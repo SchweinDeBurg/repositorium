@@ -7,6 +7,11 @@
 
 #if defined(_FileDialogEx_INLINE)
 
+#if defined(__INTEL_COMPILER)
+// remark #171: invalid type conversion
+#pragma warning(disable: 171)
+#endif	// __INTEL_COMPILER
+
 // extracted from <afxdlgs.inl> v7.1
 
 _FileDialogEx_INLINE
@@ -26,6 +31,10 @@ POSITION CFileDialogEx::GetStartPosition(void) const
 {
 	return (POSITION)m_ofn.lpstrFile;	
 }
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 171)
+#endif	// __INTEL_COMPILER
 
 #endif	// _FileDialogEx_INLINE
 
