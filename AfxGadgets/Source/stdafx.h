@@ -16,8 +16,8 @@
 #include <afxcmn.h>			// MFC common control classes
 
 // RSDK headers
-#include <wincrypt.h>
-#include <oleauto.h>
+#include <wincrypt.h>		// cryptographic API prototypes and definitions
+#include <oleauto.h>			// OLE automation support
 
 #endif	// __stdafx_h
 
