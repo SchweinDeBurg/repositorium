@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // $Workfile: ZipFile.h $
 // $Archive: /ZipArchive/ZipFile.h $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $Date: 04-06-19 9:02 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -29,7 +29,19 @@ public:
 	DECLARE_DYNAMIC(CZipFile)
 	void Flush(){CFile::Flush();}
 	ZIP_ULONGLONG GetPosition() const {return CFile::GetPosition() ;}
-	CZipString GetFilePath() const {return CFile::GetFilePath();}
+	CZipString GetFilePath() const
+	{		
+		try
+		{
+			// it throws an exception when working on an offline file
+			return CFile::GetFilePath();
+		}
+		catch (CException* e)
+		{
+			e->Delete();
+			return this->m_strFileName;
+		}
+	}
 	void SetLength(ZIP_ULONGLONG nNewLen) {CFile::SetLength(nNewLen);}
 	UINT Read(void *lpBuf, UINT nCount){return CFile::Read(lpBuf, nCount);}
 	void Write(const void* lpBuf, UINT nCount){CFile::Write(lpBuf, nCount);}
