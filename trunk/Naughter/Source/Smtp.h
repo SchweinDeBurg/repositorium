@@ -339,9 +339,8 @@ protected:
 	BOOL  AuthLoginPlain(LPCTSTR pszUsername, LPCTSTR pszPassword);
 	BOOL  SendRCPTForRecipient(CSMTPAddress& recipient);
   BOOL  SendBodyPart(CSMTPBodyPart* pBodyPart, BOOL bRoot);
-	virtual BOOL ReadCommandResponse(int nExpectedCode, BOOL bEHLO = FALSE);
-	virtual BOOL ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR pszTerminator, 
-                            int nExpectedCode, LPSTR* ppszOverFlowBuffer, int nGrowBy=4096, BOOL bEHLO = FALSE);
+	virtual BOOL ReadCommandResponse(int nExpectedCode);
+	virtual BOOL ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int nExpectedCode, LPSTR* ppszOverFlowBuffer, int nGrowBy=4096);
   void SafeCloseFile(CFile& File, const CString& sError);
   virtual void OnError(const CString& sError);
 

@@ -246,6 +246,11 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
                           if the code detects that the ATL Server SMTP class is not included. Thanks to Ken Jones for reporting this issue.
          PJN / 13-03-2004 1) Fixed a problem where the CSMTPBodyPart::m_dwMaxAttachmentSize value was not being copied in the CSMTPBodyPart::operator=
                           method. Thanks to Gerald Egert for reporting this problem and the fix.
+         PJN / 05-06-2004 1) Fixed a bug in CSMTPConnection::ReadResponse, where the wrong parameters were being null terminated. Thanks to "caowen" 
+                          for this update.
+                          2) Updated the CSMTPConnection::ReadResponse function to handle multiline responses in all cases. Thanks to Thomas Liebethal
+                          for reporting this issue.
+         PJN / 07-06-2004 1) Fixed a potential buffer overflow issue in CSMTPConnection::ReadResponse when certain multi line responses are received
 
 
 
@@ -2336,7 +2341,7 @@ BOOL CPJNSMTPConnection::ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername,
   }
 	
   //check the response to the EHLO command
-  if (!ReadCommandResponse(250, TRUE))
+  if (!ReadCommandResponse(250))
   {
 	  OnError(_T("CPJNSMTPConnection::ConnectESMTP, An unexpected response was received occurred while sending the EHLO command"));
 	  return FALSE;
@@ -3057,37 +3062,38 @@ BOOL CPJNSMTPConnection::SendRCPTForRecipient(CSMTPAddress& recipient)
   return TRUE;
 }
 
-BOOL CPJNSMTPConnection::ReadCommandResponse(int nExpectedCode, BOOL bEHLO)
+BOOL CPJNSMTPConnection::ReadCommandResponse(int nExpectedCode)
 {
   LPSTR pszOverFlowBuffer = NULL;
   char sBuf[256];
-  BOOL bSuccess = ReadResponse(sBuf, 256, "\r\n", nExpectedCode, &pszOverFlowBuffer, 4096, bEHLO);
+  BOOL bSuccess = ReadResponse(sBuf, 256, nExpectedCode, &pszOverFlowBuffer, 4096);
   if (pszOverFlowBuffer)
     delete [] pszOverFlowBuffer;
 
   return bSuccess;
 }
 
-BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR pszTerminator, int nExpectedCode, LPSTR* ppszOverFlowBuffer, int nGrowBy, BOOL bEHLO)
+BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int nExpectedCode, LPSTR* ppszOverFlowBuffer, int nGrowBy)
 {
 	ASSERT(ppszOverFlowBuffer);          //Must have a valid string pointer
 	ASSERT(*ppszOverFlowBuffer == NULL); //Initially it must point to a NULL string
 
+  //We always use a terminator of CR LF
+  LPSTR pszTerminator = "\r\n";
+	int nTerminatorLen = 2;
+
 	//must have been created first
 	ASSERT(m_bConnected);
-
-	//Get length of terminator for later use
-	int nTerminatorLen = strlen(pszTerminator);
 
 	//The local variables which will receive the data
 	LPSTR pszRecvBuffer = pszBuffer;
 	int nBufSize = nInitialBufSize;
+  int nStartOfLastLine = 0;
 
-	//retrieve the reponse using until we
-	//get the terminator or a timeout occurs
-	BOOL bFoundTerminator = FALSE;
+	//retrieve the reponse until we get the terminator or a timeout occurs
+	BOOL bFoundFullResponse = FALSE;
 	int nReceived = 0;
-	while (!bFoundTerminator)
+	while (!bFoundFullResponse)
 	{
 		//check the socket for readability
 		BOOL bReadible;
@@ -3124,7 +3130,7 @@ BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPST
 		{
 			//NULL terminate the data received
 			if (pszRecvBuffer)
-			pszBuffer[nReceived] = '\0';
+			  pszRecvBuffer[nReceived] = '\0';
 			m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
 			return FALSE; 
 		}
@@ -3155,38 +3161,37 @@ BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPST
 			}
 		}
 
-		// Check to see if the terminator character(s) have been found
-		// (at the END of the response! otherwise read loop will terminate
-		// early if there are multiple lines in the response)
-		bFoundTerminator = (strncmp( &pszRecvBuffer[ nReceived - nTerminatorLen ], pszTerminator, nTerminatorLen ) == 0);
+		//Check to see if we got a full response yet
+		BOOL bFoundTerminator = (strncmp(&pszRecvBuffer[nReceived - nTerminatorLen], pszTerminator, nTerminatorLen) == 0);
+    if (bFoundTerminator && (nReceived > 5))
+    {
+      //Find the start of the last line we have received
+      int i = nReceived - 6;
+      while ((i >= 0) && (nStartOfLastLine == 0))
+      {
+        if ((pszRecvBuffer[i] == '\r') && (pszRecvBuffer[i+1] == '\n'))
+          nStartOfLastLine = i + 2;
 
-    if (bEHLO)
-			bFoundTerminator &= strstr(pszRecvBuffer, "250 ") != NULL;
+        i--;
+      }
+			bFoundFullResponse = (pszRecvBuffer[nStartOfLastLine + 3] == ' ');
+    }
 	}
 
 	//Remove the terminator from the response data
-  pszRecvBuffer[ nReceived - nTerminatorLen ] = '\0';
+  pszRecvBuffer[nReceived - nTerminatorLen] = '\0';
 
-	// handle multi-line responses
 	BOOL bSuccess = FALSE;
-	do
-	{
-		// determine if the response is an error
-		char sCode[4];
-		strncpy(sCode, pszRecvBuffer, 3);
-		sCode[3] = '\0';
-		sscanf(sCode, "%d", &m_nLastCommandResponseCode );
-		bSuccess = (m_nLastCommandResponseCode == nExpectedCode);
 
-		// Hive away the last command reponse
-		m_sLastCommandResponse = pszRecvBuffer;
+	//determine if the response is an error
+	char sCode[4];
+	strncpy(sCode, &pszRecvBuffer[nStartOfLastLine], 3);
+	sCode[3] = '\0';
+	sscanf(sCode, "%d", &m_nLastCommandResponseCode );
+	bSuccess = (m_nLastCommandResponseCode == nExpectedCode);
 
-		// see if there are more lines to this response
-		pszRecvBuffer = strstr( pszRecvBuffer, pszTerminator );
-		if (pszRecvBuffer)
-			pszRecvBuffer += nTerminatorLen;	// skip past terminator
-
-	} while ( !bSuccess && pszRecvBuffer );
+	//Hive away the last command reponse
+	m_sLastCommandResponse = pszRecvBuffer;
 
 	if (!bSuccess)
 		SetLastError(WSAEPROTONOSUPPORT);
@@ -3194,7 +3199,7 @@ BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPST
 	return bSuccess;
 }
 
-// This function negotiates AUTH LOGIN
+//This function negotiates AUTH LOGIN
 BOOL CPJNSMTPConnection::AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 {
 	//For correct operation of the T2A macro, see MFC Tech Note 59
@@ -3285,7 +3290,7 @@ BOOL CPJNSMTPConnection::AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 	return TRUE;
 }
 
-// This function negotiates AUTH LOGIN PLAIN
+//This function negotiates AUTH LOGIN PLAIN
 BOOL CPJNSMTPConnection::AuthLoginPlain(LPCTSTR pszUsername, LPCTSTR pszPassword)
 {
 	//For correct operation of the T2A macro, see MFC Tech Note 59
@@ -3390,20 +3395,20 @@ BOOL CPJNSMTPConnection::CramLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
     LPCSTR pszLastCommandString = T2A((LPTSTR) (LPCTSTR) sLastCommandString);
 		Coder.Decode(pszLastCommandString);
 
-		// Get the base64 decoded challange 
+		//Get the base64 decoded challange 
 		LPCSTR pszChallenge = Coder.DecodedMessage();
 
-		// test data as per RFC 2195
-    //		pszChallenge = "<1896.697170952@postoffice.reston.mci.net>";
-    //		pszUsername = "tim";
-    //		pszAsciiPassword = "tanstaaftanstaaf";
-		// generate the MD5 digest from the challange and password
+		//test data as per RFC 2195
+    //	pszChallenge = "<1896.697170952@postoffice.reston.mci.net>";
+    //	pszUsername = "tim";
+    //	pszAsciiPassword = "tanstaaftanstaaf";
+		//generate the MD5 digest from the challange and password
 		unsigned char digest[16];    // message digest
     LPSTR pszAsciiPassword = T2A((LPTSTR)pszPassword);
 		MD5Digest((unsigned char*) pszChallenge, strlen(pszChallenge), 
               (unsigned char*) pszAsciiPassword, strlen(pszAsciiPassword), digest);
 		
-		// make the CRAM-MD5 response
+		//make the CRAM-MD5 response
 		CString sCramDigest;
 		sCramDigest = pszUsername;
 		sCramDigest += " ";
@@ -3414,7 +3419,7 @@ BOOL CPJNSMTPConnection::CramLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 			sCramDigest += csTemp;
 		}
 			
-		// send base64 encoded username digest
+		//send base64 encoded username digest
     LPSTR pszCramDigest = T2A((LPTSTR) (LPCTSTR) sCramDigest);
 		Coder.Encode(pszCramDigest);
 		sBuf.Format(_T("%s\r\n"), A2T(Coder.EncodedMessage()));
@@ -3427,7 +3432,7 @@ BOOL CPJNSMTPConnection::CramLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 		}
 	}
 
-	// check if authentication is successful
+	//check if authentication is successful
 	if (!ReadCommandResponse(235))
   {
     OnError(_T("CPJNSMTPConnection::CramLogin, AUTH CRAM-MD5 authentication was unsuccessful"));
