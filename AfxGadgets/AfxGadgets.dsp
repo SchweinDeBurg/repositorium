@@ -151,6 +151,11 @@ SOURCE=.\Source\MemoryDC.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\ProcessPrivileges.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\SeException.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File
@@ -185,6 +190,14 @@ SOURCE=.\Source\MemMapFile.h
 # Begin Source File
 
 SOURCE=.\Source\MemoryDC.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\ProcessPrivileges.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\ProcessPrivileges.inl
 # End Source File
 # Begin Source File
 
