@@ -3,7 +3,7 @@ Module : POP3.H
 Purpose: Defines the interface for a MFC class encapsulation of the POP3 protocol
 Created: PJN / 04-05-1998
 
-Copyright (c) 1998 - 2003 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2004 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 

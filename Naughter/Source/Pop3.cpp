@@ -75,11 +75,15 @@ History: PJN / 27-06-1998 1) Fixed a potential buffer overflow problem in Delete
                           2) Reviewed the various trace statements in the code.
          PJN / 06-11-2003 1) Fixed a problem with an unitialized "m_pszMessage" in the CPop3Message 
                           constructor. Thanks to Michael Gunlock for reporting this problem.
+         PJN / 12-11-2003 1) Fixed a bug in the CPop3Message operator= method. Thanks to Henrik Grek for 
+                          reporting this bug.
+         PJN / 05-06-2004 1) Fixed a bug in CPop3Connection::ReadResponse, where the wrong parameters
+                          were being null terminated. Thanks to "caowen" for this update.
 
 
                              
 
-Copyright (c) 1998 - 2001 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2004 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -138,14 +142,20 @@ CPop3Message& CPop3Message::operator=(const CPop3Message& message)
 {
   //Tidy up any heap memory we may be using
   if (m_pszMessage)
+  {
     delete [] m_pszMessage;
+    m_pszMessage = NULL;
+  }
 
-  //Allocate the new heap memory
-  int nMessageSize = strlen(message.m_pszMessage);
-  m_pszMessage = new char[nMessageSize + 1];
+  if (message.m_pszMessage)
+	{
+    //Allocate the new heap memory
+    int nMessageSize = strlen(message.m_pszMessage);
+    m_pszMessage = new char[nMessageSize + 1];
 
-  //Transfer across its contents
-  strcpy(m_pszMessage, message.m_pszMessage);
+    //Transfer across its contents
+    strcpy(m_pszMessage, message.m_pszMessage);
+  }
 
   return *this;
 }
@@ -848,7 +858,7 @@ BOOL CPop3Connection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR p
 		{
       //NULL terminate the data received
       if (pszRecvBuffer)
-		    pszBuffer[nReceived] = '\0';
+		    pszRecvBuffer[nReceived] = '\0';
 
       m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
 		  return FALSE; 
