@@ -903,6 +903,8 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 
 		// initial control's text
 		_T2W pwszCaption(branchControl.GetAttribute(_T("Caption")));
+		WCHAR* pwChr = const_cast<WCHAR*>(static_cast<LPCWSTR>(pwszCaption));
+		while ((pwChr = ::StrChrW(pwChr, L'|')) != NULL) *pwChr++ = L'\n';
 		fileMem.Write(pwszCaption, (::lstrlenW(pwszCaption) + 1) * sizeof(WCHAR));
 
 		// creation data - not used
@@ -1040,6 +1042,8 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 
 		// initial control's text
 		_T2W pwszCaption(branchControl.GetAttribute(_T("Caption")));
+		WCHAR* pwChr = const_cast<WCHAR*>(static_cast<LPCWSTR>(pwszCaption));
+		while ((pwChr = ::StrChrW(pwChr, L'|')) != NULL) *pwChr++ = L'\n';
 		fileMem.Write(pwszCaption, (::lstrlenW(pwszCaption) + 1) * sizeof(WCHAR));
 
 		// creation data - not used

@@ -11,6 +11,11 @@
 #pragma once
 #endif	// _MSC_VER
 
+#if !defined(__AFXTEMPL_H__)
+#pragma message(__FILE__ " : put <afxtempl.h> in your PCH to speed up compilation")
+#include <afxtempl.h>
+#endif	// __AFXTEMPL_H__
+
 class CDialogXML: public CDialog
 {
 	DECLARE_DYNAMIC(CDialogXML)
@@ -28,6 +33,7 @@ public:
 // overridables
 public:
 	virtual int DoModal(void);
+protected:
 	virtual void GetXMLpath(CString& strDest);
 
 // styles parsing
