@@ -53,7 +53,10 @@ my explicit written consent.
 
 #include "Base64Coder.h"
 
-
+#if defined(__INTEL_COMPILER)
+// remark #271: trailing comma is nonstandard
+#pragma warning(disable: 271)
+#endif	// __INTEL_COMPILER
 
 /////////////////////////////// Classes ///////////////////////////////////////
 
@@ -358,5 +361,9 @@ protected:
 #ifndef __ATLSMTPCONNECTION_H__
 #define CSMTPConnection CPJNSMTPConnection
 #endif
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 271)
+#endif	// __INTEL_COMPILER
 
 #endif //__PJNSMTP_H__

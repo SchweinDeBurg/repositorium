@@ -32,7 +32,10 @@ to maintain a single distribution point for the source code.
 #include <winsock.h>
 #endif
   
-
+#if defined(__INTEL_COMPILER)
+// remark #383: value copied to temporary, reference to temporary used
+#pragma warning(disable: 383)
+#endif	// __INTEL_COMPILER
 
 /////////////////////////////// Classes ///////////////////////////////////////
 
@@ -142,5 +145,9 @@ protected:
   CString      m_sLastCommandResponse;
 	DWORD        m_dwTimeout;
 };
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 383)
+#endif	// __INTEL_COMPILER
 
 #endif //__POP3_H__
