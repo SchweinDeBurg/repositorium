@@ -285,206 +285,51 @@ SOURCE=.\Source\stdafx.h
 # End Group
 # Begin Group "Help Files"
 
-# PROP Default_Filter "pdf"
+# PROP Default_Filter "chm"
 # Begin Source File
 
-SOURCE=.\Help\CFileSpec.pdf
-
-!IF  "$(CFG)" == "CodeProject - Win32 Release"
-
+SOURCE=.\Help\CFileSpec.chm
 # PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Release"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Debug"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
-SOURCE=.\Help\CFolderDialog.pdf
-
-!IF  "$(CFG)" == "CodeProject - Win32 Release"
-
+SOURCE=.\Help\CFolderDialog.chm
 # PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Release"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Debug"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
-SOURCE=.\Help\CIconDialog.pdf
-
-!IF  "$(CFG)" == "CodeProject - Win32 Release"
-
+SOURCE=.\Help\CIconDialog.chm
 # PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Release"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Debug"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
-SOURCE=".\Help\Colour Picker.pdf"
-
-!IF  "$(CFG)" == "CodeProject - Win32 Release"
-
+SOURCE=.\Help\ColourPicker.chm
 # PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Release"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Debug"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
-SOURCE=.\Help\CPPTooltip.pdf
-
-!IF  "$(CFG)" == "CodeProject - Win32 Release"
-
+SOURCE=.\Help\CPPTooltip.chm
 # PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Release"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Debug"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
-SOURCE=.\Help\CReportCtrl.pdf
-
-!IF  "$(CFG)" == "CodeProject - Win32 Release"
-
+SOURCE=.\Help\CReportCtrl.chm
 # PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Release"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Debug"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
-SOURCE=.\Help\ETSLayout.pdf
-
-!IF  "$(CFG)" == "CodeProject - Win32 Release"
-
+SOURCE=.\Help\ETSLayout.chm
 # PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Release"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Debug"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
-SOURCE=.\Help\HistoryCombo.pdf
-
-!IF  "$(CFG)" == "CodeProject - Win32 Release"
-
+SOURCE=.\Help\HistoryComboBox.chm
 # PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
 
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Debug"
-
+SOURCE=.\Help\PugXML.chm
 # PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Release"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "CodeProject - Win32 Unicode Debug"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
 # End Source File
 # End Group
 # End Target
