@@ -244,18 +244,30 @@ LIB32=link.exe -lib
 # Name "CodeProject - Win32 ICL Debug"
 # Name "CodeProject - Win32 ICL Unicode Release"
 # Name "CodeProject - Win32 ICL Unicode Debug"
-# Begin Group "Source Files"
+# Begin Group "stdafx"
 
-# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# PROP Default_Filter "h;cpp"
 # Begin Source File
 
-SOURCE=.\Source\CeXDib.cpp
-# ADD CPP /Yu"stdafx.h"
+SOURCE=.\Source\stdafx.cpp
+# ADD CPP /Yc"stdafx.h"
 # End Source File
+# Begin Source File
+
+SOURCE=.\Source\stdafx.h
+# End Source File
+# End Group
+# Begin Group "Controls"
+
+# PROP Default_Filter "h;cpp"
 # Begin Source File
 
 SOURCE=.\Source\ColourPicker.cpp
 # ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\ColourPicker.h
 # End Source File
 # Begin Source File
 
@@ -264,23 +276,7 @@ SOURCE=.\Source\ColourPopup.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\ETSLayout.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\FileSpec.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\FilteredFolderDlg.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\FolderDlg.cpp
-# ADD CPP /Yu"stdafx.h"
+SOURCE=.\Source\ColourPopup.h
 # End Source File
 # Begin Source File
 
@@ -289,28 +285,16 @@ SOURCE=.\Source\HistoryCombo.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\HistoryCombo.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\HyperLink.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\IconDlg.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\PPDrawManager.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\PPHtmlDrawer.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\PPTooltip.cpp
-# ADD CPP /Yu"stdafx.h"
+SOURCE=.\Source\HyperLink.h
 # End Source File
 # Begin Source File
 
@@ -319,52 +303,16 @@ SOURCE=.\Source\ReportCtrl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\stdafx.cpp
-# ADD CPP /Yc"stdafx.h"
+SOURCE=.\Source\ReportCtrl.h
 # End Source File
 # End Group
-# Begin Group "Header Files"
+# Begin Group "CPPTooltip"
 
-# PROP Default_Filter "h;hpp;hxx;hm;inl"
+# PROP Default_Filter "h;cpp"
 # Begin Source File
 
-SOURCE=.\Source\CeXDib.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\ColourPicker.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\ColourPopup.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\ETSLayout.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\FileSpec.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\FilteredFolderDlg.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\FolderDlg.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\HistoryCombo.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\HyperLink.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\IconDlg.h
+SOURCE=.\Source\PPDrawManager.cpp
+# ADD CPP /Yu"stdafx.h"
 # End Source File
 # Begin Source File
 
@@ -372,23 +320,95 @@ SOURCE=.\Source\PPDrawManager.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\PPHtmlDrawer.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\PPHtmlDrawer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\PPTooltip.cpp
+# ADD CPP /Yu"stdafx.h"
 # End Source File
 # Begin Source File
 
 SOURCE=.\Source\PPTooltip.h
 # End Source File
+# End Group
+# Begin Group "Dialogs"
+
+# PROP Default_Filter "h;cpp"
+# Begin Source File
+
+SOURCE=.\Source\ETSLayout.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\ETSLayout.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\FilteredFolderDlg.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\FilteredFolderDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\FolderDlg.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\FolderDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\IconDlg.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\IconDlg.h
+# End Source File
+# End Group
+# Begin Group "Graphics"
+
+# PROP Default_Filter "h;cpp"
+# Begin Source File
+
+SOURCE=.\Source\CeXDib.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\CeXDib.h
+# End Source File
+# End Group
+# Begin Group "Path"
+
+# PROP Default_Filter "h;cpp"
+# Begin Source File
+
+SOURCE=.\Source\FileSpec.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\FileSpec.h
+# End Source File
+# End Group
+# Begin Group "XML"
+
+# PROP Default_Filter "h;cpp"
 # Begin Source File
 
 SOURCE=.\Source\PugXML.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\ReportCtrl.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\stdafx.h
 # End Source File
 # End Group
 # Begin Group "Help Files"
