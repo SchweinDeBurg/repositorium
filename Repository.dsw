@@ -15,6 +15,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "atlmfc71"=.\atlmfc71\atlmfc71.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "CodeProject"=.\CodeProject\CodeProject.dsp - Package Owner=<4>
 
 Package=<5>
