@@ -84,8 +84,8 @@ void CSortingListCtrl::Dump(CDumpContext& dumpCtx) const
 		// first invoke inherited dumper...
 		CListCtrl::Dump(dumpCtx);
 		// ...and then dump own unique members
-		dumpCtx << "m_iSortColumn = " << m_iSortColumn;
-		dumpCtx << "\nm_nSortOrder = " << m_nSortOrder;
+		dumpCtx << "m_iSortColumn = " << m_iSortColumn << "\n";
+		dumpCtx << "m_nSortOrder = " << m_nSortOrder;
 	}
 	catch (CFileException* pXcpt) {
 		pXcpt->ReportError();

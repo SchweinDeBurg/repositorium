@@ -193,8 +193,8 @@ void CWinCrypto::Dump(CDumpContext& dumpCtx) const
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
 		// ...and then dump own unique members
-		dumpCtx << "m_hContext = " << m_hContext;
-		dumpCtx << "\nm_hKey = " << m_hKey;
+		dumpCtx << "m_hContext = " << m_hContext << "\n";
+		dumpCtx << "m_hKey = " << m_hKey;
 	}
 	catch (CFileException* pXcpt) {
 		pXcpt->ReportError();

@@ -91,11 +91,11 @@ void CMemoryDC::Dump(CDumpContext& dumpCtx) const
 		// first invoke inherited dumper...
 		CDC::Dump(dumpCtx);
 		// ...and then dump own unique members
-		dumpCtx << "m_pDC = " << m_pDC;
-		dumpCtx << "\nm_crBack = " << m_crBack;
-		dumpCtx << "\nm_rectDraw = " << m_rectDraw;
-		dumpCtx << "\nm_bmpCanvas = " << m_bmpCanvas;
-		dumpCtx << "\nm_hPrevBmp = " << m_hPrevBmp;
+		dumpCtx << "m_pDC = " << m_pDC << "\n";
+		dumpCtx << "m_crBack = " << m_crBack << "\n";
+		dumpCtx << "m_rectDraw = " << m_rectDraw << "\n";
+		dumpCtx << "m_bmpCanvas = " << m_bmpCanvas << "\n";
+		dumpCtx << "m_hPrevBmp = " << m_hPrevBmp;
 	}
 	catch (CFileException* pXcpt) {
 		pXcpt->ReportError();

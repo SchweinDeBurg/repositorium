@@ -244,49 +244,9 @@ LIB32=link.exe -lib
 # Name "AfxGadgets - Win32 ICL Debug"
 # Name "AfxGadgets - Win32 ICL Unicode Release"
 # Name "AfxGadgets - Win32 ICL Unicode Debug"
-# Begin Group "Source Files"
+# Begin Group "stdafx"
 
-# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
-# Begin Source File
-
-SOURCE=.\Source\DialogXML.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\HotKeysXML.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\MemMapFile.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\MemoryDC.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\MenuXML.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\ProcessPrivileges.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\SeException.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\SortingListCtrl.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
+# PROP Default_Filter "h;cpp"
 # Begin Source File
 
 SOURCE=.\Source\stdafx.cpp
@@ -294,8 +254,46 @@ SOURCE=.\Source\stdafx.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\StringsXML.cpp
+SOURCE=.\Source\stdafx.h
+# End Source File
+# End Group
+# Begin Group "Controls"
+
+# PROP Default_Filter "h;cpp"
+# Begin Source File
+
+SOURCE=.\Source\SortingListCtrl.cpp
 # ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\SortingListCtrl.h
+# End Source File
+# End Group
+# Begin Group "Crypto"
+
+# PROP Default_Filter "h;cpp"
+# Begin Source File
+
+SOURCE=.\Source\WinCrypto.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\WinCrypto.h
+# End Source File
+# End Group
+# Begin Group "Exceptions"
+
+# PROP Default_Filter "h;cpp"
+# Begin Source File
+
+SOURCE=.\Source\SeException.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\SeException.h
 # End Source File
 # Begin Source File
 
@@ -304,13 +302,64 @@ SOURCE=.\Source\Win32Error.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\WinCrypto.cpp
-# ADD CPP /Yu"stdafx.h"
+SOURCE=.\Source\Win32Error.h
 # End Source File
 # End Group
-# Begin Group "Header Files"
+# Begin Group "GDI"
 
-# PROP Default_Filter "h;hpp;hxx;hm;inl"
+# PROP Default_Filter "h;cpp"
+# Begin Source File
+
+SOURCE=.\Source\MemoryDC.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\MemoryDC.h
+# End Source File
+# End Group
+# Begin Group "Strings"
+
+# PROP Default_Filter "h;cpp"
+# Begin Source File
+
+SOURCE=.\Source\StringConv.h
+# End Source File
+# End Group
+# Begin Group "System"
+
+# PROP Default_Filter "h;cpp"
+# Begin Source File
+
+SOURCE=.\Source\MemMapFile.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\MemMapFile.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\ProcessPrivileges.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\ProcessPrivileges.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\ProcessPrivileges.inl
+# End Source File
+# End Group
+# Begin Group "XML"
+
+# PROP Default_Filter "h;cpp"
+# Begin Source File
+
+SOURCE=.\Source\DialogXML.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
 # Begin Source File
 
 SOURCE=.\Source\DialogXML.h
@@ -321,15 +370,17 @@ SOURCE=.\Source\GetXMLpath.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\HotKeysXML.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\HotKeysXML.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\MemMapFile.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\MemoryDC.h
+SOURCE=.\Source\MenuXML.cpp
+# ADD CPP /Yu"stdafx.h"
 # End Source File
 # Begin Source File
 
@@ -337,47 +388,16 @@ SOURCE=.\Source\MenuXML.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\ProcessPrivileges.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\ProcessPrivileges.inl
-# End Source File
-# Begin Source File
-
 SOURCE=.\Source\PugXMLplus.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\SeException.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\SortingListCtrl.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\stdafx.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\StringConv.h
+SOURCE=.\Source\StringsXML.cpp
+# ADD CPP /Yu"stdafx.h"
 # End Source File
 # Begin Source File
 
 SOURCE=.\Source\StringsXML.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\Win32Error.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\WinCrypto.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\XMLproxy.h
 # End Source File
 # End Group
 # End Target
