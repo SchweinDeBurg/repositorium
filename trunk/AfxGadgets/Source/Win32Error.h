@@ -8,6 +8,10 @@
 #if !defined(__Win32Error_h)
 #define __Win32Error_h
 
+#if defined(_MSC_VER) && (_MSC_VER > 1000)
+#pragma once
+#endif	// _MSC_VER
+
 class CWin32Error: public CException
 {
 	DECLARE_DYNAMIC(CWin32Error)

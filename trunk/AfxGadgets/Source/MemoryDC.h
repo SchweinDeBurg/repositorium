@@ -8,6 +8,10 @@
 #if !defined(__MemoryDC_h)
 #define __MemoryDC_h
 
+#if defined(_MSC_VER) && (_MSC_VER > 1000)
+#pragma once
+#endif	// _MSC_VER
+
 class CMemoryDC: public CDC
 {
 	DECLARE_DYNAMIC(CMemoryDC)

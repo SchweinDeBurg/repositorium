@@ -7,6 +7,10 @@
 #if !defined(__WinCrypto_h)
 #define __WinCrypto_h
 
+#if defined(_MSC_VER) && (_MSC_VER > 1000)
+#pragma once
+#endif	// _MSC_VER
+
 #if !defined(_WIN32_WINNT) || (_WIN32_WINNT < 0x0400)
 #error this code uses features only available under Windows 98/NT4 or later
 #endif	// _WIN32_WINNT

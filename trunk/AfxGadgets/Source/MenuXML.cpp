@@ -178,6 +178,7 @@ BOOL CMenuXML::CreateMenuXML(LPCTSTR pszMenuName)
 
 void CMenuXML::GetXMLpath(CString& strDest)
 {
+	ASSERT(AfxIsValidString(AfxGetApp()->m_pszRegistryKey));
 	ASSERT(*(AfxGetApp()->m_pszRegistryKey) != 0);
 
 	LPTSTR pszPath = strDest.GetBuffer(_MAX_PATH);
@@ -227,7 +228,7 @@ void CMenuXML::RecurseMenuTree(CMemFile& fileMem, CPugXmlBranch& branchMenu)
 		fileMem.Write(&menuExItem, sizeof(menuExItem));
 
 		// item's text
-		LPCWSTR pwszText = _T2W(branchItem.GetAttribute(_T("Text")));
+		_T2W pwszText(branchItem.GetAttribute(_T("Text")));
 		fileMem.Write(pwszText, (::lstrlenW(pwszText) + 1) * sizeof(WCHAR));
 
 		// align to the DWORD boundary
