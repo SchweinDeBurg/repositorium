@@ -171,11 +171,11 @@ void CMemMapFile::Dump(CDumpContext& dumpCtx) const
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
 		// ...and then dump own unique members
-		dumpCtx << "m_strFileName = " << m_strFileName;
-		dumpCtx << "\nm_hFile = " << m_hFile;
-		dumpCtx << "\nm_strObjName = " << m_strObjName;
-		dumpCtx << "\nm_hMapping = " << m_hMapping;
-		dumpCtx << "\nm_dataPtr = " << m_dataPtr;
+		dumpCtx << "m_strFileName = " << m_strFileName << "\n";
+		dumpCtx << "m_hFile = " << m_hFile << "\n";
+		dumpCtx << "m_strObjName = " << m_strObjName << "\n";
+		dumpCtx << "m_hMapping = " << m_hMapping << "\n";
+		dumpCtx << "m_dataPtr = " << m_dataPtr;
 	}
 	catch (CFileException* pXcpt) {
 		pXcpt->ReportError();
