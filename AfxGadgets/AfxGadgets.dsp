@@ -146,12 +146,22 @@ SOURCE=.\Source\DialogXML.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\HotKeysXML.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\MemMapFile.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File
 # Begin Source File
 
 SOURCE=.\Source\MemoryDC.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\MenuXML.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File
 # Begin Source File
@@ -194,11 +204,19 @@ SOURCE=.\Source\DialogXML.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\HotKeysXML.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\MemMapFile.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\Source\MemoryDC.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\MenuXML.h
 # End Source File
 # Begin Source File
 
