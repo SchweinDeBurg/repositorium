@@ -1,4 +1,4 @@
-// XMLMenus application.
+// AfxGadgets library.
 // Copyright (c) 2005 by Elijah Zarezky,
 // All rights reserved.
 
@@ -118,6 +118,8 @@ BOOL CMenuXML::CreateMenuXML(LPCTSTR pszMenuName)
 
 	// get the path and ensure that it exists
 	GetXMLpath(strFileXML);
+	::PathAddBackslash(strFileXML.GetBuffer(_MAX_PATH));
+	strFileXML.ReleaseBuffer();
 	if (!::PathFileExists(strFileXML)) {
 		TRACE(_T("Warning: folder %s doesn\'t exists, trying to create.\n"), strFileXML);
 #if (_WIN32_WINDOWS < 0x0490)

@@ -1,4 +1,4 @@
-// XMLMenus application.
+// AfxGadgets library.
 // Copyright (c) 2005 by Elijah Zarezky,
 // All rights reserved.
 
@@ -7,6 +7,7 @@
 #include "stdafx.h"
 #include "HotKeysXML.h"
 #include "PugXMLplus.h"
+#include "StringConv.h"
 
 #if !defined(_INC_SHLWAPI)
 #pragma message(__FILE__ " : put <shlwapi.h> in your PCH to speed up compilation")
@@ -69,6 +70,8 @@ BOOL CHotKeysXML::CreateTable(LPCTSTR pszTableName)
 
 	// get the path and ensure that it exists
 	GetXMLpath(strFileXML);
+	::PathAddBackslash(strFileXML.GetBuffer(_MAX_PATH));
+	strFileXML.ReleaseBuffer();
 	if (!::PathFileExists(strFileXML)) {
 		TRACE(_T("Warning: folder %s doesn\'t exists, trying to create.\n"), strFileXML);
 #if (_WIN32_WINDOWS < 0x0490)
@@ -396,8 +399,8 @@ void CHotKeysXML::Dump(CDumpContext& dumpCtx) const
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
 		// ...and then dump own unique members
-		dumpCtx << "m_hAccTable = " << m_hAccTable;
-		dumpCtx << "\nm_mapNames = " << m_mapNames;
+		dumpCtx << "m_hAccTable = " << m_hAccTable << "\n";
+		dumpCtx << "m_mapNames = " << m_mapNames;
 	}
 	catch (CFileException* pXcpt) {
 		pXcpt->ReportError();
@@ -406,5 +409,13 @@ void CHotKeysXML::Dump(CDumpContext& dumpCtx) const
 }
 
 #endif	// _DEBUG
+
+// import libraries
+#pragma comment(lib, "shlwapi.lib")
+
+// import library for Win95/98/NT4 builds
+#if (_WIN32_WINDOWS < 0x0490)
+#pragma comment(lib, "dbghelp.lib")
+#endif	// _WIN32_WINDOWS
 
 // end of file

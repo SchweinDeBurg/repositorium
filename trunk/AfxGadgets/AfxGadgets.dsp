@@ -294,6 +294,11 @@ SOURCE=.\Source\stdafx.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\StringsXML.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\Win32Error.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File
@@ -309,6 +314,10 @@ SOURCE=.\Source\WinCrypto.cpp
 # Begin Source File
 
 SOURCE=.\Source\DialogXML.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\GetXMLpath.h
 # End Source File
 # Begin Source File
 
@@ -353,6 +362,10 @@ SOURCE=.\Source\stdafx.h
 # Begin Source File
 
 SOURCE=.\Source\StringConv.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\StringsXML.h
 # End Source File
 # Begin Source File
 

@@ -119,6 +119,8 @@ int CDialogXML::DoModal(void)
 
 	// get the path and ensure that it exists
 	GetXMLpath(strFileXML);
+	::PathAddBackslash(strFileXML.GetBuffer(_MAX_PATH));
+	strFileXML.ReleaseBuffer();
 	if (!::PathFileExists(strFileXML)) {
 		TRACE(_T("Warning: folder %s doesn\'t exists, trying to create.\n"), strFileXML);
 #if (_WIN32_WINDOWS < 0x0490)
@@ -1073,9 +1075,9 @@ void CDialogXML::Dump(CDumpContext& dumpCtx) const
 		// first invoke inherited dumper...
 		CDialog::Dump(dumpCtx);
 		// ...and then dump own unique members
-		dumpCtx << "m_strDialogName = " << m_strDialogName;
+		dumpCtx << "m_strDialogName = " << m_strDialogName << "\n";
 		dumpCtx.SetDepth(1);
-		dumpCtx << "\nm_mapParsers = " << m_mapParsers;
+		dumpCtx << "m_mapParsers = " << m_mapParsers;
 	}
 	catch (CFileException* pXcpt) {
 		pXcpt->ReportError();
