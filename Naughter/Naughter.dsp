@@ -244,19 +244,22 @@ LIB32=link.exe -lib
 # Name "Naughter - Win32 ICL Debug"
 # Name "Naughter - Win32 ICL Unicode Release"
 # Name "Naughter - Win32 ICL Unicode Debug"
-# Begin Group "Source Files"
+# Begin Group "stdafx"
 
-# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# PROP Default_Filter "h;cpp"
 # Begin Source File
 
-SOURCE=.\Source\Base64Coder.cpp
-# ADD CPP /Yu"stdafx.h"
+SOURCE=.\Source\stdafx.cpp
+# ADD CPP /Yc"stdafx.h"
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\md5.cpp
-# ADD CPP /Yu"stdafx.h"
+SOURCE=.\Source\stdafx.h
 # End Source File
+# End Group
+# Begin Group "POP3"
+
+# PROP Default_Filter "h;cpp"
 # Begin Source File
 
 SOURCE=.\Source\Pop3.cpp
@@ -264,18 +267,17 @@ SOURCE=.\Source\Pop3.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\Smtp.cpp
-# ADD CPP /Yu"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\stdafx.cpp
-# ADD CPP /Yc"stdafx.h"
+SOURCE=.\Source\Pop3.h
 # End Source File
 # End Group
-# Begin Group "Header Files"
+# Begin Group "SMTP"
 
-# PROP Default_Filter "h;hpp;hxx;hm;inl"
+# PROP Default_Filter "h;cpp"
+# Begin Source File
+
+SOURCE=.\Source\Base64Coder.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
 # Begin Source File
 
 SOURCE=.\Source\Base64Coder.h
@@ -286,19 +288,21 @@ SOURCE=".\Source\glob-md5.h"
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\md5.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\md5.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\Pop3.h
+SOURCE=.\Source\Smtp.cpp
+# ADD CPP /Yu"stdafx.h"
 # End Source File
 # Begin Source File
 
 SOURCE=.\Source\Smtp.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Source\stdafx.h
 # End Source File
 # End Group
 # Begin Group "Help Files"
