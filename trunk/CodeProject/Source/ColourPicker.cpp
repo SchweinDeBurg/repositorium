@@ -282,8 +282,8 @@ void CColourPicker::SetWindowSize()
     CSize MarginSize(::GetSystemMetrics(SM_CXEDGE), ::GetSystemMetrics(SM_CYEDGE));
 
     // Get size of dropdown arrow
-    int nArrowWidth = max(::GetSystemMetrics(SM_CXHTHUMB), 5*MarginSize.cx);
-    int nArrowHeight = max(::GetSystemMetrics(SM_CYVTHUMB), 5*MarginSize.cy);
+    int nArrowWidth = max(::GetSystemMetrics(SM_CXHTHUMB), (int)(5*MarginSize.cx));
+    int nArrowHeight = max(::GetSystemMetrics(SM_CYVTHUMB), (int)(5*MarginSize.cy));
     CSize ArrowSize(max(nArrowWidth, nArrowHeight), max(nArrowWidth, nArrowHeight));
 
     // Get window size
@@ -295,7 +295,7 @@ void CColourPicker::SetWindowSize()
         pParent->ScreenToClient(rect);
 
     // Set window size at least as wide as 2 arrows, and as high as arrow + margins
-    int nWidth = max(rect.Width(), 2*ArrowSize.cx + 2*MarginSize.cx);
+    int nWidth = max(rect.Width(), (int)(2*ArrowSize.cx + 2*MarginSize.cx));
     MoveWindow(rect.left, rect.top, nWidth, ArrowSize.cy+2*MarginSize.cy, TRUE);
 
     // Get the new coords of this window

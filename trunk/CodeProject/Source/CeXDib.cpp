@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "CeXDib.h"
 
-#pragma warning(disable: 4189)		// local variable is initialized but not referenced
+// local variable is initialized but not referenced
+#pragma warning(disable: 4189)
 
 #ifdef _DEBUG
 #undef THIS_FILE

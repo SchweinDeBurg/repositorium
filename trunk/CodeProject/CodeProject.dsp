@@ -191,6 +191,16 @@ SOURCE=.\Source\IconDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\PPDrawManager.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\PPHtmlDrawer.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\PPTooltip.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File
@@ -247,6 +257,14 @@ SOURCE=.\Source\HyperLink.h
 # Begin Source File
 
 SOURCE=.\Source\IconDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\PPDrawManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\PPHtmlDrawer.h
 # End Source File
 # Begin Source File
 
