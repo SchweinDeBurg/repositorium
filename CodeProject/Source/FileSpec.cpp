@@ -30,6 +30,15 @@
 
 #include "FileSpec.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #174: expression has no effect
+#pragma warning(disable: 174)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #593: variable was set but never used
+#pragma warning(disable: 593)
+#endif	// __INTEL_COMPILER
+
 #pragma comment(lib, "Netapi32.lib")
 #pragma comment(lib, "mpr.lib")
 

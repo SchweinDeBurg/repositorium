@@ -12,6 +12,11 @@
 // nonstandard extension used: conversion from 'type' to 'type'
 #pragma warning(disable: 4239)
 
+#if defined(__INTEL_COMPILER)
+// warning #1125: function is hidden by another
+#pragma warning(disable: 1125)
+#endif	// __INTEL_COMPILER
+
 //ENG: Comments a next line if you never use a tooltip for a menu
 //RUS: Закоментируйте следующую строку, если вы не планируете использовать тултип для элементов меню
 #define PPTOOLTIP_USE_MENU
@@ -376,11 +381,15 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-#pragma warning(default: 4239)
-
 /////////////////////////////////////////////////////////////////////////////
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 1125)
+#endif	// __INTEL_COMPILER
+
+#pragma warning(default: 4239)
 
 #endif

@@ -7,6 +7,11 @@
 #include "stdafx.h"
 #include "FilteredFolderDlg.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+#endif	// __INTEL_COMPILER
+
 //////////////////////////////////////////////////////////////////////
 #ifdef USE_XP_FILTRATION
 //////////////////////////////////////////////////////////////////////

@@ -43,6 +43,15 @@
 #include <fstream>
 #endif	// _FSTREAM_
 
+#if defined(__INTEL_COMPILER)
+// remark #171: invalid type conversion
+#pragma warning(disable: 171)
+// remark #444: destructor for base class is not virtual
+#pragma warning(disable: 444)
+// warning #1125: function is hidden by another
+#pragma warning(disable: 1125)
+#endif	// __INTEL_COMPILER
+
 #define GROW_SIZE 4 //Default child element & attribute space growth increment.
 
 // <summary>
@@ -2543,6 +2552,10 @@ public:
 		return rOs;
 	}
 };
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 171 444 1125)
+#endif	// __INTEL_COMPILER
 
 #endif	// _PugXML_
 

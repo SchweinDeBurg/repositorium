@@ -25,6 +25,17 @@ VERSION HISTORY:
 #include "stdafx.h"
 #include "FolderDlg.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #171: invalid type conversion
+#pragma warning(disable: 171)
+// remark #174: expression has no effect
+#pragma warning(disable: 174)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #593: variable was set but never used
+#pragma warning(disable: 593)
+#endif	// __INTEL_COMPILER
+
 /////////////////////////////////////////////////////////////////////////////
 
 #ifndef BFFM_VALIDATEFAILED

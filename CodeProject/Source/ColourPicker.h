@@ -24,6 +24,11 @@
 
 #include "ColourPopup.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #424: extra ";" ignored
+#pragma warning(disable: 424)
+#endif	// __INTEL_COMPILER
+
 /////////////////////////////////////////////////////////////////////////////
 // CColourPicker window
 
@@ -109,5 +114,9 @@ protected:
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Developer Studio will insert additional declarations immediately before the previous line.
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 424)
+#endif	// __INTEL_COMPILER
 
 #endif // !defined(AFX_COLOURPICKER_H__D0B75901_9830_11D1_9C0F_00A0243D1382__INCLUDED_)

@@ -42,6 +42,11 @@
 #ifndef __REPORTCTRL_H__
 #define __REPORTCTRL_H__
 
+#if defined(__INTEL_COMPILER)
+// warning #1125: function is hidden by another
+#pragma warning(disable: 1125)
+#endif	// __INTEL_COMPILER
+
 // Sent to parent window when user clicked on the checkbox of an item:
 // wParam: The item index in the list ctrl
 // lParam: The mouse event type(WM_LBUTTONDOWN, WM_RBUTTONDOWN, etc) which generated this event. 
@@ -294,5 +299,9 @@ protected:
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 1125)
+#endif	// __INTEL_COMPILER
 
 #endif // __REPORTCTRL_H__

@@ -14,6 +14,11 @@
 #pragma once
 #endif // _MSC_VER >= 1000
 
+#if defined(__INTEL_COMPILER)
+// warning #68: integer conversion resulted in a change of sign
+#pragma warning(disable: 68)
+#endif	// __INTEL_COMPILER
+
 // Structure used to get/set hyperlink colors
 typedef struct tagHYPERLINKCOLORS {
 	COLORREF	crLink;
@@ -133,5 +138,9 @@ protected:
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Developer Studio will insert additional declarations immediately before the previous line
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 68)
+#endif	// __INTEL_COMPILER
 
 #endif // !defined(AFX_HYPERLINK_H_04ET323B01_023500_0204251998_ENG_INCLUDED_)

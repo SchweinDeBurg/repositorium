@@ -22,6 +22,10 @@
 // The author accepts no liability if it causes any damage whatsoever.
 // It's free - so you get what you pay for.
 
+#if defined(__INTEL_COMPILER)
+// warning #1125: function is hidden by another
+#pragma warning(disable: 1125)
+#endif	// __INTEL_COMPILER
 
 // CColourPopup messages
 #define CPN_SELCHANGE        WM_USER + 1001        // Colour Picker Selection change
@@ -128,5 +132,9 @@ protected:
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Developer Studio will insert additional declarations immediately before the previous line.
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 1125)
+#endif	// __INTEL_COMPILER
 
 #endif // !defined(AFX_COLOURPOPUP_H__D0B75902_9830_11D1_9C0F_00A0243D1382__INCLUDED_)

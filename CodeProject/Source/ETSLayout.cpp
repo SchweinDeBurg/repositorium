@@ -39,36 +39,34 @@
 //
 //
 // HISTORY: 
-// 1998/05/1	Initial Release
-// 1998/05/13	Added ability to have a Pane with a control
-// 1998/05/13	Added better support for TabControls
-// 1998/05/14	automatically set Icon to IDR_MAINFRAME
-// 1998/05/19	no flicker on restoring position in OnInitialUpdate
-//				Changed procedure for load/save, see constructor
-// 1998/10/02	Added support for Maximum (tracking) size
-// 1998/10/02	Much improved handling regarding RELATIVE/GREEDY
+// 1998/05/01   Initial Release
+// 1998/05/13   Added ability to have a Pane with a control
+// 1998/05/13   Added better support for TabControls
+// 1998/05/14   automatically set Icon to IDR_MAINFRAME
+// 1998/05/19   no flicker on restoring position in OnInitialUpdate
+//              Changed procedure for load/save, see constructor
+// 1998/10/02   Added support for Maximum (tracking) size
+// 1998/10/02   Much improved handling regarding RELATIVE/GREEDY
 //              /w critical minimum size
-// 1998/10/02	turn on/off gripper at lower right corner
+// 1998/10/02	 turn on/off gripper at lower right corner
 // 1998/10/05   Support for user defined minimum size for items
 //              (was hardcoded 5 before)
 // 1998/10/07   Fix for FormViews
-// 1998/10/31	Support for SECDialogBar/CDialogBar
-// 1998/10/31	simplified interface
-// 1998/10/31	Advanced positioning options
-// 1998/10/31	Added paneNull for empty Pane (former: NULL)
-// 1998/11/20	Swapped ETSLayoutDialog constructor parameters
-// 1998/11/20	Added Pane::addItemSpaceBetween 
-//				[Leo Zelevinsky]
-// 1998/11/24	Added fixup for greedy panes
-// 1998/11/24	addItemSpaceBetween now subtracts 2*nDefaultBorder
-// 1998/11/24	addGrowing() added as a shortcut for a paneNull
-// 1998/11/24	simplified interface: no more PaneBase:: / Pane:: 
-//				needed
-// 1998/11/24	added FILL_* Modes
-// 1998/11/24	improved maximum size handling for greedy panes
-// 1998/11/25	Fixup of greedy panes caused infinite loop in some 
-//				cases
-// 1999/01/07	addItemSpaceLike() added
+// 1998/10/31   Support for SECDialogBar/CDialogBar
+// 1998/10/31   simplified interface
+// 1998/10/31   Advanced positioning options
+// 1998/10/31   Added paneNull for empty Pane (former: NULL)
+// 1998/11/20   Swapped ETSLayoutDialog constructor parameters
+// 1998/11/20   Added Pane::addItemSpaceBetween 
+//              [Leo Zelevinsky]
+// 1998/11/24   Added fixup for greedy panes
+// 1998/11/24   addItemSpaceBetween now subtracts 2*nDefaultBorder
+// 1998/11/24   addGrowing() added as a shortcut for a paneNull
+// 1998/11/24   simplified interface: no more PaneBase:: / Pane:: needed
+// 1998/11/24   added FILL_* Modes
+// 1998/11/24   improved maximum size handling for greedy panes
+// 1998/11/25   Fixup of greedy panes caused infinite loop in some cases
+// 1999/01/07   addItemSpaceLike() added
 // 1999/04/03   Fixed ETSLayoutFormView memory leak
 // 1999/04/07   Fixed ALIGN_xCENTER
 // 1999/04/08   New simple stream-interface added
@@ -147,9 +145,10 @@
 //              Fixed ETSLayoutMgr::Load() to avoid C4189 warning
 //              Fixed ETSLayoutPropertySheet::OnGetMinMaxInfo() for use with SGI STL
 //              [Elijah Zarezky]
-
-#define OEMRESOURCE
-#include	<windows.h>
+// 2005/01/22   Unnecessary remarks avoided while using Intel C++ 7.0
+//              Fixed Intel C++ 7.0 error #308 (member is inaccessible)
+//              in ETSLayoutDialog::OnInitDialog()
+//              [Elijah Zarezky]
 
 #include "stdafx.h"
 #include "ETSLayout.h"
@@ -157,6 +156,20 @@
 using namespace ETSLayout;
 #pragma warning(disable: 4097 4610 4510 4100)
 
+#if defined(__INTEL_COMPILER)
+// remark #171: invalid type conversion
+#pragma warning(disable: 171)
+// remark #177: variable was declared but never referenced
+#pragma warning(disable: 177)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #383: value copied to temporary, reference to temporary used
+#pragma warning(disable: 383)
+// remark #981: operands are evaluated in unspecified order
+#pragma warning(disable: 981)
+// remark #1418: external definition with no prior declaration
+#pragma warning(disable: 1418)
+#endif	// __INTEL_COMPILER
 
 #ifndef OBM_SIZE
 #define	OBM_SIZE		32766
@@ -1937,6 +1950,10 @@ CRect ETSLayoutDialog::GetRect()
 	return r; 
 }
 
+class ETSPseudoDocTemplate : public CDocTemplate
+{
+	friend class ETSLayoutDialog;
+};
 
 BOOL ETSLayoutDialog::OnInitDialog() 
 {
@@ -1952,12 +1969,6 @@ BOOL ETSLayoutDialog::OnInitDialog()
 #ifdef _AUTO_SET_ICON
 	POSITION pos = AfxGetApp()->GetFirstDocTemplatePosition();
 	if(pos) {
-
-		class ETSPseudoDocTemplate : public CDocTemplate
-		{
-			friend class ETSLayoutDialog;
-		};
-
 		ETSPseudoDocTemplate* pDocT = (ETSPseudoDocTemplate*) AfxGetApp()->GetNextDocTemplate(pos);
 		SetIcon( AfxGetApp()->LoadIcon(pDocT->m_nIDResource) ,FALSE);
 	}

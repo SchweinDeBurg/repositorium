@@ -9,6 +9,11 @@
 
 #include "PPDrawManager.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #271: trailing comma is nonstandard
+#pragma warning(disable: 271)
+#endif	// __INTEL_COMPILER
+
 /////////////////////////////////////////////////////////////////////////////
 // CPPHtmlDrawer window
 
@@ -428,5 +433,9 @@ protected:
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 271)
+#endif	// __INTEL_COMPILER
 
 #endif
