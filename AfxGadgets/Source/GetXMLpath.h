@@ -85,7 +85,7 @@ void CMenuXML_t<pfnGetXMLpath>::GetXMLpath(CString& strDest)
 #if defined(__HotKeysXML_h)
 
 template <PFN_GetXMLpath pfnGetXMLpath>
-class CHotKeysXML_t: public CMenuXML
+class CHotKeysXML_t: public CHotKeysXML
 {
 // construction/destruction
 public:
@@ -115,6 +115,41 @@ void CHotKeysXML_t<pfnGetXMLpath>::GetXMLpath(CString& strDest)
 }
 
 #endif	// __HotKeysXML_h
+
+#if defined(__StringsXML_h)
+
+template <PFN_GetXMLpath pfnGetXMLpath>
+class CStringsXML_t: public CStringsXML
+{
+// construction/destruction
+public:
+	CStringsXML_t(LPCTSTR pszStringsName);
+	virtual ~CStringsXML_t(void);
+
+// overridables
+protected:
+	virtual void GetXMLpath(CString& strDest);
+};
+
+template <PFN_GetXMLpath pfnGetXMLpath>
+inline CStringsXML_t<pfnGetXMLpath>::CStringsXML_t(LPCTSTR pszStringsName):
+CStringsXML(pszStringsName)
+{
+}
+
+template <PFN_GetXMLpath pfnGetXMLpath>
+CStringsXML_t<pfnGetXMLpath>::~CStringsXML_t(void)
+{
+}
+
+template <PFN_GetXMLpath pfnGetXMLpath>
+void CStringsXML_t<pfnGetXMLpath>::GetXMLpath(CString& strDest)
+{
+	ASSERT(pfnGetXMLpath != NULL);
+	(*pfnGetXMLpath)(strDest);
+}
+
+#endif	// __StringsXML_h
 
 #endif	// __GetXMLpath_h
 

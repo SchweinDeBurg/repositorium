@@ -1,4 +1,4 @@
-// XMLMenus application.
+// AfxGadgets library.
 // Copyright (c) 2005 by Elijah Zarezky,
 // All rights reserved.
 
