@@ -27,6 +27,17 @@ class CFindReplaceDialog;
 #include <../src/afximpl.h>
 #endif	// _MFC_VER
 
+#if defined(__INTEL_COMPILER)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #797: a class-qualified name is not allowed
+#pragma warning(disable: 797)
+// remark #981: operands are evaluated in unspecified order
+#pragma warning(disable: 981)
+// remark #1418: external definition with no prior declaration
+#pragma warning(disable: 1418)
+#endif	// __INTEL_COMPILER
+
 #if defined(_DEBUG)
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;

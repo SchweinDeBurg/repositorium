@@ -8,6 +8,19 @@
 #include "stdafx.h"
 #include "MemoryDC.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #981: operands are evaluated in unspecified order
+#pragma warning(disable: 981)
+#endif	// __INTEL_COMPILER
+
+#if defined(_DEBUG)
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#define new DEBUG_NEW
+#endif	// _DEBUG
+
 // object model
 IMPLEMENT_DYNAMIC(CMemoryDC, CDC)
 
