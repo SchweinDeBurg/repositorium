@@ -1,5 +1,5 @@
 /*
-Module : SMTP.H
+Module : PJNSMTP.H
 Purpose: Defines the interface for a MFC class encapsulation of the SMTP protocol
 Created: PJN / 22-05-1998
 
@@ -26,8 +26,8 @@ my explicit written consent.
 
 #pragma once
 
-#ifndef __SMTP_H__
-#define __SMTP_H__
+#ifndef __PJNSMTP_H__
+#define __PJNSMTP_H__
 
 #ifndef __AFXTEMPL_H__
 #pragma message("To avoid this message, put afxtempl.h in your PCH (usually stdafx.h)")
@@ -58,12 +58,12 @@ my explicit written consent.
 /////////////////////////////// Classes ///////////////////////////////////////
 
 //Simple Socket wrapper class
-class CSMTPSocket
+class CPJNSMTPSocket
 {
 public:
 //Constructors / Destructors
-  CSMTPSocket();
-  virtual ~CSMTPSocket();
+  CPJNSMTPSocket();
+  virtual ~CPJNSMTPSocket();
 
 //methods
   BOOL  Create();
@@ -80,15 +80,15 @@ protected:
 
                      
 //Encapsulation of an SMTP email address, used for recipients and in the From: field
-class CSMTPAddress
+class CPJNSMTPAddress
 {
 public: 
 //Constructors / Destructors
-  CSMTPAddress();
-  CSMTPAddress(const CSMTPAddress& address);
-	CSMTPAddress(const CString& sAddress);
-	CSMTPAddress(const CString& sFriendly, const CString& sAddress);
-	CSMTPAddress& operator=(const CSMTPAddress& r);
+  CPJNSMTPAddress();
+  CPJNSMTPAddress(const CPJNSMTPAddress& address);
+	CPJNSMTPAddress(const CString& sAddress);
+	CPJNSMTPAddress(const CString& sFriendly, const CString& sAddress);
+	CPJNSMTPAddress& operator=(const CPJNSMTPAddress& r);
 
 //Methods
   CString GetRegularFormat(BOOL bEncode, const CString& sCharset) const;
@@ -100,14 +100,14 @@ public:
 
 
 //Encapsulatation of an SMTP MIME body part
-class CSMTPBodyPart
+class CPJNSMTPBodyPart
 {
 public:
 //Constructors / Destructors
-  CSMTPBodyPart();
-  CSMTPBodyPart(const CSMTPBodyPart& bodyPart);
-  CSMTPBodyPart& operator=(const CSMTPBodyPart& bodyPart);
-  virtual ~CSMTPBodyPart();
+  CPJNSMTPBodyPart();
+  CPJNSMTPBodyPart(const CPJNSMTPBodyPart& bodyPart);
+  CPJNSMTPBodyPart& operator=(const CPJNSMTPBodyPart& bodyPart);
+  virtual ~CPJNSMTPBodyPart();
 
 //Accessors / Mutators
   BOOL    SetFilename(const CString& sFilename);
@@ -143,7 +143,7 @@ public:
   void FreeHeader(LPSTR& pszHeader);
   void FreeBody(LPSTR& pszBody);
   void FreeFooter(LPSTR& pszFooter);
-  CSMTPBodyPart* FindFirstBodyPart(const CString sContentType);
+  CPJNSMTPBodyPart* FindFirstBodyPart(const CString sContentType);
   void SetQuotedPrintable(BOOL bValue) { m_bQuotedPrintable = bValue; };
   BOOL GetQuotedPrintable() const { return m_bQuotedPrintable; };
   void SetBase64(BOOL bValue) { m_bBase64 = bValue; };
@@ -153,10 +153,10 @@ public:
 
 //Child Body part methods
 	int            GetNumberOfChildBodyParts() const;
-	int            AddChildBodyPart(CSMTPBodyPart& bodyPart);
+	int            AddChildBodyPart(CPJNSMTPBodyPart& bodyPart);
 	void           RemoveChildBodyPart(int nIndex);
-	CSMTPBodyPart* GetChildBodyPart(int nIndex);
-  CSMTPBodyPart* GetParentBodyPart();
+	CPJNSMTPBodyPart* GetChildBodyPart(int nIndex);
+  CPJNSMTPBodyPart* GetParentBodyPart();
 
 //Static methods
   static std::string QuotedPrintableEncode(const std::string& sText);
@@ -177,8 +177,8 @@ protected:
   CString      m_sContentLocation;                          //The relative URL for this body part (allows other body parts to refer to us via a relative URL)
   CString      m_sText;                                     //If using strings rather than file, then this is it!
   CBase64Coder m_Coder;	                                    //Base64 encoder / decoder instance for this body part
-  CArray<CSMTPBodyPart*, CSMTPBodyPart*&> m_ChildBodyParts; //Child body parts for this body part
-  CSMTPBodyPart* m_pParentBodyPart;                         //The parent body part for this body part
+  CArray<CPJNSMTPBodyPart*, CPJNSMTPBodyPart*&> m_ChildBodyParts; //Child body parts for this body part
+  CPJNSMTPBodyPart* m_pParentBodyPart;                         //The parent body part for this body part
   CString      m_sBoundary;                                 //String which is used as the body separator for all child mime parts
   BOOL         m_bQuotedPrintable;                          //Should the body text by quoted printable encoded
   BOOL         m_bBase64;                                   //Should the body be base64 encoded. Overrides "m_bQuotedPrintable"
@@ -188,7 +188,7 @@ protected:
   void FixSingleDotA(std::string& sBody);
   void FixSingleDotT(CString& sBody);
 
-  friend class CSMTPMessage;
+  friend class CPJNSMTPMessage;
   friend class CPJNSMTPConnection;
 };
 
@@ -196,7 +196,7 @@ protected:
 
 ////////////////// typedefs ////////////////////////////////////////////////////
 
-typedef CArray<CSMTPAddress, CSMTPAddress&> CSMTPAddressArray;
+typedef CArray<CPJNSMTPAddress, CPJNSMTPAddress&> CPJNSMTPAddressArray;
 
 
 
@@ -207,7 +207,7 @@ class CPJNSMTPConnection;
 
 
 //Encapsulation of an SMTP message
-class CSMTPMessage
+class CPJNSMTPMessage
 {
 public:
 	//Enums
@@ -215,24 +215,24 @@ public:
   enum PRIORITY { NO_PRIORITY, LOW_PRIORITY, NORMAL_PRIORITY, HIGH_PRIORITY };
 
 //Constructors / Destructors
-  CSMTPMessage();
-  CSMTPMessage(const CSMTPMessage& message);
-  CSMTPMessage& operator=(const CSMTPMessage& message);
-  virtual ~CSMTPMessage();
+  CPJNSMTPMessage();
+  CPJNSMTPMessage(const CPJNSMTPMessage& message);
+  CPJNSMTPMessage& operator=(const CPJNSMTPMessage& message);
+  virtual ~CPJNSMTPMessage();
 
 //Recipient support
 	int           GetNumberOfRecipients(RECIPIENT_TYPE RecipientType = TO) const;
-	int           AddRecipient(CSMTPAddress& recipient, RECIPIENT_TYPE RecipientType = TO);
+	int           AddRecipient(CPJNSMTPAddress& recipient, RECIPIENT_TYPE RecipientType = TO);
 	void          RemoveRecipient(int nIndex, RECIPIENT_TYPE RecipientType = TO);
-	CSMTPAddress* GetRecipient(int nIndex, RECIPIENT_TYPE RecipientType = TO);
+	CPJNSMTPAddress* GetRecipient(int nIndex, RECIPIENT_TYPE RecipientType = TO);
   BOOL          AddMultipleRecipients(const CString& sRecipients, RECIPIENT_TYPE RecipientType);
-  static int    ParseMultipleRecipients(const CString& sRecipients, CSMTPAddressArray& recipients);
+  static int    ParseMultipleRecipients(const CString& sRecipients, CPJNSMTPAddressArray& recipients);
 
 //Body Part support
   int            GetNumberOfBodyParts() const;
-	int            AddBodyPart(CSMTPBodyPart& bodyPart);
+	int            AddBodyPart(CPJNSMTPBodyPart& bodyPart);
 	void           RemoveBodyPart(int nIndex);
-	CSMTPBodyPart* GetBodyPart(int nIndex);
+	CPJNSMTPBodyPart* GetBodyPart(int nIndex);
   int            AddMultipleAttachments(const CString& sAttachments);
 
 //Misc methods
@@ -252,22 +252,22 @@ public:
   BOOL                 SaveToDisk(const CString& sFilename);
                                 
 //Data Members
-	CSMTPAddress  m_From;
+	CPJNSMTPAddress  m_From;
 	CString       m_sSubject;
   CString       m_sXMailer;
-	CSMTPAddress  m_ReplyTo;
-  CSMTPBodyPart m_RootPart;
+	CPJNSMTPAddress  m_ReplyTo;
+  CPJNSMTPBodyPart m_RootPart;
   PRIORITY      m_Priority;
 
 protected:
 //Methods
-  BOOL        WriteToDisk(CFile& file, CSMTPBodyPart* pBodyPart, BOOL bRoot);
+  BOOL        WriteToDisk(CFile& file, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
   CString     ConvertHTMLToPlainText(const CString& sHtml);
 
 //Member variables
-	CArray<CSMTPAddress*, CSMTPAddress*&> m_ToRecipients;
-	CArray<CSMTPAddress*, CSMTPAddress*&> m_CCRecipients;
-	CArray<CSMTPAddress*, CSMTPAddress*&> m_BCCRecipients;
+	CArray<CPJNSMTPAddress*, CPJNSMTPAddress*&> m_ToRecipients;
+	CArray<CPJNSMTPAddress*, CPJNSMTPAddress*&> m_CCRecipients;
+	CArray<CPJNSMTPAddress*, CPJNSMTPAddress*&> m_BCCRecipients;
   CStringArray                          m_CustomHeaders;
   BOOL                                  m_bMime;
 
@@ -282,12 +282,12 @@ class CPJNSMTPConnection
 public:
 
 //typedefs
-enum LoginMethod
+enum AuthenticationMethod
 {
-  NoLoginMethod=0,
-  CramMD5Method=1,
-  AuthLoginMethod=2,
-  LoginPlainMethod=3
+  AUTH_NONE     = 0,
+  AUTH_CRAM_MD5 = 1,
+  AUTH_LOGIN    = 2,
+  AUTH_PLAIN    = 3
 };
 
 enum ConnectToInternetResult
@@ -302,15 +302,15 @@ enum ConnectToInternetResult
   virtual ~CPJNSMTPConnection();
 
 //Methods
-  BOOL    Connect(LPCTSTR pszHostName, LoginMethod lm=NoLoginMethod, LPCTSTR pszUsername=NULL, LPCTSTR pszPassword=NULL, int nPort=25, LPCTSTR pszLocalBoundAddress=NULL);
+  BOOL    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername=NULL, LPCTSTR pszPassword=NULL, int nPort=25, LPCTSTR pszLocalBoundAddress=NULL);
   BOOL    Disconnect(BOOL bGracefully = TRUE);
   CString GetLastCommandResponse() const { return m_sLastCommandResponse; };
   int     GetLastCommandResponseCode() const { return m_nLastCommandResponseCode; };
   DWORD   GetTimeout() const { return m_dwTimeout; };
   void    SetTimeout(DWORD dwTimeout) { m_dwTimeout = dwTimeout; };
-	BOOL    SendMessage(CSMTPMessage& Message);
-  BOOL    SendMessage(const CString& sMessageOnFile, CSMTPAddressArray& Recipients, const CSMTPAddress& From, DWORD dwSendBufferSize = 4096);
-  BOOL    SendMessage(BYTE* pMessage, DWORD dwMessageSize, CSMTPAddressArray& Recipients, const CSMTPAddress& From, DWORD dwSendBufferSize = 4096);
+	BOOL    SendMessage(CPJNSMTPMessage& Message);
+  BOOL    SendMessage(const CString& sMessageOnFile, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize = 4096);
+  BOOL    SendMessage(BYTE* pMessage, DWORD dwMessageSize, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize = 4096);
   void    SetHeloHostname(const CString& sHostname) { m_sHeloHostname = sHostname; };
   CString GetHeloHostName() const { return m_sHeloHostname; };
 
@@ -330,22 +330,22 @@ protected:
 #ifndef CSMTP_NORSA
   void MD5Digest(unsigned char*text, int text_len, unsigned char*key, int key_len, unsigned char* digest);
 #endif
-  BOOL ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername, LPCTSTR pszPassword, LoginMethod lm);
+  BOOL ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername, LPCTSTR pszPassword, AuthenticationMethod am);
   BOOL ConnectSMTP(LPCTSTR pszLocalName);
 #ifndef CSMTP_NORSA
-	BOOL CramLogin(LPCTSTR pszUsername, LPCTSTR pszPassword);
+	BOOL AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword);
 #endif
 	BOOL  AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword);
-	BOOL  AuthLoginPlain(LPCTSTR pszUsername, LPCTSTR pszPassword);
-	BOOL  SendRCPTForRecipient(CSMTPAddress& recipient);
-  BOOL  SendBodyPart(CSMTPBodyPart* pBodyPart, BOOL bRoot);
+	BOOL  AuthPlain(LPCTSTR pszUsername, LPCTSTR pszPassword);
+	BOOL  SendRCPTForRecipient(CPJNSMTPAddress& recipient);
+  BOOL  SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
 	virtual BOOL ReadCommandResponse(int nExpectedCode);
 	virtual BOOL ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int nExpectedCode, LPSTR* ppszOverFlowBuffer, int nGrowBy=4096);
   void SafeCloseFile(CFile& File, const CString& sError);
   virtual void OnError(const CString& sError);
 
 //Member variables
-  CSMTPSocket m_SMTP;
+  CPJNSMTPSocket m_SMTP;
   BOOL        m_bConnected;
   CString     m_sLastCommandResponse;
   CString     m_sHeloHostname;
@@ -356,7 +356,7 @@ protected:
 //Provide for backward compatability be defining CSMTPConnection as a preprocessor define
 //for CPJNSMTPConnection if we are not using the ATL Server's "CSMTPConnection" class.
 #ifndef __ATLSMTPCONNECTION_H__
-typedef CPJNSMTPConnection CSMTPConnection;
+#define CSMTPConnection CPJNSMTPConnection
 #endif
 
-#endif //__SMTP_H__
+#endif //__PJNSMTP_H__

@@ -1,13 +1,13 @@
 <html>
 
 <head>
-<title>CPJNSMTPConnection v2.44</title>
+<title>CPJNSMTPConnection v2.46</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
-<p align="left"><font face="Arial" size="6"><img src="smtp.gif" width="39" height="38" alt="smtp.gif (295 bytes)"><strong>CPJNSMTPConnection 
-v2.44</strong></font></p>
+<p align="left"><font face="Arial" size="6"><img src="SMTP.GIF" width="39" height="38" alt="SMTP.GIF (295 bytes)"><strong>CPJNSMTPConnection
+v2.46</strong></font></p>
 
 <p><font face="Arial">Welcome to <strong>CPJNSMTPConnection</strong>, a freeware MFC class to
 support the SMTP protocol. SMTP for those not familiar with all the internet protocols is
@@ -149,7 +149,7 @@ distribution point for the source code.&nbsp;</font></li>
 <p><font face="Times New Roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 CPJNSMTPConnection smtp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.Connect(&quot;mail.someisp.com&quot;);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CSMTPMessage m;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPMessage m;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 m.AddRecipient(CSMTPAddress(&quot;pjna@naughter.com&quot;));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_From =
@@ -166,7 +166,7 @@ as a file attachment to me you would use the following code:</font></p>
 <p><font face="Times New Roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 CPJNSMTPConnection smtp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.Connect(&quot;mail.yourisp.com&quot;);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CSMTPMessage m;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPMessage m;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 m.AddRecipient(CSMTPAddress(&quot;pjna@naughter.com&quot;));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_From =
@@ -181,7 +181,7 @@ file!&quot;;<br>
 <ul>
   <li><font face="Arial">For further details on usage of the classes please
     consult the sample application which comes with the code, specifically check
-    out CMailDlg::OnSend in maildlg.cpp.</font></li>
+    out CPJNSMTPAppDlg::OnSend in maildlg.cpp.</font></li>
 </ul>
 
 <p>&nbsp;</p>
@@ -222,7 +222,7 @@ size="3"> 1998)</font></font></strong>
 <ul>
   <li><font face="Arial">The case where a line begins with a &quot;.&quot; but contains other
     text is now also catered for. See RFC821, Section 4.5.2 for further details.</font></li>
-  <li><font face="Arial">m_sBody in CSMTPMessage has now been made protected. Client
+  <li><font face="Arial">m_sBody in CPJNSMTPMessage has now been made protected. Client
     applications now should call AddBody instead. This ensures that FixSingleDot is only
     called once even if the same message is sent a number of times.</font></li>
   <li><font face="Arial">Fixed a number of problems with how the MIME boundaries were defined
@@ -301,7 +301,7 @@ size="3"> 1998)</font></font></strong>
 
 <p><font face="Arial" color="#000000" size="3"><strong>V1.34 (10 September 1999)</strong></font>
 <ul>
-  <li><font face="Arial">Improved CSMTPMessage::GetHeader to include mime field
+  <li><font face="Arial">Improved CPJNSMTPMessage::GetHeader to include mime field
     even when no attachments are included.</font></li>
 </ul>
 
@@ -416,12 +416,12 @@ size="3"> 1998)</font></font></strong>
   <li><font face="Arial">Fixed a bug in getLine, Thanks to Lev Evert for spotting this one.</font></li>
   <li><font face="Arial">Made the charset value a member of the message class instead of the connection class</font></li>
   <li><font face="Arial">Sample app now fully supports specifying the charset of the message</font></li>
-  <li><font face="Arial">Added a AddMultipleAttachments method to CSMTPMessage</font></li>
+  <li><font face="Arial">Added a AddMultipleAttachments method to CPJNSMTPMessage</font></li>
   <li><font face="Arial">Attachments can now be copied to each other via new methods in CSMTPAttachment</font></li>
   <li><font face="Arial">Message class now contains copies of the attachments instead of pointers to them</font></li>
   <li><font face="Arial">Sample app now allows multiple attachments to be added</font></li>
   <li><font face="Arial">Removed an unnecessary assert in QuotedPrintableEncode</font></li>
-  <li><font face="Arial">Added a Mime flag to the CSMTPMessage class which allows you to decide whether or not a message
+  <li><font face="Arial">Added a Mime flag to the CPJNSMTPMessage class which allows you to decide whether or not a message
     should be sent as MIME. Note that if you have attachments, then mime is assumed.</font></li>
   <li><font face="Arial">CSMTPAttachment class has now become CSMTPBodyPart in anticipation of full support for MIME and                          MHTML email support</font></li>
   <li><font face="Arial">Updated copyright message in source code and documentation</font></li>
@@ -435,7 +435,7 @@ size="3"> 1998)</font></font></strong>
 
 <p><font face="Arial" color="#000000" size="3"><strong>V2.11 (17 June 2001)</strong></font>
 <ul>
-  <li><font face="Arial"> Fixed a bug in CSMTPMessage::HeaderEncode where spaces were not being interpreted correctly. Thanks
+  <li><font face="Arial"> Fixed a bug in CPJNSMTPMessage::HeaderEncode where spaces were not being interpreted correctly. Thanks
     to Jim Alberico for spotting this.</font></li>
   <li><font face="Arial">Fixed 2 issues with ReadResponse both having to do with multi-line responses. Thanks to Chris Hanson                          for this update.</font></li>
 </ul>
@@ -460,7 +460,7 @@ size="3"> 1998)</font></font></strong>
 
 <p><font face="Arial" color="#000000" size="3"><strong>V2.14 (15 July 2001)</strong></font>
 <ul>
-  <li><font face="Arial">Improved the error handling in the function CSMTPMessage::AddMultipleAttachments. In addition the                          return value has been changed from BOOL to int.</font></li>
+  <li><font face="Arial">Improved the error handling in the function CPJNSMTPMessage::AddMultipleAttachments. In addition the                          return value has been changed from BOOL to int.</font></li>
 </ul>
 
 <p><font face="Arial" color="#000000" size="3"><strong>V2.15 (13 August 2001)</strong></font>
@@ -522,7 +522,8 @@ size="3"> 1998)</font></font></strong>
 
 <p><font face="Arial" color="#000000" size="3"><strong>V2.20 (10 August 2002)</strong></font>
 <ul>
-  <li><font face="Arial">Fixed a number of uncaught file exceptions in CSMTPBodyPart::GetBody, CSMTPMessage::SaveToDisk and 
+  <li><font face="Arial">Fixed a number of uncaught file exceptions in CSMTPBodyPart::GetBody,
+    CPJNSMTPMessage::SaveToDisk and 
   CPJNSMTPConnection::SendMessage. Thanks to John Allan Miller for reporting this problem.</font></li>
   <li><font face="Arial">The CPJNSMTPConnection::SendMessage version of the method which sends a file directly from disk, now fails if the
     file is empty.</font></li>
@@ -583,8 +584,8 @@ size="3"> 1998)</font></font></strong>
 
 <p><strong><font face="Arial">V2.26 (</font><font face="Arial" color="#000000" size="3">19 
 March 2003</font></strong><b><font color="#000000" size="3">)</font></b><ul>
-  <li><font face="Arial">Addition of copy constructors and operator= to 
-  CSMTPMessage class. Thanks to Alexey Vasilyev for this suggestion.</font></li>
+  <li><font face="Arial">Addition of copy constructors and operator= to CPJNSMTPMessage
+    class. Thanks to Alexey Vasilyev for this suggestion.</font></li>
 </ul>
 
 <p><strong><font face="Arial">V2.27 (</font><font face="Arial" color="#000000" size="3">13 
@@ -597,8 +598,7 @@ April 2003</font></strong><b><font color="#000000" size="3">)</font></b><ul>
 April 2003</font></strong><b><font color="#000000" size="3">)</font></b><ul>
   <li><font face="Arial">Enhanced the CSMTPAddress constructor to parse out the 
   email address and friendly name rather than assume it is an email address.</font></li>
-  <li><font face="Arial">Reworked the syntax of the 
-  CSMTPMessage::ParseMultipleRecipients method. Also now internally this 
+  <li><font face="Arial">Reworked the syntax of the CPJNSMTPMessage::ParseMultipleRecipients method. Also now internally this 
   function uses the new CSMTPAddress constructor.</font></li>
 </ul>
 
@@ -714,7 +714,7 @@ May 2003</font></strong><b><font color="#000000" size="3">)</font></b><ul>
 <p><strong><font face="Arial">V2.40 (18 February</font><font face="Arial" color="#000000" size="3"> 
 2004</font></strong><b><font color="#000000" size="3">)</font></b><ul>
   <li><font face="Arial">You can now optionally set the priority of an email 
-  thro the variable CSMTPMessage::m_Priority. Thanks to Edward Livingston for 
+  thro the variable CPJNSMTPMessage::m_Priority. Thanks to Edward Livingston for 
   suggesting this addition.</font></li>
 </ul>
 
@@ -751,8 +751,24 @@ May 2003</font></strong><b><font color="#000000" size="3">)</font></b><ul>
   CSMTPConnection::ReadResponse when certain multi line responses are received</font></li>
 </ul>
 
-<p>&nbsp;</p>
+<p><strong><font face="Arial">V2.45 (30 September </font><font face="Arial" color="#000000" size="3"> 
+2004</font></strong><b><font color="#000000" size="3">)</font></b>
+<ul>
+  <li><font face="Arial">Fixed a parsing issue in CPJNSMTPConnection::ReadResponse when multi line responses are read in as multiple packets.                          Thanks to Mark Smith for reporting this problem.</font></li>
+  <li><font face="Arial">Reworked the code which supports the various authentication mechanisms to support the correct terms. What was called                          "AUTH LOGIN PLAIN" support now more correctly uses the term "AUTH PLAIN". The names of the functions and enums have now                          also been reworked.</font></li>
+  <li><font face="Arial">Did a review of the sample app code provided with the class so that the name of the modules, projects, exe etc is now
+    "PJNSMTPApp". Also reworked the name of some helper classes as well as the module name which supports the main class.</font></li>
+  <li><font face="Arial">Reworked CPJNSMTPConnection::AuthLoginPlain (now called AuthPlain) to correctly handle the case where an invalid
+    response is received when expecting the username: response. Thanks to Mark Smith for reporting this problem.</font></li>
+</ul>
 
+<p><strong><font face="Arial">V2.46 (23 December </font><font face="Arial" color="#000000" size="3"> 
+2004</font></strong><b><font color="#000000" size="3">)</font></b>
+<ul>
+  <li><font face="Arial">"Name" field in Content-Type headers is now quoted just like the filename field. Thanks to Mark Smith for reporting this
+    issue in conjunction with the mail client Eudora.</font></li>
+</ul>
+<p>&nbsp;</p>
 <p>&nbsp;</p>
 
 <p>&nbsp;</p>
@@ -778,6 +794,6 @@ THE AUTHOR</strong></font></font></p>
 <p><font face="Arial" color="#000000" size="3">PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-7 June </font><font face="Arial">2004</font></p>
+23 December </font><font face="Arial">2004</font></p>
 </body>
 </html>

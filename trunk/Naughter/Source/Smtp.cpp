@@ -11,7 +11,7 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
          PJN / 27-06-1998 1) The case where a line begins with a "." but contains
                           other text is now also catered for. See RFC821, Section 4.5.2
                           for further details.
-                          2) m_sBody in CSMTPMessage has now been made protected.
+                          2) m_sBody in CPJNSMTPMessage has now been made protected.
                           Client applications now should call AddBody instead. This
                           ensures that FixSingleDot is only called once even if the 
                           same message is sent a number of times.
@@ -48,7 +48,7 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
          PJN / 25-03-99   1) Now sleeps for 250 ms instead of yielding the time slice. This helps 
                           reduce CPU usage when waiting for data to arrive in the socket
          PJN / 14-05-99   1) Fixed a bug with the way the code generates time zone fields in the Date headers.
-         PJN / 10-09-99   1) Improved CSMTPMessage::GetHeader to include mime field even when no attachments
+         PJN / 10-09-99   1) Improved CPJNSMTPMessage::GetHeader to include mime field even when no attachments
                           are included.
          PJN / 16-02-00   1) Fixed a problem which was occuring when code was compiled with VC++ 6.0.
          PJN / 19-03-00   1) Fixed a problem in GetHeader on Non-English Windows machines
@@ -57,7 +57,7 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
                           4) Updated the sample app to deliberately assert before connecting to the author's SMTP server.
          PJN / 28-03-00   1) Set the release mode timeout to be 10 seconds. 2 seconds was causing problems for slow dial
                           up networking connections.
-         PJN / 07-05-00   1) Addition of some ASSERT's in CSMTPSocket::Connect
+         PJN / 07-05-00   1) Addition of some ASSERT's in CPJNSMTPSocket::Connect
 		     PP  / 16-06-00   The following modifications were done by Puneet Pawaia
 						              1) Removed the base64 encoder from this file
 						              2) Added the base64 encoder/decoder implementation in a separate 
@@ -104,14 +104,14 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
                           4)  Fixed a bug in getLine, Thanks to Lev Evert for spotting this one.
                           5)  Made the charset value a member of the message class instead of the connection class
                           6)  Sample app now fully supports specifying the charset of the message
-                          7)  Added a AddMultipleAttachments method to CSMTPMessage
+                          7)  Added a AddMultipleAttachments method to CPJNSMTPMessage
                           8)  Attachments can now be copied to each other via new methods in CSMTPAttachment
                           9)  Message class now contains copies of the attachments instead of pointers to them
                           10) Sample app now allows multiple attachments to be added
                           11) Removed an unnecessary assert in QuotedPrintableEncode
-                          12) Added a Mime flag to the CSMTPMessage class which allows you to decide whether or not a message 
+                          12) Added a Mime flag to the CPJNSMTPMessage class which allows you to decide whether or not a message 
                           should be sent as MIME. Note that if you have attachments, then mime is assumed.
-                          13) CSMTPAttachment class has now become CSMTPBodyPart in anticipation of full support for MIME and 
+                          13) CSMTPAttachment class has now become CPJNSMTPBodyPart in anticipation of full support for MIME and 
                           MHTML email support
                           14) Updated copright message in source code and documentation
                           15) Fixed a bug in GetHeader related to _tsetlocale usage. Thanks to Sean McKinnon for spotting this
@@ -121,21 +121,21 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
                           17) Removed the need for SendLines function entirely.
                           18) Now fully supports HTML email (aka MHTML)
                           19) Updated copyright messages in code and in documentation
-         PJN / 17-06-2001 1) Fixed a bug in CSMTPMessage::HeaderEncode where spaces were not being interpreted correctly. Thanks
+         PJN / 17-06-2001 1) Fixed a bug in CPJNSMTPMessage::HeaderEncode where spaces were not being interpreted correctly. Thanks
                           to Jim Alberico for spotting this.
                           2) Fixed 2 issues with ReadResponse both having to do with multi-line responses. Thanks to Chris Hanson 
                           for this update.
          PJN / 25-06-2001 1) Code now links in Winsock and RPCRT40 automatically. This avoids client code having to specify it in 
                           their linker settings. Thanks to Malte and Phillip for spotting this issue.
                           2) Updated sample code in documentation. Thanks to Phillip for spotting this.
-                          3) Improved the code in CSMTPBodyPart::SetText to ensure lines are correctly wrapped. Thanks to 
+                          3) Improved the code in CPJNSMTPBodyPart::SetText to ensure lines are correctly wrapped. Thanks to 
                           Thomas Moser for this fix.
          PJN / 01-07-2001 1) Modified QuotedPrintableEncode to prevent the code to enter in an infinite loop due to a long word i.e. 
                           bigger than SMTP_MAXLINE, in this case, the word is breaked. Thanks to Manuel Gustavo Saraiva for this fix.
-                          2) Provided a new protected variable in CSMTPBodyPart called m_bQuotedPrintable to bypass the 
+                          2) Provided a new protected variable in CPJNSMTPBodyPart called m_bQuotedPrintable to bypass the 
                           QuotedPrintableEncode function in cases that we don't want that kind of correction. Again thanks to 
                           Manuel Gustavo Saraiva for this fix.
-         PJN / 15-07-2001 1) Improved the error handling in the function CSMTPMessage::AddMultipleAttachments. In addition the 
+         PJN / 15-07-2001 1) Improved the error handling in the function CPJNSMTPMessage::AddMultipleAttachments. In addition the 
                           return value has been changed from BOOL to int
          PJN / 11-08-2001 1) Fixed a bug in QuotedPrintableEncode which was wrapping encoding characters across multiple lines. 
                           Thanks to Roy He for spotting this.
@@ -145,7 +145,7 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
                           3) Provided support for progress notification and cancelling via the "OnSendProgress" virtual method.
          PJN / 29-09-2001 1) Fixed a bug in ReadResponse which occured when you disconnected via Dial-Up Networking
                           while a connection was active. This was originally spotted in my POP3 class.
-                          2) Fixed a problem in CSMTPBodyPart::GetHeader which was always including the "quoted-printable" even when 
+                          2) Fixed a problem in CPJNSMTPBodyPart::GetHeader which was always including the "quoted-printable" even when 
                           m_bQuotedPrintable for that body part was FALSE. Thanks to "jason" for spotting this.
          PJN / 12-10-2001 1) Fixed a problem where GetBody was reporting the size as 1 bigger than it should have been. Thanks
                           to "c f" for spotting this problem.
@@ -155,20 +155,20 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
          PJN / 11-01-2002 1) Now includes a method to send a message directly from memory. Thanks to Tom Allebrandi for this
                           suggestion.
                           2) Change function name "IsReadible" to be "IsReadable". I was never very good at English!.
-                          3) Fixed a bug in CSMTPBodyPart::QuotedPrintableEncode. If a line was exactly 76 characters long plus 
+                          3) Fixed a bug in CPJNSMTPBodyPart::QuotedPrintableEncode. If a line was exactly 76 characters long plus 
                           \r\n it produced an invalid soft linebreak of "\r=\r\n\n". Thanks to Gerald Egert for spotting this problem.
-         PJN / 29-07-2002 1) Fixed an access violation in CSMTPBodyPart::QuotedPrintableEncode. Thanks to Fergus Gallagher for 
+         PJN / 29-07-2002 1) Fixed an access violation in CPJNSMTPBodyPart::QuotedPrintableEncode. Thanks to Fergus Gallagher for 
                           spotting this problem.
                           2) Fixed a problem where in very rare cases, the QuotedPrintableEncode function produces a single dot in a 
                           line, when inserting the "=" to avoid the mail server's maxline limit. I inserted a call to FixSingleDot 
                           after calling the QuotedPrintableEncode function in GetBody. Thanks to Andreas Kappler for spotting this
                           problem.
-                          3) Fixed an issue in CSMTPBodyPart::GetHeader where to ensure some mail clients can correctly handle
+                          3) Fixed an issue in CPJNSMTPBodyPart::GetHeader where to ensure some mail clients can correctly handle
                           body parts and attachments which have a filename with spaces in it. Thanks to Andreas kappler for spotting
                           this problem.
                           4) QP encoding is now only used when you specify MIME. This fixes a bug as reported by David Terracino.
                           5) Removed now unused "API Reference" link in HTML file supported the code.
-         PJN / 10-08-2002 1) Fixed a number of uncaught file exceptions in CSMTPBodyPart::GetBody (Tick), CSMTPMessage::SaveToDisk (Tick), and 
+         PJN / 10-08-2002 1) Fixed a number of uncaught file exceptions in CPJNSMTPBodyPart::GetBody (Tick), CPJNSMTPMessage::SaveToDisk (Tick), and 
                           CPJNSMTPConnection::SendMessage. Thanks to John Allan Miller for reporting this problem.
                           2) The CPJNSMTPConnection::SendMessage version of the method which sends a file directly from disk, now fails if the
                           file is empty.
@@ -197,13 +197,13 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
          PJN / 07-02-2003 1) Addition of a "BOOL bGracefully" argument to Disconnect so that when an application cancels the sending of a 
                           message you can pass FALSE and close the socket without properly terminating the SMTP conversation. Thanks to
                           "nabocorp" for this nice addition.
-         PJN / 19-03-2003 1) Addition of copy constructors and operator= to CSMTPMessage class. Thanks to Alexey Vasilyev for this suggestion.
+         PJN / 19-03-2003 1) Addition of copy constructors and operator= to CPJNSMTPMessage class. Thanks to Alexey Vasilyev for this suggestion.
          PJN / 13-04-2003 1) Fixed a bug in the handling of EHLO responses. Thanks to "Senior" for the bug report and the fix.
-         PJN / 16-04-2003 1) Enhanced the CSMTPAddress constructor to parse out the email address and friendly name rather than assume
+         PJN / 16-04-2003 1) Enhanced the CPJNSMTPAddress constructor to parse out the email address and friendly name rather than assume
                           it is an email address.
-                          2) Reworked the syntax of the CSMTPMessage::ParseMultipleRecipients method. Also now internally this function
-                          uses the new CSMTPAddress constructor
-         PJN / 19-04-2003 1) Fixed a bug in the CSMTPAddress constructor where I was mixing up the friendly name in the "<>" separators,
+                          2) Reworked the syntax of the CPJNSMTPMessage::ParseMultipleRecipients method. Also now internally this function
+                          uses the new CPJNSMTPAddress constructor
+         PJN / 19-04-2003 1) Fixed a bug in the CPJNSMTPAddress constructor where I was mixing up the friendly name in the "<>" separators,
                           when it should have been the email address. 
          PJN / 04-05-2003 1) Fixed an issue where the class doesn't convert the mail body and subject to the wanted encoding but rather changes 
                           the encoding of the email in the email header. Since the issue of supporting several languages is a complicated one 
@@ -232,25 +232,36 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
          PJN / 11-12-2003 1) Fixed an unreferrenced variable in CPJNSMTPConnection::OnError as reported by VC.Net 2003
                           2) DEBUG_NEW macro is now only used on VC 6 and not on VC 7 or VC 7.1. This avoids a problem on these compilers
                           where a conflict exists between it and the STL header files. Thanks to Alex Evans for reporting this problem.
-         PJN / 31-01-2004 1) Fixed a bug in CSMTPBodyPart::GetBody where the size of the body part was incorrectly calculating the size if the
+         PJN / 31-01-2004 1) Fixed a bug in CPJNSMTPBodyPart::GetBody where the size of the body part was incorrectly calculating the size if the
                           encoded size was an exact multiple of 76. Thanks to Kurt Emanuelson and Enea Mansutti for reporting this problem.
-         PJN / 07-02-2004 1) Fixed a bug in CSMTPBodyPart::SetText where the code would enter an endless loop in the Replace function. It has now 
+         PJN / 07-02-2004 1) Fixed a bug in CPJNSMTPBodyPart::SetText where the code would enter an endless loop in the Replace function. It has now 
                           been replaced with CString::Replace. This now means that the class will not now compile on VC 5. Thanks to Johannes Philipp 
                           Grohs for reporting this problem.
                           2) Fixed a number of warnings when the code is compiled with VC.Net 2003. Thanks to Edward Livingston for reporting
                           this issue.
-         PJN / 18-02-2004 1) You can now optionally set the priority of an email thro the variable CSMTPMessage::m_Priority. Thanks to Edward 
+         PJN / 18-02-2004 1) You can now optionally set the priority of an email thro the variable CPJNSMTPMessage::m_Priority. Thanks to Edward 
                           Livingston for suggesting this addition.
          PJN / 04-03-2004 1) To avoid conflicts with the ATL Server class of the same name, namely "CSMTPConnection", the class is now called 
                           "CPJNSMTPConnection". To provide for easy upgrading of code, "CSMTPConnection" is now defined to be "CPJSMTPConnection" 
                           if the code detects that the ATL Server SMTP class is not included. Thanks to Ken Jones for reporting this issue.
-         PJN / 13-03-2004 1) Fixed a problem where the CSMTPBodyPart::m_dwMaxAttachmentSize value was not being copied in the CSMTPBodyPart::operator=
+         PJN / 13-03-2004 1) Fixed a problem where the CPJNSMTPBodyPart::m_dwMaxAttachmentSize value was not being copied in the CPJNSMTPBodyPart::operator=
                           method. Thanks to Gerald Egert for reporting this problem and the fix.
          PJN / 05-06-2004 1) Fixed a bug in CSMTPConnection::ReadResponse, where the wrong parameters were being null terminated. Thanks to "caowen" 
                           for this update.
                           2) Updated the CSMTPConnection::ReadResponse function to handle multiline responses in all cases. Thanks to Thomas Liebethal
                           for reporting this issue.
-         PJN / 07-06-2004 1) Fixed a potential buffer overflow issue in CSMTPConnection::ReadResponse when certain multi line responses are received
+         PJN / 07-06-2004 1) Fixed a potential buffer overflow issue in CPJNSMTPConnection::ReadResponse when certain multi line responses are received
+         PJN / 30-09-2004 1) Fixed a parsing issue in CPJNSMTPConnection::ReadResponse when multi line responses are read in as multiple packets. 
+                          Thanks to Mark Smith for reporting this problem.
+                          2) Reworked the code which supports the various authentication mechanisms to support the correct terms. What was called 
+                          "AUTH LOGIN PLAIN" support now more correctly uses the term "AUTH PLAIN". The names of the functions and enums have now 
+                          also been reworked.
+                          3) Did a review of the sample app code provided with the class so that the name of the modules, projects, exe etc is now
+                          "PJNSMTPApp". Also reworked the name of some helper classes as well as the module name which supports the main class.
+                          4) Reworked CPJNSMTPConnection::AuthLoginPlain (now called AuthPlain) to correctly handle the case where an invalid
+                          response is received when expecting the username: response. Thanks to Mark Smith for reporting this problem.
+         PJN / 23-12-2004 "Name" field in Content-Type headers is now quoted just like the filename field. Thanks to Mark Smith for reporting this
+                          issue in conjunction with the mail client Eudora.
 
 
 
@@ -276,7 +287,7 @@ my explicit written consent.
 //////////////// Includes ////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "smtp.h"
+#include "Smtp.h"
 
 #ifndef CSMTP_NORSA
 #include "glob-md5.h"
@@ -368,28 +379,27 @@ _WININET_DATA _WinInetData;
 
 
 
-CSMTPSocket::CSMTPSocket()
+CPJNSMTPSocket::CPJNSMTPSocket()
 {
   m_hSocket = INVALID_SOCKET; //default to an invalid scoket descriptor
 }
 
-CSMTPSocket::~CSMTPSocket()
+CPJNSMTPSocket::~CPJNSMTPSocket()
 {
   Close();
 }
 
-BOOL CSMTPSocket::Create()
+BOOL CPJNSMTPSocket::Create()
 {
   m_hSocket = socket(AF_INET, SOCK_STREAM, 0);
   return (m_hSocket != INVALID_SOCKET);
 }
 
-BOOL CSMTPSocket::Connect(LPCTSTR pszHostAddress, int nPort, LPCTSTR pszLocalBoundAddress)
+BOOL CPJNSMTPSocket::Connect(LPCTSTR pszHostAddress, int nPort, LPCTSTR pszLocalBoundAddress)
 {
   ASSERT(pszHostAddress); //Must have a valid host
   ASSERT(_tcslen(pszHostAddress)); //as above
 
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
   //must have been created first
@@ -457,19 +467,19 @@ BOOL CSMTPSocket::Connect(LPCTSTR pszHostAddress, int nPort, LPCTSTR pszLocalBou
 	return Connect((SOCKADDR*)&sockDestinationAddr, sizeof(sockDestinationAddr));
 }
 
-BOOL CSMTPSocket::Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen)
+BOOL CPJNSMTPSocket::Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen)
 {
 	return (connect(m_hSocket, lpSockAddr, nSockAddrLen) != SOCKET_ERROR);
 }
 
-BOOL CSMTPSocket::Send(LPCSTR pszBuf, int nBuf)
+BOOL CPJNSMTPSocket::Send(LPCSTR pszBuf, int nBuf)
 {
   //must have been created first
   ASSERT(m_hSocket != INVALID_SOCKET);
   return (send(m_hSocket, pszBuf, nBuf, 0) != SOCKET_ERROR);
 }
 
-int CSMTPSocket::Receive(LPSTR pszBuf, int nBuf)
+int CPJNSMTPSocket::Receive(LPSTR pszBuf, int nBuf)
 {
   //must have been created first
   ASSERT(m_hSocket != INVALID_SOCKET);
@@ -477,7 +487,7 @@ int CSMTPSocket::Receive(LPSTR pszBuf, int nBuf)
   return recv(m_hSocket, pszBuf, nBuf, 0); 
 }
 
-void CSMTPSocket::Close()
+void CPJNSMTPSocket::Close()
 {
 	if (m_hSocket != INVALID_SOCKET)
 	{
@@ -486,7 +496,7 @@ void CSMTPSocket::Close()
 	}
 }
 
-BOOL CSMTPSocket::IsReadable(BOOL& bReadible, DWORD dwTimeout)
+BOOL CPJNSMTPSocket::IsReadable(BOOL& bReadible, DWORD dwTimeout)
 {
   timeval timeout;
   timeout.tv_sec = dwTimeout/1000;
@@ -509,16 +519,16 @@ BOOL CSMTPSocket::IsReadable(BOOL& bReadible, DWORD dwTimeout)
 
 
 
-CSMTPAddress::CSMTPAddress() 
+CPJNSMTPAddress::CPJNSMTPAddress() 
 {
 }
 
-CSMTPAddress::CSMTPAddress(const CSMTPAddress& address)
+CPJNSMTPAddress::CPJNSMTPAddress(const CPJNSMTPAddress& address)
 {
   *this = address;
 }
 
-CSMTPAddress::CSMTPAddress(const CString& sAddress)
+CPJNSMTPAddress::CPJNSMTPAddress(const CString& sAddress)
 {
   //The local variable which we will operate on
   CString sTemp(sAddress);
@@ -541,20 +551,20 @@ CSMTPAddress::CSMTPAddress(const CString& sAddress)
 	}
 }
 
-CSMTPAddress::CSMTPAddress(const CString& sFriendly, const CString& sAddress) : 
+CPJNSMTPAddress::CPJNSMTPAddress(const CString& sFriendly, const CString& sAddress) : 
               m_sFriendlyName(sFriendly), m_sEmailAddress(sAddress) 
 {
   ASSERT(m_sEmailAddress.GetLength()); //An empty address is not allowed
 }
 
-CSMTPAddress& CSMTPAddress::operator=(const CSMTPAddress& r) 
+CPJNSMTPAddress& CPJNSMTPAddress::operator=(const CPJNSMTPAddress& r) 
 { 
   m_sFriendlyName = r.m_sFriendlyName; 
 	m_sEmailAddress = r.m_sEmailAddress; 
 	return *this;
 }
 
-CString CSMTPAddress::GetRegularFormat(BOOL bEncode, const CString& sCharset) const
+CString CPJNSMTPAddress::GetRegularFormat(BOOL bEncode, const CString& sCharset) const
 {
   ASSERT(m_sEmailAddress.GetLength()); //Email Address must be valid
 
@@ -565,7 +575,7 @@ CString CSMTPAddress::GetRegularFormat(BOOL bEncode, const CString& sCharset) co
   {
     if (bEncode)
     {
-      std::string sAsciiEncodedFriendly = CSMTPBodyPart::HeaderEncode(m_sFriendlyName, sCharset);
+      std::string sAsciiEncodedFriendly = CPJNSMTPBodyPart::HeaderEncode(m_sFriendlyName, sCharset);
       CString sEncodedFriendly(sAsciiEncodedFriendly.c_str());
       sAddress.Format(_T("%s <%s>"), sEncodedFriendly, m_sEmailAddress);
     }
@@ -579,7 +589,7 @@ CString CSMTPAddress::GetRegularFormat(BOOL bEncode, const CString& sCharset) co
 
 
 
-CSMTPBodyPart::CSMTPBodyPart() : m_sCharset(_T("iso-8859-1")), m_sContentType(_T("text/plain")), m_pParentBodyPart(NULL), m_bQuotedPrintable(TRUE), m_bBase64(FALSE), m_dwMaxAttachmentSize(52428800)
+CPJNSMTPBodyPart::CPJNSMTPBodyPart() : m_sCharset(_T("iso-8859-1")), m_sContentType(_T("text/plain")), m_pParentBodyPart(NULL), m_bQuotedPrintable(TRUE), m_bBase64(FALSE), m_dwMaxAttachmentSize(52428800)
 {
   //Automatically generate a unique boundary separator for this body part by creating a guid
   UUID uuid;
@@ -599,12 +609,12 @@ CSMTPBodyPart::CSMTPBodyPart() : m_sCharset(_T("iso-8859-1")), m_sContentType(_T
   RpcStringFree(&pszGuid);
 }
 
-CSMTPBodyPart::CSMTPBodyPart(const CSMTPBodyPart& bodyPart)
+CPJNSMTPBodyPart::CPJNSMTPBodyPart(const CPJNSMTPBodyPart& bodyPart)
 {
   *this = bodyPart;
 }
 
-CSMTPBodyPart::~CSMTPBodyPart()
+CPJNSMTPBodyPart::~CPJNSMTPBodyPart()
 {
   //Free up the array memory
   for (int i=0; i<m_ChildBodyParts.GetSize(); i++)
@@ -612,7 +622,7 @@ CSMTPBodyPart::~CSMTPBodyPart()
   m_ChildBodyParts.RemoveAll();
 }
 
-CSMTPBodyPart& CSMTPBodyPart::operator=(const CSMTPBodyPart& bodyPart)
+CPJNSMTPBodyPart& CPJNSMTPBodyPart::operator=(const CPJNSMTPBodyPart& bodyPart)
 {
   m_sFilename           = bodyPart.m_sFilename;
   m_sText               = bodyPart.m_sText;       
@@ -635,7 +645,7 @@ CSMTPBodyPart& CSMTPBodyPart::operator=(const CSMTPBodyPart& bodyPart)
   //Now copy over the new object
   for (i=0; i<bodyPart.m_ChildBodyParts.GetSize(); i++)
   {
-    CSMTPBodyPart* pBodyPart = new CSMTPBodyPart(*bodyPart.m_ChildBodyParts.GetAt(i));
+    CPJNSMTPBodyPart* pBodyPart = new CPJNSMTPBodyPart(*bodyPart.m_ChildBodyParts.GetAt(i));
     pBodyPart->m_pParentBodyPart  = this;
     m_ChildBodyParts.Add(pBodyPart);
   }
@@ -643,7 +653,7 @@ CSMTPBodyPart& CSMTPBodyPart::operator=(const CSMTPBodyPart& bodyPart)
   return *this;
 }
 
-BOOL CSMTPBodyPart::SetFilename(const CString& sFilename)
+BOOL CPJNSMTPBodyPart::SetFilename(const CString& sFilename)
 {
   ASSERT(sFilename.GetLength());  //Empty Filename !
 
@@ -651,7 +661,7 @@ BOOL CSMTPBodyPart::SetFilename(const CString& sFilename)
   CFileStatus fs;
   if (!CFile::GetStatus(sFilename, fs))
   {
-    TRACE(_T("CSMTPBodyPart::SetFilename, Failed to get the status for file %s, probably does not exist\n"), m_sFilename);
+    TRACE(_T("CPJNSMTPBodyPart::SetFilename, Failed to get the status for file %s, probably does not exist\n"), m_sFilename);
     return FALSE;
   }
 
@@ -670,7 +680,7 @@ BOOL CSMTPBodyPart::SetFilename(const CString& sFilename)
   return TRUE;
 }
 
-void CSMTPBodyPart::SetText(const CString& sText)
+void CPJNSMTPBodyPart::SetText(const CString& sText)
 {
   m_sText = sText;
 
@@ -686,29 +696,29 @@ void CSMTPBodyPart::SetText(const CString& sText)
   m_sContentType = _T("text/plain");
 }
 
-void CSMTPBodyPart::SetContentID(const CString& sContentID) 
+void CPJNSMTPBodyPart::SetContentID(const CString& sContentID) 
 {
   m_sContentLocation.Empty();
   m_sContentID = sContentID; 
 }
 
-CString CSMTPBodyPart::GetContentID() const 
+CString CPJNSMTPBodyPart::GetContentID() const 
 { 
   return m_sContentID; 
 }
 
-void CSMTPBodyPart::SetContentLocation(const CString& sContentLocation) 
+void CPJNSMTPBodyPart::SetContentLocation(const CString& sContentLocation) 
 { 
   m_sContentID.Empty();
   m_sContentLocation = sContentLocation; 
 }
 
-CString CSMTPBodyPart::GetContentLocation() const 
+CString CPJNSMTPBodyPart::GetContentLocation() const 
 { 
   return m_sContentLocation; 
 }
 
-char CSMTPBodyPart::HexDigit(int nDigit)
+char CPJNSMTPBodyPart::HexDigit(int nDigit)
 {
   if (nDigit < 10)
     return (char) (nDigit + '0');
@@ -717,7 +727,7 @@ char CSMTPBodyPart::HexDigit(int nDigit)
 }
 
 //Converts text to its Quoted printable equivalent according to RFC 2045
-std::string CSMTPBodyPart::QuotedPrintableEncode(const std::string& sText)
+std::string CPJNSMTPBodyPart::QuotedPrintableEncode(const std::string& sText)
 {
   USES_CONVERSION;
 
@@ -787,7 +797,7 @@ std::string CSMTPBodyPart::QuotedPrintableEncode(const std::string& sText)
   return sOut;
 }
 
-int CSMTPBodyPart::ConvertToUTF8(const CString& in, std::string &out)
+int CPJNSMTPBodyPart::ConvertToUTF8(const CString& in, std::string &out)
 {
 	USES_CONVERSION;
 
@@ -812,7 +822,7 @@ int CSMTPBodyPart::ConvertToUTF8(const CString& in, std::string &out)
 //Copy of the function AtlUnicodeToUTF8 in ATL Server. This allows the 
 //SMTP class to operate on OS'es which do not support conversion to UTF-8 via
 //WideCharToMultiByte
-int CSMTPBodyPart::UnicodeToUTF8(LPCWSTR wszSrc, int nSrc, LPSTR szDest, int nDest)
+int CPJNSMTPBodyPart::UnicodeToUTF8(LPCWSTR wszSrc, int nSrc, LPSTR szDest, int nDest)
 {
 	LPCWSTR pwszSrc = wszSrc;
 	int     nU8 = 0;                // # of UTF8 chars generated
@@ -1000,16 +1010,16 @@ int CSMTPBodyPart::UnicodeToUTF8(LPCWSTR wszSrc, int nSrc, LPSTR szDest, int nDe
 	return nU8;
 }
 
-void CSMTPBodyPart::FreeHeader(LPSTR& pszHeader)
+void CPJNSMTPBodyPart::FreeHeader(LPSTR& pszHeader)
 {
-  //The CSMTPBodyPart class always allocates the memory for the header
+  //The CPJNSMTPBodyPart class always allocates the memory for the header
   delete [] pszHeader;
   pszHeader = NULL;
 }
 
-void CSMTPBodyPart::FreeBody(LPSTR& pszBody)
+void CPJNSMTPBodyPart::FreeBody(LPSTR& pszBody)
 {
-  //The CSMTPBodyPart class allocates the memory for the body if it was not base 64 encoded
+  //The CPJNSMTPBodyPart class allocates the memory for the body if it was not base 64 encoded
   if (pszBody)
   {
     delete [] pszBody;
@@ -1017,16 +1027,15 @@ void CSMTPBodyPart::FreeBody(LPSTR& pszBody)
   }
 }
 
-void CSMTPBodyPart::FreeFooter(LPSTR& pszFooter)
+void CPJNSMTPBodyPart::FreeFooter(LPSTR& pszFooter)
 {
-  //The CSMTPBodyPart class always allocates the memory for the footer
+  //The CPJNSMTPBodyPart class always allocates the memory for the footer
   delete [] pszFooter;
   pszFooter = NULL;
 }
 
-BOOL CSMTPBodyPart::GetHeader(LPSTR& pszHeader, int& nHeaderSize)
+BOOL CPJNSMTPBodyPart::GetHeader(LPSTR& pszHeader, int& nHeaderSize)
 {
-  //For correct operation of the T2A macro, see MFC Tech Note 59
   USES_CONVERSION;
 
   //Assume the worst
@@ -1038,10 +1047,10 @@ BOOL CSMTPBodyPart::GetHeader(LPSTR& pszHeader, int& nHeaderSize)
 
     //Form the header to go along with this body part
     if (GetNumberOfChildBodyParts())
-		  sHeader.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; charset=%s; name=%s; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
+		  sHeader.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; charset=%s; name=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
                      m_pParentBodyPart->m_sBoundary, m_sContentType, m_sCharset, m_sTitle, m_sBoundary, m_sTitle);
     else
-		  sHeader.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; charset=%s; name=%s\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
+		  sHeader.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; charset=%s; name=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
                      m_pParentBodyPart->m_sBoundary, m_sContentType, m_sCharset, m_sTitle, m_sTitle);
 
     bSuccess = TRUE;
@@ -1108,7 +1117,7 @@ BOOL CSMTPBodyPart::GetHeader(LPSTR& pszHeader, int& nHeaderSize)
   return bSuccess;
 }
 
-BOOL CSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
+BOOL CPJNSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
 {
 	//if the body is text we must convert is to the declared encoding, this could create some
 	//problems since windows conversion functions (such as WideCharToMultiByte) uses UINT
@@ -1116,7 +1125,6 @@ BOOL CSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
 	//For now we will add the support for UTF-8, to support other encodings we have to 
 	//implement a mapping between the "internet name" of the encoding and its LCID(UINT)
 	
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
   //Assume the worst
@@ -1138,7 +1146,7 @@ BOOL CSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
         ULONGLONG ullSize = infile.GetLength();
         if (ullSize > m_dwMaxAttachmentSize)
         {
-          TRACE(_T("CSMTPBodyPart::GetBody, File is greater than max attachment size, %s\n"), m_sFilename);
+          TRACE(_T("CPJNSMTPBodyPart::GetBody, File is greater than max attachment size, %s\n"), m_sFilename);
           return FALSE;
         }
         else
@@ -1151,7 +1159,7 @@ BOOL CSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
       catch (CFileException* pEx)
       {
         pEx->Delete();
-        TRACE(_T("CSMTPBodyPart::GetBody, Failed to get the length of the file, %s\n"), m_sFilename);
+        TRACE(_T("CPJNSMTPBodyPart::GetBody, Failed to get the length of the file, %s\n"), m_sFilename);
       }
 
       if (dwSize)
@@ -1167,7 +1175,7 @@ BOOL CSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
         {
           bSuccess = FALSE;
           pEx->Delete();
-          TRACE(_T("CSMTPBodyPart::GetBody, Failed to read the body parts file contents, %s\n"), m_sFilename);
+          TRACE(_T("CPJNSMTPBodyPart::GetBody, Failed to read the body parts file contents, %s\n"), m_sFilename);
         }
 
         if (bSuccess)
@@ -1218,11 +1226,11 @@ BOOL CSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
       catch(CFileException* pEx)
       {
         pEx->Delete();
-        TRACE(_T("CSMTPBodyPart::GetBody, A file exception occured while closing the file when saving the message to file %s\n"), m_sFilename);
+        TRACE(_T("CPJNSMTPBodyPart::GetBody, A file exception occured while closing the file when saving the message to file %s\n"), m_sFilename);
       }
     }
     else
-      TRACE(_T("CSMTPBodyPart::GetBody, No bodypart body text or filename specified!\n"));
+      TRACE(_T("CPJNSMTPBodyPart::GetBody, No bodypart body text or filename specified!\n"));
   }
   else
   {
@@ -1299,9 +1307,8 @@ BOOL CSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
   return bSuccess;
 }
 
-BOOL CSMTPBodyPart::GetFooter(LPSTR& pszFooter, int& nFooterSize)
+BOOL CPJNSMTPBodyPart::GetFooter(LPSTR& pszFooter, int& nFooterSize)
 {
-  //For correct operation of the T2A macro, see MFC Tech Note 59
   USES_CONVERSION;
 
   //Form the MIME footer
@@ -1314,38 +1321,38 @@ BOOL CSMTPBodyPart::GetFooter(LPSTR& pszFooter, int& nFooterSize)
   return TRUE;  
 }
 
-int CSMTPBodyPart::GetNumberOfChildBodyParts() const
+int CPJNSMTPBodyPart::GetNumberOfChildBodyParts() const
 {
   return m_ChildBodyParts.GetSize();
 }
 
-int CSMTPBodyPart::AddChildBodyPart(CSMTPBodyPart& bodyPart)
+int CPJNSMTPBodyPart::AddChildBodyPart(CPJNSMTPBodyPart& bodyPart)
 {
-  CSMTPBodyPart* pNewBodyPart = new CSMTPBodyPart(bodyPart);
+  CPJNSMTPBodyPart* pNewBodyPart = new CPJNSMTPBodyPart(bodyPart);
   pNewBodyPart->m_pParentBodyPart = this;
   ASSERT(m_sContentType.GetLength()); //Did you forget to call SetContentType
 
   return m_ChildBodyParts.Add(pNewBodyPart);
 }
 
-void CSMTPBodyPart::RemoveChildBodyPart(int nIndex)
+void CPJNSMTPBodyPart::RemoveChildBodyPart(int nIndex)
 {
-  CSMTPBodyPart* pBodyPart = m_ChildBodyParts.GetAt(nIndex);
+  CPJNSMTPBodyPart* pBodyPart = m_ChildBodyParts.GetAt(nIndex);
   delete pBodyPart;
   m_ChildBodyParts.RemoveAt(nIndex);
 }
 
-CSMTPBodyPart* CSMTPBodyPart::GetChildBodyPart(int nIndex)
+CPJNSMTPBodyPart* CPJNSMTPBodyPart::GetChildBodyPart(int nIndex)
 {
   return m_ChildBodyParts.GetAt(nIndex);
 }
 
-CSMTPBodyPart* CSMTPBodyPart::GetParentBodyPart()
+CPJNSMTPBodyPart* CPJNSMTPBodyPart::GetParentBodyPart()
 {
   return m_pParentBodyPart;
 }
 
-void CSMTPBodyPart::FixSingleDotT(CString& sBody)
+void CPJNSMTPBodyPart::FixSingleDotT(CString& sBody)
 {
   int nFind = sBody.Find(_T("\n."));
   if (nFind != -1)
@@ -1357,7 +1364,7 @@ void CSMTPBodyPart::FixSingleDotT(CString& sBody)
   }
 }
 
-void CSMTPBodyPart::FixSingleDotA(std::string& sBody)
+void CPJNSMTPBodyPart::FixSingleDotA(std::string& sBody)
 {
   int nFind = sBody.find("\n.");
   if (nFind != -1)
@@ -1369,11 +1376,11 @@ void CSMTPBodyPart::FixSingleDotA(std::string& sBody)
   }
 }
 
-CSMTPBodyPart* CSMTPBodyPart::FindFirstBodyPart(const CString sContentType)
+CPJNSMTPBodyPart* CPJNSMTPBodyPart::FindFirstBodyPart(const CString sContentType)
 {
   for (int i=0; i<m_ChildBodyParts.GetSize(); i++)
   {
-    CSMTPBodyPart* pBodyPart = m_ChildBodyParts.GetAt(i);
+    CPJNSMTPBodyPart* pBodyPart = m_ChildBodyParts.GetAt(i);
     if (pBodyPart->m_sContentType == sContentType)
       return pBodyPart;
   }
@@ -1381,7 +1388,7 @@ CSMTPBodyPart* CSMTPBodyPart::FindFirstBodyPart(const CString sContentType)
 }
 
 //Converts header text to its encoded form according to RFC 2047
-std::string CSMTPBodyPart::QEncode(LPCSTR sText, LPCSTR sCharset)
+std::string CPJNSMTPBodyPart::QEncode(LPCSTR sText, LPCSTR sCharset)
 {
   USES_CONVERSION;
 
@@ -1410,8 +1417,8 @@ std::string CSMTPBodyPart::QEncode(LPCSTR sText, LPCSTR sCharset)
       {
         //Must Quote the text
         sOut += _T('=');
-        sOut += CSMTPBodyPart::HexDigit((c & 0xF0) >> 4);
-        sOut += CSMTPBodyPart::HexDigit(c & 0x0F);
+        sOut += CPJNSMTPBodyPart::HexDigit((c & 0xF0) >> 4);
+        sOut += CPJNSMTPBodyPart::HexDigit(c & 0x0F);
       }
       else
         sOut += c;
@@ -1427,14 +1434,14 @@ std::string CSMTPBodyPart::QEncode(LPCSTR sText, LPCSTR sCharset)
   return sOut;
 }
 
-std::string CSMTPBodyPart::HeaderEncode(const CString& sText, const CString& sCharset)
+std::string CPJNSMTPBodyPart::HeaderEncode(const CString& sText, const CString& sCharset)
 {
 	USES_CONVERSION;
 
   //Do the UTF8 conversion if necessary
 	std::string sLocalText;
   if (sCharset.CompareNoCase(_T("UTF-8")) == 0)
-	  CSMTPBodyPart::ConvertToUTF8(sText, sLocalText);
+	  CPJNSMTPBodyPart::ConvertToUTF8(sText, sLocalText);
   else
     sLocalText = T2CA(sText);
 
@@ -1466,16 +1473,16 @@ std::string CSMTPBodyPart::HeaderEncode(const CString& sText, const CString& sCh
 
 
 
-CSMTPMessage::CSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.42")), m_bMime(FALSE), m_Priority(NO_PRIORITY)
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.46")), m_bMime(FALSE), m_Priority(NO_PRIORITY)
 {
 }
 
-CSMTPMessage::CSMTPMessage(const CSMTPMessage& message)
+CPJNSMTPMessage::CPJNSMTPMessage(const CPJNSMTPMessage& message)
 {
   *this = message;
 }
 
-CSMTPMessage& CSMTPMessage::operator=(const CSMTPMessage& message) 
+CPJNSMTPMessage& CPJNSMTPMessage::operator=(const CPJNSMTPMessage& message) 
 { 
   m_From     = message.m_From;
   m_sSubject = message.m_sSubject;
@@ -1492,7 +1499,7 @@ CSMTPMessage& CSMTPMessage::operator=(const CSMTPMessage& message)
   //Now copy over the new object
   for (i=0; i<message.m_ToRecipients.GetSize(); i++)
   {
-    CSMTPAddress* pAddress = new CSMTPAddress(*message.m_ToRecipients.GetAt(i));
+    CPJNSMTPAddress* pAddress = new CPJNSMTPAddress(*message.m_ToRecipients.GetAt(i));
     m_ToRecipients.Add(pAddress);
   }
 
@@ -1504,7 +1511,7 @@ CSMTPMessage& CSMTPMessage::operator=(const CSMTPMessage& message)
   //Now copy over the new object
   for (i=0; i<message.m_CCRecipients.GetSize(); i++)
   {
-    CSMTPAddress* pAddress = new CSMTPAddress(*message.m_CCRecipients.GetAt(i));
+    CPJNSMTPAddress* pAddress = new CPJNSMTPAddress(*message.m_CCRecipients.GetAt(i));
     m_CCRecipients.Add(pAddress);
   }
 
@@ -1516,7 +1523,7 @@ CSMTPMessage& CSMTPMessage::operator=(const CSMTPMessage& message)
   //Now copy over the new object
   for (i=0; i<message.m_BCCRecipients.GetSize(); i++)
   {
-    CSMTPAddress* pAddress = new CSMTPAddress(*message.m_BCCRecipients.GetAt(i));
+    CPJNSMTPAddress* pAddress = new CPJNSMTPAddress(*message.m_BCCRecipients.GetAt(i));
     m_BCCRecipients.Add(pAddress);
   }
 
@@ -1526,7 +1533,7 @@ CSMTPMessage& CSMTPMessage::operator=(const CSMTPMessage& message)
 	return *this;
 }
 
-CSMTPMessage::~CSMTPMessage()
+CPJNSMTPMessage::~CPJNSMTPMessage()
 {
   //Free up the array memory
   for (int i=0; i<m_ToRecipients.GetSize(); i++)
@@ -1542,17 +1549,17 @@ CSMTPMessage::~CSMTPMessage()
   m_BCCRecipients.RemoveAll();
 }
 
-void CSMTPMessage::SetCharset(const CString& sCharset)
+void CPJNSMTPMessage::SetCharset(const CString& sCharset)
 {
   m_RootPart.SetCharset(sCharset);
 }
 
-CString CSMTPMessage::GetCharset() const
+CString CPJNSMTPMessage::GetCharset() const
 {
   return m_RootPart.GetCharset();
 }
 
-int CSMTPMessage::GetNumberOfRecipients(RECIPIENT_TYPE RecipientType) const
+int CPJNSMTPMessage::GetNumberOfRecipients(RECIPIENT_TYPE RecipientType) const
 {
   int nSize = 0;
   switch (RecipientType)
@@ -1566,11 +1573,11 @@ int CSMTPMessage::GetNumberOfRecipients(RECIPIENT_TYPE RecipientType) const
 	return nSize;
 }
 
-int CSMTPMessage::AddRecipient(CSMTPAddress& recipient, RECIPIENT_TYPE RecipientType)
+int CPJNSMTPMessage::AddRecipient(CPJNSMTPAddress& recipient, RECIPIENT_TYPE RecipientType)
 {
   int nIndex = -1;
 
-  CSMTPAddress* pNewRecipient = new CSMTPAddress(recipient);
+  CPJNSMTPAddress* pNewRecipient = new CPJNSMTPAddress(recipient);
 
   switch (RecipientType)
   {
@@ -1583,7 +1590,7 @@ int CSMTPMessage::AddRecipient(CSMTPAddress& recipient, RECIPIENT_TYPE Recipient
   return nIndex;
 }
 
-void CSMTPMessage::RemoveRecipient(int nIndex, RECIPIENT_TYPE RecipientType)
+void CPJNSMTPMessage::RemoveRecipient(int nIndex, RECIPIENT_TYPE RecipientType)
 {
   switch (RecipientType)
   {
@@ -1613,59 +1620,59 @@ void CSMTPMessage::RemoveRecipient(int nIndex, RECIPIENT_TYPE RecipientType)
   }
 }
 
-CSMTPAddress* CSMTPMessage::GetRecipient(int nIndex, RECIPIENT_TYPE RecipientType)
+CPJNSMTPAddress* CPJNSMTPMessage::GetRecipient(int nIndex, RECIPIENT_TYPE RecipientType)
 {
   switch (RecipientType)
   {
     case TO:  return m_ToRecipients.GetAt(nIndex);   break;
     case CC:  return m_CCRecipients.GetAt(nIndex);   break;
     case BCC: return m_BCCRecipients.GetAt(nIndex);  break;
-    default: ASSERT(FALSE); return (CSMTPAddress*) NULL; break;
+    default: ASSERT(FALSE); return (CPJNSMTPAddress*) NULL; break;
   }
 }
 
-int CSMTPMessage::AddBodyPart(CSMTPBodyPart& Attachment)
+int CPJNSMTPMessage::AddBodyPart(CPJNSMTPBodyPart& Attachment)
 {
   SetMime(TRUE); //Body parts implies Mime
 	return m_RootPart.AddChildBodyPart(Attachment);
 }
 
-void CSMTPMessage::RemoveBodyPart(int nIndex)
+void CPJNSMTPMessage::RemoveBodyPart(int nIndex)
 {
 	m_RootPart.RemoveChildBodyPart(nIndex);
 }
 
-CSMTPBodyPart* CSMTPMessage::GetBodyPart(int nIndex)
+CPJNSMTPBodyPart* CPJNSMTPMessage::GetBodyPart(int nIndex)
 {
 	return m_RootPart.GetChildBodyPart(nIndex);
 }
 
-int CSMTPMessage::GetNumberOfBodyParts() const
+int CPJNSMTPMessage::GetNumberOfBodyParts() const
 {
 	return m_RootPart.GetNumberOfChildBodyParts();
 }
 
-void CSMTPMessage::AddCustomHeader(const CString& sHeader)
+void CPJNSMTPMessage::AddCustomHeader(const CString& sHeader)
 {
   m_CustomHeaders.Add(sHeader);
 }
 
-CString CSMTPMessage::GetCustomHeader(int nIndex)
+CString CPJNSMTPMessage::GetCustomHeader(int nIndex)
 {
   return m_CustomHeaders.GetAt(nIndex);
 }
 
-int CSMTPMessage::GetNumberOfCustomHeaders() const
+int CPJNSMTPMessage::GetNumberOfCustomHeaders() const
 {
   return m_CustomHeaders.GetSize();
 }
 
-void CSMTPMessage::RemoveCustomHeader(int nIndex)
+void CPJNSMTPMessage::RemoveCustomHeader(int nIndex)
 {
   m_CustomHeaders.RemoveAt(nIndex);
 }
 
-std::string CSMTPMessage::getHeader()
+std::string CPJNSMTPMessage::getHeader()
 {
 	USES_CONVERSION;
 
@@ -1696,7 +1703,7 @@ std::string CSMTPMessage::getHeader()
   CString sTo;
   for (int i=0; i<GetNumberOfRecipients(TO); i++)
   {
-    CSMTPAddress* pRecipient = GetRecipient(i, TO);
+    CPJNSMTPAddress* pRecipient = GetRecipient(i, TO);
     if (i)
  		  sTo += _T(",");
     ASSERT(pRecipient);
@@ -1707,7 +1714,7 @@ std::string CSMTPMessage::getHeader()
   CString sCc;
   for (i=0; i<GetNumberOfRecipients(CC); i++)
   {
-    CSMTPAddress* pRecipient = GetRecipient(i, CC);
+    CPJNSMTPAddress* pRecipient = GetRecipient(i, CC);
     if (i)
  		  sCc += _T(",");
     ASSERT(pRecipient);
@@ -1736,7 +1743,7 @@ std::string CSMTPMessage::getHeader()
 
   //add the subject
   suBuf += "Subject: ";
-  suBuf += CSMTPBodyPart::HeaderEncode(m_sSubject, sCharset);
+  suBuf += CPJNSMTPBodyPart::HeaderEncode(m_sSubject, sCharset);
 
   //X-Mailer fields
   if (m_sXMailer.GetLength())
@@ -1837,7 +1844,7 @@ std::string CSMTPMessage::getHeader()
 	return suBuf;
 }
 
-int CSMTPMessage::ParseMultipleRecipients(const CString& sRecipients, CSMTPAddressArray& recipients)
+int CPJNSMTPMessage::ParseMultipleRecipients(const CString& sRecipients, CPJNSMTPAddressArray& recipients)
 {
 	ASSERT(sRecipients.GetLength()); //An empty string is now allowed
 
@@ -1858,8 +1865,8 @@ int CSMTPMessage::ParseMultipleRecipients(const CString& sRecipients, CSMTPAddre
       sTemp.TrimLeft();
       sTemp.TrimRight();
 
-      //Let the CSMTPAddress constructor do its work
-      CSMTPAddress To(sTemp);
+      //Let the CPJNSMTPAddress constructor do its work
+      CPJNSMTPAddress To(sTemp);
       if (To.m_sEmailAddress.GetLength())
         recipients.Add(To);
 
@@ -1875,22 +1882,22 @@ int CSMTPMessage::ParseMultipleRecipients(const CString& sRecipients, CSMTPAddre
 	return recipients.GetSize();
 }
 
-BOOL CSMTPMessage::AddMultipleRecipients(const CString& sRecipients, RECIPIENT_TYPE RecipientType)
+BOOL CPJNSMTPMessage::AddMultipleRecipients(const CString& sRecipients, RECIPIENT_TYPE RecipientType)
 {
-  CSMTPAddressArray Recipients;
+  CPJNSMTPAddressArray Recipients;
   int nRecipients = ParseMultipleRecipients(sRecipients, Recipients);
 
   //Add them to the correct array
   for (int i=0; i<nRecipients; i++)
   {
-    CSMTPAddress& address = Recipients.ElementAt(i);
+    CPJNSMTPAddress& address = Recipients.ElementAt(i);
     AddRecipient(address, RecipientType);
   }
 
 	return (nRecipients != 0);
 }
 
-int CSMTPMessage::AddMultipleAttachments(const CString& sAttachments)
+int CPJNSMTPMessage::AddMultipleAttachments(const CString& sAttachments)
 {
   //Assume the best
   BOOL nAttachments = 0;
@@ -1910,7 +1917,7 @@ int CSMTPMessage::AddMultipleAttachments(const CString& sAttachments)
       CString sTemp(&buf[start]);
 
       //Finally add the new attachment to the array of attachments
-      CSMTPBodyPart attachment;
+      CPJNSMTPBodyPart attachment;
 			sTemp.TrimRight();
 			sTemp.TrimLeft();
       if (sTemp.GetLength())
@@ -1934,7 +1941,7 @@ int CSMTPMessage::AddMultipleAttachments(const CString& sAttachments)
 	return nAttachments;
 }
 
-CString CSMTPMessage::ConvertHTMLToPlainText(const CString& sHtml)
+CString CPJNSMTPMessage::ConvertHTMLToPlainText(const CString& sHtml)
 {
   //First pull out whats within the body tags
   CString sRet(sHtml);
@@ -1972,17 +1979,17 @@ CString CSMTPMessage::ConvertHTMLToPlainText(const CString& sHtml)
   return sRet;
 }
 
-void CSMTPMessage::AddTextBody(const CString& sBody)
+void CPJNSMTPMessage::AddTextBody(const CString& sBody)
 {
   if (m_bMime)
   {
-    CSMTPBodyPart* pTextBodyPart = m_RootPart.FindFirstBodyPart(_T("text/plain"));
+    CPJNSMTPBodyPart* pTextBodyPart = m_RootPart.FindFirstBodyPart(_T("text/plain"));
     if (pTextBodyPart)
       pTextBodyPart->SetText(sBody);
     else
     {
       //Create a text body part
-      CSMTPBodyPart oldRoot = m_RootPart;
+      CPJNSMTPBodyPart oldRoot = m_RootPart;
 
       //Reset the root body part to be multipart/related
       m_RootPart.SetCharset(oldRoot.GetCharset());
@@ -1990,7 +1997,7 @@ void CSMTPMessage::AddTextBody(const CString& sBody)
       m_RootPart.SetContentType(_T("multipart/mixed"));
 
       //Just add the text/plain body part (directly to the root)
-      CSMTPBodyPart text;
+      CPJNSMTPBodyPart text;
       text.SetCharset(oldRoot.GetCharset());
       text.SetText(sBody);
 
@@ -2005,17 +2012,17 @@ void CSMTPMessage::AddTextBody(const CString& sBody)
   }
 }
 
-void CSMTPMessage::AddHTMLBody(const CString& sBody, const CString& sContentBase)
+void CPJNSMTPMessage::AddHTMLBody(const CString& sBody, const CString& sContentBase)
 {
   ASSERT(m_bMime); //You forgot to make this a MIME message using SetMime(TRUE)
 
-  CSMTPBodyPart* pHtmlBodyPart = m_RootPart.FindFirstBodyPart(_T("text/html"));
+  CPJNSMTPBodyPart* pHtmlBodyPart = m_RootPart.FindFirstBodyPart(_T("text/html"));
   if (pHtmlBodyPart)
     pHtmlBodyPart->SetText(sBody);
   else
   {
     //Remember some of the old root settings before we write over it
-    CSMTPBodyPart oldRoot = m_RootPart;
+    CPJNSMTPBodyPart oldRoot = m_RootPart;
 
     //Reset the root body part to be multipart/related
     m_RootPart.SetCharset(oldRoot.GetCharset());
@@ -2023,7 +2030,7 @@ void CSMTPMessage::AddHTMLBody(const CString& sBody, const CString& sContentBase
     m_RootPart.SetContentType(_T("multipart/related"));
 
     //Just add the text/html body part (directly to the root)
-    CSMTPBodyPart html;
+    CPJNSMTPBodyPart html;
     html.SetCharset(oldRoot.GetCharset());
     html.SetText(sBody);
     html.SetContentType(_T("text/html"));
@@ -2034,25 +2041,25 @@ void CSMTPMessage::AddHTMLBody(const CString& sBody, const CString& sContentBase
   }
 }
 
-CString CSMTPMessage::GetHTMLBody()
+CString CPJNSMTPMessage::GetHTMLBody()
 {
   CString sRet;
 
   if (m_RootPart.GetNumberOfChildBodyParts())
   {
-    CSMTPBodyPart* pHtml = m_RootPart.GetChildBodyPart(0);
+    CPJNSMTPBodyPart* pHtml = m_RootPart.GetChildBodyPart(0);
     if (pHtml->GetContentType() == _T("text/html"))
       sRet = pHtml->GetText();
   }
   return sRet;
 }
 
-CString CSMTPMessage::GetTextBody()
+CString CPJNSMTPMessage::GetTextBody()
 {
   return m_RootPart.GetText();
 }
 
-void CSMTPMessage::SetMime(BOOL bMime)
+void CPJNSMTPMessage::SetMime(BOOL bMime)
 {
   if (m_bMime != bMime)
   {
@@ -2067,7 +2074,7 @@ void CSMTPMessage::SetMime(BOOL bMime)
       CString sText = GetTextBody();
 
       //Remember some of the old root settings before we write over it
-      CSMTPBodyPart oldRoot = m_RootPart;
+      CPJNSMTPBodyPart oldRoot = m_RootPart;
 
       //Reset the root body part to be multipart/mixed
       m_RootPart.SetCharset(oldRoot.GetCharset());
@@ -2081,9 +2088,8 @@ void CSMTPMessage::SetMime(BOOL bMime)
   }
 }
 
-BOOL CSMTPMessage::SaveToDisk(const CString& sFilename)
+BOOL CPJNSMTPMessage::SaveToDisk(const CString& sFilename)
 {
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
   //Assume the worst
@@ -2126,7 +2132,7 @@ BOOL CSMTPMessage::SaveToDisk(const CString& sFilename)
     }
     catch(CFileException* pEx)
     {
-      TRACE(_T("CSMTPMessage::SaveToDisk, A file exception occured while trying to save the message to file %s\n"), sFilename);
+      TRACE(_T("CPJNSMTPMessage::SaveToDisk, A file exception occured while trying to save the message to file %s\n"), sFilename);
       pEx->Delete();
     }
 
@@ -2137,7 +2143,7 @@ BOOL CSMTPMessage::SaveToDisk(const CString& sFilename)
     }
     catch(CFileException* pEx)
     {
-      TRACE(_T("CSMTPMessage::SaveToDisk, A file exception occured while closing the file when saving the message to file %s\n"), sFilename);
+      TRACE(_T("CPJNSMTPMessage::SaveToDisk, A file exception occured while closing the file when saving the message to file %s\n"), sFilename);
       pEx->Delete();
     }
   }
@@ -2145,7 +2151,7 @@ BOOL CSMTPMessage::SaveToDisk(const CString& sFilename)
   return bSuccess;
 }
 
-BOOL CSMTPMessage::WriteToDisk(CFile& file, CSMTPBodyPart* pBodyPart, BOOL bRoot)
+BOOL CPJNSMTPMessage::WriteToDisk(CFile& file, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
 {
   //Assume success
   BOOL bSuccess = TRUE;
@@ -2157,7 +2163,7 @@ BOOL CSMTPMessage::WriteToDisk(CFile& file, CSMTPBodyPart* pBodyPart, BOOL bRoot
     int nHeaderSize = 0;
     if (!pBodyPart->GetHeader(pszHeader, nHeaderSize))
     {
-		  TRACE(_T("CSMTPMessage::WriteToDisk, Failed in call to send body parts header, GetLastError returns: %d\n"), GetLastError());
+		  TRACE(_T("CPJNSMTPMessage::WriteToDisk, Failed in call to send body parts header, GetLastError returns: %d\n"), GetLastError());
 		  return FALSE;
     }
 		file.Write(pszHeader, nHeaderSize);
@@ -2171,7 +2177,7 @@ BOOL CSMTPMessage::WriteToDisk(CFile& file, CSMTPBodyPart* pBodyPart, BOOL bRoot
   int nBodySize = 0;
   if (!pBodyPart->GetBody(pszBody, nBodySize))
   {
-		TRACE(_T("CSMTPMessage::WriteToDisk, Failed in call to send body parts body, GetLastError returns: %d\n"), GetLastError());
+		TRACE(_T("CPJNSMTPMessage::WriteToDisk, Failed in call to send body parts body, GetLastError returns: %d\n"), GetLastError());
 		return FALSE;
   }
 	file.Write(pszBody, nBodySize);
@@ -2183,7 +2189,7 @@ BOOL CSMTPMessage::WriteToDisk(CFile& file, CSMTPBodyPart* pBodyPart, BOOL bRoot
   int nChildBodyParts = pBodyPart->GetNumberOfChildBodyParts();
   for (int i=0; i<nChildBodyParts && bSuccess; i++)
   {
-    CSMTPBodyPart* pChildBodyPart = pBodyPart->GetChildBodyPart(i);
+    CPJNSMTPBodyPart* pChildBodyPart = pBodyPart->GetChildBodyPart(i);
     bSuccess = WriteToDisk(file, pChildBodyPart, FALSE);
   }
 
@@ -2195,7 +2201,7 @@ BOOL CSMTPMessage::WriteToDisk(CFile& file, CSMTPBodyPart* pBodyPart, BOOL bRoot
     int nFooterSize = 0;
     if (!pBodyPart->GetFooter(pszFooter, nFooterSize))
     {
-		  TRACE(_T("CSMTPMessage::WriteToDisk, Failed in call to send body parts footer, GetLastError returns: %d\n"), GetLastError());
+		  TRACE(_T("CPJNSMTPMessage::WriteToDisk, Failed in call to send body parts footer, GetLastError returns: %d\n"), GetLastError());
 		  return FALSE;
     }
 
@@ -2241,9 +2247,8 @@ void CPJNSMTPConnection::OnError(const CString& /*sError*/)
 #endif
 }
 
-BOOL CPJNSMTPConnection::Connect(LPCTSTR pszHostName, LoginMethod lm, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort, LPCTSTR pszLocalBoundAddress)
+BOOL CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort, LPCTSTR pszLocalBoundAddress)
 {
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
 	//Validate our parameters
@@ -2301,8 +2306,8 @@ BOOL CPJNSMTPConnection::Connect(LPCTSTR pszHostName, LoginMethod lm, LPCTSTR ps
 
 	  // negotiate Extended SMTP connection
 	  BOOL bConnectOk = FALSE;
-	  if (lm != NoLoginMethod)
-		  bConnectOk = ConnectESMTP(m_sHeloHostname, pszUsername, pszPassword, lm);
+	  if (am != AUTH_NONE)
+		  bConnectOk = ConnectESMTP(m_sHeloHostname, pszUsername, pszPassword, am);
     else
 		  bConnectOk = ConnectSMTP(m_sHeloHostname);
 
@@ -2319,14 +2324,13 @@ BOOL CPJNSMTPConnection::Connect(LPCTSTR pszHostName, LoginMethod lm, LPCTSTR ps
 }
 
 // This function connects using one of the Extended SMTP methods i.e. EHLO
-BOOL CPJNSMTPConnection::ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername, LPCTSTR pszPassword, LoginMethod lm)
+BOOL CPJNSMTPConnection::ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername, LPCTSTR pszPassword, AuthenticationMethod am)
 {
   //Validate our parameters
   ASSERT(pszUsername);
   ASSERT(pszPassword);
-  ASSERT(lm != NoLoginMethod);
+  ASSERT(am != AUTH_NONE);
 
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
   //Send the EHLO command
@@ -2348,23 +2352,23 @@ BOOL CPJNSMTPConnection::ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername,
 	}
 
 	BOOL bLoginOk = FALSE;
-  switch (lm)
+  switch (am)
   {
     #ifndef CSMTP_NORSA
-    case CramMD5Method:
+    case AUTH_CRAM_MD5:
     {
-      bLoginOk = CramLogin(pszUsername, pszPassword); // CRAM-MD5 authentication
+      bLoginOk = AuthCramMD5(pszUsername, pszPassword); // CRAM-MD5 authentication
       break;
     }
     #endif
-    case AuthLoginMethod:
+    case AUTH_LOGIN:
     {
       bLoginOk = AuthLogin(pszUsername, pszPassword); // LOGIN authentication
       break;
     }
-    case LoginPlainMethod:
+    case AUTH_PLAIN:
     {
-      bLoginOk = AuthLoginPlain(pszUsername, pszPassword); // PLAIN authentication
+      bLoginOk = AuthPlain(pszUsername, pszPassword); // PLAIN authentication
       break;
     }
     default:
@@ -2380,7 +2384,6 @@ BOOL CPJNSMTPConnection::ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername,
 // This function connects using standard SMTP connection i.e. HELO
 BOOL CPJNSMTPConnection::ConnectSMTP(LPCTSTR pszLocalName)
 {
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
   //Send the HELO command
@@ -2438,7 +2441,7 @@ BOOL CPJNSMTPConnection::Disconnect(BOOL bGracefully)
   return bSuccess;
 }
 
-BOOL CPJNSMTPConnection::SendBodyPart(CSMTPBodyPart* pBodyPart, BOOL bRoot)
+BOOL CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
 {
   //we must convert all the body parts to the declared encoding.
     
@@ -2494,7 +2497,7 @@ BOOL CPJNSMTPConnection::SendBodyPart(CSMTPBodyPart* pBodyPart, BOOL bRoot)
   int nChildBodyParts = pBodyPart->GetNumberOfChildBodyParts();
   for (int i=0; i<nChildBodyParts && bSuccess; i++)
   {
-    CSMTPBodyPart* pChildBodyPart = pBodyPart->GetChildBodyPart(i);
+    CPJNSMTPBodyPart* pChildBodyPart = pBodyPart->GetChildBodyPart(i);
     bSuccess = SendBodyPart(pChildBodyPart, FALSE);
   }
 
@@ -2525,9 +2528,8 @@ BOOL CPJNSMTPConnection::SendBodyPart(CSMTPBodyPart* pBodyPart, BOOL bRoot)
   return bSuccess;
 }
 
-BOOL CPJNSMTPConnection::SendMessage(CSMTPMessage& Message)
+BOOL CPJNSMTPConnection::SendMessage(CPJNSMTPMessage& Message)
 {
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
 	//paramater validity checking
@@ -2558,32 +2560,32 @@ BOOL CPJNSMTPConnection::SendMessage(CSMTPMessage& Message)
   //Send the RCPT command, one for each recipient (includes the TO, CC & BCC recipients)
 
   //Must be sending to someone
-  ASSERT(Message.GetNumberOfRecipients(CSMTPMessage::TO) + 
-         Message.GetNumberOfRecipients(CSMTPMessage::CC) + 
-         Message.GetNumberOfRecipients(CSMTPMessage::BCC));
+  ASSERT(Message.GetNumberOfRecipients(CPJNSMTPMessage::TO) + 
+         Message.GetNumberOfRecipients(CPJNSMTPMessage::CC) + 
+         Message.GetNumberOfRecipients(CPJNSMTPMessage::BCC));
 
   //First the "To" recipients
-  for (int i=0; i<Message.GetNumberOfRecipients(CSMTPMessage::TO); i++)
+  for (int i=0; i<Message.GetNumberOfRecipients(CPJNSMTPMessage::TO); i++)
   {
-    CSMTPAddress* pRecipient = Message.GetRecipient(i, CSMTPMessage::TO);
+    CPJNSMTPAddress* pRecipient = Message.GetRecipient(i, CPJNSMTPMessage::TO);
     ASSERT(pRecipient);
     if (!SendRCPTForRecipient(*pRecipient))
       return FALSE;
   }
 
   //Then the "CC" recipients
-  for (i=0; i<Message.GetNumberOfRecipients(CSMTPMessage::CC); i++)
+  for (i=0; i<Message.GetNumberOfRecipients(CPJNSMTPMessage::CC); i++)
   {
-    CSMTPAddress* pRecipient = Message.GetRecipient(i, CSMTPMessage::CC);
+    CPJNSMTPAddress* pRecipient = Message.GetRecipient(i, CPJNSMTPMessage::CC);
     ASSERT(pRecipient);
     if (!SendRCPTForRecipient(*pRecipient))
       return FALSE;
   }
 
   //Then the "BCC" recipients
-  for (i=0; i<Message.GetNumberOfRecipients(CSMTPMessage::BCC); i++)
+  for (i=0; i<Message.GetNumberOfRecipients(CPJNSMTPMessage::BCC); i++)
   {
-    CSMTPAddress* pRecipient = Message.GetRecipient(i, CSMTPMessage::BCC);
+    CPJNSMTPAddress* pRecipient = Message.GetRecipient(i, CPJNSMTPMessage::BCC);
     ASSERT(pRecipient);
     if (!SendRCPTForRecipient(*pRecipient))
       return FALSE;
@@ -2687,9 +2689,8 @@ BOOL CPJNSMTPConnection::OnSendProgress(DWORD /*dwCurrentBytes*/, DWORD /*dwTota
   return TRUE; 
 }
 
-BOOL CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CSMTPAddressArray& Recipients, const CSMTPAddress& From, DWORD dwSendBufferSize)
+BOOL CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize)
 {
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
 	//paramater validity checking
@@ -2724,7 +2725,7 @@ BOOL CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CSMTPAd
   //Send the RCPT command, one for each recipient
   for (int i=0; i<nRecipients; i++)
   {
-    CSMTPAddress& recipient = Recipients.ElementAt(i);
+    CPJNSMTPAddress& recipient = Recipients.ElementAt(i);
     if (!SendRCPTForRecipient(recipient))
       return FALSE;
   }
@@ -2822,9 +2823,8 @@ void CPJNSMTPConnection::SafeCloseFile(CFile& file, const CString& sError)
   }
 }
 
-BOOL CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CSMTPAddressArray& Recipients, const CSMTPAddress& From, DWORD dwSendBufferSize)
+BOOL CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize)
 {
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
 	//paramater validity checking
@@ -2898,7 +2898,7 @@ BOOL CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CSMTPAddress
       //Send the RCPT command, one for each recipient
       for (int i=0; i<nRecipients; i++)
       {
-        CSMTPAddress& recipient = Recipients.ElementAt(i);
+        CPJNSMTPAddress& recipient = Recipients.ElementAt(i);
         if (!SendRCPTForRecipient(recipient))
         {
           SafeCloseFile(mailFile, sTraceMsgOnClose);
@@ -3031,9 +3031,8 @@ BOOL CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CSMTPAddress
   }
 }
 
-BOOL CPJNSMTPConnection::SendRCPTForRecipient(CSMTPAddress& recipient)
+BOOL CPJNSMTPConnection::SendRCPTForRecipient(CPJNSMTPAddress& recipient)
 {
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
 	ASSERT(recipient.m_sEmailAddress.GetLength()); //must have an email address for this recipient
@@ -3167,14 +3166,15 @@ BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int 
     {
       //Find the start of the last line we have received
       int i = nReceived - 6;
-      while ((i >= 0) && (nStartOfLastLine == 0))
+      int nOldStartOfLastLine = nStartOfLastLine;
+      while ((i >= 0) && (nOldStartOfLastLine == nStartOfLastLine))
       {
         if ((pszRecvBuffer[i] == '\r') && (pszRecvBuffer[i+1] == '\n'))
           nStartOfLastLine = i + 2;
 
         i--;
       }
-			bFoundFullResponse = (pszRecvBuffer[nStartOfLastLine + 3] == ' ');
+		  bFoundFullResponse = (pszRecvBuffer[nStartOfLastLine + 3] == ' ');
     }
 	}
 
@@ -3202,7 +3202,6 @@ BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int 
 //This function negotiates AUTH LOGIN
 BOOL CPJNSMTPConnection::AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 {
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
   //Send the AUTH LOGIN command
@@ -3211,7 +3210,7 @@ BOOL CPJNSMTPConnection::AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 	int nCmdLength = strlen(pszData);
 	if (!m_SMTP.Send(pszData, nCmdLength))
 	{
-	  OnError(_T("CPJNSMTPConnection::AuthLogin, An unexpected error occurred while sending the AUTH command"));
+	  OnError(_T("CPJNSMTPConnection::AuthLogin, An unexpected error occurred while sending the AUTH LOGIN command"));
 	  return FALSE;
 	}
 
@@ -3219,7 +3218,7 @@ BOOL CPJNSMTPConnection::AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 	CBase64Coder Coder;
 	if (!ReadCommandResponse(334))
   {
-	  OnError(_T("CPJNSMTPConnection::AuthLogin, Server does not support AUTH LOGIN"));
+	  OnError(_T("CPJNSMTPConnection::AuthLogin, Server does not support AUTH LOGIN authentication"));
 	  return FALSE;
   }
 	else
@@ -3243,7 +3242,7 @@ BOOL CPJNSMTPConnection::AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 		}
 		else
 		{
-			OnError(_T("CPJNSMTPConnection::AuthLogin, An unexpected request received when expecting username request"));
+			OnError(_T("CPJNSMTPConnection::AuthLogin, An unexpected response received when expecting username: response"));
 			return FALSE;
 		}
 	}
@@ -3282,7 +3281,7 @@ BOOL CPJNSMTPConnection::AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 		}
 		else
 		{
-			OnError(_T("CPJNSMTPConnection::AuthLogin, An unexpected request received when expecting password request"));
+			OnError(_T("CPJNSMTPConnection::AuthLogin, An unexpected response received when expecting password response"));
 			return FALSE;
 		}
 	}
@@ -3290,25 +3289,24 @@ BOOL CPJNSMTPConnection::AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 	return TRUE;
 }
 
-//This function negotiates AUTH LOGIN PLAIN
-BOOL CPJNSMTPConnection::AuthLoginPlain(LPCTSTR pszUsername, LPCTSTR pszPassword)
+//This function negotiates AUTH PLAIN
+BOOL CPJNSMTPConnection::AuthPlain(LPCTSTR pszUsername, LPCTSTR pszPassword)
 {
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
-  //Send the AUTH LOGIN PLAIN command
-	CString sBuf(_T("AUTH LOGIN PLAIN\r\n"));
+  //Send the AUTH PLAIN command
+	CString sBuf(_T("AUTH PLAIN\r\n"));
 	LPCSTR pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
 	int nCmdLength = strlen(pszData);
 	if (!m_SMTP.Send(pszData, nCmdLength))
 	{
-	  OnError(_T("CPJNSMTPConnection::AuthLoginPlain, An unexpected error occurred while sending the AUTH command"));
+	  OnError(_T("CPJNSMTPConnection::AuthPlain, An unexpected error occurred while sending the AUTH PLAIN command"));
 	  return FALSE;
 	}
 
 	if (!ReadCommandResponse(334))
   {
-	  OnError(_T("CPJNSMTPConnection::AuthLoginPlain, Server does not support AUTH LOGIN PLAIN"));
+	  OnError(_T("CPJNSMTPConnection::AuthPlain, Server does not support AUTH PLAIN authentication"));
 	  return FALSE;
   }
 	else
@@ -3324,16 +3322,21 @@ BOOL CPJNSMTPConnection::AuthLoginPlain(LPCTSTR pszUsername, LPCTSTR pszPassword
 			nCmdLength = strlen(pszData);
 			if (!m_SMTP.Send(pszData, nCmdLength))
 			{
-			  OnError(_T("CPJNSMTPConnection::AuthLoginPlain, An unexpected error occurred while sending the username"));
+			  OnError(_T("CPJNSMTPConnection::AuthPlain, An unexpected error occurred while sending the username"));
 			  return FALSE;
 			}
+		}
+		else
+		{
+			OnError(_T("CPJNSMTPConnection::AuthPlain, An unexpected response received when expecting username: response"));
+			return FALSE;
 		}
 	}
 
 	//check the response to the username 
 	if (!ReadCommandResponse(334))
   {
-	  OnError(_T("CPJNSMTPConnection::AuthLoginPlain, Server did not response correctly to AUTH LOGIN PLAIN username field"));
+	  OnError(_T("CPJNSMTPConnection::AuthPlain, Server did not response correctly to AUTH PLAIN username field"));
 	  return FALSE;
   }
 	else
@@ -3349,14 +3352,14 @@ BOOL CPJNSMTPConnection::AuthLoginPlain(LPCTSTR pszUsername, LPCTSTR pszPassword
 			nCmdLength = strlen(pszData);
 			if (!m_SMTP.Send(pszData, nCmdLength))
 			{
-			  OnError(_T("CPJNSMTPConnection::AuthLoginPlain, An unexpected error occurred while sending the password"));
+			  OnError(_T("CPJNSMTPConnection::AuthPlain, An unexpected error occurred while sending the password"));
 			  return FALSE;
 			}
 
 			// check if authentication is successful
 			if (!ReadCommandResponse(235))
       {
-        OnError(_T("CPJNSMTPConnection::AuthLoginPlain, AUTH LOGIN PLAIN authentication was unsuccessful"));
+        OnError(_T("CPJNSMTPConnection::AuthPlain, AUTH PLAIN authentication was unsuccessful"));
 				return FALSE;
       }
 		}
@@ -3366,9 +3369,8 @@ BOOL CPJNSMTPConnection::AuthLoginPlain(LPCTSTR pszUsername, LPCTSTR pszPassword
 }
 
 #ifndef CSMTP_NORSA
-BOOL CPJNSMTPConnection::CramLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
+BOOL CPJNSMTPConnection::AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword)
 {
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
   //Send the AUTH CRAM-MD5 command
@@ -3377,7 +3379,7 @@ BOOL CPJNSMTPConnection::CramLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 	int nCmdLength = strlen(pszData);
 	if (!m_SMTP.Send(pszData, nCmdLength))
 	{
-	  OnError(_T("CPJNSMTPConnection::CramLogin, An unexpected error occurred while sending the AUTH command"));
+	  OnError(_T("CPJNSMTPConnection::AuthCramMD5, An unexpected error occurred while sending the AUTH CRAM-MD5 command"));
 	  return FALSE;
 	}
 
@@ -3385,7 +3387,7 @@ BOOL CPJNSMTPConnection::CramLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 	CBase64Coder Coder;
 	if (!ReadCommandResponse(334))
   {
-	  OnError(_T("CPJNSMTPConnection::CramLogin, Server does not support AUTH CRAM-MD5"));
+	  OnError(_T("CPJNSMTPConnection::AuthCramMD5, Server does not support AUTH CRAM-MD5 authentication"));
 	  return FALSE;
   }
 	else
@@ -3427,7 +3429,7 @@ BOOL CPJNSMTPConnection::CramLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 		nCmdLength = strlen(pszData);
 		if (!m_SMTP.Send(pszData, nCmdLength))
 		{
-		  OnError(_T("CPJNSMTPConnection::CramLogin, An unexpected error occurred while sending the username"));
+		  OnError(_T("CPJNSMTPConnection::AuthCramMD5, An unexpected error occurred while sending the username"));
 		  return FALSE;
 		}
 	}
@@ -3435,7 +3437,7 @@ BOOL CPJNSMTPConnection::CramLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 	//check if authentication is successful
 	if (!ReadCommandResponse(235))
   {
-    OnError(_T("CPJNSMTPConnection::CramLogin, AUTH CRAM-MD5 authentication was unsuccessful"));
+    OnError(_T("CPJNSMTPConnection::AuthCramMD5, AUTH CRAM-MD5 authentication was unsuccessful"));
 		return FALSE;
   }
 
@@ -3549,4 +3551,3 @@ BOOL CPJNSMTPConnection::CloseInternetConnection()
     return FALSE;
   }
 }
-
