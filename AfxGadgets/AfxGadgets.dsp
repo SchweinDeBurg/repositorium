@@ -362,6 +362,10 @@ SOURCE=.\Source\Win32Error.h
 
 SOURCE=.\Source\WinCrypto.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\Source\XMLproxy.h
+# End Source File
 # End Group
 # End Target
 # End Project
