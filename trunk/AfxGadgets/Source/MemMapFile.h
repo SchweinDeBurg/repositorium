@@ -13,20 +13,23 @@ class CMemMapFile: public CObject
 
 // construction/destruction
 public:
-	CMemMapFile(LPCTSTR pszObjName = NULL);
+	CMemMapFile(void);
 	virtual ~CMemMapFile(void);
 
 // operations
 public:
-	void* Create(LPCTSTR pszFileName, DWORD fdwAccess, DWORD cbMaxSize = 0);
+	void* Create(LPCTSTR pszFileName, BOOL fWritable, DWORD cbMaxSize = 0, LPCTSTR pszObjName = NULL);
+	void* Open(BOOL fWritable, LPCTSTR pszObjName);
 	void Close(void);
+	void Flush(void);
 	void* GetDataPtr(void);
+	DWORD GetLength(void);
 
 // attributes
 public:
-	CString m_strObjName;
 	CString m_strFileName;
 	HANDLE m_hFile;
+	CString m_strObjName;
 	HANDLE m_hMapping;
 	void* m_dataPtr;
 

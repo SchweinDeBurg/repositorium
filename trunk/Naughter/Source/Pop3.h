@@ -62,6 +62,10 @@ public:
 	CString GetCC() const	     { return GetHeaderItem(_T("CC")); }
 	CString GetReplyTo() const;
 
+//Helper Methods
+  static CString GetEmailAddress(const CString& sNameAndAddress);
+  static CString GetEmailFriendlyName(const CString& sNameAndAddress);
+
 //protected:
   char* m_pszMessage;
 
@@ -111,6 +115,7 @@ public:
   BOOL    Reset();
   BOOL    UIDL();
   BOOL    Noop();
+  BOOL    IsConnected() const	{ return m_bConnected; };
   CString GetLastCommandResponse() const { return m_sLastCommandResponse; };
   DWORD   GetTimeout() const { return m_dwTimeout; };
   void    SetTimeout(DWORD dwTimeout) { m_dwTimeout = dwTimeout; };
