@@ -32,12 +32,6 @@
 
 // STL headers
 #pragma warning(push, 3)
-#if (_MSC_VER <= 1200)
-#include <typeinfo.h>
-namespace std { using ::bad_cast; }
-#else
-#include <typeinfo>
-#endif	// _MSC_VER
 #include <vector>
 #include <map>
 #include <algorithm>
