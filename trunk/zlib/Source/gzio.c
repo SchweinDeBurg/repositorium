@@ -11,6 +11,11 @@
 
 #include "zutil.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #981: operands are evaluated in unspecified order
+#pragma warning(disable: 981)
+#endif	// __INTEL_COMPILER
+
 #ifdef NO_DEFLATE       /* for compatiblity with old definition */
 #  define NO_GZCOMPRESS
 #endif

@@ -85,6 +85,11 @@
 #include "inflate.h"
 #include "inffast.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+#endif	// __INTEL_COMPILER
+
 #ifdef MAKEFIXED
 #  ifndef BUILDFIXED
 #    define BUILDFIXED
