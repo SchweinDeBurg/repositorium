@@ -13,6 +13,17 @@
 #include "stdafx.h"
 #include "HyperLink.h"
 
+#if defined(__INTEL_COMPILER)
+// warning #68: integer conversion resulted in a change of sign
+#pragma warning(disable: 68)
+// remark #171: invalid type conversion
+#pragma warning(disable: 171)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #981: operands are evaluated in unspecified order
+#pragma warning(disable: 981)
+#endif	// __INTEL_COMPILER
+
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;

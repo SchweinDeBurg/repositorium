@@ -47,6 +47,17 @@
 // DialogMgr.h : header file
 //
 
+#if defined(__INTEL_COMPILER)
+// remark #271: trailing comma is nonstandard
+#pragma warning(disable: 271)
+// remark #444: destructor for base class is not virtual
+#pragma warning(disable: 444)
+// remark #654: overloaded virtual function is only partially overridden
+#pragma warning(disable: 654)
+// warning #880: omission of explicit type is nonstandard
+#pragma warning(disable: 880)
+#endif	// __INTEL_COMPILER
+
 namespace ETSLayout
 {
 
@@ -960,9 +971,11 @@ protected:
 	bool m_bResetBuddyOnNextTimeVisible;
 };
 
-
-
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Developer Studio will insert additional declarations immediately before the previous line.
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 271 444 654 880)
+#endif	// __INTEL_COMPILER
 
 #endif // !defined(ETS_LAYOUTMGR_INCLUDED_)

@@ -4,6 +4,15 @@
 // local variable is initialized but not referenced
 #pragma warning(disable: 4189)
 
+#if defined(__INTEL_COMPILER)
+// remark #171: invalid type conversion
+#pragma warning(disable: 171)
+// warning #186: pointless comparison of unsigned integer with zero
+#pragma warning(disable: 186)
+// remark #981: operands are evaluated in unspecified order
+#pragma warning(disable: 981)
+#endif	// __INTEL_COMPILER
+
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;

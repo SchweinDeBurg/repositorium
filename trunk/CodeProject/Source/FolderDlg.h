@@ -45,6 +45,15 @@ VERSION HISTORY:
 #endif
 #pragma comment( lib, "shlwapi.lib" )
 
+#if defined(__INTEL_COMPILER)
+// remark #171: invalid type conversion
+#pragma warning(disable: 171)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #444: destructor for base class is not virtual
+#pragma warning(disable: 444)
+#endif	// __INTEL_COMPILER
+
 /////////////////////////////////////////////////////////////////////////////
 
 #ifndef BFFM_SETOKTEXT					// Version 5.0 or later
@@ -203,6 +212,10 @@ AFX_INLINE void CFolderDialog::SetStatusText( IN LPCTSTR pszText )
 AFX_INLINE void CFolderDialog::SetExpanded( IN LPITEMIDLIST pItemIDList )
 	{ ASSERT( m_hWnd != NULL ); 
 		::SendMessage( m_hWnd, BFFM_SETEXPANDED, (WPARAM)FALSE, (LPARAM)pItemIDList ); }
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 171 279 444)
+#endif	// __INTEL_COMPILER
 
 /////////////////////////////////////////////////////////////////////////////
 #endif // __FOLDERDLG_H__

@@ -16,6 +16,11 @@
 	#include "folderdlg.h"
 #endif
 
+#if defined(__INTEL_COMPILER)
+// remark #444: destructor for base class is not virtual
+#pragma warning(disable: 444)
+#endif	// __INTEL_COMPILER
+
 #if defined	( __IFolderFilterSite_FWD_DEFINED__ ) && defined( __IFolderFilterSite_INTERFACE_DEFINED__ )
 	#if defined ( __IFolderFilter_FWD_DEFINED__ ) && defined( __IFolderFilter_INTERFACE_DEFINED__ )
 		#define USE_XP_FILTRATION		
@@ -117,6 +122,12 @@ protected:
 
 //////////////////////////////////////////////////////////////////////
 #endif // USE_XP_FILTRATION
+//////////////////////////////////////////////////////////////////////
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 444)
+#endif	// __INTEL_COMPILER
+
 //////////////////////////////////////////////////////////////////////
 #endif // __FILTERED_FOLDERDLG_H__
 //////////////////////////////////////////////////////////////////////

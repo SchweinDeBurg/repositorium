@@ -3,6 +3,13 @@
 #include "stdafx.h"
 #include "PPTooltip.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #171: invalid type conversion
+#pragma warning(disable: 171)
+// remark #1418: external definition with no prior declaration
+#pragma warning(disable: 1418)
+#endif	// __INTEL_COMPILER
+
 // allow multimonitor-aware code on Win95 systems
 // comment out the first line if you already define it in another file
 // comment out both lines if you don't care about Win95
@@ -17,6 +24,15 @@
 #pragma warning(disable: 4239)
 // conversion from 'type' to 'type', possible loss of data
 #pragma warning(disable: 4244)
+
+#if defined(__INTEL_COMPILER)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #383: value copied to temporary, reference to temporary used
+#pragma warning(disable: 383)
+// remark #981: operands are evaluated in unspecified order
+#pragma warning(disable: 981)
+#endif	// __INTEL_COMPILER
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
