@@ -16,7 +16,9 @@ VERSION HISTORY:
 				- Added OnIUnknown handler for Windows XP folder filtration
 				- Added SetExpanded and SetOKText and GetSelectedFolder functions
 	24 May 2003 - Added OnSelChanged implementation
-	14 Jul 2003 - Added custom filtration for Windows XP
+	14 Jul 2003 - Added custom filtration for Windows XP, thanks to Arik Poznanski
+	29 Nov 2003 - Added SetRootFolder, thanks to Eckhard Schwabe ( and Jose Insa )
+	02 Jan 2004 - Added GetRootFolder, uncomment if needed
 */
 /////////////////////////////////////////////////////////////////////////////
 
@@ -42,36 +44,43 @@ VERSION HISTORY:
 
 IMPLEMENT_DYNAMIC( CFolderDialog, CDialog )
 
-CFolderDialog::CFolderDialog( IN LPCTSTR lpszTitle	 /*NULL*/,
-							  IN LPCTSTR lpszSelPath /*NULL*/,
-							  IN CWnd*	 pParentWnd	 /*NULL*/,
+CFolderDialog::CFolderDialog( IN LPCTSTR pszTitle	 /*NULL*/,
+							  IN LPCTSTR pszSelPath	 /*NULL*/,
+							  IN CWnd*	 pWndParent	 /*NULL*/,
 							  IN UINT	 uFlags		 /*BIF_RETURNONLYFSDIRS*/ )
-			 : CCommonDialog( pParentWnd )
+			 : CCommonDialog( pWndParent )
 			 , m_hWnd( NULL )
-{
+{	
+	ASSERT( AfxIsValidString( pszSelPath, MAX_PATH ) );
+	
+	::ZeroMemory( &m_bi, sizeof( BROWSEINFO ) );
 	::ZeroMemory( m_szFolPath, MAX_PATH );
 	::ZeroMemory( m_szSelPath, MAX_PATH );
-	::ZeroMemory( &m_bi, sizeof( BROWSEINFO ) );
-
-	if( lpszSelPath != NULL )
-		SetSelectedFolder( lpszSelPath );
+	
+	if( pszSelPath != NULL )
+		SetSelectedFolder( pszSelPath );
 	
 	// Fill data	
-	m_bi.hwndOwner	= pParentWnd->GetSafeHwnd();
+	m_bi.hwndOwner	= pWndParent->GetSafeHwnd();
 	m_bi.pidlRoot	= NULL;	
-	m_bi.lpszTitle	= lpszTitle;
+	m_bi.lpszTitle	= pszTitle;
 	m_bi.ulFlags	= uFlags;
 	m_bi.lpfn		= (BFFCALLBACK)BrowseCallbackProc;
 	m_bi.lParam		= (LPARAM)this;
 
-	// The size of this buffer is assumed to be MAX_PATH bytes
-	m_bi.pszDisplayName = new TCHAR[ MAX_PATH ];	
+	// The size of this buffer is assumed to be MAX_PATH bytes:
+	
+	m_bi.pszDisplayName = new TCHAR[ MAX_PATH ];
+	ASSERT( m_bi.pszDisplayName != NULL );
+
 	::ZeroMemory( m_bi.pszDisplayName, ( MAX_PATH * sizeof( TCHAR ) ) );
 }
 
 CFolderDialog::~CFolderDialog( void )
 {	
-	_delete2( m_bi.pszDisplayName );	
+	_coTaskMemFree( m_bi.pidlRoot );
+	_delete2( m_bi.pszDisplayName );
+
 	::ZeroMemory( &m_bi, sizeof( BROWSEINFO ) );	
 }
 
@@ -81,10 +90,67 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CFolderDialog message handlers
 
-#if ( _MFC_VER < 0x0700 )
-	INT		CFolderDialog::DoModal( void )
-#else
+// SetRootFolder By Jose Insa
+// Microsoft knowledge Base Article
+// ID Q132750: Convert a File Path to an ITEMIDLIST
+
+BOOL CFolderDialog::SetRootFolder( IN LPCTSTR pszPath )
+{
+	ASSERT_VALID( this );
+
+	if( pszPath == NULL )
+	{
+		_coTaskMemFree( m_bi.pidlRoot );
+		return ( TRUE );
+	}
+
+	ASSERT( AfxIsValidString( pszPath, MAX_PATH ) );
+
+	HRESULT		  hResult	  = S_FALSE;
+	IShellFolder* pDeskFolder = NULL;
+
+	if ( ( hResult = ::SHGetDesktopFolder( &pDeskFolder ) ) == S_OK )
+	{
+		LPITEMIDLIST pidlRoot = NULL;
+		LPTSTR       pszRoot  = const_cast< LPTSTR >( pszPath );
+
+		// Convert the path to an ITEMIDLIST:
+				
+		USES_CONVERSION;
+
+		hResult = pDeskFolder->ParseDisplayName(
+			NULL, NULL, T2W( pszRoot ), NULL, &pidlRoot, NULL 
+		);
+
+		if ( hResult == S_OK )
+		{
+			_coTaskMemFree( m_bi.pidlRoot );
+			m_bi.pidlRoot = pidlRoot;
+		}
+
+		_releaseInterface( pDeskFolder );		
+	}
+	
+	return ( hResult == S_OK );
+} 
+
+// NOTE: pszPath buffer must be at least
+// MAX_PATH characters in size:
+
+BOOL CFolderDialog::GetRootFolder( IN OUT LPTSTR pszPath )
+{
+	ASSERT_VALID( this );
+	ASSERT( AfxIsValidString( pszPath, MAX_PATH ) );
+
+	return ::SHGetPathFromIDList( m_bi.pidlRoot, pszPath );
+} 
+
+/////////////////////////////////////////////////////////////////////////////
+
+#if ( _MFC_VER >= 0x0700 )
 	INT_PTR CFolderDialog::DoModal( void )
+#else
+	INT		CFolderDialog::DoModal( void )
 #endif
 {
 	ASSERT_VALID( this );	
@@ -92,28 +158,20 @@ END_MESSAGE_MAP()
 		
 	m_bi.hwndOwner = PreModal();	
 	INT_PTR nRet   = -1;
-	LPITEMIDLIST lpItemIDList = ::SHBrowseForFolder( &m_bi );
 
-	if( lpItemIDList != NULL )
+	LPITEMIDLIST pItemIDList = ::SHBrowseForFolder( &m_bi );
+	if( pItemIDList )
 	{
-		if( ::SHGetPathFromIDList( lpItemIDList, m_szFolPath ) )
-		{
-			IMalloc* lpMalloc = NULL;
-			if( SUCCEEDED( ::SHGetMalloc( &lpMalloc ) ) )
-			{
-				lpMalloc->Free( lpItemIDList );
-				_releaseInterface( lpMalloc );
-			}
+		if( ::SHGetPathFromIDList( pItemIDList, m_szFolPath ) )
 			nRet = IDOK;
-		}
 		else
 			nRet = IDCANCEL;
 
-		lpItemIDList = NULL;
+		_coTaskMemFree( pItemIDList );
 	}
 
 	PostModal();
-	return nRet;	
+	return ( nRet );
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -125,31 +183,33 @@ void CFolderDialog::OnInitialized( void )
 		SetSelection( m_szSelPath );
 }
 
-void CFolderDialog::OnSelChanged( IN LPITEMIDLIST lpItemIDList )
+void CFolderDialog::OnSelChanged( IN LPITEMIDLIST pItemIDList )
 {
 	if( m_bi.ulFlags & BIF_STATUSTEXT )
 	{
 		TCHAR szSelFol[ MAX_PATH ] = { 0 };
-		if( ::SHGetPathFromIDList( lpItemIDList, szSelFol ) )
+		if( ::SHGetPathFromIDList( pItemIDList, szSelFol ) )
 			SetStatusText( szSelFol );
 	}
 }
 
-INT CFolderDialog::OnValidateFailed( IN LPCTSTR /*lpszFolderPath*/ )
+INT CFolderDialog::OnValidateFailed( IN LPCTSTR /*pszPath*/ )
 {	
 	::MessageBeep( MB_ICONHAND );
 	return 1; // Return 1 to leave dialog open, 0 - to end one
 }
 
-void CFolderDialog::OnIUnknown( IN IUnknown* /*lpIUnknown*/ )
+void CFolderDialog::OnIUnknown( IN IUnknown* /*pIUnknown*/ )
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // Callback function used with the SHBrowseForFolder function. 
 
-INT CALLBACK CFolderDialog::BrowseCallbackProc( HWND hWnd, 
-					UINT uMsg, LPARAM lParam, LPARAM lpData )
+INT CALLBACK CFolderDialog::BrowseCallbackProc( IN HWND   hWnd, 
+												IN UINT   uMsg, 
+												IN LPARAM lParam, 
+												IN LPARAM lpData )
 {
 	CFolderDialog* pThis = (CFolderDialog*)lpData;
 	pThis->m_hWnd = hWnd;
@@ -180,22 +240,22 @@ INT CALLBACK CFolderDialog::BrowseCallbackProc( HWND hWnd,
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CFolderDialog::SetExpanded( IN LPCTSTR lpszFolderPath )
+void CFolderDialog::SetExpanded( IN LPCTSTR pszPath )
 {
+	USES_CONVERSION;
+
 	ASSERT( m_hWnd != NULL );
+	ASSERT( AfxIsValidString( pszPath, MAX_PATH ) );
 	
-	USES_CONVERSION;	
-	::SendMessage( m_hWnd, BFFM_SETEXPANDED, (WPARAM)TRUE, 
-		(LPARAM)(LPCWSTR)T2W( const_cast<LPTSTR>( lpszFolderPath ) ) );
+	::SendMessage( m_hWnd, BFFM_SETEXPANDED, (WPARAM)TRUE, (LPARAM)T2CW( pszPath ) );
 }
 
-void CFolderDialog::SetOKText( IN LPCTSTR lpszText )
+void CFolderDialog::SetOKText( IN LPCTSTR pszText )
 {
-	ASSERT( m_hWnd != NULL );
-	
 	USES_CONVERSION;
-	::SendMessage( m_hWnd, BFFM_SETOKTEXT, (WPARAM)0, 
-		(LPARAM)(LPCWSTR)T2W( const_cast<LPTSTR>( lpszText ) ) );
+	ASSERT( m_hWnd != NULL );	
+	
+	::SendMessage( m_hWnd, BFFM_SETOKTEXT, (WPARAM)0, (LPARAM)T2CW( pszText ) );
 }
 
 
