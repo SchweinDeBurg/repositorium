@@ -92,6 +92,11 @@ SOURCE=.\Source\SeException.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\SortingListCtrl.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\stdafx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
@@ -112,6 +117,10 @@ SOURCE=.\Source\WinCrypto.cpp
 # Begin Source File
 
 SOURCE=.\Source\SeException.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\SortingListCtrl.h
 # End Source File
 # Begin Source File
 
