@@ -8,6 +8,19 @@
 #include "WinCrypto.h"
 #include "Win32Error.h"
 
+#if defined(__INTEL_COMPILER)
+// warning #68: integer conversion resulted in a change of sign
+#pragma warning(disable: 68)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+#endif	// __INTEL_COMPILER
+
+#if defined(_DEBUG)
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#define new DEBUG_NEW
+#endif	// _DEBUG
+
 // object model
 IMPLEMENT_DYNAMIC(CWinCrypto, CObject)
 
