@@ -7,6 +7,10 @@
 #if !defined(__SortingListCtrl_h)
 #define __SortingListCtrl_h
 
+#if defined(_MSC_VER) && (_MSC_VER > 1000)
+#pragma once
+#endif	// _MSC_VER
+
 class CSortingListCtrl: public CListCtrl
 {
 	DECLARE_DYNAMIC(CSortingListCtrl)

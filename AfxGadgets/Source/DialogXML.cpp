@@ -831,14 +831,14 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 	fileMem.Write(awcClass, sizeof(awcClass));
 
 	// dialog's caption
-	LPCWSTR pwszCaption = _T2W(branchDialog.GetAttribute(_T("Caption")));
+	_T2W pwszCaption(branchDialog.GetAttribute(_T("Caption")));
 	fileMem.Write(pwszCaption, (::lstrlenW(pwszCaption) + 1) * sizeof(WCHAR));
 
 	if ((dlgTemplate.style & DS_SETFONT) != 0) {
 		// font size and typeface
 		WORD wFontSize = GetAttribute_WORD(branchFont, _T("PointSize"));
 		fileMem.Write(&wFontSize, sizeof(wFontSize));
-		LPCWSTR pwszFontFace = _T2W(branchFont.GetAttribute(_T("TypeFace")));
+		_T2W pwszFontFace(branchFont.GetAttribute(_T("TypeFace")));
 		fileMem.Write(pwszFontFace, (::lstrlenW(pwszFontFace) + 1) * sizeof(WCHAR));
 	}
 
@@ -887,11 +887,11 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 		fileMem.Write(&itemTemplate, sizeof(itemTemplate));
 
 		// control's window class
-		LPCWSTR pwszClass = _T2W(pAttrClass->value);
+		_T2W pwszClass(pAttrClass->value);
 		fileMem.Write(pwszClass, (::lstrlenW(pwszClass) + 1) * sizeof(WCHAR));
 
 		// initial control's text
-		LPCWSTR pwszCaption = _T2W(branchControl.GetAttribute(_T("Caption")));
+		_T2W pwszCaption(branchControl.GetAttribute(_T("Caption")));
 		fileMem.Write(pwszCaption, (::lstrlenW(pwszCaption) + 1) * sizeof(WCHAR));
 
 		// creation data - not used
@@ -961,7 +961,7 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 	fileMem.Write(awcClass, sizeof(awcClass));
 
 	// dialog's caption
-	LPCWSTR pwszCaption = _T2W(branchDialog.GetAttribute(_T("Caption")));
+	_T2W pwszCaption(branchDialog.GetAttribute(_T("Caption")));
 	fileMem.Write(pwszCaption, (::lstrlenW(pwszCaption) + 1) * sizeof(WCHAR));
 
 	if ((dlgTemplateEx.style & DS_SETFONT) != 0) {
@@ -974,7 +974,7 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 		fileMem.Write(&bFontItalic, sizeof(bFontItalic));
 		BYTE bFontCharset = GetAttribute_BYTE(branchFont, _T("CharSet"), ANSI_CHARSET);
 		fileMem.Write(&bFontCharset, sizeof(bFontCharset));
-		LPCWSTR pwszFontFace = _T2W(branchFont.GetAttribute(_T("TypeFace")));
+		_T2W pwszFontFace(branchFont.GetAttribute(_T("TypeFace")));
 		fileMem.Write(pwszFontFace, (::lstrlenW(pwszFontFace) + 1) * sizeof(WCHAR));
 	}
 
@@ -1024,11 +1024,11 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 		fileMem.Write(&itemTemplateEx, sizeof(itemTemplateEx));
 
 		// control's window class
-		LPCWSTR pwszClass = _T2W(pAttrClass->value);
+		_T2W pwszClass(pAttrClass->value);
 		fileMem.Write(pwszClass, (::lstrlenW(pwszClass) + 1) * sizeof(WCHAR));
 
 		// initial control's text
-		LPCWSTR pwszCaption = _T2W(branchControl.GetAttribute(_T("Caption")));
+		_T2W pwszCaption(branchControl.GetAttribute(_T("Caption")));
 		fileMem.Write(pwszCaption, (::lstrlenW(pwszCaption) + 1) * sizeof(WCHAR));
 
 		// creation data - not used

@@ -7,6 +7,10 @@
 #if !defined(__DialogXML_h)
 #define __DialogXML_h
 
+#if defined(_MSC_VER) && (_MSC_VER > 1000)
+#pragma once
+#endif	// _MSC_VER
+
 class CDialogXML: public CDialog
 {
 	DECLARE_DYNAMIC(CDialogXML)
