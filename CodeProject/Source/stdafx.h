@@ -10,6 +10,13 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+// unreferenced inline/local function has been removed
+#pragma warning(disable: 4514)
+// function not inlined
+#pragma warning(disable: 4710)
+// identifier was truncated in the debug information
+#pragma warning(disable: 4786)
+
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
 
 // MFC headers
@@ -18,9 +25,31 @@
 #include <afxdlgs.h>
 #include <afxext.h>
 #include <afxadv.h>
+#include <afxconv.h>
 
 // PSDK headers
 #include <shlobj.h>
+
+// STL headers
+#pragma warning(push, 3)
+#if (_MSC_VER <= 1200)
+#include <typeinfo.h>
+namespace std { using ::bad_cast; }
+#else
+#include <typeinfo>
+#endif	// _MSC_VER
+#include <vector>
+#include <map>
+#include <algorithm>
+#pragma warning(pop)
+
+#if !defined(min)
+using std::min;
+#endif	// min
+
+#if !defined(max)
+using std::max;
+#endif	// max
 
 #pragma hdrstop
 
