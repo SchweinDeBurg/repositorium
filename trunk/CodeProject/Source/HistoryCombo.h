@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 // File:	HistoryCombo.h
-// Version:	2.1
-// Created:	09-Jul-2003
+// Version:	3.0
+// Created:	22-Jun-2004
 //
 // Author:	Paul S. Vickery
 // E-mail:	paul@vickeryhome.freeserve.co.uk
@@ -16,10 +16,23 @@
 // If you use this code, or use it as a base for your own code, it would be 
 // nice to hear from you simply so I know it's not been a waste of time!
 //
-// Copyright (c) 2001-2003 Paul S. Vickery
+// Copyright (c) 2001-2004 Paul S. Vickery
 //
 ////////////////////////////////////////////////////////////////////////////
 // Version History:
+//
+// Version 3.0 - 22-Jun-2004
+// =========================
+// Added functionality:
+// * added serialization to/from a CArchive object (suggested by EPulse), which 
+//   can be used by one of three methods:
+//   - calling Serialize() directly with a CArchive object
+//   - calling the LoadHistory()/SaveHistory() overloads which take a CArchive 
+//     object reference
+//   - using the insertion operator overloads >> and <<
+//   (the only difference between these methods is that using SaveHistory() 
+//   gives you the option of NOT adding the current item to the history)
+// * added loading/saving from/to a CString object (suggested by Uwe Keim)
 //
 // Version 2.1 - 09-Jul-2003
 // =========================
@@ -63,6 +76,8 @@ class CHistoryCombo : public CComboBox
 public:
 	CHistoryCombo(BOOL bAllowSortStyle = FALSE);
 
+	DECLARE_SERIAL(CHistoryCombo)
+
 // Attributes
 public:
 
@@ -73,6 +88,8 @@ public:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CHistoryCombo)
+	public:
+	virtual void Serialize(CArchive& ar);
 	protected:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	virtual void PreSubclassWindow();
@@ -84,8 +101,12 @@ public:
 	void ClearHistory(BOOL bDeleteRegistryEntries = TRUE);
 	void SetMaxHistoryItems(int nMaxItems);
 	void SaveHistory(BOOL bAddCurrentItemtoHistory = TRUE);
+	void SaveHistory(CArchive& ar, BOOL bAddCurrentItemToHistory = TRUE);
+	CString SaveHistoryToText(CString& sHistory, BOOL bAddCurrentItemToHistory = TRUE, LPCTSTR lpszDelims = _T("\r\n"));
 	CString LoadHistory(LPCTSTR lpszSection, LPCTSTR lpszKeyPrefix, BOOL bSaveRestoreLastCurrent = TRUE, LPCTSTR lpszKeyCurItem = NULL);
 	CString LoadHistory(CRecentFileList* pListMRU, BOOL bSelectMostRecent = TRUE);
+	void LoadHistory(CArchive& ar);
+	void LoadHistoryFromText(LPCTSTR lpszHistory, LPCTSTR lpszLastSelected = NULL, LPCTSTR lpszDelims = _T("\r\n"));
 	virtual ~CHistoryCombo();
 
 	// Generated message map functions
@@ -103,6 +124,12 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 };
+
+// helper functions to allow serialization using << and >> overloads
+inline CArchive& operator<<(CArchive& ar, CHistoryCombo& ob)
+	{ ob.Serialize(ar); return ar; }
+inline CArchive& operator>>(CArchive& ar, CHistoryCombo& ob)
+	{ ob.Serialize(ar); return ar; }
 
 /////////////////////////////////////////////////////////////////////////////
 

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 // File:	HistoryCombo.cpp
-// Version:	2.1
-// Created:	09-Jul-2003
+// Version:	3.0
+// Created:	22-Jun-2004
 //
 // Author:	Paul S. Vickery
 // E-mail:	paul@vickeryhome.freeserve.co.uk
@@ -16,10 +16,23 @@
 // If you use this code, or use it as a base for your own code, it would be 
 // nice to hear from you simply so I know it's not been a waste of time!
 //
-// Copyright (c) 2001-2003 Paul S. Vickery
+// Copyright (c) 2001-2004 Paul S. Vickery
 //
 ////////////////////////////////////////////////////////////////////////////
 // Version History:
+//
+// Version 3.0 - 22-Jun-2004
+// =========================
+// Added functionality:
+// * added serialization to/from a CArchive object (suggested by EPulse), which 
+//   can be used by one of three methods:
+//   - calling Serialize() directly with a CArchive object
+//   - calling the LoadHistory()/SaveHistory() overloads which take a CArchive 
+//     object reference
+//   - using the insertion operator overloads >> and <<
+//   (the only difference between these methods is that using SaveHistory() 
+//   gives you the option of NOT adding the current item to the history)
+// * added loading/saving from/to a CString object (suggested by Uwe Keim)
 //
 // Version 2.1 - 09-Jul-2003
 // =========================
@@ -56,6 +69,8 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 // CHistoryCombo
+
+IMPLEMENT_SERIAL(CHistoryCombo, CComboBox, 0)
 
 CHistoryCombo::CHistoryCombo(BOOL bAllowSortStyle/*=FALSE*/)
 {
@@ -99,10 +114,6 @@ END_MESSAGE_MAP()
 // also makes sure number of items in the list doesn't exceed the maximum allowed
 int CHistoryCombo::AddString(LPCTSTR lpszString)
 {
-  // if it's not set up as a history combo then call base class
-  if (m_sSection.IsEmpty() || m_sKeyPrefix.IsEmpty())
-    return CComboBox::AddString(lpszString);
-
   int nRet = -1;
   // don't add if already there
   CString sString(lpszString);
@@ -135,6 +146,7 @@ CString CHistoryCombo::LoadHistory(CRecentFileList* pListMRU, BOOL bSelectMostRe
   if (pListMRU == NULL)
     return "";
 
+  ResetContent(); // clear out any old items
   int nNumItems = pListMRU->GetSize();
   for (int n = 0; n < nNumItems; n++)
     CComboBox::AddString((*pListMRU)[n]);
@@ -147,7 +159,7 @@ CString CHistoryCombo::LoadHistory(CRecentFileList* pListMRU, BOOL bSelectMostRe
 
 // loads the history from the specified profile area, and returns the 
 // text selected
-// the profile area is kept so that in doesn't need to specified again
+// the profile strings are cached so that it doesn't need to specified again
 // when saving the history
 CString CHistoryCombo::LoadHistory(LPCTSTR lpszSection, LPCTSTR lpszKeyPrefix, 
 				   BOOL bSaveRestoreLastCurrent/*=TRUE*/, 
@@ -156,6 +168,7 @@ CString CHistoryCombo::LoadHistory(LPCTSTR lpszSection, LPCTSTR lpszKeyPrefix,
   if (lpszSection == NULL || lpszKeyPrefix == NULL || *lpszSection == '\0')
     return "";
 
+  ResetContent(); // clear out any old items
   m_sSection = lpszSection;
   m_sKeyPrefix = lpszKeyPrefix;
   m_sKeyCurItem = lpszKeyCurItem == NULL ? _T("") : lpszKeyCurItem;
@@ -194,6 +207,119 @@ CString CHistoryCombo::LoadHistory(LPCTSTR lpszSection, LPCTSTR lpszKeyPrefix,
   return sText;
 }
 
+// load the history from an archive object in binary format
+void CHistoryCombo::LoadHistory(CArchive& ar)
+{
+  ResetContent(); // clear out any old items
+  ASSERT(ar.IsLoading());
+
+  WORD wItems;
+  ar >> wItems;
+  int nItems = wItems;
+  for (int n = 0; n < nItems; n++)
+  {
+    CString sText;
+    ar >> sText;
+    CComboBox::AddString(sText);
+  }
+  // current text
+  CString sText;
+  ar >> sText;
+  // select text
+  int nIndex = FindStringExact(-1, sText);
+  if (nIndex == -1 && GetStyle() & CBS_DROPDOWN)
+    SetWindowText(sText);
+  else
+    SetCurSel(nIndex);
+}
+
+// save the history to an archive object in binary format
+void CHistoryCombo::SaveHistory(CArchive& ar, BOOL bAddCurrentItemToHistory/*=TRUE*/)
+{
+  ASSERT(ar.IsStoring());
+  if (bAddCurrentItemToHistory)
+    StoreValue();
+
+  // write number of entries
+  int nItems = GetCount();
+  ar << (WORD)nItems;
+
+  for (int n = 0; n < nItems; n++)
+  {
+    CString sText;
+    GetLBText(n, sText);
+    ar << sText;
+  }
+  // current text
+  CString sText;
+  GetWindowText(sText);
+  ar << sText;
+}
+
+// load the history from the string pointed to by lpszHistory
+// set the current selection to lpszLastSelected if not NULL
+// the lpszHistory should contain a list of items separated by 
+// the chars passed in lpszDelims (which defaults to CRLF)
+void CHistoryCombo::LoadHistoryFromText(LPCTSTR lpszHistory, 
+					LPCTSTR lpszLastSelected/*=NULL*/, 
+					LPCTSTR lpszDelims/*=_T("\r\n")*/)
+{
+  if (lpszHistory == NULL || *lpszHistory == '\0')
+    return;
+  ResetContent(); // clear out any old items
+  LPTSTR lpszList = _tcsdup(lpszHistory);
+  if (lpszDelims == NULL || *lpszDelims == '\0')
+    lpszDelims = _T("\r\n");
+  LPTSTR lpszTok = _tcstok(lpszList, lpszDelims);
+  while (lpszTok != NULL)
+  {
+    CComboBox::AddString(lpszTok);
+    lpszTok = _tcstok(NULL, lpszDelims);
+  }
+  if (lpszLastSelected != NULL)
+  {
+    // see if it's in the list of items added
+    // if it is then select it, else, if it's an editable
+    // combo, set the combo's text to the value
+    int nIndex = FindStringExact(-1, lpszLastSelected);
+    if (nIndex == -1 && GetStyle() & CBS_DROPDOWN)
+      SetWindowText(lpszLastSelected);
+    else
+      SetCurSel(nIndex);
+  }
+  if (lpszList != NULL)
+    free(lpszList);
+}
+
+// write the history to the CString object sHistory
+// and return the last selected item's text
+CString CHistoryCombo::SaveHistoryToText(CString& sHistory, 
+					 BOOL bAddCurrentItemToHistory/*=TRUE*/, 
+					 LPCTSTR lpszDelims/*=_T("\r\n")*/)
+{
+  CString sCurItem;
+  GetWindowText(sCurItem);
+
+  if (bAddCurrentItemToHistory)
+    StoreValue();
+
+  if (lpszDelims == NULL || *lpszDelims == '\0')
+    lpszDelims = _T("\r\n");
+
+  sHistory.Empty();
+  int nCount = GetCount();
+  for (int n = 0; n < nCount; n++)
+  {
+    CString sItem;
+    GetLBText(n, sItem);
+    if (! sHistory.IsEmpty())
+      sHistory += lpszDelims;
+    sHistory += sItem;
+  }
+  
+  return sCurItem;
+}
+
 // saves the history to the profile specified when calling LoadHistory
 // if no profile information (ie LoadHistory() wasn't called with it) then
 // this function does nothing
@@ -206,15 +332,7 @@ void CHistoryCombo::SaveHistory(BOOL bAddCurrentItemToHistory/*=TRUE*/)
   ASSERT(pApp);
 
   if (bAddCurrentItemToHistory)
-  {
-    CString sCurItem;
-    GetWindowText(sCurItem);
-    // trim it, so we items which differ only by a leading/trailing space
-    sCurItem.TrimLeft();
-    sCurItem.TrimRight();
-    if (! sCurItem.IsEmpty())
-      AddString(sCurItem);
-  }
+    StoreValue();
 
   // save history to info cached earlier
   int nMax = min(GetCount(), m_nMaxHistoryItems + 1);
@@ -301,6 +419,11 @@ void CHistoryCombo::StoreValue(BOOL bIgnoreIfEmpty/*=TRUE*/)
   AddString(sValue);
 }
 
-
-
-
+// serialize the history to and from an archive
+void CHistoryCombo::Serialize(CArchive& ar) 
+{
+  if (ar.IsStoring())
+    SaveHistory(ar);
+  else
+    LoadHistory(ar);
+}
