@@ -20,6 +20,17 @@
 #include <afxpriv.h>
 #endif	// __AFXPRIV_H__
 
+#if defined(__INTEL_COMPILER)
+// remark #171: invalid type conversion
+#pragma warning(disable: 171)
+// remark #177: variable was declared but never referenced
+#pragma warning(disable: 177)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #981: operands are evaluated in unspecified order
+#pragma warning(disable: 981)
+#endif	// __INTEL_COMPILER
+
 #if defined(_DEBUG)
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
