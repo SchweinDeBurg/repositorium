@@ -20,6 +20,14 @@
 #include "ZipException.h"
 #include "ZipAutoBuffer.h"
 #include "ZipFileHeader.h"
+
+#if defined(__INTEL_COMPILER)
+// remark #1418: external definition with no prior declaration
+#pragma warning(disable: 1418)
+// remark #1419: external declaration in primary source file
+#pragma warning(disable: 1419)
+#endif	// __INTEL_COMPILER
+
 enum iInternalAttr
 {
 	attROnly	= 0x01,	

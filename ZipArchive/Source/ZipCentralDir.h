@@ -37,6 +37,12 @@
 #include "ZipCollections.h"
 #include "ZipCompatibility.h"
 #include "ZipExport.h"
+
+#if defined(__INTEL_COMPILER)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+#endif	// __INTEL_COMPILER
+
 #define ZIPARCHIVE_DATADESCRIPTOR_LEN 12
 
 /**
@@ -548,5 +554,8 @@ protected:
 	
 };
 
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 279)
+#endif	// __INTEL_COMPILER
 
 #endif // !defined(AFX_CENTRALDIR_H__859029E8_8927_4717_9D4B_E26E5DA12BAE__INCLUDED_)

@@ -23,6 +23,17 @@
 
 #include <time.h>
 
+#if defined(__INTEL_COMPILER)
+// warning #186: pointless comparison of unsigned integer with zero
+#pragma warning(disable: 186)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #593: variable was set but never used
+#pragma warning(disable: 593)
+// remark #981: operands are evaluated in unspecified order
+#pragma warning(disable: 981)
+#endif	// __INTEL_COMPILER
+
 #ifndef DEF_MEM_LEVEL
 #if MAX_MEM_LEVEL >= 8
 #  define DEF_MEM_LEVEL 8

@@ -18,6 +18,11 @@
 #include "ZipException.h"
 #include <errno.h>
 
+#if defined(__INTEL_COMPILER)
+// remark #909: exception specification ignored
+#pragma warning(disable: 909)
+#endif	// __INTEL_COMPILER
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////

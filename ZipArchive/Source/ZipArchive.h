@@ -93,6 +93,12 @@
 #include "ZipString.h"
 #include "ZipExport.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #271: trailing comma is nonstandard
+#pragma warning(disable: 271)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+#endif	// __INTEL_COMPILER
 
 /**
 	Structure used as a parameter in CZipArchive::AddNewFile(CZipAddNewFileInfo& );
@@ -2045,6 +2051,8 @@ protected:
 	/*@}*/
 };
 
-
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 271 279)
+#endif	// __INTEL_COMPILER
 
 #endif // !defined(AFX_ZIPARCHIVE_H__A7F528A6_1872_4071_BE66_D56CC2DDE0E6__INCLUDED_)

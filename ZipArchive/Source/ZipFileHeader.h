@@ -30,7 +30,16 @@
 #include "ZipExport.h"
 #include "ZipStorage.h"
 #include "ZipAutoBuffer.h"
-#include "sys/types.h"
+
+#if defined(__INTEL_COMPILER)
+// remark #193: zero used for undefined preprocessing identifier
+#pragma warning(disable: 193)
+#include <sys/types.h>
+#pragma warning(default: 193)
+#else
+#include <sys/types.h>
+#endif	// __INTEL_COMPILER
+
 #include "ZipCompatibility.h"
 #define ZIPARCHIVE_ENCR_HEADER_LEN 12
 

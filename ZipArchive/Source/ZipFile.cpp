@@ -17,6 +17,11 @@
 #include "stdafx.h"
 #include "ZipFile.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #171: invalid type conversion
+#pragma warning(disable: 171)
+#endif	// __INTEL_COMPILER
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
