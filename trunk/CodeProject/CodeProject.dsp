@@ -186,7 +186,7 @@ SOURCE=.\Source\HyperLink.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\IconDialog.cpp
+SOURCE=.\Source\IconDlg.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File
 # Begin Source File
@@ -246,7 +246,7 @@ SOURCE=.\Source\HyperLink.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Source\IconDialog.h
+SOURCE=.\Source\IconDlg.h
 # End Source File
 # Begin Source File
 
