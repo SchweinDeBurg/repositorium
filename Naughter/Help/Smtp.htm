@@ -1,13 +1,13 @@
 <html>
 
 <head>
-<title>CPJNSMTPConnection v2.42</title>
+<title>CPJNSMTPConnection v2.44</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
 <p align="left"><font face="Arial" size="6"><img src="smtp.gif" width="39" height="38" alt="smtp.gif (295 bytes)"><strong>CPJNSMTPConnection 
-v2.42</strong></font></p>
+v2.44</strong></font></p>
 
 <p><font face="Arial">Welcome to <strong>CPJNSMTPConnection</strong>, a freeware MFC class to
 support the SMTP protocol. SMTP for those not familiar with all the internet protocols is
@@ -735,6 +735,22 @@ May 2003</font></strong><b><font color="#000000" size="3">)</font></b><ul>
   problem and the fix.</font></li>
 </ul>
 
+<p><strong><font face="Arial">V2.43 (5 June</font><font face="Arial" color="#000000" size="3"> 
+2004</font></strong><b><font color="#000000" size="3">)</font></b><ul>
+  <li><font face="Arial">Fixed a bug in CSMTPConnection::ReadResponse, where the 
+  wrong parameters were being null terminated. Thanks to &quot;caowen&quot; for this 
+  update.</font></li>
+  <li><font face="Arial">Updated the CSMTPConnection::ReadResponse function to 
+  handle multiline responses in all cases. Thanks to Thomas Liebethal for 
+  reporting this issue.</font></li>
+</ul>
+
+<p><strong><font face="Arial">V2.44 (7 June</font><font face="Arial" color="#000000" size="3"> 
+2004</font></strong><b><font color="#000000" size="3">)</font></b><ul>
+  <li><font face="Arial">Fixed a potential buffer overflow issue in 
+  CSMTPConnection::ReadResponse when certain multi line responses are received</font></li>
+</ul>
+
 <p>&nbsp;</p>
 
 <p>&nbsp;</p>
@@ -762,6 +778,6 @@ THE AUTHOR</strong></font></font></p>
 <p><font face="Arial" color="#000000" size="3">PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-13 March </font><font face="Arial">2004</font></p>
+7 June </font><font face="Arial">2004</font></p>
 </body>
 </html>
