@@ -487,7 +487,7 @@ void ETSLayoutMgr::EraseBkgnd(CDC* pDC)
 
 	CRgn	rgn;
 	rgn.CreateRectRgnIndirect(rcClient);
-    TRACE("CreateRgn (%d,%d,%d,%d)\n", rcClient.left, rcClient.top, rcClient.right, rcClient.bottom );
+    TRACE(_T("CreateRgn (%d,%d,%d,%d)\n"), rcClient.left, rcClient.top, rcClient.right, rcClient.bottom );
 
 	CRgn    rgnRect;
 	rgnRect.CreateRectRgn(0,0,0,0);

@@ -543,7 +543,7 @@ int CReportCtrl::MoveTo(int nItem, int nNewPosition)
 	CListCtrl::DeleteItem(nItem);
 
 	// Insert a new item to the new position
-	const int IDX = CListCtrl::InsertItem(nNewPosition, "");
+	const int IDX = CListCtrl::InsertItem(nNewPosition, _T(""));
 
 	// Restore all states & attributes to the newly inserted item
 	for (int j = 0; j < COLS; j++)
