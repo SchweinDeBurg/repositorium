@@ -22,7 +22,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#if _MSC_VER < 1300 && !defined __BORLANDC__
+#if (_MSC_VER < 1300) && !defined(__BORLANDC__) && !defined(__INTEL_COMPILER)
 #define ZIPINLINE inline
 #else
 #define ZIPINLINE
