@@ -9,9 +9,12 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#pragma warning(disable: 4514)	// unreferenced inline/local function has been removed
-#pragma warning(disable: 4710)	// function not inlined
-#pragma warning(disable: 4786)	// identifier was truncated in the debug information
+// unreferenced inline/local function has been removed
+#pragma warning(disable: 4514)
+// function not inlined
+#pragma warning(disable: 4710)
+// identifier was truncated in the debug information
+#pragma warning(disable: 4786)
 
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
 
@@ -27,13 +30,20 @@
 // STL headers
 #pragma warning(push, 3)
 #include <string>
+#include <algorithm>
+#pragma warning(pop)
+
 #if !defined(_STRING_)
 #define _STRING_			// for compatibility with Dinkumware STL
 #endif
-#include <algorithm>
+
+#if !defined(min)
 using std::min;
+#endif	// min
+
+#if !defined(max)
 using std::max;
-#pragma warning(pop)
+#endif	// max
 
 // CRT headers
 #include <locale.h>
