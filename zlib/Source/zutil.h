@@ -27,6 +27,11 @@
 #   include <errno.h>
 #endif
 
+#if defined(__INTEL_COMPILER)
+// remark #193: zero used for undefined preprocessing identifier
+#pragma warning(disable: 193)
+#endif	// __INTEL_COMPILER
+
 #ifndef local
 #  define local static
 #endif
@@ -254,5 +259,9 @@ void   zcfree  OF((voidpf opaque, voidpf ptr));
            (*((strm)->zalloc))((strm)->opaque, (items), (size))
 #define ZFREE(strm, addr)  (*((strm)->zfree))((strm)->opaque, (voidpf)(addr))
 #define TRY_FREE(s, p) {if (p) ZFREE(s, p);}
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 193)
+#endif	// __INTEL_COMPILER
 
 #endif /* ZUTIL_H */

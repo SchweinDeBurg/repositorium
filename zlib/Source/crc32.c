@@ -20,6 +20,13 @@
 
 #include "zutil.h"      /* for STDC and FAR definitions */
 
+#if defined(__INTEL_COMPILER)
+// remark #111: statement is unreachable
+#pragma warning(disable: 111)
+// remark #171: invalid type conversion
+#pragma warning(disable: 171)
+#endif	// __INTEL_COMPILER
+
 #define local static
 
 /* Find a four-byte integer type for crc32_little() and crc32_big(). */

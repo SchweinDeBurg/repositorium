@@ -6,6 +6,11 @@
 #include "zutil.h"
 #include "inftrees.h"
 
+#if defined(__INTEL_COMPILER)
+// remark #1418: external definition with no prior declaration
+#pragma warning(disable: 1418)
+#endif	// __INTEL_COMPILER
+
 #define MAXBITS 15
 
 const char inflate_copyright[] =
