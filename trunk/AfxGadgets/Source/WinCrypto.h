@@ -34,6 +34,11 @@ public:
 	CWinCrypto(LPCTSTR pszContainer, ALG_ID algID = CALG_DES, LPCTSTR pszPassword = NULL);
 	virtual ~CWinCrypto(void);
 
+// copying/assignment - not allowed and thus not implemented
+private:
+	CWinCrypto(const CWinCrypto& src);
+	CWinCrypto& operator =(const CWinCrypto& src);
+
 // operations
 public:
 	void GenerateKey(ALG_ID algID = CALG_DES, LPCTSTR pszPassword = NULL);
