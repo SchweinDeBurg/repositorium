@@ -166,6 +166,11 @@ SOURCE=.\Source\FileSpec.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\FilteredFolderDlg.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\FolderDlg.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File
@@ -222,6 +227,10 @@ SOURCE=.\Source\ETSLayout.h
 # Begin Source File
 
 SOURCE=.\Source\FileSpec.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\FilteredFolderDlg.h
 # End Source File
 # Begin Source File
 

@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
 /* 
 DESCRIPTION:
 	CFolderDialog  - Folder Selection Dialog Class	
@@ -16,12 +16,15 @@ VERSION HISTORY:
 				- Added OnIUnknown handler for Windows XP folder filtration
 				- Added SetExpanded and SetOKText and GetSelectedFolder functions
 	24 May 2003 - Added OnSelChanged implementation
-	14 Jul 2003 - Added custom filtration for Windows XP
+	14 Jul 2003 - Added custom filtration for Windows XP, thanks to Arik Poznanski
+	29 Nov 2003 - Added SetRootFolder, thanks to Eckhard Schwabe ( and Jose Insa )
+	02 Jan 2004 - Added GetRootFolder, uncomment if needed
 */
 /////////////////////////////////////////////////////////////////////////////
 
 #ifndef __FOLDERDLG_H__
 #define __FOLDERDLG_H__
+
 #if defined( _MSC_VER ) && ( _MSC_VER >= 1020 )
 	#pragma once
 #endif
@@ -32,13 +35,15 @@ VERSION HISTORY:
 	#include < AfxDlgs.h >
 #endif
 
-#ifndef _SHLOBJ_H_
-	#include < ShlObj.h >
-#endif
-
 #ifndef __ATLCONV_H__
 	#include < AtlConv.h >	// MBCS/Unicode Conversion Macros
 #endif
+
+// Uncomment if using GetRootFolder
+#ifndef _INC_SHLWAPI
+	#include < shlwapi.h >
+#endif
+#pragma comment( lib, "shlwapi.lib" )
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -60,11 +65,15 @@ VERSION HISTORY:
 /////////////////////////////////////////////////////////////////////////////
 
 #ifndef		_delete2
-	#define _delete2( p )			{ if( p != NULL ){ delete[] p; p = NULL; } }
+	#define _delete2( p )			{ if( p ){ delete[] p; p = NULL; } }
 #endif
 
 #ifndef		_releaseInterface
-	#define	_releaseInterface( p )	{ if( p != NULL ){ p->Release(); p = NULL; } }
+	#define	_releaseInterface( p )	{ if( p ){ p->Release(); p = NULL; } }
+#endif
+
+#ifndef		_coTaskMemFree
+	#define	_coTaskMemFree( p )		{ if( p ){ ::CoTaskMemFree( (LPVOID)p ); p = NULL; } }
 #endif
 
 #ifndef _NOINLINE
@@ -82,21 +91,24 @@ class CFolderDialog : public CCommonDialog
 	DECLARE_DYNAMIC( CFolderDialog )
 
 public:
-	CFolderDialog(	IN LPCTSTR	lpszTitle	= NULL, 
-					IN LPCTSTR	lpszSelPath	= NULL,
-					IN CWnd*	pParentWnd	= NULL,
+	CFolderDialog(	IN LPCTSTR	pszTitle	= NULL, 
+					IN LPCTSTR	pszSelPath	= NULL,
+					IN CWnd*	pWndParent	= NULL,
 					IN UINT		uFlags		= BIF_RETURNONLYFSDIRS );
 	virtual ~CFolderDialog( void );
 
 public:
-	#if ( _MFC_VER < 0x0700 )
-		virtual INT		DoModal( void );
+	#if ( _MFC_VER >= 0x0700 )
+		virtual INT_PTR		DoModal( void );
 	#else
-		virtual INT_PTR DoModal( void );
+		virtual INT			DoModal( void );
 	#endif
-	
+
+	BOOL	SetRootFolder( IN LPCTSTR pszPath );
+	BOOL	GetRootFolder( IN OUT LPTSTR pszPath );
+
 public:
-	AFX_INLINE BOOL		SetSelectedFolder( IN LPCTSTR lpszPath );
+	AFX_INLINE BOOL		SetSelectedFolder( IN LPCTSTR pszPath );
 	AFX_INLINE LPCTSTR	GetFolderPath( void )  const;
 	AFX_INLINE LPCTSTR	GetFolderName( void )  const;
 	AFX_INLINE INT		GetFolderImage( void ) const;		
@@ -105,7 +117,7 @@ public:
 	AFX_INLINE const BROWSEINFO& GetBI( void ) const;
 
 protected:	
-	BROWSEINFO	m_bi;
+	BROWSEINFO	m_bi;	
 	TCHAR		m_szSelPath[ MAX_PATH ];
 	TCHAR		m_szFolPath[ MAX_PATH ];
 
@@ -113,37 +125,37 @@ protected:
 	DECLARE_MESSAGE_MAP()
 	
 	virtual void OnInitialized( void );
-	virtual void OnSelChanged( IN LPITEMIDLIST  lpItemIDList );
-	virtual INT	 OnValidateFailed( IN LPCTSTR /*lpszFolderPath*/ );		
+	virtual void OnSelChanged( IN LPITEMIDLIST  pItemIDList );
+	virtual INT	 OnValidateFailed( IN LPCTSTR /*pszPath*/ );		
 
 protected: // Windows XP or later
-	virtual void OnIUnknown( IN IUnknown* /*lpIUnknown*/ );
+	virtual void OnIUnknown( IN IUnknown* /*pIUnknown*/ );
 	
 protected: // Shell version 5.0 or later:
-	_NOINLINE void SetExpanded( IN LPCTSTR lpszFolderPath );
-	_NOINLINE void SetOKText( IN LPCTSTR lpszText );	
+	_NOINLINE void SetExpanded( IN LPCTSTR pszPath );
+	_NOINLINE void SetOKText( IN LPCTSTR pszText );	
 
 protected: // Valid to call only from the above handlers
 	AFX_INLINE void EnableOK( IN BOOL bEnable = TRUE );
-	AFX_INLINE void SetSelection( IN LPITEMIDLIST lpItemIDList );
-	AFX_INLINE void SetSelection( IN LPCTSTR lpszFolderPath );	
-	AFX_INLINE void SetStatusText( IN LPCTSTR lpszText );
+	AFX_INLINE void SetSelection( IN LPITEMIDLIST pItemIDList );
+	AFX_INLINE void SetSelection( IN LPCTSTR pszPath );	
+	AFX_INLINE void SetStatusText( IN LPCTSTR pszText );
 
 protected: // Shell version 5.0 or later:
-	AFX_INLINE void SetExpanded( IN LPITEMIDLIST lpItemIDList );
+	AFX_INLINE void SetExpanded( IN LPITEMIDLIST pItemIDList );
 	
 private:
 	HWND	m_hWnd; // used only in the callback function
 	static INT CALLBACK BrowseCallbackProc(
-		HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData
+		IN HWND hWnd, IN UINT uMsg, IN LPARAM lParam, IN LPARAM lpData
 	);
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-AFX_INLINE BOOL CFolderDialog::SetSelectedFolder( IN LPCTSTR lpszPath )
-	{ ASSERT ( lpszPath != NULL ); 
-		return( ::lstrcpy( m_szSelPath, lpszPath ) != NULL ); }
+AFX_INLINE BOOL CFolderDialog::SetSelectedFolder( IN LPCTSTR pszPath )
+	{ ASSERT( AfxIsValidString( pszPath, MAX_PATH ) );
+		return( ::lstrcpy( m_szSelPath, pszPath ) != NULL ); }
 
 AFX_INLINE LPCTSTR CFolderDialog::GetSelectedFolder( void ) const
 	{ return m_szSelPath; }
@@ -173,23 +185,24 @@ AFX_INLINE void CFolderDialog::EnableOK( IN BOOL bEnable /*TRUE*/ )
 	{ ASSERT( m_hWnd != NULL ); 
 		::SendMessage( m_hWnd, BFFM_ENABLEOK, (WPARAM)bEnable, 0L );}
 
-AFX_INLINE void CFolderDialog::SetSelection( IN LPITEMIDLIST lpItemIDList )
+AFX_INLINE void CFolderDialog::SetSelection( IN LPITEMIDLIST pItemIDList )
 	{ ASSERT( m_hWnd != NULL ); 
-		::SendMessage( m_hWnd, BFFM_SETSELECTION, (WPARAM)FALSE, (LPARAM)lpItemIDList ); }
+		::SendMessage( m_hWnd, BFFM_SETSELECTION, (WPARAM)FALSE, (LPARAM)pItemIDList ); }
 
-AFX_INLINE void CFolderDialog::SetSelection( IN LPCTSTR lpszFolderPath )
+AFX_INLINE void CFolderDialog::SetSelection( IN LPCTSTR pszPath )
 	{ ASSERT( m_hWnd != NULL );
-		::SendMessage( m_hWnd, BFFM_SETSELECTION, (WPARAM)TRUE, (LPARAM)lpszFolderPath ); }
+		ASSERT( AfxIsValidString( pszPath, MAX_PATH ) );
+			::SendMessage( m_hWnd, BFFM_SETSELECTION, (WPARAM)TRUE, (LPARAM)pszPath ); }
 
-AFX_INLINE void CFolderDialog::SetStatusText( IN LPCTSTR lpszText )
+AFX_INLINE void CFolderDialog::SetStatusText( IN LPCTSTR pszText )
 	{ ASSERT( m_hWnd != NULL );
-		::SendMessage( m_hWnd, BFFM_SETSTATUSTEXT, (WPARAM)0, (LPARAM)lpszText ); }
+		::SendMessage( m_hWnd, BFFM_SETSTATUSTEXT, (WPARAM)0, (LPARAM)pszText ); }
 
 // Shell version 5.0 or later:
 
-AFX_INLINE void CFolderDialog::SetExpanded( IN LPITEMIDLIST lpItemIDList )
+AFX_INLINE void CFolderDialog::SetExpanded( IN LPITEMIDLIST pItemIDList )
 	{ ASSERT( m_hWnd != NULL ); 
-		::SendMessage( m_hWnd, BFFM_SETEXPANDED, (WPARAM)FALSE, (LPARAM)lpItemIDList ); }
+		::SendMessage( m_hWnd, BFFM_SETEXPANDED, (WPARAM)FALSE, (LPARAM)pItemIDList ); }
 
 /////////////////////////////////////////////////////////////////////////////
 #endif // __FOLDERDLG_H__
