@@ -11,26 +11,50 @@ NOTES:
 	Undocumented SelectIcon APIs by Henk Devos
 	Article _T("How to display the Pick Icon Dialog") :)
 	http://www.codeproject.com/shell/selecticon.asp
+
+VERSION REQUIREMENTS:
+	As far as this class uses undocumented Windows API functions,
+	it may possibly fail depending on the shell version ( service 
+	packs installed - different or missing ordinal, etc ). However 
+	it was tested and ran properly under:
+
+		1. Windows 95 OSR2 - 4.00.950B
+		2. Windows 98 - 4.10.1998
+		3. Windows Me - 4.90.3000
+		4. Windows NT 4.0 Workstation - NT 4.0.1381 with SP 6i
+		5. Windows 2000 Professional - NT 5.0.2195 with/out SP1/SP2/SP3 
+		6. Windows XP Professional - NT 5.1.2600
 	
+	It was not tested (though should run properly) under:
+
+		1. Windows 95 - 4.00.950
+		2. Windows 95 SP1 - 4.00.950A
+		3. Windows 95 OSR 2.5 - 4.00.950C
+		4. Windows 98 SE - 4.10.2222A ( Second Edition ) 
+		5. Windows NT 4.0 Workstation - NT 4.0.1381 with SP1-SP5
+		6. Windows NT 4.0 Server -NT 4.0.1381  with SP1-SP6i
+		7. Windows 2000 Server - NT 5.0.2195 with/out SP1-SP3 
+		8. Windows XP Professional - NT 5.1.2600 with SP1
+		9. Windows XP Server 
+	
+	If anyone tested it on above-mentioned versions of Windows,
+	please mail.
+
 VERSION HISTORY:
 	09 Mar 2002 - First release
-	04 Nov 2002 - Fixed support for MFC 7.0 ( "int DoModal( void )" to INT_PTR )
+	04 Nov 2002 - Fixed support for MFC 7.0 ( INT DoModal 2 INT_PTR )
 				- Disable warning for ExtractIcon to compile with Level 4
-				- Changed ExpandEnvironmentStrings to DoEnvironmentSubst, 
-				  no temp variable needed
-				- Changed OS detection to GetVersion ( shorter )
+				- Changed ExpandEnvironmentStrings to DoEnvironmentSubst
+				- Changed OS detection to GetVersion
+	24 May 2003 - Some code changes
+				- Changed DoEnvironmentSubst back to ExpandEnvironmentStrings
+				- Added more detailed version support
 */
 /////////////////////////////////////////////////////////////////////////////
 
 #ifndef __ICONDLG_H__
 #define __ICONDLG_H__
 #pragma once
-
-/////////////////////////////////////////////////////////////////////////////
-
-#define _freeLibrary( h )	{ if( h != NULL ){ VERIFY( ::FreeLibrary( h ) ); h = NULL; } }
-#define _destroyIcon( h )	{ if( h != NULL ){ VERIFY( ::DestroyIcon( h ) ); h = NULL; } }
-#define _delete2( p )		{ if( p != NULL ){ delete[] p; p = NULL; } }
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -51,9 +75,29 @@ SelectIconA (
 );
 
 #ifdef UNICODE
-	#define SelectIcon SelectIconW
+	#define SelectIcon	SelectIconW
 #else
-	#define SelectIcon SelectIconA
+	#define SelectIcon	SelectIconA
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifndef		_freeLibrary
+	#define _freeLibrary( h )	{ if( h != NULL ){ VERIFY( ::FreeLibrary( (HMODULE)h ) ); h = NULL; } }
+#endif
+
+#ifndef		_destroyIcon
+	#define _destroyIcon( h )	{ if( h != NULL ){ VERIFY( ::DestroyIcon( (HICON)h ) ); h = NULL; } }
+#endif
+
+#ifndef		_delete2
+	#define _delete2( p )		{ if( p != NULL ){ delete[] p; p = NULL; } }
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+#ifndef __AFXDLGS_H__
+	#include < AfxDlgs.h >
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -71,7 +115,7 @@ public:
 
 public:
 	#if ( _MFC_VER < 0x0700 )
-		virtual INT DoModal( void );
+		virtual INT		DoModal( void );
 	#else
 		virtual INT_PTR DoModal( void );
 	#endif
@@ -90,6 +134,8 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP()
 };
+
+/////////////////////////////////////////////////////////////////////////////
 
 AFX_INLINE LPCTSTR CIconDialog::GetIconFile( void ) const
 	{ return m_szIconFile; }
