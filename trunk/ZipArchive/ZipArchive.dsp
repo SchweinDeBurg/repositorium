@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir ".\ReleaseA"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /Zp4 /W4 /GR /GX /Od /Ob1 /Gf /Gy /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /Zp4 /MD /W4 /GR /GX /Od /Ob1 /Gf /Gy /I "..\zlib\Source" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_WINDOWS" /D "_AFXDLL" /FD /c
+# ADD CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /Ob1 /Gf /Gy /I "..\zlib\Source" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_WINDOWS" /D "_AFXDLL" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
