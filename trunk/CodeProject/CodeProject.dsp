@@ -245,6 +245,10 @@ SOURCE=.\Source\PPTooltip.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\PugXML.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\ReportCtrl.h
 # End Source File
 # Begin Source File
