@@ -146,6 +146,11 @@ SOURCE=.\Source\MemMapFile.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\MemoryDC.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\SeException.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File
@@ -176,6 +181,10 @@ SOURCE=.\Source\WinCrypto.cpp
 # Begin Source File
 
 SOURCE=.\Source\MemMapFile.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\MemoryDC.h
 # End Source File
 # Begin Source File
 
