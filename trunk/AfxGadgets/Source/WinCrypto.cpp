@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2003-2004 by Elijah Zarezky,
+// Copyright (c) 2003-2005 by Elijah Zarezky,
 // All rights reserved.
 
 // WinCrypto.cpp - implementation of the CWinCrypto class

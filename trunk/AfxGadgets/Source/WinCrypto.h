@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2003-2004 by Elijah Zarezky,
+// Copyright (c) 2003-2005 by Elijah Zarezky,
 // All rights reserved.
 
 // WinCrypto.h - interface of the CWinCrypto class
@@ -8,7 +8,7 @@
 #define __WinCrypto_h
 
 #if !defined(_WIN32_WINNT) || (_WIN32_WINNT < 0x0400)
-#error this code uses features only available in Windows 98/NT4 or later
+#error this code uses features only available under Windows 98/NT4 or later
 #endif	// _WIN32_WINNT
 
 #if !defined(__AFXTEMPL_H__)

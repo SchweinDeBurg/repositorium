@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2004 by Elijah Zarezky,
+// Copyright (c) 2004-2005 by Elijah Zarezky,
 // All rights reserved.
 // Portions copyright (c) 1996-2002 Keith Rule.
 
