@@ -79,7 +79,10 @@ History: PJN / 27-06-1998 1) Fixed a potential buffer overflow problem in Delete
                           reporting this bug.
          PJN / 05-06-2004 1) Fixed a bug in CPop3Connection::ReadResponse, where the wrong parameters
                           were being null terminated. Thanks to "caowen" for this update.
-
+         PJN / 04-07-2004 1) Added an IsConnected() method to the CPop3Connection class. Thanks to Alessandro 
+                          Rosa for this addition.
+                          2) Added two new helper functions, namely CPop3Message::GetEmailAddress and 
+                          CPop3Message::GetEmailFriendlyName. Thanks to Alessandro Rosa for this suggestion.
 
                              
 
@@ -99,6 +102,7 @@ to maintain a single distribution point for the source code.
 */
 
 //////////////// Includes ////////////////////////////////////////////
+
 #include "stdafx.h"
 #ifndef __AFXPRIV_H__
 #pragma message("To avoid this message, please put afxpriv.h in your pre compiled header (normally stdafx.h)")
@@ -109,6 +113,7 @@ to maintain a single distribution point for the source code.
 
 
 //////////////// Macros //////////////////////////////////////////////
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -118,6 +123,7 @@ static char THIS_FILE[] = __FILE__;
 
 
 //////////////// Implementation //////////////////////////////////////
+
 CPop3Message::CPop3Message()
 {
   m_pszMessage = NULL;
@@ -306,8 +312,57 @@ CString CPop3Message::GetReplyTo() const
 	return sRet;
 }
 
+CString CPop3Message::GetEmailAddress(const CString& sNameAndAddress)
+{
+  //What will be the return value
+  CString sEmailAddress;
 
+	//divide the substring into friendly names and e-mail addresses
+	int nMark = sNameAndAddress.Find(_T('<'));
+	int nMark2 = sNameAndAddress.Find(_T('>'));
+	if ((nMark != -1) && (nMark2 != -1) && (nMark2 > (nMark+1)))
+		sEmailAddress = sNameAndAddress.Mid(nMark+1, nMark2 - nMark - 1);
+	else
+		sEmailAddress = sNameAndAddress;
 
+  return sEmailAddress;
+}
+
+CString CPop3Message::GetEmailFriendlyName(const CString& sNameAndAddress)
+{
+  //What will be the return value
+  CString sFriendlyName;
+
+	//divide the substring into friendly names and e-mail addresses
+	int nMark = sNameAndAddress.Find(_T('<'));
+	int nMark2 = sNameAndAddress.Find(_T('>'));
+	if ((nMark != -1) && (nMark2 != -1) && (nMark2 > (nMark+1)))
+	{
+		sFriendlyName = sNameAndAddress.Left(nMark);
+    sFriendlyName.TrimLeft();
+    sFriendlyName.TrimRight();
+
+    //Remove any quotes which may appear on the friendly name
+    int nLength = sFriendlyName.GetLength();
+    if (nLength)
+    {
+      //Remove the leading quote
+      if (sFriendlyName.GetAt(nLength - 1) == _T('"'))
+      {
+        sFriendlyName = sFriendlyName.Left(nLength - 1);
+        nLength--;
+      }
+      //Remove the trailing quote
+      if (nLength)
+      {
+        if (sFriendlyName.GetAt(0) == _T('"'))
+          sFriendlyName = sFriendlyName.Right(nLength - 1);
+      }
+    }
+  }
+
+  return sFriendlyName;
+}
 
 
 
@@ -412,9 +467,6 @@ BOOL CPop3Socket::IsReadible(BOOL& bReadible, DWORD dwTimeout)
     return TRUE;
   }
 }
-
-
-
 
 
 

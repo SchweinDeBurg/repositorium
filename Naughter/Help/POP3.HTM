@@ -1,13 +1,13 @@
 <html>
 
 <head>
-<title>CPop3Connection v1.31</title>
+<title>CPop3Connection v1.32</title>
 </head>
 
 <body>
 
 <p align="left"><img src="pop3.gif" width="40" height="40"><font face="Arial"><strong><big><big><big><big>CPop3Connection 
-v1.31</big></big></big></big></strong></font></p>
+v1.32</big></big></big></big></strong></font></p>
 
 <p><font face="Arial">Welcome to <strong>CPop3Connection</strong>, a freeware MFC class to
 support the POP3 protocol. POP3 for those not familiar with all the internet protocols is
@@ -335,6 +335,15 @@ face="Arial"><font color="#000000" size="3">)</font></strong> </font>
   <li><font face="Arial">Fixed a bug in CPop3Connection::ReadResponse, where the 
   wrong parameters were being null terminated. Thanks to &quot;caowen&quot; for this 
   update.</font></li>
+</ul>
+
+<p><strong><font face="Arial" size="3">v1.32 (4 July 2004)</font></strong></p>
+<ul>
+  <li><font face="Arial">Added an IsConnected() method to the CPop3Connection 
+  class. Thanks to Alessandro Rosa for this addition.</font></li>
+  <li><font face="Arial">Added two new helper functions, namely 
+  CPop3Message::GetEmailAddress and CPop3Message::GetEmailFriendlyName. Thanks 
+  to Alessandro Rosa for this suggestion.</font></li>
 </ul>
 
 <p>&nbsp;</p>
@@ -932,6 +941,6 @@ THE AUTHOR</strong></font></font></p>
 <p><font face="Arial" color="#000000" size="3">PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-5 June 2004</font></p>
+4 July 2004</font></p>
 </body>
 </html>

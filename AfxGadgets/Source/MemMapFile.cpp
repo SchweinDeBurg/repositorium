@@ -17,8 +17,7 @@ static char THIS_FILE[] = __FILE__;
 // object model
 IMPLEMENT_DYNAMIC(CMemMapFile, CObject)
 
-CMemMapFile::CMemMapFile(LPCTSTR pszObjName):
-m_strObjName(pszObjName),
+CMemMapFile::CMemMapFile(void):
 m_hFile(INVALID_HANDLE_VALUE),
 m_hMapping(NULL),
 m_dataPtr(NULL)
@@ -30,20 +29,31 @@ CMemMapFile::~CMemMapFile(void)
 	Close();
 }
 
-void* CMemMapFile::Create(LPCTSTR pszFileName, DWORD fdwAccess, DWORD cbMaxSize)
+void* CMemMapFile::Create(LPCTSTR pszFileName, BOOL fWritable, DWORD cbMaxSize, LPCTSTR pszObjName)
 {
-	ASSERT(AfxIsValidString(pszFileName));
-	ASSERT((fdwAccess & GENERIC_READ) != 0);
+	ASSERT(m_hFile == INVALID_HANDLE_VALUE);
+	ASSERT(m_hMapping == NULL);
+	ASSERT(m_dataPtr == NULL);
 
-	m_hFile = ::CreateFile(pszFileName, fdwAccess, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	ASSERT(AfxIsValidString(pszFileName));
+	ASSERT(::lstrlen(pszFileName) > 0);
+
+	DWORD fdwMode = fWritable ? GENERIC_READ | GENERIC_WRITE : GENERIC_READ;
+	m_hFile = ::CreateFile(pszFileName, fdwMode, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (m_hFile == INVALID_HANDLE_VALUE) {
 		DWORD dwErrCode = ::GetLastError();
 		CWin32Error* pXcpt = new CWin32Error(dwErrCode);
 		throw pXcpt;
 	}
+	else if (cbMaxSize == 0 && ::GetFileSize(m_hFile, NULL) == 0) {
+		// special case - zero-length file and no growing allowed
+		::CloseHandle(m_hFile);
+		m_hFile = INVALID_HANDLE_VALUE;
+		return (NULL);
+	}
 
-	DWORD fdwProtect = (fdwAccess & GENERIC_WRITE) != 0 ? PAGE_READWRITE : PAGE_READONLY;
-	m_hMapping = ::CreateFileMapping(m_hFile, NULL, fdwProtect, 0, cbMaxSize, m_strObjName);
+	DWORD fdwProtect = fWritable ? PAGE_READWRITE : PAGE_READONLY;
+	m_hMapping = ::CreateFileMapping(m_hFile, NULL, fdwProtect, 0, cbMaxSize, pszObjName);
 	if (m_hMapping == NULL) {
 		DWORD dwErrCode = ::GetLastError();
 		::CloseHandle(m_hFile);
@@ -52,8 +62,8 @@ void* CMemMapFile::Create(LPCTSTR pszFileName, DWORD fdwAccess, DWORD cbMaxSize)
 		throw pXcpt;
 	}
 
-	DWORD fdwAccView = fdwProtect == PAGE_READWRITE ? FILE_MAP_WRITE : FILE_MAP_READ;
-	m_dataPtr = ::MapViewOfFile(m_hMapping, fdwAccView, 0, 0, 0);
+	DWORD fdwAccess = fWritable ? FILE_MAP_WRITE : FILE_MAP_READ;
+	m_dataPtr = ::MapViewOfFile(m_hMapping, fdwAccess, 0, 0, 0);
 	if (m_dataPtr == NULL) {
 		DWORD dwErrCode = ::GetLastError();
 		::CloseHandle(m_hMapping);
@@ -63,6 +73,41 @@ void* CMemMapFile::Create(LPCTSTR pszFileName, DWORD fdwAccess, DWORD cbMaxSize)
 		CWin32Error* pXcpt = new CWin32Error(dwErrCode);
 		throw pXcpt;
 	}
+
+	m_strFileName = pszFileName;
+	m_strObjName = pszObjName;
+
+	return (m_dataPtr);
+}
+
+void* CMemMapFile::Open(BOOL fWritable, LPCTSTR pszObjName)
+{
+	ASSERT(m_hFile == INVALID_HANDLE_VALUE);
+	ASSERT(m_hMapping == NULL);
+	ASSERT(m_dataPtr == NULL);
+
+	ASSERT(AfxIsValidString(pszObjName));
+	ASSERT(::lstrlen(pszObjName) > 0);
+
+	DWORD fdwAccess = fWritable ? FILE_MAP_WRITE : FILE_MAP_READ;
+
+	m_hMapping = ::OpenFileMapping(fdwAccess, FALSE, pszObjName);
+	if (m_hMapping == NULL) {
+		DWORD dwErrCode = ::GetLastError();
+		CWin32Error* pXcpt = new CWin32Error(dwErrCode);
+		throw pXcpt;
+	}
+
+	m_dataPtr = ::MapViewOfFile(m_hMapping, fdwAccess, 0, 0, 0);
+	if (m_dataPtr == NULL) {
+		DWORD dwErrCode = ::GetLastError();
+		::CloseHandle(m_hMapping);
+		m_hMapping = NULL;
+		CWin32Error* pXcpt = new CWin32Error(dwErrCode);
+		throw pXcpt;
+	}
+
+	m_strObjName = pszObjName;
 
 	return (m_dataPtr);
 }
@@ -74,14 +119,34 @@ void CMemMapFile::Close(void)
 		m_dataPtr = NULL;
 		::CloseHandle(m_hMapping);
 		m_hMapping = NULL;
-		::CloseHandle(m_hFile);
-		m_hFile = INVALID_HANDLE_VALUE;
+		if (m_hFile != INVALID_HANDLE_VALUE) {
+			::CloseHandle(m_hFile);
+			m_hFile = INVALID_HANDLE_VALUE;
+		}
+		m_strObjName.Empty();
+		m_strFileName.Empty();
+	}
+}
+
+void CMemMapFile::Flush(void)
+{
+	ASSERT(m_dataPtr != NULL);
+
+	if (!::FlushViewOfFile(m_dataPtr, 0)) {
+		DWORD dwErrCode = ::GetLastError();
+		CWin32Error* pXcpt = new CWin32Error(dwErrCode);
+		throw pXcpt;
 	}
 }
 
 void* CMemMapFile::GetDataPtr(void)
 {
 	return (m_dataPtr);
+}
+
+DWORD CMemMapFile::GetLength(void)
+{
+	return (m_hFile != INVALID_HANDLE_VALUE ? ::GetFileSize(m_hFile, NULL) : 0);
 }
 
 #if defined(_DEBUG)
@@ -99,9 +164,9 @@ void CMemMapFile::Dump(CDumpContext& dumpCtx) const
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
 		// ...and then dump own unique members
-		dumpCtx << "m_strObjName = " << m_strObjName;
-		dumpCtx << "\nm_strFileName = " << m_strFileName;
+		dumpCtx << "m_strFileName = " << m_strFileName;
 		dumpCtx << "\nm_hFile = " << m_hFile;
+		dumpCtx << "\nm_strObjName = " << m_strObjName;
 		dumpCtx << "\nm_hMapping = " << m_hMapping;
 		dumpCtx << "\nm_dataPtr = " << m_dataPtr;
 	}
