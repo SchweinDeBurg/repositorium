@@ -33,7 +33,12 @@
 #include "ZipMemFile.h"
 #include "ZipExport.h"
 
-
+#if defined(__INTEL_COMPILER)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #444: destructor for base class is not virtual
+#pragma warning(disable: 444)
+#endif	// __INTEL_COMPILER
 
 /**
 	A base class for functional objects (functors) that are used as a callbacks during various actions.
@@ -584,5 +589,9 @@ protected:
 	bool m_bReadOnly;
 	
 };
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 279 444)
+#endif	// __INTEL_COMPILER
 
 #endif // !defined(AFX_ZIPSTORAGE_H__941824FE_3320_4794_BDE3_BE334ED8984B__INCLUDED_)

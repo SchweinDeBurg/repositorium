@@ -30,10 +30,16 @@
 #pragma warning (disable:4702) // disable "Unreachable code" warning in Throw function in the Release mode
 #endif // _MSC_VER > 1000
 
-
 #include "ZipString.h"
 #include "ZipBaseException.h"
 #include "ZipExport.h"
+
+#if defined(__INTEL_COMPILER)
+// remark #271: trailing comma is nonstandard
+#pragma warning(disable: 271)
+// remark #909: exception specification ignored
+#pragma warning(disable: 909)
+#endif	// __INTEL_COMPILER
 
 #define ZIP_ENABLE_ERROR_DESCRIPTION
  
@@ -213,6 +219,10 @@ protected:
 
 #endif //ZIP_ENABLE_ERROR_DESCRIPTION
 
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 271 909)
+#endif	// __INTEL_COMPILER
+
 #ifdef _MFC_VER
 	DECLARE_DYNAMIC(CZipException)
 	#pragma warning( pop )
@@ -221,5 +231,3 @@ protected:
 
 
 #endif // !defined(AFX_ZIPEXCEPTION_H__E3546921_D728_11D3_B7C7_E77339672847__INCLUDED_)
-
-

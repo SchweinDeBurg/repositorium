@@ -28,6 +28,11 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#if defined(__INTEL_COMPILER)
+// remark #424: extra ";" ignored
+#pragma warning(disable: 424)
+#endif	// __INTEL_COMPILER
+
 class CZipAutoBuffer;
 class CZipFileHeader;
 
@@ -103,5 +108,9 @@ namespace ZipCompatibility
 	void SlashBackslashChg(CZipAutoBuffer& buffer, bool bReplaceSlash);
 
 };
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 424)
+#endif	// __INTEL_COMPILER
 
 #endif // !defined(AFX_ZIPCOMPATIBILITY_H__8E8B9904_84C7_4B22_B364_A10ED0E7DAD6__INCLUDED_)

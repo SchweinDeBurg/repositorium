@@ -29,8 +29,22 @@ class CZipFileHeader;
 class CZipAutoBuffer;
 #include "ZipString.h"
 #include "ZipPathComponent.h"
+
+#if defined(__INTEL_COMPILER)
+// remark #193: zero used for undefined preprocessing identifier
+#pragma warning(disable: 193)
 #include <sys/types.h>
+#pragma warning(default: 193)
+#else
+#include <sys/types.h>
+#endif	// __INTEL_COMPILER
+
 #include "ZipExport.h"
+
+#if defined(__INTEL_COMPILER)
+// remark #424: extra ";" ignored
+#pragma warning(disable: 424)
+#endif	// __INTEL_COMPILER
 
 /**
 	Interface to the system API.
@@ -171,5 +185,8 @@ namespace ZipPlatform
 #endif
 };
 
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 424)
+#endif	// __INTEL_COMPILER
 
 #endif // !defined(AFX_ZipPlatform_H__E2FE6343_9D03_4F3C_A1F7_706C9F0ED978__INCLUDED_)

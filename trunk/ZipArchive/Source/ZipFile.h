@@ -23,6 +23,13 @@
 #include "ZipAbstractFile.h"
 #include "ZipExport.h"
 
+#if defined(__INTEL_COMPILER)
+// warning #69: integer conversion resulted in truncation
+#pragma warning(disable: 69)
+// warning #1125: function is hidden by another
+#pragma warning(disable: 1125)
+#endif	// __INTEL_COMPILER
+
 class ZIP_API CZipFile :public CZipAbstractFile, public CFile
 {
 public:
@@ -76,5 +83,9 @@ public:
 	virtual ~CZipFile();
 
 };
+
+#if defined(__INTEL_COMPILER)
+#pragma warning(default: 69 1125)
+#endif	// __INTEL_COMPILER
 
 #endif // !defined(AFX_ZIPFILE_H__80609DE0_2C6D_4C94_A90C_0BE34A50C769__INCLUDED_)
