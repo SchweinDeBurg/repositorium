@@ -47,7 +47,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir ".\ReleaseA"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /D "NDEBUG" /D "_MBCS" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "_USE_NON_INTEL_COMPILER" /FD /c
+# ADD CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /D "NDEBUG" /D "_MBCS" /D "_USE_NON_INTEL_COMPILER" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "POP3_NOSSL_SUPPORT" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -71,7 +71,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir ".\DebugA"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /Zp4 /MDd /W4 /GR /GX /Zi /Od /Ob1 /Gf /Gy /D "_DEBUG" /D "_MBCS" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "_USE_NON_INTEL_COMPILER" /FD /GZ /c
+# ADD CPP /nologo /Zp4 /MDd /W4 /GR /GX /Zi /Od /Ob1 /Gf /Gy /D "_DEBUG" /D "_MBCS" /D "_USE_NON_INTEL_COMPILER" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "POP3_NOSSL_SUPPORT" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -96,7 +96,7 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_WINDOWS" /D "_AFXDLL" /FD /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /D "NDEBUG" /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "_USE_NON_INTEL_COMPILER" /FD /c
+# ADD CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /D "NDEBUG" /D "UNICODE" /D "_UNICODE" /D "_USE_NON_INTEL_COMPILER" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "POP3_NOSSL_SUPPORT" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -121,7 +121,7 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /Zp4 /MDd /W4 /GR /GX /Zi /Od /Ob1 /Gf /Gy /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "_WINDOWS" /D "_AFXDLL" /FD /GZ /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /nologo /Zp4 /MDd /W4 /GR /GX /Zi /Od /Ob1 /Gf /Gy /D "_DEBUG" /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "_USE_NON_INTEL_COMPILER" /FD /GZ /c
+# ADD CPP /nologo /Zp4 /MDd /W4 /GR /GX /Zi /Od /Ob1 /Gf /Gy /D "_DEBUG" /D "UNICODE" /D "_UNICODE" /D "_USE_NON_INTEL_COMPILER" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "POP3_NOSSL_SUPPORT" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -146,7 +146,7 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /D "NDEBUG" /D "_MBCS" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /FD /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /D "NDEBUG" /D "_MBCS" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "_USE_INTEL_COMPILER" /FD /c
+# ADD CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /D "NDEBUG" /D "_MBCS" /D "_USE_INTEL_COMPILER" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "POP3_NOSSL_SUPPORT" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -171,7 +171,7 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /Zp4 /MDd /W4 /GR /GX /Zi /Od /Ob1 /Gf /Gy /D "_DEBUG" /D "_MBCS" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /FD /GZ /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /nologo /Zp4 /MDd /W4 /GR /GX /Zi /Od /Ob1 /Gf /Gy /D "_DEBUG" /D "_MBCS" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "_USE_INTEL_COMPILER" /FD /GZ /c
+# ADD CPP /nologo /Zp4 /MDd /W4 /GR /GX /Zi /Od /Ob1 /Gf /Gy /D "_DEBUG" /D "_MBCS" /D "_USE_INTEL_COMPILER" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "POP3_NOSSL_SUPPORT" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -196,7 +196,7 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /D "NDEBUG" /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /FD /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /D "NDEBUG" /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "_USE_INTEL_COMPILER" /FD /c
+# ADD CPP /nologo /Zp4 /MD /W4 /GR /GX /O1 /D "NDEBUG" /D "UNICODE" /D "_UNICODE" /D "_USE_INTEL_COMPILER" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "POP3_NOSSL_SUPPORT" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -221,7 +221,7 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /Zp4 /MDd /W4 /GR /GX /Zi /Od /Ob1 /Gf /Gy /D "_DEBUG" /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /FD /GZ /c
 # SUBTRACT BASE CPP /YX
-# ADD CPP /nologo /Zp4 /MDd /W4 /GR /GX /Zi /Od /Ob1 /Gf /Gy /D "_DEBUG" /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "_USE_INTEL_COMPILER" /FD /GZ /c
+# ADD CPP /nologo /Zp4 /MDd /W4 /GR /GX /Zi /Od /Ob1 /Gf /Gy /D "_DEBUG" /D "UNICODE" /D "_UNICODE" /D "_USE_INTEL_COMPILER" /D "_WINDOWS" /D "_AFXDLL" /D "WIN32" /D "_LIB" /D "POP3_NOSSL_SUPPORT" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -262,12 +262,30 @@ SOURCE=.\Source\stdafx.h
 # PROP Default_Filter "h;cpp"
 # Begin Source File
 
+SOURCE=.\Source\Base64.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\Base64.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\Pop3.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File
 # Begin Source File
 
 SOURCE=.\Source\Pop3.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\SocMFC.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\SocMFC.h
 # End Source File
 # End Group
 # Begin Group "SMTP"

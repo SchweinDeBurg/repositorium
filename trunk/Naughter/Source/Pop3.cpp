@@ -83,10 +83,29 @@ History: PJN / 27-06-1998 1) Fixed a potential buffer overflow problem in Delete
                           Rosa for this addition.
                           2) Added two new helper functions, namely CPop3Message::GetEmailAddress and 
                           CPop3Message::GetEmailFriendlyName. Thanks to Alessandro Rosa for this suggestion.
+         PJN / 09-08-2004 1) Fixed a number of compiler warnings when the code is compiled with VC.Net 2003
+         PJN / 27-03-2005 1). Fixed a number of compiler warnings in the sample app when the code is compiled
+                          with VC .NET 2003.
+                          2) Timeout now defaults to 5 seconds in debug mode.
+                          3) Added support for connecting via Socks4, Socks5 and HTTP proxies
+                          4) Added support for POP3 via SSL. Thanks to Serhiy Pavlov and Alexey Kuznetsov for
+                          suggesting this update. Please note that because I do not have access to a mail 
+                          server which provides POP3 over SSL, you should consider this support preliminary
+                          until I get feedback from users of this feature. The standard POP3 support is still
+                          fully functional and tested of course.
+         PJN / 09-04-2005 1) Updated the initialization code for OpenSSL in the sample app to avoid memory 
+                          leaks. Thanks to Alexey Kuznetsov for reporting these issues. You should implement
+                          the same initialization and cleanup code in your applications. For details please check
+                          the code in "main.cpp" module which is enclosed in #ifndef POP3_NOSSL_SUPPORT / 
+                          #endif sections.
+                          2) "List" function is now public instead of protected. Thanks to Alexey Kuznetsov for 
+                          reporting these issues. 
+                          3) Addition of a simple "FindMessageID" which returns the Message index given a message
+                          ID as returned via UIDL. Thanks to Alexey Kuznetsov for this addition. 
 
                              
 
-Copyright (c) 1998 - 2004 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2005 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -98,8 +117,8 @@ except you cannot modify the copyright details at the top of each module. If you
 code with your application, then you are only allowed to distribute versions released by the author. This is 
 to maintain a single distribution point for the source code. 
 
-
 */
+
 
 //////////////// Includes ////////////////////////////////////////////
 
@@ -110,18 +129,7 @@ to maintain a single distribution point for the source code.
 #endif
 #include "pop3.h"
 
-#if defined(__INTEL_COMPILER)
-// remark #174: expression has no effect
-#pragma warning(disable: 174)
-// remark #279: controlling expression is constant
-#pragma warning(disable: 279)
-// remark #383: value copied to temporary, reference to temporary used
-#pragma warning(disable: 383)
-// remark #593: variable was set but never used
-#pragma warning(disable: 593)
-// remark #981: operands are evaluated in unspecified order
-#pragma warning(disable: 981)
-#endif	// __INTEL_COMPILER
+
 
 //////////////// Macros //////////////////////////////////////////////
 
@@ -167,7 +175,7 @@ CPop3Message& CPop3Message::operator=(const CPop3Message& message)
   if (message.m_pszMessage)
 	{
     //Allocate the new heap memory
-    int nMessageSize = strlen(message.m_pszMessage);
+    int nMessageSize = (int) strlen(message.m_pszMessage);
     m_pszMessage = new char[nMessageSize + 1];
 
     //Transfer across its contents
@@ -309,7 +317,7 @@ CString CPop3Message::GetBody() const
 
 CString CPop3Message::GetReplyTo() const
 {
-	CString sRet = GetHeaderItem("Reply-To");
+	CString sRet = GetHeaderItem(_T("Reply-To"));
   if (sRet.IsEmpty())
   {
     sRet = GetFrom();
@@ -377,123 +385,21 @@ CString CPop3Message::GetEmailFriendlyName(const CString& sNameAndAddress)
 
 
 
-CPop3Socket::CPop3Socket()
-{
-  m_hSocket = INVALID_SOCKET; //default to an invalid scoket descriptor
-}
-
-CPop3Socket::~CPop3Socket()
-{
-  Close();
-}
-
-BOOL CPop3Socket::Create()
-{
-  m_hSocket = socket(AF_INET, SOCK_STREAM, 0);
-  return (m_hSocket != INVALID_SOCKET);
-}
-
-BOOL CPop3Socket::Connect(LPCTSTR pszHostAddress, int nPort)
-{
-	//For correct operation of the T2A macro, see MFC Tech Note 59
-	USES_CONVERSION;
-
-  //must have been created first
-  ASSERT(m_hSocket != INVALID_SOCKET);
-  
-	//Determine if the address is in dotted notation
-	SOCKADDR_IN sockAddr;
-	ZeroMemory(&sockAddr, sizeof(sockAddr));
-	sockAddr.sin_family = AF_INET;
-	sockAddr.sin_port = htons((u_short)nPort);
-  char* pszAsciiHostAddress = T2A((LPTSTR) pszHostAddress);
-	sockAddr.sin_addr.s_addr = inet_addr(pszAsciiHostAddress);
-
-	//If the address is not dotted notation, then do a DNS 
-	//lookup of it.
-	if (sockAddr.sin_addr.s_addr == INADDR_NONE)
-	{
-		LPHOSTENT lphost;
-		lphost = gethostbyname(pszAsciiHostAddress);
-		if (lphost != NULL)
-			sockAddr.sin_addr.s_addr = ((LPIN_ADDR)lphost->h_addr)->s_addr;
-		else
-		{
-			WSASetLastError(WSAEINVAL); 
-			return FALSE;
-		}
-	}
-
-	//Call the protected version which takes an address 
-	//in the form of a standard C style struct.
-	return Connect((SOCKADDR*)&sockAddr, sizeof(sockAddr));
-}
-
-BOOL CPop3Socket::Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen)
-{
-	return (connect(m_hSocket, lpSockAddr, nSockAddrLen) != SOCKET_ERROR);
-}
-
-BOOL CPop3Socket::Send(LPCSTR pszBuf, int nBuf)
-{
-  //must have been created first
-  ASSERT(m_hSocket != INVALID_SOCKET);
-
-  return (send(m_hSocket, pszBuf, nBuf, 0) != SOCKET_ERROR);
-}
-
-int CPop3Socket::Receive(LPSTR pszBuf, int nBuf)
-{
-  //must have been created first
-  ASSERT(m_hSocket != INVALID_SOCKET);
-
-  return recv(m_hSocket, pszBuf, nBuf, 0); 
-}
-
-void CPop3Socket::Close()
-{
-	if (m_hSocket != INVALID_SOCKET)
-	{
-		VERIFY(SOCKET_ERROR != closesocket(m_hSocket));
-		m_hSocket = INVALID_SOCKET;
-	}
-}
-
-BOOL CPop3Socket::IsReadible(BOOL& bReadible, DWORD dwTimeout)
-{
-  timeval timeout;
-  timeout.tv_sec = dwTimeout/1000;
-  timeout.tv_usec = (dwTimeout%1000)*1000;
-  fd_set fds;
-  FD_ZERO(&fds);
-  FD_SET(m_hSocket, &fds);
-  int nStatus = select(0, &fds, NULL, NULL, &timeout);
-  if (nStatus == SOCKET_ERROR)
-  {
-    return FALSE;
-  }
-  else
-  {
-    bReadible = !(nStatus == 0);
-    return TRUE;
-  }
-}
-
-
-
 CPop3Connection::CPop3Connection()
 {
   m_nNumberOfMails = 0;
   m_bListRetrieved = FALSE;
   m_bStatRetrieved = FALSE;
   m_bUIDLRetrieved = FALSE;
-  m_msgSizes.RemoveAll();
   m_bConnected = FALSE;
 #ifdef _DEBUG
   m_dwTimeout = 60000; //default timeout of 60 seconds when debugging
 #else
-  m_dwTimeout = 2000;  //default timeout of 2 seconds for normal release code
+  m_dwTimeout = 5000;  //default timeout of 5 seconds for normal release code
 #endif
+  m_ConnectionType = ctNormal;
+  m_ProxyType = ptNone;;
+  m_nProxyPort = 1080;
 }
 
 CPop3Connection::~CPop3Connection()
@@ -502,76 +408,289 @@ CPop3Connection::~CPop3Connection()
     Disconnect();
 }
 
+BOOL CPop3Connection::Send(void* pBuffer, int nBufLen)
+{
+  //Assume the worst
+  BOOL bSuccess = FALSE;
+
+#ifndef POP3_NOSSL_SUPPORT
+  if (m_ConnectionType == ctSSL3)
+  {
+    int nSSLWrite = m_SSLSocket.Send(pBuffer, nBufLen);
+    bSuccess = (nSSLWrite > 1);
+  }
+  else
+#endif
+  {
+    try
+    {
+      //Let the socket do the send
+      m_Socket.Send(pBuffer, nBufLen);
+      bSuccess = TRUE;
+    }
+    catch(CWSocketException* pEx)
+    {
+      //Pull out the exceptions details before we delete it
+      int nError = pEx->m_nError;
+
+      //Delete the exception before we go any further
+      pEx->Delete();
+
+      SetLastError(nError);
+    }
+  }
+
+  return bSuccess;
+}
+
 BOOL CPop3Connection::Connect(LPCTSTR pszHostName, LPCTSTR pszUser, LPCTSTR pszPassword, int nPort)
 {
-	//For correct operation of the T2A macro, see MFC Tech Note 59
 	USES_CONVERSION;
 
   //Create the socket
-  if (!m_Pop.Create())
+  try
   {
-    TRACE(_T("CPop3Connection::Connect, Failed to create client socket, GetLastError:%d\n"), GetLastError());
+    m_Socket.Create();
+  }
+  catch(CWSocketException* pEx)
+  {
+    TRACE(_T("CPop3Connection::Connect, Failed to create client socket, Error:%d\n"), pEx->m_nError);
+
+    //Tidy up prior to returning
+    SetLastError(pEx->m_nError);
+    pEx->Delete();
+
     return FALSE;
   }
 
-  //Connect to the POP3 Host
-  if (!m_Pop.Connect(pszHostName, nPort))
+#ifndef POP3_NOSSL_SUPPORT
+  //Do the SSL setup if required
+  if (m_ConnectionType == ctSSL3)
   {
-    TRACE(_T("CPop3Connection::Connect, Could not connect to the POP3 mailbox, GetLastError:%d\n"), GetLastError());
-    return FALSE;
-  }
-  else
-  {
-    //We're now connected !!
-    m_bConnected = TRUE;
-
-    //check the response
-    if (!ReadCommandResponse())
+    //Pick the SSL protocol to use (in this example we just hard code it)
+    SSL_METHOD* pSSLMethod = SSLv3_client_method();
+    
+    //Get the default rand file from OpenSSL
+    char sSSLFile[1024];
+    const char* pszRandFile = RAND_file_name(sSSLFile, sizeof(sSSLFile));
+    if (pszRandFile == NULL)
     {
-      TRACE(_T("CPop3Connection::Connect, Failed to read a command response from the POP3 server\n"));
-      Disconnect();
-      return FALSE;
-    }
-
-    //Send the POP3 username and check the response
-    char sBuf[128];
-    char* pszAsciiUser = T2A((LPTSTR) pszUser);
-    ASSERT(strlen(pszAsciiUser) < 100); 
-    sprintf(sBuf, "USER %s\r\n", pszAsciiUser);
-    int nCmdLength = strlen(sBuf);
-    if (!m_Pop.Send(sBuf, nCmdLength))
-    {
-      TRACE(_T("CPop3Connection::Connect, Failed to send the USER command to the POP3 server\n"));
-      Disconnect();
-      return FALSE;
-    }
-    if (!ReadCommandResponse())
-    {
-      TRACE(_T("CPop3Connection::Connect, Failed to read a USER command response from the POP3 server\n"));
-      Disconnect();
-      return FALSE;
-    } 
-
-    //Send the POP3 password and check the response
-    char* pszAsciiPassword = T2A((LPTSTR) pszPassword);
-    ASSERT(strlen(pszAsciiPassword) < 100);
-    sprintf(sBuf, "PASS %s\r\n", pszAsciiPassword);
-    nCmdLength = strlen(sBuf);
-    if (!m_Pop.Send(sBuf, nCmdLength))
-    {
-      TRACE(_T("CPop3Connection::Connect, Failed to send the PASS command to the POP3 server\n"));
-      Disconnect();
-      return FALSE;
-    }
-    if (!ReadCommandResponse())
-    {
-      TRACE(_T("CPop3Connection::Connect, Failed to read a PASS command response from the POP3 server\n"));
+      TRACE(_T("CPop3Connection::Connect, Failed to get SSL RAND file name, GetLastError:%d\n"), GetLastError());
       Disconnect();
       return FALSE;
     }
     
-    return TRUE;
+    //Set the PRNG for OpenSSL
+    RAND_load_file(pszRandFile, -1);
+    if (RAND_status() == 0)
+    {
+      TRACE(_T("CPop3Connection::Connect, Failed to set SSL RAND file, GetLastError:%d\n"), GetLastError());
+      Disconnect();
+      return FALSE;
+    }
+    
+    //Create the SSL context object
+    ASSERT(pSSLMethod != NULL);
+    SSL_CTX* pSSLContext = SSL_CTX_new(pSSLMethod);
+    if (pSSLContext == NULL) 
+    {
+      TRACE(_T("CPop3Connection::Connect, Failed to create SSL context, GetLastError:%d\n"), GetLastError());
+      Disconnect();
+      return FALSE;
+    }
+    
+    //Create the SSL socket from the context
+    CSSLContext sslContext;
+    sslContext.Attach(pSSLContext);
+    if (!m_SSLSocket.Create(sslContext, m_Socket))
+    {
+      TRACE(_T("CPop3Connection::Connect, Failed to create SSL socket, GetLastError:%d\n"), GetLastError());
+      Disconnect();
+      return FALSE;
+    }
+    
+    //Connect to the POP3 Host
+    try
+    {
+      //Bind if required
+      if (m_sLocalBoundAddress.GetLength())
+        m_SSLSocket.operator CWSocket &().Bind(0, m_sLocalBoundAddress);
+
+      switch (m_ProxyType)
+      {
+        case ptSocks4:
+        {
+          m_SSLSocket.ConnectViaSocks4(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_dwTimeout);
+          break;
+        }
+        case ptSocks5:
+        {
+          if (m_sProxyUserName.GetLength())
+            m_SSLSocket.ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, FALSE);
+          else
+            m_SSLSocket.ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, NULL, NULL, m_dwTimeout, FALSE);
+          break;
+        }
+        case ptHTTP:
+        {
+          CString sProxyResponse;
+          if (m_sProxyUserName.GetLength())
+          {
+            if (m_sUserAgent.GetLength())
+              m_SSLSocket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, m_sUserAgent);
+            else
+              m_SSLSocket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, NULL);
+          }
+          else
+          {
+            if (m_sUserAgent.GetLength())
+              m_SSLSocket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, m_sUserAgent);
+            else
+              m_SSLSocket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, NULL);
+          }
+          break;
+        }
+        case ptNone:
+        {
+          m_SSLSocket.Connect(pszHostName, nPort);
+          break;
+        }
+        default:
+        {
+          ASSERT(FALSE);
+          break;
+        }
+      }
+    }
+    catch(CWSocketException* pEx)
+    {
+      TRACE(_T("CPop3Connection::Connect, Could not connect to the POP3 server, Error:%d\n"), pEx->m_nError);
+
+      //Tidy up prior to returning
+      SetLastError(pEx->m_nError);
+      pEx->Delete();
+
+      return FALSE;
+    }
   }
+  else
+#endif
+  {
+    //Connect to the POP3 Host
+    try
+    {
+      //Bind if required
+      if (m_sLocalBoundAddress.GetLength())
+        m_Socket.Bind(0, m_sLocalBoundAddress);
+
+      switch (m_ProxyType)
+      {
+        case ptSocks4:
+        {
+          m_Socket.ConnectViaSocks4(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_dwTimeout);
+          break;
+        }
+        case ptSocks5:
+        {
+          if (m_sProxyUserName.GetLength())
+            m_Socket.ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, FALSE);
+          else
+            m_Socket.ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, NULL, NULL, m_dwTimeout, FALSE);
+          break;
+        }
+        case ptHTTP:
+        {
+          CString sProxyResponse;
+          if (m_sProxyUserName.GetLength())
+          {
+            if (m_sUserAgent.GetLength())
+              m_Socket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, m_sUserAgent);
+            else
+              m_Socket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, NULL);
+          }
+          else
+          {
+            if (m_sUserAgent.GetLength())
+              m_Socket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, m_sUserAgent);
+            else
+              m_Socket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, NULL);
+          }
+          break;
+        }
+        case ptNone:
+        {
+          m_Socket.Connect(pszHostName, nPort);
+          break;
+        }
+        default:
+        {
+          ASSERT(FALSE);
+          break;
+        }
+      }
+    }
+    catch(CWSocketException* pEx)
+    {
+      TRACE(_T("CPop3Connection::Connect, Could not connect to the POP3 server, Error:%d\n"), pEx->m_nError);
+
+      //Tidy up prior to returning
+      SetLastError(pEx->m_nError);
+      pEx->Delete();
+
+      return FALSE;
+    }
+  }
+
+
+  //We're now connected !!
+  m_bConnected = TRUE;
+
+  //check the response
+  if (!ReadCommandResponse())
+  {
+    TRACE(_T("CPop3Connection::Connect, Failed to read a command response from the POP3 server, GetLastError:%d\n"), GetLastError());
+    Disconnect();
+    return FALSE;
+  }
+
+  //Send the POP3 username and check the response
+  char sBuf[128];
+  char* pszAsciiUser = T2A((LPTSTR) pszUser);
+  ASSERT(strlen(pszAsciiUser) < 100); 
+  sprintf(sBuf, "USER %s\r\n", pszAsciiUser);
+  int nCmdLength = (int) strlen(sBuf);
+  if (!Send(sBuf, nCmdLength))
+  {
+    TRACE(_T("CPop3Connection::Connect, Failed to send the USER command to the POP3 server\n"));
+    Disconnect();
+    return FALSE;
+  }
+  if (!ReadCommandResponse())
+  {
+    TRACE(_T("CPop3Connection::Connect, Failed to read a USER command response from the POP3 server\n"));
+    Disconnect();
+    return FALSE;
+  } 
+
+  //Send the POP3 password and check the response
+  char* pszAsciiPassword = T2A((LPTSTR) pszPassword);
+  ASSERT(strlen(pszAsciiPassword) < 100);
+  sprintf(sBuf, "PASS %s\r\n", pszAsciiPassword);
+  nCmdLength = (int) strlen(sBuf);
+  if (!Send(sBuf, nCmdLength))
+  {
+    TRACE(_T("CPop3Connection::Connect, Failed to send the PASS command to the POP3 server\n"));
+    Disconnect();
+    return FALSE;
+  }
+  if (!ReadCommandResponse())
+  {
+    TRACE(_T("CPop3Connection::Connect, Failed to read a PASS command response from the POP3 server\n"));
+    Disconnect();
+    return FALSE;
+  }
+  
+  return TRUE;
 }
 
 BOOL CPop3Connection::Disconnect()
@@ -583,8 +702,8 @@ BOOL CPop3Connection::Disconnect()
   {
     char sBuf[10];
     strcpy(sBuf, "QUIT\r\n");
-    int nCmdLength = strlen(sBuf);
-    if (!m_Pop.Send(sBuf, nCmdLength))
+    int nCmdLength = (int) strlen(sBuf);
+    if (!Send(sBuf, nCmdLength))
       TRACE(_T("CPop3Connection::Disconnect, Failed to send the QUIT command to the POP3 server\n"));
 
     //Check the reponse
@@ -602,7 +721,10 @@ BOOL CPop3Connection::Disconnect()
     TRACE(_T("CPop3Connection::Disconnect, Already disconnected\n"));
  
   //free up our socket
-  m_Pop.Close();
+#ifndef POP3_NOSSL_SUPPORT
+  m_SSLSocket.Close();
+#endif
+  m_Socket.Close();
  
   return bSuccess;
 }
@@ -625,8 +747,8 @@ BOOL CPop3Connection::Delete(int nMsg)
   //Send the DELE command along with the message ID
 	char sBuf[20];
  	sprintf(sBuf, "DELE %d\r\n", nMsg);
-  int nCmdLength = strlen(sBuf);
-	if (!m_Pop.Send(sBuf, nCmdLength))
+  int nCmdLength = (int) strlen(sBuf);
+	if (!Send(sBuf, nCmdLength))
   {
     TRACE(_T("CPop3Connection::Delete,  Failed to send the DELE command to the POP3 server\n"));
     return FALSE;
@@ -643,8 +765,8 @@ BOOL CPop3Connection::Statistics(int& nNumberOfMails, int& nTotalMailSize)
   //Send the STAT command
 	char sBuf[10];
  	strcpy(sBuf, "STAT\r\n");
-  int nCmdLength = strlen(sBuf);
-	if (!m_Pop.Send(sBuf, nCmdLength))
+  int nCmdLength = (int) strlen(sBuf);
+	if (!Send(sBuf, nCmdLength))
   {
     TRACE(_T("CPop3Connection::Statistics, Failed to send the STAT command to the POP3 server\n"));
     return FALSE;
@@ -676,15 +798,12 @@ BOOL CPop3Connection::GetMessageSize(int nMsg, DWORD& dwSize)
 
 BOOL CPop3Connection::GetMessageID(int nMsg, CString& sID)
 {
-  BOOL bSuccess = TRUE;
-
   //if we haven't executed the UIDL command then do it now
   if (!m_bUIDLRetrieved)
-    bSuccess = UIDL();
-
-  //Handle the error if necessary  
-  if (!bSuccess)
-    return FALSE;
+  {
+    if (!UIDL())
+      return FALSE;
+  }
 
   //nMsg must be in the correct range
   ASSERT((nMsg > 0) && (nMsg <= m_msgIDs.GetSize()));
@@ -692,7 +811,33 @@ BOOL CPop3Connection::GetMessageID(int nMsg, CString& sID)
   //retrieve the size from the message size array
   sID = m_msgIDs.GetAt(nMsg - 1);
 
-  return bSuccess;
+  return TRUE;
+}
+
+BOOL CPop3Connection::FindMessageID(const CString& sID, int& nMsg)
+{
+  //Validate our parameters
+  ASSERT(!sID.IsEmpty());
+
+  //if we haven't executed the UIDL command then do it now
+  if (!m_bUIDLRetrieved)
+  {
+    if (!UIDL()) 
+      return FALSE;
+  }
+
+  //find message ID
+  int nMsgIds = m_msgIDs.GetSize();
+  for (int i=0; i<nMsgIds; i++)
+  {
+    if (m_msgIDs.GetAt(i) == sID)
+    {
+      nMsg = i + 1; //nMsg is 1 based
+      return TRUE;
+    }
+  }
+
+  return FALSE;
 }
 
 BOOL CPop3Connection::List()
@@ -714,8 +859,8 @@ BOOL CPop3Connection::List()
   //Send the LIST command
   char sBuf[10];
 	strcpy(sBuf, "LIST\r\n");
-  int nCmdLength = strlen(sBuf);
-	if (!m_Pop.Send(sBuf, nCmdLength))
+  int nCmdLength = (int) strlen(sBuf);
+	if (!Send(sBuf, nCmdLength))
   {
     TRACE(_T("CPop3Connection::List, Failed to send the LIST command to the POP3 server\n"));
     return FALSE;
@@ -744,8 +889,8 @@ BOOL CPop3Connection::UIDL()
   //Send the UIDL command
   char sBuf[10];
 	strcpy(sBuf, "UIDL\r\n");
-  int nCmdLength = strlen(sBuf);
-	if (!m_Pop.Send(sBuf, nCmdLength))
+  int nCmdLength = (int) strlen(sBuf);
+	if (!Send(sBuf, nCmdLength))
   {
     TRACE(_T("CPop3Connection::UIDL, Failed to send the UIDL command to the POP3 server\n"));
     return FALSE;
@@ -763,8 +908,8 @@ BOOL CPop3Connection::Reset()
   //Send the RSET command
 	char sBuf[10];
  	strcpy(sBuf, "RSET\r\n");
-  int nCmdLength = strlen(sBuf);
-	if (!m_Pop.Send(sBuf, nCmdLength))
+  int nCmdLength = (int) strlen(sBuf);
+	if (!Send(sBuf, nCmdLength))
   {
     TRACE(_T("CPop3Connection::Reset, Failed to send the RSET command to the POP3 server\n"));
     return FALSE;
@@ -782,8 +927,8 @@ BOOL CPop3Connection::Noop()
   //Send the NOOP command
 	char sBuf[10];
  	strcpy(sBuf, "NOOP\r\n");
-  int nCmdLength = strlen(sBuf);
-	if (!m_Pop.Send(sBuf, nCmdLength))
+  int nCmdLength = (int) strlen(sBuf);
+	if (!Send(sBuf, nCmdLength))
   {
     TRACE(_T("CPop3Connection::Noop, Failed to send the NOOP command to the POP3 server\n"));
     return FALSE;
@@ -805,8 +950,8 @@ BOOL CPop3Connection::Retrieve(int nMsg, CPop3Message& message)
     //Send the RETR command
 	  char sBuf[20];
 	  sprintf(sBuf, "RETR %d\r\n", nMsg);	
-    int nCmdLength = strlen(sBuf);
-	  if (!m_Pop.Send(sBuf, nCmdLength))
+    int nCmdLength = (int) strlen(sBuf);
+	  if (!Send(sBuf, nCmdLength))
     {
       TRACE(_T("CPop3Connection::Retrieve, Failed to send the RETR command to the POP3 server\n"));
       return FALSE;
@@ -831,8 +976,8 @@ BOOL CPop3Connection::GetMessageHeader(int nMsg, CPop3Message& message)
     // Send the TOP command
     char sBuf[16];
     sprintf(sBuf, "TOP %d 0\r\n", nMsg);
-    int nCmdLength = strlen(sBuf);
-    if (!m_Pop.Send(sBuf, nCmdLength))
+    int nCmdLength = (int) strlen(sBuf);
+    if (!Send(sBuf, nCmdLength))
     {
       TRACE(_T("CPop3Connection::GetMessageHeader, Failed to send the TOP command to the POP3 server\n"));
       return FALSE;
@@ -868,111 +1013,6 @@ LPSTR CPop3Connection::GetFirstCharInResponse(LPSTR pszData) const
   return pszData;
 }
 
-BOOL CPop3Connection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR pszTerminator, LPSTR* ppszOverFlowBuffer, int nGrowBy)
-{
-  ASSERT(ppszOverFlowBuffer);          //Must have a valid string pointer
-  ASSERT(*ppszOverFlowBuffer == NULL); //Initially it must point to a NULL string
-
-  //must have been created first
-  ASSERT(m_bConnected);
-
-  int nTerminatorLen = strlen(pszTerminator);
-
-  //The local variables which will receive the data
-  LPSTR pszRecvBuffer = pszBuffer;
-  int nBufSize = nInitialBufSize;
-  
-  //retrieve the reponse using until we
-	//get the terminator or a timeout occurs
-	BOOL bFoundTerminator = FALSE;
-	int nReceived = 0;
-	while (!bFoundTerminator)
-	{
-    //check the socket for readability
-    BOOL bReadible;
-    if (!m_Pop.IsReadible(bReadible, m_dwTimeout))
-    {
-	    pszRecvBuffer[nReceived] = '\0';
-			m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
-			return FALSE;
-    }
-    else if (!bReadible) //no data to receive, just loop around
-    {
-	    pszRecvBuffer[nReceived] = '\0';
-			m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
-			return FALSE;
-    }
-
-		//receive the data from the socket
-    int nBufRemaining = nBufSize-nReceived-1; //Allows allow one space for the NULL terminator
-    if (nBufRemaining<0)
-      nBufRemaining = 0;
-	  int nData = m_Pop.Receive(pszRecvBuffer+nReceived, nBufRemaining);
-
-    //Reset the idle timeout if data was received
-    if (nData > 0)
-    {
-      //Increment the count of data received
-		  nReceived += nData;							   
-    }
-
-    //If an error occurred receiving the data
-		if (nData < 1)
-		{
-      //NULL terminate the data received
-      if (pszRecvBuffer)
-		    pszRecvBuffer[nReceived] = '\0';
-
-      m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
-		  return FALSE; 
-		}
-		else
-		{
-      //NULL terminate the data received
-      if (pszRecvBuffer)
-		    pszRecvBuffer[nReceived] = '\0';
-
-      if (nBufRemaining-nData == 0) //No space left in the current buffer
-      {
-        //Allocate the new receive buffer
-        nBufSize += nGrowBy; //Grow the buffer by the specified amount
-        LPSTR pszNewBuf = new char[nBufSize];
-
-        //copy the old contents over to the new buffer and assign 
-        //the new buffer to the local variable used for retreiving 
-        //from the socket
-        if (pszRecvBuffer)
-          strcpy(pszNewBuf, pszRecvBuffer);
-        pszRecvBuffer = pszNewBuf;
-
-        //delete the old buffer if it was allocated
-        if (*ppszOverFlowBuffer)
-          delete [] *ppszOverFlowBuffer;
-        
-        //Remember the overflow buffer for the next time around
-        *ppszOverFlowBuffer = pszNewBuf;        
-      }
-		}
-
-    //Check to see if the terminator character(s) have been found
-    bFoundTerminator = (strncmp(&pszRecvBuffer[nReceived - nTerminatorLen], pszTerminator, nTerminatorLen) == 0);
-	}
-
-	//Remove the terminator from the response data
-  pszRecvBuffer[nReceived - nTerminatorLen] = '\0';
-
-  //determine if the response is an error
-	BOOL bSuccess = (strnicmp(pszRecvBuffer,"+OK", 3) == 0);
-
-  if (!bSuccess)
-  {
-    SetLastError(WSAEPROTONOSUPPORT);
-    m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
-  }
-
-  return bSuccess;
-}
-
 BOOL CPop3Connection::ReadReturnResponse(CPop3Message& message, DWORD dwSize)
 {
   //Must be connected to perform a "RETR"
@@ -983,7 +1023,16 @@ BOOL CPop3Connection::ReadReturnResponse(CPop3Message& message, DWORD dwSize)
   int nSize = dwSize + 100;
   char* sBuf = new char[nSize];
   char* sMessageBuf = sBuf;
-  if (!ReadResponse(sBuf, nSize, "\r\n.\r\n", &pszOverFlowBuffer, 32000))
+
+  BOOL bReadResponse;
+#ifndef POP3_NOSSL_SUPPORT
+  if (m_ConnectionType == ctSSL3) 
+    bReadResponse = ReadResponse(sBuf, nSize, "\r\n.\r\n", &pszOverFlowBuffer, 32000);
+  else
+#endif
+    bReadResponse = ReadResponse(sBuf, nSize, "\r\n.\r\n", &pszOverFlowBuffer, 32000);
+
+  if (!bReadResponse)
 	{
     delete [] sBuf;
     if (pszOverFlowBuffer)
@@ -1013,7 +1062,7 @@ BOOL CPop3Connection::ReadReturnResponse(CPop3Message& message, DWORD dwSize)
 		VERIFY(pszFirst);
 
     //transfer the message contents to the message class
-    int nMessageSize = sMessageBuf - pszFirst + strlen(sMessageBuf);
+    int nMessageSize = (int) (sMessageBuf - pszFirst + strlen(sMessageBuf));
 
     // Do we already have memory allocated? If so, destroy it!
   	if (message.m_pszMessage)
@@ -1206,3 +1255,141 @@ BOOL CPop3Connection::ReadStatResponse(int& nNumberOfMails, int& nTotalMailSize)
 
   return FALSE; 
 }
+
+BOOL CPop3Connection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR pszTerminator, LPSTR* ppszOverFlowBuffer, int nGrowBy)
+{
+  ASSERT(ppszOverFlowBuffer);          //Must have a valid string pointer
+  ASSERT(*ppszOverFlowBuffer == NULL); //Initially it must point to a NULL string
+
+  //must have been created first
+  ASSERT(m_bConnected);
+
+  int nTerminatorLen = (int) strlen(pszTerminator);
+
+  //The local variables which will receive the data
+  LPSTR pszRecvBuffer = pszBuffer;
+  int nBufSize = nInitialBufSize;
+
+  //retrieve the reponse using until we
+	//get the terminator or a timeout occurs
+	BOOL bFoundTerminator = FALSE;
+	int nReceived = 0;
+	while (!bFoundTerminator)
+	{
+    //check for readability
+    BOOL bReadible = FALSE;
+    try
+    {
+#ifndef POP3_NOSSL_SUPPORT
+      if (m_ConnectionType == ctSSL3)
+        bReadible = m_SSLSocket.IsReadible(m_dwTimeout);
+      else
+#endif
+        bReadible = m_Socket.IsReadible(m_dwTimeout);
+    }
+    catch(CWSocketException* pEx)
+    {
+      pEx->Delete();
+
+	    pszRecvBuffer[nReceived] = '\0';
+			m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
+			return FALSE;
+    }
+
+    if (!bReadible) //no data to receive, just loop around
+    {
+	    pszRecvBuffer[nReceived] = '\0';
+			m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
+			return FALSE;
+    }
+
+		//receive the data from the socket
+    int nBufRemaining = nBufSize-nReceived-1; //Allows allow one space for the NULL terminator
+    if (nBufRemaining<0)
+      nBufRemaining = 0;
+
+    int nData;
+#ifndef POP3_NOSSL_SUPPORT
+    if (m_ConnectionType == ctSSL3)
+    {
+      nData = m_SSLSocket.Receive(pszRecvBuffer+nReceived, nBufRemaining);
+      if (nData < 1)
+      {
+        //NULL terminate the data received
+        if (pszRecvBuffer)
+		      pszRecvBuffer[nReceived] = '\0';
+
+        m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
+		    return FALSE; 
+      }
+    }
+    else
+#endif
+    {
+      try
+      {
+  	    nData = m_Socket.Receive(pszRecvBuffer+nReceived, nBufRemaining);
+      }
+      catch(CWSocketException* pEx)
+      {
+        pEx->Delete();
+
+        //NULL terminate the data received
+        if (pszRecvBuffer)
+		      pszRecvBuffer[nReceived] = '\0';
+
+        m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
+		    return FALSE; 
+      }
+    }
+
+
+    if (nData)
+    {
+      //Increment the count of data received
+		  nReceived += nData;							   
+
+      //NULL terminate the data received
+      if (pszRecvBuffer)
+		    pszRecvBuffer[nReceived] = '\0';
+
+      if (nBufRemaining-nData == 0) //No space left in the current buffer
+      {
+        //Allocate the new receive buffer
+        nBufSize += nGrowBy; //Grow the buffer by the specified amount
+        LPSTR pszNewBuf = new char[nBufSize];
+
+        //copy the old contents over to the new buffer and assign 
+        //the new buffer to the local variable used for retreiving 
+        //from the socket
+        if (pszRecvBuffer)
+          strcpy(pszNewBuf, pszRecvBuffer);
+        pszRecvBuffer = pszNewBuf;
+
+        //delete the old buffer if it was allocated
+        if (*ppszOverFlowBuffer)
+          delete [] *ppszOverFlowBuffer;
+    
+        //Remember the overflow buffer for the next time around
+        *ppszOverFlowBuffer = pszNewBuf;        
+      }
+
+      //Check to see if the terminator character(s) have been found
+      bFoundTerminator = (strncmp(&pszRecvBuffer[nReceived - nTerminatorLen], pszTerminator, nTerminatorLen) == 0);
+    }
+	}
+
+	//Remove the terminator from the response data
+  pszRecvBuffer[nReceived - nTerminatorLen] = '\0';
+
+  //determine if the response is an error
+	BOOL bSuccess = (strnicmp(pszRecvBuffer,"+OK", 3) == 0);
+  if (!bSuccess)
+  {
+    SetLastError(WSAEPROTONOSUPPORT);
+    m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
+  }
+
+  return bSuccess;
+}
+

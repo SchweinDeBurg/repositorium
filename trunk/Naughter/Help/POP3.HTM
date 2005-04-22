@@ -1,13 +1,13 @@
 <html>
 
 <head>
-<title>CPop3Connection v1.32</title>
+<title>CPop3Connection v1.35</title>
 </head>
 
 <body>
 
-<p align="left"><img src="pop3.gif" width="40" height="40"><font face="Arial"><strong><big><big><big><big>CPop3Connection 
-v1.32</big></big></big></big></strong></font></p>
+<p align="left"><img src="pop3.gif" width="40" height="40"><font face="Arial"><strong><big><big><big><big>CPop3Connection
+v1.35</big></big></big></big></strong></font></p>
 
 <p><font face="Arial">Welcome to <strong>CPop3Connection</strong>, a freeware MFC class to
 support the POP3 protocol. POP3 for those not familiar with all the internet protocols is
@@ -344,6 +344,34 @@ face="Arial"><font color="#000000" size="3">)</font></strong> </font>
   <li><font face="Arial">Added two new helper functions, namely 
   CPop3Message::GetEmailAddress and CPop3Message::GetEmailFriendlyName. Thanks 
   to Alessandro Rosa for this suggestion.</font></li>
+</ul>
+
+<p><strong><font face="Arial" size="3">v1.33 (9 August 2004)</font></strong></p>
+<ul>
+  <li><font face="Arial">Fixed a number of compiler warnings when the code is 
+  compiled with VC.Net 2003</font></li>
+</ul>
+
+<p><strong><font face="Arial" size="3">v1.34 (28 March 2005)</font></strong></p>
+<ul>
+  <li><font face="Arial"> Fixed a number of compiler warnings in the sample app when the code is compiled
+    with VC .NET 2003.</font></li>
+  <li><font face="Arial">Timeout now defaults to 5 seconds in debug mode.</font></li>
+  <li><font face="Arial">Added support for connecting via Socks4, Socks5 and HTTP proxies</font></li>
+  <li><font face="Arial">Added support for POP3 via SSL. Thanks to Serhiy Pavlov and Alexey Kuznetsov for
+    suggesting this update. Please note that because I do not have access to a mail                          server which provides POP3 over SSL, you should consider this support preliminary
+    until I get feedback from users of this feature. The standard POP3 support is still
+    fully functional and tested of course.</font></li>
+</ul>
+
+<p><strong><font face="Arial" size="3">v1.35 (9 April 2005)</font></strong></p>
+<ul>
+  <li><font face="Arial"> Updated the initialization code for OpenSSL in the sample app to avoid memory                          leaks. Thanks to Alexey Kuznetsov for reporting these issues. You should implement
+    the same initialization and cleanup code in your applications. For details please check
+    the code in "main.cpp" module which is enclosed in #ifndef POP3_NOSSL_SUPPORT /                          #endif sections.</font></li>
+  <li><font face="Arial">"List" function is now public instead of protected. Thanks to Alexey Kuznetsov for                          reporting these issues.&nbsp;</font></li>
+  <li><font face="Arial">Addition of a simple "FindMessageID" which returns the Message index given a message
+    ID as returned via UIDL. Thanks to Alexey Kuznetsov for this addition.&nbsp;</font></li>
 </ul>
 
 <p>&nbsp;</p>
@@ -941,6 +969,6 @@ THE AUTHOR</strong></font></font></p>
 <p><font face="Arial" color="#000000" size="3">PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-4 July 2004</font></p>
+9 April 2005</font></p>
 </body>
 </html>
