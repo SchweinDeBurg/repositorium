@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipPlatform.h $
-// $Archive: /ZipArchive/ZipPlatform.h $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipPlatform.h,v $
+// $Revision: 1.3 $
+// $Date: 2005/03/07 20:40:37 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -166,22 +166,26 @@ namespace ZipPlatform
 		Wide string to convert
 	\param	szSingle
 		buffer to receive converted string (without the terminating NULL character)
+	\param bUseAnsi
+		if \c true, CP_ACP code page is used for the conversion, otherwise CP_UTF8 is used
 	\return	
 		the \e szSingle buffer length, or \c -1 when not succeeded
 	\note Only in UNICODE version.
 */
-	ZIP_API int WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle);
+	ZIP_API int WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle, bool bUseAnsi);
 /**
 	Convert single character string to wide character string.
 	\param	szSingle
 		single string to convert (no terminating NULL character at the end)
 	\param	szWide
 		receives the wide string after the conversion	
+	\param bUseAnsi
+		if \c true, CP_ACP code page is used for the conversion, otherwise CP_UTF8 is used
 	\return	\e the length of the string after the conversion (without the NULL character),
 	or \c -1 when not succeeded
 	\note Only in UNICODE version.
 */
-	ZIP_API int SingleToWide(const CZipAutoBuffer &szSingle, CZipString& szWide);
+	ZIP_API int SingleToWide(const CZipAutoBuffer &szSingle, CZipString& szWide, bool bUseAnsi);
 #endif
 };
 

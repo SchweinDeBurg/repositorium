@@ -1,10 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipArchive.cpp $
-// $Archive: /ZipArchive/ZipArchive.cpp $
-// $Date: 04-03-06 19:24 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipArchive.cpp,v $
+// $Revision: 1.3 $
+// $Date: 2005/03/07 20:40:37 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //	
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -51,6 +51,9 @@
 
 const TCHAR CZipArchive::m_gszCopyright[] = {_T("ZipArchive library Copyright 2000 - 2003 Tadeusz Dracz")};
 
+#ifdef _UNICODE	
+	bool CZipArchive::g_bWideConversionUseAnsi = true;
+#endif
 
 void CZipAddNewFileInfo::Defaults()
 {
@@ -1670,7 +1673,7 @@ bool CZipArchive::SetPassword(LPCTSTR lpszPassword)
 CZipString CZipArchive::GetPassword()const 
 {
 	CZipString temp;
-	CZipArchive::SingleToWide(m_pszPassword, temp);
+	SingleToWide(m_pszPassword, temp);
 	return temp;
 }
 
@@ -1819,7 +1822,7 @@ bool CZipArchive::TestFile(WORD uIndex, DWORD uBufSize)
 int CZipArchive::WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle)
 {
 #ifdef _UNICODE
-	return ZipPlatform::WideToSingle(lpWide, szSingle);
+	return ZipPlatform::WideToSingle(lpWide, szSingle, g_bWideConversionUseAnsi);
 #else
 	
 	size_t iLen = strlen(lpWide);
@@ -1836,7 +1839,7 @@ int CZipArchive::SingleToWide(const CZipAutoBuffer &szSingle, CZipString& szWide
 {
 	
 #ifdef _UNICODE	
-	return ZipPlatform::SingleToWide(szSingle, szWide);
+	return ZipPlatform::SingleToWide(szSingle, szWide, g_bWideConversionUseAnsi);
 #else // if not UNICODE just copy
 	int singleLen = szSingle.GetSize();
 	// 	iLen does not include the NULL character
@@ -2008,12 +2011,12 @@ CZipString CZipArchive::PredictFileNameInZip(LPCTSTR lpszFilePath,
 	if (bExactly)
 	{
 		fh.SetSystemCompatibility(m_iArchiveSystCompatib);
-		ZipCompatibility::FileNameUpdate(fh, false);
+		ZipCompatibility::FileNameUpdate(fh, false, m_centralDir.m_bOemConversion);
 	}
 	else
 	{
 		fh.SetSystemCompatibility(-1); // non existing system to prevent ansi oem conversion
-		ZipCompatibility::FileNameUpdate(fh, true);// update only path separators
+		ZipCompatibility::FileNameUpdate(fh, true, m_centralDir.m_bOemConversion);// update only path separators
 	}
 
 	return fh.GetFileName();
@@ -2260,14 +2263,16 @@ int CZipArchive::CWildcard::MatchAfterStar(LPCTSTR p, LPCTSTR t)
             if (nextp == *t || nextp == _T('['))
                   iMatch = Match(p, t);
 
+			/* try finding another precondition */
+			if (iMatch == matchPattern)
+				iMatch = matchNone;
             /* if the end of text is reached then no iMatch */
 
             if (!*t++)
                   iMatch = matchAbort;
 
       } while ( iMatch != matchValid && 
-                iMatch != matchAbort &&
-                iMatch != matchPattern);
+                iMatch != matchAbort);
 
       /* return result */
 
@@ -2585,7 +2590,7 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, WORD uIndex, int iReplaceInde
 		fh.SetSystemAttr(uAttr);
 	}
 
-	ZipCompatibility::FileNameUpdate(fh, false);
+	ZipCompatibility::FileNameUpdate(fh, false, m_centralDir.m_bOemConversion);
 	szFileName = fh.GetFileName();
 				
 	
@@ -2769,8 +2774,8 @@ bool CZipArchive::RenameFile(WORD uIndex, LPCTSTR lpszNewName)
 	fhNew.SetSystemCompatibility(m_iArchiveSystCompatib);
 	
 	fhNew.SetFileName(szNewName);
-	ZipCompatibility::FileNameUpdate(fhNew, false);
-	ZipCompatibility::FileNameUpdate(fh, false); // in case the conversion changes the filename size 
+	ZipCompatibility::FileNameUpdate(fhNew, false, m_centralDir.m_bOemConversion);
+	ZipCompatibility::FileNameUpdate(fh, false, m_centralDir.m_bOemConversion); // in case the conversion changes the filename size 
 	WORD uFileNameLen = fh.GetFileNameSize();
 	WORD uNewFileNameLen = fhNew.GetFileNameSize();
 	int iDelta = uNewFileNameLen - uFileNameLen;

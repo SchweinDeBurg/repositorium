@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipFileHeader.cpp $
-// $Archive: /ZipArchive/ZipFileHeader.cpp $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipFileHeader.cpp,v $
+// $Revision: 1.4 $
+// $Date: 2005/03/06 10:25:39 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -43,6 +43,9 @@ CZipFileHeader::CZipFileHeader()
 	m_uExternalAttr = 0;//ZipPlatform::GetDefaultAttributes();
 	m_uModDate = m_uModTime = 0;
 	m_uMethod = Z_DEFLATED;
+	m_uVersionMadeBy = 0;
+	// initialize to 0, because on 64 bit platform unsigned long is 8 byte and we are copying only 4 bytes in Read()
+	m_uCrc32 = m_uComprSize = m_uUncomprSize = m_uOffset = 0;
 // 	SetSystemCompatibility(ZipPlatform::m_sSystemID);
 }
 
@@ -185,14 +188,29 @@ bool CZipFileHeader::ReadLocal(CZipStorage *pStorage, WORD& iLocExtrFieldSize)
 void CZipFileHeader::SetTime(const time_t & ttime)
 {
 	tm* gt = localtime(&ttime);
-    WORD year = (WORD)(gt->tm_year + 1900);
-    if (year <= 1980)
+	WORD year, month, day, hour, min, sec;
+	if (gt == NULL)
+	{
 		year = 0;
+		month = day = 1;
+		hour = min = sec = 0;
+	}
 	else
-		year -= 1980;
-    m_uModDate = (WORD) (gt->tm_mday + ((gt->tm_mon + 1)<< 5) + (year << 9));
-    m_uModTime = (WORD) ((gt->tm_sec >> 1) + (gt->tm_min << 5) + 
-		(gt->tm_hour << 11));
+	{
+		year = (WORD)(gt->tm_year + 1900);		
+		if (year <= 1980)
+			year = 0;
+		else
+			year -= 1980;
+		month = gt->tm_mon + 1;
+		day = gt->tm_mday;
+		hour = gt->tm_hour;
+		min = gt->tm_min;
+		sec = gt->tm_sec;
+	}
+	    
+    m_uModDate = (WORD) (day + ( month << 5) + (year << 9));
+    m_uModTime = (WORD) ((sec >> 1) + (min << 5) + (hour << 11));
 }
 //	the buffer contains crc32, compressed and uncompressed sizes to be compared 
 //	with the actual values
@@ -238,7 +256,7 @@ bool CZipFileHeader::PrepareData(int iLevel, bool bSpan, bool bEncrypted)
 {
 	memcpy(m_szSignature, m_gszSignature, 4);
 	m_uInternalAttr = 0;
-	m_uVersionNeeded = IsDirectory() ? 0xa : 0x14; // 1.0 or 2.0
+	m_uVersionNeeded = IsDirectory() ? 0xa : 0x14; // 1.0 or 2.0	
 	SetVersion((WORD)(0x14)); 
 
 	m_uCrc32 = 0;

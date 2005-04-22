@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipMemFile.h $
-// $Archive: /ZipArchive/ZipMemFile.h $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipMemFile.h,v $
+// $Revision: 1.4 $
+// $Date: 2005/02/23 18:25:00 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -73,11 +73,25 @@ public:
 		m_bAutoDelete = true;
 	}
 
+	
+
 	CZipMemFile(BYTE* lpBuf, UINT nBufSize, long nGrowBy = 0)
 	{
 		Init();
 		Attach(lpBuf, nBufSize, nGrowBy);
 	}
+
+	CZipMemFile(CZipMemFile& from)
+	{
+		Copy(from);
+	}
+
+	void Copy(CZipMemFile& from)
+	{
+		SetLength(from.m_nDataSize);
+		from.Read(m_lpBuf, (UINT)from.m_nDataSize);
+	}
+
 	ZIP_ULONGLONG GetPosition() const {	return m_nPos;}
 	void Attach(BYTE* lpBuf, UINT nBufSize, long nGrowBy = 0)
 	{

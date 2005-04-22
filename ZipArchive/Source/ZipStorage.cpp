@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipStorage.cpp $
-// $Archive: /ZipArchive/ZipStorage.cpp $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipStorage.cpp,v $
+// $Revision: 1.3 $
+// $Date: 2005/02/14 15:29:03 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -248,7 +248,13 @@ CZipString CZipStorage::GetTdVolumeName(bool bLast, LPCTSTR lpszZipName) const
 	if (bLast)
 		szExt = m_szSpanExtension;
 	else
-		szExt.Format(_T("%.3d"), m_iCurrentDisk);
+	{
+		int vol = m_iCurrentDisk + 1;
+		if (vol < 100)
+			szExt.Format(_T("z%.2d"), vol);
+		else
+			szExt.Format(_T("z%.3d"), vol);
+	}
 	zpc.SetExtension(szExt);
 	return zpc.GetFullPath();
 }
@@ -257,15 +263,17 @@ void CZipStorage::NextDisk(int iNeeded, LPCTSTR lpszFileName)
 {
 	Flush();
 	ASSERT(m_iSpanMode != noSpan);
+	bool bPkSpan = (m_iSpanMode == pkzipSpan);
 	if (m_iBytesWritten)
 	{
 		m_iBytesWritten = 0;
 		m_iCurrentDisk++;
-		if (m_iCurrentDisk >= 999)
+		int iMaxVolumes = bPkSpan ? 999 : 99;
+		if (m_iCurrentDisk >= iMaxVolumes)
 			ThrowError(CZipException::tooManyVolumes);
 	} 
 	CZipString szFileName;
-	bool bPkSpan = (m_iSpanMode == pkzipSpan);
+	
 	if (bPkSpan)
 		szFileName  = lpszFileName ? lpszFileName : (LPCTSTR)m_pFile->GetFilePath();
 	else
@@ -362,6 +370,22 @@ void CZipStorage::UpdateSpanMode(WORD uLastDisk)
 
 }
 
+DWORD CZipStorage::AssureFree(DWORD iNeeded)
+{
+	DWORD uFree;
+	while ((uFree = VolumeLeft()) < iNeeded)
+	{
+		if ((m_iSpanMode == tdSpan) && !m_iBytesWritten && !m_uBytesInWriteBuffer)
+			// in the tdSpan mode, if the size of the archive is less 
+			// than the size of the packet to be written at once,
+			// increase once the size of the volume
+			m_uCurrentVolSize = iNeeded;
+		else
+			NextDisk(iNeeded);
+	}
+	return uFree;
+}
+
 void CZipStorage::Write(const void *pBuf, DWORD iSize, bool bAtOnce)
 {
 	if (!IsSpanMode())
@@ -374,18 +398,8 @@ void CZipStorage::Write(const void *pBuf, DWORD iSize, bool bAtOnce)
 
 		while (uTotal < iSize)
 		{
-			DWORD uFree;
-			while ((uFree = VolumeLeft()) < iNeeded)
-			{
-				if ((m_iSpanMode == tdSpan) && !m_iBytesWritten && !m_uBytesInWriteBuffer)
-					// in the tdSpan mode, if the size of the archive is less 
-					// than the size of the packet to be written at once,
-					// increase once the size of the volume
-					m_uCurrentVolSize = iNeeded;
-				else
-					NextDisk(iNeeded);
-			}
-
+			
+			DWORD uFree = AssureFree(iNeeded);
 			DWORD uLeftToWrite = iSize - uTotal;
 			DWORD uToWrite = uFree < uLeftToWrite ? uFree : uLeftToWrite;
 			WriteInternalBuffer((char*)pBuf + uTotal, uToWrite);

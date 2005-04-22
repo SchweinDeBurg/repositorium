@@ -1,10 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipArchive.h $
-// $Archive: /ZipArchive/ZipArchive.h $
-// $Date: 04-03-06 19:25 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipArchive.h,v $
+// $Revision: 1.3 $
+// $Date: 2005/03/07 20:40:37 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 // 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -295,6 +295,21 @@ public:
 */
 	static int WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle);
 
+#ifdef _UNICODE	
+	/**
+		Call it to change how the Unicode string conversion is handled.
+		If \e bUseAnsi is set to \c true, ANSI (CP_ACP) code page is used,
+		otherwise translation is performed using UTF-8. Set it to \c false
+		e.g. for Japanese or Korean languages. Default is \c true.
+		\param bUseAnsi
+			if \c true, CP_ACP code page is used for the conversion, otherwise CP_UTF8 is used
+		\see EnableOemConversion
+	*/
+	static void WideConversionUseAnsi(bool bUseAnsi)
+	{
+		g_bWideConversionUseAnsi = bUseAnsi;
+	}
+#endif
 
 /** 
 	Set the password for the file to be opened or created.
@@ -1325,6 +1340,31 @@ public:
 
 	}
 
+
+	/**
+	Set CZipCentralDir::m_bOemConversion value. This has only effect on the archives that are created
+	or read under Windows platform.
+	The default value is \c true.
+	It enables or disables OEM conversion of the filenames in the archive. The OEM conversion is not desired when 
+	filenames contain e.g. Japanese or Korean characters. You need to disable the OEM conversion in this case
+	to properly extract the filenames later. Disabling the OEM conversion and creating a new archive in this mode, 
+	will make the filenames with non-US characters not properly readable under other Windows archivers
+	(e.g. WinRar, WinZip).
+	\param enable
+	\note Use before opening the archive.
+	\see CZipCentralDir::m_bOemConversion		
+	\see WideConversionUseAnsi
+	*/
+	void EnableOemConversion(bool enable)
+	{
+		if (!IsClosed())
+		{
+			TRACE(_T("CZipArchive::EnableOemConversion: Set it before opening the archive"));
+			return;
+		}
+		m_centralDir.m_bOemConversion = enable;
+	}
+
 /**
 	Enable fast finding by the file name of the files inside the archive.
 	Set CZipCentralDir::m_bFindFastEnabled to \c true, which is required by #FindFile.
@@ -1866,6 +1906,13 @@ protected:
 		\see Smartness
 	*/
 	CZipString m_szTempPath;
+
+#ifdef _UNICODE	
+	/**
+		\see WideConversionUseAnsi
+	*/
+	static bool g_bWideConversionUseAnsi;
+#endif
 
 /**
 	Open the archive in the given mode.

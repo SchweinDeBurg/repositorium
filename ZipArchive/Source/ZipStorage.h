@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipStorage.h $
-// $Archive: /ZipArchive/ZipStorage.h $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipStorage.h,v $
+// $Revision: 1.3 $
+// $Date: 2005/02/14 15:29:03 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -272,6 +272,16 @@ public:
 */
 	void UpdateSpanMode(WORD uLastDisk);
 
+
+
+/**
+	Ensures than in a disk spanning archive, there is enough free space in the current volume.
+	\param iNeeded
+		size of the free space in bytes
+	\return the number of free bytes on the current volume
+	\note Throws exceptions.
+*/
+	DWORD AssureFree(DWORD iNeeded);
 
 /**
 	Write chunk of data to the archive.

@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipException.cpp $
-// $Archive: /ZipArchive/ZipException.cpp $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipException.cpp,v $
+// $Revision: 1.3 $
+// $Date: 2005/02/14 15:29:03 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -223,7 +223,7 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 			sz = _T("The device selected for the disk spanning archive is non removable");
 			break;
 		case tooManyVolumes:
-			sz = _T("Limit of the maximum volumes reached (999)");
+			sz = _T("Limit of the maximum volumes reached");
 			break;
 		case tooLongFileName:
 			sz = _T("The filename of the file being added to the archive is too long");

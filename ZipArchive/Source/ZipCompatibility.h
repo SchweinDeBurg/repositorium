@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipCompatibility.h $
-// $Archive: /ZipArchive/ZipCompatibility.h $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipCompatibility.h,v $
+// $Revision: 1.2 $
+// $Date: 2005/02/14 07:50:10 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -96,8 +96,10 @@ namespace ZipCompatibility
 	\param	bFromZip		
 		if \c true convert the path from the from it is stored in the archive
 		to the current system compatible form; otherwise vice-versa.
+	\param bOemConversion
+		if \c true, the OEM conversion on the filename is performed (valid only under Windows platform)
 	\see CZipCentralDir::ConvertFileName
-*/	void FileNameUpdate(CZipFileHeader& header, bool bFromZip);
+*/	void FileNameUpdate(CZipFileHeader& header, bool bFromZip, bool bOemConversion);
 
 /**
 	Change the slash to backslash or vice-versa in \e buffer.
