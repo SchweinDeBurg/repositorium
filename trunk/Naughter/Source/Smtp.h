@@ -66,7 +66,10 @@ my explicit written consent.
 
 #include "Base64Coder.h"
 
-
+#if defined(__INTEL_COMPILER)
+// remark #271: trailing comma is nonstandard
+#pragma warning(disable: 271)
+#endif	// __INTEL_COMPILER
 
 /////////////////////////////// Classes ///////////////////////////////////////
 

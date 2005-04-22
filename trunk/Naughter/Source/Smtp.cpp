@@ -323,7 +323,22 @@ my explicit written consent.
 #include <wininet.h>
 #endif
 
-
+#if defined(__INTEL_COMPILER)
+// remark #111: statement is unreachable
+#pragma warning(disable: 111)
+// remark #174: expression has no effect
+#pragma warning(disable: 174)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #383: value copied to temporary, reference to temporary used
+#pragma warning(disable: 383)
+// remark #593: variable was set but never used
+#pragma warning(disable: 593)
+// remark #981: operands are evaluated in unspecified order
+#pragma warning(disable: 981)
+// remark #1418: external definition with no prior declaration
+#pragma warning(disable: 1418)
+#endif	// __INTEL_COMPILER
 
 //////////////// Macros / Locals /////////////////////////////////////
 

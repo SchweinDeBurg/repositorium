@@ -34,7 +34,10 @@ to maintain a single distribution point for the source code.
 #include <openssl\rand.h>
 #endif
 
-
+#if defined(__INTEL_COMPILER)
+// remark #383: value copied to temporary, reference to temporary used
+#pragma warning(disable: 383)
+#endif	// __INTEL_COMPILER
 
 /////////////////////////////// Classes ///////////////////////////////////////
 
