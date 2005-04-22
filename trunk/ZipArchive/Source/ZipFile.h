@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipFile.h $
-// $Archive: /ZipArchive/ZipFile.h $
-// $Date: 04-06-19 9:02 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipFile.h,v $
+// $Revision: 1.3 $ $Name:  $
+// $Date: 2005/02/14 08:09:54 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License

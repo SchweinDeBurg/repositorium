@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipString.h $
-// $Archive: /ZipArchive/ZipString.h $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipString.h,v $
+// $Revision: 1.3 $ $Name:  $
+// $Date: 2005/02/14 08:09:54 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License

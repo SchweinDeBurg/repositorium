@@ -1,10 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
-// $Workfile: stdafx.cpp $
-// $Archive: /ZipArchive/stdafx.cpp $
-// $Date: 21-01-04 18:58 $ $Author: Tadeusz Dracz $
+// $RCSfile: stdafx.cpp,v $
+// $Revision: 1.2 $ $Name:  $
+// $Date: 2005/02/14 07:50:10 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License

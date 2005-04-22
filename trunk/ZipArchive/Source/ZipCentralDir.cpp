@@ -1,10 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipCentralDir.cpp $
-// $Archive: /ZipArchive/ZipCentralDir.cpp $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipCentralDir.cpp,v $
+// $Revision: 1.4 $
+// $Date: 2005/02/22 18:42:25 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -36,6 +36,7 @@ char CZipCentralDir::m_gszSignature[] = {0x50, 0x4b, 0x05, 0x06};
 CZipCentralDir::CZipCentralDir()
 {
 	m_bConvertAfterOpen  = true;
+	m_bOemConversion = true;
 	m_bFindFastEnabled = false;
 	m_bCaseSensitive = false;
 	m_pCompare = GetCZipStrCompFunc(ZipPlatform::GetSystemCaseSensitivity());
@@ -51,6 +52,8 @@ void CZipCentralDir::Init()
 	m_info.m_uBytesBeforeZip = m_info.m_uCentrDirPos = 0;
 	m_pOpenedFile = NULL;
 	m_pszComment.Release();
+	m_info.m_uSize = 0;  // initialize ( on 64 bit platform unsigned long is 8 byte and we are copying only 4 bytes in Read())
+    m_info.m_uOffset = 0;  // initialize ( on 64 bit platform unsigned long is 8 byte and we are copying only 4 bytes in Read())
 
 }
 
@@ -69,7 +72,7 @@ void CZipCentralDir::Read()
 
 	int uRead = m_pStorage->m_pFile->Read(buf, CENTRALDIRSIZE);
 	if (uRead != CENTRALDIRSIZE)
-		ThrowError(CZipException::badZipFile);
+		ThrowError(CZipException::badZipFile);	
 	memcpy(&m_szSignature,			buf, 4);
 	memcpy(&m_info.m_uThisDisk,		buf + 4, 2);
 	memcpy(&m_info.m_uDiskWithCD,	buf + 6, 2);
@@ -359,36 +362,48 @@ void CZipCentralDir::Write(CZipActionCallback* pCallback)
 	m_info.m_uEntriesNumber = (WORD)m_headers.GetSize();
 	m_info.m_uSize = 0;
 	bool bDontAllowDiskChange = false;
-	// if there is a disk spanning archive in creation and it is only one-volume,
-	//	(current disk is 0 so far, no bytes has been written so we know they are 
-	//  all in the buffer)	make sure that it will be after writing central dir 
-	// and make it a non disk spanning archive
-	if (m_pStorage->IsSpanMode() && m_pStorage->GetCurrentDisk() == 0)
+	
+	if (m_pStorage->IsSpanMode())
 	{
-		DWORD uVolumeFree = m_pStorage->VolumeLeft();
-		// calculate the size of data descriptors already in the buffer or on the disk
-		// (they will be removed in the non disk spanning archive):
+
+		
 		// multi span signature at the beginnig (4 bytes) + the size of the data 
 		// descr. for each file (multi span signature + 12 bytes data)
-		// the number of bytes to add: central dir size - total to remove;
-		DWORD uToGrow = GetSize(true) - (4 + m_info.m_uEntriesNumber * (4 + 12)); 
-		if (uVolumeFree >= uToGrow) 
-		// lets make sure it will be one-disk archive
+		DWORD uSize = GetSize(true);
+		// if there is a disk spanning archive in creation and it is only one-volume,
+		//	(current disk is 0 so far, no bytes has been written so we know they are 
+		//  all in the buffer)	make sure that it will be after writing central dir 
+		// and make it a non disk spanning archive
+		if (m_pStorage->GetCurrentDisk() == 0)
 		{
-			// can the operation be done only in the buffer?
-			if (!m_pStorage->m_iBytesWritten && // no bytes on the disk yet
-				(m_pStorage->GetFreeInBuffer() >= uToGrow)) // is the buffer big enough?
+			// calculate the size of data descriptors already in the buffer or on the disk
+			// (they will be removed in the non disk spanning archive).		
+			// the number of bytes to add: central dir size - total to remove;
+			DWORD uToGrow = uSize - (4 + m_info.m_uEntriesNumber * (4 + 12)); 
+			DWORD uVolumeFree = m_pStorage->VolumeLeft();
+			
+			if (uVolumeFree >= uToGrow) 
+			// lets make sure it will be one-disk archive
 			{
-					RemoveDataDescr(true);
-					bDontAllowDiskChange = true; // if the disk change occurs somehow, we'll throw an error later
-			}
-			else
-			{
-				m_pStorage->Flush();
-				if (RemoveDataDescr(false))
-					bDontAllowDiskChange = true; // if the disk change occurs somehow, we'll throw an error later
+				// can the operation be done only in the buffer?
+				if (!m_pStorage->m_iBytesWritten && // no bytes on the disk yet
+					(m_pStorage->GetFreeInBuffer() >= uToGrow)) // is the buffer big enough?
+				{
+						RemoveDataDescr(true);
+						bDontAllowDiskChange = true; // if the disk change occurs somehow, we'll throw an error later
+				}
+				else
+				{
+					m_pStorage->Flush();
+					if (RemoveDataDescr(false))
+						bDontAllowDiskChange = true; // if the disk change occurs somehow, we'll throw an error later
+				}
 			}
 		}
+
+		// make sure that in the disk spanning archive, the whole central directory will fit on the single volume
+		if (!bDontAllowDiskChange)
+			m_pStorage->AssureFree(uSize);
 	}
 
 	try
@@ -864,7 +879,7 @@ void CZipCentralDir::RenameFile(WORD uIndex, LPCTSTR lpszNewName)
 	CZipFileHeader* pHeader = m_headers[uIndex];
 	pHeader->SetFileName(lpszNewName);
 	if (!m_bConvertAfterOpen)
-		ZipCompatibility::FileNameUpdate(*pHeader, false);
+		ZipCompatibility::FileNameUpdate(*pHeader, false, m_bOemConversion);
 	if (m_bFindFastEnabled)
 		BuildFindFastArray(m_bCaseSensitive);
 }

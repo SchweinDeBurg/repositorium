@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipFileHeader.h $
-// $Archive: /ZipArchive/ZipFileHeader.h $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipFileHeader.h,v $
+// $Revision: 1.3 $
+// $Date: 2005/03/06 10:25:39 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -55,7 +55,7 @@ class ZIP_API CZipFileHeader
 {
 	friend class CZipCentralDir;
 	friend class CZipArchive;
-	friend void ZipCompatibility::FileNameUpdate(CZipFileHeader&, bool);
+	friend void ZipCompatibility::FileNameUpdate(CZipFileHeader&, bool, bool);
 public:	
 	CZipFileHeader();
 	virtual ~CZipFileHeader();
@@ -182,8 +182,8 @@ public:
 	
 
 /**
-	Set #m_uModDate, #m_uModTime
-	(file modification time)
+	Set #m_uModDate, #m_uModTime (file modification time). If the \e ttime is not correct, the 
+	date defaults to January 1, 1980
 	\param ttime
 	\see GetTime
 */

@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipPlatform.cpp $
-// $Archive: /ZipArchive/ZipPlatform.cpp $
-// $Date: 21-01-04 19:01 $ $Author: Tadeusz Dracz $
+// $RCSfile: ZipPlatform.cpp,v $
+// $Revision: 1.4 $ $Name:  $
+// $Date: 2005/03/07 20:40:37 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2004 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -268,7 +268,7 @@ ZIPINLINE bool ZipPlatform::GetSystemCaseSensitivity()
 }
 
 #ifdef _UNICODE	
-int ZipPlatform::WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle)
+int ZipPlatform::WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle, bool bUseAnsi)
 {
 	size_t wideLen = wcslen(lpWide);
 	if (wideLen == 0)
@@ -278,12 +278,13 @@ int ZipPlatform::WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle)
 	}
 
 	// iLen does not include terminating character
-	int iLen = WideCharToMultiByte(CP_ACP,0, lpWide, wideLen, szSingle, 
+	UINT uCodePage = bUseAnsi ? CP_ACP : CP_UTF8;
+	int iLen = WideCharToMultiByte(uCodePage,0, lpWide, wideLen, szSingle, 
 		0, NULL, NULL);
 	if (iLen > 0)
 	{
 		szSingle.Allocate(iLen, true);
-		iLen = WideCharToMultiByte(CP_ACP,0, lpWide , wideLen, szSingle, 
+		iLen = WideCharToMultiByte(uCodePage,0, lpWide , wideLen, szSingle, 
 			iLen, NULL, NULL);
 		ASSERT(iLen != 0);
 	}
@@ -295,14 +296,26 @@ int ZipPlatform::WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle)
 	return iLen;
 
 }
-int ZipPlatform::SingleToWide(const CZipAutoBuffer &szSingle, CZipString& szWide)
+int ZipPlatform::SingleToWide(const CZipAutoBuffer &szSingle, CZipString& szWide, bool bUseAnsi)
 {
 	int singleLen = szSingle.GetSize();
-		// iLen doesn't include terminating character
-	int iLen = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, szSingle.GetBuffer(), singleLen, NULL, 0);
+	// iLen doesn't include terminating character
+	UINT uCodePage;
+	DWORD dwFlags;
+	if (bUseAnsi)
+	{
+		uCodePage = CP_ACP;
+		dwFlags = MB_PRECOMPOSED;
+	}
+	else
+	{
+		uCodePage = CP_UTF8;
+		dwFlags = 0;
+	}
+	int iLen = MultiByteToWideChar(uCodePage, dwFlags, szSingle.GetBuffer(), singleLen, NULL, 0);
 	if (iLen > 0)
 	{
-		iLen = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, szSingle.GetBuffer(), singleLen, 
+		iLen = MultiByteToWideChar(uCodePage, dwFlags, szSingle.GetBuffer(), singleLen, 
 			szWide.GetBuffer(iLen) , iLen);
 		szWide.ReleaseBuffer(iLen);
 		ASSERT(iLen != 0);
