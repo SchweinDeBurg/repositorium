@@ -1,9 +1,9 @@
 /* zconf.h -- configuration of the zlib compression library
- * Copyright (C) 1995-2003 Jean-loup Gailly.
+ * Copyright (C) 1995-2004 Jean-loup Gailly.
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
-/* @(#) $Id$ */
+/* @(#) $Id: zconf.h,v 1.2 2005/02/23 18:24:52 Tadeusz Dracz Exp $ */
 
 #ifndef ZCONF_H
 #define ZCONF_H
@@ -34,15 +34,17 @@
 #  define deflateSetDictionary z_deflateSetDictionary
 #  define deflateCopy   z_deflateCopy
 #  define deflateReset  z_deflateReset
-#  define deflatePrime  z_deflatePrime
 #  define deflateParams z_deflateParams
 #  define deflateBound  z_deflateBound
+#  define deflatePrime          z_deflatePrime
 #  define inflateInit2_ z_inflateInit2_
 #  define inflateSetDictionary z_inflateSetDictionary
 #  define inflateSync   z_inflateSync
 #  define inflateSyncPoint z_inflateSyncPoint
 #  define inflateCopy   z_inflateCopy
 #  define inflateReset  z_inflateReset
+#  define inflateBack           z_inflateBack
+#  define inflateBackEnd        z_inflateBackEnd
 #  define compress      z_compress
 #  define compress2     z_compress2
 #  define compressBound z_compressBound
@@ -50,6 +52,7 @@
 #  define adler32       z_adler32
 #  define crc32         z_crc32
 #  define get_crc_table z_get_crc_table
+#  define zError                z_zError
 
 #  define Byte          z_Byte
 #  define uInt          z_uInt
