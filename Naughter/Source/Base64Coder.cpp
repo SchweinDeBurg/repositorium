@@ -157,7 +157,7 @@ void CBase64Coder::Encode(const PBYTE pBuffer, DWORD nBufLen)
 void CBase64Coder::Encode(LPCSTR szMessage)
 {
 	if (szMessage != NULL)
-		Encode((const PBYTE)szMessage, strlen(szMessage));
+		Encode((const PBYTE)szMessage, (DWORD) strlen(szMessage));
 }
 
 void CBase64Coder::Decode(const PBYTE pBuffer, DWORD dwBufLen)
@@ -211,7 +211,7 @@ void CBase64Coder::Decode(const PBYTE pBuffer, DWORD dwBufLen)
 void CBase64Coder::Decode(LPCSTR szMessage)
 {
 	if (szMessage != NULL)
-		Decode((const PBYTE)szMessage, strlen(szMessage));
+		Decode((const PBYTE)szMessage, (DWORD) strlen(szMessage));
 }
 
 DWORD CBase64Coder::_DecodeToBuffer(const TempBucket &Decode, PBYTE pBuffer)

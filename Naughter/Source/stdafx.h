@@ -26,6 +26,7 @@
 
 // PSDK headers
 #include <wininet.h>
+#include <windns.h>		// DNS definitions and DNS API
 
 // STL headers
 #pragma warning(push, 3)

@@ -3,7 +3,7 @@ Module : PJNSMTP.H
 Purpose: Defines the interface for a MFC class encapsulation of the SMTP protocol
 Created: PJN / 22-05-1998
 
-Copyright (c) 1998 - 2004 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2005 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -44,6 +44,11 @@ my explicit written consent.
 #include <afxpriv.h>
 #endif
 
+#ifndef _WINDNS_INCLUDED_
+#pragma message("To avoid this message, put Windns.h in your PCH (usually stdafx.h)")
+#include <Windns.h>
+#endif
+
 #pragma warning(push, 3) //Avoid all the level 4 warnings in STL
 #ifndef _STRING_
 #pragma message("To avoid this message, put string in your PCH (usually stdafx.h)")
@@ -51,17 +56,52 @@ my explicit written consent.
 #endif
 #pragma warning(pop)
 
+#ifndef CPJNSMTP_NONTLM
+#include "PJNNTLMAuth.h"
+#endif
+
+#ifndef PJNSMTP_EXT_CLASS
+#define PJNSMTP_EXT_CLASS
+#endif
+
 #include "Base64Coder.h"
 
-#if defined(__INTEL_COMPILER)
-// remark #271: trailing comma is nonstandard
-#pragma warning(disable: 271)
-#endif	// __INTEL_COMPILER
+
 
 /////////////////////////////// Classes ///////////////////////////////////////
 
-//Simple Socket wrapper class
-class CPJNSMTPSocket
+
+///////////// Exception class /////////////////////////////////////////////////
+
+void AfxThrowSMTPException(DWORD dwError = 0, DWORD Facility = FACILITY_WIN32, const CString& sLastResponse = _T(""));
+void AfxThrowSMTPException(HRESULT hr, const CString& sLastResponse = _T(""));
+
+class PJNSMTP_EXT_CLASS CSMTPException : public CException
+{
+public:
+//Constructors / Destructors
+  CSMTPException(HRESULT hr, const CString& sLastResponse = _T("")); 
+	CSMTPException(DWORD dwError = 0, DWORD dwFacility = FACILITY_WIN32, const CString& sLastResponse = _T(""));
+
+//Methods
+#ifdef _DEBUG
+	virtual void Dump(CDumpContext& dc) const;
+#endif
+	virtual BOOL GetErrorMessage(LPTSTR lpstrError, UINT nMaxError,	PUINT pnHelpContext = NULL);
+	CString GetErrorMessage();
+
+//Data members
+	HRESULT m_hr;
+  CString m_sLastResponse;
+
+protected:
+	DECLARE_DYNAMIC(CSMTPException)
+};
+
+
+///////////// Simple Socket wrapper class /////////////////////////////////////
+
+class PJNSMTP_EXT_CLASS CPJNSMTPSocket
 {
 public:
 //Constructors / Destructors
@@ -69,21 +109,25 @@ public:
   virtual ~CPJNSMTPSocket();
 
 //methods
-  BOOL  Create();
-  BOOL  Connect(LPCTSTR pszHostAddress, int nPort, LPCTSTR pszLocalBoundAddress);
-  BOOL  Send(LPCSTR pszBuf, int nBuf);
+  void  Create();
+  void  Connect(LPCTSTR pszHostAddress, int nPort, LPCTSTR pszLocalBoundAddress);
+  void  Send(LPCSTR pszBuf, int nBuf);
   void  Close();
   int   Receive(LPSTR pszBuf, int nBuf);
-  BOOL  IsReadable(BOOL& bReadible, DWORD dwTimeout);
+  BOOL  IsReadable(DWORD dwTimeout);
 
 protected:
-  BOOL   Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen);
+//Methods
+  void  Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen);
+
+//Member variables
   SOCKET m_hSocket;
 };
 
                      
-//Encapsulation of an SMTP email address, used for recipients and in the From: field
-class CPJNSMTPAddress
+////// Encapsulation of an SMTP email address /////////////////////////////////
+
+class PJNSMTP_EXT_CLASS CPJNSMTPAddress
 {
 public: 
 //Constructors / Destructors
@@ -102,8 +146,9 @@ public:
 };
 
 
-//Encapsulatation of an SMTP MIME body part
-class CPJNSMTPBodyPart
+////// Encapsulatation of an SMTP MIME body part //////////////////////////////
+
+class PJNSMTP_EXT_CLASS CPJNSMTPBodyPart
 {
 public:
 //Constructors / Destructors
@@ -196,24 +241,22 @@ protected:
 };
 
 
-
-////////////////// typedefs ////////////////////////////////////////////////////
+////////////////// typedefs ///////////////////////////////////////////////////
 
 typedef CArray<CPJNSMTPAddress, CPJNSMTPAddress&> CPJNSMTPAddressArray;
 
 
+////////////////// Forward declaration ////////////////////////////////////////
 
-////////////////// Forward declaration /////////////////////////////////////////
-
-class CPJNSMTPConnection;
-
+class PJNSMTP_EXT_CLASS CPJNSMTPConnection;
 
 
-//Encapsulation of an SMTP message
-class CPJNSMTPMessage
+/////// Encapsulation of an SMTP message //////////////////////////////////////
+
+class PJNSMTP_EXT_CLASS CPJNSMTPMessage
 {
 public:
-	//Enums
+//Enums
 	enum RECIPIENT_TYPE { TO, CC, BCC };
   enum PRIORITY { NO_PRIORITY, LOW_PRIORITY, NORMAL_PRIORITY, HIGH_PRIORITY };
 
@@ -224,19 +267,19 @@ public:
   virtual ~CPJNSMTPMessage();
 
 //Recipient support
-	int           GetNumberOfRecipients(RECIPIENT_TYPE RecipientType = TO) const;
-	int           AddRecipient(CPJNSMTPAddress& recipient, RECIPIENT_TYPE RecipientType = TO);
-	void          RemoveRecipient(int nIndex, RECIPIENT_TYPE RecipientType = TO);
-	CPJNSMTPAddress* GetRecipient(int nIndex, RECIPIENT_TYPE RecipientType = TO);
-  BOOL          AddMultipleRecipients(const CString& sRecipients, RECIPIENT_TYPE RecipientType);
-  static int    ParseMultipleRecipients(const CString& sRecipients, CPJNSMTPAddressArray& recipients);
+	int                  GetNumberOfRecipients(RECIPIENT_TYPE RecipientType = TO) const;
+	int                  AddRecipient(CPJNSMTPAddress& recipient, RECIPIENT_TYPE RecipientType = TO);
+	void                 RemoveRecipient(int nIndex, RECIPIENT_TYPE RecipientType = TO);
+	CPJNSMTPAddress*     GetRecipient(int nIndex, RECIPIENT_TYPE RecipientType = TO);
+  BOOL                 AddMultipleRecipients(const CString& sRecipients, RECIPIENT_TYPE RecipientType);
+  static int           ParseMultipleRecipients(const CString& sRecipients, CPJNSMTPAddressArray& recipients);
 
 //Body Part support
-  int            GetNumberOfBodyParts() const;
-	int            AddBodyPart(CPJNSMTPBodyPart& bodyPart);
-	void           RemoveBodyPart(int nIndex);
-	CPJNSMTPBodyPart* GetBodyPart(int nIndex);
-  int            AddMultipleAttachments(const CString& sAttachments);
+  int                  GetNumberOfBodyParts() const;
+	int                  AddBodyPart(CPJNSMTPBodyPart& bodyPart);
+	void                 RemoveBodyPart(int nIndex);
+	CPJNSMTPBodyPart*    GetBodyPart(int nIndex);
+  int                  AddMultipleAttachments(const CString& sAttachments);
 
 //Misc methods
   virtual std::string  getHeader();
@@ -252,108 +295,114 @@ public:
   CString              GetCharset() const;
   void                 SetMime(BOOL bMime);
   BOOL                 GetMime() const { return m_bMime; };
-  BOOL                 SaveToDisk(const CString& sFilename);
+  void                 SaveToDisk(const CString& sFilename);
                                 
 //Data Members
-	CPJNSMTPAddress  m_From;
-	CString       m_sSubject;
-  CString       m_sXMailer;
-	CPJNSMTPAddress  m_ReplyTo;
-  CPJNSMTPBodyPart m_RootPart;
-  PRIORITY      m_Priority;
+	CPJNSMTPAddress      m_From;
+	CString              m_sSubject;
+  CString              m_sXMailer;
+	CPJNSMTPAddress      m_ReplyTo;
+  CPJNSMTPBodyPart     m_RootPart;
+  PRIORITY             m_Priority;
 
 protected:
 //Methods
-  BOOL        WriteToDisk(CFile& file, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
+  void        WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
   CString     ConvertHTMLToPlainText(const CString& sHtml);
 
 //Member variables
 	CArray<CPJNSMTPAddress*, CPJNSMTPAddress*&> m_ToRecipients;
 	CArray<CPJNSMTPAddress*, CPJNSMTPAddress*&> m_CCRecipients;
 	CArray<CPJNSMTPAddress*, CPJNSMTPAddress*&> m_BCCRecipients;
-  CStringArray                          m_CustomHeaders;
-  BOOL                                  m_bMime;
+  CStringArray                                m_CustomHeaders;
+  BOOL                                        m_bMime;
 
   friend class CPJNSMTPConnection;
 };
 
 
+//////// The main class which encapsulates the SMTP connection ////////////////
 
-//The main class which encapsulates the SMTP connection
-class CPJNSMTPConnection
+#ifndef CPJNSMTP_NONTLM
+class PJNSMTP_EXT_CLASS CPJNSMTPConnection : public CNTLMClientAuth
+#else
+class PJNSMTP_EXT_CLASS CPJNSMTPConnection
+#endif
 {
 public:
 
 //typedefs
-enum AuthenticationMethod
-{
-  AUTH_NONE     = 0,
-  AUTH_CRAM_MD5 = 1,
-  AUTH_LOGIN    = 2,
-  AUTH_PLAIN    = 3
-};
+  enum AuthenticationMethod
+  {
+    AUTH_NONE     = 0,
+    AUTH_CRAM_MD5 = 1,
+    AUTH_LOGIN    = 2,
+    AUTH_PLAIN    = 3,
+    AUTH_NTLM     = 4
+  };
 
-enum ConnectToInternetResult
-{
-  CTIR_Failure=0,
-  CTIR_ExistingConnection=1,
-  CTIR_NewConnection=2,
-};
+  enum ConnectToInternetResult
+  {
+    CTIR_Failure=0,
+    CTIR_ExistingConnection=1,
+    CTIR_NewConnection=2,
+  };
 
 //Constructors / Destructors
   CPJNSMTPConnection();
   virtual ~CPJNSMTPConnection();
 
 //Methods
-  BOOL    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername=NULL, LPCTSTR pszPassword=NULL, int nPort=25, LPCTSTR pszLocalBoundAddress=NULL);
-  BOOL    Disconnect(BOOL bGracefully = TRUE);
+  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername=NULL, LPCTSTR pszPassword=NULL, int nPort=25, LPCTSTR pszLocalBoundAddress=NULL);
+  void    Disconnect(BOOL bGracefully = TRUE);
+  BOOL    IsConnected() const	{ return m_bConnected; };
   CString GetLastCommandResponse() const { return m_sLastCommandResponse; };
   int     GetLastCommandResponseCode() const { return m_nLastCommandResponseCode; };
   DWORD   GetTimeout() const { return m_dwTimeout; };
   void    SetTimeout(DWORD dwTimeout) { m_dwTimeout = dwTimeout; };
-	BOOL    SendMessage(CPJNSMTPMessage& Message);
-  BOOL    SendMessage(const CString& sMessageOnFile, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize = 4096);
-  BOOL    SendMessage(BYTE* pMessage, DWORD dwMessageSize, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize = 4096);
-  void    SetHeloHostname(const CString& sHostname) { m_sHeloHostname = sHostname; };
+	void    SendMessage(CPJNSMTPMessage& Message);
+  void    SendMessage(const CString& sMessageOnFile, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize = 4096);
+  void    SendMessage(BYTE* pMessage, DWORD dwMessageSize, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize = 4096);
+  void    SetHeloHostname(const CString& sHostname);
   CString GetHeloHostName() const { return m_sHeloHostname; };
 
 //Static methods
   static ConnectToInternetResult ConnectToInternet();
   static BOOL CloseInternetConnection();
+  static BOOL MXLookup(LPCTSTR lpszHostDomain, CStringArray& arrHosts, CWordArray& arrPreferences, WORD fOptions = DNS_QUERY_STANDARD, PIP4_ARRAY aipServers = NULL);
 
 //Virtual Methods
-#if (_MFC_VER >= 0x700)
-  virtual BOOL OnSendProgress(DWORD dwCurrentBytes, ULONGLONG dwTotalBytes);
-#else
   virtual BOOL OnSendProgress(DWORD dwCurrentBytes, DWORD dwTotalBytes);
-#endif  
 
 protected:
+
 //methods
-#ifndef CSMTP_NORSA
-  void MD5Digest(unsigned char*text, int text_len, unsigned char*key, int key_len, unsigned char* digest);
+#ifndef CPJNSMTP_NORSA
+  void         MD5Digest(unsigned char*text, int text_len, unsigned char*key, int key_len, unsigned char* digest);
+	void         AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword);
 #endif
-  BOOL ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername, LPCTSTR pszPassword, AuthenticationMethod am);
-  BOOL ConnectSMTP(LPCTSTR pszLocalName);
-#ifndef CSMTP_NORSA
-	BOOL AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword);
-#endif
-	BOOL  AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword);
-	BOOL  AuthPlain(LPCTSTR pszUsername, LPCTSTR pszPassword);
-	BOOL  SendRCPTForRecipient(CPJNSMTPAddress& recipient);
-  BOOL  SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
+  void         ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername, LPCTSTR pszPassword, AuthenticationMethod am);
+  void         ConnectSMTP(LPCTSTR pszLocalName);
+	void         AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword);
+	void         AuthPlain(LPCTSTR pszUsername, LPCTSTR pszPassword);
+  void         AuthNTLM();
+	void         SendRCPTForRecipient(CPJNSMTPAddress& recipient);
+  void         SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
 	virtual BOOL ReadCommandResponse(int nExpectedCode);
 	virtual BOOL ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int nExpectedCode, LPSTR* ppszOverFlowBuffer, int nGrowBy=4096);
-  void SafeCloseFile(CFile& File, const CString& sError);
-  virtual void OnError(const CString& sError);
+#ifndef CPJNSMTP_NONTLM
+  virtual SECURITY_STATUS NTLMAuthPhase1(PBYTE pBuf, DWORD cbBuf);
+  virtual SECURITY_STATUS NTLMAuthPhase2(PBYTE pBuf, DWORD cbBuf, DWORD* pcbRead);
+  virtual SECURITY_STATUS NTLMAuthPhase3(PBYTE pBuf, DWORD cbBuf);
+#endif
 
 //Member variables
-  CPJNSMTPSocket m_SMTP;
-  BOOL        m_bConnected;
-  CString     m_sLastCommandResponse;
-  CString     m_sHeloHostname;
-	DWORD       m_dwTimeout;
-  int         m_nLastCommandResponseCode;
+  CPJNSMTPSocket m_Socket;                    //The socket connection to the SMTP server
+  BOOL           m_bConnected;                //Are we currently connected to the server 
+  CString        m_sLastCommandResponse;      //The full last response the server sent us  
+  CString        m_sHeloHostname;             //The hostname we will use in the HELO command
+	DWORD          m_dwTimeout;                 //The timeout in milliseconds
+  int            m_nLastCommandResponseCode;  //The last numeric SMTP response
 };
 
 //Provide for backward compatability be defining CSMTPConnection as a preprocessor define
@@ -361,9 +410,5 @@ protected:
 #ifndef __ATLSMTPCONNECTION_H__
 #define CSMTPConnection CPJNSMTPConnection
 #endif
-
-#if defined(__INTEL_COMPILER)
-#pragma warning(default: 271)
-#endif	// __INTEL_COMPILER
 
 #endif //__PJNSMTP_H__

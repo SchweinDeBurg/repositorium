@@ -290,7 +290,7 @@ SOURCE=.\Source\SocMFC.h
 # End Group
 # Begin Group "SMTP"
 
-# PROP Default_Filter "h;cpp"
+# PROP Default_Filter "h;cpp;rh;rc"
 # Begin Source File
 
 SOURCE=.\Source\Base64Coder.cpp
@@ -315,12 +315,29 @@ SOURCE=.\Source\md5.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\PJNNTLMAuth.cpp
+# ADD CPP /Yu"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\PJNNTLMAuth.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\Smtp.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File
 # Begin Source File
 
 SOURCE=.\Source\Smtp.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\Smtp.rc
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\Smtp.rh
 # End Source File
 # End Group
 # Begin Group "Help Files"
