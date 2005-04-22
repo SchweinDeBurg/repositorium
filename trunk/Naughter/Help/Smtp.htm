@@ -1,13 +1,13 @@
 <html>
 
 <head>
-<title>CPJNSMTPConnection v2.46</title>
+<title>CPJNSMTPConnection v2.50</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
-<p align="left"><font face="Arial" size="6"><img src="SMTP.GIF" width="39" height="38" alt="SMTP.GIF (295 bytes)"><strong>CPJNSMTPConnection
-v2.46</strong></font></p>
+<p align="left"><font face="Arial" size="6"><img src="SMTP.gif" width="39" height="38" alt="SMTP.gif (295 bytes)"><strong>CPJNSMTPConnection
+v2.50</strong></font></p>
 
 <p><font face="Arial">Welcome to <strong>CPJNSMTPConnection</strong>, a freeware MFC class to
 support the SMTP protocol. SMTP for those not familiar with all the internet protocols is
@@ -129,8 +129,10 @@ distribution point for the source code.&nbsp;</font></li>
 
 <ul>
   <li><font color="#000000" size="3" face="Arial">To use the class in your code simply include
-    smtp.cpp, base64code.cpp and md5.cpp in your project and #include smtp.h in which ever of your modules needs to make
-    calls to the classes.</font></li>
+    PJNSmtp.cpp/h, Base64Coder.cpp/h, PJNNTLMAuth.cpp/h and md5.cpp/h and glob-md5.h in your project and #include smtp.h in which ever of your modules needs to make
+    calls to the classes. You also need to copy all the IDS_PJNSMTP_* strings
+    from the samples apps &quot;PJNSMTP.rc&quot; rc file to your applications rc
+    file.</font></li>
   <li><font face="Arial">Your code will need to include MFC either statically or dynamically.</font></li>
   <li><font face="Arial">You will need to have a functioning Winsock stack installed and
     correctly initialised prior to calling any functions in CPJNSMTPConnection. Depending on your
@@ -139,11 +141,9 @@ distribution point for the source code.&nbsp;</font></li>
     your application.</font></li>
   <li><font face="Arial">You will also need to have afxtempl.h ,winsock.h or afxsock.h and
     afxpriv.h in your precompiled header. The code will work just as well in a GUI or console
-    app. The code should also work in a multithreaded application, although it has not be
-    explicitly tested in this scenario.</font></li>
+    app.</font></li>
   <li><font face="Arial">To see the class in action, have a look at the code in InitInstance
-    in the module &quot;main.cpp&quot;.&nbsp; For example to send a message to the author
-    about this class, the code would look something like this (ignoring error handling):</font></li>
+    in the module &quot;main.cpp&quot;.&nbsp; For example to send a message about this class, the code would look something like this (ignoring error handling):</font></li>
 </ul>
 
 <p><font face="Times New Roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -151,7 +151,7 @@ CPJNSMTPConnection smtp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.Connect(&quot;mail.someisp.com&quot;);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPMessage m;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-m.AddRecipient(CSMTPAddress(&quot;pjna@naughter.com&quot;));<br>
+m.AddRecipient(CSMTPAddress(&quot;someaddress@somedestination.com&quot;));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_From =
 CSMTPAddress(&quot;adeveloper@someisp.com&quot;);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_sSubject = &quot;A Fellow developer!&quot;;<br>
@@ -161,14 +161,14 @@ CPJNSMTPConnection code is working&quot;);<br>
 </font></p>
 
 <p><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To send your autoexec.bat
-as a file attachment to me you would use the following code:</font></p>
+as a file attachment you would use the following code:</font></p>
 
 <p><font face="Times New Roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 CPJNSMTPConnection smtp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.Connect(&quot;mail.yourisp.com&quot;);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPMessage m;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-m.AddRecipient(CSMTPAddress(&quot;pjna@naughter.com&quot;));<br>
+m.AddRecipient(CSMTPAddress(&quot;someaddress@somedestination.com&quot;));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_From =
 CSMTPAddress(&quot;you@someisp.com&quot;);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_sSubject = &quot;Here's my autoexec.bat
@@ -768,7 +768,56 @@ May 2003</font></strong><b><font color="#000000" size="3">)</font></b><ul>
   <li><font face="Arial">"Name" field in Content-Type headers is now quoted just like the filename field. Thanks to Mark Smith for reporting this
     issue in conjunction with the mail client Eudora.</font></li>
 </ul>
+<p><strong><font face="Arial">V2.47 (24 January </font><font face="Arial" color="#000000" size="3"> 
+2005</font></strong><b><font color="#000000" size="3">)</font></b>
+<ul>
+  <li><font face="Arial">All classes now uses exceptions to indicate errors. This means the whole area of handling errors in the code a whole lot
+    simpler. For example the OnError mechanism is gone along with all the string literals in the code. The actual code itself
+    is a whole lot simpler also. You should carefully review your code as a lot of the return values from methods (especially
+    CPJNSMTPConnection) are now void and will throw CSMTPException's. Thanks to Mark Smith for prompting this update.</font></li>
+  <li><font face="Arial">General tidy up of the code following the testing of the new exception based code.</font></li>
+</ul>
+<p><strong><font face="Arial">19 February </font><font face="Arial" color="#000000" size="3"> 
+2005</font></strong>
+<ul>
+  <li><font face="Arial">Updated the usage section of the documentation to
+    describe what is required to integrate the code into your applications.
+    Thanks to Matthew Tompkins for prompting this update</font><font face="Arial">.</font></li>
+</ul>
+<p><strong><font face="Arial">V2.48 (7 March </font><font face="Arial" color="#000000" size="3"> 
+2005</font></strong><b><font color="#000000" size="3">)</font></b>
+<ul>
+  <li><font face="Arial"> Addition of PJNSMTP_EXT_CLASS define to the classes to allow the classes to be easily incorporated into extension DLLs.
+    Thanks to Arnaud Faucher for suggesting this addition.</font></li>
+  <li><font face="Arial">Now support NTLM authentication. Thanks to Arnaud Faucher for this nice addition. NTLM Authentication is provided by
+    a new reusable class called "CNTLMClientAuth" in PJNNTLMAuth.cpp/h".</font></li>
+  <li><font face="Arial">Fixed a bug in the sample app in the persistence of the Authentication setting. Thanks to Arnaud Faucher for reporting
+    this issue.</font></li>
+</ul>
+<p><strong><font face="Arial">V2.49 (26 March </font><font face="Arial" color="#000000" size="3"> 
+2005</font></strong><b><font color="#000000" size="3">)</font></b>
+<ul>
+  <li><font face="Arial">Fixed compile problems with the code when the Force Conformance In For Loop Scope compile setting is used in                          Visual Studio .NET 2003. Thanks to Alexey Kuznetsov for reporting this problem.</font></li>
+  <li><font face="Arial">Fixed compile problems when the code is compiled using the Detect 64-bit Portability Issues setting in Visual Studio
+    .NET 2003.</font></li>
+</ul>
+
+<p><strong><font face="Arial">V2.50 (18 April </font><font face="Arial" color="#000000" size="3"> 
+2005</font></strong><b><font color="#000000" size="3">)</font></b>
+</p>
+<ul>
+  <li><font face="Arial">Addition of a simple IsConnected() function inline with the author's CPop3Connection class. Thanks to Alexey Kuznetsov
+    for prompting this addition.</font></li>
+  <li><font face="Arial">Addition of a MXLookup function which provides for convenient DNS lookups of MX records (the IP addresses of SMTP mail                          servers for a specific host domain). Internally this new function uses the new
+    DNS functions which are provided with                          Windows 2000 or later. To ensure
+    that the code continues to work correctly on earlier versions of Windows, the function                          pointers for the required functions are constructed at runtime using GetProcAddress.
+    You can use this function to discover the IP address of the mail servers
+    responsible for a specific domain. This allows you to deliver email directly
+    to a domain rather than through a third party mail server. Thanks to Hans Dietrich for                          suggesting this nice addition.</font></li>
+</ul>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
 
 <p>&nbsp;</p>
@@ -794,6 +843,6 @@ THE AUTHOR</strong></font></font></p>
 <p><font face="Arial" color="#000000" size="3">PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-23 December </font><font face="Arial">2004</font></p>
+18 April </font><font face="Arial">2005</font></p>
 </body>
 </html>
