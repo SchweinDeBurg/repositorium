@@ -92,6 +92,11 @@ public:
   void    Close();
   void    Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen);
   void    Connect(LPCTSTR lpszHostAddress, UINT nHostPort);
+#ifdef _WINSOCK2API_ //Connect methods which have a timeout parameter are only provided if we are using WinSock2
+                     //because we are making use of Winsock2 functionality such as WSAEventSelect
+  void    Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen, DWORD dwConnectionTimeout, BOOL bResetToBlockingMode = TRUE);
+  void    Connect(LPCTSTR lpszHostAddress, UINT nHostPort, DWORD dwConnectionTimeout, BOOL bResetToBlockingMode = TRUE);
+#endif
   void    ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout = 5000);
   void    ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName = NULL, LPCTSTR lpszPassword = NULL, DWORD dwConnectionTimeout = 5000, BOOL bUDP = FALSE);
   void    ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CString& sProxyResponse, LPCTSTR lpszUserName = NULL, LPCTSTR pszPassword = NULL, DWORD dwConnectionTimeout = 5000, LPCTSTR lpszUserAgent = NULL);
@@ -100,7 +105,7 @@ public:
   int     Receive(void* lpBuf, int nBufLen, int nFlags = 0);
   int     ReceiveFrom(void* lpBuf, int nBufLen, SOCKADDR* lpSockAddr, int* lpSockAddrLen, int nFlags = 0);
   int     ReceiveFrom(void* lpBuf, int nBufLen, CString& sSocketAddress, UINT& nSocketPort, int nFlags = 0);
-  void    Send(void* pBuffer, int nBufLen, int nFlags = 0);
+  void    Send(const void* pBuffer, int nBufLen, int nFlags = 0);
   int     SendTo(const void* lpBuf, int nBufLen, const SOCKADDR* lpSockAddr, int nSockAddrLen, int nFlags = 0);
   int     SendTo(const void* lpBuf, int nBufLen, UINT nHostPort, LPCTSTR lpszHostAddress = NULL, int nFlags = 0);
 	enum { receives = 0, sends = 1, both = 2 };
