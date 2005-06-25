@@ -40,6 +40,12 @@ History: 03-03-2003 1. Addition of a number of preprocessor defines, namely W3MF
          31-01-2005 1. Fixed a bug in CWSocket::Receive where it throws an error when a graceful 
                     disconnect occurs. Now the code only throws an exception if the return value
                     from recv is SOCKET_ERROR
+         01-05-2005 1. Send method now uses a const void* parameter.
+         21-06-2005 1. Provision of connect methods which allows a timeout to be specified. Please note
+                    that if you use a host name in these calls as opposed to an IP address, the DNS
+                    lookup is still done using the OS supplied timeout. Only the actual connection
+                    to the server is implemented using a timeout after the DNS lookup is done (if it
+                    is necessary).
 
 Copyright (c) 2002 - 2005 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -63,7 +69,18 @@ to maintain a single distribution point for the source code.
 #include "SocMFC.h"
 #include "Base64.h"
 
-
+#if defined(__INTEL_COMPILER)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+// remark #174: expression has no effect
+#pragma warning(disable: 174)
+// remark #593: variable was set but never used
+#pragma warning(disable: 593)
+// remark #383: value copied to temporary, reference to temporary used
+#pragma warning(disable: 383)
+// remark #981: operands are evaluated in unspecified order
+#pragma warning(disable: 981)
+#endif	// __INTEL_COMPILER
 
 /////////////////// Macros / Defines //////////////////////////////////////////
 
@@ -425,8 +442,141 @@ void CWSocket::Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
       AfxThrowWSocketException(); 
 	}
 
+  //Call the other version of Connect which does the actual work
 	Connect((SOCKADDR*)&sockAddr, sizeof(sockAddr));
 }
+
+#ifdef _WINSOCK2API_
+void CWSocket::Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen, DWORD dwConnectionTimeout, BOOL bResetToBlockingMode)
+{
+  //Create an event to wait on
+  WSAEVENT hConnectedEvent = WSACreateEvent();
+  if (hConnectedEvent == WSA_INVALID_EVENT)
+    AfxThrowWSocketException();
+
+  //Setup event selection on the socket
+  if (WSAEventSelect(m_hSocket, hConnectedEvent, FD_CONNECT) == SOCKET_ERROR)
+  {
+    //Hive away the last error
+    DWORD dwLastError = GetLastError();
+
+    //Close the event before we return
+    WSACloseEvent(hConnectedEvent);
+
+    //Throw the exception that we could not setup event selection
+    AfxThrowWSocketException(dwLastError);
+  }
+
+  //Call the SDK "connect" function
+  int nConnected = connect(m_hSocket, lpSockAddr, nSockAddrLen);
+  if (nConnected == SOCKET_ERROR)
+  {
+    //Check to see if the call should be completed by waiting for the event to be signalled
+    DWORD dwLastError = GetLastError();
+    if (dwLastError == WSAEWOULDBLOCK)
+    {
+      DWORD dwWait = WaitForSingleObject(hConnectedEvent, dwConnectionTimeout);
+      if (dwWait == WAIT_OBJECT_0)
+      {
+        //Get the error value returned using WSAEnumNetworkEvents
+        WSANETWORKEVENTS networkEvents;
+        int nEvents = WSAEnumNetworkEvents(m_hSocket, hConnectedEvent, &networkEvents);
+        if (nEvents == SOCKET_ERROR)
+        {
+          //Hive away the last error
+          DWORD dwLastError = GetLastError();
+
+          //Close the event before we return
+          WSACloseEvent(hConnectedEvent);
+
+          //Throw the exception that we could not call WSAEnumNetworkEvents
+          AfxThrowWSocketException(dwLastError);
+        }
+        else
+        {
+          ASSERT(networkEvents.lNetworkEvents & FD_CONNECT);
+
+          //Has an error occured in the connect call
+          if (networkEvents.iErrorCode[FD_CONNECT_BIT] != ERROR_SUCCESS)
+          {
+            //Close the event before we return
+            WSACloseEvent(hConnectedEvent);
+
+            //Throw the exception that an error has occurred in calling connect
+            AfxThrowWSocketException(networkEvents.iErrorCode[FD_CONNECT_BIT]);
+          }
+        }
+      }
+      else
+      {
+        //Close the event before we return
+        WSACloseEvent(hConnectedEvent);
+
+        //Throw the exception that we could not connect in a timely fashion
+        AfxThrowWSocketException(ERROR_TIMEOUT);
+      }
+    }
+    else
+    {
+      //Close the event before we return
+      WSACloseEvent(hConnectedEvent);
+
+      //Throw the exception that the connect call failed unexpectedly
+      AfxThrowWSocketException(dwLastError);
+    }
+  }
+
+  //Remove the event notification on the socket
+  WSAEventSelect(m_hSocket, hConnectedEvent, 0);
+
+  //Destroy the event now that we are finished with it
+  WSACloseEvent(hConnectedEvent);
+
+  //Reset the socket to blocking mode if required
+  if (bResetToBlockingMode)
+  {
+    DWORD dwNonBlocking = 0;
+    if (ioctlsocket(m_hSocket, FIONBIO, &dwNonBlocking) == SOCKET_ERROR)
+    {
+      //Throw the exception that we could not reset the socket to blocking mode
+      AfxThrowWSocketException();
+    }
+  }    
+}
+
+void CWSocket::Connect(LPCTSTR lpszHostAddress, UINT nHostPort, DWORD dwConnectionTimeout, BOOL bResetToBlockingMode)
+{
+	USES_CONVERSION;
+
+  //Validate our parameters
+  ASSERT(IsCreated());             //must have been created first
+  ASSERT(lpszHostAddress);          //Must have a valid host
+
+  //Work out the IP address of the machine we want to connect to
+	LPSTR lpszAscii = T2A((LPTSTR) lpszHostAddress);
+
+	//Determine if the address is in dotted notation
+	SOCKADDR_IN sockAddr;
+	memset(&sockAddr, 0, sizeof(sockAddr));
+	sockAddr.sin_family = AF_INET;
+	sockAddr.sin_port = htons((u_short)nHostPort);
+	sockAddr.sin_addr.s_addr = inet_addr(lpszAscii);
+
+	//If the address is not dotted notation, then do a DNS 
+	//lookup of it.
+	if (sockAddr.sin_addr.s_addr == INADDR_NONE)
+	{
+		LPHOSTENT lphost = gethostbyname(lpszAscii);
+		if (lphost != NULL)
+			sockAddr.sin_addr.s_addr = ((LPIN_ADDR)lphost->h_addr)->s_addr;
+		else
+      AfxThrowWSocketException(); 
+	}
+
+  //Call the other version of Connect which does the actual work
+  Connect((SOCKADDR*)&sockAddr, sizeof(sockAddr), dwConnectionTimeout, bResetToBlockingMode);
+}
+#endif //_WINSOCK2API_
 
 int CWSocket::Receive(void* lpBuf, int nBufLen, int nFlags)
 {
@@ -467,7 +617,7 @@ int CWSocket::ReceiveFrom(void* lpBuf, int nBufLen, CString& sSocketAddress, UIN
 	return nResult;
 }
 
-void CWSocket::Send(void* pBuffer, int nBufLen, int nFlags)
+void CWSocket::Send(const void* pBuffer, int nBufLen, int nFlags)
 {
   ASSERT(IsCreated()); //must have been created first
 

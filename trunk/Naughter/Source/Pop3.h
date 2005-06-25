@@ -37,6 +37,8 @@ to maintain a single distribution point for the source code.
 #if defined(__INTEL_COMPILER)
 // remark #383: value copied to temporary, reference to temporary used
 #pragma warning(disable: 383)
+// remark #271: trailing comma is nonstandard
+#pragma warning(disable: 271)
 #endif	// __INTEL_COMPILER
 
 /////////////////////////////// Classes ///////////////////////////////////////
