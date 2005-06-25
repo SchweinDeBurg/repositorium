@@ -36,7 +36,7 @@ my explicit written consent.
 
 #ifndef _WINSOCKAPI_
 #pragma message("To avoid this message, put afxsock.h or winsock.h in your PCH (usually stdafx.h)")
-#include <winsock.h>
+#include <WinSock.h>
 #endif
 
 #ifndef __AFXPRIV_H__
@@ -46,7 +46,7 @@ my explicit written consent.
 
 #ifndef _WINDNS_INCLUDED_
 #pragma message("To avoid this message, put Windns.h in your PCH (usually stdafx.h)")
-#include <Windns.h>
+#include <WinDNS.h>
 #endif
 
 #pragma warning(push, 3) //Avoid all the level 4 warnings in STL
@@ -56,6 +56,9 @@ my explicit written consent.
 #endif
 #pragma warning(pop)
 
+#include "SocMFC.h" //If you get a compilation error about this missing header file, then you need to download my CWSocket and base64 classes from http://www.naughter.com/w3mfc.html
+#include "Base64.h" //If you get a compilation error about this missing header file, then you need to download my CWSocket and Base64 classes from http://www.naughter.com/w3mfc.html
+
 #ifndef CPJNSMTP_NONTLM
 #include "PJNNTLMAuth.h"
 #endif
@@ -64,27 +67,52 @@ my explicit written consent.
 #define PJNSMTP_EXT_CLASS
 #endif
 
-#include "Base64Coder.h"
-
 #if defined(__INTEL_COMPILER)
+// remark #383: value copied to temporary, reference to temporary used
+#pragma warning(disable: 383)
 // remark #271: trailing comma is nonstandard
 #pragma warning(disable: 271)
+// remark #444: destructor for base class is not virtual
+#pragma warning(disable: 444)
 #endif	// __INTEL_COMPILER
 
 /////////////////////////////// Classes ///////////////////////////////////////
 
+///////////// Class which makes using CBase64 class easier ////////////////////
 
-///////////// Exception class /////////////////////////////////////////////////
-
-void AfxThrowSMTPException(DWORD dwError = 0, DWORD Facility = FACILITY_WIN32, const CString& sLastResponse = _T(""));
-void AfxThrowSMTPException(HRESULT hr, const CString& sLastResponse = _T(""));
-
-class PJNSMTP_EXT_CLASS CSMTPException : public CException
+class PJNSMTP_EXT_CLASS CPJNSMPTBase64 : public CBase64
 {
 public:
 //Constructors / Destructors
-  CSMTPException(HRESULT hr, const CString& sLastResponse = _T("")); 
-	CSMTPException(DWORD dwError = 0, DWORD dwFacility = FACILITY_WIN32, const CString& sLastResponse = _T(""));
+  CPJNSMPTBase64();
+  ~CPJNSMPTBase64();
+
+//methods
+	void	Encode(const BYTE* pbyData, int nSize, DWORD dwFlags);
+	void	Decode(LPCSTR pData, int nSize);
+	void	Encode(LPCSTR pszMessage, DWORD dwFlags);
+	void	Decode(LPCSTR sMessage);
+
+	LPSTR Result() const { return m_pBuf; };
+	int	  ResultSize() const { return m_nSize; };
+
+protected:
+  char* m_pBuf;
+  int   m_nSize;
+};
+
+
+///////////// Exception class /////////////////////////////////////////////////
+
+void AfxThrowPJNSMTPException(DWORD dwError = 0, DWORD Facility = FACILITY_WIN32, const CString& sLastResponse = _T(""));
+void AfxThrowPJNSMTPException(HRESULT hr, const CString& sLastResponse = _T(""));
+
+class PJNSMTP_EXT_CLASS CPJNSMTPException : public CException
+{
+public:
+//Constructors / Destructors
+  CPJNSMTPException(HRESULT hr, const CString& sLastResponse = _T("")); 
+	CPJNSMTPException(DWORD dwError = 0, DWORD dwFacility = FACILITY_WIN32, const CString& sLastResponse = _T(""));
 
 //Methods
 #ifdef _DEBUG
@@ -98,33 +126,7 @@ public:
   CString m_sLastResponse;
 
 protected:
-	DECLARE_DYNAMIC(CSMTPException)
-};
-
-
-///////////// Simple Socket wrapper class /////////////////////////////////////
-
-class PJNSMTP_EXT_CLASS CPJNSMTPSocket
-{
-public:
-//Constructors / Destructors
-  CPJNSMTPSocket();
-  virtual ~CPJNSMTPSocket();
-
-//methods
-  void  Create();
-  void  Connect(LPCTSTR pszHostAddress, int nPort, LPCTSTR pszLocalBoundAddress);
-  void  Send(LPCSTR pszBuf, int nBuf);
-  void  Close();
-  int   Receive(LPSTR pszBuf, int nBuf);
-  BOOL  IsReadable(DWORD dwTimeout);
-
-protected:
-//Methods
-  void  Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen);
-
-//Member variables
-  SOCKET m_hSocket;
+	DECLARE_DYNAMIC(CPJNSMTPException)
 };
 
                      
@@ -219,21 +221,21 @@ public:
 
 protected:
 //Member variables
-  CString      m_sFilename;                                 //The file you want to attach
-  CString      m_sTitle;                                    //What is it to be know as when emailed
-  CString      m_sContentType;                              //The mime content type for this body part
-  CString      m_sCharset;                                  //The charset for this body part
-  CString      m_sContentBase;                              //The absolute URL to use for when you need to resolve any relative URL's in this body part
-  CString      m_sContentID;                                //The uniqiue ID for this body part (allows other body parts to refer to us via a CID URL)
-  CString      m_sContentLocation;                          //The relative URL for this body part (allows other body parts to refer to us via a relative URL)
-  CString      m_sText;                                     //If using strings rather than file, then this is it!
-  CBase64Coder m_Coder;	                                    //Base64 encoder / decoder instance for this body part
-  CArray<CPJNSMTPBodyPart*, CPJNSMTPBodyPart*&> m_ChildBodyParts; //Child body parts for this body part
-  CPJNSMTPBodyPart* m_pParentBodyPart;                         //The parent body part for this body part
-  CString      m_sBoundary;                                 //String which is used as the body separator for all child mime parts
-  BOOL         m_bQuotedPrintable;                          //Should the body text by quoted printable encoded
-  BOOL         m_bBase64;                                   //Should the body be base64 encoded. Overrides "m_bQuotedPrintable"
-  DWORD        m_dwMaxAttachmentSize;                       //The maximum size this body part can be if it is a file attachment (Defaults to 50 MB)
+  CString                                       m_sFilename;           //The file you want to attach
+  CString                                       m_sTitle;              //What is it to be know as when emailed
+  CString                                       m_sContentType;        //The mime content type for this body part
+  CString                                       m_sCharset;            //The charset for this body part
+  CString                                       m_sContentBase;        //The absolute URL to use for when you need to resolve any relative URL's in this body part
+  CString                                       m_sContentID;          //The uniqiue ID for this body part (allows other body parts to refer to us via a CID URL)
+  CString                                       m_sContentLocation;    //The relative URL for this body part (allows other body parts to refer to us via a relative URL)
+  CString                                       m_sText;               //If using strings rather than file, then this is it!
+  CPJNSMPTBase64                                m_Coder;	             //Base64 encoder / decoder instance for this body part
+  CArray<CPJNSMTPBodyPart*, CPJNSMTPBodyPart*&> m_ChildBodyParts;      //Child body parts for this body part
+  CPJNSMTPBodyPart*                             m_pParentBodyPart;     //The parent body part for this body part
+  CString                                       m_sBoundary;           //String which is used as the body separator for all child mime parts
+  BOOL                                          m_bQuotedPrintable;    //Should the body text by quoted printable encoded
+  BOOL                                          m_bBase64;             //Should the body be base64 encoded. Overrides "m_bQuotedPrintable"
+  DWORD                                         m_dwMaxAttachmentSize; //The maximum size this body part can be if it is a file attachment (Defaults to 50 MB)
 
 //Methods
   void FixSingleDotA(std::string& sBody);
@@ -351,12 +353,20 @@ public:
     CTIR_NewConnection=2,
   };
 
+  enum ProxyType
+  {
+    ptNone = 0,
+    ptSocks4 = 1,
+    ptSocks5 = 2,
+    ptHTTP = 3
+  };
+
 //Constructors / Destructors
   CPJNSMTPConnection();
   virtual ~CPJNSMTPConnection();
 
 //Methods
-  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername=NULL, LPCTSTR pszPassword=NULL, int nPort=25, LPCTSTR pszLocalBoundAddress=NULL);
+  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername=NULL, LPCTSTR pszPassword=NULL, int nPort=25);
   void    Disconnect(BOOL bGracefully = TRUE);
   BOOL    IsConnected() const	{ return m_bConnected; };
   CString GetLastCommandResponse() const { return m_sLastCommandResponse; };
@@ -369,10 +379,28 @@ public:
   void    SetHeloHostname(const CString& sHostname);
   CString GetHeloHostName() const { return m_sHeloHostname; };
 
+
+//Proxy Methods
+  void      SetProxyType(ProxyType proxyType) { m_ProxyType = proxyType; };
+  ProxyType GetProxyType() const { return m_ProxyType; };
+  void      SetProxyServer(const CString& sServer) { m_sProxyServer = sServer; };
+  CString   GetProxyServer() const { return m_sProxyServer; };
+  void      SetProxyPort(int nPort) { m_nProxyPort = nPort; };
+  int       GetProxyPort() { return m_nProxyPort; };
+  void      SetBoundAddress(const CString& sLocalBoundAddress) { m_sLocalBoundAddress = sLocalBoundAddress; };
+  CString   SetBoundAddress() const { return m_sLocalBoundAddress; };
+  void      SetProxyUserName(const CString& sUserName) { m_sProxyUserName = sUserName; };
+  CString   GetProxyUserName() const { return m_sProxyUserName; };
+  void      SetProxyPassword(const CString& sPassword) { m_sProxyPassword = sPassword; };
+  CString   GetProxyPassword() const { return m_sProxyPassword; };
+  CString   GetHTTPProxyUserAgent() const { return m_sUserAgent; };
+  void      SetHTTPProxyUserAgent(const CString& sUserAgent) { m_sUserAgent = sUserAgent; };
+
 //Static methods
   static ConnectToInternetResult ConnectToInternet();
   static BOOL CloseInternetConnection();
   static BOOL MXLookup(LPCTSTR lpszHostDomain, CStringArray& arrHosts, CWordArray& arrPreferences, WORD fOptions = DNS_QUERY_STANDARD, PIP4_ARRAY aipServers = NULL);
+  static BOOL MXLookupAvailable();
 
 //Virtual Methods
   virtual BOOL OnSendProgress(DWORD dwCurrentBytes, DWORD dwTotalBytes);
@@ -380,10 +408,8 @@ public:
 protected:
 
 //methods
-#ifndef CPJNSMTP_NORSA
-  void         MD5Digest(unsigned char*text, int text_len, unsigned char*key, int key_len, unsigned char* digest);
+  //void         MD5Digest(unsigned char*text, int text_len, unsigned char*key, int key_len, unsigned char* digest);
 	void         AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword);
-#endif
   void         ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername, LPCTSTR pszPassword, AuthenticationMethod am);
   void         ConnectSMTP(LPCTSTR pszLocalName);
 	void         AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword);
@@ -400,12 +426,19 @@ protected:
 #endif
 
 //Member variables
-  CPJNSMTPSocket m_Socket;                    //The socket connection to the SMTP server
-  BOOL           m_bConnected;                //Are we currently connected to the server 
-  CString        m_sLastCommandResponse;      //The full last response the server sent us  
-  CString        m_sHeloHostname;             //The hostname we will use in the HELO command
-	DWORD          m_dwTimeout;                 //The timeout in milliseconds
-  int            m_nLastCommandResponseCode;  //The last numeric SMTP response
+  CWSocket       m_Socket;                   //The socket connection to the SMTP server
+  BOOL           m_bConnected;               //Are we currently connected to the server 
+  CString        m_sLastCommandResponse;     //The full last response the server sent us  
+  CString        m_sHeloHostname;            //The hostname we will use in the HELO command
+	DWORD          m_dwTimeout;                //The timeout in milliseconds
+  int            m_nLastCommandResponseCode; //The last numeric SMTP response
+  ProxyType      m_ProxyType;
+  CString        m_sProxyServer;
+  int            m_nProxyPort;
+  CString        m_sLocalBoundAddress;
+  CString        m_sProxyUserName;
+  CString        m_sProxyPassword;
+  CString        m_sUserAgent;
 };
 
 //Provide for backward compatability be defining CSMTPConnection as a preprocessor define

@@ -25,7 +25,10 @@ to maintain a single distribution point for the source code.
 #include "stdafx.h"
 #include "PJNNTLMAuth.h"
 
-
+#if defined(__INTEL_COMPILER)
+// remark #177: controlling expression is constant
+#pragma warning(disable: 177)
+#endif	// __INTEL_COMPILER
 
 //////////////// Macros / Locals /////////////////////////////////////
 

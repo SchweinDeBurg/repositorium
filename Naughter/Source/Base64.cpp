@@ -25,7 +25,10 @@ to maintain a single distribution point for the source code.
 #include "stdafx.h"
 #include "Base64.h"
 
-
+#if defined(__INTEL_COMPILER)
+// remark #279: controlling expression is constant
+#pragma warning(disable: 279)
+#endif	// __INTEL_COMPILER
 
 //////////////// Statics / Macros ////////////////////////////////////
 
