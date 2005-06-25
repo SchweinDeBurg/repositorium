@@ -1,13 +1,13 @@
 <html>
 
 <head>
-<title>CPJNSMTPConnection v2.50</title>
+<title>CPJNSMTPConnection v2.53</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
-<p align="left"><font face="Arial" size="6"><img src="SMTP.gif" width="39" height="38" alt="SMTP.gif (295 bytes)"><strong>CPJNSMTPConnection
-v2.50</strong></font></p>
+<p align="left"><font face="Arial" size="6"><img src="smtp.gif" width="39" height="38" alt="smtp.gif (295 bytes)"><strong>CPJNSMTPConnection
+v2.53</strong></font></p>
 
 <p><font face="Arial">Welcome to <strong>CPJNSMTPConnection</strong>, a freeware MFC class to
 support the SMTP protocol. SMTP for those not familiar with all the internet protocols is
@@ -25,13 +25,15 @@ want to check out RFC 2110 which covers MHTML (aka HTML Email).</font></p>
 going to any Web search engine and looking for RFC and 821,
 822, 1321, 2045, 2104 and 2195. </font></p>
 
-<p><font face="Arial">Please note that portions of the code is provided by RSA Security. Please see md5.cpp for more details on this.</font></p>
-
 <p><font face="Arial" size="3"><b><i>Important!!:</i></b> Please note that I
 have been informed recently that CPJNSMTPConnection is being used to develop and
 send unsolicited bulk mail. This was not the intention of the code and the author
 explicitly forbids use of the code for any software of this kind without my
 explicit written consent.</font></p>
+<p><font face="Arial">Also included with the SMTP classes in the download is a
+class called &quot;CPJNMD5Hash&quot; which provides for calculation of MD5
+hashes and HMACs using the MS Crypto API.</font></p>
+
 <p></p>
 
 <p>&nbsp;</p>
@@ -129,10 +131,17 @@ distribution point for the source code.&nbsp;</font></li>
 
 <ul>
   <li><font color="#000000" size="3" face="Arial">To use the class in your code simply include
-    PJNSmtp.cpp/h, Base64Coder.cpp/h, PJNNTLMAuth.cpp/h and md5.cpp/h and glob-md5.h in your project and #include smtp.h in which ever of your modules needs to make
+    PJNSMTP.cpp/h, Base64.cpp/h, PJNNTLMAuth.cpp/h, SocMFC.cpp/h and PJNMD5.h in your project and #include
+    PJNSMTP.h in which ever of your modules needs to make
     calls to the classes. You also need to copy all the IDS_PJNSMTP_* strings
     from the samples apps &quot;PJNSMTP.rc&quot; rc file to your applications rc
     file.</font></li>
+  <li><font color="#000000" size="3" face="Arial">If you do not already have the
+    Base64.cpp/h and SocMFC.cpp/h modules, these can be downloaded separately
+    from <a href="http://www.naughter.com/w3mfc.html">www.naughter.com/w3mfc.html</a>.&nbsp;</font></li>
+  <li><font color="#000000" size="3" face="Arial">You will need to have
+    downloaded, installed and configured the Platform SDK if you are compilling
+    the code with Visual C++ v6.</font></li>
   <li><font face="Arial">Your code will need to include MFC either statically or dynamically.</font></li>
   <li><font face="Arial">You will need to have a functioning Winsock stack installed and
     correctly initialised prior to calling any functions in CPJNSMTPConnection. Depending on your
@@ -816,6 +825,48 @@ May 2003</font></strong><b><font color="#000000" size="3">)</font></b><ul>
     to a domain rather than through a third party mail server. Thanks to Hans Dietrich for                          suggesting this nice addition.</font></li>
 </ul>
 
+<p><strong><font face="Arial">V2.51 (23 April </font><font face="Arial" color="#000000" size="3"> 
+2005</font></strong><b><font color="#000000" size="3">)</font></b>
+</p>
+<ul>
+  <li><font face="Arial"> The code now uses a MS Crypto API implementation of the MD5 HMAC algorithm instead of custom code based on the RSA                          MD5 code. This means that there is no need for the RSA MD5.cpp, MD5.h and glob-md5.h to be included in client applications.                          In addition the build configurations for excluding the RSA MD5 code has been removed from the sample app. The new classes to                          perform the MD5 hashing are contained in PJNMD5.h and are generic enough to be
+    included in client applications in their own right.</font></li>
+</ul>
+
+<p><strong><font face="Arial">V2.52 (1 May </font><font face="Arial" color="#000000" size="3"> 
+2005</font></strong><b><font color="#000000" size="3">)</font></b>
+</p>
+<ul>
+  <li><font face="Arial">Now uses the author's CWSocket sockets wrapper class.</font></li>
+  <li><font face="Arial">Added support for connecting via Socks4, Socks5 and HTTP proxies&nbsp;</font></li>
+  <li><font face="Arial">The last parameter to Connect has now been removed and is configured via an accessor / mutator pair Get/SetBoundAddress.</font></li>
+  <li><font face="Arial">CSMTPException class is now called CPJNSMTPException.</font></li>
+  <li><font face="Arial">Class now uses the Base64 class as provided with CWSocket. This means that the modules Base64Coder.cpp/h are no longer
+    distributed or required and should be removed from any projects which use the updated SMTP classes.</font></li>
+  <li><font face="Arial">Fixed a bug in SaveToDisk method whereby existing files were not being truncated prior to saving the email message.</font></li>
+  <li><font face="Arial">All calls to allocate heap memory now generate a CPJNSMTPException if the allocation fails.</font></li>
+  <li><font face="Arial">Addition of a MXLookupAvailable() function so that client code can know a priori if DNS MX lookups are supported.</font></li>
+  <li><font face="Arial">Sample app now allows you to use the MXLookup method to determine the
+    mail server to use based on the first email address you provide in the To field.</font></li>
+</ul>
+
+<p><strong><font face="Arial">V2.53 (3 May </font><font face="Arial" color="#000000" size="3"> 
+2005</font></strong><b><font color="#000000" size="3">)</font></b>
+</p>
+<ul>
+  <li><font face="Arial">Updated the usage section to describe the need to have
+    the Platform SDK installed and configured.</font></li>
+  <li><font face="Arial">Fixed a number of warnings when the code is compiled in Visual Studio .NET 2003. Thanks to Nigel Delaforce for
+    reporting these issues.</font></li>
+</ul>
+
+<p><strong><font face="Arial">18 May </font><font face="Arial" color="#000000" size="3"> 
+2005</font></strong>
+</p>
+<ul>
+  <li><font face="Arial"> Fixed a compiler warning in the CPJNMD5Hash class when compiled using Visual Studio .NET 2003. Thanks to Alexey Kuznetsov                          for reporting this issue.</font></li>
+</ul>
+
 <p>&nbsp;</p>
 
 <p>&nbsp;</p>
@@ -843,6 +894,6 @@ THE AUTHOR</strong></font></font></p>
 <p><font face="Arial" color="#000000" size="3">PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-18 April </font><font face="Arial">2005</font></p>
+18 May </font><font face="Arial">2005</font></p>
 </body>
 </html>

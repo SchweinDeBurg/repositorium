@@ -315,6 +315,10 @@ SOURCE=.\Source\md5.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\PJNMD5.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\PJNNTLMAuth.cpp
 # ADD CPP /Yu"stdafx.h"
 # End Source File

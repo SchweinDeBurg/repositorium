@@ -67,6 +67,8 @@ BEGIN
                             "Failed to perform NTLM authentication"
     IDS_PJNSMTP_UNEXPECTED_AUTH_NTLM_RESPONSE 
                             "Unexpected AUTH NTLM response, Last Response: %1"
+    IDS_PJNSMTP_FAIL_BASE64_DECODE "Failed to base64 decode data"
+    IDS_PJNSMTP_FAIL_BASE64_ENCODE "Failed to base64 encode data"
 END
 
 #endif    // English (U.S.) resources
