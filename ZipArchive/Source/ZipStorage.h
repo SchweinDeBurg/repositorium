@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // $RCSfile: ZipStorage.h,v $
-// $Revision: 1.3 $
-// $Date: 2005/02/14 15:29:03 $ $Author: Tadeusz Dracz $
+// $Revision: 1.4 $
+// $Date: 2005/06/18 10:50:29 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -235,24 +235,25 @@ public:
 
 /**
 	Open the archive in memory (new or existing).
-	The parameters are the same as CZipArchive::OpenMode.
-	\param	mf
+	The parameters are the same as CZipArchive::Open(CZipAbstractFile& , int).
+	\param	af
 	\param	iMode
 	\note Throws exceptions.
 
-	\see CZipArchive::Open(LPCTSTR, int, int)
+	\see CZipArchive::Open(CZipAbstractFile& , int);
+	
 */
-	void Open(CZipMemFile& mf, int iMode);
+	void Open(CZipAbstractFile& af, int iMode);
 
 /**
 	Open or create an archive.
-	The parameters are the same as CZipArchive::Open.
+	The parameters are the same as CZipArchive::Open(LPCTSTR, int, int).
 	\param	szPathName
 	\param	iMode
 	\param	iVolumeSize
 	\note Throws exceptions.
 	
-	\see CZipArchive::Open(CZipMemFile& , int);
+	\see CZipArchive::Open(LPCTSTR, int, int)
 */
 	void Open(LPCTSTR szPathName, int iMode, int iVolumeSize);
 

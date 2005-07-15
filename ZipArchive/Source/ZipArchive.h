@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // $RCSfile: ZipArchive.h,v $
-// $Revision: 1.3 $
-// $Date: 2005/03/07 20:40:37 $ $Author: Tadeusz Dracz $
+// $Revision: 1.5 $
+// $Date: 2005/06/20 16:53:00 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -236,6 +236,9 @@ public:
 		CZipInternalInfo()
 		{
 			m_iBufferSize = 65536;
+			m_uUncomprLeft = 0;
+			m_uComprLeft  = 0;
+			m_uCrc32 = 0;
 		}
 		virtual ~CZipInternalInfo(){}
 
@@ -494,11 +497,11 @@ public:
 
 
 /**
-	Open or create the archive in memory. The CZipMemFile object is not closed
+	Open or create the archive in memory. The CZipAbstractFile object is not closed
 	after closing the archive, so that is it possible to work with it afterwards.
-	\param	mf
-		CZipMemFile structure to create archive in or extract from
-		\note This is important: you shouldn't destroy CZipMemFile object before
+	\param	af
+		CZipAbstractFile structure to create archive in or extract from
+		\note This is important: you shouldn't destroy CZipAbstractFile object before
 		closing the archive, because you'll get an error;
 	\param	iMode
 		Open mode. 
@@ -506,7 +509,7 @@ public:
 	\note	Throws exceptions.
 	\see Open(LPCTSTR, int, int);
 */
-	void Open(CZipMemFile& mf, int iMode = zipOpen);
+	void Open(CZipAbstractFile& af, int iMode = zipOpen);
 
 /**
 	Set #m_szRootPath to a specified value. Use it if you don't want to set

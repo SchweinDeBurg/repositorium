@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // $RCSfile: ZipArchive.cpp,v $
-// $Revision: 1.3 $
-// $Date: 2005/03/07 20:40:37 $ $Author: Tadeusz Dracz $
+// $Revision: 1.5 $
+// $Date: 2005/06/21 16:37:02 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -49,7 +49,7 @@
 #define ZIP_COMPR_REPL_MASK 0xffffff00
 #define ZIP_COMPR_REPL_SIGN 0x0100 // first 8 bits should be 00 (reserved for compression level), next 8 should be different from ff (to distinguish from -1)
 
-const TCHAR CZipArchive::m_gszCopyright[] = {_T("ZipArchive library Copyright 2000 - 2003 Tadeusz Dracz")};
+const TCHAR CZipArchive::m_gszCopyright[] = {_T("ZipArchive library Copyright 2000 - 2005 Tadeusz Dracz")};
 
 #ifdef _UNICODE	
 	bool CZipArchive::g_bWideConversionUseAnsi = true;
@@ -97,7 +97,7 @@ void CZipArchive::Open(LPCTSTR szPathName, int iMode, int iVolumeSize)
 	OpenInternal(iMode);
 }
 
-void CZipArchive::Open(CZipMemFile& mf,int iMode)
+void CZipArchive::Open(CZipAbstractFile& af,int iMode)
 {
 	if (!IsClosed())
 	{
@@ -109,7 +109,7 @@ void CZipArchive::Open(CZipMemFile& mf,int iMode)
 		TRACE(_T("%s(%i) : Mode not supported.\n"),__FILE__,__LINE__);
 		return;
 	}
-	m_storage.Open(mf, iMode);
+	m_storage.Open(af, iMode);
 	OpenInternal(iMode);
 }
 

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // $RCSfile: ZipStorage.cpp,v $
-// $Revision: 1.3 $
-// $Date: 2005/02/14 15:29:03 $ $Author: Tadeusz Dracz $
+// $Revision: 1.4 $
+// $Date: 2005/06/18 10:50:53 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -134,23 +134,23 @@ void CZipStorage::Open(LPCTSTR szPathName, int iMode, int iVolumeSize)
 }
 
 
-void CZipStorage::Open(CZipMemFile& mf, int iMode)
+void CZipStorage::Open(CZipAbstractFile& af, int iMode)
 {
 	m_pWriteBuffer.Allocate(m_iWriteBufferSize); 
 	m_uBytesInWriteBuffer = 0;
 	m_bNewSpan = false;
-	m_pFile = &mf;
+	m_pFile = &af;
 	m_bInMemory = true;
 
 	if (iMode == CZipArchive::zipCreate)
 	{
 		m_iCurrentDisk = 0;
 		m_iSpanMode = noSpan;
-		mf.SetLength(0);
+		af.SetLength(0);
 	}
 	else // open existing
 	{
-		mf.SeekToBegin();
+		af.SeekToBegin();
 		m_iSpanMode = suggestedAuto;
 	}
 }
@@ -227,7 +227,8 @@ CZipString CZipStorage::Close(bool bAfterException)
 		sz = m_pFile->GetFilePath();
 	if (bClose && !m_bInMemory)
 	{
-		FlushFile();
+		if (!bAfterException)
+			FlushFile();
 		m_pFile->Close();
 	}
 		
