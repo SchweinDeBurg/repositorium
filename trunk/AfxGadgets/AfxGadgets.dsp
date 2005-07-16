@@ -328,7 +328,7 @@ SOURCE=.\Source\StringConv.h
 # End Group
 # Begin Group "System"
 
-# PROP Default_Filter "h;cpp"
+# PROP Default_Filter "h;hxx;cpp"
 # Begin Source File
 
 SOURCE=.\Source\MemMapFile.cpp
@@ -350,6 +350,18 @@ SOURCE=.\Source\ProcessPrivileges.h
 # Begin Source File
 
 SOURCE=.\Source\ProcessPrivileges.inl
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\RemoteInvoke.hxx
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\RemoteParam.hxx
+# End Source File
+# Begin Source File
+
+SOURCE=.\Source\RemoteProc.hxx
 # End Source File
 # End Group
 # Begin Group "XML"
