@@ -34,8 +34,8 @@
 #include <dlgs.h>				// standard control IDs for commdlg
 
 // force ISO/IEC 14882 conformance in for loop scope
-#if _MSC_VER < 1300
-#define for if(false); else for
+#if (_MSC_VER < 1300)
+#define for if (false); else for
 #else
 #pragma conform(forScope, on)
 #endif	// _MSC_VER

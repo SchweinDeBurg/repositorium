@@ -32,9 +32,16 @@
 
 // STL headers
 #pragma warning(push, 3)
+#include <utility>
+#if defined(_CPPLIB_VER) && defined(_DEBUG)
+#pragma warning(disable: 4702)
+#endif	// _CPPLIB_VER && _DEBUG
 #include <vector>
 #include <map>
 #include <algorithm>
+#if defined(_CPPLIB_VER) && defined(_DEBUG)
+#pragma warning(default: 4702)
+#endif	// _CPPLIB_VER && _DEBUG
 #pragma warning(pop)
 
 #if !defined(min)
@@ -50,8 +57,8 @@ using std::max;
 // TODO: reference additional headers your program requires here
 
 // force ISO/IEC 14882 conformance in for loop scope
-#if _MSC_VER < 1300
-#define for if(false); else for
+#if (_MSC_VER < 1300)
+#define for if (false); else for
 #else
 #pragma conform(forScope, on)
 #endif	// _MSC_VER

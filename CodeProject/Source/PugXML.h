@@ -2476,6 +2476,26 @@ LOC_PCDATA: //'>...<'
 		return s;
 	}
 
+	#undef IsSymbol
+	#undef IsSpace
+	#undef IsEnter
+	#undef IsLeave
+	#undef IsClose
+	#undef IsConnective
+	#undef IsSpecial
+	#undef IsPi
+	#undef IsDash
+	#undef IsQuote
+	#undef IsLeftBracket
+	#undef IsRightBracket
+	#undef SkipWS
+	#undef ParseOption
+	#undef Push
+	#undef Pop
+	#undef ScanUntil
+	#undef ScanWhile
+	#undef EndSegment
+
 	// <summary>Recursively free a tree.</summary>
 	// <param name="pRoot">Pointer to the root of the tree.</param>
 	// <returns></returns>

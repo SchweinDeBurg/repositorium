@@ -328,7 +328,7 @@ SOURCE=.\Source\StringConv.h
 # End Group
 # Begin Group "System"
 
-# PROP Default_Filter "h;hxx;cpp"
+# PROP Default_Filter "h;hxx;cpp;inl"
 # Begin Source File
 
 SOURCE=.\Source\MemMapFile.cpp

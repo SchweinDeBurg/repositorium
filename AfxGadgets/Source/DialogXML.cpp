@@ -21,10 +21,10 @@
 #endif	// _WIN32_WINDOWS && _DBGHELP_
 
 class CFindReplaceDialog;
-#if (_MFC_VER > 0x0600)
-#include <../src/mfc/afximpl.h>
-#else
+#if (_MFC_VER < 0x0700)
 #include <../src/afximpl.h>
+#else
+#include <../src/mfc/afximpl.h>
 #endif	// _MFC_VER
 
 #if defined(__INTEL_COMPILER)
@@ -796,7 +796,7 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 {
 	DLGTEMPLATE dlgTemplate;
 	PFN_StylesParserProc pfnParser = NULL;		// to avoid stupid warning C4701
-	int cbRemains;
+	UINT cbRemains;
 	DLGITEMTEMPLATE itemTemplate;
 
 	BYTE abAligner[4] = { 0 };
@@ -857,7 +857,11 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 
 	// align to the DWORD boundary
 	ASSERT(sizeof(DWORD) == 4);
+#if (_MFC_VER < 0x0700)
 	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+#else
+	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0) {
+#endif
 		fileMem.Write(abAligner, cbRemains);
 	}
 
@@ -915,7 +919,11 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 
 		// align to the DWORD boundary
 		ASSERT(sizeof(DWORD) == 4);
-		if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+#if (_MFC_VER < 0x0700)
+	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+#else
+	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0) {
+#endif
 			fileMem.Write(abAligner, cbRemains);
 		}
 	}
@@ -925,7 +933,7 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 {
 	DLGTEMPLATEEX dlgTemplateEx;
 	PFN_StylesParserProc pfnParser = NULL;		// to avoid stupid warning C4701
-	int cbRemains;
+	UINT cbRemains;
 	DLGITEMTEMPLATEEX itemTemplateEx;
 
 	BYTE abAligner[4] = { 0 };
@@ -995,7 +1003,11 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 
 	// align to the DWORD boundary
 	ASSERT(sizeof(DWORD) == 4);
+#if (_MFC_VER < 0x0700)
 	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+#else
+	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0) {
+#endif
 		fileMem.Write(abAligner, cbRemains);
 	}
 
@@ -1054,7 +1066,11 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 
 		// align to the DWORD boundary
 		ASSERT(sizeof(DWORD) == 4);
-		if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+#if (_MFC_VER < 0x0700)
+	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+#else
+	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0) {
+#endif
 			fileMem.Write(abAligner, cbRemains);
 		}
 	}
