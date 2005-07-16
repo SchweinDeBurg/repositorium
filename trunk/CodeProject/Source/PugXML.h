@@ -190,7 +190,8 @@ inline static BOOL StrWnorm(LPTSTR* s)
 	memset(szNorm,0,sizeof(TCHAR)*(n+1)); //Zero it.
 	LONG j = 1;
 	szNorm[0] = (*s)[0];
-	for(LONG i=1; i<n; ++i) //For each character, starting at offset 1.
+	LONG i;
+	for(i=1; i<n; ++i) //For each character, starting at offset 1.
 	{
 		if((*s)[i] < _T('!')) //Whitespace-like.
 		{
@@ -1541,7 +1542,8 @@ public:
 		{
 			XMLBRANCH* p = _m_pRoot->child[i]; //Keep a pointer to this branch so we can free it.
 			--n;
-			for(UINT_PTR j=i; j<n; ++j) //Shift everything left from this point on.
+			UINT_PTR j;
+			for(j=i; j<n; ++j) //Shift everything left from this point on.
 				_m_pRoot->child[j] = _m_pRoot->child[j+1];
 			_m_pRoot->child[j] = NULL; //Mark the last element null.
 			--_m_pRoot->children; //One less children.

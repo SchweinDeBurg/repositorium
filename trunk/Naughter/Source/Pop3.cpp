@@ -838,7 +838,11 @@ BOOL CPop3Connection::FindMessageID(const CString& sID, int& nMsg)
   }
 
   //find message ID
+#if (_MFC_VER < 0x0700)
   int nMsgIds = m_msgIDs.GetSize();
+#else
+  int nMsgIds = static_cast<int>(m_msgIDs.GetSize());
+#endif // _MFC_VER
   for (int i=0; i<nMsgIds; i++)
   {
     if (m_msgIDs.GetAt(i) == sID)
