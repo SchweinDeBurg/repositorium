@@ -356,7 +356,7 @@ void CHistoryCombo::SaveHistory(BOOL bAddCurrentItemToHistory/*=TRUE*/)
     pApp->WriteProfileString(m_sSection, sKey, sText);
   }
   // remove redundant items
-  for (n = nMax; n < 1000/* prevent runaway*/; n++)
+  for (int n = nMax; n < 1000/* prevent runaway*/; n++)
   {
     CString sKey;
     sKey.Format(_T("%s%d"), m_sKeyPrefix, n);
