@@ -12,7 +12,7 @@
 #pragma once
 #endif	// _MSC_VER
 
-#if (_MSC_VER > 1200)
+#if (_MSC_VER >= 1300)
 #error use native <afxdlgs.h> instead of this header
 #endif	// _MSC_VER
 

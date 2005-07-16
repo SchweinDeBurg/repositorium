@@ -205,7 +205,7 @@ void CMenuXML::GetXMLpath(CString& strDest)
 void CMenuXML::RecurseMenuTree(CMemFile& fileMem, CPugXmlBranch& branchMenu)
 {
 	MENUEX_TEMPLATE_ITEM menuExItem;
-	int cbRemains;
+	UINT cbRemains;
 
 	BYTE abAligner[4] = { 0 };
 
@@ -244,7 +244,11 @@ void CMenuXML::RecurseMenuTree(CMemFile& fileMem, CPugXmlBranch& branchMenu)
 
 		// align to the DWORD boundary
 		ASSERT(sizeof(DWORD) == 4);
-		if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+#if (_MFC_VER < 0x0700)
+	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+#else
+	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0) {
+#endif
 			fileMem.Write(abAligner, cbRemains);
 		}
 

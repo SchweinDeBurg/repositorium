@@ -60,7 +60,6 @@
 
 namespace ETSLayout
 {
-
 #ifdef CS_HELP
 	typedef ETSCSHelpDialog		CBaseDialog;
 	typedef ETSCSHelpFormView	CBaseFormView;

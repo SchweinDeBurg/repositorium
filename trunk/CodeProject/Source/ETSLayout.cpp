@@ -1863,7 +1863,11 @@ ETSLayoutDialog::ETSLayoutDialog(UINT nID, CWnd* pParent /*=NULL*/, LPCTSTR strN
 }
 #pragma warning(default: 4355)
 
-BEGIN_MESSAGE_MAP(ETSLayoutDialog, CBaseDialog)
+#if defined(CS_HELP)
+BEGIN_MESSAGE_MAP(ETSLayoutDialog, ETSCSHelpDialog)
+#else
+BEGIN_MESSAGE_MAP(ETSLayoutDialog, CDialog)
+#endif	// _CS_HELP
 	//{{AFX_MSG_MAP(ETSLayoutDialog)
 	ON_WM_SIZE()
 	ON_WM_GETMINMAXINFO()
@@ -2031,7 +2035,11 @@ ETSLayoutDialogBar::ETSLayoutDialogBar()
 }
 #pragma warning(default: 4355)
 
-BEGIN_MESSAGE_MAP(ETSLayoutDialogBar, CBaseDialogBar)
+#if defined(CS_HELP)
+BEGIN_MESSAGE_MAP(ETSLayoutDialogBar, ETSCSHelpDlgBar)
+#else
+BEGIN_MESSAGE_MAP(ETSLayoutDialogBar, CDialogBar)
+#endif	// CS_HELP
 	//{{AFX_MSG_MAP(ETSLayoutDialogBar)
 	ON_WM_SIZE()
 	ON_WM_GETMINMAXINFO()
@@ -2163,7 +2171,11 @@ void ETSLayoutDialogBar::OnDestroy()
 /////////////////////////////////////////////////////////////////////////////
 // ETSLayoutFormView dialog
 
+#if defined(CS_HELP)
+IMPLEMENT_DYNAMIC(ETSLayoutFormView, ETSCSHelpFormView)
+#else
 IMPLEMENT_DYNAMIC(ETSLayoutFormView, CFormView)
+#endif	// CS_HELP
 
 #pragma warning(disable: 4355)
 ETSLayoutFormView::ETSLayoutFormView(UINT nID, LPCTSTR strName /*=NULL*/)
@@ -2174,7 +2186,11 @@ ETSLayoutFormView::ETSLayoutFormView(UINT nID, LPCTSTR strName /*=NULL*/)
 }
 #pragma warning(default: 4355)
 
-BEGIN_MESSAGE_MAP(ETSLayoutFormView, CBaseFormView)
+#if defined(CS_HELP)
+BEGIN_MESSAGE_MAP(ETSLayoutFormView, ETSCSHelpFormView)
+#else
+BEGIN_MESSAGE_MAP(ETSLayoutFormView, CFormView)
+#endif	// CS_HELP
 	//{{AFX_MSG_MAP(ETSLayoutFormView)
 	ON_WM_SIZE()
 	ON_WM_GETMINMAXINFO()
@@ -2310,8 +2326,11 @@ ETSLayoutPropertyPage::~ETSLayoutPropertyPage()
 {
 }
 
-
-BEGIN_MESSAGE_MAP(ETSLayoutPropertyPage, CBasePropertyPage)
+#if defined(CS_HELP)
+BEGIN_MESSAGE_MAP(ETSLayoutPropertyPage, ETSCSHelpPropPage)
+#else
+BEGIN_MESSAGE_MAP(ETSLayoutPropertyPage, CPropertyPage)
+#endif	// CS_HELP
 	//{{AFX_MSG_MAP(ETSLayoutPropertyPage)
 	ON_WM_SIZE()
 	ON_WM_GETMINMAXINFO()
@@ -2729,7 +2748,11 @@ BOOL ETSLayoutPropertySheet::OnInitDialog()
 	pPage->GetClientRect(&rcPage);
 
 	CreateRoot(VERTICAL);
+#if (_MSC_VER < 1300)
 	ASSERT(m_RootPane);
+#else
+	ASSERT(m_RootPane.IsValid());
+#endif	// _MFC_VER
 
 	// Add Tabcontrol to root pane
 	m_ItemTab = item( GetTabControl(), GREEDY, 0, 0, 0, 0);
