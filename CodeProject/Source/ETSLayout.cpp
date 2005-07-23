@@ -139,7 +139,7 @@
 //              have a hook for additional controls in the bottem pane of a PropertySheet
 // 2000/08/03   Removed the need for DECLARE_LAYOUT
 //
-// Version: 1.2 [2000/08/05]
+// Version: 1.2 [2003/08/05]
 //
 // 2003/08/19   MFC-style RTTI added to ETSLayoutDialog and ETSLayoutDialogBar
 //              Fixed ETSLayoutMgr::Load() to avoid C4189 warning
