@@ -303,6 +303,13 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
                           you provide in the To field.
          PJN / 03-05-2005 1. Fixed a number of warnings when the code is compiled in Visual Studio .NET 2003. Thanks to Nigel Delaforce for
                           reporting these issues.
+         PJN / 24-07-2005 1. Now includes support for parsing "(...)" comments in addresses. Thanks to Alexey Kuznetsov for this nice addition.
+                          2. Fixed an issue where the mail header could contain a "Content-Transfer-Encoding" header. This header should only be 
+                          applied to headers of MIME body parts rather than the mail header itself. Thanks to Jeroen van der Laarse, Terence Dwyer
+                          and Bostjan Erzen for reporting this issue and the required fix.
+                          3. Now calling both AddTextBody and AddHTMLBody both set the root body part MIME type to multipart/mixed. Previously
+                          the code comments said one thing and did another (set it to "multipart/related"). Thanks to Bostjan Erzen for reporting
+                          this issue.
 
 
 
@@ -650,6 +657,18 @@ CPJNSMTPAddress::CPJNSMTPAddress(const CString& sAddress)
   }
 	else
 	{
+		nMark = sTemp.Find(_T('('));
+		nMark2 = sTemp.Find(_T(')'));
+		if ((nMark != -1) && (nMark2 != -1) && (nMark2 > (nMark+1)))
+		{
+			m_sEmailAddress = sTemp.Left(nMark);
+			m_sEmailAddress.TrimRight();
+			m_sFriendlyName = sTemp.Mid(nMark+1, nMark2 - nMark - 1);
+			m_sFriendlyName.TrimLeft();
+			m_sFriendlyName.TrimRight();
+		}
+		else
+
 		m_sEmailAddress = sTemp;
 	}
 }
@@ -1523,7 +1542,7 @@ std::string CPJNSMTPBodyPart::HeaderEncode(const CString& sText, const CString& 
 
 
 
-CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.53")), m_bMime(FALSE), m_Priority(NO_PRIORITY)
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.54")), m_bMime(FALSE), m_Priority(NO_PRIORITY)
 {
 }
 
@@ -1819,12 +1838,6 @@ std::string CPJNSMTPMessage::getHeader()
 
   if (m_bMime)
   {
-    //QP and UTF8 encoding is only supported if the mail is being sent as MIME
-    if (m_RootPart.m_bBase64)
-      suBuf += "Content-Transfer-Encoding: base64\r\n";
-    else if (m_RootPart.m_bQuotedPrintable)
-      suBuf += "Content-Transfer-Encoding: quoted-printable\r\n";
-
     if (bHasChildParts)
     {
       CString sReply;
@@ -2056,7 +2069,7 @@ void CPJNSMTPMessage::AddTextBody(const CString& sBody)
       //Create a text body part
       CPJNSMTPBodyPart oldRoot = m_RootPart;
 
-      //Reset the root body part to be multipart/related
+      //Reset the root body part to be multipart/mixed
       m_RootPart.SetCharset(oldRoot.GetCharset());
       m_RootPart.SetText(_T("This is a multi-part message in MIME format"));
       m_RootPart.SetContentType(_T("multipart/mixed"));
@@ -2089,10 +2102,10 @@ void CPJNSMTPMessage::AddHTMLBody(const CString& sBody, const CString& sContentB
     //Remember some of the old root settings before we write over it
     CPJNSMTPBodyPart oldRoot = m_RootPart;
 
-    //Reset the root body part to be multipart/related
+    //Reset the root body part to be multipart/mixed
     m_RootPart.SetCharset(oldRoot.GetCharset());
     m_RootPart.SetText(_T("This is a multi-part message in MIME format"));
-    m_RootPart.SetContentType(_T("multipart/related"));
+    m_RootPart.SetContentType(_T("multipart/mixed"));
 
     //Just add the text/html body part (directly to the root)
     CPJNSMTPBodyPart html;
