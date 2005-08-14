@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // $RCSfile: ZipStorage.h,v $
-// $Revision: 1.4 $
-// $Date: 2005/06/18 10:50:29 $ $Author: Tadeusz Dracz $
+// $Revision: 1.5 $
+// $Date: 2005/07/22 20:46:18 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -57,7 +57,7 @@ struct ZIP_API CZipCallback
 		- testing
 		- saving central directory on non-disk-spanning archive 
 		(saved data is removed in case of break	and you can save it again);
-		it the archive is disk-spanning and if saving is aborted, the archive
+		if the archive is disk-spanning and if saving is aborted, the archive
 		will not be damaged, but saved part of the central directory will be not removed
 		and the new central directory will have to be saved after it
 

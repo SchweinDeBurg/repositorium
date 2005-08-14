@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // $RCSfile: ZipCompatibility.cpp,v $
-// $Revision: 1.2 $
-// $Date: 2005/02/14 07:50:10 $ $Author: Tadeusz Dracz $
+// $Revision: 1.3 $
+// $Date: 2005/08/05 19:37:22 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -217,4 +217,47 @@ void ZipCompatibility::SlashBackslashChg(CZipAutoBuffer& buffer, bool bReplaceSl
 			buffer[i] = c1;
 	}
 
+}
+
+
+ZIPINLINE void ZipCompatibility::ReadBytesBigEndian(void* pDestination, const char* pSource, int iCount)
+{
+	for (int i = 0; i < iCount; i++)
+		((char*)pDestination)[i] = pSource[iCount - i - 1];
+}
+
+ZIPINLINE void ZipCompatibility::ReadBytesLittleEndian(void* pDestination, const char* pSource, int iCount)
+{
+	memcpy(pDestination, pSource, iCount);
+}
+
+
+ZIPINLINE void ZipCompatibility::WriteBytesBigEndian(char* pDestination, const void* pSource, int iCount)
+{
+	for (int i = 0; i < iCount; i++)
+		pDestination[i] = ((char*)pSource)[iCount - i - 1];
+}
+
+ZIPINLINE void ZipCompatibility::WriteBytesLittleEndian(char* pDestination, const void* pSource, int iCount)
+{
+	memcpy(pDestination, pSource, iCount);
+}
+
+ZIPINLINE bool ZipCompatibility::CompareBytesBigEndian(const char* pBuffer, const void* pBytes, int iCount)
+{
+	for (int i = 0; i < iCount; i++)
+		if (pBuffer[i] != ((char*)pBytes)[iCount - i - 1])
+			return false;
+	return true;
+}
+
+ZIPINLINE bool ZipCompatibility::CompareBytesLittleEndian(const char* pBuffer, const void* pBytes, int iCount)
+{
+	return memcmp(pBuffer, pBytes, iCount) == 0;
+}
+
+ZIPINLINE bool ZipCompatibility::IsBigEndian()
+{
+	unsigned long endian = 1;
+	return (*((unsigned char *)(&endian))) == 0;
 }

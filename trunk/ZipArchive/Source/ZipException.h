@@ -232,3 +232,5 @@ protected:
 
 
 #endif // !defined(AFX_ZIPEXCEPTION_H__E3546921_D728_11D3_B7C7_E77339672847__INCLUDED_)
+
+

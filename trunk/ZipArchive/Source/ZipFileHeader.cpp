@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // $RCSfile: ZipFileHeader.cpp,v $
-// $Revision: 1.4 $
-// $Date: 2005/03/06 10:25:39 $ $Author: Tadeusz Dracz $
+// $Revision: 1.5 $
+// $Date: 2005/08/05 19:37:22 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -64,22 +64,22 @@ bool CZipFileHeader::Read(CZipStorage *pStorage)
 	CZipAutoBuffer buf(FILEHEADERSIZE);
 	pStorage->Read(buf, FILEHEADERSIZE, true);		
 	memcpy(&m_szSignature,		buf, 4);
-	memcpy(&m_uVersionMadeBy,	buf + 4, 2);
-	memcpy(&m_uVersionNeeded,	buf + 6, 2);
-	memcpy(&m_uFlag,			buf + 8, 2);
-	memcpy(&m_uMethod,			buf + 10, 2);
-	memcpy(&m_uModTime,			buf + 12, 2);
-	memcpy(&m_uModDate,			buf + 14, 2);
-	memcpy(&m_uCrc32,			buf + 16, 4);
-	memcpy(&m_uComprSize,		buf + 20, 4);
-	memcpy(&m_uUncomprSize,		buf + 24, 4);
-	memcpy(&uFileNameSize,		buf + 28, 2);
-	memcpy(&uExtraFieldSize,	buf + 30, 2);
-	memcpy(&uCommentSize,		buf + 32, 2);
-	memcpy(&m_uDiskStart,		buf + 34, 2);
-	memcpy(&m_uInternalAttr,	buf + 36, 2);
-	memcpy(&m_uExternalAttr,	buf + 38, 4);
-	memcpy(&m_uOffset,			buf + 42, 4);
+	CZipArchive::ReadBytes(&m_uVersionMadeBy,	buf + 4, 2);
+	CZipArchive::ReadBytes(&m_uVersionNeeded,	buf + 6, 2);
+	CZipArchive::ReadBytes(&m_uFlag,			buf + 8, 2);
+	CZipArchive::ReadBytes(&m_uMethod,			buf + 10, 2);
+	CZipArchive::ReadBytes(&m_uModTime,			buf + 12, 2);
+	CZipArchive::ReadBytes(&m_uModDate,			buf + 14, 2);
+	CZipArchive::ReadBytes(&m_uCrc32,			buf + 16, 4);
+	CZipArchive::ReadBytes(&m_uComprSize,		buf + 20, 4);
+	CZipArchive::ReadBytes(&m_uUncomprSize,		buf + 24, 4);
+	CZipArchive::ReadBytes(&uFileNameSize,		buf + 28, 2);
+	CZipArchive::ReadBytes(&uExtraFieldSize,	buf + 30, 2);
+	CZipArchive::ReadBytes(&uCommentSize,		buf + 32, 2);
+	CZipArchive::ReadBytes(&m_uDiskStart,		buf + 34, 2);
+	CZipArchive::ReadBytes(&m_uInternalAttr,	buf + 36, 2);
+	CZipArchive::ReadBytes(&m_uExternalAttr,	buf + 38, 4);
+	CZipArchive::ReadBytes(&m_uOffset,			buf + 42, 4);
 	buf.Release();
 
 	if (memcmp(m_szSignature, m_gszSignature, 4) != 0)
@@ -124,23 +124,23 @@ DWORD CZipFileHeader::Write(CZipStorage *pStorage)
 		uExtraFieldSize = GetExtraFieldSize();
 	DWORD iSize = FILEHEADERSIZE + uFileNameSize + uCommentSize + uExtraFieldSize;
 	CZipAutoBuffer buf(iSize);
-	memcpy(buf, &m_szSignature, 4);
-	memcpy(buf + 4, &m_uVersionMadeBy, 2);
-	memcpy(buf + 6, &m_uVersionNeeded, 2);
-	memcpy(buf + 8, &m_uFlag, 2);
-	memcpy(buf + 10, &m_uMethod, 2);
-	memcpy(buf + 12, &m_uModTime, 2);
-	memcpy(buf + 14, &m_uModDate, 2);
-	memcpy(buf + 16, &m_uCrc32, 4);
-	memcpy(buf + 20, &m_uComprSize, 4);
-	memcpy(buf + 24, &m_uUncomprSize, 4);
-	memcpy(buf + 28, &uFileNameSize, 2);
-	memcpy(buf + 30, &uExtraFieldSize, 2);
-	memcpy(buf + 32, &uCommentSize, 2);
-	memcpy(buf + 34, &m_uDiskStart, 2);
-	memcpy(buf + 36, &m_uInternalAttr, 2);
-	memcpy(buf + 38, &m_uExternalAttr, 4);
-	memcpy(buf + 42, &m_uOffset, 4);
+	memcpy(buf, m_szSignature, 4);
+	CZipArchive::WriteBytes(buf + 4,  &m_uVersionMadeBy, 2);
+	CZipArchive::WriteBytes(buf + 6,  &m_uVersionNeeded, 2);
+	CZipArchive::WriteBytes(buf + 8,  &m_uFlag, 2);
+	CZipArchive::WriteBytes(buf + 10, &m_uMethod, 2);
+	CZipArchive::WriteBytes(buf + 12, &m_uModTime, 2);
+	CZipArchive::WriteBytes(buf + 14, &m_uModDate, 2);
+	CZipArchive::WriteBytes(buf + 16, &m_uCrc32, 4);
+	CZipArchive::WriteBytes(buf + 20, &m_uComprSize, 4);
+	CZipArchive::WriteBytes(buf + 24, &m_uUncomprSize, 4);
+	CZipArchive::WriteBytes(buf + 28, &uFileNameSize, 2);
+	CZipArchive::WriteBytes(buf + 30, &uExtraFieldSize, 2);
+	CZipArchive::WriteBytes(buf + 32, &uCommentSize, 2);
+	CZipArchive::WriteBytes(buf + 34, &m_uDiskStart, 2);
+	CZipArchive::WriteBytes(buf + 36, &m_uInternalAttr, 2);
+	CZipArchive::WriteBytes(buf + 38, &m_uExternalAttr, 4);
+	CZipArchive::WriteBytes(buf + 42, &m_uOffset, 4);
 
 	memcpy(buf + 46, m_pszFileName, uFileNameSize);
 
@@ -165,12 +165,12 @@ bool CZipFileHeader::ReadLocal(CZipStorage *pStorage, WORD& iLocExtrFieldSize)
 	
 	WORD uFileNameSize = GetFileNameSize();
 	WORD uTemp; 
-	memcpy(&uTemp, buf+6, 2); // give the priority to the local flag
+	CZipArchive::ReadBytes(&uTemp, buf+6, 2); // give the priority to the local flag
 	if ((uTemp & 0xf) != (m_uFlag & 0xf))
 		m_uFlag = uTemp;
-	if ((memcmp(buf + 8, &m_uMethod, 2) != 0)
+	if ((!CZipArchive::CompareBytes(buf + 8, &m_uMethod, 2))
 		|| (m_uMethod && (m_uMethod != Z_DEFLATED))
-		|| (memcmp(buf + 26, &uFileNameSize, 2) != 0))
+		|| (!CZipArchive::CompareBytes(buf + 26, &uFileNameSize, 2)))
 		return false;
 
 // jeszcze mo¿naby porównaæ nazwy plików
@@ -179,7 +179,7 @@ bool CZipFileHeader::ReadLocal(CZipStorage *pStorage, WORD& iLocExtrFieldSize)
 		if (!CheckCrcAndSizes(buf + 14))
 			return false;
 
-	memcpy(&iLocExtrFieldSize, buf + 28, 2);
+	CZipArchive::ReadBytes(&iLocExtrFieldSize, buf + 28, 2);
 	pStorage->m_pFile->Seek(uFileNameSize, CZipAbstractFile::current);
 
 	return true;
@@ -216,8 +216,8 @@ void CZipFileHeader::SetTime(const time_t & ttime)
 //	with the actual values
 bool CZipFileHeader::CheckCrcAndSizes(char *pBuf) const
 {
-	return (memcmp(pBuf, &m_uCrc32, 4) == 0) && (memcmp(pBuf + 4, &m_uComprSize, 4) == 0)
-		&& (memcmp(pBuf + 8, &m_uUncomprSize, 4) == 0);
+	return CZipArchive::CompareBytes(pBuf, &m_uCrc32, 4) && CZipArchive::CompareBytes(pBuf + 4, &m_uComprSize, 4)
+		&& CZipArchive::CompareBytes(pBuf + 8, &m_uUncomprSize, 4);
 }
 
 // write the local header
@@ -228,16 +228,16 @@ void CZipFileHeader::WriteLocal(CZipStorage& storage)
 	DWORD iLocalSize = LOCALFILEHEADERSIZE + uExtraFieldSize + uFileNameSize;
 	CZipAutoBuffer buf(iLocalSize);
 	memcpy(buf, m_gszLocalSignature, 4);
-	memcpy(buf + 4, &m_uVersionNeeded, 2);
-	memcpy(buf + 6, &m_uFlag, 2);
-	memcpy(buf + 8, &m_uMethod, 2);
-	memcpy(buf + 10, &m_uModTime, 2);
-	memcpy(buf + 12, &m_uModDate, 2);
-	memcpy(buf + 14, &m_uCrc32, 4);
-	memcpy(buf + 18, &m_uComprSize, 4);
-	memcpy(buf + 22, &m_uUncomprSize, 4);
-	memcpy(buf + 26, &uFileNameSize, 2);
-	memcpy(buf + 28, &uExtraFieldSize, 2);
+	CZipArchive::WriteBytes(buf + 4,  &m_uVersionNeeded, 2);
+	CZipArchive::WriteBytes(buf + 6,  &m_uFlag, 2);
+	CZipArchive::WriteBytes(buf + 8,  &m_uMethod, 2);
+	CZipArchive::WriteBytes(buf + 10, &m_uModTime, 2);
+	CZipArchive::WriteBytes(buf + 12, &m_uModDate, 2);
+	CZipArchive::WriteBytes(buf + 14, &m_uCrc32, 4);
+	CZipArchive::WriteBytes(buf + 18, &m_uComprSize, 4);
+	CZipArchive::WriteBytes(buf + 22, &m_uUncomprSize, 4);
+	CZipArchive::WriteBytes(buf + 26, &uFileNameSize, 2);
+	CZipArchive::WriteBytes(buf + 28, &uExtraFieldSize, 2);
 	memcpy(buf + 30, m_pszFileName, uFileNameSize);
 	memcpy(buf + 30 + uFileNameSize, m_pExtraField, uExtraFieldSize);
 
@@ -299,9 +299,9 @@ bool CZipFileHeader::PrepareData(int iLevel, bool bSpan, bool bEncrypted)
 
 void CZipFileHeader::GetCrcAndSizes(char * pBuffer)const
 {
-	memcpy(pBuffer, &m_uCrc32, 4);
-	memcpy(pBuffer + 4, &m_uComprSize, 4);
-	memcpy(pBuffer + 8, &m_uUncomprSize, 4);
+	CZipArchive::WriteBytes(pBuffer, &m_uCrc32, 4);
+	CZipArchive::WriteBytes(pBuffer + 4, &m_uComprSize, 4);
+	CZipArchive::WriteBytes(pBuffer + 8, &m_uUncomprSize, 4);
 }
 
 DWORD CZipFileHeader::GetSize(bool bLocal)const

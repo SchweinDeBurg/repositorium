@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // $RCSfile: ZipArchive.cpp,v $
-// $Revision: 1.5 $
-// $Date: 2005/06/21 16:37:02 $ $Author: Tadeusz Dracz $
+// $Revision: 1.6 $
+// $Date: 2005/08/05 19:37:22 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -63,6 +63,10 @@ void CZipAddNewFileInfo::Defaults()
 	m_iComprLevel = -1; // default
 	
 }
+
+void (*CZipArchive::m_pReadBytes)(void*, const char*, int);
+void (*CZipArchive::m_pWriteBytes)(char*, const void*, int);
+bool (*CZipArchive::m_pCompareBytes)(const char*, const void*, int);
 
 CZipArchive::CZipArchive()
 {
@@ -1062,7 +1066,8 @@ void CZipArchive::DeleteFiles(CZipWordArray &aIndexes)
 
 	int i;
 	int uMaxDelIndex = aIndexes[uSize - 1];
-	for (i = aIndexes[0]; i < GetCount(); i++)
+	int iStart = aIndexes[0];
+	for (i = iStart; i < GetCount(); i++)
 	{
 		CZipFileHeader* pHeader = m_centralDir[i];
 		bool bDelete;
@@ -1074,10 +1079,10 @@ void CZipArchive::DeleteFiles(CZipWordArray &aIndexes)
 		else
 			bDelete = false;
 		aInfo.Add(CZipDeleteInfo(pHeader, bDelete));
-		if (pCallback && (!(i % iStep)))
+		if (pCallback && !(i % iStep) && i != iStart)
 			if (!(*pCallback)(iStep))
 				ThrowError(CZipException::abortedSafely);
-	}
+		}
 	ASSERT(iDelIndex == uSize);
 
 	uSize = aInfo.GetSize();
@@ -2815,8 +2820,8 @@ bool CZipArchive::RenameFile(WORD uIndex, LPCTSTR lpszNewName)
 			m_centralDir[i]->m_uOffset += iDelta;
 		buf.Allocate(4+uNewFileNameLen);
 		WORD uExtraFieldSize = fh.GetExtraFieldSize();
-		memcpy(buf, &uNewFileNameLen, 2);
-		memcpy(buf + 2, &uExtraFieldSize, 2); // to write everything at once
+		CZipArchive::WriteBytes(buf, &uNewFileNameLen, 2);
+		CZipArchive::WriteBytes(buf + 2, &uExtraFieldSize, 2); // to write everything at once
 		memcpy(buf + 4, fhNew.m_pszFileName, uNewFileNameLen);	
 		pBuf = &buf;
 		iOffset = -4;
