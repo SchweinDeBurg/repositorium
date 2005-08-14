@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // $RCSfile: ZipCentralDir.cpp,v $
-// $Revision: 1.4 $
-// $Date: 2005/02/22 18:42:25 $ $Author: Tadeusz Dracz $
+// $Revision: 1.5 $
+// $Date: 2005/08/05 19:37:47 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -42,7 +42,7 @@ CZipCentralDir::CZipCentralDir()
 	m_pCompare = GetCZipStrCompFunc(ZipPlatform::GetSystemCaseSensitivity());
 	m_pStorage = NULL;
 	m_pOpenedFile = NULL;
-	m_iBufferSize = 32768;
+	m_iBufferSize = 32768;			
 	
 }
 
@@ -74,13 +74,13 @@ void CZipCentralDir::Read()
 	if (uRead != CENTRALDIRSIZE)
 		ThrowError(CZipException::badZipFile);	
 	memcpy(&m_szSignature,			buf, 4);
-	memcpy(&m_info.m_uThisDisk,		buf + 4, 2);
-	memcpy(&m_info.m_uDiskWithCD,	buf + 6, 2);
-	memcpy(&m_info.m_uDiskEntriesNo,buf + 8, 2);
-	memcpy(&m_info.m_uEntriesNumber,buf + 10, 2);
-	memcpy(&m_info.m_uSize,			buf + 12, 4);
-	memcpy(&m_info.m_uOffset,		buf + 16, 4);
-	memcpy(&uCommentSize,			buf + 20, 2);
+	CZipArchive::ReadBytes(&m_info.m_uThisDisk,		buf + 4, 2);
+	CZipArchive::ReadBytes(&m_info.m_uDiskWithCD,	buf + 6, 2);
+	CZipArchive::ReadBytes(&m_info.m_uDiskEntriesNo,buf + 8, 2);
+	CZipArchive::ReadBytes(&m_info.m_uEntriesNumber,buf + 10, 2);
+	CZipArchive::ReadBytes(&m_info.m_uSize,			buf + 12, 4);
+	CZipArchive::ReadBytes(&m_info.m_uOffset,		buf + 16, 4);
+	CZipArchive::ReadBytes(&uCommentSize,			buf + 20, 2);
 	buf.Release();
 
 
@@ -467,7 +467,8 @@ void CZipCentralDir::WriteHeaders(CZipActionCallback* pCallback, bool bOneDisk)
 	}
 
 	int iAborted = 0;
-	for (int i = 0; i < m_info.m_uEntriesNumber; i++)
+	int iLast = m_info.m_uEntriesNumber - 1;
+	for (int i = 0; i <= iLast; i++)
 	{
 		CZipFileHeader* pHeader = (*this)[i];
 		
@@ -497,8 +498,20 @@ void CZipCentralDir::WriteHeaders(CZipActionCallback* pCallback, bool bOneDisk)
 		}
 		else 
 			m_info.m_uDiskEntriesNo++;
-		if (pCallback && !(i%iStep))
-			if (!pCallback->Callback(iStep))
+
+		if (pCallback)
+		{
+			int iRest = i%iStep;
+			int iProgress;
+			if (i == 0)
+				iProgress = 1;
+			else if (!iRest)
+				iProgress = iStep;
+			else if (i == iLast)
+				iProgress = iRest;
+			else
+				continue;
+			if (!(*pCallback)(iProgress))
 			{
 				
 				if (bOneDisk) 
@@ -517,6 +530,7 @@ void CZipCentralDir::WriteHeaders(CZipActionCallback* pCallback, bool bOneDisk)
 					iAborted = CZipException::abortedAction;
 				break;
 			}
+		}
 	}
 
 	if (pCallback)
@@ -532,13 +546,13 @@ DWORD CZipCentralDir::WriteCentralEnd()
 	CZipAutoBuffer buf(uSize);
 	WORD uCommentSize = (WORD)m_pszComment.GetSize();
 	memcpy(buf, m_gszSignature, 4);
-	memcpy(buf + 4, &m_info.m_uThisDisk, 2);
-	memcpy(buf + 6, &m_info.m_uDiskWithCD, 2);
-	memcpy(buf + 8, &m_info.m_uDiskEntriesNo, 2);
-	memcpy(buf + 10, &m_info.m_uEntriesNumber, 2);
-	memcpy(buf + 12, &m_info.m_uSize, 4);
-	memcpy(buf + 16, &m_info.m_uOffset, 4);
-	memcpy(buf + 20, &uCommentSize, 2);
+	CZipArchive::WriteBytes(buf + 4,  &m_info.m_uThisDisk, 2);
+	CZipArchive::WriteBytes(buf + 6,  &m_info.m_uDiskWithCD, 2);
+	CZipArchive::WriteBytes(buf + 8,  &m_info.m_uDiskEntriesNo, 2);
+	CZipArchive::WriteBytes(buf + 10, &m_info.m_uEntriesNumber, 2);
+	CZipArchive::WriteBytes(buf + 12, &m_info.m_uSize, 4);
+	CZipArchive::WriteBytes(buf + 16, &m_info.m_uOffset, 4);
+	CZipArchive::WriteBytes(buf + 20, &uCommentSize, 2);
 	memcpy(buf + 22, m_pszComment, uCommentSize);
 	m_pStorage->Write(buf, uSize, true);
 	return uSize;
@@ -652,7 +666,7 @@ bool CZipCentralDir::RemoveDataDescr(bool bFromBuffer)
 			pHeader->m_uFlag &= ~8;
 			// update local header:
 			// write modified flag in the local header
-			memcpy(pSour + 6, &pHeader->m_uFlag, 2);
+			CZipArchive::WriteBytes(pSour + 6, &pHeader->m_uFlag, 2);
 			uExtraHeaderLen = 4/*ext. header signature*/ + 12/*data descriptor*/;
 		}
 		else

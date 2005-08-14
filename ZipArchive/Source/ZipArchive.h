@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // $RCSfile: ZipArchive.h,v $
-// $Revision: 1.5 $
-// $Date: 2005/06/20 16:53:00 $ $Author: Tadeusz Dracz $
+// $Revision: 1.6 $
+// $Date: 2005/08/05 19:37:22 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -314,6 +314,63 @@ public:
 	}
 #endif
 
+	/**
+		Read \e iCount bytes from \e pSource into \e pDestination.
+		\param pDestination
+			byte-order depends on the machine
+		\param pSource
+			always little-endian ordered
+		\param iCount 
+			bytes to read
+		
+	*/
+	static void ReadBytes(void* pDestination, const char* pSource, int iCount)
+	{
+		if (!m_pReadBytes)
+			if (ZipCompatibility::IsBigEndian())
+				m_pReadBytes = ZipCompatibility::ReadBytesBigEndian;
+			else
+				m_pReadBytes = ZipCompatibility::ReadBytesLittleEndian;
+		m_pReadBytes(pDestination, pSource, iCount);
+	}
+
+	/**
+		Write \e iCount bytes from \e pSource into \e pDestination.
+		\param pDestination
+			always little-endian ordered
+		\param pSource
+			byte-order depends on the machine
+		\param iCount 
+			bytes to write
+	*/
+	static void WriteBytes(char* pDestination, const void* pSource, int iCount)
+	{
+		if (!m_pWriteBytes)
+			if (ZipCompatibility::IsBigEndian())
+				m_pWriteBytes = ZipCompatibility::WriteBytesBigEndian;
+			else
+				m_pWriteBytes = ZipCompatibility::WriteBytesLittleEndian;
+		m_pWriteBytes(pDestination, pSource, iCount);
+	}
+
+	/**
+		Compare \e iCount bytes.
+		\param pBuffer
+			always little-endian ordered
+		\param pBytes
+			byte-order depends on the machine
+		\param iCount 
+			bytes to compare
+	*/
+	static bool CompareBytes(const char* pBuffer, const void* pBytes, int iCount)
+	{
+		if (!m_pCompareBytes)
+			if (ZipCompatibility::IsBigEndian())
+				m_pCompareBytes = ZipCompatibility::CompareBytesBigEndian;
+			else
+				m_pCompareBytes = ZipCompatibility::CompareBytesLittleEndian;
+		return m_pCompareBytes(pBuffer, pBytes, iCount);
+	}
 /** 
 	Set the password for the file to be opened or created.
 	Use this method BEFORE opening or adding a file, but AFTER opening an archive
@@ -1748,6 +1805,21 @@ public:
 
 protected:
 	
+	/**
+		Used in #ReadBytes.
+	*/
+	static void (*m_pReadBytes)(void*, const char*, int);
+
+	/**
+		Used in #WriteBytes.
+	*/
+	static void (*m_pWriteBytes)(char*, const void*, int);
+
+	/**
+		Used in #CompareBytes.
+	*/
+	static bool (*m_pCompareBytes)(const char*, const void*, int);
+
 	/**
 		\param iReplaceIndex index of file to be replaced
 		\param uTotal the size of the new file to replace existing

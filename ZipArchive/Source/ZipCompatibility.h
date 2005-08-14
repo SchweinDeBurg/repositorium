@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // $RCSfile: ZipCompatibility.h,v $
-// $Revision: 1.2 $
-// $Date: 2005/02/14 07:50:10 $ $Author: Tadeusz Dracz $
+// $Revision: 1.3 $
+// $Date: 2005/08/05 19:37:22 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
@@ -37,8 +37,9 @@ class CZipAutoBuffer;
 class CZipFileHeader;
 
 /**
-	Functions that provides the proper conversion of attributes 
-	and filename strings between different system platforms.
+	Functions that provide the proper conversion of attributes 
+	and filename strings between different system platforms and buffer operations that take 
+	into account machine's byte-order.
 */
 namespace ZipCompatibility  
 {
@@ -108,6 +109,77 @@ namespace ZipCompatibility
 		if \c true, change slash to backslash
 */
 	void SlashBackslashChg(CZipAutoBuffer& buffer, bool bReplaceSlash);
+
+	/**
+		Determine whether the current machine had a big- or little-endian architecture.
+	*/
+	bool IsBigEndian();
+
+	/**
+		Read \e iCount bytes from \e pSource into \e pDestination.
+		\param pDestination
+			big-endian order
+		\param pSource
+			little-endian order
+		\param iCount 
+			bytes to read
+	*/
+	void ReadBytesBigEndian(void* pDestination, const char* pSource, int iCount);
+
+	/**
+		Read \e iCount bytes from \e pSource into \e pDestination.
+		\param pDestination
+			little-endian order
+		\param pSource
+			little-endian order
+		\param iCount 
+			bytes to read
+	*/
+	void ReadBytesLittleEndian(void* pDestination, const char* pSource, int iCount);
+
+	/**
+		Write \e iCount bytes from \e pSource into \e pDestination.
+		\param pDestination
+			little-endian order
+		\param pSource
+			big-endian order
+		\param iCount 
+			bytes to write
+	*/
+	void WriteBytesBigEndian(char* pDestination, const void* pSource, int iCount);
+
+	/**
+		Write \e iCount bytes from \e pSource into \e pDestination.
+		\param pDestination
+			little-endian order
+		\param pSource
+			little-endian order
+		\param iCount 
+			bytes to write
+	*/
+	void WriteBytesLittleEndian(char* pDestination, const void* pSource, int iCount);
+
+	/**
+		Compare \e iCount bytes.
+		\param pBuffer
+			little-endian order
+		\param pBytes
+			big-endian order
+		\param iCount 
+			bytes to compare
+	*/
+	bool CompareBytesBigEndian(const char* pBuffer, const void* pBytes, int iCount);
+
+	/**
+		Compare \e iCount bytes.
+		\param pBuffer
+			little-endian order
+		\param pBytes
+			little-endian order
+		\param iCount 
+			bytes to compare
+	*/
+	bool CompareBytesLittleEndian(const char* pBuffer, const void* pBytes, int iCount);
 
 };
 
