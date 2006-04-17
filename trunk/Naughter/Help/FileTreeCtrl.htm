@@ -1,0 +1,2153 @@
+<html>
+
+<head>
+<title>CTreeFileCtrl v1.38</title>
+<link rel="stylesheet" type="text/css" href="naughter.css">
+</head>
+
+<body>
+
+<h2 align="left"><strong>
+CTreeFileCtrl v1.38</strong></h2>
+
+<p>CTreeFileCtrl provides an MFC class
+which provides a tree control similar to the left hand side of Windows Explorer.   </p>
+
+<p><img border="0" src="filetreectrl.gif" width="499" height="769"></p>
+
+<p>&nbsp;</p>
+
+<table>
+  <tr>
+    <td><a href="#Features">Features</a></td>
+  </tr>
+  <tr>
+    <td><a href="#History">History</a></td>
+  </tr>
+  <tr>
+    <td><a href="#Usage">Usage</a></td>
+  </tr>
+  <tr>
+    <td><a href="#Copyright">Copyright</a></td>
+  </tr>
+  <tr>
+    <td><a href="#APIReference">API Reference</a></td>
+  </tr>
+
+  <tr>
+    <td><a href="#Contact">Contacting the Author</a></td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="Features"></a><strong>Features</strong>
+
+
+</h2>
+
+
+<ul>
+  <li>CTreeFileCtrl is derived from CTreeCtrl and
+    can be created using the same mechanisms.</li>
+  <li>Uses the system image list for the icons for
+    folders and files. </li>
+  <li>Can have multiple instances of the control
+    active at one time.</li>
+  <li>Optionally allows files to be displayed
+    as well as folders.</li>
+  <li>Integrates with the shell to allow the file
+    to be <em>&quot;opened&quot;</em> and its properties page to be displayed.</li>
+  <li>Provides for deletion and moving to the
+    recycle bin. Message boxes used are the same as those provided in Windows Explorer.</li>
+  <li>Supports drag &amp; drop and auto scrolling
+    while dragging.</li>
+  <li>Standard MFC DDX functions are provided to
+    easily integrate with dialog based apps.</li>
+  <li>Supports in place renaming of items.</li>
+  <li>Provides a full set of keyboard accelerators
+    similar to Windows Explorer.</li>
+  <li>Unicode enabled and all code compiles
+    cleanly at warning level 4.</li>
+  <li>Can be used in a dialog resource or a CView derived
+    class.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="Usage"></a><strong>Usage</strong>
+
+</h2>
+
+<ul>
+  <li>To use CTreeFileCtrl, include
+    &quot;FileTreeCtrl.cpp / h&quot; in your project and
+    #include &quot;FileTreeCtrl.h&quot; in the module you want to instantiate it in. You can
+    use the usual MFC ways of hooking up the class. If you are using the class in a dialog
+    resource, then you can use the DDX function provided. You can also create the control dynamically by calling its parent
+    classes CTreeCtrl::Create method, in this case you will need to call the
+    PopulateTree yourself to display the tree contents. To allow the control to
+    allow in place editing of files / folders, just include the standard TVS_EDITLABELS
+    tree control window style.</li>
+  <li>You will also need to copy across the IDR_TREEFILECTRL_* 
+  resources from either of the sample apps provided with the code.</li>
+  <li>Please note that you may have difficulties when using 
+  the class in a CDialogBar derived class. As reported by Don Woodward: I put 
+  one of these in my CDialogBar derived class and because of CControlBar's 
+  WindowProc coupled with you doing this everywhere:<br>
+  <br>
+  return FALSE; //Allow the message to be reflected again<br>
+  <br>
+  things were going haywire.<br>
+  ....<br>
+  My solution was to do this in my CDialogBar class:<br>
+  <br>
+  LRESULT MyDialogBar::WindowProc(UINT nMsg, WPARAM wParam, LPARAM lParam)<br>
+  {<br>
+&nbsp; if ((WM_NOTIFY == nMsg) &amp;&amp; (((NMHDR*)lParam)-&gt;idFrom == 
+  IDC_MY_TREE_CONTROL_ID))<br>
+&nbsp; { // a WM_NOTIFY coming from our tree control; use CWnd's WindowProc 
+  cause CDialogBar's will dispatch to our tree control twice<br>
+&nbsp;&nbsp;&nbsp; return CWnd::WindowProc(nMsg, wParam, lParam);<br>
+&nbsp; }<br>
+&nbsp; return CDialogBar::WindowProc(nMsg, wParam, lParam);<br>
+  }</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><b><a name="Copyright"></a>Copyright</b></h2>
+<p>You are allowed to include the source code in any product
+(commercial, shareware, freeware or otherwise) when your product is released in
+binary form. You are allowed to modify the source code in any way you want
+except you cannot modify the copyright details at the top of each module. If you
+want to distribute source code with your application, then you are only allowed
+to distribute versions released by the author. This is to maintain a single
+distribution point for the source code.&nbsp;</p>
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="History"></a><strong>History</strong></h2>
+
+<p><strong>v1.0 (27 December 1999)</strong> 
+
+<ul>
+  <li>Initial public release.</li>
+</ul>
+
+<p><strong>v1.01 (12 January
+2000)</strong> 
+
+<ul>
+  <li>Added some asserts to HasGotSubEntries.</li>
+  <li>Fixed a problem with calling OnDblclk when no tree item is selected.</li>
+  <li>Removed an unused variable from SetSelectedPath.</li>
+  <li>Fixed a stack overflow in CSortedArray::Sort.</li>
+  <li>Now supports check boxes with each item in the tree
+    control.</li>
+</ul>
+
+<p><strong>v1.02 (25 January 2000)</strong> 
+
+<ul>
+  <li>Minor update to the code in CTreeFileCtrl::OnDblclk to only allow                          selected items to be opened.</li>
+</ul>
+
+<p><strong>v1.03 (31 January 2000)</strong> 
+
+<ul>
+  <li>Fixed a problem when you right mouse click over a non - selected item.
+    The control now implements the same behaviour as Explorer for this.</li>
+  <li>Removed check for keyboard invocation of the context menu in OnContextMenu</li>
+  <li>Now displays the context menu over the selected item when invoked via
+    the keyboard. Again this is the same behaviour as Explorer has.</li>
+  <li>Optimized the code in PreTranslateMessage.</li>
+  <li>Fixed a bug in CTreeFileCtrl::OnEndlabeledit</li>
+  <li>Some of the menus in the sample app have been fixed.</li>
+  <li>Menu items have been added to the sample app to allow
+    the SetAllow... functions to be tried out.</li>
+</ul>
+
+<p><strong>v1.04 (21 February 2000)</strong> 
+
+<ul>
+  <li>Fixed a number of problems in CSortedArray::Find</li>
+</ul>
+
+<p><strong>v1.05 (22 February 2000)</strong> 
+
+<ul>
+  <li> Fixed a problem in CSortedArray::Find when there are no items in the array</li>
+</ul>
+
+<p><strong>v1.06 (29 February 2000)</strong> 
+
+<ul>
+  <li> Fixed a problem in CSortedArray::Sort when there are no items in the array</li>
+</ul>
+
+<p><strong>v1.07 (2 April 2000)</strong> 
+
+<ul>
+  <li>Fixed a small bug in CTreeFileCtrl::SetRootFolder</li>
+  <li>Fixed the problem with initialisation errors in the code. Client code must not                          explicitly call PopulateTree when the window is created. When used in a dialog
+    resource this is not necessary as it is called for you in the DDX functions.</li>
+  <li>Sample app now also include the control in the about
+    box as an example.</li>
+</ul>
+
+<p><strong>v1.08 (13 May 2000)</strong> 
+
+<ul>
+  <li>Fixed a problem where items on the context menu were being invoked for the
+    wrong item when you right mouse click over an item that is not the selected item.
+    Behaviour now is that the item is selected prior to showing the context menu.
+    Now, this is same behaviour as Explorer.</li>
+</ul>
+
+<p><strong>v1.09 (18 July 2000)</strong> 
+
+<ul>
+  <li>Now uses ON_NOTIFY_REFLECT_EX instead of ON_NOTIFY_REFLECT for handling reflected
+    messages. This allows derived classes to handle these messages also. Thanks to                          Christian Dahl for this.</li>
+  <li>Sample app now allows drag drop behaviour to be toggled</li>
+  <li>Fixed a problem whereby two items were left selected after you did a 
+  drag /drop operation. Thanks to Jonathon Ralston for this.</li>
+  <li>Removed function declaration for unused function &quot;InsertDriveItem&quot;.</li>
+  <li>Removed an unreferenced variable in InsertFileItem.</li>
+  <li>Tidied up the UpOneLevel functions and made it public.</li>
+  <li>Removed all the message handlers in the sample code which reflect straight
+    down to the tree control. Instead the OnCmdMsg first routes the message to this
+    class.</li>
+  <li>Renamed all menu items which CTreeFileCtrl uses to include the prefix TREEFILECTRL</li>
+  <li>Renamed all the methods to more generic names&nbsp;</li>
+  <li>PreTranslateMessage now uses PostMessage instead of calling functions directly.                          This allows up to function correctly for derived classes in addition to correctly
+    disabling items through the OnUpdate mechanism</li>
+  <li>Removed an unreferenced variable in OnRclick</li>
+  <li>Removed the unreferenced variable m_hSelItem</li>
+  <li>Optimized a number of expressions by putting the boolean comparisons first</li>
+  <li>m_bAllowRename parameter is now observed for in place editing of an item</li>
+  <li>Now supports hiding of Drive types via the SetDriveHideFlags function. See the                          menu options on the Tools menu in the sample program for its usage.</li>
+  <li>Filename masks can now be specified via the SetFileNameMask method. See the                          menu options on the Tools menu in the sample program for its usage.</li>
+  <li>File types can now be specified via the GetFileHideFlags function. See the                          menu options on the Tools menu in the sample program for its usage.</li>
+  <li>Fixed a small issue in one of my calls to ::GetKeyState</li>
+  <li>Fixed a bug where programs was crashing if an icon index for it could not
+    be found.</li>
+  <li>Made many of the methods of CTreeFileCtrl virtual, thus allowable better
+    use in end user derived classes.</li>
+  <li>Fixed problem where SetSelectedPath(_T("C:\\"), FALSE) was resulting                          in the drive being expanded even through FALSE was being sent in to specify
+    that the item should not be expanded.</li>
+  <li>A virtual "CanDisplayFile" has been added to allow you to decide at runtime
+    whether or not a certain file is to be displayed.</li>
+  <li>A virtual "CanDisplayFolder" has been added to allow you to decide at
+    runtime whether or not a certain folder is to be displayed&nbsp;</li>
+  <li>Now optionally displays compressed files in a different 
+  Colour, 
+  similar to
+    explorer. The Colour is customizable through the class API.&nbsp;</li>
+  <li>Code has been made smarter so that it does not have to spin up the floppy
+    disk to determine if there are files on it. It now initially displays a "+" and only when you try to expand it will it do the actual scan.</li>
+</ul>
+
+<p><strong>v1.10 (24 July 2000)</strong> 
+
+<ul>
+  <li>Fixed a bug where the expansion state of the selected item was not being
+    preserved across refreshes.</li>
+  <li>Now includes full support for Next / Prev support 
+  similar to Windows                          Explorer with the Desktop Update.</li>
+  <li>Updated sample app to have some useful toolbars.</li>
+  <li>Changing any tree settings which can affect its appearance now force
+    a refresh of its contents.</li>
+  <li>ItemToPath method has been made const.</li>
+  <li>Addition of PathToItem method</li>
+  <li>Auto refresh of items is now provided for by means of change notification
+    threads. This is configurable via the SetAutoRefresh method.</li>
+  <li>The root folder of the tree control can now be changed from the sample app</li>
+  <li>Fixed a bug in SetRootFolder when passed an empty folder</li>
+  <li>Fixed a bug where the system image list was not being initialized correctly
+    if the user did not have a "C:\\" drive. This could occur on NT/Windows2000</li>
+  <li>Fixed a bug in IsFile and IsFolder which was causing invalid files or folders
+    to appear valid.</li>
+  <li>Deleted items are now removed upon expansion. Also if the item being expanded was
+    deleted and it was the only child, then its parent has the "-" expansion button removed</li>
+  <li>Removable drive nodes are collapsed back to their root nodes if their media is                          changed in the intervening time when a node expansion occurs.</li>
+  <li>Wait cursor is now displayed while a refresh is taking place.</li>
+  <li>A "OnSelectionChanged" virtual function has now been provided&nbsp;</li>
+  <li>Sample app's icon has been made the same as Explorers.</li>
+  <li>Sample app now displays the path name of the currently selected item in the tree control.</li>
+  <li>Fixed a bug in IsCompressed</li>
+  <li>items are now deleted when selected if they do not exist.</li>
+</ul>
+
+<p><strong>v1.11 (27 August 2000)</strong> 
+
+<ul>
+  <li>Fixed another stack overflow problem in
+    CSortedArray::Sort.</li>
+  <li>Fixed a problem in CSortedArray::Sort where the comparison function
+    was returning negative values, 0 and positive values instead of -1, 0 &amp; 1.
+    Thanks to Ted Crow for finding both of these problems.</li>
+  <li>Updated the documentation for SetCompareFunction on
+    what values are expected to be returned from it.</li>
+</ul>
+
+<p><strong>v1.12 (5 September 2000)</strong> 
+
+<ul>
+  <li>Fixed a bug in CTreeFileCtrl::IsFile and CTreeFileCtrl::IsFolder</li>
+</ul>
+
+<p><strong>v1.13 (20 September 2000)</strong> 
+
+<ul>
+  <li> Control now includes DECLARE_DYNCREATE thereby allowing it to be used
+    in code which requires this such as Stingray's SEC3DTabWnd. Thanks to Petter Nilsen for
+    pointing out this omission.</li>
+</ul>
+
+<p><strong>v1.14 (2 October 2000)</strong> 
+
+<ul>
+  <li>Fixed a stack overwrite problem in CSystemImageList::CSystemImageList.</li>
+  <li>Removed an unreferenced variable in CTreeFileCtrl::OnSelChanged</li>
+  <li>Removed an unreferenced variable in CTreeFileCtrl::OnItemExpanding</li>
+  <li>Changed the SendMessage in CTreeFileCtrl::OnDblClk to prevent a crash
+    which was occurring when the open call sometimes caused a refresh call                          which changed the tree items at times. When the double click message handler
+    continued it then caused item expand notifications for items already deleted
+    and of course crashes.</li>
+  <li>Removed an unreferenced variable in CTreeFileCtrl::EndDragging6. Removed an 
+  unreferenced variable in CTreeFileCtrl::KillNotificationThread</li>
+  <li>Sample app now remembers the selected path and its expansion state across
+    invocations.  Thanks to Mike Funduc for finding
+    all these problems.&nbsp;</li>
+</ul>
+
+<p><strong>v1.15 (5 May 2001)</strong> 
+
+<ul>
+  <li>Updated copyright message.</li>
+  <li>Fixed a resource leak where icon resources were not being released. Thanks to Jay Kohler for
+    spotting this problem.</li>
+</ul>
+
+<p><strong>v1.2 (5 August 2001)</strong> 
+
+<ul>
+  <li> You can now optionally display Network Neighborhood</li>
+  <li>You can now turn on / off display of file extensions.</li>
+  <li>You can now display shared items with a different icon</li>
+  <li>Friendly names can now be displayed for drives.</li>
+</ul>
+
+<p><strong>v1.21 (11 August 2001)</strong> 
+
+<ul>
+  <li> Improved checking to see if action is allowed in Rename and Delete</li>
+  <li>Fixed a bug in OnBeginLabelEdit</li>
+  <li>Fixed a problem in OnEndLabelEdit which was causing renames to fail when filename extensions                          were not being shown.</li>
+</ul>
+
+<p><strong>v1.22 (11 August 2001)</strong> 
+
+<ul>
+  <li>Fixed a bug in OnSelChanged which was causing a crash when you right click on an empty area of the control.
+    Thanks to Eli Fenton for spotting this one.</li>
+  <li>The control now by default shows drives as children of "My Computer" just like in Explorer.</li>
+  <li>When you display a rooted directory in the control, you now have the option of displaying the root
+    folder in the control as the root item.  Thanks to Eli Fenton for suggesting this.</li>
+</ul>
+
+<p><strong>v1.23 (1 October 2001)</strong> 
+
+<ul>
+  <li>Fixed another bug in CSortedArray::Sort!. Thanks to Jim Johnson for spotting this.</li>
+</ul>
+
+<p><strong>v1.24 (26 October 2001)</strong> 
+
+<ul>
+  <li> Fixed some stability problems with the code. This was due to adding items to the system image list.
+    This is normally a very bad thing. Instead now the code uses TreeView custom draw (just like the blue 
+  colour
+    for compressed items) to draw the icons for the Network Neighborhood items. Thanks to Darken Screamer and
+    Timo Haberkern for spotting this problem.</li>
+</ul>
+
+<p><strong>v1.25 (24 December 2001)</strong> 
+
+<ul>
+  <li>Fixed a copy and paste bug in GoForward. Thanks to Michael T. Luongo for this fix.</li>
+  <li>Now allows encrypted files to be displayed in a different 
+  colour</li>
+  <li>Fixed memory leak which was occurring when control was being used in a dialog</li>
+  <li>Fixed a problem with the calculation of indents when the style "TVS_LINESATROOT" is used.&nbsp;</li>
+</ul>
+
+<p><strong>v1.26 (16 February 2002)</strong> 
+
+<ul>
+  <li>Updated copyright message</li>
+  <li>Fixed a drag/drop problem which caused the tree state to be inconsistent after the file was dropped.</li>
+  <li>Fixed a bug in the refresh code which was causing it to not reselect the selected node
+    after the refresh occurs. Thanks to John Noël for this fix.</li>
+  <li>Fixed a problem where the custom draw icons for network nodes were not being drawn in the correct
+    positions when scrollbars were present in the control. Again thanks to John Noël for this fix.</li>
+  <li>Fixed a bug in SetSelectedPath which would not display the correct selection if the node we                          want to select has been deleted due to the node becoming deleted when it was previously collapsed.
+    Thanks to Franz Fackelmann and John Noël for spotting this problem.</li>
+</ul>
+
+<p><strong>v1.27 of CSortedArray (29 May 2002)</strong> 
+
+<ul>
+  <li> Fixed a problem in CSortedArray::OrderedInsert. Thanks to John Young
+    for spotting and fixing this problem.</li>
+  <li>Updated copyright and usage instructions</li>
+</ul>
+
+<p><strong>v1.27 of CTreeFileCtrl (5 June 2002)</strong> 
+
+<ul>
+  <li>Implemented function "SetUsingDifferentColorForEncrypted" which was declared but had no
+    implementation.</li>
+  <li>Fixed report of uninitialized member variable "m_nTimerID". Thanks to Emil Isberg for 
+  spotting this.</li>
+</ul>
+
+<p><strong>7 August 2002</strong>
+<ul>
+  <li> Fixed a bug in the sample app which ships with the class which was 
+  occurring when you compiled
+    the code in Visual Studio.Net. This was due to MS changing the location oleimpl2.h header file. Thanks
+    to Darren Schroeder for spotting this problem.</li>
+</ul>
+
+<p><strong>28 August 2002</strong>
+<ul>
+  <li>Updated sample app to automatically refresh upon
+    removal or addition of removal disk drives. Thanks to &quot;kimo&quot; for
+    this update.&nbsp;</li>
+</ul>
+
+<p><strong>v1.28 of CTreeFileCtrl (22 September 2002)</strong> 
+
+<ul>
+  <li> Removed a number of unreferenced variables from the code, as highlighted by Visual Studio.Net. Thanks
+    to Bill Johnson for spotting this.</li>
+</ul>
+
+<p><strong>v1.28 of CSortedArray (6 December 2002)</strong> 
+
+<ul>
+  <li>Rewrote the Sort method following reports of further 
+  problems by Serhiy Pavlov and Brian Rhodes.</li>
+</ul>
+
+<p><strong>v1.29 of CSortedArray (11 December 2002)</strong> 
+
+<ul>
+  <li>Optimized code by replacing all calls to CArray&lt;&gt;::ElementAt 
+  with CArray&lt;&gt;::GetData</li>
+</ul>
+
+<p><strong>v1.29 of CFileTreeCtrl (31 December 2002)</strong> 
+
+<ul>
+  <li>Items are now sorted using the TVM_SORTCHILDRENCB Tree 
+  Control message. This means that the class is no longer dependent on the 
+  CSortedArray class. That class has been left in this download for convenience 
+  only. Thanks to &quot;Vladi&quot; for this suggestion. </li>
+</ul>
+
+<p><strong>v1.30 of CSortedArray (24 January 2003)</strong> 
+
+<ul>
+  <li>Made CSortedArray::Find method const. Thanks to Serhiy 
+  Pavlov for reporting this.</li>
+</ul>
+
+<p><strong>v1.30 of CFileTreeCtrl (26 February 2003)</strong> 
+
+<ul>
+  <li>Fixed a bug in CTreeFileCtrl::PathToItem which was 
+  causing refreshes to fail when a rooted folder was being displayed. Thanks to 
+  Michael J. Ryan for spotting this.</li>
+</ul>
+
+<p><strong>v1.31 of CFileTreeCtrl (27 February 2003)</strong> 
+
+<ul>
+  <li>Fixed more problems with refreshing and rooted paths. 
+  Thanks to Michael J. Ryan for spotting this.</li>
+</ul>
+
+<p><strong>v1.32 of CFileTreeCtrl (31 May 2003)</strong> 
+
+<ul>
+  <li>Fixed a bug where the filename mask was being ignored.</li>
+</ul>
+
+<p><strong>v1.33 of CFileTreeCtrl (10 June 2003)</strong> 
+
+<ul>
+  <li>Custom draw is now not used for items underneath Network Neighborhood. This means that some items there will just display the standard 
+  network neighborhood icon. To resolve this issue you would need to implement a 
+  completely new solution using the shell API's. Thanks to John Noël for 
+  reporting a custom draw bug in this area which has forced this change.</li>
+  <li>m_sFQPath is now not filled in for virtual items such 
+  as My Computer and Network Neighborhood. Thanks to Hans Dietrich for this 
+  suggestion.</li>
+</ul>
+
+<p><strong>v1.34 of CFileTreeCtrl (5 July 2003)</strong> 
+
+<ul>
+  <li>Updated the WM_DEVICECHANGE message handler in the 
+  sample app to use the correct function signature for Visual Studio 6 and 
+  later. Thanks to Ed Eichman for reporting this issue.</li>
+  <li>Fixed a bug in the documentation of 
+  CTreeFileCtrl::SetDriveHideFlags. Thanks to Ed Eichman for reporting this 
+  issue.</li>
+  <li>Now documents the functions SetAutoRefresh and 
+  GetAutoRefresh. In addition by default auto refresh is now turned off. Thanks 
+  to Ed Eichman for pointing this out.</li>
+  <li>Move sample workspace up to VC 6.</li>
+</ul>
+
+<p><strong>18 August 2003</strong><ul>
+  <li> Removed CSortedArray from the download as it is 
+  available as a separate download now.</li>
+</ul>
+
+<p><strong>5 October 2003</strong><ul>
+  <li> Updated the Usage section of the documentation to 
+  describe an issue you may encounter when you use the class in a CDialogBar 
+  derived class.</li>
+</ul>
+
+<p><strong>24 October 2003</strong><ul>
+  <li> Updated the Usage section of the documentation to 
+  describe the need to copy across the appropriate resources from the sample 
+  app.</li>
+</ul>
+
+<p><strong>v1.35 of CTreeFileCtrl (9 July 2004)</strong><ul>
+  <li>Fixed a memory leak in the NETRESOURCE structure if 
+  client code returned FALSE from CTreeFileCtrl::CanDisplayNetworkItem. Thanks 
+  to Michael Oerder reporting this problem.</li>
+</ul>
+
+<p><strong>v1.36 of CTreeFileCtrl (17 April 2005)</strong>
+<ul>
+  <li> Addition of TVIF_HANDLE to the mask fields in the functions GetIconIndex(HTREEITEM hItem),                          GetSelIconIndex(HTREEITEM hItem) and SetHasPlusButton(HTREEITEM hItem, BOOL bHavePlus). This avoids ASSERTs
+    when the class is derived from the SECTreeCtrl class in the Stingray Objective Toolkit. Thanks to Greg Marr
+    for reporting this problem.</li>
+  <li>Addition of a "FILETREECTRL_EXT_CLASS" define to the class defintions. This makes the code easier to use
+    in an extension DLL.</li>
+  <li>Code now uses the TVITEM structure name rather than TV_ITEM which is in line with what is recommended by MS.</li>
+  <li>Code now uses the TVINSERTSTRUCT structure name rather than TV_INSERTSTRUCT which is in line with what is                          recommended by MS.</li>
+  <li>Class now uses a preprocessor define of FILETREECTRL_BASE_CLASS to define the class which CTreeFileCtrl
+    is derived from. This allows the class to be used with the Stingray Objective Toolkit without needing to                          modify the CTreeFileCtrl source code.</li>
+  <li>Optimized the code which deletes child nodes by now using TVE_COLLAPSERESET flag.</li>
+  <li>Removed the unused function NumberOfChildItems.</li>
+  <li>Code now uses the NMTREEVIEW structure name rather than NM_TREEVIEW which is in line with what is                          recommended by MS.</li>
+  <li>Removed the now unused DeleteChildren method.</li>
+</ul>
+
+<p><strong>v1.37 of CTreeFileCtrl (21 June 2005)</strong>
+<ul>
+  <li> Fixed a bug where drag and drag mechanism had problems when trying to drag an item into a folder immediately
+    after the root item. Thanks to Larry Paul for reporting this bug and provinding the fix.</li>
+  <li> Fixed a number of compiler warnings when the code is compiled using Visual Studio .NET 2003.</li>
+</ul>
+
+<p><strong>v1.38 of CTreeFileCtrl (25 January 2006)</strong>
+<ul>
+  <li> Updated the documentation to use the new style which the web site uses.</li>
+	<li> Updated copyright details.</li>
+	<li> Removed the GetChecked / SetChecked methods as CTreeCtrl as of VC++ 6 
+	includes equivalent functionality. </li>
+	<li> The CanDisplayFolder method has been updated to use logic similar to 
+	the CanDisplayFile virtual function. This new functionality is controlled by a new m_dwFolderHideFlags 
+	variable which can be modified via the functions SetFolderHideFlags &amp; 
+	GetFolderHideFlags. Thanks to Bob O'Neil for this update.</li>
+	<li> Reviewed all TRACE statements for correctness.</li>
+	<li> Fixed an issue where you get an ASSERT in the code when you are using 
+	XP manifest support and you are using the TVS_CHECKBOXES style in your 
+	CTreeFileCtrl. The issue seems to be a bug in Commctrl v6 custom draw
+	notifications as this problem does not occur if you are not using XP themes. 
+	Thanks to Bob O'Neill for this update.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="APIReference"></a><strong>API
+Reference</strong></h2>
+
+
+<p>The following functions are provided:</p>
+
+<p><strong><a href="#CTreeFileCtrl">CTreeFileCtrl::CTreeFileCtrl</a><br>
+<a href="#SetRootFolder">CTreeFileCtrl::SetRootFolder</a><br>
+<a href="#GetRootFolder">CTreeFileCtrl::GetRootFolder</a><br>
+<a href="#ItemToPath">CTreeFileCtrl::ItemToPath</a><br>
+<a href="#GetSelectedPath">CTreeFileCtrl::GetSelectedPath</a><br>
+<a href="#SetSelectedPath">CTreeFileCtrl::SetSelectedPath</a><br>
+<a href="#SetShowFiles">CTreeFileCtrl::SetShowFiles</a><br>
+<a href="#GetShowFiles">CTreeFileCtrl::GetShowFiles</a><br>
+<a href="#SetAllowDragDrop">CTreeFileCtrl::SetAllowDragDrop</a><br>
+<a href="#GetAllowDragDrop">CTreeFileCtrl::GetAllowDragDrop</a><br>
+<a href="#SetAllowRename">CTreeFileCtrl::SetAllowRename</a><br>
+<a href="#GetAllowRename">CTreeFileCtrl::GetAllowRename</a><br>
+<a href="#SetAutoRefresh">CTreeFileCtrl::SetAllowOpen</a><br>
+<a href="#GetAutoRefresh">CTreeFileCtrl::GetAllowOpen</a><br>
+<a href="#SetAllowProperties">CTreeFileCtrl::SetAllowProperties</a><br>
+<a href="#GetAllowProperties">CTreeFileCtrl::GetAllowProperties</a><br>
+<a href="#SetAllowDelete">CTreeFileCtrl::SetAllowDelete</a><br>
+<a href="#GetAllowDelete">CTreeFileCtrl::GetAllowDelete</a><br>
+<a href="#IsFile">CTreeFileCtrl::IsFile</a><br>
+<a href="#IsFolder">CTreeFileCtrl::IsFolder</a><br>
+<a href="#IsDrive">CTreeFileCtrl::IsDrive<br>
+</a></strong><b><a href="#IsCompressed">CTreeFileCtrl::IsCompressed</a></b><strong><br>
+<a href="#Rename">CTreeFileCtrl::Rename</a><br>
+<a href="#ShowProperties">CTreeFileCtrl::ShowProperties</a><br>
+<a href="#Delete">CTreeFileCtrl::Delete</a><br>
+<a href="#Open">CTreeFileCtrl::Open</a><br>
+<a href="#SetFlags">CTreeFileCtrl::SetFlags<br>
+</a><a href="#PopulateTree">CTreeFileCtrl::PopulateTree<br>
+</a></strong><b><a href="#SetDriveHideFlags">CTreeFileCtrl::SetDriveHideFlags</a><br>
+<a href="#GetDriveHideFlags">CTreeFileCtrl::GetDriveHideFlags</a><br>
+<a href="#SetFileHideFlags">CTreeFileCtrl::SetFileHideFlags</a><br>
+<a href="#GetFileHideFlags">CTreeFileCtrl::GetFileHideFlags</a><br>
+<a href="#SetFolderHideFlags">CTreeFileCtrl::SetFolderHideFlags</a><br>
+<a href="#GetFolderHideFlags">CTreeFileCtrl::GetFolderHideFlags</a><br>
+<a href="#SetFileNameMask">CTreeFileCtrl::SetFileNameMask</a><br>
+<a href="#GetFileNameMask">CTreeFileCtrl::GetFileNameMask</a><br>
+<a href="#GetCompressedColor">CTreeFileCtrl::GetCompressedColor</a><br>
+<a href="#SetCompressedColor">CTreeFileCtrl::SetCompressedColor</a><br>
+<a href="#GetUsingDifferentColorForCompressed">CTreeFileCtrl::GetUsingDifferentColorForCompressed</a><br>
+<a href="#SetUsingDifferentColorForCompressed">CTreeFileCtrl::SetUsingDifferentColorForCompressed<br>
+</a></b><b><a href="#SetDisplayNetwork">CTreeFileCtrl::SetDisplayNetwork</a><br>
+<a href="#GetDisplayNetwork">CTreeFileCtrl::GetDisplayNetwork</a><br>
+<a href="#SetUsingDifferentIconForSharedFolders">CTreeFileCtrl::SetUsingDifferentIconForSharedFolders</a><br>
+<a href="#GetUsingDifferentIconForSharedFolders">CTreeFileCtrl::GetUsingDifferentIconForSharedFolders</a><br>
+<a href="#GetShowFileExtensions">CTreeFileCtrl::GetShowFileExtensions</a><br>
+<a href="#SetShowFileExtensions">CTreeFileCtrl::SetShowFileExtensions</a><br>
+<a href="#SetNetworkItemTypes">CTreeFileCtrl::SetNetworkItemTypes</a><br>
+<a href="#GetNetworkItemTypes">CTreeFileCtrl::GetNetworkItemTypes</a><br>
+<a href="#SetShowDriveLabels">CTreeFileCtrl::SetShowDriveLabels</a><br>
+<a href="#GetShowDriveLabels">CTreeFileCtrl::GetShowDriveLabels<br>
+</a><a href="#SetShowMyComputer">CTreeFileCtrl::SetShowMyComputer</a><br>
+<a href="#GetShowMyComputer">CTreeFileCtrl::GetShowMyComputer</a><br>
+<a href="#SetShowRootedFolder">CTreeFileCtrl::SetShowRootedFolder</a><br>
+<a href="#GetShowRootedFolder">CTreeFileCtrl::GetShowRootedFolder<br>
+</a>
+</b><b><a href="#GoBack">CTreeFileCtrl::GoBack</a><br>
+<a href="#CanGoBack">CTreeFileCtrl::CanGoBack</a><br>
+<a href="#GoForward">CTreeFileCtrl::GoForward</a><br>
+<a href="#CanGoForward">CTreeFileCtrl::CanGoForward</a><br>
+<a href="#GetMaxHistory">CTreeFileCtrl::GetMaxHistory</a><br>
+<a href="#SetMaxHistory">CTreeFileCtrl::SetMaxHistory</a><br>
+<a href="#GetBackSize">CTreeFileCtrl::GetBackSize</a><br>
+<a href="#GetBackItemText">CTreeFileCtrl::GetBackItemText</a><br>
+<a href="#GetForwardSize">CTreeFileCtrl::GetForwardSize</a><br>
+<a href="#GetForwardtemText">CTreeFileCtrl::GetForwardItemText</a></b><br>
+<b><a href="#SetAutoRefresh">CTreeFileCtrl::SetAutoRefresh</a><br>
+<a href="#GetAutoRefresh">CTreeFileCtrl::GetAutoRefresh</a></b><br>
+&nbsp;</p>
+
+<p><strong><a href="#DDX_FileTreeValue">DDX_FileTreeValue</a></strong></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">&nbsp;</p>
+
+<p><a name="CTreeFileCtrl"></a><strong>CTreeFileCtrl::CTreeFileCtrl</strong></p>
+
+<p><strong>CTreeFileCtrl();</strong></p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>Constructs a CTreeFileCtrl object.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="SetRootFolder"></a><strong>CTreeFileCtrl::SetRootFolder</strong></p>
+
+<p><strong>void SetRootFolder(const
+CString&amp; </strong><em>sPath</em><strong>);</strong></p>
+
+
+<p><strong>Parameters</strong></p>
+
+<p><em>sPath</em> The folder to use as the parent for all items in the tree control.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This allows you to set the parent folder to
+be something other than the default which displays all the drive letters at the root. For
+example this would allow you to produce a UI to allow you to specify a <em>&quot;Program
+Group&quot;</em> as would be required by an install program.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetRootFolder"></a><strong>CTreeFileCtrl::GetRootFolder</strong></p>
+
+<p><strong>CString GetRootFolder() const;</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">The current folder used as
+the parent for all items in the tree control.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This is the corollary function to the
+SetRootFolder function.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="ItemToPath"></a><strong>CTreeFileCtrl::ItemToPath</strong></p>
+
+<p><strong>virtual CString ItemToPath(HTREEITEM </strong><em>hItem</em><strong>);</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">The folder / file path as
+represented by the tree item hItem.</p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>hItem</em> The tree item to get
+the path for.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This function allows an tree item's file
+name or folder name to be retrieved given it's HTREEITEM. Internally this function is used
+in the GetSelectedPath function.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetSelectedPath"></a><strong>CTreeFileCtrl::GetSelectedPath</strong></p>
+
+<p><strong>CString GetSelectedPath();</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">The current folder / file
+path as selected in the tree control.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This function returns the file name or
+folder name currently selected in the tree control.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="SetSelectedPath"></a><strong>CTreeFileCtrl::SetSelectedPath</strong></p>
+
+<p><strong>void SetSelectedPath(const
+CString&amp; </strong><em>sPath</em><strong>, BOOL </strong><em>bExpanded</em><strong> =
+FALSE);</strong></p>
+
+
+<p><strong>Parameters</strong></p>
+
+<p><em>sPath</em> The folder or file name path to select in the tree control.</p>
+
+<p><em>bExpanded</em> TRUE if the new
+item should be shown expanded otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This allows you to set the currently
+selected item in the tree control.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="SetShowFiles"></a><strong>CTreeFileCtrl::SetShowFiles</strong></p>
+
+<p><strong>void SetShowFiles(BOOL </strong><em>bFiles</em><strong>);</strong></p>
+
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bFiles</em> TRUE if the tree
+control should display files in addition to folders.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This allows you to decide whether the tree
+control should display files.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetShowFiles"></a><strong>CTreeFileCtrl::GetShowFiles</strong></p>
+
+<p><strong>BOOL GetShowFiles() const;</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+is displaying files otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This is the corollary function to the
+SetShowFiles function.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="SetAllowDragDrop"></a><strong>CTreeFileCtrl::SetAllowDragDrop</strong></p>
+
+<p><strong>void SetAllowDragDrop(BOOL </strong><em>bAllowDragDrop</em><strong>);</strong></p>
+
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bAllowDragDrop</em> TRUE if the
+tree control should allow drag/drop of items otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This allows you to decide whether the tree
+control should allow drag/drop of items.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetAllowDragDrop"></a><strong>CTreeFileCtrl::GetAllowDragDrop</strong></p>
+
+<p><strong>BOOL GetAllowDragDrop() const;</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+is allowing drag/drop otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This is the corollary function to the
+SetAllowDragDrop function.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="SetAllowRename"></a><strong>CTreeFileCtrl::SetAllowRename</strong></p>
+
+<p><strong>void SetAllowRename(BOOL </strong><em>bAllowRename</em><strong>);</strong></p>
+
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bAllowRename</em> TRUE if the
+tree control should allow items to be renamed otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This allows you to decide whether the tree
+control should allow items to be renamed (via the F2 keyboard accelerator and in-place
+editing of items).</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetAllowRename"></a><strong>CTreeFileCtrl::GetAllowRename</strong></p>
+
+<p><strong>BOOL GetAllowRename() const;</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+is allowing items to be renamed otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This is the corollary function to the
+SetAllowRename function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetAllowOpen"></a>CTreeFileCtrl::SetAllowOpen</strong></p>
+
+<p><strong>void SetAllowOpen(BOOL </strong><em>bAllowOpen</em><strong>);</strong></p>
+
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bAllowOpen</em> TRUE if the tree
+control should allow items to be &quot;opened&quot; via the shell.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This allows you to decide whether the tree
+control should allow items to be &quot;opened&quot; via the shell (via the Enter keyboard
+accelerator and double clicking of items).</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetAllowOpen"></a><strong>CTreeFileCtrl::GetAllowOpen</strong></p>
+
+<p><strong>BOOL GetAllowOpen() const;</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+is allowing items to be opened via the shell otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This is the corollary function to the
+SetAllowOpen function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetAllowProperties"></a>CTreeFileCtrl::SetAllowProperties</strong></p>
+
+<p><strong>void SetAllowProperties(BOOL </strong><em>bAllowProperties</em><strong>);</strong></p>
+
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bAllowProperties</em> TRUE if
+the tree control should allow an item's property dialog to be displayed.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This allows you to decide whether the tree
+control should allow property dialogs to be displayable (via the Alt-Enter keyboard
+accelerator).</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetAllowProperties"></a><strong>CTreeFileCtrl::GetAllowProperties</strong></p>
+
+<p><strong>BOOL GetAllowProperties() const;</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+is allowing an item's property dialog to be displayable otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This is the corollary function to the
+SetAllowProperties function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetAllowDelete"></a>CTreeFileCtrl::SetAllowDelete</strong></p>
+
+<p><strong>void SetAllowDelete(BOOL </strong><em>bAllowDelete</em><strong>);</strong></p>
+
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bAllowDelete</em> TRUE if the
+tree control should allow items to be deleted.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This allows you to decide whether the tree
+control should allow items to be deleted (via the Delete keyboard accelerator).</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetAllowDelete"></a><strong>CTreeFileCtrl::GetAllowDelete</strong></p>
+
+<p><strong>BOOL GetAllowDelete() const;</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+is allowing items to be deleted otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This is the corollary function to the
+SetAllowDelete function.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="IsFile"></a><strong>CTreeFileCtrl::IsFile</strong></p>
+
+<p><strong>virtual BOOL IsFile(HTREEITEM </strong><em>hItem</em><strong>);<br>
+virtual
+BOOL IsFile(const CString&amp; </strong><em>sPath</em><strong>);</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+item or path is a file otherwise FALSE.</p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>hItem</em> The tree item to be determined if it is a file.</p>
+
+<p><em>sPath</em> The path of the
+object to be determined if it is a file.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>Use these functions to determine if an item
+is a file.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="IsFolder"></a><strong>CTreeFileCtrl::IsFolder</strong></p>
+
+<p><strong>virtual BOOL IsFolder(HTREEITEM </strong><em>hItem</em><strong>);<br>
+virtual
+BOOL IsFolder(const CString&amp; </strong><em>sPath</em><strong>);</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+item or path is a folder / directory otherwise FALSE.</p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>hItem</em>The tree item to be determined if it is a folder / directory.</p>
+
+<p><em>sPath</em> The path of the
+object to be determined if it is a folder / directory.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>Use these functions to determine if an item
+is a folder / directory.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="IsDrive"></a><strong>CTreeFileCtrl::IsDrive</strong></p>
+
+<p><strong>virtual BOOL IsDrive(HTREEITEM </strong><em>hItem</em><strong>);<br>
+virtual
+BOOL IsDrive(const CString&amp; </strong><em>sPath</em><strong>);</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+item or path is a drive letter otherwise FALSE.</p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>hItem</em> The tree item to be determined if it is a drive letter.</p>
+
+<p><em>sPath</em> The path of the
+object to be determined if it is a drive letter.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>Use these functions to determine if an item
+is a drive letter e.g. &quot;A:\&quot;.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="IsCompressed"></a><strong>CTreeFileCtrl::IsCompressed</strong></p>
+
+<p><strong>virtual
+BOOL IsCompressed(const CString&amp; </strong><em>sPath</em><strong>);</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+item is a compressed file otherwise FALSE.</p>
+
+<p><strong>Parameters</strong></p>
+
+
+
+<p><em>sPath</em> The path of the
+object to be determined if it is a compressed file.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>Use this function to determine if an item
+is a compressed file. This is used internally by the control when drawing
+compressed files in a different colour</p>
+
+<p>&nbsp;</p>
+
+<p><a name="Rename"></a><strong>CTreeFileCtrl::Rename</strong></p>
+
+<p><strong>virtual BOOL Rename(HTREEITEM </strong><em>hItem</em><strong>);</strong></p>
+
+<p><strong>Return Value</strong></p>
+
+
+<p class="t">TRUE if in-place editing
+of the specified item was started successfully otherwise FALSE.</p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>hItem</em> The tree item to begin in-place editing of.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>Use this function to start in-place editing
+i.e. renaming of the specified item. To edit a specific path use the function <em>&quot;SetSelectedPath&quot;</em>.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="ShowProperties"></a><strong>CTreeFileCtrl::ShowProperties</strong></p>
+
+<p><strong>virtual BOOL ShowProperties(HTREEITEM </strong><em>hItem</em><strong>);</strong></p>
+
+<p><strong>Return Value</strong></p>
+
+
+<p class="t">TRUE if the shells
+property dialog of the specified item was shown successfully otherwise FALSE.</p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>hItem</em> The tree item to show the properties dialog of.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>Use this function to show the standard
+Windows properties dialog of an item. To show the properties of a specific path use the
+function <em>&quot;SetSelectedPath&quot;</em>.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="Delete"></a><strong>CTreeFileCtrl::Delete</strong></p>
+
+<p><strong>virtual BOOL Delete(HTREEITEM </strong><em>hItem</em><strong>);</strong></p>
+
+<p><strong>Return Value</strong></p>
+
+
+<p class="t">TRUE if the item was
+successfully deleted otherwise FALSE.</p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>hItem</em> The tree item to delete.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>Use this function to delete the specified
+item. To delete a specific path use the function <em>&quot;SetSelectedPath&quot;</em>.
+Internally the function looks at the keyboard state to implement real deletion or moving
+of the item to the recycle bin. It will also use the standard confirmation dialogs
+provided by the shell when you delete something.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="Open"></a><strong>CTreeFileCtrl::Open</strong></p>
+
+<p><strong>virtual BOOL Open(HTREEITEM </strong><em>hItem</em><strong>);</strong></p>
+
+<p><strong>Return Value</strong></p>
+
+
+<p class="t">TRUE if the item was
+successfully <em>&quot;opened&quot;</em> by the shell otherwise FALSE.</p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>hItem</em> The tree item to <em>&quot;open&quot;</em>.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>Use this function to &quot;open&quot; the
+specified item. In the case of an executable, the program will be run, while in the case
+of a document file, the default verb as setup in the shell will be used. To execute a
+specific path use the function <em>&quot;SetSelectedPath&quot;</em>.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="SetFlags"></a><strong>CTreeFileCtrl::SetFlags</strong></p>
+
+<p><strong>void SetFlags(DWORD </strong><em>dwFlags</em><strong>);</strong></p>
+
+
+<p><strong>Parameters</strong></p>
+
+<p><em>dwFlags</em> The flags / styles
+to associate with the tree control.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>Use this function as a shortcut way of
+calling the <em>&quot;SetAllow..&quot;</em> functions. This function is used internally by
+the DDX_FileTreeControl. The flags that can be used as are as follows:</p>
+
+<table border="0" width="61%">
+  <tr>
+    <td width="22%">TFC_SHOWFILES</td>
+    <td width="78%">Control will show files as well as show folders</td>
+  </tr>
+  <tr>
+    <td width="22%">TFC_ALLOWDRAGDROP</td>
+    <td width="78%">Control allows drag / drop</td>
+  </tr>
+  <tr>
+    <td width="22%">TFC_ALLOWRENAME</td>
+    <td width="78%">Control allows renaming of items</td>
+  </tr>
+  <tr>
+    <td width="22%">TFC_ALLOWOPEN</td>
+    <td width="78%">Control allows items to be &quot;opened&quot; by the
+    shell</td>
+  </tr>
+  <tr>
+    <td width="22%">TFC_ALLOWPROPERTIES</td>
+    <td width="78%">Control allows the &quot;Properties&quot; dialog to be
+    shown</td>
+  </tr>
+  <tr>
+    <td width="22%">TFC_ALLOWDELETE</td>
+    <td width="78%">Control allows items to be deleted</td>
+  </tr>
+</table>
+
+<p>These flags can be or'ed together when calling the function.</p>
+
+
+<p>&nbsp;</p>
+
+<p><a name="PopulateTree"></a><strong>CTreeFileCtrl::PopulateTree</strong></p>
+
+<p><strong>virtual void PopulateTree();</strong></p>
+
+<p><strong>Remarks</strong></p>
+<p>You need to call this function to
+populate the tree control with contents if you manually create the view. If you
+are using the control in a dialog resource and are using the DDX functions
+provided for it, then this function will be called for you automatically.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetDriveHideFlags"></a>CTreeFileCtrl::SetDriveHideFlags</strong></p>
+
+<p><strong>void
+SetDriveHideFlags(DWORD </strong><em>dwDriveHideFlags</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>dwDriveHideFlags</em> A bit
+mask of the drives to hide from the tree control</p>
+
+<p><strong>Remarks</strong></p>
+
+<p>This allows you to specify the
+types of drives which are not to be displayed in the tree control.</p>
+
+<p>The flags that can be used are as follows:</p>
+
+<table>
+  <tr vAlign="top">
+    <td>
+      <p>DRIVE_ATTRIBUTE_REMOVABLE</p>
+    <td>
+      <p>The disk can be removed from the drive.</p>
+  <tr vAlign="top">
+    <td>
+      <p>DRIVE_ATTRIBUTE_FIXED</p>
+    <td>
+      <p>The disk cannot be removed from the drive.</p>
+  <tr vAlign="top">
+    <td>
+      <p>DRIVE_ATTRIBUTE_REMOTE</p>
+    <td>
+      <p>The drive is a remote (network) drive.</p>
+  <tr vAlign="top">
+    <td>
+      <p>DRIVE_ATTRIBUTE_CDROM</p>
+    <td>
+      <p>The drive is a CD-ROM drive.</p>
+  <tr vAlign="top">
+    <td>
+      <p>DRIVE_ATTRIBUTE_RAMDISK</p>
+    <td>
+      <p>The drive is a RAM disk.</p>
+  </tr>
+</table>
+
+<p>The flags can be or'ed together when calling the function.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetDriveHideFlags"></a><strong>CTreeFileCtrl::GetDriveHideFlags</strong></p>
+
+<p><strong>DWORD</strong><strong>
+GetDriveHideFlags() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">The bit mask of drive
+types to be excluded from the tree control</p>
+
+<p><strong>Remarks</strong></p>
+<p>This is the corollary function to the
+SetDriveHideFlags function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetFileHideFlags"></a>CTreeFileCtrl::SetFileHideFlags</strong></p>
+
+<p><strong>void
+SetFileHideFlags(DWORD </strong><em>dwFileHideFlags</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>dwFileHideFlags</em> A bit
+mask of the files to hide from the tree control</p>
+
+<p><strong>Remarks</strong></p>
+
+<p>This allows you to specify the
+types of files which are not to be displayed in the tree
+control.</p>
+
+<p>The flags that can be used are as follows:</p>
+
+
+<table width="1108">
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_ARCHIVE</td>
+    <td width="827">The file is an archive file. Applications use this attribute
+      to mark files for backup or removal.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_COMPRESSED</td>
+    <td width="827">The file is compressed. For a file, this means that all of 
+	the data in the file is compressed. </td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_ENCRYPTED</td>
+    <td width="827">The file is encrypted. For a file, this means that all data 
+	streams in the file are encrypted. </td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_HIDDEN</td>
+    <td width="827">The file is hidden. It is not included in an ordinary directory listing.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_NOT_CONTENT_INDEXED</td>
+    <td width="827">The file will
+      not be indexed by the content indexing service.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_OFFLINE</td>
+    <td width="827">The data of the
+      file is not immediately available. This attribute indicates that the file
+      data has been physically moved to offline storage. This attribute is used
+      by Remote Storage, the hierarchical storage management software in Windows
+      2000. Applications should not arbitrarily change this attribute.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_READONLY</td>
+    <td width="827">The file is read-only. Applications can read the file but cannot write to
+      it or delete it. In the case of a directory, applications cannot delete
+      it.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_REPARSE_POINT</td>
+    <td width="827">The file has an
+      associated reparse point.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_SPARSE_FILE</td>
+    <td width="827">The file is a
+      sparse file.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_SYSTEM</td>
+    <td width="827">The file is part of, or is used exclusively by, the operating system.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_TEMPORARY</td>
+    <td width="827">The file is
+      being used for temporary storage. File systems attempt to keep all of the
+      data in memory for quicker access rather than flushing the data back to
+      mass storage. A temporary file should be deleted by the application as
+      soon as it is no longer needed.</td>
+  </tr>
+</table>
+
+
+<p>The flags can be or'ed together when calling the function.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetFileHideFlags"></a><strong>CTreeFileCtrl::GetFileHideFlags</strong></p>
+
+<p><strong>DWORD</strong><strong>
+GetFileHideFlags() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">The bit mask of file types to be excluded from the tree control</p>
+
+<p><strong>Remarks</strong></p>
+<p>This is the corollary function to the
+SetFileHideFlags function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetFolderHideFlags"></a>CTreeFileCtrl::SetFolderHideFlags</strong></p>
+
+<p><strong>void
+SetFolderHideFlags(DWORD </strong><em>dwFileHideFlags</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>dwFolderHideFlags</em> A bit
+mask of the files / folders to hide from the tree control</p>
+
+<p><strong>Remarks</strong></p>
+
+<p>This allows you to specify the
+types of folders which are not to be displayed in the tree
+control.</p>
+
+<p>The flags that can be used are as follows:</p>
+
+
+<table width="1108" id="table1">
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_ARCHIVE</td>
+    <td width="827">The directory is an archive file or directory. Applications use this attribute
+      to mark files for backup or removal.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_COMPRESSED</td>
+    <td width="827">The directory is compressed. For a directory, this means that compression is
+      the default for newly created files and subdirectories.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_ENCRYPTED</td>
+    <td width="827">The directory is encrypted. For a directory, this means that encryption is the
+      default for newly created files and subdirectories.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_HIDDEN</td>
+    <td width="827">The directory is hidden. It is not included in an ordinary directory listing.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_NOT_CONTENT_INDEXED</td>
+    <td width="827">The file will
+      not be indexed by the content indexing service.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_OFFLINE</td>
+    <td width="827">The data of the
+      file is not immediately available. This attribute indicates that the file
+      data has been physically moved to offline storage. This attribute is used
+      by Remote Storage, the hierarchical storage management software in Windows
+      2000. Applications should not arbitrarily change this attribute.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_READONLY</td>
+    <td width="827">The directory is read-only. Applications can read the file but cannot write to
+      it or delete it. In the case of a directory, applications cannot delete
+      it.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_REPARSE_POINT</td>
+    <td width="827">The file has an
+      associated reparse point.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_SPARSE_FILE</td>
+    <td width="827">The file is a
+      sparse file.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_SYSTEM</td>
+    <td width="827">The file or
+      directory is part of, or is used exclusively by, the operating system.</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">FILE_ATTRIBUTE_TEMPORARY</td>
+    <td width="827">The file is
+      being used for temporary storage. File systems attempt to keep all of the
+      data in memory for quicker access rather than flushing the data back to
+      mass storage. A temporary file should be deleted by the application as
+      soon as it is no longer needed.</td>
+  </tr>
+</table>
+
+
+<p>The flags can be or'ed together when calling the function.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetFolderHideFlags"></a><strong>CTreeFileCtrl::GetFolderHideFlags</strong></p>
+
+<p><strong>DWORD
+GetFileHideFlags() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">The bit mask of folder types to be excluded from the tree control</p>
+
+<p><strong>Remarks</strong></p>
+<p>This is the corollary function to the
+SetFolderHideFlags function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetFileNameMask"></a>CTreeFileCtrl::SetFileNameMask</strong></p>
+
+<p><strong>void
+SetFileNameMask(const CString&amp; </strong><em>sFileNameMask</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>sFileNameMask</em> A string
+search mask to use for specifing certain files to be included in the tree
+control</p>
+
+<p><strong>Remarks</strong></p>
+
+<p>This allows you to specify the
+types of files to be included for example based on their extension, e.g
+&quot;*.exe&quot;. By default the mask is set to &quot;*.*&quot;.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetFileNameMask"></a><strong>CTreeFileCtrl::GetFileNameMask</strong></p>
+
+<p><strong>CString </strong><strong>GetFileNameMask() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">The string search mask
+in use</p>
+
+<p><strong>Remarks</strong></p>
+<p>This is the corollary function to the
+SetFileNameMask function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetCompressedColor"></a>CTreeFileCtrl::SetCompressedColor</strong></p>
+
+<p><strong>void
+SetCompressedColor(COLORREF </strong><em>rgbCompressed</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>rgbCompressed</em> The colour
+to use to display compressed files</p>
+
+<p><strong>Remarks</strong></p>
+
+<p>This allows you to specify the
+colour compressed files are drawn in. By default the colour is RGB(0, 0, 255) i.e
+blue which is the same as &quot;Explorer&quot;.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetCompressedColor"></a><strong>CTreeFileCtrl::GetCompressedColor</strong></p>
+
+<p><strong>CString </strong><strong>GetCompressedColor() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">The colour in use for
+displaying compressed files</p>
+
+<p><strong>Remarks</strong></p>
+<p>This is the corollary function to the
+SetCompressedColor function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetUsingDifferentColorForCompressed"></a>CTreeFileCtrl::SetUsingDifferentColorForCompressed</strong></p>
+
+<p><strong>void
+SetUsingDifferentColorForCompressed(BOOL </strong><em>bShowCompressedUsingDifferentColor</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bShowCompressedUsingDifferentColor</em>&nbsp;
+TRUE if compressed files should be drawn differently to normal files, otherwise
+FALSE to leave compressed files drawn using the normal colour.</p>
+
+<p><strong>Remarks</strong></p>
+<p>This allows you to turn on or off
+whether compressed files show be drawn differently. Please note that version
+4.70 or later of Comctrl32.dll (Internet Explorer 3 and later) is required for this to
+work. The code will work on machines with earlier versions, but compressed files
+will be displayed as standard files.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetUsingDifferentColorForCompressed"></a><strong>CTreeFileCtrl::GetUsingDifferentColorForCompressed</strong></p>
+
+<p><strong>BOOL </strong><strong>GetUsingDifferentColorForCompressed() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if compressed
+files should be drawn differently to normal files, otherwise FALSE to leave
+compressed files drawn using the normal colour.</p>
+
+<p><strong>Remarks</strong></p>
+<p>This is the corollary function to the
+SetUsingDifferentColorForCompressed function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetDisplayNetwork"></a>CTreeFileCtrl::SetDisplayNetwork</strong></p>
+
+<p><strong>void
+SetDisplayNetwork(BOOL </strong><em>bDisplayNetwork</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bDisplayNetwork</em>
+TRUE if the network should be displayed, otherwise
+FALSE to only show local files (i.e. drive letters).</p>
+
+<p><strong>Remarks</strong></p>
+<p>This allows you to enumerate the
+network in addition to showing local files.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetDisplayNetwork"></a><strong>CTreeFileCtrl::GetNetworkDisplay</strong></p>
+
+<p><strong>BOOL </strong><strong>GetNetworkDisplay() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if network is
+being displayed, otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+<p>This is the corollary function to the
+SetDisplayNetwork function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetUsingDifferentIconForSharedFolders"></a>CTreeFileCtrl::SetUsingDifferentIconForSharedFolders</strong></p>
+
+<p><strong>void
+SetUsingDifferentIconForSharedFolders(BOOL </strong><em>bShowSharedUsingDifferentIcon</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bShowSharedUsingDifferentIcon</em>
+TRUE if folders which are shared should be shown as such, otherwise
+FALSE to leave shared folders drawn using the normal icon.</p>
+
+<p><strong>Remarks</strong></p>
+<p>This allows you to show folders
+which are shared, just like the way Explorer shows them.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetUsingDifferentIconForSharedFolders"></a><strong>CTreeFileCtrl::GetUsingDifferentIconForSharedFolders</strong></p>
+
+<p><strong>BOOL </strong><strong>GetUsingDifferentIconForSharedFolders() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if folders which
+are shared are shown using a different icon, otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+<p>This is the corollary function to the
+SetUsingDifferentIconForSharedFolders function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetShowFileExtensions"></a>CTreeFileCtrl::SetShowFileExtensions</strong></p>
+
+<p><strong>void
+SetShowHideExtensions(HideFileExtensions </strong><em>FileExtensions</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>FileExtensions</em> An enum 
+controlling how file extensions should be shown.</p>
+
+<p><strong>Remarks</strong></p>
+<p>This allows you to decide how
+extensions will be shown.</p>
+
+<p>The HideFileExtensions enum can
+have the following values:</p>
+
+
+<table width="1108">
+  <tr vAlign="top">
+    <td width="267">HideExtension</td>
+    <td width="827">File extensions
+      are not shown.&nbsp;</td>
+  </tr>
+  <tr vAlign="top">
+    <td width="267">DoNoHideExtension</td>
+    <td width="827">File extensions
+      are shown.</td>
+  </tr>
+  
+  <tr vAlign="top">
+    <td width="267">UseTheShellSetting</td>
+    <td width="827">File extensions
+      are shown/not shown consistent with the setting for the Shell/Explorer.</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+  <p><a name="GetShowFileExtensions"></a><strong>CTreeFileCtrl::GetShowFileExtensions</strong></p>
+
+<p><strong>HideFileExtensions </strong><strong>GetShowFileExtensions() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">enum which contains how
+file extensions are currently being shown.</p>
+
+<p><strong>Remarks</strong></p>
+  <p>This is the corollary function to the
+  SetShowFileExtensions.</p>
+
+<p>&nbsp;</p>
+
+  <p><strong><a name="SetNetworkItemTypes"></a>CTreeFileCtrl::SetNetworkItemTypes</strong></p>
+
+<p><strong>void
+SetNetworkItemTypes(DWORD </strong><em>dwTypes</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>dwTypes</em> A DWORD
+controlling what network items are to be shown.</p>
+
+<p><strong>Remarks</strong></p>
+  <p>This allows you to decide what
+  items on the network should be shown.</p>
+
+<p>The dwType can have the following
+values:</p>
+
+  <table>
+    <tr vAlign="top">
+      <td>
+        <p>RESOURCETYPE_ANY</p>
+      <td>
+        <p>All resources (this value cannot be
+        combined with RESOURCETYPE_DISK or RESOURCETYPE_PRINT).</p>
+    <tr vAlign="top">
+      <td>
+        <p>RESOURCETYPE_DISK</p>
+      <td>
+        <p>All disk resources.</p>
+    <tr vAlign="top">
+      <td>
+        <p>RESOURCETYPE_PRINT</p>
+      <td>
+        <p>All print resources.</p>
+    </tr>
+  </table>
+
+<p>&nbsp;</p>
+
+  <p><a name="GetNetworkItemTypes"></a><strong>CTreeFileCtrl::GetNetworkItemTypes</strong></p>
+
+<p><strong>DWORD </strong><strong>GetNetworkItemTypes() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">DWORD which contains
+what network items are currently being shown.</p>
+
+<p><strong>Remarks</strong></p>
+  <p>This is the corollary function to the
+  SetNetworkItemTypes.</p>
+
+<p>&nbsp;</p>
+
+  <p><strong><a name="SetShowDriveLabels"></a>CTreeFileCtrl::SetShowDriveLabels</strong></p>
+
+<p><strong>void
+SetShowDriveLabels(BOOL </strong><em>bShowDriveLabels</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bShowDriveLabels</em> TRUE to
+allow friendly names to be displayed for drive letters otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+  <p>When bShowDriveLabels is set to
+  TRUE, a friendly version of a drive is shown e.g. instead of &quot;D:&quot;
+  being shown, you might get &quot;Compact Disc (I:)&quot;.</p>
+
+  <p>&nbsp;</p>
+
+  <p><a name="GetShowDriveLabels"></a><strong>CTreeFileCtrl::GetShowDriveLabels</strong></p>
+
+<p><strong>BOOL </strong><strong>GetShowDriveLabels() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">BOOL TRUE if friendly
+names are being displayed for drives otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+  <p>This is the corollary function to the
+  SetShowDriveLetters.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetShowMyComputer"></a>CTreeFileCtrl::SetShowMyComputer</strong></p>
+
+<p><strong>void
+SetShowMyComputer(BOOL </strong><em>bShowMyComputer</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bShowMyComputer</em> A TRUE
+if drive letters should be rooted by a &quot;My Computer&quot; node, FALSE to
+leave drive letters unrooted.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetShowMyComputer"></a><strong>CTreeFileCtrl::GetShowMyComputer</strong></p>
+
+<p><strong>BOOL </strong><strong>GetShowMyComputer() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if &quot;My
+Computer&quot; is to be used as the root for drive letters otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+  <p>This is the corollary function to the
+  SetShowMyComputer.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetShowRootedFolder"></a>CTreeFileCtrl::SetShowRootedFolder</strong></p>
+
+<p><strong>void
+SetShowRootedFolder(BOOL </strong><em>bShowRootedFolder</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bShowRootedFolder</em> TRUE to
+allow the root directory to be shown as the parent node when you use SetRootFolder
+otherwise FALSE to not show the root folder.</p>
+
+  <p>&nbsp;</p>
+
+<p><a name="GetShowRootedFolder"></a><strong>CTreeFileCtrl::GetShowRootedFolder</strong></p>
+
+<p><strong>BOOL </strong><strong>GetShowRootedFolder() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">BOOL TRUE if the root
+folder is show as the parent node otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+<p>This is the corollary function to the
+SetShowRootedFolder.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="GoBack"></a>CTreeFileCtrl::GoBack</strong></p>
+
+<p><strong>virtual BOOL GoBack();</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the control
+successfully went back to the item just previously visited.</p>
+
+<p><strong>Remarks</strong></p>
+<p>This allows you to turn navigate
+just like Explorer provides for using the &quot;Back&quot; button.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="CanGoBack"></a><strong>CTreeFileCtrl::CanGoBack</strong></p>
+
+<p><strong>BOOL CanGoBack</strong><strong>() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if there are items
+which can be gone back to</p>
+
+<p><strong>Remarks</strong></p>
+<p>This is used by the sample app to
+enable / disable the &quot;Back&quot; toolbar button.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="GoForward"></a>CTreeFileCtrl::GoForward</strong></p>
+
+<p><strong>virtual BOOL GoForward();</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the control
+successfully went to the next item.</p>
+
+<p><strong>Remarks</strong></p>
+<p>This allows you to turn navigate
+just like Explorer provides for using the &quot;Forward&quot; button.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="CanGoForward"></a><strong>CTreeFileCtrl::CanGoForward</strong></p>
+
+<p><strong>BOOL CanGoForward</strong><strong>() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if there are items
+which can be gone &quot;forward&quot; to</p>
+
+<p><strong>Remarks</strong></p>
+<p>This is used by the sample app to
+enable / disable the &quot;Forward&quot; toolbar button.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="GetMaxHistory"></a>CTreeFileCtrl::GetMaxHistory</strong></p>
+
+<p><strong>virtual int GetMaxHistory();</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">the maximum items which
+can be put onto the Back / Forward stacks.</p>
+
+<p><strong>Remarks</strong></p>
+<p>By default the stack sizes are 20.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="SetMaxHistory"></a><strong>CTreeFileCtrl::SetMaxHistory</strong></p>
+
+<p><strong>virtual void SetMaxHistory</strong><strong>(int
+</strong><i>nMaxHistory</i><strong>) const;</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>nMaxHistory</em> The maximum
+size the Back / Forward stacks can grow to.</p>
+
+<p><strong>Remarks</strong></p>
+<p>You can use this function to set the size of Back /
+Forward stacks.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="GetBackSize"></a>CTreeFileCtrl::GetBackSize</strong></p>
+
+<p><strong>int GetBackSize();</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">the current number of
+items on the &quot;Back&quot; stack.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="GetBackItemText"></a>CTreeFileCtrl::GetBackItemText</strong></p>
+
+<p><strong>CString
+GetBackItemText(int </strong><i>nBack</i><strong>);</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">the text associated
+with the specific item on the &quot;Back&quot; stack.</p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>nBack</em> The zero based
+index of the item to get the text of.</p>
+
+<p><strong>Remarks</strong></p>
+<p>Allows you to retrieve the text associated with a certain
+&quot;Back&quot; item. This could be used by client apps to implement a drop
+down menu of previous items just like Internet Explorer provides.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="GetForwardSize"></a>CTreeFileCtrl::GetForwardSize</strong></p>
+
+<p><strong>int GetForwardSize();</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">the current number of
+items on the &quot;Forward&quot; stack.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="GetForwardtemText"></a>CTreeFileCtrl::GetForwardItemText</strong></p>
+
+<p><strong>CString
+GetForwardtemText(int </strong><i>nBack</i><strong>);</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">the text associated
+with the specific item on the &quot;Forward&quot; stack.</p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>nBack</em> The zero based
+index of the item to get the text of.</p>
+
+<p><strong>Remarks</strong></p>
+<p>Allows you to retrieve the text associated with a certain
+&quot;Forward&quot; item. This could be used by client apps to implement a drop
+down menu of previous items just like Internet Explorer provides.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetAutoRefresh">
+</a>CTreeFileCtrl::SetAutoRefresh</strong></p>
+
+<p><strong>void SetAutoRefresh(BOOL </strong><em>bAutoRefresh</em><strong>);</strong></p>
+
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bAutoRefresh</em> TRUE if the tree
+control should auto refresh and FALSE to disable.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>Turning on auto refresh allows 
+the control to montor changes that take place on the file system and 
+automatically update the control with this new information. By default this 
+feature is off.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetAutoRefresh"></a><strong>CTreeFileCtrl::GetAutoRefresh</strong></p>
+
+<p><strong>BOOL GetAutoRefresh() const;</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+is performing auto refresh otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This is the corollary function to the
+SetAutoRefresh function.</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+
+
+<p><a name="DDX_FileTreeValue"></a><strong>DDX_FileTreeValue</strong></p>
+
+
+<p><strong>void
+DDX_FileTreeValue(CDataExchange* </strong><em>pDX</em><strong>, CTreeFileCtrl&amp; </strong><em>ctrlFileTree</em><strong>,
+CString&amp; </strong><em>sItem</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>pDX</em> is the usual CDataExchange
+object which will be passed into your DoDataExchange function.</p>
+
+<p><em>ctrlFileTree</em> is the tree
+control to get or set the folder / file for.</p>
+
+
+<p><em>sItem</em> is the actual folder / file
+to get or set into the control depending on the direction of data exchange occurring.</p>
+
+<p><strong>Remarks</strong></p>
+
+<p>Allows the selected folder / file to
+be quickly set / retrieved in a CTreeFileCtrl instance using the normal MFC DDX mechanism.</p>
+
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="Contact"></a><strong>CONTACTING
+THE AUTHOR</strong></h2>
+
+<p>PJ Naughter<br>
+Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
+Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
+25 January 2006</p>
+</body>
+</html>

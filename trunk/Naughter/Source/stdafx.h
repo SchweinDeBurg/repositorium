@@ -23,11 +23,15 @@
 #include <afxtempl.h>
 #include <afxsock.h>
 #include <afxpriv.h>
+#include <afxmt.h>
+#include <afxcmn.h>
 
 // PSDK headers
 #include <wininet.h>
 #include <windns.h>		// DNS definitions and DNS API
 #include <wincrypt.h>	// cryptographic API prototypes and definitions
+#include <lm.h>
+#include <shlobj.h>
 
 // STL headers
 #pragma warning(push, 3)
