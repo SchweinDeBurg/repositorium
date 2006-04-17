@@ -418,6 +418,30 @@
 			</File>
 			<File
 				RelativePath="Source\Smtp.rc">
+				<FileConfiguration
+					Name="MBCS_Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCResourceCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS_Release|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCResourceCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode_Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCResourceCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode_Release|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCResourceCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="Source\Smtp.rh">
@@ -458,7 +482,7 @@
 		</Filter>
 		<Filter
 			Name="Help Files"
-			Filter="htm;gif">
+			Filter="htm;gif;css">
 			<File
 				RelativePath="Help\FileTreeCtrl.gif">
 				<FileConfiguration
@@ -654,7 +678,7 @@
 		</Filter>
 		<Filter
 			Name="Controls"
-			Filter="">
+			Filter="h;cpp;rh;rc">
 			<File
 				RelativePath="Source\FileTreeCtrl.cpp">
 				<FileConfiguration
@@ -687,6 +711,30 @@
 			</File>
 			<File
 				RelativePath="Source\FileTreeCtrl.rc">
+				<FileConfiguration
+					Name="MBCS_Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCResourceCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS_Release|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCResourceCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode_Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCResourceCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode_Release|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCResourceCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="Source\FileTreeCtrl.rh">
@@ -694,7 +742,7 @@
 		</Filter>
 		<Filter
 			Name="Binary Resources"
-			Filter="">
+			Filter="ico;cur;bmp">
 			<File
 				RelativePath="Source\BinRes\tfdropcopy.cur">
 			</File>
