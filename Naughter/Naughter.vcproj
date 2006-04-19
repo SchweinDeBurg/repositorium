@@ -419,28 +419,36 @@
 			<File
 				RelativePath="Source\Smtp.rc">
 				<FileConfiguration
-					Name="MBCS_Debug|Win32"
-					ExcludedFromBuild="TRUE">
+					Name="MBCS_Debug|Win32">
 					<Tool
-						Name="VCResourceCompilerTool"/>
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="MBCS_Release|Win32"
-					ExcludedFromBuild="TRUE">
+					Name="MBCS_Release|Win32">
 					<Tool
-						Name="VCResourceCompilerTool"/>
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode_Debug|Win32"
-					ExcludedFromBuild="TRUE">
+					Name="Unicode_Debug|Win32">
 					<Tool
-						Name="VCResourceCompilerTool"/>
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode_Release|Win32"
-					ExcludedFromBuild="TRUE">
+					Name="Unicode_Release|Win32">
 					<Tool
-						Name="VCResourceCompilerTool"/>
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 			</File>
 			<File
@@ -712,28 +720,36 @@
 			<File
 				RelativePath="Source\FileTreeCtrl.rc">
 				<FileConfiguration
-					Name="MBCS_Debug|Win32"
-					ExcludedFromBuild="TRUE">
+					Name="MBCS_Debug|Win32">
 					<Tool
-						Name="VCResourceCompilerTool"/>
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="MBCS_Release|Win32"
-					ExcludedFromBuild="TRUE">
+					Name="MBCS_Release|Win32">
 					<Tool
-						Name="VCResourceCompilerTool"/>
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode_Debug|Win32"
-					ExcludedFromBuild="TRUE">
+					Name="Unicode_Debug|Win32">
 					<Tool
-						Name="VCResourceCompilerTool"/>
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Unicode_Release|Win32"
-					ExcludedFromBuild="TRUE">
+					Name="Unicode_Release|Win32">
 					<Tool
-						Name="VCResourceCompilerTool"/>
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 			</File>
 			<File
