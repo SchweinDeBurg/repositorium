@@ -631,6 +631,9 @@
 			<File
 				RelativePath="Source\CeXDib.h">
 			</File>
+			<File
+				RelativePath="Source\memdc.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Path"
