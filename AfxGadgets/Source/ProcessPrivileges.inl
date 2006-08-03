@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2004-2005 by Elijah Zarezky,
+// Copyright (c) 2004-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // ProcessPrivileges.inl - inline members of the CProcessPrivileges class

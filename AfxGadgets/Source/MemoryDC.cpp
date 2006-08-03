@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2004-2005 by Elijah Zarezky,
+// Copyright (c) 2004-2006 by Elijah Zarezky,
 // All rights reserved.
 // Portions copyright (c) 1996-2002 Keith Rule.
 
@@ -34,10 +34,12 @@ m_hPrevBmp(NULL)
 	ASSERT(!m_pDC->IsPrinting());
 
 	// adjust and remember initialization values
-	if ((m_crBack & 0xFF000000) != 0) {
+	if ((m_crBack & 0xFF000000) != 0)
+	{
 		m_crBack = m_pDC->GetBkColor();
 	}
-	if (prcDraw != NULL) {
+	if (prcDraw != NULL)
+	{
 		m_rectDraw.CopyRect(prcDraw);
 	}
 	else {
@@ -61,7 +63,8 @@ m_hPrevBmp(NULL)
 CMemoryDC::~CMemoryDC(void)
 {
 	// clean-up
-	if (m_hPrevBmp != NULL) {
+	if (m_hPrevBmp != NULL)
+	{
 		SelectObject(m_hPrevBmp);
 		m_bmpCanvas.DeleteObject();
 	}
@@ -81,6 +84,7 @@ void CMemoryDC::AssertValid(void) const
 {
 	// first perform inherited validity check...
 	CDC::AssertValid();
+
 	// ...and then verify our own state as well
 	ASSERT_VALID(&m_bmpCanvas);
 }
@@ -90,6 +94,7 @@ void CMemoryDC::Dump(CDumpContext& dumpCtx) const
 	try {
 		// first invoke inherited dumper...
 		CDC::Dump(dumpCtx);
+
 		// ...and then dump own unique members
 		dumpCtx << "m_pDC = " << m_pDC << "\n";
 		dumpCtx << "m_crBack = " << m_crBack << "\n";
@@ -97,7 +102,8 @@ void CMemoryDC::Dump(CDumpContext& dumpCtx) const
 		dumpCtx << "m_bmpCanvas = " << m_bmpCanvas << "\n";
 		dumpCtx << "m_hPrevBmp = " << m_hPrevBmp;
 	}
-	catch (CFileException* pXcpt) {
+	catch (CFileException* pXcpt)
+	{
 		pXcpt->ReportError();
 		pXcpt->Delete();
 	}

@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2005 by Elijah Zarezky,
+// Copyright (c) 2005-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // MenuXML.cpp - implementation of the CMenuXML class
@@ -39,18 +39,22 @@ static char THIS_FILE[] = __FILE__;
 
 #pragma pack(push, 1)
 
-typedef struct {
+typedef struct
+{
 	WORD wVersion;
 	WORD wOffset;
 	DWORD dwHelpId;
-} MENUEX_TEMPLATE_HEADER;
+}
+MENUEX_TEMPLATE_HEADER;
 
-typedef struct {
+typedef struct
+{
 	DWORD dwType;
 	DWORD dwState;
 	DWORD menuID;
 	WORD bResInfo;
-} MENUEX_TEMPLATE_ITEM;
+}
+MENUEX_TEMPLATE_ITEM;
 
 #pragma pack(pop)
 
@@ -76,7 +80,8 @@ const MENUTEMPLATE* CMenuXML::CreateMenuExTemplate(LPCTSTR pszFileXML)
 	std::auto_ptr<CPugXmlParser> pParser(new CPugXmlParser());
 
 	// try to parse source XML file
-	if (pParser->ParseFile(pszFileXML)) {
+	if (pParser->ParseFile(pszFileXML))
+	{
 		// let's go ahead and fuck this iceberg!
 		fileMem.Attach(NULL, 0, 1024);
 
@@ -120,13 +125,15 @@ BOOL CMenuXML::CreateMenuXML(LPCTSTR pszMenuName)
 	GetXMLpath(strFileXML);
 	::PathAddBackslash(strFileXML.GetBuffer(_MAX_PATH));
 	strFileXML.ReleaseBuffer();
-	if (!::PathFileExists(strFileXML)) {
+	if (!::PathFileExists(strFileXML))
+	{
 		TRACE(_T("Warning: folder %s doesn\'t exists, trying to create.\n"), strFileXML);
 #if (_WIN32_WINDOWS < 0x0490)
-		if (!::MakeSureDirectoryPathExists(_T2A(strFileXML))) {
+		if (!::MakeSureDirectoryPathExists(_T2A(strFileXML)))
 #else
-		if (::SHCreateDirectoryEx(NULL, strFileXML, NULL) != ERROR_SUCCESS) {
+		if (::SHCreateDirectoryEx(NULL, strFileXML, NULL) != ERROR_SUCCESS)
 #endif	// _WIN32_WINDOWS
+		{
 			TRACE(_T("Error: unable to create folder %s\n"), strFileXML);
 			return (FALSE);
 		}
@@ -135,13 +142,16 @@ BOOL CMenuXML::CreateMenuXML(LPCTSTR pszMenuName)
 	// construct full name of the XML-file...
 	strFileXML += pszMenuName;
 	strFileXML += _T(".xml");
+
 	// ...and if this file doesn't exists...
-	if (!::PathFileExists(strFileXML)) {
+	if (!::PathFileExists(strFileXML))
+	{
 		// ...then try to create it from the corresonding resource
 		TRACE(_T("Warning: file %s doesn\'t exists, trying to create.\n"), strFileXML);
 		static const TCHAR szResType[] = _T("MENU_XML");
 		HINSTANCE hInstRes = AfxFindResourceHandle(pszMenuName, szResType);
-		if (hInstRes != NULL) {
+		if (hInstRes != NULL)
+		{
 			HRSRC hResInfo = ::FindResource(hInstRes, pszMenuName, szResType);
 			ASSERT(hResInfo != NULL);
 			HGLOBAL hResData = ::LoadResource(hInstRes, hResInfo);
@@ -149,13 +159,15 @@ BOOL CMenuXML::CreateMenuXML(LPCTSTR pszMenuName)
 			void* pvResData = ::LockResource(hResData);
 			ASSERT(pvResData != NULL);
 			DWORD cbSize = ::SizeofResource(hInstRes, hResInfo);
-			try {
+			try
+			{
 				CFile fileXML(strFileXML, modeCreate | modeWrite | shareExclusive);
 				fileXML.Write(pvResData, cbSize);
 				fileXML.Flush();
 				fileXML.Close();
 			}
-			catch (CFileException* pXcpt) {
+			catch (CFileException* pXcpt)
+			{
 				// oops!
 				::UnlockResource(hResData);
 				::FreeResource(hResData);
@@ -175,7 +187,8 @@ BOOL CMenuXML::CreateMenuXML(LPCTSTR pszMenuName)
 
 	// try to build menu template
 	const MENUTEMPLATE* pMenuTemplate = CreateMenuExTemplate(strFileXML);
-	if (pMenuTemplate != NULL) {
+	if (pMenuTemplate != NULL)
+	{
 		BOOL fSuccess = LoadMenuIndirect(pMenuTemplate);
 		free(const_cast<MENUTEMPLATE*>(pMenuTemplate));
 		return (fSuccess);
@@ -211,7 +224,8 @@ void CMenuXML::RecurseMenuTree(CMemFile& fileMem, CPugXmlBranch& branchMenu)
 
 	// interate through the menu items
 	int iLast = branchMenu.GetChildrenCount() - 1;
-	for (int i = 0; i <= iLast; ++i) {
+	for (int i = 0; i <= iLast; ++i)
+	{
 		// obtain item's XML node
 		CPugXmlBranch branchItem = branchMenu.GetChildAt(i);
 		ASSERT(!branchItem.IsNull());
@@ -245,18 +259,21 @@ void CMenuXML::RecurseMenuTree(CMemFile& fileMem, CPugXmlBranch& branchMenu)
 		// align to the DWORD boundary
 		ASSERT(sizeof(DWORD) == 4);
 #if (_MFC_VER < 0x0700)
-	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+		if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0)
 #else
-	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0) {
+		if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0)
 #endif
+		{
 			fileMem.Write(abAligner, cbRemains);
 		}
 
 		// if there's a popup menu...
-		if (fPopup) {
+		if (fPopup)
+		{
 			// ...first obtain and write its help identifier...
 			DWORD dwHelpId = GetAttribute_DWORD(branchItem, _T("HelpID"));
 			fileMem.Write(&dwHelpId, sizeof(dwHelpId));
+
 			// ...and then recurse its items
 			RecurseMenuTree(fileMem, branchItem);
 		}
@@ -271,9 +288,12 @@ DWORD CMenuXML::ParseMenuFlags(MENU_FLAG amfDict[], LPCTSTR pszFlagsStr)
 	LPTSTR pszTemp = ::StrDup(pszFlagsStr);
 	static const TCHAR szSeps[] = _T("\x20\t,;");
 	LPTSTR pszCurFlag = _tcstok(pszTemp, szSeps);
-	while (pszCurFlag != NULL) {
-		for (int i = 0; amfDict[i].pszName != NULL; ++i) {
-			if (::lstrcmpi(pszCurFlag, amfDict[i].pszName) == 0) {
+	while (pszCurFlag != NULL)
+	{
+		for (int i = 0; amfDict[i].pszName != NULL; ++i)
+		{
+			if (::lstrcmpi(pszCurFlag, amfDict[i].pszName) == 0)
+			{
 				fdwFlags |= amfDict[i].fdwValue;
 			}
 		}
@@ -285,7 +305,8 @@ DWORD CMenuXML::ParseMenuFlags(MENU_FLAG amfDict[], LPCTSTR pszFlagsStr)
 
 DWORD CMenuXML::ParseMenuItemType(LPCTSTR pszTypeStr)
 {
-	MENU_FLAG amfDict[] = {
+	MENU_FLAG amfDict[] =
+	{
 		{ _T("String"), MFT_STRING },
 		{ _T("Bitmap"), MFT_BITMAP },
 		{ _T("MenuBarBreak"), MFT_MENUBARBREAK },
@@ -302,7 +323,8 @@ DWORD CMenuXML::ParseMenuItemType(LPCTSTR pszTypeStr)
 
 DWORD CMenuXML::ParseMenuItemState(LPCTSTR pszStateStr)
 {
-	MENU_FLAG amfDict[] = {
+	MENU_FLAG amfDict[] =
+	{
 		{ _T("Grayed"), MFS_GRAYED },
 		{ _T("Disabled"), MFS_DISABLED },
 		{ _T("Checked"), MFS_CHECKED },
@@ -322,6 +344,7 @@ void CMenuXML::AssertValid(void) const
 {
 	// first perform inherited validity check...
 	CMenu::AssertValid();
+
 	// ...and then verify our own state as well
 }
 
@@ -330,9 +353,11 @@ void CMenuXML::Dump(CDumpContext& dumpCtx) const
 	try {
 		// first invoke inherited dumper...
 		CMenu::Dump(dumpCtx);
+
 		// ...and then dump own unique members
 	}
-	catch (CFileException* pXcpt) {
+	catch (CFileException* pXcpt)
+	{
 		pXcpt->ReportError();
 		pXcpt->Delete();
 	}

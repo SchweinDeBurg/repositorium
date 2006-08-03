@@ -1,8 +1,8 @@
 // AfxGadgets library.
-// Copyright (c) 2005 by Elijah Zarezky,
+// Copyright (c) 2005-2006 by Elijah Zarezky,
 // All rights reserved.
 
-// RemoteParam.hxx - interface and implementation of the CRemoteParam template class
+// RemoteParam.hxx - interface and implementation of the CRemoteParam<> template class
 
 #if !defined(__RemoteParam_hxx)
 #define __RemoteParam_hxx
@@ -13,7 +13,7 @@
 
 // interface
 
-template <class _Data_t>
+template <typename _Data_t>
 class CRemoteParam
 {
 // construction/destruction
@@ -57,7 +57,7 @@ inline void GetProcAddress_t(HMODULE hModule, LPCSTR pszProcName, _Proc_t& procA
 
 // implementation
 
-template <class _Data_t>
+template <typename _Data_t>
 CRemoteParam<_Data_t>::CRemoteParam(HANDLE hProcess, const _Data_t& dataSrc):
 m_hProcess(hProcess),
 m_thisPtr(NULL)
@@ -81,20 +81,20 @@ m_thisPtr(NULL)
 	::WriteProcessMemory(m_hProcess, m_thisPtr, this, sizeof(*this), NULL);
 }
 
-template <class _Data_t>
+template <typename _Data_t>
 inline CRemoteParam<_Data_t>::~CRemoteParam(void)
 {
 	::VirtualFreeEx(m_hProcess, m_thisPtr, 0, MEM_RELEASE);
 	m_thisPtr = NULL;
 }
 
-template <class _Data_t>
+template <typename _Data_t>
 inline CRemoteParam<_Data_t>::operator void*(void) const
 {
 	return (m_thisPtr);
 }
 
-template <class _Data_t>
+template <typename _Data_t>
 inline BOOL CRemoteParam<_Data_t>::GetRemoteData(_Data_t& dataDest)
 {
 	typedef CRemoteParam<_Data_t> _This_t;

@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2005 by Elijah Zarezky,
+// Copyright (c) 2005-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // HotKeysXML.cpp - implementation of the CHotKeysXML class
@@ -52,7 +52,8 @@ m_hAccTable(NULL)
 
 CHotKeysXML::~CHotKeysXML(void)
 {
-	if (m_hAccTable != NULL) {
+	if (m_hAccTable != NULL)
+	{
 		DestroyTable();
 	}
 }
@@ -72,13 +73,15 @@ BOOL CHotKeysXML::CreateTable(LPCTSTR pszTableName)
 	GetXMLpath(strFileXML);
 	::PathAddBackslash(strFileXML.GetBuffer(_MAX_PATH));
 	strFileXML.ReleaseBuffer();
-	if (!::PathFileExists(strFileXML)) {
+	if (!::PathFileExists(strFileXML))
+	{
 		TRACE(_T("Warning: folder %s doesn\'t exists, trying to create.\n"), strFileXML);
 #if (_WIN32_WINDOWS < 0x0490)
-		if (!::MakeSureDirectoryPathExists(_T2A(strFileXML))) {
+		if (!::MakeSureDirectoryPathExists(_T2A(strFileXML)))
 #else
-		if (::SHCreateDirectoryEx(NULL, strFileXML, NULL) != ERROR_SUCCESS) {
+		if (::SHCreateDirectoryEx(NULL, strFileXML, NULL) != ERROR_SUCCESS)
 #endif	// _WIN32_WINDOWS
+		{
 			TRACE(_T("Error: unable to create folder %s\n"), strFileXML);
 			return (FALSE);
 		}
@@ -87,13 +90,16 @@ BOOL CHotKeysXML::CreateTable(LPCTSTR pszTableName)
 	// construct full name of the XML-file...
 	strFileXML += pszTableName;
 	strFileXML += _T(".xml");
+
 	// ...and if this file doesn't exists...
-	if (!::PathFileExists(strFileXML)) {
+	if (!::PathFileExists(strFileXML))
+	{
 		// ...then try to create it from the corresonding resource
 		TRACE(_T("Warning: file %s doesn\'t exists, trying to create.\n"), strFileXML);
 		static const TCHAR szResType[] = _T("HOTKEYS_XML");
 		HINSTANCE hInstRes = AfxFindResourceHandle(pszTableName, szResType);
-		if (hInstRes != NULL) {
+		if (hInstRes != NULL)
+		{
 			HRSRC hResInfo = ::FindResource(hInstRes, pszTableName, szResType);
 			ASSERT(hResInfo != NULL);
 			HGLOBAL hResData = ::LoadResource(hInstRes, hResInfo);
@@ -101,13 +107,15 @@ BOOL CHotKeysXML::CreateTable(LPCTSTR pszTableName)
 			void* pvResData = ::LockResource(hResData);
 			ASSERT(pvResData != NULL);
 			DWORD cbSize = ::SizeofResource(hInstRes, hResInfo);
-			try {
+			try
+			{
 				CFile fileXML(strFileXML, modeCreate | modeWrite | shareExclusive);
 				fileXML.Write(pvResData, cbSize);
 				fileXML.Flush();
 				fileXML.Close();
 			}
-			catch (CFileException* pXcpt) {
+			catch (CFileException* pXcpt)
+			{
 				// oops!
 				::UnlockResource(hResData);
 				::FreeResource(hResData);
@@ -126,7 +134,8 @@ BOOL CHotKeysXML::CreateTable(LPCTSTR pszTableName)
 	}
 
 	// try to create accelerator data array...
-	if (CreateAccelArray(strFileXML, arrAccel)) {
+	if (CreateAccelArray(strFileXML, arrAccel))
+	{
 		// ...and accelerator table itself
 		m_hAccTable = ::CreateAcceleratorTable(arrAccel.GetData(), arrAccel.GetSize());
 	}
@@ -137,7 +146,8 @@ BOOL CHotKeysXML::DestroyTable(void)
 {
 	ASSERT(m_hAccTable != NULL);
 
-	if (::DestroyAcceleratorTable(m_hAccTable)) {
+	if (::DestroyAcceleratorTable(m_hAccTable))
+	{
 		m_hAccTable = NULL;
 		m_mapNames.RemoveAll();
 		return (TRUE);
@@ -160,10 +170,12 @@ void CHotKeysXML::AttachToFrame(CFrameWnd* pFrameWnd, BOOL fShowInMenu)
 
 	pFrameWnd->m_hAccelTable = m_hAccTable;
 
-	if (fShowInMenu) {
+	if (fShowInMenu)
+	{
 		menuFrame.Attach(::GetMenu(pFrameWnd->GetSafeHwnd()));
 		POSITION pos = m_mapNames.GetStartPosition();
-		while (pos != NULL) {
+		while (pos != NULL)
+		{
 			m_mapNames.GetNextAssoc(pos, wID, strKeyText);
 			menuFrame.GetMenuString(wID, strMenuText, MF_BYCOMMAND);
 			strMenuText += _T('\t');
@@ -186,11 +198,13 @@ void CHotKeysXML::DetachFromFrame(CFrameWnd* pFrameWnd)
 
 	menuFrame.Attach(::GetMenu(pFrameWnd->GetSafeHwnd()));
 	POSITION pos = m_mapNames.GetStartPosition();
-	while (pos != NULL) {
+	while (pos != NULL)
+	{
 		m_mapNames.GetNextAssoc(pos, wID, strKeyText);
 		menuFrame.GetMenuString(wID, strMenuText, MF_BYCOMMAND);
 		int cchLeft = strMenuText.Find(_T('\t'));
-		if (cchLeft > 0) {
+		if (cchLeft > 0)
+		{
 			menuFrame.ModifyMenu(wID, MF_BYCOMMAND, wID, strMenuText.Left(cchLeft));
 		}
 	}
@@ -223,7 +237,8 @@ BOOL CHotKeysXML::CreateAccelArray(LPCTSTR pszFileXML, ACCEL_ARRAY& arrAccel)
 	std::auto_ptr<CPugXmlParser> pParser(new CPugXmlParser());
 
 	// try to parse source XML file
-	if (pParser->ParseFile(pszFileXML)) {
+	if (pParser->ParseFile(pszFileXML))
+	{
 		// obtain needed XML nodes
 		CPugXmlBranch branchRoot = pParser->GetRoot();
 		ASSERT(!branchRoot.IsNull());
@@ -232,22 +247,27 @@ BOOL CHotKeysXML::CreateAccelArray(LPCTSTR pszFileXML, ACCEL_ARRAY& arrAccel)
 
 		// iterate though the keys
 		int cHotKeys = branchHotKeys.GetChildrenCount();
-		for (int i = 0; i < cHotKeys; ++i) {
+		for (int i = 0; i < cHotKeys; ++i)
+		{
 			CPugXmlBranch branchHotKey = branchHotKeys.GetChildAt(i);
 			ASSERT(!branchHotKey.IsNull());
 			LPCTSTR pszText = branchHotKey.GetAttribute(_T("Text"));
 			DWORD fdwCode = GetAttribute_DWORD(branchHotKey, _T("Code"));
-			if (fdwCode != NULL) {
+			if (fdwCode != NULL)
+			{
 				// assume that the low-order word contains VK_* value...
 				WORD wVKeyCode = LOWORD(fdwCode);
 				ASSERT(wVKeyCode != 0);
+
 				// ...and the high-order word contains HOTKEYF_* flags
 				WORD wModifiers = HIWORD(fdwCode);
+
 				// accelerator flags
 				accData.fVirt = FVIRTKEY;
 				accData.fVirt |= (wModifiers & HOTKEYF_SHIFT) != 0 ? FSHIFT : 0;
 				accData.fVirt |= (wModifiers & HOTKEYF_CONTROL) != 0 ? FCONTROL : 0;
 				accData.fVirt |= (wModifiers & HOTKEYF_ALT) != 0 ? FALT : 0;
+
 				// virtual key code
 				accData.key = wVKeyCode;
 			}
@@ -257,10 +277,13 @@ BOOL CHotKeysXML::CreateAccelArray(LPCTSTR pszFileXML, ACCEL_ARRAY& arrAccel)
 				ParseHotKeyText(pszText, accData);
 				ASSERT(accData.key != 0);
 			}
+
 			// accelerator command
 			accData.cmd = GetAttribute_WORD(branchHotKey, _T("ID"));
+
 			// add prepared ACCEL to the destination array
 			arrAccel.Add(accData);
+
 			// remember hot-key text for later use
 			m_mapNames.SetAt(accData.cmd, pszText);
 		}
@@ -280,7 +303,8 @@ WORD CHotKeysXML::GetModifierFlag(LPCTSTR pszText)
 
 	ASSERT(AfxIsValidString(pszText));
 
-	static MODIFIER amDict[] = {
+	static MODIFIER amDict[] =
+	{
 		{ _T("Shift"), FSHIFT },
 		{ _T("Ctrl"), FCONTROL },
 		{ _T("Control"), FCONTROL },
@@ -289,9 +313,11 @@ WORD CHotKeysXML::GetModifierFlag(LPCTSTR pszText)
 	};
 
 	// iterate through the dictionary...
-	for (int i = 0; amDict[i].pszName != NULL; ++i) {
+	for (int i = 0; amDict[i].pszName != NULL; ++i)
+	{
 		// ...and compare given text with the known key names
-		if (::lstrcmpi(pszText, amDict[i].pszName) == 0) {
+		if (::lstrcmpi(pszText, amDict[i].pszName) == 0)
+		{
 			// gotcha!!
 			return (amDict[i].wValue);
 		}
@@ -307,7 +333,8 @@ WORD CHotKeysXML::GetVKeyCode(LPCTSTR pszText)
 
 	ASSERT(AfxIsValidString(pszText));
 
-	static VIRT_KEY avkDict[] = {
+	static VIRT_KEY avkDict[] =
+	{
 		{ _T("Backspace"), VK_BACK },
 		{ _T("Tab"), VK_TAB },
 		{ _T("Enter"), VK_RETURN },
@@ -342,11 +369,14 @@ WORD CHotKeysXML::GetVKeyCode(LPCTSTR pszText)
 		{ NULL, 0 }
 	};
 
-	if (::lstrlen(pszText) > 1) {
+	if (::lstrlen(pszText) > 1)
+	{
 		// iterate through the dictionary...
-		for (int i = 0; avkDict[i].pszName != NULL; ++i) {
+		for (int i = 0; avkDict[i].pszName != NULL; ++i)
+		{
 			// ...and compare given text with the known key names
-			if (::lstrcmpi(pszText, avkDict[i].pszName) == 0) {
+			if (::lstrcmpi(pszText, avkDict[i].pszName) == 0)
+			{
 				// gotcha!!
 				return (avkDict[i].wVKeyCode);
 			}
@@ -372,8 +402,10 @@ void CHotKeysXML::ParseHotKeyText(LPCTSTR pszText, ACCEL& accData)
 	LPTSTR pszTemp = ::StrDup(pszText);
 	static const TCHAR szSeps[] = _T("+\x20,");
 	LPTSTR pszKey = _tcstok(pszTemp, szSeps);
-	while (pszKey != NULL) {
-		if ((wModifier = GetModifierFlag(pszKey)) != 0) {
+	while (pszKey != NULL)
+	{
+		if ((wModifier = GetModifierFlag(pszKey)) != 0)
+		{
 			accData.fVirt |= wModifier;
 		}
 		else {
@@ -390,6 +422,7 @@ void CHotKeysXML::AssertValid(void) const
 {
 	// first perform inherited validity check...
 	CObject::AssertValid();
+
 	// ...and then verify our own state as well
 }
 
@@ -398,11 +431,13 @@ void CHotKeysXML::Dump(CDumpContext& dumpCtx) const
 	try {
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
+
 		// ...and then dump own unique members
 		dumpCtx << "m_hAccTable = " << m_hAccTable << "\n";
 		dumpCtx << "m_mapNames = " << m_mapNames;
 	}
-	catch (CFileException* pXcpt) {
+	catch (CFileException* pXcpt)
+	{
 		pXcpt->ReportError();
 		pXcpt->Delete();
 	}

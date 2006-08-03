@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2004-2005 by Elijah Zarezky,
+// Copyright (c) 2004-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // ProcessPrivileges.h - interface of the CProcessPrivileges class
@@ -20,7 +20,8 @@ public:
 
 // attributes
 private:
-	struct ITEM {
+	struct ITEM
+	{
 		friend class CProcessPrivileges;
 	private:
 		explicit ITEM(LPCTSTR pszName);

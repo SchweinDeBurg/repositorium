@@ -1,8 +1,8 @@
 // AfxGadgets library.
-// Copyright (c) 2005 by Elijah Zarezky,
+// Copyright (c) 2005-2006 by Elijah Zarezky,
 // All rights reserved.
 
-// RemoteInvoke.hxx - interface and implementation of the CRemoteInvoke template class
+// RemoteInvoke.hxx - interface and implementation of the CRemoteInvoke<> template class
 
 #if !defined(__RemoteInvoke_hxx)
 #define __RemoteInvoke_hxx
@@ -15,7 +15,7 @@
 
 // interface
 
-template <class _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
+template <typename _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
 class CRemoteInvoke
 {
 // construction/destruction
@@ -39,13 +39,13 @@ private:
 
 // implementation
 
-template <class _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
+template <typename _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
 inline CRemoteInvoke<_Data_t, _Proc>::CRemoteInvoke(_Data_t& dataRef):
 m_dataRef(dataRef)
 {
 }
 
-template <class _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
+template <typename _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
 BOOL CRemoteInvoke<_Data_t, _Proc>::operator()(HANDLE hProcess, DWORD dwTimeOut)
 {
 	DWORD dwThreadID;
@@ -73,7 +73,7 @@ BOOL CRemoteInvoke<_Data_t, _Proc>::operator()(HANDLE hProcess, DWORD dwTimeOut)
 	return (fSuccess);
 }
 
-template <class _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
+template <typename _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
 inline BOOL CRemoteInvoke<_Data_t, _Proc>::operator()(DWORD dwProcessID, DWORD dwTimeOut)
 {
 	enum { fdwAccess = PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ };

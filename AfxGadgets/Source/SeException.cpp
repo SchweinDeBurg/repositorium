@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2003-2005 by Elijah Zarezky,
+// Copyright (c) 2004-2006 by Elijah Zarezky,
 // All rights reserved.
 // Portions copyright (c) 2000 by Martin Ziacek.
 
@@ -61,11 +61,13 @@ BOOL CSeException::GetErrorMessage(LPTSTR pszDest, UINT uMaxLen, UINT* puHelpCtx
 
 	ASSERT(pszDest != NULL);
 	ASSERT(AfxIsValidString(pszDest, uMaxLen));
-	if (puHelpCtx != NULL) {
+	if (puHelpCtx != NULL)
+	{
 		*puHelpCtx = 0;
 	}
 	FormatErrorMessage(strTemp);
-	if (!strTemp.IsEmpty()) {
+	if (!strTemp.IsEmpty())
+	{
 		::lstrcpyn(pszDest, strTemp, uMaxLen);
 		return (TRUE);
 	}
@@ -156,7 +158,8 @@ BOOL CSeException::FormatErrorMessage(CString& strDest)
 	static TCHAR szFormat[] = _T("Exception 0x%08lX at address 0x%08lX:\n%s.");
 
 	strDest.Empty();
-	if (m_uCode == EXCEPTION_ACCESS_VIOLATION) {
+	if (m_uCode == EXCEPTION_ACCESS_VIOLATION)
+	{
 		// special case
 		CString strDescr(GetDescription());
 		ULONG_PTR* xcptInfo = m_xcptPtrs.ExceptionRecord->ExceptionInformation;
@@ -179,6 +182,7 @@ void CSeException::AssertValid(void) const
 {
 	// first perform inherited validity check...
 	CException::AssertValid();
+
 	// ...and then verify own state as well
 }
 
@@ -187,10 +191,12 @@ void CSeException::Dump(CDumpContext& dumpCtx) const
 	try {
 		// first invoke inherited dumper...
 		CException::Dump(dumpCtx);
+
 		// ...and then dump own unique members
 		dumpCtx << "m_uCode = " << m_uCode;
 	}
-	catch (CFileException* pXcpt) {
+	catch (CFileException* pXcpt)
+	{
 		pXcpt->ReportError();
 		pXcpt->Delete();
 	}
