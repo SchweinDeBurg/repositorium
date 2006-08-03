@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2005 by Elijah Zarezky,
+// Copyright (c) 2005-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // PugXMLplus.h - PugXML parser extensions and wrappers
@@ -25,9 +25,11 @@ LONG GetAttribute_LONG(CPugXmlBranch& branch, LPCTSTR pszName, LONG nDefault = 0
 	LPTSTR pszStop;
 
 	LPCTSTR pszValue = branch.GetAttribute(pszName);
-	if (*pszValue != 0) {
+	if (*pszValue != 0)
+	{
 		LONG nResult = _tcstol(pszValue, &pszStop, nRadix);
-		if (*pszStop == 0) {
+		if (*pszStop == 0)
+		{
 			return (nResult);
 		}
 	}
@@ -44,9 +46,11 @@ DWORD GetAttribute_DWORD(CPugXmlBranch& branch, LPCTSTR pszName, DWORD dwDefault
 	LPTSTR pszStop;
 
 	LPCTSTR pszValue = branch.GetAttribute(pszName);
-	if (*pszValue != 0) {
+	if (*pszValue != 0)
+	{
 		LONG nResult = _tcstoul(pszValue, &pszStop, nRadix);
-		if (*pszStop == 0) {
+		if (*pszStop == 0)
+		{
 			return (nResult);
 		}
 	}
@@ -74,9 +78,11 @@ double GetAttribute_double(CPugXmlBranch& branch, LPCTSTR pszName, double fpDefa
 	LPTSTR pszStop;
 
 	LPCTSTR pszValue = branch.GetAttribute(pszName);
-	if (*pszValue != 0) {
+	if (*pszValue != 0)
+	{
 		double fpResult = _tcstod(pszValue, &pszStop);
-		if (*pszStop == 0) {
+		if (*pszStop == 0)
+		{
 			return (fpResult);
 		}
 	}

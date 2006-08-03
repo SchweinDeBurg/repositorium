@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2004-2005 by Elijah Zarezky,
+// Copyright (c) 2004-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // SortingListCtrl.cpp - implementation of the CSortingListCtrl class
@@ -49,7 +49,8 @@ void CSortingListCtrl::SortItems(int iColumn, SORT_ORDER eOrder)
 void CSortingListCtrl::OnColumnClick(NMHDR* pHdr, LRESULT* /*pnResult*/)
 {
 	int iColumn = reinterpret_cast<NMLISTVIEW*>(pHdr)->iSubItem;
-	if (m_iSortColumn != iColumn) {
+	if (m_iSortColumn != iColumn)
+	{
 		// sort by another column in ascending order
 		m_iSortColumn = iColumn;
 		m_nSortOrder = SORT_ASCENDING;
@@ -75,19 +76,23 @@ void CSortingListCtrl::AssertValid(void) const
 {
 	// first perform inherited validity check...
 	CListCtrl::AssertValid();
+
 	// ...and then verify our own state as well
 }
 
 void CSortingListCtrl::Dump(CDumpContext& dumpCtx) const
 {
-	try {
+	try
+	{
 		// first invoke inherited dumper...
 		CListCtrl::Dump(dumpCtx);
+
 		// ...and then dump own unique members
 		dumpCtx << "m_iSortColumn = " << m_iSortColumn << "\n";
 		dumpCtx << "m_nSortOrder = " << m_nSortOrder;
 	}
-	catch (CFileException* pXcpt) {
+	catch (CFileException* pXcpt)
+	{
 		pXcpt->ReportError();
 		pXcpt->Delete();
 	}

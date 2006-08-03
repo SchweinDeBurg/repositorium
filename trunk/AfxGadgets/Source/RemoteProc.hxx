@@ -1,8 +1,8 @@
 // AfxGadgets library.
-// Copyright (c) 2005 by Elijah Zarezky,
+// Copyright (c) 2005-2006 by Elijah Zarezky,
 // All rights reserved.
 
-// RemoteProc.hxx - interface and implementation of the CRemoteProc template class
+// RemoteProc.hxx - interface and implementation of the CRemoteProc<> template class
 
 #if !defined(__RemoteProc_hxx)
 #define __RemoteProc_hxx
@@ -15,7 +15,7 @@
 
 // interface
 
-template <class _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
+template <typename _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
 class CRemoteProc
 {
 // construction/destruction
@@ -40,7 +40,7 @@ private:
 
 // implementation
 
-template <class _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
+template <typename _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
 inline CRemoteProc<_Data_t, _Proc>::CRemoteProc(HANDLE hProcess, int cbMaxCode):
 m_hProcess(hProcess),
 m_codePtr(NULL)
@@ -49,14 +49,14 @@ m_codePtr(NULL)
 	::WriteProcessMemory(m_hProcess, m_codePtr, _Proc, cbMaxCode, NULL);
 }
 
-template <class _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
+template <typename _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
 inline CRemoteProc<_Data_t, _Proc>::~CRemoteProc(void)
 {
 	::VirtualFreeEx(m_hProcess, m_codePtr, 0, MEM_RELEASE);
 	m_codePtr = NULL;
 }
 
-template <class _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
+template <typename _Data_t, DWORD(WINAPI* _Proc)(CRemoteParam<_Data_t>*)>
 inline CRemoteProc<_Data_t, _Proc>::operator LPTHREAD_START_ROUTINE(void) const
 {
 	return (reinterpret_cast<LPTHREAD_START_ROUTINE>(m_codePtr));

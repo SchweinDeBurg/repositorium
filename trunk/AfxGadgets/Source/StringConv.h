@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2003-2005 by Elijah Zarezky,
+// Copyright (c) 2004-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // StringConv.h - Unicode <-> ANSI translation helpers
@@ -39,7 +39,8 @@ m_wcsResult(NULL)
 
 inline _A2W::~_A2W(void)
 {
-	if (m_wcsResult != m_szBuffer) {
+	if (m_wcsResult != m_szBuffer)
+	{
 		delete[] m_wcsResult;
 	}
 }
@@ -77,7 +78,8 @@ m_mbsResult(NULL)
 
 inline _W2A::~_W2A(void)
 {
-	if (m_mbsResult != m_szBuffer) {
+	if (m_mbsResult != m_szBuffer)
+	{
 		delete[] m_mbsResult;
 	}
 }
@@ -117,7 +119,8 @@ m_wcsResult(NULL)
 
 inline _W2W::~_W2W(void)
 {
-	if (m_wcsResult != m_szBuffer) {
+	if (m_wcsResult != m_szBuffer)
+	{
 		delete[] m_wcsResult;
 	}
 }
@@ -163,7 +166,8 @@ m_mbsResult(NULL)
 
 inline _A2A::~_A2A(void)
 {
-	if (m_mbsResult != m_szBuffer) {
+	if (m_mbsResult != m_szBuffer)
+	{
 		delete[] m_mbsResult;
 	}
 }

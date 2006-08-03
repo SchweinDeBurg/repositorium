@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2005 by Elijah Zarezky,
+// Copyright (c) 2005-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // DialogXML.cpp - implementation of the CDialogXML class
@@ -61,7 +61,8 @@ m_strDialogName(pszDialogName)
 
 CDialogXML::~CDialogXML(void)
 {
-	if (m_lpDialogTemplate != NULL) {
+	if (m_lpDialogTemplate != NULL)
+	{
 		free(const_cast<DLGTEMPLATE*>(m_lpDialogTemplate));
 		m_lpDialogTemplate = NULL;
 	}
@@ -77,7 +78,8 @@ const DLGTEMPLATE* CDialogXML::CreateDlgTemplate(LPCTSTR pszFileXML)
 	std::auto_ptr<CPugXmlParser> pParser(new CPugXmlParser());
 
 	// try to parse source XML file
-	if (pParser->ParseFile(pszFileXML)) {
+	if (pParser->ParseFile(pszFileXML))
+	{
 		// let's go ahead and fuck this iceberg!
 		fileMem.Attach(NULL, 0, 1024);
 
@@ -89,7 +91,8 @@ const DLGTEMPLATE* CDialogXML::CreateDlgTemplate(LPCTSTR pszFileXML)
 
 		// kind of dilaog template
 		BOOL fExtended = GetAttribute_BOOL(branchDialog, _T("Extended"));
-		if (!fExtended) {
+		if (!fExtended)
+		{
 			DlgTemplateHelper(fileMem, branchDialog);
 		}
 		else {
@@ -121,10 +124,12 @@ int CDialogXML::DoModal(void)
 	GetXMLpath(strFileXML);
 	::PathAddBackslash(strFileXML.GetBuffer(_MAX_PATH));
 	strFileXML.ReleaseBuffer();
-	if (!::PathFileExists(strFileXML)) {
+	if (!::PathFileExists(strFileXML))
+	{
 		TRACE(_T("Warning: folder %s doesn\'t exists, trying to create.\n"), strFileXML);
 #if (_WIN32_WINDOWS < 0x0490)
-		if (!::MakeSureDirectoryPathExists(_T2A(strFileXML))) {
+		if (!::MakeSureDirectoryPathExists(_T2A(strFileXML)))
+		{
 #else
 		if (::SHCreateDirectoryEx(NULL, strFileXML, NULL) != ERROR_SUCCESS) {
 #endif	// _WIN32_WINDOWS
@@ -135,13 +140,16 @@ int CDialogXML::DoModal(void)
 
 	// construct full name of the XML-file...
 	strFileXML += m_strDialogName + _T(".xml");
+
 	// ...and if this file doesn't exists...
-	if (!::PathFileExists(strFileXML)) {
+	if (!::PathFileExists(strFileXML))
+	{
 		// ...then try to create it from the corresonding resource
 		TRACE(_T("Warning: file %s doesn\'t exists, trying to create.\n"), strFileXML);
 		static const TCHAR szResType[] = _T("DIALOG_XML");
 		HINSTANCE hInstRes = AfxFindResourceHandle(m_strDialogName, szResType);
-		if (hInstRes != NULL) {
+		if (hInstRes != NULL)
+		{
 			HRSRC hResInfo = ::FindResource(hInstRes, m_strDialogName, szResType);
 			ASSERT(hResInfo != NULL);
 			HGLOBAL hResData = ::LoadResource(hInstRes, hResInfo);
@@ -149,13 +157,15 @@ int CDialogXML::DoModal(void)
 			void* pvResData = ::LockResource(hResData);
 			ASSERT(pvResData != NULL);
 			DWORD cbSize = ::SizeofResource(hInstRes, hResInfo);
-			try {
+			try
+			{
 				CFile fileXML(strFileXML, modeCreate | modeWrite | shareExclusive);
 				fileXML.Write(pvResData, cbSize);
 				fileXML.Flush();
 				fileXML.Close();
 			}
-			catch (CFileException* pXcpt) {
+			catch (CFileException* pXcpt)
+			{
 				// oops!
 				::UnlockResource(hResData);
 				::FreeResource(hResData);
@@ -174,7 +184,8 @@ int CDialogXML::DoModal(void)
 	}
 
 	// try to build the dialog template
-	if ((m_lpDialogTemplate = CreateDlgTemplate(strFileXML)) != NULL) {
+	if ((m_lpDialogTemplate = CreateDlgTemplate(strFileXML)) != NULL)
+	{
 		m_lpDialogInit = NULL;
 		return (CDialog::DoModal());
 	}
@@ -219,9 +230,12 @@ DWORD CDialogXML::ParseStyles(WINDOW_STYLE awsDict[], LPCTSTR pszStylesStr)
 	LPTSTR pszTemp = ::StrDup(pszStylesStr);
 	static const TCHAR szSeps[] = _T("\x20\t,;");
 	LPTSTR pszCurStyle = _tcstok(pszTemp, szSeps);
-	while (pszCurStyle != NULL) {
-		for (int i = 0; awsDict[i].pszName != NULL; ++i) {
-			if (::lstrcmpi(pszCurStyle, awsDict[i].pszName) == 0) {
+	while (pszCurStyle != NULL)
+	{
+		for (int i = 0; awsDict[i].pszName != NULL; ++i)
+		{
+			if (::lstrcmpi(pszCurStyle, awsDict[i].pszName) == 0)
+			{
 				fdwStyle |= awsDict[i].fdwValue;
 			}
 		}
@@ -233,7 +247,8 @@ DWORD CDialogXML::ParseStyles(WINDOW_STYLE awsDict[], LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_Window(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Overlapped"), WS_OVERLAPPED },
 		{ _T("Popup"), WS_POPUP },
 		{ _T("Child"), WS_CHILD },
@@ -261,7 +276,8 @@ DWORD CDialogXML::Parse_Window(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_WindowEx(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("DlgModalFrame"), WS_EX_DLGMODALFRAME },
 		{ _T("NoParentNotify"), WS_EX_NOPARENTNOTIFY },
 		{ _T("Topmost"), WS_EX_TOPMOST },
@@ -297,7 +313,8 @@ DWORD CDialogXML::Parse_WindowEx(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_Dialog(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("AbsAlign"), DS_ABSALIGN },
 		{ _T("SysModal"), DS_SYSMODAL },
 		{ _T("LocalEdit"), DS_LOCALEDIT },
@@ -319,7 +336,8 @@ DWORD CDialogXML::Parse_Dialog(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_Button(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("PushButton"), BS_PUSHBUTTON },
 		{ _T("DefPushButton"), BS_DEFPUSHBUTTON },
 		{ _T("CheckBox"), BS_CHECKBOX },
@@ -353,7 +371,8 @@ DWORD CDialogXML::Parse_Button(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_Edit(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Left"), ES_LEFT },
 		{ _T("Center"), ES_CENTER },
 		{ _T("Right"), ES_RIGHT },
@@ -375,7 +394,8 @@ DWORD CDialogXML::Parse_Edit(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_Static(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Left"), SS_LEFT },
 		{ _T("Center"), SS_CENTER },
 		{ _T("Right"), SS_RIGHT },
@@ -402,7 +422,8 @@ DWORD CDialogXML::Parse_Static(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_ListBox(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Notify"), LBS_NOTIFY },
 		{ _T("Sort"), LBS_SORT },
 		{ _T("NoRedraw"), LBS_NOREDRAW },
@@ -425,7 +446,8 @@ DWORD CDialogXML::Parse_ListBox(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_ScrollBar(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Horz"), SBS_HORZ },
 		{ _T("Vert"), SBS_VERT },
 		{ _T("TopAlign"), SBS_TOPALIGN },
@@ -443,7 +465,8 @@ DWORD CDialogXML::Parse_ScrollBar(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_ComboBox(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Simple"), CBS_SIMPLE },
 		{ _T("DropDown"), CBS_DROPDOWN },
 		{ _T("DropDownList"), CBS_DROPDOWNLIST },
@@ -466,7 +489,8 @@ DWORD CDialogXML::Parse_ComboBox(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_Header(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Horz"), HDS_HORZ },
 		{ _T("Buttons"), HDS_BUTTONS },
 		{ _T("HotTrack"), HDS_HOTTRACK },
@@ -484,7 +508,8 @@ DWORD CDialogXML::Parse_Header(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_Toolbar(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("ToolTips"), TBSTYLE_TOOLTIPS },
 		{ _T("Wrapable"), TBSTYLE_WRAPABLE },
 		{ _T("AltDrag"), TBSTYLE_ALTDRAG },
@@ -500,7 +525,8 @@ DWORD CDialogXML::Parse_Toolbar(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_ReBar(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("ToolTips"), RBS_TOOLTIPS },
 		{ _T("VarHeight"), RBS_VARHEIGHT },
 		{ _T("BandBorders"), RBS_BANDBORDERS },
@@ -516,7 +542,8 @@ DWORD CDialogXML::Parse_ReBar(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_ToolTip(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("AlwaysTip"), TTS_ALWAYSTIP },
 		{ _T("NoPrefix"), TTS_NOPREFIX },
 		{ _T("NoAnimate"), TTS_NOANIMATE },
@@ -530,7 +557,8 @@ DWORD CDialogXML::Parse_ToolTip(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_StatusBar(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("SizeGrip"), SBARS_SIZEGRIP },
 		{ _T("ToolTips"), SBARS_TOOLTIPS },
 		{ NULL, 0 }
@@ -540,7 +568,8 @@ DWORD CDialogXML::Parse_StatusBar(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_TrackBar(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("AutoTicks"), TBS_AUTOTICKS },
 		{ _T("Vert"), TBS_VERT },
 		{ _T("Horz"), TBS_HORZ },
@@ -563,7 +592,8 @@ DWORD CDialogXML::Parse_TrackBar(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_UpDown(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Wrap"), UDS_WRAP },
 		{ _T("SetBuddyInt"), UDS_SETBUDDYINT },
 		{ _T("AlignRight"), UDS_ALIGNRIGHT },
@@ -580,7 +610,8 @@ DWORD CDialogXML::Parse_UpDown(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_ProgressBar(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Smooth"), PBS_SMOOTH },
 		{ _T("Vertical"), PBS_VERTICAL },
 		{ NULL, 0 }
@@ -590,7 +621,8 @@ DWORD CDialogXML::Parse_ProgressBar(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_HotKey(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ NULL, 0 }
 	};
 	return (Parse_Window(pszStylesStr) | ParseStyles(awsDict, pszStylesStr));
@@ -598,7 +630,8 @@ DWORD CDialogXML::Parse_HotKey(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_ListView(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Icon"), LVS_ICON },
 		{ _T("Report"), LVS_REPORT },
 		{ _T("SmallIcon"), LVS_SMALLICON },
@@ -625,7 +658,8 @@ DWORD CDialogXML::Parse_ListView(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_TreeView(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("HasButtons"), TVS_HASBUTTONS },
 		{ _T("HasLines"), TVS_HASLINES },
 		{ _T("LinesAtRoot"), TVS_LINESATROOT },
@@ -649,7 +683,8 @@ DWORD CDialogXML::Parse_TreeView(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_TabControl(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("ScrollOpposite"), TCS_SCROLLOPPOSITE },
 		{ _T("Bottom"), TCS_BOTTOM },
 		{ _T("Right"), TCS_RIGHT },
@@ -677,7 +712,8 @@ DWORD CDialogXML::Parse_TabControl(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_Animate(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Center"), ACS_CENTER },
 		{ _T("Transparent"), ACS_TRANSPARENT },
 		{ _T("AutoPlay"), ACS_AUTOPLAY },
@@ -689,7 +725,8 @@ DWORD CDialogXML::Parse_Animate(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_MonthCal(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("DayState"), MCS_DAYSTATE },
 		{ _T("MultiSelect"), MCS_MULTISELECT },
 		{ _T("WeekNumbers"), MCS_WEEKNUMBERS },
@@ -702,7 +739,8 @@ DWORD CDialogXML::Parse_MonthCal(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_DateTimePick(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("UpDown"), DTS_UPDOWN },
 		{ _T("ShowNone"), DTS_SHOWNONE },
 		{ _T("ShortDateFormat"), DTS_SHORTDATEFORMAT },
@@ -718,7 +756,8 @@ DWORD CDialogXML::Parse_DateTimePick(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_Pager(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("Vert"), PGS_VERT },
 		{ _T("Horz"), PGS_HORZ },
 		{ _T("AutoScroll"), PGS_AUTOSCROLL },
@@ -734,7 +773,8 @@ DWORD CDialogXML::Parse_Pager(LPCTSTR pszStylesStr)
 
 DWORD CDialogXML::Parse_RichEdit(LPCTSTR pszStylesStr)
 {
-	static WINDOW_STYLE awsDict[] = {
+	static WINDOW_STYLE awsDict[] =
+	{
 		{ _T("SaveSel"), ES_SAVESEL },
 		{ _T("Sunken"), ES_SUNKEN },
 		{ _T("DisableNoScroll"), ES_DISABLENOSCROLL },
@@ -758,8 +798,10 @@ void CDialogXML::InitParsersMap(void)
 	// common styles parsers
 	SetStylesParser(_T("Window"), &Parse_Window);
 	SetStylesParser(_T("WindowEx"), &Parse_WindowEx);
+
 	// dialog styles parser
 	SetStylesParser(_T("Dialog"), &Parse_Dialog);
+
 	// control-specific styles parsers
 	SetStylesParser(_T("Button"), &Parse_Button);
 	SetStylesParser(_T("Edit"), &Parse_Edit);
@@ -818,7 +860,8 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 
 	// try to parse string-coded dialog's styles
 	LPCTSTR pszStylesStr = branchDialog.GetAttribute(_T("Styles"));
-	if (*pszStylesStr != 0) {
+	if (*pszStylesStr != 0)
+	{
 		pfnParser = m_mapParsers[_T("Dialog")];
 		ASSERT(pfnParser != NULL);
 		dlgTemplate.style |= (*pfnParser)(pszStylesStr);
@@ -826,7 +869,8 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 
 	// try to parse string-coded extended styles
 	LPCTSTR pszExStylesStr = branchDialog.GetAttribute(_T("ExStyles"));
-	if (*pszExStylesStr != 0) {
+	if (*pszExStylesStr != 0)
+	{
 		pfnParser = m_mapParsers[_T("WindowEx")];
 		ASSERT(pfnParser != NULL);
 		dlgTemplate.dwExtendedStyle |= (*pfnParser)(pszExStylesStr);
@@ -847,7 +891,8 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 	_T2W pwszCaption(branchDialog.GetAttribute(_T("Caption")));
 	fileMem.Write(pwszCaption, (::lstrlenW(pwszCaption) + 1) * sizeof(WCHAR));
 
-	if ((dlgTemplate.style & DS_SETFONT) != 0) {
+	if ((dlgTemplate.style & DS_SETFONT) != 0)
+	{
 		// font size and typeface
 		WORD wFontSize = GetAttribute_WORD(branchFont, _T("PointSize"));
 		fileMem.Write(&wFontSize, sizeof(wFontSize));
@@ -858,15 +903,17 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 	// align to the DWORD boundary
 	ASSERT(sizeof(DWORD) == 4);
 #if (_MFC_VER < 0x0700)
-	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0)
 #else
-	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0) {
+	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0)
 #endif
+	{
 		fileMem.Write(abAligner, cbRemains);
 	}
 
 	// build controls
-	for (int i = 0; i < dlgTemplate.cdit; ++i) {
+	for (int i = 0; i < dlgTemplate.cdit; ++i)
+	{
 		// obtain control's XML node
 		CPugXmlBranch branchControl = branchControls.GetChildAt(i);
 		ASSERT(!branchControl.IsNull());
@@ -885,16 +932,19 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 		ASSERT(pAttrClass != NULL);
 
 		// try to parse string-coded control's styles
-		if (m_mapParsers.Lookup(pAttrClass->value, pfnParser)) {
+		if (m_mapParsers.Lookup(pAttrClass->value, pfnParser))
+		{
 			LPCTSTR pszStylesStr = branchControl.GetAttribute(_T("Styles"));
-			if (*pszStylesStr != 0) {
+			if (*pszStylesStr != 0)
+			{
 				itemTemplate.style |= (*pfnParser)(pszStylesStr);
 			}
 		}
 
 		// try to parse string-coded extended styles
 		LPCTSTR pszExStylesStr = branchControl.GetAttribute(_T("ExStyles"));
-		if (*pszExStylesStr != 0) {
+		if (*pszExStylesStr != 0)
+		{
 			pfnParser = m_mapParsers[_T("WindowEx")];
 			ASSERT(pfnParser != NULL);
 			itemTemplate.dwExtendedStyle |= (*pfnParser)(pszExStylesStr);
@@ -920,10 +970,11 @@ void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialo
 		// align to the DWORD boundary
 		ASSERT(sizeof(DWORD) == 4);
 #if (_MFC_VER < 0x0700)
-	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+		if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0)
 #else
-	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0) {
+		if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0)
 #endif
+		{
 			fileMem.Write(abAligner, cbRemains);
 		}
 	}
@@ -958,7 +1009,8 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 
 	// try to parse string-coded dialog's styles
 	LPCTSTR pszStylesStr = branchDialog.GetAttribute(_T("Styles"));
-	if (*pszStylesStr != 0) {
+	if (*pszStylesStr != 0)
+	{
 		pfnParser = m_mapParsers[_T("Dialog")];
 		ASSERT(pfnParser != NULL);
 		dlgTemplateEx.style |= (*pfnParser)(pszStylesStr);
@@ -966,7 +1018,8 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 
 	// try to parse string-coded extended styles
 	LPCTSTR pszExStylesStr = branchDialog.GetAttribute(_T("ExStyles"));
-	if (*pszExStylesStr != 0) {
+	if (*pszExStylesStr != 0)
+	{
 		pfnParser = m_mapParsers[_T("WindowEx")];
 		ASSERT(pfnParser != NULL);
 		dlgTemplateEx.exStyle |= (*pfnParser)(pszExStylesStr);
@@ -987,7 +1040,8 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 	_T2W pwszCaption(branchDialog.GetAttribute(_T("Caption")));
 	fileMem.Write(pwszCaption, (::lstrlenW(pwszCaption) + 1) * sizeof(WCHAR));
 
-	if ((dlgTemplateEx.style & DS_SETFONT) != 0) {
+	if ((dlgTemplateEx.style & DS_SETFONT) != 0)
+	{
 		// font attributes
 		WORD wFontSize = GetAttribute_WORD(branchFont, _T("PointSize"));
 		fileMem.Write(&wFontSize, sizeof(wFontSize));
@@ -1004,15 +1058,17 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 	// align to the DWORD boundary
 	ASSERT(sizeof(DWORD) == 4);
 #if (_MFC_VER < 0x0700)
-	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0)
 #else
-	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0) {
+	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0)
 #endif
+	{
 		fileMem.Write(abAligner, cbRemains);
 	}
 
 	// build controls
-	for (int i = 0; i < dlgTemplateEx.cDlgItems; ++i) {
+	for (int i = 0; i < dlgTemplateEx.cDlgItems; ++i)
+	{
 		// obtain control's XML node
 		CPugXmlBranch branchControl = branchControls.GetChildAt(i);
 		ASSERT(!branchControl.IsNull());
@@ -1067,10 +1123,11 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 		// align to the DWORD boundary
 		ASSERT(sizeof(DWORD) == 4);
 #if (_MFC_VER < 0x0700)
-	if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0) {
+		if ((cbRemains = (4 - fileMem.GetLength() % 4) & 3) > 0)
 #else
-	if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0) {
+		if ((cbRemains = (4 - static_cast<UINT>(fileMem.GetLength() % 4)) & 3) > 0)
 #endif
+		{
 			fileMem.Write(abAligner, cbRemains);
 		}
 	}
@@ -1082,6 +1139,7 @@ void CDialogXML::AssertValid(void) const
 {
 	// first perform inherited validity check...
 	CDialog::AssertValid();
+
 	// ...and then verify our own state as well
 }
 
@@ -1090,12 +1148,14 @@ void CDialogXML::Dump(CDumpContext& dumpCtx) const
 	try {
 		// first invoke inherited dumper...
 		CDialog::Dump(dumpCtx);
+
 		// ...and then dump own unique members
 		dumpCtx << "m_strDialogName = " << m_strDialogName << "\n";
 		dumpCtx.SetDepth(1);
 		dumpCtx << "m_mapParsers = " << m_mapParsers;
 	}
-	catch (CFileException* pXcpt) {
+	catch (CFileException* pXcpt)
+	{
 		pXcpt->ReportError();
 		pXcpt->Delete();
 	}

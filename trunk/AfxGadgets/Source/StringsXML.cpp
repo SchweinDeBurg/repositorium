@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2005 by Elijah Zarezky,
+// Copyright (c) 2005-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // StringsXML.cpp - implementation of the CStringsXML class
@@ -45,7 +45,8 @@ int CStringsXML::PutStringsToCache(void)
 	std::auto_ptr<CPugXmlParser> pParser(new CPugXmlParser());
 
 	// ...and try to parse the source XML file
-	if (ParseFile(pParser.get())) {
+	if (ParseFile(pParser.get()))
+	{
 		// obtain needed XML nodes
 		CPugXmlBranch branchRoot = pParser->GetRoot();
 		ASSERT(!branchRoot.IsNull());
@@ -54,13 +55,15 @@ int CStringsXML::PutStringsToCache(void)
 
 		// iterate through the strings
 		int cNumStrings = branchStrings.GetChildrenCount();
-		for (int i = 0; i < cNumStrings; ++i) {
+		for (int i = 0; i < cNumStrings; ++i)
+		{
 			// obtain string's node
 			CPugXmlBranch branchString = branchStrings.GetChildAt(i);
 			ASSERT(!branchString.IsNull());
 
 			// if there is a "known" node...
-			if (::StrCmp(branchString.GetName(), _T("String")) == 0) {
+			if (::StrCmp(branchString.GetName(), _T("String")) == 0)
+			{
 				// ...then cache it
 				DWORD dwID = GetAttribute_DWORD(branchString, _T("ID"));
 				LPCTSTR pszText = branchString.GetAttribute(_T("Text"));
@@ -83,7 +86,8 @@ CString CStringsXML::operator [](DWORD dwID)
 	TCHAR szTemp[32];
 
 	// if desired string is already in the cache...
-	if (m_mapCache.Lookup(dwID, strText)) {
+	if (m_mapCache.Lookup(dwID, strText))
+	{
 		// ...then quickly return it
 		return (strText);
 	}
@@ -92,7 +96,8 @@ CString CStringsXML::operator [](DWORD dwID)
 	std::auto_ptr<CPugXmlParser> pParser(new CPugXmlParser());
 
 	// ...and try to parse the source XML file
-	if (ParseFile(pParser.get())) {
+	if (ParseFile(pParser.get()))
+	{
 		// obtain needed XML nodes
 		CPugXmlBranch branchRoot = pParser->GetRoot();
 		ASSERT(!branchRoot.IsNull());
@@ -102,9 +107,11 @@ CString CStringsXML::operator [](DWORD dwID)
 		// search the desired string
 		_ultot(dwID, szTemp, 10);
 		CPugXmlBranch branchString = branchStrings.FindFirstElemAttr(_T("String"), _T("ID"), szTemp);
-		if (!branchString.IsNull()) {
+		if (!branchString.IsNull())
+		{
 			// gotcha!!
 			strText = branchString.GetAttribute(_T("Text"));
+
 			// put found string into the cache
 			m_mapCache.SetAt(dwID, strText);
 		}
@@ -153,13 +160,15 @@ BOOL CStringsXML::ParseFile(class CPugXmlParser* pParser)
 	GetXMLpath(strFileXML);
 	::PathAddBackslash(strFileXML.GetBuffer(_MAX_PATH));
 	strFileXML.ReleaseBuffer();
-	if (!::PathFileExists(strFileXML)) {
+	if (!::PathFileExists(strFileXML))
+	{
 		TRACE(_T("Warning: folder %s doesn\'t exists, trying to create.\n"), strFileXML);
 #if (_WIN32_WINDOWS < 0x0490)
-		if (!::MakeSureDirectoryPathExists(_T2A(strFileXML))) {
+		if (!::MakeSureDirectoryPathExists(_T2A(strFileXML)))
 #else
-		if (::SHCreateDirectoryEx(NULL, strFileXML, NULL) != ERROR_SUCCESS) {
+		if (::SHCreateDirectoryEx(NULL, strFileXML, NULL) != ERROR_SUCCESS)
 #endif	// _WIN32_WINDOWS
+		{
 			TRACE(_T("Error: unable to create folder %s\n"), strFileXML);
 			return (FALSE);
 		}
@@ -168,13 +177,16 @@ BOOL CStringsXML::ParseFile(class CPugXmlParser* pParser)
 	// construct full name of the XML-file...
 	strFileXML += m_strStringsName;
 	strFileXML += _T(".xml");
+
 	// ...and if this file doesn't exists...
-	if (!::PathFileExists(strFileXML)) {
+	if (!::PathFileExists(strFileXML))
+	{
 		// ...then try to create it from the corresonding resource
 		TRACE(_T("Warning: file %s doesn\'t exists, trying to create.\n"), strFileXML);
 		static const TCHAR szResType[] = _T("STRINGS_XML");
 		HINSTANCE hInstRes = AfxFindResourceHandle(m_strStringsName, szResType);
-		if (hInstRes != NULL) {
+		if (hInstRes != NULL)
+		{
 			HRSRC hResInfo = ::FindResource(hInstRes, m_strStringsName, szResType);
 			ASSERT(hResInfo != NULL);
 			HGLOBAL hResData = ::LoadResource(hInstRes, hResInfo);
@@ -182,13 +194,15 @@ BOOL CStringsXML::ParseFile(class CPugXmlParser* pParser)
 			void* pvResData = ::LockResource(hResData);
 			ASSERT(pvResData != NULL);
 			DWORD cbSize = ::SizeofResource(hInstRes, hResInfo);
-			try {
+			try
+			{
 				CFile fileXML(strFileXML, modeCreate | modeWrite | shareExclusive);
 				fileXML.Write(pvResData, cbSize);
 				fileXML.Flush();
 				fileXML.Close();
 			}
-			catch (CFileException* pXcpt) {
+			catch (CFileException* pXcpt)
+			{
 				// oops!
 				::UnlockResource(hResData);
 				::FreeResource(hResData);
@@ -215,6 +229,7 @@ void CStringsXML::AssertValid(void) const
 {
 	// first perform inherited validity check...
 	CObject::AssertValid();
+
 	// ...and then verify our own state as well
 }
 
@@ -223,12 +238,14 @@ void CStringsXML::Dump(CDumpContext& dumpCtx) const
 	try {
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
+
 		// ...and then dump own unique members
 		dumpCtx << "m_strStringsName = " << m_strStringsName << "\n";
 		dumpCtx.SetDepth(1);
 		dumpCtx << "m_mapCache = " << m_mapCache;
 	}
-	catch (CFileException* pXcpt) {
+	catch (CFileException* pXcpt)
+	{
 		pXcpt->ReportError();
 		pXcpt->Delete();
 	}

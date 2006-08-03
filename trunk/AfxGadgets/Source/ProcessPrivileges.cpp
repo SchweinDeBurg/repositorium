@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2004-2005 by Elijah Zarezky,
+// Copyright (c) 2004-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // ProcessPrivileges.cpp - implementation of the CProcessPrivileges class
@@ -30,17 +30,21 @@ DWORD GetProcessPrivilege(LPCTSTR pszName)
 
 	osVerInfo.dwOSVersionInfoSize = sizeof(osVerInfo);
 	VERIFY(::GetVersionEx(&osVerInfo));
-	if (osVerInfo.dwPlatformId != VER_PLATFORM_WIN32_NT) {
+	if (osVerInfo.dwPlatformId != VER_PLATFORM_WIN32_NT)
+	{
 		fdwAttributes = SE_PRIVILEGE_ENABLED;
 	}
-	else if (::OpenProcessToken(::GetCurrentProcess(), TOKEN_QUERY, &hToken)) {
+	else if (::OpenProcessToken(::GetCurrentProcess(), TOKEN_QUERY, &hToken))
+	{
 		::GetTokenInformation(hToken, TokenPrivileges, NULL, 0, &cbSize);
 		ptpState = reinterpret_cast<TOKEN_PRIVILEGES*>(malloc(cbSize));
 		::GetTokenInformation(hToken, TokenPrivileges, ptpState, cbSize, &cbSize);
-		for (DWORD i = 0; i < ptpState->PrivilegeCount; ++i) {
+		for (DWORD i = 0; i < ptpState->PrivilegeCount; ++i)
+		{
 			DWORD cchLength = 64;
 			::LookupPrivilegeName(NULL, &ptpState->Privileges[i].Luid, szTemp, &cchLength);
-			if (::lstrcmpi(pszName, szTemp) == 0) {
+			if (::lstrcmpi(pszName, szTemp) == 0)
+			{
 				fdwAttributes = ptpState->Privileges[i].Attributes;
 				break;
 			}
@@ -62,14 +66,17 @@ BOOL SetProcessPrivilege(LPCTSTR pszName, DWORD fdwAttributes)
 
 	osVerInfo.dwOSVersionInfoSize = sizeof(osVerInfo);
 	VERIFY(::GetVersionEx(&osVerInfo));
-	if (osVerInfo.dwPlatformId != VER_PLATFORM_WIN32_NT) {
+	if (osVerInfo.dwPlatformId != VER_PLATFORM_WIN32_NT)
+	{
 		fSuccess = TRUE;
 	}
-	else if (::OpenProcessToken(::GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES, &hToken)) {
+	else if (::OpenProcessToken(::GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES, &hToken))
+	{
 		enum { cbSize = sizeof(TOKEN_PRIVILEGES) + sizeof(LUID_AND_ATTRIBUTES) };
 		ptpNewState = reinterpret_cast<TOKEN_PRIVILEGES*>(malloc(cbSize));
 		ptpNewState->PrivilegeCount = 1;
-		if (::LookupPrivilegeValue(NULL, pszName, &ptpNewState->Privileges[0].Luid)) {
+		if (::LookupPrivilegeValue(NULL, pszName, &ptpNewState->Privileges[0].Luid))
+		{
 			ptpNewState->Privileges[0].Attributes = fdwAttributes;
 			fSuccess = ::AdjustTokenPrivileges(hToken, FALSE, ptpNewState, 0, NULL, NULL);
 		}

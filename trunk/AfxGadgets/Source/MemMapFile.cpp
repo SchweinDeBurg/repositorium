@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2004-2005 by Elijah Zarezky,
+// Copyright (c) 2004-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // MemMapFile.cpp - implementation of the CMemMapFile class
@@ -47,12 +47,14 @@ void* CMemMapFile::Create(LPCTSTR pszFileName, BOOL fWritable, DWORD cbMaxSize, 
 
 	DWORD fdwMode = fWritable ? GENERIC_READ | GENERIC_WRITE : GENERIC_READ;
 	m_hFile = ::CreateFile(pszFileName, fdwMode, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (m_hFile == INVALID_HANDLE_VALUE) {
+	if (m_hFile == INVALID_HANDLE_VALUE)
+	{
 		DWORD dwErrCode = ::GetLastError();
 		CWin32Error* pXcpt = new CWin32Error(dwErrCode);
 		throw pXcpt;
 	}
-	else if (cbMaxSize == 0 && ::GetFileSize(m_hFile, NULL) == 0) {
+	else if (cbMaxSize == 0 && ::GetFileSize(m_hFile, NULL) == 0)
+	{
 		// special case - zero-length file and no growing allowed
 		::CloseHandle(m_hFile);
 		m_hFile = INVALID_HANDLE_VALUE;
@@ -61,7 +63,8 @@ void* CMemMapFile::Create(LPCTSTR pszFileName, BOOL fWritable, DWORD cbMaxSize, 
 
 	DWORD fdwProtect = fWritable ? PAGE_READWRITE : PAGE_READONLY;
 	m_hMapping = ::CreateFileMapping(m_hFile, NULL, fdwProtect, 0, cbMaxSize, pszObjName);
-	if (m_hMapping == NULL) {
+	if (m_hMapping == NULL)
+	{
 		DWORD dwErrCode = ::GetLastError();
 		::CloseHandle(m_hFile);
 		m_hFile = INVALID_HANDLE_VALUE;
@@ -71,7 +74,8 @@ void* CMemMapFile::Create(LPCTSTR pszFileName, BOOL fWritable, DWORD cbMaxSize, 
 
 	DWORD fdwAccess = fWritable ? FILE_MAP_WRITE : FILE_MAP_READ;
 	m_dataPtr = ::MapViewOfFile(m_hMapping, fdwAccess, 0, 0, 0);
-	if (m_dataPtr == NULL) {
+	if (m_dataPtr == NULL)
+	{
 		DWORD dwErrCode = ::GetLastError();
 		::CloseHandle(m_hMapping);
 		m_hMapping = NULL;
@@ -99,14 +103,16 @@ void* CMemMapFile::Open(BOOL fWritable, LPCTSTR pszObjName)
 	DWORD fdwAccess = fWritable ? FILE_MAP_WRITE : FILE_MAP_READ;
 
 	m_hMapping = ::OpenFileMapping(fdwAccess, FALSE, pszObjName);
-	if (m_hMapping == NULL) {
+	if (m_hMapping == NULL)
+	{
 		DWORD dwErrCode = ::GetLastError();
 		CWin32Error* pXcpt = new CWin32Error(dwErrCode);
 		throw pXcpt;
 	}
 
 	m_dataPtr = ::MapViewOfFile(m_hMapping, fdwAccess, 0, 0, 0);
-	if (m_dataPtr == NULL) {
+	if (m_dataPtr == NULL)
+	{
 		DWORD dwErrCode = ::GetLastError();
 		::CloseHandle(m_hMapping);
 		m_hMapping = NULL;
@@ -121,12 +127,14 @@ void* CMemMapFile::Open(BOOL fWritable, LPCTSTR pszObjName)
 
 void CMemMapFile::Close(void)
 {
-	if (m_dataPtr != NULL) {
+	if (m_dataPtr != NULL)
+	{
 		::UnmapViewOfFile(m_dataPtr);
 		m_dataPtr = NULL;
 		::CloseHandle(m_hMapping);
 		m_hMapping = NULL;
-		if (m_hFile != INVALID_HANDLE_VALUE) {
+		if (m_hFile != INVALID_HANDLE_VALUE)
+		{
 			::CloseHandle(m_hFile);
 			m_hFile = INVALID_HANDLE_VALUE;
 		}
@@ -139,7 +147,8 @@ void CMemMapFile::Flush(void)
 {
 	ASSERT(m_dataPtr != NULL);
 
-	if (!::FlushViewOfFile(m_dataPtr, 0)) {
+	if (!::FlushViewOfFile(m_dataPtr, 0))
+	{
 		DWORD dwErrCode = ::GetLastError();
 		CWin32Error* pXcpt = new CWin32Error(dwErrCode);
 		throw pXcpt;
@@ -162,6 +171,7 @@ void CMemMapFile::AssertValid(void) const
 {
 	// first perform inherited validity check...
 	CObject::AssertValid();
+
 	// ...and then verify our own state as well
 }
 
@@ -170,6 +180,7 @@ void CMemMapFile::Dump(CDumpContext& dumpCtx) const
 	try {
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
+
 		// ...and then dump own unique members
 		dumpCtx << "m_strFileName = " << m_strFileName << "\n";
 		dumpCtx << "m_hFile = " << m_hFile << "\n";
@@ -177,7 +188,8 @@ void CMemMapFile::Dump(CDumpContext& dumpCtx) const
 		dumpCtx << "m_hMapping = " << m_hMapping << "\n";
 		dumpCtx << "m_dataPtr = " << m_dataPtr;
 	}
-	catch (CFileException* pXcpt) {
+	catch (CFileException* pXcpt)
+	{
 		pXcpt->ReportError();
 		pXcpt->Delete();
 	}

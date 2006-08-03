@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2003-2005 by Elijah Zarezky,
+// Copyright (c) 2004-2006 by Elijah Zarezky,
 // All rights reserved.
 
 // WinCrypto.cpp - implementation of the CWinCrypto class
@@ -33,14 +33,18 @@ m_hKey(NULL)
 	// precondition
 	ASSERT(AfxIsValidString(pszContainer));
 
-	if ((dwErrCode = AcquireContext(pszContainer)) != ERROR_SUCCESS) {
+	if ((dwErrCode = AcquireContext(pszContainer)) != ERROR_SUCCESS)
+	{
 		throw new CWin32Error(dwErrCode);
 	}
-	else try {
+	else try
+	{
 		GenerateKey(algID, pszPassword);
 	}
-	catch (CWin32Error*) {
-		if (m_hKey != NULL) {
+	catch (CWin32Error*)
+	{
+		if (m_hKey != NULL)
+		{
 			::CryptDestroyKey(m_hKey);
 			m_hKey = NULL;
 		}
@@ -71,7 +75,8 @@ void CWinCrypto::GenerateKey(ALG_ID algID, LPCTSTR pszPassword)
 		m_hKey = NULL;
 	}
 
-	if (pszPassword == NULL || *pszPassword == 0) {
+	if (pszPassword == NULL || *pszPassword == 0)
+	{
 		// obtain default password
 		::GetCurrentHwProfile(&hwProfileInfo);
 		pszPassword = hwProfileInfo.szHwProfileGuid;
@@ -80,7 +85,8 @@ void CWinCrypto::GenerateKey(ALG_ID algID, LPCTSTR pszPassword)
 
 	// try to create a hash object
 	HCRYPTHASH hHash = NULL;
-	if (!::CryptCreateHash(m_hContext, CALG_MD5, NULL, 0, &hHash)) {
+	if (!::CryptCreateHash(m_hContext, CALG_MD5, NULL, 0, &hHash))
+	{
 		dwErrCode = ::GetLastError();
 		throw new CWin32Error(dwErrCode);
 	}
@@ -89,14 +95,16 @@ void CWinCrypto::GenerateKey(ALG_ID algID, LPCTSTR pszPassword)
 	// hash the password
 	const BYTE* pbKeyData = reinterpret_cast<const BYTE*>(pszPassword);
 	int nDataLen = ::lstrlen(pszPassword) * sizeof(TCHAR);
-	if (!::CryptHashData(hHash, pbKeyData, nDataLen, 0)) {
+	if (!::CryptHashData(hHash, pbKeyData, nDataLen, 0))
+	{
 		dwErrCode = ::GetLastError();
 		::CryptDestroyHash(hHash);
 		throw new CWin32Error(dwErrCode);
 	}
 
 	// derive a session key from the hash object
-	if (!::CryptDeriveKey(m_hContext, algID, hHash, 0, &m_hKey)) {
+	if (!::CryptDeriveKey(m_hContext, algID, hHash, 0, &m_hKey))
+	{
 		dwErrCode = ::GetLastError();
 		::CryptDestroyHash(hHash);
 		throw new CWin32Error(dwErrCode);
@@ -118,11 +126,13 @@ DWORD CWinCrypto::EncryptString(BSTR bstrSrc, CArray<BYTE, BYTE>& arrDest)
 	ASSERT(::SysStringLen(bstrSrc) > 0);
 
 	DWORD cbDataSize = cbBufSize = ::SysStringByteLen(bstrSrc);
-	if (::CryptEncrypt(m_hKey, NULL, TRUE, 0, NULL, &cbBufSize, 0)) {
+	if (::CryptEncrypt(m_hKey, NULL, TRUE, 0, NULL, &cbBufSize, 0))
+	{
 		arrDest.SetSize(cbBufSize);
 		BYTE* pbData = arrDest.GetData();
 		memcpy(pbData, bstrSrc, cbDataSize);
-		if (::CryptEncrypt(m_hKey, NULL, TRUE, 0, pbData, &cbDataSize, cbBufSize)) {
+		if (::CryptEncrypt(m_hKey, NULL, TRUE, 0, pbData, &cbDataSize, cbBufSize))
+		{
 			ASSERT(cbDataSize == cbBufSize);
 			return (cbDataSize);
 		}
@@ -140,7 +150,8 @@ DWORD CWinCrypto::DecryptString(CArray<BYTE, BYTE>& arrSrc, BSTR* pbstrDest)
 
 	DWORD cbBufSize = arrSrc.GetSize();
 	BYTE* pbData = arrSrc.GetData();
-	if (::CryptDecrypt(m_hKey, NULL, TRUE, 0, pbData, &cbBufSize)) {
+	if (::CryptDecrypt(m_hKey, NULL, TRUE, 0, pbData, &cbBufSize))
+	{
 		ASSERT(cbBufSize > 0);
 		cbBufSize /= sizeof(OLECHAR);
 		*pbstrDest = ::SysAllocStringLen(reinterpret_cast<OLECHAR*>(pbData), cbBufSize);
@@ -158,14 +169,17 @@ DWORD CWinCrypto::AcquireContext(LPCTSTR pszContainer)
 	// precondition
 	ASSERT(AfxIsValidString(pszContainer));
 
-	if (::CryptAcquireContext(&m_hContext, pszContainer, NULL, PROV_RSA_FULL, 0)) {
+	if (::CryptAcquireContext(&m_hContext, pszContainer, NULL, PROV_RSA_FULL, 0))
+	{
 		// successfully acquired
 		dwErrCode = ERROR_SUCCESS;
 	}
 	// if the key container doesn't exist...
-	else if ((dwErrCode = ::GetLastError()) == NTE_BAD_KEYSET) {
+	else if ((dwErrCode = ::GetLastError()) == NTE_BAD_KEYSET)
+	{
 		// ...then try to create it for the first time
-		if (::CryptAcquireContext(&m_hContext, pszContainer, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET)) {
+		if (::CryptAcquireContext(&m_hContext, pszContainer, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET))
+		{
 			// successfully created
 			dwErrCode = ERROR_SUCCESS;
 		}
@@ -182,6 +196,7 @@ void CWinCrypto::AssertValid(void) const
 {
 	// first perform inherited validity check...
 	CObject::AssertValid();
+
 	// ...and then verify own state as well
 	ASSERT(m_hContext != NULL);
 	ASSERT(m_hKey != NULL);
@@ -192,11 +207,13 @@ void CWinCrypto::Dump(CDumpContext& dumpCtx) const
 	try {
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
+
 		// ...and then dump own unique members
 		dumpCtx << "m_hContext = " << m_hContext << "\n";
 		dumpCtx << "m_hKey = " << m_hKey;
 	}
-	catch (CFileException* pXcpt) {
+	catch (CFileException* pXcpt)
+	{
 		pXcpt->ReportError();
 		pXcpt->Delete();
 	}

@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2003-2005 by Elijah Zarezky,
+// Copyright (c) 2004-2006 by Elijah Zarezky,
 // All rights reserved.
 // Portions copyright (c) 2001 by Ajit Jadhav.
 
@@ -51,11 +51,13 @@ BOOL CWin32Error::GetErrorMessage(LPTSTR pszDest, UINT uMaxLen, UINT* puHelpCtx)
 	ASSERT(pszDest != NULL);
 	ASSERT(AfxIsValidString(pszDest, uMaxLen));
 
-	if (puHelpCtx != NULL) {
+	if (puHelpCtx != NULL)
+	{
 		*puHelpCtx = 0;
 	}
 	FormatErrorMessage(strTemp);
-	if (!strTemp.IsEmpty()) {
+	if (!strTemp.IsEmpty())
+	{
 		::lstrcpyn(pszDest, strTemp, uMaxLen);
 		return (TRUE);
 	}
@@ -81,10 +83,12 @@ BOOL CWin32Error::FormatErrorMessage(CString& strDest)
 	cchMsg = ::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
 		FORMAT_MESSAGE_IGNORE_INSERTS, NULL, m_dwErrCode, ::GetUserDefaultLangID(),
 		reinterpret_cast<LPTSTR>(&pszBuffer), 1, NULL);
-	if (cchMsg > 0) {
+	if (cchMsg > 0)
+	{
 		strDest = pszBuffer;
 	}
-	else if (::GetLastError() == ERROR_RESOURCE_LANG_NOT_FOUND) {
+	else if (::GetLastError() == ERROR_RESOURCE_LANG_NOT_FOUND)
+	{
 		cchMsg = ::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
 			FORMAT_MESSAGE_IGNORE_INSERTS, NULL, m_dwErrCode, 0, reinterpret_cast<LPTSTR>(&pszBuffer),
 			1, NULL);
@@ -101,6 +105,7 @@ void CWin32Error::AssertValid(void) const
 {
 	// first perform inherited validity check...
 	CException::AssertValid();
+
 	// ...and then verify own state as well
 }
 
@@ -109,10 +114,12 @@ void CWin32Error::Dump(CDumpContext& dumpCtx) const
 	try {
 		// first invoke inherited dumper...
 		CException::Dump(dumpCtx);
+
 		// ...and then dump own unique members
 		dumpCtx << "m_dwErrCode = " << m_dwErrCode;
 	}
-	catch (CFileException* pXcpt) {
+	catch (CFileException* pXcpt)
+	{
 		pXcpt->ReportError();
 		pXcpt->Delete();
 	}
