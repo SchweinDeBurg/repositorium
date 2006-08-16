@@ -203,6 +203,22 @@ History: PJN / 11-01-2000 1. Added some asserts to HasGotSubEntries
                           5. Fixed an issue where you get an ASSERT in the code when you are using XP manifest support and you are using
                           the TVS_CHECKBOXES style in your CTreeFileCtrl. The issue seems to be a bug in Commctrl v6 custom draw 
                           notifications as this problem does not occur if you are not using XP themes. Thanks to Bob O'Neill for this update.
+         PJN / 18-06-2006 1. Replaced all calls to ZeroMemory with memset
+                          2. Replaced all calls to CopyMemory with memcpy
+                          3. Optimized CTreeFileCtrlItemInfo constructor code
+                          4. Now includes code to optionally show "Desktop" as the root node. Thanks to Hans Dietrich for this very nice 
+                          addition
+                          5. Removed some now deleted files from the project.
+                          6. Fixed a minor typo in the Allow Properties menu item in the sample app.
+                          7. Now includes code to optionally show "My Documents". Thanks to Hans Dietrich for this very nice addition.
+                          8. Fixed bug where m_bExtensionHidden setting was not being copied in CTreeFileCtrlItemInfo constructor
+                          9. Renamed SetDisplayNetwork to SetShowNetwork and GetDisplayNetwork to GetShowNetwork for consistency with
+                          all the other functions of the same type.
+         PJN / 22-06-2006 1. Fixed a bug where expansion of the Desktop node fails on subsequent expansions. Thanks to Jan Moorman for
+                          reporting this issue.
+         PJN / 01-07-2006 1. Fixed a bug where expansion of UNC folders failed. Thanks to Jan Moorman for reporting this bug.
+         PJN / 01-07-2006 1. Updated the code to clean compile on VC 2005     
+                          2. Code now uses new C++ style casts rather than old style C casts where necessary.     
 
 Copyright (c) 1999 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -231,9 +247,6 @@ to maintain a single distribution point for the source code.
 #endif
 
 
-
-
-
 //////////////////////////////// Defines / Locals /////////////////////////////
 
 #ifdef _DEBUG
@@ -257,28 +270,31 @@ CShareEnumerator theSharedEnumerator;   //The one and only share enumerator
 #pragma comment(lib, "mpr.lib")
 
 
-
 ////////////////////////////// Implementation /////////////////////////////////
 
-CTreeFileCtrlItemInfo::CTreeFileCtrlItemInfo()
+CTreeFileCtrlItemInfo::CTreeFileCtrlItemInfo() : m_pNetResource(NULL),
+                                                 m_bNetworkNode(FALSE),
+                                                 m_bMyDocumentNode(FALSE),
+                                                 m_bDesktopNode(FALSE),
+                                                 m_bExtensionHidden(FALSE),
+                                                 m_bFileItem(FALSE)
 {
-  m_pNetResource = NULL;
-  m_bNetworkNode = FALSE;
-  m_bExtensionHidden = FALSE;
-  m_bFileItem = FALSE;
 }
 
 CTreeFileCtrlItemInfo::CTreeFileCtrlItemInfo(const CTreeFileCtrlItemInfo& ItemInfo)
 {
-  m_sFQPath       = ItemInfo.m_sFQPath;
-  m_sRelativePath = ItemInfo.m_sRelativePath;
-  m_bNetworkNode  = ItemInfo.m_bNetworkNode;
-  m_bFileItem     = ItemInfo.m_bFileItem;
+  m_sFQPath          = ItemInfo.m_sFQPath;
+  m_sRelativePath    = ItemInfo.m_sRelativePath;
+  m_bDesktopNode     = ItemInfo.m_bDesktopNode;
+  m_bNetworkNode     = ItemInfo.m_bNetworkNode;
+  m_bMyDocumentNode  = ItemInfo.m_bMyDocumentNode;
+  m_bExtensionHidden = ItemInfo.m_bExtensionHidden;
+  m_bFileItem        = ItemInfo.m_bFileItem;
   m_pNetResource = new NETRESOURCE;
   if (ItemInfo.m_pNetResource)
   {
     //Copy the direct member variables of NETRESOURCE
-    CopyMemory(m_pNetResource, ItemInfo.m_pNetResource, sizeof(NETRESOURCE)); 
+    memcpy(m_pNetResource, ItemInfo.m_pNetResource, sizeof(NETRESOURCE)); 
 
     //Duplicate the strings which are stored in NETRESOURCE as pointers
     if (ItemInfo.m_pNetResource->lpLocalName)
@@ -291,7 +307,7 @@ CTreeFileCtrlItemInfo::CTreeFileCtrlItemInfo(const CTreeFileCtrlItemInfo& ItemIn
 		  m_pNetResource->lpProvider	= _tcsdup(ItemInfo.m_pNetResource->lpProvider);
   }
   else
-    ZeroMemory(m_pNetResource, sizeof(NETRESOURCE)); 
+    memset(m_pNetResource, 0, sizeof(NETRESOURCE)); 
 }
 
 CTreeFileCtrlItemInfo::~CTreeFileCtrlItemInfo()
@@ -320,15 +336,22 @@ CSystemImageList::CSystemImageList()
   TCHAR pszTempDir[_MAX_PATH];
   VERIFY(GetTempPath(_MAX_PATH, pszTempDir));
   TCHAR pszDrive[_MAX_DRIVE + 1];
+#if (_MSC_VER >= 1400)
+  _tsplitpath_s(pszTempDir, pszDrive, sizeof(pszDrive)/sizeof(TCHAR), NULL, 0, NULL, 0, NULL, 0);
+#else
   _tsplitpath(pszTempDir, pszDrive, NULL, NULL, NULL);
-  int nLen = (int) _tcslen(pszDrive);
+#endif  
+  size_t nLen = _tcslen(pszDrive);
   if (pszDrive[nLen-1] != _T('\\'))
+  #if (_MSC_VER >= 1400)
+    _tcscat_s(pszDrive, sizeof(pszDrive)/sizeof(TCHAR), _T("\\"));
+  #else
     _tcscat(pszDrive, _T("\\"));
+  #endif
 
   //Attach to the system image list
   SHFILEINFO sfi;
-  HIMAGELIST hSystemImageList = (HIMAGELIST) SHGetFileInfo(pszTempDir, 0, &sfi, sizeof(SHFILEINFO),
-                                                           SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
+  HIMAGELIST hSystemImageList = reinterpret_cast<HIMAGELIST>(SHGetFileInfo(pszTempDir, 0, &sfi, sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON));
   VERIFY(m_ImageList.Attach(hSystemImageList));
 }
 
@@ -365,8 +388,8 @@ CShareEnumerator::CShareEnumerator()
     if (m_hNetApi)
     {
       //Get the required function pointers
-      m_pNTShareEnum = (NT_NETSHAREENUM*) GetProcAddress(m_hNetApi, "NetShareEnum");
-      m_pNTBufferFree = (NT_NETAPIBUFFERFREE*) GetProcAddress(m_hNetApi, "NetApiBufferFree");
+      m_pNTShareEnum = reinterpret_cast<NT_NETSHAREENUM*>(GetProcAddress(m_hNetApi, "NetShareEnum"));
+      m_pNTBufferFree = reinterpret_cast<NT_NETAPIBUFFERFREE*>(GetProcAddress(m_hNetApi, "NetApiBufferFree"));
     }
   }
   else
@@ -376,7 +399,7 @@ CShareEnumerator::CShareEnumerator()
     if (m_hNetApi)
     {
       //Get the required function pointer
-      m_pWin9xShareEnum = (WIN9X_NETSHAREENUM*) GetProcAddress(m_hNetApi, "NetShareEnum");
+      m_pWin9xShareEnum = reinterpret_cast<WIN9X_NETSHAREENUM*>(GetProcAddress(m_hNetApi, "NetShareEnum"));
     }
   }
 
@@ -417,7 +440,7 @@ void CShareEnumerator::Refresh()
     if (m_pNTShareEnum)
     {
       DWORD dwEntriesRead = 0;
-      m_pNTShareEnum(NULL, 502, (LPBYTE*) &m_pNTShareInfo, MAX_PREFERRED_LENGTH, &dwEntriesRead, &m_dwShares, NULL);
+      m_pNTShareEnum(NULL, 502, reinterpret_cast<LPBYTE*>(&m_pNTShareInfo), MAX_PREFERRED_LENGTH, &dwEntriesRead, &m_dwShares, NULL);
     }
   }
   else
@@ -436,10 +459,10 @@ void CShareEnumerator::Refresh()
       while (bNeedMoreMemory && !bSuccess)
       {
         unsigned short nTotalRead = 0;
-        m_pWin9xShareInfo = (CTreeFile_share_info_50*) new BYTE[cbBuffer];
-        ZeroMemory(m_pWin9xShareInfo, cbBuffer);
+        m_pWin9xShareInfo = reinterpret_cast<CTreeFile_share_info_50*>(new BYTE[cbBuffer]);
+        memset(m_pWin9xShareInfo, 0, cbBuffer);
         unsigned short nShares = 0;
-        NET_API_STATUS nStatus = m_pWin9xShareEnum(NULL, 50, (char FAR *)m_pWin9xShareInfo, cbBuffer, (unsigned short FAR *)&nShares, (unsigned short FAR *)&nTotalRead);
+        NET_API_STATUS nStatus = m_pWin9xShareEnum(NULL, 50, reinterpret_cast<char FAR *>(m_pWin9xShareInfo), cbBuffer, static_cast<unsigned short FAR *>(&nShares), static_cast<unsigned short FAR *>(&nTotalRead));
         if (nStatus == ERROR_MORE_DATA)
 		    {            
           //Free up the heap memory we have used
@@ -471,7 +494,7 @@ BOOL CShareEnumerator::IsShared(const CString& sPath)
     {
       for (DWORD i=0; i<m_dwShares && !bShared; i++)
       {
-        CString sShare((LPWSTR) m_pNTShareInfo[i].shi502_path);
+        CString sShare(m_pNTShareInfo[i].shi502_path);
         bShared = (sPath.CompareNoCase(sShare) == 0) && ((m_pNTShareInfo[i].shi502_type == STYPE_DISKTREE) || ((m_pNTShareInfo[i].shi502_type == STYPE_PRINTQ)));
       }
     }
@@ -483,19 +506,13 @@ BOOL CShareEnumerator::IsShared(const CString& sPath)
       for (DWORD i=0; i<m_dwShares && !bShared; i++)
       {
         CString sShare(m_pWin9xShareInfo[i].shi50_path);
-        bShared = (sPath.CompareNoCase(sShare) == 0) && 
-                   ((m_pWin9xShareInfo[i].shi50_type == STYPE_DISKTREE) || ((m_pWin9xShareInfo[i].shi50_type == STYPE_PRINTQ)));
+        bShared = (sPath.CompareNoCase(sShare) == 0) && ((m_pWin9xShareInfo[i].shi50_type == STYPE_DISKTREE) || ((m_pWin9xShareInfo[i].shi50_type == STYPE_PRINTQ)));
       }
     }
   }
 
   return bShared;
 }
-
-
-
-
-
 
 
 CTreeFileCtrlThreadInfo::CTreeFileCtrlThreadInfo() : m_TerminateEvent(FALSE, TRUE)
@@ -509,8 +526,6 @@ CTreeFileCtrlThreadInfo::~CTreeFileCtrlThreadInfo()
 {
   delete m_pThread;
 }
-
-
 
 
 IMPLEMENT_DYNCREATE(CTreeFileCtrl, FILETREECTRL_BASE_CLASS)
@@ -569,6 +584,8 @@ CTreeFileCtrl::CTreeFileCtrl() : FILETREECTRL_BASE_CLASS()
   m_hItemDrag = NULL;
   m_hItemDrop = NULL;
   m_hNetworkRoot = NULL;
+  m_hMyDocumentsRoot = NULL;
+  m_hRoot = TVI_ROOT;
   m_TimerTicks = 0;
   m_bAllowDragDrop = FALSE;
   m_bAllowRename = FALSE;
@@ -585,11 +602,13 @@ CTreeFileCtrl::CTreeFileCtrl() : FILETREECTRL_BASE_CLASS()
 
   m_pMalloc = NULL;
   m_pShellFolder = NULL;
-  m_bDisplayNetwork = TRUE;
+  m_bShowNetwork = TRUE;
   m_FileExtensions = UseTheShellSetting;
   m_dwNetworkItemTypes = RESOURCETYPE_ANY;
   m_hMyComputerRoot = NULL;
   m_bShowMyComputer = TRUE;
+  m_bShowDesktop = TRUE;
+  m_bShowMyDocuments = TRUE;
   m_bShowRootedFolder = FALSE;
   m_hRootedFolder = NULL;
   m_bShowDriveLabels = TRUE;
@@ -597,8 +616,8 @@ CTreeFileCtrl::CTreeFileCtrl() : FILETREECTRL_BASE_CLASS()
 
 int CALLBACK CTreeFileCtrl::CompareByFilenameNoCase(LPARAM lParam1, LPARAM lParam2, LPARAM /*lParamSort*/)
 {
-  CTreeFileCtrlItemInfo* pItem1 = (CTreeFileCtrlItemInfo*) lParam1;
-  CTreeFileCtrlItemInfo* pItem2 = (CTreeFileCtrlItemInfo*) lParam2;
+  CTreeFileCtrlItemInfo* pItem1 = reinterpret_cast<CTreeFileCtrlItemInfo*>(lParam1);
+  CTreeFileCtrlItemInfo* pItem2 = reinterpret_cast<CTreeFileCtrlItemInfo*>(lParam2);
 
   if (pItem1->m_bFileItem)
   {
@@ -664,7 +683,7 @@ int CTreeFileCtrl::GetIconIndex(const CString& sFilename)
 {
   //Retreive the icon index for a specified file/folder
   SHFILEINFO sfi;
-  ZeroMemory(&sfi, sizeof(SHFILEINFO));
+  memset(&sfi, 0, sizeof(SHFILEINFO));
   SHGetFileInfo(sFilename, 0, &sfi, sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
   return sfi.iIcon; 
 }
@@ -673,7 +692,7 @@ int CTreeFileCtrl::GetSelIconIndex(const CString& sFilename)
 {
   //Retreive the icon index for a specified file/folder
   SHFILEINFO sfi;
-  ZeroMemory(&sfi, sizeof(SHFILEINFO));
+  memset(&sfi, 0, sizeof(SHFILEINFO));
   SHGetFileInfo(sFilename, 0, &sfi, sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_OPENICON | SHGFI_SMALLICON);
   return sfi.iIcon; 
 }
@@ -681,7 +700,7 @@ int CTreeFileCtrl::GetSelIconIndex(const CString& sFilename)
 int CTreeFileCtrl::GetIconIndex(LPITEMIDLIST lpPIDL)
 {
   SHFILEINFO sfi;
-  ZeroMemory(&sfi, sizeof(SHFILEINFO));
+  memset(&sfi, 0, sizeof(SHFILEINFO));
   SHGetFileInfo((LPCTSTR)lpPIDL, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON | SHGFI_LINKOVERLAY);
   return sfi.iIcon; 
 }
@@ -689,7 +708,7 @@ int CTreeFileCtrl::GetIconIndex(LPITEMIDLIST lpPIDL)
 int CTreeFileCtrl::GetSelIconIndex(LPITEMIDLIST lpPIDL)
 {
   SHFILEINFO sfi;
-  ZeroMemory(&sfi, sizeof(SHFILEINFO));
+  memset(&sfi, 0, sizeof(SHFILEINFO));
   SHGetFileInfo((LPCTSTR)lpPIDL, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON | SHGFI_OPENICON);
   return sfi.iIcon; 
 }
@@ -710,7 +729,7 @@ HTREEITEM CTreeFileCtrl::FindSibling(HTREEITEM hParent, const CString& sItem) co
   HTREEITEM hChild = GetChildItem(hParent);
   while (hChild)
   {
-    CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(hChild);
+    CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(hChild));
     ASSERT(pItem);
     if (pItem->m_sRelativePath.CompareNoCase(sItem) == 0)
       return hChild;
@@ -730,13 +749,13 @@ CString CTreeFileCtrl::GetSelectedPath()
 
 HTREEITEM CTreeFileCtrl::FindServersNode(HTREEITEM hFindFrom) const
 {
-  if (m_bDisplayNetwork)
+  if (m_bShowNetwork)
   {
     //Try to find some "servers" in the child items of hFindFrom
     HTREEITEM hChild = GetChildItem(hFindFrom);
     while (hChild)
     {
-      CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(hChild);
+      CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(hChild));
       ASSERT(pItem);
       if (pItem->m_pNetResource)
       {
@@ -804,7 +823,7 @@ HTREEITEM CTreeFileCtrl::SetSelectedPath(const CString& sPath, BOOL bExpanded)
   {
     if (sSearch.Find(sRootFolder) != 0)
     {
-      TRACE(_T("CTreeFileCtrl::SetSelectedPath, Could not select the path %s as the root has been configued as %s\n"), sPath, m_sRootFolder);
+      TRACE(_T("CTreeFileCtrl::SetSelectedPath, Could not select the path %s as the root has been configued as %s\n"), sPath.operator LPCTSTR(), m_sRootFolder.operator LPCTSTR());
       return NULL;
     }
     sSearch = sSearch.Right(sSearch.GetLength() - nRootLength);
@@ -820,11 +839,11 @@ HTREEITEM CTreeFileCtrl::SetSelectedPath(const CString& sPath, BOOL bExpanded)
 
   SetRedraw(FALSE);
 
-  HTREEITEM hItemFound = TVI_ROOT;
+  HTREEITEM hItemFound = m_hRoot;
   if (nRootLength && m_hRootedFolder)
     hItemFound = m_hRootedFolder;
   BOOL bDriveMatch = sRootFolder.IsEmpty();
-  BOOL bNetworkMatch = m_bDisplayNetwork && ((sSearch.GetLength() > 2) && sSearch.Find(_T("\\\\")) == 0);
+  BOOL bNetworkMatch = m_bShowNetwork && ((sSearch.GetLength() > 2) && sSearch.Find(_T("\\\\")) == 0);
   if (bNetworkMatch)
   {
     bDriveMatch = FALSE;
@@ -842,9 +861,26 @@ HTREEITEM CTreeFileCtrl::SetSelectedPath(const CString& sPath, BOOL bExpanded)
   }
   if (bDriveMatch)
   {
-    if (m_hMyComputerRoot)
+    CString sMyDocumentsPath(m_sMyDocumentsPath);
+    sMyDocumentsPath.MakeUpper();
+
+    if (m_hMyDocumentsRoot && sSearch.Find(sMyDocumentsPath) == 0)
     {
-      //Working here
+      BOOL bHasPlus = HasPlusButton(m_hMyDocumentsRoot);
+      BOOL bHasChildren = (GetChildItem(m_hMyDocumentsRoot) != NULL);
+
+      if (bHasPlus && !bHasChildren)
+        DoExpand(m_hMyDocumentsRoot);
+      else
+        Expand(m_hMyDocumentsRoot, TVE_EXPAND);
+      hItemFound = m_hMyDocumentsRoot;
+
+      //Skip over the part of the search path which contains the My documents path
+      sSearch = sSearch.Right(sSearch.GetLength() - sMyDocumentsPath.GetLength() - 1);
+      bDriveMatch = FALSE;
+    }
+    else if (m_hMyComputerRoot)
+    {
       BOOL bHasPlus = HasPlusButton(m_hMyComputerRoot);
       BOOL bHasChildren = (GetChildItem(m_hMyComputerRoot) != NULL);
 
@@ -939,7 +975,7 @@ BOOL CTreeFileCtrl::ShowProperties(HTREEITEM hItem)
     //Show the "properties" for the selected file
     CString sFile = ItemToPath(hItem);
     SHELLEXECUTEINFO sei;
-    ZeroMemory(&sei, sizeof(sei));
+    memset(&sei, 0, sizeof(sei));
     sei.cbSize = sizeof(sei);
     sei.hwnd = AfxGetMainWnd()->GetSafeHwnd();
     sei.nShow = SW_SHOW;
@@ -958,7 +994,7 @@ BOOL CTreeFileCtrl::Delete(HTREEITEM hItem)
 
   if (hItem)
   {
-    CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(hItem);
+    CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(hItem));
     ASSERT(pItem);
     if (m_bAllowDelete && !IsDrive(hItem) && !pItem->m_bNetworkNode)
     {
@@ -967,7 +1003,7 @@ BOOL CTreeFileCtrl::Delete(HTREEITEM hItem)
       int nChars = sFileToDelete.GetLength() + 1;
       nChars++;
       SHFILEOPSTRUCT shfo;
-      ZeroMemory(&shfo, sizeof(SHFILEOPSTRUCT));
+      memset(&shfo, 0, sizeof(SHFILEOPSTRUCT));
       shfo.hwnd = AfxGetMainWnd()->GetSafeHwnd();
       shfo.wFunc = FO_DELETE;
 
@@ -977,7 +1013,11 @@ BOOL CTreeFileCtrl::Delete(HTREEITEM hItem)
 
       TCHAR* pszFrom = new TCHAR[nChars];
       TCHAR* pszCur = pszFrom;
+    #if (_MSC_VER >= 1400)
+      _tcscpy_s(pszCur, nChars, sFileToDelete);
+    #else  
       _tcscpy(pszCur, sFileToDelete);
+    #endif
       pszCur[nChars-1] = _T('\0');
       shfo.pFrom = pszFrom;
 
@@ -1008,7 +1048,7 @@ BOOL CTreeFileCtrl::Open(HTREEITEM hItem)
     //Show the "properties" for the selected file
     CString sFile = ItemToPath(hItem);
     SHELLEXECUTEINFO sei;
-    ZeroMemory(&sei, sizeof(sei));
+    memset(&sei, 0, sizeof(sei));
     sei.cbSize = sizeof(sei);
     sei.hwnd = AfxGetMainWnd()->GetSafeHwnd();
     sei.nShow = SW_SHOW;
@@ -1071,9 +1111,9 @@ void CTreeFileCtrl::SetCompressedColor(COLORREF rgbCompressed)
   Refresh();
 }
 
-void CTreeFileCtrl::SetDisplayNetwork(BOOL bDisplayNetwork)
+void CTreeFileCtrl::SetShowNetwork(BOOL bShowNetwork)
 {
-  m_bDisplayNetwork = bDisplayNetwork;
+  m_bShowNetwork = bShowNetwork;
 
   //Force a refresh
   Refresh();
@@ -1130,6 +1170,22 @@ void CTreeFileCtrl::SetShowDriveLabels(BOOL bShowDriveLabels)
 void CTreeFileCtrl::SetShowMyComputer(BOOL bShowMyComputer)
 {
   m_bShowMyComputer = bShowMyComputer;
+
+  //Force a refresh
+  Refresh();
+}
+
+void CTreeFileCtrl::SetShowDesktop(BOOL bShowDesktop)
+{
+  m_bShowDesktop = bShowDesktop;
+
+  //Force a refresh
+  Refresh();
+}
+
+void CTreeFileCtrl::SetShowMyDocuments(BOOL bShowMyDocuments)
+{
+  m_bShowMyDocuments = bShowMyDocuments;
 
   //Force a refresh
   Refresh();
@@ -1243,7 +1299,7 @@ void CTreeFileCtrl::OnUpdateRename(CCmdUI* pCmdUI)
   HTREEITEM hSelItem = GetSelectedItem();
   if (hSelItem)
   {
-    CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(hSelItem);
+    CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(hSelItem));
     ASSERT(pItem);
 	  pCmdUI->Enable(m_bAllowRename && !IsDrive(hSelItem) && !pItem->m_bNetworkNode);
   }
@@ -1263,7 +1319,7 @@ void CTreeFileCtrl::OnUpdateProperties(CCmdUI* pCmdUI)
   {
     if (m_bAllowProperties)
     {
-      CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(hSelItem);
+      CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(hSelItem));
       ASSERT(pItem);
       if (pItem->m_bNetworkNode)
       { 
@@ -1295,7 +1351,7 @@ void CTreeFileCtrl::OnUpdateOpen(CCmdUI* pCmdUI)
   {
     if (m_bAllowOpen)
     {
-      CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(hSelItem);
+      CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(hSelItem));
       ASSERT(pItem);
       if (pItem->m_bNetworkNode)
       { 
@@ -1326,7 +1382,7 @@ void CTreeFileCtrl::OnUpdateDelete(CCmdUI* pCmdUI)
   HTREEITEM hSelItem = GetSelectedItem();
   if (hSelItem)
   {
-    CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(hSelItem);
+    CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(hSelItem));
     ASSERT(pItem);
 	  pCmdUI->Enable(m_bAllowDelete && !IsDrive(hSelItem) && !pItem->m_bNetworkNode);
   }
@@ -1355,14 +1411,14 @@ HTREEITEM CTreeFileCtrl::InsertFileItem(HTREEITEM hParent, CTreeFileCtrlItemInfo
 
   //Add the actual item
 	TVINSERTSTRUCT tvis;
-  ZeroMemory(&tvis, sizeof(TVINSERTSTRUCT));
+  memset(&tvis, 0, sizeof(TVINSERTSTRUCT));
 	tvis.hParent = hParent;
 	tvis.hInsertAfter = TVI_LAST;
 	tvis.item.mask = TVIF_CHILDREN | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_TEXT | TVIF_PARAM;
   tvis.item.iImage = nIcon;
   tvis.item.iSelectedImage = nSelIcon;
 
-  tvis.item.lParam = (LPARAM) pItem;
+  tvis.item.lParam = reinterpret_cast<LPARAM>(pItem);
   tvis.item.pszText = sLabel.GetBuffer(sLabel.GetLength());
   if (bCheckForChildren)
 	  tvis.item.cChildren = HasGotSubEntries(pItem->m_sFQPath);
@@ -1419,8 +1475,13 @@ CString CTreeFileCtrl::GetCorrectedLabel(CTreeFileCtrlItemInfo* pItem)
         TCHAR szDrive[_MAX_DRIVE];
         TCHAR szDir[_MAX_DIR];
         TCHAR szFname[_MAX_FNAME];
+      #if (_MSC_VER >= 1400)
+        _tsplitpath_s(pItem->m_sRelativePath, szDrive, sizeof(szDrive)/sizeof(TCHAR), szDir, sizeof(szDir)/sizeof(TCHAR), szFname, sizeof(szFname)/sizeof(TCHAR), NULL, 0);
+        _tmakepath_s(szPath, sizeof(szPath)/sizeof(TCHAR), szDrive, szDir, szFname, NULL);
+      #else  
         _tsplitpath(pItem->m_sRelativePath, szDrive, szDir, szFname, NULL);
         _tmakepath(szPath, szDrive, szDir, szFname, NULL);
+      #endif
         sLabel = szPath;
         pItem->m_bExtensionHidden = TRUE;
       }
@@ -1434,6 +1495,107 @@ CString CTreeFileCtrl::GetCorrectedLabel(CTreeFileCtrlItemInfo* pItem)
   }
 
   return sLabel;
+}
+
+
+void CTreeFileCtrl::DisplayRootItems()
+{
+  //add My Documents if requested to do so
+  if (m_bShowMyDocuments)
+  {
+    CTreeFileCtrlItemInfo* pItem = new CTreeFileCtrlItemInfo;
+    pItem->m_bMyDocumentNode = TRUE;
+    int nIcon = 0;
+    int nSelIcon = 0;
+
+    //Get the localized name and correct icons for "My Documents"
+    LPITEMIDLIST lpDocsPidl;
+
+    if (SUCCEEDED(SHGetSpecialFolderLocation(NULL, CSIDL_PERSONAL, &lpDocsPidl)))
+    {
+      SHFILEINFO sfi;
+      if (SHGetFileInfo((LPCTSTR)lpDocsPidl, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
+        pItem->m_sRelativePath = sfi.szDisplayName;
+
+      //While we are at it, also get the real path of "My Documents"
+      TCHAR szFolderPath[_MAX_PATH];
+      if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, szFolderPath)))
+      {
+        pItem->m_sFQPath = szFolderPath;
+        m_sMyDocumentsPath = pItem->m_sFQPath; //Also maintain a copy ourselves, We use this when we are trying to select items in the control
+      }
+
+      nIcon = GetIconIndex(lpDocsPidl);
+      nSelIcon = GetSelIconIndex(lpDocsPidl);
+
+      //Free up the pidl now that we are finished with it
+      ASSERT(m_pMalloc);
+      m_pMalloc->Free(lpDocsPidl);
+      m_pMalloc->Release();
+    }
+
+    //Add it to the tree control
+    m_hMyDocumentsRoot = InsertFileItem(m_hRoot, pItem, FALSE, nIcon, nSelIcon, FALSE);
+  }
+
+  //Should we insert a "My Computer" node
+  if (m_bShowMyComputer)
+  {
+    CTreeFileCtrlItemInfo* pItem = new CTreeFileCtrlItemInfo;
+    int nIcon = 0;
+    int nSelIcon = 0;
+
+    //Get the localized name and correct icons for "My Computer"
+    LPITEMIDLIST lpMCPidl;
+    if (SUCCEEDED(SHGetSpecialFolderLocation(NULL, CSIDL_DRIVES, &lpMCPidl)))
+    {
+      SHFILEINFO sfi;
+      if (SHGetFileInfo((LPCTSTR)lpMCPidl, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
+        pItem->m_sRelativePath = sfi.szDisplayName;
+      nIcon = GetIconIndex(lpMCPidl);
+      nSelIcon = GetSelIconIndex(lpMCPidl);
+
+      //Free up the pidl now that we are finished with it
+      ASSERT(m_pMalloc);
+      m_pMalloc->Free(lpMCPidl);
+      m_pMalloc->Release();
+    }
+
+    //Add it to the tree control
+    m_hMyComputerRoot = InsertFileItem(m_hRoot, pItem, FALSE, nIcon, nSelIcon, FALSE);
+  }
+
+  //Display all the drives (if we are not using My Computers")
+  if (!m_bShowMyComputer)
+    DisplayDrives(m_hRoot, FALSE);
+
+  //Also add network neighborhood if requested to do so
+  if (m_bShowNetwork)
+  {
+    CTreeFileCtrlItemInfo* pItem = new CTreeFileCtrlItemInfo;
+    pItem->m_bNetworkNode = TRUE;
+    int nIcon = 0;
+    int nSelIcon = 0;
+
+    //Get the localized name and correct icons for "Network Neighborhood"
+    LPITEMIDLIST lpNNPidl;
+    if (SUCCEEDED(SHGetSpecialFolderLocation(NULL, CSIDL_NETWORK, &lpNNPidl)))
+    {
+      SHFILEINFO sfi;
+      if (SHGetFileInfo((LPCTSTR)lpNNPidl, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
+        pItem->m_sRelativePath = sfi.szDisplayName;
+      nIcon = GetIconIndex(lpNNPidl);
+      nSelIcon = GetSelIconIndex(lpNNPidl);
+
+      //Free up the pidl now that we are finished with it
+      ASSERT(m_pMalloc);
+      m_pMalloc->Free(lpNNPidl);
+      m_pMalloc->Release();
+    }
+
+    //Add it to the tree control
+    m_hNetworkRoot = InsertFileItem(m_hRoot, pItem, FALSE, nIcon, nSelIcon, FALSE);
+  }
 }
 
 void CTreeFileCtrl::OnRefresh() 
@@ -1463,69 +1625,41 @@ void CTreeFileCtrl::OnRefresh()
   //Display the folder items in the tree
   if (m_sRootFolder.IsEmpty())
   {
-    //Should we insert a "My Computer" node
-    if (m_bShowMyComputer)
+	  //Should we insert a desktop node
+    if (m_bShowDesktop)
     {
-      CTreeFileCtrlItemInfo* pItem = new CTreeFileCtrlItemInfo;
-      pItem->m_bNetworkNode = FALSE;
-      int nIcon = 0;
-      int nSelIcon = 0;
+		  CTreeFileCtrlItemInfo* pItem = new CTreeFileCtrlItemInfo;
+		  pItem->m_bDesktopNode = TRUE;
+		  int nIcon = 0;
+		  int nSelIcon = 0;
 
-      //Get the localized name and correct icons for "My Computer"
-      LPITEMIDLIST lpMCPidl;
-      if (SUCCEEDED(SHGetSpecialFolderLocation(NULL, CSIDL_DRIVES, &lpMCPidl)))
-      {
-        SHFILEINFO sfi;
-        if (SHGetFileInfo((LPCTSTR)lpMCPidl, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
-          pItem->m_sRelativePath = sfi.szDisplayName;
-        nIcon = GetIconIndex(lpMCPidl);
-        nSelIcon = GetSelIconIndex(lpMCPidl);
+		  //Get the localized name and correct icons for the Desktop
+		  LPITEMIDLIST lpDPidl;
+		  if (SUCCEEDED(SHGetSpecialFolderLocation(NULL, CSIDL_DESKTOP, &lpDPidl)))
+		  {
+		    SHFILEINFO sfi;
+		    if (SHGetFileInfo((LPCTSTR)lpDPidl, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
+			    pItem->m_sRelativePath = sfi.szDisplayName;
+		    nIcon = GetIconIndex(lpDPidl);
+		    nSelIcon = GetSelIconIndex(lpDPidl);
 
-        //Free up the pidl now that we are finished with it
-        ASSERT(m_pMalloc);
-        m_pMalloc->Free(lpMCPidl);
-        m_pMalloc->Release();
-      }
+		    //Free up the pidl now that we are finished with it
+		    ASSERT(m_pMalloc);
+		    m_pMalloc->Free(lpDPidl);
+		    m_pMalloc->Release();
+		  }
 
-      //Add it to the tree control
-      m_hMyComputerRoot = InsertFileItem(TVI_ROOT, pItem, FALSE, nIcon, nSelIcon, FALSE);
+		  //Add it to the tree control
+		  m_hRoot = InsertFileItem(TVI_ROOT, pItem, FALSE, nIcon, nSelIcon, FALSE);
     }
+    else
+      m_hRoot = TVI_ROOT;
 
-    //Display all the drives
-    if (!m_bShowMyComputer)
-      DisplayDrives(TVI_ROOT, FALSE);
-
-    //Also add network neighborhood if requested to do so
-    if (m_bDisplayNetwork)
-    {
-      CTreeFileCtrlItemInfo* pItem = new CTreeFileCtrlItemInfo;
-      pItem->m_bNetworkNode = TRUE;
-      int nIcon = 0;
-      int nSelIcon = 0;
-
-      //Get the localized name and correct icons for "Network Neighborhood"
-      LPITEMIDLIST lpNNPidl;
-      if (SUCCEEDED(SHGetSpecialFolderLocation(NULL, CSIDL_NETWORK, &lpNNPidl)))
-      {
-        SHFILEINFO sfi;
-        if (SHGetFileInfo((LPCTSTR)lpNNPidl, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
-          pItem->m_sRelativePath = sfi.szDisplayName;
-        nIcon = GetIconIndex(lpNNPidl);
-        nSelIcon = GetSelIconIndex(lpNNPidl);
-
-        //Free up the pidl now that we are finished with it
-        ASSERT(m_pMalloc);
-        m_pMalloc->Free(lpNNPidl);
-        m_pMalloc->Release();
-      }
-
-      //Add it to the tree control
-      m_hNetworkRoot = InsertFileItem(TVI_ROOT, pItem, FALSE, nIcon, nSelIcon, FALSE);
-    }
+    DisplayRootItems();
   }
   else
   {
-    DisplayPath(m_sRootFolder, TVI_ROOT, FALSE);
+    DisplayPath(m_sRootFolder, m_hRoot, FALSE);
     if (CanHandleChangeNotifications(m_sRootFolder))
       CreateMonitoringThread(m_sRootFolder);
   }
@@ -1540,11 +1674,11 @@ void CTreeFileCtrl::OnRefresh()
 
 BOOL CTreeFileCtrl::OnBeginLabelEdit(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	TV_DISPINFO* pDispInfo = (TV_DISPINFO*)pNMHDR;
+	TV_DISPINFO* pDispInfo = reinterpret_cast<TV_DISPINFO*>(pNMHDR);
 
   if (pDispInfo->item.hItem)
   {
-    CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(pDispInfo->item.hItem);
+    CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(pDispInfo->item.hItem));
     ASSERT(pItem);
 	  if (m_bAllowRename && !IsDrive(pDispInfo->item.hItem) && !pItem->m_bNetworkNode)
       *pResult = FALSE;
@@ -1559,7 +1693,7 @@ BOOL CTreeFileCtrl::OnBeginLabelEdit(NMHDR* pNMHDR, LRESULT* pResult)
 
 BOOL CTreeFileCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-  NMTVCUSTOMDRAW* pCustomDraw = (NMTVCUSTOMDRAW*) pNMHDR;
+  NMTVCUSTOMDRAW* pCustomDraw = reinterpret_cast<NMTVCUSTOMDRAW*>(pNMHDR);
   switch (pCustomDraw->nmcd.dwDrawStage) 
   {
     case CDDS_PREPAINT:
@@ -1578,15 +1712,13 @@ BOOL CTreeFileCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 
       //Check to see if this item is compressed and if it it is, change its
       //color just like explorer does
-      if (m_bShowCompressedUsingDifferentColor && 
-          ((pCustomDraw->nmcd.uItemState & CDIS_SELECTED) == 0) && 
+      if (m_bShowCompressedUsingDifferentColor && ((pCustomDraw->nmcd.uItemState & CDIS_SELECTED) == 0) && 
           IsCompressed((HTREEITEM) pCustomDraw->nmcd.dwItemSpec))
       {
         pCustomDraw->clrText = m_rgbCompressed;
       }
       //also check for encrypted files
-      else if (m_bShowEncryptedUsingDifferentColor && 
-          ((pCustomDraw->nmcd.uItemState & CDIS_SELECTED) == 0) && 
+      else if (m_bShowEncryptedUsingDifferentColor && ((pCustomDraw->nmcd.uItemState & CDIS_SELECTED) == 0) && 
           IsEncrypted((HTREEITEM) pCustomDraw->nmcd.dwItemSpec))
       {
         pCustomDraw->clrText = m_rgbEncrypted;
@@ -1605,17 +1737,19 @@ BOOL CTreeFileCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 
 BOOL CTreeFileCtrl::OnSelChanged(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	NMTREEVIEW* pNMTreeView = (NMTREEVIEW*)pNMHDR;
+	NMTREEVIEW* pNMTreeView = reinterpret_cast<NMTREEVIEW*>(pNMHDR);
 
   //Nothing selected
   if (pNMTreeView->itemNew.hItem == NULL)
     return FALSE;
 
-  //Check to see if the current item is valid, if not then delete it (Exclude network items from this check)
-  CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(pNMTreeView->itemNew.hItem);
+  //Check to see if the current item is valid, if not then delete it (Exclude special items from this check)
+  CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(pNMTreeView->itemNew.hItem));
   ASSERT(pItem);
   CString sPath = pItem->m_sFQPath;
-  if ((pNMTreeView->itemNew.hItem != m_hNetworkRoot) && (pItem->m_pNetResource == NULL) && 
+  if ((pNMTreeView->itemNew.hItem != m_hRoot) &&
+      (pNMTreeView->itemNew.hItem != m_hMyDocumentsRoot) &&
+      (pNMTreeView->itemNew.hItem != m_hNetworkRoot) && (pItem->m_pNetResource == NULL) && 
       (pNMTreeView->itemNew.hItem != m_hMyComputerRoot) && !IsDrive(sPath) && (GetFileAttributes(sPath) == 0xFFFFFFFF))
   {
     //Before we delete it see if we are the only child item
@@ -1657,15 +1791,16 @@ BOOL CTreeFileCtrl::OnSelChanged(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CTreeFileCtrl::OnSelectionChanged(NMTREEVIEW*, const CString&)
 {
+  //CTreeFileCtrl does nothing, but a derived class may want to do something
 }
 
 BOOL CTreeFileCtrl::OnEndLabelEdit(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	TV_DISPINFO* pDispInfo = (TV_DISPINFO*)pNMHDR;
+	TV_DISPINFO* pDispInfo = reinterpret_cast<TV_DISPINFO*>(pNMHDR);
   if (pDispInfo->item.pszText)
   {
     SHFILEOPSTRUCT shfo;
-    ZeroMemory(&shfo, sizeof(SHFILEOPSTRUCT));
+    memset(&shfo, 0, sizeof(SHFILEOPSTRUCT));
     shfo.hwnd = AfxGetMainWnd()->GetSafeHwnd();
     shfo.wFunc = FO_RENAME;
     shfo.fFlags = FOF_ALLOWUNDO;
@@ -1674,7 +1809,11 @@ BOOL CTreeFileCtrl::OnEndLabelEdit(NMHDR* pNMHDR, LRESULT* pResult)
     CString sFrom = ItemToPath(pDispInfo->item.hItem);
     int nFromLength = sFrom.GetLength();
     TCHAR* pszFrom = new TCHAR[nFromLength + 2];
+  #if (_MSC_VER >= 1400)
+    _tcscpy_s(pszFrom, nFromLength+2, sFrom);
+  #else  
     _tcscpy(pszFrom, sFrom);
+  #endif
     pszFrom[nFromLength+1] = _T('\0');
     shfo.pFrom = pszFrom;
     HTREEITEM hParent = GetParentItem(pDispInfo->item.hItem);
@@ -1692,13 +1831,21 @@ BOOL CTreeFileCtrl::OnEndLabelEdit(NMHDR* pNMHDR, LRESULT* pResult)
     if (pItem->m_bExtensionHidden)
     {
       TCHAR szExt[_MAX_EXT];
+    #if (_MSC_VER >= 1400)
+      _tsplitpath_s(sFrom, NULL, 0, NULL, 0, NULL, 0, szExt, sizeof(szExt)/sizeof(TCHAR));
+    #else
       _tsplitpath(sFrom, NULL, NULL, NULL, szExt);
+    #endif
       sTo += szExt;
       sToRelative += szExt;
     }
-    int nToLength = (int) _tcslen(sTo);
+    size_t nToLength = _tcslen(sTo);
     TCHAR* pszTo = new TCHAR[nToLength + 2];
+  #if (_MSC_VER >= 1400)
+    _tcscpy_s(pszTo, nToLength+2, sTo);
+  #else  
     _tcscpy(pszTo, sTo);
+  #endif
     pszTo[nToLength+1] = _T('\0');
     shfo.pTo = pszTo;
 
@@ -1922,7 +2069,6 @@ BOOL CTreeFileCtrl::IsEncrypted(const CString& sPath)
   return bEncrypted;
 }
 
-
 BOOL CTreeFileCtrl::HasGotSubEntries(const CString& sDirectory)
 {
   ASSERT(sDirectory.GetLength());
@@ -1991,7 +2137,7 @@ void CTreeFileCtrl::CreateMonitoringThread(const CString& sPath)
     pInfo->m_sPath += _T('\\');
   pInfo->m_pTree = this;
 
-  TRACE(_T("CTreeFileCtrl::CreateMonitoringThread, Creating monitoring thread for %s\n"), pInfo->m_sPath);
+  TRACE(_T("CTreeFileCtrl::CreateMonitoringThread, Creating monitoring thread for %s\n"), pInfo->m_sPath.operator LPCTSTR());
 
   CWinThread* pThread = AfxBeginThread(MonitoringThread, pInfo, THREAD_PRIORITY_IDLE, 0, CREATE_SUSPENDED);
   ASSERT(pThread);
@@ -1999,7 +2145,7 @@ void CTreeFileCtrl::CreateMonitoringThread(const CString& sPath)
   pInfo->m_pThread = pThread;
 
   //Add the info struct to the thread array
-  int nIndex = (int) m_ThreadInfo.Add(pInfo);
+  int nIndex = static_cast<int>(m_ThreadInfo.Add(pInfo));
   m_ThreadInfo.GetAt(nIndex)->m_nIndex = nIndex;
 
   //Resume the thread now that everything is ready to go
@@ -2010,7 +2156,7 @@ UINT CTreeFileCtrl::MonitoringThread(LPVOID pParam)
 {
   //Validate our parameters
   ASSERT(pParam);
-  CTreeFileCtrlThreadInfo* pInfo = (CTreeFileCtrlThreadInfo*) pParam;
+  CTreeFileCtrlThreadInfo* pInfo = static_cast<CTreeFileCtrlThreadInfo*>(pParam);
   ASSERT(pInfo->m_pTree);
 
   //Form the notification flag to use
@@ -2038,7 +2184,7 @@ UINT CTreeFileCtrl::MonitoringThread(LPVOID pParam)
         if (!pInfo->m_pTree->m_bAutoRefresh)
           bContinue = FALSE;
         else
-          pInfo->m_pTree->PostMessage(WM_TREEUPDATE_CHANGE, (WPARAM) pInfo->m_nIndex);
+          pInfo->m_pTree->PostMessage(WM_TREEUPDATE_CHANGE, static_cast<WPARAM>(pInfo->m_nIndex));
         
         //Move onto the next notification
         ::FindNextChangeNotification(hChange);
@@ -2097,7 +2243,7 @@ BOOL CTreeFileCtrl::EnumNetwork(HTREEITEM hParent)
 	BOOL bGotChildren = FALSE;
 
 	//Check if the item already has a network resource and use it.
-  CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(hParent);
+  CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(hParent));
   ASSERT(pItem);
 	NETRESOURCE* pNetResource = pItem->m_pNetResource;
 
@@ -2123,7 +2269,7 @@ BOOL CTreeFileCtrl::EnumNetwork(HTREEITEM hParent)
   while (bNeedMoreMemory && !bSuccess)
   {
     //Allocate the memory and enumerate
-  	lpnrDrv = (LPNETRESOURCE) new BYTE[cbBuffer];
+  	lpnrDrv = reinterpret_cast<LPNETRESOURCE>(new BYTE[cbBuffer]);
     cEntries = 0xFFFFFFFF;
 		dwResult = WNetEnumResource(hEnum, &cEntries, lpnrDrv, &cbBuffer);
 
@@ -2159,7 +2305,7 @@ BOOL CTreeFileCtrl::EnumNetwork(HTREEITEM hParent)
       //Setup the item data for the new item
       CTreeFileCtrlItemInfo* pItem = new CTreeFileCtrlItemInfo;
 			pItem->m_pNetResource = new NETRESOURCE;
-      ZeroMemory(pItem->m_pNetResource, sizeof(NETRESOURCE));
+      memset(pItem->m_pNetResource, 0, sizeof(NETRESOURCE));
 			*pItem->m_pNetResource = lpnrDrv[i];
       if (lpnrDrv[i].lpLocalName)
 				pItem->m_pNetResource->lpLocalName	= _tcsdup(lpnrDrv[i].lpLocalName);
@@ -2326,12 +2472,12 @@ void CTreeFileCtrl::DisplayPath(const CString& sPath, HTREEITEM hParent, BOOL bU
   }
 
   //Should we display the root folder
-  if (m_bShowRootedFolder && (hParent == TVI_ROOT)) 
+  if (m_bShowRootedFolder && (hParent == m_hRoot))
   {
     CTreeFileCtrlItemInfo* pItem = new CTreeFileCtrlItemInfo;
     pItem->m_sFQPath = m_sRootFolder;
     pItem->m_sRelativePath = m_sRootFolder;
-    m_hRootedFolder = InsertFileItem(TVI_ROOT, pItem, FALSE, GetIconIndex(m_sRootFolder), GetSelIconIndex(m_sRootFolder), TRUE);
+    m_hRootedFolder = InsertFileItem(m_hRoot, pItem, FALSE, GetIconIndex(m_sRootFolder), GetSelIconIndex(m_sRootFolder), TRUE);
     Expand(m_hRootedFolder, TVE_EXPAND);
     return;
   }
@@ -2358,8 +2504,13 @@ void CTreeFileCtrl::DisplayPath(const CString& sPath, HTREEITEM hParent, BOOL bU
         TCHAR szPath[_MAX_PATH];
         TCHAR szFname[_MAX_FNAME];
         TCHAR szExt[_MAX_EXT];
+      #if (_MSC_VER >= 1400)
+        _tsplitpath_s(sPath, NULL, 0, NULL, 0, szFname, sizeof(szFname)/sizeof(TCHAR), szExt, sizeof(szExt)/sizeof(TCHAR));
+        _tmakepath_s(szPath, sizeof(szPath)/sizeof(TCHAR), NULL, NULL, szFname, szExt);
+      #else
         _tsplitpath(sPath, NULL, NULL, szFname, szExt);
         _tmakepath(szPath, NULL, NULL, szFname, szExt);
+      #endif
 
         CTreeFileCtrlItemInfo* pItem = new CTreeFileCtrlItemInfo;
         pItem->m_sFQPath = sPath;
@@ -2390,8 +2541,13 @@ void CTreeFileCtrl::DisplayPath(const CString& sPath, HTREEITEM hParent, BOOL bU
         TCHAR szPath[_MAX_PATH];
         TCHAR szFname[_MAX_FNAME];
         TCHAR szExt[_MAX_EXT];
+      #if (_MSC_VER >= 1400)
+        _tsplitpath_s(sPath, NULL, 0, NULL, 0, szFname, sizeof(szFname)/sizeof(TCHAR), szExt, sizeof(szExt)/sizeof(TCHAR));
+        _tmakepath_s(szPath, sizeof(szPath)/sizeof(TCHAR), NULL, NULL, szFname, szExt);
+      #else
         _tsplitpath(sPath, NULL, NULL, szFname, szExt);
         _tmakepath(szPath, NULL, NULL, szFname, szExt);
+      #endif
 
         CTreeFileCtrlItemInfo* pItem = new CTreeFileCtrlItemInfo;
         pItem->m_sFQPath = sPath;
@@ -2420,66 +2576,70 @@ void CTreeFileCtrl::DisplayPath(const CString& sPath, HTREEITEM hParent, BOOL bU
 
 void CTreeFileCtrl::DoExpand(HTREEITEM hItem)
 {
-  CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(hItem);
+  CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(hItem));
   ASSERT(pItem);
 
-  //Reset the drive node if the drive is empty or the media has changed
-  if (IsMediaValid(pItem->m_sFQPath))
-  {
-    //Delete the item if the path is no longer valid
-    if (IsFolder(pItem->m_sFQPath))
-    {
-      //Add the new items to the tree if it does not have any child items
-      //already
-      if (!GetChildItem(hItem))
-        DisplayPath(pItem->m_sFQPath, hItem);
-
-      //Create a thread to monitor file changes
-      if (m_bAutoRefresh && IsDrive(pItem->m_sFQPath))
-        CreateMonitoringThread(pItem->m_sFQPath);
-    }
-    else if (hItem == m_hMyComputerRoot)
-    {
-      //Display an hour glass as this may take some time
-      CWaitCursor wait;
-
-      //Enumerate the local drive letters
-      DisplayDrives(m_hMyComputerRoot, FALSE);
-    }
-    else if ((hItem == m_hNetworkRoot) || (pItem->m_pNetResource))
-    {
-      //Display an hour glass as this may take some time
-      CWaitCursor wait;
-
-      //Enumerate the network resources
-      EnumNetwork(hItem);
-    }
-    else
-    {
-      //Before we delete it see if we are the only child item
-      HTREEITEM hParent = GetParentItem(hItem);
-
-      //Delete the item
-      DeleteItem(hItem);
-
-      //Remove all the child items from the parent
-      SetHasPlusButton(hParent, FALSE);
-    }
-  }
-  else
+  if (hItem == m_hRoot && m_sRootFolder.IsEmpty())
+    DisplayRootItems();
+  else if (hItem == m_hMyComputerRoot)
   {
     //Display an hour glass as this may take some time
     CWaitCursor wait;
 
-    //Collapse the drive node and remove all the child items from it
-    Expand(hItem, TVE_COLLAPSE | TVE_COLLAPSERESET);
-    SetHasPlusButton(hItem, FALSE);
+    //Enumerate the local drive letters
+    DisplayDrives(m_hMyComputerRoot, FALSE);
+  }
+  else if ((hItem == m_hNetworkRoot) || ((pItem->m_pNetResource) && !IsFolder(pItem->m_sFQPath)))
+  {
+    //Display an hour glass as this may take some time
+    CWaitCursor wait;
+
+    //Enumerate the network resources
+    EnumNetwork(hItem);
+  }
+  else if (pItem->m_sFQPath.GetLength())
+  {
+    if (IsMediaValid(pItem->m_sFQPath))
+    {
+      //Delete the item if the path is no longer valid
+      if (IsFolder(pItem->m_sFQPath))
+      {
+        //Add the new items to the tree if it does not have any child items
+        //already
+        if (!GetChildItem(hItem))
+          DisplayPath(pItem->m_sFQPath, hItem);
+
+        //Create a thread to monitor file changes
+        if (m_bAutoRefresh && IsDrive(pItem->m_sFQPath))
+          CreateMonitoringThread(pItem->m_sFQPath);
+      }
+      else
+      {
+        //Before we delete it see if we are the only child item
+        HTREEITEM hParent = GetParentItem(hItem);
+
+        //Delete the item
+        DeleteItem(hItem);
+
+        //Remove all the child items from the parent
+        SetHasPlusButton(hParent, FALSE);
+      }
+    }
+    else if (hItem != m_hRoot)
+    {
+      //Display an hour glass as this may take some time
+      CWaitCursor wait;
+
+      //Collapse the drive node and remove all the child items from it
+      Expand(hItem, TVE_COLLAPSE | TVE_COLLAPSERESET);
+      SetHasPlusButton(hItem, FALSE);
+    }
   }
 }
 
 BOOL CTreeFileCtrl::OnItemExpanding(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	NMTREEVIEW* pNMTreeView = (NMTREEVIEW*)pNMHDR;
+	NMTREEVIEW* pNMTreeView = reinterpret_cast<NMTREEVIEW*>(pNMHDR);
   if (pNMTreeView->action == TVE_EXPAND)
   {
     BOOL bHasPlus = HasPlusButton(pNMTreeView->itemNew.hItem);
@@ -2490,7 +2650,7 @@ BOOL CTreeFileCtrl::OnItemExpanding(NMHDR* pNMHDR, LRESULT* pResult)
   }
   else if (pNMTreeView->action == TVE_COLLAPSE)
   {
-    CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(pNMTreeView->itemNew.hItem);
+    CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(pNMTreeView->itemNew.hItem));
     ASSERT(pItem);
 
     //Display an hour glass as this may take some time
@@ -2539,7 +2699,7 @@ HTREEITEM CTreeFileCtrl::PathToItem(const CString& sPath) const
   {
     if (sSearch.Find(sRootFolder) != 0)
     {
-      TRACE(_T("CTreeFileCtrl::PathToItem, Could not find the path %s as the root has been configued as %s\n"), sPath, m_sRootFolder);
+      TRACE(_T("CTreeFileCtrl::PathToItem, Could not find the path %s as the root has been configued as %s\n"), sPath.operator LPCTSTR(), m_sRootFolder.operator LPCTSTR());
       return NULL;
     }
     sSearch = sSearch.Right(nSearchLength - 1 - nRootLength);
@@ -2558,11 +2718,11 @@ HTREEITEM CTreeFileCtrl::PathToItem(const CString& sPath) const
       return NULL;
   }
 
-  HTREEITEM hItemFound = TVI_ROOT;
+  HTREEITEM hItemFound = m_hRoot;
   if (nRootLength && m_hRootedFolder)
     hItemFound = m_hRootedFolder;
   BOOL bDriveMatch = sRootFolder.IsEmpty();
-  BOOL bNetworkMatch = m_bDisplayNetwork && ((sSearch.GetLength() > 2) && sSearch.Find(_T("\\\\")) == 0);
+  BOOL bNetworkMatch = m_bShowNetwork && ((sSearch.GetLength() > 2) && sSearch.Find(_T("\\\\")) == 0);
   if (bNetworkMatch)
   {
     bDriveMatch = FALSE;
@@ -2608,7 +2768,7 @@ CString CTreeFileCtrl::ItemToPath(HTREEITEM hItem) const
   CString sPath;
   if (hItem)
   {
-    CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) GetItemData(hItem);
+    CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(GetItemData(hItem));
     ASSERT(pItem);
     sPath = pItem->m_sFQPath;
   }
@@ -2737,7 +2897,7 @@ void CTreeFileCtrl::OnInitMenuPopup(CMenu* pMenu, UINT /*nIndex*/, BOOL bSysMenu
 
 BOOL CTreeFileCtrl::OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	NMTREEVIEW* pNMTreeView = (NMTREEVIEW*)pNMHDR;
+	NMTREEVIEW* pNMTreeView = reinterpret_cast<NMTREEVIEW*>(pNMHDR);
 	*pResult = 0;
 
   if (!m_bAllowDragDrop || !IsDropSource(pNMTreeView->itemNew.hItem))
@@ -2915,7 +3075,7 @@ void CTreeFileCtrl::EndDragging(BOOL bCancel)
       int nFromLength = sFromPath.GetLength();
       int nToLength = sToPath.GetLength();
       SHFILEOPSTRUCT shfo;
-      ZeroMemory(&shfo, sizeof(SHFILEOPSTRUCT));
+      memset(&shfo, 0, sizeof(SHFILEOPSTRUCT));
       shfo.hwnd = GetSafeHwnd();
 
       if ((GetKeyState(VK_CONTROL) & 0x8000))
@@ -2929,12 +3089,20 @@ void CTreeFileCtrl::EndDragging(BOOL bCancel)
         shfo.fFlags |= FOF_ALLOWUNDO;
 
       TCHAR* pszFrom = new TCHAR[nFromLength + 2];
+    #if (_MSC_VER >= 1400)
+      _tcscpy_s(pszFrom, nFromLength+2, sFromPath);
+    #else  
       _tcscpy(pszFrom, sFromPath);
+    #endif
       pszFrom[nFromLength+1] = _T('\0');
       shfo.pFrom = pszFrom;
 
       TCHAR* pszTo = new TCHAR[nToLength + 2];
+    #if (_MSC_VER >= 1400)
+      _tcscpy_s(pszTo, nToLength+2, sToPath);
+    #else
       _tcscpy(pszTo, sToPath);
+    #endif
       pszTo[nToLength+1] = _T('\0');
       shfo.pTo = pszTo;
 
@@ -3007,8 +3175,8 @@ HTREEITEM CTreeFileCtrl::CopyItem(HTREEITEM hItem, HTREEITEM htiNewParent, HTREE
   tvstruct.item.pszText = sText.GetBuffer(tvstruct.item.cchTextMax);
 
   //Make a copy of the item data we are carying around
-  CTreeFileCtrlItemInfo* pOldInfo = (CTreeFileCtrlItemInfo*) tvstruct.item.lParam;
-  tvstruct.item.lParam = (LPARAM) new CTreeFileCtrlItemInfo(*pOldInfo);
+  CTreeFileCtrlItemInfo* pOldInfo = reinterpret_cast<CTreeFileCtrlItemInfo*>(tvstruct.item.lParam);
+  tvstruct.item.lParam = reinterpret_cast<LPARAM>(new CTreeFileCtrlItemInfo(*pOldInfo));
 
   //Insert the item at the proper location
   tvstruct.hParent = htiNewParent;
@@ -3101,11 +3269,11 @@ void CTreeFileCtrl::OnTimer(UINT nIDEvent)
 
 void CTreeFileCtrl::OnBack() 
 {
-  int nSize = (int) m_PrevItems.GetSize();
+  int nSize = static_cast<int>(m_PrevItems.GetSize());
   if (nSize)
   {
     HTREEITEM hOldItem = GetSelectedItem();
-    HTREEITEM hNewItem = (HTREEITEM) m_PrevItems.GetAt(nSize - 1);
+    HTREEITEM hNewItem = static_cast<HTREEITEM>(m_PrevItems.GetAt(nSize - 1));
 
     //Select the previous item
     m_bUpdatingHistorySelection = TRUE;
@@ -3126,11 +3294,11 @@ void CTreeFileCtrl::OnUpdateBack(CCmdUI* pCmdUI)
 
 void CTreeFileCtrl::OnForward() 
 {
-  int nSize = (int) m_NextItems.GetSize();
+  int nSize = static_cast<int>(m_NextItems.GetSize());
   if (nSize)
   {
     HTREEITEM hOldItem = GetSelectedItem();
-    HTREEITEM hNewItem = (HTREEITEM) m_NextItems.GetAt(nSize - 1);
+    HTREEITEM hNewItem = static_cast<HTREEITEM>(m_NextItems.GetAt(nSize - 1));
 
     //Select the previous item
     m_bUpdatingHistorySelection = TRUE;
@@ -3176,7 +3344,7 @@ void CTreeFileCtrl::SetMaxHistory(int nMaxHistory)
   m_nMaxHistory = nMaxHistory;
 
   //Shrink the prev array if necessary
-  int nCurItems = (int) m_PrevItems.GetSize();
+  int nCurItems = static_cast<int>(m_PrevItems.GetSize());
   if (nCurItems > m_nMaxHistory)
   {
     int nItemsToDelete = nCurItems - m_nMaxHistory;
@@ -3185,7 +3353,7 @@ void CTreeFileCtrl::SetMaxHistory(int nMaxHistory)
   }
 
   //Shrink the next array if necessary
-  nCurItems = (int) m_NextItems.GetSize();
+  nCurItems = static_cast<int>(m_NextItems.GetSize());
   if (nCurItems > m_nMaxHistory)
   {
     int nItemsToDelete = nCurItems - m_nMaxHistory;
@@ -3196,38 +3364,38 @@ void CTreeFileCtrl::SetMaxHistory(int nMaxHistory)
 
 int CTreeFileCtrl::GetBackSize() const
 {
-  return (int) m_PrevItems.GetSize();
+  return static_cast<int>(m_PrevItems.GetSize());
 }
 
 CString CTreeFileCtrl::GetBackItemText(int nBack) const
 {
   ASSERT(nBack < GetBackSize());
-  HTREEITEM hItem = (HTREEITEM) m_PrevItems.GetAt(nBack);
+  HTREEITEM hItem = static_cast<HTREEITEM>(m_PrevItems.GetAt(nBack));
   return ItemToPath(hItem);
 }
 
 int CTreeFileCtrl::GetForwardSize() const
 {
-  return (int) m_NextItems.GetSize();
+  return static_cast<int>(m_NextItems.GetSize());
 }
 
 CString CTreeFileCtrl::GetForwardItemText(int nForward) const
 {
   ASSERT(nForward < GetForwardSize());
-  HTREEITEM hItem = (HTREEITEM) m_NextItems.GetAt(nForward);
+  HTREEITEM hItem = static_cast<HTREEITEM>(m_NextItems.GetAt(nForward));
   return ItemToPath(hItem);
 }
 
 void CTreeFileCtrl::KillNotificationThread(const CString& sPath)
 {
 	//Kill all the running file change notification threads
-  int nThreads = (int) m_ThreadInfo.GetSize();
+  int nThreads = static_cast<int>(m_ThreadInfo.GetSize());
   for (int i=0; i<nThreads; i++)
   {
     CTreeFileCtrlThreadInfo* pInfo = m_ThreadInfo.GetAt(i);
     if (pInfo->m_sPath.CompareNoCase(sPath) == 0)
     {
-      TRACE(_T("CTreeFileCtrl::KillNotificationThread, Killing monitoring thread for %s\n"), sPath);
+      TRACE(_T("CTreeFileCtrl::KillNotificationThread, Killing monitoring thread for %s\n"), sPath.operator LPCTSTR());
 
       //Signal the worker thread to exit and wait for it to return
       pInfo->m_TerminateEvent.SetEvent();
@@ -3243,7 +3411,7 @@ void CTreeFileCtrl::KillNotificationThread(const CString& sPath)
 void CTreeFileCtrl::KillNotificationThreads()
 {
 	//Kill all the running file change notification threads
-  int nThreads = (int) m_ThreadInfo.GetSize();
+  int nThreads = static_cast<int>(m_ThreadInfo.GetSize());
   if (nThreads)
   {
     HANDLE* pThreads = new HANDLE[nThreads];
@@ -3293,7 +3461,7 @@ LRESULT CTreeFileCtrl::OnChange(WPARAM wParam, LPARAM /*lParam*/)
   ASSERT(pInfo);
 
   //Trace message which is helpful for diagnosing autorefresh
-  TRACE(_T("CTreeFileCtrl::OnChange, Refreshing %s due to change\n"), pInfo->m_sPath), 
+  TRACE(_T("CTreeFileCtrl::OnChange, Refreshing %s due to change\n"), pInfo->m_sPath.operator LPCTSTR()), 
 
   SetRedraw(FALSE);
 
@@ -3372,6 +3540,8 @@ void CTreeFileCtrl::Clear()
   m_hMyComputerRoot = NULL;
   m_hNetworkRoot = NULL;
   m_hRootedFolder = NULL;
+  m_hMyDocumentsRoot = NULL;
+  m_hRoot = TVI_ROOT;
 }
 
 void CTreeFileCtrl::PreSubclassWindow() 
@@ -3399,10 +3569,10 @@ void CTreeFileCtrl::PreSubclassWindow()
 
 BOOL CTreeFileCtrl::OnDeleteItem(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	NMTREEVIEW* pNMTreeView = (NMTREEVIEW*)pNMHDR;
+	NMTREEVIEW* pNMTreeView = reinterpret_cast<NMTREEVIEW*>(pNMHDR);
   if (pNMTreeView->itemOld.hItem != TVI_ROOT)
   {
-    CTreeFileCtrlItemInfo* pItem = (CTreeFileCtrlItemInfo*) pNMTreeView->itemOld.lParam;
+    CTreeFileCtrlItemInfo* pItem = reinterpret_cast<CTreeFileCtrlItemInfo*>(pNMTreeView->itemOld.lParam);
     if (pItem->m_pNetResource)
     {
       if (pItem->m_pNetResource->lpLocalName)
