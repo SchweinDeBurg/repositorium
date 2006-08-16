@@ -310,10 +310,58 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
                           3. Now calling both AddTextBody and AddHTMLBody both set the root body part MIME type to multipart/mixed. Previously
                           the code comments said one thing and did another (set it to "multipart/related"). Thanks to Bostjan Erzen for reporting
                           this issue.
-
-
-
-Copyright (c) 1998 - 2005 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
+         PJN / 14-08-2005 1. Minor update to include comments next to various locations in the code to inform users what to do if they get compile
+                          errors as a result of compiling the code without the Platform SDK being installed. Thanks to Gudjon Adalsteinsson for 
+                          prompting this update.
+                          2. Fixed an issue when the code calls the function DnsQuery when the code is compiled for UNICODE. This was the result of 
+                          a documentation error in the Platform SDK which incorrectly says that DnsQuery_W takes a ASCII string when in actual fact 
+                          it takes a UNICODE string. Thanks to John Oustalet III for reporting this issue.
+         PJN / 05-09-2005 1. Fixed an issue in MXLookup method where memory was not being freed correctly in the call to DnsRecordListFree. Thanks 
+                          to Raimund Mettendorf for reporting this bug.
+                          2. Fixed an issue where lines which had a single dot i.e. "." did not get mailed correctly. Thanks to Raimund Mettendorf
+                          for reporting this issue.
+                          3. Removed the call to FixSingleDot from SetText method as it is done at runtime as the email as being sent. This was 
+                          causing problems for fixing up the dot issue when MIME encoded messages were being sent.
+                          4. Fixed an issue where the FixSingleDot function was being called when saving a message to disk. This was incorrect
+                          and it should only be done when actually sending an SMTP email.
+         PJN / 07-09-2005 1. Fixed another single dot issue, this time where the body is composed of just a single dot. Thanks to Raimund Mettendorf
+                          for reporting this issue.
+                          2. Fixed a typo in the accessor function CPJNSMTPConnection::GetBoundAddress which was incorrectly called 
+                          CPJNSMTPConnection::SetBoundAddress.
+         PJN / 29-09-2005 1. Removed linkage to secur32.lib as all SSPI functions are now constructed at runtime using GetProcAddress. Thanks to 
+                          Emir Kapic for this update.
+                          2. 250 or 251 is now considered a successful response to the RCPT command. Thanks to Jian Peng for reporting this issue.
+                          3. Fixed potential memory leaks in the implementation of NTLM authentication as the code was throwing exceptions
+                          which the authentication code was not expected to handle.
+         PJN / 02-10-2005 1. MXLookup functionality of the class can now be excluded via the preprocessor define "CPJNSMTP_NOMXLOOKUP". Thanks to
+                          Thiago Luiz for prompting this update. 
+                          2. Sample app now does not bother asking for username and password if authentication type is NTLM. Thanks to Emir Kapic
+                          for spotting this issue.
+                          3. Documentation has been updated to refer to issues with NTLM Authentication and SSPI. Thanks to Emir Kapic for prompting
+                          this update.
+                          4. Fixed an update error done for the previous version which incorrectly supported the additional 251 command for the "MAIL"
+                          command instead of more correctly the "RCPT" command. Thanks to Jian Peng for reporting this issue.
+         PJN / 07-10-2005 1. Fixed an issue where file attachments were incorrectly including a charset value in their headers. Thanks to Asle Rokstad
+                          for reporting this issue.
+         PJN / 16-11-2005 1. Now includes full support for connecting via SSL. For example sending mail thro Gmail using the server 
+                          "smtp.gmail.com" on port 465. Thanks to Vladimir Sukhoy for providing this very nice addition (using of course the author's 
+                          very own OpenSSL wrappers!).
+         PJN / 29-06-2006 1. Code now uses new C++ style casts rather than old style C casts where necessary. 
+                          2. Integrated ThrowPJNSMTPException function into CPJNSMTPConnection class and renamed to ThrowPJNSMTPException
+                          3. Combined the functionality of the _PJNSMTP_DATA class into the main CPJNSMTPConnection class.
+                          4. Updated the code to clean compile on VC 2005
+                          5. Updated copyright details.
+                          6. Removed unnecessary checks for failure to allocate via new since in MFC these will throw CMemoryExceptions!.
+                          7. Optimized CPJNSMTPException constructor code
+         PJN / 14-07-2006 1. Fixed a bug in CPJNSMTPConnection where when compiled in UNICODE mode, NTLM authentication would fail. Thanks to 
+                          Wouter Demuynck for providing the fix for this bug.
+                          2. Reworked the CPJNSMTPConnection::NTLMAuthPhase(*) methods to throw standard CPJNSMTPException exceptions if there are any 
+                          problems detected. This can be done now that the CNTLMClientAuth class is resilient to exceptions being thrown.
+         PJN / 17-07-2006 1. Updated the code in the sample app to allow > 30000 characters to be entered into the edit box which contains the body
+                          of the email. This is achieved by placing a call to CEdit::SetLimitText in the OnInitDialog method of the dialog. Thanks to 
+                          Thomas Noone for reporting this issue.
+                          
+Copyright (c) 1998 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -340,8 +388,8 @@ my explicit written consent.
 #include "PJNMD5.h"
 
 #ifndef _WININET_
-#pragma message("To avoid this message, put wininet.h in your PCH (usually stdafx.h)")
-#include <wininet.h>
+#pragma message("To avoid this message, please put WinInet.h in your PCH (usually stdafx.h)")
+#include <WinInet.h>
 #endif
 
 #if defined(__INTEL_COMPILER)
@@ -384,104 +432,10 @@ static char THIS_FILE[] = __FILE__;
 #ifndef SEC_SUCCESS
 #define SEC_SUCCESS(Status) ((Status) >= 0)
 #endif
-#pragma comment(lib, "Secur32.lib") //Automatically link to the security dll
 #endif
 
 
 //////////////// Implementation //////////////////////////////////////
-
-//Class which handles function which must be constructed at run time
-//since we cannot absolutely gurantee wininet will be available. To avoid the loader
-//bringing up a message such as "Failed to load due to missing export...", the
-//functions are constructed using GetProcAddress. The SMTP functions then checks to 
-//see if the function pointers are NULL and if it is it returns failure and sets the 
-//error code ERROR_CALL_NOT_IMPLEMENTED which is what the OS would have done if it had 
-//implemented a stub for it in the first place !!
-class _PJNSMTP_DATA
-{
-public:
-//Constructors /Destructors
-  _PJNSMTP_DATA();
-  ~_PJNSMTP_DATA();
-
-//typedefs of the function pointers
-  typedef BOOL (WINAPI INTERNETGETCONNECTEDSTATE)(LPDWORD, DWORD);
-  typedef INTERNETGETCONNECTEDSTATE* LPINTERNETGETCONNECTEDSTATE;
-  typedef BOOL (WINAPI INTERNETAUTODIALHANGUP)(DWORD);
-  typedef INTERNETAUTODIALHANGUP* LPINTERNETAUTODIALHANGUP;
-  typedef BOOL (WINAPI INTERNETATTEMPCONNECT)(DWORD);
-  typedef INTERNETATTEMPCONNECT* LPINTERNETATTEMPCONNECT;
-
-  typedef VOID (WINAPI DNSRECORDLISTFREE)(PDNS_RECORD, DNS_FREE_TYPE);
-  typedef DNSRECORDLISTFREE* LPDNSRECORDLISTFREE;
-  typedef DNS_STATUS (WINAPI DNSQUERY)(LPSTR, WORD, DWORD, PIP4_ARRAY, PDNS_RECORD*, PVOID*);
-  typedef DNSQUERY* LPDNSQUERY;
-
-
-//Member variables
-  HINSTANCE                   m_hWininet;  //Instance handle of the "Wininet.dll" which houses the functions we want
-  LPINTERNETGETCONNECTEDSTATE m_lpfnInternetGetConnectedState;
-  LPINTERNETAUTODIALHANGUP    m_lpfnInternetAutoDialHangup;
-  LPINTERNETATTEMPCONNECT     m_lpfnInternetAttemptConnect;
-
-  HINSTANCE                   m_hDnsapi;   //Instance handle of the "Dnsapi.dll" which houses the other functions we want
-  LPDNSRECORDLISTFREE         m_lpfnDnsRecordListFree;
-  LPDNSQUERY                  m_lpfnDnsQuery; 
-};
-
-_PJNSMTP_DATA::_PJNSMTP_DATA()
-{
-  m_hWininet = LoadLibrary(_T("WININET.DLL"));
-  if (m_hWininet)
-  {
-    m_lpfnInternetGetConnectedState = (LPINTERNETGETCONNECTEDSTATE) GetProcAddress(m_hWininet, "InternetGetConnectedState");
-    m_lpfnInternetAutoDialHangup = (LPINTERNETAUTODIALHANGUP) GetProcAddress(m_hWininet, "InternetAutodialHangup");
-    m_lpfnInternetAttemptConnect = (LPINTERNETATTEMPCONNECT) GetProcAddress(m_hWininet, "InternetAttemptConnect");
-  }
-  else
-  {
-    m_lpfnInternetGetConnectedState = NULL;
-    m_lpfnInternetAutoDialHangup = NULL;
-    m_lpfnInternetAttemptConnect = NULL;
-  }
-  m_hDnsapi = LoadLibrary(_T("DNSAPI.DLL"));
-  if (m_hDnsapi)
-  {
-    m_lpfnDnsRecordListFree = (LPDNSRECORDLISTFREE) GetProcAddress(m_hDnsapi, "DnsRecordListFree");
-    #ifdef _UNICODE
-    m_lpfnDnsQuery = (LPDNSQUERY) GetProcAddress(m_hDnsapi, "DnsQuery_W");
-    #else
-    m_lpfnDnsQuery = (LPDNSQUERY) GetProcAddress(m_hDnsapi, "DnsQuery_A");  
-    #endif
-  }
-  else
-  {
-    m_lpfnDnsRecordListFree = NULL;
-    m_lpfnDnsQuery = NULL; 
-  }
-}
-
-_PJNSMTP_DATA::~_PJNSMTP_DATA()
-{
-  if (m_hWininet)
-  {
-    FreeLibrary(m_hWininet);
-    m_hWininet = NULL;
-  }
-  if (m_hDnsapi)
-  {
-    FreeLibrary(m_hDnsapi);
-    m_hDnsapi = NULL;
-  }
-}
-
-
-
-//The local variable which handle the function pointers
-
-_PJNSMTP_DATA _PJNSmtpData;
-
-
 
 CPJNSMPTBase64::CPJNSMPTBase64() : m_pBuf(NULL), m_nSize(0)
 {
@@ -502,12 +456,10 @@ void CPJNSMPTBase64::Encode(const BYTE* pData, int nSize, DWORD dwFlags)
   //Calculate and allocate the buffer to store the encoded data
   m_nSize = EncodeGetRequiredLength(nSize, dwFlags) + 1; //We allocate an extra byte so that we can null terminate the result
   m_pBuf = new char[m_nSize];
-  if (m_pBuf == NULL)
-    AfxThrowPJNSMTPException(E_OUTOFMEMORY);
 
   //Finally do the encoding
   if (!CBase64::Encode(pData, nSize, m_pBuf, &m_nSize, dwFlags))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_FAIL_BASE64_ENCODE, FACILITY_ITF);
+    CPJNSMTPConnection::ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_BASE64_ENCODE, FACILITY_ITF);
 
   m_pBuf[m_nSize] = '\0';
 }
@@ -521,45 +473,32 @@ void CPJNSMPTBase64::Decode(LPCSTR pData, int nSize)
   //Calculate and allocate the buffer to store the encoded data
   m_nSize = DecodeGetRequiredLength(nSize) + 1;
   m_pBuf = new char[m_nSize];
-  if (m_pBuf == NULL)
-    AfxThrowPJNSMTPException(E_OUTOFMEMORY);
 
   //Finally do the encoding
   if (!CBase64::Decode(pData, nSize, (BYTE*) m_pBuf, &m_nSize))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_FAIL_BASE64_DECODE, FACILITY_ITF);
+    CPJNSMTPConnection::ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_BASE64_DECODE, FACILITY_ITF);
 
   m_pBuf[m_nSize] = '\0';
 }
 
 void CPJNSMPTBase64::Encode(LPCSTR pszMessage, DWORD dwFlags)
 {
-  Encode((const BYTE*) pszMessage, (int) strlen(pszMessage), dwFlags);
+  Encode(reinterpret_cast<const BYTE*>(pszMessage), static_cast<int>(strlen(pszMessage)), dwFlags);
 }
 
 void CPJNSMPTBase64::Decode(LPCSTR pszMessage)
 {
-  Decode(pszMessage, (int) strlen(pszMessage));
+  Decode(pszMessage, static_cast<int>(strlen(pszMessage)));
 }
 
-
-
-void AfxThrowPJNSMTPException(DWORD dwError, DWORD dwFacility, const CString& sLastResponse)
+CPJNSMTPException::CPJNSMTPException(HRESULT hr, const CString& sLastResponse) : m_hr(hr), 
+                                                                                 m_sLastResponse(sLastResponse)
 {
-	if (dwError == 0)
-		dwError = ::WSAGetLastError();
-
-	CPJNSMTPException* pException = new CPJNSMTPException(dwError, dwFacility, sLastResponse);
-
-	TRACE(_T("Warning: throwing CPJNSMTPException for error %x\n"), pException->m_hr);
-	THROW(pException);
 }
 
-void AfxThrowPJNSMTPException(HRESULT hr, const CString& sLastResponse)
+CPJNSMTPException::CPJNSMTPException(DWORD dwError, DWORD dwFacility, const CString& sLastResponse) : m_hr(MAKE_HRESULT(SEVERITY_ERROR, dwFacility, dwError)),
+                                                                                                      m_sLastResponse(sLastResponse)
 {
-	CPJNSMTPException* pException = new CPJNSMTPException(hr, sLastResponse);
-
-	TRACE(_T("Warning: throwing CPJNSMTPException for error %x\n"), pException->m_hr);
-	THROW(pException);
 }
 
 BOOL CPJNSMTPException::GetErrorMessage(LPTSTR pstrError, UINT nMaxError, PUINT pnHelpContext)
@@ -583,7 +522,7 @@ BOOL CPJNSMTPException::GetErrorMessage(LPTSTR pstrError, UINT nMaxError, PUINT 
   	LPTSTR lpBuffer;
 	  bRet = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
 			                        NULL, HRESULT_CODE(m_hr), MAKELANGID(LANG_NEUTRAL, SUBLANG_SYS_DEFAULT),
-			                        (LPTSTR) &lpBuffer, 0, NULL);
+			                        reinterpret_cast<LPTSTR>(&lpBuffer), 0, NULL);
 
 	  if (bRet == FALSE)
 		  *pstrError = '\0';
@@ -604,15 +543,6 @@ CString CPJNSMTPException::GetErrorMessage()
   GetErrorMessage(pstrError, 4096, NULL);
   rVal.ReleaseBuffer();
   return rVal;
-}
-
-CPJNSMTPException::CPJNSMTPException(HRESULT hr, const CString& sLastResponse) : m_hr(hr), m_sLastResponse(sLastResponse)
-{
-}
-
-CPJNSMTPException::CPJNSMTPException(DWORD dwError, DWORD dwFacility, const CString& sLastResponse) : m_sLastResponse(sLastResponse)
-{
-  m_hr = MAKE_HRESULT(SEVERITY_ERROR, dwFacility, dwError);
 }
 
 IMPLEMENT_DYNAMIC(CPJNSMTPException, CException)
@@ -673,8 +603,8 @@ CPJNSMTPAddress::CPJNSMTPAddress(const CString& sAddress)
 	}
 }
 
-CPJNSMTPAddress::CPJNSMTPAddress(const CString& sFriendly, const CString& sAddress) : 
-              m_sFriendlyName(sFriendly), m_sEmailAddress(sAddress) 
+CPJNSMTPAddress::CPJNSMTPAddress(const CString& sFriendly, const CString& sAddress) : m_sFriendlyName(sFriendly), 
+                                                                                      m_sEmailAddress(sAddress) 
 {
   ASSERT(m_sEmailAddress.GetLength()); //An empty address is not allowed
 }
@@ -699,10 +629,10 @@ CString CPJNSMTPAddress::GetRegularFormat(BOOL bEncode, const CString& sCharset)
     {
       std::string sAsciiEncodedFriendly = CPJNSMTPBodyPart::HeaderEncode(m_sFriendlyName, sCharset);
       CString sEncodedFriendly(sAsciiEncodedFriendly.c_str());
-      sAddress.Format(_T("%s <%s>"), sEncodedFriendly, m_sEmailAddress);
+      sAddress.Format(_T("%s <%s>"), sEncodedFriendly.operator LPCTSTR(), m_sEmailAddress.operator LPCTSTR());
     }
     else
-      sAddress.Format(_T("%s <%s>"), m_sFriendlyName, m_sEmailAddress);
+      sAddress.Format(_T("%s <%s>"), m_sFriendlyName.operator LPCTSTR(), m_sEmailAddress.operator LPCTSTR());
   }
 
   return sAddress;
@@ -710,7 +640,12 @@ CString CPJNSMTPAddress::GetRegularFormat(BOOL bEncode, const CString& sCharset)
 
 
 
-CPJNSMTPBodyPart::CPJNSMTPBodyPart() : m_sCharset(_T("iso-8859-1")), m_sContentType(_T("text/plain")), m_pParentBodyPart(NULL), m_bQuotedPrintable(TRUE), m_bBase64(FALSE), m_dwMaxAttachmentSize(52428800)
+CPJNSMTPBodyPart::CPJNSMTPBodyPart() : m_sCharset(_T("iso-8859-1")), 
+                                       m_sContentType(_T("text/plain")), 
+                                       m_pParentBodyPart(NULL), 
+                                       m_bQuotedPrintable(TRUE), 
+                                       m_bBase64(FALSE), 
+                                       m_dwMaxAttachmentSize(52428800)
 {
   //Automatically generate a unique boundary separator for this body part by creating a guid
   UUID uuid;
@@ -724,7 +659,7 @@ CPJNSMTPBodyPart::CPJNSMTPBodyPart() : m_sCharset(_T("iso-8859-1")), m_sContentT
   #endif
   UuidToString(&uuid, &pszGuid);
 
-  m_sBoundary = (TCHAR*) pszGuid;
+  m_sBoundary = reinterpret_cast<TCHAR*>(pszGuid);
 
   //Free up the temp memory
   RpcStringFree(&pszGuid);
@@ -768,8 +703,6 @@ CPJNSMTPBodyPart& CPJNSMTPBodyPart::operator=(const CPJNSMTPBodyPart& bodyPart)
   for (i=0; i<bodyPart.m_ChildBodyParts.GetSize(); i++)
   {
     CPJNSMTPBodyPart* pBodyPart = new CPJNSMTPBodyPart(*bodyPart.m_ChildBodyParts.GetAt(i));
-    if (pBodyPart == NULL)
-      AfxThrowPJNSMTPException(E_OUTOFMEMORY);
     pBodyPart->m_pParentBodyPart  = this;
     m_ChildBodyParts.Add(pBodyPart);
   }
@@ -785,8 +718,13 @@ BOOL CPJNSMTPBodyPart::SetFilename(const CString& sFilename)
   TCHAR sPath[_MAX_PATH];
   TCHAR sFname[_MAX_FNAME];
   TCHAR sExt[_MAX_EXT];
+#if (_MSC_VER >= 1400)
+  _tsplitpath_s(sFilename, NULL, 0, NULL, 0, sFname, sizeof(sFname)/sizeof(TCHAR), sExt, sizeof(sExt)/sizeof(TCHAR));
+  _tmakepath_s(sPath, sizeof(sPath)/sizeof(TCHAR), NULL, NULL, sFname, sExt);
+#else  
   _tsplitpath(sFilename, NULL, NULL, sFname, sExt);
   _tmakepath(sPath, NULL, NULL, sFname, sExt);
+#endif  
 	m_sFilename = sFilename;
   m_sTitle = sPath;
 
@@ -804,9 +742,6 @@ void CPJNSMTPBodyPart::SetText(const CString& sText)
   m_sText.Replace(_T("\r\n"), _T("\n"));
   m_sText.Replace(_T("\r"), _T("\n"));
   m_sText.Replace(_T("\n"), _T("\r\n"));
-
-  //Fix the case of a single dot on a line in the message body
-  FixSingleDotT(m_sText);
 
   //Also set the content type while we are at it
   m_sContentType = _T("text/plain");
@@ -837,9 +772,9 @@ CString CPJNSMTPBodyPart::GetContentLocation() const
 char CPJNSMTPBodyPart::HexDigit(int nDigit)
 {
   if (nDigit < 10)
-    return (char) (nDigit + '0');
+    return static_cast<char>(nDigit + '0');
   else
-    return (char) (nDigit - 10 + 'A');
+    return static_cast<char>(nDigit - 10 + 'A');
 }
 
 //Converts text to its Quoted printable equivalent according to RFC 2045
@@ -893,7 +828,7 @@ std::string CPJNSMTPBodyPart::QuotedPrintableEncode(const std::string& sText)
         if (bInWord)
         {
           --i;
-          c = (BYTE) sTemp[i];
+          c = static_cast<BYTE>(sTemp[i]);
         }
 
 		    if (i == nStartLine)
@@ -917,7 +852,7 @@ int CPJNSMTPBodyPart::ConvertToUTF8(const CString& in, std::string &out)
 	USES_CONVERSION;
 
 	LPCWSTR psuBuff = T2CW(in);
-  int nULength = (int) wcslen(psuBuff);
+  int nULength = static_cast<int>(wcslen(psuBuff));
 	LPSTR pUtf8 = NULL;
 
 	//convert the data to utf-8
@@ -925,8 +860,6 @@ int CPJNSMTPBodyPart::ConvertToUTF8(const CString& in, std::string &out)
   ASSERT(iLength);
 
 	pUtf8 = new char[iLength+1];
-  if (pUtf8 == NULL)
-    AfxThrowPJNSMTPException(E_OUTOFMEMORY);
   iLength = UnicodeToUTF8(psuBuff, nULength, pUtf8, iLength);
 	ASSERT(iLength);
 	pUtf8[iLength] = '\0';
@@ -961,9 +894,9 @@ int CPJNSMTPBodyPart::UnicodeToUTF8(LPCWSTR wszSrc, int nSrc, LPSTR szDest, int 
 				{
 					if ((nU8 + 2) < nDest)
 					{
-						szDest[nU8++] = (char)(0xe0 | (wchHighSurrogate >> 12));
-						szDest[nU8++] = (char)(0x80 | (((wchHighSurrogate) & 0x0fc0) >> 6));
-						szDest[nU8++] = (char)(0x80 | (wchHighSurrogate & 0x003f));
+						szDest[nU8++] = static_cast<char>(0xe0 | (wchHighSurrogate >> 12));
+						szDest[nU8++] = static_cast<char>(0x80 | (((wchHighSurrogate) & 0x0fc0) >> 6));
+						szDest[nU8++] = static_cast<char>(0x80 | (wchHighSurrogate & 0x003f));
 					}
 					else
 					{
@@ -991,10 +924,10 @@ int CPJNSMTPBodyPart::UnicodeToUTF8(LPCWSTR wszSrc, int nSrc, LPSTR szDest, int 
 					 if ((nU8 + 3) < nDest)
 					 {
 						 dwSurrogateChar = (((wchHighSurrogate-0xD800) << 10) + (*pwszSrc - 0xDC00) + 0x10000);
-						 szDest[nU8++] = (unsigned char) (0xf0 | (unsigned char)(dwSurrogateChar >> 18));           // 3 bits from 1st byte
-						 szDest[nU8++] = (unsigned char) (0x80 | (unsigned char)((dwSurrogateChar >> 12) & 0x3f));  // 6 bits from 2nd byte
-						 szDest[nU8++] = (unsigned char) (0x80 | (unsigned char)((dwSurrogateChar >> 6) & 0x3f));   // 6 bits from 3rd byte
-						 szDest[nU8++] = (unsigned char) (0x80 | (unsigned char)(0x3f & dwSurrogateChar));          // 6 bits from 4th byte
+						 szDest[nU8++] = static_cast<unsigned char>(0xf0 | static_cast<unsigned char>(dwSurrogateChar >> 18));           // 3 bits from 1st byte
+						 szDest[nU8++] = static_cast<unsigned char>(0x80 | static_cast<unsigned char>((dwSurrogateChar >> 12) & 0x3f));  // 6 bits from 2nd byte
+						 szDest[nU8++] = static_cast<unsigned char>(0x80 | static_cast<unsigned char>((dwSurrogateChar >> 6) & 0x3f));   // 6 bits from 3rd byte
+						 szDest[nU8++] = static_cast<unsigned char>(0x80 | static_cast<unsigned char>(0x3f & dwSurrogateChar));          // 6 bits from 4th byte
 					 }
 					 else
 					 {
@@ -1019,9 +952,9 @@ int CPJNSMTPBodyPart::UnicodeToUTF8(LPCWSTR wszSrc, int nSrc, LPSTR szDest, int 
 				 {
 					 if ((nU8 + 2) < nDest)
 					 {
-						szDest[nU8++] = (char)(0xe0 | (wchHighSurrogate >> 12));
-						szDest[nU8++] = (char)(0x80 | (((wchHighSurrogate) & 0x0fc0) >> 6));
-						szDest[nU8++] = (char)(0x80 | (wchHighSurrogate & 0x003f));
+						szDest[nU8++] = static_cast<char>(0xe0 | (wchHighSurrogate >> 12));
+						szDest[nU8++] = static_cast<char>(0x80 | (((wchHighSurrogate) & 0x0fc0) >> 6));
+						szDest[nU8++] = static_cast<char>(0x80 | (wchHighSurrogate & 0x003f));
 					 }
 					 else
 					 {
@@ -1041,7 +974,7 @@ int CPJNSMTPBodyPart::UnicodeToUTF8(LPCWSTR wszSrc, int nSrc, LPSTR szDest, int 
 				//Found ASCII.
 				if (nDest)
 				{
-					szDest[nU8] = (char)*pwszSrc;
+					szDest[nU8] = static_cast<char>(*pwszSrc);
 				}
 				nU8++;
 			}
@@ -1054,8 +987,8 @@ int CPJNSMTPBodyPart::UnicodeToUTF8(LPCWSTR wszSrc, int nSrc, LPSTR szDest, int 
 					{
 						//Use upper 5 bits in first byte.
 						//Use lower 6 bits in second byte.
-						szDest[nU8++] = (char)(0xc0 | (*pwszSrc >> 6));
-						szDest[nU8++] = (char)(0x80 | (*pwszSrc & 0x003f));
+						szDest[nU8++] = static_cast<char>(0xc0 | (*pwszSrc >> 6));
+						szDest[nU8++] = static_cast<char>(0x80 | (*pwszSrc & 0x003f));
 					}
 					else
 					{
@@ -1079,9 +1012,9 @@ int CPJNSMTPBodyPart::UnicodeToUTF8(LPCWSTR wszSrc, int nSrc, LPSTR szDest, int 
 						//Use upper  4 bits in first byte.
 						//Use middle 6 bits in second byte.
 						//Use lower  6 bits in third byte.
-						szDest[nU8++] = (char)(0xe0 | (*pwszSrc >> 12));
-						szDest[nU8++] = (char)(0x80 | (((*pwszSrc) & 0x0fc0) >> 6));
-						szDest[nU8++] = (char)(0x80 | (*pwszSrc & 0x003f));
+						szDest[nU8++] = static_cast<char>(0xe0 | (*pwszSrc >> 12));
+						szDest[nU8++] = static_cast<char>(0x80 | (((*pwszSrc) & 0x0fc0) >> 6));
+						szDest[nU8++] = static_cast<char>(0x80 | (*pwszSrc & 0x003f));
 					}
 					else
 					{
@@ -1106,9 +1039,9 @@ int CPJNSMTPBodyPart::UnicodeToUTF8(LPCWSTR wszSrc, int nSrc, LPSTR szDest, int 
 		{
 			if ((nU8 + 2) < nDest)
 			{
-				szDest[nU8++] = (char)(0xe0 | (wchHighSurrogate >> 12));
-				szDest[nU8++] = (char)(0x80 | (((wchHighSurrogate) & 0x0fc0) >> 6));
-				szDest[nU8++] = (char)(0x80 | (wchHighSurrogate & 0x003f));
+				szDest[nU8++] = static_cast<char>(0xe0 | (wchHighSurrogate >> 12));
+				szDest[nU8++] = static_cast<char>(0x80 | (((wchHighSurrogate) & 0x0fc0) >> 6));
+				szDest[nU8++] = static_cast<char>(0x80 | (wchHighSurrogate & 0x003f));
 			}
 			else
 			{
@@ -1161,11 +1094,11 @@ BOOL CPJNSMTPBodyPart::GetHeader(LPSTR& pszHeader, int& nHeaderSize)
 
     //Form the header to go along with this body part
     if (GetNumberOfChildBodyParts())
-		  sHeader.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; charset=%s; name=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
-                     m_pParentBodyPart->m_sBoundary, m_sContentType, m_sCharset, m_sTitle, m_sBoundary, m_sTitle);
+		  sHeader.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
+                     m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sBoundary.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
     else
-		  sHeader.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; charset=%s; name=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
-                     m_pParentBodyPart->m_sBoundary, m_sContentType, m_sCharset, m_sTitle, m_sTitle);
+		  sHeader.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
+                     m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
 
     bSuccess = TRUE;
   }
@@ -1179,25 +1112,25 @@ BOOL CPJNSMTPBodyPart::GetHeader(LPSTR& pszHeader, int& nHeaderSize)
     {
       if (m_bBase64)
         sHeader.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\n"),
-                       m_pParentBodyPart->m_sBoundary, m_sContentType, m_sCharset, m_sBoundary);
+                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
       else if (m_bQuotedPrintable)
         sHeader.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s; Boundary=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\n"),
-                       m_pParentBodyPart->m_sBoundary, m_sContentType, m_sCharset, m_sBoundary);
+                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
       else
         sHeader.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s; Boundary=\"%s\"\r\n"),
-                       m_pParentBodyPart->m_sBoundary, m_sContentType, m_sCharset, m_sBoundary);
+                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
     }
     else
     {
       if (m_bBase64)
         sHeader.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s\r\nContent-Transfer-Encoding: base64\r\n"),
-                       m_pParentBodyPart->m_sBoundary, m_sContentType, m_sCharset);
+                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
       else if (m_bQuotedPrintable)
         sHeader.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s\r\nContent-Transfer-Encoding: quoted-printable\r\n"),
-                       m_pParentBodyPart->m_sBoundary, m_sContentType, m_sCharset);
+                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
       else
         sHeader.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s\r\n"),
-                       m_pParentBodyPart->m_sBoundary, m_sContentType, m_sCharset);
+                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
     }
 
     bSuccess = TRUE;
@@ -1207,33 +1140,35 @@ BOOL CPJNSMTPBodyPart::GetHeader(LPSTR& pszHeader, int& nHeaderSize)
   if (m_sContentBase.GetLength())
   {
     CString sLine;
-    sLine.Format(_T("Content-Base: %s\r\n"), m_sContentBase);
+    sLine.Format(_T("Content-Base: %s\r\n"), m_sContentBase.operator LPCTSTR());
     sHeader += sLine;
   }
   if (m_sContentID.GetLength())
   {
     CString sLine;
-    sLine.Format(_T("Content-ID: %s\r\n"), m_sContentID);
+    sLine.Format(_T("Content-ID: %s\r\n"), m_sContentID.operator LPCTSTR());
     sHeader += sLine;
   }
   if (m_sContentLocation.GetLength())
   {
     CString sLine;
-    sLine.Format(_T("Content-Location: %s\r\n"), m_sContentLocation);
+    sLine.Format(_T("Content-Location: %s\r\n"), m_sContentLocation.operator LPCTSTR());
     sHeader += sLine;
   }
   sHeader += _T("\r\n");
 
-  nHeaderSize = (int) _tcslen(sHeader);
+  nHeaderSize = static_cast<int>(_tcslen(sHeader));
   pszHeader = new char[nHeaderSize+1];
-  if (pszHeader == NULL)
-    AfxThrowPJNSMTPException(E_OUTOFMEMORY);
-  strcpy(pszHeader, T2A((LPTSTR) (LPCTSTR) sHeader));
+#if (_MSC_VER >= 1400)
+  strcpy_s(pszHeader, nHeaderSize+1, T2A(const_cast<LPTSTR>(sHeader.operator LPCTSTR())));
+#else    
+  strcpy(pszHeader, T2A(const_cast<LPTSTR>(sHeader.operator LPCTSTR())));
+#endif  
 
   return bSuccess;
 }
 
-BOOL CPJNSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
+BOOL CPJNSMTPBodyPart::GetBody(BOOL bDoSingleDotFix, LPSTR& pszBody, int& nBodySize)
 {
 	//if the body is text we must convert is to the declared encoding, this could create some
 	//problems since windows conversion functions (such as WideCharToMultiByte) uses UINT
@@ -1263,8 +1198,6 @@ BOOL CPJNSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
           {
             //read in the contents of the input file
             BYTE* pszIn = new BYTE[dwFileSizeLow];
-            if (pszIn == NULL)
-              AfxThrowPJNSMTPException(E_OUTOFMEMORY);
 
             //Read in the contents of the file
             DWORD dwBytesWritten = 0;
@@ -1276,9 +1209,11 @@ BOOL CPJNSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
               //Form the body for this body part
               nBodySize = m_Coder.ResultSize();
               pszBody = new char[nBodySize + 1];
-              if (pszBody == NULL)
-                AfxThrowPJNSMTPException(E_OUTOFMEMORY);
+            #if (_MSC_VER >= 1400)
+              strcpy_s(pszBody, nBodySize+1, m_Coder.Result());
+            #else    
               strcpy(pszBody, m_Coder.Result());
+            #endif
 
               bSuccess = TRUE;
             }
@@ -1316,14 +1251,16 @@ BOOL CPJNSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
         sBuff = T2CA(m_sText);
 
       //Do the encoding
-      m_Coder.Encode((const BYTE*) sBuff.c_str(), (int) sBuff.length(), BASE64_FLAG_NONE);
+      m_Coder.Encode(reinterpret_cast<const BYTE*>(sBuff.c_str()), static_cast<int>(sBuff.length()), BASE64_FLAG_NONE);
 
       //Form the body for this body part
       nBodySize = m_Coder.ResultSize();
       pszBody = new char[nBodySize + 1];
-      if (pszBody == NULL)
-        AfxThrowPJNSMTPException(E_OUTOFMEMORY);
+    #if (_MSC_VER >= 1400)
+      strcpy_s(pszBody, nBodySize+1, m_Coder.Result());
+    #else
       strcpy(pszBody, m_Coder.Result());
+    #endif
     }
     else if (m_bQuotedPrintable)
     {
@@ -1336,13 +1273,16 @@ BOOL CPJNSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
 
       //Do the encoding
 	    std::string sBody = QuotedPrintableEncode(sBuff);
-      FixSingleDotA(sBody);
+      if (bDoSingleDotFix)
+        FixSingleDotA(sBody);
 
-      nBodySize = (int) sBody.length();
+      nBodySize = static_cast<int>(sBody.length());
       pszBody = new char[nBodySize+1];
-      if (pszBody == NULL)
-        AfxThrowPJNSMTPException(E_OUTOFMEMORY);
+    #if (_MSC_VER >= 1400)
+      strcpy_s(pszBody, nBodySize+1, sBody.c_str());
+    #else
       strcpy(pszBody, sBody.c_str());
+    #endif
     }
     else
     {
@@ -1354,13 +1294,16 @@ BOOL CPJNSMTPBodyPart::GetBody(LPSTR& pszBody, int& nBodySize)
         sBody = T2CA(m_sText);
 
       //No encoding to do
-      FixSingleDotA(sBody);
+      if (bDoSingleDotFix)
+        FixSingleDotA(sBody);
 
-		  nBodySize = (int) sBody.length();
+		  nBodySize = static_cast<int>(sBody.length());
 		  pszBody = new char[nBodySize+1];
-      if (pszBody == NULL)
-        AfxThrowPJNSMTPException(E_OUTOFMEMORY);
+    #if (_MSC_VER >= 1400)
+      strcpy_s(pszBody, nBodySize+1, sBody.c_str());
+    #else
 		  strcpy(pszBody, sBody.c_str());
+		#endif
     }
 
     bSuccess = TRUE;
@@ -1376,29 +1319,29 @@ BOOL CPJNSMTPBodyPart::GetFooter(LPSTR& pszFooter, int& nFooterSize)
   //Form the MIME footer
 	CString sFooter;
   sFooter.Format(_T("\r\n--%s--"), m_sBoundary);
-  nFooterSize = (int) _tcslen(sFooter);
+  nFooterSize = static_cast<int>(_tcslen(sFooter));
   pszFooter = new char[nFooterSize+1];
-  if (pszFooter == NULL)
-    AfxThrowPJNSMTPException(E_OUTOFMEMORY);
-  strcpy(pszFooter, T2A((LPTSTR) (LPCTSTR) sFooter));
+#if (_MSC_VER >= 1400)
+  strcpy_s(pszFooter, nFooterSize+1, T2A(const_cast<LPTSTR>(sFooter.operator LPCTSTR())));
+#else    
+  strcpy(pszFooter, T2A(const_cast<LPTSTR>(sFooter.operator LPCTSTR())));
+#endif
 
   return TRUE;  
 }
 
 int CPJNSMTPBodyPart::GetNumberOfChildBodyParts() const
 {
-  return (int) m_ChildBodyParts.GetSize();
+  return static_cast<int>(m_ChildBodyParts.GetSize());
 }
 
 int CPJNSMTPBodyPart::AddChildBodyPart(CPJNSMTPBodyPart& bodyPart)
 {
   CPJNSMTPBodyPart* pNewBodyPart = new CPJNSMTPBodyPart(bodyPart);
-  if (pNewBodyPart == NULL)
-    AfxThrowPJNSMTPException(E_OUTOFMEMORY);
   pNewBodyPart->m_pParentBodyPart = this;
   ASSERT(m_sContentType.GetLength()); //Did you forget to call SetContentType
 
-  return (int) m_ChildBodyParts.Add(pNewBodyPart);
+  return static_cast<int>(m_ChildBodyParts.Add(pNewBodyPart));
 }
 
 void CPJNSMTPBodyPart::RemoveChildBodyPart(int nIndex)
@@ -1420,30 +1363,29 @@ CPJNSMTPBodyPart* CPJNSMTPBodyPart::GetParentBodyPart()
 
 void CPJNSMTPBodyPart::FixSingleDotT(CString& sBody)
 {
-  int nFind = sBody.Find(_T("\n."));
-  if (nFind != -1)
-  {
-	  CString sLeft(sBody.Left(nFind+1));
-	  CString sRight(sBody.Right(sBody.GetLength()-(nFind+1)));
-	  FixSingleDotT(sRight);
-	  sBody = sLeft + _T(".") + sRight;
-  }
+  //Handle a dot on the first line on its own (by replacing it with a double dot as referred to in 
+  //section 4.5.2 of the SMTP RFC)  
+  if ((sBody.Find(_T(".\r\n")) == 0) || (sBody == _T(".")))
+    sBody.Insert(0, _T("."));
+  //Also handle any subsequent single dot lines
+  sBody.Replace(_T("\r\n."), _T("\r\n.."));
 }
 
 void CPJNSMTPBodyPart::FixSingleDotA(std::string& sBody)
 {
-  size_t nFind = sBody.find("\n.");
-#if !defined(__INTEL_COMPILER)
-  if (nFind != -1)
-#else
-  if (nFind != -1U)
-#endif	// __INTEL_COMPILER
+  //Handle a dot on the first line on its own (by replacing it with a double dot as referred to in 
+  //section 4.5.2 of the SMTP RFC)  
+  if ((sBody.find(".\r\n") == 0) || (sBody == "."))
+    sBody.insert(0, ".");
+  //Also handle any subsequent single dot lines
+  std::string::size_type nFound = std::string::npos;
+  do
   {
-	  std::string sLeft(sBody.substr(0, nFind+1));
-	  std::string sRight(sBody.substr(nFind+1));
-	  FixSingleDotA(sRight);
-	  sBody = sLeft + "." + sRight;
+    nFound = sBody.find("\r\n.", nFound != std::string::npos ? nFound + 1 : 0);
+    if (nFound != std::string::npos)
+      sBody.replace(nFound, 3, "\r\n..");
   }
+  while (nFound != std::string::npos);
 }
 
 CPJNSMTPBodyPart* CPJNSMTPBodyPart::FindFirstBodyPart(const CString sContentType)
@@ -1466,7 +1408,7 @@ std::string CPJNSMTPBodyPart::QEncode(LPCSTR sText, LPCSTR sCharset)
   size_t i;
   for (i=0; i<nSize && !bTranslationNeeded; i++)
   {
-    BYTE c = (BYTE) sText[i];
+    BYTE c = static_cast<BYTE>(sText[i]);
     bTranslationNeeded = (c > 127);
   }
 
@@ -1525,7 +1467,11 @@ std::string CPJNSMTPBodyPart::HeaderEncode(const CString& sText, const CString& 
 		size_t length = (70 > nCurrentLineLength) ? nCurrentLineLength : 70;
 
 		char buf[71];
+  #if (_MSC_VER >= 1400)
+    strncpy_s(buf, sizeof(buf), itr, length);
+  #else
 		strncpy(buf, itr, length);
+	#endif
     buf[length] = '\0';
 
     //Prepare for the next time around
@@ -1542,7 +1488,9 @@ std::string CPJNSMTPBodyPart::HeaderEncode(const CString& sText, const CString& 
 
 
 
-CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.54")), m_bMime(FALSE), m_Priority(NO_PRIORITY)
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.63")), 
+                                     m_bMime(FALSE), 
+                                     m_Priority(NO_PRIORITY)
 {
 }
 
@@ -1570,8 +1518,6 @@ CPJNSMTPMessage& CPJNSMTPMessage::operator=(const CPJNSMTPMessage& message)
   for (i=0; i<message.m_ToRecipients.GetSize(); i++)
   {
     CPJNSMTPAddress* pAddress = new CPJNSMTPAddress(*message.m_ToRecipients.GetAt(i));
-    if (pAddress == NULL)
-      AfxThrowPJNSMTPException(E_OUTOFMEMORY);
     m_ToRecipients.Add(pAddress);
   }
 
@@ -1584,8 +1530,6 @@ CPJNSMTPMessage& CPJNSMTPMessage::operator=(const CPJNSMTPMessage& message)
   for (i=0; i<message.m_CCRecipients.GetSize(); i++)
   {
     CPJNSMTPAddress* pAddress = new CPJNSMTPAddress(*message.m_CCRecipients.GetAt(i));
-    if (pAddress == NULL)
-      AfxThrowPJNSMTPException(E_OUTOFMEMORY);
     m_CCRecipients.Add(pAddress);
   }
 
@@ -1598,8 +1542,6 @@ CPJNSMTPMessage& CPJNSMTPMessage::operator=(const CPJNSMTPMessage& message)
   for (i=0; i<message.m_BCCRecipients.GetSize(); i++)
   {
     CPJNSMTPAddress* pAddress = new CPJNSMTPAddress(*message.m_BCCRecipients.GetAt(i));
-    if (pAddress == NULL)
-      AfxThrowPJNSMTPException(E_OUTOFMEMORY);
     m_BCCRecipients.Add(pAddress);
   }
 
@@ -1641,10 +1583,26 @@ int CPJNSMTPMessage::GetNumberOfRecipients(RECIPIENT_TYPE RecipientType) const
   int nSize = 0;
   switch (RecipientType)
   {
-    case TO:  nSize = (int) m_ToRecipients.GetSize();  break;
-    case CC:  nSize = (int) m_CCRecipients.GetSize();  break;
-    case BCC: nSize = (int) m_BCCRecipients.GetSize(); break;
-    default: ASSERT(FALSE);                      break;
+    case TO:  
+    {
+      nSize = static_cast<int>(m_ToRecipients.GetSize());  
+      break;
+    }
+    case CC:  
+    {
+      nSize = static_cast<int>(m_CCRecipients.GetSize());  
+      break;
+    }
+    case BCC: 
+    {
+      nSize = static_cast<int>(m_BCCRecipients.GetSize()); 
+      break;
+    }
+    default: 
+    {
+      ASSERT(FALSE);
+      break;
+    }
   }
 
 	return nSize;
@@ -1653,17 +1611,29 @@ int CPJNSMTPMessage::GetNumberOfRecipients(RECIPIENT_TYPE RecipientType) const
 int CPJNSMTPMessage::AddRecipient(CPJNSMTPAddress& recipient, RECIPIENT_TYPE RecipientType)
 {
   int nIndex = -1;
-
   CPJNSMTPAddress* pNewRecipient = new CPJNSMTPAddress(recipient);
-  if (pNewRecipient == NULL)
-    AfxThrowPJNSMTPException(E_OUTOFMEMORY);
-
   switch (RecipientType)
   {
-    case TO:  nIndex = (int) m_ToRecipients.Add(pNewRecipient);  break;
-    case CC:  nIndex = (int) m_CCRecipients.Add(pNewRecipient);  break;
-    case BCC: nIndex = (int) m_BCCRecipients.Add(pNewRecipient); break;
-    default: ASSERT(FALSE);                            break;
+    case TO:  
+    {
+      nIndex = static_cast<int>(m_ToRecipients.Add(pNewRecipient));  
+      break;
+    }
+    case CC:  
+    {
+      nIndex = static_cast<int>(m_CCRecipients.Add(pNewRecipient));  
+      break;
+    }
+    case BCC: 
+    {
+      nIndex = static_cast<int>(m_BCCRecipients.Add(pNewRecipient)); 
+      break;
+    }
+    default: 
+    {
+      ASSERT(FALSE);
+      break;
+    }
   }
 
   return nIndex;
@@ -1703,10 +1673,27 @@ CPJNSMTPAddress* CPJNSMTPMessage::GetRecipient(int nIndex, RECIPIENT_TYPE Recipi
 {
   switch (RecipientType)
   {
-    case TO:  return m_ToRecipients.GetAt(nIndex);   break;
-    case CC:  return m_CCRecipients.GetAt(nIndex);   break;
-    case BCC: return m_BCCRecipients.GetAt(nIndex);  break;
-    default: ASSERT(FALSE); return (CPJNSMTPAddress*) NULL; break;
+    case TO:  
+    {
+      return m_ToRecipients.GetAt(nIndex);   
+      break;
+    }
+    case CC:  
+    {
+      return m_CCRecipients.GetAt(nIndex);   
+      break;
+    }
+    case BCC: 
+    {
+      return m_BCCRecipients.GetAt(nIndex);  
+      break;
+    }
+    default: 
+    {
+      ASSERT(FALSE); 
+      return static_cast<CPJNSMTPAddress*>(NULL); 
+      break;
+    }
   }
 }
 
@@ -1743,7 +1730,7 @@ CString CPJNSMTPMessage::GetCustomHeader(int nIndex)
 
 int CPJNSMTPMessage::GetNumberOfCustomHeaders() const
 {
-  return (int) m_CustomHeaders.GetSize();
+  return static_cast<int>(m_CustomHeaders.GetSize());
 }
 
 void CPJNSMTPMessage::RemoveCustomHeader(int nIndex)
@@ -1841,20 +1828,20 @@ std::string CPJNSMTPMessage::getHeader()
     if (bHasChildParts)
     {
       CString sReply;
-      sReply.Format(_T("MIME-Version: 1.0\r\nContent-Type: %s; boundary=\"%s\"\r\n"), m_RootPart.GetContentType(), m_RootPart.GetBoundary());
+      sReply.Format(_T("MIME-Version: 1.0\r\nContent-Type: %s; boundary=\"%s\"\r\n"), m_RootPart.GetContentType().operator LPCTSTR(), m_RootPart.GetBoundary().operator LPCTSTR());
       suBuf += T2CA(sReply);
     }
     else
     {
       CString sReply;
-      sReply.Format(_T("MIME-Version: 1.0\r\nContent-Type: %s\r\n"), m_RootPart.GetContentType());
+      sReply.Format(_T("MIME-Version: 1.0\r\nContent-Type: %s\r\n"), m_RootPart.GetContentType().operator LPCTSTR());
       suBuf += T2CA(sReply);
     }
   }
   else
   {
     CString sReply;
-    sReply.Format(_T("Content-Type: %s;\r\n\tcharset=%s\r\n"), m_RootPart.GetContentType(), m_RootPart.GetCharset());
+    sReply.Format(_T("Content-Type: %s;\r\n\tcharset=%s\r\n"), m_RootPart.GetContentType(), m_RootPart.GetCharset().operator LPCTSTR());
     suBuf += T2CA(sReply);
   }
   
@@ -1901,7 +1888,7 @@ std::string CPJNSMTPMessage::getHeader()
   }
 
   //Add the custom headers
-  int nCustomHeaders = (int) m_CustomHeaders.GetSize();
+  int nCustomHeaders = static_cast<int>(m_CustomHeaders.GetSize());
   for (i=0; i<nCustomHeaders; i++)
   {
     CString sHeader = m_CustomHeaders.GetAt(i);
@@ -1928,9 +1915,11 @@ int CPJNSMTPMessage::ParseMultipleRecipients(const CString& sRecipients, CPJNSMT
 	//Loop through the whole string, adding recipients as they are encountered
 	int length = sRecipients.GetLength();
 	TCHAR* buf = new TCHAR[length + 1];	// Allocate a work area (don't touch parameter itself)
-  if (buf == NULL)
-    AfxThrowPJNSMTPException(E_OUTOFMEMORY);
+#if (_MSC_VER >= 1400)
+  _tcscpy_s(buf, length+1, sRecipients);
+#else    
 	_tcscpy(buf, sRecipients);
+#endif
 	for (int pos=0, start=0; pos<=length; pos++)
 	{
 		//Valid separators between addresses are ',' or ';'
@@ -1955,7 +1944,7 @@ int CPJNSMTPMessage::ParseMultipleRecipients(const CString& sRecipients, CPJNSMT
 	delete [] buf;
 
   //Return the number of recipients parsed
-	return (int) recipients.GetSize();
+	return static_cast<int>(recipients.GetSize());
 }
 
 BOOL CPJNSMTPMessage::AddMultipleRecipients(const CString& sRecipients, RECIPIENT_TYPE RecipientType)
@@ -1983,9 +1972,11 @@ int CPJNSMTPMessage::AddMultipleAttachments(const CString& sAttachments)
 	//Loop through the whole string, adding attachments as they are encountered
 	int length = sAttachments.GetLength();
 	TCHAR* buf = new TCHAR[length + 1];	// Allocate a work area (don't touch parameter itself)
-  if (buf == NULL)
-    AfxThrowPJNSMTPException(E_OUTOFMEMORY);
+#if (_MSC_VER >= 1400)
+  _tcscpy_s(buf, length+1, sAttachments);
+#else    
 	_tcscpy(buf, sAttachments);
+#endif
 	for (int pos=0, start=0; pos<=length; pos++)
 	{
 		//Valid separators between attachments are ',' or ';'
@@ -2173,28 +2164,28 @@ void CPJNSMTPMessage::SaveToDisk(const CString& sFilename)
   //Open the file for writing
   HANDLE hFile = CreateFile(sFilename, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
   if (hFile == INVALID_HANDLE_VALUE)
-    AfxThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+    CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
 
   //Set the file back to 0 in size
-  if (SetFilePointer(hFile, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    AfxThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+  if (SetFilePointer(hFile, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER) //If you get a compilation error on this line, then you need to download, install and configure the MS Platform SDK if you are compiling the code under Visual C++ 6
+    CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
   if (!SetEndOfFile(hFile))
-    AfxThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+    CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
 
   try
   {
     //Write out the Message Header
     std::string sHeader = getHeader();
-    int nCmdLength = (int) sHeader.length();
+    int nCmdLength = static_cast<int>(sHeader.length());
     DWORD dwWritten = 0;
     if (!WriteFile(hFile, sHeader.c_str(), nCmdLength, &dwWritten, NULL))
-      AfxThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+      CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
 
 	  //Write out the separator
     char* pszBodyHeader = "\r\n";
-    nCmdLength = (int) strlen(pszBodyHeader);
+    nCmdLength = static_cast<int>(strlen(pszBodyHeader));
     if (!WriteFile(hFile, pszBodyHeader, nCmdLength, &dwWritten, NULL))
-      AfxThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+      CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
 
     //Write out the rest of the message
     BOOL bHasChildParts = (m_RootPart.GetNumberOfChildBodyParts() != 0);
@@ -2206,13 +2197,13 @@ void CPJNSMTPMessage::SaveToDisk(const CString& sFilename)
     else
     {
       //Send the body
-      char* pszBody = T2A((LPTSTR) (LPCTSTR) m_RootPart.GetText());
+      char* pszBody = T2A(const_cast<LPTSTR>(m_RootPart.GetText().operator LPCTSTR()));
       ASSERT(pszBody);
-      nCmdLength = (int) strlen(pszBody);
+      nCmdLength = static_cast<int>(strlen(pszBody));
 
       //Send the body
       if (!WriteFile(hFile, pszBody, nCmdLength, &dwWritten, NULL))
-        AfxThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+        CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
     }
   }
   catch(CPJNSMTPException* pEx)
@@ -2225,7 +2216,7 @@ void CPJNSMTPMessage::SaveToDisk(const CString& sFilename)
     pEx->Delete();
 
     //rethrow the exception
-    AfxThrowPJNSMTPException(hr, sLastResponse);
+    CPJNSMTPConnection::ThrowPJNSMTPException(hr, sLastResponse);
   }
 
   CloseHandle(hFile);
@@ -2242,7 +2233,7 @@ void CPJNSMTPMessage::WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOO
     LPSTR pszHeader = NULL;
     int nHeaderSize = 0;
     if (!pBodyPart->GetHeader(pszHeader, nHeaderSize))
-      AfxThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_HEADER_OF_BODY_PART, FACILITY_ITF);
+      CPJNSMTPConnection::ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_HEADER_OF_BODY_PART, FACILITY_ITF);
     DWORD dwWritten = 0;
 		if (!WriteFile(hFile, pszHeader, nHeaderSize, &dwWritten, NULL))
     {
@@ -2252,7 +2243,7 @@ void CPJNSMTPMessage::WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOO
       pBodyPart->FreeHeader(pszHeader);
 
       //Throw the exception
-      AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+      CPJNSMTPConnection::ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
 
     //Free up the temp memory we have used
@@ -2262,8 +2253,8 @@ void CPJNSMTPMessage::WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOO
   //Then the body parts body
   LPSTR pszBody = NULL;
   int nBodySize = 0;
-  if (!pBodyPart->GetBody(pszBody, nBodySize))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_BODY_OF_BODY_PART, FACILITY_ITF);
+  if (!pBodyPart->GetBody(FALSE, pszBody, nBodySize))
+    CPJNSMTPConnection::ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_BODY_OF_BODY_PART, FACILITY_ITF);
   DWORD dwWritten = 0;
 	if (!WriteFile(hFile, pszBody, nBodySize, &dwWritten, NULL))
   { 
@@ -2272,7 +2263,7 @@ void CPJNSMTPMessage::WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOO
     //Free up the temp memory we have used
     pBodyPart->FreeBody(pszBody);
 
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    CPJNSMTPConnection::ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //Free up the temp memory we have used
@@ -2293,7 +2284,7 @@ void CPJNSMTPMessage::WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOO
     LPSTR pszFooter = NULL;
     int nFooterSize = 0;
     if (!pBodyPart->GetFooter(pszFooter, nFooterSize))
-      AfxThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_FOOTER_OF_BODY_PART, FACILITY_ITF);
+      CPJNSMTPConnection::ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_FOOTER_OF_BODY_PART, FACILITY_ITF);
   	if (!WriteFile(hFile, pszFooter, nFooterSize, &dwWritten, NULL))
     {
       DWORD dwError = GetLastError();
@@ -2301,7 +2292,7 @@ void CPJNSMTPMessage::WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOO
       //Free up the temp memory we have used
       pBodyPart->FreeFooter(pszFooter);
 
-      AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+      CPJNSMTPConnection::ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
 
     //Free up the temp memory we have used
@@ -2310,8 +2301,9 @@ void CPJNSMTPMessage::WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOO
 }
 
 
-
-CPJNSMTPConnection::CPJNSMTPConnection() : m_bConnected(FALSE), m_nLastCommandResponseCode(0)
+CPJNSMTPConnection::CPJNSMTPConnection() : m_bConnected(FALSE), 
+                                           m_nLastCommandResponseCode(0), 
+                                           m_bSSL(FALSE)
 {
 #ifdef _DEBUG
   m_dwTimeout = 90000; //default timeout of 90 seconds when debugging
@@ -2321,6 +2313,37 @@ CPJNSMTPConnection::CPJNSMTPConnection() : m_bConnected(FALSE), m_nLastCommandRe
   SetHeloHostname(_T("auto"));
   m_ProxyType = ptNone;
   m_nProxyPort = 1080;
+  
+  m_hWininet = LoadLibrary(_T("WININET.DLL"));
+  if (m_hWininet)
+  {
+    m_lpfnInternetGetConnectedState = reinterpret_cast<LPINTERNETGETCONNECTEDSTATE>(GetProcAddress(m_hWininet, "InternetGetConnectedState"));
+    m_lpfnInternetAutoDialHangup = reinterpret_cast<LPINTERNETAUTODIALHANGUP>(GetProcAddress(m_hWininet, "InternetAutodialHangup"));
+    m_lpfnInternetAttemptConnect = reinterpret_cast<LPINTERNETATTEMPCONNECT>(GetProcAddress(m_hWininet, "InternetAttemptConnect"));
+  }
+  else
+  {
+    m_lpfnInternetGetConnectedState = NULL;
+    m_lpfnInternetAutoDialHangup = NULL;
+    m_lpfnInternetAttemptConnect = NULL;
+  }
+#ifndef CPJNSMTP_NOMXLOOKUP
+  m_hDnsapi = LoadLibrary(_T("DNSAPI.DLL"));
+  if (m_hDnsapi)
+  {
+    m_lpfnDnsRecordListFree = reinterpret_cast<LPDNSRECORDLISTFREE>(GetProcAddress(m_hDnsapi, "DnsRecordListFree"));
+    #ifdef _UNICODE
+    m_lpfnDnsQuery = reinterpret_cast<LPDNSQUERY>(GetProcAddress(m_hDnsapi, "DnsQuery_W"));
+    #else
+    m_lpfnDnsQuery = reinterpret_cast<LPDNSQUERY>(GetProcAddress(m_hDnsapi, "DnsQuery_A"));
+    #endif
+  }
+  else
+  {
+    m_lpfnDnsRecordListFree = NULL;
+    m_lpfnDnsQuery = NULL; 
+  }
+#endif
 }
 
 CPJNSMTPConnection::~CPJNSMTPConnection()
@@ -2337,6 +2360,38 @@ CPJNSMTPConnection::~CPJNSMTPConnection()
       pEx->Delete();
     }
   }
+  
+  if (m_hWininet)
+  {
+    FreeLibrary(m_hWininet);
+    m_hWininet = NULL;
+  }
+#ifndef CPJNSMTP_NOMXLOOKUP
+  if (m_hDnsapi)
+  {
+    FreeLibrary(m_hDnsapi);
+    m_hDnsapi = NULL;
+  }
+#endif
+}
+
+void CPJNSMTPConnection::ThrowPJNSMTPException(DWORD dwError, DWORD dwFacility, const CString& sLastResponse)
+{
+	if (dwError == 0)
+		dwError = ::WSAGetLastError();
+
+	CPJNSMTPException* pException = new CPJNSMTPException(dwError, dwFacility, sLastResponse);
+
+	TRACE(_T("Warning: throwing CPJNSMTPException for error %x\n"), pException->m_hr);
+	THROW(pException);
+}
+
+void CPJNSMTPConnection::ThrowPJNSMTPException(HRESULT hr, const CString& sLastResponse)
+{
+	CPJNSMTPException* pException = new CPJNSMTPException(hr, sLastResponse);
+
+	TRACE(_T("Warning: throwing CPJNSMTPException for error %x\n"), pException->m_hr);
+	THROW(pException);
 }
 
 void CPJNSMTPConnection::SetHeloHostname(const CString& sHostname)
@@ -2356,24 +2411,177 @@ void CPJNSMTPConnection::SetHeloHostname(const CString& sHostname)
     m_sHeloHostname = sHostname;
 }
 
+void CPJNSMTPConnection::_CreateSocket()
+{
+	m_Socket.Create();
+#ifndef CPJNSMTP_NOSSL
+	if (m_bSSL) 
+  {
+		m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
+		if (!m_SSL.Create(m_SSLCtx, m_Socket))
+      ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CREATE_SSL_SOCKET, FACILITY_ITF, GetOpenSSLError());
+	}
+#endif
+}
 
+#ifndef CPJNSMTP_NOSSL
+CString CPJNSMTPConnection::GetOpenSSLError()
+{
+  //What will be the return value
+  CString sError;
+
+  char szError[1024];
+  unsigned long nError;
+  do
+  { 
+    nError = ERR_get_error();
+    if (nError)
+    {
+      ERR_error_string(nError, szError);
+      sError += szError;
+      sError += _T("\r\n");
+    }
+  }
+  while (nError);
+
+  return sError;
+}
+#endif
+
+void CPJNSMTPConnection::_ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout)
+{
+#ifndef CPJNSMTP_NOSSL
+	if (m_bSSL) 
+  {
+		if(!m_SSL.ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout)) 
+			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_SOCKS4_VIASSL, FACILITY_ITF, GetOpenSSLError());
+	}
+	else 
+#endif
+		m_Socket.ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout);
+}
+
+void CPJNSMTPConnection::_ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort , LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP)
+{
+#ifndef CPJNSMTP_NOSSL
+	if (m_bSSL) 
+  {
+		if (!m_SSL.ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP)) 
+			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_SOCKS5_VIASSL, FACILITY_ITF, GetOpenSSLError());
+	}
+	else 
+#endif
+		m_Socket.ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP);
+}
+
+void CPJNSMTPConnection::_ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CString & sProxyResponse, 
+                                              LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent)
+{
+#ifndef CPJNSMTP_NOSSL
+	if (m_bSSL) 
+  {
+		if (!m_SSL.ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent))
+			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_HTTPPROXY_VIASSL, FACILITY_ITF, GetOpenSSLError());
+	}
+	else 
+#endif
+		m_Socket.ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent);
+}
+
+void CPJNSMTPConnection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
+{
+#ifndef CPJNSMTP_NOSSL
+	if (m_bSSL) 
+  {
+		if (!m_SSL.Connect(lpszHostAddress, nHostPort)) 
+			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_VIASSL, FACILITY_ITF, GetOpenSSLError());
+	}
+	else 
+#endif
+		m_Socket.Connect(lpszHostAddress, nHostPort);
+}
+
+int CPJNSMTPConnection::_Send(const void* pBuffer, int nBuf)
+{
+#ifndef CPJNSMTP_NOSSL
+	if (m_bSSL) 
+  {
+		int nSSLWrite = m_SSL.Send(pBuffer, nBuf);
+    if (nSSLWrite < 1)
+      ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_SEND_VIASSL, FACILITY_ITF, GetOpenSSLError());
+    return nSSLWrite;
+  }
+	else 
+#endif
+		return m_Socket.Send(pBuffer, nBuf);
+}
+
+int CPJNSMTPConnection::_Receive(void *pBuffer, int nBuf)
+{
+#ifndef CPJNSMTP_NOSSL
+	if (m_bSSL) 
+  {
+		int nSSLReceive = m_SSL.Receive(pBuffer, nBuf);
+    if (nSSLReceive <= 0)
+    {
+      int nSSLError = SSL_get_error(m_SSL, nSSLReceive);
+      if (nSSLError != SSL_ERROR_WANT_READ)
+        ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_RECEIVE_VIASSL, FACILITY_ITF, GetOpenSSLError());
+    }
+    return nSSLReceive;
+  }
+	else 
+#endif
+		return m_Socket.Receive(pBuffer, nBuf);
+}
+
+void CPJNSMTPConnection::_Close()
+{
+#ifndef CPJNSMTP_NOSSL
+	if (m_bSSL)
+		m_SSL.Close();
+	else 
+#endif
+		m_Socket.Close();
+}
+
+BOOL CPJNSMTPConnection::_IsReadible(DWORD dwTimeout)
+{
+#ifndef CPJNSMTP_NOSSL
+	if (m_bSSL) 
+		return m_SSL.IsReadible(dwTimeout);
+	else 
+#endif
+		return m_Socket.IsReadible(dwTimeout);
+}
+
+#ifndef CPJNSMTP_NOSSL
+void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort, BOOL bSSL)
+#else
 void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort)
+#endif
 {
 	//Validate our parameters
   ASSERT(pszHostName);
   ASSERT(!m_bConnected);
 
+#ifndef CPJNSMTP_NOSSL
+  m_bSSL = bSSL;
+#else
+  m_bSSL = FALSE;
+#endif
+
   //Create the socket
   try
   {
-    m_Socket.Create();
+    _CreateSocket();
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
 
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   try
@@ -2388,15 +2596,15 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
     {
       case ptSocks4:
       {
-        m_Socket.ConnectViaSocks4(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_dwTimeout);
+        _ConnectViaSocks4(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_dwTimeout);
         break;
       }
       case ptSocks5:
       {
         if (m_sProxyUserName.GetLength())
-          m_Socket.ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, FALSE);
+          _ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, FALSE);
         else
-          m_Socket.ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, NULL, NULL, m_dwTimeout, FALSE);
+          _ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, NULL, NULL, m_dwTimeout, FALSE);
         break;
       }
       case ptHTTP:
@@ -2405,22 +2613,22 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
         if (m_sProxyUserName.GetLength())
         {
           if (m_sUserAgent.GetLength())
-            m_Socket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, m_sUserAgent);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, m_sUserAgent);
           else
-            m_Socket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, NULL);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, NULL);
         }
         else
         {
           if (m_sUserAgent.GetLength())
-            m_Socket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, m_sUserAgent);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, m_sUserAgent);
           else
-            m_Socket.ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, NULL);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, NULL);
         }
         break;
       }
       case ptNone:
       {
-        m_Socket.Connect(pszHostName, nPort);
+        _Connect(pszHostName, nPort);
         break;
       }
       default:
@@ -2446,7 +2654,7 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
     }
 
     //rethrow the exception
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //We're now connected
@@ -2456,7 +2664,7 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
   {
     //check the response to the login
     if (!ReadCommandResponse(220))
-      AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_SMTP_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+      ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_SMTP_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
 	  //Negotiate Extended SMTP connection
 	  if (am != AUTH_NONE)
@@ -2481,7 +2689,7 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
     pEx->Delete();
 
     //rethrow the exception
-    AfxThrowPJNSMTPException(hr, sLastResponse);
+    ThrowPJNSMTPException(hr, sLastResponse);
   }
 }
 
@@ -2498,22 +2706,22 @@ void CPJNSMTPConnection::ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername,
   //Send the EHLO command
 	CString sBuf;
 	sBuf.Format(_T("EHLO %s\r\n"), pszLocalName);
-  LPCSTR pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-  int nCmdLength = (int) strlen(pszData);
+  LPCSTR pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+  int nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-    m_Socket.Send(pszData, nCmdLength);
+    _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 	
   //check the response to the EHLO command
   if (!ReadCommandResponse(250))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_EHLO_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_EHLO_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
   switch (am)
   {
@@ -2535,9 +2743,9 @@ void CPJNSMTPConnection::ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername,
     #ifndef CPJNSMTP_NONTLM
     case AUTH_NTLM:
     {
-      SECURITY_STATUS ss = NTLMAuthenticate();
+      SECURITY_STATUS ss = NTLMAuthenticate(pszUsername, pszPassword);
       if (!SEC_SUCCESS(ss))
-        AfxThrowPJNSMTPException(ss, GetLastCommandResponse());
+        ThrowPJNSMTPException(ss, GetLastCommandResponse());
       break;
     }
     #endif  
@@ -2557,22 +2765,22 @@ void CPJNSMTPConnection::ConnectSMTP(LPCTSTR pszLocalName)
   //Send the HELO command
 	CString sBuf;
 	sBuf.Format(_T("HELO %s\r\n"), pszLocalName);
-	LPCSTR pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-	int nCmdLength = (int) strlen(pszData);
+	LPCSTR pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+	int nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-	  m_Socket.Send(pszData, nCmdLength);
+	  _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
 	//check the response to the HELO command
 	if (!ReadCommandResponse(250))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_HELO_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_HELO_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 }
 
 void CPJNSMTPConnection::Disconnect(BOOL bGracefully)
@@ -2585,10 +2793,10 @@ void CPJNSMTPConnection::Disconnect(BOOL bGracefully)
     if (bGracefully)
     {
       char sBuf[] = "QUIT\r\n";
-      int nCmdLength = (int) strlen(sBuf);
+      int nCmdLength = static_cast<int>(strlen(sBuf));
       try
       {
-        m_Socket.Send(sBuf, nCmdLength);
+        _Send(sBuf, nCmdLength);
       }
       catch(CWSocketException* pEx)
       {
@@ -2609,11 +2817,11 @@ void CPJNSMTPConnection::Disconnect(BOOL bGracefully)
   }
  
   //free up our socket
-  m_Socket.Close();
+  _Close();
 
   //Should we throw an expection
   if (FAILED(hr))
-    AfxThrowPJNSMTPException(hr, sLastResponse);
+    ThrowPJNSMTPException(hr, sLastResponse);
 }
 
 void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
@@ -2624,17 +2832,17 @@ void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
     LPSTR pszHeader = NULL;
     int nHeaderSize = 0;
     if (!pBodyPart->GetHeader(pszHeader, nHeaderSize))
-      AfxThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_HEADER_OF_BODY_PART, FACILITY_ITF);
+      ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_HEADER_OF_BODY_PART, FACILITY_ITF);
 
     try
     {
-		  m_Socket.Send(pszHeader, nHeaderSize);
+		  _Send(pszHeader, nHeaderSize);
     }
     catch(CWSocketException* pEx)
     {
       DWORD dwError = pEx->m_nError;
       pEx->Delete();
-      AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+      ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
 
     //Free up the temp memory we have used
@@ -2644,17 +2852,17 @@ void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
   //Then the body parts body
   LPSTR pszBody = NULL;
   int nBodySize = 0;
-  if (!pBodyPart->GetBody(pszBody, nBodySize))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_BODY_OF_BODY_PART, FACILITY_ITF);
+  if (!pBodyPart->GetBody(TRUE, pszBody, nBodySize))
+    ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_BODY_OF_BODY_PART, FACILITY_ITF);
   try
   {
-    m_Socket.Send(pszBody, nBodySize);
+    _Send(pszBody, nBodySize);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //Free up the temp memory we have used
@@ -2675,17 +2883,17 @@ void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
     LPSTR pszFooter = NULL;
     int nFooterSize = 0;
     if (!pBodyPart->GetFooter(pszFooter, nFooterSize))
-      AfxThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_FOOTER_OF_BODY_PART, FACILITY_ITF);
+      ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_FOOTER_OF_BODY_PART, FACILITY_ITF);
 
     try
     {
-	    m_Socket.Send(pszFooter, nFooterSize);
+	    _Send(pszFooter, nFooterSize);
     }
     catch(CWSocketException* pEx)
     {
       DWORD dwError = pEx->m_nError;
       pEx->Delete();
-      AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+      ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
 
     //Free up the temp memory we have used
@@ -2704,23 +2912,23 @@ void CPJNSMTPConnection::SendMessage(CPJNSMTPMessage& Message)
 	ASSERT(Message.m_From.m_sEmailAddress.GetLength());
   CString sBuf;
   sBuf.Format(_T("MAIL FROM:<%s>\r\n"), Message.m_From.m_sEmailAddress);
-  LPCSTR pszMailFrom = T2A((LPTSTR) (LPCTSTR) sBuf);
-  int nCmdLength = (int) strlen(pszMailFrom);
+  LPCSTR pszMailFrom = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+  int nCmdLength = static_cast<int>(strlen(pszMailFrom));
 
   try
   {
-    m_Socket.Send(pszMailFrom, nCmdLength);
+    _Send(pszMailFrom, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //check the response to the MAIL command
   if (!ReadCommandResponse(250))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_MAIL_FROM_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_MAIL_FROM_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
   //Send the RCPT command, one for each recipient (includes the TO, CC & BCC recipients)
 
@@ -2756,48 +2964,48 @@ void CPJNSMTPConnection::SendMessage(CPJNSMTPMessage& Message)
 
   //Send the DATA command
   char* pszDataCommand = "DATA\r\n";
-  nCmdLength = (int) strlen(pszDataCommand);
+  nCmdLength = static_cast<int>(strlen(pszDataCommand));
   try
   {
-    m_Socket.Send(pszDataCommand, nCmdLength);
+    _Send(pszDataCommand, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //check the response to the DATA command
   if (!ReadCommandResponse(354))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_DATA_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_DATA_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
   //Send the Message Header
   std::string sHeader = Message.getHeader();
-  nCmdLength = (int) sHeader.length();
+  nCmdLength = static_cast<int>(sHeader.length());
   try
   {
-    m_Socket.Send(sHeader.c_str(), nCmdLength);
+    _Send(sHeader.c_str(), nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
 	//Send the Header / body Separator
   char* pszBodyHeader = "\r\n";
-  nCmdLength = (int) strlen(pszBodyHeader);
+  nCmdLength = static_cast<int>(strlen(pszBodyHeader));
   try
   {
-    m_Socket.Send(pszBodyHeader, nCmdLength);
+    _Send(pszBodyHeader, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //Now send the contents of the mail    
@@ -2809,40 +3017,42 @@ void CPJNSMTPConnection::SendMessage(CPJNSMTPMessage& Message)
   }
   else
   {
-	  LPCSTR pszBody = T2CA(Message.m_RootPart.GetText());
+    CString sBody = Message.m_RootPart.GetText();
+    CPJNSMTPBodyPart::FixSingleDotT(sBody);
+	  LPCSTR pszBody = T2CA(sBody);
     ASSERT(pszBody);
-    nCmdLength = (int) strlen(pszBody);
+    nCmdLength = static_cast<int>(strlen(pszBody));
 
     //Send the body
     try
     {
-      m_Socket.Send(pszBody, nCmdLength);
+      _Send(pszBody, nCmdLength);
     }
     catch(CWSocketException* pEx)
     {
       DWORD dwError = pEx->m_nError;
       pEx->Delete();
-      AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+      ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
   }
 
   //Send the end of message indicator
   char* pszEOM = "\r\n.\r\n";
-	nCmdLength = (int) strlen(pszEOM);
+	nCmdLength = static_cast<int>(strlen(pszEOM));
   try
   {
-    m_Socket.Send(pszEOM, nCmdLength);
+    _Send(pszEOM, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //check the response to the End of Message command
   if (!ReadCommandResponse(250))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_END_OF_MESSAGE_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_END_OF_MESSAGE_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 }
 
 BOOL CPJNSMTPConnection::OnSendProgress(DWORD /*dwCurrentBytes*/, DWORD /*dwTotalBytes*/)
@@ -2862,25 +3072,25 @@ void CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CPJNSMT
 	ASSERT(From.m_sEmailAddress.GetLength());
   CString sBuf;
   sBuf.Format(_T("MAIL FROM:<%s>\r\n"), From.m_sEmailAddress);
-  LPCSTR pszMailFrom = T2A((LPTSTR) (LPCTSTR) sBuf);
-  int nCmdLength = (int) strlen(pszMailFrom);
+  LPCSTR pszMailFrom = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+  int nCmdLength = static_cast<int>(strlen(pszMailFrom));
   try
   {
-    m_Socket.Send(pszMailFrom, nCmdLength);
+    _Send(pszMailFrom, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //check the response to the MAIL command
   if (!ReadCommandResponse(250))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_MAIL_FROM_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_MAIL_FROM_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
   //Must be sending to someone
-  int nRecipients = (int) Recipients.GetSize();
+  int nRecipients = static_cast<int>(Recipients.GetSize());
   ASSERT(nRecipients);
 
   //Send the RCPT command, one for each recipient
@@ -2892,21 +3102,21 @@ void CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CPJNSMT
 
   //Send the DATA command
   char* pszDataCommand = "DATA\r\n";
-  nCmdLength = (int) strlen(pszDataCommand);
+  nCmdLength = static_cast<int>(strlen(pszDataCommand));
   try
   {
-    m_Socket.Send(pszDataCommand, nCmdLength);
+    _Send(pszDataCommand, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //check the response to the DATA command
   if (!ReadCommandResponse(354))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_DATA_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_DATA_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
   //Read and send the data a chunk at a time
   BOOL bMore = TRUE;
@@ -2923,13 +3133,13 @@ void CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CPJNSMT
     {
       try
       {
-        m_Socket.Send((LPCSTR)pSendBuf, dwRead);
+        _Send(pSendBuf, dwRead);
       }
       catch(CWSocketException* pEx)
       {
         DWORD dwError = pEx->m_nError;
         pEx->Delete();
-        AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+        ThrowPJNSMTPException(dwError, FACILITY_WIN32);
       }
     }
     else
@@ -2948,21 +3158,21 @@ void CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CPJNSMT
   {
     //Send the end of message indicator
     char* pszEOM = "\r\n.\r\n";
-	  nCmdLength = (int) strlen(pszEOM);
+	  nCmdLength = static_cast<int>(strlen(pszEOM));
     try
     {
-      m_Socket.Send(pszEOM, nCmdLength);
+      _Send(pszEOM, nCmdLength);
     }
     catch(CWSocketException* pEx)
     {
       DWORD dwError = pEx->m_nError;
       pEx->Delete();
-      AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+      ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
 
     //check the response to the End of Message command
     if (!ReadCommandResponse(250))
-      AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_END_OF_MESSAGE_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+      ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_END_OF_MESSAGE_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
   }
 }
 
@@ -2976,7 +3186,7 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
   //Open up the file we want to send
   HANDLE hFile = CreateFile(sMessageOnFile, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
   if (hFile == INVALID_HANDLE_VALUE)
-    AfxThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+    ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
 
   //Get the length of the file (we only support sending files less than 4GB)
   DWORD dwFileSizeHigh = 0;
@@ -2985,17 +3195,17 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
   if (dwFileSizeLow == INVALID_FILE_SIZE)
   {
     CloseHandle(hFile);
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
   if (dwFileSizeHigh)
   {
     CloseHandle(hFile);
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_FILE_SIZE_TO_SEND_TOO_LARGE, FACILITY_ITF);
+    ThrowPJNSMTPException(IDS_PJNSMTP_FILE_SIZE_TO_SEND_TOO_LARGE, FACILITY_ITF);
   }
   if (dwFileSizeLow == 0)
   {
     CloseHandle(hFile);
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_CANNOT_SEND_ZERO_BYTE_MESSAGE, FACILITY_ITF);
+    ThrowPJNSMTPException(IDS_PJNSMTP_CANNOT_SEND_ZERO_BYTE_MESSAGE, FACILITY_ITF);
   }
 
   char* pSendBuf = NULL;
@@ -3006,25 +3216,25 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
 	  ASSERT(From.m_sEmailAddress.GetLength());
     CString sBuf;
     sBuf.Format(_T("MAIL FROM:<%s>\r\n"), From.m_sEmailAddress);
-    LPCSTR pszMailFrom = T2A((LPTSTR) (LPCTSTR) sBuf);
-    int nCmdLength = (int) strlen(pszMailFrom);
+    LPCSTR pszMailFrom = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+    int nCmdLength = static_cast<int>(strlen(pszMailFrom));
     try
     {
-      m_Socket.Send(pszMailFrom, nCmdLength);
+      _Send(pszMailFrom, nCmdLength);
     }
     catch(CWSocketException* pEx)
     {
       DWORD dwError = pEx->m_nError;
       pEx->Delete();
-      AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+      ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
 
     //check the response to the MAIL command
     if (!ReadCommandResponse(250))
-      AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_MAIL_FROM_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+      ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_MAIL_FROM_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
     //Must be sending to someone
-    int nRecipients = (int) Recipients.GetSize();
+    int nRecipients = static_cast<int>(Recipients.GetSize());
     ASSERT(nRecipients);
 
     //Send the RCPT command, one for each recipient
@@ -3036,26 +3246,24 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
 
     //Send the DATA command
     char* pszDataCommand = "DATA\r\n";
-    nCmdLength = (int) strlen(pszDataCommand);
+    nCmdLength = static_cast<int>(strlen(pszDataCommand));
     try
     {
-      m_Socket.Send(pszDataCommand, nCmdLength);
+      _Send(pszDataCommand, nCmdLength);
     }
     catch(CWSocketException* pEx)
     {
       DWORD dwError = pEx->m_nError;
       pEx->Delete();
-      AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+      ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
 
     //check the response to the DATA command
     if (!ReadCommandResponse(354))
-      AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_DATA_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+      ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_DATA_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
     //Allocate a buffer we will use in the sending
     pSendBuf = new char[dwSendBufferSize];
-    if (pSendBuf == NULL)
-      AfxThrowPJNSMTPException(E_OUTOFMEMORY);
 
     //Read and send the data a chunk at a time
     BOOL bMore = TRUE;
@@ -3066,7 +3274,7 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
       //Read the chunk from file
       DWORD dwRead = 0;
       if (!ReadFile(hFile, pSendBuf, dwSendBufferSize, &dwRead, NULL))
-        AfxThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+        ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
       bMore = (dwRead == dwSendBufferSize);
 
       //Send the chunk
@@ -3079,13 +3287,13 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
         {
           try
           {
-            m_Socket.Send(pSendBuf, dwRead);
+            _Send(pSendBuf, dwRead);
           }
           catch(CWSocketException* pEx)
           {
             DWORD dwError = pEx->m_nError;
             pEx->Delete();
-            AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+            ThrowPJNSMTPException(dwError, FACILITY_WIN32);
           }
         }
         else
@@ -3101,21 +3309,21 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
     {
       //Send the end of message indicator
       char* pszEOM = "\r\n.\r\n";
-	    nCmdLength = (int) strlen(pszEOM);
+	    nCmdLength = static_cast<int>(strlen(pszEOM));
       try
       {
-        m_Socket.Send(pszEOM, nCmdLength);
+        _Send(pszEOM, nCmdLength);
       }
       catch(CWSocketException* pEx)
       {
         DWORD dwError = pEx->m_nError;
         pEx->Delete();
-        AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+        ThrowPJNSMTPException(dwError, FACILITY_WIN32);
       }
 
       //check the response to the End of Message command
       if (!ReadCommandResponse(250))
-        AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_END_OF_MESSAGE_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+        ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_END_OF_MESSAGE_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
     }
   }
   catch(CPJNSMTPException* pEx)
@@ -3131,7 +3339,7 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
     pEx->Delete();
 
     //rethrow the exception
-    AfxThrowPJNSMTPException(hr, sLastResponse);
+    ThrowPJNSMTPException(hr, sLastResponse);
   }
 
   //close the file we have been working on
@@ -3147,38 +3355,55 @@ void CPJNSMTPConnection::SendRCPTForRecipient(CPJNSMTPAddress& recipient)
   //form the command to send
   CString sBuf;
   sBuf.Format(_T("RCPT TO:<%s>\r\n"), recipient.m_sEmailAddress);
-  LPSTR pszRCPT = T2A((LPTSTR) (LPCTSTR) sBuf);
+  LPSTR pszRCPT = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
 
   //and send it
-  int nCmdLength = (int) strlen(pszRCPT);
+  int nCmdLength = static_cast<int>(strlen(pszRCPT));
   try
   {
-    m_Socket.Send(pszRCPT, nCmdLength);
+    _Send(pszRCPT, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
-  //check the response to the RCPT command
-  if (!ReadCommandResponse(250))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_RCPT_TO_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+  //check the response to the RCPT command (250 or 251) is considered success
+  if (!ReadCommandResponse(250, 251))
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_RCPT_TO_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 }
 
 BOOL CPJNSMTPConnection::ReadCommandResponse(int nExpectedCode)
 {
   LPSTR pszOverFlowBuffer = NULL;
   char sBuf[256];
-  BOOL bSuccess = ReadResponse(sBuf, 256, nExpectedCode, &pszOverFlowBuffer, 4096);
+  BOOL bSuccess = ReadResponse(sBuf, 256, &pszOverFlowBuffer, 4096);
   if (pszOverFlowBuffer)
     delete [] pszOverFlowBuffer;
+
+  if (bSuccess)
+    bSuccess = (m_nLastCommandResponseCode == nExpectedCode);
 
   return bSuccess;
 }
 
-BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int nExpectedCode, LPSTR* ppszOverFlowBuffer, int nGrowBy)
+BOOL CPJNSMTPConnection::ReadCommandResponse(int nExpectedCode1, int nExpectedCode2)
+{
+  LPSTR pszOverFlowBuffer = NULL;
+  char sBuf[256];
+  BOOL bSuccess = ReadResponse(sBuf, 256, &pszOverFlowBuffer, 4096);
+  if (pszOverFlowBuffer)
+    delete [] pszOverFlowBuffer;
+
+  if (bSuccess)
+    bSuccess = (m_nLastCommandResponseCode == nExpectedCode1) || (m_nLastCommandResponseCode == nExpectedCode2);
+
+  return bSuccess;
+}
+
+BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR* ppszOverFlowBuffer, int nGrowBy)
 {
 	ASSERT(ppszOverFlowBuffer);          //Must have a valid string pointer
 	ASSERT(*ppszOverFlowBuffer == NULL); //Initially it must point to a NULL string
@@ -3203,7 +3428,7 @@ BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int 
 		//check the socket for readability
     try
     {
-		  if (!m_Socket.IsReadible(m_dwTimeout)) //A timeout has occured so fail the function call
+		  if (!_IsReadible(m_dwTimeout)) //A timeout has occured so fail the function call
 		  {
 			  pszRecvBuffer[nReceived] = '\0';
 			  m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
@@ -3214,7 +3439,7 @@ BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int 
     {
       DWORD dwError = pEx->m_nError;
       pEx->Delete();
-      AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+      ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
 
 		//receive the data from the socket
@@ -3224,13 +3449,13 @@ BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int 
 		int nData = 0;
     try
     {
-      nData = m_Socket.Receive(pszRecvBuffer+nReceived, nBufRemaining);
+      nData = _Receive(pszRecvBuffer+nReceived, nBufRemaining);
     }
     catch(CWSocketException* pEx)
     {
       DWORD dwError = pEx->m_nError;
       pEx->Delete();
-      AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+      ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
 
 		//Reset the idle timeout if data was received
@@ -3259,14 +3484,16 @@ BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int 
 				//Allocate the new receive buffer
 				nBufSize += nGrowBy; //Grow the buffer by the specified amount
 				LPSTR pszNewBuf = new char[nBufSize];
-        if (pszNewBuf == NULL)
-          AfxThrowPJNSMTPException(E_OUTOFMEMORY);
 
 				//copy the old contents over to the new buffer and assign 
 				//the new buffer to the local variable used for retreiving 
 				//from the socket
 				if (pszRecvBuffer)
+				#if (_MSC_VER >= 1400)
+				  strcpy_s(pszNewBuf, nBufSize, pszRecvBuffer);
+				#else
 				  strcpy(pszNewBuf, pszRecvBuffer);
+				#endif
 				pszRecvBuffer = pszNewBuf;
 
 				//delete the old buffer if it was allocated
@@ -3299,19 +3526,24 @@ BOOL CPJNSMTPConnection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, int 
 	//Remove the terminator from the response data
   pszRecvBuffer[nReceived - nTerminatorLen] = '\0';
 
-	BOOL bSuccess = FALSE;
-
-	//determine if the response is an error
+	//determine if Numeric response code
 	char sCode[4];
+#if (_MSC_VER >= 1400)
+  strncpy_s(sCode, sizeof(sCode), &pszRecvBuffer[nStartOfLastLine], 3);
+#else
 	strncpy(sCode, &pszRecvBuffer[nStartOfLastLine], 3);
+#endif
 	sCode[3] = '\0';
-	sscanf(sCode, "%d", &m_nLastCommandResponseCode );
-	bSuccess = (m_nLastCommandResponseCode == nExpectedCode);
+#if (_MSC_VER >= 1400)
+  sscanf_s(sCode, "%d", &m_nLastCommandResponseCode);
+#else	
+	sscanf(sCode, "%d", &m_nLastCommandResponseCode);
+#endif	
 
 	//Hive away the last command reponse
 	m_sLastCommandResponse = pszRecvBuffer;
 
-	return bSuccess;
+	return TRUE;
 }
 
 void CPJNSMTPConnection::AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
@@ -3320,79 +3552,79 @@ void CPJNSMTPConnection::AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword)
 
   //Send the AUTH LOGIN command
 	CString sBuf(_T("AUTH LOGIN\r\n"));
-	LPCSTR pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-	int nCmdLength = (int) strlen(pszData);
+	LPCSTR pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+	int nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-	  m_Socket.Send(pszData, nCmdLength);
+	  _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //check the response to the AUTH LOGIN command
 	if (!ReadCommandResponse(334))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
   //Check that the response has a username request in it
 	CString sLastCommandString = m_sLastCommandResponse;
 	sLastCommandString = sLastCommandString.Right(sLastCommandString.GetLength() - 4);
-  LPCSTR pszLastCommandString = T2A((LPTSTR) (LPCTSTR) sLastCommandString);
+  LPCSTR pszLastCommandString = T2A(const_cast<LPTSTR>(sLastCommandString.operator LPCTSTR()));
   CPJNSMPTBase64 Coder;
 	Coder.Decode(pszLastCommandString);
-	if (stricmp(Coder.Result(), "username:") != 0)
-		AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_LOGIN_USERNAME_REQUEST, FACILITY_ITF, GetLastCommandResponse());
+	if (_stricmp(Coder.Result(), "username:") != 0)
+		ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_LOGIN_USERNAME_REQUEST, FACILITY_ITF, GetLastCommandResponse());
 
 	//send base64 encoded username
-	Coder.Encode(T2A((LPTSTR)pszUsername), BASE64_FLAG_NOCRLF);
+	Coder.Encode(T2A(const_cast<LPTSTR>(pszUsername)), BASE64_FLAG_NOCRLF);
 	sBuf.Format(_T("%s\r\n"), A2T(Coder.Result()));
-	pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-	nCmdLength = (int) strlen(pszData);
+	pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+	nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-	  m_Socket.Send(pszData, nCmdLength);
+	  _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
 	//check the response to the username 
 	if (!ReadCommandResponse(334))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_LOGIN_USERNAME_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_LOGIN_USERNAME_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
 	//Check that the response has a password request in it
 	sLastCommandString = m_sLastCommandResponse;
 	sLastCommandString = sLastCommandString.Right(sLastCommandString.GetLength() - 4);
-  pszLastCommandString = T2A((LPTSTR) (LPCTSTR) sLastCommandString);
+  pszLastCommandString = T2A(const_cast<LPTSTR>(sLastCommandString.operator LPCTSTR()));
 	Coder.Decode(pszLastCommandString);
-	if (stricmp(Coder.Result(), "password:") != 0)
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_LOGIN_PASSWORD_REQUEST, FACILITY_ITF, GetLastCommandResponse());
+	if (_stricmp(Coder.Result(), "password:") != 0)
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_LOGIN_PASSWORD_REQUEST, FACILITY_ITF, GetLastCommandResponse());
 
   //send password as base64 encoded
-	Coder.Encode(T2A((LPTSTR)pszPassword), BASE64_FLAG_NOCRLF);
+	Coder.Encode(T2A(const_cast<LPTSTR>(pszPassword)), BASE64_FLAG_NOCRLF);
 	sBuf.Format(_T("%s\r\n"), A2T(Coder.Result()));
-	pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-	nCmdLength = (int) strlen(pszData);
+	pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+	nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-	  m_Socket.Send(pszData, nCmdLength);
+	  _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
 	//check if authentication is successful
 	if (!ReadCommandResponse(235))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_LOGIN_PASSWORD_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_LOGIN_PASSWORD_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 }
 
 void CPJNSMTPConnection::AuthPlain(LPCTSTR pszUsername, LPCTSTR pszPassword)
@@ -3401,74 +3633,74 @@ void CPJNSMTPConnection::AuthPlain(LPCTSTR pszUsername, LPCTSTR pszPassword)
 
   //Send the AUTH PLAIN command
 	CString sBuf(_T("AUTH PLAIN\r\n"));
-	LPCSTR pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-	int nCmdLength = (int) strlen(pszData);
+	LPCSTR pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+	int nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-	  m_Socket.Send(pszData, nCmdLength);
+	  _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //Check the response to the AUTH PLAIN command
 	if (!ReadCommandResponse(334))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_PLAIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_PLAIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
   //Check that the response has a username request in it
 	CString sLastCommandString = m_sLastCommandResponse;
 	sLastCommandString = sLastCommandString.Right(sLastCommandString.GetLength() - 4);
-  LPCSTR pszLastCommandString = T2A((LPTSTR) (LPCTSTR) sLastCommandString);
-	if (stricmp(pszLastCommandString, "username:") != 0)
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_PLAIN_USERNAME_REQUEST, FACILITY_ITF, GetLastCommandResponse());
+  LPCSTR pszLastCommandString = T2A(const_cast<LPTSTR>(sLastCommandString.operator LPCTSTR()));
+	if (_stricmp(pszLastCommandString, "username:") != 0)
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_PLAIN_USERNAME_REQUEST, FACILITY_ITF, GetLastCommandResponse());
 
 	//send username in plain
 	sBuf.Format(_T("%s\r\n"), pszUsername);
-	pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-	nCmdLength = (int) strlen(pszData);
+	pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+	nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-	  m_Socket.Send(pszData, nCmdLength);
+	  _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
 	//check the response to the username 
 	if (!ReadCommandResponse(334))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_PLAIN_USERNAME_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_PLAIN_USERNAME_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
 	//Check that the response has a password request in it
 	sLastCommandString = m_sLastCommandResponse;
 	sLastCommandString = sLastCommandString.Right(sLastCommandString.GetLength() - 4);
-  pszLastCommandString = T2A((LPTSTR) (LPCTSTR) sLastCommandString);
-	if (stricmp(pszLastCommandString, "password:") != 0)
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_PLAIN_PASSWORD_REQUEST, FACILITY_ITF, GetLastCommandResponse());
+  pszLastCommandString = T2A(const_cast<LPTSTR>(sLastCommandString.operator LPCTSTR()));
+	if (_stricmp(pszLastCommandString, "password:") != 0)
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_PLAIN_PASSWORD_REQUEST, FACILITY_ITF, GetLastCommandResponse());
 
   //send password in plain
 	sBuf.Format(_T("%s\r\n"), pszPassword);
-	pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-	nCmdLength = (int) strlen(pszData);
+	pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+	nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-	  m_Socket.Send(pszData, nCmdLength);
+	  _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
 	//check if authentication is successful
 	if (!ReadCommandResponse(235))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_PLAIN_PASSWORD_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_PLAIN_PASSWORD_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 }
 
 void CPJNSMTPConnection::AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword)
@@ -3477,27 +3709,27 @@ void CPJNSMTPConnection::AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword)
 
   //Send the AUTH CRAM-MD5 command
 	CString sBuf(_T("AUTH CRAM-MD5\r\n"));
-	LPCSTR pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-	int nCmdLength = (int) strlen(pszData);
+	LPCSTR pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+	int nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-	  m_Socket.Send(pszData, nCmdLength);
+	  _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
 	//Check the response to the AUTH PLAIN command
 	if (!ReadCommandResponse(334))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_CRAM_MD5_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_CRAM_MD5_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
 	//Get the base64 decoded challange 
 	CString sLastCommandString = m_sLastCommandResponse;
 	sLastCommandString = sLastCommandString.Right(sLastCommandString.GetLength() - 4);
-  LPCSTR pszLastCommandString = T2A((LPTSTR) (LPCTSTR) sLastCommandString);
+  LPCSTR pszLastCommandString = T2A(const_cast<LPTSTR>(sLastCommandString.operator LPCTSTR()));
 	CPJNSMPTBase64 Coder;
 	Coder.Decode(pszLastCommandString);
 	LPCSTR pszChallenge = Coder.Result();
@@ -3505,53 +3737,53 @@ void CPJNSMTPConnection::AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword)
 	//generate the MD5 digest from the challenge and password
   CPJNMD5 hmac;
   CPJNMD5Hash hash;
-  LPSTR pszAsciiPassword = T2A((LPTSTR) pszPassword);
-  if (!hmac.HMAC((const BYTE*) pszChallenge, (DWORD) strlen(pszChallenge), (const BYTE*) pszAsciiPassword, (DWORD) strlen(pszAsciiPassword), hash))
-    AfxThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
-  CString sRet = hash.Format();
+  LPSTR pszAsciiPassword = T2A(const_cast<LPTSTR>(pszPassword));
+  if (!hmac.HMAC(reinterpret_cast<const BYTE*>(pszChallenge), static_cast<DWORD>(strlen(pszChallenge)), reinterpret_cast<const BYTE*>(pszAsciiPassword), static_cast<DWORD>(strlen(pszAsciiPassword)), hash))
+    ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+  CString sRet = hash.Format(FALSE); //CRAM-MD5 requires a lowercase hash
 	
 	//make the CRAM-MD5 response
 	CString sCramDigest(pszUsername);
-	sCramDigest += " ";
-  sCramDigest += hash.Format();
+	sCramDigest += _T(" ");
+  sCramDigest += hash.Format(FALSE); //CRAM-MD5 requires a lowercase hash
 		
 	//send the digest response
-  LPSTR pszCramDigest = T2A((LPTSTR) (LPCTSTR) sCramDigest);
+  LPSTR pszCramDigest = T2A(const_cast<LPTSTR>(sCramDigest.operator LPCTSTR()));
 	Coder.Encode(pszCramDigest, BASE64_FLAG_NOCRLF);
 	sBuf.Format(_T("%s\r\n"), A2T(Coder.Result()));
-	pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-	nCmdLength = (int) strlen(pszData);
+	pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+	nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-	  m_Socket.Send(pszData, nCmdLength);
+	  _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
 	//check if authentication is successful
 	if (!ReadCommandResponse(235))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_CRAMD_MD5_DIGEST_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_CRAMD_MD5_DIGEST_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 }
 
 CPJNSMTPConnection::ConnectToInternetResult CPJNSMTPConnection::ConnectToInternet()
 {
-  if (_PJNSmtpData.m_lpfnInternetGetConnectedState && _PJNSmtpData.m_lpfnInternetAttemptConnect)
+  if ((m_lpfnInternetGetConnectedState != NULL) && (m_lpfnInternetAttemptConnect != NULL))
   {
     //Check to see if an internet connection already exists.
     //bInternet = TRUE  internet connection exists.
     //bInternet = FALSE internet connection does not exist
     DWORD dwFlags = 0;
-    BOOL bInternet = _PJNSmtpData.m_lpfnInternetGetConnectedState(&dwFlags, 0);
+    BOOL bInternet = m_lpfnInternetGetConnectedState(&dwFlags, 0);
     if (!bInternet)
     {
       //Attempt to establish internet connection, probably
       //using Dial-up connection. CloseInternetConnection() should be called when
       //as some time to drop the dial-up connection.
-      DWORD dwResult = _PJNSmtpData.m_lpfnInternetAttemptConnect(0);
+      DWORD dwResult = m_lpfnInternetAttemptConnect(0);
       if (dwResult != ERROR_SUCCESS)
       {
         SetLastError(dwResult);
@@ -3574,10 +3806,10 @@ CPJNSMTPConnection::ConnectToInternetResult CPJNSMTPConnection::ConnectToInterne
 
 BOOL CPJNSMTPConnection::CloseInternetConnection()
 {
-  if (_PJNSmtpData.m_lpfnInternetAutoDialHangup)
+  if (m_lpfnInternetAutoDialHangup)
   {
     //Make sure any connection through a modem is 'closed'.
-    return _PJNSmtpData.m_lpfnInternetAutoDialHangup(0);
+    return m_lpfnInternetAutoDialHangup(0);
   }
   else
   {
@@ -3597,18 +3829,18 @@ SECURITY_STATUS CPJNSMTPConnection::NTLMAuthPhase1(PBYTE pBuf, DWORD cbBuf)
   CPJNSMPTBase64 Coder;
   CString sBuf;
   Coder.Encode(pBuf, cbBuf, BASE64_FLAG_NOCRLF);
-  sBuf.Format(_T("AUTH NTLM %s\r\n"), Coder.Result());
-  LPCSTR pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-  int nCmdLength = (int) strlen(pszData);
+  sBuf.Format(_T("AUTH NTLM %s\r\n"), A2T(Coder.Result()));
+  LPCSTR pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+  int nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-    m_Socket.Send(pszData, nCmdLength);
+    _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   return SEC_E_OK;
@@ -3620,19 +3852,19 @@ SECURITY_STATUS CPJNSMTPConnection::NTLMAuthPhase2(PBYTE pBuf, DWORD cbBuf, DWOR
 
   //check the response to the AUTH NTLM command
   if (!ReadCommandResponse(334))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_NTLM_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_NTLM_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
   //Decode the last response
   CPJNSMPTBase64 Coder;
   CString sLastCommandString(m_sLastCommandResponse);
   sLastCommandString = sLastCommandString.Right(sLastCommandString.GetLength() - 4);
-  LPCSTR pszLastCommandString = T2A((LPTSTR) (LPCTSTR) sLastCommandString);
+  LPCSTR pszLastCommandString = T2A(const_cast<LPTSTR>(sLastCommandString.operator LPCTSTR()));
   Coder.Decode(pszLastCommandString);
 
+  //Store the results in the output parameters
   *pcbRead = Coder.ResultSize();
   if (*pcbRead >= cbBuf)
     return SEC_E_INSUFFICIENT_MEMORY;
-
   memcpy(pBuf, Coder.Result(), *pcbRead);
 
   return SEC_E_OK;
@@ -3646,28 +3878,29 @@ SECURITY_STATUS CPJNSMTPConnection::NTLMAuthPhase3(PBYTE pBuf, DWORD cbBuf)
   CPJNSMPTBase64 Coder;
   CString sBuf;
   Coder.Encode(pBuf, cbBuf, BASE64_FLAG_NOCRLF);
-  sBuf.Format(_T("%s\r\n"), Coder.Result());
-  LPCSTR pszData = T2A((LPTSTR) (LPCTSTR) sBuf);
-  int nCmdLength = (int) strlen(pszData);
+  sBuf.Format(_T("%s\r\n"), A2T(Coder.Result()));
+  LPCSTR pszData = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
+  int nCmdLength = static_cast<int>(strlen(pszData));
   try
   {
-    m_Socket.Send(pszData, nCmdLength);
+    _Send(pszData, nCmdLength);
   }
   catch(CWSocketException* pEx)
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-    AfxThrowPJNSMTPException(dwError, FACILITY_WIN32);
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //check if authentication is successful
   if (!ReadCommandResponse(235))
-    AfxThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_NTLM_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_NTLM_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
   return SEC_E_OK;
 }
 #endif
 
+#ifndef CPJNSMTP_NOMXLOOKUP
 BOOL CPJNSMTPConnection::MXLookup(LPCTSTR lpszHostDomain,	CStringArray& arrHosts, CWordArray& arrPreferences, WORD fOptions, PIP4_ARRAY aipServers)
 {
   USES_CONVERSION;
@@ -3679,14 +3912,15 @@ BOOL CPJNSMTPConnection::MXLookup(LPCTSTR lpszHostDomain,	CStringArray& arrHosts
   arrHosts.RemoveAll();
   arrPreferences.RemoveAll();
 
-  if (_PJNSmtpData.m_lpfnDnsRecordListFree && _PJNSmtpData.m_lpfnDnsQuery)
+  if ((m_lpfnDnsRecordListFree != NULL) && (m_lpfnDnsQuery != NULL))
   {
     //Do the DNS MX lookup  
 	  PDNS_RECORD pRec = NULL;
-	  if (_PJNSmtpData.m_lpfnDnsQuery(T2A((LPTSTR) lpszHostDomain), DNS_TYPE_MX, fOptions, aipServers, &pRec, NULL) == ERROR_SUCCESS)
+	  if (m_lpfnDnsQuery(lpszHostDomain, DNS_TYPE_MX, fOptions, aipServers, &pRec, NULL) == ERROR_SUCCESS)
 	  {
       bSuccess = TRUE;
 
+      PDNS_RECORD pRecFirst = pRec;
 		  while (pRec)
 		  {
         //We're only interested in MX records
@@ -3697,7 +3931,7 @@ BOOL CPJNSMTPConnection::MXLookup(LPCTSTR lpszHostDomain,	CStringArray& arrHosts
         }
 			  pRec = pRec->pNext;
 		  }
-		  _PJNSmtpData.m_lpfnDnsRecordListFree(pRec,DnsFreeRecordList);
+		  m_lpfnDnsRecordListFree(pRecFirst, DnsFreeRecordList);
 	  }
   }
   else
@@ -3712,5 +3946,6 @@ BOOL CPJNSMTPConnection::MXLookup(LPCTSTR lpszHostDomain,	CStringArray& arrHosts
 
 BOOL CPJNSMTPConnection::MXLookupAvailable()
 {
-  return (_PJNSmtpData.m_lpfnDnsRecordListFree != NULL && _PJNSmtpData.m_lpfnDnsQuery != NULL);
+  return (m_lpfnDnsRecordListFree != NULL && m_lpfnDnsQuery != NULL);
 }
+#endif

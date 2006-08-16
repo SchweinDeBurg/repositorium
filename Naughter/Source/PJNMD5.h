@@ -4,6 +4,9 @@ Purpose: Defines the interface for some MFC class which encapsulate calculating 
 Created: PJN / 23-04-2005
 History: PJN / 18-05-2005 1. Fixed a compiler warning when compiled using Visual Studio .NET 2003. Thanks to Alexey Kuznetsov
                           for reporting this issue.
+         PJN / 29-09-2005 1. Format method now allows you to specify an uppercase or lower case string for the hash. This is 
+                          necessary since the CRAM-MD5 authentication mechanism requires a lowercase MD5 hash. Thanks to 
+                          Jian Peng for reporting this issue.
 
 
 Copyright (c) 2005 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
@@ -54,7 +57,7 @@ public:
     return m_byHash; 
   };
 
-  CString Format()
+  CString Format(BOOL bUppercase)
   {
     //What will be the return value
     CString sRet;
@@ -67,13 +70,13 @@ public:
       if (nChar <= 9)
         pString[i*2] = (TCHAR) (nChar + _T('0'));
       else
-        pString[i*2] = (TCHAR) (nChar - 10 + _T('A'));
+        pString[i*2] = (TCHAR) (nChar - 10 + (bUppercase ? _T('A') : _T('a')));
 
       nChar = m_byHash[i] & 0x0F;
       if (nChar <= 9)
         pString[i*2 + 1] = (TCHAR) (nChar + _T('0'));
       else
-        pString[i*2 + 1] = (TCHAR) (nChar - 10 + _T('A'));
+        pString[i*2 + 1] = (TCHAR) (nChar - 10 + (bUppercase ? _T('A') : _T('a')));
     }
     pString[i*2] = _T('\0');
     sRet.ReleaseBuffer();
@@ -132,7 +135,7 @@ public:
   //NULL on entry then a new HCRYPTHASH is created. If hHash is non-null
   //then this existing hash is used and the data to hash is included into
   //the current hash. The client is responsible for freeing the hash handle
-  BOOL Hash(const BYTE* pbyData, DWORD dwDataSize, HCRYPTHASH& hHash)
+  BOOL Hash(const BYTE* pbyData, DWORD dwDataSize, HCRYPTHASH& hHash) //If you get a compilation error on this line, then you need to download, install and configure the MS Platform SDK if you are compiling the code under Visual C++ 6
   {
     //Create the hash object if required to
     if (hHash == NULL)
@@ -241,7 +244,7 @@ public:
 
 protected:
 //Member variables
-  HCRYPTPROV m_hProv;
+  HCRYPTPROV m_hProv; //If you get a compilation error on this line, then you need to download, install and configure the MS Platform SDK if you are compiling the code under Visual C++ 6
 };
 
 #endif //__PJNMD5_H__
