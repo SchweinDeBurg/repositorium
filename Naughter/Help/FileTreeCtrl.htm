@@ -1,14 +1,14 @@
 <html>
 
 <head>
-<title>CTreeFileCtrl v1.38</title>
+<title>CTreeFileCtrl v1.42</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
 </head>
 
 <body>
 
 <h2 align="left"><strong>
-CTreeFileCtrl v1.38</strong></h2>
+CTreeFileCtrl v1.42</strong></h2>
 
 <p>CTreeFileCtrl provides an MFC class
 which provides a tree control similar to the left hand side of Windows Explorer.   </p>
@@ -99,6 +99,9 @@ which provides a tree control similar to the left hand side of Windows Explorer.
     tree control window style.</li>
   <li>You will also need to copy across the IDR_TREEFILECTRL_* 
   resources from either of the sample apps provided with the code.</li>
+  <li>As of v1.39 you will need an up to date Platform SDK
+    installed to compile the code if you are using Visual C++ 6 (February 2003 
+	was the last version which was compatible with VC 6).</li>
   <li>Please note that you may have difficulties when using 
   the class in a CDialogBar derived class. As reported by Don Woodward: I put 
   one of these in my CDialogBar derived class and because of CControlBar's 
@@ -594,8 +597,49 @@ distribution point for the source code.&nbsp;</p>
 	Thanks to Bob O'Neill for this update.</li>
 </ul>
 
-<p>&nbsp;</p>
+<p><strong>v1.39 of CTreeFileCtrl (18 June 2006)</strong>
+<ul>
+  <li> Replaced all calls to ZeroMemory with memset</li>
+	<li> Replaced all calls to CopyMemory with memcpy</li>
+	<li> Optimized CTreeFileCtrlItemInfo constructor code</li>
+	<li> Now includes code to optionally show &quot;Desktop&quot; as the root node. Thanks 
+	to Hans Dietrich for this very nice addition</li>
+	<li> Removed some now deleted files from the project.</li>
+	<li> Fixed a minor typo in the Allow Properties menu item in the sample app.</li>
+	<li> Now includes code to optionally show &quot;My Documents&quot;. Thanks to Hans 
+	Dietrich for this very nice addition.</li>
+	<li> Fixed bug where m_bExtensionHidden setting was not being copied in 
+	CTreeFileCtrlItemInfo constructor.</li>
+	<li> Renamed SetDisplayNetwork to SetShowNetwork and GetDisplayNetwork to 
+	GetShowNetwork for consistency with all the other functions of the same 
+	type.</li>
+</ul>
 
+<p><strong>19 June 2006</strong><ul>
+  <li> Updated the usage section to explain that the code now requires the 
+	Platform SDK to be installed if you are compiling the code with VC 6.</li>
+	<li> Added a missing manifest file to the zip download.</li>
+</ul>
+
+<p><strong>v1.40 of CTreeFileCtrl (22 June 2006)</strong>
+<ul>
+	<li>Fixed a bug where expansion of the Desktop node fails on subsequent 
+	expansions. Thanks to Jan Moorman for reporting this issue.</li>
+</ul>
+
+<p><strong>v1.41 of CTreeFileCtrl (1 July 2006)</strong>
+<ul>
+	<li>Fixed a bug where expansion of UNC folders failed. Thanks to Jan Moorman 
+	for reporting this bug.</li>
+</ul>
+
+<p><strong>v1.42 of CTreeFileCtrl (1 July 2006)</strong>
+<ul>
+	<li>Updated the code to clean compile on VC 2005 </li>
+	<li>Code now uses new C++ style casts rather than old style C casts where 
+	necessary.</li>
+</ul>
+<p>&nbsp;</p>
 <p>&nbsp;</p>
 
 <p>&nbsp;</p>
@@ -646,8 +690,8 @@ Reference</strong></h2>
 <a href="#SetCompressedColor">CTreeFileCtrl::SetCompressedColor</a><br>
 <a href="#GetUsingDifferentColorForCompressed">CTreeFileCtrl::GetUsingDifferentColorForCompressed</a><br>
 <a href="#SetUsingDifferentColorForCompressed">CTreeFileCtrl::SetUsingDifferentColorForCompressed<br>
-</a></b><b><a href="#SetDisplayNetwork">CTreeFileCtrl::SetDisplayNetwork</a><br>
-<a href="#GetDisplayNetwork">CTreeFileCtrl::GetDisplayNetwork</a><br>
+</a></b><b><a href="#SetShowNetwork">CTreeFileCtrl::SetShowNetwork</a><br>
+<a href="#GetShowNetwork">CTreeFileCtrl::GetShowNetwork</a><br>
 <a href="#SetUsingDifferentIconForSharedFolders">CTreeFileCtrl::SetUsingDifferentIconForSharedFolders</a><br>
 <a href="#GetUsingDifferentIconForSharedFolders">CTreeFileCtrl::GetUsingDifferentIconForSharedFolders</a><br>
 <a href="#GetShowFileExtensions">CTreeFileCtrl::GetShowFileExtensions</a><br>
@@ -657,8 +701,12 @@ Reference</strong></h2>
 <a href="#SetShowDriveLabels">CTreeFileCtrl::SetShowDriveLabels</a><br>
 <a href="#GetShowDriveLabels">CTreeFileCtrl::GetShowDriveLabels<br>
 </a><a href="#SetShowMyComputer">CTreeFileCtrl::SetShowMyComputer</a><br>
-<a href="#GetShowMyComputer">CTreeFileCtrl::GetShowMyComputer</a><br>
-<a href="#SetShowRootedFolder">CTreeFileCtrl::SetShowRootedFolder</a><br>
+<a href="#GetShowMyComputer">CTreeFileCtrl::GetShowMyComputer</a></b><br>
+<b><a href="#SetShowDesktop">CTreeFileCtrl::SetShowDesktop</a></b><br>
+<b><a href="#GetShowDesktop">CTreeFileCtrl::GetShowDesktop</a></b><br>
+<b><a href="#SetShowMyDocuments">CTreeFileCtrl::SetShowMyDocuments</a></b><br>
+<b><a href="#GetShowMyDocuments">CTreeFileCtrl::GetShowMyDocuments</a></b><br>
+<b><a href="#SetShowRootedFolder">CTreeFileCtrl::SetShowRootedFolder</a><br>
 <a href="#GetShowRootedFolder">CTreeFileCtrl::GetShowRootedFolder<br>
 </a>
 </b><b><a href="#GoBack">CTreeFileCtrl::GoBack</a><br>
@@ -1652,16 +1700,16 @@ SetUsingDifferentColorForCompressed function.</p>
 
 <p>&nbsp;</p>
 
-<p><strong><a name="SetDisplayNetwork"></a>CTreeFileCtrl::SetDisplayNetwork</strong></p>
+<p><strong><a name="SetShowNetwork"></a>CTreeFileCtrl::SetShowNetwork</strong></p>
 
 <p><strong>void
-SetDisplayNetwork(BOOL </strong><em>bDisplayNetwork</em><strong>);</strong></p>
+SetShowNetwork(BOOL </strong><em>bShowNetwork</em><strong>);</strong></p>
 
 <p><strong>Parameters</strong></p>
 
-<p><em>bDisplayNetwork</em>
-TRUE if the network should be displayed, otherwise
-FALSE to only show local files (i.e. drive letters).</p>
+<p><em>bShowNetwork</em>
+TRUE if the network should be shown, otherwise FALSE to only show local files 
+and mapped drives (i.e. drive letters).</p>
 
 <p><strong>Remarks</strong></p>
 <p>This allows you to enumerate the
@@ -1669,18 +1717,18 @@ network in addition to showing local files.</p>
 
 <p>&nbsp;</p>
 
-<p><a name="GetDisplayNetwork"></a><strong>CTreeFileCtrl::GetNetworkDisplay</strong></p>
+<p><a name="GetShowNetwork"></a><strong>CTreeFileCtrl::GetShowNetwork</strong></p>
 
-<p><strong>BOOL </strong><strong>GetNetworkDisplay() const;</strong></p>
+<p><strong>BOOL </strong><strong>GetShowNetwork() const;</strong></p>
 
 <p class="rl"><strong>Return Value</strong></p>
 
 <p class="t">TRUE if network is
-being displayed, otherwise FALSE.</p>
+being shown, otherwise FALSE.</p>
 
 <p><strong>Remarks</strong></p>
 <p>This is the corollary function to the
-SetDisplayNetwork function.</p>
+SetShowNetwork function.</p>
 
 <p>&nbsp;</p>
 
@@ -1863,7 +1911,7 @@ SetShowMyComputer(BOOL </strong><em>bShowMyComputer</em><strong>);</strong></p>
 
 <p><strong>Parameters</strong></p>
 
-<p><em>bShowMyComputer</em> A TRUE
+<p><em>bShowMyComputer</em> TRUE
 if drive letters should be rooted by a &quot;My Computer&quot; node, FALSE to
 leave drive letters unrooted.</p>
 
@@ -1881,6 +1929,60 @@ Computer&quot; is to be used as the root for drive letters otherwise FALSE.</p>
 <p><strong>Remarks</strong></p>
   <p>This is the corollary function to the
   SetShowMyComputer.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetShowDesktop"></a>CTreeFileCtrl::SetShowDesktop</strong></p>
+
+<p><strong>void
+SetShowDesktop(BOOL </strong><em>bShowDesktop</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bShowDesktop</em> TRUE
+if the &quot;Desktop&quot; node should be shown, FALSE to
+not show it.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetShowDesktop"></a><strong>CTreeFileCtrl::GetShowDesktop</strong></p>
+
+<p><strong>BOOL GetShowDesktop() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if &quot;Desktop&quot; is to be shown otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+  <p>This is the corollary function to the
+  SetShowDesktop.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetShowMyDocuments"></a>CTreeFileCtrl::SetShowMyDocuments</strong></p>
+
+<p><strong>void
+SetShowMyDocuments(BOOL </strong><em>bShowMyDocuments</em><strong>);</strong></p>
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bShowMyDocuments</em> TRUE
+if the &quot;My Documents&quot; node should be shown, FALSE to
+not show it.</p>
+
+<p>&nbsp;</p>
+
+<p><a name="GetShowMyDocuments"></a><strong>CTreeFileCtrl::GetShowMyDocuments</strong></p>
+
+<p><strong>BOOL GetShowMyDocuments() const;</strong></p>
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if &quot;My Documents&quot; is to be shown otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+  <p>This is the corollary function to the
+  SetShowMyDocuments.</p>
 
 <p>&nbsp;</p>
 
@@ -2148,6 +2250,6 @@ THE AUTHOR</strong></h2>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-25 January 2006</p>
+1 July 2006</p>
 </body>
 </html>

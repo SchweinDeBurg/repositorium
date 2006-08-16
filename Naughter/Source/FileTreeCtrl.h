@@ -17,8 +17,6 @@ to maintain a single distribution point for the source code.
 
 */
 
-
-
 ////////////////////////////////// Macros / Defines  ///////////////////////
 
 #ifndef __FILETREECTRL_H__
@@ -56,7 +54,6 @@ to maintain a single distribution point for the source code.
 #define FILETREECTRL_BASE_CLASS CTreeCtrl
 #endif
 
-
 //flags used to control how the DDX_FileTreeControl and SetFlags routine works
 
 const DWORD TFC_SHOWFILES       = 0x0001;   //Control will show files aswell as show folders
@@ -66,7 +63,6 @@ const DWORD TFC_ALLOWOPEN       = 0x0008;   //Control allows items to be "opened
 const DWORD TFC_ALLOWPROPERTIES = 0x0010;   //Control allows the "Properties" dialog to be shown
 const DWORD TFC_ALLOWDELETE     = 0x0020;   //Control allows items to be deleted
 
-
 //Allowable bit mask flags in SetDriveHideFlags / GetDriveHideFlags
 
 const DWORD DRIVE_ATTRIBUTE_REMOVABLE   = 0x00000001;
@@ -74,7 +70,6 @@ const DWORD DRIVE_ATTRIBUTE_FIXED       = 0x00000002;
 const DWORD DRIVE_ATTRIBUTE_REMOTE      = 0x00000004;
 const DWORD DRIVE_ATTRIBUTE_CDROM       = 0x00000010;
 const DWORD DRIVE_ATTRIBUTE_RAMDISK     = 0x00000020;
-
 
 
 /////////////////////////// Classes /////////////////////////////////
@@ -93,11 +88,12 @@ public:
   CString       m_sFQPath;          //Fully qualified path for this item
   CString       m_sRelativePath;    //The relative bit of the path
   NETRESOURCE*  m_pNetResource;     //Used if this item is under Network Neighborhood
+  BOOL          m_bDesktopNode;     //Item is "Desktop"
   BOOL          m_bNetworkNode;     //Item is "Network Neighborhood" or is underneath it
+  BOOL          m_bMyDocumentNode;  //Item is "My Documents"
   BOOL          m_bExtensionHidden; //Is the extension being hidden for this item
   BOOL          m_bFileItem;        //TRUE if this item is a file item
 };
-
 
 //Class which encapsulates access to the System image list which contains
 //all the icons used by the shell to represent the file system
@@ -117,7 +113,6 @@ protected:
   friend class CTreeFileCtrl;      //Allow the FileTreeCtrl access to our internals
 };
 
-
 //Struct taken from svrapi.h as we cannot mix Win9x and Win NT net headers in one program
 
 #pragma pack(push, 1)
@@ -132,7 +127,6 @@ struct FILETREECTRL_EXT_CLASS CTreeFile_share_info_50
 	char		        shi50_ro_password[SHPWLEN+1]; //read-only password (share-level security)
 };	/* share_info_50 */
 #pragma pack(pop)
-
 
 //class which manages enumeration of shares. This is used for determining 
 //if an item is shared or not
@@ -165,9 +159,7 @@ protected:
   DWORD                    m_dwShares;        //The number of shares enumerated
 };
 
-
-//Class which is used for passing info to and from the change notification
-//threads
+//Class which is used for passing info to and from the change notification threads
 
 class FILETREECTRL_EXT_CLASS CTreeFileCtrlThreadInfo
 {
@@ -183,7 +175,6 @@ public:
   int            m_nIndex;         //Index of this item into CTreeFileCtrl::m_ThreadInfo
   CEvent         m_TerminateEvent; //Event using to terminate the thread
 };
-
 
 //Class which implements the tree control representation of the file system
 
@@ -208,8 +199,8 @@ enum HideFileExtension
   HTREEITEM         SetSelectedPath(const CString& sPath, BOOL bExpanded=FALSE);
   void              SetShowFiles(BOOL bFiles);
   BOOL              GetShowFiles() const { return m_bShowFiles; };
-  void              SetDisplayNetwork(BOOL bDisplayNetwork);
-  BOOL              GetDisplayNetwork() const { return m_bDisplayNetwork; };
+  void              SetShowNetwork(BOOL bShowNetwork);
+  BOOL              GetShowNetwork() const { return m_bShowNetwork; };
   void              SetUsingDifferentIconForSharedFolders(BOOL bShowSharedUsingDifferentIcon);
   BOOL              GetUsingDifferentIconForSharedFolders() const { return m_bShowSharedUsingDifferentIcon; };
   void              SetAllowDragDrop(BOOL bAllowDragDrop) { m_bAllowDragDrop = bAllowDragDrop; };
@@ -247,6 +238,10 @@ enum HideFileExtension
   void              SetShowFileExtensions(HideFileExtension FileExtensions);
   BOOL              GetShowMyComputer() const { return m_bShowMyComputer; };
   void              SetShowMyComputer(BOOL bShowMyComputer);
+  BOOL              GetShowDesktop() const { return m_bShowDesktop; };
+  void              SetShowDesktop(BOOL bShowDesktop);
+  BOOL              GetShowMyDocuments() const { return m_bShowMyDocuments; };
+  void              SetShowMyDocuments(BOOL bShowMyDocuments);
   BOOL              GetShowRootedFolder() const { return m_bShowRootedFolder; };
   void              SetShowRootedFolder(BOOL bShowRootedFolder);
   void              SetAutoRefresh(BOOL bAutoRefresh);
@@ -377,17 +372,22 @@ protected:
   BOOL                HasPlusButton(HTREEITEM hItem);
   void                SetHasPlusButton(HTREEITEM hItem, BOOL bHavePlus);
   void                DoExpand(HTREEITEM hItem);
-
+  virtual void        DisplayRootItems();
 
 //Member variables
   CString                                                     m_sRootFolder;
+  CString                                                     m_sMyDocumentsPath;
   BOOL                                                        m_bShowFiles;
+  HTREEITEM                                                   m_hRoot;
   HTREEITEM                                                   m_hItemDrag;
   HTREEITEM                                                   m_hItemDrop;
   HTREEITEM                                                   m_hNetworkRoot;
+  HTREEITEM                                                   m_hMyDocumentsRoot;
   HTREEITEM                                                   m_hMyComputerRoot;
   HTREEITEM                                                   m_hRootedFolder;
   BOOL                                                        m_bShowMyComputer;
+  BOOL                                                        m_bShowDesktop;
+  BOOL                                                        m_bShowMyDocuments;
   CImageList*                                                 m_pilDrag;
 #if (_MFC_VER >= 0x700)  
   UINT_PTR                                                    m_nTimerID;
@@ -419,7 +419,7 @@ protected:
   CArray<CTreeFileCtrlThreadInfo*, CTreeFileCtrlThreadInfo*&> m_ThreadInfo;
   CEvent                                                      m_TerminateEvent;
   BOOL                                                        m_bAutoRefresh;
-  BOOL                                                        m_bDisplayNetwork;
+  BOOL                                                        m_bShowNetwork;
   BOOL                                                        m_bShowSharedUsingDifferentIcon;
   HideFileExtension                                           m_FileExtensions;
   DWORD                                                       m_dwMediaID[26];
@@ -430,10 +430,8 @@ protected:
   BOOL                                                        m_bShowRootedFolder;
 };
 
-
 //MFC Data exchange routines
 
 void FILETREECTRL_EXT_API DDX_FileTreeValue(CDataExchange* pDX, CTreeFileCtrl& ctrlFileTree, CString& sItem);
-
 
 #endif //__FILETREECTRL_H__
