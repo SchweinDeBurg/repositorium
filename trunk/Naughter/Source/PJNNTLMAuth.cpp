@@ -1,11 +1,29 @@
 /*
-Module : PJJNSMTP.CPP
+Module : PJNNTLMAuth.CPP
 Purpose: Implementation for a simple wrapper class for client NTLM authentication via SSPI
-Created: PJN / 22-05-1998
-History: None
+Created: PJN / 06-04-2005
+History: PJN / 05-09-2005 1. Function pointer to CompleteAuthToken is now constructed at runtime. This means
+                          that NTLM client authentication will work correctly on Win9x as used by the class
+                          CPJNSMTPConnection and any other class instead of bringing up a "Failed to load
+                          due to missing export..." message from the Windows loader. If you want to remove
+                          the NTLM support from CPJNSMTPConnection then you can continue to use the CPJNSMTP_NONTLM
+                          preprocessor define. Thanks to "Lior" for reporting this problem.
+         PJN / 29-09-2005 1. All SDK function pointers used by the class are now implemented using GetProcAddress.
+                          Thanks to Emir Kapic for this update.
+         PJN / 29-06-2006 1. Combined the functionality of the _PJNNTLMCLIENTAUTH_DATA class into the main 
+                          CNTLMClientAuth class.
+         PJN / 14-07-2006 1. Updated CNTLMClientAuth to use newer C++ style casts.
+                          2. Made the NTLMAuthenticate function "exception" safe, that is derived classes are free to throw 
+                          exceptions in their implementations of NTLMAuthPhase1, NTLMAuthPhase2 or NTLMAuthPhase3 and the
+                          CNTLMClientAuth class will properly clean up its resources. This is achieved by making the CredHandle
+                          and SecHandle values member variables of the class.
+                          3. Replaced all calls to ZeroMemory with memset.
+                          4. Now the public NTLMAuthenticate function allows you to pass a user name and password pair to 
+                          do NTLM authentication using a specified account instead of the credentials of the current user. If 
+                          you leave these values as NULL, then you will get the old behaviour which is to use the current
+                          user credentials. Thanks to Wouter Demuynck for this very nice addition.
 
-
-Copyright (c) 2005 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2005 - 2006 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -24,6 +42,10 @@ to maintain a single distribution point for the source code.
 
 #include "stdafx.h"
 #include "PJNNTLMAuth.h"
+#ifndef __SSPI_H__
+#pragma message("To avoid this message, please put Sspi.h in your PCH (usually stdafx.h)")
+#include <Sspi.h>
+#endif
 
 #if defined(__INTEL_COMPILER)
 // remark #177: controlling expression is constant
@@ -43,34 +65,117 @@ static char THIS_FILE[] = __FILE__;
 #ifndef SEC_SUCCESS
 #define SEC_SUCCESS(Status) ((Status) >= 0)
 #endif
-#pragma comment(lib, "Secur32.lib") //Automatically link to the security dll
-
 
 
 //////////////// Implementation //////////////////////////////////////
 
-SECURITY_STATUS CNTLMClientAuth::NTLMAuthenticate()
+CNTLMClientAuth::CNTLMClientAuth()
 {
-  CredHandle hCred;
-  ZeroMemory(&hCred, sizeof(hCred));
-  SecHandle hContext;
-  ZeroMemory(&hContext, sizeof(hContext));
+  //Set our credentials handles to default values
+  memset(&m_hCred, 0, sizeof(m_hCred));
+  memset(&m_hContext, 0, sizeof(m_hContext));
 
-  //Call the helper function which does all the work
-  SECURITY_STATUS ss = DoNTLMAuthentication(hCred, hContext);
+  m_hSecur32 = LoadLibrary(_T("SECUR32.DLL"));
+  if (m_hSecur32)
+  {
+    m_lpfnCompleteAuthToken = reinterpret_cast<COMPLETE_AUTH_TOKEN_FN>(GetProcAddress(m_hSecur32, "CompleteAuthToken"));
+    m_lpfnFreeCredentialsHandle = reinterpret_cast<FREE_CREDENTIALS_HANDLE_FN>(GetProcAddress(m_hSecur32, "FreeCredentialsHandle"));
+    m_lpfnDeleteSecurityContext = reinterpret_cast<DELETE_SECURITY_CONTEXT_FN>(GetProcAddress(m_hSecur32, "DeleteSecurityContext"));
 
+    #ifdef _UNICODE
+      m_lpfnInitializeSecurityContext = reinterpret_cast<INITIALIZE_SECURITY_CONTEXT_FN>(GetProcAddress(m_hSecur32, "InitializeSecurityContextW"));
+      m_lpfnAcquireCredentialsHandle = reinterpret_cast<ACQUIRE_CREDENTIALS_HANDLE_FN>(GetProcAddress(m_hSecur32, "AcquireCredentialsHandleW")); 
+    #else
+      m_lpfnInitializeSecurityContext = reinterpret_cast<INITIALIZE_SECURITY_CONTEXT_FN>(GetProcAddress(m_hSecur32, "InitializeSecurityContextA"));
+      m_lpfnAcquireCredentialsHandle = reinterpret_cast<ACQUIRE_CREDENTIALS_HANDLE_FN>(GetProcAddress(m_hSecur32, "AcquireCredentialsHandleA"));
+    #endif
+
+    //Note we allow "CompleteAuthToken" to be not implemented. this gives us at least a runtime chance of using NTLM authentication on Win 9x.
+    if (m_lpfnFreeCredentialsHandle == NULL || m_lpfnDeleteSecurityContext == NULL ||
+        m_lpfnInitializeSecurityContext == NULL || m_lpfnAcquireCredentialsHandle == NULL)
+    {
+      m_lpfnFreeCredentialsHandle     = NULL;
+      m_lpfnDeleteSecurityContext     = NULL;
+      m_lpfnInitializeSecurityContext = NULL;
+      m_lpfnAcquireCredentialsHandle  = NULL;
+    } 
+  }
+  else
+  {
+    m_lpfnCompleteAuthToken         = NULL;
+    m_lpfnFreeCredentialsHandle     = NULL;
+    m_lpfnDeleteSecurityContext     = NULL;
+    m_lpfnInitializeSecurityContext = NULL;
+    m_lpfnAcquireCredentialsHandle  = NULL;
+  }
+}
+
+CNTLMClientAuth::~CNTLMClientAuth()
+{
+  ReleaseHandles();
+
+  if (m_hSecur32)
+  {
+    FreeLibrary(m_hSecur32);
+    m_hSecur32 = NULL;
+  }
+}
+
+void CNTLMClientAuth::ReleaseHandles()
+{
   //Free up the security context if valid
-  if (hContext.dwLower != 0 || hContext.dwUpper != 0) 
-    DeleteSecurityContext(&hContext);
+  if (m_hContext.dwLower != 0 || m_hContext.dwUpper != 0) 
+  {
+    ASSERT(m_lpfnDeleteSecurityContext);
+    m_lpfnDeleteSecurityContext(&m_hContext);
+    memset(&m_hContext, 0, sizeof(m_hContext));
+  }
 
   //Free up the credentials handle if valid
-  if (hCred.dwLower != 0 || hCred.dwUpper != 0) 
-    FreeCredentialHandle(&hCred);
+  if (m_hCred.dwLower != 0 || m_hCred.dwUpper != 0) 
+  {
+    ASSERT(m_lpfnFreeCredentialsHandle);
+    m_lpfnFreeCredentialsHandle(&m_hCred);
+    memset(&m_hCred, 0, sizeof(m_hCred));
+  }
+}
+
+SECURITY_STATUS CNTLMClientAuth::NTLMAuthenticate(LPCTSTR pszUserName, LPCTSTR pszPassword)
+{
+  //Note we do the check for these 2 function pointers at the start, as otherwise we could (very unlikely
+  //but possibly) end up with resource handles but with no means to deallocate them!.
+  if ((m_lpfnDeleteSecurityContext == NULL) || (m_lpfnFreeCredentialsHandle == NULL))
+    return SEC_E_UNSUPPORTED_FUNCTION;
+
+  //allow "UserName" to be of the format DomainName\UserName
+  LPCTSTR pszDomain = NULL;
+  CString sUserName(pszUserName);
+  int nSlashSeparatorOffset = sUserName.Find(_T('\\'));
+  CString sDomain;
+  CString sUserNameWithoutDomain;
+  if (nSlashSeparatorOffset != -1)
+  {
+	  sDomain = sUserName.Left(nSlashSeparatorOffset);
+	  pszDomain = sDomain.operator LPCTSTR();
+	  sUserNameWithoutDomain = sUserName.Mid(nSlashSeparatorOffset + 1);
+	  pszUserName = sUserNameWithoutDomain.operator LPCTSTR();
+  }
+
+  //Release the handles before we try to authenticate (we do this here to ensure any previous calls
+  //to NTLMAuthenticate which throw exceptions are cleaned up prior to any new calls to DoNTLMAuthentication)
+  ReleaseHandles();
+
+  //Call the helper function which does all the work
+  SECURITY_STATUS ss = DoNTLMAuthentication(pszUserName, pszPassword, pszDomain);
+
+  //Now free up the handles now that we are finished the authentication (note it is not critical that this code is
+  //called since the various NTLMAuthPhase(*) functions may throw exceptions
+  ReleaseHandles();
 
   return ss;
 }
 
-SECURITY_STATUS CNTLMClientAuth::DoNTLMAuthentication(CredHandle& hCred, SecHandle& hContext)
+SECURITY_STATUS CNTLMClientAuth::DoNTLMAuthentication(LPCTSTR pszUserName, LPCTSTR pszPassword, LPCTSTR pszDomain)
 {
   BOOL fDone = FALSE;
   DWORD cbIn = 0;
@@ -79,7 +184,7 @@ SECURITY_STATUS CNTLMClientAuth::DoNTLMAuthentication(CredHandle& hCred, SecHand
   DWORD cbMaxMessage = sizeof(InBuf);
   DWORD cbOut = cbMaxMessage;
 
-  SECURITY_STATUS ss = GenClientContext(NULL, 0, OutBuf, &cbOut, &fDone, hCred, hContext);
+  SECURITY_STATUS ss = GenClientContext(NULL, 0, OutBuf, &cbOut, &fDone, pszUserName, pszPassword, pszDomain);
   if (!SEC_SUCCESS(ss))
     return ss;
 
@@ -95,7 +200,7 @@ SECURITY_STATUS CNTLMClientAuth::DoNTLMAuthentication(CredHandle& hCred, SecHand
 
     cbOut = cbMaxMessage;
 
-    ss = GenClientContext(InBuf, cbIn, OutBuf, &cbOut, &fDone, hCred, hContext);
+    ss = GenClientContext(InBuf, cbIn, OutBuf, &cbOut, &fDone, pszUserName, pszPassword, pszDomain);
     if (!SEC_SUCCESS(ss))
       return ss;
 
@@ -107,15 +212,44 @@ SECURITY_STATUS CNTLMClientAuth::DoNTLMAuthentication(CredHandle& hCred, SecHand
   return ss;
 }
 
-SECURITY_STATUS CNTLMClientAuth::GenClientContext(BYTE* pIn, DWORD cbIn, BYTE* pOut, DWORD* pcbOut, BOOL* pfDone, CredHandle& hCred, SecHandle& hContext)
+SECURITY_STATUS CNTLMClientAuth::GenClientContext(BYTE* pIn, DWORD cbIn, BYTE* pOut, DWORD* pcbOut, BOOL* pfDone, LPCTSTR pszUserName, LPCTSTR pszPassword, LPCTSTR pszDomain)
 {
   TimeStamp Lifetime;
   SECURITY_STATUS ss;
   if (NULL == pIn)  
   {   
-    ss = AcquireCredentialsHandle(NULL, _T("NTLM"), SECPKG_CRED_OUTBOUND, NULL, NULL, NULL, NULL, &hCred, &Lifetime);
-    if (!SEC_SUCCESS(ss))
-      return ss;
+    if (m_lpfnAcquireCredentialsHandle)
+    {
+      SEC_WINNT_AUTH_IDENTITY authInfo;
+      authInfo.Domain = NULL;
+      authInfo.User = NULL;
+      authInfo.Password = NULL;
+      void* pvLogonID = NULL;
+      if ((pszUserName != NULL) && (lstrlen(pszUserName)))
+      {
+        authInfo.UserLength = lstrlen(pszUserName);
+        authInfo.DomainLength = lstrlen(pszDomain);
+        authInfo.PasswordLength = lstrlen(pszPassword);
+      #ifdef _UNICODE  
+        authInfo.User = reinterpret_cast<unsigned short*>(const_cast<LPTSTR>(pszUserName));
+        authInfo.Domain = reinterpret_cast<unsigned short*>(const_cast<LPTSTR>(pszDomain));
+        authInfo.Password = reinterpret_cast<unsigned short*>(const_cast<LPTSTR>(pszPassword));
+        authInfo.Flags = SEC_WINNT_AUTH_IDENTITY_UNICODE;
+      #else
+        authInfo.User = reinterpret_cast<unsigned char*>(const_cast<LPTSTR>(pszUserName));
+        authInfo.Domain = reinterpret_cast<unsigned char*>(const_cast<LPTSTR>(pszDomain));
+        authInfo.Password = reinterpret_cast<unsigned char*>(const_cast<LPTSTR>(pszPassword));
+        authInfo.Flags = SEC_WINNT_AUTH_IDENTITY_ANSI;
+      #endif
+        pvLogonID = &authInfo;
+      }
+
+      ss = m_lpfnAcquireCredentialsHandle(NULL, _T("NTLM"), SECPKG_CRED_OUTBOUND, NULL, pvLogonID, NULL, NULL, &m_hCred, &Lifetime);
+      if (!SEC_SUCCESS(ss))
+        return ss;
+    }
+    else
+      return SEC_E_UNSUPPORTED_FUNCTION;
   }
 
   //Prepare the buffers
@@ -141,12 +275,18 @@ SECURITY_STATUS CNTLMClientAuth::GenClientContext(BYTE* pIn, DWORD cbIn, BYTE* p
     InSecBuff.pvBuffer   = pIn;
 
     ULONG ContextAttributes;
-    ss = InitializeSecurityContext(&hCred, &hContext, NULL, 0, 0, SECURITY_NATIVE_DREP, &InBuffDesc, 0, &hContext, &OutBuffDesc, &ContextAttributes, &Lifetime);
+    if (m_lpfnInitializeSecurityContext)
+      ss = m_lpfnInitializeSecurityContext(&m_hCred, &m_hContext, NULL, 0, 0, SECURITY_NATIVE_DREP, &InBuffDesc, 0, &m_hContext, &OutBuffDesc, &ContextAttributes, &Lifetime);
+    else
+      return SEC_E_UNSUPPORTED_FUNCTION;
   }
   else
   {
     ULONG ContextAttributes;
-    ss = InitializeSecurityContext(&hCred, NULL, NULL, 0, 0, SECURITY_NATIVE_DREP, NULL, 0, &hContext, &OutBuffDesc, &ContextAttributes, &Lifetime);
+    if (m_lpfnInitializeSecurityContext)
+      ss = m_lpfnInitializeSecurityContext(&m_hCred, NULL, NULL, 0, 0, SECURITY_NATIVE_DREP, NULL, 0, &m_hContext, &OutBuffDesc, &ContextAttributes, &Lifetime);
+    else
+      return SEC_E_UNSUPPORTED_FUNCTION;
   }
 
   if (!SEC_SUCCESS(ss))
@@ -155,9 +295,15 @@ SECURITY_STATUS CNTLMClientAuth::GenClientContext(BYTE* pIn, DWORD cbIn, BYTE* p
   //If necessary, complete the token.
   if ((SEC_I_COMPLETE_NEEDED == ss) || (SEC_I_COMPLETE_AND_CONTINUE == ss))  
   {
-    ss = CompleteAuthToken(&hContext, &OutBuffDesc);
-    if (!SEC_SUCCESS(ss))  
-      return ss;
+    //Check if CompleteAuthToken is available at runtime
+    if (m_lpfnCompleteAuthToken)
+    {
+      ss = m_lpfnCompleteAuthToken(&m_hContext, &OutBuffDesc);
+      if (!SEC_SUCCESS(ss))  
+        return ss;
+    }
+    else
+      return SEC_E_UNSUPPORTED_FUNCTION;
   }
 
   *pcbOut = OutSecBuff.cbBuffer;
