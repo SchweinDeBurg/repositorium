@@ -36,17 +36,13 @@ to maintain a single distribution point for the source code.
 #endif
 
 
-
 ////////////////////////////// Classes ////////////////////////////////////////
-
-void AfxThrowWSocketException(int nError = 0);
 
 class SOCKMFC_EXT_CLASS CWSocketException : public CException
 {
 public:
 //Constructors / Destructors
 	CWSocketException(int nError);
-	~CWSocketException();
 
 //Methods
 #ifdef _DEBUG
@@ -105,14 +101,17 @@ public:
   int     Receive(void* lpBuf, int nBufLen, int nFlags = 0);
   int     ReceiveFrom(void* lpBuf, int nBufLen, SOCKADDR* lpSockAddr, int* lpSockAddrLen, int nFlags = 0);
   int     ReceiveFrom(void* lpBuf, int nBufLen, CString& sSocketAddress, UINT& nSocketPort, int nFlags = 0);
-  void    Send(const void* pBuffer, int nBufLen, int nFlags = 0);
+  int     Send(const void* pBuffer, int nBufLen, int nFlags = 0);
   int     SendTo(const void* lpBuf, int nBufLen, const SOCKADDR* lpSockAddr, int nSockAddrLen, int nFlags = 0);
   int     SendTo(const void* lpBuf, int nBufLen, UINT nHostPort, LPCTSTR lpszHostAddress = NULL, int nFlags = 0);
-	enum { receives = 0, sends = 1, both = 2 };
+  enum { receives = 0, sends = 1, both = 2 };
   void    ShutDown(int nHow = sends);
 
 //Operators
   operator SOCKET();
+
+//Static methods
+  static void ThrowWSocketException(int nError = 0);
 
 protected:
 //Methods

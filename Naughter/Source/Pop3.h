@@ -1,9 +1,9 @@
 /*
-Module : POP3.H
+Module : PJNPOP3.H
 Purpose: Defines the interface for a MFC class encapsulation of the POP3 protocol
 Created: PJN / 04-05-1998
 
-Copyright (c) 1998 - 2005 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -19,8 +19,11 @@ to maintain a single distribution point for the source code.
 
 
 /////////////////////////////// Includes / Defines ////////////////////////////
-#ifndef __POP3_H__
-#define __POP3_H__
+
+#pragma once
+
+#ifndef __PJNPOP3_H__
+#define __PJNPOP3_H__
 
 #ifndef __AFXTEMPL_H__
 #pragma message("To avoid this message, put afxtempl.h in your PCH (usually stdafx.h)")
@@ -29,9 +32,12 @@ to maintain a single distribution point for the source code.
 
 #include "SocMFC.h" //If you get a compilation error about this missing header file, then you need to download my CWSocket wrapper classes from http://www.naughter.com/w3mfc.html
 
-#ifndef POP3_NOSSL_SUPPORT
+#ifndef CPJNPOP3_NOSSL
 #include "OpenSSLMfc.h" //If you get a compilation error about this missing header file, then you need to download my CSSLSocket wrapper classes from http://www.naughter.com/w3mfc.html
-#include <openssl\rand.h>
+#endif
+
+#ifndef PJNPOP3_EXT_CLASS
+#define PJNPOP3_EXT_CLASS
 #endif
 
 #if defined(__INTEL_COMPILER)
@@ -43,20 +49,42 @@ to maintain a single distribution point for the source code.
 
 /////////////////////////////// Classes ///////////////////////////////////////
 
-////// forward declaration
-class CPop3Connection;
-
-//Encapsulation of a POP3 message
-class CPop3Message
+class PJNPOP3_EXT_CLASS CPJNPOP3Exception : public CException
 {
 public:
 //Constructors / Destructors
-  CPop3Message();
-  CPop3Message(const CPop3Message& message);
-  virtual ~CPop3Message();
+  CPJNPOP3Exception(HRESULT hr, const CString& sLastResponse = _T("")); 
+	CPJNPOP3Exception(DWORD dwError = 0, DWORD dwFacility = FACILITY_WIN32, const CString& sLastResponse = _T(""));
 
 //Methods
-  CPop3Message& operator=(const CPop3Message& message);
+#ifdef _DEBUG
+	virtual void Dump(CDumpContext& dc) const;
+#endif
+	virtual BOOL GetErrorMessage(LPTSTR lpstrError, UINT nMaxError,	PUINT pnHelpContext = NULL);
+	CString GetErrorMessage();
+
+//Data members
+	HRESULT m_hr;
+  CString m_sLastResponse;
+
+protected:
+	DECLARE_DYNAMIC(CPJNPOP3Exception)
+};
+
+////// forward declaration
+class CPJNPOP3Connection;
+
+//Encapsulation of a POP3 message
+class PJNPOP3_EXT_CLASS CPJNPOP3Message
+{
+public:
+//Constructors / Destructors
+  CPJNPOP3Message();
+  CPJNPOP3Message(const CPJNPOP3Message& message);
+  virtual ~CPJNPOP3Message();
+
+//Methods
+  CPJNPOP3Message& operator=(const CPJNPOP3Message& message);
   LPCSTR  GetMessageText() const { return m_pszMessage; };
   CString GetHeader() const;
   CString GetHeaderItem(const CString& sName, int nItem = 0) const;
@@ -76,21 +104,13 @@ public:
 //protected:
   char* m_pszMessage;
 
-  friend class CPop3Connection;
+  friend class CPJNPOP3Connection;
 };
   
 //The main class which encapsulates the POP3 connection
-class CPop3Connection
+class PJNPOP3_EXT_CLASS CPJNPOP3Connection
 {
 public:
-  typedef enum ConnectionType
-  {
-    ctNormal = 0,
-#ifndef POP3_NOSSL_SUPPORT
-    ctSSL3 = 1,
-#endif
-  }; 
-
   typedef enum ProxyType
   {
     ptNone = 0,
@@ -100,69 +120,83 @@ public:
   };
 
 //Constructors / Destructors
-  CPop3Connection();
-  virtual ~CPop3Connection();
+  CPJNPOP3Connection();
+  virtual ~CPJNPOP3Connection();
 
 //Methods
-  BOOL           Connect(LPCTSTR pszHostName, LPCTSTR pszUser, LPCTSTR pszPassword, int nPort = 110);
-  BOOL           Disconnect();
-  BOOL           Statistics(int& nNumberOfMails, int& nTotalMailSize);
-  BOOL           Delete(int nMsg);
-  BOOL           GetMessageSize(int nMsg, DWORD& dwSize);
-  BOOL           GetMessageID(int nMsg, CString& sID);
-  BOOL           FindMessageID(const CString& sID, int& nMsg); 
-  BOOL           Retrieve(int nMsg, CPop3Message& message);
-  BOOL           GetMessageHeader(int nMsg, CPop3Message& message);
-  BOOL           Reset();
-  BOOL           UIDL();
-  BOOL           Noop();
-  BOOL           List();
+#ifndef CPJNPOP3_NOSSL
+  void    Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort=110, BOOL bSSL = FALSE);
+#else
+  void    Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort=110);
+#endif
+  void    Disconnect(BOOL bGracefully = TRUE);
+  BOOL    IsConnected() const	{ return m_bConnected; };
+  CString GetLastCommandResponse() const { return m_sLastCommandResponse; };
+  DWORD   GetTimeout() const { return m_dwTimeout; };
+  void    SetTimeout(DWORD dwTimeout) { m_dwTimeout = dwTimeout; };
 
-  BOOL           IsConnected() const	{ return m_bConnected; };
-  CString        GetLastCommandResponse() const { return m_sLastCommandResponse; };
-  DWORD          GetTimeout() const { return m_dwTimeout; };
-  void           SetTimeout(DWORD dwTimeout) { m_dwTimeout = dwTimeout; };
-  ConnectionType GetConnectionType() const { return m_ConnectionType; };
-  void           SetConnectionType(ConnectionType connectionType) { m_ConnectionType = connectionType; };
-  void           SetProxyType(ProxyType proxyType) { m_ProxyType = proxyType; };
-  ProxyType      GetProxyType() const { return m_ProxyType; };
-  void           SetProxyServer(const CString& sServer) { m_sProxyServer = sServer; };
-  CString        GetProxyServer() const { return m_sProxyServer; };
-  void           SetProxyPort(int nPort) { m_nProxyPort = nPort; };
-  int            GetProxyPort() { return m_nProxyPort; };
-  void           SetBoundAddress(const CString& sLocalBoundAddress) { m_sLocalBoundAddress = sLocalBoundAddress; };
-  CString        SetBoundAddress() const { return m_sLocalBoundAddress; };
-  void           SetProxyUserName(const CString& sUserName) { m_sProxyUserName = sUserName; };
-  CString        GetProxyUserName() const { return m_sProxyUserName; };
-  void           SetProxyPassword(const CString& sPassword) { m_sProxyPassword = sPassword; };
-  CString        GetProxyPassword() const { return m_sProxyPassword; };
-  CString        GetHTTPProxyUserAgent() const { return m_sUserAgent; };
-  void           SetHTTPProxyUserAgent(const CString& sUserAgent) { m_sUserAgent = sUserAgent; };
+  void    Statistics(int& nNumberOfMails, int& nTotalMailSize);
+  void    Delete(int nMsg);
+  DWORD   GetMessageSize(int nMsg);
+  CString GetMessageID(int nMsg);
+  int     FindMessageID(const CString& sID); 
+  void    Retrieve(int nMsg, CPJNPOP3Message& message);
+  void    GetMessageHeader(int nMsg, CPJNPOP3Message& message);
+  void    Reset();
+  void    UIDL();
+  void    Noop();
+  void    List();
+
+//Prxy methods
+  void      SetProxyType(ProxyType proxyType) { m_ProxyType = proxyType; };
+  ProxyType GetProxyType() const { return m_ProxyType; };
+  void      SetProxyServer(const CString& sServer) { m_sProxyServer = sServer; };
+  CString   GetProxyServer() const { return m_sProxyServer; };
+  void      SetProxyPort(int nPort) { m_nProxyPort = nPort; };
+  int       GetProxyPort() { return m_nProxyPort; };
+  void      SetBoundAddress(const CString& sLocalBoundAddress) { m_sLocalBoundAddress = sLocalBoundAddress; };
+  CString   SetBoundAddress() const { return m_sLocalBoundAddress; };
+  void      SetProxyUserName(const CString& sUserName) { m_sProxyUserName = sUserName; };
+  CString   GetProxyUserName() const { return m_sProxyUserName; };
+  void      SetProxyPassword(const CString& sPassword) { m_sProxyPassword = sPassword; };
+  CString   GetProxyPassword() const { return m_sProxyPassword; };
+  CString   GetHTTPProxyUserAgent() const { return m_sUserAgent; };
+  void      SetHTTPProxyUserAgent(const CString& sUserAgent) { m_sUserAgent = sUserAgent; };
+
+//Static methods
+  static void ThrowPJNPOP3Exception(DWORD dwError = 0, DWORD Facility = FACILITY_WIN32, const CString& sLastResponse = _T(""));
+  static void ThrowPJNPOP3Exception(HRESULT hr, const CString& sLastResponse = _T(""));
 
 protected:
-  virtual BOOL ReadStatResponse(int& nNumberOfMails, int& nTotalMailSize);
+  virtual void ReadStatResponse(int& nNumberOfMails, int& nTotalMailSize);
 	virtual BOOL ReadCommandResponse();
-  virtual BOOL ReadListResponse(int nNumberOfMails);
-  virtual BOOL ReadUIDLResponse(int nNumberOfMails);
-  virtual BOOL ReadReturnResponse(CPop3Message& message, DWORD dwSize);
+  virtual void ReadListResponse(int nNumberOfMails);
+  virtual void ReadUIDLResponse(int nNumberOfMails);
+  virtual void ReadReturnResponse(CPJNPOP3Message& message, DWORD dwSize);
   virtual BOOL ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR pszTerminator, LPSTR* ppszOverFlowBuffer, int nGrowBy=4096);
-  BOOL         Send(void* pBuffer, int nBufLen);
   LPSTR        GetFirstCharInResponse(LPSTR pszData) const;
-
-  CWSocket       m_Socket;
-#ifndef POP3_NOSSL_SUPPORT
-  CSSLSocket     m_SSLSocket;
+#ifndef CPJNPOP3_NOSSL
+  virtual CString GetOpenSSLError();
 #endif
-  int            m_nNumberOfMails;
-  BOOL           m_bListRetrieved;
-  BOOL           m_bStatRetrieved;
-  BOOL           m_bUIDLRetrieved;
-  CDWordArray    m_msgSizes;
-  CStringArray   m_msgIDs;
-  BOOL           m_bConnected;
-  CString        m_sLastCommandResponse;
+  void _CreateSocket();
+  void _ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout);
+  void _ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP);
+  void _ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CString & sProxyResponse, LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent);
+  void _Connect(LPCTSTR lpszHostAddress, UINT nHostPort);
+  int  _Send(const void *pBuffer, int nBuf);
+  int  _Receive(void *pBuffer, int nBuf);
+  void _Close();
+  BOOL _IsReadible(DWORD dwTimeout);
+
+#ifndef CPJNPOP3_NOSSL
+  CSSLContext    m_SSLCtx;               //SSL Context
+  CSSLSocket     m_SSL;                  //SSL socket wrapper
+#endif
+  BOOL           m_bSSL;                 //Are we connecting using SSL?
+  CWSocket       m_Socket;               //The socket connection to the POP3 server (if not using SSL) 
+  BOOL           m_bConnected;           //Are we currently connected to the server 
+  CString        m_sLastCommandResponse; //The full last response the server sent us  
 	DWORD          m_dwTimeout;
-  ConnectionType m_ConnectionType;
   ProxyType      m_ProxyType;
   CString        m_sProxyServer;
   int            m_nProxyPort;
@@ -170,6 +204,12 @@ protected:
   CString        m_sProxyUserName;
   CString        m_sProxyPassword;
   CString        m_sUserAgent;
+  int            m_nNumberOfMails;
+  BOOL           m_bListRetrieved;
+  BOOL           m_bStatRetrieved;
+  BOOL           m_bUIDLRetrieved;
+  CDWordArray    m_msgSizes;
+  CStringArray   m_msgIDs;
 };
 
-#endif //__POP3_H__
+#endif //__PJNPOP3_H__

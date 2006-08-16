@@ -1,0 +1,62 @@
+#include "winres.h"
+#include "Pop3.rh"
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PJNPOP3_FAILED_RECEIVE_UIDL_RESPONSE "Failed to receive UIDL response"
+    IDS_PJNPOP3_FAILED_RECEIVE_STAT_RESPONSE "Failed to receive STAT response"
+    IDS_PJNPOP3_FAIL_CREATE_SSL_SOCKET 
+                            "Failed to create SSL socket, Details: %1"
+    IDS_PJNPOP3_FAIL_CONNECT_SOCKS4_VIASSL 
+                            "Failed to connect to Socks 4 proxy via SSL: Details:%1"
+    IDS_PJNPOP3_FAIL_CONNECT_SOCKS5_VIASSL 
+                            "Failed to connect to Socks 5 proxy via SSL: Details:%1"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PJNPOP3_FAIL_CONNECT_HTTPPROXY_VIASSL 
+                            "Failed to connect to HTTP proxy via SSL:Details:%1"
+    IDS_PJNPOP3_FAIL_CONNECT_VIASSL "Failed to connect via SSL: Details:%1"
+    IDS_PJNPOP3_FAIL_SEND_VIASSL "Failed to send data via SSL: Details:%1"
+    IDS_PJNPOP_FAIL_RECEIVE_VIASSL 
+                            "Failed to receive data via SSL: Details:%1"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PJNPOP3_UNEXPECTED_RETR_RESPONSE 
+                            "Unexpected RETR response, Last Response: %1"
+    IDS_PJNPOP3_UNEXPECTED_TOP_RESPONSE 
+                            "Unexpected TOP response, Last Response: %1"
+    IDS_PJNPOP3_UNEXPECTED_POP3_LOGIN_RESPONSE 
+                            "Unexpected LOGIN response, Last Response: %1"
+    IDS_PJNPOP3_UNEXPECTED_QUIT_RESPONSE 
+                            "Unexpected QUIT response, Last Response: %1"
+    IDS_PJNPOP3_UNEXPECTED_POP3_NOOP_RESPONSE 
+                            "Unexpected NOOP response, Last Response: %1"
+    IDS_PJNPOP3_UNEXPECTED_STAT_RESPONSE 
+                            "Unexpected STAT response, Last Response: %1"
+    IDS_PJNPOP3_UNEXPECTED_DELE_RESPONSE 
+                            "Unexpected DELE response, Last Response: %1"
+    IDS_PJNPOP3_UNEXPECTED_UIDL_RESPONSE 
+                            "Unexpected UIDL response, Last Response: %1"
+    IDS_PJNPOP3_UNEXPECTED_RSET_RESPONSE 
+                            "Unexpected RSET response, Last Response: %1"
+    IDS_PJNPOP3_UNEXPECTED_LIST_RESPONSE 
+                            "Unexpected LIST response, Last Response: %1"
+    IDS_PJNPOP3_FAILED_RECEIVE_RETR_RESPONSE "Failed to receive RETR response"
+    IDS_PJNPOP3_FAILED_RECEIVE_LIST_RESPONSE "Failed to receive LIST response"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
