@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;POP3_NOSSL_SUPPORT"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;CPJNPOP3_NOSSL"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -68,7 +68,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;POP3_NOSSL_SUPPORT"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;CPJNPOP3_NOSSL"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -111,7 +111,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;POP3_NOSSL_SUPPORT"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;CPJNPOP3_NOSSL"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -158,7 +158,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;POP3_NOSSL_SUPPORT"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;CPJNPOP3_NOSSL"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -228,7 +228,7 @@
 		</Filter>
 		<Filter
 			Name="POP3"
-			Filter="h;cpp">
+			Filter="h;cpp;rh;rc">
 			<File
 				RelativePath="Source\Base64.cpp">
 				<FileConfiguration
@@ -288,6 +288,44 @@
 			</File>
 			<File
 				RelativePath="Source\Pop3.h">
+			</File>
+			<File
+				RelativePath="Source\Pop3.rc">
+				<FileConfiguration
+					Name="MBCS_Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS_Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode_Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode_Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling resources: $(InputFileName) ..."
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						Outputs="$(IntDir)\$(InputName).output"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="Source\Pop3.rh">
 			</File>
 			<File
 				RelativePath="Source\SocMFC.cpp">
@@ -724,7 +762,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -732,7 +771,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -740,7 +780,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -748,7 +789,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 			</File>
