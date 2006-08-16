@@ -1,10 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $RCSfile: ZipStorage.h,v $
-// $Revision: 1.5 $
-// $Date: 2005/07/22 20:46:18 $ $Author: Tadeusz Dracz $
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -41,7 +37,7 @@
 #endif	// __INTEL_COMPILER
 
 /**
-	A base class for functional objects (functors) that are used as a callbacks during various actions.
+	A base class for callback objects that are notified when various actions take place.
 	You need to derive your own class and overload \c Callback method to use it.
 	Do not derive from CZipCallback directly but from CZipSpanCallback (as a callback when there is a need 
 	for a disk change in a disk-spanning archive) or from CZipActionCallback for other actions.
@@ -50,7 +46,7 @@ struct ZIP_API CZipCallback
 {
 	/**
 		Method called as a callback. 
-		Return \c false from inside the method to abort the current operation. If it is a span callback functor,
+		Return \c false from inside the method to abort the current operation. If it is a span callback object,
 		a CZipException with CZipException::aborted code will be thrown, otherwise the code will be CZipException::abortedAction or CZipException::abortedSafely.
 		The following actions can be safely aborted (without having the archive corrupted):
 		- counting bytes before deleting files
@@ -71,7 +67,7 @@ struct ZIP_API CZipCallback
 };
 
 /**
-	Derive from this a class to be used as a callback functor for the disk change callback.
+	Derive from this a class to be used as a callback object for the disk change callback.
 	You need to override member function CZipCallback::Callback. The meaning of \e iProgress parameter is the reason for calling:
 		- -1 : a disk needed for reading		<BR>
 	other codes occurs during writing:
@@ -94,7 +90,7 @@ struct ZIP_API CZipSpanCallback : public CZipCallback
 
 
 /**
-	Derive from this a class to be used as a callback functors when adding, extracting, deleting, testing a file
+	Derive from this a class to be used as a callback object when adding, extracting, deleting, testing a file
 	or saving central directory.
 	You need to override member function CZipCallback::Callback. The meaning of \e iProgress parameter is the count
 	of data just processed. It is a smallest number of bytes after which the callback method is called and it depends
@@ -114,7 +110,7 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 	
 	/**
 		The type of the callback. It is set to one of CZipArchive::CallbackType values when the action begins.
-		It's useful if you have more than one callback assigned to the same functor.
+		It's useful if you have more than one callback assigned to the same callback object.
 	*/
 	int m_iType;
 
@@ -297,6 +293,21 @@ public:
 */
 	void Write(const void *pBuf, DWORD iSize, bool bAtOnce);
 
+	/** 
+	  \return the length of the current archive file increased by the number of bytes in the write buffer
+	*/
+	DWORD GetOccupiedSpace() const
+	{
+		return (DWORD)m_pFile->GetLength() + m_uBytesInWriteBuffer;
+	}
+
+/**
+	\see CZipArchive::IsClosed
+*/
+	bool IsClosed(bool bArchive) const 
+	{
+		return  bArchive ?(GetCurrentDisk() == -1) : (!m_pFile ||  m_pFile->IsClosed());
+	}
 /**
 	Read chunk of data from the archive.
 	\param	pBuf
@@ -379,6 +390,12 @@ public:
 		return m_bReadOnly || IsSpanMode() < 0;
 	}
 
+	/**
+		If you set \e bSingleDisk to \c true, no disk change will occur while reading an existing archive.
+		The purpose of this method is to allow reading archives that have improperly set disk numbers.
+	*/
+	void SetTreatAsSingleDisk(bool bSingleDisk = true){m_bTreatAsSingleDisk = bSingleDisk;}
+
 /**
 	
 	\param	bAfterException
@@ -426,7 +443,7 @@ public:
 	int m_iSpanMode;
 
 	/**
-		A callback functor which method \c Callback is called when there is a need for a disk change 
+		A callback object which method \c Callback is called when there is a need for a disk change 
 		while operating on a #pkzipSpan archive.
 		\see CZipArchive::SetSpanCallback
 	*/
@@ -489,10 +506,10 @@ protected:
 	DWORD GetFreeVolumeSpace() const;
 
 /**
-	Call the callback functor.
-	Throw an exception if the callback functor's method \c Callback returns \c false.
+	Notify the callback object.
+	Throw an exception if the callback object's method \c Callback returns \c false.
 	\param	iCode
-		a code to be passed to the callback functor
+		a code to be passed to the callback object
 	\param	szTemp
 		a string to be used as a filename (the second argument
 		of CZipException::Throw) when the exception must be thrown
@@ -598,6 +615,11 @@ protected:
 		It is set to \e true if OpenMode::zipOpenReadOnly was specified when opening the archive
 	*/
 	bool m_bReadOnly;
+
+	/**
+		Is is set by #SetTreatAsSingleDisk
+	*/
+	bool m_bTreatAsSingleDisk;
 	
 };
 

@@ -1,10 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $RCSfile: ZipFileHeader.cpp,v $
-// $Revision: 1.5 $
-// $Date: 2005/08/05 19:37:22 $ $Author: Tadeusz Dracz $
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -46,6 +42,7 @@ CZipFileHeader::CZipFileHeader()
 	m_uVersionMadeBy = 0;
 	// initialize to 0, because on 64 bit platform unsigned long is 8 byte and we are copying only 4 bytes in Read()
 	m_uCrc32 = m_uComprSize = m_uUncomprSize = m_uOffset = 0;
+	m_uLocalExtraFieldSize = m_uLocalFileNameSize = 0;
 // 	SetSystemCompatibility(ZipPlatform::m_sSystemID);
 }
 
@@ -154,7 +151,7 @@ DWORD CZipFileHeader::Write(CZipStorage *pStorage)
 	return iSize;
 }
 
-bool CZipFileHeader::ReadLocal(CZipStorage *pStorage, WORD& iLocExtrFieldSize)
+bool CZipFileHeader::ReadLocal(CZipStorage *pStorage)
 {
 	char buf[LOCALFILEHEADERSIZE];
 	pStorage->Read(buf, LOCALFILEHEADERSIZE, true);
@@ -163,31 +160,37 @@ bool CZipFileHeader::ReadLocal(CZipStorage *pStorage, WORD& iLocExtrFieldSize)
 	
 	bool bIsDataDescr = (((WORD)*(buf + 6)) & 8) != 0;
 	
-	WORD uFileNameSize = GetFileNameSize();
 	WORD uTemp; 
 	CZipArchive::ReadBytes(&uTemp, buf+6, 2); // give the priority to the local flag
 	if ((uTemp & 0xf) != (m_uFlag & 0xf))
 		m_uFlag = uTemp;
+
+	
 	if ((!CZipArchive::CompareBytes(buf + 8, &m_uMethod, 2))
-		|| (m_uMethod && (m_uMethod != Z_DEFLATED))
-		|| (!CZipArchive::CompareBytes(buf + 26, &uFileNameSize, 2)))
+		|| (m_uMethod && (m_uMethod != Z_DEFLATED)))
 		return false;
 
-// jeszcze mo¿naby porównaæ nazwy plików
+	// this may be different in the local header (it may contain disk name for example)
+	CZipArchive::ReadBytes(&m_uLocalFileNameSize, buf + 26, 2); 
 
 	if (!bIsDataDescr/* || !pStorage->IsSpanMode()*/)
 		if (!CheckCrcAndSizes(buf + 14))
 			return false;
 
-	CZipArchive::ReadBytes(&iLocExtrFieldSize, buf + 28, 2);
-	pStorage->m_pFile->Seek(uFileNameSize, CZipAbstractFile::current);
-
+	CZipArchive::ReadBytes(&m_uLocalExtraFieldSize, buf + 28, 2);
+	pStorage->m_pFile->Seek(m_uLocalFileNameSize, CZipAbstractFile::current);
 	return true;
 }
 
 void CZipFileHeader::SetTime(const time_t & ttime)
 {
+#if _MSC_VER >= 1400
+	tm gts;
+	tm* gt = &gts;
+	localtime_s(gt, &ttime);
+#else
 	tm* gt = localtime(&ttime);
+#endif
 	WORD year, month, day, hour, min, sec;
 	if (gt == NULL)
 	{
@@ -304,14 +307,18 @@ void CZipFileHeader::GetCrcAndSizes(char * pBuffer)const
 	CZipArchive::WriteBytes(pBuffer + 8, &m_uUncomprSize, 4);
 }
 
-DWORD CZipFileHeader::GetSize(bool bLocal)const
+DWORD CZipFileHeader::GetSize()const
 {
-	if (bLocal)
-		return LOCALFILEHEADERSIZE + GetExtraFieldSize() + GetFileNameSize();
-	else
-		return FILEHEADERSIZE + GetExtraFieldSize() + GetFileNameSize() + GetCommentSize();
+	return FILEHEADERSIZE + GetExtraFieldSize() + GetFileNameSize() + GetCommentSize();
 }
 
+DWORD CZipFileHeader::GetLocalSize(bool bReal)const
+{
+	if (bReal)
+		return LOCALFILEHEADERSIZE + m_uLocalExtraFieldSize + m_uLocalFileNameSize;
+	else
+		return LOCALFILEHEADERSIZE + GetExtraFieldSize() + GetFileNameSize();
+}
 
 bool CZipFileHeader::SetComment(LPCTSTR lpszComment)
 {

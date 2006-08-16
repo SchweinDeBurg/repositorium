@@ -1,10 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-// $RCSfile: ZipArchive.cpp,v $
-// $Revision: 1.6 $
-// $Date: 2005/08/05 19:37:22 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 //	
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -49,7 +45,7 @@
 #define ZIP_COMPR_REPL_MASK 0xffffff00
 #define ZIP_COMPR_REPL_SIGN 0x0100 // first 8 bits should be 00 (reserved for compression level), next 8 should be different from ff (to distinguish from -1)
 
-const TCHAR CZipArchive::m_gszCopyright[] = {_T("ZipArchive library Copyright 2000 - 2005 Tadeusz Dracz")};
+const TCHAR CZipArchive::m_gszCopyright[] = {_T("ZipArchive library Copyright 2000 - 2006 Tadeusz Dracz")};
 
 #ifdef _UNICODE	
 	bool CZipArchive::g_bWideConversionUseAnsi = true;
@@ -139,13 +135,6 @@ void CZipArchive::OpenInternal(int iMode)
 
 }
 
-
-bool CZipArchive::IsClosed(bool bArchive) const 
-{
-	return  bArchive ?(m_storage.GetCurrentDisk() == -1):(!m_storage.m_pFile || m_storage.m_pFile->IsClosed());
-}
-
-
 void CZipArchive::ThrowError(int err, bool bZlib)
 {
 	if (bZlib)
@@ -208,8 +197,7 @@ bool CZipArchive::OpenFile(WORD uIndex)
 	{
 		TRACE(_T("%s(%i) : You cannot extract from the span in creation.\n"),__FILE__,__LINE__);
 		return false;
-	}
-	
+	}	
 	
 	if (m_iFileOpened)
 	{
@@ -638,7 +626,7 @@ bool CZipArchive::OpenNewFile(CZipFileHeader & header,
 
 	if (bReplace)
 	{
-		uInternal += header.GetSize(true);
+		uInternal += header.GetLocalSize(false); // we don't need the real local size, because it does not exists yet
 		if (header.IsEncrypted())
 			uInternal += ZIPARCHIVE_ENCR_HEADER_LEN;
 		if (header.IsDataDescr())
@@ -795,7 +783,7 @@ bool CZipArchive::ExtractFile(WORD uIndex,
 	
 
 	CZipAutoBuffer buf(nBufSize);
-	mf.SeekToEnd();
+	//mf.SeekToEnd();
 	ZIP_ULONGLONG oldPos = 0;
 
 	if (bRewind)
@@ -1216,6 +1204,7 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 	CZipPathComponent::RemoveSeparators(info.m_szFilePath);
 	if (!info.m_szFilePath.IsEmpty()) // it may be empty after removing sep.
 	{
+		// TODO: refactor - we should use PredictFileNameInZip here
 		if (info.m_szFileNameInZip.IsEmpty())
 		{
 			CZipPathComponent zpc(info.m_szFilePath);
@@ -1365,7 +1354,7 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 			}
 			
 			m_info.Init();
-			throw GetFromArchive(zip, 0, info.m_iReplaceIndex, true, GetCallback(cbAddTmp));
+			throw GetFromArchive(zip, 0, NULL, info.m_iReplaceIndex, true, GetCallback(cbAddTmp));
 		}
 		catch (bool bRet)
 		{
@@ -1650,7 +1639,7 @@ bool CZipArchive::SetPassword(LPCTSTR lpszPassword)
 {
 	if (m_iFileOpened != nothing)
 	{
-		TRACE(_T("%s(%i) : You cannot change the password when the file is opened.\n"),__FILE__,__LINE__);
+		TRACE(_T("%s(%i) : You cannot change the password when a file is opened.\n"),__FILE__,__LINE__);
 		return false; // it's important not to change the password when the file inside archive is opened
 	}
 	if (IsClosed())
@@ -1662,13 +1651,6 @@ bool CZipArchive::SetPassword(LPCTSTR lpszPassword)
 		int iLen = WideToSingle(lpszPassword, m_pszPassword);
 		if (iLen == -1)
 			return false;
-		for (size_t i = 0; (int)i < iLen; i++)
-			if (m_pszPassword[i] <= 0)
-			{
-				m_pszPassword.Release();
-				TRACE(_T("%s(%i) : The password contains forbidden characters. Password cleared.\n"),__FILE__,__LINE__);
-				return false;
-			}
 	}
 	else
 		m_pszPassword.Release();
@@ -1830,11 +1812,11 @@ int CZipArchive::WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle)
 	return ZipPlatform::WideToSingle(lpWide, szSingle, g_bWideConversionUseAnsi);
 #else
 	
-	size_t iLen = strlen(lpWide);
+	int iLen = (int)strlen(lpWide);
 	// if not UNICODE just copy
 	// 	iLen does not include the NULL character
 	szSingle.Allocate(iLen);
-	memcpy(szSingle, lpWide, iLen);
+	memcpy(szSingle, lpWide, (size_t)iLen);
 	return iLen;
 #endif
 
@@ -1875,7 +1857,7 @@ void CZipArchive::EmptyPtrList()
 
 
 
-void CZipArchive::SetFileHeaderAttr(CZipFileHeader& header, DWORD uAttr)
+void CZipArchive::SetFileHeaderAttr(CZipFileHeader& header, DWORD uAttr)const
 {
 	header.SetSystemCompatibility(m_iArchiveSystCompatib);
 	header.SetSystemAttr(uAttr);
@@ -2045,6 +2027,33 @@ CZipString CZipArchive::PredictExtractedFileName(LPCTSTR lpszFileNameInZip, LPCT
 	return szFile;
 }
 
+DWORD CZipArchive::PredictMaximumFileSizeInArchive(LPCTSTR lpszFilePath, bool bFullPath) const
+{
+		DWORD attr;
+		if (!ZipPlatform::GetFileAttr(lpszFilePath, attr))
+			return 0;		
+		CZipFileHeader fh;		
+		SetFileHeaderAttr(fh, attr);
+		if (!fh.IsDirectory())
+			if (!ZipPlatform::GetFileSize(lpszFilePath, fh.m_uUncomprSize))
+				return 0;
+		fh.SetFileName(PredictFileNameInZip(lpszFilePath, bFullPath, fh.IsDirectory() ? prDir  : prFile, false));
+		return PredictMaximumFileSizeInArchive(fh);
+}
+
+DWORD CZipArchive::PredictMaximumFileSizeInArchive(CZipFileHeader& fh) const
+{
+	DWORD uSize = fh.GetSize() + fh.GetLocalSize() + fh.m_uUncomprSize;
+	bool bWillBeEncrypted = !GetPassword().IsEmpty();
+	bool bIsSpan = m_storage.IsSpanMode() != 0;
+	// TODO: refactor - it is used in several places
+	if (bWillBeEncrypted)
+		uSize += ZIPARCHIVE_ENCR_HEADER_LEN;
+	if (bWillBeEncrypted || bIsSpan)
+		uSize += ZIPARCHIVE_DATADESCRIPTOR_LEN + 4; // CZipCentralDir::CloseNewFile	
+
+	return uSize;
+}
 
 void CZipArchive::SetAutoFlush(bool bAutoFlush)
 {
@@ -2517,8 +2526,14 @@ int CZipArchive::WillBeDuplicated(LPCTSTR lpszFilePath, bool bFullPath, bool bFi
 
 
 // it'll get up to the next file or to the end of file (bad if zip corrupted or not-ordered by offsett or redundant bytes added)
-bool CZipArchive::GetFromArchive(CZipArchive& zip, WORD uIndex, int iReplaceIndex, bool bKeepSystComp, CZipActionCallback* pCallback)
+bool CZipArchive::GetFromArchive(CZipArchive& zip, WORD uIndex, LPCTSTR lpszNewFileName, int iReplaceIndex, bool bKeepSystComp, CZipActionCallback* pCallback)
 {
+
+	if (this == &zip)
+	{
+		TRACE(_T("%s(%i) : You cannot get files from the same archive.\n"),__FILE__,__LINE__);
+		return false;
+	}
 
 	if (IsClosed() || zip.IsClosed())
 	{
@@ -2548,6 +2563,8 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, WORD uIndex, int iReplaceInde
 
 	bool bIsSpan = m_storage.IsSpanMode() == 1;
 
+	// update sizes of local filename and extra field - they may differ from the ones in the central directory
+	zip.m_centralDir.UpdateLocal(uIndex);
 	CZipFileHeader fh;
 	if (!zip.GetFileInfo(fh, uIndex))
 		return false;
@@ -2572,7 +2589,7 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, WORD uIndex, int iReplaceInde
 			uEndOffset = pFile->GetLength();
 	}
 	uEndOffset += zip.m_centralDir.GetBytesBefore();
-	DWORD uStartOffset = zip.m_centralDir.GetBytesBefore() + fh.m_uOffset + fh.GetSize(true);
+	DWORD uStartOffset = zip.m_centralDir.GetBytesBefore() + fh.m_uOffset + fh.GetLocalSize(true); // we need the real local size, we called CZipCentralDir::UpdateLocal before for this reason 
 	DWORD uTotalToMove = uEndOffset - uStartOffset, uTotalMoved = 0;
 		
 	DWORD uPredictedSize = fh.m_uComprSize + 
@@ -2587,7 +2604,13 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, WORD uIndex, int iReplaceInde
 	bool bConvertSystem = !bKeepSystComp && fh.GetSystemCompatibility() != m_iArchiveSystCompatib;
 
 	// GetFileInfo always converts the filename regardless of zip.m_centralDir.m_bConvertAfterOpen value
-	szFileNameConverted = fh.GetFileName(); 
+	if (lpszNewFileName != NULL)
+	{
+		fh.SetFileName(lpszNewFileName);
+		szFileNameConverted = lpszNewFileName;
+	}
+	else
+		szFileNameConverted = fh.GetFileName(); 
 	if (bConvertSystem)
 	{
 		DWORD uAttr = fh.GetSystemAttr();
@@ -2620,7 +2643,7 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, WORD uIndex, int iReplaceInde
 	// if the same callback is applied to cbReplace, then the previous information about the type will be lost
 	CZipFileHeader* pHeader = m_centralDir.AddNewFile(fh, iReplaceIndex); // must be converted when adding because of InsertFastElement
 	if (bReplace)
-		MakeSpaceForReplace(iReplaceIndex, uTotalToMove + fh.GetSize(true), szFileNameConverted);
+		MakeSpaceForReplace(iReplaceIndex, uTotalToMove + fh.GetLocalSize(false), szFileNameConverted); // we don't want the real local size, because the CZipFileHeader::WriteLocal writes filename and extra field from the central directory
 
 	if (pCallback)
 	{
@@ -2730,7 +2753,7 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, CZipWordArray &aIndexes, bool
 		{
 			int iFileIndex = aIndexes[i];
 			if (!m_centralDir.IsValidIndex(iFileIndex))
-			if (!GetFromArchive(zip, iFileIndex, -1, bKeepSystComp, GetCallback(cbGetFromArchive)))
+			if (!GetFromArchive(zip, iFileIndex, NULL, -1, bKeepSystComp, GetCallback(cbGetFromArchive)))
 			{
 				m_info.ReleaseBuf();
 				return false;
@@ -2781,16 +2804,26 @@ bool CZipArchive::RenameFile(WORD uIndex, LPCTSTR lpszNewName)
 	fhNew.SetFileName(szNewName);
 	ZipCompatibility::FileNameUpdate(fhNew, false, m_centralDir.m_bOemConversion);
 	ZipCompatibility::FileNameUpdate(fh, false, m_centralDir.m_bOemConversion); // in case the conversion changes the filename size 
-	WORD uFileNameLen = fh.GetFileNameSize();
+	m_centralDir.RemoveFromDisk(); // does m_storage.Flush();
+
+	// read local data - it may differ from central data
+	char localInfo[4];
+	m_storage.m_pFile->Seek(m_centralDir.GetBytesBefore() + fh.m_uOffset + 26, CZipAbstractFile::begin);
+	m_storage.m_pFile->Read(localInfo, 4); // read at once
+	WORD uFileNameLen, uExtraFieldSize;
+	CZipArchive::ReadBytes(&uFileNameLen, localInfo, 2);
+	// skip endian issues - the variable will not be used, but written back as it is
+	memcpy(&uExtraFieldSize, localInfo + 2, 2);
+	
+
 	WORD uNewFileNameLen = fhNew.GetFileNameSize();
 	int iDelta = uNewFileNameLen - uFileNameLen;
 	int iOffset = 0;
 	CZipAutoBuffer buf, *pBuf;
-	m_centralDir.RemoveFromDisk(); // does m_storage.Flush();
+	
 	if (iDelta != 0)
 	{
-		// we need to make more or less space
-		
+		// we need to make more or less space		
 		m_info.Init();
 		DWORD uStartOffset = fh.m_uOffset + 30 + uFileNameLen;
 		DWORD uFileLen = m_storage.m_pFile->GetLength();
@@ -2819,9 +2852,10 @@ bool CZipArchive::RenameFile(WORD uIndex, LPCTSTR lpszNewName)
 		for (int i = uIndex + 1; i < iSize; i++)
 			m_centralDir[i]->m_uOffset += iDelta;
 		buf.Allocate(4+uNewFileNameLen);
-		WORD uExtraFieldSize = fh.GetExtraFieldSize();
 		CZipArchive::WriteBytes(buf, &uNewFileNameLen, 2);
-		CZipArchive::WriteBytes(buf + 2, &uExtraFieldSize, 2); // to write everything at once
+		// the variable was not used - we write it back as it was (no endian issues)
+		// to write everything at once
+		memcpy(buf + 2, &uExtraFieldSize, 2);
 		memcpy(buf + 4, fhNew.m_pszFileName, uNewFileNameLen);	
 		pBuf = &buf;
 		iOffset = -4;
@@ -2830,7 +2864,7 @@ bool CZipArchive::RenameFile(WORD uIndex, LPCTSTR lpszNewName)
 		pBuf = &fhNew.m_pszFileName;
 	
 	m_storage.m_pFile->Seek(m_centralDir.GetBytesBefore() + fh.m_uOffset + 30 + iOffset, CZipAbstractFile::begin);
-	m_storage.m_pFile->Write(buf, buf.GetSize());
+	m_storage.m_pFile->Write(*pBuf, pBuf->GetSize());
 	m_centralDir.RenameFile(uIndex, szNewName);	
 	if (m_bAutoFlush)
 		Flush();

@@ -1,10 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $RCSfile: ZipPlatform.cpp,v $
-// $Revision: 1.4 $ $Name:  $
-// $Date: 2005/03/07 20:40:37 $ $Author: Tadeusz Dracz $
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -104,7 +100,7 @@ CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, DWORD iSizeNeeded)
 		}
 		if (bCheckTemp)
 		{
-			DWORD size = GetTempPath(0, NULL);
+			DWORD size = GetTempPath(0, empty);
 			if (size == 0)
 				return empty;
 		
@@ -175,7 +171,11 @@ bool ZipPlatform::SetFileModTime(LPCTSTR lpFileName, time_t ttime)
 	struct _utimbuf ub;
 	ub.actime = time(NULL);
 	ub.modtime = ttime == -1 ? time(NULL) : ttime; // if wrong file time, set it to the current
-	return _tutime(lpFileName, &ub) == 0;
+#ifdef __MINGW32__
+ return utime(lpFileName, &ub) == 0;
+#else
+ return _tutime(lpFileName, &ub) == 0;
+#endif
 }
 
 
@@ -279,12 +279,12 @@ int ZipPlatform::WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle, bool bUs
 
 	// iLen does not include terminating character
 	UINT uCodePage = bUseAnsi ? CP_ACP : CP_UTF8;
-	int iLen = WideCharToMultiByte(uCodePage,0, lpWide, wideLen, szSingle, 
+	int iLen = WideCharToMultiByte(uCodePage, 0, lpWide, (int)wideLen, szSingle, 
 		0, NULL, NULL);
 	if (iLen > 0)
 	{
 		szSingle.Allocate(iLen, true);
-		iLen = WideCharToMultiByte(uCodePage,0, lpWide , wideLen, szSingle, 
+		iLen = WideCharToMultiByte(uCodePage, 0, lpWide , (int)wideLen, szSingle, 
 			iLen, NULL, NULL);
 		ASSERT(iLen != 0);
 	}
@@ -335,8 +335,11 @@ int ZipPlatform::SingleToWide(const CZipAutoBuffer &szSingle, CZipString& szWide
 #include <share.h>
 bool ZipPlatform::TruncateFile(int iDes, DWORD iSize)
 {
-	int ret = chsize(iDes, iSize);
-	return ret != -1;
+#if _MSC_VER >= 1400	
+	return _chsize_s(iDes, iSize) == 0;
+#else
+	return chsize(iDes, iSize) == 0;
+#endif
 
 }
 
@@ -356,7 +359,16 @@ int ZipPlatform::OpenFile(LPCTSTR lpszFileName, UINT iMode, int iShareMode)
 	default:
 		iShareMode = SH_DENYNO;
 	}
+#if _MSC_VER >= 1400	
+	int handle;
+	if (_tsopen_s(&handle, lpszFileName, iMode, iShareMode, S_IREAD | S_IWRITE /*required only when O_CREAT mode*/) != 0)
+		return -1;
+	else
+		return handle;
+#else
 	return  _tsopen(lpszFileName, iMode, iShareMode, S_IREAD | S_IWRITE /*required only when O_CREAT mode*/);
+#endif
+	
 }
 
 bool ZipPlatform::FlushFile(int iDes)
@@ -366,7 +378,7 @@ bool ZipPlatform::FlushFile(int iDes)
 
 int ZipPlatform::GetFileSystemHandle(int iDes)
 {
-	return _get_osfhandle(iDes);
+	return (int)_get_osfhandle(iDes);
 }
 
 

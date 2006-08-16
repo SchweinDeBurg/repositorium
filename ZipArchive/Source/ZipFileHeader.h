@@ -1,10 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $RCSfile: ZipFileHeader.h,v $
-// $Revision: 1.3 $
-// $Date: 2005/03/06 10:25:39 $ $Author: Tadeusz Dracz $
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -163,17 +159,15 @@ public:
 	WORD m_uModDate;				///< last mod file date 
 	DWORD m_uCrc32;					///< crc-32    
 	DWORD m_uComprSize;				///< compressed size 
-	DWORD m_uUncomprSize;			///< uncompressed size     
-//         filename length                 2 bytes
-// 	WORD m_uFileNameSize;
-//         extra field length              2 bytes
-// 	WORD m_uExtraFieldSize;
-//         file comment length             2 bytes
+	DWORD m_uUncomprSize;			///< uncompressed size  
+	 //file comment length             2 bytes
 // 	WORD m_uCommentSize;
 	WORD m_uDiskStart;				///< disk number start
 	WORD m_uInternalAttr;			///< internal file attributes 
 protected:
 	DWORD m_uExternalAttr;			///< external file attributes 
+ 	WORD m_uLocalFileNameSize;		///< local filename length     
+ 	WORD m_uLocalExtraFieldSize;	///< local extra field length
 public:
 	DWORD m_uOffset;				///< relative offset of local header 
 	CZipAutoBuffer m_pExtraField;	///< extra field (variable size)
@@ -196,11 +190,18 @@ public:
 	time_t GetTime()const;
 
 /**
-	\param bLocal
-		if \c true return the local file header size or in the central directory otherwise
-	\return	the total size of the structure depending on the \e bLocal parameter
+	\return	the total size of the structure in the central directory
 */
-	DWORD GetSize(bool bLocal = false)const;
+	DWORD GetSize()const;
+
+	/**
+		\return	the total size of the local header as it is reported by #GetLocalSize(bool) const with \e bReal parameter set to \c false
+		\see GetLocalSize(bool) const
+    */
+	DWORD GetLocalSize() const
+	{
+		return GetLocalSize(false);
+	}
 
 /**
 	\return	the system compatibility of the current file as
@@ -243,6 +244,15 @@ public:
 
 
 protected:
+
+	/**
+	\param bReal
+		if \c true return the local file header size as it is (a call to CZipCentralDir::UpdateLocal before is required),
+		otherwise return the size as it is when CZipFileHeader::WriteLocal is executed (in this case the filename and extra field are copied
+		from the central directory)
+	\return	the total size of the local structure depending on the \e bReal parameter
+*/
+	DWORD GetLocalSize(bool bReal)const;
 
 /**
 	Set the system compatibility of the file.
@@ -325,7 +335,7 @@ protected:
 */
 	bool PrepareData(int iLevel, bool bSpan, bool bEncrypted);
 /**	
-	Write the local file header to the \e storage
+	Write the local file header to the \e storage. The filename and extra field are copied from the central directory.
 	\param	storage
 	\note Throws exceptions.
 */
@@ -342,12 +352,10 @@ protected:
 /**
 	Read the local file header from \e pStorage and check for consistency.
 	\param	*pStorage
-	\param	iLocExtrFieldSize
-		receives local extra field size
 	\return	\c false, if something goes wrong; otherwise \c true;
 	\note Throws exceptions.
 */
-	bool ReadLocal(CZipStorage *pStorage, WORD& iLocExtrFieldSize);
+	bool ReadLocal(CZipStorage *pStorage);
 /**
 	Write the file header to \e pStorage.
 	\param	*pStorage
