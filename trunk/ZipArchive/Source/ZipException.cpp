@@ -1,10 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $RCSfile: ZipException.cpp,v $
-// $Revision: 1.3 $
-// $Date: 2005/02/14 15:29:03 $ $Author: Tadeusz Dracz $
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -99,11 +95,20 @@ BOOL CZipException::GetErrorMessage(LPTSTR lpszError, UINT nMaxError,
 	if (nMaxError - 1 < iLen)
 		iLen = nMaxError - 1;
 	LPTSTR lpsz = sz.GetBuffer(iLen);
-#ifdef _UNICODE	
-	wcsncpy(lpszError, lpsz, iLen);
+#if _MSC_VER >= 1400
+	#ifdef _UNICODE	
+		wcsncpy_s(lpszError, nMaxError, lpsz, iLen);
+	#else
+		strncpy_s(lpszError, nMaxError, lpsz, iLen);
+	#endif
 #else
-	strncpy(lpszError, lpsz, iLen);
+	#ifdef _UNICODE	
+		wcsncpy(lpszError, lpsz, iLen);
+	#else
+		strncpy(lpszError, lpsz, iLen);
+	#endif
 #endif
+
 	lpszError[iLen] = _T('\0');
 	return TRUE;
 }
@@ -208,7 +213,7 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 			sz = _T("Crc mismatched");
 			break;
 		case noCallback:
-			sz = _T("No disk-spanning callback functor set");
+			sz = _T("No disk-spanning callback object set");
 			break;
 		case aborted:
 			sz = _T("Disk change aborted");

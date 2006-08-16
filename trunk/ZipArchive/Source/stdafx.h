@@ -1,10 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-// $RCSfile: stdafx.h,v $
-// $Revision: 1.3 $ $Name:  $
-// $Date: 2005/02/14 08:09:54 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 // 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -19,10 +15,16 @@
 #define AFX_STDAFX_H__926F70F4_1B34_49AA_9532_498E8D2F3495__INCLUDED_
 
 #if _MSC_VER > 1000
+#ifndef WINVER
+	#define WINVER 0x0400
+#endif
 #pragma once
 #endif // _MSC_VER > 1000
 
-#if (_MSC_VER < 1300) && !defined(__BORLANDC__) && !defined(__INTEL_COMPILER)
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
+
+#if _MSC_VER < 1300 && !defined __BORLANDC__
 #define ZIPINLINE inline
 #else
 #define ZIPINLINE
@@ -38,7 +40,9 @@
 
 #define ZIP_ARCHIVE_MFC
 
+#ifndef VC_EXTRALEAN
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
+#endif
 #include <afx.h>
 #include <afxwin.h>
 

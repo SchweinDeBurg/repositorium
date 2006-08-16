@@ -1,10 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $RCSfile: ZipException.h,v $
-// $Revision: 1.2 $
-// $Date: 2005/02/14 07:50:10 $ $Author: Tadeusz Dracz $
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -61,7 +57,7 @@ public:
 */
 		CZipException(int iCause = generic, LPCTSTR lpszZipName = NULL);
 
-		CZipException::CZipException(CZipException& e)
+		CZipException(CZipException& e)
 		{
 			m_szFileName = e.m_szFileName;
 			m_iCause = e.m_iCause;
@@ -159,9 +155,9 @@ public:
 		generic		= 100,	///< unknown error
 		badZipFile,			///< damaged or not a zip file
 		badCrc,				///< crc mismatched
-		noCallback,			///< no disk-spanning callback functor set
-		aborted,			///< callback functor's method Callback returned \c false while disk change in the disk-spanning archive
-		abortedAction,		///< callback functor's method Callback returned \c false in CZipArchive class members: AddNewFile, ExtractFile, TestFile, DeleteFile or DeleteFiles 
+		noCallback,			///< no disk-spanning callback object set
+		aborted,			///< callback object's method Callback returned \c false while disk change in the disk-spanning archive
+		abortedAction,		///< callback object's method Callback returned \c false in CZipArchive class members: AddNewFile, ExtractFile, TestFile, DeleteFile or DeleteFiles 
 		abortedSafely,		///< the same as above, you may be sure that the operation was successfully completed before or it didn't cause any damage in the archive (break when counting before deleting files; see CZipArchive::cbDeleteCnt)
 		nonRemovable,		///< the disk selected for pkzipSpan archive is non removable
 		tooManyVolumes,		///< limit of the maximum volumes reached (999)

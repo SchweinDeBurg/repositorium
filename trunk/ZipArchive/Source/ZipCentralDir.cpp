@@ -1,10 +1,6 @@
-///////////////////////////////////////////////////////////////////////////////
-// $RCSfile: ZipCentralDir.cpp,v $
-// $Revision: 1.5 $
-// $Date: 2005/08/05 19:37:47 $ $Author: Tadeusz Dracz $
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -212,15 +208,10 @@ bool CZipCentralDir::IsValidIndex(int uIndex)const
 
 void CZipCentralDir::OpenFile(WORD uIndex)
 {
-	WORD uLocalExtraFieldSize;
-	m_pOpenedFile = (*this)[uIndex];
-	m_pStorage->ChangeDisk(m_pOpenedFile->m_uDiskStart);
-	m_pStorage->m_pFile->Seek(m_pOpenedFile->m_uOffset + m_info.m_uBytesBeforeZip, CZipAbstractFile::begin);
-	if (!m_pOpenedFile->ReadLocal(m_pStorage, uLocalExtraFieldSize))
-		ThrowError(CZipException::badZipFile);
-
-
+	m_pOpenedFile = UpdateLocal(uIndex);
+	//m_pOpenedFile = (*this)[uIndex];
 	m_pLocalExtraField.Release(); // just in case
+	WORD uLocalExtraFieldSize = m_pOpenedFile->m_uLocalExtraFieldSize;
 	if (uLocalExtraFieldSize)
 	{
 		int iCurrDsk = m_pStorage->GetCurrentDisk();
@@ -229,6 +220,16 @@ void CZipCentralDir::OpenFile(WORD uIndex)
 		if (m_pStorage->GetCurrentDisk() != iCurrDsk)
 			ThrowError(CZipException::badZipFile);
 	}
+}
+
+CZipFileHeader* CZipCentralDir::UpdateLocal(WORD uIndex)
+{
+	CZipFileHeader* pOpenedFile = (*this)[uIndex];
+	m_pStorage->ChangeDisk(pOpenedFile->m_uDiskStart);
+	m_pStorage->m_pFile->Seek(pOpenedFile->m_uOffset + m_info.m_uBytesBeforeZip, CZipAbstractFile::begin);
+	if (!pOpenedFile->ReadLocal(m_pStorage))
+		ThrowError(CZipException::badZipFile);
+	return pOpenedFile;
 }
 
 void CZipCentralDir::CloseFile(bool bAfterException)
@@ -328,7 +329,7 @@ void CZipCentralDir::CloseNewFile()
 	// offset set during writing the local header
 	m_pOpenedFile->m_uOffset -= m_info.m_uBytesBeforeZip;
 	
-	// write the data descriptor and a disk spanning signature at once
+	// write the data descriptor and the disk spanning signature at once
 	m_pStorage->Write(buf, iToWrite, true);
 	if (!bIsSpan)
 	{

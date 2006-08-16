@@ -1,10 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $RCSfile: ZipCentralDir.h,v $
-// $Revision: 1.2 $
-// $Date: 2005/02/14 07:50:10 $ $Author: Tadeusz Dracz $
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -155,6 +151,15 @@ public:
 	*/
 	void OpenFile(WORD uIndex);
 
+	/**
+		Update local header info.
+		\param uIndex
+			zero-based index of the file to update info
+		\return the pointer to the header at the given index
+		\note Throws exceptions.
+	*/
+	CZipFileHeader* UpdateLocal(WORD uIndex);
+
 /**	
 	Test if the given file header index is valid.
 	\param	uIndex
@@ -182,7 +187,7 @@ public:
 	{
 		if (iIndex == -1)
 		{
-			iIndex = m_headers.GetSize() - 1;
+			iIndex = (int)(m_headers.GetSize() - 1);
 			if (iIndex == -1)
 				return;
 		}
@@ -386,6 +391,8 @@ public:
 			return;
 		if (!pHeader)
 		{
+			if (!m_pOpenedFile)
+				ThrowError(CZipException::internal);
 			pHeader = m_pOpenedFile;
 			ASSERT(pHeader);
 		}

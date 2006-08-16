@@ -1,10 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $RCSfile: ZipPathComponent.cpp,v $
-// $Revision: 1.3 $ $Name:  $
-// $Date: 2005/02/14 08:09:54 $ $Author: Tadeusz Dracz $
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -56,8 +52,12 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 	}
 	else
 		m_szPrefix.Empty();
-
+#if _MSC_VER >= 1400	
+	_tsplitpath_s(szTempPath, szDrive , szDir, szFname, szExt);
+#else
 	_tsplitpath(szTempPath, szDrive , szDir, szFname, szExt);
+#endif
+	
 	m_szDrive = szDrive;
 	m_szDirectory = szDir;
 	

@@ -1,10 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $RCSfile: ZipStorage.cpp,v $
-// $Revision: 1.4 $
-// $Date: 2005/06/18 10:50:53 $ $Author: Tadeusz Dracz $
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000-2005 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -39,6 +35,7 @@ int CZipActionCallback::m_iStep = 256;
 char CZipStorage::m_gszExtHeaderSignat[] = {0x50, 0x4b, 0x07, 0x08};
 CZipStorage::CZipStorage()
 {
+	m_bTreatAsSingleDisk = false;
 	m_pChangeDiskFunc = NULL;
 	m_iWriteBufferSize = 65536;
 	m_iCurrentDisk = -1;
@@ -140,6 +137,7 @@ void CZipStorage::Open(CZipAbstractFile& af, int iMode)
 	m_uBytesInWriteBuffer = 0;
 	m_bNewSpan = false;
 	m_pFile = &af;
+	// TODO: this should be checked for the CZipMemFile type
 	m_bInMemory = true;
 
 	if (iMode == CZipArchive::zipCreate)
@@ -158,7 +156,7 @@ void CZipStorage::Open(CZipAbstractFile& af, int iMode)
 
 void CZipStorage::ChangeDisk(int iNumber)
 {
-	if (iNumber == m_iCurrentDisk)
+	if (iNumber == m_iCurrentDisk || m_bTreatAsSingleDisk)
 		return;
 
 	ASSERT(m_iSpanMode != noSpan);
@@ -254,7 +252,7 @@ CZipString CZipStorage::GetTdVolumeName(bool bLast, LPCTSTR lpszZipName) const
 		if (vol < 100)
 			szExt.Format(_T("z%.2d"), vol);
 		else
-			szExt.Format(_T("z%.3d"), vol);
+			szExt.Format(_T("z%.5d"), m_iCurrentDisk + 1);
 	}
 	zpc.SetExtension(szExt);
 	return zpc.GetFullPath();
@@ -269,8 +267,8 @@ void CZipStorage::NextDisk(int iNeeded, LPCTSTR lpszFileName)
 	{
 		m_iBytesWritten = 0;
 		m_iCurrentDisk++;
-		int iMaxVolumes = bPkSpan ? 999 : 99;
-		if (m_iCurrentDisk >= iMaxVolumes)
+		int iMaxVolumes = bPkSpan ? 999 : 99999;
+		if (m_iCurrentDisk >= iMaxVolumes) // m_iCurrentDisk is a zero-based index
 			ThrowError(CZipException::tooManyVolumes);
 	} 
 	CZipString szFileName;
@@ -318,7 +316,8 @@ void CZipStorage::NextDisk(int iNeeded, LPCTSTR lpszFileName)
 
 void CZipStorage::CallCallback(int iCode, CZipString szTemp)
 {
-	ASSERT(m_pChangeDiskFunc);
+	if (!m_pChangeDiskFunc)
+		ThrowError(CZipException::internal);
 	m_pChangeDiskFunc->m_szExternalFile = szTemp;
 	m_pChangeDiskFunc->m_uDiskNeeded = m_iCurrentDisk + 1;
 	if (!m_pChangeDiskFunc->Callback(iCode))
@@ -478,7 +477,6 @@ void CZipStorage::FinalizeSpan()
 	else
 		m_iTdSpanData = m_iCurrentDisk;
 	
-	OpenFile(szFileName, CZipFile::modeNoTruncate | (m_iSpanMode == noSpan ? CZipFile::modeReadWrite : CZipFile::modeRead));
-	
+	OpenFile(szFileName, CZipFile::modeNoTruncate | (m_iSpanMode == noSpan ? CZipFile::modeReadWrite : CZipFile::modeRead));	
 }
 
