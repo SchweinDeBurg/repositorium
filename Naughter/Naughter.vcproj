@@ -296,7 +296,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
+						AdditionalDependencies="Pop3.rh"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -304,7 +306,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
+						AdditionalDependencies="Pop3.rh"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -312,7 +316,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
+						AdditionalDependencies="Pop3.rh"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -320,7 +326,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
+						AdditionalDependencies="Pop3.rh"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 			</File>
@@ -461,7 +469,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
+						AdditionalDependencies="Smtp.rh"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -469,7 +479,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
+						AdditionalDependencies="Smtp.rh"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -477,7 +489,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
+						AdditionalDependencies="Smtp.rh"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -485,7 +499,9 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling resources: $(InputFileName) ..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)"
+						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
+"
+						AdditionalDependencies="Smtp.rh"
 						Outputs="$(IntDir)\$(InputName).output"/>
 				</FileConfiguration>
 			</File>
