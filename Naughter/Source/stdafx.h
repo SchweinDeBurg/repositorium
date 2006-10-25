@@ -18,6 +18,8 @@
 
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
 
+#define _WIN32_WINNT 0x0500	// use Windows 2000 features
+
 // MFC headers
 #include <afxwin.h>		// MFC core and standard components
 #include <afxtempl.h>
@@ -62,8 +64,5 @@ using std::max;
 #else
 #pragma conform(forScope, on)
 #endif	// _MSC_VER
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
 #endif // !defined(AFX_STDAFX_H__483FB9A9_908F_4150_90A7_4EEAF73AD80C__INCLUDED_)
