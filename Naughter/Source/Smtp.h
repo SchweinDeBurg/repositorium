@@ -258,8 +258,19 @@ class PJNSMTP_EXT_CLASS CPJNSMTPMessage
 {
 public:
 //Enums
-	enum RECIPIENT_TYPE { TO, CC, BCC };
-  enum PRIORITY { NO_PRIORITY, LOW_PRIORITY, NORMAL_PRIORITY, HIGH_PRIORITY };
+	enum RECIPIENT_TYPE 
+	{ 
+	  TO  = 0, 
+	  CC  = 1, 
+	  BCC = 2 
+	};
+  enum PRIORITY 
+  { 
+    NO_PRIORITY     = 0, 
+    LOW_PRIORITY    = 1, 
+    NORMAL_PRIORITY = 2, 
+    HIGH_PRIORITY   = 3 
+  };
 
 //Constructors / Destructors
   CPJNSMTPMessage();

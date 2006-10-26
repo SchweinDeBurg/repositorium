@@ -22,8 +22,11 @@ History: PJN / 05-09-2005 1. Function pointer to CompleteAuthToken is now constr
                           do NTLM authentication using a specified account instead of the credentials of the current user. If 
                           you leave these values as NULL, then you will get the old behaviour which is to use the current
                           user credentials. Thanks to Wouter Demuynck for this very nice addition.
+         PJN / 13-10-2006 1. Code now initializes the Domain name value in NTLMAuthenticate to an empty string instead of a NULL
+                          string. This avoids NTLM authentication issues when authenticating as a non-domain user with certain
+                          mail servers. Thanks to Wouter Demuynck for reporting this issue.
 
-Copyright (c) 2005 - 2006 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2005 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -148,7 +151,7 @@ SECURITY_STATUS CNTLMClientAuth::NTLMAuthenticate(LPCTSTR pszUserName, LPCTSTR p
     return SEC_E_UNSUPPORTED_FUNCTION;
 
   //allow "UserName" to be of the format DomainName\UserName
-  LPCTSTR pszDomain = NULL;
+  LPCTSTR pszDomain = _T("");
   CString sUserName(pszUserName);
   int nSlashSeparatorOffset = sUserName.Find(_T('\\'));
   CString sDomain;

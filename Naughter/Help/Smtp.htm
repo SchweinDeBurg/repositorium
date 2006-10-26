@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>CPJNSMTPConnection v2.63</title>
+<title>CPJNSMTPConnection v2.64</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
 
 </head>
@@ -1017,6 +1017,24 @@ autoexec.bat file!&quot;;<br />
 	achieved by placing a call to CEdit::SetLimitText in the OnInitDialog method 
 	of the dialog. Thanks to Thomas Noone for reporting this issue.</li>
 </ul>
+<p><strong>V2.64 (13 October 2006</strong><b>)</b></p>
+<ul>
+	<li>Code now initializes the Domain name value in 
+	CNTLMClientAuth::NTLMAuthenticate to an empty string instead of a NULL 
+	string. This avoids NTLM authentication issues when authenticating as a 
+	non-domain user with certain mail servers. Thanks to Wouter Demuynck for 
+	reporting this issue.</li>
+	<li>Fixed an issue in Disconnect where if the call to ReadCommandResponse 
+	threw an exception, we would not close down the socket or set m_bConnected 
+	to FALSE. The code has been updated to ensure these are now done. This just 
+	provides a more consistent debugging experience. Thanks to Alexey Kuznetsov 
+	for reporting this issue.</li>
+	<li>CPJNSMTPException::GetErrorMessage now uses the user default locale for 
+	formatting error strings.</li>
+	<li>Fixed some issues with cleaning up of header and body parts in 
+	CPJNSMTPConnection::SendBodyPart and CPJNSMTPMessage::WriteToDisk. Thanks to 
+	Xiao-li Ling for reporting this issue.</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1032,7 +1050,7 @@ autoexec.bat file!&quot;;<br />
 <p>PJ Naughter<br />
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br />
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br />
-17 July&nbsp; 2006</p>
+13 October 2006</p>
 
 </body>
 
