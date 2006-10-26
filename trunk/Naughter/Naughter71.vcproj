@@ -321,7 +321,7 @@
 					Name="MBCS_Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						AdditionalDependencies="Pop3.rh"
@@ -331,7 +331,7 @@
 					Name="MBCS_Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						AdditionalDependencies="Pop3.rh"
@@ -341,7 +341,7 @@
 					Name="Unicode_Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						AdditionalDependencies="Pop3.rh"
@@ -351,7 +351,7 @@
 					Name="Unicode_Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						AdditionalDependencies="Pop3.rh"
@@ -527,7 +527,7 @@
 					Name="MBCS_Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						AdditionalDependencies="Smtp.rh"
@@ -537,7 +537,7 @@
 					Name="MBCS_Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						AdditionalDependencies="Smtp.rh"
@@ -547,7 +547,7 @@
 					Name="Unicode_Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						AdditionalDependencies="Smtp.rh"
@@ -557,7 +557,7 @@
 					Name="Unicode_Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						AdditionalDependencies="Smtp.rh"
@@ -803,7 +803,7 @@
 					Name="MBCS_Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						Outputs="$(IntDir)\$(InputName).output"/>
@@ -812,7 +812,7 @@
 					Name="MBCS_Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						Outputs="$(IntDir)\$(InputName).output"/>
@@ -821,7 +821,7 @@
 					Name="Unicode_Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						Outputs="$(IntDir)\$(InputName).output"/>
@@ -830,7 +830,7 @@
 					Name="Unicode_Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						Description="Compiling resources: $(InputFileName) ..."
+						Description="Compiling resources ($(InputFileName))..."
 						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)
 "
 						Outputs="$(IntDir)\$(InputName).output"/>
