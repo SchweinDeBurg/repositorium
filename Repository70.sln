@@ -1,13 +1,13 @@
 Microsoft Visual Studio Solution File, Format Version 7.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Naughter", "Naughter\Naughter.vcproj", "{EC0688B8-E25C-4AAF-9051-25625C09C3E8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Naughter", "Naughter\Naughter70.vcproj", "{EC0688B8-E25C-4AAF-9051-25625C09C3E8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CodeProject", "CodeProject\CodeProject.vcproj", "{9A5B0E8A-CCDD-42BB-BAF1-C64F9E62B4DA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CodeProject", "CodeProject\CodeProject70.vcproj", "{9A5B0E8A-CCDD-42BB-BAF1-C64F9E62B4DA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AfxGadgets", "AfxGadgets\AfxGadgets.vcproj", "{C1ED1032-6C88-4591-B881-9B61592B7805}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AfxGadgets", "AfxGadgets\AfxGadgets70.vcproj", "{C1ED1032-6C88-4591-B881-9B61592B7805}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcproj", "{039E1C13-5B01-4BF9-A2F6-08FAB8D8A23E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib70.vcproj", "{039E1C13-5B01-4BF9-A2F6-08FAB8D8A23E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZipArchive", "ZipArchive\ZipArchive.vcproj", "{1D0C4F6B-8659-40F2-9AFE-4E947F1EA906}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZipArchive", "ZipArchive\ZipArchive70.vcproj", "{1D0C4F6B-8659-40F2-9AFE-4E947F1EA906}"
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
