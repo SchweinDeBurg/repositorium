@@ -1,5 +1,5 @@
 /*
-Module : PJJNSMTP.CPP
+Module : PJNSMTP.CPP
 Purpose: Implementation for a MFC class encapsulation of the SMTP protocol
 Created: PJN / 22-05-1998
 History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
@@ -360,6 +360,14 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
          PJN / 17-07-2006 1. Updated the code in the sample app to allow > 30000 characters to be entered into the edit box which contains the body
                           of the email. This is achieved by placing a call to CEdit::SetLimitText in the OnInitDialog method of the dialog. Thanks to 
                           Thomas Noone for reporting this issue.
+         PJN / 13-10-2006 1. Fixed an issue in Disconnect where if the call to ReadCommandResponse threw an exception, we would not close down the 
+                          socket or set m_bConnected to FALSE. The code has been updated to ensure these are now done. This just provides a more
+                          consistent debugging experience. Thanks to Alexey Kuznetsov for reporting this issue.
+                          2. CPJNSMTPException::GetErrorMessage now uses the user default locale for formatting error strings.
+                          3. CPJNSMTPMessage::ParseMultipleRecipients now supports email addresses of the form ""Friendly, More Friendly" <emailaddress>"
+                          Thanks to Xiao-li Ling for this very nice addition.
+                          4. Fixed some issues with cleaning up of header and body parts in CPJNSMTPConnection::SendBodyPart and 
+                          CPJNSMTPMessage::WriteToDisk. Thanks to Xiao-li Ling for reporting this issue.
                           
 Copyright (c) 1998 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -373,7 +381,7 @@ except you cannot modify the copyright details at the top of each module. If you
 code with your application, then you are only allowed to distribute versions released by the author. This is 
 to maintain a single distribution point for the source code. 
 
-Please note that I have been informed recently that C(PJN)SMTPConnection is being used to develop and send unsolicted bulk mail. 
+Please note that I have been informed that C(PJN)SMTPConnection was being used to develop and send unsolicted bulk mail. 
 This was not the intention of the code and the author explicitly forbids use of the code for any software of this kind without 
 my explicit written consent.
 
@@ -521,8 +529,8 @@ BOOL CPJNSMTPException::GetErrorMessage(LPTSTR pstrError, UINT nMaxError, PUINT 
   {
   	LPTSTR lpBuffer;
 	  bRet = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-			                        NULL, HRESULT_CODE(m_hr), MAKELANGID(LANG_NEUTRAL, SUBLANG_SYS_DEFAULT),
-			                        reinterpret_cast<LPTSTR>(&lpBuffer), 0, NULL);
+			                   NULL, HRESULT_CODE(m_hr), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			                   reinterpret_cast<LPTSTR>(&lpBuffer), 0, NULL);
 
 	  if (bRet == FALSE)
 		  *pstrError = '\0';
@@ -1488,7 +1496,7 @@ std::string CPJNSMTPBodyPart::HeaderEncode(const CString& sText, const CString& 
 
 
 
-CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.63")), 
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.64")), 
                                      m_bMime(FALSE), 
                                      m_Priority(NO_PRIORITY)
 {
@@ -1920,8 +1928,23 @@ int CPJNSMTPMessage::ParseMultipleRecipients(const CString& sRecipients, CPJNSMT
 #else    
 	_tcscpy(buf, sRecipients);
 #endif
+
+  BOOL bLeftQuotationMark=FALSE;
 	for (int pos=0, start=0; pos<=length; pos++)
 	{
+		if (bLeftQuotationMark && buf[pos] != _T('"') )
+			continue;
+		if (bLeftQuotationMark && buf[pos] == _T('"'))
+		{
+			bLeftQuotationMark = FALSE;
+			continue;
+		}
+		if (buf[pos] == _T('"'))
+		{
+			bLeftQuotationMark = TRUE;
+			continue;
+		}
+	
 		//Valid separators between addresses are ',' or ';'
 		if ((buf[pos] == _T(',')) || (buf[pos] == _T(';')) || (buf[pos] == 0))
 		{
@@ -2233,41 +2256,57 @@ void CPJNSMTPMessage::WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOO
     LPSTR pszHeader = NULL;
     int nHeaderSize = 0;
     if (!pBodyPart->GetHeader(pszHeader, nHeaderSize))
+    {
+      if (pszHeader)
+        pBodyPart->FreeHeader(pszHeader);
+        
       CPJNSMTPConnection::ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_HEADER_OF_BODY_PART, FACILITY_ITF);
+    }
+    
     DWORD dwWritten = 0;
 		if (!WriteFile(hFile, pszHeader, nHeaderSize, &dwWritten, NULL))
     {
       DWORD dwError = GetLastError();
 
       //Free up the temp memory we have used
-      pBodyPart->FreeHeader(pszHeader);
+      if (pszHeader)
+        pBodyPart->FreeHeader(pszHeader);
 
       //Throw the exception
       CPJNSMTPConnection::ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
 
     //Free up the temp memory we have used
-    pBodyPart->FreeHeader(pszHeader);
+    if (pszHeader)
+      pBodyPart->FreeHeader(pszHeader);
   }
   
   //Then the body parts body
   LPSTR pszBody = NULL;
   int nBodySize = 0;
   if (!pBodyPart->GetBody(FALSE, pszBody, nBodySize))
+  {
+    if (pszBody)
+      pBodyPart->FreeBody(pszBody);
+      
     CPJNSMTPConnection::ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_BODY_OF_BODY_PART, FACILITY_ITF);
+  }
+  
   DWORD dwWritten = 0;
 	if (!WriteFile(hFile, pszBody, nBodySize, &dwWritten, NULL))
   { 
     DWORD dwError = GetLastError();
 
     //Free up the temp memory we have used
-    pBodyPart->FreeBody(pszBody);
+    if (pszBody)
+      pBodyPart->FreeBody(pszBody);
 
     CPJNSMTPConnection::ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //Free up the temp memory we have used
-  pBodyPart->FreeBody(pszBody);
+  if (pszBody)
+    pBodyPart->FreeBody(pszBody);
 
   //Recursively send all the child body parts
   int nChildBodyParts = pBodyPart->GetNumberOfChildBodyParts();
@@ -2805,10 +2844,22 @@ void CPJNSMTPConnection::Disconnect(BOOL bGracefully)
       }
 
       //Check the reponse
-      if (!ReadCommandResponse(221))
+      try
       {
-        hr = MAKE_HRESULT(SEVERITY_ERROR, IDS_PJNSMTP_UNEXPECTED_QUIT_RESPONSE, FACILITY_ITF);
-        sLastResponse = GetLastCommandResponse();
+        if (!ReadCommandResponse(221))
+        {
+          hr = MAKE_HRESULT(SEVERITY_ERROR, IDS_PJNSMTP_UNEXPECTED_QUIT_RESPONSE, FACILITY_ITF);
+          sLastResponse = GetLastCommandResponse();
+        }
+      }
+      catch(CPJNSMTPException* pEx)
+      {
+        //Hive away the values in the local variables first. We do this to ensure that we 
+        //end up executing the m_bConnected = FALSE and _Close code below
+        hr = pEx->m_hr;
+        sLastResponse = pEx->m_sLastResponse;
+      
+        pEx->Delete();
       }
     }
 
@@ -2832,7 +2883,12 @@ void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
     LPSTR pszHeader = NULL;
     int nHeaderSize = 0;
     if (!pBodyPart->GetHeader(pszHeader, nHeaderSize))
+    {
+      if (pszHeader)
+        pBodyPart->FreeHeader(pszHeader);
+        
       ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_HEADER_OF_BODY_PART, FACILITY_ITF);
+    }
 
     try
     {
@@ -2840,33 +2896,47 @@ void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
     }
     catch(CWSocketException* pEx)
     {
+      if (pszHeader)
+        pBodyPart->FreeHeader(pszHeader);
+    
       DWORD dwError = pEx->m_nError;
       pEx->Delete();
       ThrowPJNSMTPException(dwError, FACILITY_WIN32);
     }
 
     //Free up the temp memory we have used
-    pBodyPart->FreeHeader(pszHeader);
+    if (pszHeader)
+      pBodyPart->FreeHeader(pszHeader);
   }
   
   //Then the body parts body
   LPSTR pszBody = NULL;
   int nBodySize = 0;
   if (!pBodyPart->GetBody(TRUE, pszBody, nBodySize))
+  {
+    if (pszBody)
+      pBodyPart->FreeBody(pszBody);
+      
     ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_GET_BODY_OF_BODY_PART, FACILITY_ITF);
+  }
+    
   try
   {
     _Send(pszBody, nBodySize);
   }
   catch(CWSocketException* pEx)
   {
+    if (pszBody)
+      pBodyPart->FreeBody(pszBody);
+  
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
     ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
   //Free up the temp memory we have used
-  pBodyPart->FreeBody(pszBody);
+  if (pszBody)
+    pBodyPart->FreeBody(pszBody);
 
   //The recursively send all the child body parts
   int nChildBodyParts = pBodyPart->GetNumberOfChildBodyParts();
