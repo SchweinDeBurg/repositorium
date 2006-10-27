@@ -21,7 +21,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;CPJNPOP3_NOSSL;CPJNSMTP_NOSSL"
+				AdditionalIncludeDirectories="..\OpenSSL\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -74,7 +75,8 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;CPJNPOP3_NOSSL;CPJNSMTP_NOSSL"
+				AdditionalIncludeDirectories="..\OpenSSL\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -123,7 +125,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;CPJNPOP3_NOSSL;CPJNSMTP_NOSSL"
+				AdditionalIncludeDirectories="..\OpenSSL\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -176,7 +179,8 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;CPJNPOP3_NOSSL;CPJNSMTP_NOSSL"
+				AdditionalIncludeDirectories="..\OpenSSL\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -854,6 +858,40 @@
 			</File>
 			<File
 				RelativePath="Source\BinRes\tfnodropmove.cur">
+			</File>
+		</Filter>
+		<Filter
+			Name="SSL"
+			Filter="h;cpp">
+			<File
+				RelativePath=".\Source\OpenSSLMfc.cpp">
+				<FileConfiguration
+					Name="MBCS_Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS_Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode_Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode_Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\OpenSSLMfc.h">
 			</File>
 		</Filter>
 	</Files>
