@@ -69,6 +69,22 @@ BEGIN
                             "Unexpected AUTH NTLM response, Last Response: %1"
     IDS_PJNSMTP_FAIL_BASE64_DECODE "Failed to base64 decode data"
     IDS_PJNSMTP_FAIL_BASE64_ENCODE "Failed to base64 encode data"
+	 IDS_PJNSMTP_FAIL_CREATE_SSL_SOCKET
+                            "Failed to create SSL socket, Details: %1"
+    IDS_PJNSMTP_FAIL_CONNECT_SOCKS4_VIASSL 
+                            "Failed to connect to Socks 4 proxy via SSL: Details:%1"
+    IDS_PJNSMTP_FAIL_CONNECT_SOCKS5_VIASSL 
+                            "Failed to connect to Socks 5 proxy via SSL: Details:%1"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PJNSMTP_FAIL_CONNECT_HTTPPROXY_VIASSL 
+                            "Failed to connect to HTTP proxy via SSL: Details:%1"
+    IDS_PJNSMTP_FAIL_CONNECT_VIASSL "Failed to connect via SSL: Details:%1"
+    IDS_PJNSMTP_FAIL_SEND_VIASSL "Failed to send data via SSL: Details:%1"
+    IDS_PJNSMTP_FAIL_RECEIVE_VIASSL 
+                            "Failed to receive data via SSL: Details:%1"
 END
 
 #endif    // English (U.S.) resources

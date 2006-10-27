@@ -29,3 +29,11 @@
 #define IDS_PJNSMTP_UNEXPECTED_AUTH_NTLM_RESPONSE              0x801A
 #define IDS_PJNSMTP_FAIL_BASE64_DECODE                         0x801B
 #define IDS_PJNSMTP_FAIL_BASE64_ENCODE                         0x801C
+
+#define IDS_PJNSMTP_FAIL_CREATE_SSL_SOCKET                     0x801D
+#define IDS_PJNSMTP_FAIL_CONNECT_SOCKS4_VIASSL                 0x801E
+#define IDS_PJNSMTP_FAIL_CONNECT_SOCKS5_VIASSL                 0x801F
+#define IDS_PJNSMTP_FAIL_CONNECT_HTTPPROXY_VIASSL              0x8020
+#define IDS_PJNSMTP_FAIL_CONNECT_VIASSL                        0x8021
+#define IDS_PJNSMTP_FAIL_SEND_VIASSL                           0x8022
+#define IDS_PJNSMTP_FAIL_RECEIVE_VIASSL                        0x8023

@@ -35,6 +35,10 @@
 #include <lm.h>
 #include <shlobj.h>
 
+// OpenSSL headers
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
 // STL headers
 #pragma warning(push, 3)
 #include <string>
