@@ -368,6 +368,15 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
                           Thanks to Xiao-li Ling for this very nice addition.
                           4. Fixed some issues with cleaning up of header and body parts in CPJNSMTPConnection::SendBodyPart and 
                           CPJNSMTPMessage::WriteToDisk. Thanks to Xiao-li Ling for reporting this issue.
+         PJN / 09-11-2006 1. Reverted CPJNSMTPException::GetErrorMessage to use the system default locale. This is consistent with how MFC
+                          does its own error handling.
+                          2. Now includes comprehensive support for DSN's (Delivery Status Notifications) as specified in RFC 3461. Thanks to 
+                          Riccardo Raccuglia for prompting this update.
+                          3. CPJNSMTPBodyPart::GetBody and CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile... now does not open the disk
+                          file for exclusive read access, meaning that other apps can read from the file. Thanks to Wouter Demuynck for reporting
+                          this issue.
+                          4. Fixed an issue in CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile... where under certain circumstances
+                          we could end up deleting the local "pSendBuf" buffer twice. Thanks to Izidor Rozman for reporting this issue.
                           
 Copyright (c) 1998 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -391,7 +400,7 @@ my explicit written consent.
 //////////////// Includes ////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "Smtp.h"
+#include "PJNSMTP.h"
 #include "Smtp.rh"
 #include "PJNMD5.h"
 
@@ -529,7 +538,7 @@ BOOL CPJNSMTPException::GetErrorMessage(LPTSTR pstrError, UINT nMaxError, PUINT 
   {
   	LPTSTR lpBuffer;
 	  bRet = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-			                   NULL, HRESULT_CODE(m_hr), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			                   NULL, HRESULT_CODE(m_hr), MAKELANGID(LANG_NEUTRAL, SUBLANG_SYS_DEFAULT),
 			                   reinterpret_cast<LPTSTR>(&lpBuffer), 0, NULL);
 
 	  if (bRet == FALSE)
@@ -564,7 +573,6 @@ void CPJNSMTPException::Dump(CDumpContext& dc) const
 	dc << "m_hr = " << m_hr;
 }
 #endif
-
 
 
 CPJNSMTPAddress::CPJNSMTPAddress() 
@@ -647,7 +655,6 @@ CString CPJNSMTPAddress::GetRegularFormat(BOOL bEncode, const CString& sCharset)
 }
 
 
-
 CPJNSMTPBodyPart::CPJNSMTPBodyPart() : m_sCharset(_T("iso-8859-1")), 
                                        m_sContentType(_T("text/plain")), 
                                        m_pParentBodyPart(NULL), 
@@ -656,7 +663,7 @@ CPJNSMTPBodyPart::CPJNSMTPBodyPart() : m_sCharset(_T("iso-8859-1")),
                                        m_dwMaxAttachmentSize(52428800)
 {
   //Automatically generate a unique boundary separator for this body part by creating a guid
-  UUID uuid;
+  UUID uuid = { 0 };
   UuidCreate(&uuid);
   
   //Convert it to a string
@@ -1178,7 +1185,7 @@ BOOL CPJNSMTPBodyPart::GetHeader(LPSTR& pszHeader, int& nHeaderSize)
 
 BOOL CPJNSMTPBodyPart::GetBody(BOOL bDoSingleDotFix, LPSTR& pszBody, int& nBodySize)
 {
-	//if the body is text we must convert is to the declared encoding, this could create some
+	//if the body is text we must convert it to the declared encoding, this could create some
 	//problems since windows conversion functions (such as WideCharToMultiByte) uses UINT
 	//code page and not a String like HTTP uses.
 	//For now we will add the support for UTF-8, to support other encodings we have to 
@@ -1192,7 +1199,7 @@ BOOL CPJNSMTPBodyPart::GetBody(BOOL bDoSingleDotFix, LPSTR& pszBody, int& nBodyS
   if (m_sFilename.GetLength())
   {
     //Ok, it's a file  
-    HANDLE hFile = CreateFile(m_sFilename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+    HANDLE hFile = CreateFile(m_sFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
     if (hFile != INVALID_HANDLE_VALUE)
     {
       //Get the length of the file (we only support sending files less than m_dwMaxAttachmentSize)
@@ -1495,10 +1502,11 @@ std::string CPJNSMTPBodyPart::HeaderEncode(const CString& sText, const CString& 
 }
 
 
-
-CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.64")), 
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.65")), 
                                      m_bMime(FALSE), 
-                                     m_Priority(NO_PRIORITY)
+                                     m_Priority(NO_PRIORITY),
+                                     m_DSNReturnType(HEADERS_ONLY),
+                                     m_DSN(PJNSMTP_DSN_NOT_SPECIFIED)
 {
 }
 
@@ -1509,15 +1517,18 @@ CPJNSMTPMessage::CPJNSMTPMessage(const CPJNSMTPMessage& message)
 
 CPJNSMTPMessage& CPJNSMTPMessage::operator=(const CPJNSMTPMessage& message) 
 { 
-  m_From     = message.m_From;
-  m_sSubject = message.m_sSubject;
-  m_sXMailer = message.m_sXMailer;
-  m_ReplyTo  = message.m_ReplyTo;
-  m_RootPart = message.m_RootPart;
-  m_Priority = message.m_Priority;
+  m_From          = message.m_From;
+  m_sSubject      = message.m_sSubject;
+  m_sXMailer      = message.m_sXMailer;
+  m_ReplyTo       = message.m_ReplyTo;
+  m_RootPart      = message.m_RootPart;
+  m_Priority      = message.m_Priority;
+  m_DSNReturnType = message.m_DSNReturnType;
+  m_DSN           = message.m_DSN;
+  m_sENVID        = message.m_sENVID;
 
   //Free up the To memory
-  int i;
+  INT_PTR i;
   for (i=0; i<m_ToRecipients.GetSize(); i++)
     delete m_ToRecipients.GetAt(i);
   m_ToRecipients.RemoveAll();
@@ -1562,7 +1573,7 @@ CPJNSMTPMessage& CPJNSMTPMessage::operator=(const CPJNSMTPMessage& message)
 CPJNSMTPMessage::~CPJNSMTPMessage()
 {
   //Free up the array memory
-  int i;
+  INT_PTR i;
   for (i=0; i<m_ToRecipients.GetSize(); i++)
     delete m_ToRecipients.GetAt(i);
   m_ToRecipients.RemoveAll();
@@ -2340,6 +2351,7 @@ void CPJNSMTPMessage::WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOO
 }
 
 
+
 CPJNSMTPConnection::CPJNSMTPConnection() : m_bConnected(FALSE), 
                                            m_nLastCommandResponseCode(0), 
                                            m_bSSL(FALSE)
@@ -2971,6 +2983,31 @@ void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
   }
 }
 
+CString CPJNSMTPConnection::FormMailFromCommand(const CString& sEmailAddress, DWORD DSN, CPJNSMTPMessage::DSN_RETURN_TYPE DSNReturnType, CString& sENVID)
+{
+  //Validate our parameters
+	ASSERT(sEmailAddress.GetLength());
+	
+	//What will be the return value from this function
+  CString sBuf;
+  
+  if (DSN == PJNSMTP_DSN_NOT_SPECIFIED)
+    sBuf.Format(_T("MAIL FROM:<%s>\r\n"), sEmailAddress);
+  else
+  {
+    //Create an envelope ID if one has not been specified
+    if (sENVID.IsEmpty())
+      sENVID = CreateNEWENVID();
+  
+    if (DSNReturnType == CPJNSMTPMessage::HEADERS_ONLY)
+      sBuf.Format(_T("MAIL FROM:<%s> RET=HDRS ENVID=%s\r\n"), sEmailAddress, sENVID);
+    else
+      sBuf.Format(_T("MAIL FROM:<%s> RET=FULL ENVID=%s\r\n"), sEmailAddress, sENVID);
+  }
+
+  return sBuf;  
+}
+
 void CPJNSMTPConnection::SendMessage(CPJNSMTPMessage& Message)
 {
 	USES_CONVERSION;
@@ -2979,9 +3016,7 @@ void CPJNSMTPConnection::SendMessage(CPJNSMTPMessage& Message)
   ASSERT(m_bConnected); //Must be connected to send a message
 
   //Send the MAIL command
-	ASSERT(Message.m_From.m_sEmailAddress.GetLength());
-  CString sBuf;
-  sBuf.Format(_T("MAIL FROM:<%s>\r\n"), Message.m_From.m_sEmailAddress);
+  CString sBuf(FormMailFromCommand(Message.m_From.m_sEmailAddress, Message.m_DSN, Message.m_DSNReturnType, Message.m_sENVID));
   LPCSTR pszMailFrom = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
   int nCmdLength = static_cast<int>(strlen(pszMailFrom));
 
@@ -3013,7 +3048,7 @@ void CPJNSMTPConnection::SendMessage(CPJNSMTPMessage& Message)
   {
     CPJNSMTPAddress* pRecipient = Message.GetRecipient(i, CPJNSMTPMessage::TO);
     ASSERT(pRecipient);
-    SendRCPTForRecipient(*pRecipient);
+    SendRCPTForRecipient(Message.m_DSN, *pRecipient);
   }
 
   //Then the "CC" recipients
@@ -3021,7 +3056,7 @@ void CPJNSMTPConnection::SendMessage(CPJNSMTPMessage& Message)
   {
     CPJNSMTPAddress* pRecipient = Message.GetRecipient(i, CPJNSMTPMessage::CC);
     ASSERT(pRecipient);
-    SendRCPTForRecipient(*pRecipient);
+    SendRCPTForRecipient(Message.m_DSN, *pRecipient);
   }
 
   //Then the "BCC" recipients
@@ -3029,7 +3064,7 @@ void CPJNSMTPConnection::SendMessage(CPJNSMTPMessage& Message)
   {
     CPJNSMTPAddress* pRecipient = Message.GetRecipient(i, CPJNSMTPMessage::BCC);
     ASSERT(pRecipient);
-    SendRCPTForRecipient(*pRecipient);
+    SendRCPTForRecipient(Message.m_DSN, *pRecipient);
   }
 
   //Send the DATA command
@@ -3131,7 +3166,7 @@ BOOL CPJNSMTPConnection::OnSendProgress(DWORD /*dwCurrentBytes*/, DWORD /*dwTota
   return TRUE; 
 }
 
-void CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize)
+void CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, CString& sENVID, DWORD dwSendBufferSize, DWORD DSN, CPJNSMTPMessage::DSN_RETURN_TYPE DSNReturnType)
 {
 	USES_CONVERSION;
 
@@ -3139,9 +3174,7 @@ void CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CPJNSMT
   ASSERT(m_bConnected); //Must be connected to send a message
 
   //Send the MAIL command
-	ASSERT(From.m_sEmailAddress.GetLength());
-  CString sBuf;
-  sBuf.Format(_T("MAIL FROM:<%s>\r\n"), From.m_sEmailAddress);
+  CString sBuf(FormMailFromCommand(From.m_sEmailAddress, DSN, DSNReturnType, sENVID));
   LPCSTR pszMailFrom = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
   int nCmdLength = static_cast<int>(strlen(pszMailFrom));
   try
@@ -3167,7 +3200,7 @@ void CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CPJNSMT
   for (int i=0; i<nRecipients; i++)
   {
     CPJNSMTPAddress& recipient = Recipients.ElementAt(i);
-    SendRCPTForRecipient(recipient);
+    SendRCPTForRecipient(DSN, recipient);
   }
 
   //Send the DATA command
@@ -3246,7 +3279,7 @@ void CPJNSMTPConnection::SendMessage(BYTE* pMessage, DWORD dwTotalBytes, CPJNSMT
   }
 }
 
-void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize)
+void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, CString& sENVID, DWORD dwSendBufferSize, DWORD DSN, CPJNSMTPMessage::DSN_RETURN_TYPE DSNReturnType)
 {
 	USES_CONVERSION;
 
@@ -3254,7 +3287,7 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
   ASSERT(m_bConnected); //Must be connected to send a message
 
   //Open up the file we want to send
-  HANDLE hFile = CreateFile(sMessageOnFile, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+  HANDLE hFile = CreateFile(sMessageOnFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
   if (hFile == INVALID_HANDLE_VALUE)
     ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
 
@@ -3284,8 +3317,7 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
   {
     //Send the MAIL command
 	  ASSERT(From.m_sEmailAddress.GetLength());
-    CString sBuf;
-    sBuf.Format(_T("MAIL FROM:<%s>\r\n"), From.m_sEmailAddress);
+    CString sBuf(FormMailFromCommand(From.m_sEmailAddress, DSN, DSNReturnType, sENVID));
     LPCSTR pszMailFrom = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
     int nCmdLength = static_cast<int>(strlen(pszMailFrom));
     try
@@ -3311,7 +3343,7 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
     for (int i=0; i<nRecipients; i++)
     {
       CPJNSMTPAddress& recipient = Recipients.ElementAt(i);
-      SendRCPTForRecipient(recipient);
+      SendRCPTForRecipient(DSN, recipient);
     }
 
     //Send the DATA command
@@ -3374,6 +3406,7 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
 
     //Tidy up the heap memory we have used
     delete [] pSendBuf;
+    pSendBuf = NULL;
 
     if (bSuccess)
     {
@@ -3402,7 +3435,8 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
     CloseHandle(hFile);
 
     //Tidy up the heap memory we have used
-    delete [] pSendBuf;
+    if (pSendBuf)
+      delete [] pSendBuf;
 
     HRESULT hr = pEx->m_hr;
     CString sLastResponse = pEx->m_sLastResponse;
@@ -3416,7 +3450,7 @@ void CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile, CPJNSMTPAddr
   CloseHandle(hFile);
 }
 
-void CPJNSMTPConnection::SendRCPTForRecipient(CPJNSMTPAddress& recipient)
+void CPJNSMTPConnection::SendRCPTForRecipient(DWORD DSN, CPJNSMTPAddress& recipient)
 {
 	USES_CONVERSION;
 
@@ -3424,7 +3458,32 @@ void CPJNSMTPConnection::SendRCPTForRecipient(CPJNSMTPAddress& recipient)
 
   //form the command to send
   CString sBuf;
-  sBuf.Format(_T("RCPT TO:<%s>\r\n"), recipient.m_sEmailAddress);
+  if (DSN == PJNSMTP_DSN_NOT_SPECIFIED)
+    sBuf.Format(_T("RCPT TO:<%s>\r\n"), recipient.m_sEmailAddress);
+  else
+  {
+    sBuf.Format(_T("RCPT TO:<%s>\r\n"), recipient.m_sEmailAddress);
+    
+    CString sNotificationTypes;
+    if (DSN & PJNSMTP_DSN_SUCCESS)
+      sNotificationTypes = _T("SUCCESS");
+    if (DSN & PJNSMTP_DSN_FAILURE)
+    {
+      if (sNotificationTypes.GetLength())
+        sNotificationTypes += _T(",");
+      sNotificationTypes += _T("FAILURE");
+    }      
+    if (DSN & PJNSMTP_DSN_DELAY)
+    {
+      if (sNotificationTypes.GetLength())
+        sNotificationTypes += _T(",");
+      sNotificationTypes += _T("DELAY");
+    }  
+    if (sNotificationTypes.IsEmpty()) //Not setting DSN_SUCCESS, DSN_FAILURE or DSN_DELAY in m_DSNReturnType implies we do not want DSN's
+      sNotificationTypes += _T("NEVER");
+    
+    sBuf.Format(_T("RCPT TO:<%s> NOTIFY=%s\r\n"), recipient.m_sEmailAddress, sNotificationTypes);
+  }
   LPSTR pszRCPT = T2A(const_cast<LPTSTR>(sBuf.operator LPCTSTR()));
 
   //and send it
@@ -4019,3 +4078,29 @@ BOOL CPJNSMTPConnection::MXLookupAvailable()
   return (m_lpfnDnsRecordListFree != NULL && m_lpfnDnsQuery != NULL);
 }
 #endif
+
+CString CPJNSMTPConnection::CreateNEWENVID()
+{
+  UUID uuid = { 0 };
+  UuidCreate(&uuid);
+  
+  //Convert it to a string
+  #ifdef _UNICODE
+  unsigned short* pszGuid = NULL;
+  #else
+  unsigned char* pszGuid = NULL;
+  #endif
+  UuidToString(&uuid, &pszGuid);
+
+  CString sGUID(reinterpret_cast<TCHAR*>(pszGuid));
+
+  //Free up the temp memory
+  RpcStringFree(&pszGuid);
+
+	sGUID.Remove('{');
+	sGUID.Remove('}');
+	sGUID.Remove('-');
+  sGUID.MakeUpper();
+
+	return sGUID;
+}

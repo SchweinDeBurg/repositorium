@@ -30,35 +30,35 @@ my explicit written consent.
 #define __PJNSMTP_H__
 
 #ifndef __AFXTEMPL_H__
-#pragma message("To avoid this message, put afxtempl.h in your PCH (usually stdafx.h)")
+#pragma message("To avoid this message, please put afxtempl.h in your PCH (usually stdafx.h)")
 #include <afxtempl.h>
 #endif
 
 #ifndef _WINSOCKAPI_
-#pragma message("To avoid this message, put afxsock.h or winsock.h in your PCH (usually stdafx.h)")
+#pragma message("To avoid this message, please put afxsock.h or winsock.h in your PCH (usually stdafx.h)")
 #include <WinSock.h>
 #endif
 
 #ifndef __AFXPRIV_H__
-#pragma message("To avoid this message, put afxpriv.h in your PCH (usually stdafx.h)")
+#pragma message("To avoid this message, please put afxpriv.h in your PCH (usually stdafx.h)")
 #include <afxpriv.h>
 #endif
 
 #ifndef CPJNSMTP_NOMXLOOKUP
 #ifndef _WINDNS_INCLUDED_
-#pragma message("To avoid this message, put Windns.h in your PCH (usually stdafx.h)")
+#pragma message("To avoid this message, please put WinDNS.h in your PCH (usually stdafx.h)")
 #include <WinDNS.h> //If you get a compilation error on this line, then you need to download, install and configure the MS Platform SDK if you are compiling the code under Visual C++ 6
 #endif
 #endif
 
 #pragma warning(push, 3) //Avoid all the level 4 warnings in STL
 #ifndef _STRING_
-#pragma message("To avoid this message, put string in your PCH (usually stdafx.h)")
+#pragma message("To avoid this message, please put string in your PCH (usually stdafx.h)")
 #include <string>
 #endif
 #pragma warning(pop)
 
-#include "SocMFC.h" //If you get a compilation error about this missing header file, then you need to download my CWSocket and base64 classes from http://www.naughter.com/w3mfc.html
+#include "SocMFC.h" //If you get a compilation error about this missing header file, then you need to download my CWSocket and Base64 classes from http://www.naughter.com/w3mfc.html
 #include "Base64.h" //If you get a compilation error about this missing header file, then you need to download my CWSocket and Base64 classes from http://www.naughter.com/w3mfc.html
 #ifndef CPJNSMTP_NOSSL
 #include "OpenSSLMfc.h" //If you get a compilation error about this missing header file, then you need to download my CSSLSocket classes from http://www.naughter.com/w3mfc.html
@@ -80,6 +80,14 @@ my explicit written consent.
 // remark #444: destructor for base class is not virtual
 #pragma warning(disable: 444)
 #endif	// __INTEL_COMPILER
+
+//Constants
+const DWORD PJNSMTP_DSN_NOT_SPECIFIED = 0xFFFFFFFF; //We are not specifying if we should be using a DSN or not  
+const DWORD PJNSMTP_DSN_SUCCESS       = 0x01;       //A DSN should be sent back for messages which were successfully delivered
+const DWORD PJNSMTP_DSN_FAILURE       = 0x02;       //A DSN should be sent back for messages which was not successfully delivered
+const DWORD PJNSMTP_DSN_DELAY         = 0x04;       //A DSN should be sent back for messages which were delayed
+
+
 
 /////////////////////////////// Classes ///////////////////////////////////////
 
@@ -271,6 +279,11 @@ public:
     NORMAL_PRIORITY = 2, 
     HIGH_PRIORITY   = 3 
   };
+  enum DSN_RETURN_TYPE
+  {
+    HEADERS_ONLY = 0,
+    FULL_EMAIL = 1
+  };
 
 //Constructors / Destructors
   CPJNSMTPMessage();
@@ -316,6 +329,11 @@ public:
 	CPJNSMTPAddress      m_ReplyTo;
   CPJNSMTPBodyPart     m_RootPart;
   PRIORITY             m_Priority;
+  DSN_RETURN_TYPE      m_DSNReturnType;
+  DWORD                m_DSN;     //To be filled in with the PJNSMTP_DSN_... flags
+  CString              m_sENVID;  //The "Envelope ID" to use for requesting DSN's. If you leave this empty when you are sending the message
+                                  //then one which be generated for you based on a GUID and you can examine/store this value after the 
+                                  //message was sent
 
 protected:
 //Methods
@@ -384,8 +402,8 @@ public:
   DWORD   GetTimeout() const { return m_dwTimeout; };
   void    SetTimeout(DWORD dwTimeout) { m_dwTimeout = dwTimeout; };
 	void    SendMessage(CPJNSMTPMessage& Message);
-  void    SendMessage(const CString& sMessageOnFile, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize = 4096);
-  void    SendMessage(BYTE* pMessage, DWORD dwMessageSize, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, DWORD dwSendBufferSize = 4096);
+  void    SendMessage(const CString& sMessageOnFile, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, CString& sENVID, DWORD dwSendBufferSize = 4096, DWORD DSN = PJNSMTP_DSN_NOT_SPECIFIED, CPJNSMTPMessage::DSN_RETURN_TYPE DSNReturnType = CPJNSMTPMessage::HEADERS_ONLY);
+  void    SendMessage(BYTE* pMessage, DWORD dwMessageSize, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, CString& sENVID, DWORD dwSendBufferSize = 4096, DWORD DSN = PJNSMTP_DSN_NOT_SPECIFIED, CPJNSMTPMessage::DSN_RETURN_TYPE DSNReturnType = CPJNSMTPMessage::HEADERS_ONLY);
   void    SetHeloHostname(const CString& sHostname);
   CString GetHeloHostName() const { return m_sHeloHostname; };
 
@@ -417,6 +435,7 @@ public:
 //Static methods
   static void ThrowPJNSMTPException(DWORD dwError = 0, DWORD Facility = FACILITY_WIN32, const CString& sLastResponse = _T(""));
   static void ThrowPJNSMTPException(HRESULT hr, const CString& sLastResponse = _T(""));
+  static CString CreateNEWENVID();
 
 //Virtual Methods
   virtual BOOL OnSendProgress(DWORD dwCurrentBytes, DWORD dwTotalBytes);
@@ -444,8 +463,9 @@ protected:
 	void         AuthLogin(LPCTSTR pszUsername, LPCTSTR pszPassword);
 	void         AuthPlain(LPCTSTR pszUsername, LPCTSTR pszPassword);
   void         AuthNTLM();
-	void         SendRCPTForRecipient(CPJNSMTPAddress& recipient);
-  void         SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
+  virtual CString FormMailFromCommand(const CString& sEmailAddress, DWORD DSN, CPJNSMTPMessage::DSN_RETURN_TYPE DSNReturnType, CString& sENVID);
+	virtual void SendRCPTForRecipient(DWORD DSN, CPJNSMTPAddress& recipient);
+  virtual void SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
 	virtual BOOL ReadCommandResponse(int nExpectedCode);
   virtual BOOL ReadCommandResponse(int nExpectedCode1, int nExpectedCode2);
 	virtual BOOL ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR* ppszOverFlowBuffer, int nGrowBy=4096);
