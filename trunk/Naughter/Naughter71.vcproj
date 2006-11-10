@@ -496,7 +496,7 @@
 				RelativePath="Source\PJNNTLMAuth.h">
 			</File>
 			<File
-				RelativePath="Source\Smtp.cpp">
+				RelativePath="Source\PJNSMTP.cpp">
 				<FileConfiguration
 					Name="MBCS_Debug|Win32">
 					<Tool
@@ -523,7 +523,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\Smtp.h">
+				RelativePath="Source\PJNSMTP.h">
 			</File>
 			<File
 				RelativePath="Source\Smtp.rc">
@@ -713,7 +713,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Help\SMTP.GIF">
+				RelativePath="Help\PJNSMTP.gif">
 				<FileConfiguration
 					Name="MBCS_Debug|Win32"
 					ExcludedFromBuild="TRUE">
@@ -740,7 +740,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Help\Smtp.htm"
+				RelativePath="Help\PJNSMTP.htm"
 				DeploymentContent="TRUE">
 				<FileConfiguration
 					Name="MBCS_Debug|Win32"
