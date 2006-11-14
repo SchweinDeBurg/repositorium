@@ -429,6 +429,36 @@
 			Name="System"
 			Filter="h;hxx;cpp;inl">
 			<File
+				RelativePath=".\Source\ArgsParser.cpp">
+				<FileConfiguration
+					Name="MBCS_Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS_Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode_Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode_Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\ArgsParser.h">
+			</File>
+			<File
 				RelativePath="Source\MemMapFile.cpp">
 				<FileConfiguration
 					Name="MBCS_Debug|Win32">
