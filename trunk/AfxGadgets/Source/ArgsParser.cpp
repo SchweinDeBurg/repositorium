@@ -28,7 +28,7 @@ m_fCaseSensitive(fCaseSensitive)
 {
 	if (pszArguments != NULL && *pszArguments != 0)
 	{
-		Parse(pszArguments);
+		Parse(pszArguments, fCaseSensitive);
 	}
 }
 
@@ -38,12 +38,14 @@ CArgsParser::~CArgsParser(void)
 
 // operations
 
-void CArgsParser::Parse(LPCTSTR pszArguments)
+void CArgsParser::Parse(LPCTSTR pszArguments, bool fCaseSensitive)
 {
 	if (! pszArguments)
 		return;
 
 	m_strArguments = pszArguments;
+	m_fCaseSensitive = fCaseSensitive;
+
 	m_mapKeys.RemoveAll();
 
 	LPCTSTR pszCurrent = pszArguments;
@@ -158,10 +160,123 @@ void CArgsParser::Parse(LPCTSTR pszArguments)
 	}
 }
 
+bool CArgsParser::GetIntValue(LPCTSTR pszKeyName, int& nDest, int nRadix)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	if (HasKey(pszKeyName) && HasValue(pszKeyName))
+	{
+		LPTSTR pszStop = 0;
+		nDest = _tcstol(GetStringValue(pszKeyName), &pszStop, nRadix);
+		return (*pszStop == 0);
+	}
+	else {
+		return (false);
+	}
+}
+
+int CArgsParser::GetIntValue(LPCTSTR pszKeyName, int nRadix)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	int nValue;
+	if (!GetIntValue(pszKeyName, nValue, nRadix))
+	{
+		AfxThrowInvalidArgException();
+	}
+	return (nValue);
+}
+
+bool CArgsParser::GetUIntValue(LPCTSTR pszKeyName, UINT& uDest, int nRadix)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	if (HasKey(pszKeyName) && HasValue(pszKeyName))
+	{
+		LPTSTR pszStop = 0;
+		uDest = _tcstoul(GetStringValue(pszKeyName), &pszStop, nRadix);
+		return (*pszStop == 0);
+	}
+	else {
+		return (false);
+	}
+}
+
+UINT CArgsParser::GetUIntValue(LPCTSTR pszKeyName, int nRadix)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	UINT uValue;
+	if (!GetUIntValue(pszKeyName, uValue, nRadix))
+	{
+		AfxThrowInvalidArgException();
+	}
+	return (uValue);
+}
+
+#if !defined(ARGS_PARSER_NO_TIME)
+
+bool CArgsParser::GetTimeValue(LPCTSTR pszKeyName, CTime& timeDest, DWORD fdwFlags, LCID Locale)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	COleDateTime odtTemp;
+	if (GetOleTimeValue(pszKeyName, odtTemp, fdwFlags, Locale))
+	{
+		SYSTEMTIME st = { 0 };
+		odtTemp.GetAsSystemTime(st);
+		timeDest = CTime(st);
+		return (true);
+	}
+	else {
+		return (false);
+	}
+}
+
+CTime CArgsParser::GetTimeValue(LPCTSTR pszKeyName, DWORD fdwFlags, LCID Locale)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	CTime timeValue;
+	if (!GetTimeValue(pszKeyName, timeValue, fdwFlags, Locale))
+	{
+		AfxThrowInvalidArgException();
+	}
+	return (timeValue);
+}
+
+bool CArgsParser::GetOleTimeValue(LPCTSTR pszKeyName, COleDateTime& odtDest, DWORD fdwFlags, LCID Locale)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	if (HasKey(pszKeyName) && HasValue(pszKeyName))
+	{
+		odtDest.ParseDateTime(GetStringValue(pszKeyName), fdwFlags, Locale);
+		return (odtDest.GetStatus() == COleDateTime::valid);
+	}
+	else {
+		return (false);
+	}
+}
+
+COleDateTime CArgsParser::GetOleTimeValue(LPCTSTR pszKeyName, DWORD fdwFlags, LCID Locale)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	COleDateTime odtValue;
+	if (!GetOleTimeValue(pszKeyName, odtValue, fdwFlags, Locale))
+	{
+		AfxThrowInvalidArgException();
+	}
+	return (odtValue);
+}
+
+#endif	// ARGS_PARSER_NO_TIME
+
 // attributes
 
 const TCHAR CArgsParser::m_szDelimeters[] = _T("-/");
-const TCHAR CArgsParser::m_szQuotes[] = _T("\"\'`");
+const TCHAR CArgsParser::m_szQuotes[] = _T("\"\'");
 // space MUST be in set, but is not a name/value delimiter
 const TCHAR CArgsParser::m_szValueSep[] = _T("\x20:=");
 

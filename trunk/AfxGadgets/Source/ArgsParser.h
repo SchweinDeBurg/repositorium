@@ -19,6 +19,13 @@
 #include <afxtempl.h>
 #endif	// __AFXTEMPL_H__
 
+#if !defined(ARGS_PARSER_NO_TIME) && !defined(__ATLCOMTIME_H__)
+#pragma message(__FILE__ " : put <atlbase.h> in your PCH to speed up compilation")
+#include <atlbase.h>
+#pragma message(__FILE__ " : put <ATLComTime.h> in your PCH to speed up compilation")
+#include <ATLComTime.h>
+#endif	// ARGS_PARSER_NO_TIME && __ATLCOMTIME_H__
+
 // interface
 
 class CArgsParser: public CObject
@@ -32,8 +39,22 @@ public:
 
 // operations
 public:
-	void Parse(LPCTSTR pszArguments);
-	CString GetValue(LPCTSTR pszKeyName);
+	void Parse(LPCTSTR pszArguments, bool fCaseSensitive = false);
+	CString GetStringValue(LPCTSTR pszKeyName);
+	bool GetIntValue(LPCTSTR pszKeyName, int& nDest, int nRadix = 10);
+	int GetIntValue(LPCTSTR pszKeyName, int nRadix = 10);
+	bool GetUIntValue(LPCTSTR pszKeyName, UINT& uDest, int nRadix = 10);
+	UINT GetUIntValue(LPCTSTR pszKeyName, int nRadix = 10);
+
+#if !defined(ARGS_PARSER_NO_TIME)
+	bool GetTimeValue(LPCTSTR pszKeyName, CTime& timeDest, DWORD fdwFlags = 0,
+		LCID Locale = LANG_USER_DEFAULT);
+	CTime GetTimeValue(LPCTSTR pszKeyName, DWORD fdwFlags = 0, LCID Locale = LANG_USER_DEFAULT);
+	bool GetOleTimeValue(LPCTSTR pszKeyName, COleDateTime& odtDest, DWORD fdwFlags = 0,
+		LCID Locale = LANG_USER_DEFAULT);
+	COleDateTime GetOleTimeValue(LPCTSTR pszKeyName, DWORD fdwFlags = 0, LCID Locale = LANG_USER_DEFAULT);
+#endif	// ARGS_PARSER_NO_TIME
+
 	bool HasKey(LPCTSTR pszKeyName);
 	bool HasValue(LPCTSTR pszKeyName);
 
@@ -56,7 +77,7 @@ public:
 
 // inlines
 
-inline CString CArgsParser::GetValue(LPCTSTR pszKeyName)
+inline CString CArgsParser::GetStringValue(LPCTSTR pszKeyName)
 {
 	ASSERT(AfxIsValidString(pszKeyName));
 
