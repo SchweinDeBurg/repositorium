@@ -31,6 +31,10 @@
 #include <afxtempl.h>		// MFC collection template classes
 #include <afxcmn.h>			// MFC common control classes
 
+// ATL headers
+#include <atlbase.h>			// for ATL::CComBSTR
+#include <ATLComTime.h>		// for ATL::CTime and ATL::COleDateTime
+
 // RSDK headers
 #include <wincrypt.h>		// cryptographic API prototypes and definitions
 #include <oleauto.h>			// OLE automation support
