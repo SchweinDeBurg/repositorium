@@ -1,14 +1,14 @@
 <html>
 
 <head>
-<title>CPJNPOP3Connection v1.38</title>
+<title>CPJNPOP3Connection v1.39</title>
 <link rel="stylesheet" type="text/css" href="./naughter.css">
 </head>
 
 <body>
 
 <h2 align="left"><img src="pop3.gif" width="40" height="40">CPJNPOP3Connection 
-v1.38</h2>
+v1.39</h2>
 <p>Welcome to <strong>CPJNPOP3Connection</strong>, a freeware MFC class to support 
 the POP3 protocol. POP3 for those not familiar with all the internet protocols is 
 the protocol used to retrieve internet email. </p>
@@ -337,6 +337,17 @@ for RFC and 1725 or 822. </p>
 	<li>Update the code in the sample app to TRACE out what it is doing</li>
 	<li>Updated the code to clean compile on VC 2005</li>
 </ul>
+<p><strong>v1.39 (20 November 2006)</strong></p>
+<ul>
+	<li>Minor update to the sample app to allow it to clean compile on VC 2005 
+	</li>
+	<li>Optimized ReadResponse method so that if an error occurs while reading 
+	the &quot;RETR&quot; response, only the actual command text is set into 
+	m_sLastCommandResponse instead of the whole message. This avoids a great 
+	performance hit on Unicode projects because of the m_sLastCommandResponse 
+	CString nature (ANSI -&gt; UNICODE conversion). Thanks to Alexey Kuznetsov for 
+	reporting this issue.</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -641,7 +652,7 @@ const;</strong></p>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-9 July 2006</p>
+20 November 2006</p>
 
 </body>
 

@@ -122,6 +122,12 @@ History: PJN / 27-06-1998 1) Fixed a potential buffer overflow problem in Delete
                           5) General rework of the class to bring it in line with the author's CPJNSMTPConnection code
                           6) Update the code in the sample app to TRACE out what it is doing
                           7) Updated the code to clean compile on VC 2005
+         PJN / 15-11-2006 1) Minor update to the sample app to allow it to clean compile on VC 2005
+                          2) Optimized ReadResponse method so that if an error occurs while reading the "RETR" 
+                          response, only the actual command text is set into m_sLastCommandResponse instead of the 
+                          whole message. This avoids a great performance hit on Unicode projects because of the
+                          m_sLastCommandResponse CString nature (ANSI -> UNICODE conversion). Thanks to Alexey 
+                          Kuznetsov for reporting this issue.
 
 Copyright (c) 1998 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -1113,7 +1119,7 @@ void CPJNPOP3Connection::ReadReturnResponse(CPJNPOP3Message& message, DWORD dwSi
   char* sBuf = new char[nSize];
   char* sMessageBuf = sBuf;
 
-  BOOL bReadResponse = ReadResponse(sBuf, nSize, "\r\n.\r\n", &pszOverFlowBuffer, 32000);
+  BOOL bReadResponse = ReadResponse(sBuf, nSize, "\r\n.\r\n", &pszOverFlowBuffer, 32000, TRUE);
   if (!bReadResponse)
 	{
     delete [] sBuf;
@@ -1137,7 +1143,7 @@ void CPJNPOP3Connection::ReadReturnResponse(CPJNPOP3Message& message, DWORD dwSi
 	else
 	{  
     //remove the first line which contains the +OK from the message
-    char* pszFirst = GetFirstCharInResponse(sMessageBuf);
+    LPCSTR pszFirst = GetFirstCharInResponse(sMessageBuf);
 		VERIFY(pszFirst);
 
     //transfer the message contents to the message class
@@ -1197,7 +1203,7 @@ void CPJNPOP3Connection::ReadListResponse(int nNumberOfMails)
     m_msgSizes.SetSize(0, nNumberOfMails);
 
     //then parse the LIST response
-		char* pszSize = GetFirstCharInResponse(sMessageBuf);
+		LPCSTR pszSize = GetFirstCharInResponse(sMessageBuf);
 		VERIFY(pszSize);
 		for (; *pszSize != '.'; pszSize++)
 			if (*pszSize == '\t' || *pszSize == ' ')
@@ -1246,13 +1252,13 @@ void CPJNPOP3Connection::ReadUIDLResponse(int nNumberOfMails)
     m_msgIDs.SetSize(0, nNumberOfMails);
 
 		//then parse the UIDL response
-		char* pszSize = GetFirstCharInResponse(sMessageBuf);
+		LPSTR pszSize = GetFirstCharInResponse(sMessageBuf);
 		
 		VERIFY(pszSize);
 		for (int iCount=0; iCount<nNumberOfMails; iCount++)
 		{
 		  //Find the next line, before we attempt to parse the current one
-		  char* pszBegin = pszSize;
+		  LPSTR pszBegin = pszSize;
 		  while (*pszSize != '\n' && *pszSize != '\0')
   			++pszSize;
   			
@@ -1342,7 +1348,7 @@ void CPJNPOP3Connection::ReadStatResponse(int& nNumberOfMails, int& nTotalMailSi
     delete [] pszOverFlowBuffer;
 }
 
-BOOL CPJNPOP3Connection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR pszTerminator, LPSTR* ppszOverFlowBuffer, int nGrowBy)
+BOOL CPJNPOP3Connection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR pszTerminator, LPSTR* ppszOverFlowBuffer, int nGrowBy, BOOL bRetrieve)
 {
   ASSERT(ppszOverFlowBuffer);          //Must have a valid string pointer
   ASSERT(*ppszOverFlowBuffer == NULL); //Initially it must point to a NULL string
@@ -1367,8 +1373,15 @@ BOOL CPJNPOP3Connection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPST
     {
 		  if (!_IsReadible(m_dwTimeout)) //A timeout has occured so fail the function call
 		  {
+		    //Null terminate the received data
 			  pszRecvBuffer[nReceived] = '\0';
-			  m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
+			  
+			  //Hive away the last command response
+        if (!bRetrieve)
+	        m_sLastCommandResponse = pszRecvBuffer;
+        else
+	        SetRetrieveResponse(pszRecvBuffer);
+	        
 			  return FALSE;
 		  }
     }
@@ -1406,10 +1419,16 @@ BOOL CPJNPOP3Connection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPST
 		//If an error occurred receiving the data
 		if (nData < 1)
 		{
-			//NULL terminate the data received
+			//Null terminate the received data
 			if (pszRecvBuffer)
 			  pszRecvBuffer[nReceived] = '\0';
-			m_sLastCommandResponse = pszRecvBuffer; //Hive away the last command reponse
+
+		  //Hive away the last command response
+      if (!bRetrieve)
+        m_sLastCommandResponse = pszRecvBuffer;
+      else
+        SetRetrieveResponse(pszRecvBuffer);
+
 			return FALSE; 
 		}
 		else
@@ -1451,8 +1470,33 @@ BOOL CPJNPOP3Connection::ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPST
   pszRecvBuffer[nReceived - nTerminatorLen] = '\0';
 
   //Hive away the last command response
-  m_sLastCommandResponse = pszRecvBuffer;
+  if (!bRetrieve)
+	  m_sLastCommandResponse = pszRecvBuffer;
+  else
+	  SetRetrieveResponse(pszRecvBuffer);
 
   return TRUE;
 }
 
+void CPJNPOP3Connection::SetRetrieveResponse(LPSTR pszData)
+{
+  LPCSTR pszFirst = strchr(pszData, '\r');
+	if (pszFirst)
+	{
+		DWORD_PTR n = pszFirst - pszData;
+		LPSTR pEditRecv = new char[n + 1];
+
+  #if (_MSC_VER >= 1400)
+    strncpy_s(pEditRecv, n+1, pszData, n);		
+  #else
+		strncpy(pEditRecv, pszData, n);		
+	#endif
+		pEditRecv[n] = '\0';
+		
+		m_sLastCommandResponse = pEditRecv;		
+		
+		delete [] pEditRecv;
+	}
+	else 
+	  m_sLastCommandResponse.Empty();
+}
