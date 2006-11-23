@@ -173,7 +173,7 @@ protected:
   virtual void ReadListResponse(int nNumberOfMails);
   virtual void ReadUIDLResponse(int nNumberOfMails);
   virtual void ReadReturnResponse(CPJNPOP3Message& message, DWORD dwSize);
-  virtual BOOL ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR pszTerminator, LPSTR* ppszOverFlowBuffer, int nGrowBy=4096);
+  virtual BOOL ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR pszTerminator, LPSTR* ppszOverFlowBuffer, int nGrowBy=4096, BOOL bRetrieve = FALSE);
   LPSTR        GetFirstCharInResponse(LPSTR pszData) const;
 #ifndef CPJNPOP3_NOSSL
   virtual CString GetOpenSSLError();
@@ -187,6 +187,7 @@ protected:
   int  _Receive(void *pBuffer, int nBuf);
   void _Close();
   BOOL _IsReadible(DWORD dwTimeout);
+  void SetRetrieveResponse(LPSTR pszData);
 
 #ifndef CPJNPOP3_NOSSL
   CSSLContext    m_SSLCtx;               //SSL Context
