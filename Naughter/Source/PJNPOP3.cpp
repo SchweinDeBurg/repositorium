@@ -2,43 +2,43 @@
 Module : PJNPOP3.CPP
 Purpose: Implementation for a MFC class encapsulation of the POP3 protocol
 Created: PJN / 04-05-1998
-History: PJN / 27-06-1998 1) Fixed a potential buffer overflow problem in Delete
+History: PJN / 27-06-1998 1. Fixed a potential buffer overflow problem in Delete
                           and Retrieve functions when a large message number was
                           specified.
-                          2) Improve the ReadResponse code by a) passing the 
+                          2. Improve the ReadResponse code by a) passing the 
                           readability check onto the scoket class and b) Sleeping
                           for 100 ms prior to looping around waiting for new 
                           response data
-                          3) Classes are now fully Unicode compliant. Unicode
+                          3. Classes are now fully Unicode compliant. Unicode
                           build configurations are also now included.
-                          4) Now supports the TOP POP3 command which can be
+                          4. Now supports the TOP POP3 command which can be
                           issued using the GetHeader function.
-         PJN / 04-01-1999 1) Properly UNICODE enabled the code
-         PJN / 22-02-1999 1) Improved the reading of responses back from the server by implementing
+         PJN / 04-01-1999 1. Properly UNICODE enabled the code
+         PJN / 22-02-1999 1. Improved the reading of responses back from the server by implementing
                           a growable receive buffer
-                          2) timeout is now 60 seconds when building for debug
-                          3) Code now yields its time slice while waiting for a timeout
-                          4) Made most functions virtual to help end user usage
-         PJN / 25-03-1999 1) Fixed memory leak in the CPJNPOP3Connection::ReadReturnResponse function.
-                          2) Now sleeps for 250 ms instead of yielding the time slice. This helps 
+                          2. timeout is now 60 seconds when building for debug
+                          3. Code now yields its time slice while waiting for a timeout
+                          4. Made most functions virtual to help end user usage
+         PJN / 25-03-1999 1. Fixed memory leak in the CPJNPOP3Connection::ReadReturnResponse function.
+                          2. Now sleeps for 250 ms instead of yielding the time slice. This helps 
                           reduce CPU usage when waiting for data to arrive in the socket
-         PJN / 15-06-1999 1) Added functions to return the message body, header or a particular
+         PJN / 15-06-1999 1. Added functions to return the message body, header or a particular
                           header field of a message
-                          2) Tidied up some of the TRACE messages which the code generates
-         PJN / 16-06-1999 1) Fixed a bug in the GetHeaderItem function which was causing a header
+                          2. Tidied up some of the TRACE messages which the code generates
+         PJN / 16-06-1999 1. Fixed a bug in the GetHeaderItem function which was causing a header
                           item which appeared at the begining of the header fields to fail to be 
                           parsed incorrectly.
-         PJN / 27-06-1999 1) Fixed a bug in the GetHeaderItem function when a header spanned 
+         PJN / 27-06-1999 1. Fixed a bug in the GetHeaderItem function when a header spanned 
                           multiple lines as is allowed by RFC 822
-         PJN / 29-06-1999 1) Another improvement to GetHeaderItem. When will it end <g>. Originally 
+         PJN / 29-06-1999 1. Another improvement to GetHeaderItem. When will it end <g>. Originally 
                           this was reported as a bug but upon further investigation it turns out that
                           the message which was causing the problems had embedded tabs in the header. 
                           This is discouraged by the RFC which refers to mail headers (RFC 822). 
                           The code has been enhanced to handle this case. Thanks to Chris Bishop 
                           for spotting this.
-                          2) Fix for a bug in GetHeaderItem where I accidently was using "=" instead of
+                          2. Fix for a bug in GetHeaderItem where I accidently was using "=" instead of
                           "==". Thanks to Angelini Fabio for spotting this.
-         PJN / 05-07-1999 1) Addition of the following functions:
+         PJN / 05-07-1999 1. Addition of the following functions:
 
                           i)   CPJNPOP3Message::GetReplyTo
                           ii)  CPJNPOP3Message::GetRawBody      
@@ -46,90 +46,95 @@ History: PJN / 27-06-1998 1) Fixed a potential buffer overflow problem in Delete
 	                        iv)  CPJNPOP3Message::GetFrom                    
 	                        v)   CPJNPOP3Message::GetDate                    
 
-                          2) GetHeaderItem function now uses case insensitive searching
-                          3) GetHeaderItem now allows you to search for the "n'th" header of a specified type
-         PJN / 24-08-1999 1) Fixed a bug whereby the function GetHeader was sometimes failing when it
+                          2. GetHeaderItem function now uses case insensitive searching
+                          3. GetHeaderItem now allows you to search for the "n'th" header of a specified type
+         PJN / 24-08-1999 1. Fixed a bug whereby the function GetHeader was sometimes failing when it
                           was called when the message was retrieved using the "TOP" command.
-         PJN / 27-03-2000 1) Fixed a problem where GetBody and GetRawBody will fail if you call it for a 
+         PJN / 27-03-2000 1. Fixed a problem where GetBody and GetRawBody will fail if you call it for a 
                           CPJNPOP3Message object that doesn't have a message in it (i.e m_pszMessage == NULL). 
                           This was previously causing a goof old access violation in GetRawBody.
-         PJN / 20-09-2000 1) Fixed a bug in CPJNPOP3Connection::UIDL when message id's were returned
+         PJN / 20-09-2000 1. Fixed a bug in CPJNPOP3Connection::UIDL when message id's were returned
                           with embedded dots in them. Thanks to Konstantin Vasserman for finding and resolving
                           this problem.
-         PJN / 25-03-2001 1) Updated copyright information
-         PJN / 27-07-2001 1) Added two methods namely: GetTo() and GetCC() to the CPJNPOP3Message class
-         PJN / 11-08-2001 1) Fixed a bug in CPJNPOP3Connection::ReadResponse where determining the terminator
+         PJN / 25-03-2001 1. Updated copyright information
+         PJN / 27-07-2001 1. Added two methods namely: GetTo() and GetCC() to the CPJNPOP3Message class
+         PJN / 11-08-2001 1. Fixed a bug in CPJNPOP3Connection::ReadResponse where determining the terminator
                           was failing when an embedded NULL was in the message.
-         PJN / 27-09-2001 1) Fixed a bug in CPJNPOP3Connection::ReadResponse when handling disconnection errors
-                          2) Improved the error handling in Delete, GetMessageSize & GetMessageID methods
-         PJN / 29-09-2001 1) Further improved the error handling in CPJNPOP3Connection::ReadResponse
-         PJN / 05-07-2003 1) Added copy constructors and operator= methods to the CPJNPOP3Message class. Thanks
+         PJN / 27-09-2001 1. Fixed a bug in CPJNPOP3Connection::ReadResponse when handling disconnection errors
+                          2. Improved the error handling in Delete, GetMessageSize & GetMessageID methods
+         PJN / 29-09-2001 1. Further improved the error handling in CPJNPOP3Connection::ReadResponse
+         PJN / 05-07-2003 1. Added copy constructors and operator= methods to the CPJNPOP3Message class. Thanks
                           to "Sten" for pointing out this omission.
-                          2) Made destructors of all classes virtual.
-         PJN / 21-07-2003 1) Class now preserves last command response across calls to Disconnect. This is 
+                          2. Made destructors of all classes virtual.
+         PJN / 21-07-2003 1. Class now preserves last command response across calls to Disconnect. This is 
                           especially important in calls to Connect when for example you get the POP3 error
                           "-Err. Can't lock the mailbox" or something like this when you call Connect. Thanks
                           to "Lev Elbert" for reporting this problem and providing the fix. 
-         PJN / 03-11-2003 1) Simplified the code in CPJNPOP3Connection::ReadResponse. Thanks to Clarke Brunt for 
+         PJN / 03-11-2003 1. Simplified the code in CPJNPOP3Connection::ReadResponse. Thanks to Clarke Brunt for 
                           reporting this issue.
-                          2) Reviewed the various trace statements in the code.
-         PJN / 06-11-2003 1) Fixed a problem with an unitialized "m_pszMessage" in the CPJNPOP3Message 
+                          2. Reviewed the various trace statements in the code.
+         PJN / 06-11-2003 1. Fixed a problem with an unitialized "m_pszMessage" in the CPJNPOP3Message 
                           constructor. Thanks to Michael Gunlock for reporting this problem.
-         PJN / 12-11-2003 1) Fixed a bug in the CPJNPOP3Message operator= method. Thanks to Henrik Grek for 
+         PJN / 12-11-2003 1. Fixed a bug in the CPJNPOP3Message operator= method. Thanks to Henrik Grek for 
                           reporting this bug.
-         PJN / 05-06-2004 1) Fixed a bug in CPJNPOP3Connection::ReadResponse, where the wrong parameters
+         PJN / 05-06-2004 1. Fixed a bug in CPJNPOP3Connection::ReadResponse, where the wrong parameters
                           were being null terminated. Thanks to "caowen" for this update.
-         PJN / 04-07-2004 1) Added an IsConnected() method to the CPJNPOP3Connection class. Thanks to Alessandro 
+         PJN / 04-07-2004 1. Added an IsConnected() method to the CPJNPOP3Connection class. Thanks to Alessandro 
                           Rosa for this addition.
-                          2) Added two new helper functions, namely CPJNPOP3Message::GetEmailAddress and 
+                          2. Added two new helper functions, namely CPJNPOP3Message::GetEmailAddress and 
                           CPJNPOP3Message::GetEmailFriendlyName. Thanks to Alessandro Rosa for this suggestion.
-         PJN / 09-08-2004 1) Fixed a number of compiler warnings when the code is compiled with VC.Net 2003
-         PJN / 27-03-2005 1). Fixed a number of compiler warnings in the sample app when the code is compiled
+         PJN / 09-08-2004 1. Fixed a number of compiler warnings when the code is compiled with VC.Net 2003
+         PJN / 27-03-2005 1. Fixed a number of compiler warnings in the sample app when the code is compiled
                           with VC .NET 2003.
-                          2) Timeout now defaults to 5 seconds in debug mode.
-                          3) Added support for connecting via Socks4, Socks5 and HTTP proxies
-                          4) Added support for POP3 via SSL. Thanks to Serhiy Pavlov and Alexey Kuznetsov for
+                          2. Timeout now defaults to 5 seconds in debug mode.
+                          3. Added support for connecting via Socks4, Socks5 and HTTP proxies
+                          4. Added support for POP3 via SSL. Thanks to Serhiy Pavlov and Alexey Kuznetsov for
                           suggesting this update. Please note that because I do not have access to a mail 
                           server which provides POP3 over SSL, you should consider this support preliminary
                           until I get feedback from users of this feature. The standard POP3 support is still
                           fully functional and tested of course.
-         PJN / 09-04-2005 1) Updated the initialization code for OpenSSL in the sample app to avoid memory 
+         PJN / 09-04-2005 1. Updated the initialization code for OpenSSL in the sample app to avoid memory 
                           leaks. Thanks to Alexey Kuznetsov for reporting these issues. You should implement
                           the same initialization and cleanup code in your applications. For details please check
                           the code in "main.cpp" module which is enclosed in #ifndef POP3_NOSSL_SUPPORT / 
                           #endif sections.
-                          2) "List" function is now public instead of protected. Thanks to Alexey Kuznetsov for 
+                          2. "List" function is now public instead of protected. Thanks to Alexey Kuznetsov for 
                           reporting these issues. 
-                          3) Addition of a simple "FindMessageID" which returns the Message index given a message
+                          3. Addition of a simple "FindMessageID" which returns the Message index given a message
                           ID as returned via UIDL. Thanks to Alexey Kuznetsov for this addition. 
-         PJN / 08-02-2006 1) Fixed a /Wp64 compile issue in CPJNPOP3Connection::FindMessageID. Thanks to Alexey 
+         PJN / 08-02-2006 1. Fixed a /Wp64 compile issue in CPJNPOP3Connection::FindMessageID. Thanks to Alexey 
                           Kuznetsov for reporting this issue.    
-                          2) Updated copyright details.
-                          3) Renamed the classes to include a PJN prefix inline with my SMTP class.
-                          4) Provided a PJNPOP3_EXT_CLASS to allow the class to be easily added to an extension dll
-                          5) Changed the preprocessor macro to exclude SSL support to be CPJNPOP3_NOSSL. This is
+                          2. Updated copyright details.
+                          3. Renamed the classes to include a PJN prefix inline with my SMTP class.
+                          4. Provided a PJNPOP3_EXT_CLASS to allow the class to be easily added to an extension dll
+                          5. Changed the preprocessor macro to exclude SSL support to be CPJNPOP3_NOSSL. This is
                           to maintain consistency with my SMTP class.     
-                          6) Changed the default release mode timeout to 60 seconds and the default debug mode 
+                          6. Changed the default release mode timeout to 60 seconds and the default debug mode 
                           timeout to 90 seconds.
-         PJN / 13-02-2006 1) Fixed a graceful disconnect issue in CPJNPOP3Connection::ReadResponse.
-         PJN / 09-07-2006 1) Optimized CPJNPOP3Message constructor code.
-                          2) Code now uses new C++ style casts rather than old style C casts where necessary.
-                          3) Optimized CPJNPOP3Connection constructor code
-                          4) All classes now uses exceptions to indicate errors. This means the whole area of 
+         PJN / 13-02-2006 1. Fixed a graceful disconnect issue in CPJNPOP3Connection::ReadResponse.
+         PJN / 09-07-2006 1. Optimized CPJNPOP3Message constructor code.
+                          2. Code now uses new C++ style casts rather than old style C casts where necessary.
+                          3. Optimized CPJNPOP3Connection constructor code
+                          4. All classes now uses exceptions to indicate errors. This means the whole area of 
                           handling errors in the code is a whole lot simpler. You should carefully review your 
                           code as a lot of the return values from methods (especially CPJNPOP3Connection) are now void 
                           and will throw CPJNPOP3Exception's.
-                          5) General rework of the class to bring it in line with the author's CPJNSMTPConnection code
-                          6) Update the code in the sample app to TRACE out what it is doing
-                          7) Updated the code to clean compile on VC 2005
-         PJN / 15-11-2006 1) Minor update to the sample app to allow it to clean compile on VC 2005
-                          2) Optimized ReadResponse method so that if an error occurs while reading the "RETR" 
+                          5. General rework of the class to bring it in line with the author's CPJNSMTPConnection code
+                          6. Update the code in the sample app to TRACE out what it is doing
+                          7. Updated the code to clean compile on VC 2005
+         PJN / 15-11-2006 1. Minor update to the sample app to allow it to clean compile on VC 2005
+                          2. Optimized ReadResponse method so that if an error occurs while reading the "RETR" 
                           response, only the actual command text is set into m_sLastCommandResponse instead of the 
                           whole message. This avoids a great performance hit on Unicode projects because of the
                           m_sLastCommandResponse CString nature (ANSI -> UNICODE conversion). Thanks to Alexey 
                           Kuznetsov for reporting this issue.
+         PJN / 21-07-2007 1. Updated copyright details
+                          2. CPJNPOP3Connection::Connect, Delete, Statistics, List, UIDL, Reset, Noop and GetMessageHeader
+                          methods now catch CWSocketException exceptions and rethrow them as CPJNPOP3Exception exceptions. 
+                          This allows client code to only expect CPJNPOP3Exception exceptions to be thrown from the class. 
+                          Thanks to Alexey Kuznetsov for reporting this issue.
 
-Copyright (c) 1998 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -143,6 +148,7 @@ to maintain a single distribution point for the source code.
 
 */
 
+
 //////////////// Includes /////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -150,7 +156,6 @@ to maintain a single distribution point for the source code.
 #pragma message("To avoid this message, please put afxpriv.h in your pre compiled header (normally stdafx.h)")
 #include <afxpriv.h>
 #endif
-
 #include "PJNPOP3.h"
 #include "pop3.rh"
 
@@ -169,12 +174,8 @@ to maintain a single distribution point for the source code.
 
 //////////////// Macros ///////////////////////////////////////////////////////
 
-#if (_MFC_VER < 0x700)
 #ifdef _DEBUG
 #define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 #endif
 
 
@@ -511,7 +512,7 @@ CPJNPOP3Connection::~CPJNPOP3Connection()
 {
   if (m_bConnected)
   {
-    //Deliberately handle exceptions here, so that the destructor does not throw exception
+    //Deliberately handle exceptions here, so that the destructor does not throw exceptions
     try
     {
       Disconnect(TRUE);
@@ -530,7 +531,7 @@ void CPJNPOP3Connection::ThrowPJNPOP3Exception(DWORD dwError, DWORD dwFacility, 
 
 	CPJNPOP3Exception* pException = new CPJNPOP3Exception(dwError, dwFacility, sLastResponse);
 
-	TRACE(_T("Warning: throwing CPJNPOP3Exception for error %x\n"), pException->m_hr);
+	TRACE(_T("Warning: throwing CPJNPOP3Exception for error %X\n"), pException->m_hr);
 	THROW(pException);
 }
 
@@ -538,7 +539,7 @@ void CPJNPOP3Connection::ThrowPJNPOP3Exception(HRESULT hr, const CString& sLastR
 {
 	CPJNPOP3Exception* pException = new CPJNPOP3Exception(hr, sLastResponse);
 
-	TRACE(_T("Warning: throwing CPJNPOP3Exception for error %x\n"), pException->m_hr);
+	TRACE(_T("Warning: throwing CPJNPOP3Exception for error %X\n"), pException->m_hr);
 	THROW(pException);
 }
 
@@ -709,7 +710,6 @@ void CPJNPOP3Connection::Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTS
   {
     DWORD dwError = pEx->m_nError;
     pEx->Delete();
-
     ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
   }
 
@@ -812,6 +812,22 @@ void CPJNPOP3Connection::Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTS
     if (!ReadCommandResponse())
       ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_POP3_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
   }
+  catch(CWSocketException* pEx)
+  {
+    //Disconnect before we rethrow the exception
+    try
+    {
+      Disconnect(TRUE);
+    }
+    catch(CPJNPOP3Exception* pEx2)
+    {
+      pEx2->Delete();
+    }
+  
+    DWORD dwError = pEx->m_nError;
+    pEx->Delete();
+    ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
+  }
   catch(CPJNPOP3Exception* pEx)
   {
     //Disconnect before we rethrow the exception
@@ -897,7 +913,16 @@ void CPJNPOP3Connection::Delete(int nMsg)
  	sRequest.Format(_T("DELE %d\r\n"), nMsg);
   char* pszAsciiRequest = T2A(const_cast<LPTSTR>(sRequest.operator LPCTSTR()));
   int nCmdLength = static_cast<int>(strlen(pszAsciiRequest));
-	_Send(pszAsciiRequest, nCmdLength);
+  try
+  {
+	  _Send(pszAsciiRequest, nCmdLength);
+	}
+  catch(CWSocketException* pEx)
+  {
+    DWORD dwError = pEx->m_nError;
+    pEx->Delete();
+    ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
+  }
 
 	if (!ReadCommandResponse())
     ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_DELE_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
@@ -911,7 +936,16 @@ void CPJNPOP3Connection::Statistics(int& nNumberOfMails, int& nTotalMailSize)
   //Send the STAT command
 	static char* sBuf = "STAT\r\n";
   int nCmdLength = static_cast<int>(strlen(sBuf));
-	_Send(sBuf, nCmdLength);
+  try
+  {
+	  _Send(sBuf, nCmdLength);
+	}
+  catch(CWSocketException* pEx)
+  {
+    DWORD dwError = pEx->m_nError;
+    pEx->Delete();
+    ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
+  }
 
 	ReadStatResponse(nNumberOfMails, nTotalMailSize);
   m_bStatRetrieved = TRUE;
@@ -977,7 +1011,16 @@ void CPJNPOP3Connection::List()
   //Send the LIST command
   static char* sBuf = "LIST\r\n";
   int nCmdLength = static_cast<int>(strlen(sBuf));
-	_Send(sBuf, nCmdLength);
+  try
+  {
+	  _Send(sBuf, nCmdLength);
+	}
+  catch(CWSocketException* pEx)
+  {
+    DWORD dwError = pEx->m_nError;
+    pEx->Delete();
+    ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
+  }
 
   //And check the response
 	ReadListResponse(nNumberOfMails);
@@ -998,7 +1041,16 @@ void CPJNPOP3Connection::UIDL()
   //Send the UIDL command
   static char* sBuf = "UIDL\r\n";
   int nCmdLength = static_cast<int>(strlen(sBuf));
-	_Send(sBuf, nCmdLength);
+  try
+  {
+	  _Send(sBuf, nCmdLength);
+	}
+  catch(CWSocketException* pEx)
+  {
+    DWORD dwError = pEx->m_nError;
+    pEx->Delete();
+    ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
+  }
 
   //And check the response
 	ReadUIDLResponse(nNumberOfMails);
@@ -1013,7 +1065,16 @@ void CPJNPOP3Connection::Reset()
   //Send the RSET command
 	static char* sBuf = "RSET\r\n";
   int nCmdLength = static_cast<int>(strlen(sBuf));
-	_Send(sBuf, nCmdLength);
+  try
+  {
+  	_Send(sBuf, nCmdLength);
+	}
+  catch(CWSocketException* pEx)
+  {
+    DWORD dwError = pEx->m_nError;
+    pEx->Delete();
+    ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
+  }
 
   //And check the command
 	if (!ReadCommandResponse())
@@ -1028,7 +1089,16 @@ void CPJNPOP3Connection::Noop()
   //Send the NOOP command
 	static char* sBuf = "NOOP\r\n";
   int nCmdLength = static_cast<int>(strlen(sBuf));
-	_Send(sBuf, nCmdLength);
+  try
+  {
+	  _Send(sBuf, nCmdLength);
+	}
+  catch(CWSocketException* pEx)
+  {
+    DWORD dwError = pEx->m_nError;
+    pEx->Delete();
+    ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
+  }
 
   //And check the response
 	if (!ReadCommandResponse())
@@ -1050,7 +1120,16 @@ void CPJNPOP3Connection::Retrieve(int nMsg, CPJNPOP3Message& message)
 	sRequest.Format(_T("RETR %d\r\n"), nMsg);	
   char* pszAsciiRequest = T2A(const_cast<LPTSTR>(sRequest.operator LPCTSTR()));
   int nCmdLength = static_cast<int>(strlen(pszAsciiRequest));
-	_Send(pszAsciiRequest, nCmdLength);
+  try
+  {
+	  _Send(pszAsciiRequest, nCmdLength);
+	}
+  catch(CWSocketException* pEx)
+  {
+    DWORD dwError = pEx->m_nError;
+    pEx->Delete();
+    ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
+  }
   
 	//And check the command
 	ReadReturnResponse(message, dwSize);
@@ -1071,7 +1150,16 @@ void CPJNPOP3Connection::GetMessageHeader(int nMsg, CPJNPOP3Message& message)
   sRequest.Format(_T("TOP %d 0\r\n"), nMsg);
   char* pszAsciiRequest = T2A(const_cast<LPTSTR>(sRequest.operator LPCTSTR()));
   int nCmdLength = static_cast<int>(strlen(pszAsciiRequest));
-  _Send(pszAsciiRequest, nCmdLength);
+  try
+  {
+    _Send(pszAsciiRequest, nCmdLength);
+	}
+  catch(CWSocketException* pEx)
+  {
+    DWORD dwError = pEx->m_nError;
+    pEx->Delete();
+    ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
+  }
 
   //And check the command
   ReadReturnResponse(message, dwSize);
