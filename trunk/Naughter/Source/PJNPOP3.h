@@ -3,7 +3,7 @@ Module : PJNPOP3.H
 Purpose: Defines the interface for a MFC class encapsulation of the POP3 protocol
 Created: PJN / 04-05-1998
 
-Copyright (c) 1998 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -26,7 +26,7 @@ to maintain a single distribution point for the source code.
 #define __PJNPOP3_H__
 
 #ifndef __AFXTEMPL_H__
-#pragma message("To avoid this message, put afxtempl.h in your PCH (usually stdafx.h)")
+#pragma message("To avoid this message, put afxtempl.h in your pre compiled header (usually stdafx.h)")
 #include <afxtempl.h>
 #endif
 
@@ -134,7 +134,6 @@ public:
   CString GetLastCommandResponse() const { return m_sLastCommandResponse; };
   DWORD   GetTimeout() const { return m_dwTimeout; };
   void    SetTimeout(DWORD dwTimeout) { m_dwTimeout = dwTimeout; };
-
   void    Statistics(int& nNumberOfMails, int& nTotalMailSize);
   void    Delete(int nMsg);
   DWORD   GetMessageSize(int nMsg);
@@ -147,7 +146,7 @@ public:
   void    Noop();
   void    List();
 
-//Prxy methods
+//Proxy methods
   void      SetProxyType(ProxyType proxyType) { m_ProxyType = proxyType; };
   ProxyType GetProxyType() const { return m_ProxyType; };
   void      SetProxyServer(const CString& sServer) { m_sProxyServer = sServer; };

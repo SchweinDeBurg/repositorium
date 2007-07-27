@@ -1,14 +1,14 @@
 <html>
 
 <head>
-<title>CPJNPOP3Connection v1.39</title>
+<title>CPJNPOP3Connection v1.40</title>
 <link rel="stylesheet" type="text/css" href="./naughter.css">
 </head>
 
 <body>
 
-<h2 align="left"><img src="pop3.gif" width="40" height="40">CPJNPOP3Connection 
-v1.39</h2>
+<h2 align="left"><img src="PJNPOP3.gif" width="40" height="40">CPJNPOP3Connection 
+v1.40</h2>
 <p>Welcome to <strong>CPJNPOP3Connection</strong>, a freeware MFC class to support 
 the POP3 protocol. POP3 for those not familiar with all the internet protocols is 
 the protocol used to retrieve internet email. </p>
@@ -60,8 +60,8 @@ for RFC and 1725 or 822. </p>
 <p>&nbsp;</p>
 <h2><a name="Usage"></a>Usage </h2>
 <ul>
-	<li>To use the class in your code simple include pop3.cpp in your project and 
-	#include pop3.h in which ever of your modules needs to make calls to the class.
+	<li>To use the class in your code simple include PJNPOP3.cpp in your project and 
+	#include PJNPOP3.h in which ever of your modules needs to make calls to the class.
 	</li>
 	<li>If you do not already have the Base64.cpp/h, OpenSSLMfc.cpp/h and SocMFC.cpp/h 
 	modules, these can be downloaded separately from
@@ -77,6 +77,13 @@ for RFC and 1725 or 822. </p>
 	precompiled header. The code will work just as well in a GUI or console app. 
 	The code should also work in a multithreaded application, although it has not 
 	be explicitly tested in this scenario.</li>
+	<li>If you will be using the SSL extensions to the class, then you need to 
+	compile the OpenSSL libraries into your app and initialize OpenSSL 
+	correctly. See the Linker library settings, CApp::InitInstance and 
+	CApp::ExitInstance code for examples on doing this in the sample app 
+	provided with the download. For more info on this, please see my blog entry:
+	<a href="http://naughter.spaces.live.com/blog/cns!7692E6D72E26EAC!209.entry">
+	http://naughter.spaces.live.com/blog/cns!7692E6D72E26EAC!209.entry</a></li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -347,6 +354,15 @@ for RFC and 1725 or 822. </p>
 	performance hit on Unicode projects because of the m_sLastCommandResponse 
 	CString nature (ANSI -&gt; UNICODE conversion). Thanks to Alexey Kuznetsov for 
 	reporting this issue.</li>
+</ul>
+<p><strong>v1.40 (21 July 2007)</strong></p>
+<ul>
+	<li>Updated copyright details</li>
+	<li>CPJNPOP3Connection::Connect, Delete, Statistics, List, UIDL, Reset, Noop 
+	and GetMessageHeader methods now catch CWSocketException exceptions and 
+	rethrow them as CPJNPOP3Exception exceptions. This allows client code to 
+	only expect CPJNPOP3Exception exceptions to be thrown from the class. Thanks 
+	to Alexey Kuznetsov for reporting this issue.</li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -639,7 +655,6 @@ const;</strong></p>
 <p>&nbsp;</p>
 <h2><a name="Enhancements"></a>Planned Enhancements</h2>
 <ul>
-	<li>Implement support for the APOP command.</li>
 	<li>Provide a better sample app. At the moment, it&#39;s very much a test program 
 	which tests all of the functions.</li>
 	<li>If you have any other suggested improvements, please let me know so that 
@@ -652,7 +667,7 @@ const;</strong></p>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-20 November 2006</p>
+21 July 2007</p>
 
 </body>
 
