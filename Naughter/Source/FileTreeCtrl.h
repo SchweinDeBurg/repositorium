@@ -3,7 +3,7 @@ Module : FileTreeCtrl.h
 Purpose: Interface for an MFC class which provides a tree control similiar 
          to the left hand side of explorer
 
-Copyright (c) 1999 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -19,21 +19,23 @@ to maintain a single distribution point for the source code.
 
 ////////////////////////////////// Macros / Defines  ///////////////////////
 
+#pragma once
+
 #ifndef __FILETREECTRL_H__
 #define __FILETREECTRL_H__
 
 #ifndef __AFXMT_H__
-#pragma message("To avoid this message, put afxmt.h in your PCH (normally stdafx.h)")
+#pragma message("To avoid this message, put afxmt.h in your pre compiled header (normally stdafx.h)")
 #include <afxmt.h>
 #endif
 
 #ifndef _SHLOBJ_H_
-#pragma message("To avoid this message, put shlobj.h in your PCH (normally stdafx.h)")
+#pragma message("To avoid this message, put shlobj.h in your pre compiled header (normally stdafx.h)")
 #include <shlobj.h>
 #endif
 
 #ifndef _LM_
-#pragma message("To avoid this message, put lm.h in your PCH (normally stdafx.h)")
+#pragma message("To avoid this message, put lm.h in your pre compiled header (normally stdafx.h)")
 #include <lm.h>
 #endif
 
@@ -56,12 +58,13 @@ to maintain a single distribution point for the source code.
 
 //flags used to control how the DDX_FileTreeControl and SetFlags routine works
 
-const DWORD TFC_SHOWFILES       = 0x0001;   //Control will show files aswell as show folders
-const DWORD TFC_ALLOWDRAGDROP   = 0x0002;   //Control allows drag / drop
-const DWORD TFC_ALLOWRENAME     = 0x0004;   //Control allows renaming of items
-const DWORD TFC_ALLOWOPEN       = 0x0008;   //Control allows items to be "opened" by the shell
-const DWORD TFC_ALLOWPROPERTIES = 0x0010;   //Control allows the "Properties" dialog to be shown
-const DWORD TFC_ALLOWDELETE     = 0x0020;   //Control allows items to be deleted
+const DWORD TFC_SHOWFILES         = 0x0001;   //Control will show files aswell as show folders
+const DWORD TFC_ALLOWDRAGDROP     = 0x0002;   //Control allows drag / drop
+const DWORD TFC_ALLOWRENAME       = 0x0004;   //Control allows renaming of items
+const DWORD TFC_ALLOWOPEN         = 0x0008;   //Control allows items to be "opened" by the shell
+const DWORD TFC_ALLOWPROPERTIES   = 0x0010;   //Control allows the "Properties" dialog to be shown
+const DWORD TFC_ALLOWDELETE       = 0x0020;   //Control allows items to be deleted
+const DWORD TFC_ALLOWCREATEFOLDER = 0x0040;   //Control allows new folders to be created
 
 //Allowable bit mask flags in SetDriveHideFlags / GetDriveHideFlags
 
@@ -75,10 +78,19 @@ const DWORD DRIVE_ATTRIBUTE_RAMDISK     = 0x00000020;
 /////////////////////////// Classes /////////////////////////////////
 
 //Class which gets stored int the item data on the tree control
-
 class FILETREECTRL_EXT_CLASS CTreeFileCtrlItemInfo
 {
 public:
+//Enums
+  enum NodeType
+  {
+    DesktopNode,
+    NetworkNode,
+    MyDocumentsNode,
+    MyComputerNode,
+    OtherNode
+  };
+
 //Constructors / Destructors
   CTreeFileCtrlItemInfo();
   CTreeFileCtrlItemInfo(const CTreeFileCtrlItemInfo& ItemInfo);
@@ -86,18 +98,15 @@ public:
 
 //Member variables
   CString       m_sFQPath;          //Fully qualified path for this item
-  CString       m_sRelativePath;    //The relative bit of the path
+  CString       m_sRelativePath;    //The "Display name" for this item, Normally will be a relative bit of the path from "m_sFQPath"
   NETRESOURCE*  m_pNetResource;     //Used if this item is under Network Neighborhood
-  BOOL          m_bDesktopNode;     //Item is "Desktop"
-  BOOL          m_bNetworkNode;     //Item is "Network Neighborhood" or is underneath it
-  BOOL          m_bMyDocumentNode;  //Item is "My Documents"
-  BOOL          m_bExtensionHidden; //Is the extension being hidden for this item
-  BOOL          m_bFileItem;        //TRUE if this item is a file item
+  NodeType      m_NodeType;         //The type of node this is
+  bool          m_bExtensionHidden; //Is the extension being hidden for this item
+  bool          m_bFileItem;        //TRUE if this item is a file item
 };
 
 //Class which encapsulates access to the System image list which contains
 //all the icons used by the shell to represent the file system
-
 class FILETREECTRL_EXT_CLASS CSystemImageList
 {
 public:
@@ -114,7 +123,6 @@ protected:
 };
 
 //Struct taken from svrapi.h as we cannot mix Win9x and Win NT net headers in one program
-
 #pragma pack(push, 1)
 struct FILETREECTRL_EXT_CLASS CTreeFile_share_info_50 
 {
@@ -130,7 +138,6 @@ struct FILETREECTRL_EXT_CLASS CTreeFile_share_info_50
 
 //class which manages enumeration of shares. This is used for determining 
 //if an item is shared or not
-
 class FILETREECTRL_EXT_CLASS CShareEnumerator
 {
 public:
@@ -160,7 +167,6 @@ protected:
 };
 
 //Class which is used for passing info to and from the change notification threads
-
 class FILETREECTRL_EXT_CLASS CTreeFileCtrlThreadInfo
 {
 public:
@@ -177,7 +183,6 @@ public:
 };
 
 //Class which implements the tree control representation of the file system
-
 class FILETREECTRL_EXT_CLASS CTreeFileCtrl : public FILETREECTRL_BASE_CLASS
 {
 public:
@@ -213,6 +218,8 @@ enum HideFileExtension
   BOOL              GetAllowProperties() const { return m_bAllowProperties; };
   void              SetAllowDelete(BOOL bAllowDelete) { m_bAllowDelete = bAllowDelete; };
   BOOL              GetAllowDelete() const { return m_bAllowDelete; };
+  void              SetAllowCreateFolder(BOOL bAllowCreateFolder) { m_bAllowCreateFolder = bAllowCreateFolder; };
+  BOOL              GetAllowCreateFolder() const { return m_bAllowCreateFolder; };
   void              SetFlags(DWORD dwFlags);
   void              SetDriveHideFlags(DWORD dwDriveHideFlags);
   DWORD             GetDriveHideFlags() const { return m_dwDriveHideFlags; };
@@ -220,8 +227,12 @@ enum HideFileExtension
   DWORD             GetFileHideFlags() const { return m_dwFileHideFlags; };
   void              SetFolderHideFlags(DWORD dwFolderHideFlags);
   DWORD             GetFolderHideFlags() const { return m_dwFolderHideFlags; };
-  void              SetFileNameMask(const CString& sFileNameMask);
-  CString           GetFileNameMask() const { return m_sFileNameMask; };
+  int               AddMultipleFileNameMasks(const CString& sFileNameMasks);
+  void              SetFileNameMask(int i, const CString& sFileNameMask);
+  void              AddFileNameMask(const CString& sFileNameMask);
+  void              RemoveFileNameMask(int nIndex) { m_sFileNameMasks.RemoveAt(nIndex); };
+  CString           GetFileNameMask(int nIndex) const { return m_sFileNameMasks.GetAt(nIndex); };
+  CString           GetFileNameMasks() const;
   void              SetNetworkItemTypes(DWORD dwTypes); 
   DWORD             GetNetworkItemTypes() const { return m_dwNetworkItemTypes; };
   void              SetShowDriveLabels(BOOL bShowDriveLabels); 
@@ -263,6 +274,7 @@ enum HideFileExtension
   virtual BOOL      ShowProperties(HTREEITEM hItem);
   virtual BOOL      Delete(HTREEITEM hItem);
   virtual BOOL      Open(HTREEITEM hItem);
+  virtual HTREEITEM CreateFolder(HTREEITEM hItem, const CString& sNewFolderName = _T(""));
   virtual void      PopulateTree(); 
   virtual void      UpOneLevel();
   virtual void      Refresh();
@@ -289,6 +301,12 @@ enum HideFileExtension
 
 protected:
 	//{{AFX_MSG(CTreeFileCtrl)
+#ifndef FILETREECTRL_NO_RESOURCES	
+	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnTimer(UINT nIDEvent);
+#endif  
 	afx_msg void OnProperties();
 	afx_msg void OnUpdateProperties(CCmdUI* pCmdUI);
 	afx_msg void OnRename();
@@ -297,26 +315,26 @@ protected:
 	afx_msg void OnUpdateOpen(CCmdUI* pCmdUI);
 	afx_msg void OnDelete();
 	afx_msg void OnUpdateDelete(CCmdUI* pCmdUI);
-	afx_msg void OnRefresh();
-  afx_msg void OnUpOneLevel();
   afx_msg void OnUpdateUpOneLevel(CCmdUI* pCmdUI);
-	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
-	afx_msg void OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu);
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg void OnBack();
 	afx_msg void OnUpdateBack(CCmdUI* pCmdUI);
 	afx_msg void OnForward();
 	afx_msg void OnUpdateForward(CCmdUI* pCmdUI);
+  afx_msg void OnUpOneLevel();
+	afx_msg void OnRefresh();
+	afx_msg void OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu);
 	afx_msg void OnDestroy();
+	afx_msg void OnCreateFolder();
+	afx_msg void OnUpdateCreateFolder(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	afx_msg BOOL OnDblclk(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg BOOL OnItemExpanding(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg BOOL OnBeginLabelEdit(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg BOOL OnEndLabelEdit(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg BOOL OnRclick(NMHDR* pNMHDR, LRESULT* pResult);
+#ifndef FILETREECTRL_NO_RESOURCES	
 	afx_msg BOOL OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult);
+#endif	
   afx_msg BOOL OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
  	afx_msg BOOL OnSelChanged(NMHDR* pNMHDR, LRESULT* pResult);
   afx_msg BOOL OnDeleteItem(NMHDR* pNMHDR, LRESULT* pResult);
@@ -332,7 +350,7 @@ protected:
 	//}}AFX_VIRTUAL
 
 //Methods
-  virtual void        DisplayPath(const CString& sPath, HTREEITEM hParent, BOOL bUseSetRedraw=TRUE);
+  virtual void        DisplayPath(const CString& sPath, HTREEITEM hParent, BOOL bUseSetRedraw = TRUE, BOOL bDeleteExistingSiblings = TRUE);
   virtual void        DisplayDrives(HTREEITEM hParent, BOOL bUseSetRedraw=TRUE);
   virtual int         GetIconIndex(const CString& sFilename);
   virtual int         GetIconIndex(HTREEITEM hItem);
@@ -345,11 +363,13 @@ protected:
   virtual HTREEITEM   InsertFileItem(HTREEITEM hParent, CTreeFileCtrlItemInfo* pItem, BOOL bShared, int nIcon, int nSelIcon, BOOL bCheckForChildren);
   virtual HTREEITEM   FindSibling(HTREEITEM hParent, const CString& sItem) const;
   virtual BOOL        DriveHasRemovableMedia(const CString& sPath);
+  BOOL                IsExpanded(HTREEITEM hItem);
+#ifndef FILETREECTRL_NO_RESOURCES  
   virtual BOOL        IsDropSource(HTREEITEM hItem);
   BOOL                IsDragging();
-  BOOL                IsExpanded(HTREEITEM hItem);
-  virtual HTREEITEM   GetDropTarget(HTREEITEM hItem);
   void                EndDragging(BOOL bCancel);
+  virtual HTREEITEM   GetDropTarget(HTREEITEM hItem);
+#endif
   virtual HTREEITEM   CopyItem(HTREEITEM hItem, HTREEITEM htiNewParent, HTREEITEM htiAfter = TVI_LAST);
   virtual HTREEITEM   CopyBranch(HTREEITEM htiBranch, HTREEITEM htiNewParent, HTREEITEM htiAfter = TVI_LAST);
   virtual BOOL        CanDisplayFile(const CFileFind& find);
@@ -367,6 +387,7 @@ protected:
   virtual void        OnSelectionChanged(NM_TREEVIEW*, const CString&);
   virtual BOOL        EnumNetwork(HTREEITEM hParent);
   virtual CString     GetDriveLabel(const CString& sDrive);
+  virtual CString     CreateNewChildFolderName(const CString& sParentFolder);
   CString             GetCorrectedLabel(CTreeFileCtrlItemInfo* pItem);
   HTREEITEM           FindServersNode(HTREEITEM hFindFrom) const;
   BOOL                HasPlusButton(HTREEITEM hItem);
@@ -377,37 +398,46 @@ protected:
 //Member variables
   CString                                                     m_sRootFolder;
   CString                                                     m_sMyDocumentsPath;
+  CString                                                     m_sDesktopPath;
   BOOL                                                        m_bShowFiles;
   HTREEITEM                                                   m_hRoot;
+#ifndef FILETREECTRL_NO_RESOURCES  
   HTREEITEM                                                   m_hItemDrag;
   HTREEITEM                                                   m_hItemDrop;
+#endif  
   HTREEITEM                                                   m_hNetworkRoot;
+  HTREEITEM                                                   m_hDesktop;
   HTREEITEM                                                   m_hMyDocumentsRoot;
   HTREEITEM                                                   m_hMyComputerRoot;
   HTREEITEM                                                   m_hRootedFolder;
   BOOL                                                        m_bShowMyComputer;
   BOOL                                                        m_bShowDesktop;
   BOOL                                                        m_bShowMyDocuments;
+#ifndef FILETREECTRL_NO_RESOURCES  
   CImageList*                                                 m_pilDrag;
+#endif  
 #if (_MFC_VER >= 0x700)  
   UINT_PTR                                                    m_nTimerID;
 #else  
   UINT                                                        m_nTimerID;
 #endif  
+#ifndef FILETREECTRL_NO_RESOURCES	
   HCURSOR                                                     m_DropCopyCursor;
   HCURSOR                                                     m_NoDropCopyCursor;
   HCURSOR                                                     m_DropMoveCursor;
   HCURSOR                                                     m_NoDropMoveCursor;
+#endif  
   UINT                                                        m_TimerTicks;
   BOOL                                                        m_bAllowDragDrop;
   BOOL                                                        m_bAllowRename;
   BOOL                                                        m_bAllowOpen;
   BOOL                                                        m_bAllowProperties;
   BOOL                                                        m_bAllowDelete;
+  BOOL                                                        m_bAllowCreateFolder;
   DWORD                                                       m_dwDriveHideFlags;
   DWORD                                                       m_dwFileHideFlags;
   DWORD                                                       m_dwFolderHideFlags;
-  CString                                                     m_sFileNameMask;
+  CStringArray                                                m_sFileNameMasks;
   COLORREF                                                    m_rgbCompressed;
   BOOL                                                        m_bShowCompressedUsingDifferentColor;  
   COLORREF                                                    m_rgbEncrypted;
@@ -428,10 +458,13 @@ protected:
   DWORD                                                       m_dwNetworkItemTypes;
   BOOL                                                        m_bShowDriveLabels;
   BOOL                                                        m_bShowRootedFolder;
+#ifndef FILETREECTRL_NO_CACHE_COMPUTER_ICON  
+  int                                                         m_nComputerIconIndex;
+  int                                                         m_nSelectedComputerIconIndex;
+#endif
 };
 
 //MFC Data exchange routines
-
 void FILETREECTRL_EXT_API DDX_FileTreeValue(CDataExchange* pDX, CTreeFileCtrl& ctrlFileTree, CString& sItem);
 
 #endif //__FILETREECTRL_H__
