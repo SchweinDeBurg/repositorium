@@ -1,14 +1,14 @@
 <html>
 
 <head>
-<title>CTreeFileCtrl v1.42</title>
+<title>CTreeFileCtrl v1.49</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
 </head>
 
 <body>
 
 <h2 align="left"><strong>
-CTreeFileCtrl v1.42</strong></h2>
+CTreeFileCtrl v1.49</strong></h2>
 
 <p>CTreeFileCtrl provides an MFC class
 which provides a tree control similar to the left hand side of Windows Explorer.   </p>
@@ -99,9 +99,12 @@ which provides a tree control similar to the left hand side of Windows Explorer.
     tree control window style.</li>
   <li>You will also need to copy across the IDR_TREEFILECTRL_* 
   resources from either of the sample apps provided with the code.</li>
-  <li>As of v1.39 you will need an up to date Platform SDK
-    installed to compile the code if you are using Visual C++ 6 (February 2003 
-	was the last version which was compatible with VC 6).</li>
+  <li>As of v1.39, you will need an up to date Platform SDK
+    installed to compile the code if you are using an older compiler such as Visual C++ 6 (February 2003 
+	was the last version which was compatible with VC 6). For further 
+	information on this, please see my blog entry from April 14 2007 titled 
+	&quot;Common problems compiling my code&quot; at
+	<a href="http://naughter.spaces.live.com/blog/">http://naughter.spaces.live.com/blog/.</a></li>
   <li>Please note that you may have difficulties when using 
   the class in a CDialogBar derived class. As reported by Don Woodward: I put 
   one of these in my CDialogBar derived class and because of CControlBar's 
@@ -639,9 +642,110 @@ distribution point for the source code.&nbsp;</p>
 	<li>Code now uses new C++ style casts rather than old style C casts where 
 	necessary.</li>
 </ul>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 
+<p><strong>v1.43 of CTreeFileCtrl (17 March 2007)</strong>
+<ul>
+	<li>Updated copyright details. </li>
+	<li>Updated the sample apps to clean compile on VC 2005</li>
+	<li>Added a preprocessor define &quot;FILETREECTRL_NO_RESOURCES&quot; which allows you 
+	to use the CTreeFileCtrl code without the need to pull in any resources. 
+	Please note that this will lead to reduced functionality of the control, for 
+	example drag and drag will not be supported and all the menu functionality 
+	will also be excluded. For exact details on what is out when you define this 
+	value, just look for all occurences of FILETREECTRL_NO_RESOURCES in the 
+	FileTreeCtrl.cpp module. Thanks to saukwan chou for reporting this issue.</li>
+	<li>Optimized CTreeFileCtrl constructor code.</li>
+	<li>Optimized CTreeFileCtrlThreadInfo constructor code.</li>
+	<li>Optimized the code which gets the icon and &quot;selected&quot; icon for network 
+	servers which are displayed by the class. What the code does is cache the 
+	local machine name in the constructor and uses it to get the icon for a 
+	server when the code is enumerating servers. This does mean that if MS ever 
+	brings in a mechanism to allow customization of the icon on a server by 
+	server level, then CTreeFileCtrl will ignore this. Thanks to Fotis 
+	Xomeritakis for providing this optimization which really helps speed up the 
+	performance of CTreeFileCtrl when browsing domains or workgroups with a 
+	large number of workstations and servers.</li>
+	<li>Optimized CShareEnumerator constructor code.</li>
+	<li>Sample Binaries included in download are now compiled with VC 2005 SP1</li>
+</ul>
+
+<p><strong>v1.44 of CTreeFileCtrl (30 March 2007)</strong>
+<ul>
+	<li>The icons used for computer nodes in Network neighborhood is now cached 
+	in the CTreeFileCtrl constructor. This is a further improvement over the 
+	caching of the local computer name approach which was used in the last 
+	version of the code. If you do not want to use this approach, then you can 
+	define a FILETREECTRL_CACHE_COMPUTER_ICON preprocessor value which will 
+	result in the computer icon being found when actual network enumeration is 
+	performed. Thanks to Fotis Xomeritakis for this nice optimization.</li>
+</ul>
+
+<p><strong>v1.45 of CTreeFileCtrl (13 April 2007)</strong>
+<ul>
+	<li>Updated IsDropSource method to now allow drag / drop of folders. Thanks 
+	to Kirk A. Baker for reporting this useful update.</li>
+	<li>The class now supports multiple filename masks. To support this new 
+	functionality, an updated / new set of functions have been provided, namely: 
+	AddMultipleFileNameMasks, SetFileNameMask, AddFileNameMask, 
+	RemoveFileNameMask, GetFileNameMask &amp; GetFileNameMasks. Thanks to Fedor 
+	Gavrilov for this nice update.</li>
+</ul>
+
+<p><strong>v1.46 of CTreeFileCtrl (22 April 2007)</strong>
+<ul>
+	<li>Fixed a bug in CTreeFileCtrl::OnItemExpanding when the control is 
+	created with the TVS_SINGLEEXPAND style. What was happening was that if for 
+	example you selected C:\program files using SetSelectedPath, then you 
+	selected &quot;C:\&quot; using the same function and then you selected &quot;D:\&quot;, the 
+	control will end up showing no plus button on the C node. Thanks to John 
+	Emmas for reporting this quite difficult to find bug.</li>
+</ul>
+
+<p><strong>v1.47 of CTreeFileCtrl (6 June 2007)</strong>
+<ul>
+	<li>Now supports in place creation of folders. Thanks to Phil Gibson for 
+	prompting this update.</li>
+</ul>
+
+<p><strong>v1.48 of CTreeFileCtrl (9 June 2007)</strong>
+<ul>
+	<li>Updated comments in documentation about usage of the Platform SDK.</li>
+	<li>Internal WM_TREEUPDATE_CHANGE message is now defined as WM_APP instead 
+	of WM_USER</li>
+	<li>CreateFolder method now takes a second parameter which allows the new 
+	child folder name to be set. If you leave this parameter as the default 
+	value of _T(&quot;&quot;) then the new folder name will be created by calling the 
+	virtual CreateNewChildFolderName function. This function has also been 
+	updated in this release to better encapsulate how a new folder name is 
+	created.</li>
+	<li>Return value from CreateFolder method is now a HTREEITEM instead of a 
+	BOOL</li>
+	<li>Reworked the internal logic of CreateFolder method to avoid the need to 
+	call the Refresh method. As a result the user experience is much improved 
+	due to the elimination of the tree updates.</li>
+</ul>
+
+<p><strong>v1.49 of CTreeFileCtrl (13 June 2007)</strong>
+<ul>
+	<li>Reviewed class code for use of C++ casts instead of old style C casts.</li>
+	<li>Desktop node item now includes a file system path in its 
+	CTreeFileCtrlItemInfo pointer</li>
+	<li>Made all BOOL members of CTreeFileCtrlItemInfo a &quot;bool&quot; to conserve 
+	memory usage</li>
+	<li>Replaced CTreeFileCtrlItemInfo member variables &quot;m_bDesktopNode&quot;, &quot;m_bNetworkNode&quot; 
+	&amp; &quot;m_bMyDocumentNode&quot; with a single enum member variable</li>
+	<li>Fixed a bug where rename would previously be allowed for nodes such as 
+	My Documents, My Computers etc</li>
+	<li>Fixed a bug where delete would previously be allowed for nodes such as 
+	My Documents, My Computers etc</li>
+	<li>Desktop node now also includes files and folders as found on the 
+	desktop. Also the ordering of items on the desktop is consistent with how 
+	Explorer displays the desktop.</li>
+	<li>The shell is notified that a new directory has been created in 
+	CreateFolder via the SHChangeNotify API</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 <p>&nbsp;</p>
 
 <h2><a name="APIReference"></a><strong>API
@@ -668,6 +772,8 @@ Reference</strong></h2>
 <a href="#GetAllowProperties">CTreeFileCtrl::GetAllowProperties</a><br>
 <a href="#SetAllowDelete">CTreeFileCtrl::SetAllowDelete</a><br>
 <a href="#GetAllowDelete">CTreeFileCtrl::GetAllowDelete</a><br>
+<a href="#SetAllowCreateFolder">CTreeFileCtrl::SetAllowCreateFolder</a><br>
+<a href="#GetAllowCreateFolder">CTreeFileCtrl::GetAllowCreateFolder</a><br>
 <a href="#IsFile">CTreeFileCtrl::IsFile</a><br>
 <a href="#IsFolder">CTreeFileCtrl::IsFolder</a><br>
 <a href="#IsDrive">CTreeFileCtrl::IsDrive<br>
@@ -684,8 +790,8 @@ Reference</strong></h2>
 <a href="#GetFileHideFlags">CTreeFileCtrl::GetFileHideFlags</a><br>
 <a href="#SetFolderHideFlags">CTreeFileCtrl::SetFolderHideFlags</a><br>
 <a href="#GetFolderHideFlags">CTreeFileCtrl::GetFolderHideFlags</a><br>
-<a href="#SetFileNameMask">CTreeFileCtrl::SetFileNameMask</a><br>
-<a href="#GetFileNameMask">CTreeFileCtrl::GetFileNameMask</a><br>
+<a href="#AddMultipleFileNameMasks">CTreeFileCtrl::AddMultipleFileNameMasks</a><br>
+<a href="#GetFileNameMasks">CTreeFileCtrl::GetFileNameMasks</a><br>
 <a href="#GetCompressedColor">CTreeFileCtrl::GetCompressedColor</a><br>
 <a href="#SetCompressedColor">CTreeFileCtrl::SetCompressedColor</a><br>
 <a href="#GetUsingDifferentColorForCompressed">CTreeFileCtrl::GetUsingDifferentColorForCompressed</a><br>
@@ -1058,6 +1164,42 @@ is allowing items to be deleted otherwise FALSE.</p>
 
 <p>This is the corollary function to the
 SetAllowDelete function.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="SetAllowCreateFolder"></a>CTreeFileCtrl::SetAllowCreateFolder</strong></p>
+
+<p><strong>void SetAllowDelete(BOOL </strong><em>bAllowCreateFolder</em><strong>);</strong></p>
+
+
+<p><strong>Parameters</strong></p>
+
+<p><em>bAllowCreateFolder</em> TRUE if the
+tree control should allow folder creation.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This allows you to decide whether the tree
+control should allow new folders to be created.</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a name="GetAllowCreateFolder"></a>CTreeFileCtrl::GetAllowCreateFolder</strong></p>
+
+<p><strong>BOOL GetAllowCreateFolder() const;</strong></p>
+
+
+<p class="rl"><strong>Return Value</strong></p>
+
+<p class="t">TRUE if the tree control
+is allowing folder creation otherwise FALSE.</p>
+
+<p><strong>Remarks</strong></p>
+
+
+<p>This is the corollary function to the
+SetAllowCreateFolder function.</p>
 
 <p>&nbsp;</p>
 
@@ -1597,16 +1739,17 @@ SetFolderHideFlags function.</p>
 
 <p>&nbsp;</p>
 
-<p><strong><a name="SetFileNameMask"></a>CTreeFileCtrl::SetFileNameMask</strong></p>
+<p><strong><a name="AddMultipleFileNameMasks"></a>CTreeFileCtrl::AddMultipleFileNameMasks</strong></p>
 
 <p><strong>void
-SetFileNameMask(const CString&amp; </strong><em>sFileNameMask</em><strong>);</strong></p>
+AddMultipleFileNameMasks(const CString&amp; </strong><em>sFileNameMasks</em><strong>);</strong></p>
 
 <p><strong>Parameters</strong></p>
 
-<p><em>sFileNameMask</em> A string
+<p><em>sFileNameMasks</em> A string
 search mask to use for specifing certain files to be included in the tree
-control</p>
+control e.g. &quot;*.cpp,*.c;*.h,*.inl&quot;. Note that a comma or semicolon are both 
+valid delimiters</p>
 
 <p><strong>Remarks</strong></p>
 
@@ -1616,9 +1759,9 @@ types of files to be included for example based on their extension, e.g
 
 <p>&nbsp;</p>
 
-<p><a name="GetFileNameMask"></a><strong>CTreeFileCtrl::GetFileNameMask</strong></p>
+<p><a name="GetFileNameMasks"></a><strong>CTreeFileCtrl::GetFileNameMasks</strong></p>
 
-<p><strong>CString </strong><strong>GetFileNameMask() const;</strong></p>
+<p><strong>CString </strong><strong>GetFileNameMasks() const;</strong></p>
 
 <p class="rl"><strong>Return Value</strong></p>
 
@@ -1627,7 +1770,7 @@ in use</p>
 
 <p><strong>Remarks</strong></p>
 <p>This is the corollary function to the
-SetFileNameMask function.</p>
+AddMultipleFileNameMasks function.</p>
 
 <p>&nbsp;</p>
 
@@ -2250,6 +2393,6 @@ THE AUTHOR</strong></h2>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-1 July 2006</p>
+13 June 2007</p>
 </body>
 </html>

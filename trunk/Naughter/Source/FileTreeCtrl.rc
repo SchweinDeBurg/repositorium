@@ -23,6 +23,7 @@ BEGIN
         MENUITEM "&Rename",                     ID_TREEFILECTRL_RENAME
         MENUITEM "&Delete",                     ID_TREEFILECTRL_DELETE
         MENUITEM "&Properties",                 ID_TREEFILECTRL_PROPERTIES
+        MENUITEM "&Create Folder",              ID_TREEFILECTRL_CREATEFOLDER
     END
 END
 
@@ -51,6 +52,7 @@ BEGIN
     ID_TREEFILECTRL_REFRESH "Refresh the view\nRefresh"
     ID_TREEFILECTRL_BACK    "Go back to the previous item\nBack"
     ID_TREEFILECTRL_FORWARD "Go the next item\nForward"
+    ID_TREEFILECTRL_CREATEFOLDER "Creates a new folder"
 END
 
 #endif    // English (U.S.) resources
