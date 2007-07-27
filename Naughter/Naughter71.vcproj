@@ -290,7 +290,7 @@
 				RelativePath="Source\Base64.h">
 			</File>
 			<File
-				RelativePath="Source\Pop3.cpp">
+				RelativePath="Source\PJNPOP3.cpp">
 				<FileConfiguration
 					Name="MBCS_Debug|Win32">
 					<Tool
@@ -317,7 +317,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\Pop3.h">
+				RelativePath="Source\PJNPOP3.h">
 			</File>
 			<File
 				RelativePath="Source\Pop3.rc">
@@ -658,7 +658,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Help\POP3.GIF">
+				RelativePath="Help\PJNPOP3.GIF">
 				<FileConfiguration
 					Name="MBCS_Debug|Win32"
 					ExcludedFromBuild="TRUE">
@@ -685,7 +685,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Help\POP3.HTM"
+				RelativePath="Help\PJNPOP3.htm"
 				DeploymentContent="TRUE">
 				<FileConfiguration
 					Name="MBCS_Debug|Win32"

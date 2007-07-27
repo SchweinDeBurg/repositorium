@@ -151,7 +151,7 @@ to maintain a single distribution point for the source code.
 #include <afxpriv.h>
 #endif
 
-#include "pop3.h"
+#include "PJNPOP3.h"
 #include "pop3.rh"
 
 #if defined(__INTEL_COMPILER)
