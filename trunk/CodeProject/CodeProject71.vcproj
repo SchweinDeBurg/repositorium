@@ -1066,6 +1066,13 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<Filter
+			Name="Strings"
+			Filter="h;cpp">
+			<File
+				RelativePath=".\Source\StdString.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
