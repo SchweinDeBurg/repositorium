@@ -1,5 +1,5 @@
 // AfxGadgets library.
-// Copyright (c) 2004-2006 by Elijah Zarezky,
+// Copyright (c) 2004-2007 by Elijah Zarezky,
 // All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,7 +56,7 @@ public:
 	void GenerateKey(ALG_ID algID = CALG_DES, LPCTSTR pszPassword = NULL);
 	DWORD EncryptString(BSTR bstrSrc, CArray<BYTE, BYTE>& arrDest);
 	DWORD DecryptString(CArray<BYTE, BYTE>& arrSrc, BSTR* pbstrDest);
-	
+
 // attributes
 public:
 	HCRYPTPROV m_hContext;
