@@ -1,14 +1,14 @@
 @echo off
+
 echo.
-echo Building libraries - "Win32 Release"...
+echo Building libraries - "Win32 MBCS Release"...
 echo.
-msdev.com Repository.dsw /MAKE "AfxGadgets - Win32 Release" /REBUILD
+
+devenv.com Repository71.sln /rebuild "MBCS Release" /project AfxGadgets /nologo
 echo.
-msdev.com Repository.dsw /MAKE "atlmfc71 - Win32 Release" /REBUILD
+devenv.com Repository71.sln /rebuild "MBCS Release" /project CodeProject /nologo
 echo.
-msdev.com Repository.dsw /MAKE "CodeProject - Win32 Release" /REBUILD
+devenv.com Repository71.sln /rebuild "MBCS Release" /project Naughter /nologo
 echo.
-msdev.com Repository.dsw /MAKE "Naughter - Win32 Release" /REBUILD
-echo.
-msdev.com Repository.dsw /MAKE "ZipArchive - Win32 Release" /REBUILD
+devenv.com Repository71.sln /rebuild "MBCS Release" /project ZipArchive /nologo
 echo.
