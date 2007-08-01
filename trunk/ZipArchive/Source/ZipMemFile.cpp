@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 // 
-// For the licensing details see the file License.txt
+// For the licensing details refer to the License.txt file.
+//
+// Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -45,9 +47,9 @@ void CZipMemFile::Grow(size_t nGrowTo)
 	}
 } 
 
-void CZipMemFile::SetLength(ZIP_ULONGLONG nNewLen)
+void CZipMemFile::SetLength(ZIP_FILE_USIZE nNewLen)
 {
-	if (m_nBufSize < (UINT)nNewLen)
+	if (m_nBufSize < (size_t)nNewLen)
 		Grow((size_t)nNewLen);
 	else
 		m_nPos = (size_t)nNewLen;
@@ -77,23 +79,37 @@ void CZipMemFile::Write(const void *lpBuf, UINT nCount)
 	if (m_nPos > m_nDataSize)
 		m_nDataSize = m_nPos;
 }
-
-ZIP_ULONGLONG CZipMemFile::Seek(ZIP_LONGLONG lOff, int nFrom)
+ZIP_FILE_USIZE CZipMemFile::Seek(ZIP_FILE_SIZE lOff, int nFrom)
 {
-	ZIP_ULONGLONG lNew = m_nPos;
+	ZIP_FILE_USIZE lNew = m_nPos;
 
 	if (nFrom == CZipAbstractFile::begin)
+	{
+		if (lOff < 0)
+			CZipException::Throw(CZipException::memError);
 		lNew = lOff;
+	}
 	else if (nFrom == CZipAbstractFile::current)
+	{
+		if (lOff < 0 && (ZIP_FILE_USIZE)(-lOff) > lNew)
+			CZipException::Throw(CZipException::memError);
 		lNew += lOff;
+	}
 	else if (nFrom == CZipAbstractFile::end)
+	{
+		if (lOff < 0 && ZIP_FILE_USIZE(-lOff) > m_nDataSize)
+			CZipException::Throw(CZipException::memError);
 		lNew = m_nDataSize + lOff;
+	}
 	else
 		return lNew;
 
-	if (lNew< 0)
+	// assumption that size_t is always signed
+	if (lNew > (size_t)(-1)) // max of size_t
 		CZipException::Throw(CZipException::memError);
-
+	if (lNew > m_nDataSize)
+		Grow((size_t)lNew);
+	
 	m_nPos = (size_t)lNew;
 	return lNew;
 }

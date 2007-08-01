@@ -1,17 +1,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 // 
-// For the licensing details see the file License.txt
+// For the licensing details refer to the License.txt file.
+//
+// Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
 #include "ZipException.h"
+#include "_features.h"
+#include "../../zlib/Source/zlib.h"
 #include <errno.h>
 
 #if defined(__INTEL_COMPILER)
@@ -22,7 +26,7 @@
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-#ifdef _MFC_VER
+#if defined _MFC_VER && defined ZIP_ARCHIVE_MFC
 	IMPLEMENT_DYNAMIC( CZipException, CException)
 #endif
 
@@ -58,31 +62,31 @@ int CZipException::ZlibErrToZip(int iZlibError)
 {
 	switch (iZlibError)
 	{
-	case 2://Z_NEED_DICT:
+	case Z_NEED_DICT:
 		return CZipException::needDict;
-	case 1://Z_STREAM_END:
+	case Z_STREAM_END:
 		return CZipException::streamEnd;
-	case -1://Z_ERRNO:
+	case Z_ERRNO:
 		return CZipException::errNo;
-	case -2://Z_STREAM_ERROR:
+	case Z_STREAM_ERROR:
 		return CZipException::streamError;
-	case -3://Z_DATA_ERROR:
+	case Z_DATA_ERROR:
 		return CZipException::dataError;
-	case -4://Z_MEM_ERROR:
+	case Z_MEM_ERROR:
 		return CZipException::memError;
-	case -5://Z_BUF_ERROR:
+	case Z_BUF_ERROR:
 		return CZipException::bufError;
-	case -6://Z_VERSION_ERROR:
+	case Z_VERSION_ERROR:
 		return CZipException::versionError;
 	default:
-		return CZipException::generic;
+		return CZipException::genericError;
 	}
 	
 }
 
 #ifdef ZIP_ENABLE_ERROR_DESCRIPTION
 
-BOOL CZipException::GetErrorMessage(LPTSTR lpszError, UINT nMaxError,
+ZBOOL CZipException::GetErrorMessage(LPTSTR lpszError, UINT nMaxError,
 	UINT* )
 
 {
@@ -135,7 +139,7 @@ CZipString CZipException::GetSystemErrorDescription()
 		return sz;
 	}
 #endif
-	return GetInternalErrorDescription(errno == 0 ? generic : errno, true);
+	return GetInternalErrorDescription(errno == 0 ? genericError : errno, true);
 }
 
 CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
@@ -210,10 +214,10 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 			sz = _T("Damaged or not a zip file");
 			break;
 		case badCrc:
-			sz = _T("Crc mismatched");
+			sz = _T("Crc is mismatched");
 			break;
 		case noCallback:
-			sz = _T("No disk-spanning callback object set");
+			sz = _T("There is no spanned archive callback object set");
 			break;
 		case aborted:
 			sz = _T("Disk change aborted");
@@ -225,22 +229,28 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 			sz = _T("Action aborted safely");
 			break;
 		case nonRemovable:
-			sz = _T("The device selected for the disk spanning archive is non removable");
+			sz = _T("The device selected for the spanned archive is not removable");
 			break;
 		case tooManyVolumes:
-			sz = _T("Limit of the maximum volumes reached");
+			sz = _T("The limit of the maximum volumes reached");
 			break;
-		case tooLongFileName:
-			sz = _T("The filename of the file being added to the archive is too long");
+		case tooManyFiles:
+			sz = _T("The limit of the maximum files in an archive reached");
+			break;
+		case tooLongData:
+			sz = _T("The filename, the comment or the local or central extra field of the file added to the archive is too long");
+			break;
+		case tooBigSize:
+			sz = _T("The file size is too large to be supported");
 			break;
 		case badPassword:
-			sz = _T("Incorrect password set for the file being decrypted");
+			sz = _T("An incorrect password set for the file being decrypted");
 			break;
 		case dirWithSize:
-			sz = _T("During testing found the directory with the size greater than 0");
+			sz = _T("The directory with a non-zero size found while testing");
 			break;
-		case internal:
-			sz = _T("Internal error");
+		case internalError:
+			sz = _T("An internal error");
 			break;
 		case notRemoved:
 			sz.Format(_T("%s (%s)"), _T("Error while removing a file"), (LPCTSTR)GetSystemErrorDescription());
@@ -249,16 +259,27 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 			sz.Format(_T("%s (%s)"), _T("Error while renaming a file"), (LPCTSTR)GetSystemErrorDescription());
 			break;
 		case platfNotSupp:
-			sz = _T("Cannot create the file for the specified platform");
+			sz = _T("Cannot create a file for the specified platform");
 			break;
 		case cdirNotFound:
-			sz = _T("The central directory was not found in the archive (or you were trying to open not the last disk of a multi-disk archive)");
+			sz = _T("The central directory was not found in the archive (or you were trying to open not the last disk of a segmented archive)");
 			break;
+		case noZip64:
+			sz = _T("The Zip64 format has not been enabled for the library, but is required to open the archive");
+			break;
+		case noAES:
+			sz = _T("WinZip AES encryption has not been enabled for the library, but is required to decompress the archive");
+			break;
+#ifdef ZIP_ARCHIVE_STL
+			case outOfBounds:
+			sz = _T("The collection is empty and the bounds do not exist");
+			break;
+#endif
 		case streamEnd:
 			sz = _T("Zlib Library error (end of stream)");
 			break;
 		case errNo:
-			sz = GetInternalErrorDescription(errno != errNo ? errno : generic);
+			sz = GetInternalErrorDescription(errno != errNo ? errno : genericError);
 			break;
 		case streamError:
 			sz = _T("Zlib library error (stream error)");
@@ -274,7 +295,7 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 			break;
 		case versionError:
 			sz = _T("Zlib library error (version error)");
-			break;
+			break;		
 		default:
 			sz = bNoLoop ? _T("Unknown error") :(LPCTSTR) GetSystemErrorDescription();
 	}

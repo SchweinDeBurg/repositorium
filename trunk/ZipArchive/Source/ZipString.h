@@ -1,34 +1,37 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 // 
-// For the licensing details see the file License.txt
+// For the licensing details refer to the License.txt file.
+//
+// Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef ZIPSTRING_DOT_H
-#define ZIPSTRING_DOT_H
-#include "stdafx.h"
-#include "ZipExport.h"
-
-typedef CString CZipString;
-
 /**
-	A poiter type to point to CZipString to Collate or CollateNoCase
-	or Compare or CompareNoCase
+* \file ZipString.h
+*	Includes the CZipString class.
+*
 */
-typedef int (CZipString::*ZIPSTRINGCOMPARE)( LPCTSTR ) const;
 
 
+#ifndef ZIPARCHIVE_ZIPSTRING_DOT_H
+#define ZIPARCHIVE_ZIPSTRING_DOT_H
 
-/**
-	return a pointer to the function in CZipString structure, 
-	used to compare elements depending on the arguments
-*/
-	ZIP_API ZIPSTRINGCOMPARE GetCZipStrCompFunc(bool bCaseSensitive, bool bCollate = true);
+#if _MSC_VER > 1000
+	#pragma once
+#endif
 
-#endif  /* ZIPSTRING_DOT_H */
+#include "_platform.h"
+
+#ifdef ZIP_ARCHIVE_STL
+	#include "ZipString_stl.h"
+#else
+	#include "ZipString_mfc.h"
+#endif
+
+#endif  /* ZIPARCHIVE_ZIPSTRING_DOT_H */

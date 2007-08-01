@@ -1,50 +1,52 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
-// 
+// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 // 
-// For the licensing details see the file License.txt
+// For the licensing details refer to the License.txt file.
+//
+// Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+* \file stdafx.h
+*	Contains global definitions.
+*
+*/
 
-#if !defined(AFX_STDAFX_H__926F70F4_1B34_49AA_9532_498E8D2F3495__INCLUDED_)
-#define AFX_STDAFX_H__926F70F4_1B34_49AA_9532_498E8D2F3495__INCLUDED_
+#if !defined(ZIPARCHIVE_STDAFX_DOT_H)
+#define ZIPARCHIVE_STDAFX_DOT_H
+
+#include "_features.h"
+#include "_platform.h"
 
 #if _MSC_VER > 1000
-#ifndef WINVER
-	#define WINVER 0x0400
+	#pragma once
+	#ifndef WINVER
+		#define WINVER 0x0400
+	#endif
 #endif
-#pragma once
-#endif // _MSC_VER > 1000
 
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
+// uncomment to disable compiling standard error messages into the library
+#define ZIP_ENABLE_ERROR_DESCRIPTION
 
-#if _MSC_VER < 1300 && !defined __BORLANDC__
-#define ZIPINLINE inline
+ 
+
+#if _MSC_VER < 1300 && !defined __BORLANDC__ && !defined (__GNUC__)
+	#define ZIPINLINE inline
 #else
-#define ZIPINLINE
+	#define ZIPINLINE
 #endif
 
-#if _MSC_VER >= 1300
-#define ZIP_ULONGLONG ULONGLONG
-#define ZIP_LONGLONG LONGLONG
+#ifdef ZIP_ARCHIVE_STL
+	#include "std_stl.h"
 #else
-#define ZIP_ULONGLONG DWORD
-#define ZIP_LONGLONG LONG
+	#include "std_mfc.h"
 #endif
-
-#define ZIP_ARCHIVE_MFC
-
-#ifndef VC_EXTRALEAN
-#define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
-#endif
-#include <afx.h>
-#include <afxwin.h>
 
 // force ISO/IEC 14882 conformance in for loop scope
 #if _MSC_VER < 1300
@@ -53,8 +55,31 @@
 #pragma conform(forScope, on)
 #endif	// _MSC_VER
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+#ifdef TRACE
+	#if _MSC_VER >= 1300
+		#define ZIPTRACE(f) TRACE(f,__FILE__,__LINE__)
+	#else
+		#define ZIPTRACE(f) TRACE(_T(f))
+	#endif
+#else
+	#define ZIPTRACE(f)
+	#define NOZIPTRACE
+#endif
 
-#endif // !defined(AFX_STDAFX_H__926F70F4_1B34_49AA_9532_498E8D2F3495__INCLUDED_)
+	#ifdef _ZIP_STRICT_U16
+		#define ZIP_INDEX_TYPE WORD
+		#define ZIP_PART_TYPE WORD		
+	#else
+		#define ZIP_INDEX_TYPE int
+		#define ZIP_PART_TYPE int
+	#endif	
+
+	#define ZIP_SIZE_TYPE DWORD
+	#define ZIP_ZLIB_TYPE int
+
+#define ZIP_FILE_INDEX_NOT_FOUND ZIP_INDEX_TYPE(-1)
+#define ZIP_FILE_INDEX_UNSPECIFIED ZIP_FILE_INDEX_NOT_FOUND
+#define ZIP_DISK_NUMBER_UNSPECIFIED ZIP_PART_TYPE(-1)
+
+#endif // !defined(ZIPARCHIVE_STDAFX_DOT_H)
  

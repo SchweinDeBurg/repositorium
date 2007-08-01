@@ -1,18 +1,30 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 // 
-// For the licensing details see the file License.txt
+// For the licensing details refer to the License.txt file.
+//
+// Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __ZIPBASEEXCEPTION_H__
-#define __ZIPBASEEXCEPTION_H__
+/**
+* \file ZipBaseException.h
+*	Contains a type definition of the base exception class.
+*
+*/
 
-typedef CException CZipBaseException;
+#ifndef ZIPARCHIVE_ZIPBASEEXCEPTION_DOT_H
+#define ZIPARCHIVE_ZIPBASEEXCEPTION_DOT_H
 
-#endif //__ZIPBASEEXCEPTION_H__4
+	#ifdef ZIP_ARCHIVE_STL
+		typedef std::exception CZipBaseException;
+	#else
+		typedef CException CZipBaseException;
+#endif
+
+#endif //ZIPARCHIVE_ZIPBASEEXCEPTION_DOT_H
