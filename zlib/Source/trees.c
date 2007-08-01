@@ -203,12 +203,12 @@ local void send_bits(s, value, length)
      * unused bits in value.
      */
     if (s->bi_valid > (int)Buf_size - length) {
-        s->bi_buf |= (value << s->bi_valid);
+        s->bi_buf |= ((value << s->bi_valid) & 0xFFFF);
         put_short(s, s->bi_buf);
-        s->bi_buf = (ush)value >> (Buf_size - s->bi_valid);
+        s->bi_buf = (ush)((ush)value >> (Buf_size - s->bi_valid));
         s->bi_valid += length - Buf_size;
     } else {
-        s->bi_buf |= value << s->bi_valid;
+        s->bi_buf |= (value << s->bi_valid);
         s->bi_valid += length;
     }
 }
@@ -218,12 +218,12 @@ local void send_bits(s, value, length)
 { int len = length;\
   if (s->bi_valid > (int)Buf_size - len) {\
     int val = value;\
-    s->bi_buf |= (val << s->bi_valid);\
-    put_short(s, s->bi_buf);\
-    s->bi_buf = (ush)val >> (Buf_size - s->bi_valid);\
+	s->bi_buf |= (((value) << s->bi_valid) & 0xFFFF);\
+	put_short(s, s->bi_buf);\
+    s->bi_buf = (ush)((ush)val >> (Buf_size - s->bi_valid));\
     s->bi_valid += len - Buf_size;\
   } else {\
-    s->bi_buf |= (value) << s->bi_valid;\
+    s->bi_buf |= ((value) << s->bi_valid);\
     s->bi_valid += len;\
   }\
 }
