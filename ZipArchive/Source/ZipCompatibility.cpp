@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 // 
-// For the licensing details see the file License.txt
+// For the licensing details refer to the License.txt file.
+//
+// Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -23,6 +25,7 @@
 // remark #1419: external declaration in primary source file
 #pragma warning(disable: 1419)
 #endif	// __INTEL_COMPILER
+
 
 enum iInternalAttr
 {
@@ -56,9 +59,6 @@ enum iInternalAttr
 #define UNIX_DIRECTORY_ATTRIBUTE 0x40000000
 #define UNIX_FILE_ATTRIBUTE 0x80000000
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 using namespace ZipCompatibility;
 
 typedef DWORD(*conv_func)(DWORD , bool );
@@ -172,31 +172,47 @@ ZIPINLINE bool ZipCompatibility::IsPlatformSupported(int iCode)
 		|| iCode == zcNtfs || iCode == zcOs2Hpfs;
 }
 
-
-void ZipCompatibility::FileNameUpdate(CZipFileHeader& header, bool bFromZip, bool bOemConversion)
+void ZipCompatibility::ConvertBufferToString(CZipString& szString, const CZipAutoBuffer& buffer, UINT uCodePage)
 {
-	int iSysHeader = header.GetSystemCompatibility();
-	int iCurSystem = ZipPlatform::GetSystemID();
-	if (bFromZip) 
+#ifdef _UNICODE	
+	ZipPlatform::SingleToWide(buffer, szString, uCodePage);
+#else
+	// 	iLen does not include the NULL character
+	int iLen;
+	if (uCodePage == CP_OEMCP)
 	{
-		if (iCurSystem == zcDosFat)
-			SlashBackslashChg(header.m_pszFileName, true);
-		if (iSysHeader == zcDosFat && bOemConversion)
-			ZipPlatform::AnsiOem(header.m_pszFileName, false);
+		CZipAutoBuffer buf;
+		buf = buffer;
+		ZipPlatform::AnsiOem(buf, false);		
+		iLen = buf.GetSize();
+		memcpy(szString.GetBuffer(iLen), buf.GetBuffer(), iLen);
 	}
 	else
 	{
-		if (iSysHeader == zcDosFat && bOemConversion)
-		{
-			ZipPlatform::AnsiOem(header.m_pszFileName, true);				
-		}
-		SlashBackslashChg(header.m_pszFileName, false);
+		iLen = buffer.GetSize();		
+		memcpy(szString.GetBuffer(iLen), buffer.GetBuffer(), iLen);
 	}
+	szString.ReleaseBuffer(iLen);
+#endif
 }
 
-void ZipCompatibility::SlashBackslashChg(CZipAutoBuffer& buffer, bool bReplaceSlash)
+void ZipCompatibility::ConvertStringToBuffer(LPCTSTR lpszString, CZipAutoBuffer& buffer, UINT uCodePage)
 {
-	char t1 = '\\' /*backslash*/, t2 = '/', c1, c2;
+#ifdef _UNICODE
+	ZipPlatform::WideToSingle(lpszString, buffer, uCodePage);
+#else
+	int iLen = (int)strlen(lpszString);
+	// 	iLen does not include the NULL character
+	buffer.Allocate(iLen);
+	memcpy(buffer, lpszString, (size_t)iLen);
+	if (uCodePage == CP_OEMCP)
+		ZipPlatform::AnsiOem(buffer, true);
+#endif
+}
+
+void ZipCompatibility::SlashBackslashChg(CZipString& szFileName, bool bReplaceSlash)
+{
+	TCHAR t1 = _T('\\') /*backslash*/, t2 = _T('/'), c1, c2;
 	if (bReplaceSlash)
 	{
 		c1 = t1;
@@ -207,53 +223,12 @@ void ZipCompatibility::SlashBackslashChg(CZipAutoBuffer& buffer, bool bReplaceSl
 		c1 = t2;
 		c2 = t1;
 	}
-	for (DWORD i = 0; i < buffer.GetSize(); i++)
-	{
-		if (buffer[i] == c2)
-			buffer[i] = c1;
-	}
-
+	szFileName.Replace(c2, c1);
 }
 
 
-ZIPINLINE void ZipCompatibility::ReadBytesBigEndian(void* pDestination, const char* pSource, int iCount)
-{
-	for (int i = 0; i < iCount; i++)
-		((char*)pDestination)[i] = pSource[iCount - i - 1];
-}
-
-ZIPINLINE void ZipCompatibility::ReadBytesLittleEndian(void* pDestination, const char* pSource, int iCount)
-{
-	memcpy(pDestination, pSource, iCount);
-}
-
-
-ZIPINLINE void ZipCompatibility::WriteBytesBigEndian(char* pDestination, const void* pSource, int iCount)
-{
-	for (int i = 0; i < iCount; i++)
-		pDestination[i] = ((char*)pSource)[iCount - i - 1];
-}
-
-ZIPINLINE void ZipCompatibility::WriteBytesLittleEndian(char* pDestination, const void* pSource, int iCount)
-{
-	memcpy(pDestination, pSource, iCount);
-}
-
-ZIPINLINE bool ZipCompatibility::CompareBytesBigEndian(const char* pBuffer, const void* pBytes, int iCount)
-{
-	for (int i = 0; i < iCount; i++)
-		if (pBuffer[i] != ((char*)pBytes)[iCount - i - 1])
-			return false;
-	return true;
-}
-
-ZIPINLINE bool ZipCompatibility::CompareBytesLittleEndian(const char* pBuffer, const void* pBytes, int iCount)
-{
-	return memcmp(pBuffer, pBytes, iCount) == 0;
-}
-
-ZIPINLINE bool ZipCompatibility::IsBigEndian()
-{
-	unsigned long endian = 1;
-	return (*((unsigned char *)(&endian))) == 0;
-}
+//ZIPINLINE bool ZipCompatibility::IsBigEndian()
+//{
+//	unsigned long endian = 1;
+//	return (*((unsigned char *)(&endian))) == 0;
+//}

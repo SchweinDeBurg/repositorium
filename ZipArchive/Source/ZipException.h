@@ -1,36 +1,37 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2006 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 // 
-// For the licensing details see the file License.txt
+// For the licensing details refer to the License.txt file.
+//
+// Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipException.h
-* Interface for the CZipException class.
+* Includes the CZipException class.
 *
 */
 
-
-#if !defined(AFX_ZIPEXCEPTION_H__E3546921_D728_11D3_B7C7_E77339672847__INCLUDED_)
-#define AFX_ZIPEXCEPTION_H__E3546921_D728_11D3_B7C7_E77339672847__INCLUDED_
+#if !defined(ZIPARCHIVE_ZIPEXCEPTION_DOT_H)
+#define ZIPARCHIVE_ZIPEXCEPTION_DOT_H
 
 #if _MSC_VER > 1000
 #pragma once
 #pragma warning( push )
 #pragma warning (disable:4702) // disable "Unreachable code" warning in Throw function in the Release mode
-#endif // _MSC_VER > 1000
+#endif
 
 
 #include "ZipString.h"
 #include "ZipBaseException.h"
 #include "ZipExport.h"
-
+ 
 #if defined(__INTEL_COMPILER)
 // remark #271: trailing comma is nonstandard
 #pragma warning(disable: 271)
@@ -38,104 +39,101 @@
 #pragma warning(disable: 909)
 #endif	// __INTEL_COMPILER
 
-#define ZIP_ENABLE_ERROR_DESCRIPTION
- 
 /**
-	A class representing exceptions specific to the ZipArchive library.
-	Library exception class derived in the MFC version from \c CException 
-	and in non-MFC version from \c std::exception.	
+	Represents exceptions specific to the ZipArchive Library.
+
+	\see
+		<a href="kb">0610222049</a>
 */
 class ZIP_API CZipException : public CZipBaseException
 {
 public:
 
-/**
-	\param	iCause
-		error cause (takes one of the #ZipErrors enumeration codes)
-	\param	lpszZipName
-		the name of the file where the error occurred (if applicable)
-*/
-		CZipException(int iCause = generic, LPCTSTR lpszZipName = NULL);
+	/**
+		Throws an exception.
+		Whether it throws an object or a pointer to it, depends 
+		on the current version (STL or MFC correspondingly).
 
-		CZipException(CZipException& e)
-		{
-			m_szFileName = e.m_szFileName;
-			m_iCause = e.m_iCause;
-		}
+		\param	iCause
+			The error cause. Takes one of the #ZipErrors values.
 
-/**
-		Throw an exception.
-		Throw CZipException* in the MFC version of the library
-		(the object must be deleted with Delete() method)
-		and CZipException in other versions.
-		
-	The arguments are the same as in CZipException().
+		\param	lpszZipName
+			The name of the file where the error occurred (if applicable).
+			May be \c NULL.
 
-	\param	iZipError
-	\param	lpszZipName
-	
-	\see CZipException()
-	
-*/
-
-	static void Throw(int iZipError = CZipException::generic, LPCTSTR lpszZipName = NULL)
+		\see
+			<a href="kb">0610222049</a>
+	*/
+	static void Throw(int iCause = CZipException::genericError, LPCTSTR lpszZipName = NULL)
 	{
-		#ifdef _MFC_VER
-			throw new CZipException(iZipError, lpszZipName);
+		#ifdef ZIP_ARCHIVE_MFC
+			throw new CZipException(iCause, lpszZipName);
 		#else
-			CZipException e(iZipError, lpszZipName);
+			CZipException e(iCause, lpszZipName);
 			throw e;
 		#endif
 	}
 
 	 
-/**
-	Convert a zlib library error code to a \link #ZipErrors CZipException error code \endlink
-	\param	iZlibError
-		zlib library error code
-	\return	\link #ZipErrors CZipException error code \endlink
-*/
+	/**
+		Converts a Zlib library error code to one of the #ZipErrors values.
 
+		\param	iZlibError
+			The Zlib library error code.
+
+		\return
+			One of the #ZipErrors values corresponding to \a iZlibError.
+	*/
 	static int ZlibErrToZip(int iZlibError);
 
+	/**
+		Initializes a new instance of the CZipException class.
+
+		\param	iCause
+			The error cause. Takes one of the #ZipErrors values.
+
+		\param	lpszZipName
+			The name of the file where the error occurred (if applicable).
+			May be \c NULL.
+	*/
+	CZipException(int iCause = genericError, LPCTSTR lpszZipName = NULL);
+
+	CZipException(CZipException& e)
+	{
+		m_szFileName = e.m_szFileName;
+		m_iCause = e.m_iCause;
+	}
 
 #ifdef ZIP_ENABLE_ERROR_DESCRIPTION
 
     /**
-       Return the error description.
-	   \note You need to have defined ZIP_ENABLE_ERROR_DESCRIPTION
-	   (in file ZipException.h); undefine this value if you don't want to 
-	   store the messages in the library.
-       
-       
+		Gets the error description.
+
+		\return 
+			The error description.
      */
 	CZipString GetErrorDescription();
 
 	
     /**
-	Return the description of the error based on system variables
-	(this function is provided only for compatibility with MFC \c CException::GetErrorMessage)
+		Gets the error description. This method is provided for compatibility with the MFC version (\c CException::GetErrorMessage).
 
-    \param lpszError 
-		a pointer to a buffer that will receive the error message
-		if \c NULL
+		\param lpszError 
+			The buffer to receive the error message.
 
-	\param nMaxError
-		the maximum number of characters the buffer can hold, including the NULL terminator
+		\param nMaxError
+			The maximum number of characters \a lpszError can hold, 
+			including the ending \c NULL character.
 
+		\return 
+			\c TRUE if the error string was successfully copied to \a lpszError; \c FALSE otherwise.
 
-     \return 
-			\c TRUE if the error string is not empty
-	\note 
-	- The function will not copy more than \c nMaxError – 1 characters 
-		to the buffer, and it always adds a trailing null to end the string;
-		if the buffer is too small, the error message will be truncated.
-	- You need to have defined ZIP_ENABLE_ERROR_DESCRIPTION
-		(in file ZipException.h); undefine this value if you don't want to 
-		store the messages in the library.
-
+		\note 
+			The method will not copy more than \c nMaxError - 1 characters 
+			to the buffer, and it always appends a \c NULL character.
+			If \a lpszError is too small, the error message will be truncated.
      */
-	BOOL GetErrorMessage(LPTSTR lpszError, UINT nMaxError, UINT* = NULL);
+	ZBOOL GetErrorMessage(LPTSTR lpszError, UINT nMaxError, UINT* = NULL);
 
 #endif //ZIP_ENABLE_ERROR_DESCRIPTION
 
@@ -145,88 +143,93 @@ public:
 	CZipString m_szFileName;
 
 	/**
-		The codes of errors thrown by the ZipArchive library
+		The codes of errors thrown by the ZipArchive Library.
 	*/
 	enum ZipErrors
 	{
-		noError,			///< no error 
+		noError,			///< No error.
 // 			 1 - 42 reserved for errno (from STL) values - used only in non-MFC versions
 // 			 43 - 99 reserved
-		generic		= 100,	///< unknown error
-		badZipFile,			///< damaged or not a zip file
-		badCrc,				///< crc mismatched
-		noCallback,			///< no disk-spanning callback object set
-		aborted,			///< callback object's method Callback returned \c false while disk change in the disk-spanning archive
-		abortedAction,		///< callback object's method Callback returned \c false in CZipArchive class members: AddNewFile, ExtractFile, TestFile, DeleteFile or DeleteFiles 
-		abortedSafely,		///< the same as above, you may be sure that the operation was successfully completed before or it didn't cause any damage in the archive (break when counting before deleting files; see CZipArchive::cbDeleteCnt)
-		nonRemovable,		///< the disk selected for pkzipSpan archive is non removable
-		tooManyVolumes,		///< limit of the maximum volumes reached (999)
-		tooLongFileName,	///< the filename of the file added to the archive is too long
-		badPassword,		///< incorrect password set for the file being decrypted
-		dirWithSize,		///< during testing: found the directory with the size greater than 0
-		internal,			///< internal error
-		notRemoved,			///< error while removing a file (under Windows call GetLastError() to find out more)
-		notRenamed,			///< error while renaming a file (under Windows call GetLastError() to find out more)
-		platfNotSupp,		///< the platform that the zip file is being created for is not supported
-		cdirNotFound,		///< the central directory was not found in the archive (it is thrown also when the last disk of multi-disk archive is not in the drive when opening the archive)
-		streamEnd	= 500,	///< zlib library error
-		needDict,			///< zlib library error
-		errNo,				///< zlib library error
-		streamError,		///< zlib library error
-		dataError,			///< zlib library error
-		memError,			///< zlib library error thrown by CZipMemFile as well
-		bufError,			///< zlib library error
-		versionError,		///< zlib library error
+		genericError		= 100,	///< An unknown error.
+		badZipFile,			///< Damaged or not a zip file.
+		badCrc,				///< Crc is mismatched.
+		noCallback,			///< There is no spanned archive callback object set.
+		aborted,			///< The disk change callback method returned \c false.
+		abortedAction,		///< The action callback method returned \c false.
+		abortedSafely,		///< The action callback method returned \c false, but the data is not corrupted.
+		nonRemovable,		///< The device selected for the spanned archive is not removable.
+		tooManyVolumes,		///< The limit of the maximum volumes reached.
+		tooManyFiles,		///< The limit of the maximum files in an archive reached.
+		tooLongData,		///< The filename, the comment or the local or central extra field of the file added to the archive is too long.
+		tooBigSize,			///< The file size is too large to be supported.
+		badPassword,		///< An incorrect password set for the file being decrypted.
+		dirWithSize,		///< The directory with a non-zero size found while testing.
+		internalError,		///< An internal error.
+		notRemoved,			///< Error while removing a file (under Windows call \c GetLastError() to find out more).
+		notRenamed,			///< Error while renaming a file (under Windows call \c GetLastError() to find out more).
+		platfNotSupp,		///< Cannot create a file for the specified platform.
+		cdirNotFound,		///< The central directory was not found in the archive (or you were trying to open not the last disk of a segmented archive).
+		noZip64,			///< The Zip64 format has not been enabled for the library, but is required to open the archive.
+		noAES,				///< WinZip AES encryption has not been enabled for the library, but is required to decompress the archive.
+#ifdef ZIP_ARCHIVE_STL
+		outOfBounds,		///< The collection is empty and the bounds do not exist.
+#endif
+		streamEnd	= 500,	///< Zlib library error.
+		needDict,			///< Zlib library error.
+		errNo,				///< Zlib library error.
+		streamError,		///< Zlib library error.
+		dataError,			///< Zlib library error.
+		memError,			///< Zlib library or CZipMemFile error.
+		bufError,			///< Zlib library error.
+		versionError,		///< Zlib library error.
 	};
 
-
-
 	/**
-		A cause of the error - takes one of the #ZipErrors enumeration codes.
+		The error code - takes one of the #ZipErrors values.
 	*/
 	int m_iCause;
 
-	
 	virtual ~CZipException() throw();
+
 protected:
 
 #ifdef ZIP_ENABLE_ERROR_DESCRIPTION
 
+	/**
+		Gets the error description.
 
-    /**
-       Return the error description 
-       
-       \param iCause : error number
-	   \param bNoLoop: if \c true tells not to search for en error description,
-	   it the error is generic
-       
-       \return 
-     */
+		\param	iCause
+			The error cause. Takes one of the #ZipErrors values.
+
+		\param bNoLoop
+			If \c true, does not search for en error description, it the error code is #genericError.
+
+		\return 
+			The error description.
+	 */
 	CZipString GetInternalErrorDescription(int iCause, bool bNoLoop = false);
 
 
-    /**
-       Return the description of the error based on system variables
-       
-      
-       \return 
-     */
+	/**
+	   Gets the error description based on system variables.
+	   
+	  \return 
+			The error description.
+	 */
 	CZipString GetSystemErrorDescription();
 
 
 #endif //ZIP_ENABLE_ERROR_DESCRIPTION
 
-#if defined(__INTEL_COMPILER)
-#pragma warning(default: 271 909)
-#endif	// __INTEL_COMPILER
-
-#ifdef _MFC_VER
+#if defined _MFC_VER && defined ZIP_ARCHIVE_MFC
 	DECLARE_DYNAMIC(CZipException)
-	#pragma warning( pop )
 #endif
 };
 
+#if _MSC_VER > 1000
+	#pragma warning( pop )
+#endif
 
-#endif // !defined(AFX_ZIPEXCEPTION_H__E3546921_D728_11D3_B7C7_E77339672847__INCLUDED_)
+#endif // !defined(ZIPARCHIVE_ZIPEXCEPTION_DOT_H)
 
 
