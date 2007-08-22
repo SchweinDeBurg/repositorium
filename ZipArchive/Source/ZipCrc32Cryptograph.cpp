@@ -57,7 +57,7 @@ void CZipCrc32Cryptograph::InitEncode(CZipAutoBuffer& password, CZipFileHeader& 
 	CryptEncode(c);
 	buf[ZIPARCHIVE_ENCR_HEADER_LEN - 1] = c;
 	storage.Write(buf, ZIPARCHIVE_ENCR_HEADER_LEN, false);
-	currentFile.m_uComprSize = ZIPARCHIVE_ENCR_HEADER_LEN;
+	currentFile.m_uComprSize += ZIPARCHIVE_ENCR_HEADER_LEN;
 }
 
 void CZipCrc32Cryptograph::CryptInitKeys(CZipAutoBuffer& password)

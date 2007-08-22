@@ -58,7 +58,22 @@ public:
 		for (DWORD i = 0; i < uSize; i++)
 			CryptEncode(pBuffer[i]);
 	}
-	static DWORD GetEncryptedInfoSize() {return ZIPARCHIVE_ENCR_HEADER_LEN;}
+
+	bool CanHandle(int iEncryptionMethod)
+	{
+		return iEncryptionMethod == CZipCryptograph::encStandard;
+	}
+
+	static DWORD GetEncryptedInfoSizeBeforeData()
+	{
+		return ZIPARCHIVE_ENCR_HEADER_LEN;
+	}
+
+	static DWORD GetEncryptedInfoSizeAfterData()
+	{
+		return 0;
+	}
+
 	static const DWORD* GetCRCTable()
 	{
 			return zarch_get_crc_table();

@@ -25,6 +25,9 @@
 	#pragma once
 	#pragma warning( push )
 	#pragma warning (disable : 4100) // unreferenced formal parameter
+	#if defined ZIP_HAS_DLL
+		#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
+	#endif
 #endif
 
 #include "ZipString.h"

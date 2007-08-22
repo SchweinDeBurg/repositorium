@@ -199,6 +199,20 @@ public:
 	}
 
 	/**
+		Returns the value indicating whether the extra data record with the given ID is present in the extra field.
+
+		\param headerID
+			The ID of the extra data to check.
+
+		\return 
+			\c true, if the extra data record with the given ID is present in the extra field; \c false otherwise.
+	*/
+	bool HasHeader(WORD headerID)
+	{
+		return Lookup(headerID) != NULL;
+	}
+
+	/**
 		Lookups the extra field for the extra data record with the given ID.
 
 		\param headerID
@@ -225,6 +239,7 @@ protected:
 	{
 		for (int i = 0; i < GetCount(); i++)
 			delete (GetAt(i));
+		m_aData.RemoveAll();
 	}	
 
 	/**

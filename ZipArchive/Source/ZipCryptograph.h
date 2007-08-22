@@ -50,7 +50,7 @@ public:
 	*/
 	enum EncryptionMethod
 	{
-		encStandard,		///< The traditional zip encrtypion.
+		encStandard,		///< The traditional zip encryption.
 		encWinZipAes128,	///< WinZip AES 128-bit encryption.
 		encWinZipAes192,	///< WinZip AES 192-bit encryption.
 		encWinZipAes256,	///< WinZip AES 256-bit encryption.
@@ -82,6 +82,42 @@ public:
 	{
 		return iEncryptionMethod == encWinZipAes128 || iEncryptionMethod == encWinZipAes192 || iEncryptionMethod == encWinZipAes256;
 	}
+
+	/**
+		Returns the total size of the extra data that is added to the compression stream during encryption with the given method.
+
+		\param iEncryptionMethod
+			The encryption method. Can be one of #EncryptionMethod values.
+
+		\return
+			The total size of extra data for the given encryption method.
+
+	*/
+	static DWORD GetEncryptedInfoSize(int iEncryptionMethod);
+
+	/**
+		Returns the size of the extra data that is added before the compression stream during encryption with the given method.
+
+		\param iEncryptionMethod
+			The encryption method. Can be one of #EncryptionMethod values.
+
+		\return
+			The size of extra data at the beginning of the compression stream for the given encryption method.
+
+	*/
+	static DWORD GetEncryptedInfoSizeBeforeData(int iEncryptionMethod);
+
+	/**
+		Returns the size of the extra data that is added after the compression stream during encryption with the given method.
+
+		\param iEncryptionMethod
+			The encryption method. Can be one of #EncryptionMethod values.
+
+		\return
+			The size of extra data at the end of the compression stream for the given encryption method.
+
+	*/
+	static DWORD GetEncryptedInfoSizeAfterData(int iEncryptionMethod);
 
 	/**
 		Determines if the given encryption method is supported by the current compilation of the ZipArchive Library.
@@ -171,6 +207,20 @@ public:
 			The current CZipStorage.
 	 */
 	virtual void FinishEncode(CZipFileHeader& currentFile, CZipStorage& storage){};
+
+	/**
+		Returns the value indicating whether the current compressor can handle the given encryption method.
+
+		\param iEncryptionMethod
+			The encryption method to test. Can be one of #EncryptionMethod values.
+
+		\return 
+			\c true, if the current compressor can handle the given encryption method; \c false otherwise.
+	*/
+	virtual bool CanHandle(int iEncryptionMethod)
+	{
+		return false;
+	}
 	virtual ~CZipCryptograph(){}
 };
 

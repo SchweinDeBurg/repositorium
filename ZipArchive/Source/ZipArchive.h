@@ -36,6 +36,7 @@
 	#pragma warning( disable : 4275 ) // non dll-interface class used as base for dll-interface
 #endif
 
+#include "_features.h"
 #include "ZipException.h"
 #include "ZipAutoBuffer.h"
 #include "ZipCentralDir.h"	
@@ -222,7 +223,7 @@ public:
 		\see
 			SetEncryptionMethod
 		\see 
-			EncryptNextFile
+			WillEncryptNextFile
 	*/
 	bool SetPassword(LPCTSTR lpszPassword = NULL);	
 
@@ -251,8 +252,8 @@ public:
 			SetPassword
 		\see
 			GetPassword
-	*/
-	bool EncryptNextFile() const
+	*/	
+	bool WillEncryptNextFile() const
 	{
 		return m_pszPassword.GetSize() != 0 && m_iEncryptionMethod != CZipCryptograph::encNone;
 	}
@@ -280,20 +281,21 @@ public:
 		\see
 			GetEncryptionMethod	
 		\see 
-			EncryptNextFile
+			WillEncryptNextFile
 	 */
 	bool SetEncryptionMethod(int iEncryptionMethod = CZipCryptograph::encStandard);
 
 
 	/**	
 		Gets the current encryption method.
+
 		\returns
 			One of CZipCryptograph::EncryptionMethod values.
 
 		\see
 			SetEncryptionMethod		
 		\see 
-			EncryptNextFile
+			WillEncryptNextFile
 	 */
 	int GetEncryptionMethod() const
 	{
@@ -301,11 +303,112 @@ public:
 	}
 
 	/**
+		Encrypts an existing file with a given index using the current encryption method.
+
+		\param uIndex
+			The index of the file to encrypt.
+
+		\return 
+			\c false, if the file could not be encrypted; \c true otherwise.
+
+		\note
+			- The method will not encrypt a file, if it already is encrypted.
+			- Calls the CZipActionCallback::cbEncryptPrepare, CZipActionCallback::cbMultiEncrypt, 
+			CZipActionCallback::cbEncryptMoveData and CZipActionCallback::cbEncrypt callbacks.
+			- Throws exceptions.
+
+		\see
+			<a href="kb">0610201627|existing</a>
+		\see
+			SetEncryptionMethod
+		\see
+			SetPassword
+		\see 
+			WillEncryptNextFile
+		\see
+			EncryptFiles
+		\see
+			EncryptAllFiles		
+			
+	*/
+	bool EncryptFile(ZIP_INDEX_TYPE uIndex)
+	{
+		CZipIndexesArray aIndexes;
+		aIndexes.Add(uIndex);
+		return EncryptFilesInternal(&aIndexes);
+	}
+	
+	/**
+		Encrypts existing files with given indexes using the current encryption method.
+
+		\param aIndexes
+			The indexes of files to encrypt.
+
+		\return 
+			\c false, if the files could not be encrypted; \c true otherwise.
+
+		\note
+			- The method will not encrypt files that are already encrypted.
+			- Calls the CZipActionCallback::cbEncryptPrepare, CZipActionCallback::cbMultiEncrypt, 
+			CZipActionCallback::cbEncryptMoveData and CZipActionCallback::cbEncrypt callbacks.
+			- Throws exceptions.
+
+		\see
+			<a href="kb">0610201627|existing</a>
+		\see
+			SetEncryptionMethod
+		\see
+			SetPassword
+		\see 
+			WillEncryptNextFile
+		\see
+			EncryptFile
+		\see
+			EncryptAllFiles		
+			
+	*/
+	bool EncryptFiles(CZipIndexesArray &aIndexes)
+	{
+		return EncryptFilesInternal(&aIndexes);
+	}
+
+	/**
+		Encrypts all existing files in the archive using the current encryption method.
+
+		\return 
+			\c false, if the files could not be encrypted; \c true otherwise.
+
+		\note
+			- The method will not encrypt files that are already encrypted.
+			- Calls the CZipActionCallback::cbEncryptPrepare, CZipActionCallback::cbMultiEncrypt, 
+			CZipActionCallback::cbEncryptMoveData and CZipActionCallback::cbEncrypt callbacks.
+			- Throws exceptions.
+
+		\see
+			<a href="kb">0610201627|existing</a>
+		\see
+			SetEncryptionMethod
+		\see
+			SetPassword
+		\see 
+			WillEncryptNextFile
+		\see
+			EncryptFile
+		\see
+			EncryptFiles		
+			
+	*/
+	bool EncryptAllFiles()
+	{
+		return EncryptFilesInternal(NULL);
+	}
+
+	/**
 		Sets the compression method used when compressing file. If affects the files that are  
 		added to the archive after calling this method.
 
 		\param uCompressionMethod
-			The compression method to use. The only supported method is currently CZipCompressor::methodDeflate.
+			The compression method to use. Valid values are CZipCompressor::methodDeflate and CZipCompressor::methodBzip2.
 			To store files (without compression), use the CZipCompressor::levelStore compression level 
 			when adding files to the archive.
 
@@ -453,12 +556,11 @@ public:
 	enum OpenMode
 	{
 		zipOpen,			///< Opens an existing archive.
-		zipOpenReadOnly,	///< Opens an existing archive as a read only file. This mode is intended to use in a self extract code or opening archive on a storage without the write access (e.g. CD-ROMS). If you try to modify the archive in this mode, an exception will be thrown.
+		zipOpenReadOnly,	///< Opens an existing archive as a read only file. This mode is intended to use in a self extract code, when opening an archive on a storage without the write access (e.g. CD-ROMS) or when sharing the central directory (#OpenFrom). If you try to modify the archive in this mode, an exception will be thrown.
 		zipCreate,			///< Creates a new archive.
-		zipCreateSegm		///< Creates a segmented archive.
+		zipCreateSegm,		///< Creates a segmented archive.
+		zipCreateAppend		///< Creates a new archive, but allows appending the archive to an existing file (which can be for example a self-extracting stub).
 	};
-
-
 
 	/**
 		Opens or creates a zip archive.
@@ -466,12 +568,12 @@ public:
 		The archive creation mode depends on the \a iMode and \a uVolumesSize values:
 		- If \a iMode == #zipCreateSegm and \a uVolumeSize is \c ZIP_AUTODETECT_VOLUME_SIZE then creates a spanned archive.
 		- If \a iMode == #zipCreateSegm and \a uVolumeSize > 0 then creates a split archive.
-		- If \a iMode == #zipOpen and the existing archive is a segmented archive
+		- If \a iMode == #zipOpen or \a iMode == #zipOpenReadOnly and the existing archive is a segmented archive
 			then CZipStorage::spannedArchive mode is assumed if the archive is on a removable device
 			or CZipStorage::splitArchive otherwise. If you want to open a split archive on a removable device, 
 			set \a uVolumeSize to a value different from 0 (under Linux, the device is always assumed to be removable due to lack of 
 			implementation of the ZipPlatform::IsDriveRemovable method).
-		- If \a iMode == #zipCreate then \a uVolumeSize doesn't matter.
+		- If \a iMode == #zipCreate or a \a iMode == #zipCreateAppend then \a uVolumeSize doesn't matter.
 
 		\param	szPathName
 			The path to the archive.
@@ -483,6 +585,9 @@ public:
 			The volume size in a split archive. The size of the volume may be from 1 to 4,294,967,295.
 		The bigger this value is - the faster is creation and extraction of segmented archives,
 		because there is no volume changes.
+
+		\return
+			\c true, if the archive was opened successfully; \c false, if the archive was already opened before.
 		
 		\note
 			Throws exceptions.
@@ -498,7 +603,7 @@ public:
 		\see
 			GetSegmMode
 	*/
-	void Open(LPCTSTR szPathName, int iMode = zipOpen, ZIP_SIZE_TYPE uVolumeSize = 0);
+	bool Open(LPCTSTR szPathName, int iMode = zipOpen, ZIP_SIZE_TYPE uVolumeSize = 0);
 
 
 	/**
@@ -509,7 +614,13 @@ public:
 			\c CZipAbstractFile object to store the archive data.
 
 		\param	iMode
-			The open mode. The following values are valid:  #zipOpen, #zipOpenReadOnly, #zipCreate.
+			The open mode. The following values are valid:  #zipOpen, #zipOpenReadOnly, #zipCreate, #zipCreateAppend.
+			If you use #zipCreate, the contents of the memory file are cleared. Use #zipCreateAppend, if you want to 
+			append the archive at the end of the data contained in the memory file.
+
+		\return
+			\c true, if the archive was opened successfully; \c false, if the archive was already opened before or an 
+			invalid open mode was specified.
 
 		\note
 			Throws exceptions.
@@ -518,8 +629,33 @@ public:
 			<a href="kb">0610231924</a>
 		\see
 			Open(LPCTSTR, int, ZIP_SIZE_TYPE);		
+	*/	
+	bool Open(CZipAbstractFile& af, int iMode = zipOpen);
+
+	/**
+		Opens the archive from the already opened archive. Both archives will share the same central directory.
+		The \a zip archive must be opened in read-only mode and the newly opened archive will open as read-only as well.
+
+		\param zip
+			The archive that provides the reference to the central directory. It must be a read-only archive and it cannot be in memory.
+
+		\return 
+			\c true, if the new archive was successfully opened; \c false otherwise.
+
+		\note
+			If you use this method in a multithreaded environment, 
+			make sure that \c ZIP_ARCHIVE_USE_LOCKING is defined in the \e _features.h file. Also make sure, that \a zip stays open until 
+			this method returns.
+		\note
+			Throws exceptions.
+
+		\see 
+			<a href="kb">0610241003|thread</a>
+		\see 
+			zipOpenReadOnly
+
 	*/
-	void Open(CZipAbstractFile& af, int iMode = zipOpen);
+	bool OpenFrom(CZipArchive& zip);
 
 	/**
 		Sets the path fragment to be removed from the beginning of the full path when adding or extracting a file.
@@ -532,7 +668,8 @@ public:
 			The string that you want to be removed from the beginning of the path of the file
 			in the archive. Set it to \c NULL stop removing the path beginning.
 
-		\note Set the case-sensitivity with the #SetCaseSensitivity method.
+		\note
+			Set the case-sensitivity with the #SetCaseSensitivity method.
 
 		\see
 			AddNewFile 
@@ -617,7 +754,7 @@ public:
 			See CZipAddNewFileInfo for more information.
 
 		\return	
-			If \c false then the file was not added (in this case, you can still try to add other files).
+			If \c false then the file was not added (in this case, you can still try to add other files); \c true otherwise.
 		
 		\note 
 			- If you abort the operation from a callback object, while adding a file in a not segmented archive, the added data will be removed from the archive.
@@ -705,6 +842,12 @@ public:
 		\param nBufSize
 			The size of the buffer used while file operations.
 
+		\return	
+			If \c false then some files were probably not added (in this case, you can still try to add other files); \c true otherwise.
+
+		\note
+			Throws exceptions.
+
 		\see
 			<a href="kb">0610231446|filters</a>
 		\see
@@ -760,6 +903,12 @@ public:
 
 		\param nBufSize
 			The size of the buffer used while file operations.
+
+		\return	
+			If \c false then some files were probably not added (in this case, you can still try to add other files); \c true otherwise.
+
+		\note
+			Throws exceptions.
 
 		\see
 			name: <a href="kb">0610242025|wildcards</a>
@@ -924,6 +1073,9 @@ public:
 		a file inside either of archives is opened, \a zip archive is segmented or the current
 		archive is an existing segmented archive.
 
+		\note 
+			This method will encrypt data, if an encryption method and a password are set and the file is not already encrypted.
+
 		\note
 			Throws exceptions. When an exception is thrown, you may need to call #CloseNewFile with 
 			\a bAfterException set to \c true, to make the archive reusable.
@@ -945,6 +1097,10 @@ public:
 			SetCallback
 		\see
 			SetAdvanced 
+		\see 
+			SetEncryptionMethod
+		\see 
+			SetPassword
 	*/
 	bool GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewFileName = NULL, ZIP_INDEX_TYPE uReplaceIndex = ZIP_FILE_INDEX_UNSPECIFIED, bool bKeepSystComp = false)
 	{				
@@ -987,6 +1143,9 @@ public:
 		a file inside either of archives is opened, \a zip archive is segmented or the current
 		archive is an existing segmented archive.
 
+		\note 
+			This method will encrypt data, if an encryption method and a password are set and the file is not already encrypted.
+
 		\note
 			Throws exceptions. When an exception is thrown, you may need to call #CloseNewFile with 
 			\a bAfterException set to \c true, to make the archive reusable.
@@ -1008,6 +1167,10 @@ public:
 			SetCallback
 		\see
 			SetAdvanced 
+		\see 
+			SetEncryptionMethod
+		\see 
+			SetPassword
 	*/
 	bool GetFromArchive(CZipArchive& zip, CZipIndexesArray &aIndexes, bool bKeepSystComp = false);
 	
@@ -1022,7 +1185,7 @@ public:
 		\param	aNames
 			An array of filenames to acquire from the \a zip archive.
 
-	\param bKeepSystComp
+		\param bKeepSystComp
 			If \c false, then the system compatibility of the file from the \a zip archive
 			is converted to the current archive system compatibility, if they differ. Otherwise
 			the source system compatibility is copied.
@@ -1031,6 +1194,9 @@ public:
 			\c false, if the operation could not be performed (either of archives is closed, 
 		a file inside either of archives is opened, \a zip archive is segmented or the current
 		archive is an existing segmented archive.
+
+		\note 
+			This method will encrypt data, if an encryption method and a password are set and the file is not already encrypted.
 
 		\note
 			Throws exceptions. When an exception is thrown, you may need to call #CloseNewFile with 
@@ -1055,7 +1221,11 @@ public:
 		\see
 			SetCallback
 		\see
-			SetAdvanced 
+			SetAdvanced
+		\see
+			SetEncryptionMethod
+		\see 
+			SetPassword
 	*/
 	
 	bool GetFromArchive(CZipArchive& zip, CZipStringArray &aNames, bool bKeepSystComp = false)
@@ -1063,7 +1233,6 @@ public:
 		CZipIndexesArray indexes;
 		zip.GetIndexes(aNames, indexes);
 		return GetFromArchive(zip, indexes, bKeepSystComp);
-		
 	}
 
 	/**
@@ -1184,7 +1353,8 @@ public:
 			The index of the file to open.
 
 		\return
-			\c true, if successful; \c false otherwise.
+			\c true, if successful; \c false otherwise. This method will also return \c false, if the compression method
+			of the file is not supported by the ZipArchive Library.
 
 		\throws CZipException
 			with the CZipException::badPassword code, if the file is encrypted 
@@ -1381,6 +1551,101 @@ public:
 			EnableFindFast
 	*/
 	bool RemoveFiles(const CZipStringArray& aNames);
+
+	/**
+		Shifts data inside the archive to make an empty space at the beginning of the archive. 
+		Into this empty space, you can copy for example a self-extracting stub. To perform shifting, 
+		the archive must be opened and no file must be opened for compression or extraction. This method 
+		will not work with segmented archives or archives, for which #GetBytesBeforeZip method returns value
+		different from \c 0.
+
+		\param uOffset
+			The number of bytes to shift the archive data by.
+
+		\return
+			\c true, if data was shifted successfully; \c false otherwise.
+			
+		\note
+			- Calls the CZipActionCallback::cbMoveData callback.
+			- Throws exceptions.
+
+		\see
+			<a href="kb">0610242241|convert</a>
+		\see
+			PrependData(CZipAbstractFile&, LPCTSTR)
+		\see
+			PrependData(LPCTSTR, LPCTSTR)
+	*/
+	bool ShiftData(ZIP_SIZE_TYPE uOffset);
+
+	/**
+		Inserts data contained in the file pointed by the \a lpszFilePath path before the archive data.
+		You can use this method for example to convert the archive into a self-extracting archive (store 
+		a self-extracting stub inside \a lpszFilePath file).
+		To perform prepending, the archive must be opened and no file must be opened for compression or extraction. This method 
+		will not work with segmented archives or archives, for which #GetBytesBeforeZip method returns value
+		different from \c 0.
+
+		\param lpszFilePath
+			The path of the file to prepend to the archive.
+
+		\param lpszNewExt
+			If it is not \c NULL, then the extension of the archive is changed to this value after prepending data.
+			Under linux additionally, this method sets executable permission for the owner after prepeding. If renaming is performed,
+			then the archive is closed before it. If this value is \c NULL, the no renaming is performed and the archive stays opened.
+
+		\return
+			\c true, if data from \a lpszFilePath file was prepended (and optionally renamed) successfully; \c false otherwise.
+			
+		\note
+			- Calls the CZipActionCallback::cbMoveData callback.
+			- Throws exceptions.
+
+		\see
+			<a href="kb">0610242241|convert</a>
+		\see
+			ShiftData
+		\see
+			PrependData(CZipAbstractFile&, LPCTSTR)
+	*/
+	bool PrependData(LPCTSTR lpszFilePath, LPCTSTR lpszNewExt = 
+#ifdef ZIP_ARCHIVE_WIN
+		_T("exe")
+#else
+		_T("")
+#endif
+		);
+
+	/**
+		Inserts data contained in the \a file before the archive data. You can use this method for example to convert
+		the archive into a self-extracting archive (store a self-extracting stub inside \a file).
+		To perform prepending, the archive must be opened and no file must be opened for compression or extraction. This method 
+		will not work with segmented archives or archives, for which #GetBytesBeforeZip method returns value
+		different from \c 0.
+
+		\param file
+			The file containing data to insert before the archive data. The file should be opened.
+
+		\param lpszNewExt
+			If it is not \c NULL, then the extension of the archive is changed to this value after prepending data.
+			Under linux additionally, this method sets executable permission for the owner after prepeding. If renaming is performed,
+			then the archive is closed before it. If this value is \c NULL, the no renaming is performed and the archive stays opened
+
+		\return
+			\c true, if data from \a file was prepended successfully; \c false otherwise.
+			
+		\note
+			- Calls the CZipActionCallback::cbMoveData callback.
+			- Throws exceptions.
+
+		\see
+			<a href="kb">0610242241|convert</a>
+		\see
+			ShiftData
+		\see
+			PrependData(LPCTSTR, LPCTSTR)
+	*/
+	bool PrependData(CZipAbstractFile& file, LPCTSTR lpszNewExt = NULL);
 
 	/**
 		Sets the global comment in the archive.
@@ -1595,8 +1860,8 @@ public:
 
 	/**
 		Gets the information about the file with the given index.
-		This method provides a direct access to the file data. You should not modify 
-		the returned object apart from the extra fields in the central directory (CZipFileHeader::m_aCentralExtraData).
+		This method provides a direct access to the file data. You should normally not modify 
+		the returned object apart from the reasons given in <a href="kb">0610242128|file</a>.
 
 		\param	uIndex
 			A zero-based index of the file to get the information about.
@@ -1647,8 +1912,8 @@ public:
 
 	/**
 		Gets the information about the file with the given index.
-		This method provides a direct access to the file data. You should not modify 
-		the returned object apart from the extra fields in the central directory (CZipFileHeader::m_aCentralExtraData).
+		This method provides a direct access to the file data. You should normally not modify 
+		the returned object apart from the reasons given in <a href="kb">0610242128|file</a>.
 
 		\param	uIndex
 			A zero-based index of the file to get the information about.
@@ -1715,20 +1980,39 @@ public:
 		\see
 			<a href="kb">0610242128|file</a>
 	*/
-	ZIP_INDEX_TYPE GetCount(bool bOnlyFiles = false)const 
+	ZIP_INDEX_TYPE GetCount(bool bOnlyFiles)
 	{
-		ZIP_INDEX_TYPE iTotalCount = (ZIP_INDEX_TYPE) m_centralDir.m_headers.GetSize();
+		if (IsClosed())
+			return 0;
+
+		ZIP_INDEX_TYPE iTotalCount = GetCount();
 		if (bOnlyFiles)
 		{
 			ZIP_INDEX_TYPE iCount = 0;
 			for (ZIP_INDEX_TYPE i = 0; i < iTotalCount; i++)
-				if (!m_centralDir.m_headers[(ZIP_ARRAY_SIZE_TYPE)i]->IsDirectory())
+			{
+				if (!m_centralDir[i]->IsDirectory())
 					iCount++;
+			}
 			return iCount;
 		}
 		else
 			return iTotalCount;
 	}
+
+	/**
+		Gets the number of files in the archive.
+
+		\return
+			The number of files in the archive. 
+			Note that under some compilation configuration this maybe an unsigned value and a signed value under other compilations.
+	*/
+	ZIP_INDEX_TYPE GetCount() const
+	{
+		return (ZIP_INDEX_TYPE) m_centralDir.GetCount();
+	}
+
+
 	/** 
 		Calculates the actual size (in bytes) currently occupied by the archive.
 
@@ -1850,7 +2134,7 @@ public:
 	{
 		if (IsClosed())
 		{
-			ZIPTRACE("%s(%i) : ZipArchive not yet opened.\n");
+			ZIPTRACE("%s(%i) : ZipArchive should be opened first.\n");
 			return;
 		}
 
@@ -1993,7 +2277,7 @@ public:
 	*/
 	void SetStringStoreSettings(const CZipStringStoreSettings& settings)
 	{
-		m_centralDir.m_stringSettings = settings;
+		m_stringSettings = settings;
 	}
 
 	/**
@@ -2021,7 +2305,7 @@ public:
 	*/
 	void SetStringStoreSettings(UINT uFileNameCodePage, bool bStoreNameInExtraData, UINT uCommentCodePage)
 	{
-		m_centralDir.m_stringSettings.Set(uFileNameCodePage, bStoreNameInExtraData, uCommentCodePage);
+		m_stringSettings.Set(uFileNameCodePage, bStoreNameInExtraData, uCommentCodePage);
 	}
 
 	/**
@@ -2047,7 +2331,7 @@ public:
 	*/
 	void SetStringStoreSettings(UINT uFileNameCodePage, bool bStoreNameInExtraData = false)
 	{
-		SetStringStoreSettings(uFileNameCodePage, bStoreNameInExtraData,  m_centralDir.m_stringSettings.m_uCommentCodePage);
+		SetStringStoreSettings(uFileNameCodePage, bStoreNameInExtraData,  m_stringSettings.m_uCommentCodePage);
 	}
 	
 	/**
@@ -2067,7 +2351,7 @@ public:
 	*/
 	void ResetStringStoreSettings()
 	{
-		m_centralDir.m_stringSettings.Reset(m_iArchiveSystCompatib);
+		m_stringSettings.Reset(m_iArchiveSystCompatib);
 	}
 
 	/**
@@ -2091,7 +2375,7 @@ public:
 	 */
 	CZipStringStoreSettings& GetStringStoreSettings()
 	{
-		return m_centralDir.m_stringSettings;
+		return m_stringSettings;
 	}
 
 	/**
@@ -2131,7 +2415,7 @@ public:
 	{
 		if (IsClosed())
 		{
-			ZIPTRACE("CZipArchive::GetFindFastIndex: ZipArchive not yet opened.\n");
+			ZIPTRACE("CZipArchive::GetFindFastIndex: ZipArchive should be opened first.\n");
 			return ZIP_FILE_INDEX_UNSPECIFIED;
 		}
 		
@@ -2371,7 +2655,7 @@ public:
 		\see
 			SetCaseSensitivity
 	*/
-	bool GetCaseSensitivity()
+	bool GetCaseSensitivity() const
 	{
 		return m_bCaseSensitive;
 	}
@@ -2384,7 +2668,7 @@ public:
 		\see
 			GetCentralDirSize
 	*/
-	void GetCentralDirInfo(CZipCentralDir::Info& info)const;
+	void GetCentralDirInfo(CZipCentralDir::CInfo& info)const;
 	
 
 	/**
@@ -2401,6 +2685,11 @@ public:
 	*/
 	ZIP_SIZE_TYPE GetCentralDirSize(bool bWhole = true) const
 	{
+		if (IsClosed())
+		{
+			ZIPTRACE("%s(%i) : ZipArchive is closed.\n");
+			return 0;
+		}
 		return m_centralDir.GetSize(bWhole);
 	}
 
@@ -2412,11 +2701,10 @@ public:
 		\return
 			\c true if the archive is read-only; \c false otherwise.
 	*/
-	bool IsReadOnly(){return m_storage.IsReadOnly();}
+	bool IsReadOnly(){return m_storage.IsReadOnly();} const
 
 	/**
-		Sets the number of non-archive bytes that are present before the actual archive in the archive file 
-		(such as a self-extract stub).
+		Sets the number of non-archive bytes that are present before the actual archive in the archive file.
 		The library usually tries to automatically calculate this value, but this may not be possible
 		under some conditions.
 		
@@ -2437,15 +2725,14 @@ public:
 	}
 
 	/**
-		Gets the number of non-archive bytes that are present before the actual archive in the archive file 
-		(such as a self-extract stub).
+		Gets the number of non-archive bytes that are present before the actual archive in the archive file.
 
 		\returns
 			The number of bytes before the actual archive.
 		\see
 			SetBytesBeforeZip
 	 */
-	ZIP_SIZE_TYPE GetBytesBeforeZip()
+	ZIP_SIZE_TYPE GetBytesBeforeZip() const
 	{
 		return m_storage.m_uBytesBeforeZip;
 	}
@@ -2459,19 +2746,19 @@ public:
 		checkNone,							///< If used in the the #SetIgnoredConsistencyChecks method, checks for all inconsistencies in an archive.
 		checkCRC				= 0x0001,	///< Check CRC after decompression. Use it when working with Java <sup><small>TM</small></sup> Archives (jar). The CRC check is performed using CRC written in a central header when closing a file after extraction.
 		checkLocalMethod		= 0x0002,	///< Check if the compression method written in a local header matches the compression method written in a central header.
-		checkLocalSizes			= 0x0004,	///< Check if sizes of compressed and uncompressed data written in a local header match their counterparts in a central header.
+		checkLocalSizes			= 0x0004,	///< Check if sizes of compressed and uncompressed data written in a local header match their counterparts in a central header. The compressed size in the local header is always ignored, if it is 0.
 		checkLocalCRC			= 0x0008,	///< Check if the CRC written in a local header matches the CRC written in a central header. 
 		checkLocalFlag			= 0x0010,	///< Check if the general purpose flag value written in a local header matches its counterpart written in a central header. 
 		checkLocalAll			= checkLocalMethod | checkLocalSizes | checkLocalCRC | checkLocalFlag, ///< Check for inconsistencies between central and local headers at all. These checks are performed when opening a file for extraction. 
-		checkDataDescriptor		= 0x0100, ///< Check if values written in extra data descriptor match values written in central header. This check is performed when closing a file after extraction, only if a file has a data descriptor (see CZipFileHeader::IsDataDescriptor()). <strong>Ignored by default (consistent with behavior of popular archivers).</strong>.
+		checkDataDescriptor		= 0x0100, ///< Check if values written in extra data descriptor match values written in central header. This check is performed when closing a file after extraction, only if a file has a data descriptor (see CZipFileHeader::IsDataDescriptor()). Ignored by default (it is consistent with behavior of popular archivers).
 		checkAll				= checkCRC | checkLocalAll | checkDataDescriptor, ///< Logical sum of all possible checks.
 		checkIgnoredByDefault	= checkDataDescriptor, ///< Checks that are ignored by default by the ZipArchive Library
 	};
 
 	/**
 		Set the consistency checks to ignore while processing an archive. Allows opening archives which are not entirely 
-		consistent, but nevertheless the compressed data is correct. The level is reset to #checkNone when
-		opening or creating an archive, which means that all checks are performed by default.
+		consistent, but nevertheless the compressed data is correct. The level is reset to #checkIgnoredByDefault when
+		opening or creating an archive.
 		\param iLevel
 			The consistency check. Can be one or more (OR-ed together) of #ConsistencyCheck values.
 
@@ -2496,9 +2783,44 @@ public:
 		\see 
 			SetIgnoredConsistencyChecks
 	*/
-	int GetIgnoredConsistencyChecks()
+	int GetIgnoredConsistencyChecks() const
 	{
 		return m_centralDir.m_iIgnoredChecks;
+	}
+
+	/**
+		Forces reading all headers from the central directory, even if the number of files reported by the archive is different. 
+		By default, the ZipArchive Library reads only the number of headers declared by the archive. Call this method before opening an archive.
+
+		\note This method is useful when dealing with archives created with
+		external software that put more files inside an archive that it is permitted by the zip format. Such a situation
+		can take place with archives created with e.g. BOMArchiveHelper (Mac OS X utility), when the number of files exceeds 65,535.
+
+		\see
+			GetExhaustiveRead
+	*/
+	void SetExhaustiveRead(bool bExhaustiveRead)
+	{
+		if (!IsClosed())
+		{
+			ZIPTRACE("%s(%i) : Set it before opening the archive.\n");
+			return;
+		}
+		m_bExhaustiveRead = bExhaustiveRead;
+	}
+
+	/**
+		Returns the value indicating whether the exhaustive read function is active or not.
+
+		\return
+			\c true, if the exhaustive read function is active; \c false otherwise.
+
+		\see
+			SetExhaustiveRead
+	*/
+	bool GetExhaustiveRead() const
+	{
+		return m_bExhaustiveRead;
 	}
 
     /**
@@ -2550,8 +2872,8 @@ public:
 	bool RenameFile(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewName);
 	
 	/**
-		Removes the central directory from the disk. 
-		You may then modify central extra fields and write the central directory back to the disk afterwards (use the #Close method).
+		Removes the central directory from the archive. 
+		You may then modify central extra fields and write the central directory back to the archive afterwards (use the #Close method).
 
 		\return 
 			\c true, if the central directory was successfully removed; \c false otherwise.
@@ -2559,22 +2881,45 @@ public:
 		\see
 			<a href="kb">0610242300|central</a>
 	*/
-	bool RemoveCentralDirectoryFromDisk()
-	{
-		if (IsClosed())
-		{
-			ZIPTRACE("%s(%i) : ZipArchive is closed.\n");
-			return false;
-		}
-	
-		if (m_storage.IsSegmented())
-		{
-			ZIPTRACE("%s(%i) : You cannot remove the central directory from a segmented archive.\n");
-			return false;
-		}
-		m_centralDir.RemoveFromDisk();
-		return true;
-	}
+	bool RemoveCentralDirectoryFromArchive();
+
+	/**
+		Reads the local header information of the file with the given index.
+
+		\param uIndex
+			The index of the file for which to update the local information.
+
+		\return 
+			\c true, if the information was successfully updated; \c false otherwise.
+
+		\note
+			Throws exceptions.
+
+		\see
+			<a href="kb">0610231944|time</a>
+		\see
+			OverwriteLocalHeader
+	*/
+	bool ReadLocalHeader(ZIP_INDEX_TYPE uIndex);
+
+	/**
+		Writes the local header information of the file with the given index back to the archive.
+
+		\param uIndex
+			The index of the file for which to write the local information.
+
+		\return 
+			\c true, if the information was successfully written; \c false otherwise.
+
+		\note
+			Throws exceptions.
+
+		\see
+			<a href="kb">0610231944|time</a>
+		\see
+			ReadLocalHeader
+	*/
+	bool OverwriteLocalHeader(ZIP_INDEX_TYPE uIndex);
 
 	/**
 		If \c true, the drive letter is removed from the filename stored inside the archive when adding
@@ -2585,6 +2930,45 @@ public:
 	bool m_bRemoveDriveLetter;
 
 protected:
+
+	/**
+		Reads the local header information of the file with the given index.
+
+		\param uIndex
+			The index of the file for which to update the local information.
+
+		\note
+			Throws exceptions.
+	*/
+	void ReadLocalHeaderInternal(ZIP_INDEX_TYPE uIndex)
+	{
+		// update sizes of local filename and extra field - they may differ from the ones in the central directory
+		m_centralDir.OpenFile(uIndex);
+		// skip checking the data descriptor, we are not there yet
+		m_centralDir.CloseFile(true);
+	}
+
+	/**
+		See the description of #EncryptFiles.
+
+		\param pIndexes
+
+		\return 
+			\c false, if the files could not be encrypted; \c true otherwise.
+
+		\note
+			Throws exceptions.
+
+		\see
+			EncryptFiles
+	*/
+	bool EncryptFilesInternal(CZipIndexesArray* pIndexes);
+
+
+	/**
+		The value set with #SetExhaustiveRead.
+	*/
+	bool m_bExhaustiveRead;
 
 	/**
 		See the description of #OpenNewFile(CZipFileHeader&, int, LPCTSTR)
@@ -2614,6 +2998,7 @@ protected:
 		The value set with #SetCaseSensitivity.
 	*/
 	bool m_bCaseSensitive;
+	
 
 	/**
 		A pointer to a method used to compare strings. 
@@ -2678,6 +3063,20 @@ protected:
 	void OpenInternal(int iMode);
 
 	/**
+		Initializes the archive during opening.
+
+		\param iArchiveSystCompatib
+			The system's compatibility of the archive.
+
+		\param pSource
+			If not \c NULL, then it specifies the central directory for sharing.
+
+		\note
+			Throws exceptions.
+	*/
+	void InitOnOpen(int iArchiveSystCompatib, CZipCentralDir* pSource = NULL);
+
+	/**
 		The value set with #SetSystemCompatibility.
 	*/
 	int m_iArchiveSystCompatib;
@@ -2717,6 +3116,11 @@ protected:
 	*/
 	virtual void CreateCryptograph(int iEncryptionMethod)
 	{
+		// TODO: [postponed] do not clear cryptograph after each operation?
+		if (m_pCryptograph != NULL)
+			if (m_pCryptograph->CanHandle(iEncryptionMethod))
+				return;
+
 		ClearCryptograph();
 		m_pCryptograph = CZipCryptograph::CreateCryptograph(iEncryptionMethod);
 	}
@@ -2786,36 +3190,9 @@ protected:
 	*/
 	CZipAutoBuffer m_pBuffer;
 
-private:
+	CZipStringStoreSettings m_stringSettings;
 
-	struct ZIP_API CZipDeleteInfo
-	{
-		CZipDeleteInfo(){m_pHeader = NULL; m_bDelete = false;}
-		CZipDeleteInfo(CZipFileHeader* pHeader, bool bDelete)
-			:m_pHeader(pHeader), m_bDelete (bDelete){}
-		CZipFileHeader* m_pHeader;
-		//bool operator < (const CZipDeleteInfo& di) const
-		//{
-		//	return m_pHeader->m_uOffset < di.m_pHeader->m_uOffset;
-		//}
-		//bool operator > (const CZipDeleteInfo& di) const
-		//{
-		//	return m_pHeader->m_uOffset > di.m_pHeader->m_uOffset;
-		//}
-		//bool operator == (const CZipDeleteInfo& di) const
-		//{
-		//	return m_pHeader->m_uOffset == di.m_pHeader->m_uOffset;
-		//}
-		//bool operator <= (const CZipDeleteInfo& di) const
-		//{
-		//	return m_pHeader->m_uOffset <= di.m_pHeader->m_uOffset;
-		//}
-		//bool operator >= (const CZipDeleteInfo& di) const
-		//{
-		//	return m_pHeader->m_uOffset >= di.m_pHeader->m_uOffset;
-		//}
-		bool m_bDelete;
-	};
+private:
 
 	void Initialize();
 	void MakeSpaceForReplace(ZIP_INDEX_TYPE iReplaceIndex, ZIP_SIZE_TYPE uTotal, LPCTSTR lpszFileName);

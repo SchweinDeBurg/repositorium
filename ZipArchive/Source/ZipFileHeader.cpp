@@ -30,9 +30,6 @@
 #pragma warning(disable: 981)
 #endif	// __INTEL_COMPILER
 
-
-
-
 #define FILEHEADERSIZE	46
 #define LOCALFILEHEADERSIZE	30
 #define EXTRA_ZARCH_VER 1
@@ -65,15 +62,20 @@ CZipFileHeader::~CZipFileHeader()
 		delete m_pszFileName;
 }
 
-// read the header from the central dir
-bool CZipFileHeader::Read(CZipCentralDir& centralDir)
+bool CZipFileHeader::Read(CZipCentralDir& centralDir, bool bReadSignature)
 {
 	CZipStorage *pStorage = centralDir.m_pStorage;
 	WORD uFileNameSize, uCommentSize, uExtraFieldSize;
 	CZipAutoBuffer buf(FILEHEADERSIZE);
-	pStorage->Read(buf, FILEHEADERSIZE, true);		
-	if (memcmp(buf, m_gszSignature, 4) != 0)
-		return false;
+	if (bReadSignature)
+	{
+		pStorage->Read(buf, FILEHEADERSIZE, true);	
+		if (!VerifySignature(buf))
+			return false;
+	}
+	else
+		pStorage->Read(buf + 4, FILEHEADERSIZE - 4, true);	
+
 	CBytesWriter::ReadBytes(m_uVersionMadeBy,	buf + 4);
 	CBytesWriter::ReadBytes(m_uVersionNeeded,	buf + 6);
 	CBytesWriter::ReadBytes(m_uFlag,			buf + 8);
@@ -99,13 +101,13 @@ bool CZipFileHeader::Read(CZipCentralDir& centralDir)
 	m_pszFileNameBuffer.Allocate(uFileNameSize); // don't add NULL at the end
 	pStorage->Read(m_pszFileNameBuffer, uFileNameSize, true);
 
-	if (centralDir.m_stringSettings.IsStandardNameCodePage())
+	if (centralDir.m_pStringSettings->IsStandardNameCodePage())
 		m_stringSettings.SetDefaultNameCodePage(GetSystemCompatibility());
 	else
-		m_stringSettings.m_uNameCodePage = centralDir.m_stringSettings.m_uNameCodePage;
+		m_stringSettings.m_uNameCodePage = centralDir.m_pStringSettings->m_uNameCodePage;
 
-	if (!centralDir.m_stringSettings.IsStandardCommentCodePage())
-		m_stringSettings.m_uCommentCodePage = centralDir.m_stringSettings.m_uCommentCodePage;
+	if (!centralDir.m_pStringSettings->IsStandardCommentCodePage())
+		m_stringSettings.m_uCommentCodePage = centralDir.m_pStringSettings->m_uCommentCodePage;
 
 	if (!m_aCentralExtraData.Read(pStorage, uExtraFieldSize))
 		return false;
@@ -337,11 +339,6 @@ bool CZipFileHeader::ReadLocal(CZipCentralDir& centralDir)
 	if (uMethod == CZipCompressor::methodWinZipAes && IsEncrypted())
 		CZipException::Throw(CZipException::noAES);
 
-	// check it now, not when reading central to allow reading information
-	// but disallow extraction now - unsupported method
-	if (!CZipCompressor::IsCompressionSupported(m_uMethod))
-		return false;
-
 	if (centralDir.IsConsistencyCheckOn(CZipArchive::checkLocalMethod)
 		&& uMethod != m_uMethod )
 		return false;
@@ -356,7 +353,9 @@ bool CZipFileHeader::ReadLocal(CZipCentralDir& centralDir)
 			return false;
 
 		if (centralDir.IsConsistencyCheckOn(CZipArchive::checkLocalSizes)
-			&& ( m_uLocalComprSize != m_uComprSize || m_uLocalUncomprSize != m_uUncomprSize))
+			// do not check, if local compressed size is 0 - this usually means, that some archiver 
+			// could not update the compressed size after compression
+			&& ( m_uLocalComprSize != 0 && m_uLocalComprSize != m_uComprSize || m_uLocalUncomprSize != m_uUncomprSize))
 			return false;
 	}
 	return pStorage->GetCurrentDisk() == uCurDsk; // check that the whole header is on the one disk
@@ -431,8 +430,10 @@ void CZipFileHeader::WriteLocal(CZipStorage *pStorage)
 		// local descriptor should be discarded)
 		if (!IsWinZipAesEncryption())
 			m_uLocalUncomprSize = 0;
-		
-		
+	}
+	else
+	{
+		m_uLocalComprSize = GetDataSize(true, false);
 	}
 
 	WORD uMethod = m_uMethod;
@@ -489,7 +490,9 @@ void CZipFileHeader::PrepareData(int iLevel, bool bSegm)
 	m_uInternalAttr = 0;
 
 	// version made by
+
 	SetVersion((WORD)(0x14)); 
+
 
 	m_uCrc32 = 0;
 	m_uComprSize = 0;
@@ -513,15 +516,13 @@ void CZipFileHeader::PrepareData(int iLevel, bool bSegm)
 			break;
 		}
 
-	// TODO: [postponed] it should a cryptographer's call
-	if (bSegm || m_uEncryptionMethod == CZipCryptograph::encStandard)
-		m_uFlag  |= 8; // data descriptor present
+	UpdateFlag(bSegm);
 
-	if (IsEncrypted())
-		m_uFlag  |= 1;		// encrypted file		
-
+	m_uVersionNeeded = 0;
+	if (m_uVersionNeeded == 0)
 		m_uVersionNeeded = IsDirectory() ? 0xa : 0x14; // 1.0 or 2.0		
 }
+
 
 void CZipFileHeader::GetCrcAndSizes(char * pBuffer)const
 {
@@ -659,10 +660,19 @@ DWORD CZipFileHeader::GetSystemAttr()
 	int iSystemComp = GetSystemCompatibility();
 	if (ZipCompatibility::IsPlatformSupported(iSystemComp))
 	{
-		if (!m_uExternalAttr && CZipPathComponent::HasEndingSeparator(GetFileName()))
+		
+		if (!m_uExternalAttr && CZipPathComponent::HasEndingSeparator(GetFileName()))			
 			return ZipPlatform::GetDefaultDirAttributes(); // can happen
 		else
-			return ZipCompatibility::ConvertToSystem(m_uExternalAttr, iSystemComp, ZipPlatform::GetSystemID());
+		{
+			DWORD uAttributes = ZipCompatibility::ConvertToSystem(m_uExternalAttr, iSystemComp, ZipPlatform::GetSystemID());
+#ifdef ZIP_ARCHIVE_LNX
+			// return default attributes for directory to compensate for invalid attributes created by Windows utilities
+			if (ZipPlatform::IsDirectory(uAttributes >> 16))
+				return ZipPlatform::GetDefaultDirAttributes();
+#endif
+			return uAttributes;
+		}
 	}
 	else
 		return CZipPathComponent::HasEndingSeparator(GetFileName()) ? ZipPlatform::GetDefaultDirAttributes() : ZipPlatform::GetDefaultAttributes();
@@ -729,7 +739,7 @@ void CZipFileHeader::WriteDataDescriptor(CZipStorage* pStorage)
 {
 	if (!IsDataDescriptor())
 		return;
-	bool signature = pStorage->IsSegmented() != 0 || IsEncrypted();
+	bool signature = NeedsSignatureInDataDescriptor(pStorage);
 	CZipAutoBuffer buf;
 	buf.Allocate(GetDataDescriptorSize(signature));
 	char* pBuf;
@@ -754,7 +764,7 @@ void CZipFileHeader::UpdateLocalHeader(CZipStorage* pStorage)
 	pStorage->Flush();
 	ZIP_FILE_USIZE uPos = pStorage->m_pFile->GetPosition();
 			// update crc and sizes, the sizes may already be all right,
-			// but 8 more bytes does not make the difference, we need to update crc32 anyway
+			// but 8 more bytes won't make a difference, we need to update crc32 anyway
 			CZipAutoBuffer buf(12);		
 			m_uLocalComprSize = CBytesWriter::WriteSafeU32(m_uComprSize);
 			m_uLocalUncomprSize = CBytesWriter::WriteSafeU32(m_uUncomprSize);
@@ -763,16 +773,6 @@ void CZipFileHeader::UpdateLocalHeader(CZipStorage* pStorage)
 			pStorage->m_pFile->Write(buf, 12);
 
 	pStorage->m_pFile->Seek(uPos);
-}
-
-DWORD CZipFileHeader::GetEncryptedInfoSize() const
-{
-	if (IsEncrypted())
-	{
-		if (m_uEncryptionMethod == CZipCryptograph::encStandard)
-			return CZipCrc32Cryptograph::GetEncryptedInfoSize();
-	}
-	return 0;
 }
 
 void CZipFileHeader::WriteCrc32(char* pBuf) const

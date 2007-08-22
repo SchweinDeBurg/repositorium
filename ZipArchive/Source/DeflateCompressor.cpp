@@ -18,7 +18,6 @@
 namespace ZipArchiveLib
 {
 
-// TODO: [postponed] move processing of the stored data to the base class, so every class can handle it and there is no need to switch compressors
 #ifndef DEF_MEM_LEVEL
 #if MAX_MEM_LEVEL >= 8
 #  define DEF_MEM_LEVEL 8
@@ -28,38 +27,134 @@ namespace ZipArchiveLib
 #endif
 
 
-CDeflateCompressor::CDeflateCompressor(CZipStorage* pStorage, CZipAutoBuffer* pBuffer, bool bDetectZlibMemoryLeaks)
-	:CZipCompressor(pStorage, pBuffer)
+CDeflateCompressor::CDeflateCompressor(CZipStorage* pStorage, CZipAutoBuffer* pBuffer, bool bDetectLibMemoryLeaks)
+	:CBaseLibCompressor(pStorage, pBuffer, bDetectLibMemoryLeaks)
 {
-	m_stream.zalloc = (zarch_alloc_func)_zliballoc;
-	m_stream.zfree = (zarch_free_func)_zlibfree;
-	m_bDetectZlibMemoryLeaks = bDetectZlibMemoryLeaks;
+	m_stream.zalloc = (zarch_alloc_func)_zipalloc;
+	m_stream.zfree = (zarch_free_func)_zipfree;	
 	m_bCheckLastBlock = true;
+}
+
+
+void CDeflateCompressor::InitCompression(int iLevel, CZipFileHeader* pFile, CZipCryptograph* pCryptograph)
+{
+	CZipCompressor::InitCompression(iLevel, pFile, pCryptograph);
+
+	m_stream.avail_in = (zarch_uInt)0;
+	m_stream.avail_out = (zarch_uInt)m_pBuffer->GetSize();
+	m_stream.next_out = (zarch_Bytef*)(char*)*m_pBuffer;
+	m_stream.total_in = 0;
+	m_stream.total_out = 0;
+	
+	if (pFile->m_uMethod == methodDeflate)
+	{
+		GetInternalDataAddress(&m_stream.opaque);
+		
+		int err = zarch_deflateInit2_(&m_stream, iLevel,
+			Z_DEFLATED, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, ZLIB_VERSION, sizeof(zarch_z_stream));
+		
+		CheckForError(err);
+	}
+}
+
+void CDeflateCompressor::Compress(const void *pBuffer, DWORD uSize)
+{ 
+	m_stream.next_in = (zarch_Bytef*)pBuffer;
+	m_stream.avail_in = uSize;
+	UpdateFileCrc(pBuffer, uSize);
+	
+	
+	while (m_stream.avail_in > 0)
+	{
+		if (m_stream.avail_out == 0)
+		{
+			FlushWriteBuffer();
+			m_stream.avail_out = m_pBuffer->GetSize();
+			m_stream.next_out = (zarch_Bytef*)(char*)*m_pBuffer;
+		}
+		
+		if (m_pFile->m_uMethod == methodDeflate)
+		{
+			ZIP_ZLIB_TYPE uTotal = m_stream.total_out;
+			CheckForError(zarch_deflate(&m_stream,  Z_NO_FLUSH));
+			m_uComprLeft += m_stream.total_out - uTotal;
+		}
+		else
+		{
+			DWORD uToCopy = (m_stream.avail_in < m_stream.avail_out) 
+				? m_stream.avail_in : m_stream.avail_out;
+			
+			memcpy(m_stream.next_out, m_stream.next_in, uToCopy);
+			
+			m_stream.avail_in -= uToCopy;
+			m_stream.avail_out -= uToCopy;
+			m_stream.next_in += uToCopy;
+			m_stream.next_out += uToCopy;
+			m_stream.total_in += uToCopy;
+			m_stream.total_out += uToCopy;
+			m_uComprLeft += uToCopy;
+		}
+	}
+}
+
+void CDeflateCompressor::FinishCompression(bool bAfterException)
+{
+	m_stream.avail_in = 0;
+	if (!bAfterException)
+	{
+		if (m_pFile->m_uMethod == methodDeflate)
+		{
+			int err;
+			do
+			{
+				if (m_stream.avail_out == 0)
+				{
+					FlushWriteBuffer();
+					m_stream.avail_out = m_pBuffer->GetSize();
+					m_stream.next_out = (zarch_Bytef*)(char*)*m_pBuffer;
+				}
+				ZIP_SIZE_TYPE uTotal = m_stream.total_out;
+				err = zarch_deflate(&m_stream,  Z_FINISH);
+				m_uComprLeft += m_stream.total_out - uTotal;
+			}
+			while (err == Z_OK);
+			
+			if (err == Z_STREAM_END)
+				err = Z_OK;
+			CheckForError(err);
+		}
+		
+		if (m_uComprLeft > 0)
+			FlushWriteBuffer();
+		
+		if (m_pFile->m_uMethod == methodDeflate)
+			CheckForError(zarch_deflateEnd(&m_stream));
+		
+		
+		// it may be increased by the encrypted header size in CZipFileHeader::PrepareData
+		m_pFile->m_uComprSize += m_stream.total_out;
+		m_pFile->m_uUncomprSize = m_stream.total_in;
+	}
+	EmptyPtrList();
 }
 
 void CDeflateCompressor::InitDecompression(CZipFileHeader* pFile, CZipCryptograph* pCryptograph)
 {
-	CZipCompressor::InitDecompression(pFile, pCryptograph);
+	CBaseLibCompressor::InitDecompression(pFile, pCryptograph);
 	if (m_pFile->m_uMethod == methodDeflate)
 	{
-		m_stream.opaque = m_bDetectZlibMemoryLeaks ? &m_list : 0;
-
-		int err = zarch_inflateInit2_(&m_stream, -MAX_WBITS, ZLIB_VERSION, sizeof(zarch_z_stream));
-		//			* windowBits is passed < 0 to tell that there is no zlib header.
-		//          * Note that in this case inflate *requires* an extra "dummy" byte
-		//          * after the compressed stream in order to complete decompression and
-		//          * return Z_STREAM_END. 
-		CheckForError(err);
+		GetInternalDataAddress(&m_stream.opaque);
+		CheckForError(zarch_inflateInit2_(&m_stream, -MAX_WBITS, ZLIB_VERSION, sizeof(zarch_z_stream)));
 	}
-	m_uComprLeft = m_pFile->GetDataSize(false, true);
-	m_uUncomprLeft = m_pFile->m_uUncomprSize;
-	m_uCrc32 = 0;
 	m_stream.total_out = 0;
 	m_stream.avail_in = 0;
 }
 
 DWORD CDeflateCompressor::Decompress(void *pBuffer, DWORD uSize)
 {
+	if (m_bDecompressionDone)
+		return 0;
+
 	m_stream.next_out = (zarch_Bytef*)pBuffer;
 	m_stream.avail_out = uSize > m_uUncomprLeft 
 		? (DWORD)m_uUncomprLeft : uSize;
@@ -99,7 +194,7 @@ DWORD CDeflateCompressor::Decompress(void *pBuffer, DWORD uSize)
 			
 			memcpy(m_stream.next_out, m_stream.next_in, uToCopy);
 			
-			m_uCrc32 = zarch_crc32(m_uCrc32, m_stream.next_out, uToCopy);
+			UpdateCrc(m_stream.next_out, uToCopy);
 			
 			m_uUncomprLeft -= uToCopy;
 			m_stream.avail_in -= uToCopy;
@@ -117,15 +212,18 @@ DWORD CDeflateCompressor::Decompress(void *pBuffer, DWORD uSize)
 			// will not exceed DWORD
 			DWORD uToCopy = (DWORD)(m_stream.total_out - uTotal);
 			
-			m_uCrc32 = zarch_crc32(m_uCrc32, pOldBuf, uToCopy);
+			UpdateCrc(pOldBuf, uToCopy);
 			
 			m_uUncomprLeft -= uToCopy;
 			uRead += uToCopy;
             
 			if (ret == Z_STREAM_END)
+			{
+				m_bDecompressionDone = true;
 				return uRead;
-			
-			CheckForError(ret);
+			}
+			else			
+				CheckForError(ret);
 		}
 	}
 
@@ -147,137 +245,6 @@ void CDeflateCompressor::FinishDecompression(bool bAfterException)
 	EmptyPtrList();
 }
 
-void CDeflateCompressor::InitCompression(int iLevel, CZipFileHeader* pFile, CZipCryptograph* pCryptograph)
-{
-	CZipCompressor::InitCompression(iLevel, pFile, pCryptograph);
 
-	m_uComprLeft = 0;
-	m_stream.avail_in = (zarch_uInt)0;
-	m_stream.avail_out = (zarch_uInt)m_pBuffer->GetSize();
-	m_stream.next_out = (zarch_Bytef*)(char*)*m_pBuffer;
-	m_stream.total_in = 0;
-	m_stream.total_out = 0;
-	
-	if (pFile->m_uMethod == methodDeflate)
-	{
-		m_stream.opaque = m_bDetectZlibMemoryLeaks ? &m_list : 0;
-		
-		int err = zarch_deflateInit2_(&m_stream, iLevel,
-			Z_DEFLATED, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, ZLIB_VERSION, sizeof(zarch_z_stream));
-		
-		CheckForError(err);
-	}
-}
 
-void CDeflateCompressor::Compress(const void *pBuffer, DWORD uSize)
-{ 
-	m_stream.next_in = (zarch_Bytef*)pBuffer;
-	m_stream.avail_in = uSize;
-	m_pFile->m_uCrc32 = zarch_crc32(m_pFile->m_uCrc32, (zarch_Bytef*)pBuffer, uSize);
-	
-	
-	while (m_stream.avail_in > 0)
-	{
-		if (m_stream.avail_out == 0)
-		{
-			if (m_pCryptograph)
-				m_pCryptograph->Encode(*m_pBuffer, (DWORD)m_uComprLeft);
-			m_pStorage->Write(*m_pBuffer, (DWORD)m_uComprLeft, false);
-			m_uComprLeft = 0;
-			m_stream.avail_out = m_pBuffer->GetSize();
-			m_stream.next_out = (zarch_Bytef*)(char*)*m_pBuffer;
-		}
-		
-		if (m_pFile->m_uMethod == methodDeflate)
-		{
-			ZIP_ZLIB_TYPE uTotal = m_stream.total_out;
-			int err = zarch_deflate(&m_stream,  Z_NO_FLUSH);
-			CheckForError(err);
-			m_uComprLeft += m_stream.total_out - uTotal;
-		}
-		else
-		{
-			DWORD uToCopy = (m_stream.avail_in < m_stream.avail_out) 
-				? m_stream.avail_in : m_stream.avail_out;
-			
-			memcpy(m_stream.next_out, m_stream.next_in, uToCopy);
-			
-			m_stream.avail_in -= uToCopy;
-			m_stream.avail_out -= uToCopy;
-			m_stream.next_in += uToCopy;
-			m_stream.next_out += uToCopy;
-			m_stream.total_in += uToCopy;
-			m_stream.total_out += uToCopy;
-			m_uComprLeft += uToCopy;
-		}
-	}
-}
-
-void CDeflateCompressor::FinishCompression(bool bAfterException)
-{
-	m_stream.avail_in = 0;
-	if (!bAfterException)
-	{
-		int err = Z_OK;
-		if (m_pFile->m_uMethod == methodDeflate)
-			while (err == Z_OK)
-			{
-				if (m_stream.avail_out == 0)
-				{
-					if (m_pCryptograph)
-						m_pCryptograph->Encode(*m_pBuffer, (DWORD)m_uComprLeft);
-					m_pStorage->Write(*m_pBuffer, (DWORD)m_uComprLeft, false);
-					m_uComprLeft = 0;
-					m_stream.avail_out = m_pBuffer->GetSize();
-					m_stream.next_out = (zarch_Bytef*)(char*)*m_pBuffer;
-				}
-				ZIP_SIZE_TYPE uTotal = m_stream.total_out;
-				err = zarch_deflate(&m_stream,  Z_FINISH);
-				m_uComprLeft += m_stream.total_out - uTotal;
-			}
-			
-		if (err == Z_STREAM_END)
-			err = Z_OK;
-		CheckForError(err);
-		
-		if (m_uComprLeft > 0)
-		{
-			if (m_pCryptograph)
-				m_pCryptograph->Encode(*m_pBuffer, (DWORD)m_uComprLeft);
-			m_pStorage->Write(*m_pBuffer, (DWORD)m_uComprLeft, false);
-		}
-		
-		if (m_pFile->m_uMethod == methodDeflate)
-		{
-			err = zarch_deflateEnd(&m_stream);
-			CheckForError(err);
-		}
-		
-		
-		// it may be increased by the encrypted header size in CZipFileHeader::PrepareData
-		m_pFile->m_uComprSize += m_stream.total_out;
-		m_pFile->m_uUncomprSize = m_stream.total_in;
-	}
-	EmptyPtrList();
-}
-
-void CDeflateCompressor::EmptyPtrList()
-{
-	if (m_list.GetCount())
-	{
-		// if some memory hasn't been freed due to an error in zlib, so free it now
-		CZipPtrListIter iter = m_list.GetHeadPosition();
-		while (m_list.IteratorValid(iter))
-			delete[] (char*) m_list.GetNext(iter);
-	}
-	m_list.RemoveAll();
-}
-
-void CDeflateCompressor::CheckForError(int iErr)
-{
-	if ((iErr == Z_OK) ||(iErr == Z_NEED_DICT))
-		return;
-	
-	ThrowError(iErr, true);
-}
 } // namespace

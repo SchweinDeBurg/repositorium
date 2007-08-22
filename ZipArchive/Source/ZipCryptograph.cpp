@@ -18,5 +18,39 @@
 
 CZipCryptograph* CZipCryptograph::CreateCryptograph(int iEncryptionMethod)
 {
-	return (iEncryptionMethod != encNone ? new CZipCrc32Cryptograph() : NULL);
+	if (iEncryptionMethod == encNone)
+		return NULL;
+		return new CZipCrc32Cryptograph();
+}
+
+
+DWORD CZipCryptograph::GetEncryptedInfoSize(int iEncryptionMethod)
+{
+	if (iEncryptionMethod != encNone)
+	{
+		if (iEncryptionMethod == encStandard)
+			return CZipCrc32Cryptograph::GetEncryptedInfoSizeBeforeData() + CZipCrc32Cryptograph::GetEncryptedInfoSizeAfterData();
+	}
+	return 0;
+}
+
+DWORD CZipCryptograph::GetEncryptedInfoSizeBeforeData(int iEncryptionMethod)
+{
+	if (iEncryptionMethod != encNone)
+	{
+		if (iEncryptionMethod == encStandard)
+			return CZipCrc32Cryptograph::GetEncryptedInfoSizeBeforeData();
+	}
+	return 0;
+}
+
+
+DWORD CZipCryptograph::GetEncryptedInfoSizeAfterData(int iEncryptionMethod)
+{
+	if (iEncryptionMethod != encNone)
+	{
+		if (iEncryptionMethod == encStandard)
+			return CZipCrc32Cryptograph::GetEncryptedInfoSizeAfterData();
+	}
+	return 0;
 }

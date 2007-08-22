@@ -153,7 +153,7 @@ public:
 	*/
 	WORD GetDataDescriptorSize(const CZipStorage* pStorage) const
 	{
-		return GetDataDescriptorSize(pStorage->IsSegmented() != 0 || IsEncrypted());
+		return GetDataDescriptorSize(NeedsSignatureInDataDescriptor(pStorage));
 	}
 
 	/**
@@ -190,11 +190,19 @@ public:
 	ZIP_SIZE_TYPE GetDataSize(bool bUseLocal = false, bool bReal = true) const
 	{
 		ZIP_SIZE_TYPE uSize = bUseLocal ? m_uLocalComprSize : m_uComprSize;
-		if (bReal)
-			uSize -= GetEncryptedInfoSize();
-		else
-			uSize += GetEncryptedInfoSize();
-		return uSize;
+		DWORD uEncrSize = GetEncryptedInfoSize();
+		return bReal ? (uSize - uEncrSize) : (uSize + uEncrSize);
+	}
+
+	/**
+		Gets the encrypted information size. The returned value depends on the used encryption method.
+
+		\return
+			The  encrypted information size in bytes.
+	*/
+	DWORD GetEncryptedInfoSize() const
+	{
+		return CZipCryptograph::GetEncryptedInfoSize(m_uEncryptionMethod);
 	}
 
 	/**
@@ -272,7 +280,7 @@ public:
 
 	/**
 		Gets the file system compatibility.
-		An external software can use this information e.g. to determine end-of-line 
+		External software can use this information e.g. to determine end-of-line 
 		format for text files etc.
 		The ZipArchive Library uses it to perform a proper file attributes conversion.
 
@@ -387,12 +395,11 @@ public:
 	int GetCompressionLevel() const;
 
 	/**
-		Gets the encrypted information size. The returned value depends on the used encryption method.
+		Returns the value indicating whether the current CZipFileHeader object has the time set or not.
 
 		\return
-			The  encrypted information size in bytes.
+			\c true, if the time is set; \c false otherwise.
 	*/
-	DWORD GetEncryptedInfoSize() const;
 	bool HasTime()
 	{
 		return m_uModTime != 0 || m_uModDate != 0;
@@ -400,27 +407,27 @@ public:
 
 	static char m_gszSignature[];		///< The central file header signature.
 	static char m_gszLocalSignature[];	///< The local file header signature.
-	WORD m_uVersionMadeBy;			///< The "made by" version and the system compatibility.
-	WORD m_uVersionNeeded;			///< The version needed to extract the file.
-	WORD m_uFlag;					///< A general purpose bit flag.
-	WORD m_uMethod;					///< The compression method. Can be one of the CZipCompressor::CompressionMethod values.
-	WORD m_uModTime;				///< The file last modification time.
-	WORD m_uModDate;				///< The file last modification date.
-	DWORD m_uCrc32;					///< The crc-32 value.
-	ZIP_SIZE_TYPE m_uComprSize;		///< The compressed size.
+	WORD m_uVersionMadeBy;				///< The "made by" version and the system compatibility.
+	WORD m_uVersionNeeded;				///< The version needed to extract the file.
+	WORD m_uFlag;						///< A general purpose bit flag.
+	WORD m_uMethod;						///< The compression method. Can be one of the CZipCompressor::CompressionMethod values.
+	WORD m_uModTime;					///< The file last modification time.
+	WORD m_uModDate;					///< The file last modification date.
+	DWORD m_uCrc32;						///< The crc-32 value.
+	ZIP_SIZE_TYPE m_uComprSize;			///< The compressed size.
 	ZIP_SIZE_TYPE m_uUncomprSize;		///< The uncompressed size.
-	ZIP_PART_TYPE m_uDiskStart;		///< The disk number at which the compressed file starts.
-	WORD m_uInternalAttr;			///< Internal file attributes.
+	ZIP_PART_TYPE m_uDiskStart;			///< The disk number at which the compressed file starts.
+	WORD m_uInternalAttr;				///< Internal file attributes.
 	ZIP_SIZE_TYPE m_uLocalComprSize;	///< The compressed size written in the local header.
-	ZIP_SIZE_TYPE m_uLocalUncomprSize;///< The uncompressed size written in the local header.
-	ZIP_SIZE_TYPE m_uOffset;				///< Relative offset of the local header with respect to #m_uDiskStart.
+	ZIP_SIZE_TYPE m_uLocalUncomprSize;	///< The uncompressed size written in the local header.
+	ZIP_SIZE_TYPE m_uOffset;			///< Relative offset of the local header with respect to #m_uDiskStart.
 	CZipExtraField m_aLocalExtraData;	///< The local extra field. Do not modify after you have started compressing the file.
 	CZipExtraField m_aCentralExtraData; ///< The central extra field.
 protected:
-	DWORD m_uExternalAttr;			///< External file attributes.
- 	WORD m_uLocalFileNameSize;		///< The local filename length.
-	BYTE m_uEncryptionMethod;		///< The file encryption method. Can be one of the CZipCryptograph::EncryptionMethod values.
-	bool m_bIgnoreCrc32;			///< A value indicating whether to ignore Crc32 checking or not. 
+	DWORD m_uExternalAttr;				///< External file attributes.
+ 	WORD m_uLocalFileNameSize;			///< The local filename length.
+	BYTE m_uEncryptionMethod;			///< The file encryption method. Can be one of the CZipCryptograph::EncryptionMethod values.
+	bool m_bIgnoreCrc32;				///< A value indicating whether to ignore Crc32 checking or not. 
 
 	
 
@@ -540,13 +547,17 @@ protected:
 		\param	centralDir
 			The current central directory.
 
+		\param bReadSignature
+			\c true, if the the central header signature should be read; \c false otherwise.
+
+
 		\return
 			\c true, if the read data is consistent; \c false otherwise.
 
 		\note
 			Throws exceptions.
 	*/
-	bool Read(CZipCentralDir& centralDir);
+	bool Read(CZipCentralDir& centralDir, bool bReadSignature);
 
 
 	/**
@@ -604,6 +615,11 @@ protected:
 	*/
 	void WriteDataDescriptor(CZipStorage* pStorage);
 
+	bool NeedsSignatureInDataDescriptor(const CZipStorage* pStorage) const
+	{
+		return pStorage->IsSegmented() != 0 || IsEncrypted();
+	}
+
 	/**
 		Updates the local header in the archive after is has already been written.
 
@@ -611,6 +627,36 @@ protected:
 			The storage to update the data descriptor in.
 	*/
 	void UpdateLocalHeader(CZipStorage* pStorage);
+
+	/**
+		Verifies the central header signature.
+
+		\param buf
+			The buffer that contains the signature to verify.
+
+		\return 
+			\c true, if the signature is valid; \c false otherwise.
+	*/
+	static bool VerifySignature(CZipAutoBuffer& buf)
+	{
+		return memcmp(buf, m_gszSignature, 4) == 0;
+	}
+
+	/**
+		Updates the general purpose bit flag. 
+
+		\param bSegm
+			\c true, if the current archive is a segmented archive; \c false otherwise.
+	*/
+	void UpdateFlag(bool bSegm)
+	{
+		if (bSegm || m_uEncryptionMethod == CZipCryptograph::encStandard)
+			m_uFlag  |= 8; // data descriptor present
+
+		if (IsEncrypted())
+			m_uFlag  |= 1;		// encrypted file		
+	}
+
 
 private:
 

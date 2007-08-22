@@ -22,7 +22,11 @@
 #define ZIPARCHIVE_ZIPSTORAGE_DOT_H
 
 #if _MSC_VER > 1000
-#pragma once
+	#pragma once
+	#if defined ZIP_HAS_DLL
+		#pragma warning (push)
+		#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
+	#endif
 #endif
 
 #include "ZipFile.h"	
@@ -94,7 +98,7 @@ public:
 
 		The meaning for the parameters is the same as in the CZipArchive::Open(LPCTSTR, int, ZIP_SIZE_TYPE) method.
 	*/
-	void Open(LPCTSTR szPathName, int iMode, ZIP_SIZE_TYPE uVolumeSize);
+	void Open(LPCTSTR lpszPathName, int iMode, ZIP_SIZE_TYPE uVolumeSize);
 
 
 	/**
@@ -273,6 +277,28 @@ public:
 	}
 
 	/**
+		Checks, if the archive is a split archive.
+
+		\return
+			\c true, if the archive is a split archive; \c false otherwise.
+	*/
+	bool IsSplit() const
+	{
+		return m_iSegmMode == splitArchive;
+	}
+
+	/**
+		Checks, if the archive is a spanned archive.
+
+		\return
+			\c true, if the archive is a spanned archive; \c false otherwise.
+	*/
+	bool IsSpanned() const
+	{
+		return m_iSegmMode == spannedArchive;
+	}
+
+	/**
 		The same as the CZipArchive::IsReadOnly method.
 	*/
 	bool IsReadOnly()
@@ -300,7 +326,7 @@ public:
 			The number of free bytes on the current volume.
 	*/
 	ZIP_SIZE_TYPE VolumeLeft() const;
-
+	
 	/**	
 		Closes the storage.
 
@@ -326,6 +352,17 @@ public:
 	static char m_gszExtHeaderSignat[];
 
 protected:
+
+	/**
+		Returns the file offset after the last data byte in the archive.
+
+		\return 
+			The file offset after the last data byte in the archive.
+	*/
+	ZIP_SIZE_TYPE GetLastDataOffset()
+	{
+		return (ZIP_SIZE_TYPE)m_pFile->GetLength() - m_uBytesBeforeZip;
+	}
 	
 	/**
 		Reverse-finds the location of the given signature starting from the current position in file.
@@ -550,5 +587,10 @@ private:
 	static const ZIP_FILE_USIZE SignatureNotFound;
 	void ThrowError(int err);
 };
+
+#if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
+	#pragma warning (pop)	
+#endif
+
 
 #endif // !defined(ZIPARCHIVE_ZIPSTORAGE_DOT_H)

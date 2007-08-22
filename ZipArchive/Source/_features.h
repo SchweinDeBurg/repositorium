@@ -19,7 +19,10 @@
 */
 
 #if !defined(ZIPARCHIVE_FEATURES_DOT_H)
-#define ZIPARCHIVE_FEATURES_DOT_H
+/// @cond
+#define ZIPARCHIVE_FEATURES_DOT_H 
+/// @endcond
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -38,22 +41,48 @@
 /************ Feel free to adjust the definitions in the following block ************/
 /************************************ BLOCK START ***********************************/
 
-// comment this out, if you don't use ZIP64
+/**
+	Make sure it is defined, if you use ZIP64. Comment this out otherwise.
+
+	\see
+		<a href="kb">0610051629</a>
+*/
 // #define _ZIP64
-// comment this out, if you don't use AES
+
+/**
+	Make sure it is defined, if you use AES. Comment this out otherwise.
+
+	\see
+		<a href="kb">0610201627|aes</a>
+*/
 // #define _ZIP_AES
+
+/**
+	Make sure it is defined, if you use the BZIP2 algorithm for compression. Comment this out otherwise.
+
+	\see
+		<a href="kb">0610231446|bzip2</a>
+*/
+// #define _BZIP2
+
+/**
+	Make sure it is defined, if you use the AES encryption in a multithreaded environment or archive sharing (CZipArchive::OpenFrom). Comment this out otherwise.
+
+	\see
+		<a href="kb">0610201627|aes</a>
+	\see
+		<a href="kb">0610241003|thread</a>
+*/
+// #define ZIP_ARCHIVE_USE_LOCKING
 
 #ifndef _ZIP64
 // Uncomment this to have the index and part types defined as WORD. Otherwise they are defined as int
 #define _ZIP_STRICT_U16
 #endif
 
+
 /************************************* BLOCK END ***********************************/
 /********* The contents below this line are not intended for modification **********/
 
-#if defined _ZIP64 && (defined __BORLANDC__ || (defined _MSC_VER && _MSC_VER < 1300 && defined ZIP_ARCHIVE_MFC))
-	#error Zip64 Cannot be used under Borland and Visual Studio 6.0 MFC
-		#undef _ZIP64
-#endif
 
 #endif // !defined(ZIPARCHIVE_FEATURES_DOT_H)

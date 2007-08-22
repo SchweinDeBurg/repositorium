@@ -21,8 +21,13 @@
 #define ZIPARCHIVE_ZIPPATHCOMPONENT_DOT_H
 
 #if _MSC_VER > 1000
-#pragma once
+	#pragma once
+	#if defined ZIP_HAS_DLL
+		#pragma warning (push)
+		#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
+	#endif
 #endif
+
 #include "ZipString.h"
 #include "ZipExport.h"
 
@@ -246,5 +251,10 @@ protected:
 	//@}
 	
 };
+
+#if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
+	#pragma warning (pop)	
+#endif
+
 
 #endif // !defined(ZIPARCHIVE_ZIPPATHCOMPONENT_DOT_H)

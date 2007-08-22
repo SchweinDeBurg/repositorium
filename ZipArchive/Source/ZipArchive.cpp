@@ -35,7 +35,7 @@
 using namespace ZipArchiveLib;
 
 const char CZipArchive::m_gszCopyright[] = {"ZipArchive Library Copyright (C) 2000 - 2007 Artpol Software - Tadeusz Dracz"};
-const char CZipArchive::m_gszVersion[] = {"3.0.2"};
+const char CZipArchive::m_gszVersion[] = {"3.1.0"};
 
 void CZipAddNewFileInfo::Defaults()
 {
@@ -55,9 +55,8 @@ CZipArchive::CZipArchive()
 void CZipArchive::Initialize()
 {
 	m_bRemoveDriveLetter = true;
+	m_bExhaustiveRead = false;
 	m_bAutoFlush = false;
-	m_centralDir.m_pStorage= &m_storage;	
-	m_centralDir.m_pCallbacks = &m_callbacks;
 	m_iFileOpened = nothing;
 	SetCaseSensitivity(ZipPlatform::GetSystemCaseSensitivity());
 	m_uCompressionMethod = CZipCompressor::methodDeflate;
@@ -75,45 +74,74 @@ CZipArchive::~CZipArchive()
 	ClearCryptograph();	
 }
 
-void CZipArchive::Open(LPCTSTR szPathName, int iMode, ZIP_SIZE_TYPE uVolumeSize)
+bool CZipArchive::Open(LPCTSTR szPathName, int iMode, ZIP_SIZE_TYPE uVolumeSize)
 {
 	if (!IsClosed())
 	{
 		ZIPTRACE("%s(%i) : ZipArchive already opened.\n");
-		return;
+		return false;
 	}
 	m_storage.Open(szPathName, iMode, uVolumeSize);
 	OpenInternal(iMode);
+	return true;
 }
 
-void CZipArchive::Open(CZipAbstractFile& af, int iMode)
+bool CZipArchive::Open(CZipAbstractFile& af, int iMode)
 {
 	if (!IsClosed())
 	{
 		ZIPTRACE("%s(%i) : ZipArchive is already opened.\n");
-		return;
+		return false;
 	}
-	if (iMode != zipOpen && iMode != zipOpenReadOnly && iMode != zipCreate)
+	if (iMode != zipOpen && iMode != zipOpenReadOnly && iMode != zipCreate && iMode != zipCreateAppend)
 	{
 		ZIPTRACE("%s(%i) : Mode is not supported.\n");
-		return;
+		return false; 
 	}
 	m_storage.Open(af, iMode);
 	OpenInternal(iMode);
+	return true;
 }
 
+bool CZipArchive::OpenFrom(CZipArchive& zip)
+{
+	if (zip.IsClosed())
+	{
+		ZIPTRACE("%s(%i) : The source archive must be opened.\n");
+		return false; 
+	}
+	if (!zip.IsReadOnly())
+	{
+		ZIPTRACE("%s(%i) : The source archive must be opened in the read-only mode.\n");
+		return false; 
+	}
+	if (zip.m_storage.m_bInMemory)
+	{
+		ZIPTRACE("%s(%i) : ZipArchive cannot share an archive in memory.\n");
+		return false; 
+	}
 
-void CZipArchive::OpenInternal(int iMode)
+	m_storage.Open(zip.GetArchivePath(), CZipArchive::zipOpenReadOnly, zip.m_storage.IsSplit() ? 1 : 0);
+	InitOnOpen(zip.GetSystemCompatibility(), &zip.m_centralDir);	
+
+	return true;
+}
+
+void CZipArchive::InitOnOpen(int iArchiveSystCompatib, CZipCentralDir* pSource)
 {
 	m_pszPassword.Release();
 	m_iFileOpened = nothing;
-	m_iArchiveSystCompatib = ZipPlatform::GetSystemID();
-	m_centralDir.Init();	
 	m_szRootPath.Empty();
+	m_centralDir.Init(&m_storage, &m_callbacks, &m_stringSettings, pSource);	
+	m_iArchiveSystCompatib = iArchiveSystCompatib;
+}
 
+void CZipArchive::OpenInternal(int iMode)
+{
+	InitOnOpen(ZipPlatform::GetSystemID());		
 	if ((iMode == zipOpen) ||(iMode == zipOpenReadOnly))
 	{
-		m_centralDir.Read();
+		m_centralDir.Read(m_bExhaustiveRead);
 		// if there is at least one file, get system comp. from the first one
 		if (m_centralDir.IsValidIndex(0))
 		{			
@@ -200,6 +228,12 @@ ZIP_INDEX_TYPE CZipArchive::FindFile(LPCTSTR lpszFileName, int iCaseSensitive, b
 
 bool CZipArchive::OpenFile(ZIP_INDEX_TYPE uIndex)
 {	
+	if (IsClosed())
+	{
+		ZIPTRACE("%s(%i) : ZipArchive is closed.\n");
+		return false;
+	}
+
 	if (!m_centralDir.IsValidIndex(uIndex))
 	{
 		ASSERT(FALSE);
@@ -207,7 +241,7 @@ bool CZipArchive::OpenFile(ZIP_INDEX_TYPE uIndex)
 	}
 	if (m_storage.IsSegmented() == 1)
 	{
-		ZIPTRACE("%s(%i) : You cannot extract from a segmented archive in creation.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot extract from a segmented archive in creation.\n");
 		return false;
 	}	
 	
@@ -219,6 +253,16 @@ bool CZipArchive::OpenFile(ZIP_INDEX_TYPE uIndex)
 	
 	InitBuffer();
 	m_centralDir.OpenFile(uIndex);
+
+	// check it now, not when reading central to allow reading information
+	// but disallow extraction now - unsupported method
+	if (!CZipCompressor::IsCompressionSupported(CurrentFile()->m_uMethod))
+	{		
+		m_centralDir.CloseFile(true);
+		ZIPTRACE("%s(%i) : The compression method is not supported.\n");
+		return false;
+	}
+
 	if (CurrentFile()->IsEncrypted())
 	{		
 		if (m_pszPassword.GetSize() == 0)
@@ -231,13 +275,14 @@ bool CZipArchive::OpenFile(ZIP_INDEX_TYPE uIndex)
 			ThrowError(CZipException::badPassword); 
 
 	}
-	else if (m_pszPassword.GetSize() != 0)
+	else
 	{
-		ZIPTRACE("%s(%i) : Password set for a not encrypted file. Ignoring password.\n");
+		ClearCryptograph();
+		if (m_pszPassword.GetSize() != 0)
+		{
+			ZIPTRACE("%s(%i) : Password set for a not encrypted file. Ignoring password.\n");
+		}
 	}
-
-	// should be validated already in CZipFileHeader::ReadLocal (from CZipCentralDir::OpenFile)
-	ASSERT(CZipCompressor::IsCompressionSupported(CurrentFile()->m_uMethod));
 	
 	CreateCompressor(CurrentFile()->m_uMethod);
 	m_pCompressor->InitDecompression(CurrentFile(), m_pCryptograph);
@@ -252,8 +297,7 @@ CZipFileHeader* CZipArchive::CurrentFile()
 	return m_centralDir.m_pOpenedFile;
 }
 
-DWORD CZipArchive::ReadFile(void *pBuf,     
-                            DWORD uSize)
+DWORD CZipArchive::ReadFile(void *pBuf, DWORD uSize)
 {
 	if (m_iFileOpened != extract)
 	{
@@ -289,7 +333,7 @@ void CZipArchive::Close(int iAfterException, bool bUpdateTimeStamp)
 
 	if (bUpdateTimeStamp)
 	{
-		ZIP_INDEX_TYPE iSize = (ZIP_INDEX_TYPE)m_centralDir.m_headers.GetSize();
+		ZIP_INDEX_TYPE iSize = (ZIP_INDEX_TYPE)m_centralDir.GetCount();
 		for (ZIP_INDEX_TYPE i = 0; i < iSize; i++)
 		{
 			time_t tFileInZipTime = m_centralDir[i]->GetTime();
@@ -297,8 +341,8 @@ void CZipArchive::Close(int iAfterException, bool bUpdateTimeStamp)
 				tNewestTime = tFileInZipTime;
 		}
 	}
-	m_centralDir.Clear();
-	m_centralDir.m_stringSettings.Reset();
+	m_centralDir.Close();
+	m_stringSettings.Reset();
 	CZipString szFileName = m_storage.Close(iAfterException == afAfterException);
 	if (bUpdateTimeStamp && !szFileName.IsEmpty())
 		ZipPlatform::SetFileModTime(szFileName, tNewestTime);
@@ -391,7 +435,7 @@ bool CZipArchive::OpenNewFile(CZipFileHeader & header, int iLevel, LPCTSTR lpszF
 	
 	if (m_storage.IsSegmented() == -1)
 	{
-		ZIPTRACE("%s(%i) : You cannot add files to an existing segmented archive.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot add files to an existing segmented archive.\n");
 		return false;
 	}
 
@@ -447,7 +491,7 @@ bool CZipArchive::OpenNewFile(CZipFileHeader & header, int iLevel, LPCTSTR lpszF
 		header.SetFileName(szFileName);
 	}
 
-	bool bEncrypted = EncryptNextFile();
+	bool bEncrypted = WillEncryptNextFile();
 
 #if defined _DEBUG && !defined NOZIPTRACE
 	if (bIsDirectory && bEncrypted)
@@ -465,7 +509,10 @@ bool CZipArchive::OpenNewFile(CZipFileHeader & header, int iLevel, LPCTSTR lpszF
 		CreateCryptograph(m_iEncryptionMethod);
 	}
 	else
+	{
 		header.m_uEncryptionMethod = CZipCryptograph::encNone;
+		ClearCryptograph();
+	}
 
 	if (iLevel == 0 || bIsDirectory)
 		header.m_uMethod = CZipCompressor::methodStore;
@@ -773,6 +820,15 @@ bool CZipArchive::RemoveFiles(const CZipStringArray &aNames)
 	return RemoveFiles(indexes);
 }
 
+struct CZipDeleteInfo
+{
+	CZipDeleteInfo(){m_pHeader = NULL; m_bDelete = false;}
+	CZipDeleteInfo(CZipFileHeader* pHeader, bool bDelete)
+		:m_pHeader(pHeader), m_bDelete (bDelete){}
+	CZipFileHeader* m_pHeader;	
+	bool m_bDelete;
+};
+
 bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 {
 	if (IsClosed())
@@ -783,13 +839,13 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 	
 	if (m_storage.IsSegmented())
 	{
-		ZIPTRACE("%s(%i) : You cannot delete files from a segmented archive.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot delete files from a segmented archive.\n");
 		return false;
 	}
 	
 	if (m_iFileOpened)
 	{
-		ZIPTRACE("%s(%i) : You cannot delete files if there is a file opened.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot delete files if there is a file opened.\n");
 		return false;
 	}
 
@@ -799,18 +855,12 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 		return false;
 	}
 	
-	CZipActionCallback* pCallback = GetCallback(CZipActionCallback::cbDeleteCnt);
-	if (pCallback)
-		pCallback->Init();
-
 	ZIP_INDEX_TYPE uSize = (ZIP_INDEX_TYPE)aIndexes.GetSize();
 	if (!uSize)
 	{
 		ZIPTRACE("%s(%i) : The indexes array is empty.\n");
 		return true;
 	}
-
-	ZIP_INDEX_TYPE i;
 	
 	aIndexes.Sort(true);
 	// remove all - that's easy so don't waste the time
@@ -819,7 +869,7 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 		// check that the indexes are correct
 		bool allIncluded = true;
 		// iterate all indexes, if all are sorted then the condition should always be true
-		for (i = 0; i < uSize; i++)
+		for (ZIP_INDEX_TYPE i = 0; i < uSize; i++)
 			if (aIndexes[(ZIP_ARRAY_SIZE_TYPE)i] != i)
 			{
 				allIncluded = false;
@@ -828,7 +878,7 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 
 		if (allIncluded)
 		{
-			pCallback = GetCallback(CZipActionCallback::cbDelete);
+			CZipActionCallback* pCallback = GetCallback(CZipActionCallback::cbDelete);
 			if (pCallback)
 			{
 				// do it right and sent the notification
@@ -848,15 +898,21 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 	}
 	else
 	{
-		for (i = 0; i < uSize; i++)
+		for (ZIP_INDEX_TYPE i = 0; i < uSize; i++)
 			if (!m_centralDir.IsValidIndex(aIndexes[(ZIP_ARRAY_SIZE_TYPE)i]))
 				return false;
 	}
 
+	ZIP_INDEX_TYPE i;
+
 	CZipArray<CZipDeleteInfo> aInfo;
 	
+	CZipActionCallback* pCallback = GetCallback(CZipActionCallback::cbDeleteCnt);
 	if (pCallback)
+	{
+		pCallback->Init();
 		pCallback->SetTotal(GetCount());
+	}
 	
 	ZIP_INDEX_TYPE uDelIndex = 0;
 	ZIP_INDEX_TYPE uMaxDelIndex = aIndexes[(ZIP_ARRAY_SIZE_TYPE)(uSize - 1)];
@@ -917,21 +973,17 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 	
 	m_centralDir.RemoveFromDisk();
 
-	ZIP_SIZE_TYPE uTotalToMoveBytes = 0, uLastOffset = (ZIP_SIZE_TYPE)m_storage.m_pFile->GetLength() - m_storage.m_uBytesBeforeZip;
+	ZIP_SIZE_TYPE uTotalToMoveBytes = 0, uLastOffset = m_storage.GetLastDataOffset();
 	// count the number of bytes to move
-	// uSize is greated than 0 (checked before) - no overflow
-	i = (ZIP_INDEX_TYPE)(uSize - 1);
-	for(;;)
+	i = uSize;
+	while(i > 0)
 	{
-		// we alread know it is not 0
+		i--;
 		// cannot use a decreasing loop because i is unsigned and instead negative at the end of the loop it will be maximum positive
 		const CZipDeleteInfo& di = aInfo[(ZIP_ARRAY_SIZE_TYPE)i];
 		if (!di.m_bDelete)
 			uTotalToMoveBytes += uLastOffset - di.m_pHeader->m_uOffset;
 		uLastOffset = di.m_pHeader->m_uOffset;
-		if (i == 0)
-			break;
-		i--;
 	}
 	
 	if (pCallback)
@@ -957,7 +1009,7 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 				uOffsetStart = 0;  // never be at the beginning, because the first file is always to be deleted
 			}
 			if (i == uSize - 1)
-				uTemp = ((ZIP_SIZE_TYPE)m_storage.m_pFile->GetLength() - m_storage.m_uBytesBeforeZip) - uTemp;
+				uTemp = (m_storage.GetLastDataOffset()) - uTemp;
 			else
 				uTemp = aInfo[(ZIP_ARRAY_SIZE_TYPE)(i + 1)].m_pHeader->m_uOffset - uTemp;
 
@@ -966,18 +1018,16 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 		}
 		else
 		{
-			if (uOffsetStart == 0) // find contiuos area to move
+			if (uOffsetStart == 0) // find continuous area to move
 				uOffsetStart = di.m_pHeader->m_uOffset;
 			di.m_pHeader->m_uOffset -= uMoveBy;
 		}
-
 	}
+
 	if (uOffsetStart)
 	{
 		// will call the last callback, if necessary
-		MovePackedFiles(uOffsetStart,
-			(ZIP_SIZE_TYPE)m_storage.m_pFile->GetLength() - m_storage.m_uBytesBeforeZip,
-			uMoveBy, pCallback); 
+		MovePackedFiles(uOffsetStart, m_storage.GetLastDataOffset(), uMoveBy, pCallback); 
 	}
 	else
 	{
@@ -1002,6 +1052,122 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 }
 
 
+
+bool CZipArchive::ShiftData(ZIP_SIZE_TYPE uOffset)
+{
+	if (IsClosed())
+	{
+		ZIPTRACE("%s(%i) : ZipArchive should be opened first.\n");
+		return false; 
+	}
+
+	if (m_storage.IsSegmented() != 0)
+	{
+		ZIPTRACE("%s(%i) : Cannot shift data for a segmented archive.\n");
+		return false;
+	}
+
+	if (m_iFileOpened)
+	{
+		ZIPTRACE("%s(%i) : A file should not be opened.\n");
+		return false;
+	}
+
+	if (m_storage.m_uBytesBeforeZip != 0)
+	{
+		ZIPTRACE("%s(%i) : Bytes before zip file must not be present.\n");
+		return false;
+	}
+
+	if (uOffset == 0)
+		return true;
+
+	m_centralDir.RemoveFromDisk();  // does m_storage.Flush();
+	InitBuffer();
+	
+	ZIP_SIZE_TYPE uFileLen = (ZIP_SIZE_TYPE)m_storage.m_pFile->GetLength();
+	CZipActionCallback* pCallback = GetCallback(CZipActionCallback::cbMoveData);
+	if (pCallback)
+	{
+		pCallback->Init(NULL, GetArchivePath());
+		pCallback->SetTotal(uFileLen);
+	}			
+
+	m_storage.m_pFile->SetLength((ZIP_FILE_USIZE)(uFileLen + uOffset)); // ensure the seek is correct
+
+	MovePackedFiles(0, uFileLen, uOffset, pCallback, true);
+	
+	ZIP_INDEX_TYPE uSize = GetCount();
+	for (ZIP_INDEX_TYPE i = 0; i < uSize; i++)
+		m_centralDir[i]->m_uOffset += uOffset;
+
+	if (pCallback)
+		pCallback->CallbackEnd();			
+
+	return true;
+}
+
+bool CZipArchive::PrependData(LPCTSTR lpszFilePath, LPCTSTR lpszNewExt)
+{
+	CZipFile file(lpszFilePath, CZipFile::modeRead | CZipFile::shareDenyNone);
+	return PrependData(file, lpszNewExt);
+}
+
+bool CZipArchive::PrependData(CZipAbstractFile& file, LPCTSTR lpszNewExt)
+{
+	if (file.IsClosed())
+	{
+		ZIPTRACE("%s(%i) : File to prepend should be opened.\n");
+		return false;
+	}
+
+	ZIP_SIZE_TYPE uOffset = (ZIP_SIZE_TYPE)file.GetLength();
+	if (uOffset == 0)
+		return true;
+
+	if (!ShiftData(uOffset))
+		return false;
+	file.SeekToBegin();
+	// do not use callback - self-extracting stubs should be small
+	m_storage.Seek(0);
+
+	char* buf = (char*)m_pBuffer;
+
+	ZIP_SIZE_TYPE uTotalToMove = uOffset;
+	ZIP_SIZE_TYPE uToRead;
+	UINT uSizeRead;
+	bool bBreak = false;
+	DWORD bufSize = m_pBuffer.GetSize();
+	do
+	{
+		uToRead = uTotalToMove > bufSize ? bufSize : uTotalToMove;
+		uSizeRead = (UINT)file.Read(buf, (UINT)uToRead);
+		if (!uSizeRead)
+			break;
+		uTotalToMove -= uSizeRead;
+		if (uTotalToMove == 0)
+			bBreak = true;			
+		m_storage.m_pFile->Write(buf, uSizeRead);
+	}
+	while (!bBreak);
+
+	if (m_storage.m_bInMemory || lpszNewExt == NULL)
+		return true;
+
+	CZipString szInitialPath = m_storage.m_pFile->GetFilePath();
+	// must close to rename
+	Close();
+	CZipPathComponent zpc(szInitialPath);
+	zpc.SetExtension(lpszNewExt);
+	CZipString szNewPath = zpc.GetFullPath();
+	if (!ZipPlatform::RenameFile(szInitialPath, szNewPath, false))
+		return false;
+#ifdef ZIP_ARCHIVE_LNX
+	return ZipPlatform::SetExeAttr(szNewPath);
+#else
+	return true;
+#endif	
+}
 
 bool CZipArchive::AddNewFile(LPCTSTR lpszFilePath,
                              int iComprLevel,          
@@ -1138,7 +1304,7 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 		if (info.m_iSmartLevel & zipsmCPassDir)
 			smcp.ClearPasswordSmartly(this);
 
-		bool bRet = OpenNewFile(header, 0, NULL, info.m_uReplaceIndex);
+		bool bRet = OpenNewFile(header, CZipCompressor::levelStore, NULL, info.m_uReplaceIndex);
 		
 		CloseNewFile();
 		if (pCallback)
@@ -1150,7 +1316,7 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 	CZipSmClrPass smcp;
 	bool bIsCompression = info.m_iComprLevel != 0;
 	bool bEff = (info.m_iSmartLevel & zipsmCheckForEff)&& bIsCompression;
-	bool bCheckForZeroSized = (info.m_iSmartLevel & zipsmCPFile0) && EncryptNextFile();
+	bool bCheckForZeroSized = (info.m_iSmartLevel & zipsmCPFile0) && WillEncryptNextFile();
 	bool bCheckForSmallFiles = (info.m_iSmartLevel & zipsmNotCompSmall) && bIsCompression;
 	ZIP_SIZE_TYPE uFileSize = ZIP_SIZE_TYPE(-1);
 	bool bNeedTempArchive = (bEff && bSegm) || (bReplace && bIsCompression);
@@ -1274,7 +1440,7 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 	if (bReplace)
 	{
 		ASSERT(!bIsCompression);		
-		bRet = OpenNewFile(header, 0, NULL, info.m_uReplaceIndex);
+		bRet = OpenNewFile(header, CZipCompressor::levelStore, NULL, info.m_uReplaceIndex);
 	}
 	else
 		bRet = OpenNewFile(header, info.m_iComprLevel);
@@ -1282,7 +1448,7 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 		return false;
 
 	// we do it here, because if in OpenNewFile is replacing 
-	// then we get called cbReplace callback before and it would 
+	// then we get called cbMoveData callback before and it would 
 	// overwrite callback information written in pCallback->Init()
 	CZipActionCallback* pCallback =  GetCallback(bInternal ? CZipActionCallback::cbAddStore : CZipActionCallback::cbAdd);
 
@@ -1577,7 +1743,7 @@ bool CZipArchive::SetGlobalComment(LPCTSTR lpszComment)
 	}
 	if (m_storage.IsSegmented() == -1)
 	{
-		ZIPTRACE("%s(%i) : You cannot modify the global comment of an existing segmented archive.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot modify the global comment of an existing segmented archive.\n");
 		return false;
 	}
 
@@ -1604,7 +1770,7 @@ bool CZipArchive::SetFileComment(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszComment)
 	}
 	if (m_storage.IsSegmented() == -1)
 	{
-		ZIPTRACE("%s(%i) : You cannot modify the file comment in an existing segmented archive.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot modify the file comment in an existing segmented archive.\n");
 		return false;
 	}
 	
@@ -1618,7 +1784,7 @@ bool CZipArchive::SetPassword(LPCTSTR lpszPassword)
 {
 	if (m_iFileOpened != nothing)
 	{
-		ZIPTRACE("%s(%i) : You cannot change the password when a file is opened.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot change the password when a file is opened.\n");
 		return false; // it's important not to change the password when the file inside archive is opened
 	}
 	if (IsClosed())
@@ -1636,7 +1802,7 @@ bool CZipArchive::SetEncryptionMethod(int iEncryptionMethod)
 {
 	if (m_iFileOpened == compress)
 	{
-		ZIPTRACE("%s(%i) : You cannot change the encryption method when there is a file opened for compression.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot change the encryption method when there is a file opened for compression.\n");
 		return false;
 	}	
 	
@@ -1646,11 +1812,389 @@ bool CZipArchive::SetEncryptionMethod(int iEncryptionMethod)
 	return true;
 }
 
+struct CZipEncryptFileInfo
+{
+	CZipEncryptFileInfo()
+	{
+		m_pHeader = NULL;
+		m_uLocalSizeDiff = 0;
+		m_uDescriptorSizeDiff = 0;
+		m_uIndex = 0;
+	}
+	CZipEncryptFileInfo(CZipFileHeader* pHeader, DWORD uLocalSizeDiff, 
+		DWORD uDescriptorSizeDiff, ZIP_INDEX_TYPE uIndex, ZIP_SIZE_TYPE uDataOffset)
+		:m_pHeader(pHeader), m_uLocalSizeDiff(uLocalSizeDiff), 
+		m_uDescriptorSizeDiff(uDescriptorSizeDiff), m_uIndex(uIndex), m_uDataOffset(uDataOffset)
+	{		
+	}
+
+	CZipFileHeader* m_pHeader;
+	DWORD m_uLocalSizeDiff;
+	DWORD m_uDescriptorSizeDiff;
+	ZIP_INDEX_TYPE m_uIndex;
+	ZIP_SIZE_TYPE m_uDataOffset;
+	ZIP_SIZE_TYPE GetLastDataOffset()
+	{
+		return m_uDataOffset + m_pHeader->m_uOffset;
+	}
+};
+
+bool CZipArchive::EncryptFilesInternal(CZipIndexesArray* pIndexes)
+{
+	if (IsClosed())
+	{
+		ZIPTRACE("%s(%i) : ZipArchive is closed.\n");
+		return false;
+	}
+	
+	if (m_storage.IsSegmented())
+	{
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot encrypt existing files in a segmented archive.\n");
+		return false;
+	}
+
+	if (m_storage.m_bReadOnly)
+	{
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot encrypt files in a read-only archive.\n");
+		return false;
+	}
+	
+	if (m_iFileOpened)
+	{
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot encrypt files if there is a file opened.\n");
+		return false;
+	}
+
+	if (GetCount() == 0)
+	{
+		ZIPTRACE("%s(%i) : There is nothing to encrypt: the archive is empty.\n");
+		return false;
+	}
+
+	if (!WillEncryptNextFile())
+	{
+		ZIPTRACE("%s(%i) : An encryption method and a password must be set.\n");
+		return false;
+	}
+
+	bool bAll;
+	ZIP_ARRAY_SIZE_TYPE i;
+	if (pIndexes == NULL)
+	{
+		bAll = true;
+		i = (ZIP_ARRAY_SIZE_TYPE)GetCount();
+	}
+	else
+	{
+		bAll = false;
+		pIndexes->Sort(true);
+		i = pIndexes->GetSize();	
+	}	
+
+	CZipActionCallback* pCallback = GetCallback(CZipActionCallback::cbEncryptPrepare);
+	if (pCallback)
+	{
+		pCallback->Init();
+		pCallback->SetTotal((ZIP_SIZE_TYPE)i);
+	}
+	bool bAborted = false;
+
+	CZipArray<CZipEncryptFileInfo> infos;
+	ZIP_SIZE_TYPE uExtraData = 0;		
+    while (i > 0)
+    {
+        i--;
+		ZIP_INDEX_TYPE idx;
+		if (bAll)
+			idx = (ZIP_INDEX_TYPE)i;
+		else
+		{
+			idx = pIndexes->GetAt(i);
+			if (!m_centralDir.IsValidIndex(idx))
+			{
+				if (pCallback && !pCallback->RequestCallback())				
+				{
+					bAborted = true;
+					break;
+				}
+				continue;
+			}
+		}		
+		CZipFileHeader* pHeader = GetFileInfo(idx);
+
+        if (pHeader->IsEncrypted())
+		{
+			if (pCallback && !pCallback->RequestCallback())				
+			{
+				bAborted = true;
+				break;
+			}
+			continue;
+		}
+
+		ReadLocalHeaderInternal(idx);
+		DWORD uOrigSize = pHeader->GetLocalSize(true);
+		DWORD uOrigDescriptorSize = pHeader->GetDataDescriptorSize(&m_storage);
+		
+		pHeader->m_uEncryptionMethod = (BYTE)m_iEncryptionMethod;	
+		pHeader->UpdateFlag(m_storage.IsSegmented() != 0);
+		
+		// needed for GetLocalSize
+		pHeader->PrepareFileName();
+		DWORD uLocalDiff = pHeader->GetLocalSize(false) - uOrigSize;
+		DWORD uDescriptorDiff = pHeader->GetDataDescriptorSize(&m_storage) - uOrigDescriptorSize;
+		uExtraData += uLocalDiff + uDescriptorDiff;
+		infos.Add(CZipEncryptFileInfo(pHeader, uLocalDiff, uDescriptorDiff, idx, pHeader->m_uOffset + uOrigSize));
+		if (pCallback && !pCallback->RequestCallback())				
+		{
+			bAborted = true;
+			break;
+		}
+    }    
+
+	if (pCallback)
+	{
+		if (!bAborted && !pCallback->RequestLastCallback())
+			bAborted = true;
+		pCallback->CallbackEnd();
+		if (bAborted)
+			CZipException::Throw(CZipException::abortedAction);
+	}
+
+	ZIP_ARRAY_SIZE_TYPE uSize = infos.GetSize();
+	if (!uSize)
+	{
+		ZIPTRACE("%s(%i) : There are no files to encrypt.\n");
+		return true;
+	}	
+
+	m_centralDir.RemoveFromDisk();
+
+	CZipActionCallback* pMultiCallback = GetCallback(CZipActionCallback::cbMultiEncrypt);
+
+	ZIP_ARRAY_SIZE_TYPE idxIdx;
+	ZIP_INDEX_TYPE idx;	
+
+	if (pMultiCallback)
+	{	
+		ZIP_SIZE_TYPE uTotalToMove = 0;
+		ZIP_SIZE_TYPE uTotalToEncrypt = 0;
+	
+		// move files
+		idxIdx = 0;
+		// infos array has data from largest index to the smallest	
+		CZipEncryptFileInfo info = infos[0];		
+		idx = GetCount();
+		
+		ZIP_SIZE_TYPE uLastOffset = m_storage.GetLastDataOffset();		
+		ZIP_INDEX_TYPE lastNormalIdx = ZIP_FILE_INDEX_UNSPECIFIED;
+		while (idx > 0)
+		{
+			idx--;
+			if (idx == info.m_uIndex)
+			{				
+				if (lastNormalIdx != ZIP_FILE_INDEX_UNSPECIFIED)
+				{
+					// compensate changed offset
+					uTotalToMove += uLastOffset - GetFileInfo(lastNormalIdx)->m_uOffset;										
+					lastNormalIdx = ZIP_FILE_INDEX_UNSPECIFIED;
+				}
+				uTotalToMove += info.m_pHeader->m_uComprSize;
+				uTotalToEncrypt += info.m_pHeader->m_uComprSize;
+				
+				// no more files to encrypt
+				if (++idxIdx == uSize)
+					break;				
+				uLastOffset = info.m_pHeader->m_uOffset;
+				info = infos[idxIdx];
+			}
+			else
+				lastNormalIdx = idx;
+		}
+		pMultiCallback->MultiActionsInit((ZIP_SIZE_TYPE)uSize, uTotalToMove + uTotalToEncrypt, CZipActionCallback::cbEncryptMoveData);
+	}
+	
+
+	try
+	{
+		// move files
+		idxIdx = 0;
+		// infos array has data from largest index to the smallest	
+		CZipEncryptFileInfo info = infos[0];		
+		idx = GetCount();
+		
+		DWORD uExtraBefore = CZipCryptograph::GetEncryptedInfoSizeBeforeData(m_iEncryptionMethod);
+		DWORD uExtraAfter = CZipCryptograph::GetEncryptedInfoSizeAfterData(m_iEncryptionMethod);
+		// the total amount of extra data
+		uExtraData += ((uExtraBefore + uExtraAfter) * infos.GetSize());
+				
+		ZIP_SIZE_TYPE uLastOffset = m_storage.GetLastDataOffset();		
+		ZIP_INDEX_TYPE lastNormalIdx = ZIP_FILE_INDEX_UNSPECIFIED;
+		InitBuffer();
+		pCallback = GetCallback(CZipActionCallback::cbEncryptMoveData);
+		while (idx > 0)
+		{
+			idx--;
+			if (idx == info.m_uIndex)
+			{				
+				if (lastNormalIdx != ZIP_FILE_INDEX_UNSPECIFIED)
+				{
+					// compensate changed offset
+					ZIP_SIZE_TYPE uStartOffset = GetFileInfo(lastNormalIdx)->m_uOffset - uExtraData; 					
+					if (pCallback)
+					{
+						pCallback->Init();
+						pCallback->SetTotal(uLastOffset - uStartOffset);
+					}					
+					MovePackedFiles(uStartOffset, uLastOffset, uExtraData, pCallback, true);
+					if (pCallback)
+						pCallback->CallbackEnd();
+					lastNormalIdx = ZIP_FILE_INDEX_UNSPECIFIED;
+				}
+				uExtraData -= (uExtraAfter + info.m_uDescriptorSizeDiff);
+				if (pCallback)
+				{
+					pCallback->Init();
+					pCallback->SetTotal(info.m_pHeader->m_uComprSize);
+				}					
+				MovePackedFiles(info.m_uDataOffset, info.m_uDataOffset + info.m_pHeader->m_uComprSize, uExtraData, pCallback, true);
+				if (pCallback)
+					pCallback->CallbackEnd();
+
+				// no more files to encrypt
+				if (++idxIdx == uSize)
+					break;
+
+				uExtraData -= (uExtraBefore + info.m_uLocalSizeDiff);
+				// use original offsett
+				uLastOffset = info.m_pHeader->m_uOffset;
+				// now change the offset (not counting expanded local header - it changed the offset of data, not the offset of local header)
+				info.m_pHeader->m_uOffset += uExtraData;			
+							
+				info = infos[idxIdx];
+			}
+			else
+			{
+				lastNormalIdx = idx;
+				GetFileInfo(idx)->m_uOffset += uExtraData;
+			}
+		}
+		bAborted = false;
+		ZIP_SIZE_TYPE uToEncrypt = 0;
+		i = uSize;
+		// now encrypt the files (starting from the first one in the archive - this way the general direction of data copying is kept
+		CreateCryptograph(m_iEncryptionMethod);
+		if (pMultiCallback)
+			pMultiCallback->SetReactType(CZipActionCallback::cbEncrypt);
+		pCallback = GetCallback(CZipActionCallback::cbEncrypt);
+		while (i > 0)
+		{	
+			i--;
+			CZipEncryptFileInfo inf = infos[i];
+			CZipFileHeader* pHeader = inf.m_pHeader;
+			uToEncrypt = pHeader->m_uComprSize;
+			if (pCallback)
+			{
+				pCallback->Init(pHeader->GetFileName());
+				pCallback->SetTotal(uToEncrypt);
+			}	
+
+			m_storage.Seek(pHeader->m_uOffset);
+			pHeader->WriteLocal(&m_storage);		
+			// take the number of bytes to encode, before m_uComprSize is modified			
+			m_pCryptograph->InitEncode(m_pszPassword, *pHeader, m_storage);
+			m_storage.Flush();
+
+			if (uToEncrypt)
+			{
+				DWORD bufSize = m_pBuffer.GetSize();
+				char* buf = (char*)m_pBuffer;
+				ZIP_SIZE_TYPE uToRead;
+				UINT uSizeRead;				
+				bool bBreak = false;
+				CZipAbstractFile* pFile = m_storage.m_pFile;
+				ZIP_FILE_USIZE uPosition = pFile->GetPosition();
+				// the file pointer should be already positioned on the data
+				do
+				{
+					uToRead = uToEncrypt > bufSize ? bufSize : uToEncrypt;
+					uSizeRead = (UINT)pFile->Read(buf, (UINT)uToRead);
+					if (!uSizeRead)
+						break;
+					uToEncrypt -= uSizeRead;
+					if (uToEncrypt == 0)
+						bBreak = true;
+					
+					m_pCryptograph->Encode(buf, uSizeRead);
+					pFile->Seek(uPosition);
+					pFile->Write(buf, uSizeRead);
+					uPosition += uSizeRead;
+
+					if (pCallback && !pCallback->RequestCallback(uSizeRead))
+					{
+						bAborted = true;
+						break;
+					}
+					if (pMultiCallback)
+						pMultiCallback->MultiActionsNext();
+				}
+				while (!bBreak);			
+			}
+
+			// copying from a not segmented to a segmented archive so add the data descriptor
+
+			// we want write the additional data only if everything is all right, but we don't want to flush the storage before 
+			// (and we want to flush the storage before throwing an exception, if something is wrong)
+			if (uToEncrypt == 0)
+			{
+				m_pCryptograph->FinishEncode(*pHeader, m_storage);
+				// it will be written only if needed
+				pHeader->WriteDataDescriptor(&m_storage);
+				m_storage.Flush();
+			}
+
+			if (pCallback)
+			{
+				if (!bAborted && !pCallback->RequestLastCallback())
+					bAborted = true;
+								
+				if (bAborted)
+				{
+					pCallback->CallbackEnd();
+					CZipException::Throw(CZipException::abortedAction);
+				}
+			}
+
+			if (uToEncrypt > 0)
+				ThrowError(CZipException::badZipFile);
+
+			if (pCallback)
+				pCallback->CallbackEnd();
+		}
+		
+		m_storage.FlushFile();
+		ClearCryptograph();	
+
+	}
+	catch(...)
+	{
+		if (pMultiCallback)
+			pMultiCallback->MultiActionsEnd();
+		throw;
+	}
+
+	if (pMultiCallback)
+		pMultiCallback->MultiActionsEnd();
+	return true;
+
+}
+
+
 bool CZipArchive::SetCompressionMethod(WORD uCompressionMethod)
 {
 	if (m_iFileOpened == compress)
 	{
-		ZIPTRACE("%s(%i) : You cannot change the compression method when there is a file opened for compression.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot change the compression method when there is a file opened for compression.\n");
 		return false; 
 	}
 	if (uCompressionMethod == CZipCompressor::methodStore)
@@ -1678,9 +2222,15 @@ CZipString CZipArchive::GetPassword()const
 
 bool CZipArchive::TestFile(ZIP_INDEX_TYPE uIndex, DWORD uBufSize)
 {
+	if (IsClosed())
+	{
+		ZIPTRACE("%s(%i) : ZipArchive is closed.\n");
+		return false;
+	}
+
 	if (m_storage.IsSegmented() == 1)
 	{
-		ZIPTRACE("%s(%i) : You cannot test a segmented archive in creation.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot test a segmented archive in creation.\n");
 		return false;
 	}
 	if (!uBufSize)
@@ -1812,7 +2362,6 @@ void CZipArchive::EnableFindFast(bool bEnable)
 		return;
 	}
 	m_centralDir.EnableFindFast(bEnable, m_bCaseSensitive);
-
 }
 
 bool CZipArchive::SetSystemCompatibility(int iSystemComp)
@@ -1832,8 +2381,8 @@ bool CZipArchive::SetSystemCompatibility(int iSystemComp)
 	if (!ZipCompatibility::IsPlatformSupported(iSystemComp))
 		return false;
 	// change the name coding page, if it was not changed before
-	if (m_centralDir.m_stringSettings.IsStandardNameCodePage(m_iArchiveSystCompatib))
-		m_centralDir.m_stringSettings.SetDefaultNameCodePage(iSystemComp);	
+	if (m_stringSettings.IsStandardNameCodePage(m_iArchiveSystCompatib))
+		m_stringSettings.SetDefaultNameCodePage(iSystemComp);	
 	m_iArchiveSystCompatib = iSystemComp;
 	
 	return true;
@@ -1978,8 +2527,8 @@ ZIP_SIZE_TYPE CZipArchive::PredictMaximumFileSizeInArchive(LPCTSTR lpszFilePath,
 
 ZIP_SIZE_TYPE CZipArchive::PredictMaximumFileSizeInArchive(CZipFileHeader& fh) const
 {
-	fh.m_stringSettings = m_centralDir.m_stringSettings;
-	fh.m_uEncryptionMethod = EncryptNextFile() ? (BYTE)m_iEncryptionMethod : (BYTE)CZipCryptograph::encNone;
+	fh.m_stringSettings = m_stringSettings;
+	fh.m_uEncryptionMethod = WillEncryptNextFile() ? (BYTE)m_iEncryptionMethod : (BYTE)CZipCryptograph::encNone;
 	fh.m_uMethod = CZipCompressor::methodStore;
 	fh.PrepareData(CZipCompressor::levelStore, m_storage.IsSegmented() != 0);
 	DWORD uLocalSize = fh.GetLocalSize(true);
@@ -1990,7 +2539,7 @@ void CZipArchive::SetAutoFlush(bool bAutoFlush)
 {
 	if (IsClosed())
 	{
-		ZIPTRACE("%s(%i) : ZipArchive not yet opened.\n");
+		ZIPTRACE("%s(%i) : ZipArchive should be opened first.\n");
 		return;
 	}
 	if (m_storage.IsSegmented() != 0)
@@ -2005,7 +2554,7 @@ void CZipArchive::Flush()
 {
 	if (IsClosed())
 	{
-		ZIPTRACE("%s(%i) : ZipArchive not yet opened.\n");
+		ZIPTRACE("%s(%i) : ZipArchive should be opened first.\n");
 		return;
 	}
 
@@ -2021,11 +2570,11 @@ void CZipArchive::Flush()
 }
 
 
-void CZipArchive::GetCentralDirInfo(CZipCentralDir::Info& info)const
+void CZipArchive::GetCentralDirInfo(CZipCentralDir::CInfo& info)const
 {
 	if (IsClosed())
 	{
-		ZIPTRACE("%s(%i) : ZipArchive not yet opened.\n");
+		ZIPTRACE("%s(%i) : ZipArchive should be opened first.\n");
 		return;
 		
 	}
@@ -2077,7 +2626,7 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTST
 {
 	if (this == &zip)
 	{
-		ZIPTRACE("%s(%i) : You cannot get files from the same archive.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot get files from the same archive.\n");
 		return false;
 	}
 
@@ -2089,13 +2638,13 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTST
 	
 	if (m_iFileOpened || zip.m_iFileOpened)
 	{
-		ZIPTRACE("%s(%i) : You cannot get files from another archive if there is a file opened.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot get files from another archive if there is a file opened.\n");
 		return false;
 	}
 	
 	if (m_storage.IsSegmented() == -1)
 	{
-		ZIPTRACE("%s(%i) : You cannot add files to an existing segmented archive.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot add files to an existing segmented archive.\n");
 		return false;
 	}
 
@@ -2105,17 +2654,16 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTST
 
 	if (!zip.m_centralDir.IsValidIndex(uIndex))
 		return false;
-	// update sizes of local filename and extra field - they may differ from the ones in the central directory
-	zip.m_centralDir.OpenFile(uIndex);
-	// skip checking the data descriptor, we are not there yet
-	zip.m_centralDir.CloseFile(true);
+
+	zip.ReadLocalHeaderInternal(uIndex);
 
 	CZipFileHeader originalHeader;
 	// we need a copy - we are going to modify this
 	if (!zip.GetFileInfo(originalHeader, uIndex))
 		return false;
 	if (zip.m_storage.IsSegmented() != 0 && originalHeader.m_uLocalComprSize == 0)
-		originalHeader.m_uLocalComprSize = originalHeader.m_uComprSize;
+		// we must compensate for adding the encrypted info size to m_uLocalComprSize at the beginning of CZipFileHeader::WriteLocal()
+		originalHeader.m_uLocalComprSize = originalHeader.m_uComprSize - originalHeader.GetEncryptedInfoSize();
 	bool bConvertSystem = !bKeepSystComp && originalHeader.GetSystemCompatibility() != m_iArchiveSystCompatib;
 	CZipString szFileName;
 	if (lpszNewFileName != NULL)
@@ -2144,7 +2692,15 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTST
 	if (pCallback)
 		iCallbackType = pCallback->m_iType;
 
-	// if the same callback is applied to cbReplace, then the previous information about the type will be lost
+	if (!originalHeader.IsEncrypted() && WillEncryptNextFile())
+	{
+		originalHeader.m_uEncryptionMethod = (BYTE)m_iEncryptionMethod;
+		CreateCryptograph(m_iEncryptionMethod);
+	}
+	else
+		ClearCryptograph();
+
+	// if the same callback is applied to cbMoveData, then the previous information about the type will be lost
 	// we restore it later
 	CZipFileHeader* pHeader = m_centralDir.AddNewFile(originalHeader, uReplaceIndex, originalHeader.GetCompressionLevel(), true);
 	pHeader->m_stringSettings.m_uCommentCodePage = originalHeader.m_stringSettings.m_uCommentCodePage;
@@ -2152,10 +2708,18 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTST
 	// prepare this here: it will be used for GetLocalSize and WriteLocal
 	pHeader->PrepareFileName();
 
-	ZIP_SIZE_TYPE uTotalToMove = originalHeader.m_uComprSize;
+	ZIP_SIZE_TYPE uTotalToMove = pHeader->m_uComprSize;
 
 	if (bReplace)
-		MakeSpaceForReplace(uReplaceIndex, uTotalToMove + pHeader->GetLocalSize(false) + pHeader->GetDataDescriptorSize(&m_storage), szFileName);
+	{
+		ZIP_SIZE_TYPE uDataSize;
+		if (m_pCryptograph)
+			// the file will be encrypted and have not yet increased pHeader->m_uComprSize (in m_pCryptograph->InitEncode)
+			uDataSize = pHeader->GetDataSize(false, false);
+		else
+			uDataSize = uTotalToMove;
+		MakeSpaceForReplace(uReplaceIndex, uDataSize + pHeader->GetLocalSize(false) + pHeader->GetDataDescriptorSize(&m_storage), szFileName);
+	}
 
 	if (pCallback)
 	{
@@ -2167,28 +2731,34 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTST
 
 	// must be written as not converted
 	pHeader->WriteLocal(&m_storage); 
+	if (m_pCryptograph)
+		m_pCryptograph->InitEncode(m_pszPassword, *pHeader, m_storage);
 
 
 	char* buf = (char*)m_pBuffer;
 
 	ZIP_SIZE_TYPE uToRead;
-	DWORD size_read;	
+	DWORD uSizeRead;	
 	int iAborted = 0;
 	bool bBreak = false;
 	if (uTotalToMove)
 	{
+		DWORD bufSize = m_pBuffer.GetSize();
 		do
 		{
-			uToRead = uTotalToMove > m_pBuffer.GetSize() ? m_pBuffer.GetSize() : uTotalToMove;
-			size_read = (UINT)zip.m_storage.Read(buf, (UINT)uToRead, false);
-			if (!size_read)
+			uToRead = uTotalToMove > bufSize ? bufSize : uTotalToMove;
+			uSizeRead = (UINT)zip.m_storage.Read(buf, (UINT)uToRead, false);
+			if (!uSizeRead)
 				break;
-			uTotalToMove -= size_read;
+			uTotalToMove -= uSizeRead;
 			if (uTotalToMove == 0)
 				bBreak = true;
 			
-			m_storage.Write(buf, size_read, false);
-			if (pCallback && !pCallback->RequestCallback(size_read))
+			if (m_pCryptograph)
+				m_pCryptograph->Encode(m_pBuffer, uSizeRead);
+
+			m_storage.Write(buf, uSizeRead, false);
+			if (pCallback && !pCallback->RequestCallback(uSizeRead))
 			{												
 				if (uTotalToMove != 0) 
 				{							
@@ -2225,11 +2795,15 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTST
 	m_centralDir.m_pOpenedFile = NULL;
 	// copying from a not segmented to a segmented archive so add the data descriptor
 
-	// we want write the descriptor only if everything is all right, but we don't want to flush the storage before 
+	// we want write the additional data only if everything is all right, but we don't want to flush the storage before 
 	// (and we want to flush the storage before throwing an exception, if something is wrong)
 	if (uTotalToMove == 0)
+	{
+		if (m_pCryptograph)
+			m_pCryptograph->FinishEncode(*pHeader, m_storage);
 		// it will be written only if needed
 		pHeader->WriteDataDescriptor(&m_storage);
+	}
 
 	m_storage.Flush();
 	if (uTotalToMove > 0)
@@ -2237,7 +2811,8 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTST
 
 	if (pCallback)
 		pCallback->CallbackEnd();
-				
+
+	ClearCryptograph();				
 	return true;
 }
 
@@ -2278,13 +2853,13 @@ bool CZipArchive::RenameFile(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewName)
 	
 	if (m_storage.IsSegmented())
 	{
-		ZIPTRACE("%s(%i) : You cannot rename files in a segmented archive.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot rename files in a segmented archive.\n");
 		return false;
 	}
 	
 	if (m_iFileOpened)
 	{
-		ZIPTRACE("%s(%i) : You cannot rename a file if there is a file opened.\n");
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot rename a file if there is a file opened.\n");
 		return false;
 	}
 	CZipFileHeader* pHeader = (*this)[uIndex];
@@ -2301,8 +2876,8 @@ bool CZipArchive::RenameFile(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewName)
 		return true;
 	
 	// don't copy the comment code page, it already could have been set using it's own code page (set CD CP, change comment, change CD CP)
-	pHeader->m_stringSettings.m_bStoreNameInExtraData = m_centralDir.m_stringSettings.m_bStoreNameInExtraData;
-	pHeader->m_stringSettings.m_uNameCodePage = m_centralDir.m_stringSettings.m_uNameCodePage;
+	pHeader->m_stringSettings.m_bStoreNameInExtraData = m_stringSettings.m_bStoreNameInExtraData;
+	pHeader->m_stringSettings.m_uNameCodePage = m_stringSettings.m_uNameCodePage;
 	pHeader->SetFileName(szNewName);
 
 	m_centralDir.RemoveFromDisk(); // does m_storage.Flush();
@@ -2381,7 +2956,7 @@ bool CZipArchive::UpdateReplaceIndex(ZIP_INDEX_TYPE& uReplaceIndex)
 
 	if (GetSegmMode() != 0)
 	{
-		ZIPTRACE("%s(%i) : You cannot replace files in a segmented archive.\n");		
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot replace files in a segmented archive.\n");		
 		return false;
 	}
 	
@@ -2407,10 +2982,10 @@ void CZipArchive::MakeSpaceForReplace(ZIP_INDEX_TYPE uReplaceIndex, ZIP_SIZE_TYP
 	// find the next offset (files in the central directory may not necessarily be ordered by offset)
 	ZIP_SIZE_TYPE uReplaceEnd = ZIP_SIZE_TYPE(-1);
 	ZIP_INDEX_TYPE i;
-	for (i = 0; (ZIP_ARRAY_SIZE_TYPE)i < m_centralDir.m_headers.GetSize(); i++)
+	for (i = 0; i < (ZIP_INDEX_TYPE)m_centralDir.GetCount(); i++)
 		if (i != uReplaceIndex)
 		{
-			ZIP_SIZE_TYPE uOffset = m_centralDir.m_headers[(ZIP_ARRAY_SIZE_TYPE)i]->m_uOffset;
+			ZIP_SIZE_TYPE uOffset = m_centralDir[i]->m_uOffset;
 			if (uOffset > uReplaceStart && uOffset < uReplaceEnd)
 				uReplaceEnd = uOffset;
 		}
@@ -2428,7 +3003,7 @@ void CZipArchive::MakeSpaceForReplace(ZIP_INDEX_TYPE uReplaceIndex, ZIP_SIZE_TYP
 	
 	
 	//	InitBuffer(); don't - the calling functions will
-	CZipActionCallback* pCallback = GetCallback(CZipActionCallback::cbReplace);
+	CZipActionCallback* pCallback = GetCallback(CZipActionCallback::cbMoveData);
 	ZIP_SIZE_TYPE uFileLen = (ZIP_SIZE_TYPE)m_storage.m_pFile->GetLength();
 	ZIP_SIZE_TYPE uUpperLimit = uFileLen - m_storage.m_uBytesBeforeZip; // will be added in m_storage.Seek
 	if (pCallback)
@@ -2446,17 +3021,18 @@ void CZipArchive::MakeSpaceForReplace(ZIP_INDEX_TYPE uReplaceIndex, ZIP_SIZE_TYP
 		m_storage.m_pFile->SetLength((ZIP_FILE_USIZE)(uFileLen - uDelta));
 
 	m_storage.Seek(uReplaceStart);
-	ZIP_INDEX_TYPE uSize = (ZIP_INDEX_TYPE)m_centralDir.m_headers.GetSize();
+	ZIP_INDEX_TYPE uSize = GetCount();
 	for (i = (ZIP_INDEX_TYPE)(uReplaceIndex + 1); i < uSize; i++)
 	{
-		ZIP_SIZE_TYPE uOffset = m_centralDir.m_headers[(ZIP_ARRAY_SIZE_TYPE)i]->m_uOffset;
-		m_centralDir.m_headers[(ZIP_ARRAY_SIZE_TYPE)i]->m_uOffset = bForward ? uOffset + uDelta : uOffset - uDelta;
+		ZIP_SIZE_TYPE uOffset = m_centralDir[i]->m_uOffset;
+		m_centralDir[i]->m_uOffset = bForward ? uOffset + uDelta : uOffset - uDelta;
 	}
 	if (pCallback)
 		pCallback->CallbackEnd();			
 }
 
-void CZipArchive::MovePackedFiles(ZIP_SIZE_TYPE uStartOffset, ZIP_SIZE_TYPE uEndOffset, ZIP_SIZE_TYPE uMoveBy, CZipActionCallback* pCallback, bool bForward, bool bLastCall)
+void CZipArchive::MovePackedFiles(ZIP_SIZE_TYPE uStartOffset, ZIP_SIZE_TYPE uEndOffset, ZIP_SIZE_TYPE uMoveBy, 
+								  CZipActionCallback* pCallback, bool bForward, bool bLastCall)
 {
 	ASSERT(m_pBuffer.GetSize() > 0);
 	
@@ -2465,7 +3041,7 @@ void CZipArchive::MovePackedFiles(ZIP_SIZE_TYPE uStartOffset, ZIP_SIZE_TYPE uEnd
 	char* buf = (char*)m_pBuffer;
 	
 	
-	UINT size_read;
+	UINT uSizeRead;
 	bool bBreak = false;
 	bool bAborted = false;
 	do
@@ -2481,8 +3057,8 @@ void CZipArchive::MovePackedFiles(ZIP_SIZE_TYPE uStartOffset, ZIP_SIZE_TYPE uEnd
 		ZIP_SIZE_TYPE uPosition = bForward ? uEndOffset - uPack : uStartOffset;
 		
 		m_storage.Seek(uPosition);
-		size_read = m_storage.m_pFile->Read(buf, (UINT)uPack);
-		if (!size_read)
+		uSizeRead = m_storage.m_pFile->Read(buf, (UINT)uPack);
+		if (!uSizeRead)
 			break;
 		
 		if (bForward)
@@ -2490,12 +3066,12 @@ void CZipArchive::MovePackedFiles(ZIP_SIZE_TYPE uStartOffset, ZIP_SIZE_TYPE uEnd
 		else
 			uPosition -= uMoveBy;
 		m_storage.Seek(uPosition);
-		m_storage.m_pFile->Write(buf, size_read);
+		m_storage.m_pFile->Write(buf, uSizeRead);
 		if (bForward)
-			uEndOffset -= size_read;
+			uEndOffset -= uSizeRead;
 		else
-			uStartOffset += size_read;
-		if (pCallback && !pCallback->RequestCallback(size_read))
+			uStartOffset += uSizeRead;
+		if (pCallback && !pCallback->RequestCallback(uSizeRead))
 		{
 			bAborted = true;
 			break;			
@@ -2520,4 +3096,58 @@ void CZipArchive::MovePackedFiles(ZIP_SIZE_TYPE uStartOffset, ZIP_SIZE_TYPE uEnd
 	if (uEndOffset != uStartOffset)
 		ThrowError(CZipException::internalError);
 	
+}
+
+
+bool CZipArchive::RemoveCentralDirectoryFromArchive()
+{
+	if (IsClosed())
+	{
+		ZIPTRACE("%s(%i) : ZipArchive is closed.\n");
+		return false;
+	}
+
+	if (m_storage.IsSegmented())
+	{
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot remove the central directory from a segmented archive.\n");
+		return false;
+	}
+	m_centralDir.RemoveFromDisk();
+	return true;
+}
+
+bool CZipArchive::OverwriteLocalHeader(ZIP_INDEX_TYPE uIndex)
+{
+	if (IsClosed())
+	{
+		ZIPTRACE("%s(%i) : ZipArchive is closed.\n");
+		return false;
+	}
+
+	if (m_storage.IsSegmented())
+	{
+		ZIPTRACE("%s(%i) : ZipArchive Library cannot overwrite local header in a segmented archive.\n");
+		return false;
+	}	
+	
+	CZipFileHeader* pHeader = GetFileInfo(uIndex);
+	m_storage.Seek(pHeader->m_uOffset);
+	pHeader->WriteLocal(&m_storage);
+	return true;
+}
+
+bool CZipArchive::ReadLocalHeader(ZIP_INDEX_TYPE uIndex)
+{
+	if (IsClosed())
+	{
+		ZIPTRACE("%s(%i) : ZipArchive is closed.\n");
+		return false;
+	}
+	if (m_iFileOpened)
+	{
+		ZIPTRACE("%s(%i) : A file is already opened.\n");
+		return false;
+	}
+	ReadLocalHeaderInternal(uIndex);
+	return true;
 }
