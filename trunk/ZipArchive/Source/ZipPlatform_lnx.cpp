@@ -48,6 +48,8 @@ const TCHAR CZipPathComponent::m_cSeparator = _T('/');
 #define _utimbuf utimbuf
 #endif
 
+#define ZIP_DEFAULT_DIR_ATTRIBUTES (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -101,7 +103,6 @@ bool ZipPlatform::GetCurrentDirectory(CZipString& sz)
 bool ZipPlatform::SetFileAttr(LPCTSTR lpFileName, DWORD uAttr)
 {
 	return chmod(lpFileName, uAttr >> 16) == 0;
-
 }
 
 bool ZipPlatform::GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr)
@@ -111,9 +112,17 @@ bool ZipPlatform::GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr)
 		return false;
   	uAttr = (sStats.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO | S_IFMT)) << 16;
   	return true;
-
-
 }
+
+bool ZipPlatform::SetExeAttr(LPCTSTR lpFileName)
+{
+	DWORD uAttr;
+	if (!GetFileAttr(lpFileName, uAttr))
+		return false;
+	uAttr |= (S_IXUSR << 16);
+	return ZipPlatform::SetFileAttr(lpFileName, uAttr);
+}
+
 
 bool ZipPlatform::GetFileModTime(LPCTSTR lpFileName, time_t & ttime)
 {
@@ -204,7 +213,7 @@ ZIPINLINE  bool ZipPlatform::IsDirectory(DWORD uAttr)
 
 ZIPINLINE  bool ZipPlatform::CreateDirectory(LPCTSTR lpDirectory)
 {	
-	return mkdir(lpDirectory, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == 0;
+	return mkdir(lpDirectory, ZIP_DEFAULT_DIR_ATTRIBUTES) == 0;
 }
 
 ZIPINLINE  DWORD ZipPlatform::GetDefaultAttributes()
@@ -214,7 +223,7 @@ ZIPINLINE  DWORD ZipPlatform::GetDefaultAttributes()
 
 ZIPINLINE  DWORD ZipPlatform::GetDefaultDirAttributes()
 {
-	return 0x41ff0010;
+	return ((S_IFDIR | ZIP_DEFAULT_DIR_ATTRIBUTES) << 16 ) | 0x10;
 }
 
 
@@ -231,21 +240,13 @@ ZIPINLINE bool ZipPlatform::GetSystemCaseSensitivity()
 
 bool ZipPlatform::TruncateFile(int iDes, ULONGLONG uSize)
 {
-#if defined _ZIP64 && !defined __APPLE__
-	return ftruncate64(iDes, uSize) == 0;
-#else
 	return ftruncate(iDes, uSize) == 0;
-#endif
 
 }
 
 int ZipPlatform::OpenFile(LPCTSTR lpszFileName, UINT iMode, int iShareMode)
 {
-#if defined _ZIP64 && !defined __APPLE__
-	return open64(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );
-#else
 	return open(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );	
-#endif
 }
 
 bool ZipPlatform::FlushFile(int iDes)

@@ -19,6 +19,7 @@ bool CZipExtraField::Read(CZipStorage *pStorage, WORD uSize)
 {
 	if (uSize == 0)
 		return true;
+	Clear();
 	CZipAutoBuffer buffer;
 	buffer.Allocate(uSize);
 	pStorage->Read(buffer, uSize, true);

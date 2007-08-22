@@ -26,8 +26,7 @@
 #endif
 
 #include "ZipExport.h"
-#include "ZipCompressor.h"
-#include "ZipCollections.h"
+#include "BaseLibCompressor.h"
 #include "ZipException.h"
 #include "_features.h"
 #include "../../zlib/Source/zlib.h"
@@ -38,9 +37,8 @@ namespace ZipArchiveLib
 /**
 	Compresses and decompresses data using the Zlib library.
 */
-class ZIP_API CDeflateCompressor : public CZipCompressor
-{	
-	bool m_bDetectZlibMemoryLeaks;
+class ZIP_API CDeflateCompressor : public CBaseLibCompressor
+{		
 	bool m_bCheckLastBlock;
 public:
 
@@ -48,16 +46,16 @@ public:
 		Initializes a new instance of the CDeflateCompressor class.
 
 		\param pStorage
-			The current storage.
-
+			The current storage object.
+		
 		\param pBuffer
 			A pre-allocated buffer that receives compressed data or provides data for decompression.
 
-		\param bDetectZlibMemoryLeaks			
-			Set to \c true, if you want to control the allocation and freeing of memory by the Zlib library 
-			or to \c false otherwise.
+		\param bDetectLibMemoryLeaks
+			\c true, if the ZipArchive Library should detect memory leaks in an external library; \c false otherwise. 
+			Usually not needed to be set.
 	*/
-	CDeflateCompressor(CZipStorage* pStorage, CZipAutoBuffer* pBuffer, bool bDetectZlibMemoryLeaks = true);
+	CDeflateCompressor(CZipStorage* pStorage, CZipAutoBuffer* pBuffer, bool bDetectLibMemoryLeaks = false);
 
 	bool CanProcess(WORD uMethod) {return uMethod == methodStore || uMethod == methodDeflate;}
 
@@ -99,63 +97,39 @@ public:
 		return m_bCheckLastBlock;
 	}
 
-	~CDeflateCompressor()
+protected:
+	int ConvertInternalError(int iErr)
 	{
-		EmptyPtrList();
+		switch (iErr)
+		{
+		case Z_NEED_DICT:
+			return CZipException::needDict;
+		case Z_STREAM_END:
+			return CZipException::streamEnd;
+		case Z_ERRNO:
+			return CZipException::errNo;
+		case Z_STREAM_ERROR:
+			return CZipException::streamError;
+		case Z_DATA_ERROR:
+			return CZipException::dataError;
+		case Z_MEM_ERROR:
+			return CZipException::memError;
+		case Z_BUF_ERROR:
+			return CZipException::bufError;
+		case Z_VERSION_ERROR:
+			return CZipException::versionError;
+		default:
+			return CZipException::genericError;
+		}
 	}
-	
+
+	bool IsCodeErrorOK(int iErr)
+	{
+		return iErr == Z_OK || iErr == Z_NEED_DICT;
+	}
 private:		
 	zarch_z_stream m_stream;
-	typedef CZipPtrList<void*>::iterator CZipPtrListIter;
-
-#if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (push)
-	#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
-#endif
-
-	CZipPtrList<void*> m_list; ///< A list holding pointers to the memory areas allocated by the Zlib library.
-
-#if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning( pop)
-#endif
-
-	void CheckForError(int iErr);
-
-	void ThrowError(int err, bool bZlib = false)
-	{
-		if (bZlib)
-			err = CZipException::ZlibErrToZip(err);
-		CZipException::Throw(err, m_pStorage->IsClosed(true) ? _T("") : (LPCTSTR)m_pStorage->m_pFile->GetFilePath());
-	}
-
-
-	static void* _zliballoc(void* opaque, UINT items, UINT size) ///< The memory allocator called by the Zlib library.
-	{
-		void* p = new char[size * items];
-		if (opaque)
-		{
-			CZipPtrList<void*>* list  = (CZipPtrList<void*>*) opaque;
-			list->AddTail(p);
-		}
-		return p;
-	}
-	static void _zlibfree(void* opaque, void* address) ///< The memory deallocator called by the Zlib library.	
-	{
-		if (opaque)
-		{
-			CZipPtrList<void*>* list  = (CZipPtrList<void*>*) opaque;
-			CZipPtrListIter iter = list->Find(address);
-			if (list->IteratorValid(iter))
-				list->RemoveAt(iter);
-		}
-		delete[] (char*) address;
-	}
-
-	/**
-		Frees the memory allocated by the Zlib library that hasn't been freed
-		due to an error in the Zlib library (usually never happens).
-	*/
-	void EmptyPtrList();
+	
 };
 
 } // namespace

@@ -22,7 +22,11 @@
 #define ZIPARCHIVE_ZIPCALLBACKPROVIDER_DOT_H
 
 #if _MSC_VER > 1000
-#pragma once
+	#pragma once
+	#if defined ZIP_HAS_DLL
+		#pragma warning (push)
+		#pragma warning( disable : 4275 ) // non dll-interface used as base for dll-interface class
+	#endif
 #endif
 
 #include "ZipCallback.h"
@@ -43,7 +47,7 @@ class ZIP_API CZipCallbackProvider : public CZipMap<CZipActionCallback::Callback
 public:
 	void Set(CZipActionCallback* pCallback, int iWhich)
 	{
-		CZipActionCallback::CallbackType cbs[] = {CZipActionCallback::cbAdd, CZipActionCallback::cbAddTmp, CZipActionCallback::cbAddStore, CZipActionCallback::cbExtract, CZipActionCallback::cbDeleteCnt, CZipActionCallback::cbDelete, CZipActionCallback::cbTest, CZipActionCallback::cbSave, CZipActionCallback::cbGet, CZipActionCallback::cbRename, CZipActionCallback::cbReplace, CZipActionCallback::cbCalculateForMulti, CZipActionCallback::cbMultiAdd};
+		CZipActionCallback::CallbackType cbs[] = {CZipActionCallback::cbAdd, CZipActionCallback::cbAddTmp, CZipActionCallback::cbAddStore, CZipActionCallback::cbExtract, CZipActionCallback::cbDeleteCnt, CZipActionCallback::cbDelete, CZipActionCallback::cbTest, CZipActionCallback::cbSave, CZipActionCallback::cbGet, CZipActionCallback::cbRename, CZipActionCallback::cbMoveData, CZipActionCallback::cbCalculateForMulti, CZipActionCallback::cbMultiAdd, CZipActionCallback::cbEncryptPrepare, CZipActionCallback::cbEncryptMoveData, CZipActionCallback::cbEncrypt, CZipActionCallback::cbMultiEncrypt};
 		int iCount = sizeof(cbs)/sizeof(CZipActionCallback::CallbackType);
 		for (int i = 0; i < iCount; i++)
 		{
@@ -77,5 +81,10 @@ protected:
 };
 
 } // namespace
+
+#if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
+	#pragma warning (pop)	
+#endif
+
 
 #endif // !defined(ZIPARCHIVE_ZIPCALLBACKPROVIDER_DOT_H)

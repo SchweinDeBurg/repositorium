@@ -40,25 +40,13 @@ ULONGLONG CZipFile::GetLength() const
 {
 	// cannot use Seek here, Seek is not const
 	ZIP_SIZE_TYPE lLen, lCur;
-#if defined _ZIP64 && !defined __APPLE__
-	lCur = _lseeki64(m_hFile, 0, current);
-#else
 	lCur = _lseek(m_hFile, 0, current);
-#endif
 	if (lCur == (ZIP_SIZE_TYPE)-1)
 		ThrowError();
-#if defined _ZIP64 && !defined __APPLE__
-	lLen = _lseeki64(m_hFile, 0, end);
-#else
 	lLen = _lseek(m_hFile, 0, end);
-#endif
 
 	// first go back
-#if defined _ZIP64 && !defined __APPLE__
-	bool err = _lseeki64(m_hFile, lCur, begin) == -1;
-#else
 	bool err = _lseek(m_hFile, lCur, begin) == -1;
-#endif
 
 	if (err || lLen == (ZIP_SIZE_TYPE)-1)
 		ThrowError();
@@ -112,19 +100,11 @@ void CZipFile::SetLength(ULONGLONG uNewLen)
 
 ZIP_FILE_USIZE CZipFile::GetPosition() const
 {
-#if defined _ZIP64 && !defined __APPLE__
-	#ifndef __GNUC__
-		ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)_telli64(m_hFile);
-	#else
-		ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)lseek64(m_hFile, 0, SEEK_CUR);
-	#endif		
-#else
 	#ifndef __GNUC__
 		ZIP_FILE_USIZE ret = _tell(m_hFile);
 	#else
 		ZIP_FILE_USIZE ret = lseek(m_hFile, 0, SEEK_CUR);
 	#endif
-#endif
 		if (ret == (ZIP_FILE_USIZE)-1)
 			ThrowError();
 		return ret;
@@ -133,11 +113,7 @@ ZIP_FILE_USIZE CZipFile::GetPosition() const
 ZIP_FILE_USIZE CZipFile::Seek(ZIP_FILE_SIZE dOff, int nFrom)
 {
 	// restricted to signed
-#if defined _ZIP64 && !defined __APPLE__
-	ZIP_FILE_SIZE ret = (ZIP_FILE_SIZE)_lseeki64(m_hFile, dOff, nFrom);
-#else
 	ZIP_FILE_SIZE ret = (ZIP_FILE_SIZE)_lseek(m_hFile, (long)dOff, nFrom);
-#endif
 	if (ret == -1)
 		ThrowError();
 	return (ZIP_FILE_USIZE)ret;
@@ -161,4 +137,4 @@ CZipFile::operator HANDLE()
 #endif
 }
 
-#endif // ZIP_ARCHIVE_STL
+#endif

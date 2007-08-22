@@ -207,6 +207,7 @@ public:
 		}
 		return iSize;
 	}
+#ifndef __MINGW32__	
 	void MakeLower() 
 	{
 			std::transform(begin(),end(),begin(),tl);
@@ -215,6 +216,16 @@ public:
 	{
 			std::transform(begin(),end(),begin(),tu);
 	}
+#else
+	void MakeLower() 
+	{
+			std::transform(begin(),end(),begin(),tolower);
+	}
+	void MakeUpper() 
+	{
+			std::transform(begin(),end(),begin(),toupper);
+	}
+#endif	
 	void MakeReverse()
 	{
 		std::reverse(begin(), end());

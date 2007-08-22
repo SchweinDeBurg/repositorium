@@ -58,31 +58,6 @@ CZipException::~CZipException() throw()
 // optimizations
 // }
 
-int CZipException::ZlibErrToZip(int iZlibError)
-{
-	switch (iZlibError)
-	{
-	case Z_NEED_DICT:
-		return CZipException::needDict;
-	case Z_STREAM_END:
-		return CZipException::streamEnd;
-	case Z_ERRNO:
-		return CZipException::errNo;
-	case Z_STREAM_ERROR:
-		return CZipException::streamError;
-	case Z_DATA_ERROR:
-		return CZipException::dataError;
-	case Z_MEM_ERROR:
-		return CZipException::memError;
-	case Z_BUF_ERROR:
-		return CZipException::bufError;
-	case Z_VERSION_ERROR:
-		return CZipException::versionError;
-	default:
-		return CZipException::genericError;
-	}
-	
-}
 
 #ifdef ZIP_ENABLE_ERROR_DESCRIPTION
 
@@ -148,154 +123,159 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 	switch (iCause)
 	{
 		case EROFS:
-			sz = _T("Read-only file system");
+			sz = _T("Read-only file system.");
 			break;
 		case ESPIPE:
-			sz = _T("Illegal seek");
+			sz = _T("Illegal seek.");
 			break;
 		case ENOSPC:
-			sz = _T("No space left on device");
+			sz = _T("No space left on device.");
 			break;
 		case EFBIG:
-			sz = _T("File too large");
+			sz = _T("File too large.");
 			break;
 		case EMFILE:
-			sz = _T("Too many open files");
+			sz = _T("Too many open files.");
 			break;
 		case ENFILE:
-			sz = _T("File table overflow");
+			sz = _T("File table overflow.");
 			break;
 		case EINVAL:
-			sz = _T("Invalid argument");
+			sz = _T("Invalid argument.");
 			break;
 		case EISDIR:
-			sz = _T("Is a directory");
+			sz = _T("Is a directory.");
 			break;
 		case ENOTDIR:
-			sz = _T("Not a directory");
+			sz = _T("Not a directory.");
 			break;
 		case ENODEV:
-			sz = _T("No such device");
+			sz = _T("No such device.");
 			break;
 		case EXDEV:
-			sz = _T("Cross-device link");
+			sz = _T("Cross-device link.");
 			break;
 		case EEXIST:
-			sz = _T("File exists");
+			sz = _T("File exists.");
 			break;
 		case EFAULT:
-			sz = _T("Bad address");
+			sz = _T("Bad address.");
 			break;
 		case EACCES:
-			sz = _T("Permission denied");
+			sz = _T("Permission denied.");
 			break;
 		case ENOMEM:
-			sz = _T("Not enough space");
+			sz = _T("Not enough space.");
 			break;
 		case EBADF:
-			sz = _T("Bad file number");
+			sz = _T("Bad file number.");
 			break;
 		case ENXIO:
-			sz = _T("No such device or address");
+			sz = _T("No such device or address.");
 			break;
 		case EIO:
-			sz = _T("I/O error");
+			sz = _T("I/O error.");
 			break;
 		case EINTR:
-			sz = _T("Interrupted system call");
+			sz = _T("Interrupted system call.");
 			break;
 		case ENOENT:
-			sz = _T("No such file or directory");
+			sz = _T("No such file or directory.");
 			break;
 		case EPERM:
-			sz = _T("Not super-user");
+			sz = _T("Not super-user.");
 			break;
 		case badZipFile:
-			sz = _T("Damaged or not a zip file");
+			sz = _T("Damaged or not a zip file.");
 			break;
 		case badCrc:
-			sz = _T("Crc is mismatched");
+			sz = _T("Crc is mismatched.");
 			break;
 		case noCallback:
-			sz = _T("There is no spanned archive callback object set");
+			sz = _T("There is no spanned archive callback object set.");
 			break;
 		case aborted:
-			sz = _T("Disk change aborted");
+			sz = _T("Disk change aborted.");
 			break;
 		case abortedAction:
-			sz = _T("Action aborted");
+			sz = _T("Action aborted.");
 			break;
 		case abortedSafely:
-			sz = _T("Action aborted safely");
+			sz = _T("Action aborted safely.");
 			break;
 		case nonRemovable:
-			sz = _T("The device selected for the spanned archive is not removable");
+			sz = _T("The device selected for the spanned archive is not removable.");
 			break;
 		case tooManyVolumes:
-			sz = _T("The limit of the maximum volumes reached");
+			sz = _T("The limit of the maximum volumes reached.");
 			break;
 		case tooManyFiles:
-			sz = _T("The limit of the maximum files in an archive reached");
+			sz = _T("The limit of the maximum files in an archive reached.");
 			break;
 		case tooLongData:
-			sz = _T("The filename, the comment or the local or central extra field of the file added to the archive is too long");
+			sz = _T("The filename, the comment or the local or central extra field of the file added to the archive is too long.");
 			break;
 		case tooBigSize:
-			sz = _T("The file size is too large to be supported");
+			sz = _T("The file size is too large to be supported.");
 			break;
 		case badPassword:
-			sz = _T("An incorrect password set for the file being decrypted");
+			sz = _T("An incorrect password set for the file being decrypted.");
 			break;
 		case dirWithSize:
-			sz = _T("The directory with a non-zero size found while testing");
+			sz = _T("The directory with a non-zero size found while testing.");
 			break;
 		case internalError:
-			sz = _T("An internal error");
+			sz = _T("An internal error.");
 			break;
 		case notRemoved:
-			sz.Format(_T("%s (%s)"), _T("Error while removing a file"), (LPCTSTR)GetSystemErrorDescription());
+			sz.Format(_T("%s (%s)."), _T("Error while removing a file"), (LPCTSTR)GetSystemErrorDescription());
 			break;
 		case notRenamed:
-			sz.Format(_T("%s (%s)"), _T("Error while renaming a file"), (LPCTSTR)GetSystemErrorDescription());
+			sz.Format(_T("%s (%s)."), _T("Error while renaming a file"), (LPCTSTR)GetSystemErrorDescription());
 			break;
 		case platfNotSupp:
-			sz = _T("Cannot create a file for the specified platform");
+			sz = _T("Cannot create a file for the specified platform.");
 			break;
 		case cdirNotFound:
-			sz = _T("The central directory was not found in the archive (or you were trying to open not the last disk of a segmented archive)");
+			sz = _T("The central directory was not found in the archive (or you were trying to open not the last disk of a segmented archive).");
 			break;
 		case noZip64:
-			sz = _T("The Zip64 format has not been enabled for the library, but is required to open the archive");
+			sz = _T("The Zip64 format has not been enabled for the library, but is required to open the archive.");
 			break;
 		case noAES:
-			sz = _T("WinZip AES encryption has not been enabled for the library, but is required to decompress the archive");
+			sz = _T("WinZip AES encryption has not been enabled for the library, but is required to decompress the archive.");
 			break;
 #ifdef ZIP_ARCHIVE_STL
 			case outOfBounds:
-			sz = _T("The collection is empty and the bounds do not exist");
+			sz = _T("The collection is empty and the bounds do not exist.");
+			break;
+#endif
+#ifdef ZIP_ARCHIVE_USE_LOCKING
+		case mutexError:
+			sz = _T("Locking or unlocking resources access was unsuccessful.");
 			break;
 #endif
 		case streamEnd:
-			sz = _T("Zlib Library error (end of stream)");
+			sz = _T("Zlib library error (end of stream).");
 			break;
 		case errNo:
 			sz = GetInternalErrorDescription(errno != errNo ? errno : genericError);
 			break;
 		case streamError:
-			sz = _T("Zlib library error (stream error)");
+			sz = _T("Zlib library error (stream error).");
 			break;
 		case dataError:
-			sz = _T("Zlib library error (data error)");
+			sz = _T("Zlib library error (data error).");
 			break;
 		case memError:
-			sz = _T("Not enough memory");
+			sz = _T("Not enough memory.");
 			break;
 		case bufError:
-			sz = _T("Zlib library error (buffer error)");
+			sz = _T("Zlib library error (buffer error).");
 			break;
 		case versionError:
-			sz = _T("Zlib library error (version error)");
-			break;		
+			sz = _T("Zlib library error (version error).");
+			break;
 		default:
 			sz = bNoLoop ? _T("Unknown error") :(LPCTSTR) GetSystemErrorDescription();
 	}

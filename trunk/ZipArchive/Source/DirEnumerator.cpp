@@ -14,7 +14,7 @@
 
 #include "stdafx.h"
 
-#if _MSC_VER < 1300	
+#if defined(_MSC_VER) && _MSC_VER < 1300	
 	// STL warnings 
 	#pragma warning (push, 3) 
 #endif
@@ -179,7 +179,7 @@ bool CDirEnumerator::IsDots(LPCTSTR lpszName)
 
 } // namespace
 
-#if _MSC_VER < 1300
+#if defined(_MSC_VER) && _MSC_VER < 1300
 	// STL warnings 
 	#pragma warning (pop) 
 #endif

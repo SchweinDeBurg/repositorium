@@ -13,24 +13,32 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "ZipCompressor.h"
-#include "DeflateCompressor.h"
+#include "BaseLibCompressor.h"
 
-using namespace ZipArchiveLib;
-
-CZipCompressor* CZipCompressor::CreateCompressor(WORD uMethod, CZipStorage* pStorage, CZipAutoBuffer* pBuffer)
+namespace ZipArchiveLib
 {
-	if (uMethod == methodStore || uMethod == methodDeflate)
-		return new CDeflateCompressor(pStorage, pBuffer);
-	return NULL;
+
+void CBaseLibCompressor::GetInternalDataAddress(void** opaque)
+{
+	*opaque = m_bDetectLibMemoryLeaks ? &m_list : 0;;
 }
 
-void CZipCompressor::UpdateFileCrc(const void *pBuffer, DWORD uSize)
+void CBaseLibCompressor::EmptyPtrList()
 {
-	m_pFile->m_uCrc32 = zarch_crc32(m_pFile->m_uCrc32, (zarch_Bytef*)pBuffer, uSize);
+	if (m_list.GetCount())
+	{
+		// if some memory hasn't been freed due to an error in zlib, so free it now
+		CZipPtrListIter iter = m_list.GetHeadPosition();
+		while (m_list.IteratorValid(iter))
+			delete[] (char*) m_list.GetNext(iter);
+	}
+	m_list.RemoveAll();
 }
 
-void CZipCompressor::UpdateCrc(const void *pBuffer, DWORD uSize)
-{
-	m_uCrc32 = zarch_crc32(m_uCrc32, (zarch_Bytef*)pBuffer, uSize);
-}
+} // namespace
+
+
+
+
+
+

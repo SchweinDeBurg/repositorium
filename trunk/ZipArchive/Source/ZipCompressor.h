@@ -32,9 +32,10 @@
 #include "ZipFileHeader.h"
 #include "ZipStorage.h"
 #include "ZipCryptograph.h"
+#include "ZipException.h"
 
 /**
-	The base class for compressors used in compression and decompression of data.
+	A base class for compressors used in compression and decompression of data.
 */
 class ZIP_API CZipCompressor
 {
@@ -82,6 +83,13 @@ public:
 		methodStore = 0, ///< A file is stored, not compressed.
 		methodDeflate = 8, ///< The deflate compression method.
 		/**
+			A file is compressed using the bzip2 algorithm. 
+
+			\see
+				<a href="kb">0610231446|bzip2</a>				
+		*/
+		methodBzip2 = 12,
+		/**
 			This value means that WinZip AES encryption is used.
 			The original compression method is stored in a WinZip extra field.
 			It is only an informational value - you cannot set it as a compression method. The ZipArchive 
@@ -104,7 +112,8 @@ public:
 	*/
 	static bool IsCompressionSupported(WORD uCompressionMethod)
 	{		
-		return uCompressionMethod == methodStore || uCompressionMethod == methodDeflate;
+		return uCompressionMethod == methodStore || uCompressionMethod == methodDeflate
+			;
 	}
 
 	ZIP_SIZE_TYPE m_uUncomprLeft;	///< The number of bytes left to decompress.
@@ -143,6 +152,7 @@ public:
 	 */
 	virtual void InitCompression(int iLevel, CZipFileHeader* pFile, CZipCryptograph* pCryptograph)	
 	{
+		m_uComprLeft = 0;
 		m_pFile = pFile;
 		m_pCryptograph = pCryptograph;
 	}
@@ -165,6 +175,10 @@ public:
 	{
 		m_pFile = pFile;
 		m_pCryptograph = pCryptograph;
+
+		m_uComprLeft = m_pFile->GetDataSize(false, true);
+		m_uUncomprLeft = m_pFile->m_uUncomprSize;
+		m_uCrc32 = 0;
 	}
 
 	/**
@@ -248,6 +262,78 @@ public:
 
 	virtual ~CZipCompressor()
 	{
+	}
+protected:
+	/**
+		Updates CRC value while compression. 
+
+		\param pBuffer
+			A buffer with data for which the CRC value should be updated.
+
+		\param uSize
+			The size of the buffer.
+	*/
+	void UpdateFileCrc(const void *pBuffer, DWORD uSize);
+
+	/**
+		Updates CRC value while decompression. 
+
+		\param pBuffer
+			A buffer with data for which the CRC value should be updated.
+
+		\param uSize
+			The size of the buffer.
+	*/
+	void UpdateCrc(const void *pBuffer, DWORD uSize);
+
+	/**
+		Flushes data in the buffer into the storage, encrypting the data if needed.
+
+		\note
+			Throws exceptions.
+	*/
+	void FlushWriteBuffer()
+	{
+		if (m_pCryptograph)
+				m_pCryptograph->Encode(*m_pBuffer, (DWORD)m_uComprLeft);
+		m_pStorage->Write(*m_pBuffer, (DWORD)m_uComprLeft, false);
+		m_uComprLeft = 0;
+	}
+
+	/**
+		Converts internal error code of the compressor to the ZipArchive Library error code.
+
+		\param iErr
+			An internal error code.
+
+		\return
+			A ZipArchive Library error code.
+	*/
+	virtual int ConvertInternalError(int iErr)
+	{
+		return iErr;
+	}
+
+	/**
+		Throws an exception with a given error code.
+
+		\param iErr
+			An error code.
+
+		\param bInternal
+			\c true, if \a iErr is an internal error code and needs a conversion to the ZipArchive Library error code; \c false otherwise.
+
+		\note
+			Throws exceptions.
+
+		\see
+			ConvertInternalError
+	*/
+	void ThrowError(int iErr, bool bInternal = false)
+	{
+		if (bInternal)
+			iErr = ConvertInternalError(iErr);
+		CZipException::Throw(iErr, m_pStorage->IsClosed(true) ? _T("") : (LPCTSTR)m_pStorage->m_pFile->GetFilePath());
 	}
 };
 

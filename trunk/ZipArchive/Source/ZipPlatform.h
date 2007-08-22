@@ -123,6 +123,10 @@ namespace ZipPlatform
 	ZIP_API bool RemoveFile(LPCTSTR lpszFileName, bool bThrow = true); ///< Removes a file.
 	ZIP_API bool RenameFile( LPCTSTR lpszOldName, LPCTSTR lpszNewName, bool bThrow = true); ///< Renames a file.
 
+#ifdef ZIP_ARCHIVE_LNX
+	ZIP_API bool SetExeAttr( LPCTSTR lpFileName ); ///< Sets executable permissions for a file.
+#endif
+
 #ifdef ZIP_ARCHIVE_STL
 	/**
 		Truncates the file.

@@ -25,6 +25,10 @@
 #pragma once
 #pragma warning( push )
 #pragma warning (disable:4702) // disable "Unreachable code" warning in Throw function in the Release mode
+	#if defined ZIP_HAS_DLL
+		#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
+		#pragma warning( disable : 4275 ) // non dll-interface used as base for dll-interface class
+	#endif
 #endif
 
 
@@ -73,18 +77,6 @@ public:
 			throw e;
 		#endif
 	}
-
-	 
-	/**
-		Converts a Zlib library error code to one of the #ZipErrors values.
-
-		\param	iZlibError
-			The Zlib library error code.
-
-		\return
-			One of the #ZipErrors values corresponding to \a iZlibError.
-	*/
-	static int ZlibErrToZip(int iZlibError);
 
 	/**
 		Initializes a new instance of the CZipException class.
@@ -173,6 +165,9 @@ public:
 		noAES,				///< WinZip AES encryption has not been enabled for the library, but is required to decompress the archive.
 #ifdef ZIP_ARCHIVE_STL
 		outOfBounds,		///< The collection is empty and the bounds do not exist.
+#endif
+#ifdef ZIP_ARCHIVE_USE_LOCKING
+		mutexError,			///< Locking or unlocking resources access was unsuccessful.
 #endif
 		streamEnd	= 500,	///< Zlib library error.
 		needDict,			///< Zlib library error.

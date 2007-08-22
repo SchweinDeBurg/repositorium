@@ -22,7 +22,11 @@
 #define ZIPARCHIVE_ZIPCALLBACK_DOT_H
 
 #if _MSC_VER > 1000
-#pragma once
+	#pragma once
+	#if defined ZIP_HAS_DLL
+		#pragma warning (push)
+		#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
+	#endif
 #endif
 
 #include "ZipString.h"
@@ -236,11 +240,11 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 
 		/**
 			\brief .
-			Replacing a file.
-			The callback called when moving data while replacing files to make less or more space 
-			for the new file.
+			Moving data.
+			The callback called when moving data inside the archive. It happens while replacing files to make less or more space 
+			for the new file or while shifting data with the CZipArchive::ShiftData() method.
 		*/
-		cbReplace		= 0x0400,
+		cbMoveData		= 0x0400,
 
 		/**
 			\brief.
@@ -261,36 +265,76 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		*/
 		cbMultiAdd		= 0x1000 | cbAdd,
 
+		
+		/**
+			\brief .
+			The callback called when preparing existing files for encryption.
+
+			\see
+				<a href="kb">0610201627|existing</a>
+		*/
+		cbEncryptPrepare= 0x2000,
+
+		/**
+			\brief .
+			The callback called in order to report the progress of making space inside the archive before the actual encryption takes place.
+
+			\see
+				<a href="kb">0610201627|existing</a>
+		*/
+		cbEncryptMoveData= 0x4000,
+
+		/**
+			\brief .
+			The callback called for every file being encrypted.
+
+			\see
+				<a href="kb">0610201627|existing</a>
+		*/
+		cbEncrypt		= 0x8000,
+
+
+		/**
+			\brief .
+			The callback called when encrypting existing files in the archive. This callback also registers for #cbEncryptMoveData and #cbEncrypt.
+
+			\see
+				<a href="kb">0610201627|existing</a>
+			\see
+				<a href="kb">0610231200|multi</a>
+		*/
+		cbMultiEncrypt	= 0x10000 | cbEncryptMoveData | cbEncrypt,
+
 		/**
 			\brief .
 			Reserved.
 			You can declare your own callback types above this value. Do not use the numeric value, 
 			but the symbol name - the value may change in the future releases of the library.
 		*/
-		cbNextValue		= 0x8000,
+		cbNextValue		= 0x20000,
 		
 		/**
 			\brief .
 			All sub-actions.
 			Represents the sub-actions callbacks - they are called as a part of bigger actions
-			(#cbAddTmp | #cbAddStore | #cbDeleteCnt | #cbReplace | #cbCalculateForMulti).
+			(#cbAddTmp | #cbAddStore | #cbDeleteCnt | #cbMoveData | #cbCalculateForMulti | #cbEncryptPrepare | #cbEncryptMoveData).
 		*/
-		cbSubActions	= cbAddTmp | cbAddStore | cbDeleteCnt | cbReplace | cbCalculateForMulti,
+		cbSubActions	= cbAddTmp | cbAddStore | cbDeleteCnt | cbMoveData | cbCalculateForMulti | cbEncryptPrepare | cbEncryptMoveData,
 
 		/**
 			\brief .
 			Main callbacks.
-			Represents the main action callbacks (#cbAdd | #cbExtract | #cbDelete | #cbTest | #cbSave | #cbGet | #cbRename).
+			Represents the main action callbacks (#cbAdd | #cbExtract | #cbDelete | #cbTest | #cbSave | #cbGet | #cbRename | #cbEncrypt).
 		*/
-		cbActions		= cbAdd | cbExtract | cbDelete | cbTest | cbSave | cbGet | cbRename,
+		cbActions		= cbAdd | cbExtract | cbDelete | cbTest | cbSave | cbGet | cbRename | cbEncrypt,
 
 		/**
 			\brief .
 			Multiple action callbacks.
-			Represents the multiple action callbacks (currently #cbMultiAdd only).
+			Represents the multiple action callbacks.
 		*/
 		
-		cbMultiActions	= cbMultiAdd,
+		cbMultiActions	= cbMultiAdd | cbMultiEncrypt,
 
 		/**
 			\brief .
@@ -330,7 +374,7 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 			\return 
 				The number of bytes left to process.
 		*/
-		ZIP_SIZE_TYPE LeftBytesToProcess() const {return m_uTotalBytesToProcess - m_uBytesProcessed;}
+		ZIP_SIZE_TYPE LeftBytesToProcess() const {return m_uTotalBytesToProcess - m_uBytesProcessed;}		
 	private:
 		void Init(ZIP_SIZE_TYPE uTotalItemsToProcess, ZIP_SIZE_TYPE uTotalBytesToProcess, int iReactType)
 		{
@@ -362,7 +406,7 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 			else
 				return false;
 		}
-		bool m_bActive;
+		bool m_bActive;		
 		int m_iReactType;
 	};
 
@@ -528,13 +572,24 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 	}
 
 	/**
+		Sets the type of the callback, that will cause the current CMultiActionsInfo object to update its progress.
+
+		\param iType
+			The type of the callback. It can be one of the CZipArchive::CallbackType values.
+	*/
+	void SetReactType(int iType)
+	{
+		m_pMultiActionsInfo->m_iReactType = iType;
+	}
+
+	/**
 		Specifies how often the #Callback method is called. The #Callback is called every \b n-th callback request,
 		where \b n is the value returned from the #GetStepSize method.
 		Override this method to adjust the frequency of calling the callback. 
 
 		\return 
 			The value that determines the frequency of calling the #Callback method.
-			By default, it returns \c 256 for #cbSave, #cbDeleteCnt and #cbCalculateForMulti and \c 1
+			By default, it returns \c 256 for #cbSave, #cbDeleteCnt, #cbCalculateForMulti and #cbEncryptPrepare and \c 1
 			for other callback types.
 
 		\note
@@ -547,7 +602,7 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 	*/
 	virtual int GetStepSize()
 	{
-		return m_iType == cbSave || m_iType == cbDeleteCnt || m_iType == cbCalculateForMulti ? 256 : 1;
+		return m_iType == cbSave || m_iType == cbDeleteCnt || m_iType == cbCalculateForMulti || m_iType == cbEncryptPrepare ? 256 : 1;
 	}
 
 	~CZipActionCallback()
@@ -674,5 +729,10 @@ private:
 	int m_iCurrentStep;
 	ZIP_SIZE_TYPE m_uAccumulatedProgress;
 };
+
+#if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
+	#pragma warning (pop)	
+#endif
+
 
 #endif

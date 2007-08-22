@@ -23,6 +23,7 @@
 	#pragma warning (disable : 4710) // 'function' : function not inlined
 	#pragma warning (disable : 4514) // unreferenced inline/local function has been removed
 	#pragma warning (disable : 4786) // 'identifier' : identifier was truncated to 'number' characters in the debug information
+	#pragma warning (disable : 4702) // unreachable code
 #endif
 
 #if defined (_UNICODE) && !defined (UNICODE)

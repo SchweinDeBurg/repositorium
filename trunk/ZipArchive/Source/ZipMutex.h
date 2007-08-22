@@ -12,25 +12,27 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
-#include "ZipCompressor.h"
-#include "DeflateCompressor.h"
+/**
+* \file ZipMutex.h
+*	Includes the ZipArchiveLib::CZipMutex class.
+*
+*/
 
-using namespace ZipArchiveLib;
+#if !defined(ZIPARCHIVE_ZIPMUTEX_DOT_H)
+#define ZIPARCHIVE_ZIPMUTEX_DOT_H
 
-CZipCompressor* CZipCompressor::CreateCompressor(WORD uMethod, CZipStorage* pStorage, CZipAutoBuffer* pBuffer)
-{
-	if (uMethod == methodStore || uMethod == methodDeflate)
-		return new CDeflateCompressor(pStorage, pBuffer);
-	return NULL;
-}
+#if _MSC_VER > 1000
+	#pragma once
+#endif
 
-void CZipCompressor::UpdateFileCrc(const void *pBuffer, DWORD uSize)
-{
-	m_pFile->m_uCrc32 = zarch_crc32(m_pFile->m_uCrc32, (zarch_Bytef*)pBuffer, uSize);
-}
+#include "_features.h"
 
-void CZipCompressor::UpdateCrc(const void *pBuffer, DWORD uSize)
-{
-	m_uCrc32 = zarch_crc32(m_uCrc32, (zarch_Bytef*)pBuffer, uSize);
-}
+#ifdef ZIP_ARCHIVE_LNX
+	#include "ZipMutex_lnx.h"
+#else
+	#include "ZipMutex_win.h"
+#endif
+
+
+#endif
+

@@ -222,6 +222,33 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath=".\Source\BaseLibCompressor.cpp">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\Source\DeflateCompressor.cpp">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
@@ -880,6 +907,9 @@
 				RelativePath=".\Source\_platform.h">
 			</File>
 			<File
+				RelativePath=".\Source\BaseLibCompressor.h">
+			</File>
+			<File
 				RelativePath=".\Source\BytesWriter.h">
 			</File>
 			<File
@@ -977,6 +1007,15 @@
 			</File>
 			<File
 				RelativePath="Source\ZipMemFile.h">
+			</File>
+			<File
+				RelativePath=".\Source\ZipMutex.h">
+			</File>
+			<File
+				RelativePath=".\Source\ZipMutex_lnx.h">
+			</File>
+			<File
+				RelativePath=".\Source\ZipMutex_win.h">
 			</File>
 			<File
 				RelativePath="Source\ZipPathComponent.h">
