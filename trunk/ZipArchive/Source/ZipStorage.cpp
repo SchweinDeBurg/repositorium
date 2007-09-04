@@ -443,7 +443,8 @@ void CZipStorage::WriteInternalBuffer(const char *pBuf, DWORD uSize)
 ZIP_SIZE_TYPE CZipStorage::VolumeLeft() const
 {
 	// for spanned archives m_uCurrentVolSize is updated after each flush()
-	return m_uCurrentVolSize  - m_uBytesInWriteBuffer - (IsSpanned() ? 0 : m_uBytesWritten);
+	ZIP_SIZE_TYPE uBytes = m_uBytesInWriteBuffer + (IsSpanned() ? 0 : m_uBytesWritten);	
+	return uBytes > m_uCurrentVolSize ? 0 : m_uCurrentVolSize - uBytes;
 }
 
 void CZipStorage::Flush()

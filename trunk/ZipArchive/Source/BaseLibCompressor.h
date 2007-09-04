@@ -50,9 +50,9 @@ public:
 
 		\param bDetectLibMemoryLeaks
 			\c true, if the ZipArchive Library should detect memory leaks in an external library; \c false otherwise. 
-			Usually not needed to be set to \c true
+			Recommended to be set to \c true.
 	 */
-	CBaseLibCompressor(CZipStorage* pStorage, CZipAutoBuffer* pBuffer, bool bDetectLibMemoryLeaks = false)
+	CBaseLibCompressor(CZipStorage* pStorage, CZipAutoBuffer* pBuffer, bool bDetectLibMemoryLeaks = true)
 		:CZipCompressor(pStorage, pBuffer)
 	{
 		m_bDetectLibMemoryLeaks = bDetectLibMemoryLeaks;

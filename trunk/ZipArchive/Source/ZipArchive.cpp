@@ -35,7 +35,7 @@
 using namespace ZipArchiveLib;
 
 const char CZipArchive::m_gszCopyright[] = {"ZipArchive Library Copyright (C) 2000 - 2007 Artpol Software - Tadeusz Dracz"};
-const char CZipArchive::m_gszVersion[] = {"3.1.0"};
+const char CZipArchive::m_gszVersion[] = {"3.1.1"};
 
 void CZipAddNewFileInfo::Defaults()
 {
@@ -326,7 +326,9 @@ void CZipArchive::Close(int iAfterException, bool bUpdateTimeStamp)
 	if (m_iFileOpened == compress)
 		CloseNewFile(iAfterException != afNoException);
 
-	if (iAfterException != afAfterException && !IsClosed(false)) // in disk spanning when user aborts 
+	bool bWrite = iAfterException != afAfterException && !IsClosed(false);// in disk spanning when user aborts 
+
+	if (bWrite) 
 		WriteCentralDirectory(false);  // we will flush in CZipStorage::Close
 
 	time_t tNewestTime = 0;
@@ -343,7 +345,7 @@ void CZipArchive::Close(int iAfterException, bool bUpdateTimeStamp)
 	}
 	m_centralDir.Close();
 	m_stringSettings.Reset();
-	CZipString szFileName = m_storage.Close(iAfterException == afAfterException);
+	CZipString szFileName = m_storage.Close(!bWrite);
 	if (bUpdateTimeStamp && !szFileName.IsEmpty())
 		ZipPlatform::SetFileModTime(szFileName, tNewestTime);
 }

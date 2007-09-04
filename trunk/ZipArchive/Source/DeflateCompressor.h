@@ -53,9 +53,9 @@ public:
 
 		\param bDetectLibMemoryLeaks
 			\c true, if the ZipArchive Library should detect memory leaks in an external library; \c false otherwise. 
-			Usually not needed to be set.
+			Recommended to be set to \c true.
 	*/
-	CDeflateCompressor(CZipStorage* pStorage, CZipAutoBuffer* pBuffer, bool bDetectLibMemoryLeaks = false);
+	CDeflateCompressor(CZipStorage* pStorage, CZipAutoBuffer* pBuffer, bool bDetectLibMemoryLeaks = true);
 
 	bool CanProcess(WORD uMethod) {return uMethod == methodStore || uMethod == methodDeflate;}
 
