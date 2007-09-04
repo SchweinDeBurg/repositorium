@@ -30,7 +30,7 @@ CZipFile::CZipFile()
 
 CZipFile::~CZipFile()
 {
-
+	Close();
 }
 
 CZipFile::operator HANDLE()
