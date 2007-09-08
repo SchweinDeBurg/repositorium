@@ -52,8 +52,10 @@ CArgsParser::~CArgsParser(void)
 
 void CArgsParser::Parse(LPCTSTR pszArguments, bool fCaseSensitive)
 {
-	if (! pszArguments)
+	if (pszArguments == NULL || * pszArguments == 0)
+	{
 		return;
+	}
 
 	m_strArguments = pszArguments;
 	m_fCaseSensitive = fCaseSensitive;
@@ -61,6 +63,7 @@ void CArgsParser::Parse(LPCTSTR pszArguments, bool fCaseSensitive)
 	m_mapKeys.RemoveAll();
 
 	LPCTSTR pszCurrent = pszArguments;
+
 	while (true)
 	{
 		// /Key:"arg"
@@ -71,7 +74,7 @@ void CArgsParser::Parse(LPCTSTR pszArguments, bool fCaseSensitive)
 		}
 
 		LPCTSTR pszArg = _tcspbrk(pszCurrent, m_szDelimeters);
-		if (! pszArg)
+		if (!pszArg)
 		{
 			// No delimeters found
 			break;
@@ -97,7 +100,7 @@ void CArgsParser::Parse(LPCTSTR pszArguments, bool fCaseSensitive)
 		{
 			// Key ends	command	line
 			CString strKey(pszArg);
-			if(! m_fCaseSensitive)
+			if (!m_fCaseSensitive)
 			{
 				strKey.MakeLower();
 			}
@@ -108,7 +111,7 @@ void CArgsParser::Parse(LPCTSTR pszArguments, bool fCaseSensitive)
 		{
 			// Key with no value or cmdline ends with /Key:
 			CString strKey(pszArg, (int)(pszVal - pszArg));
-			if(! strKey.IsEmpty())
+			if (!strKey.IsEmpty())
 			{
 				// Prevent /: case
 				if(!m_fCaseSensitive)
@@ -149,7 +152,7 @@ void CArgsParser::Parse(LPCTSTR pszArguments, bool fCaseSensitive)
 			{
 				// No end quotes or terminating space, take rest of string
 				CString strValue(pszQuote);
-				if(! strKey.IsEmpty())
+				if (!strKey.IsEmpty())
 				{
 					// Prevent /:val case
 					m_mapKeys.SetAt(strKey, strValue);
@@ -158,8 +161,8 @@ void CArgsParser::Parse(LPCTSTR pszArguments, bool fCaseSensitive)
 			}
 			else
 			{
-				// End quote or	space present
-				if(! strKey.IsEmpty())
+				// End quote or space present
+				if (!strKey.IsEmpty())
 				{
 					// Prevent /:"val" case
 					CString strValue(pszQuote, (int)(pszEndQuote - pszQuote));
