@@ -229,6 +229,33 @@ UINT CArgsParser::GetUIntValue(LPCTSTR pszKeyName, int nRadix)
 	return (uValue);
 }
 
+bool CArgsParser::GetShortValue(LPCTSTR pszKeyName, short& nDest, int nRadix)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	int nTemp = 0;
+	if (GetIntValue(pszKeyName, nTemp, nRadix))
+	{
+		nDest = LOWORD(nTemp);
+		return (true);
+	}
+	else {
+		return (false);
+	}
+}
+
+short CArgsParser::GetShortValue(LPCTSTR pszKeyName, int nRadix)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	short nValue;
+	if (!GetShortValue(pszKeyName, nValue, nRadix))
+	{
+		AfxThrowInvalidArgException();
+	}
+	return (nValue);
+}
+
 #if !defined(ARGS_PARSER_NO_TIME)
 
 bool CArgsParser::GetTimeValue(LPCTSTR pszKeyName, CTime& timeDest, DWORD fdwFlags, LCID Locale)

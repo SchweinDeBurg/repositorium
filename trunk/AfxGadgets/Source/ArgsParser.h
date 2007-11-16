@@ -57,6 +57,8 @@ public:
 	int GetIntValue(LPCTSTR pszKeyName, int nRadix = 10);
 	bool GetUIntValue(LPCTSTR pszKeyName, UINT& uDest, int nRadix = 10);
 	UINT GetUIntValue(LPCTSTR pszKeyName, int nRadix = 10);
+	bool GetShortValue(LPCTSTR pszKeyName, short& nDest, int nRadix = 10);
+	short GetShortValue(LPCTSTR pszKeyName, int nRadix = 10);
 
 #if !defined(ARGS_PARSER_NO_TIME)
 	bool GetTimeValue(LPCTSTR pszKeyName, CTime& timeDest, DWORD fdwFlags = 0,
