@@ -59,6 +59,13 @@ public:
 	UINT GetUIntValue(LPCTSTR pszKeyName, int nRadix = 10);
 	bool GetShortValue(LPCTSTR pszKeyName, short& nDest, int nRadix = 10);
 	short GetShortValue(LPCTSTR pszKeyName, int nRadix = 10);
+	bool GetUShortValue(LPCTSTR pszKeyName, unsigned short& uDest, int nRadix = 10);
+	unsigned short GetUShortValue(LPCTSTR pszKeyName, int nRadix = 10);
+
+#if !defined(ARGS_PARSER_NO_FLOATS)
+	bool GetDoubleValue(LPCTSTR pszKeyName, double& dblDest);
+	double GetDoubleValue(LPCTSTR pszKeyName);
+#endif	// ARGS_PARSER_NO_FLOATS
 
 #if !defined(ARGS_PARSER_NO_TIME)
 	bool GetTimeValue(LPCTSTR pszKeyName, CTime& timeDest, DWORD fdwFlags = 0,

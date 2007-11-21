@@ -194,11 +194,13 @@ int CArgsParser::GetIntValue(LPCTSTR pszKeyName, int nRadix)
 {
 	ASSERT(AfxIsValidString(pszKeyName));
 
-	int nValue;
+	int nValue = 0;
+
 	if (!GetIntValue(pszKeyName, nValue, nRadix))
 	{
 		AfxThrowInvalidArgException();
 	}
+
 	return (nValue);
 }
 
@@ -221,11 +223,13 @@ UINT CArgsParser::GetUIntValue(LPCTSTR pszKeyName, int nRadix)
 {
 	ASSERT(AfxIsValidString(pszKeyName));
 
-	UINT uValue;
+	UINT uValue = 0;
+
 	if (!GetUIntValue(pszKeyName, uValue, nRadix))
 	{
 		AfxThrowInvalidArgException();
 	}
+
 	return (uValue);
 }
 
@@ -234,9 +238,10 @@ bool CArgsParser::GetShortValue(LPCTSTR pszKeyName, short& nDest, int nRadix)
 	ASSERT(AfxIsValidString(pszKeyName));
 
 	int nTemp = 0;
-	if (GetIntValue(pszKeyName, nTemp, nRadix))
+
+	if (GetIntValue(pszKeyName, nTemp, nRadix) && nTemp >= SHRT_MIN && nTemp <= SHRT_MAX)
 	{
-		nDest = LOWORD(nTemp);
+		nDest = static_cast<short>(nTemp);
 		return (true);
 	}
 	else {
@@ -248,13 +253,78 @@ short CArgsParser::GetShortValue(LPCTSTR pszKeyName, int nRadix)
 {
 	ASSERT(AfxIsValidString(pszKeyName));
 
-	short nValue;
+	short nValue = 0;
+
 	if (!GetShortValue(pszKeyName, nValue, nRadix))
 	{
 		AfxThrowInvalidArgException();
 	}
+
 	return (nValue);
 }
+
+bool CArgsParser::GetUShortValue(LPCTSTR pszKeyName, unsigned short& uDest, int nRadix)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	UINT uTemp = 0;
+
+	if (GetUIntValue(pszKeyName, uTemp, nRadix) && uTemp <= USHRT_MAX)
+	{
+		uDest = static_cast<unsigned short>(uTemp);
+		return (true);
+	}
+	else {
+		return (false);
+	}
+}
+
+unsigned short CArgsParser::GetUShortValue(LPCTSTR pszKeyName, int nRadix)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	unsigned short uValue = 0;
+
+	if (!GetUShortValue(pszKeyName, uValue, nRadix))
+	{
+		AfxThrowInvalidArgException();
+	}
+
+	return (uValue);
+}
+
+#if !defined(ARGS_PARSER_NO_FLOATS)
+
+bool CArgsParser::GetDoubleValue(LPCTSTR pszKeyName, double& dblDest)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	if (HasKey(pszKeyName) && HasValue(pszKeyName))
+	{
+		LPTSTR pszStop = 0;
+		dblDest = _tcstod(GetStringValue(pszKeyName), &pszStop);
+		return (*pszStop == 0);
+	}
+	else {
+		return (false);
+	}
+}
+
+double CArgsParser::GetDoubleValue(LPCTSTR pszKeyName)
+{
+	ASSERT(AfxIsValidString(pszKeyName));
+
+	double dblTemp = 0.0;
+
+	if (!GetDoubleValue(pszKeyName, dblTemp))
+	{
+		AfxThrowInvalidArgException();
+	}
+
+	return (dblTemp);
+}
+
+#endif	// ARGS_PARSER_NO_FLOATS
 
 #if !defined(ARGS_PARSER_NO_TIME)
 
