@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;XHTMLHTML;XHTMLTOOLTIPS;XHTMLXML;XHTMLDRAGDROP"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -74,7 +74,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;XHTMLHTML;XHTMLTOOLTIPS;XHTMLXML;XHTMLDRAGDROP"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -123,7 +123,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;XHTMLHTML;XHTMLTOOLTIPS;XHTMLXML;XHTMLDRAGDROP"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -176,7 +176,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;XHTMLHTML;XHTMLTOOLTIPS;XHTMLXML;XHTMLDRAGDROP"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -1071,6 +1071,154 @@
 			Filter="h;cpp">
 			<File
 				RelativePath=".\Source\StdString.h">
+			</File>
+			<File
+				RelativePath=".\Source\XString.cpp">
+			</File>
+			<File
+				RelativePath=".\Source\XString.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="XHtmlTree"
+			Filter="h;cpp">
+			<File
+				RelativePath=".\Source\CreateCheckboxImageList.cpp">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\CreateCheckboxImageList.h">
+			</File>
+			<File
+				RelativePath=".\Source\VisualStylesXP.cpp">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\VisualStylesXP.h">
+			</File>
+			<File
+				RelativePath=".\Source\XHtmlDraw.cpp">
+			</File>
+			<File
+				RelativePath=".\Source\XHtmlDraw.h">
+			</File>
+			<File
+				RelativePath=".\Source\XHtmlDrawLink.cpp">
+			</File>
+			<File
+				RelativePath=".\Source\XHtmlDrawLink.h">
+			</File>
+			<File
+				RelativePath=".\Source\XHtmlTree.cpp">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\XHtmlTree.h">
+			</File>
+			<File
+				RelativePath=".\Source\XmlDocument.cpp">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\XmlDocument.h">
+			</File>
+			<File
+				RelativePath=".\Source\XNamedColors.cpp">
+			</File>
+			<File
+				RelativePath=".\Source\XNamedColors.h">
 			</File>
 		</Filter>
 	</Files>
