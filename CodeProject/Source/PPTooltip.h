@@ -1,21 +1,66 @@
-// PPTooltip.h : header file
 //
+//	Class:		CPPTooltip
+//
+//	Compiler:	Visual C++
+//	Tested on:	Visual C++ 6.0
+//				Visual C++ .NET 2003
+//
+//	Version:	See GetVersionC() or GetVersionI()
+//
+//	Created:	xx/xxxx/2004
+//	Updated:	21/November/2004
+//
+//	Author:		Eugene Pustovoyt	pustovoyt@mail.ru
+//
+//	Disclaimer
+//	----------
+//	THIS SOFTWARE AND THE ACCOMPANYING FILES ARE DISTRIBUTED "AS IS" AND WITHOUT
+//	ANY WARRANTIES WHETHER EXPRESSED OR IMPLIED. NO REPONSIBILITIES FOR POSSIBLE
+//	DAMAGES OR EVEN FUNCTIONALITY CAN BE TAKEN. THE USER MUST ASSUME THE ENTIRE
+//	RISK OF USING THIS SOFTWARE.
+//
+//	Terms of use
+//	------------
+//	THIS SOFTWARE IS FREE FOR PERSONAL USE OR FREEWARE APPLICATIONS.
+//	IF YOU WISH TO THANK MY WORK, YOU MAY DONATE ANY SUM OF MONEY TO ME 
+//  FOR SUPPORT OF DEVELOPMENT OF THIS CLASS.
+//	IF YOU USE THIS SOFTWARE IN COMMERCIAL OR SHAREWARE APPLICATIONS YOU
+//	ARE GENTLY ASKED TO DONATE ANY SUM OF MONEY TO THE AUTHOR:
+//
+//
+//--- History ------------------------------ 
+// 2004/03/01 *** Releases version 2.0 ***
+//------------------------------------------
+//		2004/04/04 [ADD] Added method SetCssStyles(DWORD dwIdCssStyle, LPCTSTR lpszPathDll /* = NULL */)
+//		2004/04/14 [FIX] Fixed correct drawing for some tooltip's directions
+//		2004/04/15 [FIX] Fixed changing a z-order of the some windows by show a tooltip on Win9x
+//		2004/04/27 [FIX] Corrected a work with a tooltip's directions with a large tooltip
+//		2004/04/28 [ADD] Disables a message translation if object was't created (thanks to Stoil Todorov)
+//		2004/07/02 [UPD] Changes a GetWndFromPoint mechanism of the window's searching
+//		2004/09/01 [ADD] New SetMaxTipWidth method was added
+//		2004/10/12 [FIX] Now a tooltip has a different methods to show a menu's tooltip and other 
+//							control's tooltip
+//------------------------------------------
+// 2004/11/19 *** Releases version 2.1 ***
+//------------------------------------------
+//		2004/11/30 [FIX] Corrected the debug window drawing
+//		           [FIX] Changes a GetWndFromPoint mechanism of the window's searching
+////////////////////////////////////////////////////////////////////
+//
+// "SmoothMaskImage" and "GetPartialSums" functions by Denis Sarazhinsky (c)2003
+// Modified by Eugene Pustovoyt to use with image's mask instead of full color image.
+//
+/////////////////////////////////////////////////////////////////////
+//
+
 #ifndef _PPTOOLTIP_H
 #define _PPTOOLTIP_H
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
 #include "PPHtmlDrawer.h"
-
-// nonstandard extension used: conversion from 'type' to 'type'
-#pragma warning(disable: 4239)
-
-#if defined(__INTEL_COMPILER)
-// warning #1125: function is hidden by another
-#pragma warning(disable: 1125)
-#endif	// __INTEL_COMPILER
+#pragma warning(push, 3)
+#pragma warning(disable : 4786)
+#include <vector>
+#include <map>
 
 //ENG: Comments a next line if you never use a tooltip for a menu
 //RUS: Закоментируйте следующую строку, если вы не планируете использовать тултип для элементов меню
@@ -35,6 +80,7 @@
 #define PPTOOLTIP_CLOSE_LEAVEWND		0x00000004 //Close tooltip if mouse leave the control
 #define PPTOOLTIP_NOCLOSE_OVER			0x00000008 //No close tooltip if mouse over him
 #define PPTOOLTIP_DISABLE_AUTOPOP		0x00000010 //Disables autopop tooltip from timer
+//#define PPTOOLTIP_NOCLOSE_MOUSEDOWN		0x00000020 //Disables autopop tooltip from timer
 
 //The masks
 #define PPTOOLTIP_MASK_STYLES			0x0001	// The styles for the tooltip gets from the structures
@@ -49,6 +95,7 @@
 #define PPTOOLTIP_TIME_AUTOPOP			TTDT_AUTOPOP
 #define PPTOOLTIP_TIME_FADEIN			4
 #define PPTOOLTIP_TIME_FADEOUT			5
+#define PPTOOLTIP_TIME_ANIMATION		6
 
 //Tooltip's directions
 #define PPTOOLTIP_TOPEDGE_LEFT			0x00
@@ -212,6 +259,7 @@ protected:
 	DWORD m_dwTimeInitial; //Retrieve the length of time the pointer must remain stationary within a tool's bounding rectangle before the tool tip window appears
 	DWORD m_dwTimeFadeIn;
 	DWORD m_dwTimeFadeOut;
+
 	DWORD m_dwBehaviour;   //The tooltip's behaviour
 	DWORD m_dwEffectBk;
 	DWORD m_dwDirection;   //The default tooltip's direction
@@ -220,7 +268,7 @@ protected:
 	BYTE  m_nTransparency; //The current value of transparency
 	DWORD m_dwShowEffect; //
 	DWORD m_dwHideEffect;
-	DWORD m_dwSizes [PPTTSZ_MAX_SIZES]; //All sizes 
+	int  m_nSizes [PPTTSZ_MAX_SIZES]; //All sizes 
 
 #ifdef PPTOOLTIP_USE_MENU
 	DWORD m_dwMenuToolPos;
@@ -263,8 +311,15 @@ public:
 	void AddTool(CWnd * pWnd, DWORD dwIdString, DWORD dwIdIcon, CSize & szIcon = CSize(0, 0), LPCRECT lpRectBounds = NULL, DWORD dwIDTool = 0);
 	void AddTool(CWnd * pWnd, LPCTSTR lpszString, HICON hIcon, LPCRECT lpRectBounds = NULL, DWORD dwIDTool = 0);
 	void AddTool(CWnd * pWnd, LPCTSTR lpszString, DWORD dwIdIcon, CSize & szIcon = CSize(0, 0), LPCRECT lpRectBounds = NULL, DWORD dwIDTool = 0);
+	void AddTool(CWnd * pWnd, LPCTSTR lpszString, DWORD dwIdBitmap, COLORREF crMask, CSize & szBitmap = CSize(0, 0), LPCRECT lpRectBounds = NULL, DWORD dwIDTool = 0);
 	void RemoveTool(CWnd * pWnd, LPCRECT lpRectBounds = NULL);
 	void RemoveAllTools();
+
+	BOOL GetToolInfo(PPTOOLTIP_INFO & ti, CWnd * pWnd, LPCRECT lpRectBounds = NULL);
+	BOOL GetToolInfo(PPTOOLTIP_INFO & ti, CWnd * pWnd, DWORD dwIDTool = 0);
+	void UpdateTipText(LPCTSTR lpszText, CWnd * pWnd, DWORD dwIDTool = 0);
+	void DelTool(CWnd * pWnd, DWORD dwIDTool = 0);
+	void SetToolRect(CWnd * pWnd, DWORD dwIDTool, LPCRECT lpRectBounds);
 
 	//Help tooltip
 	void ShowHelpTooltip (LPPOINT pt, DWORD dwIdText, HICON hIcon = NULL);
@@ -291,8 +346,8 @@ public:
 	void SetImageList(HBITMAP hBitmap, int cx, int cy, int nCount, COLORREF crMask = RGB(255, 0, 255));
 
 	//functions for sizes
-	void SetSize(DWORD nSizeIndex, DWORD nValue);
-	DWORD GetSize(DWORD nSizeIndex);
+	void SetSize(int nSizeIndex, int nValue);
+	int GetSize(int nSizeIndex);
 	void SetDefaultSizes(BOOL bBalloonSize = TRUE);
 
 	//functions for direction
@@ -304,11 +359,16 @@ public:
 	void EnableHyperlink(BOOL bEnable = TRUE);
 	void SetDebugMode(BOOL bDebug = TRUE);
 
+//	void EnableTextWrap(BOOL bEnable = TRUE){m_drawer.EnableTextWrap(bEnable);};
+	void SetMaxTipWidth(int nWidth = 0){m_drawer.SetMaxWidth(nWidth);};
+
 	//functions for
 	void  SetNotify(HWND hWnd);
 	void  SetNotify(BOOL bParentNotify = TRUE);
 
+	void SetTextStyle(LPCTSTR lpszStyleName, LPCTSTR lpszStyleValue);
 	void SetCssStyles(LPCTSTR lpszCssStyles = NULL);
+	void SetCssStyles(DWORD dwIdCssStyle, LPCTSTR lpszPathDll = NULL); //Sets the CSS styles
 	LPCTSTR GetCssStyles();
 
 	void EnableEscapeSequences(BOOL bEnable);
@@ -334,6 +394,9 @@ public:
 	HWND GetRunningMenuWnd();
 #endif //PPTOOLTIP_USE_MENU
 
+	static short GetVersionI()		{return 0x22;}
+	static LPCTSTR GetVersionC()	{return (LPCTSTR)_T("2.2 beta");}
+
 private:
 	virtual void OnDrawBorder(HDC hDC, HRGN hRgn);
 
@@ -342,7 +405,7 @@ protected:
 	void Pop();
 	void KillTimers(DWORD dwIdTimer = NULL);
 	void SetNewTooltip(HWND hWnd, const PPTOOLTIP_INFO & ti, BOOL bDisplayWithDelay = TRUE, TooltipType type = PPTOOLTIP_NORMAL);
-	HWND GetWndFromPoint(LPPOINT lpPoint, BOOL bUseDisabled = TRUE);
+	HWND GetWndFromPoint(LPPOINT lpPoint, PPTOOLTIP_INFO & ti, BOOL bCheckTool = TRUE);
 	LRESULT SendNotify(LPPOINT pt, PPTOOLTIP_INFO & ti);
 
 	BOOL IsCursorOverTooltip() const;
@@ -358,14 +421,16 @@ protected:
 	void FreeResources();
 	CString GetDebugInfoTool(LPPOINT lpPoint);
 
-	DWORD GetTooltipDirection(DWORD dwDirection, const LPPOINT lpPoint, LPPOINT lpAnchor, CRect & rcBody, CRect & rcFull, CRect & rcTipArea);
+	DWORD GetTooltipDirection(DWORD dwDirection, const CPoint & ptPoint, CPoint & ptAnchor, CRect & rcBody, CRect & rcFull, CRect & rcTipArea);
 	HRGN GetTooltipRgn(DWORD dwDirection, int x, int y, int nWidth, int nHeight);
 	
-	CString GetMaxDebugString(CString str);
+	CString GetMaxDebugString(LPCTSTR lpszText);
+	CString CreateDebugCell(CString sTitle, LPCTSTR lpszDescription);
 
 	BOOL FindTool(HWND hWnd, const LPPOINT lpPoint, PPTOOLTIP_INFO & ti);
 	HWND FindTool(const LPPOINT lpPoint, PPTOOLTIP_INFO & ti);
 	HWND FindToolBarItem(POINT point, PPTOOLTIP_INFO & ti);
+	BOOL IsComboBoxControl(HWND hWnd, UINT nStyle);
 
 	//{{AFX_MSG(CPPToolTip)
 	afx_msg void OnPaint();
@@ -381,15 +446,11 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
+#pragma warning(pop)
+
 /////////////////////////////////////////////////////////////////////////////
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#if defined(__INTEL_COMPILER)
-#pragma warning(default: 1125)
-#endif	// __INTEL_COMPILER
-
-#pragma warning(default: 4239)
 
 #endif

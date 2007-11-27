@@ -1,38 +1,46 @@
-// PPTooltip.cpp : implementation file
 //
+//--- History ------------------------------ 
+// 2004/03/01 *** Releases version 2.0 ***
+//------------------------------------------
+// 2004/04/04 [ADD] Added method SetCssStyles(DWORD dwIdCssStyle, LPCTSTR lpszPathDll /* = NULL */)
+// 2004/04/14 [FIX] Fixed correct drawing for some tooltip's directions
+// 2004/04/15 [FIX] Fixed changing a z-order of the some windows by show a tooltip on Win9x
+// 2004/04/27 [FIX] Corrected a work with a tooltip's directions with a large tooltip
+// 2004/04/28 [ADD] Disables a message translation if object was't created (thanks to Stoil Todorov)
+// 2004/07/02 [UPD] Changes a GetWndFromPoint mechanism of the window's searching
+// 2004/09/01 [ADD] New SetMaxTipWidth method was added
+// 2004/10/12 [FIX] Now a tooltip has a different methods to show a menu's tooltip and other 
+//					control's tooltip
+////////////////////////////////////////////////////////////////////
+//
+// "SmoothMaskImage" and "GetPartialSums" functions by Denis Sarazhinsky (c)2003
+// Modified by Eugene Pustovoyt to use with image's mask instead of full color image.
+//
+/////////////////////////////////////////////////////////////////////
+
 #include "stdafx.h"
 #include "PPTooltip.h"
 
-#if defined(__INTEL_COMPILER)
-// remark #171: invalid type conversion
-#pragma warning(disable: 171)
-// remark #1418: external definition with no prior declaration
-#pragma warning(disable: 1418)
-#endif	// __INTEL_COMPILER
+#ifndef __noop
+#if _MSC_VER < 1300
+#define __noop ((void)0)
+#endif
+#endif
 
-// allow multimonitor-aware code on Win95 systems
+#undef TRACE
+#define TRACE __noop
+
+// if you want to see the TRACE output, 
+// uncomment this line:
+//#include "XTrace.h"
+
+// allow multi-monitor-aware code on Win95 systems
 // comment out the first line if you already define it in another file
 // comment out both lines if you don't care about Win95
-#define COMPILE_MULTIMON_STUBS
-#include "multimon.h"
+//#define COMPILE_MULTIMON_STUBS
+//#include "multimon.h"
 
-// unreferenced formal parameter
-#pragma warning(disable: 4100)
-// local variable is initialized but not referenced
-#pragma warning(disable: 4189)
-// nonstandard extension used: conversion from 'type' to 'type'
-#pragma warning(disable: 4239)
-// conversion from 'type' to 'type', possible loss of data
-#pragma warning(disable: 4244)
-
-#if defined(__INTEL_COMPILER)
-// remark #279: controlling expression is constant
-#pragma warning(disable: 279)
-// remark #383: value copied to temporary, reference to temporary used
-#pragma warning(disable: 383)
-// remark #981: operands are evaluated in unspecified order
-#pragma warning(disable: 981)
-#endif	// __INTEL_COMPILER
+#pragma warning(disable : 4100)
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -44,6 +52,7 @@ static char THIS_FILE[] = __FILE__;
 #define TIMER_SHOWING	0x102 //the identifier of the timer for tooltip's fade in
 #define TIMER_SHOW		0x100 //the identifier of the timer for show the tooltip
 #define TIMER_HIDING	0x103 //the identifier of the timer for tooltip's fade out
+#define TIMER_ANIMATION 0x104 //the identifier of the timer for animation
 
 #define PERCENT_STEP_FADEIN		20 //How mush percent will adding during fade in
 #define PERCENT_STEP_FADEOUT	20 //How mush percent will adding during fade out
@@ -51,7 +60,7 @@ static char THIS_FILE[] = __FILE__;
 #define PERCENT_MIN_TRANSPARENCY 0 //How mush percent by minimum transparency
 
 #define MAX_LENGTH_DEBUG_STRING 25 //
-
+/*
 struct PPTOOLTIP_ENUM_CHILD 
 {
 	HWND hwndExclude;
@@ -67,6 +76,8 @@ BOOL CALLBACK EnumChildProc(HWND hwndChild, LPARAM lParam)
 	{
 		DWORD dwStyle = ::GetWindowLong(hwndChild, GWL_STYLE);
 		
+		if (!(dwStyle & WS_VISIBLE))
+			return TRUE;
 		if (structEnum->dwFlags & CWP_SKIPDISABLED)
 		{
 			if (dwStyle & WS_DISABLED)
@@ -75,10 +86,13 @@ BOOL CALLBACK EnumChildProc(HWND hwndChild, LPARAM lParam)
 
 		if ((dwStyle & 0xF) != BS_GROUPBOX)
 		{
-			CRect rcWindow;// = wi.rcWindow;
+			RECT rcWindow;// = wi.rcWindow;
 			::GetWindowRect(hwndChild, &rcWindow);
 			
-			if (rcWindow.PtInRect(structEnum->ptScreen))
+			if ((rcWindow.left <= structEnum->ptScreen.x) &&
+				(rcWindow.right > structEnum->ptScreen.x) &&
+				(rcWindow.top <= structEnum->ptScreen.y) &&
+				(rcWindow.bottom > structEnum->ptScreen.y))
 			{
 				structEnum->hWnd = hwndChild;
 				return FALSE;
@@ -88,7 +102,7 @@ BOOL CALLBACK EnumChildProc(HWND hwndChild, LPARAM lParam)
 
 	return TRUE;
 } //End EnumChildProc
-
+*/
 //////////////////
 // Note that windows are enumerated in top-down Z-order, so the menu
 // window should always be the first one found.
@@ -96,9 +110,8 @@ BOOL CALLBACK EnumChildProc(HWND hwndChild, LPARAM lParam)
 static BOOL CALLBACK MyEnumProc(HWND hwnd, LPARAM lParam)
 {
 	TCHAR buf[16];
-
-	GetClassName(hwnd, buf, sizeof(buf) / sizeof(buf[0]));
-	if (::lstrcmp(buf, _T("#32768")) == 0)  // special classname for menus
+	GetClassName(hwnd, buf, sizeof(buf) / sizeof(TCHAR));
+	if (_tcscmp(buf, _T("#32768")) == 0)  // special classname for menus
 	{
 		*((HWND*)lParam) = hwnd;	 // found it
 		return FALSE;
@@ -116,7 +129,7 @@ CPPToolTip::CPPToolTip()
 	m_dwTimeInitial = 500;
 	m_dwTimeFadeIn = 500;
 	m_dwTimeFadeOut = 500;
-	m_dwBehaviour = PPTOOLTIP_CLOSE_LEAVEWND | PPTOOLTIP_NOCLOSE_OVER;	 //The tooltip's behaviour
+	m_dwBehaviour = 0; //PPTOOLTIP_CLOSE_LEAVEWND | PPTOOLTIP_NOCLOSE_OVER;	 //The tooltip's behaviour
 	m_dwEffectBk = 0;
 	m_dwDirection = 0;
 	m_dwStyles = 0;
@@ -150,6 +163,8 @@ CPPToolTip::CPPToolTip()
 	SetDirection();
 	SetBehaviour();
 	SetDebugMode(FALSE);
+	SetMaxTipWidth(0);
+//	EnableTextWrap(FALSE);
 	SetDelayTime(PPTOOLTIP_TIME_INITIAL, 500);
 	SetDelayTime(PPTOOLTIP_TIME_AUTOPOP, 5000);
 	SetDelayTime(PPTOOLTIP_TIME_FADEIN, 0);
@@ -171,14 +186,14 @@ CPPToolTip::CPPToolTip()
 		wndcls.cbClsExtra		= wndcls.cbWndExtra = 0;
 		wndcls.hInstance		= hInst;
 		wndcls.hIcon			= NULL;
-		wndcls.hCursor			= LoadCursor(hInst, IDC_ARROW );
+		wndcls.hCursor			= LoadCursor(hInst, IDC_ARROW);
 		wndcls.hbrBackground	= NULL;
 		wndcls.lpszMenuName		= NULL;
 		wndcls.lpszClassName	= PPTOOLTIP_CLASSNAME;
 		
 		if (!AfxRegisterClass(&wndcls))
 			AfxThrowResourceException();
-	}
+	} //if
 }
 
 CPPToolTip::~CPPToolTip()
@@ -218,14 +233,15 @@ BOOL CPPToolTip::Create(CWnd* pParentWnd, BOOL bBalloon /* = TRUE */)
 	//
 	SetDefaultSizes(bBalloon);
 	m_drawer.SetCallbackRepaint(this->GetSafeHwnd(), UDM_TOOLTIP_REPAINT);
+	SetDelayTime(PPTOOLTIP_TIME_ANIMATION, 100);
 
 	return TRUE;
 } //End of Create
 
 BOOL CPPToolTip::DestroyWindow() 
 {
-//	SetWindowRgn(NULL, FALSE);
 	Pop();
+	SetDelayTime(PPTOOLTIP_TIME_ANIMATION, 0);
 	return CWnd::DestroyWindow();
 } //End of DestroyWindow
 
@@ -239,7 +255,7 @@ BOOL CPPToolTip::DestroyWindow()
 void CPPToolTip::OnActivateApp(BOOL bActive, HTASK hTask)
 #else
 void CPPToolTip::OnActivateApp(BOOL bActive, DWORD hTask)
-#endif
+#endif //_MSC_VER
 {
 	CWnd::OnActivateApp(bActive, hTask);
 	
@@ -291,7 +307,7 @@ BOOL CPPToolTip::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 	::GetCursorPos(&ptClient);
 	ScreenToClient(&ptClient);
 	TRACE (_T("CPPToolTip::OnSetCursor(x=%d, y=%d)\n"), ptClient.x, ptClient.y);
-	if (m_drawer.OnSetCursor(ptClient))
+	if (m_drawer.OnSetCursor(&ptClient))
 		return TRUE; //The cursor over the hyperlink
 	
 	::SetCursor(::LoadCursor(NULL, IDC_ARROW));
@@ -340,7 +356,7 @@ void CPPToolTip::OnDrawBorder(HDC hDC, HRGN hRgn)
 //   |  |                 |<----+  DrawShadow  |              |         
 //   |  |                 |     +--------------+              |         
 //   |  |                 |                                   |         
-//   |  |                 <---------ALPHA---------------------+         
+//   |  |                 |<--------ALPHA---------------------+         
 //   |  |                 |
 //   |  +--------+--------+
 //   |           |          
@@ -388,7 +404,7 @@ void CPPToolTip::OnRedrawTooltip(HDC hDC, BYTE nTransparency /* = 0 */)
 	
 	//ENG: Draw HTML string
 	//RUS: Отображаем HTML строку
-	m_drawer.DrawPreparedOutput(CDC::FromHandle(hMemDC), m_tiDisplayed.sTooltip, m_rcTipArea);
+	m_drawer.DrawPreparedOutput(hMemDC, &m_rcTipArea);
 
 	//ENG: Gets a region of a window
 	//RUS: Получаем регион окна
@@ -432,7 +448,8 @@ void CPPToolTip::OnRedrawTooltip(HDC hDC, BYTE nTransparency /* = 0 */)
 		//ENG: Creates a mask of the tooltip
 		//RUS: Создание маски тултипа
 		BYTE nColor = LOBYTE(::MulDiv(255, 100 - m_nDarkenShadow, 100));
-		nColor += ((255 - nColor) * nTransparency) / 100;
+		int ntmp = ((255 - nColor) * nTransparency) / 100;
+		nColor = (BYTE) (nColor + ntmp);	// +++hd
 		HBRUSH hBrush = ::CreateSolidBrush(RGB(nColor, nColor, nColor));
 		HBITMAP hOldMask = (HBITMAP)::SelectObject(hMaskDC, hMask);
 		::BitBlt(hMaskDC, 0, 0, rect.Width(), rect.Height(), NULL, 0, 0, WHITENESS);
@@ -504,6 +521,11 @@ BOOL CPPToolTip::PreTranslateMessage(MSG* pMsg)
 
 BOOL CPPToolTip::RelayEvent(MSG* pMsg)
 {
+	//ENG: Disables a message translation if object was't created (thanks to Stoil Todorov)
+	//RUS: Запрет обработки сообщений если объект не создан
+	if (NULL == GetSafeHwnd())  
+		return FALSE;
+
 	ASSERT(m_hParentWnd);
 
 	HWND hWnd = NULL;
@@ -524,7 +546,7 @@ BOOL CPPToolTip::RelayEvent(MSG* pMsg)
 			//Left Button was pressed over the tooltip
 			pt = pMsg->pt;
 			ScreenToClient(&pt);
-			m_drawer.OnLButtonDown(CPoint(pt.x, pt.y)); //
+			m_drawer.OnLButtonDown(&pt); //
 		} //if
 	case WM_LBUTTONDBLCLK:
 	case WM_RBUTTONDOWN:
@@ -540,7 +562,8 @@ BOOL CPPToolTip::RelayEvent(MSG* pMsg)
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 	case WM_MOUSEWHEEL:
-		// The user has interupted the current tool - dismiss it
+//		// The user has interrupted the current tool - dismiss it
+//		if (!(m_tiDisplayed.nBehaviour & PPTOOLTIP_NOCLOSE_MOUSEDOWN))
 		Pop();
 		break;
 	case WM_MOUSEMOVE:
@@ -590,7 +613,7 @@ BOOL CPPToolTip::RelayEvent(MSG* pMsg)
 					//RUS: Ищем предопределенную горячую зону тултипа
 					hWnd = FindTool(&pt, ti);
 				} //if
-					
+				TRACE ("Временное окно = 0x%08X\n", hWnd);
 				if (NULL == hWnd)
 				{
 					//ENG: An item with a tooltip wasn't found
@@ -799,6 +822,12 @@ void CPPToolTip::OnTimer(UINT nIDEvent)
 			//ENG: Kills hiding timer and hides a tooltip
 			//RUS: Убиваем таймер плавного сокрытия и прячем окно тултипа
 			KillTimer(TIMER_HIDING);
+			if (m_tiDisplayed.nBehaviour & PPTOOLTIP_MULTIPLE_SHOW)
+			{
+				//If for tool to set a multiple show then reset last window
+				m_hwndDisplayedTool = NULL;
+				m_tiDisplayed.rectBounds.SetRectEmpty();
+			} //if
 			ShowWindow(SW_HIDE);
 			m_nTooltipState = PPTOOLTIP_STATE_HIDEN;
 			if (m_bNextToolExist)
@@ -826,6 +855,13 @@ void CPPToolTip::OnTimer(UINT nIDEvent)
 			OnRedrawTooltip(NULL, m_dwCurTransparency);
 		} //if
 		break;	
+	case TIMER_ANIMATION:
+		if (IsVisible() && (PPTOOLTIP_STATE_SHOWN == m_nTooltipState))
+		{
+			if(m_drawer.OnTimer())
+				OnRedrawTooltip(NULL, m_dwCurTransparency);
+		} //if
+		break;
 	default:
 		CWnd::OnTimer(nIDEvent);
 		break;
@@ -934,19 +970,19 @@ void CPPToolTip::PrepareDisplayTooltip(LPPOINT lpPoint)
 	ASSERT(pDC->GetSafeHdc());
 	
 	CSize sz (0, 0);
-	sz = m_drawer.PrepareOutput(pDC, m_tiNextTool.sTooltip);
-	
+	m_drawer.PrepareOutput(pDC->GetSafeHdc(), m_tiNextTool.sTooltip, &sz);
+
 	m_rcTipArea.SetRect(0, 0, sz.cx, sz.cy);
 	m_rcTooltip = m_rcTipArea;
 
 	//Inflates on MARGIN_CX and MARGIN_CY sizes
-	m_rcTipArea.OffsetRect(m_dwSizes[PPTTSZ_MARGIN_CX], m_dwSizes[PPTTSZ_MARGIN_CY]);
-	m_rcTooltip.InflateRect(0, 0, 2 * m_dwSizes[PPTTSZ_MARGIN_CX], 2 * m_dwSizes[PPTTSZ_MARGIN_CY]);
+	m_rcTipArea.OffsetRect(m_nSizes[PPTTSZ_MARGIN_CX], m_nSizes[PPTTSZ_MARGIN_CY]);
+	m_rcTooltip.InflateRect(0, 0, 2 * m_nSizes[PPTTSZ_MARGIN_CX], 2 * m_nSizes[PPTTSZ_MARGIN_CY]);
 
 	//Inflates on 
 	//Gets tooltip's rect with anchor
-	POINT ptAnchor;
-	m_dwCurDirection = GetTooltipDirection(m_tiNextTool.nDirection, &pt, &ptAnchor, m_rcTooltip, m_rcBoundsTooltip, m_rcTipArea);
+	CPoint ptAnchor;
+	m_dwCurDirection = GetTooltipDirection(m_tiNextTool.nDirection, pt, ptAnchor, m_rcTooltip, m_rcBoundsTooltip, m_rcTipArea);
 
 	//ENG: Clears resources
 	//RUS: Очищаем ресурсы
@@ -1005,7 +1041,6 @@ void CPPToolTip::PrepareDisplayTooltip(LPPOINT lpPoint)
 	} //switch
 
 	::SelectObject(hMemDC, hOldBitmap);
-	::DeleteObject(hOldBitmap);
 	::DeleteDC(hMemDC);
 	
 	ReleaseDC(pDC);
@@ -1053,11 +1088,22 @@ void CPPToolTip::PrepareDisplayTooltip(LPPOINT lpPoint)
 	
 	//ENG: Sets a tooltip on the screen
 	//RUS: Устанавливаем тултип на экране
-	SetWindowPos(NULL, 
-		rect.left, rect.top,
-		m_rcBoundsTooltip.Width(), 
-		m_rcBoundsTooltip.Height(),
-		SWP_SHOWWINDOW|SWP_NOCOPYBITS|SWP_NOACTIVATE/*|SWP_NOZORDER*/);
+	if (PPTOOLTIP_MENU == m_nTooltipType) 
+	{
+		SetWindowPos(NULL, 
+			rect.left, rect.top,
+			m_rcBoundsTooltip.Width(), 
+			m_rcBoundsTooltip.Height(),
+			SWP_SHOWWINDOW|SWP_NOACTIVATE|SWP_NOZORDER/*|SWP_NOCOPYBITS*/);
+	}
+	else
+	{
+		SetWindowPos(NULL, 
+			rect.left, rect.top,
+			m_rcBoundsTooltip.Width(), 
+			m_rcBoundsTooltip.Height(),
+			SWP_SHOWWINDOW|SWP_NOACTIVATE/*|SWP_NOCOPYBITS*/);
+	}
 } //End of PrepareDisplayTooltip
 
 void CPPToolTip::FreeResources()
@@ -1090,165 +1136,263 @@ void CPPToolTip::OutputTooltipOnScreen(LPPOINT lpPoint, HDC hDC /* = NULL */)
 	MoveWindow(rect);
 } //End OutputTooltipOnScreen
 
-DWORD CPPToolTip::GetTooltipDirection(DWORD dwDirection, const LPPOINT lpPoint, LPPOINT lpAnchor, CRect & rcBody, CRect & rcFull, CRect & rcTipArea)
+////////////////////////////////////////////////////////////////////
+// CPPToolTip::GetTooltipDirection()
+//		Gets a real direction of a tooltip.
+//------------------------------------------------------------------
+// Parameters:
+//		dwDirection		- A default direction of a tooltip. 
+//		lpPoint			- A mouse position in the screen coordinates.
+//		lpAnchor		- An anchor position in the client coordinates
+//      rcBody			- A rectangle of a tooltip's body in the client coordinates
+//		rcFull			- A rectangle of a full tooltip in the client coordinates
+//		rcTipArea		- A rectangle of a tooltip's info area in the client coordinates
+// Return values:
+//		A real direction of a tooltip
+//------------------------------------------------------------------
+// Explanation:
+//    0
+//  0 +------------------------------------+
+//    |                                    |
+//    |             rcBody                 |
+//    |                                    |
+//    |  +------------------------------+  |
+//    |  |                              |  |
+//    |  |         rcTipArea            |  |
+//    |  |                              |  |
+//    |  +------------------------------+  |
+//    |                                    |
+//    +--+...------------------------------+
+//    :  |  /                              :
+//    :  | /        rcFull                 :
+//    :..|/................................:
+//       +- lpAnchor
+//
+////////////////////////////////////////////////////////////////////
+DWORD CPPToolTip::GetTooltipDirection(DWORD dwDirection, const CPoint & ptPoint, CPoint & ptAnchor, CRect & rcBody, CRect & rcFull, CRect & rcTipArea)
 {
-	//Get Window's rectangle
-	CWindowDC wdc(NULL);
+	//ENG: Get Window's rectangle. The whole virtual desktop .... not only the primary screen.JFN
+	//RUS: Получаем полный прямоугольник экрана Windows
 	CRect rWindow;
-	
-	// the the whole virtual desktop .... not only the primary screen.JFN
     rWindow.left    = ::GetSystemMetrics(SM_XVIRTUALSCREEN);
     rWindow.top     = ::GetSystemMetrics(SM_YVIRTUALSCREEN);
 	rWindow.right   = rWindow.left + ::GetSystemMetrics(SM_CXVIRTUALSCREEN);
     rWindow.bottom  = rWindow.top + ::GetSystemMetrics(SM_CYVIRTUALSCREEN);
 
 	//-------------------------------------------
-	// Initializing size of the bounds rect
+	//ENG: Initializing size of the bounds rect
+	//RUS: Инициализация полного размера ограничивающего тултип прямоугольника
 	rcFull = rcBody;
 	switch(dwDirection) 
 	{
 	case PPTOOLTIP_LEFTEDGE_TOP:
 	case PPTOOLTIP_LEFTEDGE_VCENTER:
 	case PPTOOLTIP_LEFTEDGE_BOTTOM:
-		rcFull.right += m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		rcFull.right += m_nSizes [PPTTSZ_HEIGHT_ANCHOR];
 		break;
 	case PPTOOLTIP_RIGHTEDGE_TOP:
 	case PPTOOLTIP_RIGHTEDGE_VCENTER:
 	case PPTOOLTIP_RIGHTEDGE_BOTTOM:
-		rcFull.right += m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		rcFull.right += m_nSizes [PPTTSZ_HEIGHT_ANCHOR];
 		break;
 	case PPTOOLTIP_BOTTOMEDGE_LEFT:
 	case PPTOOLTIP_BOTTOMEDGE_CENTER:
 	case PPTOOLTIP_BOTTOMEDGE_RIGHT:
-		rcFull.bottom += m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		rcFull.bottom += m_nSizes [PPTTSZ_HEIGHT_ANCHOR];
 		break;
 	case PPTOOLTIP_TOPEDGE_LEFT:
 	case PPTOOLTIP_TOPEDGE_CENTER:
 	case PPTOOLTIP_TOPEDGE_RIGHT:
-		rcFull.bottom += m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		rcFull.bottom += m_nSizes [PPTTSZ_HEIGHT_ANCHOR];
 		break;
 	} //switch
 	
 	//---------------------------------------------------
-	//If needed change a horizontal direction
-	CPoint pt(*lpPoint);
+	//ENG: If needed change a horizontal direction
+	//RUS: Проверка горизонтальных размеров на попадание в экран
+	CPoint pt(ptPoint);
 	switch(dwDirection) 
 	{
 	case PPTOOLTIP_LEFTEDGE_TOP:
 	case PPTOOLTIP_LEFTEDGE_VCENTER:
 	case PPTOOLTIP_LEFTEDGE_BOTTOM:
-		pt.x += rcFull.Width();
+		pt.x += rcFull.right;
 		if (pt.x > rWindow.right)
 			dwDirection ^= 0x10;
 		break;
 	case PPTOOLTIP_RIGHTEDGE_TOP:
 	case PPTOOLTIP_RIGHTEDGE_VCENTER:
 	case PPTOOLTIP_RIGHTEDGE_BOTTOM:
-		pt.x -= rcFull.Width();
+		pt.x -= rcFull.right;
 		if (pt.x < rWindow.left)
 			dwDirection ^= 0x10;
 		break;
 	case PPTOOLTIP_BOTTOMEDGE_LEFT:
 	case PPTOOLTIP_TOPEDGE_LEFT:
-		pt.x += rcFull.Width();
-		pt.x -= m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		pt.x += rcFull.right;
+		pt.x -= m_nSizes [PPTTSZ_MARGIN_ANCHOR];
 		if (pt.x > rWindow.right)
-			dwDirection ^= 0x01;
+		{
+			pt.x = ptPoint.x - rcFull.right;
+			pt.x += m_nSizes [PPTTSZ_MARGIN_ANCHOR];
+			if (pt.x < rWindow.left)
+				dwDirection |= 0x02;
+			else
+				dwDirection ^= 0x01;
+		} //if
 		break;
 	case PPTOOLTIP_BOTTOMEDGE_RIGHT:
 	case PPTOOLTIP_TOPEDGE_RIGHT:
-		pt.x -= rcFull.Width();
-		pt.x += m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		pt.x -= rcFull.right;
+		pt.x += m_nSizes [PPTTSZ_MARGIN_ANCHOR];
 		if (pt.x < rWindow.left)
-			dwDirection ^= 0x01;
+		{
+			pt.x = ptPoint.x + rcFull.right;
+			pt.x -= m_nSizes [PPTTSZ_MARGIN_ANCHOR];
+			if (pt.x > rWindow.right)
+				dwDirection ^= 0x03;
+			else
+				dwDirection ^= 0x01;
+		} //if
+		break;
+	case PPTOOLTIP_BOTTOMEDGE_CENTER:
+	case PPTOOLTIP_TOPEDGE_CENTER:
+		if ((ptPoint.x - rWindow.left) <= m_nSizes [PPTTSZ_MARGIN_ANCHOR])
+			dwDirection ^= 0x02;
+		else if ((rWindow.right - ptPoint.x) <= m_nSizes [PPTTSZ_MARGIN_ANCHOR])
+			dwDirection ^= 0x03;
 		break;
 	} //switch
 
 	//---------------------------------------------------
-	//If needed change a vertical direction
+	//ENG: If needed change a vertical direction
+	//RUS: Проверка вертикальных размеров на попадание в экран
 	switch(dwDirection) 
 	{
 	case PPTOOLTIP_LEFTEDGE_TOP:
 	case PPTOOLTIP_RIGHTEDGE_TOP:
-		pt.y -= rcFull.Height();
-		pt.y += m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		pt.y += rcFull.bottom;
+		pt.y -= m_nSizes [PPTTSZ_MARGIN_ANCHOR];
 		if (pt.y > rWindow.bottom)
-			dwDirection ^= 0x01;
+		{
+			pt.y = ptPoint.y - rcFull.bottom;
+			pt.y += m_nSizes [PPTTSZ_MARGIN_ANCHOR];
+			if (pt.y < rWindow.top)
+				dwDirection |= 0x02;
+			else
+				dwDirection ^= 0x01;
+		} //if
 		break;
 	case PPTOOLTIP_LEFTEDGE_BOTTOM:
 	case PPTOOLTIP_RIGHTEDGE_BOTTOM:
-		pt.y += rcFull.Height();
-		pt.y += m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		pt.y -= rcFull.bottom;
+		pt.y += m_nSizes [PPTTSZ_MARGIN_ANCHOR];
 		if (pt.y < rWindow.top)
-			dwDirection ^= 0x01;
+		{
+			pt.y = ptPoint.y + rcFull.bottom;
+			pt.y -= m_nSizes [PPTTSZ_MARGIN_ANCHOR];
+			if (pt.y > rWindow.bottom)
+				dwDirection ^= 0x03;
+			else
+				dwDirection ^= 0x01;
+		} //if
+		break;
+	case PPTOOLTIP_LEFTEDGE_VCENTER:
+	case PPTOOLTIP_RIGHTEDGE_VCENTER:
+		if ((ptPoint.y - rWindow.top) <= m_nSizes [PPTTSZ_MARGIN_ANCHOR])
+			dwDirection ^= 0x02;
+		else if ((rWindow.bottom - ptPoint.y) <= m_nSizes [PPTTSZ_MARGIN_ANCHOR])
+			dwDirection ^= 0x03;
 		break;
 	case PPTOOLTIP_BOTTOMEDGE_LEFT:
 	case PPTOOLTIP_BOTTOMEDGE_CENTER:
 	case PPTOOLTIP_BOTTOMEDGE_RIGHT:
-		pt.y -= rcFull.Height();
+		pt.y -= rcFull.bottom;
 		if (pt.y < rWindow.top)
 			dwDirection ^= 0x10;
 		break;
 	case PPTOOLTIP_TOPEDGE_LEFT:
 	case PPTOOLTIP_TOPEDGE_CENTER:
 	case PPTOOLTIP_TOPEDGE_RIGHT:
-		pt.y += rcFull.Height();
+		pt.y += rcFull.bottom;
 		if (pt.y > rWindow.bottom)
 			dwDirection ^= 0x10;
 		break;
 	} //switch
 
 	//---------------------------------------------------
-	// Set the anchor's point
+	//ENG: Set the anchor's point
+	//RUS: Установка координаты кончика
 	switch(dwDirection) 
 	{
 	case PPTOOLTIP_LEFTEDGE_TOP:
 	case PPTOOLTIP_LEFTEDGE_VCENTER:
 	case PPTOOLTIP_LEFTEDGE_BOTTOM:
-		lpAnchor->x = rcFull.left;
+		ptAnchor.x = rcFull.left;
 		break;
 	case PPTOOLTIP_RIGHTEDGE_TOP:
 	case PPTOOLTIP_RIGHTEDGE_VCENTER:
 	case PPTOOLTIP_RIGHTEDGE_BOTTOM:
-		lpAnchor->x = rcFull.right;
+		ptAnchor.x = rcFull.right;
 		break;
 	case PPTOOLTIP_BOTTOMEDGE_LEFT:
 	case PPTOOLTIP_BOTTOMEDGE_CENTER:
 	case PPTOOLTIP_BOTTOMEDGE_RIGHT:
-		lpAnchor->y = rcFull.bottom;
+		ptAnchor.y = rcFull.bottom;
 		break;
 	case PPTOOLTIP_TOPEDGE_LEFT:
 	case PPTOOLTIP_TOPEDGE_CENTER:
 	case PPTOOLTIP_TOPEDGE_RIGHT:
-		lpAnchor->y = rcFull.top;
+		ptAnchor.y = rcFull.top;
 		break;
 	} //switch
 	
+	//
 	switch(dwDirection) 
 	{
 	case PPTOOLTIP_LEFTEDGE_TOP:
 	case PPTOOLTIP_RIGHTEDGE_TOP:
-		lpAnchor->y = rcFull.top + m_dwSizes [PPTTSZ_MARGIN_ANCHOR];
+		ptAnchor.y = rcFull.top + m_nSizes [PPTTSZ_MARGIN_ANCHOR];
 		break;
 	case PPTOOLTIP_LEFTEDGE_BOTTOM:
 	case PPTOOLTIP_RIGHTEDGE_BOTTOM:
-		lpAnchor->y = rcFull.bottom - m_dwSizes [PPTTSZ_MARGIN_ANCHOR];
+		ptAnchor.y = rcFull.bottom - m_nSizes [PPTTSZ_MARGIN_ANCHOR];
 		break;
 	case PPTOOLTIP_LEFTEDGE_VCENTER:
 	case PPTOOLTIP_RIGHTEDGE_VCENTER:
-		lpAnchor->y = rcFull.Height() / 2;
+		ptAnchor.y = rcFull.bottom / 2;
+		if ((ptPoint.y + rcFull.bottom / 2) <= rWindow.bottom)
+		{
+			if ((ptPoint.y - rcFull.bottom / 2) < rWindow.top)
+				ptAnchor.y -= (rcFull.bottom / 2 - ptPoint.y + rWindow.top);
+		}
+		else if ((ptPoint.y - rcFull.bottom / 2) >= rWindow.top)
+		{
+			if ((ptPoint.y + rcFull.bottom / 2) > rWindow.bottom)
+				ptAnchor.y += (ptPoint.y + rcFull.bottom / 2 - rWindow.bottom);
+		} //if
 		break;
 	case PPTOOLTIP_BOTTOMEDGE_LEFT:
 	case PPTOOLTIP_TOPEDGE_LEFT:
-		lpAnchor->x = rcFull.left + m_dwSizes [PPTTSZ_MARGIN_ANCHOR];
+		ptAnchor.x = rcFull.left + m_nSizes [PPTTSZ_MARGIN_ANCHOR];
 		break;
 	case PPTOOLTIP_BOTTOMEDGE_RIGHT:
 	case PPTOOLTIP_TOPEDGE_RIGHT:
-		lpAnchor->x = rcFull.right - m_dwSizes [PPTTSZ_MARGIN_ANCHOR];
+		ptAnchor.x = rcFull.right - m_nSizes [PPTTSZ_MARGIN_ANCHOR];
 		break;
 	case PPTOOLTIP_BOTTOMEDGE_CENTER:
 	case PPTOOLTIP_TOPEDGE_CENTER:
-		lpAnchor->x = rcFull.left + rcFull.Width() / 2;
+		ptAnchor.x = rcFull.right / 2;
+		if ((ptPoint.x + rcFull.right / 2) <= rWindow.right)
+		{
+			if ((ptPoint.x - rcFull.right / 2) < rWindow.left)
+				ptAnchor.x -= (rcFull.right / 2 - ptPoint.x + rWindow.left);
+		}
+		else if ((ptPoint.x - rcFull.right / 2) >= rWindow.left)
+		{
+			if ((ptPoint.x + rcFull.right / 2) > rWindow.right)
+				ptAnchor.x += (ptPoint.x + rcFull.right / 2 - rWindow.right);
+		} //if
 		break;
 	} //switch
 
@@ -1260,28 +1404,32 @@ DWORD CPPToolTip::GetTooltipDirection(DWORD dwDirection, const LPPOINT lpPoint, 
 	case PPTOOLTIP_RIGHTEDGE_TOP:
 	case PPTOOLTIP_LEFTEDGE_VCENTER:
 	case PPTOOLTIP_RIGHTEDGE_VCENTER:
-		if ((lpPoint->y - lpAnchor->y) < rWindow.top)
-			lpAnchor->y = lpPoint->y - rWindow.top;
+		if ((ptPoint.y - ptAnchor.y) < rWindow.top)
+			ptAnchor.y = ptPoint.y - rWindow.top;
 		break;
 	case PPTOOLTIP_LEFTEDGE_BOTTOM:
 	case PPTOOLTIP_RIGHTEDGE_BOTTOM:
-		if ((lpPoint->y + rcFull.Height() - lpAnchor->y) > rWindow.bottom)
-			lpAnchor->y = rcFull.Height() - rWindow.bottom + lpPoint->y;
+		if ((ptPoint.y + rcFull.bottom - ptAnchor.y) > rWindow.bottom)
+			ptAnchor.y = rcFull.bottom - rWindow.bottom + ptPoint.y;
 		break;
 	case PPTOOLTIP_BOTTOMEDGE_LEFT:
 	case PPTOOLTIP_TOPEDGE_LEFT:
 	case PPTOOLTIP_BOTTOMEDGE_CENTER:
 	case PPTOOLTIP_TOPEDGE_CENTER:
-		if ((lpPoint->x - lpAnchor->x) < rWindow.left)
-			lpAnchor->x = lpPoint->x - rWindow.left;
+		if ((ptPoint.x - ptAnchor.x) < rWindow.left)
+			ptAnchor.x = ptPoint.x - rWindow.left;
 		break;
 	case PPTOOLTIP_BOTTOMEDGE_RIGHT:
 	case PPTOOLTIP_TOPEDGE_RIGHT:
-		if ((lpPoint->x + rcFull.Width() - lpAnchor->x) > rWindow.right)
-			lpAnchor->x = rcFull.Width() - rWindow.right + lpPoint->x;
+		if ((ptPoint.x + rcFull.right - ptAnchor.x) > rWindow.right)
+			ptAnchor.x = rcFull.right - rWindow.right + ptPoint.x;
 		break;
 	} //switch
-	
+
+	//*!* I don't know why but without following lines application fails in Release mode!!!!
+	CString str;
+	str.Format(_T("0x%08X"), dwDirection);
+
 	//---------------------------------------------
 	// Offset the body rectangle
 	switch(dwDirection) 
@@ -1289,19 +1437,19 @@ DWORD CPPToolTip::GetTooltipDirection(DWORD dwDirection, const LPPOINT lpPoint, 
 	case PPTOOLTIP_LEFTEDGE_TOP:
 	case PPTOOLTIP_LEFTEDGE_VCENTER:
 	case PPTOOLTIP_LEFTEDGE_BOTTOM:
-		rcBody.OffsetRect(m_dwSizes [PPTTSZ_HEIGHT_ANCHOR], 0);
-		rcTipArea.OffsetRect(m_dwSizes [PPTTSZ_HEIGHT_ANCHOR], 0);
+		rcTipArea.OffsetRect(m_nSizes [PPTTSZ_HEIGHT_ANCHOR], 0);
+		rcBody.OffsetRect(m_nSizes [PPTTSZ_HEIGHT_ANCHOR], 0);
 		break;
 	case PPTOOLTIP_TOPEDGE_LEFT:
 	case PPTOOLTIP_TOPEDGE_CENTER:
 	case PPTOOLTIP_TOPEDGE_RIGHT:
-		rcBody.OffsetRect(0, m_dwSizes [PPTTSZ_HEIGHT_ANCHOR]);
-		rcTipArea.OffsetRect(0, m_dwSizes [PPTTSZ_HEIGHT_ANCHOR]);
+		rcTipArea.OffsetRect(0, m_nSizes [PPTTSZ_HEIGHT_ANCHOR]);
+		rcBody.OffsetRect(0, m_nSizes [PPTTSZ_HEIGHT_ANCHOR]);
 		break;
 	} //switch
 
 	return dwDirection;
-}
+} //End of GetTooltipDirection
 
 HRGN CPPToolTip::GetTooltipRgn(DWORD dwDirection, int x, int y, int nWidth, int nHeight)
 {
@@ -1315,7 +1463,7 @@ HRGN CPPToolTip::GetTooltipRgn(DWORD dwDirection, int x, int y, int nWidth, int 
 	ptAnchor [0].x = x;
 	ptAnchor [0].y = y;
 	
-	HRGN hrgnRect = NULL;
+	//HRGN hrgnRect = NULL;
 	
 	//------------------------------
 	switch(dwDirection) 
@@ -1323,25 +1471,25 @@ HRGN CPPToolTip::GetTooltipRgn(DWORD dwDirection, int x, int y, int nWidth, int 
 	case PPTOOLTIP_LEFTEDGE_TOP:
 	case PPTOOLTIP_LEFTEDGE_VCENTER:
 	case PPTOOLTIP_LEFTEDGE_BOTTOM:
-		rcBody.left += m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		rcBody.left += m_nSizes [PPTTSZ_HEIGHT_ANCHOR];
 		ptAnchor [1].x = ptAnchor [2].x = rcBody.left;
 		break;
 	case PPTOOLTIP_RIGHTEDGE_TOP:
 	case PPTOOLTIP_RIGHTEDGE_VCENTER:
 	case PPTOOLTIP_RIGHTEDGE_BOTTOM:
-		rcBody.right -= m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		rcBody.right -= m_nSizes [PPTTSZ_HEIGHT_ANCHOR];
 		ptAnchor [1].x = ptAnchor [2].x = rcBody.right;
 		break;
 	case PPTOOLTIP_TOPEDGE_LEFT:
 	case PPTOOLTIP_TOPEDGE_CENTER:
 	case PPTOOLTIP_TOPEDGE_RIGHT:
-		rcBody.top += m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		rcBody.top += m_nSizes [PPTTSZ_HEIGHT_ANCHOR];
 		ptAnchor [1].y = ptAnchor [2].y = rcBody.top;
 		break;
 	case PPTOOLTIP_BOTTOMEDGE_LEFT:
 	case PPTOOLTIP_BOTTOMEDGE_CENTER:
 	case PPTOOLTIP_BOTTOMEDGE_RIGHT:
-		rcBody.bottom -= m_dwSizes [PPTTSZ_HEIGHT_ANCHOR];
+		rcBody.bottom -= m_nSizes [PPTTSZ_HEIGHT_ANCHOR];
 		ptAnchor [1].y = ptAnchor [2].y = rcBody.bottom;
 		break;
 	} //switch
@@ -1351,50 +1499,48 @@ HRGN CPPToolTip::GetTooltipRgn(DWORD dwDirection, int x, int y, int nWidth, int 
 	{
 	case PPTOOLTIP_LEFTEDGE_TOP:
 	case PPTOOLTIP_RIGHTEDGE_TOP:
-		ptAnchor [1].y = rcBody.top + m_dwSizes [PPTTSZ_MARGIN_ANCHOR];
-		ptAnchor [2].y = ptAnchor [1].y + m_dwSizes [PPTTSZ_WIDTH_ANCHOR];
+		ptAnchor [1].y = rcBody.top + m_nSizes [PPTTSZ_MARGIN_ANCHOR];
+		ptAnchor [2].y = ptAnchor [1].y + m_nSizes [PPTTSZ_WIDTH_ANCHOR];
 		break;
 	case PPTOOLTIP_LEFTEDGE_BOTTOM:
 	case PPTOOLTIP_RIGHTEDGE_BOTTOM:
-		ptAnchor [1].y = rcBody.bottom - m_dwSizes [PPTTSZ_MARGIN_ANCHOR];
-		ptAnchor [2].y = ptAnchor [1].y - m_dwSizes [PPTTSZ_WIDTH_ANCHOR];
+		ptAnchor [1].y = rcBody.bottom - m_nSizes [PPTTSZ_MARGIN_ANCHOR];
+		ptAnchor [2].y = ptAnchor [1].y - m_nSizes [PPTTSZ_WIDTH_ANCHOR];
 		break;
 	case PPTOOLTIP_LEFTEDGE_VCENTER:
 	case PPTOOLTIP_RIGHTEDGE_VCENTER:
-		ptAnchor [1].y = rcBody.top + (rcBody.Height() - m_dwSizes [PPTTSZ_WIDTH_ANCHOR]) / 2;
-		ptAnchor [2].y = ptAnchor [1].y + m_dwSizes [PPTTSZ_WIDTH_ANCHOR];
+		ptAnchor [1].y = ptAnchor [0].y - m_nSizes [PPTTSZ_WIDTH_ANCHOR] / 2;
+//		ptAnchor [1].y = rcBody.top + (rcBody.Height() - m_nSizes [PPTTSZ_WIDTH_ANCHOR]) / 2;
+		ptAnchor [2].y = ptAnchor [1].y + m_nSizes [PPTTSZ_WIDTH_ANCHOR];
 		break;
 	case PPTOOLTIP_TOPEDGE_LEFT:
 	case PPTOOLTIP_BOTTOMEDGE_LEFT:
-		ptAnchor [1].x = rcBody.left + m_dwSizes [PPTTSZ_MARGIN_ANCHOR];
-		ptAnchor [2].x = ptAnchor [1].x + m_dwSizes [PPTTSZ_WIDTH_ANCHOR];
+		ptAnchor [1].x = rcBody.left + m_nSizes [PPTTSZ_MARGIN_ANCHOR];
+		ptAnchor [2].x = ptAnchor [1].x + m_nSizes [PPTTSZ_WIDTH_ANCHOR];
 		break;
 	case PPTOOLTIP_TOPEDGE_RIGHT:
 	case PPTOOLTIP_BOTTOMEDGE_RIGHT:
-		ptAnchor [1].x = rcBody.right - m_dwSizes [PPTTSZ_MARGIN_ANCHOR];
-		ptAnchor [2].x = ptAnchor [1].x - m_dwSizes [PPTTSZ_WIDTH_ANCHOR];
+		ptAnchor [1].x = rcBody.right - m_nSizes [PPTTSZ_MARGIN_ANCHOR];
+		ptAnchor [2].x = ptAnchor [1].x - m_nSizes [PPTTSZ_WIDTH_ANCHOR];
 		break;
 	case PPTOOLTIP_TOPEDGE_CENTER:
 	case PPTOOLTIP_BOTTOMEDGE_CENTER:
-		ptAnchor [1].x = rcBody.left + (rcBody.Width() - m_dwSizes [PPTTSZ_WIDTH_ANCHOR]) / 2;
-		ptAnchor [2].x = ptAnchor [1].x + m_dwSizes [PPTTSZ_WIDTH_ANCHOR];
+		ptAnchor [1].x = ptAnchor [0].x - m_nSizes [PPTTSZ_WIDTH_ANCHOR] / 2;
+//		ptAnchor [1].x = rcBody.left + (rcBody.Width() - m_nSizes [PPTTSZ_WIDTH_ANCHOR]) / 2;
+		ptAnchor [2].x = ptAnchor [1].x + m_nSizes [PPTTSZ_WIDTH_ANCHOR];
 		break;
 	} //switch
 
 	//------------------------------
 	//Gets the tooltip body's region
 	hrgnBody = ::CreateRoundRectRgn(rcBody.left, rcBody.top, rcBody.right + 1, rcBody.bottom + 1, 
-			m_dwSizes[PPTTSZ_ROUNDED_CX], m_dwSizes[PPTTSZ_ROUNDED_CY]);
+			m_nSizes[PPTTSZ_ROUNDED_CX], m_nSizes[PPTTSZ_ROUNDED_CY]);
 
 	//Gets the tooltip anchor's region
-	if (m_dwSizes [PPTTSZ_HEIGHT_ANCHOR] && m_dwSizes [PPTTSZ_WIDTH_ANCHOR])
-	{
+	if (m_nSizes [PPTTSZ_HEIGHT_ANCHOR] && m_nSizes [PPTTSZ_WIDTH_ANCHOR])
 		hrgnAnchor = ::CreatePolygonRgn(ptAnchor, 3, ALTERNATE);
-	}
 	else
-	{
 		hrgnAnchor = ::CreateRectRgn(0, 0, 0, 0);
-	} //if
 
 	hRgn = ::CreateRectRgn(0, 0, 0, 0);
 	::CombineRgn(hRgn, hrgnBody, hrgnAnchor, RGN_OR);
@@ -1423,35 +1569,59 @@ BOOL CPPToolTip::IsCursorOverTooltip() const
 	return (pWnd == this);
 }
 
-HWND CPPToolTip::GetWndFromPoint(const LPPOINT lpPoint, BOOL bUseDisabled /* = TRUE */)
+HWND CPPToolTip::GetWndFromPoint(const LPPOINT lpPoint, PPTOOLTIP_INFO & ti, BOOL bCheckTool /* = TRUE */)
 {
-	ASSERT(m_hParentWnd);
-	
-    POINT pt = *lpPoint;
-	// Find the window under the cursor
-    ::ClientToScreen(m_hParentWnd, &pt);
+	// the default implementation of tooltips just calls WindowFromPoint
+	// which does not work for certain kinds of combo boxes
+	CPoint pt = *lpPoint;
+	::ClientToScreen(m_hParentWnd, &pt);
+	HWND hWnd = ::WindowFromPoint(pt);
+	if (NULL != hWnd)
+	{
+		// try to hit combobox instead of edit control for CBS_DROPDOWN styles
+		HWND hWndTemp = ::GetParent(hWnd);
+		if (NULL != hWndTemp)
+		{
+			if (!IsComboBoxControl(hWndTemp, CBS_DROPDOWN))
+			{
+				// handle special case of disabled child windows
+				::ScreenToClient(hWnd, &pt);
+				hWndTemp = ::ChildWindowFromPoint(hWnd, pt);
+				if (NULL == hWndTemp)
+					return NULL;
+				if ((!::IsWindowEnabled(hWndTemp)) && bCheckTool)
+					return NULL;
+			} //if
+			
+			if (FindTool(hWndTemp, &pt, ti) || !bCheckTool)
+				return hWndTemp;
+		} //if
+	} //if
 
-	PPTOOLTIP_ENUM_CHILD structEnum;
-	structEnum.hwndExclude = this->GetSafeHwnd();
-	structEnum.hWnd = NULL;
-	structEnum.ptScreen = pt;
-	structEnum.dwFlags = (bUseDisabled) ? 0 : CWP_SKIPDISABLED;
-	::EnumChildWindows(m_hParentWnd, EnumChildProc, (LPARAM)&structEnum);
-
-	HWND hWnd = m_hParentWnd;
-	if (NULL != structEnum.hWnd)
-		hWnd = structEnum.hWnd;
-
-    return hWnd;
+	return NULL;
 } //End GetWndFromPoint
+
+BOOL CPPToolTip::IsComboBoxControl(HWND hWnd, UINT nStyle)
+{
+	if (hWnd == NULL)
+		return FALSE;
+	// do cheap style compare first
+	if ((UINT)(::GetWindowLong(hWnd, GWL_STYLE) & 0x0F) != nStyle)
+		return FALSE;
+
+	// do expensive classname compare next
+	TCHAR szCompare[9];
+	::GetClassName(hWnd, szCompare, 9);
+	return lstrcmpi(szCompare, _T("combobox")) == 0;
+}
 
 CString CPPToolTip::GetDebugInfoTool(LPPOINT lpPoint)
 {
-	HWND hWnd = GetWndFromPoint(lpPoint);
+	PPTOOLTIP_INFO ti;
+	HWND hWnd = GetWndFromPoint(lpPoint, ti, FALSE);
 	HWND hParent = ::GetParent (hWnd);
 
 	_TCHAR ch[128];
-	PPTOOLTIP_INFO ti;
 	CString str, strTemp;
 	CString strOutput = _T("<table>");
 	
@@ -1460,48 +1630,43 @@ CString CPPToolTip::GetDebugInfoTool(LPPOINT lpPoint)
 	strOutput += _T("<tr><td><font color=darkblue>Window</font><table border=1>");
 
 	//1. Window's class name and Window Owner's class name
-	strOutput += _T("<tr><td bgcolor=buttonface>Class Name</td><td bgcolor=window>");
 	::GetClassName (hWnd, ch, 128);
-	strOutput += GetMaxDebugString((CString)ch);
-	strOutput += _T("</td></tr>");
+	strOutput += CreateDebugCell(_T("Class name"), ch);
 	
 	//2. Window's title and Window Owner's title
-	strOutput += _T("<tr><td bgcolor=buttonface>Title</td><td bgcolor=white>");
 	::GetWindowText (hWnd, ch, 128);
-	strOutput += GetMaxDebugString((CString)ch);
-	strOutput += _T("</td></tr>");
+	strOutput += CreateDebugCell(_T("Title"), ch);
 	
 	//3. Window's handle and Window Owner's handle
-	str.Format(_T("<tr><td bgcolor=buttonface>Handle</td><td bgcolor=white>0x%08X</td></tr>"), hWnd);
-	strOutput += str;
+	str.Format(_T("0x%08X"), hWnd);
+	strOutput += CreateDebugCell(_T("Handle"), str);
 	
 	//4. Window's ID
-	str.Format(_T("<tr><td bgcolor=buttonface>Control ID</td><td bgcolor=white>%d</td></tr>"), GetWindowLong(hWnd, GWL_ID));
-	strOutput += str;
+	str.Format(_T("%d"), GetWindowLong(hWnd, GWL_ID));
+	strOutput += CreateDebugCell(_T("Control ID"), str);
 
 	//5. Window's styles
-	str.Format(_T("<tr><td bgcolor=buttonface>Styles</td><td bgcolor=white>0x%08X</td></tr>"), (DWORD)::GetWindowLong (hWnd, GWL_STYLE));
-	strOutput += str;
+	str.Format(_T("0x%08X"), (DWORD)::GetWindowLong (hWnd, GWL_STYLE));
+	strOutput += CreateDebugCell(_T("Styles"), str);
 	
 	//6. Window's rect
 	RECT rc; 
 	::GetWindowRect(hWnd, &rc);
-	str.Format(_T("<tr><td bgcolor=buttonface>RECT</td><td bgcolor=white>(%d, %d)-(%d, %d)</td></tr>"), rc.left, rc.top, rc.right, rc.bottom);
-	strOutput += str;
+	str.Format(_T("(%d, %d)-(%d, %d)"), rc.left, rc.top, rc.right, rc.bottom);
+	strOutput += CreateDebugCell(_T("RECT"), str);
 
 	//7. Window's width
-	str.Format(_T("<tr><td bgcolor=buttonface>Width</td><td bgcolor=white>%d</td></tr>"), rc.right - rc.left);
-	strOutput += str;
+	str.Format(_T("%d"), rc.right - rc.left);
+	strOutput += CreateDebugCell(_T("Width"), str);
 	
 	//8. Window's height
-	str.Format(_T("<tr><td bgcolor=buttonface>Height</td><td bgcolor=white>%d</td></tr>"), rc.bottom - rc.top);
-	strOutput += str;
+	str.Format(_T("%d"), rc.bottom - rc.top);
+	strOutput += CreateDebugCell(_T("Height"), str);
 
 	//9. Window's has tooltip
-	strOutput += _T("<tr><td bgcolor=buttonface>Has Tooltip</td><td bgcolor=white>");
 	HWND hwndTool = FindTool(lpPoint, ti);
-	strOutput += (NULL != hwndTool) ? _T("Yes") : _T("No");
-	strOutput += _T("</td></tr>");
+	str = (NULL != hwndTool) ? _T("Yes") : _T("No");
+	strOutput += CreateDebugCell(_T("Has Tooltip"), str);
 
 	strOutput += _T("</table></td>");
 
@@ -1510,42 +1675,40 @@ CString CPPToolTip::GetDebugInfoTool(LPPOINT lpPoint)
 	strOutput += _T("<td><font color=darkblue>Window Owner</font><table border=1>");
 	
 	//1. Window's class name and Window Owner's class name
-	strOutput += _T("<tr><td bgcolor=buttonface>Class Name</td><td bgcolor=white>");
 	if (NULL != hParent)
 	{
 		::GetClassName (hParent, ch, 128);
-		strOutput += GetMaxDebugString((CString)ch);
-	}
-	else strOutput += _T("N/A");
-	strOutput += _T("</td></tr>");
+		str = GetMaxDebugString((CString)ch);
+	} //if
+	else str = _T("N/A");
+	strOutput += CreateDebugCell(_T("Class name"), str);
 	
 	//2. Window's title and Window Owner's title
-	strOutput += _T("<tr><td bgcolor=buttonface>Title</td><td bgcolor=white>");
 	if (NULL != hParent)
 	{
 		::GetWindowText (hParent, ch, 128);
-		strOutput += GetMaxDebugString((CString)ch);
-	}
-	else strOutput += _T("N/A");
-	strOutput += _T("</td></tr>");
+		str = GetMaxDebugString((CString)ch);
+	} //if
+	else str = _T("N/A");
+	strOutput += CreateDebugCell(_T("Title"), str);
 	
 	//3. Window's handle and Window Owner's handle
-	str.Format(_T("<tr><td bgcolor=buttonface>Handle</td><td bgcolor=white>0x%08X</td></tr>"), hParent);
-	strOutput += str;
+	str.Format(_T("0x%08X"), hParent);
+	strOutput += CreateDebugCell(_T("Handle"), str);
 
 	strOutput += _T("</table>");
 	
 	///////////////////////////////////////////////////////////////////
 	//Table of a window owner
-	strOutput += _T("<font color=darkblue>Mouse Cursor</font><table border=1>");
+	strOutput += _T("<br><font color=darkblue>Mouse Cursor</font><table border=1>");
 	
 	//1.
-	str.Format(_T("<tr><td bgcolor=buttonface>X</td><td bgcolor=white>%d</td></tr>"), lpPoint->x);
-	strOutput += str;
+	str.Format(_T("%d"), lpPoint->x);
+	strOutput += CreateDebugCell(_T("X"), str);
 	
 	//2.
-	str.Format(_T("<tr><td bgcolor=buttonface>Y</td><td bgcolor=white>%d</td></tr>"), lpPoint->y);
-	strOutput += str;
+	str.Format(_T("%d"), lpPoint->y);
+	strOutput += CreateDebugCell(_T("Y"), str);
 
 	strOutput += _T("</table></td></tr></table>");
 
@@ -1553,8 +1716,17 @@ CString CPPToolTip::GetDebugInfoTool(LPPOINT lpPoint)
 	return strOutput;
 }
 
-CString CPPToolTip::GetMaxDebugString(CString str)
+CString CPPToolTip::CreateDebugCell(CString sTitle, LPCTSTR lpszDescription)
 {
+	CString str;
+	str.Format(_T("<tr><td width=70 bgcolor=buttonface>%s</td><td width=130 bgcolor=window>%s</td></tr>"), 
+		sTitle, GetMaxDebugString(lpszDescription));
+	return str;
+} //End of CreateDebugCell
+
+CString CPPToolTip::GetMaxDebugString(LPCTSTR lpszText)
+{
+	CString str = (CString)lpszText;
 	str.Replace(_T("<"), _T("?")); //Replaces the begins of the tags
 	if (str.GetLength() > MAX_LENGTH_DEBUG_STRING)
 	{
@@ -1563,36 +1735,11 @@ CString CPPToolTip::GetMaxDebugString(CString str)
 	} //if
 
 	return str;
-}
+} //End of GetMaxDebugString
 
 HWND CPPToolTip::FindTool(const LPPOINT lpPoint, PPTOOLTIP_INFO & ti)
 {
-	//ENG: Gets a window's handle under the cursor
-	//RUS: Получаем дескриптор окна под курсором
-	HWND hWnd = GetWndFromPoint(lpPoint, FALSE /* m_nStyles & PPTOOLTIP_SHOW_DISABLED */);
-	
-	if (NULL != hWnd)
-	{
-		//ENG: A window under the cursor was existed
-		//RUS: Окно под курсором существует
-		if (FindTool(hWnd, lpPoint, ti))
-		{
-			//ENG: ... and tool was found
-			//RUS: ... и найден инструмент
-			return hWnd;
-		} //if
-
-		//ENG: Checks a child window
-		//RUS: Проверяем дочернее окно
-		hWnd = ::GetParent(hWnd);
-		if (NULL != hWnd)
-		{
-			if (FindTool(hWnd, lpPoint, ti))
-				return hWnd;
-		} //if
-	} //if
-
-	return NULL;
+	return GetWndFromPoint(lpPoint, ti, TRUE);
 } //End of FindTool
 
 BOOL CPPToolTip::FindTool(HWND hWnd, const LPPOINT lpPoint, PPTOOLTIP_INFO & ti)
@@ -1758,6 +1905,14 @@ void CPPToolTip::AddTool(CWnd * pWnd, LPCTSTR lpszString, DWORD dwIdIcon, CSize 
 	AddTool(pWnd, str, lpRectBounds, dwIDTool);
 }
 
+void CPPToolTip::AddTool(CWnd * pWnd, LPCTSTR lpszString, DWORD dwIdBitmap, COLORREF crMask, CSize & szBitmap /*= CSize(0, 0)*/, LPCRECT lpRectBounds /*= NULL*/, DWORD dwIDTool /*= 0*/)
+{
+	CString str;
+	str.Format(_T("<table><tr><td><bmp idres=%d mask=0x%X width=%d height=%d></td><td>%s</td></tr></table>"), 
+		dwIdBitmap, crMask, szBitmap.cx, szBitmap.cy, lpszString);
+	AddTool(pWnd, str, lpRectBounds, dwIDTool);
+}
+
 void CPPToolTip::AddTool(CWnd * pWnd, DWORD dwIdString, LPCRECT lpRectBounds /* = NULL */, DWORD dwIDTool /* = 0 */)
 {
 	CString str;
@@ -1807,7 +1962,7 @@ void CPPToolTip::AddTool(CWnd * pWnd, PPTOOLTIP_INFO & ti)
 		//RUS: Тултип для указанного HWND не обнаружен, поэтому создаем его
 		arHotArea hotarea;
 		hotarea.push_back(ti);
-		m_ToolMap.insert(std::map<HWND, arHotArea>::value_type(hWnd, hotarea));
+		m_ToolMap.insert(std::make_pair(hWnd, hotarea));
 		return;
 	} //if
 
@@ -1960,6 +2115,108 @@ void CPPToolTip::AddToolBar(CToolBar * pBar)
 	pBar->SetBarStyle(dwStyles);
 } //End of AddToolBar
 
+
+BOOL CPPToolTip::GetToolInfo(PPTOOLTIP_INFO & ti, CWnd * pWnd, LPCRECT lpRectBounds /* = NULL */)
+{
+	ASSERT(pWnd);
+
+	//ENG: Gets HWND of a window
+	//RUS: Получаем HWND окна
+	HWND hWnd = pWnd->GetSafeHwnd();	
+	//ENG: Searching a specified HWND
+	//RUS: Ищем указанный HWND
+	mapIter item = m_ToolMap.find(hWnd);	
+	if (item == m_ToolMap.end())
+	{
+		//ENG: Specified HWND wasn't found
+		//RUS: Указанный HWND не найден
+		return FALSE; 
+	} //if
+
+	//ENG: Gets parameters of the tooltip
+	//RUS: Получаем параметры тултипа
+	arHotArea & hotarea = item->second;
+
+	//ENG: A tooltip has more one rectangle areas. Check all theirs
+	//RUS: Тултип содержит более одной прямоугольной области, проверим всех их
+	arHotArea::iterator iter;
+	for (iter = hotarea.begin(); iter != hotarea.end(); ++iter)
+	{
+		if (lpRectBounds == (*iter).rectBounds)
+		{
+			//ENG: Specified window's rect already exist and so updates him
+			//RUS: Указанный прямоугольник окна уже существует, поэтому просто обновляем его параметры
+			ti = *iter;
+			return TRUE ;
+		} //if
+	} //for
+	
+	return FALSE;
+}
+
+BOOL CPPToolTip::GetToolInfo(PPTOOLTIP_INFO & ti, CWnd * pWnd, DWORD dwIDTool /* = 0 */)
+{
+	ASSERT(pWnd);
+
+	//ENG: Gets HWND of a window
+	//RUS: Получаем HWND окна
+	HWND hWnd = pWnd->GetSafeHwnd();	
+	//ENG: Searching a specified HWND
+	//RUS: Ищем указанный HWND
+	mapIter item = m_ToolMap.find(hWnd);	
+	if (item == m_ToolMap.end())
+	{
+		//ENG: Specified HWND wasn't found
+		//RUS: Указанный HWND не найден
+		return FALSE; 
+	} //if
+
+	//ENG: Gets parameters of the tooltip
+	//RUS: Получаем параметры тултипа
+	arHotArea & hotarea = item->second;
+
+	arHotArea::iterator iter;
+	for (iter = hotarea.begin(); iter != hotarea.end(); ++iter)
+	{
+		if (dwIDTool == (*iter).nIDTool)
+		{
+			ti = *iter;
+			return TRUE ;
+		} //if
+	} //for
+	
+	return FALSE;
+}
+
+void CPPToolTip::UpdateTipText(LPCTSTR lpszText, CWnd * pWnd, DWORD dwIDTool /* = 0 */)
+{
+	PPTOOLTIP_INFO ti;
+	if (GetToolInfo(ti, pWnd, dwIDTool))
+	{
+		ti.sTooltip = lpszText;
+		AddTool(pWnd, ti);
+	}
+}
+
+void CPPToolTip::DelTool(CWnd * pWnd, DWORD dwIDTool)
+{
+	PPTOOLTIP_INFO ti;
+	if (GetToolInfo(ti, pWnd, dwIDTool))
+	{
+		RemoveTool(pWnd, ti.rectBounds);
+	}
+}
+
+void CPPToolTip::SetToolRect(CWnd * pWnd, DWORD dwIDTool, LPCRECT lpRectBounds)
+{
+	PPTOOLTIP_INFO ti;
+	if (GetToolInfo(ti, pWnd, dwIDTool))
+	{
+		ti.rectBounds = *lpRectBounds;
+		AddTool(pWnd, ti);
+	}
+}
+
 ////////////////////////////////////////////////////////////////////
 // CPPToolTip::EnableHyperlink()
 // Enables redrawing hyperlinks and hot areas.
@@ -2045,13 +2302,13 @@ void CPPToolTip::SetNotify(HWND hWnd)
 //													  from the hot spot of a cursor
 //		nValue			- size's value
 /////////////////////////////////////////////////////////////////////////////
-void CPPToolTip::SetSize(DWORD nSizeIndex, DWORD nValue)
+void CPPToolTip::SetSize(int nSizeIndex, int nValue)
 {
 	TRACE(_T("CPPToolTip::SetSize(nSizeIndex = %d, nValue = %d)\n"), nSizeIndex, nValue);
 	if (nSizeIndex >= PPTTSZ_MAX_SIZES)
 		return;
 
-	m_dwSizes [nSizeIndex] = nValue;
+	m_nSizes [nSizeIndex] = nValue;
 } //End of SetSize
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2065,13 +2322,13 @@ void CPPToolTip::SetSize(DWORD nSizeIndex, DWORD nValue)
 //		size's value
 //
 /////////////////////////////////////////////////////////////////////////////
-DWORD CPPToolTip::GetSize(DWORD nSizeIndex)
+int CPPToolTip::GetSize(int nSizeIndex)
 {
 	TRACE(_T("CPPToolTip::GetSize(nSizeIndex = %d)\n"), nSizeIndex);
 	if (nSizeIndex >= PPTTSZ_MAX_SIZES)
 		return 0;
 
-	return m_dwSizes [nSizeIndex];
+	return m_nSizes [nSizeIndex];
 } //End of GetSize
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2206,6 +2463,7 @@ DWORD CPPToolTip::GetBehaviour()
 //													  fade-in effect
 //							PPTOOLTIP_TIME_FADEOUT	- Retrieve the length of time for each step of
 //													  fade-out effect
+//							PPTOOLTIP_TIME_ANIMATION  Retrieve the speed for the animation
 //						  For compatibility with 1.x versions of CPPToolTip a following values
 //						  are available also:
 //							TTDT_AUTOPOP			- Same PPTOOLTIP_TIME_AUTOPOP 
@@ -2227,6 +2485,11 @@ void CPPToolTip::SetDelayTime(DWORD dwDuration, DWORD dwTime)
 		break;
 	case PPTOOLTIP_TIME_FADEOUT:
 		m_dwTimeFadeOut = dwTime;
+		break;
+	case PPTOOLTIP_TIME_ANIMATION:
+		KillTimer(TIMER_ANIMATION);
+		if (dwTime)
+			SetTimer(TIMER_ANIMATION, dwTime, NULL);
 		break;
 	}
 } //End of SetDelayTime
@@ -2313,6 +2576,21 @@ DWORD CPPToolTip::GetDirection()
 } //End of GetDirection
 
 /////////////////////////////////////////////////////////////////////////////
+//  CPPToolTip::SetTextStyles()
+//    Applies a CSS-like style for the tooltip's HTML
+//---------------------------------------------------------------------------
+//  Parameters:
+//		lpszStyleName	- Pointer to a null-terminated string that specifies
+//						  a name of CSS style
+//		lpszStyleValue  - Pointer to a null-terminated string that specifies 
+//						  CSS-lite style for drawing a tooltip text.
+/////////////////////////////////////////////////////////////////////////////
+void CPPToolTip::SetTextStyle(LPCTSTR lpszStyleName, LPCTSTR lpszStyleValue)
+{
+	m_drawer.SetTextStyle(lpszStyleName, lpszStyleValue);
+}
+
+/////////////////////////////////////////////////////////////////////////////
 //  CPPToolTip::SetCssStyles()
 //    Applies a CSS-like styles for the tooltip's HTML
 //---------------------------------------------------------------------------
@@ -2323,6 +2601,19 @@ DWORD CPPToolTip::GetDirection()
 void CPPToolTip::SetCssStyles(LPCTSTR lpszCssStyles /* = NULL */)
 {
 	m_drawer.SetCssStyles(lpszCssStyles);
+} //End of SetCssStyles
+
+///////////////////////////////////////////////////////////////////////////// 
+//  CPPToolTip::SetCssStyles() 
+//    Applies a CSS-like styles for the tooltip's HTML 
+//--------------------------------------------------------------------------- 
+//  Parameters: 
+//      dwIdCssStyle    - ID of string resource 
+//      lpszPathDll		- 
+///////////////////////////////////////////////////////////////////////////// 
+void CPPToolTip::SetCssStyles(DWORD dwIdCssStyle, LPCTSTR lpszPathDll /* = NULL */) 
+{ 
+    m_drawer.SetCssStyles(dwIdCssStyle, lpszPathDll); 
 } //End of SetCssStyles
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2652,7 +2943,7 @@ void CPPToolTip::SetTooltipShadow(int nOffsetX, int nOffsetY, BYTE nDarkenPercen
 	m_szOffsetShadow.cy = nOffsetY;
 	m_szDepthShadow.cx = nDepthX;
 	m_szDepthShadow.cy = nDepthY;
-	m_nDarkenShadow = min((BYTE)100, nDarkenPercent);
+	m_nDarkenShadow = (BYTE)min(100, nDarkenPercent);
 	m_bGradientShadow = bGradient;
 } //End of SetTooltipShadow
 

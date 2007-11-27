@@ -1,57 +1,27 @@
-/////////////////////////////////////////////////////////////////////
-// PPHtmlDrawer.cpp : implementation file
-//-----------------------------------------
-// Author:			Eugene Pustovoyt
-// Created:			8 May 2003
-// Last Modified:	09 September 2003
-// Current Version: 1.0
-//
-//--- History ------------------------------ 
-//
-/////////////////////////////////////////////////////////////////////
-//
-// "GotoURL" function by Stuart Patterson
-// As seen in the August, 1997 Windows Developer's Journal.
-// Copyright 1997 by Miller Freeman, Inc. All rights reserved.
-// Modified by Chris Maunder to use TCHARs instead of chars.
-//
-// "Default hand cursor" from Paul DiLascia's Jan 1998 MSJ article.
-// Modified by Zorglab to use standard hand cursor on WinMe,2k,XP
-//
-/////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#pragma warning(push, 3)
 #include "PPHtmlDrawer.h"
+#include "atlconv.h"    // for Unicode conversion - requires #include <afxdisp.h> // MFC OLE automation classes
 
-// unreferenced formal parameter
-#pragma warning(disable: 4100)
-// local variable is initialized but not referenced
-#pragma warning(disable: 4189)
-// conversion from 'type' to 'type', possible loss of data
-#pragma warning(disable: 4244)
-
-#if defined(__INTEL_COMPILER)
-// remark #171: invalid type conversion
-#pragma warning(disable: 171)
-// remark #174: expression has no effect
-#pragma warning(disable: 174)
-// remark #279: controlling expression is constant
-#pragma warning(disable: 279)
-// remark #383: value copied to temporary, reference to temporary used
-#pragma warning(disable: 383)
-// remark #593: variable was set but never used
-#pragma warning(disable: 593)
-// remark #981: operands are evaluated in unspecified order
-#pragma warning(disable: 981)
-#endif	// __INTEL_COMPILER
+#include <shellapi.h>
+#pragma comment(lib, "comctl32.lib")
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
 #undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+static char THIS_FILE[]=__FILE__;
+#define new DEBUG_NEW
 #endif
 
+#pragma warning(disable : 4996)	// disable bogus deprecation warning
+
 #define PPHTMLDRAWER_NO_HOVERLINK	-2	//A hot area is not exist under the cursor
+#define PPHTMLDRAWER_BREAK_CHARS	_T(" -.,!:;)}]?") //A set of the chars to break line in the text wrap mode
+
+enum {
+		MODE_DRAW = 0,
+		MODE_FIRSTPASS,
+		MODE_SECONDPASS
+	};
 
 /*
 #define m_szOffsetShadow.cx		4 //
@@ -67,9 +37,12 @@ static char THIS_FILE[] = __FILE__;
 
 CPPHtmlDrawer::CPPHtmlDrawer()
 {
+	m_nNumPass = MODE_FIRSTPASS;
+
 	m_hInstDll = NULL;
 	m_bFreeInstDll = FALSE;
-	m_pDC = NULL;
+	m_hDC = NULL;
+	m_hImageList = NULL;
 	
 	m_csCallbackRepaint.hWnd = NULL;
 	m_csCallbackRepaint.nMessage = 0;
@@ -86,11 +59,19 @@ CPPHtmlDrawer::CPPHtmlDrawer()
 	m_hLinkCursor = NULL; // No cursor as yet
 	m_nHoverIndexLink = PPHTMLDRAWER_NO_HOVERLINK;
 
+	SetListOfTags();
+	SetListSpecChars();
     SetTableOfColors();
 	SetDefaultCursor();
 	EnableEscapeSequences();
+	SetMaxWidth(0);
+//	EnableTextWrap(FALSE); //A text warpping was disabled by default
+//	EnableTextWrap(TRUE); //A text warpping was disabled by default
 	SetImageShadow(4, 4);
+	SetTabSize(32);
 	SetDefaultCssStyles();
+	EnableOutput();
+	SetDisabledColor(::GetSysColor(COLOR_BTNSHADOW));
 }
 
 CPPHtmlDrawer::~CPPHtmlDrawer()
@@ -103,30 +84,44 @@ CPPHtmlDrawer::~CPPHtmlDrawer()
 		m_hLinkCursor = NULL;
 	}
 	
-	if (m_ImageList.m_hImageList != NULL)
-		m_ImageList.DeleteImageList();
+	if (NULL != m_hImageList)
+		::DeleteObject(m_hImageList);
 }
 
-HICON CPPHtmlDrawer::GetIconFromResources(DWORD dwID, CSize szIcon /* = CSize(0, 0) */) const
+void CPPHtmlDrawer::EnableOutput(BOOL bEnable /* = TRUE */)
+{
+	m_bIsEnable = bEnable;
+} //End of EnableOutput
+
+void CPPHtmlDrawer::SetDisabledColor(COLORREF color)
+{
+	m_crDisabled = color;
+}
+
+HICON CPPHtmlDrawer::GetIconFromResources(DWORD dwID, int nWidth /* = 0 */, int nHeight /* = 0 */) const
 {
 	if (0 == dwID) return NULL;
 
 	// Find correct resource handle
+#ifdef _MFC_VER
 	HINSTANCE hInstResource = AfxFindResourceHandle(MAKEINTRESOURCE(dwID), RT_GROUP_ICON);
+#else
+	HINSTANCE hInstResource = ::GetModuleHandle(NULL);
+#endif
 	// Set icon when the mouse is IN the button
-	HICON hIcon = (HICON)::LoadImage(hInstResource, MAKEINTRESOURCE(dwID), IMAGE_ICON, szIcon.cx, szIcon.cy, 0);
+	HICON hIcon = (HICON)::LoadImage(hInstResource, MAKEINTRESOURCE(dwID), IMAGE_ICON, nWidth, nHeight, LR_DEFAULTCOLOR);
 	
 	return hIcon;
 }
 
-HICON CPPHtmlDrawer::GetIconFromFile(LPCTSTR lpszPath, CSize szIcon /* = CSize(0, 0) */) const
+HICON CPPHtmlDrawer::GetIconFromFile(LPCTSTR lpszPath, int nWidth /* = 0 */, int nHeight /* = 0 */) const
 {
-	HICON hIcon = (HICON)::LoadImage(NULL, lpszPath, IMAGE_ICON, szIcon.cx, szIcon.cy, LR_LOADFROMFILE);
+	HICON hIcon = (HICON)::LoadImage(NULL, lpszPath, IMAGE_ICON, nWidth, nHeight, LR_LOADFROMFILE | LR_DEFAULTCOLOR);
 	
 	return hIcon;
 }
 
-HICON CPPHtmlDrawer::GetIconFromDll(DWORD dwID, CSize szIcon /* = CSize(0, 0) */, LPCTSTR lpszPathDll /* = NULL */) const
+HICON CPPHtmlDrawer::GetIconFromDll(DWORD dwID, int nWidth /* = 0 */, int nHeight /* = 0 */, LPCTSTR lpszPathDll /* = NULL */) const
 {
 	if (0 == dwID) return NULL;
 
@@ -150,7 +145,7 @@ HICON CPPHtmlDrawer::GetIconFromDll(DWORD dwID, CSize szIcon /* = CSize(0, 0) */
 
 	if (NULL != hInstDll)
 	{
-		hIcon = (HICON)::LoadImage(hInstDll, MAKEINTRESOURCE(dwID), IMAGE_ICON, szIcon.cx, szIcon.cy, 0);
+		hIcon = (HICON)::LoadImage(hInstDll, MAKEINTRESOURCE(dwID), IMAGE_ICON, nWidth, nHeight, LR_DEFAULTCOLOR);
 
 		if (bNewDll)
 			::FreeLibrary(hInstDll);
@@ -164,9 +159,13 @@ HBITMAP CPPHtmlDrawer::GetBitmapFromResources(DWORD dwID) const
 	if (0 == dwID) return NULL;
 
 	// Find correct resource handle
+#ifdef _MFC_VER
 	HINSTANCE hInstResource = AfxFindResourceHandle(MAKEINTRESOURCE(dwID), RT_BITMAP);
+#else
+	HINSTANCE hInstResource = ::GetModuleHandle(NULL);
+#endif
 	// Load bitmap
-	HBITMAP hBitmap = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(dwID), IMAGE_BITMAP, 0, 0, 0);
+	HBITMAP hBitmap = (HBITMAP)::LoadImage(hInstResource, MAKEINTRESOURCE(dwID), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
 	
 	return hBitmap;
 }
@@ -213,21 +212,21 @@ HBITMAP CPPHtmlDrawer::GetBitmapFromDll(DWORD dwID, LPCTSTR lpszPathDll /* = NUL
 	return hBitmap;
 }
 
-CString CPPHtmlDrawer::GetStringFromResource(DWORD dwID) const
+CPPString CPPHtmlDrawer::GetStringFromResource(DWORD dwID) const
 {
 	if (0 == dwID) return _T("");
 
-	CString str;
+	CPPString str;
 	str.LoadString(dwID);
 
 	return str;
 }
 
-CString CPPHtmlDrawer::GetStringFromDll(DWORD dwID, LPCTSTR lpszPathDll /* = NULL */) const
+CPPString CPPHtmlDrawer::GetStringFromDll(DWORD dwID, LPCTSTR lpszPathDll /* = NULL */) const
 {
 	if (0 == dwID) return _T("");
 
-	CString str = _T("");
+	CPPString str = _T("");
 
 	HINSTANCE hInstDll = NULL;
 	BOOL bNewDll = FALSE;
@@ -297,9 +296,9 @@ CString CPPHtmlDrawer::GetStringFromDll(DWORD dwID, LPCTSTR lpszPathDll /* = NUL
 //
 // Format prompt string:  long prompt \n short prompt \n disable prompt
 ////////////////////////////////////////////////////////////
-CString CPPHtmlDrawer::GetResCommandPrompt(UINT nID, UINT nNumParam /* = 0 */)
+CPPString CPPHtmlDrawer::GetResCommandPrompt(UINT nID, UINT nNumParam /* = 0 */)
 {
-	CString str = GetStringFromResource(nID);
+	CPPString str = GetStringFromResource(nID);
 	if (!str.IsEmpty())
 	{
 		int nFirst = 0;
@@ -339,7 +338,148 @@ CString CPPHtmlDrawer::GetResCommandPrompt(UINT nID, UINT nNumParam /* = 0 */)
 } //End of GetResCommandPrompt
 
 /////////////////////////////////////////////////////////////////////////////
-// CPPHtmlDrawer message handlers
+// 
+void CPPHtmlDrawer::SetListSpecChars()
+{
+	AddSpecChar(_T("&amp;"), _T("&"));			// ampersand
+	AddSpecChar(_T("&bull;"), _T("\x95\0"));	// bullet  NOT IN MS SANS SERIF
+	AddSpecChar(_T("&copy;"), _T("\xA9\0"));	// copyright
+//	AddSpecChar(_T("&euro;"), _T("\x80\0"));	// euro sign IN NOT CYRILLIC FONTS
+	AddSpecChar(_T("&euro;"), _T("\x88\0"));	// euro sign IN CYRILLIC FONTS
+	AddSpecChar(_T("&gt;"), _T(">"));			// greater than
+	AddSpecChar(_T("&iquest;"), _T("\xBF\0"));	// inverted question mark
+	AddSpecChar(_T("&lt;"), _T("<<"));			// less than
+	AddSpecChar(_T("&nbsp;"), _T(" "));			// nonbreaking space
+	AddSpecChar(_T("&para;"), _T("\xB6\0"));	// paragraph sign
+	AddSpecChar(_T("&pound;"), _T("\xA3\0"));	// pound sign
+	AddSpecChar(_T("&quot;"), _T("\""));		// quotation mark
+	AddSpecChar(_T("&reg;"), _T("\xAE\0"));		// registered trademark
+	AddSpecChar(_T("&trade;"), _T("\x99\0"));	// trademark NOT IN MS SANS SERIF
+} //End of SetListSpecChars
+
+void CPPHtmlDrawer::AddSpecChar(LPCTSTR lpszAlias, LPCTSTR lpszValue)
+{
+	iter_mapStyles iter = m_mapSpecChars.find(lpszAlias);
+	
+	if (iter != m_mapSpecChars.end())
+		iter->second = lpszValue;		//Modifies
+	else
+		m_mapSpecChars.insert(std::make_pair(lpszAlias, lpszValue)); //Add new
+} //End of AddSpecialChar
+
+void CPPHtmlDrawer::ReplaceSpecChars()
+{
+	CPPString sAlias, sValue;
+	for (iter_mapStyles iter = m_mapSpecChars.begin(); iter != m_mapSpecChars.end(); ++iter)
+	{
+		sAlias = iter->first;
+		sValue = iter->second;
+		m_csHtmlText.Replace(sAlias, sValue);
+	} //for
+
+	m_csHtmlText.Remove(_T('\r'));
+	if (!m_bEnableEscapeSequences)
+	{
+		//ENG: Remove escape sequences
+		//RUS: Удаляем специальные символы
+		m_csHtmlText.Remove(_T('\n'));
+		m_csHtmlText.Remove(_T('\t'));
+	}
+	else
+	{
+		//ENG: Replace escape sequences to HTML tags
+		//RUS: Заменяем специальные символы HTML тэгами
+		m_csHtmlText.Replace(_T("\n"), _T("<br>"));
+		m_csHtmlText.Replace(_T("\t"), _T("<t>"));
+	} //if
+} //End of ReplaceSpecChars
+
+/////////////////////////////////////////////////////////////////////////////
+// 
+void CPPHtmlDrawer::SetListOfTags()
+{
+	AddTagToList(_T("b"), TAG_BOLD, _T("bold"));
+	AddTagToList(_T("i"), TAG_ITALIC, _T("italic"));
+	AddTagToList(_T("em"), TAG_ITALIC, _T("italic"));
+	AddTagToList(_T("u"), TAG_UNDERLINE, _T("underline"));
+	AddTagToList(_T("s"), TAG_STRIKEOUT, _T("strikeout"));
+	AddTagToList(_T("strike"), TAG_STRIKEOUT, _T("strikeout"));
+	AddTagToList(_T("font"), TAG_FONT, _T("font"));
+	AddTagToList(_T("hr"), TAG_HLINE, _T(""));
+	AddTagToList(_T("br"), TAG_NEWLINE, _T(""));
+	AddTagToList(_T("\n"), TAG_NEWLINE, _T(""));
+	AddTagToList(_T("t"), TAG_TABULATION, _T(""));
+	AddTagToList(_T("\t"), TAG_TABULATION, _T(""));
+	AddTagToList(_T("left"), TAG_LEFT, _T("left"));
+	AddTagToList(_T("center"), TAG_CENTER, _T("center"));
+	AddTagToList(_T("right"), TAG_RIGHT, _T("right"));
+	AddTagToList(_T("justify"), TAG_JUSTIFY, _T("justify"));
+	AddTagToList(_T("baseline"), TAG_BASELINE, _T("baseline"));
+	AddTagToList(_T("top"), TAG_TOP, _T("top"));
+	AddTagToList(_T("vcenter"), TAG_VCENTER, _T("vcenter"));
+	AddTagToList(_T("middle"), TAG_VCENTER, _T("vcenter"));
+	AddTagToList(_T("bottom"), TAG_BOTTOM, _T("vcenter"));
+	AddTagToList(_T("bmp"), TAG_BITMAP, _T(""));
+	AddTagToList(_T("icon"), TAG_ICON, _T(""));
+	AddTagToList(_T("ilst"), TAG_IMAGELIST, _T(""));
+	AddTagToList(_T("string"), TAG_STRING, _T(""));
+	AddTagToList(_T("body"), TAG_NEWSTYLE, _T("body"));
+	AddTagToList(_T("h1"), TAG_NEWSTYLE, _T("h1"));
+	AddTagToList(_T("h2"), TAG_NEWSTYLE, _T("h2"));
+	AddTagToList(_T("h3"), TAG_NEWSTYLE, _T("h3"));
+	AddTagToList(_T("h4"), TAG_NEWSTYLE, _T("h4"));
+	AddTagToList(_T("h5"), TAG_NEWSTYLE, _T("h5"));
+	AddTagToList(_T("h6"), TAG_NEWSTYLE, _T("h6"));
+	AddTagToList(_T("code"), TAG_NEWSTYLE, _T("code"));
+	AddTagToList(_T("pre"), TAG_NEWSTYLE, _T("pre"));
+	AddTagToList(_T("big"), TAG_NEWSTYLE, _T("big"));
+	AddTagToList(_T("small"), TAG_NEWSTYLE, _T("small"));
+	AddTagToList(_T("sub"), TAG_NEWSTYLE, _T("sub"));
+	AddTagToList(_T("sup"), TAG_NEWSTYLE, _T("sup"));
+	AddTagToList(_T("span"), TAG_SPAN, _T("span"));
+	AddTagToList(_T("a"), TAG_HYPERLINK, _T("link"));
+} //End of SetListOfTags
+
+////////////////////////////////////////////////////////////////////////
+// Format for the new tags:
+//		lpszName		- a tag's name in the HTML string
+//		dwTagIndex		- ID of the tag
+//		lpszFullName	- a custom name if tag must be closing. Empty if not.  
+////////////////////////////////////////////////////////////////////////
+void CPPHtmlDrawer::AddTagToList(LPCTSTR lpszName, DWORD dwTagIndex, LPCTSTR lpszFullName)
+{
+	STRUCT_TAGPROP tp;
+	tp.dwTagIndex = dwTagIndex;
+	tp.strTagName = lpszFullName;
+
+	iterMapTags iterMap = m_mapTags.find(lpszName);
+	
+	if (iterMap != m_mapTags.end())
+		iterMap->second = tp; //Modifies
+	else
+		m_mapTags.insert(std::make_pair(lpszName, tp)); //Add new
+} //End of AddTagToList
+
+DWORD CPPHtmlDrawer::GetTagFromList(CPPString sTagName, CPPString & strFullName, BOOL & bCloseTag)
+{
+	strFullName.Empty();
+
+	bCloseTag = (sTagName.GetAt(0) == _T('/')) ? TRUE : FALSE;
+	if (bCloseTag)
+		sTagName = sTagName.Mid(1);
+
+	iterMapTags iterMap = m_mapTags.find(sTagName);
+	
+	if (iterMap != m_mapTags.end())
+	{
+		STRUCT_TAGPROP tp = iterMap->second;
+		strFullName = tp.strTagName;
+		
+		return tp.dwTagIndex;
+	} //if
+
+	return TAG_NONE;
+} //End of GetTagFromList
 
 ///////////////////////////////////////////////////////
 // 
@@ -523,20 +663,28 @@ void CPPHtmlDrawer::SetTableOfColors()
 
 void CPPHtmlDrawer::SetColorName(LPCTSTR lpszColorName, COLORREF color)
 {
-	iterMapColors iterMap = m_mapColors.find((CString)lpszColorName);
+	iterMapColors iterMap = m_mapColors.find(lpszColorName);
 	
 	if (iterMap != m_mapColors.end())
 		iterMap->second = color; //Modifies
 	else
-		m_mapColors.insert(mapColors::value_type((CString)lpszColorName, color)); //Add new
+		m_mapColors.insert(std::make_pair(lpszColorName, color)); //Add new
 } //End SetColorName
 
 COLORREF CPPHtmlDrawer::GetColorByName(LPCTSTR lpszColorName, COLORREF crDefColor /* = RGB(0, 0, 0) */)
 {
-	iterMapColors iterMap = m_mapColors.find((CString)lpszColorName);
-	
-	if (iterMap != m_mapColors.end())
-		crDefColor = iterMap->second;
+	if (m_bIsEnable)
+	{
+		iterMapColors iterMap = m_mapColors.find(lpszColorName);
+		
+		if (iterMap != m_mapColors.end())
+			crDefColor = iterMap->second;
+	}
+	else
+	{
+		//For disabled output
+		crDefColor = m_crDisabled;
+	} //if
 	return crDefColor;
 } //End GetColorByName
 
@@ -559,29 +707,26 @@ LPLOGFONT CPPHtmlDrawer::GetSystemToolTipFont() const
 
 ////////////////////////////////////////////
 // Check a pointer over the hyperlink
-//   In: pt - the coordinates of the mouse pointer 
+//   In: lpPoint - the coordinates of the mouse pointer 
 //  Out: -1 - hyperlink not found
 //       index of the hyperlink
 ////////////////////////////////////////////
-int CPPHtmlDrawer::PtInHyperlink(CPoint pt)
+int CPPHtmlDrawer::PtInHyperlink(LPPOINT lpPoint)
 {
-	if (m_arrLinks.size() > 0)
+	for (UINT i = 0; i < m_arrLinks.size(); ++i)
 	{
-		STRUCT_HYPERLINK link;
-		for (int i = 0; i < (int)m_arrLinks.size(); i++)
-		{
-			link = m_arrLinks [i];
-			if (link.rcArea.PtInRect(pt))
-				return i;
-		} //for
-	} //if
+		STRUCT_HYPERLINK & link = m_arrLinks [i];
+		if ((link.rcArea.left <= lpPoint->x) && (link.rcArea.right >= lpPoint->x) &&
+			(link.rcArea.top <= lpPoint->y) && (link.rcArea.bottom >= lpPoint->y))
+			return i;
+	} //for
 	return -1;
 } //End PtInHyperlink
 
 void CPPHtmlDrawer::JumpToHyperlink(int nLink)
 {
-	STRUCT_HYPERLINK link = m_arrLinks [nLink];
-	TRACE(_T("Jump to Hyperlink number = %d\n"), nLink);
+	STRUCT_HYPERLINK & link = m_arrLinks [nLink];
+//	TRACE(_T("Jump to Hyperlink number = %d\n"), nLink);
 	if (!link.sHyperlink.IsEmpty())
 	{
 		switch (link.nTypeLink)
@@ -596,11 +741,11 @@ void CPPHtmlDrawer::JumpToHyperlink(int nLink)
 	} //if
 } //End JumpToHyperlink
 
-void CPPHtmlDrawer::OnLButtonDown(CPoint & ptClient)
+void CPPHtmlDrawer::OnLButtonDown(LPPOINT lpClient)
 {
-	TRACE (_T("CPPHtmlDrawer::OnLButtonDown()\n"));
+//	TRACE (_T("CPPHtmlDrawer::OnLButtonDown()\n"));
 	
-	int nLink = PtInHyperlink(ptClient);
+	int nLink = PtInHyperlink(lpClient);
 	if (nLink >= 0)
 	{
 		//Hyperlink under the mouse pointer
@@ -608,9 +753,9 @@ void CPPHtmlDrawer::OnLButtonDown(CPoint & ptClient)
 	} //if
 } //End OnLButtonDown
 
-BOOL CPPHtmlDrawer::OnSetCursor(CPoint & ptClient)
+BOOL CPPHtmlDrawer::OnSetCursor(LPPOINT lpClient)
 {
-	int nLink = PtInHyperlink(ptClient);
+	int nLink = PtInHyperlink(lpClient);
 	if (nLink >= 0)
 	{
 		STRUCT_HYPERLINK link = m_arrLinks [nLink];
@@ -637,9 +782,36 @@ BOOL CPPHtmlDrawer::OnSetCursor(CPoint & ptClient)
     return FALSE;
 } //End OnSetCursor
 
+BOOL CPPHtmlDrawer::OnTimer()
+{
+	BOOL bRedraw = FALSE;
+	if (m_arrAni.size() > 0)
+	{
+		for (UINT i = 0; i < m_arrAni.size(); ++i)
+		{
+			STRUCT_ANIMATION & sa = m_arrAni [i];
+			if (sa.nMaxImages > 0)
+			{
+				sa.nTimerCount ++;
+				if (sa.nTimerCount >= sa.nSpeed)
+				{
+					sa.nTimerCount = 0;
+					sa.nIndex ++;
+					if (sa.nIndex >= sa.nMaxImages)
+						sa.nIndex = 0;
+					bRedraw = TRUE;
+				} //if
+				m_arrAni [i] = sa;
+			} //if
+		} //for
+	} //if
+
+	return bRedraw;
+} //End of OnTimer
+
 void CPPHtmlDrawer::CallbackOnRepaint(int nIndexLink)
 {
-	TRACE(_T("CPPHtmlDrawer::CallbackOnRepaint()\n")); 
+//	TRACE(_T("CPPHtmlDrawer::CallbackOnRepaint()\n")); 
 
 	if ((NULL == m_csCallbackRepaint.hWnd) || !m_csCallbackRepaint.nMessage)
 		return; 
@@ -649,7 +821,7 @@ void CPPHtmlDrawer::CallbackOnRepaint(int nIndexLink)
 
 void CPPHtmlDrawer::CallbackOnClickHyperlink(LPCTSTR sLink)
 {
-	TRACE(_T("CPPHtmlDrawer::CallbackOnClickHyperlink()\n")); 
+//	TRACE(_T("CPPHtmlDrawer::CallbackOnClickHyperlink()\n")); 
 
 	if ((NULL == m_csCallbackLink.hWnd) || !m_csCallbackLink.nMessage)
 		return; 
@@ -664,7 +836,7 @@ HINSTANCE CPPHtmlDrawer::GotoURL(LPCTSTR url, int showcmd /* = SW_SHOW */)
     TCHAR key[MAX_PATH + MAX_PATH];
 
     // First try ShellExecute()
-    HINSTANCE result = ShellExecute(NULL, _T("open"), url, NULL,NULL, showcmd);
+    HINSTANCE result = ShellExecute(NULL, _T("open"), url, NULL, NULL, showcmd);
 
     // If it failed, get the .htm regkey and lookup the program
     if ((UINT)result <= HINSTANCE_ERROR) 
@@ -717,27 +889,52 @@ LONG CPPHtmlDrawer::GetRegKey(HKEY key, LPCTSTR subkey, LPTSTR retdata)
 } //End GetRegKey
 
 /////////////////////////////////////////////////////////////////
-CSize CPPHtmlDrawer::DrawHtml (CDC * pDC, CString & str, CRect & rect, BOOL bCalc /* = TRUE */)
+void CPPHtmlDrawer::DrawHtml (LPSIZE lpSize, LPCRECT lpRect)
 {
-	m_pDC = pDC;
-	//Removes all hyperlinks
-	if (bCalc)
+	//ENG: Bounding rectangle of a current area for output
+	//RUS: Ограничивающей прямоугольник для текущей области вывода
+	RECT rcArea;
+	rcArea.left = lpRect->left;
+	rcArea.right = lpRect->right;
+	rcArea.top = lpRect->top;
+	rcArea.bottom = lpRect->bottom;
+
+	SIZE szArea;
+	szArea.cx = szArea.cy = 0;
+	
+	if (MODE_FIRSTPASS == m_nNumPass)
 	{
+		//ENG: In preparing mode clears an auxiliary tables
+		//RUS: В режиме подготовки очищаем вспомогательные таблицы 
 		m_arrLinks.clear();
-		m_arrTable.clear();
+//		m_arrTable.clear();
 		m_arrHtmlLine.clear();
-		m_arrTableSizes.clear();
-	}
+//		m_arrTableSizes.clear();
+		m_arrAni.clear();
+	} //if
+
 	m_nCurLine = 0;
-	m_nCurTableIndex = 0;
+	m_nCurTable = -1;
 	m_nNumCurTable = -1;
 	m_nCurIndexLink = -1;
+	m_nCurIndexAni = -1;
+	
+	//ENG: Clear stack of tags
+	//RUS: Очищаем стэк тэгов
 	m_arrStack.clear();
-	// Default styles
+	
+	int nIndex = 0;
+	int nBegin;
+	CPPString strText;
+	
+	//ENG: Applies a default styles
+	//RUS: Применяем стили по-умолчанию
 	SetDefaultStyles(m_defStyle);
 	SelectNewHtmlStyle(_T("body"), m_defStyle);
 	
-	//Create font
+	//ENG: Creates a default font
+	//RUS: Создаем шрифт по умолчанию
+	memset(&m_lfDefault, 0, sizeof(m_lfDefault));	//+++hd
 	m_lfDefault.lfHeight = m_defStyle.nSizeFont;
 	m_lfDefault.lfWidth = 0;
 	m_lfDefault.lfOrientation = 0;
@@ -752,477 +949,355 @@ CSize CPPHtmlDrawer::DrawHtml (CDC * pDC, CString & str, CRect & rect, BOOL bCal
 	m_lfDefault.lfQuality = DEFAULT_QUALITY;
 	m_lfDefault.lfPitchAndFamily = FF_DONTCARE;
 	_tcscpy (m_lfDefault.lfFaceName, m_defStyle.sFaceFont);
-	m_font.CreateFontIndirect(&m_lfDefault);
+	m_hFont = ::CreateFontIndirect(&m_lfDefault);
 	
-	//Remember context setting
-	m_pOldFont = pDC->SelectObject(&m_font);
-	m_nOldBkMode = pDC->SetBkMode(m_defStyle.nBkMode);
-	m_crOldText = pDC->SetTextColor(m_defStyle.crText);
-	m_crOldBk = pDC->SetBkColor(m_defStyle.crBkgnd);
-	pDC->GetTextMetrics(&m_tm);
+	//ENG: Remember a current context setting
+	//RUS: Запоминаем текущие настройки контекст устройства
+	m_hOldFont = (HFONT)::SelectObject(m_hDC, m_hFont);
+	m_nOldBkMode = ::SetBkMode(m_hDC, m_defStyle.nBkMode);
+	m_crOldText = ::SetTextColor(m_hDC, m_defStyle.crText);
+	m_crOldBk = ::SetBkColor(m_hDC, m_defStyle.crBkgnd);
+	::GetTextMetrics(m_hDC, &m_tm);
 	
-	int nIndex = 0;
-	int nBegin;
-	//Calculates size of the table
-	
-	CString strText;
-	CSize szText;
-	CSize size(0, 0);
-	CRect rcArea = rect;
-	while (nIndex < str.GetLength())
+	while (nIndex < m_csHtmlText.GetLength())
 	{
+		//ENG: Searching a begin of table
+		//RUS: Ищем начало таблицы
 		nBegin = nIndex;
-		BOOL bFoundTable = SearchTag(str, nIndex, _T("table"));
-		strText = str.Mid(nBegin, nIndex - nBegin);
+		BOOL bFoundTable = SearchTag(m_csHtmlText, nIndex, _T("table"));
+
+		//ENG: Gets a text before a table
+		//RUS: Получаем текст до таблицы
+		strText = m_csHtmlText.Mid(nBegin, nIndex - nBegin);
+
+		//ENG: If text before a table is exist
+		//RUS: Если текст перед таблицей существует
 		if (!strText.IsEmpty())
 		{
-			szText = DrawHtmlString(pDC, strText, rcArea, bCalc);
-			size.cx = max(size.cx, szText.cx);
-			size.cy += szText.cy;
-			if (!bCalc)
-				rcArea.top += szText.cy;
+			//ENG: Add a tag BODY around of a output text
+			//RUS: Добавляем тэг BODY вокруг выводимого текста
+//			strText = _T("<body>") + strText + _T("</body>");
+
+			//ENG: Output a text before of a table
+			//RUS: Выводим текст перед таблицей
+			szArea = DrawHtmlString(strText, &rcArea);
+
+			//ENG: Updates a output area size
+			//RUS: Обновляем размер области вывода
+			lpSize->cx = max(lpSize->cx, szArea.cx);
+			lpSize->cy += szArea.cy;
+			if (MODE_DRAW == m_nNumPass)
+				rcArea.top += szArea.cy;
 		} //if
 		
+		//ENG: If table was found
+		//RUS: Если таблица была найдена
 		if (bFoundTable)
 		{
+			//ENG: Searching an end of the table
+			//RUS: Ищем окончание таблицы
 			nBegin = nIndex;
 			nIndex += 6;
-			SearchEndOfTable(str, nIndex);
-			strText = str.Mid(nBegin, nIndex - nBegin);
-			szText = DrawHtmlTable(pDC, strText, rcArea, bCalc);
-			size.cx = max(size.cx, szText.cx);
-			size.cy += szText.cy;
-			if (!bCalc)
-				rcArea.top += szText.cy;
+			SearchEndOfTable(m_csHtmlText, nIndex);
+
+			//ENG: Cuts a text of a table
+			//RUS: Вырезаем текст таблицы
+			strText = m_csHtmlText.Mid(nBegin, nIndex - nBegin);
+
+			//ENG: Output a table
+			//RUS: Вывод таблицы
+			szArea = DrawHtmlTable(strText, &rcArea);
+			
+			//ENG: Updates a output area size
+			//RUS: Обновляем размер области вывода
+			lpSize->cx = max(lpSize->cx, szArea.cx);
+			lpSize->cy += szArea.cy;
+			if (MODE_DRAW == m_nNumPass)
+				rcArea.top += szArea.cy;
 		} //if
 	} //while
 	
-	//Restore context setting
-	pDC->SetBkMode(m_nOldBkMode);
-	pDC->SetBkColor(m_crOldBk);
-	pDC->SetTextColor(m_crOldText);
-	pDC->SelectObject(m_pOldFont);
+	//ENG: Restore context setting
+	//RUS: Восстанавливаем настроки контекста устройства
+	::SetBkMode(m_hDC, m_nOldBkMode);
+	::SetBkColor(m_hDC, m_crOldBk);
+	::SetTextColor(m_hDC, m_crOldText);
+	::SelectObject(m_hDC, m_hOldFont);
 	
-	//Remove stack
+	//ENG: Clear stack of tags
+	//RUS: Очищаем стэк тэгов
 	m_arrStack.clear();
 	
-	//Free resources
-	m_font.DeleteObject();
-	
-	size.cx ++;
-	size.cy ++;
-	return size;
-} //End DrawHtml
+	//ENG: Delete a font
+	//RUS: Удаляем шрифт
+	::DeleteObject(m_hFont);
+} //End of DrawHtml
 
-CSize CPPHtmlDrawer::DrawHtmlTable (CDC * pDC, CString & str, CRect & rect, BOOL bCalc /* = TRUE */)
+
+SIZE CPPHtmlDrawer::DrawHtmlTable (CPPString & sTable, LPCRECT lpRect)
 {
-	_STRUCT_CELL sc;
-	vecCol row;
-	vecSize rowHeight;
-	vecSize colWidth;
-	CSize szTable; //The size of the table
-	m_nNumCurTable++;
-	int nNumOfTable = m_nNumCurTable;
+	//ENG: Jump to the next table
+	//RUS: Начинаем новую таблицу
+	m_nCurTable++;
+
+	int i;
+	UINT pos;
+	SIZE size = {0, 0};
+	SIZE szTable;
+	RECT rcTable = {0, 0, 0, 0};
+	RECT rcRow;
+
+	if (MODE_FIRSTPASS == m_nNumPass) 
+	{
+		//ENG: Get size of the table
+		//RUS: Получаем размеры таблицы
+		szTable = GetTableDimensions(sTable);
+		
+		STRUCT_TABLE st;
+		STRUCT_CELL sc;
+		sc.nRowSpan = 0;
+		sc.nColSpan = 0;
+//		sc.bHeightPercent = FALSE;
+//		sc.bWidthPercent = FALSE;
+//		sc.nHeight = 0;
+//		sc.nWidth = 0;
+		sc.szText.cx = sc.szText.cy = sc.szCell.cx = sc.szCell.cy = 0;
+		sc.bFixedWidth = FALSE;
 	
-	//Creates table
-	if (bCalc)
-	{
-		//Get size of the table
-		szTable = GetTableDimensions(str);
-
-		sc.nColSpan = 1;
-		sc.nRowSpan = 1;
-		sc.szText = szTable;
-		row.push_back(sc);
-		m_arrTable.push_back(row); //First stores the size of the table
-
-		if (szTable.cx && szTable.cy)
+		//ENG: Creates a template of an empty table
+		//RUS: Создаем шаблон пустой таблицы
+		vecRow rows;
+		for (i = 0; i < szTable.cx; i++)
 		{
-			//Creates one row of the table
-			row.clear();
-			sc.szText = CSize(0, 0);
-			for (int i = 0; i < szTable.cx; i++)
-			{
-				row.push_back(sc);
-				colWidth.push_back(0);
-			} //for
+			rows.push_back(sc);
+			st.width.push_back(0);
+			st.fixed_width.push_back(FALSE);
+		} //for
+		for (i = 0; i < szTable.cy; i++)
+		{
+			st.cells.push_back(rows);
+			st.height.push_back(0);
+		} //for
+		
+		//ENG: Add a new table
+		//RUS: Добавляем новую таблицу
+		m_arrTables.push_back(st);
+	} //if
 
-			//Creates table
-			for (int i = 0; i < szTable.cy; i++)
-			{
-				m_arrTable.push_back(row);
-				rowHeight.push_back(0);
-			} //for
-			m_arrTableSizes.push_back(colWidth);
-			m_arrTableSizes.push_back(rowHeight);
-		} //if
-	}
-	else
-	{
-		ASSERT (m_arrTable.size());
-		row = m_arrTable [m_nCurTableIndex];
-		sc = row [0];
-		szTable = sc.szText;
-		colWidth = m_arrTableSizes [nNumOfTable * 2];
-		rowHeight = m_arrTableSizes [nNumOfTable * 2 + 1];
-	}//if
+	//ENG: Gets an info about a current table
+	//RUS: Взять информацию о текущей таблице 
+	int nIndexTable = m_nCurTable;
+	STRUCT_TABLE cur_table = m_arrTables [nIndexTable];
+	
+	szTable.cx = cur_table.width.size();
+	szTable.cy = cur_table.height.size();
 
-	m_nCurTableIndex ++;
-	if (!szTable.cx || !szTable.cy)
-		return CSize(0, 0); //Returns if error or empty table
-
-	int nBeginTable = m_nCurTableIndex;
-	m_nCurTableIndex += szTable.cy;
-
-	//Unpacked <table> tag style
+	//ENG: Applies styles of <table> tag
+	//RUS: Применяем стили таблицы (тэг <table>)
 	m_defStyle.strTag = _T("table");
 	StoreRestoreStyle(FALSE);
-	SetDefaultStyles(m_defStyle);
 	SelectNewHtmlStyle(m_defStyle.strTag, m_defStyle);
-
-	CRect rcTable = rect;
-	CRect rcCell = rcTable;
-	CRect rcText;
-
-	int nIndex = 0;
-	int nRow = 0;
-	int nCol = 0;
-	CSize szSpan;
-	CString strTag = _T("");
-	CString strProperty = _T("");
-	CString strParameter = _T("");
-	CString strText = _T("");
-	CString strTable = _T("");
-	SearchBodyOfTag(str, strTable, nIndex);
-	AnalyseCellParam(strTable, m_defStyle);
-	UpdateContext(pDC);
 	
-	int nWidthTable = 0;
-	int nHeightTable = 0;
-	int i = 0;
-	//Draw table border
-	if (!bCalc)
-	{
-		//Calculate the real column's width and row's height
-		for (i = 0; i < szTable.cx; i++)
-			nWidthTable += colWidth [i];
-		for (i = 0; i < szTable.cy; i++)
-			nHeightTable += rowHeight [i];
+	//ENG: Passes a tag body and get a properties of the tag
+	//RUS: Пропускаем тэг начала ячейки и получаем строку свойств тэга
+	int nIndex = 0;
+	CPPString sTag;
+	SearchNextTag(sTable, sTag, nIndex);
+	CPPString sProperties = SplitTag(sTag);
 
-		rcTable.right = rcTable.left + GetTableWidth(strTable, rcTable.Width(), nWidthTable);
-		//horizontal align of the table
-		if (rcTable.Width() < rect.Width())
+	//ENG: Analyses a properties of the tag
+	//RUS: Анализируем свойства тэга
+	AnalyseCellParam(sProperties, m_defStyle, TRUE);
+	UpdateContext();
+
+	if (MODE_FIRSTPASS != m_nNumPass)
+	{
+		//ENG: Gets a real size of the table
+		//RUS: Получаем реальные размеры таблицы
+		rcTable.left = lpRect->left;
+		rcTable.top = rcTable.bottom = lpRect->top;
+
+		int nWidthTable = m_defStyle.nPadding + cur_table.width.size() - 1;
+		for (pos = 0; pos < cur_table.width.size(); ++pos)
+			nWidthTable += cur_table.width [pos] + m_defStyle.nPadding;
+		rcTable.bottom += m_defStyle.nPadding + cur_table.height.size() - 1;
+		for (pos = 0; pos < cur_table.height.size(); ++pos)
+			rcTable.bottom += cur_table.height [pos] + m_defStyle.nPadding;
+
+		if (CPPDrawManager::PEN_DOUBLE == m_defStyle.nBorderStyle)
+		{
+			nWidthTable += 6;
+			rcTable.bottom += 6;
+		}
+		else
+		{
+			nWidthTable += m_defStyle.nBorderWidth * 2;
+			rcTable.bottom += m_defStyle.nBorderWidth * 2;
+		} //if
+
+		//ENG: Horizontal align of the table
+		//RUS: Выравнивание таблицы по горизонтали
+		int nRealWidth = lpRect->right - lpRect->left;
+
+		if (nWidthTable < nRealWidth)
+		{
+			//RUS: Попытаемся растянуть таблицу на всю доступную область
+			int nDelta = nRealWidth - nWidthTable;
+			int nNotFixedColumns = 0;
+			for (pos = 0; pos < cur_table.fixed_width.size(); ++pos)
+			{
+				if (!cur_table.fixed_width [pos])
+					nNotFixedColumns++;
+			} //for
+			for (pos = 0; (pos < cur_table.fixed_width.size()) && (nNotFixedColumns > 0); ++pos)
+			{
+				if (!cur_table.fixed_width [pos])
+				{
+					int nStep = nDelta / nNotFixedColumns;
+					cur_table.width [pos] += nStep;
+					nDelta -= nStep;
+					nNotFixedColumns--;
+					nWidthTable += nStep;
+				} //if
+			} //for
+		} //if
+
+		if (nWidthTable < nRealWidth)
 		{
 			switch (m_defStyle.nHorzAlign)
 			{
 			case ALIGN_RIGHT:
-				rcTable.OffsetRect(rect.Width() - rcTable.Width(), 0);
+				rcTable.left = lpRect->right - nWidthTable;
 				break;
 			case ALIGN_CENTER:
-				rcTable.OffsetRect((rect.Width() - rcTable.Width()) / 2, 0);
+				rcTable.left += (nRealWidth - nWidthTable) / 2;
 				break;
 			} //switch
 		} //if
+		rcTable.right = rcTable.left + nWidthTable;
 
-		if (CPPDrawManager::PEN_DOUBLE == m_defStyle.nBorderStyle)
-			nHeightTable += m_defStyle.nBorderWidth * 6;
-		else
-			nHeightTable += m_defStyle.nBorderWidth * 2;
+		//Calculate the real column's width and row's height
+//		if (CPPDrawManager::PEN_DOUBLE == m_defStyle.nBorderStyle)
+//			rcTable.bottom += m_defStyle.nBorderWidth * 6;
+//		else
+//			rcTable.bottom += m_defStyle.nBorderWidth * 2;
+	} //if
 
-		rcTable.bottom = rcTable.top + nHeightTable;
-
+	//Draw table border
+	if (MODE_DRAW == m_nNumPass)
+	{
 		if (m_defStyle.nFillBkgnd >= 0)
 		{
-			m_drawmanager.FillEffect(pDC->GetSafeHdc(), m_defStyle.nFillBkgnd, rcTable, 
+			m_drawmanager.FillEffect(m_hDC, m_defStyle.nFillBkgnd, &rcTable, 
 				m_defStyle.crBkgnd, m_defStyle.crMidBkgnd, m_defStyle.crEndBkgnd,
 				5);
 		}
 		else if (!m_defStyle.strNameResBk.IsEmpty())
 		{
-			DrawBackgroundImage(pDC, rcTable.left, rcTable.top, rcTable.Width(), rcTable.Height(), m_defStyle.strNameResBk);
+			DrawBackgroundImage(m_hDC, rcTable.left, rcTable.top, rcTable.right - rcTable.left, rcTable.bottom - rcTable.top, m_defStyle.strNameResBk);
 		} //if
-
-		m_drawmanager.DrawRectangle(pDC->GetSafeHdc(), rcTable, m_defStyle.crBorderLight, m_defStyle.crBorderDark,
-			m_defStyle.nBorderStyle, m_defStyle.nBorderWidth);
-
-		if (CPPDrawManager::PEN_DOUBLE == m_defStyle.nBorderStyle)
-			rcTable.DeflateRect(m_defStyle.nBorderWidth * 3, m_defStyle.nBorderWidth * 3);
-		else
-			rcTable.DeflateRect(m_defStyle.nBorderWidth, m_defStyle.nBorderWidth);
-
-		if (nWidthTable < rcTable.Width())
+		if (m_defStyle.nBorderWidth > 0)
 		{
-			int nStep = (rcTable.Width() - nWidthTable) / szTable.cx;
-			colWidth [0] += (rcTable.Width() - nWidthTable) % szTable.cx;
-			for (i = 0; i < szTable.cx; i++)
-				colWidth [i] += nStep;
+			if (m_bIsEnable)
+			{
+				m_drawmanager.DrawRectangle(m_hDC, &rcTable, m_defStyle.crBorderLight, m_defStyle.crBorderDark,
+					m_defStyle.nBorderStyle, m_defStyle.nBorderWidth);
+			}
+			else
+			{
+				m_drawmanager.DrawRectangle(m_hDC, &rcTable, m_crDisabled, m_crDisabled,
+					m_defStyle.nBorderStyle, m_defStyle.nBorderWidth);
+			} //if
 		} //if
 	} //if
 
-	//Analize the table
-	BOOL bEndOfTable = FALSE;
-	while (!bEndOfTable && (nIndex < str.GetLength()))
+	rcRow = rcTable;
+
+	if (MODE_FIRSTPASS != m_nNumPass)
 	{
-		int nNewRow = nIndex;
-		int nEndTable = nIndex;
-		SearchTag(str, nNewRow, _T("tr"));
-		SearchTag(str, nEndTable, _T("/table"));
-		if (nNewRow < nEndTable)
+		if (CPPDrawManager::PEN_DOUBLE == m_defStyle.nBorderStyle)
 		{
-			//Applies styles of <tr> tag
-			m_defStyle.strTag = _T("tr");
-			StoreRestoreStyle(FALSE);
-			SelectNewHtmlStyle(m_defStyle.strTag, m_defStyle);
-
-			//Gets data of the current row
-			row = m_arrTable [nRow + nBeginTable];
-			nCol = 0;
-			
-			SearchBodyOfTag(str, strTag, nIndex);
-			//Analizing <tr> tag
-			AnalyseCellParam(strTag, m_defStyle);
-			UpdateContext(pDC);
-			
-			BOOL bEndOfRow = FALSE;
-			while (!bEndOfRow && (nIndex < str.GetLength()))
-			{
-				int nEndRow = nIndex;
-				int nNewCell = nIndex;
-				SearchTag(str, nEndRow, _T("/tr"));
-				SearchTag(str, nNewCell, _T("td"));
-				if (nNewCell < nEndRow)
-				{
-					//Applies styles of <td> tag
-					m_defStyle.strTag = _T("td");
-					StoreRestoreStyle(FALSE);
-					SelectNewHtmlStyle(m_defStyle.strTag, m_defStyle);
-
-					nIndex = nNewCell;
-					//Gets data of the current cell
-					sc = row [nCol];
-					while ((sc.nColSpan < 0) && (nCol < (szTable.cx - 1)))
-					{
-						nCol ++;
-						sc = row.at(nCol);
-					} //while
-					
-					CSize szCell(0, 0);
-//					nInTag = 0;
-					SearchBodyOfTag(str, strTag, nIndex);
-//					GetNameOfTag(strTag, nInTag);
-					//Analizing <td> tag
-					szSpan = AnalyseCellParam(strTag, m_defStyle);
-					UpdateContext(pDC);
-
-					if (bCalc)
-					{
-						//Set colspan and rowspan
-						sc.nColSpan = szSpan.cx;
-						sc.nRowSpan = szSpan.cy;
-						_STRUCT_CELL scTemp;
-						if (szSpan.cx > 1)
-						{
-							szSpan.cx += nCol;
-							for (int i = nCol + 1; i < szSpan.cx; i++)
-							{
-								scTemp = row [i];
-								scTemp.nColSpan = -1;
-								scTemp.nRowSpan = -1;
-								row [i] = scTemp;
-							} //for
-						} //if
-						if (szSpan.cy > 1)
-						{
-							vecCol rowTemp;
-							szSpan.cy += nRow;
-							for (int i = nRow + 1; i < szSpan.cy; i++)
-							{
-								rowTemp = m_arrTable [i + nBeginTable];
-								scTemp = rowTemp [nCol];
-								scTemp.nColSpan = -1;
-								scTemp.nRowSpan = -1;
-								rowTemp [nCol] = scTemp;
-								m_arrTable [i + nBeginTable] = rowTemp;
-							} //for
-						} //if
-						sc.szText = CSize(0, 0);
-						rcCell.SetRect(0, 0, 0, 0);
-						rcText = rcCell;
-					}
-					else
-					{
-						//Draws the cell
-						rcCell = rcTable;
-						for (i = 0; i < nCol; i++)
-							rcCell.left += colWidth [i];
-						rcCell.right = rcCell.left;
-						for (i = 0; i < sc.nColSpan; i++)
-							rcCell.right += colWidth [nCol + i];
-
-						for (i = 0; i < nRow; i++)
-							rcCell.top += rowHeight [i];
-						rcCell.bottom = rcCell.top;
-						for (i = 0; i < sc.nRowSpan; i++)
-							rcCell.bottom += rowHeight [nRow + i];
-
-						//Cellspacing
-						rcText = rcCell;
-						rcText.DeflateRect(m_defStyle.nPaddingLeft, m_defStyle.nPaddingTop, 
-							m_defStyle.nPaddingRight, m_defStyle.nPaddingBottom);
-						if (m_defStyle.nFillBkgnd >= 0)
-						{
-							m_drawmanager.FillEffect(pDC->GetSafeHdc(), m_defStyle.nFillBkgnd, rcText, 
-								m_defStyle.crBkgnd, m_defStyle.crMidBkgnd, m_defStyle.crEndBkgnd,
-								5);
-						} //if
-
-						//Draws the border
-						m_drawmanager.DrawRectangle(pDC->GetSafeHdc(), rcText, m_defStyle.crBorderLight, m_defStyle.crBorderDark, m_defStyle.nBorderStyle);
-
-						if (m_defStyle.nBorderWidth)
-						{
-							if (CPPDrawManager::PEN_DOUBLE == m_defStyle.nBorderStyle)
-								rcText.DeflateRect(3, 3, 3, 3);
-							else
-								rcText.DeflateRect(1, 1, 1, 1);
-						} //if
-							
-						//Cellpadding
-						rcText.DeflateRect(m_defStyle.nMarginLeft, m_defStyle.nMarginTop, 
-							m_defStyle.nMarginRight, m_defStyle.nMarginBottom);
-
-						//Vertical align
-						switch (m_defStyle.nVertAlign)
-						{
-						case ALIGN_BOTTOM:
-							rcText.top += rcText.Height() - sc.szText.cy;
-							break;
-						case ALIGN_VCENTER:
-							rcText.top += (rcText.Height() - sc.szText.cy) / 2;
-							break;
-						}
-					} //if
-					
-					BOOL bEndOfCell = FALSE;
-					while(!bEndOfCell && (nIndex < str.GetLength()))
-					{
-						int nEndCell = nIndex;
-						int nNewTable = nIndex;
-						SearchTag(str, nEndCell, _T("/td"));
-						SearchTag(str, nNewTable, _T("table"));
-						int nNearlyTag = min(nEndCell, nNewTable);
-						szCell = CSize(0, 0);
-						if (nNearlyTag > nIndex)
-						{
-							//Exist output text
-							strParameter = str.Mid(nIndex, nNearlyTag - nIndex);
-							szCell = DrawHtmlString(pDC, strParameter, rcText, bCalc);
-							nIndex = nNearlyTag;
-						} //if
-						else if (nNewTable < nEndCell)
-						{
-							//Include new table
-							nIndex = nNewTable;
-							SearchEndOfTable(str, nIndex);
-							strParameter = str.Mid(nNewTable, nIndex - nNewTable);
-							szCell = DrawHtmlTable(pDC, strParameter, rcText, bCalc); 
-						}
-						else
-						{
-							bEndOfCell = TRUE;
-							nIndex = nEndCell;
-							GetIndexNextChars(str, nIndex, _T(">"));
-						} //if
-						
-						if (bCalc)
-						{
-							sc.szText.cx = max(sc.szText.cx, szCell.cx);
-							sc.szText.cy += szCell.cy;
-						} //if
-						rcText.top += szCell.cy;
-					} //while
-					
-					if (bCalc)
-					{
-						//Adding cellpadding and cellspacing
-						sc.szCell = sc.szText;
-						sc.szCell.cx += m_defStyle.nMarginLeft + m_defStyle.nMarginRight;
-						sc.szCell.cx += m_defStyle.nPaddingLeft + m_defStyle.nPaddingRight;
-						sc.szCell.cy += m_defStyle.nMarginTop + m_defStyle.nMarginBottom;
-						sc.szCell.cy += m_defStyle.nPaddingTop + m_defStyle.nPaddingBottom;
-						
-						if (m_defStyle.nBorderWidth)
-						{
-							if (CPPDrawManager::PEN_DOUBLE == m_defStyle.nBorderStyle)
-							{
-								sc.szCell.cx += 6;
-								sc.szCell.cy += 6;
-							}
-							else
-							{
-								sc.szCell.cx += 2;
-								sc.szCell.cy += 2;
-							} //if
-						} //if
-						row [nCol] = sc;
-					} //if
-					nCol += sc.nColSpan;
-					//Restore styles before <td> tag
-					m_defStyle.strTag = _T("td");
-					if (StoreRestoreStyle(TRUE))
-						UpdateContext(pDC);
-				}
-				else
-				{
-					bEndOfRow = TRUE;
-					nIndex = nEndRow;
-					GetIndexNextChars(str, nIndex, _T(">"));
-				} //if
-			} //while
-
-			m_arrTable [nRow + nBeginTable] = row;
-			nRow++;
-			//Restore styles before <tr> tag
-			m_defStyle.strTag = _T("tr");
-			if (StoreRestoreStyle(TRUE))
-				UpdateContext(pDC);
+			rcRow.left += 3;
+			rcRow.top  += 3;
+			rcRow.right -= 3;
+			rcRow.bottom -= 3;
 		}
 		else
 		{
-			bEndOfTable = TRUE;
-			nIndex = nEndTable;
-			GetIndexNextChars(str, nIndex, _T(">"));
-		} //if
-	} //while
+			rcRow.left += m_defStyle.nBorderWidth;
+			rcRow.top  += m_defStyle.nBorderWidth;
+			rcRow.right -= m_defStyle.nBorderWidth;
+			rcRow.bottom -= m_defStyle.nBorderWidth;
+		}
+	} //if
 
-	CSize size(0, 0);
-	if (bCalc)
+	if (szTable.cx && szTable.cy)
 	{
-		//Analysing cell's width
+		int nNewRow = 0;
+		int nEndRow;
+		CPPString sTagName, sTagParam, sRow;
+		for (i = 0; i < szTable.cy; ++i)
+		{
+			//ENG: Searching a begin of the row
+			//RUS: Поиск начала строки
+			if (SearchTag(sTable, nNewRow, _T("tr")))
+			{
+				//ENG: The begin of the row was found. Searching end of the row
+				//RUS: Начало строки найдено. Ищем окончание строки
+				nEndRow = nNewRow;
+				SearchEndOfRow(sTable, nEndRow);
+				//ENG: The end of the row was found
+				//RUS: Окончание строки найдено
+				sRow = sTable.Mid(nNewRow, nEndRow - nNewRow);
+				
+				//ENG: Draw a row of the table
+				//RUS: Выводим строку таблицы
+				DrawHtmlTableRow(sRow, &rcRow, cur_table, i);
+				
+				//ENG: Jump to char after the end of the row
+				//RUS: Перемещаемся на символ, следующий за окончанием строки
+				nNewRow = nEndRow + 5;
+			} //if
+		} //for
+	} //if
+
+	if (MODE_DRAW != m_nNumPass)
+	{
+		//ENG: Analysing cell's width
+		//RUS: Анализ ширины ячейки
 		for (i = 1; i <= szTable.cx; i++)
 		{
 			for (int y = 0; y < szTable.cy; y++)
 			{
-				row = m_arrTable [nBeginTable + y];
+				vecRow & row = cur_table.cells [y];
 				for (int x = 0; x < szTable.cx; x++)
 				{
-					sc = row [x];
+					STRUCT_CELL & sc = row [x];
 					if (sc.nColSpan == i)
 					{
 						if (i == 1)
-							colWidth [x] = max (colWidth [x], (int)sc.szCell.cx);
+						{
+							cur_table.width [x] = max (cur_table.width [x], sc.szCell.cx);
+							if (sc.bFixedWidth)
+								cur_table.fixed_width [x] = TRUE;
+						}
 						else
 						{
 							int span_width = 0;
-							for (int z = 0; z < i; z++)
-								span_width += colWidth [x + z];
+							int z = 0;
+							for (z = 0; z < i; z++)
+							{
+								span_width += cur_table.width [x + z];
+								if (sc.bFixedWidth)
+									cur_table.fixed_width [x + z] = TRUE;
+							} //for
 							
 							if (span_width < sc.szText.cx)
 							{
 								int step = (sc.szCell.cx - span_width) / i;
-								colWidth [x + i - 1] += (sc.szCell.cx - span_width) % i;
-								for (int z = 0; z < i; z++)
-									colWidth [x + z] += step;
+								cur_table.width [x + i - 1] += (sc.szCell.cx - span_width) % i;
+								for (z = 0; z < i; z++)
+									cur_table.width [x + z] += step;
 							} //if
 						} //if
 					} //if
@@ -1230,31 +1305,33 @@ CSize CPPHtmlDrawer::DrawHtmlTable (CDC * pDC, CString & str, CRect & rect, BOOL
 			} //for
 		} //for
 
-		//Analysing cell's height
+		//ENG: Analysing cell's height
+		//RUS: Анализ высоты ячейки
 		for (i = 1; i <= szTable.cy; i++)
 		{
 			for (int y = 0; y < szTable.cy; y++)
 			{
-				row = m_arrTable [nBeginTable + y];
+				vecRow & row = cur_table.cells [y];
 				for (int x = 0; x < szTable.cx; x++)
 				{
-					sc = row [x];
+					STRUCT_CELL & sc = row [x];
 					if (sc.nRowSpan == i)
 					{
 						if (i == 1)
-							rowHeight [y] = max (rowHeight [y], (int)sc.szCell.cy);
+							cur_table.height [y] = max (cur_table.height [y], sc.szCell.cy);
 						else
 						{
 							int span_height = 0;
-							for (int z = 0; z < i; z++)
-								span_height += rowHeight [y + z];
+							int z = 0;
+							for (z = 0; z < i; z++)
+								span_height += cur_table.height [y + z];
 							
 							if (span_height < sc.szCell.cy)
 							{
 								int step = (sc.szCell.cy - span_height) / i;
-								rowHeight [y] += (sc.szCell.cy - span_height) % i;
-								for (int z = 0; z < i; z++)
-									rowHeight [y + z] += step;
+								cur_table.height [y] += (sc.szCell.cy - span_height) % i;
+								for (z = 0; z < i; z++)
+									cur_table.height [y + z] += step;
 							} //if
 						} //if
 					} //if
@@ -1262,14 +1339,12 @@ CSize CPPHtmlDrawer::DrawHtmlTable (CDC * pDC, CString & str, CRect & rect, BOOL
 			} //for
 		} //for
 
-		//Stores width and height of the table's cells
-		m_arrTableSizes [nNumOfTable * 2] = colWidth;
-		m_arrTableSizes [nNumOfTable * 2 + 1] = rowHeight;
-
+		size.cx += m_defStyle.nPadding + szTable.cx - 1;
+		size.cy += m_defStyle.nPadding + szTable.cy - 1;
 		for (i = 0; i < szTable.cx; i++)
-			size.cx += colWidth [i];
+			size.cx += cur_table.width [i] + m_defStyle.nPadding;
 		for (i = 0; i < szTable.cy; i++)
-			size.cy += rowHeight [i];
+			size.cy += cur_table.height [i] + m_defStyle.nPadding;
 		
 		if (CPPDrawManager::PEN_DOUBLE == m_defStyle.nBorderStyle)
 		{
@@ -1282,800 +1357,1409 @@ CSize CPPHtmlDrawer::DrawHtmlTable (CDC * pDC, CString & str, CRect & rect, BOOL
 			size.cy += m_defStyle.nBorderWidth * 2;
 		} //if
 
-		size.cx = GetTableWidth(strTable, 0, size.cx, TRUE);
+//		size.cx = GetTableWidth(strTable, 0, size.cx, TRUE);
 	}
 	else
 	{
-		size.cx = rect.Width();
-		size.cy = nHeightTable;
+		size.cx = rcTable.right - rcTable.left;
+		size.cy = rcTable.bottom - rcTable.top;
 	} //if
 
-	//Restore styles before <table> tag
+	//ENG: Stores a current table
+	//RUS: Сохраняем текущую таблицу
+	m_arrTables [nIndexTable] = cur_table;
+
+	//ENG: Restore styles before <table> tag
+	//RUS: Восстанавливаем стили до тэга <table>
 	m_defStyle.strTag = _T("table");
 	if (StoreRestoreStyle(TRUE))
-		UpdateContext(pDC);
+		UpdateContext();
 
 	return size;
 } //End DrawHtmlTable
 
-CSize CPPHtmlDrawer::DrawHtmlString (CDC * pDC, CString & str, CRect & rect, BOOL bCalc /* = TRUE */)
+///////////////////////////////////////////////////////////////////////////////
+// CPPHtmlDrawer::DrawHtmlTableRow
+//	Draw a row of the table
+//-----------------------------------------------------------------------------
+// Parameters:
+//		sRow	- a text of the cell with the tags. For example: "<tr>...</tr>"
+//		lpRect	- a bounding rectangle for the row
+//		st		- the info about current table
+//		nRow	- the current row of the table
+///////////////////////////////////////////////////////////////////////////////
+//
+///////////////////////////////////////////////////////////////////////////////
+void CPPHtmlDrawer::DrawHtmlTableRow(CPPString & sRow, LPCRECT lpRect, STRUCT_TABLE & st, int nRow)
 {
-	m_rect = rect;
+	//ENG: Applies styles of <tr> tag
+	//RUS: Применяем стили строки (тэг <tr>)
+	m_defStyle.strTag = _T("tr");
+	StoreRestoreStyle(FALSE);
+	SelectNewHtmlStyle(m_defStyle.strTag, m_defStyle);
 	
-	m_szOutput = CSize(0, 0);
-	if (str.IsEmpty())
-		return CSize (0, 0);
+	int nCol = 0;
+	int i;
+	vecRow & row = st.cells [nRow];
+	
+	//ENG: Passes a tag body and get a properties of the tag
+	//RUS: Пропускаем тэг начала ячейки и получаем строку свойств тэга
+	int nIndex = 0;
+	CPPString sTag;
+	SearchNextTag(sRow, sTag, nIndex);
+	CPPString sProperties = SplitTag(sTag);
 
-	//For any string we are add a <body> tag as wrapper
-	str = _T("<body>") + str;
-	str += _T("</body>");
+	//ENG: Analyses a properties of the tag
+	//RUS: Анализируем свойства тэга
+	AnalyseCellParam(sProperties, m_defStyle, FALSE);
+	UpdateContext();
+	
+	while (nIndex < sRow.GetLength())
+	{
+		int nEndRow = nIndex;
+		int nNewCell = nIndex;
+		//ENG: Search an end of the cell or a begin of the nested table
+		//RUS: Ищем конец ячейки или начало вложенной таблицы
+		SearchTag(sRow, nEndRow, _T("/tr"));
+		SearchTag(sRow, nNewCell, _T("td"));
+		if (nNewCell < nEndRow)
+		{
+			//ENG: Search an existing cell
+			//RUS: Поиск существующей ячейки
+			STRUCT_CELL * sc2 = &row [nCol];
+			while ((sc2->nColSpan < 0) && (nCol < (int)row.size())) 
+			{
+				nCol++;
+				sc2 = &row [nCol];
+			} //while
+			STRUCT_CELL & sc = row [nCol];
+			//ENG: Searching the end of the cell
+			//RUS: Ищем окончание ячейки
+			nIndex = nNewCell;
+			SearchEndOfCell(sRow, nIndex);
+			CPPString sCell = sRow.Mid(nNewCell, nIndex - nNewCell);
+
+			RECT rcCell = {0, 0, 0, 0};
+			if (MODE_FIRSTPASS != m_nNumPass)
+			{
+				//ENG: Gets a real rectangle to draw a cell
+				//RUS: Получаем реальный прямоугольник для вывода ячейки
+				rcCell = *lpRect;
+				rcCell.left += m_defStyle.nPadding;
+				for (i = 0; i < nCol; i++)
+					rcCell.left += st.width [i] + m_defStyle.nPadding + 1;
+				rcCell.right = rcCell.left;
+				for (i = 0; i < sc.nColSpan; i++)
+					rcCell.right += st.width [nCol + i];
+				rcCell.right += (sc.nColSpan - 1) * (m_defStyle.nPadding + 1);
+				
+				rcCell.top += m_defStyle.nPadding;
+				for (i = 0; i < nRow; i++)
+					rcCell.top += st.height [i] + m_defStyle.nPadding + 1;
+				rcCell.bottom = rcCell.top;
+				for (i = 0; i < sc.nRowSpan; i++)
+					rcCell.bottom += st.height [nRow + i];
+				rcCell.bottom += (sc.nRowSpan - 1) * (m_defStyle.nPadding + 1);
+
+				//ENG: cellspacing - margins from table's edge to the cell's edge
+				//RUS: cellspacing - отступ от контура таблицы до ячейки 
+//				rcCell.left += m_defStyle.nPadding;
+//				rcCell.top += m_defStyle.nPadding;
+//				rcCell.right -= m_defStyle.nPadding;
+//				rcCell.bottom -= m_defStyle.nPadding;
+			} //if
+
+			DrawHtmlTableCell(sCell, &rcCell, sc);
+
+			if (MODE_DRAW != m_nNumPass)
+			{
+				//ENG: Add a cellspacing
+				//RUS: Добавляем отступ ячейки от
+//				sc.szCell.cx += m_defStyle.nPadding + m_defStyle.nPadding;
+//				sc.szCell.cy += m_defStyle.nPadding + m_defStyle.nPadding;
+				
+				//ENG: Stores a span cells
+				//RUS: Запоминаем объединенные ячейки
+				int nColSpan = sc.nColSpan + nCol;
+				int nRowSpan = sc.nRowSpan + nRow;
+				for (i = nCol + 1; i < nColSpan; i++)
+				{
+					STRUCT_CELL & scTemp = row [i];
+					scTemp.nColSpan = -1;
+					scTemp.nRowSpan = -1;
+				} //for
+				for (i = nRow + 1; i < nRowSpan; i++)
+				{
+					vecRow & rowTemp = st.cells [i];
+					STRUCT_CELL & scTemp = rowTemp [nCol];
+					scTemp.nColSpan = -1;
+					scTemp.nRowSpan = -1;
+				} //for
+			} //if
+			nCol += sc.nColSpan;
+		}
+		else
+		{
+			nIndex = sRow.GetLength();
+		} //if
+	} //while
+
+	//ENG: Restore styles before <tr> tag
+	//RUS: Восстанавливаем стили до тэга <tr>
+	m_defStyle.strTag = _T("tr");
+	if (StoreRestoreStyle(TRUE))
+		UpdateContext();
+
+} //End of DrawHtmlTableRow
+
+///////////////////////////////////////////////////////////////////////////////
+// CPPHtmlDrawer::DrawHtmlTableCell
+//	Draw a table's cell
+//-----------------------------------------------------------------------------
+// Parameters:
+//		sCell	- a text of the cell with the tags. For example: "<td>...</td>"
+//		lpRect	- a bounding rectangle for cell
+//		sc		- the info about current cell
+///////////////////////////////////////////////////////////////////////////////
+//
+///////////////////////////////////////////////////////////////////////////////
+void CPPHtmlDrawer::DrawHtmlTableCell(CPPString & sCell, LPCRECT lpRect, STRUCT_CELL & sc)
+{
+	if (MODE_DRAW != m_nNumPass)
+	{
+		sc.szText.cx = 0;
+		sc.szText.cy = 0;
+	} //if
+	
+	RECT rcCell = *lpRect;
+	RECT rcText = { 0 };
+
+	//ENG: Applies styles of <td> tag
+	//RUS: Применяем стили ячейки (тэг <td>)
+	m_defStyle.strTag = _T("td");
+	StoreRestoreStyle(FALSE);
+	SelectNewHtmlStyle(m_defStyle.strTag, m_defStyle);
+
+	//ENG: Passes a tag body and get a properties of the tag
+	//RUS: Пропускаем тэг начала ячейки и получаем строку свойств тэга
+	int nIndex = 0;
+	CPPString sTag;
+	SearchNextTag(sCell, sTag, nIndex);
+	CPPString sProperties = SplitTag(sTag);
+
+	//ENG: Analyses a properties of the tag
+	//RUS: Анализируем свойства тэга
+	m_defStyle.nCellWidth = m_defStyle.nCellHeight = 0;
+	m_defStyle.bCellWidthPercent = m_defStyle.bCellHeightPercent = FALSE;
+	SIZE szSpan = AnalyseCellParam(sProperties, m_defStyle, FALSE);
+
+	if (MODE_FIRSTPASS == m_nNumPass)
+	{
+		//ENG: Stores a cell span info
+		//RUS: Сохраняем информацию об объединении ячеек
+		sc.nColSpan = szSpan.cx;
+		sc.nRowSpan = szSpan.cy;
+		//ENG: Stores an info about the recommended cell sizes
+		//RUS: Сохраняем информацию об рекомендованных размерах ячейки
+//		sc.nWidth = m_defStyle.nCellWidth;
+//		sc.bWidthPercent = m_defStyle.bCellWidthPercent;
+//		sc.nHeight = m_defStyle.nCellHeight;
+//		sc.bHeightPercent = m_defStyle.bCellHeightPercent;
+		//ENG: 
+		//RUS: Если указаны минимальные рaзмеры ячейки, то установить их как начальные
+		sc.szText.cx = m_defStyle.nCellWidth;
+//		sc.szText.cy = m_defStyle.nCellHeight;
+		sc.szText.cy = 0;
+
+		if (m_defStyle.nCellWidth > 0)
+			sc.bFixedWidth = TRUE;
+
+		rcText = rcCell;
+		rcText.right = rcText.left + sc.szText.cx;
+		rcText.bottom = rcText.top + sc.szText.cy;
+	}
+	else if (MODE_DRAW == m_nNumPass)
+	{
+		//ENG: cellspacing - margins from table's edge to the cell's edge
+		//RUS: cellspacing - отступ от контура таблицы до ячейки 
+		rcText = rcCell;
+
+		if (m_defStyle.nFillBkgnd >= 0)
+		{
+			//ENG: Filling cell background
+			//RUS: Заполнение фона ячейки
+			m_drawmanager.FillEffect(m_hDC, m_defStyle.nFillBkgnd, &rcText, 
+				m_defStyle.crBkgnd, m_defStyle.crMidBkgnd, m_defStyle.crEndBkgnd, 5);
+		} //if
+		
+		//Draws the border
+		if (m_bIsEnable) 
+			m_drawmanager.DrawRectangle(m_hDC, &rcText, m_defStyle.crBorderDark, m_defStyle.crBorderLight, m_defStyle.nBorderStyle);
+		else 
+			m_drawmanager.DrawRectangle(m_hDC, &rcText, m_crDisabled, m_crDisabled, m_defStyle.nBorderStyle);
+		
+		//ENG: cellpadding - margin from cell's edge to the inside cell text
+		//RUS: cellpadding - отступ от контура ячейки, до текста внутри ее
+		rcText.left += m_defStyle.nMargin + m_defStyle.nBorderWidth;
+		rcText.top += m_defStyle.nMargin + m_defStyle.nBorderWidth;
+		rcText.right -= m_defStyle.nMargin + m_defStyle.nBorderWidth;
+		rcText.bottom -= m_defStyle.nMargin + m_defStyle.nBorderWidth;
+		
+		//Vertical align
+		switch (m_defStyle.nVertAlign)
+		{
+		case ALIGN_BOTTOM:
+			rcText.top = rcText.bottom - sc.szText.cy;
+			break;
+		case ALIGN_VCENTER:
+			rcText.top += (rcText.bottom - rcText.top - sc.szText.cy) / 2;
+			break;
+		} //switch
+	} //if
+
+	//ENG: Draws a cell
+	//RUS: Вывод ячейки
+	while(nIndex < sCell.GetLength())
+	{
+		int nEndCell = nIndex;
+		int nNewTable = nIndex;
+		//ENG: Search an end of the cell or a begin of the nested table
+		//RUS: Ищем конец ячейки или начало вложенной таблицы
+		SearchTag(sCell, nEndCell, _T("/td"));
+		SearchTag(sCell, nNewTable, _T("table"));
+		//ENG: Gets a nearly index of the tag
+		//RUS: Получаем индекс ближайшего тэга
+		int nNearlyTag = min(nEndCell, nNewTable);
+		SIZE szTemp = {0, 0};
+		if (nNearlyTag > nIndex)
+		{
+			//ENG: If between the last index and the current index there is a text
+			//RUS: Если между последним индексом и текущим индексом существует текст
+			CPPString sText = sCell.Mid(nIndex, nNearlyTag - nIndex);
+			szTemp = DrawHtmlString(sText, &rcText);
+			nIndex = nNearlyTag;
+		} //if
+		else if (nNewTable < nEndCell)
+		{
+			//ENG: A nested table was found
+			//RUS: Найдена вложенная таблица
+			nIndex = nNewTable;
+			SearchEndOfTable(sCell, nIndex);
+			CPPString sTable = sCell.Mid(nNewTable, nIndex - nNewTable);
+			szTemp = DrawHtmlTable(sTable, &rcText); 
+		}
+		else
+		{
+			//ENG: Alas, it is the end of the cell
+			//RUS: Конец ячейки
+			nIndex = sCell.GetLength();
+		} //if
+		
+		if (MODE_DRAW != m_nNumPass)
+		{
+			//ENG: On first and second passes we are calculate the dimensions of the cell
+			//RUS: На первом и втором проходах вычисляем размеры ячейки.
+			sc.szText.cx = max(szTemp.cx, sc.szText.cx);
+			sc.szText.cy += szTemp.cy;
+		} //if
+		rcText.top += szTemp.cy;
+	} //while
+
+	if (MODE_DRAW != m_nNumPass)
+	{
+		//ENG: On first and second passes we are calculate the dimensions of the cell
+		//RUS: На первом и втором проходах вычисляем размеры ячейки.
+		sc.szCell.cx = max(m_defStyle.nCellWidth, sc.szText.cx);
+		sc.szCell.cy = max(m_defStyle.nCellHeight, sc.szText.cy);
+
+		//ENG: Add the margins of the text from the cell's edges
+		//RUS: Добавляем отступы текста от границ ячейки
+		sc.szCell.cx += 2 * (m_defStyle.nMargin + m_defStyle.nBorderWidth);
+		sc.szCell.cy += 2 * (m_defStyle.nMargin + m_defStyle.nBorderWidth);
+	} //if
+		
+	//ENG: Restore styles before <td> tag
+	//RUS: Воостанавливаем стили, которые были до тэга <td>
+	m_defStyle.strTag = _T("td");
+	if (StoreRestoreStyle(TRUE))
+		UpdateContext();
+}
+
+SIZE CPPHtmlDrawer::DrawHtmlString (CPPString & sHtml, LPCRECT lpRect)
+{
+	SIZE szTextArea = {0, 0};
+
+	COLORREF clrShadow = m_bIsEnable ? m_crShadow : GetColorByName(_T(""));
+
+	//ENG: For any string we are add a <body> tag as wrapper
+	//RUS: Для любой строки добавляем тэг <body>
+	sHtml = _T("<body>") + sHtml;
+	sHtml += _T("</body>");
+
+	//ENG: Bounding rectangle for a full text
+	//RUS: Ограничивающий прямоугольник для вывода всего текста
+	m_rcOutput.top = lpRect->top;
+	m_rcOutput.left = lpRect->left;
+	m_rcOutput.bottom = lpRect->bottom;
+	m_rcOutput.right = lpRect->right;
+
+	//ENG: The width of the bounding rectangle
+	//RUS: Ширина ограничивающего прямоугольника
+	int nTextWrapWidth = m_rcOutput.right - m_rcOutput.left;
+
+	//ENG: A current position for output
+	//RUS: Текущая позиция для вывода
+	POINT ptOutput;
+	ptOutput.x = lpRect->left;
+	ptOutput.y = lpRect->top;
+
+//	szTextArea.cx = szTextArea.cy = 0;
+//	m_szOutput.cx = m_szOutput.cy = 0;
+
+//	m_szOutput = CSize(0, 0);
+
+	//ENG: If a text is empty
+	//RUS: Если текста для вывода нет
+//	if (str.IsEmpty())
+//	{
+//		szTextArea.cx = szTextArea.cy = 0;
+//		return;
+//	} //if
 
 	int nFirstLine = m_nCurLine;
 
-	CPoint pt = rect.TopLeft();
+//	POINT pt;
+//	pt.x = lpRect->left;
+//	pt.y = lpRect->top;
 
-	CString strText = _T("");
-	CString strTag = _T(""); //String of the tag
-	CString strProperty = _T(""); //String of the tag's property
-	CString strParameter = _T("");
+	int y;
+	SIZE sz;
+
+	CPPString sText = _T("");
+	CPPString sTag = _T(""); //String of the tag
+	CPPString sProperties = _T(""); //String of the tag's property
+	CPPString sParameter = _T("");
+	CPPString sValue = _T("");
 
 	BOOL bCloseTag = FALSE; //TRUE if tag have symbol '\'
 
-	STRUCT_CHANGESTYLE csTemp; //Temporary structure
-
-	InitNewLine(pt, bCalc);
+	//ENG: Initializing a new line
+	//RUS: Инициализация новой строки
+	ptOutput.x = InitNewLine(ptOutput.x);
+	int nBeginLineX = ptOutput.x;
+	int nSpacesInLine = m_hline.nSpaceChars;
+	int nRealWidth = m_hline.nWidthLine;
 
 	int nIndex = 0;
 	int nBegin = 0;
 	int i = 0;
-	while (i < str.GetLength())
+	while (i < sHtml.GetLength())
 	{
-		strText = SearchBodyOfTag(str, strTag, i);
+		//ENG: Searching a first tag
+		//RUS: Поиск первого тэга
+		sText = SearchNextTag(sHtml, sTag, i);
+		sProperties = SplitTag(sTag);
 
-		if (!strText.IsEmpty())
+		//ENG: Before a tag was exist a text
+		//RUS: Перед тэгом есть текст для вывода
+		if (!sText.IsEmpty())
 		{
-			//Transform text
+			//ENG: Transform text
+			//RUS: Преобразуем текст
 			switch (m_defStyle.nTextTransform)
 			{
 			case TEXT_TRANSFORM_UPPERCASE:
-				strText.MakeUpper();
+				//ENG: All chars make upper
+				//RUS: Все символы переводим в верхний регистр
+				sText.MakeUpper();
 				break;
 			case TEXT_TRANSFORM_LOWERCASE:
-				strText.MakeLower();
+				//ENG: All chars make lower
+				//RUS: Все символы переводим в нижний регистр
+				sText.MakeLower();
 				break;
 			case TEXT_TRANSFORM_CAPITALIZE:
-				strText.MakeLower();
-				for (nIndex = 0; nIndex < strText.GetLength(); nIndex++)
+				//ENG: Each first char of a word to upper
+				//RUS: Кадый первый символ слова в верхний регистр, остальные в нижний
+				sText.MakeLower();
+				for (nIndex = 0; nIndex < sText.GetLength(); nIndex++)
 				{
-					if ((strText.GetAt(nIndex) >= _T('a')) && (strText.GetAt(nIndex) <= _T('z')))
+					if ((sText.GetAt(nIndex) >= _T('a')) && (sText.GetAt(nIndex) <= _T('z')))
 					{
-						if ((0 == nIndex) || (_T(' ') == strText.GetAt(nIndex - 1)))
-							strText.SetAt(nIndex, strText.GetAt(nIndex) - _T('a') + _T('A'));
+						if ((0 == nIndex) || (_T(' ') == sText.GetAt(nIndex - 1)))
+							sText.SetAt(nIndex, sText.GetAt(nIndex) - _T('a') + _T('A'));
 					} //if
 				} //if
 				break;
 			} //switch
 
-			CSize sz = pDC->GetTextExtent(strText);
-			CPoint ptOut = VerticalAlignText(pt, sz.cy, bCalc);
-			if (!bCalc)
+			//RUS: Зацикливаем до тех пор, пока не будет выведен весь текст
+			while (!sText.IsEmpty())
 			{
-				StoreHyperlinkArea(CRect(ptOut.x, ptOut.y, ptOut.x + sz.cx, ptOut.y + sz.cy));
-				pDC->TextOut(ptOut.x, ptOut.y, strText);
-				if (m_defStyle.bOverlineFont)
+				//ENG: Reset an additional interval for space chars
+				//RUS: Сброс дополнительного интервала между словами
+				::SetTextJustification(m_hDC, 0, 0);
+
+				//ENG: Gets a size a output text
+				//RUS: Получаем размер выводимого текста
+				::GetTextExtentPoint32(m_hDC, sText, sText.GetLength(), &sz);
+
+				//ENG: Gets a real top coordinate to output with vertical alignment
+				//RUS: Получаем реальную коодинату верха вывода с учетом вертикального выравнивания
+				y = VerticalAlignText(ptOutput.y, sz.cy);
+
+				CPPString sTemp = sText;
+				int nMaxSize = nTextWrapWidth - ptOutput.x + m_rcOutput.left;
+
+				if (m_nMaxWidth && ((nMaxSize - sz.cx) < 0) && nTextWrapWidth)
 				{
-					//Draw overline
-					HPEN hpenOverline = ::CreatePen(PS_SOLID, (m_defStyle.nWeightFont >= FW_BOLD) ? 2 : 1, m_defStyle.crText);
-					HPEN hOldPen = (HPEN)::SelectObject(pDC->GetSafeHdc(), hpenOverline);
-					pDC->MoveTo(pt);
-					pDC->LineTo(pt.x + sz.cx, pt.y);
-					::SelectObject(pDC->GetSafeHdc(), hOldPen);
+					//ENG: Text wrap was enabled and text out for a bounding rectangle
+					int nRealSize = nMaxSize;
+					sTemp = GetWordWrap(sText, nTextWrapWidth, nRealSize);
+					sz.cx = nRealSize;
 				}
-			}
-			else
-			{
-				m_hline.nHorzAlign = m_defStyle.nHorzAlign; //Store a last horizontal alignment
-			} //if
-			pt.x += sz.cx;
-			strText.Empty();
+				else
+				{
+					sText.Empty();
+				} //if
+
+				if (MODE_DRAW == m_nNumPass)
+				{
+					if (sz.cx)
+					{
+						if ((0 == (nRealWidth - sz.cx)) && (_T(' ') == sTemp.GetAt(sTemp.GetLength() - 1)))
+						{
+							//ENG: Removes the right space chars for the last output in line
+							//RUS: Если это последний вывод в строке, то убираем пробелы справа
+							sTemp.TrimRight();
+							nSpacesInLine = GetCountOfChars(sTemp);
+							SIZE szTemp;
+							::GetTextExtentPoint32(m_hDC, sTemp, sTemp.GetLength(), &szTemp);
+							nRealWidth -= (sz.cx - szTemp.cx);
+						} //if
+
+						if ((ALIGN_JUSTIFY == m_hline.nHorzAlign) && m_hline.bWrappedLine)
+							::SetTextJustification(m_hDC, nMaxSize - nRealWidth, nSpacesInLine);
+						nRealWidth -= sz.cx;
+						
+						//ENG: Gets a size a output text
+						//RUS: Получаем размер выводимого текста
+						::GetTextExtentPoint32(m_hDC, sTemp, sTemp.GetLength(), &sz);
+						
+						//ENG: Stores a current area as a hyperlink area if it available
+						//RUS: Сохранякм текущую область как область гиперлинка если он установлен
+						StoreHyperlinkArea(ptOutput.x, y, ptOutput.x + sz.cx, y + sz.cy);
+						
+						//ENG: Real output a text
+						//RUS: Вывод текста
+						sTemp.TrimLeft();	//+++hd
+						::TextOut(m_hDC, ptOutput.x, y, sTemp, sTemp.GetLength());
+						nSpacesInLine -= GetCountOfChars(sTemp);
+						
+						//ENG: If sets an overline style then draw a line over the text
+						//RUS: Если установлен стиль overline, то рисуем линию над текстом
+						if (m_defStyle.bOverlineFont)
+						{
+							HPEN hpenOverline = ::CreatePen(PS_SOLID, (m_defStyle.nWeightFont >= FW_BOLD) ? 2 : 1, m_defStyle.crText);
+							HPEN hOldPen = (HPEN)::SelectObject(m_hDC, hpenOverline);
+							::MoveToEx(m_hDC, ptOutput.x, y, NULL);
+							::LineTo(m_hDC, ptOutput.x + sz.cx, y);
+							::SelectObject(m_hDC, hOldPen);
+						} //if
+					} //if
+				}
+				else
+				{
+					//ENG: Stores a last horizontal alignment
+					//RUS: Сохраняем последнее горизонтальное выравнивание
+					m_hline.nHorzAlign = m_defStyle.nHorzAlign;
+
+					//ENG:
+					//RUS:
+					m_hline.nSpaceChars += GetCountOfChars(sTemp);
+				} //if
+
+				//ENG: Moves to a right of the outputed text
+				//RUS: Перемещаемся справа от выведенного текста
+				ptOutput.x += sz.cx;
+				if (!sText.IsEmpty())
+				{
+					//ENG: Not all text was printed (cause text wrap) 
+					//RUS: Не вся строка еще вывелась (в случае переноса текста)
+					m_hline.bWrappedLine = TRUE;
+					Tag_NewLine(&ptOutput, 1, &szTextArea);
+					nBeginLineX = ptOutput.x;
+					nSpacesInLine = m_hline.nSpaceChars;
+					nRealWidth = m_hline.nWidthLine;
+				}
+			} //while
 		} //if
 
-		if (!strTag.IsEmpty())
+		//ENG: If tag was found then analyzing ...
+		//RUS: Если тэг найден, анализируем ...
+		if (!sTag.IsEmpty())
 		{
-			//Reset temporary parameters
-			strTag.MakeLower();
+			//ENG: Reset temporary parameters
+			//RUS: Сброс временных параметров
 			m_defStyle.strTag.Empty();
 			bCloseTag = FALSE;
 			
-			//Analyze a tag
+			//ENG: Get Tag's name
+			//RUS: Получаем имя тэга
 			nIndex = 0;
-			strProperty = GetNameOfTag(strTag, nIndex);
-
-			if (!strProperty.IsEmpty())
+			
+			//ENG: Searching a tag's value
+			//RUS: Поиск значения тэга
+			DWORD dwTag = GetTagFromList(sTag, m_defStyle.strTag, bCloseTag);
+			
+			//ENG: If a tag was found in a list of the tags
+			//RUS: Если тэг найден в списке
+			if (TAG_NONE != dwTag)
 			{
-				if (strProperty.GetAt(0) == _T('/'))
+				//ENG: If it is a style tag 
+				//RUS: Если текущий тэг для работы со стилями
+				if (!m_defStyle.strTag.IsEmpty())
 				{
-					//If tag has a close flag
-					bCloseTag = TRUE;
-					strProperty = strProperty.Right(strProperty.GetLength() - 1);
-				} //if
-
-				//Analyze a tag
-				if (strProperty == _T("b"))
-				{
-					//Bold Text
-					m_defStyle.strTag = _T("bold");
+					//ENG: Checks on permissibility of tag
+					//RUS: Проверяем на допустимость тэга
 					if (StoreRestoreStyle(bCloseTag))
 					{
+						//ENG: If it isn't a close tag
+						//RUS: Если это не окончание тэга
 						if (!bCloseTag)
 						{
-							m_defStyle.nWeightFont <<= 1;
-							if (m_defStyle.nWeightFont > FW_BLACK)
-								m_defStyle.nWeightFont = FW_BLACK;
-						} //if
-						UpdateContext(pDC);
-					} //if
-				} 
-				else if ((strProperty == _T("i")) || (strProperty == _T("em")))
-				{
-					//Italic Text
-					m_defStyle.strTag = _T("italic");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-							m_defStyle.bItalicFont = m_defStyle.bItalicFont ? FALSE : TRUE;
-						UpdateContext(pDC);
-					} //if
-				}
-				else if (strProperty == _T("u"))
-				{
-					//Underline Text
-					m_defStyle.strTag = _T("underline");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-							m_defStyle.bUnderlineFont = m_defStyle.bUnderlineFont ? FALSE : TRUE;
-						UpdateContext(pDC);
-					} //if
-				}
-				else if ((strProperty == _T("s")) || (strProperty == _T("strike")))
-				{
-					//Strikeout Text
-					m_defStyle.strTag = _T("strikeout");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-							m_defStyle.bStrikeOutFont = m_defStyle.bStrikeOutFont ? FALSE : TRUE;
-						UpdateContext(pDC);
-					} //if
-				}
-				else if (strProperty == _T("font"))
-				{
-					/////////////////////////////////////////////////////////////////
-					//Change Font of the Text
-					m_defStyle.strTag = _T("font");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-						{
-							//Search parameters
-							while (nIndex < strTag.GetLength())
+							//ENG: Processing a tag
+							//RUS: Обработка тэга
+							switch (dwTag)
 							{
-								strProperty = SearchPropertyOfTag(strTag, nIndex);
-								if (!strProperty.IsEmpty())
+							case TAG_BOLD:
+								m_defStyle.nWeightFont <<= 1;
+								if (m_defStyle.nWeightFont > FW_BLACK)
+									m_defStyle.nWeightFont = FW_BLACK;
+								break;
+							case TAG_ITALIC:
+								m_defStyle.bItalicFont = m_defStyle.bItalicFont ? FALSE : TRUE;
+								break;
+							case TAG_UNDERLINE:
+								m_defStyle.bUnderlineFont = m_defStyle.bUnderlineFont ? FALSE : TRUE;
+								break;
+							case TAG_STRIKEOUT:
+								m_defStyle.bStrikeOutFont = m_defStyle.bStrikeOutFont ? FALSE : TRUE;
+								break;
+							case TAG_FONT:
+								//Search parameters
+								while (nIndex < sProperties.GetLength())
 								{
-									strParameter = GetParameterString(strTag, nIndex, _T('='), _T(" "));
-									if (strProperty == _T("face"))
-										m_defStyle.sFaceFont = GetStyleString(strParameter, m_defStyle.sFaceFont);
-									else if (strProperty == _T("size"))
-										m_defStyle.nSizeFont = GetLengthUnit(strParameter, m_defStyle.nSizeFont, TRUE);
-									else if (strProperty == _T("color"))
-										m_defStyle.crText = GetStyleColor(strParameter, m_defStyle.crText);
-									else if (strProperty == _T("style"))
-										GetStyleFontShortForm(strParameter);
-									else if (strProperty == _T("weight"))
-										m_defStyle.nWeightFont = GetStyleFontWeight(strParameter, m_defStyle.nWeightFont);
-									else if (strProperty == _T("bkgnd"))
+									//ENG: Searching a parameters of a tag
+									//RUS: Поиск параметров тэга
+									sValue = GetNextProperty(sProperties, nIndex, sParameter);
+									//ENG: If a parameter was found
+									//RUS: Если параметр найден
+									if (!sParameter.IsEmpty())
 									{
-										if ((strParameter == _T("transparent")) && strParameter.IsEmpty())
+										//ENG: Processing a parameters of a tag
+										//RUS: Обработка параметров тэга
+										if (sParameter == _T("face"))
+											m_defStyle.sFaceFont = GetStyleString(sValue, m_defStyle.sFaceFont);
+										else if (sParameter == _T("size"))
+											m_defStyle.nSizeFont = GetLengthUnit(sValue, m_defStyle.nSizeFont, TRUE);
+										else if (sParameter == _T("color"))
 										{
-											m_defStyle.nBkMode = TRANSPARENT;
+											if (m_bIsEnable)
+												m_defStyle.crText = GetStyleColor(sValue, m_defStyle.crText);
+											else
+												m_defStyle.crText = GetColorByName(_T(""));
 										}
-										else
+										else if (sParameter == _T("style"))
+											GetStyleFontShortForm(sValue);
+										else if (sParameter == _T("weight"))
+											m_defStyle.nWeightFont = GetStyleFontWeight(sValue, m_defStyle.nWeightFont);
+										else if (sParameter == _T("bkgnd"))
 										{
-											m_defStyle.nBkMode = OPAQUE;
-											m_defStyle.crBkgnd = GetStyleColor(strParameter, m_defStyle.crBkgnd);
+											if (((sValue == _T("transparent")) && sValue.IsEmpty()) || !m_bIsEnable)
+											{
+												m_defStyle.nBkMode = TRANSPARENT;
+											}
+											else
+											{
+												m_defStyle.nBkMode = OPAQUE;
+												m_defStyle.crBkgnd = GetStyleColor(sValue, m_defStyle.crBkgnd);
+											} //if
 										} //if
 									} //if
-								} //if
-							} //while
-						} //if
-						UpdateContext(pDC);
-					} //if
-				}
-				else if (strProperty == _T("hr"))
-				{
-					//-----------------------------
-					//Draws the horizontal line
-					//-----------------------------
-					csTemp = m_defStyle;
-					csTemp.nBorderWidth = 1;
-					SelectNewHtmlStyle(_T("hr"), csTemp);
-					int nWidth = 100;
-					BOOL bPercent = TRUE;
-
-					while (nIndex < strTag.GetLength())
-					{
-						strProperty = SearchPropertyOfTag(strTag, nIndex);
-						if (!strProperty.IsEmpty())
-						{
-							strParameter = GetParameterString(strTag, nIndex, _T('='), _T(" "));
-							if (strProperty == _T("width"))
-							{
-								bPercent = IsPercentableValue(strParameter);
-								nWidth = GetLengthUnit(strParameter, 100);
-							}
-							else if (strProperty == _T("size"))
-								csTemp.nBorderWidth = GetLengthUnit(strParameter, csTemp.nBorderWidth);
-							else if (strProperty == _T("color"))
-								csTemp.crText = GetStyleColor(strParameter, csTemp.crText);
-						} //if
-					} //while
-
-					if (bPercent)
-					{
-						if (bCalc)
-						{
-							m_hline.nAddPercentWidth += nWidth;
-							nWidth = 0;
-						}
-						else nWidth = ::MulDiv(m_rect.Width(), nWidth, 100);
-					} //if
-
-					if (bCalc)
-					{
-						m_hline.nHeightLine = max(m_hline.nHeightLine, csTemp.nBorderWidth + 8);
-						m_hline.nHorzAlign = m_defStyle.nHorzAlign; //Store a last horizontal alignment
-					}
-					else
-					{
-						m_drawmanager.DrawLine(pDC->GetSafeHdc(), 
-							pt.x, pt.y + m_hline.nHeightLine / 2, 
-							pt.x + nWidth, pt.y + m_hline.nHeightLine / 2, 
-							csTemp.crText, CPPDrawManager::PEN_SOLID, csTemp.nBorderWidth);
-					} //if
-					pt.x += nWidth;
-				}
-				else if ((strProperty == _T("br")) || (strProperty == _T("\n")))
-				{
-					m_defStyle.strTag = _T("new_line");
-					int nNum = 1;
-					if (strProperty == _T("br"))
-					{
-						strParameter = GetParameterString(strTag, nIndex, _T('='), _T(" "));
-						nNum = GetLengthUnit(strParameter, nNum);
-					}
-					Tag_NewLine(pt, nNum, bCalc);
-				}
-				else if ((strProperty == _T("\t")) || (strProperty == _T("t")))
-				{
-					m_defStyle.strTag = _T("tab");
-					int nNum = 1;
-					if (strProperty == _T("t"))
-					{
-						strParameter = GetParameterString(strTag, nIndex, _T('='), _T(" "));
-						nNum = GetLengthUnit(strParameter, nNum);
-					}
-					Tag_Tabulation(pt, nNum);
-				}
-				else if (strProperty == _T("left"))
-				{
-					m_defStyle.strTag = _T("left");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-						{
-							m_defStyle.nHorzAlign = ALIGN_LEFT;
-						}
-						UpdateContext(pDC);
-					} //if
-				}
-				else if (strProperty == _T("center"))
-				{
-					m_defStyle.strTag = _T("center");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-						{
-							m_defStyle.nHorzAlign = ALIGN_CENTER;
-						}
-						UpdateContext(pDC);
-					} //if
-				}
-				else if (strProperty == _T("right"))
-				{
-					m_defStyle.strTag = _T("right");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-						{
-							m_defStyle.nHorzAlign = ALIGN_RIGHT;
-						}
-						UpdateContext(pDC);
-					} //if
-				}
-				else if (strProperty == _T("baseline"))
-				{
-					m_defStyle.strTag = _T("baseline");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-							m_defStyle.nVertAlign = ALIGN_BASELINE;
-						UpdateContext(pDC);
-					} //if
-				}
-				else if (strProperty == _T("top"))
-				{
-					m_defStyle.strTag = _T("top");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-							m_defStyle.nVertAlign = ALIGN_TOP;
-						UpdateContext(pDC);
-					} //if
-				}
-				else if ((strProperty == _T("middle")) || (strProperty == _T("vcenter")))
-				{
-					m_defStyle.strTag = _T("vcenter");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-							m_defStyle.nVertAlign = ALIGN_VCENTER;
-						UpdateContext(pDC);
-					} //if
-				}
-				else if (strProperty == _T("bottom"))
-				{
-					m_defStyle.strTag = _T("bottom");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-							m_defStyle.nVertAlign = ALIGN_BOTTOM;
-						UpdateContext(pDC);
-					} //if
-				}
-				else if (strProperty == _T("bmp"))
-				{
-					//-----------------------------
-					//Draws the bitmap or 
-					//-----------------------------
-					//Default Parameters
-					_STRUCT_IMAGE si;
-					si.nIdRes = 0;
-					si.nIdDll = 0;
-					si.nHandle = 0;
-					si.nWidth = 100;
-					si.bPercentWidth = TRUE;
-					si.nHeight = 100;
-					si.bPercentHeight = TRUE;
-					si.crMask = RGB(255, 0, 255);
-					si.bUseMask = FALSE;
-					si.nStyles = 0;
-					si.nHotStyles = 0;
-					si.strSrcFile.Empty();
-					si.strPathDll.Empty();
-
-					AnalyseImageParam(strTag, si);
-
-					if (si.nIdRes || si.nIdDll || si.nHandle || !si.strSrcFile.IsEmpty())
-					{
-						HBITMAP	hBitmap = NULL;
-						BOOL bAutoDelete = TRUE;
-
-						if (si.nIdRes)
-							hBitmap = GetBitmapFromResources(si.nIdRes);
-						else if (!si.strSrcFile.IsEmpty())
-							hBitmap = GetBitmapFromFile(si.strSrcFile);
-						else if (si.nIdDll)
-							hBitmap = GetBitmapFromDll(si.nIdDll, si.strPathDll);
-						else if (si.nHandle)
-						{
-							hBitmap = (HBITMAP)si.nHandle;
-							bAutoDelete = FALSE;
-						} //if
-						
-						if (NULL != hBitmap)
-						{
-							BOOL bShadow = IsImageWithShadow(si);
-							
-							CSize sz = m_drawmanager.GetSizeOfBitmap(hBitmap);
-							
-							if (si.bPercentWidth) sz.cx = ::MulDiv(sz.cx, si.nWidth, 100);
-							else sz.cx = si.nWidth;
-							
-							if (si.bPercentHeight) sz.cy = ::MulDiv(sz.cy, si.nHeight, 100);
-							else sz.cy = si.nHeight;
-
-							CSize szReal = sz;
-							if (sz.cx && sz.cy && bShadow)
-							{
-								szReal += m_szOffsetShadow;
-							} //if
-							
-							if (bCalc) m_hline.nHorzAlign = m_defStyle.nHorzAlign; //Store a last horizontal alignment
-							CPoint ptCur = VerticalAlignImage(pt, szReal.cy, bCalc);
-							if (sz.cx && sz.cy && !bCalc)
-							{
-								StoreHyperlinkArea(CRect(ptCur.x, ptCur.y, ptCur.x + szReal.cx, ptCur.y + szReal.cy));
-								
-								if (m_defStyle.nTypeLink != LINK_NONE)
+								} //while
+								break;
+							case TAG_LEFT:
+								m_defStyle.nHorzAlign = ALIGN_LEFT;
+								break;
+							case TAG_CENTER:
+								m_defStyle.nHorzAlign = ALIGN_CENTER;
+								break;
+							case TAG_RIGHT:
+								m_defStyle.nHorzAlign = ALIGN_RIGHT;
+								break;
+							case TAG_JUSTIFY:
+								m_defStyle.nHorzAlign = ALIGN_JUSTIFY;
+								break;
+							case TAG_BASELINE:
+								m_defStyle.nVertAlign = ALIGN_BASELINE;
+								break;
+							case TAG_TOP:
+								m_defStyle.nVertAlign = ALIGN_TOP;
+								break;
+							case TAG_VCENTER:
+								m_defStyle.nVertAlign = ALIGN_VCENTER;
+								break;
+							case TAG_BOTTOM:
+								m_defStyle.nVertAlign = ALIGN_BOTTOM;
+								break;
+							case TAG_NEWSTYLE:
+								SelectNewHtmlStyle(sTag, m_defStyle);
+								break;
+							case TAG_SPAN:
+								while (nIndex < sProperties.GetLength())
 								{
-									if (m_nCurIndexLink == m_nHoverIndexLink)
-										si.nStyles = si.nHotStyles;
-								} //if
-								m_drawmanager.DrawBitmap(pDC->m_hDC, ptCur.x, ptCur.y, sz.cx, sz.cy, hBitmap, 
-									si.bUseMask, si.crMask, si.nStyles, 
-									bShadow, 
-									m_szOffsetShadow.cx, m_szOffsetShadow.cy, 
-									m_szDepthShadow.cx, m_szDepthShadow.cy, 
-									m_crShadow);
+									//ENG: Searching a parameters of a tag
+									//RUS: Поиск параметров тэга
+									sValue = GetNextProperty(sProperties, nIndex, sParameter);
+									//ENG: If a parameter was found
+									//RUS: Если параметр найден
+									if (sParameter == _T("class"))
+										SelectNewHtmlStyle(_T(".") + GetStyleString(sValue, _T("")), m_defStyle);
+								} //while
+								break;
+							case TAG_HYPERLINK:
+								//ENG: A default values
+								//RUS: Значения по умолчанию
+								m_defStyle.nTypeLink = LINK_MESSAGE;
+								m_defStyle.sHyperlink.Empty();
+								while (nIndex < sProperties.GetLength())
+								{
+									//ENG: Searching a parameters of a tag
+									//RUS: Поиск параметров тэга
+									sValue = GetNextProperty(sProperties, nIndex, sParameter);
+									//ENG: If a parameter was found
+									//RUS: Если параметр найден
+									if (!sParameter.IsEmpty())
+									{
+										//ENG: Processing a parameters of a tag
+										//RUS: Обработка параметров тэга
+										if (sParameter == _T("href"))
+										{
+											m_defStyle.nTypeLink = LINK_HREF;
+											m_defStyle.sHyperlink = GetStyleString(sValue, _T(""));
+										} //if
+										if (sParameter == _T("msg"))
+										{
+											m_defStyle.nTypeLink = LINK_MESSAGE;
+											m_defStyle.sHyperlink = GetStyleString(sValue, _T(""));
+										} //if
+									} //if
+								} //while
+								//ENG: Gets a index of a current link
+								//RUS: Получаем индекс текущей гиперссылки
+								m_nCurIndexLink ++;
+								//ENG: If a mouse over this link
+								//RUS: Если мыш над этим тэгом
+								if (m_nCurIndexLink == m_nHoverIndexLink)
+									SelectNewHtmlStyle(_T("a:hover"), m_defStyle);
+								else
+									SelectNewHtmlStyle(_T("a:link"), m_defStyle);
+								break;
+								} //switch
 							} //if
-							pt.x += szReal.cx;
-							
-							if (bAutoDelete)
-								::DeleteObject(hBitmap);
+							//ENG: Update a device context
+							//RUS: Обновление контекста устройства
+							UpdateContext();
 						} //if
-					} //if
-				}
-				else if (strProperty == _T("icon"))
-				{
-					//-----------------------------
-					//Draws the icon
-					//-----------------------------
-					//Default Parameters
-					_STRUCT_IMAGE si;
-					si.nIdRes = 0;
-					si.nIdDll = 0;
-					si.nHandle = 0;
-					si.nWidth = ::GetSystemMetrics(SM_CXICON);
-					si.bPercentWidth = FALSE;
-					si.nHeight = ::GetSystemMetrics(SM_CYICON);
-					si.bPercentHeight = FALSE;
-					si.nStyles = 0;
-					si.nHotStyles = 0;
-					si.strSrcFile.Empty();
-					si.strPathDll.Empty();
-
-					AnalyseImageParam(strTag, si);
-					
-					if (si.nIdRes || si.nIdDll || si.nHandle || !si.strSrcFile.IsEmpty())
+					}
+					else 
 					{
-						CSize sz (si.nWidth, si.nHeight);
+						BOOL bPercent;
+						BOOL bShadow;
+						BOOL bAutoDelete;
+						int nWidth, nNum;
+						
+						STRUCT_IMAGE si;
+						STRUCT_CHANGESTYLE csTemp; //Temporary structure
+						STRUCT_ANIMATION sa;
+						
+						SIZE szReal;
+						HBITMAP hBitmap = NULL;;
 						HICON hIcon = NULL;
-						BOOL bAutoDelete = TRUE;
-
-						if (si.nIdRes)
-							hIcon = GetIconFromResources(si.nIdRes, sz);
-						else if (!si.strSrcFile.IsEmpty())
-							hIcon = GetIconFromFile(si.strSrcFile, sz);
-						else if (si.nIdDll)
-							hIcon = GetIconFromDll(si.nIdDll, sz, si.strPathDll);
-						else if (si.nHandle)
-						{
-							bAutoDelete = FALSE;
-							hIcon = (HICON)si.nHandle;
-						} //if
-
-						if (NULL != hIcon)
-						{
-							BOOL bShadow = IsImageWithShadow(si);
-							
-							sz = m_drawmanager.GetSizeOfIcon(hIcon);
-							CSize szReal = sz;
-							if (sz.cx && sz.cy && bShadow)
-							{
-								szReal += m_szOffsetShadow;
-							} //if
-							if (bCalc) m_hline.nHorzAlign = m_defStyle.nHorzAlign; //Store a last horizontal alignment
-							CPoint ptCur = VerticalAlignImage(pt, szReal.cy, bCalc);
-							if (sz.cx && sz.cy && !bCalc)
-							{
-								StoreHyperlinkArea(CRect(ptCur.x, ptCur.y, ptCur.x + szReal.cx, ptCur.y + szReal.cy));
-								
-								if (m_defStyle.nTypeLink != LINK_NONE)
-								{
-									if (m_nCurIndexLink == m_nHoverIndexLink)
-										si.nStyles = si.nHotStyles;
-								} //if
-								m_drawmanager.DrawIcon(pDC->m_hDC, ptCur.x, ptCur.y, sz.cx, sz.cy, hIcon, si.nStyles, 
-									bShadow, 
-									m_szOffsetShadow.cx, m_szOffsetShadow.cy, 
-									m_szDepthShadow.cx, m_szDepthShadow.cy, 
-									m_crShadow);
-							} //if
-							if (bAutoDelete)
-								::DestroyIcon(hIcon);
-							pt.x += szReal.cx;
-						} //if
-					} //if
-				}
-				else if (strProperty == _T("ilst"))
-				{
-					//-----------------------------
-					//Draws the icon from image list
-					//-----------------------------
-					//Default Parameters
-					_STRUCT_IMAGE si;
-					si.nIndexImageList = 0;
-					si.nIdRes = 0;
-					si.nIdDll = 0;
-					si.nHandle = 0;
-					si.nWidth = 100;
-					si.bPercentWidth = TRUE;
-					si.nHeight = 100;
-					si.bPercentHeight = TRUE;
-					si.bUseMask = FALSE;
-					si.crMask = RGB(255, 0, 255);
-					si.cx = GetSystemMetrics(SM_CXICON);
-					si.cy = GetSystemMetrics(SM_CYICON);
-					si.nStyles = 0;
-					si.nHotStyles = 0;
-					si.strSrcFile.Empty();
-					si.strPathDll.Empty();
-					
-					AnalyseImageParam(strTag, si);
-
-					BOOL bShadow = IsImageWithShadow(si);
-
-					if (si.nIdRes || si.nIdDll || si.nHandle || !si.strSrcFile.IsEmpty())
-					{
-						HBITMAP	hBitmap = NULL;
-						BOOL bAutoDelete = TRUE;
 						
-						if (si.nIdRes)
-							hBitmap = GetBitmapFromResources(si.nIdRes);
-						else if (!si.strSrcFile.IsEmpty())
-							hBitmap = GetBitmapFromFile(si.strSrcFile);
-						else if (si.nIdDll)
-							hBitmap = GetBitmapFromDll(si.nIdDll, si.strPathDll);
-						else if (si.nHandle)
-						{
-							bAutoDelete = FALSE;
-							hBitmap = (HBITMAP)si.nHandle;
-						} //if
+						DWORD nMaxCol, nMaxRow;
+						UINT nIdRes, nIdDll;
+						//CPPString str;
 						
-						if ((NULL != hBitmap) && si.cx && si.cy)
+						//ENG: Processing a tag
+						//RUS: Обработка тэга
+						switch (dwTag)
 						{
-							CSize szBitmap = m_drawmanager.GetSizeOfBitmap(hBitmap);
+						case TAG_HLINE:
+							//ENG: Draws the horizontal line
+							//RUS: Рисование горизонтальной линии
+							csTemp = m_defStyle;
+							csTemp.nBorderWidth = 1;
+							//ENG: Applies a new styles for <hr> tag
+							SelectNewHtmlStyle(_T("hr"), csTemp);
+							nWidth = 100;
+							bPercent = TRUE;
 							
-							if (si.bPercentWidth) si.nWidth = ::MulDiv(si.cx, si.nWidth, 100);
-							if (si.bPercentHeight) si.nHeight = ::MulDiv(si.cy, si.nHeight, 100);
-						
-							CSize szReal(si.nWidth, si.nHeight);
-							if (si.nWidth && si.nHeight && bShadow)
+							while (nIndex < sProperties.GetLength())
 							{
-								szReal.cx += m_szOffsetShadow.cx;
-								szReal.cy += m_szOffsetShadow.cy;
-							} //if
-
-							DWORD nMaxCol = szBitmap.cx / si.cx;
-							DWORD nMaxRow = szBitmap.cy / si.cy;
-							
-							if ((si.nIndexImageList < (int)(nMaxCol * nMaxRow)) && nMaxCol && nMaxRow)
-							{
-								if (bCalc) m_hline.nHorzAlign = m_defStyle.nHorzAlign; //Store a last horizontal alignment
-								CPoint ptCur = VerticalAlignImage(pt, szReal.cy, bCalc);
-								if (si.nWidth && si.nHeight && !bCalc)
+								//ENG: Searching a parameters of a tag
+								//RUS: Поиск параметров тэга
+								sValue = GetNextProperty(sProperties, nIndex, sParameter);
+								//ENG: If a parameter was found
+								//RUS: Если параметр найден
+								if (!sParameter.IsEmpty())
 								{
-									StoreHyperlinkArea(CRect(ptCur.x, ptCur.y, ptCur.x + szReal.cx, ptCur.y + szReal.cy));
-									
-									if (m_defStyle.nTypeLink != LINK_NONE)
+									//ENG: Processing a parameters of a tag
+									//RUS: Обработка параметров тэга
+									if (sParameter == _T("width"))
 									{
-										if (m_nCurIndexLink == m_nHoverIndexLink)
-											si.nStyles = si.nHotStyles;
-									} //if
-									//Gets Image from bitmap
-									HDC hSrcDC = ::CreateCompatibleDC(pDC->m_hDC);
-									HDC hDestDC = ::CreateCompatibleDC(pDC->m_hDC);
-									HBITMAP hIconBmp = ::CreateCompatibleBitmap(pDC->m_hDC, si.cx, si.cy);
-									HBITMAP hOldSrcBmp = (HBITMAP)::SelectObject(hSrcDC, hBitmap);
-									HBITMAP hOldDestBmp = (HBITMAP)::SelectObject(hDestDC, hIconBmp);
-									::BitBlt(hDestDC, 0, 0, si.cx, si.cy, hSrcDC, 
-										(si.nIndexImageList % nMaxCol) * si.cx, 
-										(si.nIndexImageList / nMaxCol) * si.cy, 
-										SRCCOPY);
-									::SelectObject(hSrcDC, hOldSrcBmp);
-									::SelectObject(hDestDC, hOldDestBmp);
-									::DeleteDC(hSrcDC);
-									::DeleteDC(hDestDC);
-									::DeleteObject(hOldSrcBmp);
-									::DeleteObject(hOldDestBmp);
-									m_drawmanager.DrawBitmap(pDC->m_hDC, ptCur.x, ptCur.y, si.nWidth, si.nHeight, hIconBmp, 
-														si.bUseMask, si.crMask, si.nStyles, 
-														bShadow, 
-														m_szOffsetShadow.cx, m_szOffsetShadow.cy, 
-														m_szDepthShadow.cx, m_szDepthShadow.cy, 
-														m_crShadow);
-									::DeleteObject(hIconBmp);
-								} //if
-								pt.x += szReal.cx;
-							} //if
-							if (bAutoDelete)
-								::DeleteObject(hBitmap);
-						} //if
-					}
-					else if (NULL != m_ImageList.GetSafeHandle())
-					{
-						if ((int)si.nIndexImageList < m_ImageList.GetImageCount())
-						{
-							HICON hIcon = m_ImageList.ExtractIcon(si.nIndexImageList);
-							if (NULL != hIcon)
-							{
-								CSize sz(si.nWidth, si.nHeight);
-								if (si.bPercentWidth) sz.cx = ::MulDiv(m_szImageList.cx, si.nWidth, 100);
-								if (si.bPercentHeight) sz.cy = ::MulDiv(m_szImageList.cy, si.nHeight, 100);
-								
-								CSize szReal = sz;
-								if (sz.cx && sz.cy && bShadow)
-								{
-									szReal.cx += m_szOffsetShadow.cx;
-									szReal.cy += m_szOffsetShadow.cy;
-								} //if
-								
-								if (bCalc) m_hline.nHorzAlign = m_defStyle.nHorzAlign; //Store a last horizontal alignment
-								CPoint ptCur = VerticalAlignImage(pt, szReal.cy, bCalc);
-								if (sz.cx && sz.cy && !bCalc)
-								{
-									StoreHyperlinkArea(CRect(ptCur.x, ptCur.y, ptCur.x + szReal.cx, ptCur.y + szReal.cy));
-									
-									if (m_defStyle.nTypeLink != LINK_NONE)
+										bPercent = IsPercentableValue(sValue);
+										nWidth = GetLengthUnit(sValue, 100);
+									}
+									else if (sParameter == _T("size"))
+										csTemp.nBorderWidth = GetLengthUnit(sValue, csTemp.nBorderWidth);
+									else if (sParameter == _T("color"))
 									{
-										if (m_nCurIndexLink == m_nHoverIndexLink)
-											si.nStyles = si.nHotStyles;
-									} //if
-									m_drawmanager.DrawIcon(pDC->m_hDC, ptCur.x, ptCur.y, 
-										sz.cx, sz.cy, hIcon, si.nStyles, 
-										bShadow, 
-										m_szOffsetShadow.cx, m_szOffsetShadow.cy, 
-										m_szDepthShadow.cx, m_szDepthShadow.cy, 
-										m_crShadow);
-									::DestroyIcon(hIcon);
-								} //if
-								pt.x += szReal.cx;
-							} //if
-						} //if
-					} //if
-				}
-				else if (strProperty == _T("string"))
-				{
-					//-----------------------------
-					//Draws the string
-					//-----------------------------
-					UINT nIdRes = 0;
-					UINT nIdDll = 0;
-					CString srcDll = _T("");
-					while (nIndex < strTag.GetLength())
-					{
-						strProperty = SearchPropertyOfTag(strTag, nIndex);
-						if (!strProperty.IsEmpty())
-						{
-							strParameter = GetParameterString(strTag, nIndex, _T('='), _T(" "));
-							if (strProperty == _T("idres"))
-								nIdRes = GetLengthUnit(strParameter, nIdRes);
-							else if (strProperty == _T("iddll"))
-								nIdRes = GetLengthUnit(strParameter, nIdDll);
-							else if (strProperty == _T("srcdll"))
-								srcDll = GetStyleString(strParameter, srcDll);
-						} //if
-					} //while
-					if (nIdRes || nIdDll)
-					{
-						CString str = _T("");
-						if (nIdRes)
-							str = GetStringFromResource(nIdRes);
-						else if (nIdDll)
-							str = GetStringFromDll(nIdDll, srcDll);
-
-						if (!str.IsEmpty())
-						{
-							CSize sz = pDC->GetTextExtent(str);
-							if (bCalc) m_hline.nHorzAlign = m_defStyle.nHorzAlign; //Store a last horizontal alignment
-							CPoint ptOut = VerticalAlignText(pt, sz.cy, bCalc);
-							if (!bCalc)
-							{
-								StoreHyperlinkArea(CRect(ptOut.x, ptOut.y, ptOut.x + sz.cx, ptOut.y + sz.cy));
-								pDC->TextOut(ptOut.x, ptOut.y, str);
-							} //if
-							pt.x += sz.cx;
-						} //if
-					} //if
-				}
-				else if ((strProperty == _T("body")) ||
-						 (strProperty == _T("h1")) || (strProperty == _T("h2")) ||
-						 (strProperty == _T("h3")) || (strProperty == _T("h4")) ||
-						 (strProperty == _T("h5")) || (strProperty == _T("h6")) ||
-						 (strProperty == _T("code")) || (strProperty == _T("pre")) ||
-						 (strProperty == _T("big")) || (strProperty == _T("small")) ||
-						 (strProperty == _T("sub")) || (strProperty == _T("sup")))
-				{
-					m_defStyle.strTag = strProperty;
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-							SelectNewHtmlStyle(strProperty, m_defStyle);
-						UpdateContext(pDC);
-					} //if
-				}
-				else if (strProperty == _T("span"))
-				{
-					m_defStyle.strTag = _T("span");
-					if (!bCloseTag)
-					{
-						strProperty = SearchPropertyOfTag(strTag, nIndex);
-						if (!strProperty.IsEmpty())
-						{
-							strParameter = GetParameterString(strTag, nIndex, _T('='), _T(" "));
-							if (strProperty == _T("class"))
-							{
-								int nIndexStyle = -1;
-								CString sStyle = GetStyleString(strParameter, _T(""));
-								if (StoreRestoreStyle(FALSE))
-								{
-									SelectNewHtmlStyle(_T(".") + sStyle, m_defStyle);
-									UpdateContext(pDC);
-								} //if
-							} //if
-						} //if
-					}
-					else
-					{
-						if (StoreRestoreStyle(TRUE))
-							UpdateContext(pDC);
-					} //if
-				}
-				else if (strProperty == _T("a"))
-				{
-					//Hyperlink tag
-					m_defStyle.strTag = _T("link");
-					if (StoreRestoreStyle(bCloseTag))
-					{
-						if (!bCloseTag)
-						{
-							m_defStyle.nTypeLink = LINK_MESSAGE;
-							m_defStyle.sHyperlink.Empty();
-							while (nIndex < strTag.GetLength())
-							{
-								strProperty = SearchPropertyOfTag(strTag, nIndex);
-								if (!strProperty.IsEmpty())
-								{
-									strParameter = GetParameterString(strTag, nIndex, _T('='), _T(" "));
-									if (strProperty == _T("href"))
-									{
-										m_defStyle.nTypeLink = LINK_HREF;
-										m_defStyle.sHyperlink = GetStyleString(strParameter, _T(""));
-									} //if
-									if (strProperty == _T("msg"))
-									{
-										m_defStyle.nTypeLink = LINK_MESSAGE;
-										m_defStyle.sHyperlink = GetStyleString(strParameter, _T(""));
-									} //if
+										if (m_bIsEnable)
+											csTemp.crText = GetStyleColor(sValue, csTemp.crText);
+										else
+											csTemp.crText = GetColorByName(_T(""));
+									}
 								} //if
 							} //while
-							m_nCurIndexLink ++;
-							if (m_nCurIndexLink == m_nHoverIndexLink)
-								SelectNewHtmlStyle(_T("a:hover"), m_defStyle);
-							else
-								SelectNewHtmlStyle(_T("a:link"), m_defStyle);
-						} //if
-						UpdateContext(pDC);
+							
+							if (bPercent)
+							{
+								if (MODE_FIRSTPASS == m_nNumPass)
+								{
+									m_hline.nAddPercentWidth += nWidth;
+									nWidth = 1;
+								}
+								else nWidth = ::MulDiv(lpRect->right - lpRect->left, nWidth, 100);
+							} //if
+							
+							if (MODE_FIRSTPASS == m_nNumPass)
+							{
+								m_hline.nHeightLine = max(m_hline.nHeightLine, csTemp.nBorderWidth + 8);
+								m_hline.nHorzAlign = m_defStyle.nHorzAlign; //Store a last horizontal alignment
+							}
+							else if (MODE_DRAW == m_nNumPass)
+							{
+								m_drawmanager.DrawLine(m_hDC, ptOutput.x, ptOutput.y + m_hline.nHeightLine / 2, 
+									ptOutput.x + nWidth, ptOutput.y + m_hline.nHeightLine / 2, 
+									csTemp.crText, CPPDrawManager::PEN_SOLID, csTemp.nBorderWidth);
+							} //if
+							ptOutput.x += nWidth;
+							break;
+						case TAG_NEWLINE:
+							//ENG: New line
+							//RUS: Новая строка
+							nNum = 1;
+							if (!sProperties.IsEmpty())
+							{
+								sProperties = sProperties.Mid(1);
+								nNum = GetLengthUnit(sProperties, nNum);
+							} //if
+							m_hline.bWrappedLine = FALSE;
+							Tag_NewLine(&ptOutput, nNum, &szTextArea);
+							nBeginLineX = ptOutput.x;
+							nSpacesInLine = m_hline.nSpaceChars;
+							nRealWidth = m_hline.nWidthLine;
+							break;
+						case TAG_TABULATION:
+							//ENG: Tabulation
+							//RUS: Табуляция
+							nNum = 1;
+							if (!sProperties.IsEmpty())
+							{
+								sProperties = sProperties.Mid(1);
+								nNum = GetLengthUnit(sProperties, nNum);
+							} //if
+							Tag_Tabulation(&ptOutput, nNum);
+							break;
+						case TAG_BITMAP:
+							//-----------------------------
+							//Draws the bitmap 
+							//-----------------------------
+							//ENG: Default Parameters
+							//RUS: Параметры по умолчанию
+							si.nIdRes = 0;
+							si.nIdDll = 0;
+							si.nHandle = 0;
+							si.nWidth = 100;
+							si.bPercentWidth = TRUE;
+							si.nHeight = 100;
+							si.bPercentHeight = TRUE;
+							si.crMask = RGB(255, 0, 255);
+							si.bUseMask = FALSE;
+							si.nStyles = 0;
+							si.nHotStyles = 0;
+							si.strSrcFile.Empty();
+							si.strPathDll.Empty();
+							
+							//ENG: Searching image parameters
+							//RUS: Поиск параметров изображения
+							AnalyseImageParam(sProperties, si);
+							
+							//ENG: If a image's source was specified
+							//RUS: Если указан источник изображения
+							if (si.nIdRes || si.nIdDll || si.nHandle || !si.strSrcFile.IsEmpty())
+							{
+								//ENG: Sets a autodelete flag of the image object
+								//RUS: Установлен флаг автоматического удаления объекта изображения
+								bAutoDelete = TRUE;
+								
+								//ENG: Gets a handle of the image
+								//RUS: Получить дескриптор изображения
+								if (si.nIdRes)
+									hBitmap = GetBitmapFromResources(si.nIdRes);
+								else if (!si.strSrcFile.IsEmpty())
+									hBitmap = GetBitmapFromFile(si.strSrcFile);
+								else if (si.nIdDll)
+									hBitmap = GetBitmapFromDll(si.nIdDll, si.strPathDll);
+								else if (si.nHandle)
+								{
+									hBitmap = (HBITMAP)si.nHandle;
+									//ENG: If an image handle specified, disables autodelete
+									//RUS: Если указан дескриптор изображения, то запрещаем удаление
+									bAutoDelete = FALSE;
+								} //if
+								
+								//ENG: If a handle of an image was retrieved
+								//RUS: Если дескриптор изображения получен
+								if (NULL != hBitmap)
+								{
+									//ENG: Image with shadow or not?
+									//RUS: Изображение с тенью или нет
+									bShadow = IsImageWithShadow(si);
+									
+									//ENG: Retrieves an original size of an image
+									//RUS: Получаем оригинальный размер изображения
+									m_drawmanager.GetSizeOfBitmap(hBitmap, &sz);
+									
+									//ENG: Retrieves an output size
+									//RUS: Получаем размеры для рисования
+									if (si.bPercentWidth) si.nWidth = ::MulDiv(sz.cx, si.nWidth, 100);
+									if (si.bPercentHeight) si.nHeight = ::MulDiv(sz.cy, si.nHeight, 100);
+									
+									//ENG: If a shadow was enabled then set a real size
+									//RUS: Если тень доступна, то устанавливаем реальный размер
+									if (si.nWidth && si.nHeight && bShadow)
+									{
+										sz.cx = si.nWidth + m_szOffsetShadow.cx;
+										sz.cy = si.nHeight + m_szOffsetShadow.cy;
+									} //if
+									
+									int nMaxSize = nTextWrapWidth - ptOutput.x + m_rcOutput.left;
+									if (m_nMaxWidth && ((nMaxSize - sz.cx) < 0) && nTextWrapWidth) 
+									{
+										//ENG: Not all text was printed (cause text wrap) 
+										//RUS: Не вся строка еще вывелась (в случае переноса текста)
+										m_hline.bWrappedLine = TRUE;
+										Tag_NewLine(&ptOutput, 1, &szTextArea);
+										nBeginLineX = ptOutput.x;
+										nSpacesInLine = m_hline.nSpaceChars;
+										nRealWidth = m_hline.nWidthLine;
+									} //if
+									nRealWidth -= sz.cx;
+
+									//ENG: Store a last horizontal alignment
+									//RUS: Запоминаем последнее горизонтальное выравнивание
+									if (MODE_FIRSTPASS == m_nNumPass) 
+										m_hline.nHorzAlign = m_defStyle.nHorzAlign;
+									
+									//ENG: Retrieves a vertical coordinates of drawing area
+									//RUS: Получаем вертикальную координату области рисования
+									y = VerticalAlignImage(ptOutput.y, si.nHeight);
+									
+									//ENG: If an image is exist and not prepare mode
+									//RUS: Если изображение доступно и не установлен режим подготовки
+									if (si.nWidth && si.nHeight && (MODE_DRAW == m_nNumPass))
+									{
+										//ENG: Add an output area to hyperlink list if needed
+										//RUS: Если необходимо добавляем область вывода в список гиперссылок
+										StoreHyperlinkArea(ptOutput.x, y, ptOutput.x + sz.cx, y + sz.cy);
+										
+										//ENG: If a mouse over an image then applies a hot styles
+										//RUS: Если мышь над изображением, то применяем соотвествующие стили
+										if (m_defStyle.nTypeLink != LINK_NONE)
+										{
+											if (m_nCurIndexLink == m_nHoverIndexLink)
+												si.nStyles = si.nHotStyles;
+										} //if
+										
+										if (!m_bIsEnable)
+											si.nStyles = (si.nStyles & 0xFF00) | IMAGE_EFFECT_MONOCHROME;
+										
+										//ENG: Drawing an image
+										//RUS: Рисование изображения
+										m_drawmanager.DrawBitmap(m_hDC, ptOutput.x, y, si.nWidth, si.nHeight, hBitmap, 
+											si.bUseMask, si.crMask, si.nStyles, 
+											bShadow, 
+											m_szOffsetShadow.cx, m_szOffsetShadow.cy, 
+											m_szDepthShadow.cx, m_szDepthShadow.cy, 
+											clrShadow);
+									} //if
+									
+									//ENG: Moves to a right of the outputed image
+									//RUS: Перемещаемся справа от выведенного изображения
+									ptOutput.x += sz.cx; //si.nWidth;
+									
+									//ENG: If needed delete a handle of an image
+									//RUS: Если необходимо удаляем дескриптор изображения
+									if (bAutoDelete)
+										::DeleteObject(hBitmap);
+								} //if
+							} //if
+							break;
+						case TAG_ICON:
+							//-----------------------------
+							//Draws the icon
+							//-----------------------------
+							//ENG: Default Parameters
+							//RUS: Параметры по умолчанию
+							si.nIdRes = 0;
+							si.nIdDll = 0;
+							si.nHandle = 0;
+							si.nWidth = 100;
+							si.bPercentWidth = TRUE;
+							si.nHeight = 100;
+							si.bPercentHeight = TRUE;
+							si.nStyles = 0;
+							si.nHotStyles = 0;
+							si.strSrcFile.Empty();
+							si.strPathDll.Empty();
+							
+							//ENG: Searching image parameters
+							//RUS: Поиск параметров изображения
+							AnalyseImageParam(sProperties, si);
+							
+							//ENG: If a image's source was specified
+							//RUS: Если указан источник изображения
+							if (si.nIdRes || si.nIdDll || si.nHandle || !si.strSrcFile.IsEmpty())
+							{
+								//ENG: Sets a autodelete flag of the image object
+								//RUS: Установлен флаг автоматического удаления объекта изображения
+								bAutoDelete = TRUE;
+								
+								//RUS: Получаем требуемый размер иконки
+								sz.cx = si.nWidth;
+								sz.cy = si.nHeight;
+								if (si.bPercentWidth) sz.cx = ::MulDiv(::GetSystemMetrics(SM_CXICON), si.nWidth, 100);
+								if (si.bPercentHeight) sz.cy = ::MulDiv(::GetSystemMetrics(SM_CYICON), si.nHeight, 100);
+								
+								//ENG: Gets a handle of the image
+								//RUS: Получить дескриптор изображения
+								if (si.nIdRes)
+									hIcon = GetIconFromResources(si.nIdRes, sz.cx, sz.cy);
+								else if (!si.strSrcFile.IsEmpty())
+									hIcon = GetIconFromFile(si.strSrcFile, sz.cx, sz.cy);
+								else if (si.nIdDll)
+									hIcon = GetIconFromDll(si.nIdDll, sz.cx, sz.cy, si.strPathDll);
+								else if (si.nHandle)
+								{
+									hIcon = (HICON)si.nHandle;
+									
+									//ENG: If an image handle specified, disables autodelete
+									//RUS: Если указан дескриптор изображения, то запрещаем удаление
+									bAutoDelete = FALSE;
+								} //if
+								
+								//ENG: If a handle of an image was retrieved
+								//RUS: Если дескриптор изображения получен
+								if (NULL != hIcon)
+								{
+									//ENG: Image with shadow or not?
+									//RUS: Изображение с тенью или нет
+									BOOL bShadow = IsImageWithShadow(si);
+									
+									//ENG: Retrieves an original size of an image
+									//RUS: Получаем оригинальный размер изображения
+									m_drawmanager.GetSizeOfIcon(hIcon, &sz);
+									si.nWidth = sz.cx;
+									si.nHeight = sz.cy;
+									
+									//ENG: Retrieves an output size
+									//RUS: Получаем размеры для рисования
+									//									if (si.bPercentWidth) si.nWidth = ::MulDiv(sz.cx, si.nWidth, 100);
+									//									if (si.bPercentHeight) si.nHeight = ::MulDiv(sz.cy, si.nHeight, 100);
+									
+									//ENG: If a shadow was enabled then set a real size
+									//RUS: Если тень доступна, то устанавливаем реальный размер
+									if (si.nWidth && si.nHeight && bShadow)
+									{
+										sz.cx = si.nWidth + m_szOffsetShadow.cx;
+										sz.cy = si.nHeight + m_szOffsetShadow.cy;
+									} //if
+
+									int nMaxSize = nTextWrapWidth - ptOutput.x + m_rcOutput.left;
+									if (m_nMaxWidth && ((nMaxSize - sz.cx) < 0) && nTextWrapWidth) 
+									{
+										//ENG: Not all text was printed (cause text wrap) 
+										//RUS: Не вся строка еще вывелась (в случае переноса текста)
+										m_hline.bWrappedLine = TRUE;
+										Tag_NewLine(&ptOutput, 1, &szTextArea);
+										nBeginLineX = ptOutput.x;
+										nSpacesInLine = m_hline.nSpaceChars;
+										nRealWidth = m_hline.nWidthLine;
+									} //if
+									nRealWidth -= sz.cx;
+									
+									//ENG: Store a last horizontal alignment
+									//RUS: Запоминаем последнее горизонтальное выравнивание
+									if (MODE_FIRSTPASS == m_nNumPass) 
+										m_hline.nHorzAlign = m_defStyle.nHorzAlign;
+									
+									//ENG: Retrieves a vertical coordinates of drawing area
+									//RUS: Получаем вертикальную координату области рисования
+									y = VerticalAlignImage(ptOutput.y, si.nHeight);
+									
+									//ENG: If an image is exist and not prepare mode
+									//RUS: Если изображение доступно и не установлен режим подготовки
+									if (si.nWidth && si.nHeight && (MODE_DRAW == m_nNumPass))
+									{
+										//ENG: Add an output area to hyperlink list if needed
+										//RUS: Если необходимо добавляем область вывода в список гиперссылок
+										StoreHyperlinkArea(ptOutput.x, y, ptOutput.x + sz.cx, y + sz.cy);
+										
+										//ENG: If a mouse over an image then applies a hot styles
+										//RUS: Если мышь над изображением, то применяем соотвествующие стили
+										if (m_defStyle.nTypeLink != LINK_NONE)
+										{
+											if (m_nCurIndexLink == m_nHoverIndexLink)
+												si.nStyles = si.nHotStyles;
+										} //if
+										
+										if (!m_bIsEnable)
+											si.nStyles = (si.nStyles & 0xFF00) | IMAGE_EFFECT_MONOCHROME;
+										
+										//ENG: Drawing an image
+										//RUS: Рисование изображения
+										m_drawmanager.DrawIcon(m_hDC, ptOutput.x, y, si.nWidth, si.nHeight, hIcon, si.nStyles, 
+											bShadow, 
+											m_szOffsetShadow.cx, m_szOffsetShadow.cy, 
+											m_szDepthShadow.cx, m_szDepthShadow.cy, 
+											clrShadow);
+									} //if
+									//ENG: Moves to a right of the outputed image
+									//RUS: Перемещаемся справа от выведенного изображения
+									ptOutput.x += sz.cx; //si.nWidth;
+									
+									//ENG: If needed delete a handle of an image
+									//RUS: Если необходимо удаляем дескриптор изображения
+									if (bAutoDelete) 
+										::DestroyIcon(hIcon);
+								} //if
+							} //if
+							break;
+						case TAG_IMAGELIST:
+							//-----------------------------
+							//Draws the icon from image list
+							//-----------------------------
+							//ENG: Default Parameters
+							//RUS: Параметры по умолчанию
+							si.nIndexImageList = 0;
+							si.nIdRes = 0;
+							si.nIdDll = 0;
+							si.nHandle = 0;
+							si.nWidth = 100;
+							si.bPercentWidth = TRUE;
+							si.nHeight = 100;
+							si.bPercentHeight = TRUE;
+							si.nSpeed = 0;
+							si.bUseMask = FALSE;
+							si.crMask = RGB(255, 0, 255);
+							si.cx = 0;//GetSystemMetrics(SM_CXICON);
+							si.cy = 0;//GetSystemMetrics(SM_CYICON);
+							si.nStyles = 0;
+							si.nHotStyles = 0;
+							si.strSrcFile.Empty();
+							si.strPathDll.Empty();
+							
+							//ENG: Searching image parameters
+							//RUS: Поиск параметров изображения
+							AnalyseImageParam(sProperties, si);
+							
+							//ENG: Image with shadow or not?
+							//RUS: Изображение с тенью или нет
+							bShadow = IsImageWithShadow(si);
+							
+							if (si.nIdRes || si.nIdDll || si.nHandle || !si.strSrcFile.IsEmpty())
+							{
+								//ENG: Sets a autodelete flag of the image object
+								//RUS: Установлен флаг автоматического удаления объекта изображения
+								bAutoDelete = TRUE;
+								
+								//ENG: Gets a handle of the image
+								//RUS: Получить дескриптор изображения
+								if (si.nIdRes)
+									hBitmap = GetBitmapFromResources(si.nIdRes);
+								else if (!si.strSrcFile.IsEmpty())
+									hBitmap = GetBitmapFromFile(si.strSrcFile);
+								else if (si.nIdDll)
+									hBitmap = GetBitmapFromDll(si.nIdDll, si.strPathDll);
+								else if (si.nHandle)
+								{
+									hBitmap = (HBITMAP)si.nHandle;
+									//ENG: If an image handle specified, disables autodelete
+									//RUS: Если указан дескриптор изображения, то запрещаем удаление
+									bAutoDelete = FALSE;
+								} //if
+								
+								//ENG: If a handle of an image was retrieved
+								//RUS: Если дескриптор изображения получен
+								if (NULL != hBitmap)
+								{
+									//ENG: Retrieves an original size of an image
+									//RUS: Получаем оригинальный размер изображения
+									m_drawmanager.GetSizeOfBitmap(hBitmap, &sz);
+
+									//ENG: Creates a no specified sizes
+									//RUS: Создаем незаданные размеры
+									if (!si.cx && !si.cy)
+										si.cx = si.cy = min(sz.cx, sz.cy);
+									else if (!si.cx)
+										si.cx = si.cy;
+									else if (!si.cy)
+										si.cy = si.cx;
+									
+									//ENG: Retrieves an output size
+									//RUS: Получаем размеры для рисования
+									if (si.bPercentWidth) si.nWidth = ::MulDiv(si.cx, si.nWidth, 100);
+									if (si.bPercentHeight) si.nHeight = ::MulDiv(si.cy, si.nHeight, 100);
+									
+									//ENG: If a shadow was enabled then set a real size
+									//RUS: Если тень доступна, то устанавливаем реальный размер
+									szReal.cx = si.nWidth;
+									szReal.cy = si.nHeight;
+									if (si.nWidth && si.nHeight && bShadow)
+									{
+										szReal.cx += m_szOffsetShadow.cx;
+										szReal.cy += m_szOffsetShadow.cy;
+									} //if
+									
+									//ENG: Gets a max columns and rows of the images on the bitmap
+									//RUS: Получаем максимальное число колонок и строк изображений на битмапке
+									nMaxCol = sz.cx / si.cx;
+									nMaxRow = sz.cy / si.cy;
+									
+									if (si.nSpeed)
+									{
+										if (MODE_FIRSTPASS == m_nNumPass)
+										{
+											sa.nIndex = si.nIndexImageList;
+											sa.nMaxImages = nMaxCol * nMaxRow;
+											sa.nSpeed = si.nSpeed;
+											sa.nTimerCount = 0;
+											m_arrAni.push_back(sa);
+										}
+										else if (MODE_DRAW == m_nNumPass)
+										{
+											m_nCurIndexAni ++;
+											sa = m_arrAni [m_nCurIndexAni];
+											si.nIndexImageList = sa.nIndex;
+										} //if
+									} //if
+									
+									//ENG: If a specified index of image is a legitimate value
+									//RUS: Если указанный индекс изображения допустим
+									if ((si.nIndexImageList < (int)(nMaxCol * nMaxRow)) && nMaxCol && nMaxRow)
+									{
+										int nMaxSize = nTextWrapWidth - ptOutput.x + m_rcOutput.left;
+										if (m_nMaxWidth && ((nMaxSize - szReal.cx) < 0) && nTextWrapWidth) 
+										{
+											//ENG: Not all text was printed (cause text wrap) 
+											//RUS: Не вся строка еще вывелась (в случае переноса текста)
+											m_hline.bWrappedLine = TRUE;
+											Tag_NewLine(&ptOutput, 1, &szTextArea);
+											nBeginLineX = ptOutput.x;
+											nSpacesInLine = m_hline.nSpaceChars;
+											nRealWidth = m_hline.nWidthLine;
+										} //if
+										nRealWidth -= szReal.cx;
+										
+										//ENG: Store a last horizontal alignment
+										//RUS: Запоминаем последнее горизонтальное выравнивание
+										if (MODE_FIRSTPASS == m_nNumPass) 
+											m_hline.nHorzAlign = m_defStyle.nHorzAlign;
+										
+										//ENG: Retrieves a vertical coordinates of drawing area
+										//RUS: Получаем вертикальную координату области рисования
+										y = VerticalAlignImage(ptOutput.y, szReal.cy);
+										
+										//ENG: If an image is exist and not prepare mode
+										//RUS: Если изображение доступно и не установлен режим подготовки
+										if (si.nWidth && si.nHeight && (MODE_DRAW == m_nNumPass))
+										{
+											//ENG: Add an output area to hyperlink list if needed
+											//RUS: Если необходимо добавляем область вывода в список гиперссылок
+											StoreHyperlinkArea(ptOutput.x, y, ptOutput.x + szReal.cx, y + szReal.cy);
+											
+											//ENG: If a mouse over an image then applies a hot styles
+											//RUS: Если мышь над изображением, то применяем соотвествующие стили
+											if (m_defStyle.nTypeLink != LINK_NONE)
+											{
+												if (m_nCurIndexLink == m_nHoverIndexLink)
+													si.nStyles = si.nHotStyles;
+											} //if
+											
+											if (!m_bIsEnable)
+												si.nStyles = (si.nStyles & 0xFF00) | IMAGE_EFFECT_MONOCHROME;
+											
+											//ENG: Drawing an image
+											//RUS: Рисование изображения
+											m_drawmanager.DrawImageList(m_hDC, ptOutput.x, y, si.nWidth, si.nHeight, hBitmap,
+												si.nIndexImageList, si.cx, si.cy,
+												si.bUseMask, si.crMask, si.nStyles, 
+												bShadow, 
+												m_szOffsetShadow.cx, m_szOffsetShadow.cy, 
+												m_szDepthShadow.cx, m_szDepthShadow.cy, 
+												clrShadow);
+										} //if
+										
+										//ENG: Moves to a right of the outputed image
+										//RUS: Перемещаемся справа от выведенного изображения
+										ptOutput.x += szReal.cx;
+									} //if
+									
+									//ENG: If needed delete a handle of an image
+									//RUS: Если необходимо удаляем дескриптор изображения
+									if (bAutoDelete)
+										::DeleteObject(hBitmap);
+								} //if
+							}
+							else if (NULL != m_hImageList)
+							{
+								// Ensure that the common control DLL is loaded. 
+								InitCommonControls(); 
+
+								if ((int)si.nIndexImageList < ImageList_GetImageCount(m_hImageList))
+								{
+									hIcon = ImageList_ExtractIcon(NULL, m_hImageList, si.nIndexImageList);
+									if (NULL != hIcon)
+									{
+										sz.cx = si.nWidth;
+										sz.cy = si.nHeight;
+										if (si.bPercentWidth) sz.cx = ::MulDiv(m_szImageList.cx, si.nWidth, 100);
+										if (si.bPercentHeight) sz.cy = ::MulDiv(m_szImageList.cy, si.nHeight, 100);
+										
+										szReal.cx = sz.cx;
+										szReal.cy = sz.cy;
+										if (sz.cx && sz.cy && bShadow)
+										{
+											szReal.cx += m_szOffsetShadow.cx;
+											szReal.cy += m_szOffsetShadow.cy;
+										} //if
+										
+										int nMaxSize = nTextWrapWidth - ptOutput.x + m_rcOutput.left;
+										if (m_nMaxWidth && ((nMaxSize - szReal.cx) < 0) && nTextWrapWidth) 
+										{
+											//ENG: Not all text was printed (cause text wrap) 
+											//RUS: Не вся строка еще вывелась (в случае переноса текста)
+											m_hline.bWrappedLine = TRUE;
+											Tag_NewLine(&ptOutput, 1, &szTextArea);
+											nBeginLineX = ptOutput.x;
+											nSpacesInLine = m_hline.nSpaceChars;
+											nRealWidth = m_hline.nWidthLine;
+										} //if
+										nRealWidth -= sz.cx;
+
+										if (MODE_FIRSTPASS == m_nNumPass) 
+											m_hline.nHorzAlign = m_defStyle.nHorzAlign; //Store a last horizontal alignment
+										y = VerticalAlignImage(ptOutput.y, szReal.cy);
+										if (sz.cx && sz.cy && (MODE_DRAW == m_nNumPass))
+										{
+											StoreHyperlinkArea(ptOutput.x, y, ptOutput.x + szReal.cx, y + szReal.cy);
+											
+											if (m_defStyle.nTypeLink != LINK_NONE)
+											{
+												if (m_nCurIndexLink == m_nHoverIndexLink)
+													si.nStyles = si.nHotStyles;
+											} //if
+											
+											if (!m_bIsEnable)
+												si.nStyles = (si.nStyles & 0xFF00) | IMAGE_EFFECT_MONOCHROME;
+											
+											m_drawmanager.DrawIcon(m_hDC, ptOutput.x, y, 
+												sz.cx, sz.cy, hIcon, si.nStyles, 
+												bShadow, 
+												m_szOffsetShadow.cx, m_szOffsetShadow.cy, 
+												m_szDepthShadow.cx, m_szDepthShadow.cy, 
+												clrShadow);
+										} //if
+										ptOutput.x += szReal.cx;
+										::DestroyIcon(hIcon);
+									} //if
+								} //if
+							} //if
+							break;
+						case TAG_STRING:
+							//-----------------------------
+							//Draws the string
+							//-----------------------------
+							nIdRes = 0;
+							nIdDll = 0;
+							sText.Empty();
+							while (nIndex < sProperties.GetLength())
+							{
+								//ENG: Searching a parameters of a tag
+								//RUS: Поиск параметров тэга
+								sValue = GetNextProperty(sProperties, nIndex, sParameter);
+								//ENG: If a parameter was found
+								//RUS: Если параметр найден
+								if (!sParameter.IsEmpty())
+								{
+									if (sParameter == _T("idres"))
+										nIdRes = GetLengthUnit(sValue, nIdRes);
+									else if (sParameter == _T("iddll"))
+										nIdRes = GetLengthUnit(sValue, nIdDll);
+									else if (sParameter == _T("srcdll"))
+										sText = GetStyleString(sValue, sText);
+								} //if
+							} //while
+							if (nIdRes || nIdDll)
+							{
+								if (nIdRes)
+									sText = GetStringFromResource(nIdRes);
+								else if (nIdDll)
+									sText = GetStringFromDll(nIdDll, sText);
+								
+								if (!sText.IsEmpty())
+								{
+									::GetTextExtentPoint32(m_hDC, sText, sText.GetLength(), &sz);
+									if (MODE_FIRSTPASS == m_nNumPass) m_hline.nHorzAlign = m_defStyle.nHorzAlign; //Store a last horizontal alignment
+									y = VerticalAlignText(ptOutput.y, sz.cy);
+									if (MODE_DRAW == m_nNumPass)
+									{
+										StoreHyperlinkArea(ptOutput.x, y, ptOutput.x + sz.cx, y + sz.cy);
+										::TextOut(m_hDC, ptOutput.x, y, sText, sText.GetLength());
+									} //if
+									ptOutput.x += sz.cx;
+								} //if
+							} //if
+							break;
+						} //switch
 					} //if
 				} //if
-			} //if
 		} //if
 	} //for
-	Tag_NewLine(pt, 1, bCalc);
+	if (nBeginLineX != ptOutput.x)
+	{
+		m_hline.bWrappedLine = FALSE;
+		Tag_NewLine(&ptOutput, 1, &szTextArea);
+	}
 
-	m_szOutput.cy = pt.y - m_rect.TopLeft().y;
+	//ENG: Reset an additional interval for space chars
+	//RUS: Сброс дополнительного интервала между словами
+	::SetTextJustification(m_hDC, 0, 0);
+
+	szTextArea.cy = ptOutput.y - lpRect->top;
 
 	//Adds the percent's length to the line's length
 	for (i = nFirstLine; i < m_nCurLine; i++)
@@ -2083,21 +2767,28 @@ CSize CPPHtmlDrawer::DrawHtmlString (CDC * pDC, CString & str, CRect & rect, BOO
 		m_hline = m_arrHtmlLine [i];
 		if (0 != m_hline.nAddPercentWidth)
 		{
-			m_hline.nWidthLine += ::MulDiv(m_hline.nAddPercentWidth, m_szOutput.cx, 100);
-//			m_arrHtmlLine [i] = m_hline;
-			m_szOutput.cx = max(m_szOutput.cx, (long)m_hline.nWidthLine);
+			m_hline.nWidthLine += ::MulDiv(m_hline.nAddPercentWidth, szTextArea.cx, 100);
+			szTextArea.cx = max(szTextArea.cx, m_hline.nWidthLine);
 		} //if
 	} //for
-
-	return m_szOutput;
+//
+//	if (NULL != lpSize)
+//	{
+//		szTextArea.cx = m_szOutput.cx;
+//		szTextArea.cy = m_szOutput.cy;
+//	} //if
+	return szTextArea;
 } //End DrawHtmlString
 
-void CPPHtmlDrawer::StoreHyperlinkArea(CRect rArea)
+void CPPHtmlDrawer::StoreHyperlinkArea(int left, int top, int right, int bottom)
 {
 	if (m_defStyle.nTypeLink != LINK_NONE)
 	{
 		STRUCT_HYPERLINK link;
-		link.rcArea = rArea;
+		link.rcArea.left = left;
+		link.rcArea.top = top;
+		link.rcArea.right = right;
+		link.rcArea.bottom = bottom;
 		link.sHyperlink = m_defStyle.sHyperlink;
 		link.nTypeLink = m_defStyle.nTypeLink;
 		link.nIndexLink = m_nCurIndexLink;
@@ -2138,118 +2829,104 @@ BOOL CPPHtmlDrawer::StoreRestoreStyle(BOOL bRestore)
 	return bOk;
 } //End StoreRestoreStyle
 
-void CPPHtmlDrawer::UpdateContext(CDC * pDC)
+void CPPHtmlDrawer::UpdateContext()
 {
-	pDC->SelectObject(m_pOldFont);
-	m_font.DeleteObject();
+	::SelectObject(m_hDC, m_hOldFont);
+	::DeleteObject(m_hFont);
+	memset(&m_lfDefault, 0, sizeof(m_lfDefault));	//+++hd
 	m_lfDefault.lfHeight = m_defStyle.nSizeFont;
 	m_lfDefault.lfWeight = m_defStyle.nWeightFont;
 	m_lfDefault.lfItalic = m_defStyle.bItalicFont;
 	m_lfDefault.lfStrikeOut = m_defStyle.bStrikeOutFont;
 	m_lfDefault.lfUnderline = m_defStyle.bUnderlineFont;
 	_tcscpy (m_lfDefault.lfFaceName, m_defStyle.sFaceFont);
-	m_font.CreateFontIndirect(&m_lfDefault);
-	pDC->SelectObject(&m_font);
-	pDC->GetTextMetrics(&m_tm);
+	m_hFont = ::CreateFontIndirect(&m_lfDefault);
+	m_hOldFont = (HFONT)::SelectObject(m_hDC, m_hFont);
+	::GetTextMetrics(m_hDC, &m_tm);
 	
-	pDC->SetBkMode(m_defStyle.nBkMode);
-	pDC->SetTextColor(m_defStyle.crText);
-	pDC->SetBkColor(m_defStyle.crBkgnd);
+	::SetBkMode(m_hDC, m_defStyle.nBkMode);
+	::SetTextColor(m_hDC, m_defStyle.crText);
+	::SetBkColor(m_hDC, m_defStyle.crBkgnd);
 } //End UpdateContext
 
-CPoint CPPHtmlDrawer::VerticalAlignText(CPoint pt, int nHeight, BOOL bCalc)
+int CPPHtmlDrawer::VerticalAlignText(int y, int nHeight)
 {
 	//Vertical align
-	if (bCalc)
+	if (MODE_FIRSTPASS == m_nNumPass)
 	{
 		//If calculate then don't output text
-		m_hline.nDescentLine = max(m_hline.nDescentLine, (int)(nHeight - m_tm.tmAscent));
-		m_hline.nHeightLine = max(m_hline.nHeightLine, (int)m_tm.tmAscent);
+		m_hline.nDescentLine = max(m_hline.nDescentLine, nHeight - m_tm.tmAscent);
+		m_hline.nHeightLine = max(m_hline.nHeightLine, m_tm.tmAscent);
 	}
-	else
+	else if (MODE_DRAW == m_nNumPass)
 	{
 		switch (m_defStyle.nVertAlign)
 		{
 		case ALIGN_VCENTER:
-			pt.y += (m_hline.nHeightLine - m_tm.tmHeight) / 2;
+			y += (m_hline.nHeightLine - m_tm.tmHeight) / 2;
 			break;
 		case ALIGN_BASELINE:
-			pt.y += m_hline.nHeightLine - m_hline.nDescentLine - m_tm.tmAscent;
+			y += m_hline.nHeightLine - m_hline.nDescentLine - m_tm.tmAscent;
 			break;
 		case ALIGN_BOTTOM:
-			pt.y += m_hline.nHeightLine - m_tm.tmAscent;
+			y += m_hline.nHeightLine - m_tm.tmAscent;
 			break;
 		} //switch
 	} //if
-	return pt;
+	return y;
 } //End VerticalAlignText
 
-CPoint CPPHtmlDrawer::VerticalAlignImage(CPoint pt, int nHeight, BOOL bCalc)
+int CPPHtmlDrawer::VerticalAlignImage(int y, int nHeight)
 {
 	//Vertical align
-	if (bCalc)
+	if (MODE_FIRSTPASS == m_nNumPass)
 	{
 		//If calculate then don't output text
 		m_hline.nHeightLine = max(m_hline.nHeightLine, nHeight);
 	}
-	else
+	else if (MODE_DRAW == m_nNumPass)
 	{
 		switch (m_defStyle.nVertAlign)
 		{
 		case ALIGN_VCENTER:
-			pt.y += (m_hline.nHeightLine - nHeight) / 2;
+			y += (m_hline.nHeightLine - nHeight) / 2;
 			break;
 		case ALIGN_BASELINE:
-			pt.y += m_hline.nHeightLine - m_hline.nDescentLine - nHeight;
+			y += m_hline.nHeightLine - m_hline.nDescentLine - nHeight;
 			break;
 		case ALIGN_BOTTOM:
-			pt.y += m_hline.nHeightLine - nHeight;
+			y += m_hline.nHeightLine - nHeight;
 			break;
 		} //switch
 	} //if
-	return pt;
+	return y;
 } //End VerticalAlignImage
 
-void CPPHtmlDrawer::HorizontalAlign(CPoint & ptCur)
-{
-	switch (m_hline.nHorzAlign)
-	{
-	case ALIGN_CENTER:
-		ptCur.x = m_rect.left + (m_rect.Width() - m_hline.nWidthLine) / 2;
-		break;
-	case ALIGN_RIGHT:
-		ptCur.x = m_rect.left + m_rect.Width() - m_hline.nWidthLine;
-		break;
-	} //switch
-} //End HorizontalAlign
-
-void CPPHtmlDrawer::Tag_NewLine(CPoint & ptCur, int nNum, BOOL bCalc)
+void CPPHtmlDrawer::Tag_NewLine(LPPOINT lpPoint, int nNum, LPSIZE lpSize)
 {
 	//New line
-	if (!nNum)
+	if (nNum <= 0)
 		nNum = 1;
 
-	CPoint pt = m_rect.TopLeft();
-	if (bCalc)
+	if (MODE_FIRSTPASS == m_nNumPass)
 	{
 		if (!m_hline.nHeightLine)
 			m_hline.nHeightLine = m_tm.tmHeight;
-		m_szOutput.cx = max(m_szOutput.cx, ptCur.x - pt.x);
-		m_hline.nWidthLine = ptCur.x - pt.x; //Adds the real length of the lines
+		lpSize->cx = max(lpSize->cx, lpPoint->x - m_rcOutput.left);
+		m_hline.nWidthLine = lpPoint->x - m_rcOutput.left; //Adds the real length of the lines
 		m_hline.nHeightLine += m_hline.nDescentLine; //Adds the real height of the lines
 		m_arrHtmlLine [m_nCurLine] = m_hline;
 	} //if
 	
-	ptCur.y += m_hline.nHeightLine * nNum;
 	m_nCurLine ++;
-	ptCur.x = pt.x;
 
-	InitNewLine(ptCur, bCalc);	
+	lpPoint->y += m_hline.nHeightLine * nNum;
+	lpPoint->x = InitNewLine(m_rcOutput.left);	
 } //End Tag_NewLine
 
-void CPPHtmlDrawer::InitNewLine(CPoint & pt, BOOL bCalc)
+int CPPHtmlDrawer::InitNewLine(int x)
 {
-	if (bCalc)
+	if (MODE_FIRSTPASS == m_nNumPass)
 	{
 		//ENG: Creates a new line with default parameters
 		//RUS: Создание новой линии с параметрами по-умолчанию
@@ -2258,66 +2935,157 @@ void CPPHtmlDrawer::InitNewLine(CPoint & pt, BOOL bCalc)
 		m_hline.nHeightLine = 0;
 		m_hline.nWidthLine = 0;
 		m_hline.nHorzAlign = m_defStyle.nHorzAlign;
+		m_hline.nSpaceChars = 0;
 		m_arrHtmlLine.push_back(m_hline);
 	}
-	else
+	else if (MODE_DRAW == m_nNumPass)
 	{
 		//ENG: Gets the data of the first line and converts the percent value to the real width
 		//RUS: Получаем данные первой строки и преобразуем процентную ширину в реальную
 		m_hline = m_arrHtmlLine [m_nCurLine];
+		int nRealWidth = m_rcOutput.right - m_rcOutput.left;
+		
 		if (m_hline.nAddPercentWidth)
-			m_hline.nWidthLine += ::MulDiv(m_rect.Width(), m_hline.nAddPercentWidth, 100);
-		HorizontalAlign(pt);
-	} //if
-}
+			m_hline.nWidthLine += ::MulDiv(nRealWidth, m_hline.nAddPercentWidth, 100);
 
-void CPPHtmlDrawer::Tag_Tabulation(CPoint & ptCur, int nNum)
+		if ((ALIGN_JUSTIFY == m_hline.nHorzAlign) && m_hline.bWrappedLine)
+			::SetTextJustification(m_hDC, nRealWidth - m_hline.nWidthLine, m_hline.nSpaceChars);
+		else
+			::SetTextJustification(m_hDC, 0, 0);
+		
+		//ENG: Horizontal coordinate of the begin output
+		//RUS: Координата начала вывода с учетом выравнивания
+		switch (m_hline.nHorzAlign)
+		{
+		case ALIGN_CENTER:
+			x = m_rcOutput.left + (nRealWidth - m_hline.nWidthLine) / 2;
+			break;
+		case ALIGN_RIGHT:
+			x = m_rcOutput.left + nRealWidth - m_hline.nWidthLine;
+			break;
+		} //switch
+	} //if
+	return x;
+} //End of InitNewLine
+
+void CPPHtmlDrawer::Tag_Tabulation(LPPOINT lpPoint, int nNum)
 {
 	//Tabulation
 	if (!nNum)
 		nNum = 1;
-	CPoint pt = m_rect.TopLeft();
-	int nWidth = (ptCur.x - pt.x) % 32;
+	int nWidth = (lpPoint->x - m_rcOutput.left) % m_nTabSize;
 	if (nWidth)
 	{
 		//aligns with tab
-		ptCur.x += 32 - nWidth;
+		lpPoint->x += m_nTabSize - nWidth;
 		nNum --;
 	} //if
-	ptCur.x += (nNum * 32);
+	lpPoint->x += (nNum * m_nTabSize);
 } //End Tag_Tabulation
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-void CPPHtmlDrawer::Draw(CDC * pDC, CString & strHtml, CPoint ptTopLeft)
+void CPPHtmlDrawer::Draw(HDC hDC, LPCTSTR lpszHtml, LPPOINT lpPoint)
 {
-	CSize size = PrepareOutput(pDC, strHtml);
+	//ENG: Preparing an output text
+	//RUS: Подготовка текста к выводу
+	SIZE size;
+	PrepareOutput(hDC, lpszHtml, &size);
+
+	//ENG: If output was disabled
+	//RUS: Если вывод запрещен
 	if (!size.cx || !size.cy)
 		return;
 	
-	CRect rect;
-	rect.left = ptTopLeft.x;
-	rect.top = ptTopLeft.y;
+	//ENG: Calculates an output area
+	//RUS: Подсчет области вывода
+	RECT rect;
+	rect.left = lpPoint->x;
+	rect.top = lpPoint->y;
 	rect.right = rect.left + size.cx;
 	rect.bottom = rect.top + size.cy;
 	
-	DrawPreparedOutput(pDC, strHtml, rect);
+	//ENG: Output a prepared text
+	//RUS: Вывод подготовленного текста
+	DrawPreparedOutput(hDC, &rect);
 } //End Draw
 
-CSize CPPHtmlDrawer::PrepareOutput(CDC * pDC, CString & strHtml)
+void CPPHtmlDrawer::PrepareOutput(HDC hDC, LPCTSTR lpszHtml, LPSIZE lpSize)
 {
-	CRect rect(0, 0, 0, 0);
-	CSize sz = DrawHtml(pDC, strHtml, rect, TRUE);
-	sz += CSize(1, 1);
-	return sz;
+	//ENG: Copy initial parameters
+	//RUS: Копирование начальных параметров
+	m_hDC = hDC;
+
+	//ENG: Reset text justification
+	::SetTextJustification(m_hDC, 0, 0);
+
+	RECT rect;
+	rect.left = rect.right = rect.top = rect.bottom = 0;
+//	if (m_bIsTextWrapEnabled)
+		rect.right = m_nMaxWidth;
+	m_csHtmlText = lpszHtml;
+	ReplaceSpecChars();
+	lpSize->cx = lpSize->cy = 0;
+	
+	//ENG: If prepared text wasn't empty then return
+	//RUS: Если подготовленный текст не пустой, то выход
+	if (!m_csHtmlText.IsEmpty())
+	{
+		//ENG: Sets a prepare mode
+		//RUS: Устанавливаем режим подготовки
+		m_nNumPass = MODE_FIRSTPASS;
+
+		m_arrTables.clear();
+
+		//ENG: Prepares to real output
+		//RUS: Подготовка к реальному выводу
+		DrawHtml(lpSize, &rect);
+
+		if (!lpSize->cx && !lpSize->cy)
+			m_csHtmlText.Empty();
+
+		//Cuts a tooltip if his real width more than m_nMaxWidth
+		if (m_nMaxWidth/*m_bIsTextWrapEnabled*/ && (lpSize->cx > m_nMaxWidth))
+			lpSize->cx = m_nMaxWidth;
+		
+		lpSize->cx ++;
+		lpSize->cy ++;
+	} //if
 } //End PrepareOutput
 
-void CPPHtmlDrawer::DrawPreparedOutput(CDC * pDC, CString & strHtml, CRect rect)
+////////////////////////////////////////////////////////////////////
+// CPPHtmlDrawer::DrawPreparedOutput()
+//		Draw a string prepared by PrepareOutput method.
+//------------------------------------------------------------------
+// Parameters:
+//		hDC				- Device Context to drawing 
+//		lpRect			- Pointer to RECT structure contains a bounding rectangle of
+//						  drawing area.
+////////////////////////////////////////////////////////////////////
+void CPPHtmlDrawer::DrawPreparedOutput(HDC hDC, LPCRECT lpRect)
 {
-	CRect rcOut = rect;
-	rcOut.DeflateRect(0, 0, 1, 1);
-	DrawHtml(pDC, strHtml, rcOut, FALSE);
-} //End DrawPreparedOutput
+	//ENG: If prepared text was empty then return
+	//RUS: Если подготовленный текст пустой, то выход
+	if (m_csHtmlText.IsEmpty())
+		return;
+
+	//ENG: Copy initial parameters
+	//RUS: Копирование начальных параметров
+	m_hDC = hDC;
+	SIZE size = {0, 0};
+
+	//ENG: Sets a output mode
+	//RUS: Устанавливаем режим вывода
+	m_nNumPass = MODE_DRAW;
+
+	RECT rect = *lpRect;
+//	if (((rect.right - rect.left) > m_nMaxWidth) && m_bIsTextWrapEnabled)
+//		rect.right = rect.left + m_nMaxWidth;
+
+	//ENG: Real output the prepared string
+	//RUS: Вывод подготовленной строки
+	DrawHtml(&size, &rect);
+} //End of DrawPreparedOutput
 
 // The following appeared in Paul DiLascia's Jan 1998 MSJ articles.
 // It loads a "hand" cursor from the winhlp32.exe module
@@ -2326,13 +3094,13 @@ void CPPHtmlDrawer::SetDefaultCursor()
 	if (m_hLinkCursor == NULL)                // No cursor handle - load our own
     {
 #ifdef IDC_HAND
-		//This code was added from Zorglab's comments to Hyperlink control from Chris Maunder
+		//This code was added from Zorglab's comments to hyperlink control from Chris Maunder
 		m_hLinkCursor = ::LoadCursor(NULL, IDC_HAND); // Load Windows' hand cursor
 		if (m_hLinkCursor != NULL)                    // if not available, load it from winhlp32.exe
 			return;
-#endif
+#endif //IDC_HAND
 		// Get the windows directory
-        CString strWndDir;
+        CPPString strWndDir;
         GetWindowsDirectory(strWndDir.GetBuffer(MAX_PATH), MAX_PATH);
         strWndDir.ReleaseBuffer();
 
@@ -2373,7 +3141,7 @@ HCURSOR CPPHtmlDrawer::GetHyperlinkCursor() const
 } //End GetHyperlinkCursor
 
 /////////////////////////////////////////////////////////////////////
-// CPPHtmlDrawer::SetNotify
+// CPPHtmlDrawer::SetCallbackHyperlink
 // This function sets or removes the notification messages from the control before display.
 //
 // Parameters:
@@ -2383,7 +3151,7 @@ HCURSOR CPPHtmlDrawer::GetHyperlinkCursor() const
 ///////////////////////////////////////////////////////////////////////
 void CPPHtmlDrawer::SetCallbackHyperlink(HWND hWnd, UINT nMessage, LPARAM lParam /* = 0 */)
 {
-	TRACE(_T("CPPHtmlDrawer::SetCallbackHyperlink()\n"));
+//	TRACE(_T("CPPHtmlDrawer::SetCallbackHyperlink()\n"));
 
 	m_csCallbackLink.hWnd = hWnd;
 	if (NULL == hWnd)
@@ -2396,11 +3164,11 @@ void CPPHtmlDrawer::SetCallbackHyperlink(HWND hWnd, UINT nMessage, LPARAM lParam
 		m_csCallbackLink.nMessage = nMessage;
 		m_csCallbackLink.lParam = lParam;
 	} //if
-} //End SetNotify
+} //End SetCallbackHyperlink
 
 void CPPHtmlDrawer::SetCallbackRepaint(HWND hWnd, UINT nMessage, LPARAM lParam /* = 0 */)
 {
-	TRACE(_T("CPPHtmlDrawer::SetCallbackRepaint()\n"));
+//	TRACE(_T("CPPHtmlDrawer::SetCallbackRepaint()\n"));
 
 	m_csCallbackRepaint.hWnd = hWnd;
 	if (NULL == hWnd)
@@ -2456,23 +3224,23 @@ void CPPHtmlDrawer::SetImageList(UINT nIdBitmap, int cx, int cy, int nCount, COL
 /////////////////////////////////////////////////////////////////////////////
 void CPPHtmlDrawer::SetImageList(HBITMAP hBitmap, int cx, int cy, int nCount, COLORREF crMask /* = RGB(255, 0, 255) */)
 {
-	if (NULL == hBitmap)
-	{
-		if (NULL != m_ImageList.GetSafeHandle())
-		{
-			m_ImageList.DeleteImageList();
-		} //if
-		return;
-	} //if
-	
-	if (NULL == m_ImageList.GetSafeHandle())
-		m_ImageList.Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 1);
-	else 
-		m_ImageList.DeleteImageList();
+	//ENG: Removes previously image list
+	//RUS: Удаляем предыдущий список изображений
+	if (NULL != m_hImageList)
+		::DeleteObject(m_hImageList);
 
-	m_ImageList.Add(CBitmap::FromHandle(hBitmap), crMask);
+	//ENG: If don't need to create a new image list
+	//RUS: Если не нужно создавать новый список изображений
+	if (NULL == hBitmap)
+		return;
+
+	// Ensure that the common control DLL is loaded. 
+	InitCommonControls(); 
 	
-	m_szImageList = CSize(cx, cy);
+	m_hImageList = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, nCount, 1);
+	ImageList_AddMasked(m_hImageList, hBitmap, crMask);
+	m_szImageList.cx = cx;
+	m_szImageList.cy = cy;
 } //End SetImageList
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2524,104 +3292,6 @@ void CPPHtmlDrawer::SetResourceDll(HINSTANCE hInstDll /* = NULL */)
 		m_hInstDll = hInstDll;
 } //End SetResourceDll
 
-/////////////////////////////////////////////////////
-// Gets dimensions of the table
-//---------------------------------------------------
-//  In: str - the string contains a HTML table
-// Return: CSize::cx - number of the columns
-//         CSize::cy - number of the row
-/////////////////////////////////////////////////////
-CSize CPPHtmlDrawer::GetTableDimensions(CString str)
-{
-	CSize szTable(0, 0);
-	CString strTag = _T("");
-	CString strName = _T("");
-	CString strProperty = _T("");
-	CString strParameter = _T("");
-	int nIndex = 0;
-	int nBegin = 0;
-	int nCols = 0;
-	int nRows = 0;
-	int nTable = 0;
-	BOOL bEndOfTable = FALSE;
-
-	SearchBodyOfTag(str, strTag, nIndex);
-
-	while (!bEndOfTable && (nIndex < str.GetLength()))
-	{
-		SearchBodyOfTag(str, strTag, nIndex);
-		nBegin = 0;
-		strName = GetNameOfTag(strTag, nBegin);
-		if (strName == _T("tr"))
-		{
-			//New row
-			nCols = 0;
-			szTable.cy ++;
-		}
-		else if (strName == _T("/tr"))
-		{
-			//End of the row
-			szTable.cx = max(szTable.cx, (long)nCols);
-		}
-		else if (strName == _T("td"))
-		{
-			//New cell
-			BOOL bColspan = FALSE;
-			while (nBegin < strTag.GetLength())
-			{
-				strProperty = SearchPropertyOfTag(strTag, nBegin);
-				if (strProperty == _T("colspan"))
-				{
-					strParameter = GetParameterString(strTag, nBegin, _T('='), _T(" "));
-					nCols += GetLengthUnit(strParameter, 0);
-					nBegin = strTag.GetLength();
-					bColspan = TRUE;
-				} //if
-			} //while
-			if (!bColspan)
-				nCols ++;
-		}
-		else if (strName == _T("table"))
-		{
-			//Nested table(s)
-			SearchEndOfTable(str, nIndex);
-		}
-		else if (strName == _T("/table"))
-		{
-			//End of the table
-			bEndOfTable = TRUE;
-		} //if
-	} //while
-	return szTable;
-} //End GetTableDimensions
-
-/////////////////////////////////////////////////////
-// Searching the end of the table
-//---------------------------------------------------
-//  In:    str - the string contains a HTML table
-//		nIndex - index of the begin char of the <table> tag
-// Out: nIndex - index of the first char after end of the table (</table> tag)
-/////////////////////////////////////////////////////
-void CPPHtmlDrawer::SearchEndOfTable(CString & str, int & nIndex)
-{
-	CString strTag = _T("");
-	CString strName = _T("");
-	int nBegin;
-	int nTable;
-	SearchBodyOfTag(str, strTag, nIndex); //Passes first <table> tag
-	//Nested table(s)
-	nTable = 1;
-	while (nTable && (nIndex < str.GetLength()))
-	{
-		SearchBodyOfTag(str, strTag, nIndex);
-		nBegin = 0;
-		strName = GetNameOfTag(strTag, nBegin);
-		if (strName == _T("table"))
-			nTable ++;
-		else if (strName == _T("/table"))
-			nTable --;
-	} //while
-} //End SearchEndOfTable
 
 CPPDrawManager * CPPHtmlDrawer::GetDrawManager()
 {
@@ -2642,7 +3312,7 @@ BOOL CPPHtmlDrawer::IsImageWithShadow(_STRUCT_IMAGE & si)
 // Map of the styles
 void CPPHtmlDrawer::SetDefaultCssStyles()
 {
-	CString str = _T("");
+	CPPString str = _T("");
 	str += _T("body {font-size: 10pt; color:black; font-family:Verdana}\r\n");
 	str += _T("p {font-size: 10pt; color:black; font-family:Verdana; font-weight:bold}\r\n");
 	str += _T("h1 {font-size: 14pt; color:black; font-family:Verdana; font-weight:bold}\r\n");
@@ -2660,13 +3330,15 @@ void CPPHtmlDrawer::SetDefaultCssStyles()
 	str += _T("big {font-size:125%}\r\n");
 	str += _T("small {font-size:75%}\r\n");
 	str += _T(".cpp-comment {color:green; font-style:italic}\r\n");
+//	str += _T("td {text-align:center; color:#ff0000; vertical-align:middle}\r\n");
+//	str += _T("table {padding:2; border-width:1; color:red}\r\n");
 
 	SetCssStyles(str);
 } //End SetDefaultCssStyle
 
 void CPPHtmlDrawer::SetCssStyles(DWORD dwIdCssString, LPCTSTR lpszPathDll /* = NULL */)
 {
-	CString str;
+	CPPString str;
 	if (NULL == lpszPathDll)
 		str = GetStringFromResource(dwIdCssString);
 	else
@@ -2684,11 +3356,11 @@ void CPPHtmlDrawer::SetCssStyles(LPCTSTR lpszCssString /* = NULL */)
 	}
 	else
 	{
-		CString str = (CString)lpszCssString;
+		CPPString str = (CPPString)lpszCssString;
 		m_strCssStyles = str;
 		
-		CString strName;
-		CString strProperty;
+		CPPString strName;
+		CPPString strProperty;
 		
 		int nBegin;
 		TCHAR chSymbol;
@@ -2734,7 +3406,7 @@ LPCTSTR CPPHtmlDrawer::GetCssStyles()
 
 LPCTSTR CPPHtmlDrawer::GetTextStyle(LPCTSTR lpszStyleName)
 {
-	CString name = (CString)lpszStyleName;
+	CPPString name = (CPPString)lpszStyleName;
 	name.MakeLower();
 	iter_mapStyles iterMap = m_mapStyles.find(name);
 	
@@ -2747,25 +3419,25 @@ LPCTSTR CPPHtmlDrawer::GetTextStyle(LPCTSTR lpszStyleName)
 
 void CPPHtmlDrawer::SetTextStyle(LPCTSTR lpszStyleName, LPCTSTR lpszStyleValue)
 {
-	CString name = (CString)lpszStyleName;
+	CPPString name = (CPPString)lpszStyleName;
 	name.MakeLower();
 	iter_mapStyles iterMap = m_mapStyles.find(name);
 	
 	if (iterMap != m_mapStyles.end())
 	{
 		//Modifies 
-		iterMap->second = (CString)lpszStyleValue;
+		iterMap->second = (CPPString)lpszStyleValue;
 	}
 	else
 	{
 		//Add new
-		m_mapStyles.insert(mapStyles::value_type(name, (CString)lpszStyleValue));
+		m_mapStyles.insert(std::make_pair(name, (CPPString)lpszStyleValue));
 	} //if
 } //End SetTextStyle
 
 void CPPHtmlDrawer::RemoveTextStyle(LPCTSTR lpszStyleName)
 {
-	CString name = (CString)lpszStyleName;
+	CPPString name = (CPPString)lpszStyleName;
 	name.MakeLower();
 	iter_mapStyles iterMap = m_mapStyles.find(name);
 	
@@ -2779,20 +3451,20 @@ void CPPHtmlDrawer::AddToTextStyle(LPCTSTR lpszStyleName, LPCTSTR lpszAddStyle)
 {
 } //End AddToTextStyle
 
-void CPPHtmlDrawer::UnpackTextStyle(CString strStyle, _STRUCT_CHANGESTYLE & cs)
+void CPPHtmlDrawer::UnpackTextStyle(CPPString strStyle, _STRUCT_CHANGESTYLE & cs)
 {
 	//Gets a string
 	strStyle.MakeLower();
 	if (strStyle.IsEmpty())
 		return;
 
-	CString strName;
-	CString strParameter;
+	CPPString strName;
+	CPPString strParameter;
 
 	int nBegin;
 	TCHAR chSymbol;
 	int nIndex = 0;
-	CString str;
+	CPPString str;
 
 	while (nIndex < strStyle.GetLength())
 	{
@@ -2838,11 +3510,14 @@ void CPPHtmlDrawer::UnpackTextStyle(CString strStyle, _STRUCT_CHANGESTYLE & cs)
 				}
 				else if (strName == _T("color"))
 				{
-					cs.crText = GetStyleColor(strParameter, cs.crText);
+					if (m_bIsEnable)
+						cs.crText = GetStyleColor(strParameter, cs.crText);
+					else
+						cs.crText = GetColorByName(_T(""));
 				}
 				else if (strName == _T("background-color"))
 				{
-					if ((strParameter == _T("transparent")) && strParameter.IsEmpty())
+					if (((strParameter == _T("transparent")) && strParameter.IsEmpty()) || !m_bIsEnable)
 					{
 						cs.nBkMode = TRANSPARENT;
 					}
@@ -2862,55 +3537,40 @@ void CPPHtmlDrawer::UnpackTextStyle(CString strStyle, _STRUCT_CHANGESTYLE & cs)
 				}
 				else if (strName == _T("border-color"))
 				{
-					cs.crBorderLight = GetStyleColor(strParameter, cs.crBorderLight);
+					if (m_bIsEnable)
+						cs.crBorderLight = GetStyleColor(strParameter, cs.crBorderLight);
+					else
+						cs.crBorderLight = GetColorByName(_T(""));
 					cs.crBorderDark = cs.crBorderLight;
 				}
 				else if ((strName == _T("border-width")) || (strName == _T("size")))
 				{
 					cs.nBorderWidth = StyleBorderWidth(strParameter, cs.nBorderWidth);
+					if (!cs.nBorderWidth)
+						cs.nBorderStyle = CPPDrawManager::PEN_NULL;
+					else if (CPPDrawManager::PEN_NULL == cs.nBorderStyle)
+						cs.nBorderStyle = CPPDrawManager::PEN_SOLID;
 				}
 				else if (strName == _T("border-style"))
 				{
 					cs.nBorderStyle = StyleBorder(strParameter, cs.nBorderStyle);
+					if ((CPPDrawManager::PEN_NULL != cs.nBorderStyle) && !cs.nBorderWidth)
+						cs.nBorderWidth = 1;
 				}
-				else if (strName == _T("margin-left"))
+				else if (strName == _T("margin"))
 				{
-					cs.nMarginLeft = GetLengthUnit(strParameter, cs.nMarginLeft);
+					cs.nMargin = GetLengthUnit(strParameter, cs.nMargin);
 				}
-				else if (strName == _T("margin-top"))
+				else if (strName == _T("padding"))
 				{
-					cs.nMarginTop = GetLengthUnit(strParameter, cs.nMarginTop);
-				}
-				else if (strName == _T("margin-right"))
-				{
-					cs.nMarginRight = GetLengthUnit(strParameter, cs.nMarginRight);
-				}
-				else if (strName == _T("margin-bottom"))
-				{
-					cs.nMarginBottom = GetLengthUnit(strParameter, cs.nMarginBottom);
-				}
-				else if (strName == _T("padding-left"))
-				{
-					cs.nPaddingLeft = GetLengthUnit(strParameter, cs.nPaddingLeft);
-				}
-				else if (strName == _T("padding-top"))
-				{
-					cs.nPaddingTop = GetLengthUnit(strParameter, cs.nPaddingTop);
-				}
-				else if (strName == _T("padding-right"))
-				{
-					cs.nPaddingRight = GetLengthUnit(strParameter, cs.nPaddingRight);
-				}
-				else if (strName == _T("padding-bottom"))
-				{
-					cs.nPaddingBottom = GetLengthUnit(strParameter, cs.nPaddingBottom);
+					cs.nPadding = GetLengthUnit(strParameter, cs.nPadding);
 				} //if
 			} //if
 		} //if
 	} //while
 } //End UnpackTextStyle
 
-BOOL CPPHtmlDrawer::GetStyleFontStyle(CString & str, BOOL bDefault)
+BOOL CPPHtmlDrawer::GetStyleFontStyle(CPPString & str, BOOL bDefault)
 {
 	if ((str == _T("normal")) || str.IsEmpty())
 	{
@@ -2924,7 +3584,7 @@ BOOL CPPHtmlDrawer::GetStyleFontStyle(CString & str, BOOL bDefault)
 	return bDefault;
 } //End GetStyleFontStyle
 
-int CPPHtmlDrawer::GetStyleFontWeight(CString & str, int nDefault)
+int CPPHtmlDrawer::GetStyleFontWeight(CPPString & str, int nDefault)
 {
 	if ((str == _T("normal")) || str.IsEmpty())
 	{
@@ -2950,7 +3610,7 @@ int CPPHtmlDrawer::GetStyleFontWeight(CString & str, int nDefault)
 	return nDefault;
 } //End GetStyleFontWeight
 
-int CPPHtmlDrawer::GetStyleHorzAlign(CString & str, int nDefault)
+int CPPHtmlDrawer::GetStyleHorzAlign(CPPString & str, int nDefault)
 {
 	if ((str == _T("left")) || str.IsEmpty())
 	{
@@ -2968,7 +3628,7 @@ int CPPHtmlDrawer::GetStyleHorzAlign(CString & str, int nDefault)
 	return nDefault;
 } //End GetStyleHorzAlign
 
-int CPPHtmlDrawer::GetStyleVertAlign(CString & str, int nDefault)
+int CPPHtmlDrawer::GetStyleVertAlign(CPPString & str, int nDefault)
 {
 	if ((str == _T("baseline")) || str.IsEmpty())
 	{
@@ -2990,7 +3650,7 @@ int CPPHtmlDrawer::GetStyleVertAlign(CString & str, int nDefault)
 	return nDefault;
 } //End GetStyleVertAlign
 
-int CPPHtmlDrawer::GetStyleTextTransform(CString & str, int nDefault)
+int CPPHtmlDrawer::GetStyleTextTransform(CPPString & str, int nDefault)
 {
 	if ((str == _T("none")) || str.IsEmpty())
 	{
@@ -3012,15 +3672,18 @@ int CPPHtmlDrawer::GetStyleTextTransform(CString & str, int nDefault)
 	return nDefault;
 }
 
-COLORREF CPPHtmlDrawer::GetStyleColor(CString & str, COLORREF crDefault)
+COLORREF CPPHtmlDrawer::GetStyleColor(CPPString & str, COLORREF crDefault)
 {
+//	if (!m_bIsEnable)
+//		return GetColorByName("");
+	
 	if (!str.IsEmpty())
 	{
 		if (str.GetAt(0) == _T('#'))
 		{
 			if (str.GetLength() == 7)
 			{
-				CString strHex = _T("0x");
+				CPPString strHex = _T("0x");
 				strHex += str.Mid(5, 2);
 				strHex += str.Mid(3, 2);
 				strHex += str.Mid(1, 2);
@@ -3036,7 +3699,7 @@ COLORREF CPPHtmlDrawer::GetStyleColor(CString & str, COLORREF crDefault)
 	return crDefault;
 } //End GetStyleColor
 
-int CPPHtmlDrawer::GetLengthUnit(CString & str, int nDefault, BOOL bFont /* = FALSE */)
+int CPPHtmlDrawer::GetLengthUnit(CPPString & str, int nDefault, BOOL bFont /* = FALSE */)
 {
 	if (str.IsEmpty())
 		return nDefault;
@@ -3054,15 +3717,25 @@ int CPPHtmlDrawer::GetLengthUnit(CString & str, int nDefault, BOOL bFont /* = FA
 	
 	if (0 != nSign) str = str.Right(str.GetLength() - 1);
 	
-	int nValue = _ttoi(str.Left(str.GetLength() - 2));
-	CString strUnit = str.Right(2);
+	//ENG: This code fragment fixed by Reinhard Steiner(2004/10/20).
+	int nValue = _ttoi(str);
+	CPPString strUnit;
+	if(str.GetLength() >= 2)
+		strUnit = str.Right(2);
+
 	if (strUnit == _T("px"))		nDefault = nValue;
-	else if (strUnit == _T("ex"))	nDefault = nValue * m_pDC->GetTextExtent(_T("x")).cy;
+	else if (strUnit == _T("ex"))
+	{
+		SIZE szText;
+		CPPString strText = _T("x");
+		::GetTextExtentPoint32(m_hDC, strText, strText.GetLength(), &szText);
+		nDefault = nValue * szText.cy;
+	}
 	else if (strUnit == _T("em"))	nDefault = nValue * m_tm.tmHeight;
 	else
 	{
 		//Gets pixel in inch
-		nValue *= m_pDC->GetDeviceCaps(LOGPIXELSY);
+		nValue *= ::GetDeviceCaps(m_hDC, LOGPIXELSY);
 		if (strUnit == _T("in"))		nDefault = nValue;
 		else if (strUnit == _T("cm"))	nDefault = (int)((double)nValue / 2.54);
 		else if (strUnit == _T("mm"))	nDefault = (int)((double)nValue / 25.4);
@@ -3079,6 +3752,8 @@ int CPPHtmlDrawer::GetLengthUnit(CString & str, int nDefault, BOOL bFont /* = FA
 			else
 			{
 				nDefault = nValue;
+				if (nSign == -1)				//+++hd
+					nDefault = -nDefault;
 			} //if
 		} //if
 	} //if
@@ -3086,14 +3761,14 @@ int CPPHtmlDrawer::GetLengthUnit(CString & str, int nDefault, BOOL bFont /* = FA
 	return nDefault;
 } //End GetLengthUnit
 
-void CPPHtmlDrawer::StyleTextDecoration(CString & str, _STRUCT_CHANGESTYLE & cs)
+void CPPHtmlDrawer::StyleTextDecoration(CPPString & str, _STRUCT_CHANGESTYLE & cs)
 {
 	if (str.IsEmpty())
 		str = _T("none");
 	
 	int nBegin = 0;
 	int nEnd = 0;
-	CString strTemp;
+	CPPString strTemp;
 	while (nBegin < str.GetLength())
 	{
 		if (GetIndexNextAlphaNum(str, nBegin))
@@ -3124,7 +3799,7 @@ void CPPHtmlDrawer::StyleTextDecoration(CString & str, _STRUCT_CHANGESTYLE & cs)
 	} //while
 } //End StyleTextDecoration
 
-int CPPHtmlDrawer::StyleBorderWidth(CString & str, int nDefault)
+int CPPHtmlDrawer::StyleBorderWidth(CPPString & str, int nDefault)
 {
 	if (str ==_T("thin"))		nDefault = ::MulDiv(75, nDefault, 100);
 	else if (str ==_T("thick"))	nDefault = ::MulDiv(125, nDefault, 100);
@@ -3133,7 +3808,7 @@ int CPPHtmlDrawer::StyleBorderWidth(CString & str, int nDefault)
 	return nDefault;
 } //End StyleBorderWidth
 
-int CPPHtmlDrawer::StyleBorder(CString & str, int nDefault)
+int CPPHtmlDrawer::StyleBorder(CPPString & str, int nDefault)
 {
 	if ((str == _T("none")) || str.IsEmpty()) nDefault = CPPDrawManager::PEN_NULL;
 	else if (str == _T("solid")) nDefault = CPPDrawManager::PEN_SOLID;
@@ -3182,16 +3857,10 @@ void CPPHtmlDrawer::SetDefaultStyles(_STRUCT_CHANGESTYLE & cs)
 	m_defStyle.nTextTransform = TEXT_TRANSFORM_NONE;//Transformation of the text (NONE, UPPERCASE, LOWERCASE, CAPITALIZE)
 	
 	//Margins
-	m_defStyle.nMarginLeft = 2;
-	m_defStyle.nMarginRight = 2;
-	m_defStyle.nMarginTop = 2;
-	m_defStyle.nMarginBottom = 2;
+	m_defStyle.nMargin = 2;
 	
 	//Padding
-	m_defStyle.nPaddingLeft = 0;
-	m_defStyle.nPaddingRight = 0;
-	m_defStyle.nPaddingTop = 0;
-	m_defStyle.nPaddingBottom = 0;
+	m_defStyle.nPadding = 0;
 	
 	//Hyperlink
 	m_defStyle.nTypeLink = LINK_NONE;		//The type of the link (NONE, HREF, MESSAGE)
@@ -3208,57 +3877,132 @@ void CPPHtmlDrawer::SetDefaultStyles(_STRUCT_CHANGESTYLE & cs)
 //         strTag - a string contained the tag's text if was found
 // Return: A string before found tag's text 
 /////////////////////////////////////////////////////////////////
-CString CPPHtmlDrawer::SearchBodyOfTag(CString & str, CString & strTag, int & nIndex)
+CPPString CPPHtmlDrawer::SearchNextTag(CPPString & str, CPPString & strTag, int & nIndex)
 {
 	int nBegin;
-	TCHAR chFound;
-	CString sText = _T("");
+	CPPString sText = _T("");
 	strTag.Empty();
 
 	while (nIndex < str.GetLength())
 	{
 		nBegin = nIndex;
 		//Searching a chars of the begin tag
-		chFound = GetIndexNextChars(str, nIndex, _T("<\n\r\t"));
+		nIndex = str.Find(_T("<"), nIndex);
+		if (nIndex < 0)
+			nIndex = str.GetLength(); //A tag wasn't found
 		sText += str.Mid(nBegin, nIndex - nBegin);
-		switch (chFound)
+		if (nIndex < str.GetLength())
 		{
-		case 0:
-			//End of the searching string
-			return sText; 
-		case _T('\n'):
-		case _T('\r'):
-		case _T('\t'):
-			nIndex ++; //Jump to the char after the tag
-			if (m_bEnableEscapeSequences)
-			{
-				//If escape sequnces was enabled then tag was found
-				strTag += chFound;
-				return sText;
-			}
-			break;
-		case _T('<'):
 			//May be it is a begin of the tag?
 			if ((nIndex < (str.GetLength() - 1)) && (_T('<') != str.GetAt(nIndex + 1)))
 			{
 				//Yes of cause!!!
-				nIndex++;
-				nBegin = nIndex;
-				//Searching end of the tag
-				GetIndexNextChars(str, nIndex, _T(">"));
-				//Retrive string of the tag
-				strTag = str.Mid(nBegin, nIndex - nBegin);
-				nIndex ++; //Jump to the char after the tag
+				strTag = GetTagBody(str, nIndex);
 				return sText;
 			}
 			//No, it is a char '<'
-			sText += chFound;
+			sText += _T("<");
 			nIndex += 2;
 			break;
-		} //switch
+		} //if
 	} //while
 	return sText;
-} //End SearchBodyOfTag
+} //End SearchNextTag
+
+/////////////////////////////////////////////////////////////////
+// CPPHtmlDrawer::GetTagBody
+//	Gets a name of tag with a parameters
+//---------------------------------------------------------------
+// Parameters:
+//	[in]
+//		str		-	a string with html text
+//		nIndex	-   an index of the begin of the tag. 
+//	[out]
+//		nIndex  -	an index of char after the tag
+//---------------------------------------------------------------
+// Return values:
+//	A tag's name .
+/////////////////////////////////////////////////////////////////
+CPPString CPPHtmlDrawer::GetTagBody(CPPString & str, int & nIndex)
+{
+	CPPString sTagName = _T("");
+	//ENG: Search the tag's end 
+	//RUS: Ищем окончание тэга
+	int nEndOfTag = str.Find(_T('>'), nIndex);
+	//ENG: The tag's end was found. Passes a tag's begin char ('<')
+	//RUS: Конец тэга найденю Пропускаем символ начала тэга
+	nIndex++;
+	if (nEndOfTag > nIndex)
+	{
+		//ENG: Gets a full body of tag
+		//RUS: Получаем полную строку тэга
+		sTagName = str.Mid(nIndex, nEndOfTag - nIndex);
+		//ENG: Jump to next char after the tag
+		//RUS: Перемещаемся на следующий за тэгом символ
+		nIndex = nEndOfTag + 1;
+	} //if
+	return sTagName;
+} //End of GetTagBody
+
+/////////////////////////////////////////////////////////////////
+// Split a tag to his name and properties
+//---------------------------------------------------------------
+// Parameters:
+//     In: sTag    - a string with tag's text
+//    Out: sTag	   - a tag's name
+// Return: A property's string 
+/////////////////////////////////////////////////////////////////
+CPPString CPPHtmlDrawer::SplitTag(CPPString & sTag)
+{
+	CPPString sParam(_T(""));
+	int nIndex = 0;
+	TCHAR tch = GetIndexNextChars(sTag, nIndex, _T(" ="));
+	if (tch != _T('\0'))
+	{
+		//ENG: The separator was found. Splits a tag's body to his name and his parameteres 
+		//RUS: Разделитель найден. Разделяем тело тэга на имя и параметры
+		sParam = sTag.Mid(nIndex);
+		sTag = sTag.Left(nIndex);
+		sParam.TrimLeft(_T(' '));
+	} //if
+	return sParam;
+} //End of SplitTag
+
+CPPString CPPHtmlDrawer::GetNextProperty(CPPString & str, int & nIndex, CPPString & sProp)
+{
+	CPPString sValue(_T(""));
+	sProp.Empty();
+	
+	//Passes the spaces before a property
+	if (GetIndexNextAlphaNum(str, nIndex))
+	{
+		//The begin of the property was found
+		int nBegin = nIndex;
+		//Searching end of the property
+		GetIndexNextChars(str, nIndex, _T(" ="));
+		//Gets a property's string
+		sProp = str.Mid(nBegin, nIndex - nBegin);
+		TCHAR chFound = GetIndexNextNoChars(str, nIndex, _T(" "));
+		if (_T('=') == chFound)
+		{
+			chFound = GetIndexNextNoChars(str, nIndex, _T(" ="));
+			if ((_T('\'') == chFound) || (_T('\"') == chFound))
+			{
+				nIndex++;
+			}
+			else
+			{
+				chFound = _T(' ');
+			} //if
+			sValue += chFound;
+			nBegin = nIndex;
+			GetIndexNextChars(str, nIndex, sValue);
+			sValue = str.Mid(nBegin, nIndex - nBegin);
+			nIndex ++;
+		} //if
+	} //if
+	return sValue;
+} //End of GetNextProperty
 
 /////////////////////////////////////////////////////////////////
 // Searching the next property of the tag
@@ -3269,9 +4013,9 @@ CString CPPHtmlDrawer::SearchBodyOfTag(CString & str, CString & strTag, int & nI
 //    Out: nIndex - an index of the char in the string after found tag's text
 // Return: A property's string 
 /////////////////////////////////////////////////////////////////
-CString CPPHtmlDrawer::SearchPropertyOfTag(CString & str, int & nIndex)
+CPPString CPPHtmlDrawer::SearchPropertyOfTag(CPPString & str, int & nIndex)
 {
-	CString sText = _T("");
+	CPPString sText = _T("");
 	
 	//Passes the spaces before a property
 	if (GetIndexNextAlphaNum(str, nIndex))
@@ -3297,18 +4041,26 @@ CString CPPHtmlDrawer::SearchPropertyOfTag(CString & str, int & nIndex)
 //---------------------------------------------------------------
 // Example: (strTag = "table") or (strTag = "/table")
 /////////////////////////////////////////////////////////////////
-BOOL CPPHtmlDrawer::SearchTag(CString & str, int & nIndex, CString strTag)
+BOOL CPPHtmlDrawer::SearchTag(CPPString & str, int & nIndex, CPPString strTag)
 {
 	strTag = _T("<") + strTag;
-	int nBegin = nIndex;
-	nIndex = str.Find(strTag, nBegin);
-	if (nIndex < 0)
+	while (nIndex < str.GetLength())
 	{
-		nIndex = str.GetLength();
-		return FALSE;
+		nIndex = str.Find(strTag, nIndex);
+		if (nIndex < 0)
+			nIndex = str.GetLength();
+		else
+		{
+			if (nIndex > 0)
+			{
+				if (str.GetAt(nIndex - 1) != _T('<'))
+					return TRUE;
+				nIndex += 2;
+			}
+			else return TRUE;
+		} //if
 	}
-
-	return TRUE;
+	return FALSE;
 } //End SearchTag
 
 /////////////////////////////////////////////////////////////////
@@ -3320,7 +4072,7 @@ BOOL CPPHtmlDrawer::SearchTag(CString & str, int & nIndex, CString strTag)
 //    Out: nIndex - an index of the first found char
 // Return: TRUE if specified char was found 
 /////////////////////////////////////////////////////////////////
-BOOL CPPHtmlDrawer::GetIndexNextAlphaNum(CString & str, int & nIndex, BOOL bArithmetic /* = FALSE */)
+BOOL CPPHtmlDrawer::GetIndexNextAlphaNum(CPPString & str, int & nIndex, BOOL bArithmetic /* = FALSE */)
 {
 	TCHAR ch;
 	for (; nIndex < str.GetLength(); nIndex++)
@@ -3354,7 +4106,7 @@ BOOL CPPHtmlDrawer::GetIndexNextAlphaNum(CString & str, int & nIndex, BOOL bArit
 //    Out: nIndex   - an index of the first found char
 // Return: A found char or zero if chars was not found  
 /////////////////////////////////////////////////////////////////
-TCHAR CPPHtmlDrawer::GetIndexNextChars(CString & str, int & nIndex, CString strChars)
+TCHAR CPPHtmlDrawer::GetIndexNextChars(CPPString & str, int & nIndex, CPPString strChars)
 {
 	int i;
 	for (; nIndex < str.GetLength(); nIndex++)
@@ -3378,7 +4130,7 @@ TCHAR CPPHtmlDrawer::GetIndexNextChars(CString & str, int & nIndex, CString strC
 //    Out: nIndex   - an index of the first char isn't from chars set
 // Return: A found char or zero if all chars was specified in the chars set  
 /////////////////////////////////////////////////////////////////
-TCHAR CPPHtmlDrawer::GetIndexNextNoChars(CString & str, int & nIndex, CString strChars)
+TCHAR CPPHtmlDrawer::GetIndexNextNoChars(CPPString & str, int & nIndex, CPPString strChars)
 {
 	int i;
 	BOOL bFound;
@@ -3406,7 +4158,7 @@ TCHAR CPPHtmlDrawer::GetIndexNextNoChars(CString & str, int & nIndex, CString st
 //    Out: nIndex   - an index of the begin parameter (if it exist) or the begin of the next property
 // Return: TRUE if parameter was found  
 /////////////////////////////////////////////////////////////////
-BOOL CPPHtmlDrawer::GetBeginParameter(CString & str, int & nIndex, TCHAR chSeparator /* = _T(':') */)
+BOOL CPPHtmlDrawer::GetBeginParameter(CPPString & str, int & nIndex, TCHAR chSeparator /* = _T(':') */)
 {
 	TCHAR ch;
 	for (; nIndex < str.GetLength(); nIndex++) 
@@ -3441,7 +4193,7 @@ BOOL CPPHtmlDrawer::GetBeginParameter(CString & str, int & nIndex, TCHAR chSepar
 //    Out: nIndex   - an index of the first char after the parameter
 // Return: String of the property's parameter (empty if it is not exist)  
 /////////////////////////////////////////////////////////////////
-CString CPPHtmlDrawer::GetParameterString(CString & str, int & nIndex, TCHAR chBeginParam /* = _T(':') */, CString strSeparators /* = _T(";") */)
+CPPString CPPHtmlDrawer::GetParameterString(CPPString & str, int & nIndex, TCHAR chBeginParam /* = _T(':') */, CPPString strSeparators /* = _T(";") */)
 {
 	if (GetBeginParameter(str, nIndex, chBeginParam))
 	{
@@ -3479,9 +4231,9 @@ CString CPPHtmlDrawer::GetParameterString(CString & str, int & nIndex, TCHAR chB
 //    Out: nIndex   - an index of the first char after the parameter
 // Return: Name of the tag (empty if it is not exist)  
 /////////////////////////////////////////////////////////////////
-CString CPPHtmlDrawer::GetNameOfTag(CString & str, int & nIndex)
+CPPString CPPHtmlDrawer::GetNameOfTag(CPPString & str, int & nIndex)
 {
-	CString strName = _T("");
+	CPPString strName = _T("");
 	GetIndexNextNoChars(str, nIndex, _T(" "));
 	int nBegin = nIndex;
 	GetIndexNextChars(str, nIndex, _T(" ="));
@@ -3491,104 +4243,332 @@ CString CPPHtmlDrawer::GetNameOfTag(CString & str, int & nIndex)
 	return strName;
 } //End GetNameOfTag
 
+/////////////////////////////////////////////////////
+// Gets dimensions of the table
+//---------------------------------------------------
+//  In: sTable - the string contains a HTML table
+// Return: cx - number of the columns
+//         cy - number of the row
+/////////////////////////////////////////////////////
+SIZE CPPHtmlDrawer::GetTableDimensions(CPPString & sTable)
+{
+	//ENG: A table dimensions by default
+	//RUS: Размеры таблицы по умолчанию
+	SIZE szTable = {0, 0};
+	int nIndex = 0;
+	int nCol = 0;
+	while (nIndex < sTable.GetLength())
+	{
+		//ENG: Search a begin of the row
+		//RUS: Ищем начало строки
+		if (SearchTag(sTable, nIndex, _T("tr")))
+		{
+			//ENG: Increment count of the rows
+			//RUS: Увеличиваем количество строк
+			szTable.cy++;
+
+			//ENG: Count of the columns in current row
+			//RUS: Количество колонок в текущей строке
+			nCol = 0;
+			int nEndRow;
+			int nNewCell;
+			do 
+			{
+				nEndRow = nNewCell = nIndex;
+				//ENG: Search an end of the row or a begin of the cell
+				//RUS: Ищем конец строки или начало ячейки
+				SearchTag(sTable, nEndRow, _T("/tr"));
+				SearchTag(sTable, nNewCell, _T("td"));
+				if (nNewCell < nEndRow)
+				{
+					nIndex = nNewCell;
+
+					//ENG: Passes a tag body and get a properties of the tag
+					//RUS: Пропускаем тэг начала ячейки и получаем строку свойств тэга
+					CPPString sTag;
+					SearchNextTag(sTable, sTag, nNewCell);
+					CPPString sProperties = SplitTag(sTag);
+
+					//ENG: Analyses a properties of the tag
+					//RUS: Анализируем свойства тэга
+					STRUCT_CHANGESTYLE style;
+					SIZE szSpan = AnalyseCellParam(sProperties, style, TRUE);
+
+					//ENG: Increment count of the cells
+					//RUS: Увеличиваем количество ячеек в строке
+					nCol += szSpan.cx;
+
+					//ENG: Jump to end of the cell
+					//RUS: Переходим на конец ячейки
+					SearchEndOfCell(sTable, nIndex);
+				} //if
+			} while (nNewCell < nEndRow);
+			nIndex = nEndRow;
+			if (nCol > szTable.cx)
+				szTable.cx = nCol;
+		} //if
+	} //while
+	return szTable;
+} //End GetTableDimensions
+
+/////////////////////////////////////////////////////
+// CPPHtmlDrawer::SearchEndOfTable
+//	Searching the end of the table
+//---------------------------------------------------
+//  Parameter:    
+//		str - the string contains a HTML table
+//		nIndex - index of the first char after the <table> tag
+//	Return values:
+//		nIndex - index of the begin char of a </table> tag
+/////////////////////////////////////////////////////
+void CPPHtmlDrawer::SearchEndOfTable(CPPString & str, int & nIndex)
+{
+	int nBeginTable = nIndex + 7;
+	int nEndTable = nIndex + 7;
+	int nTable = 1;
+	do
+	{
+		SearchTag(str, nBeginTable, _T("table"));
+		SearchTag(str, nEndTable, _T("/table"));
+		if (nBeginTable < nEndTable)
+		{
+			nTable++;
+			nBeginTable += 7;
+		}
+		else if (nEndTable < nBeginTable)
+		{
+			nTable --;
+			nEndTable += 8;
+		} //if
+	}
+	while ((nBeginTable != nEndTable) && nTable); //while
+	nIndex = nEndTable - 8;
+} //End SearchEndOfTable
+
+/////////////////////////////////////////////////////
+// CPPHtmlDrawer::SearchEndOfRow
+//	Searching the end of the row
+//---------------------------------------------------
+//  Parameter:    
+//		str - the string contains a HTML table
+//		nIndex - index of the first char after the <tr> tag
+//	Return values:
+//		nIndex - index of the begin char of a </tr> tag
+/////////////////////////////////////////////////////
+void CPPHtmlDrawer::SearchEndOfRow(CPPString & str, int & nIndex)
+{
+	nIndex += 4;
+	int nBeginRow, nEndRow, nStartTable;
+	int nRow = 1;
+
+	do
+	{
+		nBeginRow = nEndRow = nStartTable = nIndex;
+
+		SearchTag(str, nBeginRow, _T("tr"));
+		SearchTag(str, nEndRow, _T("/tr"));
+		SearchTag(str, nStartTable, _T("table"));
+		
+		if ((nStartTable < nBeginRow) && (nStartTable < nEndRow))
+		{
+			SearchEndOfTable(str, nStartTable);
+			nIndex = nStartTable + 6;
+		}
+		else if (nBeginRow < nEndRow)
+		{
+			nRow++;
+			nIndex = nBeginRow + 4;
+		}
+		else if (nEndRow < nBeginRow)
+		{
+			nRow --;
+			nIndex = nEndRow + 5;
+		} //if
+	}
+	while ((nIndex < str.GetLength()) && nRow); //while
+	nIndex -= 5;
+} //End SearchEndOfRow
+
+/////////////////////////////////////////////////////
+// CPPHtmlDrawer::SearchEndOfCell
+//	Searching the end of the cell
+//---------------------------------------------------
+//  Parameter:    
+//		str - the string contains a HTML table
+//		nIndex - index of the first char after the <td> tag
+//	Return values:
+//		nIndex - index of the begin char of a </td> tag
+/////////////////////////////////////////////////////
+void CPPHtmlDrawer::SearchEndOfCell(CPPString & str, int & nIndex)
+{
+	nIndex += 4;
+	int nEndCell, nStartTable;
+	do
+	{
+		nEndCell = nStartTable = nIndex;
+
+		SearchTag(str, nEndCell, _T("/td"));
+		SearchTag(str, nStartTable, _T("table"));
+		
+		if (nStartTable < nEndCell)
+		{
+			SearchEndOfTable(str, nStartTable);
+			nEndCell = nIndex = nStartTable + 6;
+		}
+		else
+		{
+			nIndex = nEndCell + 5;
+		} //if
+	}
+	while (nStartTable < nEndCell); //while
+	nIndex -= 5;
+} //End SearchEndOfCell
+
 ///////////////////////////////////////////////////////////////////////
 // Analysing the cell parameters
 //---------------------------------------------------------------------
 // Parameters:
 //   In: strTag - str string contains parameters of the <table>, <td> or <tr> tags
 //           cs - the structures contains the current styles
+//		 bTable - 
 //  Out:     cs - the structures contains the new styles
 ///////////////////////////////////////////////////////////////////////
-CSize CPPHtmlDrawer::AnalyseCellParam(CString & strTag, _STRUCT_CHANGESTYLE & cs)
+SIZE CPPHtmlDrawer::AnalyseCellParam(CPPString & sProperties, _STRUCT_CHANGESTYLE & cs, BOOL bTable)
 {
-	CSize szSpan(1, 1);
-	if (strTag.IsEmpty())
+	SIZE szSpan = {1, 1};
+	if (sProperties.IsEmpty())
 		return szSpan;
 	
 	int i = 0;
-	CString strProperty;
-	CString strParameter;
+	CPPString sParameter;
+	CPPString sValue;
 	
-	while (i < strTag.GetLength())
+	while (i < sProperties.GetLength())
 	{
-		strProperty = SearchPropertyOfTag(strTag, i);
-		strParameter = GetParameterString(strTag, i, _T('='), _T(" "));
-			
-		if (strProperty == _T("rowspan"))
+		//ENG: Searching a parameters of a tag
+		//RUS: Поиск параметров тэга
+		sValue = GetNextProperty(sProperties, i, sParameter);
+
+		//ENG: Processes the specific parameters for <table> tag.
+		//RUS: Обрабатываем специфические для тэга <table> параметры
+		if(bTable)
 		{
-			szSpan.cy = GetLengthUnit(strParameter, szSpan.cy);
+			if (sParameter == _T("cellpadding"))
+			{
+				cs.nMargin = GetLengthUnit(sValue, cs.nMargin);
+			}
+			else if (sParameter == _T("cellspacing"))
+			{
+				cs.nPadding = GetLengthUnit(sValue, cs.nPadding);
+			} 
+			else if (sParameter == _T("background"))
+			{
+				cs.strNameResBk = sValue;
+			} //if
+		} //if
+
+		if (sParameter == _T("rowspan"))
+		{
+			szSpan.cy = GetLengthUnit(sValue, szSpan.cy);
 		}
-		else if (strProperty == _T("colspan"))
+		else if (sParameter == _T("colspan"))
 		{
-			szSpan.cx = GetLengthUnit(strParameter, szSpan.cx);
+			szSpan.cx = GetLengthUnit(sValue, szSpan.cx);
 		}
-		else if (strProperty == _T("border"))
+		else if (sParameter == _T("border"))
 		{
-			cs.nBorderWidth = GetLengthUnit(strParameter, cs.nBorderWidth);
+			cs.nBorderWidth = GetLengthUnit(sValue, cs.nBorderWidth);
 			if (!cs.nBorderWidth)
 				cs.nBorderStyle = CPPDrawManager::PEN_NULL;
 			else if (CPPDrawManager::PEN_NULL == cs.nBorderStyle)
 				cs.nBorderStyle = CPPDrawManager::PEN_SOLID;
 		}
-		else if (strProperty == _T("borderstyle"))
+		else if (sParameter == _T("borderstyle"))
 		{
-			cs.nBorderStyle = StyleBorder(strParameter, cs.nBorderStyle);
+			cs.nBorderStyle = StyleBorder(sValue, cs.nBorderStyle);
+			if ((CPPDrawManager::PEN_NULL != cs.nBorderStyle) && !cs.nBorderWidth)
+					cs.nBorderWidth = 1;
 		}
-		else if (strProperty == _T("bordercolor"))
+		else if (sParameter == _T("bordercolor"))
 		{
-			cs.crBorderLight = GetStyleColor(strParameter, cs.crBorderLight);
+			if (m_bIsEnable)
+				cs.crBorderLight = GetStyleColor(sValue, cs.crBorderLight);
+			else
+				cs.crBorderLight = GetColorByName(_T(""));
 			cs.crBorderDark = cs.crBorderLight;
 		}
-		else if (strProperty == _T("bordercolorlight"))
+		else if (sParameter == _T("bordercolorlight"))
 		{
-			cs.crBorderLight = GetStyleColor(strParameter, cs.crBorderLight);
+			if (m_bIsEnable)
+				cs.crBorderLight = GetStyleColor(sValue, cs.crBorderLight);
+			else
+				cs.crBorderLight = GetColorByName(_T(""));
 		}
-		else if (strProperty == _T("bordercolordark"))
+		else if (sParameter == _T("bordercolordark"))
 		{
-			cs.crBorderDark = GetStyleColor(strParameter, cs.crBorderDark);
+			if (m_bIsEnable)
+				cs.crBorderDark = GetStyleColor(sValue, cs.crBorderDark);
+			else
+				cs.crBorderDark = GetColorByName(_T(""));
 		}
-		else if (strProperty == _T("bgcolor"))
+		else if (sParameter == _T("bgcolor"))
 		{
-			cs.crBkgnd = GetStyleColor(strParameter, cs.crBkgnd);
-			if (cs.nFillBkgnd < 0)
-				cs.nFillBkgnd = CPPDrawManager::EFFECT_SOLID;
+			if (m_bIsEnable)
+			{
+				cs.crBkgnd = GetStyleColor(sValue, cs.crBkgnd);
+				if (cs.nFillBkgnd < 0)
+					cs.nFillBkgnd = CPPDrawManager::EFFECT_SOLID;
+			} //if
 		}
-		else if (strProperty == _T("bgmidcolor"))
+		else if (sParameter == _T("bgmidcolor"))
 		{
-			cs.crMidBkgnd = GetStyleColor(strParameter, cs.crMidBkgnd);
+			if (m_bIsEnable)
+				cs.crMidBkgnd = GetStyleColor(sValue, cs.crMidBkgnd);
 		}
-		else if (strProperty == _T("bgendcolor"))
+		else if (sParameter == _T("bgendcolor"))
 		{
-			cs.crEndBkgnd = GetStyleColor(strParameter, cs.crEndBkgnd);
+			if (m_bIsEnable)
+				cs.crEndBkgnd = GetStyleColor(sValue, cs.crEndBkgnd);
 		}
-		else if (strProperty == _T("bgeffect"))
+		else if (sParameter == _T("bgeffect"))
 		{
-//			cs.nFillBkgnd = GetLengthUnit(strParameter, cs.nFillBkgnd);
-			cs.nFillBkgnd = GetStyleBkgndEffect(strParameter, cs.nFillBkgnd);
+			if (m_bIsEnable)
+				cs.nFillBkgnd = GetStyleBkgndEffect(sValue, cs.nFillBkgnd);
 		}
-		else if (strProperty == _T("align"))
+		else if (sParameter == _T("align"))
 		{
-			cs.nHorzAlign = GetStyleHorzAlign(strParameter, cs.nHorzAlign);
+			cs.nHorzAlign = GetStyleHorzAlign(sValue, cs.nHorzAlign);
 		}
-		else if (strProperty == _T("valign"))
+		else if (sParameter == _T("valign"))
 		{
-			cs.nVertAlign = GetStyleVertAlign(strParameter, cs.nVertAlign);
+			cs.nVertAlign = GetStyleVertAlign(sValue, cs.nVertAlign);
 		}
-		else if (strProperty == _T("cellpadding"))
+		else if (sParameter == _T("width"))
 		{
-			cs.nMarginLeft = cs.nMarginTop = 
-			cs.nMarginRight = cs.nMarginBottom = GetLengthUnit(strParameter, cs.nMarginLeft);
+			cs.nCellWidth = GetLengthUnit(sValue, cs.nCellWidth);
 		}
-		else if (strProperty == _T("cellspacing"))
+		else if (sParameter == _T("height"))
 		{
-			cs.nPaddingLeft = cs.nPaddingTop = 
-			cs.nPaddingRight = cs.nPaddingBottom = GetLengthUnit(strParameter, cs.nPaddingLeft);
-		} 
-		else if (strProperty == _T("background"))
-		{
-			cs.strNameResBk = strParameter;
+			cs.nCellHeight = GetLengthUnit(sValue, cs.nCellHeight);
 		} //if
 	} //for
+
+	//ENG:
+	//RUS: 
+	if ((CPPDrawManager::PEN_NULL == cs.nBorderStyle) || !cs.nBorderWidth)
+	{
+		cs.nBorderStyle = CPPDrawManager::PEN_NULL;
+		cs.nBorderWidth = 0;
+	}
+	else if (CPPDrawManager::PEN_SOLID != cs.nBorderStyle)
+	{
+		cs.nBorderWidth = 1;
+	}	//if
+
+	//ENG: 
+	//RUS: Для ячеек ширина всегда равна 1
+	if (!bTable && cs.nBorderWidth)
+		cs.nBorderWidth = 1;
 
 	return szSpan;
 } //End AnalyseCellParam
@@ -3597,84 +4577,92 @@ CSize CPPHtmlDrawer::AnalyseCellParam(CString & strTag, _STRUCT_CHANGESTYLE & cs
 // Analysing the image parameters
 //---------------------------------------------------------------------
 // Parameters:
-//   In: strTag - the string contains
+//   In: sProperties - the sing contains
 //           si - the structures contains the image parameters
 //  Out:     si - the structures contains the image parameters
 ///////////////////////////////////////////////////////////////////////
-void CPPHtmlDrawer::AnalyseImageParam(CString & strTag, _STRUCT_IMAGE & si)
+void CPPHtmlDrawer::AnalyseImageParam(CPPString & sProperties, _STRUCT_IMAGE & si)
 {
-	if (strTag.IsEmpty())
+	if (sProperties.IsEmpty())
 		return;
 	
 	int i = 0;
-	CString strProperty;
-	CString strParameter;
+	CPPString sParameter;
+	CPPString sValue;
 	
-	while (i < strTag.GetLength())
+	while (i < sProperties.GetLength())
 	{
-		strProperty = SearchPropertyOfTag(strTag, i);
-		strParameter = GetParameterString(strTag, i, _T('='), _T(" "));
+		//ENG: Searching a parameters of a tag
+		//RUS: Поиск параметров тэга
+		sValue = GetNextProperty(sProperties, i, sParameter);
+
+//		sParameter = SearchPropertyOfTag(sProperties, i);
+//		sValue = GetParameterString(sProperties, i, _T('='), _T(" "));
 			
-		if (strProperty == _T("index"))
+		if (sParameter == _T("index"))
 		{
-			si.nIndexImageList = GetLengthUnit(strParameter, si.nIndexImageList);
+			si.nIndexImageList = GetLengthUnit(sValue, si.nIndexImageList);
 		}
-		else if (strProperty == _T("idres"))
+		else if (sParameter == _T("idres"))
 		{
-			si.nIdRes = GetLengthUnit(strParameter, si.nIdRes);
+			si.nIdRes = GetLengthUnit(sValue, si.nIdRes);
 		}
-		else if (strProperty == _T("iddll"))
+		else if (sParameter == _T("iddll"))
 		{
-			si.nIdDll = GetLengthUnit(strParameter, si.nIdDll);
+			si.nIdDll = GetLengthUnit(sValue, si.nIdDll);
 		}
-		else if (strProperty == _T("handle"))
+		else if (sParameter == _T("handle"))
 		{
-			si.nHandle = GetLengthUnit(strParameter, si.nHandle);
+			si.nHandle = GetLengthUnit(sValue, si.nHandle);
 		}
-		else if (strProperty == _T("file"))
+		else if (sParameter == _T("file"))
 		{
-			si.strSrcFile = GetStyleString(strParameter, si.strSrcFile);
+			si.strSrcFile = GetStyleString(sValue, si.strSrcFile);
 		}
-		else if (strProperty == _T("srcdll"))
+		else if (sParameter == _T("srcdll"))
 		{
-			si.strPathDll = GetStyleString(strParameter, si.strPathDll);
+			si.strPathDll = GetStyleString(sValue, si.strPathDll);
 		}
-		else if (strProperty == _T("mask"))
+		else if (sParameter == _T("mask"))
 		{
-			si.crMask = GetStyleColor(strParameter, si.crMask);
+			si.crMask = GetStyleColor(sValue, si.crMask);
 			si.bUseMask = TRUE;
 		}
-		else if (strProperty == _T("style"))
+		else if (sParameter == _T("style"))
 		{
-			si.nStyles = GetStyleImageShortForm(strParameter);
+			si.nStyles = GetStyleImageShortForm(sValue);
 			si.nHotStyles = si.nStyles;
 		}
-		else if (strProperty == _T("hotstyle"))
+		else if (sParameter == _T("hotstyle"))
 		{
-			si.nHotStyles = GetStyleImageShortForm(strParameter);
+			si.nHotStyles = GetStyleImageShortForm(sValue);
 		}
-		else if (strProperty == _T("cx"))
+		else if (sParameter == _T("cx"))
 		{
-			si.cx = GetLengthUnit(strParameter, si.cx);
+			si.cx = GetLengthUnit(sValue, si.cx);
 		}
-		else if (strProperty == _T("cy"))
+		else if (sParameter == _T("cy"))
 		{
-			si.cy = GetLengthUnit(strParameter, si.cy);
+			si.cy = GetLengthUnit(sValue, si.cy);
 		}
-		else if (strProperty == _T("width"))
+		else if (sParameter == _T("width"))
 		{
-			si.bPercentWidth = IsPercentableValue(strParameter);
-			si.nWidth = GetLengthUnit(strParameter, si.nWidth);
+			si.bPercentWidth = IsPercentableValue(sValue);
+			si.nWidth = GetLengthUnit(sValue, si.nWidth);
 		}
-		else if (strProperty == _T("height"))
+		else if (sParameter == _T("height"))
 		{
-			si.bPercentHeight = IsPercentableValue(strParameter);
-			si.nHeight = GetLengthUnit(strParameter, si.nHeight);
+			si.bPercentHeight = IsPercentableValue(sValue);
+			si.nHeight = GetLengthUnit(sValue, si.nHeight);
+		}
+		else if (sParameter == _T("speed"))
+		{
+			si.nSpeed = GetLengthUnit(sValue, si.nSpeed);
 		} //if
 	} //for
 } //End AnalyseImageParam
 
-CString CPPHtmlDrawer::GetStyleString(CString str, CString strDefault)
+CPPString CPPHtmlDrawer::GetStyleString(CPPString str, CPPString strDefault)
 {
 	if (!str.IsEmpty())
 		strDefault = str;
@@ -3695,7 +4683,7 @@ CString CPPHtmlDrawer::GetStyleString(CString str, CString strDefault)
 //       [s] - strikeout
 //       [o] - overline
 ///////////////////////////////////////////////////////////////////////
-void CPPHtmlDrawer::GetStyleFontShortForm(CString & str)
+void CPPHtmlDrawer::GetStyleFontShortForm(CPPString & str)
 {
 	if (!str.IsEmpty())
 	{
@@ -3736,7 +4724,7 @@ void CPPHtmlDrawer::GetStyleFontShortForm(CString & str)
 } //End GetStyleFontShortForm
 
 //Get font style value
-UINT CPPHtmlDrawer::GetStyleImageShortForm(CString & str)
+UINT CPPHtmlDrawer::GetStyleImageShortForm(CPPString & str)
 {
 	UINT uStyle = 0; //Original image
 	
@@ -3770,7 +4758,7 @@ UINT CPPHtmlDrawer::GetStyleImageShortForm(CString & str)
 	return uStyle;
 } //End GetStyleImageShortForm
 
-BOOL CPPHtmlDrawer::IsPercentableValue(CString & str)
+BOOL CPPHtmlDrawer::IsPercentableValue(CPPString & str)
 {
 	if (!str.IsEmpty())
 	{
@@ -3780,7 +4768,7 @@ BOOL CPPHtmlDrawer::IsPercentableValue(CString & str)
 	return FALSE;
 }
 
-int CPPHtmlDrawer::GetStyleBkgndEffect(CString & str, int nDefault)
+int CPPHtmlDrawer::GetStyleBkgndEffect(CPPString & str, int nDefault)
 {
 	if (!str.IsEmpty())
 	{
@@ -3826,13 +4814,13 @@ int CPPHtmlDrawer::GetStyleBkgndEffect(CString & str, int nDefault)
 	return nDefault;
 } //End GetStyleBkgndEffect
 
-int CPPHtmlDrawer::GetTableWidth(CString & str, int nClientWidth, int nMinWidth, BOOL bSet /* = FALSE */)
+int CPPHtmlDrawer::GetTableWidth(CPPString & str, int nClientWidth, int nMinWidth, BOOL bSet /* = FALSE */)
 {
 	if (!str.IsEmpty())
 	{
 		int i = 0;
-		CString strProperty;
-		CString strParameter;
+		CPPString strProperty;
+		CPPString strParameter;
 		
 		while (i < str.GetLength())
 		{
@@ -3873,8 +4861,10 @@ int CPPHtmlDrawer::GetTableWidth(CString & str, int nClientWidth, int nMinWidth,
 	return nClientWidth;
 } //End GetTableWidth
 
-void CPPHtmlDrawer::DrawBackgroundImage(CDC * pDC, int nDestX, int nDestY, int nWidth, int nHeight, CString strNameImage)
+void CPPHtmlDrawer::DrawBackgroundImage(HDC hDC, int nDestX, int nDestY, int nWidth, int nHeight, CPPString strNameImage)
 {
+	if (!m_bIsEnable)
+		return;
 	if (strNameImage.IsEmpty())
 		return;
 	if (strNameImage.GetLength() < 6)
@@ -3891,9 +4881,9 @@ void CPPHtmlDrawer::DrawBackgroundImage(CDC * pDC, int nDestX, int nDestY, int n
 		if (0 != chSymbol)
 		{
 			//Gets a property's name
-			CString strName = strNameImage.Mid(nBegin, nIndex - nBegin);
+			CPPString strName = strNameImage.Mid(nBegin, nIndex - nBegin);
 			//Gets a property's value
-			CString strParameter = GetParameterString(strNameImage, nIndex, _T(':'));
+			CPPString strParameter = GetParameterString(strNameImage, nIndex, _T(':'));
 			
 			if (strName == _T("idres"))
 			{
@@ -3915,13 +4905,13 @@ void CPPHtmlDrawer::DrawBackgroundImage(CDC * pDC, int nDestX, int nDestY, int n
 	if (NULL == hBitmap)
 		return;
 
-	CSize sz = m_drawmanager.GetSizeOfBitmap(hBitmap);
-	CDC srcDC;
-	srcDC.CreateCompatibleDC(pDC);
-	CBitmap * pOldBitmap = srcDC.SelectObject(CBitmap::FromHandle(hBitmap));
-	m_drawmanager.MultipleCopy(pDC->GetSafeHdc(), nDestX, nDestY, nWidth, nHeight, srcDC.GetSafeHdc(), 0, 0, sz.cx, sz.cy);
-	srcDC.SelectObject(pOldBitmap);
-	srcDC.DeleteDC();
+	SIZE sz;
+	m_drawmanager.GetSizeOfBitmap(hBitmap, &sz);
+	HDC hSrcDC = ::CreateCompatibleDC(hDC);
+	HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hSrcDC, hBitmap);
+	m_drawmanager.MultipleCopy(hDC, nDestX, nDestY, nWidth, nHeight, hSrcDC, 0, 0, sz.cx, sz.cy);
+	::SelectObject(hSrcDC, hOldBitmap);
+	::DeleteDC(hSrcDC);
 
 	::DeleteObject(hBitmap);
 	hBitmap = NULL;
@@ -3946,8 +4936,90 @@ void CPPHtmlDrawer::SetImageShadow(int nOffsetX, int nOffsetY, BYTE nDarkenPerce
 	m_szOffsetShadow.cy = nOffsetY;
 	m_szDepthShadow.cx = nDepthX;
 	m_szDepthShadow.cy = nDepthY;
-	m_nDarkenShadow = min((BYTE)100, nDarkenPercent);
+	m_nDarkenShadow = min(100, nDarkenPercent);
 	m_bGradientShadow = bGradient;
 	BYTE nColor = ::MulDiv(255, 100 - m_nDarkenShadow, 100);
 	m_crShadow = RGB(nColor, nColor, nColor);
 } //End of SetTooltipShadow
+
+CPPString CPPHtmlDrawer::GetWordWrap(CPPString & str, int nMaxSize, int & nRealSize)
+{
+	int nCurIndex = 0;
+	int nLastIndex = 0;
+	SIZE sz = {0, 0};
+	TCHAR tch = _T(' ');
+	CPPString sResult = _T("");
+	while ((sz.cx <= nRealSize) && (0 != tch))
+	{
+		nLastIndex = nCurIndex;
+		nCurIndex ++;
+		tch = GetIndexNextChars(str, nCurIndex, PPHTMLDRAWER_BREAK_CHARS);
+		::GetTextExtentPoint32(m_hDC, str, nCurIndex, &sz);
+
+		//+++hd
+		// arw - Begin Change
+		// Get the break character as well, trim it if it's a space,
+		// and get the new correct length.
+		sResult = str.Left(nCurIndex + 1);
+		sResult.TrimRight();
+		::GetTextExtentPoint32(m_hDC, sResult, sResult.GetLength(), &sz);
+		// End Change
+
+	} //while
+
+	if (0 == nLastIndex)
+	{
+		if (nMaxSize == nRealSize)
+		{
+			//RUS: Разрывов в строке не обнаружено, поэтому будем разбивать строку 
+			//     по символам, а не по словам
+			sz.cx = 0;
+			int i = 0;
+			for (i = 1; i < str.GetLength(); i++)
+			{
+				::GetTextExtentPoint32(m_hDC, str, i + 1, &sz);
+				if (sz.cx > nRealSize)
+				{
+					sResult = str.Left(i);
+					str = str.Mid(i);
+					::GetTextExtentPoint32(m_hDC, sResult, i, &sz);
+					nRealSize = sz.cx;
+					return sResult;
+				} //if
+			} //for
+			::GetTextExtentPoint32(m_hDC, str, i, &sz);
+			//RUS: Невозможно разбить строку, выводим целиком
+			sResult = str;
+			str.Empty();
+		}
+		else
+		{
+			//RUS: В отставшееся место текущей строки не влазит ни одного слова
+			sz.cx = 0;
+		} //if
+	}
+	else 
+	{
+		sResult = str.Left(nLastIndex + 1);
+		str = str.Mid(nLastIndex + 1);
+		sResult.TrimRight();
+		::GetTextExtentPoint32(m_hDC, sResult, sResult.GetLength(), &sz);
+//		str.TrimRight();
+		str.TrimLeft();
+	} //if
+	nRealSize = sz.cx;
+	return sResult;
+} //End of GetWordWrap
+
+int CPPHtmlDrawer::GetCountOfChars(CPPString str, TCHAR tchar /*= _T(' ')*/)
+{
+	int nCount = 0;
+	//ENG:
+	//RUS:
+	for (int i = 0; i < str.GetLength(); i++)
+	{
+		if (tchar == str.GetAt(i))
+			nCount++;
+	} //if
+	return nCount;
+}
