@@ -1,43 +1,20 @@
-/////////////////////////////////////////////////////////////////////
-// PPDrawManager.cpp: implementation of the CPPDrawManager class.
-//-----------------------------------------
-// Author:			Eugene Pustovoyt
-// Created:			10 May 2003
-// Last Modified:	10 July 2003
-// Current Version: 1.0
-//
-//--- History ------------------------------ 
-//
-/////////////////////////////////////////////////////////////////////
-//
-// "SmoothMaskImage" and "GetPartialSums" functions by Denis Sarazhinsky (c)2003
-// Modified by Eugene Pustovoyt to use with image's mask instead of full color image.
-//
-/////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "PPDrawManager.h"
 
-// local variable is initialized but not referenced
-#pragma warning(disable: 4189)
-// conversion from 'type' to 'type', possible loss of data
-#pragma warning(disable: 4244)
-// local variable may be used without having been initialized
-#pragma warning(disable: 4701)
-
-#if defined(__INTEL_COMPILER)
-// remark #279: controlling expression is constant
-#pragma warning(disable: 279)
-// remark #383: value copied to temporary, reference to temporary used
-#pragma warning(disable: 383)
-// remark #981: operands are evaluated in unspecified order
-#pragma warning(disable: 981)
-#endif	// __INTEL_COMPILER
+#pragma warning(push, 3)
 
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
+#endif
+
+/*
+	DIBs use RGBQUAD format:
+		0xbb 0xgg 0xrr 0x00
+*/
+#ifndef CLR_TO_RGBQUAD
+#define CLR_TO_RGBQUAD(clr)     (RGB(GetBValue(clr), GetGValue(clr), GetRValue(clr)))
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -54,9 +31,10 @@ CPPDrawManager::~CPPDrawManager()
 
 }
 
-CSize CPPDrawManager::GetSizeOfIcon(HICON hIcon) const
+void CPPDrawManager::GetSizeOfIcon(HICON hIcon, LPSIZE pSize) const
 {
-	CSize sz (0, 0);
+	pSize->cx = 0;
+	pSize->cy = 0;
 	if (hIcon != NULL)
 	{
 		ICONINFO ii;
@@ -64,8 +42,8 @@ CSize CPPDrawManager::GetSizeOfIcon(HICON hIcon) const
 		::ZeroMemory(&ii, sizeof(ICONINFO));
 		if (::GetIconInfo(hIcon, &ii))
 		{
-			sz.cx = (DWORD)(ii.xHotspot * 2);
-			sz.cy = (DWORD)(ii.yHotspot * 2);
+			pSize->cx = (DWORD)(ii.xHotspot * 2);
+			pSize->cy = (DWORD)(ii.yHotspot * 2);
 			//release icon mask bitmaps
 			if(ii.hbmMask)
 				::DeleteObject(ii.hbmMask);
@@ -73,12 +51,12 @@ CSize CPPDrawManager::GetSizeOfIcon(HICON hIcon) const
 				::DeleteObject(ii.hbmColor);
 		} //if
 	} //if
-	return sz;
 } //End GetSizeOfIcon
 
-CSize CPPDrawManager::GetSizeOfBitmap(HBITMAP hBitmap) const
+void CPPDrawManager::GetSizeOfBitmap(HBITMAP hBitmap, LPSIZE pSize) const
 {
-	CSize sz (0, 0);
+	pSize->cx = 0;
+	pSize->cy = 0;
 	if (hBitmap != NULL)
 	{
 		BITMAP	csBitmapSize;
@@ -86,16 +64,15 @@ CSize CPPDrawManager::GetSizeOfBitmap(HBITMAP hBitmap) const
 		int nRetValue = ::GetObject(hBitmap, sizeof(csBitmapSize), &csBitmapSize);
 		if (nRetValue)
 		{
-			sz.cx = (DWORD)csBitmapSize.bmWidth;
-			sz.cy = (DWORD)csBitmapSize.bmHeight;
+			pSize->cx = (DWORD)csBitmapSize.bmWidth;
+			pSize->cy = (DWORD)csBitmapSize.bmHeight;
 		} //if
 	} //if
-	return sz;
 } //End GetSizeOfBitmap
 
 void CPPDrawManager::AlphaBitBlt(HDC hDestDC, int nDestX, int nDestY, DWORD dwWidth, DWORD dwHeight, HDC hSrcDC, int nSrcX, int nSrcY, int percent /* = 100 */)
 {
-	ASSERT ((NULL != hDestDC) || (NULL != hSrcDC));
+	_ASSERT ((NULL != hDestDC) || (NULL != hSrcDC));
 
 	if (percent >= 100)
 	{
@@ -173,18 +150,103 @@ void CPPDrawManager::AlphaBitBlt(HDC hDestDC, int nDestX, int nDestY, DWORD dwWi
 			::BitBlt (hDestDC, nDestX, nDestY, dwWidth, dwHeight, hTempDC, 0, 0, SRCCOPY);
 			::SelectObject (hTempDC, hOldTempBmp);
 
-			delete lpbiDest;
+			delete [] lpbiDest;
 			::DeleteObject(hDestDib);
 		} //if
-		delete lpbiSrc;
+		delete [] lpbiSrc;
 		::DeleteObject(hSrcDib);
-		::DeleteObject(hOldTempBmp);
 	} //if
 
 	::DeleteDC(hTempDC);
 } //End AlphaBitBlt
 
-HBITMAP CPPDrawManager::CreateImageEffect(HBITMAP hBitmap, DWORD dwWidth, DWORD dwHeight, DWORD dwEffect, BOOL bUseMask /* = TRUE */, COLORREF crMask /* = RGB(255, 0, 255) */, COLORREF crMono /* = RGB(255, 255, 255) */)
+void CPPDrawManager::AlphaChannelBitBlt(HDC hDestDC, int nDestX, int nDestY, DWORD dwWidth, DWORD dwHeight, HDC hSrcDC, int nSrcX, int nSrcY)
+{
+	_ASSERT ((NULL != hDestDC) || (NULL != hSrcDC));
+
+	HDC hTempDC = ::CreateCompatibleDC(hDestDC);
+	if (NULL == hTempDC)
+		return;
+	
+	//Creates Source DIB
+	LPBITMAPINFO lpbiSrc;
+	// Fill in the BITMAPINFOHEADER
+	lpbiSrc = (LPBITMAPINFO) new BYTE[sizeof(BITMAPINFOHEADER)];
+	lpbiSrc->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	lpbiSrc->bmiHeader.biWidth = dwWidth;
+	lpbiSrc->bmiHeader.biHeight = dwHeight;
+	lpbiSrc->bmiHeader.biPlanes = 1;
+	lpbiSrc->bmiHeader.biBitCount = 32;
+	lpbiSrc->bmiHeader.biCompression = BI_RGB;
+	lpbiSrc->bmiHeader.biSizeImage = dwWidth * dwHeight;
+	lpbiSrc->bmiHeader.biXPelsPerMeter = 0;
+	lpbiSrc->bmiHeader.biYPelsPerMeter = 0;
+	lpbiSrc->bmiHeader.biClrUsed = 0;
+	lpbiSrc->bmiHeader.biClrImportant = 0;
+	
+	COLORREF* pSrcBits = NULL;
+	HBITMAP hSrcDib = CreateDIBSection (
+		hSrcDC, lpbiSrc, DIB_RGB_COLORS, (void **)&pSrcBits,
+		NULL, NULL);
+	
+	if ((NULL != hSrcDib) && (NULL != pSrcBits))
+	{
+		HBITMAP hOldTempBmp = (HBITMAP)::SelectObject (hTempDC, hSrcDib);
+		::BitBlt (hTempDC, 0, 0, dwWidth, dwHeight, hSrcDC, nSrcX, nSrcY, SRCCOPY);
+		::SelectObject (hTempDC, hOldTempBmp);
+		
+		//Creates Destination DIB
+		LPBITMAPINFO lpbiDest;
+		// Fill in the BITMAPINFOHEADER
+		lpbiDest = (LPBITMAPINFO) new BYTE[sizeof(BITMAPINFOHEADER)];
+		lpbiDest->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		lpbiDest->bmiHeader.biWidth = dwWidth;
+		lpbiDest->bmiHeader.biHeight = dwHeight;
+		lpbiDest->bmiHeader.biPlanes = 1;
+		lpbiDest->bmiHeader.biBitCount = 32;
+		lpbiDest->bmiHeader.biCompression = BI_RGB;
+		lpbiDest->bmiHeader.biSizeImage = dwWidth * dwHeight;
+		lpbiDest->bmiHeader.biXPelsPerMeter = 0;
+		lpbiDest->bmiHeader.biYPelsPerMeter = 0;
+		lpbiDest->bmiHeader.biClrUsed = 0;
+		lpbiDest->bmiHeader.biClrImportant = 0;
+		
+		COLORREF* pDestBits = NULL;
+		HBITMAP hDestDib = CreateDIBSection (
+			hDestDC, lpbiDest, DIB_RGB_COLORS, (void **)&pDestBits,
+			NULL, NULL);
+		
+		if ((NULL != hDestDib) && (NULL != pDestBits))
+		{
+			::SelectObject (hTempDC, hDestDib);
+			::BitBlt (hTempDC, 0, 0, dwWidth, dwHeight, hDestDC, nDestX, nDestY, SRCCOPY);
+			::SelectObject (hTempDC, hOldTempBmp);
+
+			double src_darken;
+			BYTE nAlpha;
+			
+			for (DWORD pixel = 0; pixel < dwWidth * dwHeight; pixel++, pSrcBits++, pDestBits++)
+			{
+				nAlpha = LOBYTE(*pSrcBits >> 24);
+				src_darken = (double)nAlpha / 255.0;
+				*pDestBits = PixelAlpha(*pSrcBits, src_darken, *pDestBits, 1.0 - src_darken);
+			} //for
+			
+			::SelectObject (hTempDC, hDestDib);
+			::BitBlt (hDestDC, nDestX, nDestY, dwWidth, dwHeight, hTempDC, 0, 0, SRCCOPY);
+			::SelectObject (hTempDC, hOldTempBmp);
+
+			delete [] lpbiDest;
+			::DeleteObject(hDestDib);
+		} //if
+		delete [] lpbiSrc;
+		::DeleteObject(hSrcDib);
+	} //if
+
+	::DeleteDC(hTempDC);
+} //End of AlphaChannelBitBlt
+
+HBITMAP CPPDrawManager::CreateImageEffect(HBITMAP hBitmap, DWORD dwWidth, DWORD dwHeight, DWORD dwEffect, BOOL bUseMask /* = TRUE */, COLORREF clrMask /* = RGB(255, 0, 255) */, COLORREF clrMono /* = RGB(255, 255, 255) */)
 {
 	HBITMAP hOldSrcBmp = NULL;
 	HBITMAP hOldResBmp = NULL;  
@@ -192,11 +254,12 @@ HBITMAP CPPDrawManager::CreateImageEffect(HBITMAP hBitmap, DWORD dwWidth, DWORD 
 	HDC hSrcDC = NULL;
 	HDC hResDC = NULL;
 	
-	hMainDC = GetDC(NULL);
+	hMainDC = ::GetDC(NULL);
 	hSrcDC = ::CreateCompatibleDC(hMainDC);
 	hResDC = ::CreateCompatibleDC(hMainDC);
 
 	hOldSrcBmp = (HBITMAP)::SelectObject(hSrcDC, hBitmap);
+
 	LPBITMAPINFO lpbi;
 
 	// Fill in the BITMAPINFOHEADER
@@ -220,33 +283,41 @@ HBITMAP CPPDrawManager::CreateImageEffect(HBITMAP hBitmap, DWORD dwWidth, DWORD 
 
 	if (hDibBmp == NULL || pBits == NULL)
 	{
-		delete lpbi;
-		ASSERT (FALSE);
+		delete [] lpbi;
+		_ASSERT (FALSE);
 		return NULL;
 	} //if
 
 	hOldResBmp = (HBITMAP)::SelectObject (hResDC, hDibBmp);
 	::BitBlt (hResDC, 0, 0, dwWidth, dwHeight, hSrcDC, 0, 0, SRCCOPY);
 
+	clrMask = CLR_TO_RGBQUAD(clrMask);
+	clrMono = CLR_TO_RGBQUAD(clrMono);
+
+	DWORD dwAlpha;
 	for (DWORD pixel = 0; pixel < dwWidth * dwHeight; pixel++, *pBits++)
 	{
 		COLORREF color = (COLORREF)*pBits;
-		
-		if (bUseMask && (color == crMask))
+		//ENG: Extract an original alpha value
+		dwAlpha = color & 0xFF000000;
+		if (dwAlpha != 0) 
+			m_bIsAlpha = TRUE;
+		if (bUseMask && (color == clrMask))
 		{
 			//This is transparent area
 			color = RGB(0, 0, 0);
-			
 		}
 		else 
 		{
-			if (dwEffect & IMAGE_EFFECT_GRAYEN) color = GrayColor(color);
+			//ENG: Color conversion
+			if (dwEffect & IMAGE_EFFECT_GRAYEN) color = GrayMirrorColor(color);
 			if (dwEffect & IMAGE_EFFECT_DARKEN) color = DarkenColor(color, 0.75);
 			if (dwEffect & IMAGE_EFFECT_LIGHTEN) color = LightenColor(color, 0.25);
-			if (dwEffect & IMAGE_EFFECT_MONOCHROME) color = crMono;
+			if (dwEffect & IMAGE_EFFECT_MONOCHROME) color = clrMono;
 		} //if
 		if (dwEffect & IMAGE_EFFECT_INVERT) color = InvertColor(color);
-		*pBits = color;
+		//ENG: Merges a color with an original alpha value
+		*pBits = (color | dwAlpha);
 	} //for
 
 	::SelectObject(hSrcDC, hOldSrcBmp);
@@ -255,16 +326,30 @@ HBITMAP CPPDrawManager::CreateImageEffect(HBITMAP hBitmap, DWORD dwWidth, DWORD 
 	::DeleteDC(hResDC);
 	::ReleaseDC(NULL, hMainDC);
 	
-	delete lpbi;
+	delete [] lpbi;
 
 	return hDibBmp;
 } //End CreateImageEffect
 
+//----------------------------------------------------------
+// CPPDrawManager::GrayMirrorColor()
+//	Graying color in RGBQUAD format
+//----------------------------------------------------------
+// Parameter:
+//	clrColor	- RGBQUAD value from DIB
+// Return value:
+//	A grayed color in the RGBQUAD format
+//----------------------------------------------------------
+COLORREF CPPDrawManager::GrayMirrorColor(COLORREF clrColor)
+{
+	BYTE nGrayColor = (BYTE)((GetBValue(clrColor) * 0.299) + (GetGValue(clrColor) * 0.587) + (GetRValue(clrColor) * 0.114));
+	
+	return RGB(nGrayColor, nGrayColor, nGrayColor);
+} //End of GrayMirrorColor
+
 COLORREF CPPDrawManager::GrayColor(COLORREF clrColor)
 {
 	BYTE nGrayColor = (BYTE)((GetRValue(clrColor) * 0.299) + (GetGValue(clrColor) * 0.587) + (GetBValue(clrColor) * 0.114));
-	//color to grey mapping <H. Muelner> <jurgene>
-	//BYTE nGrayColor = (BYTE)((GetBValue(clrColor)*117 + GetGValue(clrColor)*601 + GetRValue(clrColor)*306) >> 10)
 	
 	return RGB(nGrayColor, nGrayColor, nGrayColor);
 } //End GrayColor
@@ -295,9 +380,9 @@ COLORREF CPPDrawManager::LightenColor(COLORREF clrColor, double lighten)
 		BYTE color_r, color_g, color_b;
 		
 		lighten += 1.0;
-		color_r = (BYTE)min((int)((DWORD)GetRValue(clrColor) * lighten), 255);
-		color_g = (BYTE)min((int)((DWORD)GetGValue(clrColor) * lighten), 255);
-		color_b = (BYTE)min((int)((DWORD)GetBValue(clrColor) * lighten), 255);
+		color_r = (BYTE)min((DWORD)GetRValue(clrColor) * lighten, 255.0);
+		color_g = (BYTE)min((DWORD)GetGValue(clrColor) * lighten, 255.0);
+		color_b = (BYTE)min((DWORD)GetBValue(clrColor) * lighten, 255.0);
 		clrColor = RGB(color_r, color_g, color_b);
 /*		
 		lighten *= 255
@@ -330,6 +415,8 @@ HICON CPPDrawManager::StretchIcon(HICON hIcon, DWORD dwWidth, DWORD dwHeight)
 	HBITMAP hOldDestBitmap = NULL;
 	ICONINFO csOriginal, csStretched;
 	
+	memset(&csStretched, 0, sizeof(csStretched));	// +++hd
+
 	if (!::GetIconInfo(hIcon, &csOriginal))
 		return FALSE;
 	
@@ -365,9 +452,9 @@ HICON CPPDrawManager::StretchIcon(HICON hIcon, DWORD dwWidth, DWORD dwHeight)
 			::SelectObject(hDestDC, hOldDestBitmap);
 			csStretched.fIcon = TRUE;
 			hStretchedIcon = ::CreateIconIndirect(&csStretched);
+			::DeleteObject(csStretched.hbmColor);
+			::DeleteObject(csStretched.hbmMask);
 		} //if
-		::DeleteObject(csStretched.hbmColor);
-		::DeleteObject(csStretched.hbmMask);
 	} //if
 	
 	::DeleteObject(csOriginal.hbmColor);
@@ -379,7 +466,7 @@ HICON CPPDrawManager::StretchIcon(HICON hIcon, DWORD dwWidth, DWORD dwHeight)
 	return hStretchedIcon;
 } //End StretchIcon
 
-void CPPDrawManager::FillGradient (HDC hDC, CRect rect, 
+void CPPDrawManager::FillGradient (HDC hDC, LPCRECT lpRect, 
 								COLORREF colorStart, COLORREF colorFinish, 
 								BOOL bHorz/* = TRUE*/)
 {
@@ -387,7 +474,16 @@ void CPPDrawManager::FillGradient (HDC hDC, CRect rect,
     int nShift = 6;
     int nSteps = 1 << nShift;
 
-    for (int i = 0; i < nSteps; i++)
+	RECT r2;
+	r2.top = lpRect->top;
+	r2.left = lpRect->left;
+	r2.right = lpRect->right;
+	r2.bottom = lpRect->bottom;
+
+	int nHeight = lpRect->bottom - lpRect->top;
+	int nWidth = lpRect->right - lpRect->left;
+
+	for (int i = 0; i < nSteps; i++)
     {
         // do a little alpha blending
         BYTE bR = (BYTE) ((GetRValue(colorStart) * (nSteps - i) +
@@ -400,24 +496,20 @@ void CPPDrawManager::FillGradient (HDC hDC, CRect rect,
 		HBRUSH hBrush = ::CreateSolidBrush(RGB(bR, bG, bB));
 		
         // then paint with the resulting color
-        CRect r2 = rect;
+
         if (!bHorz)
         {
-            r2.top = rect.top + 
-                ((i * rect.Height()) >> nShift);
-            r2.bottom = rect.top + 
-                (((i + 1) * rect.Height()) >> nShift);
-            if (r2.Height() > 0)
-                ::FillRect(hDC, r2, hBrush);
+            r2.top = lpRect->top + ((i * nHeight) >> nShift);
+            r2.bottom = lpRect->top + (((i + 1) * nHeight) >> nShift);
+            if ((r2.bottom - r2.top) > 0)
+                ::FillRect(hDC, &r2, hBrush);
         }
         else
         {
-            r2.left = rect.left + 
-                ((i * rect.Width()) >> nShift);
-            r2.right = rect.left + 
-                (((i + 1) * rect.Width()) >> nShift);
-            if (r2.Width() > 0)
-                ::FillRect(hDC, r2, hBrush);
+            r2.left = lpRect->left + ((i * nWidth) >> nShift);
+            r2.right = lpRect->left + (((i + 1) * nWidth) >> nShift);
+            if ((r2.right - r2.left) > 0)
+                ::FillRect(hDC, &r2, hBrush);
         } //if
 		
 		if (NULL != hBrush)
@@ -429,66 +521,40 @@ void CPPDrawManager::FillGradient (HDC hDC, CRect rect,
 } //End FillGradient
 
 #ifdef USE_SHADE
-void CPPDrawManager::SetShade(CRect rect, UINT shadeID /* = 0 */, BYTE granularity /* = 8 */, 
+void CPPDrawManager::SetShade(LPCRECT lpRect, UINT shadeID /* = 0 */, BYTE granularity /* = 8 */, 
 						  BYTE coloring /* = 0 */, COLORREF hicr /* = 0 */, COLORREF midcr /* = 0 */, COLORREF locr /* = 0 */)
 {
 	long	sXSize,sYSize,bytes,j,i,k,h;
 	BYTE	*iDst ,*posDst;
 	
-	sYSize= rect.Height(); //rect.bottom-rect.top;
-	sXSize= rect.Width(); //rect.right-rect.left ;
-
-//	m_dh.Create(max(1,sXSize /*-2*m_FocusRectMargin-1*/ ),1,8);	//create the horizontal focus bitmap
-//	m_dv.Create(1,max(1,sYSize /*-2*m_FocusRectMargin*/),8);	//create the vertical focus bitmap
+	sYSize = lpRect->bottom - lpRect->top; 
+	sXSize = lpRect->right - lpRect->left; 
 
 	m_dNormal.Create(sXSize,sYSize,8);					//create the default bitmap
 
-//	COLORREF hicr = m_tool_info.crBegin; //GetSysColor(COLOR_BTNHIGHLIGHT);		//get the button base colors
-//	COLORREF midcr = m_tool_info.crMid;  //GetSysColor(COLOR_BTNFACE);
-//	COLORREF locr = m_tool_info.crEnd;   //GetSysColor(COLOR_BTNSHADOW);
 	long r,g,b;											//build the shaded palette
-	for(i=0;i<129;i++){
+	for(i = 0; i < 129; i++)
+	{
 		r=((128-i)*GetRValue(locr)+i*GetRValue(midcr))/128;
 		g=((128-i)*GetGValue(locr)+i*GetGValue(midcr))/128;
 		b=((128-i)*GetBValue(locr)+i*GetBValue(midcr))/128;
 		m_dNormal.SetPaletteIndex((BYTE)i,(BYTE)r,(BYTE)g,(BYTE)b);
-//		m_dh.SetPaletteIndex((BYTE)i,(BYTE)r,(BYTE)g,(BYTE)b);
-//		m_dv.SetPaletteIndex((BYTE)i,(BYTE)r,(BYTE)g,(BYTE)b);
 	} //for
 	for(i=1;i<129;i++){
 		r=((128-i)*GetRValue(midcr)+i*GetRValue(hicr))/128;
 		g=((128-i)*GetGValue(midcr)+i*GetGValue(hicr))/128;
 		b=((128-i)*GetBValue(midcr)+i*GetBValue(hicr))/128;
 		m_dNormal.SetPaletteIndex((BYTE)(i+127),(BYTE)r,(BYTE)g,(BYTE)b);
-//		m_dh.SetPaletteIndex((BYTE)(i+127),(BYTE)r,(BYTE)g,(BYTE)b);
-//		m_dv.SetPaletteIndex((BYTE)(i+127),(BYTE)r,(BYTE)g,(BYTE)b);
 	} //for
 
 	m_dNormal.BlendPalette(hicr,coloring);	//color the palette
-
-/*
-	iDst=m_dh.GetBits();		//build the horiz. dotted focus bitmap
-	j=(long)m_dh.GetWidth();
-	for(i=0;i<j;i++){
-//		iDst[i]=64+127*(i%2);	//soft
-		iDst[i]=255*(i%2);		//hard
-	}
-
-	iDst=m_dv.GetBits();		//build the vert. dotted focus bitmap
-	j=(long)m_dv.GetHeight();
-	for(i=0;i<j;i++){
-//		*iDst=64+127*(i%2);		//soft
-		*iDst=255*(i%2);		//hard
-		iDst+=4;
-	}
-*/
 
 	bytes = m_dNormal.GetLineWidth();
 	iDst = m_dNormal.GetBits();
 	posDst =iDst;
 	long a,x,y,d,xs,idxmax,idxmin;
 
-	int grainx2=RAND_MAX/(max(1,2*granularity));
+	int grainx2 = RAND_MAX/(max(1,2*granularity));
 	idxmax=255-granularity;
 	idxmin=granularity;
 
@@ -643,57 +709,56 @@ void CPPDrawManager::SetShade(CRect rect, UINT shadeID /* = 0 */, BYTE granulari
 
 void CPPDrawManager::FillEffect(HDC hDC, DWORD dwEffect, LPCRECT lpRect, COLORREF clrBegin, COLORREF clrMid /* = 0 */, COLORREF clrEnd /* = 0 */,  BYTE granularity /* = 0 */, BYTE coloring /* = 0 */)
 {
-	CRect rect = *lpRect;
 	HBRUSH hBrush = NULL;
+
+	RECT rect;
+	rect.left = lpRect->left;
+	rect.top = lpRect->top;
+	rect.right = lpRect->right;
+	rect.bottom = lpRect->bottom;
+
+	int nHeight = rect.bottom - rect.top;
+	int nWidth = rect.right - rect.left;
+	
 	switch (dwEffect)
 	{
 	default:
 		hBrush = ::CreateSolidBrush(clrBegin);
 		::FillRect(hDC, lpRect, hBrush);
 		break;
-/*
-	case HS_HORIZONTAL:
-		break;
-	case HS_VERTICAL:
-		break;
-	case HS_FDIAGONAL:
-		break;
-	case HS_BDIAGONAL:
-		break;
-	case HS_CROSS:
-		break;
-	case HS_DIAGCROSS:
-		break;
-*/
 	case EFFECT_HGRADIENT:
-		FillGradient(hDC, rect, clrBegin, clrEnd, TRUE);
+		FillGradient(hDC, lpRect, clrBegin, clrEnd, TRUE);
 		break;
 	case EFFECT_VGRADIENT:
-		FillGradient(hDC, rect, clrBegin, clrEnd, FALSE);
+		FillGradient(hDC, lpRect, clrBegin, clrEnd, FALSE);
 		break;
 	case EFFECT_HCGRADIENT:
-		FillGradient(hDC, CRect(rect.left, rect.top, rect.left + rect.Width() / 2, rect.bottom), 
-			clrBegin, clrEnd, TRUE);
-		FillGradient(hDC, CRect(rect.left + rect.Width() / 2, rect.top, rect.right, rect.bottom), 
-			clrEnd, clrBegin, TRUE);
-		break;
-	case EFFECT_VCGRADIENT:
-		FillGradient(hDC, CRect (rect.left, rect.top, rect.right, rect.top + rect.Height() / 2), 
-			clrBegin, clrEnd, FALSE);
-		FillGradient(hDC, CRect (rect.left, rect.top + rect.Height() / 2, rect.right, rect.bottom), 
-			clrEnd, clrBegin, FALSE);
+		rect.right = rect.left + nWidth / 2;
+		FillGradient(hDC, &rect, clrBegin, clrEnd, TRUE);
+		rect.left = rect.right;
+		rect.right = lpRect->right;
+		FillGradient(hDC, &rect, clrEnd, clrBegin, TRUE);
 		break;
 	case EFFECT_3HGRADIENT:
-		FillGradient(hDC, CRect(rect.left, rect.top, rect.left + rect.Width()/2, rect.bottom), 
-			clrBegin, clrMid, TRUE);
-		FillGradient(hDC, CRect(rect.left + rect.Width() / 2, rect.top, rect.right, rect.bottom), 
-			clrMid, clrEnd, TRUE);
+		rect.right = rect.left + nWidth / 2;
+		FillGradient(hDC, &rect, clrBegin, clrMid, TRUE);
+		rect.left = rect.right;
+		rect.right = lpRect->right;
+		FillGradient(hDC, &rect, clrMid, clrEnd, TRUE);
+		break;
+	case EFFECT_VCGRADIENT:
+		rect.bottom = rect.top + nHeight / 2;
+		FillGradient(hDC, &rect, clrBegin, clrEnd, FALSE);
+		rect.top = rect.bottom;
+		rect.bottom = lpRect->bottom;
+		FillGradient(hDC, &rect, clrEnd, clrBegin, FALSE);
 		break;
 	case EFFECT_3VGRADIENT:
-		FillGradient(hDC, CRect (rect.left, rect.top, rect.right, rect.top + rect.Height() / 2), 
-			clrBegin, clrMid, FALSE);
-		FillGradient(hDC, CRect (rect.left, rect.top + rect.Height() / 2, rect.right, rect.bottom), 
-			clrMid, clrEnd, FALSE);
+		rect.bottom = rect.top + nHeight / 2;
+		FillGradient(hDC, &rect, clrBegin, clrMid, FALSE);
+		rect.top = rect.bottom;
+		rect.bottom = lpRect->bottom;
+		FillGradient(hDC, &rect, clrMid, clrEnd, FALSE);
 		break;
 #ifdef USE_SHADE
 	case EFFECT_NOISE:
@@ -705,8 +770,12 @@ void CPPDrawManager::FillEffect(HDC hDC, DWORD dwEffect, LPCRECT lpRect, COLORRE
 	case EFFECT_SOFTBUMP:
 	case EFFECT_HARDBUMP:
 	case EFFECT_METAL:
-		SetShade(CRect (0, 0, rect.Width(), rect.Height()), dwEffect, granularity, coloring, clrBegin, clrMid, clrEnd);
-		m_dNormal.Draw(hDC, rect.left, rect.top);
+		rect.left = 0;
+		rect.top = 0;
+		rect.right = nWidth;
+		rect.bottom = nHeight;
+		SetShade(&rect, dwEffect, granularity, coloring, clrBegin, clrMid, clrEnd);
+		m_dNormal.Draw(hDC, lpRect->left, lpRect->top);
 		break; 
 #endif
 	} //switch
@@ -747,10 +816,12 @@ void CPPDrawManager::DrawBitmap(HDC hDC, int x, int y, DWORD dwWidth, DWORD dwHe
 					DWORD dwCyDepth /* = PPDRAWMANAGER_SHADOW_YDEPTH */,
 					COLORREF clrShadow /* = PPDRAWMANAGER_SHADOW_COLOR */)
 {
+	m_bIsAlpha = FALSE;
 	if (NULL == hSrcBitmap)
 		return;
 
-	CSize sz = GetSizeOfBitmap(hSrcBitmap);
+	SIZE sz;
+	GetSizeOfBitmap(hSrcBitmap, &sz);
 
 	HDC hSrcDC = ::CreateCompatibleDC(hDC);
 	HDC hDestDC = ::CreateCompatibleDC(hDC);
@@ -769,15 +840,15 @@ void CPPDrawManager::DrawBitmap(HDC hDC, int x, int y, DWORD dwWidth, DWORD dwHe
 	::SelectObject(hDestDC, hOldDestBitmap);
 	
 	HBITMAP hMaskBmp = CreateImageEffect(hBitmapTemp, dwWidth, dwHeight, IMAGE_EFFECT_MASK, bUseMask, crMask);
-	HBITMAP hBitmap = CreateImageEffect(hBitmapTemp, dwWidth, dwHeight, dwEffect, bUseMask, crMask);
+	HBITMAP hBitmap = CreateImageEffect(hBitmapTemp, dwWidth, dwHeight, dwEffect, bUseMask, crMask, clrShadow);
 	
 	if (bShadow)
 	{
 		if (dwEffect & IMAGE_EFFECT_SHADOW)
 		{
-			CPoint ptShadow = CPoint (x, y);
-			ptShadow.x += dwCxShadow;
-			ptShadow.y += dwCyShadow;
+			POINT ptShadow;
+			ptShadow.x = x + dwCxShadow;
+			ptShadow.y = y + dwCyShadow;
 			HBITMAP hShadowBmp =  CreateImageEffect(hBitmapTemp, dwWidth, dwHeight, IMAGE_EFFECT_MASK, bUseMask, crMask, InvertColor(clrShadow));
 			DrawShadow(hDC, ptShadow.x, ptShadow.y, dwWidth, dwHeight, hShadowBmp, dwEffect & IMAGE_EFFECT_GRADIENT_SHADOW, dwCxDepth, dwCyDepth);
 			::DeleteObject(hShadowBmp);
@@ -789,21 +860,27 @@ void CPPDrawManager::DrawBitmap(HDC hDC, int x, int y, DWORD dwWidth, DWORD dwHe
 		} //if
 	} //if
 	
-	//Merge the image mask with backround
-	::SelectObject(hSrcDC, hMaskBmp);
-	::BitBlt(hDC, x, y, dwWidth, dwHeight, hSrcDC, 0, 0, SRCAND);
-	
-	//Draw the image
-	::SelectObject(hSrcDC, hBitmap);
-	::BitBlt(hDC, x, y, dwWidth, dwHeight, hSrcDC, 0, 0, SRCPAINT);
+	if (m_bIsAlpha)
+	{
+		::SelectObject(hSrcDC, hBitmap);
+		AlphaChannelBitBlt(hDC, x, y, dwWidth, dwHeight, hSrcDC, 0, 0);
+	}
+	else
+	{
+		//Merge the image mask with background
+		::SelectObject(hSrcDC, hMaskBmp);
+		::BitBlt(hDC, x, y, dwWidth, dwHeight, hSrcDC, 0, 0, SRCAND);
+		
+		//Draw the image
+		::SelectObject(hSrcDC, hBitmap);
+		::BitBlt(hDC, x, y, dwWidth, dwHeight, hSrcDC, 0, 0, SRCPAINT);
+	}
 	
 	::SelectObject(hSrcDC, hOldSrcBitmap);
 	
 	::DeleteDC(hDestDC);
 	::DeleteDC(hSrcDC);
 
-	::DeleteObject(hOldDestBitmap);
-	::DeleteObject(hOldSrcBitmap);
 	::DeleteObject(hBitmap);
 	::DeleteObject(hMaskBmp);
 	::DeleteObject(hBitmapTemp);
@@ -818,14 +895,16 @@ void CPPDrawManager::DrawIcon(HDC hDC, int x, int y, DWORD dwWidth, DWORD dwHeig
 							DWORD dwCyDepth /* = PPDRAWMANAGER_SHADOW_YDEPTH */,
 							COLORREF clrShadow /* = PPDRAWMANAGER_SHADOW_COLOR */)
 {
+	m_bIsAlpha = FALSE;
 	if (NULL == hSrcIcon)
 		return;
 
-	CSize sz = GetSizeOfIcon(hSrcIcon);
+	SIZE sz;
+	GetSizeOfIcon(hSrcIcon, &sz);
 
 	HICON hIcon = NULL;
 
-	if (((DWORD)sz.cx == dwWidth) && ((DWORD)sz.cy == dwHeight)) 
+	if (((DWORD)sz.cx == dwWidth) && ((DWORD)sz.cy == dwHeight))
 		hIcon = ::CopyIcon(hSrcIcon);
 	else hIcon = StretchIcon(hSrcIcon, dwWidth, dwHeight);
 	
@@ -836,16 +915,20 @@ void CPPDrawManager::DrawIcon(HDC hDC, int x, int y, DWORD dwWidth, DWORD dwHeig
 
 	HDC hSrcDC = ::CreateCompatibleDC(hDC);
 	
-	HBITMAP hBitmap = CreateImageEffect(csOriginal.hbmColor, dwWidth, dwHeight, dwEffect, TRUE, RGB(0, 0, 0));
+	HBITMAP hBitmap;
+	if (dwEffect & IMAGE_EFFECT_MONOCHROME)
+		hBitmap = CreateImageEffect(csOriginal.hbmMask, dwWidth, dwHeight, dwEffect, TRUE, RGB(255, 255, 255), clrShadow);
+	else
+		hBitmap = CreateImageEffect(csOriginal.hbmColor, dwWidth, dwHeight, dwEffect, TRUE, RGB(0, 0, 0), clrShadow);
 	HBITMAP hOldSrcBitmap = (HBITMAP)::SelectObject(hSrcDC, hBitmap);
 
 	if (bShadow)
 	{
 		if (dwEffect & IMAGE_EFFECT_SHADOW)
 		{
-			CPoint ptShadow = CPoint (x, y);
-			ptShadow.x += dwCxShadow;
-			ptShadow.y += dwCyShadow;
+			POINT ptShadow;
+			ptShadow.x = x + dwCxShadow;
+			ptShadow.y = y + dwCyShadow;
 			HBITMAP hShadowBmp =  CreateImageEffect(csOriginal.hbmMask, dwWidth, dwHeight, IMAGE_EFFECT_MASK, TRUE, RGB(255, 255, 255), InvertColor(clrShadow));
 			DrawShadow(hDC, ptShadow.x, ptShadow.y, dwWidth, dwHeight, hShadowBmp, dwEffect & IMAGE_EFFECT_GRADIENT_SHADOW, dwCxDepth, dwCyDepth);
 			::DeleteObject(hShadowBmp);
@@ -857,24 +940,31 @@ void CPPDrawManager::DrawIcon(HDC hDC, int x, int y, DWORD dwWidth, DWORD dwHeig
 		} //if
 	} //if
 	
-	//-------------------------------------------------------------------
-	// !!! ATTENTION !!!
-	// I don't know why a icon uses text's color
-	// Therefore I change a text's color to BLACK and after draw I restore
-	// original color
-	//-------------------------------------------------------------------
-	COLORREF crOldColor = ::SetTextColor(hDC, RGB(0, 0, 0));
-	//Merge the image mask with background
-	::SelectObject(hSrcDC, csOriginal.hbmMask);
-	::BitBlt(hDC, x, y, dwWidth, dwHeight, hSrcDC, 0, 0, SRCAND);
-	//Draw the image
-	::SelectObject(hSrcDC, hBitmap);
-	::BitBlt(hDC, x, y, dwWidth, dwHeight, hSrcDC, 0, 0, SRCPAINT);
-	::SetTextColor(hDC, crOldColor);
+	if (m_bIsAlpha)
+	{
+//		::SelectObject(hSrcDC, hBitmap);
+		AlphaChannelBitBlt(hDC, x, y, dwWidth, dwHeight, hSrcDC, 0, 0);
+	}
+	else
+	{
+		//-------------------------------------------------------------------
+		// !!! ATTENTION !!!
+		// I don't know why a icon uses text's color
+		// Therefore I change a text's color to BLACK and after draw I restore
+		// original color
+		//-------------------------------------------------------------------
+		COLORREF crOldColor = ::SetTextColor(hDC, RGB(0, 0, 0));
+		//Merge the image mask with background
+		::SelectObject(hSrcDC, csOriginal.hbmMask);
+		::BitBlt(hDC, x, y, dwWidth, dwHeight, hSrcDC, 0, 0, SRCAND);
+		//Draw the image
+		::SelectObject(hSrcDC, hBitmap);
+		::BitBlt(hDC, x, y, dwWidth, dwHeight, hSrcDC, 0, 0, SRCPAINT);
+		::SetTextColor(hDC, crOldColor);
+	} //if
 
 	::SelectObject(hSrcDC, hOldSrcBitmap);
 	::DeleteDC(hSrcDC);
-	::DeleteObject(hOldSrcBitmap);
 	::DeleteObject(hBitmap);
 	::DestroyIcon(hIcon);
 
@@ -980,17 +1070,60 @@ void CPPDrawManager::DrawShadow(HDC hDestDC, int nDestX, int nDestY, DWORD dwWid
 			::BitBlt (hDestDC, nDestX, nDestY, dwWidth, dwHeight, hTempDC, 0, 0, SRCCOPY);
 			::SelectObject (hTempDC, hOldTempBmp);
 
-			delete lpbiDest;
+			delete [] lpbiDest;
 			::DeleteObject(hDestDib);
 		} //if
-		delete lpbiSrc;
+		delete [] lpbiSrc;
 		::DeleteObject(hSrcDib);
-		::DeleteObject(hOldTempBmp);
-		::DeleteObject(hOldSrcBmp);
 	} //if
 	::DeleteDC(hTempDC);
 	::DeleteDC(hSrcDC);
 } //End DrawIcon
+
+void CPPDrawManager::DrawImageList(HDC hDC, int x, int y, DWORD dwWidth, DWORD dwHeight, HBITMAP hSrcBitmap,
+					int nIndex, int cx, int cy,
+					BOOL bUseMask, COLORREF crMask, 
+					DWORD dwEffect /*= IMAGE_EFFECT_NONE*/, 
+					BOOL bShadow /*= FALSE*/, 
+					DWORD dwCxShadow /*= PPDRAWMANAGER_SHADOW_XOFFSET*/, 
+					DWORD dwCyShadow /*= PPDRAWMANAGER_SHADOW_YOFFSET*/,
+					DWORD dwCxDepth /*= PPDRAWMANAGER_SHADOW_XDEPTH*/, 
+					DWORD dwCyDepth /*= PPDRAWMANAGER_SHADOW_YDEPTH*/,
+					COLORREF clrShadow /*= PPDRAWMANAGER_SHADOW_COLOR*/)
+{
+	if ((NULL == hSrcBitmap) || !cx || !cy)
+		return;
+
+	SIZE sz;
+	GetSizeOfBitmap(hSrcBitmap, &sz);
+
+	//ENG: Gets a max columns and rows of the images on the bitmap
+	//RUS: Получаем максимальное число колонок и строк изображений на битмапке
+	int nMaxCol = sz.cx / cx;
+	int nMaxRow = sz.cy / cy;
+	int nMaxImages = nMaxCol * nMaxRow;
+
+	if ((nIndex < nMaxImages) && nMaxCol && nMaxRow)
+	{
+		//ENG: Gets an specified image from the bitmap
+		//RUS: Получаем указанное изображение из битмапа
+		HDC hSrcDC = ::CreateCompatibleDC(hDC);
+		HDC hDestDC = ::CreateCompatibleDC(hDC);
+		HBITMAP hIconBmp = ::CreateCompatibleBitmap(hDC, cx, cy);
+		HBITMAP hOldSrcBmp = (HBITMAP)::SelectObject(hSrcDC, hSrcBitmap);
+		HBITMAP hOldDestBmp = (HBITMAP)::SelectObject(hDestDC, hIconBmp);
+		::BitBlt(hDestDC, 0, 0, cx, cy, hSrcDC, (nIndex % nMaxCol) * cx, (nIndex / nMaxCol) * cy, SRCCOPY);
+		::SelectObject(hSrcDC, hOldSrcBmp);
+		::SelectObject(hDestDC, hOldDestBmp);
+		::DeleteDC(hSrcDC);
+		::DeleteDC(hDestDC);
+		DrawBitmap( hDC, x, y, dwWidth, dwHeight, hIconBmp, 
+					bUseMask, crMask, dwEffect, 
+					bShadow, dwCxShadow, dwCyShadow, 
+					dwCxDepth, dwCyDepth, clrShadow);
+		::DeleteObject(hIconBmp);
+	} //if
+} //End of DrawImageList
 
 void CPPDrawManager::MaskToDepth(HDC hDC, DWORD dwWidth, DWORD dwHeight, HBITMAP hMask, double * pDepth, BOOL bGradient /* = FALSE */, DWORD dwDepthX /* = PPDRAWMANAGER_CXSHADOW */, DWORD dwDepthY /* = PPDRAWMANAGER_CYSHADOW */)
 {
@@ -1060,10 +1193,8 @@ void CPPDrawManager::MaskToDepth(HDC hDC, DWORD dwWidth, DWORD dwHeight, HBITMAP
 				*pDepth = GetRValue(*pSrcBits) / 255;
 			} //for
 		} //if
-		delete lpbiSrc;
+		delete [] lpbiSrc;
 		::DeleteObject(hSrcDib);
-		::DeleteObject(hOldTempBmp);
-		::DeleteObject(hOldSrcBmp);
 	} //if
 	::DeleteDC(hTempDC);
 	::DeleteDC(hSrcDC);
@@ -1115,9 +1246,8 @@ void CPPDrawManager::DarkenByDepth(HDC hDC, int x, int y, DWORD dwWidth, DWORD d
 		::BitBlt(hDC, x, y, dwWidth, dwHeight, hSrcDC, 0, 0, SRCCOPY);
 		::SelectObject (hSrcDC, hOldSrcBmp);
 
-		delete lpbiSrc;
+		delete [] lpbiSrc;
 		::DeleteObject(hSrcDib);
-		::DeleteObject(hOldSrcBmp);
 	} //if
 	::DeleteDC(hSrcDC);
 } //DarkenByDepth
@@ -1167,8 +1297,8 @@ void CPPDrawManager::SmoothMaskImage(const int ImageWidth,
 	} //if
 	
 	
-	delete []pfBuff1;
-	delete []pfBuff2;
+	delete [] pfBuff1;
+	delete [] pfBuff2;
 } //End SmoothMaskImage
 
 void CPPDrawManager::GetPartialSums(const double* const pM,
