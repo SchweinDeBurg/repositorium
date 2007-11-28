@@ -58,6 +58,27 @@ using std::max;
 
 // TODO: reference additional headers your program requires here
 
+#include "XTrace.h"
+
+///////////////////////////////////////////////////////////////////////////////
+// uncomment following line to remove support for comboboxes
+//#define DO_NOT_INCLUDE_XCOMBOLIST
+
+///////////////////////////////////////////////////////////////////////////////
+// uncomment following line to remove support for tooltips
+//#define NO_XLISTCTRL_TOOL_TIPS
+
+///////////////////////////////////////////////////////////////////////////////
+// comment the following line to disable TRACE statements within the 
+// XListCtrl library
+#define ENABLE_XLISTCTRL_TRACE
+
+#ifdef ENABLE_XLISTCTRL_TRACE
+	#define XLISTCTRL_TRACE TRACE
+#else
+	#define XLISTCTRL_TRACE __noop
+#endif
+
 // force ISO/IEC 14882 conformance in for loop scope
 #if (_MSC_VER < 1300)
 #define for if (false); else for
