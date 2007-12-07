@@ -377,8 +377,17 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
                           this issue.
                           4. Fixed an issue in CPJNSMTPConnection::SendMessage(const CString& sMessageOnFile... where under certain circumstances
                           we could end up deleting the local "pSendBuf" buffer twice. Thanks to Izidor Rozman for reporting this issue.
+         PJN / 30-03-2007 1. Fixed a bug in CPJNSMTPConnection::SetHeloHostname where an unitialized stack variable could potentially be used. Thanks
+                          to Anthony Kowalski for reporting this bug.
+                          2. Updated copyright details.
+         PJN / 01-08-2007 1. AuthCramMD5, ConnectESMTP, ConnectSMTP, AuthLogin, and AuthPlain methods have now been made virtual.
+                          2. Now includes support for a Auto Authentication protocol. This will detect what authentication methods the SMTP server 
+                          supports and uses the "most secure" method available. If you do not agree with the order in which the protocol is chosen,
+                          a virtual function called "ChooseAuthenticationMethod" is provided. Thanks to "zhangbo" for providing this very nice 
+                          addition to the code.
+                          3. Removed the definition for the defunct "AuthNTLM" method.
                           
-Copyright (c) 1998 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -405,7 +414,7 @@ my explicit written consent.
 #include "PJNMD5.h"
 
 #ifndef _WININET_
-#pragma message("To avoid this message, please put WinInet.h in your PCH (usually stdafx.h)")
+#pragma message("To avoid this message, please put WinInet.h in your pre compiled header (usually stdafx.h)")
 #include <WinInet.h>
 #endif
 
@@ -442,8 +451,8 @@ static char THIS_FILE[] = __FILE__;
 
 #define PJNSMTP_MAXLINE  76
 
-#pragma comment(lib, "wsock32.lib") //Automatically link in Winsock dll
-#pragma comment(lib, "rpcrt4.lib")  //Automatically link in RPC runtime dll
+#pragma comment(lib, "wsock32.lib") //Automatically link in the Winsock dll
+#pragma comment(lib, "rpcrt4.lib")  //Automatically link in the RPC runtime dll
 
 #ifndef CPJNSMTP_NONTLM
 #ifndef SEC_SUCCESS
@@ -1502,7 +1511,7 @@ std::string CPJNSMTPBodyPart::HeaderEncode(const CString& sText, const CString& 
 }
 
 
-CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.65")), 
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.67")), 
                                      m_bMime(FALSE), 
                                      m_Priority(NO_PRIORITY),
                                      m_DSNReturnType(HEADERS_ONLY),
@@ -2453,10 +2462,11 @@ void CPJNSMTPConnection::SetHeloHostname(const CString& sHostname)
 	if (sHostname == _T("auto"))
 	{
 		//retrieve the localhost name
-		char sHostName[_MAX_PATH];
-		gethostname(sHostName, sizeof(sHostName));
-		TCHAR* pszHostName = A2T(sHostName);
-		m_sHeloHostname = pszHostName;
+		char sHostName[_MAX_PATH] = "\0";
+		if (gethostname(sHostName, sizeof(sHostName)) == 0)
+		  m_sHeloHostname = A2T(sHostName);
+    else
+      m_sHeloHostname = sHostname;
 	}
   else
     m_sHeloHostname = sHostname;
@@ -2744,6 +2754,24 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
   }
 }
 
+CPJNSMTPConnection::AuthenticationMethod CPJNSMTPConnection::ChooseAuthenticationMethod(const CString& sAuthMethods)
+{
+  //What will be the return value from this function
+  AuthenticationMethod am = AUTH_AUTO;
+
+  //decide which protocol to choose
+	if (_tcsstr(sAuthMethods, _T("NTLM")) != NULL)
+		am = AUTH_NTLM;
+	else if (_tcsstr(sAuthMethods, _T("CRAM-MD5")) != NULL)
+		am = AUTH_CRAM_MD5;
+	else if (_tcsstr(sAuthMethods, _T("LOGIN")) != NULL)
+		am = AUTH_LOGIN;
+	else if (_tcsstr(sAuthMethods, _T("PLAIN")) != NULL)
+		am = AUTH_PLAIN;
+		
+  return am;
+}
+
 //This function connects using one of the Extended SMTP methods i.e. EHLO
 void CPJNSMTPConnection::ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername, LPCTSTR pszPassword, AuthenticationMethod am)
 {
@@ -2769,11 +2797,35 @@ void CPJNSMTPConnection::ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername,
     pEx->Delete();
     ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
-	
+  
   //check the response to the EHLO command
   if (!ReadCommandResponse(250))
     ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_EHLO_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
+  //If we are doing "Auto authentication, then find the supported protocols of the SMTP server, then pick and use one
+  if (am == AUTH_AUTO)
+  {
+    //Find the authentication methods supported by the SMTP server
+    CString sResponse(GetLastCommandResponse());
+		TCHAR* sBegin = _T("250-AUTH ");
+		TCHAR* sEnd = _T("\r\n");
+		int PosBegin = sResponse.Find(sBegin);
+		if (PosBegin >= 0)
+		{
+			CString sAuthMethods;
+			int PosEnd = sResponse.Find(sEnd, PosBegin);
+			if (PosEnd >= 0)
+				sAuthMethods = sResponse.Mid(PosBegin + 9, PosEnd - PosBegin - 9);
+			else
+				sAuthMethods = sResponse.Mid(PosBegin + 9);
+			sAuthMethods.MakeUpper();
+
+      //Now decide which protocol to choose via the virtual function to allow further client customization
+			am = ChooseAuthenticationMethod(sAuthMethods);
+		}
+  }
+
+  //What we do next depends on what authentication protocol we are using
   switch (am)
   {
     case AUTH_CRAM_MD5:
@@ -2800,6 +2852,11 @@ void CPJNSMTPConnection::ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername,
       break;
     }
     #endif  
+    case AUTH_AUTO:
+		{
+			ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_EHLO_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+			break;
+		}    
     default:
     {
       ASSERT(FALSE);
@@ -3851,7 +3908,7 @@ void CPJNSMTPConnection::AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword)
     ThrowPJNSMTPException(dwError, FACILITY_WIN32);
   }
 
-	//Check the response to the AUTH PLAIN command
+	//Check the response to the AUTH CRAM-MD5 command
 	if (!ReadCommandResponse(334))
     ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_AUTH_CRAM_MD5_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 

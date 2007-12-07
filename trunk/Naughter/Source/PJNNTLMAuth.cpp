@@ -26,7 +26,7 @@ History: PJN / 05-09-2005 1. Function pointer to CompleteAuthToken is now constr
                           string. This avoids NTLM authentication issues when authenticating as a non-domain user with certain
                           mail servers. Thanks to Wouter Demuynck for reporting this issue.
 
-Copyright (c) 2005 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2005 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -41,12 +41,12 @@ to maintain a single distribution point for the source code.
 */
 
 
-//////////////// Includes ////////////////////////////////////////////
+//////////////// Includes /////////////////////////////////////////////////////
 
 #include "stdafx.h"
 #include "PJNNTLMAuth.h"
 #ifndef __SSPI_H__
-#pragma message("To avoid this message, please put Sspi.h in your PCH (usually stdafx.h)")
+#pragma message("To avoid this message, please put Sspi.h in your pre compiled header (usually stdafx.h)")
 #include <Sspi.h>
 #endif
 
@@ -55,7 +55,7 @@ to maintain a single distribution point for the source code.
 #pragma warning(disable: 177)
 #endif	// __INTEL_COMPILER
 
-//////////////// Macros / Locals /////////////////////////////////////
+//////////////// Macros / Locals //////////////////////////////////////////////
 
 #if (_MFC_VER < 0x700)
 #ifdef _DEBUG
@@ -70,7 +70,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-//////////////// Implementation //////////////////////////////////////
+//////////////// Implementation ///////////////////////////////////////////////
 
 CNTLMClientAuth::CNTLMClientAuth()
 {

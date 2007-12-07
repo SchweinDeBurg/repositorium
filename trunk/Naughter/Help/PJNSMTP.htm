@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>CPJNSMTPConnection v2.65</title>
+<title>CPJNSMTPConnection v2.67</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
 
 </head>
@@ -11,10 +11,9 @@
 
 <h2 align="left">
 <img src="PJNSMTP.gif" width="39" height="38" alt="PJNSMTP.gif (295 bytes)" /><strong>CPJNSMTPConnection 
-v2.65</strong></h2>
+v2.67</strong></h2>
 
-<p>Welcome to <strong>CPJNSMTPConnection</strong> (formerly 
-CSMTPConnection), a collection of MFC classes to
+<p>Welcome to <strong>CPJNSMTPConnection</strong>, a collection of MFC classes to
 support the SMTP protocol. SMTP for those not familiar with all the internet protocols is
 the protocol used to send internet email. </p>
 
@@ -97,7 +96,10 @@ my explicit written consent.</p>
 	form of authentication such as AUTH PLAIN because it does not operate as an 
 	open relay (which would facilitate spam).</li>
 	<li>Supports numerous authentication protocols including &quot;AUTH CRAM-MD5&quot;, 
-	&quot;AUTH LOGIN&quot;, &quot;AUTH PLAIN&quot; and &quot;AUTH NTLM&quot;.</li>
+	&quot;AUTH LOGIN&quot;, &quot;AUTH PLAIN&quot; and &quot;AUTH NTLM&quot;. An 
+	&quot;Auto Detection&quot; form of authentication is also supported. In this mode, the 
+	authentication protocols supported by the server are detected and the most 
+	appropriate protocol is used.</li>
 	<li>As of v2.65, the classes include comprehensive support for DSN's 
 	(Delivery Status Notifications) as specified in RFC 3461.</li>
 </ul>
@@ -115,7 +117,7 @@ my explicit written consent.</p>
 	are only allowed to distribute versions released by the author. This is to 
 	maintain a single distribution point for the source code. </li>
 	<li><b><i>Important!!:</i></b> Please note that I have been informed 
-	recently that CPJNSMTPConnection is being used to develop and send 
+	that CPJNSMTPConnection is being used to develop and send 
 	unsolicited bulk mail. This was not the intention of the code and the author 
 	explicitly forbids use of the code for any software of this kind without my 
 	explicit written consent.</li>
@@ -1064,6 +1066,25 @@ autoexec.bat file!&quot;;<br />
 	the local &quot;pSendBuf&quot; buffer twice. Thanks to Izidor Rozman for reporting 
 	this issue.</li>
 </ul>
+<p><strong>V2.66 (30 March 2007</strong><b>)</b></p>
+<ul>
+	<li>Fixed a bug in CPJNSMTPConnection::SetHeloHostname where an unitialized 
+	stack variable could potentially be used. Thanks to Anthony Kowalski for 
+	reporting this bug.</li>
+	<li>Updated copyright details.</li>
+</ul>
+<p><strong>V2.67 (1 August 2007</strong><b>)</b></p>
+<ul>
+	<li>AuthCramMD5, ConnectESMTP, ConnectSMTP, AuthLogin, and AuthPlain methods 
+	have now been made virtual.</li>
+	<li>Now includes support for a Auto Authentication protocol. This will 
+	detect what authentication methods the SMTP server supports and uses the 
+	&quot;most secure&quot; method available. If you do not agree with the order in which 
+	the protocol is chosen, a virtual function called &quot;ChooseAuthenticationMethod&quot; 
+	has been provided. 
+	Thanks to &quot;zhangbo&quot; for providing this very nice addition to the code.</li>
+	<li>Removed the definition for the defunct &quot;AuthNTLM&quot; method.</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1079,7 +1100,7 @@ autoexec.bat file!&quot;;<br />
 <p>PJ Naughter<br />
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br />
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br />
-9 November 2006</p>
+1 August 2007</p>
 
 </body>
 
