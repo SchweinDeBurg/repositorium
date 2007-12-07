@@ -2044,6 +2044,11 @@
 #define NID_id_ce		81
 #define OBJ_id_ce		OBJ_X500,29L
 
+#define SN_subject_directory_attributes		"subjectDirectoryAttributes"
+#define LN_subject_directory_attributes		"X509v3 Subject Directory Attributes"
+#define NID_subject_directory_attributes		769
+#define OBJ_subject_directory_attributes		OBJ_id_ce,9L
+
 #define SN_subject_key_identifier		"subjectKeyIdentifier"
 #define LN_subject_key_identifier		"X509v3 Subject Key Identifier"
 #define NID_subject_key_identifier		82
@@ -2093,6 +2098,16 @@
 #define LN_delta_crl		"X509v3 Delta CRL Indicator"
 #define NID_delta_crl		140
 #define OBJ_delta_crl		OBJ_id_ce,27L
+
+#define SN_issuing_distribution_point		"issuingDistributionPoint"
+#define LN_issuing_distribution_point		"X509v3 Issuing Distrubution Point"
+#define NID_issuing_distribution_point		770
+#define OBJ_issuing_distribution_point		OBJ_id_ce,28L
+
+#define SN_certificate_issuer		"certificateIssuer"
+#define LN_certificate_issuer		"X509v3 Certificate Issuer"
+#define NID_certificate_issuer		771
+#define OBJ_certificate_issuer		OBJ_id_ce,29L
 
 #define SN_name_constraints		"nameConstraints"
 #define LN_name_constraints		"X509v3 Name Constraints"
@@ -3390,4 +3405,29 @@
 #define SN_camellia_256_cfb8		"CAMELLIA-256-CFB8"
 #define LN_camellia_256_cfb8		"camellia-256-cfb8"
 #define NID_camellia_256_cfb8		765
+
+#define SN_kisa		"KISA"
+#define LN_kisa		"kisa"
+#define NID_kisa		773
+#define OBJ_kisa		OBJ_member_body,410L,200004L
+
+#define SN_seed_ecb		"SEED-ECB"
+#define LN_seed_ecb		"seed-ecb"
+#define NID_seed_ecb		776
+#define OBJ_seed_ecb		OBJ_kisa,1L,3L
+
+#define SN_seed_cbc		"SEED-CBC"
+#define LN_seed_cbc		"seed-cbc"
+#define NID_seed_cbc		777
+#define OBJ_seed_cbc		OBJ_kisa,1L,4L
+
+#define SN_seed_cfb128		"SEED-CFB"
+#define LN_seed_cfb128		"seed-cfb"
+#define NID_seed_cfb128		779
+#define OBJ_seed_cfb128		OBJ_kisa,1L,5L
+
+#define SN_seed_ofb128		"SEED-OFB"
+#define LN_seed_ofb128		"seed-ofb"
+#define NID_seed_ofb128		778
+#define OBJ_seed_ofb128		OBJ_kisa,1L,6L
 
