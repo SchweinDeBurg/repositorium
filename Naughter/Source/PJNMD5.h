@@ -8,8 +8,7 @@ History: PJN / 18-05-2005 1. Fixed a compiler warning when compiled using Visual
                           necessary since the CRAM-MD5 authentication mechanism requires a lowercase MD5 hash. Thanks to 
                           Jian Peng for reporting this issue.
 
-
-Copyright (c) 2005 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2005 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -23,22 +22,24 @@ to maintain a single distribution point for the source code.
 
 */
 
+
+////////////////////////////// Macros / Defines ///////////////////////////////
+
+#pragma once
+
 #ifndef __PJNMD5_H__
 #define __PJNMD5_H__
-
 
 
 ////////////////////////////// Includes ///////////////////////////////////////
 
 #ifndef __WINCRYPT_H__
-#pragma message("To avoid this message, put wincrypt.h in your PCH (usually stdafx.h)")
+#pragma message("To avoid this message, put wincrypt.h in your pre compiled header (usually stdafx.h)")
 #include <wincrypt.h>
 #endif
 
 
-
 ////////////////////////////// Classes ////////////////////////////////////////
-
 
 ////// A simple wrapper class which contains a MD5 hash i.e. a 16 byte blob ///
 

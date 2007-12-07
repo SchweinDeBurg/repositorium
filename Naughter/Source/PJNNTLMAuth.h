@@ -3,7 +3,7 @@ Module : PJNNTLMAuth.H
 Purpose: Defines the interface for a simple wrapper class for client NTLM authentication via SSPI
 Created: PJN / 07-03-2005
 
-Copyright (c) 2005 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2005 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
