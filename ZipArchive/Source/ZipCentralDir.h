@@ -56,9 +56,7 @@ public:
 		Used in fast finding files by the filename.
 		A structure for the internal use only.
 		\see
-			CZipCentralDir::m_findarray
-		\see
-			CZipArchive::GetFindFastElement
+			CZipCentralDir::m_pFindArray
 		\see
 			CZipArchive::FindFile
 		\see
@@ -79,7 +77,7 @@ public:
 		CZipFileHeader* m_pHeader;
 
 		/**
-			The index in the central directory of the \a m_pHeader.
+			The index in the central directory of the #m_pHeader.
 		*/
 		ZIP_INDEX_TYPE m_uIndex;
 	};
@@ -100,12 +98,12 @@ public:
 		ZIP_SIZE_TYPE   m_uEndOffset;
 
 		/**
-			The zero-based number of the disk with the End of Central Directory Record. To determine the total number of segments in an archive,
+			The zero-based number of the volume with the End of Central Directory Record. To determine the total number of segments in an archive,
 			add one to this value. Request this information with CZipArchive::GetCentralDirInfo.
 		*/
-		ZIP_PART_TYPE m_uLastDisk;
-		ZIP_PART_TYPE m_uDiskWithCD;		///< The number of the disk with the start of the central directory.
-		ZIP_INDEX_TYPE m_uDiskEntriesNo;	///< The total number of entries in the central directory on the last disk.
+		ZIP_VOLUME_TYPE m_uLastVolume;
+		ZIP_VOLUME_TYPE m_uVolumeWithCD;		///< The number of the volume with the start of the central directory.
+		ZIP_INDEX_TYPE m_uVolumeEntriesNo;	///< The total number of entries in the central directory on the last volume.
 		ZIP_INDEX_TYPE m_uEntriesNumber;	///< The total number of entries in the central directory.
 
 		/**
@@ -115,7 +113,7 @@ public:
 		ZIP_SIZE_TYPE m_uSize;
 
 		/**
-			The offset of the start of the central directory with respect to the starting disk number.
+			The offset of the start of the central directory with respect to the starting volume number.
 			It is the value written in the central directory record.
 			This value is valid only if #m_bInArchive is \c true.
 		*/
@@ -127,10 +125,14 @@ public:
 		*/
 		bool m_bInArchive;
 
-	protected:
+	private:
 		friend class CZipCentralDir;		
 		void Init()
 		{
+			m_iReference = 1;
+#ifdef ZIP_ARCHIVE_USE_LOCKING
+			m_mutex.Open();
+#endif
 			m_pCompare = GetCZipStrCompFunc(ZipPlatform::GetSystemCaseSensitivity());
 			m_bCaseSensitive = false;
 			m_bFindFastEnabled = false;
@@ -138,9 +140,9 @@ public:
 			// initialize ( necessary when using 64 bits - we are copying only 4 bytes in Read())	
 			m_bInArchive = false;
 			m_uEndOffset = 0;
-			m_uLastDisk = 0;
-			m_uDiskWithCD = 0;
-			m_uDiskEntriesNo = 0;
+			m_uLastVolume = 0;
+			m_uVolumeWithCD = 0;
+			m_uVolumeEntriesNo = 0;
 			m_uEntriesNumber = 0;
 			m_uSize = 0;  
 			m_uOffset = 0;
@@ -157,16 +159,16 @@ public:
 		{
 			return (m_uSize || !m_uEntriesNumber) && (m_uEntriesNumber || !m_uSize);
 		}
-		void DiskChange(ZIP_PART_TYPE uCurrentDisk)
+		void DiskChange(ZIP_VOLUME_TYPE uCurrentVolume)
 		{
-			m_uLastDisk = uCurrentDisk;
+			m_uLastVolume = uCurrentVolume;
 			if (m_uEntriesNumber)
 			{
-				m_uDiskEntriesNo = 0;	
+				m_uVolumeEntriesNo = 0;	
 			}
 			else
 			{
-				m_uDiskWithCD = m_uLastDisk;
+				m_uVolumeWithCD = m_uLastVolume;
 				m_uOffset = 0;
 			}
 		}
@@ -182,13 +184,13 @@ public:
 		 */
 		bool NeedsZip64() const
 		{
-			return m_uLastDisk >= USHRT_MAX || m_uDiskWithCD >= USHRT_MAX || m_uDiskEntriesNo >= USHRT_MAX || m_uEntriesNumber >= USHRT_MAX || m_uSize >= UINT_MAX || m_uOffset >= UINT_MAX;
+			return m_uLastVolume >= USHRT_MAX || m_uVolumeWithCD >= USHRT_MAX || m_uVolumeEntriesNo >= USHRT_MAX || m_uEntriesNumber >= USHRT_MAX || m_uSize >= UINT_MAX || m_uOffset >= UINT_MAX;
 		}
 
 		CZipAutoBuffer m_pszComment;	///< The global archive comment.		
 
 		/**
-			The case-sensitivity of CZipCentralDir::m_findarray sorting.
+			The case-sensitivity of CZipCentralDir::m_pFindArray sorting.
 		*/
 		bool m_bCaseSensitive;
 
@@ -498,7 +500,7 @@ public:
 			The name of the file to find.
 
 		\return
-			The index in #m_findarray with the corresponding CZipFindFast structure
+			The index in CZipCentralDir::m_pFindArray with the corresponding CZipFindFast structure
 			or \c ZIP_FILE_INDEX_NOT_FOUND, if there is no such file with the given name.
 
 		\see
@@ -523,7 +525,7 @@ public:
 	bool IsFindFastEnabled(){return m_pInfo->m_bFindFastEnabled;}
 	
 	/**
-		Rebuilds #m_pFindArray
+		Rebuilds the CZipCentralDir::m_pFindArray array.
 	*/
 	void RebuildFindFastArray()
 	{
@@ -582,7 +584,7 @@ protected:
 		if (pw1 == pw2)
 			return 0;
 
-		if (pw1->m_uDiskStart == pw2->m_uDiskStart)
+		if (pw1->m_uVolumeStart == pw2->m_uVolumeStart)
 		{
 			if (pw1->m_uOffset < pw2->m_uOffset)
 				return -1;
@@ -591,13 +593,13 @@ protected:
 				ASSERT(FALSE);
 
 
-			// two files with the same offsets on the same disk???
+			// two files with the same offsets in the same volume???
 			CZipException::Throw(CZipException::badZipFile);
 			return 0; // just for the compiler comfort (and discomfort of another)
 		}
-		else if (pw1->m_uDiskStart < pw2->m_uDiskStart)
+		else if (pw1->m_uVolumeStart < pw2->m_uVolumeStart)
 			return -1;
-		else // if (pw1->m_uDiskStart > pw2->m_uDiskStart)
+		else // if (pw1->m_uVolumeStart > pw2->m_uVolumeStart)
 			return 1;		
 	}
 
@@ -629,7 +631,7 @@ protected:
 
 
 	/**
-		Builds #m_pFindArray->
+		Builds the CZipCentralDir::m_pFindArray array.
 	*/
 	void BuildFindFastArray( bool bCaseSensitive );
 
@@ -661,13 +663,13 @@ protected:
 			The name of the file.
 
 		\param	uIndex
-			The index from #m_pFindArray->
+			The index from the CZipCentralDir::m_pFindArray array.
 
 		\return 
 			The return value has the following meaning:
 			- 0 if the filenames are the same
-			- < 0 if the filename stored in the array is less than \e lpszFileName
-			- > 0 if the filename stored in the array is greater than \e lpszFileName
+			- < 0 if the filename stored in the array is less than \a lpszFileName
+			- > 0 if the filename stored in the array is greater than \a lpszFileName
 	*/
 	int CompareElement(LPCTSTR lpszFileName, ZIP_INDEX_TYPE uIndex) const
 	{
@@ -675,7 +677,7 @@ protected:
 	}
 
 	/**
-		Inserts a new CZipFindFast element to the #m_pFindArray->
+		Inserts a new CZipFindFast element to the CZipCentralDir::m_pFindArray array
 		Initializes the CZipFindFast object with \a pHeader and \a uIndex values.
 
 		\param pHeader
@@ -686,7 +688,7 @@ protected:
 			If set to \c ZIP_FILE_INDEX_UNSPECIFIED, it is assumed to be the last element.
 
 		\return
-			The index in #m_pFindArray->
+			The index in the CZipCentralDir::m_pFindArray array.
 	*/
 	ZIP_INDEX_TYPE InsertFindFastElement(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uIndex);
 

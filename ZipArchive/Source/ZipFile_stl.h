@@ -76,7 +76,7 @@ public:
 		Open(lpszFileName, openFlags, true);
 	}
 	void Flush();
-	ULONGLONG GetLength() const;
+	ZIP_FILE_USIZE GetLength() const;
 	CZipString GetFilePath() const {return m_szFileName;}
 	bool IsClosed()const { return m_hFile == -1;}
 	bool Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow);
@@ -88,7 +88,7 @@ public:
 			ThrowError();
 		else
 		{
-			m_szFileName.empty();
+			m_szFileName.Empty();
 			m_hFile = -1;
 		}
 	}

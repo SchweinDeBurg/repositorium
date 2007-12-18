@@ -16,6 +16,12 @@
 
 #ifdef ZIP_ARCHIVE_LNX
 
+#if defined __APPLE__ || defined __CYGWIN__
+	#define FILE_FUNCTIONS_64B_BY_DEFAULT
+#else
+	#undef FILE_FUNCTIONS_64B_BY_DEFAULT	
+#endif	
+
 #include "stdafx.h"
 #include "ZipPlatform.h"
 #include "ZipFileHeader.h"
@@ -102,7 +108,7 @@ bool ZipPlatform::GetCurrentDirectory(CZipString& sz)
 
 bool ZipPlatform::SetFileAttr(LPCTSTR lpFileName, DWORD uAttr)
 {
-	return chmod(lpFileName, uAttr >> 16) == 0;
+	return chmod(lpFileName, uAttr) == 0;
 }
 
 bool ZipPlatform::GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr)
@@ -110,7 +116,7 @@ bool ZipPlatform::GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr)
 	struct stat sStats;
 	if (stat(lpFileName, &sStats) == -1)
 		return false;
-  	uAttr = (sStats.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO | S_IFMT)) << 16;
+  	uAttr = (sStats.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO | S_IFMT));
   	return true;
 }
 
@@ -119,7 +125,7 @@ bool ZipPlatform::SetExeAttr(LPCTSTR lpFileName)
 	DWORD uAttr;
 	if (!GetFileAttr(lpFileName, uAttr))
 		return false;
-	uAttr |= (S_IXUSR << 16);
+	uAttr |= S_IXUSR;
 	return ZipPlatform::SetFileAttr(lpFileName, uAttr);
 }
 
@@ -218,12 +224,12 @@ ZIPINLINE  bool ZipPlatform::CreateDirectory(LPCTSTR lpDirectory)
 
 ZIPINLINE  DWORD ZipPlatform::GetDefaultAttributes()
 {
-	return 0x81a40000;
+	return S_IFREG | S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 }
 
 ZIPINLINE  DWORD ZipPlatform::GetDefaultDirAttributes()
 {
-	return ((S_IFDIR | ZIP_DEFAULT_DIR_ATTRIBUTES) << 16 ) | 0x10;
+	return S_IFDIR | ZIP_DEFAULT_DIR_ATTRIBUTES;
 }
 
 

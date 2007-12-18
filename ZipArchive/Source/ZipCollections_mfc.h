@@ -76,7 +76,14 @@ public:
 template<class KEY, class VALUE>
 class CZipMap : public CMap<KEY, KEY, VALUE, VALUE>
 {
-	
+public:
+	typedef POSITION iterator;
+	typedef POSITION const_iterator;
+
+	bool IteratorValid(const iterator &iter) const
+	{
+		return iter != NULL;
+	}
 };
 
 #if _MSC_VER > 1000

@@ -90,7 +90,7 @@ public:
 	void RemoveAll() {this->clear();}
 	void RemoveAt(size_t uIndex) { erase(GetIterFromIndex(uIndex));}
 	void InsertAt(size_t uIndex, const TYPE& x){insert(GetIterFromIndex(uIndex), x);}
-#if !defined _MSC_VER || defined __BORLANDC__
+
 	TYPE& operator[](size_t uIndex)
 	{
 		return inherited::operator[](uIndex);
@@ -99,9 +99,6 @@ public:
 	{
 		return inherited::operator[](uIndex);
 	}
-#else
-	using inherited::operator[];
-#endif 
 };
 
 
@@ -165,6 +162,7 @@ template<class KEY, class VALUE>
 class CZipMap : private std::map<KEY, VALUE>
 {
 public:
+	typedef typename std::map<KEY, VALUE>::iterator iterator;
 	typedef typename std::map<KEY, VALUE>::const_iterator const_iterator;
 	typedef typename  std::map<KEY,VALUE, std::less<KEY>, std::allocator<std::pair<const KEY, VALUE> > >::value_type v_type;
 	void SetAt( KEY key, VALUE newValue)
@@ -177,9 +175,7 @@ public:
 	}
 	ZBOOL Lookup( KEY key, VALUE& rValue ) const
 	{
-		
-
-#if (__GNUC__ >= 3) // I'm not sure which version precisely should be here
+#if (__GNUC__ >= 3) // The actual version number may be different.
 		const_iterator iter = std::map<KEY, VALUE>::find(key);
 		if (iter == std::map<KEY, VALUE>::end())
 #else
@@ -193,6 +189,34 @@ public:
 			return TRUE;
 		}
 	}
+
+	iterator GetStartPosition() { return this->begin();}
+	const_iterator GetStartPosition() const { return this->begin();}
+
+	bool IteratorValid(const_iterator &iter) const
+	{
+		return iter != this->end();
+	}
+	bool IteratorValid(iterator &iter)
+	{
+		return iter != this->end();
+	}
+
+	void GetNextAssoc(iterator &iter, KEY& key, VALUE& value)
+	{
+		key = iter->first;
+		value = iter->second;
+		iter++;
+	}
+
+	void GetNextAssoc(const_iterator &iter, KEY& key, VALUE& value)
+	{
+		key = iter->first;
+		value = iter->second;
+		iter++;
+	}
+	void RemoveAll() {this->clear();}
+
 };
 
 #if _MSC_VER > 1000

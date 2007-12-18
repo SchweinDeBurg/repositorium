@@ -135,6 +135,7 @@ public:
 
 	/**
 		Gets a value indicating whether the data descriptor is present or not.
+
 		\return
 			\c true, if the data descriptor is present; \c false otherwise.
 	*/
@@ -181,7 +182,7 @@ public:
 			If \c false, the encrypted information size is added (you should not use this value 
 			when the file exists in the archive).
 	
-		\returns
+		\return
 			The compressed data size in bytes.
 
 		\see
@@ -303,10 +304,8 @@ public:
 			The file attributes, converted if necessary to be compatible with the current system.
 
 		\note 
-			- Throws an exception, if the archive system or the current system 
-		is not supported by the ZipArchive Library.
-			- <strong>Linux version</strong>: after obtaining the attributes, 
-			you need to shift them right by 16 bits.
+			Throws an exception, if the archive system or the current system 
+			is not supported by the ZipArchive Library.			
 
 		\see
 			GetOriginalAttributes
@@ -314,12 +313,14 @@ public:
 	DWORD GetSystemAttr();
 
 	/**
-		Gets the original file attributes.
+		Gets the file attributes exactly as they are stored in the archive.
 
 		\return 
-			The original file attributes as they are stored in the archive.
+			The file attributes as they are stored in the archive.
 			No conversion is performed.
 
+		\note
+			The attributes for Linux are stored shifted left by 16 bits in this field.
 		\see 
 			GetSystemAttr
 	*/
@@ -341,7 +342,7 @@ public:
 	/**
 		Gets the string store settings for the file.
 	
-		\returns
+		\return
 			The string store settings.
 
 		\see
@@ -416,11 +417,11 @@ public:
 	DWORD m_uCrc32;						///< The crc-32 value.
 	ZIP_SIZE_TYPE m_uComprSize;			///< The compressed size.
 	ZIP_SIZE_TYPE m_uUncomprSize;		///< The uncompressed size.
-	ZIP_PART_TYPE m_uDiskStart;			///< The disk number at which the compressed file starts.
+	ZIP_VOLUME_TYPE m_uVolumeStart;		///< The volume number at which the compressed file starts.
 	WORD m_uInternalAttr;				///< Internal file attributes.
 	ZIP_SIZE_TYPE m_uLocalComprSize;	///< The compressed size written in the local header.
 	ZIP_SIZE_TYPE m_uLocalUncomprSize;	///< The uncompressed size written in the local header.
-	ZIP_SIZE_TYPE m_uOffset;			///< Relative offset of the local header with respect to #m_uDiskStart.
+	ZIP_SIZE_TYPE m_uOffset;			///< Relative offset of the local header with respect to CZipFileHeader::m_uVolumeStart.
 	CZipExtraField m_aLocalExtraData;	///< The local extra field. Do not modify after you have started compressing the file.
 	CZipExtraField m_aCentralExtraData; ///< The central extra field.
 protected:
@@ -694,7 +695,7 @@ private:
 
 	bool NeedsZip64() const
 	{
-		return m_uComprSize >= UINT_MAX || m_uUncomprSize >= UINT_MAX || m_uDiskStart >= USHRT_MAX || m_uOffset >= UINT_MAX;
+		return m_uComprSize >= UINT_MAX || m_uUncomprSize >= UINT_MAX || m_uVolumeStart >= USHRT_MAX || m_uOffset >= UINT_MAX;
 	}
 
 

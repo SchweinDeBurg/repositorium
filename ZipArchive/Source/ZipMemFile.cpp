@@ -60,7 +60,7 @@ UINT CZipMemFile::Read(void *lpBuf, UINT nCount)
 {
 	if (m_nPos >= m_nDataSize)
 		return 0;
-	UINT nToRead = (m_nPos + nCount > m_nDataSize) ? (UINT)m_nDataSize - m_nPos : nCount;
+	UINT nToRead = (m_nPos + nCount > m_nDataSize) ? (UINT)(m_nDataSize - m_nPos) : nCount;
 	memcpy(lpBuf, m_lpBuf + m_nPos, nToRead);
 	m_nPos += nToRead;
 	return nToRead;

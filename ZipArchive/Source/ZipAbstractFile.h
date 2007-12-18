@@ -36,7 +36,7 @@ public:
 			end		= SEEK_END  // 2
 	};
 	CZipAbstractFile(){}
-	virtual bool Open(LPCTSTR , UINT , bool ){return true;}
+	virtual bool Open(LPCTSTR , UINT , bool ){return false;}
 	virtual void Close() = 0;
 	virtual void Flush() = 0;
 	virtual ZIP_FILE_USIZE GetPosition() const = 0;	
@@ -46,7 +46,7 @@ public:
 		ZIP_FILE_SIZE offset;
 		if (lOff > ZIP_FILE_SIZEMAX)
 		{
-			offset = lOff - ZIP_FILE_SIZEMAX;
+			offset = GetLength() - lOff;
 			fromBeginning = !fromBeginning;
 		}
 		else

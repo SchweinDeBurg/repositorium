@@ -35,7 +35,7 @@
 
 typedef BOOL ZBOOL;
 
-#if _MSC_VER >= 1300
+#if _MSC_VER >= 1300 || defined ZIP_FILE_USES_STL
 	#define ZIP_FILE_USIZE ULONGLONG
 	#define ZIP_FILE_SIZE LONGLONG
 	#define ZIP_FILE_SIZEMAX _I64_MAX	

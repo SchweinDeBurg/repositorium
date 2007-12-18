@@ -41,7 +41,7 @@ class ZIP_API CZipCompressor
 {
 protected:
 	CZipStorage* m_pStorage;			///< The current storage object.
-	CZipAutoBuffer* m_pBuffer;			///< A buffer that receives compressed data or provides data for decompression.
+	CZipAutoBuffer m_pBuffer;			///< A buffer that receives compressed data or provides data for decompression.
 	CZipCryptograph* m_pCryptograph;	///< Current cryptograph.
 	CZipFileHeader* m_pFile;			///< The file header being compressed or decompressed.
 
@@ -51,28 +51,35 @@ protected:
 
 		\param pStorage
 			The current storage object.
-		
-		\param pBuffer
-			A pre-allocated buffer that receives compressed data or provides data for decompression.
 	 */
-	CZipCompressor(CZipStorage* pStorage, CZipAutoBuffer* pBuffer)
-		:m_pStorage(pStorage), m_pBuffer(pBuffer)
+	CZipCompressor(CZipStorage* pStorage)
+		:m_pStorage(pStorage)
 	{
 		m_pCryptograph = NULL;
 		m_uUncomprLeft = 0;
 		m_uComprLeft  = 0;
 		m_uCrc32 = 0;
 	}
-public:
+	
+public:		
+	/**
+		The type of a compressor.
+	*/
+	enum CompressorType
+	{
+		typeDeflate = 1,	///< Deflate compression (default in zip archives).
+		typeBzip2			///< Bzip2 compression.
+	};
+
 	/**
 		The compression level.
 	*/
 	enum CompressionLevel
 	{		
-		levelDefault = -1, ///< The default compression level (equals 6 for deflate).
-		levelStore = 0, ///< No compression used. Data is stored.
-		levelFastest = 1, ///< The fastest compression. The compression ratio is the lowest (apart from #levelStore).
-		levelBest = 9 ///< The highest compression ratio. It's usually the slowest.
+		levelDefault = -1,	///< The default compression level (equals 6 for deflate).
+		levelStore = 0,		///< No compression used. Data is stored.
+		levelFastest = 1,	///< The fastest compression. The compression ratio is the lowest (apart from #levelStore).
+		levelBest = 9		///< The highest compression ratio. It's usually the slowest.
 	};
 
 	/**
@@ -99,6 +106,79 @@ public:
 				<a href="kb">0610201627|aes</a>
 		*/
 		methodWinZipAes = 99
+	};
+
+	/**
+		The base class for compressors options.
+
+		\see
+			<a href="kb">0610231446|options</a>
+		\see
+			CZipArchive::SetCompressionOptions
+	*/
+	struct ZIP_API COptions
+	{
+
+		/**	  
+			  Helper constants.
+		*/
+		enum Constants
+		{
+			/**
+				The default size of the buffer used in compression and decompression operations.
+			*/
+			cDefaultBufferSize = 2 * 65536
+		};
+
+		COptions()
+		{
+			m_iBufferSize = cDefaultBufferSize;
+		}
+
+		/**
+			Gets the type of the compressor to which the current options apply.
+
+			\return
+				The type of the compressor. It can be one of the #CompressorType values.
+		*/
+		virtual int GetType() const = 0;
+
+		/**
+			Clones the current options object.
+
+			\return 
+				The cloned object of the same type as the current object.
+		*/
+		virtual COptions* Clone() const = 0;
+
+		/**
+			The size of the buffer used in compression and decompression operations. 
+			By default it is set to to #cDefaultBufferSize. For the optimal performance of the 
+			deflate algorithm it should be set at least to 128kB.
+
+			\see
+				CZipArchive::SetAdvanced
+		*/
+		int m_iBufferSize;
+		virtual ~COptions()
+		{
+		}
+	};
+
+
+	/**
+		A dictionary used for keeping options for different types of compressors.
+
+		\see
+			CZipArchive::SetCompressionOptions
+	*/
+	class ZIP_API COptionsMap : public CZipMap<int, COptions*>
+	{
+		public:
+			void Set(const COptions* pOptions);
+			void Remove(int iType);
+			COptions* Get(int iType) const; 
+			~COptionsMap();
 	};
 
 	/**
@@ -152,6 +232,7 @@ public:
 	 */
 	virtual void InitCompression(int iLevel, CZipFileHeader* pFile, CZipCryptograph* pCryptograph)	
 	{
+		InitBuffer();
 		m_uComprLeft = 0;
 		m_pFile = pFile;
 		m_pCryptograph = pCryptograph;
@@ -173,6 +254,7 @@ public:
 	 */
 	virtual void InitDecompression(CZipFileHeader* pFile, CZipCryptograph* pCryptograph)
 	{
+		InitBuffer();
 		m_pFile = pFile;
 		m_pCryptograph = pCryptograph;
 
@@ -246,6 +328,43 @@ public:
 	virtual void FinishDecompression(bool bAfterException){}
 
 	/**
+		Returns the current options of the compressor.
+
+		\return
+			The current options for the compressor.
+
+		\see
+			<a href="kb">0610231446|options</a>
+		\see
+			CZipArchive::SetCompressionOptions
+		\see 
+			UpdateOptions
+	*/
+	virtual const COptions* GetOptions() const
+	{
+		return NULL;
+	}
+
+	/**
+		Updates the current options with the options stored in \a optionsMap,
+		if the appropriate options are present in the map.
+
+		\param optionsMap
+			The map to get the new options from.
+
+		\see
+			<a href="kb">0610231446|options</a>
+		\see
+			GetOptions		
+	*/
+	void UpdateOptions(const COptionsMap& optionsMap);
+
+
+	virtual ~CZipCompressor()
+	{
+	}
+
+	/**
 		A factory method that creates an appropriate compressor for the given compression method.
 
 		\param uMethod
@@ -253,17 +372,20 @@ public:
 
 		\param pStorage
 			The current storage object.
-
-		\param pBuffer
-			A pre-allocated buffer that receives compressed data or provides data for decompression.
-
 	*/
-	static CZipCompressor* CreateCompressor(WORD uMethod, CZipStorage* pStorage, CZipAutoBuffer* pBuffer);
+	static CZipCompressor* CreateCompressor(WORD uMethod, CZipStorage* pStorage);
 
-	virtual ~CZipCompressor()
-	{
-	}
+	
 protected:
+	/**
+		Updates the current options with the new options.
+
+		\param pOptions
+			The new options to apply.
+	*/
+	virtual void UpdateOptions(const COptions* pOptions)
+	{		
+	}
 	/**
 		Updates CRC value while compression. 
 
@@ -295,9 +417,28 @@ protected:
 	void FlushWriteBuffer()
 	{
 		if (m_pCryptograph)
-				m_pCryptograph->Encode(*m_pBuffer, (DWORD)m_uComprLeft);
-		m_pStorage->Write(*m_pBuffer, (DWORD)m_uComprLeft, false);
+			m_pCryptograph->Encode(m_pBuffer, (DWORD)m_uComprLeft);
+		m_pStorage->Write(m_pBuffer, (DWORD)m_uComprLeft, false);
 		m_uComprLeft = 0;
+	}
+
+	/**
+		Initializes the internal buffer.
+
+		\see
+			ReleaseBuffer
+	*/
+	void InitBuffer();
+
+	/**
+		Releases the internal buffer.
+
+		\see
+			InitBuffer
+	*/
+	void ReleaseBuffer()
+	{
+		m_pBuffer.Release();
 	}
 
 	/**
@@ -309,7 +450,7 @@ protected:
 		\return
 			A ZipArchive Library error code.
 	*/
-	virtual int ConvertInternalError(int iErr)
+	virtual int ConvertInternalError(int iErr) const
 	{
 		return iErr;
 	}

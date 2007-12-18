@@ -127,7 +127,7 @@ namespace ZipPlatform
 	ZIP_API bool SetExeAttr( LPCTSTR lpFileName ); ///< Sets executable permissions for a file.
 #endif
 
-#ifdef ZIP_ARCHIVE_STL
+#if defined ZIP_ARCHIVE_STL || defined ZIP_FILE_USES_STL
 	/**
 		Truncates the file.
 
@@ -225,12 +225,12 @@ namespace ZipPlatform
 
 #ifdef _UNICODE	
 	/**
-		Converts a wide character string to a single character string.
+		Converts a wide character string to a multi-byte character string.
 
-		\param	lpWide
+		\param	lpszIn
 			The wide character string to convert.
 
-		\param	szSingle
+		\param	szOut
 			The buffer to receive the converted string.
 			Does not contain the terminating \c NULL character.
 
@@ -238,21 +238,21 @@ namespace ZipPlatform
 			The code page used in conversion.
 
 		\return	
-			The \e szSingle buffer length, or \c -1 when not succeeded.
+			The \a szOut buffer length, or \c -1 when not succeeded.
 
 		\note 
 			Defined only in the UNICODE version.
 	*/
-	ZIP_API int WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle, UINT uCodePage);
+	ZIP_API int WideToMultiByte(LPCWSTR lpszIn, CZipAutoBuffer &szOut, UINT uCodePage);
 
 	/**
-		Converts a single character string to a wide character string.
+		Converts a multi-byte character string to a wide character string.
 
-		\param	szSingle
-			The single character string to convert.
+		\param	szIn
+			The multi-byte character string to convert.
 			Should not contain the terminating \c NULL character.
 
-		\param	szWide
+		\param	szOut
 			Receives the converted string.
 
 		\param uCodePage
@@ -265,7 +265,7 @@ namespace ZipPlatform
 		\note 
 			Defined only in the UNICODE version.
 	*/	
-	ZIP_API int SingleToWide(const CZipAutoBuffer &szSingle, CZipString& szWide, UINT uCodePage);
+	ZIP_API int MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, UINT uCodePage);
 #endif
 };
 

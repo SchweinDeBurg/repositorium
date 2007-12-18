@@ -36,8 +36,8 @@ public:
 	{
 		return m_pBuffer;
 	}
-#ifndef __BORLANDC__
-	operator const char*() const  // Borland seems to have problems with this
+#if !defined (__BORLANDC__) || (__BORLANDC__ > 0x560) // The actual version may be different.
+	operator const char*() const
 	{
 		return m_pBuffer;
 	}

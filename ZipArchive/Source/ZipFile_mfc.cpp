@@ -13,9 +13,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "_features.h"
 #include "ZipFile.h"
 
-#ifdef ZIP_ARCHIVE_MFC
+#if defined ZIP_ARCHIVE_MFC && !defined ZIP_FILE_USES_STL
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -38,4 +39,4 @@ CZipFile::operator HANDLE()
 	return (HANDLE)m_hFile;
 }
 
-#endif // ZIP_ARCHIVE_MFC
+#endif // ZIP_ARCHIVE_MFC && !ZIP_FILE_USES_STL

@@ -31,7 +31,11 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 {
 
 	TCHAR szDrive[_MAX_DRIVE];
+#if defined _UNICODE && _MSC_VER >= 1400
+	TCHAR szDir[32767];
+#else
 	TCHAR szDir[_MAX_DIR];
+#endif
 	TCHAR szFname[_MAX_FNAME];
 	TCHAR szExt[_MAX_EXT];
 	

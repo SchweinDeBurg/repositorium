@@ -33,9 +33,10 @@
 #pragma warning(disable: 1125)
 #endif	// __INTEL_COMPILER
 
+#include "_features.h"
 #include "_platform.h"
 
-#ifdef ZIP_ARCHIVE_STL
+#if defined ZIP_ARCHIVE_STL || defined ZIP_FILE_USES_STL
 	#include "ZipFile_stl.h"
 #else
 	#include "ZipFile_mfc.h"

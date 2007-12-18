@@ -55,6 +55,22 @@ public:
 	}
 
 	/**
+		Combines a path information with a file name information.
+
+		\param szPath
+			Provides the path information and retrieves the result.
+
+		\param lpszName
+			The filename to be appended to the path.
+	*/
+	static void Combine(CZipString& szPath, LPCTSTR lpszName)
+	{
+		AppendSeparator(szPath);
+		if (lpszName != NULL)
+			szPath += lpszName;
+	}
+
+	/**
 		Removes path separators from the end of \a szPath
 
 		\param szPath
@@ -215,11 +231,12 @@ public:
 		CZipString szFileName = GetFileName();
 		if (!szFileName.IsEmpty())
 		{
+			if (szFullPath.IsEmpty())
+				szFullPath += _T('.');
 			szFullPath  += m_cSeparator;
 			szFullPath  += szFileName;
 		}
 		return szFullPath;
-
 	}
 
 	/**
@@ -230,13 +247,12 @@ public:
 	*/
 	CZipString GetFilePath() const
 	{
-			CZipString szDrive = m_szDrive;
-			CZipString szDir = m_szDirectory;
-			if (!szDrive.IsEmpty() && !szDir.IsEmpty())
-				szDrive += m_cSeparator;
+		CZipString szDrive = m_szDrive;
+		CZipString szDir = m_szDirectory;
+		if (!szDrive.IsEmpty() && !szDir.IsEmpty())
+			szDrive += m_cSeparator;
 
-			return m_szPrefix + szDrive + szDir;	
-
+		return m_szPrefix + szDrive + szDir;	
 	}
 protected:
 	/**

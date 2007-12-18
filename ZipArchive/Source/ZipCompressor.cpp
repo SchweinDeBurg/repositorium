@@ -14,14 +14,15 @@
 
 #include "stdafx.h"
 #include "ZipCompressor.h"
+#include "BytesWriter.h"
 #include "DeflateCompressor.h"
 
 using namespace ZipArchiveLib;
 
-CZipCompressor* CZipCompressor::CreateCompressor(WORD uMethod, CZipStorage* pStorage, CZipAutoBuffer* pBuffer)
+CZipCompressor* CZipCompressor::CreateCompressor(WORD uMethod, CZipStorage* pStorage)
 {
 	if (uMethod == methodStore || uMethod == methodDeflate)
-		return new CDeflateCompressor(pStorage, pBuffer);
+		return new CDeflateCompressor(pStorage);
 	return NULL;
 }
 
@@ -34,3 +35,70 @@ void CZipCompressor::UpdateCrc(const void *pBuffer, DWORD uSize)
 {
 	m_uCrc32 = zarch_crc32(m_uCrc32, (zarch_Bytef*)pBuffer, uSize);
 }
+
+void CZipCompressor::UpdateOptions(const COptionsMap& optionsMap)
+{
+	const COptions* pOptions = GetOptions();
+	if (pOptions == NULL)
+		return;
+	const COptions* pNewOptions = optionsMap.Get(pOptions->GetType());
+	if (pNewOptions != NULL)
+		UpdateOptions(pNewOptions);
+}
+
+void CZipCompressor::InitBuffer()
+{
+	// This should be greated that 64k for deflate when creating offsets pairs is enabled
+	// otherwise deflate will not be able to write one block in one go and will never report
+	// a flushed block for low-compressable data
+	const COptions* pOptions = GetOptions();
+	DWORD bufferSize = 0;
+	if (pOptions != NULL)
+        bufferSize = pOptions->m_iBufferSize;
+	if (bufferSize == 0)
+		bufferSize = COptions::cDefaultBufferSize;
+	m_pBuffer.Allocate(bufferSize);
+}
+
+
+void CZipCompressor::COptionsMap::Set(const CZipCompressor::COptions* pOptions)
+{
+	if (pOptions == NULL)
+		return;
+	int iType = pOptions->GetType();
+	Remove(iType);
+	SetAt(iType, pOptions->Clone());
+}
+
+CZipCompressor::COptions* CZipCompressor::COptionsMap::Get(int iType) const
+{
+	COptions* pTemp = NULL;
+	if (Lookup(iType, pTemp))
+		return pTemp;
+	else
+		return NULL;
+}
+
+void CZipCompressor::COptionsMap::Remove(int iType)
+{
+	COptions* pTemp = Get(iType);
+	if (pTemp != NULL)
+	{
+		delete pTemp;
+		RemoveKey(iType);
+	}	
+}
+
+CZipCompressor::COptionsMap::~COptionsMap()
+{
+	COptionsMap::iterator iter = GetStartPosition();
+	while (IteratorValid(iter))
+	{
+		COptions* pOptions = NULL;
+		int iType = 0;
+		GetNextAssoc(iter, iType, pOptions);
+		delete pOptions;
+	}
+	RemoveAll();
+}
+

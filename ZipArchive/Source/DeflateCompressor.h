@@ -38,24 +38,49 @@ namespace ZipArchiveLib
 	Compresses and decompresses data using the Zlib library.
 */
 class ZIP_API CDeflateCompressor : public CBaseLibCompressor
-{		
-	bool m_bCheckLastBlock;
-public:
+{			
+public:	
+	/**
+		Represents options of the CDeflateCompressor.
+
+		\see
+			<a href="kb">0610231446|options</a>
+		\see
+			CZipArchive::SetCompressionOptions
+	*/
+	struct ZIP_API COptions : CBaseLibCompressor::COptions
+	{
+		COptions()
+		{
+			m_bCheckLastBlock = true;
+		}
+
+		int GetType() const
+		{
+			return typeDeflate;
+		}
+
+		CZipCompressor::COptions* Clone() const
+		{
+			return new COptions(*this);
+		}
+
+		/**
+			Enables or disables checking, if the compressed data ends with an end-of-stream block.
+			This should be enabled to protect against malformed data.
+			\c true, if the checking of the last block should be enabled; \c false otherwise.
+		*/
+		bool m_bCheckLastBlock;	
+
+	};	
 
 	/**
 		Initializes a new instance of the CDeflateCompressor class.
 
 		\param pStorage
 			The current storage object.
-		
-		\param pBuffer
-			A pre-allocated buffer that receives compressed data or provides data for decompression.
-
-		\param bDetectLibMemoryLeaks
-			\c true, if the ZipArchive Library should detect memory leaks in an external library; \c false otherwise. 
-			Recommended to be set to \c true.
 	*/
-	CDeflateCompressor(CZipStorage* pStorage, CZipAutoBuffer* pBuffer, bool bDetectLibMemoryLeaks = true);
+	CDeflateCompressor(CZipStorage* pStorage);
 
 	bool CanProcess(WORD uMethod) {return uMethod == methodStore || uMethod == methodDeflate;}
 
@@ -68,37 +93,22 @@ public:
 	void FinishCompression(bool bAfterException);
 	void FinishDecompression(bool bAfterException);
 
-	/**
-		Enables or disables checking, if the compressed data ends with a correct block.
-		This should be enabled to protect against malformed data.
-		
-		\param bCheckLastBlock
-			\c true, if the checking of the last block should be enabled; \c false otherwise.
 
-		\see 
-			GetCheckLastBlock
-	*/
-	void SetCheckLastBlock(bool bCheckLastBlock)
+	const CZipCompressor::COptions* GetOptions() const
 	{
-		m_bCheckLastBlock = bCheckLastBlock;
+		return &m_options;
 	}
 
-	/**
-		Returns the value indicating whether checking of the last block is enabled or not.
-
-		\return
-			\c true, if checking of the last block is enabled; \c false otherwise.
-
-		\see 
-			SetCheckLastBlock
-	*/
-	bool GetCheckLastBlock()
+	~CDeflateCompressor()
 	{
-		return m_bCheckLastBlock;
 	}
-
 protected:
-	int ConvertInternalError(int iErr)
+	void UpdateOptions(const CZipCompressor::COptions* pOptions)
+	{
+		m_options = *(COptions*)pOptions;
+	}
+	
+	int ConvertInternalError(int iErr) const
 	{
 		switch (iErr)
 		{
@@ -123,13 +133,14 @@ protected:
 		}
 	}
 
-	bool IsCodeErrorOK(int iErr)
+	bool IsCodeErrorOK(int iErr) const
 	{
 		return iErr == Z_OK || iErr == Z_NEED_DICT;
 	}
-private:		
+
+private:			
+	COptions m_options;
 	zarch_z_stream m_stream;
-	
 };
 
 } // namespace

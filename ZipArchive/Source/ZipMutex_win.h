@@ -22,13 +22,21 @@
 
 namespace ZipArchiveLib
 {
-	
 class ZIP_API CZipMutex
 {
 	HANDLE m_handle;
 public:
-	CZipMutex()
+	CZipMutex(bool bOpen = false)
+	{		
+		if (bOpen)
+			Open();
+		else
+			m_handle = NULL;
+	}
+
+	void Open()
 	{
+		Close();
 		m_handle = ::CreateMutex(NULL, FALSE, NULL);
 		if (m_handle == NULL)
 			CZipException::Throw(CZipException::mutexError);
@@ -47,10 +55,24 @@ public:
 			CZipException::Throw(CZipException::mutexError);
 	}
 
-	~CZipMutex()
+	void Close()
 	{
 		if (m_handle != NULL)
+		{
 			::CloseHandle(m_handle);
+			m_handle = NULL;
+		}
+	}
+
+	CZipMutex& operator=(const CZipMutex&)
+	{
+		m_handle = NULL;
+		return *this;
+	}
+
+	~CZipMutex()
+	{
+		Close();
 	}
 };
 

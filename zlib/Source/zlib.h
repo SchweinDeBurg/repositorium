@@ -33,6 +33,7 @@
 
 #define Z_PREFIX 1
 #define NO_GZIP 1
+#define NO_DUMMY_DECL 1
 
 #include "zconf.h"
 
@@ -82,7 +83,7 @@ extern "C" {
 typedef voidpf (*alloc_func) OF((voidpf opaque, uInt items, uInt size));
 typedef void   (*free_func)  OF((voidpf opaque, voidpf address));
 
-struct internal_state;
+//struct internal_state;
 
 typedef struct z_stream_s {
     Bytef    *next_in;  /* next input byte */

@@ -39,6 +39,7 @@ void CZipCrc32Cryptograph::InitEncode(CZipAutoBuffer& password, CZipFileHeader& 
 	srand(UINT(time(NULL)));
 	// genereate pseudo-random sequence
 	char c;
+	char* buffer = (char*)buf;
 	for (int i = 0; i < ZIPARCHIVE_ENCR_HEADER_LEN - 2; i++)
 	{
 		int t1 = rand();
@@ -46,16 +47,16 @@ void CZipCrc32Cryptograph::InitEncode(CZipAutoBuffer& password, CZipFileHeader& 
 		if (!c)
 			c = (char)(t1 & 0xFF);
 		CryptEncode(c);
-		buf[i] = c;
+		buffer[i] = c;
 
 	}
 	long iCrc = (long)currentFile.m_uModTime << 16;	
 	c = (char)((iCrc >> 16) & 0xFF);
 	CryptEncode(c);
-	buf[ZIPARCHIVE_ENCR_HEADER_LEN - 2] = c;
+	buffer[ZIPARCHIVE_ENCR_HEADER_LEN - 2] = c;
 	c = (char)((iCrc >> 24) & 0xFF);
 	CryptEncode(c);
-	buf[ZIPARCHIVE_ENCR_HEADER_LEN - 1] = c;
+	buffer[ZIPARCHIVE_ENCR_HEADER_LEN - 1] = c;
 	storage.Write(buf, ZIPARCHIVE_ENCR_HEADER_LEN, false);
 	currentFile.m_uComprSize += ZIPARCHIVE_ENCR_HEADER_LEN;
 }

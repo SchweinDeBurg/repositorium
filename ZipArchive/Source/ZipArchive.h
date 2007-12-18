@@ -110,7 +110,7 @@ struct ZIP_API CZipAddNewFileInfo
 
 	/**			
 		Initialize this field to set the source data for compression to be taken from 
-		the CZipAbstractFile object (such as CZipMemFile) instead of from a physical file.
+		the \c CZipAbstractFile object (such as \c CZipMemFile) instead of from a physical file.
 		
 		 \note 
 		  - You have to leave #m_szFilePath empty if you set #m_pFile to not \c NULL.
@@ -135,8 +135,8 @@ struct ZIP_API CZipAddNewFileInfo
 	CZipString m_szFileNameInZip;
 	
 	/**
-		It has only the meaning when #m_szFileNameInZip is not specified and 
-		#m_szFilePath is not empty. 
+		It has only the meaning when CZipAddNewFileInfo::m_szFileNameInZip is not specified and 
+		CZipAddNewFileInfo::m_szFilePath is not empty. 
 
 		- If set to \c true, instructs to store the full path of the file inside the archive,
 		even if CZipArchive::m_szRootPath is set.
@@ -215,7 +215,7 @@ public:
 		\param	lpszPassword
 			The password. Set it to \c NULL or an empty string to clear the password.
 
-		\returns
+		\return
 			\c false if the password cannot be changed at this time; \c true otherwise.
 
 		\see
@@ -229,7 +229,7 @@ public:
 
 	/**
 		Gets the current archive password or an empty string if there is no password set. 
-		\returns
+		\return
 			The current password.
 		\see
 			SetPassword
@@ -240,7 +240,7 @@ public:
 		Returns the value indicating whether the next file will be encrypted or not. To encrypt a file, 
 		a password must be set with the #SetPassword method and an encryption method must be set 
 		to a value different from CZipCryptograph::encNone.
-		\returns
+		\return
 			\c true, if the next file added to the archive will be encrypted; \c false otherwise.
 		\see
 			<a href="kb">0610201627</a>
@@ -268,7 +268,7 @@ public:
 		\param iEncryptionMethod
 			One of the CZipCryptograph::EncryptionMethod values.
 		
-		\returns
+		\return
 			\c false if selected encryption method is not supported or a 
 			file is opened for compression; \c true otherwise.
 
@@ -285,11 +285,10 @@ public:
 	 */
 	bool SetEncryptionMethod(int iEncryptionMethod = CZipCryptograph::encStandard);
 
-
 	/**	
 		Gets the current encryption method.
 
-		\returns
+		\return
 			One of CZipCryptograph::EncryptionMethod values.
 
 		\see
@@ -421,9 +420,13 @@ public:
 			written in the archive.
 
 		\see
+			<a href="kb">0610231446|methods</a>
+		\see
 			CZipCompressor::IsCompressionSupported
 		\see 
 			GetCompressionMethod
+		\see
+			GetCurrentCompressor
 
 	*/
 	bool SetCompressionMethod(WORD uCompressionMethod = CZipCompressor::methodDeflate);
@@ -443,6 +446,34 @@ public:
 	}
 
 	/**
+		Sets the compression options for an appropriate compressor. The library automatically detects to
+		which compressor the options apply by examining the return value from the CZipCompressor::COptions::GetType() method.
+		If a file is currently opened for compression or decompression, the options will have no effect on the current file
+		processing. A sample that illustrates setting options can be found at <a href="kb">0610231446|options</a>.
+
+		\param pOptions 
+			The options to set. The \c NULL value has no effect.
+			The object is no longer needed and can be safely released after this method returns.
+
+		\see
+			<a href="kb">0610231446|options</a>
+		\see
+			GetCurrentCompressor
+		\see
+			CZipCompressor::GetOptions
+		\see
+			SetAdvanced
+	*/
+	void SetCompressionOptions(CZipCompressor::COptions* pOptions)
+	{
+		if (m_iFileOpened)
+		{
+			ZIPTRACE("%s(%i) : The options will have no effect on the current file processing.\n");
+		}
+		m_compressorsOptions.Set(pOptions);
+	}
+
+	/**
 		Sets the internal buffer sizes. No buffer size can be set smaller than 1024.
 		Use this method before opening the archive. The optimal size for 
 		the write buffer for a segmented archive is the size of the volume.
@@ -451,20 +482,23 @@ public:
 			The write buffer size. See also CZipStorage::m_iWriteBufferSize.
 
 		\param iGeneralBuffer
-			A buffer used in compressing, decompressing, deleting, getting (#GetFromArchive)
-			files, renaming and replacing. See also #m_iBufferSize.
+			A helper buffer used in moving data, deleting, getting (#GetFromArchive)
+			files, renaming and replacing. This buffer is not used for
+			compression and decompression. For these purposes, use the CZipCompressor::COptions::m_iBufferSize option.
 
 		\param iSearchBuffer
 			A buffer used in searching for the central directory. See also CZipStorage::m_iLocateBufferSize.
 			
 		\see
 			GetAdvanced
+		\see
+			SetCompressionOptions
 	*/
 	void SetAdvanced(int iWriteBuffer = 65536, int iGeneralBuffer = 65536, int iSearchBuffer = 32768);
 
 	
 	/**
-		Retrieves buffer sizes as set with the #SetAdvanced method.
+		Retrieves buffer sizes as set with the SetAdvanced() method.
 	
 		\param piWriteBuffer
 				
@@ -532,31 +566,49 @@ public:
 	}
 
 	/**
-		Sets the callback object used during operations on a segmented archive to change disks.
-		Set it before opening the archive. If you open a spanned archive and don't set the callback object, 
-		the exception CZipException::noCallback will be thrown.
+		The type of the callback object used during changing volumes in a segmented archive.
 
-		Callback object's method CZipSpanCallback::Callback is called when there is a need for a disk change.
+		\see
+			CZipArchive::SetSegmCallback
+	*/
+	enum SegmCallbackType
+	{
+		scSpan	= 0x01,				///< The callback object will be set for operations on spanned archives only.
+		scSplit	= 0x02,				///< The callback object will be set for operations on split archives only.
+		scAll	= scSpan | scSplit	///< The callback object will be set for operations spanned and split archives.
+	};
+
+	/**
+		Sets the callback object used during operations on a segmented archive to change volumes in spanned and split archives.
+		Set it before opening the archive. If you open a spanned archive and don't set the callback object, 
+		the exception CZipException::noCallback will be thrown. Setting the callback object is not required for 
+		a split archive.
+
+		Callback object's method CZipSegmCallback::Callback is called when the next volume is processed in a segmented archive.
 		Calling CZipArchive methods from inside this method may result in an unexpected behavior.
+
 		\param pCallback
 			The address of the callback object. Set it to \c NULL to clear the callback.
 
+		\param callbackType
+			The type of the callback to set. It can be one of the #SegmCallbackType values.
+
 		\see
 			<a href="kb">0610051553</a>
-		\see CZipSpanCallback
+		\see
+			CZipSegmCallback
 	*/
-	void SetSpanCallback(CZipSpanCallback* pCallback = NULL){m_storage.m_pChangeDiskFunc = pCallback;}
-
+	void SetSegmCallback(CZipSegmCallback* pCallback = NULL, int callbackType = scSpan);
 
 	
 	/**
-		Archive open modes used in the #Open(LPCTSTR, int, ZIP_SIZE_TYPE)
-		and ZIP_SIZE_TYPE::Open(CZipAbstractFile&, int ) methods.
+		Archive open modes used in the CZipArchive::Open(LPCTSTR, int, ZIP_SIZE_TYPE)
+		and CZipArchive::Open(CZipAbstractFile&, int ) methods.
 	*/
 	enum OpenMode
 	{
 		zipOpen,			///< Opens an existing archive.
-		zipOpenReadOnly,	///< Opens an existing archive as a read only file. This mode is intended to use in a self extract code, when opening an archive on a storage without the write access (e.g. CD-ROMS) or when sharing the central directory (#OpenFrom). If you try to modify the archive in this mode, an exception will be thrown.
+		zipOpenReadOnly,	///< Opens an existing archive as a read only file. This mode is intended to use in a self extract code, when opening an archive on a storage without the write access (e.g. CD-ROMS) or when sharing the central directory (see OpenFrom()). If you try to modify the archive in this mode, an exception will be thrown.
 		zipCreate,			///< Creates a new archive.
 		zipCreateSegm,		///< Creates a segmented archive.
 		zipCreateAppend		///< Creates a new archive, but allows appending the archive to an existing file (which can be for example a self-extracting stub).
@@ -566,8 +618,8 @@ public:
 		Opens or creates a zip archive.
 
 		The archive creation mode depends on the \a iMode and \a uVolumesSize values:
-		- If \a iMode == #zipCreateSegm and \a uVolumeSize is \c ZIP_AUTODETECT_VOLUME_SIZE then creates a spanned archive.
-		- If \a iMode == #zipCreateSegm and \a uVolumeSize > 0 then creates a split archive.
+		- If \a iMode == #zipCreateSegm and \a uVolumeSize is \c ZIP_AUTODETECT_VOLUME_SIZE then a spanned archive is created.
+		- If \a iMode == #zipCreateSegm and \a uVolumeSize > 0 then a split archive is created.
 		- If \a iMode == #zipOpen or \a iMode == #zipOpenReadOnly and the existing archive is a segmented archive
 			then CZipStorage::spannedArchive mode is assumed if the archive is on a removable device
 			or CZipStorage::splitArchive otherwise. If you want to open a split archive on a removable device, 
@@ -584,7 +636,7 @@ public:
 		\param	uVolumeSize
 			The volume size in a split archive. The size of the volume may be from 1 to 4,294,967,295.
 		The bigger this value is - the faster is creation and extraction of segmented archives,
-		because there is no volume changes.
+		because there are no volume changes.
 
 		\return
 			\c true, if the archive was opened successfully; \c false, if the archive was already opened before.
@@ -683,7 +735,7 @@ public:
 
 
     /**
-		Gets the value set previously with the #SetRootPath method.
+		Gets the value set previously with the SetRootPath() method.
 
 		\return
 			The current value of the #m_szRootPath field.
@@ -697,7 +749,7 @@ public:
 	}
 
 	/**
-		The levels of smartness of the adding files action (#AddNewFile).
+		The levels of smartness of the adding files action (CZipArchive::AddNewFile).
 		\note If you use #zipsmCheckForEff, you should use 
 		#zipsmNotCompSmall as well, because the small file will be surely larger 
 		after compression, so that you can add it not compressed straight away. The compression level 
@@ -715,7 +767,6 @@ public:
 		zipsmNotCompSmall	= 0x0004,
 
 		/**
-			\brief . 
 			Checks whether the compressed file is larger than uncompressed and if so, remove it and store 
 			without the compression. In a segmented archive, a temporary file is used for that: 
 			if the file compression is efficient, the data is not compressed again, but moved from 
@@ -734,7 +785,6 @@ public:
 		zipsmMemoryFlag		= 0x0010,
 
 		/**
-			\brief .
 			The same as #zipsmCheckForEff, but the temporary file is created created in memory instead.
 			It has the meaning only in a segmented archive, not segmented archives don't need a temporary file.
 		*/
@@ -1283,10 +1333,13 @@ public:
 			
 
 		\param	lpszNewName 
-				The new name of the file after extraction. 
-				If \c NULL, the original filename stored in the archive is used.
-				May include a path information, but if \a bFullPath is \c false, 
-				only the filename is extracted from this value.
+			The new name of the file after extraction. 
+			If \c NULL, the original filename stored in the archive is used.
+			May include a path information, but if \a bFullPath is \c false, 
+			only the filename is extracted from this value.
+
+		\param pSeekPair
+			If not NULL, the file will be extracted starting from the seek position described by this value.
 
 		\param	nBufSize 
 			The size of the buffer used while file operations.
@@ -1302,20 +1355,24 @@ public:
 			<a href="kb">0610241003</a>
 		\see
 			<a href="kb">0610231200</a>
+		\see
+			<a href="kb">0711101739</a>
 		\see 
-			ExtractFile(ZIP_INDEX_TYPE, CZipMemFile&, bool, DWORD)
+			ExtractFile(ZIP_INDEX_TYPE, CZipMemFile&, bool, CZipCompressor::COffsetsPair*, DWORD)
 		\see
 			FindMatches
 		\see
 			SetCallback
 	*/
-	bool ExtractFile(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszPath, bool bFullPath = true,
-		LPCTSTR lpszNewName = NULL, DWORD nBufSize = 65536);
-
+	bool ExtractFile(ZIP_INDEX_TYPE uIndex,
+		LPCTSTR lpszPath,
+		bool bFullPath = true,
+		LPCTSTR lpszNewName = NULL,
+		DWORD nBufSize = 65536);
 	
 	/**
-		The same as #ExtractFile(ZIP_INDEX_TYPE, LPCTSTR, bool, LPCTSTR, DWORD )
-		but instead to a physical file, this method extracts data into a CZipMemFile object.
+		The same as #ExtractFile(ZIP_INDEX_TYPE, LPCTSTR, bool, LPCTSTR, CZipCompressor::COffsetsPair*, DWORD )
+		but instead to a physical file, this method extracts data into a \c CZipMemFile object.
 
 		\param	uIndex
 			The index of the file to extract.
@@ -1327,22 +1384,28 @@ public:
 			If \c true, the memory file pointer is positioned at the beginning of the compressed data after compression.
 			The rewind operation is performed even if extraction was aborted, but rewinding will not take 
 			place, if other exception than CZipException::abortedAction or CZipException::abortedSafely was thrown in the meantime.
-
+		\param pSeekPair
+			If not NULL, the file will be extracted starting from the seek position described by this value.
 		\param	nBufSize 
 			The size of the buffer used while file operations.
 
 		\note 
 		- Writing of the decompressed data starts at the current position of the memory file. 
-		Keep this in mind, when you pass a CZipMemFile object that already contains data 
+		Keep this in mind, when you pass a \c CZipMemFile object that already contains data 
 		(or has a buffer attached) - its contents may be overwritten.
 		- If you try to extract a directory, the method will return \c false.
 
 		\see
 			<a href="kb">0610231924</a>
 		\see
-			ExtractFile(ZIP_INDEX_TYPE, LPCTSTR, bool, LPCTSTR, DWORD )
+			<a href="kb">0711101739</a>
+		\see
+			ExtractFile(ZIP_INDEX_TYPE, LPCTSTR, bool, LPCTSTR, CZipCompressor::COffsetsPair*, DWORD )
 	*/
-	bool ExtractFile(ZIP_INDEX_TYPE uIndex, CZipMemFile& mf, bool bRewind = true, DWORD nBufSize = 65536);
+	bool ExtractFile(ZIP_INDEX_TYPE uIndex,
+		CZipMemFile& mf,
+		bool bRewind = true,
+		DWORD nBufSize = 65536);
 
 	/**
 		Opens the file with the given index in the archive for extracting.
@@ -1391,6 +1454,7 @@ public:
 	*/
 	DWORD ReadFile(void *pBuf, DWORD uSize);
 
+
 	/**
 		Closes the file opened for extraction in the archive and copy its date and 
 		attributes to the file pointed by \a lpszFilePath.
@@ -1424,7 +1488,7 @@ public:
 	int CloseFile(LPCTSTR lpszFilePath = NULL, bool bAfterException = false);
 
 	/**
-		Closes \a file and then calls the #CloseFile(LPCTSTR, bool) method using the path of \a file as an argument.		
+		Closes \a file and then calls the CloseFile(LPCTSTR, bool) method using the path of \a file as an argument.		
 		Don't call this method, if an exception was thrown before, call the #CloseFile(LPCTSTR, bool) method instead.
 
 		\param	file
@@ -1734,19 +1798,19 @@ public:
 	CZipString GetArchivePath()const;
 
 	/**
-		Gets the current disk.
+		Gets the archive volume number currently being processed. The first volume has the number 1.
 
 		This method is useful while working with a segmented archive in creation to find out
-		how many disks were already created. To find out how many disks are in an existing segmented archive,
+		how many parts were already created. To find out how many parts are in an existing segmented archive,
 		use the #GetCentralDirInfo method.
 
 		\return
-			A one-based number of the current disk or 0, if there is no current disk (the archive is closed).
+			A one-based number of the current volume or 0, if there is no current volume (the archive is closed).
 
 		\see
 			<a href="kb">0610051553</a>
 	*/
-	ZIP_PART_TYPE GetCurrentDisk()const ;
+	ZIP_VOLUME_TYPE GetCurrentVolume() const ;
 
 	/**
 		Gets the segmentation mode of the current archive.
@@ -1755,7 +1819,7 @@ public:
 			One of the following values:
 			- \c -2 : An existing split archive.
 			- \c -1 : An existing spanned archive.
-			- \c 0 : No archive segmentation or one part only.
+			- \c 0 : No archive segmentation or one-volume only.
 			- \c 1 : A spanned archive in creation.
 			- \c 2 : A split archive in creation.
 
@@ -1768,12 +1832,11 @@ public:
 	}
 
 	/**
-		Case-sensitivity values used as the \a iCaseSensitive argument in the #FindFile method.
+		Case-sensitivity values used as the \a iCaseSensitive argument in the FindFile() method.
 	*/
 	enum FFCaseSens
 	{
 		/**
-			\brief .
 			Uses the default case-sensitivity as set with the #SetCaseSensitivity method.
 			If the Find Fast array was built before with a different case-sensitivity,
 			it is rebuilt again, if it hasn't been built so far, it is built now with the
@@ -1782,7 +1845,6 @@ public:
 		ffDefault,
 
 		/**
-			\brief .
 			Performs a case-sensitive search. If the CZipArchive is non-case-sensitive,
 			a less effective search is performed. It does not rebuild the Find Fast array,
 			but if the array hasn't been built yet, it is built now as \b non-case-sensitive
@@ -1791,7 +1853,6 @@ public:
 		ffCaseSens,
 
 		/**
-			\brief .
 			Performs a non-case-sensitive search. If the CZipArchive is case-sensitive,
 			a less effective search is performed. It does not rebuild the Find Fast array,
  			but if the array hasn't been built yet, it is build now as \b case-sensitive
@@ -2034,18 +2095,16 @@ public:
 	}
 
 	/**
-		The values used in the #Close method.
+		The values used in the CZipArchive::Close() method.
 	*/
 	enum CloseAfterException
 	{
 		/**
-			\brief .
 			Normal closing. Use it, when no exception was thrown while processing the archive.
 		*/
 		afNoException,
 
 		/**
-			\brief .
 			Use when an exception was thrown.
 			The #Close method doesn't write any data but performs necessary cleaning to reuse the 
 			CZipArchive object for another archive processing.
@@ -2053,7 +2112,6 @@ public:
 		afAfterException,
 
 		/**	
-			\brief .
 			Use when an exception was thrown.
 			The #Close method writes the central directory structure to the archive, 
 			so that the archive should be usable.
@@ -2143,7 +2201,7 @@ public:
 
 
 	/**
-		Sets the CZipArchive object to call the #Flush method after each operation that modifies the archive (apart from changing central extra fields).
+		Sets the CZipArchive object to call the Flush() method after each operation that modifies the archive (apart from changing central extra fields).
 		It is useful when you want to prevent the loss of data in case of the program crash - the zip file will then be finalized on the disk.
 		Use it after opening the archive.
 
@@ -2225,7 +2283,7 @@ public:
 
 	/**
 		Sets the attributes for the CZipFileHeader object to be used
-		in the #OpenNewFile(CZipFileHeader&, int, LPCTSTR) method.
+		in the OpenNewFile(CZipFileHeader&, int, LPCTSTR) method.
 
 		This special procedure is required, because the attributes value depends 
 		on the system compatibility of the archive.
@@ -2336,7 +2394,7 @@ public:
 	
 	/**
 		Sets the current settings that control storing of filenames and comments in the archive to their default values considering the 
-		current system compatibility of the archive (#GetSystemCompatibility).
+		current system compatibility of the archive (see GetSystemCompatibility()).
 
 		\see
 			<a href="kb">0610051525</a>
@@ -2357,7 +2415,7 @@ public:
 	/**
 		Gets the current settings that control storing of filenames and comments in the archive.
 	
-		\returns
+		\return
 			The current string store settings.
 
 		\see
@@ -2394,7 +2452,7 @@ public:
 
 
     /**
-		Allows to retrieve the order of sorted files after you enabled the Find Fast feature with #EnableFindFast.
+		Allows to retrieve the order of sorted files after you enabled the Find Fast feature with the EnableFindFast() method.
        
        \param iFindFastIndex
 			The index of the file in the sorted array.
@@ -2467,7 +2525,7 @@ public:
 	}
 
 	/**
-		The values used in the #PredictFileNameInZip method.
+		The values used in the PredictFileNameInZip() method.
 	*/
 	enum Predict
 	{
@@ -2479,7 +2537,7 @@ public:
 
     /**
        Predicts the filename as it would be stored in the archive, when given parameters would be used with 
-	   one of the #AddNewFile methods. The method takes into account the root path set with the #SetRootPath method. 
+	   one of the AddNewFile() methods. The method takes into account the root path set with the #SetRootPath method. 
 	   You can use this method to eliminate duplicates before adding a list of files.
        
        \param lpszFilePath
@@ -2518,7 +2576,7 @@ public:
 		- If the archive has a password set, the method will assume that the file would be stored encrypted in the archive (extra bytes may be added then depending on the encryption method).
 		- The method calls CZipFileHeader::PrepareData
 		- Zip64 only: The method takes into account the current file pointer position in the archive to determine the need for the Zip64 extensions 
-			and updates CZipFileHeader::m_uDiskStart and CZipFileHeader::m_uOffset.
+			and updates CZipFileHeader::m_uVolumeStart and CZipFileHeader::m_uOffset.
 		- The method does not take into account a situation when a file would be compressed, but mostly stored blocks would be emitted by the Huffman compression engine.
 		In this case extra 5 bytes are added per a single stored block. You should remove the file and store it instead when it happens (see #zipsmCheckForEff).
 
@@ -2528,7 +2586,7 @@ public:
 	ZIP_SIZE_TYPE PredictMaximumFileSizeInArchive(CZipFileHeader& fh) const;
 
 	 /**
-		Calls the #PredictMaximumFileSizeInArchive(CZipFileHeader&) const method. 
+		Calls the PredictMaximumFileSizeInArchive(CZipFileHeader&) const method. 
 		Before calling, fills the #CZipFileHeader structure with the filename as it 
 		would appear in the archive and sets the proper file size (unless \a lpszFilePath is a directory).
 
@@ -2572,7 +2630,7 @@ public:
     /**
        Predicts the full resulting filename with path after extraction. 
 	   The parameters (except for the first) are in the form you'd pass
-	   to the #ExtractFile(ZIP_INDEX_TYPE , LPCTSTR , bool , LPCTSTR , DWORD ) method.
+	   to the #ExtractFile(ZIP_INDEX_TYPE , LPCTSTR , bool , LPCTSTR , CZipCompressor::COffsetsPair*, DWORD ) method.
 	   The method takes into account the root path set with the #SetRootPath method.
 
        \param lpszFileNameInZip
@@ -2727,7 +2785,7 @@ public:
 	/**
 		Gets the number of non-archive bytes that are present before the actual archive in the archive file.
 
-		\returns
+		\return
 			The number of bytes before the actual archive.
 		\see
 			SetBytesBeforeZip
@@ -2846,7 +2904,7 @@ public:
 		\see
 			SetCaseSensitivity
 		\see
-			CWildcard
+			ZipArchiveLib::CWildcard
        
      */
 	void FindMatches(LPCTSTR lpszPattern, CZipIndexesArray& ar, bool bFullPath = true);
@@ -2920,6 +2978,18 @@ public:
 			ReadLocalHeader
 	*/
 	bool OverwriteLocalHeader(ZIP_INDEX_TYPE uIndex);
+
+	/**
+		Retrieves the current compressor. The type of the compressor depends on the compression method 
+		used for compressing or decompressing data.
+
+		\see
+			SetCompressionMethod
+	*/
+	const CZipCompressor* GetCurrentCompressor() const
+	{
+		return m_pCompressor;
+	}
 
 	/**
 		If \c true, the drive letter is removed from the filename stored inside the archive when adding
@@ -3032,22 +3102,22 @@ protected:
 	};
 	
 	/**
-		Takes one of the #OpenFileType enum values.
+		Takes one of the CZipArchive::OpenFileType enum values.
 	*/
 	int m_iFileOpened;
 
 	/**
-		The value set with #SetAutoFlush.
+		The value set with SetAutoFlush().
 	*/
 	bool m_bAutoFlush;
 
 	/**
-		The value set with #SetRootPath.
+		The value set with SetRootPath().
 	*/
 	CZipString m_szRootPath;
 
 	/**
-		The value set with #SetTempPath.
+		The value set with SetTempPath().
 	*/
 	CZipString m_szTempPath;
 
@@ -3116,7 +3186,6 @@ protected:
 	*/
 	virtual void CreateCryptograph(int iEncryptionMethod)
 	{
-		// TODO: [postponed] do not clear cryptograph after each operation?
 		if (m_pCryptograph != NULL)
 			if (m_pCryptograph->CanHandle(iEncryptionMethod))
 				return;
@@ -3156,8 +3225,9 @@ protected:
 		if (m_pCompressor == NULL || !m_pCompressor->CanProcess(uMethod))
 		{
 			ClearCompressor();
-			m_pCompressor = CZipCompressor::CreateCompressor(uMethod, &m_storage, &m_pBuffer);
+			m_pCompressor = CZipCompressor::CreateCompressor(uMethod, &m_storage);
 		}
+		m_pCompressor->UpdateOptions(m_compressorsOptions);
 	}
 
 	/**
@@ -3174,6 +3244,17 @@ protected:
 		The value set with #SetCompressionMethod.
 	*/
 	WORD m_uCompressionMethod;
+	
+
+	/**
+		A helper buffer used during various IO operations.
+
+		\see 
+			m_iBufferSize
+		\see
+			SetAdvanced
+	*/
+	CZipAutoBuffer m_pBuffer;
 
 	/**
 		The size of the #m_pBuffer buffer. Set it before opening the archive.
@@ -3186,14 +3267,12 @@ protected:
 	DWORD m_iBufferSize;
 
 	/**
-		This buffer caches data during compression and decompression.
+		The value set with the SetStringStoreSettings() method.
 	*/
-	CZipAutoBuffer m_pBuffer;
-
 	CZipStringStoreSettings m_stringSettings;
 
 private:
-
+	CZipCompressor::COptionsMap m_compressorsOptions;
 	void Initialize();
 	void MakeSpaceForReplace(ZIP_INDEX_TYPE iReplaceIndex, ZIP_SIZE_TYPE uTotal, LPCTSTR lpszFileName);
 

@@ -181,7 +181,7 @@ namespace ZipArchiveLib
 		{
 			return (LPCTSTR)m_szPattern;
 		}
-	protected:
+	private:
 		bool m_bCaseSensitive;		
 		static int MatchAfterStar(LPCTSTR p , LPCTSTR t);
 		CZipString m_szPattern;

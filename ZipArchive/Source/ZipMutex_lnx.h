@@ -26,10 +26,22 @@ namespace ZipArchiveLib
 class ZIP_API CZipMutex
 {
 	pthread_mutex_t m_mutex;
+	bool m_bOpened;
 public:
-	CZipMutex()
+	CZipMutex(bool bOpen = false)
 	{
-		if (pthread_mutex_init(&m_mutex, NULL) != 0)
+		if (bOpen)
+			Open();
+		else
+			m_bOpened = false;
+	}
+
+	void Open()
+	{
+		Close();
+		if (pthread_mutex_init(&m_mutex, NULL) == 0)
+			m_bOpened = true;
+		else
 			CZipException::Throw(CZipException::mutexError);
 	}
 
@@ -45,10 +57,25 @@ public:
 			CZipException::Throw(CZipException::mutexError);
 	}
 
+	CZipMutex& operator=(const CZipMutex&)
+	{
+		m_bOpened = false;
+		return *this;
+	}
+
+
+	void Close()
+	{
+		if (m_bOpened)
+			if (pthread_mutex_destroy(&m_mutex) == 0)
+				m_bOpened = false;
+			else
+				CZipException::Throw(CZipException::mutexError);
+	}
+
 	~CZipMutex()
 	{		 
-		if (pthread_mutex_destroy(&m_mutex) != 0)
-			CZipException::Throw(CZipException::mutexError);
+		Close();
 	}
 };
 
