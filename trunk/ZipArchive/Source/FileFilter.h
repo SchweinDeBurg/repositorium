@@ -157,7 +157,7 @@ namespace ZipArchiveLib
 			\param info
 				A structure containing the information about the file.
 
-			\returns
+			\return
 				\c true, if the \a info file should be evaluated by the #Evaluate method; \c false otherwise.
 
 			\note
@@ -358,7 +358,7 @@ protected:
 			\param info
 				A structure containing the information about the file.
 
-			\returns
+			\return
 				\c true, if the \a info file will be evaluated by the #Evaluate method; \c false otherwise.
 
 			\see
@@ -596,7 +596,7 @@ protected:
 			\param info
 				A structure containing the information about the file.
 
-			\returns
+			\return
 				\c true, if any of the grouped filters accepts \a info; \c false otherwise.
 
 		*/

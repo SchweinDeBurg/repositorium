@@ -44,20 +44,24 @@ enum iInternalAttr
 	#define FILE_ATTRIBUTE_ARCHIVE              0x00000020 
 #endif
 // *********************** UINX **************************
-#define USER_PERMISSIONS_MASK  0x01C00000
-#define EXTRACT_USER_PERMISSIONS(x) ((x & USER_PERMISSIONS_MASK) >> 22)
-#define CREATE_USER_PERMISSIONS(x) ((x & 0x0007) << 22)
 
-#define GROUP_PERMISSIONS_MASK 0x00380000
-#define EXTRACT_GROUP_PERMISSIONS ((x & GROUP_PERMISSIONS_MASK) >> 19)
-#define CREATE_GROUP_PERMISSIONS(x) ((x & 0x0007) << 19)
+#define USER_PERMISSIONS_MASK  0x01C0
+#define EXTRACT_USER_PERMISSIONS(x) ((x & USER_PERMISSIONS_MASK) >> 6)
+#define CREATE_USER_PERMISSIONS(x) ((x & 0x0007) << 6)
 
-#define OTHER_PERMISSIONS_MASK  0x00070000
-#define EXTRACT_OTHER_PERMISSIONS  ((x & OTHER_PERMISSIONS_MASK) >> 16)
-#define CREATE_OTHER_PERMISSIONS(x) ((x & 0x0007) << 16)
+#define GROUP_PERMISSIONS_MASK 0x0038
+#define CREATE_GROUP_PERMISSIONS(x) ((x & 0x0007) << 3)
 
-#define UNIX_DIRECTORY_ATTRIBUTE 0x40000000
-#define UNIX_FILE_ATTRIBUTE 0x80000000
+
+#define OTHER_PERMISSIONS_MASK  0x0007
+#define CREATE_OTHER_PERMISSIONS(x) (x & 0x0007)
+
+#define UNIX_DIRECTORY_ATTRIBUTE 0x4000
+#define UNIX_FILE_ATTRIBUTE 0x8000
+
+#define UNIX_EXEC 1
+#define UNIX_WRITE 2
+#define UNIX_READ 4
 
 using namespace ZipCompatibility;
 
@@ -67,7 +71,6 @@ DWORD AttrDos(DWORD , bool );
 DWORD AttrUnix(DWORD, bool);
 DWORD AttrMac(DWORD , bool );
 
-// more to come...
 conv_func conv_funcs[11] = {AttrDos,
 							NULL,
 							NULL,
@@ -85,7 +88,6 @@ conv_func conv_funcs[11] = {AttrDos,
 
 DWORD ZipCompatibility::ConvertToSystem(DWORD uAttr, int iFromSystem, int iToSystem)
 {
-	
 	if (iToSystem != iFromSystem && iFromSystem < 11 && iToSystem < 11)
 	{
 		conv_func p = conv_funcs[iFromSystem], q = conv_funcs[iToSystem];
@@ -110,39 +112,45 @@ DWORD AttrUnix(DWORD uAttr, bool bFrom)
 	DWORD uNewAttr = 0;
 	if (bFrom)
 	{
-		if (uAttr & UNIX_DIRECTORY_ATTRIBUTE)
+		bool isDir = (uAttr & UNIX_DIRECTORY_ATTRIBUTE) != 0;
+		if (isDir)
 			uNewAttr = attDir;
 
 		uAttr = EXTRACT_USER_PERMISSIONS (uAttr);
 
-		// we may set archive attribute if the file hasn't the execute permissions
-		// 
-		if (!(uAttr & 1))
+		// we may set archive attribute if the file hasn't got the execute permissions
+		// and is not a directory
+		if (!isDir && !(uAttr & UNIX_EXEC))
 			uNewAttr |= attArch	;
 
-		if (!(uAttr & 2)) 
+		if (!(uAttr & UNIX_WRITE)) 
 		    uNewAttr |= attROnly;
 
-	    if (!(uAttr & 4)) 
+	    if (!(uAttr & UNIX_READ)) 
 		    uNewAttr |= attHidd;
 	}
 	else
 	{
 
-		uNewAttr = 0; // we cannot assume that if the file hasn't the archive attribute set
-		
-		//then it is executable and set execute permissions
+		uNewAttr = 0;
+
+		// we cannot assume that if the file hasn't the archive attribute set		
+		// then it is executable and set execute permissions
 
 		if (!(uAttr & attHidd)) 
-			uNewAttr |= (CREATE_OTHER_PERMISSIONS (4) | 
-								  CREATE_GROUP_PERMISSIONS (4))
-								  | CREATE_USER_PERMISSIONS (4);
+			uNewAttr |= (CREATE_OTHER_PERMISSIONS (UNIX_READ) | CREATE_GROUP_PERMISSIONS (UNIX_READ)) |
+				CREATE_USER_PERMISSIONS (UNIX_READ);
+							
 
 		if (!(uAttr & attROnly))
-			uNewAttr |= (CREATE_GROUP_PERMISSIONS (2) |
-								  CREATE_USER_PERMISSIONS (2));
+			uNewAttr |= (CREATE_GROUP_PERMISSIONS (UNIX_WRITE) | CREATE_USER_PERMISSIONS (UNIX_WRITE));
+
 		if (uAttr & attDir) 
-			uNewAttr |= UNIX_DIRECTORY_ATTRIBUTE | attDir;
+		{
+			uNewAttr |= UNIX_DIRECTORY_ATTRIBUTE;
+			uNewAttr |= (CREATE_OTHER_PERMISSIONS (UNIX_EXEC) | CREATE_GROUP_PERMISSIONS (UNIX_EXEC)) |
+				CREATE_USER_PERMISSIONS (UNIX_EXEC);
+		}
 		else
 			uNewAttr |= UNIX_FILE_ATTRIBUTE;
 
@@ -153,16 +161,7 @@ DWORD AttrUnix(DWORD uAttr, bool bFrom)
 
 DWORD AttrMac(DWORD uAttr, bool )
 {
-	DWORD uNewAttr  = uAttr & (attDir | attROnly);
-// 	if (bFrom)
-// 	{
-// 		
-// 	}
-// 	else
-// 	{
-// 		
-// 	}
-	return uNewAttr;
+	return uAttr & (attDir | attROnly);
 }
 
 // ************************************************************************
@@ -175,7 +174,7 @@ ZIPINLINE bool ZipCompatibility::IsPlatformSupported(int iCode)
 void ZipCompatibility::ConvertBufferToString(CZipString& szString, const CZipAutoBuffer& buffer, UINT uCodePage)
 {
 #ifdef _UNICODE	
-	ZipPlatform::SingleToWide(buffer, szString, uCodePage);
+	ZipPlatform::MultiByteToWide(buffer, szString, uCodePage);
 #else
 	// 	iLen does not include the NULL character
 	int iLen;
@@ -199,7 +198,7 @@ void ZipCompatibility::ConvertBufferToString(CZipString& szString, const CZipAut
 void ZipCompatibility::ConvertStringToBuffer(LPCTSTR lpszString, CZipAutoBuffer& buffer, UINT uCodePage)
 {
 #ifdef _UNICODE
-	ZipPlatform::WideToSingle(lpszString, buffer, uCodePage);
+	ZipPlatform::WideToMultiByte(lpszString, buffer, uCodePage);
 #else
 	int iLen = (int)strlen(lpszString);
 	// 	iLen does not include the NULL character
@@ -225,10 +224,3 @@ void ZipCompatibility::SlashBackslashChg(CZipString& szFileName, bool bReplaceSl
 	}
 	szFileName.Replace(c2, c1);
 }
-
-
-//ZIPINLINE bool ZipCompatibility::IsBigEndian()
-//{
-//	unsigned long endian = 1;
-//	return (*((unsigned char *)(&endian))) == 0;
-//}

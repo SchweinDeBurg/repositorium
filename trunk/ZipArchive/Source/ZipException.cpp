@@ -195,7 +195,7 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 			sz = _T("There is no spanned archive callback object set.");
 			break;
 		case aborted:
-			sz = _T("Disk change aborted.");
+			sz = _T("Volume change aborted in a segmented archive.");
 			break;
 		case abortedAction:
 			sz = _T("Action aborted.");
@@ -237,10 +237,10 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 			sz = _T("Cannot create a file for the specified platform.");
 			break;
 		case cdirNotFound:
-			sz = _T("The central directory was not found in the archive (or you were trying to open not the last disk of a segmented archive).");
+			sz = _T("The central directory was not found in the archive (or you were trying to open not the last volume of a segmented archive).");
 			break;
 		case noZip64:
-			sz = _T("The Zip64 format has not been enabled for the library, but is required to open the archive.");
+			sz = _T("The Zip64 format has not been enabled for the library, but is required to use the archive.");
 			break;
 		case noAES:
 			sz = _T("WinZip AES encryption has not been enabled for the library, but is required to decompress the archive.");

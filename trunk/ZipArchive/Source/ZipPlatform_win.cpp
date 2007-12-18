@@ -13,6 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "_platform.h"
 #include "ZipPlatform.h"
 #include "ZipFileHeader.h"
 #include "ZipException.h"
@@ -20,6 +21,8 @@
 #include <sys/stat.h>
 
 #ifdef ZIP_ARCHIVE_WIN
+
+#define ZIP_USES_SAFE_WINDOWS_API
 
 #ifndef __BORLANDC__
         #include <sys/utime.h>
@@ -164,9 +167,22 @@ bool ZipPlatform::ChangeDirectory(LPCTSTR lpDirectory)
 {
 	return _tchdir(lpDirectory) == 0; // returns 0 if ok
 }
+
 int ZipPlatform::FileExists(LPCTSTR lpszName)
 {
+#ifndef __BORLANDC__
+	#if _MSC_VER >= 1400
+	if (_taccess_s(lpszName, 0) == 0)
+	#else
 	if (_taccess(lpszName, 0) == 0)
+	#endif
+#else
+	#ifdef _UNICODE
+	if (_waccess(lpszName, 0) == 0)
+	#else
+	if (access(lpszName, 0) == 0)
+	#endif
+#endif
 	{
 		if (DirectoryExists(lpszName))
 			return -1;
@@ -193,10 +209,44 @@ ZIPINLINE  bool ZipPlatform::SetVolLabel(LPCTSTR lpszPath, LPCTSTR lpszLabel)
 
 ZIPINLINE void ZipPlatform::AnsiOem(CZipAutoBuffer& buffer, bool bAnsiToOem)
 {
+#ifdef ZIP_USES_SAFE_WINDOWS_API
+	UINT cpIn, cpOut;
+	if (bAnsiToOem)
+	{
+		cpIn = CP_ACP;
+		cpOut = CP_OEMCP;
+	}
+	else
+	{
+		cpIn = CP_OEMCP;
+		cpOut = CP_ACP;
+	}
+
+	CZipAutoBuffer interBuffer;
+
+	int size = buffer.GetSize();
+	// iLen doesn't include terminating character
+	int iLen = MultiByteToWideChar(cpIn, MB_PRECOMPOSED, buffer, size, NULL, 0);
+	if (iLen <= 0)
+		return;
+	interBuffer.Allocate(iLen * sizeof(wchar_t));
+	LPWSTR lpszWide = (LPWSTR)(char*)interBuffer;
+	iLen = MultiByteToWideChar(cpIn, MB_PRECOMPOSED, buffer, size, lpszWide, iLen);
+	ASSERT(iLen != 0);
+
+	// iLen does not include terminating character
+	size = WideCharToMultiByte(cpOut, 0, lpszWide, iLen, NULL, 0, NULL, NULL);
+	if (size <= 0)
+		return;
+	buffer.Allocate(size);
+	size = WideCharToMultiByte(cpOut, 0, lpszWide, iLen, buffer, size, NULL, NULL);
+	ASSERT(size != 0);
+#else
 	if (bAnsiToOem)
 		CharToOemBuffA(buffer, buffer, buffer.GetSize());
 	else
 		OemToCharBuffA(buffer, buffer, buffer.GetSize());
+#endif
 }
 
 ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow)
@@ -232,12 +282,12 @@ ZIPINLINE  bool ZipPlatform::CreateDirectory(LPCTSTR lpDirectory)
 
 ZIPINLINE  DWORD ZipPlatform::GetDefaultAttributes()
 {
-	return 0x81a40020; // make it readable under Unix
+	return FILE_ATTRIBUTE_ARCHIVE;
 }
 
 ZIPINLINE  DWORD ZipPlatform::GetDefaultDirAttributes()
 {
-	return 0x41ff0010; // make it readable under Unix
+	return FILE_ATTRIBUTE_DIRECTORY;
 }
 
 ZIPINLINE  int ZipPlatform::GetSystemID()
@@ -251,57 +301,56 @@ ZIPINLINE bool ZipPlatform::GetSystemCaseSensitivity()
 }
 
 #ifdef _UNICODE	
-int ZipPlatform::WideToSingle(LPCTSTR lpWide, CZipAutoBuffer &szSingle, UINT uCodePage)
+int ZipPlatform::WideToMultiByte(LPCWSTR lpszIn, CZipAutoBuffer &szOut, UINT uCodePage)
 {
-	size_t wideLen = wcslen(lpWide);
+	size_t wideLen = wcslen(lpszIn);
 	if (wideLen == 0)
 	{
-		szSingle.Release();
+		szOut.Release();
 		return 0;
 	}
 
 	// iLen does not include terminating character
-	int iLen = WideCharToMultiByte(uCodePage, 0, lpWide, (int)wideLen, szSingle, 
+	int iLen = WideCharToMultiByte(uCodePage, 0, lpszIn, (int)wideLen, szOut, 
 		0, NULL, NULL);
 	if (iLen > 0)
 	{
-		szSingle.Allocate(iLen, true);
-		iLen = WideCharToMultiByte(uCodePage, 0, lpWide , (int)wideLen, szSingle, 
+		szOut.Allocate(iLen, true);
+		iLen = WideCharToMultiByte(uCodePage, 0, lpszIn , (int)wideLen, szOut, 
 			iLen, NULL, NULL);
 		ASSERT(iLen != 0);
 	}
 	else // here it means error
 	{
-		szSingle.Release();
+		szOut.Release();
 		iLen --;
 	}
 	return iLen;
 
 }
-int ZipPlatform::SingleToWide(const CZipAutoBuffer &szSingle, CZipString& szWide, UINT uCodePage)
+int ZipPlatform::MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, UINT uCodePage)
 {
-	int singleLen = szSingle.GetSize();
+	int singleLen = szIn.GetSize();
 	// iLen doesn't include terminating character
 	DWORD dwFlags = uCodePage <= CP_OEMCP ? MB_PRECOMPOSED : 0;
-	int iLen = MultiByteToWideChar(uCodePage, dwFlags, szSingle.GetBuffer(), singleLen, NULL, 0);
+	int iLen = MultiByteToWideChar(uCodePage, dwFlags, szIn.GetBuffer(), singleLen, NULL, 0);
 	if (iLen > 0)
 	{
-		iLen = MultiByteToWideChar(uCodePage, dwFlags, szSingle.GetBuffer(), singleLen, 
-			szWide.GetBuffer(iLen) , iLen);
-		szWide.ReleaseBuffer(iLen);
+		iLen = MultiByteToWideChar(uCodePage, dwFlags, szIn.GetBuffer(), singleLen, 
+			szOut.GetBuffer(iLen) , iLen);
+		szOut.ReleaseBuffer(iLen);
 		ASSERT(iLen != 0);
 	}
 	else
 	{
-		szWide.Empty();
+		szOut.Empty();
 		iLen --; // return -1
 	}
 	return iLen;
-
 }
 #endif
 
-#ifdef ZIP_ARCHIVE_STL
+#if defined ZIP_ARCHIVE_STL || defined ZIP_FILE_USES_STL
 
 #if _MSC_VER > 1000
 	#pragma warning( push )
@@ -379,6 +428,6 @@ intptr_t ZipPlatform::GetFileSystemHandle(int iDes)
 }
 
 
-#endif // ZIP_ARCHIVE_STL
+#endif // ZIP_ARCHIVE_STL || ZIP_FILE_USES_STL
 
 #endif // ZIP_ARCHIVE_WIN

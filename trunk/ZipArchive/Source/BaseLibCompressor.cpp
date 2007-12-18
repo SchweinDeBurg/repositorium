@@ -18,9 +18,9 @@
 namespace ZipArchiveLib
 {
 
-void CBaseLibCompressor::GetInternalDataAddress(void** opaque)
+void CBaseLibCompressor::SetOpaque(void** opaque, const COptions* pOptions)
 {
-	*opaque = m_bDetectLibMemoryLeaks ? &m_list : 0;;
+	*opaque = pOptions->m_bDetectLibMemoryLeaks ? &m_list : 0;
 }
 
 void CBaseLibCompressor::EmptyPtrList()

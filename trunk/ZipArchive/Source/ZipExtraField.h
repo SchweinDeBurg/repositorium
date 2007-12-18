@@ -31,7 +31,9 @@
 #include "ZipStorage.h"
 
 
-#define ZIP_EXTRA_ZARCH 0x5A4C // ZL - ZipArchive Library
+#define ZIP_EXTRA_ZARCH_NAME 0x5A4C // ZL - ZipArchive Library
+
+#define ZIP_EXTRA_ZARCH_SEEK 0x5A4D 
 
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)

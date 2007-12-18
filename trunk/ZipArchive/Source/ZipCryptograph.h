@@ -145,7 +145,7 @@ public:
 		\param storage
 			The current CZipStorage.
 	
-		\returns
+		\return
 			\c true, if the password is initially considered correct; \c false otherwise.	
 	 */
 	virtual bool InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage) = 0;

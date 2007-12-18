@@ -71,15 +71,12 @@ void CZipCentralDir::Init(CZipStorage* pStorage, ZipArchiveLib::CZipCallbackProv
 		UnlockAccess();
 #endif
 
-		m_pStorage->UpdateSegmMode(m_pInfo->m_uLastDisk);
+		m_pStorage->UpdateSegmMode(m_pInfo->m_uLastVolume);
 		m_pStorage->m_uBytesBeforeZip = pSource->m_pStorage->m_uBytesBeforeZip;
 		
 	}
 	else
-	{		
 		CreateSharedData();
-		m_pInfo->Init();	
-	}
 }
 
 CZipCentralDir::~CZipCentralDir()
@@ -111,9 +108,9 @@ void CZipCentralDir::Read(bool bExhaustiveRead)
 		ThrowError(CZipException::badZipFile);	
 
 	WORD uCommentSize;
-	CBytesWriter::ReadBytes(m_pInfo->m_uLastDisk,		buf, 2);
-	CBytesWriter::ReadBytes(m_pInfo->m_uDiskWithCD,	buf + 2, 2);
-	CBytesWriter::ReadBytes(m_pInfo->m_uDiskEntriesNo,buf + 4, 2);
+	CBytesWriter::ReadBytes(m_pInfo->m_uLastVolume,		buf, 2);
+	CBytesWriter::ReadBytes(m_pInfo->m_uVolumeWithCD,	buf + 2, 2);
+	CBytesWriter::ReadBytes(m_pInfo->m_uVolumeEntriesNo,buf + 4, 2);
 	CBytesWriter::ReadBytes(m_pInfo->m_uEntriesNumber,buf + 6, 2);
 	CBytesWriter::ReadBytes(m_pInfo->m_uSize,			buf + 8, 4);
 	CBytesWriter::ReadBytes(m_pInfo->m_uOffset,		buf + 12, 4);
@@ -137,22 +134,22 @@ void CZipCentralDir::Read(bool bExhaustiveRead)
 		// when the zip64 locator is not found, try to treat this archive as normal
 	}
 	
-	// if m_uLastDisk is not zero, it is enough to say that it is a multi disk archive
-	ASSERT((!m_pInfo->m_uLastDisk && (m_pInfo->m_uEntriesNumber == m_pInfo->m_uDiskEntriesNo) && !m_pInfo->m_uDiskWithCD) || m_pInfo->m_uLastDisk);
+	// if m_uLastVolume is not zero, it is enough to say that it is a multi-volume archive
+	ASSERT((!m_pInfo->m_uLastVolume && (m_pInfo->m_uEntriesNumber == m_pInfo->m_uVolumeEntriesNo) && !m_pInfo->m_uVolumeWithCD) || m_pInfo->m_uLastVolume);
 
-		m_pStorage->UpdateSegmMode(m_pInfo->m_uLastDisk);
+		m_pStorage->UpdateSegmMode(m_pInfo->m_uLastVolume);
 
 	if (!m_pStorage->IsSegmented() && !m_pInfo->CheckIfOK_1())
 		ThrowError(CZipException::badZipFile);
 
-	if (m_pStorage->m_uBytesBeforeZip == 0 && m_pInfo->m_uLastDisk == 0)
+	if (m_pStorage->m_uBytesBeforeZip == 0 && m_pInfo->m_uLastVolume == 0)
 		m_pStorage->m_uBytesBeforeZip = m_pInfo->CalculateBytesBeforeZip();
 
 	if (!m_pInfo->CheckIfOK_2())
 		ThrowError(CZipException::badZipFile);
 
 	m_pInfo->m_bInArchive = true;
-	m_pStorage->ChangeDisk(m_pInfo->m_uDiskWithCD);
+	m_pStorage->ChangeVolume(m_pInfo->m_uVolumeWithCD);
 
 	if (!m_pInfo->m_uSize)
 		return;
@@ -183,8 +180,8 @@ void CZipCentralDir::ReadHeaders(bool bExhaustiveRead)
 	if (bExhaustiveRead)
 		{
 			ZIP_FILE_USIZE uPosition = m_pStorage->m_pFile->GetPosition();
-			// different offset, or different disks
-			if (uPosition != m_pInfo->m_uEndOffset || m_pStorage->IsSegmented() && m_pStorage->GetCurrentDisk() != m_pInfo->m_uLastDisk)
+			// different offset, or different parts
+			if (uPosition != m_pInfo->m_uEndOffset || m_pStorage->IsSegmented() && m_pStorage->GetCurrentVolume() != m_pInfo->m_uLastVolume)
 				for(;;)
 				{
 					CZipAutoBuffer buf(4);
@@ -222,7 +219,7 @@ bool CZipCentralDir::IsValidIndex(ZIP_INDEX_TYPE uIndex)const
 void CZipCentralDir::OpenFile(ZIP_INDEX_TYPE uIndex)
 {
 	CZipFileHeader* pOpenedFile = (*this)[uIndex];
-	m_pStorage->ChangeDisk(pOpenedFile->m_uDiskStart);
+	m_pStorage->ChangeVolume(pOpenedFile->m_uVolumeStart);
 	m_pStorage->Seek(pOpenedFile->m_uOffset);
 	if (!pOpenedFile->ReadLocal(*this))
 		ThrowError(CZipException::badZipFile);
@@ -377,17 +374,17 @@ void CZipCentralDir::Write()
 // 		we are at the end already
 
 	m_pInfo->m_uSize = 0;
-	bool bDontAllowDiskChange = false;
+	bool bDontAllowVolumeChange = false;
 	
 	if (m_pStorage->IsSegmented())
 	{
 		// segmentation signature at the beginning (4 bytes) + the size of the data descr. for each file
 		ZIP_SIZE_TYPE uSize = GetSize(true);
 		// if there is a segmented archive in creation and it is only one-volume,
-		//	(current disk is 0 so far, no bytes has been written so we know they are 
+		//	(current volume number is 0 so far, no bytes has been written so we know they are 
 		//  all in the buffer)	make sure that it will be after writing central dir 
 		// and make it a not segmented archive
-		if (m_pStorage->GetCurrentDisk() == 0)
+		if (m_pStorage->GetCurrentVolume() == 0)
 		{
 			// calculate the size of data descriptors already in the buffer or on the disk
 			// (they will be removed in the not segmented archive).
@@ -407,47 +404,47 @@ void CZipCentralDir::Write()
 			ZIP_SIZE_TYPE uVolumeFree = m_pStorage->VolumeLeft();
 			
 			if (uVolumeFree >= uToGrow) 
-			// lets make sure it will be one-disk archive
+			// lets make sure it will be one-volume archive
 			{
 				// can the operation be done only in the buffer?
 				if (!m_pStorage->m_uBytesWritten && // no bytes on the disk yet
 					(m_pStorage->GetFreeInBuffer() >= uToGrow)) // is the buffer big enough?
 				{
 						RemoveDataDescr(true);
-						bDontAllowDiskChange = true; // if the disk change occurs somehow, we'll throw an error later
+						bDontAllowVolumeChange = true; // if a volume change occurs somehow, we'll throw an error later
 				}
 				else
 				{
 					m_pStorage->Flush();
 					if (RemoveDataDescr(false))
-						bDontAllowDiskChange = true; // if the disk change occurs somehow, we'll throw an error later
+						bDontAllowVolumeChange = true; // if a volume change occurs somehow, we'll throw an error later
 				}
 			}
 		}
 
 		// make sure that in a segmented archive, the whole central directory will fit on the single volume
-		if (!bDontAllowDiskChange)
+		if (!bDontAllowVolumeChange)
 			m_pStorage->AssureFree(uSize);
 	}
 
 	try
 	{
-		WriteHeaders(bDontAllowDiskChange || !m_pStorage->IsSegmented());
+		WriteHeaders(bDontAllowVolumeChange || !m_pStorage->IsSegmented());
 				
 		WriteCentralEnd();
 
-		if (bDontAllowDiskChange)
+		if (bDontAllowVolumeChange)
 		{
-			if (m_pStorage->GetCurrentDisk() != 0)
+			if (m_pStorage->GetCurrentVolume() != 0)
 				ThrowError(CZipException::badZipFile);
 		}		
 	}
 	catch (...)
 	{
-		if (bDontAllowDiskChange)
+		if (bDontAllowVolumeChange)
 		{
 			m_pStorage->FinalizeSegm();
-			m_pInfo->m_uLastDisk = 0;
+			m_pInfo->m_uLastVolume = 0;
 		}
 		throw;
 	}
@@ -457,14 +454,14 @@ void CZipCentralDir::Write()
 void CZipCentralDir::WriteHeaders(bool bOneDisk)
 {
 	CZipActionCallback* pCallback = m_pCallbacks->Get(CZipActionCallback::cbSave);
-	m_pInfo->m_uDiskEntriesNo = 0;
-	m_pInfo->m_uDiskWithCD = m_pStorage->GetCurrentDisk();
+	m_pInfo->m_uVolumeEntriesNo = 0;
+	m_pInfo->m_uVolumeWithCD = m_pStorage->GetCurrentVolume();
 	
 	m_pInfo->m_uOffset = m_pStorage->GetPosition();
 	if (!m_pInfo->m_uEntriesNumber)
 		return;
 
-	ZIP_PART_TYPE uDisk = m_pInfo->m_uDiskWithCD;
+	ZIP_VOLUME_TYPE uDisk = m_pInfo->m_uVolumeWithCD;
 
 	if (pCallback)
 	{
@@ -483,20 +480,20 @@ void CZipCentralDir::WriteHeaders(bool bOneDisk)
 			
 			m_pInfo->m_uSize += pHeader->Write(m_pStorage);
 
-			if (m_pStorage->GetCurrentDisk() != uDisk)
+			if (m_pStorage->GetCurrentVolume() != uDisk)
 			{
-				m_pInfo->m_uDiskEntriesNo = 1;
-				uDisk = m_pStorage->GetCurrentDisk();
-				// update the information about the offset and starting disk if the 
-				// first header was written on the new disk
+				m_pInfo->m_uVolumeEntriesNo = 1;
+				uDisk = m_pStorage->GetCurrentVolume();
+				// update the information about the offset and starting volume if the 
+				// first header was written in the new volume
 				if (i == 0)
 				{
 					m_pInfo->m_uOffset = 0;
-					m_pInfo->m_uDiskWithCD = uDisk;
+					m_pInfo->m_uVolumeWithCD = uDisk;
 				}
 			}
 			else 
-				m_pInfo->m_uDiskEntriesNo++;
+				m_pInfo->m_uVolumeEntriesNo++;
 
 			if (pCallback)
 			{
@@ -522,9 +519,9 @@ void CZipCentralDir::WriteHeaders(bool bOneDisk)
 					if (bOneDisk) 
 					{						
 						ASSERT(!m_pStorage->IsSegmented());
-						// if segmented, would need to m_pStorage->Flush(), but the headers can span multiple disks/parts
+						// if segmented, would need to m_pStorage->Flush(), but the headers can span multiple volumes
 						m_pStorage->EmptyWriteBuffer();						
-						// remove saved part from the disk
+						// remove saved part from the volume
 						m_pStorage->m_pFile->SetLength((ZIP_FILE_USIZE)(m_pStorage->m_uBytesBeforeZip + m_pInfo->m_uOffset));
 	//	 				We can now abort safely
 						iAborted = CZipException::abortedSafely;
@@ -556,22 +553,22 @@ void CZipCentralDir::WriteCentralEnd()
 
 	CZipAutoBuffer buf((DWORD)uSize);
 	char* pBuf = buf;
-	ZIP_PART_TYPE uDisk = m_pStorage->GetCurrentDisk();
+	ZIP_VOLUME_TYPE uDisk = m_pStorage->GetCurrentVolume();
 	if (m_pStorage->IsSegmented() != 0)
 	{
-		// update the disk number
+		// update the volume number
 		m_pStorage->AssureFree(uSize);
-		m_pInfo->m_uLastDisk = m_pStorage->GetCurrentDisk();
+		m_pInfo->m_uLastVolume = m_pStorage->GetCurrentVolume();
 	}
-	if (m_pInfo->m_uLastDisk != uDisk)
-		m_pInfo->m_uDiskEntriesNo = 0;
+	if (m_pInfo->m_uLastVolume != uDisk)
+		m_pInfo->m_uVolumeEntriesNo = 0;
 
 
 	WORD uCommentSize = (WORD)m_pInfo->m_pszComment.GetSize();
 	memcpy(pBuf, m_gszSignature, 4);
-	CBytesWriter::WriteBytes(pBuf + 4,  CBytesWriter::WriteSafeU16(m_pInfo->m_uLastDisk));
-	CBytesWriter::WriteBytes(pBuf + 6,  CBytesWriter::WriteSafeU16(m_pInfo->m_uDiskWithCD));
-	CBytesWriter::WriteBytes(pBuf + 8,  CBytesWriter::WriteSafeU16(m_pInfo->m_uDiskEntriesNo));
+	CBytesWriter::WriteBytes(pBuf + 4,  CBytesWriter::WriteSafeU16(m_pInfo->m_uLastVolume));
+	CBytesWriter::WriteBytes(pBuf + 6,  CBytesWriter::WriteSafeU16(m_pInfo->m_uVolumeWithCD));
+	CBytesWriter::WriteBytes(pBuf + 8,  CBytesWriter::WriteSafeU16(m_pInfo->m_uVolumeEntriesNo));
 	CBytesWriter::WriteBytes(pBuf + 10, CBytesWriter::WriteSafeU16(m_pInfo->m_uEntriesNumber));
 	CBytesWriter::WriteBytes(pBuf + 12, CBytesWriter::WriteSafeU32(m_pInfo->m_uSize));
 	CBytesWriter::WriteBytes(pBuf + 16, CBytesWriter::WriteSafeU32(m_pInfo->m_uOffset));
@@ -642,7 +639,7 @@ void CZipCentralDir::RemoveLastFile(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uInd
 	{
 		if (m_pHeaders->GetSize() == 0)
 			return;			
-		uIndex = (ZIP_PART_TYPE)(m_pHeaders->GetSize() - 1);
+		uIndex = (ZIP_VOLUME_TYPE)(m_pHeaders->GetSize() - 1);
 	}
 	if (!pHeader)
 		pHeader = (*m_pHeaders)[(ZIP_ARRAY_SIZE_TYPE)uIndex];
@@ -687,7 +684,7 @@ bool CZipCentralDir::RemoveDataDescr(bool bFromBuffer)
 	else
 	{
 		uSize = (ZIP_SIZE_TYPE)m_pStorage->m_pFile->GetLength();
-		// we cannot use CZipMemFile in multidisk archive
+		// we cannot use CZipMemFile in multi-volume archive
 		// so it must be CZipFile
 		if (!fm.CreateMapping(static_cast<CZipFile*>(m_pStorage->m_pFile)))
 			return false;
@@ -913,7 +910,7 @@ ZIP_INDEX_TYPE CZipCentralDir::FindFileNameIndex(LPCTSTR lpszFileName) const
 void CZipCentralDir::CreateSharedData()
 {
 	m_pInfo = new CInfo();
-	m_pInfo->m_iReference = 1;
+	m_pInfo->Init();	
 	m_pHeaders = new CZipArray<CZipFileHeader*>();
 	m_pFindArray = new CZipArray<CZipFindFast*>();
 }

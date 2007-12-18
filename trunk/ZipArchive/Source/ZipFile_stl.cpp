@@ -19,7 +19,13 @@
 
 #include <fcntl.h>
 
-#ifdef ZIP_ARCHIVE_STL
+#if defined ZIP_ARCHIVE_STL || defined ZIP_FILE_USES_STL
+
+#if defined __APPLE__ || defined __CYGWIN__
+	#define FILE_FUNCTIONS_64B_BY_DEFAULT
+#else
+	#undef FILE_FUNCTIONS_64B_BY_DEFAULT	
+#endif	
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -36,7 +42,7 @@ void CZipFile::ThrowError() const
 }
 
 
-ULONGLONG CZipFile::GetLength() const
+ZIP_FILE_USIZE CZipFile::GetLength() const
 {
 	// cannot use Seek here, Seek is not const
 	ZIP_SIZE_TYPE lLen, lCur;
@@ -85,7 +91,7 @@ bool CZipFile::Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow)
 	m_hFile = ZipPlatform::OpenFile(lpszFileName, iNewFlags, openFlags & 0x1C);
 	if (m_hFile == -1)
 		if (bThrow)
-			ThrowError();
+			CZipException::Throw(errno, lpszFileName);
 		else
 			return false;
 	m_szFileName = lpszFileName;

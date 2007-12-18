@@ -23,11 +23,11 @@ bool CZipExtraField::Read(CZipStorage *pStorage, WORD uSize)
 	CZipAutoBuffer buffer;
 	buffer.Allocate(uSize);
 	pStorage->Read(buffer, uSize, true);
-	int offset = 0;
+	char* position = (char*) buffer;
 	do
 	{
 		CZipExtraData* pExtra = new CZipExtraData();
-		if (!pExtra->Read(buffer + offset, uSize))
+		if (!pExtra->Read(position, uSize))
 		{
 			delete pExtra;
 			return false;
@@ -35,7 +35,7 @@ bool CZipExtraField::Read(CZipStorage *pStorage, WORD uSize)
 		int totalSize = pExtra->GetTotalSize();
 		if (totalSize > uSize || totalSize < 0)
 			return false;
-		offset += totalSize;		
+		position += totalSize;
 		uSize = (WORD)(uSize - totalSize);
 		Add(pExtra);
 	}
@@ -65,7 +65,7 @@ void CZipExtraField::RemoveInternalHeaders()
 	{
 		WORD headerID = GetAt(i)->GetHeaderID();
 		if (
-			headerID == ZIP_EXTRA_ZARCH)
+			headerID == ZIP_EXTRA_ZARCH_NAME)
 				RemoveAt(i);
 	}
 }

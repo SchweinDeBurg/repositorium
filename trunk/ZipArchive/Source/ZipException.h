@@ -146,7 +146,7 @@ public:
 		badZipFile,			///< Damaged or not a zip file.
 		badCrc,				///< Crc is mismatched.
 		noCallback,			///< There is no spanned archive callback object set.
-		aborted,			///< The disk change callback method returned \c false.
+		aborted,			///< The volume change callback in a segmented archive method returned \c false.
 		abortedAction,		///< The action callback method returned \c false.
 		abortedSafely,		///< The action callback method returned \c false, but the data is not corrupted.
 		nonRemovable,		///< The device selected for the spanned archive is not removable.
@@ -161,7 +161,7 @@ public:
 		notRenamed,			///< Error while renaming a file (under Windows call \c GetLastError() to find out more).
 		platfNotSupp,		///< Cannot create a file for the specified platform.
 		cdirNotFound,		///< The central directory was not found in the archive (or you were trying to open not the last disk of a segmented archive).
-		noZip64,			///< The Zip64 format has not been enabled for the library, but is required to open the archive.
+		noZip64,			///< The Zip64 format has not been enabled for the library, but is required to use the archive.
 		noAES,				///< WinZip AES encryption has not been enabled for the library, but is required to decompress the archive.
 #ifdef ZIP_ARCHIVE_STL
 		outOfBounds,		///< The collection is empty and the bounds do not exist.
@@ -174,13 +174,13 @@ public:
 		errNo,				///< Zlib library error.
 		streamError,		///< Zlib library error.
 		dataError,			///< Zlib library error.
-		memError,			///< Zlib library or CZipMemFile error.
+		memError,			///< Zlib library or \c CZipMemFile error.
 		bufError,			///< Zlib library error.
 		versionError,		///< Zlib library error.
 	};
 
 	/**
-		The error code - takes one of the #ZipErrors values.
+		The error code - takes one of the CZipException::ZipErrors values.
 	*/
 	int m_iCause;
 

@@ -69,7 +69,6 @@ public:
 		splitArchive,		///< A split archive.
 
 		/**
-			\brief .
 			The archive segmentation type will be auto-detected.			
 			If the archive is on the removable device,
 			assume a spanned archive, otherwise assume a split archive.
@@ -77,11 +76,27 @@ public:
 		suggestedAuto,	
 
 		/**
-			\brief .
 			If a segmented archive is on a removable device, assume a split archive.
 			Normally you create spanned archives on removable devices.
 		*/
 		suggestedSplit
+	};
+	
+	/**
+		The direction of seeking operation.
+
+		\see
+			CZipStorage::Seek
+	*/
+	enum SeekType
+	{
+		seekFromBeginning, ///< Start seeking from the beginning of a file.
+		seekFromEnd, ///< Start seeking from the end of a file.
+		/**
+			Start seeking from the current position in an archive.
+			This value can cause a volume change when a segmented archive is opened for reading.
+		*/
+		seekCurrent
 	};
 	CZipStorage();
 	virtual ~CZipStorage();
@@ -111,13 +126,13 @@ public:
 	/**
 		Called only by CZipCentralDir::Read when opening an existing archive.
 
-		\param	uLastDisk
-			The number of the disk the central directory is on.
+		\param	uLastVolume
+			The number of the volme the central directory is on.
 
 		\note Throws exceptions.
 
 	*/
-	void UpdateSegmMode(ZIP_PART_TYPE uLastDisk);
+	void UpdateSegmMode(ZIP_VOLUME_TYPE uLastVolume);
 
 	/**
 		Ensures than in a segmented archive, there is enough free space on the current volume.
@@ -144,7 +159,7 @@ public:
 
 		\param	bAtOnce
 			If \c true, the whole chunk must fit in the current volume.
-			If there is not enough free space, a disk change is performed.
+			If there is not enough free space, a volume change is performed.
 
 		\note
 			Throws exceptions.
@@ -168,7 +183,7 @@ public:
 	bool IsClosed(bool bArchive) const 
 	{
 		if (bArchive)
-			return GetCurrentDisk() == ZIP_DISK_NUMBER_UNSPECIFIED;
+			return GetCurrentVolume() == ZIP_VOLUME_NUMBER_UNSPECIFIED;
 		else
 			return !m_pFile || !m_bInMemory && m_pFile->IsClosed();
 	}
@@ -183,8 +198,8 @@ public:
 			The number of bytes to read.
 
 		\param	bAtOnce
-			If \c true, the specified number of bytes must be read from the same 
-			volume (no disk change is allowed).
+			If \c true, the specified number of bytes must be read 
+			from the same volume (no volume change is allowed).
 
 		\note
 			Throws exceptions.
@@ -204,7 +219,7 @@ public:
 	ZIP_SIZE_TYPE GetPosition() const
 	{
 		ZIP_SIZE_TYPE uPos = (ZIP_SIZE_TYPE)(m_pFile->GetPosition()) + m_uBytesInWriteBuffer;
-		if (m_uCurrentDisk == 0)
+		if (m_uCurrentVolume == 0)
 			uPos -= m_uBytesBeforeZip;
 		return uPos;
 	}
@@ -235,33 +250,38 @@ public:
 	}
 
 	/**
-		Changes disks during writing to a segmented archive.
+		Changes volumes during writing to a segmented archive.
 
 		\param	uNeeded
-			The number of bytes needed on the disk.
-
-		\param	lpszFileName
-			The archive filename.
+			The number of bytes needed in the volume.
 
 		\note
 			Throws exceptions.
 	*/
-	void NextDisk(ZIP_SIZE_TYPE uNeeded, LPCTSTR lpszFileName = NULL);
+	void NextVolume(ZIP_SIZE_TYPE uNeeded);
 
 
 	/**
-		Gets a zero-based number of the current disk.
+		Gets a zero-based number of the current volume.
 	*/
-	ZIP_PART_TYPE GetCurrentDisk() const {return m_uCurrentDisk;}
+	ZIP_VOLUME_TYPE GetCurrentVolume() const {return m_uCurrentVolume;}
 
  
 	/**
-		Changes the disk during extract operations.
+		Changes the volume during extract operations.
 
 		\param	uNumber
-			A zero-based requested disk number.
+			A zero-based number of the requested volume.
 	*/
-	void ChangeDisk(ZIP_PART_TYPE uNumber);
+	void ChangeVolume(ZIP_VOLUME_TYPE uNumber);
+
+	/**
+		Changes the current volume to the next volume during extract operations.
+	*/
+	void ChangeVolume()
+	{
+		ChangeVolume((ZIP_VOLUME_TYPE)(m_uCurrentVolume + 1));
+	}
 
 	/**
 		Detects the segmentation mode.
@@ -312,12 +332,11 @@ public:
 		\param lOff
 			The new position in the file.
 
-		\param fromBeginning
-			The direction of the seek operation. If \c true, 
-			\a lOff is counted from the beginning of the file;
-			otherwise the \a lOff is counted from the end of the file.
+		\param iSeekType
+			The direction of the seek operation.
+			It can be one of the #SeekType values.
 	*/
-	ULONGLONG Seek(ULONGLONG lOff , bool fromBeginning = true);	
+	ULONGLONG Seek(ULONGLONG lOff, SeekType iSeekType = seekFromBeginning);	
 
 	/**
 		Gets the number of free bytes on the current volume.	
@@ -409,6 +428,9 @@ protected:
 
 	/**
 		Renames the last segment file in a split archive when finalizing the whole archive.
+
+		\return
+			The name of the last segment.
 	*/
 	CZipString RenameLastFileInSplitArchive();
 
@@ -451,7 +473,7 @@ protected:
 		\note
 			Throws exceptions.
 		\see
-			CZipArchive::SetSpanCallback
+			CZipArchive::SetSegmCallback
 	*/
 	void CallCallback(ZIP_SIZE_TYPE uNeeded, int iCode, CZipString szTemp);
 
@@ -461,21 +483,18 @@ protected:
 		\param	bLast
 			Set it to \c true, if constructing the last volume name.
 
-		\param	lpszZipName
-			The name of the archive.
-
 		\return	
 			The segment name.
 	*/
-	CZipString GetSplitVolumeName(bool bLast, LPCTSTR lpszZipName = NULL) const;
+	CZipString GetSplitVolumeName(bool bLast) const;
 
 	/**
-		Changes the disk when processing a split archive.
+		Changes a file when processing a split archive.
 	*/
 	CZipString ChangeSplitRead();
 
 	/**
-		Changes the disk when processing a spanned archive.
+		Changes a disk when processing a spanned archive.
 	*/
 	CZipString ChangeSpannedRead();
 
@@ -489,7 +508,7 @@ protected:
 
 	/**
 		The value it holds, depends on the current mode:		
-		- An opened existing split archive - stores the number of the last disk ( the one with "zip" extension).
+		- An opened existing split archive - stores the number of the last volume ( the one with "zip" extension).
 		- A split archive in creation - the size of the volume.
 
 		This method is used only when processing split archives.
@@ -530,13 +549,13 @@ protected:
 	bool m_bNewSegm;
 
 	/**
-		The current disk in a segmented archive.
+		The current volume number in a segmented archive.
 		The value is zero-based.
 	*/
-	ZIP_PART_TYPE m_uCurrentDisk;
+	ZIP_VOLUME_TYPE m_uCurrentVolume;
 
 	/**
-		\c true when the archive is created in memory; \e false otherwise.
+		\c true when the archive is created in memory; \c false otherwise.
 	*/
 	bool m_bInMemory;
 
@@ -575,14 +594,25 @@ protected:
 	int m_iSegmMode;
 
 	/**
-		A callback object called when there is a need for a disk change in a spanned archive.
+		A callback object called when there is a need for a volume change
+		in a spanned archive.
 
 		\see
-			CZipArchive::SetSpanCallback
+			CZipArchive::SetSegmCallback
 	*/
-	CZipSpanCallback* m_pChangeDiskFunc;
+	CZipSegmCallback* m_pSpanChangeVolumeFunc;
 
+	/**
+		A callback object called when there is a need for a volume change
+		in a split archive.
+
+		\see
+			CZipArchive::SetSegmCallback
+	*/
+	CZipSegmCallback* m_pSplitChangeVolumeFunc;
 private:
+	CZipSegmCallback* m_pChangeVolumeFunc;
+	CZipString m_szArchiveName;
 	CZipFile m_internalfile;
 	static const ZIP_FILE_USIZE SignatureNotFound;
 	void ThrowError(int err);

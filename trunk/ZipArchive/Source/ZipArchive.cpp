@@ -34,12 +34,12 @@
 
 using namespace ZipArchiveLib;
 
-const char CZipArchive::m_gszCopyright[] = {"ZipArchive Library Copyright (C) 2000 - 2007 Artpol Software - Tadeusz Dracz"};
-const char CZipArchive::m_gszVersion[] = {"3.1.1"};
+const char  CZipArchive::m_gszCopyright[] = {"ZipArchive Library Copyright (C) 2000 - 2007 Artpol Software - Tadeusz Dracz"};
+const char  CZipArchive::m_gszVersion[] = {"3.2.0"};
 
 void CZipAddNewFileInfo::Defaults()
 {
-	m_iSmartLevel = CZipArchive::zipsmSafeSmart;
+	m_iSmartLevel =  CZipArchive::zipsmSafeSmart;
 	m_uReplaceIndex = ZIP_FILE_INDEX_UNSPECIFIED;
 	m_nBufSize = 65536;
 	m_iComprLevel = -1; // default
@@ -47,12 +47,12 @@ void CZipAddNewFileInfo::Defaults()
 
 
 
-CZipArchive::CZipArchive()
+ CZipArchive:: CZipArchive()
 {
 	Initialize();
 }
 
-void CZipArchive::Initialize()
+void  CZipArchive::Initialize()
 {
 	m_bRemoveDriveLetter = true;
 	m_bExhaustiveRead = false;
@@ -67,14 +67,14 @@ void CZipArchive::Initialize()
 }
 
 
-CZipArchive::~CZipArchive()
+ CZipArchive::~ CZipArchive()
 {
 	// 	Close(); // cannot be here: if an exception is thrown strange things can happen	
 	ClearCompressor();
 	ClearCryptograph();	
 }
 
-bool CZipArchive::Open(LPCTSTR szPathName, int iMode, ZIP_SIZE_TYPE uVolumeSize)
+bool  CZipArchive::Open(LPCTSTR szPathName, int iMode, ZIP_SIZE_TYPE uVolumeSize)
 {
 	if (!IsClosed())
 	{
@@ -86,7 +86,7 @@ bool CZipArchive::Open(LPCTSTR szPathName, int iMode, ZIP_SIZE_TYPE uVolumeSize)
 	return true;
 }
 
-bool CZipArchive::Open(CZipAbstractFile& af, int iMode)
+bool  CZipArchive::Open(CZipAbstractFile& af, int iMode)
 {
 	if (!IsClosed())
 	{
@@ -103,7 +103,7 @@ bool CZipArchive::Open(CZipAbstractFile& af, int iMode)
 	return true;
 }
 
-bool CZipArchive::OpenFrom(CZipArchive& zip)
+bool  CZipArchive::OpenFrom( CZipArchive& zip)
 {
 	if (zip.IsClosed())
 	{
@@ -121,13 +121,13 @@ bool CZipArchive::OpenFrom(CZipArchive& zip)
 		return false; 
 	}
 
-	m_storage.Open(zip.GetArchivePath(), CZipArchive::zipOpenReadOnly, zip.m_storage.IsSplit() ? 1 : 0);
+	m_storage.Open(zip.GetArchivePath(),  CZipArchive::zipOpenReadOnly, zip.m_storage.IsSplit() ? 1 : 0);
 	InitOnOpen(zip.GetSystemCompatibility(), &zip.m_centralDir);	
 
 	return true;
 }
 
-void CZipArchive::InitOnOpen(int iArchiveSystCompatib, CZipCentralDir* pSource)
+void  CZipArchive::InitOnOpen(int iArchiveSystCompatib, CZipCentralDir* pSource)
 {
 	m_pszPassword.Release();
 	m_iFileOpened = nothing;
@@ -136,7 +136,7 @@ void CZipArchive::InitOnOpen(int iArchiveSystCompatib, CZipCentralDir* pSource)
 	m_iArchiveSystCompatib = iArchiveSystCompatib;
 }
 
-void CZipArchive::OpenInternal(int iMode)
+void  CZipArchive::OpenInternal(int iMode)
 {
 	InitOnOpen(ZipPlatform::GetSystemID());		
 	if ((iMode == zipOpen) ||(iMode == zipOpenReadOnly))
@@ -152,12 +152,12 @@ void CZipArchive::OpenInternal(int iMode)
 	}
 }
 
-void CZipArchive::ThrowError(int err)
+void  CZipArchive::ThrowError(int err)
 {
 	CZipException::Throw(err, IsClosed() ? _T("") : (LPCTSTR)m_storage.m_pFile->GetFilePath());
 }
 
-bool CZipArchive::GetFileInfo(CZipFileHeader & fhInfo, ZIP_INDEX_TYPE uIndex) const
+bool  CZipArchive::GetFileInfo(CZipFileHeader & fhInfo, ZIP_INDEX_TYPE uIndex) const
 {
 	if (IsClosed())
 	{
@@ -172,7 +172,7 @@ bool CZipArchive::GetFileInfo(CZipFileHeader & fhInfo, ZIP_INDEX_TYPE uIndex) co
 	return true;
 }
 
-CZipFileHeader* CZipArchive::GetFileInfo(ZIP_INDEX_TYPE uIndex)
+CZipFileHeader*  CZipArchive::GetFileInfo(ZIP_INDEX_TYPE uIndex)
 {
 	if (IsClosed())
 	{
@@ -185,7 +185,7 @@ CZipFileHeader* CZipArchive::GetFileInfo(ZIP_INDEX_TYPE uIndex)
 	return m_centralDir[uIndex];
 }
 
-const CZipFileHeader* CZipArchive::GetFileInfo(ZIP_INDEX_TYPE uIndex) const
+const CZipFileHeader*  CZipArchive::GetFileInfo(ZIP_INDEX_TYPE uIndex) const
 {
 	if (IsClosed())
 	{
@@ -200,7 +200,7 @@ const CZipFileHeader* CZipArchive::GetFileInfo(ZIP_INDEX_TYPE uIndex) const
 
 
 
-ZIP_INDEX_TYPE CZipArchive::FindFile(LPCTSTR lpszFileName, int iCaseSensitive, bool bFileNameOnly)
+ZIP_INDEX_TYPE  CZipArchive::FindFile(LPCTSTR lpszFileName, int iCaseSensitive, bool bFileNameOnly)
 {
 	if (IsClosed())
 	{
@@ -226,7 +226,7 @@ ZIP_INDEX_TYPE CZipArchive::FindFile(LPCTSTR lpszFileName, int iCaseSensitive, b
 	return m_centralDir.FindFile(lpszFileName, bCS, bSporadically, bFileNameOnly);
 }
 
-bool CZipArchive::OpenFile(ZIP_INDEX_TYPE uIndex)
+bool  CZipArchive::OpenFile(ZIP_INDEX_TYPE uIndex)
 {	
 	if (IsClosed())
 	{
@@ -251,7 +251,6 @@ bool CZipArchive::OpenFile(ZIP_INDEX_TYPE uIndex)
 		return false;
 	}
 	
-	InitBuffer();
 	m_centralDir.OpenFile(uIndex);
 
 	// check it now, not when reading central to allow reading information
@@ -291,13 +290,13 @@ bool CZipArchive::OpenFile(ZIP_INDEX_TYPE uIndex)
 	return true;
 }
 
-CZipFileHeader* CZipArchive::CurrentFile()
+CZipFileHeader*  CZipArchive::CurrentFile()
 {
 	ASSERT(m_centralDir.m_pOpenedFile);
 	return m_centralDir.m_pOpenedFile;
 }
 
-DWORD CZipArchive::ReadFile(void *pBuf, DWORD uSize)
+DWORD  CZipArchive::ReadFile(void *pBuf, DWORD uSize)
 {
 	if (m_iFileOpened != extract)
 	{
@@ -311,7 +310,8 @@ DWORD CZipArchive::ReadFile(void *pBuf, DWORD uSize)
 	return m_pCompressor->Decompress(pBuf, uSize);
 }
 
-void CZipArchive::Close(int iAfterException, bool bUpdateTimeStamp)
+
+void  CZipArchive::Close(int iAfterException, bool bUpdateTimeStamp)
 {
 	// if after an exception - the archive may be closed, but the file may be opened
 	if (IsClosed() && (!iAfterException || IsClosed(false)))
@@ -326,7 +326,7 @@ void CZipArchive::Close(int iAfterException, bool bUpdateTimeStamp)
 	if (m_iFileOpened == compress)
 		CloseNewFile(iAfterException != afNoException);
 
-	bool bWrite = iAfterException != afAfterException && !IsClosed(false);// in disk spanning when user aborts 
+	bool bWrite = iAfterException != afAfterException && !IsClosed(false);// in segmented archive when user aborts 
 
 	if (bWrite) 
 		WriteCentralDirectory(false);  // we will flush in CZipStorage::Close
@@ -350,18 +350,18 @@ void CZipArchive::Close(int iAfterException, bool bUpdateTimeStamp)
 		ZipPlatform::SetFileModTime(szFileName, tNewestTime);
 }
 
-void CZipArchive::WriteCentralDirectory(bool bFlush)
+void  CZipArchive::WriteCentralDirectory(bool bFlush)
 {
 	m_centralDir.Write();
 	if (bFlush)
 		m_storage.Flush();
 }
 
-void CZipArchive::SetAdvanced(int iWriteBuffer, int iGeneralBuffer, int iSearchBuffer)
+void  CZipArchive::SetAdvanced(int iWriteBuffer, int iGeneralBuffer, int iSearchBuffer)
 {
 	if (!IsClosed())
 	{
-		ZIPTRACE("%s(%i) : Set this options before opening the archive.\n");
+		ZIPTRACE("%s(%i) : Set these options before opening the archive.\n");
 		return;
 	}
 	
@@ -370,14 +370,14 @@ void CZipArchive::SetAdvanced(int iWriteBuffer, int iGeneralBuffer, int iSearchB
 	m_storage.m_iLocateBufferSize = iSearchBuffer < 1024 ? 1024 : iSearchBuffer;
 }
 
-int CZipArchive::CloseFile(CZipFile &file)
+int  CZipArchive::CloseFile(CZipFile &file)
 {
 	CZipString temp = file.GetFilePath();
 	file.Close();
 	return CloseFile(temp);
 }
 
-int CZipArchive::CloseFile(LPCTSTR lpszFilePath, bool bAfterException)
+int  CZipArchive::CloseFile(LPCTSTR lpszFilePath, bool bAfterException)
 {
 	if (m_iFileOpened != extract)
 	{
@@ -414,13 +414,12 @@ int CZipArchive::CloseFile(LPCTSTR lpszFilePath, bool bAfterException)
 
 	m_centralDir.CloseFile(bAfterException);
 		
-	ReleaseBuffer();
 	m_iFileOpened = nothing;	
 	ClearCryptograph();	
 	return iRet;
 }
 
-bool CZipArchive::OpenNewFile(CZipFileHeader & header, int iLevel, LPCTSTR lpszFilePath,
+bool  CZipArchive::OpenNewFile(CZipFileHeader & header, int iLevel, LPCTSTR lpszFilePath,
 							  ZIP_INDEX_TYPE uReplaceIndex)
 {
 	if (IsClosed())
@@ -457,9 +456,6 @@ bool CZipArchive::OpenNewFile(CZipFileHeader & header, int iLevel, LPCTSTR lpszF
 			return false;
 		ZipPlatform::GetFileModTime(lpszFilePath, ttime);
 	}
-
-	InitBuffer();
-	
 	
 	if (lpszFilePath)
 	{
@@ -531,7 +527,9 @@ bool CZipArchive::OpenNewFile(CZipFileHeader & header, int iLevel, LPCTSTR lpszF
 		pHeader->PrepareFileName();
 		// we use the local size, because the real does not exist yet
 		ZIP_SIZE_TYPE uFileSize = pHeader->GetDataSize(true, false) + pHeader->GetLocalSize(false) + pHeader->GetDataDescriptorSize(&m_storage);
+		InitBuffer();
 		MakeSpaceForReplace(uReplaceIndex, uFileSize, szFileName);
+		ReleaseBuffer();
 	}
 
 	CurrentFile()->WriteLocal(&m_storage);
@@ -546,10 +544,10 @@ bool CZipArchive::OpenNewFile(CZipFileHeader & header, int iLevel, LPCTSTR lpszF
 }
 
 
-bool CZipArchive::ExtractFile(ZIP_INDEX_TYPE uIndex,                  
+bool  CZipArchive::ExtractFile(ZIP_INDEX_TYPE uIndex,                  
                               LPCTSTR lpszPath,             
                               bool bFullPath,              
-                              LPCTSTR lpszNewName,          
+                              LPCTSTR lpszNewName,  
                               DWORD nBufSize)
 {
 	
@@ -578,11 +576,10 @@ bool CZipArchive::ExtractFile(ZIP_INDEX_TYPE uIndex,
 	}
 	else
 	{
-		if (pCallback)
-			pCallback->SetTotal(pHeader->m_uUncomprSize);
-
 		if (!OpenFile(uIndex))
 			return false;
+		if (pCallback)
+			pCallback->SetTotal(pHeader->m_uUncomprSize);
 
 		CZipPathComponent zpc(szFile);
 		ZipPlatform::ForceDirectory(zpc.GetFilePath());
@@ -660,7 +657,7 @@ bool CZipArchive::ExtractFile(ZIP_INDEX_TYPE uIndex,
 	}	
 }
 
-bool CZipArchive::ExtractFile(ZIP_INDEX_TYPE uIndex,                  
+bool  CZipArchive::ExtractFile(ZIP_INDEX_TYPE uIndex,                  
                               CZipMemFile& mf,
 							  bool bRewind,
                               DWORD nBufSize)
@@ -671,13 +668,14 @@ bool CZipArchive::ExtractFile(ZIP_INDEX_TYPE uIndex,
 	CZipFileHeader* pHeader = (*this)[uIndex];
 	CZipActionCallback* pCallback = GetCallback(CZipActionCallback::cbExtract);
 	if (pCallback)
-	{
 		pCallback->Init(pHeader->GetFileName());
-		pCallback->SetTotal(pHeader->m_uUncomprSize);
-	}
 
 	if (pHeader->IsDirectory() || !OpenFile(uIndex))
 		return false;
+
+	if (pCallback)
+		pCallback->SetTotal(pHeader->m_uUncomprSize);
+
 
 	CZipAutoBuffer buf(nBufSize);
 	//mf.SeekToEnd();
@@ -708,13 +706,13 @@ bool CZipArchive::ExtractFile(ZIP_INDEX_TYPE uIndex,
 		}
 	}
 
+	bool bRet;
 	if (pCallback)
 	{
 		if (!iAborted)
 		{
-			bool bRet = CloseFile() == 1;
-			pCallback->CallbackEnd();
-			return bRet;
+			bRet = CloseFile() == 1;
+			pCallback->CallbackEnd();			
 		}
 		else
 		{
@@ -722,7 +720,7 @@ bool CZipArchive::ExtractFile(ZIP_INDEX_TYPE uIndex,
 				CloseFile(NULL, true);
 			else
 			{
-				bool bRet;
+				bRet = false;
 				try
 				{
 					bRet = CloseFile() == 1;
@@ -748,16 +746,22 @@ bool CZipArchive::ExtractFile(ZIP_INDEX_TYPE uIndex,
 			}
 			
 			pCallback->CallbackEnd();
+			if (bRewind)
+				mf.Seek(oldPos, CZipMemFile::begin);
 			CZipException::Throw(iAborted);
 			return false; // for the compiler
 		}
 	}
 	else
-		return CloseFile() == 1;
+		bRet = CloseFile() == 1;
+
+	if (bRewind)
+		mf.Seek(oldPos, CZipMemFile::begin);
+	return bRet;
 }
 
 
-bool CZipArchive::WriteNewFile(const void *pBuf, DWORD uSize)
+bool  CZipArchive::WriteNewFile(const void *pBuf, DWORD uSize)
 {
 	if (m_iFileOpened != compress)
 	{
@@ -769,7 +773,7 @@ bool CZipArchive::WriteNewFile(const void *pBuf, DWORD uSize)
 	return true;
 }
 
-bool CZipArchive::CloseNewFile(bool bAfterException)
+bool  CZipArchive::CloseNewFile(bool bAfterException)
 {
 	if (m_iFileOpened != compress)
 	{
@@ -788,7 +792,6 @@ bool CZipArchive::CloseNewFile(bool bAfterException)
 		m_centralDir.CloseNewFile();
 	}	
 	m_iFileOpened = nothing;
-	ReleaseBuffer();	
 	ClearCryptograph();
 	if (m_bAutoFlush && !bAfterException)
 		Flush();
@@ -796,14 +799,14 @@ bool CZipArchive::CloseNewFile(bool bAfterException)
 	return true;
 }
 
-bool CZipArchive::RemoveFile(ZIP_INDEX_TYPE uIndex)
+bool  CZipArchive::RemoveFile(ZIP_INDEX_TYPE uIndex)
 {
 	CZipIndexesArray indexes;
 	indexes.Add(uIndex);
 	return RemoveFiles(indexes);
 }
 
-void CZipArchive::GetIndexes(const CZipStringArray &aNames, CZipIndexesArray& aIndexes)
+void  CZipArchive::GetIndexes(const CZipStringArray &aNames, CZipIndexesArray& aIndexes)
 {
 	if (IsClosed())
 	{
@@ -815,7 +818,7 @@ void CZipArchive::GetIndexes(const CZipStringArray &aNames, CZipIndexesArray& aI
 		aIndexes.Add(FindFile(aNames[(ZIP_ARRAY_SIZE_TYPE)i], ffDefault, false));			
 }
 
-bool CZipArchive::RemoveFiles(const CZipStringArray &aNames)
+bool  CZipArchive::RemoveFiles(const CZipStringArray &aNames)
 {
 	CZipIndexesArray indexes;
 	GetIndexes(aNames, indexes);
@@ -831,7 +834,7 @@ struct CZipDeleteInfo
 	bool m_bDelete;
 };
 
-bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
+bool  CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 {
 	if (IsClosed())
 	{
@@ -1055,7 +1058,7 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray &aIndexes)
 
 
 
-bool CZipArchive::ShiftData(ZIP_SIZE_TYPE uOffset)
+bool  CZipArchive::ShiftData(ZIP_SIZE_TYPE uOffset)
 {
 	if (IsClosed())
 	{
@@ -1109,13 +1112,13 @@ bool CZipArchive::ShiftData(ZIP_SIZE_TYPE uOffset)
 	return true;
 }
 
-bool CZipArchive::PrependData(LPCTSTR lpszFilePath, LPCTSTR lpszNewExt)
+bool  CZipArchive::PrependData(LPCTSTR lpszFilePath, LPCTSTR lpszNewExt)
 {
 	CZipFile file(lpszFilePath, CZipFile::modeRead | CZipFile::shareDenyNone);
 	return PrependData(file, lpszNewExt);
 }
 
-bool CZipArchive::PrependData(CZipAbstractFile& file, LPCTSTR lpszNewExt)
+bool  CZipArchive::PrependData(CZipAbstractFile& file, LPCTSTR lpszNewExt)
 {
 	if (file.IsClosed())
 	{
@@ -1171,7 +1174,7 @@ bool CZipArchive::PrependData(CZipAbstractFile& file, LPCTSTR lpszNewExt)
 #endif	
 }
 
-bool CZipArchive::AddNewFile(LPCTSTR lpszFilePath,
+bool  CZipArchive::AddNewFile(LPCTSTR lpszFilePath,
                              int iComprLevel,          
                              bool bFullPath,
 							 int iSmartLevel,
@@ -1185,7 +1188,7 @@ bool CZipArchive::AddNewFile(LPCTSTR lpszFilePath,
 	return AddNewFile(zanfi);	
 }
 
-bool CZipArchive::AddNewFile(LPCTSTR lpszFilePath,
+bool  CZipArchive::AddNewFile(LPCTSTR lpszFilePath,
 							 LPCTSTR lpszFileNameInZip,
                              int iComprLevel,                                       
 							 int iSmartLevel,
@@ -1198,7 +1201,7 @@ bool CZipArchive::AddNewFile(LPCTSTR lpszFilePath,
 	return AddNewFile(zanfi);	
 }
 
-bool CZipArchive::AddNewFile(CZipMemFile& mf,
+bool  CZipArchive::AddNewFile(CZipMemFile& mf,
 							 LPCTSTR lpszFileNameInZip,
                              int iComprLevel,                                       
 							 int iSmartLevel,
@@ -1222,7 +1225,7 @@ struct CZipSmClrPass
 		m_pZip = NULL;
 	}
 
-	void ClearPasswordSmartly(CZipArchive* pZip)
+	void ClearPasswordSmartly( CZipArchive* pZip)
 	{
 		m_pZip = pZip;
 		m_szPass = pZip->GetPassword();
@@ -1237,10 +1240,10 @@ struct CZipSmClrPass
 	}
 private:
 	CZipString m_szPass;
-	CZipArchive* m_pZip;
+	 CZipArchive* m_pZip;
 };
 
-bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
+bool  CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 {
 	// no need for ASSERT and TRACE here - it will be done by OpenNewFile
 	
@@ -1277,10 +1280,7 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 			return false; // we don't know whether it is a file or a directory
 		ZipPlatform::GetFileModTime(info.m_szFilePath, ttime);
 	}
-	CZipFileHeader header;
-	
-	if (ZipPlatform::GetSystemID() != ZipCompatibility::zcUnix)
-		uAttr |= ZipCompatibility::ConvertToSystem(uAttr, ZipPlatform::GetSystemID(), ZipCompatibility::zcUnix);  // make it readable under Unix as well, since it stores its attributes in HIWORD(uAttr)
+	CZipFileHeader header;		
 	SetFileHeaderAttr(header, uAttr);
 	if (info.m_szFileNameInZip.IsEmpty())
 		info.m_szFileNameInZip = PredictFileNameInZip(info.m_szFilePath, info.m_bFullPath, header.IsDirectory() ? prDir : prFile);
@@ -1349,7 +1349,7 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 		).IsEmpty()))
 	{
 		CZipMemFile* pmf = NULL;
-		CZipArchive zip;
+		 CZipArchive zip;
 		try
 		{
 			// compress first to a temporary file, if ok - copy the data, if not - add storing
@@ -1559,7 +1559,7 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 	return true;		
 }
 
-bool CZipArchive::RemoveLast(bool bRemoveAnyway)
+bool  CZipArchive::RemoveLast(bool bRemoveAnyway)
 {
 	if (GetCount() == 0)
 		return false;
@@ -1576,13 +1576,13 @@ bool CZipArchive::RemoveLast(bool bRemoveAnyway)
 class CZipRootPathRestorer
 {
 	CZipString m_szOldRootPath;
-	CZipArchive* m_pZip;
+	 CZipArchive* m_pZip;
 public:	
 	CZipRootPathRestorer()
 	{
 		m_pZip = NULL;
 	}
-	void SetNewRootPath(CZipArchive* pZip, LPCTSTR lpszNewRoot)
+	void SetNewRootPath( CZipArchive* pZip, LPCTSTR lpszNewRoot)
 	{
 		m_pZip = pZip;
 		m_szOldRootPath = m_pZip->GetRootPath();
@@ -1640,7 +1640,7 @@ protected:
 
 class CAddFilesEnumerator : public ZipArchiveLib::CDirEnumerator
 {
-	CZipArchive* m_pZip;
+	 CZipArchive* m_pZip;
 	CZipActionCallback* m_pMultiCallback;
 	int m_iComprLevel;
 	int m_iSmartLevel;
@@ -1648,7 +1648,7 @@ class CAddFilesEnumerator : public ZipArchiveLib::CDirEnumerator
 public:
 	CAddFilesEnumerator(LPCTSTR lpszDirectory, 
 			bool bRecursive, 
-			CZipArchive* pZip, 
+			 CZipArchive* pZip, 
 			int iComprLevel, 
 			int iSmartLevel, 
 			unsigned long nBufSize,
@@ -1671,7 +1671,7 @@ protected:
 	}
 };
 
-bool CZipArchive::AddNewFiles(LPCTSTR lpszPath,
+bool  CZipArchive::AddNewFiles(LPCTSTR lpszPath,
 								CFileFilter& filter,
 								bool bRecursive,
 								int iComprLevel,
@@ -1714,7 +1714,7 @@ bool CZipArchive::AddNewFiles(LPCTSTR lpszPath,
 }
 
 
-CZipString CZipArchive::GetArchivePath() const
+CZipString  CZipArchive::GetArchivePath() const
 {
 	if (IsClosed(false))
 	{
@@ -1724,7 +1724,7 @@ CZipString CZipArchive::GetArchivePath() const
 	return m_storage.m_pFile->GetFilePath();
 }
 
-CZipString CZipArchive::GetGlobalComment() const
+CZipString  CZipArchive::GetGlobalComment() const
 {
 	if (IsClosed())
 	{
@@ -1736,7 +1736,7 @@ CZipString CZipArchive::GetGlobalComment() const
 	return temp;
 }
 
-bool CZipArchive::SetGlobalComment(LPCTSTR lpszComment)
+bool  CZipArchive::SetGlobalComment(LPCTSTR lpszComment)
 {
 	if (IsClosed())
 	{
@@ -1758,12 +1758,12 @@ bool CZipArchive::SetGlobalComment(LPCTSTR lpszComment)
 
 
 
-ZIP_PART_TYPE CZipArchive::GetCurrentDisk() const 
+ZIP_VOLUME_TYPE  CZipArchive::GetCurrentVolume() const 
 {
-	return (ZIP_PART_TYPE)(m_storage.GetCurrentDisk() + 1);
+	return (ZIP_VOLUME_TYPE)(m_storage.GetCurrentVolume() + 1);
 }
 
-bool CZipArchive::SetFileComment(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszComment)
+bool  CZipArchive::SetFileComment(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszComment)
 {
 	if (IsClosed())
 	{
@@ -1782,7 +1782,7 @@ bool CZipArchive::SetFileComment(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszComment)
 	return true;
 }
 
-bool CZipArchive::SetPassword(LPCTSTR lpszPassword)
+bool  CZipArchive::SetPassword(LPCTSTR lpszPassword)
 {
 	if (m_iFileOpened != nothing)
 	{
@@ -1800,7 +1800,7 @@ bool CZipArchive::SetPassword(LPCTSTR lpszPassword)
 	return true;
 }
 
-bool CZipArchive::SetEncryptionMethod(int iEncryptionMethod)
+bool  CZipArchive::SetEncryptionMethod(int iEncryptionMethod)
 {
 	if (m_iFileOpened == compress)
 	{
@@ -1826,7 +1826,7 @@ struct CZipEncryptFileInfo
 	CZipEncryptFileInfo(CZipFileHeader* pHeader, DWORD uLocalSizeDiff, 
 		DWORD uDescriptorSizeDiff, ZIP_INDEX_TYPE uIndex, ZIP_SIZE_TYPE uDataOffset)
 		:m_pHeader(pHeader), m_uLocalSizeDiff(uLocalSizeDiff), 
-		m_uDescriptorSizeDiff(uDescriptorSizeDiff), m_uIndex(uIndex), m_uDataOffset(uDataOffset)
+		m_uDescriptorSizeDiff(uDescriptorSizeDiff), m_uIndex(uIndex), m_uUncompressedOffset(uDataOffset)
 	{		
 	}
 
@@ -1834,14 +1834,14 @@ struct CZipEncryptFileInfo
 	DWORD m_uLocalSizeDiff;
 	DWORD m_uDescriptorSizeDiff;
 	ZIP_INDEX_TYPE m_uIndex;
-	ZIP_SIZE_TYPE m_uDataOffset;
+	ZIP_SIZE_TYPE m_uUncompressedOffset;
 	ZIP_SIZE_TYPE GetLastDataOffset()
 	{
-		return m_uDataOffset + m_pHeader->m_uOffset;
+		return m_uUncompressedOffset + m_pHeader->m_uOffset;
 	}
 };
 
-bool CZipArchive::EncryptFilesInternal(CZipIndexesArray* pIndexes)
+bool  CZipArchive::EncryptFilesInternal(CZipIndexesArray* pIndexes)
 {
 	if (IsClosed())
 	{
@@ -2059,7 +2059,7 @@ bool CZipArchive::EncryptFilesInternal(CZipIndexesArray* pIndexes)
 					pCallback->Init();
 					pCallback->SetTotal(info.m_pHeader->m_uComprSize);
 				}					
-				MovePackedFiles(info.m_uDataOffset, info.m_uDataOffset + info.m_pHeader->m_uComprSize, uExtraData, pCallback, true);
+				MovePackedFiles(info.m_uUncompressedOffset, info.m_uUncompressedOffset + info.m_pHeader->m_uComprSize, uExtraData, pCallback, true);
 				if (pCallback)
 					pCallback->CallbackEnd();
 
@@ -2192,7 +2192,7 @@ bool CZipArchive::EncryptFilesInternal(CZipIndexesArray* pIndexes)
 }
 
 
-bool CZipArchive::SetCompressionMethod(WORD uCompressionMethod)
+bool  CZipArchive::SetCompressionMethod(WORD uCompressionMethod)
 {
 	if (m_iFileOpened == compress)
 	{
@@ -2215,14 +2215,14 @@ bool CZipArchive::SetCompressionMethod(WORD uCompressionMethod)
 	return true;
 }
 
-CZipString CZipArchive::GetPassword()const 
+CZipString  CZipArchive::GetPassword()const 
 {
 	CZipString temp;
 	ZipCompatibility::ConvertBufferToString(temp, m_pszPassword, CP_ACP);
 	return temp;
 }
 
-bool CZipArchive::TestFile(ZIP_INDEX_TYPE uIndex, DWORD uBufSize)
+bool  CZipArchive::TestFile(ZIP_INDEX_TYPE uIndex, DWORD uBufSize)
 {
 	if (IsClosed())
 	{
@@ -2350,13 +2350,13 @@ bool CZipArchive::TestFile(ZIP_INDEX_TYPE uIndex, DWORD uBufSize)
 	}
 }
 
-void CZipArchive::SetFileHeaderAttr(CZipFileHeader& header, DWORD uAttr)const
+void  CZipArchive::SetFileHeaderAttr(CZipFileHeader& header, DWORD uAttr)const
 {
 	header.SetSystemCompatibility(m_iArchiveSystCompatib);
 	header.SetSystemAttr(uAttr);
 }
 
-void CZipArchive::EnableFindFast(bool bEnable)
+void  CZipArchive::EnableFindFast(bool bEnable)
 {
 	if (IsClosed())
 	{
@@ -2366,7 +2366,7 @@ void CZipArchive::EnableFindFast(bool bEnable)
 	m_centralDir.EnableFindFast(bEnable, m_bCaseSensitive);
 }
 
-bool CZipArchive::SetSystemCompatibility(int iSystemComp)
+bool  CZipArchive::SetSystemCompatibility(int iSystemComp)
 {
 	if (IsClosed())
 	{
@@ -2390,7 +2390,7 @@ bool CZipArchive::SetSystemCompatibility(int iSystemComp)
 	return true;
 }
 
-void CZipArchive::SetRootPath(LPCTSTR szPath)
+void  CZipArchive::SetRootPath(LPCTSTR szPath)
 {
 	if (IsClosed())
 	{
@@ -2413,7 +2413,7 @@ void CZipArchive::SetRootPath(LPCTSTR szPath)
 		m_szRootPath.Empty();
 }
 
-CZipString CZipArchive::TrimRootPath(CZipPathComponent &zpc)const 
+CZipString  CZipArchive::TrimRootPath(CZipPathComponent &zpc)const 
 {
 	if (m_szRootPath.IsEmpty())
 		return zpc.GetFileName();
@@ -2421,7 +2421,7 @@ CZipString CZipArchive::TrimRootPath(CZipPathComponent &zpc)const
 	return RemovePathBeginning(m_szRootPath, szPath, m_pZipCompare) ? szPath : zpc.GetFileName();
 }
 
-bool CZipArchive::RemovePathBeginning(LPCTSTR lpszBeginning, CZipString& szPath, ZIPSTRINGCOMPARE pCompareFunction)
+bool  CZipArchive::RemovePathBeginning(LPCTSTR lpszBeginning, CZipString& szPath, ZIPSTRINGCOMPARE pCompareFunction)
 {
 	CZipString szBeginning(lpszBeginning);
 	CZipPathComponent::RemoveSeparators(szBeginning);
@@ -2448,7 +2448,7 @@ bool CZipArchive::RemovePathBeginning(LPCTSTR lpszBeginning, CZipString& szPath,
 	return false;
 }
 
-void CZipArchive::SetTempPath(LPCTSTR lpszPath, bool bForce)
+void  CZipArchive::SetTempPath(LPCTSTR lpszPath, bool bForce)
 {
 	m_szTempPath = lpszPath;
 	if (lpszPath && bForce)
@@ -2456,7 +2456,7 @@ void CZipArchive::SetTempPath(LPCTSTR lpszPath, bool bForce)
 	CZipPathComponent::RemoveSeparators(m_szTempPath);
 }
 
-CZipString CZipArchive::PredictFileNameInZip(LPCTSTR lpszFilePath, 
+CZipString  CZipArchive::PredictFileNameInZip(LPCTSTR lpszFilePath, 
 						 bool bFullPath, int iWhat)const 
 {
 	CZipString sz = lpszFilePath;
@@ -2495,7 +2495,7 @@ CZipString CZipArchive::PredictFileNameInZip(LPCTSTR lpszFilePath,
 	return sz;	
 }
 
-CZipString CZipArchive::PredictExtractedFileName(LPCTSTR lpszFileNameInZip, LPCTSTR lpszPath, bool bFullPath, LPCTSTR lpszNewName)const 
+CZipString  CZipArchive::PredictExtractedFileName(LPCTSTR lpszFileNameInZip, LPCTSTR lpszPath, bool bFullPath, LPCTSTR lpszNewName)const 
 {
 	CZipString szFile = lpszPath;
 	CZipString sz = lpszNewName ? lpszNewName : lpszFileNameInZip;
@@ -2513,7 +2513,7 @@ CZipString CZipArchive::PredictExtractedFileName(LPCTSTR lpszFileNameInZip, LPCT
 	return szFile;
 }
 
-ZIP_SIZE_TYPE CZipArchive::PredictMaximumFileSizeInArchive(LPCTSTR lpszFilePath, bool bFullPath) const
+ZIP_SIZE_TYPE  CZipArchive::PredictMaximumFileSizeInArchive(LPCTSTR lpszFilePath, bool bFullPath) const
 {
 	DWORD attr;
 	if (!ZipPlatform::GetFileAttr(lpszFilePath, attr))
@@ -2527,7 +2527,7 @@ ZIP_SIZE_TYPE CZipArchive::PredictMaximumFileSizeInArchive(LPCTSTR lpszFilePath,
 	return PredictMaximumFileSizeInArchive(fh);
 }
 
-ZIP_SIZE_TYPE CZipArchive::PredictMaximumFileSizeInArchive(CZipFileHeader& fh) const
+ZIP_SIZE_TYPE  CZipArchive::PredictMaximumFileSizeInArchive(CZipFileHeader& fh) const
 {
 	fh.m_stringSettings = m_stringSettings;
 	fh.m_uEncryptionMethod = WillEncryptNextFile() ? (BYTE)m_iEncryptionMethod : (BYTE)CZipCryptograph::encNone;
@@ -2537,7 +2537,7 @@ ZIP_SIZE_TYPE CZipArchive::PredictMaximumFileSizeInArchive(CZipFileHeader& fh) c
 	return fh.GetSize() + uLocalSize + fh.GetDataSize(true, false) + fh.GetDataDescriptorSize(&m_storage);
 }
 
-void CZipArchive::SetAutoFlush(bool bAutoFlush)
+void  CZipArchive::SetAutoFlush(bool bAutoFlush)
 {
 	if (IsClosed())
 	{
@@ -2552,7 +2552,7 @@ void CZipArchive::SetAutoFlush(bool bAutoFlush)
 	m_bAutoFlush = bAutoFlush;
 }
 
-void CZipArchive::Flush()
+void  CZipArchive::Flush()
 {
 	if (IsClosed())
 	{
@@ -2572,7 +2572,7 @@ void CZipArchive::Flush()
 }
 
 
-void CZipArchive::GetCentralDirInfo(CZipCentralDir::CInfo& info)const
+void  CZipArchive::GetCentralDirInfo(CZipCentralDir::CInfo& info)const
 {
 	if (IsClosed())
 	{
@@ -2582,10 +2582,10 @@ void CZipArchive::GetCentralDirInfo(CZipCentralDir::CInfo& info)const
 	}
 	m_centralDir.GetInfo(info);
 	if (GetSegmMode() > 0)
-		info.m_uLastDisk = m_storage.GetCurrentDisk();
+		info.m_uLastVolume = m_storage.GetCurrentVolume();
 }
 
-void CZipArchive::FindMatches(LPCTSTR lpszPattern, CZipIndexesArray &ar, bool bFullPath)
+void  CZipArchive::FindMatches(LPCTSTR lpszPattern, CZipIndexesArray &ar, bool bFullPath)
 {
 	if (IsClosed())
 	{
@@ -2610,7 +2610,7 @@ void CZipArchive::FindMatches(LPCTSTR lpszPattern, CZipIndexesArray &ar, bool bF
 	}
 }
 
-ZIP_INDEX_TYPE CZipArchive::WillBeDuplicated(LPCTSTR lpszFilePath, bool bFullPath, bool bFileNameOnly , int iWhat)
+ZIP_INDEX_TYPE  CZipArchive::WillBeDuplicated(LPCTSTR lpszFilePath, bool bFullPath, bool bFileNameOnly , int iWhat)
 {
 	CZipString szFile;
 	if (bFileNameOnly)
@@ -2624,7 +2624,7 @@ ZIP_INDEX_TYPE CZipArchive::WillBeDuplicated(LPCTSTR lpszFilePath, bool bFullPat
 }
 
 
-bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewFileName, ZIP_INDEX_TYPE uReplaceIndex, bool bKeepSystComp, CZipActionCallback* pCallback)
+bool  CZipArchive::GetFromArchive( CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewFileName, ZIP_INDEX_TYPE uReplaceIndex, bool bKeepSystComp, CZipActionCallback* pCallback)
 {
 	if (this == &zip)
 	{
@@ -2818,7 +2818,7 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTST
 	return true;
 }
 
-bool CZipArchive::GetFromArchive(CZipArchive& zip, CZipIndexesArray &aIndexes, bool bKeepSystComp)
+bool  CZipArchive::GetFromArchive( CZipArchive& zip, CZipIndexesArray &aIndexes, bool bKeepSystComp)
 {
 	aIndexes.Sort(true);
 	ZIP_INDEX_TYPE uFiles = (ZIP_INDEX_TYPE)aIndexes.GetSize();		
@@ -2845,7 +2845,7 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, CZipIndexesArray &aIndexes, b
 		Flush();
 	return true;
 }
-bool CZipArchive::RenameFile(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewName)
+bool  CZipArchive::RenameFile(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewName)
 {
 	if (IsClosed())
 	{
@@ -2934,8 +2934,8 @@ bool CZipArchive::RenameFile(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewName)
 		CBytesWriter::WriteBytes(buf, uNewFileNameLen);
 		// the variable was not used - we write it back as it was (no endian issues)
 		// to write everything at once
-		memcpy(buf + 2, &uExtraFieldSize, 2);
-		memcpy(buf + 4, pHeader->m_pszFileNameBuffer, uNewFileNameLen);	
+		memcpy((char*)buf + 2, &uExtraFieldSize, 2);
+		memcpy((char*)buf + 4, pHeader->m_pszFileNameBuffer, uNewFileNameLen);
 		pBuf = &buf;
 		iOffset = -4;
 	}
@@ -2951,7 +2951,7 @@ bool CZipArchive::RenameFile(ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewName)
 	return true;
 }
 
-bool CZipArchive::UpdateReplaceIndex(ZIP_INDEX_TYPE& uReplaceIndex)
+bool  CZipArchive::UpdateReplaceIndex(ZIP_INDEX_TYPE& uReplaceIndex)
 {
 	if (uReplaceIndex == ZIP_FILE_INDEX_UNSPECIFIED)
 		return true;
@@ -2975,7 +2975,7 @@ bool CZipArchive::UpdateReplaceIndex(ZIP_INDEX_TYPE& uReplaceIndex)
 	return true;	
 }
 
-void CZipArchive::MakeSpaceForReplace(ZIP_INDEX_TYPE uReplaceIndex, ZIP_SIZE_TYPE uTotal, LPCTSTR lpszFileName)
+void  CZipArchive::MakeSpaceForReplace(ZIP_INDEX_TYPE uReplaceIndex, ZIP_SIZE_TYPE uTotal, LPCTSTR lpszFileName)
 {		
 	ASSERT(uReplaceIndex < GetCount() - 1);
 	// we can't use the offset from the central directory here, because the header is already replaced
@@ -3033,7 +3033,7 @@ void CZipArchive::MakeSpaceForReplace(ZIP_INDEX_TYPE uReplaceIndex, ZIP_SIZE_TYP
 		pCallback->CallbackEnd();			
 }
 
-void CZipArchive::MovePackedFiles(ZIP_SIZE_TYPE uStartOffset, ZIP_SIZE_TYPE uEndOffset, ZIP_SIZE_TYPE uMoveBy, 
+void  CZipArchive::MovePackedFiles(ZIP_SIZE_TYPE uStartOffset, ZIP_SIZE_TYPE uEndOffset, ZIP_SIZE_TYPE uMoveBy, 
 								  CZipActionCallback* pCallback, bool bForward, bool bLastCall)
 {
 	ASSERT(m_pBuffer.GetSize() > 0);
@@ -3101,7 +3101,7 @@ void CZipArchive::MovePackedFiles(ZIP_SIZE_TYPE uStartOffset, ZIP_SIZE_TYPE uEnd
 }
 
 
-bool CZipArchive::RemoveCentralDirectoryFromArchive()
+bool  CZipArchive::RemoveCentralDirectoryFromArchive()
 {
 	if (IsClosed())
 	{
@@ -3118,7 +3118,7 @@ bool CZipArchive::RemoveCentralDirectoryFromArchive()
 	return true;
 }
 
-bool CZipArchive::OverwriteLocalHeader(ZIP_INDEX_TYPE uIndex)
+bool  CZipArchive::OverwriteLocalHeader(ZIP_INDEX_TYPE uIndex)
 {
 	if (IsClosed())
 	{
@@ -3138,7 +3138,7 @@ bool CZipArchive::OverwriteLocalHeader(ZIP_INDEX_TYPE uIndex)
 	return true;
 }
 
-bool CZipArchive::ReadLocalHeader(ZIP_INDEX_TYPE uIndex)
+bool  CZipArchive::ReadLocalHeader(ZIP_INDEX_TYPE uIndex)
 {
 	if (IsClosed())
 	{
@@ -3152,4 +3152,12 @@ bool CZipArchive::ReadLocalHeader(ZIP_INDEX_TYPE uIndex)
 	}
 	ReadLocalHeaderInternal(uIndex);
 	return true;
+}
+
+void  CZipArchive::SetSegmCallback(CZipSegmCallback* pCallback, int callbackType)
+{
+	if ((callbackType & scSpan) != 0)
+		m_storage.m_pSpanChangeVolumeFunc = pCallback;
+	if ((callbackType & scSplit) != 0)
+		m_storage.m_pSplitChangeVolumeFunc = pCallback;
 }

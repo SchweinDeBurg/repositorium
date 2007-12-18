@@ -40,29 +40,43 @@ class ZIP_API CBaseLibCompressor : public CZipCompressor
 {	
 public:
 	/**
+		Represents options of compressors that use external libraries.
+
+		\see
+			<a href="kb">0610231446|options</a>
+		\see
+			CZipArchive::SetCompressionOptions
+	*/
+	struct ZIP_API COptions : CZipCompressor::COptions
+	{
+		COptions()
+		{
+			m_bDetectLibMemoryLeaks = true;
+		}
+
+		/**		
+			\c true, if the ZipArchive Library should detect memory leaks in an external library; \c false otherwise. 
+			Recommended to be set to \c true.
+		*/
+		bool m_bDetectLibMemoryLeaks;
+	};
+
+	/**
 		Initializes a new instance of the CBaseLibCompressor class.
 
 		\param pStorage
 			The current storage object.
-		
-		\param pBuffer
-			A pre-allocated buffer that receives compressed data or provides data for decompression.
-
-		\param bDetectLibMemoryLeaks
-			\c true, if the ZipArchive Library should detect memory leaks in an external library; \c false otherwise. 
-			Recommended to be set to \c true.
 	 */
-	CBaseLibCompressor(CZipStorage* pStorage, CZipAutoBuffer* pBuffer, bool bDetectLibMemoryLeaks = true)
-		:CZipCompressor(pStorage, pBuffer)
+	CBaseLibCompressor(CZipStorage* pStorage)
+		:CZipCompressor(pStorage)
 	{
-		m_bDetectLibMemoryLeaks = bDetectLibMemoryLeaks;
 	}
 	
 	void InitDecompression(CZipFileHeader* pFile, CZipCryptograph* pCryptograph)
 	{
 		CZipCompressor::InitDecompression(pFile, pCryptograph);
 		m_bDecompressionDone = false;
-	}
+	}	
 
 	~CBaseLibCompressor()
 	{
@@ -132,7 +146,7 @@ protected:
 		\return
 			\c true, if \a iErr is an error code; \c false otherwise.
 	*/
-	virtual bool IsCodeErrorOK(int iErr) = 0;
+	virtual bool IsCodeErrorOK(int iErr) const = 0;
 
 	/**
 		Checks, if \a iErr value is an error code and throws an exception, if it is.
@@ -150,19 +164,20 @@ protected:
 	}
 
 	/**
-		Gets an address of internal data used in ZipArchive Library memory allocation and deallocation methods.
+		Sets an address of internal data used in ZipArchive Library memory allocation and deallocation methods.
 
 		\param opaque
 			Receives an address on the internal data.
+		\param pOptions
+			The current decompressor options.
 	*/
-	void GetInternalDataAddress(void** opaque);
+	void SetOpaque(void** opaque, const	COptions* pOptions);
 
 	/**
 		Signalizes, that the decompression process reached the end of the compressed data. It is internally set by derived classes.
 	*/
 	bool m_bDecompressionDone;
 private:
-	bool m_bDetectLibMemoryLeaks;
 	typedef CZipPtrList<void*>::iterator CZipPtrListIter;
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)

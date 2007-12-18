@@ -121,10 +121,6 @@
 	#endif
 #endif
 
-#if !defined(_INTPTR_T_DEFINED) && !defined(__GNUC__)
-	typedef long intptr_t;
-#endif
-
 #define ZIP_FILE_USIZE ULONGLONG
 #define ZIP_FILE_SIZE LONGLONG
 #define ZIP_FILE_SIZEMAX _I64_MAX

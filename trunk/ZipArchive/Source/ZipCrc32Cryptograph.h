@@ -64,16 +64,25 @@ public:
 		return iEncryptionMethod == CZipCryptograph::encStandard;
 	}
 
+	/**
+		See CZipCryptograph::GetEncryptedInfoSizeBeforeData
+	*/
 	static DWORD GetEncryptedInfoSizeBeforeData()
 	{
 		return ZIPARCHIVE_ENCR_HEADER_LEN;
 	}
 
+	/**
+		See CZipCryptograph::GetEncryptedInfoSizeAfterData
+	*/
 	static DWORD GetEncryptedInfoSizeAfterData()
 	{
 		return 0;
 	}
 
+	/**
+		Returns the CRC table.
+	*/
 	static const DWORD* GetCRCTable()
 	{
 			return zarch_get_crc_table();

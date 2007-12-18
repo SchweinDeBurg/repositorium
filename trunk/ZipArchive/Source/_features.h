@@ -23,7 +23,6 @@
 #define ZIPARCHIVE_FEATURES_DOT_H 
 /// @endcond
 
-
 #if _MSC_VER > 1000
 #pragma once
 #endif
@@ -66,6 +65,15 @@
 // #define _BZIP2
 
 /**
+	Make sure it is defined, if you want to create seekable data.
+
+	\see
+		<a href="kb">0711101739</a>
+
+*/
+// #define _ZIP_SEEK
+
+/**
 	Make sure it is defined, if you use the AES encryption in a multithreaded environment or archive sharing (CZipArchive::OpenFrom). Comment this out otherwise.
 
 	\see
@@ -76,13 +84,14 @@
 // #define ZIP_ARCHIVE_USE_LOCKING
 
 #ifndef _ZIP64
-// Uncomment this to have the index and part types defined as WORD. Otherwise they are defined as int
+// Uncomment this to have the index and volume numbers types defined as WORD. Otherwise they are defined as int.
 #define _ZIP_STRICT_U16
 #endif
 
 
 /************************************* BLOCK END ***********************************/
-/********* The contents below this line are not intended for modification **********/
+/***** The contents below this line are usually not intended for modification ******/
+
 
 
 #endif // !defined(ZIPARCHIVE_FEATURES_DOT_H)

@@ -34,14 +34,15 @@ CZipStorage::CZipStorage()
 }
 
 void CZipStorage::Initialize()
-{
-	m_pChangeDiskFunc = NULL;
+{	
+	m_pSplitChangeVolumeFunc = m_pSpanChangeVolumeFunc = m_pChangeVolumeFunc = NULL;
 	m_iWriteBufferSize = 65536;	
 	m_pFile = NULL;
 	m_szSplitExtension = _T("zip");
 	m_iLocateBufferSize = 32768;
 	m_uBytesBeforeZip = 0;
-	m_uCurrentDisk = ZIP_DISK_NUMBER_UNSPECIFIED;
+	m_uCurrentVolume = ZIP_VOLUME_NUMBER_UNSPECIFIED;
+	m_szArchiveName.Empty();
 }
 
 CZipStorage::~CZipStorage()
@@ -53,15 +54,19 @@ DWORD CZipStorage::Read(void *pBuf, DWORD iSize, bool bAtOnce)
 {
 	if (iSize == 0)
 		return 0;
-	DWORD iRead = 0;
-	while (!iRead)
+	DWORD iRead;
+	for(;;)
 	{
 		iRead = m_pFile->Read(pBuf, iSize);
 		if (!iRead)
+		{
 			if (IsSegmented())
-				ChangeDisk((ZIP_PART_TYPE)(m_uCurrentDisk + 1));
+				ChangeVolume();
 			else
 				ThrowError(CZipException::badZipFile);
+		}
+		else
+			break;
 	}
 
 	if (iRead == iSize)
@@ -71,7 +76,7 @@ DWORD CZipStorage::Read(void *pBuf, DWORD iSize, bool bAtOnce)
 
 	while (iRead < iSize)
 	{
-		ChangeDisk((ZIP_PART_TYPE)(m_uCurrentDisk + 1));
+		ChangeVolume();
 		UINT iNewRead = m_pFile->Read((char*)pBuf + iRead, iSize - iRead);
 		if (!iNewRead && iRead < iSize)
 			ThrowError(CZipException::badZipFile);
@@ -83,22 +88,24 @@ DWORD CZipStorage::Read(void *pBuf, DWORD iSize, bool bAtOnce)
 
 void CZipStorage::Open(LPCTSTR lpszPathName, int iMode, ZIP_SIZE_TYPE uVolumeSize)
 {
-	m_uCurrentDisk = ZIP_DISK_NUMBER_UNSPECIFIED;
+	m_uCurrentVolume = ZIP_VOLUME_NUMBER_UNSPECIFIED;
 	m_pWriteBuffer.Allocate(m_iWriteBufferSize); 
 	m_uBytesInWriteBuffer = 0;
 	m_bNewSegm = false;
 	m_pFile = &m_internalfile;
 	m_bInMemory = false;
+	m_szArchiveName = lpszPathName;
+	m_pChangeVolumeFunc = NULL;
 
-	if (iMode == CZipArchive::zipCreate || iMode == CZipArchive::zipCreateSegm
-		|| iMode == CZipArchive::zipCreateAppend) // create new archive
+	if (iMode ==  CZipArchive::zipCreate || iMode ==  CZipArchive::zipCreateSegm
+		|| iMode ==  CZipArchive::zipCreateAppend) // create new archive
 	{
 		m_bReadOnly = false;
-		m_uCurrentDisk = 0;
-		if (iMode == CZipArchive::zipCreate || iMode == CZipArchive::zipCreateAppend)
+		m_uCurrentVolume = 0;
+		if (iMode ==  CZipArchive::zipCreate || iMode ==  CZipArchive::zipCreateAppend)
 		{
 			m_iSegmMode = noSegments;
-			OpenFile(lpszPathName, (iMode == CZipArchive::zipCreate ? CZipFile::modeCreate : CZipFile::modeNoTruncate) | CZipFile::modeReadWrite);
+			OpenFile(lpszPathName, (iMode ==  CZipArchive::zipCreate ? CZipFile::modeCreate : CZipFile::modeNoTruncate) | CZipFile::modeReadWrite);
 		}
 		else // create a segmented archive
 		{
@@ -106,25 +113,27 @@ void CZipStorage::Open(LPCTSTR lpszPathName, int iMode, ZIP_SIZE_TYPE uVolumeSiz
 			m_uBytesWritten = 0;
 			if (uVolumeSize == ZIP_AUTODETECT_VOLUME_SIZE) // spanned archive
 			{
-				if (!m_pChangeDiskFunc)
+				if (!m_pSpanChangeVolumeFunc)
 					ThrowError(CZipException::noCallback);
 				if (!ZipPlatform::IsDriveRemovable(lpszPathName))
 					ThrowError(CZipException::nonRemovable);
 				m_iSegmMode = spannedArchive;
+				m_pChangeVolumeFunc = m_pSpanChangeVolumeFunc;
 			}
 			else
 			{
 				m_uSplitData = uVolumeSize;
 				m_iSegmMode = splitArchive;
+				m_pChangeVolumeFunc = m_pSplitChangeVolumeFunc;
 			}
 
-			NextDisk(4, lpszPathName);
+			NextVolume(4);
 			Write(m_gszExtHeaderSignat, 4, true);
 		}
 	}
 	else // open existing
 	{
-		m_bReadOnly = iMode == CZipArchive::zipOpenReadOnly;
+		m_bReadOnly = iMode ==  CZipArchive::zipOpenReadOnly;
 		OpenFile(lpszPathName, CZipFile::modeNoTruncate |
 			(m_bReadOnly ? CZipFile::modeRead : CZipFile::modeReadWrite));
 		// m_uData and m_iSegmMode are automatically set during reading the central dir
@@ -142,11 +151,11 @@ void CZipStorage::Open(CZipAbstractFile& af, int iMode)
 	m_pFile = &af;
 	m_bInMemory = true;
 
-	if (iMode == CZipArchive::zipCreate || iMode == CZipArchive::zipCreateAppend)
+	if (iMode ==  CZipArchive::zipCreate || iMode ==  CZipArchive::zipCreateAppend)
 	{
-		m_uCurrentDisk = 0;
+		m_uCurrentVolume = 0;
 		m_iSegmMode = noSegments;
-		if (iMode == CZipArchive::zipCreate)
+		if (iMode ==  CZipArchive::zipCreate)
 			af.SetLength(0);
 		else
 			af.SeekToEnd();
@@ -159,12 +168,12 @@ void CZipStorage::Open(CZipAbstractFile& af, int iMode)
 }
 
 
-void CZipStorage::ChangeDisk(ZIP_PART_TYPE uNumber)
+void CZipStorage::ChangeVolume(ZIP_VOLUME_TYPE uNumber)
 {
-	if (uNumber == m_uCurrentDisk || m_iSegmMode == noSegments) // the second condition may happen in some bad archives
+	if (uNumber == m_uCurrentVolume || m_iSegmMode == noSegments) // the second condition may happen in some bad archives
 		return;
 
-	m_uCurrentDisk = uNumber;
+	m_uCurrentVolume = uNumber;
 	OpenFile(IsSpanned() ? ChangeSpannedRead() : ChangeSplitRead(),
 		CZipFile::modeNoTruncate | CZipFile::modeRead);
 }
@@ -184,13 +193,29 @@ CZipString CZipStorage::ChangeSpannedRead()
 {
 	CZipString szTemp = m_pFile->GetFilePath();
 	m_pFile->Close();
-	CallCallback(0, CZipSpanCallback::scDiskNeededForRead, szTemp);
+	CallCallback(0, CZipSegmCallback::scVolumeNeededForRead, szTemp);
 	return szTemp;
 }
 
 CZipString CZipStorage::ChangeSplitRead()
 {
-	CZipString szTemp = GetSplitVolumeName((ZIP_SIZE_TYPE)m_uCurrentDisk == m_uSplitData);
+	bool lastPart = (ZIP_SIZE_TYPE)m_uCurrentVolume == m_uSplitData;
+	CZipString szTemp = GetSplitVolumeName(lastPart);
+	if (m_pChangeVolumeFunc)
+	{
+		int iCode = CZipSegmCallback::scVolumeNeededForRead;
+		for(;;)
+		{
+			CallCallback(lastPart ? ZIP_SPLIT_LAST_VOLUME : 0, iCode, szTemp);
+			if (ZipPlatform::FileExists(m_pChangeVolumeFunc->m_szExternalFile))
+			{
+				szTemp = m_pChangeVolumeFunc->m_szExternalFile;
+				break;
+			}
+			else
+				iCode = CZipSegmCallback::scFileNotFound;
+		}
+	}
 	m_pFile->Close();
 	return szTemp;
 }
@@ -201,12 +226,25 @@ CZipString CZipStorage::RenameLastFileInSplitArchive()
 		// give to the last volume the zip extension
 	CZipString szFileName = m_pFile->GetFilePath();
 	CZipString szNewFileName = GetSplitVolumeName(true);
+	if (m_pChangeVolumeFunc)
+	{
+		int code = CZipSegmCallback::scVolumeNeededForWrite;
+		for(;;)
+		{
+			CallCallback(ZIP_SPLIT_LAST_VOLUME, code, szNewFileName);
+			szNewFileName = m_pChangeVolumeFunc->m_szExternalFile;
+			if (ZipPlatform::FileExists(szNewFileName))
+				code = CZipSegmCallback::scFileNameDuplicated;
+			else
+				break;
+		}
+	}
 	if (!m_bInMemory)
 	{
 		m_pFile->Flush();
 		m_pFile->Close();
 	}
-	if (ZipPlatform::FileExists(szNewFileName))
+	if (!m_pChangeVolumeFunc && ZipPlatform::FileExists(szNewFileName))
 		ZipPlatform::RemoveFile(szNewFileName);
 	ZipPlatform::RenameFile(szFileName, szNewFileName);
 	return szNewFileName;
@@ -235,23 +273,23 @@ CZipString CZipStorage::Close(bool bAfterException)
 	}
 
 	m_pWriteBuffer.Release();
-	m_uCurrentDisk = ZIP_DISK_NUMBER_UNSPECIFIED;
+	m_uCurrentVolume = ZIP_VOLUME_NUMBER_UNSPECIFIED;
 	m_iSegmMode = noSegments;
 	m_pFile = NULL;
 	m_uBytesBeforeZip = 0;
 	return sz;
 }
 
-CZipString CZipStorage::GetSplitVolumeName(bool bLast, LPCTSTR lpszZipName) const
+CZipString CZipStorage::GetSplitVolumeName(bool bLast) const
 {
-	CZipString szFilePath = lpszZipName ? lpszZipName : (LPCTSTR)m_pFile->GetFilePath();
+	CZipString szFilePath = m_szArchiveName;
 	CZipPathComponent zpc(szFilePath);
 	CZipString szExt;
 	if (bLast)
 		szExt = m_szSplitExtension;
 	else
 	{
-		DWORD vol = m_uCurrentDisk + 1;
+		DWORD vol = m_uCurrentVolume + 1;
 		if (vol < 100)
 			szExt.Format(_T("z%.2u"), vol);
 		else
@@ -261,7 +299,7 @@ CZipString CZipStorage::GetSplitVolumeName(bool bLast, LPCTSTR lpszZipName) cons
 	return zpc.GetFullPath();
 }
 
-void CZipStorage::NextDisk(ZIP_SIZE_TYPE uNeeded, LPCTSTR lpszFileName)
+void CZipStorage::NextVolume(ZIP_SIZE_TYPE uNeeded)
 {
 	Flush();
 	ASSERT(m_iSegmMode != noSegments);
@@ -269,18 +307,18 @@ void CZipStorage::NextDisk(ZIP_SIZE_TYPE uNeeded, LPCTSTR lpszFileName)
 	if (m_uBytesWritten)
 	{
 		m_uBytesWritten = 0;
-		m_uCurrentDisk++;
-		ZIP_PART_TYPE uMaxVolumes = (ZIP_PART_TYPE)(bSpan ? 999 : 0xFFFF);
-		if (m_uCurrentDisk >= uMaxVolumes) // m_uCurrentDisk is a zero-based index
+		m_uCurrentVolume++;
+		ZIP_VOLUME_TYPE uMaxVolumes = (ZIP_VOLUME_TYPE)(bSpan ? 999 : 0xFFFF);
+		if (m_uCurrentVolume >= uMaxVolumes) // m_uCurrentVolume is a zero-based index
 			ThrowError(CZipException::tooManyVolumes);
 	} 
 
 	CZipString szFileName;
 	
 	if (bSpan)
-		szFileName  = lpszFileName ? lpszFileName : (LPCTSTR)m_pFile->GetFilePath();
+		szFileName  = m_szArchiveName;
 	else
-		szFileName =  GetSplitVolumeName(false, lpszFileName);
+		szFileName =  GetSplitVolumeName(false);
 
 	if (!m_pFile->IsClosed())
 	{
@@ -288,31 +326,44 @@ void CZipStorage::NextDisk(ZIP_SIZE_TYPE uNeeded, LPCTSTR lpszFileName)
 		m_pFile->Close();
 	}
 
-	if (bSpan)
+	if (m_pChangeVolumeFunc)
 	{
-		int iCode = CZipSpanCallback::scDiskNeededForWrite;
+		int iCode = CZipSegmCallback::scVolumeNeededForWrite;
 		for(;;)
 		{
 			CallCallback(uNeeded, iCode, szFileName);
+			if (!bSpan)
+				// allow the user to change the filename
+				szFileName = m_pChangeVolumeFunc->m_szExternalFile;
+
 			if (ZipPlatform::FileExists(szFileName))
-				iCode = CZipSpanCallback::scFileNameDuplicated;
+				iCode = CZipSegmCallback::scFileNameDuplicated;
 			else
 			{
-				CZipString label;
-				label.Format(_T("pkback# %.3d"), m_uCurrentDisk + 1);
-				if (!ZipPlatform::SetVolLabel(szFileName, label))
-					iCode = CZipSpanCallback::scCannotSetVolLabel;
-				else if (!OpenFile(szFileName, CZipFile::modeCreate | CZipFile::modeReadWrite, false))
-					iCode = CZipSpanCallback::scFileCreationFailure;
-				else
+				if (bSpan)
+				{
+					CZipString label;
+					label.Format(_T("pkback# %.3d"), m_uCurrentVolume + 1);
+					if (!ZipPlatform::SetVolLabel(szFileName, label))
+					{
+						iCode = CZipSegmCallback::scCannotSetVolLabel;
+						continue;
+					}
+				}					
+				
+				if (OpenFile(szFileName, CZipFile::modeCreate | CZipFile::modeReadWrite, false))
 					break;
+				else
+					iCode = CZipSegmCallback::scFileCreationFailure;
 			}
 
 		}
-		m_uCurrentVolSize = GetFreeVolumeSpace();
+		m_uCurrentVolSize = bSpan ? GetFreeVolumeSpace() : m_uSplitData;
 	}
 	else
 	{
+		if (bSpan)
+			ThrowError(CZipException::internalError);
 		m_uCurrentVolSize = m_uSplitData;
 		OpenFile(szFileName, CZipFile::modeCreate | CZipFile::modeReadWrite);
 	}
@@ -320,12 +371,12 @@ void CZipStorage::NextDisk(ZIP_SIZE_TYPE uNeeded, LPCTSTR lpszFileName)
 
 void CZipStorage::CallCallback(ZIP_SIZE_TYPE uNeeded, int iCode, CZipString szTemp)
 {
-	if (!m_pChangeDiskFunc)
+	if (!m_pChangeVolumeFunc)
 		ThrowError(CZipException::internalError);
-	m_pChangeDiskFunc->m_szExternalFile = szTemp;
-	m_pChangeDiskFunc->m_uDiskNeeded = (ZIP_PART_TYPE)(m_uCurrentDisk + 1);
-	m_pChangeDiskFunc->m_iCode = iCode; 
-	if (!m_pChangeDiskFunc->Callback(uNeeded))
+	m_pChangeVolumeFunc->m_szExternalFile = szTemp;
+	m_pChangeVolumeFunc->m_uVolumeNeeded = (ZIP_VOLUME_TYPE)(m_uCurrentVolume + 1);
+	m_pChangeVolumeFunc->m_iCode = iCode; 
+	if (!m_pChangeVolumeFunc->Callback(uNeeded))
 		CZipException::Throw(CZipException::aborted, szTemp);
 }
 
@@ -347,9 +398,9 @@ ZIP_SIZE_TYPE CZipStorage::GetFreeVolumeSpace() const
 }
 
 
-void CZipStorage::UpdateSegmMode(ZIP_PART_TYPE uLastDisk)
+void CZipStorage::UpdateSegmMode(ZIP_VOLUME_TYPE uLastDisk)
 {
-	m_uCurrentDisk = uLastDisk;
+	m_uCurrentVolume = uLastDisk;
 	if (uLastDisk)
 	{
 		// segmentation detected
@@ -365,11 +416,15 @@ void CZipStorage::UpdateSegmMode(ZIP_PART_TYPE uLastDisk)
 
 		if (IsSpanned())
 		{
-			if (!m_pChangeDiskFunc)
-					ThrowError(CZipException::noCallback);
+			if (!m_pSpanChangeVolumeFunc)
+				ThrowError(CZipException::noCallback);
+			m_pChangeVolumeFunc = m_pSpanChangeVolumeFunc;
 		}
 		else /*if (IsSplit())*/
-			m_uSplitData = uLastDisk; // disk with .zip extension ( the last one)
+		{
+			m_uSplitData = uLastDisk; // volume with .zip extension ( the last one)
+			m_pChangeVolumeFunc = m_pSplitChangeVolumeFunc;
+		}
 		CZipPathComponent zpc(szFilePath);
 		m_szSplitExtension = zpc.GetFileExt();
 		m_pWriteBuffer.Release(); // no need for this in this case
@@ -390,7 +445,7 @@ ZIP_SIZE_TYPE CZipStorage::AssureFree(ZIP_SIZE_TYPE uNeeded)
 			// increase once the size of the volume
 			m_uCurrentVolSize = uNeeded;
 		else
-			NextDisk(uNeeded);
+			NextVolume(uNeeded);
 	}
 	return uFree;
 }
@@ -434,7 +489,7 @@ void CZipStorage::WriteInternalBuffer(const char *pBuf, DWORD uSize)
 		}
 		DWORD uLeftToWrite = uSize - uWritten;
 		DWORD uToCopy = uLeftToWrite < uFreeInBuffer ? uLeftToWrite : uFreeInBuffer;
-		memcpy(m_pWriteBuffer + m_uBytesInWriteBuffer, pBuf + uWritten, uToCopy);
+		memcpy((char*)m_pWriteBuffer + m_uBytesInWriteBuffer, pBuf + uWritten, uToCopy);
 		uWritten += uToCopy;
 		m_uBytesInWriteBuffer += uToCopy;
 	}
@@ -484,8 +539,8 @@ ZIP_FILE_USIZE CZipStorage::LocateSignature(char* szSignature, ZIP_SIZE_TYPE uMa
 			offset = diff;
 			position = max;
 		}
-		Seek(position, false);		
-		int actuallyRead = m_pFile->Read(buffer + offset, toRead);
+		Seek(position, seekFromEnd);	
+		int actuallyRead = m_pFile->Read((char*)buffer + offset, toRead);
 		if (actuallyRead != toRead)
 			ThrowError(CZipException::badZipFile);
 		int pos = m_iLocateBufferSize - 1;
@@ -513,11 +568,33 @@ ZIP_FILE_USIZE CZipStorage::LocateSignature(char* szSignature, ZIP_SIZE_TYPE uMa
 	return SignatureNotFound;
 }
 
-ULONGLONG CZipStorage::Seek(ULONGLONG lOff, bool fromBeginning)
-{
-	if (m_uCurrentDisk == 0 && m_uBytesBeforeZip > 0)
-		lOff += m_uBytesBeforeZip;
-	return m_pFile->Seek((ZIP_FILE_USIZE)lOff, fromBeginning);
+ULONGLONG CZipStorage::Seek(ULONGLONG lOff, SeekType iSeekType)
+{	
+	if (iSeekType == seekCurrent)
+	{
+		ZIP_SIZE_TYPE uPosition = (ZIP_SIZE_TYPE)m_pFile->GetPosition();
+		if (IsSegmented() == -1)
+		{
+			ZIP_FILE_USIZE uLength = m_pFile->GetLength();
+			while (uPosition + lOff >= uLength)
+			{
+				ZIP_SIZE_TYPE uCanSeek = (ZIP_SIZE_TYPE)(uLength - uPosition);
+				lOff -= uCanSeek;
+				ChangeVolume();
+				uPosition = 0;
+				uLength = m_pFile->GetLength();
+			}
+			return lOff > 0 ? m_pFile->Seek((ZIP_FILE_USIZE)lOff) : 0;
+		}
+		else
+			return m_pFile->Seek((ZIP_FILE_SIZE)lOff, CZipAbstractFile::current);			
+	}
+	else
+	{
+		if (m_uCurrentVolume == 0 && m_uBytesBeforeZip > 0)
+			lOff += m_uBytesBeforeZip;
+		return m_pFile->Seek((ZIP_FILE_USIZE)lOff, iSeekType == seekFromBeginning);
+	}
 }
 
 void CZipStorage::FinalizeSegm()
@@ -535,10 +612,10 @@ void CZipStorage::FinalizeSegm()
 		m_pFile->Close();
 	}
 	m_bNewSegm = false;
-	if (m_uCurrentDisk == 0) // one-disk segmented archive was converted to normal archive
+	if (m_uCurrentVolume == 0) // one-volume segmented archive was converted to normal archive
 		m_iSegmMode = noSegments;
 	else
-		m_uSplitData = m_uCurrentDisk;
+		m_uSplitData = m_uCurrentVolume;
 	
 	OpenFile(szFileName, CZipFile::modeNoTruncate | (m_iSegmMode == noSegments ? CZipFile::modeReadWrite : CZipFile::modeRead));	
 }

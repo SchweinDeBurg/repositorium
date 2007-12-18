@@ -32,11 +32,18 @@
 #include "ZipString.h"
 #include "ZipExport.h"
 
+/*
+	When processing split archives, this value is passes as the argument to the CZipCallback::Callback method
+	to notify that the current volume is the last one.
+*/
+#define ZIP_SPLIT_LAST_VOLUME (ZIP_SIZE_TYPE)(-1)
+
 /**
 	A base class for callback objects that are notified when various actions take place.
 	You need to derive your own class and overload the #Callback method to use it.
 	Do not derive from CZipCallback directly but derive from:
-	\li CZipSpanCallback, when you create a spanned archive - you will be notified when there is a need for a disk change
+	\li CZipSegmCallback, when you create a segmented archive - you will be notified 
+		when there the next volume is processed in a segmented archive.
 	\li CZipActionCallback, for other notifications.
 
 	\see
@@ -44,7 +51,7 @@
 	\see
 		<a href="kb">0610231200</a>
 	\see
-		CZipSpanCallback
+		CZipSegmCallback
 	\see
 		CZipActionCallback
 */
@@ -53,7 +60,7 @@ struct ZIP_API CZipCallback
 	/**
 		The method called as a callback.
 
-		Return \c false from inside the method to abort the current operation. If it is a spanned archive callback object,
+		Return \c false from inside the method to abort the current operation. If it is a segmented archive callback object,
 		a CZipException with CZipException::aborted code will be thrown, otherwise the code will be CZipException::abortedAction or CZipException::abortedSafely.
 		The following actions can be safely aborted (without corrupting the archive):
 		- counting bytes before deleting files
@@ -74,6 +81,9 @@ struct ZIP_API CZipCallback
 		\note
 			Override this method in the derived class. If you define this method inside the class declaration, consider inlining
 			it to make the action progress faster.
+
+		\see
+			CZipSegmCallback
 	*/
 	virtual bool Callback(ZIP_SIZE_TYPE uProgress) = 0;
 
@@ -86,9 +96,15 @@ struct ZIP_API CZipCallback
 };
 
 /**
-	When you derive from CZipSpanCallback, you can use the derived class as a callback object for the disk change notification.
+	When you derive from CZipSegmCallback, you can use the derived class as a callback object for:
+		- the disk change notification in a spanned archive,
+		- notification about the next part being processed in a split archive.
+
 	You need to override the CZipActionCallback::Callback method.
-	The value of the \a uProgress parameter in the callback method is the minimum number of free bytes required on the disk.
+	The value of the \a uProgress parameter in the callback method has the following meaning:
+		- the minimum number of free bytes required on the disk when writing a spanned archive
+		- it is set to \c 0 when reading a spanned archive
+		- when writing or reading a split archive it is set to \c 0 apart for the last volume when it is set to \c ZIP_SPLIT_LAST_VOLUME
 
 	Return \c false from the callback function to abort the operation: the proper exception will be thrown.
 
@@ -97,28 +113,27 @@ struct ZIP_API CZipCallback
 	\see
 		CZipActionCallback::Callback
 	\see
-		CZipArchive::SetSpanCallback
+		CZipArchive::SetSegmCallback
 */
-struct ZIP_API CZipSpanCallback : public CZipCallback
+struct ZIP_API CZipSegmCallback : public CZipCallback
 {
 	/**
 		Values indicating the reason for calling the callback.
 	*/
-	enum SpanCodes
+	enum SegmCodes
 	{
-		scDiskNeededForRead,	///< A disk is needed when reading a segmented archive. The number of the disk is stored in #m_uDiskNeeded.
-		scDiskNeededForWrite,	///< A disk is needed when writing a segmented archive. The number of the disk is stored in #m_uDiskNeeded.
-		scFileNameDuplicated,	///< The file with the archive name already exists on the disk.
-		scCannotSetVolLabel,	///< The volume label could not be created. The disk may be write-protected.
-		scFileCreationFailure	///< The archive file could not be created. The disk may be write-protected.
+		scVolumeNeededForRead,	///< The next volume is needed when reading a segmented archive. The number of the volume is stored in #m_uVolumeNeeded.
+		scVolumeNeededForWrite,	///< The next volume is needed when writing a segmented archive. The number of the volume is stored in #m_uVolumeNeeded.
+		scFileNameDuplicated,	///< The file used for writing a new volume already exists.
+		scCannotSetVolLabel,	///< The disk label could not be set. The disk may be write-protected. Called only for spanned archives.
+		scFileCreationFailure,	///< The archive file could not be created. The disk may be write-protected.
+		scFileNotFound,			///< The given volume file was not found when reading a split archive. The number of the volume is stored in #m_uVolumeNeeded. Called only for split archives.
 	};
 
-	ZIP_PART_TYPE m_uDiskNeeded;		///< The number of the disk needed when reading or writing a segmented archive. Disk are numbered starting from 1.
+	ZIP_VOLUME_TYPE m_uVolumeNeeded;		///< The number of the volume needed when reading or writing a segmented archive. Volumes are numbered starting from 1.
 	
-	int m_iCode; ///< The reason for calling the callback. Can be one of the #SpanCodes values.
+	int m_iCode; ///< The reason for calling the callback. Can be one of the #SegmCodes values.
 };
-
-
 
 /**
 	When you derive from CZipActionCallback, you can use the new class as a callback object when adding, extracting, deleting, testing files
@@ -151,21 +166,18 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 	enum CallbackType
 	{
 		/**
-			\brief .
 			Not used.
 			You can use it for your own purposes.			
 		*/
 		cbNothing		= 0x0000,
 
 		/**
-			\brief .
 			Compressing a file.
 			The callback called when adding a file with one of the CZipArchive::AddNewFile methods.
 		*/
 		cbAdd			= 0x0001,
 
 		/**
-			\brief .
 			Moving a file from a temporary archive.
 			The callback called while adding a file (only on a segmented archive) when the smartness level contains
 			CZipArchive::zipsmCheckForEff or CZipArchive::zipsmCheckForEffInMem
@@ -174,7 +186,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbAddTmp		= 0x0002,
 
 		/**
-			\brief .
 			Storing a file.
 			The callback called while adding a file and if its compressing has proven to be inefficient
 			and it is now being stored (instead of compressed) in the archive. The smartness level must 
@@ -184,14 +195,12 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbAddStore		= 0x0004,	
 
 		/**
-			\brief .
 			Extracting a file.
 			The callback called when extracting a file with one of the CZipArchive::ExtractFile methods.
 		*/
 		cbExtract		= 0x0008,
 
 		/**
-			\brief .
 			Counting data to process before deleting.
 			The callback called before the actual deletion takes place and the map of holes and continuous
 			areas is being created. It is safe to abort the operation (by returning \c false from
@@ -200,7 +209,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbDeleteCnt		= 0x0010,
 
 		/**
-			\brief .
 			Deleting files.
 			The callback called when moving data while deleting file(s) with the CZipArchive::RemoveFile
 			method or one of the CZipArchive::RemoveFiles methods.
@@ -208,14 +216,12 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbDelete		= 0x0020,
 
 		/**
-			\brief .
 			Testing a file.
 			The callback called when testing a file with the CZipArchive::TestFile method.
 		*/
 		cbTest			= 0x0040,
 
 		/**
-			\brief .
 			Saving the central directory.
 			The callback called when saving the central directory with the CZipCentralDir::Write method
 			(usually on close or flush). It is safe to abort the operation on a segmented archive - 
@@ -224,14 +230,12 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbSave			= 0x0080,
 
 		/**
-			\brief .
 			Getting a file from another archive.
 			The callback called when using one of the CZipArchive::GetFromArchive methods.
 		*/
 		cbGet			= 0x0100,
 
 		/**
-			\brief .
 			Renaming a file.
 			The callback called when during renaming a file there is a need to make less or more space 
 			for the new filename.
@@ -239,7 +243,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbRename		= 0x0200,
 
 		/**
-			\brief .
 			Moving data.
 			The callback called when moving data inside the archive. It happens while replacing files to make less or more space 
 			for the new file or while shifting data with the CZipArchive::ShiftData() method.
@@ -247,7 +250,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbMoveData		= 0x0400,
 
 		/**
-			\brief.
 			The callback called when counting files and bytes to process when performing multiple actions.
 			When this callback is called, CZipActionCallback::m_uTotalToProcess is
 			not set (because it is not known and that's why the counting is performed), 
@@ -256,7 +258,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbCalculateForMulti= 0x0800,
 		
 		/**
-			\brief .
 			The callback called when adding multiple files with one of the CZipArchive::AddNewFiles
 			methods. This callback also registers for #cbAdd.
 
@@ -267,7 +268,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 
 		
 		/**
-			\brief .
 			The callback called when preparing existing files for encryption.
 
 			\see
@@ -276,7 +276,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbEncryptPrepare= 0x2000,
 
 		/**
-			\brief .
 			The callback called in order to report the progress of making space inside the archive before the actual encryption takes place.
 
 			\see
@@ -285,7 +284,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbEncryptMoveData= 0x4000,
 
 		/**
-			\brief .
 			The callback called for every file being encrypted.
 
 			\see
@@ -295,7 +293,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 
 
 		/**
-			\brief .
 			The callback called when encrypting existing files in the archive. This callback also registers for #cbEncryptMoveData and #cbEncrypt.
 
 			\see
@@ -306,7 +303,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbMultiEncrypt	= 0x10000 | cbEncryptMoveData | cbEncrypt,
 
 		/**
-			\brief .
 			Reserved.
 			You can declare your own callback types above this value. Do not use the numeric value, 
 			but the symbol name - the value may change in the future releases of the library.
@@ -314,7 +310,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbNextValue		= 0x20000,
 		
 		/**
-			\brief .
 			All sub-actions.
 			Represents the sub-actions callbacks - they are called as a part of bigger actions
 			(#cbAddTmp | #cbAddStore | #cbDeleteCnt | #cbMoveData | #cbCalculateForMulti | #cbEncryptPrepare | #cbEncryptMoveData).
@@ -322,14 +317,12 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbSubActions	= cbAddTmp | cbAddStore | cbDeleteCnt | cbMoveData | cbCalculateForMulti | cbEncryptPrepare | cbEncryptMoveData,
 
 		/**
-			\brief .
 			Main callbacks.
 			Represents the main action callbacks (#cbAdd | #cbExtract | #cbDelete | #cbTest | #cbSave | #cbGet | #cbRename | #cbEncrypt).
 		*/
 		cbActions		= cbAdd | cbExtract | cbDelete | cbTest | cbSave | cbGet | cbRename | cbEncrypt,
 
 		/**
-			\brief .
 			Multiple action callbacks.
 			Represents the multiple action callbacks.
 		*/
@@ -337,7 +330,6 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		cbMultiActions	= cbMultiAdd | cbMultiEncrypt,
 
 		/**
-			\brief .
 			All values.
 			Use this value to call one callback object for all callback types.
 		*/
@@ -551,14 +543,14 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 	CZipString m_szFileInZip;		///< The name of the file that is being processed in the archive.
 
 	/**
-		The type of the callback. It is set to one of the CZipArchive::CallbackType values when the action begins.
+		The type of the callback. It is set to one of the #CallbackType values when the action begins.
 		It's useful, if you have more than one callback assigned to the same callback object.
 	*/
 	int m_iType;
 
 	/**
 		Returns the current CMultiActionsInfo object in multiple actions operation or \c NULL, if 
-		the current operation is not one of #cbMultiActions actions.
+		the current operation is not one of CZipActionCallback::cbMultiActions actions.
 
 		\return
 			The current CMultiActionsInfo object.
@@ -575,7 +567,7 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		Sets the type of the callback, that will cause the current CMultiActionsInfo object to update its progress.
 
 		\param iType
-			The type of the callback. It can be one of the CZipArchive::CallbackType values.
+			The type of the callback. It can be one of the #CallbackType values.
 	*/
 	void SetReactType(int iType)
 	{
@@ -583,22 +575,22 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 	}
 
 	/**
-		Specifies how often the #Callback method is called. The #Callback is called every \b n-th callback request,
-		where \b n is the value returned from the #GetStepSize method.
+		Specifies how often the Callback() method is called. The Callback() method is called every \b n-th callback request,
+		where \b n is the value returned from the GetStepSize() method.
 		Override this method to adjust the frequency of calling the callback. 
 
 		\return 
-			The value that determines the frequency of calling the #Callback method.
+			The value that determines the frequency of calling the Callback() method.
 			By default, it returns \c 256 for #cbSave, #cbDeleteCnt, #cbCalculateForMulti and #cbEncryptPrepare and \c 1
 			for other callback types.
 
 		\note
-			This method is called in the #Init method and the returned value is cached for further processing.
+			This method is called in the Init() method and the returned value is cached for further processing.
 			This means that when you override this method, even with some time-consuming operations, it will not affect
 			the in-action performance.
 
 		\note
-			Do use a too low value, because it may increase significantly the time needed to process a huge number of files.
+			Do not use a too low value, because it may increase significantly the time needed to process a huge number of files.
 	*/
 	virtual int GetStepSize()
 	{
@@ -645,9 +637,9 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 
 	/**
 		Called by processing classes when data processing has finished to 
-		allow calling the #Callback method for the amount of processed data for 
-		which the #Callback has not been called. This usually happens, 
-		when #GetStepSize does not return 1.
+		allow calling the Callback() method for the amount of processed data for 
+		which the Callback() has not been called. This usually happens, 
+		when GetStepSize() does not return 1.
 
 		\param uProgress
 			The amount of data processed.
@@ -670,14 +662,14 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 protected:	
 	/**
 		
-		Calls the #Callback method internally, increases #m_uProcessed and lets the CZipActionCallback
+		Calls the Callback() method internally, increases CZipActionCallback::m_uProcessed and lets the CZipActionCallback
 		increase its values, if needed.
 
 		\param uProgress
 			The amount of data processed.
 
 		\return
-			The return value from the #Callback method.
+			The return value from the Callback() method.
 	*/
 	virtual bool CallCallback(ZIP_SIZE_TYPE uProgress)
 	{
@@ -688,7 +680,7 @@ protected:
 	}
 
 	/**
-		Caches the value returned from the #GetStepSize method. Called in the #Init method.
+		Caches the value returned from the GetStepSize() method. Called in the Init()method.
 	*/
 	void CacheStepSize()
 	{
@@ -698,8 +690,8 @@ protected:
 	}
 
 	/**
-		Initializes the values that depend on the frequency of calling the #Callback method.
-		Called with every call to #Callback.
+		Initializes the values that depend on the frequency of calling the Callback() method.
+		Called with every call to the Callback() method.
 
 		\see
 			GetStepSize

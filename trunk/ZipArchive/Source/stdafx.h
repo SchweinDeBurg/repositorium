@@ -68,18 +68,26 @@
 
 	#ifdef _ZIP_STRICT_U16
 		#define ZIP_INDEX_TYPE WORD
-		#define ZIP_PART_TYPE WORD		
+		#define ZIP_VOLUME_TYPE WORD		
 	#else
 		#define ZIP_INDEX_TYPE int
-		#define ZIP_PART_TYPE int
+		#define ZIP_VOLUME_TYPE int
 	#endif	
 
 	#define ZIP_SIZE_TYPE DWORD
 	#define ZIP_ZLIB_TYPE int
 
+#if !defined(_INTPTR_T_DEFINED) && !defined(__GNUC__)
+	#if defined (__BORLANDC__)
+		#include <stdint.h>
+	#elif _MSC_VER <= 1200 || !defined _MSC_VER
+		typedef long intptr_t;
+	#endif
+#endif
+
 #define ZIP_FILE_INDEX_NOT_FOUND ZIP_INDEX_TYPE(-1)
 #define ZIP_FILE_INDEX_UNSPECIFIED ZIP_FILE_INDEX_NOT_FOUND
-#define ZIP_DISK_NUMBER_UNSPECIFIED ZIP_PART_TYPE(-1)
+#define ZIP_VOLUME_NUMBER_UNSPECIFIED ZIP_VOLUME_TYPE(-1)
 
 #endif // !defined(ZIPARCHIVE_STDAFX_DOT_H)
  

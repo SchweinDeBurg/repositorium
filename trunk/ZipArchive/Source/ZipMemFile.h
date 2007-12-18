@@ -101,6 +101,15 @@ public:
 		m_nDataSize = nGrowBy == 0 ? nBufSize : 0;
 		m_bAutoDelete = false;
 	}
+
+	void ReInit(long nGrowBy = 1024)
+	{
+		Close();
+		Init();
+		m_nGrowBy = nGrowBy;
+		m_bAutoDelete = true;
+	}
+
 	BYTE* Detach()
 	{
 		BYTE* b = m_lpBuf;
