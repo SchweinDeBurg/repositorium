@@ -16,12 +16,12 @@
 
 // StringConv.h - Unicode <-> ANSI translation helpers
 
-#if !defined(__StringConv_h)
-#define __StringConv_h
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__StringConv_h)
+#define __StringConv_h
 
 class _A2W
 {

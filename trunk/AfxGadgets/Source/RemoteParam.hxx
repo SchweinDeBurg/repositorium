@@ -16,12 +16,12 @@
 
 // RemoteParam.hxx - interface and implementation of the CRemoteParam<> template class
 
-#if !defined(__RemoteParam_hxx)
-#define __RemoteParam_hxx
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__RemoteParam_hxx)
+#define __RemoteParam_hxx
 
 // interface
 

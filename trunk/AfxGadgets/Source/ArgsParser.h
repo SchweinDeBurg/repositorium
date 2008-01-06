@@ -19,12 +19,12 @@
 // Based on the code by Pavel Antonov and changes contributed by dB (www.dblock.org).
 // Visit http://www.codeproject.com/cpp/cmdlineparser.asp for more info.
 
-#if !defined(__ArgsParser_h)
-#define __ArgsParser_h
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__ArgsParser_h)
+#define __ArgsParser_h
 
 #if !defined(__AFXTEMPL_H__)
 #pragma message(__FILE__ " : put <afxtempl.h> in your PCH to speed up compilation")

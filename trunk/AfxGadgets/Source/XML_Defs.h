@@ -19,12 +19,12 @@
 // Based on the code by Jerry.Wang.
 // Visit http://www.codeproject.com/useritems/CXml.asp for more info.
 
-#if !defined(__XML_Defs_h_)
-#define __XML_Defs_h_
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__XML_Defs_h_)
+#define __XML_Defs_h_
 
 #if defined(_ATL_VER) && (_ATL_VER < 0x0700)
 #error required ATL version 7.0 or later

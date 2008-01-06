@@ -16,12 +16,12 @@
 
 // DialogXML.h - interface of the CDialogXML class
 
-#if !defined(__DialogXML_h)
-#define __DialogXML_h
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__DialogXML_h)
+#define __DialogXML_h
 
 #if !defined(__AFXTEMPL_H__)
 #pragma message(__FILE__ " : put <afxtempl.h> in your PCH to speed up compilation")

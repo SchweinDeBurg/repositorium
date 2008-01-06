@@ -19,12 +19,12 @@
 // Based on the code by Jerry.Wang.
 // Visit http://www.codeproject.com/useritems/CXml.asp for more info.
 
-#if !defined(__XML_Document_h_)
-#define __XML_Document_h_
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__XML_Document_h_)
+#define __XML_Document_h_
 
 #include "XML_Defs.h"
 #include "XML_Node.h"

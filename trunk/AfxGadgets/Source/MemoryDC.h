@@ -17,12 +17,12 @@
 
 // MemoryDC.h - interface of the CMemoryDC class
 
-#if !defined(__MemoryDC_h)
-#define __MemoryDC_h
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__MemoryDC_h)
+#define __MemoryDC_h
 
 class CMemoryDC: public CDC
 {

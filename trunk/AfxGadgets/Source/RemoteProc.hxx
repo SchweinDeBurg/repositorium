@@ -16,12 +16,12 @@
 
 // RemoteProc.hxx - interface and implementation of the CRemoteProc<> template class
 
-#if !defined(__RemoteProc_hxx)
-#define __RemoteProc_hxx
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__RemoteProc_hxx)
+#define __RemoteProc_hxx
 
 #include "RemoteParam.hxx"
 

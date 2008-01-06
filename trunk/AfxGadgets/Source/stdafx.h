@@ -16,12 +16,12 @@
 
 // stdafx.h - include file for standard system include files
 
-#if !defined(__stdafx_h)
-#define __stdafx_h
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__stdafx_h)
+#define __stdafx_h
 
 // unreferenced inline/local function has been removed
 #pragma warning(disable: 4514)
@@ -42,6 +42,9 @@
 #include <afxwin.h>			// MFC core and standard components
 #include <afxtempl.h>		// MFC collection template classes
 #include <afxcmn.h>			// MFC common control classes
+#include <afxpriv.h>       // MFC private classes
+
+#include <../src/mfc/afximpl.h>
 
 // ATL headers
 #include <atlbase.h>			// for ATL::CComBSTR
