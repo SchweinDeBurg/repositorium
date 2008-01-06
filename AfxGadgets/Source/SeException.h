@@ -17,12 +17,12 @@
 
 // SeException.h - interface of the CSeException class
 
-#if !defined(__SeException_h)
-#define __SeException_h
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__SeException_h)
+#define __SeException_h
 
 class CSeException: public CException
 {

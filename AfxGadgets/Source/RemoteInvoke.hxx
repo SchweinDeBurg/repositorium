@@ -16,12 +16,12 @@
 
 // RemoteInvoke.hxx - interface and implementation of the CRemoteInvoke<> template class
 
-#if !defined(__RemoteInvoke_hxx)
-#define __RemoteInvoke_hxx
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__RemoteInvoke_hxx)
+#define __RemoteInvoke_hxx
 
 #include "RemoteProc.hxx"
 

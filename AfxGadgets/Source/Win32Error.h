@@ -17,12 +17,12 @@
 
 // Win32Error.h - interface of the CWin32Error class
 
-#if !defined(__Win32Error_h)
-#define __Win32Error_h
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__Win32Error_h)
+#define __Win32Error_h
 
 class CWin32Error: public CException
 {

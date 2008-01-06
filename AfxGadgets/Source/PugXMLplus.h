@@ -16,12 +16,12 @@
 
 // PugXMLplus.h - PugXML parser extensions and wrappers
 
-#if !defined(__PugXMLplus_h)
-#define __PugXMLplus_h
-
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
 #endif	// _MSC_VER
+
+#if !defined(__PugXMLplus_h)
+#define __PugXMLplus_h
 
 #if !defined(_PugXML_)
 #error PugXML.h must be included before this file

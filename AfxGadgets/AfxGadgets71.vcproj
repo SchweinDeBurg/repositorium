@@ -321,6 +321,40 @@
 			</File>
 		</Filter>
 		<Filter
+			Name="Dialogs"
+			Filter="h;cpp">
+			<File
+				RelativePath=".\Source\ddxv.cpp">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\ddxv.h">
+			</File>
+		</Filter>
+		<Filter
 			Name="Exceptions"
 			Filter="h;cpp">
 			<File
