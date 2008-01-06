@@ -19,9 +19,18 @@
 // Based on the code by Pavel Antonov and changes contributed by dB (www.dblock.org).
 // Visit http://www.codeproject.com/cpp/cmdlineparser.asp for more info.
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// PCH includes
+
 #include "stdafx.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// other includes
+
 #include "ArgsParser.h"
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// debugging support
 
 #if defined(_DEBUG)
 #undef THIS_FILE
@@ -29,9 +38,12 @@ static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif	// _DEBUG
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // object model
+
 IMPLEMENT_DYNAMIC(CArgsParser, CObject)
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // construction/destruction
 
 CArgsParser::CArgsParser(LPCTSTR pszArguments, bool fCaseSensitive):
@@ -48,6 +60,7 @@ CArgsParser::~CArgsParser(void)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // operations
 
 void CArgsParser::Parse(LPCTSTR pszArguments, bool fCaseSensitive)
@@ -385,6 +398,7 @@ COleDateTime CArgsParser::GetOleTimeValue(LPCTSTR pszKeyName, DWORD fdwFlags, LC
 
 #endif	// ARGS_PARSER_NO_TIME
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // attributes
 
 const TCHAR CArgsParser::m_szDelimeters[] = _T("-/");
@@ -392,6 +406,7 @@ const TCHAR CArgsParser::m_szQuotes[] = _T("\"\'");
 // space MUST be in set, but is not a name/value delimiter
 const TCHAR CArgsParser::m_szValueSep[] = _T("\x20:=");
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // diagnostic services
 
 #if defined(_DEBUG)

@@ -16,21 +16,36 @@
 
 // DialogXML.cpp - implementation of the CDialogXML class
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// PCH includes
+
 #include "stdafx.h"
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// other includes
+
 #include "DialogXML.h"
 #include "PugXMLplus.h"
 #include "StringConv.h"
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// required PSDK headers
 
 #if !defined(_INC_SHLWAPI)
 #pragma message(__FILE__ " : put <shlwapi.h> in your PCH to speed up compilation")
 #include <shlwapi.h>
 #endif	// _INC_SHLWAPI
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // PSDK header for Win95/98/NT4 builds
+
 #if (_WIN32_WINDOWS < 0x0490) && !defined(_DBGHELP_)
 #pragma message(__FILE__ " : put <dbghelp.h> in your PCH to speed up compilation")
 #include <dbghelp.h>
 #endif	// _WIN32_WINDOWS && _DBGHELP_
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// required MFC headers
 
 class CFindReplaceDialog;
 #if (_MFC_VER < 0x0700)
@@ -38,6 +53,9 @@ class CFindReplaceDialog;
 #else
 #include <../src/mfc/afximpl.h>
 #endif	// _MFC_VER
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// avoid unwanted ICL warnings
 
 #if defined(__INTEL_COMPILER)
 // remark #279: controlling expression is constant
@@ -50,18 +68,28 @@ class CFindReplaceDialog;
 #pragma warning(disable: 1418)
 #endif	// __INTEL_COMPILER
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// debugging support
+
 #if defined(_DEBUG)
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif	// _DEBUG
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // object model
+
 IMPLEMENT_DYNAMIC(CDialogXML, CDialog)
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // message map
+
 BEGIN_MESSAGE_MAP(CDialogXML, CDialog)
 END_MESSAGE_MAP()
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// construction/destruction
 
 CDialogXML::CDialogXML(LPCTSTR pszDialogName, CWnd* pParentWnd):
 CDialog(),
@@ -79,6 +107,9 @@ CDialogXML::~CDialogXML(void)
 		m_lpDialogTemplate = NULL;
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// initilization
 
 const DLGTEMPLATE* CDialogXML::CreateDlgTemplate(LPCTSTR pszFileXML)
 {
@@ -119,6 +150,9 @@ const DLGTEMPLATE* CDialogXML::CreateDlgTemplate(LPCTSTR pszFileXML)
 		return (NULL);
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// overridables
 
 int CDialogXML::DoModal(void)
 {
@@ -223,6 +257,9 @@ void CDialogXML::GetXMLpath(CString& strDest)
 	strDest.ReleaseBuffer();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// styles parsing
+
 void CDialogXML::SetStylesParser(LPCTSTR pszClassName, PFN_StylesParserProc pfnParser)
 {
 	m_mapParsers.SetAt(pszClassName, pfnParser);
@@ -256,6 +293,9 @@ DWORD CDialogXML::ParseStyles(WINDOW_STYLE awsDict[], LPCTSTR pszStylesStr)
 	::LocalFree(pszTemp);
 	return (fdwStyle);
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// predefined parsers
 
 DWORD CDialogXML::Parse_Window(LPCTSTR pszStylesStr)
 {
@@ -802,6 +842,9 @@ DWORD CDialogXML::Parse_RichEdit(LPCTSTR pszStylesStr)
 
 #endif	// _RICHEDIT_
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// attributes
+
 using CDialogXML::PFN_StylesParserProc;
 CMap<CString, LPCTSTR, PFN_StylesParserProc, PFN_StylesParserProc> CDialogXML::m_mapParsers;
 
@@ -845,6 +888,9 @@ void CDialogXML::InitParsersMap(void)
 	SetStylesParser(_T("RichEdit20W"), &Parse_RichEdit);
 #endif	// _RICHEDIT_
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// implementation helpers
 
 void CDialogXML::DlgTemplateHelper(CMemFile& fileMem, CPugXmlBranch& branchDialog)
 {
@@ -1145,6 +1191,9 @@ void CDialogXML::DlgTemplateExHelper(CMemFile& fileMem, CPugXmlBranch& branchDia
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// diagnostic services
+
 #if defined(_DEBUG)
 
 void CDialogXML::AssertValid(void) const
@@ -1175,6 +1224,9 @@ void CDialogXML::Dump(CDumpContext& dumpCtx) const
 
 #endif	// _DEBUG
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// global initialization
+
 struct INIT_PARSERS_MAP
 {
 	INIT_PARSERS_MAP(void)
@@ -1183,10 +1235,14 @@ struct INIT_PARSERS_MAP
 	}
 } g_initParsersMap;
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // import libraries
+
 #pragma comment(lib, "shlwapi.lib")
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // import library for Win95/98/NT4 builds
+
 #if (_WIN32_WINDOWS < 0x0490)
 #pragma comment(lib, "dbghelp.lib")
 #endif	// _WIN32_WINDOWS

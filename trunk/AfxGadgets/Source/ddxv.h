@@ -23,6 +23,9 @@
 #if !defined(__ddxv_h)
 #define __ddxv_h
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// required CRT headers
+
 #if !defined(_INC_LIMITS)
 #pragma message(__FILE__ " : put <limits.h> in your PCH to speed up compilation")
 #include <limits.h>
