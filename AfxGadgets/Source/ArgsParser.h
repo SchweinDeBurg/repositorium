@@ -26,10 +26,16 @@
 #if !defined(__ArgsParser_h)
 #define __ArgsParser_h
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// required MFC headers
+
 #if !defined(__AFXTEMPL_H__)
 #pragma message(__FILE__ " : put <afxtempl.h> in your PCH to speed up compilation")
 #include <afxtempl.h>
 #endif	// __AFXTEMPL_H__
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// required ATL headers
 
 #if !defined(ARGS_PARSER_NO_TIME) && !defined(__ATLCOMTIME_H__)
 #pragma message(__FILE__ " : put <atlbase.h> in your PCH to speed up compilation")
@@ -38,6 +44,7 @@
 #include <ATLComTime.h>
 #endif	// ARGS_PARSER_NO_TIME && __ATLCOMTIME_H__
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // interface
 
 class CArgsParser: public CObject
@@ -96,6 +103,7 @@ public:
 #endif
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // inlines
 
 inline CString CArgsParser::GetStringValue(LPCTSTR pszKeyName)

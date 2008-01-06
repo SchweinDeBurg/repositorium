@@ -16,7 +16,14 @@
 
 // HotKeysXML.cpp - implementation of the CHotKeysXML class
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// PCH includes
+
 #include "stdafx.h"
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// other includes
+
 #include "HotKeysXML.h"
 #include "PugXMLplus.h"
 #include "StringConv.h"
@@ -31,11 +38,16 @@
 #include <commctrl.h>
 #endif	// _INC_COMMCTRL
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // PSDK header for Win95/98/NT4 builds
+
 #if (_WIN32_WINDOWS < 0x0490) && !defined(_DBGHELP_)
 #pragma message(__FILE__ " : put <dbghelp.h> in your PCH to speed up compilation")
 #include <dbghelp.h>
 #endif	// _WIN32_WINDOWS && _DBGHELP_
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// avoid unwanted ICL warnings
 
 #if defined(__INTEL_COMPILER)
 // remark #171: invalid type conversion
@@ -48,13 +60,18 @@
 #pragma warning(disable: 981)
 #endif	// __INTEL_COMPILER
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// debugging support
+
 #if defined(_DEBUG)
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif	// _DEBUG
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // object model
+
 IMPLEMENT_DYNAMIC(CHotKeysXML, CObject)
 
 CHotKeysXML::CHotKeysXML(void):

@@ -16,9 +16,15 @@
 
 // stdafx.cpp - source file that includes just the standard includes
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// PCH includes
+
 #include "stdafx.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // linker options
-#pragma comment(linker, "/ignore:4089")		// all references to DLL discarded by /opt:ref
+
+// all references to DLL discarded by /opt:ref
+#pragma comment(linker, "/ignore:4089")
 
 // end of file

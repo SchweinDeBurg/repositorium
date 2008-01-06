@@ -23,10 +23,16 @@
 #if !defined(__DialogXML_h)
 #define __DialogXML_h
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// required MFC headers
+
 #if !defined(__AFXTEMPL_H__)
 #pragma message(__FILE__ " : put <afxtempl.h> in your PCH to speed up compilation")
 #include <afxtempl.h>
 #endif	// __AFXTEMPL_H__
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// interface
 
 class CDialogXML: public CDialog
 {
