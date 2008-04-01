@@ -20,6 +20,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZipArchive", "ZipArchive\Zi
 		{4B70F6A5-35AE-4CEE-815C-20E1F31B5F5E} = {4B70F6A5-35AE-4CEE-815C-20E1F31B5F5E}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClassLib", "Jan_van_den_Baard\ClassLib\ClassLib.vcproj", "{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		MBCS Debug = MBCS Debug
@@ -70,6 +74,14 @@ Global
 		{EFD1CCD3-3C31-4BDE-976A-B45A08FBFF83}.Unicode Debug.Build.0 = Unicode Debug|Win32
 		{EFD1CCD3-3C31-4BDE-976A-B45A08FBFF83}.Unicode Release.ActiveCfg = Unicode Release|Win32
 		{EFD1CCD3-3C31-4BDE-976A-B45A08FBFF83}.Unicode Release.Build.0 = Unicode Release|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.MBCS Debug.ActiveCfg = MBCS Debug|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.MBCS Debug.Build.0 = MBCS Debug|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.MBCS Release.ActiveCfg = MBCS Release|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.MBCS Release.Build.0 = MBCS Release|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.Unicode Debug.ActiveCfg = Unicode Debug|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.Unicode Debug.Build.0 = Unicode Debug|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.Unicode Release.ActiveCfg = Unicode Release|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.Unicode Release.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

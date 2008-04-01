@@ -1,0 +1,230 @@
+// Created by Microsoft (R) C/C++ Compiler Version 13.10.6030 (fbf07cd6).
+//
+// p:\repository\jan_van_den_baard\classlib\output\x86\debug\mbcs\obj\msjro.tli
+//
+// Wrapper implementations for Win32 type library AC3B8B4C-B6CA-11D1-9F31-00C04FC29D52
+// compiler-generated file created 03/27/08 at 09:31:12 - DO NOT EDIT!
+
+#pragma once
+
+//
+// interface Filter wrapper method implementations
+//
+
+inline _bstr_t Filter::GetTableName ( ) {
+    BSTR _result = 0;
+    HRESULT _hr = get_TableName(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _bstr_t(_result, false);
+}
+
+inline enum FilterTypeEnum Filter::GetFilterType ( ) {
+    enum FilterTypeEnum _result;
+    HRESULT _hr = get_FilterType(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline _bstr_t Filter::GetFilterCriteria ( ) {
+    BSTR _result = 0;
+    HRESULT _hr = get_FilterCriteria(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _bstr_t(_result, false);
+}
+
+//
+// interface Filters wrapper method implementations
+//
+
+inline HRESULT Filters::Refresh ( ) {
+    HRESULT _hr = raw_Refresh();
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+inline IUnknownPtr Filters::_NewEnum ( ) {
+    IUnknown * _result = 0;
+    HRESULT _hr = raw__NewEnum(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return IUnknownPtr(_result, false);
+}
+
+inline long Filters::GetCount ( ) {
+    long _result = 0;
+    HRESULT _hr = get_Count(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline FilterPtr Filters::GetItem ( const _variant_t & Index ) {
+    struct Filter * _result = 0;
+    HRESULT _hr = get_Item(Index, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return FilterPtr(_result, false);
+}
+
+inline HRESULT Filters::Append ( _bstr_t TableName, enum FilterTypeEnum FilterType, _bstr_t FilterCriteria ) {
+    HRESULT _hr = raw_Append(TableName, FilterType, FilterCriteria);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+inline HRESULT Filters::Delete ( const _variant_t & Index ) {
+    HRESULT _hr = raw_Delete(Index);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+//
+// interface IReplica wrapper method implementations
+//
+
+inline void IReplica::PutRefActiveConnection ( IDispatch * ppconn ) {
+    HRESULT _hr = putref_ActiveConnection(ppconn);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+}
+
+inline void IReplica::PutActiveConnection ( const _variant_t & ppconn ) {
+    HRESULT _hr = put_ActiveConnection(ppconn);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+}
+
+inline IDispatchPtr IReplica::GetActiveConnection ( ) {
+    IDispatch * _result = 0;
+    HRESULT _hr = get_ActiveConnection(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return IDispatchPtr(_result, false);
+}
+
+inline _bstr_t IReplica::GetConflictFunction ( ) {
+    BSTR _result = 0;
+    HRESULT _hr = get_ConflictFunction(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _bstr_t(_result, false);
+}
+
+inline void IReplica::PutConflictFunction ( _bstr_t pbstr ) {
+    HRESULT _hr = put_ConflictFunction(pbstr);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+}
+
+inline ADODB::_RecordsetPtr IReplica::GetConflictTables ( ) {
+    struct ADODB::_Recordset * _result = 0;
+    HRESULT _hr = get_ConflictTables(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return ADODB::_RecordsetPtr(_result, false);
+}
+
+inline _variant_t IReplica::GetDesignMasterId ( ) {
+    VARIANT _result;
+    VariantInit(&_result);
+    HRESULT _hr = get_DesignMasterId(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _variant_t(_result, false);
+}
+
+inline void IReplica::PutDesignMasterId ( const _variant_t & pvar ) {
+    HRESULT _hr = put_DesignMasterId(pvar);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+}
+
+inline long IReplica::GetPriority ( ) {
+    long _result = 0;
+    HRESULT _hr = get_Priority(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline _variant_t IReplica::GetReplicaId ( ) {
+    VARIANT _result;
+    VariantInit(&_result);
+    HRESULT _hr = get_ReplicaId(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _variant_t(_result, false);
+}
+
+inline enum ReplicaTypeEnum IReplica::GetReplicaType ( ) {
+    enum ReplicaTypeEnum _result;
+    HRESULT _hr = get_ReplicaType(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline long IReplica::GetRetentionPeriod ( ) {
+    long _result = 0;
+    HRESULT _hr = get_RetentionPeriod(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline void IReplica::PutRetentionPeriod ( long pl ) {
+    HRESULT _hr = put_RetentionPeriod(pl);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+}
+
+inline enum VisibilityEnum IReplica::GetVisibility ( ) {
+    enum VisibilityEnum _result;
+    HRESULT _hr = get_Visibility(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline HRESULT IReplica::CreateReplica ( _bstr_t replicaName, _bstr_t description, enum ReplicaTypeEnum ReplicaType, enum VisibilityEnum Visibility, long Priority, enum UpdatabilityEnum updatability ) {
+    HRESULT _hr = raw_CreateReplica(replicaName, description, ReplicaType, Visibility, Priority, updatability);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+inline VARIANT_BOOL IReplica::GetObjectReplicability ( _bstr_t objectName, _bstr_t objectType ) {
+    VARIANT_BOOL _result = 0;
+    HRESULT _hr = raw_GetObjectReplicability(objectName, objectType, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline HRESULT IReplica::SetObjectReplicability ( _bstr_t objectName, _bstr_t objectType, VARIANT_BOOL replicability ) {
+    HRESULT _hr = raw_SetObjectReplicability(objectName, objectType, replicability);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+inline HRESULT IReplica::MakeReplicable ( _bstr_t connectionString, VARIANT_BOOL columnTracking ) {
+    HRESULT _hr = raw_MakeReplicable(connectionString, columnTracking);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+inline HRESULT IReplica::PopulatePartial ( _bstr_t FullReplica ) {
+    HRESULT _hr = raw_PopulatePartial(FullReplica);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+inline HRESULT IReplica::Synchronize ( _bstr_t target, enum SyncTypeEnum syncType, enum SyncModeEnum syncMode ) {
+    HRESULT _hr = raw_Synchronize(target, syncType, syncMode);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+inline FiltersPtr IReplica::GetFilters ( ) {
+    struct Filters * _result = 0;
+    HRESULT _hr = get_Filters(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return FiltersPtr(_result, false);
+}
+
+//
+// interface IJetEngine wrapper method implementations
+//
+
+inline HRESULT IJetEngine::CompactDatabase ( _bstr_t SourceConnection, _bstr_t Destconnection ) {
+    HRESULT _hr = raw_CompactDatabase(SourceConnection, Destconnection);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+inline HRESULT IJetEngine::RefreshCache ( struct ADODB::_Connection * Connection ) {
+    HRESULT _hr = raw_RefreshCache(Connection);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
