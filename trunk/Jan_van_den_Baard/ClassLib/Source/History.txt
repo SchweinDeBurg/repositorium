@@ -1,0 +1,713 @@
+
+ ClassLib C++ Class Library by Jan van den Baard.
+ ============================================================================
+ Version 3.0
+ ----------------------------------------------------------------------------
+ - Added XPC_MENU_FRAME to "ClsXPColors". (8-7-2004).
+ - Added the OpenPrompt() method to "ClsADODatabase". It will open a Datalink 
+   selection dialog for the user to select a connection.Requires at least ADO 
+   version 2.1. (9-7-2004)
+ - SetConnectionString() in "ClsADODatabase" now also set's the string to it's
+   m_pConnection member. (13-7-2004)
+ - Added the TYPE*() operator to "ClsInterface". (16-7-2004)
+ - Added the GetWS(), GetMBS() and ReleaseConversion() methods to "ClsString".
+   The GetWS() and GetMBS() methods will return a pointer to the Multibyte or
+   Wide-char conversions of the object wether you compiled for Unicode or not.
+   The ReleaseConversion() method releases resources used for the conversion.
+   (18-7-2004)
+ - Fixed quite a few unicode problems. These where exposed because I have 
+   included Unicode configurations in the solution. Note however that Unicode 
+   is not fully tested and the "ClsBoyerMoore" class does not support Unicode 
+   at all. (18-7-2004)
+ - Bug Fix: The "ClsWindow" class did not pre-translate messages to windows 
+   not wrapped by the class correctly. Now it does. (24-7-2004)
+ - Fixed a small bug in "ClsMenu". The bug rendered shadows in the wrong place
+   when the menu was a popup menu with subitems. (27-7-2004)
+ - Added the IsPanelHeader method to "ClsHotButton". It returns a reference to 
+   a boolean which wil, if set to TRUE, instruct the control not to render the
+   default frames and focus rectangles. Used by the coming panelbar control.
+   (31-7-2004)
+ - Fixed a bug in "ClsColorPopup" which screwed up when using a non-zero
+   identifier. (7-10-2004)
+ - Added the DefaultColor() method to "ClsColorPicker". It allows you to set
+   the color for the default selection. A color of CLR_NONE will render a
+   crosshatch style which represents a transparent color. (7-10-2004)
+ - Added the Goto() method to "ClsBrainchild". (3-11-2004)
+ - Added the SetSelectionPoints() and GetSelectionPoints() methods to 
+   "ClsBrainchild". (6-11-2004)
+ - Added the InsertText() method to "ClsBrainchild". (11-11-2004)
+ - Added the RepeatTrigger() method to "ClsHotButton". When this option is 
+   turned on the Trigger() overidable will be called in set intervals while
+   the button is pressed. The intervals are the same as the keyboard intervals.
+   (21-11-2004)
+ - Added the classes "ClsPanelBar", "ClsPanel" and "ClsOutlookBar". The first
+   class is a container for "ClsPanel" derived objects. "ClsPanel" is a
+   container for other controls which are "paged" by the "ClsPanelBar". The
+   "ClsOutlookBar" class is a outlook style icon bar control. (22-11-2004)
+ - Added the EnableOutlookButton() method to "ClsOutlookBar". (23-11-2004)
+ - Added "ClsXPOutlookBar". A simple "ClsOutlookBar" derived class which does
+   Office XP style rendering. (23-11-2004)
+ - Added the dwData parameter to the AddCaptionButton() method in "ClsCFWindow".
+   (28-11-2004)
+ - Added the flags CDSF_END_ELLIPSIS and CDSF_PATH_ELLIPSIS to "ClsDrawTools".
+   They will only work on the RenderText() method of this class of course.
+   (28-11-2004)
+ - "ClsCFWindow" now also does default client background rendering. (28-11-2004)
+ - Added the SetOldStyle() method to "ClsCFWindow". When the old style is active
+   the frames are rendered using the "old" windows style. (28-11-2004)
+ - BUG FIX: Indexes in the "ClsXPColors" class color array overlapped. Fixed.
+   (28-11-2004)
+ - Added the BEGIN_MSG_MSP, MESSAGE_HANDLER, END_MSG_MAP and DEFINE_MSG_HANDLER
+   macros. These are created to make it easier to handle messages through the
+   WindowProc() overidable. (2-12-2004)
+ - Cls(XP)OutlookBar now supports multi-line labels. Also the disabled rendering 
+   of outlook buttons has changed. It now is rendered using a color which is
+   based on the background color. (12-12-2004)
+ - Checked caption buttons in "ClsCFWindow" are now rendered correctly when
+   they are checked. Both XP style and old style had some minor problems.
+   (14-12-2004)
+ - Added the "ClsSaveDC" class. A simple class which manages calls to the
+   SaveDC() and RestoreDC() APIs. (25-12-2004)
+ - Added the MESSAGE_RANGE_HANDLER, START_MAP, BEGIN_NOTIFICATION_MAP,
+   NOTIFICATION_HANDLER, END_NOTIFICATION_MAP and DEFINE_NOTIFICATION_HANDLER
+   macros. (26-12-2004)
+ - Added a port of Bjarke Viksoe's and Daniel Bowen's CustomTabCtrl code. I have 
+   made a ClassLib port of the "ClsCustomTabItem", "ClsTabViewTabItem", 
+   "ClsCustomTabCtrl", "ClsCloseScrollTabCtrl", "ClsDotNetTabCtrl" and 
+   "ClsFolderTabCtrl" classes. Although the ATL/WTL dependancy is gone the 
+   classes are still templatized (is this even a word?). (26-12-2004)
+ - Fixed a bug in "ClsRectTracker" which did not restore the original rectange
+   when the drag was canceled. (28-12-2004)
+ - Added the CopyRect() method to "ClsRect". Also added the LPCRECT operator
+   overload. (29-12-2004)
+ - Added a SetWindowPos() method to "ClsWindow" which accepts a LPCRECT instead
+   of seperate values. (29-12-2004)
+ - Fixed a bug in the EndDialog() method of "ClsMessageBox". It would return
+   a wrong result code when it was called more than once with different return
+   codes. (16-2-2005)
+ - Added the ShowFocus() and LabelPlace() methods to "ClsHyperlink". Suggested
+   by Stephan Brenner. (24-2-2005)
+ - The Transparent() option in "ClsHyperlink" now works. Still has some problems 
+   with ClearType though. Suggested by Stephan Brenner. (24-2-2005)
+ - Added the SelectMRUEntry() method to ClsMRU. This method moves the path to
+   the top of the list. (28-3-2005)
+ - Accelerators for MDI application did not work at all. (31-3-2005)
+ - Fixed a rather nasty bug int the message pump which could lead to the app
+   using 100% CPU time during a longer period of time. (5-4-2005)
+ - "ClsMRU" now uses the SHGFI_USEFILEATTRIBUTES flag to get the file icon
+   so that non-existing files also get and icon in the menu. (6-4-2005)
+
+ Version 2.9
+ ----------------------------------------------------------------------------
+ - Added the "ClsDateTime" and "ClsCurrency" classes. They wrap the OLE DATE
+   and CURRENCY data types. (29-10-2003)
+ - Added the XTRACE() macro's. They accept ClsString arguments instead of
+   text constants. (1-11-2003)
+ - Included Carlos Antollini his ADO and ADOX classes in the library.
+   (5-11-2003)
+ - Changed the shadow rendering of top-level menus in "ClsXPMenu" a bit. It
+   does not repaint the whole parent window anymore when a popup closes.
+   (14-12-2003)
+ - The LightenColor() and DarkenColor() methods of "ClsColor" will not
+   assert with a parameter value of 0 anymore. (19-12-2003)
+ - Added GetClientRect(), GetWindowRect() and GetChildRect() methods to
+   "ClsWindow" which directly return a "ClsRect" object. (21-12-2003)
+ - Added the CII_CLOSE, CII_UP, CII_DOWN, CII_LEFT, CII_RIGHT, CII_PIN and
+   CII_PINNED images to the image list which is returned by the
+   GetClsImages() method of "ClsApp". (27-12-2003)
+ - Depreciated the GetDropdownIcon() and GetCheckmarkIcon() methods in
+   "ClsApp". They have been replaced by the GetCIIIcon() method.
+   (31-12-2003)
+ - Added the GetWindowLong64() and SeWindowLong64() methods to ClsWindow.
+   Also the 64bit versions of these methods and API's are used throughout
+   the code to facilitate 64 bit compilation. (13-1-2004)
+ - Added the nPenSize parameter to the DrawRectange() method of the
+   "ClsDrawTools" class. Defaults to 1. (15-1-2004)
+ - Added the DrawGradient() method to the "ClsDrawTools" class. (15-1-2004)
+ - Added the bOffsetInBuffer parameter to the Constructor and SetRect()
+   method of the "ClsBufferDC" class. Normally offset 0,0 in the buffer DC
+   is used to BitBlt() into the destination. When this parameter is TRUE it
+   will use the rectangle top/left offset of the specified rectangle to
+   BitBlt() into the destination. (16-1-2004)
+ - The label color of a clicked XP style "ClsFlatButton" button has changed
+   to XPC_TEXT_BACKGROUND. (16-1-2004)
+ - Added the SetXPDefault() method to "ClsFlatButton". It will prevent the
+   frame to be rendered in the XPC_OUTER_SELECTION color when the button
+   is default. (17-1-2004)
+ - Added the "ClsCFWindow" class. This class will make it easy to create custom
+   window frames including caption buttons. By default this class will, when
+   custom frame rendering is turned on, render frames using the Office XP
+   style command bar windows. (17-1-2004)
+ - Added a few more colors to "ClsXPColors" to facilitate XP style
+   toolwindows. (17-1-2004)
+ - "ClsBufferDC" now has support for transparency. (17-1-2004)
+ - The Close() method of "ClsStdioFile" will not assert on an invalid handle
+   anymore. This means it is safe to call the Close() method when the
+   object does not have a file open. Did this for "ClsFile" in 2.7 but somehow
+   not for "ClsStdioFile". (16-5-2004)
+ - Added the ReplaceSelection() method to "ClsBrainchild". (16-5-2004)
+
+ Version 2.8
+ ----------------------------------------------------------------------------
+ - Added the LoadParserFromFile() and LoadParserFromMemory() methods to the
+   "ClsBrainchild" class. (15-6-2003)
+ - Added the CheckModuleVersion() methods to the "ClsModule"class. (4-8-2003)
+ - Added the InitRichedit() method to "ClsApp". It will load the
+   "riched20.dll" if not already done. (4-8-2003)
+ - Added "ClsRichEdit", a wrapper for the RichEdit control. Suggested by
+   gri. (6-8-2003)
+ - "ClsFileDirBrowser" now makes the popup sizable through a sizegrip. It
+   opens with a minimum of 10 lines which is also the minimum which the popup
+   can be resized to. The sizegrip is rendered theme-aware. (9-8-2003)
+ - "ClsMenu" derived classes with overidden frame rendering did not function
+   properly in a multi-monitor environment. The popups where forced to the
+   default monitor.
+ - Adjusted the height of a separator item in "ClsBitmapMenu". It's SM_CYFRAME
+   pixels less height now. (19-9-2003)
+ - Moved the functional part of "ClsComboCompletion" into a seperate class
+   "ClsCompletion". This class can be used to add auto-completion to other
+   "ClsComboBox" derived classes. (21-9-2003)
+ - Added the DrawRectangle() method to "ClsDrawTools". (24-9-2003)
+ - Added "ClsHotEdit" and "ClsHotComboBox". These controls are simple edit
+   and combobox controls which have hottracking. Both normal and Office XP
+   style rendering is supported. The "ClsHotComboBox" also supports auto-
+   completion using "ClsCompletion". (24-9-2003)
+ - "ClsColorPicker" and "ClsColorPopup" now use the WM_NCACTIVATE message to
+   make their parent appear active. This way keyboard navigation of the popup
+   will work. (24-9-2003)
+ - The "ClsFileDirBrowser" class will now preselect the first file or
+   directory when more than one selection is dropped on the control. It
+   should have done this before but it did not. (7-10-2003)
+ - Added the GetUnicodeFlag() and SetUnicodeFlag() methods to the
+   "ClsBrainchild" class. (12-10-2003)
+ - Default XP style colorpicker buttons now have a XPC_OUTER_SELECTION color
+   frame. (14-10-2003)
+
+ Version 2.7
+ ----------------------------------------------------------------------------
+ - "ClsFileDirBrowser" will now use a minimum of 5 lines for the dropdown
+   "ClsFileDirTree" window. (6-2-2003)
+ - The Close() method of "ClsFile" will not assert on an invalid handle
+   anymore. This means it is safe to call the Close() method when the
+   object does not have a file open. (12-3-2003)
+ - Added the GetItemData() method to "ClsTreeView" and "ClsListView".
+   (5-3-2003)
+ - Moved the inlined functions declared in "application.h" to
+   "application.cpp". (26-4-2003)
+ - "ClsColorPicker" now tracks the color on which the mouse hovers in the
+   color popup. (13-5-2003)
+
+ Version 2.6
+ ----------------------------------------------------------------------------
+ - Added the CDSF_TRANSPARENT flag to "ClsDrawTools". This will force a
+   CLR_NONE setting of the imagelist from which a bitmap is rendered. It will
+   also render text using the TRANSPARENT drawmode. (17-9-2002)
+ - "ClsBitmapMenu" & "ClsXPMenu" now use the CDSF_TRANSPARENT mode to render
+   it's images. (17-9-2002)
+ - Images in "ClsBitmapMenu" and "ClsXPMenu" will now always be rendered from
+   the imagelist of the owner object. I.E. If you create a sub menu from
+   "ClsXPMenu", add it to another "ClsXPMenu" based menu the images used by
+   the sub menu will be those defined in the sub menu. (17-9-2002)
+ - Tweaked shadow rendering a bit. (28-9-2002)
+ - Fixed a small problem in re-enabling the dialog parent after a modal
+   session. It used to activate the wrong window before the dialog owner was
+   re-enabled. A call to SetForegroundWindow() resolved this problem.
+   (30-9-2002)
+ - Tweaked to compile cleanly on both VC++ 6 and VC++ 7. (19-10-2002)
+
+ Version 2.5
+ ----------------------------------------------------------------------------
+ - Added the GetMenuObject() method to "ClsMRU". (1-8-2002)
+ - Tweaked "ClsColorPicker" and "ClsColorPopup" a bit. Also fixed a bug in
+   "ClsColorPopup" which would screwup the popup rendering. (3-8-2002)
+ - Added the UseIcons() method to "ClsMRU". This option, when turned on,
+   will make the popup menu from the class show the icons of the file types.
+   (3-8-2002)
+ - Fixed a couple of problems in "ClsArray". Also added the "ClsSimpleArray"
+   class for the simple datatypes. (3-8-2002)
+ - Tweaked "ClsMenu" and "ClsBitmapMenu" so that they can be used in an MDI
+   environment. The behaviour is as follows, custom frame and item rendering
+   is disabled for system controlled menus except the file menu of an MDI
+   environment. (3-8-2002)
+ - Fixed a couple of problems in "ClsWindow" concerning self-destructing
+   objects. (6-8-2002)
+ - Added "ClsFileDirBrowser" which is a "ClsBrowser" derived class which uses
+   a "ClsFileDirTree" as a popup to select files and or directories.
+   Suggested by Philippe Lhoste. (7-8-2002)
+ - Added FillSolidRect() to ClsDC. (17-8-2002)
+ - Updated "ClsBalloonHelp" to Joshua Heyer's Release #3 sources. (17-8-2002)
+ - Added the ClosePopups() method to "ClsWindow". (19-8-2002)
+ - "ClsColorPopup" windows will now look at the system settings for menu
+   animation and menu fading to determine if and what type of animation
+   should be used. (20-8-2002)
+ - Added the m_sDescription member to "ClsException". (27-8-2002)
+ - Added the "ClsShellException" class. (27-8-2002).
+ - Added the "ClsInterface" and "ClsShellDesktopFolder" classes. (27-8-2002)
+ - Fixed a small problem in "ClsMRU" which screwed up when the MRU menu was
+   empty. Introduced when adding the UseIcons() method. (13-9-2002)
+
+ Version 2.4
+ ----------------------------------------------------------------------------
+ - ClosePopups() in "ClsColorPopup" now hides the window before destroying
+   it. Fixes some problems with the shadow rendering. (11-7-2002)
+ - UI state changes did not work properly on a Windows 2000 (SP2) machine.
+   "ClsWindow" did not react to state changes the way it should. (11-7-2002)
+ - The "ClsColorPicker" tooltip wil now display the name from the popup it's
+   default color table if a match is found. (15-7-2002)
+ - Fixed a small bug in "ClsColorPicker" which did not get the dropped state
+   right after a custom color selection. (15-7-2002)
+ - The "ClsHotButton" WM_GETFONT message handling will now create a copy of
+   the parent window font when no font was set yet. On NT4 or below the
+   system messagebox font is used. (15-7-2002)
+ - Added Office XP style rendering to "ClsFlatButton". (15-7-2002)
+ - Added the DrawXPBitmap() method to "ClsDrawTools". "ClsXPMenu" and
+   "ClsFlatButton" make use of this method. (16-7-2002)
+
+ Version 2.3
+ ----------------------------------------------------------------------------
+ - The Destroy() method of "ClsWorkerThread" did not set the handle to NULL.
+   Caused an assert in the Start method. Strange I did not encounter this
+   one before... (29-5-2002)
+ - Added the OnFileDropped() method to "ClsBrowser" as a pure virtual. The
+   "ClsDirBrowser" and "ClsFileBrowser" override these to extract the
+   file/dir name of the dropped files. Suggested by Philippe Lhoste.
+   (29-5-2002)
+ - The OnBrowserClicked() method is also made a pure virtual now. It must be
+   overridden in derived classes. (29-5-2002)
+ - "ClsBitmapMenu" had a huge memory leak when the DeleteMenu() method was
+   called. This also affected "ClsMRU". (29-5-2002)
+ - Added GetCheckmarkIcon() and GetClsImages() to "ClsApp". (29-5-2002)
+ - Fixed a bug in "ClsMDIMainWindow". The base ID of the window menu was not
+   correctly initialized. (31-5-2002)
+ - The GetSubMenu() method from "ClsMenu" now also returns temporary objects.
+   (3-6-2002)
+ - LoadBitmap() from "ClsBitmap" would not load from the resources when it
+   was passed a resource ID. (4-6-2002)
+ - Added the GetButtonSize() and RenderButton() overidables to "ClsBrowser".
+   This will allow for custom browser buttons. (6-6-2002)
+ - The LPTSTR and LPCTSTR operator overides from "ClsString" will now return
+   a pointer to an empty string (e.g. _T( "" )) when there is no string
+   buffer present in the object. (6-6-2002)
+ - Added the Trim() method to "ClsString". This method will remove leading
+   and trailing white-spaces from the object contents returning a reference
+   to itself. (6-6-2002)
+ - Added the EnumProps(), EnumPropsEx(), GetProp(), SetProp() and
+   RemoveProp() methods to "ClsWindow". Now why werent they in there
+   before... (12-6-2002)
+ - "ClsBufferDC" now also handles rectangles with an origin other than 0,0
+   the way it should. (17-6-2002)
+ - Added IsShadowEnabled() to "ClsApp()". (18-6-2002)
+ - Implemented a cunning technique to implement ownerdraw frames on menus.
+   This technique was devised by Bruno Podetti (Podetti@gmx.net) and is
+   based on subclassing the menus in a message hook. (19-6-2002)
+ - Used the above mentioned technique to render the frames for the XP
+   style menus. They come pretty near to the Office XP and Visual Studio.NET
+   menus now. (19-6-2002)
+ - Added the DrawShadow() method to "ClsDrawState". (21-6-2001)
+ - The "ClsColorPopup" control now renders a shadow no matter which OS it is
+   run on. (21-6-2002)
+ - Renamed ClsRGBHLS to "ClsColor" and ClsDrawState to "ClsDrawTools".
+   depending on how you include those this may present compilation errors in
+   your source. Sorry about that. (22-6-2001)
+ - Added the DrawMenuShadow() method to "ClsBitmapMenu". This methos is used
+   to control shadow rendering of menu of this class and "ClsXPMenu".
+   (22-6-2002)
+ - Fixed a small bug in "ClsFileDirTree" which asserted when the ShowFiles()
+   method was used. Probably a result of a code change is "ClsString".
+   (28-6-2002)
+ - Added "ClsShellMalloc" which is a simple wrapper for the Shell it's
+   IMalloc interface.
+   (3-7-2002)
+ - "ClsDirBrowser" now makes use of the "ClsShellMalloc" class to access the
+   Shell it's allocator interface. (3-7-2002)
+ - Added IsMenuFadeEnabled() to "ClsApp". (10-7-2002)
+ - "ClsColorPopup" will now blend in when the OS supports it and menus are
+   configured to blend in. Otherwise, when supported, it will use roll
+   animation. If that is not supported either the control simply appears.
+   (10-7-2002)
+ - Fixed a a rather stupid bug in "ClsBoyerMoore" which resulted in patterns
+   near the end of the buffer not being matched. I.E. A search string which
+   has a match close to the end of the buffer searched was not found.
+   (10-7-2002)
+
+ Version 2.2
+ ----------------------------------------------------------------------------
+ - Radio-items in "ClsXPMenu" menus now look more like the Office XP style.
+   (18-5-2002)
+ - Using the GetSubMenu() method on "ClsBitmapMenu" and derived classes would
+   result in memory leaks. Fixed. (18-5-2002)
+ - Moved the "ClsXPColors" out of the "ClsXPMenu" files into a seperate class
+   header in the Tools directory. (18-5-2002)
+ - Added the bSmall parameter to the GetDropdownIcon() from "ClsApp".
+   (18-5-2002)
+ - Added the SetImageIndex() method to "ClsFlatButton". (19-5-2002)
+ - Added the GetDIBSection() method to "ClsBitmap". (22-5-2002)
+ - Added the GetGrayscaledBitmap() methods to "ClsBitmap". Code derived from
+   the Per-Pixel filters article on www.CodeProject.com by Christian Graus.
+   (22-5-2002).
+ - Added the GetMaskBitmap() methods to "ClsBitmap". (22-5-2002)
+ - Fixed a bug in the CreateCompatibleDC() method from ClsDC. It did not
+   accept a NULL parameter. (22-5-2002)
+ - Added Office XP style rendering to "ClsColorPopup". Also the CPN_DROPDOWN
+   and CPN_CLOSEUP notifications are sent now. (23-5-2002)
+ - Added the SetXPStyle() method to "ClsColorPicker". (23-5-2002)
+ - Removed the UpdateColors() methods from "ClsXPMenu" and "ClsMRU". Also
+   create one single "ClsXPColors" globally declared object which is
+   automatically updated when necessary. All Office XP style rendering
+   makes use of this global object. (23-5-2002)
+ - Added the OutlinedRectangle() method to "ClsDC". Used by a lot of
+   Office XP style rendering code. (23-5-2002)
+ - After reading the short but sweet article by Chris Losinger on the Code
+   Project about detecting memory leaks in non-MFC apps I have implemented
+   this in the library aswell. When compiling in debug mode the memory
+   allocated with new or malloc which is not freed is reported including the
+   file and line at which it was allocated. You must run under debugger
+   control though. (23-5-2002)
+ - Under Windows 98/2000 or better the top-level menus of "ClsBitmapMenu"
+   derived objects are now also ownerdraw. The "ClsXPMenu" uses this feature
+   also to resemble Office XP top-level items. (26-5-2002)
+ - A WM_SYSCOLORCHANGE message is now automatically distributed to the child
+   windows. (27-5-2002)
+ - Changed the GetGrayscaledBitmap() from using GetPixel()/SetPixelV() to
+   accessing bitmap data directly. This resulted in a massive speed increase
+   on large bitmaps. (28-5-2002)
+ - Added the GetMappedBitmap() method to "ClsBitmap". (28-5-2002)
+
+ Version 2.1
+ ----------------------------------------------------------------------------
+ - Fixed a bug in "ClsWindow" which caused derived objects which self-
+   destruct during PostNcDestroy() to crash horribly on Windows 95.
+   (30-4-2002)
+ - Added an optional length parameter to the ClsString( LPCTSTR pszSource ),
+   ClsString( LPCWSTR pszSource ) and ClsString( LPCSTR pszSource )
+   constructors. Suggested by Royce Kemp. (30-4-2002)
+ - Fixed a couple of potentional pitfalls in "ClsBalloonHelp". (30-4-2002)
+ - Added the OnInitReflectedMenu() and OnReflectedInitMenuPopup() overidables
+   to "ClsMenu" (15-5-2002)
+ - "ClsXPMenu". When selecting a disabled item with the up or down arrow key
+   instead of the mouse the item is rendered correctly now. (15-5-2002)
+ - "ClsBitmapMenu" and "ClsXPMenu" now also hide accelerator keys on Windows
+   2000/XP systems when appropiate. (15-5-2002)
+
+ Version 2.0
+ ----------------------------------------------------------------------------
+ - Lost 2 weeks work on a complete hard-disk crash. Shit, now I have to do it
+   all over again. This should teach me to backup more often...
+ - Added GetUIState() to "ClsWindow". It uses the WM_QUERYUISTATE message to
+   get the UI state. The custom controls use it to see wether or not they
+   should underline the accellerator key and draw the focus rectangle.
+   (16-3-2002)
+ - Added the CDSF_HIDEACCEL flag to "ClsDrawState". Should be used in
+   combination with the above mentioned GetUIState() method. (16-3-2002)
+ - Rendering the Dropdown arrow in "ClsColorPicker" screwed up on Windows 95
+   & NT4.0. Now the class renders the arrow itself instead of depending on
+   windows to do it. (16-3-2002)
+ - Successfully compiled the libraries & sample programs with Visual C++ 7.
+   (16-3-2002)
+ - Added the GradientFill() method to "ClsDC". (20-3-2002)
+ - "ClsInfoBar" now uses the GradientFill() method from "ClsDC". (20-3-2002)
+ - Compiling the library under VC++ .NET uncovered some potentional problems
+   which are now fixed. (23-3-2002)
+ - Added a static MsgBox() method to "ClsMessageBox" which you can pass
+   parameters directly. (23-3-2002)
+ - Added the MBF_HOTBUTTONS flag to "ClsMessageBox". (27-3-2002)
+ - "ClsBitmapMenu" now also renders the seperator items itself. (28-3-2002)
+ - Added the LightenColor() and DarkenColor() methods to "ClsRGBHLS". The
+   code for this was lifted from the BCMenu class by Brent Corkum. (28-3-2002)
+ - Fixed up "ClsBitmapMenu" a bit. Please note that it is not 100% compatible
+   with older versions. Changes are a different resource allocation scheme,
+   new methods GetItemText() and SetItemText() and miscellanious other small
+   changes. (28-3-2002)
+ - Added the "ClsXPMenu" class which renders the menus in the new Office XP
+   and Visual Studio .NET style. (30-3-2002)
+ - Adapted "ClsMRU" to make use of the "ClsXPMenu" class. (30-3-2002)
+ - "ClsWindow" now detaches menus which are wrapped by "ClsMenu" derived
+   classes before the window is destroyed. This must be done so that the
+   destructor of these "ClsMenu" derived objects can free up used
+   resources before windows renders the menu handle invalid. (30-3-2002)
+ - Added the UpdateColors() method to "ClsMRU". Should be called uppon
+   receiving a WM_SYSCOLORCHANGE message. (1-4-2002)
+
+ Version 1.9
+ ----------------------------------------------------------------------------
+  - When clicking outside the colorpopup window of a "ClsColorPopup" object
+    the control is now closed and the mouse-click is requeue'd to the input
+    stream. (13-2-2002)
+  - Added the unCLOSE_ON_KEYPRESS flag to "ClsBalloonHelp" as suggested by
+    the author of this class. (18-2-2002)
+  - Added "ClsMultiMon". This is a class which allows an easy way to program
+    for a multi-monitor environment. (20-2-2002)
+  - Added multi-monitor support to "ClsColorPicker". By doing this I also
+    squashed a bug which could resize the control wrong when it got opened
+    to close to the screen borders. (20-2-2002)
+  - Added multi-monitor support to "ClsWindow", "ClsDirBrowser" and
+    "ClsCommonDialog". (20-2-2002)
+  - Fixed a rather nasty bug in "ClsWindow" which caused the "ClsBalloon"
+    and "ClsColorPopup" classes to crash on Win95 systems. The problem was
+    that the Destroy() method referenced the "this" pointer after the
+    ::DestroyWindow() API. Since objects from these two classes can self-
+    destruct when receiving a WM_NCDESTROY message the memory accessed was
+    already freed. Problem is that it did not manifest itself on the
+    ME/NT/2000/XP boxes I tested the code on. (23-02-2002)
+  - Added the "DropDownArray()" method to "ClsColorPicker" which you can use
+    to make the control render a drop-down arrow right of the color-
+    rectangle. (23-02-2002)
+
+ Version 1.8
+ ----------------------------------------------------------------------------
+  - Added "ClsImageList". A wrapper for the HIMAGELIST handle. (14-1-2002)
+  - Fixed a problem when centering the text of a "ClsInfoControl" vertically.
+    It was misaligned a couple of pixels. (15-1-2002)
+  - Added the OnFontDistributed() virtual method to "ClsDialog". (15-1-2002)
+  - When the font is not known when WM_NCPAINT is received by a
+    "ClsHotButton" object it will be copied from it's parent. (15-1-2002)
+  - Added the AnimateWindow() method to "ClsWindow". It returns FALSE on
+    operating systems which do not support it. (17-1-2002)
+  - Added the SetLayeredWindowAttributes() method to "ClsWindow". It returns
+    FALSE on operating systems which do not support it. (19-1-2002)
+  - Fixed a dumb bug in the modal message loop in "ClsDialog" which hogged
+    almost all the processor time. Uhhh, oops. (19-1-2002)
+  - Added the "ClsWorkerThread" class. (19-1-2002)
+  - Added the "ClsSyncObject", "ClsCriticalSection" and "ClsEvent" classes.
+    (24-1-2002)
+  - Implemented "ClsCriticalSection" and "ClsEvent" in "ClsWorkerThread".
+    (24-1-2002)
+  - Added the "ClsMutex" and "ClsSemaphore" classes. (25-1-2002)
+  - Added InsertLine() to "ClsBrainChild". (27-1-2002)
+
+ Version 1.7
+ ----------------------------------------------------------------------------
+  - Started new version history method. (19-Oct-2001)
+  - Fixed a massive leak in "ClsGetDC" and "ClsWindowDC". As it turned out
+    they did not release the device context in the object destructor. Ooops.
+    (19-Oct-2001)
+  - Added "ClsBrainchild" which is a wrapper for the brainchild custom editor
+    control. (22-Oct-2001)
+  - Added the CenterWindow() method to "ClsWindow". (22-Oct-2001)
+  - Added the CenterOnParent() method to "ClsCommonDialog". (22-Oct-2001)
+  - Switched to "LoadImage()" instead of "LoadIcon()" in "ClsInfoBar". This
+    yields much better results. (27-Nov-2001)
+  - Pressing the ESC key when a "ClsHotButton" derived class has the focus
+    will now send an IDCANCEL WM_COMMAND message to it's parent. (1-Dec-2001)
+  - Fixed a problem in "ClsColorPopup". (1-Dec-2001)
+  - "ClsColorPicker" will now render the color rectangle with a color
+    pattern when it is disabled. (3-Dec-2001)
+  - Added OnReflectedMeasureItem() and OnReflectedDrawItem() to "ClsWindow".
+    Using these overidables will automagically route WM_MEASUREITEM and
+    WM_DRAWITEM messages to the correct control. (6-Dec-2001)
+  - Added OnReflectedMeasureItem() and OnReflectedDrawItem() to "ClsMenu" and
+    "ClsBitmapMenu(). Using these overidables will automagically route
+    WM_MEASUREITEM and WM_DRAWITEM messages to the menu. (6-Dec-2001)
+  - The class "ClsDSWindowClass" is now also registered in application.cpp.
+    This is a class with CS_DROPSHADOW support on operating systems that
+    support this class. "ClsColorPopup" makes use of this class.
+    (10-Dec-2001)
+  - Added the Filters() method to "ClsFileBrowser". (17-Dec-2001)
+  - Added the "dwFlags" parameter to ModifyStyle() and ModifyExStyle() in
+    "ClsWindow". (28-12-2001)
+  - Added PreSubclassWindow() to "ClsWindow". This is called before the
+    window is subclassed. (28-12-2001)
+  - Icoorporated the "COddButton", by Paolo Messina and Jerzy Kaczorowski,
+    behaviour into "ClsHotButton". This also means that the class is now
+    subclassed from "ClsButton". (28-12-2001)
+  - Added "ClsUxTheme" which is a class that must be used to call the
+    Windows XP theming API. (28-12-2001)
+  - Added theme enabled rendering to "ClsHotButton", "ClsFlatButton",
+    "ClsColorPicker" and "ClsBrowser". (29-12-2001)
+  - Added the COLPN_COLORCHANGED notification to "ClsColorPicker".
+  - Fixed a small problem in "ClsFileBrowser" which did not pass the file
+    name to the file dialog if it was without a path. (29-12-2001)
+  - Added theming to the "ClsColorPopup". (29-12-2001)
+  - Fixed a problem in "ClsHotButton" which caused it not to trigger an
+    event when the button was clicked on while the parent was not active.
+    (29-12-2001)
+  - Added theming to "ClsBalloonHelp". Only yhe close button is themed.
+    (30-12-2001)
+  - Added theming to "ClsSizeDialog". It now renders the themed sizing
+    grip on XP with theming enabled apps. (30-12-2001)
+  - Added fading support to "ClsColorPopup" (4-1-2002)
+  - Implemented WM_PRINT and WM_PRINTCLIENT handling in most custom
+    controls. (4-1-2002)
+  - Changed "ClsBalloonHelp" so that it does not require timers for fading
+    and hottracking anymore. Also instead of using the
+    SetLayeredWindowAttributes() API the AnimateWindow() API is used to
+    perform the fading of the control. (5-1-2002)
+  - Fixed a problem in the WM_ACTIVATEAPP handling of "ClsColorPopup".
+    (5-1-2002)
+  - Added "ClsTracker". A class to track mouse movements. (6-1-2002)
+  - Added the ExtCreatePen() method to "ClsPen". (6-1-2002)
+  - Added "ClsRectTracker". A "ClsTracker" derived class which will drag a
+    rectangle accros the screen following mouse movements. (7-1-2002)
+  - Added slide animation to "ClsColorPopup" when blending is not
+    available (8-1-2002)
+
+ Version 1.6 (16-Sep-2001)
+ ----------------------------------------------------------------------------
+  - Added "ClsMessageBox". This is a class which creates dialogs simular to
+    the MessageBox() API dialogs. Difference is that this class uses the
+    "ClsInfoControl" to display it's body text meaning that text styles and
+    colors are possible.
+  - The checkmark/radiobutton rectangles in "ClsBitmapMenu" menus will now
+    look more simular to the ones used in Visual Studio.
+  - Added "ClsRGBHLS". This class, based on code found in "Q29240" of the
+    Microsoft knowledge base website, converts RGB to HLS, Hue, Lightness and
+    Saturation values and vice-versa.
+  - The checkmark/radiobutton rectangles in "ClsBitmapButton" menus will now
+    get a background color which is based on the COLOR_MENU color with it's
+    lightness increased or decreased depending on it's current lightness.
+  - Added playing the system sounds in "ClsMessageBox" dialogs.
+  - Added the FrameIcon() method to "ClsBitmapMenu". With it you can switch
+    the rendering of a frame around the selecten item it's icon on or off.
+    When the frame is off the selected menu color is used in the icon
+    background.
+  - The MDI client window created by "ClsMDIMainWindow" now has the
+    WS_EX_CLIENTEDGE style set by default.
+  - Fixed a rather anoying problem with accelerators and MDI applications.
+
+ Version 1.5 (6-Aug-2001)
+ ----------------------------------------------------------------------------
+  - Removed the "hWnd" parameter from the "WindowProc()" methods since it was
+    a useless parameter.
+  - Converted Chris Maunder's excellent "CColourPopup" class to work with
+    this class library. Did change the "Colour" references to "Color". Sorry
+    Chris...
+  - The LoadMappedBitmap() method in "ClsBitmap" can now also load and map
+    disk-based bitmaps.
+  - Added "ClsBoyerMoore" for extreme fast string searches.
+  - Fixed a bug in the "ClsString" allocator. Ouch...
+  - Added the CrcReset() methods to "ClsCrcXX". Also added functionality so
+    you can specify the polynomial to compute other CRC tables. The basic
+    or static build in tables are computed with a polynomial of 0x1021
+    (16-bit) and 0xEDB88320 (32-bit).
+  - "ClsBrowser" will now render the ellipsis with COLOR_GRAYTEXT when the
+    control is disabled.
+  - Added dynamic dialog creation to "ClsDialog". Dynamic dialog creation
+    means creating dialogs without a resource based template.
+  - Fixed a bug resulting in wrong values returned when using TotalWidth() or
+    TotalHeight() from "ClsInfoControl".
+
+ Version 1.4 (31-Jul-2001)
+ ----------------------------------------------------------------------------
+  - Fixed the ShowFiles() method of "ClsFileDirTree". It now refreshes the
+    tree and opens the previous selection as it should.
+  - Added the CompactAsPath() method to "ClsInfoBar" which will put an
+    ellipsis at the appropiate place in the caption instead of at the end.
+  - Added the "ClsMRU" class which can be used to keep track of most recently
+    used files in form of a popup menu. It also has the ability to store and
+    restore from and to the registery.
+  - Added "ClsHashTable" which provides basic functionality for creating and
+    maintaining hash tables.
+  - Added the IconRight() method to "ClsInfoBar".
+  - Added support to "ClsWindow" for MDI frame windows.
+  - Added the "ClsMDIMainWindow" and "ClsMDIChildWindow" classes for creating
+    and maintaining MDI user interfaces.
+  - Replaced the SplitRect() method of "ClsSplitter" with the GetSplitRect()
+    and SetSplitRect() methods. SetSplitRect() will adjust the splitter size
+    automagically.
+  - The ShowMembers() method was not implemented in "ClsLayoutEngine". Oops..
+  - Added the Refresh() method to "ClsLayoutEngine". This will force the
+    layout engine to recompute all it's values.
+  - Fixed a bug in "ClsLayoutEngine" which caused objects which where added
+    with the ATTR_UseControlSize tag to misbehave.
+
+ Version 1.3 (07-Jun-2001)
+ ----------------------------------------------------------------------------
+  - Added "ClsWindowDC" which encapsulates the GetWindowDC() API.
+  - Added "ClsBrowser" which is a "ClsEdit" derived class with a small
+    browser button on the right. Clicking on this button will call the
+    OnBrowserClicked() overidable.
+  - Added "ClsFileBrowser" which is a "ClsBrowser" derived class which
+    open the file dialog when the browser button is clicked.
+  - Added "ClsDirBrowser" which is a "ClsBrowser" derived class which
+    open the folder selection dialog when the browser button is clicked.
+  - Did some general source code cleanup.
+  - Fixed some problems in the multi-byte to wide character conversions
+    in "ClsString".
+  - Completely re-vamped "ClsString". It now makes use of referenced
+    buffers which makes the whole assignment and copying of strings much
+    more memory efficient.
+  - Added the FillRect( LPRECT, HBRUSH ) method to "ClsDC".
+  - inlined most of "ClsDC".
+  - inlined most of "ClsWindow".
+  - Fixed a rather dumb bug in the operator=(ClsString) overload of
+    "ClsString". It did a CopyBeforeWrite() instead of a Release() before
+    assigning a reference to the other object. Oh well...
+  - "ClsInfoBar" now renders an ellipsis at the end of the caption when the
+    whole caption would not fit inside the caption area.
+  - Added the TipClippedCaption() method to "ClsInfoBar". When turned on the
+    caption will be shown using a tooltip when it is clipped.
+  - Fixed a rather nasty resource leak in "ClsInfoText".
+  - Added the operator+() overloads to "ClsString".
+  - Added the "all.h" files to each sub-directory.
+  - Moved some stuff from derived classes to "ClsHotButton". Namely
+    SetImageList(), GetImageList(), BackgroundColor(), HotBackgroundColor(),
+    LabelColor() and HotLabelColor() where moved. Also added the
+    Transparent() method was added to prevent the RenderFrame() method to
+    erase the background.
+
+ Version 1.2 (09-May-2001)
+ ----------------------------------------------------------------------------
+  - Changed "ClsMenuItemInfo" not to include the last HBITMAP handle in the
+    size of the MENUITEMINFO structure on Win95 and WinNT <= 4.0. These OSs
+    seem to have a problem with it...
+  - Removed the expensive mode from "ClsFileDirTree". It did not work
+    consistently when disks where swapped.
+  - Added the volume name in the drive display of "ClsFileDirTree".
+  - The drive display from "ClsFileDirTree" now uses system defined display
+    names.
+  - Fixed "ClsMenuItemInfo" so that when running on Windows 95 or NT 4.0 and
+    compiling with WINVER >= 0x0500 the size of the structure is reduced to
+    the size expected by these OSs.
+  - Fixed a bug in "ClsBitmapMenu" which could potentially lead to crashes.
+  - Created a pattern brush in "ClsApp" which can be retrieved with a call
+    to ClsGetApp()->GetMazeBrush(). The pattern is a simple raster pattern
+    like the one used by the splitter control.
+  - Adapted "ClsSplitter" to use the ClsGetApp()->GetMazeBrush() call to
+    create it's hatch brush.
+  - Fixed some small rendering problems in "ClsBitmapMenu".
+
+ Version 1.1 (02-May-2001)
+ ----------------------------------------------------------------------------
+
+  - Added the IsDialog() method to the "ClsWindowClass".
+  - Fixed the OnReflectedNotify() and OnReflectedCommand() methods in
+    "ClsWindowClass" so that they set the result via
+    SetWindowLong(DWL_MSGRESULT) when the class is a dialog.
+  - Fixed a few problems with removable media like floppy and CD-rom in the
+    "ClsFileDirTree" class.
+  - Added the OnDriveEmpty() override to "ClsFileDirTree()". This is called
+    when the user tries to open a drive or sub-directory on a device from
+    which the media was removed.
+  - Fixed a problem with the "ClsTreeView" class. It did not set the default
+    arrow mouse pointer uppon receiving a WM_SETCURSOR message. At least it
+    did not on Windows ME.
+  - Added the ClsGetDC( HRGN, DWORD ) constructor to "ClsGetDC".
+  - Added the LoadingText(), LoadingTextColor() and OnRenderLoadingItem()
+    methods to "ClsFileDirTree". With these methods a special item is shown
+    during the loading of a directory.
+
+ Version 1.0 (01-Mar-2001) (Started revision history)
+ ----------------------------------------------------------------------------
+
+  - Added the SetHotFrame() and RenderFrame() methods to the "ClsHotButton"
+    class.
+  - Added code to the "ClsFlatButton" and "ClsColorPicker" classes to deal
+    with the hot-frame rendering.
+  - Added the CreatePointFont() method to the "ClsFont" class.
+  - Fixed the "ClsGetDC" class so that it will accept a NULL pointer in it's
+    constructor. Passing NULL will get the DC of the entire screen.
+  - The "ClsDialog" class will now set the dialog font to all of it's child
+    windows during WM_INITDIALOG processing.
+  - Fixed a bug in the mnemonic key handling for controls on dialogs.
+  - The SetWindowText() method from "ClsWindow" can now also be called with
+    a resource identifier as parameter.
+  - Removed the LoadBitmap() call's from the "ClsBitmapMeu", "ClsFlatButton"
+    and "ClsHyperLink" classes and replaced them with a SetImageList() and
+    GetImageList() method.
+  - Extended the keyboard handling of the "ClsHotButton" class. It now
+    handles the accelerator, SPACE, ESC, ENTER, TAB, SHIFT TAB, UP, DOWN,
+    LEFT and RIGHT keys itself.
+  - Fixed some rendering problems with the colorpicker control.
+  - The "ClsInfoBar" class now repaints after settings the window text.
+  - Fixed some rendering problems when switching pages with the "ClsLTab"
+    control.

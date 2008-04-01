@@ -1,0 +1,357 @@
+// Created by Microsoft (R) C/C++ Compiler Version 13.10.6030 (fbf07cd6).
+//
+// p:\repository\jan_van_den_baard\classlib\output\x86\debug\mbcs\obj\msjro.tlh
+//
+// C++ source equivalent of Win32 type library AC3B8B4C-B6CA-11D1-9F31-00C04FC29D52
+// compiler-generated file created 03/27/08 at 09:31:12 - DO NOT EDIT!
+
+//
+// Cross-referenced type libraries:
+//
+//
+
+#pragma once
+#pragma pack(push, 8)
+
+#include <comdef.h>
+
+//
+// Forward references and typedefs
+//
+
+struct __declspec(uuid("ac3b8b4c-b6ca-11d1-9f31-00c04fc29d52"))
+/* LIBID */ __JRO;
+enum ReplicaTypeEnum;
+enum VisibilityEnum;
+enum UpdatabilityEnum;
+enum SyncTypeEnum;
+enum SyncModeEnum;
+enum FilterTypeEnum;
+struct __declspec(uuid("d2d139e0-b6ca-11d1-9f31-00c04fc29d52"))
+/* dual interface */ IReplica;
+struct __declspec(uuid("d2d139e2-b6ca-11d1-9f31-00c04fc29d52"))
+/* dual interface */ Filters;
+struct __declspec(uuid("d2d139e1-b6ca-11d1-9f31-00c04fc29d52"))
+/* dual interface */ Filter;
+struct __declspec(uuid("9f63d980-ff25-11d1-bb6f-00c04fae22da"))
+/* dual interface */ IJetEngine;
+struct /* coclass */ Replica;
+struct /* coclass */ JetEngine;
+
+//
+// Smart pointer typedef declarations
+//
+
+_COM_SMARTPTR_TYPEDEF(Filter, __uuidof(Filter));
+_COM_SMARTPTR_TYPEDEF(Filters, __uuidof(Filters));
+_COM_SMARTPTR_TYPEDEF(IReplica, __uuidof(IReplica));
+_COM_SMARTPTR_TYPEDEF(IJetEngine, __uuidof(IJetEngine));
+
+//
+// Type library items
+//
+
+enum __declspec(uuid("d2d139df-b6ca-11d1-9f31-00c04fc29d52"))
+ReplicaTypeEnum
+{
+    jrRepTypeNotReplicable = 0,
+    jrRepTypeDesignMaster = 1,
+    jrRepTypeFull = 2,
+    jrRepTypePartial = 3
+};
+
+enum __declspec(uuid("6877d21a-b6ce-11d1-9f31-00c04fc29d52"))
+VisibilityEnum
+{
+    jrRepVisibilityGlobal = 1,
+    jrRepVisibilityLocal = 2,
+    jrRepVisibilityAnon = 4
+};
+
+enum __declspec(uuid("b42fbff6-b6cf-11d1-9f31-00c04fc29d52"))
+UpdatabilityEnum
+{
+    jrRepUpdFull = 0,
+    jrRepUpdReadOnly = 2
+};
+
+enum __declspec(uuid("60c05416-b6d0-11d1-9f31-00c04fc29d52"))
+SyncTypeEnum
+{
+    jrSyncTypeExport = 1,
+    jrSyncTypeImport = 2,
+    jrSyncTypeImpExp = 3
+};
+
+enum __declspec(uuid("5eba3970-061e-11d2-bb77-00c04fae22da"))
+SyncModeEnum
+{
+    jrSyncModeIndirect = 1,
+    jrSyncModeDirect = 2,
+    jrSyncModeInternet = 3
+};
+
+enum __declspec(uuid("72769f94-bf78-11d1-ac4d-00c04fc29f8f"))
+FilterTypeEnum
+{
+    jrFilterTypeTable = 1,
+    jrFilterTypeRelationship = 2
+};
+
+struct __declspec(uuid("d2d139e1-b6ca-11d1-9f31-00c04fc29d52"))
+Filter : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetTableName))
+    _bstr_t TableName;
+    __declspec(property(get=GetFilterType))
+    enum FilterTypeEnum FilterType;
+    __declspec(property(get=GetFilterCriteria))
+    _bstr_t FilterCriteria;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    _bstr_t GetTableName ( );
+    enum FilterTypeEnum GetFilterType ( );
+    _bstr_t GetFilterCriteria ( );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall get_TableName (
+        /*[out,retval]*/ BSTR * pbstr ) = 0;
+      virtual HRESULT __stdcall get_FilterType (
+        /*[out,retval]*/ enum FilterTypeEnum * ptype ) = 0;
+      virtual HRESULT __stdcall get_FilterCriteria (
+        /*[out,retval]*/ BSTR * pbstr ) = 0;
+};
+
+struct __declspec(uuid("d2d139e2-b6ca-11d1-9f31-00c04fc29d52"))
+Filters : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetItem))
+    FilterPtr Item[];
+    __declspec(property(get=GetCount))
+    long Count;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    HRESULT Refresh ( );
+    IUnknownPtr _NewEnum ( );
+    long GetCount ( );
+    FilterPtr GetItem (
+        const _variant_t & Index );
+    HRESULT Append (
+        _bstr_t TableName,
+        enum FilterTypeEnum FilterType,
+        _bstr_t FilterCriteria );
+    HRESULT Delete (
+        const _variant_t & Index );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall raw_Refresh ( ) = 0;
+      virtual HRESULT __stdcall raw__NewEnum (
+        /*[out,retval]*/ IUnknown * * ppvObject ) = 0;
+      virtual HRESULT __stdcall get_Count (
+        /*[out,retval]*/ long * c ) = 0;
+      virtual HRESULT __stdcall get_Item (
+        /*[in]*/ VARIANT Index,
+        /*[out,retval]*/ struct Filter * * ppvObject ) = 0;
+      virtual HRESULT __stdcall raw_Append (
+        /*[in]*/ BSTR TableName,
+        /*[in]*/ enum FilterTypeEnum FilterType,
+        /*[in]*/ BSTR FilterCriteria ) = 0;
+      virtual HRESULT __stdcall raw_Delete (
+        /*[in]*/ VARIANT Index ) = 0;
+};
+
+struct __declspec(uuid("d2d139e0-b6ca-11d1-9f31-00c04fc29d52"))
+IReplica : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetActiveConnection,put=PutRefActiveConnection))
+    IDispatchPtr ActiveConnection;
+    __declspec(property(get=GetConflictFunction,put=PutConflictFunction))
+    _bstr_t ConflictFunction;
+    __declspec(property(get=GetConflictTables))
+    ADODB::_RecordsetPtr ConflictTables;
+    __declspec(property(get=GetDesignMasterId,put=PutDesignMasterId))
+    _variant_t DesignMasterId;
+    __declspec(property(get=GetPriority))
+    long Priority;
+    __declspec(property(get=GetReplicaId))
+    _variant_t ReplicaId;
+    __declspec(property(get=GetReplicaType))
+    enum ReplicaTypeEnum ReplicaType;
+    __declspec(property(get=GetRetentionPeriod,put=PutRetentionPeriod))
+    long RetentionPeriod;
+    __declspec(property(get=GetVisibility))
+    enum VisibilityEnum Visibility;
+    __declspec(property(get=GetFilters))
+    FiltersPtr Filters;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    void PutRefActiveConnection (
+        IDispatch * ppconn );
+    void PutActiveConnection (
+        const _variant_t & ppconn );
+    IDispatchPtr GetActiveConnection ( );
+    _bstr_t GetConflictFunction ( );
+    void PutConflictFunction (
+        _bstr_t pbstr );
+    ADODB::_RecordsetPtr GetConflictTables ( );
+    _variant_t GetDesignMasterId ( );
+    void PutDesignMasterId (
+        const _variant_t & pvar );
+    long GetPriority ( );
+    _variant_t GetReplicaId ( );
+    enum ReplicaTypeEnum GetReplicaType ( );
+    long GetRetentionPeriod ( );
+    void PutRetentionPeriod (
+        long pl );
+    enum VisibilityEnum GetVisibility ( );
+    HRESULT CreateReplica (
+        _bstr_t replicaName,
+        _bstr_t description,
+        enum ReplicaTypeEnum ReplicaType,
+        enum VisibilityEnum Visibility,
+        long Priority,
+        enum UpdatabilityEnum updatability );
+    VARIANT_BOOL GetObjectReplicability (
+        _bstr_t objectName,
+        _bstr_t objectType );
+    HRESULT SetObjectReplicability (
+        _bstr_t objectName,
+        _bstr_t objectType,
+        VARIANT_BOOL replicability );
+    HRESULT MakeReplicable (
+        _bstr_t connectionString,
+        VARIANT_BOOL columnTracking );
+    HRESULT PopulatePartial (
+        _bstr_t FullReplica );
+    HRESULT Synchronize (
+        _bstr_t target,
+        enum SyncTypeEnum syncType,
+        enum SyncModeEnum syncMode );
+    FiltersPtr GetFilters ( );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall putref_ActiveConnection (
+        /*[in]*/ IDispatch * ppconn ) = 0;
+      virtual HRESULT __stdcall put_ActiveConnection (
+        /*[in]*/ VARIANT ppconn ) = 0;
+      virtual HRESULT __stdcall get_ActiveConnection (
+        /*[out,retval]*/ IDispatch * * ppconn ) = 0;
+      virtual HRESULT __stdcall get_ConflictFunction (
+        /*[out,retval]*/ BSTR * pbstr ) = 0;
+      virtual HRESULT __stdcall put_ConflictFunction (
+        /*[in]*/ BSTR pbstr ) = 0;
+      virtual HRESULT __stdcall get_ConflictTables (
+        /*[out,retval]*/ struct ADODB::_Recordset * * pprset ) = 0;
+      virtual HRESULT __stdcall get_DesignMasterId (
+        /*[out,retval]*/ VARIANT * pvar ) = 0;
+      virtual HRESULT __stdcall put_DesignMasterId (
+        /*[in]*/ VARIANT pvar ) = 0;
+      virtual HRESULT __stdcall get_Priority (
+        /*[out,retval]*/ long * pl ) = 0;
+      virtual HRESULT __stdcall get_ReplicaId (
+        /*[out,retval]*/ VARIANT * pvar ) = 0;
+      virtual HRESULT __stdcall get_ReplicaType (
+        /*[out,retval]*/ enum ReplicaTypeEnum * pl ) = 0;
+      virtual HRESULT __stdcall get_RetentionPeriod (
+        /*[out,retval]*/ long * pl ) = 0;
+      virtual HRESULT __stdcall put_RetentionPeriod (
+        /*[in]*/ long pl ) = 0;
+      virtual HRESULT __stdcall get_Visibility (
+        /*[out,retval]*/ enum VisibilityEnum * pl ) = 0;
+      virtual HRESULT __stdcall raw_CreateReplica (
+        /*[in]*/ BSTR replicaName,
+        /*[in]*/ BSTR description,
+        /*[in]*/ enum ReplicaTypeEnum ReplicaType,
+        /*[in]*/ enum VisibilityEnum Visibility,
+        /*[in]*/ long Priority,
+        /*[in]*/ enum UpdatabilityEnum updatability ) = 0;
+      virtual HRESULT __stdcall raw_GetObjectReplicability (
+        /*[in]*/ BSTR objectName,
+        /*[in]*/ BSTR objectType,
+        /*[out,retval]*/ VARIANT_BOOL * replicability ) = 0;
+      virtual HRESULT __stdcall raw_SetObjectReplicability (
+        /*[in]*/ BSTR objectName,
+        /*[in]*/ BSTR objectType,
+        /*[in]*/ VARIANT_BOOL replicability ) = 0;
+      virtual HRESULT __stdcall raw_MakeReplicable (
+        /*[in]*/ BSTR connectionString,
+        /*[in]*/ VARIANT_BOOL columnTracking ) = 0;
+      virtual HRESULT __stdcall raw_PopulatePartial (
+        /*[in]*/ BSTR FullReplica ) = 0;
+      virtual HRESULT __stdcall raw_Synchronize (
+        /*[in]*/ BSTR target,
+        /*[in]*/ enum SyncTypeEnum syncType,
+        /*[in]*/ enum SyncModeEnum syncMode ) = 0;
+      virtual HRESULT __stdcall get_Filters (
+        /*[out,retval]*/ struct Filters * * ppFilters ) = 0;
+};
+
+struct __declspec(uuid("9f63d980-ff25-11d1-bb6f-00c04fae22da"))
+IJetEngine : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    HRESULT CompactDatabase (
+        _bstr_t SourceConnection,
+        _bstr_t Destconnection );
+    HRESULT RefreshCache (
+        struct ADODB::_Connection * Connection );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall raw_CompactDatabase (
+        /*[in]*/ BSTR SourceConnection,
+        /*[in]*/ BSTR Destconnection ) = 0;
+      virtual HRESULT __stdcall raw_RefreshCache (
+        /*[in]*/ struct ADODB::_Connection * Connection ) = 0;
+};
+
+struct __declspec(uuid("d2d139e3-b6ca-11d1-9f31-00c04fc29d52"))
+Replica;
+    // [ default ] interface IReplica
+
+struct __declspec(uuid("de88c160-ff2c-11d1-bb6f-00c04fae22da"))
+JetEngine;
+    // [ default ] interface IJetEngine
+
+//
+// Wrapper method implementations
+//
+
+#include "msjro.tli"
+
+#pragma pack(pop)
