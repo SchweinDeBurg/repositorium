@@ -260,7 +260,7 @@ BEGIN
             VALUE "FileDescription", "Brainchild, A 32 bit, syntax coloring, multi-level undo/redo editor control."
             VALUE "FileVersion", "2.4.4225"
             VALUE "InternalName", "Brainchild"
-            VALUE "LegalCopyright", "Copyright © 1993-2005 by Jan van den Baard."
+            VALUE "LegalCopyright", "Copyright © 1993-2005 by Jan van den Baard. Enchancements © 2008 by Elijah Zarezky."
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation."
             VALUE "OriginalFilename", "Brainchild.dll"
             VALUE "ProductName", "Brainchild, A 32 bit editor control."
