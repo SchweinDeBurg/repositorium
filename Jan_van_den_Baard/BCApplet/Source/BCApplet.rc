@@ -1,0 +1,753 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "Resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "WinResrc.h"
+
+#if !defined(IDC_STATIC)
+#define IDC_STATIC -1
+#endif   // IDC_STATIC
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "Resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""WinResrc.h""\r\n"
+    "\r\n"
+    "#if !defined(IDC_STATIC)\r\n"
+    "#define IDC_STATIC -1\r\n"
+    "#endif   // IDC_STATIC\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ABOUT               ICON                    "BinRes\\about.ico"
+IDI_MAIN                ICON                    "BinRes\\main.ico"
+IDI_WWW                 ICON                    "BinRes\\www.ico"
+IDI_EMAIL               ICON                    "BinRes\\email.ico"
+IDI_PRINTER             ICON                    "BinRes\\printer.ico"
+IDI_INDENTION           ICON                    "BinRes\\indentio.ico"
+IDI_GENERAL             ICON                    "BinRes\\general.ico"
+IDI_DATETIME            ICON                    "BinRes\\datetime.ico"
+IDI_FILES               ICON                    "BinRes\\files.ico"
+IDI_SYNTAX              ICON                    "BinRes\\syntax.ico"
+IDI_KEYBOARD            ICON                    "BinRes\\keyboard.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_TOOLS               BITMAP                  "BinRes\\toolbar.bmp"
+IDB_CLIST               BITMAP                  "BinRes\\clist.bmp"
+IDB_TREE                BITMAP                  "BinRes\\tree.bmp"
+IDB_MAIN                BITMAP                  "BinRes\\main.bmp"
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,4,4227,0
+ PRODUCTVERSION 2,4,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "none\0"
+            VALUE "CompanyName", "Jan van den Baard\0"
+            VALUE "FileDescription", "BCApplet - The Brainchild configuration tool.\0"
+            VALUE "FileVersion", "2.4.4227\0"
+            VALUE "InternalName", "BCApplet\0"
+            VALUE "LegalCopyright", "Copyright © 1999-2005 by Jan van den Baard\0"
+            VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation\0"
+            VALUE "OriginalFilename", "BCApplet.cpl\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "Brainchild, A 32 bit editor control.\0"
+            VALUE "ProductVersion", "2.4.0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MAIN DIALOGEX 0, 0, 387, 231
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_CAPTION | WS_SYSMENU
+CAPTION "Brainchild configuration editor."
+FONT 8, "Tahoma", 0, 0, 0x1
+BEGIN
+    LTEXT           " Text Class:",IDC_STATIC,4,4,105,16,SS_CENTERIMAGE,
+                    WS_EX_STATICEDGE
+    CONTROL         "",IDC_TOOLS,"ToolbarWindow32",0x944,77,5,31,14
+    CONTROL         "",IDC_PAGEBAR,"ClsWindowClass",0x0,113,4,270,15
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,113,209,271,1
+    DEFPUSHBUTTON   "&OK",IDC_OK,225,214,50,14
+    PUSHBUTTON      "&Cancel",IDC_CANCEL,279,214,50,14
+    PUSHBUTTON      "&Apply",IDC_APPLY,333,214,50,14,WS_DISABLED
+    CONTROL         "Tree1",IDC_TREE,"SysTreeView32",TVS_HASBUTTONS |
+                    TVS_DISABLEDRAGDROP | TVS_SHOWSELALWAYS | WS_TABSTOP |
+                    0x400,4,20,105,190,WS_EX_CLIENTEDGE
+END
+
+IDD_ABOUT DIALOGEX 113, 23, 271, 184
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma", 0, 0, 0x0
+BEGIN
+    LTEXT           "",IDC_COPYRIGHT,0,2,270,25
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,31,270,1
+    CTEXT           "",IDC_DISCLAIMER,0,42,270,87
+    ICON            IDI_WWW,IDC_STATIC,74,130,20,20,NOT WS_VISIBLE
+    ICON            IDI_EMAIL,IDC_STATIC,101,142,20,20
+    CONTROL         "",IDC_HTTP,"ClsWindowClass",NOT WS_VISIBLE |
+                    WS_DISABLED | WS_TABSTOP,87,129,92,11
+    CONTROL         "",IDC_EMAIL,"ClsWindowClass",WS_TABSTOP,114,142,60,11
+    PUSHBUTTON      "&More...",IDC_MORE,220,170,50,14
+END
+
+IDD_PRINTING DIALOGEX 113, 23, 271, 184
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma", 0, 0, 0x0
+BEGIN
+    CTEXT           "\033+bHeader",IDC_ST_HEAD,0,0,33,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,32,4,239,1
+    CONTROL         "Print &header.",IDC_PRINT_HEADER,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,12,55,8
+    EDITTEXT        IDC_HLEFT,7,24,84,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_HMID,96,24,84,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_HRIGHT,184,24,85,13,ES_AUTOHSCROLL
+    LTEXT           "\033+bFooter",IDC_ST_FOOT,0,41,32,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,29,45,242,1
+    CONTROL         "Print &footer.",IDC_PRINT_FOOTER,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,53,48,8
+    EDITTEXT        IDC_FLEFT,7,65,84,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_FMID,96,65,84,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_FRIGHT,184,65,85,13,ES_AUTOHSCROLL
+    LTEXT           "\033+bOptions ",IDC_ST_OPT,0,82,35,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,33,86,238,1
+    CONTROL         "Use s&yntax coloring when printing.",IDC_COLORS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,8,94,124,8
+    CONTROL         "Print line n&umbers.",IDC_LINENUMS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,8,105,74,8
+    CONTROL         "Use screen font for &printing.",IDC_SCREEN,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,8,117,104,8
+    CONTROL         "Use selected fon&t for printing:",IDC_SELECT,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,8,129,109,8
+    PUSHBUTTON      "S&elect...",IDC_FONT,120,126,44,15,WS_DISABLED
+END
+
+IDD_GENERAL DIALOGEX 113, 23, 271, 184
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma", 0, 0, 0x0
+BEGIN
+    LTEXT           "\033+bGeneral settings",IDC_ST_GEN,0,0,76,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,65,4,206,1
+    LTEXT           "Text Class &Name:",IDC_STATIC,5,14,58,8
+    EDITTEXT        IDC_CLASS,66,12,204,13,ES_AUTOHSCROLL
+    LTEXT           "File &Extentions:",IDC_STATIC,13,31,50,8
+    EDITTEXT        IDC_EXT,66,29,204,13,ES_AUTOHSCROLL
+    LTEXT           "&Delimiters:",IDC_STATIC,28,48,35,8
+    EDITTEXT        IDC_DELIM,66,46,204,13,ES_AUTOHSCROLL
+    LTEXT           "Caret &Style:",IDC_STATIC,24,65,39,8
+    COMBOBOX        IDC_CARET,66,63,51,54,CBS_DROPDOWNLIST | WS_VSCROLL |
+                    WS_TABSTOP
+    LTEXT           "\033+bOptions",IDC_ST_OPT,0,79,48,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,33,83,238,1
+    CONTROL         "",IDC_OPTIONS,"SysTreeView32",TVS_SHOWSELALWAYS |
+                    WS_TABSTOP,7,88,263,52,WS_EX_CLIENTEDGE
+    LTEXT           "\033+bGlobal settings (all text classes)",IDC_ST_GLOB,0,
+                    143,122,9
+    CONTROL         "",IDC_SEP,"Static",SS_ETCHEDHORZ,124,147,147,1
+    CONTROL         "S&yntax coloring.",IDC_SYNTAX,"Button",BS_AUTOCHECKBOX |
+                    WS_TABSTOP,8,156,64,9
+    LTEXT           "Undo/Redo &hops:",IDC_LABEL1,165,156,58,8
+    EDITTEXT        IDC_HOPS,225,154,45,13,ES_CENTER | ES_AUTOHSCROLL |
+                    ES_NUMBER
+    CONTROL         "Spin1",IDC_UDHOPS,"msctls_updown32",UDS_SETBUDDYINT |
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS |
+                    UDS_NOTHOUSANDS,233,138,11,14
+    LTEXT           "Search History:",IDC_LABEL2,172,173,51,8
+    EDITTEXT        IDC_HIST,225,171,45,13,ES_CENTER | ES_AUTOHSCROLL |
+                    ES_NUMBER
+    CONTROL         "",IDC_UDHIST,"msctls_updown32",UDS_SETBUDDYINT |
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS |
+                    UDS_NOTHOUSANDS,250,137,11,14
+    CONTROL         "Column Marker:",IDC_COLMARKER,"Button",BS_AUTOCHECKBOX |
+                    BS_LEFTTEXT | WS_TABSTOP,120,65,65,9
+    EDITTEXT        IDC_COLMARKER_OFFSET,189,63,45,13,ES_CENTER |
+                    ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+    CONTROL         "",IDC_UD_OFFSET,"msctls_updown32",UDS_SETBUDDYINT |
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS |
+                    UDS_NOTHOUSANDS,236,63,11,14
+END
+
+IDD_DATETIME DIALOGEX 113, 23, 271, 184
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma", 0, 0, 0x0
+BEGIN
+    LTEXT           "\033+bDate and Time format strings",IDC_ST_DTF,0,0,115,
+                    9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,113,4,158,1
+    LTEXT           "&Date format:",IDC_STATIC,5,14,42,8
+    EDITTEXT        IDC_DATE,50,12,220,13,ES_AUTOHSCROLL
+    LTEXT           "&Time format:",IDC_STATIC,4,31,44,8
+    EDITTEXT        IDC_TIME,50,29,220,13,ES_AUTOHSCROLL
+    LTEXT           "\033+bSample",IDC_ST_DTS,0,47,42,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,34,51,237,1
+    LTEXT           "Sample date:",IDC_STATIC,8,59,45,8
+    CTEXT           "",IDC_DATE_SAMP,57,59,213,8
+    LTEXT           "Sample time:",IDC_STATIC,9,74,44,8
+    CTEXT           "",IDC_TIME_SAMP,57,74,213,8
+END
+
+IDD_FILES DIALOGEX 113, 23, 271, 184
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma", 0, 0, 0x0
+BEGIN
+    LTEXT           "\033+bDefault file mode",IDC_ST_DEF,0,0,64,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,69,4,202,1
+    LTEXT           "\033+bBackups",IDC_ST_BACK,0,30,39,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,38,34,233,1
+    COMBOBOX        IDC_DEFAULTMODE,7,13,262,52,CBS_DROPDOWNLIST | CBS_SORT |
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "&Backup files before saving.",IDC_BACKUP,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,42,97,9
+    LTEXT           "\033+bBackup ""FILE.EXT"" as:",IDC_ST_AS,7,55,87,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,94,59,176,1
+    CONTROL         """FIL&E.BAK""",IDC_BAK,"Button",BS_AUTORADIOBUTTON |
+                    WS_TABSTOP,7,68,49,9
+    CONTROL         """FILE.BAK.E&XT""",IDC_BAKEXT,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,7,81,65,9
+    CONTROL         """FILE.EXT.BA&K""",IDC_EXTBAK,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,7,94,65,9
+    CONTROL         """FILE.EX&T"" in folder:",IDC_EXTIN,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,7,107,77,9
+    EDITTEXT        IDC_FOLDER,18,120,251,13,ES_AUTOHSCROLL
+END
+
+IDD_SYNTAX DIALOGEX 113, 23, 271, 184
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma", 0, 0, 0x1
+BEGIN
+    CONTROL         "&Enable syntax coloring.",IDC_SYNTAX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,0,0,86,9
+    LTEXT           " &Blocks:",IDC_STATIC,0,11,133,16,SS_CENTERIMAGE,
+                    WS_EX_STATICEDGE
+    CONTROL         "",IDC_TOOLS,"ToolbarWindow32",0x944,70,12,62,14
+    LISTBOX         IDC_BLOCKS,0,27,133,140,LBS_OWNERDRAWFIXED |
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           " Common colo&rs:",IDC_STATIC,137,11,132,16,
+                    SS_CENTERIMAGE,WS_EX_STATICEDGE
+    CONTROL         "",IDC_COLOR,"ToolbarWindow32",0x944,252,12,16,14
+    LISTBOX         IDC_COMMON,137,27,132,140,LBS_OWNERDRAWFIXED |
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Esca&pe character:",IDC_STATIC,45,172,59,8
+    EDITTEXT        IDC_ESCAPE,109,170,23,13,ES_CENTER | ES_AUTOHSCROLL
+    PUSHBUTTON      "&Font...",IDC_FONT,137,170,64,14
+    PUSHBUTTON      "Key&words...",IDC_KEYWORDS,205,170,64,14
+END
+
+IDD_BLOCK DIALOGEX 0, 0, 207, 156
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION |
+    WS_SYSMENU
+CAPTION "Block Editor..."
+FONT 8, "Tahoma", 0, 0, 0x0
+BEGIN
+    LTEXT           "&Block name:",IDC_STATIC,34,4,41,8
+    EDITTEXT        IDC_NAME,77,3,125,12,ES_AUTOHSCROLL
+    LTEXT           "This block &starts with:",IDC_STATIC,3,20,72,8
+    EDITTEXT        IDC_START,77,19,125,12,ES_AUTOHSCROLL
+    CONTROL         "at the be&ginning of the line.",IDC_SOL,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,77,36,100,8
+    LTEXT           "and ends:",IDC_STATIC,42,48,33,8
+    CONTROL         "at the &end of the line.",IDC_EOL,"Button",
+                    BS_AUTORADIOBUTTON,77,48,82,8
+    CONTROL         "at the first &white space or delimiter.",IDC_WHITE,
+                    "Button",BS_AUTORADIOBUTTON,77,60,126,8
+    CONTROL         "with the following ch&aracter(s):",IDC_CHARS,"Button",
+                    BS_AUTORADIOBUTTON,77,72,112,8
+    EDITTEXT        IDC_END,87,85,113,12,ES_AUTOHSCROLL
+    LTEXT           "Textcolo&r:",IDC_STATIC,40,104,33,8
+    PUSHBUTTON      "",IDC_COLOR,77,101,60,15
+    LTEXT           "Backgro&undcolor:",IDC_STATIC,17,122,56,8
+    PUSHBUTTON      "",IDC_BGCOLOR,77,119,60,15
+    DEFPUSHBUTTON   "&OK",IDC_OK,77,138,60,14
+    PUSHBUTTON      "&Cancel",IDC_CANCEL,143,138,60,14
+END
+
+IDD_CLASSNAME DIALOGEX 0, 0, 173, 87
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION |
+    WS_SYSMENU
+CAPTION "Text Class Filename..."
+FONT 8, "Tahoma", 0, 0, 0x0
+BEGIN
+    CTEXT           "Please type in the name under which\nthe settings of this new text class will be saved.\n\nJust type in the name, the file will be saved in your settings path.",
+                    IDC_STATIC,4,4,165,43,SS_SUNKEN
+    EDITTEXT        IDC_NAME,4,51,165,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "&OK",IDC_OK,65,69,50,14,WS_DISABLED
+    PUSHBUTTON      "&Cancel",IDC_CANCEL,119,69,50,14
+END
+
+IDD_KEYWORDS DIALOGEX 0, 0, 272, 145
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION |
+    WS_SYSMENU
+CAPTION "Edit Keywords..."
+FONT 8, "Tahoma", 0, 0, 0x1
+BEGIN
+    CONTROL         "&Keywords are case sensitive.",IDC_CASE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,4,4,106,8
+    LTEXT           " Keyword &groups:",IDC_STATIC,4,16,130,16,
+                    SS_CENTERIMAGE,WS_EX_STATICEDGE
+    LISTBOX         IDC_LIST,4,32,130,91,LBS_OWNERDRAWFIXED |
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           " Ke&ywords:",IDC_STATIC,138,16,130,16,SS_CENTERIMAGE,
+                    WS_EX_STATICEDGE
+    LISTBOX         IDC_WORDS,138,32,130,91,LBS_NOINTEGRALHEIGHT |
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_TOOLS,"ToolbarWindow32",0x944,71,17,61,14
+    CONTROL         "",IDC_KEYS,"ToolbarWindow32",0x944,236,17,31,14
+    DEFPUSHBUTTON   "&OK",IDC_OK,138,127,62,14
+    PUSHBUTTON      "&Cancel",IDC_CANCEL,206,127,62,14
+END
+
+IDD_KWEDIT DIALOGEX 0, 0, 284, 206
+STYLE DS_SETFONT | DS_CENTER | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP |
+    WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Edit keywords..."
+FONT 8, "Tahoma", 0, 0, 0x1
+BEGIN
+    CTEXT           "Type or edit the keywords you see below\nand select OK to confirm the changes or cancel to abort.",
+                    IDC_TITLE,4,4,187,19,SS_SUNKEN
+    CONTROL         "",IDC_EDIT,"BrainchildEditControl32",WS_TABSTOP,4,23,
+                    187,22,WS_EX_CLIENTEDGE
+    DEFPUSHBUTTON   "&OK",IDC_OK,87,49,50,14
+    PUSHBUTTON      "&Cancel",IDC_CANCEL,141,49,50,14
+END
+
+IDD_APPLY DIALOGEX 0, 0, 59, 9
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE
+FONT 24, "Tahoma", 400, 0, 0x0
+BEGIN
+    CTEXT           "Applying Settings...",IDC_STATIC,0,0,59,9
+END
+
+IDD_INDENT DIALOGEX 113, 23, 271, 184
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma", 0, 0, 0x1
+BEGIN
+    CONTROL         "A&utomatic indention.",IDC_AUTO,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,0,0,86,9
+    CONTROL         "&Smart indention.",IDC_SMART,"Button",BS_AUTOCHECKBOX |
+                    WS_TABSTOP,0,12,66,9
+    LTEXT           "&Tab size:",IDC_STATIC,194,2,30,8
+    EDITTEXT        IDC_TABSIZE,228,0,42,13,ES_CENTER | ES_AUTOHSCROLL |
+                    ES_NUMBER
+    CONTROL         "Spin1",IDC_TABSIZE_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY |
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,260,10,11,14
+    LTEXT           " Smart &indention strings:",IDC_STATIC,0,25,270,16,
+                    SS_CENTERIMAGE,WS_EX_STATICEDGE
+    CONTROL         "",IDC_TOOLS,"ToolbarWindow32",0x944,207,26,62,14
+    LISTBOX         IDC_LIST,0,41,270,111,LBS_OWNERDRAWFIXED |
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT,0,156,270,13,ES_AUTOHSCROLL
+    CONTROL         "Indent &left.",IDC_LEFT,"Button",BS_AUTORADIOBUTTON,0,
+                    173,46,9
+    CONTROL         "Indent &right.",IDC_RIGHT,"Button",BS_AUTORADIOBUTTON,
+                    49,173,52,9
+END
+
+IDD_KEYBOARD DIALOGEX 113, 23, 271, 184
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma", 0, 0, 0x1
+BEGIN
+    LTEXT           " &Mapped keys:",IDC_STATIC,0,1,133,16,SS_CENTERIMAGE,
+                    WS_EX_STATICEDGE
+    CONTROL         "",IDC_TOOLS,"ToolbarWindow32",0x944,100,2,32,14
+    LISTBOX         IDC_KEYS,0,17,133,163,LBS_SORT | LBS_NOINTEGRALHEIGHT |
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           " Mapped &to:",IDC_STATIC,137,1,133,16,SS_CENTERIMAGE,
+                    WS_EX_STATICEDGE
+    CONTROL         "",IDC_COMTOOLS,"ToolbarWindow32",0x944,207,2,62,14
+    LISTBOX         IDC_COMMANDS,137,17,133,163,LBS_OWNERDRAWFIXED |
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_KEYRECORD DIALOG  0, 0, 197, 70
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION |
+    WS_SYSMENU
+CAPTION "Key Recorder..."
+FONT 8, "Tahoma"
+BEGIN
+    CTEXT           "Type the key sequence you wish to map\nin the edit control below and click on\n""OK"" to confirm your selection.",
+                    IDC_STATIC,4,4,189,27,SS_SUNKEN
+    EDITTEXT        IDC_RECORD_EDIT,4,35,189,12,ES_CENTER | ES_AUTOHSCROLL
+    PUSHBUTTON      "OK",IDC_RECORD_OK,89,51,50,14
+    PUSHBUTTON      "Cancel",IDC_RECORD_CANCEL,143,51,50,14
+END
+
+IDD_HARDCODED DIALOG  0, 0, 186, 134
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION |
+    WS_SYSMENU
+CAPTION "Select Hardcoded Command..."
+FONT 8, "Tahoma"
+BEGIN
+    LISTBOX         IDC_LIST,4,4,178,107,LBS_SORT | LBS_NOINTEGRALHEIGHT |
+                    WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "&OK",IDC_OK,77,115,50,14
+    PUSHBUTTON      "&Cancel",IDC_CANCEL,132,115,50,14
+END
+
+IDD_INSERTEDIT DIALOGEX 0, 0, 238, 142
+STYLE DS_SETFONT | DS_CENTER | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP |
+    WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Insert String..."
+FONT 8, "Tahoma", 0, 0, 0x1
+BEGIN
+    LTEXT           "&Text to insert:",IDC_INSERT,4,4,46,8
+    CONTROL         "",IDC_EDIT,"BrainchildEditControl32",WS_TABSTOP,4,16,
+                    103,27,WS_EX_CLIENTEDGE
+    DEFPUSHBUTTON   "&OK",IDC_OK,4,47,50,14
+    PUSHBUTTON      "&Cancel",IDC_CANCEL,58,47,50,14
+END
+
+IDD_RUN DIALOGEX 0, 0, 213, 54
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION |
+    WS_SYSMENU
+FONT 8, "Tahoma", 0, 0, 0x0
+BEGIN
+    RTEXT           "",IDC_RUN,4,6,35,8
+    EDITTEXT        IDC_COMMAND,44,4,165,12,ES_AUTOHSCROLL
+    LTEXT           "&Arguments:",IDC_STATIC_ARGS,4,22,38,8
+    EDITTEXT        IDC_ARGS,44,21,165,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "&OK",IDC_OK,104,36,51,14
+    PUSHBUTTON      "&Cancel",IDC_CANCEL,159,36,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_MAIN, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 383
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 227
+    END
+
+    IDD_ABOUT, DIALOG
+    BEGIN
+        RIGHTMARGIN, 270
+        BOTTOMMARGIN, 183
+    END
+
+    IDD_BLOCK, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 203
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 152
+    END
+
+    IDD_CLASSNAME, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 169
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 83
+    END
+
+    IDD_KEYWORDS, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 268
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 141
+    END
+
+    IDD_KWEDIT, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 280
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 202
+    END
+
+    IDD_KEYRECORD, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 193
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 66
+    END
+
+    IDD_HARDCODED, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 182
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 130
+    END
+
+    IDD_INSERTEDIT, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 234
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 138
+    END
+
+    IDD_RUN, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 209
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 50
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_POPUP MENU
+BEGIN
+    POPUP "Dummy"
+    BEGIN
+        MENUITEM "&Hardcoded",                  IDS_HARDCODED
+        MENUITEM "&Insert",                     IDS_INSERT
+        MENUITEM "&Run",                        IDS_RUN
+        MENUITEM "&Open",                       IDS_OPEN
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_APP_TITLE           "Brainchild.CPL"
+    IDS_CPL_INFO            "Brainchild custom edit control configuration tool."
+    IDS_CPL_NAME            "Brainchild"
+    IDS_SETTINGS_LOCATION   "Unable to find the location of the Brainchild settings files. Therefore it is not possible to edit the settings."
+    IDS_NO_BRAINCHILD       "Unable to load Brainchild.DLL."
+    IDS_NO_MEMORY           "Out of memory."
+    IDS_NO_SETTINGS         "Problems reading the brainchild configuration files. Therefore it is not possible to edit the settings."
+    IDS_TOOL_NEW            "New"
+    IDS_TOOL_DELETE         "Delete"
+    IDS_TOOL_UP             "Up"
+    IDS_TOOL_DOWN           "Down"
+    IDS_ABOUT               "About"
+    IDS_COPYRIGHT           "\033c\033+b\033+uBrainchild Configuration Tool\n\033n(C) Copyright 1999-2005 by Jan van den Baard.\nAll Rights Reserved."
+    IDS_DISCLAIMER          "\033cThis software is freeware. Usage of this software is free but if\n you feel compelled to donate something for my efforts please\nfeel free to do so.\n\n\033lDISCLAIMER: This software is provided AS-IS. The author is not responsible in any\nway for any damage direct, indirect or consequential, that may arise from the use\nor abuse of this software.\n\n\033cFor bug-reports, comments, suggestions etc.:"
+    IDS_NO_PAGE             "Problem creating settings pages."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_NO_ITEM             "Problems building tree contents."
+    IDS_PAGE_PRINTER        "Printer"
+    IDS_COMMENT_PRINT       ";\n;\tPrinter settings.\n;\n"
+    IDS_NORMAL              "Normal"
+    IDS_WIDE                "Wide"
+    IDS_BLOCK               "Block"
+    IDS_DEFAULT_TITLE       "! Default Text Class !"
+    IDS_HOPS_RANGE          "Number of Undo/Redo hops must\nbe between 100 and 100000."
+    IDS_COMMENT_GENERAL     ";\n;\tGeneral settings.\n;\n"
+    IDS_PAGE_DATETIME       "Date & Time"
+    IDS_COMMENT_DATETIME    ";\n;\tDate & Time settings.\n;\n"
+    IDS_PAGE_FILES          "Files"
+    IDS_DOS                 "MS DOS"
+    IDS_UNIX                "Unix"
+    IDS_MAC                 "Macintosh"
+    IDS_COMMENT_FILES       ";\n;\tFile settings.\n;\n"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_PAGE_SYNTAX         "Syntax Coloring"
+    IDS_TEXT                "Text."
+    IDS_BACKGROUND          "Background."
+    IDS_BACKGROUND_READONLY "Background readonly files."
+    IDS_MARGIN              "Selection margin."
+    IDS_BOOKMARK            "Bookmarked lines."
+    IDS_NUMBER              "Numbers."
+    IDS_DELIMITER           "Delimiters."
+    IDS_SELTEXT             "Selected text."
+    IDS_SELTEXTBKGND        "Selected text background."
+    IDS_BLOCK_NONAME        "<< Unnamed Text Block >>"
+    IDS_NEW_BLOCK           "New Block..."
+    IDS_DEFAULT             "Default"
+    IDS_CUSTOM              "Custom..."
+    IDS_HIST_RANGE          "Search history must\nbe between 10 and 30."
+    IDS_SURE                "\033t200,0,0\033+bWarning!!\n\n\033gt18\033nYou are about to delete all settings\nfor the text class:\n\n\033+b\033t0,0,200%s\n\n\033n\033gt18It is not possible to undo this action!\nAre you sure you want to continue?"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_YESNO               "&Yes|*&No"
+    IDS_ERROR_NAME          "A name without a file extention and path is required!"
+    IDS_ERROR_SAMENAME      "The name you have selected is already in use.\nPlease select another name."
+    IDS_NEWCLASS            "New Text Class (%ld)"
+    IDS_TOOL_EDIT           "Edit keywords."
+    IDS_TOOL_INSERT         "Insert keywords from a file."
+    IDS_TOOL_COLOR          "Select textcolor."
+    IDS_COLOR_FMT           "Red=$%02.2lx,Green=$%02.2lx,Blue=$%02.2lx"
+    IDS_KEYWORD_DELETE      "\033t200,0,0\033+bWarning!!\n\n\033gt18\033nYou are about to delete an entire keyword group\n\033n\033gt18It is not possible to undo this action!\nAre you sure you want to continue?"
+    IDS_INSERT_KEYWORDS     "Select keyword file..."
+    IDS_ERROR_SAVETEMP      "Error saving temporary file."
+    IDS_COMMENT_COLORS      ";\n;\tColor settings\n;\n"
+    IDS_COMMENT_SYNTAXGENERAL ";\n;\tGeneral syntaxcoloring settings.\n;\n"
+    IDS_COMMENT_BLOCKS      ";\n;\tBlocks.\n;\n"
+    IDS_COMMENT_KEYWORDS    ";\n;\tKeywords.\n;\n"
+    IDS_NO_BACKUP           "\033t200,0,0\033+bWarning!!\n\n\033gt18\033nBacking up settings files failed!\nAre you sure you want to continue?"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_ERROR_FILE          "Error writing settings file\n\n\\""%s\\"""
+    IDS_PAGE_INDENT         "Indention"
+    IDS_COMMENT_INDENTION   ";\n;\tSmart indention strings.\n;\n"
+    IDS_ERROR_NOEMPTY       "Empty strings are not allowed here."
+    IDS_NEWSMART_ENTRY      "New Entry"
+    IDS_PAGE_KEYBOARD       "Keyboard"
+    IDS_HARDCODED           "Hardcoded"
+    IDS_INSERT              "Insert Text"
+    IDS_RUN                 "Run"
+    IDS_OPEN                "Open"
+    IDS_ERROR_BACKUPPATH    "When the \033+u""FILE.EXT"" in folder\033n option\nis selected a backup path must be configured!"
+    IDS_NEWINSERT           "<Text to insert >"
+    IDS_RUN_TITLE           "Edit Run Command..."
+    IDS_SHELLOPEN_TITLE     "Edit Shellopen Command..."
+    IDS_EXEC_FILTER         "*.exe;*.com;*.pif;*bat;*.cmd"
+    IDS_ALL_FILTER          "*.*"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMENT_KEYS        ";\n;\tKeyboard settings\n;\n"
+    IDS_ERROR_TABSIZE       "The value of a Tab-jump must be\nbetween \033+b2\033n and \033+b24\033n."
+    IDS_LINENUMBER          "Line numbers."
+    IDS_LINENUMBERBKGND     "Background line number margin."
+    IDS_HORIZONTAL          "Horizontal"
+    IDS_ERROR_COLUMNMARKER  "The offset of a column marker must be\nbetween \033+b0\033n and \033+b256\033n."
+    IDS_BACKGROUND_NUMBER   "Background numbers."
+    IDS_BACKGROUND_DELIM    "Background delimiters."
+    IDS_TOOL_BGCOLOR        "Select backgroundcolor."
+    IDS_TRANSPARENT         "Transparent"
+    IDS_BRACKET_MATCH       "Background matched brackets."
+    IDS_AUTOMATCH           "Automatic bracket matching."
+    IDS_VISIBLE_ERROR       "Visible error on bracket mismatch."
+    IDS_CLEAR_SPACES        "Clear trailing spaces."
+    IDS_ENABLE_DND          "Enable Drag and Drop editing."
+    IDS_SHOW_MARGIN         "Show selection margin."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_SOLID_MARGIN        "Solid selection margin."
+    IDS_LINE_NUMBERS        "Show line numbers."
+    IDS_FAST_SCROLL         "Fast scrolling."
+    IDS_CLEAR_UNDO          "Clear undo buffers after save."
+    IDS_VISIBLE_SPACE       "Visible white spaces."
+    IDS_CASE_FIXING         "Case fixing."
+    IDS_COLOR_MATCH         "Highlight matching brackets."
+    IDS_LINE_HIGHLIGHT      "Line highlighting."
+    IDS_HIGHLIGHT_LINE      "Highlight the current line."
+    IDS_REALLY_EXIT         "\033t200,0,0\033+bWarning!!\n\n\033gt18\033nThere are unsaved changes made to\nthe text classes:\n\n\033+b\033c%s\033l\033n\n\nAre you sure you want to exit without\napplying these settings?"
+    IDS_YESAPPLYNO          "&Yes|&Apply and Exit|*&No"
+    IDS_PARSEHYPERLINKS     "Parse hyperlinks."
+    IDS_HYPERLINK           "Hyperlinks."
+    IDS_HYPERLINK_BKGND     "Background hyperlinks."
+    IDS_SHOWHYPERTIPS       "Show hyperlink tooltips."
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

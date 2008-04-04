@@ -9,15 +9,8 @@
 
 #include "../standard.h"
 
-#if _MSC_VER == 1200
-	#ifdef new
-		#undef new
-		#define _REDEF_NEW
-	#endif
-
-	#ifndef _INC_NEW
-		#include <new.h>
-	#endif
+#ifndef _INC_NEW
+	#include <new.h>
 #endif
 
 // Base class for the collection template classes.
