@@ -1083,6 +1083,9 @@
 				RelativePath=".\Source\BinRes\WWW.ICO">
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\Source\ChangeLog.txt">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

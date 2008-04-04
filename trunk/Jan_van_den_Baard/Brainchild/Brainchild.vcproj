@@ -1335,6 +1335,13 @@
 				RelativePath=".\Source\BinRes\SelectionPointer.cur">
 			</File>
 		</Filter>
+		<Filter
+			Name="Documentation"
+			Filter="">
+			<File
+				RelativePath=".\Documentation\Brainchild.chm">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
