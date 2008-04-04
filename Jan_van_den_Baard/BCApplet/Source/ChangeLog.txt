@@ -1,0 +1,15 @@
+Brainchild configuration tool version 2.0
+(C) Copyright 2000-2002 Jan van den Baard
+==============================================================================
+
+Version 2.0
+==============================================================================
+- Due to a harddisk crash I lost the complete change log (and then some...) of
+  all previous versions. Therefore the new change log is for version 2.0 and
+  up. (17-3-2002)
+- Tweaked the treeview a bit. Added images to the entries and made it single
+  expand. (17-3-2002)
+- Added the "Visible whitespaces" option. (23-3-2002)
+- When the the GetUserName() API fails during the determination of the 
+  settings files to use the default files are used. (7-5-2002)
+- The "key recorder" did not see all key combinations. (19-7-2002)
