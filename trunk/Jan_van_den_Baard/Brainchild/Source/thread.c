@@ -112,7 +112,7 @@ LRESULT WINAPI ComProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
  *	Return the registered settings
  *	update message.
  */
-UINT GetUpdateMessage( void )
+UINT Brainchild_GetUpdateMessage( void )
 {
 	return uRegisteredMsg;
 }
@@ -121,7 +121,7 @@ UINT GetUpdateMessage( void )
  *	Check if the message is intended for one of
  *	the controls it's find or replace dialogs.
  */
-BOOL IsNonModalDialogMessage( const LPMSG lpMsg )
+BOOL Brainchild_IsNonModalDialogMessage( const LPMSG lpMsg )
 {
 	LPWINDOW	pWin;
 
@@ -206,7 +206,7 @@ void FreeWindow( HWND hWnd )
 		 *	Remove and free it.
 		 */
 		Remove(( LPNODE )pWin );
-		FreePooled( pMainPool, pWin );
+		Brainchild_FreePooled( pMainPool, pWin );
 	}
 
 	/*
@@ -231,7 +231,7 @@ BOOL AddWindow( HWND hWnd )
 	/*
 	 *	Allocate node.
 	 */
-	if (( pWin = AllocPooled( pMainPool, sizeof( WINDOW ))) != NULL )
+	if (( pWin = Brainchild_AllocPooled( pMainPool, sizeof( WINDOW ))) != NULL )
 	{
 		/*
 		 *	Setup the node and add it.
@@ -260,7 +260,7 @@ static void FreeWindows( void )
 	 *	Free 'm all.
 	 */
 	while (( pWin = ( LPWINDOW )RemHead(( LPLIST )&wlWindows )) != NULL )
-		FreePooled( pMainPool, pWin );
+		Brainchild_FreePooled( pMainPool, pWin );
 }
 
 /*
@@ -274,23 +274,23 @@ static LPPARSER CreateDefaultParser( void )
 	/*
 	 *	Allocate the node.
 	 */
-	if (( lpp = AllocPooled( pMainPool, sizeof( PARSER ))) != NULL )
+	if (( lpp = Brainchild_AllocPooled( pMainPool, sizeof( PARSER ))) != NULL )
 	{
 		/*
 		 *	Create the block array.
 		 */
-		if (( lpp->lpaBlocks = ArrayCreate( 0, 5, sizeof( BLOCK ))) != NULL )
+		if (( lpp->lpaBlocks = Brainchild_ArrayCreate( 0, 5, sizeof( BLOCK ))) != NULL )
 		{
 			/*
 			 *	Setup default stuff.
 			 */
-			DefaultParser( lpp );
+			Brainchild_DefaultParser( lpp );
 
 			/*
 			 *	Setup default keyboard
 			 *	mappings.
 			 */
-			SetupHash( pMainPool, &lpp->aHash[ 0 ] );
+			Brainchild_SetupHash( pMainPool, &lpp->aHash[ 0 ] );
 
 			/*
 			 *	Make us default.
@@ -305,14 +305,14 @@ static LPPARSER CreateDefaultParser( void )
 			{
 				if (( lpp->hScreenFont = CreateFontIndirect( &lpp->lfScreenFont )) == NULL )
 				{
-					FreePooled( pMainPool, lpp );
+					Brainchild_FreePooled( pMainPool, lpp );
 					return FALSE;
 				}
 			}
 
 			return lpp;
 		}
-		FreePooled( pMainPool, lpp );
+		Brainchild_FreePooled( pMainPool, lpp );
 	}
 	return NULL;
 }
@@ -348,7 +348,7 @@ BOOL SetupProcess( void )
 	/*
 	 *	Allocate memory pool.
 	 */
-	if (( pMainPool = GetMemoryPool( 4096L )) != NULL )
+	if (( pMainPool = Brainchild_GetMemoryPool( 4096L )) != NULL )
 	{
 		/*
 		 *	Create the default parser.
@@ -364,7 +364,7 @@ BOOL SetupProcess( void )
 				/*
 				*	Load the parser files.
 				*/
-				if ( LoadParserFiles( pMainPool, &plParsers ))
+				if ( Brainchild_LoadParserFiles( pMainPool, &plParsers ))
 				{
 					/*
 					 *	Did we load a default parser?
@@ -399,7 +399,7 @@ BOOL SetupProcess( void )
 					 *	Remove and free the nodes which did
 					 *	load.
 					 */
-					FreeParserList( pMainPool, &plParsers );
+					Brainchild_FreeParserList( pMainPool, &plParsers );
 
 					/*
 					 *	Add the default parser which will be
@@ -417,12 +417,12 @@ BOOL SetupProcess( void )
 				AddHead(( LPLIST )&plParsers, ( LPNODE )lpDefault );
 				return TRUE;
 			}
-			FreeParserNode( pMainPool, lpDefault );
+			Brainchild_FreeParserNode( pMainPool, lpDefault );
 		}
 		/*
 		 *	Deallocate the memory pool.
 		 */
-		FreeMemoryPool( pMainPool, TRUE );
+		Brainchild_FreeMemoryPool( pMainPool, TRUE );
 	}
 	return FALSE;
 }
@@ -457,12 +457,12 @@ void KillProcess( void )
 			/*
 			 *	No, we must free it manually.
 			 */
-			 FreeParserNode( pMainPool, lpDefault );
+			 Brainchild_FreeParserNode( pMainPool, lpDefault );
 		}
 		/*
 		 *	Free the parser files.
 		 */
-		FreeParserList( pMainPool, &plParsers );
+		Brainchild_FreeParserList( pMainPool, &plParsers );
 
 		/*
 		 *	Free tracked windows.
@@ -472,7 +472,7 @@ void KillProcess( void )
 		/*
 		 *	Free the memory pool.
 		 */
-		FreeMemoryPool( pMainPool, TRUE );
+		Brainchild_FreeMemoryPool( pMainPool, TRUE );
 	}
 
 	/*
@@ -566,7 +566,7 @@ void UpdateSettings( void )
 	/*
 	 *	Load parser files into the new list.
 	 */
-	if ( LoadParserFiles( pMainPool, &pll ))
+	if ( Brainchild_LoadParserFiles( pMainPool, &pll ))
 	{
 		/*
 		 *	Lock the list.
@@ -615,7 +615,7 @@ void UpdateSettings( void )
 				/*
 				 *	Free it...
 				 */
-				FreeParserNode( pMainPool, lpp );
+				Brainchild_FreeParserNode( pMainPool, lpp );
 		}
 
 		/*

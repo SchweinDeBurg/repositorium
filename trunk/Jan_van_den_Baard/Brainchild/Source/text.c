@@ -111,7 +111,7 @@ LRESULT OnSetUnicodeFlag( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA l
  */
 LRESULT OnNumberOfLines( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 {
-	return ArrayGetSize( lpcd->lpLines );
+	return Brainchild_ArrayGetSize( lpcd->lpLines );
 }
 
 /*
@@ -132,8 +132,8 @@ LRESULT OnGetText( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 		 *	Get start location.
 		 */
 		ptStart.x = ptStart.y = 0;
-		ptEnd.y	  = ArrayGetSize( lpcd->lpLines ) - 1;;
-		ptEnd.x   = (( LPLINE )ArrayGetAt( lpcd->lpLines, ptEnd.y ))->nLength;
+		ptEnd.y	  = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;;
+		ptEnd.x   = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, ptEnd.y ))->nLength;
 
 		/*
 		 *	Buffer supplied?
@@ -167,7 +167,7 @@ LRESULT OnGetText( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 
 LRESULT OnGetTextLength( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 {
-	int		i, nBytes = 0, nLines = ArrayGetSize( lpcd->lpLines );
+	int		i, nBytes = 0, nLines = Brainchild_ArrayGetSize( lpcd->lpLines );
 
 	/*
 	 *	Any text?
@@ -184,7 +184,7 @@ LRESULT OnGetTextLength( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lp
 		/*
 		 *	Add line length.
 		 */
-		nBytes += (( LPLINE )ArrayGetAt( lpcd->lpLines, i ))->nLength;
+		nBytes += (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, i ))->nLength;
 
 		/*
 		 *	Add line terminator bytes
@@ -266,7 +266,7 @@ LRESULT OnGetLine( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 	/*
 	 *	Get the requested line.
 	 */
-	if ( wParam != -1 ) lpLine = ArrayGetAt( lpcd->lpLines, wParam );
+	if ( wParam != -1 ) lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, wParam );
 	else		    lpLine = GETLINE( lpcd );
 
 	/*
@@ -318,7 +318,7 @@ LRESULT OnGetLineLength( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lp
 	/*
 	 *	Get the requested line.
 	 */
-	if ( wParam != -1 ) lpLine = ArrayGetAt( lpcd->lpLines, wParam );
+	if ( wParam != -1 ) lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, wParam );
 	else		    lpLine = GETLINE( lpcd );
 
 	/*
@@ -388,14 +388,14 @@ LRESULT OnGetSelectionLength( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDA
 			 *	Simply compute the number of bytes
 			 *	required to store the whole line.
 			 */
-			nNumChars += (( LPLINE )ArrayGetAt( lpcd->lpLines, i ))->nLength + 2;
+			nNumChars += (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, i ))->nLength + 2;
 
 		/*
 		 *	Adjust for the start and
 		 *	end columns.
 		 */
 		nNumChars -= lpcd->ptSelStart.x;
-		nNumChars -= (( LPLINE )ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y ))->nLength - ( lpcd->ptSelEnd.x - 1 );
+		nNumChars -= (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y ))->nLength - ( lpcd->ptSelEnd.x - 1 );
 
 		/*
 		 *	Return the required buffer size.
@@ -466,7 +466,7 @@ LRESULT OnSetText( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 	 *	We _must_ have atleast one
 	 *	empty line.
 	 */
-	if ( ArrayGetSize( lpcd->lpLines ) == 0 )
+	if ( Brainchild_ArrayGetSize( lpcd->lpLines ) == 0 )
 	{
 		if ( InsertLine( lpcd, NULL, 0, -1 ) == FALSE )
 			return FALSE;
@@ -519,7 +519,7 @@ LRESULT OnInsertLine( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd 
 	/*
 	 *	Clamp position.
 	 */
-	if ( nPos < 0 || nPos > ArrayGetSize( lpcd->lpLines )) nPos = -1;
+	if ( nPos < 0 || nPos > Brainchild_ArrayGetSize( lpcd->lpLines )) nPos = -1;
 
 	/*
 	 *	Insert the text line.
@@ -673,7 +673,7 @@ BOOL DeleteTheContents( LPCLASSDATA lpcd )
 		 *	We _must_ have atleast one
 		 *	empty line.
 		 */
-		if ( ArrayGetSize( lpcd->lpLines ) == 0 )
+		if ( Brainchild_ArrayGetSize( lpcd->lpLines ) == 0 )
 		{
 			if ( InsertLine( lpcd, NULL, 0, -1 ) == FALSE )
 				return FALSE;
@@ -709,12 +709,12 @@ static void RecomputeLongestLine( LPCLASSDATA lpcd )
 	/*
 	 *	Iterate lines.
 	 */
-	for ( nLine = 0; nLine < ArrayGetSize( lpcd->lpLines ); nLine++ )
+	for ( nLine = 0; nLine < Brainchild_ArrayGetSize( lpcd->lpLines ); nLine++ )
 	{
 		/*
 		 *	Compute visual length.
 		 */
-		nLength = CaretOffsetLine( lpcd, nLine, (( LPLINE )ArrayGetAt( lpcd->lpLines, nLine ))->nLength );
+		nLength = CaretOffsetLine( lpcd, nLine, (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, nLine ))->nLength );
 
 		/*
 		 *	Larger?
@@ -773,7 +773,7 @@ BOOL InsertLine( LPCLASSDATA lpcd, LPCTSTR lpszText, int nLength, int nPosition 
 		/*
 		 *	Allocate line storage,
 		 */
-		if (( line.pcText = ArrayAllocMem( lpcd->lpLines, line.nMax )) != NULL )
+		if (( line.pcText = Brainchild_ArrayAllocMem( lpcd->lpLines, line.nMax )) != NULL )
 			/*
 			 *	Copy the text.
 			 */
@@ -785,8 +785,8 @@ BOOL InsertLine( LPCLASSDATA lpcd, LPCTSTR lpszText, int nLength, int nPosition 
 	/*
 	 *	Position given?
 	 */
-	if ( nPosition == -1 ) bAdd = ArrayAdd( lpcd->lpLines, &line, 1 );
-	else		       bAdd = ArrayInsertAt( lpcd->lpLines, nPosition, &line, 1 );
+	if ( nPosition == -1 ) bAdd = Brainchild_ArrayAdd( lpcd->lpLines, &line, 1 );
+	else		       bAdd = Brainchild_ArrayInsertAt( lpcd->lpLines, nPosition, &line, 1 );
 
 	/*
 	 *	OK?
@@ -797,14 +797,14 @@ BOOL InsertLine( LPCLASSDATA lpcd, LPCTSTR lpszText, int nLength, int nPosition 
 		 *	Deallocate text.
 		 */
 		if ( line.pcText )
-			ArrayFreeMem( lpcd->lpLines, line.pcText );
+			Brainchild_ArrayFreeMem( lpcd->lpLines, line.pcText );
 		return FALSE;
 	}
 
 	/*
 	 *	Compute it's length.
 	 */
-	nLength = CaretOffsetLine( lpcd, nPosition == -1 ? ArrayGetSize( lpcd->lpLines ) - 1 : nPosition, nLength );
+	nLength = CaretOffsetLine( lpcd, nPosition == -1 ? Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 : nPosition, nLength );
 
 	/*
 	 *	Is it the longest?
@@ -846,7 +846,7 @@ static BOOL AppendText( LPCLASSDATA lpcd, LPCTSTR lpszText, int nLine, int nLeng
 	/*
 	 *	Get a pointer to the line.
 	 */
-	if (( lpLine = ArrayGetAt( lpcd->lpLines, nLine )) != NULL )
+	if (( lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine )) != NULL )
 	{
 		/*
 		 *	Compute the required storage space.
@@ -867,7 +867,7 @@ static BOOL AppendText( LPCLASSDATA lpcd, LPCTSTR lpszText, int nLine, int nLeng
 			/*
 			 *	Allocate a new buffer.
 			 */
-			TCHAR*	pcReAlloc = ArrayAllocMem( lpcd->lpLines, nRequired );
+			TCHAR*	pcReAlloc = Brainchild_ArrayAllocMem( lpcd->lpLines, nRequired );
 			if ( pcReAlloc == NULL )
 				return FALSE;
 
@@ -878,7 +878,7 @@ static BOOL AppendText( LPCLASSDATA lpcd, LPCTSTR lpszText, int nLine, int nLeng
 			if ( lpLine->pcText )
 			{
 				memcpy( pcReAlloc, lpLine->pcText, REAL_SIZE( lpLine->nLength ));
-				ArrayFreeMem( lpcd->lpLines, lpLine->pcText );
+				Brainchild_ArrayFreeMem( lpcd->lpLines, lpLine->pcText );
 			}
 
 			/*
@@ -1314,7 +1314,7 @@ BOOL LoadFile( LPCLASSDATA lpcd, LPCTSTR lpszFileName )
 	 *	We _must_ have atleast one
 	 *	empty line.
 	 */
-	if ( ArrayGetSize( lpcd->lpLines ) == 0 )
+	if ( Brainchild_ArrayGetSize( lpcd->lpLines ) == 0 )
 	{
 		if ( InsertLine( lpcd, NULL, 0, -1 ) == FALSE )
 			bError = TRUE;
@@ -1453,7 +1453,7 @@ BOOL SaveFile( LPCLASSDATA lpcd, LPCTSTR lpszFileName )
 		 *	and the number of bytes in the line
 		 *	terminator.
 		 */
-		nLines = ArrayGetSize( lpcd->lpLines );
+		nLines = Brainchild_ArrayGetSize( lpcd->lpLines );
 
 		if ( Parser->nFileMode == FMODE_MSDOS ) nCrSize = 2;
 		else				      nCrSize = 1;
@@ -1485,7 +1485,7 @@ BOOL SaveFile( LPCLASSDATA lpcd, LPCTSTR lpszFileName )
 			/*
 			 *	Get line structure pointer.
 			 */
-			LPLINE	lpLine = ArrayGetAt( lpcd->lpLines, i );
+			LPLINE	lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, i );
 
 			/*
 			 *	Write the line.
@@ -1604,7 +1604,7 @@ static LPTSTR StaticGetText( LPCLASSDATA lpcd, LPPOINT ptStart, LPPOINT ptEnd, B
 			 *	Add the length of the line including
 			 *	2 for the line terminator.
 			 */
-			nNumChars += (( LPLINE )ArrayGetAt( lpcd->lpLines, i ))->nLength + 2;
+			nNumChars += (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, i ))->nLength + 2;
 
 		/*
 		 *	Allocate the buffer.
@@ -1615,7 +1615,7 @@ static LPTSTR StaticGetText( LPCLASSDATA lpcd, LPPOINT ptStart, LPPOINT ptEnd, B
 			 *	Allocate the required memory
 			 *	from the Undo/Redo array.
 			 */
-			pcText = ArrayAllocMem( lpcd->lpUndoRedo, REAL_SIZE( nNumChars + 1 ));
+			pcText = Brainchild_ArrayAllocMem( lpcd->lpUndoRedo, REAL_SIZE( nNumChars + 1 ));
 		}
 		else
 		{
@@ -1650,7 +1650,7 @@ static LPTSTR StaticGetText( LPCLASSDATA lpcd, LPPOINT ptStart, LPPOINT ptEnd, B
 		 */
 		if ( ptStart->y == ptEnd->y )
 		{
-			LPLINE	lpLine = ArrayGetAt( lpcd->lpLines, ptStart->y );
+			LPLINE	lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, ptStart->y );
 
 			/*
 			 *	Yes. Do a simple copy. The text is automatically 0-terminated
@@ -1662,7 +1662,7 @@ static LPTSTR StaticGetText( LPCLASSDATA lpcd, LPPOINT ptStart, LPPOINT ptEnd, B
 		}
 		else
 		{
-			LPLINE	lpLine = ArrayGetAt( lpcd->lpLines, ptStart->y );
+			LPLINE	lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, ptStart->y );
 			TCHAR  *pcPtr = pcText;
 			int	nCount, i;
 
@@ -1693,7 +1693,7 @@ static LPTSTR StaticGetText( LPCLASSDATA lpcd, LPPOINT ptStart, LPPOINT ptEnd, B
 			 */
 			for ( i = ptStart->y + 1; i < ptEnd->y; i++ )
 			{
-				lpLine = ArrayGetAt( lpcd->lpLines, i );
+				lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, i );
 
 				/*
 				 *	Copy the line.
@@ -1719,7 +1719,7 @@ static LPTSTR StaticGetText( LPCLASSDATA lpcd, LPPOINT ptStart, LPPOINT ptEnd, B
 			 */
 			if ( ptEnd->x > 0 )
 			{
-				memcpy( pcPtr, (( LPLINE )ArrayGetAt( lpcd->lpLines, ptEnd->y ))->pcText, REAL_SIZE( ptEnd->x ));
+				memcpy( pcPtr, (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, ptEnd->y ))->pcText, REAL_SIZE( ptEnd->x ));
 				pcPtr += ptEnd->x;
 			}
 		}
@@ -1783,7 +1783,7 @@ static BOOL StaticInsertText( LPCLASSDATA lpcd, int nLine, int nColumn, LPCTSTR 
 	 *	of the caret on the line we start
 	 *	the insert on.
 	 */
-	if (( lpLine = ArrayGetAt( lpcd->lpLines, nLine )) != NULL )
+	if (( lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine )) != NULL )
 	{
 		/*
 		 *	Any text?
@@ -1798,7 +1798,7 @@ static BOOL StaticInsertText( LPCLASSDATA lpcd, int nLine, int nColumn, LPCTSTR 
 				/*
 				 *	Save the characters.
 				 */
-				if (( pcRemChars = AllocPooled( lpcd->pMemPool, REAL_SIZE( nRemaining ))) != NULL )
+				if (( pcRemChars = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( nRemaining ))) != NULL )
 				{
 					/*
 					 *	Copy the characters and
@@ -1863,7 +1863,7 @@ static BOOL StaticInsertText( LPCLASSDATA lpcd, int nLine, int nColumn, LPCTSTR 
 			 */
 			if ( ptNewPos != NULL )
 			{
-				ptNewPos->x = (( LPLINE )( ArrayGetAt( lpcd->lpLines, nCurrent )))->nLength;
+				ptNewPos->x = (( LPLINE )( Brainchild_ArrayGetAt( lpcd->lpLines, nCurrent )))->nLength;
 				ptNewPos->y = nCurrent;
 			}
 
@@ -1897,7 +1897,7 @@ static BOOL StaticInsertText( LPCLASSDATA lpcd, int nLine, int nColumn, LPCTSTR 
 	 *	Free the remaining characters.
 	 */
 	if ( pcRemChars )
-		FreePooled( lpcd->pMemPool, pcRemChars );
+		Brainchild_FreePooled( lpcd->pMemPool, pcRemChars );
 
 	/*
 	 *	Send status message.
@@ -1920,7 +1920,7 @@ static BOOL StaticDeleteText( LPCLASSDATA lpcd, LPPOINT ptFrom, LPPOINT ptTo )
 	 */
 	if ( ptFrom->y == ptTo->y )
 	{
-		LPLINE	lpLine = ArrayGetAt( lpcd->lpLines, ptFrom->y );
+		LPLINE	lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, ptFrom->y );
 
 		/*
 		 *	Is this the longest line?
@@ -1968,7 +1968,7 @@ static BOOL StaticDeleteText( LPCLASSDATA lpcd, LPPOINT ptFrom, LPPOINT ptTo )
 		 *	of the caret on the line we start
 		 *	the insert on.
 		 */
-		if (( lpLine = ArrayGetAt( lpcd->lpLines, ptTo->y )) != NULL )
+		if (( lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, ptTo->y )) != NULL )
 		{
 			/*
 			 *	Any text?
@@ -1983,7 +1983,7 @@ static BOOL StaticDeleteText( LPCLASSDATA lpcd, LPPOINT ptFrom, LPPOINT ptTo )
 					/*
 					 *	Save the characters.
 					 */
-					if (( pcRemChars = AllocPooled( lpcd->pMemPool, REAL_SIZE( nRemaining ))) != NULL )
+					if (( pcRemChars = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( nRemaining ))) != NULL )
 					{
 						/*
 						 *	Copy the characters and
@@ -2007,24 +2007,24 @@ static BOOL StaticDeleteText( LPCLASSDATA lpcd, LPPOINT ptFrom, LPPOINT ptTo )
 			/*
 			 *	Get the line.
 			 */
-			lpLine = ArrayGetAt( lpcd->lpLines, nLine );
+			lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine );
 
 			/*
 			 *	Remove any available text.
 			 */
 			if ( lpLine->pcText )
-				ArrayFreeMem( lpcd->lpLines, lpLine->pcText );
+				Brainchild_ArrayFreeMem( lpcd->lpLines, lpLine->pcText );
 		}
 
 		/*
 		 *	Remove the lines.
 		 */
-		ArrayRemoveAt( lpcd->lpLines, ptFrom->y + 1, ptTo->y - ptFrom->y );
+		Brainchild_ArrayRemoveAt( lpcd->lpLines, ptFrom->y + 1, ptTo->y - ptFrom->y );
 
 		/*
 		 *	Setup the length of the first line.
 		 */
-		lpLine = ArrayGetAt( lpcd->lpLines, ptFrom->y );
+		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, ptFrom->y );
 		lpLine->nLength = ptFrom->x;
 
 		/*
@@ -2032,7 +2032,7 @@ static BOOL StaticDeleteText( LPCLASSDATA lpcd, LPPOINT ptFrom, LPPOINT ptTo )
 		 */
 		if ( pcRemChars ) {
 			bError = ! AppendText( lpcd, pcRemChars, ptFrom->y, nRemaining );
-			FreePooled( lpcd->pMemPool, pcRemChars );
+			Brainchild_FreePooled( lpcd->pMemPool, pcRemChars );
 		}
 
 	}
@@ -2041,7 +2041,7 @@ static BOOL StaticDeleteText( LPCLASSDATA lpcd, LPPOINT ptFrom, LPPOINT ptTo )
 	 *	We _must_ have at least
 	 *	one empty line.
 	 */
-	if ( ArrayGetSize( lpcd->lpLines ) == 0 )
+	if ( Brainchild_ArrayGetSize( lpcd->lpLines ) == 0 )
 		InsertLine( lpcd, NULL, 0, -1 );
 
 	/*
@@ -2077,18 +2077,18 @@ static void RemoveLastUndoRecord( LPCLASSDATA lpcd )
 		/*
 		 *	Get the record.
 		 */
-		lpUndoRedo = ArrayGetAt( lpcd->lpUndoRedo, lpcd->nUndoPosition );
+		lpUndoRedo = Brainchild_ArrayGetAt( lpcd->lpUndoRedo, lpcd->nUndoPosition );
 
 		/*
 		 *	Free it's text.
 		 */
 		if ( lpUndoRedo->pcText )
-			ArrayFreeMem( lpcd->lpUndoRedo, lpUndoRedo->pcText );
+			Brainchild_ArrayFreeMem( lpcd->lpUndoRedo, lpUndoRedo->pcText );
 
 		/*
 		 *	Remove the entry.
 		 */
-		ArrayRemoveAt( lpcd->lpUndoRedo, lpcd->nUndoPosition, 1 );
+		Brainchild_ArrayRemoveAt( lpcd->lpUndoRedo, lpcd->nUndoPosition, 1 );
 	}
 }
 
@@ -2152,7 +2152,7 @@ BOOL DeleteText( LPCLASSDATA lpcd, LPPOINT ptFrom, LPPOINT ptTo, BOOL bGroupStar
 		/*
 		 *	Free the text.
 		 */
-		ArrayFreeMem( lpcd->lpUndoRedo, lpszUndoText );
+		Brainchild_ArrayFreeMem( lpcd->lpUndoRedo, lpszUndoText );
 	}
 	return bRC;
 }
@@ -2167,7 +2167,7 @@ BOOL AddUndoRecord( LPCLASSDATA lpcd, DWORD dwFlags, LPPOINT ptStart, LPPOINT pt
 	 *	First we remove any re-done
 	 *	records.
 	 */
-	nCount = ArrayGetSize( lpcd->lpUndoRedo );
+	nCount = Brainchild_ArrayGetSize( lpcd->lpUndoRedo );
 	if ( lpcd->nUndoPosition < nCount )
 		/*
 		 *	Re-size the array.
@@ -2177,7 +2177,7 @@ BOOL AddUndoRecord( LPCLASSDATA lpcd, DWORD dwFlags, LPPOINT ptStart, LPPOINT pt
 	/*
 	 *	Are we close to critical?
 	 */
-	if ( ArrayGetSize( lpcd->lpUndoRedo ) >= lpcd->nUndoSize )
+	if ( Brainchild_ArrayGetSize( lpcd->lpUndoRedo ) >= lpcd->nUndoSize )
 	{
 		nCount = 0;
 
@@ -2186,27 +2186,27 @@ BOOL AddUndoRecord( LPCLASSDATA lpcd, DWORD dwFlags, LPPOINT ptStart, LPPOINT pt
 			/*
 			 *	Get record.
 			 */
-			LPUNDOREDO lpUndoRedo = ArrayGetAt( lpcd->lpUndoRedo, nCount++ );
-			LPUNDOREDO lpNext = ArrayGetAt( lpcd->lpUndoRedo, nCount );
+			LPUNDOREDO lpUndoRedo = Brainchild_ArrayGetAt( lpcd->lpUndoRedo, nCount++ );
+			LPUNDOREDO lpNext = Brainchild_ArrayGetAt( lpcd->lpUndoRedo, nCount );
 
 			/*
 			 *	Delete text.
 			 */
 			if ( lpUndoRedo->pcText )
-				ArrayFreeMem( lpcd->lpUndoRedo, lpUndoRedo->pcText );
+				Brainchild_ArrayFreeMem( lpcd->lpUndoRedo, lpUndoRedo->pcText );
 
 			/*
 			 *	Is the buffer empty or are we
 			 *	at a new group?
 			 */
-			if ( ArrayGetSize( lpcd->lpUndoRedo ) == 0 || (( lpNext->dwFlags & URF_GROUP ) == URF_GROUP ))
+			if ( Brainchild_ArrayGetSize( lpcd->lpUndoRedo ) == 0 || (( lpNext->dwFlags & URF_GROUP ) == URF_GROUP ))
 				break;
 		}
 
 		/*
 		 *	Remove records.
 		 */
-		ArrayRemoveAt( lpcd->lpUndoRedo, 0, nCount );
+		Brainchild_ArrayRemoveAt( lpcd->lpUndoRedo, 0, nCount );
 
 		/*
 		 *	Adjust the save position.
@@ -2217,7 +2217,7 @@ BOOL AddUndoRecord( LPCLASSDATA lpcd, DWORD dwFlags, LPPOINT ptStart, LPPOINT pt
 	/*
 	 *	Allocate record.
 	 */
-	if (( lpRecord = ArrayAllocMem( lpcd->lpUndoRedo, sizeof( UNDOREDO ))) != NULL )
+	if (( lpRecord = Brainchild_ArrayAllocMem( lpcd->lpUndoRedo, sizeof( UNDOREDO ))) != NULL )
 	{
 		/*
 		 *	Initalize it.
@@ -2234,7 +2234,7 @@ BOOL AddUndoRecord( LPCLASSDATA lpcd, DWORD dwFlags, LPPOINT ptStart, LPPOINT pt
 			/*
 			 *	Allocate buffer.
 			 */
-			if (( lpRecord->pcText = ArrayAllocMem( lpcd->lpUndoRedo, REAL_SIZE( _tcslen( lpszText ) + 1 ))) != NULL )
+			if (( lpRecord->pcText = Brainchild_ArrayAllocMem( lpcd->lpUndoRedo, REAL_SIZE( _tcslen( lpszText ) + 1 ))) != NULL )
 				/*
 				 *	Copy the input text.
 				 */
@@ -2244,7 +2244,7 @@ BOOL AddUndoRecord( LPCLASSDATA lpcd, DWORD dwFlags, LPPOINT ptStart, LPPOINT pt
 				/*
 				 *	Free record.
 				 */
-				ArrayFreeMem( lpcd->lpUndoRedo, lpRecord );
+				Brainchild_ArrayFreeMem( lpcd->lpUndoRedo, lpRecord );
 				bRC = FALSE;
 			}
 		}
@@ -2257,12 +2257,12 @@ BOOL AddUndoRecord( LPCLASSDATA lpcd, DWORD dwFlags, LPPOINT ptStart, LPPOINT pt
 			/*
 			 *	Add the record.
 			 */
-			if ( ArrayAdd( lpcd->lpUndoRedo, lpRecord, 1 ) == TRUE )
+			if ( Brainchild_ArrayAdd( lpcd->lpUndoRedo, lpRecord, 1 ) == TRUE )
 			{
 				/*
 				 *	Set new index.
 				 */
-				lpcd->nUndoPosition = ArrayGetSize( lpcd->lpUndoRedo );
+				lpcd->nUndoPosition = Brainchild_ArrayGetSize( lpcd->lpUndoRedo );
 				return TRUE;
 			}
 		}
@@ -2284,7 +2284,7 @@ LRESULT OnCanRedo( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 	if ( ISREADONLY )
 		return FALSE;
 
-	return ( BOOL )( lpcd->nUndoPosition < ArrayGetSize( lpcd->lpUndoRedo ));
+	return ( BOOL )( lpcd->nUndoPosition < Brainchild_ArrayGetSize( lpcd->lpUndoRedo ));
 }
 
 /*
@@ -2408,7 +2408,7 @@ void Undo( LPCLASSDATA lpcd )
 			/*
 			 *	Get record.
 			 */
-			lpUndoRedo = ArrayGetAt( lpcd->lpUndoRedo, lpcd->nUndoPosition );
+			lpUndoRedo = Brainchild_ArrayGetAt( lpcd->lpUndoRedo, lpcd->nUndoPosition );
 
 			/*
 			 *	Undo text insert?
@@ -2524,7 +2524,7 @@ void RedoAll( LPCLASSDATA lpcd )
 	/*
 	 *	Anything to redo?
 	 */
-	if ( lpcd->nUndoPosition < ArrayGetSize( lpcd->lpUndoRedo ))
+	if ( lpcd->nUndoPosition < Brainchild_ArrayGetSize( lpcd->lpUndoRedo ))
 	{
 		/*
 		 *	Quiet mode...
@@ -2544,7 +2544,7 @@ void RedoAll( LPCLASSDATA lpcd )
 		/*
 		 *	Redo all entries.
 		 */
-		while ( lpcd->nUndoPosition < ArrayGetSize( lpcd->lpUndoRedo ))
+		while ( lpcd->nUndoPosition < Brainchild_ArrayGetSize( lpcd->lpUndoRedo ))
 			Redo( lpcd );
 
 		/*
@@ -2584,7 +2584,7 @@ void RedoAll( LPCLASSDATA lpcd )
  */
 void Redo( LPCLASSDATA lpcd )
 {
-	int	nNumElem = ArrayGetSize( lpcd->lpUndoRedo );
+	int	nNumElem = Brainchild_ArrayGetSize( lpcd->lpUndoRedo );
 	BOOL	bRedraw = FALSE;
 	BOOL	bCanRedo = ( BOOL )( lpcd->nUndoPosition < nNumElem );
 
@@ -2623,7 +2623,7 @@ void Redo( LPCLASSDATA lpcd )
 			/*
 			 *	Get record.
 			 */
-			lpUndoRedo = ArrayGetAt( lpcd->lpUndoRedo, lpcd->nUndoPosition );
+			lpUndoRedo = Brainchild_ArrayGetAt( lpcd->lpUndoRedo, lpcd->nUndoPosition );
 
 			/*
 			 *	One more record done.
@@ -2666,10 +2666,10 @@ void Redo( LPCLASSDATA lpcd )
 			/*
 			 *	End of this group or end of redo?
 			 */
-			if (( lpNext = ArrayGetAt( lpcd->lpUndoRedo, lpcd->nUndoPosition )) == NULL )
+			if (( lpNext = Brainchild_ArrayGetAt( lpcd->lpUndoRedo, lpcd->nUndoPosition )) == NULL )
 				break;
 
-			if ((( lpNext->dwFlags & URF_GROUP ) == URF_GROUP ) || lpcd->nUndoPosition == ArrayGetSize( lpcd->lpUndoRedo ))
+			if ((( lpNext->dwFlags & URF_GROUP ) == URF_GROUP ) || lpcd->nUndoPosition == Brainchild_ArrayGetSize( lpcd->lpUndoRedo ))
 				break;
 		}
 

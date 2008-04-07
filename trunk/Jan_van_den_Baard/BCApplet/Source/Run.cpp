@@ -59,7 +59,7 @@ void Run::SplitRunCommand()
 {
 	// Allocate buffer.
 	LPTSTR pszTmp = m_pCNode->pcStr;
-	LPTSTR pszBuf = ( LPTSTR )::AllocPooled( pParserPool, ( _tcslen( pszTmp ) + 1 ) * sizeof( TCHAR ));
+	LPTSTR pszBuf = ( LPTSTR )::Brainchild_AllocPooled( pParserPool, ( _tcslen( pszTmp ) + 1 ) * sizeof( TCHAR ));
 	if ( pszBuf != NULL )
 	{
 		// Skip blanks.
@@ -112,7 +112,7 @@ void Run::SplitRunCommand()
 			m_Run.SetWindowText( pszTmp );
 
 		// Free buffer.
-		::FreePooled( pParserPool, pszBuf );
+		::Brainchild_FreePooled( pParserPool, pszBuf );
 	}
 	else
 		// Error...
@@ -144,7 +144,7 @@ LRESULT Run::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 			BOOL	bRC = FALSE;
 
 			// Allocate string.
-			LPTSTR pszCommand = ( LPTSTR )::AllocPooled( pParserPool, ( nCommand + nArgs + 4 ) * sizeof( TCHAR ));
+			LPTSTR pszCommand = ( LPTSTR )::Brainchild_AllocPooled( pParserPool, ( nCommand + nArgs + 4 ) * sizeof( TCHAR ));
 			if ( pszCommand != NULL )
 			{
 				// Quote command string.
@@ -162,7 +162,7 @@ LRESULT Run::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 					m_Run.GetWindowText( pszCommand, nCommand + 1 );
 				
 				// Free old contents.
-				::FreePooled( pParserPool, m_pCNode->pcStr );
+				::Brainchild_FreePooled( pParserPool, m_pCNode->pcStr );
 
 				// Set new contents.
 				m_pCNode->pcStr = pszCommand;

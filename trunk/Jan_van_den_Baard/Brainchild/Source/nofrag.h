@@ -27,10 +27,10 @@ typedef void		*POOL;
 /*
  *	Prototypes.
  */
-POOL GetMemoryPool( DWORD );
-void FreeMemoryPool( POOL, BOOL );
-LPVOID AllocPooled( POOL, DWORD );
-void FreePooled( POOL, LPVOID );
+POOL Brainchild_GetMemoryPool( DWORD );
+void Brainchild_FreeMemoryPool( POOL, BOOL );
+LPVOID Brainchild_AllocPooled( POOL, DWORD );
+void Brainchild_FreePooled( POOL, LPVOID );
 
 #ifdef __cplusplus
 }

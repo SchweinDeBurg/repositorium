@@ -129,12 +129,12 @@ void ClearAllBookmarks( LPCLASSDATA lpcd )
 	/*
 	 *	Iterate lines.
 	 */
-	for ( i = 0; i < ArrayGetSize( lpcd->lpLines ); i++ )
+	for ( i = 0; i < Brainchild_ArrayGetSize( lpcd->lpLines ); i++ )
 	{
 		/*
 		 *	Get line pointer.
 		 */
-		lpLine = ArrayGetAt( lpcd->lpLines, i );
+		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, i );
 
 		/*
 		 *	Bookmark?
@@ -177,7 +177,7 @@ void ClearAllBookmarks( LPCLASSDATA lpcd )
 void NextBookmark( LPCLASSDATA lpcd )
 {
 	LPLINE		lpLine;
-	int		i, nLines = ArrayGetSize( lpcd->lpLines ) - 1, nLine = lpcd->ptCaretPos.y;
+	int		i, nLines = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1, nLine = lpcd->ptCaretPos.y;
 
 	/*
 	 *	Only one line?
@@ -220,7 +220,7 @@ void NextBookmark( LPCLASSDATA lpcd )
 	 */
 	for ( i = nLine; i <= nLines; i++ )
 	{
-		lpLine = ArrayGetAt( lpcd->lpLines, i );
+		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, i );
 
 		/*
 		 *	Bookmark?
@@ -292,7 +292,7 @@ void NextBookmark( LPCLASSDATA lpcd )
 void PrevBookmark( LPCLASSDATA lpcd )
 {
 	LPLINE		lpLine;
-	int		i, nLines = ArrayGetSize( lpcd->lpLines ) - 1, nLine = lpcd->ptCaretPos.y;
+	int		i, nLines = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1, nLine = lpcd->ptCaretPos.y;
 
 	/*
 	 *	Only one line?
@@ -336,7 +336,7 @@ void PrevBookmark( LPCLASSDATA lpcd )
 	 */
 	for ( i = nLine; i >= 0; i-- )
 	{
-		lpLine = ArrayGetAt( lpcd->lpLines, i );
+		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, i );
 
 		/*
 		 *	Bookmark?
@@ -414,9 +414,9 @@ void FirstBookmark( LPCLASSDATA lpcd )
 	/*
 	 *	Iterate...
 	 */
-	for ( i = 0; i < ArrayGetSize( lpcd->lpLines ); i++ )
+	for ( i = 0; i < Brainchild_ArrayGetSize( lpcd->lpLines ); i++ )
 	{
-		lpLine = ArrayGetAt( lpcd->lpLines, i );
+		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, i );
 
 		/*
 		 *	Bookmark?
@@ -461,9 +461,9 @@ void LastBookmark( LPCLASSDATA lpcd )
 	/*
 	 *	Iterate...
 	 */
-	for ( i = ArrayGetSize( lpcd->lpLines ) - 1; i >= 0; i-- )
+	for ( i = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1; i >= 0; i-- )
 	{
-		lpLine = ArrayGetAt( lpcd->lpLines, i );
+		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, i );
 
 		/*
 		 *	Bookmark?

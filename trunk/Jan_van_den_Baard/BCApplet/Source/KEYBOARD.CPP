@@ -56,7 +56,7 @@ void KeyboardPage::RefreshData( LPPARSER pParser )
 
 			// Convert code and qualifier into
 			// a string.
-			::CodeQual2Str( lpHash->cCode, lpHash->cQual, szKeyString );
+			::Brainchild_CodeQual2Str( lpHash->cCode, lpHash->cQual, szKeyString );
 
 			// Add the string to the list.
 			m_Keys.AddString( szKeyString );
@@ -86,7 +86,7 @@ BOOL KeyboardPage::SavePage( ClsStdioFile *pFile, LPPARSER pParser )
 			{
 				// Convert code and qualifier into
 				// a string.
-				::CodeQual2Str( pHash->cCode, pHash->cQual, szKeyString );
+				::Brainchild_CodeQual2Str( pHash->cCode, pHash->cQual, szKeyString );
 
 				// Write the key identifier.
 				pFile->PrintF( _T( "Key=%s\n" ), szKeyString );
@@ -99,7 +99,7 @@ BOOL KeyboardPage::SavePage( ClsStdioFile *pFile, LPPARSER pParser )
 					{
 						case	CTYPE_HARDCODED:
 							// Write command and it's ID.
-							pFile->PrintF( _T( "\tHardcoded=%ld\n" ), ::FindCommandID( pCNode->lpFunc ));
+							pFile->PrintF( _T( "\tHardcoded=%ld\n" ), ::Brainchild_FindCommandID( pCNode->lpFunc ));
 							break;
 
 						case	CTYPE_RUN:
@@ -193,7 +193,7 @@ LRESULT KeyboardPage::OnDrawItem( UINT nID, LPDRAWITEMSTRUCT pDis )
 		if ( lpCNode )
 		{
 			// Ontain string to render.
-			LPCTSTR pszStr = ( LPCTSTR )( lpCNode->nType == CTYPE_HARDCODED ? ::FindCommandDesc( lpCNode->lpFunc ) : lpCNode->pcStr );
+			LPCTSTR pszStr = ( LPCTSTR )( lpCNode->nType == CTYPE_HARDCODED ? ::Brainchild_FindCommandDesc( lpCNode->lpFunc ) : lpCNode->pcStr );
 
 			// Images valid?.
 			if ( m_hImages )
@@ -224,7 +224,7 @@ LPHASH KeyboardPage::GetSelection()
 	{
 		// Convert to a code and qualifier.
 		TCHAR cCode, cQual;
-		if ( ::Str2CodeQual( szKeyString, &cCode, &cQual ))
+		if ( ::Brainchild_Str2CodeQual( szKeyString, &cCode, &cQual ))
 		{
 			// Find the hash.
 			LPHASH lpHash;
@@ -281,7 +281,7 @@ void KeyboardPage::AddKeyMapping( ClsString strKey )
 {
 	// Convert the string to a code and qualifier.
 	TCHAR cCode, cQual;
-	if ( ::Str2CodeQual( strKey, &cCode, &cQual ) == FALSE )
+	if ( ::Brainchild_Str2CodeQual( strKey, &cCode, &cQual ) == FALSE )
 		return;
 
 	// Is the hash for this key already defined?
@@ -310,14 +310,14 @@ void KeyboardPage::AddKeyMapping( ClsString strKey )
 
 	// Hash not available. Allocate
 	// an empty command list.
-	LPCLIST lpCList = ( LPCLIST )::AllocPooled( pParserPool, sizeof( CLIST ));
+	LPCLIST lpCList = ( LPCLIST )::Brainchild_AllocPooled( pParserPool, sizeof( CLIST ));
 	if ( lpCList )
 	{
 		// Initialize list.
 		NewList(( LPLIST )lpCList );
 
 		// Add the hash to the hash table.
-		if (( lpHash = ::AddHash( pParserPool, m_pParser->aHash, cCode, cQual, lpCList )) != NULL )
+		if (( lpHash = ::Brainchild_AddHash( pParserPool, m_pParser->aHash, cCode, cQual, lpCList )) != NULL )
 		{
 			// Add the string to the
 			// listview control.
@@ -336,7 +336,7 @@ void KeyboardPage::AddKeyMapping( ClsString strKey )
 			MessageBox( ClsString( MAKEINTRESOURCE( IDS_NO_MEMORY )), ClsGetApp()->GetAppTitle(), MB_ICONERROR | MB_OK );
 
 		// De-allocate command list.
-		::FreePooled( pParserPool, lpCList );
+		::Brainchild_FreePooled( pParserPool, lpCList );
 	}
 	else
 		// Emit an error.
@@ -352,7 +352,7 @@ void KeyboardPage::CreateNode( int nType, LPVOID lpvData )
 	if ( pHash )
 	{
 		// Allocate node.
-		pCNode = ( LPCNODE )::AllocPooled( pParserPool, sizeof( CNODE ));
+		pCNode = ( LPCNODE )::Brainchild_AllocPooled( pParserPool, sizeof( CNODE ));
 		if ( pCNode != NULL )
 		{
 			// Setup type.
@@ -361,16 +361,16 @@ void KeyboardPage::CreateNode( int nType, LPVOID lpvData )
 			// Hardcoded?
 			if ( nType == CTYPE_HARDCODED )
 				// Setup function.
-				pCNode->lpFunc = ::FindCommand(( int )lpvData );
+				pCNode->lpFunc = ::Brainchild_FindCommand(( int )lpvData );
 			else
 			{
 				// Allocate string copy.
-				pCNode->pcStr = ::CopyStringPool( pParserPool, ( LPCTSTR )lpvData );
+				pCNode->pcStr = ::Brainchild_CopyStringPool( pParserPool, ( LPCTSTR )lpvData );
 				if ( pCNode->pcStr == NULL )
 				{
 					// Failure.
 					MessageBox( ClsString( MAKEINTRESOURCE( IDS_NO_MEMORY )), ClsGetApp()->GetAppTitle(), MB_ICONERROR | MB_OK );
-					::FreePooled( pParserPool, pCNode );
+					::Brainchild_FreePooled( pParserPool, pCNode );
 					pCNode = NULL;
 				}
 			}
@@ -407,8 +407,8 @@ void KeyboardPage::CreateNode( int nType, LPVOID lpvData )
 
 			// Free the node and
 			// it's string.
-			if ( nType != CTYPE_HARDCODED ) ::FreePooled( pParserPool, pCNode->pcStr );
-			::FreePooled( pParserPool, pCNode );
+			if ( nType != CTYPE_HARDCODED ) ::Brainchild_FreePooled( pParserPool, pCNode->pcStr );
+			::Brainchild_FreePooled( pParserPool, pCNode );
 		}
 	}
 }
@@ -479,10 +479,10 @@ LRESULT KeyboardPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 					// Free the node
 					// data.
 					if ( pCNode->nType != CTYPE_HARDCODED )
-						::FreePooled( pParserPool, pCNode->pcStr );
+						::Brainchild_FreePooled( pParserPool, pCNode->pcStr );
 
 					// And the node itself.
-					::FreePooled( pParserPool, pCNode );
+					::Brainchild_FreePooled( pParserPool, pCNode );
 
 					// Setup GUI.
 					SetupControls();
@@ -501,11 +501,11 @@ LRESULT KeyboardPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 					{
 						// Convert to a code and qualifier.
 						TCHAR cCode, cQual;
-						if ( ::Str2CodeQual( szKeyString, &cCode, &cQual ))
+						if ( ::Brainchild_Str2CodeQual( szKeyString, &cCode, &cQual ))
 						{
 							// Remove the hash. This will automatically destroy
 							// the command-list aswell.
-							::RemHash( pParserPool, m_pParser->aHash, cCode, cQual );
+							::Brainchild_RemHash( pParserPool, m_pParser->aHash, cCode, cQual );
 
 							// Remove it from the listview.
 							m_Keys.DeleteString( nSel );
@@ -586,7 +586,7 @@ LRESULT KeyboardPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 			return 0;
 
 		case	IDS_HARDCODED:
-			CreateNode( CTYPE_HARDCODED, ( LPVOID )( ::GetCommandTable()->nCommandID ));
+			CreateNode( CTYPE_HARDCODED, ( LPVOID )( ::Brainchild_GetCommandTable()->nCommandID ));
 			return 0;
 
 		case	IDS_RUN:

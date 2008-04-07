@@ -58,22 +58,22 @@ LONG WINAPI CALLBACK CPlApplet( HWND hWnd, UINT uMsg, LPARAM lParam1, LPARAM lPa
 	{
 		case	CPL_INIT:
 			// Load brainchild.dll
-			if (( hBrainchild = ::LoadLibrary( _T( "brainchild.dll" ))) != NULL )
+			if (( hBrainchild = ::LoadLibrary( _T( "Brainchild.dll" ))) != NULL )
 			{
 				// Create memory pool.
-				if (( pParserPool = ::GetMemoryPool( 4096L )) != NULL )
+				if (( pParserPool = ::Brainchild_GetMemoryPool( 4096L )) != NULL )
 				{
 					// Initialize lists.
 					NewList(( LPLIST )&plParsers );
 
 					// Loadup parser files.
-					if ( ::LoadParserFiles( pParserPool, &plParsers ) == TRUE )
+					if ( ::Brainchild_LoadParserFiles( pParserPool, &plParsers ) == TRUE )
 						return TRUE;
 					else
 						MessageBox( hWnd, ClsString( MAKEINTRESOURCE( IDS_NO_SETTINGS )), ClsGetApp()->GetAppTitle(), MB_ICONERROR | MB_OK );
 
 					// Free the memory pool.
-					::FreeMemoryPool( pParserPool, TRUE );
+					::Brainchild_FreeMemoryPool( pParserPool, TRUE );
 				}
 				else
 					MessageBox( hWnd, ClsString( MAKEINTRESOURCE( IDS_NO_MEMORY )), ClsGetApp()->GetAppTitle(), MB_ICONERROR | MB_OK );
@@ -121,10 +121,10 @@ LONG WINAPI CALLBACK CPlApplet( HWND hWnd, UINT uMsg, LPARAM lParam1, LPARAM lPa
 
 		case	CPL_STOP:
 			// Free the parser list.
-			FreeParserList( pParserPool, &plParsers );
+			::Brainchild_FreeParserList( pParserPool, &plParsers );
 
 			// Free the memory pool.
-			FreeMemoryPool( pParserPool, TRUE );
+			Brainchild_FreeMemoryPool( pParserPool, TRUE );
 
 			// Unload the library.
 			FreeLibrary( hBrainchild );

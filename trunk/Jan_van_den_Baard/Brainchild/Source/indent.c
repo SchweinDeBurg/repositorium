@@ -127,7 +127,7 @@ TCHAR *CopyLeadingBlanks( LPCLASSDATA lpcd, int *lpnCaretX )
 			/*
 			 *	Allocate...
 			 */
-			if (( pcBlanks = AllocPooled( lpcd->pMemPool, REAL_SIZE( nTabs + nSpaces ) + 1 )) != NULL )
+			if (( pcBlanks = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( nTabs + nSpaces ) + 1 )) != NULL )
 			{
 				/*
 				 *	Insert tabs.
@@ -217,7 +217,7 @@ static void TabIndent( LPCLASSDATA lpcd, BOOL bIndent )
 			/*
 			 *	Get the line.
 			 */
-			lpLine = ArrayGetAt( lpcd->lpLines, i );
+			lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, i );
 
 			/*
 			 *	Create positions.
@@ -291,7 +291,7 @@ static void TabIndent( LPCLASSDATA lpcd, BOOL bIndent )
 	/*
 	 *	Get the last line.
 	 */
-	lpLine = ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y );
+	lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y );
 
 	/*
 	 *	Make sure the selection covers whole lines...

@@ -254,7 +254,7 @@ LRESULT OnCreate( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpDummy )
 		/*
 		 *	Create general memory pool.
 		 */
-		if (( lpcd->pMemPool = GetMemoryPool( 4096 )) == NULL )
+		if (( lpcd->pMemPool = Brainchild_GetMemoryPool( 4096 )) == NULL )
 			return -1;
 
 		/*
@@ -300,9 +300,9 @@ LRESULT OnCreate( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpDummy )
 		/*
 		 *	Create lines and undo/redo arrays.
 		 */
-		if (( lpcd->lpLines = ArrayCreate( 0, 4096, sizeof( LINE ))) == NULL )
+		if (( lpcd->lpLines = Brainchild_ArrayCreate( 0, 4096, sizeof( LINE ))) == NULL )
 			return -1;
-		if (( lpcd->lpUndoRedo = ArrayCreate( 0, 1024, sizeof( UNDOREDO ))) == NULL )
+		if (( lpcd->lpUndoRedo = Brainchild_ArrayCreate( 0, 1024, sizeof( UNDOREDO ))) == NULL )
 			return -1;
 
 		/*
@@ -474,7 +474,7 @@ LRESULT OnDestroy( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 		/*
 		 *	Free the coloring array.
 		 */
-		if ( lpcd->lpscColorArray ) FreePooled( lpcd->pMemPool, lpcd->lpscColorArray );
+		if ( lpcd->lpscColorArray ) Brainchild_FreePooled( lpcd->pMemPool, lpcd->lpscColorArray );
 
 		/*
 		 *	Free string lists.
@@ -485,7 +485,7 @@ LRESULT OnDestroy( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 		/*
 		 *	Free memory pool.
 		 */
-		if ( lpcd->pMemPool ) FreeMemoryPool( lpcd->pMemPool, TRUE );
+		if ( lpcd->pMemPool ) Brainchild_FreeMemoryPool( lpcd->pMemPool, TRUE );
 		
 		/*
 		 *	Destroy cursors.
@@ -510,8 +510,8 @@ LRESULT OnDestroy( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 		/*
 		 *	Free the arrays.
 		 */
-		if ( lpcd->lpLines    ) ArrayDelete( lpcd->lpLines );
-		if ( lpcd->lpUndoRedo ) ArrayDelete( lpcd->lpUndoRedo );
+		if ( lpcd->lpLines    ) Brainchild_ArrayDelete( lpcd->lpLines );
+		if ( lpcd->lpUndoRedo ) Brainchild_ArrayDelete( lpcd->lpUndoRedo );
 
 		/*
 		 *	Destroy brushes.

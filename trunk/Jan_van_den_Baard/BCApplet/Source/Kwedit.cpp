@@ -127,12 +127,12 @@ LRESULT KWEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 			if ( m_Edit.SaveFile( m_szOutput ) == BCMR_OK )
 			{
 				// Delete the current contents.
-				for ( int i = 0; i < ::ArrayGetSize( m_pKW->lpaKeywords ); i++ )
+				for ( int i = 0; i < ::Brainchild_ArrayGetSize( m_pKW->lpaKeywords ); i++ )
 					// Free the string contents.
-					::ArrayFreeMem( m_pKW->lpaKeywords, *(( LPTSTR * )::ArrayGetAt( m_pKW->lpaKeywords, i )));
+					::Brainchild_ArrayFreeMem( m_pKW->lpaKeywords, *(( LPTSTR * )::Brainchild_ArrayGetAt( m_pKW->lpaKeywords, i )));
 
 				// Empty the array.
-				::ArrayRemoveAll( m_pKW->lpaKeywords );
+				::Brainchild_ArrayRemoveAll( m_pKW->lpaKeywords );
 				EndDialog( TRUE );
 				return 0;
 			}
@@ -168,8 +168,8 @@ BOOL KWEdit::SaveKeywords()
 				file.Open( m_szOutput, _T( "wa" ));
 
 				// Write keywords.
-				for ( int i = 0; i < ::ArrayGetSize( m_pKW->lpaKeywords ); i++ )
-					file.PrintF( _T( "%s\n" ), *(( LPSTRING * )::ArrayGetAt( m_pKW->lpaKeywords, i )));
+				for ( int i = 0; i < ::Brainchild_ArrayGetSize( m_pKW->lpaKeywords ); i++ )
+					file.PrintF( _T( "%s\n" ), *(( LPSTRING * )::Brainchild_ArrayGetAt( m_pKW->lpaKeywords, i )));
 
 				// Close the file.
 				file.Close();

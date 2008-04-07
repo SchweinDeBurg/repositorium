@@ -32,7 +32,7 @@ LRESULT Hardcoded::OnInitDialog( LPPROPSHEETPAGE pPsp )
 
 
 	// Add commands to the list.
-	LPCOMMAND lpCTable = ::GetCommandTable();
+	LPCOMMAND lpCTable = ::Brainchild_GetCommandTable();
 	int nSel;
 	while ( lpCTable->lpfnFunc )
 	{
@@ -83,7 +83,7 @@ LRESULT Hardcoded::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 				m_List.GetText( nSel, szEntry );
 
 				// Find the correct command.
-				LPCOMMAND lpCTable = ::GetCommandTable();
+				LPCOMMAND lpCTable = ::Brainchild_GetCommandTable();
 				while ( lpCTable->lpfnFunc )
 				{
 					// Is this the one?

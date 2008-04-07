@@ -241,7 +241,7 @@ int FindMatches( LPCLASSDATA lpcd, LPPOINT lpPoint1, LPPOINT lpPoint2, BOOL bFin
 			/*
 			 *	Get the line we are on.
 			 */
-			lpLine = ArrayGetAt( lpcd->lpLines, nLine );
+			lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine );
 
 			/*
 			 *	Are we at the end?
@@ -277,7 +277,7 @@ int FindMatches( LPCLASSDATA lpcd, LPPOINT lpPoint1, LPPOINT lpPoint2, BOOL bFin
 				 *	it's end.
 				 */
 				nLine--;
-				lpLine = ArrayGetAt( lpcd->lpLines, nLine );
+				lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine );
 				nColumn = lpLine->nLength;
 			}
 			else
@@ -295,12 +295,12 @@ int FindMatches( LPCLASSDATA lpcd, LPPOINT lpPoint1, LPPOINT lpPoint2, BOOL bFin
 			/*
 			 *	Look for the match.
 			 */
-			while ( nLine < ArrayGetSize( lpcd->lpLines ) && bHasMatch == FALSE )
+			while ( nLine < Brainchild_ArrayGetSize( lpcd->lpLines ) && bHasMatch == FALSE )
 			{
 				/*
 				 *	Get a pointer to the line.
 				 */
-				lpLine = ArrayGetAt( lpcd->lpLines, nLine );
+				lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine );
 
 				/*
 				 *	Any text on this line?
@@ -373,7 +373,7 @@ int FindMatches( LPCLASSDATA lpcd, LPPOINT lpPoint1, LPPOINT lpPoint2, BOOL bFin
 				/*
 				 *	Get a pointer to the line we are on.
 				 */
-				lpLine = ArrayGetAt( lpcd->lpLines, nLine );
+				lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine );
 
 				/*
 				 *	Any text on this line?
@@ -434,7 +434,7 @@ int FindMatches( LPCLASSDATA lpcd, LPPOINT lpPoint1, LPPOINT lpPoint2, BOOL bFin
 					 */
 					nLine--;
 					if ( nLine >= 0 )
-						nColumn = (( LPLINE )ArrayGetAt( lpcd->lpLines, nLine ))->nLength;
+						nColumn = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, nLine ))->nLength;
 				}
 			}
 		}

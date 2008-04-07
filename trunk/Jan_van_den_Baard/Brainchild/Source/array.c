@@ -39,7 +39,7 @@ BOOL ArraySetSize( LPARRAY lpArray, int nSize, int nGrowBy )
 			/*
 			 *	Free the array.
 			 */
-			FreePooled( lpArray->mpPool, lpArray->lpElements );
+			Brainchild_FreePooled( lpArray->mpPool, lpArray->lpElements );
 			lpArray->lpElements = NULL;
 		}
 
@@ -92,7 +92,7 @@ BOOL ArraySetSize( LPARRAY lpArray, int nSize, int nGrowBy )
 		/*
 		 *	Allocate new elements.
 		 */
-		if (( lpNewElem = AllocPooled( lpArray->mpPool, nMaximum * lpArray->nElemSize )) == NULL )
+		if (( lpNewElem = Brainchild_AllocPooled( lpArray->mpPool, nMaximum * lpArray->nElemSize )) == NULL )
 			return FALSE;
 
 		/*
@@ -101,7 +101,7 @@ BOOL ArraySetSize( LPARRAY lpArray, int nSize, int nGrowBy )
 		if ( lpArray->lpElements )
 		{
 			memcpy(lpNewElem, lpArray->lpElements, lpArray->nSize * lpArray->nElemSize );
-			FreePooled( lpArray->mpPool, lpArray->lpElements );
+			Brainchild_FreePooled( lpArray->mpPool, lpArray->lpElements );
 		}
 
 		/*
@@ -117,7 +117,7 @@ BOOL ArraySetSize( LPARRAY lpArray, int nSize, int nGrowBy )
 /*
  *	Sort the array contents.
  */
-void ArraySort( LPARRAY lpArray, COMPFUNC lpfnCompare )
+void Brainchild_ArraySort( LPARRAY lpArray, COMPFUNC lpfnCompare )
 {
 	/*
 	 *	Sort the array.
@@ -128,7 +128,7 @@ void ArraySort( LPARRAY lpArray, COMPFUNC lpfnCompare )
 /*
  *	Return the size of the array.
  */
-int ArrayGetSize( LPARRAY lpArray )
+int Brainchild_ArrayGetSize( LPARRAY lpArray )
 {
 	return lpArray->nSize;
 }
@@ -136,7 +136,7 @@ int ArrayGetSize( LPARRAY lpArray )
 /*
  *	Return a pointer to an array element.
  */
-LPVOID ArrayGetAt( LPARRAY lpArray, int nIndex )
+LPVOID Brainchild_ArrayGetAt( LPARRAY lpArray, int nIndex )
 {
 	/*
 	 *	Valid index?
@@ -156,7 +156,7 @@ LPVOID ArrayGetAt( LPARRAY lpArray, int nIndex )
 /*
  *	Add a new element(s) to the array.
  */
-BOOL ArrayAdd( LPARRAY lpArray, LPVOID lpElements, int nNum )
+BOOL Brainchild_ArrayAdd( LPARRAY lpArray, LPVOID lpElements, int nNum )
 {
 	int	nIndex = lpArray->nSize;
 
@@ -177,7 +177,7 @@ BOOL ArrayAdd( LPARRAY lpArray, LPVOID lpElements, int nNum )
 /*
  *	Insert an element.
  */
-BOOL ArrayInsertAt( LPARRAY lpArray, int nIndex, LPVOID lpElements, int nNum )
+BOOL Brainchild_ArrayInsertAt( LPARRAY lpArray, int nIndex, LPVOID lpElements, int nNum )
 {
 	int nSize;
 
@@ -225,7 +225,7 @@ BOOL ArrayInsertAt( LPARRAY lpArray, int nIndex, LPVOID lpElements, int nNum )
 	return TRUE;
 }
 
-void ArrayRemoveAt( LPARRAY lpArray, int nIndex, int nNum )
+void Brainchild_ArrayRemoveAt( LPARRAY lpArray, int nIndex, int nNum )
 {
 	/*
 	 *	Valid index?
@@ -254,7 +254,7 @@ void ArrayRemoveAt( LPARRAY lpArray, int nIndex, int nNum )
 /*
  *	Remove all array elements.
  */
-void ArrayRemoveAll( LPARRAY lpArray )
+void Brainchild_ArrayRemoveAll( LPARRAY lpArray )
 {
 	/*
 	 *	Free array elements.
@@ -277,13 +277,13 @@ void ArrayReset( LPARRAY lpArray )
 	/*
 	 *	Flush all allocated memory.
 	 */
-	FreeMemoryPool( lpArray->mpPool, FALSE );
+	Brainchild_FreeMemoryPool( lpArray->mpPool, FALSE );
 }
 
 /*
  *	Create an array handle.
  */
-LPARRAY ArrayCreate( int nSize, int nGrowBy, int nElemSize )
+LPARRAY Brainchild_ArrayCreate( int nSize, int nGrowBy, int nElemSize )
 {
 	LPARRAY		lpArray;
 
@@ -295,7 +295,7 @@ LPARRAY ArrayCreate( int nSize, int nGrowBy, int nElemSize )
 		/*
 		 *	Create a memory pool.
 		 */
-		if (( lpArray->mpPool = GetMemoryPool( 4096L )) != NULL )
+		if (( lpArray->mpPool = Brainchild_GetMemoryPool( 4096L )) != NULL )
 		{
 			/*
 			 *	Initialize the array.
@@ -315,7 +315,7 @@ LPARRAY ArrayCreate( int nSize, int nGrowBy, int nElemSize )
 			/*
 			 *	Free the memory pool.
 			 */
-			FreeMemoryPool( lpArray->mpPool, TRUE );
+			Brainchild_FreeMemoryPool( lpArray->mpPool, TRUE );
 		}
 		/*
 		 *	Free the structure.
@@ -328,12 +328,12 @@ LPARRAY ArrayCreate( int nSize, int nGrowBy, int nElemSize )
 /*
  *	Delete the array.
  */
-void ArrayDelete( LPARRAY lpArray )
+void Brainchild_ArrayDelete( LPARRAY lpArray )
 {
 	/*
 	 *	Remove the array memory pool.
 	 */
-	FreeMemoryPool( lpArray->mpPool, TRUE );
+	Brainchild_FreeMemoryPool( lpArray->mpPool, TRUE );
 
 	/*
 	 *	Free the array structure.
@@ -344,15 +344,15 @@ void ArrayDelete( LPARRAY lpArray )
 /*
  *	Allocate memory in the array memory pool.
  */
-LPVOID ArrayAllocMem( LPARRAY lpArray, int nSize )
+LPVOID Brainchild_ArrayAllocMem( LPARRAY lpArray, int nSize )
 {
-	return AllocPooled( lpArray->mpPool, nSize );
+	return Brainchild_AllocPooled( lpArray->mpPool, nSize );
 }
 
 /*
  *	Free memory from the array memory pool.
  */
-void ArrayFreeMem( LPARRAY lpArray, LPVOID lpMemPtr )
+void Brainchild_ArrayFreeMem( LPARRAY lpArray, LPVOID lpMemPtr )
 {
-	FreePooled( lpArray->mpPool, lpMemPtr );
+	Brainchild_FreePooled( lpArray->mpPool, lpMemPtr );
 }

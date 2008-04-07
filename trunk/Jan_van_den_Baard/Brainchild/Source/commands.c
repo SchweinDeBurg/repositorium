@@ -121,7 +121,7 @@ COMMAND	ComTable[] = {
 /*
  *	Return a pointer to the command table.
  */
-LPCOMMAND GetCommandTable( void )
+LPCOMMAND Brainchild_GetCommandTable( void )
 {
 	return ComTable;
 }
@@ -129,7 +129,7 @@ LPCOMMAND GetCommandTable( void )
 /*
  *	Find a command by it's identifier.
  */
-LPFUNC FindCommand( int nCommandID )
+LPFUNC Brainchild_FindCommand( int nCommandID )
 {
 	int		i = 0;
 
@@ -162,7 +162,7 @@ LPFUNC FindCommand( int nCommandID )
  *	Find a command identifier by
  *	it's function pointer.
  */
-int FindCommandID( LPFUNC lpfnFunc )
+int Brainchild_FindCommandID( LPFUNC lpfnFunc )
 {
 	int		i = 0;
 
@@ -191,7 +191,7 @@ int FindCommandID( LPFUNC lpfnFunc )
  *	Find a command descroption by
  *	it's function pointer.
  */
-LPCTSTR FindCommandDesc( LPFUNC lpfnFunc )
+LPCTSTR Brainchild_FindCommandDesc( LPFUNC lpfnFunc )
 {
 	int		i = 0;
 
@@ -223,7 +223,7 @@ LRESULT OnExecuteCommand( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA l
 	/*
 	 *	Find the command.
 	 */
-	if (( lpfnFunction = FindCommand( wParam )) != NULL )
+	if (( lpfnFunction = Brainchild_FindCommand( wParam )) != NULL )
 		/*
 		 *	Execute it.
 		 */

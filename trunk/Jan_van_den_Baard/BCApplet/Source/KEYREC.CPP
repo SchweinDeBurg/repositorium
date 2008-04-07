@@ -63,7 +63,7 @@ LRESULT KeyRecEdit::WindowProc( UINT uMsg, WPARAM wParam, LPARAM lParam )
 
 					// Convert the values into a
 					// human readable form.
-					::CodeQual2Str(( TCHAR )wParam, m_cQual, szKeyString );
+					::Brainchild_CodeQual2Str(( TCHAR )wParam, m_cQual, szKeyString );
 
 					// Display and copy the text.
 					SetWindowText( szKeyString );

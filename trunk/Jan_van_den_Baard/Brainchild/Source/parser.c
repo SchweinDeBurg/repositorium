@@ -302,7 +302,7 @@ static BOOL BlockEnd( LPCLASSDATA lpcd, LPBLOCK lpb, TCHAR *pcText, int nIndex, 
 void PreParseTo( LPCLASSDATA lpcd, int nTo )
 {
 	register LPLINE		lpLine;
-	register int		i, nBlock = -1, nLines = ArrayGetSize( lpcd->lpLines );
+	register int		i, nBlock = -1, nLines = Brainchild_ArrayGetSize( lpcd->lpLines );
 	int			nDummy;
 
 	/* 
@@ -310,7 +310,7 @@ void PreParseTo( LPCLASSDATA lpcd, int nTo )
 	 *	marker?
 	 */
 	if ( lpcd->dwParsedUpTo == 0 ) nBlock = -1;
-	else			       nBlock = (( LPLINE )ArrayGetAt( lpcd->lpLines, lpcd->dwParsedUpTo ))->nBlock;
+	else			       nBlock = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, lpcd->dwParsedUpTo ))->nBlock;
 
 	/*
 	 *	Make sure we do not go past the end
@@ -326,7 +326,7 @@ void PreParseTo( LPCLASSDATA lpcd, int nTo )
 		/*
 		 *	Get line pointer.
 		 */
-		lpLine = ArrayGetAt( lpcd->lpLines, i );
+		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, i );
 
 		/*
 		 *	Pre-parse the line. This is done so that 
@@ -574,7 +574,7 @@ int ParseLine( LPCLASSDATA lpcd, int nInBlock, TCHAR *pcText, int nLength, SYNTA
 		/*
 		 *	Get the block.
 		 */
-		lpBlock = ArrayGetAt( lpp->lpaBlocks, nInBlock );
+		lpBlock = Brainchild_ArrayGetAt( lpp->lpaBlocks, nInBlock );
 		
 		/*
 		 *	Setup the color.
@@ -657,7 +657,7 @@ int ParseLine( LPCLASSDATA lpcd, int nInBlock, TCHAR *pcText, int nLength, SYNTA
 			/*
 			 *	Get the block.
 			 */
-			lpBlock = ArrayGetAt( lpp->lpaBlocks, i );
+			lpBlock = Brainchild_ArrayGetAt( lpp->lpaBlocks, i );
 			
 			/*
 			 *	Done?
@@ -724,7 +724,7 @@ int ParseLine( LPCLASSDATA lpcd, int nInBlock, TCHAR *pcText, int nLength, SYNTA
 			/*
 			 *	Get block.
 			 */
-			lpBlock = ArrayGetAt( lpp->lpaBlocks, nInBlock );
+			lpBlock = Brainchild_ArrayGetAt( lpp->lpaBlocks, nInBlock );
 
 			/*
 			 *	Does the block terminate with a string?
@@ -853,7 +853,7 @@ int ParseLine( LPCLASSDATA lpcd, int nInBlock, TCHAR *pcText, int nLength, SYNTA
 				/*
 				 *	Valid block?
 				 */
-				if (( lpBlock = ArrayGetAt( lpp->lpaBlocks, i )) == NULL )
+				if (( lpBlock = Brainchild_ArrayGetAt( lpp->lpaBlocks, i )) == NULL )
 					break;
 
 				/*

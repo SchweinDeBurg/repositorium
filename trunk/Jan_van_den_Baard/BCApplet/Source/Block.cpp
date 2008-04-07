@@ -96,7 +96,7 @@ LRESULT BlockEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 				if ( nLength )
 				{
 					// Allocate memory for the name.
-					pszString = ( LPTSTR )::ArrayAllocMem( m_pParser->lpaBlocks, nLength + 1 );
+					pszString = ( LPTSTR )::Brainchild_ArrayAllocMem( m_pParser->lpaBlocks, nLength + 1 );
 					if ( pszString )
 						// Get the text.
 						m_Name.GetWindowText( pszString, nLength + 1 );
@@ -104,7 +104,7 @@ LRESULT BlockEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 
 				// Free the old string.
 				if ( m_Block.pszName )
-					::ArrayFreeMem( m_pParser->lpaBlocks, m_Block.pszName );
+					::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, m_Block.pszName );
 
 				// Setup new name.
 				m_Block.pszName = pszString;
@@ -124,7 +124,7 @@ LRESULT BlockEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 				if ( nLength )
 				{
 					// Allocate memory for the name.
-					pszString = ( LPTSTR )::ArrayAllocMem( m_pParser->lpaBlocks, nLength + 1 );
+					pszString = ( LPTSTR )::Brainchild_ArrayAllocMem( m_pParser->lpaBlocks, nLength + 1 );
 					if ( pszString )
 					{
 						// Get the text.
@@ -135,7 +135,7 @@ LRESULT BlockEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 
 						// Free the old string.
 						if ( m_Block.pszStart )
-							::ArrayFreeMem( m_pParser->lpaBlocks, m_Block.pszStart );
+							::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, m_Block.pszStart );
 
 						// Setup new string.
 						m_Block.pszStart = pszString;
@@ -171,7 +171,7 @@ LRESULT BlockEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 				if ( nLength )
 				{
 					// Allocate memory for the name.
-					pszString = ( LPTSTR )::ArrayAllocMem( m_pParser->lpaBlocks, nLength + 1 );
+					pszString = ( LPTSTR )::Brainchild_ArrayAllocMem( m_pParser->lpaBlocks, nLength + 1 );
 					if ( pszString )
 					{
 						// Get the text.
@@ -187,7 +187,7 @@ LRESULT BlockEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 
 				// Free the old string.
 				if ( m_Block.pszEnd && m_Block.pszEnd != END_OF_LINE )
-					::ArrayFreeMem( m_pParser->lpaBlocks, m_Block.pszEnd );
+					::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, m_Block.pszEnd );
 
 				// Setup new string.
 				m_Block.pszEnd = pszString;
@@ -203,7 +203,7 @@ LRESULT BlockEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 		case	IDC_EOL:
 			// Free end string.
 			if ( m_Block.pszEnd && m_Block.pszEnd != END_OF_LINE )
-				::ArrayFreeMem( m_pParser->lpaBlocks, m_Block.pszEnd );
+				::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, m_Block.pszEnd );
 
 			// Clear end edit control.
 			m_End.SetWindowText( NULL );
@@ -221,7 +221,7 @@ LRESULT BlockEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 		case	IDC_WHITE:
 			// Free end string.
 			if ( m_Block.pszEnd && m_Block.pszEnd != END_OF_LINE )
-				::ArrayFreeMem( m_pParser->lpaBlocks, m_Block.pszEnd );
+				::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, m_Block.pszEnd );
 
 			// No length.
 			m_Block.nEnd = 0;
@@ -288,9 +288,9 @@ BOOL BlockEdit::EditBlock( ClsWindow& Parent, LPBLOCK pBlock, LPPARSER pParser )
 
 	// Free the strings from the
 	// block structure.
-	if ( pToFree->pszStart ) ::ArrayFreeMem( pParser->lpaBlocks, pToFree->pszStart );
-	if ( pToFree->pszEnd && pToFree->pszEnd != END_OF_LINE ) ::ArrayFreeMem( pParser->lpaBlocks, pToFree->pszEnd );
-	if ( pToFree->pszName ) ::ArrayFreeMem( pParser->lpaBlocks, pToFree->pszName );
+	if ( pToFree->pszStart ) ::Brainchild_ArrayFreeMem( pParser->lpaBlocks, pToFree->pszStart );
+	if ( pToFree->pszEnd && pToFree->pszEnd != END_OF_LINE ) ::Brainchild_ArrayFreeMem( pParser->lpaBlocks, pToFree->pszEnd );
+	if ( pToFree->pszName ) ::Brainchild_ArrayFreeMem( pParser->lpaBlocks, pToFree->pszName );
 
 	// Setup new values.
 	if ( bRC ) *pBlock = m_Block;
@@ -310,7 +310,7 @@ BOOL BlockEdit::CloneBlock( LPBLOCK pSource, LPBLOCK pDest )
 	if ( pSource->pszName )
 	{
 		// Allocate memory.
-		pDest->pszName = ( LPTSTR )::ArrayAllocMem( m_pParser->lpaBlocks, ( _tcslen( pSource->pszName ) + 1 ) * sizeof( TCHAR ));
+		pDest->pszName = ( LPTSTR )::Brainchild_ArrayAllocMem( m_pParser->lpaBlocks, ( _tcslen( pSource->pszName ) + 1 ) * sizeof( TCHAR ));
 		if ( pDest->pszName )
 			// Copy string.
 			_tcscpy( pDest->pszName, pSource->pszName );
@@ -319,13 +319,13 @@ BOOL BlockEdit::CloneBlock( LPBLOCK pSource, LPBLOCK pDest )
 	}
 
 	// Copy start string,.
-	pDest->pszStart = ( LPTSTR )::ArrayAllocMem( m_pParser->lpaBlocks, ( _tcslen( pSource->pszStart ) + 1 ) * sizeof( TCHAR ));
+	pDest->pszStart = ( LPTSTR )::Brainchild_ArrayAllocMem( m_pParser->lpaBlocks, ( _tcslen( pSource->pszStart ) + 1 ) * sizeof( TCHAR ));
 	if ( pDest->pszStart )
 		// Copy string.
 		_tcscpy( pDest->pszStart, pSource->pszStart );
 	else
 	{
-		if ( pDest->pszName ) ::ArrayFreeMem( m_pParser->lpaBlocks, pDest->pszName );
+		if ( pDest->pszName ) ::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, pDest->pszName );
 		return FALSE;
 	}
 
@@ -338,14 +338,14 @@ BOOL BlockEdit::CloneBlock( LPBLOCK pSource, LPBLOCK pDest )
 		else
 		{
 			// Allocate memory.
-			pDest->pszEnd = ( LPTSTR )::ArrayAllocMem( m_pParser->lpaBlocks, ( _tcslen( pSource->pszEnd ) + 1 ) * sizeof( TCHAR ));
+			pDest->pszEnd = ( LPTSTR )::Brainchild_ArrayAllocMem( m_pParser->lpaBlocks, ( _tcslen( pSource->pszEnd ) + 1 ) * sizeof( TCHAR ));
 			if ( pDest->pszEnd )
 				// Copy string.
 				_tcscpy( pDest->pszEnd, pSource->pszEnd );
 			else
 			{
-				if ( pDest->pszName ) ::ArrayFreeMem( m_pParser->lpaBlocks, pDest->pszName );
-				::ArrayFreeMem( m_pParser->lpaBlocks, pDest->pszStart );
+				if ( pDest->pszName ) ::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, pDest->pszName );
+				::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, pDest->pszStart );
 				return FALSE;
 			}
 		}

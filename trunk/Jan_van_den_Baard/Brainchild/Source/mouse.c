@@ -15,7 +15,7 @@
 BOOL MouseToCaret( LPCLASSDATA lpcd, int x, int y, LPPOINT pt )
 {
 	LPLINE		lpLine;
-	int		nPos, nLastLine = ArrayGetSize( lpcd->lpLines ) - 1;
+	int		nPos, nLastLine = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
 	BOOL		bRC = TRUE, bTruncated;
 
 	/*
@@ -50,7 +50,7 @@ BOOL MouseToCaret( LPCLASSDATA lpcd, int x, int y, LPPOINT pt )
 	/*
 	 *	Get a pointer to the line.
 	 */
-	lpLine = ArrayGetAt( lpcd->lpLines, pt->y );
+	lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, pt->y );
 
 	/*
 	 *	Get the text offset of the
@@ -104,7 +104,7 @@ BOOL MouseOnSelection( LPCLASSDATA lpcd )
 		/*
 		 *	Passed the text?
 		 */
-		if ( lpcd->ptViewPos.y + ( ptMousePos.y / Parser->szCharSize.cy ) > ArrayGetSize( lpcd->lpLines ) -1 )
+		if ( lpcd->ptViewPos.y + ( ptMousePos.y / Parser->szCharSize.cy ) > Brainchild_ArrayGetSize( lpcd->lpLines ) -1 )
 			return FALSE;
 
 		/*
@@ -154,7 +154,7 @@ BOOL MouseOnSelection( LPCLASSDATA lpcd )
 
 static ExtendWordLeft( LPCLASSDATA lpcd, LPPOINT lpPoint )
 {
-	LPLINE		lpLine = ArrayGetAt( lpcd->lpLines, lpPoint->y );
+	LPLINE		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, lpPoint->y );
 
 	/*
 	 *	Start of the line?
@@ -200,7 +200,7 @@ static ExtendWordLeft( LPCLASSDATA lpcd, LPPOINT lpPoint )
 
 static ExtendWordRight( LPCLASSDATA lpcd, LPPOINT lpPoint )
 {
-	LPLINE		lpLine = ArrayGetAt( lpcd->lpLines, lpPoint->y );
+	LPLINE		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, lpPoint->y );
 
 	/*
 	 *	End of the line?
@@ -418,7 +418,7 @@ LRESULT OnLButtonDown( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd
 				/*
 				 *	Are we on the last line?
 				 */
-				if ( lpcd->ptSelStart.y < ArrayGetSize( lpcd->lpLines ) - 1 )
+				if ( lpcd->ptSelStart.y < Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 				{
 					/*
 					 *	No. Go down one and move
@@ -431,7 +431,7 @@ LRESULT OnLButtonDown( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd
 					/*
 					 *	The end of this line.
 					 */
-					lpcd->ptSelEnd.x = (( LPLINE )ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y ))->nLength;
+					lpcd->ptSelEnd.x = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y ))->nLength;
 
 				/*
 				 *	Make the end position the
@@ -621,7 +621,7 @@ static void DoTooltip( LPCLASSDATA lpcd, BOOL bShow )
 		/*
 		 *	Free the URL.
 		 */
-		FreePooled( lpcd->pMemPool, pszLink );
+		Brainchild_FreePooled( lpcd->pMemPool, pszLink );
 	}
 }
 
@@ -749,12 +749,12 @@ LRESULT OnMouseMove( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 					/*
 					 *	Is it on the last line?
 					 */
-					if ( lpcd->ptSelEnd.y == ArrayGetSize( lpcd->lpLines ) - 1 )
+					if ( lpcd->ptSelEnd.y == Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 						/*
 						 *	Put it at the end
 						 *	of this line.
 						 */
-						lpcd->ptSelEnd.x = (( LPLINE )ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y ))->nLength;
+						lpcd->ptSelEnd.x = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y ))->nLength;
 					else
 					{
 						/*
@@ -777,7 +777,7 @@ LRESULT OnMouseMove( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 					 *	Setup new end position.
 					 */
 					lpcd->ptSelEnd.y = ptMousePos.y;
-					lpcd->ptSelEnd.x = (( LPLINE )ArrayGetAt( lpcd->lpLines, ptMousePos.y ))->nLength;
+					lpcd->ptSelEnd.x = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, ptMousePos.y ))->nLength;
 
 					/*
 					 *	The position we started on will become
@@ -789,12 +789,12 @@ LRESULT OnMouseMove( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 					/*
 					 *	Is it on the last line?
 					 */
-					if ( lpcd->ptSelEnd.y == ArrayGetSize( lpcd->lpLines ) - 1 )
+					if ( lpcd->ptSelEnd.y == Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 						/*
 						 *	Put it at the end
 						 *	of this line.
 						 */
-						lpcd->ptSelEnd.x = (( LPLINE )ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y ))->nLength;
+						lpcd->ptSelEnd.x = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y ))->nLength;
 					else
 					{
 						/*
@@ -934,7 +934,7 @@ LRESULT OnTimer( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 		POINT	ptMouse;
 		RECT	rcClient;
 		BOOL	bChange = FALSE;
-		int	nLines = ArrayGetSize( lpcd->lpLines ) - 1;
+		int	nLines = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
 
 		/*
 		 *	Get client rectabgle.

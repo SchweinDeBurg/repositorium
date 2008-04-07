@@ -53,7 +53,7 @@ LPSTRING AddStringNode( LPCLASSDATA lpcd, LPSTRINGLIST lpList, LPCTSTR lpszStrin
 	/*
 	 *	Allocate node?
 	 */
-	if (( lps = AllocPooled( lpcd->pMemPool, sizeof( STRING ))) != NULL )
+	if (( lps = Brainchild_AllocPooled( lpcd->pMemPool, sizeof( STRING ))) != NULL )
 	{
 		/*
 		 *	Copy the string.
@@ -74,12 +74,12 @@ LPSTRING AddStringNode( LPCLASSDATA lpcd, LPSTRINGLIST lpList, LPCTSTR lpszStrin
 					 *	Free it's string.
 					 */
 					if ( lpr->lpszString )
-						FreePooled( lpcd->pMemPool, ( LPVOID )lpr->lpszString );
+						Brainchild_FreePooled( lpcd->pMemPool, ( LPVOID )lpr->lpszString );
 
 					/*
 					 *	And itself.
 					 */
-					FreePooled( lpcd->pMemPool, lpr );
+					Brainchild_FreePooled( lpcd->pMemPool, lpr );
 
 					/*
 					 *	One less.
@@ -104,7 +104,7 @@ LPSTRING AddStringNode( LPCLASSDATA lpcd, LPSTRINGLIST lpList, LPCTSTR lpszStrin
 			/*
 			 *	Free the node.
 			 */
-			FreePooled( lpcd->pMemPool, lps );
+			Brainchild_FreePooled( lpcd->pMemPool, lps );
 			lps = NULL;
 		}
 	}
@@ -124,12 +124,12 @@ void FreeStringNodes( LPCLASSDATA lpcd, LPSTRINGLIST lpList )
 		 *	Free the string.
 		 */
 		if ( lps->lpszString )
-			FreePooled( lpcd->pMemPool, ( LPVOID )lps->lpszString );
+			Brainchild_FreePooled( lpcd->pMemPool, ( LPVOID )lps->lpszString );
 
 		/*
 		 *	And the node.
 		 */
-		FreePooled( lpcd->pMemPool, lps );
+		Brainchild_FreePooled( lpcd->pMemPool, lps );
 	}
 
 	/*
@@ -398,7 +398,7 @@ static BOOL CheckSelection( LPCLASSDATA lpcd )
 		 *	Get the line on which the
 		 *	selection is located.
 		 */
-		LPLINE	lpLine = ArrayGetAt( lpcd->lpLines, lpcd->ptSelStart.y );
+		LPLINE	lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, lpcd->ptSelStart.y );
 
 		/*
 		 *	Does the contents match the
@@ -417,7 +417,7 @@ static BOOL FindString( LPCLASSDATA lpcd, HWND hDlg, int nDirection, BOOL bQuiet
 	POINT		ptSearch = lpcd->ptCaretPos;
 	BOOL		bFound = FALSE;
 	int		nStrLen = lpcd->bmSkipTable.nLength, nFoundAt;
-	int		nLines = ArrayGetSize( lpcd->lpLines ) - 1;
+	int		nLines = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
 
 	/*
 	 *	Valid?
@@ -463,7 +463,7 @@ static BOOL FindString( LPCLASSDATA lpcd, HWND hDlg, int nDirection, BOOL bQuiet
 			/*
 			 *	Get line pointer.
 			 */
-			lpLine = ArrayGetAt( lpcd->lpLines, ptSearch.y );
+			lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, ptSearch.y );
 
 			/*
 			 *	Valid text?
@@ -548,7 +548,7 @@ static BOOL FindString( LPCLASSDATA lpcd, HWND hDlg, int nDirection, BOOL bQuiet
 				 *	Go up a line.
 				 */
 				ptSearch.y--;
-				ptSearch.x = (( LPLINE )ArrayGetAt( lpcd->lpLines, ptSearch.y ))->nLength;
+				ptSearch.x = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, ptSearch.y ))->nLength;
 			}
 		}
 		else
@@ -557,7 +557,7 @@ static BOOL FindString( LPCLASSDATA lpcd, HWND hDlg, int nDirection, BOOL bQuiet
 		/*
 		 *	Get line pointer.
 		 */
-		lpLine = ArrayGetAt( lpcd->lpLines, ptSearch.y );
+		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, ptSearch.y );
 
 		/*
 		 *	Search...
@@ -615,7 +615,7 @@ static BOOL FindString( LPCLASSDATA lpcd, HWND hDlg, int nDirection, BOOL bQuiet
 								 *	Previous line...
 								 */
 								ptSearch.y--;
-								lpLine = ArrayGetAt( lpcd->lpLines, ptSearch.y );
+								lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, ptSearch.y );
 								ptSearch.x = lpLine->nLength;
 							}
 						}
@@ -636,7 +636,7 @@ static BOOL FindString( LPCLASSDATA lpcd, HWND hDlg, int nDirection, BOOL bQuiet
 			 *	Previous...
 			 */
 			ptSearch.y--;
-			lpLine = ArrayGetAt( lpcd->lpLines, ptSearch.y );
+			lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, ptSearch.y );
 			ptSearch.x = lpLine->nLength;
 		}
 	}
@@ -835,7 +835,7 @@ static void AddReplaceString( LPCLASSDATA lpcd, HWND hCombo )
 		/*
 		 *	Allocate buffer.
 		 */
-		if (( lpszString = AllocPooled( lpcd->pMemPool, REAL_SIZE( nTextLength + 1 ))) != NULL )
+		if (( lpszString = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( nTextLength + 1 ))) != NULL )
 		{
 			/*
 			 *	Get the string.
@@ -875,7 +875,7 @@ static void AddReplaceString( LPCLASSDATA lpcd, HWND hCombo )
 			/*
 			 *	Release the buffer.
 			 */
-			FreePooled( lpcd->pMemPool, ( LPVOID )lpszString );
+			Brainchild_FreePooled( lpcd->pMemPool, ( LPVOID )lpszString );
 			return;
 		}
 	}
@@ -896,7 +896,7 @@ static void AddSearchString( LPCLASSDATA lpcd, HWND hCombo )
 		/*
 		 *	Allocate buffer.
 		 */
-		if (( lpszString = AllocPooled( lpcd->pMemPool, REAL_SIZE( nTextLength + 1 ))) != NULL )
+		if (( lpszString = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( nTextLength + 1 ))) != NULL )
 		{
 			/*
 			 *	Get the string.
@@ -928,7 +928,7 @@ static void AddSearchString( LPCLASSDATA lpcd, HWND hCombo )
 			/*
 			 *	Release the buffer.
 			 */
-			FreePooled( lpcd->pMemPool, ( LPVOID )lpszString );
+			Brainchild_FreePooled( lpcd->pMemPool, ( LPVOID )lpszString );
 			return;
 		}
 	}
@@ -980,7 +980,7 @@ static BOOL AddWord( LPCLASSDATA lpcd )
 		/*
 		 *	Allocate buffer.
 		 */
-		if (( lpszString = AllocPooled( lpcd->pMemPool, REAL_SIZE( nTextLength + 1 ))) != NULL )
+		if (( lpszString = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( nTextLength + 1 ))) != NULL )
 		{
 			/*
 			 *	Get the string.
@@ -997,7 +997,7 @@ static BOOL AddWord( LPCLASSDATA lpcd )
 			/*
 			 *	Release the buffer.
 			 */
-			FreePooled( lpcd->pMemPool, ( LPVOID )lpszString );
+			Brainchild_FreePooled( lpcd->pMemPool, ( LPVOID )lpszString );
 			return TRUE;
 		}
 	}
@@ -1089,7 +1089,7 @@ static BOOL CALLBACK FindProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 				/*
 				 *	Copy the points.
 				 */
-				lpLine = ArrayGetAt( lpcd->lpLines, lpcd->ptSelStart.y );
+				lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, lpcd->ptSelStart.y );
 				ptStart = lpcd->ptSelStart;
 				ptEnd   = lpcd->ptSelEnd;
 			}
@@ -1107,7 +1107,7 @@ static BOOL CALLBACK FindProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 			 */
 			if ( ptStart.x != -1 && ptStart.y != -1 && ptEnd.x != -1 && ptEnd.y != -1 )
 			{
-				TCHAR *pcTemp = AllocPooled( lpcd->pMemPool, REAL_SIZE( ptEnd.x - ptStart.x + 1 ));
+				TCHAR *pcTemp = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( ptEnd.x - ptStart.x + 1 ));
 
 				/*
 				 *	Allocation ok?
@@ -1128,7 +1128,7 @@ static BOOL CALLBACK FindProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 					/*
 					 *	Free the string.
 					 */
-					FreePooled( lpcd->pMemPool, pcTemp );
+					Brainchild_FreePooled( lpcd->pMemPool, pcTemp );
 				}
 			}
 			else
@@ -1532,8 +1532,8 @@ void ReplaceAll( LPCLASSDATA lpcd, HWND hParent, BOOL bSelection )
 		 *	of the whole file.
 		 */
 		ptStart.x = ptStart.y = 0;
-		ptEnd.y = ArrayGetSize( lpcd->lpLines ) - 1;
-		ptEnd.x = (( LPLINE )ArrayGetAt( lpcd->lpLines, ptEnd.y ))->nLength;
+		ptEnd.y = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
+		ptEnd.x = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, ptEnd.y ))->nLength;
 	}
 
 	/*
@@ -1792,7 +1792,7 @@ static BOOL CALLBACK ReplaceProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 				/*
 				 *	Use the selection.
 				 */
-				lpLine = ArrayGetAt( lpcd->lpLines, lpcd->ptSelStart.y );
+				lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, lpcd->ptSelStart.y );
 				ptStart = lpcd->ptSelStart;
 				ptEnd   = lpcd->ptSelEnd;
 			}
@@ -1811,7 +1811,7 @@ static BOOL CALLBACK ReplaceProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 			 */
 			if ( ptStart.x != -1 && ptStart.y != -1 && ptEnd.x != -1 && ptEnd.y != -1 )
 			{
-				TCHAR *pcTemp = AllocPooled( lpcd->pMemPool, REAL_SIZE( ptEnd.x - ptStart.x + 1 ));
+				TCHAR *pcTemp = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( ptEnd.x - ptStart.x + 1 ));
 
 				/*
 				 *	Allocation ok?
@@ -1832,7 +1832,7 @@ static BOOL CALLBACK ReplaceProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 					/*
 					 *	Free the string.
 					 */
-					FreePooled( lpcd->pMemPool, pcTemp );
+					Brainchild_FreePooled( lpcd->pMemPool, pcTemp );
 				}
 			}
 			else

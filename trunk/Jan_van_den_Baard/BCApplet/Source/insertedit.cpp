@@ -112,7 +112,7 @@ LRESULT TextInsert::OnInitDialog( LPPROPSHEETPAGE pPsp )
 	// Put it into the edit control and
 	// deallocate it.
 	m_Edit.SetText( pszText, TRUE );
-	::FreePooled( pParserPool, pszText );
+	::Brainchild_FreePooled( pParserPool, pszText );
 
 	// Setup icon.
 	SetIcon( m_hIcon, FALSE );
@@ -132,7 +132,7 @@ LPTSTR TextInsert::Str2CNode( LPCTSTR pszString )
 	}
 
 	// Allocate string.
-	LPTSTR pszRc = ( LPTSTR )::AllocPooled( pParserPool, ( nNewLength + 1 ) * sizeof( TCHAR ));
+	LPTSTR pszRc = ( LPTSTR )::Brainchild_AllocPooled( pParserPool, ( nNewLength + 1 ) * sizeof( TCHAR ));
 	if ( pszRc != NULL )
 	{
 		// Copy the string and convert
@@ -171,7 +171,7 @@ LPTSTR TextInsert::CNode2Str( LPCTSTR pszString )
 	}
 
 	// Allocate string.
-	LPTSTR pszRc = ( LPTSTR )::AllocPooled( pParserPool, ( nNewLength + 1 ) * sizeof( TCHAR ));
+	LPTSTR pszRc = ( LPTSTR )::Brainchild_AllocPooled( pParserPool, ( nNewLength + 1 ) * sizeof( TCHAR ));
 	if ( pszRc != NULL )
 	{
 		// Copy the string and convert
@@ -235,7 +235,7 @@ LRESULT TextInsert::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 					{
 						// Free the old contents and
 						// setup the new.
-						::FreePooled( pParserPool, m_pCNode->pcStr );
+						::Brainchild_FreePooled( pParserPool, m_pCNode->pcStr );
 						m_pCNode->pcStr = ( LPTSTR )pszCopy;
 
 						// We are OK...

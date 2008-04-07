@@ -32,7 +32,7 @@ LRESULT OnGetExtentions( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lp
 	return ( LRESULT )Parser->pszExtentions;
 }
 
-BOOL OpenSettingsDialog( HWND hParent )
+BOOL Brainchild_OpenSettingsDialog( HWND hParent )
 {
 	HMODULE		   hBCPL;
 	FARPROC		   lpfnApplet;
@@ -84,7 +84,7 @@ BOOL OpenSettingsDialog( HWND hParent )
 
 LRESULT OnSettingsDialog( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 {
-	return OpenSettingsDialog( hWnd );
+	return Brainchild_OpenSettingsDialog( hWnd );
 }
 
 /*
@@ -182,14 +182,14 @@ void SetModified( LPCLASSDATA lpcd, BOOL bModified )
 /*
  *	Create a string copy (mempool version).
  */
-LPTSTR CopyStringPool( POOL pMemPool, LPCTSTR pszString )
+LPTSTR Brainchild_CopyStringPool( POOL pMemPool, LPCTSTR pszString )
 {
 	LPTSTR	pszCopy;
 
 	/*
 	 *	Allocate copy.
 	 */
-	if (( pszCopy = AllocPooled( pMemPool, REAL_SIZE( _tcslen( pszString ) + 1 ))) != NULL )
+	if (( pszCopy = Brainchild_AllocPooled( pMemPool, REAL_SIZE( _tcslen( pszString ) + 1 ))) != NULL )
 		/*
 		 *	Copy the string.
 		 */
@@ -203,7 +203,7 @@ LPTSTR CopyStringPool( POOL pMemPool, LPCTSTR pszString )
  */
 LPTSTR CopyString( LPCLASSDATA lpcd, LPCTSTR pszString )
 {
-	return CopyStringPool( lpcd->pMemPool, pszString);
+	return Brainchild_CopyStringPool( lpcd->pMemPool, pszString);
 }
 
 /*
@@ -211,7 +211,7 @@ LPTSTR CopyString( LPCLASSDATA lpcd, LPCTSTR pszString )
  */
 BOOL AnyText( LPCLASSDATA lpcd )
 {
-	if ( ArrayGetSize( lpcd->lpLines ) == 1 && (( LPLINE )ArrayGetAt( lpcd->lpLines, 0 ))->nLength == 0 )
+	if ( Brainchild_ArrayGetSize( lpcd->lpLines ) == 1 && (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, 0 ))->nLength == 0 )
 		return FALSE;
 	return TRUE;
 }

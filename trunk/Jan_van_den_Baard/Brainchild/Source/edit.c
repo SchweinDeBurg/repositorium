@@ -226,7 +226,7 @@ void BackSpace( LPCLASSDATA lpcd )
 		 *	Join the previous and this line.
 		 */
 		ptStart.y--;
-		ptStart.x = (( LPLINE )ArrayGetAt( lpcd->lpLines, ptStart.y ))->nLength;
+		ptStart.x = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, ptStart.y ))->nLength;
 
 		/*
 		 *	Re-render whole view.
@@ -324,7 +324,7 @@ void DeleteChar( LPCLASSDATA lpcd )
 	 *	If we are at the end of the text
 	 *	we do nothing.
 	 */
-	if ( lpcd->ptCaretPos.y == ArrayGetSize( lpcd->lpLines ) - 1 && lpcd->ptCaretPos.x == lpLine->nLength )
+	if ( lpcd->ptCaretPos.y == Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 && lpcd->ptCaretPos.x == lpLine->nLength )
 		return;
 
 	/*
@@ -412,7 +412,7 @@ void DeleteLine( LPCLASSDATA lpcd )
 	/*
 	 *	Any text to delete?
 	 */
-	if ( ArrayGetSize( lpcd->lpLines ) == 1 && lpLine->nLength == 0 )
+	if ( Brainchild_ArrayGetSize( lpcd->lpLines ) == 1 && lpLine->nLength == 0 )
 		return;
 
 	/*
@@ -428,7 +428,7 @@ void DeleteLine( LPCLASSDATA lpcd )
 	/*
 	 *	Are we on the last line?
 	 */
-	if ( lpcd->ptCaretPos.y == ArrayGetSize( lpcd->lpLines ) - 1 )
+	if ( lpcd->ptCaretPos.y == Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 	{
 		/*
 		 *	If this is no the first
@@ -440,7 +440,7 @@ void DeleteLine( LPCLASSDATA lpcd )
 			 *	Go to the end.
 			 */
 			ptStart.y--;
-			ptStart.x = (( LPLINE )ArrayGetAt( lpcd->lpLines, ptStart.y ))->nLength;
+			ptStart.x = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, ptStart.y ))->nLength;
 		}
 		else
 			/*
@@ -738,7 +738,7 @@ static void CheckPreviousLine( LPCLASSDATA lpcd )
 		/*
 		 *	Get a pointer to it.
 		 */
-		LPLINE	lpPrev = ArrayGetAt( lpcd->lpLines, lpcd->ptCaretPos.y - 1 );
+		LPLINE	lpPrev = Brainchild_ArrayGetAt( lpcd->lpLines, lpcd->ptCaretPos.y - 1 );
 		int	nBlanks = 0;
 
 		/*
@@ -798,7 +798,7 @@ void SplitLine( LPCLASSDATA lpcd )
 		/*
 		 *	Are we before the last line?
 		 */
-		if ( lpcd->ptCaretPos.y < ArrayGetSize( lpcd->lpLines ) - 1 )
+		if ( lpcd->ptCaretPos.y < Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 		{
 			/*
 			 *	One down.
@@ -864,7 +864,7 @@ void SplitLine( LPCLASSDATA lpcd )
 		/*
 		 *	Free the string.
 		 */
-		FreePooled( lpcd->pMemPool, pcBlanks );
+		Brainchild_FreePooled( lpcd->pMemPool, pcBlanks );
 	}
 
 	/*
@@ -1005,7 +1005,7 @@ void ConvertCase( LPCLASSDATA lpcd, LPPOINT lpStart, LPPOINT lpEnd, int nType )
 		/*
 		 *	Free the text.
 		 */
-		ArrayFreeMem( lpcd->lpUndoRedo, pcText );
+		Brainchild_ArrayFreeMem( lpcd->lpUndoRedo, pcText );
 		return;
 	}
 
@@ -1056,7 +1056,7 @@ void ConvertCase( LPCLASSDATA lpcd, LPPOINT lpStart, LPPOINT lpEnd, int nType )
 	/*
 	 *	Free the text.
 	 */
-	ArrayFreeMem( lpcd->lpUndoRedo, pcText );
+	Brainchild_ArrayFreeMem( lpcd->lpUndoRedo, pcText );
 
 	/*
 	 *	Update column position.
@@ -1143,7 +1143,7 @@ void CopyLine( LPCLASSDATA lpcd )
 	/*
 	 *	Allocate text buffer.
 	 */
-	if (( lpszText = AllocPooled( lpcd->pMemPool, REAL_SIZE( nLength ))) != NULL )
+	if (( lpszText = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( nLength ))) != NULL )
 	{
 		/*
 		 *	Hide the caret.
@@ -1179,7 +1179,7 @@ void CopyLine( LPCLASSDATA lpcd )
 		/*
 		 *	Free the text.
 		 */
-		FreePooled( lpcd->pMemPool, lpszText );
+		Brainchild_FreePooled( lpcd->pMemPool, lpszText );
 
 		/*
 		 *	Caret in the view?
@@ -1354,7 +1354,7 @@ void SwapLines( LPCLASSDATA lpcd )
 	 *	line, otherwise we set it at
 	 *	the start of the next line.
 	 */
-	if ( lpcd->ptCaretPos.y == ArrayGetSize( lpcd->lpLines ) - 1 )
+	if ( lpcd->ptCaretPos.y == Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 	{
 		ptEnd.x = lpLine->nLength;
 		ptEnd.y = lpcd->ptCaretPos.y;
@@ -1382,7 +1382,7 @@ void SwapLines( LPCLASSDATA lpcd )
 		/*
 		 *	Free the text.
 		 */
-		ArrayFreeMem( lpcd->lpUndoRedo, pszLine );
+		Brainchild_ArrayFreeMem( lpcd->lpUndoRedo, pszLine );
 	}
 
 	/*

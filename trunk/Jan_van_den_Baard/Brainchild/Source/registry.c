@@ -177,7 +177,7 @@ static BOOL CopyDefaultFiles( LPCTSTR lpszUserPath )
  *	create a directory for the user and
  *	copy the default files to it.
  */
-BOOL CheckUser( LPTSTR lpszUserPath )
+BOOL Brainchild_CheckUser( LPTSTR lpszUserPath )
 {
 	TCHAR		szCurrDir[ MAX_PATH ];
 	TCHAR		szUserPath[ MAX_PATH ];
@@ -359,7 +359,7 @@ BOOL LoadSearchReplaceStrings( LPCLASSDATA lpcd, LPSTRINGLIST lpList, BOOL bRepl
 			/*
 			 *	Allocate memory for the string.
 			 */
-			if (( pszString = AllocPooled( pMainPool, dwSize )) != NULL )
+			if (( pszString = Brainchild_AllocPooled( pMainPool, dwSize )) != NULL )
 			{
 				/*
 				 *	Read the string.
@@ -376,7 +376,7 @@ BOOL LoadSearchReplaceStrings( LPCLASSDATA lpcd, LPSTRINGLIST lpList, BOOL bRepl
 				/*
 				 *	Free the string.
 				 */
-				FreePooled( pMainPool, pszString );
+				Brainchild_FreePooled( pMainPool, pszString );
 			}
 		}
 

@@ -88,10 +88,10 @@ BOOL ColorList::SetBlockList()
 	ResetContent();
 
 	// Add each entry from the array.
-	for ( int i = 0; i < ArrayGetSize( m_pParser->lpaBlocks ); i++ )
+	for ( int i = 0; i < ::Brainchild_ArrayGetSize( m_pParser->lpaBlocks ); i++ )
 	{
 		// Add the entry.
-		if ( AddString(( LPCTSTR )::ArrayGetAt( m_pParser->lpaBlocks, i )) == LB_ERR )
+		if ( AddString(( LPCTSTR )::Brainchild_ArrayGetAt( m_pParser->lpaBlocks, i )) == LB_ERR )
 			return FALSE;
 	}
 	// We are using the blocks array.
@@ -220,8 +220,8 @@ void ColorList::MoveSelUp()
 		_ASSERT_VALID( m_pParser );
 
 		// Get entries.
-		LPBLOCK lpBlockA = ( LPBLOCK )::ArrayGetAt( m_pParser->lpaBlocks, nSel );
-		LPBLOCK lpBlockB = ( LPBLOCK )::ArrayGetAt( m_pParser->lpaBlocks, nSel - 1 );
+		LPBLOCK lpBlockA = ( LPBLOCK )::Brainchild_ArrayGetAt( m_pParser->lpaBlocks, nSel );
+		LPBLOCK lpBlockB = ( LPBLOCK )::Brainchild_ArrayGetAt( m_pParser->lpaBlocks, nSel - 1 );
 
 		// Swap contents.
 		BLOCK bTmp  = *lpBlockA;
@@ -274,8 +274,8 @@ void ColorList::MoveSelDown()
 		_ASSERT_VALID( m_pParser );
 
 		// Get entries.
-		LPBLOCK lpBlockA = ( LPBLOCK )::ArrayGetAt( m_pParser->lpaBlocks, nSel );
-		LPBLOCK lpBlockB = ( LPBLOCK )::ArrayGetAt( m_pParser->lpaBlocks, nSel + 1 );
+		LPBLOCK lpBlockA = ( LPBLOCK )::Brainchild_ArrayGetAt( m_pParser->lpaBlocks, nSel );
+		LPBLOCK lpBlockB = ( LPBLOCK )::Brainchild_ArrayGetAt( m_pParser->lpaBlocks, nSel + 1 );
 
 		// Swap contents.
 		BLOCK bTmp = *lpBlockA;
@@ -310,8 +310,8 @@ void ColorList::RemoveSel()
 		Remove(( LPNODE )lpSmart );
 
 		// Free the node and it's text.
-		::FreePooled( pParserPool, lpSmart->lpszSmartString );
-		::FreePooled( pParserPool, lpSmart );
+		::Brainchild_FreePooled( pParserPool, lpSmart->lpszSmartString );
+		::Brainchild_FreePooled( pParserPool, lpSmart );
 
 		// Select the next or previous
 		// item.
@@ -333,22 +333,22 @@ void ColorList::RemoveSel()
 		//else	  		        nSel++;
 
 		// Get the data from the array.
-		LPBLOCK lpBlock = ( LPBLOCK )::ArrayGetAt( m_pParser->lpaBlocks, nPos );
+		LPBLOCK lpBlock = ( LPBLOCK )::Brainchild_ArrayGetAt( m_pParser->lpaBlocks, nPos );
 
 		// Free the strings from the
 		// block structure.
-		if ( lpBlock->pszStart ) ::ArrayFreeMem( m_pParser->lpaBlocks, lpBlock->pszStart );
-		if ( lpBlock->pszEnd && lpBlock->pszEnd != END_OF_LINE ) ::ArrayFreeMem( m_pParser->lpaBlocks, lpBlock->pszEnd );
-		if ( lpBlock->pszName ) ::ArrayFreeMem( m_pParser->lpaBlocks, lpBlock->pszName );
+		if ( lpBlock->pszStart ) ::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, lpBlock->pszStart );
+		if ( lpBlock->pszEnd && lpBlock->pszEnd != END_OF_LINE ) ::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, lpBlock->pszEnd );
+		if ( lpBlock->pszName ) ::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, lpBlock->pszName );
 
 		// Remove the block from the array.
-		::ArrayRemoveAt( m_pParser->lpaBlocks, nPos, 1 );
+		::Brainchild_ArrayRemoveAt( m_pParser->lpaBlocks, nPos, 1 );
 
 		// Data has shifted in the array. Re-apply it's
 		// contents into the list.
 		ResetContent();
-		for ( int i = 0; i < ArrayGetSize( m_pParser->lpaBlocks ); i++ )
-			AddString(( LPCTSTR )::ArrayGetAt( m_pParser->lpaBlocks, i ));
+		for ( int i = 0; i < Brainchild_ArrayGetSize( m_pParser->lpaBlocks ); i++ )
+			AddString(( LPCTSTR )::Brainchild_ArrayGetAt( m_pParser->lpaBlocks, i ));
 
 		// Setup selection.
 		SetCurSel( nSel );

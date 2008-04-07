@@ -22,7 +22,7 @@ void SetupVScroller( LPCLASSDATA lpcd )
 	si.cbSize	= sizeof ( si );
 	si.fMask	= SIF_PAGE | SIF_POS | SIF_RANGE;
 	si.nMin		= 0;
-	si.nMax		= ArrayGetSize( lpcd->lpLines ) - 1;
+	si.nMax		= Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
 	si.nPos         = lpcd->ptViewPos.y;
 	si.nPage        = lpcd->szViewSize.cy;
 
@@ -58,7 +58,7 @@ void SetupHScroller( LPCLASSDATA lpcd )
 
 LRESULT OnVScroll( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 {
-	int		nLines = ArrayGetSize( lpcd->lpLines );
+	int		nLines = Brainchild_ArrayGetSize( lpcd->lpLines );
 	LONG		lSTop, lOTop, lDiff = lpcd->ptViewPos.y;
 
 	/*
