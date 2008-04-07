@@ -48,7 +48,7 @@ static LPCTSTR CNode2Str( LPCLASSDATA lpcd, LPCTSTR pszString )
 	/*
 	 *	Allocate string.
 	 */
-	if (( pszRc = AllocPooled( lpcd->pMemPool, REAL_SIZE( nNewLength + 1 ))) != NULL )
+	if (( pszRc = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( nNewLength + 1 ))) != NULL )
 	{
 		/*
 		 *	Copy the string and convert
@@ -114,7 +114,7 @@ void ExecuteCList( LPCLIST lpCList, LPCLASSDATA lpcd )
 					/*
 					 *	Free conversion.
 					 */
-					FreePooled( lpcd->pMemPool, ( LPVOID )pszConversion );
+					Brainchild_FreePooled( lpcd->pMemPool, ( LPVOID )pszConversion );
 				}
 				break;
 			}
@@ -196,19 +196,19 @@ static void FreeCList( LPCLIST lpCList, POOL pMemPool )
 			 *	Free the string.
 			 */
 			if ( lpCNode->pcStr )
-				FreePooled( pMemPool, lpCNode->pcStr );
+				Brainchild_FreePooled( pMemPool, lpCNode->pcStr );
 		}
 
 		/*
 		 *	Free the node.
 		 */
-		FreePooled( pMemPool, lpCNode );
+		Brainchild_FreePooled( pMemPool, lpCNode );
 	}
 
 	/*
 	 *	Free the list itself.
 	 */
-	FreePooled( pMemPool, lpCList );
+	Brainchild_FreePooled( pMemPool, lpCList );
 }
 
 /*
@@ -222,7 +222,7 @@ static LPCLIST MakeCList( POOL pMemPool, LPDATA lpData )
 	/*
 	 *	Allocate list.
 	 */
-	if (( lpCList = AllocPooled( pMemPool, sizeof( CLIST ))) != NULL )
+	if (( lpCList = Brainchild_AllocPooled( pMemPool, sizeof( CLIST ))) != NULL )
 	{
 		/*
 		 *	Initialize it.
@@ -237,7 +237,7 @@ static LPCLIST MakeCList( POOL pMemPool, LPDATA lpData )
 			/*
 			 *	Allocate node.
 			 */
-			if (( lpCNode = AllocPooled( pMemPool, sizeof( CNODE ))) != NULL )
+			if (( lpCNode = Brainchild_AllocPooled( pMemPool, sizeof( CNODE ))) != NULL )
 			{
 				/*
 				 *	Setup command type.
@@ -253,14 +253,14 @@ static LPCLIST MakeCList( POOL pMemPool, LPDATA lpData )
 						/*
 						 *	Store function pointer.
 						 */
-						lpCNode->lpFunc = FindCommand(( int )lpData->lpData );
+						lpCNode->lpFunc = Brainchild_FindCommand(( int )lpData->lpData );
 
 						/*
 						 *	OK?
 						 */
 						if ( lpCNode->lpFunc == NULL )
 						{
-							FreePooled( pMemPool, lpCNode );
+							Brainchild_FreePooled( pMemPool, lpCNode );
 							FreeCList( lpCList, pMemPool );
 							return NULL;
 						}
@@ -271,11 +271,11 @@ static LPCLIST MakeCList( POOL pMemPool, LPDATA lpData )
 						 *	Other commands get a copy of
 						 *	the supplied string.
 						 */
-						if (( lpCNode->pcStr = AllocPooled( pMemPool, REAL_SIZE( _tcslen(( LPCTSTR )lpData->lpData ) + 1 ))) != NULL )
+						if (( lpCNode->pcStr = Brainchild_AllocPooled( pMemPool, REAL_SIZE( _tcslen(( LPCTSTR )lpData->lpData ) + 1 ))) != NULL )
 							_tcscpy( lpCNode->pcStr, ( LPCTSTR )lpData->lpData );
 						else
 						{
-							FreePooled( pMemPool, lpCNode );
+							Brainchild_FreePooled( pMemPool, lpCNode );
 							FreeCList( lpCList, pMemPool );
 							return NULL;
 						}
@@ -312,7 +312,7 @@ LRESULT OnExecuteCList( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpc
 /*
  *	Construct a command list (exported...)
  */
-LPCOMLIST CreateCList( DWORD dwType, ... )
+LPCOMLIST Brainchild_CreateCList( DWORD dwType, ... )
 {
 	return ( LPCOMLIST )MakeCList( pMainPool, ( LPDATA )&dwType );
 }
@@ -328,7 +328,7 @@ LPCLIST BuildCList( POOL pMemPool, DWORD dwType, ... )
 /*
  *	Delete a command list (exported)
  */
-void DeleteCList( LPCOMLIST lpComList )
+void Brainchild_DeleteCList( LPCOMLIST lpComList )
 {
 	FreeCList(( LPCLIST )lpComList, pMainPool );
 }
@@ -336,7 +336,7 @@ void DeleteCList( LPCOMLIST lpComList )
 /*
  *	Delete a command list.
  */
-void KillCList( LPCLIST lpComList, POOL pMemPool )
+void Brainchild_KillCList( LPCLIST lpComList, POOL pMemPool )
 {
 	FreeCList( lpComList, pMemPool );
 }
@@ -352,7 +352,7 @@ LPCLIST CopyCList( LPCLIST lpCList, POOL pMemPool )
 	/*
 	 *	Allocate a command list.
 	 */
-	if (( lpCClones = AllocPooled( pMemPool, sizeof( CLIST ))) != NULL )
+	if (( lpCClones = Brainchild_AllocPooled( pMemPool, sizeof( CLIST ))) != NULL )
 	{
 		/*
 		 *	Initialize list.
@@ -367,7 +367,7 @@ LPCLIST CopyCList( LPCLIST lpCList, POOL pMemPool )
 			/*
 			 *	Allocate node.
 			 */
-			if (( lpCCopy = AllocPooled( pMemPool, sizeof( CNODE ))) != NULL )
+			if (( lpCCopy = Brainchild_AllocPooled( pMemPool, sizeof( CNODE ))) != NULL )
 			{
 				/*
 				 *	Copy data.
@@ -378,12 +378,12 @@ LPCLIST CopyCList( LPCLIST lpCList, POOL pMemPool )
 					lpCCopy->lpFunc = lpCNode->lpFunc;
 				else
 				{
-					if (( lpCCopy->pcStr = AllocPooled( pMemPool, REAL_SIZE( _tcslen( lpCNode->pcStr ) + 1 ))) != NULL )
+					if (( lpCCopy->pcStr = Brainchild_AllocPooled( pMemPool, REAL_SIZE( _tcslen( lpCNode->pcStr ) + 1 ))) != NULL )
 						_tcscpy( lpCCopy->pcStr, lpCNode->pcStr );
 					else
 					{
-						FreePooled( pMemPool, lpCCopy );
-						KillCList( lpCClones, pMemPool );
+						Brainchild_FreePooled( pMemPool, lpCCopy );
+						Brainchild_KillCList( lpCClones, pMemPool );
 						return NULL;
 					}
 				}
@@ -395,7 +395,7 @@ LPCLIST CopyCList( LPCLIST lpCList, POOL pMemPool )
 			}
 			else
 			{
-				KillCList( lpCClones, pMemPool );
+				Brainchild_KillCList( lpCClones, pMemPool );
 				return NULL;
 			}
 		}
@@ -407,7 +407,7 @@ LPCLIST CopyCList( LPCLIST lpCList, POOL pMemPool )
  *	Return the next command node
  *	entry data.
  */
-DWORD NextCEntry( LPCOMLIST lpComList, LPDWORD lpdwAnchor, LPDWORD lpdwCType, LPDWORD lpdwCData )
+DWORD Brainchild_NextCEntry( LPCOMLIST lpComList, LPDWORD lpdwAnchor, LPDWORD lpdwCType, LPDWORD lpdwCData )
 {
 	LPCNODE		lpCNode = ( LPCNODE )*lpdwAnchor;
 
@@ -432,7 +432,7 @@ DWORD NextCEntry( LPCOMLIST lpComList, LPDWORD lpdwAnchor, LPDWORD lpdwCType, LP
 		/*
 		 *	String or command?
 		 */
-		if (      lpCNode->nType == CTYPE_HARDCODED ) *lpdwCData = ( DWORD )FindCommandID( lpCNode->lpFunc );
+		if (      lpCNode->nType == CTYPE_HARDCODED ) *lpdwCData = ( DWORD )Brainchild_FindCommandID( lpCNode->lpFunc );
 		else					      *lpdwCData = ( DWORD )lpCNode->pcStr;
 
 		/*

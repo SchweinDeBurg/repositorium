@@ -20,7 +20,7 @@ static BOOL GotoLine( LPCLASSDATA lpcd, int nLine )
 	 *	Valid line?
 	 */
 	nLine--;
-	if ( nLine >= 0 && nLine < ArrayGetSize( lpcd->lpLines ))
+	if ( nLine >= 0 && nLine < Brainchild_ArrayGetSize( lpcd->lpLines ))
 	{
 		/*
 		 *	Hide the caret.
@@ -35,7 +35,7 @@ static BOOL GotoLine( LPCLASSDATA lpcd, int nLine )
 		/*
 		 *	Get a pointer to it.
 		 */
-		lpLine = ArrayGetAt( lpcd->lpLines, nLine );
+		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine );
 
 		/*
 		 *	Setup column position.
@@ -113,12 +113,12 @@ static BOOL CALLBACK GotoProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 			/*
 			 *	Format min/max display string.
 			 */
-			_stprintf( szBuffer, GetString( IDS_GOTO_MINMAX ), ArrayGetSize( lpcd->lpLines ));
+			_stprintf( szBuffer, GetString( IDS_GOTO_MINMAX ), Brainchild_ArrayGetSize( lpcd->lpLines ));
 
 			/*
 			 *	Setup the up/down rangle.
 			 */
-			SendMessage( hUpDown, UDM_SETRANGE, 0, MAKELPARAM( ArrayGetSize( lpcd->lpLines ), 1 ));
+			SendMessage( hUpDown, UDM_SETRANGE, 0, MAKELPARAM( Brainchild_ArrayGetSize( lpcd->lpLines ), 1 ));
 
 			/*
 			 *	Show the current line number
@@ -155,7 +155,7 @@ static BOOL CALLBACK GotoProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 						 */
 						LPCLASSDATA	lpcd = ( LPCLASSDATA )GetWindowLong( hDlg, DWL_USER );
 						int		nLine = GetDlgItemInt( hDlg, IDC_GOTO_LINE, NULL, FALSE );
-						int		nLines = ArrayGetSize( lpcd->lpLines );
+						int		nLines = Brainchild_ArrayGetSize( lpcd->lpLines );
 
 						/*
 						 *	Clamp entered value between 1 and the
@@ -180,7 +180,7 @@ static BOOL CALLBACK GotoProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 					 */
 					LPCLASSDATA	lpcd = ( LPCLASSDATA )GetWindowLong( hDlg, DWL_USER );
 					int		nLine = GetDlgItemInt( hDlg, IDC_GOTO_LINE, NULL, FALSE );
-					int		nLines = ArrayGetSize( lpcd->lpLines );
+					int		nLines = Brainchild_ArrayGetSize( lpcd->lpLines );
 
 					/*
 					 *	Clamp entered value between 1 and the

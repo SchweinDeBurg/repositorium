@@ -130,12 +130,12 @@ BOOL CheckPoint( LPCLASSDATA lpcd, LPPOINT pt )
 		/*
 		 *	Line in range?
 		 */
-		if ( pt->y >= 0 && pt->y < ArrayGetSize( lpcd->lpLines ))
+		if ( pt->y >= 0 && pt->y < Brainchild_ArrayGetSize( lpcd->lpLines ))
 		{
 			/*
 			 *	Get the line.
 			 */
-			lpLine = ArrayGetAt( lpcd->lpLines, pt->y );
+			lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, pt->y );
 
 			/*
 			 *	Is the passed column in the line?
@@ -226,8 +226,8 @@ void MarkAll( LPCLASSDATA lpcd )
 		 *	Mark it all.
 		 */
 		lpcd->ptSelStart.x = lpcd->ptSelStart.y = 0;
-		lpcd->ptSelEnd.y   = ArrayGetSize( lpcd->lpLines ) - 1;
-		lpcd->ptSelEnd.x   = (( LPLINE )ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y ))->nLength;
+		lpcd->ptSelEnd.y   = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
+		lpcd->ptSelEnd.x   = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, lpcd->ptSelEnd.y ))->nLength;
 
 		/*
 		 *	Re-render.
@@ -334,7 +334,7 @@ BOOL MarkWholeLine( LPCLASSDATA lpcd, BOOL bQuiet )
 	 *	line, otherwise we set it at
 	 *	the start of the next line.
 	 */
-	if ( lpcd->ptCaretPos.y == ArrayGetSize( lpcd->lpLines ) - 1 ) 
+	if ( lpcd->ptCaretPos.y == Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 ) 
 	{
 		lpcd->ptSelEnd.x = lpLine->nLength;
 		lpcd->ptSelEnd.y = lpcd->ptCaretPos.y;

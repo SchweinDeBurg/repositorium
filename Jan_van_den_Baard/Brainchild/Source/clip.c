@@ -348,7 +348,7 @@ BOOL Delete( LPCLASSDATA lpcd )
 		 *	We _must_ have atleast one
 		 *	empty line.
 		 */
-		if ( ArrayGetSize( lpcd->lpLines ) == 0 )
+		if ( Brainchild_ArrayGetSize( lpcd->lpLines ) == 0 )
 		{
 			if ( InsertLine( lpcd, NULL, 0, -1 ) == FALSE )
 				return FALSE;
@@ -535,7 +535,7 @@ BOOL CopyAppend( LPCLASSDATA lpcd )
 								/*
 								 *	Free the selection.
 								 */
-								ArrayFreeMem(lpcd->lpUndoRedo, pszSelection );
+								Brainchild_ArrayFreeMem(lpcd->lpUndoRedo, pszSelection );
 
 								/*
 								 *	Empty the clipboard and
@@ -556,7 +556,7 @@ BOOL CopyAppend( LPCLASSDATA lpcd )
 							}
 							GlobalFree( hCombination );
 						}
-						ArrayFreeMem( lpcd->lpUndoRedo, pszSelection );
+						Brainchild_ArrayFreeMem( lpcd->lpUndoRedo, pszSelection );
 					}
 					GlobalUnlock( hClip );
 				}

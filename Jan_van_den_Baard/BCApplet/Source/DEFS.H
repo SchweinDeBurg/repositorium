@@ -70,7 +70,7 @@ extern "C" {
  */
 #define ROUND_SIZE(s)	((s+15)&-16)
 #define REAL_SIZE(s)	((s)*sizeof(TCHAR))
-#define GETLINE(l)	((LPLINE)ArrayGetAt( l->lpLines,l->ptCaretPos.y))
+#define GETLINE(l)	((LPLINE)Brainchild_ArrayGetAt( l->lpLines,l->ptCaretPos.y))
 #define ISREADONLY	((lpcd->dwFileAttr & FILE_ATTRIBUTE_READONLY)==FILE_ATTRIBUTE_READONLY)
 
 /*
@@ -781,18 +781,18 @@ extern UINT uRegisteredMsg;
 
 typedef int ( __cdecl *COMPFUNC )( const void *, const void * );
 
-extern void ArraySort( LPARRAY, COMPFUNC );
+extern void Brainchild_ArraySort( LPARRAY, COMPFUNC );
 extern BOOL ArraySetSize( LPARRAY, int, int );
-extern LPVOID ArrayGetAt( LPARRAY, int );
-extern int ArrayGetSize( LPARRAY );
-extern BOOL ArrayAdd( LPARRAY, LPVOID, int );
+extern LPVOID Brainchild_ArrayGetAt( LPARRAY, int );
+extern int Brainchild_ArrayGetSize( LPARRAY );
+extern BOOL Brainchild_ArrayAdd( LPARRAY, LPVOID, int );
 extern BOOL ArrayInsertAt( LPARRAY, int, LPVOID, int );
-extern void ArrayRemoveAt( LPARRAY, int, int );
-extern void ArrayRemoveAll( LPARRAY );
-extern LPARRAY ArrayCreate( int, int, int );
-extern void ArrayDelete( LPARRAY );
-extern LPVOID ArrayAllocMem( LPARRAY, int );
-extern void ArrayFreeMem( LPARRAY, LPVOID );
+extern void Brainchild_ArrayRemoveAt( LPARRAY, int, int );
+extern void Brainchild_ArrayRemoveAll( LPARRAY );
+extern LPARRAY Brainchild_ArrayCreate( int, int, int );
+extern void Brainchild_ArrayDelete( LPARRAY );
+extern LPVOID Brainchild_ArrayAllocMem( LPARRAY, int );
+extern void Brainchild_ArrayFreeMem( LPARRAY, LPVOID );
 extern void ArrayReset( LPARRAY );
 
 /* text.c */
@@ -939,12 +939,12 @@ extern LRESULT OnChar( HWND, WPARAM, LPARAM, LPCLASSDATA );
 
 extern BOOL IsSpecialKey( int );
 extern void FreeHashTable( POOL, LPHASH * );
-extern BOOL SetupHash( POOL, LPHASH * );
+extern BOOL Brainchild_SetupHash( POOL, LPHASH * );
 extern LPHASH FindHash( LPHASH *, TCHAR, TCHAR );
-extern LPHASH AddHash( POOL, LPHASH *, TCHAR, TCHAR, LPCLIST );
-extern BOOL RemHash( POOL, LPHASH *, TCHAR, TCHAR );
-extern BOOL Str2CodeQual( LPCTSTR, TCHAR *, TCHAR * );
-extern void CodeQual2Str( TCHAR, TCHAR, TCHAR * );
+extern LPHASH Brainchild_AddHash( POOL, LPHASH *, TCHAR, TCHAR, LPCLIST );
+extern BOOL Brainchild_RemHash( POOL, LPHASH *, TCHAR, TCHAR );
+extern BOOL Brainchild_Str2CodeQual( LPCTSTR, TCHAR *, TCHAR * );
+extern void Brainchild_CodeQual2Str( TCHAR, TCHAR, TCHAR * );
 
 /* misc.c */
 extern LRESULT OnModified( HWND, WPARAM, LPARAM, LPCLASSDATA );
@@ -957,7 +957,7 @@ extern void ToggleOverwrite( LPCLASSDATA );
 extern LPCTSTR GetString( int );
 extern void SetModified( LPCLASSDATA, BOOL );
 extern LPTSTR CopyString( LPCLASSDATA, LPCTSTR );
-extern LPTSTR CopyStringPool( POOL, LPCTSTR );
+extern LPTSTR Brainchild_CopyStringPool( POOL, LPCTSTR );
 extern BOOL AnyText( LPCLASSDATA );
 
 extern void SendStatusMessage( LPCLASSDATA );
@@ -1016,14 +1016,14 @@ extern LRESULT OnMouseHover( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnMouseLeave( HWND, WPARAM, LPARAM, LPCLASSDATA );
 
 /* parserlist.c */
-extern void FreeParserNode( POOL, LPPARSER );
-extern BOOL AddKeyword( POOL, LPPARSER, LPCTSTR, COLORREF, COLORREF );
+extern void Brainchild_FreeParserNode( POOL, LPPARSER );
+extern BOOL Brainchild_AddKeyword( POOL, LPPARSER, LPCTSTR, COLORREF, COLORREF );
 extern BOOL SetupParser( LPCLASSDATA, LPCTSTR );
-extern void FreeParserList( POOL, LPPARSERLIST );
-extern BOOL LoadParserFiles( POOL, LPPARSERLIST );
+extern void Brainchild_FreeParserList( POOL, LPPARSERLIST );
+extern BOOL Brainchild_LoadParserFiles( POOL, LPPARSERLIST );
 extern LRESULT OnLoadParser( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern BOOL LoadParserFile( POOL, LPPARSERLIST, LPCTSTR, HGLOBAL, BOOL );
-extern void DefaultParser( LPPARSER );
+extern void Brainchild_DefaultParser( LPPARSER );
 extern void RemoveTrailingBlanks( LPTSTR );
 
 /* marks.c */
@@ -1110,7 +1110,7 @@ extern LRESULT OnReplaceDialog( HWND, WPARAM, LPARAM, LPCLASSDATA );
 /* registry.c */
 extern TCHAR szSettingsPath[ MAX_PATH ];
 
-extern BOOL CheckUser( LPTSTR );
+extern BOOL Brainchild_CheckUser( LPTSTR );
 extern BOOL GetSettingsLocation( void );
 extern BOOL SaveSearchReplaceStrings( LPCLASSDATA, LPSTRINGLIST, BOOL );
 extern BOOL LoadSearchReplaceStrings( LPCLASSDATA lpcd, LPSTRINGLIST lpList, BOOL bReplace );
@@ -1131,7 +1131,7 @@ extern POOL		pMainPool;
 extern PARSERLIST	plParsers;
 extern PAGESETUPDLG	pdPage;
 
-extern UINT GetUpdateMessage( void );
+extern UINT Brainchild_GetUpdateMessage( void );
 extern LRESULT OnDefaultParser( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnResetParser( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnResetDefault( HWND, WPARAM, LPARAM, LPCLASSDATA );
@@ -1153,10 +1153,10 @@ extern void DoBackTab( LPCLASSDATA );
 /* commands.c */
 extern LRESULT OnExecuteCommand( HWND, WPARAM, LPARAM, LPCLASSDATA );
 
-extern LPCOMMAND GetCommandTable( void );
-extern LPFUNC FindCommand( int );
-extern int FindCommandID( LPFUNC );
-extern LPCTSTR FindCommandDesc( LPFUNC );
+extern LPCOMMAND Brainchild_GetCommandTable( void );
+extern LPFUNC Brainchild_FindCommand( int );
+extern int Brainchild_FindCommandID( LPFUNC );
+extern LPCTSTR Brainchild_FindCommandDesc( LPFUNC );
 
 /* date.c */
 extern void InsertDate( LPCLASSDATA );

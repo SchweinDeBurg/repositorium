@@ -96,7 +96,7 @@ struct SpecialKey
  *	Does the code belong to any of the
  *	keys in the special keys array above?
  */
-BOOL IsSpecialKey( int cCode )
+BOOL Brainchild_IsSpecialKey( int cCode )
 {
 	struct SpecialKey	*sk = Keys;
 
@@ -359,12 +359,12 @@ void FreeHashTable( POOL pMemPool, LPHASH *lpTable )
                         /*
                          *      Delete it's command list.
                          */
-                        KillCList( lpHash->lpCommands, pMemPool );
+                        Brainchild_KillCList( lpHash->lpCommands, pMemPool );
 
                         /*
                          *      Free the hash entry itself.
                          */
-                        FreePooled( pMemPool, lpHash );
+                        Brainchild_FreePooled( pMemPool, lpHash );
                 }
 		lpTable[ i ] = NULL;
         }
@@ -373,7 +373,7 @@ void FreeHashTable( POOL pMemPool, LPHASH *lpTable )
 /*
  *      Setup default key map.
  */
-BOOL SetupHash( POOL pMemPool, LPHASH *lpTable )
+BOOL Brainchild_SetupHash( POOL pMemPool, LPHASH *lpTable )
 {
 	int			i;
 	TCHAR			cCode, cQual;
@@ -486,14 +486,14 @@ BOOL SetupHash( POOL pMemPool, LPHASH *lpTable )
 	 */
 	for ( i = 0; defmap[ i ].pcKeyStr; i++ )
 	{
-		if ( Str2CodeQual( defmap[ i ].pcKeyStr, &cCode, &cQual ))
+		if ( Brainchild_Str2CodeQual( defmap[ i ].pcKeyStr, &cCode, &cQual ))
 		{
 			/*
 			 *      By default a simple
 			 *      set of built-in commands
 			 *      is bound.
 			 */
-			AddHash( pMemPool, lpTable, cCode, cQual, BuildCList( pMemPool, defmap[ i ].nType, defmap[ i ].nFuncID, CTYPE_END ));
+			Brainchild_AddHash( pMemPool, lpTable, cCode, cQual, BuildCList( pMemPool, defmap[ i ].nType, defmap[ i ].nFuncID, CTYPE_END ));
                 }
         }
         return TRUE;
@@ -520,7 +520,7 @@ LPHASH FindHash( LPHASH *lpTable, TCHAR cCode, TCHAR cQual )
 /*
  *      Add a key to the hash table.
  */
-LPHASH AddHash( POOL pMemPool, LPHASH *lpTable, TCHAR cCode, TCHAR cQual, LPCLIST lpCList )
+LPHASH Brainchild_AddHash( POOL pMemPool, LPHASH *lpTable, TCHAR cCode, TCHAR cQual, LPCLIST lpCList )
 {
         LPHASH		*p, lpHash;
 
@@ -538,7 +538,7 @@ LPHASH AddHash( POOL pMemPool, LPHASH *lpTable, TCHAR cCode, TCHAR cQual, LPCLIS
                         /*
                          *      Kill the current command list.
                          */
-                        KillCList( lpHash->lpCommands, pMemPool );
+                        Brainchild_KillCList( lpHash->lpCommands, pMemPool );
 
 			/*
 			 *	Setup new commands.
@@ -556,7 +556,7 @@ LPHASH AddHash( POOL pMemPool, LPHASH *lpTable, TCHAR cCode, TCHAR cQual, LPCLIS
         /*
          *      Allocate a new hash entry.
          */
-        if (( *p = lpHash = ( LPHASH )AllocPooled( pMemPool, sizeof( HASH ))) != NULL )
+        if (( *p = lpHash = ( LPHASH )Brainchild_AllocPooled( pMemPool, sizeof( HASH ))) != NULL )
 	{
                 lpHash->lpNext     = NULL;
                 lpHash->cCode      = cCode;
@@ -572,7 +572,7 @@ LPHASH AddHash( POOL pMemPool, LPHASH *lpTable, TCHAR cCode, TCHAR cQual, LPCLIS
 /*
  *      Remove a key from the hash table.
  */
-BOOL RemHash( POOL pMemPool, LPHASH *lpTable, TCHAR cCode, TCHAR cQual )
+BOOL Brainchild_RemHash( POOL pMemPool, LPHASH *lpTable, TCHAR cCode, TCHAR cQual )
 {
         LPHASH            *p, lpHash;
 
@@ -590,12 +590,12 @@ BOOL RemHash( POOL pMemPool, LPHASH *lpTable, TCHAR cCode, TCHAR cQual )
                         /*
                          *      Kill it's command list.
                          */
-                        KillCList( lpHash->lpCommands, pMemPool );
+                        Brainchild_KillCList( lpHash->lpCommands, pMemPool );
 
                         /*
                          *      Free the hash entry.
                          */
-                        FreePooled( pMemPool, lpHash );
+                        Brainchild_FreePooled( pMemPool, lpHash );
                         return TRUE;
                 }
                 lpHash = *( p = &lpHash->lpNext );
@@ -608,7 +608,7 @@ BOOL RemHash( POOL pMemPool, LPHASH *lpTable, TCHAR cCode, TCHAR cQual )
  *      Convert a key string into
  *      a code and qualifier value.
  */
-BOOL Str2CodeQual( LPCTSTR lpszKeyString, TCHAR *pcCode, TCHAR *pcQual )
+BOOL Brainchild_Str2CodeQual( LPCTSTR lpszKeyString, TCHAR *pcCode, TCHAR *pcQual )
 {
 	LPCTSTR		lpszBase = lpszKeyString;
 	TCHAR		cQual = 0;
@@ -744,7 +744,7 @@ BOOL Str2CodeQual( LPCTSTR lpszKeyString, TCHAR *pcCode, TCHAR *pcQual )
  *      Convert a code and qualifier
  *      value to a key string.
  */
-void CodeQual2Str( TCHAR cCode, TCHAR cQual, TCHAR *lpszBuffer )
+void Brainchild_CodeQual2Str( TCHAR cCode, TCHAR cQual, TCHAR *lpszBuffer )
 {
 	TCHAR			bStates[ 256 ] = { 0 }, bBuf[ 4 ] = { 0 };
 	int			i;

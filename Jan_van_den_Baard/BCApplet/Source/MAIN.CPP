@@ -96,7 +96,7 @@ BOOL SettingsDialog::SetChanges()
 	{
 		// Get the destination path.
 		TCHAR szPath[ MAX_PATH ], szBackup[ MAX_PATH ];
-		if ( ::CheckUser( szPath ))
+		if ( ::Brainchild_CheckUser( szPath ))
 		{
 			// Create a backup path.
 			_tcscpy( szBackup, szPath );
@@ -244,7 +244,7 @@ BOOL SettingsDialog::SetChanges()
 			dlg.Create( MAKEINTRESOURCE( IDD_APPLY ));
 
 			// Signal settings changes.
-			::SendMessage( HWND_BROADCAST, ::GetUpdateMessage(), 0, 0 );
+			::SendMessage( HWND_BROADCAST, ::Brainchild_GetUpdateMessage(), 0, 0 );
 		}
 
 		// Reset directory.
@@ -447,7 +447,7 @@ LRESULT SettingsDialog::OnNotify( LPNMHDR pHdr )
 // memory pool.
 LPTSTR SettingsDialog::StrToPool( ClsString& str )
 {
-	LPTSTR pStr = ( LPTSTR )::AllocPooled( pParserPool, str.GetStringLength() + 1 );
+	LPTSTR pStr = ( LPTSTR )::Brainchild_AllocPooled( pParserPool, str.GetStringLength() + 1 );
 	if ( pStr )
 		_tcscpy( pStr, str );
 	return pStr;
@@ -484,15 +484,15 @@ LRESULT SettingsDialog::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl
 			if ( cn.Name( *this, name ))
 			{
 				// Allocate a parser node.
-				LPPARSER pParser = ( LPPARSER )::AllocPooled( pParserPool, sizeof( PARSER ));
+				LPPARSER pParser = ( LPPARSER )::Brainchild_AllocPooled( pParserPool, sizeof( PARSER ));
 				if ( pParser )
 				{
 					// Allocate a block array.
-					pParser->lpaBlocks = ::ArrayCreate( 0, 5, sizeof( BLOCK ));
+					pParser->lpaBlocks = ::Brainchild_ArrayCreate( 0, 5, sizeof( BLOCK ));
 					if ( pParser->lpaBlocks )
 					{
 						// Default the parser.
-						::DefaultParser( pParser );
+						::Brainchild_DefaultParser( pParser );
 
 						// Setup the file name.
 						pParser->pszFileName = StrToPool( name );
@@ -509,7 +509,7 @@ LRESULT SettingsDialog::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl
 								if ( pParser->pszTimeFormat )
 								{
 									// Setup keyboard.
-									if ( ::SetupHash( pParserPool, &pParser->aHash[ 0 ] ))
+									if ( ::Brainchild_SetupHash( pParserPool, &pParser->aHash[ 0 ] ))
 									{
 										// Give it a name.
 										name.Format( ClsString( MAKEINTRESOURCE( IDS_NEWCLASS )), m_dwAddCounter++ );
@@ -540,7 +540,7 @@ LRESULT SettingsDialog::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl
 						}
 					}
 					// Free the parser node.
-					::FreeParserNode( pParserPool, pParser );
+					::Brainchild_FreeParserNode( pParserPool, pParser );
 				}
 			}
 			else

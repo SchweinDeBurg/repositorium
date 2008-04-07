@@ -12,7 +12,7 @@
 #include "defs.h"
 #include "LangRes.rh"
 
-void FreeParserNode( POOL pMemPool, LPPARSER lpp )
+void Brainchild_FreeParserNode( POOL pMemPool, LPPARSER lpp )
 {
 	LPKEYHASH	lpHash, lpNext;
 	LPSMART		lpSmart;
@@ -21,27 +21,27 @@ void FreeParserNode( POOL pMemPool, LPPARSER lpp )
 	/*
 	 *	Free the strings.
 	 */
-	if ( lpp->pszTitle	  ) FreePooled( pMemPool, lpp->pszTitle );
-	if ( lpp->pszExtentions   ) FreePooled( pMemPool, lpp->pszExtentions );
-	if ( lpp->pszDelimiters   ) FreePooled( pMemPool, lpp->pszDelimiters );
-	if ( lpp->pszFileName     ) FreePooled( pMemPool, lpp->pszFileName );
-	if ( lpp->pszDateFormat   ) FreePooled( pMemPool, lpp->pszDateFormat );
-	if ( lpp->pszTimeFormat   ) FreePooled( pMemPool, lpp->pszTimeFormat );
-	if ( lpp->pszBackupPath   ) FreePooled( pMemPool, lpp->pszBackupPath );
-	if ( lpp->pszHeaderLeft   ) FreePooled( pMemPool, lpp->pszHeaderLeft );
-	if ( lpp->pszHeaderCenter ) FreePooled( pMemPool, lpp->pszHeaderCenter );
-	if ( lpp->pszHeaderRight  ) FreePooled( pMemPool, lpp->pszHeaderRight );
-	if ( lpp->pszFooterLeft   ) FreePooled( pMemPool, lpp->pszFooterLeft );
-	if ( lpp->pszFooterCenter ) FreePooled( pMemPool, lpp->pszFooterCenter );
-	if ( lpp->pszFooterRight  ) FreePooled( pMemPool, lpp->pszFooterRight );
+	if ( lpp->pszTitle	  ) Brainchild_FreePooled( pMemPool, lpp->pszTitle );
+	if ( lpp->pszExtentions   ) Brainchild_FreePooled( pMemPool, lpp->pszExtentions );
+	if ( lpp->pszDelimiters   ) Brainchild_FreePooled( pMemPool, lpp->pszDelimiters );
+	if ( lpp->pszFileName     ) Brainchild_FreePooled( pMemPool, lpp->pszFileName );
+	if ( lpp->pszDateFormat   ) Brainchild_FreePooled( pMemPool, lpp->pszDateFormat );
+	if ( lpp->pszTimeFormat   ) Brainchild_FreePooled( pMemPool, lpp->pszTimeFormat );
+	if ( lpp->pszBackupPath   ) Brainchild_FreePooled( pMemPool, lpp->pszBackupPath );
+	if ( lpp->pszHeaderLeft   ) Brainchild_FreePooled( pMemPool, lpp->pszHeaderLeft );
+	if ( lpp->pszHeaderCenter ) Brainchild_FreePooled( pMemPool, lpp->pszHeaderCenter );
+	if ( lpp->pszHeaderRight  ) Brainchild_FreePooled( pMemPool, lpp->pszHeaderRight );
+	if ( lpp->pszFooterLeft   ) Brainchild_FreePooled( pMemPool, lpp->pszFooterLeft );
+	if ( lpp->pszFooterCenter ) Brainchild_FreePooled( pMemPool, lpp->pszFooterCenter );
+	if ( lpp->pszFooterRight  ) Brainchild_FreePooled( pMemPool, lpp->pszFooterRight );
 
 	/*
 	 *	Free the smart indention nodes.
 	 */
 	while (( lpSmart = ( LPSMART )RemHead(( LPLIST )&lpp->lSmartIndention )) != NULL )
 	{
-		if ( lpSmart->lpszSmartString ) FreePooled( pMemPool, lpSmart->lpszSmartString );
-		FreePooled( pMemPool, lpSmart );
+		if ( lpSmart->lpszSmartString ) Brainchild_FreePooled( pMemPool, lpSmart->lpszSmartString );
+		Brainchild_FreePooled( pMemPool, lpSmart );
 	}
 
 	/*
@@ -49,7 +49,7 @@ void FreeParserNode( POOL pMemPool, LPPARSER lpp )
 	 *	automatically free the strings in
 	 *	the block aswell.
 	 */
-	if ( lpp->lpaBlocks ) ArrayDelete( lpp->lpaBlocks );
+	if ( lpp->lpaBlocks ) Brainchild_ArrayDelete( lpp->lpaBlocks );
 
 	/*
 	 *	Free the keyboard hashes.
@@ -78,25 +78,25 @@ void FreeParserNode( POOL pMemPool, LPPARSER lpp )
 			/*
 			 *	Delete keyword string.
 			 */
-			if ( lpHash->pszKeyword ) FreePooled( pMemPool, lpHash->pszKeyword );
+			if ( lpHash->pszKeyword ) Brainchild_FreePooled( pMemPool, lpHash->pszKeyword );
 
 			/*
 			 *	And the hash entry itself.
 			 */
-			FreePooled( pMemPool, lpHash );
+			Brainchild_FreePooled( pMemPool, lpHash );
 		}
 	}
 
 	/*
 	 *	Free the parser structure itself.
 	 */
-	FreePooled( pMemPool, lpp );
+	Brainchild_FreePooled( pMemPool, lpp );
 }
 
 /*
  *	Deallocate the parser list.
  */
-void FreeParserList( POOL pMemPool, LPPARSERLIST lppl )
+void Brainchild_FreeParserList( POOL pMemPool, LPPARSERLIST lppl )
 {
 	LPPARSER	lpp;
 
@@ -104,7 +104,7 @@ void FreeParserList( POOL pMemPool, LPPARSERLIST lppl )
 	 *	Remove parser nodes.
 	 */
 	while (( lpp = ( LPPARSER )RemHead(( LPLIST )lppl )) != NULL )
-		FreeParserNode( pMemPool, lpp );
+		Brainchild_FreeParserNode( pMemPool, lpp );
 }
 
 /*
@@ -152,7 +152,7 @@ static LPTSTR CopyArrayString( LPARRAY lpa, LPCTSTR lpszString )
 	/*
 	 *	Allocate memory.
 	 */
-	if (( lpszCopy = ArrayAllocMem( lpa, REAL_SIZE( _tcslen( lpszString ) + 1 ))) != NULL )
+	if (( lpszCopy = Brainchild_ArrayAllocMem( lpa, REAL_SIZE( _tcslen( lpszString ) + 1 ))) != NULL )
 		_tcscpy( lpszCopy, lpszString );
 
 	return lpszCopy;
@@ -162,7 +162,7 @@ static LPTSTR CopyArrayString( LPARRAY lpa, LPCTSTR lpszString )
  *	Add a keyword hash to the
  *	hash table.
  */
-BOOL AddKeyword( POOL pMemPool, LPPARSER lpp, LPCTSTR lpszKeyword, COLORREF crColor, COLORREF crBkColor )
+BOOL Brainchild_AddKeyword( POOL pMemPool, LPPARSER lpp, LPCTSTR lpszKeyword, COLORREF crColor, COLORREF crBkColor )
 {
 	LPKEYHASH	*p, lpEntry, lpHash;
 	WORD		 wIndex;
@@ -170,12 +170,12 @@ BOOL AddKeyword( POOL pMemPool, LPPARSER lpp, LPCTSTR lpszKeyword, COLORREF crCo
 	/*
 	 *	Allocate hash structure.
 	 */
-	if (( lpHash = AllocPooled( pMemPool, sizeof( KEYHASH ))) != NULL )
+	if (( lpHash = Brainchild_AllocPooled( pMemPool, sizeof( KEYHASH ))) != NULL )
 	{
 		/*
 		 *	Allocate a copy of the keyword.
 		 */
-		if (( lpHash->pszKeyword = CopyStringPool( pMemPool, lpszKeyword )) != NULL )
+		if (( lpHash->pszKeyword = Brainchild_CopyStringPool( pMemPool, lpszKeyword )) != NULL )
 		{
 			/*
 			 *	Remove trailing blanks.
@@ -213,8 +213,8 @@ BOOL AddKeyword( POOL pMemPool, LPPARSER lpp, LPCTSTR lpszKeyword, COLORREF crCo
 					 *	Yes. Kill this hash structure and
 					 *	return success.
 					 */
-					FreePooled( pMemPool, lpHash->pszKeyword );
-					FreePooled( pMemPool, lpHash );
+					Brainchild_FreePooled( pMemPool, lpHash->pszKeyword );
+					Brainchild_FreePooled( pMemPool, lpHash );
 					return TRUE;
 				}
 				/*
@@ -230,7 +230,7 @@ BOOL AddKeyword( POOL pMemPool, LPPARSER lpp, LPCTSTR lpszKeyword, COLORREF crCo
 
 			return TRUE;
 		}
-		FreePooled( pMemPool, lpHash );
+		Brainchild_FreePooled( pMemPool, lpHash );
 	}
 	return FALSE;
 }
@@ -374,7 +374,7 @@ BOOL SetupParser( LPCLASSDATA lpcd, LPCTSTR lpszFileName )
 	return bRC;
 }
 
-BOOL LoadParserFiles( POOL pMemPool, LPPARSERLIST lppl )
+BOOL Brainchild_LoadParserFiles( POOL pMemPool, LPPARSERLIST lppl )
 {
 	HANDLE		hFile;
 	WIN32_FIND_DATA	wfd;
@@ -389,7 +389,7 @@ BOOL LoadParserFiles( POOL pMemPool, LPPARSERLIST lppl )
 		/*
 		 *	Setup settings directory.
 		 */
-		if ( CheckUser( szUser ))
+		if ( Brainchild_CheckUser( szUser ))
 		{
 			/*
 			 *	Setup the directory.
@@ -486,14 +486,14 @@ BOOL ReadString( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileName
 	 */
 	if ( *ppDest )
 	{
-		FreePooled( pMemPool, *ppDest );
+		Brainchild_FreePooled( pMemPool, *ppDest );
 		*ppDest = NULL;
 	}
 
 	/*
 	 *	Copy the name string.
 	 */
-	if (( *ppDest = CopyStringPool( pMemPool, pszArgs )) == NULL )
+	if (( *ppDest = Brainchild_CopyStringPool( pMemPool, pszArgs )) == NULL )
 	{
 		ErrorMsg( GetString( IDS_OUTOFMEM ), lpszFileName );
 		bErrorMsg = TRUE;
@@ -725,7 +725,7 @@ BOOL EndBlock( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileName, 
 	/*
 	 *	Save the block in the array.
 	 */
-	if ( ArrayAdd( lpp->lpaBlocks, &bBlock, 1 ) == FALSE )
+	if ( Brainchild_ArrayAdd( lpp->lpaBlocks, &bBlock, 1 ) == FALSE )
 	{
 		ErrorMsg( GetString( IDS_OUTOFMEM ), lpszFileName );
 		bErrorMsg = TRUE;
@@ -1565,14 +1565,14 @@ BOOL Indent( BOOL bLeft, POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpsz
 	/*
 	 *	Allocate node.
 	 */
-	if (( lps = AllocPooled( pMemPool, sizeof( SMART ))) != NULL )
+	if (( lps = Brainchild_AllocPooled( pMemPool, sizeof( SMART ))) != NULL )
 	{
 		/*
 		 *	Copy the name string.
 		 */
-		if (( lps->lpszSmartString = CopyStringPool( pMemPool, pszArgs )) == NULL )
+		if (( lps->lpszSmartString = Brainchild_CopyStringPool( pMemPool, pszArgs )) == NULL )
 		{
-			FreePooled( pMemPool, lps );
+			Brainchild_FreePooled( pMemPool, lps );
 			ErrorMsg( GetString( IDS_OUTOFMEM ), lpszFileName );
 			bErrorMsg = TRUE;
 			return FALSE;
@@ -1801,7 +1801,7 @@ BOOL Key( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileName, TCHAR
 	/*
 	 *	Copy the key string.
 	 */
-	if (( pszKeyDesc = CopyStringPool( pMemPool, pszArgs )) != NULL )
+	if (( pszKeyDesc = Brainchild_CopyStringPool( pMemPool, pszArgs )) != NULL )
 	{
 		/*
 		 *	remove spaces from the end.
@@ -1811,7 +1811,7 @@ BOOL Key( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileName, TCHAR
 		/*
 		 *	Create the command list.
 		 */
-		if (( lpCList = AllocPooled( pMemPool, sizeof( CLIST ))) != NULL )
+		if (( lpCList = Brainchild_AllocPooled( pMemPool, sizeof( CLIST ))) != NULL )
 		{
 			/*
 			 *	Initialize.
@@ -1822,7 +1822,7 @@ BOOL Key( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileName, TCHAR
 			 *	Convert the key string to a code
 			 *	and qualifier.
 			 */
-			if ( Str2CodeQual( pszKeyDesc, &cCode, &cQual ) == TRUE )
+			if ( Brainchild_Str2CodeQual( pszKeyDesc, &cCode, &cQual ) == TRUE )
 				/*
 				 *	We are in key mode.
 				 */
@@ -1833,11 +1833,11 @@ BOOL Key( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileName, TCHAR
 				 */
 				ErrorMsg( GetString( IDS_INVALID_KEYDESC ), nLineNum, lpszFileName );
 				bErrorMsg = TRUE;
-				FreePooled( pMemPool, lpCList );
+				Brainchild_FreePooled( pMemPool, lpCList );
 				lpCList = NULL;
 			}
 		}
-		FreePooled( pMemPool, pszKeyDesc );
+		Brainchild_FreePooled( pMemPool, pszKeyDesc );
 	}
 	return bRC;
 }
@@ -1865,9 +1865,9 @@ BOOL EndKey( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileName, TC
 	/*
 	 *	Add the hash to the hash table.
 	 */
-	if ( AddHash( pMemPool, &lpp->aHash[ 0 ], cCode, cQual, lpCList ) == NULL )
+	if ( Brainchild_AddHash( pMemPool, &lpp->aHash[ 0 ], cCode, cQual, lpCList ) == NULL )
 	{
-		KillCList( lpCList, pMemPool );
+		Brainchild_KillCList( lpCList, pMemPool );
 		ErrorMsg( GetString( IDS_OUTOFMEM ), lpszFileName );
 		bErrorMsg = TRUE;
 		return FALSE;
@@ -1907,7 +1907,7 @@ BOOL Hardcoded( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileName,
 	/*
 	 *	Allocate a node.
 	 */
-	if (( lpCNode = AllocPooled( pMemPool, sizeof( CNODE ))) != NULL )
+	if (( lpCNode = Brainchild_AllocPooled( pMemPool, sizeof( CNODE ))) != NULL )
 	{
 		/*
 		 *	Read the command code.
@@ -1917,7 +1917,7 @@ BOOL Hardcoded( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileName,
 			/*
 			 *	Command valid?
 			 */
-			if (( lpCNode->lpFunc = FindCommand( nCode )) != NULL )
+			if (( lpCNode->lpFunc = Brainchild_FindCommand( nCode )) != NULL )
 			{
 				/*
 				 *	Yes. Add the node.
@@ -1971,12 +1971,12 @@ BOOL RunInsert( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileName,
 	/*
 	 *	Allocate a node.
 	 */
-	if (( lpCNode = AllocPooled( pMemPool, sizeof( CNODE ))) != NULL )
+	if (( lpCNode = Brainchild_AllocPooled( pMemPool, sizeof( CNODE ))) != NULL )
 	{
 		/*
 		 *	Copy arguuments.
 		 */
-		if (( lpCNode->pcStr = CopyStringPool( pMemPool, pszArgs )) != NULL )
+		if (( lpCNode->pcStr = Brainchild_CopyStringPool( pMemPool, pszArgs )) != NULL )
 		{
 			/*
 			 *	Clear balnks.
@@ -1994,7 +1994,7 @@ BOOL RunInsert( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileName,
 			AddTail(( LPLIST )lpCList, ( LPNODE )lpCNode );
 			return TRUE;
 		}
-		FreePooled( pMemPool, lpCNode );
+		Brainchild_FreePooled( pMemPool, lpCNode );
 	}
 	ErrorMsg( GetString( IDS_OUTOFMEM ), lpszFileName );
 	bErrorMsg = TRUE;
@@ -2801,7 +2801,7 @@ BOOL ParseCommand( POOL pMemPool, LPPARSER lpp, int nLineNum, LPCTSTR lpszFileNa
 	return FALSE;
 }
 
-void DefaultParser( LPPARSER lpp )
+void Brainchild_DefaultParser( LPPARSER lpp )
 {
 	int		i;
 
@@ -2939,7 +2939,7 @@ void DefaultParser( LPPARSER lpp )
 /* 
  *	Load a parser file from the given file name.
  */
-BOOL LoadParserFromFile( LPCTSTR lpszFileName )
+BOOL Brainchild_LoadParserFromFile( LPCTSTR lpszFileName )
 {
 	return LoadParserFile( pMainPool, &plParsers, lpszFileName, INVALID_HANDLE_VALUE, TRUE );
 }
@@ -2947,7 +2947,7 @@ BOOL LoadParserFromFile( LPCTSTR lpszFileName )
 /*
  *	Load a parser from the memory handle.
  */
-BOOL LoadParserFromMemory( HGLOBAL hGlobal )
+BOOL Brainchild_LoadParserFromMemory( HGLOBAL hGlobal )
 {
 	return LoadParserFile( pMainPool, &plParsers, NULL, hGlobal, TRUE );
 }
@@ -3040,7 +3040,7 @@ BOOL LoadParserFile( POOL pMemPool, LPPARSERLIST lppl, LPCTSTR lpszFileName, HGL
 		/*
 		 *	Allocate parser node.
 		 */
-		if (( lpp = AllocPooled( pMemPool, sizeof( PARSER ))) == NULL ) 
+		if (( lpp = Brainchild_AllocPooled( pMemPool, sizeof( PARSER ))) == NULL ) 
 		{
 			bError = TRUE;
 			break;
@@ -3049,7 +3049,7 @@ BOOL LoadParserFile( POOL pMemPool, LPPARSERLIST lppl, LPCTSTR lpszFileName, HGL
 		/*
 		 *	Allocate block array.
 		 */
-		if (( lpp->lpaBlocks = ArrayCreate( 0, 5, sizeof( BLOCK ))) == NULL )
+		if (( lpp->lpaBlocks = Brainchild_ArrayCreate( 0, 5, sizeof( BLOCK ))) == NULL )
 		{
 			bError = TRUE;
 			break;
@@ -3058,7 +3058,7 @@ BOOL LoadParserFile( POOL pMemPool, LPPARSERLIST lppl, LPCTSTR lpszFileName, HGL
 		/*
 		 *	Setup defaults.
 		 */
-		DefaultParser( lpp );
+		Brainchild_DefaultParser( lpp );
 
 		/*
 		 *	Added parser?
@@ -3070,7 +3070,7 @@ BOOL LoadParserFile( POOL pMemPool, LPPARSERLIST lppl, LPCTSTR lpszFileName, HGL
 		 */
 		if ( lpszFileName )
 		{
-			if (( lpp->pszFileName = CopyStringPool( pMemPool, lpszFileName )) == NULL )
+			if (( lpp->pszFileName = Brainchild_CopyStringPool( pMemPool, lpszFileName )) == NULL )
 			{
 				bError = TRUE;
 				break;
@@ -3179,7 +3179,7 @@ BOOL LoadParserFile( POOL pMemPool, LPPARSERLIST lppl, LPCTSTR lpszFileName, HGL
 				/*
 				 *	Add it as a hash.
 				 */
-				if ( AddKeyword( pMemPool, lpp, pszPtr, crColor, crBkColor ) == FALSE )
+				if ( Brainchild_AddKeyword( pMemPool, lpp, pszPtr, crColor, crBkColor ) == FALSE )
 				{
 					bError = TRUE;
 					continue;
@@ -3227,16 +3227,16 @@ BOOL LoadParserFile( POOL pMemPool, LPPARSERLIST lppl, LPCTSTR lpszFileName, HGL
 		 */
 		if ( lpp->lpaBlocks )
 		{
-			if ( bBlock.pszName   ) ArrayFreeMem( lpp->lpaBlocks, bBlock.pszName   );
-			if ( bBlock.pszStart  ) ArrayFreeMem( lpp->lpaBlocks, bBlock.pszStart  );
-			if ( bBlock.pszEnd    ) ArrayFreeMem( lpp->lpaBlocks, bBlock.pszEnd    );
+			if ( bBlock.pszName   ) Brainchild_ArrayFreeMem( lpp->lpaBlocks, bBlock.pszName   );
+			if ( bBlock.pszStart  ) Brainchild_ArrayFreeMem( lpp->lpaBlocks, bBlock.pszStart  );
+			if ( bBlock.pszEnd    ) Brainchild_ArrayFreeMem( lpp->lpaBlocks, bBlock.pszEnd    );
 		}
 
 		/*
 		 *	De-allocate the parser node.
 		 */
 		if ( lpp )
-			FreeParserNode( pMemPool, lpp );
+			Brainchild_FreeParserNode( pMemPool, lpp );
 
 		/*
 		 *	Failure.

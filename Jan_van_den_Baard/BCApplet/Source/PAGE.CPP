@@ -38,7 +38,7 @@ void Page::HandleEditControl( UINT nNotifyCode, UINT nCtrlID, LPTSTR *pStrPtr, B
 		if ( pszText )
 		{
 			// Release current contents.
-			if ( *pStrPtr ) ::FreePooled( pParserPool, *pStrPtr );
+			if ( *pStrPtr ) ::Brainchild_FreePooled( pParserPool, *pStrPtr );
 
 			// Check if it has valid contents.
 			for ( size_t i = 0; i <= _tcslen( pszText ); i++ )
@@ -47,7 +47,7 @@ void Page::HandleEditControl( UINT nNotifyCode, UINT nCtrlID, LPTSTR *pStrPtr, B
 				if ( pszText[ i ] == _T( '\0' ))
 				{
 					// Free the memory.
-					::FreePooled( pParserPool, pszText );
+					::Brainchild_FreePooled( pParserPool, pszText );
 
 					// Clear edit control contents.
 					::SetWindowText( GetDlgItemHandle( nCtrlID ), _T( "" ));
@@ -83,7 +83,7 @@ LPTSTR Page::CopyEditContents( UINT nCtrlID )
 	int nLen = ::GetWindowTextLength( hEdit );
 	
 	// Allocate buffer.
-	LPTSTR pszBuffer = ( LPTSTR )::AllocPooled( pParserPool, nLen + 1 );
+	LPTSTR pszBuffer = ( LPTSTR )::Brainchild_AllocPooled( pParserPool, nLen + 1 );
 	if ( pszBuffer )
 	{
 		// Get contents.

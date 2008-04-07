@@ -620,7 +620,7 @@ static void InternalFreePooled( LPMEMPOOL lpMemPool, LPVOID lpMemPtr, DWORD dwSi
 /*
  *	Allocate a new memory pool.
  */
-POOL GetMemoryPool( DWORD dwBlockSize )
+POOL Brainchild_GetMemoryPool( DWORD dwBlockSize )
 {
 	LPMEMPOOL	lpMemPool;
 
@@ -657,7 +657,7 @@ POOL GetMemoryPool( DWORD dwBlockSize )
 /*
  *	Free a memory pool.
  */
-void FreeMemoryPool( POOL memPool, BOOL bAll )
+void Brainchild_FreeMemoryPool( POOL memPool, BOOL bAll )
 {
 	LPMEMBLOCK	lpMemBlock;
 	LPSYSITEM	lpSysItem;
@@ -686,7 +686,7 @@ void FreeMemoryPool( POOL memPool, BOOL bAll )
 /*
  *	Allocate memory.
  */
-LPVOID AllocPooled( POOL memPool, DWORD dwSize )
+LPVOID Brainchild_AllocPooled( POOL memPool, DWORD dwSize )
 {
 	LPDWORD		lpdwMem;
 
@@ -707,7 +707,7 @@ LPVOID AllocPooled( POOL memPool, DWORD dwSize )
 /*
  *	Free memory.
  */
-void FreePooled( POOL memPool, LPVOID lpMemPtr )
+void Brainchild_FreePooled( POOL memPool, LPVOID lpMemPtr )
 {
 	/*
 	 *	Adjust pointer.

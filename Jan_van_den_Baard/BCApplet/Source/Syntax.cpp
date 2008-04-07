@@ -124,10 +124,10 @@ BOOL SyntaxPage::SavePage( ClsStdioFile *pFile, LPPARSER pParser )
 		pFile->PrintF( ClsString( MAKEINTRESOURCE( IDS_COMMENT_BLOCKS )));
 
 		// Write blocks.
-		for ( int i = 0; i < ::ArrayGetSize( pParser->lpaBlocks ); i++ )
+		for ( int i = 0; i < ::Brainchild_ArrayGetSize( pParser->lpaBlocks ); i++ )
 		{
 			// Get block.
-			LPBLOCK lpBlock = ( LPBLOCK )::ArrayGetAt( pParser->lpaBlocks, i );
+			LPBLOCK lpBlock = ( LPBLOCK )::Brainchild_ArrayGetAt( pParser->lpaBlocks, i );
 
 			// Write block opening.
 			if ( lpBlock->pszName ) pFile->PrintF( _T( "Block=%s\n" ), lpBlock->pszName );
@@ -194,8 +194,8 @@ BOOL SyntaxPage::SavePage( ClsStdioFile *pFile, LPPARSER pParser )
 										  GetBValue( pKW->crBgColor ));
 
 				// Write keywords from this group.
-				for ( int i = 0; i < ::ArrayGetSize( pKW->lpaKeywords ); i++ )
-					pFile->PrintF( _T( "%s\n" ), *(( LPCTSTR * )::ArrayGetAt( pKW->lpaKeywords, i )));
+				for ( int i = 0; i < ::Brainchild_ArrayGetSize( pKW->lpaKeywords ); i++ )
+					pFile->PrintF( _T( "%s\n" ), *(( LPCTSTR * )::Brainchild_ArrayGetAt( pKW->lpaKeywords, i )));
 			}
 
 			// Free the converted list.
@@ -316,14 +316,14 @@ LRESULT SyntaxPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 			//		EndBlock
 			ClsString strName( MAKEINTRESOURCE( IDS_NEW_BLOCK ));
 			BLOCK	  bBlock;
-			bBlock.pszName = ( LPTSTR )::ArrayAllocMem( m_pParser->lpaBlocks, ( strName.GetStringLength() + 1 ) * sizeof( TCHAR ));
+			bBlock.pszName = ( LPTSTR )::Brainchild_ArrayAllocMem( m_pParser->lpaBlocks, ( strName.GetStringLength() + 1 ) * sizeof( TCHAR ));
 			if ( bBlock.pszName )
 			{
 				// Copy the name.
 				_tcscpy( bBlock.pszName, strName );
 
 				// Allocate start string.
-				bBlock.pszStart = ( LPTSTR )::ArrayAllocMem( m_pParser->lpaBlocks, ( _tcslen( _T( ";" )) + 1 ) * sizeof( TCHAR ));
+				bBlock.pszStart = ( LPTSTR )::Brainchild_ArrayAllocMem( m_pParser->lpaBlocks, ( _tcslen( _T( ";" )) + 1 ) * sizeof( TCHAR ));
 				if ( bBlock.pszStart )
 				{
 					// Copy the name.
@@ -336,10 +336,10 @@ LRESULT SyntaxPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 					bBlock.pszEnd = END_OF_LINE;
 
 					// Add it to the array.
-					if ( ::ArrayAdd( m_pParser->lpaBlocks, &bBlock, 1 ))
+					if ( ::Brainchild_ArrayAdd( m_pParser->lpaBlocks, &bBlock, 1 ))
 					{
 						// Get the added block.
-						LPBLOCK	lpAdded = ( LPBLOCK )::ArrayGetAt( m_pParser->lpaBlocks, ::ArrayGetSize( m_pParser->lpaBlocks ) - 1 );
+						LPBLOCK	lpAdded = ( LPBLOCK )::Brainchild_ArrayGetAt( m_pParser->lpaBlocks, ::Brainchild_ArrayGetSize( m_pParser->lpaBlocks ) - 1 );
 
 						// Setup color.
 						lpAdded->crColor = RGB( 50, 100, 150 );
@@ -351,11 +351,11 @@ LRESULT SyntaxPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 						// elements which, in turn, causes the
 						// listview contents to be faulty.
 						m_Blocks.ResetContent();
-						for ( int i = 0; i < ::ArrayGetSize( m_pParser->lpaBlocks ); i++ )
-							m_Blocks.AddString(( LPCTSTR )::ArrayGetAt( m_pParser->lpaBlocks, i ));
+						for ( int i = 0; i < ::Brainchild_ArrayGetSize( m_pParser->lpaBlocks ); i++ )
+							m_Blocks.AddString(( LPCTSTR )::Brainchild_ArrayGetAt( m_pParser->lpaBlocks, i ));
 
 						// Select last added entry.
-						m_Blocks.SetCurSel( ::ArrayGetSize( m_pParser->lpaBlocks ) - 1 );
+						m_Blocks.SetCurSel( ::Brainchild_ArrayGetSize( m_pParser->lpaBlocks ) - 1 );
 
 						// Setup toolbar.
 						SetupToolbar();
@@ -370,9 +370,9 @@ LRESULT SyntaxPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 							m_Blocks.Invalidate();
 						return 0;
 					}
-					::ArrayFreeMem( m_pParser->lpaBlocks, bBlock.pszStart );
+					::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, bBlock.pszStart );
 				}
-				::ArrayFreeMem( m_pParser->lpaBlocks, bBlock.pszName );
+				::Brainchild_ArrayFreeMem( m_pParser->lpaBlocks, bBlock.pszName );
 			}
 			MessageBox( ClsString( MAKEINTRESOURCE( IDS_NO_MEMORY )), ClsGetApp()->GetAppTitle(), MB_ICONERROR | MB_OK );
 			return 0;
@@ -392,7 +392,7 @@ LRESULT SyntaxPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 
 				// Edit it.
 				BlockEdit be;
-				if ( be.EditBlock( *GetParent(), ( LPBLOCK )::ArrayGetAt( m_pParser->lpaBlocks, nSel ), m_pParser ))
+				if ( be.EditBlock( *GetParent(), ( LPBLOCK )::Brainchild_ArrayGetAt( m_pParser->lpaBlocks, nSel ), m_pParser ))
 				{
 					// Refresh the list.
 					m_Blocks.Invalidate();

@@ -204,7 +204,7 @@ LRESULT OnKillFocus( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 
 int CaretOffsetLine( LPCLASSDATA lpcd, int nLine, int nColumn )
 {
-	LPLINE		lpLine = ArrayGetAt( lpcd->lpLines, nLine );
+	LPLINE		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine );
 	int		nPos = 0, i;
 
 	if ( lpLine && lpLine->pcText )
@@ -239,7 +239,7 @@ int GetCaretOffset( LPCLASSDATA lpcd, int nColumn )
 
 int TextOffsetLine( LPCLASSDATA lpcd, int nLine, int nColumn, BOOL *pTruncated )
 {
-	LPLINE	lpLine = ArrayGetAt( lpcd->lpLines, nLine );
+	LPLINE	lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine );
 	int i = 0, nPos = 0;
 
 	/*
@@ -476,7 +476,7 @@ static void MoveRight( LPCLASSDATA lpcd )
 	        /*
 		 *	Yes. Are we at the last line?
 		 */
-                if ( lpcd->ptCaretPos.y < ArrayGetSize( lpcd->lpLines ) - 1 )
+                if ( lpcd->ptCaretPos.y < Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 	        {
 		        /*
 			 *	Go down one.
@@ -699,7 +699,7 @@ static void MoveDown( LPCLASSDATA lpcd )
 	/*
 	 *	Caret at the last line?
 	 */
-	if ( lpcd->ptCaretPos.y < ArrayGetSize( lpcd->lpLines ) - 1 )
+	if ( lpcd->ptCaretPos.y < Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 	{
 		/*
 		 *	Fast scrolling?
@@ -713,7 +713,7 @@ static void MoveDown( LPCLASSDATA lpcd )
 				/*
 				 *	Setup new position.
 				 */
-				lpcd->ptCaretPos.y = min( lpcd->ptCaretPos.y + 2, ArrayGetSize( lpcd->lpLines ) - 1 );
+				lpcd->ptCaretPos.y = min( lpcd->ptCaretPos.y + 2, Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 );
 			else
 				/*
 				 *	One line up.
@@ -904,7 +904,7 @@ static void MoveNextWord( LPCLASSDATA lpcd )
 		 *	Yes go down one line and to the
 		 *	first word on that line.
 		 */
-		if ( lpcd->ptCaretPos.y < ArrayGetSize( lpcd->lpLines ) - 1 )
+		if ( lpcd->ptCaretPos.y < Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 		{
 			/*
 			 *	Start at 0
@@ -1234,7 +1234,7 @@ static void MoveEnd( LPCLASSDATA lpcd )
 	/*
 	 *	Are we there yet?
 	 */
-	if ( lpcd->ptCaretPos.y == ArrayGetSize( lpcd->lpLines ) - 1 && lpcd->ptCaretPos.x == GETLINE( lpcd )->nLength )
+	if ( lpcd->ptCaretPos.y == Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 && lpcd->ptCaretPos.x == GETLINE( lpcd )->nLength )
 		/*
 		 *	Yes.
 		 */
@@ -1243,7 +1243,7 @@ static void MoveEnd( LPCLASSDATA lpcd )
 	/*
 	 *	Put us on the last line.
 	 */
-	lpcd->ptCaretPos.y = ArrayGetSize( lpcd->lpLines ) - 1;
+	lpcd->ptCaretPos.y = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
 
 	/*
 	 *	Move us to the end.
@@ -1388,7 +1388,7 @@ void CaretViewUp( LPCLASSDATA lpcd )
 
 static void MoveViewDown( LPCLASSDATA lpcd )
 {
-	int	nLines = ArrayGetSize( lpcd->lpLines ) - 1;
+	int	nLines = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
 
 	/*
 	 *	Are we already at the end?
@@ -1474,7 +1474,7 @@ void ScrollViewDown( LPCLASSDATA lpcd )
 
 void ScrollViewUp( LPCLASSDATA lpcd )
 {
-	int	nLines = ArrayGetSize( lpcd->lpLines ) - 1;
+	int	nLines = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
 
 	/*
 	 *	Are we there already?

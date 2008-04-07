@@ -25,7 +25,7 @@ static void SetSizeControls( HWND hDlg )
 	LPCLASSDATA	lpcd = ( LPCLASSDATA )GetWindowLong( hDlg, DWL_USER );
 	TCHAR		szBuffer[ 256 ];
 	SHFILEINFO	psfi;
-	int		nLines = ArrayGetSize( lpcd->lpLines ), i, nFileMode;
+	int		nLines = Brainchild_ArrayGetSize( lpcd->lpLines ), i, nFileMode;
 	unsigned int	nBytes = 0, nLineTerm = 1;
 
 	/*
@@ -76,7 +76,7 @@ static void SetSizeControls( HWND hDlg )
 		/*
 		 *	Add line length.
 		 */
-		nBytes += (( LPLINE )ArrayGetAt( lpcd->lpLines, i ))->nLength;
+		nBytes += (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, i ))->nLength;
 
 		/*
 		 *	Add line terminator bytes

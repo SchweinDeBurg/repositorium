@@ -43,7 +43,7 @@ Hyper[] =
  */
 static BOOL CheckForHyperlink( LPCLASSDATA lpcd, LPPOINT lpPos, LPPOINT lpStart, LPPOINT lpEnd, BOOL bQuoted )
 {
-	LPLINE	lpLine = ( LPLINE )ArrayGetAt( lpcd->lpLines, lpPos->y );
+	LPLINE	lpLine = ( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, lpPos->y );
 	int	nIndex = lpPos->x, i = 0;
 
 	/*
@@ -281,14 +281,14 @@ TCHAR *GetHyperlink( LPCLASSDATA lpcd )
 				 *	Allocate memory to store the
 				 *	hyperlink text.
 				 */
-				TCHAR *pszUrl = AllocPooled( lpcd->pMemPool, REAL_SIZE( ptEnd.x - ptStart.x + 2 ));
+				TCHAR *pszUrl = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( ptEnd.x - ptStart.x + 2 ));
 				if ( pszUrl )
 				{
 					/*
 					 *	Copy the hyperlink text into the
 				 	 *	allocated buffer.
 					 */
-					LPLINE lpLine = ( LPLINE )ArrayGetAt( lpcd->lpLines, ptStart.y );
+					LPLINE lpLine = ( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, ptStart.y );
 					memcpy( pszUrl, &lpLine->pcText[ ptStart.x ], ptEnd.x - ptStart.x + 1 );
 
 					/*
@@ -333,7 +333,7 @@ BOOL RunHyperlink( LPCLASSDATA lpcd )
 		/*
 		 *	Release the url buffer.
 		 */
-		FreePooled( lpcd->pMemPool, pszLink );
+		Brainchild_FreePooled( lpcd->pMemPool, pszLink );
 		return TRUE;
 	}
 	/*

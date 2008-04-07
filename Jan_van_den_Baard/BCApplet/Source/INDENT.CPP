@@ -138,7 +138,7 @@ LRESULT IndentPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 		case	EditToolbar::ETID_NEW:
 		{
 			// Allocate new node.
-			LPSMART	lpSmart = ( LPSMART )::AllocPooled( pParserPool, sizeof( SMART ));
+			LPSMART	lpSmart = ( LPSMART )::Brainchild_AllocPooled( pParserPool, sizeof( SMART ));
 			if ( lpSmart )
 			{
 				// Allocate a name...
@@ -165,7 +165,7 @@ LRESULT IndentPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 					return 0;
 				}
 				// Free the node.
-				::FreePooled( pParserPool, lpSmart );
+				::Brainchild_FreePooled( pParserPool, lpSmart );
 			}
 			return 0;
 		}
@@ -285,7 +285,7 @@ LRESULT IndentPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 						ClsBalloonHelp::LaunchBalloon( ClsGetApp()->GetAppTitle(), MAKEINTRESOURCE( IDS_ERROR_NOEMPTY ), rc.CenterPoint(), IDI_ERROR, ClsBalloonHelp::unSHOW_INNER_SHADOW | ClsBalloonHelp::unSHOW_CLOSE_BUTTON, this );
 
 						// Just in case.
-						if ( pStr ) ::FreePooled( pParserPool, pStr );
+						if ( pStr ) ::Brainchild_FreePooled( pParserPool, pStr );
 
 						// Restore original contents.
 						m_Edit.SetWindowText( pSmart->lpszSmartString );
@@ -295,7 +295,7 @@ LRESULT IndentPage::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 					else
 					{
 						// Delete the old string.
-						if ( pSmart->lpszSmartString ) ::FreePooled( pParserPool, pSmart->lpszSmartString );
+						if ( pSmart->lpszSmartString ) ::Brainchild_FreePooled( pParserPool, pSmart->lpszSmartString );
 
 						// And setup the new.
 						pSmart->lpszSmartString = pStr;

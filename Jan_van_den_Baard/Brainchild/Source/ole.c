@@ -452,7 +452,7 @@ static void MoveView( LPCLASSDATA lpcd )
 	POINT	ptMouse;
 	RECT	rcClient;
 	BOOL	bChange = FALSE;
-	int	nLines = ArrayGetSize( lpcd->lpLines ) - 1;
+	int	nLines = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
 
 	/*
 	 *	Get client rectabgle.

@@ -372,7 +372,7 @@ void SetupViewSize( LPCLASSDATA lpcd )
 
 LRESULT OnSize( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 {
-	int nLines = ArrayGetSize( lpcd->lpLines ) - 1;
+	int nLines = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
 
 	/*
 	 *	Compute view size.
@@ -630,12 +630,12 @@ SYNTAX_COLOR *GetColorBlocks( LPCLASSDATA lpcd, int nBlocks )
 	 *	Free previous allocation...
 	 */
 	if ( lpcd->lpscColorArray )
-		FreePooled( lpcd->pMemPool, lpcd->lpscColorArray );
+		Brainchild_FreePooled( lpcd->pMemPool, lpcd->lpscColorArray );
 
 	/*
 	 *	Allocate color blocks.
 	 */
-	if (( lpcd->lpscColorArray = AllocPooled( lpcd->pMemPool, nBlocks * sizeof( SYNTAX_COLOR ))) != NULL )
+	if (( lpcd->lpscColorArray = Brainchild_AllocPooled( lpcd->pMemPool, nBlocks * sizeof( SYNTAX_COLOR ))) != NULL )
 		/*
 		 *	Save number of blocks.
 		 */
@@ -715,7 +715,7 @@ static void OutputLine( LPCLASSDATA lpcd, HDC hDC, int nLine, BOOL bRender )
 		/*
 		 *	Get a pointer to the line structure.
 		 */
-		if (( lpLine = ArrayGetAt( lpcd->lpLines, nLine )) != NULL )
+		if (( lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine )) != NULL )
 		{
 			/*
 			 *	Compute the "real" size.
@@ -819,7 +819,7 @@ static void OutputLine( LPCLASSDATA lpcd, HDC hDC, int nLine, BOOL bRender )
 					 *	Get block.
 					 */
 					if ( nLine > 0 )
-						nBlock = (( LPLINE )ArrayGetAt( lpcd->lpLines, nLine - 1 ))->nBlock;
+						nBlock = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, nLine - 1 ))->nBlock;
 
 					/*
 					 *	Get the array of syntax
@@ -842,7 +842,7 @@ static void OutputLine( LPCLASSDATA lpcd, HDC hDC, int nLine, BOOL bRender )
 							 *	the lines below this one to make
 							 *	sure they are updated aswell.
 							 */
-							if ( nLine < ArrayGetSize( lpcd->lpLines ) - 1 )
+							if ( nLine < Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 								/*
 								 *	Setting this boolean will force
 								 *	the WM_DRAW message handler to
@@ -1158,12 +1158,12 @@ static void OutputLine( LPCLASSDATA lpcd, HDC hDC, int nLine, BOOL bRender )
 			 *	Get block.
 			 */
 			if ( nLine > 0 )
-				nBlock = (( LPLINE )ArrayGetAt( lpcd->lpLines, nLine - 1 ))->nBlock;
+				nBlock = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, nLine - 1 ))->nBlock;
 
 			/*
 			 *	Get line pointer.
 			 */
-			lpLine = ArrayGetAt( lpcd->lpLines, nLine );
+			lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, nLine );
 
 			/*
 			 *	Parse the line to see if the block has changed...
@@ -1326,7 +1326,7 @@ static void PaintControl( HDC hDC, LPCRECT pClipRect, LPCLASSDATA lpcd )
 {
 	RECT		rcClient;
 	HDC		osDC;
-	int		sDC, i, cy, nLines = ArrayGetSize( lpcd->lpLines ), nLast = lpcd->ptViewPos.y + lpcd->szViewSize.cy;
+	int		sDC, i, cy, nLines = Brainchild_ArrayGetSize( lpcd->lpLines ), nLast = lpcd->ptViewPos.y + lpcd->szViewSize.cy;
 
 	/*
 	 *	Obtain client rectangle.

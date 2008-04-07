@@ -150,7 +150,7 @@ static HFONT CalcPageSize( LPCLASSDATA lpcd, HDC hDC )
 		 *
 		 *	We also add a two-millimeter space.
 		 */
-		_itot( ArrayGetSize( lpcd->lpLines ), szLN, 10 );
+		_itot( Brainchild_ArrayGetSize( lpcd->lpLines ), szLN, 10 );
 		nLineMargin = ( _tcslen( szLN ) * nCharWidth ) + ( 2 * nPixXmm );
 	}
 	else
@@ -930,7 +930,7 @@ static int CountPages( LPCLASSDATA lpcd, HDC hDC, int nFirst, int nLast, BOOL bS
 		/*
 		 *	Get the line.
 		 */
-		lpLine  = ArrayGetAt( lpcd->lpLines, nIndex );
+		lpLine  = Brainchild_ArrayGetAt( lpcd->lpLines, nIndex );
 		pcText  = lpLine->pcText;
 		nLength = CaretOffsetLine( lpcd, nIndex, lpLine->nLength );
 
@@ -1081,7 +1081,7 @@ static int CountPages( LPCLASSDATA lpcd, HDC hDC, int nFirst, int nLast, BOOL bS
 			/*
 			 *	Increase page counter.
 			 */
-			if ( nIndex < ArrayGetSize( lpcd->lpLines ) - 1 )
+			if ( nIndex < Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 				nPages++;
 		}
 	}
@@ -1182,7 +1182,7 @@ static void OutputText( LPCLASSDATA lpcd, HDC hDC, int nFirst, int nLast, int nC
 		 *	line if we are printing a selection.
 		 */
 		if ( bSelection )
-			nBlock = (( LPLINE )ArrayGetAt( lpcd->lpLines, nFirst ))->nBlock;
+			nBlock = (( LPLINE )Brainchild_ArrayGetAt( lpcd->lpLines, nFirst ))->nBlock;
 
 
 		/*
@@ -1201,7 +1201,7 @@ static void OutputText( LPCLASSDATA lpcd, HDC hDC, int nFirst, int nLast, int nC
 			/*
 			 *	Get the line.
 			 */
-			lpLine  = ArrayGetAt( lpcd->lpLines, nIndex );
+			lpLine  = Brainchild_ArrayGetAt( lpcd->lpLines, nIndex );
 			pcText  = lpLine->pcText;
 			nLength = CaretOffsetLine( lpcd, nIndex, lpLine->nLength );
 
@@ -1357,7 +1357,7 @@ static void OutputText( LPCLASSDATA lpcd, HDC hDC, int nFirst, int nLast, int nC
 			/*
 			 *	Are we done?
 			 */
-			if ( nIndex >= ArrayGetSize( lpcd->lpLines ) - 1 )
+			if ( nIndex >= Brainchild_ArrayGetSize( lpcd->lpLines ) - 1 )
 				break;
 
 			/*
@@ -1548,7 +1548,7 @@ static void PrintText( LPCLASSDATA lpcd, HDC hDC, BOOL bSelection, int nCopies )
 	/*
 	 *	Allocate a conversion buffer.
 	 */
-	if (( pcBuffer = AllocPooled( lpcd->pMemPool, REAL_SIZE( lpcd->nLongestLine + 1 ))) == NULL )
+	if (( pcBuffer = Brainchild_AllocPooled( lpcd->pMemPool, REAL_SIZE( lpcd->nLongestLine + 1 ))) == NULL )
 	{
 		DestroyWindow( hAbortBox );
 		return;
@@ -1565,7 +1565,7 @@ static void PrintText( LPCLASSDATA lpcd, HDC hDC, BOOL bSelection, int nCopies )
 	else
 	{
 		nFirst = 0;
-		nLast  = ArrayGetSize( lpcd->lpLines ) - 1;
+		nLast  = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
 	}
 
 	/*
@@ -1581,7 +1581,7 @@ static void PrintText( LPCLASSDATA lpcd, HDC hDC, BOOL bSelection, int nCopies )
 	/*
 	 *	Free the conversion buffer.
 	 */
-	FreePooled( lpcd->pMemPool, pcBuffer );
+	Brainchild_FreePooled( lpcd->pMemPool, pcBuffer );
 
 	/*
 	 *	Destroy the abort dialog.

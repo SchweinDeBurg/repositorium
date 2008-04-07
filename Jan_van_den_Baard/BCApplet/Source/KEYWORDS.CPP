@@ -225,8 +225,8 @@ LRESULT KeywordEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 
 					// Add keywords.
 					m_KeyList.SetRedraw( FALSE );
-					for ( int i = 0; i < ::ArrayGetSize( pKW->lpaKeywords ); i++ )
-						m_KeyList.AddString(( LPCTSTR )*(( LPTSTR * )::ArrayGetAt( pKW->lpaKeywords, i )));
+					for ( int i = 0; i < ::Brainchild_ArrayGetSize( pKW->lpaKeywords ); i++ )
+						m_KeyList.AddString(( LPCTSTR )*(( LPTSTR * )::Brainchild_ArrayGetAt( pKW->lpaKeywords, i )));
 					m_KeyList.SetRedraw();
 
 					// Setup UI.
@@ -279,8 +279,8 @@ LRESULT KeywordEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 					Remove(( LPNODE )pKW );
 
 					// Free the keyword array and the node.
-					if ( pKW->lpaKeywords ) ::ArrayDelete( pKW->lpaKeywords );
-					::FreePooled( pParserPool, pKW );
+					if ( pKW->lpaKeywords ) ::Brainchild_ArrayDelete( pKW->lpaKeywords );
+					::Brainchild_FreePooled( pParserPool, pKW );
 				}	
 			}
 			return 0;
@@ -289,11 +289,11 @@ LRESULT KeywordEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 		case	EditToolbar::ETID_NEW:
 		{
 			// Allocate a new node.
-			LPKEYWORDS pKW = ( LPKEYWORDS )::AllocPooled( pParserPool, sizeof( KEYWORDS ));
+			LPKEYWORDS pKW = ( LPKEYWORDS )::Brainchild_AllocPooled( pParserPool, sizeof( KEYWORDS ));
 			if ( pKW )
 			{
 				// Allocate an array.
-				pKW->lpaKeywords = ::ArrayCreate( 0, 500, sizeof( LPTSTR * ));
+				pKW->lpaKeywords = ::Brainchild_ArrayCreate( 0, 500, sizeof( LPTSTR * ));
 				if ( pKW->lpaKeywords )
 				{
 					// Set color.
@@ -315,7 +315,7 @@ LRESULT KeywordEdit::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 					return 0;
 				}
 				else
-					::FreePooled( pParserPool, pKW );
+					::Brainchild_FreePooled( pParserPool, pKW );
 			}
 			// Error.
 			MessageBox( ClsString( MAKEINTRESOURCE( IDS_NO_MEMORY )), ClsGetApp()->GetAppTitle(), MB_ICONERROR | MB_OK );
@@ -347,7 +347,7 @@ LPTSTR KeywordEdit::StringArrayCopy( LPARRAY lpa, LPTSTR pszString )
 {
 	// Allocate memory from the
 	// array.
-	LPTSTR pszCopy = ( LPTSTR )::ArrayAllocMem( lpa, ( _tcslen( pszString ) + 1 ) * sizeof( TCHAR ));
+	LPTSTR pszCopy = ( LPTSTR )::Brainchild_ArrayAllocMem( lpa, ( _tcslen( pszString ) + 1 ) * sizeof( TCHAR ));
 	if ( pszCopy )
 		// Copy the string.
 		_tcscpy( pszCopy, pszString );
@@ -363,10 +363,10 @@ void KeywordEdit::FreeKeyList( LPKEYLIST pKeyList )
 	{
 		// Free the array.
 		if ( pKey->lpaKeywords )
-			::ArrayDelete( pKey->lpaKeywords );
+			::Brainchild_ArrayDelete( pKey->lpaKeywords );
 
 		// And the node.
-		::FreePooled( pParserPool, pKey );
+		::Brainchild_FreePooled( pParserPool, pKey );
 	}
 }
 
@@ -384,10 +384,10 @@ void KeywordEdit::FreeKeyHashes()
 
 			// Delete keyword string.
 			if ( pHash->pszKeyword ) 
-				::FreePooled( pParserPool, pHash->pszKeyword );
+				::Brainchild_FreePooled( pParserPool, pHash->pszKeyword );
 
 			// And the hash entry itself.
-			::FreePooled( pParserPool, pHash );
+			::Brainchild_FreePooled( pParserPool, pHash );
 		}
 	}
 }
@@ -401,7 +401,7 @@ BOOL KeywordEdit::AddKeyword2Node( LPKEYWORDS pKeywords, LPTSTR pszKeyword )
 	if ( pszCopy )
 	{
 		// Add it to the array.
-		if ( ::ArrayAdd( pKeywords->lpaKeywords, &pszCopy, 1 ) == TRUE )
+		if ( ::Brainchild_ArrayAdd( pKeywords->lpaKeywords, &pszCopy, 1 ) == TRUE )
 			return TRUE;
 	}
 	return FALSE;
@@ -453,10 +453,10 @@ BOOL KeywordEdit::Hash2List( LPKEYLIST pKeyList, LPPARSER pParser )
 			if ( bAdded == FALSE )
 			{
 				// Allocate a new keyword node.
-				if (( pKey = ( LPKEYWORDS )::AllocPooled( pParserPool, sizeof( KEYWORDS ))) != NULL )
+				if (( pKey = ( LPKEYWORDS )::Brainchild_AllocPooled( pParserPool, sizeof( KEYWORDS ))) != NULL )
 				{
 					// Create a keyword array.
-					if (( pKey->lpaKeywords = ::ArrayCreate( 0, 500, sizeof( LPTSTR * ))) != NULL )
+					if (( pKey->lpaKeywords = ::Brainchild_ArrayCreate( 0, 500, sizeof( LPTSTR * ))) != NULL )
 					{
 						// Setup the node colors.
 						pKey->crColor   = pHash->crColor;
@@ -476,7 +476,7 @@ BOOL KeywordEdit::Hash2List( LPKEYLIST pKeyList, LPPARSER pParser )
 					else
 					{
 						// Error.
-						::FreePooled( pParserPool, pKey );
+						::Brainchild_FreePooled( pParserPool, pKey );
 						FreeKeyList( pKeyList );
 						return FALSE;
 					}
@@ -495,7 +495,7 @@ BOOL KeywordEdit::Hash2List( LPKEYLIST pKeyList, LPPARSER pParser )
 
 	// Sort the arrays.
 	for ( LPKEYWORDS pKey = pKeyList->lpFirst; pKey->lpNext; pKey = pKey->lpNext )
-		::ArraySort( pKey->lpaKeywords, ( COMPFUNC )CompareKeywords );
+		::Brainchild_ArraySort( pKey->lpaKeywords, ( COMPFUNC )CompareKeywords );
 
 	return TRUE;
 }
@@ -536,7 +536,7 @@ BOOL KeywordEdit::ReadKeywords( LPCTSTR pszFileName )
 					if (( pszCopy = StringArrayCopy( pKey->lpaKeywords, pszPtr )) != NULL )
 					{
 						 // Add it to the array.
-						if ( ::ArrayAdd( pKey->lpaKeywords, &pszCopy, 1 ) == FALSE )
+						if ( ::Brainchild_ArrayAdd( pKey->lpaKeywords, &pszCopy, 1 ) == FALSE )
 						 {
 							// Error...
 							MessageBox( ClsString( MAKEINTRESOURCE( IDS_NO_MEMORY )), ClsGetApp()->GetAppTitle(), MB_ICONERROR | MB_OK );
@@ -562,7 +562,7 @@ BOOL KeywordEdit::ReadKeywords( LPCTSTR pszFileName )
 		}
 	}
 	// Sort the array.
-	::ArraySort( pKey->lpaKeywords, ( COMPFUNC )CompareKeywords );
+	::Brainchild_ArraySort( pKey->lpaKeywords, ( COMPFUNC )CompareKeywords );
 	return TRUE;
 }
 
@@ -571,7 +571,7 @@ BOOL KeywordEdit::UseKeywords( LPKEYLIST pKeyList )
 {
 	// Default the parser.
 	PARSER pParser;
-	::DefaultParser( &pParser );
+	::Brainchild_DefaultParser( &pParser );
 
 	// Now we are going to use this parser to 
 	// add the edited keywords to. When this 
@@ -580,16 +580,16 @@ BOOL KeywordEdit::UseKeywords( LPKEYLIST pKeyList )
 	for ( LPKEYWORDS pKey = pKeyList->lpFirst; pKey->lpNext; pKey = pKey->lpNext )
 	{
 		// Iterate the array.
-		for ( int i = 0; i < ::ArrayGetSize( pKey->lpaKeywords ); i++ )
+		for ( int i = 0; i < ::Brainchild_ArrayGetSize( pKey->lpaKeywords ); i++ )
 		{
 			// Get string pointer.
-			LPTSTR	pszString = *(( LPTSTR * )::ArrayGetAt( pKey->lpaKeywords, i ));
+			LPTSTR	pszString = *(( LPTSTR * )::Brainchild_ArrayGetAt( pKey->lpaKeywords, i ));
 
 			// Add it to the hash table.
-			if ( ::AddKeyword( pParserPool, &pParser, pszString, pKey->crColor, pKey->crBgColor ) == FALSE )
+			if ( ::Brainchild_AddKeyword( pParserPool, &pParser, pszString, pKey->crColor, pKey->crBgColor ) == FALSE )
 			{
 				// Free node.
-				::FreeParserNode( pParserPool, &pParser);
+				::Brainchild_FreeParserNode( pParserPool, &pParser);
 
 				// Free the list and fail.
 				FreeKeyList( pKeyList );

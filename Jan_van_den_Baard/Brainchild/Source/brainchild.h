@@ -244,21 +244,21 @@ typedef LPVOID			LPCOMLIST;
 /*
  *	Command list routine prototypes.
  */
-extern LPCOMLIST CreateCList( DWORD, ... );
-extern void DeleteCList( LPCOMLIST );
-extern DWORD NextCEntry( LPCOMLIST, LPDWORD, LPDWORD, LPDWORD );
+extern LPCOMLIST Brainchild_CreateCList( DWORD, ... );
+extern void Brainchild_DeleteCList( LPCOMLIST );
+extern DWORD Brainchild_NextCEntry( LPCOMLIST, LPDWORD, LPDWORD, LPDWORD );
 
 /*
  *	Settings dialog prototypes.
  */
-extern BOOL OpenSettingsDialog( HWND );
+extern BOOL Brainchild_OpenSettingsDialog( HWND );
 
 /*
  *	Miscellanious...
  */
-extern BOOL LoadParserFromFile( LPCTSTR );
-extern BOOL LoadParserFromMemory( HGLOBAL );
-extern BOOL IsNonModalDialogMessage( const LPMSG );
+extern BOOL Brainchild_LoadParserFromFile( LPCTSTR );
+extern BOOL Brainchild_LoadParserFromMemory( HGLOBAL );
+extern BOOL Brainchild_IsNonModalDialogMessage( const LPMSG );
 
 /*
  *	Structure used by the BCM_GETFILEINFO
