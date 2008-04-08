@@ -658,7 +658,7 @@ static BOOL FindString( LPCLASSDATA lpcd, HWND hDlg, int nDirection, BOOL bQuiet
 	 *	Clear current marker.
 	 */
 	if ( ! bSkipMark ) 
-		ClearMark( lpcd );
+		ClearMark( 0, lpcd );
 
 	/*
 	 *	Move caret.
@@ -706,7 +706,7 @@ static BOOL FindString( LPCLASSDATA lpcd, HWND hDlg, int nDirection, BOOL bQuiet
 	return TRUE;
 }
 
-void FindNext( LPCLASSDATA lpcd )
+void FindNext( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Save current caret position.
@@ -769,7 +769,7 @@ void FindNext( LPCLASSDATA lpcd )
 	SendCaretMessage( lpcd );
 }
 
-void FindPrevious( LPCLASSDATA lpcd )
+void FindPrevious( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Save current caret position.
@@ -1004,24 +1004,24 @@ static BOOL AddWord( LPCLASSDATA lpcd )
 	return FALSE;
 }
 
-void FindNextWord( LPCLASSDATA lpcd )
+void FindNextWord( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Find the next occurence of the word
 	 *	under the caret.
 	 */
 	if ( AddWord( lpcd ))
-		FindNext( lpcd );
+		FindNext( lParam, lpcd );
 }
 
-void FindPrevWord( LPCLASSDATA lpcd )
+void FindPrevWord( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Find the previous occurence of the word
 	 *	under the caret.
 	 */
 	if ( AddWord( lpcd ))
-		FindPrevious( lpcd );
+		FindPrevious( lParam, lpcd );
 }
 
 void DestroyFindDialog( HWND hDlg )
@@ -1308,7 +1308,7 @@ static BOOL CALLBACK FindProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 					/*
 					 *	Clear markers.
 					 */
-					ClearMark( lpcd );
+					ClearMark( 0, lpcd );
 
 					/*
 					 *	Put back the caret.
@@ -1372,7 +1372,7 @@ static BOOL CALLBACK FindProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 	return FALSE;
 }
 
-void FindDialog( LPCLASSDATA lpcd )
+void FindDialog( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	RECT rcReplace = { 0 };
 	BOOL bPositionAtReplace = FALSE;
@@ -1397,7 +1397,14 @@ void FindDialog( LPCLASSDATA lpcd )
 	/*
 	 *	Create the dialog.
 	 */
-	lpcd->hFindWnd = CreateDialogParam( hDLL, MAKEINTRESOURCE( IDD_FIND ), lpcd->hWnd, &FindProc, ( LPARAM )lpcd );
+	if ( lParam != 0 )
+	{
+		lpcd->hFindWnd = CreateDialogIndirectParam( hDLL, ( LPCDLGTEMPLATE )lParam, lpcd->hWnd, &FindProc, ( LPARAM )lpcd );
+	}
+	else {
+		lpcd->hFindWnd = CreateDialogParam( hDLL, MAKEINTRESOURCE( IDD_FIND ), lpcd->hWnd, &FindProc, ( LPARAM )lpcd );
+	}
+
 	if ( lpcd->hFindWnd )
 	{
 		/*
@@ -1427,7 +1434,7 @@ LRESULT OnFindDialog( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd 
 	/*
 	 *	Popup the find dialog.
 	 */
-	FindDialog( lpcd );
+	FindDialog( lParam, lpcd );
 	return 0;
 }		
 
@@ -1449,7 +1456,7 @@ void Replace( LPCLASSDATA lpcd, HWND hParent )
 		/*
 		 *	Clear marker.
 		 */
-		ClearMark( lpcd );
+		ClearMark( 0, lpcd );
 
 		/*
 		 *	Delete the current selection.
@@ -1544,7 +1551,7 @@ void ReplaceAll( LPCLASSDATA lpcd, HWND hParent, BOOL bSelection )
 	/*
 	 *	Clear the marker.
 	 */
-	ClearMark( lpcd );
+	ClearMark( 0, lpcd );
 
 	/*
 	 *	Continue replacing until we reached
@@ -2042,7 +2049,7 @@ static BOOL CALLBACK ReplaceProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 	return FALSE;
 }
 
-void ReplaceDialog( LPCLASSDATA lpcd )
+void ReplaceDialog( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	RECT rcFind = { 0 };
 	BOOL bPositionAtFind = FALSE;
@@ -2067,7 +2074,14 @@ void ReplaceDialog( LPCLASSDATA lpcd )
 	/*
 	 *	Create the dialog.
 	 */
-	lpcd->hReplaceWnd = CreateDialogParam( hDLL, MAKEINTRESOURCE( IDD_REPLACE ), lpcd->hWnd, &ReplaceProc, ( LPARAM )lpcd );
+	if ( lParam != 0 )
+	{
+		lpcd->hReplaceWnd = CreateDialogIndirectParam( hDLL, ( LPCDLGTEMPLATE )lParam, lpcd->hWnd, &ReplaceProc, ( LPARAM )lpcd );
+	}
+	else {
+		lpcd->hReplaceWnd = CreateDialogParam( hDLL, MAKEINTRESOURCE( IDD_REPLACE ), lpcd->hWnd, &ReplaceProc, ( LPARAM )lpcd );
+	}
+
 	if ( lpcd->hReplaceWnd )
 	{
 		/*
@@ -2097,6 +2111,6 @@ LRESULT OnReplaceDialog( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lp
 	/*
 	 *	Popup the replace dialog.
 	 */
-	ReplaceDialog( lpcd );
+	ReplaceDialog( lParam, lpcd );
 	return 0;
 }

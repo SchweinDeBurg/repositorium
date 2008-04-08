@@ -593,7 +593,7 @@ static LRESULT STDMETHODCALLTYPE IDropTarget_DragLeave( LPDROPTARGET lpdt )
 	 *	marker we clear it now.
 	 */
 	if ( ISREADONLY && HasMark( lpcd ))
-		ClearMark( lpcd );
+		ClearMark( 0, lpcd );
 
 	/*
 	 *	Add reference.
@@ -651,7 +651,7 @@ static HRESULT STDMETHODCALLTYPE IDropTarget_Drop( LPDROPTARGET lpdt, LPDATAOBJE
 		/*
 		 *	Clear marker.
 		 */
-		ClearMark( lpcd );		
+		ClearMark( 0, lpcd );		
 	else
 	{
 		/*

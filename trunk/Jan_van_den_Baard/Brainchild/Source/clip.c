@@ -38,7 +38,7 @@ LRESULT OnReplaceSelection( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA
 	/*
 	 *	Delete the curren selection from the text.
 	 */
-	bDeleted = Delete( lpcd );
+	bDeleted = Delete( 0, lpcd );
 
 	/*
 	 *	Hide the caret.
@@ -107,29 +107,29 @@ LRESULT OnCanPaste( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 
 LRESULT OnCut( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 {
-	Cut( lpcd );
+	Cut( 0, lpcd );
 	return 0;
 }
 
 LRESULT OnCopy( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 {
-	Copy( lpcd );
+	Copy( 0, lpcd );
 	return 0;
 }
 
 LRESULT OnPaste( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 {
-	Paste( lpcd );
+	Paste( 0, lpcd );
 	return 0;
 }
 
 LRESULT OnClear( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 {
-	Delete( lpcd );
+	Delete( 0, lpcd );
 	return 0;
 }
 
-void ClearClipboard( LPCLASSDATA lpcd )
+void ClearClipboard( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Open the clipboard.
@@ -153,7 +153,7 @@ void ClearClipboard( LPCLASSDATA lpcd )
 	}
 }
 
-void Paste( LPCLASSDATA lpcd )
+void Paste( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	HANDLE		hData;
 	LPCTSTR		lpszText;
@@ -175,7 +175,7 @@ void Paste( LPCLASSDATA lpcd )
 	 *	Any marks set?
 	 */
 	if ( HasMark( lpcd ))
-		bDeleted = Delete( lpcd );
+		bDeleted = Delete( lParam, lpcd );
 
 	/*
 	 *	Hide the caret.
@@ -253,7 +253,7 @@ void Paste( LPCLASSDATA lpcd )
 	DisplayCaret( lpcd, TRUE );
 }
 
-BOOL Copy( LPCLASSDATA lpcd )
+BOOL Copy( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	HANDLE		hData;
 	BOOL		bRC = FALSE, bClearMark = FALSE;
@@ -321,11 +321,11 @@ BOOL Copy( LPCLASSDATA lpcd )
 	 *	Clear markers?
 	 */
 	if ( bClearMark )
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 	return bRC;
 }
 
-BOOL Delete( LPCLASSDATA lpcd )
+BOOL Delete( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Read only?
@@ -415,7 +415,7 @@ BOOL Delete( LPCLASSDATA lpcd )
 	return TRUE;
 }
 
-void Cut( LPCLASSDATA lpcd )
+void Cut( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Read only?
@@ -432,20 +432,20 @@ void Cut( LPCLASSDATA lpcd )
 		/*
 		 *	Copy the text.
 		 */
-		if ( Copy( lpcd ))
+		if ( Copy( lParam, lpcd ))
 			/*
 			 *	And delete it.
 			 */
-			Delete( lpcd );
+			Delete( lParam, lpcd );
 	}
 }
 
-void CopyClipLine( LPCLASSDATA lpcd )
+void CopyClipLine( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Mark the line.
 	 */
-	MarkLine( lpcd );
+	MarkLine( lParam, lpcd );
 
 	/*
 	 *	Valid marker?
@@ -454,10 +454,10 @@ void CopyClipLine( LPCLASSDATA lpcd )
 		/*
 		 *	Copy the line...
 		 */
-		 Copy( lpcd );
+		 Copy( lParam, lpcd );
 }
 
-void CutLine( LPCLASSDATA lpcd )
+void CutLine( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Are we read-only?
@@ -468,7 +468,7 @@ void CutLine( LPCLASSDATA lpcd )
 	/*
 	 *	Mark the line.
 	 */
-	MarkLine( lpcd );
+	MarkLine( lParam, lpcd );
 
 	/*
 	 *	Valid marker?
@@ -477,10 +477,10 @@ void CutLine( LPCLASSDATA lpcd )
 		/*
 		 *	Cut the line...
 		 */
-		 Cut( lpcd );
+		 Cut( lParam, lpcd );
 }
 
-BOOL CopyAppend( LPCLASSDATA lpcd )
+BOOL CopyAppend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	HGLOBAL		hCombination, hClip;
 	LPTSTR		pszSelection, pszClip, pszCombination;
@@ -564,7 +564,7 @@ BOOL CopyAppend( LPCLASSDATA lpcd )
 			else
 			{
 				CloseClipboard();
-				Copy( lpcd );
+				Copy( 0, lpcd );
 				return TRUE;
 			}
 			CloseClipboard();
@@ -573,14 +573,14 @@ BOOL CopyAppend( LPCLASSDATA lpcd )
 	return FALSE;
 }
 
-void CutAppend( LPCLASSDATA lpcd )
+void CutAppend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Append the selection to the clipboard.
 	 */
-	if ( CopyAppend( lpcd ))
+	if ( CopyAppend( lParam, lpcd ))
 		/*
 		 *	Cut it.
 		 */
-		 Delete( lpcd );
+		 Delete( lParam, lpcd );
 }

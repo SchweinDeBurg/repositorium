@@ -73,7 +73,7 @@ LRESULT OnSetSelectionPoints( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDA
 			 *	Clear current marker.
 			 */
 			if ( HasMark( lpcd ))
-				ClearMark( lpcd );
+				ClearMark( 0, lpcd );
 
 			/*
 			 *	Setup marker.
@@ -188,7 +188,7 @@ BOOL HasMark( LPCLASSDATA lpcd )
 	return ( BOOL )( lpcd->ptSelStart.x != -1 );
 }
 
-void ClearMark( LPCLASSDATA lpcd )
+void ClearMark( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Is it already cleared?
@@ -215,7 +215,7 @@ void ClearMark( LPCLASSDATA lpcd )
 	SendStatusMessage( lpcd );
 }
 
-void MarkAll( LPCLASSDATA lpcd )
+void MarkAll( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Any text to select?
@@ -241,7 +241,7 @@ void MarkAll( LPCLASSDATA lpcd )
 	}
 }
 
-void MarkWord( LPCLASSDATA lpcd )
+void MarkWord( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Get the word points.
@@ -294,10 +294,11 @@ void MarkWord( LPCLASSDATA lpcd )
 		lpcd->ptSelStart = lpcd->ptSelEnd = lpcd->ptCaretPos;
 }
 
-void MarkLine( LPCLASSDATA lpcd )
+void MarkLine( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	MarkWholeLine( lpcd, FALSE );
 }
+
 BOOL MarkWholeLine( LPCLASSDATA lpcd, BOOL bQuiet )
 {
 	LPLINE		lpLine = GETLINE( lpcd );
@@ -307,7 +308,7 @@ BOOL MarkWholeLine( LPCLASSDATA lpcd, BOOL bQuiet )
 	 *	Clear current marker.
 	 */
 	if ( ! bQuiet )
-		ClearMark( lpcd );
+		ClearMark( 0, lpcd );
 
 	/*
 	 *	Any text on the current line?
@@ -385,7 +386,7 @@ BOOL MarkWholeLine( LPCLASSDATA lpcd, BOOL bQuiet )
 	return TRUE;
 }
 
-void UpperCaseSelection( LPCLASSDATA lpcd )
+void UpperCaseSelection( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Valid selection?
@@ -397,7 +398,7 @@ void UpperCaseSelection( LPCLASSDATA lpcd )
 		/*
 		 *	Clear markers.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 
 		/*
 		 *	Convert selection to uppercase.
@@ -406,7 +407,7 @@ void UpperCaseSelection( LPCLASSDATA lpcd )
 	}
 }
 
-void LowerCaseSelection( LPCLASSDATA lpcd )
+void LowerCaseSelection( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Valid selection?
@@ -418,7 +419,7 @@ void LowerCaseSelection( LPCLASSDATA lpcd )
 		/*
 		 *	Clear markers.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 
 		/*
 		 *	Convert selection to lowercase.
@@ -427,7 +428,7 @@ void LowerCaseSelection( LPCLASSDATA lpcd )
 	}
 }
 
-void SwapCaseSelection( LPCLASSDATA lpcd )
+void SwapCaseSelection( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Valid selection?
@@ -439,7 +440,7 @@ void SwapCaseSelection( LPCLASSDATA lpcd )
 		/*
 		 *	Clear markers.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 
 		/*
 		 *	Swap selection casing.

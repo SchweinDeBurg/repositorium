@@ -352,7 +352,7 @@ static BOOL CALLBACK PropProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 	return FALSE;
 }
 
-void PropertiesDialog( LPCLASSDATA lpcd )
+void PropertiesDialog( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Clear qualifiers.
@@ -362,7 +362,13 @@ void PropertiesDialog( LPCLASSDATA lpcd )
 	/*
 	 *	Popup the dialog.
 	 */
-	DialogBoxParam( hDLL, MAKEINTRESOURCE( IDD_PROPERTIES ), lpcd->hWnd, PropProc, ( LPARAM )lpcd );
+	if ( lParam != 0 )
+	{
+		DialogBoxIndirectParam( hDLL, ( LPCDLGTEMPLATE )lParam, lpcd->hWnd, &PropProc, ( LPARAM )lpcd );
+	}
+	else {
+		DialogBoxParam( hDLL, MAKEINTRESOURCE( IDD_PROPERTIES ), lpcd->hWnd, &PropProc, ( LPARAM )lpcd );
+	}
 }
 
 LRESULT OnPropDialog( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
@@ -370,6 +376,6 @@ LRESULT OnPropDialog( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd 
 	/*
 	 *	Popup the properties dialog.
 	 */
-	PropertiesDialog( lpcd );
+	PropertiesDialog( lParam, lpcd );
 	return 0;
 }

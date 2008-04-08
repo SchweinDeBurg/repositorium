@@ -190,7 +190,7 @@ static BOOL DoKeyDown( LPCLASSDATA lpcd, UINT uKeyCode, DWORD dwKeyData )
 		/*
 		 *	Clear current markers.
 		 */
-		ClearMark( lpcd );
+		ClearMark( 0, lpcd );
 
 		/*
 		 *	Setup new markers.

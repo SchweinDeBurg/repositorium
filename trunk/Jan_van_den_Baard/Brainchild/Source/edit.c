@@ -17,7 +17,7 @@
  *	Remove blanks between the cursor
  *	position and the next non-blank.
  */
-void Pull( LPCLASSDATA lpcd )
+void Pull( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE	lpLine = GETLINE( lpcd );
 	POINT	ptStart, ptEnd;
@@ -31,7 +31,7 @@ void Pull( LPCLASSDATA lpcd )
 	/*
 	 *	Clear markers.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Are we on the end of the line?
@@ -106,7 +106,7 @@ void Pull( LPCLASSDATA lpcd )
 /*
  *	Delete to the end of the line.
  */
-void DeleteEol( LPCLASSDATA lpcd )
+void DeleteEol( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE	lpLine = GETLINE( lpcd );
 	POINT	ptStart, ptEnd;
@@ -120,7 +120,7 @@ void DeleteEol( LPCLASSDATA lpcd )
 	/*
 	 *	Clear markers.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Are we alreay on the end of the line?
@@ -179,7 +179,7 @@ void DeleteEol( LPCLASSDATA lpcd )
 /*
  *	Back space a character.
  */
-void BackSpace( LPCLASSDATA lpcd )
+void BackSpace( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	POINT	ptStart, ptEnd;
 	BOOL	bChangeLines = FALSE;
@@ -196,7 +196,7 @@ void BackSpace( LPCLASSDATA lpcd )
 	 */
 	if ( HasMark( lpcd ))
 	{
-		Delete( lpcd );
+		Delete( lParam, lpcd );
 		return;
 	}
 
@@ -298,7 +298,7 @@ void BackSpace( LPCLASSDATA lpcd )
 /*
  *	Delete a character from the text.
  */
-void DeleteChar( LPCLASSDATA lpcd )
+void DeleteChar( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE	lpLine = GETLINE( lpcd );
 	POINT	ptStart, ptEnd;
@@ -316,7 +316,7 @@ void DeleteChar( LPCLASSDATA lpcd )
 	 */
 	if ( HasMark( lpcd ))
 	{
-		Delete( lpcd );
+		Delete( lParam, lpcd );
 		return;
 	}
 
@@ -393,7 +393,7 @@ void DeleteChar( LPCLASSDATA lpcd )
 /*
  *	Delete current line.
  */
-void DeleteLine( LPCLASSDATA lpcd )
+void DeleteLine( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE	lpLine = GETLINE( lpcd );
 	POINT	ptStart, ptEnd;
@@ -407,7 +407,7 @@ void DeleteLine( LPCLASSDATA lpcd )
 	/*
 	 *	Clear markers.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Any text to delete?
@@ -535,7 +535,7 @@ static void AutoMatch( LPCLASSDATA lpcd, TCHAR cChar )
 		/*
 		 *      Match it.
 		 */
-		if ( ! MatchBracket( lpcd ))
+		if ( ! MatchBracket( 0, lpcd ))
 		{
 			/*
 			 *	Visible alarm?
@@ -582,7 +582,7 @@ void InsertChar( LPCLASSDATA lpcd, TCHAR cChar )
 	 *	Delete selection
 	 */
 	if ( HasMark( lpcd ))
-		bDeleted = Delete( lpcd );
+		bDeleted = Delete( 0, lpcd );
 
 	/*
 	 *	Construct text to insert.
@@ -682,7 +682,7 @@ void InsertCharacters( LPCLASSDATA lpcd, LPCTSTR lpszText )
 	/*
 	 *	Clear markers.
 	 */
-	ClearMark( lpcd );
+	ClearMark( 0, lpcd );
 
 	/*
 	 *	Hide the caret.
@@ -767,7 +767,7 @@ static void CheckPreviousLine( LPCLASSDATA lpcd )
 /*
  *	Split up the current line.
  */
-void SplitLine( LPCLASSDATA lpcd )
+void SplitLine( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	TCHAR	*szText = _T("\r\n"), *pcBlanks = NULL;
 	int	nPosX = 0;
@@ -783,7 +783,7 @@ void SplitLine( LPCLASSDATA lpcd )
 	 *	Delete selection
 	 */
 	if ( HasMark( lpcd ))
-		bDeleted = Delete( lpcd );
+		bDeleted = Delete( lParam, lpcd );
 
 	/*
 	 *	Hide the caret.
@@ -1095,7 +1095,7 @@ static void WordToXXX( LPCLASSDATA lpcd, int nType )
 	/*
 	 *	Clear marker.
 	 */
-	ClearMark( lpcd );
+	ClearMark( 0, lpcd );
 
 	/*
 	 *	Get word points.
@@ -1107,22 +1107,22 @@ static void WordToXXX( LPCLASSDATA lpcd, int nType )
 		ConvertCase( lpcd, &ptStart, &ptEnd, nType );
 }
 
-void WordToUpper( LPCLASSDATA lpcd )
+void WordToUpper( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	WordToXXX( lpcd, NTYPE_TOUPPER );
 }
 
-void WordToLower( LPCLASSDATA lpcd )
+void WordToLower( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	WordToXXX( lpcd, NTYPE_TOLOWER );
 }
 
-void WordSwapCase( LPCLASSDATA lpcd )
+void WordSwapCase( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	WordToXXX( lpcd, NTYPE_SWAP );
 }
 
-void CopyLine( LPCLASSDATA lpcd )
+void CopyLine( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	POINT	ptStart = lpcd->ptCaretPos, ptEnd;
 	LPLINE	lpLine = GETLINE( lpcd );
@@ -1138,7 +1138,7 @@ void CopyLine( LPCLASSDATA lpcd )
 	/*
 	 *	Clear markers.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Allocate text buffer.
@@ -1206,7 +1206,7 @@ void CopyLine( LPCLASSDATA lpcd )
 	}
 }
 
-void DeleteWord( LPCLASSDATA lpcd )
+void DeleteWord( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	POINT	ptStart, ptEnd;
 
@@ -1220,7 +1220,7 @@ void DeleteWord( LPCLASSDATA lpcd )
 	 *	Clear markers.
 	 */
 	if ( HasMark( lpcd ))
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 
 	/*
 	 *	Get the word points.
@@ -1237,11 +1237,11 @@ void DeleteWord( LPCLASSDATA lpcd )
 		/*
 		 *	Delete it.
 		 */
-		Delete( lpcd );
+		Delete( lParam, lpcd );
 	}
 }
 
-void DeleteEow( LPCLASSDATA lpcd )
+void DeleteEow( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	POINT	ptStart, ptEnd;
 
@@ -1255,7 +1255,7 @@ void DeleteEow( LPCLASSDATA lpcd )
 	 *	Clear markers.
 	 */
 	if ( HasMark( lpcd ))
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 
 	/*
 	 *	Get the word points.
@@ -1273,11 +1273,11 @@ void DeleteEow( LPCLASSDATA lpcd )
 		/*
 		 *	Delete it.
 		 */
-		Delete( lpcd );
+		Delete( lParam, lpcd );
 	}
 }
 
-void DeleteSow( LPCLASSDATA lpcd )
+void DeleteSow( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	POINT	ptStart, ptEnd;
 
@@ -1291,7 +1291,7 @@ void DeleteSow( LPCLASSDATA lpcd )
 	 *	Clear markers.
 	 */
 	if ( HasMark( lpcd ))
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 
 	/*
 	 *	Get the word points.
@@ -1309,11 +1309,11 @@ void DeleteSow( LPCLASSDATA lpcd )
 		/*
 		 *	Delete it.
 		 */
-		Delete( lpcd );
+		Delete( lParam, lpcd );
 	}
 }
 
-void SwapLines( LPCLASSDATA lpcd )
+void SwapLines( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE		lpLine = GETLINE( lpcd );
 	LPTSTR		pszLine;

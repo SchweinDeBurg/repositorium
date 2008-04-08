@@ -94,7 +94,7 @@ void ExecuteCList( LPCLIST lpCList, LPCLASSDATA lpcd )
 				/*
 				 *	Call the function.
 				 */
-				( lpCNode->lpFunc )( lpcd );
+				( lpCNode->lpFunc )( 0, lpcd );
 				break;
 
 			case	CTYPE_TEXT:

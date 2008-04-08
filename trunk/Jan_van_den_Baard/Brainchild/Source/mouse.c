@@ -374,7 +374,7 @@ LRESULT OnLButtonDown( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd
 		/*
 		 *	Invalidate current marker.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 
 		/*
 		 *	Are we in the selection margin?
@@ -389,7 +389,7 @@ LRESULT OnLButtonDown( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd
 				/*
 				 *	Select the whole text.
 				 */
-				MarkAll( lpcd );
+				MarkAll( lParam, lpcd );
 
 				/*
 				 *	Do not change selection.
@@ -466,7 +466,7 @@ LRESULT OnLButtonDown( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd
 				/*
 				 *	Mark the current word.
 				 */
-				MarkWord( lpcd );
+				MarkWord( lParam, lpcd );
 
 				/*
 				 *	We are word-selecting.

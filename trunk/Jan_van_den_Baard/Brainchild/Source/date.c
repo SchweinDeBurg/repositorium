@@ -14,7 +14,7 @@
 /*
  *	Insert system time.
  */
-void InsertTime( LPCLASSDATA lpcd )
+void InsertTime( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	TCHAR		szBuffer[ 1024 ];
 
@@ -37,7 +37,7 @@ void InsertTime( LPCLASSDATA lpcd )
 /*
  *	Insert system date.
  */
-void InsertDate( LPCLASSDATA lpcd )
+void InsertDate( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	TCHAR		szBuffer[ 1024 ];
 

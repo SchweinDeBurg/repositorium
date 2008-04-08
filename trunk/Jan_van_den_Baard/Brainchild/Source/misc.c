@@ -133,7 +133,7 @@ void SendStatusMessage( LPCLASSDATA lpcd )
 /*
  *	Toggle overwrite mode.
  */
-void ToggleOverwrite( LPCLASSDATA lpcd )
+void ToggleOverwrite( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	// Toggle overwrite mode.
 	lpcd->bOverwrite = ! lpcd->bOverwrite;

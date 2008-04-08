@@ -225,6 +225,9 @@ typedef struct {
 
 typedef void			(*LPFUNC)( LPVOID );
 
+typedef struct data *LPCLASSDATA;
+typedef void			(*LPCMDFUNC)( LPARAM, LPCLASSDATA );
+
 /*
  *	Command definition node.
  */
@@ -241,7 +244,7 @@ typedef struct commNode
 		} sText;
 		struct
 		{
-			LPFUNC   lpFunc;
+			LPCMDFUNC   lpFunc;
 		} sFunc;
 	} uCommand;
 } CNODE, FAR *LPCNODE;
@@ -265,11 +268,10 @@ typedef struct
 /*
  *	Command table structure.
  */
-typedef struct data *LPCLASSDATA;
 typedef struct tagCommand
 {
 	int			nCommandID;
-	void		       (*lpfnFunc)( LPCLASSDATA );
+	void		       (*lpfnFunc)( LPARAM, LPCLASSDATA );
 	LPCTSTR			pszCommandDesc;
 } COMMAND, FAR *LPCOMMAND;
 
@@ -813,7 +815,7 @@ extern LRESULT OnGetSelectionLength( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnSetText( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnInsertLine( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern void DeleteContents( LPCLASSDATA );
-extern BOOL DeleteTheContents( LPCLASSDATA );
+extern BOOL DeleteTheContents( LPARAM, LPCLASSDATA );
 extern BOOL InsertLine( LPCLASSDATA, LPCTSTR, int, int );
 extern BOOL LoadFile( LPCLASSDATA, LPCTSTR );
 extern BOOL SaveFile( LPCLASSDATA, LPCTSTR );
@@ -823,10 +825,10 @@ extern LPTSTR GetTextBuffer( LPCLASSDATA, LPPOINT, LPPOINT, LPTSTR );
 extern BOOL InsertText( LPCLASSDATA, int, int, LPCTSTR, LPPOINT, BOOL );
 extern BOOL DeleteText( LPCLASSDATA, LPPOINT, LPPOINT, BOOL );
 extern BOOL AddUndoRecord( LPCLASSDATA, DWORD, LPPOINT, LPPOINT, LPCTSTR );
-extern void UndoAll( LPCLASSDATA );
-extern void Undo( LPCLASSDATA );
-extern void RedoAll( LPCLASSDATA );
-extern void Redo( LPCLASSDATA );
+extern void UndoAll( LPARAM, LPCLASSDATA );
+extern void Undo( LPARAM, LPCLASSDATA );
+extern void RedoAll( LPARAM, LPCLASSDATA );
+extern void Redo( LPARAM, LPCLASSDATA );
 
 /* dispatch.c */
 extern LRESULT WINAPI Dispatch( HWND, UINT, WPARAM, LPARAM );
@@ -887,36 +889,36 @@ extern BOOL CaretInView( LPCLASSDATA );
 extern void UpdateCaret( LPCLASSDATA );
 extern void MakeCaretVisible( LPCLASSDATA );
 extern void MakeCaretVisibleNoRedraw( LPCLASSDATA );
-extern void CaretRight( LPCLASSDATA );
-extern void CaretRightExtend( LPCLASSDATA );
-extern void CaretLeft( LPCLASSDATA );
-extern void CaretLeftExtend( LPCLASSDATA );
-extern void CaretUp( LPCLASSDATA );
-extern void CaretUpExtend( LPCLASSDATA );
-extern void CaretDown( LPCLASSDATA );
-extern void CaretDownExtend( LPCLASSDATA );
-extern void CaretEol( LPCLASSDATA );
-extern void CaretEolExtend( LPCLASSDATA );
-extern void CaretSol( LPCLASSDATA );
-extern void CaretSolExtend( LPCLASSDATA );
-extern void CaretNextWord( LPCLASSDATA );
-extern void CaretNextWordExtend( LPCLASSDATA );
-extern void CaretPrevWord( LPCLASSDATA );
-extern void CaretPrevWordExtend( LPCLASSDATA );
-extern void CaretHome( LPCLASSDATA );
-extern void CaretHomeExtend( LPCLASSDATA );
-extern void CaretEnd( LPCLASSDATA );
-extern void CaretEndExtend( LPCLASSDATA );
-extern void CaretTabBack( LPCLASSDATA );
-extern void CaretTabBackExtend( LPCLASSDATA );
-extern void CaretViewUp( LPCLASSDATA );
-extern void CaretViewUpExtend( LPCLASSDATA );
-extern void CaretViewDown( LPCLASSDATA );
-extern void CaretViewDownExtend( LPCLASSDATA );
-extern void ScrollViewUp( LPCLASSDATA );
-extern void ScrollViewDown( LPCLASSDATA );
-extern void ScrollViewLeft( LPCLASSDATA );
-extern void ScrollViewRight( LPCLASSDATA );
+extern void CaretRight( LPARAM, LPCLASSDATA );
+extern void CaretRightExtend( LPARAM, LPCLASSDATA );
+extern void CaretLeft( LPARAM, LPCLASSDATA );
+extern void CaretLeftExtend( LPARAM, LPCLASSDATA );
+extern void CaretUp( LPARAM, LPCLASSDATA );
+extern void CaretUpExtend( LPARAM, LPCLASSDATA );
+extern void CaretDown( LPARAM, LPCLASSDATA );
+extern void CaretDownExtend( LPARAM, LPCLASSDATA );
+extern void CaretEol( LPARAM, LPCLASSDATA );
+extern void CaretEolExtend( LPARAM, LPCLASSDATA );
+extern void CaretSol( LPARAM, LPCLASSDATA );
+extern void CaretSolExtend( LPARAM, LPCLASSDATA );
+extern void CaretNextWord( LPARAM, LPCLASSDATA );
+extern void CaretNextWordExtend( LPARAM, LPCLASSDATA );
+extern void CaretPrevWord( LPARAM, LPCLASSDATA );
+extern void CaretPrevWordExtend( LPARAM, LPCLASSDATA );
+extern void CaretHome( LPARAM, LPCLASSDATA );
+extern void CaretHomeExtend( LPARAM, LPCLASSDATA );
+extern void CaretEnd( LPARAM, LPCLASSDATA );
+extern void CaretEndExtend( LPARAM, LPCLASSDATA );
+extern void CaretTabBack( LPARAM, LPCLASSDATA );
+extern void CaretTabBackExtend( LPARAM, LPCLASSDATA );
+extern void CaretViewUp( LPARAM, LPCLASSDATA );
+extern void CaretViewUpExtend( LPARAM, LPCLASSDATA );
+extern void CaretViewDown( LPARAM, LPCLASSDATA );
+extern void CaretViewDownExtend( LPARAM, LPCLASSDATA );
+extern void ScrollViewUp( LPARAM, LPCLASSDATA );
+extern void ScrollViewDown( LPARAM, LPCLASSDATA );
+extern void ScrollViewLeft( LPARAM, LPCLASSDATA );
+extern void ScrollViewRight( LPARAM, LPCLASSDATA );
 
 extern LRESULT OnSetFocus( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnKillFocus( HWND, WPARAM, LPARAM, LPCLASSDATA );
@@ -953,7 +955,7 @@ extern LRESULT OnAnyText( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnSettingsDialog( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnGetExtentions( HWND, WPARAM, LPARAM, LPCLASSDATA );
 
-extern void ToggleOverwrite( LPCLASSDATA );
+extern void ToggleOverwrite( LPARAM, LPCLASSDATA );
 extern LPCTSTR GetString( int );
 extern void SetModified( LPCLASSDATA, BOOL );
 extern LPTSTR CopyString( LPCLASSDATA, LPCTSTR );
@@ -965,8 +967,8 @@ extern void SendStatusMessage( LPCLASSDATA );
 extern LRESULT OnGetDlgCode( HWND, WPARAM, LPARAM, LPCLASSDATA );
 
 /* io.c */
-extern void FlushUndoBuffers( LPCLASSDATA );
-extern void SaveFileAsIs( LPCLASSDATA );
+extern void FlushUndoBuffers( LPARAM, LPCLASSDATA );
+extern void SaveFileAsIs( LPARAM, LPCLASSDATA );
 extern void SetFileName( LPCLASSDATA, LPCTSTR );
 
 extern LRESULT OnLoadFile( HWND, WPARAM, LPARAM, LPCLASSDATA );
@@ -978,24 +980,24 @@ extern LRESULT OnCheckModified( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnSetReadOnly( HWND, WPARAM, LPARAM, LPCLASSDATA );
 
 /* edit.c */
-extern void Pull( LPCLASSDATA );
-extern void DeleteEol( LPCLASSDATA );
-extern void BackSpace( LPCLASSDATA );
-extern void DeleteChar( LPCLASSDATA );
-extern void DeleteLine( LPCLASSDATA );
+extern void Pull( LPARAM, LPCLASSDATA );
+extern void DeleteEol( LPARAM, LPCLASSDATA );
+extern void BackSpace( LPARAM, LPCLASSDATA );
+extern void DeleteChar( LPARAM, LPCLASSDATA );
+extern void DeleteLine( LPARAM, LPCLASSDATA );
 extern void InsertChar( LPCLASSDATA, TCHAR );
 extern void InsertCharacters( LPCLASSDATA, LPCTSTR );
-extern void SplitLine( LPCLASSDATA );
+extern void SplitLine( LPARAM, LPCLASSDATA );
 extern BOOL GetWordPoints( LPCLASSDATA, LPPOINT, LPPOINT );
 extern void ConvertCase( LPCLASSDATA, LPPOINT, LPPOINT, int );
-extern void WordToUpper( LPCLASSDATA );
-extern void WordToLower( LPCLASSDATA );
-extern void WordSwapCase( LPCLASSDATA );
-extern void CopyLine( LPCLASSDATA );
-extern void DeleteWord( LPCLASSDATA );
-extern void DeleteEow( LPCLASSDATA );
-extern void DeleteSow( LPCLASSDATA );
-extern void SwapLines( LPCLASSDATA );
+extern void WordToUpper( LPARAM, LPCLASSDATA );
+extern void WordToLower( LPARAM, LPCLASSDATA );
+extern void WordSwapCase( LPARAM, LPCLASSDATA );
+extern void CopyLine( LPARAM, LPCLASSDATA );
+extern void DeleteWord( LPARAM, LPCLASSDATA );
+extern void DeleteEow( LPARAM, LPCLASSDATA );
+extern void DeleteSow( LPARAM, LPCLASSDATA );
+extern void SwapLines( LPARAM, LPCLASSDATA );
 
 /* parser.c */
 extern WORD HashKeyword( LPCTSTR, int, BOOL );
@@ -1030,15 +1032,15 @@ extern void RemoveTrailingBlanks( LPTSTR );
 extern LRESULT OnSetSelectionPoints( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnGetSelectionPoints( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern BOOL CheckPoint( LPCLASSDATA, LPPOINT );
-extern void MarkWord( LPCLASSDATA );
-extern void MarkLine( LPCLASSDATA );
+extern void MarkWord( LPARAM, LPCLASSDATA );
+extern void MarkLine( LPARAM, LPCLASSDATA );
 extern BOOL MarkWholeLine( LPCLASSDATA, BOOL );
-extern void MarkAll( LPCLASSDATA );
-extern void ClearMark( LPCLASSDATA );
+extern void MarkAll( LPARAM, LPCLASSDATA );
+extern void ClearMark( LPARAM, LPCLASSDATA );
 extern BOOL HasMark( LPCLASSDATA );
-extern void UpperCaseSelection( LPCLASSDATA );
-extern void LowerCaseSelection( LPCLASSDATA );
-extern void SwapCaseSelection( LPCLASSDATA );
+extern void UpperCaseSelection( LPARAM, LPCLASSDATA );
+extern void LowerCaseSelection( LPARAM, LPCLASSDATA );
+extern void SwapCaseSelection( LPARAM, LPCLASSDATA );
 
 /* clip.c */
 extern LRESULT OnReplaceSelection( HWND, WPARAM, LPARAM, LPCLASSDATA );
@@ -1049,19 +1051,19 @@ extern LRESULT OnCut( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnCopy( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnPaste( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnClear( HWND, WPARAM, LPARAM, LPCLASSDATA );
-extern void ClearClipboard( LPCLASSDATA );
-extern void Paste( LPCLASSDATA );
-extern BOOL Copy( LPCLASSDATA );
-extern void Cut( LPCLASSDATA );
-extern BOOL Delete( LPCLASSDATA );
-extern void CopyClipLine( LPCLASSDATA );
-extern void CutLine( LPCLASSDATA );
-extern BOOL CopyAppend( LPCLASSDATA );
-extern void CutAppend( LPCLASSDATA );
+extern void ClearClipboard( LPARAM, LPCLASSDATA );
+extern void Paste( LPARAM, LPCLASSDATA );
+extern BOOL Copy( LPARAM, LPCLASSDATA );
+extern void Cut( LPARAM, LPCLASSDATA );
+extern BOOL Delete( LPARAM, LPCLASSDATA );
+extern void CopyClipLine( LPARAM, LPCLASSDATA );
+extern void CutLine( LPARAM, LPCLASSDATA );
+extern BOOL CopyAppend( LPARAM, LPCLASSDATA );
+extern void CutAppend( LPARAM, LPCLASSDATA );
 
 /* match.c */
-extern BOOL MatchBracketSelect( LPCLASSDATA );
-extern BOOL MatchBracket( LPCLASSDATA );
+extern BOOL MatchBracketSelect( LPARAM, LPCLASSDATA );
+extern BOOL MatchBracket( LPARAM, LPCLASSDATA );
 extern int FindMatches( LPCLASSDATA, LPPOINT, LPPOINT, BOOL );
 
 /* messagebox.c */
@@ -1072,20 +1074,20 @@ extern int YesNoCancelWarning( LPCLASSDATA, HWND, LPCTSTR, ... );
 extern int OkIOError( LPCLASSDATA, HWND, LPCTSTR, ... );
 extern int OkError( LPCLASSDATA, HWND, LPCTSTR, ... );
 extern void ErrorMsg( LPCTSTR, ... );
-extern void AboutControl( LPCLASSDATA );
+extern void AboutControl( LPARAM, LPCLASSDATA );
 
 /* bookmarks.c */
-extern void SetBookmark( LPCLASSDATA );
-extern void ClearBookmark( LPCLASSDATA );
-extern void ToggleBookmark( LPCLASSDATA );
-extern void ClearAllBookmarks( LPCLASSDATA lpcd );
-extern void NextBookmark( LPCLASSDATA );
-extern void PrevBookmark( LPCLASSDATA );
-extern void FirstBookmark( LPCLASSDATA );
-extern void LastBookmark( LPCLASSDATA );
+extern void SetBookmark( LPARAM, LPCLASSDATA );
+extern void ClearBookmark( LPARAM, LPCLASSDATA );
+extern void ToggleBookmark( LPARAM, LPCLASSDATA );
+extern void ClearAllBookmarks( LPARAM, LPCLASSDATA lpcd );
+extern void NextBookmark( LPARAM, LPCLASSDATA );
+extern void PrevBookmark( LPARAM, LPCLASSDATA );
+extern void FirstBookmark( LPARAM, LPCLASSDATA );
+extern void LastBookmark( LPARAM, LPCLASSDATA );
 
 /* goto.c */
-extern void GotoDialog( LPCLASSDATA );
+extern void GotoDialog( LPARAM, LPCLASSDATA );
 
 extern LRESULT OnGotoLine( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LRESULT OnGotoDialog( HWND, WPARAM, LPARAM, LPCLASSDATA );
@@ -1095,12 +1097,12 @@ extern LRESULT OnGoto( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern LPSTRING AddStringNode( LPCLASSDATA, LPSTRINGLIST, LPCTSTR, BOOL );
 extern void FreeStringNodes( LPCLASSDATA, LPSTRINGLIST );
 extern void SetSearchString( LPCLASSDATA, LPCTSTR );
-extern void FindNextWord( LPCLASSDATA );
-extern void FindPrevWord( LPCLASSDATA );
-extern void FindNext( LPCLASSDATA );
-extern void FindPrevious( LPCLASSDATA );
-extern void FindDialog( LPCLASSDATA );
-extern void ReplaceDialog( LPCLASSDATA );
+extern void FindNextWord( LPARAM, LPCLASSDATA );
+extern void FindPrevWord( LPARAM, LPCLASSDATA );
+extern void FindNext( LPARAM, LPCLASSDATA );
+extern void FindPrevious( LPARAM, LPCLASSDATA );
+extern void FindDialog( LPARAM, LPCLASSDATA );
+extern void ReplaceDialog( LPARAM, LPCLASSDATA );
 extern int FindForward( LPCLASSDATA, TCHAR *, int );
 extern int FindBackward( LPCLASSDATA, TCHAR *, int );
 
@@ -1116,7 +1118,7 @@ extern BOOL SaveSearchReplaceStrings( LPCLASSDATA, LPSTRINGLIST, BOOL );
 extern BOOL LoadSearchReplaceStrings( LPCLASSDATA lpcd, LPSTRINGLIST lpList, BOOL bReplace );
 
 /* prop.c */
-extern void PropertiesDialog( LPCLASSDATA );
+extern void PropertiesDialog( LPARAM, LPCLASSDATA );
 
 extern LRESULT OnPropDialog( HWND, WPARAM, LPARAM, LPCLASSDATA );
 
@@ -1147,26 +1149,26 @@ extern void UnlockParserList( void );
 
 /* indent.c */
 extern TCHAR *CopyLeadingBlanks( LPCLASSDATA lpcd, int * );
-extern void DoTab( LPCLASSDATA );
-extern void DoBackTab( LPCLASSDATA );
+extern void DoTab( LPARAM, LPCLASSDATA );
+extern void DoBackTab( LPARAM, LPCLASSDATA );
 
 /* commands.c */
 extern LRESULT OnExecuteCommand( HWND, WPARAM, LPARAM, LPCLASSDATA );
 
 extern LPCOMMAND Brainchild_GetCommandTable( void );
-extern LPFUNC Brainchild_FindCommand( int );
-extern int Brainchild_FindCommandID( LPFUNC );
-extern LPCTSTR Brainchild_FindCommandDesc( LPFUNC );
+extern LPCMDFUNC Brainchild_FindCommand( int );
+extern int Brainchild_FindCommandID( LPCMDFUNC );
+extern LPCTSTR Brainchild_FindCommandDesc( LPCMDFUNC );
 
 /* date.c */
-extern void InsertDate( LPCLASSDATA );
-extern void InsertTime( LPCLASSDATA );
+extern void InsertDate( LPARAM, LPCLASSDATA );
+extern void InsertTime( LPARAM, LPCLASSDATA );
 
 /* printer.c */
-extern void Print( LPCLASSDATA );
+extern void Print( LPARAM, LPCLASSDATA );
 extern LRESULT OnPageSetupDialog( HWND, WPARAM, LPARAM, LPCLASSDATA );
 extern void PageSetupBody( LPCLASSDATA, BOOL );
-extern void PageSetup( LPCLASSDATA );
+extern void PageSetup( LPARAM, LPCLASSDATA );
 extern void PageSetupDefault( LPCLASSDATA );
 
 /* hyperlink.c */

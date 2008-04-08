@@ -11,7 +11,7 @@
 
 #include "defs.h"
 
-void SetBookmark( LPCLASSDATA lpcd )
+void SetBookmark( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE		lpLine = GETLINE( lpcd );
 
@@ -43,7 +43,7 @@ void SetBookmark( LPCLASSDATA lpcd )
 	}
 }
 
-void ClearBookmark( LPCLASSDATA lpcd )
+void ClearBookmark( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE		lpLine = GETLINE( lpcd );
 
@@ -75,7 +75,7 @@ void ClearBookmark( LPCLASSDATA lpcd )
 	}
 }
 
-void ToggleBookmark( LPCLASSDATA lpcd )
+void ToggleBookmark( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE		lpLine = GETLINE( lpcd );
 	BOOL		bStatus = FALSE;
@@ -120,7 +120,7 @@ void ToggleBookmark( LPCLASSDATA lpcd )
 	RenderLine( lpcd, lpcd->ptCaretPos.y );
 }
 
-void ClearAllBookmarks( LPCLASSDATA lpcd )
+void ClearAllBookmarks( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE		lpLine;
 	BOOL		bStatus = FALSE;
@@ -174,7 +174,7 @@ void ClearAllBookmarks( LPCLASSDATA lpcd )
 		SendStatusMessage( lpcd );
 }
 
-void NextBookmark( LPCLASSDATA lpcd )
+void NextBookmark( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE		lpLine;
 	int		i, nLines = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1, nLine = lpcd->ptCaretPos.y;
@@ -203,7 +203,7 @@ void NextBookmark( LPCLASSDATA lpcd )
 		/*
 		 *	Call ourselves.
 		 */
-		NextBookmark( lpcd );
+		NextBookmark( lParam, lpcd );
 	}
 
 	/*
@@ -286,10 +286,10 @@ void NextBookmark( LPCLASSDATA lpcd )
 	/*
 	 *	Call ourselves.
 	 */
-	NextBookmark( lpcd );
+	NextBookmark( lParam, lpcd );
 }
 
-void PrevBookmark( LPCLASSDATA lpcd )
+void PrevBookmark( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE		lpLine;
 	int		i, nLines = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1, nLine = lpcd->ptCaretPos.y;
@@ -319,7 +319,7 @@ void PrevBookmark( LPCLASSDATA lpcd )
 		/*
 		 *	Call ourselves.
 		 */
-		PrevBookmark( lpcd );
+		PrevBookmark( lParam, lpcd );
 	}
 
 	/*
@@ -403,10 +403,10 @@ void PrevBookmark( LPCLASSDATA lpcd )
 	/*
 	 *	Call ourselves.
 	 */
-	PrevBookmark( lpcd );
+	PrevBookmark( lParam, lpcd );
 }
 
-void FirstBookmark( LPCLASSDATA lpcd )
+void FirstBookmark( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE		lpLine;
 	int		i;
@@ -453,7 +453,7 @@ void FirstBookmark( LPCLASSDATA lpcd )
 	MessageBeep( 0xFFFFFFFF );
 }
 
-void LastBookmark( LPCLASSDATA lpcd )
+void LastBookmark( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	LPLINE		lpLine;
 	int		i;
