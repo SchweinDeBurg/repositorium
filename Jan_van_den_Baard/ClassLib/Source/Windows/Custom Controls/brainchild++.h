@@ -243,28 +243,28 @@ public:
 		return ( BOOL )SendMessage( BCM_SETREADONLY, bReadonly );
 	}
 	
-	inline void GotoDialog()
+	inline void GotoDialog( LPCDLGTEMPLATE lpDlgTemplate = NULL )
 	{
 		_ASSERT( GetSafeHWND() );
-		SendMessage( BCM_GOTO_DIALOG );
+		SendMessage( BCM_GOTO_DIALOG, 0, ( LPARAM )lpDlgTemplate );
 	}
 
-	inline void FindDialog()
+	inline void FindDialog( LPCDLGTEMPLATE lpDlgTemplate = NULL )
 	{
 		_ASSERT( GetSafeHWND() );
-		SendMessage( BCM_FIND_DIALOG );
+		SendMessage( BCM_FIND_DIALOG, 0, ( LPARAM )lpDlgTemplate );
 	}
 
-	inline void ReplaceDialog()
+	inline void ReplaceDialog( LPCDLGTEMPLATE lpDlgTemplate = NULL )
 	{
 		_ASSERT( GetSafeHWND() );
-		SendMessage( BCM_REPLACE_DIALOG );
+		SendMessage( BCM_REPLACE_DIALOG, 0, ( LPARAM )lpDlgTemplate );
 	}
 
-	inline void PropertiesDialog()
+	inline void PropertiesDialog( LPCDLGTEMPLATE lpDlgTemplate = NULL )
 	{
 		_ASSERT( GetSafeHWND() );
-		SendMessage( BCM_PROPERTIES_DIALOG );
+		SendMessage( BCM_PROPERTIES_DIALOG, 0, ( LPARAM )lpDlgTemplate );
 	}
 
 	inline void SettingsDialog()
