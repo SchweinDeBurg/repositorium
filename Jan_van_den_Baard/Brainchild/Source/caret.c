@@ -507,7 +507,7 @@ static void MoveRight( LPCLASSDATA lpcd )
 	UpdateCaret( lpcd );
 }
 
-void CaretRight( LPCLASSDATA lpcd )
+void CaretRight( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Block marker set?
@@ -522,7 +522,7 @@ void CaretRight( LPCLASSDATA lpcd )
 		/*
 		 *	Clear marker.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 
 		/*
 		 *	Update position.
@@ -581,7 +581,7 @@ static void MoveLeft( LPCLASSDATA lpcd )
         UpdateCaret( lpcd );
 }
 
-void CaretLeft( LPCLASSDATA lpcd )
+void CaretLeft( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Do we have a block marker?
@@ -596,7 +596,7 @@ void CaretLeft( LPCLASSDATA lpcd )
 		/*
 		 *	Clear the marker.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 
 		/*
 		 *	Update position.
@@ -670,7 +670,7 @@ static void MoveUp( LPCLASSDATA lpcd )
         UpdateCaret( lpcd );
 }
 
-void CaretUp( LPCLASSDATA lpcd )
+void CaretUp( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Do we have a marker?
@@ -685,7 +685,7 @@ void CaretUp( LPCLASSDATA lpcd )
 		/*
 		 *	Clear marker.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 	}
 
 	/*
@@ -762,7 +762,7 @@ static void MoveDown( LPCLASSDATA lpcd )
         UpdateCaret( lpcd );
 }
 
-void CaretDown( LPCLASSDATA lpcd )
+void CaretDown( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Do we have a marker?
@@ -777,7 +777,7 @@ void CaretDown( LPCLASSDATA lpcd )
 		/*
 		 *	Clear marker.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 	}
 
 	/*
@@ -815,12 +815,12 @@ static void MoveEol( LPCLASSDATA lpcd )
 	UpdateCaret( lpcd );
 }
 
-void CaretEol( LPCLASSDATA lpcd )
+void CaretEol( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Clear marker.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Move to eol.
@@ -873,12 +873,12 @@ static void MoveSol( LPCLASSDATA lpcd )
 	UpdateCaret( lpcd );
 }
 
-void CaretSol( LPCLASSDATA lpcd )
+void CaretSol( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Clear marker.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Move to sol.
@@ -1017,12 +1017,12 @@ static void MoveNextWord( LPCLASSDATA lpcd )
 	UpdateCaret( lpcd );
 }
 
-void CaretNextWord( LPCLASSDATA lpcd )
+void CaretNextWord( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Clear marker.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Caret to the next word.
@@ -1174,12 +1174,12 @@ static void MovePrevWord( LPCLASSDATA lpcd )
 	UpdateCaret( lpcd );
 }
 
-void CaretPrevWord( LPCLASSDATA lpcd )
+void CaretPrevWord( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Clear marker.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Caret to the previous word.
@@ -1216,12 +1216,12 @@ static void MoveHome( LPCLASSDATA lpcd )
 	}
 }
 
-void CaretHome( LPCLASSDATA lpcd )
+void CaretHome( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Clear marker.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Move the caret home.
@@ -1266,12 +1266,12 @@ static void MoveEnd( LPCLASSDATA lpcd )
 	UpdateCaret( lpcd );
 }
 
-void CaretEnd( LPCLASSDATA lpcd )
+void CaretEnd( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Clear marker.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Move the caret to the end.
@@ -1322,12 +1322,12 @@ static void MoveTabBack( LPCLASSDATA lpcd )
 	UpdateCaret( lpcd );
 }
 
-void CaretTabBack( LPCLASSDATA lpcd )
+void CaretTabBack( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Clear marker.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Move the caret back a tab stop.
@@ -1373,12 +1373,12 @@ static void MoveViewUp( LPCLASSDATA lpcd )
 	}
 }
 
-void CaretViewUp( LPCLASSDATA lpcd )
+void CaretViewUp( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Clear marker.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Move the caret a view up.
@@ -1426,12 +1426,12 @@ static void MoveViewDown( LPCLASSDATA lpcd )
 	}
 }
 
-void CaretViewDown( LPCLASSDATA lpcd )
+void CaretViewDown( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Clear marker.
 	 */
-	ClearMark( lpcd );
+	ClearMark( lParam, lpcd );
 
 	/*
 	 *	Move the caret a view down.
@@ -1439,7 +1439,7 @@ void CaretViewDown( LPCLASSDATA lpcd )
 	MoveViewDown( lpcd );
 }
 
-void ScrollViewDown( LPCLASSDATA lpcd )
+void ScrollViewDown( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Are we there already?
@@ -1472,7 +1472,7 @@ void ScrollViewDown( LPCLASSDATA lpcd )
 	}
 }
 
-void ScrollViewUp( LPCLASSDATA lpcd )
+void ScrollViewUp( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	int	nLines = Brainchild_ArrayGetSize( lpcd->lpLines ) - 1;
 
@@ -1507,7 +1507,7 @@ void ScrollViewUp( LPCLASSDATA lpcd )
 	}
 }
 
-void ScrollViewRight( LPCLASSDATA lpcd )
+void ScrollViewRight( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Are we there already?
@@ -1532,7 +1532,7 @@ void ScrollViewRight( LPCLASSDATA lpcd )
 	}
 }
 
-void ScrollViewLeft( LPCLASSDATA lpcd )
+void ScrollViewLeft( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Are we there already?
@@ -1659,67 +1659,67 @@ static void CaretMoveExtend( LPCLASSDATA lpcd, int nMove )
  *	Simple CaretXXX() routines which
  *	will extend the block markers.
  */
-void CaretLeftExtend( LPCLASSDATA lpcd )
+void CaretLeftExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_LEFT );
 }
 
-void CaretRightExtend( LPCLASSDATA lpcd )
+void CaretRightExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_RIGHT );
 }
 
-void CaretUpExtend( LPCLASSDATA lpcd )
+void CaretUpExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_UP );
 }
 
-void CaretDownExtend( LPCLASSDATA lpcd )
+void CaretDownExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_DOWN );
 }
 
-void CaretEolExtend( LPCLASSDATA lpcd )
+void CaretEolExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_EOL );
 }
 
-void CaretSolExtend( LPCLASSDATA lpcd )
+void CaretSolExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_SOL );
 }
 
-void CaretNextWordExtend( LPCLASSDATA lpcd )
+void CaretNextWordExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_NEXTWORD );
 }
 
-void CaretPrevWordExtend( LPCLASSDATA lpcd )
+void CaretPrevWordExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_PREVWORD );
 }
 
-void CaretHomeExtend( LPCLASSDATA lpcd )
+void CaretHomeExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_HOME );
 }
 
-void CaretEndExtend( LPCLASSDATA lpcd )
+void CaretEndExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_END );
 }
 
-void CaretTabBackExtend( LPCLASSDATA lpcd )
+void CaretTabBackExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_TABBACK);
 }
 
-void CaretViewUpExtend( LPCLASSDATA lpcd )
+void CaretViewUpExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_VIEWUP );
 }
 
-void CaretViewDownExtend( LPCLASSDATA lpcd )
+void CaretViewDownExtend( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	CaretMoveExtend( lpcd, CEM_VIEWDOWN );
 }

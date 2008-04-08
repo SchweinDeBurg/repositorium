@@ -1614,14 +1614,17 @@ extern LRESULT OnPageSetupDialog( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLA
 	PageSetupBody( lpcd, TRUE );
 	return 0;
 }
-void PageSetup( LPCLASSDATA lpcd )
+
+void PageSetup( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	PageSetupBody( lpcd, TRUE );
 }
+
 void PageSetupDefault( LPCLASSDATA lpcd )
 {
 	PageSetupBody( lpcd, FALSE );
 }
+
 void PageSetupBody( LPCLASSDATA lpcd, BOOL bShowDialog )
 {
 	/*
@@ -1659,7 +1662,7 @@ void PageSetupBody( LPCLASSDATA lpcd, BOOL bShowDialog )
 /*
  *	Print the data...
  */
-void Print( LPCLASSDATA lpcd )
+void Print( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	PRINTDLG	pd = { 0 };
 	DWORD		dwFlags = PD_RETURNDC | PD_DISABLEPRINTTOFILE;

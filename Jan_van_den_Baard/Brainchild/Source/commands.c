@@ -129,7 +129,7 @@ LPCOMMAND Brainchild_GetCommandTable( void )
 /*
  *	Find a command by it's identifier.
  */
-LPFUNC Brainchild_FindCommand( int nCommandID )
+LPCMDFUNC Brainchild_FindCommand( int nCommandID )
 {
 	int		i = 0;
 
@@ -146,7 +146,7 @@ LPFUNC Brainchild_FindCommand( int nCommandID )
 			 *	Yes. Return a pointer
 			 *	to the function.
 			 */
-			return ( LPFUNC )ComTable[ i ].lpfnFunc;
+			return ( LPCMDFUNC )ComTable[ i ].lpfnFunc;
 		/*
 		 *	Next...
 		 */
@@ -155,14 +155,14 @@ LPFUNC Brainchild_FindCommand( int nCommandID )
 	/*
 	 *	Not found.
 	 */
-	return ( LPFUNC )NULL;
+	return ( LPCMDFUNC )NULL;
 }
 
 /*
  *	Find a command identifier by
  *	it's function pointer.
  */
-int Brainchild_FindCommandID( LPFUNC lpfnFunc )
+int Brainchild_FindCommandID( LPCMDFUNC lpfnFunc )
 {
 	int		i = 0;
 
@@ -191,7 +191,7 @@ int Brainchild_FindCommandID( LPFUNC lpfnFunc )
  *	Find a command descroption by
  *	it's function pointer.
  */
-LPCTSTR Brainchild_FindCommandDesc( LPFUNC lpfnFunc )
+LPCTSTR Brainchild_FindCommandDesc( LPCMDFUNC lpfnFunc )
 {
 	int		i = 0;
 
@@ -218,7 +218,7 @@ LPCTSTR Brainchild_FindCommandDesc( LPFUNC lpfnFunc )
 
 LRESULT OnExecuteCommand( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 {
-	LPFUNC		lpfnFunction;
+	LPCMDFUNC		lpfnFunction;
 
 	/*
 	 *	Find the command.
@@ -227,6 +227,6 @@ LRESULT OnExecuteCommand( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA l
 		/*
 		 *	Execute it.
 		 */
-		 ( lpfnFunction )( lpcd );
+		 ( lpfnFunction )( lParam, lpcd );
 	return 0;
 }

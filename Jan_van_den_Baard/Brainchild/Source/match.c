@@ -26,7 +26,7 @@ static TCHAR cBrackets[][ 2 ] =
 	{ 0,   0    }
 };
 
-BOOL MatchBracketSelect( LPCLASSDATA lpcd )
+BOOL MatchBracketSelect( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	POINT ptStart;
 
@@ -38,7 +38,7 @@ BOOL MatchBracketSelect( LPCLASSDATA lpcd )
 	/*
 	 *	Match the bracket.
 	 */
-	if ( MatchBracket( lpcd ) == FALSE )
+	if ( MatchBracket( lParam, lpcd ) == FALSE )
 		return FALSE;
 
 	/*
@@ -61,7 +61,7 @@ BOOL MatchBracketSelect( LPCLASSDATA lpcd )
 	}
 	else
 	{
-		CaretRight( lpcd );
+		CaretRight( lParam, lpcd );
 		lpcd->ptSelStart = lpcd->ptStartPos;
 		lpcd->ptSelEnd   = lpcd->ptCaretPos;
 	}
@@ -84,7 +84,7 @@ BOOL MatchBracketSelect( LPCLASSDATA lpcd )
 	return TRUE;
 }
 
-BOOL MatchBracket( LPCLASSDATA lpcd )
+BOOL MatchBracket( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	// Look for a bracket match.
 	POINT pt1, pt2;
@@ -115,7 +115,7 @@ BOOL MatchBracket( LPCLASSDATA lpcd )
 	/*
 	 *	Clear markers.
 	 */
-	ClearMark( lpcd );
+	ClearMark( 0, lpcd );
 
 	/*
 	 *	Silent mode?

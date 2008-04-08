@@ -211,7 +211,7 @@ static BOOL CALLBACK GotoProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 	return FALSE;
 }
 
-void GotoDialog( LPCLASSDATA lpcd )
+void GotoDialog( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Clear qualifiers.
@@ -221,7 +221,13 @@ void GotoDialog( LPCLASSDATA lpcd )
 	/*
 	 *	Popup the dialog.
 	 */
-	DialogBoxParam( hDLL, MAKEINTRESOURCE( IDD_GOTO ), lpcd->hWnd, GotoProc, ( LPARAM )lpcd );
+	if ( lParam != 0 )
+	{
+		DialogBoxIndirectParam( hDLL, ( LPCDLGTEMPLATE )lParam, lpcd->hWnd, &GotoProc, ( LPARAM )lpcd );
+	}
+	else {
+		DialogBoxParam( hDLL, MAKEINTRESOURCE( IDD_GOTO ), lpcd->hWnd, &GotoProc, ( LPARAM )lpcd );
+	}
 }
 
 LRESULT OnGotoDialog( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
@@ -229,6 +235,6 @@ LRESULT OnGotoDialog( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd 
 	/*
 	 *	Popup the goto dialog.
 	 */
-	GotoDialog( lpcd );
+	GotoDialog( lParam, lpcd );
 	return 0;
 }

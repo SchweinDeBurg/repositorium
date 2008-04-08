@@ -343,7 +343,7 @@ static void TabIndent( LPCLASSDATA lpcd, BOOL bIndent )
 	DisplayCaret( lpcd, TRUE );
 }
 
-void DoTab( LPCLASSDATA lpcd )
+void DoTab( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Do we have a valid selection?
@@ -363,7 +363,7 @@ void DoTab( LPCLASSDATA lpcd )
 	InsertChar( lpcd, _T( '\t' ));
 }
 
-void DoBackTab( LPCLASSDATA lpcd )
+void DoBackTab( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Do we have a valid selection?
@@ -380,5 +380,5 @@ void DoBackTab( LPCLASSDATA lpcd )
 	/*
 	 *	Move the caret back a tab.
 	 */
-	CaretTabBack( lpcd );
+	CaretTabBack( lParam, lpcd );
 }

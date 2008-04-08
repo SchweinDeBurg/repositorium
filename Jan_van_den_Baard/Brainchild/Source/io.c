@@ -343,7 +343,7 @@ LRESULT OnLoadFile( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 	return BCMR_OK;
 }
 
-void SaveFileAsIs( LPCLASSDATA lpcd )
+void SaveFileAsIs( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Save the file under it's

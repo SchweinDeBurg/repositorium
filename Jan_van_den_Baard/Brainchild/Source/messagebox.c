@@ -136,7 +136,7 @@ void ErrorMsg( LPCTSTR lpszBody, ... )
 	va_end( args );
 }
 
-void AboutControl( LPCLASSDATA lpcd )
+void AboutControl( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	TCHAR		szBuffer[ 1024 ];
 	

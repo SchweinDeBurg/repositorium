@@ -37,7 +37,7 @@ LRESULT OnInsertText( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd 
 	 *	Any marks set?
 	 */
 	if ( HasMark( lpcd ))
-		bDeleted = Delete( lpcd );
+		bDeleted = Delete( 0, lpcd );
 
 	/*
 	 *	Hide the caret.
@@ -550,7 +550,7 @@ LRESULT OnInsertLine( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd 
 /*
  *	Flush undo buffers.
  */
-void FlushUndoBuffers( LPCLASSDATA lpcd )
+void FlushUndoBuffers( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Free the memory allcated in the array
@@ -587,7 +587,7 @@ void DeleteContents( LPCLASSDATA lpcd )
 	/*
 	 *	Flush undo buffers.
 	 */
-	FlushUndoBuffers( lpcd );
+	FlushUndoBuffers( 0, lpcd );
 
 	/*
 	 *	Reset longest line.
@@ -609,7 +609,7 @@ void DeleteContents( LPCLASSDATA lpcd )
 /*
  *	Delete contents (command)
  */
-BOOL DeleteTheContents( LPCLASSDATA lpcd )
+BOOL DeleteTheContents( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	TCHAR	szName[ MAX_PATH ] = { 0 }, *pszTmp;
 
@@ -1549,7 +1549,7 @@ BOOL SaveFile( LPCLASSDATA lpcd, LPCTSTR lpszFileName )
 	 *	Clear undo buffer after save?
 	 */
 	if ( Parser->bClearUndoSave )
-		FlushUndoBuffers( lpcd );
+		FlushUndoBuffers( 0, lpcd );
 
 	/*
 	 *	Error?
@@ -2290,7 +2290,7 @@ LRESULT OnCanRedo( HWND hWnd, WPARAM wParam, LPARAM lParam, LPCLASSDATA lpcd )
 /*
  *	Undo all changes.
  */
-void UndoAll( LPCLASSDATA lpcd )
+void UndoAll( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Read only?
@@ -2316,13 +2316,13 @@ void UndoAll( LPCLASSDATA lpcd )
 		/*
 		 *	Clear markers.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 
 		/*
 		 *	Undo all of them...
 		 */
 		while ( lpcd->nUndoPosition )
-			Undo( lpcd );
+			Undo( lParam, lpcd );
 
 		/*
 		 *	Is the caret still visible?
@@ -2360,7 +2360,7 @@ void UndoAll( LPCLASSDATA lpcd )
 /*
  *	Undo the latest change.
  */
-void Undo( LPCLASSDATA lpcd )
+void Undo( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	BOOL	bRedraw = FALSE;
 	int	nOldPosition = lpcd->nUndoPosition;
@@ -2384,7 +2384,7 @@ void Undo( LPCLASSDATA lpcd )
 		/*
 		 *	Clear markers.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 	}
 
 	/*
@@ -2513,7 +2513,7 @@ void Undo( LPCLASSDATA lpcd )
 /*
  *	Re-do all of them...
  */
-void RedoAll( LPCLASSDATA lpcd )
+void RedoAll( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	/*
 	 *	Read only?
@@ -2539,13 +2539,13 @@ void RedoAll( LPCLASSDATA lpcd )
 		/*
 		 *	Clear markers.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 
 		/*
 		 *	Redo all entries.
 		 */
 		while ( lpcd->nUndoPosition < Brainchild_ArrayGetSize( lpcd->lpUndoRedo ))
-			Redo( lpcd );
+			Redo( lParam, lpcd );
 
 		/*
 		 *	Is the caret still visible?
@@ -2582,7 +2582,7 @@ void RedoAll( LPCLASSDATA lpcd )
 /*
  *	Redo.
  */
-void Redo( LPCLASSDATA lpcd )
+void Redo( LPARAM lParam, LPCLASSDATA lpcd )
 {
 	int	nNumElem = Brainchild_ArrayGetSize( lpcd->lpUndoRedo );
 	BOOL	bRedraw = FALSE;
@@ -2607,7 +2607,7 @@ void Redo( LPCLASSDATA lpcd )
 		/*
 		 *	Clear markers.
 		 */
-		ClearMark( lpcd );
+		ClearMark( lParam, lpcd );
 	}
 
 	/*
