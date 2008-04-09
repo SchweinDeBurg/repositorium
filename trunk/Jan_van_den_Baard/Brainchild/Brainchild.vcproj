@@ -1297,6 +1297,9 @@
 				RelativePath=".\Source\brainchild.h">
 			</File>
 			<File
+				RelativePath=".\Source\BrainchildCtrlWTL.h">
+			</File>
+			<File
 				RelativePath=".\Source\defs.h">
 			</File>
 			<File
