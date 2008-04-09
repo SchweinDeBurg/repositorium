@@ -16,16 +16,16 @@
 #include "brainchild.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CBrainChildEditCtrlT - client side for brainchild edit control
+// CBrainchildCtrlT - client side for brainchild edit control
 
 template <class TBase>
-class CBrainChildEditCtrlT : public TBase
+class CBrainchildCtrlT : public TBase
 {
 public:
 // Constructors
-	CBrainChildEditCtrlT(HWND hWnd = NULL) : TBase(hWnd) { }
+	CBrainchildCtrlT(HWND hWnd = NULL) : TBase(hWnd) { }
 
-	CBrainChildEditCtrlT< TBase >& operator=(HWND hWnd)
+	CBrainchildCtrlT< TBase >& operator=(HWND hWnd)
 	{
 		m_hWnd = hWnd;
 		return *this;
@@ -271,6 +271,6 @@ public:
 };
 
 
-typedef CBrainChildEditCtrlT<ATL::CWindow> CBrainChildEditCtrl;
+typedef CBrainchildCtrlT<ATL::CWindow> CBrainchildCtrl;
 
 #endif //_BRAINCHILDEDIT_CTRL_

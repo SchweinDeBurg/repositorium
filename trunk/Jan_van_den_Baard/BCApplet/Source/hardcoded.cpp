@@ -40,7 +40,7 @@ LRESULT Hardcoded::OnInitDialog( LPPROPSHEETPAGE pPsp )
 		nSel = m_List.AddString( lpCTable->pszCommandDesc );
 
 		// Current selection?
-		if ( m_pCNode->lpFunc == ( LPFUNC )lpCTable->lpfnFunc )
+		if ( m_pCNode->lpFunc == ( LPCMDFUNC )lpCTable->lpfnFunc )
 			// Yes. Select it.
 			m_List.SetCurSel( nSel );
 
@@ -90,7 +90,7 @@ LRESULT Hardcoded::OnCommand( UINT nNotifyCode, UINT nCtrlID, HWND hWndCtrl )
 					if ( ! _tcsicmp( lpCTable->pszCommandDesc, szEntry ))
 					{
 						// Store function pointer.
-						m_pCNode->lpFunc = ( LPFUNC )lpCTable->lpfnFunc;
+						m_pCNode->lpFunc = ( LPCMDFUNC )lpCTable->lpfnFunc;
 						
 						// Bye...
 						EndDialog( TRUE );
