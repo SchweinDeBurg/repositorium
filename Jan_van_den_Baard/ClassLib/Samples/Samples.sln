@@ -18,6 +18,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ColorPicker", "ColorPicker\
 		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CRC", "CRC\CRC.vcproj", "{AC8F4373-7E4F-49AA-9AA4-3BF86BFD09EF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		MBCS Debug = MBCS Debug
@@ -60,6 +65,14 @@ Global
 		{C80514DE-7E95-4AD4-8EB2-AAB4D33B73DD}.Unicode Debug.Build.0 = Unicode Debug|Win32
 		{C80514DE-7E95-4AD4-8EB2-AAB4D33B73DD}.Unicode Release.ActiveCfg = Unicode Release|Win32
 		{C80514DE-7E95-4AD4-8EB2-AAB4D33B73DD}.Unicode Release.Build.0 = Unicode Release|Win32
+		{AC8F4373-7E4F-49AA-9AA4-3BF86BFD09EF}.MBCS Debug.ActiveCfg = MBCS Debug|Win32
+		{AC8F4373-7E4F-49AA-9AA4-3BF86BFD09EF}.MBCS Debug.Build.0 = MBCS Debug|Win32
+		{AC8F4373-7E4F-49AA-9AA4-3BF86BFD09EF}.MBCS Release.ActiveCfg = MBCS Release|Win32
+		{AC8F4373-7E4F-49AA-9AA4-3BF86BFD09EF}.MBCS Release.Build.0 = MBCS Release|Win32
+		{AC8F4373-7E4F-49AA-9AA4-3BF86BFD09EF}.Unicode Debug.ActiveCfg = Unicode Debug|Win32
+		{AC8F4373-7E4F-49AA-9AA4-3BF86BFD09EF}.Unicode Debug.Build.0 = Unicode Debug|Win32
+		{AC8F4373-7E4F-49AA-9AA4-3BF86BFD09EF}.Unicode Release.ActiveCfg = Unicode Release|Win32
+		{AC8F4373-7E4F-49AA-9AA4-3BF86BFD09EF}.Unicode Release.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
