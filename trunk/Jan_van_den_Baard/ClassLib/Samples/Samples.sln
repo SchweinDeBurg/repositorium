@@ -1,0 +1,42 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClassLib", "..\ClassLib.vcproj", "{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ADO", "ADO\ADO.vcproj", "{E8242B19-BA49-4336-94CA-4F8658DD319F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		MBCS Debug = MBCS Debug
+		MBCS Release = MBCS Release
+		Unicode Debug = Unicode Debug
+		Unicode Release = Unicode Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.MBCS Debug.ActiveCfg = MBCS Debug|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.MBCS Debug.Build.0 = MBCS Debug|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.MBCS Release.ActiveCfg = MBCS Release|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.MBCS Release.Build.0 = MBCS Release|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.Unicode Debug.ActiveCfg = Unicode Debug|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.Unicode Debug.Build.0 = Unicode Debug|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.Unicode Release.ActiveCfg = Unicode Release|Win32
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}.Unicode Release.Build.0 = Unicode Release|Win32
+		{E8242B19-BA49-4336-94CA-4F8658DD319F}.MBCS Debug.ActiveCfg = MBCS Debug|Win32
+		{E8242B19-BA49-4336-94CA-4F8658DD319F}.MBCS Debug.Build.0 = MBCS Debug|Win32
+		{E8242B19-BA49-4336-94CA-4F8658DD319F}.MBCS Release.ActiveCfg = MBCS Release|Win32
+		{E8242B19-BA49-4336-94CA-4F8658DD319F}.MBCS Release.Build.0 = MBCS Release|Win32
+		{E8242B19-BA49-4336-94CA-4F8658DD319F}.Unicode Debug.ActiveCfg = Unicode Debug|Win32
+		{E8242B19-BA49-4336-94CA-4F8658DD319F}.Unicode Debug.Build.0 = Unicode Debug|Win32
+		{E8242B19-BA49-4336-94CA-4F8658DD319F}.Unicode Release.ActiveCfg = Unicode Release|Win32
+		{E8242B19-BA49-4336-94CA-4F8658DD319F}.Unicode Release.Build.0 = Unicode Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
