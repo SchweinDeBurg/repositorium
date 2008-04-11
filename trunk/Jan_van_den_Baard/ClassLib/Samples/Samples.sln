@@ -68,6 +68,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PanelBar", "PanelBar\PanelB
 		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XPControls", "XPControls\XPControls.vcproj", "{5D957307-E73B-4A16-8DFA-75B73087E4BA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		MBCS Debug = MBCS Debug
@@ -190,6 +195,14 @@ Global
 		{9270D6A4-03D3-4573-94E6-C6E40709B02F}.Unicode Debug.Build.0 = Unicode Debug|Win32
 		{9270D6A4-03D3-4573-94E6-C6E40709B02F}.Unicode Release.ActiveCfg = Unicode Release|Win32
 		{9270D6A4-03D3-4573-94E6-C6E40709B02F}.Unicode Release.Build.0 = Unicode Release|Win32
+		{5D957307-E73B-4A16-8DFA-75B73087E4BA}.MBCS Debug.ActiveCfg = MBCS Debug|Win32
+		{5D957307-E73B-4A16-8DFA-75B73087E4BA}.MBCS Debug.Build.0 = MBCS Debug|Win32
+		{5D957307-E73B-4A16-8DFA-75B73087E4BA}.MBCS Release.ActiveCfg = MBCS Release|Win32
+		{5D957307-E73B-4A16-8DFA-75B73087E4BA}.MBCS Release.Build.0 = MBCS Release|Win32
+		{5D957307-E73B-4A16-8DFA-75B73087E4BA}.Unicode Debug.ActiveCfg = Unicode Debug|Win32
+		{5D957307-E73B-4A16-8DFA-75B73087E4BA}.Unicode Debug.Build.0 = Unicode Debug|Win32
+		{5D957307-E73B-4A16-8DFA-75B73087E4BA}.Unicode Release.ActiveCfg = Unicode Release|Win32
+		{5D957307-E73B-4A16-8DFA-75B73087E4BA}.Unicode Release.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
