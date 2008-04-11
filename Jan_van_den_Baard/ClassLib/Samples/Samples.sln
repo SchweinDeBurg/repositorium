@@ -53,6 +53,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MDI", "MDI\MDI.vcproj", "{8
 		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MRU", "MRU\MRU.vcproj", "{0880B28D-9A15-4EFE-872C-895B2509E50D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		MBCS Debug = MBCS Debug
@@ -151,6 +156,14 @@ Global
 		{87C5DA2F-C340-46C2-BCE8-C1C7342A5917}.Unicode Debug.Build.0 = Unicode Debug|Win32
 		{87C5DA2F-C340-46C2-BCE8-C1C7342A5917}.Unicode Release.ActiveCfg = Unicode Release|Win32
 		{87C5DA2F-C340-46C2-BCE8-C1C7342A5917}.Unicode Release.Build.0 = Unicode Release|Win32
+		{0880B28D-9A15-4EFE-872C-895B2509E50D}.MBCS Debug.ActiveCfg = MBCS Debug|Win32
+		{0880B28D-9A15-4EFE-872C-895B2509E50D}.MBCS Debug.Build.0 = MBCS Debug|Win32
+		{0880B28D-9A15-4EFE-872C-895B2509E50D}.MBCS Release.ActiveCfg = MBCS Release|Win32
+		{0880B28D-9A15-4EFE-872C-895B2509E50D}.MBCS Release.Build.0 = MBCS Release|Win32
+		{0880B28D-9A15-4EFE-872C-895B2509E50D}.Unicode Debug.ActiveCfg = Unicode Debug|Win32
+		{0880B28D-9A15-4EFE-872C-895B2509E50D}.Unicode Debug.Build.0 = Unicode Debug|Win32
+		{0880B28D-9A15-4EFE-872C-895B2509E50D}.Unicode Release.ActiveCfg = Unicode Release|Win32
+		{0880B28D-9A15-4EFE-872C-895B2509E50D}.Unicode Release.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
