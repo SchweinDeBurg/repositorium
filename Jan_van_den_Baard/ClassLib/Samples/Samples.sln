@@ -33,6 +33,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastFind", "FastFind\FastFi
 		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileDirTree", "FileDirTree\FileDirTree.vcproj", "{B3D54E9E-B35E-472D-A443-8C2AAFFACCC3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		MBCS Debug = MBCS Debug
@@ -99,6 +104,14 @@ Global
 		{7038E450-46D2-4E5C-9BCD-BD426D1F539C}.Unicode Debug.Build.0 = Unicode Debug|Win32
 		{7038E450-46D2-4E5C-9BCD-BD426D1F539C}.Unicode Release.ActiveCfg = Unicode Release|Win32
 		{7038E450-46D2-4E5C-9BCD-BD426D1F539C}.Unicode Release.Build.0 = Unicode Release|Win32
+		{B3D54E9E-B35E-472D-A443-8C2AAFFACCC3}.MBCS Debug.ActiveCfg = MBCS Debug|Win32
+		{B3D54E9E-B35E-472D-A443-8C2AAFFACCC3}.MBCS Debug.Build.0 = MBCS Debug|Win32
+		{B3D54E9E-B35E-472D-A443-8C2AAFFACCC3}.MBCS Release.ActiveCfg = MBCS Release|Win32
+		{B3D54E9E-B35E-472D-A443-8C2AAFFACCC3}.MBCS Release.Build.0 = MBCS Release|Win32
+		{B3D54E9E-B35E-472D-A443-8C2AAFFACCC3}.Unicode Debug.ActiveCfg = Unicode Debug|Win32
+		{B3D54E9E-B35E-472D-A443-8C2AAFFACCC3}.Unicode Debug.Build.0 = Unicode Debug|Win32
+		{B3D54E9E-B35E-472D-A443-8C2AAFFACCC3}.Unicode Release.ActiveCfg = Unicode Release|Win32
+		{B3D54E9E-B35E-472D-A443-8C2AAFFACCC3}.Unicode Release.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
