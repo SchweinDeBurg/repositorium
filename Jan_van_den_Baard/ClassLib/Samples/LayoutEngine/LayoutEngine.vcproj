@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="FastFind"
-	ProjectGUID="{7038E450-46D2-4E5C-9BCD-BD426D1F539C}"
+	Name="LayoutEngine"
+	ProjectGUID="{730F1D72-65F5-446E-BC0C-6EE3B40506D3}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -40,11 +40,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/OPT:NOWIN98 /IGNORE:4089"
-				OutputFile="$(OutDir)/FastFind.exe"
+				OutputFile="$(OutDir)/LayoutEngine.exe"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/FastFind.pdb"
+				ProgramDatabaseFile="$(OutDir)/LayoutEngine.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -103,7 +103,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/OPT:NOWIN98 /IGNORE:4089"
-				OutputFile="$(OutDir)/FastFind.exe"
+				OutputFile="$(OutDir)/LayoutEngine.exe"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="FALSE"
@@ -168,11 +168,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/OPT:NOWIN98 /IGNORE:4089"
-				OutputFile="$(OutDir)/FastFind.exe"
+				OutputFile="$(OutDir)/LayoutEngine.exe"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/FastFind.pdb"
+				ProgramDatabaseFile="$(OutDir)/LayoutEngine.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -231,7 +231,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/OPT:NOWIN98 /IGNORE:4089"
-				OutputFile="$(OutDir)/FastFind.exe"
+				OutputFile="$(OutDir)/LayoutEngine.exe"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="FALSE"
@@ -345,10 +345,10 @@
 				RelativePath=".\Source\BinRes\AppIcon.ico">
 			</File>
 			<File
-				RelativePath=".\Source\FastFind.rc">
+				RelativePath=".\Source\BinRes\icon.ico">
 			</File>
 			<File
-				RelativePath=".\Source\BinRes\find.ico">
+				RelativePath=".\Source\LayoutEngine.rc">
 			</File>
 		</Filter>
 	</Files>
