@@ -29,6 +29,10 @@
 #include <afxadv.h>
 #include <afxconv.h>
 
+// ATL headers
+#include <atlbase.h>
+#include <ATLComTime.h>
+
 // PSDK headers
 #include <shlobj.h>
 
