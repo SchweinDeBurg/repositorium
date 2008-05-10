@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>CPJNSMTPConnection v2.67</title>
+<title>CPJNSMTPConnection v2.76</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
 
 </head>
@@ -11,39 +11,29 @@
 
 <h2 align="left">
 <img src="PJNSMTP.gif" width="39" height="38" alt="PJNSMTP.gif (295 bytes)" /><strong>CPJNSMTPConnection 
-v2.67</strong></h2>
+v2.76</strong></h2>
 
 <p>Welcome to <strong>CPJNSMTPConnection</strong>, a collection of MFC classes to
 support the SMTP protocol. SMTP for those not familiar with all the internet protocols is
 the protocol used to send internet email. </p>
 
-<p>For detailed information about <strong style="font-weight: 400">SMTP (S</strong>imple
-<strong style="font-weight: 400">M</strong>ail <strong style="font-weight: 400">
-T</strong>ransfer <strong style="font-weight: 400">P</strong>rotocol) you should 
-read RFC 821 and for details about ESMTP (Extended Simple Mail Transfer 
-Protocol) which obsoletes the SMTP RFC, you should read RFC 2821.</p>
-<p>Other documents that these classes refer to are RFC 2045
-which defines how MIME attachments are to be handled in a standard SMTP
-message, RFC 822 and RFC 2822 which defines the way standard headers which SMTP uses, RFC
-2110 which covers MHTML (aka HTML Email), RFC 2195 and 2554 which covers SMTP
-authentication and RFC 3461 and RFC 3464 which covers DSN's (Delivery Status 
-Notifications).</p>
 <p>Also included with the SMTP classes in the download is a
 class called &quot;CPJNMD5Hash&quot; which provides for calculation of MD5
 hashes and HMACs using the MS Crypto API as well as a class called &quot;CNTLMClientAuth&quot; which 
 provides a reusable client side implementation for NTLM authentication.</p>
 
 <p><b><i>Important!:</i></b> Please note that I
-have been informed recently that CPJNSMTPConnection is being used to develop and
+have been informed that CPJNSMTPConnection is being used to develop and
 send unsolicited bulk mail. This was not the intention of the code and the
 author explicitly forbids use of the code for any software of this kind without
 my explicit written consent.</p>
 
 <p></p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 <table>
 	<tbody>
+	<tr>
+		<td><a href="#References">References</a></td>
+	</tr>
 	<tr>
 		<td><a href="#Features">Features</a></td>
 	</tr>
@@ -64,6 +54,55 @@ my explicit written consent.</p>
 	</tr>
 </tbody>
 </table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="References"></a><strong>References</strong> </h2>
+<ul>
+	<li>For information about <strong style="font-weight: 400">SMTP (S</strong>imple
+<strong style="font-weight: 400">M</strong>ail <strong style="font-weight: 400">
+T</strong>ransfer <strong style="font-weight: 400">P</strong>rotocol) you should 
+read <a href="http://www.ietf.org/rfc/rfc821.txt">RFC 821</a>.</li>
+	<li>For information about ESMTP (Extended Simple Mail Transfer 
+Protocol) which obsoletes the original SMTP RFC, you should read
+	<a href="http://www.ietf.org/rfc/rfc821.txt">RFC 2821</a>.</li>
+	<li><a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a> which defines 
+	how MIME attachments are to be handled in a standard SMTP message.</li>
+	<li><a href="http://www.ietf.org/rfc/rfc822.txt">RFC 822</a> and 
+	<a href="http://www.ietf.org/rfc/rfc2822.txt">RFC 2822</a> define the ways 
+	standard headers are used by SMTP.</li>
+	<li><a href="http://www.ietf.org/rfc/rfc2110.txt">RFC
+2110</a> and <a href="http://www.ietf.org/rfc/rfc2557.txt">RFC 2557</a> which covers MHTML 
+	(aka HTML Email).</li>
+	<li>Base64 encoding which is used in various places in SMTP is described in
+	<a href="http://www.ietf.org/rfc/rfc1113.txt">RFC 1113</a> and
+	<a href="http://www.ietf.org/rfc/rfc1421.txt">RFC 1421</a>. If was 
+	eventually referred to as Base64 in
+	<a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a></li>
+	<li>The details about SMTP authentication are spread across a number of RFCs 
+	including <a href="http://www.ietf.org/rfc/rfc1731.txt">RFC 1731</a>,
+	<a href="http://www.ietf.org/rfc/rfc1869.txt">RFC 1869</a>,
+	<a href="http://www.ietf.org/rfc/rfc2195.txt">RFC 2195</a>,
+	<a href="http://www.ietf.org/rfc/rfc2095.txt">RFC 2095</a>,
+	<a href="http://www.ietf.org/rfc/rfc2245.txt">RFC 2245</a>,
+	<a href="http://www.ietf.org/rfc/rfc2554.txt">RFC 2554</a>,
+	<a href="http://www.ietf.org/rfc/rfc2595.txt">RFC 2595</a>,
+	<a href="http://www.ietf.org/rfc/rfc4616.txt">RFC 4616</a> and
+	<a href="http://www.ietf.org/rfc/rfc4954.txt">RFC 4954</a>.</li>
+	<li>The CRAM-MD5 authentication scheme uses a HMAC (Hashed Message 
+	Authentication Code) which is described in
+	<a href="http://www.ietf.org/rfc/rfc2104.txt">RFC 2104</a>, while MD5 itself 
+	is described in <a href="http://www.ietf.org/rfc/rfc1321.txt">RFC 1321</a>.</li>
+	<li><a href="http://www.ietf.org/rfc/rfc3461.txt">RFC 3461</a>,
+	<a href="http://www.ietf.org/rfc/rfc3464.txt">RFC 3464</a> ,
+	<a href="http://www.ietf.org/rfc/rfc3798.txt">RFC 3798</a> and
+	<a href="http://www.ietf.org/rfc/rfc3885.txt">RFC 3885</a> describe DSN's 
+	(Delivery Status Notifications).</li>
+	<li>The page <a href="http://www.activexperts.com/support/activemail/auth/">
+	http://www.activexperts.com/support/activemail/auth/</a> includes a good 
+	description of the AUTH LOGIN, AUTH PLAIN and AUTH CRAM-MD5 authentication 
+	schemes which is implemented by CPJNSMTPConnection.</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -100,8 +139,10 @@ my explicit written consent.</p>
 	&quot;Auto Detection&quot; form of authentication is also supported. In this mode, the 
 	authentication protocols supported by the server are detected and the most 
 	appropriate protocol is used.</li>
-	<li>As of v2.65, the classes include comprehensive support for DSN's 
-	(Delivery Status Notifications) as specified in RFC 3461.</li>
+	<li>As of v2.65, the classes include comprehensive support for DSN's.</li>
+</ul>
+<ul>
+	<li>As of v2.70, the classes are only supported on VC 2005 or later.</li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -127,8 +168,9 @@ my explicit written consent.</p>
 <p>&nbsp;</p>
 <h2><a name="Usage"></a><strong>Usage</strong> </h2>
 <ul>
-	<li>To use the class in your code simply include PJNSMTP.cpp/h, 
-	Base64.cpp/h, SocMFC.cpp/h and PJNMD5.h in your project and #include 
+	<li>The classes are designed for VC 2005 or later. They will not compile on 
+	earlier releases of VC.</li>
+	<li>To use the class in your code simply include PJNSMTP.cpp/h, SocMFC.cpp/h and PJNMD5.h in your project and #include 
 	PJNSMTP.h in which ever of your modules needs to make calls to the classes. 
 	You also need to copy all the IDS_PJNSMTP_* strings from the samples apps 
 	&quot;PJNSMTP.rc&quot; rc file to your applications rc file (Use drag and drop in the 
@@ -144,12 +186,10 @@ my explicit written consent.</p>
 	pre-processor macro &quot;CPJNSMTP_NOSSL&quot; before including PJNSMTP.h. In this 
 	case, you do not need to include these two modules in your project.</li>
 	<li>The following modules are not included in the CPJNSMTPConnection zip 
-	download: Base64.cpp/h, SocMFC.cpp/h and OpenSSLMfc.cpp/h and you will need 
+	download: SocMFC.cpp/h and OpenSSLMfc.cpp/h and you will need 
 	to download separately these separately from
 	<a href="http://www.naughter.com/w3mfc.html">www.naughter.com/w3mfc.html</a>. 
 	</li>
-	<li>You will need to have downloaded, installed and configured the Platform 
-	SDK if you are compiling the code with Visual C++ v6.</li>
 	<li>You can optionally exclude the DNS MXLookup support in 
 	CPJNSMTPConnection by defining the pre-processor macro &quot;CPJNSMTP_NOMXLOOKUP&quot; 
 	before including &quot;PJNSMTP.h&quot;</li>
@@ -165,30 +205,30 @@ my explicit written consent.</p>
 	the code would look something like this (ignoring error handling):</li>
 </ul>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPConnection smtp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.Connect(&quot;mail.someisp.com&quot;);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.Connect(_T(&quot;mail.someisp.com&quot;));<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPMessage m;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-m.AddRecipient(CSMTPAddress(&quot;someaddress@somedestination.com&quot;));<br />
+m.To.Add(CSMTPAddress(_T(&quot;someaddress@somedestination.com&quot;)));<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_From = 
 CSMTPAddress(&quot;adeveloper@someisp.com&quot;);<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_sSubject = &quot;A Fellow developer!&quot;;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.AddTextBody(&quot;if you can read this 
-then the CPJNSMTPConnection code is working&quot;);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_sSubject = _T(&quot;A Fellow developer!&quot;);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.AddTextBody(_T(&quot;if you can read this 
+then the CPJNSMTPConnection code is working&quot;));<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.SendMessage(m);<br />
 </p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To send your autoexec.bat as a 
 file attachment you would use the following code:</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPConnection smtp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.Connect(&quot;mail.yourisp.com&quot;);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.Connect(_T(&quot;mail.yourisp.com&quot;));<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPMessage m;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-m.AddRecipient(CSMTPAddress(&quot;someaddress@somedestination.com&quot;));<br />
+m.m_To.Add(CSMTPAddress(_T(&quot;someaddress@somedestination.com&quot;)));<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_From = 
-CSMTPAddress(&quot;you@someisp.com&quot;);<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_sSubject = &quot;Here's my 
-autoexec.bat file!&quot;;<br />
+CSMTPAddress(_T(&quot;you@someisp.com&quot;));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_sSubject = _T(&quot;Here's my 
+autoexec.bat file!&quot;);<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CSMTPBodyPart a;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a.SetFilename(&quot;c:\\autoexec.bat&quot;);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a.SetFilename(_T(&quot;c:\\autoexec.bat&quot;));<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.AddBodyPart(a);<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.SendMessage(m);<br />
 </p>
@@ -202,7 +242,7 @@ autoexec.bat file!&quot;;<br />
 	Internet Mail Service and Windows 2000 SMTP Stack&quot;. </li>
 	<li>Please note that if you are using the class to send MHTML HTML emails, 
 	that you should form CID tags using angle brackets as some mail servers such 
-	as the iPlanet mail reader on sun/solaris has problems if you do not use 
+	as the iPlanet mail reader on Sun/Solaris has problems if you do not use 
 	this. For example, you should use:<br />
 	<br />
 	Content-ID: &lt;IMAGE_1&gt;<br />
@@ -224,10 +264,13 @@ autoexec.bat file!&quot;;<br />
 	This is not really a problem with the class but more of a gotcha on the 
 	minutiae of using MHTML email.</li>
 	<li>If you will be using the SSL extensions to the class, then you need to 
-	compile the OpenSSL libraries into your app and initialize OpenSSL 
+	compile/link with the OpenSSL libraries and initialize OpenSSL 
 	correctly. See the Linker library settings, CPJNSMTPApp::InitInstance and 
 	CPJNSMTPApp::ExitInstance code for examples on doing this in the sample app 
-	provided with the download.</li>
+	provided with the download. For further information on using OpenSSL, see my 
+	blog entry at
+	<a href="http://naughter.spaces.live.com/blog/cns!7692E6D72E26EAC!209.entry">
+	http://naughter.spaces.live.com/blog/cns!7692E6D72E26EAC!209.entry.</a></li>
 	<li>For further details on usage of the classes please consult the sample 
 	application which comes with the code, specifically check out 
 	CPJNSMTPAppDlg::OnSend in PJSMTPAppDlg.cpp.</li>
@@ -256,7 +299,7 @@ autoexec.bat file!&quot;;<br />
 <p><strong>V1.12 (27 June 1998)</strong> </p>
 <ul>
 	<li>The case where a line begins with a &quot;.&quot; but contains other text is now 
-	also catered for. See RFC821, Section 4.5.2 for further details.</li>
+	also catered for. See RFC 821, Section 4.5.2 for further details.</li>
 	<li>m_sBody in CPJNSMTPMessage has now been made protected. Client 
 	applications now should call AddBody instead. This ensures that FixSingleDot 
 	is only called once even if the same message is sent a number of times.</li>
@@ -1085,6 +1128,89 @@ autoexec.bat file!&quot;;<br />
 	Thanks to &quot;zhangbo&quot; for providing this very nice addition to the code.</li>
 	<li>Removed the definition for the defunct &quot;AuthNTLM&quot; method.</li>
 </ul>
+<p><strong>V2.70 (13 November 2007</strong><b>)</b></p>
+<ul>
+	<li>Major update to the code to use VC2005 specific features. This version 
+	of the code and onwards will be supported only on VC 2005 or later. Thanks 
+	to Andrey Babushkin for prompting this update. Please note that there has 
+	been breaking changes to the names and layout of various methods and member 
+	variables. You should carefully analyze the sample app included in the 
+	download as well as your client code for the required updates you will need 
+	to make.</li>
+	<li>Sample app included in download is now build for Unicode and links 
+	dynamically to MFC. It also links dynamically to the latest OpenSSL 0.9.8g 
+	dlls.</li>
+</ul>
+<p><strong>V2.71 (19 November 2007</strong><b>)</b></p>
+<ul>
+	<li>The &quot;Date:&quot; header is now formed using static lookup arrays for the day 
+	of week and month names instead of using CTime::Format. This helps avoid 
+	generating invalid Date headers on non English version of Windows where the 
+	local language versions of these strings would end up being used. Thanks to 
+	feedback at the codeproject page for the code (specifically
+	<a href="http://www.codeproject.com/internet/csmtpconn.asp?df=100&forumid=472&mpp=50&select=2054493#xx2054493xx">
+	http://www.codeproject.com/internet/csmtpconn.asp?df=100&amp;forumid=472&amp;mpp=50&amp;select=2054493#xx2054493xx</a> 
+	for reporting this issue).</li>
+</ul>
+<p><strong>V2.72 (23 December 2007</strong><b>)</b></p>
+<ul>
+	<li>Following feedback from Selwyn Stevens that the AUTH PLAIN mechanism was 
+	failing for him while trying to send mail using the gmail SMTP server, I 
+	decided to go back and re-research the area of SMTP authentication again&lt;g&gt;. 
+	It turns out that the way I was implementing AUTH PLAIN support was not the 
+	same as that specified in the relevant RFCs. The code has now been updated 
+	to be compliant with that specified in the RFC. I've confirmed the fix as 
+	operating correctly by using the gmail SMTP mail server at &quot;smtp.gmail.com&quot; 
+	on the SMTP/SSL port of 465. I've also taken the opportunity to update the 
+	documentation to include a section with links to various RFC's and web pages 
+	for background reference material</li>
+</ul>
+<p><strong>V2.73 (24 December 2007</strong><b>)</b></p>
+<ul>
+	<li>CPJNSMTPException::GetErrorMessage now uses the 
+	FORMAT_MESSAGE_IGNORE_INSERTS flag. For more information please see Raymond 
+	Chen's blog at
+	<a href="http://blogs.msdn.com/oldnewthing/archive/2007/11/28/6564257.aspx">
+	http://blogs.msdn.com/oldnewthing/archive/2007/11/28/6564257.aspx</a>. 
+	Thanks to Alexey Kuznetsov for reporting this issue.</li>
+	<li>All username and password temp strings are now securely destroyed using 
+	SecureZeroMemory.</li>
+</ul>
+<p><strong>V2.74 (31 December 2007</strong><b>)</b></p>
+<ul>
+	<li>Updated the sample app to clean compile on VC 2008</li>
+	<li>Fixed a x64 compile problems in RemoveCustomHeader &amp; 
+	AddMultipleAttachments.</li>
+	<li>Fixed a x64 compile problem in 
+	CPJNSMTPAppConfigurationDlg::CBAddStringAndData</li>
+	<li>CPJNSMTPException::GetErrorMessage now uses Checked::tcsncpy_s</li>
+	<li>Other Minor coding updates to CPJNSMTPException::GetErrorMessage</li>
+</ul>
+<p><strong>V2.75 (2 February 2008</strong><b>)</b></p>
+<ul>
+	<li>Updated copyright details.</li>
+	<li>Fixed a bug in CPJNSMTPMessage::FormDateHeader where sometimes an 
+	invalid &quot;Date:&quot; header is created. The bug will manifest itself for anywhere 
+	that is ahead of GMT, where the difference isn't a multiple of one hour. 
+	According to the Windows Time Zone applet, this bug would have occured in: 
+	Tehran, Kabul, Chennai, Kolkata, Mumbai, New Delhi, Sri Jayawardenepura, 
+	Kathmandu, Yangon, Adelaide and Darwin. Thanks to Selwyn Stevens for 
+	reporting this bug and providing the fix.</li>
+</ul>
+<p><strong>V2.76 (1 March 2008</strong><b>)</b></p>
+<ul>
+	<li>CPJNSMTP Priority enum values, specifically NO_PRIORITY have been 
+	renamed to avoid clashing with a #define of the same name in the Windows SDK 
+	header file WinSpool.h. The enum values for DSN_RETURN_TYPE have also been 
+	renamed to maintain consistency. Thanks to Zoran Buntic for reporting this 
+	issue. </li>
+	<li>Fixed compile problems related to the recent changes in the Base64 
+	class. Thanks to Mat Berchtold for reporting this issue.</li>
+	<li>Since the code is now for VC 2005 or later only, the code now uses the 
+	Base64 encoding support from the ATL atlenc.h header file. Thanks to Mat 
+	Berchtold for reporting this optimization. This means that client projects 
+	no longer need to include Base64.cpp/h in their projects.</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1100,7 +1226,7 @@ autoexec.bat file!&quot;;<br />
 <p>PJ Naughter<br />
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br />
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br />
-1 August 2007</p>
+1 March 2008</p>
 
 </body>
 

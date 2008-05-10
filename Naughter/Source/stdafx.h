@@ -28,6 +28,10 @@
 #include <afxmt.h>
 #include <afxcmn.h>
 
+// ATL headers
+#include <atlbase.h>
+#include <atlenc.h>
+
 // PSDK headers
 #include <wininet.h>
 #include <windns.h>		// DNS definitions and DNS API

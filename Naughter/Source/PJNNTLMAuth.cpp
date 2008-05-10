@@ -26,7 +26,7 @@ History: PJN / 05-09-2005 1. Function pointer to CompleteAuthToken is now constr
                           string. This avoids NTLM authentication issues when authenticating as a non-domain user with certain
                           mail servers. Thanks to Wouter Demuynck for reporting this issue.
 
-Copyright (c) 2005 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2005 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -57,12 +57,10 @@ to maintain a single distribution point for the source code.
 
 //////////////// Macros / Locals //////////////////////////////////////////////
 
-#if (_MFC_VER < 0x700)
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
-#endif
 #endif
 
 #ifndef SEC_SUCCESS
