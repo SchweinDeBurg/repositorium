@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="BCApplet"
-	ProjectGUID="{2244F7C1-5A6E-4B0F-BE20-0188BEDF73D8}"
+	Name="Brainchild"
+	ProjectGUID="{8E941715-D8DA-46A6-BA3A-37FA06367DE6}"
 	Keyword="MFCDLLProj">
 	<Platforms>
 		<Platform
@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="MBCS Debug|Win32"
-			OutputDirectory="Output\x86\Debug\MBCS"
-			IntermediateDirectory="Output\x86\Debug\MBCS\OBJ"
+			OutputDirectory="Output.2003\x86\Debug\MBCS"
+			IntermediateDirectory="Output.2003\x86\Debug\MBCS\OBJ"
 			ConfigurationType="2"
 			UseOfMFC="2"
 			CharacterSet="2">
@@ -41,16 +41,16 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/BCApplet.cpl"
+				OutputFile="$(OutDir)/Brainchild.dll"
 				Version="1.0"
 				LinkIncremental="1"
-				ModuleDefinitionFile=".\Source\BCApplet.def"
+				ModuleDefinitionFile=".\Source\Brainchild.def"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
-				ImportLibrary="$(OutDir)/BCApplet.lib"
+				ImportLibrary="$(OutDir)/Brainchild.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -80,8 +80,8 @@
 		</Configuration>
 		<Configuration
 			Name="MBCS Release|Win32"
-			OutputDirectory="Output\x86\Release\MBCS"
-			IntermediateDirectory="Output\x86\Release\MBCS\OBJ"
+			OutputDirectory="Output.2003\x86\Release\MBCS"
+			IntermediateDirectory="Output.2003\x86\Release\MBCS\OBJ"
 			ConfigurationType="2"
 			UseOfMFC="2"
 			CharacterSet="2">
@@ -106,17 +106,17 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/BCApplet.cpl"
+				OutputFile="$(OutDir)/Brainchild.dll"
 				Version="1.0"
 				LinkIncremental="1"
-				ModuleDefinitionFile=".\Source\BCApplet.def"
+				ModuleDefinitionFile=".\Source\Brainchild.def"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
 				SetChecksum="TRUE"
-				ImportLibrary="$(OutDir)/BCApplet.lib"
+				ImportLibrary="$(OutDir)/Brainchild.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -146,8 +146,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Debug|Win32"
-			OutputDirectory="Output\x86\Debug\Unicode"
-			IntermediateDirectory="Output\x86\Debug\Unicode\OBJ"
+			OutputDirectory="Output.2003\x86\Debug\Unicode"
+			IntermediateDirectory="Output.2003\x86\Debug\Unicode\OBJ"
 			ConfigurationType="2"
 			UseOfMFC="2"
 			CharacterSet="1">
@@ -175,16 +175,16 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/BCApplet.cpl"
+				OutputFile="$(OutDir)/Brainchild.dll"
 				Version="1.0"
 				LinkIncremental="1"
-				ModuleDefinitionFile=".\Source\BCApplet.def"
+				ModuleDefinitionFile=".\Source\Brainchild.def"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
-				ImportLibrary="$(OutDir)/BCApplet.lib"
+				ImportLibrary="$(OutDir)/Brainchild.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -214,8 +214,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Release|Win32"
-			OutputDirectory="Output\x86\Release\Unicode"
-			IntermediateDirectory="Output\x86\Release\Unicode\OBJ"
+			OutputDirectory="Output.2003\x86\Release\Unicode"
+			IntermediateDirectory="Output.2003\x86\Release\Unicode\OBJ"
 			ConfigurationType="2"
 			UseOfMFC="2"
 			CharacterSet="1">
@@ -240,17 +240,17 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/BCApplet.cpl"
+				OutputFile="$(OutDir)/Brainchild.dll"
 				Version="1.0"
 				LinkIncremental="1"
-				ModuleDefinitionFile=".\Source\BCApplet.def"
+				ModuleDefinitionFile=".\Source\Brainchild.def"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
 				SetChecksum="TRUE"
-				ImportLibrary="$(OutDir)/BCApplet.lib"
+				ImportLibrary="$(OutDir)/Brainchild.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -287,7 +287,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\Source\About.cpp">
+				RelativePath=".\Source\array.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -314,10 +314,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\BCApplet.def">
-			</File>
-			<File
-				RelativePath=".\Source\Block.cpp">
+				RelativePath=".\Source\bookmarks.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -344,7 +341,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\classname.cpp">
+				RelativePath=".\Source\Brainchild.def">
+			</File>
+			<File
+				RelativePath=".\Source\caret.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -371,7 +371,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\colorlist.cpp">
+				RelativePath=".\Source\clip.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -398,7 +398,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\CPL.CPP">
+				RelativePath=".\Source\clist.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -425,7 +425,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\DATETIME.CPP">
+				RelativePath=".\Source\commands.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -452,7 +452,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\FILES.CPP">
+				RelativePath=".\Source\create.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -479,7 +479,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\General.cpp">
+				RelativePath=".\Source\cursor.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -506,7 +506,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\hardcoded.cpp">
+				RelativePath=".\Source\custcntl.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -533,7 +533,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\INDENT.CPP">
+				RelativePath=".\Source\date.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -560,7 +560,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\insertedit.cpp">
+				RelativePath=".\Source\dispatch.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -587,7 +587,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\KEYBOARD.CPP">
+				RelativePath=".\Source\dll.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -614,7 +614,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\KEYREC.CPP">
+				RelativePath=".\Source\edit.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -641,7 +641,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\KEYWORDS.CPP">
+				RelativePath=".\Source\goto.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -668,7 +668,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\Kwedit.cpp">
+				RelativePath=".\Source\hyperlink.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -695,7 +695,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\MAIN.CPP">
+				RelativePath=".\Source\indent.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -722,7 +722,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\optiontree.cpp">
+				RelativePath=".\Source\io.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -749,7 +749,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\PAGE.CPP">
+				RelativePath=".\Source\keyboard.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -776,7 +776,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\PRINTER.CPP">
+				RelativePath=".\Source\marks.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -803,7 +803,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\Run.cpp">
+				RelativePath=".\Source\match.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -830,7 +830,358 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\stdafx.cpp">
+				RelativePath=".\Source\messagebox.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\misc.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\mouse.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\nofrag.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\ole.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\parser.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\parserlist.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\printer.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\prop.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\registry.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\render.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\scrollers.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\search.c">
+				<FileConfiguration
+					Name="MBCS Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\stdafx.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -857,7 +1208,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\Syntax.cpp">
+				RelativePath=".\Source\text.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -884,7 +1235,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\TOOLBAR.CPP">
+				RelativePath=".\Source\thread.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -911,7 +1262,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\Treeview.cpp">
+				RelativePath=".\Source\tooltip.c">
 				<FileConfiguration
 					Name="MBCS Debug|Win32">
 					<Tool
@@ -943,88 +1294,31 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath=".\Source\ABOUT.H">
+				RelativePath=".\Source\brainchild.h">
 			</File>
 			<File
-				RelativePath=".\Source\Bcc.h">
+				RelativePath=".\Source\BrainchildCtrlMFC.h">
 			</File>
 			<File
-				RelativePath=".\Source\BLOCK.H">
+				RelativePath=".\Source\BrainchildCtrlWTL.h">
 			</File>
 			<File
-				RelativePath=".\Source\classname.h">
+				RelativePath=".\Source\defs.h">
 			</File>
 			<File
-				RelativePath=".\Source\colorlist.h">
+				RelativePath=".\Source\LangRes.rh">
 			</File>
 			<File
-				RelativePath=".\Source\DATETIME.H">
-			</File>
-			<File
-				RelativePath=".\Source\DEFS.H">
-			</File>
-			<File
-				RelativePath=".\Source\FILES.H">
-			</File>
-			<File
-				RelativePath=".\Source\GENERAL.H">
-			</File>
-			<File
-				RelativePath=".\Source\hardcoded.h">
-			</File>
-			<File
-				RelativePath=".\Source\INDENT.H">
-			</File>
-			<File
-				RelativePath=".\Source\insertedit.h">
-			</File>
-			<File
-				RelativePath=".\Source\KEYBOARD.H">
-			</File>
-			<File
-				RelativePath=".\Source\KEYREC.H">
-			</File>
-			<File
-				RelativePath=".\Source\KEYWORDS.H">
-			</File>
-			<File
-				RelativePath=".\Source\Kwedit.h">
-			</File>
-			<File
-				RelativePath=".\Source\LIST.H">
-			</File>
-			<File
-				RelativePath=".\Source\MAIN.H">
+				RelativePath=".\Source\list.h">
 			</File>
 			<File
 				RelativePath=".\Source\nofrag.h">
 			</File>
 			<File
-				RelativePath=".\Source\optiontree.h">
-			</File>
-			<File
-				RelativePath=".\Source\PAGE.H">
-			</File>
-			<File
-				RelativePath=".\Source\PRINTER.H">
-			</File>
-			<File
 				RelativePath=".\Source\Resource.h">
 			</File>
 			<File
-				RelativePath=".\Source\RUN.H">
-			</File>
-			<File
 				RelativePath=".\Source\stdafx.h">
-			</File>
-			<File
-				RelativePath=".\Source\SYNTAX.H">
-			</File>
-			<File
-				RelativePath=".\Source\TOOLBAR.H">
-			</File>
-			<File
-				RelativePath=".\Source\TREEVIEW.H">
 			</File>
 		</Filter>
 		<Filter
@@ -1032,60 +1326,28 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
-				RelativePath=".\Source\BinRes\ABOUT.ICO">
+				RelativePath=".\Source\Brainchild.rc">
 			</File>
 			<File
-				RelativePath=".\Source\BCApplet.rc">
+				RelativePath=".\Source\BinRes\DragSelection.cur">
 			</File>
 			<File
-				RelativePath=".\Source\BinRes\CLIST.BMP">
+				RelativePath=".\Source\BinRes\HyperLink.cur">
 			</File>
 			<File
-				RelativePath=".\Source\BinRes\datetime.ico">
+				RelativePath=".\Source\BinRes\Pattern.bmp">
 			</File>
 			<File
-				RelativePath=".\Source\BinRes\EMAIL.ICO">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\FILES.ICO">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\GENERAL.ICO">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\INDENTIO.ICO">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\keyboard.ico">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\KEYWORDS.BMP">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\main.bmp">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\MAIN.ICO">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\PRINTER.ICO">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\SYNTAX.ICO">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\toolbar.bmp">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\TREE.BMP">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\WWW.ICO">
+				RelativePath=".\Source\BinRes\SelectionPointer.cur">
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\Source\ChangeLog.txt">
-		</File>
+		<Filter
+			Name="Documentation"
+			Filter="">
+			<File
+				RelativePath=".\Documentation\Brainchild.chm">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

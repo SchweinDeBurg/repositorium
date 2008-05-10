@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="MBCS Debug|Win32"
-			OutputDirectory="Output\x86\Debug\MBCS"
-			IntermediateDirectory="Output\x86\Debug\MBCS\OBJ"
+			OutputDirectory="Output.2003\x86\Debug\MBCS"
+			IntermediateDirectory="Output.2003\x86\Debug\MBCS\OBJ"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
@@ -77,8 +77,8 @@
 		</Configuration>
 		<Configuration
 			Name="MBCS Release|Win32"
-			OutputDirectory="Output\x86\Release\MBCS"
-			IntermediateDirectory="Output\x86\Release\MBCS\OBJ"
+			OutputDirectory="Output.2003\x86\Release\MBCS"
+			IntermediateDirectory="Output.2003\x86\Release\MBCS\OBJ"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
@@ -140,8 +140,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Debug|Win32"
-			OutputDirectory="Output\x86\Debug\Unicode"
-			IntermediateDirectory="Output\x86\Debug\Unicode\OBJ"
+			OutputDirectory="Output.2003\x86\Debug\Unicode"
+			IntermediateDirectory="Output.2003\x86\Debug\Unicode\OBJ"
 			ConfigurationType="1"
 			CharacterSet="1">
 			<Tool
@@ -205,8 +205,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Release|Win32"
-			OutputDirectory="Output\x86\Release\Unicode"
-			IntermediateDirectory="Output\x86\Release\Unicode\OBJ"
+			OutputDirectory="Output.2003\x86\Release\Unicode"
+			IntermediateDirectory="Output.2003\x86\Release\Unicode\OBJ"
 			ConfigurationType="1"
 			CharacterSet="1">
 			<Tool
