@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="InfoBar"
-	ProjectGUID="{3AB24FD8-2732-4BF9-88BD-4DA55A38CF98}"
+	Name="ADO"
+	ProjectGUID="{E8242B19-BA49-4336-94CA-4F8658DD319F}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="MBCS Debug|Win32"
-			OutputDirectory="Output\x86\Debug\MBCS"
-			IntermediateDirectory="Output\x86\Debug\MBCS\OBJ"
+			OutputDirectory="Output.2003\x86\Debug\MBCS"
+			IntermediateDirectory="Output.2003\x86\Debug\MBCS\OBJ"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
@@ -40,11 +40,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/OPT:NOWIN98 /IGNORE:4089"
-				OutputFile="$(OutDir)/InfoBar.exe"
+				OutputFile="$(OutDir)/ADO.exe"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/InfoBar.pdb"
+				ProgramDatabaseFile="$(OutDir)/ADO.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -77,8 +77,8 @@
 		</Configuration>
 		<Configuration
 			Name="MBCS Release|Win32"
-			OutputDirectory="Output\x86\Release\MBCS"
-			IntermediateDirectory="Output\x86\Release\MBCS\OBJ"
+			OutputDirectory="Output.2003\x86\Release\MBCS"
+			IntermediateDirectory="Output.2003\x86\Release\MBCS\OBJ"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
@@ -103,7 +103,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/OPT:NOWIN98 /IGNORE:4089"
-				OutputFile="$(OutDir)/InfoBar.exe"
+				OutputFile="$(OutDir)/ADO.exe"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="FALSE"
@@ -140,8 +140,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Debug|Win32"
-			OutputDirectory="Output\x86\Debug\Unicode"
-			IntermediateDirectory="Output\x86\Debug\Unicode\OBJ"
+			OutputDirectory="Output.2003\x86\Debug\Unicode"
+			IntermediateDirectory="Output.2003\x86\Debug\Unicode\OBJ"
 			ConfigurationType="1"
 			CharacterSet="1">
 			<Tool
@@ -168,11 +168,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/OPT:NOWIN98 /IGNORE:4089"
-				OutputFile="$(OutDir)/InfoBar.exe"
+				OutputFile="$(OutDir)/ADO.exe"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/InfoBar.pdb"
+				ProgramDatabaseFile="$(OutDir)/ADO.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -205,8 +205,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Release|Win32"
-			OutputDirectory="Output\x86\Release\Unicode"
-			IntermediateDirectory="Output\x86\Release\Unicode\OBJ"
+			OutputDirectory="Output.2003\x86\Release\Unicode"
+			IntermediateDirectory="Output.2003\x86\Release\Unicode\OBJ"
 			ConfigurationType="1"
 			CharacterSet="1">
 			<Tool
@@ -231,7 +231,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/OPT:NOWIN98 /IGNORE:4089"
-				OutputFile="$(OutDir)/InfoBar.exe"
+				OutputFile="$(OutDir)/ADO.exe"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="FALSE"
@@ -342,22 +342,10 @@
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 			<File
+				RelativePath=".\Source\ADO.rc">
+			</File>
+			<File
 				RelativePath=".\Source\BinRes\AppIcon.ico">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\ico00001.ico">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\icon.ico">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\icon1.ico">
-			</File>
-			<File
-				RelativePath=".\Source\InfoBar.rc">
-			</File>
-			<File
-				RelativePath=".\Source\BinRes\left.ico">
 			</File>
 		</Filter>
 	</Files>

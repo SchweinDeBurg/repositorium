@@ -1,34 +1,34 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Naughter", "Naughter\Naughter71.vcproj", "{2EBC127D-357A-4258-B19F-78466C0C467B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Naughter", "Naughter\Naughter.2003.vcproj", "{2EBC127D-357A-4258-B19F-78466C0C467B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CodeProject", "CodeProject\CodeProject71.vcproj", "{55F49127-D37F-4C01-861A-55ACC3A71242}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CodeProject", "CodeProject\CodeProject.2003.vcproj", "{55F49127-D37F-4C01-861A-55ACC3A71242}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AfxGadgets", "AfxGadgets\AfxGadgets71.vcproj", "{6B7749EE-74DF-496C-9EBE-0E6C73CAA50B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AfxGadgets", "AfxGadgets\AfxGadgets.2003.vcproj", "{6B7749EE-74DF-496C-9EBE-0E6C73CAA50B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib71.vcproj", "{4B70F6A5-35AE-4CEE-815C-20E1F31B5F5E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.2003.vcproj", "{4B70F6A5-35AE-4CEE-815C-20E1F31B5F5E}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZipArchive", "ZipArchive\ZipArchive71.vcproj", "{EFD1CCD3-3C31-4BDE-976A-B45A08FBFF83}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZipArchive", "ZipArchive\ZipArchive.2003.vcproj", "{EFD1CCD3-3C31-4BDE-976A-B45A08FBFF83}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4B70F6A5-35AE-4CEE-815C-20E1F31B5F5E} = {4B70F6A5-35AE-4CEE-815C-20E1F31B5F5E}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClassLib", "Jan_van_den_Baard\ClassLib\ClassLib.vcproj", "{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClassLib", "Jan_van_den_Baard\ClassLib\ClassLib.2003.vcproj", "{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Brainchild", "Jan_van_den_Baard\Brainchild\Brainchild.vcproj", "{8E941715-D8DA-46A6-BA3A-37FA06367DE6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Brainchild", "Jan_van_den_Baard\Brainchild\Brainchild.2003.vcproj", "{8E941715-D8DA-46A6-BA3A-37FA06367DE6}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BCApplet", "Jan_van_den_Baard\BCApplet\BCApplet.vcproj", "{2244F7C1-5A6E-4B0F-BE20-0188BEDF73D8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BCApplet", "Jan_van_den_Baard\BCApplet\BCApplet.2003.vcproj", "{2244F7C1-5A6E-4B0F-BE20-0188BEDF73D8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8E941715-D8DA-46A6-BA3A-37FA06367DE6} = {8E941715-D8DA-46A6-BA3A-37FA06367DE6}
 		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}

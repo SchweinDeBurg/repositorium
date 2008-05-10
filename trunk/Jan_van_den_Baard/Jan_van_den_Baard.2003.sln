@@ -1,15 +1,15 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BCApplet", "BCApplet\BCApplet.vcproj", "{2244F7C1-5A6E-4B0F-BE20-0188BEDF73D8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BCApplet", "BCApplet\BCApplet.2003.vcproj", "{2244F7C1-5A6E-4B0F-BE20-0188BEDF73D8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8E941715-D8DA-46A6-BA3A-37FA06367DE6} = {8E941715-D8DA-46A6-BA3A-37FA06367DE6}
 		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Brainchild", "Brainchild\Brainchild.vcproj", "{8E941715-D8DA-46A6-BA3A-37FA06367DE6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Brainchild", "Brainchild\Brainchild.2003.vcproj", "{8E941715-D8DA-46A6-BA3A-37FA06367DE6}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClassLib", "ClassLib\ClassLib.vcproj", "{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClassLib", "ClassLib\ClassLib.2003.vcproj", "{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
