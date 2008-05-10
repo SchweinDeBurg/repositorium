@@ -3,7 +3,7 @@ Module : PJNSMTP.H
 Purpose: Defines the interface for a MFC class encapsulation of the SMTP protocol
 Created: PJN / 22-05-1998
 
-Copyright (c) 1998 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -29,37 +29,14 @@ my explicit written consent.
 #ifndef __PJNSMTP_H__
 #define __PJNSMTP_H__
 
-#ifndef __AFXTEMPL_H__
-#pragma message("To avoid this message, please put afxtempl.h in your PCH (usually stdafx.h)")
-#include <afxtempl.h>
-#endif
-
-#ifndef _WINSOCKAPI_
-#pragma message("To avoid this message, please put afxsock.h or winsock.h in your PCH (usually stdafx.h)")
-#include <WinSock.h>
-#endif
-
-#ifndef __AFXPRIV_H__
-#pragma message("To avoid this message, please put afxpriv.h in your PCH (usually stdafx.h)")
-#include <afxpriv.h>
-#endif
-
 #ifndef CPJNSMTP_NOMXLOOKUP
 #ifndef _WINDNS_INCLUDED_
-#pragma message("To avoid this message, please put WinDNS.h in your PCH (usually stdafx.h)")
-#include <WinDNS.h> //If you get a compilation error on this line, then you need to download, install and configure the MS Platform SDK if you are compiling the code under Visual C++ 6
+#pragma message("To avoid this message, please put WinDNS.h in your pre compiled header (usually stdafx.h)")
+#include <WinDNS.h>
 #endif
 #endif
 
-#pragma warning(push, 3) //Avoid all the level 4 warnings in STL
-#ifndef _STRING_
-#pragma message("To avoid this message, please put string in your PCH (usually stdafx.h)")
-#include <string>
-#endif
-#pragma warning(pop)
-
-#include "SocMFC.h" //If you get a compilation error about this missing header file, then you need to download my CWSocket and Base64 classes from http://www.naughter.com/w3mfc.html
-#include "Base64.h" //If you get a compilation error about this missing header file, then you need to download my CWSocket and Base64 classes from http://www.naughter.com/w3mfc.html
+#include "SocMFC.h" //If you get a compilation error about this missing header file, then you need to download my CWSocket class from http://www.naughter.com/w3mfc.html
 #ifndef CPJNSMTP_NOSSL
 #include "OpenSSLMfc.h" //If you get a compilation error about this missing header file, then you need to download my CSSLSocket classes from http://www.naughter.com/w3mfc.html
 #endif
@@ -72,28 +49,12 @@ my explicit written consent.
 #define PJNSMTP_EXT_CLASS
 #endif
 
-#if defined(__INTEL_COMPILER)
-// remark #383: value copied to temporary, reference to temporary used
-#pragma warning(disable: 383)
-// remark #271: trailing comma is nonstandard
-#pragma warning(disable: 271)
-// remark #444: destructor for base class is not virtual
-#pragma warning(disable: 444)
-#endif	// __INTEL_COMPILER
-
-//Constants
-const DWORD PJNSMTP_DSN_NOT_SPECIFIED = 0xFFFFFFFF; //We are not specifying if we should be using a DSN or not  
-const DWORD PJNSMTP_DSN_SUCCESS       = 0x01;       //A DSN should be sent back for messages which were successfully delivered
-const DWORD PJNSMTP_DSN_FAILURE       = 0x02;       //A DSN should be sent back for messages which was not successfully delivered
-const DWORD PJNSMTP_DSN_DELAY         = 0x04;       //A DSN should be sent back for messages which were delayed
-
-
 
 /////////////////////////////// Classes ///////////////////////////////////////
 
-///////////// Class which makes using CBase64 class easier ////////////////////
+///////////// Class which makes using the ATL base64 encoding functions somewhat easier
 
-class PJNSMTP_EXT_CLASS CPJNSMPTBase64 : public CBase64
+class PJNSMTP_EXT_CLASS CPJNSMPTBase64
 {
 public:
 //Constructors / Destructors
@@ -131,7 +92,7 @@ public:
 	virtual BOOL GetErrorMessage(LPTSTR lpstrError, UINT nMaxError,	PUINT pnHelpContext = NULL);
 	CString GetErrorMessage();
 
-//Data members
+//Members variables
 	HRESULT m_hr;
   CString m_sLastResponse;
 
@@ -200,34 +161,29 @@ public:
   CString GetBoundary() const { return m_sBoundary; };
 
 //Misc methods
-  BOOL GetHeader(LPSTR& pszHeader, int& nHeaderSize);
-  BOOL GetBody(BOOL bDoSingleDotFix, LPSTR& pszBody, int& nBodySize);
-  BOOL GetFooter(LPSTR& pszFooter, int& nFooterSize);
-  void FreeHeader(LPSTR& pszHeader);
-  void FreeBody(LPSTR& pszBody);
-  void FreeFooter(LPSTR& pszFooter);
+  CStringA          GetHeader();
+  CStringA          GetBody(BOOL bDoSingleDotFix);
+  CStringA          GetFooter();
   CPJNSMTPBodyPart* FindFirstBodyPart(const CString sContentType);
-  void SetQuotedPrintable(BOOL bValue) { m_bQuotedPrintable = bValue; };
-  BOOL GetQuotedPrintable() const { return m_bQuotedPrintable; };
-  void SetBase64(BOOL bValue) { m_bBase64 = bValue; };
-  BOOL GetBase64() const { return m_bBase64; };
-  void SetMaxAttachmentSize(DWORD dwSize) { m_dwMaxAttachmentSize = dwSize; };
-  DWORD GetMaxAttachementSize() const { return m_dwMaxAttachmentSize; };
+  void              SetQuotedPrintable(BOOL bValue) { m_bQuotedPrintable = bValue; };
+  BOOL              GetQuotedPrintable() const { return m_bQuotedPrintable; };
+  void              SetBase64(BOOL bValue) { m_bBase64 = bValue; };
+  BOOL              GetBase64() const { return m_bBase64; };
 
 //Child Body part methods
-	int            GetNumberOfChildBodyParts() const;
-	int            AddChildBodyPart(CPJNSMTPBodyPart& bodyPart);
-	void           RemoveChildBodyPart(int nIndex);
-	CPJNSMTPBodyPart* GetChildBodyPart(int nIndex);
+	INT_PTR           GetNumberOfChildBodyParts() const;
+	INT_PTR           AddChildBodyPart(CPJNSMTPBodyPart& bodyPart);
+	void              RemoveChildBodyPart(INT_PTR nIndex);
+	CPJNSMTPBodyPart* GetChildBodyPart(INT_PTR nIndex);
   CPJNSMTPBodyPart* GetParentBodyPart();
 
 //Static methods
-  static std::string QuotedPrintableEncode(const std::string& sText);
-  static int         ConvertToUTF8(const CString& in, std::string &);
-  static int         UnicodeToUTF8(LPCWSTR wszSrc, int nSrc, LPSTR szDest,int nDest);
+  static CStringA    QuotedPrintableEncode(const CStringA& sText);
+  static CStringA    ConvertToUTF8(const CString& sIn);
   static char        HexDigit(int nDigit);
-  static std::string HeaderEncode(const CString& sText, const CString& sCharset);
-  static std::string QEncode(LPCSTR sText, LPCSTR sCharset);
+  static CStringA    HeaderEncode(const CString& sText, const CString& sCharset);
+  static CStringA    QEncode(LPCSTR sText, LPCSTR sCharset);
+  static CString     CreateGUID();
 
 protected:
 //Member variables
@@ -245,10 +201,9 @@ protected:
   CString                                       m_sBoundary;           //String which is used as the body separator for all child mime parts
   BOOL                                          m_bQuotedPrintable;    //Should the body text by quoted printable encoded
   BOOL                                          m_bBase64;             //Should the body be base64 encoded. Overrides "m_bQuotedPrintable"
-  DWORD                                         m_dwMaxAttachmentSize; //The maximum size this body part can be if it is a file attachment (Defaults to 50 MB)
 
 //Methods
-  static void FixSingleDotA(std::string& sBody);
+  static void FixSingleDotA(CStringA& sBody);
   static void FixSingleDotT(CString& sBody);
 
   friend class CPJNSMTPMessage;
@@ -280,48 +235,52 @@ public:
 	};
   enum PRIORITY 
   { 
-    NO_PRIORITY     = 0, 
-    LOW_PRIORITY    = 1, 
-    NORMAL_PRIORITY = 2, 
-    HIGH_PRIORITY   = 3 
+    NoPriority     = 0, 
+    LowPriority    = 1, 
+    NormalPriority = 2, 
+    HighPriority   = 3 
   };
   enum DSN_RETURN_TYPE
   {
-    HEADERS_ONLY = 0,
-    FULL_EMAIL = 1
+    HeadersOnly = 0,
+    FullEmail = 1
+  };
+  enum DNS_FLAGS
+  {
+    DSN_NOT_SPECIFIED = 0xFFFFFFFF, //We are not specifying if we should be using a DSN or not  
+    DSN_SUCCESS       = 0x01,       //A DSN should be sent back for messages which were successfully delivered
+    DSN_FAILURE       = 0x02,       //A DSN should be sent back for messages which was not successfully delivered
+    DSN_DELAY         = 0x04        //A DSN should be sent back for messages which were delayed
   };
 
 //Constructors / Destructors
   CPJNSMTPMessage();
   CPJNSMTPMessage(const CPJNSMTPMessage& message);
   CPJNSMTPMessage& operator=(const CPJNSMTPMessage& message);
-  virtual ~CPJNSMTPMessage();
 
 //Recipient support
-	int                  GetNumberOfRecipients(RECIPIENT_TYPE RecipientType = TO) const;
-	int                  AddRecipient(CPJNSMTPAddress& recipient, RECIPIENT_TYPE RecipientType = TO);
-	void                 RemoveRecipient(int nIndex, RECIPIENT_TYPE RecipientType = TO);
-	CPJNSMTPAddress*     GetRecipient(int nIndex, RECIPIENT_TYPE RecipientType = TO);
-  BOOL                 AddMultipleRecipients(const CString& sRecipients, RECIPIENT_TYPE RecipientType);
-  static int           ParseMultipleRecipients(const CString& sRecipients, CPJNSMTPAddressArray& recipients);
+	CPJNSMTPAddressArray m_To;
+	CPJNSMTPAddressArray m_CC;
+	CPJNSMTPAddressArray m_BCC;
+  static INT_PTR       ParseMultipleRecipients(const CString& sRecipients, CPJNSMTPAddressArray& recipients);
 
 //Body Part support
-  int                  GetNumberOfBodyParts() const;
-	int                  AddBodyPart(CPJNSMTPBodyPart& bodyPart);
-	void                 RemoveBodyPart(int nIndex);
-	CPJNSMTPBodyPart*    GetBodyPart(int nIndex);
+  INT_PTR              GetNumberOfBodyParts() const;
+	INT_PTR              AddBodyPart(CPJNSMTPBodyPart& bodyPart);
+	void                 RemoveBodyPart(INT_PTR nIndex);
+	CPJNSMTPBodyPart*    GetBodyPart(INT_PTR nIndex);
   int                  AddMultipleAttachments(const CString& sAttachments);
 
 //Misc methods
-  virtual std::string  getHeader();
+  virtual CStringA     GetHeader();
   void                 AddTextBody(const CString& sBody);
   CString              GetTextBody();
   void                 AddHTMLBody(const CString& sBody, const CString& sContentBase);
   CString              GetHTMLBody();
   void                 AddCustomHeader(const CString& sHeader);
   CString              GetCustomHeader(int nIndex);
-  int                  GetNumberOfCustomHeaders() const;
-  void                 RemoveCustomHeader(int nIndex);
+  INT_PTR              GetNumberOfCustomHeaders() const;
+  void                 RemoveCustomHeader(INT_PTR nIndex);
   void                 SetCharset(const CString& sCharset);
   CString              GetCharset() const;
   void                 SetMime(BOOL bMime);
@@ -345,13 +304,11 @@ protected:
 //Methods
   void        WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
   CString     ConvertHTMLToPlainText(const CString& sHtml);
+  virtual CString FormDateHeader();
 
 //Member variables
-	CArray<CPJNSMTPAddress*, CPJNSMTPAddress*&> m_ToRecipients;
-	CArray<CPJNSMTPAddress*, CPJNSMTPAddress*&> m_CCRecipients;
-	CArray<CPJNSMTPAddress*, CPJNSMTPAddress*&> m_BCCRecipients;
-  CStringArray                                m_CustomHeaders;
-  BOOL                                        m_bMime;
+  CStringArray m_CustomHeaders;
+  BOOL         m_bMime;
 
   friend class CPJNSMTPConnection;
 };
@@ -409,8 +366,8 @@ public:
   DWORD   GetTimeout() const { return m_dwTimeout; };
   void    SetTimeout(DWORD dwTimeout) { m_dwTimeout = dwTimeout; };
 	void    SendMessage(CPJNSMTPMessage& Message);
-  void    SendMessage(const CString& sMessageOnFile, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, CString& sENVID, DWORD dwSendBufferSize = 4096, DWORD DSN = PJNSMTP_DSN_NOT_SPECIFIED, CPJNSMTPMessage::DSN_RETURN_TYPE DSNReturnType = CPJNSMTPMessage::HEADERS_ONLY);
-  void    SendMessage(BYTE* pMessage, DWORD dwMessageSize, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, CString& sENVID, DWORD dwSendBufferSize = 4096, DWORD DSN = PJNSMTP_DSN_NOT_SPECIFIED, CPJNSMTPMessage::DSN_RETURN_TYPE DSNReturnType = CPJNSMTPMessage::HEADERS_ONLY);
+  void    SendMessage(const CString& sMessageOnFile, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, CString& sENVID, DWORD dwSendBufferSize = 4096, DWORD DSN = CPJNSMTPMessage::DSN_NOT_SPECIFIED, CPJNSMTPMessage::DSN_RETURN_TYPE DSNReturnType = CPJNSMTPMessage::HeadersOnly);
+  void    SendMessage(BYTE* pMessage, DWORD dwMessageSize, CPJNSMTPAddressArray& Recipients, const CPJNSMTPAddress& From, CString& sENVID, DWORD dwSendBufferSize = 4096, DWORD DSN = CPJNSMTPMessage::DSN_NOT_SPECIFIED, CPJNSMTPMessage::DSN_RETURN_TYPE DSNReturnType = CPJNSMTPMessage::HeadersOnly);
   void    SetHeloHostname(const CString& sHostname);
   CString GetHeloHostName() const { return m_sHeloHostname; };
 
@@ -463,7 +420,7 @@ protected:
   typedef DNSQUERY* LPDNSQUERY;
 #endif
 
-//methods
+//Methods
 	virtual void AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword);
   virtual void ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername, LPCTSTR pszPassword, AuthenticationMethod am);
   virtual void ConnectSMTP(LPCTSTR pszLocalName);
@@ -493,6 +450,11 @@ protected:
   int  _Receive(void *pBuffer, int nBuf);
   void _Close();
   BOOL _IsReadible(DWORD dwTimeout);
+  
+//Static methods
+  __forceinline static void SecureEmptyString(CStringA& sVal);
+  __forceinline static void SecureEmptyString(CStringW& sVal);
+  __forceinline static void SecureEmptyString(CT2A& sVal);
 
 //Member variables
 #ifndef CPJNSMTP_NOSSL
@@ -523,11 +485,5 @@ protected:
   LPDNSQUERY                  m_lpfnDnsQuery; 
 #endif
 };
-
-//Provide for backward compatability be defining CSMTPConnection as a preprocessor define
-//for CPJNSMTPConnection if we are not using the ATL Server's "CSMTPConnection" class.
-#ifndef __ATLSMTPCONNECTION_H__
-#define CSMTPConnection CPJNSMTPConnection
-#endif
 
 #endif //__PJNSMTP_H__
