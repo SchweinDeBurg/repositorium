@@ -172,10 +172,6 @@ void CStringsXML::GetXMLpath(CString& strDest)
 
 BOOL CStringsXML::ParseFile(class CPugXmlParser* pParser)
 {
-	using CFile::modeCreate;
-	using CFile::modeWrite;
-	using CFile::shareExclusive;
-
 	CString strFileXML;
 
 	ASSERT(pParser != NULL);
@@ -220,7 +216,7 @@ BOOL CStringsXML::ParseFile(class CPugXmlParser* pParser)
 			DWORD cbSize = ::SizeofResource(hInstRes, hResInfo);
 			try
 			{
-				CFile fileXML(strFileXML, modeCreate | modeWrite | shareExclusive);
+				CFile fileXML(strFileXML, CFile::modeCreate | CFile::modeWrite | CFile::shareExclusive);
 				fileXML.Write(pvResData, cbSize);
 				fileXML.Flush();
 				fileXML.Close();

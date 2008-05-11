@@ -113,7 +113,7 @@ void CChartSurfaceSerie::DrawAll(CDC* pDC)
 
 int CChartSurfaceSerie::DrawLegend(CDC* pDC, CPoint UpperLeft, int BitmapWidth) const
 {
-	if (ATL::CA2T(m_strSerieName.c_str()) == _T(""))
+	if (m_strSerieName.length() == 0)
 		return 0;
 
 	//Draw Text

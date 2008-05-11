@@ -89,10 +89,6 @@ CHotKeysXML::~CHotKeysXML(void)
 
 BOOL CHotKeysXML::CreateTable(LPCTSTR pszTableName)
 {
-	using CFile::modeCreate;
-	using CFile::modeWrite;
-	using CFile::shareExclusive;
-
 	CString strFileXML;
 	ACCEL_ARRAY arrAccel;
 
@@ -138,7 +134,7 @@ BOOL CHotKeysXML::CreateTable(LPCTSTR pszTableName)
 			DWORD cbSize = ::SizeofResource(hInstRes, hResInfo);
 			try
 			{
-				CFile fileXML(strFileXML, modeCreate | modeWrite | shareExclusive);
+				CFile fileXML(strFileXML, CFile::modeCreate | CFile::modeWrite | CFile::shareExclusive);
 				fileXML.Write(pvResData, cbSize);
 				fileXML.Flush();
 				fileXML.Close();

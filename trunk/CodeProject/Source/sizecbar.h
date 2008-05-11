@@ -164,7 +164,11 @@ protected:
     afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
     afx_msg void OnNcPaint();
     afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR* lpncsp);
+#if (_MFC_VER < 0x0900)
     afx_msg UINT OnNcHitTest(CPoint point);
+#else
+    afx_msg LRESULT OnNcHitTest(CPoint point);
+#endif   // _MFC_VER
     afx_msg void OnCaptureChanged(CWnd *pWnd);
     afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
     afx_msg void OnLButtonUp(UINT nFlags, CPoint point);

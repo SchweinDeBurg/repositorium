@@ -209,7 +209,7 @@ public:
 	BOOL AddField( LPCTSTR lpstrIndexName, enum DataType Type, int nLength = 0 );
 	void SetPrimarKey( BOOL bPrimary = TRUE );
 
-	inline GetIndexPtr() { return m_pIndex; }
+	inline ADOX::_IndexPtr GetIndexPtr() { return m_pIndex; }
 
 protected:
 	// Data.

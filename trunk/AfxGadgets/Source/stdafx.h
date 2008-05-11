@@ -30,11 +30,21 @@
 // identifier was truncated in the debug information
 #pragma warning(disable: 4786)
 
+// C4996: function or variable may be unsafe
+#if (_MSC_VER > 1310)
+#define _CRT_SECURE_NO_WARNINGS
+#endif   // _MSC_VER
+
+#if (_MSC_VER > 1310)
+// use WinXP/IE6 features
+#define _WIN32_WINNT 0x0501
+#define _WIN32_IE 0x0601
+#else
 // use Win98/NT4 features
 #define _WIN32_WINNT 0x0400
+#endif   // _MSC_VER
 
-#if (_MSC_VER < 1300)
-#else
+#if (_MSC_VER >= 1200)
 #define _WIN32_WINDOWS 0x0490
 #endif	// _MSC_VER
 

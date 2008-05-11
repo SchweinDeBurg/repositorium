@@ -15,8 +15,8 @@ public:
 	virtual ~Page();
 
 	// Implementation.
-	inline SetIcon( UINT nIcon ) { m_nIcon = nIcon; }
-	inline GetIcon() { return m_nIcon; }
+	inline void SetIcon( UINT nIcon ) { m_nIcon = nIcon; }
+	inline UINT GetIcon() { return m_nIcon; }
 	void HandleEditControl( UINT nNotifyCode, UINT nCtrlID, LPTSTR *pStrPtr, BOOL bChange = TRUE );
 	
 	// Overidables.

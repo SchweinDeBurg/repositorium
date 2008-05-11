@@ -31,6 +31,10 @@
 	#endif
 #endif
 
+#if (_MSC_VER > 1310)
+	#define _WIN32_IE 0x0601
+#endif   // _MSC_VER
+
 // uncomment to disable compiling standard error messages into the library
 #define ZIP_ENABLE_ERROR_DESCRIPTION
 

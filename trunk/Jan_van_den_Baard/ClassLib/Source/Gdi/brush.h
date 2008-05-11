@@ -37,8 +37,8 @@ public:
 
 	// Operator overloads.
 	operator HBRUSH() const;
-	operator=( const ClsBrush& cBrush );
-	operator=( HBRUSH hBrush );
+	BOOL operator=( const ClsBrush& cBrush );
+	BOOL operator=( HBRUSH hBrush );
 };
 
 #endif // _BRUSH_H_

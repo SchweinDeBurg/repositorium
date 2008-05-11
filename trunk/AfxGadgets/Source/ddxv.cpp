@@ -50,9 +50,14 @@ void FailMinMaxWithFormat(CDataExchange* pDX, LONGLONG minVal, LONGLONG maxVal, 
 	}
 
 	TCHAR szMin[64] = { 0 };
-	_stprintf(szMin, pszFormat, minVal);
 	TCHAR szMax[64] = { 0 };
+#if (_MSC_VER < 1500)
+	_stprintf(szMin, pszFormat, minVal);
 	_stprintf(szMax, pszFormat, maxVal);
+#else
+	_stprintf_s(szMin, _countof(szMin), pszFormat, minVal);
+	_stprintf_s(szMax, _countof(szMax), pszFormat, maxVal);
+#endif   // _MSC_VER
 	CString strPrompt;
 	AfxFormatString2(strPrompt, idsPrompt, szMin, szMax);
 	AfxMessageBox(strPrompt, MB_ICONEXCLAMATION, idsPrompt);
@@ -80,7 +85,11 @@ void AFXAPI DDX_Text(CDataExchange* pDX, int nIDC, WORD& value)
 		}
 	}
 	else {
+#if (_MSC_VER < 1500)
 		_stprintf(szText, _T("%hu"), value);
+#else
+		_stprintf_s(szText, _countof(szText), _T("%hu"), value);
+#endif   // _MSC_VER
 		AfxSetWindowText(hEditWnd, szText);
 	}
 }

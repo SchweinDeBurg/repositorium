@@ -128,7 +128,11 @@ protected:
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+#if (_MFC_VER < 0x0900)
 	afx_msg UINT OnNcHitTest(CPoint point);
+#else
+	afx_msg LRESULT OnNcHitTest(CPoint point);
+#endif   // _MFC_VER
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

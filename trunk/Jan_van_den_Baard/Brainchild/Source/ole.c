@@ -274,7 +274,7 @@ static LRESULT STDMETHODCALLTYPE IDropSource_GiveFeedback( LPDROPSOURCE lpds, DW
 /*
  *	IDropTarget interface.
  */
-static MoveCaret( LPCLASSDATA lpcd )
+static void MoveCaret( LPCLASSDATA lpcd )
 {
 	/*
 	 *	Change caret position.

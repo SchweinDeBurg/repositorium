@@ -113,7 +113,11 @@ static BOOL CALLBACK GotoProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 			/*
 			 *	Format min/max display string.
 			 */
+#if (_MSC_VER < 1500)
 			_stprintf( szBuffer, GetString( IDS_GOTO_MINMAX ), Brainchild_ArrayGetSize( lpcd->lpLines ));
+#else
+			_stprintf_s( szBuffer, _countof( szBuffer ), GetString( IDS_GOTO_MINMAX ), Brainchild_ArrayGetSize( lpcd->lpLines ));
+#endif   // _MSC_VER
 
 			/*
 			 *	Setup the up/down rangle.

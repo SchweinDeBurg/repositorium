@@ -1329,7 +1329,11 @@ public:
 		if(i > -1)
 		{
 			TCHAR szValue[32] = {0};
+#if (_MSC_VER < 1500)
 			_stprintf(szValue,_T("%ld"),newVal);
+#else
+			_stprintf_s(szValue,_countof(szValue),_T("%ld"),newVal);
+#endif   // _MSC_VER
 			return SetAttributeValue((UINT_PTR)i,szValue);
 		}
 		else return AddAttribute(szName,newVal);
@@ -1347,7 +1351,11 @@ public:
 		if(i > -1)
 		{
 			TCHAR szValue[32] = {0};
+#if (_MSC_VER < 1500)
 			_stprintf(szValue,_T("%lf"),newVal);
+#else
+			_stprintf_s(szValue,_countof(szValue),_T("%lf"),newVal);
+#endif   // _MSC_VER
 			return SetAttributeValue((UINT_PTR)i,szValue);
 		}
 		else return AddAttribute(szName,newVal);
@@ -1449,7 +1457,11 @@ public:
 	{
 		if(!szName) return FALSE;
 		TCHAR szValue[32] = {0};
+#if (_MSC_VER < 1500)
 		_stprintf(szValue,_T("%ld"),lValue);
+#else
+		_stprintf_s(szValue,_countof(szValue),_T("%ld"),lValue);
+#endif   // _MSC_VER
 		return AddAttribute(szName,szValue);
 	}
 
@@ -1462,7 +1474,11 @@ public:
 	{
 		if(!szName) return FALSE;
 		TCHAR szValue[32] = {0};
+#if (_MSC_VER < 1500)
 		_stprintf(szValue,_T("%lf"),dValue);
+#else
+		_stprintf_s(szValue,_countof(szValue),_T("%lf"),dValue);
+#endif   // _MSC_VER
 		return AddAttribute(szName,szValue);
 	}
 

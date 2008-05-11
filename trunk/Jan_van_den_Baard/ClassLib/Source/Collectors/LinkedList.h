@@ -262,13 +262,13 @@ public:
 	}
 
 	// Same as AddTail().
-	inline operator += ( TYPE *pNode )
+	inline void operator += ( TYPE *pNode )
 	{
 		AddTail( pNode );
 	}
 
 	// Same as Remove().
-	inline operator -= ( TYPE *pNode )
+	inline void operator -= ( TYPE *pNode )
 	{
 		Remove( pNode );
 	}

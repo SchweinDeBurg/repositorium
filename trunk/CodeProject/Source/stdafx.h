@@ -17,6 +17,11 @@
 // identifier was truncated in the debug information
 #pragma warning(disable: 4786)
 
+// C4996: function or variable may be unsafe
+#if (_MSC_VER > 1310)
+#define _CRT_SECURE_NO_WARNINGS
+#endif   // _MSC_VER
+
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
 
 #define _WIN32_WINNT 0x0500	// use Windows 2000 features

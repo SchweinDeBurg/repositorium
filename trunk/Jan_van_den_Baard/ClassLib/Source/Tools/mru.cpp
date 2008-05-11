@@ -122,7 +122,11 @@ BOOL ClsMRU::AddMRUEntry( LPCTSTR pszPath )
 
 	// Build name.
 	TCHAR szPath[ MAX_PATH + 4 ];
+#if (_MSC_VER < 1500)
 	_stprintf( szPath, _T( "&0 %s" ), pszPath );
+#else
+	_stprintf_s( szPath, _countof( szPath ), _T( "&0 %s" ), pszPath );
+#endif   // _MSC_VER
 
 	// Setup structure.
 	ClsMenuItemInfo mi;
@@ -268,7 +272,11 @@ BOOL ClsMRU::SaveMRUList()
 			if ( m_Menu.GetItemText( i, str, TRUE ))
 			{
 				// Build key name.
+#if (_MSC_VER < 1500)
 				_stprintf( szEntry, _T( "MRU%ld" ), i );
+#else
+				_stprintf_s( szEntry, _countof( szEntry ), _T( "MRU%ld" ), i );
+#endif   // _MSC_VER
 
 				// Set the key.
 				str = str.Right( str.GetStringLength() - 3 );
@@ -377,7 +385,11 @@ void ClsMRU::ClearMRUList()
 		for ( int i = 0; i < m_nMaxEntries; i++ )
 		{
 			// Build subkey name.
+#if (_MSC_VER < 1500)
 			_stprintf( szEntry, _T( "MRU%ld" ), i );
+#else
+			_stprintf_s( szEntry, _countof( szEntry ), _T( "MRU%ld" ), i );
+#endif   // _MSC_VER
 
 			// Delete it.
 			key.DeleteValue( szEntry );
@@ -390,11 +402,19 @@ BOOL ClsMRU::GetMRUEntry( int nNum, ClsString& str )
 {
 	// Build key name.
 	TCHAR szEntry[ 10 ];
+#if (_MSC_VER < 1500)
 	_stprintf( szEntry, _T( "MRU%ld" ), nNum );
+#else
+	_stprintf_s( szEntry, _countof( szEntry ), _T( "MRU%ld" ), nNum );
+#endif   // _MSC_VER
 
 	// Pre-contruct menu name.
 	TCHAR szPath[ MAX_PATH + 4 ];
+#if (_MSC_VER < 1500)
 	_stprintf( szPath, _T( "&%ld " ), nNum );
+#else
+	_stprintf_s( szPath, _countof( szPath ), _T( "&%ld " ), nNum );
+#endif   // _MSC_VER
 
 	// Open the key.
 	ClsRegKey key;

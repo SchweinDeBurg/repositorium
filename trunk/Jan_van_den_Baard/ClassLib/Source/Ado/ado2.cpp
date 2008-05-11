@@ -343,7 +343,7 @@ BOOL ClsADORecordset::GetFieldValue( LPCTSTR lpFieldName, double& dbValue )
 				// Corrected by José Carlos Martínez Galán
 				dbValue = vtFld.decVal.Lo32;
 				dbValue *= ( vtFld.decVal.sign == 128 )? -1 : 1;
-				dbValue /= pow( 10, vtFld.decVal.scale ); 
+				dbValue /= pow( 10.0, vtFld.decVal.scale ); 
 				break;
 
 			case VT_UI1:
@@ -399,7 +399,7 @@ BOOL ClsADORecordset::GetFieldValue( int nIndex, double& dbValue )
 				//Corrected by José Carlos Martínez Galán
 				dbValue = vtFld.decVal.Lo32;
 				dbValue *= ( vtFld.decVal.sign == 128 )? -1 : 1;
-				dbValue /= pow( 10, vtFld.decVal.scale ); 
+				dbValue /= pow( 10.0, vtFld.decVal.scale ); 
 				break;
 
 			case VT_UI1:
@@ -633,7 +633,7 @@ BOOL ClsADORecordset::GetFieldValue( LPCTSTR lpFieldName, ClsString& strValue, C
 				//Corrected by José Carlos Martínez Galán
 				double val = vtFld.decVal.Lo32;
 				val *= ( vtFld.decVal.sign == 128 ) ? -1 : 1;
-				val /= pow( 10, vtFld.decVal.scale ); 
+				val /= pow( 10.0, vtFld.decVal.scale ); 
 				strValue = DblToStr( val );
 				break;
 			}
@@ -714,7 +714,7 @@ BOOL ClsADORecordset::GetFieldValue( int nIndex, ClsString& strValue, ClsString 
 				//Corrected by José Carlos Martínez Galán
 				double val = vtFld.decVal.Lo32;
 				val *= ( vtFld.decVal.sign == 128 ) ? -1 : 1;
-				val /= pow( 10, vtFld.decVal.scale ); 
+				val /= pow( 10.0, vtFld.decVal.scale ); 
 				strValue = DblToStr( val );
 				break;
 			}
@@ -2193,7 +2193,7 @@ BOOL ClsADOParameter::GetValue( double& dbValue )
 				// Corrected by José Carlos Martínez Galán
 				dblVal = vtVal.decVal.Lo32;
 				dblVal *= ( vtVal.decVal.sign == 128 )? -1 : 1;
-				dblVal /= pow( 10, vtVal.decVal.scale ); 
+				dblVal /= pow( 10.0, vtVal.decVal.scale ); 
 				break;
 
 			case VT_UI1:
@@ -2268,7 +2268,7 @@ BOOL ClsADOParameter::GetValue( ClsString& strValue, ClsString strDateFormat )
 				// Corrected by José Carlos Martínez Galán
 				double val = vtVal.decVal.Lo32;
 				val *= ( vtVal.decVal.sign == 128 ) ? -1 : 1;
-				val /= pow( 10, vtVal.decVal.scale ); 
+				val /= pow( 10.0, vtVal.decVal.scale ); 
 				strVal = DblToStr( val );
 				break;
 			}

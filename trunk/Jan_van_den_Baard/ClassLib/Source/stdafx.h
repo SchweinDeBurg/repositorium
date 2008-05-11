@@ -21,6 +21,11 @@
 // identifier was truncated in the debug information
 #pragma warning(disable: 4786)
 
+// C4996: function or variable may be unsafe
+#if (_MSC_VER > 1310)
+#define _CRT_SECURE_NO_WARNINGS
+#endif   // _MSC_VER
+
 #define OEMRESOURCE
 
 // CRT headers

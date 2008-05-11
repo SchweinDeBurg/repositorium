@@ -570,7 +570,11 @@ void CSizingControlBar::OnPaint()
     CPaintDC dc(this);
 }
 
+#if (_MFC_VER < 0x0900)
 UINT CSizingControlBar::OnNcHitTest(CPoint point)
+#else
+LRESULT CSizingControlBar::OnNcHitTest(CPoint point)
+#endif   // _MFC_VER
 {
     CRect rcBar, rcEdge;
     GetWindowRect(rcBar);

@@ -89,7 +89,11 @@ static void SetSizeControls( HWND hDlg )
 	/*
 	 *	Format and set size string.
 	 */
+#if (_MSC_VER < 1500)
 	_stprintf( szBuffer, GetString( IDS_FILE_SIZE ), nBytes, nLines );
+#else
+	_stprintf_s( szBuffer, _countof( szBuffer ), GetString( IDS_FILE_SIZE ), nBytes, nLines );
+#endif   // _MSC_VER
 	SetDlgItemText( hDlg, IDC_PROP_SIZE, szBuffer );
 }
 

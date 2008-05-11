@@ -96,7 +96,11 @@ int ClsBoyerMoore::FindForward( char *pData, int nLength )
 			while ( 1 )
 			{
 				// Found string?
+#if (_MSC_VER < 1500)
 				if (( tolower( *pcEndString ) == tolower( *pcTextPtr )) && ( ! strnicmp( pcString, pcTextPtr - nStrLen, nStrLen )))
+#else
+				if (( tolower( *pcEndString ) == tolower( *pcTextPtr )) && ( ! _strnicmp( pcString, pcTextPtr - nStrLen, nStrLen )))
+#endif   // _MSC_VER
 					// Yes. Return the offset.
 					return ( int )(( pcTextPtr - pData ) - nStrLen );
 
@@ -164,7 +168,11 @@ int ClsBoyerMoore::FindBackward( char *pData, int nLength )
 			while ( 1 )
 			{
 				// Found the string?
+#if (_MSC_VER < 1500)
 				if (( tolower( *pcString ) == tolower( *pcTextPtr )) && ( ! strnicmp( pcString + 1, pcTextPtr + 1, nStrLen )))
+#else
+				if (( tolower( *pcString ) == tolower( *pcTextPtr )) && ( ! _strnicmp( pcString + 1, pcTextPtr + 1, nStrLen )))
+#endif   // _MSC_VER
 					// Return the index.
 					return ( int )( pData - pcTextPtr );
 

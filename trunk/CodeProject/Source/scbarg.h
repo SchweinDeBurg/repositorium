@@ -100,7 +100,11 @@ protected:
 // Generated message map functions
 protected:
     //{{AFX_MSG(CSizingControlBarG)
+#if (_MFC_VER < 0x0900)
     afx_msg UINT OnNcHitTest(CPoint point);
+#else
+    afx_msg LRESULT OnNcHitTest(CPoint point);
+#endif   // _MFC_VER
     afx_msg void OnNcLButtonUp(UINT nHitTest, CPoint point);
     //}}AFX_MSG
 
