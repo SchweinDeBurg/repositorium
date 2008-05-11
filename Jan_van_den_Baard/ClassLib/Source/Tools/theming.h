@@ -10,7 +10,11 @@
 #include "../standard.h"
 #include "../application.h"
 #include <uxtheme.h>
+#if (_MSC_VER < 1500)
 #include <tmschema.h>
+#else
+#include <vssym32.h>
+#endif   // _MSC_VER
 
 // Just in case...
 #ifndef WM_THEMECHANGED

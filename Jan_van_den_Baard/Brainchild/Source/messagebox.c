@@ -23,7 +23,11 @@ static int MsgBox( LPCLASSDATA lpcd, HWND hParent, DWORD dwType, LPCTSTR lpszBod
 	/*
 	 *	Format the arguments.
 	 */
+#if (_MSC_VER < 1500)
 	_vstprintf( szBuffer, lpszBody, args );
+#else
+	_vstprintf_s( szBuffer, _countof( szBuffer ), lpszBody, args );
+#endif   // _MSC_VER
 	return MessageBox( hParent ? hParent : lpcd->hWnd, szBuffer, lpcd->szFileName, dwType );
 }
 
@@ -131,13 +135,23 @@ void ErrorMsg( LPCTSTR lpszBody, ... )
 	 *	Format the arguments.
 	 */
 	va_start( args, lpszBody );
+#if (_MSC_VER < 1500)
 	_vstprintf( szBuffer, lpszBody, args );
+#else
+	_vstprintf_s( szBuffer, _countof( szBuffer ), lpszBody, args );
+#endif   // _MSC_VER
 	MessageBox( NULL, szBuffer, _T("Brainchild DLL"), MB_OK | MB_APPLMODAL | MB_ICONERROR );
 	va_end( args );
 }
 
 void AboutControl( LPARAM lParam, LPCLASSDATA lpcd )
 {
+	static const TCHAR szAboutFmt[] =
+		_T("Brainchild custom control DLL.\n\nVersion %ld.%ld.\n")
+		_T("Compiled: %s (%s)\n\n")
+		_T("(C) Copyright 1993-2005 Jan van den Baard.\n")
+		_T("All Rights Reserved.\n")
+		_T("Enchancements (c) 2008 by Elijah Zarezky.");
 	TCHAR		szBuffer[ 1024 ];
 	
 	/*
@@ -150,6 +164,10 @@ void AboutControl( LPARAM lParam, LPCLASSDATA lpcd )
 	 *
 	 *	These strings are not translated.
 	 */
-	_stprintf( szBuffer, _T("Brainchild custom control DLL.\n\nVersion %ld.%ld.\nCompiled: %s (%s)\n\n(C) Copyright 1993-2005 Jan van den Baard.\nAll Rights Reserved.\nEnchancements (c) 2008 by Elijah Zarezky."), BCVERSION, BCREVISION, __DATE__, __TIME__ );
+#if (_MSC_VER < 1500)
+	_stprintf( szBuffer, szAboutFmt, BCVERSION, BCREVISION, __DATE__, __TIME__ );
+#else
+	_stprintf_s( szBuffer, _countof( szBuffer ), szAboutFmt, BCVERSION, BCREVISION, __DATE__, __TIME__ );
+#endif   // _MSC_VER
 	MessageBox( lpcd->hWnd, szBuffer, lpcd->szFileName, MB_OK | MB_APPLMODAL | MB_ICONINFORMATION );
 }

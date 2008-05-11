@@ -297,8 +297,12 @@ static LPTSTR ParseString( LPCLASSDATA lpcd, LPTSTR pszInput, LPTSTR pszBuffer, 
 					/*
 					 *	Convert the number string.
 					 */
+#if (_MSC_VER < 1500)
 					_stprintf( szNumber, _T( "%ld " ), nPage );
-					
+#else
+					_stprintf_s( szNumber, _countof( szNumber ), _T( "%ld " ), nPage );
+#endif   // _MSC_VER
+
 					/*
 					 *	Append it and adjust
 					 *	the buffer index.
@@ -322,8 +326,12 @@ static LPTSTR ParseString( LPCLASSDATA lpcd, LPTSTR pszInput, LPTSTR pszBuffer, 
 					/*
 					 *	Convert the number string.
 					 */
+#if (_MSC_VER < 1500)
 					_stprintf( szNumber, _T( "%ld " ), nTotalPages );
-					
+#else
+					_stprintf_s( szNumber, _countof( szNumber ), _T( "%ld " ), nTotalPages );
+#endif   // _MSC_VER
+
 					/*
 					 *	Append it and adjust
 					 *	the buffer index.

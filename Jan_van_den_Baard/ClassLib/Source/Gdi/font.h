@@ -45,8 +45,8 @@ public:
 
 	// Operator overloads.
 	operator HFONT() const;
-	operator=( const ClsFont& cFont );
-	operator=( HFONT hFont );
+	BOOL operator=( const ClsFont& cFont );
+	BOOL operator=( HFONT hFont );
 };
 
 #endif // _FONT_H_

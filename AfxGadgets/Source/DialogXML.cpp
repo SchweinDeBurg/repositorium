@@ -156,10 +156,6 @@ const DLGTEMPLATE* CDialogXML::CreateDlgTemplate(LPCTSTR pszFileXML)
 
 int CDialogXML::DoModal(void)
 {
-	using CFile::modeCreate;
-	using CFile::modeWrite;
-	using CFile::shareExclusive;
-
 	CString strFileXML;
 
 	// precondition
@@ -205,7 +201,7 @@ int CDialogXML::DoModal(void)
 			DWORD cbSize = ::SizeofResource(hInstRes, hResInfo);
 			try
 			{
-				CFile fileXML(strFileXML, modeCreate | modeWrite | shareExclusive);
+				CFile fileXML(strFileXML, CFile::modeCreate | CFile::modeWrite | CFile::shareExclusive);
 				fileXML.Write(pvResData, cbSize);
 				fileXML.Flush();
 				fileXML.Close();
@@ -845,8 +841,14 @@ DWORD CDialogXML::Parse_RichEdit(LPCTSTR pszStylesStr)
 //////////////////////////////////////////////////////////////////////////////////////////////
 // attributes
 
-using CDialogXML::PFN_StylesParserProc;
-CMap<CString, LPCTSTR, PFN_StylesParserProc, PFN_StylesParserProc> CDialogXML::m_mapParsers;
+CMap
+<
+	CString,
+	LPCTSTR,
+	CDialogXML::PFN_StylesParserProc,
+	CDialogXML::PFN_StylesParserProc
+>
+CDialogXML::m_mapParsers;
 
 void CDialogXML::InitParsersMap(void)
 {

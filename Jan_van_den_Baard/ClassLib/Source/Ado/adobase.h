@@ -49,7 +49,7 @@ public:
 	inline ClsString GetLastErrorString() { return m_strLastError; }
 	inline DWORD GetLastError() { return m_dwLastError; }
 	inline ClsString GetLastErrorDescription() { return m_strErrorDescription; }
-	inline ThrowComErrors( BOOL bThrow = TRUE ) { m_bThrow = bThrow; }
+	inline void ThrowComErrors( BOOL bThrow = TRUE ) { m_bThrow = bThrow; }
 
 protected:
 	// Test HRESULT return code.

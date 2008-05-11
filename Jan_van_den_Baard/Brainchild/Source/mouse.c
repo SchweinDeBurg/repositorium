@@ -152,7 +152,7 @@ BOOL MouseOnSelection( LPCLASSDATA lpcd )
 }
 
 
-static ExtendWordLeft( LPCLASSDATA lpcd, LPPOINT lpPoint )
+static void ExtendWordLeft( LPCLASSDATA lpcd, LPPOINT lpPoint )
 {
 	LPLINE		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, lpPoint->y );
 
@@ -198,7 +198,7 @@ static ExtendWordLeft( LPCLASSDATA lpcd, LPPOINT lpPoint )
 		lpPoint->x++;
 }
 
-static ExtendWordRight( LPCLASSDATA lpcd, LPPOINT lpPoint )
+static void ExtendWordRight( LPCLASSDATA lpcd, LPPOINT lpPoint )
 {
 	LPLINE		lpLine = Brainchild_ArrayGetAt( lpcd->lpLines, lpPoint->y );
 
@@ -610,7 +610,11 @@ static void DoTooltip( LPCLASSDATA lpcd, BOOL bShow )
 			/*
 			 *	Format the output.
 			 */
+#if (_MSC_VER < 1500)
 			_stprintf( szBuffer, pszFormat, pszLink );
+#else
+			_stprintf_s( szBuffer, _countof( szBuffer ), pszFormat, pszLink );
+#endif   // _MSC_VER
 
 			/*
 			 *	Show the tooltip.

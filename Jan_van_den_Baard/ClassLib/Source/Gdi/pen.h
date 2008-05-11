@@ -35,8 +35,8 @@ public:
 
 	// Operator overloads.
 	operator HPEN() const;
-	operator=( const ClsPen& cPen );
-	operator=( HPEN hPen );
+	BOOL operator=( const ClsPen& cPen );
+	BOOL operator=( HPEN hPen );
 };
 
 #endif // _PEN_H_

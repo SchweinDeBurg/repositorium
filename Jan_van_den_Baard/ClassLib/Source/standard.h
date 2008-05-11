@@ -44,8 +44,8 @@
 
 	// This will prevent the compiler from generating a default
 	// copy constructor and = operator overload.
-	#define _NO_COPY(c)		private: c(const c& src) {;} operator=(const c& src ) {;}
-	#define _NO_COPY_PARAM(c,p)	private: c(const c& src) : p(0) {;} operator=(const c& src ) {;}
+	#define _NO_COPY(c)		private: c(const c& src) {;} c& operator=(const c& src ) {;}
+	#define _NO_COPY_PARAM(c,p)	private: c(const c& src) : p(0) {;} c& operator=(const c& src ) {;}
 	
 	// Calls the _CrtDumpMemoryLeaks() routine
 	// asserts when a leak is detected.

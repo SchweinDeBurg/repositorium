@@ -281,7 +281,11 @@ BOOL SaveSearchReplaceStrings( LPCLASSDATA lpcd, LPSTRINGLIST lpList, BOOL bRepl
 			/*
 			 *	Format value name.
 			 */
+#if (_MSC_VER < 1500)
 			_stprintf( szKey, _T( "%s%ld" ), bReplace ? lpszSearchStrKey : lpszReplaceStrKey, i );
+#else
+			_stprintf_s( szKey, _countof( szKey ), _T( "%s%ld" ), bReplace ? lpszSearchStrKey : lpszReplaceStrKey, i );
+#endif   // _MSC_VER
 			if ( RegDeleteValue( hKey, szKey ) == ERROR_FILE_NOT_FOUND )
 				break;
 		}
@@ -294,7 +298,11 @@ BOOL SaveSearchReplaceStrings( LPCLASSDATA lpcd, LPSTRINGLIST lpList, BOOL bRepl
 			/*
 			 *	Format value name.
 			 */
+#if (_MSC_VER < 1500)
 			_stprintf( szKey, _T( "%s%ld" ), bReplace == FALSE ? lpszSearchStrKey : lpszReplaceStrKey, i );
+#else
+			_stprintf_s( szKey, _countof( szKey ), _T( "%s%ld" ), bReplace == FALSE ? lpszSearchStrKey : lpszReplaceStrKey, i );
+#endif   // _MSC_VER
 
 			/*
 			 *	Setup length.
@@ -343,7 +351,11 @@ BOOL LoadSearchReplaceStrings( LPCLASSDATA lpcd, LPSTRINGLIST lpList, BOOL bRepl
 			/*
 			 *	Format value name.
 			 */
+#if (_MSC_VER < 1500)
 			_stprintf( szKey, _T( "%s%ld" ), bReplace == FALSE ? lpszSearchStrKey : lpszReplaceStrKey, i );
+#else
+			_stprintf_s( szKey, _countof( szKey ), _T( "%s%ld" ), bReplace == FALSE ? lpszSearchStrKey : lpszReplaceStrKey, i );
+#endif   // _MSC_VER
 
 			/*
 			 *	Get the length required.

@@ -280,7 +280,11 @@ public:
 		PaneBase* GetPaneBase()	{ return operator->(); }
 
 		bool IsValid()			{ return (m_pPaneHolder != 0); }
+#if (_MSC_VER < 1500)
 		operator !()			{ return (m_pPaneHolder == 0); }
+#else
+		bool operator !()		{ return (m_pPaneHolder == 0); }
+#endif   // _MSC_VER
 
 	};
 

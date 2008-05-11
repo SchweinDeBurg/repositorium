@@ -158,9 +158,9 @@ ClsBalloonHelp::ClsBalloonHelp() :
 		m_nMouseMoveTolerance = nTol;
 
 	// setup hook procedures
-	BHKeybHookThunk<ClsBalloonHelp>::InitThunk(( TMFP )KeyboardHookProc, this);
-	BHMouseHookThunk<ClsBalloonHelp>::InitThunk(( TMFP )MouseHookProc, this);
-	BHCallWndRetHookThunk<ClsBalloonHelp>::InitThunk(( TMFP )CallWndRetProc, this);
+	BHKeybHookThunk<ClsBalloonHelp>::InitThunk(( TMFP )&ClsBalloonHelp::KeyboardHookProc, this);
+	BHMouseHookThunk<ClsBalloonHelp>::InitThunk(( TMFP )&ClsBalloonHelp::MouseHookProc, this);
+	BHCallWndRetHookThunk<ClsBalloonHelp>::InitThunk(( TMFP )&ClsBalloonHelp::CallWndRetProc, this);
 }
 
 ClsBalloonHelp::~ClsBalloonHelp()
