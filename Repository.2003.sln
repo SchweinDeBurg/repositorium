@@ -34,6 +34,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BCApplet", "Jan_van_den_Baa
 		{44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB} = {44F0B7AD-2952-4D7C-AF72-6A0CB26F00DB}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CJLibrary", "CJLibrary\CJLibrary.2003.vcproj", "{79DED8B0-AB89-46EA-97FE-B2C0129D7401}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		MBCS Debug = MBCS Debug
@@ -108,6 +112,14 @@ Global
 		{2244F7C1-5A6E-4B0F-BE20-0188BEDF73D8}.Unicode Debug.Build.0 = Unicode Debug|Win32
 		{2244F7C1-5A6E-4B0F-BE20-0188BEDF73D8}.Unicode Release.ActiveCfg = Unicode Release|Win32
 		{2244F7C1-5A6E-4B0F-BE20-0188BEDF73D8}.Unicode Release.Build.0 = Unicode Release|Win32
+		{79DED8B0-AB89-46EA-97FE-B2C0129D7401}.MBCS Debug.ActiveCfg = MBCS Debug|Win32
+		{79DED8B0-AB89-46EA-97FE-B2C0129D7401}.MBCS Debug.Build.0 = MBCS Debug|Win32
+		{79DED8B0-AB89-46EA-97FE-B2C0129D7401}.MBCS Release.ActiveCfg = MBCS Release|Win32
+		{79DED8B0-AB89-46EA-97FE-B2C0129D7401}.MBCS Release.Build.0 = MBCS Release|Win32
+		{79DED8B0-AB89-46EA-97FE-B2C0129D7401}.Unicode Debug.ActiveCfg = Unicode Debug|Win32
+		{79DED8B0-AB89-46EA-97FE-B2C0129D7401}.Unicode Debug.Build.0 = Unicode Debug|Win32
+		{79DED8B0-AB89-46EA-97FE-B2C0129D7401}.Unicode Release.ActiveCfg = Unicode Release|Win32
+		{79DED8B0-AB89-46EA-97FE-B2C0129D7401}.Unicode Release.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
