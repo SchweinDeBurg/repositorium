@@ -499,7 +499,7 @@ LPITEMIDLIST CCJShell::GetFullyQualPidl(LPSHELLFOLDER lpsf, LPITEMIDLIST lpi)
 		&lpifq, &ulAttribs );
 #else
    MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, szBuff,
-		-1, (USHORT*)szOleChar, sizeof(szOleChar));
+		-1, szOleChar, sizeof(szOleChar));
 
    hr=lpsfDeskTop->ParseDisplayName(NULL, NULL, szOleChar, &ulEaten, 
 		&lpifq, &ulAttribs );

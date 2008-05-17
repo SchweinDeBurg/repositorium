@@ -323,7 +323,11 @@ protected:
 	LRESULT OnSetSizeHelper(CSize& size, LPARAM lParam);
 
 	//{{AFX_MSG(CCJToolBar)
+#if (_MFC_VER < 0x0900)
 	afx_msg UINT OnNcHitTest(CPoint);
+#else
+	afx_msg LRESULT OnNcHitTest(CPoint);
+#endif   // _MFC_VER
 	afx_msg void OnNcPaint();
 	afx_msg void OnPaint();
 	afx_msg void OnNcCalcSize(BOOL, NCCALCSIZE_PARAMS*);

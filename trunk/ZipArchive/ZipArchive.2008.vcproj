@@ -52,7 +52,7 @@
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				BrowseInformation="1"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
@@ -125,7 +125,7 @@
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
@@ -198,7 +198,7 @@
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				BrowseInformation="1"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
@@ -271,7 +271,7 @@
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
@@ -318,149 +318,21 @@
 			<File
 				RelativePath=".\Source\BaseLibCompressor.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\DeflateCompressor.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\DirEnumerator.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\FileFilter.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\stdafx.cpp"
+				RelativePath=".\Source\stdafx.cpp"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -498,722 +370,82 @@
 			<File
 				RelativePath=".\Source\Wildcard.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\ZipArchive.cpp"
+				RelativePath=".\Source\ZipArchive.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\ZipAutoBuffer.cpp"
+				RelativePath=".\Source\ZipAutoBuffer.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\ZipCentralDir.cpp"
+				RelativePath=".\Source\ZipCentralDir.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\ZipCompatibility.cpp"
+				RelativePath=".\Source\ZipCompatibility.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\ZipCompressor.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\ZipCrc32Cryptograph.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\ZipCryptograph.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\ZipException.cpp"
+				RelativePath=".\Source\ZipException.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\ZipExtraData.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\ZipExtraField.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\ZipFile_mfc.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\ZipFile_stl.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\ZipFileHeader.cpp"
+				RelativePath=".\Source\ZipFileHeader.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\ZipMemFile.cpp"
+				RelativePath=".\Source\ZipMemFile.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\ZipPathComponent_win.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\ZipPlatform_win.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\ZipPlatformComm.cpp"
+				RelativePath=".\Source\ZipPlatformComm.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\ZipStorage.cpp"
+				RelativePath=".\Source\ZipStorage.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\ZipString.cpp"
+				RelativePath=".\Source\ZipString.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -1261,7 +493,7 @@
 				>
 			</File>
 			<File
-				RelativePath="Source\stdafx.h"
+				RelativePath=".\Source\stdafx.h"
 				>
 			</File>
 			<File
@@ -1269,19 +501,19 @@
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipAbstractFile.h"
+				RelativePath=".\Source\ZipAbstractFile.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipArchive.h"
+				RelativePath=".\Source\ZipArchive.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipAutoBuffer.h"
+				RelativePath=".\Source\ZipAutoBuffer.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipBaseException.h"
+				RelativePath=".\Source\ZipBaseException.h"
 				>
 			</File>
 			<File
@@ -1289,11 +521,11 @@
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipCentralDir.h"
+				RelativePath=".\Source\ZipCentralDir.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipCollections.h"
+				RelativePath=".\Source\ZipCollections.h"
 				>
 			</File>
 			<File
@@ -1305,7 +537,7 @@
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipCompatibility.h"
+				RelativePath=".\Source\ZipCompatibility.h"
 				>
 			</File>
 			<File
@@ -1321,11 +553,11 @@
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipException.h"
+				RelativePath=".\Source\ZipException.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipExport.h"
+				RelativePath=".\Source\ZipExport.h"
 				>
 			</File>
 			<File
@@ -1337,7 +569,7 @@
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipFile.h"
+				RelativePath=".\Source\ZipFile.h"
 				>
 			</File>
 			<File
@@ -1349,11 +581,11 @@
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipFileHeader.h"
+				RelativePath=".\Source\ZipFileHeader.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipFileMapping.h"
+				RelativePath=".\Source\ZipFileMapping.h"
 				>
 			</File>
 			<File
@@ -1361,7 +593,7 @@
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipMemFile.h"
+				RelativePath=".\Source\ZipMemFile.h"
 				>
 			</File>
 			<File
@@ -1377,19 +609,19 @@
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipPathComponent.h"
+				RelativePath=".\Source\ZipPathComponent.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipPlatform.h"
+				RelativePath=".\Source\ZipPlatform.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipStorage.h"
+				RelativePath=".\Source\ZipStorage.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\ZipString.h"
+				RelativePath=".\Source\ZipString.h"
 				>
 			</File>
 			<File
@@ -1410,7 +642,7 @@
 			Filter="txt"
 			>
 			<File
-				RelativePath="MiscText\Appnote.txt"
+				RelativePath=".\MiscText\Appnote.txt"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -1446,7 +678,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="MiscText\ChangeLog.txt"
+				RelativePath=".\MiscText\ChangeLog.txt"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -1482,7 +714,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="MiscText\faq.txt"
+				RelativePath=".\MiscText\faq.txt"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -1518,7 +750,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="MiscText\gpl.txt"
+				RelativePath=".\MiscText\gpl.txt"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -1554,7 +786,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="MiscText\License.txt"
+				RelativePath=".\MiscText\License.txt"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -1590,7 +822,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="MiscText\Readme.txt"
+				RelativePath=".\MiscText\Readme.txt"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -1631,7 +863,7 @@
 			Filter="chi;chm"
 			>
 			<File
-				RelativePath="Help\ZipArchive.chi"
+				RelativePath=".\Help\ZipArchive.chi"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -1667,7 +899,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Help\ZipArchive.chm"
+				RelativePath=".\Help\ZipArchive.chm"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"

@@ -1874,7 +1874,11 @@ BOOL CCJToolBar::OnEraseBkgnd(CDC*)
 	return (BOOL)Default();
 }
 
+#if (_MFC_VER < 0x0900)
 UINT CCJToolBar::OnNcHitTest(CPoint)
+#else
+LRESULT CCJToolBar::OnNcHitTest(CPoint)
+#endif   // _MFC_VER
 {
 	return HTCLIENT;
 }
@@ -2139,13 +2143,16 @@ void CCJToolBar::AssertValid() const
 	// Note: CCJToolBarBase::AssertValid is not called because it checks for
 	//  m_nCount and m_pData to be in sync, which they are not in CCJToolBar.
 
-#ifndef _VC_VERSION_5
+#if (_MFC_VER < 0x0600)
+	ASSERT(m_hbmImageWell == NULL ||
+		( ::GetObjectType(m_hbmImageWell) == OBJ_BITMAP));
+#elif (_MFC_VER < 0x0900)
 	ASSERT(m_hbmImageWell == NULL ||
 		( afxData.bWin95 || ::GetObjectType(m_hbmImageWell) == OBJ_BITMAP));
 #else
 	ASSERT(m_hbmImageWell == NULL ||
-		( ::GetObjectType(m_hbmImageWell) == OBJ_BITMAP));
-#endif
+		( (::GetVersion() & 0x80000000) >= 4 || ::GetObjectType(m_hbmImageWell) == OBJ_BITMAP));
+#endif   // _MFC_VER
 
 	if (m_hInstImageWell != NULL && m_hbmImageWell != NULL)
 		ASSERT(m_hRsrcImageWell != NULL);

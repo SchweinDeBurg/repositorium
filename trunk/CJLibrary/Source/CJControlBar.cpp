@@ -673,7 +673,11 @@ void CCJControlBar::OnLButtonUp(UINT nFlags, CPoint point)
     }
 }
 
+#if (_MFC_VER < 0x0900)
 UINT CCJControlBar::OnNcHitTest(CPoint /*point*/)
+#else
+LRESULT CCJControlBar::OnNcHitTest(CPoint /*point*/)
+#endif   // _MFC_VER
 {
 	return HTCLIENT;
 }
