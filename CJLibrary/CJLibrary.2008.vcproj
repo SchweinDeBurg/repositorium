@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="AfxGadgets"
-	ProjectGUID="{6B7749EE-74DF-496C-9EBE-0E6C73CAA50B}"
+	Name="CJLibrary"
+	ProjectGUID="{79DED8B0-AB89-46EA-97FE-B2C0129D7401}"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -43,6 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories=".\Include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -71,7 +72,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/AfxGadgets.lib"
+				OutputFile="$(OutDir)/CJLibrary.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -118,6 +119,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
+				AdditionalIncludeDirectories=".\Include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -143,7 +145,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/AfxGadgets.lib"
+				OutputFile="$(OutDir)/CJLibrary.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -189,6 +191,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories=".\Include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -217,7 +220,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/AfxGadgets.lib"
+				OutputFile="$(OutDir)/CJLibrary.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -264,6 +267,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
+				AdditionalIncludeDirectories=".\Include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -289,7 +293,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/AfxGadgets.lib"
+				OutputFile="$(OutDir)/CJLibrary.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -312,11 +316,231 @@
 	</References>
 	<Files>
 		<Filter
-			Name="stdafx"
-			Filter="h;cpp"
+			Name="Source Files"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath=".\Source\stdafx.cpp"
+				RelativePath=".\Source\CJBrowseEdit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJCaption.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJCaptionPopupWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJColorPicker.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJColorPopup.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJComboBoxEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJControlBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJDateTimeCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJDockBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJDockContext.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJExplorerBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJFlatButton.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJFlatComboBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJFlatHeaderCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJFlatSplitterWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJFlatTabCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJFontCombo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJFrameWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJHexEdit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJHtmlView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJHyperLink.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJListBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJListCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJListView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJLogoPane.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJMaskEdit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJMDIChildWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJMDIFrameWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJMemFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJMenuBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJMetaFileButton.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJMiniDockFrameWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJOutlookBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJPagerCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJReBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJReBarCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJShell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJShellList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJShellTree.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJSizeDockBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJSortClass.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJStatusBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJTabCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJTabCtrlBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJTabView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJThemeHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJToolBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJToolBarBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJToolBarCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJTreeCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CJWindowPlacement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\GfxGroupEdit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\GfxOutBarCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\GfxSplitterWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -352,210 +576,255 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\stdafx.h"
+				RelativePath=".\Source\Subclass.cpp"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Controls"
-			Filter="h;cpp"
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath=".\Source\SortingListCtrl.cpp"
+				RelativePath=".\Include\CJBrowseEdit.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\SortingListCtrl.h"
+				RelativePath=".\Include\CJCaption.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJCaptionPopupWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJColorPicker.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJColorPopup.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJComboBoxEx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJControlBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJDateTimeCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJDockBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJDockContext.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJExplorerBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJFlatButton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJFlatComboBox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJFlatHeaderCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJFlatSplitterWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJFlatTabCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJFontCombo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJFrameWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJHexEdit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJHtmlView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJHyperLink.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJLibrary.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJListBox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJListCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJListView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJLogoPane.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJMaskEdit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJMDIChildWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJMDIFrameWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJMemFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJMenuBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJMetaFileButton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJMiniDockFrameWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJOutlookBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJPagerCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJReBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJReBarCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJResource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJShell.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJShellList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJShellTree.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJSizeDockBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJSortClass.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJStatusBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJTabCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJTabCtrlBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJTabView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJThemeHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJToolBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJToolBarBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJToolBarCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJTreeCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CJWindowPlacement.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\GfxGroupEdit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\GfxOutBarCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\GfxSplitterWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\Subclass.h"
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="Crypto"
-			Filter="h;cpp"
+		<File
+			RelativePath=".\Source\ReadMe.txt"
 			>
-			<File
-				RelativePath=".\Source\WinCrypto.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\WinCrypto.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Dialogs"
-			Filter="h;cpp"
-			>
-			<File
-				RelativePath=".\Source\ddxv.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\ddxv.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Exceptions"
-			Filter="h;cpp"
-			>
-			<File
-				RelativePath=".\Source\SeException.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\SeException.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\Win32Error.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\Win32Error.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="GDI"
-			Filter="h;cpp"
-			>
-			<File
-				RelativePath=".\Source\MemoryDC.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\MemoryDC.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Strings"
-			Filter="h;cpp"
-			>
-			<File
-				RelativePath=".\Source\StringConv.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="System"
-			Filter="h;hxx;cpp;inl"
-			>
-			<File
-				RelativePath=".\Source\ArgsParser.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\ArgsParser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\MemMapFile.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\MemMapFile.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\ProcessPrivileges.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\ProcessPrivileges.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\ProcessPrivileges.inl"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\RemoteInvoke.hxx"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\RemoteParam.hxx"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\RemoteProc.hxx"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="XML"
-			Filter="h;cpp"
-			>
-			<File
-				RelativePath=".\Source\DialogXML.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\DialogXML.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\GetXMLpath.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\HotKeysXML.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\HotKeysXML.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\MenuXML.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\MenuXML.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\PugXMLplus.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\StringsXML.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\StringsXML.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\XML_Defs.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\XML_Document.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\XML_Document.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\XML_Node.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\XML_Node.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\XML_NodeList.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\XML_NodeList.h"
-				>
-			</File>
-		</Filter>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -194,7 +194,11 @@ void CCJHexEdit::OnPaint()
 			rcd.TopLeft().x = m_offAddress;
 			for(int	 i = m_topindex; (i < m_length) && (rcd.TopLeft().y < height); i+= m_bpr)
 			{
+#if (_MSC_VER < 1500)
 				_stprintf(buf, fmt, i);
+#else
+				_stprintf_s(buf, _countof(buf), fmt, i);
+#endif   // _MSC_VER
 				memDC.DrawText(buf, w, rcd, DT_LEFT|DT_TOP|DT_SINGLELINE|DT_NOPREFIX);
 				rcd.TopLeft().y += m_lineHeight;
 			}

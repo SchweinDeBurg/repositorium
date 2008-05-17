@@ -280,7 +280,11 @@ BOOL CCJSizeDockBar::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 		CDockBar::OnSetCursor(pWnd, nHitTest, message):FALSE;
 }
 
+#if (_MFC_VER < 0x0900)
 UINT CCJSizeDockBar::OnNcHitTest(CPoint point) 
+#else
+LRESULT CCJSizeDockBar::OnNcHitTest(CPoint point) 
+#endif   // _MFC_VER
 {
 	HitTest(point);
 	return (m_bOkToDrag)?HTBORDER:CDockBar::OnNcHitTest(point);

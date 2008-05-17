@@ -53,7 +53,7 @@
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				BrowseInformation="1"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
@@ -127,7 +127,7 @@
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
@@ -201,7 +201,7 @@
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				BrowseInformation="1"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
@@ -275,7 +275,7 @@
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
@@ -320,7 +320,7 @@
 			Filter="h;cpp"
 			>
 			<File
-				RelativePath="Source\stdafx.cpp"
+				RelativePath=".\Source\stdafx.cpp"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -356,7 +356,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\stdafx.h"
+				RelativePath=".\Source\stdafx.h"
 				>
 			</File>
 		</Filter>
@@ -365,87 +365,23 @@
 			Filter="h;cpp;rh;rc"
 			>
 			<File
-				RelativePath="Source\Base64.cpp"
-				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Source\Base64.h"
+				RelativePath=".\Source\Base64.cpp"
 				>
 			</File>
 			<File
-				RelativePath="Source\PJNPOP3.cpp"
-				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Source\PJNPOP3.h"
+				RelativePath=".\Source\Base64.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\Pop3.rc"
+				RelativePath=".\Source\PJNPOP3.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PJNPOP3.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Pop3.rc"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -497,47 +433,15 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\Pop3.rh"
+				RelativePath=".\Source\Pop3.rh"
 				>
 			</File>
 			<File
-				RelativePath="Source\SocMFC.cpp"
+				RelativePath=".\Source\SocMFC.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\SocMFC.h"
+				RelativePath=".\Source\SocMFC.h"
 				>
 			</File>
 		</Filter>
@@ -546,175 +450,47 @@
 			Filter="h;cpp;rh;rc"
 			>
 			<File
-				RelativePath="Source\Base64Coder.cpp"
-				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Source\Base64Coder.h"
+				RelativePath=".\Source\Base64Coder.cpp"
 				>
 			</File>
 			<File
-				RelativePath="Source\glob-md5.h"
+				RelativePath=".\Source\Base64Coder.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\md5.cpp"
-				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Source\md5.h"
+				RelativePath=".\Source\glob-md5.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\PJNMD5.h"
+				RelativePath=".\Source\md5.cpp"
 				>
 			</File>
 			<File
-				RelativePath="Source\PJNNTLMAuth.cpp"
-				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Source\PJNNTLMAuth.h"
+				RelativePath=".\Source\md5.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\PJNSMTP.cpp"
-				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Source\PJNSMTP.h"
+				RelativePath=".\Source\PJNMD5.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\Smtp.rc"
+				RelativePath=".\Source\PJNNTLMAuth.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PJNNTLMAuth.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PJNSMTP.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PJNSMTP.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Smtp.rc"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -766,7 +542,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\Smtp.rh"
+				RelativePath=".\Source\Smtp.rh"
 				>
 			</File>
 		</Filter>
@@ -775,7 +551,7 @@
 			Filter="htm;gif;css"
 			>
 			<File
-				RelativePath="Help\FileTreeCtrl.gif"
+				RelativePath=".\Help\FileTreeCtrl.gif"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -811,7 +587,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Help\FileTreeCtrl.htm"
+				RelativePath=".\Help\FileTreeCtrl.htm"
 				DeploymentContent="true"
 				>
 				<FileConfiguration
@@ -848,7 +624,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Help\naughter.css"
+				RelativePath=".\Help\naughter.css"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -884,7 +660,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Help\PJNPOP3.GIF"
+				RelativePath=".\Help\PJNPOP3.GIF"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -920,7 +696,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Help\PJNPOP3.htm"
+				RelativePath=".\Help\PJNPOP3.htm"
 				DeploymentContent="true"
 				>
 				<FileConfiguration
@@ -957,7 +733,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Help\PJNSMTP.gif"
+				RelativePath=".\Help\PJNSMTP.gif"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -993,7 +769,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Help\PJNSMTP.htm"
+				RelativePath=".\Help\PJNSMTP.htm"
 				DeploymentContent="true"
 				>
 				<FileConfiguration
@@ -1035,47 +811,15 @@
 			Filter="h;cpp;rh;rc"
 			>
 			<File
-				RelativePath="Source\FileTreeCtrl.cpp"
-				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Source\FileTreeCtrl.h"
+				RelativePath=".\Source\FileTreeCtrl.cpp"
 				>
 			</File>
 			<File
-				RelativePath="Source\FileTreeCtrl.rc"
+				RelativePath=".\Source\FileTreeCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\FileTreeCtrl.rc"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -1123,7 +867,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="Source\FileTreeCtrl.rh"
+				RelativePath=".\Source\FileTreeCtrl.rh"
 				>
 			</File>
 		</Filter>
@@ -1132,19 +876,19 @@
 			Filter="ico;cur;bmp"
 			>
 			<File
-				RelativePath="Source\BinRes\tfdropcopy.cur"
+				RelativePath=".\Source\BinRes\tfdropcopy.cur"
 				>
 			</File>
 			<File
-				RelativePath="Source\BinRes\tfnodrop.cur"
+				RelativePath=".\Source\BinRes\tfnodrop.cur"
 				>
 			</File>
 			<File
-				RelativePath="Source\BinRes\tfnodropcopy.cur"
+				RelativePath=".\Source\BinRes\tfnodropcopy.cur"
 				>
 			</File>
 			<File
-				RelativePath="Source\BinRes\tfnodropmove.cur"
+				RelativePath=".\Source\BinRes\tfnodropmove.cur"
 				>
 			</File>
 		</Filter>
@@ -1155,38 +899,6 @@
 			<File
 				RelativePath=".\Source\OpenSSLMfc.cpp"
 				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\OpenSSLMfc.h"
