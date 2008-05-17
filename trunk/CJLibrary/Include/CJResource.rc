@@ -1,0 +1,167 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "CJResource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "CJResource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BTN_ARROW           BITMAP  DISCARDABLE     "BinRes\\btn_arro.bmp"
+IDB_BUTTON_IMAGES       BITMAP  DISCARDABLE     "BinRes\\button_images.bmp"
+IDB_PUSHPIN             BITMAP  DISCARDABLE     "BinRes\\PushPin.bmp"
+IDC_URL_CODEJOCKEY      BITMAP  DISCARDABLE     "BinRes\\cj_logo.bmp"
+IDR_GFXOUTBAR           BITMAP  MOVEABLE PURE   "BinRes\\Toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_DRAGGING            CURSOR  DISCARDABLE     "BinRes\\dragging.cur"
+IDC_HANDCUR             CURSOR  DISCARDABLE     "BinRes\\handcur.cur"
+IDC_HSPLITBAR           CURSOR  DISCARDABLE     "BinRes\\hsplitba.cur"
+IDC_NODRAGGING          CURSOR  DISCARDABLE     "BinRes\\nodraggi.cur"
+IDC_VSPLITBAR           CURSOR  DISCARDABLE     "BinRes\\vsplitba.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_GFXOUTBAR MENU DISCARDABLE 
+BEGIN
+    POPUP "RClickOutbarButton"
+    BEGIN
+        MENUITEM "S&mall Icons",                ID_GFX_SMALLICON
+        MENUITEM "Lar&ge Icons",                ID_GFX_LARGEICON
+    END
+END
+
+IDR_POPUP_HEX_EDIT MENU DISCARDABLE 
+BEGIN
+    POPUP "_POPUP_"
+    BEGIN
+        MENUITEM "&Undo",                       ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t",                        ID_EDIT_CUT
+        MENUITEM "&Copy",                       ID_EDIT_COPY
+        MENUITEM "&Paste",                      ID_EDIT_PASTE
+        MENUITEM "&Delete",                     ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "Select &All",                 ID_EDIT_SELECT_ALL
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_GFXOUTBAR TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_GFX_LARGEICON
+    BUTTON      ID_GFX_SMALLICON
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_HIDE                "Hide docked window"
+    IDS_NAME                "Name"
+    IDS_EXPAND              "Expand docked window"
+    IDS_SIZE                "Size"
+    IDS_CONTRACT            "Contract docked window"
+    IDS_TYPE                "Type"
+    IDS_MODIFIED            "Modified"
+    IDS_REGKEY              "Software\\%s\\%s\\Settings"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_INVALID_VER         "Warning: This program requires comctl32.dll version 4.71 or greater."
+    IDS_WIN_PLACEMENT       "%u,%u,%d,%d,%d,%d,%d,%d,%d,%d"
+    IDS_COLOR_AUTO          "Automatic"
+    IDS_COLOR_CUST          "Customize..."
+    IDS_SECTION             "Settings"
+    IDS_ENTRY               "Column Info"
+    IDS_REMOVEITEM          "Re&move from Outlook Bar"
+    IDS_RENAMEITEM          "&Rename Shortcut"
+    ID_GFX_LARGEICON        "Display large icons"
+    ID_GFX_SMALLICON        "Display small icons"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SETTINGS            "Settings"
+    IDS_TBAR_SETTINGS       "Toolbar %d Settings"
+    ID_POPUP_CUSTOMIZE      "Allows the customization of the toolbar\nCustomize toolbar"
+    IDS_WNDPOS              "Window Pos"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
