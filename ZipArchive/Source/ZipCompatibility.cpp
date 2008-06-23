@@ -15,9 +15,9 @@
 #include "stdafx.h"
 #include "ZipCompatibility.h"
 #include "ZipPlatform.h"
-#include "ZipException.h"
+#include "_ZipException.h"
 #include "ZipAutoBuffer.h"
-#include "ZipFileHeader.h"
+#include "_ZipFileHeader.h"
 
 #if defined(__INTEL_COMPILER)
 // remark #1418: external definition with no prior declaration

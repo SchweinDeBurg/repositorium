@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #if defined(ZIP_ARCHIVE_FULL)
-#include "../../../ZipArchiveFull/Source/stdafx.h"
+#include "../../../ZipArchiveFull/Source/ZipArchive.h"
 #else
-#include "_stdafx.h"
+#include "ZipArchive.h"
 #endif   // ZIP_ARCHIVE_FULL

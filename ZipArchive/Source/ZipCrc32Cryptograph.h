@@ -28,8 +28,8 @@
 #include "_features.h"
 #include "../../zlib/Source/zlib.h"
 
-#include "ZipCryptograph.h"
-#include "ZipFileHeader.h"
+#include "_ZipCryptograph.h"
+#include "_ZipFileHeader.h"
 #include "ZipStorage.h"
 
 

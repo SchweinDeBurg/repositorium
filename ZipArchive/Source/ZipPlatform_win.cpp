@@ -15,8 +15,8 @@
 #include "stdafx.h"
 #include "_platform.h"
 #include "ZipPlatform.h"
-#include "ZipFileHeader.h"
-#include "ZipException.h"
+#include "_ZipFileHeader.h"
+#include "_ZipException.h"
 #include "ZipAutoBuffer.h"
 #include <sys/stat.h>
 

@@ -13,9 +13,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "ZipArchive.h"
+#include "_ZipArchive.h"
 #include "ZipExtraData.h"
-#include "BytesWriter.h"
+#include "_BytesWriter.h"
 
 using namespace ZipArchiveLib;
 

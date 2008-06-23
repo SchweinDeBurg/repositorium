@@ -26,9 +26,9 @@
 #endif
 
 #include "ZipExport.h"
-#include "ZipCompressor.h"
+#include "_ZipCompressor.h"
 #include "ZipCollections.h"
-#include "ZipException.h"
+#include "_ZipException.h"
 
 namespace ZipArchiveLib
 {
