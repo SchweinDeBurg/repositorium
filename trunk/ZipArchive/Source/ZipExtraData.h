@@ -27,8 +27,8 @@
 
 #include "ZipExport.h"
 #include "ZipAutoBuffer.h"
-#include "ZipExtraField.h"
-#include "memory.h"
+#include "_ZipExtraField.h"
+#include <memory.h>
 
 /**
 	Represents a single data record in an extra field.

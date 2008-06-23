@@ -18,7 +18,7 @@
 
 #ifdef ZIP_ARCHIVE_USE_LOCKING
 
-#include "ZipException.h"
+#include "_ZipException.h"
 
 namespace ZipArchiveLib
 {

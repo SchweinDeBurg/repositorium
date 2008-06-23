@@ -28,7 +28,7 @@
 #include <algorithm>
 #include <functional>
 #include "ZipString.h"
-#include "ZipException.h"
+#include "_ZipException.h"
 
 #define ZIP_ARRAY_SIZE_TYPE size_t
 

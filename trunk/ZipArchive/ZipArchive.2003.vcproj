@@ -376,6 +376,9 @@
 				RelativePath=".\Source\ZipCallback.h">
 			</File>
 			<File
+				RelativePath=".\Source\ZipCallbackProvider.h">
+			</File>
+			<File
 				RelativePath=".\Source\ZipCentralDir.h">
 			</File>
 			<File
@@ -631,34 +634,7 @@
 		</Filter>
 		<Filter
 			Name="Help Files"
-			Filter="chi;chm">
-			<File
-				RelativePath=".\Help\ZipArchive.chi">
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
-			</File>
+			Filter="chm">
 			<File
 				RelativePath=".\Help\ZipArchive.chm">
 				<FileConfiguration

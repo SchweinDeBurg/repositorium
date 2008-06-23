@@ -18,6 +18,12 @@
 *
 */
 
+#if defined(ZIP_ARCHIVE_FULL)
+
+#include "../../../ZipArchiveFull/Source/_features.h"
+
+#else
+
 #if !defined(ZIPARCHIVE_FEATURES_DOT_H)
 /// @cond
 #define ZIPARCHIVE_FEATURES_DOT_H 
@@ -95,3 +101,5 @@
 
 
 #endif // !defined(ZIPARCHIVE_FEATURES_DOT_H)
+
+#endif // ZIP_ARCHIVE_FULL
