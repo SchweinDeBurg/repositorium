@@ -1,9 +1,11 @@
-// XTrace.h  Version 1.1
+// XTrace.h  Version 1.2
 //
 // Author:       Paul Mclachlan
 //
 // Modified by:  Hans Dietrich
-//               hdietrich2@hotmail.com
+//               hdietrich@gmail.com
+//
+// Version 1.2   fixed macro redefinition warnings
 //
 // Version 1.1:  added Unicode support
 //               added optional thread id to output string
@@ -49,6 +51,7 @@
 #define XTRACE_SHOW_FULLPATH	FALSE	// FALSE = only show base name of file
 #define XTRACE_SHOW_THREAD_ID	TRUE	// TRUE = include thread id in output
 #define XTRACE_FILE				FALSE	// TRUE = output to file
+										// FALSE = OutputDebugString only
 
 class xtracing_output_debug_string
 {
@@ -117,6 +120,17 @@ public:
 
 				if (dwRC != INVALID_SET_FILE_POINTER)
 				{
+					int n = _tcslen(buf2);
+					if (n > 0)
+					{
+						TCHAR *cp = &buf2[n-1];
+						if (*cp == _T('\n'))
+						{
+							*cp++ = _T('\r');
+							*cp++ = _T('\n');
+							*cp   = _T('\0');
+						}
+					}
 					DWORD dwWritten = 0;
 					::WriteFile(hFile,							// handle to file
 								buf2,							// data buffer
@@ -214,6 +228,17 @@ public:
 
 				if (dwRC != INVALID_SET_FILE_POINTER)
 				{
+					int n = _tcslen(buf2);
+					if (n > 0)
+					{
+						TCHAR *cp = &buf2[n-1];
+						if (*cp == _T('\n'))
+						{
+							*cp++ = _T('\r');
+							*cp++ = _T('\n');
+							*cp   = _T('\0');
+						}
+					}
 					DWORD dwWritten = 0;
 					::WriteFile(hFile,							// handle to file
 								buf2,							// data buffer
@@ -243,10 +268,16 @@ private:
 #undef TRACE0
 #undef TRACE1
 #undef TRACE2
+#undef TRACERECT
+#undef TRACEPOINT
+#undef TRACESIZE
+#undef TRACEHILO
 
 #define  _DEBUGnow
 
 #ifdef _DEBUG
+
+#pragma message("XTrace.h: including trace")
 
 #define TRACE (xtracing_output_debug_string(_T(__FILE__), __LINE__ ))
 #define TRACEENTRY (xtracing_output_debug_string(_T(__FILE__), __LINE__ ))
@@ -254,6 +285,19 @@ private:
 #define TRACE0 TRACE
 #define TRACE1 TRACE
 #define TRACE2 TRACE
+
+#define TRACEHILO(d) \
+			WORD ___hi = HIWORD(d); WORD ___lo = LOWORD(d); \
+			TRACE(_T(#d) _T(":  HIWORD = %u  LOWORD = %u\n"), ___hi, ___lo)
+
+#define TRACESIZE(s) TRACE(_T(#s) _T(":  cx = %d  cy = %d\n"), \
+                           (s).cx, (s).cy)
+
+#define TRACEPOINT(p) TRACE(_T(#p) _T(":  x = %d  y = %d\n"), \
+                           (p).x, (p).y)
+
+#define TRACERECT(r) TRACE(_T(#r) _T(":  left = %d  top = %d  right = %d  bottom = %d\n"), \
+                           (r).left, (r).top, (r).right, (r).bottom)
 
 #else
 
@@ -268,21 +312,12 @@ private:
 #define TRACE0		__noop
 #define TRACE1		__noop
 #define TRACE2		__noop
+#define TRACERECT	__noop
+#define TRACEPOINT	__noop
+#define TRACESIZE	__noop
+#define TRACEHILO	__noop
 
 #endif	//_DEBUG
-
-#define TRACEHILO(d) \
-			WORD ___hi = HIWORD(d); WORD ___lo = LOWORD(d); \
-			TRACE(_T(#d) _T(":  HIWORD = %u  LOWORD = %u\n"), ___hi, ___lo)
-
-#define TRACESIZE(s) TRACE(_T(#s) _T(":  cx = %d  cy = %d\n"), \
-                           (s).cx, (s).cy)
-
-#define TRACEPOINT(p) TRACE(_T(#p) _T(":  x = %d  y = %d\n"), \
-                           (p).x, (p).y)
-
-#define TRACERECT(r) TRACE(_T(#r) _T(":  left = %d  top = %d  right = %d  bottom = %d\n"), \
-                           (r).left, (r).top, (r).right, (r).bottom)
 
 #pragma warning(pop)
 
