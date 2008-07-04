@@ -639,7 +639,35 @@
 			Filter="h;cpp"
 			>
 			<File
+				RelativePath=".\Source\CLinkedList.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\PugXML.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XmlParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XmlParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XMLProfile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XMLProfile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XmlWinApp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XmlWinApp.h"
 				>
 			</File>
 		</Filter>
