@@ -31,7 +31,7 @@
 	#endif
 #endif
 
-#if (_MSC_VER > 1310)
+#if (_MSC_VER > 1310) && !defined(_WIN32_IE)
 	#define _WIN32_IE 0x0601
 #endif   // _MSC_VER
 
