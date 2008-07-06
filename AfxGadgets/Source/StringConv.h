@@ -44,9 +44,9 @@ private:
 inline _A2W::_A2W(LPCSTR mbsSource):
 m_wcsResult(NULL)
 {
-	int nNumChars = mbstowcs(NULL, mbsSource, 0) + 1;
-	m_wcsResult = nNumChars > BUF_SIZE ? new WCHAR[nNumChars] : m_szBuffer;
-	mbstowcs(m_wcsResult, mbsSource, nNumChars);
+	size_t cNumChars = mbstowcs(NULL, mbsSource, 0) + 1;
+	m_wcsResult = cNumChars > BUF_SIZE ? new WCHAR[cNumChars] : m_szBuffer;
+	mbstowcs(m_wcsResult, mbsSource, cNumChars);
 }
 
 inline _A2W::~_A2W(void)
@@ -83,9 +83,9 @@ private:
 inline _W2A::_W2A(LPCWSTR wcsSource):
 m_mbsResult(NULL)
 {
-	int nNumChars = wcstombs(NULL, wcsSource, 0) + 1;
-	m_mbsResult = nNumChars > BUF_SIZE ? new CHAR[nNumChars] : m_szBuffer;
-	wcstombs(m_mbsResult, wcsSource, nNumChars);
+	size_t cNumChars = wcstombs(NULL, wcsSource, 0) + 1;
+	m_mbsResult = cNumChars > BUF_SIZE ? new CHAR[cNumChars] : m_szBuffer;
+	wcstombs(m_mbsResult, wcsSource, cNumChars);
 }
 
 inline _W2A::~_W2A(void)
