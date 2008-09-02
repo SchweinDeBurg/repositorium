@@ -6,9 +6,13 @@ History: PJN / 29-12-2004 1. Updated to suit new layout of CWSocket methods
          PJN / 19-02-2005 1. Provided a derived implementation of CSSLSocket::IsReadible.
          PJN / 16-11-2005 1. CSSLSocket::Send now uses a const void* parameter.
          PJN / 27-11-2005 1. Updated comments in the header file to accompany inclusion of the OpenSSL header files
+         PJN / 19-11-2007 1. Optimized CSSLContext constructor.
+                          2. Optimized CSSL constructor.
+                          3. Optimized CSSLSocket constructor.
+         PJN / 31-05-2008 1. Updated copyright details
+                          2. Code now compiles cleanly using Code Analysis (/analyze)
 
-
-Copyright (c) 2002 - 2005 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2002 - 2008 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -23,15 +27,13 @@ to maintain a single distribution point for the source code.
 */
 
 
-
-//////////////// Includes ////////////////////////////////////////////
+//////////////// Includes /////////////////////////////////////////////////////
 
 #include "stdafx.h"
 #include "OpenSSLMfc.h"
 
 
-
-//////////////// Macros //////////////////////////////////////////////
+//////////////// Macros ///////////////////////////////////////////////////////
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -40,13 +42,10 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
+//////////////// Implementation ///////////////////////////////////////////////
 
-//////////////// Implementation //////////////////////////////////////
-
-CSSLContext::CSSLContext()
+CSSLContext::CSSLContext() : m_pSSLContext(NULL)
 {
-  //Initialize our member variable to sane defaults
-  m_pSSLContext = NULL;
 }
 
 CSSLContext::CSSLContext(SSL_CTX* pSSLContext)
@@ -99,11 +98,8 @@ SSL_CTX* CSSLContext::Detach()
 }
 
 
-
-CSSL::CSSL()
+CSSL::CSSL() : m_pSSL(NULL)
 {
-  //Initialize our member variable to sane defaults
-  m_pSSL = NULL;
 }
 
 CSSL::CSSL(SSL* pSSL)
@@ -159,10 +155,8 @@ SSL* CSSL::Detach()
 }
 
 
-
-CSSLSocket::CSSLSocket()
+CSSLSocket::CSSLSocket() : m_pSocket(NULL)
 {
-  m_pSocket = NULL;
 }
 
 CSSLSocket::~CSSLSocket()
@@ -195,7 +189,7 @@ BOOL CSSLSocket::Create(CSSLContext& sslContext, CWSocket& socket)
 BOOL CSSLSocket::Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
 {
   //Validate our parameters
-  ASSERT(m_pSocket);
+  AFXASSUME(m_pSocket);
 
   //Call the low level socket connect
   m_pSocket->Connect(lpszHostAddress, nHostPort);
@@ -208,7 +202,7 @@ BOOL CSSLSocket::Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
 BOOL CSSLSocket::ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout)
 {
   //Validate our parameters
-  ASSERT(m_pSocket);
+  AFXASSUME(m_pSocket);
 
   //Call the low level socket connect
   m_pSocket->ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout);
@@ -221,7 +215,7 @@ BOOL CSSLSocket::ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTS
 BOOL CSSLSocket::ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP)
 {
   //Validate our parameters
-  ASSERT(m_pSocket);
+  AFXASSUME(m_pSocket);
 
   //Call the low level socket connect
   m_pSocket->ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP);
@@ -231,10 +225,10 @@ BOOL CSSLSocket::ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTS
   return (nSSLConnect == 1);
 }
 
-BOOL CSSLSocket::ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CString& sProxyResponse, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent)
+BOOL CSSLSocket::ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent)
 {
   //Validate our parameters
-  ASSERT(m_pSocket);
+  AFXASSUME(m_pSocket);
 
   //Call the low level socket connect
   m_pSocket->ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, lpszPassword, dwConnectionTimeout, lpszUserAgent);
@@ -247,7 +241,7 @@ BOOL CSSLSocket::ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LP
 BOOL CSSLSocket::Accept(DWORD dwSSLNegotiationTimeout)
 {
   //Validate our parameters
-  ASSERT(m_pSocket);
+  AFXASSUME(m_pSocket);
 
   //Then do the SSL accept
   BOOL bNegotiationComplete = FALSE;
@@ -314,7 +308,7 @@ CSSLSocket::operator SSL*() const
 CSSLSocket::operator CWSocket&() const
 {
   //validate our parameters
-  ASSERT(m_pSocket);
+  AFXASSUME(m_pSocket);
 
   return *m_pSocket;
 }
@@ -322,7 +316,7 @@ CSSLSocket::operator CWSocket&() const
 BOOL CSSLSocket::IsReadible(DWORD dwTimeout)
 {
   //Validate our parameters
-  ASSERT(m_pSocket);
+  AFXASSUME(m_pSocket);
 
   //Try SSL_pending before we defer to our socket implementation
   if (m_SSL.m_pSSL)

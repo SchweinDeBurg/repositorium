@@ -37,3 +37,6 @@
 #define IDS_PJNSMTP_FAIL_CONNECT_VIASSL                        0x8021
 #define IDS_PJNSMTP_FAIL_SEND_VIASSL                           0x8022
 #define IDS_PJNSMTP_FAIL_RECEIVE_VIASSL                        0x8023
+#define IDS_PJNSMTP_GRACEFUL_DISCONNECT                        0x8024
+#define IDS_PJNSMTP_FAIL_QP_ENCODE                             0x8025
+#define IDS_PJNSMTP_FAIL_Q_ENCODE                              0x8026

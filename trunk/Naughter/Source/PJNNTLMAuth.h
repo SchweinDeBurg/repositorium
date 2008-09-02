@@ -48,6 +48,8 @@ public:
 
 //Methods
   SECURITY_STATUS NTLMAuthenticate(LPCTSTR pszUserName = NULL, LPCTSTR pszPassword = NULL);
+  DWORD GetBufferSize() const { return m_dwBufferSize; };
+  void SetBufferSize(DWORD dwBufferSize) { m_dwBufferSize = dwBufferSize; };
 
 //Virtual methods
   virtual SECURITY_STATUS NTLMAuthPhase1(PBYTE pBuf, DWORD cbBuf) = 0;
@@ -69,6 +71,7 @@ protected:
   ACQUIRE_CREDENTIALS_HANDLE_FN  m_lpfnAcquireCredentialsHandle;  //The function pointer to "AcquireCredentialsHandle"
   CredHandle                     m_hCred;                         //The credentials handle for the connection
   SecHandle                      m_hContext;                      //The security handle for the connection 
+  DWORD                          m_dwBufferSize;                  //The size of the buffers we allocate for reading and writing via SSPI
 };
 
 #endif //__PJNNTLMAUTH_H__
