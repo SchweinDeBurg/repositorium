@@ -52,16 +52,16 @@ my explicit written consent.
 
 /////////////////////////////// Classes ///////////////////////////////////////
 
-///////////// Class which makes using the ATL base64 encoding functions somewhat easier
+///////////// Class which makes using the ATL base64 encoding / decoding functions somewhat easier
 
-class PJNSMTP_EXT_CLASS CPJNSMPTBase64
+class PJNSMTP_EXT_CLASS CPJNSMPTBase64Encode
 {
 public:
 //Constructors / Destructors
-  CPJNSMPTBase64();
-  ~CPJNSMPTBase64();
+  CPJNSMPTBase64Encode();
+  ~CPJNSMPTBase64Encode();
 
-//methods
+//Methods
 	void	Encode(const BYTE* pbyData, int nSize, DWORD dwFlags);
 	void	Decode(LPCSTR pData, int nSize);
 	void	Encode(LPCSTR pszMessage, DWORD dwFlags);
@@ -71,6 +71,53 @@ public:
 	int	  ResultSize() const { return m_nSize; };
 
 protected:
+//Member variables
+  char* m_pBuf;
+  int   m_nSize;
+};
+
+
+///////////// Class which makes using the ATL QP encoding functions somewhat easier
+
+class PJNSMTP_EXT_CLASS CPJNSMPTQPEncode
+{
+public:
+//Constructors / Destructors
+  CPJNSMPTQPEncode();
+  ~CPJNSMPTQPEncode();
+
+//Methods
+	void	Encode(const BYTE* pbyData, int nSize, DWORD dwFlags);
+	void	Encode(LPCSTR pszMessage, DWORD dwFlags);
+
+	LPSTR Result() const { return m_pBuf; };
+	int	  ResultSize() const { return m_nSize; };
+
+protected:
+//Member variables
+  char* m_pBuf;
+  int   m_nSize;
+};
+
+
+///////////// Class which makes using the ATL Q encoding functions somewhat easier
+
+class PJNSMTP_EXT_CLASS CPJNSMPTQEncode
+{
+public:
+//Constructors / Destructors
+  CPJNSMPTQEncode();
+  ~CPJNSMPTQEncode();
+
+//Methods
+	void	Encode(const BYTE* pbyData, int nSize, LPCSTR szCharset);
+	void	Encode(LPCSTR pszMessage, LPCSTR szCharset);
+
+	LPSTR Result() const { return m_pBuf; };
+	int	  ResultSize() const { return m_nSize; };
+
+protected:
+//Member variables
   char* m_pBuf;
   int   m_nSize;
 };
@@ -89,7 +136,7 @@ public:
 #ifdef _DEBUG
 	virtual void Dump(CDumpContext& dc) const;
 #endif
-	virtual BOOL GetErrorMessage(LPTSTR lpstrError, UINT nMaxError,	PUINT pnHelpContext = NULL);
+	virtual BOOL GetErrorMessage(__out_ecount_z(nMaxError) LPTSTR lpstrError, __in UINT nMaxError,	__out_opt PUINT pnHelpContext = NULL);
 	CString GetErrorMessage();
 
 //Members variables
@@ -114,7 +161,7 @@ public:
 	CPJNSMTPAddress& operator=(const CPJNSMTPAddress& r);
 
 //Methods
-  CString GetRegularFormat(BOOL bEncode, const CString& sCharset) const;
+  CStringA GetRegularFormat(BOOL bEncode, const CString& sCharset) const;
 
 //Data members
 	CString m_sFriendlyName; //Would set it to contain something like "PJ Naughter"
@@ -178,12 +225,12 @@ public:
   CPJNSMTPBodyPart* GetParentBodyPart();
 
 //Static methods
-  static CStringA    QuotedPrintableEncode(const CStringA& sText);
-  static CStringA    ConvertToUTF8(const CString& sIn);
-  static char        HexDigit(int nDigit);
-  static CStringA    HeaderEncode(const CString& sText, const CString& sCharset);
-  static CStringA    QEncode(LPCSTR sText, LPCSTR sCharset);
-  static CString     CreateGUID();
+  static CStringA   ConvertToUTF8(const CString& sIn);
+  static char       HexDigit(int nDigit);
+  static CString    CreateGUID();
+  static CStringA   HeaderEncode(const CString& sText, const CString& sCharset);
+  static CStringA   FoldHeader(const CStringA& sHeader);
+  static CStringA   FoldSubjectHeader(const CString& sSubject, const CString& sCharset);
 
 protected:
 //Member variables
@@ -195,7 +242,6 @@ protected:
   CString                                       m_sContentID;          //The uniqiue ID for this body part (allows other body parts to refer to us via a CID URL)
   CString                                       m_sContentLocation;    //The relative URL for this body part (allows other body parts to refer to us via a relative URL)
   CString                                       m_sText;               //If using strings rather than file, then this is it!
-  CPJNSMPTBase64                                m_Coder;	             //Base64 encoder / decoder instance for this body part
   CArray<CPJNSMTPBodyPart*, CPJNSMTPBodyPart*&> m_ChildBodyParts;      //Child body parts for this body part
   CPJNSMTPBodyPart*                             m_pParentBodyPart;     //The parent body part for this body part
   CString                                       m_sBoundary;           //String which is used as the body separator for all child mime parts
@@ -302,9 +348,9 @@ public:
 
 protected:
 //Methods
-  void        WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
-  CString     ConvertHTMLToPlainText(const CString& sHtml);
-  virtual CString FormDateHeader();
+  void             WriteToDisk(__in HANDLE hFile, __in CPJNSMTPBodyPart* pBodyPart, __in BOOL bRoot);
+  CString          ConvertHTMLToPlainText(const CString& sHtml);
+  virtual CStringA FormDateHeader();
 
 //Member variables
   CStringArray m_CustomHeaders;
@@ -432,7 +478,7 @@ protected:
   virtual void SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
 	virtual BOOL ReadCommandResponse(int nExpectedCode);
   virtual BOOL ReadCommandResponse(int nExpectedCode1, int nExpectedCode2);
-	virtual BOOL ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR* ppszOverFlowBuffer, int nGrowBy=4096);
+	virtual BOOL ReadResponse(CStringA& sResponse);
 #ifndef CPJNSMTP_NONTLM
   virtual SECURITY_STATUS NTLMAuthPhase1(PBYTE pBuf, DWORD cbBuf);
   virtual SECURITY_STATUS NTLMAuthPhase2(PBYTE pBuf, DWORD cbBuf, DWORD* pcbRead);
@@ -444,7 +490,7 @@ protected:
   void _CreateSocket();
   void _ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout);
   void _ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP);
-  void _ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CString & sProxyResponse, LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent);
+  void _ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent);
   void _Connect(LPCTSTR lpszHostAddress, UINT nHostPort);
   int  _Send(const void *pBuffer, int nBuf);
   int  _Receive(void *pBuffer, int nBuf);

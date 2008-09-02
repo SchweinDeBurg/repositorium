@@ -56,6 +56,8 @@ BEGIN
                             "Unexpected LIST response, Last Response: %1"
     IDS_PJNPOP3_FAILED_RECEIVE_RETR_RESPONSE "Failed to receive RETR response"
     IDS_PJNPOP3_FAILED_RECEIVE_LIST_RESPONSE "Failed to receive LIST response"
+    IDS_PJNPOP3_GRACEFUL_DISCONNECT 
+                            "A graceful disconnect had occurred, Last Response: %1"
 END
 
 #endif    // English (U.S.) resources

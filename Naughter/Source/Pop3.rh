@@ -22,3 +22,4 @@
 #define IDS_PJNPOP3_FAIL_SEND_VIASSL                  0x8053
 #define IDS_PJNPOP3_FAIL_RECEIVE_VIASSL               0x8054
 #define IDS_PJNPOP_FAIL_RECEIVE_VIASSL                0x8055
+#define IDS_PJNPOP3_GRACEFUL_DISCONNECT               0x8056

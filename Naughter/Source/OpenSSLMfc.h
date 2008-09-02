@@ -2,9 +2,8 @@
 Module : OpenSSLMfc.H
 Purpose: Defines the interface for wrapper classes for the OpenSSL C variable types
 Created: PJN / 24-05-2002
-History: None
 
-Copyright (c) 2002 - 2005 by PJ Naughter.  
+Copyright (c) 2002 - 2008 by PJ Naughter.  
 
 All rights reserved.
 
@@ -21,6 +20,8 @@ to maintain a single distribution point for the source code.
 
 /////////////////////////////// Defines ///////////////////////////////////////
 
+#pragma once
+
 #ifndef __OPENSSLMFC_H__
 #define __OPENSSLMFC_H__
 
@@ -29,13 +30,11 @@ to maintain a single distribution point for the source code.
 #endif
 
 
-
 /////////////////////////////// Includes //////////////////////////////////////
 
-#include <openssl\ssl.h> //If you get a compilation error about this missing header file, then you need to download OpenSSL from http://www.openssl.org and build a Win32 version and incorporate it into Visual C
-#include <openssl\err.h> //If you get a compilation error about this missing header file, then you need to download OpenSSL from http://www.openssl.org and build a Win32 version and incorporate it into Visual C
+#include <openssl\ssl.h> //If you get a compilation error about this missing header file, then you need to download OpenSSL from http://www.openssl.org and build a Win32 version and incorporate it into your project
+#include <openssl\err.h> //If you get a compilation error about this missing header file, then you need to download OpenSSL from http://www.openssl.org and build a Win32 version and incorporate it into your project
 #include "SocMFC.h"
-
 
 
 /////////////////////////////// Classes ///////////////////////////////////////
@@ -64,7 +63,6 @@ public:
 };
 
 
-
 //class which encapsulates the OpenSSL SSL* variable
 class SOCKMFC_EXT_CLASS CSSL 
 {
@@ -89,7 +87,6 @@ public:
 };
 
 
-
 //Class which encapsulates a SSL socket, in OpenSSL parlance, this is an SSL* struct (aka CSSL) doing file IO over a socket (aka CWSocket)
 class SOCKMFC_EXT_CLASS CSSLSocket
 {
@@ -103,7 +100,7 @@ public:
   BOOL    Connect(LPCTSTR lpszHostAddress, UINT nHostPort);
   BOOL    ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout = 5000);
   BOOL    ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName = NULL, LPCTSTR lpszPassword = NULL, DWORD dwConnectionTimeout = 5000, BOOL bUDP = FALSE);
-  BOOL    ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CString& sProxyResponse, LPCTSTR lpszUserName = NULL, LPCTSTR pszPassword = NULL, DWORD dwConnectionTimeout = 5000, LPCTSTR lpszUserAgent = NULL);
+  BOOL    ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName = NULL, LPCTSTR pszPassword = NULL, DWORD dwConnectionTimeout = 5000, LPCTSTR lpszUserAgent = NULL);
   BOOL    Accept(DWORD dwSSLNegotiationTimeout);
   void    Close();
   int     Send(const void* pBuffer, int nBuf);

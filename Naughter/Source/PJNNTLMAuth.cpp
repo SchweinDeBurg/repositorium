@@ -25,6 +25,7 @@ History: PJN / 05-09-2005 1. Function pointer to CompleteAuthToken is now constr
          PJN / 13-10-2006 1. Code now initializes the Domain name value in NTLMAuthenticate to an empty string instead of a NULL
                           string. This avoids NTLM authentication issues when authenticating as a non-domain user with certain
                           mail servers. Thanks to Wouter Demuynck for reporting this issue.
+         PJN / 31-05-2008 1. Code now compiles cleanly using Code Analysis (/analyze)
 
 Copyright (c) 2005 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -70,7 +71,7 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////// Implementation ///////////////////////////////////////////////
 
-CNTLMClientAuth::CNTLMClientAuth()
+CNTLMClientAuth::CNTLMClientAuth() : m_dwBufferSize(16384)
 {
   //Set our credentials handles to default values
   memset(&m_hCred, 0, sizeof(m_hCred));
@@ -91,9 +92,8 @@ CNTLMClientAuth::CNTLMClientAuth()
       m_lpfnAcquireCredentialsHandle = reinterpret_cast<ACQUIRE_CREDENTIALS_HANDLE_FN>(GetProcAddress(m_hSecur32, "AcquireCredentialsHandleA"));
     #endif
 
-    //Note we allow "CompleteAuthToken" to be not implemented. this gives us at least a runtime chance of using NTLM authentication on Win 9x.
-    if (m_lpfnFreeCredentialsHandle == NULL || m_lpfnDeleteSecurityContext == NULL ||
-        m_lpfnInitializeSecurityContext == NULL || m_lpfnAcquireCredentialsHandle == NULL)
+    //Note we allow "CompleteAuthToken" to be not implemented. This gives us at least a runtime chance of using NTLM authentication on Win 9x
+    if (m_lpfnFreeCredentialsHandle == NULL || m_lpfnDeleteSecurityContext == NULL || m_lpfnInitializeSecurityContext == NULL || m_lpfnAcquireCredentialsHandle == NULL)
     {
       m_lpfnFreeCredentialsHandle     = NULL;
       m_lpfnDeleteSecurityContext     = NULL;
@@ -144,7 +144,7 @@ void CNTLMClientAuth::ReleaseHandles()
 SECURITY_STATUS CNTLMClientAuth::NTLMAuthenticate(LPCTSTR pszUserName, LPCTSTR pszPassword)
 {
   //Note we do the check for these 2 function pointers at the start, as otherwise we could (very unlikely
-  //but possibly) end up with resource handles but with no means to deallocate them!.
+  //but possible) end up with resource handles but with no means to deallocate them!
   if ((m_lpfnDeleteSecurityContext == NULL) || (m_lpfnFreeCredentialsHandle == NULL))
     return SEC_E_UNSUPPORTED_FUNCTION;
 
@@ -180,32 +180,40 @@ SECURITY_STATUS CNTLMClientAuth::DoNTLMAuthentication(LPCTSTR pszUserName, LPCTS
 {
   BOOL fDone = FALSE;
   DWORD cbIn = 0;
-  BYTE InBuf[12000];
-  BYTE OutBuf[12000];
-  DWORD cbMaxMessage = sizeof(InBuf);
+  
+  //Allocate some heap space to contain the in and out buffers for SSPI
+  ATL::CHeapPtr<BYTE> inBuf;
+  if (!inBuf.Allocate(m_dwBufferSize))
+    return SEC_E_INSUFFICIENT_MEMORY;
+    
+  ATL::CHeapPtr<BYTE> outBuf;
+  if (!outBuf.Allocate(m_dwBufferSize))
+    return SEC_E_INSUFFICIENT_MEMORY;
+  
+  DWORD cbMaxMessage = m_dwBufferSize;
   DWORD cbOut = cbMaxMessage;
 
-  SECURITY_STATUS ss = GenClientContext(NULL, 0, OutBuf, &cbOut, &fDone, pszUserName, pszPassword, pszDomain);
+  SECURITY_STATUS ss = GenClientContext(NULL, 0, outBuf.m_pData, &cbOut, &fDone, pszUserName, pszPassword, pszDomain);
   if (!SEC_SUCCESS(ss))
     return ss;
 
-  ss = NTLMAuthPhase1(OutBuf, cbOut);
+  ss = NTLMAuthPhase1(outBuf.m_pData, cbOut);
   if (!SEC_SUCCESS(ss))
     return ss;
 
   while (!fDone) 
   {
-    ss = NTLMAuthPhase2(InBuf, sizeof(InBuf), &cbIn);
+    ss = NTLMAuthPhase2(inBuf.m_pData, m_dwBufferSize, &cbIn);
     if (!SEC_SUCCESS(ss))
       return ss;
 
     cbOut = cbMaxMessage;
 
-    ss = GenClientContext(InBuf, cbIn, OutBuf, &cbOut, &fDone, pszUserName, pszPassword, pszDomain);
+    ss = GenClientContext(inBuf.m_pData, cbIn, outBuf.m_pData, &cbOut, &fDone, pszUserName, pszPassword, pszDomain);
     if (!SEC_SUCCESS(ss))
       return ss;
 
-    ss = NTLMAuthPhase3(OutBuf, cbOut);
+    ss = NTLMAuthPhase3(outBuf.m_pData, cbOut);
     if (!SEC_SUCCESS(ss))
       return ss;
   }

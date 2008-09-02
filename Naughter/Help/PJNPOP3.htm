@@ -1,24 +1,21 @@
 <html>
 
 <head>
-<title>CPJNPOP3Connection v1.40</title>
+<title>CPJNPOP3Connection v1.45</title>
 <link rel="stylesheet" type="text/css" href="./naughter.css">
 </head>
 
 <body>
 
 <h2 align="left"><img src="PJNPOP3.gif" width="40" height="40">CPJNPOP3Connection 
-v1.40</h2>
+v1.45</h2>
 <p>Welcome to <strong>CPJNPOP3Connection</strong>, a freeware MFC class to support 
-the POP3 protocol. POP3 for those not familiar with all the internet protocols is 
+the POP3 (Post Office Protocol v3) protocol. POP3 for those not familiar with all the internet protocols is 
 the protocol used to retrieve internet email. </p>
-<p>For detailed information about the <strong>P</strong>ost <strong>O</strong>ffice
-<strong>P</strong>rotocol Version <strong>3</strong> you should read RFC 1725. You 
-should also refer to RFC 822 which contains details on the layout of messages.</p>
-<p>You can find numerous web sites which carry these documents by doing a search 
-for RFC and 1725 or 822. </p>
-<p>&nbsp;</p>
 <table>
+	<tr>
+		<td><a href="#References">References</a></td>
+	</tr>
 	<tr>
 		<td><a href="#Features">Features</a></td>
 	</tr>
@@ -44,6 +41,26 @@ for RFC and 1725 or 822. </p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
+<h2><a name="References"></a><strong>References</strong> </h2>
+<ul>
+	<li>For information about <strong style="font-weight: 400">POP3 (Post Office 
+	Protocol v3</strong>) you should 
+read <a href="http://www.ietf.org/rfc/rfc1939.txt">RFC 1939</a>.</li>
+	<li><a href="http://www.ietf.org/rfc/rfc822.txt">RFC 822</a> and 
+	<a href="http://www.ietf.org/rfc/rfc2822.txt">RFC 2822</a> define the ways 
+	standard headers are used by SMTP/POP3.</li>
+	<li><a href="http://www.ietf.org/rfc/rfc2110.txt">RFC
+2110</a> and <a href="http://www.ietf.org/rfc/rfc2557.txt">RFC 2557</a> which covers MHTML 
+	(aka HTML Email).</li>
+	<li>Base64 encoding which is used in various places in SMTP/POP3 is described in
+	<a href="http://www.ietf.org/rfc/rfc1113.txt">RFC 1113</a> and
+	<a href="http://www.ietf.org/rfc/rfc1421.txt">RFC 1421</a>. If was 
+	eventually referred to as Base64 in
+	<a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a></li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 <h2><a name="Features"></a>Features </h2>
 <ul>
 	<li>Simple and clean C++ interface.</li>
@@ -54,20 +71,36 @@ for RFC and 1725 or 822. </p>
 	<li>The code can be used in a console application without any problems (Again 
 	this is not the case for the MFC socket classes).</li>
 	<li>A configurable timeout for the connection can be set through the class API.</li>
+	<li>Supports APOP as well as clear text authentication.</li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <h2><a name="Usage"></a>Usage </h2>
 <ul>
-	<li>To use the class in your code simple include PJNPOP3.cpp in your project and 
-	#include PJNPOP3.h in which ever of your modules needs to make calls to the class.
+	<li>The classes are designed for VC 2005 or later. They will not compile on 
+	earlier releases of VC.</li>
+	<li>To use the class in your code simply include PJNPOP3.cpp/h, SocMFC.cpp/h and PJNMD5.h in your project and #include 
+	PJNPOP3.h in which ever of your modules needs to make calls to the classes. 
+	You also need to copy all the IDS_PJNPOP3_* strings from the samples apps 
+	&quot;POP3Connection.rc&quot; rc file to your applications rc file (Use drag and drop in the 
+	Visual C++ resource editor to speed this up!).</li>
+	<li>By default SSL connections are also provided for. This is provided by 
+	including OpenSSLMfc.cpp/h in your project also. If you do not want to 
+	include this support in CPJNPOP3Connection, then you should define the 
+	pre-processor macro &quot;CPJNPOP3_NOSSL&quot; before including PJNPOP3.h. In this 
+	case, you do not need to include these two modules in your project.</li>
+	<li>The following modules are not included in the CPJNPOP3Connection zip 
+	download: SocMFC.cpp/h and OpenSSLMfc.cpp/h and you will need 
+	to download separately these separately from
+	<a href="http://www.naughter.com/w3mfc.html">www.naughter.com/w3mfc.html</a>. 
 	</li>
-	<li>If you do not already have the Base64.cpp/h, OpenSSLMfc.cpp/h and SocMFC.cpp/h 
-	modules, these can be downloaded separately from
-	<a href="http://www.naughter.com/w3mfc.html">www.naughter.com/w3mfc.html</a>.</li>
+	<li>Also the PJNMD5.h module is not included in the CPJNPOP3Connection zip 
+	download and you will need to download this separately from
+	<a href="http://www.naughter.com/smtp.html">www.naughter.com/smtp.html</a>.  
+	</li>
 	<li>To see the class in action, have a look at the code in InitInstance in the 
-	module &quot;main.cpp&quot;. </li>
+	module &quot;main.cpp&quot;.</li>
 	<li>Your code will need to include MFC either statically or dynamically.</li>
 	<li>You will need to have a functioning Winsock stack installed and correctly 
 	initialized prior to calling any functions in CPJNPOP3Connection. Depending 
@@ -364,6 +397,44 @@ for RFC and 1725 or 822. </p>
 	only expect CPJNPOP3Exception exceptions to be thrown from the class. Thanks 
 	to Alexey Kuznetsov for reporting this issue.</li>
 </ul>
+<p><strong>v1.41 (31 December 2007)</strong></p>
+<ul>
+	<li>Updated sample app to clean compile on VC 2008</li>
+	<li>CPJNPOP3Exception::GetErrorMessage now uses the 
+	FORMAT_MESSAGE_IGNORE_INSERTS flag. For more information please see Raymond 
+	Chen's blog at
+	<a href="http://blogs.msdn.com/oldnewthing/archive/2007/11/28/6564257.aspx">
+	http://blogs.msdn.com/oldnewthing/archive/2007/11/28/6564257.aspx</a>. 
+	Thanks to Alexey Kuznetsov for reporting this issue.</li>
+	<li>CPJNPOP3Exception::GetErrorMessage now uses Checked::tcsncpy_s if 
+	compiled using VC 2005 or later.</li>
+	<li>Sample app shipped with download is now a VC 2005 solution</li>
+</ul>
+<p><strong>v1.42 (18 March 2008)</strong></p>
+<ul>
+	<li>Updated copyright details</li>
+	<li>The code now only supports VC 2005 or later.</li>
+	<li>Simplified the response parsing considerably through the usage of 
+	CStringA</li>
+	<li>Fixed logic which terminates the parsing loop in ReadListResponse</li>
+	<li>Improved the robustness of the ReadUIDLResponse parsing logic</li>
+	<li>Now includes support for APOP authentication. Thanks to &quot;goodsiwen&quot; for 
+	prompting this update.</li>
+</ul>
+<p><strong>v1.43 (18 May 2008)</strong></p>
+<ul>
+	<li>GetHeaderItem now uses a CStringA parameter instead of CString. Thanks 
+	to Alexey Kuznetsov for reporting this issue.</li>
+</ul>
+<p><strong>v1.44 (31 May 2008)</strong></p>
+<ul>
+	<li>Code now compiles cleanly using Code Analysis (/analyze)</li>
+</ul>
+<p><strong>v1.45 (14 June 2008)</strong></p>
+<ul>
+	<li>Updated code to compile correctly using _ATL_CSTRING_EXPLICIT_CONSTRUCTORS 
+	define</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -384,13 +455,10 @@ for RFC and 1725 or 822. </p>
 </a><a href="#GetLastCommandResponse">CPJNPOP3Connection::GetLastCommandResponse<br>
 </a><a href="#GetTimeout">CPJNPOP3Connection::GetTimeout<br>
 </a><a href="#SetTimeout">CPJNPOP3Connection::SetTimeout<br>
-</a><a href="#GetMessageText">CPJNPOP3Message::GetMessageText </a>
-<a href="#GetMessageText"><br>
 </a><a href="#GetHeader">CPJNPOP3Message::GetHeader</a><a href="#GetMessageText"><br>
 </a><a href="#GetHeaderItem">CPJNPOP3Message::GetHeaderItem</a><a href="#GetMessageText"><br>
 </a><a href="#GetBody">CPJNPOP3Message::GetBody<br>
 </a><a href="#GetReplyTo">CPJNPOP3Message::GetReplyTo</a><br>
-<a href="#GetRawBody">CPJNPOP3Message::GetRawBody</a><br>
 <a href="#GetSubject">CPJNPOP3Message::GetSubject</a><br>
 <a href="#GetFrom">CPJNPOP3Message::GetFrom</a><br>
 <a href="#GetDate">CPJNPOP3Message::GetDate</a></p>
@@ -399,7 +467,8 @@ for RFC and 1725 or 822. </p>
 <p><a name="Connect"></a><strong>CPJNPOP3Connection::Connect</strong></p>
 <p><strong>void CPJNPOP3Connection::Connect(LPCSTR </strong><em>pszHostName</em><strong>, 
 LPCSTR </strong><em>pszUser</em><strong>,&nbsp;&nbsp; LPCSTR </strong><em>pszPassword</em><strong>, 
-int </strong><em>nPort</em><strong> = 110, BOOL </strong><i>bSSL </i><strong>= FALSE);</strong></p>
+int </strong><em>nPort</em><strong> = 110, AuthenticationMethod </strong><em>am</em><strong> 
+= AUTH_PLAIN, BOOL </strong><i>bSSL </i><strong>= FALSE);</strong></p>
 <p><strong>Parameters</strong></p>
 <p><em>pszHostName</em> The network address of the socket to connect to: a machine 
 name such as “mail.yourisp.com”, or a dotted number such as “128.56.22.8”.</p>
@@ -407,6 +476,9 @@ name such as “mail.yourisp.com”, or a dotted number such as “128.56.22.8”.</p>
 <p><em>pszPassword</em> This is the password for the POP3 mailbox.</p>
 <p><em>nPort</em> This is the port number on which to connect. The default value 
 is 110 which is the default POP3 port number.</p>
+<p>am The authentication method to use. Choices are AUTH_PLAIN which corresponds 
+to using the &quot;USER / PASS&quot; commands or AUTH_APOP which uses the APOP challenge / 
+response command.</p>
 <p>bSSL If compiled to support SSL, then setting this value will cause the 
 connection to be made over a SSL connection instead of in the clear.</p>
 <p><strong>Remarks</strong></p>
@@ -573,37 +645,23 @@ const;</strong></p>
 <p><a href="#GetTimeout">CPJNPOP3Connection::GetTimeout</a></p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<p><a name="GetMessageText" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetMessageText</strong></p>
-<p><strong>LPCSTR </strong><strong>CPJNPOP3Message</strong><strong>::GetMessageText() 
-const;</strong></p>
-<p class="rl"><strong>Return Value</strong></p>
-<p class="t">A character pointer to the actual message text this class instance 
-represents.</p>
-<p><strong>Parameters</strong></p>
-<p>None.</p>
-<p><strong>Remarks</strong></p>
-<p>Upon a successful call to CPJNPOP3Connection::Retrieve, the message class will 
-contain a message. This function allows the text to of the message to be accessed.</p>
-<p><strong>See Also </strong></p>
-<p><a href="#Retrieve">CPJNPOP3Connection::Retrieve</a></p>
-<p>&nbsp;</p>
 <p><a name="GetHeader" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetHeader</strong></p>
-<p><strong>CString </strong><strong>CPJNPOP3Message</strong><strong>::GetHeader() 
+<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetHeader() 
 const;</strong></p>
 <p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CString containing the header of this message</p>
+<p class="t">A CStringA containing the header of this message</p>
 <p>&nbsp;</p>
 <p><a name="GetBody" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetBody</strong></p>
-<p><strong>CString </strong><strong>CPJNPOP3Message</strong><strong>::GetBody() 
+<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetBody() 
 const;</strong></p>
 <p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CString containing the body of this message</p>
+<p class="t">A CStringA containing the body of this message</p>
 <p>&nbsp;</p>
 <p><a name="GetHeaderItem" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetHeaderItem</strong></p>
-<p><strong>CString </strong><strong>CPJNPOP3Message</strong><strong>::GetHeaderItem(const 
-CString&amp; sName, int nItem = 0) const;</strong></p>
+<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetHeaderItem(const 
+CStringA&amp; sName, int nItem = 0) const;</strong></p>
 <p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CString containing the header body of the header field</p>
+<p class="t">A CStringA containing the header body of the header field</p>
 <p><strong>Remarks</strong></p>
 <p>This function allows a specific message header line to be retrieved e.g you could 
 call the function with sName set to &quot;Date&quot; to find the date the mail message was 
@@ -612,42 +670,36 @@ that particular header. The nItem parameter allows you to specify that the n&#39
 occurrence of the header field be returned.</p>
 <p>&nbsp;</p>
 <p><a name="GetReplyTo" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetReplyTo</strong></p>
-<p><strong>CString </strong><strong>CPJNPOP3Message</strong><strong>::GetReplyTo() 
+<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetReplyTo() 
 const;</strong></p>
 <p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CString containing the Reply to field</p>
+<p class="t">A CStringA containing the Reply to field</p>
 <p><strong>Remarks</strong></p>
 <p>Returns the most appropriate address for replies. Looks first for Reply-To, then 
 From, then Sender, then Return-Path as a last resort, returns the first one of the 
 above that is non-empty.</p>
 <p>&nbsp;</p>
-<p><a name="GetRawBody" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetRawBody</strong></p>
-<p><strong>LPCSTR </strong><strong>CPJNPOP3Message</strong><strong>::GetRawBody() 
-const;</strong></p>
-<p class="rl"><strong>Return Value</strong></p>
-<p class="t">A const char pointer to the raw message body</p>
-<p>&nbsp;</p>
 <p><a name="GetSubject" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetSubject</strong></p>
-<p><strong>CString </strong><strong>CPJNPOP3Message</strong><strong>::GetSubject() 
+<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetSubject() 
 const;</strong></p>
 <p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CString containing the subject of the message</p>
+<p class="t">A CStringA containing the subject of the message</p>
 <p><strong>Remarks</strong></p>
 <p>Returns the subject of the message.</p>
 <p>&nbsp;</p>
 <p><a name="GetFrom" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetFrom</strong></p>
-<p><strong>CString </strong><strong>CPJNPOP3Message</strong><strong>::GetFrom() 
+<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetFrom() 
 const;</strong></p>
 <p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CString containing the sender of the message</p>
+<p class="t">A CStringA containing the sender of the message</p>
 <p><strong>Remarks</strong></p>
 <p>Returns the sender of the message.</p>
 <p>&nbsp;</p>
 <p><a name="GetDate" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetDate</strong></p>
-<p><strong>CString </strong><strong>CPJNPOP3Message</strong><strong>::GetDate() 
+<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetDate() 
 const;</strong></p>
 <p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CString containing the &quot;Date:&quot; header of the message</p>
+<p class="t">A CStringA containing the &quot;Date:&quot; header of the message</p>
 <p><strong>Remarks</strong></p>
 <p>Returns the &quot;Date:&quot; header of the message.</p>
 <p>&nbsp;</p>
@@ -655,8 +707,6 @@ const;</strong></p>
 <p>&nbsp;</p>
 <h2><a name="Enhancements"></a>Planned Enhancements</h2>
 <ul>
-	<li>Provide a better sample app. At the moment, it&#39;s very much a test program 
-	which tests all of the functions.</li>
 	<li>If you have any other suggested improvements, please let me know so that 
 	I can incorporate them into the next release.</li>
 </ul>
@@ -667,7 +717,7 @@ const;</strong></p>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-21 July 2007</p>
+14 June 2008</p>
 
 </body>
 

@@ -3,7 +3,7 @@ Module : PJNPOP3.H
 Purpose: Defines the interface for a MFC class encapsulation of the POP3 protocol
 Created: PJN / 04-05-1998
 
-Copyright (c) 1998 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -60,7 +60,7 @@ public:
 #ifdef _DEBUG
 	virtual void Dump(CDumpContext& dc) const;
 #endif
-	virtual BOOL GetErrorMessage(LPTSTR lpstrError, UINT nMaxError,	PUINT pnHelpContext = NULL);
+	virtual BOOL GetErrorMessage(__out_ecount_z(nMaxError) LPTSTR lpstrError, __in UINT nMaxError, __out_opt PUINT pnHelpContext = NULL);
 	CString GetErrorMessage();
 
 //Data members
@@ -81,28 +81,25 @@ public:
 //Constructors / Destructors
   CPJNPOP3Message();
   CPJNPOP3Message(const CPJNPOP3Message& message);
-  virtual ~CPJNPOP3Message();
 
 //Methods
   CPJNPOP3Message& operator=(const CPJNPOP3Message& message);
-  LPCSTR  GetMessageText() const { return m_pszMessage; };
-  CString GetHeader() const;
-  CString GetHeaderItem(const CString& sName, int nItem = 0) const;
-  CString GetBody() const;
-	LPCSTR  GetRawBody() const;
-	CString GetSubject() const { return GetHeaderItem(_T("Subject")); }
-	CString GetFrom() const		 { return GetHeaderItem(_T("From")); }
-	CString GetDate() const		 { return GetHeaderItem(_T("Date")); }
-  CString GetTo() const	     { return GetHeaderItem(_T("To")); }
-	CString GetCC() const	     { return GetHeaderItem(_T("CC")); }
-	CString GetReplyTo() const;
+  CStringA GetHeader() const;
+  CStringA GetHeaderItem(const CStringA& sName, int nItem = 0) const;
+  CStringA GetBody() const;
+	CStringA GetSubject() const { return GetHeaderItem("Subject"); }
+	CStringA GetFrom() const		{ return GetHeaderItem("From"); }
+	CStringA GetDate() const		{ return GetHeaderItem("Date"); }
+  CStringA GetTo() const	    { return GetHeaderItem("To"); }
+	CStringA GetCC() const	    { return GetHeaderItem("CC"); }
+	CStringA GetReplyTo() const;
 
 //Helper Methods
-  static CString GetEmailAddress(const CString& sNameAndAddress);
-  static CString GetEmailFriendlyName(const CString& sNameAndAddress);
+  static CStringA GetEmailAddress(const CStringA& sNameAndAddress);
+  static CStringA GetEmailFriendlyName(const CStringA& sNameAndAddress);
 
-//protected:
-  char* m_pszMessage;
+//Member variables
+  CStringA m_sMessage;
 
   friend class CPJNPOP3Connection;
 };
@@ -111,7 +108,14 @@ public:
 class PJNPOP3_EXT_CLASS CPJNPOP3Connection
 {
 public:
-  typedef enum ProxyType
+//typedefs
+  enum AuthenticationMethod
+  {
+    AUTH_PLAIN = 0, //Username and password are send in the clear to the server (USER / PASS commands)
+    AUTH_APOP = 1   //Use APOP support which is a challenge response authentication method (APOP command)
+  };
+
+  enum ProxyType
   {
     ptNone = 0,
     ptSocks4 = 1,
@@ -125,9 +129,9 @@ public:
 
 //Methods
 #ifndef CPJNPOP3_NOSSL
-  void    Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort=110, BOOL bSSL = FALSE);
+  void    Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort = 110, AuthenticationMethod am = AUTH_PLAIN, BOOL bSSL = FALSE);
 #else
-  void    Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort=110);
+  void    Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort = 110, AuthenticationMethod am = AUTH_PLAIN);
 #endif
   void    Disconnect(BOOL bGracefully = TRUE);
   BOOL    IsConnected() const	{ return m_bConnected; };
@@ -138,7 +142,7 @@ public:
   void    Delete(int nMsg);
   DWORD   GetMessageSize(int nMsg);
   CString GetMessageID(int nMsg);
-  int     FindMessageID(const CString& sID); 
+  INT_PTR FindMessageID(const CString& sID); 
   void    Retrieve(int nMsg, CPJNPOP3Message& message);
   void    GetMessageHeader(int nMsg, CPJNPOP3Message& message);
   void    Reset();
@@ -169,24 +173,28 @@ public:
 protected:
   virtual void ReadStatResponse(int& nNumberOfMails, int& nTotalMailSize);
 	virtual BOOL ReadCommandResponse();
+	virtual BOOL ReadCommandResponse(CStringA& sResponse);
   virtual void ReadListResponse(int nNumberOfMails);
   virtual void ReadUIDLResponse(int nNumberOfMails);
   virtual void ReadReturnResponse(CPJNPOP3Message& message, DWORD dwSize);
-  virtual BOOL ReadResponse(LPSTR pszBuffer, int nInitialBufSize, LPSTR pszTerminator, LPSTR* ppszOverFlowBuffer, int nGrowBy=4096, BOOL bRetrieve = FALSE);
-  LPSTR        GetFirstCharInResponse(LPSTR pszData) const;
+  virtual BOOL ReadResponse(CStringA& sResponse, LPSTR pszTerminator, BOOL bCalledForReturnResponse);
+  CStringA     GetBodyOfResponse(const CStringA& sResponse) const;
 #ifndef CPJNPOP3_NOSSL
   virtual CString GetOpenSSLError();
 #endif
   void _CreateSocket();
   void _ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout);
   void _ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP);
-  void _ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CString & sProxyResponse, LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent);
+  void _ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent);
   void _Connect(LPCTSTR lpszHostAddress, UINT nHostPort);
   int  _Send(const void *pBuffer, int nBuf);
   int  _Receive(void *pBuffer, int nBuf);
   void _Close();
   BOOL _IsReadible(DWORD dwTimeout);
-  void SetRetrieveResponse(LPSTR pszData);
+  void SetReturnLastCommandResponse(const CStringA& sResponse);
+  
+//Static methods
+  __forceinline static void SecureEmptyString(CStringA& sVal);
 
 #ifndef CPJNPOP3_NOSSL
   CSSLContext    m_SSLCtx;               //SSL Context

@@ -85,6 +85,10 @@ BEGIN
     IDS_PJNSMTP_FAIL_SEND_VIASSL "Failed to send data via SSL: Details:%1"
     IDS_PJNSMTP_FAIL_RECEIVE_VIASSL 
                             "Failed to receive data via SSL: Details:%1"
+    IDS_PJNSMTP_GRACEFUL_DISCONNECT 
+                            "A graceful disconnect had occurred, Last Response: %1"
+    IDS_PJNSMTP_FAIL_QP_ENCODE "Failed to QP encode data"
+    IDS_PJNSMTP_FAIL_Q_ENCODE "Failed to Q encode data"
 END
 
 #endif    // English (U.S.) resources
