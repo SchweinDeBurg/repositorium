@@ -25,6 +25,9 @@
 // identifier was truncated in the debug information
 #pragma warning(disable: 4786)
 
+// C4996: function or variable may be unsafe
+#define _CRT_SECURE_NO_WARNINGS
+
 // PSDK headers
 #include <windows.h>
 

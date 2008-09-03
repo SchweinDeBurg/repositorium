@@ -49,22 +49,6 @@ END
 3 TEXTINCLUDE 
 BEGIN
     "\r\n"
-    "// English (U.S.) resources\r\n"
-    "\r\n"
-    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
-    "\r\n"
-    "#if defined(_WIN32)\r\n"
-    "LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US\r\n"
-    "#pragma code_page(1252)\r\n"
-    "#endif\r\n"
-    "\r\n"
-    "#if !defined(RT_MANIFEST)\r\n"
-    "#define RT_MANIFEST 24\r\n"
-    "#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1\r\n"
-    "#endif\r\n"
-    "CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST ""PanelBar.manifest""\r\n"
-    "\r\n"
-    "#endif    // English (U.S.) resources\r\n"
     "\0"
 END
 
@@ -182,32 +166,3 @@ IDB_BITMAP2             BITMAP                  "BinRes\\bitmap2.bmp"
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
-
-
-
-#ifndef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 3 resource.
-//
-
-// English (U.S.) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-
-#if defined(_WIN32)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-#endif
-
-#if !defined(RT_MANIFEST)
-#define RT_MANIFEST 24
-#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1
-#endif
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "PanelBar.manifest"
-
-#endif    // English (U.S.) resources
-
-/////////////////////////////////////////////////////////////////////////////
-#endif    // not APSTUDIO_INVOKED
-
