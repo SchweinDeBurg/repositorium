@@ -8,7 +8,6 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "WinResrc.h"
-
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -34,29 +33,12 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""WinResrc.h""\r\n"
-    "\0"
+    "#include ""WinResrc.\0"
 END
 
 3 TEXTINCLUDE 
 BEGIN
     "\r\n"
-    "// English (U.S.) resources\r\n"
-    "\r\n"
-    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
-    "\r\n"
-    "#if defined(_WIN32)\r\n"
-    "LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US\r\n"
-    "#pragma code_page(1252)\r\n"
-    "#endif\r\n"
-    "\r\n"
-    "#if !defined(RT_MANIFEST)\r\n"
-    "#define RT_MANIFEST 24\r\n"
-    "#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1\r\n"
-    "#endif\r\n"
-    "CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST ""ADO.manifest""\r\n"
-    "\r\n"
-    "#endif    // English (U.S.) resources\r\n"
     "\0"
 END
 
@@ -110,20 +92,15 @@ END
 //
 
 IDD_ADO DIALOGEX 0, 0, 266, 206
-STYLE DS_SETFONT | DS_CENTER | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | 
-    WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+STYLE DS_SETFONT | DS_CENTER | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "ADO Sample..."
 FONT 8, "Tahoma", 400, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDC_OK,146,100,50,14
-    COMBOBOX        IDC_TABLES,69,23,128,92,CBS_DROPDOWNLIST | CBS_SORT | 
-                    WS_DISABLED | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_TABLES,69,23,128,92,CBS_DROPDOWNLIST | CBS_SORT | WS_DISABLED | WS_VSCROLL | WS_TABSTOP
     EDITTEXT        IDC_CONN,79,7,117,12,ES_AUTOHSCROLL
-    CONTROL         "",IDC_CONTENT,"SysListView32",LVS_REPORT | 
-                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | 
-                    WS_BORDER | WS_TABSTOP,7,39,190,55
-    RTEXT           "Connection string:",IDC_LABEL1,7,8,60,8,0,
-                    WS_EX_TRANSPARENT
+    CONTROL         "",IDC_CONTENT,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,39,190,55
+    RTEXT           "Connection string:",IDC_LABEL1,7,8,60,8,0,WS_EX_TRANSPARENT
     RTEXT           "Table:",IDC_LABEL2,7,24,60,8,0,WS_EX_TRANSPARENT
     LTEXT           "",IDC_LABEL3,208,23,51,8,0,WS_EX_TRANSPARENT
 END
@@ -147,6 +124,7 @@ BEGIN
 END
 #endif    // APSTUDIO_INVOKED
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Icon
@@ -155,35 +133,5 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_APP_ICON            ICON                    "BinRes\\AppIcon.ico"
-
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
-
-
-
-#ifndef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 3 resource.
-//
-
-// English (U.S.) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-
-#if defined(_WIN32)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-#endif
-
-#if !defined(RT_MANIFEST)
-#define RT_MANIFEST 24
-#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1
-#endif
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "ADO.manifest"
-
-#endif    // English (U.S.) resources
-
-/////////////////////////////////////////////////////////////////////////////
-#endif    // not APSTUDIO_INVOKED
-

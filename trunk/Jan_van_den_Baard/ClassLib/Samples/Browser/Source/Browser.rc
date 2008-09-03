@@ -42,29 +42,12 @@ BEGIN
     "\r\n"
     "#if !defined(IDC_STATIC)\r\n"
     "#define IDC_STATIC -1\r\n"
-    "#endif   // IDC_STATIC\r\n"
-    "\0"
+    "#endif   // IDC_STATIC\r\0"
 END
 
 3 TEXTINCLUDE 
 BEGIN
     "\r\n"
-    "// English (U.S.) resources\r\n"
-    "\r\n"
-    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
-    "\r\n"
-    "#if defined(_WIN32)\r\n"
-    "LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US\r\n"
-    "#pragma code_page(1252)\r\n"
-    "#endif\r\n"
-    "\r\n"
-    "#if !defined(RT_MANIFEST)\r\n"
-    "#define RT_MANIFEST 24\r\n"
-    "#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1\r\n"
-    "#endif\r\n"
-    "CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST ""Browser.manifest""\r\n"
-    "\r\n"
-    "#endif    // English (U.S.) resources\r\n"
     "\0"
 END
 
@@ -127,16 +110,14 @@ IDI_APP_ICON            ICON                    "BinRes\\AppIcon.ico"
 //
 
 IDD_CRC DIALOGEX 0, 0, 260, 41
-STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | 
-    WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION """ClsBrowser"" sample..."
 FONT 8, "Tahoma", 400, 0, 0x0
 BEGIN
     LTEXT           "File:",IDC_STATIC,8,6,14,8
     EDITTEXT        IDC_FILE,24,4,232,13,ES_AUTOHSCROLL,WS_EX_ACCEPTFILES
     PUSHBUTTON      "OK",IDOK,198,22,58,14
-    CONTROL         "Show Files",IDC_SHOWFILES,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,24,21,83,8
+    CONTROL         "Show Files",IDC_SHOWFILES,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,24,21,83,8
 END
 
 
@@ -160,32 +141,3 @@ END
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
-
-
-
-#ifndef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 3 resource.
-//
-
-// English (U.S.) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-
-#if defined(_WIN32)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-#endif
-
-#if !defined(RT_MANIFEST)
-#define RT_MANIFEST 24
-#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1
-#endif
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Browser.manifest"
-
-#endif    // English (U.S.) resources
-
-/////////////////////////////////////////////////////////////////////////////
-#endif    // not APSTUDIO_INVOKED
-
