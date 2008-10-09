@@ -44,6 +44,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libtiff", "Graphics\libtiff
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenJPEG", "Graphics\OpenJPEG\OpenJPEG.2008.vcproj", "{3B567EEC-3F1F-4C75-91CD-5B3B7E096F3B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenEXR", "Graphics\OpenEXR\OpenEXR.2008.vcproj", "{14E1708C-7C58-4757-81F3-C6434F41B33B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4B70F6A5-35AE-4CEE-815C-20E1F31B5F5E} = {4B70F6A5-35AE-4CEE-815C-20E1F31B5F5E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		MBCS Debug|Win32 = MBCS Debug|Win32
@@ -164,6 +169,14 @@ Global
 		{3B567EEC-3F1F-4C75-91CD-5B3B7E096F3B}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
 		{3B567EEC-3F1F-4C75-91CD-5B3B7E096F3B}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
 		{3B567EEC-3F1F-4C75-91CD-5B3B7E096F3B}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
+		{14E1708C-7C58-4757-81F3-C6434F41B33B}.MBCS Debug|Win32.ActiveCfg = MBCS Debug|Win32
+		{14E1708C-7C58-4757-81F3-C6434F41B33B}.MBCS Debug|Win32.Build.0 = MBCS Debug|Win32
+		{14E1708C-7C58-4757-81F3-C6434F41B33B}.MBCS Release|Win32.ActiveCfg = MBCS Release|Win32
+		{14E1708C-7C58-4757-81F3-C6434F41B33B}.MBCS Release|Win32.Build.0 = MBCS Release|Win32
+		{14E1708C-7C58-4757-81F3-C6434F41B33B}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{14E1708C-7C58-4757-81F3-C6434F41B33B}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{14E1708C-7C58-4757-81F3-C6434F41B33B}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
+		{14E1708C-7C58-4757-81F3-C6434F41B33B}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
