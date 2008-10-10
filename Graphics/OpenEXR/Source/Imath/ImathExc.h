@@ -44,7 +44,7 @@
 //
 //-----------------------------------------------
 
-#include "IexBaseExc.h"
+#include "../Iex/IexBaseExc.h"
 
 namespace Imath {
 

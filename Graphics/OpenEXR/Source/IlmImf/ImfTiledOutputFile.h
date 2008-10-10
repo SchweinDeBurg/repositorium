@@ -44,7 +44,7 @@
 
 #include <ImfHeader.h>
 #include <ImfFrameBuffer.h>
-#include "ImathBox.h"
+#include "../Imath/ImathBox.h"
 #include <ImfTileDescription.h>
 #include <ImfThreading.h>
 
