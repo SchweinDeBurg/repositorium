@@ -59,6 +59,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeImage", "FreeImage\Free
 		{1B250FF9-59DA-4F60-98DD-C3C0E9BE2F7C} = {1B250FF9-59DA-4F60-98DD-C3C0E9BE2F7C}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeImagePlus", "FreeImagePlus\FreeImagePlus.2008.vcproj", "{EB1B996F-0A4C-46BE-A099-030AC5976E64}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B74C3F31-EAE2-47F2-80F3-F749311DE762} = {B74C3F31-EAE2-47F2-80F3-F749311DE762}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		MBCS Debug|Win32 = MBCS Debug|Win32
@@ -195,6 +200,14 @@ Global
 		{B74C3F31-EAE2-47F2-80F3-F749311DE762}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
 		{B74C3F31-EAE2-47F2-80F3-F749311DE762}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
 		{B74C3F31-EAE2-47F2-80F3-F749311DE762}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
+		{EB1B996F-0A4C-46BE-A099-030AC5976E64}.MBCS Debug|Win32.ActiveCfg = MBCS Debug|Win32
+		{EB1B996F-0A4C-46BE-A099-030AC5976E64}.MBCS Debug|Win32.Build.0 = MBCS Debug|Win32
+		{EB1B996F-0A4C-46BE-A099-030AC5976E64}.MBCS Release|Win32.ActiveCfg = MBCS Release|Win32
+		{EB1B996F-0A4C-46BE-A099-030AC5976E64}.MBCS Release|Win32.Build.0 = MBCS Release|Win32
+		{EB1B996F-0A4C-46BE-A099-030AC5976E64}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{EB1B996F-0A4C-46BE-A099-030AC5976E64}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{EB1B996F-0A4C-46BE-A099-030AC5976E64}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
+		{EB1B996F-0A4C-46BE-A099-030AC5976E64}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
