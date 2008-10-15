@@ -20,6 +20,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#if !defined(FREEIMAGE_NO_JPEG)
+
 extern "C" {
 #define XMD_H
 #undef FAR
@@ -299,3 +301,5 @@ FreeImage_JPEGCrop(const char *src_file, const char *dst_file, int left, int top
 		return FALSE;
 	}
 }
+
+#endif   // FREEIMAGE_NO_JPEG
