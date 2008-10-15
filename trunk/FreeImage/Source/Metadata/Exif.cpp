@@ -25,6 +25,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#if !defined(FREEIMAGE_NO_JPEG)
+
 #ifdef _MSC_VER 
 #pragma warning (disable : 4786) // identifier was truncated to 'number' characters
 #endif
@@ -685,4 +687,4 @@ jpeg_read_exif_profile(FIBITMAP *dib, const BYTE *dataptr, unsigned int datalen)
 	return FALSE;
 }
 
-
+#endif   // FREEIMAGE_NO_JPEG

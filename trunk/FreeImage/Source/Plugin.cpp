@@ -225,37 +225,89 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
 			as the one used to define the FREE_IMAGE_FORMAT enum. 
 			*/
 			s_plugins->AddNode(InitBMP);
+#if !defined(FREEIMAGE_NO_ICO)
 			s_plugins->AddNode(InitICO);
+#endif
+#if !defined(FREEIMAGE_NO_JPEG)
 			s_plugins->AddNode(InitJPEG);
+#endif
+#if !defined(FREEIMAGE_NO_MNG)
 			s_plugins->AddNode(InitMNG, NULL, "JNG", "JPEG Network Graphics", "jng", "");
+#endif
+#if !defined(FREEIMAGE_NO_KOALA)
 			s_plugins->AddNode(InitKOALA);
+#endif
+#if !defined(FREEIMAGE_NO_IFF)
 			s_plugins->AddNode(InitIFF);
+#endif
+#if !defined(FREEIMAGE_NO_MNG)
 			s_plugins->AddNode(InitMNG);
+#endif
+#if !defined(FREEIMAGE_NO_PNM)
 			s_plugins->AddNode(InitPNM, NULL, "PBM", "Portable Bitmap (ASCII)", "pbm", "^P1");
 			s_plugins->AddNode(InitPNM, NULL, "PBMRAW", "Portable Bitmap (RAW)", "pbm", "^P4");
+#endif
+#if !defined(FREEIMAGE_NO_PCD)
 			s_plugins->AddNode(InitPCD);
+#endif
+#if !defined(FREEIMAGE_NO_PCX)
 			s_plugins->AddNode(InitPCX);
+#endif
+#if !defined(FREEIMAGE_NO_PNM)
 			s_plugins->AddNode(InitPNM, NULL, "PGM", "Portable Greymap (ASCII)", "pgm", "^P2");
 			s_plugins->AddNode(InitPNM, NULL, "PGMRAW", "Portable Greymap (RAW)", "pgm", "^P5");
+#endif
+#if !defined(FREEIMAGE_NO_PNG)
 			s_plugins->AddNode(InitPNG);
+#endif
+#if !defined(FREEIMAGE_NO_PNM)
 			s_plugins->AddNode(InitPNM, NULL, "PPM", "Portable Pixelmap (ASCII)", "ppm", "^P3");
 			s_plugins->AddNode(InitPNM, NULL, "PPMRAW", "Portable Pixelmap (RAW)", "ppm", "^P6");
+#endif
 			s_plugins->AddNode(InitRAS);
+#if !defined(FREEIMAGE_NO_TARGA)
 			s_plugins->AddNode(InitTARGA);
+#endif
+#if !defined(FREEIMAGE_NO_TIFF)
 			s_plugins->AddNode(InitTIFF);
+#endif
+#if !defined(FREEIMAGE_NO_WBMP)
 			s_plugins->AddNode(InitWBMP);
+#endif
+#if !defined(FREEIMAGE_NO_PSD)
 			s_plugins->AddNode(InitPSD);
+#endif
+#if !defined(FREEIMAGE_NO_CUT)
 			s_plugins->AddNode(InitCUT);
+#endif
+#if !defined(FREEIMAGE_NO_XBM)
 			s_plugins->AddNode(InitXBM);
+#endif
+#if !defined(FREEIMAGE_NO_XPM)
 			s_plugins->AddNode(InitXPM);
+#endif
+#if !defined(FREEIMAGE_NO_DDS)
 			s_plugins->AddNode(InitDDS);
-	        s_plugins->AddNode(InitGIF);
-	        s_plugins->AddNode(InitHDR);
+#endif
+#if !defined(FREEIMAGE_NO_GIF)
+			s_plugins->AddNode(InitGIF);
+#endif
+#if !defined(FREEIMAGE_NO_HDR)
+			s_plugins->AddNode(InitHDR);
+#endif
+#if !defined(FREEIMAGE_NO_TIFF)
 			s_plugins->AddNode(InitG3);
+#endif
+#if !defined(FREEIMAGE_NO_SGI)
 			s_plugins->AddNode(InitSGI);
+#endif
+#if !defined(FREEIMAGE_NO_EXR)
 			s_plugins->AddNode(InitEXR);
+#endif
+#if !defined(FREEIMAGE_NO_J2K)
 			s_plugins->AddNode(InitJ2K);
 			s_plugins->AddNode(InitJP2);
+#endif
 			
 			// external plugin initialization
 

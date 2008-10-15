@@ -19,6 +19,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#if !defined(FREEIMAGE_NO_J2K)
+
 #include "FreeImage.h"
 #include "Utilities.h"
 #include "../../Graphics/OpenJPEG/Source/openjpeg.h"
@@ -491,3 +493,5 @@ opj_image_t* FIBITMAPToJ2KImage(int format_id, FIBITMAP *dib, const opj_cparamet
 		return NULL;
 	}
 }
+
+#endif   // FREEIMAGE_NO_J2K

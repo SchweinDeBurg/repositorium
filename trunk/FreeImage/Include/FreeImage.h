@@ -378,39 +378,91 @@ FI_STRUCT (FIICCPROFILE) {
 */
 FI_ENUM(FREE_IMAGE_FORMAT) {
 	FIF_UNKNOWN = -1,
-	FIF_BMP		= 0,
-	FIF_ICO		= 1,
-	FIF_JPEG	= 2,
-	FIF_JNG		= 3,
-	FIF_KOALA	= 4,
-	FIF_LBM		= 5,
+	FIF_BMP,
+#if !defined(FREEIMAGE_NO_ICO)
+	FIF_ICO,
+#endif
+#if !defined(FREEIMAGE_NO_JPEG)
+	FIF_JPEG,
+#endif
+#if !defined(FREEIMAGE_NO_MNG)
+	FIF_JNG,
+#endif
+#if !defined(FREEIMAGE_NO_KOALA)
+	FIF_KOALA4,
+#endif
+#if !defined(FREEIMAGE_NO_IFF)
+	FIF_LBM,
 	FIF_IFF = FIF_LBM,
-	FIF_MNG		= 6,
-	FIF_PBM		= 7,
-	FIF_PBMRAW	= 8,
-	FIF_PCD		= 9,
-	FIF_PCX		= 10,
-	FIF_PGM		= 11,
-	FIF_PGMRAW	= 12,
-	FIF_PNG		= 13,
-	FIF_PPM		= 14,
-	FIF_PPMRAW	= 15,
-	FIF_RAS		= 16,
-	FIF_TARGA	= 17,
-	FIF_TIFF	= 18,
-	FIF_WBMP	= 19,
-	FIF_PSD		= 20,
-	FIF_CUT		= 21,
-	FIF_XBM		= 22,
-	FIF_XPM		= 23,
-	FIF_DDS		= 24,
-	FIF_GIF     = 25,
-	FIF_HDR		= 26,
-	FIF_FAXG3	= 27,
-	FIF_SGI		= 28,
-	FIF_EXR		= 29,
-	FIF_J2K		= 30,
-	FIF_JP2		= 31
+#endif
+#if !defined(FREEIMAGE_NO_MNG)
+	FIF_MNG,
+#endif
+#if !defined(FREEIMAGE_NO_PNM)
+	FIF_PBM,
+	FIF_PBMRAW,
+#endif
+#if !defined(FREEIMAGE_NO_PCD)
+	FIF_PCD,
+#endif
+#if !defined(FREEIMAGE_NO_PCX)
+	FIF_PCX,
+#endif
+#if !defined(FREEIMAGE_NO_PNM)
+	FIF_PGM,
+	FIF_PGMRAW,
+#endif
+#if !defined(FREEIMAGE_NO_PNG)
+	FIF_PNG,
+#endif
+#if !defined(FREEIMAGE_NO_PNM)
+	FIF_PPM,
+	FIF_PPMRAW,
+#endif
+	FIF_RAS,
+#if !defined(FREEIMAGE_NO_TARGA)
+	FIF_TARGA,
+#endif
+#if !defined(FREEIMAGE_NO_TIFF)
+	FIF_TIFF,
+#endif
+#if !defined(FREEIMAGE_NO_WBMP)
+	FIF_WBMP,
+#endif
+#if !defined(FREEIMAGE_NO_PSD)
+	FIF_PSD,
+#endif
+#if !defined(FREEIMAGE_NO_CUT)
+	FIF_CUT,
+#endif
+#if !defined(FREEIMAGE_NO_XBM)
+	FIF_XBM,
+#endif
+#if !defined(FREEIMAGE_NO_XPM)
+	FIF_XPM,
+#endif
+#if !defined(FREEIMAGE_NO_DDS)
+	FIF_DDS,
+#endif
+#if !defined(FREEIMAGE_NO_GIF)
+	FIF_GIF,
+#endif
+#if !defined(FREEIMAGE_NO_HDR)
+	FIF_HDR,
+#endif
+#if !defined(FREEIMAGE_NO_TIFF)
+	FIF_FAXG3,
+#endif
+#if !defined(FREEIMAGE_NO_SGI)
+	FIF_SGI,
+#endif
+#if !defined(FREEIMAGE_NO_EXR)
+	FIF_EXR,
+#endif
+#if !defined(FREEIMAGE_NO_J2K)
+	FIF_J2K,
+	FIF_JP2
+#endif
 };
 
 /** Image type used in FreeImage.
