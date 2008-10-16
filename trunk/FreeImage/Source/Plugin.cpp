@@ -224,7 +224,9 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
 			The order used to initialize internal plugins below MUST BE the same order 
 			as the one used to define the FREE_IMAGE_FORMAT enum. 
 			*/
+#if !defined(FREEIMAGE_NO_BMP)
 			s_plugins->AddNode(InitBMP);
+#endif
 #if !defined(FREEIMAGE_NO_ICO)
 			s_plugins->AddNode(InitICO);
 #endif

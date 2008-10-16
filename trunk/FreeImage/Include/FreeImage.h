@@ -378,7 +378,9 @@ FI_STRUCT (FIICCPROFILE) {
 */
 FI_ENUM(FREE_IMAGE_FORMAT) {
 	FIF_UNKNOWN = -1,
+#if !defined(FREEIMAGE_NO_BMP)
 	FIF_BMP,
+#endif
 #if !defined(FREEIMAGE_NO_ICO)
 	FIF_ICO,
 #endif
