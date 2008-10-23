@@ -231,7 +231,8 @@ void CWinCrypto::AssertValid(void) const
 
 void CWinCrypto::Dump(CDumpContext& dumpCtx) const
 {
-	try {
+	try
+	{
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
 

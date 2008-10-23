@@ -255,7 +255,8 @@ void CStringsXML::AssertValid(void) const
 
 void CStringsXML::Dump(CDumpContext& dumpCtx) const
 {
-	try {
+	try
+	{
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
 

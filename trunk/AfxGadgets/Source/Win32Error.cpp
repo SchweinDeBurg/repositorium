@@ -138,7 +138,8 @@ void CWin32Error::AssertValid(void) const
 
 void CWin32Error::Dump(CDumpContext& dumpCtx) const
 {
-	try {
+	try
+	{
 		// first invoke inherited dumper...
 		CException::Dump(dumpCtx);
 

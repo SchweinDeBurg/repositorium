@@ -422,7 +422,8 @@ void CArgsParser::AssertValid(void) const
 
 void CArgsParser::Dump(CDumpContext& dumpCtx) const
 {
-	try {
+	try
+	{
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
 
