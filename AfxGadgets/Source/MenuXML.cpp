@@ -374,7 +374,8 @@ void CMenuXML::AssertValid(void) const
 
 void CMenuXML::Dump(CDumpContext& dumpCtx) const
 {
-	try {
+	try
+	{
 		// first invoke inherited dumper...
 		CMenu::Dump(dumpCtx);
 

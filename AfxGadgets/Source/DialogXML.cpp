@@ -1208,7 +1208,8 @@ void CDialogXML::AssertValid(void) const
 
 void CDialogXML::Dump(CDumpContext& dumpCtx) const
 {
-	try {
+	try
+	{
 		// first invoke inherited dumper...
 		CDialog::Dump(dumpCtx);
 

@@ -215,7 +215,8 @@ void CSeException::AssertValid(void) const
 
 void CSeException::Dump(CDumpContext& dumpCtx) const
 {
-	try {
+	try
+	{
 		// first invoke inherited dumper...
 		CException::Dump(dumpCtx);
 

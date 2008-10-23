@@ -453,7 +453,8 @@ void CHotKeysXML::AssertValid(void) const
 
 void CHotKeysXML::Dump(CDumpContext& dumpCtx) const
 {
-	try {
+	try
+	{
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
 

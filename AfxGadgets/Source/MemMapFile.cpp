@@ -204,7 +204,8 @@ void CMemMapFile::AssertValid(void) const
 
 void CMemMapFile::Dump(CDumpContext& dumpCtx) const
 {
-	try {
+	try
+	{
 		// first invoke inherited dumper...
 		CObject::Dump(dumpCtx);
 

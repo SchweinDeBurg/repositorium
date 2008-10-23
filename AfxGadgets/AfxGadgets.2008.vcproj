@@ -451,6 +451,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\CustomResource.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CustomResource.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\MemMapFile.cpp"
 				>
 			</File>

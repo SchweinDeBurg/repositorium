@@ -118,7 +118,8 @@ void CMemoryDC::AssertValid(void) const
 
 void CMemoryDC::Dump(CDumpContext& dumpCtx) const
 {
-	try {
+	try
+	{
 		// first invoke inherited dumper...
 		CDC::Dump(dumpCtx);
 
