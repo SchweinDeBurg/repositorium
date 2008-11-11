@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>CPJNSMTPConnection v2.80</title>
+<title>CPJNSMTPConnection v2.82</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
 
 </head>
@@ -11,7 +11,7 @@
 
 <h2 align="left">
 <img src="PJNSMTP.gif" width="39" height="38" alt="PJNSMTP.gif (295 bytes)" /><strong>CPJNSMTPConnection 
-v2.80</strong></h2>
+v2.82</strong></h2>
 
 <p>Welcome to <strong>CPJNSMTPConnection</strong>, a collection of MFC classes to
 support the SMTP protocol. SMTP for those not familiar with all the internet protocols is
@@ -176,15 +176,29 @@ Protocol) which obsoletes the original SMTP RFC, you should read
 	&quot;PJNSMTP.rc&quot; rc file to your applications rc file (Use drag and drop in the 
 	Visual C++ resource editor to speed this up!).</li>
 	<li>By default NTLM authentication is also provided for. This is provided by 
-	including PJNNTLMAuth.cpp/h in your project also. If you do not want to 
+	including PJNNTLMAuth.cpp/h in your project. If you do not want to 
 	include this support in CPJNSMTPConnection, then you should define the 
 	pre-processor macro &quot;CPJNSMTP_NONTLM&quot; before including PJNSMTP.h. You then 
 	do not need to include these two modules in your project.</li>
 	<li>By default SSL connections are also provided for. This is provided by 
-	including OpenSSLMfc.cpp/h in your project also. If you do not want to 
-	include this support in CPJNSMTPConnection, then you should define the 
+	including OpenSSLMfc.cpp/h in your project. You will also need to 
+	compile/link with the OpenSSL libraries and initialize OpenSSL 
+	correctly. See the Linker library settings, CPJNSMTPApp::InitInstance and 
+	CPJNSMTPApp::ExitInstance code for examples on doing this in the sample app 
+	provided with the download. If you do not want to 
+	include SSL support in CPJNSMTPConnection, then you should define the 
 	pre-processor macro &quot;CPJNSMTP_NOSSL&quot; before including PJNSMTP.h. In this 
-	case, you do not need to include these two modules in your project.</li>
+	case, you do not need to include the OpenSSLMfc.cpp/h modules in your project. 
+	The sample app provided with the download compiles against the DLL version 
+	of OpenSSL provided by
+	<a href="http://www.slproweb.com/products/Win32OpenSSL.html">Shining Light 
+	Productions</a>. You will need to ship the libeay32.dll 
+	and ssleay32.dll DLLs along with your application (preferably in your 
+	application's main directory). The zip file includes these two DLLs along 
+	with the prebuilt sample app binary.&nbsp; For further information on using OpenSSL, see my 
+	blog entry at
+	<a href="http://naughter.spaces.live.com/blog/cns!7692E6D72E26EAC!209.entry">
+	http://naughter.spaces.live.com/blog/cns!7692E6D72E26EAC!209.entry.</a></li>
 	<li>The following modules are not included in the CPJNSMTPConnection zip 
 	download: SocMFC.cpp/h and OpenSSLMfc.cpp/h and you will need 
 	to download separately these separately from
@@ -193,16 +207,16 @@ Protocol) which obsoletes the original SMTP RFC, you should read
 	<li>You can optionally exclude the DNS MXLookup support in 
 	CPJNSMTPConnection by defining the pre-processor macro &quot;CPJNSMTP_NOMXLOOKUP&quot; 
 	before including &quot;PJNSMTP.h&quot;</li>
-	<li>You will need to have a functioning Winsock stack installed and 
-	correctly initialised prior to calling any functions in CPJNSMTPConnection. 
+	<li>You will need to have Winsock correctly initialised prior to calling any functions in CPJNSMTPConnection. 
 	Depending on your application, this will involve calling either WSAStartup 
 	or AfxSocketInit at start-up of your application.</li>
 	<li>You will also need to have afxtempl.h, winsock.h or afxsock.h and 
-	afxpriv.h in your precompiled header. The code will work just as well in a 
-	GUI or console app.</li>
-	<li>To see the class in action, have a look at the code in InitInstance in 
-	the module &quot;main.cpp&quot;.&nbsp; For example to send a message about this class, 
-	the code would look something like this (ignoring error handling):</li>
+	afxpriv.h in your precompiled header.</li>
+	<li>To see the class in action, have a look at the code in 
+	CPJNSMTPApp::InitInstance in 
+	the module &quot;PJNSMTPApp.cpp&quot; as well as all the code in the 
+	PJNSMTPAppDlg.cpp module in the sample application which comes with the code.&nbsp;For example to send a message about this class, 
+	the code would look something like this (ignoring error handling&lt;gg&gt;):</li>
 </ul>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPConnection smtp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.Connect(_T(&quot;mail.someisp.com&quot;));<br />
@@ -214,24 +228,7 @@ CSMTPAddress(&quot;adeveloper@someisp.com&quot;);<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_sSubject = _T(&quot;A Fellow developer!&quot;);<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.AddTextBody(_T(&quot;if you can read this 
 then the CPJNSMTPConnection code is working&quot;));<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.SendMessage(m);<br />
-</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To send your autoexec.bat as a 
-file attachment you would use the following code:</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPConnection smtp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.Connect(_T(&quot;mail.yourisp.com&quot;));<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPMessage m;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-m.m_To.Add(CSMTPAddress(_T(&quot;someaddress@somedestination.com&quot;)));<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_From = 
-CSMTPAddress(_T(&quot;you@someisp.com&quot;));<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_sSubject = _T(&quot;Here's my 
-autoexec.bat file!&quot;);<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CSMTPBodyPart a;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a.SetFilename(_T(&quot;c:\\autoexec.bat&quot;));<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.AddBodyPart(a);<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.SendMessage(m);<br />
-</p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.SendMessage(m);</p>
 <ul>
 	<li>Please note that the NTLM authentication support in the class is 
 	provided by using the SSPI (Security Support Provider Interface) interfaces 
@@ -263,17 +260,6 @@ autoexec.bat file!&quot;);<br />
 	.<br />
 	This is not really a problem with the class but more of a gotcha on the 
 	minutiae of using MHTML email.</li>
-	<li>If you will be using the SSL extensions to the class, then you need to 
-	compile/link with the OpenSSL libraries and initialize OpenSSL 
-	correctly. See the Linker library settings, CPJNSMTPApp::InitInstance and 
-	CPJNSMTPApp::ExitInstance code for examples on doing this in the sample app 
-	provided with the download. For further information on using OpenSSL, see my 
-	blog entry at
-	<a href="http://naughter.spaces.live.com/blog/cns!7692E6D72E26EAC!209.entry">
-	http://naughter.spaces.live.com/blog/cns!7692E6D72E26EAC!209.entry.</a></li>
-	<li>For further details on usage of the classes please consult the sample 
-	application which comes with the code, specifically check out 
-	CPJNSMTPAppDlg::OnSend in PJSMTPAppDlg.cpp.</li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1239,6 +1225,26 @@ autoexec.bat file!&quot;);<br />
 	no authentication scheme is supported by the SMTP server. Thanks to Mat 
 	Berchtold for this update.</li>
 </ul>
+<p><strong>V2.81 (2 November 2008</strong><b>)</b></p>
+<ul>
+	<li>Improvements to CPJNSMTPAddress constructor which takes a single string. 
+	The code now removes redundant quotes.</li>
+	<li>CPJNSMTPAddress::GetRegularFormat now forms the regular form of the 
+	email address before it Q encodes it.</li>
+	<li>The sample app now uses DPAPI to encrypt the username &amp; password 
+	configuration settings. </li>
+	<li>The sample app is now linked against the latest OpenSSL v0.9.8i dlls. </li>
+	<li>Updated coding references in the html documentation. In addition the zip 
+	file now includes the OpenSSL dlls. Thanks to Michael Grove for reporting 
+	this issues.</li>
+</ul>
+<p><strong>V2.82 (6 November 2008</strong><b>)</b></p>
+<ul>
+	<li>For best compatibility purposes with existing SMTP mail servers, all 
+	message headers which include email addresses are now not Q encoded. Thanks 
+	to Christian Egging for reporting this issue.</li>
+	<li>Optimized use of CT2A class throughout the code</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1254,7 +1260,7 @@ autoexec.bat file!&quot;);<br />
 <p>PJ Naughter<br />
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br />
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br />
-16 August 2008</p>
+6 November 2008</p>
 
 </body>
 

@@ -15,9 +15,8 @@ except you cannot modify the copyright details at the top of each module. If you
 code with your application, then you are only allowed to distribute versions released by the author. This is 
 to maintain a single distribution point for the source code. 
 
-Please note that I have been informed recently that C(PJN)SMTPConnection is being used to develop and send unsolicted bulk mail. 
-This was not the intention of the code and the author explicitly forbids use of the code for any software of this kind without 
-my explicit written consent.
+Please note that I have been informed that C(PJN)SMTPConnection is being used to develop and send unsolicted bulk mail. 
+This was not the intention of the code and the author explicitly forbids use of the code for any software of this kind.
 
 */
 
@@ -161,11 +160,15 @@ public:
 	CPJNSMTPAddress& operator=(const CPJNSMTPAddress& r);
 
 //Methods
-  CStringA GetRegularFormat(BOOL bEncode, const CString& sCharset) const;
+  CString GetRegularFormat() const;
 
 //Data members
 	CString m_sFriendlyName; //Would set it to contain something like "PJ Naughter"
   CString m_sEmailAddress; //Would set it to contains something like "pjna@naughter.com"
+  
+protected:
+//Methods
+  static CString RemoveQuotes(const CString& sValue);
 };
 
 
@@ -401,9 +404,9 @@ public:
 
 //Methods
 #ifndef CPJNSMTP_NOSSL
-  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername=NULL, LPCTSTR pszPassword=NULL, int nPort=25, BOOL bSSL = FALSE);
+  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25, BOOL bSSL = FALSE);
 #else
-  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername=NULL, LPCTSTR pszPassword=NULL, int nPort=25);
+  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25);
 #endif
   void    Disconnect(BOOL bGracefully = TRUE);
   BOOL    IsConnected() const	{ return m_bConnected; };
