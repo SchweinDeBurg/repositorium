@@ -53,7 +53,7 @@ class CArgsParser: public CObject
 
 // construction/destruction
 public:
-	CArgsParser(LPCTSTR pszArguments = ::GetCommandLine(), bool fCaseSensitive = false);
+	CArgsParser(LPCTSTR pszArguments, bool fCaseSensitive = false);
 	virtual ~CArgsParser(void);
 
 // operations
