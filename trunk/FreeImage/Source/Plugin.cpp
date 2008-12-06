@@ -266,7 +266,9 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
 			s_plugins->AddNode(InitPNM, NULL, "PPM", "Portable Pixelmap (ASCII)", "ppm", "^P3");
 			s_plugins->AddNode(InitPNM, NULL, "PPMRAW", "Portable Pixelmap (RAW)", "ppm", "^P6");
 #endif
+#if !defined(FREEIMAGE_NO_RAS)
 			s_plugins->AddNode(InitRAS);
+#endif
 #if !defined(FREEIMAGE_NO_TARGA)
 			s_plugins->AddNode(InitTARGA);
 #endif
