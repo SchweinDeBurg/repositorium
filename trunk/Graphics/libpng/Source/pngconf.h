@@ -1,7 +1,7 @@
 
 /* pngconf.h - machine configurable file for libpng
  *
- * libpng version 1.2.32 - September 18, 2008
+ * libpng version 1.2.33 - October 31, 2008
  * For conditions of distribution and use, see copyright notice in png.h
  * Copyright (c) 1998-2008 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
@@ -18,6 +18,22 @@
 #define PNGCONF_H
 
 #define PNG_1_2_X
+
+/* ------------------------------------------------ */
+/** Added by FreeImage
+*/
+#define PNG_iTXt_SUPPORTED
+#define PNG_READ_iTXt_SUPPORTED
+#define PNG_WRITE_iTXt_SUPPORTED
+
+#if defined(_MSC_VER) || (defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__) || defined(__x86_64__)) && defined(__GNUC__)
+#define PNG_ASSEMBLER_CODE_SUPPORTED
+#else
+#undef PNG_ASSEMBLER_CODE_SUPPORTED
+#define PNG_NO_ASSEMBLER_CODE
+#define PNG_NO_MMX_CODE
+#endif // i386 || x86_64
+/* ------------------------------------------------ */
 
 /* 
  * PNG_USER_CONFIG has to be defined on the compiler command line. This
