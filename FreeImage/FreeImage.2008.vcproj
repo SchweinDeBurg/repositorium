@@ -547,6 +547,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\PluginPFM.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\PluginPNG.cpp"
 					>
 				</File>

@@ -312,7 +312,10 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
 			s_plugins->AddNode(InitJ2K);
 			s_plugins->AddNode(InitJP2);
 #endif
-			
+#if !defined(FREEIMAGE_NO_PFM)
+			s_plugins->AddNode(InitPFM);
+#endif
+
 			// external plugin initialization
 
 #ifdef _WIN32
