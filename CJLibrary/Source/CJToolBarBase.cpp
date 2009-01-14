@@ -56,8 +56,12 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #if (_MFC_VER >= 0x0900)
+#if !defined(CX_BORDER)
 #define CX_BORDER AFX_CX_BORDER
+#endif   // CX_BORDER
+#if !defined(CY_BORDER)
 #define CY_BORDER AFX_CY_BORDER
+#endif   // CY_BORDER
 #endif   // _MFC_VER
 
 /////////////////////////////////////////////////////////////////////////////
