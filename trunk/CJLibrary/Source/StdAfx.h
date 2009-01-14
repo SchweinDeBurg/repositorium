@@ -117,7 +117,7 @@
 #endif
 
 #if _MSC_VER >= 1300
-	#include <..\src\mfc\afximpl.h>		// VC.NET
+	#include <..\src\mfc\afximpl.h>		// VC.NET/2003/2005/2008
 #else
 	#include <..\src\afximpl.h>			// VC 5/6
 #endif

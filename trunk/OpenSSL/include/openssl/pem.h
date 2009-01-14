@@ -125,6 +125,7 @@ extern "C" {
 #define PEM_STRING_DSA		"DSA PRIVATE KEY"
 #define PEM_STRING_DSA_PUBLIC	"DSA PUBLIC KEY"
 #define PEM_STRING_PKCS7	"PKCS7"
+#define PEM_STRING_PKCS7_SIGNED	"PKCS #7 SIGNED DATA"
 #define PEM_STRING_PKCS8	"ENCRYPTED PRIVATE KEY"
 #define PEM_STRING_PKCS8INF	"PRIVATE KEY"
 #define PEM_STRING_DHPARAMS	"DH PARAMETERS"
@@ -133,6 +134,7 @@ extern "C" {
 #define PEM_STRING_ECDSA_PUBLIC "ECDSA PUBLIC KEY"
 #define PEM_STRING_ECPARAMETERS "EC PARAMETERS"
 #define PEM_STRING_ECPRIVATEKEY	"EC PRIVATE KEY"
+#define PEM_STRING_CMS		"CMS"
 
   /* Note that this structure is initialised by PEM_SealInit and cleaned up
      by PEM_SealFinal (at least for now) */
