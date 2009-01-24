@@ -72,7 +72,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/Naughter.lib"
+				OutputFile="$(OutDir)\Naughter.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -145,7 +145,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/Naughter.lib"
+				OutputFile="$(OutDir)\Naughter.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -220,7 +220,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/Naughter.lib"
+				OutputFile="$(OutDir)\Naughter.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -293,7 +293,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/Naughter.lib"
+				OutputFile="$(OutDir)\Naughter.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
