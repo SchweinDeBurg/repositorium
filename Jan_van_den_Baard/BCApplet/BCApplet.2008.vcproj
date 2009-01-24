@@ -75,7 +75,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/BCApplet.cpl"
+				OutputFile="$(OutDir)\BCApplet.cpl"
 				Version="1.0"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\Source\BCApplet.def"
@@ -86,7 +86,7 @@
 				OptimizeForWindows98="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/BCApplet.lib"
+				ImportLibrary="$(OutDir)\BCApplet.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -168,7 +168,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/BCApplet.cpl"
+				OutputFile="$(OutDir)\BCApplet.cpl"
 				Version="1.0"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\Source\BCApplet.def"
@@ -180,7 +180,7 @@
 				SetChecksum="true"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/BCApplet.lib"
+				ImportLibrary="$(OutDir)\BCApplet.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -265,7 +265,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/BCApplet.cpl"
+				OutputFile="$(OutDir)\BCApplet.cpl"
 				Version="1.0"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\Source\BCApplet.def"
@@ -276,7 +276,7 @@
 				OptimizeForWindows98="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/BCApplet.lib"
+				ImportLibrary="$(OutDir)\BCApplet.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -358,7 +358,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/BCApplet.cpl"
+				OutputFile="$(OutDir)\BCApplet.cpl"
 				Version="1.0"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\Source\BCApplet.def"
@@ -370,7 +370,7 @@
 				SetChecksum="true"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/BCApplet.lib"
+				ImportLibrary="$(OutDir)\BCApplet.lib"
 				TargetMachine="1"
 			/>
 			<Tool

@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/zlib.lib"
+				OutputFile="$(OutDir)\zlib.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -141,7 +141,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/zlib.lib"
+				OutputFile="$(OutDir)\zlib.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -214,7 +214,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/zlib.lib"
+				OutputFile="$(OutDir)\zlib.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -285,7 +285,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/zlib.lib"
+				OutputFile="$(OutDir)\zlib.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -310,98 +310,100 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="Source\adler32.c"
+				RelativePath=".\Source\adler32.c"
 				>
 			</File>
 			<File
-				RelativePath="Source\compress.c"
+				RelativePath=".\Source\compress.c"
 				>
 			</File>
 			<File
-				RelativePath="Source\crc32.c"
+				RelativePath=".\Source\crc32.c"
 				>
 			</File>
 			<File
-				RelativePath="Source\deflate.c"
+				RelativePath=".\Source\deflate.c"
 				>
 			</File>
 			<File
-				RelativePath="Source\gzio.c"
+				RelativePath=".\Source\gzio.c"
 				>
 			</File>
 			<File
-				RelativePath="Source\infback.c"
+				RelativePath=".\Source\infback.c"
 				>
 			</File>
 			<File
-				RelativePath="Source\inffast.c"
+				RelativePath=".\Source\inffast.c"
 				>
 			</File>
 			<File
-				RelativePath="Source\inflate.c"
+				RelativePath=".\Source\inflate.c"
 				>
 			</File>
 			<File
-				RelativePath="Source\inftrees.c"
+				RelativePath=".\Source\inftrees.c"
 				>
 			</File>
 			<File
-				RelativePath="Source\trees.c"
+				RelativePath=".\Source\trees.c"
 				>
 			</File>
 			<File
-				RelativePath="Source\uncompr.c"
+				RelativePath=".\Source\uncompr.c"
 				>
 			</File>
 			<File
-				RelativePath="Source\zutil.c"
+				RelativePath=".\Source\zutil.c"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="Source\crc32.h"
+				RelativePath=".\Source\crc32.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\deflate.h"
+				RelativePath=".\Source\deflate.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\inffast.h"
+				RelativePath=".\Source\inffast.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\inffixed.h"
+				RelativePath=".\Source\inffixed.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\inflate.h"
+				RelativePath=".\Source\inflate.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\inftrees.h"
+				RelativePath=".\Source\inftrees.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\trees.h"
+				RelativePath=".\Source\trees.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\zconf.h"
+				RelativePath=".\Source\zconf.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\zlib.h"
+				RelativePath=".\Source\zlib.h"
 				>
 			</File>
 			<File
-				RelativePath="Source\zutil.h"
+				RelativePath=".\Source\zutil.h"
 				>
 			</File>
 		</Filter>

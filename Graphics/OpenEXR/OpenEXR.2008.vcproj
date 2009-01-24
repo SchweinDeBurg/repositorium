@@ -76,7 +76,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalOptions="/IGNORE:4221"
-				OutputFile="$(OutDir)/OpenEXR.lib"
+				OutputFile="$(OutDir)\OpenEXR.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -152,7 +152,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalOptions="/IGNORE:4221"
-				OutputFile="$(OutDir)/OpenEXR.lib"
+				OutputFile="$(OutDir)\OpenEXR.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -230,7 +230,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalOptions="/IGNORE:4221"
-				OutputFile="$(OutDir)/OpenEXR.lib"
+				OutputFile="$(OutDir)\OpenEXR.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -306,7 +306,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalOptions="/IGNORE:4221"
-				OutputFile="$(OutDir)/OpenEXR.lib"
+				OutputFile="$(OutDir)\OpenEXR.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -331,6 +331,7 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<Filter
 				Name="Half"
@@ -644,6 +645,7 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
 				RelativePath=".\Source\IlmBaseConfig.h"

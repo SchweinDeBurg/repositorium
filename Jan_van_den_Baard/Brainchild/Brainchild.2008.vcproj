@@ -75,7 +75,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/Brainchild.dll"
+				OutputFile="$(OutDir)\Brainchild.dll"
 				Version="1.0"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\Source\Brainchild.def"
@@ -86,7 +86,7 @@
 				OptimizeForWindows98="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/Brainchild.lib"
+				ImportLibrary="$(OutDir)\Brainchild.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -168,7 +168,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/Brainchild.dll"
+				OutputFile="$(OutDir)\Brainchild.dll"
 				Version="1.0"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\Source\Brainchild.def"
@@ -180,7 +180,7 @@
 				SetChecksum="true"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/Brainchild.lib"
+				ImportLibrary="$(OutDir)\Brainchild.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -265,7 +265,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/Brainchild.dll"
+				OutputFile="$(OutDir)\Brainchild.dll"
 				Version="1.0"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\Source\Brainchild.def"
@@ -276,7 +276,7 @@
 				OptimizeForWindows98="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/Brainchild.lib"
+				ImportLibrary="$(OutDir)\Brainchild.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -358,7 +358,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)/Brainchild.dll"
+				OutputFile="$(OutDir)\Brainchild.dll"
 				Version="1.0"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\Source\Brainchild.def"
@@ -370,7 +370,7 @@
 				SetChecksum="true"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)/Brainchild.lib"
+				ImportLibrary="$(OutDir)\Brainchild.lib"
 				TargetMachine="1"
 			/>
 			<Tool

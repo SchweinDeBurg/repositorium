@@ -72,7 +72,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/CJLibrary.lib"
+				OutputFile="$(OutDir)\CJLibrary.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -145,7 +145,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/CJLibrary.lib"
+				OutputFile="$(OutDir)\CJLibrary.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -220,7 +220,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/CJLibrary.lib"
+				OutputFile="$(OutDir)\CJLibrary.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -293,7 +293,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/CJLibrary.lib"
+				OutputFile="$(OutDir)\CJLibrary.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -318,6 +318,7 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
 				RelativePath=".\Source\CJBrowseEdit.cpp"
@@ -583,6 +584,7 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
 				RelativePath=".\Include\CJBrowseEdit.h"
