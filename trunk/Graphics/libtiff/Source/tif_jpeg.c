@@ -1,4 +1,4 @@
-/* $Id: tif_jpeg.c,v 1.23 2008/06/08 18:47:33 drolon Exp $ */
+/* $Id: tif_jpeg.c,v 1.24 2009/03/15 17:29:17 drolon Exp $ */
 
 /*
  * Copyright (c) 1994-1997 Sam Leffler
@@ -1425,6 +1425,10 @@ JPEGEncode(TIFF* tif, tidata_t buf, tsize_t cc, tsample_t s)
 	if (cc % sp->bytesperline)
 		TIFFWarningExt(tif->tif_clientdata, tif->tif_name, "fractional scanline discarded");
 
+        /* The last strip will be limited to image size */
+        if( !isTiled(tif) && tif->tif_row+nrows > tif->tif_dir.td_imagelength )
+            nrows = tif->tif_dir.td_imagelength - tif->tif_row;
+
 	while (nrows-- > 0) {
 		bufptr[0] = (JSAMPROW) buf;
 		if (TIFFjpeg_write_scanlines(sp, bufptr, 1) != 1)
@@ -1670,7 +1674,7 @@ JPEGVSetField(TIFF* tif, ttag_t tag, va_list ap)
 		return (*sp->vsetparent)(tif, tag, ap);
 	}
 
-	if ((fip = _TIFFFieldWithTag(tif, tag)) != 0) {
+	if ((fip = _TIFFFieldWithTag(tif, tag)) != NULL) {
 		TIFFSetFieldBit(tif, fip->field_bit);
 	} else {
 		return (0);
