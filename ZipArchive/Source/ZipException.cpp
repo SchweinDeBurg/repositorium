@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "ZipException.h"
+#include "_ZipException.h"
 #include "_features.h"
 #include "../../zlib/Source/zlib.h"
 #include <errno.h>
@@ -26,7 +26,7 @@
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-#if defined _MFC_VER && defined ZIP_ARCHIVE_MFC
+#if defined _MFC_VER && defined _ZIP_IMPL_MFC
 	IMPLEMENT_DYNAMIC( CZipException, CException)
 #endif
 
@@ -38,7 +38,13 @@ CZipException::CZipException(int iCause, LPCTSTR lpszZipName)
 	m_iCause = iCause;
 
 	if (lpszZipName)
-		m_szFileName = lpszZipName;	
+		m_szFileName = lpszZipName;
+
+#ifdef _ZIP_SYSTEM_WIN
+	m_iSystemError = ::GetLastError();
+#else
+	m_iSystemError = errno;
+#endif
 }
 
 CZipException::~CZipException() throw()
@@ -59,7 +65,7 @@ CZipException::~CZipException() throw()
 // }
 
 
-#ifdef ZIP_ENABLE_ERROR_DESCRIPTION
+#ifdef _ZIP_ENABLE_ERROR_DESCRIPTION
 
 ZBOOL CZipException::GetErrorMessage(LPTSTR lpszError, UINT nMaxError,
 	UINT* )
@@ -194,6 +200,9 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 		case noCallback:
 			sz = _T("There is no spanned archive callback object set.");
 			break;
+		case noVolumeSize:
+			sz = _T("The volume size was not defined for a split archive.");
+			break;
 		case aborted:
 			sz = _T("Volume change aborted in a segmented archive.");
 			break;
@@ -207,13 +216,13 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 			sz = _T("The device selected for the spanned archive is not removable.");
 			break;
 		case tooManyVolumes:
-			sz = _T("The limit of the maximum volumes reached.");
+			sz = _T("The limit of the maximum number of volumes has been reached.");
 			break;
 		case tooManyFiles:
-			sz = _T("The limit of the maximum files in an archive reached.");
+			sz = _T("The limit of the maximum number of files in an archive has been reached.");
 			break;
 		case tooLongData:
-			sz = _T("The filename, the comment or the local or central extra field of the file added to the archive is too long.");
+			sz = _T("The filename, the comment or local or central extra field of the file added to the archive is too long.");
 			break;
 		case tooBigSize:
 			sz = _T("The file size is too large to be supported.");
@@ -226,6 +235,9 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 			break;
 		case internalError:
 			sz = _T("An internal error.");
+			break;
+		case fileError:
+			sz.Format(_T("%s (%s)."), _T("A file error occurred"), (LPCTSTR)GetSystemErrorDescription());
 			break;
 		case notRemoved:
 			sz.Format(_T("%s (%s)."), _T("Error while removing a file"), (LPCTSTR)GetSystemErrorDescription());
@@ -245,12 +257,12 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 		case noAES:
 			sz = _T("WinZip AES encryption has not been enabled for the library, but is required to decompress the archive.");
 			break;
-#ifdef ZIP_ARCHIVE_STL
+#ifdef _ZIP_IMPL_STL
 			case outOfBounds:
 			sz = _T("The collection is empty and the bounds do not exist.");
 			break;
 #endif
-#ifdef ZIP_ARCHIVE_USE_LOCKING
+#ifdef _ZIP_USE_LOCKING
 		case mutexError:
 			sz = _T("Locking or unlocking resources access was unsuccessful.");
 			break;
@@ -277,9 +289,9 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 			sz = _T("Zlib library error (version error).");
 			break;
 		default:
-			sz = bNoLoop ? _T("Unknown error") :(LPCTSTR) GetSystemErrorDescription();
+			sz = bNoLoop ? _T("Unspecified error") :(LPCTSTR) GetSystemErrorDescription();
 	}
 	return sz;
 }
 
-#endif //ZIP_ENABLE_ERROR_DESCRIPTION
+#endif //_ZIP_ENABLE_ERROR_DESCRIPTION

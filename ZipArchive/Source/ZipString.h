@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -28,10 +28,15 @@
 
 #include "_platform.h"
 
-#ifdef ZIP_ARCHIVE_STL
+#ifdef _ZIP_IMPL_STL
 	#include "ZipString_stl.h"
 #else
 	#include "ZipString_mfc.h"
 #endif
+
+namespace ZipArchiveLib
+{
+	ZIP_API bool IsStringAscii(const CZipString& value);	
+};
 
 #endif  /* ZIPARCHIVE_ZIPSTRING_DOT_H */

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,7 +14,7 @@
 
 #include "_platform.h"
 
-#ifdef ZIP_ARCHIVE_LNX
+#ifdef _ZIP_SYSTEM_LINUX
 
 #if defined __APPLE__ || defined __CYGWIN__
 	#define FILE_FUNCTIONS_64B_BY_DEFAULT
@@ -24,8 +24,8 @@
 
 #include "stdafx.h"
 #include "ZipPlatform.h"
-#include "ZipFileHeader.h"
-#include "ZipException.h"
+#include "_ZipFileHeader.h"
+#include "_ZipException.h"
 #include "ZipAutoBuffer.h"
 
 #include <utime.h>
@@ -80,7 +80,7 @@ CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, ZIP_SIZE_TYPE uSizeNeed
 	CZipString tempPath = lpszPath;
 	if (tempPath.IsEmpty())
 		tempPath = "/tmp";
-	if (ZipPlatform::GetDeviceFreeSpace(tempPath) < uSizeNeeded)
+	if (uSizeNeeded > 0 && ZipPlatform::GetDeviceFreeSpace(tempPath) < uSizeNeeded)
 		return empty;
 	CZipPathComponent::AppendSeparator(tempPath);
 	tempPath += prefix;
@@ -175,19 +175,19 @@ int ZipPlatform::FileExists(LPCTSTR lpszName)
 
 ZIPINLINE  bool ZipPlatform::IsDriveRemovable(LPCTSTR lpszFilePath)
 {
-	// not implemmented
+	// not implemented
 	return true;
 }
 
 ZIPINLINE  bool ZipPlatform::SetVolLabel(LPCTSTR lpszPath, LPCTSTR lpszLabel)
 {
-	// not implemmented
+	// not implemented
         return true;
 }
 
 ZIPINLINE void ZipPlatform::AnsiOem(CZipAutoBuffer& buffer, bool bAnsiToOem)
 {
-	// not implemmented
+	// not implemented
 }
 
 ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow)
@@ -217,7 +217,7 @@ ZIPINLINE  bool ZipPlatform::IsDirectory(DWORD uAttr)
 	return S_ISDIR(uAttr) != 0;
 }
 
-ZIPINLINE  bool ZipPlatform::CreateDirectory(LPCTSTR lpDirectory)
+ZIPINLINE  bool ZipPlatform::CreateNewDirectory(LPCTSTR lpDirectory)
 {	
 	return mkdir(lpDirectory, ZIP_DEFAULT_DIR_ATTRIBUTES) == 0;
 }
@@ -246,13 +246,22 @@ ZIPINLINE bool ZipPlatform::GetSystemCaseSensitivity()
 
 bool ZipPlatform::TruncateFile(int iDes, ULONGLONG uSize)
 {
+#ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
 	return ftruncate(iDes, uSize) == 0;
+#else
+	return ftruncate64(iDes, uSize) == 0;
+	
+#endif
 
 }
 
 int ZipPlatform::OpenFile(LPCTSTR lpszFileName, UINT iMode, int iShareMode)
 {
+#ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
 	return open(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );	
+#else
+	return open64(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );	
+#endif
 }
 
 bool ZipPlatform::FlushFile(int iDes)
@@ -266,4 +275,4 @@ intptr_t ZipPlatform::GetFileSystemHandle(int iDes)
 }
 
 
-#endif // ZIP_ARCHIVE_LNX
+#endif // _ZIP_SYSTEM_LINUX

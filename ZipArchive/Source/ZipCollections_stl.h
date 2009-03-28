@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -76,7 +76,8 @@ public:
 
 	
 	size_t GetSize() const{return this->size();	}
-	size_t GetCount() const{return this->size();	}
+	void SetSize(size_t uSize) {this->resize(uSize); }
+	size_t GetCount() const{return this->size(); }
 	size_t GetUpperBound() const
 	{
 		size_t ret = this->size();
@@ -86,11 +87,11 @@ public:
 	}
 	TYPE& GetAt(size_t uIndex) {return this->at(uIndex);}
 	const TYPE& GetAt(size_t uIndex) const {return this->at(uIndex);} 
+	void SetAt(size_t uIndex, TYPE value) {inherited::operator[](uIndex) = value; }
 	size_t Add(const TYPE& x) {push_back(x);return GetUpperBound();}
 	void RemoveAll() {this->clear();}
 	void RemoveAt(size_t uIndex) { erase(GetIterFromIndex(uIndex));}
 	void InsertAt(size_t uIndex, const TYPE& x){insert(GetIterFromIndex(uIndex), x);}
-
 	TYPE& operator[](size_t uIndex)
 	{
 		return inherited::operator[](uIndex);

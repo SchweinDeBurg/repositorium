@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -13,8 +13,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "ZipCompressor.h"
-#include "BytesWriter.h"
+#include "_ZipCompressor.h"
+#include "_BytesWriter.h"
 #include "DeflateCompressor.h"
 
 using namespace ZipArchiveLib;
@@ -48,7 +48,7 @@ void CZipCompressor::UpdateOptions(const COptionsMap& optionsMap)
 
 void CZipCompressor::InitBuffer()
 {
-	// This should be greated that 64k for deflate when creating offsets pairs is enabled
+	// This should be greater that 64k for deflate when creating offsets pairs is enabled
 	// otherwise deflate will not be able to write one block in one go and will never report
 	// a flushed block for low-compressable data
 	const COptions* pOptions = GetOptions();
@@ -95,8 +95,8 @@ CZipCompressor::COptionsMap::~COptionsMap()
 	while (IteratorValid(iter))
 	{
 		COptions* pOptions = NULL;
-		int iType = 0;
-		GetNextAssoc(iter, iType, pOptions);
+		int iDummyType;
+		GetNextAssoc(iter, iDummyType, pOptions);
 		delete pOptions;
 	}
 	RemoveAll();

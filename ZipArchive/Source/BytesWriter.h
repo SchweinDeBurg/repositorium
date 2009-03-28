@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -37,11 +37,11 @@ namespace ZipArchiveLib
 	{
 	public:
 		
-	#ifdef ZIP_ARCHIVE_LITTLE_ENDIAN
+	#ifndef _ZIP_BIG_ENDIAN
 		/**
 			Reads \a iCount bytes from \a pSource into \a pDestination.
 
-			\param[out] pDestination
+			\param[out] uDestination
 				The buffer to retrieve data with byte-ordering depending on the machine.
 
 			\param[in] pSource
@@ -71,6 +71,11 @@ namespace ZipArchiveLib
 		}
 		#endif
 
+		
+		static void WriteBytes(char* pDestination, WORD uSource)
+		{
+			memcpy(pDestination, &uSource, 2);
+		}
 
 		/**
 			Writes \a iCount bytes from \a pSource into \a pDestination.
@@ -78,17 +83,12 @@ namespace ZipArchiveLib
 			\param[out] pDestination
 				The buffer to retrieve little-endian ordered data.
 
-			\param[in] pSource
+			\param[in] uSource
 				The buffer with byte-ordering depending on the machine.
 
 			\param iCount 
 				The number of bytes to write.
 		*/
-		static void WriteBytes(char* pDestination, WORD uSource)
-		{
-			memcpy(pDestination, &uSource, 2);
-		}
-
 		static void WriteBytes(char* pDestination, DWORD uSource, int iCount = 4)
 		{
 			memcpy(pDestination, &uSource, iCount);

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -133,12 +133,12 @@ protected:
 
 	/**
 		Frees the memory allocated by an external library that hasn't been freed
-		due to an error in the library (usually never happens).
+		due to an error in the library (it should never happen).
 	*/
 	void EmptyPtrList();
 
 	/**
-		Checks, if \a iErr value is an error code.
+		Checks whether \a iErr value is an error code.
 
 		\param iErr
 			The code to check.
@@ -149,13 +149,11 @@ protected:
 	virtual bool IsCodeErrorOK(int iErr) const = 0;
 
 	/**
-		Checks, if \a iErr value is an error code and throws an exception, if it is.
+		Checks whether \a iErr value is an error code and throws an exception if it is.
 
 		\param iErr
 			The error code.
 
-		\note
-			Throws exceptions.
 	*/
 	void CheckForError(int iErr)
 	{
@@ -167,14 +165,14 @@ protected:
 		Sets an address of internal data used in ZipArchive Library memory allocation and deallocation methods.
 
 		\param opaque
-			Receives an address on the internal data.
+			Receives an address of the internal data.
 		\param pOptions
 			The current decompressor options.
 	*/
 	void SetOpaque(void** opaque, const	COptions* pOptions);
 
 	/**
-		Signalizes, that the decompression process reached the end of the compressed data. It is internally set by derived classes.
+		Signalizes that the decompression process reached the end of the compressed data. It is internally set by derived classes.
 	*/
 	bool m_bDecompressionDone;
 private:

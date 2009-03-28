@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 #ifndef ZIPARCHIVE_ZIPBASEEXCEPTION_DOT_H
 #define ZIPARCHIVE_ZIPBASEEXCEPTION_DOT_H
 
-	#ifdef ZIP_ARCHIVE_STL
+	#ifdef _ZIP_IMPL_STL
 		typedef std::exception CZipBaseException;
 	#else
 		typedef CException CZipBaseException;

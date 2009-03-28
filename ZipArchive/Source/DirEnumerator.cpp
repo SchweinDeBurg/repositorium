@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,8 +14,8 @@
 
 #include "stdafx.h"
 
-#if defined(_MSC_VER) && _MSC_VER < 1300	
-	// STL warnings 
+#if defined(_MSC_VER) && _MSC_VER < 1300
+	// STL warnings
 	#pragma warning (push, 3) 
 #endif
 
@@ -130,7 +130,7 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 				{
 					bool bAllow;
 					if (filter.HandlesFile(info))
-						bAllow = filter.Evaluate(path, name, info);
+						bAllow = filter.Evaluate(path, name, info) && Process(path, info);
 					else
 						// examine directory, if the filter cannot decide
 						bAllow = true;

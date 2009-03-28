@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -13,16 +13,17 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+
+#ifdef _ZIP_SYSTEM_WIN
+
+#define _ZIP_SAFE_WINDOWS_API
+
 #include "_platform.h"
 #include "ZipPlatform.h"
 #include "_ZipFileHeader.h"
 #include "_ZipException.h"
 #include "ZipAutoBuffer.h"
 #include <sys/stat.h>
-
-#ifdef ZIP_ARCHIVE_WIN
-
-#define ZIP_USES_SAFE_WINDOWS_API
 
 #ifndef __BORLANDC__
         #include <sys/utime.h>
@@ -38,8 +39,13 @@
 	#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
 #endif
 
+#ifndef INVALID_SET_FILE_POINTER
+	#define INVALID_SET_FILE_POINTER ((DWORD)-1)
+#endif
+
 #include <direct.h>
 #include <io.h>
+#include <share.h>
 #include <time.h> 
 #include "ZipPathComponent.h"
 #include "ZipCompatibility.h"
@@ -79,7 +85,7 @@ CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, ZIP_SIZE_TYPE uSizeNeed
 		if (lpszPath)
 		{
 			tempPath = lpszPath;
-			bCheckTemp = GetDeviceFreeSpace(tempPath) < uSizeNeeded;
+			bCheckTemp = uSizeNeeded > 0 && GetDeviceFreeSpace(tempPath) < uSizeNeeded;
 
 		}
 		if (bCheckTemp)
@@ -92,7 +98,7 @@ CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, ZIP_SIZE_TYPE uSizeNeed
 			tempPath.ReleaseBuffer();
 			if (GetDeviceFreeSpace(tempPath) < uSizeNeeded)
 			{
-				if (!GetCurrentDirectory(tempPath) || GetDeviceFreeSpace(tempPath) < uSizeNeeded)
+				if (!GetCurrentDirectory(tempPath) || (uSizeNeeded > 0 && GetDeviceFreeSpace(tempPath) < uSizeNeeded))
 					return (CZipString)empty;
 			}
 		}
@@ -126,7 +132,6 @@ bool ZipPlatform::SetFileAttr(LPCTSTR lpFileName, DWORD uAttr)
 
 bool ZipPlatform::GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr)
 {
-	// not using MFC due to MFC bug (attr is one byte there)
 	DWORD temp = ::GetFileAttributes(lpFileName);
 	if (temp == INVALID_FILE_ATTRIBUTES)
 		return false;
@@ -137,30 +142,46 @@ bool ZipPlatform::GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr)
 
 bool ZipPlatform::GetFileModTime(LPCTSTR lpFileName, time_t & ttime)
 {
-#ifndef __BORLANDC__
-    struct _stat st;
-    if (_tstat(lpFileName, &st) != 0)
-#else
-    struct stat st;
-    if (stat(lpFileName, &st) != 0)
-#endif
-	return false;
-	ttime = st.st_mtime;
-	if (ttime == (time_t)-1)
+	WIN32_FIND_DATA findData = {0};
+	HANDLE handle = ::FindFirstFile(lpFileName, &findData);
+	if (handle == INVALID_HANDLE_VALUE)
 	{
 		ttime = time(NULL);
 		return false;
 	}
-	else
-		return true;
+	bool ret = false;
+    if ( findData.ftLastWriteTime.dwLowDateTime || findData.ftLastWriteTime.dwHighDateTime )
+    {
+		LONGLONG val = (findData.ftLastWriteTime.dwLowDateTime & 0xFFFFFFFF);
+
+		val |= ((LONGLONG)findData.ftLastWriteTime.dwHighDateTime << 32) & SUFFIX_I64(0xFFFFFFFF00000000);
+		val -= SUFFIX_I64(116444736000000000);
+
+		ttime = (time_t)(val / 10000000);
+		ret = ttime >= 0;
+    }
+	FindClose(handle);
+	if (ret == false)
+		ttime = time(NULL);	
+	return ret;
 }
 
 bool ZipPlatform::SetFileModTime(LPCTSTR lpFileName, time_t ttime)
 {
-	struct _utimbuf ub;
-	ub.actime = time(NULL);
-	ub.modtime = ttime == -1 ? time(NULL) : ttime; // if wrong file time, set it to the current
-	return _tutime(lpFileName, &ub) == 0;
+	HANDLE handle = ::CreateFile(lpFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_WRITE | FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, 0);
+	if (handle == INVALID_HANDLE_VALUE)
+	{
+		return false;
+	}
+	
+	FILETIME ft;
+	LONGLONG val = ((LONGLONG)ttime * 10000000) + SUFFIX_I64(116444736000000000);
+    ft.dwLowDateTime = (DWORD)val & 0xFFFFFFFF;
+    ft.dwHighDateTime = (DWORD)((val >> 32) & 0xFFFFFFFF);
+
+	bool ret = ::SetFileTime(handle, NULL, NULL, &ft) != 0;
+	CloseHandle(handle);
+	return ret;
 }
 
 bool ZipPlatform::ChangeDirectory(LPCTSTR lpDirectory)
@@ -170,27 +191,10 @@ bool ZipPlatform::ChangeDirectory(LPCTSTR lpDirectory)
 
 int ZipPlatform::FileExists(LPCTSTR lpszName)
 {
-#ifndef __BORLANDC__
-	#if _MSC_VER >= 1400
-	if (_taccess_s(lpszName, 0) == 0)
-	#else
-	if (_taccess(lpszName, 0) == 0)
-	#endif
-#else
-	#ifdef _UNICODE
-	if (_waccess(lpszName, 0) == 0)
-	#else
-	if (access(lpszName, 0) == 0)
-	#endif
-#endif
-	{
-		if (DirectoryExists(lpszName))
-			return -1;
-		return 1;
-	}
-	else
+	DWORD attributes = ::GetFileAttributes(lpszName);
+	if (attributes == INVALID_FILE_ATTRIBUTES)
 		return 0;
-
+	return ((attributes & FILE_ATTRIBUTE_DIRECTORY) != 0) ? -1 : 1;
 }
 
 ZIPINLINE  bool ZipPlatform::IsDriveRemovable(LPCTSTR lpszFilePath)
@@ -209,7 +213,7 @@ ZIPINLINE  bool ZipPlatform::SetVolLabel(LPCTSTR lpszPath, LPCTSTR lpszLabel)
 
 ZIPINLINE void ZipPlatform::AnsiOem(CZipAutoBuffer& buffer, bool bAnsiToOem)
 {
-#ifdef ZIP_USES_SAFE_WINDOWS_API
+#ifdef _ZIP_SAFE_WINDOWS_API
 	UINT cpIn, cpOut;
 	if (bAnsiToOem)
 	{
@@ -275,7 +279,7 @@ ZIPINLINE  bool ZipPlatform::IsDirectory(DWORD uAttr)
 	return (uAttr & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
-ZIPINLINE  bool ZipPlatform::CreateDirectory(LPCTSTR lpDirectory)
+ZIPINLINE  bool ZipPlatform::CreateNewDirectory(LPCTSTR lpDirectory)
 {
 	return ::CreateDirectory(lpDirectory, NULL) != 0;
 }
@@ -300,7 +304,13 @@ ZIPINLINE bool ZipPlatform::GetSystemCaseSensitivity()
 	return false;
 }
 
-#ifdef _UNICODE	
+
+#ifdef _UNICODE
+
+#ifdef _ZIP_UNICODE_NORMALIZE
+	#pragma comment(lib, "Normaliz.lib")
+#endif
+
 int ZipPlatform::WideToMultiByte(LPCWSTR lpszIn, CZipAutoBuffer &szOut, UINT uCodePage)
 {
 	size_t wideLen = wcslen(lpszIn);
@@ -318,19 +328,24 @@ int ZipPlatform::WideToMultiByte(LPCWSTR lpszIn, CZipAutoBuffer &szOut, UINT uCo
 		szOut.Allocate(iLen, true);
 		iLen = WideCharToMultiByte(uCodePage, 0, lpszIn , (int)wideLen, szOut, 
 			iLen, NULL, NULL);
-		ASSERT(iLen != 0);
+		ASSERT(iLen > 0);
+		return iLen > 0 ? iLen : -1;
 	}
 	else // here it means error
 	{
 		szOut.Release();
-		iLen --;
+		return -1;
 	}
-	return iLen;
-
 }
 int ZipPlatform::MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, UINT uCodePage)
-{
+{	
 	int singleLen = szIn.GetSize();
+	if (singleLen == 0)
+	{
+		szOut.Empty();
+		return 0;
+	}
+	
 	// iLen doesn't include terminating character
 	DWORD dwFlags = uCodePage <= CP_OEMCP ? MB_PRECOMPOSED : 0;
 	int iLen = MultiByteToWideChar(uCodePage, dwFlags, szIn.GetBuffer(), singleLen, NULL, 0);
@@ -339,18 +354,41 @@ int ZipPlatform::MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, 
 		iLen = MultiByteToWideChar(uCodePage, dwFlags, szIn.GetBuffer(), singleLen, 
 			szOut.GetBuffer(iLen) , iLen);
 		szOut.ReleaseBuffer(iLen);
-		ASSERT(iLen != 0);
+		ASSERT(iLen > 0);
+		if (iLen == 0)
+			return -1;
+#ifdef _ZIP_UNICODE_NORMALIZE
+		// if there is a problem with compilation here, you may need uncomment the block defining WINVER = 0x0600 at the bottom of _features.h file
+		if (IsNormalizedString(NormalizationC, szOut, iLen + 1) == TRUE)
+			return iLen;		
+		int iNewLen = NormalizeString(NormalizationC, szOut, iLen, NULL, 0);
+		if (iNewLen <= 0)
+		{
+			return iLen;
+		}
+		CZipString szNormalized;
+		iNewLen = NormalizeString(NormalizationC, szOut, iLen, szNormalized.GetBuffer(iNewLen), iNewLen);		
+		if (iNewLen <= 0)
+		{
+			szNormalized.ReleaseBuffer(0);
+			return iLen;
+		}
+		szNormalized.ReleaseBuffer(iNewLen);
+		szOut = szNormalized;
+		return iNewLen;
+#else
+		return iLen;
+#endif
 	}
 	else
 	{
 		szOut.Empty();
-		iLen --; // return -1
-	}
-	return iLen;
+		return -1;
+	}	
 }
 #endif
 
-#if defined ZIP_ARCHIVE_STL || defined ZIP_FILE_USES_STL
+#if defined _ZIP_IMPL_STL || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
 
 #if _MSC_VER > 1000
 	#pragma warning( push )
@@ -358,8 +396,6 @@ int ZipPlatform::MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, 
 #endif
 
 
-#include <io.h>
-#include <share.h>
 bool ZipPlatform::TruncateFile(int iDes, ULONGLONG uSize)
 {	
 #if (_MSC_VER >= 1400)
@@ -375,9 +411,9 @@ bool ZipPlatform::TruncateFile(int iDes, ULONGLONG uSize)
 		ULARGE_INTEGER li;
 		li.QuadPart = uSize;
 		li.LowPart = SetFilePointer(handle, li.LowPart, (LONG*)&li.HighPart, FILE_BEGIN);
-		if (li.LowPart == UINT_MAX && GetLastError() != NO_ERROR)
+		if (li.LowPart == INVALID_SET_FILE_POINTER && GetLastError() != NO_ERROR)
 			return false;
-		return SetEndOfFile(handle) != 0;
+		return SetEndOfFile(handle) == TRUE;
 	}
 	return false; // for the compiler
 #endif
@@ -393,7 +429,7 @@ int ZipPlatform::OpenFile(LPCTSTR lpszFileName, UINT iMode, int iShareMode)
 {
 	switch (iShareMode)
 	{
-	case (CZipFile::shareDenyWrite & CZipFile::shareDenyRead):
+	case (CZipFile::shareExclusive):
 		iShareMode = SH_DENYRW;
 		break;
 	case (CZipFile::shareDenyRead):
@@ -428,6 +464,6 @@ intptr_t ZipPlatform::GetFileSystemHandle(int iDes)
 }
 
 
-#endif // ZIP_ARCHIVE_STL || ZIP_FILE_USES_STL
+#endif // _ZIP_IMPL_STL
 
-#endif // ZIP_ARCHIVE_WIN
+#endif // _ZIP_SYSTEM_WIN

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ class CZipAutoBuffer;
 class CZipFileHeader;
 
 #include "ZipString.h"
-
+#include "ZipPlatform.h"
 /**
 	Includes functions that provide support for the proper conversion of attributes 
 	and filenames between different system platforms.
@@ -64,7 +64,17 @@ namespace ZipCompatibility
                zcMacintosh,		///< Macintosh 
                zcZsystem,		///< Z-System
                zcCpm,			///< CP/M 
-               zcNtfs			///< Windows NTFS
+			   zcTops20,		///< TOPS-20
+               zcNtfs,			///< Windows NTFS
+			   zcQDos,			///< SMS/QDOS
+			   zcAcorn,			///< Acorn RISC OS
+			   ZcMvs,			///< MVS
+			   zcVfat,			///< Win32 VFAT
+			   zcAtheOS,		///< AtheOS
+			   zcBeOS,			///< BeOS
+			   zcTandem,		///< Tandem NSK
+			   zcTheos,			///< Theos
+			   zcMacDarwin		///< Mac OS/X (Darwin)
 	};
 
 	/**
@@ -76,7 +86,7 @@ namespace ZipCompatibility
 		\return
 			\c true, if supported; \c false otherwise.
 	*/
-	bool IsPlatformSupported(int iCode);
+	ZIP_API bool IsPlatformSupported(int iCode);
 
 	/**
 		Converts the system attributes between different system platforms.
@@ -93,13 +103,11 @@ namespace ZipCompatibility
 		\return
 			The converted attributes.
 
-		\note
-			Throws exceptions.
-
+		
 		\see
 			ZipPlatforms
 	*/
-	DWORD ConvertToSystem(DWORD uAttr, int iFromSystem, int iToSystem);
+	ZIP_API DWORD ConvertToSystem(DWORD uAttr, int iFromSystem, int iToSystem);
 
 	/**
 		Converts the string stored in \a buffer using the given code page.
@@ -112,11 +120,8 @@ namespace ZipCompatibility
 
 		\param uCodePage
 			The code page used in conversion.
-
-		\see
-			<a href="kb">0610051525</a>
 	*/
-	void ConvertBufferToString(CZipString& szString, const CZipAutoBuffer& buffer, UINT uCodePage);
+	ZIP_API void ConvertBufferToString(CZipString& szString, const CZipAutoBuffer& buffer, UINT uCodePage);
 	
 	/**
 		Converts the \a lpszString using the given code page.
@@ -129,11 +134,8 @@ namespace ZipCompatibility
 
 		\param uCodePage
 			The code page used in conversion.
-
-		\see
-			<a href="kb">0610051525</a>
 	*/
-	void ConvertStringToBuffer(LPCTSTR lpszString, CZipAutoBuffer& buffer, UINT uCodePage);
+	ZIP_API void ConvertStringToBuffer(LPCTSTR lpszString, CZipAutoBuffer& buffer, UINT uCodePage);
 
 	/**
 		Changes the path separators from slash to backslash or vice-versa in \a szFileName.
@@ -145,6 +147,56 @@ namespace ZipCompatibility
 			If \c true, changes slash to backslash. If \c false, changes backslash to slash.
 	*/
 	void SlashBackslashChg(CZipString& szFileName, bool bReplaceSlash);
+
+	/**
+		Returns the default filename code page for the given platform.
+
+		\param iPlatform
+			One of the ZipCompatibility::ZipPlatforms values.	
+
+		\return 
+			The default filename code page.
+	*/
+	ZIP_API UINT GetDefaultNameCodePage(int iPlatform);
+
+	
+	/**
+		Returns the default filename code page for the current platform.
+
+		\return 
+			The default filename code page.
+	*/
+	ZIP_API UINT GetDefaultNameCodePage();
+
+	/**
+		Returns the default comment code page.
+
+		\param iPlatform
+			One of the ZipCompatibility::ZipPlatforms values.
+
+		\return 
+			The default comment code page.
+	*/
+	ZIP_API UINT GetDefaultCommentCodePage(int iPlatform);
+
+	/**
+		Returns the default password code page.
+
+		\param iPlatform
+			One of the ZipCompatibility::ZipPlatforms values.
+
+		\return 
+			The default password code page.
+	*/
+	ZIP_API UINT GetDefaultPasswordCodePage(int iPlatform);
+
+	/**
+		Returns the default comment code page for the current platform.
+
+		\return 
+			The default comment code page.
+	*/
+	ZIP_API UINT GetDefaultCommentCodePage();
 };
 
 #endif // !defined(ZIPARCHIVE_ZIPCOMPATIBILITY_DOT_H)

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,10 +20,12 @@
 
 #if _MSC_VER > 1000
 	#pragma warning( push, 3 ) // STL requirements
+	#pragma warning( disable : 4275 ) // non dll-interface class used as base for dll-interface
+	#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
 #endif
 
 
-#include <string>
+#include <cstring>
 #include <algorithm>
 #include <stdarg.h>
 #include <stdio.h>
@@ -311,7 +313,7 @@ public:
 };
 
 /**
-	A poiter type to point to CZipString to Collate or CollateNoCase
+	A pointer type to point to CZipString to Collate or CollateNoCase
 	or Compare or CompareNoCase
 */
 typedef int (CZipString::*ZIPSTRINGCOMPARE)( LPCTSTR ) const;

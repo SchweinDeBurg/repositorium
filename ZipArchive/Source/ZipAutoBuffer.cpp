@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -52,7 +52,7 @@ char* CZipAutoBuffer::Allocate(DWORD iSize, bool bZeroMemory)
 	else
 	{
 		if (bZeroMemory)
-			memset(m_pBuffer, 0, iSize); // zerowanie bufora
+			memset(m_pBuffer, 0, iSize);
 		return m_pBuffer;
 	}
 
@@ -60,7 +60,7 @@ char* CZipAutoBuffer::Allocate(DWORD iSize, bool bZeroMemory)
 	{
 			m_pBuffer = new char [iSize];
 			if (bZeroMemory)
-				memset(m_pBuffer, 0, iSize); // zerowanie bufora
+				memset(m_pBuffer, 0, iSize);
 			m_iSize = iSize;
 	}
 	else 

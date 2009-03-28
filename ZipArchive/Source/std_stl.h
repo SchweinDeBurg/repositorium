@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -17,6 +17,10 @@
 #endif
 
 #include "_features.h"
+
+#if defined DEBUG && !defined _DEBUG
+	#define _DEBUG
+#endif
 
 #if _MSC_VER > 1000
 	// STL warnings
@@ -38,10 +42,11 @@
 		#define NULL    0
 	#endif
 
-	#include <ctype.h>
+	#include <cctype>
+	#include <climits>
 	typedef int HFILE;
 	typedef void*				HANDLE;
-	typedef unsigned long       DWORD;
+	typedef unsigned int        DWORD;
 	typedef long				LONG;
 	typedef int                 ZBOOL; /* to avoid conflicts when using Objective-C under Mac */
 	typedef unsigned char       BYTE;
@@ -82,25 +87,34 @@
 	typedef long long LONGLONG;
 	#define CP_ACP 0
 	#define CP_OEMCP 1
+
+	#ifndef CP_UTF8
+		#define CP_UTF8	65001
+	#endif
+
 	
 	#ifndef _I64_MAX
 		#ifdef LLONG_MAX	
 			#define _I64_MAX LLONG_MAX
-		#else
+		#elif defined LONG_LONG_MAX
 			#define _I64_MAX LONG_LONG_MAX
+		#else
+			#define _I64_MAX LONGLONG_MAX
 		#endif
 	#endif
 	#ifndef _UI64_MAX
 		#ifdef ULLONG_MAX	
 			#define _UI64_MAX ULLONG_MAX
-		#else
+		#elif defined ULONG_LONG_MAX
 			#define _UI64_MAX ULONG_LONG_MAX
+		#else 
+			#define _UI64_MAX ULONGLONG_MAX
 		#endif
 	#endif
 	#define _lseeki64 lseek64
 #else
 	#include <TCHAR.H>
-   	#include <windows.h>
+   	#include <windows.h>	
 	#include <stddef.h>
   	#ifndef STRICT
 		#define STRICT
@@ -110,15 +124,16 @@
 #endif	// #ifndef _WIN32
 
 #ifndef ASSERT
-	#include <assert.h>
-	#define ASSERT(f) assert((f))
-#endif
-#ifndef VERIFY
 	#ifdef _DEBUG
-		#define VERIFY(x) ASSERT((x))
+		#include <assert.h>
+		#define ASSERT(f) assert((f))
 	#else
-		#define VERIFY(x) x
+		#define ASSERT(f)
 	#endif
+#endif
+
+#if !defined(_INTPTR_T_DEFINED) && !defined(__GNUC__) && !defined __BORLANDC__
+	typedef long intptr_t;
 #endif
 
 #define ZIP_FILE_USIZE ULONGLONG

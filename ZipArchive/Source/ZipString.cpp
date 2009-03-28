@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,4 +21,17 @@ ZIPSTRINGCOMPARE GetCZipStrCompFunc(bool bCaseSensitive, bool bCollate)
 		return bCaseSensitive ? & CZipString::Collate : & CZipString::CollateNoCase;
 	else
 		return bCaseSensitive ? & CZipString::Compare : & CZipString::CompareNoCase;
+}
+
+
+ZIP_API bool ZipArchiveLib::IsStringAscii(const CZipString& value)
+{
+	for (int i = 0; i < value.GetLength(); i++)
+#if !defined __GNUC__ || defined __MINGW32__
+		if (!_istascii(value[i]))
+#else
+		if (!isascii(value[i]))
+#endif
+			return false;
+	return true;
 }

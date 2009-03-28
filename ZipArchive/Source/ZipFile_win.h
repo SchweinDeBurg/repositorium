@@ -16,48 +16,21 @@
 	#error Do not include this file directly. Include ZipFile.h instead
 #endif
 
+#if !defined _ZIP_SYSTEM_WIN || defined _ZIP_SYSTEM_LINUX
+	#error This implementation can be used under the Windows platform only.
+#endif
+
 #include "ZipAbstractFile.h"
 #include "ZipString.h"
 #include "ZipExport.h"
 
-#ifndef __GNUC__
-	#include <io.h>
-#else
-	#include <unistd.h>
-	#include <errno.h>	
-#endif
-
-#if !defined (_MSC_VER) || _MSC_VER < 1400	
-
-// there seems to be a problem under Windows sometimes when using one of the functions below 
-// without the underscore at the beginning	
-#ifndef _lseek
-	#define _lseek lseek
-#endif
-
-#ifndef _read
-	#define _read read
-#endif
-
-#ifndef _close
-	#define _close close
-#endif
-
-#ifndef _tell
-	#define _tell tell
-#endif
-
-#ifndef _write
-	#define _write write
-#endif
-
-#endif 
 class ZIP_API CZipFile : public CZipAbstractFile
 {
 	void ThrowError() const;
 public:
-	int m_hFile;
+	HANDLE m_hFile;
 	operator HANDLE();
+
 	enum OpenModes
 	{
 		modeRead =         0x00000,
@@ -74,20 +47,20 @@ public:
 	CZipFile();
 	CZipFile(LPCTSTR lpszFileName, UINT openFlags);
 	void Flush();
-	ZIP_FILE_USIZE GetLength() const;
+	ULONGLONG GetLength() const;
 	CZipString GetFilePath() const {return m_szFileName;}
-	bool IsClosed()const { return m_hFile == -1;}
+	bool IsClosed()const { return m_hFile == INVALID_HANDLE_VALUE;}
 	bool Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow);
 	void Close(); 
 
 	void Write(const void* lpBuf, UINT nCount);
-	ZIP_FILE_USIZE GetPosition() const;	
-	void SetLength(ZIP_FILE_USIZE uNewLen);
+	ULONGLONG GetPosition() const;	
+	void SetLength(ULONGLONG uNewLen);
 	UINT Read(void *lpBuf, UINT nCount);
-	ZIP_FILE_USIZE Seek(ZIP_FILE_SIZE dOff, int nFrom);
+
+	ULONGLONG Seek(LONGLONG dOff, int nFrom);
 	
 	virtual ~CZipFile (){Close();};
 protected:
 	CZipString m_szFileName;
-
 };

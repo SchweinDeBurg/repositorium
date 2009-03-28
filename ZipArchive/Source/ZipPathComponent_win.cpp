@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -13,23 +13,33 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+
+#ifdef _ZIP_SYSTEM_WIN
+
+#include "_platform.h"
 #include "ZipPathComponent.h"
 
-#ifdef ZIP_ARCHIVE_WIN
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
+const CZipString CZipPathComponent::PathPrefix =  _T("\\\\?\\unc\\");
 
 CZipPathComponent::~CZipPathComponent()
 {
 
 }
 
+int CZipPathComponent::IsPrefixed(const CZipString& path)
+{
+	int i = -1, iLen = PathPrefix.GetLength();
+	int pathLen = path.GetLength();
+	if (iLen > pathLen)
+		iLen = pathLen;
+	CZipString szPossiblePrefix = path.Left(iLen);
+	szPossiblePrefix.MakeLower(); // must perform case insensitive comparison
+	while (++i < iLen && szPossiblePrefix[i] == PathPrefix[i]);
+	return i;
+}
+
 void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 {
-
 	TCHAR szDrive[_MAX_DRIVE];
 #if defined _UNICODE && _MSC_VER >= 1400
 	TCHAR szDir[32767];
@@ -41,14 +51,8 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 	
 	
 	CZipString szTempPath(lpszFullPath);
-	const CZipString szPrefix = _T("\\\\?\\unc\\");
-	int i = -1, iLen = szPrefix.GetLength();
-	if (iLen > szTempPath.GetLength())
-		iLen = szTempPath.GetLength();
-	CZipString szPossiblePrefix = szTempPath.Left(iLen);
-	szPossiblePrefix.MakeLower(); // must perform case insensitive comparison
-	while (++i < iLen && szPossiblePrefix[i] == szPrefix[i]); 
-	if (i == 2 || i == 4 || i == 8) // unc path, unicode path or unc path meeting windows file name conventions
+	int i = IsPrefixed(szTempPath);	
+	if (i == ptUnc || i == ptUnicode || i == ptUncWin) // unc path, Unicode path or unc path meeting windows file name conventions
 	{
 		m_szPrefix = szTempPath.Left(i);
 		szTempPath = szTempPath.Mid(i);		
@@ -82,4 +86,4 @@ CZipString CZipPathComponent::GetNoDrive() const
 	return szPath;	
 }
 
-#endif // ZIP_ARCHIVE_WIN
+#endif // _ZIP_SYSTEM_WIN

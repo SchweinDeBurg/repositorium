@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -58,7 +58,7 @@ namespace ZipArchiveLib
 
 			\param bRecursive 
 				The value indicating whether the subfolders of \a lpszDirectory
-				should be processed recursively or not.
+				should be processed recursively.
 
 			\see
 				GetDirectory
@@ -126,7 +126,7 @@ namespace ZipArchiveLib
 		virtual void EnterDirectory(){}
 
 		/**
-			This method is method called when an enumeration process exits a directory.
+			This method is called when an enumeration process exits a directory.
 
 			\see 
 				GetCurrentDirectory
@@ -150,7 +150,7 @@ namespace ZipArchiveLib
 
 		/**
 			Returns the value indicating whether the subfolders of the root directory 
-			are processed recursively or not.
+			are processed recursively.
 
 			\return
 				\c true, if the enumeration process is recursive; \c false otherwise.
@@ -161,10 +161,10 @@ namespace ZipArchiveLib
 		bool IsRecursive() const {return m_bRecursive;}
 
 		/**
-			Returns the directory which the enumeration process is currently processing.
+			Returns the directory being currently processed.
 
 			\return 
-				The directory which the enumeration process is currently processing.
+				The directory being currently processed.
 		*/
 		LPCTSTR GetCurrentDirectory() const {return m_szCurrentDirectory;}
 

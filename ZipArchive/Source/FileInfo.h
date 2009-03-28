@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -48,9 +48,9 @@ namespace ZipArchiveLib
 		}
 		ZIP_FILE_USIZE m_uSize;		///< The file size.
 		DWORD m_uAttributes;		///< The file system attributes.
-		time_t m_uCreateTime;		///< Creation time.
-		time_t m_uModTime;			///< Last modification time.
-		time_t m_uAccessTime;		///< Last access time.
+		time_t m_uCreateTime;		///< The Creation time.
+		time_t m_uModTime;			///< The last modification time.
+		time_t m_uAccessTime;		///< The last access time.
 
 		/**
 			Returns the value indicating whether the current CFileInfo

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -26,17 +26,6 @@
 
 using namespace ZipPlatform;
 
-bool ZipPlatform::DirectoryExists(LPCTSTR lpszDir)
-{
-	CZipString sz;
-	if (!GetCurrentDirectory(sz))
-		return false;
-	if (!ChangeDirectory(lpszDir))
-		return false;
-	ChangeDirectory(sz);
-	return true;
-}
-
 bool ZipPlatform::ForceDirectory(LPCTSTR lpDirectory)
 {
 	ASSERT(lpDirectory);
@@ -48,7 +37,7 @@ bool ZipPlatform::ForceDirectory(LPCTSTR lpDirectory)
 		return true;
 	if (!ForceDirectory(zpc.GetFilePath()))
 		return false;
-	if (!CreateDirectory(szDirectory))
+	if (!CreateNewDirectory(szDirectory))
 		return false;
 	return true;
 }
@@ -67,7 +56,7 @@ bool ZipPlatform::GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize)
 		if (ret)
 			dSize = (ZIP_SIZE_TYPE)size;
 	}
-#ifdef ZIP_ARCHIVE_MFC
+#ifdef _ZIP_IMPL_MFC
 	catch(CZipBaseException* e)
 	{
 		e->Delete();
@@ -84,7 +73,7 @@ bool ZipPlatform::GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize)
 	{
 		f.Close();
 	}
-#ifdef ZIP_ARCHIVE_MFC
+#ifdef _ZIP_IMPL_MFC
 	catch(CZipBaseException* e)
 	{
 		e->Delete();

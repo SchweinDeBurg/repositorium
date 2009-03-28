@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -13,7 +13,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "ZipExtraField.h"
+#include "_ZipExtraField.h"
+
+CZipArray<WORD> CZipExtraField::m_aNoSizeExtraHeadersID;
 
 bool CZipExtraField::Read(CZipStorage *pStorage, WORD uSize)
 {
@@ -25,7 +27,7 @@ bool CZipExtraField::Read(CZipStorage *pStorage, WORD uSize)
 	pStorage->Read(buffer, uSize, true);
 	char* position = (char*) buffer;
 	do
-	{
+	{		
 		CZipExtraData* pExtra = new CZipExtraData();
 		if (!pExtra->Read(position, uSize))
 		{
@@ -48,7 +50,9 @@ void CZipExtraField::Write(char* buffer)const
 {
 	int offset = 0;
 	for (int i = 0; i < GetCount(); i++)
+	{	
 		offset += GetAt(i)->Write(buffer + offset);
+	}
 }
 
 int CZipExtraField::GetTotalSize()const
@@ -64,9 +68,33 @@ void CZipExtraField::RemoveInternalHeaders()
 	for (int i = GetCount() - 1; i >= 0; i--)
 	{
 		WORD headerID = GetAt(i)->GetHeaderID();
-		if (
-			headerID == ZIP_EXTRA_ZARCH_NAME)
+		if (headerID == ZIP_EXTRA_PKZIP 
+			|| headerID == ZIP_EXTRA_WINZIP_AES
+			|| headerID == ZIP_EXTRA_UNICODE_PATH
+			|| headerID == ZIP_EXTRA_UNICODE_COMMENT
+			|| headerID == ZIP_EXTRA_ZARCH_NAME)
 				RemoveAt(i);
+	}
+}
+
+void CZipExtraField::RemoveInternalLocalHeaders()
+{
+	for (int i = GetCount() - 1; i >= 0; i--)
+	{
+		WORD headerID = GetAt(i)->GetHeaderID();
+		if (headerID == ZIP_EXTRA_WINZIP_AES
+			|| headerID == ZIP_EXTRA_UNICODE_PATH
+			|| headerID == ZIP_EXTRA_UNICODE_COMMENT)
+				RemoveAt(i);
+	}
+}
+
+void CZipExtraField::Remove(WORD headerID)
+{
+	for (int i = GetCount() - 1; i >= 0; i--)
+	{
+		if (headerID == GetAt(i)->GetHeaderID())
+			RemoveAt(i);
 	}
 }
 

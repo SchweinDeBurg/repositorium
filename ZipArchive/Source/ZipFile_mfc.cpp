@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,13 +14,10 @@
 
 #include "stdafx.h"
 #include "_features.h"
+
+#if defined _ZIP_IMPL_MFC && (!defined _ZIP_FILE_IMPLEMENTATION || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_DEFAULT)
+
 #include "ZipFile.h"
-
-#if defined ZIP_ARCHIVE_MFC && !defined ZIP_FILE_USES_STL
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 // IMPLEMENT_DYNAMIC(CZipAbstractFile, CFile)
 IMPLEMENT_DYNAMIC(CZipFile, CFile)
@@ -39,4 +36,4 @@ CZipFile::operator HANDLE()
 	return (HANDLE)m_hFile;
 }
 
-#endif // ZIP_ARCHIVE_MFC && !ZIP_FILE_USES_STL
+#endif
