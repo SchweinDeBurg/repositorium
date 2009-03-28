@@ -19,6 +19,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#include "stdafx.h"
+
 #include "FreeImagePlus.h"
 
 fipMultiPage::fipMultiPage(BOOL keep_cache_in_memory) : _mpage(NULL), _bMemoryCache(keep_cache_in_memory) {
