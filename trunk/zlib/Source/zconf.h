@@ -312,7 +312,7 @@ typedef unsigned char  Byte;  /* 8 bits */
 typedef unsigned int   uInt;  /* 16 bits or more */
 typedef unsigned long  uLong; /* 32 bits or more */
 
-#ifdef _ZIP64
+#ifdef _ZIP_ZIP64
 	typedef unsigned __int64 uLongLong;
 #else
 	typedef unsigned long uLongLong;
