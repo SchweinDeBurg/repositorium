@@ -34,6 +34,8 @@
 
 
 
+#include "stdafx.h"
+
 //-----------------------------------------------------------------------------
 //
 //	Lookup tables for efficient application

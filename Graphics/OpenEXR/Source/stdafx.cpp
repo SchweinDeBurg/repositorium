@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////
 //
-// Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
+// Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-//
+// 
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,6 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+
+
 #include "stdafx.h"
-
-#include "ImathBox.h"
-
-// this file is necessary for template instantiation on windows

@@ -34,6 +34,8 @@
 
 
 
+#include "stdafx.h"
+
 //-----------------------------------------------------------------------------
 //
 //	16-bit Haar Wavelet encoding and decoding

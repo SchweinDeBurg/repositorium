@@ -34,6 +34,8 @@
 
 
 
+#include "stdafx.h"
+
 //----------------------------------------------------------------------------
 //
 //	Specializations of the Vec2<T> and Vec3<T> templates.
