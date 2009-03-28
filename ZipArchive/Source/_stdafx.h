@@ -36,7 +36,7 @@
 #endif   // _MSC_VER
 
 // uncomment to disable compiling standard error messages into the library
-#define ZIP_ENABLE_ERROR_DESCRIPTION
+#define _ZIP_ENABLE_ERROR_DESCRIPTION
 
 // #define _ZIP_TRIAL
 #if _MSC_VER < 1300 && !defined __BORLANDC__ && !defined (__GNUC__)
@@ -114,3 +114,4 @@
 #endif
 
 #endif // !defined(ZIPARCHIVE_STDAFX_DOT_H)
+ 
