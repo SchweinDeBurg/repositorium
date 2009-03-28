@@ -23,6 +23,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#include "stdafx.h"
+
 #include "FreeImage.h"
 #include "Utilities.h"
 
@@ -37,10 +39,14 @@ static const BYTE RLE_DELTA       = 2;
 
 #ifndef __MINGW32__		// prevents a bug in mingw32
 
+#ifndef _WINGDI_
+
 static const BYTE BI_RGB          = 0;
 static const BYTE BI_RLE8         = 1;
 static const BYTE BI_RLE4         = 2;
 static const BYTE BI_BITFIELDS    = 3;
+
+#endif // _WINGDI_
 
 #endif // __MINGW32__
 
@@ -53,13 +59,15 @@ static const BYTE BI_BITFIELDS    = 3;
 #endif
 
 #ifndef __MINGW32__
+#ifndef _WINGDI_
 typedef struct tagBITMAPCOREHEADER {
   DWORD   bcSize;
   WORD    bcWidth;
   WORD    bcHeight;
   WORD    bcPlanes;
   WORD    bcBitCnt;
-} BITMAPCOREHEADER, *PBITMAPCOREHEADER; 
+} BITMAPCOREHEADER, *PBITMAPCOREHEADER;
+#endif // _WINGDI_
 #endif //__MINGW32__
 
 typedef struct tagBITMAPINFOOS2_1X_HEADER {
@@ -71,6 +79,7 @@ typedef struct tagBITMAPINFOOS2_1X_HEADER {
 } BITMAPINFOOS2_1X_HEADER, *PBITMAPINFOOS2_1X_HEADER; 
 
 #ifndef __MINGW32__
+#ifndef _WINGDI_
 typedef struct tagBITMAPFILEHEADER {
   WORD    bfType; 
   DWORD   bfSize;
@@ -78,6 +87,7 @@ typedef struct tagBITMAPFILEHEADER {
   WORD    bfReserved2;
   DWORD   bfOffBits; 
 } BITMAPFILEHEADER, *PBITMAPFILEHEADER;
+#endif // _WINGDI_
 #endif //__MINGW32__
 
 #ifdef _WIN32

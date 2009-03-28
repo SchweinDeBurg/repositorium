@@ -25,6 +25,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#include "stdafx.h"
+
 #if !defined(FREEIMAGE_NO_JPEG)
 
 #ifdef _MSC_VER 

@@ -20,6 +20,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#include "stdafx.h"
+
 #if !defined(FREEIMAGE_NO_JPEG)
 
 extern "C" {

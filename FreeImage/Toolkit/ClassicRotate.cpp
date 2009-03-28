@@ -32,6 +32,8 @@
  ============================================================
 */
 
+#include "stdafx.h"
+
 #include "FreeImage.h"
 #include "Utilities.h"
 

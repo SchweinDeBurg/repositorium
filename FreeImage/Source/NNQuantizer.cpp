@@ -30,6 +30,8 @@
 //               Author: Hervé Drolon (drolon@infonie.fr)
 ///////////////////////////////////////////////////////////////////////
 
+#include "stdafx.h"
+
 #include "Quantizers.h"
 #include "FreeImage.h"
 #include "Utilities.h"

@@ -19,6 +19,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#include "stdafx.h"
+
 #include "FreeImage.h"
 #include "Utilities.h"
 #include "../../Graphics/OpenEXR/Source/IlmImf/ImfIO.h"
