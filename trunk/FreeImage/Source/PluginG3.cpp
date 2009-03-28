@@ -20,6 +20,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#include "stdafx.h"
+
 #include "../../Graphics/libtiff/Source/tiffiop.h"
 
 #include "FreeImage.h"

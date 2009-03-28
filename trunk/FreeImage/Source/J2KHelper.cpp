@@ -19,6 +19,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#include "stdafx.h"
+
 #if !defined(FREEIMAGE_NO_J2K)
 
 #include "FreeImage.h"

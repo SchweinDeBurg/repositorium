@@ -19,6 +19,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#include "stdafx.h"
+
 #include <zlib.h>
 #include "FreeImage.h"
 #include "Utilities.h"
