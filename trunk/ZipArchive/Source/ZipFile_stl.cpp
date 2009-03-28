@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -13,13 +13,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "ZipFile.h"
-#include "ZipException.h"
-#include "ZipPlatform.h"
 
-#include <fcntl.h>
-
-#if defined ZIP_ARCHIVE_STL || defined ZIP_FILE_USES_STL
+#if (defined _ZIP_IMPL_STL && (!defined _ZIP_FILE_IMPLEMENTATION || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_DEFAULT)) || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
 
 #if defined __APPLE__ || defined __CYGWIN__
 	#define FILE_FUNCTIONS_64B_BY_DEFAULT
@@ -27,9 +22,19 @@
 	#undef FILE_FUNCTIONS_64B_BY_DEFAULT	
 #endif	
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+#include "_features.h"
+#include "ZipFile.h"
+#include "_ZipException.h"
+#include "ZipPlatform.h"
+#include "BitFlag.h"
+
+#include <fcntl.h>
+
+CZipFile::CZipFile(LPCTSTR lpszFileName, UINT openFlags)
+{
+	m_hFile = -1;
+	Open(lpszFileName, openFlags, true);
+}
 
 CZipFile::CZipFile()
 {
@@ -46,13 +51,25 @@ ZIP_FILE_USIZE CZipFile::GetLength() const
 {
 	// cannot use Seek here, Seek is not const
 	ZIP_SIZE_TYPE lLen, lCur;
-	lCur = _lseek(m_hFile, 0, current);
+#ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
+	lCur = (ZIP_SIZE_TYPE)_lseek(m_hFile, 0, current);
+#else
+	lCur = (ZIP_SIZE_TYPE)_lseeki64(m_hFile, 0, current);	
+#endif
 	if (lCur == (ZIP_SIZE_TYPE)-1)
 		ThrowError();
-	lLen = _lseek(m_hFile, 0, end);
+#ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
+	lLen = (ZIP_SIZE_TYPE)_lseek(m_hFile, 0, end);
+#else
+	lLen = (ZIP_SIZE_TYPE)_lseeki64(m_hFile, 0, end);	
+#endif
 
 	// first go back
+#ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
 	bool err = _lseek(m_hFile, lCur, begin) == -1;
+#else
+	bool err = _lseeki64(m_hFile, lCur, begin) == -1;	
+#endif
 
 	if (err || lLen == (ZIP_SIZE_TYPE)-1)
 		ThrowError();
@@ -73,22 +90,29 @@ bool CZipFile::Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow)
 #endif
 
 	bool bReadOnly = false;
-	if (openFlags & CZipFile::modeCreate)
-		iNewFlags |= O_CREAT;
-	if ((openFlags & CZipFile::modeReadWrite) == CZipFile::modeReadWrite)
+	DWORD temp = openFlags & 3;
+	if (temp == modeWrite)
+	{
+		iNewFlags |= O_WRONLY;
+	}
+	else if (temp == modeReadWrite)
+	{
 		iNewFlags |= O_RDWR;
-	else if (openFlags & CZipFile::modeRead)
+	}
+	else
 	{
 		// O_RDONLY is defined as 0
 		bReadOnly = true;
 		iNewFlags |= O_RDONLY;
 	}
-	else if (openFlags & CZipFile::modeWrite)
-		iNewFlags |= O_WRONLY;
+	
+	if (openFlags & modeCreate)
+		iNewFlags |= O_CREAT;
 
-	if (!(openFlags & CZipFile::modeNoTruncate) && !bReadOnly)
+	if (!(openFlags & modeNoTruncate) && !bReadOnly)
 		iNewFlags |= O_TRUNC;
-	m_hFile = ZipPlatform::OpenFile(lpszFileName, iNewFlags, openFlags & 0x1C);
+
+	m_hFile = ZipPlatform::OpenFile(lpszFileName, iNewFlags, openFlags & 0x70);
 	if (m_hFile == -1)
 		if (bThrow)
 			CZipException::Throw(errno, lpszFileName);
@@ -106,11 +130,19 @@ void CZipFile::SetLength(ULONGLONG uNewLen)
 
 ZIP_FILE_USIZE CZipFile::GetPosition() const
 {
+#ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
 	#ifndef __GNUC__
 		ZIP_FILE_USIZE ret = _tell(m_hFile);
 	#else
 		ZIP_FILE_USIZE ret = lseek(m_hFile, 0, SEEK_CUR);
 	#endif
+#else
+	#ifndef __GNUC__
+		ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)_telli64(m_hFile);
+	#else
+		ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)lseek64(m_hFile, 0, SEEK_CUR);
+	#endif			
+#endif
 		if (ret == (ZIP_FILE_USIZE)-1)
 			ThrowError();
 		return ret;
@@ -119,13 +151,30 @@ ZIP_FILE_USIZE CZipFile::GetPosition() const
 ZIP_FILE_USIZE CZipFile::Seek(ZIP_FILE_SIZE dOff, int nFrom)
 {
 	// restricted to signed
-	ZIP_FILE_SIZE ret = (ZIP_FILE_SIZE)_lseek(m_hFile, (long)dOff, nFrom);
+#ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
+	ZIP_FILE_SIZE ret = (ZIP_FILE_SIZE)_lseek(m_hFile, dOff, nFrom);
+#else
+	ZIP_FILE_SIZE ret = (ZIP_FILE_SIZE)_lseeki64(m_hFile, dOff, nFrom);
+#endif
 	if (ret == -1)
 		ThrowError();
 	return (ZIP_FILE_USIZE)ret;
 }
 
-void  CZipFile::Flush()
+void CZipFile::Close()
+{
+	if (IsClosed())
+		return;
+	if (_close(m_hFile) != 0)
+		ThrowError();
+	else
+	{
+		m_szFileName.Empty();
+		m_hFile = -1;
+	}
+}
+
+void CZipFile::Flush()
 {
 	if (!ZipPlatform::FlushFile(m_hFile)) 
 		ThrowError();
@@ -136,11 +185,31 @@ CZipFile::operator HANDLE()
 	intptr_t fh = ZipPlatform::GetFileSystemHandle(m_hFile);
 	if (fh == -1)
 		ThrowError();
-#if _MSC_VER >= 1300
 	return (HANDLE)fh;
-#else
-	return (HANDLE)fh;
-#endif
+}
+
+void CZipFile::Write(const void* lpBuf, UINT nCount)
+{
+	if (nCount == 0)
+	{
+		return;
+	}
+	if (_write(m_hFile, lpBuf, nCount) != (int) nCount)
+		ThrowError();
+}
+
+UINT CZipFile::Read(void *lpBuf, UINT nCount)
+{
+	if (nCount == 0)
+	{
+		return 0;
+	}
+	errno = 0;
+	int ret = _read(m_hFile, lpBuf, nCount);
+	if (ret < (int) nCount && errno != 0)
+		ThrowError();
+	return ret;
+
 }
 
 #endif

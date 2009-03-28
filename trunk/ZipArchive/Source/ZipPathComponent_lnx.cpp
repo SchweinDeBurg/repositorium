@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,7 +14,7 @@
 
 #include "_platform.h"
 
-#ifdef ZIP_ARCHIVE_LNX
+#ifdef _ZIP_SYSTEM_LINUX
 
 #include "stdafx.h"
 #include "ZipPathComponent.h"
@@ -35,7 +35,7 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 	CZipString szPossiblePrefix = szTempPath.Left(iLen);
 	szPossiblePrefix.MakeLower(); // must perform case insensitive comparison
 	while (++i < iLen && szPossiblePrefix[i] == szPrefix[i]); 
-	if (i == 2 || i == 4 || i == 8) // unc path, unicode path or unc path meeting windows file name conventions
+	if (i == 2 || i == 4 || i == 8) // unc path, Unicode path or unc path meeting windows file name conventions
 	{
 		m_szPrefix = szTempPath.Left(i);
 		szTempPath = szTempPath.Mid(i);		
@@ -91,4 +91,4 @@ CZipString CZipPathComponent::GetNoDrive() const
 	return szPath;	
 }
 
-#endif // ZIP_ARCHIVE_LNX
+#endif // _ZIP_SYSTEM_LINUX

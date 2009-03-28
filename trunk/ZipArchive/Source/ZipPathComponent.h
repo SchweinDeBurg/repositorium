@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -36,11 +36,49 @@
 */
 class ZIP_API CZipPathComponent  
 {
+	
 public:
+	static const CZipString PathPrefix;
+#ifdef _ZIP_SYSTEM_WIN
+	/**
+		The type of the prefix in path.
+	*/
+	enum PrefixType
+	{
+		ptNone = 0,			///< There is no prefix present.
+		ptUnc = 2,			///< UNC path.
+		ptUnicode = 4,		///< Unicode path.
+		ptUncWin = 8		///< Windows UNC path.
+	};	
+	/**
+		Returns the length of the path prefix detected.
+
+		\param path
+			The path to examine.
+
+		\return
+			The length of the path prefix or \c 0, if no prefix was detected.
+	*/
+	static int IsPrefixed(const CZipString& path);
+#endif
 	CZipPathComponent(){}
+	/**
+		Initializes a new instance of the CZipPathComponent class.
+
+		\param	lpszFullPath
+			The full path to the file.
+
+		\see
+			SetFullPath
+	*/
+	CZipPathComponent(LPCTSTR lpszFullPath)
+	{
+		SetFullPath(lpszFullPath);
+	}
+
 	virtual ~CZipPathComponent();
 
-	static const TCHAR m_cSeparator; ///< A system - specific default path separator.
+	static const TCHAR m_cSeparator; ///< A system specific default path separator.
 
 	/**
 		Appends a path separator to \a szPath, if it is not already appended.
@@ -95,7 +133,7 @@ public:
 
 
     /**
-		Tests the character, if it is a separator or not.	
+		Returns the value indicating whether the given character is a path separator.
 
 		\param c 
 			The character to test.
@@ -125,32 +163,18 @@ public:
 		else
 			return false;
 	}
-
-	/**
-		Initializes a new instance of the CZipPathComponent class.
-
-		\param	lpszFullPath
-			The full path to the file.
-
-		\see
-			SetFullPath
-	*/
-	CZipPathComponent(LPCTSTR lpszFullPath)
-	{
-		SetFullPath(lpszFullPath);
-	}
 	
 	/**
 		Sets the full path to the file.
 
 		\param	lpszFullPath
 			The full path to the file including a filename.
-			The last element in the path is assumed to be a filename.
+			The last element in the path is assumed to be the filename.
 	*/
 	void SetFullPath(LPCTSTR lpszFullPath);
 
 	/**
-		Gets the name of the file without an extension (and without a path).
+		Returns the name of the file without the extension (and without the path).
 
 		\return
 			The title of the file.
@@ -158,7 +182,7 @@ public:
 	CZipString GetFileTitle() const { return m_szFileTitle;}
 
 	/**
-		Sets the file title (the name without an extension and without a path).
+		Sets the file title (the name without the extension and without the path).
 
 		\param	lpszFileTitle
 			The title to set.
@@ -167,10 +191,10 @@ public:
 
 	
 	/**
-		Sets the extension alone.
+		Sets the extension.
 
 		\param	lpszExt
-			The extension to set. May contain a dot at the beginning, but doesn't have to.
+			The extension to set. May contain the dot character at the beginning, but doesn't have to.
 	*/
 	void SetExtension(LPCTSTR lpszExt) 
 	{
@@ -179,15 +203,15 @@ public:
 	}
 
 	/**
-		Gets the extension of the file.
+		Returns the extension of the file.
 
 		\return
-			The extension without a dot.
+			The extension without the dot character.
 	*/
 	CZipString GetFileExt() const { return m_szFileExt;}
 
 	/**
-		Gets the drive of the file.
+		Returns the drive of the file.
 
 		\return
 			The drive without a path separator at the end.
@@ -195,7 +219,7 @@ public:
 	CZipString GetFileDrive() const { return m_szDrive;}
 
 	/**
-		Gets the full path to the file without the drive.
+		Returns the full path to the file without the drive.
 
 		\return
 			The path without the drive and without a path separator at the beginning.
@@ -203,10 +227,10 @@ public:
 	CZipString GetNoDrive() const ;
 
 	/**
-		Get the filename.
+		Returns the filename.
 
 		\return
-			The filename including an extension and without a path.
+			The filename including the extension and without the path.
 	*/
 	CZipString GetFileName() const
 	{
@@ -220,7 +244,7 @@ public:
 	}
 
 	/**
-		Gets the full path to the file.
+		Returns the full path to the file.
 
 		\return
 			The full path information including the filename.
@@ -240,10 +264,10 @@ public:
 	}
 
 	/**
-		Gets the path part only.
+		Returns the path part only.
 
 		\return
-			The path to the file without a filename and without a path separator at the end.
+			The file path without the filename and without a path separator at the end.
 	*/
 	CZipString GetFilePath() const
 	{
@@ -259,11 +283,11 @@ protected:
 		\name Path parts.
 	*/
 	//@{
-	CZipString m_szDirectory,	///< A directory(ies) only without path separators at the end and the beginning.
-		m_szFileTitle,			///< A filename without an extension.
-		m_szFileExt,			///< A file extension without a dot.
-		m_szDrive,				///< A drive (if the system path standard uses it) without a path separator at the end.
-		m_szPrefix;				///< A prefix (e.g. for the UNC path or Unicode path under Windows).
+	CZipString m_szDirectory,	///< The path without the filename and without path separators at the end and the beginning.
+		m_szFileTitle,			///< The filename without the extension.
+		m_szFileExt,			///< The file extension without the dot character.
+		m_szDrive,				///< The drive (if the system path standard uses it). It does not include a path separator at the end.
+		m_szPrefix;				///< The prefix (e.g. for the UNC path or Unicode path under Windows).
 	//@}
 	
 };

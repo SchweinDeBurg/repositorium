@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -53,7 +53,7 @@ public:
 	void Sort(CompareFunction pFunction)
 	{
 		INT_PTR uSize = GetSize();
-		if (!uSize) // if ommitted operator [] will fail if empty
+		if (!uSize) // if omitted operator [] will fail if empty
 			return;
 		qsort((void*)&((*this)[0]), (size_t)uSize , sizeof(TYPE), pFunction);
 	}

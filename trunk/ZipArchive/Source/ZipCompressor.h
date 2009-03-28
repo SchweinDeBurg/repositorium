@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -24,15 +24,16 @@
 #if _MSC_VER > 1000
 	#pragma once
 	#pragma warning( push )
-	#pragma warning (disable : 4100) // unreferenced formal parameter
+	#pragma warning (disable: 4100) // unreferenced formal parameter
+	#pragma warning (disable: 4275) // non dll-interface class 'CObject' used as base for dll-interface class 'CMap<KEY,ARG_KEY,VALUE,ARG_VALUE>'
 #endif
 
 #include "ZipExport.h"
 #include "ZipAutoBuffer.h"
-#include "ZipFileHeader.h"
+#include "_ZipFileHeader.h"
 #include "ZipStorage.h"
-#include "ZipCryptograph.h"
-#include "ZipException.h"
+#include "_ZipCryptograph.h"
+#include "_ZipException.h"
 
 /**
 	A base class for compressors used in compression and decompression of data.
@@ -42,7 +43,7 @@ class ZIP_API CZipCompressor
 protected:
 	CZipStorage* m_pStorage;			///< The current storage object.
 	CZipAutoBuffer m_pBuffer;			///< A buffer that receives compressed data or provides data for decompression.
-	CZipCryptograph* m_pCryptograph;	///< Current cryptograph.
+	CZipCryptograph* m_pCryptograph;	///< The current cryptograph.
 	CZipFileHeader* m_pFile;			///< The file header being compressed or decompressed.
 
 	
@@ -76,10 +77,10 @@ public:
 	*/
 	enum CompressionLevel
 	{		
-		levelDefault = -1,	///< The default compression level (equals 6 for deflate).
+		levelDefault = -1,	///< The default compression level (equals \c 6 for deflate).
 		levelStore = 0,		///< No compression used. Data is stored.
 		levelFastest = 1,	///< The fastest compression. The compression ratio is the lowest (apart from #levelStore).
-		levelBest = 9		///< The highest compression ratio. It's usually the slowest.
+		levelBest = 9		///< The highest compression ratio. It's usually the slowest one.
 	};
 
 	/**
@@ -90,7 +91,7 @@ public:
 		methodStore = 0, ///< A file is stored, not compressed.
 		methodDeflate = 8, ///< The deflate compression method.
 		/**
-			A file is compressed using the bzip2 algorithm. 
+			The bzip2 compression method.
 
 			\see
 				<a href="kb">0610231446|bzip2</a>				
@@ -136,7 +137,7 @@ public:
 		}
 
 		/**
-			Gets the type of the compressor to which the current options apply.
+			Returns the type of the compressor to which the current options apply.
 
 			\return
 				The type of the compressor. It can be one of the #CompressorType values.
@@ -153,7 +154,7 @@ public:
 
 		/**
 			The size of the buffer used in compression and decompression operations. 
-			By default it is set to to #cDefaultBufferSize. For the optimal performance of the 
+			By default it is set to #cDefaultBufferSize. For the optimal performance of the 
 			deflate algorithm it should be set at least to 128kB.
 
 			\see
@@ -185,7 +186,7 @@ public:
 		Returns the value indicating whether the given compression method is supported by the ZipArchive Library.
 		
 		\param uCompressionMethod
-			The compression method. Can be one of the #CompressionMethod values.
+			The compression method. It can be one of the #CompressionMethod values.
 
 		\return 
 			\c true, if the compression method is supported, \c false otherwise.
@@ -201,10 +202,10 @@ public:
 	DWORD m_uCrc32;	///< The CRC32 file checksum.	
 
 	/**
-		Returns the value indicating, if the current #CZipCompressor object supports the given compression method.
+		Returns the value indicating whether the current #CZipCompressor object supports the given compression method.
 		
 		\param uMethod
-			The compression method. Can be one of the #CompressionMethod values.
+			The compression method. It can be one of the #CompressionMethod values.
 
 		\return 
 			\c true, if the compression method is supported; \c false otherwise.
@@ -223,7 +224,7 @@ public:
 			The file being compressed.
 		
 		\param pCryptograph
-			The current CZipCryptograph. Can be \c NULL, if no encryption is used.
+			The current CZipCryptograph. It can be \c NULL, if no encryption is used.
 
 		\see
 			Compress
@@ -245,7 +246,7 @@ public:
 			The file being extracted.
 		
 		\param pCryptograph
-			The current CZipCryptograph. Can be \c NULL, if no decryption is used.
+			The current CZipCryptograph. It can be \c NULL, if no decryption is used.
 
 		\see
 			Decompress
@@ -258,7 +259,7 @@ public:
 		m_pFile = pFile;
 		m_pCryptograph = pCryptograph;
 
-		m_uComprLeft = m_pFile->GetDataSize(false, true);
+		m_uComprLeft = m_pFile->GetDataSize(true);
 		m_uUncomprLeft = m_pFile->m_uUncomprSize;
 		m_uCrc32 = 0;
 	}
@@ -292,7 +293,7 @@ public:
 			The number of bytes decompressed and written to \a pBuffer.
 
 		\note
-			This method should be called repeatedly until it returns 0.
+			This method should be called repeatedly until it returns \c 0.
 
 		\see
 			InitDecompression
@@ -368,7 +369,7 @@ public:
 		A factory method that creates an appropriate compressor for the given compression method.
 
 		\param uMethod
-			The compression method to create a compressor for. Can be one of #CompressionMethod values.
+			The compression method to create a compressor for. It can be one of the #CompressionMethod values.
 
 		\param pStorage
 			The current storage object.
@@ -411,8 +412,6 @@ protected:
 	/**
 		Flushes data in the buffer into the storage, encrypting the data if needed.
 
-		\note
-			Throws exceptions.
 	*/
 	void FlushWriteBuffer()
 	{
@@ -442,7 +441,7 @@ protected:
 	}
 
 	/**
-		Converts internal error code of the compressor to the ZipArchive Library error code.
+		Converts an internal error code of the compressor to the ZipArchive Library error code.
 
 		\param iErr
 			An internal error code.
@@ -464,9 +463,7 @@ protected:
 		\param bInternal
 			\c true, if \a iErr is an internal error code and needs a conversion to the ZipArchive Library error code; \c false otherwise.
 
-		\note
-			Throws exceptions.
-
+		
 		\see
 			ConvertInternalError
 	*/

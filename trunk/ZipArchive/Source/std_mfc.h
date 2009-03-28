@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -16,10 +16,20 @@
 	#error Do not include this file directly. Include stdafx.h instead
 #endif
 
-#if _MSC_VER > 1000
-#ifndef WINVER
-	#define WINVER 0x0400
-#endif
+#if _MSC_VER > 1000	
+	#if _MSC_VER < 1500		
+		#if !defined WINVER && !defined _WIN32_WINNT
+			#if _MSC_VER < 1300		
+				#define WINVER 0x0400
+			#else
+				#define WINVER 0x0501
+			#endif
+		#endif
+	#else
+		// Including this header for earlier versions of Visual Studio will cause 
+		// warning messages with Platform SDK, but is safe otherwise.
+		#include "sdkddkver.h"
+	#endif
 #pragma once
 #endif
 
@@ -35,7 +45,7 @@
 
 typedef BOOL ZBOOL;
 
-#if _MSC_VER >= 1300 || defined ZIP_FILE_USES_STL
+#if _MSC_VER >= 1300 || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_WIN || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
 	#define ZIP_FILE_USIZE ULONGLONG
 	#define ZIP_FILE_SIZE LONGLONG
 	#define ZIP_FILE_SIZEMAX _I64_MAX	

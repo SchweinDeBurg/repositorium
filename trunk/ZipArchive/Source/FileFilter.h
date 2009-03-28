@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -67,7 +67,7 @@ namespace ZipArchiveLib
 			This method is directly called by the CDirEnumerator::Start for each file or directory that was
 			previously accepted with the #HandlesFile method.
 
-			It internally calls the #Accept method and inverts it's result, if the filter is in the inverted 
+			It internally calls the #Accept method and inverts its result, if the filter is in the inverted 
 			mode and does not handle the inversion internally.
 			
 			- If this method returns \c true for a file, then the file is processed (the CDirEnumerator::Process method
@@ -83,7 +83,7 @@ namespace ZipArchiveLib
 				The name of the file to accept (without a path).
 
 			\param info
-				A structure containing the information about the current file.
+				The structure containing the information about the current file.
 
 			\return
 				\c true, if the file is accepted (taking inversion into account); \c false otherwise.
@@ -146,7 +146,7 @@ namespace ZipArchiveLib
 			Returns the value indicating whether the filter can decide about processing of the \a info file.
 			If it can, then the #Evaluate method will be called for the \a info file.
 			By default this method returns \c true for files and \c false for directories. Override this method
-			to change it's behavior.
+			to change its behavior.
 
 			- If \a info is a file and this method returns \c false, then the file is not processed.
 			- If \a info is a directory and this method returns \c false, then the directory can still be traversed for files
@@ -155,7 +155,7 @@ namespace ZipArchiveLib
 			The #Evaluate method is not called in both cases.
 
 			\param info
-				A structure containing the information about the file.
+				The structure containing the information about the file.
 
 			\return
 				\c true, if the \a info file should be evaluated by the #Evaluate method; \c false otherwise.
@@ -163,7 +163,7 @@ namespace ZipArchiveLib
 			\note
 				This method is particularly useful when the filter operates in the inverted mode (see #SetInverted).
 				For example, if a filter should accept directories in both inverted and non-inverted mode, it would need
-				to particularly handle inversion for directories without this method. With this method it can just not accept
+				to specially handle inversion for directories without this method. With this method it can just not accept
 				directories for evaluation and they still will be traversed.
 		*/
 		virtual bool HandlesFile(const CFileInfo& info)
@@ -193,7 +193,7 @@ protected:
 				The name of the file to accept (without a path).
 
 			\param info
-				A structure containing the information about the current file.
+				The structure containing the information about the current file.
 
 			\return
 				\c true, if the file is accepted; \c false otherwise.
@@ -213,7 +213,7 @@ protected:
 		}	
 
 		/**
-			Returns the value indicating, whether the current filter handles the inversion mode internally
+			Returns the value indicating whether the current filter handles the inversion mode internally
 			or not.
 			- If the filter is in the inverted mode and it handles the inversion, then the return value \c true
 			from the #Accept method means that the file should be processed.
@@ -281,7 +281,7 @@ protected:
 				A mask to match against a filename. This filter uses the CWildcard functionality for this purpose.
 
 			\param iAppliesToTypes
-				The file type to which this filter applies. The file type to which this filter applies. Can be one or more of the #AppliesToTypes values.
+				The file type to which this filter applies. It an be one or more of the #AppliesToTypes values.
 
 			\param bInverted
 				Set to \c true to invert the behavior of the filter or to \c false for the normal behavior.				
@@ -303,7 +303,7 @@ protected:
 			\see
 				ZipPlatform::GetSystemCaseSensitivity			
 		*/
-		CNameFileFilter(LPCTSTR lpszPattern = _T("*.*"), bool bInverted = false, int iAppliesToTypes = toFile, bool bCaseSensitive = ZipPlatform::GetSystemCaseSensitivity())
+		CNameFileFilter(LPCTSTR lpszPattern = _T("*"), bool bInverted = false, int iAppliesToTypes = toFile, bool bCaseSensitive = ZipPlatform::GetSystemCaseSensitivity())
 			:CFileFilter(bInverted), m_matcher(lpszPattern, bCaseSensitive)
 		{
 			m_iAppliesToTypes = iAppliesToTypes;
@@ -313,7 +313,7 @@ protected:
 			Returns the value indicating whether the filter can be applied to the given \a iType type.
 
 			\param iType
-				Can be one or more of the #AppliesToTypes values.
+				It can be one or more of the #AppliesToTypes values.
 
 			\return 
 				\c true, if the filter can be applied to \a iType type; \c false otherwise.
@@ -329,10 +329,10 @@ protected:
 		}
 
 		/**
-			Set the file type to which this filter applies.
+			Sets the file type to which this filter applies.
 
 			\param iType
-				The file type to which this filter applies. Can be one or more of the #AppliesToTypes values.
+				The file type to which this filter applies. It can be one or more of the #AppliesToTypes values.
 
 			\see
 				GetAppliesToTypes
@@ -341,10 +341,10 @@ protected:
 		void SetAppliesToTypes(int iType) { m_iAppliesToTypes = iType; }
 
 		/**
-			Return the file type to which this filter applies.
+			Returns the file type to which this filter applies.
 
 			\return 
-				The file type to which this filter applies. Can be one or more of the #AppliesToTypes values.
+				The file type to which this filter applies. It can be one or more of the #AppliesToTypes values.
 
 			\see
 				SetAppliesToTypes
@@ -356,7 +356,7 @@ protected:
 			The CNameFileFilter returns the value depending on the #GetAppliesToTypes value.
 			
 			\param info
-				A structure containing the information about the file.
+				The structure containing the information about the file.
 
 			\return
 				\c true, if the \a info file will be evaluated by the #Evaluate method; \c false otherwise.
@@ -430,7 +430,7 @@ protected:
 		}
 
 		/**
-			Add \a pFilter to the filter's group.
+			Adds \a pFilter to the filter's group.
 
 			\param pFilter
 				The filter to add.
@@ -557,7 +557,7 @@ protected:
 			Returns the type of grouping. 
 
 			\return 
-				The type of groupgroupeding. Can be one of the #GroupType values.
+				The type of grouping. It can be one of the #GroupType values.
 
 			\see 
 				SetType
@@ -565,7 +565,7 @@ protected:
 		GroupType GetType() const {return m_iType;}
 
 		/**
-			Enable or disable auto-deletion of grouped filters.
+			Enables or disables auto-deletion of grouped filters.
 			If auto-deletion is enabled, the grouped filters are released from memory
 			when they are removed from the group or when the CGroupFileFilter
 			object is destroyed.
@@ -579,7 +579,7 @@ protected:
 		void SetAutoDelete(bool bAutoDelete) {m_bAutoDelete = bAutoDelete;}
 
 		/**
-			Return the value indicating whether the auto-deletion is enabled or not.
+			Returns the value indicating whether the auto-deletion is enabled.
 
 			\return
 				\c true, if the auto-deletion is enabled; \c false otherwise.
@@ -594,7 +594,7 @@ protected:
 			The CGroupFileFilter returns the value depending on the value returned by the grouped filters.
 			
 			\param info
-				A structure containing the information about the file.
+				The structure containing the information about the file.
 
 			\return
 				\c true, if any of the grouped filters accepts \a info; \c false otherwise.
@@ -619,7 +619,7 @@ protected:
 
 		virtual bool Accept(LPCTSTR lpszParentDir, LPCTSTR lpszName, const CFileInfo& info);
 		/**
-			This filter handles inversion internally.
+			This filter handles the inversion mode internally.
 
 			\return
 				This method returns \c true for this class.

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -36,18 +36,12 @@
 namespace ZipArchiveLib
 {
 
-/**
-	The storage for callback objects. A structure for the internal use only.
-	\see
-		CZipArchive::SetCallback
-		CZipArchive::GetCallback
-*/
 class ZIP_API CZipCallbackProvider : public CZipMap<CZipActionCallback::CallbackType, CZipActionCallback*>		
 {
 public:
 	void Set(CZipActionCallback* pCallback, int iWhich)
 	{
-		CZipActionCallback::CallbackType cbs[] = {CZipActionCallback::cbAdd, CZipActionCallback::cbAddTmp, CZipActionCallback::cbAddStore, CZipActionCallback::cbExtract, CZipActionCallback::cbDeleteCnt, CZipActionCallback::cbDelete, CZipActionCallback::cbTest, CZipActionCallback::cbSave, CZipActionCallback::cbGet, CZipActionCallback::cbRename, CZipActionCallback::cbMoveData, CZipActionCallback::cbCalculateForMulti, CZipActionCallback::cbMultiAdd, CZipActionCallback::cbEncryptPrepare, CZipActionCallback::cbEncryptMoveData, CZipActionCallback::cbEncrypt, CZipActionCallback::cbMultiEncrypt};
+		CZipActionCallback::CallbackType cbs[] = {CZipActionCallback::cbAdd, CZipActionCallback::cbAddTmp, CZipActionCallback::cbAddStore, CZipActionCallback::cbExtract, CZipActionCallback::cbDeleteCnt, CZipActionCallback::cbDelete, CZipActionCallback::cbTest, CZipActionCallback::cbSave, CZipActionCallback::cbGet, CZipActionCallback::cbModify, CZipActionCallback::cbMoveData, CZipActionCallback::cbCalculateForMulti, CZipActionCallback::cbMultiAdd, CZipActionCallback::cbEncryptPrepare, CZipActionCallback::cbEncryptMoveData, CZipActionCallback::cbEncrypt, CZipActionCallback::cbMultiEncrypt};
 		int iCount = sizeof(cbs)/sizeof(CZipActionCallback::CallbackType);
 		for (int i = 0; i < iCount; i++)
 		{

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
 #include "_ZipException.h"
 #include "ZipAutoBuffer.h"
 #include "_ZipFileHeader.h"
+#include "_ZipArchive.h"
 
 #if defined(__INTEL_COMPILER)
 // remark #1418: external definition with no prior declaration
@@ -71,7 +72,7 @@ DWORD AttrDos(DWORD , bool );
 DWORD AttrUnix(DWORD, bool);
 DWORD AttrMac(DWORD , bool );
 
-conv_func conv_funcs[11] = {AttrDos,
+conv_func conv_funcs[21] = {AttrDos,
 							NULL,
 							NULL,
 							AttrUnix,
@@ -81,7 +82,17 @@ conv_func conv_funcs[11] = {AttrDos,
 							AttrMac,
 							NULL,
 							NULL,
-							AttrDos
+							NULL,
+							AttrDos,
+							NULL,
+							NULL,
+							NULL,
+							AttrDos,
+							NULL,
+							NULL,
+							NULL,
+							NULL,
+							AttrMac,
 };
 
 
@@ -168,7 +179,7 @@ DWORD AttrMac(DWORD uAttr, bool )
 ZIPINLINE bool ZipCompatibility::IsPlatformSupported(int iCode)
 {
 	return iCode == zcDosFat || iCode == zcUnix || iCode == zcMacintosh
-		|| iCode == zcNtfs || iCode == zcOs2Hpfs;
+		|| iCode == zcNtfs || iCode == zcOs2Hpfs || iCode == zcVfat || iCode == zcMacDarwin;
 }
 
 void ZipCompatibility::ConvertBufferToString(CZipString& szString, const CZipAutoBuffer& buffer, UINT uCodePage)
@@ -223,4 +234,40 @@ void ZipCompatibility::SlashBackslashChg(CZipString& szFileName, bool bReplaceSl
 		c2 = t1;
 	}
 	szFileName.Replace(c2, c1);
+}
+
+UINT ZipCompatibility::GetDefaultNameCodePage(int iPlatform)
+{
+	if (iPlatform == ZipCompatibility::zcDosFat || iPlatform == ZipCompatibility::zcNtfs)
+		return CP_OEMCP;
+	else if (iPlatform == ZipCompatibility::zcUnix || iPlatform == ZipCompatibility::zcMacintosh || iPlatform == zcMacDarwin)
+		return CP_UTF8;
+	else
+		return CP_ACP;
+}
+
+UINT ZipCompatibility::GetDefaultNameCodePage()
+{
+	return GetDefaultNameCodePage(ZipPlatform::GetSystemID());
+}
+
+UINT ZipCompatibility::GetDefaultCommentCodePage(int iPlatform)
+{
+	if (iPlatform == ZipCompatibility::zcUnix || iPlatform == ZipCompatibility::zcMacintosh || iPlatform == zcMacDarwin)
+		return CP_UTF8;
+	else
+		return CP_ACP;
+}
+
+UINT ZipCompatibility::GetDefaultPasswordCodePage(int iPlatform)
+{
+	if (iPlatform == ZipCompatibility::zcUnix || iPlatform == ZipCompatibility::zcMacintosh || iPlatform == zcMacDarwin)
+		return CP_UTF8;
+	else
+		return CP_ACP;
+}
+
+UINT ZipCompatibility::GetDefaultCommentCodePage()
+{
+	return GetDefaultCommentCodePage(ZipPlatform::GetSystemID());
 }

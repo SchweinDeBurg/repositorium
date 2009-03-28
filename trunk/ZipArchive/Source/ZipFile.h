@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@
 #if !defined(ZIPARCHIVE_ZIPFILE_DOT_H)
 #define ZIPARCHIVE_ZIPFILE_DOT_H
 
+
 #if _MSC_VER > 1000
 	#pragma once
 #endif
@@ -36,12 +37,12 @@
 #include "_features.h"
 #include "_platform.h"
 
-#if defined ZIP_ARCHIVE_STL || defined ZIP_FILE_USES_STL
+#if (defined _ZIP_IMPL_STL && (!defined _ZIP_FILE_IMPLEMENTATION || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_DEFAULT)) || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
 	#include "ZipFile_stl.h"
+#elif _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_WIN
+	#include "ZipFile_win.h"
 #else
 	#include "ZipFile_mfc.h"
 #endif
-
-
 
 #endif // !defined(ZIPARCHIVE_ZIPFILE_DOT_H)

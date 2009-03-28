@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -40,9 +40,10 @@
 
 #include "ZipCompatibility.h"
 #include "ZipCollections.h"
-#include "ZipExtraField.h"
+#include "_ZipExtraField.h"
 #include "ZipStringStoreSettings.h"
-#include "ZipCryptograph.h"
+#include "_ZipCryptograph.h"
+#include "BitFlag.h"
 
 
 class CZipCentralDir;
@@ -54,7 +55,24 @@ class ZIP_API CZipFileHeader
 {
 	friend class CZipCentralDir;
 	friend class CZipArchive;
+protected:
+	CZipFileHeader(CZipCentralDir* pCentralDir);
 public:	
+	/**
+		File header state flags.
+
+		\see
+			CZipArchive::UnicodeMode
+	*/
+	enum StateFlags
+	{
+		sfNone				= 0x00,		///< No special flags set.
+#ifdef _ZIP_UNICODE_CUSTOM	
+		sfCustomUnicode		= 0x10,		///< The header uses custom Unicode functionality.
+#endif
+		sfModified			= 0x20		///< The file has been modified.
+	};
+
 	CZipFileHeader();
 	CZipFileHeader(const CZipFileHeader& header)
 	{
@@ -71,24 +89,35 @@ public:
 	*/
 	int PredictFileNameSize() const 
 	{
-		if (m_pszFileNameBuffer.IsAllocated())
-			return m_pszFileNameBuffer.GetSize();
+		if (m_fileName.HasBuffer())
+		{
+			return m_fileName.GetBufferSize();
+		}
 		CZipAutoBuffer buffer;
 		ConvertFileName(buffer);
 		return buffer.GetSize();
 	}
-
+	
 	/**
-		Gets the comment size.
+		Predicts a file comment size.
 
 		\return
 			The number of characters in the comment not including a terminating \c NULL character.
 	*/
-	WORD GetCommentSize() const {return (WORD)m_pszComment.GetSize();}
+	int	PredictCommentSize() const 
+	{
+		if (m_comment.HasBuffer())
+		{
+			return m_comment.GetBufferSize();
+		}
+		CZipAutoBuffer buffer;
+		ConvertComment(buffer);
+		return buffer.GetSize();
+	}
 
 
 	/**
-		Gets the filename. If necessary, performs the conversion using the current filename code page.
+		Returns the filename. If necessary, performs the conversion using the current filename code page.
 		Caches the result of conversion for faster access the next time.
 
 		\param bClearBuffer
@@ -102,39 +131,72 @@ public:
 
 		\see
 			<a href="kb">0610051525</a>
+		\see
+			SetFileName
 		\see 
 			GetStringStoreSettings
 		\see
 			CZipStringStoreSettings::m_uNameCodePage
 	*/
-	CZipString& GetFileName(bool bClearBuffer = true);
+	const CZipString& GetFileName(bool bClearBuffer = true);
 
 	/**
 		Sets the filename.
 
+		The actual renaming of the file inside of the archive depends on the current commit mode.
+
 		\param	lpszFileName
 			The filename to set.
+
+		\return 
+			\c true, if the method succeeded; \c false, if the current state of the archive is invalid for this method to be called.
+
+		\see
+			<a href="kb">0610231944|rename</a>
+		\see
+			GetFileName
+		\see 
+			CZipArchive::CommitChanges
 	*/
-	void SetFileName(LPCTSTR lpszFileName);
+	bool SetFileName(LPCTSTR lpszFileName);
 
 	/**
-		Gets the file comment.
+		Returns the file comment.
+		
+		\param bClearBuffer
+			If \c true, releases the internal buffer after performing the comment conversion.
+			If \c false, the internal buffer is not released and both representations of the 
+			comment are kept in memory (converted and not converted). This takes more memory, but the 
+			conversion does not take place again when the central directory is written back to the archive.
 
 		\return
 			The file comment.
+
+		\see
+			<a href="kb">0610231944|comment</a>
+		\see
+			SetComment
 	*/
-	CZipString GetComment() const;
+	const CZipString& GetComment(bool bClearBuffer = false);
 
 	/**
 		Sets the file comment.
 
 		\param lpszComment
 			The file comment.
+
+		\return 
+			\c true, if the method succeeded; \c false, if the current state of the archive is invalid for this method to be called.
+
+		\see
+			<a href="kb">0610231944|comment</a>
+		\see
+			GetComment
 	*/
-	void SetComment(LPCTSTR lpszComment);
+	bool SetComment(LPCTSTR lpszComment);
 
 	/**
-		Gets a value indicating whether the data descriptor is present or not.
+		Returns the value indicating whether the data descriptor is present.
 
 		\return
 			\c true, if the data descriptor is present; \c false otherwise.
@@ -142,12 +204,12 @@ public:
 	bool IsDataDescriptor()const {	return (m_uFlag & (WORD) 8) != 0;}
 
 	/**
-		Gets the data descriptor size as it is required for the current file.
+		Returns the data descriptor size as it is required for the current file.
 		Takes into account various factors, such as the archive segmentation type,
 		encryption and the need for the Zip64 format.
 
 		\param pStorage
-			The storage to test for segmentation type.
+			The storage to test for the segmentation type.
 
 		\return 
 			The required data descriptor size in bytes.
@@ -158,7 +220,7 @@ public:
 	}
 
 	/**
-		Gets the data descriptor size as it is required for the current file.
+		Returns the data descriptor size as it is required for the current file.
 		Takes into account various factors, such as the need for the data descriptor signature
 		or for the Zip64 format.
 
@@ -168,19 +230,14 @@ public:
 		\return 
 			The required data descriptor size in bytes.
 	*/
-	WORD GetDataDescriptorSize(bool bConsiderSignature = false) const;
-	
+	WORD GetDataDescriptorSize(bool bConsiderSignature = false) const;	
 
 	/**
-		Gets the size of the compressed data.
-	
-		\param bUseLocal
-			If \c true, uses #m_uLocalComprSize; otherwise uses #m_uComprSize;
+		Returns the size of the compressed data.
 	
 		\param bReal
-			If \c true, the returned value does not include the encrypted information size, only the data size.
-			If \c false, the encrypted information size is added (you should not use this value 
-			when the file exists in the archive).
+			Set to \c true when calling for a file already in an archive.
+			Set to \c false when the header is not a part of the archive.
 	
 		\return
 			The compressed data size in bytes.
@@ -188,15 +245,14 @@ public:
 		\see
 			GetEncryptedInfoSize
 	 */
-	ZIP_SIZE_TYPE GetDataSize(bool bUseLocal = false, bool bReal = true) const
+	ZIP_SIZE_TYPE GetDataSize(bool bReal) const
 	{
-		ZIP_SIZE_TYPE uSize = bUseLocal ? m_uLocalComprSize : m_uComprSize;
 		DWORD uEncrSize = GetEncryptedInfoSize();
-		return bReal ? (uSize - uEncrSize) : (uSize + uEncrSize);
+		return bReal ? (m_uComprSize - uEncrSize) : (m_uComprSize + uEncrSize);
 	}
 
 	/**
-		Gets the encrypted information size. The returned value depends on the used encryption method.
+		Returns the encrypted information size. The returned value depends on the used encryption method.
 
 		\return
 			The  encrypted information size in bytes.
@@ -207,15 +263,15 @@ public:
 	}
 
 	/**
-		Gets the total size of the structure in the central directory.
+		Returns the total size of this structure in the central directory.
 
 		\return
 			The total size in bytes.
 	*/
-	DWORD GetSize()const;
+	DWORD GetSize() const;
 
 	/**
-		Gets the local header size. Before calling this method, the local information must be up-to-date
+		Returns the local header size. Before calling this method, the local information must be up-to-date
 		(see <a href="kb">0610242128|local</a> for more information).
 
 		\param bReal
@@ -228,7 +284,7 @@ public:
 	DWORD GetLocalSize(bool bReal) const;	
 
 	/**
-		Gets a value indicating if the compression is efficient.
+		Returns the value indicating whether the compression is efficient.
 
 		\return 
 			\c true if the compression is efficient; \c false if the file should be 
@@ -238,19 +294,19 @@ public:
 	{
 		ZIP_SIZE_TYPE uBefore = m_uUncomprSize;
 		// ignore the length of encryption info 
-		ZIP_SIZE_TYPE uAfter = GetDataSize(false, true);
+		ZIP_SIZE_TYPE uAfter = GetDataSize(true);
 		return  uAfter <= uBefore;
 	}
 
 	/**
-		Gets the compression ratio.
+		Returns the compression ratio.
 
 		\return
 			The compression ratio of the file.
 	*/
 	float GetCompressionRatio()
 	{
-#if _MSC_VER >= 1300 || !defined(_ZIP64)
+#if _MSC_VER >= 1300 || !defined(_ZIP_ZIP64)
 		return m_uUncomprSize ? ((float)m_uComprSize * 100 ) / m_uUncomprSize: 0;
 #else
 		return m_uUncomprSize ? ((float)(__int64)(m_uComprSize) / (float)(__int64)m_uUncomprSize) * 100: 0;
@@ -269,7 +325,7 @@ public:
 	void SetTime(const time_t& ttime);
 
 	/**
-		Gets the file modification time.
+		Returns the file modification time.
 
 		\return
 			The modification time.
@@ -280,13 +336,13 @@ public:
 	time_t GetTime()const;
 
 	/**
-		Gets the file system compatibility.
+		Returns the file system compatibility.
 		External software can use this information e.g. to determine end-of-line 
 		format for text files etc.
 		The ZipArchive Library uses it to perform a proper file attributes conversion.
 
 		\return
-			The file system compatibility. Can be one of the ZipCompatibility::ZipPlatforms values.
+			The file system compatibility. It can be one of the ZipCompatibility::ZipPlatforms values.
 		\see
 			CZipArchive::GetSystemComatibility
 		\see
@@ -294,11 +350,11 @@ public:
 	*/
 	int GetSystemCompatibility()const
 	{
-		return (m_uVersionMadeBy & 0xFF00) >> 8;
+		return (int)m_iSystemCompatibility;
 	}
 
 	/**
-		Gets the file attributes.
+		Returns the file attributes.
 
 		\return
 			The file attributes, converted if necessary to be compatible with the current system.
@@ -312,8 +368,23 @@ public:
 	*/
 	DWORD GetSystemAttr();
 
+	
 	/**
-		Gets the file attributes exactly as they are stored in the archive.
+		Sets the file attributes.
+
+		\param	uAttr
+			The attributes to set.
+
+		\note
+			Throws an exception, if the archive system or the current system is not supported by the ZipArchive Library.
+
+		\see	
+			GetSystemAttr
+	*/
+	bool SetSystemAttr(DWORD uAttr);
+
+	/**
+		Returns the file attributes exactly as they are stored in the archive.
 
 		\return 
 			The file attributes as they are stored in the archive.
@@ -327,7 +398,7 @@ public:
 	DWORD GetOriginalAttributes() const {return m_uExternalAttr;}
 
 	/**
-		Gets a value indicating whether the file represents a directory or not.
+		Returns the value indicating whether the file represents a directory.
 		This method checks the file attributes. If the attributes value is zero, 
 		the method checks for the presence of a path 
 		separator at the end of the filename. If the path separator is present, 
@@ -338,15 +409,15 @@ public:
 	*/
 	bool IsDirectory();
 
-	
+#ifdef _ZIP_UNICODE_CUSTOM	
 	/**
-		Gets the string store settings for the file.
+		Returns the current string store settings.
 	
 		\return
 			The string store settings.
 
 		\see
-			<a href="kb">0610051525</a>
+			<a href="kb">0610051525|custom</a>
 		\see
 			CZipArchive::GetStringStoreSettings
 	 */
@@ -354,9 +425,10 @@ public:
 	{
 		return m_stringSettings;
 	}
+#endif
 
 	/**
-		Gets a value indicating if the file is encrypted or not.
+		Returns the value indicating whether the file is encrypted.
 		If the file is encrypted, you need to set the password with the 
 		CZipArchive::SetPassword method before decompressing the file.
 
@@ -369,15 +441,15 @@ public:
 	bool IsEncrypted()const {	return m_uEncryptionMethod != CZipCryptograph::encNone;}
 
 	/**
-		Gets the encryption method of the file.
+		Returns the encryption method of the file.
 
 		\return
-			The file encryption method. Can be one of the CZipCryptograph::EncryptionMethod values.
+			The file encryption method. It can be one of the CZipCryptograph::EncryptionMethod values.
 	*/
 	int GetEncryptionMethod() const {return m_uEncryptionMethod;}
 
 	/**
-		Gets a value indicating if the file is encrypted using WinZip AES encryption method or not.
+		Returns the value indicating whether the file is encrypted using WinZip AES encryption method.
 
 		\return
 			\c true, if the file is encrypted using WinZip AES encryption method; \c false otherwise.
@@ -388,7 +460,7 @@ public:
 	}
 
 	/**
-		Gets an approximate file compression level.
+		Returns an approximate file compression level.
 
 		\return 
 			The compression level. May not be the real value used when compressing the file.
@@ -396,22 +468,48 @@ public:
 	int GetCompressionLevel() const;
 
 	/**
-		Returns the value indicating whether the current CZipFileHeader object has the time set or not.
+		Returns the value indicating whether the current CZipFileHeader object has the time set.
 
 		\return
 			\c true, if the time is set; \c false otherwise.
 	*/
-	bool HasTime()
+	bool HasTime() const
 	{
 		return m_uModTime != 0 || m_uModDate != 0;
 	}
 
+	/**
+		Returns the value indicating whether the file was modified.
+
+		\return
+			\c true, if the file was modified; \c false otherwise.
+
+		\see
+			CZipArchive::CommitChanges
+	*/
+	bool IsModified() const
+	{
+		return m_state.IsSetAny(sfModified);
+	}
+
+
+	/**
+		Returns the state flags.
+
+		\return
+			State flags. It can be one or more of #StateFlags values.		
+	*/
+	const ZipArchiveLib::CBitFlag& GetState() const
+	{
+		return m_state;
+	}
+
 	static char m_gszSignature[];		///< The central file header signature.
 	static char m_gszLocalSignature[];	///< The local file header signature.
-	WORD m_uVersionMadeBy;				///< The "made by" version and the system compatibility.
+	unsigned char m_uVersionMadeBy;		///< The version of the software that created the archive.
 	WORD m_uVersionNeeded;				///< The version needed to extract the file.
 	WORD m_uFlag;						///< A general purpose bit flag.
-	WORD m_uMethod;						///< The compression method. Can be one of the CZipCompressor::CompressionMethod values.
+	WORD m_uMethod;						///< The compression method. It can be one of the CZipCompressor::CompressionMethod values.
 	WORD m_uModTime;					///< The file last modification time.
 	WORD m_uModDate;					///< The file last modification date.
 	DWORD m_uCrc32;						///< The crc-32 value.
@@ -422,13 +520,16 @@ public:
 	ZIP_SIZE_TYPE m_uLocalComprSize;	///< The compressed size written in the local header.
 	ZIP_SIZE_TYPE m_uLocalUncomprSize;	///< The uncompressed size written in the local header.
 	ZIP_SIZE_TYPE m_uOffset;			///< Relative offset of the local header with respect to CZipFileHeader::m_uVolumeStart.
-	CZipExtraField m_aLocalExtraData;	///< The local extra field. Do not modify after you have started compressing the file.
+	CZipExtraField m_aLocalExtraData;	///< The local extra field. Do not modify it after you started compressing the file.
 	CZipExtraField m_aCentralExtraData; ///< The central extra field.
 protected:
 	DWORD m_uExternalAttr;				///< External file attributes.
  	WORD m_uLocalFileNameSize;			///< The local filename length.
-	BYTE m_uEncryptionMethod;			///< The file encryption method. Can be one of the CZipCryptograph::EncryptionMethod values.
-	bool m_bIgnoreCrc32;				///< A value indicating whether to ignore Crc32 checking or not. 
+	BYTE m_uEncryptionMethod;			///< The file encryption method. It can be one of the CZipCryptograph::EncryptionMethod values.
+	bool m_bIgnoreCrc32;				///< The value indicating whether to ignore Crc32 checking.
+	DWORD m_uLocalHeaderSize;
+	
+	CZipCentralDir* m_pCentralDir;		///< The parent central directory. It can be \c NULL when the header is not a part of central directory.
 
 	
 
@@ -436,43 +537,42 @@ protected:
 		Sets the file system compatibility.
 
 		\param	iSystemID
-			The file system compatibility. Can be one of the ZipCompatibility::ZipPlatforms values.
+			The file system compatibility. It can be one of the ZipCompatibility::ZipPlatforms values.
+
+		\param bUpdateAttr
+			If \c true, the attributes will be converted to the new system; \c false otherwise.
 
 		\see
 			GetSystemCompatibility
 	*/
-	void SetSystemCompatibility(int iSystemID)
+	void SetSystemCompatibility(int iSystemID, bool bUpdateAttr = false)
 	{
-		m_uVersionMadeBy &= 0x00FF;
-		m_uVersionMadeBy |= (WORD)(iSystemID << 8);
+		if (bUpdateAttr)
+		{
+			if ((int)m_iSystemCompatibility != iSystemID)
+			{
+				DWORD uAttr = GetSystemAttr();
+				m_iSystemCompatibility = (char)(iSystemID & 0xFF);
+				SetSystemAttr(uAttr & 0xFFFF);				
+			}
+			return;
+		}
+		m_iSystemCompatibility = (char)(iSystemID & 0xFF);
 	}
-
-	/**
-		Sets the file attributes.
-		To set the attributes of this structure use the CZipArchive::SetFileHeaderAttr method.
-
-		\param	uAttr
-			The attributes to set.
-
-		\note
-			Throws exceptions, if the archive system or the current system 
-			is not supported by the ZipArchive Library.
-
-		\see
-			CZipArchive::SetFileHeaderAttr
-		\see	
-			GetSystemAttr
-	*/
-	void SetSystemAttr(DWORD uAttr);
 	
 	/**
 		Prepares the filename for writing to the archive.
 	*/
-	void PrepareFileName()
+	void PrepareStringBuffers()
 	{
-		if (m_pszFileNameBuffer.IsAllocated() || m_pszFileName == NULL)
-			return;
-		ConvertFileName(m_pszFileNameBuffer);
+		if (!m_fileName.HasBuffer())
+		{
+			ConvertFileName(m_fileName.m_buffer);
+		}
+		if (!m_comment.HasBuffer())
+		{
+			ConvertComment(m_comment.m_buffer);
+		}
 	}
 
 	/**
@@ -506,27 +606,23 @@ protected:
 		\param	pStorage
 			The storage to write the local file header to.
 
-		\note
-			Throws exceptions.
 	*/
 	void WriteLocal(CZipStorage *pStorage);
 
 	/**
-		Reads the local file header from an archive and validates the read data.
+		Reads the local file header from the archive and validates the read data.
 
-		\param	centralDir
-			The current central directory.
+		\param pCentralDir
+			Used when the archive was opened with CZipArchive::OpenFrom method. Points to the original central directory.
 
 		\return
-			\c true, if read data is consistent; \c false otherwise.
+			\c true, if the data read is consistent; \c false otherwise.
 
-		\note
-			Throws exceptions.
-
+		
 		\see 
 			CZipArchive::SetIgnoredConsistencyChecks
 	*/
-	bool ReadLocal(CZipCentralDir& centralDir);
+	bool ReadLocal(CZipCentralDir* pCentralDir);
 
 	/**
 		Writes the central file header to \a pStorage.
@@ -537,16 +633,11 @@ protected:
 		\return
 			The size of the file header.
 
-		\note
-			Throws exceptions.
 	*/
 	DWORD Write(CZipStorage *pStorage);
 
 	/**
 		Reads the central file header from \a pStorage and validates the read data.
-
-		\param	centralDir
-			The current central directory.
 
 		\param bReadSignature
 			\c true, if the the central header signature should be read; \c false otherwise.
@@ -555,10 +646,8 @@ protected:
 		\return
 			\c true, if the read data is consistent; \c false otherwise.
 
-		\note
-			Throws exceptions.
 	*/
-	bool Read(CZipCentralDir& centralDir, bool bReadSignature);
+	bool Read(bool bReadSignature);
 
 
 	/**
@@ -570,7 +659,7 @@ protected:
 	*/
 	bool CheckLengths(bool local) const
 	{
-		if (m_pszComment.GetSize() > USHRT_MAX || m_pszFileNameBuffer.GetSize() > USHRT_MAX)
+		if (m_comment.GetBufferSize() > (int)USHRT_MAX || m_fileName.GetBufferSize() > (int)USHRT_MAX)
 			return false;
 		else if (local)
 			return m_aLocalExtraData.Validate();
@@ -588,7 +677,7 @@ protected:
 	
 	
 	/**
-		Gets a value indicating whether the file needs the data descriptor.
+		Returns the value indicating whether the file needs the data descriptor.
 		The data descriptor is needed when a file is encrypted or the Zip64 format needs to be used.
 
 		\return 
@@ -616,9 +705,18 @@ protected:
 	*/
 	void WriteDataDescriptor(CZipStorage* pStorage);
 
+	/**
+		Returns the value indicating whether the signature in the data descriptor is needed.
+
+		\param pStorage
+			The current storage.
+
+		\return
+			\c true, if the signature is needed; \c false otherwise.
+	*/
 	bool NeedsSignatureInDataDescriptor(const CZipStorage* pStorage) const
 	{
-		return pStorage->IsSegmented() != 0 || IsEncrypted();
+		return pStorage->IsSegmented() || IsEncrypted();
 	}
 
 	/**
@@ -628,6 +726,25 @@ protected:
 			The storage to update the data descriptor in.
 	*/
 	void UpdateLocalHeader(CZipStorage* pStorage);
+
+	/**
+		Adjusts the local compressed size.
+	*/
+	void AdjustLocalComprSize()
+	{
+		AdjustLocalComprSize(m_uLocalComprSize);
+	}
+
+	/**
+		Adjusts the local compressed size.
+
+		\param uLocalComprSize
+			The value to adjust.
+	*/
+	void AdjustLocalComprSize(ZIP_SIZE_TYPE& uLocalComprSize)
+	{
+		uLocalComprSize += GetEncryptedInfoSize();
+	}
 
 	/**
 		Verifies the central header signature.
@@ -658,38 +775,118 @@ protected:
 			m_uFlag  |= 1;		// encrypted file		
 	}
 
+	
+private:	
 
-private:
-
-	/**
-		Sets the "made by" version.
-
-		\param uVersion
-			The version to set.
-	*/
-	void SetVersion(WORD uVersion)
+	struct StringWithBuffer
 	{
-		if ((m_uVersionMadeBy & 0x00FF) != (uVersion & 0x00FF)) 
+		StringWithBuffer()
 		{
-			m_uVersionMadeBy &= 0xFF00;
-			m_uVersionMadeBy |= (WORD)(uVersion & 0x00FF);
+			m_pString = NULL;
 		}
+		CZipAutoBuffer m_buffer;
+		StringWithBuffer& operator = (const StringWithBuffer& original)
+		{			
+			if (original.HasString())
+			{
+				SetString(original.GetString());
+			}
+			else
+			{
+				ClearString();
+			}
+			m_buffer = original.m_buffer;
+			return *this;
+		}
+		void AllocateString()
+		{
+			ClearString();
+			m_pString = new CZipString(_T(""));
+		}
+		bool HasString() const
+		{
+			return m_pString != NULL;
+		}
+		bool HasBuffer() const 
+		{
+			return m_buffer.IsAllocated() && m_buffer.GetSize() > 0;
+		}
+		void ClearString()
+		{
+			if (HasString())
+			{
+				delete m_pString;
+				m_pString = NULL;
+			}
+		}
+		void ClearBuffer()
+		{
+			m_buffer.Release();
+		}
+
+		const CZipString& GetString() const
+		{
+			ASSERT(HasString());
+			return *m_pString;
+		}
+
+		CZipString& GetString()
+		{
+			ASSERT(HasString());
+			return *m_pString;
+		}
+
+		void SetString(LPCTSTR value)
+		{
+			if (!HasString())
+				AllocateString();
+			*m_pString = value;
+		}
+		
+		int GetBufferSize() const
+		{
+			return m_buffer.GetSize();
+		}
+		~StringWithBuffer()
+		{
+			ClearString();
+		}
+	protected:
+		CZipString* m_pString;
+	};
+
+	ZipArchiveLib::CBitFlag m_state;
+		
+	void Initialize(CZipCentralDir* pCentralDir);
+
+	void SetModified(bool bModified = true)
+	{
+		m_state.Change(sfModified, bModified);
 	}
 
 	void ConvertFileName(CZipAutoBuffer& buffer) const;
 	void ConvertFileName(CZipString& szFileName) const;
+	void ConvertComment(CZipAutoBuffer& buffer) const;
+	void ConvertComment(CZipString& szComment) const;
 
-	void ClearFileName()
+	bool UpdateFileNameFlags(const CZipString* szNewFileName, bool bAllowRemoveCDir);
+	bool UpdateCommentFlags(const CZipString* szNewComment);
+	bool UpdateStringsFlags(bool bAllowRemoveCDir)
 	{
-		if (m_stringSettings.m_bStoreNameInExtraData)
-			// we are keeping m_pszFileName, clear the buffer, we need the original, when writing extra header and when accessing the filename
-			m_pszFileNameBuffer.Release();
-		else if (m_pszFileName != NULL)
-		{
-			delete m_pszFileName;
-			m_pszFileName = NULL;
-		}
+		return UpdateFileNameFlags(NULL, bAllowRemoveCDir) | UpdateCommentFlags(NULL);
 	}
+
+	UINT GetDefaultFileNameCodePage() const
+	{
+		return ZipCompatibility::GetDefaultNameCodePage(GetSystemCompatibility());
+	}
+
+	UINT GetDefaultCommentCodePage() const
+	{
+		return ZipCompatibility::GetDefaultCommentCodePage(GetSystemCompatibility());
+	}
+
+	void ClearFileName();
 
 	void GetCrcAndSizes(char* pBuffer)const;
 
@@ -706,13 +903,12 @@ private:
 		pStorage->Flush();
 	}
 
-	CZipAutoBuffer m_pszFileNameBuffer;
-
-	CZipString* m_pszFileName;
-
+#ifdef _ZIP_UNICODE_CUSTOM
 	CZipStringStoreSettings m_stringSettings;
-
-	CZipAutoBuffer m_pszComment;
+#endif
+	StringWithBuffer m_fileName;
+	StringWithBuffer m_comment;
+	char m_iSystemCompatibility;
 };
 
 #endif // !defined(ZIPARCHIVE_ZIPFILEHEADER_DOT_H)

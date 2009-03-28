@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -48,7 +48,7 @@ namespace ZipPlatform
 {
 
 	/**
-		Gets the default case-sensitivity for the current file system.
+		Returns the default case-sensitivity for the current file system.
 
 		\return
 			\c true, if the system is case-sensitive; \c false otherwise.
@@ -56,7 +56,7 @@ namespace ZipPlatform
 	ZIP_API bool GetSystemCaseSensitivity();
 
 	/**
-		Gets the current system identifier.
+		Returns the current system identifier.
 
 		\return
 			One of the ZipCompatibility::ZipPlatforms values.
@@ -67,7 +67,7 @@ namespace ZipPlatform
 	ZIP_API int GetSystemID();
 
 	/**
-		Gets the default file attributes for the current system.
+		Returns the default file attributes for the current system.
 
 		\return
 			The default file attributes.
@@ -75,7 +75,7 @@ namespace ZipPlatform
 	ZIP_API DWORD GetDefaultAttributes(); 
 
 	/**
-		Gets the default directory attributes for the current system.
+		Returns the default directory attributes for the current system.
 
 		\return
 			The default directory attributes.
@@ -83,7 +83,7 @@ namespace ZipPlatform
 	ZIP_API DWORD GetDefaultDirAttributes();
 
 	/**
-		Gets the free space on the given device.
+		Returns the free space on the given device.
 
 		\param lpszPath
 			Points to the device to test.
@@ -94,40 +94,40 @@ namespace ZipPlatform
 	ZIP_API ULONGLONG GetDeviceFreeSpace(LPCTSTR lpszPath);
 
 	/**
-		Gets the name of a temporary file ensuring there is enough free space in the destination directory.
+		Returns the name of a temporary file ensuring there is enough free space in the destination directory.
 
 		\param lpszPath
 			The path to the directory to initially create the file in.
 
 		\param uSizeNeeded
-			The requested free space size in bytes. If set to <code>ZIP_SIZE_TYPE(-1)</code>, the 
+			The requested free space size in bytes. If set to <code>0</code>, the 
 			space availability is not checked.
 	*/
-	ZIP_API CZipString GetTmpFileName(LPCTSTR lpszPath = NULL, ZIP_SIZE_TYPE uSizeNeeded = ZIP_SIZE_TYPE(-1));
+	ZIP_API CZipString GetTmpFileName(LPCTSTR lpszPath = NULL, ZIP_SIZE_TYPE uSizeNeeded = 0);
 
 	/**
 		\name Various operations on files and directories.
 		If the functions returns a \c bool value, then \c true indicates that the operation was successful.
 	*/
 	//@{
-	ZIP_API bool GetCurrentDirectory(CZipString& sz);	///< Gets the current directory and stores it in \a sz.
+	ZIP_API bool GetCurrentDirectory(CZipString& sz);	///< Returns the current directory and stores it in \a sz.
 	ZIP_API bool ChangeDirectory(LPCTSTR lpDirectory);	///< Changes the current directory.
 	ZIP_API bool SetFileAttr(LPCTSTR lpFileName, DWORD uAttr);	///< Sets the file attributes.
-	ZIP_API bool GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr); ///< Gets the file attributes.
-	ZIP_API bool GetFileModTime(LPCTSTR lpFileName, time_t & ttime); ///< Gets the file modification time.
+	ZIP_API bool GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr); ///< Returns the file attributes.
+	ZIP_API bool GetFileModTime(LPCTSTR lpFileName, time_t & ttime); ///< Returns the file modification time.
 	ZIP_API bool SetFileModTime(LPCTSTR lpFileName, time_t ttime);	 ///< Set the file modification time.
-	ZIP_API bool GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize); ///< Gets the file size.
-	ZIP_API bool CreateDirectory(LPCTSTR lpDirectory);	///< Creates a new directory.
+	ZIP_API bool GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize); ///< Returns the file size.
+	ZIP_API bool CreateNewDirectory(LPCTSTR lpDirectory);	///< Creates a new directory.
 	ZIP_API bool SetVolLabel(LPCTSTR lpszPath, LPCTSTR lpszLabel); ///< Sets a label on a removable device. \c lpszPath may point to a file on the device.
 	ZIP_API bool ForceDirectory(LPCTSTR lpDirectory);	///< Creates nested directories at once.
 	ZIP_API bool RemoveFile(LPCTSTR lpszFileName, bool bThrow = true); ///< Removes a file.
 	ZIP_API bool RenameFile( LPCTSTR lpszOldName, LPCTSTR lpszNewName, bool bThrow = true); ///< Renames a file.
 
-#ifdef ZIP_ARCHIVE_LNX
+#ifdef _ZIP_SYSTEM_LINUX
 	ZIP_API bool SetExeAttr( LPCTSTR lpFileName ); ///< Sets executable permissions for a file.
 #endif
 
-#if defined ZIP_ARCHIVE_STL || defined ZIP_FILE_USES_STL
+#if defined _ZIP_IMPL_STL || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
 	/**
 		Truncates the file.
 
@@ -153,7 +153,7 @@ namespace ZipPlatform
 	ZIP_API bool FlushFile(int iDes);
 
 	/**
-		Gets the underlying system handle.
+		Returns the underlying system handle.
 
 		\note
 			Defined only in the STL version.
@@ -162,16 +162,6 @@ namespace ZipPlatform
 #endif
 	//@}
 
-	/**
-		Checks if the given directory exists.
-
-		\param	lpszDir
-			The directory to test.
-			
-		\return
-			\c true, if \a lpszDir exists; \c false otherwise.
-	*/
-	ZIP_API bool DirectoryExists(LPCTSTR lpszDir);
 
 	/**
 		Checks if the given drive is removable.

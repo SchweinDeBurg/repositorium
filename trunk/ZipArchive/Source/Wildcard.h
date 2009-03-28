@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -51,12 +51,12 @@ namespace ZipArchiveLib
 		enum Match
 		{
 			matchNone,			///< For internal use.
-			matchValid,			///< Valid match.
+			matchValid,			///< A valid match.
 			matchEnd,			///< Premature end of the pattern string.
 			matchAbort,			///< Premature end of the text string.
 			matchRange,			///< Match failure on the \c [..] construct.
 			matchLiteral,		///< Match failure on a literal match
-			matchPattern		///< Bad pattern.
+			matchPattern		///< A bad pattern.
 		};
 		
 		enum Pattern 
@@ -64,21 +64,21 @@ namespace ZipArchiveLib
 			patternEmpty = -4,	///< The \c [..] construct is empty
 			patternClose,		///< There is no end bracket in the \c [..] construct.
 			patternRange,		///< Malformed range in the \c [..] construct.
-			patternEsc,			///< Literal escape at the end of the pattern.
-			patternValid,		///< Valid pattern.
+			patternEsc,			///< There is a literal escape at the end of the pattern.
+			patternValid,		///< A valid pattern.
 		};
 		
 		
 		/**
 			Matches \a lpszText against the pattern.
-			A match means the entire \a lpszText is used up in matching.
+			A match means the entire \a lpszText is used in matching.
 			Set the pattern with the #SetPattern method or in the constructor.
 			
 			\param lpszText
 				The string to match against the pattern.
 
 			\param iRetCode
-				If not \c NULL, receives one of #Match values indicating a return code.
+				If not \c NULL, receives one of the #Match values indicating a return code.
 
 			\return
 				\c true, if \a lpszText matches the pattern.
@@ -89,7 +89,7 @@ namespace ZipArchiveLib
 		bool IsMatch(LPCTSTR lpszText, int* iRetCode = NULL);
 
 		/**
-			Gets a value indicating if \a lpszPattern has any special wildcard characters.
+			Returns the value indicating whether \a lpszPattern has any special wildcard characters.
 
 			\param lpszPattern
 				The pattern to test.
@@ -127,7 +127,7 @@ namespace ZipArchiveLib
 				The string to match against the pattern.
 
 			\return 
-				One of #Match values.
+				One of the #Match values.
 
 			\see
 				SetPattern

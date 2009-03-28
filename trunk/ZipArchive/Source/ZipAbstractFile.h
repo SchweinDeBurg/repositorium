@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -41,7 +41,7 @@ public:
 	virtual void Flush() = 0;
 	virtual ZIP_FILE_USIZE GetPosition() const = 0;	
 	virtual ZIP_FILE_USIZE Seek(ZIP_FILE_SIZE lOff, int nFrom) = 0;
-	ZIP_FILE_USIZE Seek(ZIP_FILE_USIZE lOff, bool fromBeginning = true)
+	ZIP_FILE_USIZE SafeSeek(ZIP_FILE_USIZE lOff, bool fromBeginning = true)
 	{
 		ZIP_FILE_SIZE offset;
 		if (lOff > ZIP_FILE_SIZEMAX)

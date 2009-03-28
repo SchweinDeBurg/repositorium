@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -30,10 +30,16 @@
 #include "ZipCollections.h"
 #include "ZipStorage.h"
 
+#define ZIP_EXTRA_PKZIP 0x0001
 
 #define ZIP_EXTRA_ZARCH_NAME 0x5A4C // ZL - ZipArchive Library
 
 #define ZIP_EXTRA_ZARCH_SEEK 0x5A4D 
+
+#define ZIP_EXTRA_WINZIP_AES 0x9901
+
+#define ZIP_EXTRA_UNICODE_PATH 0x7075
+#define ZIP_EXTRA_UNICODE_COMMENT 0x6375
 
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
@@ -53,7 +59,9 @@ class ZIP_API CZipExtraField
 {
 	friend class CZipFileHeader;
 public:
-	CZipExtraField(){}
+	CZipExtraField()
+	{
+	}
 	CZipExtraField(const CZipExtraField& arr)
 	{		
 		*this = arr;
@@ -67,7 +75,7 @@ public:
 	}
 
 	/**
-		Gets the total size, the extra data will occupy in the archive.
+		Returns the total size the extra data will occupy in the archive.
 
 		\return
 			The size in bytes.
@@ -82,11 +90,11 @@ public:
 	*/
 	bool Validate() const
 	{
-		return GetTotalSize() <= USHRT_MAX;
+		return GetTotalSize() <= (int)USHRT_MAX;
 	}
 	
 	/**
-		Gets the number of extra data records included in the extra field.
+		Returns the number of extra data records included in the extra field.
 
 		\return
 			The number of extra fields included.
@@ -97,7 +105,7 @@ public:
 	}
 
 	/**
-		Gets the extra data record at the given index.
+		Returns the extra data record at the given index.
 
 		\param index
 			The index of extra data record to retrieve.
@@ -175,21 +183,36 @@ public:
 	CZipExtraData* CreateNew(WORD headerID, int& idx)
 	{
 		CZipExtraData* pData = new CZipExtraData(headerID);
+		pData->m_bHasSize = HasSize(headerID);
 		idx = (int)m_aData.Add(pData);
 		return pData;
 	}
 
 	/**
-		Removes all extra data records from the extra field,
+		Removes all extra data records from the central extra field
 		that are internally used by the ZipArchive Library.
 	*/
 	void RemoveInternalHeaders();
 
 	/**
-		Lookups the extra field for the extra data record with the given ID.
+		Removes all extra data records from the local extra field
+		that are internally used by the ZipArchive Library.
+	*/
+	void RemoveInternalLocalHeaders();
+
+	/**
+		Removes the extra data with the given ID.
 
 		\param headerID
-			The ID of the extra data to lookup.
+			The ID of the extra data to remove.
+	*/
+	void Remove(WORD headerID);
+
+	/**
+		Searches the extra field for the extra data record with the given ID.
+
+		\param headerID
+			The ID of the extra data to search.
 
 		\return
 			The found extra data record or \c NULL, if the extra data could not be found.
@@ -215,10 +238,10 @@ public:
 	}
 
 	/**
-		Lookups the extra field for the extra data record with the given ID.
+		Searches the extra field for the extra data record with the given ID.
 
 		\param headerID
-			The ID of the extra data to lookup.
+			The ID of the extra data to search.
 
 		\param index
 			Receives the value of the index of the found 
@@ -232,6 +255,38 @@ public:
 	{
 		Clear();
 	}
+
+	/**
+		An array of headers that do not write extra data size.
+
+		\see
+			<a href="kb">0610242300|read</a>
+	*/
+	static CZipArray<WORD> m_aNoSizeExtraHeadersID;
+
+	/**
+		Returns the value indicating whether the extra data record with the given ID writes its size.
+
+		\param headerID
+			The ID of extra data to examine.
+
+		\return
+			\c true, if the extra data record writes its size; \c false otherwise.
+
+		\see
+			m_aNoSizeExtraHeadersID			
+	*/
+	static bool HasSize(WORD headerID)
+	{
+		ZIP_ARRAY_SIZE_TYPE size = m_aNoSizeExtraHeadersID.GetSize();
+		for (ZIP_ARRAY_SIZE_TYPE i = 0; i < size; i++)
+		{
+			if (m_aNoSizeExtraHeadersID.GetAt(i) == headerID)
+				return false;
+		}
+		return true;
+	}
+
 protected:
 
 	/**
@@ -265,7 +320,9 @@ protected:
 			The buffer to write to.
 	*/
 	void Write(char* buffer) const;	
+	
 private:
+	
 	CZipArray<CZipExtraData*> m_aData;
 };
 

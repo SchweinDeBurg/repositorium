@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -28,48 +28,38 @@
 /************ Feel free to adjust the definitions in the following block ************/
 /************************************ BLOCK START ***********************************/
 
-#define ZIP_ARCHIVE_MFC
-//#define ZIP_ARCHIVE_LNX
+#define _ZIP_IMPL_MFC
+//#define _ZIP_SYSTEM_LINUX
 
 // simplified endianess detection
 #ifdef __APPLE__
-	#ifdef __LITTLE_ENDIAN__
-		#define ZIP_ARCHIVE_LITTLE_ENDIAN
+	#if  __BIG_ENDIAN__ == 1
+		#define _ZIP_BIG_ENDIAN
 	#endif
-#else
-	#define ZIP_ARCHIVE_LITTLE_ENDIAN
 #endif
 
 /************************************* BLOCK END ***********************************/
 /********* The contents below this line are not intended for modification **********/
 
-#ifndef ZIP_ARCHIVE_MFC
-	#define ZIP_ARCHIVE_STL
+#ifndef _ZIP_IMPL_MFC
+	#define _ZIP_IMPL_STL
 #else
-	#ifdef ZIP_ARCHIVE_STL
-		#undef ZIP_ARCHIVE_STL
+	#ifdef _ZIP_IMPL_STL
+		#undef _ZIP_IMPL_STL
 	#endif
 #endif
 
-#ifndef ZIP_ARCHIVE_LNX
-	#define ZIP_ARCHIVE_WIN
+#ifndef _ZIP_SYSTEM_LINUX
+	#define _ZIP_SYSTEM_WIN
 #else
-	#ifdef ZIP_ARCHIVE_WIN
-		#undef ZIP_ARCHIVE_WIN
+	#ifdef _ZIP_SYSTEM_WIN
+		#undef _ZIP_SYSTEM_WIN
 	#endif
 #endif
 
-#ifndef ZIP_ARCHIVE_LITTLE_ENDIAN
-	#define ZIP_ARCHIVE_BIG_ENDIAN
-#else
-	#ifdef ZIP_ARCHIVE_BIG_ENDIAN
-		#undef ZIP_ARCHIVE_BIG_ENDIAN
-	#endif
-#endif
-
-#if defined (ZIP_ARCHIVE_LNX) && defined (ZIP_ARCHIVE_MFC)
-	#undef ZIP_ARCHIVE_MFC
-	#define ZIP_ARCHIVE_STL
+#if defined (_ZIP_SYSTEM_LINUX) && defined (_ZIP_IMPL_MFC)
+	#undef _ZIP_IMPL_MFC
+	#define _ZIP_IMPL_STL
 	#error Using MFC under a non-Windows platform is not supported
 #endif
 

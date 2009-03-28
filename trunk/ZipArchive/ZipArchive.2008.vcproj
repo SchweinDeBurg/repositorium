@@ -4,6 +4,7 @@
 	Version="9,00"
 	Name="ZipArchive"
 	ProjectGUID="{EFD1CCD3-3C31-4BDE-976A-B45A08FBFF83}"
+	RootNamespace="ZipArchive"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -421,6 +422,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ZipFile_win.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ZipFileHeader.cpp"
 				>
 			</File>
@@ -464,6 +469,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\BaseLibCompressor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\BitFlag.h"
 				>
 			</File>
 			<File
@@ -587,6 +596,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ZipFile_win.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ZipFileHeader.h"
 				>
 			</File>
@@ -620,6 +633,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\ZipPlatform.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ZipSplitNamesHandler.h"
 				>
 			</File>
 			<File

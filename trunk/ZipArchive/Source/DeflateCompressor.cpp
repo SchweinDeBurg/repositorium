@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -173,16 +173,13 @@ DWORD CDeflateCompressor::Decompress(void *pBuffer, DWORD uSize)
 			if (m_uComprLeft < uToRead)
 				uToRead = (DWORD)m_uComprLeft;
 			
-			if (uToRead == 0)
-				uToRead = 1; // Add dummy byte at end of compressed data.
-			else
+			if (uToRead > 0)
 			{
 				m_pStorage->Read(m_pBuffer, uToRead, false);
 				if (m_pCryptograph)
 					m_pCryptograph->Decode(m_pBuffer, uToRead);
+				m_uComprLeft -= uToRead;
 			}
-
-			m_uComprLeft -= uToRead;
 			
 			m_stream.next_in = (zarch_Bytef*)(char*)m_pBuffer;
 			m_stream.avail_in = uToRead;

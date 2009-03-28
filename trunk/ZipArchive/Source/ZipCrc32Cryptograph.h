@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -83,7 +83,7 @@ public:
 	/**
 		Returns the CRC table.
 	*/
-	static const DWORD* GetCRCTable()
+	static const unsigned long* GetCRCTable()
 	{
 			return zarch_get_crc_table();
 	}
@@ -104,7 +104,7 @@ private:
 	void CryptUpdateKeys(char c);
 	DWORD CryptCRC32(DWORD l, char c)
 	{
-		const DWORD *CRC_TABLE = zarch_get_crc_table();
+		const unsigned long* CRC_TABLE = zarch_get_crc_table();
 		return CRC_TABLE[(l ^ c) & 0xff] ^ (l >> 8);
 	}
 	void CryptEncode(char &c)

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -61,7 +61,7 @@ public:
 		A factory method that creates an appropriate cryptograph for the given method.
 
 		\param iEncryptionMethod
-			The encryption method to create a cryptograph for. Can be one of #EncryptionMethod values.
+			The encryption method to create a cryptograph for. It can be one of the #EncryptionMethod values.
 
 		\return
 			The new cryptograph. The caller is responsible for destroying the object.
@@ -70,10 +70,10 @@ public:
 	static CZipCryptograph* CreateCryptograph(int iEncryptionMethod);
 
 	/**
-		Determines if the given method is one of the WinZip AES encryption method.
+		Returns the value indicating whether the given method is one of the WinZip AES encryption methods.
 
 		\param iEncryptionMethod
-			The encryption method to test. Can be one of #EncryptionMethod values.
+			The encryption method to test. It can be one of the #EncryptionMethod values.
 
 		\return
 			\c true, if the method is one the WinZip AES encryption methods; \c false otherwise.
@@ -87,7 +87,7 @@ public:
 		Returns the total size of the extra data that is added to the compression stream during encryption with the given method.
 
 		\param iEncryptionMethod
-			The encryption method. Can be one of #EncryptionMethod values.
+			The encryption method. It can be one of the #EncryptionMethod values.
 
 		\return
 			The total size of extra data for the given encryption method.
@@ -99,7 +99,7 @@ public:
 		Returns the size of the extra data that is added before the compression stream during encryption with the given method.
 
 		\param iEncryptionMethod
-			The encryption method. Can be one of #EncryptionMethod values.
+			The encryption method. It can be one of the #EncryptionMethod values.
 
 		\return
 			The size of extra data at the beginning of the compression stream for the given encryption method.
@@ -111,7 +111,7 @@ public:
 		Returns the size of the extra data that is added after the compression stream during encryption with the given method.
 
 		\param iEncryptionMethod
-			The encryption method. Can be one of #EncryptionMethod values.
+			The encryption method. It can be one of the #EncryptionMethod values.
 
 		\return
 			The size of extra data at the end of the compression stream for the given encryption method.
@@ -120,10 +120,10 @@ public:
 	static DWORD GetEncryptedInfoSizeAfterData(int iEncryptionMethod);
 
 	/**
-		Determines if the given encryption method is supported by the current compilation of the ZipArchive Library.
+		Returns the value indicating whether the given encryption method is supported by the current compilation of the ZipArchive Library.
 
 		\param iEncryptionMethod
-			The encryption method to test. Can be one of #EncryptionMethod values.
+			The encryption method to test. It can be one of the #EncryptionMethod values.
 
 		\return
 			\c true, if the method is supported; \c false otherwise.
@@ -212,7 +212,7 @@ public:
 		Returns the value indicating whether the current compressor can handle the given encryption method.
 
 		\param iEncryptionMethod
-			The encryption method to test. Can be one of #EncryptionMethod values.
+			The encryption method to test. It can be one of the #EncryptionMethod values.
 
 		\return 
 			\c true, if the current compressor can handle the given encryption method; \c false otherwise.

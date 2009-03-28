@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -26,6 +26,9 @@
 #endif
 
 #include "stdafx.h"
+
+#ifdef _ZIP_UNICODE_CUSTOM
+
 #include "ZipPlatform.h"
 #include "ZipCompatibility.h"
 
@@ -34,46 +37,13 @@
 	Settings used in storing strings inside archives.
 
 	\see
-		<a href="kb">0610051525</a>
+		<a href="kb">0610051525|custom</a>
 	\see
 		CZipArchive::SetStringStoreSettings.
 */
 class ZIP_API CZipStringStoreSettings
 {
 public:
-
-	/**
-		Gets the default filename code page for the given platform.
-
-		\param iPlatform
-			One of the ZipCompatibility::ZipPlatforms values.	
-
-		\return 
-			The default filename code page.
-	*/
-	static UINT GetDefaultNameCodePage(int iPlatform)
-	{
-		return iPlatform == ZipCompatibility::zcDosFat ? CP_OEMCP : CP_ACP;
-	}
-
-	/**
-		Gets the default filename code page for the current platform.
-
-		\return 
-			The default filename code page.
-	*/
-	static UINT GetDefaultNameCodePage()
-	{
-		return GetDefaultNameCodePage(ZipPlatform::GetSystemID());
-	}
-
-	/**
-		Gets the default comment code page. It is not platform-dependent.
-	*/
-	static UINT GetDefaultCommentCodePage()
-	{
-		return CP_ACP;
-	}
 
 	/**
 		Initializes a new instance of the CZipStringStoreSettings class.
@@ -84,19 +54,19 @@ public:
 	}
 
 	/**
-		Sets the default filename code page depening on the given platform.
+		Sets the default filename code page depending on the given platform.
 	
 		\param iPlatform
 			One of the ZipCompatibility::ZipPlatforms values.	
 	 */
 	void SetDefaultNameCodePage(int iPlatform)
 	{
-		m_uNameCodePage = GetDefaultNameCodePage(iPlatform);
+		m_uNameCodePage = ZipCompatibility::GetDefaultNameCodePage(iPlatform);
 	}
 
 	/**
-		Gets a value indicating whether the current filename code page is
-		standard for the current platform or not.
+		Returns the value indicating whether the current filename code page is
+		standard for the current platform.
 
 		\return
 			\c true, if the current filename code page is standard; \c false otherwise.
@@ -106,12 +76,12 @@ public:
 	*/
 	bool IsStandardNameCodePage() const
 	{
-		return m_uNameCodePage == GetDefaultNameCodePage();
+		return m_uNameCodePage == ZipCompatibility::GetDefaultNameCodePage();
 	}
 
 	/**
-		Gets a value indicating whether the current filename code page is
-		standard for the given platform or not.
+		Returns the value indicating whether the current filename code page is
+		standard for the given platform.
 
 		\param iPlatform
 			One of the ZipCompatibility::ZipPlatforms values.
@@ -121,23 +91,37 @@ public:
 	*/
 	bool IsStandardNameCodePage(int iPlatform) const
 	{
-		return m_uNameCodePage == GetDefaultNameCodePage(iPlatform);
+		return m_uNameCodePage == ZipCompatibility::GetDefaultNameCodePage(iPlatform);
 	}
 
 	/**
-		Gets a value indicating whether the current comment code page is standard.
+		Returns the value indicating whether the current comment code page is standard.
+
+		\param iPlatform
+			One of the ZipCompatibility::ZipPlatforms values.
+
+		\return
+			\c true, if the current comment code page is standard; \c false otherwise.
+	*/
+	bool IsStandardCommentCodePage(int iPlatform) const
+	{
+		return m_uCommentCodePage == ZipCompatibility::GetDefaultCommentCodePage(iPlatform);
+	}
+
+	/**
+		Returns the value indicating whether the current comment code page is standard.
 
 		\return
 			\c true, if the current comment code page is standard; \c false otherwise.
 	*/
 	bool IsStandardCommentCodePage() const
 	{
-		return m_uCommentCodePage == GetDefaultCommentCodePage();
+		return m_uCommentCodePage == ZipCompatibility::GetDefaultCommentCodePage();
 	}
 
 	/**
-		Gets a value indicating whether the current settings are
-		standard for the given platform or not.
+		Returns the value indicating whether the current settings are
+		standard for the given platform.
 
 		\param iPlatform
 			One of the ZipCompatibility::ZipPlatforms values.
@@ -147,11 +131,11 @@ public:
 	*/
 	bool IsStandard(int iPlatform) const
 	{
-		return !m_bStoreNameInExtraData && IsStandardNameCodePage(iPlatform) && IsStandardCommentCodePage();
+		return !m_bStoreNameInExtraData && IsStandardNameCodePage(iPlatform) && IsStandardCommentCodePage(iPlatform);
 	}
 
 	/**
-		Reset the settings to its default values for the given platform.
+		Resets the settings to their default values for the given platform.
 
 		\param iPlatform
 			One of the ZipCompatibility::ZipPlatforms values.
@@ -162,7 +146,7 @@ public:
 	{
 		m_bStoreNameInExtraData = false;
 		SetDefaultNameCodePage(iPlatform);
-		m_uCommentCodePage = GetDefaultCommentCodePage();
+		m_uCommentCodePage = ZipCompatibility::GetDefaultCommentCodePage(iPlatform);
 	}
 
 	/**
@@ -192,7 +176,7 @@ public:
 	}
 
 	/**
-		If \c true, the converted filenames are stored in extra field in the archive.
+		If \c true, the converted filenames are stored in the central extra field in the archive.
 	*/
 	bool m_bStoreNameInExtraData;
 
@@ -202,9 +186,11 @@ public:
 	UINT m_uNameCodePage;
 
 	/**
-		The current comment code page.
+		The current comment code page for files.
 	*/
 	UINT m_uCommentCodePage;
 };
+
+#endif
 
 #endif // !defined(ZIPARCHIVE_ZIPSTRINGSTRINGSTORESETTINGS_DOT_H)
