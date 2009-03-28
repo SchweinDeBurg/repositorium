@@ -21,7 +21,7 @@
 #if !defined(ZIPARCHIVE_STDAFX_DOT_H)
 #define ZIPARCHIVE_STDAFX_DOT_H
 
-// alignment of a member was sensitive to packing
+// avoid C4121: alignment of a member was sensitive to packing
 #pragma warning(disable: 4121)
 
 #include "_features.h"
