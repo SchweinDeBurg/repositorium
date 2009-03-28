@@ -35,6 +35,8 @@
 
 
 
+#include "stdafx.h"
+
 //----------------------------------------------------------------------------
 //
 //	Specializations of the Shear6<T> template.

@@ -34,6 +34,8 @@
 
 
 
+#include "stdafx.h"
+
 //-----------------------------------------------------------------------------
 //
 //	Miscellaneous helper functions for OpenEXR image file I/O

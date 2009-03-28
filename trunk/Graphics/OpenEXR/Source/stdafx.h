@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////
 //
-// Copyright (c) 2004, Industrial Light & Magic, a division of Lucas
+// Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
 // Digital Ltd. LLC
-//
+// 
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,52 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
 
-#include "ImathBox.h"
 
-// this file is necessary for template instantiation on windows
+#ifndef INCLUDED_STDAFX_H
+#define INCLUDED_STDAFX_H
+
+#include <assert.h>
+#include <float.h>
+#include <string.h>
+#include <errno.h>
+#include <math.h>
+#include <stdlib.h>
+#include <time.h>
+#include <stdio.h>
+#include <limits.h>
+
+#include <limits>
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <exception>
+#include <sstream>
+#include <map>
+#include <algorithm>
+#include <set>
+#include <iosfwd>
+#include <fstream>
+#include <vector>
+#include <cmath>
+#include <list>
+#include <iomanip>
+#include <complex>
+
+#include <zlib.h>
+
+#if defined _WIN32 || defined _WIN64
+    #ifdef NOMINMAX
+        #undef NOMINMAX
+    #endif
+    #define NOMINMAX
+    #include <windows.h>
+    #include <process.h>
+#elif HAVE_PTHREAD
+    #include <pthread.h>
+#endif
+
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+#endif

@@ -40,6 +40,8 @@
 //
 //---------------------------------------------------------------------
 
+#include "stdafx.h"
+
 #include "IexBaseExc.h"
 
 namespace Iex {

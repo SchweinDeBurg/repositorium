@@ -35,6 +35,8 @@
 
 
 
+#include "stdafx.h"
+
 //-----------------------------------------------------------------------------
 //
 //	16-bit Huffman compression and decompression.

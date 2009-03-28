@@ -36,6 +36,8 @@
 
 
 
+#include "stdafx.h"
+
 //----------------------------------------------------------------------------
 //
 //	Implementation of non-template items declared in ImathMatrixAlgo.h
