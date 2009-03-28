@@ -19,6 +19,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#include "stdafx.h"
+
 #include <string.h>
 #include "FreeImagePlus.h"
 
