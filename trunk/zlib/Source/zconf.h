@@ -179,6 +179,11 @@
 #  define NO_DUMMY_DECL
 #endif
 
+/* Windows CE is not have errno.h file: */
+#if defined(UNDER_CE) && !defined(NO_ERRNO_H)
+#  define NO_ERRNO_H
+#endif
+
 /* Maximum value for memLevel in deflateInit2 */
 #ifndef MAX_MEM_LEVEL
 #  ifdef MAXSEG_64K
@@ -383,5 +388,16 @@ typedef uLong FAR uLongf;
 #   pragma map(inflate_fast,"INFA")
 #   pragma map(inflate_copyright,"INCOPY")
 #endif
+
+#if defined(UNDER_CE)
+
+#pragma comment(linker, "/nodefaultlib:libc.lib")
+#pragma comment(linker, "/nodefaultlib:libcd.lib")
+
+#if (_WIN32_WCE < 0x500)
+#pragma comment(lib, "ccrtrtti.lib")
+#endif   /* _WIN32_WCE */
+
+#endif   /* UNDER_CE */
 
 #endif /* ZCONF_H */
