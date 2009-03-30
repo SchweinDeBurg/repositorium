@@ -52,11 +52,11 @@
 #include "deflate.h"
 
 #if defined(__INTEL_COMPILER)
-// remark #171: invalid type conversion
+/* remark #171: invalid type conversion */
 #pragma warning(disable: 171)
-// remark #1418: external definition with no prior declaration
+/* remark #1418: external definition with no prior declaration */
 #pragma warning(disable: 1418)
-#endif	// __INTEL_COMPILER
+#endif	/* __INTEL_COMPILER */
 
 const char deflate_copyright[] =
    " deflate 1.2.3 Copyright 1995-2005 Jean-loup Gailly ";

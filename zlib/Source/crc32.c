@@ -29,11 +29,11 @@
 #include "zutil.h"      /* for STDC and FAR definitions */
 
 #if defined(__INTEL_COMPILER)
-// remark #111: statement is unreachable
+/* remark #111: statement is unreachable */
 #pragma warning(disable: 111)
-// remark #171: invalid type conversion
+/* remark #171: invalid type conversion */
 #pragma warning(disable: 171)
-#endif	// __INTEL_COMPILER
+#endif	/* __INTEL_COMPILER */
 
 #define local static
 

@@ -9,12 +9,18 @@
 
 #include <stdio.h>
 
+#if defined(UNDER_CE)
+#pragma warning(push, 3)
+#include <windows.h>
+#pragma warning(pop)
+#endif   /* UNDER_CE */
+
 #include "zutil.h"
 
 #if defined(__INTEL_COMPILER)
-// remark #981: operands are evaluated in unspecified order
+/* remark #981: operands are evaluated in unspecified order */
 #pragma warning(disable: 981)
-#endif	// __INTEL_COMPILER
+#endif	/* __INTEL_COMPILER */
 
 #ifdef NO_DEFLATE       /* for compatiblity with old definition */
 #  define NO_GZCOMPRESS
@@ -976,6 +982,32 @@ int ZEXPORT gzclose (file)
     return destroy((gz_stream*)file);
 }
 
+#if defined(UNDER_CE)
+
+static char* strerror(DWORD dwErrCode)
+{
+	static char szErrorStr[256] = { 0 };
+
+	LPTSTR pszBuffer = NULL;
+	int cchErrMsg = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL,
+		dwErrCode, 0, (LPTSTR)&pszBuffer, 1, NULL);
+
+	if (cchErrMsg > 0)
+	{
+		wcstombs(szErrorStr, pszBuffer, sizeof(szErrorStr) - 1);
+	}
+	else {
+		memset(szErrorStr, 0, sizeof(szErrorStr));
+	}
+
+	LocalFree(pszBuffer);
+
+	return (szErrorStr);
+}
+
+#endif   /* UNDER_CE */
+
 #ifdef STDC
 #  define zstrerror(errnum) strerror(errnum)
 #else
@@ -1003,7 +1035,11 @@ const char * ZEXPORT gzerror (file, errnum)
     *errnum = s->z_err;
     if (*errnum == Z_OK) return (const char*)"";
 
+#if defined(UNDER_CE)
+	 m = (char*)(*errnum == Z_ERRNO ? zstrerror(GetLastError()) : s->stream.msg);
+#else
     m = (char*)(*errnum == Z_ERRNO ? zstrerror(errno) : s->stream.msg);
+#endif   /* UNDER_CE */
 
     if (m == NULL || *m == '\0') m = (char*)ERR_MSG(s->z_err);
 
