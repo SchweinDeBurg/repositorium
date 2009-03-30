@@ -460,11 +460,43 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Source\_BytesWriter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\_features.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\_platform.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\_stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\_ZipArchive.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\_ZipCompressor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\_ZipCryptograph.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\_ZipException.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\_ZipExtraField.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\_ZipFileHeader.h"
 				>
 			</File>
 			<File
