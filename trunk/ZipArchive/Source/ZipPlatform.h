@@ -30,6 +30,7 @@ class CZipAutoBuffer;
 #include "ZipString.h"
 #include "ZipPathComponent.h"
 
+#if !defined(UNDER_CE)
 #if defined(__INTEL_COMPILER)
 // remark #193: zero used for undefined preprocessing identifier
 #pragma warning(disable: 193)
@@ -37,7 +38,8 @@ class CZipAutoBuffer;
 #pragma warning(default: 193)
 #else
 #include <sys/types.h>
-#endif	// __INTEL_COMPILER
+#endif   // __INTEL_COMPILER
+#endif   // UNDER_CE
 
 #include "ZipExport.h"
 
@@ -110,8 +112,11 @@ namespace ZipPlatform
 		If the functions returns a \c bool value, then \c true indicates that the operation was successful.
 	*/
 	//@{
+#if !defined(UNDER_CE)
+	// concept of a current working directory does not exist in Windows CE
 	ZIP_API bool GetCurrentDirectory(CZipString& sz);	///< Returns the current directory and stores it in \a sz.
 	ZIP_API bool ChangeDirectory(LPCTSTR lpDirectory);	///< Changes the current directory.
+#endif   // UNDER_CE
 	ZIP_API bool SetFileAttr(LPCTSTR lpFileName, DWORD uAttr);	///< Sets the file attributes.
 	ZIP_API bool GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr); ///< Returns the file attributes.
 	ZIP_API bool GetFileModTime(LPCTSTR lpFileName, time_t & ttime); ///< Returns the file modification time.
@@ -127,7 +132,7 @@ namespace ZipPlatform
 	ZIP_API bool SetExeAttr( LPCTSTR lpFileName ); ///< Sets executable permissions for a file.
 #endif
 
-#if defined _ZIP_IMPL_STL || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
+#if !defined(UNDER_CE) && (defined _ZIP_IMPL_STL || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL)
 	/**
 		Truncates the file.
 

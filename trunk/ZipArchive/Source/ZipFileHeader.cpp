@@ -433,7 +433,7 @@ bool CZipFileHeader::ReadLocal(CZipCentralDir* pCentralDir)
 
 void CZipFileHeader::SetTime(const time_t & ttime)
 {
-#if _MSC_VER >= 1400
+#if !defined(UNDER_CE) && (_MSC_VER >= 1400)
 	tm gts;
 	tm* gt = &gts;
 	localtime_s(gt, &ttime);

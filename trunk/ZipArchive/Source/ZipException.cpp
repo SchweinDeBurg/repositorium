@@ -16,7 +16,10 @@
 #include "_ZipException.h"
 #include "_features.h"
 #include "../../zlib/Source/zlib.h"
+
+#if !defined(UNDER_CE)
 #include <errno.h>
+#endif   // UNDER_CE
 
 #if defined(__INTEL_COMPILER)
 // remark #909: exception specification ignored
@@ -120,7 +123,13 @@ CZipString CZipException::GetSystemErrorDescription()
 		return sz;
 	}
 #endif
+
+#if !defined(UNDER_CE)
 	return GetInternalErrorDescription(errno == 0 ? genericError : errno, true);
+#else
+	// "errno" is not supported under Windows CE
+	return (GetInternalErrorDescription(genericError, true));
+#endif   // UNDER_CE
 }
 
 CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
@@ -270,9 +279,11 @@ CZipString CZipException::GetInternalErrorDescription(int iCause, bool bNoLoop)
 		case streamEnd:
 			sz = _T("Zlib library error (end of stream).");
 			break;
+#if !defined(UNDER_CE)
 		case errNo:
 			sz = GetInternalErrorDescription(errno != errNo ? errno : genericError);
 			break;
+#endif   // UNDER_CE
 		case streamError:
 			sz = _T("Zlib library error (stream error).");
 			break;

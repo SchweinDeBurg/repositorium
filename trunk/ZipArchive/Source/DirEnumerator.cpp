@@ -24,6 +24,8 @@
 
 #include <queue>
 
+#if !defined(UNDER_CE)
+
 #if defined __GNUC__ && !defined __MINGW32__
 	#include <sys/stat.h>
 	#include <dirent.h>	
@@ -41,6 +43,36 @@
 		#endif		
 	#endif	
 #endif
+
+#else
+
+static time_t FileTimeToCrtTime(const FILETIME* pftSrc)
+{
+	FILETIME ftLocal = { 0 };
+	if (!::FileTimeToLocalFileTime(pftSrc, &ftLocal))
+	{
+		return (time_t(-1));
+	}
+	
+	SYSTEMTIME stTemp = { 0 };
+	if (!::FileTimeToSystemTime(&ftLocal, &stTemp))
+	{
+		return (time_t(-1));
+	}
+
+	struct tm tmMake = { 0 };
+	tmMake.tm_sec = stTemp.wSecond;
+	tmMake.tm_min = stTemp.wMinute;
+	tmMake.tm_hour = stTemp.wHour;
+	tmMake.tm_mday = stTemp.wDay;
+	tmMake.tm_mon = stTemp.wMonth - 1;
+	tmMake.tm_year = stTemp.wYear - 1900;
+	tmMake.tm_isdst = -1;
+
+	return (mktime(&tmMake));
+}
+
+#endif   // UNDER_CE
 
 namespace ZipArchiveLib
 {
@@ -89,6 +121,7 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 #else
 		CZipString szFullFileName = m_szCurrentDirectory + _T("*");
 		
+#if !defined(UNDER_CE)
 		_tfinddatai64_t ffInfo;
 #if _MSC_VER > 1200
 		intptr_t hFile;
@@ -96,13 +129,24 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 		long hFile;
 #endif
 		if( (hFile = _tfindfirsti64( (LPTSTR)(LPCTSTR)szFullFileName, &ffInfo )) != -1L )
+#else
+		WIN32_FIND_DATA wfd = { 0 };
+		HANDLE hFile = INVALID_HANDLE_VALUE;
+		if ((hFile = ::FindFirstFile(szFullFileName, &wfd)) != INVALID_HANDLE_VALUE)
+#endif   // UNDER_CE
 		{
 			do
-			{				
+			{
+#if !defined(UNDER_CE)
 				LPCTSTR name = ffInfo.name;
 				CFileInfo info;
-				info.m_uAttributes = ffInfo.attrib;				
-#endif				
+				info.m_uAttributes = ffInfo.attrib;
+#else
+				LPCTSTR name = wfd.cFileName;
+				CFileInfo info;
+				info.m_uAttributes = wfd.dwFileAttributes != FILE_ATTRIBUTE_NORMAL ? wfd.dwFileAttributes : 0;
+#endif   // UNDER_CE
+#endif   // ZIP_ENUMERATOR_FOR_GNUC
 				bool isDir;
 				if (ZipPlatform::IsDirectory(info.m_uAttributes))
 				{
@@ -118,12 +162,18 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 				info.m_uCreateTime = sStats.st_ctime;
 				info.m_uModTime = sStats.st_mtime;
 				info.m_uAccessTime = sStats.st_atime;				
-#else
+#elif !defined(UNDER_CE)
 				info.m_uSize = (ZIP_FILE_USIZE)ffInfo.size;
 				info.m_uCreateTime = ffInfo.time_create;
 				info.m_uModTime = ffInfo.time_write;
 				info.m_uAccessTime = ffInfo.time_access;	
 				CZipString path(m_szCurrentDirectory + ffInfo.name);
+#else
+				info.m_uSize = (ZIP_FILE_USIZE)(wfd.nFileSizeHigh * MAXDWORD + 1) + wfd.nFileSizeLow;
+				info.m_uCreateTime = FileTimeToCrtTime(&wfd.ftCreationTime);
+				info.m_uModTime = FileTimeToCrtTime(&wfd.ftLastWriteTime);
+				info.m_uAccessTime = FileTimeToCrtTime(&wfd.ftLastAccessTime);
+				CZipString path(m_szCurrentDirectory + wfd.cFileName);
 #endif				
 				
 				if (isDir)
@@ -158,11 +208,16 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 			}
 			closedir(dp);
 		}		
-#else
+#elif !defined(UNDER_CE)
 			}
 			while (_tfindnexti64(hFile, &ffInfo) == 0L);
 			_findclose(hFile);
-		}		
+		}
+#else
+			}
+			while (::FindNextFile(hFile, &wfd) != 0);
+			::FindClose(hFile);
+		}
 #endif		
 		ExitDirectory();
 	}
