@@ -47,18 +47,18 @@ public:
 	CZipFile();
 	CZipFile(LPCTSTR lpszFileName, UINT openFlags);
 	void Flush();
-	ULONGLONG GetLength() const;
+	ZIP_FILE_USIZE GetLength() const;
 	CZipString GetFilePath() const {return m_szFileName;}
 	bool IsClosed()const { return m_hFile == INVALID_HANDLE_VALUE;}
 	bool Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow);
 	void Close(); 
 
 	void Write(const void* lpBuf, UINT nCount);
-	ULONGLONG GetPosition() const;	
-	void SetLength(ULONGLONG uNewLen);
+	ZIP_FILE_USIZE GetPosition() const;	
+	void SetLength(ZIP_FILE_USIZE uNewLen);
 	UINT Read(void *lpBuf, UINT nCount);
 
-	ULONGLONG Seek(LONGLONG dOff, int nFrom);
+	ZIP_FILE_USIZE Seek(ZIP_FILE_SIZE dOff, int nFrom);
 	
 	virtual ~CZipFile (){Close();};
 protected:

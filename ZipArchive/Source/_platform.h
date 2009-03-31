@@ -28,8 +28,21 @@
 /************ Feel free to adjust the definitions in the following block ************/
 /************************************ BLOCK START ***********************************/
 
+#if !defined(UNDER_CE)
 #define _ZIP_IMPL_MFC
-//#define _ZIP_SYSTEM_LINUX
+#else
+#pragma warning(push, 3)
+#include <windows.h>
+#pragma warning(pop)
+#include <altcecrt.h>
+#pragma comment(linker, "/nodefaultlib:libc.lib")
+#pragma comment(linker, "/nodefaultlib:libcd.lib")
+#if (_WIN32_WCE < 0x500)
+#pragma comment(lib, "ccrtrtti.lib")
+#endif   // _WIN32_WCE
+#define _ZIP_IMPL_STL
+#endif   // UNDER_CE
+/* #define _ZIP_SYSTEM_LINUX */
 
 // simplified endianess detection
 #ifdef __APPLE__

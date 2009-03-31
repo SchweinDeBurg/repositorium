@@ -30,7 +30,14 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <cctype>
+
+#if !defined(UNDER_CE)
 #include <locale>
+#else
+#include <winnls.h>
+#include <string>
+#pragma comment(lib, "coreloc.lib")
+#endif   // UNDER_CE
 
 #include "ZipExport.h"
 
@@ -94,12 +101,20 @@ class ZIP_API CZipString : public stdbs
 static TCHAR tl(TCHAR c)
 {
 	// use_facet doesn't work here well (doesn't convert all the local characters properly)
+#if defined(UNDER_CE)
+	return (_tolower(c));
+#else
 	return std::tolower(c, std::locale());
+#endif   // UNDER_CE
 }
 static TCHAR tu(TCHAR c)
 {
 	// use_facet doesn't work here well (doesn't convert all the local characters properly)
+#if defined(UNDER_CE)
+	return (_toupper(c));
+#else
 	return std::toupper(c, std::locale());
+#endif   // UNDER_CE
 }
 
 public:
@@ -166,7 +181,7 @@ public:
 			}
 			pBuf = pTempBuf;
 
-#if _MSC_VER >= 1400	
+#if !defined(UNDER_CE) && (_MSC_VER >= 1400)
 			uTotal = _vsntprintf_s(pBuf, nChars, nChars - 1, lpszFormat, arguments);
 #else
 			uTotal = _vsntprintf(pBuf, nChars - 1, lpszFormat, arguments);
@@ -243,7 +258,9 @@ public:
 	CZipString Mid( int nFirst, int nCount ) const {return substr(nFirst, nCount);}
 	int Collate( LPCTSTR lpsz ) const
 	{
-#if !defined __GNUC__ || defined __MINGW32__
+#if defined(UNDER_CE)
+		return (::CompareString(LOCALE_USER_DEFAULT, 0, c_str(), -1, lpsz, -1) - 2);
+#elif !defined __GNUC__ || defined __MINGW32__
 		return _tcscoll(c_str(), lpsz);
 #else
  		//return compare(lpsz);
@@ -253,7 +270,9 @@ public:
 
 	int CollateNoCase( LPCTSTR lpsz ) const
 	{
-#if !defined __GNUC__ || defined __MINGW32__
+#if defined(UNDER_CE)
+		return (::CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, c_str(), -1, lpsz, -1) - 2);
+#elif !defined __GNUC__ || defined __MINGW32__
 		return _tcsicoll(c_str(), lpsz);
 #else
 		if (std::locale() == std::locale::classic())

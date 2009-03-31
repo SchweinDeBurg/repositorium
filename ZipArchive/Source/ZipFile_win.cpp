@@ -138,7 +138,7 @@ bool CZipFile::Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow)
 }
 
 
-ULONGLONG CZipFile::GetLength() const
+ZIP_FILE_USIZE CZipFile::GetLength() const
 {
 	ASSERT(m_hFile != INVALID_HANDLE_VALUE);
 	ULARGE_INTEGER size;
@@ -147,15 +147,14 @@ ULONGLONG CZipFile::GetLength() const
 	{
 		ThrowError();
 	}
-
 	return size.QuadPart;
 }
 
 
-void CZipFile::SetLength(ULONGLONG uNewLen)
+void CZipFile::SetLength(ZIP_FILE_USIZE uNewLen)
 {
 	ASSERT(m_hFile != INVALID_HANDLE_VALUE);
-	if (uNewLen > _I64_MAX)
+	if (uNewLen > ZIP_FILE_SIZEMAX)
 	{
 		CZipException::Throw(CZipException::tooBigSize);
 	}
@@ -166,7 +165,7 @@ void CZipFile::SetLength(ULONGLONG uNewLen)
 	}
 }
 
-ULONGLONG CZipFile::GetPosition() const
+ZIP_FILE_USIZE CZipFile::GetPosition() const
 {
 	ASSERT(m_hFile != INVALID_HANDLE_VALUE);
 
@@ -191,13 +190,12 @@ ULONGLONG CZipFile::GetPosition() const
 #endif
 }
 
-ULONGLONG CZipFile::Seek(LONGLONG dOff, int nFrom)
+ZIP_FILE_USIZE CZipFile::Seek(ZIP_FILE_SIZE dOff, int nFrom)
 {
 	ASSERT(m_hFile != INVALID_HANDLE_VALUE);
 	ASSERT(nFrom == FILE_BEGIN || nFrom == FILE_END || nFrom == FILE_CURRENT);
 
-#if (defined(NTDDI_VERSION) && NTDDI_VERSION >=NTDDI_WIN2K) || (_WIN32_WINNT >= 0x0500 && WINVER >= 0x0500)
-	
+#if (defined(NTDDI_VERSION) && NTDDI_VERSION >= NTDDI_WIN2K) || (_WIN32_WINNT >= 0x0500 && WINVER >= 0x0500)
 	LARGE_INTEGER li, oli = {0};
 	li.QuadPart = (LONGLONG)dOff;
 	if (::SetFilePointerEx(m_hFile, li, &oli, (DWORD)nFrom) == FALSE)	

@@ -23,8 +23,12 @@
 #include "_ZipFileHeader.h"
 #include "_ZipException.h"
 #include "ZipAutoBuffer.h"
-#include <sys/stat.h>
 
+#if !defined(UNDER_CE)
+#include <sys/stat.h>
+#endif   // UNDER_CE
+
+#if !defined(UNDER_CE)
 #ifndef __BORLANDC__
         #include <sys/utime.h>
 #else
@@ -33,7 +37,8 @@
 		#define _UTIMBUF_DEFINED
 	#endif
         #include <utime.h>
-#endif
+#endif   // __BORLANDC__
+#endif   // UNDER_CE
 
 #ifndef INVALID_FILE_ATTRIBUTES
 	#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
@@ -43,9 +48,12 @@
 	#define INVALID_SET_FILE_POINTER ((DWORD)-1)
 #endif
 
+#if !defined(UNDER_CE)
 #include <direct.h>
 #include <io.h>
 #include <share.h>
+#endif   // UNDER_CE
+
 #include <time.h> 
 #include "ZipPathComponent.h"
 #include "ZipCompatibility.h"
@@ -98,7 +106,9 @@ CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, ZIP_SIZE_TYPE uSizeNeed
 			tempPath.ReleaseBuffer();
 			if (GetDeviceFreeSpace(tempPath) < uSizeNeeded)
 			{
+#if !defined(UNDER_CE)
 				if (!GetCurrentDirectory(tempPath) || (uSizeNeeded > 0 && GetDeviceFreeSpace(tempPath) < uSizeNeeded))
+#endif   // UNDER_CE
 					return (CZipString)empty;
 			}
 		}
@@ -109,6 +119,8 @@ CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, ZIP_SIZE_TYPE uSizeNeed
 		return tempName;
 }
 
+#if !defined(UNDER_CE)
+// concept of a current working directory does not exist in Windows CE
 
 bool ZipPlatform::GetCurrentDirectory(CZipString& sz)
 {
@@ -124,6 +136,8 @@ bool ZipPlatform::GetCurrentDirectory(CZipString& sz)
 	delete[] pBuf;
 	return b;
 }
+
+#endif   // UNDER_CE
 
 bool ZipPlatform::SetFileAttr(LPCTSTR lpFileName, DWORD uAttr)
 {
@@ -184,10 +198,15 @@ bool ZipPlatform::SetFileModTime(LPCTSTR lpFileName, time_t ttime)
 	return ret;
 }
 
+#if !defined(UNDER_CE)
+// concept of a current working directory does not exist in Windows CE
+
 bool ZipPlatform::ChangeDirectory(LPCTSTR lpDirectory)
 {
 	return _tchdir(lpDirectory) == 0; // returns 0 if ok
 }
+
+#endif   // UNDER_CE
 
 int ZipPlatform::FileExists(LPCTSTR lpszName)
 {
@@ -199,16 +218,29 @@ int ZipPlatform::FileExists(LPCTSTR lpszName)
 
 ZIPINLINE  bool ZipPlatform::IsDriveRemovable(LPCTSTR lpszFilePath)
 {
+#if !defined(UNDER_CE)
 	CZipPathComponent zpc(lpszFilePath);
 	return ::GetDriveType(zpc.GetFileDrive()) == DRIVE_REMOVABLE;
+#else
+	UNREFERENCED_PARAMETER(lpszFilePath);
+	return (false);
+	//TODO: add flash card detection
+#endif   // UNDER_CE
 }
 
 ZIPINLINE  bool ZipPlatform::SetVolLabel(LPCTSTR lpszPath, LPCTSTR lpszLabel)
 {
+#if !defined(UNDER_CE)
 	CZipPathComponent zpc(lpszPath);
 	CZipString szDrive = zpc.GetFileDrive();
 	CZipPathComponent::AppendSeparator(szDrive);
 	return ::SetVolumeLabel(szDrive, lpszLabel) != 0;
+#else
+	// volume labels are not supported under Windows CE
+	UNREFERENCED_PARAMETER(lpszPath);
+	UNREFERENCED_PARAMETER(lpszLabel);
+	return (true);
+#endif   // UNDER_CE
 }
 
 ZIPINLINE void ZipPlatform::AnsiOem(CZipAutoBuffer& buffer, bool bAnsiToOem)
@@ -388,7 +420,7 @@ int ZipPlatform::MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, 
 }
 #endif
 
-#if defined _ZIP_IMPL_STL || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
+#if !defined(UNDER_CE) && (defined _ZIP_IMPL_STL || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL)
 
 #if _MSC_VER > 1000
 	#pragma warning( push )
@@ -441,7 +473,7 @@ int ZipPlatform::OpenFile(LPCTSTR lpszFileName, UINT iMode, int iShareMode)
 	default:
 		iShareMode = SH_DENYNO;
 	}
-#if _MSC_VER >= 1400	
+#if _MSC_VER >= 1400
 	int handle;
 	if (_tsopen_s(&handle, lpszFileName, iMode, iShareMode, S_IREAD | S_IWRITE /*required only when O_CREAT mode*/) != 0)
 		return -1;
@@ -464,6 +496,6 @@ intptr_t ZipPlatform::GetFileSystemHandle(int iDes)
 }
 
 
-#endif // _ZIP_IMPL_STL
+#endif // _ZIP_IMPL_STL && !UNDER_CE
 
 #endif // _ZIP_SYSTEM_WIN

@@ -29,6 +29,7 @@
 #include "ZipStorage.h"
 #include "ZipAutoBuffer.h"
 
+#if !defined(UNDER_CE)
 #if defined(__INTEL_COMPILER)
 // remark #193: zero used for undefined preprocessing identifier
 #pragma warning(disable: 193)
@@ -36,7 +37,8 @@
 #pragma warning(default: 193)
 #else
 #include <sys/types.h>
-#endif	// __INTEL_COMPILER
+#endif   // __INTEL_COMPILER
+#endif   // UNDER_CE
 
 #include "ZipCompatibility.h"
 #include "ZipCollections.h"

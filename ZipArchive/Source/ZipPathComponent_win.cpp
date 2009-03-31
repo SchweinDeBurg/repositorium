@@ -59,10 +59,14 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 	}
 	else
 		m_szPrefix.Empty();
-#if _MSC_VER >= 1400	
-	_tsplitpath_s(szTempPath, szDrive , szDir, szFname, szExt);
+#if _MSC_VER >= 1400
+#if !defined(UNDER_CE)
+	_tsplitpath_s(szTempPath, szDrive, szDir, szFname, szExt);
 #else
-	_tsplitpath(szTempPath, szDrive , szDir, szFname, szExt);
+	_tsplitpath_s(szTempPath, szDrive, _MAX_DRIVE, szDir, _MAX_DIR, szFname, _MAX_FNAME, szExt, _MAX_EXT);
+#endif   // UNDER_CE
+#else
+	_tsplitpath(szTempPath, szDrive, szDir, szFname, szExt);
 #endif
 	
 	m_szDrive = szDrive;

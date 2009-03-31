@@ -150,7 +150,11 @@
 	\see
 			<a href="kb">0610050933|fileImpl</a>
 */
+#if !defined(UNDER_CE)
 #define _ZIP_FILE_IMPLEMENTATION ZIP_ZFI_DEFAULT
+#else
+#define _ZIP_FILE_IMPLEMENTATION ZIP_ZFI_WIN
+#endif   // UNDER_CE
 
 
 #ifdef _ZIP_UNICODE_NORMALIZE
