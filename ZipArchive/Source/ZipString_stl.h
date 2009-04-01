@@ -34,9 +34,7 @@
 #if !defined(UNDER_CE)
 #include <locale>
 #else
-#include <winnls.h>
 #include <string>
-#pragma comment(lib, "coreloc.lib")
 #endif   // UNDER_CE
 
 #include "ZipExport.h"
