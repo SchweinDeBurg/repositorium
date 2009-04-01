@@ -150,10 +150,10 @@
 	\see
 			<a href="kb">0610050933|fileImpl</a>
 */
-#if !defined(UNDER_CE)
-#define _ZIP_FILE_IMPLEMENTATION ZIP_ZFI_DEFAULT
-#else
+#if defined(UNDER_CE) && !defined(_ZIP_IMPL_MFC)
 #define _ZIP_FILE_IMPLEMENTATION ZIP_ZFI_WIN
+#else
+#define _ZIP_FILE_IMPLEMENTATION ZIP_ZFI_DEFAULT
 #endif   // UNDER_CE
 
 
