@@ -59,7 +59,9 @@
 #endif	// _MSC_VER
 
 #ifdef TRACE
-	#if _MSC_VER >= 1300
+	#if defined(UNDER_CE)
+		#define ZIPTRACE(f) TRACE(_T(f),__FILE__,__LINE__)
+	#elif _MSC_VER >= 1300
 		#define ZIPTRACE(f) TRACE(f,__FILE__,__LINE__)
 	#else
 		#define ZIPTRACE(f) TRACE(_T(f))

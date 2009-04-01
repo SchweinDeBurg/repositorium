@@ -16,6 +16,8 @@
 	#error Do not include this file directly. Include stdafx.h instead
 #endif
 
+#if !defined(UNDER_CE)
+
 #if _MSC_VER > 1000	
 	#if _MSC_VER < 1500		
 		#if !defined WINVER && !defined _WIN32_WINNT
@@ -32,6 +34,18 @@
 	#endif
 #pragma once
 #endif
+
+#else
+
+#define WINVER _WIN32_WCE
+
+#define _SECURE_ATL 1
+
+// CE COM has no single threaded apartment (everything runs in the MTA).
+// Hence we declare we're not concerned about thread safety issues.
+#define _CE_ALLOW_SINGLE_THREADED_OBJECTS_IN_MTA
+
+#endif   // UNDER_CE
 
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
