@@ -553,7 +553,7 @@
 				RelativePath=".\MiscText\Appnote.txt"
 				>
 				<FileConfiguration
-					Name="MBCS Debug|Win32"
+					Name="Pocket PC Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -561,23 +561,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="MBCS Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="Pocket PC Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -589,7 +573,7 @@
 				RelativePath=".\MiscText\ChangeLog.txt"
 				>
 				<FileConfiguration
-					Name="MBCS Debug|Win32"
+					Name="Pocket PC Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -597,23 +581,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="MBCS Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="Pocket PC Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -625,7 +593,7 @@
 				RelativePath=".\MiscText\faq.txt"
 				>
 				<FileConfiguration
-					Name="MBCS Debug|Win32"
+					Name="Pocket PC Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -633,23 +601,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="MBCS Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="Pocket PC Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -661,7 +613,7 @@
 				RelativePath=".\MiscText\gpl.txt"
 				>
 				<FileConfiguration
-					Name="MBCS Debug|Win32"
+					Name="Pocket PC Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -669,23 +621,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="MBCS Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="Pocket PC Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -697,7 +633,7 @@
 				RelativePath=".\MiscText\License.txt"
 				>
 				<FileConfiguration
-					Name="MBCS Debug|Win32"
+					Name="Pocket PC Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -705,23 +641,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="MBCS Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="Pocket PC Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -733,7 +653,7 @@
 				RelativePath=".\MiscText\Readme.txt"
 				>
 				<FileConfiguration
-					Name="MBCS Debug|Win32"
+					Name="Pocket PC Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -741,23 +661,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="MBCS Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="Pocket PC Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -774,7 +678,7 @@
 				RelativePath=".\Help\ZipArchive.chm"
 				>
 				<FileConfiguration
-					Name="MBCS Debug|Win32"
+					Name="Pocket PC Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -782,23 +686,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="MBCS Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
+					Name="Pocket PC Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 					ExcludedFromBuild="true"
 					>
 					<Tool
