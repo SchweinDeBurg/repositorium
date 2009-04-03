@@ -31,7 +31,9 @@
 //#define _ZIP_IMPL_MFC
 //#define _ZIP_SYSTEM_LINUX
 
-#if defined(UNDER_CE) && !defined(_ZIP_IMPL_MFC)
+#if defined(UNDER_CE)
+
+#if !defined(_ZIP_IMPL_MFC)
 
 #define _ZIP_IMPL_STL
 
@@ -40,13 +42,15 @@
 #pragma warning(pop)
 #include <altcecrt.h>
 
+#endif   // !_ZIP_IMPL_MFC
+
 #pragma comment(linker, "/nodefaultlib:libc.lib")
 #pragma comment(linker, "/nodefaultlib:libcd.lib")
 #if (_WIN32_WCE < 0x500)
 #pragma comment(lib, "ccrtrtti.lib")
 #endif   // _WIN32_WCE
 
-#endif   // UNDER_CE && !_ZIP_IMPL_MFC
+#endif   // UNDER_CE
 
 // simplified endianess detection
 #ifdef __APPLE__
