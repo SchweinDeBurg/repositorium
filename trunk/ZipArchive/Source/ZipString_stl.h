@@ -98,20 +98,20 @@ class ZIP_API CZipString : public stdbs
 
 static TCHAR tl(TCHAR c)
 {
+#if !defined(UNDER_CE)
 	// use_facet doesn't work here well (doesn't convert all the local characters properly)
-#if defined(UNDER_CE)
-	return (_tolower(c));
-#else
 	return std::tolower(c, std::locale());
+#else
+	return (_tolower(c));
 #endif   // UNDER_CE
 }
 static TCHAR tu(TCHAR c)
 {
+#if !defined(UNDER_CE)
 	// use_facet doesn't work here well (doesn't convert all the local characters properly)
-#if defined(UNDER_CE)
-	return (_toupper(c));
-#else
 	return std::toupper(c, std::locale());
+#else
+	return (_toupper(c));
 #endif   // UNDER_CE
 }
 
