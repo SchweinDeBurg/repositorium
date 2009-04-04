@@ -58,6 +58,36 @@
 #include "ZipPathComponent.h"
 #include "ZipCompatibility.h"
 
+#if defined(UNDER_CE)
+
+// under Windows CE the following fucntions are declared but not implemented
+
+extern "C" _CRTIMP time_t __cdecl mktime(struct tm* ptm)
+{
+	return (static_cast<time_t>(_mktime64(ptm)));
+}
+
+extern "C" _CRTIMP time_t __cdecl time(time_t* timeptr)
+{
+	__time64_t time64 = 0;
+	time_t timeret = static_cast<time_t>(_time64(&time64));
+	if (timeptr != NULL)
+	{
+		*timeptr = static_cast<time_t>(time64);
+	}
+	return (timeret);
+}
+
+extern "C" _CRTIMP struct tm* __cdecl localtime(const time_t* timeptr)
+{
+	static struct tm tmret = { 0 };
+	__time64_t time64 = *timeptr;
+	_localtime64_s(&tmret, &time64);
+	return (&tmret);
+}
+
+#endif   // UNDER_CE
+
 const TCHAR CZipPathComponent::m_cSeparator = _T('\\');
 
 ULONGLONG ZipPlatform::GetDeviceFreeSpace(LPCTSTR lpszPath)
