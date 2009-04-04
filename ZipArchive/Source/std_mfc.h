@@ -37,7 +37,9 @@
 
 #else
 
+#if !defined(WINVER)
 #define WINVER _WIN32_WCE
+#endif   // WINVER
 
 #define _SECURE_ATL 1
 
