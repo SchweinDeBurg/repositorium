@@ -41,7 +41,7 @@ int CZipPathComponent::IsPrefixed(const CZipString& path)
 void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 {
 	TCHAR szDrive[_MAX_DRIVE];
-#if defined _UNICODE && _MSC_VER >= 1400
+#if defined _UNICODE && _MSC_VER >= 1400 && !defined(UNDER_CE)
 	TCHAR szDir[32767];
 #else
 	TCHAR szDir[_MAX_DIR];
