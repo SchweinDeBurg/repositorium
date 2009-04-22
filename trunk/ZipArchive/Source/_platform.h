@@ -28,7 +28,7 @@
 /************ Feel free to adjust the definitions in the following block ************/
 /************************************ BLOCK START ***********************************/
 
-//#define _ZIP_IMPL_MFC
+#define _ZIP_IMPL_MFC
 //#define _ZIP_SYSTEM_LINUX
 
 #if defined(UNDER_CE)

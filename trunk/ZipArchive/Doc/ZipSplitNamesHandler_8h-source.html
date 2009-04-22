@@ -151,22 +151,23 @@
 <a name="l00190"></a>00190 <span class="preprocessor">#if !defined __GNUC__ || defined __MINGW32__</span>
 <a name="l00191"></a>00191 <span class="preprocessor"></span>  ret = _ttoi64((LPCTSTR)szExt);  
 <a name="l00192"></a>00192 <span class="preprocessor">#else</span>
-<a name="l00193"></a>00193 <span class="preprocessor"></span>  ret = (__int64)strtoll((LPCTSTR)szExt, NULL, 10);
-<a name="l00194"></a>00194   <span class="keywordflow">if</span> (errno != 0)
-<a name="l00195"></a>00195    <span class="keywordflow">return</span> 0;  
-<a name="l00196"></a>00196 <span class="preprocessor">#endif</span>
-<a name="l00197"></a>00197 <span class="preprocessor"></span>  <span class="keywordflow">return</span> (ZIP_VOLUME_TYPE)((ret &lt;= 0 || ret &gt; UINT_MAX) ? 0 : ret);
-<a name="l00198"></a>00198  }
-<a name="l00199"></a>00199 };
-<a name="l00200"></a>00200 
-<a name="l00201"></a>00201 <span class="preprocessor">#if _MSC_VER &gt; 1000</span>
-<a name="l00202"></a>00202 <span class="preprocessor"></span><span class="preprocessor"> #pragma warning( pop )</span>
-<a name="l00203"></a>00203 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00204"></a>00204 <span class="preprocessor"></span>
-<a name="l00205"></a>00205 <span class="preprocessor">#endif</span>
+<a name="l00193"></a>00193 <span class="preprocessor"></span>  errno = 0;
+<a name="l00194"></a>00194   ret = (__int64)strtoll((LPCTSTR)szExt, NULL, 10);
+<a name="l00195"></a>00195   <span class="keywordflow">if</span> (errno != 0)
+<a name="l00196"></a>00196    <span class="keywordflow">return</span> 0;  
+<a name="l00197"></a>00197 <span class="preprocessor">#endif</span>
+<a name="l00198"></a>00198 <span class="preprocessor"></span>  <span class="keywordflow">return</span> (ZIP_VOLUME_TYPE)((ret &lt;= 0 || ret &gt; UINT_MAX) ? 0 : ret);
+<a name="l00199"></a>00199  }
+<a name="l00200"></a>00200 };
+<a name="l00201"></a>00201 
+<a name="l00202"></a>00202 <span class="preprocessor">#if _MSC_VER &gt; 1000</span>
+<a name="l00203"></a>00203 <span class="preprocessor"></span><span class="preprocessor"> #pragma warning( pop )</span>
+<a name="l00204"></a>00204 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00205"></a>00205 <span class="preprocessor"></span>
+<a name="l00206"></a>00206 <span class="preprocessor">#endif</span>
 </pre></div></div>
 <hr><address><small>
-The ZipArchive Library Copyright &copy;&nbsp;2000 - 2009 Artpol Software - Tadeusz Dracz. Generated at Tue Mar 24 11:57:25 2009.
+The ZipArchive Library Copyright &copy;&nbsp;2000 - 2009 Artpol Software - Tadeusz Dracz. Generated at Mon Apr 20 17:01:38 2009.
 </small></address>
 </body>
 </html>

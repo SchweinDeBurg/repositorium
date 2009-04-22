@@ -230,9 +230,7 @@ void CZipStorage::ChangeVolume(ZIP_VOLUME_TYPE uNumber)
 	if (uNumber == m_uCurrentVolume || !IsSegmented()) // the second condition may happen in some bad archives
 		return;
 
-	m_uCurrentVolume = uNumber;
-	if (!m_pFile->IsClosed())
-		m_pFile->Close();
+	m_uCurrentVolume = uNumber;	
 	OpenFile(IsSpanned() ? ChangeSpannedRead() : ChangeSplitRead(),
 		CZipFile::modeNoTruncate | CZipFile::modeRead);
 }
@@ -317,7 +315,7 @@ CZipString CZipStorage::RenameLastFileInSplitArchive()
 	return szNewFileName;
 }
 
-CZipString CZipStorage::Close(bool bWrite)
+CZipString CZipStorage::Close(bool bWrite, bool bGetLastVolumeName)
 {
 	bool bClose = true;
 	CZipString sz;
@@ -330,13 +328,15 @@ CZipString CZipStorage::Close(bool bWrite)
 			bClose = false;// already closed in RenameLastFileInSplitArchive
 		}
 	}
-	if (sz.IsEmpty())
+
+	if (bGetLastVolumeName && sz.IsEmpty())
 	{
 		if (IsSplit() && IsExisting())
 			sz = m_pSplitNames->GetVolumeName(m_szArchiveName, (ZIP_VOLUME_TYPE)(m_uSplitData + 1), CZipSplitNamesHandler::flLast | CZipSplitNamesHandler::flExisting);
 		else
 			sz = m_pFile->GetFilePath();
 	}
+	
 	if (bClose)
 	{
 		if (bWrite)

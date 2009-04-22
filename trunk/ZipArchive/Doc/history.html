@@ -23,12 +23,30 @@
         <div class="kbaindex">
             <ul class="kbaindex">
 
+<li><a class="linkindex" href="#4.0.1">4.0.1 (2009-04-20)</a></li>
 <li><a class="linkindex" href="#4.0.0">4.0.0 (2009-03-24)</a></li>
 <li><a class="linkindex" href="#prev">Previous History</a></li></ul>
 
         </div>
         <div class="kbacontents">
-            <h2 class="kb" id="4.0.0" name="4.0.0">4.0.0 (2009-03-24)
+            <h2 class="kb" id="4.0.1" name="4.0.1">4.0.1 (2009-04-20)
+            </h2><h4 class="kb">Changes</h4><ul><li>
+				Allowed using precompiled headers by correcting the <span class="file">stdafx.h</span> inclusion order.
+			</li><li>
+				Projects for Visual Studio 2008/2005/2003 use now a precompiled header.
+			</li></ul><h4 class="kb">Bugs Fixed</h4><ul><li>
+				Fixed problem with decompressing spanned archives (thanks to Miroslav Bonchev for reporting it).
+			</li><li>
+				<code>CZipFile::Seek()</code> in the STL version didn't seek on files larger than 2GB when Zip64 was disabled.
+			</li><li>
+				Opening an archive that was not a split archive, was throwing exception when closing an archive even if the <code>iAfterException</code> parameter was set to <a class="linkapi" href="classCZipArchive.html#ef1712a894641d675903b34c815de80264383ab2ba2586c69af5add1a1c6d665">CZipArchive::afAfterException</a> (thanks to Dragan Milic for reporting it).
+			</li><li>
+				Opening a binary split archive could throw an exception sometimes (thanks to Dragan Milic for the fix).
+			</li><li>
+				Extracting a binary split archive could throw exception with some archives (thanks to Dragan Milic for reporting it).
+			</li><li>
+				Fixed run-time check failure under Visual Studio (a cast to a smaller data type has caused a loss of data) - thanks to James Grocholl for the fix.
+			</li></ul><h2 class="kb" id="4.0.0" name="4.0.0">4.0.0 (2009-03-24)
             </h2><h4 class="kb">New Features</h4><ul><li>
 				Unicode support compatible with WinZip (Full Version only). See <a class="linkkb" href="0610051525.html#unicode">Unicode Support: Using Non-English Characters in Filenames, Comments and Passwords</a> for more information.
 			</li><li>

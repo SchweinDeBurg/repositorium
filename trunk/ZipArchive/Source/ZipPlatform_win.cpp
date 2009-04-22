@@ -220,7 +220,7 @@ bool ZipPlatform::SetFileModTime(LPCTSTR lpFileName, time_t ttime)
 	
 	FILETIME ft;
 	LONGLONG val = ((LONGLONG)ttime * 10000000) + SUFFIX_I64(116444736000000000);
-    ft.dwLowDateTime = (DWORD)val & 0xFFFFFFFF;
+    ft.dwLowDateTime = (DWORD)(val & 0xFFFFFFFF);
     ft.dwHighDateTime = (DWORD)((val >> 32) & 0xFFFFFFFF);
 
 	bool ret = ::SetFileTime(handle, NULL, NULL, &ft) != 0;

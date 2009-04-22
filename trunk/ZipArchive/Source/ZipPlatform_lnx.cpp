@@ -12,7 +12,7 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "_platform.h"
+#include "stdafx.h"
 
 #ifdef _ZIP_SYSTEM_LINUX
 
@@ -22,7 +22,6 @@
 	#undef FILE_FUNCTIONS_64B_BY_DEFAULT	
 #endif	
 
-#include "stdafx.h"
 #include "ZipPlatform.h"
 #include "_ZipFileHeader.h"
 #include "_ZipException.h"

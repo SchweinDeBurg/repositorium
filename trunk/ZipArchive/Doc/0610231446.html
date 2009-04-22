@@ -29,9 +29,9 @@
 <li><a class="linkindex" href="#deflate">Deflate</a></li>
 <li><a class="linkindex" href="#bzip2">Bzip2</a>
 <ul class="kbaindex">
-<li><a class="linkindex" href="#bzip2-integration">Enabling Bzip2 Functionality</a></li>
-<li><a class="linkindex" href="#bzip2-external">Using External Bzip2 Library</a></li>
-<li><a class="linkindex" href="#bzip2-linux">Compiling with Bzip2 under Linux/Mac OS X</a></li>
+<li><a class="linkindex" href="#bzip2Integration">Enabling Bzip2 Functionality</a></li>
+<li><a class="linkindex" href="#bzip2External">Using External Bzip2 Library</a></li>
+<li><a class="linkindex" href="#bzip2Linux">Compiling with Bzip2 under Linux/Mac OS X</a></li>
 </ul>
 </li>
 </ul>
@@ -130,12 +130,12 @@
 		versions of these programs will not decompress archives that use the bzip2 algorithm.
 		The implementation of this algorithm is provided by the bzip2 data compressor (see
 		<a class="linkkb" href="credits.html#bzip2">Acknowledgements: Credits and Used Third-Party Code Licensing Information</a> for more information).
-		<h4 id="bzip2-integration" name="bzip2-integration">
+		<h4 id="bzip2Integration" name="bzip2Integration">
 			Enabling Bzip2 Functionality</h4>
 		The bzip2 algorithm is available in the Full Version of the Library only and is
 		enabled by default. If you don't need it, you can disable it by commenting out the
 		<span class="preproc">_ZIP_BZIP2</span> definition in the file <span class="file">_features.h</span>.
-		<h4 id="bzip2-external" name="bzip2-external">
+		<h4 id="bzip2External" name="bzip2External">
 			Using External Bzip2 Library</h4>
 		The ZipArchive Library comes already with source files for bzip2 algorithm from
 		the original bzip2 library distribution, but you can also use the bzip2 library
@@ -149,7 +149,7 @@
 		<span class="preproc">_ZIP_BZIP2_INTERNAL</span> is defined in the <span class="file">
 			_features.h</span> file while compiling the library. Undefine it, to use the
 		bzip2 library that comes with your system.
-		<h4 id="bzip2-linux" name="bzip2-linux">
+		<h4 id="bzip2Linux" name="bzip2Linux">
 			Compiling with Bzip2 under Linux/Mac OS X</h4>
 		<ul>
 			<li>If you use the <span class="file">makefile</span> provided with the ZipArchive Library,

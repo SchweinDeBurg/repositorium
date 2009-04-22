@@ -12,11 +12,10 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "_platform.h"
+#include "stdafx.h"
 
 #ifdef _ZIP_SYSTEM_LINUX
 
-#include "stdafx.h"
 #include "ZipPathComponent.h"
 
 

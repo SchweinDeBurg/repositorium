@@ -19,7 +19,6 @@
 
 #include "ZipFile.h"
 
-// IMPLEMENT_DYNAMIC(CZipAbstractFile, CFile)
 IMPLEMENT_DYNAMIC(CZipFile, CFile)
 
 CZipFile::CZipFile()

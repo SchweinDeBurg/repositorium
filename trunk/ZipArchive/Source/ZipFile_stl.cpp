@@ -143,20 +143,20 @@ ZIP_FILE_USIZE CZipFile::GetPosition() const
 		ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)lseek64(m_hFile, 0, SEEK_CUR);
 	#endif			
 #endif
-		if (ret == (ZIP_FILE_USIZE)-1)
-			ThrowError();
-		return ret;
+	if (ret == (ZIP_FILE_USIZE)-1)
+		ThrowError();
+	return ret;
 }
 
 ZIP_FILE_USIZE CZipFile::Seek(ZIP_FILE_SIZE dOff, int nFrom)
 {
 	// restricted to signed
 #ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
-	ZIP_FILE_SIZE ret = (ZIP_FILE_SIZE)_lseek(m_hFile, dOff, nFrom);
+	ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)_lseek(m_hFile, dOff, nFrom);
 #else
-	ZIP_FILE_SIZE ret = (ZIP_FILE_SIZE)_lseeki64(m_hFile, dOff, nFrom);
+	ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)_lseeki64(m_hFile, dOff, nFrom);
 #endif
-	if (ret == -1)
+	if (ret == (ZIP_FILE_USIZE)-1)
 		ThrowError();
 	return (ZIP_FILE_USIZE)ret;
 }
