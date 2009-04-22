@@ -490,7 +490,7 @@ Changes will be committed immediately after they occur. </td></tr>
 </table>
 </dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02918">2918</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02919">2919</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -533,7 +533,7 @@ Verifies that are ignored by default by the ZipArchive Library. </td></tr>
 </table>
 </dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02798">2798</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02799">2799</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -587,7 +587,7 @@ A new file is opened for compression. </td></tr>
 </table>
 </dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03236">3236</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03237">3237</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -653,7 +653,7 @@ Treats <em>lpszFilePath</em> as a directory only if it has a path separator appe
 </table>
 </dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02526">2526</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02527">2527</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -757,7 +757,7 @@ The custom Unicode support. </td></tr>
 </table>
 </dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02405">2405</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02406">2406</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -1138,7 +1138,7 @@ Returns the value indicating whether the archive can be modified.<p>
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd><code>true</code>, if the archive can be modified; <code>false</code> otherwise. </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03063">3063</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03064">3064</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -1159,7 +1159,7 @@ Returns the value indicating whether the archive can be modified.<p>
 
 <p>
 Releases the current compressor. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03345">3345</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03346">3346</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -1180,7 +1180,7 @@ Releases the current compressor.
 
 <p>
 Releases the current cryptograph. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03309">3309</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03310">3310</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -1217,7 +1217,7 @@ Closes the archive.<p>
     <tr><td valign="top"></td><td valign="top"><em>bUpdateTimeStamp</em>&nbsp;</td><td>If <code>true</code>, the method sets the modification date of the zip file to the date of the newest file in the archive. In a segmented archive, only the last segment file will have the time stamp updated. You can use this option even without performing any additional processing on the archive, just open and close the archive.</td></tr>
   </table>
 </dl>
-<dl class="return" compact><dt><b>Returns:</b></dt><dd>The name of the last volume. It is useful when compressing split archives to know which file to use when opening the archive.</dd></dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The name of the last volume. It is useful when compressing split archives to know which file to use when opening the archive. The name is only returned when <em>iAfterException</em> is different from <a class="el" href="classCZipArchive.html#ef1712a894641d675903b34c815de80264383ab2ba2586c69af5add1a1c6d665">afAfterException</a>.</dd></dl>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>Does not throw any exceptions, if <em>iAfterException</em> is set to the <a class="el" href="classCZipArchive.html#ef1712a894641d675903b34c815de80264383ab2ba2586c69af5add1a1c6d665">afAfterException</a> value.</dd></dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a href="0610222049.html">Exceptions Handling</a> <p>
 <a class="el" href="classCZipArchive.html#60166588e0126c68899860e00676a51f">IsClosed</a> </dd></dl>
@@ -1379,7 +1379,7 @@ Creates a new compressor. You can override this method and implement your own co
 </dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipCompressor.html#b68b3b3437bcae944edd4a20ab1ca777">CZipCompressor::CompressionMethod</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03363">3363</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03364">3364</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -1408,7 +1408,7 @@ Creates a new cryptograph. You can override this method and implement your own c
 </dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipCryptograph.html#b3e0a46c0680f616ccf7a163f4f40332">CZipCryptograph::EncryptionMethod</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03327">3327</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03328">3328</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -1875,7 +1875,7 @@ Writes internal buffers to the storage file and flushes the file buffers to the 
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a href="0610231446.html#finalize">Compressing Data</a> <p>
 <a class="el" href="classCZipArchive.html#3b6b89bcc1a725621a41b815b973efa6">Finalize</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02171">2171</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02172">2172</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -1968,7 +1968,7 @@ Returns the current auto-finalize value.<p>
 <a class="el" href="classCZipArchive.html#368ef976b50ad90491f56a1f9bd555d5">SetAutoFinalize</a> <p>
 <a class="el" href="classCZipArchive.html#3b6b89bcc1a725621a41b815b973efa6">Finalize</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02216">2216</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02217">2217</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -1992,7 +1992,7 @@ Returns the number of extra bytes that are present before the actual archive in 
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>The number of bytes before the actual archive. </dd></dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#8507cdbe74b6698a74f247c1c8bdbab8">SetBytesBeforeZip</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02789">2789</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02790">2790</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2081,7 +2081,7 @@ Returns the central directory size.<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>The size of the central directory.</dd></dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#fbf6eb8ce378ec0812f0ccb7827e8e79">GetCentralDirInfo</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02740">2740</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02741">2741</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2107,7 +2107,7 @@ Returns the current commit mode.<p>
 <a class="el" href="classCZipArchive.html#28f18c652496e2599bd49d0f0648769d">SetCommitMode</a> <p>
 <a class="el" href="classCZipArchive.html#817d828483c57299b4de7b7b6319a88a">CommitChanges</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02955">2955</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02956">2956</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2207,7 +2207,7 @@ Returns the number of files in the archive.<p>
 Retrieves the current compressor. The type of the compressor depends on the compression method used for compressing or decompressing data.<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#297a68eee12eb680c945a420ae407db0">SetCompressionMethod</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03046">3046</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03047">3047</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2279,7 +2279,7 @@ Returns the value indicating whether the exhaustive read function is active.<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd><code>true</code>, if the exhaustive read function is active; <code>false</code> otherwise.</dd></dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#fd1998fe648f83a299e595b9f37cc15e">SetExhaustiveRead</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02879">2879</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02880">2880</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2416,7 +2416,7 @@ Allows to retrieve the order of sorted files after you enabled the Find Fast fea
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a href="0610242025.html#findfast">Searching in Archive</a> <p>
 <a class="el" href="classCZipArchive.html#674015911b66a42299b60e04c33dd35b">EnableFindFast</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02468">2468</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02469">2469</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2645,7 +2645,7 @@ Returns the global comment for the archive.<p>
 Returns the currently ignored consistency checks. It can be one or more of the <a class="el" href="classCZipArchive.html#23977e24b0930a40a83c0e4075860e4d">ConsistencyCheck</a> values.<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#6c97370520628da3908d7dca9b58fdeb">SetIgnoredConsistencyChecks</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02841">2841</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02842">2842</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2777,7 +2777,7 @@ Returns the underlying archive storage object.<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>The pointer to <a class="el" href="classCZipStorage.html">CZipStorage</a>.</dd></dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipStorage.html">CZipStorage</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02275">2275</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02276">2276</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2806,7 +2806,7 @@ Returns the current settings that control storing of filenames and comments in t
 <a class="el" href="classCZipArchive.html#81a15f347bad84ffaeee0c8eff3b98db">ResetStringStoreSettings</a> <p>
 <a class="el" href="classCZipFileHeader.html#d4d29775356f406d8f1e6864f90681a0">CZipFileHeader::GetStringStoreSettings</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02393">2393</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02394">2394</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2834,7 +2834,7 @@ Returns the system compatibility of the current archive.<p>
 <a class="el" href="namespaceZipCompatibility.html#e66702f3e1756c3a13834602f8861209">ZipCompatibility::ZipPlatforms</a> <p>
 <a class="el" href="namespaceZipPlatform.html#cdfcdd6eb3e4e93497a551b7c007d0bd">ZipPlatform::GetSystemID</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02264">2264</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02265">2265</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2858,7 +2858,7 @@ Returns the current temporary path used when compressing files.<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>The current temporary path.</dd></dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#c20345ce4f4760630d6514600fe3cbe0">SetTempPath</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02518">2518</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02519">2519</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2882,7 +2882,7 @@ Returns the current Unicode mode.<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>The current Unicode mode. It can be one or more of the <a class="el" href="classCZipArchive.html#c5c98aebbf9defcb4b5e16683b51d80e">UnicodeMode</a> values.</dd></dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a href="0610051525.html">Unicode Support: Using Non-English Characters in Filenames, Comments and Passwords</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02433">2433</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02434">2434</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2949,7 +2949,7 @@ Tests if the whole archive or the current volume is closed.<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd><code>true</code> if a file closed; <code>false</code> otherwise.</dd></dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#f5a360f32249b89ff32b69ad436416b7">Close</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02131">2131</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02132">2132</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2974,7 +2974,7 @@ Returns the value indicating whether there are any pending changes in the archiv
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a href="0610231944.html#commit">Modification of Archives: Replacing, Renaming, Deleting and Changing Data</a> <p>
 <a class="el" href="classCZipArchive.html#817d828483c57299b4de7b7b6319a88a">CommitChanges</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02991">2991</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02992">2992</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -2997,7 +2997,7 @@ Returns the value indicating whether there are any pending changes in the archiv
 Returns the value indicating whether the archive can be modified. An archive is read-only when it is an existing segmented archive or it was opened with the <a class="el" href="classCZipArchive.html#5d80f4df2aa34edda55d5fb98cffafdbbf5fdf56b9ed21bb4439d72efbefb13d" title="Opens an existing archive as a read only file. This mode is intended to use in a...">zipOpenReadOnly</a> flag.<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd><code>true</code> if the archive is read-only; <code>false</code> otherwise. </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02758">2758</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02759">2759</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -3816,7 +3816,7 @@ Reads the local header information of the file with the given index.<p>
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03156">3156</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03157">3157</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -4041,7 +4041,7 @@ Sets the current settings that control storing of filenames and comments in the 
 <a class="el" href="classCZipArchive.html#6a2d19de8bb5cc3939bc0d4dce1c1150">SetStringStoreSettings(UINT, bool)</a> <p>
 <a class="el" href="classCZipArchive.html#54f26713f4bc6c808250fe5a0b8b0565">GetStringStoreSettings</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02369">2369</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02370">2370</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -4142,7 +4142,7 @@ Sets the number of extra bytes that are present before the actual archive in the
 </dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#ca3e489f54afcd72390093e853af822e">GetBytesBeforeZip</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02771">2771</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02772">2772</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -4220,7 +4220,7 @@ Calling this method affects the following methods:<p>
 </dl>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>Set it before using one of the mentioned methods or leave it as it was set by default. </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02697">2697</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02698">2698</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -4251,7 +4251,7 @@ Sets the commit mode.<p>
 <a class="el" href="classCZipArchive.html#3adb7bec41b0cfb44871c297a85c592e">GetCommitMode</a> <p>
 <a class="el" href="classCZipArchive.html#817d828483c57299b4de7b7b6319a88a">CommitChanges</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02937">2937</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02938">2938</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -4377,7 +4377,7 @@ Forces reading all headers from the central directory, even if the number of fil
 <dl class="note" compact><dt><b>Note:</b></dt><dd>This method is useful when dealing with archives created with external software that put more files inside an archive that it is permitted by the zip format. Such a situation can take place with archives created with e.g. BOMArchiveHelper (Mac OS X utility), when the number of files exceeds 65,535.</dd></dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#7b8e84348fc230cd358758dcff6c9290">GetExhaustiveRead</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02860">2860</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02861">2861</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -4445,7 +4445,7 @@ Sets the consistency checks to ignore while processing the archive. Allows openi
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#23977e24b0930a40a83c0e4075860e4d">ConsistencyCheck</a> <p>
 <a class="el" href="classCZipArchive.html#69d2178514e8d8e0a4f91b6bb1e5864e">GetIgnoredConsistencyChecks</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02825">2825</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02826">2826</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -4674,7 +4674,7 @@ Sets the current settings that control storing of filenames and comments in the 
 <a class="el" href="classCZipArchive.html#81a15f347bad84ffaeee0c8eff3b98db">ResetStringStoreSettings</a> <p>
 <a class="el" href="classCZipArchive.html#54f26713f4bc6c808250fe5a0b8b0565">GetStringStoreSettings</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02349">2349</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02350">2350</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -4724,7 +4724,7 @@ Sets the current settings that control storing of filenames and comments in the 
 <a class="el" href="classCZipArchive.html#81a15f347bad84ffaeee0c8eff3b98db">ResetStringStoreSettings</a> <p>
 <a class="el" href="classCZipArchive.html#54f26713f4bc6c808250fe5a0b8b0565">GetStringStoreSettings</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02323">2323</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02324">2324</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -4757,7 +4757,7 @@ Sets the current settings that control storing of filenames and comments in the 
 <a class="el" href="classCZipArchive.html#81a15f347bad84ffaeee0c8eff3b98db">ResetStringStoreSettings</a> <p>
 <a class="el" href="classCZipArchive.html#54f26713f4bc6c808250fe5a0b8b0565">GetStringStoreSettings</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02295">2295</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02296">2296</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -4862,7 +4862,7 @@ Sets the current Unicode mode.<p>
 </dl>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a href="0610051525.html">Unicode Support: Using Non-English Characters in Filenames, Comments and Passwords</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02422">2422</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l02423">2423</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5115,7 +5115,7 @@ Compresses the contents of the buffer and writes it to a new file.<p>
 
 <p>
 The value set with <a class="el" href="classCZipArchive.html#368ef976b50ad90491f56a1f9bd555d5">SetAutoFinalize()</a>. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03251">3251</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03252">3252</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5132,7 +5132,7 @@ The value set with <a class="el" href="classCZipArchive.html#368ef976b50ad90491f
 
 <p>
 The value set with <a class="el" href="classCZipArchive.html#ec981beb4dfb55e4a2f054c410ee3031">SetCaseSensitivity</a>. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03209">3209</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03210">3210</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5149,7 +5149,7 @@ The value set with <a class="el" href="classCZipArchive.html#ec981beb4dfb55e4a2f
 
 <p>
 The value set with <a class="el" href="classCZipArchive.html#fd1998fe648f83a299e595b9f37cc15e">SetExhaustiveRead</a>. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03180">3180</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03181">3181</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5166,7 +5166,7 @@ The value set with <a class="el" href="classCZipArchive.html#fd1998fe648f83a299e
 
 <p>
 If <code>true</code>, the drive letter is removed from the filename stored inside the archive when adding a new file to the archive or extracting an existing one. It affects <a class="el" href="classCZipArchive.html#835a92a9a94ae71ab1742c50d282d0d2">AddNewFile</a>, <a class="el" href="classCZipArchive.html#80006e2eed2778115c1d0206728d7dc5">ExtractFile</a>, <a class="el" href="classCZipArchive.html#9d875516849ce5632a024b3acb4613cf">PredictFileNameInZip</a>, <a class="el" href="classCZipArchive.html#e34cef405c28c66cbf7fc6f1e45b09d6">PredictExtractedFileName</a>, <a class="el" href="classCZipArchive.html#136b89cc32a24b3f358f592c9d060a78">WillBeDuplicated</a> methods. The default value is <code>true</code>. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03145">3145</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03146">3146</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5183,7 +5183,7 @@ If <code>true</code>, the drive letter is removed from the filename stored insid
 
 <p>
 Holds currently set callback objects. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03198">3198</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03199">3199</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5201,7 +5201,7 @@ Holds currently set callback objects.
 <p>
 The central directory object. <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipCentralDir.html">CZipCentralDir</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03231">3231</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03232">3232</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5218,7 +5218,7 @@ The central directory object. <dl class="see" compact><dt><b>See also:</b></dt><
 
 <p>
 The value set with <a class="el" href="classCZipArchive.html#3b22230148bd8a11a9f1f92bff446e1b">SetSystemCompatibility</a>. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03292">3292</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03293">3293</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5237,7 +5237,7 @@ The value set with <a class="el" href="classCZipArchive.html#3b22230148bd8a11a9f
 The size of the <a class="el" href="classCZipArchive.html#2c10424365afc7d073e53bc1e120c410">m_pBuffer</a> buffer. Set it before opening the archive. It is usually set with the <a class="el" href="classCZipArchive.html#be06c912f3dbacfe3d327d7c7a2d0e88">SetAdvanced</a> method (specify this value as the second argument).<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#be06c912f3dbacfe3d327d7c7a2d0e88">SetAdvanced</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03407">3407</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03408">3408</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5254,7 +5254,7 @@ The size of the <a class="el" href="classCZipArchive.html#2c10424365afc7d073e53b
 
 <p>
 The value set with <a class="el" href="classCZipArchive.html#28f18c652496e2599bd49d0f0648769d">SetCommitMode()</a>. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03256">3256</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03257">3257</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5271,7 +5271,7 @@ The value set with <a class="el" href="classCZipArchive.html#28f18c652496e2599bd
 
 <p>
 The value set with <a class="el" href="classCZipArchive.html#00d53cf407629000c551cb134c8c7993">SetEncryptionMethod</a>. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03381">3381</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03382">3382</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5288,7 +5288,7 @@ The value set with <a class="el" href="classCZipArchive.html#00d53cf407629000c55
 
 <p>
 Takes one of the <a class="el" href="classCZipArchive.html#50a0edbfe33ae586c7a119c93b326671">CZipArchive::OpenFileType</a> enum values. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03246">3246</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03247">3247</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5308,7 +5308,7 @@ A helper buffer used during various IO operations.<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#eb1fe32b8b4218244c88f0eb0d52688e">m_iBufferSize</a> <p>
 <a class="el" href="classCZipArchive.html#be06c912f3dbacfe3d327d7c7a2d0e88">SetAdvanced</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03397">3397</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03398">3398</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5325,7 +5325,7 @@ A helper buffer used during various IO operations.<p>
 
 <p>
 The current compressor. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03376">3376</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03377">3377</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5342,7 +5342,7 @@ The current compressor.
 
 <p>
 The current cryptograph. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03340">3340</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03341">3341</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5359,7 +5359,7 @@ The current cryptograph.
 
 <p>
 The value set with <a class="el" href="classCZipArchive.html#f68297f88e912ec811ba1c27496a6683">SetPassword</a>. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03297">3297</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03298">3298</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5376,7 +5376,7 @@ The value set with <a class="el" href="classCZipArchive.html#f68297f88e912ec811b
 
 <p>
 A pointer to a method used to compare strings. Can point to <code>Compare</code>, <code>CompareNoCase</code>, <code>Collate</code> or <code>CollateNoCase</code> method. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03216">3216</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03217">3217</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5394,7 +5394,7 @@ A pointer to a method used to compare strings. Can point to <code>Compare</code>
 <p>
 Physical layer of the archive. <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipStorage.html">CZipStorage</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03224">3224</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03225">3225</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5411,7 +5411,7 @@ Physical layer of the archive. <dl class="see" compact><dt><b>See also:</b></dt>
 
 <p>
 The value set with the <a class="el" href="classCZipArchive.html#c497dc2ebb4b65be1f5b7d08fe024a29">SetStringStoreSettings()</a> method. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03413">3413</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03414">3414</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5428,7 +5428,7 @@ The value set with the <a class="el" href="classCZipArchive.html#c497dc2ebb4b65b
 
 <p>
 The value set with <a class="el" href="classCZipArchive.html#0e623537c7cbf00c6b255c3a5728acd9">SetRootPath()</a>. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03261">3261</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03262">3262</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5445,7 +5445,7 @@ The value set with <a class="el" href="classCZipArchive.html#0e623537c7cbf00c6b2
 
 <p>
 The value set with <a class="el" href="classCZipArchive.html#c20345ce4f4760630d6514600fe3cbe0">SetTempPath()</a>. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03266">3266</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03267">3267</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5462,7 +5462,7 @@ The value set with <a class="el" href="classCZipArchive.html#c20345ce4f4760630d6
 
 <p>
 The value set with <a class="el" href="classCZipArchive.html#297a68eee12eb680c945a420ae407db0">SetCompressionMethod</a>. 
-<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03386">3386</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h-source.html#l03387">3387</a> of file <a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div><p>
@@ -5470,7 +5470,7 @@ The value set with <a class="el" href="classCZipArchive.html#297a68eee12eb680c94
 <li><a class="el" href="ZipArchive_8h-source.html">ZipArchive.h</a></ul>
 </div>
 <hr><address><small>
-The ZipArchive Library Copyright &copy;&nbsp;2000 - 2009 Artpol Software - Tadeusz Dracz. Generated at Tue Mar 24 11:57:26 2009.
+The ZipArchive Library Copyright &copy;&nbsp;2000 - 2009 Artpol Software - Tadeusz Dracz. Generated at Mon Apr 20 17:01:40 2009.
 </small></address>
 </body>
 </html>

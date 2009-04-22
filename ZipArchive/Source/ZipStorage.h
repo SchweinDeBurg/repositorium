@@ -463,12 +463,15 @@ public:
 
 		\param	bWrite
 			Set to \c false, if the storage should not perform any write operations.
+		\param bGetLastVolumeName
+			Set to \c true, if the storage should return the path.
 
 		\return
 			The file path of the archive or of the last volume in the archive.
+			Only if \a bGetLastVolumeName is set to \c true.
 
 	*/
-	CZipString Close(bool bWrite);
+	CZipString Close(bool bWrite, bool bGetLastVolumeName);
 
 	/**
 		Represents the physical storage for the archive (or the current archive segment in segmented archives).

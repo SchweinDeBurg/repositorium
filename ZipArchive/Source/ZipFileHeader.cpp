@@ -362,7 +362,7 @@ bool CZipFileHeader::ReadLocal(CZipCentralDir* pCentralDir)
 	pStorage->ChangeVolume(m_uVolumeStart);
 	bool isBinary = pStorage->IsBinarySplit();
 	if (isBinary)
-		pStorage->SeekInBinary(m_uOffset);
+		pStorage->SeekInBinary(m_uOffset, true);
 	else
 		pStorage->Seek(m_uOffset);
 

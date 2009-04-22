@@ -14,7 +14,6 @@
 
 #include "stdafx.h"
 
-
 #if _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_WIN
 
 #include "_features.h"
@@ -147,6 +146,7 @@ ZIP_FILE_USIZE CZipFile::GetLength() const
 	{
 		ThrowError();
 	}
+
 	return size.QuadPart;
 }
 

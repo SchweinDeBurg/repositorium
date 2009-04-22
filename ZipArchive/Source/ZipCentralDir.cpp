@@ -1055,6 +1055,5 @@ void CZipCentralDir::DestroySharedData()
 
 ZIP_FILE_USIZE CZipCentralDir::LocateSignature()
 {
-	// maximum size of end of central dir record	
-	return m_pStorage->LocateSignature(m_gszSignature, 0xFFFF + CENTRAL_DIR_END_SIZE);	
+	return m_pStorage->LocateSignature(m_gszSignature, 0xFFFF + CENTRAL_DIR_END_SIZE);
 }

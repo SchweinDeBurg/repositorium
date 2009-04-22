@@ -2104,6 +2104,7 @@ public:
 
 		\return
 			The name of the last volume. It is useful when compressing split archives to know which file to use when opening the archive.
+			The name is only returned when \a iAfterException is different from #afAfterException.
 
 		\note
 			Does not throw any exceptions, if \a iAfterException is set to the #afAfterException value.

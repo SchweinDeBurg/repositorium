@@ -60,7 +60,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCZipStorage.html#8e89e706e6224a5f6da80cb3e6872189">ChangeVolumeDec</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">CZipString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCZipStorage.html#dabe9e0628a883f92d7cd4201e241ee0">Close</a> (bool bWrite)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">CZipString&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCZipStorage.html#24d2413cee9952e17b42a1c72aff4bb1">Close</a> (bool bWrite, bool bGetLastVolumeName)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCZipStorage.html#82700d19bed231ff7fe778ba16a9cc0c">FinalizeSegm</a> ()</td></tr>
 
@@ -432,7 +432,7 @@ Changes the current volume to the previous volume during extract operations.
 
 </div>
 </div><p>
-<a class="anchor" name="dabe9e0628a883f92d7cd4201e241ee0"></a><!-- doxytag: member="CZipStorage::Close" ref="dabe9e0628a883f92d7cd4201e241ee0" args="(bool bWrite)" -->
+<a class="anchor" name="24d2413cee9952e17b42a1c72aff4bb1"></a><!-- doxytag: member="CZipStorage::Close" ref="24d2413cee9952e17b42a1c72aff4bb1" args="(bool bWrite, bool bGetLastVolumeName)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -440,9 +440,18 @@ Changes the current volume to the previous volume during extract operations.
           <td class="memname">CZipString CZipStorage::Close           </td>
           <td>(</td>
           <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>bWrite</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
+          <td class="paramname"> <em>bWrite</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>bGetLastVolumeName</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
         </tr>
       </table>
 </div>
@@ -452,10 +461,11 @@ Changes the current volume to the previous volume during extract operations.
 Closes the storage.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>bWrite</em>&nbsp;</td><td>Set to <code>false</code>, if the storage should not perform any write operations.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bWrite</em>&nbsp;</td><td>Set to <code>false</code>, if the storage should not perform any write operations. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bGetLastVolumeName</em>&nbsp;</td><td>Set to <code>true</code>, if the storage should return the path.</td></tr>
   </table>
 </dl>
-<dl class="return" compact><dt><b>Returns:</b></dt><dd>The file path of the archive or of the last volume in the archive. </dd></dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The file path of the archive or of the last volume in the archive. Only if <em>bGetLastVolumeName</em> is set to <code>true</code>. </dd></dl>
 
 </div>
 </div><p>
@@ -476,7 +486,7 @@ Closes the storage.<p>
 
 <p>
 Flushes without writing. It can be used only on not segmented archives. 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00506">506</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00509">509</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -579,7 +589,7 @@ Returns a zero-based number of the current volume.
 Returns the free space left in the write buffer.<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>The free space in bytes. </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00591">591</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00594">594</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -623,7 +633,7 @@ Returns the free space size on the current removable disk.<p>
 Returns the file offset after the last data byte in the archive.<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>The file offset after the last data byte in the archive. </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00482">482</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00485">485</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1437,7 +1447,7 @@ Writes data to the internal buffer.<p>
 
 <p>
 The signature of the extended header. 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00472">472</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00475">475</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1456,7 +1466,7 @@ The signature of the extended header.
 The size of the buffer used in searching for the central directory.<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#be06c912f3dbacfe3d327d7c7a2d0e88">CZipArchive::SetAdvanced</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00653">653</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00656">656</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1475,7 +1485,7 @@ The size of the buffer used in searching for the central directory.<p>
 The size of the write buffer.<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#be06c912f3dbacfe3d327d7c7a2d0e88">CZipArchive::SetAdvanced</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00645">645</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00648">648</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1492,7 +1502,7 @@ The size of the write buffer.<p>
 
 <p>
 Represents the physical storage for the archive (or the current archive segment in segmented archives). 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00467">467</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00470">470</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1511,7 +1521,7 @@ Represents the physical storage for the archive (or the current archive segment 
 A callback object called when there is a need for a volume change in a spanned archive.<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#7f0aeb9a7368afd0689149485bd7ca5b">CZipArchive::SetSegmCallback</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00662">662</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00665">665</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1530,7 +1540,7 @@ A callback object called when there is a need for a volume change in a spanned a
 A callback object called when there is a need for a volume change in a split archive.<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#7f0aeb9a7368afd0689149485bd7ca5b">CZipArchive::SetSegmCallback</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00671">671</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00674">674</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1547,7 +1557,7 @@ A callback object called when there is a need for a volume change in a split arc
 
 <p>
 The write buffer caching data. 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00617">617</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00620">620</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1565,7 +1575,7 @@ The write buffer caching data.
 <p>
 The number of bytes before the actual zip archive in a file. <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#ca3e489f54afcd72390093e853af822e">CZipArchive::GetBytesBeforeZip</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00636">636</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00639">639</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1582,7 +1592,7 @@ The number of bytes before the actual zip archive in a file. <dl class="see" com
 
 <p>
 The number of bytes available in the write buffer. 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00605">605</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00608">608</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1599,7 +1609,7 @@ The number of bytes available in the write buffer.
 
 <p>
 Stores the number of bytes that have been written physically to the current segment. Used only when processing a segmented archive in creation. 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00623">623</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00626">626</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1618,7 +1628,7 @@ Stores the number of bytes that have been written physically to the current segm
 The value it holds depends on the segmentation mode:<ul>
 <li>A split archive: the total size of the current volume.</li><li>A spanned archive: the free space on the current volume. </li></ul>
 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00612">612</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00615">615</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1635,7 +1645,7 @@ The value it holds depends on the segmentation mode:<ul>
 
 <p>
 The current volume number in a segmented archive. The value is zero-based. 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00629">629</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00632">632</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1655,7 +1665,7 @@ The value it holds, depends on the current mode:<ul>
 <li>An opened existing split archive: the number of the last volume ( usually the one with the "zip" extension).</li><li>A split archive in creation: the size of the volume.</li></ul>
 <p>
 This method is used only when processing split archives. 
-<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00600">600</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipStorage_8h-source.html#l00603">603</a> of file <a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a>.</p>
 
 </div>
 </div><p>
@@ -1663,7 +1673,7 @@ This method is used only when processing split archives.
 <li><a class="el" href="ZipStorage_8h-source.html">ZipStorage.h</a></ul>
 </div>
 <hr><address><small>
-The ZipArchive Library Copyright &copy;&nbsp;2000 - 2009 Artpol Software - Tadeusz Dracz. Generated at Tue Mar 24 11:57:28 2009.
+The ZipArchive Library Copyright &copy;&nbsp;2000 - 2009 Artpol Software - Tadeusz Dracz. Generated at Mon Apr 20 17:01:42 2009.
 </small></address>
 </body>
 </html>

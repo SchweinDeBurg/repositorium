@@ -35,7 +35,7 @@
 using namespace ZipArchiveLib;
 
 const char CZipArchive::m_gszCopyright[] = {"The ZipArchive Library Copyright (c) 2000 - 2009 Artpol Software - Tadeusz Dracz"};
-const char CZipArchive::m_gszVersion[] = {"4.0.0"};
+const char CZipArchive::m_gszVersion[] = {"4.0.1"};
 
 void CZipAddNewFileInfo::Defaults()
 {
@@ -388,7 +388,7 @@ CZipString CZipArchive::Close(int iAfterException, bool bUpdateTimeStamp)
 #endif
 	m_centralDir.Close();
 	m_pszPassword.Release();
-	CZipString szFileName = m_storage.Close(bWrite);
+	CZipString szFileName = m_storage.Close(bWrite, iAfterException != afAfterException);
 	if (bUpdateTimeStamp && !szFileName.IsEmpty())
 		ZipPlatform::SetFileModTime(szFileName, tNewestTime);
 	return szFileName;

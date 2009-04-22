@@ -190,6 +190,7 @@ public:
 #if !defined __GNUC__ || defined __MINGW32__
 		ret = _ttoi64((LPCTSTR)szExt);		
 #else
+		errno = 0;
 		ret = (__int64)strtoll((LPCTSTR)szExt, NULL, 10);
 		if (errno != 0)
 			return 0;		
