@@ -628,6 +628,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\PSDParser.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\TIFFLogLuv.cpp"
 					>
 				</File>
@@ -676,6 +680,10 @@
 			</File>
 			<File
 				RelativePath=".\Include\Plugin.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\PSDParser.h"
 				>
 			</File>
 			<File
