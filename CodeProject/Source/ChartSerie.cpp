@@ -18,7 +18,15 @@
  *
  *	History:
  *		- 11/08/2006: Management of the auto axis now done in the axis. Series Register
- *					  Unregister themselves to their respective axes	
+ *					  Unregister themselves to their respective axes	.
+ *		- 29/02/2008: Taking into account that RefreshAutoAxis doesn't refresh the control.
+ *		- 01/03/2008: RemovePointsFromBegin and RemovePointsFromEnd functions added.
+ *		- 08/03/2008: AddPoints function added (thanks to Bruno Lavier).
+ *		- 11/03/2008: Min and max values are now cached.
+ *		- 14/03/2008: Series can be ordered. Speed improvement done in that case.
+ *		- 13/08/2008: Bug fix: calling AddPoint was not drawing the new points.
+ *		- 27/11/2008: Points are now stored into the CChartPointsArray class instead of
+ *					  std::vector for efficiency.
  *
  */
 
@@ -26,8 +34,10 @@
 #include "ChartSerie.h"
 #include "ChartAxis.h"
 #include "ChartCtrl.h"
+#include "ChartLabel.h"
 
 #include "Math.h"
+#include <algorithm>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -35,223 +45,191 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
+unsigned CChartSerie::m_uNextFreeId = 0;
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CChartSerie::CChartSerie(CChartCtrl* pParent, int Type) : CChartObject(pParent)
+CChartSerie::CChartSerie(CChartCtrl* pParent)
 {
-	m_iLastDrawnPoint = 0;
+	m_pParentCtrl = pParent;
+	m_uLastDrawnPoint = 0;
+	m_strSerieName = _T("");
 
-	m_pHorizontalAxis = pParent->GetBottomAxis();
-	m_pHorizontalAxis->RegisterSeries(this);
-	m_pVerticalAxis = pParent->GetLeftAxis();
-	m_pVerticalAxis->RegisterSeries(this);
+	m_pHorizontalAxis = m_pVerticalAxis = NULL;
+	m_uSerieId = m_uNextFreeId;
+	m_uNextFreeId++;
 
-	m_strSerieName = "";
-	m_iSerieType = Type;
+	m_bIsVisible = true;
+	m_bShadow = false;		
+	m_SerieColor = RGB(0, 0, 0);
+	m_ShadowColor = RGB(150,150,150);
+	m_iShadowDepth = 2;
+
+	m_bMouseClickNotifications = true;
+	m_bMouseMoveNotifications = false;
 }
 
 CChartSerie::~CChartSerie()
 {
 	m_pHorizontalAxis->UnregisterSeries(this);
 	m_pVerticalAxis->UnregisterSeries(this);
+
+	TLabelMap::iterator iter = m_mapLabels.begin();
+	for (iter; iter!=m_mapLabels.end(); iter++)
+	{
+		delete iter->second;
+	}
+}
+
+void CChartSerie::SetSeriesOrdering(CChartPointsArray::PointsOrdering newOrdering)
+{
+	m_vPoints.SetOrdering(newOrdering);
+}
+
+void CChartSerie::SetName(const TChartString& NewName) 
+{ 
+	m_strSerieName = NewName; 
+	m_pParentCtrl->RefreshCtrl();
 }
 
 void CChartSerie::AddPoint(double X, double Y)
 {
-	SChartPoint NewPoint;
-	NewPoint.X = X;
-	NewPoint.Y = Y;
-	m_vPoints.push_back(NewPoint);
+	m_vPoints.AddPoint(X, Y);
 
+	m_pParentCtrl->EnableRefresh(false);
 	m_pHorizontalAxis->RefreshAutoAxis();
 	m_pVerticalAxis->RefreshAutoAxis();
+	m_pParentCtrl->EnableRefresh(true);
 
-	CDC* pDC = m_pParent->GetDC();
+	CDC* pDC = m_pParentCtrl->GetDC();
 	Draw(pDC);
+	m_pParentCtrl->Invalidate();
+}
+
+void CChartSerie::AddPoints(double* pX, double* pY, unsigned Count)
+{
+	m_vPoints.AddPoints(pX, pY, Count);
+
+	m_pParentCtrl->EnableRefresh(false);
+	m_pHorizontalAxis->RefreshAutoAxis();
+	m_pVerticalAxis->RefreshAutoAxis();
+	m_pParentCtrl->EnableRefresh(true);
+
+	CDC* pDC = m_pParentCtrl->GetDC();
+	Draw(pDC);
+	m_pParentCtrl->Invalidate();
+}
+
+void CChartSerie::SetPoints(double* pX, double* pY, unsigned Count)
+{
+	m_vPoints.SetPoints(pX, pY, Count);
+	m_pParentCtrl->EnableRefresh(false);
+	m_pHorizontalAxis->RefreshAutoAxis();
+	m_pVerticalAxis->RefreshAutoAxis();
+	m_pParentCtrl->RefreshCtrl();
+	m_pParentCtrl->EnableRefresh(true);
+}
+
+void CChartSerie::RemovePointsFromBegin(unsigned Count)
+{
+	m_vPoints.RemovePointsFromBegin(Count);
+	m_pParentCtrl->EnableRefresh(false);
+	m_pHorizontalAxis->RefreshAutoAxis();
+	m_pVerticalAxis->RefreshAutoAxis();
+	m_pParentCtrl->RefreshCtrl();
+	m_pParentCtrl->EnableRefresh(true);
+
+	// Remove all the labels associated with thos points
+	for (unsigned i=0; i<=Count; i++)
+	{
+		TLabelMap::iterator iter = m_mapLabels.find(i);
+		if (iter != m_mapLabels.end())
+			m_mapLabels.erase(iter);
+	}
+}
+
+void CChartSerie::RemovePointsFromEnd(unsigned Count)
+{
+	unsigned uPtsCount = m_vPoints.GetPointsCount();
+
+	m_vPoints.RemovePointsFromEnd(Count);
+	m_pParentCtrl->EnableRefresh(false);
+	m_pHorizontalAxis->RefreshAutoAxis();
+	m_pVerticalAxis->RefreshAutoAxis();
+	m_pParentCtrl->RefreshCtrl();
+	m_pParentCtrl->EnableRefresh(true);
+
+	// Remove all the labels associated with thos points
+	unsigned uStart = uPtsCount - Count;
+	for (unsigned i=0; i<=Count; i++)
+	{
+		TLabelMap::iterator iter = m_mapLabels.find(uStart + i);
+		if (iter != m_mapLabels.end())
+			m_mapLabels.erase(iter);
+	}
 }
 
 void CChartSerie::ClearSerie()
 {
+	// We don't care about the return of RefreshAutoAxis: 
+	// we will always refresh the control afterwards.
+	m_vPoints.Clear();
+	m_pParentCtrl->EnableRefresh(false);
 	m_pHorizontalAxis->RefreshAutoAxis();
 	m_pVerticalAxis->RefreshAutoAxis();
-
-	m_vPoints.clear();
-	m_pParent->RefreshCtrl();
+	m_pParentCtrl->RefreshCtrl();
+	m_pParentCtrl->EnableRefresh(true);
 }
 
-
-double CChartSerie::GetXPointValue(int PointIndex) const
+double CChartSerie::GetXPointValue(unsigned PointIndex) const
 {
-	if (PointIndex >= (int)m_vPoints.size() )
-		return 0;
-
-	return m_vPoints[PointIndex].X;
+	return m_vPoints.GetXPointValue(PointIndex);
 }
 
-double CChartSerie::GetYPointValue(int PointIndex) const
+double CChartSerie::GetYPointValue(unsigned PointIndex) const
 {
-	if (PointIndex >= (int)m_vPoints.size())
-		return 0;
-
-	return m_vPoints[PointIndex].Y;
+	return m_vPoints.GetYPointValue(PointIndex);
 }
 
-void CChartSerie::SetYPointValue(int PointIndex, double NewVal)
+void CChartSerie::SetXPointValue(unsigned PointIndex, double NewVal)
 {
-	if (PointIndex >= (int)m_vPoints.size())
-		return;
+	m_vPoints.SetXPointValue(PointIndex, NewVal);
 
-	m_vPoints[PointIndex].Y = NewVal;
-
-	m_pVerticalAxis->RefreshAutoAxis();
-	m_pParent->RefreshCtrl();
-}
-	
-void CChartSerie::SetXPointValue(int PointIndex, double NewVal)
-{
-	if (PointIndex >= (int)m_vPoints.size())
-		return;
-
-	m_vPoints[PointIndex].X = NewVal;
-
+	// We don't care about the return of RefreshAutoAxis: 
+	// we will always refresh the control afterwards.
+	m_pParentCtrl->EnableRefresh(false);
 	m_pHorizontalAxis->RefreshAutoAxis();
-	m_pParent->RefreshCtrl();
+	m_pParentCtrl->RefreshCtrl();
+	m_pParentCtrl->EnableRefresh(true);
 }
 
+void CChartSerie::SetYPointValue(unsigned PointIndex, double NewVal)
+{
+	m_vPoints.SetYPointValue(PointIndex, NewVal);
 
+	// We don't care about the return of RefreshAutoAxis: 
+	// we will always refresh the control afterwards.
+	m_pParentCtrl->EnableRefresh(false);
+	m_pVerticalAxis->RefreshAutoAxis();
+	m_pParentCtrl->RefreshCtrl();
+	m_pParentCtrl->EnableRefresh(true);
+}
 
 bool CChartSerie::GetSerieXMinMax(double &Min, double &Max) const
 {
-	if ( (m_vPoints.size()==0) || !IsVisible() ) 
+	if (!IsVisible()) 
 		return false;
-
-	Min = m_vPoints[0].X;
-	Max = m_vPoints[0].X;
-	for (int i=0;i<(int)m_vPoints.size();i++)
-	{
-		if (m_vPoints[i].X<Min)
-			Min = m_vPoints[i].X;
-		if (m_vPoints[i].X>Max)
-			Max = m_vPoints[i].X;
-	}
-	return true;
+	return m_vPoints.GetSerieXMinMax(Min, Max); 
 }
 
 bool CChartSerie::GetSerieYMinMax(double &Min, double &Max) const
 {
-	if (m_vPoints.size() == 0)
+	if (!IsVisible())
 		return false;
-
-	Min = m_vPoints[0].Y;
-	Max = m_vPoints[0].Y;
-	for (int i=0;i<(int)m_vPoints.size();i++)
-	{
-		if (m_vPoints[i].Y<Min)
-			Min = m_vPoints[i].Y;
-		if (m_vPoints[i].Y>Max)
-			Max = m_vPoints[i].Y;
-	}
-	return true;
+	return m_vPoints.GetSerieYMinMax(Min, Max); 
 }
-
-void CChartSerie::SetPoints(double *X, double *Y, int Count)
-{
-	m_vPoints.clear();
-	for (int i=0;i<Count;i++)
-	{
-		SChartPoint NewPoint;
-		NewPoint.X = X[i];
-		NewPoint.Y = Y[i];
-		m_vPoints.push_back(NewPoint);
-	}
-
-	m_pHorizontalAxis->RefreshAutoAxis();
-	m_pVerticalAxis->RefreshAutoAxis();
-
-	//Do not refresh parent so if more series are added, we refresh just once and gain some
-	// speed
-//	m_pParent->RefreshCtrl();
-}
-
-
-bool CChartSerie::SetVerticalAxis(bool bSecond)
-{
-	if (bSecond)
-	{		
-		CChartAxis* pAxis = m_pParent->GetRightAxis();
-		if (pAxis)
-		{
-			m_pVerticalAxis->UnregisterSeries(this);
-			m_pVerticalAxis->RefreshAutoAxis();
-
-			m_pVerticalAxis = pAxis;
-			m_pVerticalAxis->RegisterSeries(this);
-			m_pVerticalAxis->RefreshAutoAxis();
-
-			return true;
-		}
-		else
-			return false;
-	}
-	else
-	{
-		CChartAxis* pAxis = m_pParent->GetLeftAxis();
-		if (pAxis)
-		{
-			m_pVerticalAxis->UnregisterSeries(this);
-			m_pVerticalAxis->RefreshAutoAxis();
-
-			m_pVerticalAxis = pAxis;
-			m_pVerticalAxis->RegisterSeries(this);
-			m_pVerticalAxis->RefreshAutoAxis();
-
-			return true;
-		}
-		else
-			return false;
-	}
-}
-
-bool CChartSerie::SetHorizontalAxis(bool bSecond)
-{
-	if (bSecond)
-	{
-		CChartAxis* pAxis = m_pParent->GetTopAxis();
-		if (pAxis)
-		{
-			m_pHorizontalAxis->UnregisterSeries(this);
-			m_pHorizontalAxis->RefreshAutoAxis();
-
-			m_pHorizontalAxis = pAxis;
-			m_pHorizontalAxis->RegisterSeries(this);
-			m_pHorizontalAxis->RefreshAutoAxis();
-
-			return true;
-		}
-		else
-			return false;
-	}
-	else
-	{
-		CChartAxis* pAxis = m_pParent->GetBottomAxis();
-		if (pAxis)
-		{
-			m_pHorizontalAxis->UnregisterSeries(this);
-			m_pHorizontalAxis->RefreshAutoAxis();
-
-			m_pHorizontalAxis = pAxis;
-			m_pHorizontalAxis->RegisterSeries(this);
-			m_pHorizontalAxis->RefreshAutoAxis();
-
-			return true;
-		}
-		else
-			return false;
-	}
-}
-
 
 double CChartSerie::XScreenToValue(long XScreenCoord) const
 {
@@ -269,14 +247,133 @@ void CChartSerie::ValueToScreen(double XValue, double YValue, CPoint &ScreenPoin
 	ScreenPoint.y = m_pVerticalAxis->ValueToScreen(YValue);
 }
 
-CChartLineSerie* CChartSerie::GetAsLine()
+bool CChartSerie::GetVisiblePoints(unsigned& uFirst, unsigned& uLast) const
 {
-	ASSERT(m_iSerieType==stLineSerie);
-	return reinterpret_cast<CChartLineSerie*>(this);
+	double Min=0, Max=0;
+	bool bResult = false;
+	switch (m_vPoints.GetOrdering())
+	{
+	case CChartPointsArray::poNoOrdering:
+		uFirst = 0;
+		uLast = GetPointsCount();
+		bResult = true;
+		break;
+	case CChartPointsArray::poXOrdering:
+		m_pHorizontalAxis->GetMinMax(Min, Max);
+		bResult = m_vPoints.GetVisiblePoints(Min, Max, uFirst, uLast);
+		break;
+	case CChartPointsArray::poYOrdering:
+		m_pVerticalAxis->GetMinMax(Min, Max);
+		bResult = m_vPoints.GetVisiblePoints(Min, Max, uFirst, uLast);
+		break;
+	}
+
+	return bResult;
 }
 
-CChartPointsSerie* CChartSerie::GetAsPoints()
+CChartBalloonLabel* CChartSerie::CreateBalloonLabel(unsigned uPointIndex, 
+													const TChartString& strLabelText)
 {
-	ASSERT(m_iSerieType==stPointsSerie);
-	return reinterpret_cast<CChartPointsSerie*>(this);
+	unsigned uCount = m_vPoints.GetPointsCount();
+	ASSERT(uPointIndex<uCount);
+
+	CChartBalloonLabel* pToReturn = new CChartBalloonLabel(m_pParentCtrl, this);
+	pToReturn->SetLabelText(strLabelText);
+	AttachCustomLabel(uPointIndex, pToReturn);
+	return pToReturn;
 }
+
+CChartBalloonLabel* CChartSerie::CreateBalloonLabel(unsigned uPointIndex,
+											 CChartLabelProvider* pLabelProvider)
+{
+	unsigned uCount = m_vPoints.GetPointsCount();
+	ASSERT(uPointIndex<uCount);
+
+	CChartBalloonLabel* pToReturn = new CChartBalloonLabel(m_pParentCtrl, this);
+	pToReturn->SetLabelProvider(pLabelProvider);
+	AttachCustomLabel(uPointIndex, pToReturn);
+	return pToReturn;
+}
+
+void CChartSerie::AttachCustomLabel(unsigned uPointIndex, CChartLabel* pLabel)
+{
+	unsigned uCount = m_vPoints.GetPointsCount();
+	ASSERT(uPointIndex<uCount);
+
+	TLabelMap::iterator iter = m_mapLabels.find(uPointIndex);
+	if (iter != m_mapLabels.end())
+	{
+		delete iter->second;
+	}
+	m_mapLabels[uPointIndex] = pLabel;
+}
+
+CPoint CChartSerie::GetPointScreenCoord(unsigned uPointIndex)
+{
+	unsigned uCount = m_vPoints.GetPointsCount();
+	ASSERT(uPointIndex<uCount);
+
+	double XVal = m_vPoints.GetXPointValue(uPointIndex);
+	double YVal = m_vPoints.GetYPointValue(uPointIndex);
+
+	CPoint ScreenPoint;
+	ValueToScreen(XVal, YVal, ScreenPoint);
+	return ScreenPoint;
+}
+
+void CChartSerie::DrawLabels(CDC* pDC)
+{
+	TLabelMap::iterator iter = m_mapLabels.begin();
+	for (iter; iter!=m_mapLabels.end(); iter++)
+	{
+		iter->second->Draw(pDC,iter->first);
+	}
+}
+
+void CChartSerie::SetVisible(bool bVisible)
+{ 
+	m_bIsVisible = bVisible; 
+	m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartSerie::SetColor(COLORREF NewColor)	   
+{ 
+	m_SerieColor = NewColor; 
+	m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartSerie::SetShadowColor(COLORREF NewColor) 
+{ 
+	m_ShadowColor = NewColor; 
+	m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartSerie::EnableShadow(bool bEnable)
+{
+	m_bShadow = bEnable;
+	m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartSerie::SetShadowDepth(int Depth)
+{ 
+	m_iShadowDepth = Depth; 
+	m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartSerie::EnableMouseNotifications(bool bClickEnabled, bool bMoveEnabled)
+{
+	m_bMouseClickNotifications = bClickEnabled;
+	m_bMouseMoveNotifications = bMoveEnabled;
+}
+
+#ifndef NO_USER_DATA
+void  CChartSerie::SetUserData(unsigned uPointIndex, void* pData)
+{
+	m_vPoints.SetUserData(uPointIndex, pData);
+}
+
+void* CChartSerie::GetUserData(unsigned uPointIndex)
+{
+	return m_vPoints.GetUserData(uPointIndex);
+}
+#endif

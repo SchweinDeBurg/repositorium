@@ -36,10 +36,10 @@ using namespace std;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CChartGrid::CChartGrid(CChartCtrl* pParent, bool bHoriz) 
-  : CChartObject(pParent), m_bIsHorizontal(bHoriz), m_vecTickPos()
+CChartGrid::CChartGrid() 
+  : m_GridColor(RGB(128,128,128)), m_pParentCtrl(NULL), m_bIsVisible(true), 
+    m_bIsHorizontal(true), m_lstTickPos()
 {
-	SetColor(RGB(128,128,128));
 }
 
 CChartGrid::~CChartGrid()
@@ -49,67 +49,75 @@ CChartGrid::~CChartGrid()
 
 void CChartGrid::AddTick(int Position)
 {
-	m_vecTickPos.push_back(Position);
+	m_lstTickPos.push_back(Position);
 }
 
 void CChartGrid::ClearTicks()
 {
-	m_vecTickPos.clear();
+	m_lstTickPos.clear();
 }
 
 void CChartGrid::Draw(CDC *pDC)
 {
 	if (!m_bIsVisible)
 		return;
-
 	if (!pDC->GetSafeHdc() )
 		return;
+	
+	CRect plottingRect = m_pParentCtrl->GetPlottingRect();
+	pDC->IntersectClipRect(plottingRect);
 
 	CPen* pOldPen;
-	CPen NewPen(PS_SOLID,0,m_ObjectColor);
+	CPen NewPen(PS_SOLID,0,m_GridColor);
 	pOldPen = pDC->SelectObject(&NewPen);
 
-	list<int>::iterator iter = m_vecTickPos.begin();
+	list<int>::iterator iter = m_lstTickPos.begin();
 	int ActuPosition = 0;
-	for (iter; iter!=m_vecTickPos.end(); iter++)
+
+	for (iter; iter!=m_lstTickPos.end(); iter++)
 	{
 		ActuPosition = *iter;
 		if (!m_bIsHorizontal)
 		{
-			int ActuX = m_ObjectRect.left;
+			int ActuX = plottingRect.left;
 
-			while (true)
+			while (ActuX<plottingRect.right)
 			{
-				if (!Clip(ActuX,ActuPosition))
-					break;
 				pDC->MoveTo(ActuX,ActuPosition);
-
 				ActuX += 3;
-				Clip(ActuX,ActuPosition);
 				pDC->LineTo(ActuX,ActuPosition);
-
 				ActuX += 3;
 			}
 		}
 		else
 		{
-			int ActuY = m_ObjectRect.bottom;
+			int ActuY = plottingRect.bottom;
 
-			while (true)
+			while (ActuY>plottingRect.top)
 			{
-				if (!Clip(ActuPosition,ActuY))
-					break;
 				pDC->MoveTo(ActuPosition,ActuY);
-
 				ActuY -= 3;
-				Clip(ActuPosition,ActuY);
 				pDC->LineTo(ActuPosition,ActuY);
-
 				ActuY -= 3;
 			}
 		}
 	}
 
+	pDC->SelectClipRgn(NULL);
 	pDC->SelectObject(pOldPen);
-	DeleteObject(NewPen);
+	NewPen.DeleteObject();
+}
+
+void CChartGrid::SetVisible(bool bVisible)
+{
+	m_bIsVisible = bVisible;
+	if (m_pParentCtrl)
+		m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartGrid::SetColor(COLORREF NewColor)
+{
+	m_GridColor = NewColor; 
+	if (m_pParentCtrl)
+		m_pParentCtrl->RefreshCtrl();
 }

@@ -17,10 +17,13 @@
  *	An e-mail to notify me that you are using this code is appreciated also.
  *
  *
+ *	History:
+ *		- 07/07/2008: Last point of the series was not displayed. Fixed.
  */
 
 #include "stdafx.h"
 #include "ChartPointsSerie.h"
+#include "ChartCtrl.h"
 #include "Math.h"
 
 #ifdef _DEBUG
@@ -34,15 +37,26 @@ static char THIS_FILE[]=__FILE__;
 //////////////////////////////////////////////////////////////////////
 
 CChartPointsSerie::CChartPointsSerie(CChartCtrl* pParent) 
- : CChartSerie(pParent,stPointsSerie), m_iPointType(ptEllipse), m_iXPointSize(5),
+ : CChartSerie(pParent), m_iPointType(ptEllipse), m_iXPointSize(5),
    m_iYPointSize(5)
 {
-
 }
 
 CChartPointsSerie::~CChartPointsSerie()
 {
 
+}
+void CChartPointsSerie::SetPointSize(int XSize, int YSize)
+{
+	m_iXPointSize = XSize;
+	m_iYPointSize = YSize;
+	m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartPointsSerie::SetPointType(PointType Type)  
+{ 
+	m_iPointType = Type; 
+	m_pParentCtrl->RefreshCtrl();
 }
 
 void CChartPointsSerie::Draw(CDC *pDC)
@@ -52,30 +66,50 @@ void CChartPointsSerie::Draw(CDC *pDC)
 
 	if (pDC->GetSafeHdc())
 	{
-		CBrush NewBrush(m_ObjectColor);
+		CBrush NewBrush(m_SerieColor);
+		CBrush ShadowBrush(m_ShadowColor);
+		CPen ShadowPen(PS_SOLID,1,m_ShadowColor);
+		CPen* pOldPen;
 		CBrush* pOldBrush;
 
 		pDC->SetBkMode(TRANSPARENT);
 		//To have lines limited in the drawing rectangle :
-		pDC->IntersectClipRect(m_ObjectRect);
+		pDC->IntersectClipRect(m_PlottingRect);
 		pOldBrush = pDC->SelectObject(&NewBrush);
 
 		//Draw all points that haven't been drawn yet
-		for (m_iLastDrawnPoint;m_iLastDrawnPoint<(int)m_vPoints.size();m_iLastDrawnPoint++)
+		for (m_uLastDrawnPoint;m_uLastDrawnPoint<(int)GetPointsCount();m_uLastDrawnPoint++)
 		{
 			CPoint ScreenPoint;
-			ValueToScreen(m_vPoints[m_iLastDrawnPoint].X,m_vPoints[m_iLastDrawnPoint].Y,ScreenPoint);
+			ValueToScreen(m_vPoints.GetXPointValue(m_uLastDrawnPoint),m_vPoints.GetYPointValue(m_uLastDrawnPoint),ScreenPoint);
 
 			CRect PointRect;
 			PointRect.SetRect(ScreenPoint.x-m_iXPointSize/2,ScreenPoint.y-m_iYPointSize/2,ScreenPoint.x+m_iXPointSize/2,ScreenPoint.y+m_iYPointSize/2);
+			CRect ShadowRect = PointRect + CSize(m_iShadowDepth,m_iShadowDepth);
 
 			switch(m_iPointType)
 			{
 			case ptEllipse:
+				if (m_bShadow)
+				{
+					pOldPen = pDC->SelectObject(&ShadowPen);
+					pDC->SelectObject(&ShadowBrush);
+					pDC->Ellipse(ShadowRect);
+					pDC->SelectObject(&NewBrush);
+					pDC->SelectObject(pOldPen);
+				}
 				pDC->Ellipse(PointRect);
 				break;
 
 			case ptRectangle:
+				if (m_bShadow)
+				{
+					pOldPen = pDC->SelectObject(&ShadowPen);
+					pDC->SelectObject(&ShadowBrush);
+					pDC->Rectangle(ShadowRect);
+					pDC->SelectObject(&NewBrush);
+					pDC->SelectObject(pOldPen);
+				}
 				pDC->Rectangle(PointRect);
 				break;
 
@@ -89,15 +123,32 @@ void CChartPointsSerie::Draw(CDC *pDC)
 					TrPoints[2].x = PointRect.left + (int)fabs((PointRect.left-PointRect.right)/2.0);
 					TrPoints[2].y = PointRect.top;
 
+					if (m_bShadow)
+					{
+						CPoint ShadowPoints[3];
+						for (int i=0;i<3;i++)
+						{
+							ShadowPoints[i] = TrPoints[i] + CSize(m_iShadowDepth,m_iShadowDepth);
+						}
+
+						pOldPen = pDC->SelectObject(&ShadowPen);
+						pDC->SelectObject(&ShadowBrush);
+						pDC->Polygon(ShadowPoints,3);
+						pDC->SelectObject(&NewBrush);
+						pDC->SelectObject(pOldPen);
+					}
 					pDC->Polygon(TrPoints,3);
 				}
 				break;
 			}
+
 		}
 
 		pDC->SelectClipRgn(NULL);
 		pDC->SelectObject(pOldBrush);
 		DeleteObject(NewBrush);
+		DeleteObject(ShadowBrush);
+		DeleteObject(ShadowPen);
 	}
 }
 
@@ -106,31 +157,55 @@ void CChartPointsSerie::DrawAll(CDC *pDC)
 	if (!m_bIsVisible)
 		return;
 
-	CBrush NewBrush(m_ObjectColor);
+	CBrush NewBrush(m_SerieColor);
+	CBrush ShadowBrush(m_ShadowColor);
+	CPen ShadowPen(PS_SOLID,1,m_ShadowColor);
+	CPen* pOldPen;
 	CBrush* pOldBrush;
+
+	unsigned uFirst=0, uLast=0;
+	if (!GetVisiblePoints(uFirst,uLast))
+		return;
 
 	if (pDC->GetSafeHdc())
 	{
 		pDC->SetBkMode(TRANSPARENT);
 		//To have lines limited in the drawing rectangle :
-		pDC->IntersectClipRect(m_ObjectRect);
+		pDC->IntersectClipRect(m_PlottingRect);
 		pOldBrush = pDC->SelectObject(&NewBrush);
 
-		for (int i=0;i<(int)m_vPoints.size();i++)
+		for (m_uLastDrawnPoint=uFirst;m_uLastDrawnPoint<=uLast;m_uLastDrawnPoint++)
 		{
 			CPoint ScreenPoint;
-			ValueToScreen(m_vPoints[i].X,m_vPoints[i].Y,ScreenPoint);
+			ValueToScreen(m_vPoints.GetXPointValue(m_uLastDrawnPoint),m_vPoints.GetYPointValue(m_uLastDrawnPoint),ScreenPoint);
 
 			CRect PointRect;
 			PointRect.SetRect(ScreenPoint.x-m_iXPointSize/2,ScreenPoint.y-m_iYPointSize/2,ScreenPoint.x+m_iXPointSize/2,ScreenPoint.y+m_iYPointSize/2);
+			CRect ShadowRect = PointRect + CSize(m_iShadowDepth,m_iShadowDepth);
 
 			switch(m_iPointType)
 			{
 			case ptEllipse:
+				if (m_bShadow)
+				{
+					pOldPen = pDC->SelectObject(&ShadowPen);
+					pDC->SelectObject(&ShadowBrush);
+					pDC->Ellipse(ShadowRect);
+					pDC->SelectObject(&NewBrush);
+					pDC->SelectObject(pOldPen);
+				}
 				pDC->Ellipse(PointRect);
 				break;
 
 			case ptRectangle:
+				if (m_bShadow)
+				{
+					pOldPen = pDC->SelectObject(&ShadowPen);
+					pDC->SelectObject(&ShadowBrush);
+					pDC->Rectangle(ShadowRect);
+					pDC->SelectObject(&NewBrush);
+					pDC->SelectObject(pOldPen);
+				}
 				pDC->Rectangle(PointRect);
 				break;
 
@@ -144,6 +219,20 @@ void CChartPointsSerie::DrawAll(CDC *pDC)
 					TrPoints[2].x = PointRect.left + (int)fabs((PointRect.left-PointRect.right)/2.0);
 					TrPoints[2].y = PointRect.top;
 
+					if (m_bShadow)
+					{
+						CPoint ShadowPoints[3];
+						for (int i=0;i<3;i++)
+						{
+							ShadowPoints[i] = TrPoints[i] + CSize(m_iShadowDepth,m_iShadowDepth);
+						}
+
+						pOldPen = pDC->SelectObject(&ShadowPen);
+						pDC->SelectObject(&ShadowBrush);
+						pDC->Polygon(ShadowPoints,3);
+						pDC->SelectObject(&NewBrush);
+						pDC->SelectObject(pOldPen);
+					}
 					pDC->Polygon(TrPoints,3);
 				}
 				break;
@@ -156,34 +245,22 @@ void CChartPointsSerie::DrawAll(CDC *pDC)
 	}
 }
 
-CSize CChartPointsSerie::GetLegendSize() const
+void CChartPointsSerie::DrawLegend(CDC *pDC, const CRect& rectBitmap) const
 {
-	CSize LegendSize;
-	LegendSize.cx = m_iXPointSize;
-	LegendSize.cy = m_iYPointSize;
+	if (m_strSerieName== _T(""))
+		return;
 
-	return LegendSize;
-}
-
-int CChartPointsSerie::DrawLegend(CDC *pDC, CPoint UpperLeft, int BitmapWidth) const
-{
-	if (m_strSerieName.length() == 0)
-		return 0;
-
-	//Draw Text
-	int TextHeigh = pDC->GetTextExtent(m_strSerieName.c_str()).cy;
-	pDC->ExtTextOut(UpperLeft.x+BitmapWidth+6,UpperLeft.y,ETO_CLIPPED,NULL,m_strSerieName.c_str(),NULL);
-
-	CRect PointRect;
-	if (TextHeigh > m_iYPointSize)
+	CRect PointRect(0,0,m_iXPointSize,m_iYPointSize);
+	if ( (rectBitmap.Height()>m_iYPointSize) && (rectBitmap.Width()>m_iXPointSize) )
 	{
-		int Offset = (TextHeigh - m_iYPointSize)/2;
-		PointRect.SetRect(UpperLeft.x+4,UpperLeft.y+Offset,UpperLeft.x+m_iXPointSize+4,UpperLeft.y+Offset+m_iYPointSize);
+		int XOffset = rectBitmap.left + rectBitmap.Width()/2 - m_iXPointSize/2;
+		int YOffset = rectBitmap.top + rectBitmap.Height()/2 - m_iYPointSize/2;
+		PointRect.OffsetRect(XOffset,YOffset);
 	}
 	else
-		PointRect.SetRect(UpperLeft.x+4,UpperLeft.y,UpperLeft.x+m_iXPointSize+4,UpperLeft.y+m_iYPointSize);
+		PointRect = rectBitmap;
 
-	CBrush NewBrush(m_ObjectColor);
+	CBrush NewBrush(m_SerieColor);
 	CBrush* pOldBrush = pDC->SelectObject(&NewBrush);
 
 	switch(m_iPointType)
@@ -213,9 +290,33 @@ int CChartPointsSerie::DrawLegend(CDC *pDC, CPoint UpperLeft, int BitmapWidth) c
 
 	pDC->SelectObject(pOldBrush);
 	DeleteObject(NewBrush);
-
-	if (TextHeigh>m_iYPointSize)
-		return TextHeigh;
-	else
-		return m_iYPointSize;
 }
+
+bool CChartPointsSerie::IsPointOnSerie(const CPoint& screenPoint, unsigned& uIndex) const 
+{ 
+	uIndex = INVALID_POINT;
+	if (!m_bIsVisible)
+        return false;
+
+	unsigned uFirst=0, uLast=0;
+	if (!GetVisiblePoints(uFirst, uLast))
+		return false;
+
+	bool bResult = false;
+	for (unsigned i=uFirst ; i < uLast ; i++)
+	{
+		CPoint ValuePoint;
+		ValueToScreen(m_vPoints.GetXPointValue(i),m_vPoints.GetYPointValue(i),ValuePoint);
+
+		int xDist = abs(screenPoint.x - ValuePoint.x);
+		int yDist = abs(screenPoint.y - ValuePoint.y);
+		if (xDist<=5 && yDist<=5)
+		{
+			uIndex = i;
+			bResult = true;
+			break;
+		}
+    }
+    return bResult;
+}
+

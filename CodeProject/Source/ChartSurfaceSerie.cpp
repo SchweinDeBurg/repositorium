@@ -1,12 +1,28 @@
-// ChartSurfaceSerie.cpp: implementation of the CChartSurfaceSerie class.
-//
-//////////////////////////////////////////////////////////////////////
+/*
+ *
+ *	ChartSurfaceSerie.cpp
+ *
+ *	Written by Cédric Moonen (cedric_moonen@hotmail.com)
+ *
+ *
+ *
+ *	This code may be used for any non-commercial and commercial purposes in a compiled form.
+ *	The code may be redistributed as long as it remains unmodified and providing that the 
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	consent only.
+ *	
+ *	This code is provided without any garanties. I cannot be held responsible for the damage or
+ *	the loss of time it causes. Use it at your own risks
+ *
+ *	An e-mail to notify me that you are using this code is appreciated also.
+ *
+ *
+ */
 
 #include "stdafx.h"
 #include "ChartSurfaceSerie.h"
 #include "ChartCtrl.h"
 
-#include <algorithm>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -19,7 +35,7 @@ static char THIS_FILE[]=__FILE__;
 //////////////////////////////////////////////////////////////////////
 
 CChartSurfaceSerie::CChartSurfaceSerie(CChartCtrl* pParent) 
- : CChartSerie(pParent,stSurfaceSerie), m_FillStyle(fsHatchDownDiag), m_bHorizontal(true)
+ : CChartSerie(pParent), m_FillStyle(fsHatchDownDiag), m_bHorizontal(true)
 {
 
 }
@@ -36,12 +52,20 @@ void CChartSurfaceSerie::Draw(CDC* pDC)
 
 void CChartSurfaceSerie::DrawAll(CDC* pDC)
 {
-	size_t count = m_vPoints.size();
-	CPoint* pPoints = new CPoint[count+2];
+	unsigned uFirst=0, uLast=0;
+	if (!GetVisiblePoints(uFirst,uLast))
+		return;
+
+	if (uFirst>0)
+		uFirst--;
+	if (uLast<GetPointsCount())
+		uLast++;
+	unsigned uCount = uLast - uFirst;
+	CPoint* pPoints = new CPoint[uCount+2];
 
 	CBrush NewBrush;
 	if (m_FillStyle == fsSolid)
-		NewBrush.CreateSolidBrush(m_ObjectColor);
+		NewBrush.CreateSolidBrush(m_SerieColor);
 	else
 	{
 		int nIndex = 0;
@@ -66,44 +90,47 @@ void CChartSurfaceSerie::DrawAll(CDC* pDC)
 			nIndex = HS_VERTICAL;
 			break;
 		}
-		NewBrush.CreateHatchBrush(nIndex,m_ObjectColor);
+		NewBrush.CreateHatchBrush(nIndex,m_SerieColor);
 	}
 
 	CBrush* pOldBrush = pDC->SelectObject(&NewBrush);
 
-	for (size_t i=0; i<count; i++)
+	for (unsigned index=uFirst; index<uLast; index++)
 	{
-		ValueToScreen(m_vPoints[i].X,m_vPoints[i].Y,pPoints[i+1]);
+		ValueToScreen(m_vPoints.GetXPointValue(index),m_vPoints.GetYPointValue(index),pPoints[index-uFirst+1]);
 	}
 
 	if (m_bHorizontal)
 	{
 		pPoints[0].x = pPoints[1].x;
-		pPoints[count+1].x = pPoints[count].x;
+		pPoints[uCount+1].x = pPoints[uCount].x;
 
 		double Position = m_pHorizontalAxis->GetPosition()/100.00;
-		int AxisPos = m_ObjectRect.top + (int)(Position * (m_ObjectRect.bottom-m_ObjectRect.top));
+		int AxisPos = m_PlottingRect.top + (int)(Position * (m_PlottingRect.bottom-m_PlottingRect.top));
 
 		pPoints[0].y = AxisPos;
-		pPoints[count+1].y = AxisPos;
+		pPoints[uCount+1].y = AxisPos;
 	}
 	else
 	{
 		pPoints[0].y = pPoints[1].y;
-		pPoints[count+1].y = pPoints[count].y;
+		pPoints[uCount+1].y = pPoints[uCount].y;
 
 		double Position = m_pVerticalAxis->GetPosition()/100.00;
-		int AxisPos = m_ObjectRect.left + (int)(Position * (m_ObjectRect.right-m_ObjectRect.left));
+		int AxisPos = m_PlottingRect.left + (int)(Position * (m_PlottingRect.right-m_PlottingRect.left));
 
 		pPoints[0].x = AxisPos;
-		pPoints[count+1].x = AxisPos;
+		pPoints[uCount+1].x = AxisPos;
 	}
 
 	pDC->SetBkMode(TRANSPARENT);
 	//To have lines limited in the drawing rectangle :
-	pDC->IntersectClipRect(m_ObjectRect);
+	CRect TempClipRect(m_PlottingRect);
+	TempClipRect.DeflateRect(1,1);
+	pDC->SetBkMode(TRANSPARENT);
+	pDC->IntersectClipRect(TempClipRect);
 
-	pDC->Polygon(pPoints,count+2);
+	pDC->Polygon(pPoints,uCount+2);
 	pDC->SelectClipRgn(NULL);
 	pDC->SelectObject(pOldBrush);
 	DeleteObject(NewBrush);
@@ -111,18 +138,15 @@ void CChartSurfaceSerie::DrawAll(CDC* pDC)
 	delete[] pPoints;
 }
 
-int CChartSurfaceSerie::DrawLegend(CDC* pDC, CPoint UpperLeft, int BitmapWidth) const
+void CChartSurfaceSerie::DrawLegend(CDC* pDC, const CRect& rectBitmap) const
 {
-	if (m_strSerieName.length() == 0)
-		return 0;
-
-	//Draw Text
-	pDC->ExtTextOut(UpperLeft.x+BitmapWidth+6,UpperLeft.y+1,ETO_CLIPPED,NULL,m_strSerieName.c_str(),NULL);
+	if (m_strSerieName== _T(""))
+		return;
 
 	// Draw the bitmap
 	CBrush NewBrush;
 	if (m_FillStyle == fsSolid)
-		NewBrush.CreateSolidBrush(m_ObjectColor);
+		NewBrush.CreateSolidBrush(m_SerieColor);
 	else
 	{
 		int nIndex = 0;
@@ -147,55 +171,116 @@ int CChartSurfaceSerie::DrawLegend(CDC* pDC, CPoint UpperLeft, int BitmapWidth) 
 			nIndex = HS_VERTICAL;
 			break;
 		}
-		NewBrush.CreateHatchBrush(nIndex,m_ObjectColor);
+		NewBrush.CreateHatchBrush(nIndex,m_SerieColor);
 	}
 
 	CBrush* pOldBrush = pDC->SelectObject(&NewBrush);
 
-	pDC->Rectangle(UpperLeft.x+2,UpperLeft.y+2,UpperLeft.x+17,UpperLeft.y+17);
+	pDC->Rectangle(rectBitmap);
 
 	pDC->SelectObject(pOldBrush);
 	DeleteObject(NewBrush);
-
-	return 15;
 }
 
-CSize CChartSurfaceSerie::GetLegendSize() const
-{
-	CSize LegendSize;
-	LegendSize.cx = 17;
-	LegendSize.cy = 17;
-
-	return LegendSize;
+void CChartSurfaceSerie::SetFillStyle(FillStyle NewStyle)  
+{ 
+	m_FillStyle = NewStyle; 
+	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartSurfaceSerie::AddPoint(double X, double Y)
-{
-	CChartSerie::AddPoint(X,Y);
-	ReorderPoints();
+void CChartSurfaceSerie::SetHorizontal(bool bHoriz) 
+{ 
+	m_bHorizontal = bHoriz; 
+	if (m_bHorizontal)
+		m_vPoints.SetOrdering(CChartPointsArray::poXOrdering);
+	else
+		m_vPoints.SetOrdering(CChartPointsArray::poYOrdering);
+	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartSurfaceSerie::SetPoints(double *X, double *Y, int Count)
+void CChartSurfaceSerie::SetSeriesOrdering(CChartPointsArray::PointsOrdering )
 {
-	CChartSerie::SetPoints(X,Y,Count);
-	ReorderPoints();
+	TRACE(_T("Can't change the series ordering of a surface series."));
 }
 
-void CChartSurfaceSerie::SetYPointValue(int PointIndex, double NewVal)
-{
-	CChartSerie::SetYPointValue(PointIndex,NewVal);
-	ReorderPoints();
-}
+bool CChartSurfaceSerie::IsPointOnSerie(const CPoint& screenPoint, 
+										unsigned& uIndex) const 
+{ 
+	uIndex = INVALID_POINT;
+	if (!m_bIsVisible)
+        return false;
 
-void CChartSurfaceSerie::SetXPointValue(int PointIndex, double NewVal)
-{
-	CChartSerie::SetXPointValue(PointIndex,NewVal);
-	ReorderPoints();
-}
+	unsigned uFirst=0, uLast=0;
+	if (!GetVisiblePoints(uFirst,uLast))
+		return false;
 
-void CChartSurfaceSerie::ReorderPoints()
-{
-	SPointSort NewSort;
-	NewSort.m_bHorizontal = m_bHorizontal;
-	std::sort(m_vPoints.begin(),m_vPoints.end(),NewSort);
+	if (uFirst>0)
+		uFirst--;
+	if (uLast<GetPointsCount())
+		uLast++;
+
+	bool bResult = false;
+	for (unsigned ptIndex=uFirst; ptIndex<uLast-1; ptIndex++)
+	{
+		CPoint point1;
+		CPoint point2;
+		ValueToScreen( m_vPoints.GetXPointValue(ptIndex),m_vPoints.GetYPointValue(ptIndex),point1);
+		ValueToScreen( m_vPoints.GetXPointValue(ptIndex+1),m_vPoints.GetYPointValue(ptIndex+1),point2);
+
+		double lineSlope = (1.0*(point2.y-point1.y))/(point2.x-point1.x);
+		double lineOffset = (1.0*(point2.x*point1.y-point1.x*point2.y))/(point2.x-point1.x);
+
+		if (m_bHorizontal)
+		{
+			if ( (screenPoint.x < point1.x) || (screenPoint.x > point2.x))
+				continue;
+
+			int Position = m_pHorizontalAxis->GetPosition();
+			if ( (Position==100) && (screenPoint.y > (screenPoint.x *lineSlope + lineOffset)) )
+				bResult = true;
+			if ( (Position==0) && (screenPoint.y < (screenPoint.x *lineSlope + lineOffset)) )
+				bResult = true;
+
+			if (bResult)
+			{
+				// Check if the click is close to one of the two points.
+				int xDist = abs(screenPoint.x - point1.x);
+				int yDist = abs(screenPoint.y - point1.y);
+				if (xDist<=5 && yDist<=5)
+					uIndex = ptIndex;
+				xDist = abs(screenPoint.x - point2.x);
+				yDist = abs(screenPoint.y - point2.y);
+				if (xDist<=5 && yDist<=5)
+					uIndex = ptIndex+1;
+				break;
+			}
+		}
+		else
+		{
+			if ( (screenPoint.y > point1.y) || (screenPoint.y < point2.y))
+				continue;
+
+			int Position = m_pVerticalAxis->GetPosition();
+			if ( (Position==0) && (screenPoint.x < (screenPoint.y-lineOffset)/lineSlope) ) 
+				bResult = true;
+			if ( (Position==100) && (screenPoint.x > (screenPoint.y-lineOffset)/lineSlope) )
+				bResult = true;
+
+			if (bResult)
+			{
+				// Check if the click is close to one of the two points.
+				int xDist = abs(screenPoint.x - point1.x);
+				int yDist = abs(screenPoint.y - point1.y);
+				if (xDist<=5 && yDist<=5)
+					uIndex = ptIndex;
+				xDist = abs(screenPoint.x - point2.x);
+				yDist = abs(screenPoint.y - point2.y);
+				if (xDist<=5 && yDist<=5)
+					uIndex = ptIndex+1;
+				break;
+			}
+		}
+	}
+
+	return bResult; 
 }

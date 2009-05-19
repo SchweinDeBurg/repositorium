@@ -26,26 +26,57 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "ChartObject.h"
 #include <list>
+#include "ChartCtrl.h"
 
 
 class CChartAxis;
 
-class CChartGrid : public CChartObject  
+//! Class which draws the grid associated with a specific axis.
+/**
+	This object is retrieved through the CChartAxis::GetGrid function.
+**/
+class CChartGrid  
 {
 	friend CChartAxis;
+
 public:
-	CChartGrid(CChartCtrl* pParent, bool bHoriz);
-	virtual ~CChartGrid();
+	//! Shows/hides the grid.
+	void SetVisible(bool bVisible);
+	//! Returns true if the grid is visible.
+	bool IsVisible()  const         { return m_bIsVisible; }
+
+	//! Sets the color of the grid.
+	void SetColor(COLORREF NewColor);
+	//! Returns the grid color.
+	COLORREF GetColor() const		{ return m_GridColor; }
 
 private:
+	//! Constructor
+	CChartGrid();
+	//! Destructor
+	virtual ~CChartGrid();
+
+	//! Draws the grid
 	void Draw(CDC* pDC);
 
+	//! Add a tick at a certain position
 	void AddTick(int Position);
+	//! Removes all the ticks.
 	void ClearTicks();
 
-	std::list<int> m_vecTickPos;
+
+	//! The grid color.
+	COLORREF	m_GridColor;		
+
+	//! The parent charting control.
+	CChartCtrl*	m_pParentCtrl;		
+	//! Specifies if the grid is visible or not.
+	bool        m_bIsVisible;
+
+	//! List containing all the tick positions.
+	std::list<int> m_lstTickPos;
+	//! Specifies if the grid is associated with a vertical or horizontal axis.
 	bool           m_bIsHorizontal;
 };
 
