@@ -37,6 +37,15 @@
  *					  opposite.
  *		- 21/02/2008: The zoom doesn't do anything if the user only clicks on the control
  *					  (thanks to Eugene Pustovoyt).
+ *		- 29/02/2008: The auto axis are now refreshed when a series is removed (thanks to
+ *					  Bruno Lavier).
+ *		- 08/03/2008: EnableRefresh function added (thanks to Bruno Lavier).
+ *		- 21/03/2008: Added support for scrolling.
+ *		- 25/03/2008: UndoZoom function added.
+ *		- 25/03/2008: A series can now be removed using its pointer.
+ *		- 12/08/2008: Performance patch (thanks to Nick Holgate).
+ *		- 18/08/2008: Added support for printing.
+ *		- 31/10/2008: Fixed a bug for unicode.
  *
  */
 
@@ -44,11 +53,14 @@
 #include "ChartCtrl.h"
 
 #include "ChartSerie.h"
-#include "ChartLineSerie.h"
-#include "ChartPointsSerie.h"
-#include "ChartSurfaceSerie.h"
+#include "ChartGradient.h"
+#include "ChartStandardAxis.h"
+#include "ChartDateTimeAxis.h"
+#include "ChartLogarithmicAxis.h"
+#include "ChartCrossHairCursor.h"
+#include "ChartDragLineCursor.h"
 
-
+using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -69,23 +81,17 @@ CChartCtrl::CChartCtrl()
 {
 	RegisterWindowClass();
 
+	m_iEnableRefresh = 1;
+	m_bPendingRefresh = false;
 	m_BorderColor = RGB(0,0,0);
 	m_BackColor = GetSysColor(COLOR_BTNFACE);
 	EdgeType = EDGE_RAISED;
+	m_BackGradientType = gtVertical;
+	m_bBackGradient = false;
+	m_BackGradientCol1 = m_BackGradientCol2 = m_BackColor;
 
-	CChartAxis* pBottom = new CChartAxis(this,true);
-	CChartAxis* pLeft = new CChartAxis(this,false);
-	CChartAxis* pTop = new CChartAxis(this,true);
-	pTop->SetVisible(false);
-	pTop->SetSecondary(true);
-	CChartAxis* pRight = new CChartAxis(this,false);
-	pRight->SetVisible(false);
-	pRight->SetSecondary(true);
-
-	m_pAxisList.push_back(pBottom);
-	m_pAxisList.push_back(pLeft);
-	m_pAxisList.push_back(pTop);
-	m_pAxisList.push_back(pRight);
+	for (int i=0;i<4;i++)
+		m_pAxes[i] = NULL;
 
 	m_pLegend = new CChartLegend(this);
 	m_pTitles = new CChartTitle(this);
@@ -97,17 +103,30 @@ CChartCtrl::CChartCtrl()
 	m_bZoomEnabled = true;
 	m_bLMouseDown = false;
 	m_ZoomRectColor = RGB(255,255,255);
+
+	m_bToolBarCreated = false;
+	m_pMouseListener = NULL;
+	m_bMouseVisible = true;
 }
 
 CChartCtrl::~CChartCtrl()
 {
-	size_t SeriesCount = m_pSeriesList.size();
-	for (size_t i=0;i<SeriesCount;i++)
-		delete m_pSeriesList[i];
+	TSeriesMap::iterator seriesIter = m_mapSeries.begin();
+	for (seriesIter; seriesIter!=m_mapSeries.end(); seriesIter++)
+	{
+		delete (seriesIter->second);
+	}
+	TCursorMap::iterator cursorIter = m_mapCursors.begin();
+	for (cursorIter; cursorIter!=m_mapCursors.end(); cursorIter++)
+	{
+		delete (cursorIter->second);
+	}
 
-	size_t AxisCount = m_pAxisList.size();
-	for (size_t j=0;j<AxisCount;j++)
-		delete m_pAxisList[j];
+	for (int i=0; i<4 ;i++)
+	{
+		if (m_pAxes[i])
+			delete m_pAxes[i];
+	}
 
 	if (m_pLegend)
 	{
@@ -127,11 +146,15 @@ BEGIN_MESSAGE_MAP(CChartCtrl, CWnd)
 	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
 	ON_WM_MOUSEMOVE()
-	ON_WM_RBUTTONDOWN()
-	ON_WM_RBUTTONUP()
-	ON_WM_SIZE()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
+	ON_WM_LBUTTONDBLCLK()
+	ON_WM_RBUTTONDOWN()
+	ON_WM_RBUTTONUP()
+	ON_WM_RBUTTONDBLCLK()
+	ON_WM_SIZE()
+	ON_WM_HSCROLL()
+	ON_WM_VSCROLL()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -170,13 +193,112 @@ void CChartCtrl::OnPaint()
 		dc.SelectObject(pOldPen);
 		DeleteObject(NewPen);
 	}
+
+	// Draw the cursors. 
+	TCursorMap::iterator iter = m_mapCursors.begin();
+	for (iter; iter!=m_mapCursors.end(); iter++)
+		iter->second->Draw(&dc);
 }
 
-BOOL CChartCtrl::OnEraseBkgnd(CDC* /*pDC*/) 
+BOOL CChartCtrl::OnEraseBkgnd(CDC* ) 
 {
 	// To avoid flickering
 //	return CWnd::OnEraseBkgnd(pDC);
 	return FALSE;
+}
+
+CChartCrossHairCursor* CChartCtrl::CreateCrossHairCursor(bool bSecondaryHorizAxis, 
+														 bool bSecondaryVertAxis)
+{
+	CChartAxis* pHorizAxis = NULL;
+	CChartAxis* pVertAxis = NULL;
+	if (bSecondaryHorizAxis)
+		pHorizAxis = m_pAxes[TopAxis];
+	else
+		pHorizAxis = m_pAxes[BottomAxis];
+	if (bSecondaryVertAxis)
+		pVertAxis = m_pAxes[RightAxis];
+	else
+		pVertAxis = m_pAxes[LeftAxis];
+
+	ASSERT(pHorizAxis != NULL);
+	ASSERT(pVertAxis != NULL);
+
+	CChartCrossHairCursor* pNewCursor = new CChartCrossHairCursor(this, pHorizAxis, pVertAxis);
+	m_mapCursors[pNewCursor->GetCursorId()] = pNewCursor;
+	return pNewCursor;
+}
+
+CChartDragLineCursor* CChartCtrl::CreateDragLineCursor(EAxisPos relatedAxis)
+{
+	ASSERT(m_pAxes[relatedAxis] != NULL);
+
+	CChartDragLineCursor* pNewCursor = new CChartDragLineCursor(this, m_pAxes[relatedAxis]);
+	m_mapCursors[pNewCursor->GetCursorId()] = pNewCursor;
+	return pNewCursor;
+}
+
+void CChartCtrl::AttachCustomCursor(CChartCursor* pCursor)
+{
+	m_mapCursors[pCursor->GetCursorId()] = pCursor;
+}
+
+void CChartCtrl::RemoveCursor(unsigned cursorId)
+{
+	TCursorMap::iterator iter = m_mapCursors.find(cursorId);
+	if (iter != m_mapCursors.end())
+	{
+		delete iter->second;
+		m_mapCursors.erase(iter);
+	}
+}
+
+void CChartCtrl::ShowMouseCursor(bool bShow)
+{
+	m_bMouseVisible = bShow;
+	if (!bShow)
+		SetCursor(NULL);
+}
+
+CChartStandardAxis* CChartCtrl::CreateStandardAxis(EAxisPos axisPos)
+{
+	CChartStandardAxis* pAxis = new CChartStandardAxis();
+	AttachCustomAxis(pAxis, axisPos);
+	return pAxis;
+}
+
+CChartLogarithmicAxis* CChartCtrl::CreateLogarithmicAxis(EAxisPos axisPos)
+{
+	CChartLogarithmicAxis* pAxis = new CChartLogarithmicAxis();
+	AttachCustomAxis(pAxis, axisPos);
+	return pAxis;
+}
+
+CChartDateTimeAxis* CChartCtrl::CreateDateTimeAxis(EAxisPos axisPos)
+{
+	CChartDateTimeAxis* pAxis = new CChartDateTimeAxis();
+	AttachCustomAxis(pAxis, axisPos);
+	return pAxis;
+}
+
+void CChartCtrl::AttachCustomAxis(CChartAxis* pAxis, EAxisPos axisPos)
+{
+	// The axis should not be already attached to another control
+	ASSERT(pAxis->m_pParentCtrl == NULL);
+	pAxis->SetParent(this);
+
+	if ( (axisPos==RightAxis) || (axisPos==TopAxis) )
+		pAxis->SetSecondary(true);
+	if (  (axisPos==BottomAxis) || (axisPos==TopAxis) )
+		pAxis->SetHorizontal(true);
+	else
+		pAxis->SetHorizontal(false);
+	pAxis->CreateScrollBar();
+
+	// Beofre storing the new axis, we should delete the previous one if any
+	if (m_pAxes[axisPos])
+		delete m_pAxes[axisPos];
+	m_pAxes[axisPos] = pAxis;
 }
 
 bool CChartCtrl::RegisterWindowClass()
@@ -190,11 +312,11 @@ bool CChartCtrl::RegisterWindowClass()
 
 		wndcls.hInstance		= hInst;
 		wndcls.lpfnWndProc		= ::DefWindowProc;
-	//	wndcls.hCursor			= LoadCursor(NULL, IDC_ARROW);
+		wndcls.hCursor			= NULL; //LoadCursor(NULL, IDC_ARROW);
 		wndcls.hIcon			= 0;
 		wndcls.lpszMenuName		= NULL;
 		wndcls.hbrBackground	= (HBRUSH) ::GetStockObject(WHITE_BRUSH);
-		wndcls.style			= CS_GLOBALCLASS; // To be modified
+		wndcls.style			= CS_DBLCLKS; 
 		wndcls.cbClsExtra		= 0;
 		wndcls.cbWndExtra		= 0;
 		wndcls.lpszClassName    = CHARTCTRL_CLASSNAME;
@@ -212,24 +334,71 @@ bool CChartCtrl::RegisterWindowClass()
 
 int CChartCtrl::Create(CWnd *pParentWnd, const RECT &rect, UINT nID, DWORD dwStyle)
 {
+	dwStyle |= WS_CLIPCHILDREN;
 	int Result = CWnd::Create(CHARTCTRL_CLASSNAME, _T(""), dwStyle, rect, pParentWnd, nID);
-	
+
 	if (Result)
 		RefreshCtrl();
 
 	return Result;
 }
 
+void CChartCtrl::SetBackGradient(COLORREF Col1, COLORREF Col2, EGradientType GradientType)
+{
+	m_bBackGradient = true;
+	m_BackGradientCol1 = Col1;
+	m_BackGradientCol2 = Col2;
+	m_BackGradientType = GradientType;
+	RefreshCtrl();
+}
+
+void CChartCtrl::EnableRefresh(bool bEnable)
+{
+	if (bEnable)
+		m_iEnableRefresh++;
+	else
+		m_iEnableRefresh--;
+	if (m_iEnableRefresh > 0 && m_bPendingRefresh)
+	{
+		m_bPendingRefresh = false;
+		RefreshCtrl();
+	}
+}
+
+void CChartCtrl::UndoPanZoom()
+{
+	EnableRefresh(false);
+	if (m_pAxes[BottomAxis])
+		m_pAxes[BottomAxis]->UndoZoom();
+	if (m_pAxes[LeftAxis])
+		m_pAxes[LeftAxis]->UndoZoom();
+	if (m_pAxes[TopAxis])
+		m_pAxes[TopAxis]->UndoZoom();
+	if (m_pAxes[RightAxis])
+		m_pAxes[RightAxis]->UndoZoom();
+	EnableRefresh(true);
+}
+
 void CChartCtrl::RefreshCtrl()
 {
+	// Window is not created yet, so skip the refresh.
+	if (!GetSafeHwnd())
+		return;
+	if (m_iEnableRefresh < 1)
+	{
+		m_bPendingRefresh = true;
+		return;
+	}
+
+	// Retrieve the client rect and initialize the
+	// plotting rect
 	CClientDC dc(this) ;  
 	CRect ClientRect;
-	GetClientRect(ClientRect);
+	GetClientRect(&ClientRect);
 	m_PlottingRect = ClientRect;		
 
-	CBrush m_BrushBack;
-	m_BrushBack.CreateSolidBrush(m_BackColor) ;
-
+	// If the backgroundDC was not created yet, create it (it
+	// is used to avoid flickering).
 	if (!m_BackgroundDC.GetSafeHdc() )
 	{
 		CBitmap memBitmap;
@@ -237,177 +406,239 @@ void CChartCtrl::RefreshCtrl()
 		memBitmap.CreateCompatibleBitmap(&dc, ClientRect.Width(),ClientRect.Height()) ;
 		m_BackgroundDC.SelectObject(&memBitmap) ;
 	}
-    
-	m_BackgroundDC.SetBkColor(m_BackColor);
-	m_BackgroundDC.FillRect(ClientRect,&m_BrushBack);
+
+	// Draw the chart background, which is not part of
+	// the DrawChart function (to avoid a background when
+	// printing).
+	CBrush m_BrushBack;
+	m_BrushBack.CreateSolidBrush(m_BackColor) ;
+	if (!m_bBackGradient)
+	{
+		m_BackgroundDC.SetBkColor(m_BackColor);
+		m_BackgroundDC.FillRect(ClientRect,&m_BrushBack);
+	}
+	else
+	{
+		CChartGradient::DrawGradient(&m_BackgroundDC,ClientRect,m_BackGradientCol1,
+									 m_BackGradientCol2,m_BackGradientType);
+	}
+
+	// Draw the edge.
 	m_BackgroundDC.DrawEdge(ClientRect,EdgeType,BF_RECT);
 	ClientRect.DeflateRect(3,3);
 
-	CSize TitleSize = m_pTitles->GetSize(&m_BackgroundDC);
-	CRect rcTitle;
-	rcTitle = ClientRect;
-	rcTitle.bottom = TitleSize.cy;
-
-	ClientRect.top += TitleSize.cy;
-	m_pTitles->SetRect(rcTitle);
-	m_pTitles->Draw(&m_BackgroundDC);
-
-	CSize LegendSize = m_pLegend->GetSize(&m_BackgroundDC);
-	if ( (LegendSize.cx >= (ClientRect.right-ClientRect.left) - 6) 
-		 || (LegendSize.cy >= (ClientRect.bottom-ClientRect.top)) )
-	{}
-	else
+	DrawChart(&m_BackgroundDC,ClientRect);
+	for (int i=0; i<4 ;i++)
 	{
-		ClientRect.right -= LegendSize.cx + 6;
-		int XPos = ClientRect.right + 1;
-		int YPos = ((ClientRect.bottom-ClientRect.top)/2) - (LegendSize.cy/2);
-		m_pLegend->SetPosition(XPos,YPos,&m_BackgroundDC);
-		m_pLegend->Draw(&m_BackgroundDC);
+		if (m_pAxes[i])
+			m_pAxes[i]->UpdateScrollBarPos();
 	}
-
-	//Clip all the margins (axis) of the client rect
-	size_t AxisCount = m_pAxisList.size();
-	size_t SeriesCount = m_pSeriesList.size();
-	
-	GetBottomAxis()->SetAxisSize(ClientRect,m_PlottingRect);
-	GetBottomAxis()->Recalculate();
-	GetBottomAxis()->ClipMargin(ClientRect,m_PlottingRect,&m_BackgroundDC);
-	GetTopAxis()->SetAxisSize(ClientRect,m_PlottingRect);
-	GetTopAxis()->Recalculate();
-	GetTopAxis()->ClipMargin(ClientRect,m_PlottingRect,&m_BackgroundDC);
-	GetLeftAxis()->SetAxisSize(ClientRect,m_PlottingRect);
-	GetLeftAxis()->Recalculate();
-	GetLeftAxis()->ClipMargin(ClientRect,m_PlottingRect,&m_BackgroundDC);
-	GetRightAxis()->SetAxisSize(ClientRect,m_PlottingRect);
-	GetRightAxis()->Recalculate();
-	GetRightAxis()->ClipMargin(ClientRect,m_PlottingRect,&m_BackgroundDC);
-	for (size_t n=0;n<AxisCount;n++)
-	{
-		m_pAxisList[n]->SetAxisSize(ClientRect,m_PlottingRect);
-		m_pAxisList[n]->Recalculate();
-		m_pAxisList[n]->Draw(&m_BackgroundDC);
-	}
-
-	CPen SolidPen(PS_SOLID,0,m_BorderColor);
-	CPen* pOldPen = m_BackgroundDC.SelectObject(&SolidPen);
-
-	m_BackgroundDC.MoveTo(m_PlottingRect.left,m_PlottingRect.top);
-	m_BackgroundDC.LineTo(m_PlottingRect.right,m_PlottingRect.top);
-	m_BackgroundDC.LineTo(m_PlottingRect.right,m_PlottingRect.bottom);
-	m_BackgroundDC.LineTo(m_PlottingRect.left,m_PlottingRect.bottom);
-	m_BackgroundDC.LineTo(m_PlottingRect.left,m_PlottingRect.top);
-
-	m_BackgroundDC.SelectObject(pOldPen);
-	DeleteObject(SolidPen);
-
-	for (size_t z=0;z<SeriesCount;z++)
-	{
-		CChartSerie* m_NewLine = (CChartSerie*)m_pSeriesList[z];
-		CRect drawingRect = m_PlottingRect;
-		drawingRect.bottom += 1;
-		drawingRect.right += 1;
-		m_NewLine->SetRect(drawingRect);
-		m_NewLine->DrawAll(&m_BackgroundDC);
-	}
-
 	Invalidate();
 }
 
-
-CChartSerie* CChartCtrl::AddSerie(int Type)
+void CChartCtrl::DrawChart(CDC* pDC, CRect ChartRect)
 {
-	size_t Count = m_pSeriesList.size();
+	m_PlottingRect = ChartRect;
+	CSize TitleSize = m_pTitles->GetSize(pDC);
+	CRect rcTitle;
+	rcTitle = ChartRect;
+	rcTitle.bottom = TitleSize.cy;
 
-	size_t ColIndex = Count%10;
-	CChartSerie* pNewLine = NULL;
+	ChartRect.top += TitleSize.cy;
+	m_pTitles->SetTitleRect(rcTitle);
+	m_pTitles->Draw(pDC);
 
-	switch (Type)
+	m_pLegend->ClipArea(ChartRect,pDC);
+
+	//Clip all the margins (axis) of the client rect
+	int n=0;
+	for (n=0;n<4;n++)
 	{
-	case CChartSerie::stLineSerie:
-		pNewLine = new CChartLineSerie(this);
-		break;
-
-	case CChartSerie::stPointsSerie:
-		pNewLine = new CChartPointsSerie(this);
-		break;
-
-	case CChartSerie::stSurfaceSerie:
-		pNewLine = new CChartSurfaceSerie(this);
-		break;
-
-	default:
-		pNewLine = NULL;
-		break;
+		if (m_pAxes[n])
+		{
+			m_pAxes[n]->SetAxisSize(ChartRect,m_PlottingRect);
+			m_pAxes[n]->Recalculate();
+			m_pAxes[n]->ClipMargin(ChartRect,m_PlottingRect,pDC);
+		}
+	}
+	for (n=0;n<4;n++)
+	{
+		if (m_pAxes[n])
+		{
+			m_pAxes[n]->SetAxisSize(ChartRect,m_PlottingRect);
+			m_pAxes[n]->Recalculate();
+			m_pAxes[n]->Draw(pDC);
+		}
 	}
 
-	if (pNewLine)
+	CPen SolidPen(PS_SOLID,0,m_BorderColor);
+	CPen* pOldPen = pDC->SelectObject(&SolidPen);
+
+	pDC->MoveTo(m_PlottingRect.left,m_PlottingRect.top);
+	pDC->LineTo(m_PlottingRect.right,m_PlottingRect.top);
+	pDC->LineTo(m_PlottingRect.right,m_PlottingRect.bottom);
+	pDC->LineTo(m_PlottingRect.left,m_PlottingRect.bottom);
+	pDC->LineTo(m_PlottingRect.left,m_PlottingRect.top);
+
+	pDC->SelectObject(pOldPen);
+	DeleteObject(SolidPen);
+
+	TSeriesMap::iterator iter = m_mapSeries.begin();
+	for (iter; iter!=m_mapSeries.end(); iter++)
 	{
-		pNewLine->SetRect(m_PlottingRect);
-		pNewLine->SetColor(pSeriesColorTable[ColIndex]);
-		m_pSeriesList.push_back(pNewLine);
+		CRect drawingRect = m_PlottingRect;
+		drawingRect.bottom += 1;
+		drawingRect.right += 1;
+		iter->second->SetPlottingRect(drawingRect);
+		iter->second->DrawAll(pDC);
 	}
 
-	return pNewLine;
-}
-
-CChartSerie* CChartCtrl::GetSerie(size_t Index) const
-{
-	size_t Count = m_pSeriesList.size();
-	if (Index>=Count)
-		return NULL;
-
-	return m_pSeriesList[Index];
-}
-
-void CChartCtrl::RemoveSerie(size_t Index)
-{
-	size_t Count = m_pSeriesList.size();
-	if (Index>=Count)
-		return;
-
-	CChartSerie* pToDelete = m_pSeriesList[Index];
-
-    std::vector<CChartSerie*>::iterator it = m_pSeriesList.begin() + Index;
-	m_pSeriesList.erase(it);
-	if (pToDelete)
+	pDC->IntersectClipRect(m_PlottingRect);
+	// Draw the labels when all series have been drawn
+	for (iter=m_mapSeries.begin(); iter!=m_mapSeries.end(); iter++)
 	{
+		iter->second->DrawLabels(pDC);
+	}
+	pDC->SelectClipRgn(NULL);
+
+	// Draw the legend at the end (when floating it should come over the plotting area).
+	m_pLegend->Draw(pDC);
+}
+
+CChartPointsSerie* CChartCtrl::CreatePointsSerie(bool bSecondaryHorizAxis, 
+											   bool bSecondaryVertAxis)
+{
+	CChartPointsSerie* pNewSerie = new CChartPointsSerie(this);
+	AttachCustomSerie(pNewSerie, bSecondaryHorizAxis, bSecondaryVertAxis);
+	return pNewSerie;
+}
+
+CChartLineSerie* CChartCtrl::CreateLineSerie(bool bSecondaryHorizAxis, 
+											 bool bSecondaryVertAxis)
+{
+	CChartLineSerie* pNewSerie = new CChartLineSerie(this);
+	AttachCustomSerie(pNewSerie, bSecondaryHorizAxis, bSecondaryVertAxis);
+	return pNewSerie;
+}
+
+CChartSurfaceSerie* CChartCtrl::CreateSurfaceSerie(bool bSecondaryHorizAxis, 
+											   bool bSecondaryVertAxis)
+{
+	CChartSurfaceSerie* pNewSerie = new CChartSurfaceSerie(this);
+	AttachCustomSerie(pNewSerie, bSecondaryHorizAxis, bSecondaryVertAxis);
+	return pNewSerie;
+}
+
+CChartBarSerie* CChartCtrl::CreateBarSerie(bool bSecondaryHorizAxis, 
+											   bool bSecondaryVertAxis)
+{
+	CChartBarSerie* pNewSerie = new CChartBarSerie(this);
+	AttachCustomSerie(pNewSerie, bSecondaryHorizAxis, bSecondaryVertAxis);
+	return pNewSerie;
+}
+
+void CChartCtrl::AttachCustomSerie(CChartSerie* pNewSeries,
+								   bool bSecondaryHorizAxis,
+								   bool bSecondaryVertAxis)
+{
+	size_t ColIndex = m_mapSeries.size()%10;
+
+	CChartAxis* pHorizAxis = NULL;
+	CChartAxis* pVertAxis = NULL;
+	if (bSecondaryHorizAxis)
+		pHorizAxis = m_pAxes[TopAxis];
+	else
+		pHorizAxis = m_pAxes[BottomAxis];
+	if (bSecondaryVertAxis)
+		pVertAxis = m_pAxes[RightAxis];
+	else
+		pVertAxis = m_pAxes[LeftAxis];
+
+	ASSERT(pHorizAxis != NULL);
+	ASSERT(pVertAxis != NULL);
+
+	if (pNewSeries)
+	{
+		pNewSeries->SetPlottingRect(m_PlottingRect);
+		pNewSeries->SetColor(pSeriesColorTable[ColIndex]);
+		pNewSeries->m_pHorizontalAxis = pHorizAxis;
+		pNewSeries->m_pVerticalAxis = pVertAxis;
+		m_mapSeries[pNewSeries->GetSerieId()] = pNewSeries;
+
+		EnableRefresh(false);
+		pVertAxis->RegisterSeries(pNewSeries);
+		pVertAxis->RefreshAutoAxis();
+		pHorizAxis->RegisterSeries(pNewSeries);
+		pHorizAxis->RefreshAutoAxis();
+
+		// The series will need to be redrawn so we need to refresh the control
+		RefreshCtrl();
+		EnableRefresh(true);
+	}
+}
+
+CChartSerie* CChartCtrl::GetSerie(size_t uSerieId) const
+{
+	CChartSerie* pToReturn = NULL;
+	TSeriesMap::const_iterator iter = m_mapSeries.find(uSerieId);
+	if (iter != m_mapSeries.end())
+	{
+		pToReturn = iter->second;
+	}
+
+	return pToReturn;
+}
+
+void CChartCtrl::RemoveSerie(unsigned uSerieId)
+{
+	TSeriesMap::iterator iter = m_mapSeries.find(uSerieId);
+	if (iter != m_mapSeries.end())
+	{
+		CChartSerie* pToDelete = iter->second;
+		m_mapSeries.erase(iter);
+
+		EnableRefresh(false);
+		pToDelete->m_pVerticalAxis->UnregisterSeries(pToDelete);
+		pToDelete->m_pHorizontalAxis->UnregisterSeries(pToDelete);
+		pToDelete->m_pVerticalAxis->RefreshAutoAxis();
+		pToDelete->m_pHorizontalAxis->RefreshAutoAxis();
 		delete pToDelete;
-		pToDelete = NULL;
+		RefreshCtrl();
+		EnableRefresh(true);
 	}
-	RefreshCtrl();
 }
 
 void CChartCtrl::RemoveAllSeries()
 {
-	std::vector<CChartSerie*>::iterator iter = m_pSeriesList.begin();
-	for (iter; iter != m_pSeriesList.end(); iter++)
+	TSeriesMap::iterator iter = m_mapSeries.begin();
+	for (iter; iter != m_mapSeries.end(); iter++)
 	{
-		delete (*iter);
+		delete iter->second;
 	}
 
-	m_pSeriesList.clear();
+	m_mapSeries.clear();
 	RefreshCtrl();
 }
 
 
 CChartAxis* CChartCtrl::GetBottomAxis() const
 {
-	return (m_pAxisList[0]);
+	return (m_pAxes[BottomAxis]);
 }
 
 CChartAxis* CChartCtrl::GetLeftAxis() const
 {
-	return (m_pAxisList[1]);
+	return (m_pAxes[LeftAxis]);
 }
 
 CChartAxis* CChartCtrl::GetTopAxis() const
 {
-	return (m_pAxisList[2]);
+	return (m_pAxes[TopAxis]);
 }
 
 CChartAxis* CChartCtrl::GetRightAxis() const
 {
-	return (m_pAxisList[3]);
+	return (m_pAxes[RightAxis]);
 }
 
 
@@ -419,8 +650,11 @@ CDC* CChartCtrl::GetDC()
 
 size_t CChartCtrl::GetSeriesCount() const
 {
-	return m_pSeriesList.size();
+	return m_mapSeries.size();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// Mouse events
 
 void CChartCtrl::OnMouseMove(UINT nFlags, CPoint point) 
 {
@@ -428,12 +662,18 @@ void CChartCtrl::OnMouseMove(UINT nFlags, CPoint point)
 	{
 		if (point != m_PanAnchor)
 		{
-			GetLeftAxis()->PanAxis(m_PanAnchor.y,point.y);
-			GetRightAxis()->PanAxis(m_PanAnchor.y,point.y);
-			GetBottomAxis()->PanAxis(m_PanAnchor.x,point.x);
-			GetTopAxis()->PanAxis(m_PanAnchor.x,point.x);
-
+			EnableRefresh(false);
+			if (m_pAxes[LeftAxis])
+				m_pAxes[LeftAxis]->PanAxis(m_PanAnchor.y,point.y);
+			if (m_pAxes[RightAxis])
+				m_pAxes[RightAxis]->PanAxis(m_PanAnchor.y,point.y);
+			if (m_pAxes[BottomAxis])
+				m_pAxes[BottomAxis]->PanAxis(m_PanAnchor.x,point.x);
+			if (m_pAxes[TopAxis])
+				m_pAxes[TopAxis]->PanAxis(m_PanAnchor.x,point.x);
 			RefreshCtrl();
+			EnableRefresh(true);
+
 			m_PanAnchor = point;
 		}
 	}
@@ -444,26 +684,40 @@ void CChartCtrl::OnMouseMove(UINT nFlags, CPoint point)
 		Invalidate();
 	}
 
+	for (int i=0; i<4; i++)
+	{
+		if (m_pAxes[i])
+			m_pAxes[i]->m_pScrollBar->OnMouseLeave();
+	}
+	CWnd* pWnd = ChildWindowFromPoint(point);
+	if (pWnd != this)
+	{
+		CChartScrollBar* pScrollBar = dynamic_cast<CChartScrollBar*>(pWnd);
+		if (pScrollBar)
+			pScrollBar->OnMouseEnter();
+	}
+
+	if (m_PlottingRect.PtInRect(point))
+	{
+		TCursorMap::iterator iter = m_mapCursors.begin();
+		for (iter; iter!=m_mapCursors.end(); iter++)
+			iter->second->OnMouseMove(point);
+		
+		Invalidate();
+	}
+
+	if (!m_bMouseVisible && m_PlottingRect.PtInRect(point))
+		SetCursor(NULL);
+	else
+		SetCursor(::LoadCursor(NULL,IDC_ARROW));
+
+	SendMouseEvent(CChartMouseListener::MouseMove, point);
 	CWnd::OnMouseMove(nFlags, point);
-}
-
-void CChartCtrl::OnRButtonDown(UINT nFlags, CPoint point) 
-{
-	m_bRMouseDown = true;
-	if (m_bPanEnabled)
-		m_PanAnchor = point;
-
-	CWnd::OnLButtonDown(nFlags, point);
-}
-
-void CChartCtrl::OnRButtonUp(UINT nFlags, CPoint point) 
-{
-	m_bRMouseDown = false;
-	CWnd::OnLButtonUp(nFlags, point);
 }
 
 void CChartCtrl::OnLButtonDown(UINT nFlags, CPoint point) 
 {
+	SetCapture();
 	if (m_bZoomEnabled)
 	{
 		m_bLMouseDown = true;
@@ -471,85 +725,186 @@ void CChartCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 		m_rectZoomArea.BottomRight() = point;
 	}
 
+	if (m_PlottingRect.PtInRect(point))
+	{
+		TCursorMap::iterator iter = m_mapCursors.begin();
+		for (iter; iter!=m_mapCursors.end(); iter++)
+			iter->second->OnMouseButtonDown(point);
+		
+		Invalidate();
+	}
+
+	SendMouseEvent(CChartMouseListener::LButtonDown, point);
 	CWnd::OnLButtonDown(nFlags, point);
 }
 
 void CChartCtrl::OnLButtonUp(UINT nFlags, CPoint point) 
 {
+	ReleaseCapture();
 	m_bLMouseDown = false;
 	if (m_bZoomEnabled)
 	{
 		if ( (m_rectZoomArea.left > m_rectZoomArea.right) ||
 			 (m_rectZoomArea.top > m_rectZoomArea.bottom))
 		{
-			GetBottomAxis()->UndoZoom();
-			GetTopAxis()->UndoZoom();
-			GetLeftAxis()->UndoZoom();
-			GetRightAxis()->UndoZoom();
+			UndoPanZoom();
 		}
 		else if ( (m_rectZoomArea.left!=m_rectZoomArea.right) &&
 				  (m_rectZoomArea.top!=m_rectZoomArea.bottom))
 		{
-			CChartAxis* pBottom = GetBottomAxis();
 			double MinVal = 0;			
 			double MaxVal = 0;
 			
-			if (pBottom->IsInverted())
+			if (m_pAxes[BottomAxis])
 			{
-				MaxVal = pBottom->ScreenToValue(m_rectZoomArea.left);
-				MinVal = pBottom->ScreenToValue(m_rectZoomArea.right);
+				if (m_pAxes[BottomAxis]->IsInverted())
+				{
+					MaxVal = m_pAxes[BottomAxis]->ScreenToValue(m_rectZoomArea.left);
+					MinVal = m_pAxes[BottomAxis]->ScreenToValue(m_rectZoomArea.right);
+				}
+				else
+				{
+					MinVal = m_pAxes[BottomAxis]->ScreenToValue(m_rectZoomArea.left);
+					MaxVal = m_pAxes[BottomAxis]->ScreenToValue(m_rectZoomArea.right);
+				}
+				m_pAxes[BottomAxis]->SetZoomMinMax(MinVal,MaxVal);
 			}
-			else
-			{
-				MinVal = pBottom->ScreenToValue(m_rectZoomArea.left);
-				MaxVal = pBottom->ScreenToValue(m_rectZoomArea.right);
-			}
-			pBottom->SetZoomMinMax(MinVal,MaxVal);
 
-			CChartAxis* pLeft = GetLeftAxis();
-			if (pLeft->IsInverted())
+			if (m_pAxes[LeftAxis])
 			{
-				MaxVal = pLeft->ScreenToValue(m_rectZoomArea.bottom);
-				MinVal = pLeft->ScreenToValue(m_rectZoomArea.top);
+				if (m_pAxes[LeftAxis]->IsInverted())
+				{
+					MaxVal = m_pAxes[LeftAxis]->ScreenToValue(m_rectZoomArea.bottom);
+					MinVal = m_pAxes[LeftAxis]->ScreenToValue(m_rectZoomArea.top);
+				}
+				else
+				{
+					MinVal = m_pAxes[LeftAxis]->ScreenToValue(m_rectZoomArea.bottom);
+					MaxVal = m_pAxes[LeftAxis]->ScreenToValue(m_rectZoomArea.top);
+				}
+				m_pAxes[LeftAxis]->SetZoomMinMax(MinVal,MaxVal);
 			}
-			else
-			{
-				MinVal = pLeft->ScreenToValue(m_rectZoomArea.bottom);
-				MaxVal = pLeft->ScreenToValue(m_rectZoomArea.top);
-			}
-			pLeft->SetZoomMinMax(MinVal,MaxVal);
 
-			CChartAxis* pTop = GetTopAxis();
-			if (pTop->IsInverted())
+			if (m_pAxes[TopAxis])
 			{
-				MaxVal = pTop->ScreenToValue(m_rectZoomArea.left);
-				MinVal = pTop->ScreenToValue(m_rectZoomArea.right);
+				if (m_pAxes[TopAxis]->IsInverted())
+				{
+					MaxVal = m_pAxes[TopAxis]->ScreenToValue(m_rectZoomArea.left);
+					MinVal = m_pAxes[TopAxis]->ScreenToValue(m_rectZoomArea.right);
+				}
+				else
+				{
+					MinVal = m_pAxes[TopAxis]->ScreenToValue(m_rectZoomArea.left);
+					MaxVal = m_pAxes[TopAxis]->ScreenToValue(m_rectZoomArea.right);
+				}
+				m_pAxes[TopAxis]->SetZoomMinMax(MinVal,MaxVal);
 			}
-			else
-			{
-				MinVal = pTop->ScreenToValue(m_rectZoomArea.left);
-				MaxVal = pTop->ScreenToValue(m_rectZoomArea.right);
-			}
-			pTop->SetZoomMinMax(MinVal,MaxVal);
 
-			CChartAxis* pRight = GetRightAxis();
-			if (pRight->IsInverted())
+			if (m_pAxes[RightAxis])
 			{
-				MaxVal = pRight->ScreenToValue(m_rectZoomArea.bottom);
-				MinVal = pRight->ScreenToValue(m_rectZoomArea.top);
+				if (m_pAxes[RightAxis]->IsInverted())
+				{
+					MaxVal = m_pAxes[RightAxis]->ScreenToValue(m_rectZoomArea.bottom);
+					MinVal = m_pAxes[RightAxis]->ScreenToValue(m_rectZoomArea.top);
+				}
+				else
+				{
+					MinVal = m_pAxes[RightAxis]->ScreenToValue(m_rectZoomArea.bottom);
+					MaxVal = m_pAxes[RightAxis]->ScreenToValue(m_rectZoomArea.top);
+				}
+				m_pAxes[RightAxis]->SetZoomMinMax(MinVal,MaxVal);
 			}
-			else
-			{
-				MinVal = pRight->ScreenToValue(m_rectZoomArea.bottom);
-				MaxVal = pRight->ScreenToValue(m_rectZoomArea.top);
-			}
-			pRight->SetZoomMinMax(MinVal,MaxVal);
+
+			RefreshCtrl();
 		}
-
-		RefreshCtrl();
 	}
 
+	if (m_PlottingRect.PtInRect(point))
+	{
+		TCursorMap::iterator iter = m_mapCursors.begin();
+		for (iter; iter!=m_mapCursors.end(); iter++)
+			iter->second->OnMouseButtonUp(point);
+		
+		Invalidate();
+	}
+
+	SendMouseEvent(CChartMouseListener::LButtonUp, point);
 	CWnd::OnLButtonUp(nFlags, point);
+}
+
+void CChartCtrl::OnLButtonDblClk(UINT nFlags, CPoint point) 
+{
+	SendMouseEvent(CChartMouseListener::LButtonDoubleClick, point);
+	CWnd::OnLButtonDblClk(nFlags, point);
+}
+
+void CChartCtrl::OnRButtonDown(UINT nFlags, CPoint point) 
+{
+	SetCapture();
+	m_bRMouseDown = true;
+	if (m_bPanEnabled)
+		m_PanAnchor = point;
+
+	SendMouseEvent(CChartMouseListener::RButtonDown, point);
+	CWnd::OnRButtonDown(nFlags, point);
+}
+
+void CChartCtrl::OnRButtonUp(UINT nFlags, CPoint point) 
+{
+	ReleaseCapture();
+	m_bRMouseDown = false;
+
+	SendMouseEvent(CChartMouseListener::RButtonUp, point);
+	CWnd::OnRButtonUp(nFlags, point);
+}
+
+void CChartCtrl::OnRButtonDblClk(UINT nFlags, CPoint point) 
+{
+	SendMouseEvent(CChartMouseListener::RButtonDoubleClick, point);
+	CWnd::OnRButtonDblClk(nFlags, point);
+}
+
+void CChartCtrl::SendMouseEvent(CChartMouseListener::MouseEvent mouseEvent, 
+								const CPoint& screenPoint) const
+{
+	if (!m_pMouseListener)
+		return;
+
+	// Check where the click occured.
+	if (m_pTitles->IsPointInside(screenPoint))
+		m_pMouseListener->OnMouseEventTitle(mouseEvent,screenPoint);
+	if (m_pLegend->IsPointInside(screenPoint))
+		m_pMouseListener->OnMouseEventLegend(mouseEvent,screenPoint);
+	for (int i=0; i<4; i++)
+	{
+		if ( m_pAxes[i] && m_pAxes[i]->IsPointInside(screenPoint) )
+			m_pMouseListener->OnMouseEventAxis(mouseEvent,screenPoint,m_pAxes[i]);
+	}
+	if (m_PlottingRect.PtInRect(screenPoint))
+		m_pMouseListener->OnMouseEventPlotArea(mouseEvent,screenPoint);
+	
+	// Check all the series in reverse order (check the series on top first).
+	TSeriesMap::const_reverse_iterator rIter = m_mapSeries.rbegin();
+	for(rIter; rIter!=m_mapSeries.rend(); rIter++)
+	{
+		unsigned uPtIndex = 0;
+		if ( (mouseEvent==CChartMouseListener::MouseMove) && 
+			 !rIter->second->NotifyMouseMoveEnabled())
+		{
+			continue;
+		}
+		if ( (mouseEvent!=CChartMouseListener::MouseMove) && 
+			 !rIter->second->NotifyMouseClickEnabled())
+		{
+			continue;
+		}
+
+		if (rIter->second->IsPointOnSerie(screenPoint,uPtIndex))
+		{
+			m_pMouseListener->OnMouseEventSeries(mouseEvent,screenPoint,rIter->second,uPtIndex);
+			break;
+		}
+	}
 }
 
 void CChartCtrl::OnSize(UINT nType, int cx, int cy) 
@@ -565,11 +920,152 @@ void CChartCtrl::OnSize(UINT nType, int cx, int cy)
 
 double CChartCtrl::DateToValue(const COleDateTime& Date)
 {
-	return Date.operator DATE();
+	return (DATE)Date;
 }
 
 COleDateTime CChartCtrl::ValueToDate(double Value)
 {
 	COleDateTime RetDate((DATE)Value);
 	return RetDate;
+}
+
+void CChartCtrl::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	CChartScrollBar* pChartBar = dynamic_cast<CChartScrollBar*>(pScrollBar);
+	if (pChartBar)
+		pChartBar->OnHScroll(nSBCode, nPos);
+
+	CWnd::OnHScroll(nSBCode, nPos, pScrollBar);
+	RefreshCtrl();
+}
+
+void CChartCtrl::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	CChartScrollBar* pChartBar = dynamic_cast<CChartScrollBar*>(pScrollBar);
+	if (pChartBar)
+		pChartBar->OnVScroll(nSBCode, nPos);
+
+	CWnd::OnVScroll(nSBCode, nPos, pScrollBar);
+	RefreshCtrl();
+}
+
+void CChartCtrl::Print(const TChartString& strTitle, CPrintDialog* pPrntDialog)
+{
+	CDC dc;
+    if (pPrntDialog == NULL)
+    {
+        CPrintDialog printDlg(FALSE);
+        if (printDlg.DoModal() != IDOK)         // Get printer settings from user
+            return;
+
+		dc.Attach(printDlg.GetPrinterDC());     // attach a printer DC
+    }
+    else
+		dc.Attach(pPrntDialog->GetPrinterDC()); // attach a printer DC
+    dc.m_bPrinting = TRUE;
+	
+    DOCINFO di;                                 // Initialise print doc details
+    memset(&di, 0, sizeof (DOCINFO));
+    di.cbSize = sizeof (DOCINFO);
+	di.lpszDocName = strTitle.c_str();
+
+    BOOL bPrintingOK = dc.StartDoc(&di);        // Begin a new print job
+
+    CPrintInfo Info;
+    Info.m_rectDraw.SetRect(0,0, dc.GetDeviceCaps(HORZRES), dc.GetDeviceCaps(VERTRES));
+
+    OnBeginPrinting(&dc, &Info);                // Initialise printing
+    for (UINT page = Info.GetMinPage(); page <= Info.GetMaxPage() && bPrintingOK; page++)
+    {
+        dc.StartPage();                         // begin new page
+        Info.m_nCurPage = page;
+        OnPrint(&dc, &Info);                    // Print page
+        bPrintingOK = (dc.EndPage() > 0);       // end page
+    }
+    OnEndPrinting(&dc, &Info);                  // Clean up after printing
+
+    if (bPrintingOK)
+        dc.EndDoc();                            // end a print job
+    else
+        dc.AbortDoc();                          // abort job.
+
+    dc.Detach();                                // detach the printer DC
+}
+
+void CChartCtrl::OnBeginPrinting(CDC *pDC, CPrintInfo *pInfo)
+{
+    // OnBeginPrinting() is called after the user has committed to
+    // printing by OK'ing the Print dialog, and after the framework
+    // has created a CDC object for the printer or the preview view.
+
+    // This is the right opportunity to set up the page range.
+    // Given the CDC object, we can determine how many rows will
+    // fit on a page, so we can in turn determine how many printed
+    // pages represent the entire document.
+    ASSERT(pDC && pInfo);
+
+    // Get a DC for the current window (will be a screen DC for print previewing)
+    CDC *pCurrentDC = GetDC();        // will have dimensions of the client area
+    if (!pCurrentDC) 
+		return;
+
+    CSize PaperPixelsPerInch(pDC->GetDeviceCaps(LOGPIXELSX), pDC->GetDeviceCaps(LOGPIXELSY));
+    CSize ScreenPixelsPerInch(pCurrentDC->GetDeviceCaps(LOGPIXELSX), pCurrentDC->GetDeviceCaps(LOGPIXELSY));
+
+    // Create the printer font
+    int nFontSize = -10;
+    CString strFontName = _T("Arial");
+    m_PrinterFont.CreateFont(nFontSize, 0,0,0, FW_NORMAL, 0,0,0, DEFAULT_CHARSET,
+                             OUT_CHARACTER_PRECIS, CLIP_CHARACTER_PRECIS, DEFAULT_QUALITY,
+                             DEFAULT_PITCH | FF_DONTCARE, strFontName);
+    CFont *pOldFont = pDC->SelectObject(&m_PrinterFont);
+
+    // Get the page sizes (physical and logical)
+    m_PaperSize = CSize(pDC->GetDeviceCaps(HORZRES), pDC->GetDeviceCaps(VERTRES));
+
+	m_LogicalPageSize.cx = ScreenPixelsPerInch.cx * m_PaperSize.cx / PaperPixelsPerInch.cx * 3 / 4;
+	m_LogicalPageSize.cy = ScreenPixelsPerInch.cy * m_PaperSize.cy / PaperPixelsPerInch.cy * 3 / 4;
+
+
+    // Set up the print info
+    pInfo->SetMaxPage(1);
+    pInfo->m_nCurPage = 1;                        // start printing at page# 1
+
+    ReleaseDC(pCurrentDC);
+    pDC->SelectObject(pOldFont);
+}
+
+void CChartCtrl::OnPrint(CDC *pDC, CPrintInfo *pInfo)
+{
+    if (!pDC || !pInfo)
+        return;
+
+    CFont *pOldFont = pDC->SelectObject(&m_PrinterFont);
+
+    // Set the page map mode to use GraphCtrl units
+	pDC->SetMapMode(MM_ANISOTROPIC);
+    pDC->SetWindowExt(m_LogicalPageSize);
+    pDC->SetViewportExt(m_PaperSize);
+    pDC->SetWindowOrg(0, 0);
+
+    // Header
+    pInfo->m_rectDraw.top    = 0;
+    pInfo->m_rectDraw.left   = 0;
+    pInfo->m_rectDraw.right  = m_LogicalPageSize.cx;
+    pInfo->m_rectDraw.bottom = m_LogicalPageSize.cy;
+
+	DrawChart(pDC, &pInfo->m_rectDraw);
+
+    // SetWindowOrg back for next page
+    pDC->SetWindowOrg(0,0);
+
+    pDC->SelectObject(pOldFont);
+} 
+
+void CChartCtrl::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
+{
+    m_PrinterFont.DeleteObject();
+	// RefreshCtrl is needed because the print job 
+	// modifies the chart components (axis, ...)
+	RefreshCtrl();
 }

@@ -28,9 +28,14 @@
 
 #include "ChartSerie.h"
 
+//! Specialization of a CChartSerie to display a points series.
+/**
+	The data points are simply displayed as independant points.
+**/
 class CChartPointsSerie : public CChartSerie  
 {
 public:
+	//! The different point shapes
 	enum PointType
 	{
 		ptEllipse=0,
@@ -38,32 +43,67 @@ public:
 		ptTriangle=2
 	};
 
-	void SetPointSize(int XSize, int YSize)
-	{
-		m_iXPointSize = XSize;
-		m_iYPointSize = YSize;
-	}
+	//! Sets the width and height of each points
+	void SetPointSize(int XSize, int YSize);
+	//! Retrieves the width and height of each points
 	void GetPointSize(int& XSize, int& YSize) const
 	{
         XSize = m_iXPointSize;
         YSize = m_iYPointSize;
     }
-	void SetPointType(PointType Type)  { m_iPointType = Type; }
+	//! Sets the points shape
+	void SetPointType(PointType Type);
+	//! Returns the points shape
 	PointType GetPointType() const     { return m_iPointType; }
 
+	//! Constructor
 	CChartPointsSerie(CChartCtrl* pParent);
+	//! Destructor
 	virtual ~CChartPointsSerie();
+	
+	//! Check whether a screen point is on the series.
+	/**
+		@param screenPoint
+			The screen point to test
+		@param uIndex
+			If the point is close to a specific point of the series, its index is stored here.
+		@return true if the point is on the series
+	**/
+	bool IsPointOnSerie(const CPoint& screenPoint, unsigned& uIndex) const;
 
 private:
-	int DrawLegend(CDC* pDC, CPoint UpperLeft, int BitmapWidth) const;
-	CSize GetLegendSize() const;
+	//! Draws the legend icon for the series.
+	/**
+		This pure virtual function should be overriden by child classes.
+		@param pDC
+			The device context used to draw
+		@param rectBitmap
+			The rectangle in which to draw the legend icon
+	**/
+    void DrawLegend(CDC* pDC, const CRect& rectBitmap) const;
 
-	void DrawAll(CDC *pDC);
+	//! Draws the most recent points of the series.
+	/**
+		This pure virtual function should be overriden by child classes.
+		This function should only draw the points that were not previously 
+		drawn.
+		@param pDC
+			The device context used to draw
+	**/
 	void Draw(CDC* pDC);
+	//! Redraws the full series.
+	/**
+		This pure virtual function should be overriden by child classes.
+		@param pDC
+			The device context used to draw
+	**/
+	void DrawAll(CDC *pDC);
 
-
-	int m_iXPointSize;		// Width of the points
-	int m_iYPointSize;		// Height of the points
+	//! Width of the points
+	int m_iXPointSize;		
+	//! Height of the points
+	int m_iYPointSize;	
+	//! Shape of the points
 	PointType m_iPointType;
 
 };

@@ -21,6 +21,7 @@
 
 #include "stdafx.h"
 #include "ChartTitle.h"
+#include "ChartCtrl.h"
 #include "Math.h"
 
 using namespace std;
@@ -35,11 +36,11 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CChartTitle::CChartTitle(CChartCtrl* pParent) : CChartObject(pParent)
+CChartTitle::CChartTitle(CChartCtrl* pParent) 
 {
-	CChartObject::SetColor(RGB(0,0,0));
-	m_iFontSize = 100;
-	m_strFontName = "Microsoft Sans Serif";
+	m_pParentCtrl = pParent;
+	m_bIsVisible = true;
+	m_TextColor = RGB(0,0,0);
 }
 
 CChartTitle::~CChartTitle()
@@ -47,9 +48,41 @@ CChartTitle::~CChartTitle()
 
 }
 
-void CChartTitle::AddString(std::string NewString)
+void CChartTitle::SetFont(int iPointSize, const TChartString& strFaceName)
+{
+	m_DefaultFont.SetFont(strFaceName, iPointSize);
+	m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartTitle::SetFont(const CChartFont& newFont)
+{
+	m_DefaultFont = newFont;
+	m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartTitle::SetColor(COLORREF NewColor)
+{
+	m_TextColor = NewColor;
+	m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartTitle::SetLineFont(int iLineIndex, 
+							  int iPointSize, 
+							  const TChartString& strFaceName)
+{
+	CChartFont newFont(strFaceName,iPointSize);
+	m_mapLineFonts[iLineIndex] = newFont;
+}
+
+void CChartTitle::SetLineFont(int iLineIndex, const CChartFont& newFont)
+{
+	m_mapLineFonts[iLineIndex] = newFont;
+}
+
+void CChartTitle::AddString(const TChartString& NewString)
 {
 	m_StringArray.push_back(NewString);
+	m_pParentCtrl->RefreshCtrl();
 }
 
 size_t CChartTitle::GetStringCount() const
@@ -57,16 +90,17 @@ size_t CChartTitle::GetStringCount() const
 	return m_StringArray.size();
 }
 
-string CChartTitle::GetString(size_t Index) const
+TChartString CChartTitle::GetString(size_t Index) const
 {
 	if ( (Index<0) || (Index>=m_StringArray.size()) )
-		return "";
+		return _T("");
 	return m_StringArray[Index];
 }
 
 void CChartTitle::RemoveAll()
 {
 	m_StringArray.clear();
+	m_pParentCtrl->RefreshCtrl();
 }
 
 void CChartTitle::Draw(CDC *pDC)
@@ -76,36 +110,43 @@ void CChartTitle::Draw(CDC *pDC)
 	if (!m_bIsVisible)
 		return;
 
-	CPen SolidPen(PS_SOLID,0,m_ObjectColor);
-	CPen* pOldPen;
-	CFont* pOldFont;
-	CFont NewFont;
-	NewFont.CreatePointFont(m_iFontSize,ATL::CA2T(m_strFontName.c_str()),pDC);
-
-	COLORREF OldColor = pDC->SetTextColor(m_ObjectColor);
-	pOldFont = pDC->SelectObject(&NewFont);
-	pOldPen = pDC->SelectObject(&SolidPen);
+	m_DefaultFont.SelectFont(pDC);
+	COLORREF OldColor = pDC->SetTextColor(m_TextColor);
+	int iPrevMode = pDC->SetBkMode(TRANSPARENT);
 
 	//Draw all entries
 	int YPos = 4;
 	size_t TitleCount = m_StringArray.size();
 	for (size_t i=0;i<TitleCount;i++)
 	{
+		map<int, CChartFont>::iterator iter = m_mapLineFonts.find(i);
+		if (iter != m_mapLineFonts.end())
+			iter->second.SelectFont(pDC);
+
 		//Draw Text
 		int TextWidth = pDC->GetTextExtent(m_StringArray[i].c_str()).cx;
 		int TextHeigh = pDC->GetTextExtent(m_StringArray[i].c_str()).cy;
 
-		int XPos = m_ObjectRect.left + (int)fabs((m_ObjectRect.left-m_ObjectRect.right)/2.0) - TextWidth/2;
-		pDC->ExtTextOut(XPos,m_ObjectRect.top+YPos,ETO_CLIPPED,NULL,m_StringArray[i].c_str(),NULL);
+		int XPos = m_TitleRect.left + (int)fabs((m_TitleRect.left-m_TitleRect.right)/2.0) - TextWidth/2;
+
+/*		if (m_bShadow)
+		{
+			pDC->SetTextColor(m_ShadowColor);
+			pDC->ExtTextOut(XPos+m_iShadowDepth,m_TitleRect.top+YPos+m_iShadowDepth,
+							ETO_CLIPPED,NULL,m_StringArray[i].c_str(),NULL);
+			pDC->SetTextColor(m_TextColor);
+		}*/
+		pDC->ExtTextOut(XPos,m_TitleRect.top+YPos,ETO_CLIPPED,NULL,m_StringArray[i].c_str(),NULL);
+
+		if (iter != m_mapLineFonts.end())
+			iter->second.UnselectFont(pDC);
 
 		YPos += TextHeigh + 2;
 	}
 
-	pDC->SelectObject(pOldFont);
-	DeleteObject(NewFont);
-	pDC->SelectObject(pOldPen);
-	DeleteObject(SolidPen);
+	m_DefaultFont.UnselectFont(pDC);
 	pDC->SetTextColor(OldColor);
+	pDC->SetBkMode(iPrevMode);
 }
 
 CSize CChartTitle::GetSize(CDC *pDC)
@@ -129,26 +170,32 @@ CSize CChartTitle::GetSize(CDC *pDC)
 		return TitleSize;
 	}
 
-	CFont* pOldFont;
-	CFont NewFont;
-	NewFont.CreatePointFont(m_iFontSize,ATL::CA2T(m_strFontName.c_str()),pDC);
-	pOldFont = pDC->SelectObject(&NewFont);
-
+	m_DefaultFont.SelectFont(pDC);
 	for (size_t i=0;i<TitleCount;i++)
 	{
+		map<int, CChartFont>::iterator iter = m_mapLineFonts.find(i);
+		if (iter != m_mapLineFonts.end())
+			iter->second.SelectFont(pDC);
+
 		TextSize = pDC->GetTextExtent(m_StringArray[i].c_str());
 		Height += TextSize.cy + 2;
 		if (TextSize.cx > MaxTextWidth)
 			MaxTextWidth = TextSize.cx;
+
+		if (iter != m_mapLineFonts.end())
+			iter->second.UnselectFont(pDC);
 	}
 
 	TitleSize.cx = MaxTextWidth + 2;
 	TitleSize.cy = Height;
 
-	m_ObjectRect.bottom = m_ObjectRect.top + Height;
+	m_TitleRect.bottom = m_TitleRect.top + Height;
 
-	pDC->SelectObject(pOldFont);
-	DeleteObject(NewFont);
+	m_DefaultFont.UnselectFont(pDC);
 	return TitleSize;
 }
 
+BOOL CChartTitle::IsPointInside(const CPoint& screenPoint) const
+{
+	return m_TitleRect.PtInRect(screenPoint);
+}

@@ -24,6 +24,7 @@
 
 #include "stdafx.h"
 #include "ChartAxisLabel.h"
+#include "ChartCtrl.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -35,19 +36,56 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CChartAxisLabel::CChartAxisLabel(CChartCtrl* pParent, bool bHorizontal):CChartObject(pParent)
+CChartAxisLabel::CChartAxisLabel()
+  : m_pParentCtrl(NULL), m_bIsVisible(true), m_TextColor(RGB(0,0,0)),
+	m_bIsHorizontal(true), m_Font(), m_strLabelText(_T(""))
 {
-	m_bIsHorizontal = bHorizontal;
-
-	m_iFontSize = 100;
-	m_strFontName = "Microsoft Sans Serif";
-
-	m_strLabelText = "";
+	m_Font.SetVertical(!m_bIsHorizontal);
 }
 
 CChartAxisLabel::~CChartAxisLabel()
 {
+}
 
+void CChartAxisLabel::SetVisible(bool bVisible)
+{
+	m_bIsVisible = bVisible;
+	if (m_pParentCtrl)
+		m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartAxisLabel::SetColor(COLORREF NewColor)
+{
+	m_TextColor = NewColor; 
+	if (m_pParentCtrl)
+		m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartAxisLabel::SetText(const TChartString& NewText)  
+{ 
+	m_strLabelText = NewText; 
+	if (m_pParentCtrl)
+		m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartAxisLabel::SetFont(int nPointSize, const TChartString& strFaceName)
+{
+	m_Font.SetFont(strFaceName, nPointSize);
+	if (m_pParentCtrl)
+		m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartAxisLabel::SetHorizontal(bool bHorizontal)
+{
+	m_bIsHorizontal = bHorizontal;
+	m_Font.SetVertical(!m_bIsHorizontal);
+}
+
+void CChartAxisLabel::SetFont(const CChartFont& newFont)
+{
+	m_Font = newFont;
+	if (m_pParentCtrl)
+		m_pParentCtrl->RefreshCtrl();
 }
 
 CSize CChartAxisLabel::GetSize(CDC *pDC) const
@@ -60,13 +98,10 @@ CSize CChartAxisLabel::GetSize(CDC *pDC) const
 		return LabelSize;
 	if (!pDC->GetSafeHdc())
 		return LabelSize;
-	if (m_strLabelText == "")
+	if (m_strLabelText == _T(""))
 		return LabelSize;
 
-	CFont NewFont;
-	CFont* pOldFont;
-	NewFont.CreatePointFont(m_iFontSize,ATL::CA2T(m_strFontName.c_str()),pDC);
-	pOldFont = pDC->SelectObject(&NewFont);
+	m_Font.SelectFont(pDC);
 
 	LabelSize = pDC->GetTextExtent(m_strLabelText.c_str());
 	LabelSize.cx += 4;
@@ -78,8 +113,7 @@ CSize CChartAxisLabel::GetSize(CDC *pDC) const
 		LabelSize.cx = Width;
 		LabelSize.cy = Height;
 	}
-	pDC->SelectObject(pOldFont);
-	DeleteObject(NewFont);
+	m_Font.UnselectFont(pDC);
 
 	return LabelSize;
 }
@@ -90,52 +124,34 @@ void CChartAxisLabel::Draw(CDC *pDC)
 		return;
 	if (!pDC->GetSafeHdc())
 		return;
-	if (m_strLabelText == "")
+	if (m_strLabelText == _T(""))
 		return;
 
-	COLORREF OldColor = pDC->SetTextColor(m_ObjectColor);
-	CFont NewFont;
-	NewFont.CreatePointFont(m_iFontSize,ATL::CA2T(m_strFontName.c_str()),pDC);
-	CFont* pOldFont;
+	int iPrevMode = pDC->SetBkMode(TRANSPARENT);
+	COLORREF OldColor = pDC->SetTextColor(m_TextColor);
 
+	m_Font.SelectFont(pDC);
 	if (!m_bIsHorizontal)
 	{
-		LOGFONT LogFont;
-		NewFont.GetLogFont(&LogFont);
-		LogFont.lfOrientation = 900;
-		LogFont.lfEscapement = 900;
-
-		CFont VertFont;
-		VertFont.CreateFontIndirect(&LogFont);
-		pOldFont = pDC->SelectObject(&VertFont);
-
-		pDC->ExtTextOut(m_ObjectRect.left + 2,m_ObjectRect.top,
+		pDC->ExtTextOut(m_TextRect.left + 2,m_TextRect.top,
 					ETO_CLIPPED,NULL,m_strLabelText.c_str(),NULL);
-
-		pDC->SelectObject(pOldFont);
-		DeleteObject(VertFont);
-		DeleteObject(NewFont);
 	}
 	else
 	{		
-		pOldFont = pDC->SelectObject(&NewFont);
-		pDC->ExtTextOut(m_ObjectRect.left,m_ObjectRect.top + 2,
+		pDC->ExtTextOut(m_TextRect.left,m_TextRect.top + 2,
 					ETO_CLIPPED,NULL,m_strLabelText.c_str(),NULL);
-		pDC->SelectObject(pOldFont);
-		DeleteObject(NewFont);
 	}
+	m_Font.UnselectFont(pDC);
 
+	pDC->SetBkMode(iPrevMode);
 	pDC->SetTextColor(OldColor);
 }
 
 void CChartAxisLabel::SetPosition(int LeftBorder, int TopBorder, CDC *pDC)
 {
 	CSize NewSize = GetSize(pDC);
-	CRect NewRect;
-	NewRect.top = TopBorder;
-	NewRect.bottom = TopBorder + NewSize.cy;
-	NewRect.left = LeftBorder;
-	NewRect.right = LeftBorder + NewSize.cx;
-
-	CChartObject::SetRect(NewRect);
+	m_TextRect.top = TopBorder;
+	m_TextRect.bottom = TopBorder + NewSize.cy;
+	m_TextRect.left = LeftBorder;
+	m_TextRect.right = LeftBorder + NewSize.cx;
 }

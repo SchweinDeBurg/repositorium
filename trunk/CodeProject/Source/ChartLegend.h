@@ -26,37 +26,130 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "ChartObject.h"
+#include "ChartCtrl.h"
 
-#include <string>
+#include "ChartString.h"
 
 class CChartSerie;
 
-class CChartLegend : public CChartObject  
+//! This class is responsible for the legend displayed on the control.
+/**
+	Series which are named will be displayed in the legend. The legend
+	object is retrieved	by calling the GetLegend() function on the 
+	CChartCtrl class. 
+**/
+class CChartLegend  
 {
 	friend CChartCtrl;
 
 public:
-//	int SerieIndexFromPoint(CPoint NewPoint) const;
-	void SetFont(int iPointSize,std::string strFaceName)
+	//! Sets the font used to display the series names.
+	void SetFont(int iPointSize, const TChartString& strFaceName);
+
+	//! Enumeration specifying on which side of the control the legend is docked.
+	enum DockSide
 	{
-		m_iFontSize = iPointSize;
-		m_strFontName = strFaceName;
-	}
+		dsDockRight,
+		dsDockLeft,
+		dsDockTop,
+		dsDockBottom
+	};
 
-	CChartLegend(CChartCtrl* pParent);
-	virtual ~CChartLegend();
+	//! Dock the legend on a specific side of the control. Default is right.
+	void DockLegend(DockSide dsSide);
+	//! Undock the legend.
+	/**
+		When the legend is undocked (floating), it doesn't take any margin size
+		but is drawn on top of the control at the specified location (it can be
+		above the plotting area for instance).
+		@param iLeftPos
+			The left position of the legend, in pixels (from the left of the control)
+		@param iTopPos
+			The top position of the legend, in pixels (from the top of the control)
+	**/
+	void UndockLegend(int iLeftPos, int iTopPos);
 
+	//! Sets the background of the legend transparent.
+	void SetTransparent(bool bTransparent);  
+	//! Sets the legend in horizontal/vertical mode.
+	/**
+		In horizontal mode, the names are drawn next to each other
+		instead of on top of each other.
+	**/
+	void SetHorizontalMode(bool bHorizontal);
+
+	//! Sets the legend visible/invisible.
+	void SetVisible(bool bVisible);
+	//! Returns true if the legend is visible.
+	bool IsVisible()  const         { return m_bIsVisible; }
+
+	//! Returns the back color of the legend.
+	COLORREF GetBackColor() const			   { return m_BackColor; }
+	//! Sets the back color of the legend.
+	void SetBackColor(COLORREF NewColor);
+	//! Returns the shadow color.
+	COLORREF GetShadowColor() const		   { return m_ShadowColor; }
+	//! Sets the shadow color.
+	void SetShadowColor(COLORREF NewColor);
+	//! Enables/disables the shadow.
+	void EnableShadow(bool bEnable);
+	//! Sets the shadow depth (in pixels).
+	void SetShadowDepth(int Depth);
+
+	//! Returns true if the screen point is on the legend region.
+	BOOL IsPointInside(const CPoint& screenPoint) const;
 
 private:
+	//! Constructor
+	CChartLegend(CChartCtrl* pParent);
+	//! Destructor
+	virtual ~CChartLegend();
+
+	//! Draw the legend.
 	void Draw(CDC* pDC);
-	void SetPosition(int LeftBorder, int TopBorder, CDC* pDC);
-	CSize GetSize(CDC* pDC) const;
+	//! Remove the area needed for the legend from the chart rectangle.
+	void ClipArea(CRect& rcControl, CDC* pDC);
+	//! Recalculate the legend size and position.
+	void UpdatePosition(CDC* pDC, const CRect& rcControl);
 
-	std::string m_strFontName;
-	int         m_iFontSize;
+	//! The parent charting control.
+	CChartCtrl* m_pParentCtrl;
+	//! The rectangle used to draw the legend.
+	CRect m_LegendRect;
 
-	int m_iTextHeigh;
+	//! The font face name used to display the series names.
+	TChartString m_strFontName;
+	//! The font point size.
+	int          m_iFontSize;
+
+	//! True if the legend is docked
+	bool m_bDocked;	
+	//! The side of the control on which the legend is docked.
+	DockSide m_DockSide;
+
+	//! The left position of the legend if in floating mode.
+	int m_iLeftPos;
+	//! The top position of the legend if in floating mode.
+	int m_iTopPos;
+
+	//! Specifies if the legend is visible.
+	bool m_bIsVisible;
+	//! Specifies if the background of the legend is transparent.
+	bool m_bIsTransparent;
+	//! Specifies if the legend is in horizontal mode.
+	bool m_bIsHorizontal;
+	//! Specifies if the legend shadow should be displayed.
+	bool m_bShadow;
+	//! Specifies the shadow depth (in pixels).
+	int m_iShadowDepth;
+
+	//! Specifies the legend back color.
+	COLORREF m_BackColor;
+	//! Specifies the shadow color.
+	COLORREF m_ShadowColor;
+
+	//! Specifies the size of the bitmap used by each series.
+	CSize m_BitmapSize;
 };
 
 #endif // !defined(AFX_CHARTLEGEND_H__CD72E5A0_8F52_472A_A611_C588F642080B__INCLUDED_)
