@@ -135,6 +135,150 @@
 			<param name="Name" value="ChartAxis.h">
 			<param name="Local" value="_chart_axis_8h-source.html">
 			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartAxisLabel.h">
+			<param name="Local" value="_chart_axis_label_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartAxisOld.h">
+			<param name="Local" value="_chart_axis_old_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartBalloonLabel.h">
+			<param name="Local" value="_chart_balloon_label_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartBarSerie.h">
+			<param name="Local" value="_chart_bar_serie_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartCrossHairCursor.h">
+			<param name="Local" value="_chart_cross_hair_cursor_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartCtrl.h">
+			<param name="Local" value="_chart_ctrl_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartCursor.h">
+			<param name="Local" value="_chart_cursor_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartDateTimeAxis.h">
+			<param name="Local" value="_chart_date_time_axis_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartDemo.h">
+			<param name="Local" value="_chart_demo_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartDemoDlg.h">
+			<param name="Local" value="_chart_demo_dlg_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartDragLineCursor.h">
+			<param name="Local" value="_chart_drag_line_cursor_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartFont.h">
+			<param name="Local" value="_chart_font_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartGradient.h">
+			<param name="Local" value="_chart_gradient_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartGrid.h">
+			<param name="Local" value="_chart_grid_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartLabel.h">
+			<param name="Local" value="_chart_label_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartLegend.h">
+			<param name="Local" value="_chart_legend_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartLineSerie.h">
+			<param name="Local" value="_chart_line_serie_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartLogarithmicAxis.h">
+			<param name="Local" value="_chart_logarithmic_axis_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartMouseListener.h">
+			<param name="Local" value="_chart_mouse_listener_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartObject.h">
+			<param name="Local" value="_chart_object_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartPointLabel.h">
+			<param name="Local" value="_chart_point_label_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartPointsArray.h">
+			<param name="Local" value="_chart_points_array_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartPointsSerie.h">
+			<param name="Local" value="_chart_points_serie_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartScrollBar.h">
+			<param name="Local" value="_chart_scroll_bar_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartSerie.h">
+			<param name="Local" value="_chart_serie_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartStandardAxis.h">
+			<param name="Local" value="_chart_standard_axis_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartString.h">
+			<param name="Local" value="_chart_string_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartSurfaceSerie.h">
+			<param name="Local" value="_chart_surface_serie_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ChartTitle.h">
+			<param name="Local" value="_chart_title_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ColourPicker.h">
+			<param name="Local" value="_colour_picker_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ColourPopup.h">
+			<param name="Local" value="_colour_popup_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="LinePropDialog.h">
+			<param name="Local" value="_line_prop_dialog_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="PointsPropDialog.h">
+			<param name="Local" value="_points_prop_dialog_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="SeriesPropDlg.h">
+			<param name="Local" value="_series_prop_dlg_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="StdAfx.h">
+			<param name="Local" value="_std_afx_8h-source.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="SurfacePropDialog.h">
+			<param name="Local" value="_surface_prop_dialog_8h-source.html">
+			</OBJECT>
 	</UL>
 </UL>
 </BODY></HTML>
