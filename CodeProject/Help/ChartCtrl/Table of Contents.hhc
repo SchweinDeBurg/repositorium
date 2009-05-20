@@ -25,106 +25,366 @@
 			<param name="Name" value="CChartAxis">
 			<param name="Local" value="class_c_chart_axis.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_axis.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_axis-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartAxisLabel">
 			<param name="Local" value="class_c_chart_axis_label.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_axis_label.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_axis_label-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartBalloonLabel">
 			<param name="Local" value="class_c_chart_balloon_label.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_balloon_label.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_balloon_label-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartBarSerie">
 			<param name="Local" value="class_c_chart_bar_serie.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_bar_serie.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_bar_serie-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartCrossHairCursor">
 			<param name="Local" value="class_c_chart_cross_hair_cursor.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_cross_hair_cursor.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_cross_hair_cursor-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartCtrl">
 			<param name="Local" value="class_c_chart_ctrl.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_ctrl.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_ctrl-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartCursor">
 			<param name="Local" value="class_c_chart_cursor.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_cursor.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_cursor-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartCursorListener">
 			<param name="Local" value="class_c_chart_cursor_listener.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_cursor_listener.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_cursor_listener-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartDateTimeAxis">
 			<param name="Local" value="class_c_chart_date_time_axis.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_date_time_axis.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_date_time_axis-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartDragLineCursor">
 			<param name="Local" value="class_c_chart_drag_line_cursor.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_drag_line_cursor.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_drag_line_cursor-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartFont">
 			<param name="Local" value="class_c_chart_font.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_font.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_font-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartGradient">
 			<param name="Local" value="class_c_chart_gradient.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_gradient.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_gradient-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartGrid">
 			<param name="Local" value="class_c_chart_grid.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_grid.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_grid-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartLabel">
 			<param name="Local" value="class_c_chart_label.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_label.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_label-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartLabelProvider">
 			<param name="Local" value="class_c_chart_label_provider.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_label_provider.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_label_provider-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartLegend">
 			<param name="Local" value="class_c_chart_legend.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_legend.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_legend-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartLineSerie">
 			<param name="Local" value="class_c_chart_line_serie.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_line_serie.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_line_serie-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartLogarithmicAxis">
 			<param name="Local" value="class_c_chart_logarithmic_axis.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_logarithmic_axis.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_logarithmic_axis-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartMouseListener">
 			<param name="Local" value="class_c_chart_mouse_listener.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_mouse_listener.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_mouse_listener-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartPointsArray">
 			<param name="Local" value="class_c_chart_points_array.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_points_array.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_points_array-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartPointsArray::SChartPoint">
 			<param name="Local" value="struct_c_chart_points_array_1_1_s_chart_point.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="struct_c_chart_points_array_1_1_s_chart_point.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="struct_c_chart_points_array_1_1_s_chart_point-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartPointsSerie">
 			<param name="Local" value="class_c_chart_points_serie.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_points_serie.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_points_serie-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartSerie">
 			<param name="Local" value="class_c_chart_serie.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_serie.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_serie-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartStandardAxis">
 			<param name="Local" value="class_c_chart_standard_axis.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_standard_axis.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_standard_axis-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartSurfaceSerie">
 			<param name="Local" value="class_c_chart_surface_serie.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_surface_serie.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_surface_serie-members.html">
+				</OBJECT>
+		</UL>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CChartTitle">
 			<param name="Local" value="class_c_chart_title.html">
 			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Detailed Description">
+				<param name="Local" value="class_c_chart_title.html#_details">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Member List">
+				<param name="Local" value="class_c_chart_title-members.html">
+				</OBJECT>
+		</UL>
 	</UL>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Class Members">
