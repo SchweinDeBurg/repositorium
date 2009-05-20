@@ -8,5 +8,16 @@
 <param name="Font" value="Verdana,8,0">
 </OBJECT>
 <UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CChartAxis">
+		<param name="Name" value="CChartAxis Class Reference">
+		<param name="Local" value="class_c_chart_axis.html">
+		<param name="Name" value="Detailed Description">
+		<param name="Local" value="class_c_chart_axis.html#_details">
+		<param name="Name" value="CChartAxis Member List">
+		<param name="Local" value="class_c_chart_axis-members.html">
+		<param name="Name" value="ChartAxis.h">
+		<param name="Local" value="_chart_axis_8h-source.html">
+		</OBJECT>
 </UL>
 </BODY></HTML>
