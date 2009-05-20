@@ -9,6 +9,45 @@
 </OBJECT>
 <UL>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="AddPoint">
+		<param name="Name" value="CChartPointsArray::AddPoint">
+		<param name="Local" value="class_c_chart_points_array.html#3baee1f908a1a0f571782518325142b5">
+		<param name="Name" value="CChartSerie::AddPoint">
+		<param name="Local" value="class_c_chart_serie.html#a78614f5cd814d5d03019096e01518c7">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="AddPoints">
+		<param name="Name" value="CChartSerie::AddPoints">
+		<param name="Local" value="class_c_chart_serie.html#5ac3df9bdf26425d80b60c86dae1e673">
+		<param name="Name" value="CChartPointsArray::AddPoints">
+		<param name="Local" value="class_c_chart_points_array.html#8b5695aeadeac7cd1ffe204cdcae484f">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="AddString">
+		<param name="Name" value="CChartTitle::AddString">
+		<param name="Local" value="class_c_chart_title.html#69d4e3f98237a695bb2450f79a0bbc38">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="AttachCustomAxis">
+		<param name="Name" value="CChartCtrl::AttachCustomAxis">
+		<param name="Local" value="class_c_chart_ctrl.html#033fb8812e4df872c4ecae989f9a37eb">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="AttachCustomCursor">
+		<param name="Name" value="CChartCtrl::AttachCustomCursor">
+		<param name="Local" value="class_c_chart_ctrl.html#81c624348084247a037e014ad2bd3a86">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="AttachCustomLabel">
+		<param name="Name" value="CChartSerie::AttachCustomLabel">
+		<param name="Local" value="class_c_chart_serie.html#a20d12328d360e26c5495b390d73dbae">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="AttachCustomSerie">
+		<param name="Name" value="CChartCtrl::AttachCustomSerie">
+		<param name="Local" value="class_c_chart_ctrl.html#5ab5b2ae76f9ad0130a164d28efb1f5b">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="CChartAxis">
 		<param name="Name" value="CChartAxis Class Reference">
 		<param name="Local" value="class_c_chart_axis.html">
@@ -282,6 +321,76 @@
 		<param name="Local" value="class_c_chart_title-members.html">
 		<param name="Name" value="ChartTitle.h">
 		<param name="Local" value="_chart_title_8h-source.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Clear">
+		<param name="Name" value="CChartPointsArray::Clear">
+		<param name="Local" value="class_c_chart_points_array.html#8dd978ba105c46f52571762207a9b36b">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="ClearSerie">
+		<param name="Name" value="CChartSerie::ClearSerie">
+		<param name="Local" value="class_c_chart_serie.html#b9391f8bb3424c34843e1617f10e28ee">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Create">
+		<param name="Name" value="CChartCtrl::Create">
+		<param name="Local" value="class_c_chart_ctrl.html#1508a990e3ee11b4eb295f1df6449c37">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CreateBalloonLabel">
+		<param name="Name" value="CChartSerie::CreateBalloonLabel">
+		<param name="Local" value="class_c_chart_serie.html#ac1ea89e37aed368687a260da02861d9">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CreateBarSerie">
+		<param name="Name" value="CChartCtrl::CreateBarSerie">
+		<param name="Local" value="class_c_chart_ctrl.html#c166a75bb6f77ee1855debe7d6cd3338">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CreateCrossHairCursor">
+		<param name="Name" value="CChartCtrl::CreateCrossHairCursor">
+		<param name="Local" value="class_c_chart_ctrl.html#06f647456e4a0716355b6c79cacce71f">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CreateDateTimeAxis">
+		<param name="Name" value="CChartCtrl::CreateDateTimeAxis">
+		<param name="Local" value="class_c_chart_ctrl.html#139df86f220cc33e8661d012e4f39a38">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CreateDragLineCursor">
+		<param name="Name" value="CChartCtrl::CreateDragLineCursor">
+		<param name="Local" value="class_c_chart_ctrl.html#fc19342eec58562148b11b255ede154e">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CreateLineSerie">
+		<param name="Name" value="CChartCtrl::CreateLineSerie">
+		<param name="Local" value="class_c_chart_ctrl.html#3e92e6744ffe32b53773cf547529c875">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CreateLogarithmicAxis">
+		<param name="Name" value="CChartCtrl::CreateLogarithmicAxis">
+		<param name="Local" value="class_c_chart_ctrl.html#e486f97544fc5c408e18daf0e6aafe68">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CreatePointsSerie">
+		<param name="Name" value="CChartCtrl::CreatePointsSerie">
+		<param name="Local" value="class_c_chart_ctrl.html#12edc002960c38d129152c10e96cf81c">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CreateStandardAxis">
+		<param name="Name" value="CChartCtrl::CreateStandardAxis">
+		<param name="Local" value="class_c_chart_ctrl.html#5ac2726eb8085645d4afa25f8d0e9153">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CreateSurfaceSerie">
+		<param name="Name" value="CChartCtrl::CreateSurfaceSerie">
+		<param name="Local" value="class_c_chart_ctrl.html#8e955846e668b3cb860d08550f995aa2">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CursorMoved">
+		<param name="Name" value="CChartCursor::CursorMoved">
+		<param name="Local" value="class_c_chart_cursor.html#99684299e615294469bfb4f0c6079dc8">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="SChartPoint">
