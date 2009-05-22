@@ -470,6 +470,52 @@
 		<param name="Local" value="class_c_chart_surface_serie.html#bdb08942927e938a640575594a1a181d">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetAutoHideScrollBar">
+		<param name="Name" value="CChartAxis::GetAutoHideScrollBar">
+		<param name="Local" value="class_c_chart_axis.html#b30b762fd016500a992a6095c63b648f">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetAxis">
+		<param name="Name" value="CChartCtrl::GetAxis">
+		<param name="Local" value="class_c_chart_ctrl.html#f7283d9146c122e4580444355ea2951e">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetAxisLenght">
+		<param name="Name" value="CChartAxis::GetAxisLenght">
+		<param name="Local" value="class_c_chart_axis.html#da7fa85a04f2430e5e293c248d87998f">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetBackColor">
+		<param name="Name" value="CChartCtrl::GetBackColor">
+		<param name="Local" value="class_c_chart_ctrl.html#7b7896c0f8b00298b29da08d7af334c7">
+		<param name="Name" value="CChartLegend::GetBackColor">
+		<param name="Local" value="class_c_chart_legend.html#03431c7ae2764527fead0db1f129c187">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetBackgroundColor">
+		<param name="Name" value="CChartBalloonLabel::GetBackgroundColor">
+		<param name="Local" value="class_c_chart_balloon_label.html#0ea535b7cee214f7c24002c25cbf0ffc">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetBarWidth">
+		<param name="Name" value="CChartBarSerie::GetBarWidth">
+		<param name="Local" value="class_c_chart_bar_serie.html#8e4ab7a0af3097d935922f12ba9c4f3d">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetBezierControlPoints">
+		<param name="Name" value="CChartPointsArray::GetBezierControlPoints">
+		<param name="Local" value="class_c_chart_points_array.html#9f87932f7975c09b6dccf0d8caa37bb8">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetBorderColor">
+		<param name="Name" value="CChartBalloonLabel::GetBorderColor">
+		<param name="Local" value="class_c_chart_balloon_label.html#47dad431d33bbcd07057a6ff96c4b717">
+		<param name="Name" value="CChartBarSerie::GetBorderColor">
+		<param name="Local" value="class_c_chart_bar_serie.html#30b9d6b27438a8040cc40d68e7ff74ae">
+		<param name="Name" value="CChartCtrl::GetBorderColor">
+		<param name="Local" value="class_c_chart_ctrl.html#8761c0b97fc83ee817e5331cd6427640">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="SChartPoint">
 		<param name="Name" value="ChartDemo: CChartPointsArray::CChartPointsArray::SChartPoint Struct Reference">
 		<param name="Local" value="struct_c_chart_points_array_1_1_s_chart_point.html">
