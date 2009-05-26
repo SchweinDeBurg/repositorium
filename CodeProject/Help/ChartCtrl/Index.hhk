@@ -795,5 +795,57 @@
 		<param name="Name" value="CChartCtrl::GetZoomRectColor">
 		<param name="Local" value="class_c_chart_ctrl.html#16ad1084a1fc0b81fc5fbec67ac61225">
 		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="IsAutomatic">
+		<param name="Name" value="CChartAxis::IsAutomatic">
+		<param name="Local" value="class_c_chart_axis.html#70c25c84b78ac9d349e1b30162bf88ce">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="IsHorizontal">
+		<param name="Name" value="CChartAxis::IsHorizontal">
+		<param name="Local" value="class_c_chart_axis.html#635f5e389dadc7f59b81ce6b0a4529f9">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="IsInverted">
+		<param name="Name" value="CChartAxis::IsInverted">
+		<param name="Local" value="class_c_chart_axis.html#0fd782ffe225b9a639a3880691b6e2ff">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="IsPointInside">
+		<param name="Name" value="CChartAxis::IsPointInside">
+		<param name="Local" value="class_c_chart_axis.html#2ebc8ea10c41e4b635e097469f56f313">
+		<param name="Name" value="CChartLegend::IsPointInside">
+		<param name="Local" value="class_c_chart_legend.html#de42499c29132ecdda476afb6a9b366c">
+		<param name="Name" value="CChartTitle::IsPointInside">
+		<param name="Local" value="class_c_chart_title.html#a5c095e2b33f0629efcc11fde2e80bf1">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="IsPointOnSerie">
+		<param name="Name" value="CChartLineSerie::IsPointOnSerie">
+		<param name="Local" value="class_c_chart_line_serie.html#d30c44e96b7551d1d4576da40ac683f6">
+		<param name="Name" value="CChartSurfaceSerie::IsPointOnSerie">
+		<param name="Local" value="class_c_chart_surface_serie.html#3ce7b3fef28a13bb6e5748bb1e5334f8">
+		<param name="Name" value="CChartPointsSerie::IsPointOnSerie">
+		<param name="Local" value="class_c_chart_points_serie.html#da57c96010550fa96a65a803644e3521">
+		<param name="Name" value="CChartSerie::IsPointOnSerie">
+		<param name="Local" value="class_c_chart_serie.html#941aec6162f5b449fc570bc5063fb076">
+		<param name="Name" value="CChartBarSerie::IsPointOnSerie">
+		<param name="Local" value="class_c_chart_bar_serie.html#49c4128340700712f2be11449d59cfee">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="IsVisible">
+		<param name="Name" value="CChartAxisLabel::IsVisible">
+		<param name="Local" value="class_c_chart_axis_label.html#04462dd4988a32f369e22201179d0ff7">
+		<param name="Name" value="CChartSerie::IsVisible">
+		<param name="Local" value="class_c_chart_serie.html#0b5abeb1edfb69ec6c1133542784c01c">
+		<param name="Name" value="CChartLegend::IsVisible">
+		<param name="Local" value="class_c_chart_legend.html#b2c65ac7823a1551eff83709f4310ddf">
+		<param name="Name" value="CChartAxis::IsVisible">
+		<param name="Local" value="class_c_chart_axis.html#9e7bf4eec0e4a881f9ef869e3e12cd2e">
+		<param name="Name" value="CChartTitle::IsVisible">
+		<param name="Local" value="class_c_chart_title.html#c8132d6630b993c49de48a60d8516ad0">
+		<param name="Name" value="CChartGrid::IsVisible">
+		<param name="Local" value="class_c_chart_grid.html#5622130837c1b5e05de5dafa4d5f8fde">
+		</OBJECT>
 </UL>
 </BODY></HTML>
