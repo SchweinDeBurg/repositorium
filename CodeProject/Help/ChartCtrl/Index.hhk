@@ -847,5 +847,247 @@
 		<param name="Name" value="CChartGrid::IsVisible">
 		<param name="Local" value="class_c_chart_grid.html#5622130837c1b5e05de5dafa4d5f8fde">
 		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_AxisColor">
+		<param name="Name" value="CChartAxis::m_AxisColor">
+		<param name="Local" value="class_c_chart_axis.html#2137029301f796af0fdfc4e6f373f0c5">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_AxisRect">
+		<param name="Name" value="CChartAxis::m_AxisRect">
+		<param name="Local" value="class_c_chart_axis.html#a33ee78a82bfa536959c1daaadd6dca6">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_bAutoMargin">
+		<param name="Name" value="CChartAxis::m_bAutoMargin">
+		<param name="Local" value="class_c_chart_axis.html#dc702fdff9e5d6349a18a3145f5114a6">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_bAutoTicks">
+		<param name="Name" value="CChartAxis::m_bAutoTicks">
+		<param name="Local" value="class_c_chart_axis.html#709a22de2a236d99371e6a4b5a9abebb">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_bDiscrete">
+		<param name="Name" value="CChartAxis::m_bDiscrete">
+		<param name="Local" value="class_c_chart_axis.html#47312e5e307faab0c07d4524d971803c">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_bIsAutomatic">
+		<param name="Name" value="CChartAxis::m_bIsAutomatic">
+		<param name="Local" value="class_c_chart_axis.html#b4e008ad0cf0af8ebc201ee6bbc46667">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_bIsHorizontal">
+		<param name="Name" value="CChartAxis::m_bIsHorizontal">
+		<param name="Local" value="class_c_chart_axis.html#ed506671697ff705f470d1a2c7b036e2">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_bIsInverted">
+		<param name="Name" value="CChartAxis::m_bIsInverted">
+		<param name="Local" value="class_c_chart_axis.html#bf01a1fb475970963e8c71bff67720b2">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_bIsSecondary">
+		<param name="Name" value="CChartAxis::m_bIsSecondary">
+		<param name="Local" value="class_c_chart_axis.html#c42a13ee6fb3823fa963f084d30c85a6">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_bIsVisible">
+		<param name="Name" value="CChartAxis::m_bIsVisible">
+		<param name="Local" value="class_c_chart_axis.html#4fa87c936a3fc43345159691be8de282">
+		<param name="Name" value="CChartLabel::m_bIsVisible">
+		<param name="Local" value="class_c_chart_label.html#2740f329ead0fb9a9ab8df0dfd43fba9">
+		<param name="Name" value="CChartSerie::m_bIsVisible">
+		<param name="Local" value="class_c_chart_serie.html#94abd6b662b6cef7daf54f406ab7932c">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_bShadow">
+		<param name="Name" value="CChartSerie::m_bShadow">
+		<param name="Local" value="class_c_chart_serie.html#eed7e4283c2c4d180d03de51bee0b411">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_bZoomEnabled">
+		<param name="Name" value="CChartAxis::m_bZoomEnabled">
+		<param name="Local" value="class_c_chart_axis.html#2a5f79febb9e814df869869b14a67a43">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_colCursor">
+		<param name="Name" value="CChartCursor::m_colCursor">
+		<param name="Local" value="class_c_chart_cursor.html#82f0fae88de7676e725cb394c7350bbe">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_dZoomLimit">
+		<param name="Name" value="CChartAxis::m_dZoomLimit">
+		<param name="Local" value="class_c_chart_axis.html#ed4efe99a86dfd951b3696e2df3590a1">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_EndPos">
+		<param name="Name" value="CChartAxis::m_EndPos">
+		<param name="Local" value="class_c_chart_axis.html#a7d85a34e4dc88016775771bf9acc926">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_iFontSize">
+		<param name="Name" value="CChartLabel::m_iFontSize">
+		<param name="Local" value="class_c_chart_label.html#c0808d3cabf8e26655d3dfa945fff0b2">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_iMarginSize">
+		<param name="Name" value="CChartAxis::m_iMarginSize">
+		<param name="Local" value="class_c_chart_axis.html#7d368a223ad02eb28747c38d6eb45fad">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_iShadowDepth">
+		<param name="Name" value="CChartSerie::m_iShadowDepth">
+		<param name="Local" value="class_c_chart_serie.html#45935afe018d61b5535de248ea0abfa4">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_lstListeners">
+		<param name="Name" value="CChartCursor::m_lstListeners">
+		<param name="Local" value="class_c_chart_cursor.html#fbe312c829d2bbcdd73ce92211e1614c">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_MaxValue">
+		<param name="Name" value="CChartAxis::m_MaxValue">
+		<param name="Local" value="class_c_chart_axis.html#d983f570d89221b662818a4d32b1d79f">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_MinValue">
+		<param name="Name" value="CChartAxis::m_MinValue">
+		<param name="Local" value="class_c_chart_axis.html#21beddc72ca06eb4057ff8b22176bc56">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_nFontSize">
+		<param name="Name" value="CChartAxis::m_nFontSize">
+		<param name="Local" value="class_c_chart_axis.html#d83c6124190aa668e199e75ad72a583f">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_pAxisGrid">
+		<param name="Name" value="CChartAxis::m_pAxisGrid">
+		<param name="Local" value="class_c_chart_axis.html#1e712d05cacf6547e1c3ae3a4fa67400">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_pAxisLabel">
+		<param name="Name" value="CChartAxis::m_pAxisLabel">
+		<param name="Local" value="class_c_chart_axis.html#0fd166ea387fa86a3101a26a4aa70faa">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_pHorizontalAxis">
+		<param name="Name" value="CChartSerie::m_pHorizontalAxis">
+		<param name="Local" value="class_c_chart_serie.html#2b071028dd27e4c20f3b6f9e3c2f5be4">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_pLabelProvider">
+		<param name="Name" value="CChartLabel::m_pLabelProvider">
+		<param name="Local" value="class_c_chart_label.html#064ffa7fdb21ac3595969903ee346622">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_PlottingRect">
+		<param name="Name" value="CChartSerie::m_PlottingRect">
+		<param name="Local" value="class_c_chart_serie.html#cb9b462fb6cd06efcc222989a288de9e">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_pParentCtrl">
+		<param name="Name" value="CChartCursor::m_pParentCtrl">
+		<param name="Local" value="class_c_chart_cursor.html#c913e38511292baeb5b8f1ae26e32444">
+		<param name="Name" value="CChartLabel::m_pParentCtrl">
+		<param name="Local" value="class_c_chart_label.html#ce0d9c814d3661cbdc2ae0e5e5c2ef6d">
+		<param name="Name" value="CChartSerie::m_pParentCtrl">
+		<param name="Local" value="class_c_chart_serie.html#e58934056f70a5dc032294893d926f11">
+		<param name="Name" value="CChartAxis::m_pParentCtrl">
+		<param name="Local" value="class_c_chart_axis.html#e2c8a1607523b37f4fd11ec35e113856">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_pParentSeries">
+		<param name="Name" value="CChartLabel::m_pParentSeries">
+		<param name="Local" value="class_c_chart_label.html#d944aa65cbc4a0277d91fcdf363590b2">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_pRelatedSeries">
+		<param name="Name" value="CChartAxis::m_pRelatedSeries">
+		<param name="Local" value="class_c_chart_axis.html#f73c7b1f8b543a255a9a5e3eeb479e89">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_pScrollBar">
+		<param name="Name" value="CChartAxis::m_pScrollBar">
+		<param name="Local" value="class_c_chart_axis.html#e08ed8eb54e4b74007f1f635e51e26dd">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_pVerticalAxis">
+		<param name="Name" value="CChartSerie::m_pVerticalAxis">
+		<param name="Local" value="class_c_chart_serie.html#44258e79dbd6649366cad26d43d4535b">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_SerieColor">
+		<param name="Name" value="CChartSerie::m_SerieColor">
+		<param name="Local" value="class_c_chart_serie.html#31ee0886968100ede5a3d20797c7848d">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_ShadowColor">
+		<param name="Name" value="CChartSerie::m_ShadowColor">
+		<param name="Local" value="class_c_chart_serie.html#795b0d0f4bfb6a5a634aece700481422">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_StartPos">
+		<param name="Name" value="CChartAxis::m_StartPos">
+		<param name="Local" value="class_c_chart_axis.html#3e31b004cf574ede66a8b069086b4236">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_strFontName">
+		<param name="Name" value="CChartLabel::m_strFontName">
+		<param name="Local" value="class_c_chart_label.html#532aa8ae70cf640a1a73f1ab51e8b970">
+		<param name="Name" value="CChartAxis::m_strFontName">
+		<param name="Local" value="class_c_chart_axis.html#ed09f30a9bb0a764ddc9c0870082ab7e">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_strLabelText">
+		<param name="Name" value="CChartLabel::m_strLabelText">
+		<param name="Local" value="class_c_chart_label.html#e11381ce16fe478bf7abbaf85363fe36">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_strSerieName">
+		<param name="Name" value="CChartSerie::m_strSerieName">
+		<param name="Local" value="class_c_chart_serie.html#7fc508448dd10f3baba827adc23d8798">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_TextColor">
+		<param name="Name" value="CChartAxis::m_TextColor">
+		<param name="Local" value="class_c_chart_axis.html#a9bf09724c43d6aa5b2b6d547d1670f6">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_uCursorId">
+		<param name="Name" value="CChartCursor::m_uCursorId">
+		<param name="Local" value="class_c_chart_cursor.html#634c001d77168bbe68963644774eac4e">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_uLastDrawnPoint">
+		<param name="Name" value="CChartSerie::m_uLastDrawnPoint">
+		<param name="Local" value="class_c_chart_serie.html#cae7222f663037ea1ca9b1e246023296">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_uNextFreeId">
+		<param name="Name" value="CChartCursor::m_uNextFreeId">
+		<param name="Local" value="class_c_chart_cursor.html#a60c63b9ba30caae2c4d4971a2d617af">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_UnzoomMax">
+		<param name="Name" value="CChartAxis::m_UnzoomMax">
+		<param name="Local" value="class_c_chart_axis.html#b59aae9335438f4013b7cfa6663631f5">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_UnzoomMin">
+		<param name="Name" value="CChartAxis::m_UnzoomMin">
+		<param name="Local" value="class_c_chart_axis.html#0ef1ca7f15e14d313fa3bfb89e6d8634">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="m_vPoints">
+		<param name="Name" value="CChartSerie::m_vPoints">
+		<param name="Local" value="class_c_chart_serie.html#2c8274ea2efa3883ee95a5e468346377">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="MouseEvent">
+		<param name="Name" value="CChartMouseListener::MouseEvent">
+		<param name="Local" value="class_c_chart_mouse_listener.html#cffa1073dca632eca72f7339ecb350d7">
+		</OBJECT>
 </UL>
 </BODY></HTML>
