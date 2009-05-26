@@ -651,5 +651,149 @@
 		<param name="Name" value="CChartSerie::GetPointScreenCoord">
 		<param name="Local" value="class_c_chart_serie.html#72e0a034ac7202926e481bb66aff5efb">
 		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetPointSize">
+		<param name="Name" value="CChartPointsSerie::GetPointSize">
+		<param name="Local" value="class_c_chart_points_serie.html#bc86737dbc712394282675bfd0e2eae0">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetPointType">
+		<param name="Name" value="CChartPointsSerie::GetPointType">
+		<param name="Local" value="class_c_chart_points_serie.html#3522a357f3af5a82ad5f5950a9b8eb68">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetPosition">
+		<param name="Name" value="CChartAxis::GetPosition">
+		<param name="Local" value="class_c_chart_axis.html#64a6ddeff5c34376d461c5bd5c6177dc">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetRoundedRect">
+		<param name="Name" value="CChartBalloonLabel::GetRoundedRect">
+		<param name="Local" value="class_c_chart_balloon_label.html#0b758ec0d68b478cfa980306f7193c2a">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetScrollbarSteps">
+		<param name="Name" value="CChartAxis::GetScrollbarSteps">
+		<param name="Local" value="class_c_chart_axis.html#cadb566b32dd7cb52fd29d50eda6974f">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetSerie">
+		<param name="Name" value="CChartCtrl::GetSerie">
+		<param name="Local" value="class_c_chart_ctrl.html#3c1119756906792a51ab691191e488af">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetSerieId">
+		<param name="Name" value="CChartSerie::GetSerieId">
+		<param name="Local" value="class_c_chart_serie.html#800f46d86d6078273a8437e719bbf259">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetSeriesCount">
+		<param name="Name" value="CChartCtrl::GetSeriesCount">
+		<param name="Local" value="class_c_chart_ctrl.html#d79d9e5978eb957366dbe3d4d71c4902">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetSeriesMinMax">
+		<param name="Name" value="CChartAxis::GetSeriesMinMax">
+		<param name="Local" value="class_c_chart_axis.html#3e6094a0885da791201677702e2a9989">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetSerieXMinMax">
+		<param name="Name" value="CChartPointsArray::GetSerieXMinMax">
+		<param name="Local" value="class_c_chart_points_array.html#77205601a8e78b60c8a4301875856012">
+		<param name="Name" value="CChartSerie::GetSerieXMinMax">
+		<param name="Local" value="class_c_chart_serie.html#8d7991667c09689a6506ddb0dc621d3d">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetSerieYMinMax">
+		<param name="Name" value="CChartPointsArray::GetSerieYMinMax">
+		<param name="Local" value="class_c_chart_points_array.html#bcb68f1a2f4269dede80326ceadfca28">
+		<param name="Name" value="CChartSerie::GetSerieYMinMax">
+		<param name="Local" value="class_c_chart_serie.html#39055ffd58ad32295aba43fe10091cf5">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetShadowColor">
+		<param name="Name" value="CChartSerie::GetShadowColor">
+		<param name="Local" value="class_c_chart_serie.html#80a017e164d59595da682c712c24ee1b">
+		<param name="Name" value="CChartLegend::GetShadowColor">
+		<param name="Local" value="class_c_chart_legend.html#89ee10fed100ff1b19c16908bc79491d">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetString">
+		<param name="Name" value="CChartTitle::GetString">
+		<param name="Local" value="class_c_chart_title.html#25bce9dc954b60d9c8342e58f204af2e">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetStringCount">
+		<param name="Name" value="CChartTitle::GetStringCount">
+		<param name="Local" value="class_c_chart_title.html#4c6da1aa950e674d1ecfcef3bef36b9f">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetText">
+		<param name="Name" value="CChartAxisLabel::GetText">
+		<param name="Local" value="class_c_chart_axis_label.html#c0aacb5d08b22eb026f17599a772d3e0">
+		<param name="Name" value="CChartLabelProvider::GetText">
+		<param name="Local" value="class_c_chart_label_provider.html#4eb08f9c614f5f11aa95a58dc2c44c70">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetTextColor">
+		<param name="Name" value="CChartAxis::GetTextColor">
+		<param name="Local" value="class_c_chart_axis.html#f682fbf0598b0e268fbbb2d5106f3516">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetTickIncrement">
+		<param name="Name" value="CChartStandardAxis::GetTickIncrement">
+		<param name="Local" value="class_c_chart_standard_axis.html#f72b79a26c98e9b9f0d3eeea6d854fde">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetTickLabel">
+		<param name="Name" value="CChartAxis::GetTickLabel">
+		<param name="Local" value="class_c_chart_axis.html#d7a3eac8b9db57f066f52074a56d8ec7">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetTickPos">
+		<param name="Name" value="CChartAxis::GetTickPos">
+		<param name="Local" value="class_c_chart_axis.html#bc9379bae77cf45f3f5010a247a5b8b2">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetTitle">
+		<param name="Name" value="CChartCtrl::GetTitle">
+		<param name="Local" value="class_c_chart_ctrl.html#7f303be46f9fecae1ca6311dc5a17e98">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetVisiblePoints">
+		<param name="Name" value="CChartSerie::GetVisiblePoints">
+		<param name="Local" value="class_c_chart_serie.html#47910a67d3e376f4f291340cc617d97e">
+		<param name="Name" value="CChartPointsArray::GetVisiblePoints">
+		<param name="Local" value="class_c_chart_points_array.html#dd4a6afe571d5d809953668cd305c620">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetWidth">
+		<param name="Name" value="CChartLineSerie::GetWidth">
+		<param name="Local" value="class_c_chart_line_serie.html#4b5b1152532fc9cc0c9fd3ddc71a20db">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetXPointValue">
+		<param name="Name" value="CChartPointsArray::GetXPointValue">
+		<param name="Local" value="class_c_chart_points_array.html#ee6b6864a7f78479e98b63248b6505bf">
+		<param name="Name" value="CChartSerie::GetXPointValue">
+		<param name="Local" value="class_c_chart_serie.html#69b68925a4bd6c3bcdeb02e7a46eb0c2">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetYPointValue">
+		<param name="Name" value="CChartPointsArray::GetYPointValue">
+		<param name="Local" value="class_c_chart_points_array.html#406b26cbe960028f229e7ce3a6832ac0">
+		<param name="Name" value="CChartSerie::GetYPointValue">
+		<param name="Local" value="class_c_chart_serie.html#4e4111b8a03d9eadc07dc49a8f8a6535">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetZoomEnabled">
+		<param name="Name" value="CChartCtrl::GetZoomEnabled">
+		<param name="Local" value="class_c_chart_ctrl.html#0c4353590178e76e508899344819049e">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="GetZoomRectColor">
+		<param name="Name" value="CChartCtrl::GetZoomRectColor">
+		<param name="Local" value="class_c_chart_ctrl.html#16ad1084a1fc0b81fc5fbec67ac61225">
+		</OBJECT>
 </UL>
 </BODY></HTML>
