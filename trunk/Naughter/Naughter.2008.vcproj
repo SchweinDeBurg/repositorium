@@ -551,6 +551,43 @@
 			Filter="htm;gif;css"
 			>
 			<File
+				RelativePath=".\Help\appsettings.htm"
+				DeploymentContent="true"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\Help\FileTreeCtrl.gif"
 				>
 				<FileConfiguration
@@ -1318,6 +1355,15 @@
 			</File>
 			<File
 				RelativePath=".\Source\XTaskDialogStatic.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="General Purpose"
+			Filter="h;cpp;rh;rc"
+			>
+			<File
+				RelativePath=".\Source\AppSettings.h"
 				>
 			</File>
 		</Filter>
