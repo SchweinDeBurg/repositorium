@@ -72,7 +72,10 @@ public:
     MyDocumentsNode,
     MyComputerNode,
     CurrentUserFolderNode,
-    OtherNode
+    FileNode,
+    FolderNode,
+    DriveNode,
+    UnknownNode
   };
 
 //Constructors / Destructors
@@ -84,9 +87,8 @@ public:
   CString       m_sFQPath;          //Fully qualified path for this item
   CString       m_sRelativePath;    //The "Display name" for this item, Normally will be a relative bit of the path from "m_sFQPath"
   NETRESOURCE*  m_pNetResource;     //Used if this item is under Network Neighborhood
-  NodeType      m_NodeType;         //The type of node this is
+  BYTE          m_NodeType;         //The type of node this is (A BYTE and not a NodeType instance to optimize memory footprint)
   bool          m_bExtensionHidden; //Is the extension being hidden for this item
-  bool          m_bFileItem;        //TRUE if this item is a file item
 };
 
 
@@ -151,23 +153,6 @@ protected:
   WIN9X_NETSHAREENUM*          m_pWin9xShareEnum; //Win9x function pointer for NetShareEnum
   CFileTreeCtrl_share_info_50* m_pWin9xShareInfo; //Win9x share info
   DWORD                        m_dwShares;        //The number of shares enumerated
-};
-
-
-//Class which is used for passing info to and from the change notification threads
-class FILETREECTRL_EXT_CLASS CFileTreeCtrlThreadInfo
-{
-public:
-//Constructors / Destructors
-  CFileTreeCtrlThreadInfo();
-  virtual ~CFileTreeCtrlThreadInfo();
-
-//Member variables
-  CString        m_sPath;          //The path we are monitoring
-  CWinThread*    m_pThread;        //The thread pointer
-  CFileTreeCtrl* m_pTree;          //The tree control
-  INT_PTR        m_nIndex;         //Index of this item into CFileTreeCtrl::m_ThreadInfo
-  CEvent         m_TerminateEvent; //Event using to terminate the thread
 };
 
 
@@ -287,9 +272,9 @@ public:
   CString           GetBackItemText(INT_PTR nBack) const;
   INT_PTR           GetForwardSize() const;
   CString           GetForwardItemText(INT_PTR nForward) const;
-  void              CollapseExpandBranch(HTREEITEM hti, int nAction);
-  void              Collapseall();
-  void              Expandall();
+  void              CollapseExpandBranch(HTREEITEM hItem, int nAction);
+  void              CollapseAll();
+  void              ExpandAll();
   void              Clear();
 
 //Debug / Assert help
@@ -373,9 +358,9 @@ protected:
   virtual BOOL        CanHandleChangeNotifications(const CString& sPath);
   static int CALLBACK CompareByFilenameNoCase(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
   virtual void        CreateMonitoringThread(const CString& sPath);
-  static UINT         MonitoringThread(LPVOID pParam);
-  virtual void        KillNotificationThreads();
-  virtual void        KillNotificationThread(const CString& sPath);
+  static UINT         _MonitoringThread(LPVOID pParam);
+  virtual UINT        MonitoringThread();
+  virtual void        KillMonitoringThread();
   virtual BOOL        GetSerialNumber(const CString& sDrive, DWORD& dwSerialNumber);
   virtual BOOL        IsMediaValid(const CString& sDrive);
   virtual void        OnSelectionChanged(NM_TREEVIEW*, const CString&);
@@ -394,7 +379,7 @@ protected:
   CString                                                     m_sMyDocumentsPath;
   CString                                                     m_sCurrentUserFolderPath;
   CString                                                     m_sDesktopPath;
-  BOOL                                                        m_bShowFiles;
+  volatile long                                               m_bShowFiles;
   HTREEITEM                                                   m_hRoot;
 #ifndef FILETREECTRL_NO_RESOURCES  
   HTREEITEM                                                   m_hItemDrag;
@@ -439,9 +424,6 @@ protected:
   CArray<HTREEITEM, HTREEITEM>                                m_NextItems;
   INT_PTR                                                     m_nMaxHistory;            
   BOOL                                                        m_bUpdatingHistorySelection;
-  CArray<CFileTreeCtrlThreadInfo*, CFileTreeCtrlThreadInfo*&> m_ThreadInfo;
-  CEvent                                                      m_TerminateEvent;
-  LONG volatile                                               m_nAutoRefresh;
   BOOL                                                        m_bShowNetwork;
   BOOL                                                        m_bShowSharedUsingDifferentIcon;
   HideFileExtension                                           m_FileExtensions;
@@ -455,6 +437,10 @@ protected:
   int                                                         m_nComputerIconIndex;
   int                                                         m_nSelectedComputerIconIndex;
 #endif
+  LONG volatile                                               m_nAutoRefresh;
+  CString                                                     m_sMonitoringPath;          //The path we are monitoring
+  CWinThread*                                                 m_pMonitoringThread;        //The pointer for the monitor thread
+  CEvent                                                      m_MonitoringTerminateEvent; //Event using to terminate the thread
 };
 
 //MFC Data exchange routines
