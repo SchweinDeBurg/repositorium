@@ -1,0 +1,536 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>CScintillaCtrl, CScintillaView &amp; CScintillaDoc v1.24</title>
+<link rel="stylesheet" type="text/css" href="naughter.css">
+</head>
+
+<body>
+
+<h2><strong>CScintillaCtrl, CScintillaView &amp; 
+CScintillaDoc v1.24</strong></h2>
+
+<h2><i>Freeware MFC wrapper classes for the Scintilla edit 
+control</i></h2>
+
+<p>These classes provides a MFC wrapping for the Scintilla edit control (<a href="http://www.scintilla.org">http://www.scintilla.org</a>). 
+This control provides an open source cross platform edit control. Some of the 
+features it provides include syntax colouring, call tips, brace highlighting, 
+Styles, margins and markers to name but a few. The provided wrapper classes make 
+it easier to include the control in MFC projects on Windows.</p>
+
+<table>
+<TBODY>
+  <tr>
+    <td><a href="#Features">Features</a></td>
+  </tr>
+  <tr>
+    <td><a href="#Usage">Usage</a></td>
+  </tr>
+  <tr>
+    <td><a href="#Copyright">Copyright</a></td>
+  </tr>
+  <tr>
+    <td><a href="#History">History</a></td>
+  </tr>
+  <tr>
+    <td><a href="#Enhancements">Planned Enhancements</a></td>
+  </tr>
+  <tr>
+    <td><a href="#References">Reference</a></td>
+  </tr>
+  <tr>
+    <td><a href="#Contact">Contacting the Author</a></td>
+  </tr>
+</TBODY>
+</table>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><strong><a name="Features"></a>Features</strong></h2>
+
+<ul>
+  <li>Implements all the 
+  functionality provided by Scintilla v1.77.</li>
+  <li>The CScintillaCtrl wrapper class observes the same 
+  semantics as the built in MFC &quot;CEdit&quot; wrapper class.</li>
+  <li>Uses the direct access functions provided by scintilla 
+  to improve performance. Multi threaded code can still use SendMessage by 
+  specifying FALSE for the bDirect parameter in the wrapper methods of 
+  CScintillaCtrl.</li>
+  <li>The generation of the wrapper class methods are created 
+  using a Windows script file &quot;ConvertScintillaiface.js&quot; included in the 
+  download. This allows the class to be easily updated when new versions of 
+  Scintilla are released.</li>
+  <li>The CScintillaView and CScintillaDoc classes provide a 
+  complete doc / view implementation which can be dropped into an existing 
+  project instead of the built in MFC rich edit or edit control classes.</li>
+  <li>Provides built in MFC persistence support.</li>
+  <li>All notifications sent using WM_NOTIFY and 
+  WM_COMMAND are mapped to easier to use C++ virtual functions in the view 
+  wrapper class.</li>
+  <li>The CScintillaView class provides a default folding 
+  implementation.</li>
+  <li>Includes full &quot;Find and Replace&quot; support including the 
+  regular expression support provided by Scintilla. To achieve this a 
+  &quot;CScintillaFindReplaceDlg&quot; class is implemented which derives from the 
+  standard MFC &quot;CFindReplaceDialog&quot;.</li>
+  <li>Includes a complete MFC printing implementation in 
+  CScintillaView.</li>
+  <li>Includes complete support for standard Page Setup 
+  dialog and print margins.</li>
+  <li>Includes a framework for Print headers and footers.</li>
+  <li>Includes support for all the standard MFC menu items, 
+  such as Cut, Copy, Paste etc.</li>
+  <li>The sample app demonstrates how top level messages 
+  should be forwarded to the Scintilla control.</li>
+  <li>The sample app also demonstrates how you would
+    implement autocompletion and call tips in your code.</li>
+	<li>The classes hide the fact that Scintilla does not natively support 
+	Windows Unicode (aka UTF16 or UCS-2). The way Scintilla supports Unicode is 
+	through a UTF8 API. The &quot;CScintillaCtrl&quot; wrapper class looks after the 
+	details of setting up the Unicode code page for Scintilla and the 
+	translation to and from UTF8 strings. If you take a look at the &quot;ScintillaCtrl.h&quot; 
+	header file, you will see a section which includes widechar string versions 
+	of the functions in Scintilla which involves string parameters. These 
+	widechar string functions are wrapped in a &quot;_UNICODE&quot; pre-processor 
+	#ifdef. Internally, these functions perform the thunking required to map 
+	between Windows Unicode and the UTF8 API of Scintilla. Please note that 
+	to perform this thunking the code uses the UTF8 translation functionality 
+	provided by the &quot;WideCharToMultiByte&quot; and &quot;MultiByteToWideChar&quot; Win32 API 
+	calls. Please note that UTF8 support for these Win32 API calls is limited to 
+	Windows 98, Windows ME, Windows NT 4.0 or later. This does mean that it is 
+	not possible to use the wrapper classes for Unicode on Windows 95 (if you 
+	were to arrange to use the Microsoft Layer for Unicode aka Unicows). This 
+	should not be an inconvenience for many people. Also note that this new 
+	functionality which was introduced in v1.15 in no way prevents the wrapper 
+	classes from being fully used if you were to use them in non Unicode mode on 
+	Windows 9x.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><strong><a name="Usage"></a>Usage</strong></h2>
+
+<ul>
+  <li>To use the class in your code simply include
+    ScintillaCtrl.h and ScintillaCtrl.cpp in your project and #include 
+  ScintillaCtrl.h in which ever of your modules needs
+    to make calls to the class.</li>
+  <li>If you want to use the document / view wrappers then 
+  also include ScintillaDocView.h and ScintillaDocView.cpp in your project.</li>
+	<li>As of v1.21, the classes are now designed for VC 2005 or later. 
+	They will not compile on earlier releases of VC.</li>
+  <li>Your code will need to include MFC either statically or dynamically.</li>
+  <li>If you are linking to Scintilla dynamically, then you 
+  should call &quot;LoadLibrary(_T(&quot;SciLexer.dll&quot;))&quot; in the start-up of your 
+  application. If using the control by statically including the control code, 
+  then you need to register the scintilla window class yourself.</li>
+  <li>To see the class in action, have a look at the module
+    &quot;ScintillaDemoView.cpp&quot; in the sample app provided.</li>
+  <li>For further information on  developing with Scintilla and 
+  the functionality it provides, please review the comprehensive documentation 
+  on the Scintilla web site.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><b><a name="Copyright"></a>Copyright</b></h2>
+<ul>
+	<li>You are allowed to include the source code in any product (commercial, shareware, 
+	freeware or otherwise) when your product is released in binary form.</li>
+	<li>You are allowed to modify the source code in any way you want except you 
+	cannot modify the copyright details at the top of each module.</li>
+	<li>If you want to distribute source code with your application, then you are 
+	only allowed to distribute versions released by the author. This is to maintain 
+	a single distribution point for the source code.</li>
+</ul>
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><strong><a name="History"></a>History</strong></h2>
+
+<p><strong>V1.0 (18 March 2004)</strong>
+
+<ul>
+  <li>Initial public release.</li>
+</ul>
+
+<p><strong>V1.01 (18 March 2004)</strong>
+
+<ul>
+  <li>Updated the sample app's Find Next and Find Previous 
+  marker functions. Now correctly goes to the next and previous markers when a 
+  marker is on the current line.</li>
+  <li>Updated the sample app's passing of messages to 
+  Scintilla from the top level CMainFrame window.</li>
+</ul>
+
+<p><strong>V1.02 (6 June 2004)</strong>
+
+<ul>
+  <li>Updated class to work with Scintilla v1.61.</li>
+</ul>
+
+<p><strong>V1.03 (13 August 2004)</strong>
+
+<ul>
+  <li>Made all the remaining non virtual functions related to 
+  Find and Replace in CScintillaView virtual.</li>
+  <li>CScintillaView::TextNotFound function is now passed the 
+  parameters used for the search. Thanks to Dmitry Naumov for this update.</li>
+  <li>Removed the CScintillaView::OnTextNotFound function as 
+  all the work for it is achieved using the TextNotFound function.</li>
+  <li>Creation of the find / replace dialog now takes place 
+  in a new virtual function &quot;CScintillaViewCreateFindReplaceDialog&quot;. Again 
+  thanks to Dmitry Naumov for this update. </li>
+</ul>
+
+<p><strong>V1.04 (20 December 2004)</strong>
+
+<ul>
+  <li>Updated class to work with Scintilla v1.62.</li>
+  <li>Sample app now includes a common control 6 manifest</li>
+  <li>Sample app now includes an example of scintilla autocompletion. When you type                          "scintilla is " case insensitively a autocompletion list is displayed which allows                          "very cool", "easy" or "way cool!!" to be entered.&nbsp;</li>
+  <li>Sample app now includes an example of scintilla calltips. Whenever you hover
+    over text which is "author " case insensitively, a call tip with the text                          "PJ Naughter" is displayed.</li>
+</ul>
+
+<p><strong>V1.05 (4 March 2005)</strong>
+
+<ul>
+  <li>Fix in CScintillaView::PrintPage which now sorts out the issue of print preview
+    not working in the MFC doc / view wrappers for scintilla. Thanks to Frank Kiesel
+    for reporting this fix.</li>
+</ul>
+
+<p><b>30 May 2005</b></p>
+
+<ul>
+  <li>Updated the sample app to show how to handle cancel
+    call tips if a view loses focus, is sized or moved. This is achieved by
+    handling WM_ACTIVATE in the view class and WM_SIZE and WM_MOVE in the child
+    frame class. Thanks to Markus Werle for spotting this issue.</li>
+</ul>
+
+<p><strong>V1.06 (10 July 2005)</strong>
+
+<ul>
+  <li>Addition of a virtual function namely OnAutoCSelection which handles the
+    SCN_AUTOCSELECTION notification message which was introduced in Scintilla v1.63.
+    Thanks to Dan Petitt for suggesting this update.</li>
+  <li>Updated class to work with Scintilla v1.64.</li>
+  <li>A new boolean variable called &quot;m_bUseROFileAttributeDuringLoading&quot; has been added                          to CScintillaView. If this value is set then the code will check the read only file
+    attribute of the file being loaded and if it is set, then the document is marked as
+    read only by Scintilla. By doing this any attempts to modify the document will cause                          the OnModifyAttemptRO virtual function to be called. This allows you to prompt to                          make the file read write or to check out the file from a version control system.                          Thanks to Dan Petitt for suggesting this update.</li>
+  <li>Demo app now demonstrates how to use the SCN_MODIFYATTEMPTRO notification.</li>
+  <li>Fixed a number of warnings when the code is compiled
+    using Visual Studio .NET 2003.</li>
+  <li>SetSavePoint and SetReadOnly calls are now made in CScintillaDoc::OnSaveDocument
+    instead of CScintillaView::Serialize. This ensures that the control is only reset
+    upon a successful save.</li>
+</ul>
+
+<p><strong>V1.07 (3 January 2006)</strong>
+
+<ul>
+	<li>Updated class to work with Scintilla v1.67. New 
+	messages wrapped include: SCI_MARKERADDSET, SCI_SETPASTECONVERTENDINGS, 
+	SCI_GETPASTECONVERTENDINGS, SCI_SELECTIONDUPLICATE and 
+	SCI_GETSTYLEBITSNEEDED.</li>
+	<li>Updated copyright messages</li>
+	<li>Fixed a bug where the separator line in the header 
+	was not being drawn due to issues in the code which calculates the 
+	coordinates. </li>
+	<li>Added two member variables which decide whether 
+	printer headers and footers should be printed (CScintillaView::m_bPrintHeader 
+	and CScintillaView::m_bPrintFooter). You could of course achieve the same 
+	result by deriving a class from CScintillaView and implementing empty 
+	PrintHeader and PrinterFooter methods!!!. Thanks to Jason Elliott for 
+	suggesting this update.</li>
+	<li>Optimized the construction of member variables in 
+	CScintillaView::CScintillaView and in 
+	CScintillaFindReplaceDlg::CScintillaFindReplaceDlg.</li>
+	<li>CScintillaView::OnReplaceAll sets the selection to 
+	0,0 before doing text replacement. This ensures that all text in a document 
+	is replaced. Also this function now does not bother calling TextNotFound at 
+	the end of the function if replacements took place. Thanks to Jason Elliott 
+	for this nice update. </li>
+	<li>A parameter which indicates whether text is being 
+	replaced or found is now sent to CScintillaView::TextNotFound.</li>
+</ul>
+
+<p><strong>V1.08 (6 January 2006)</strong>
+
+<ul>
+	<li>Removed some unnecessary code from CScintillaView::OnEndPrinting. Thanks 
+	to Greg Smith for spotting this issue.</li>
+	<li>Updated the documentation to use the same style as the web site</li>
+</ul>
+
+<p><strong>V1.09 (8 January 2006)</strong>
+
+<ul>
+	<li>Find / Replace dialog and associated state is now maintained outside of 
+	CScintillaView. This means that if you have multiple CScintillaView's in 
+	your app, that they share the one find / replace dialog which is the 
+	standard type of UI you would normally expect for this. Thanks to Greg Smith 
+	for reporting this issue.</li>
+	<li>Find / replace dialog is now closed when the last CScintillaView is 
+	destroyed. Thanks to Greg Smith for reporting this issue.</li>
+</ul>
+
+<p><strong>V1.10 (16 January 2006)</strong>
+
+<ul>
+	<li>Removed an unused &quot;rSetup&quot; variable in CScintillaView::PrintPage</li>
+	<li>Optimized code in CScintillaView::PrintPage and 
+	CScintillaView::OnFilePageSetup which determines if metric or imperial 
+	measurements are being used. Now a boolean member variable of CScintillaView 
+	called m_bUsingMetric which by default picks up the control panel preference 
+	is provided. This allows client code to change this value to customize how 
+	measurements are specified. Thanks to Greg Smith for reporting this issue.</li>
+	<li>Fixed a small typo in CScintillaView::PrintHeader and PrintFooter. Also 
+	explicitly uses the TA_TOP flag in combination with TA_LEFT when setting 
+	alignment settings for header and footer text. Again thanks to Greg Smith 
+	for reporting this.</li>
+	<li>Scintilla find / replace state is now stored in a standard global 
+	variable instead of using the CProcessLocal template which it was using 
+	previously. This is no longer required since it was used to provide Win32s 
+	support for MFC on older versions of MFC. Since Win32s is no longer 
+	supported by MFC, there is no need to use this mechanism any more.</li>
+</ul>
+
+<p><strong>V1.11 (2 February 2006)</strong>
+
+<ul>
+	<li>Minor update to CScintillaView to allow deletion of text when there is 
+	nothing selected. Thanks to Alexander Kirillov for reporting this bug.</li>
+</ul>
+<p><strong>V1.12 (14 March 2006)</strong> </p>
+
+<ul>
+	<li>Updated class to work with Scintilla v1.68. New messages wrapped 
+	include: SCI_CALLTIPUSESTYLE, SCI_SETCARETLINEBACKALPHA and 
+	SCI_GETCARETLINEBACKALPHA.</li>
+	<li>Updated the internal function CScintillaView::SameAsSelected to support 
+	regular expressions. Thanks to Greg Smith for this update.</li>
+</ul>
+<p><strong>V1.13 (22 May 2006)</strong> </p>
+
+<ul>
+	<li>Fixed a flicker issue when the CScintillaView is resized. Thanks to Michael Gunlock 
+	for reporting this issue.</li>
+</ul>
+
+<p><strong>V1.14 (5 June 2006)</strong> </p>
+
+<ul>
+	<li>Updated class to work with Scintilla v1.69. New messages wrapped 
+	include: SCI_MARKERSETALPHA, SCI_GETSELALPHA and SCI_SETSELALPHA.</li>
+</ul>
+
+<p><strong>V1.15 (6 June 2006)</strong> </p>
+
+<ul>
+	<li>Updated the wrapper classes to work correctly when compiled for Unicode.</li>
+</ul>
+
+<p><strong>V1.16 (29 June 2006)</strong> </p>
+
+<ul>
+  <li>Removed common control 6 manifest as this conflicts with VC 2005 
+	compilation.</li>
+	<li>Code now uses new C++ style casts rather than old style C casts where 
+	necessary. </li>
+	<li>Optimized CScintillaCtrl constructor code</li>
+	<li>Updated the code to clean compile in VC 2005</li>
+	<li>Fixed a bug in the sample program when you invoke Print Preview when 
+	compiled using VC 2005.</li>
+	<li>Code now supports persisting margin settings. Thanks to Krasimir 
+	Stoychev for this update.</li>
+</ul>
+
+<p><strong>27 July 2006</strong></p>
+
+<ul>
+	<li>Minor update to the sample app to fix an ASSERT related to the 
+	formatting of the IDR_SCINTITYPE string resource. Thanks to Matt Spear for 
+	reporting this issue.</li>
+</ul>
+
+<p><strong>V1.17 (17 September 2006)</strong></p>
+
+<ul>
+  <li>Updated the CScintillaView::OnReplaceSel and CScintillaView::OnReplaceAll 
+	implementations to use TargetFromSelection and ReplaceTargetRE/ReplaceTarget. 
+	Thanks to Matt Spear for reporting this issue.</li>
+	<li>Fixed a bug in UTF82W (and W2UTF8) where if GetLine is called in a 
+	Unicode build for the end of the file (i.e. a line having a length of 0), 
+	the UTF82W function would allocate no buffer, but still erroneously write a 
+	one character terminating null. In addition, the caller (GetLine) will try 
+	to deallocate the buffer that was never allocated. Thanks to Scott Kelley 
+	for spotting this nasty bug.</li>
+	<li>Added of a GetLineEx method which explicitly sets the first WORD value 
+	in the text string to the maximum size. This avoids client code from having 
+	to deal with the weird semantics of the EM_GETLINE message. Thanks to Scott 
+	Kelley for providing this
+	nice addition.</li>
+	<li>Verified code implements all the functionality of Scintilla v1.71</li>
+</ul>
+
+<p><strong>V1.18 (11 June 2007)</strong></p>
+
+<ul>
+  <li>Demo program included in the download is now compiled with VC 2005 SP1</li>
+	<li>Addition of a SCINTILLADOCVIEW_EXT_CLASS preprocessor to allow the 
+	classes to be more easily used in an extension DLL.</li>
+	<li>Addition of a SCINTILLACTRL_EXT_CLASS preprocessor macro to allow the 
+	classes to be more easily used in an extension DLL.</li>
+	<li>Updated copyright details.</li>
+	<li>CScintillaCtrl::GetSelText now uses CString::GetBufferSetLength to avoid 
+	having to allocate an intermediate buffer. Thanks to Jochen Neubeck for 
+	reporting this optimization.</li>
+	<li>Updated class to work with Scintilla v1.73. New messages wrapped 
+	include: SCI_STYLEGETFORE, SCI_STYLEGETBACK, SCI_STYLEGETBOLD, 
+	SCI_STYLEGETITALIC, SCI_STYLEGETSIZE, SCI_STYLEGETFONT, 
+	SCI_STYLEGETEOLFILLED, SCI_STYLEGETUNDERLINE, SCI_STYLEGETCASE, 
+	SCI_STYLEGETCHARACTERSET, SCI_STYLEGETVISIBLE, SCI_STYLEGETCHANGEABLE, 
+	SCI_STYLEGETHOTSPOT, SCI_GETSELEOLFILLED, SCI_SETSELEOLFILLED, 
+	SCI_GETHOTSPOTACTIVEFORE, SCI_GETHOTSPOTACTIVEBACK, 
+	SCI_GETHOTSPOTACTIVEUNDERLINE &amp; SCI_GETHOTSPOTSINGLELINE</li>
+</ul>
+
+<p><strong>V1.19 (28 November 2007)</strong></p>
+
+<ul>
+  <li>Updated class to work with Scintilla v1.75. New messages wrapped 
+	include: SCI_INDICSETUNDER, SCI_INDICGETUNDER, new behavior for 
+	SCI_SETINDENTATIONGUIDES &amp; SCI_GETINDENTATIONGUIDES, 
+	SCI_SETSCROLLWIDTHTRACKING, SCI_GETSCROLLWIDTHTRACKING, SCI_DELWORDRIGHTEND, 
+	SCI_SETCARETSTYLE, SCI_GETCARETSTYLE, SCI_SETINDICATORCURRENT, 
+	SCI_SETINDICATORVALUE, SCI_INDICATORFILLRANGE, SCI_INDICATORCLEARRANGE, 
+	SCI_INDICATORALLONFOR, SCI_INDICATORVALUEAT, SCI_INDICATORSTART, 
+	SCI_INDICATOREND, SCI_SETPOSITIONCACHE &amp; SCI_GETPOSITIONCACHE</li>
+	<li>The auto completion sample in CScintillaDemoView::OnCharAdded has been 
+	extended to show another style of auto completion. Thanks to alessandro 
+	limonta for suggesting this update.</li>
+</ul>
+
+<p><strong>V1.20 (19 March 2008)</strong></p>
+
+<ul>
+  <li>Updated class to work with Scintilla v1.76. New messages wrapped include: 
+	SCI_COPYALLOWLINE.</li>
+	<li>Updated copyright details.</li>
+	<li>Updated code to clean compile on VC 2008.</li>
+	<li>Removed VC 6 style classwizard comments from the code.</li>
+	<li>Updated the sample app's document icon.</li>
+	<li>Fixed a copy and paste bug in CScintillaView::PrintPage where the 
+	incorrect margin value was being used in the calculation of &quot;rfPrint.rc.left&quot;. 
+	Thanks to Steve Arnold for reporting this bug.</li>
+	<li>Fixed a level 4 warning when the code is compiled on VC 6.</li>
+</ul>
+
+<p><strong>V1.21 (15 June 2008)</strong></p>
+
+<ul>
+	<li>Code now compiles cleanly using Code Analysis (/analyze)</li>
+	<li>Updated code to compile correctly using _ATL_CSTRING_EXPLICIT_CONSTRUCTORS 
+	define</li>
+	<li>The code now only supports VC 2005 or later.</li>
+</ul>
+
+<p><strong>V1.22 (1 November 2008)</strong></p>
+
+<ul>
+	<li>Updated class to work with Scintilla v1.77. New messages wrapped 
+	include: SCI_GETCHARACTERPOINTER, SCI_SETKEYSUNICODE &amp; SCI_GETKEYSUNICODE</li>
+	<li>Reworked all the key Unicode functions which expose string length 
+	management and reimplemented them to use CStringW output parameters. 
+	Equivalent ASCII versions have also been provided. This new approach helps 
+	to raise the level of abstraction provided by the wrapper class. In the 
+	process the need for the GetLineEx function has been removed. Thanks to 
+	Alexei Letov for prompting this update.</li>
+</ul>
+
+<p><strong>V1.23 (20 January 2009)</strong></p>
+
+<ul>
+	<li>Updated copyright details</li>
+	<li>Fixed a bug in CScintillaView::SameAsSelected where it did not correctly 
+	handle the fact that GetSelectionStart() and GetSelectionEnd() returns the 
+	positions in UTF-8 encoded text which would result in failures in the logic 
+	for multibyte encoded characters. This made it impossible to replace 
+	multibyte character sequences in find / replace operations. Thanks to Alexei 
+	Letov for reporting this bug.</li>
+</ul>
+
+<p><strong>V1.24 (11 February 2009)</strong></p>
+
+<ul>
+	<li>Updated the project file to remove VC 6 upgrade settings.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<h2><strong><a name="Enhancements">
+</a>Planned Enhancements</strong></h2>
+<ul>
+  <li>If you have any other 
+  suggested improvements, please let me know so that I can incorporate them into 
+  the next release. </li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="References"></a><strong>References</strong></h2>
+<ul>
+  <li>The open source
+  <a href="http://scintilla.sourceforge.net">Scintilla</a> editing component.</li>
+  <li><a href="http://scintilla.sourceforge.net/SciTE.html">
+  SciTE</a>, the sample editor which exercises the functionality of 
+  Scintilla.</li>
+  <li><a href="http://www.pnotepad.org/scintilla/">CScintilla</a>, 
+  an existing C++ wrapper class for Scintilla from Simon Steele.</li>
+  <li>
+	<a href="http://www.codeproject.com/editctrl/scintillawnd.asp?target=scintilla">CScintillaWnd</a> an existing MFC wrapper from toffy, which I based my demo 
+  app on.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="Contact"></a><strong>Contacting the Author</strong></h2>
+
+<p>PJ Naughter<br>
+Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
+Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
+11 February 2009</p>
+</body>
+</html>

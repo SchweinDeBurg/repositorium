@@ -43,8 +43,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC"
+				AdditionalIncludeDirectories="..\OpenSSL\include;..\Scintilla\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -119,8 +119,8 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC"
+				AdditionalIncludeDirectories="..\OpenSSL\include;..\Scintilla\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -191,8 +191,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC"
+				AdditionalIncludeDirectories="..\OpenSSL\include;..\Scintilla\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -267,8 +267,8 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC"
+				AdditionalIncludeDirectories="..\OpenSSL\include;..\Scintilla\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -916,6 +916,43 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Help\Scintilla.htm"
+				DeploymentContent="true"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\Help\TreeOptionsCtrl.gif"
 				>
 				<FileConfiguration
@@ -1213,6 +1250,62 @@
 			</File>
 			<File
 				RelativePath=".\Source\ListOptionsCtrlRes.rc"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\ScintillaCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ScintillaCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ScintillaDocView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ScintillaDocView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ScintillaWrappersRes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ScintillaWrappersRes.rc"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
