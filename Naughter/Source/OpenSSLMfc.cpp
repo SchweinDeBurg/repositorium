@@ -11,8 +11,13 @@ History: PJN / 29-12-2004 1. Updated to suit new layout of CWSocket methods
                           3. Optimized CSSLSocket constructor.
          PJN / 31-05-2008 1. Updated copyright details
                           2. Code now compiles cleanly using Code Analysis (/analyze)
+         PJN / 23-05-2009 1. Updated copyright details
+                          2. Removed the operator= and copy constructor support from the CSSLContext and CSSL classes.
+                          This avoids de-allocation problems in the respective destructor classes when one of these
+                          contexts is shared between two C++ class instances. Thanks to Dmitriy Maksimov for reporting
+                          this bug.
 
-Copyright (c) 2002 - 2008 by PJ Naughter.  (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2002 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -53,11 +58,6 @@ CSSLContext::CSSLContext(SSL_CTX* pSSLContext)
   m_pSSLContext = pSSLContext;
 }
 
-CSSLContext::CSSLContext(const CSSLContext& SSLContext)
-{
-  *this = SSLContext;
-}
-
 CSSLContext::~CSSLContext()
 {
   Close();
@@ -83,13 +83,6 @@ void CSSLContext::Attach(SSL_CTX* pSSLContext)
   m_pSSLContext = pSSLContext;
 }
 
-CSSLContext& CSSLContext::operator=(const CSSLContext& SSLContext)
-{
-  Close();
-  m_pSSLContext = SSLContext;
-  return *this;
-}
-
 SSL_CTX* CSSLContext::Detach()
 {
   SSL_CTX* pTemp = m_pSSLContext;
@@ -105,11 +98,6 @@ CSSL::CSSL() : m_pSSL(NULL)
 CSSL::CSSL(SSL* pSSL)
 {
   m_pSSL = pSSL;
-}
-
-CSSL::CSSL(const CSSL& ssl)
-{
-  *this = ssl;
 }
 
 CSSL::~CSSL()
@@ -138,13 +126,6 @@ void CSSL::Attach(SSL* pSSL)
 {
   Close();
   m_pSSL = pSSL;
-}
-
-CSSL& CSSL::operator=(const CSSL& ssl)
-{
-  Close();
-  m_pSSL = ssl;
-  return *this;
 }
 
 SSL* CSSL::Detach()

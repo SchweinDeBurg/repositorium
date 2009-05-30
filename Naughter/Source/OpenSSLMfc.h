@@ -3,7 +3,7 @@ Module : OpenSSLMfc.H
 Purpose: Defines the interface for wrapper classes for the OpenSSL C variable types
 Created: PJN / 24-05-2002
 
-Copyright (c) 2002 - 2008 by PJ Naughter.  
+Copyright (c) 2002 - 2009 by PJ Naughter.  
 
 All rights reserved.
 
@@ -46,7 +46,6 @@ public:
 //Constructors / Destructors
   CSSLContext();
   CSSLContext(SSL_CTX* pSSLContext);
-  CSSLContext(const CSSLContext& SSLContext);
   ~CSSLContext();
 
 //Methods
@@ -56,7 +55,6 @@ public:
 
 //operators
   operator SSL_CTX*() const;
-  CSSLContext& operator=(const CSSLContext& SSLContext);
 
 //Data
   SSL_CTX* m_pSSLContext; //The underlying OpenSSL context variable
@@ -70,7 +68,6 @@ public:
 //Constructors / Destructors
   CSSL();
   CSSL(SSL* pSSLContext);
-  CSSL(const CSSL& ssl);
   ~CSSL();
 
 //Methods
@@ -80,7 +77,6 @@ public:
 
 //operators
   operator SSL*() const;
-  CSSL& operator=(const CSSL& ssl);
 
 //Data
   SSL* m_pSSL; //The underlying OpenSSL "SSL" variable

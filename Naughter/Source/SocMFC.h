@@ -3,7 +3,7 @@ Module : SocMFC.H
 Purpose: Interface for an MFC wrapper class for sockets
 Created: PJN / 05-08-1998
 
-Copyright (c) 2002 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2002 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 

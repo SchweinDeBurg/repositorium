@@ -79,8 +79,9 @@ History: 03-03-2003 1. Addition of a number of preprocessor defines, namely W3MF
                     Base64.cpp/h in their projects.
          31-05-2008 1. Code now compiles cleanly using Code Analysis (/analyze)
                     2. Tidied up the CWSocket::ReadHTTPProxyResponse implementation
+         23-05-2009 1. Removed use of CT2A throughout the code
 
-Copyright (c) 2002 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2002 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -393,15 +394,15 @@ void CWSocket::Bind(UINT nSocketPort, LPCTSTR lpszSocketAddress)
   if (lpszSocketAddress)
   {
     //Convert to an ASCII string
-    CT2A szAsciiSocketAddress(lpszSocketAddress);
-    sockAddr.sin_addr.s_addr = inet_addr(szAsciiSocketAddress);
+    CStringA sAsciiSocketAddress(lpszSocketAddress);
+    sockAddr.sin_addr.s_addr = inet_addr(sAsciiSocketAddress);
 
 	  //If the address is not dotted notation, then do a DNS 
 	  //lookup of it.
 	  if (sockAddr.sin_addr.s_addr == INADDR_NONE)
 	  {
 		  LPHOSTENT lphost;
-		  lphost = gethostbyname(szAsciiSocketAddress);
+		  lphost = gethostbyname(sAsciiSocketAddress);
 		  if (lphost != NULL)
 			  sockAddr.sin_addr.s_addr = (reinterpret_cast<LPIN_ADDR>(lphost->h_addr))->s_addr;
 		  else
@@ -442,20 +443,20 @@ void CWSocket::Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
   ASSERT(lpszHostAddress); //must have a valid host
 
   //Work out the IP address of the machine we want to connect to
-	CT2A szAsciiHostAddress(lpszHostAddress);
+	CStringA sAsciiHostAddress(lpszHostAddress);
 
 	//Determine if the address is in dotted notation
 	SOCKADDR_IN sockAddr;
 	memset(&sockAddr, 0, sizeof(sockAddr));
 	sockAddr.sin_family = AF_INET;
 	sockAddr.sin_port = htons(static_cast<u_short>(nHostPort));
-	sockAddr.sin_addr.s_addr = inet_addr(szAsciiHostAddress);
+	sockAddr.sin_addr.s_addr = inet_addr(sAsciiHostAddress);
 
 	//If the address is not dotted notation, then do a DNS 
 	//lookup of it.
 	if (sockAddr.sin_addr.s_addr == INADDR_NONE)
 	{
-		LPHOSTENT lphost = gethostbyname(szAsciiHostAddress);
+		LPHOSTENT lphost = gethostbyname(sAsciiHostAddress);
 		if (lphost != NULL)
 			sockAddr.sin_addr.s_addr = (reinterpret_cast<LPIN_ADDR>(lphost->h_addr))->s_addr;
 		else
@@ -571,19 +572,19 @@ void CWSocket::Connect(LPCTSTR lpszHostAddress, UINT nHostPort, DWORD dwTimeout,
   ASSERT(lpszHostAddress); //must have a valid host
 
   //Work out the IP address of the machine we want to connect to
-	CT2A szAsciiHostAddress(lpszHostAddress);
+	CStringA sAsciiHostAddress(lpszHostAddress);
 
 	//Determine if the address is in dotted notation
 	SOCKADDR_IN sockAddr;
 	memset(&sockAddr, 0, sizeof(sockAddr));
 	sockAddr.sin_family = AF_INET;
 	sockAddr.sin_port = htons(static_cast<u_short>(nHostPort));
-	sockAddr.sin_addr.s_addr = inet_addr(szAsciiHostAddress);
+	sockAddr.sin_addr.s_addr = inet_addr(sAsciiHostAddress);
 
 	//If the address is not dotted notation, then do a DNS lookup of it.
 	if (sockAddr.sin_addr.s_addr == INADDR_NONE)
 	{
-		LPHOSTENT lphost = gethostbyname(szAsciiHostAddress);
+		LPHOSTENT lphost = gethostbyname(sAsciiHostAddress);
 		if (lphost != NULL)
 			sockAddr.sin_addr.s_addr = (reinterpret_cast<LPIN_ADDR>(lphost->h_addr))->s_addr;
 		else
@@ -674,11 +675,11 @@ int CWSocket::SendTo(const void* lpBuf, int nBufLen, UINT nHostPort, LPCTSTR lps
 	else
 	{
 	  //If the address is not dotted notation, then do a DNS lookup of it.
-	  CT2A szAsciiHostAddress(lpszHostAddress);
-		sockAddr.sin_addr.s_addr = inet_addr(szAsciiHostAddress);
+	  CStringA sAsciiHostAddress(lpszHostAddress);
+		sockAddr.sin_addr.s_addr = inet_addr(sAsciiHostAddress);
 		if (sockAddr.sin_addr.s_addr == INADDR_NONE)
 		{
-			LPHOSTENT lphost = gethostbyname(szAsciiHostAddress);
+			LPHOSTENT lphost = gethostbyname(sAsciiHostAddress);
 			if (lphost != NULL)
 				sockAddr.sin_addr.s_addr = (reinterpret_cast<LPIN_ADDR>(lphost->h_addr))->s_addr;
 			else
@@ -754,14 +755,14 @@ void CWSocket::ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR
     request.DSTPORT = htons(static_cast<u_short>(nHostPort));
 
 	  //Determine if the address is in dotted notation
-	  CT2A szAsciiHostAddress(lpszHostAddress);
-	  request.DSTIP.S_un.S_addr = inet_addr(szAsciiHostAddress);
+	  CStringA sAsciiHostAddress(lpszHostAddress);
+	  request.DSTIP.S_un.S_addr = inet_addr(sAsciiHostAddress);
 
 	  //If the address is not dotted notation, then do a DNS 
 	  //lookup of it, since Socks 4 does not support DNS proxying
 	  if (request.DSTIP.S_un.S_addr == INADDR_NONE)
 	  {
-		  LPHOSTENT lphost = gethostbyname(szAsciiHostAddress);
+		  LPHOSTENT lphost = gethostbyname(sAsciiHostAddress);
 		  if (lphost != NULL)
 			  request.DSTIP.S_un.S_addr = (reinterpret_cast<LPIN_ADDR>(lphost->h_addr))->s_addr;
 		  else
@@ -855,28 +856,28 @@ void CWSocket::ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR
 
     if (bAuthenticate && reply.METHOD == 2)
     {
-      CT2A szAsciiUserName(lpszUserName);
-      CT2A szAsciiPassword(lpszPassword);
-      size_t nUserNameLength = strlen(szAsciiUserName);
-      size_t nPasswordLength = strlen(szAsciiPassword);
+      CStringA sAsciiUserName(lpszUserName);
+      CStringA sAsciiPassword(lpszPassword);
+      int nUserNameLength = sAsciiUserName.GetLength();
+      int nPasswordLength = sAsciiPassword.GetLength();
 
       //Verify the username and password are not longer that the protocol allows
       if ((nUserNameLength > 255) || (nPasswordLength > 255))
       {
-        SecureEmptyString(szAsciiUserName);
-        SecureEmptyString(szAsciiPassword);
+        SecureEmptyString(sAsciiUserName);
+        SecureEmptyString(sAsciiPassword);
         ThrowWSocketException(ERROR_INVALID_PARAMETER);
       }
 
-      size_t nUserRequestLength = 3 + nUserNameLength + nPasswordLength;
+      int nUserRequestLength = 3 + nUserNameLength + nPasswordLength;
       BYTE* pUserRequest = reinterpret_cast<BYTE*>(_alloca(nUserRequestLength));
       pUserRequest[0] = 1;
       pUserRequest[1] = static_cast<BYTE>(nUserNameLength);
-      memcpy(&(pUserRequest[2]), szAsciiUserName, nUserNameLength);
-      SecureEmptyString(szAsciiUserName);
+      memcpy(&(pUserRequest[2]), sAsciiUserName.operator LPCSTR(), nUserNameLength);
+      SecureEmptyString(sAsciiUserName);
       pUserRequest[2 + nUserNameLength] = static_cast<BYTE>(nPasswordLength);
-      memcpy(pUserRequest + 3 + nUserNameLength, szAsciiPassword, nPasswordLength);
-      SecureEmptyString(szAsciiPassword);
+      memcpy(pUserRequest + 3 + nUserNameLength, sAsciiPassword.operator LPCSTR(), nPasswordLength);
+      SecureEmptyString(sAsciiPassword);
       Send(pUserRequest, static_cast<int>(nUserRequestLength));
       SecureZeroMemory(pUserRequest, nUserRequestLength);
 
@@ -909,12 +910,12 @@ void CWSocket::ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR
     }
 
 	  //Determine if the address is in dotted notation
-	  CT2A szAsciiHostAddress(lpszHostAddress);
-	  unsigned long nAddr = inet_addr(szAsciiHostAddress);
+	  CStringA sAsciiHostAddress(lpszHostAddress);
+	  unsigned long nAddr = inet_addr(sAsciiHostAddress);
 	  if (nAddr == INADDR_NONE)
 	  {
       //verify that the host name is less than 256 bytes which is the limit of the hostname which Socks5 can accomadate
-      size_t nHostLength = strlen(szAsciiHostAddress);
+      int nHostLength = sAsciiHostAddress.GetLength();
       if (nHostLength > 255)
         ThrowWSocketException(ERROR_INVALID_PARAMETER);
 
@@ -927,7 +928,7 @@ void CWSocket::ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR
         requestDetails.Base.CMD = 1;
       requestDetails.Base.ATYP = 3;
       requestDetails.DST_HOST.LENGTH = static_cast<BYTE>(nHostLength);
-      memcpy(requestDetails.DST_HOST.HOST, szAsciiHostAddress, nHostLength);
+      memcpy(requestDetails.DST_HOST.HOST, sAsciiHostAddress.operator LPCSTR(), nHostLength);
       WORD* pPort = reinterpret_cast<WORD*>(requestDetails.DST_HOST.HOST + nHostLength);
       *pPort = htons(static_cast<u_short>(nHostPort));
       size_t nRequestDetailsSize = sizeof(requestDetails) - 256 + nHostLength + 1;
@@ -1091,16 +1092,17 @@ void CWSocket::ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCT
       //Base64 encode the username password combination
       CString sUserNamePassword;
       sUserNamePassword.Format(_T("%s:%s"), lpszUserName, lpszPassword);
-      CT2A szUserNamePassword(sUserNamePassword);
-      size_t nUserNamePasswordLength = strlen(szUserNamePassword);
-      int nEncodedLength = ATL::Base64EncodeGetRequiredLength(static_cast<int>(nUserNamePasswordLength), ATL_BASE64_FLAG_NOCRLF);
+      CStringA sAsciiUserNamePassword(sUserNamePassword);
+      int nUserNamePasswordLength = sAsciiUserNamePassword.GetLength();
+      int nEncodedLength = ATL::Base64EncodeGetRequiredLength(nUserNamePasswordLength, ATL_BASE64_FLAG_NOCRLF);
       LPSTR pszEncoded = static_cast<LPSTR>(_alloca(nEncodedLength + 1));
-      ATL::Base64Encode(reinterpret_cast<const BYTE*>(szUserNamePassword.operator LPSTR()), static_cast<int>(nUserNamePasswordLength), pszEncoded, &nEncodedLength);
+      ATL::Base64Encode(reinterpret_cast<const BYTE*>(sAsciiUserNamePassword.operator LPCSTR()), nUserNamePasswordLength, pszEncoded, &nEncodedLength);
       pszEncoded[nEncodedLength] = '\0';
+      SecureEmptyString(sAsciiUserNamePassword);
       SecureEmptyString(sUserNamePassword);
 
       //Form the Authorization header line and add it to the request
-      sLine.Format(_T("Proxy-authorization: Basic %s\r\n"), CA2T(pszEncoded).operator LPTSTR());
+      sLine.Format(_T("Proxy-authorization: Basic %s\r\n"), CString(pszEncoded).operator LPCTSTR());
       SecureZeroMemory(pszEncoded, nEncodedLength + 1);
       sRequest += sLine;
     }
@@ -1117,8 +1119,8 @@ void CWSocket::ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCT
     sRequest += _T("\r\n");
 
     //Finally send the request to the HTTP proxy
-    CT2A szAsciiRequest(sRequest);
-    Send(szAsciiRequest, static_cast<int>(strlen(szAsciiRequest)));
+    CStringA sAsciiRequest(sRequest);
+    Send(sAsciiRequest.operator LPCSTR(), sAsciiRequest.GetLength());
 
     //Read the proxy response
     sProxyResponse.Preallocate(4096);
