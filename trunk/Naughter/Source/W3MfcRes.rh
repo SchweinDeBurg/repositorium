@@ -1,0 +1,11 @@
+// Used by W3MfcRes.rc
+
+#define IDS_DIRECTORY_LISTING_HEADER    0x8090
+#define IDS_DIRECTORY_LISTING_FOOTER    0x8091
+#define IDH_FILE_DELETED_OK             0x8092
+#define IDH_302                         0x8093
+#define IDH_400                         0x8094
+#define IDH_401                         0x8095
+#define IDH_404                         0x8096
+#define IDH_500                         0x8097
+#define IDH_501                         0x8098

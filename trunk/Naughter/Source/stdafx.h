@@ -16,13 +16,16 @@
 // identifier was truncated in the debug information
 #pragma warning(disable: 4786)
 
-#define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
+#define _SECURE_ATL 1   // use the Secure C Runtime in ATL
 
-#define _WIN32_WINNT 0x0500	// use Windows 2000 features
+#define VC_EXTRALEAN   // exclude rarely-used stuff from Windows headers
+
+#define _WIN32_WINNT 0x0501   // use Windows XP features
 
 // MFC headers
 #include <afxwin.h>		// MFC core and standard components
 #include <afxtempl.h>
+#include <afxext.h> 
 #include <afxsock.h>
 #include <afxpriv.h>
 #include <afxmt.h>
@@ -38,6 +41,15 @@
 #include <wincrypt.h>	// cryptographic API prototypes and definitions
 #include <lm.h>
 #include <shlobj.h>
+#include <winsock2.h>
+#include <mswsock.h>
+
+#if !defined(W3MFC_NO_ISAPI_SUPPORT)
+#include <HttpExt.h>
+#endif   // W3MFC_NO_ISAPI_SUPPORT
+#if !defined(W3MFC_NO_SSPI_SUPPORT)
+#include <sspi.h>
+#endif   // W3MFC_NO_SSPI_SUPPORT
 
 // OpenSSL headers
 #include <openssl/ssl.h>
@@ -50,7 +62,7 @@
 #pragma warning(pop)
 
 #if !defined(_STRING_)
-#define _STRING_			// for compatibility with Dinkumware STL
+#define _STRING_   // for compatibility with Dinkumware STL
 #endif
 
 #if !defined(min)
@@ -71,6 +83,6 @@ using std::max;
 #define for if (false); else for
 #else
 #pragma conform(forScope, on)
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #endif // !defined(AFX_STDAFX_H__483FB9A9_908F_4150_90A7_4EEAF73AD80C__INCLUDED_)

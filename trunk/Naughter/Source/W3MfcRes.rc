@@ -1,0 +1,39 @@
+#include "winres.h"
+#include "Pop3.rh"
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// HTML
+//
+
+IDH_302                 HTML                    "BinRes\\302.htm"
+IDH_400                 HTML                    "BinRes\\400.htm"
+IDH_401                 HTML                    "BinRes\\401.htm"
+IDH_404                 HTML                    "BinRes\\404.htm"
+IDH_500                 HTML                    "BinRes\\500.htm"
+IDH_501                 HTML                    "BinRes\\501.htm"
+IDH_FILE_DELETED_OK     HTML                    "BinRes\\deleted_ok.htm"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_DIRECTORY_LISTING_HEADER 
+                            "<html>\n<head>\n<title>Directory Listing for %1</title>\n</head>\n \n<body><h2>Directory Listing for %1</h2>\n\n<hr>"
+    IDS_DIRECTORY_LISTING_FOOTER "<hr>\n</body>\n\n</html>"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////

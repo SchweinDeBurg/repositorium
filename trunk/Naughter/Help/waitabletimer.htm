@@ -1,0 +1,205 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>CWaitableTimer v1.03</title>
+<link rel="stylesheet" type="text/css" href="naughter.css" />
+</head>
+
+<body>
+
+<h2 align="left"><img border="0" src="waitabletimer.gif" width="32" height="32" />
+CWaitableTimer v1.03</h2>
+
+<p>Welcome to CWaitableTimer, a simple C++ wrapper class for 
+waitable timers. </p>
+
+<table>
+  <tbody>
+  <tr>
+    <td><a href="#Features">Features</a></td>
+  </tr>
+  <tr>
+    <td><a href="#Usage">Usage</a></td>
+  </tr>
+  <tr>
+    <td><a href="#Copyright">Copyright</a></td>
+  </tr>
+  <tr>
+    <td><a href="#History">History</a></td>
+  </tr>
+  <tr>
+    <td><a href="#Enhancements">Planned Enhancements</a></td>
+  </tr>
+  <tr>
+    <td><a href="#Contact">Contacting the Author</a></td>
+  </tr>
+</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="Features"></a>Features
+
+
+</h2>
+
+
+<ul>
+  <li>Simple and clean C++ interface.</li>
+  <li>The code is Unicode enabled and build configurations are provided.</li>
+  <li>Even though waitable timers are not available on Windows 95 or NT 3.x, 
+	the code will do the right thing on these operating systems without causing 
+	the OS loader to cause your program to fail to load, with the error message 
+	&quot;Call to function not defined... &quot;.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="Usage"></a>Usage
+
+
+
+</h2>
+
+
+
+<ul>
+  <li>Add wtimer.cpp and wtimer.h to your project.</li>
+  <li>Just declare an instance of CWaitableTimer and call its methods as needed. 
+	For further information on waitable timers, please consult the Platform SDK 
+	and or the MSDN.</li>
+  <li>To see the code in action, have a look at the code in the sample app in 
+	the function &quot;OnTest1&quot; in the module &quot;waittestdlg.cpp&quot;. </li>
+  <li>As of v1.03, the code is now for Visual C++ 2005 or later. I 
+will not be supporting VC 6 anymore for this code, so please don't email me 
+requesting this&lt;gg&gt;. Remember VC 6 is now a ten year old compiler. It's 
+now time to upgrade to VC 
+2005 or VC 2008!</li>
+</ul>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><b><a name="Copyright"></a>Copyright</b></h2>
+<ul>
+  <li>You are allowed to include the source code in
+    any product (commercial, shareware, freeware or otherwise) when your product
+    is released in binary form.</li>
+  <li>You are allowed to modify the source code in
+    any way you want except you cannot modify the copyright details at the top
+    of each module.</li>
+  <li>If you want to distribute source code with
+    your application, then you are only allowed to distribute versions released
+    by the author. This is to maintain a single distribution point for the
+    source code.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="History"></a>History</h2>
+
+<p><b>v1.0 (8 August 2000) 
+
+</b> 
+
+</p> 
+
+<ul>
+  <li>Initial public release.</li>
+</ul>
+
+<p><b>8 November 2002</b></p>
+<ul>
+  <li>Removed some unnecessary comments in the module</li>
+  <li>Updated copyright details in the module</li>
+</ul>
+
+<p><b>v1.01 (18 February 2004) 
+
+</b> 
+
+</p> 
+
+<ul>
+  <li>Completion routine can now be passed an LPVOID parameter just like the SDK 
+	equivalent. Thanks to Erenst F. Wepener for suggesting this addition.</li>
+  <li>Minor updates to the code to allow the code to compile on VC 5 without the 
+	requirement for the Platform SDK to be installed.</li>
+</ul>
+
+<p><b>v1.02 (26 June 2006) 
+
+</b> 
+
+</p> 
+
+<ul>
+  <li>Updated the documentation to use the same style as the web site.</li>
+	<li>Updated copyright details.</li>
+	<li>Removed various defines in code which were taken from the Platform SDK. This 
+	does mean that the code now requires the Platform SDK if compiled using VC 
+	6.</li>
+	<li>Optimized CWaitableTimer constructor code.</li>
+	<li>Combined the functionality of the _WAITABLE_TIMER_DATA class into the 
+	main CWaitableTimer class.</li>
+	<li>Code now uses new C++ style casts rather than old style C casts where 
+	necessary. </li>
+	<li>Reviewed all TRACE statements for correctness</li>
+</ul>
+
+<p><b>v1.03 (1 June 2008) 
+
+</b> 
+
+</p> 
+
+<ul>
+  <li>Code now compiles cleanly using Code Analysis (/analyze)</li>
+	<li>The code has now been updated to support VC 2005 or later only. </li>
+	<li>Updated the sample app to clean compile on VC 2008</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="Enhancements"></a>Planned Enhancements 
+
+</h2>
+
+<ul>
+  <li>Provide a better sample app. At the moment, all it does is use try out the 
+	functions of the CWaitableTimer class.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="Contact"></a>Contacting the Author</h2>
+
+<p>PJ Naughter<br />
+Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br />
+Web: <a href="http://indigo.ie/~pjn">http://www.naughter.com</a><br />
+1 June 2008</p>
+</body>
+</html>
