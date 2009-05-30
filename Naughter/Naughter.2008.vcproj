@@ -44,7 +44,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -120,7 +120,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -192,7 +192,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -268,7 +268,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -805,6 +805,79 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\Help\waitabletimer.gif"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Help\waitabletimer.htm"
+				DeploymentContent="true"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
 		</Filter>
 		<Filter
 			Name="Controls"
@@ -902,6 +975,163 @@
 			</File>
 			<File
 				RelativePath=".\Source\OpenSSLMfc.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Web Server"
+			Filter="h;cpp;rh;rc"
+			>
+			<File
+				RelativePath=".\Source\DirectedThreadPoolQueue.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DirectedThreadPoolQueue.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\IOCPThreadPoolQueue.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\IOCPThreadPoolQueue.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ThrdPool.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ThrdPool.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3Mfc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3Mfc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCCGI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCCGI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCClient.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCClient.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCDirectory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCDirectory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCISAPI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCISAPI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCISAPIManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCISAPIManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCMimeManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCMimeManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCRequest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCRequest.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MfcRes.rc"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\W3MfcRes.rh"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCResponseHeader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCResponseHeader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCSocket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\W3MFCSocket.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\WTimer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\WTimer.h"
 				>
 			</File>
 		</Filter>
