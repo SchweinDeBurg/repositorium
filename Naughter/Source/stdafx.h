@@ -48,6 +48,8 @@
 #include <winsock2.h>
 #include <mswsock.h>
 #include <shlobj.h>
+#include <uxtheme.h>
+#include <tmschema.h>
 
 #if !defined(W3MFC_NO_ISAPI_SUPPORT)
 #include <HttpExt.h>
