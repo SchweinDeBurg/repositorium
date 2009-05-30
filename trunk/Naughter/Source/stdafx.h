@@ -30,6 +30,7 @@
 #include <afxpriv.h>
 #include <afxmt.h>
 #include <afxcmn.h>
+#include <afxdtctl.h>
 
 // ATL headers
 #include <atlbase.h>
@@ -46,6 +47,7 @@
 #include <shlobj.h>
 #include <winsock2.h>
 #include <mswsock.h>
+#include <shlobj.h>
 
 #if !defined(W3MFC_NO_ISAPI_SUPPORT)
 #include <HttpExt.h>
