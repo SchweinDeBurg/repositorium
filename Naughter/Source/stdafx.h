@@ -83,6 +83,11 @@ using std::max;
 // CRT headers
 #include <locale.h>
 
+// Scintilla headers
+#include <Platform.h>
+#include <Scintilla.h>
+#include <SciLexer.h>
+
 #pragma hdrstop
 
 // force ISO/IEC 14882 conformance in for loop scope
