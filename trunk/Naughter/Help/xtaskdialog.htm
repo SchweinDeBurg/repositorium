@@ -1,0 +1,334 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>XTaskDialog v1.08</title>
+<link rel="stylesheet" type="text/css" href="./naughter.css">
+</head>
+
+<body>
+
+<h2 align="left"><strong>XTaskDialog v1.08</strong></h2>
+<p>Welcome to <strong>XTaskDialog</strong>, an emulation of the new Vista Task Dialog APIs 
+for down level operating systems including Windows 98, Windows ME, Windows 2000, 
+Windows XP and Windows 2003. Task Dialogs 
+are designed as the replacement for the venerable MessageBox API call. Some of you 
+may know that I have extended the MessageBox API for MFC clients thro the use of 
+my <a href="http://www.naughter.com/messageboxx.html">CMessageBoxX</a> class. You 
+can do quite a few things with the message box API but MS have decided in their 
+wisdom to deprecate the API in preference to the much more extensible Task Dialog 
+API. For a good intro on the usage of Task Dialogs check out Michael Dunn&#39;s article 
+at <a href="http://www.codeproject.com/vista/VGTaskDialog2.asp">http://www.codeproject.com/vista/VGTaskDialog2.asp</a>. 
+There is also a good article also on CodeProject about developing an emulated version 
+of the API at <a href="http://www.codeproject.com/useritems/taskdialogs.asp">http://www.codeproject.com/useritems/taskdialogs.asp</a>. 
+XTaskDialog is my own independently developing emulation version of the Task Dialog 
+API. Note that some of the XTaskDialog code which creates the in memory dialog template 
+is based in part on the XMessageBox class by Hans Dietrich at
+<a href="http://www.codeproject.com/dialog/xmessagebox.asp">http://www.codeproject.com/dialog/xmessagebox.asp</a> 
+. You should check this article out as a good primer on how you go about creating 
+in memory dialog templates. </p>
+<p>&nbsp;</p>
+<p>
+<span id="BlogViewId" be:sortmode="NormalWithPaging" be:sortkey be:firsthandle="cns!7692E6D72E26EAC!156" be:lasthandle="cns!7692E6D72E26EAC!127">
+Here's an example of what a Task Dialog looks like from the sample app included in 
+the download assuming you want to see what pretty much all the features look 
+like, when it is run on Windows XP with theming enabled:</span></p>
+<p><img border="0" src="xtaskdialog.jpg" width="716" height="557"></p>
+<p>&nbsp;</p>
+<p>
+Please bear in mind that &quot;less is more&quot; when it comes to UI design and a well 
+written application should not try to use all of the features of a TaskDialog in 
+every single dialog which your application puts up!</p>
+<p>&nbsp;</p>
+<table>
+	<tr>
+		<td><a href="#Features">Features / Limitations</a></td>
+	</tr>
+	<tr>
+		<td><a href="#Copyright">Copyright</a></td>
+	</tr>
+	<tr>
+		<td><a href="#History">History</a></td>
+	</tr>
+	<tr>
+		<td><a href="#Usage">Usage</a></td>
+	</tr>
+	<tr>
+		<td><a href="#Enhancements">Planned Enhancements</a></td>
+	</tr>
+	<tr>
+		<td><a href="#Contact">Contacting the Author</a></td>
+	</tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Features"></a>Features / Limitations</h2>
+<ul>
+	<li>Supports most of the Vista native Task Dialog functionality. This includes: 
+	Main instruction text, content text standard command buttons, custom command 
+	buttons, radio buttons, Verification check box, expanded text (and associated 
+	dialog animations), customizing the expando button caption, standard task dialog 
+	message box sounds, footer text, main icon and footer icon customization including 
+	the Vista UAC shield icon, support for hyperlinks in text, a complete emulation 
+	of command link buttons (These are the 3 options in the centre of the screen 
+	capture above which include a larger caption and then a smaller more detailed 
+	description on them), a progress control, callback timer support and support 
+	for a minimized task dialog.</li>
+	<li>Having described the main features of task dialogs and what XTaskDialog 
+	supports, here is a list of the current limitations of the XTaskDialog emulation 
+	of TaskDialogIndirect: </li>
+	<li>TDM_SET_PROGRESS_BAR_STATE is only supported on Windows Vista, so in reality 
+	you will not be able to use &quot;paused&quot; or &quot;error&quot; progress bars on downlevel OS&#39;es.</li>
+	<li>TDM_SET_MARQUEE_PROGRESS_BAR / TDF_SHOW_MARQUEE_PROGRESS_BAR is only supported 
+	for apps which are linked with a Common Control v6 manifest and running on Windows 
+	XP or later.</li>
+	<li>TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE is only supported for command link 
+	buttons and not for the standard buttons on the task dialog.</li>
+	<li>TDF_ENABLE_HYPERLINKS is only supported for apps which are linked with a 
+	v6 Common Control v6 manifest and are running on Windows XP or later. If you try to 
+	create a task dialog if either of these conditions are not true, then the task 
+	dialog will fail to show because it could not create the required &quot;SysLink&quot; 
+	child windows. You have been warned!</li>
+	<li>The metrics which XTaskDialog uses for calculating the dialog window width 
+	is definitely different that the native Vista implementation. The mechanism 
+	which XTaskDialog uses to calculate the width is quite complicated and for those 
+	interested (or for those who spot problems with it), this logic is implemented 
+	in CXTaskDialog::Layout.</li>
+	<li>The expando button and its associated text is currently drawn using a standard 
+	button rather than the bitmap button the native Vista version seems to uses. 
+	This is something which I may work on improving in a future release.</li>
+	<li>The emulated command link buttons do not emulate all the nice UI / animation 
+	features which the native Vista version implements. For example the emulation 
+	does not do as nice a job as Vista to show a &quot;selected&quot; command link button. 
+	That said the emulation is pretty good and unless you are a hard core UI developer 
+	who is used to examining every pixel&lt;gg&gt;, you will most likely not notice much 
+	difference.</li>
+	<li>The native Vista implementation supports stacking of the standard buttons 
+	when horizontal space is limited. Currently XTaskDialog does not support this.
+	</li>
+	<li>The native Vista implementation aligns the check box and expando buttons 
+	vertically with the standard buttons. Currently XTaskDialog displays both of 
+	these controls below the button row.</li>
+	<li>TDF_RTL_LAYOUT is currently not properly supported by XTaskDialog. If you 
+	think support for this would be useful, then I may implement this in a future 
+	release.</li>
+	<li>TDM_NAVIGATE_PAGE is currently not supported by XTaskDialog. As a consequence, 
+	the TDN_NAVIGATED notification message will also never be sent. If you think 
+	support for page navigation would be useful, then I may implement this in a 
+	future release.</li>
+	<li>Quite a few of the various colors and metrics used by XTaskDialog are hard 
+	coded. Examples include the colors used for the dialog backgrounds and divider 
+	colors, the various colors used by the emulated command link buttons and the 
+	color used for the main instruction text. I believe these will have to remain 
+	hard-coded because downlevel OS&#39;es simply would not support the required system 
+	metrics to get these values even if I knew you could get these system metrics 
+	on Vista!.</li>
+	<li>The icons shown on the emulated command link buttons are vertically centred. 
+	The native Vista implementation seems to use a fixed offset from the top.
+	</li>
+	<li>Because the code uses the _TrackMouseEvent function (used to implement 
+	the hot look for the emulated command links) and the MultiMon function &quot;MonitorFromWindow&quot;, 
+	the code requires at least Windows 98 to operate correctly, that is it will 
+	not work for Windows 95.</li>
+	<li>Finally with all the limitations mentioned above, you can consider all the 
+	other features of TaskDialogIndirect as fully emulated by XTaskDialog. For example, 
+	all the animation effects which the native TaskDialogIndirect API uses for handling 
+	the expando text are pretty faithfully emulated. If you think I have missed 
+	something compared to the native Vista implementation, then please drop me an 
+	email and I will see about including it in a future release.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><b><a name="Copyright"></a>Copyright</b></h2>
+<ul>
+	<li>You are allowed to include the source code in any product (commercial, shareware, 
+	freeware or otherwise) when your product is released in binary form.</li>
+	<li>You are allowed to modify the source code in any way you want except you 
+	cannot modify the copyright details at the top of each module.</li>
+	<li>If you want to distribute source code with your application, then you are 
+	only allowed to distribute versions released by the author. This is to maintain 
+	a single distribution point for the source code.</li>
+</ul>
+<p></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="History"></a>History</h2>
+<p><strong>V1.0 (14 March 2007)</strong></p>
+<ul>
+	<li>Initial public release. </li>
+</ul>
+<p><strong>V1.01 (16 March 2007)</strong></p>
+<ul>
+	<li>Updated XTaskDialogDefines.h so that XTaskDialog can be used in VC 6 without 
+	the need for the Platform SDK header files to be integrated with VC 6. Thanks 
+	to Andre Buenger for reporting this issue.</li>
+	<li>I&#39;ve done some testing of the code on Windows 9x (specifically Windows ME). 
+	As well as the restrictions which I have already documented, XTaskDialog will 
+	fail to show if you use TD_WARNING_ICON, TD_ERROR_ICON or TD_INFORMATION_ICON 
+	for the main icon or the footer icon. The reason why this fails is that the 
+	XTaskDialog code expects these icons to reside in user32.dll, but on Windows 
+	9x which is a mixture of 16/32 bit binaries, these icons do not exist. I could 
+	fix this issue by adding in my own versions of these icons, but to be honest 
+	this is too much effort for such old operating systems. Instead, If you specify 
+	your own icons for the main icon or the footer icon, then XTaskDialog will display 
+	correctly. Hopefully for those people still supporting Windows 9x apps out there, 
+	this will be another reason to use XTaskDialog to spruce up your application. 
+	Thanks to Andre Buenger for reporting this issue.</li>
+</ul>
+<p><strong>V1.02 (20 March 2007)</strong></p>
+<ul>
+	<li>Fixed a bug where the code unnecessarily set the progress bar range to 
+	0-100 in CXTaskDialog::OnInitDialog. This was causing client calls to 
+	TDM_SET_PROGRESS_BAR_RANGE in TDN_CREATED notifications to effectively be 
+	ignored. Thanks to Demetrios A. Thomakos for reporting this issue.</li>
+	<li>For completeness, the DLL version of XTaskDialog now also emulates the 
+	TaskDialog API call in addition to the existing TaskDialogIndirect API call. 
+	Thanks to Demetrios A. Thomakos for reporting this issue.</li>
+	<li>XTaskDialog now ships with its own version of the error, warning and 
+	info icons in addition to the existing shield icon. This now allows 
+	XTaskDialog to work out of the box on Windows 98 and Windows ME in addition 
+	to 2000, XP and 2003 which were already supported. In addition the icons are 
+	a closer match for the Vista icons. For example the TD_INFORMATION_ICON icon 
+	is a I on a blue background. </li>
+	<li>Fixed a typo and a minor code optimization in CXTaskDialogCommandLink::DrawItem.</li>
+	<li>CXTaskDialogCommandLink now provides a WM_ERASEBKGND handler to optimize 
+	it drawing</li>
+	<li>Minor code optimization in CXTaskDialog::CalculateCommandLinkMetrics.</li>
+	<li>CXTaskDialog::LoadStringResource method has been renamed to 
+	LoadStringResources. </li>
+	<li>Fixed a minor vertical layout issue for TDF_EXPAND_FOOTER_AREA footer 
+	text in CXTaskDialog::Layout</li>
+</ul>
+<p><strong>V1.03 (22 March 2007)</strong></p>
+<ul>
+	<li>TaskDialog function exported from XTaskDlg dll now uses the correct 
+	definition for the TaskDialog API as described at
+	<a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/shellcc/platform/commctls/taskdialogs/taskdialogreference/taskdialogfunctions/taskdialog.asp">
+	http://msdn.microsoft.com/library/default.asp?url=/library/en-us/shellcc/platform/commctls/taskdialogs/taskdialogreference/taskdialogfunctions/taskdialog.asp</a>. 
+	It seems that the description of the TaskDialog as provided with the latest 
+	Vista SDK (aka Windows SDK) is incorrect and forget to mention the 
+	pszContent parameter. Thanks to Demetrios A. Thomakos for reporting this 
+	issue.</li>
+	<li>Removed an unused &quot;m_bCancelButtonPresent&quot; member variable from the 
+	CXTaskDialog class.</li>
+	<li>Fixed bug where cancel button would always be ignored when clicked when 
+	you did not provide the TDF_ALLOW_DIALOG_CANCELLATION flag.</li>
+</ul>
+<p><strong>V1.04 (30 March 2007)</strong></p>
+<ul>
+	<li>Fixed a problem where the progress control was not created with the 
+	proper width if the end of the button row was to the left of the left of the 
+	control text. Thanks to Demetrios A. Thomakos for reporting this bug.</li>
+	<li>Fixed a bug where the main instruction text could sometimes appear in a 
+	standard sized font instead of the expected larger size. Thanks to Demetrios 
+	A. Thomakos for reporting this bug.</li>
+	<li>Fixed a bug where all static text controls could sometimes display 
+	clipped text. Thanks to Demetrios A. Thomakos for reporting this bug.</li>
+</ul>
+<p><strong>V1.05 (31 March 2007)</strong></p>
+<ul>
+	<li>Removed use of internal &quot;VerificalTextSpacing&quot; enum value.</li>
+</ul>
+<p><strong>V1.06 (5 April 2007)</strong></p>
+<ul>
+	<li>Fixed a bug where the code would not correctly set the initial selection 
+	state of the radio buttons in CXTaskDialog::OnInitDialog. Thanks to 
+	Demetrios A. Thomakos for reporting this bug.</li>
+</ul>
+<p><strong>V1.07 (12 October 2008)</strong></p>
+<ul>
+	<li>Updated copyright details</li>
+	<li>The code has now been updated to support VC 2005 or later only.</li>
+	<li>Updated code to compile correctly using _ATL_CSTRING_EXPLICIT_CONSTRUCTORS 
+	define</li>
+	<li>Updated code to clean compile on VC 2008</li>
+	<li>Code now compiles cleanly using Code Analysis (/analyze)</li>
+</ul>
+<p><strong>V1.08 (20 January 2009)</strong></p>
+<ul>
+	<li>Updated copyright details.</li>
+	<li>Fixed the text reported in a number of ATLTRACE calls throughout the 
+	code</li>
+	<li>Fixed a bug where the dialog would appear with a top horizontal white 
+	block, followed by a grey block, then a separator and then a final grey 
+	block even when no non command link buttons are displayed on the grey 
+	blocks. When this condition now occurs, the whole dialog is now shown in 
+	white. This is consistent with how the native TaskDialog API behaves on 
+	Vista. Thanks to Jacob Liebeck for reporting this bug.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Usage"></a>Usage</h2>
+<ul>
+	<li>To use the code in your application you have a couple of approaches you 
+	can take:</li>
+	<li>You can link to the DLL version of XTaskDialog. Then you
+	can simply use the CXTaskDialogClient class using the header file &quot;XTaskDialogClient.h&quot; 
+	which provides the client side API to Task Dialogs (both the native Vista implementation 
+	and XTaskDialog&#39;s emulation of them). To show the dialog you can then simply 
+	call the &quot;DoModalEmulatedDLL&quot; method, which will load up the XTaskDlg.dll as 
+	necessary and call its exported API. If you are using MFC in your client project, 
+	then you should use the class CXTaskDialogMFCClient using the modules &quot;XTaskDialogMFCClient.h&quot; 
+	and &quot;XTaskDialogMFCClient.cpp&quot;. This provides a ASCII and UNICODE wrapping of 
+	the Task Dialog API as well as closer integration with how MFC implements modality 
+	and support for help. For example, hitting F1 on the Task Dialog is completely 
+	integrated with the MFC way of doing help if you use the CXTaskDialogMFCClient 
+	class.</li>
+	<li>If you want to pull in the code directly and statically link to XTaskDialog, 
+	then simply add XTaskDialog.cpp (and XTaskDialogClient.h 
+	and / or XTaskDialogMFCClient.h/cpp) to your project and then call the &quot;DoModalEmulatedStatic&quot; 
+	of your preferred client class in whichever module you want to show your Task 
+	Dialog from. Internally the &quot;DoModalEmulatedStatic&quot; method will create an instance 
+	of a &quot;CXTaskDialog&quot; class (which is the ATL class which actually implements 
+	the emulation of the API). You will also need to copy across the following resources 
+	from the TestXTastDialog or XTaskDLL projects:<br>
+	<p>The IDI_XTASKDIALOG_* icons<br>
+	The IDS_XTASKDIALOG_* string resources<br>
+	</p>
+	<p>The simplest way to transfer the resources to your project&#39;s rc file is to 
+	use either drag and drop or clipboard copy and paste.</p>
+	</li>
+	<li>Included with the download is a very simple VC2005 / MFC 8 dialog based 
+	which provides 2 buttons to exercise the DLL API of XTaskDialog as well as the 
+	static linking approach and both the MFC and Non MFC client classes. It also 
+	includes a button to run the native Vista API with some parameters also. Note 
+	that this will only work correctly if you are running on Vista. The XTaskDialog 
+	DLL is created using a sub project of the main solution file and creates a &quot;XTaskDlg.dll&quot; 
+	which you will need to distribute with your application if you take the DLL 
+	approach. The XTaskDialog DLL project is set up to statically link to the VC 
+	2005 CRT so all you need to deploy is the &quot;XTaskDlg.dll&quot; with your client applications. 
+	Included in the download is a pre-built Win32 Unicode version of the DLL. It 
+	weighs in as a very small c. 150K binary.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Enhancements"></a>Planned Enhancements</h2>
+<ul>
+	<li>The expando button and its associated text could be made more like the native 
+	Vista implementation.</li>
+	<li>It would be nice to support stacking of the standard buttons when horizontal 
+	space is limited.</li>
+	<li>The positioning of the check box and expando buttons could be made more 
+	like the native Vista implementation.</li>
+	<li>Support TDF_RTL_LAYOUT.</li>
+	<li>Support TDM_NAVIGATE_PAGE / TDN_NAVIGATED.</li>
+	<li>If you have any other suggested improvements on which suggested items are 
+	more important for XTaskDialog, please let me know so that I can incorporate 
+	them into the next release of XTaskDialog.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Contact"></a>Contacting the Author</h2>
+<p>PJ Naughter<br>
+Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
+Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
+20 January 2009</p>
+
+</body>
+
+</html>

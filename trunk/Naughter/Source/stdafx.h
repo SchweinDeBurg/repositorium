@@ -34,6 +34,9 @@
 // ATL headers
 #include <atlbase.h>
 #include <atlenc.h>
+#include <atlwin.h>
+#include <atlstr.h>
+#include <atltypes.h>
 
 // PSDK headers
 #include <wininet.h>
