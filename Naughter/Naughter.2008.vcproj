@@ -44,7 +44,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -120,7 +120,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -192,7 +192,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -268,7 +268,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\OpenSSL\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -878,6 +878,79 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\Help\xtaskdialog.htm"
+				DeploymentContent="true"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Help\xtaskdialog.jpg"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
 		</Filter>
 		<Filter
 			Name="Controls"
@@ -949,6 +1022,26 @@
 			Filter="ico;cur;bmp"
 			>
 			<File
+				RelativePath=".\Source\BinRes\CommandLink.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\BinRes\error.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\BinRes\hot_commandlink.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\BinRes\info.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\BinRes\shield.ico"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\BinRes\tfdropcopy.cur"
 				>
 			</File>
@@ -962,6 +1055,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\BinRes\tfnodropmove.cur"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\BinRes\warning.ico"
 				>
 			</File>
 		</Filter>
@@ -1132,6 +1229,95 @@
 			</File>
 			<File
 				RelativePath=".\Source\WTimer.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="XTaskDialog"
+			Filter="h;cpp;rh;rc"
+			>
+			<File
+				RelativePath=".\Source\XTaskDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialogButton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialogClient.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialogCommandLink.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialogDefines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialogIconStatic.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialogItem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialogMFCClient.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialogMFCClient.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialogRes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialogRes.rc"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\XTaskDialogStatic.h"
 				>
 			</File>
 		</Filter>
