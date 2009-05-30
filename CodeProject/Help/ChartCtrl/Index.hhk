@@ -1589,5 +1589,72 @@
 		<param name="Name" value="CChartBarSerie::ShowGradient">
 		<param name="Local" value="class_c_chart_bar_serie.html#97475ad09ac06af0d9b0a719eaa4cc9a">
 		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="TimeInterval">
+		<param name="Name" value="CChartDateTimeAxis::TimeInterval">
+		<param name="Local" value="class_c_chart_date_time_axis.html#783a3bd7291b25d95d05514150434c8f">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="UndockLegend">
+		<param name="Name" value="CChartLegend::UndockLegend">
+		<param name="Local" value="class_c_chart_legend.html#398a83f500e7d3ec88b53baac0caa8f9">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="UndoPanZoom">
+		<param name="Name" value="CChartCtrl::UndoPanZoom">
+		<param name="Local" value="class_c_chart_ctrl.html#39a297d54bf34bcb0fb4b828144101c8">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="UndoZoom">
+		<param name="Name" value="CChartAxis::UndoZoom">
+		<param name="Local" value="class_c_chart_axis.html#933b0071a04af914af06ec03e7a0b250">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="UnselectFont">
+		<param name="Name" value="CChartFont::UnselectFont">
+		<param name="Local" value="class_c_chart_font.html#ceb7f6c71c10c0aca1b6298a5ed358ad">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="ValueToDate">
+		<param name="Name" value="CChartCtrl::ValueToDate">
+		<param name="Local" value="class_c_chart_ctrl.html#355792ea4e0bc6dda66910409d22a2d1">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="ValueToScreen">
+		<param name="Name" value="CChartAxis::ValueToScreen">
+		<param name="Local" value="class_c_chart_axis.html#e9bff492d909eb9d86f1b95d0cff9c45">
+		<param name="Name" value="CChartSerie::ValueToScreen">
+		<param name="Local" value="class_c_chart_serie.html#f60f21abce8f270d943a2870377af5a4">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="ValueToScreenDiscrete">
+		<param name="Name" value="CChartAxis::ValueToScreenDiscrete">
+		<param name="Local" value="class_c_chart_axis.html#9cf74d600feed2f9a214644b97632829">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="ValueToScreenStandard">
+		<param name="Name" value="CChartAxis::ValueToScreenStandard">
+		<param name="Local" value="class_c_chart_axis.html#4262b15c1564b6dd8220afbe62ae966b">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="X">
+		<param name="Name" value="CChartPointsArray::SChartPoint::X">
+		<param name="Local" value="struct_c_chart_points_array_1_1_s_chart_point.html#2887b15c586f7b77cc8a3f3dffc73aae">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="XScreenToValue">
+		<param name="Name" value="CChartSerie::XScreenToValue">
+		<param name="Local" value="class_c_chart_serie.html#8ed785985e449503435f1f4d38ba395e">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Y">
+		<param name="Name" value="CChartPointsArray::SChartPoint::Y">
+		<param name="Local" value="struct_c_chart_points_array_1_1_s_chart_point.html#fea61b017dc868ff86f362aee4c77c5f">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="YScreenToValue">
+		<param name="Name" value="CChartSerie::YScreenToValue">
+		<param name="Local" value="class_c_chart_serie.html#ad323db2efabc8ba5cc5b5639fcc5da6">
+		</OBJECT>
 </UL>
 </BODY></HTML>
