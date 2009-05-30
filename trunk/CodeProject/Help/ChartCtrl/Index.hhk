@@ -1089,5 +1089,63 @@
 		<param name="Name" value="CChartMouseListener::MouseEvent">
 		<param name="Local" value="class_c_chart_mouse_listener.html#cffa1073dca632eca72f7339ecb350d7">
 		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="OnCursorMoved">
+		<param name="Name" value="CChartCursorListener::OnCursorMoved">
+		<param name="Local" value="class_c_chart_cursor_listener.html#f33ee6368a4a6382523eff1c835ef2e4">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="OnMouseButtonDown">
+		<param name="Name" value="CChartCursor::OnMouseButtonDown">
+		<param name="Local" value="class_c_chart_cursor.html#bd95379b8f28b93191de1bf5e02a0126">
+		<param name="Name" value="CChartDragLineCursor::OnMouseButtonDown">
+		<param name="Local" value="class_c_chart_drag_line_cursor.html#1b397fe1c95e3b5f2b901f9728d3a58d">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="OnMouseButtonUp">
+		<param name="Name" value="CChartCursor::OnMouseButtonUp">
+		<param name="Local" value="class_c_chart_cursor.html#93394fc366bf6f76aa0f4cea0858a8f1">
+		<param name="Name" value="CChartDragLineCursor::OnMouseButtonUp">
+		<param name="Local" value="class_c_chart_drag_line_cursor.html#e4b7d1c533b38e06186305d4a28d1a9c">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="OnMouseEventAxis">
+		<param name="Name" value="CChartMouseListener::OnMouseEventAxis">
+		<param name="Local" value="class_c_chart_mouse_listener.html#4a9a76163cd0ed652be5fc516ec5dded">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="OnMouseEventLegend">
+		<param name="Name" value="CChartMouseListener::OnMouseEventLegend">
+		<param name="Local" value="class_c_chart_mouse_listener.html#64fd6fc4da12a033dc271c2cde31513a">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="OnMouseEventPlotArea">
+		<param name="Name" value="CChartMouseListener::OnMouseEventPlotArea">
+		<param name="Local" value="class_c_chart_mouse_listener.html#339729bb430d803412d9705f85be5094">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="OnMouseEventSeries">
+		<param name="Name" value="CChartMouseListener::OnMouseEventSeries">
+		<param name="Local" value="class_c_chart_mouse_listener.html#a51c1dea325cd13ee681300ac6e9fa2d">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="OnMouseEventTitle">
+		<param name="Name" value="CChartMouseListener::OnMouseEventTitle">
+		<param name="Local" value="class_c_chart_mouse_listener.html#ccb46591a6ff19b5e789f04988294b81">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="OnMouseMove">
+		<param name="Name" value="CChartCursor::OnMouseMove">
+		<param name="Local" value="class_c_chart_cursor.html#fe447ebc13060419ef7b60410ba5532b">
+		<param name="Name" value="CChartDragLineCursor::OnMouseMove">
+		<param name="Local" value="class_c_chart_drag_line_cursor.html#c844f049640ccc6d73d4cb21b6ae8c63">
+		<param name="Name" value="CChartCrossHairCursor::OnMouseMove">
+		<param name="Local" value="class_c_chart_cross_hair_cursor.html#94b2631efaf940e76aeb5dfc71135641">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="operator =">
+		<param name="Name" value="CChartFont::operator =">
+		<param name="Local" value="class_c_chart_font.html#e82aee1219413e43d6a05e4c0862b044">
+		</OBJECT>
 </UL>
 </BODY></HTML>
