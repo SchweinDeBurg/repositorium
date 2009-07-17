@@ -377,102 +377,104 @@ FI_STRUCT (FIICCPROFILE) {
 /** I/O image format identifiers.
 */
 FI_ENUM(FREE_IMAGE_FORMAT) {
-	FIF_UNKNOWN = -1,
+	FIF_UNKNOWN = -1
 #if !defined(FREEIMAGE_NO_BMP)
-	FIF_BMP,
+,	FIF_BMP
 #endif
 #if !defined(FREEIMAGE_NO_ICO)
-	FIF_ICO,
+,	FIF_ICO
 #endif
 #if !defined(FREEIMAGE_NO_JPEG)
-	FIF_JPEG,
+,	FIF_JPEG
 #endif
 #if !defined(FREEIMAGE_NO_MNG)
-	FIF_JNG,
+,	FIF_JNG
 #endif
 #if !defined(FREEIMAGE_NO_KOALA)
-	FIF_KOALA4,
+,	FIF_KOALA4
 #endif
 #if !defined(FREEIMAGE_NO_IFF)
-	FIF_LBM,
-	FIF_IFF = FIF_LBM,
+,	FIF_LBM
+,	FIF_IFF = FIF_LBM
 #endif
 #if !defined(FREEIMAGE_NO_MNG)
-	FIF_MNG,
+,	FIF_MNG
 #endif
 #if !defined(FREEIMAGE_NO_PNM)
-	FIF_PBM,
-	FIF_PBMRAW,
+,	FIF_PBM
+,	FIF_PBMRAW
 #endif
 #if !defined(FREEIMAGE_NO_PCD)
-	FIF_PCD,
+,	FIF_PCD
 #endif
 #if !defined(FREEIMAGE_NO_PCX)
-	FIF_PCX,
+,	FIF_PCX
 #endif
 #if !defined(FREEIMAGE_NO_PNM)
-	FIF_PGM,
-	FIF_PGMRAW,
+,	FIF_PGM
+,	FIF_PGMRAW
 #endif
 #if !defined(FREEIMAGE_NO_PNG)
-	FIF_PNG,
+,	FIF_PNG
 #endif
 #if !defined(FREEIMAGE_NO_PNM)
-	FIF_PPM,
-	FIF_PPMRAW,
+,	FIF_PPM
+,	FIF_PPMRAW
 #endif
-	FIF_RAS,
+#if !defined(FREEIMAGE_NO_RAS)
+,	FIF_RAS
+#endif
 #if !defined(FREEIMAGE_NO_TARGA)
-	FIF_TARGA,
+,	FIF_TARGA
 #endif
 #if !defined(FREEIMAGE_NO_TIFF)
-	FIF_TIFF,
+,	FIF_TIFF
 #endif
 #if !defined(FREEIMAGE_NO_WBMP)
-	FIF_WBMP,
+,	FIF_WBMP
 #endif
 #if !defined(FREEIMAGE_NO_PSD)
-	FIF_PSD,
+,	FIF_PSD
 #endif
 #if !defined(FREEIMAGE_NO_CUT)
-	FIF_CUT,
+,	FIF_CUT
 #endif
 #if !defined(FREEIMAGE_NO_XBM)
-	FIF_XBM,
+,	FIF_XBM
 #endif
 #if !defined(FREEIMAGE_NO_XPM)
-	FIF_XPM,
+,	FIF_XPM
 #endif
 #if !defined(FREEIMAGE_NO_DDS)
-	FIF_DDS,
+,	FIF_DDS
 #endif
 #if !defined(FREEIMAGE_NO_GIF)
-	FIF_GIF,
+,	FIF_GIF
 #endif
 #if !defined(FREEIMAGE_NO_HDR)
-	FIF_HDR,
+,	FIF_HDR
 #endif
 #if !defined(FREEIMAGE_NO_TIFF)
-	FIF_FAXG3,
+,	FIF_FAXG3
 #endif
 #if !defined(FREEIMAGE_NO_SGI)
-	FIF_SGI,
+,	FIF_SGI
 #endif
 #if !defined(FREEIMAGE_NO_EXR)
-	FIF_EXR,
+,	FIF_EXR
 #endif
 #if !defined(FREEIMAGE_NO_J2K)
-	FIF_J2K,
-	FIF_JP2,
+,	FIF_J2K
+,	FIF_JP2
 #endif
 #if !defined(FREEIMAGE_NO_PFM)
-	FIF_PFM,
+,	FIF_PFM
 #endif
 #if !defined(FREEIMAGE_NO_PICT)
-	FIF_PICT,
+,	FIF_PICT
 #endif
 #if !defined(FREEIMAGE_NO_RAW)
-	FIF_RAW
+,	FIF_RAW
 #endif
 };
 
