@@ -4,6 +4,7 @@
 	Version="9,00"
 	Name="FreeImage"
 	ProjectGUID="{B74C3F31-EAE2-47F2-80F3-F749311DE762}"
+	RootNamespace="FreeImage"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -44,7 +45,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="./Include;../zlib/Source;../Graphics/OpenEXR/Source/IlmImf"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;OPJ_STATIC;FREEIMAGE_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;OPJ_STATIC;FREEIMAGE_LIB;LIBRAW_NODLL"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -59,7 +60,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4100;4121;4127;4189;4244;4611"
+				DisableSpecificWarnings="4100;4121;4127;4189;4244;4611;4701"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -122,7 +123,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="./Include;../zlib/Source;../Graphics/OpenEXR/Source/IlmImf"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;OPJ_STATIC;FREEIMAGE_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;OPJ_STATIC;FREEIMAGE_LIB;LIBRAW_NODLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -134,7 +135,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4100;4121;4127;4189;4244;4611"
+				DisableSpecificWarnings="4100;4121;4127;4189;4244;4611;4701"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -196,7 +197,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="./Include;../zlib/Source;../Graphics/OpenEXR/Source/IlmImf"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;OPJ_STATIC;FREEIMAGE_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;OPJ_STATIC;FREEIMAGE_LIB;LIBRAW_NODLL"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -211,7 +212,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4100;4121;4127;4189;4244;4611"
+				DisableSpecificWarnings="4100;4121;4127;4189;4244;4611;4701"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -274,7 +275,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="./Include;../zlib/Source;../Graphics/OpenEXR/Source/IlmImf"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;OPJ_STATIC;FREEIMAGE_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;OPJ_STATIC;FREEIMAGE_LIB;LIBRAW_NODLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -286,7 +287,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4100;4121;4127;4189;4244;4611"
+				DisableSpecificWarnings="4100;4121;4127;4189;4244;4611;4701"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -588,6 +589,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\PluginPICT.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\PluginPNG.cpp"
 					>
 				</File>
@@ -601,6 +606,10 @@
 				</File>
 				<File
 					RelativePath=".\Source\PluginRAS.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\PluginRAW.cpp"
 					>
 				</File>
 				<File
