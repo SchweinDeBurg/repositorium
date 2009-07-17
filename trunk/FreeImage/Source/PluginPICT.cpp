@@ -73,6 +73,8 @@
 #include "FreeImage.h"
 #include "Utilities.h"
 
+#if !defined(FREEIMAGE_NO_PICT)
+
 // ==========================================================
 // Plugin Interface
 // ==========================================================
@@ -1332,3 +1334,5 @@ InitPICT(Plugin *plugin, int format_id) {
 	plugin->supports_export_type_proc = SupportsExportType;
 	plugin->supports_icc_profiles_proc = SupportsICCProfiles;
 }
+
+#endif   // FREEIMAGE_NO_PICT

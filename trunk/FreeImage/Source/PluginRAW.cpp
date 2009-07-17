@@ -25,6 +25,8 @@
 #include "Utilities.h"
 #include "FreeImageTag.h"
 
+#if !defined(FREEIMAGE_NO_RAW)
+
 #include "../../Graphics/LibRawLite/Source/libraw/libraw.h"
 
 // ==========================================================
@@ -490,3 +492,5 @@ InitRAW(Plugin *plugin, int format_id) {
 	plugin->supports_export_type_proc = SupportsExportType;
 	plugin->supports_icc_profiles_proc = NULL;
 }
+
+#endif   // FREEIMAGE_NO_RAW
