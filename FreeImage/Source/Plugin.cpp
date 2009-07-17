@@ -317,6 +317,12 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
 #if !defined(FREEIMAGE_NO_PFM)
 			s_plugins->AddNode(InitPFM);
 #endif
+#if !defined(FREEIMAGE_NO_PICT)
+			s_plugins->AddNode(InitPICT);
+#endif
+#if !defined(FREEIMAGE_NO_RAW)
+			s_plugins->AddNode(InitRAW);
+#endif
 
 			// external plugin initialization
 

@@ -30,9 +30,9 @@
 #endif 
 
 #include <stdlib.h>
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32) || defined(_WIN64) || defined(__MINGW32__)
 #include <malloc.h>
-#endif // _WIN32 || _WIN64
+#endif // _WIN32 || _WIN64 || __MINGW32__
 
 #include "FreeImage.h"
 #include "FreeImageIO.h"
@@ -84,7 +84,7 @@ FI_STRUCT (FREEIMAGEHEADER) {
 //  Memory allocation on a specified alignment boundary
 // ----------------------------------------------------------
 
-#if defined(_WIN32) || defined(_WIN64)
+#if (defined(_WIN32) || defined(_WIN64)) && !defined(__MINGW32__)
 
 void* FreeImage_Aligned_Malloc(size_t amount, size_t alignment) {
 	assert(alignment == FIBITMAP_ALIGNMENT);
@@ -93,6 +93,17 @@ void* FreeImage_Aligned_Malloc(size_t amount, size_t alignment) {
 
 void FreeImage_Aligned_Free(void* mem) {
 	_aligned_free(mem);
+}
+
+#elif defined (__MINGW32__)
+
+void* FreeImage_Aligned_Malloc(size_t amount, size_t alignment) {
+	assert(alignment == FIBITMAP_ALIGNMENT);
+	return __mingw_aligned_malloc (amount, alignment);
+}
+
+void FreeImage_Aligned_Free(void* mem) {
+	__mingw_aligned_free (mem);
 }
 
 #else
