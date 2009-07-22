@@ -59,7 +59,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4005;4018;4057;4100;4101;4127;4133;4146;4189;4204;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
+				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -133,7 +133,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4005;4018;4057;4100;4101;4127;4133;4146;4189;4204;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
+				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -209,7 +209,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4005;4018;4057;4100;4101;4127;4133;4146;4189;4204;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
+				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -283,7 +283,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4005;4018;4057;4100;4101;4127;4133;4146;4189;4204;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
+				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -328,46 +328,6 @@
 			<Filter
 				Name="internal"
 				>
-				<File
-					RelativePath=".\Source\dcraw\dcraw.c"
-					>
-					<FileConfiguration
-						Name="MBCS Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							PreprocessorDefinitions="NO_LCMS"
-							DisableSpecificWarnings="4013"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="MBCS Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							PreprocessorDefinitions="NO_LCMS"
-							DisableSpecificWarnings="4013"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							PreprocessorDefinitions="NO_LCMS"
-							DisableSpecificWarnings="4013"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							PreprocessorDefinitions="NO_LCMS"
-							DisableSpecificWarnings="4013"
-						/>
-					</FileConfiguration>
-				</File>
 				<File
 					RelativePath=".\Source\internal\dcraw_common.cpp"
 					>
