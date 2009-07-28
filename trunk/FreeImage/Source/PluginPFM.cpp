@@ -64,14 +64,12 @@ Get an integer value from the actual position pointed by handle
 */
 static int
 pfm_get_int(FreeImageIO *io, fi_handle handle) {
-	static const char *PNM_ERROR_PARSING	= "Parsing error";
-
     char c = 0;
 	BOOL firstchar;
 
     // skip forward to start of next number
 
-    if(!io->read_proc(&c, 1, 1, handle)) throw PNM_ERROR_PARSING;
+    if(!io->read_proc(&c, 1, 1, handle)) throw FI_MSG_ERROR_PARSING;
 
     while (1) {
         // eat comments
@@ -82,7 +80,7 @@ pfm_get_int(FreeImageIO *io, fi_handle handle) {
             firstchar = TRUE;
 
             while (1) {
-				if(!io->read_proc(&c, 1, 1, handle)) throw PNM_ERROR_PARSING;
+				if(!io->read_proc(&c, 1, 1, handle)) throw FI_MSG_ERROR_PARSING;
 
 				if (firstchar && c == ' ') {
 					// loop off 1 sp after #
@@ -100,7 +98,7 @@ pfm_get_int(FreeImageIO *io, fi_handle handle) {
             break;
 		}
 
-        if(!io->read_proc(&c, 1, 1, handle)) throw PNM_ERROR_PARSING;
+        if(!io->read_proc(&c, 1, 1, handle)) throw FI_MSG_ERROR_PARSING;
     }
 
     // we're at the start of a number, continue until we hit a non-number
@@ -110,7 +108,7 @@ pfm_get_int(FreeImageIO *io, fi_handle handle) {
     while (1) {
         i = (i * 10) + (c - '0');
 
-        if(!io->read_proc(&c, 1, 1, handle)) throw PNM_ERROR_PARSING;
+        if(!io->read_proc(&c, 1, 1, handle)) throw FI_MSG_ERROR_PARSING;
 
         if (c < '0' || c > '9')
             break;
@@ -215,7 +213,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		}
 		if(image_type == FIT_UNKNOWN) {
 			// signature error
-			throw "Invalid magic number";
+			throw FI_MSG_ERROR_MAGIC_NUMBER;
 		}
 
 		// Read the header information: width, height and the scale value
@@ -234,7 +232,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		// Create a new DIB
 		dib = FreeImage_AllocateT(image_type, width, height);
 		if (dib == NULL) {
-			throw "DIB allocation failed";
+			throw FI_MSG_ERROR_DIB_MEMORY;
 		}
 
 		// Read the image...
@@ -243,7 +241,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			const unsigned lineWidth = 3 * width;
 			lineBuffer = (float*)malloc(lineWidth * sizeof(float));
 			if(!lineBuffer) {
-				throw "Allocation error";
+				throw FI_MSG_ERROR_MEMORY;
 			}
 
 			for (unsigned y = 0; y < height; y++) {	
@@ -277,7 +275,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			const unsigned lineWidth = width;
 			lineBuffer = (float*)malloc(lineWidth * sizeof(float));
 			if(!lineBuffer) {
-				throw "Allocation error";
+				throw FI_MSG_ERROR_MEMORY;
 			}
 
 			for (unsigned y = 0; y < height; y++) {	

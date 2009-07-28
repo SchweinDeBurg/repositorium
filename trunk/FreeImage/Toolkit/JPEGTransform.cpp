@@ -300,7 +300,7 @@ FreeImage_JPEGTransform(const char *src_file, const char *dst_file, FREE_IMAGE_J
 	try {
 		// check the src file format
 		if(FreeImage_GetFileType(src_file) != FIF_JPEG) {
-			throw "Input file is not a JPEG file";
+			throw FI_MSG_ERROR_MAGIC_NUMBER;
 		}
 
 		// setup IO
@@ -325,7 +325,7 @@ FreeImage_JPEGCrop(const char *src_file, const char *dst_file, int left, int top
 	try {
 		// check the src file format
 		if(FreeImage_GetFileType(src_file) != FIF_JPEG) {
-			throw "Input file is not a JPEG file";
+			throw FI_MSG_ERROR_MAGIC_NUMBER;
 		}
 		
 		// normalize the rectangle
@@ -360,7 +360,7 @@ FreeImage_JPEGTransformU(const wchar_t *src_file, const wchar_t *dst_file, FREE_
 	try {
 		// check the src file format
 		if(FreeImage_GetFileTypeU(src_file) != FIF_JPEG) {
-			throw "Input file is not a JPEG file";
+			throw FI_MSG_ERROR_MAGIC_NUMBER;
 		}
 
 		// setup IO
@@ -387,7 +387,7 @@ FreeImage_JPEGCropU(const wchar_t *src_file, const wchar_t *dst_file, int left, 
 	try {
 		// check the src file format
 		if(FreeImage_GetFileTypeU(src_file) != FIF_JPEG) {
-			throw "Input file is not a JPEG file";
+			throw FI_MSG_ERROR_MAGIC_NUMBER;
 		}
 		
 		// normalize the rectangle
