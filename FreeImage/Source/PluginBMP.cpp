@@ -492,9 +492,9 @@ LoadWindowsBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bit
 				// allocate enough memory to hold the bitmap (header, palette, pixels) and read the palette
 
 				dib = FreeImage_Allocate(width, height, bit_count);
-
-				if (dib == NULL)
-					throw "DIB allocation failed";
+				if (dib == NULL) {
+					throw FI_MSG_ERROR_DIB_MEMORY;
+				}
 
 				// set resolution information
 				FreeImage_SetDotsPerMeterX(dib, bih.biXPelsPerMeter);
@@ -540,7 +540,7 @@ LoadWindowsBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bit
 						break;
 
 					default :
-						throw "compression type not supported";
+						throw FI_MSG_ERROR_UNSUPPORTED_COMPRESSION;
 				}
 			}
 			break; // 1-, 4-, 8-bit
@@ -557,8 +557,9 @@ LoadWindowsBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bit
 					dib = FreeImage_Allocate(width, height, bit_count, FI16_555_RED_MASK, FI16_555_GREEN_MASK, FI16_555_BLUE_MASK);
 				}
 
-				if (dib == NULL)
-					throw "DIB allocation failed";						
+				if (dib == NULL) {
+					throw FI_MSG_ERROR_DIB_MEMORY;						
+				}
 
 				// set resolution information
 				FreeImage_SetDotsPerMeterX(dib, bih.biXPelsPerMeter);
@@ -588,8 +589,9 @@ LoadWindowsBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bit
 					}
 				}
 
-				if (dib == NULL)
-					throw "DIB allocation failed";
+				if (dib == NULL) {
+					throw FI_MSG_ERROR_DIB_MEMORY;
+				}
 
 				// set resolution information
 				FreeImage_SetDotsPerMeterX(dib, bih.biXPelsPerMeter);
@@ -665,8 +667,9 @@ LoadOS22XBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bits_
 
 				dib = FreeImage_Allocate(width, height, bit_count);
 
-				if (dib == NULL)
-					throw "DIB allocation failed";
+				if (dib == NULL) {
+					throw FI_MSG_ERROR_DIB_MEMORY;
+				}
 
 				// set resolution information
 				FreeImage_SetDotsPerMeterX(dib, bih.biXPelsPerMeter);
@@ -719,7 +722,7 @@ LoadOS22XBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bits_
 						break;
 
 					default :		
-						throw "compression type not supported";
+						throw FI_MSG_ERROR_UNSUPPORTED_COMPRESSION;
 				}	
 			}
 
@@ -735,8 +738,9 @@ LoadOS22XBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bits_
 					dib = FreeImage_Allocate(width, height, bit_count, FI16_555_RED_MASK, FI16_555_GREEN_MASK, FI16_555_BLUE_MASK);
 				}
 
-				if (dib == NULL)
-					throw "DIB allocation failed";						
+				if (dib == NULL) {
+					throw FI_MSG_ERROR_DIB_MEMORY;
+				}
 
 				// set resolution information
 				FreeImage_SetDotsPerMeterX(dib, bih.biXPelsPerMeter);
@@ -761,8 +765,9 @@ LoadOS22XBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bits_
 					dib = FreeImage_Allocate(width, height, bit_count, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
 				}
 
-				if (dib == NULL)
-					throw "DIB allocation failed";
+				if (dib == NULL) {
+					throw FI_MSG_ERROR_DIB_MEMORY;
+				}
 				
 				// set resolution information
 				FreeImage_SetDotsPerMeterX(dib, bih.biXPelsPerMeter);
@@ -827,8 +832,9 @@ LoadOS21XBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bits_
 
 				dib = FreeImage_Allocate(width, height, bit_count);
 
-				if (dib == NULL)
-					throw "DIB allocation failed";						
+				if (dib == NULL) {
+					throw FI_MSG_ERROR_DIB_MEMORY;
+				}
 
 				// set resolution information to default values (72 dpi in english units)
 				FreeImage_SetDotsPerMeterX(dib, 2835);
@@ -865,8 +871,9 @@ LoadOS21XBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bits_
 			{
 				dib = FreeImage_Allocate(width, height, bit_count, FI16_555_RED_MASK, FI16_555_GREEN_MASK, FI16_555_BLUE_MASK);
 
-				if (dib == NULL)
-					throw "DIB allocation failed";						
+				if (dib == NULL) {
+					throw FI_MSG_ERROR_DIB_MEMORY;						
+				}
 
 				// set resolution information to default values (72 dpi in english units)
 				FreeImage_SetDotsPerMeterX(dib, 2835);
@@ -887,8 +894,9 @@ LoadOS21XBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bits_
 					dib = FreeImage_Allocate(width, height, bit_count, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
 				}
 
-				if (dib == NULL)
-					throw "DIB allocation failed";						
+				if (dib == NULL) {
+					throw FI_MSG_ERROR_DIB_MEMORY;						
+				}
 
 				// set resolution information to default values (72 dpi in english units)
 				FreeImage_SetDotsPerMeterX(dib, 2835);
