@@ -16,6 +16,10 @@ History: PJN / 29-12-2004 1. Updated to suit new layout of CWSocket methods
                           This avoids de-allocation problems in the respective destructor classes when one of these
                           contexts is shared between two C++ class instances. Thanks to Dmitriy Maksimov for reporting
                           this bug.
+         PJN / 12-07-2009 1. Copy constructors and assignment operators are now private to ensure that the CSSLContext,
+                          CSSL, & CSSLSocket classes are not copyable. The previous fix on 23-05-2009 was not 
+                          sufficient as default compiler generated methods are created for these two C++ methods. Thanks
+                          to Dmitriy Maksimov for following up on this issue.
 
 Copyright (c) 2002 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
