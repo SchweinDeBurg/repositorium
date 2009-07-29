@@ -32,8 +32,8 @@ to maintain a single distribution point for the source code.
 
 /////////////////////////////// Includes //////////////////////////////////////
 
-#include <openssl\ssl.h> //If you get a compilation error about this missing header file, then you need to download OpenSSL from http://www.openssl.org and build a Win32 version and incorporate it into your project
-#include <openssl\err.h> //If you get a compilation error about this missing header file, then you need to download OpenSSL from http://www.openssl.org and build a Win32 version and incorporate it into your project
+#include <openssl\ssl.h> //If you get a compilation error about this missing header file, then you need to download OpenSSL from http://www.openssl.org or http://www.slproweb.com/products/Win32OpenSSL.html and incorporate it into your project
+#include <openssl\err.h> //If you get a compilation error about this missing header file, then you need to download OpenSSL from http://www.openssl.org or http://www.slproweb.com/products/Win32OpenSSL.html and incorporate it into your project
 #include "SocMFC.h"
 
 
@@ -56,10 +56,14 @@ public:
 //operators
   operator SSL_CTX*() const;
 
-//Data
+//Member variables
   SSL_CTX* m_pSSLContext; //The underlying OpenSSL context variable
+  
+private:
+//Methods
+  CSSLContext(const CSSLContext& sslContext); //Implemented as private to ensure that instances of this class are non-copyable
+  CSSLContext& operator=(const CSSLContext& sslContext); //Implemented as private to ensure that instances of this class are non-copyable
 };
-
 
 //class which encapsulates the OpenSSL SSL* variable
 class SOCKMFC_EXT_CLASS CSSL 
@@ -78,10 +82,14 @@ public:
 //operators
   operator SSL*() const;
 
-//Data
+//Member variables
   SSL* m_pSSL; //The underlying OpenSSL "SSL" variable
+  
+private:
+//Methods
+  CSSL(const CSSL& ssl); //Implemented as private to ensure that instances of this class are non-copyable
+  CSSL& operator=(const CSSL& ssl); //Implemented as private to ensure that instances of this class are non-copyable
 };
-
 
 //Class which encapsulates a SSL socket, in OpenSSL parlance, this is an SSL* struct (aka CSSL) doing file IO over a socket (aka CWSocket)
 class SOCKMFC_EXT_CLASS CSSLSocket
@@ -108,8 +116,14 @@ public:
   operator CWSocket&() const;
 
 protected:
+//Member variables
   CSSL      m_SSL;
   CWSocket* m_pSocket;
+  
+private:
+//Methods
+  CSSLSocket(const CSSLSocket& socket); //Implemented as private to ensure that instances of this class are non-copyable
+  CSSLSocket& operator=(const CSSLSocket& socket); //Implemented as private to ensure that instances of this class are non-copyable
 };
 
 #endif //__OPENSSLMFC_H__

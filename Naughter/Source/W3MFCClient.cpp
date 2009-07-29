@@ -1783,22 +1783,28 @@ void CW3MFCClient::PostLog(int /*nHTTPStatusCode*/, DWORD /*dwBodyLength*/)
 
   //Get the time zone information
   TIME_ZONE_INFORMATION tzi;
-  GetTimeZoneInformation(&tzi);
+  memset(&tzi, 0, sizeof(tzi));
+  int nTZBias = 0;
+  if (GetTimeZoneInformation(&tzi) == TIME_ZONE_ID_DAYLIGHT)
+    nTZBias = tzi.Bias + tzi.DaylightBias;
+  else
+    nTZBias = tzi.Bias;
 
   //Format the date and time appropiately
   TCHAR sDateTime[64];
+  sDateTime[0] = _T('\0');
   _tcsftime(sDateTime, 64, _T("[%d/%b/%Y:%H:%M:%S"), pNow);
 
   //Display the connections to the console window
   CString sUser(m_Request.m_sUserName);
   if (sUser.IsEmpty())
     sUser = _T("-");
-  TRACE(_T("%d.%d.%d.%d - %s %s %04d] \"%s\" %d %d\n"), 
+  TRACE(_T("%d.%d.%d.%d - %s [%s %+.2d%.2d%] \"%s\" %d %d\n"), 
         m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b1,
         m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b2, 
         m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b3, 
         m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b4, 
-        sUser.operator LPCTSTR(), sDateTime, tzi.Bias, m_Request.m_sRequest.operator LPCTSTR(), nHTTPStatusCode, dwBodyLength);
+        sUser.operator LPCTSTR(), sDateTime, -nTZBias/60, abs(nTZBias)%60, m_Request.m_sRequest.operator LPCTSTR(), nHTTPStatusCode, dwBodyLength);
 #endif        
 }
 
@@ -1894,15 +1900,15 @@ BOOL CW3MFCClient::TransmitBuffer(CW3MFCSocket& socket, CW3MFCResponseHeader& re
 
 BOOL CW3MFCClient::TransmitBuffer(CW3MFCSocket& socket, CW3MFCResponseHeader& responseHdr, BYTE* byData, DWORD dwSize, DWORD dwTimeout)
 {
+  //Assume the worst
+  BOOL bSuccess = FALSE;
+
+#ifdef W3MFC_SSL_SUPPORT
   //Validate our parameters
   AFXASSUME(m_pServer);
   CW3MFCServerSettings* pSettings = m_pServer->GetSettings();
   AFXASSUME(pSettings);
 
-  //Assume the worst
-  BOOL bSuccess = FALSE;
-
-#ifdef W3MFC_SSL_SUPPORT
   BOOL bTryUsingSendExtension = (pSettings->m_SSLProtocol == CW3MFCServerSettings::SSL_NONE);
 #else
   BOOL bTryUsingSendExtension = TRUE;
@@ -1973,16 +1979,16 @@ void CW3MFCClient::SetRequestToStop()
 
 BOOL CW3MFCClient::GetKeySizeServerVariable(int& nKeySize)
 {
-  //Validate our parameters
-  AFXASSUME(m_pServer);
-  CW3MFCServerSettings* pSettings = m_pServer->GetSettings();
-  AFXASSUME(pSettings);
-
   //What will be the return value
   BOOL bSuccess = FALSE;
   nKeySize = 0;
 
 #ifdef W3MFC_SSL_SUPPORT
+  //Validate our parameters
+  AFXASSUME(m_pServer);
+  CW3MFCServerSettings* pSettings = m_pServer->GetSettings();
+  AFXASSUME(pSettings);
+
   if (pSettings->m_SSLProtocol != CW3MFCServerSettings::SSL_NONE)
   {
     SSL_get_cipher_bits(m_SSL, &nKeySize);
@@ -1995,16 +2001,16 @@ BOOL CW3MFCClient::GetKeySizeServerVariable(int& nKeySize)
 
 BOOL CW3MFCClient::GetServerKeySizeServerVariable(int& nKeySize)
 {
-  //Validate our parameters
-  AFXASSUME(m_pServer);
-  CW3MFCServerSettings* pSettings = m_pServer->GetSettings();
-  AFXASSUME(pSettings);
-
   //What will be the return value
   BOOL bSuccess = FALSE;
   nKeySize = 0;
 
 #ifdef W3MFC_SSL_SUPPORT
+  //Validate our parameters
+  AFXASSUME(m_pServer);
+  CW3MFCServerSettings* pSettings = m_pServer->GetSettings();
+  AFXASSUME(pSettings);
+
   if (pSettings->m_SSLProtocol != CW3MFCServerSettings::SSL_NONE)
   {
     EVP_PKEY* pKey = SSL_get_privatekey(m_SSL);
@@ -2021,16 +2027,16 @@ BOOL CW3MFCClient::GetServerKeySizeServerVariable(int& nKeySize)
 
 BOOL CW3MFCClient::GetCertSerialNumberServerVariable(long& nSerialNumber)
 {
-  //Validate our parameters
-  AFXASSUME(m_pServer);
-  CW3MFCServerSettings* pSettings = m_pServer->GetSettings();
-  AFXASSUME(pSettings);
-
   //What will be the return value
   BOOL bSuccess = FALSE;
   nSerialNumber = 0;
 
 #ifdef W3MFC_SSL_SUPPORT
+  //Validate our parameters
+  AFXASSUME(m_pServer);
+  CW3MFCServerSettings* pSettings = m_pServer->GetSettings();
+  AFXASSUME(pSettings);
+
   if (pSettings->m_SSLProtocol != CW3MFCServerSettings::SSL_NONE)
   {
     X509* pCert = SSL_get_certificate(m_SSL);
@@ -2051,16 +2057,16 @@ BOOL CW3MFCClient::GetCertSerialNumberServerVariable(long& nSerialNumber)
 
 BOOL CW3MFCClient::GetCertIssuerServerVariable(char*& szIssuer)
 {
-  //Validate our parameters
-  AFXASSUME(m_pServer);
-  CW3MFCServerSettings* pSettings = m_pServer->GetSettings();
-  AFXASSUME(pSettings);
-
   //What will be the return value
   BOOL bSuccess = FALSE;
   szIssuer = NULL;
 
 #ifdef W3MFC_SSL_SUPPORT
+  //Validate our parameters
+  AFXASSUME(m_pServer);
+  CW3MFCServerSettings* pSettings = m_pServer->GetSettings();
+  AFXASSUME(pSettings);
+
   if (pSettings->m_SSLProtocol != CW3MFCServerSettings::SSL_NONE)
   {
     X509* pCert = SSL_get_certificate(m_SSL);
@@ -2077,16 +2083,16 @@ BOOL CW3MFCClient::GetCertIssuerServerVariable(char*& szIssuer)
 
 BOOL CW3MFCClient::GetCertSubjectServerVariable(char*& szSubject)
 {
-  //Validate our parameters
-  AFXASSUME(m_pServer);
-  CW3MFCServerSettings* pSettings = m_pServer->GetSettings();
-  AFXASSUME(pSettings);
-
   //What will be the return value
   BOOL bSuccess = FALSE;
   szSubject = NULL;
 
 #ifdef W3MFC_SSL_SUPPORT
+  //Validate our parameters
+  AFXASSUME(m_pServer);
+  CW3MFCServerSettings* pSettings = m_pServer->GetSettings();
+  AFXASSUME(pSettings);
+
   if (pSettings->m_SSLProtocol != CW3MFCServerSettings::SSL_NONE)
   {
     X509* pCert = SSL_get_certificate(m_SSL);
