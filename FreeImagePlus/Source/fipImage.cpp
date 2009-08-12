@@ -108,7 +108,9 @@ fipImage& fipImage::operator=(const fipImage& Image) {
 }
 
 fipImage& fipImage::operator=(FIBITMAP *dib) {
-	replace(dib);
+	if(_dib != dib) {
+		replace(dib);
+	}
 	return *this;
 }
 
