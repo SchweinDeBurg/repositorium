@@ -1015,25 +1015,25 @@ CStringA CPJNSMTPBodyPart::GetHeader()
     if (GetNumberOfChildBodyParts())
     {
       if (m_bBase64)
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\n"),
+        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\n"),
                        m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
       else if (m_bQuotedPrintable)
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s; Boundary=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\n"),
+        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\n"),
                        m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
       else
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s; Boundary=\"%s\"\r\n"),
+        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"; Boundary=\"%s\"\r\n"),
                        m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
     }
     else
     {
       if (m_bBase64)
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s\r\nContent-Transfer-Encoding: base64\r\n"),
+        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"\r\nContent-Transfer-Encoding: base64\r\n"),
                        m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
       else if (m_bQuotedPrintable)
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s\r\nContent-Transfer-Encoding: quoted-printable\r\n"),
+        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\n"),
                        m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
       else
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=%s\r\n"),
+        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"\r\n"),
                        m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
     }
   }
@@ -1623,7 +1623,7 @@ CStringA CPJNSMTPMessage::GetHeader()
   else
   {
     CStringA sPartHeader;
-    sPartHeader.Format("Content-Type: %s;\r\n\tcharset=%s\r\n", CStringA(m_RootPart.GetContentType()).operator LPCSTR(), CStringA(m_RootPart.GetCharset()).operator LPCSTR());
+    sPartHeader.Format("Content-Type: %s;\r\n\tcharset=\"%s\"\r\n", CStringA(m_RootPart.GetContentType()).operator LPCSTR(), CStringA(m_RootPart.GetCharset()).operator LPCSTR());
     sHeader += sPartHeader;
   }
   
