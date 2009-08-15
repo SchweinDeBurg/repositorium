@@ -1385,6 +1385,14 @@
 				RelativePath=".\Source\XEmphasisButton.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Source\XHyperLink.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XHyperLink.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="CPPTooltip"
