@@ -2223,6 +2223,19 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Compression"
+			Filter="h;cpp"
+			>
+			<File
+				RelativePath=".\Source\XZip.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XZip.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
