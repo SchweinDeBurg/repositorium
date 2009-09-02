@@ -338,6 +338,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\Deprecated.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\DeprecationMgr.cpp"
 				>
 			</File>
