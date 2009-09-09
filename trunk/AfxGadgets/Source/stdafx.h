@@ -47,6 +47,35 @@
 #define _WIN32_WINNT 0x0501
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+// force private CRT/MFC assemblies to be used
+
+// see http://www.codeproject.com/KB/cpp/PrivateAssemblyProjects.aspx and
+// http://blog.m-ri.de/index.php/2008/05/06/hotfix-fuer-usemsprivateassembliesh-und-vc-2008/
+// by by Martin Richter for more information
+
+#define _STL_NOFORCE_MANIFEST
+#define _CRT_NOFORCE_MANIFEST
+#define _AFX_NOFORCE_MANIFEST
+#define _ATL_NOFORCE_MANIFEST
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+__declspec(selectany) int _forceCRTManifest;
+__declspec(selectany) int _forceMFCManifest;
+__declspec(selectany) int _forceAtlDllManifest;
+
+// the next symbols are used by the several versions of VC 9.0
+__declspec(selectany) int _forceCRTManifestRTM;
+__declspec(selectany) int _forceMFCManifestRTM;
+__declspec(selectany) int _forceMFCManifestCUR;
+
+#ifdef __cplusplus
+}   // extern "C"
+#endif
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 // MFC headers
 
 #include <afxwin.h>        // MFC core and standard components

@@ -387,7 +387,7 @@ CW3MFCServerSettings::CW3MFCServerSettings() : m_nPort(80),                  //D
                                              #else
                                                m_dwIdleClientTimeout(30000), //Default to client idle timeout of 30 seconds
                                              #endif
-                                               m_sServerName(_T("W3MFC/1.91")), //Default server name will be the name of the MFC classes i.e "W3MFC" plus the current version number 
+                                               m_sServerName(_T("W3MFC/1.92")), //Default server name will be the name of the MFC classes i.e "W3MFC" plus the current version number 
                                                m_pRuntimeClientClass(RUNTIME_CLASS(CW3MFCClient)), //Default class to use is CW3MFCClient
                                                m_nThreadPoolSize(10),
                                                m_bDNSLookup(FALSE),

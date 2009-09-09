@@ -29,6 +29,8 @@
 // build configurations.
 //#include "stdafx.h"
 
+#include "NoForceManifest.h"
+
 #include <windows.h>
 #include <tchar.h>
 #include <crtdbg.h>

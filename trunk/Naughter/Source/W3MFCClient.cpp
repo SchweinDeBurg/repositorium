@@ -8,6 +8,7 @@ History  PJN / 19-02-2006 1. Replaced all calls to ZeroMemory and CopyMemory wit
          PJN / 18-02-2008 1. Fixed a memory leak in CW3MFCClient::_TransmitFile
          PJN / 31-05-2008 1. Code now compiles cleanly using Code Analysis (/analyze)
          PJN / 23-05-2009 1. Reworked all token parsing code to use CString::Tokenize
+         PJN / 07-09-2009 1. Fixed a debug mode ASSERT when calling TRACE in CW3MFCClient::PostLog
 
 Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -1799,11 +1800,12 @@ void CW3MFCClient::PostLog(int /*nHTTPStatusCode*/, DWORD /*dwBodyLength*/)
   CString sUser(m_Request.m_sUserName);
   if (sUser.IsEmpty())
     sUser = _T("-");
-  TRACE(_T("%d.%d.%d.%d - %s [%s %+.2d%.2d%] \"%s\" %d %d\n"), 
-        m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b1,
-        m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b2, 
-        m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b3, 
-        m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b4, 
+    
+  TRACE(_T("%d.%d.%d.%d - %s [%s %+.2d%.2d] \"%s\" %d %d\n"), 
+        static_cast<int>(m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b1),
+        static_cast<int>(m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b2), 
+        static_cast<int>(m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b3), 
+        static_cast<int>(m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b4), 
         sUser.operator LPCTSTR(), sDateTime, -nTZBias/60, abs(nTZBias)%60, m_Request.m_sRequest.operator LPCTSTR(), nHTTPStatusCode, dwBodyLength);
 #endif        
 }

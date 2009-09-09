@@ -10,6 +10,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// unwanted warnings
+
 // unreferenced inline/local function has been removed
 #pragma warning(disable: 4514)
 // function not inlined
@@ -22,11 +25,31 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif   // _MSC_VER
 
-#define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
+//////////////////////////////////////////////////////////////////////////////////////////////
+// use WinXP/IE6 features
 
-#define _WIN32_WINNT 0x0500	// use Windows 2000 features
+#define WINVER 0x0501
+#define _WIN32_WINDOWS 0x0500
+#define _WIN32_IE 0x0600
+#define _WIN32_WINNT 0x0501
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// exclude rarely-used stuff from Windows headers
+
+#define VC_EXTRALEAN
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// force private CRT/MFC assemblies to be used
+
+// see http://www.codeproject.com/KB/cpp/PrivateAssemblyProjects.aspx and
+// http://blog.m-ri.de/index.php/2008/05/06/hotfix-fuer-usemsprivateassembliesh-und-vc-2008/
+// by by Martin Richter for more information
+
+#include "NoForceManifest.h"
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 // MFC headers
+
 #include <afxwin.h>
 #include <afxcmn.h>
 #include <afxdlgs.h>
@@ -34,11 +57,15 @@
 #include <afxadv.h>
 #include <afxconv.h>
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // ATL headers
+
 #include <atlbase.h>
 #include <ATLComTime.h>
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // PSDK headers
+
 #include <shlobj.h>
 
 // STL headers
@@ -88,11 +115,14 @@ using std::max;
 	#define XLISTCTRL_TRACE __noop
 #endif
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// some tricks
+
 // force ISO/IEC 14882 conformance in for loop scope
 #if (_MSC_VER < 1300)
 #define for if (false); else for
 #else
 #pragma conform(forScope, on)
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #endif // !defined(AFX_STDAFX_H__25D88527_2F22_4EDF_AE89_D4EF9AB307EC__INCLUDED_)
