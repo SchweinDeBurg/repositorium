@@ -316,6 +316,10 @@
 			Filter="h;cpp"
 			>
 			<File
+				RelativePath=".\Source\NoForceManifest.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\stdafx.cpp"
 				>
 				<FileConfiguration
