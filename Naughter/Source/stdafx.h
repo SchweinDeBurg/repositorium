@@ -9,6 +9,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// unwanted warnings
+
 // unreferenced inline/local function has been removed
 #pragma warning(disable: 4514)
 // function not inlined
@@ -16,33 +19,69 @@
 // identifier was truncated in the debug information
 #pragma warning(disable: 4786)
 
-#define _SECURE_ATL 1   // use the Secure C Runtime in ATL
+// use the Secure C Runtime in ATL
+#define _SECURE_ATL 1
+// exclude rarely-used stuff from Windows headers
+#define VC_EXTRALEAN
+// use Windows XP features
+#define _WIN32_WINNT 0x0501
 
-#define VC_EXTRALEAN   // exclude rarely-used stuff from Windows headers
+//////////////////////////////////////////////////////////////////////////////////////////////
+// force private CRT/MFC assemblies to be used
 
-#define _WIN32_WINNT 0x0501   // use Windows XP features
+// see http://www.codeproject.com/KB/cpp/PrivateAssemblyProjects.aspx and
+// http://blog.m-ri.de/index.php/2008/05/06/hotfix-fuer-usemsprivateassembliesh-und-vc-2008/
+// by by Martin Richter for more information
 
+#define _STL_NOFORCE_MANIFEST
+#define _CRT_NOFORCE_MANIFEST
+#define _AFX_NOFORCE_MANIFEST
+#define _ATL_NOFORCE_MANIFEST
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+__declspec(selectany) int _forceCRTManifest;
+__declspec(selectany) int _forceMFCManifest;
+__declspec(selectany) int _forceAtlDllManifest;
+
+// the next symbols are used by the several versions of VC 9.0
+__declspec(selectany) int _forceCRTManifestRTM;
+__declspec(selectany) int _forceMFCManifestRTM;
+__declspec(selectany) int _forceMFCManifestCUR;
+
+#ifdef __cplusplus
+}   // extern "C"
+#endif
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 // MFC headers
-#include <afxwin.h>		// MFC core and standard components
-#include <afxtempl.h>
-#include <afxext.h> 
-#include <afxsock.h>
-#include <afxpriv.h>
-#include <afxmt.h>
-#include <afxcmn.h>
-#include <afxdtctl.h>
 
+#include <afxwin.h>        // MFC core and standard components
+#include <afxtempl.h>      // MFC collection template classes
+#include <afxext.h>        // MFC advanced extensions
+#include <afxsock.h>       // MFC support for Windows Sockets
+#include <afxpriv.h>       // MFC private classes
+#include <afxmt.h>         // MFC multithreaded extensions
+#include <afxcmn.h>        // MFC common control classes
+#include <afxdtctl.h>      // MFC date/time control classes
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 // ATL headers
+
 #include <atlbase.h>
 #include <atlenc.h>
 #include <atlwin.h>
 #include <atlstr.h>
 #include <atltypes.h>
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // PSDK headers
+
 #include <wininet.h>
-#include <windns.h>		// DNS definitions and DNS API
-#include <wincrypt.h>	// cryptographic API prototypes and definitions
+#include <windns.h>        // DNS definitions and DNS API
+#include <wincrypt.h>      // cryptographic API prototypes and definitions
 #include <lm.h>
 #include <shlobj.h>
 #include <winsock2.h>
@@ -58,11 +97,15 @@
 #include <sspi.h>
 #endif   // W3MFC_NO_SSPI_SUPPORT
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // OpenSSL headers
+
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // STL headers
+
 #pragma warning(push, 3)
 #include <string>
 #include <algorithm>
@@ -80,15 +123,20 @@ using std::min;
 using std::max;
 #endif	// max
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // CRT headers
+
 #include <locale.h>
 
+//////////////////////////////////////////////////////////////////////////////////////////////
 // Scintilla headers
+
 #include <Platform.h>
 #include <Scintilla.h>
 #include <SciLexer.h>
 
-#pragma hdrstop
+//////////////////////////////////////////////////////////////////////////////////////////////
+// some tricks
 
 // force ISO/IEC 14882 conformance in for loop scope
 #if (_MSC_VER < 1300)
