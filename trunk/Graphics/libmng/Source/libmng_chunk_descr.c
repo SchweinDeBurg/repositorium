@@ -32,8 +32,6 @@
 /* *                                                                        * */
 /* ************************************************************************** */
 
-#include <stddef.h>                    /* needed for offsetof() */
-
 #include "libmng.h"
 #include "libmng_data.h"
 #include "libmng_error.h"
