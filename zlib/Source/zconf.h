@@ -20,6 +20,14 @@
 
 #if defined(ZLIB_LIB_BUILD)
 
+/*
+ * force private CRT/MFC assemblies to be used
+ *
+ * see http://www.codeproject.com/KB/cpp/PrivateAssemblyProjects.aspx and
+ * http://blog.m-ri.de/index.php/2008/05/06/hotfix-fuer-usemsprivateassembliesh-und-vc-2008/
+ * by by Martin Richter for more information
+ */
+
 #if defined(_MSC_VER) && (_MSC_VER >= 1400) && !defined(UNDER_CE)
 /* VC++ 8.0 or greater */
 
