@@ -24,6 +24,34 @@
 // avoid C4121: alignment of a member was sensitive to packing
 #pragma warning(disable: 4121)
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+// VC++ 8.0 or greater
+
+#define _STL_NOFORCE_MANIFEST
+#define _CRT_NOFORCE_MANIFEST
+#define _AFX_NOFORCE_MANIFEST
+#define _ATL_NOFORCE_MANIFEST
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+__declspec(selectany) int _forceCRTManifest;
+__declspec(selectany) int _forceMFCManifest;
+__declspec(selectany) int _forceAtlDllManifest;
+
+// the next symbols are used by the several versions of VC++ 9.0
+__declspec(selectany) int _forceCRTManifestRTM;
+__declspec(selectany) int _forceMFCManifestRTM;
+__declspec(selectany) int _forceMFCManifestCUR;
+
+#ifdef __cplusplus
+}   // extern "C"
+#endif
+
+#endif   // _MSC_VER
+
 #include "_features.h"
 #include "_platform.h"
 
