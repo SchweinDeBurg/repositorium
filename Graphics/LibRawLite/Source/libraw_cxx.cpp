@@ -20,6 +20,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "libraw/libraw_types.h"
+
 #include <errno.h>
 #include <float.h>
 #include <math.h>
