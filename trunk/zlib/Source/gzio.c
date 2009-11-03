@@ -7,6 +7,8 @@
 
 /* @(#) $Id: gzio.c,v 1.3 2005/07/22 20:44:42 Tadeusz Dracz Exp $ */
 
+#include "zconf.h"
+
 #include <stdio.h>
 
 #if defined(UNDER_CE)
