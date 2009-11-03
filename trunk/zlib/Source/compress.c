@@ -5,8 +5,6 @@
 
 /* @(#) $Id$ */
 
-#include "noforcem.h"
-
 #define ZLIB_INTERNAL
 #include "zlib.h"
 

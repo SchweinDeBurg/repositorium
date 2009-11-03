@@ -49,8 +49,6 @@
 
 /* @(#) $Id$ */
 
-#include "noforcem.h"
-
 #include "deflate.h"
 
 #if defined(__INTEL_COMPILER)

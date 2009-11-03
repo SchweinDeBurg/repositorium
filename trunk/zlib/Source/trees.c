@@ -33,8 +33,6 @@
 
 /* #define GEN_TREES_H */
 
-#include "noforcem.h"
-
 #include "deflate.h"
 
 #ifdef DEBUG

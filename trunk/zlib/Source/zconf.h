@@ -18,6 +18,39 @@
 	#pragma warning (disable : 4206)
 #endif
 
+#if defined(ZLIB_LIB_BUILD)
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1400) && !defined(UNDER_CE)
+/* VC++ 8.0 or greater */
+
+#pragma once
+
+#define _STL_NOFORCE_MANIFEST
+#define _CRT_NOFORCE_MANIFEST
+#define _AFX_NOFORCE_MANIFEST
+#define _ATL_NOFORCE_MANIFEST
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+__declspec(selectany) int _forceCRTManifest;
+__declspec(selectany) int _forceMFCManifest;
+__declspec(selectany) int _forceAtlDllManifest;
+
+/* the next symbols are used by the several versions of VC++ 9.0 */
+__declspec(selectany) int _forceCRTManifestRTM;
+__declspec(selectany) int _forceMFCManifestRTM;
+__declspec(selectany) int _forceMFCManifestCUR;
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+#endif /* _MSC_VER && UNDER_CE */
+
+#endif /* ZLIB_LIB_BUILD */
 
 /*
  * If you *really* need a unique prefix for all types and library functions,
