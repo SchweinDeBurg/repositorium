@@ -222,6 +222,8 @@
 #include <math.h>                      /* fp gamma-calculation */
 #endif
 
+#include <stddef.h>                    /* needed for offsetof() */
+
 /* ************************************************************************** */
 /* *                                                                        * */
 /* * Platform-dependant stuff                                               * */
