@@ -24,6 +24,8 @@
 // avoid C4121: alignment of a member was sensitive to packing
 #pragma warning(disable: 4121)
 
+#if defined(ZIPARCHIVE_LIB_BUILD)
+
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 // VC++ 8.0 or greater
 
@@ -51,6 +53,8 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #endif
 
 #endif   // _MSC_VER
+
+#endif   // ZIPARCHIVE_LIB_BUILD
 
 #include "_features.h"
 #include "_platform.h"
