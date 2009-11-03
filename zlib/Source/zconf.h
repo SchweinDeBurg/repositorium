@@ -19,34 +19,6 @@
 #endif
 
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1400)
-// VC++ 8.0 or greater
-
-#define _STL_NOFORCE_MANIFEST
-#define _CRT_NOFORCE_MANIFEST
-#define _AFX_NOFORCE_MANIFEST
-#define _ATL_NOFORCE_MANIFEST
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-__declspec(selectany) int _forceCRTManifest;
-__declspec(selectany) int _forceMFCManifest;
-__declspec(selectany) int _forceAtlDllManifest;
-
-// the next symbols are used by the several versions of VC++ 9.0
-__declspec(selectany) int _forceCRTManifestRTM;
-__declspec(selectany) int _forceMFCManifestRTM;
-__declspec(selectany) int _forceMFCManifestCUR;
-
-#ifdef __cplusplus
-}   // extern "C"
-#endif
-
-#endif   // _MSC_VER
-
 /*
  * If you *really* need a unique prefix for all types and library functions,
  * compile with -DZ_PREFIX. The "standard" zlib should be compiled without it.
