@@ -47,7 +47,7 @@
 #define _WIN32_WINNT 0x0501
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-// force private CRT/MFC assemblies to be used
+// remove automatic CRT/MFC dependencies generation
 
 // see http://www.codeproject.com/KB/cpp/PrivateAssemblyProjects.aspx and
 // http://blog.m-ri.de/index.php/2008/05/06/hotfix-fuer-usemsprivateassembliesh-und-vc-2008/
