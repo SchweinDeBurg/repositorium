@@ -406,6 +406,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\tif_ojpeg.c"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\tif_open.c"
 				>
 			</File>

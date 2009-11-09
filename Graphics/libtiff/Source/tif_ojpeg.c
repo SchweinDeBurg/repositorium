@@ -1,4 +1,4 @@
-/* $Id: tif_ojpeg.c,v 1.26 2009/11/07 19:18:27 drolon Exp $ */
+/* $Id: tif_ojpeg.c,v 1.27 2009/11/08 19:22:38 drolon Exp $ */
 
 /* WARNING: The type of JPEG encapsulation defined by the TIFF Version 6.0
    specification is now totally obsolete and deprecated for new applications and
@@ -189,8 +189,8 @@ static const TIFFFieldInfo ojpeg_field_info[] = {
 #include <setjmp.h>
 #endif
 
-#include "jpeglib.h"
-#include "jerror.h"
+#include "../../libjpeg/Source/jpeglib.h"
+#include "../../libjpeg/Source/jerror.h"
 
 typedef struct jpeg_error_mgr jpeg_error_mgr;
 typedef struct jpeg_common_struct jpeg_common_struct;
@@ -2406,6 +2406,10 @@ OJPEGLibjpegJpegSourceMgrSkipInputData(jpeg_decompress_struct* cinfo, long num_b
 	jpeg_encap_unwind(tif);
 }
 
+#if defined(_MSC_VER) && !defined(_DEBUG)
+#pragma warning(disable: 4702)   // unreachable code
+#endif   // _MSC_VER && !_DEBUG
+
 static boolean
 OJPEGLibjpegJpegSourceMgrResyncToRestart(jpeg_decompress_struct* cinfo, int desired)
 {
@@ -2415,6 +2419,10 @@ OJPEGLibjpegJpegSourceMgrResyncToRestart(jpeg_decompress_struct* cinfo, int desi
 	jpeg_encap_unwind(tif);
 	return(0);
 }
+
+#if defined(_MSC_VER) && !defined(_DEBUG)
+#pragma warning(default: 4702)   // unreachable code
+#endif   // _MSC_VER && !_DEBUG
 
 static void
 OJPEGLibjpegJpegSourceMgrTermSource(jpeg_decompress_struct* cinfo)
