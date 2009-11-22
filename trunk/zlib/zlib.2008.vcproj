@@ -407,6 +407,22 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\algorithm.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\changelog.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\faq.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\readme.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
