@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>CPJNSMTPConnection v2.82</title>
+<title>CPJNSMTPConnection v2.84</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
 
 </head>
@@ -11,7 +11,7 @@
 
 <h2 align="left">
 <img src="PJNSMTP.gif" width="39" height="38" alt="PJNSMTP.gif (295 bytes)" /><strong>CPJNSMTPConnection 
-v2.82</strong></h2>
+v2.84</strong></h2>
 
 <p>Welcome to <strong>CPJNSMTPConnection</strong>, a collection of MFC classes to
 support the SMTP protocol. SMTP for those not familiar with all the internet protocols is
@@ -97,7 +97,8 @@ Protocol) which obsoletes the original SMTP RFC, you should read
 	<a href="http://www.ietf.org/rfc/rfc3464.txt">RFC 3464</a> ,
 	<a href="http://www.ietf.org/rfc/rfc3798.txt">RFC 3798</a> and
 	<a href="http://www.ietf.org/rfc/rfc3885.txt">RFC 3885</a> describe DSN's 
-	(Delivery Status Notifications).</li>
+	(Delivery Status Notifications) and MDN's (Message Disposition 
+	Notifications)</li>
 	<li>The page <a href="http://www.activexperts.com/support/activemail/auth/">
 	http://www.activexperts.com/support/activemail/auth/</a> includes a good 
 	description of the AUTH LOGIN, AUTH PLAIN and AUTH CRAM-MD5 authentication 
@@ -139,10 +140,13 @@ Protocol) which obsoletes the original SMTP RFC, you should read
 	&quot;Auto Detection&quot; form of authentication is also supported. In this mode, the 
 	authentication protocols supported by the server are detected and the most 
 	appropriate protocol is used.</li>
-	<li>As of v2.65, the classes include comprehensive support for DSN's.</li>
+	<li>As of v2.65, the classes include comprehensive support for DSN's 
+	(Delivery Status Notifications).</li>
 </ul>
 <ul>
 	<li>As of v2.70, the classes are only supported on VC 2005 or later.</li>
+	<li>As of v2.84, the classes include support for MDN's (Message Disposition 
+	Notifications)</li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1245,6 +1249,25 @@ then the CPJNSMTPConnection code is working&quot;));<br />
 	to Christian Egging for reporting this issue.</li>
 	<li>Optimized use of CT2A class throughout the code</li>
 </ul>
+<p><strong>V2.83 (28 June 2009</strong><b>)</b></p>
+<ul>
+	<li>Updated copyright details</li>
+	<li>Fixed a bug where the Reply-To email address was not correctly added to 
+	the message. Thanks to Dmitriy Maksimov for reporting this issue.</li>
+	<li>Updated the sample app's project settings to more modern default values.</li>
+	<li>Updated the sample exe to ship with OpenSSL v0.98k</li>
+	<li>&nbsp;Fixed a bug in CPJNSMTPConnection::SendBodyPart where it would 
+	cause errors from OpenSSL when trying to send a body of 0 bytes in size. 
+	This can occur when MHTML based emails are sent and you are using a 
+	&quot;multipart/related&quot; body part. Thanks to &quot;atota&quot; for reporting this issue</li>
+</ul>
+<p><strong>V2.84 (13 November 2009</strong><b>)</b></p>
+<ul>
+	<li>Now includes comprehensive support for MDN's (Message Disposition 
+	Notifications) as specified in RFC 3798. Thanks to Ron Brunton for prompting 
+	this update.</li>
+	<li>Rewrote CPJNSMTPMessage::SaveToDisk method to use CAtlFile</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1260,7 +1283,7 @@ then the CPJNSMTPConnection code is working&quot;));<br />
 <p>PJ Naughter<br />
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br />
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br />
-6 November 2008</p>
+13 November 2009</p>
 
 </body>
 

@@ -3,7 +3,7 @@ Module : PJNSMTP.H
 Purpose: Defines the interface for a MFC class encapsulation of the SMTP protocol
 Created: PJN / 22-05-1998
 
-Copyright (c) 1998 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -42,6 +42,11 @@ This was not the intention of the code and the author explicitly forbids use of 
 
 #ifndef CPJNSMTP_NONTLM
 #include "PJNNTLMAuth.h"
+#endif
+
+#ifndef __ATLFILE_H__
+#pragma message("To avoid this message, please put atlfile.h in your pre compiled header (usually stdafx.h)")
+#include <atlfile.h>
 #endif
 
 #ifndef PJNSMTP_EXT_CLASS
@@ -298,7 +303,7 @@ public:
   {
     DSN_NOT_SPECIFIED = 0xFFFFFFFF, //We are not specifying if we should be using a DSN or not  
     DSN_SUCCESS       = 0x01,       //A DSN should be sent back for messages which were successfully delivered
-    DSN_FAILURE       = 0x02,       //A DSN should be sent back for messages which was not successfully delivered
+    DSN_FAILURE       = 0x02,       //A DSN should be sent back for messages which were not successfully delivered
     DSN_DELAY         = 0x04        //A DSN should be sent back for messages which were delayed
   };
 
@@ -346,12 +351,16 @@ public:
   DSN_RETURN_TYPE      m_DSNReturnType;
   DWORD                m_DSN;     //To be filled in with the PJNSMTP_DSN_... flags
   CString              m_sENVID;  //The "Envelope ID" to use for requesting DSN's. If you leave this empty when you are sending the message
-                                  //then one which be generated for you based on a GUID and you can examine/store this value after the 
+                                  //then one will be generated for you based on a GUID and you can examine/store this value after the 
                                   //message was sent
+  CStringArray         m_MessageDispositionEmailAddresses; //Set this value to an email address if you want to request Message Disposition
+                                                           //notifications aka read receipts
+                                  
+                                  
 
 protected:
 //Methods
-  void             WriteToDisk(__in HANDLE hFile, __in CPJNSMTPBodyPart* pBodyPart, __in BOOL bRoot);
+  void             WriteToDisk(ATL::CAtlFile& file, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
   CString          ConvertHTMLToPlainText(const CString& sHtml);
   virtual CStringA FormDateHeader();
 
