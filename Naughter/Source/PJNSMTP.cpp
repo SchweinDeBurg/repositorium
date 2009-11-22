@@ -2,284 +2,284 @@
 Module : PJNSMTP.CPP
 Purpose: Implementation for a MFC class encapsulation of the SMTP protocol
 Created: PJN / 22-05-1998
-History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
+History: PJN / 15-06-1998 1. Fixed the case where a single dot occurs on its own
                              in the body of a message
-				              	  2) Class now supports Reply-To Header Field
-                          3) Class now supports file attachments
-   		   PJN / 18-06-1998 1) Fixed a memory overwrite problem which was occurring 
+				              	  2. Class now supports Reply-To Header Field
+                          3. Class now supports file attachments
+   		   PJN / 18-06-1998 1. Fixed a memory overwrite problem which was occurring 
 	  		                 with the buffer used for encoding base64 attachments
-         PJN / 27-06-1998 1) The case where a line begins with a "." but contains
+         PJN / 27-06-1998 1. The case where a line begins with a "." but contains
                           other text is now also catered for. See RFC821, Section 4.5.2
                           for further details.
-                          2) m_sBody in CPJNSMTPMessage has now been made protected.
+                          2. m_sBody in CPJNSMTPMessage has now been made protected.
                           Client applications now should call AddBody instead. This
                           ensures that FixSingleDot is only called once even if the 
                           same message is sent a number of times.
-                          3) Fixed a number of problems with how the MIME boundaries
+                          3. Fixed a number of problems with how the MIME boundaries
                           were defined and sent.
-                          4) Got rid of an unreferenced formal parameter 
+                          4. Got rid of an unreferenced formal parameter 
                           compiler warning when doing a release build
-         PJN / 11-09-1998 1) VC 5 project file is now provided
-                          2) Attachment array which the message class contains now uses
+         PJN / 11-09-1998 1. VC 5 project file is now provided
+                          2. Attachment array which the message class contains now uses
                           references instead of pointers.
-                          3) Now uses Sleep(0) to yield our time slice instead of Sleep(100),
+                          3. Now uses Sleep(0) to yield our time slice instead of Sleep(100),
                           this is the preferred way of writting polling style code in Win32
                           without serverly impacting performance.
-                          4) All Trace statements now display the value as returned from
+                          4. All Trace statements now display the value as returned from
                           GetLastError
-                          5) A number of extra asserts have been added
-                          6) A AddMultipleRecipients function has been added which supports added a 
+                          5. A number of extra asserts have been added
+                          6. A AddMultipleRecipients function has been added which supports added a 
                           number of recipients at one time from a single string
-                          7) Extra trace statements have been added to help in debugging
-         PJN / 12-09-98   1) Removed a couple of unreferenced variable compiler warnings when code
+                          7. Extra trace statements have been added to help in debugging
+         PJN / 12-09-1998 1. Removed a couple of unreferenced variable compiler warnings when code
                           was compiled with Visual C++ 6.0
-                          2) Fixed a major bug which was causing an ASSERT when the CSMTPAttachment
+                          2. Fixed a major bug which was causing an ASSERT when the CSMTPAttachment
                           destructor was being called in the InitInstance of the sample app. 
                           This was inadvertingly introduced for the 1.2 release. The fix is to revert 
-                          fix 2) as done on 11-09-1998. This will also help to reduce the number of 
+                          fix 2. as done on 11-09-1998. This will also help to reduce the number of 
                           attachment images kept in memory at one time.
-         PJN / 18-01-99   1) Full CC & BCC support has been added to the classes
-         PJN / 22-02-99   1) Addition of a Get and SetTitle function which allows a files attachment 
+         PJN / 18-01-1999 1. Full CC & BCC support has been added to the classes
+         PJN / 22-02-1999 1. Addition of a Get and SetTitle function which allows a files attachment 
                           title to be different that the original filename
-                          2) AddMultipleRecipients now ignores addresses if they are empty.
-                          3) Improved the reading of responses back from the server by implementing
+                          2. AddMultipleRecipients now ignores addresses if they are empty.
+                          3. Improved the reading of responses back from the server by implementing
                           a growable receive buffer
-                          4) timeout is now 60 seconds when building for debug
-         PJN / 25-03-99   1) Now sleeps for 250 ms instead of yielding the time slice. This helps 
+                          4. timeout is now 60 seconds when building for debug
+         PJN / 25-03-1999 1. Now sleeps for 250 ms instead of yielding the time slice. This helps 
                           reduce CPU usage when waiting for data to arrive in the socket
-         PJN / 14-05-99   1) Fixed a bug with the way the code generates time zone fields in the Date headers.
-         PJN / 10-09-99   1) Improved CPJNSMTPMessage::GetHeader to include mime field even when no attachments
+         PJN / 14-05-1999 1. Fixed a bug with the way the code generates time zone fields in the Date headers.
+         PJN / 10-09-1999 1. Improved CPJNSMTPMessage::GetHeader to include mime field even when no attachments
                           are included.
-         PJN / 16-02-00   1) Fixed a problem which was occuring when code was compiled with VC++ 6.0.
-         PJN / 19-03-00   1) Fixed a problem in GetHeader on Non-English Windows machines
-                          2) Now ships with a VC 5 workspace. I accidentally shipped a VC 6 version in one of the previous versions of the code.
-                          3) Fixed a number of UNICODE problems
-                          4) Updated the sample app to deliberately assert before connecting to the author's SMTP server.
-         PJN / 28-03-00   1) Set the release mode timeout to be 10 seconds. 2 seconds was causing problems for slow dial
+         PJN / 16-02-2000 1. Fixed a problem which was occuring when code was compiled with VC++ 6.0.
+         PJN / 19-03-2000 1. Fixed a problem in GetHeader on Non-English Windows machines
+                          2. Now ships with a VC 5 workspace. I accidentally shipped a VC 6 version in one of the previous versions of the code.
+                          3. Fixed a number of UNICODE problems
+                          4. Updated the sample app to deliberately assert before connecting to the author's SMTP server.
+         PJN / 28-03-2000 1. Set the release mode timeout to be 10 seconds. 2 seconds was causing problems for slow dial
                           up networking connections.
-         PJN / 07-05-00   1) Addition of some ASSERT's in CPJNSMTPSocket::Connect
-		     PP  / 16-06-00   The following modifications were done by Puneet Pawaia
-						              1) Removed the base64 encoder from this file
-						              2) Added the base64 encoder/decoder implementation in a separate 
+         PJN / 07-05-2000 1. Addition of some ASSERT's in CPJNSMTPSocket::Connect
+		     PP  / 16-06-2000 The following modifications were done by Puneet Pawaia
+						              1. Removed the base64 encoder from this file
+						              2. Added the base64 encoder/decoder implementation in a separate 
 						              file. This was done because base64 decoding was not part of 
 							            the previous implementation
-						              3) Added support for ESMTP connection. The class now attempts to 
+						              3. Added support for ESMTP connection. The class now attempts to 
 						              authenticate the user on the ESMTP server using the username and
 							            passwords supplied. For this connect now takes the username and 
 							            passwords as parameters. These can be null in which case ESMTP 
 							            authentication is not attempted
-						              4) This class can now handle AUTH LOGIN and AUTH LOGIN PLAIN authentication
+						              4. This class can now handle AUTH LOGIN and AUTH LOGIN PLAIN authentication
 						              schemes on 
-		     PP  / 19-06-00   The following modifications were done by Puneet Pawaia
-				         		      1) Added the files md5.* containing the MD5 digest generation code
+		     PP  / 19-06-2000 The following modifications were done by Puneet Pawaia
+				         		      1. Added the files md5.* containing the MD5 digest generation code
 						              after modifications so that it compiles with VC++ 6
-						              2) Added the CRAM-MD5 login procedure.
-         PJN / 10-07-00   1) Fixed a problem with sending attachments > 1K in size
-                          2) Changed the parameters to CPJNSMTPConnection::Connect
-         PJN / 30-07-00   1) Fixed a bug in AuthLogin which was transmitting the username and password
+						              2. Added the CRAM-MD5 login procedure.
+         PJN / 10-07-2000 1. Fixed a problem with sending attachments > 1K in size
+                          2. Changed the parameters to CPJNSMTPConnection::Connect
+         PJN / 30-07-2000 1. Fixed a bug in AuthLogin which was transmitting the username and password
                           with an extra "=" which was causing the login to failure. Thanks to Victor Vogelpoel for
                           finding this.
-         PJN / 05-09-00   1) Added a CSMTP_NORSA preprocessor macro to allow the CPJNSMTPConnection code to be compiled
+         PJN / 05-09-2000 1. Added a CSMTP_NORSA preprocessor macro to allow the CPJNSMTPConnection code to be compiled
                           without the dependence on the RSA code.
-         PJN / 28-12-2000 1) Removed an unused variable from ConnectESMTP.
-                          2) Allowed the hostname as sent in the HELO command to be specified at run time 
+         PJN / 28-12-2000 1. Removed an unused variable from ConnectESMTP.
+                          2. Allowed the hostname as sent in the HELO command to be specified at run time 
                           in addition to using the hostname of the client machine
-                          3) Fixed a problem where high ascii characters were not being properly encoded in
+                          3. Fixed a problem where high ascii characters were not being properly encoded in
                           the quoted-printable version of the body sent.
-                          4) Added support for user definable charset's for the message body.
-                          5) Mime boundaries are now always sent irrespective if whether attachments are included or
+                          4. Added support for user definable charset's for the message body.
+                          5. Mime boundaries are now always sent irrespective if whether attachments are included or
                           not. This is required as the body is using quoted-printable.
-                          6) Fixed a bug in sendLines which was causing small message bodies to be sent incorrectly
-                          7) Now fully supports custom headers in the SMTP message
-                          8) Fixed a copy and paste bug where the default port for the SMTP socket class was 110.
-                          9) You can now specify the address on which the socket is bound. This enables the programmer
+                          6. Fixed a bug in sendLines which was causing small message bodies to be sent incorrectly
+                          7. Now fully supports custom headers in the SMTP message
+                          8. Fixed a copy and paste bug where the default port for the SMTP socket class was 110.
+                          9. You can now specify the address on which the socket is bound. This enables the programmer
                           to decide on which NIC data should be sent from. This is especially useful on a machine
                           with multiple IP addresses.
-                          10) Addition of functions in the SMTP connection class to auto dial and auto disconnect to 
+                          10. Addition of functions in the SMTP connection class to auto dial and auto disconnect to 
                           the Internet if you so desire.
-                          11) Sample app has been improved to allow Auto Dial and binding to IP addresses to be configured.
-         PJN / 26-02-2001 1)  Charset now defaults to ISO 8859-1 instead of us-ascii
-                          2)  Removed a number of unreferrenced variables from the sample app.
-                          3)  Headers are now encoded if they contain non ascii characters.
-                          4)  Fixed a bug in getLine, Thanks to Lev Evert for spotting this one.
-                          5)  Made the charset value a member of the message class instead of the connection class
-                          6)  Sample app now fully supports specifying the charset of the message
-                          7)  Added a AddMultipleAttachments method to CPJNSMTPMessage
-                          8)  Attachments can now be copied to each other via new methods in CSMTPAttachment
-                          9)  Message class now contains copies of the attachments instead of pointers to them
-                          10) Sample app now allows multiple attachments to be added
-                          11) Removed an unnecessary assert in QuotedPrintableEncode
-                          12) Added a Mime flag to the CPJNSMTPMessage class which allows you to decide whether or not a message 
+                          11. Sample app has been improved to allow Auto Dial and binding to IP addresses to be configured.
+         PJN / 26-02-2001 1. Charset now defaults to ISO 8859-1 instead of us-ascii
+                          2. Removed a number of unreferrenced variables from the sample app.
+                          3. Headers are now encoded if they contain non ascii characters.
+                          4. Fixed a bug in getLine, Thanks to Lev Evert for spotting this one.
+                          5. Made the charset value a member of the message class instead of the connection class
+                          6. Sample app now fully supports specifying the charset of the message
+                          7. Added a AddMultipleAttachments method to CPJNSMTPMessage
+                          8. Attachments can now be copied to each other via new methods in CSMTPAttachment
+                          9. Message class now contains copies of the attachments instead of pointers to them
+                          10. Sample app now allows multiple attachments to be added
+                          11. Removed an unnecessary assert in QuotedPrintableEncode
+                          12. Added a Mime flag to the CPJNSMTPMessage class which allows you to decide whether or not a message 
                           should be sent as MIME. Note that if you have attachments, then mime is assumed.
-                          13) CSMTPAttachment class has now become CPJNSMTPBodyPart in anticipation of full support for MIME and 
+                          13. CSMTPAttachment class has now become CPJNSMTPBodyPart in anticipation of full support for MIME and 
                           MHTML email support
-                          14) Updated copright message in source code and documentation
-                          15) Fixed a bug in GetHeader related to _tsetlocale usage. Thanks to Sean McKinnon for spotting this
+                          14. Updated copright message in source code and documentation
+                          15. Fixed a bug in GetHeader related to _tsetlocale usage. Thanks to Sean McKinnon for spotting this
                           problem.
-                          16) Fixed a bug in SendLines when sending small attachments. Thanks to Deng Tao for spotting this
+                          16. Fixed a bug in SendLines when sending small attachments. Thanks to Deng Tao for spotting this
                           problem.
-                          17) Removed the need for SendLines function entirely.
-                          18) Now fully supports HTML email (aka MHTML)
-                          19) Updated copyright messages in code and in documentation
-         PJN / 17-06-2001 1) Fixed a bug in CPJNSMTPMessage::HeaderEncode where spaces were not being interpreted correctly. Thanks
+                          17. Removed the need for SendLines function entirely.
+                          18. Now fully supports HTML email (aka MHTML)
+                          19. Updated copyright messages in code and in documentation
+         PJN / 17-06-2001 1. Fixed a bug in CPJNSMTPMessage::HeaderEncode where spaces were not being interpreted correctly. Thanks
                           to Jim Alberico for spotting this.
-                          2) Fixed 2 issues with ReadResponse both having to do with multi-line responses. Thanks to Chris Hanson 
+                          2. Fixed 2 issues with ReadResponse both having to do with multi-line responses. Thanks to Chris Hanson 
                           for this update.
-         PJN / 25-06-2001 1) Code now links in Winsock and RPCRT40 automatically. This avoids client code having to specify it in 
+         PJN / 25-06-2001 1. Code now links in Winsock and RPCRT40 automatically. This avoids client code having to specify it in 
                           their linker settings. Thanks to Malte and Phillip for spotting this issue.
-                          2) Updated sample code in documentation. Thanks to Phillip for spotting this.
-                          3) Improved the code in CPJNSMTPBodyPart::SetText to ensure lines are correctly wrapped. Thanks to 
+                          2. Updated sample code in documentation. Thanks to Phillip for spotting this.
+                          3. Improved the code in CPJNSMTPBodyPart::SetText to ensure lines are correctly wrapped. Thanks to 
                           Thomas Moser for this fix.
-         PJN / 01-07-2001 1) Modified QuotedPrintableEncode to prevent the code to enter in an infinite loop due to a long word i.e. 
+         PJN / 01-07-2001 1. Modified QuotedPrintableEncode to prevent the code to enter in an infinite loop due to a long word i.e. 
                           bigger than SMTP_MAXLINE, in this case, the word is breaked. Thanks to Manuel Gustavo Saraiva for this fix.
-                          2) Provided a new protected variable in CPJNSMTPBodyPart called m_bQuotedPrintable to bypass the 
+                          2. Provided a new protected variable in CPJNSMTPBodyPart called m_bQuotedPrintable to bypass the 
                           QuotedPrintableEncode function in cases that we don't want that kind of correction. Again thanks to 
                           Manuel Gustavo Saraiva for this fix.
-         PJN / 15-07-2001 1) Improved the error handling in the function CPJNSMTPMessage::AddMultipleAttachments. In addition the 
+         PJN / 15-07-2001 1. Improved the error handling in the function CPJNSMTPMessage::AddMultipleAttachments. In addition the 
                           return value has been changed from BOOL to int
-         PJN / 11-08-2001 1) Fixed a bug in QuotedPrintableEncode which was wrapping encoding characters across multiple lines. 
+         PJN / 11-08-2001 1. Fixed a bug in QuotedPrintableEncode which was wrapping encoding characters across multiple lines. 
                           Thanks to Roy He for spotting this.
-                          2) Provided a "SendMessage" method which sends a email directly from disk. This allows you 
+                          2. Provided a "SendMessage" method which sends a email directly from disk. This allows you 
                           to construct your own emails and the use the class just to do the sending. This function also has the 
                           advantage that it efficiently uses memory and reports progress.
-                          3) Provided support for progress notification and cancelling via the "OnSendProgress" virtual method.
-         PJN / 29-09-2001 1) Fixed a bug in ReadResponse which occured when you disconnected via Dial-Up Networking
+                          3. Provided support for progress notification and cancelling via the "OnSendProgress" virtual method.
+         PJN / 29-09-2001 1. Fixed a bug in ReadResponse which occured when you disconnected via Dial-Up Networking
                           while a connection was active. This was originally spotted in my POP3 class.
-                          2) Fixed a problem in CPJNSMTPBodyPart::GetHeader which was always including the "quoted-printable" even when 
+                          2. Fixed a problem in CPJNSMTPBodyPart::GetHeader which was always including the "quoted-printable" even when 
                           m_bQuotedPrintable for that body part was FALSE. Thanks to "jason" for spotting this.
-         PJN / 12-10-2001 1) Fixed a problem where GetBody was reporting the size as 1 bigger than it should have been. Thanks
+         PJN / 12-10-2001 1. Fixed a problem where GetBody was reporting the size as 1 bigger than it should have been. Thanks
                           to "c f" for spotting this problem.
-                          2) Fixed a bug in the TRACE statements when a socket connection cannot be made.
-                          3) The sample app now displays a filter of "All Files" when selecting attachments to send
-                          4) Fixed a problem sending 0 byte attachments. Thanks to Deng Tao for spotting this problem.
-         PJN / 11-01-2002 1) Now includes a method to send a message directly from memory. Thanks to Tom Allebrandi for this
+                          2. Fixed a bug in the TRACE statements when a socket connection cannot be made.
+                          3. The sample app now displays a filter of "All Files" when selecting attachments to send
+                          4. Fixed a problem sending 0 byte attachments. Thanks to Deng Tao for spotting this problem.
+         PJN / 11-01-2002 1. Now includes a method to send a message directly from memory. Thanks to Tom Allebrandi for this
                           suggestion.
-                          2) Change function name "IsReadible" to be "IsReadable". I was never very good at English!.
-                          3) Fixed a bug in CPJNSMTPBodyPart::QuotedPrintableEncode. If a line was exactly 76 characters long plus 
+                          2. Change function name "IsReadible" to be "IsReadable". I was never very good at English!.
+                          3. Fixed a bug in CPJNSMTPBodyPart::QuotedPrintableEncode. If a line was exactly 76 characters long plus 
                           \r\n it produced an invalid soft linebreak of "\r=\r\n\n". Thanks to Gerald Egert for spotting this problem.
-         PJN / 29-07-2002 1) Fixed an access violation in CPJNSMTPBodyPart::QuotedPrintableEncode. Thanks to Fergus Gallagher for 
+         PJN / 29-07-2002 1. Fixed an access violation in CPJNSMTPBodyPart::QuotedPrintableEncode. Thanks to Fergus Gallagher for 
                           spotting this problem.
-                          2) Fixed a problem where in very rare cases, the QuotedPrintableEncode function produces a single dot in a 
+                          2. Fixed a problem where in very rare cases, the QuotedPrintableEncode function produces a single dot in a 
                           line, when inserting the "=" to avoid the mail server's maxline limit. I inserted a call to FixSingleDot 
                           after calling the QuotedPrintableEncode function in GetBody. Thanks to Andreas Kappler for spotting this
                           problem.
-                          3) Fixed an issue in CPJNSMTPBodyPart::GetHeader where to ensure some mail clients can correctly handle
+                          3. Fixed an issue in CPJNSMTPBodyPart::GetHeader where to ensure some mail clients can correctly handle
                           body parts and attachments which have a filename with spaces in it. Thanks to Andreas kappler for spotting
                           this problem.
-                          4) QP encoding is now only used when you specify MIME. This fixes a bug as reported by David Terracino.
-                          5) Removed now unused "API Reference" link in HTML file supported the code.
-         PJN / 10-08-2002 1) Fixed a number of uncaught file exceptions in CPJNSMTPBodyPart::GetBody (Tick), CPJNSMTPMessage::SaveToDisk (Tick), and 
+                          4. QP encoding is now only used when you specify MIME. This fixes a bug as reported by David Terracino.
+                          5. Removed now unused "API Reference" link in HTML file supported the code.
+         PJN / 10-08-2002 1. Fixed a number of uncaught file exceptions in CPJNSMTPBodyPart::GetBody (Tick), CPJNSMTPMessage::SaveToDisk (Tick), and 
                           CPJNSMTPConnection::SendMessage. Thanks to John Allan Miller for reporting this problem.
-                          2) The CPJNSMTPConnection::SendMessage version of the method which sends a file directly from disk, now fails if the
+                          2. The CPJNSMTPConnection::SendMessage version of the method which sends a file directly from disk, now fails if the
                           file is empty.
-                          3) Improved the sample app by displaying a wait cursor while a message from file is being sent
-                          4) Improved the sample app by warning the user if mail settings are missing and then bringing up the configuration
+                          3. Improved the sample app by displaying a wait cursor while a message from file is being sent
+                          4. Improved the sample app by warning the user if mail settings are missing and then bringing up the configuration
                           dialog.
-         PJN / 20-09-2002 1) Fixed a problem where the code "Coder.EncodedMessage" was not being converted from an ASCII string to a UNICODE 
+         PJN / 20-09-2002 1. Fixed a problem where the code "Coder.EncodedMessage" was not being converted from an ASCII string to a UNICODE 
                           string in calls to CString::Format. This was occurring when sending the username and password for "AUTH LOGIN" support
                           in addition to sending the "username digest" for "AUTH CRAM-MD5" support. Thanks to Serhiy Pavlov for reporting this
                           problem.
-                          2) Removed a number of calls to CString::Format and instead replaced with string literal CString constructors instead.
-         PJN / 03-10-2002 1) Quoted printable encoding didn't work properly in UNICODE. (invalid conversion from TCHAR to BYTE). Thanks to
+                          2. Removed a number of calls to CString::Format and instead replaced with string literal CString constructors instead.
+         PJN / 03-10-2002 1. Quoted printable encoding didn't work properly in UNICODE. (invalid conversion from TCHAR to BYTE). Thanks to
                           Serhiy Pavlov for reporting this problem.
-                          2) Subject encoding didn't work properly in UNICODE. (invalid conversion from TCHAR to BYTE). Thanks to Serhiy Pavlov
+                          2. Subject encoding didn't work properly in UNICODE. (invalid conversion from TCHAR to BYTE). Thanks to Serhiy Pavlov
                           for reporting this problem.
-                          3) It didn't insert "charset" tag into root header for plain text messages (now it includes "charset" into plain text 
+                          3. It didn't insert "charset" tag into root header for plain text messages (now it includes "charset" into plain text 
                           messages too). Thanks to Serhiy Pavlov for reporting this problem.
-         PJN / 04-10-2002 1) Fixed an issue where the header / body separator was not being sent correctly for mails with attachments or when
+         PJN / 04-10-2002 1. Fixed an issue where the header / body separator was not being sent correctly for mails with attachments or when
                           the message is MIME encoded. Thanks to Serhiy Pavlov for reporting this problem.
-                          2) Fixed a bug in QuotedPrintableEncode and HeaderEncode which was causing the errors. Thanks to Antonio Maiorano 
+                          2. Fixed a bug in QuotedPrintableEncode and HeaderEncode which was causing the errors. Thanks to Antonio Maiorano 
                           for reporting this problem.
-                          3) Fixed an issue with an additional line separator being sent between the header and body of emails. This was only
+                          3. Fixed an issue with an additional line separator being sent between the header and body of emails. This was only
                           evident in mail clients if a non mime email without attachments was sent.
-         PJN / 11-12-2002 1) Review all TRACE statements for correctness
-                          2) Provided a virtual OnError method which gets called with error information 
-         PJN / 07-02-2003 1) Addition of a "BOOL bGracefully" argument to Disconnect so that when an application cancels the sending of a 
+         PJN / 11-12-2002 1. Review all TRACE statements for correctness
+                          2. Provided a virtual OnError method which gets called with error information 
+         PJN / 07-02-2003 1. Addition of a "BOOL bGracefully" argument to Disconnect so that when an application cancels the sending of a 
                           message you can pass FALSE and close the socket without properly terminating the SMTP conversation. Thanks to
                           "nabocorp" for this nice addition.
-         PJN / 19-03-2003 1) Addition of copy constructors and operator= to CPJNSMTPMessage class. Thanks to Alexey Vasilyev for this suggestion.
-         PJN / 13-04-2003 1) Fixed a bug in the handling of EHLO responses. Thanks to "Senior" for the bug report and the fix.
-         PJN / 16-04-2003 1) Enhanced the CPJNSMTPAddress constructor to parse out the email address and friendly name rather than assume
+         PJN / 19-03-2003 1. Addition of copy constructors and operator= to CPJNSMTPMessage class. Thanks to Alexey Vasilyev for this suggestion.
+         PJN / 13-04-2003 1. Fixed a bug in the handling of EHLO responses. Thanks to "Senior" for the bug report and the fix.
+         PJN / 16-04-2003 1. Enhanced the CPJNSMTPAddress constructor to parse out the email address and friendly name rather than assume
                           it is an email address.
-                          2) Reworked the syntax of the CPJNSMTPMessage::ParseMultipleRecipients method. Also now internally this function
+                          2. Reworked the syntax of the CPJNSMTPMessage::ParseMultipleRecipients method. Also now internally this function
                           uses the new CPJNSMTPAddress constructor
-         PJN / 19-04-2003 1) Fixed a bug in the CPJNSMTPAddress constructor where I was mixing up the friendly name in the "<>" separators,
+         PJN / 19-04-2003 1. Fixed a bug in the CPJNSMTPAddress constructor where I was mixing up the friendly name in the "<>" separators,
                           when it should have been the email address. 
-         PJN / 04-05-2003 1) Fixed an issue where the class doesn't convert the mail body and subject to the wanted encoding but rather changes 
+         PJN / 04-05-2003 1. Fixed an issue where the class doesn't convert the mail body and subject to the wanted encoding but rather changes 
                           the encoding of the email in the email header. Since the issue of supporting several languages is a complicated one 
                           I've decided that we could settle for sending all CPJNSMTPConnection emails in UTF-8. I've added some conversion functions 
                           to the class that - at this point - always converts the body and subject of the email to UTF-8. A big thanks to Itamar 
                           Kerbel for this nice addition.
-                          2) Moved code and sample app to VC 6.
-         PJN / 05-05-2003 1) Reworked the way UTF8 encoding is now done. What you should do if you want to use UTF-8 encoding is set the charset
+                          2. Moved code and sample app to VC 6.
+         PJN / 05-05-2003 1. Reworked the way UTF8 encoding is now done. What you should do if you want to use UTF-8 encoding is set the charset
                           to "UTF-8" and use either QP or base 64 encoding.
-                          2) Reworked the automatic encoding of the subject line to use the settings as taken from the root SMTP body part
-                          3) Only the correct headers according to the MIME RFC are now encoded.
-                          4) QP encoding is the encoding mechanism now always used for headers.
-                          5) Headers are now only encoded if required to be encoded.
-         PJN / 12-05-2003 1) Fixed a bug where the X-Mailer header was being sent incorrectly. Thanks to Paolo Vernazza for reporting this problem.
-                          2) Addition of X-Mailer header is now optional. In addition sample app now does not send the X-Mailer header.
-                          3) The sample app now does not send the Reply-To header.
-         PJN / 18-08-2003 1) Modified the return value from the ConnectToInternet method. Instead of it being a boolean, it is now an enum. This
+                          2. Reworked the automatic encoding of the subject line to use the settings as taken from the root SMTP body part
+                          3. Only the correct headers according to the MIME RFC are now encoded.
+                          4. QP encoding is the encoding mechanism now always used for headers.
+                          5. Headers are now only encoded if required to be encoded.
+         PJN / 12-05-2003 1. Fixed a bug where the X-Mailer header was being sent incorrectly. Thanks to Paolo Vernazza for reporting this problem.
+                          2. Addition of X-Mailer header is now optional. In addition sample app now does not send the X-Mailer header.
+                          3. The sample app now does not send the Reply-To header.
+         PJN / 18-08-2003 1. Modified the return value from the ConnectToInternet method. Instead of it being a boolean, it is now an enum. This
                           allows client code to differentiate between two conditions that it couldn't previously, namely when an internet connection
                           already existed or if a new connection (presumably a dial-up connection was made). This allows client code to then
                           disconnect if a new connection was required. Thanks to Pete Arends for this nice addition.
-         PJN / 05-10-2003 1) Reworked the CPJNSMTPConnection::ReadResponse method to use the timeout provided by IsReadable rather than calling sleep.
+         PJN / 05-10-2003 1. Reworked the CPJNSMTPConnection::ReadResponse method to use the timeout provided by IsReadable rather than calling sleep.
                           Thanks to Clarke Brunt for reporting this issue.
-         PJN / 03-11-2003 1) Simplified the code in CPJNSMTPConnection::ReadResponse. Thanks to Clarke Brunt for reporting this issue.
-         PJN / 03-12-2003 1) Made code which checks the Login responses which contain "Username" and "Password" case insensitive. Thanks to 
+         PJN / 03-11-2003 1. Simplified the code in CPJNSMTPConnection::ReadResponse. Thanks to Clarke Brunt for reporting this issue.
+         PJN / 03-12-2003 1. Made code which checks the Login responses which contain "Username" and "Password" case insensitive. Thanks to 
                           Zhang xiao Pan for reporting this problem.
-         PJN / 11-12-2003 1) Fixed an unreferrenced variable in CPJNSMTPConnection::OnError as reported by VC.Net 2003
-                          2) DEBUG_NEW macro is now only used on VC 6 and not on VC 7 or VC 7.1. This avoids a problem on these compilers
+         PJN / 11-12-2003 1. Fixed an unreferrenced variable in CPJNSMTPConnection::OnError as reported by VC.Net 2003
+                          2. DEBUG_NEW macro is now only used on VC 6 and not on VC 7 or VC 7.1. This avoids a problem on these compilers
                           where a conflict exists between it and the STL header files. Thanks to Alex Evans for reporting this problem.
-         PJN / 31-01-2004 1) Fixed a bug in CPJNSMTPBodyPart::GetBody where the size of the body part was incorrectly calculating the size if the
+         PJN / 31-01-2004 1. Fixed a bug in CPJNSMTPBodyPart::GetBody where the size of the body part was incorrectly calculating the size if the
                           encoded size was an exact multiple of 76. Thanks to Kurt Emanuelson and Enea Mansutti for reporting this problem.
-         PJN / 07-02-2004 1) Fixed a bug in CPJNSMTPBodyPart::SetText where the code would enter an endless loop in the Replace function. It has now 
+         PJN / 07-02-2004 1. Fixed a bug in CPJNSMTPBodyPart::SetText where the code would enter an endless loop in the Replace function. It has now 
                           been replaced with CString::Replace. This now means that the class will not now compile on VC 5. Thanks to Johannes Philipp 
                           Grohs for reporting this problem.
-                          2) Fixed a number of warnings when the code is compiled with VC.Net 2003. Thanks to Edward Livingston for reporting
+                          2. Fixed a number of warnings when the code is compiled with VC.Net 2003. Thanks to Edward Livingston for reporting
                           this issue.
-         PJN / 18-02-2004 1) You can now optionally set the priority of an email thro the variable CPJNSMTPMessage::m_Priority. Thanks to Edward 
+         PJN / 18-02-2004 1. You can now optionally set the priority of an email thro the variable CPJNSMTPMessage::m_Priority. Thanks to Edward 
                           Livingston for suggesting this addition.
-         PJN / 04-03-2004 1) To avoid conflicts with the ATL Server class of the same name, namely "CSMTPConnection", the class is now called 
+         PJN / 04-03-2004 1. To avoid conflicts with the ATL Server class of the same name, namely "CSMTPConnection", the class is now called 
                           "CPJNSMTPConnection". To provide for easy upgrading of code, "CSMTPConnection" is now defined to be "CPJSMTPConnection" 
                           if the code detects that the ATL Server SMTP class is not included. Thanks to Ken Jones for reporting this issue.
-         PJN / 13-03-2004 1) Fixed a problem where the CPJNSMTPBodyPart::m_dwMaxAttachmentSize value was not being copied in the CPJNSMTPBodyPart::operator=
+         PJN / 13-03-2004 1. Fixed a problem where the CPJNSMTPBodyPart::m_dwMaxAttachmentSize value was not being copied in the CPJNSMTPBodyPart::operator=
                           method. Thanks to Gerald Egert for reporting this problem and the fix.
-         PJN / 05-06-2004 1) Fixed a bug in CSMTPConnection::ReadResponse, where the wrong parameters were being null terminated. Thanks to "caowen" 
+         PJN / 05-06-2004 1. Fixed a bug in CSMTPConnection::ReadResponse, where the wrong parameters were being null terminated. Thanks to "caowen" 
                           for this update.
-                          2) Updated the CSMTPConnection::ReadResponse function to handle multiline responses in all cases. Thanks to Thomas Liebethal
+                          2. Updated the CSMTPConnection::ReadResponse function to handle multiline responses in all cases. Thanks to Thomas Liebethal
                           for reporting this issue.
-         PJN / 07-06-2004 1) Fixed a potential buffer overflow issue in CPJNSMTPConnection::ReadResponse when certain multi line responses are received
-         PJN / 30-09-2004 1) Fixed a parsing issue in CPJNSMTPConnection::ReadResponse when multi line responses are read in as multiple packets. 
+         PJN / 07-06-2004 1. Fixed a potential buffer overflow issue in CPJNSMTPConnection::ReadResponse when certain multi line responses are received
+         PJN / 30-09-2004 1. Fixed a parsing issue in CPJNSMTPConnection::ReadResponse when multi line responses are read in as multiple packets. 
                           Thanks to Mark Smith for reporting this problem.
-                          2) Reworked the code which supports the various authentication mechanisms to support the correct terms. What was called 
+                          2. Reworked the code which supports the various authentication mechanisms to support the correct terms. What was called 
                           "AUTH LOGIN PLAIN" support now more correctly uses the term "AUTH PLAIN". The names of the functions and enums have now 
                           also been reworked.
-                          3) Did a review of the sample app code provided with the class so that the name of the modules, projects, exe etc is now
+                          3. Did a review of the sample app code provided with the class so that the name of the modules, projects, exe etc is now
                           "PJNSMTPApp". Also reworked the name of some helper classes as well as the module name which supports the main class.
-                          4) Reworked CPJNSMTPConnection::AuthLoginPlain (now called AuthPlain) to correctly handle the case where an invalid
+                          4. Reworked CPJNSMTPConnection::AuthLoginPlain (now called AuthPlain) to correctly handle the case where an invalid
                           response is received when expecting the username: response. Thanks to Mark Smith for reporting this problem.
          PJN / 23-12-2004 "Name" field in Content-Type headers is now quoted just like the filename field. Thanks to Mark Smith for reporting this
                           issue in conjunction with the mail client Eudora.
-         PJN / 23-01-2005 1) All classes now uses exceptions to indicate errors. This means the whole area of handling errors in the code a whole lot
+         PJN / 23-01-2005 1. All classes now uses exceptions to indicate errors. This means the whole area of handling errors in the code a whole lot
                           simpler. For example the OnError mechanism is gone along with all the string literals in the code. The actual code itself
                           is a whole lot simpler also. You should carefully review your code as a lot of the return values from methods (especially
                           CPJNSMTPConnection) are now void and will throw CSMTPException's. Thanks to Mark Smith for prompting this update.
-                          2) General tidy up of the code following the testing of the new exception based code.
-         PJN / 06-04-2005 1) Addition of PJNSMTP_EXT_CLASS define to the classes to allow the classes to be easily incorporated into extension DLLs.
+                          2. General tidy up of the code following the testing of the new exception based code.
+         PJN / 06-04-2005 1. Addition of PJNSMTP_EXT_CLASS define to the classes to allow the classes to be easily incorporated into extension DLLs.
                           Thanks to Arnaud Faucher for suggesting this addition.
-                          2) Now support NTLM authentication. Thanks to Arnaud Faucher for this nice addition. NTLM Authentication is provided by
+                          2. Now support NTLM authentication. Thanks to Arnaud Faucher for this nice addition. NTLM Authentication is provided by
                           a new reusable class called "CNTLMClientAuth" in PJNNTLMAuth.cpp/h".
-                          3) Fixed a bug in the sample app in the persistence of the Authentication setting. Thanks to Arnaud Faucher for reporting
+                          3. Fixed a bug in the sample app in the persistence of the Authentication setting. Thanks to Arnaud Faucher for reporting
                           this issue.
-         PJN / 26-03-2005 1) Fixed compile problems with the code when the Force Conformance In For Loop Scope compile setting is used in 
+         PJN / 26-03-2005 1. Fixed compile problems with the code when the Force Conformance In For Loop Scope compile setting is used in 
                           Visual Studio .NET 2003. Thanks to Alexey Kuznetsov for reporting this problem.
-                          2) Fixed compile problems when the code is compiled using the Detect 64-bit Portability Issues setting in Visual Studio
+                          2. Fixed compile problems when the code is compiled using the Detect 64-bit Portability Issues setting in Visual Studio
                           .NET 2003.
-         PJN / 18-04-2005 1) Addition of a simple IsConnected() function inline with the author's CPop3Connection class. Thanks to Alexey Kuznetsov
+         PJN / 18-04-2005 1. Addition of a simple IsConnected() function inline with the author's CPop3Connection class. Thanks to Alexey Kuznetsov
                           for prompting this addition.
-                          2) Addition of a MXLookup function which provides for convenient DNS lookups of MX records (the IP addresses of SMTP mail 
+                          2. Addition of a MXLookup function which provides for convenient DNS lookups of MX records (the IP addresses of SMTP mail 
                           servers for a specific host domain). Internally this new function uses the new DNS functions which are provided with 
                           Windows 2000 or later. To ensure that the code continues to work correctly on earlier versions of Windows, the function 
                           pointers for the required functions are constructed at runtime using GetProcAddress. You can use this function to 
@@ -443,8 +443,19 @@ History: PJN / 15-06-1998 1) Fixed the case where a single dot occurs on its own
          PJN / 03-11-2008 1. For best compatibility purposes with existing SMTP mail servers, all message headers which include email addresses are now not
                           Q encoded. Also the friendly part of the email address is quoted. Thanks to Christian Egging for reporting this issue.
                           2. Optimized use of CT2A class throughout the code
+         PJN / 25-06-2009 1. Updated copyright details
+                          2. Fixed a bug where the Reply-To email address was not correctly added to the message. Thanks to Dmitriy Maksimov for reporting this
+                          issue.
+                          3. Updated the sample app's project settings to more modern default values.
+                          4. Updated the sample exe to ship with OpenSSL v0.98k
+                          5. Fixed a bug in CPJNSMTPConnection::SendBodyPart where it would cause errors from OpenSSL when trying to send a body of 0 bytes in size.
+                          This can occur when MHTML based emails are sent and you are using a "multipart/related" body part. Thanks to "atota" for reporting this
+                          issue
+         PJN / 13-11-2009 1. Now includes comprehensive support for MDN's (Message Disposition Notifications) as specified in RFC 3798. Thanks to 
+                          Ron Brunton for prompting this update.
+                          2. Rewrote CPJNSMTPMessage::SaveToDisk method to use CAtlFile
                           
-Copyright (c) 1998 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -1399,7 +1410,7 @@ CStringA CPJNSMTPBodyPart::FoldSubjectHeader(const CString& sSubject, const CStr
 }
 
 
-CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.82")), 
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.84")), 
                                      m_bMime(FALSE), 
                                      m_Priority(NoPriority),
                                      m_DSNReturnType(HeadersOnly),
@@ -1414,21 +1425,22 @@ CPJNSMTPMessage::CPJNSMTPMessage(const CPJNSMTPMessage& message)
 
 CPJNSMTPMessage& CPJNSMTPMessage::operator=(const CPJNSMTPMessage& message) 
 { 
-  m_From          = message.m_From;
-  m_sSubject      = message.m_sSubject;
-  m_sXMailer      = message.m_sXMailer;
-  m_ReplyTo       = message.m_ReplyTo;
-  m_RootPart      = message.m_RootPart;
-  m_Priority      = message.m_Priority;
-  m_DSNReturnType = message.m_DSNReturnType;
-  m_DSN           = message.m_DSN;
-  m_sENVID        = message.m_sENVID;
+  m_From           = message.m_From;
+  m_sSubject       = message.m_sSubject;
+  m_sXMailer       = message.m_sXMailer;
+  m_ReplyTo        = message.m_ReplyTo;
+  m_RootPart       = message.m_RootPart;
+  m_Priority       = message.m_Priority;
+  m_DSNReturnType  = message.m_DSNReturnType;
+  m_DSN            = message.m_DSN;
+  m_sENVID         = message.m_sENVID;
+  m_bMime          = message.m_bMime;
 
   m_To.Copy(message.m_To);
   m_CC.Copy(message.m_CC);
   m_BCC.Copy(message.m_BCC);
+  m_MessageDispositionEmailAddresses.Copy(message.m_MessageDispositionEmailAddresses);
   m_CustomHeaders.Copy(message.m_CustomHeaders);
-  m_bMime = message.m_bMime;
 
 	return *this;
 }
@@ -1592,7 +1604,7 @@ CStringA CPJNSMTPMessage::GetHeader()
   sHeader += sSubject;
   sHeader += "\r\n";
 
-  //X-Mailer fields
+  //X-Mailer header
   if (m_sXMailer.GetLength())
   { 
     CStringA sXMailer("X-Mailer: ");
@@ -1601,13 +1613,29 @@ CStringA CPJNSMTPMessage::GetHeader()
     sHeader += sXMailer;
     sHeader += "\r\n";
   }
-
+  
+  //Disposition-Notification-To header
+  INT_PTR nMessageDispositionEmailAddresses = m_MessageDispositionEmailAddresses.GetSize();
+  if (nMessageDispositionEmailAddresses)
+  {
+    CStringA sMDN("Disposition-Notification-To: ");
+    for (INT_PTR i=0; i<nMessageDispositionEmailAddresses; i++)
+    {
+      CString sLine(m_MessageDispositionEmailAddresses.ElementAt(i));
+      if (i < (nMessageDispositionEmailAddresses - 1))
+ 		    sLine += _T(",");
+      sMDN += sLine;
+      if (i < (nMessageDispositionEmailAddresses - 1))
+        sMDN += "\r\n ";
+    }
+    sHeader += sMDN;
+    sHeader += "\r\n";
+  }
+  
   //Add the Mime header if needed
-  BOOL bHasChildParts = (m_RootPart.GetNumberOfChildBodyParts() != 0);
-
   if (m_bMime)
   {
-    if (bHasChildParts)
+    if (m_RootPart.GetNumberOfChildBodyParts())
     {
       CStringA sPartHeader;
       sPartHeader.Format("MIME-Version: 1.0\r\nContent-Type: %s; boundary=\"%s\"\r\n", CStringA(m_RootPart.GetContentType()).operator LPCSTR(), CStringA(m_RootPart.GetBoundary()).operator LPCSTR());
@@ -1632,6 +1660,7 @@ CStringA CPJNSMTPMessage::GetHeader()
 	{
     CStringA sReplyTo("Reply-To: ");
     sReplyTo += m_ReplyTo.GetRegularFormat();
+    sHeader += sReplyTo;
     sHeader += "\r\n";
 	}
 
@@ -1924,91 +1953,71 @@ void CPJNSMTPMessage::SetMime(BOOL bMime)
 void CPJNSMTPMessage::SaveToDisk(const CString& sFilename)
 {
   //Open the file for writing
-  HANDLE hFile = CreateFile(sFilename, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-  if (hFile == INVALID_HANDLE_VALUE)
-    CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+  ATL::CAtlFile file;
+  HRESULT hr = file.Create(sFilename, GENERIC_WRITE, 0, OPEN_ALWAYS);
+  if (FAILED(hr))
+    CPJNSMTPConnection::ThrowPJNSMTPException(hr);
 
   //Set the file back to 0 in size
-  if (SetFilePointer(hFile, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
-  if (!SetEndOfFile(hFile))
-    CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+  hr = file.SetSize(0);
+  if (FAILED(hr))
+    CPJNSMTPConnection::ThrowPJNSMTPException(hr);
 
-  try
+  //Write out the Message Header
+  CStringA sHeader(GetHeader());
+  hr = file.Write(sHeader.operator LPCSTR(), sHeader.GetLength());
+  if (FAILED(hr))
+    CPJNSMTPConnection::ThrowPJNSMTPException(hr);
+
+  //Write out the separator
+  hr = file.Write("\r\n", 2);
+  if (FAILED(hr))
+    CPJNSMTPConnection::ThrowPJNSMTPException(hr);
+
+  //Write out the rest of the message
+  if (m_RootPart.GetNumberOfChildBodyParts() || m_bMime)
   {
-    //Write out the Message Header
-    CStringA sHeader(GetHeader());
-    DWORD dwWritten = 0;
-    if (!WriteFile(hFile, sHeader.operator LPCSTR(), sHeader.GetLength(), &dwWritten, NULL))
-      CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
-
-	  //Write out the separator
-    char* pszBodyHeader = "\r\n";
-    if (!WriteFile(hFile, pszBodyHeader, 2, &dwWritten, NULL))
-      CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
-
-    //Write out the rest of the message
-    BOOL bHasChildParts = (m_RootPart.GetNumberOfChildBodyParts() != 0);
-    if (bHasChildParts || m_bMime)
-    {
-      //Write the root body part (and all its children)
-      WriteToDisk(hFile, &m_RootPart, TRUE);
-    }
-    else
-    {
-      //Send the body
-      CStringA sBody(m_RootPart.GetText());
-
-      //Send the body
-      if (!WriteFile(hFile, sBody.operator LPCSTR(), sBody.GetLength(), &dwWritten, NULL))
-        CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
-    }
+    //Write the root body part (and all its children)
+    WriteToDisk(file, &m_RootPart, TRUE);
   }
-  catch(CPJNSMTPException* pEx)
+  else
   {
-    //Close the file before we rethrow the exception
-    CloseHandle(hFile);
+    //Send the body
+    CStringA sBody(m_RootPart.GetText());
 
-    HRESULT hr = pEx->m_hr;
-    CString sLastResponse(pEx->m_sLastResponse);
-    pEx->Delete();
-
-    //rethrow the exception
-    CPJNSMTPConnection::ThrowPJNSMTPException(hr, sLastResponse);
+    //Send the body
+    hr = file.Write(sBody.operator LPCSTR(), sBody.GetLength());
+    if (FAILED(hr))
+      CPJNSMTPConnection::ThrowPJNSMTPException(hr);
   }
-
-  CloseHandle(hFile);
 }
 
-void CPJNSMTPMessage::WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
+void CPJNSMTPMessage::WriteToDisk(ATL::CAtlFile& file, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
 {
-  //validate our parameters
+  //Validate our parameters
   AFXASSUME(pBodyPart);
 
   if (!bRoot)
   {
     //First send this body parts header
     CStringA sHeader(pBodyPart->GetHeader());
-    DWORD dwWritten = 0;
-		if (!WriteFile(hFile, sHeader.operator LPCSTR(), sHeader.GetLength(), &dwWritten, NULL))
-    {
-      //Throw the exception
-      CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
-    }
+		HRESULT hr = file.Write(sHeader.operator LPCSTR(), sHeader.GetLength());
+		if (FAILED(hr))
+      CPJNSMTPConnection::ThrowPJNSMTPException(hr);
   }
   
   //Then the body parts body
   CStringA sBody(pBodyPart->GetBody(FALSE));
-  DWORD dwWritten = 0;
-	if (!WriteFile(hFile, sBody.operator LPCSTR(), sBody.GetLength(), &dwWritten, NULL))
-    CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+	HRESULT hr = file.Write(sBody.operator LPCSTR(), sBody.GetLength());
+	if (FAILED(hr))
+    CPJNSMTPConnection::ThrowPJNSMTPException(hr);
 
   //Recursively save all the child body parts
   INT_PTR nChildBodyParts = pBodyPart->GetNumberOfChildBodyParts();
   for (INT_PTR i=0; i<nChildBodyParts; i++)
   {
     CPJNSMTPBodyPart* pChildBodyPart = pBodyPart->GetChildBodyPart(i);
-    WriteToDisk(hFile, pChildBodyPart, FALSE);
+    WriteToDisk(file, pChildBodyPart, FALSE);
   }
 
   //Then the MIME footer if need be
@@ -2016,8 +2025,9 @@ void CPJNSMTPMessage::WriteToDisk(HANDLE hFile, CPJNSMTPBodyPart* pBodyPart, BOO
   if (bSendFooter)
   {
     CStringA sFooter(pBodyPart->GetFooter());
-  	if (!WriteFile(hFile, sFooter.operator LPCSTR(), sFooter.GetLength(), &dwWritten, NULL))
-      CPJNSMTPConnection::ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
+  	hr = file.Write(sFooter.operator LPCSTR(), sFooter.GetLength());
+  	if (FAILED(hr))
+      CPJNSMTPConnection::ThrowPJNSMTPException(hr);
   }
 }
 
@@ -2617,7 +2627,9 @@ void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
     CStringA sHeader(pBodyPart->GetHeader());
     try
     {
-		  _Send(sHeader.operator LPCSTR(), sHeader.GetLength());
+      int nHeaderLength = sHeader.GetLength();
+      if (nHeaderLength)
+		    _Send(sHeader.operator LPCSTR(), nHeaderLength);
     }
     catch(CWSocketException* pEx)
     {
@@ -2631,7 +2643,9 @@ void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
   CStringA sBody(pBodyPart->GetBody(TRUE));
   try
   {
-    _Send(sBody.operator LPCSTR(), sBody.GetLength());
+    int nBodyLength = sBody.GetLength();
+    if (nBodyLength)
+      _Send(sBody.operator LPCSTR(), nBodyLength);
   }
   catch(CWSocketException* pEx)
   {
@@ -2655,7 +2669,9 @@ void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
     CStringA sFooter(pBodyPart->GetFooter());
     try
     {
-	    _Send(sFooter.operator LPCSTR(), sFooter.GetLength());
+      int nFooterLength = sFooter.GetLength();
+      if (nFooterLength)
+	      _Send(sFooter.operator LPCSTR(), nFooterLength);
     }
     catch(CWSocketException* pEx)
     {
@@ -2783,8 +2799,7 @@ void CPJNSMTPConnection::SendMessage(CPJNSMTPMessage& Message)
   }
 
   //Now send the contents of the mail    
-  BOOL bHasChildParts = (Message.m_RootPart.GetNumberOfChildBodyParts() != 0);
-  if (bHasChildParts || Message.m_bMime)
+  if (Message.m_RootPart.GetNumberOfChildBodyParts() || Message.m_bMime)
   {
     //Send the root body part (and all its children)
     SendBodyPart(&Message.m_RootPart, TRUE);
