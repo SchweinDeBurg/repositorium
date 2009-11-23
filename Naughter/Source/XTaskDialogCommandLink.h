@@ -32,6 +32,30 @@ to maintain a single distribution point for the source code.
 //Pull in support for _TrackMouseEvent automatically
 #pragma comment(lib, "Comctl32.lib")
 
+#ifndef WM_CHANGEUISTATE
+#define WM_CHANGEUISTATE 0x0127
+#endif
+
+#ifndef WM_UPDATEUISTATE
+#define WM_UPDATEUISTATE 0x0128
+#endif
+
+#ifndef WM_QUERYUISTATE
+#define WM_QUERYUISTATE 0x0129
+#endif
+
+#ifndef UISF_HIDEFOCUS
+#define UISF_HIDEFOCUS 0x1
+#endif
+
+#ifndef UISF_HIDEACCEL
+#define UISF_HIDEACCEL 0x2
+#endif
+
+#ifndef DT_HIDEPREFIX
+#define DT_HIDEPREFIX 0x00100000
+#endif
+
 
 ////////////////////////////// Classes ////////////////////////////////////////
 
