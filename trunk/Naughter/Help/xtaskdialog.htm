@@ -2,13 +2,13 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>XTaskDialog v1.08</title>
+<title>XTaskDialog v1.10</title>
 <link rel="stylesheet" type="text/css" href="./naughter.css">
 </head>
 
 <body>
 
-<h2 align="left"><strong>XTaskDialog v1.08</strong></h2>
+<h2 align="left"><strong>XTaskDialog v1.10</strong></h2>
 <p>Welcome to <strong>XTaskDialog</strong>, an emulation of the new Vista Task Dialog APIs 
 for down level operating systems including Windows 98, Windows ME, Windows 2000, 
 Windows XP and Windows 2003. Task Dialogs 
@@ -258,6 +258,35 @@ every single dialog which your application puts up!</p>
 	white. This is consistent with how the native TaskDialog API behaves on 
 	Vista. Thanks to Jacob Liebeck for reporting this bug.</li>
 </ul>
+<p><strong>V1.09 (28 June 2009)</strong></p>
+<ul>
+	<li>
+	Updated the sample apps project settings to more modern default values.</li>
+	<li>
+	The supplied zip file now inclues a x64 Unicode DLL version of 
+	XTaskDialog.</li>
+	<li>
+	Fixed a bug in calling SystemParametersInfo(SPI_GETNONCLIENTMETRICS,... 
+	). The issue is that the NONCLIENTMETRICS structure can be bigger depending 
+	on the value of the WINVER preprocessor value. The code now ensures that the 
+	original base size of NONCLIENTMETRICS is used to ensure it works on down 
+	level operating systems. For more information on this issue, please see the 
+	MSDN documentation on the NONCLIENTMETRICS stucture. Also the second 
+	parameter to SystemParametersInfo in the code was incorrectly being set to 
+	0, it is now set to the sizeof the structure. Thanks to Dick Smith for 
+	reporting this issue.</li>
+	<li>
+	Updated the code to be as independent as possible from the standard 
+	Windows preprocessor variables (WINVER, _WIN32_WINNT, _WIN32_WINDOWS &amp; 
+	_WIN32_IE). Note the code still requires WINVER &gt;= 0x500</li>
+</ul>
+<p><strong>V1.10 (14 October 2009)</strong></p>
+<ul>
+	<li>
+	&nbsp;Fix for returning the correct ID of the button which closes the task 
+	dialog if it is closed via the default button via the RETURN key. Thanks to 
+	Mathias Svensson for reporting this bug.</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -327,7 +356,7 @@ every single dialog which your application puts up!</p>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-20 January 2009</p>
+14 October 2009</p>
 
 </body>
 

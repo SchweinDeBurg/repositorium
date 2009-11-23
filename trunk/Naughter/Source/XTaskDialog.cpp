@@ -49,6 +49,17 @@ History: PJN / 20-03-2007 1. Fixed a bug where the code unnecessarily set the pr
                           then a separator and then a final grey block even when no non command link buttons are displayed on the 
                           grey blocks. When this condition now occurs, the whole dialog is now shown in white. This is consistent 
                           with how the native TaskDialog API behaves on Vista. Thanks to Jacob Liebeck for reporting this bug.
+         PJN / 28-06-2009 1. Updated the sample apps project settings to more modern default values.
+                          2. The supplied zip file now inclues a x64 Unicode DLL version of XTaskDialog.
+                          3. Fixed a bug in calling SystemParametersInfo(SPI_GETNONCLIENTMETRICS,... ). The issue is that the NONCLIENTMETRICS structure can be bigger depending on the
+                          value of the WINVER preprocessor value. The code now ensures that the original base size of NONCLIENTMETRICS is used to ensure it works on down level 
+                          operating systems. For more information on this issue, please see the MSDN documentation on the NONCLIENTMETRICS stucture. Also the second parameter to 
+                          SystemParametersInfo in the code was incorrectly being set to 0, it is now set to the sizeof the structure. Thanks to Dick Smith for reporting 
+                          this issue.
+                          4. Updated the code to be as independent as possible from the standard Windows preprocessor variables (WINVER, _WIN32_WINNT, _WIN32_WINDOWS & _WIN32_IE). Note
+                          the code still requires WINVER >= 0x500
+         PJN / 14-10-2009 1. Fix for returning the correct ID of the button which closes the task dialog if it is closed via the default button via the RETURN key. Thanks to 
+                          Mathias Svensson for reporting this bug.
 
 Copyright (c) 2007 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -75,7 +86,7 @@ to maintain a single distribution point for the source code.
 ////////////////////////////////// Macros / Defines ///////////////////////////
 
 //XTaskDialog require WINVER to be defined >= 0x500 to compile correctly
-#if WINVER < 0x500
+#if (WINVER < 0x500)
 #pragma message("XTaskDialog requires the WINVER preprocessor macro to be 0x500 or greater to compile correctly.")
 #endif
 
@@ -91,28 +102,21 @@ to maintain a single distribution point for the source code.
 #define L_MAX_URL_LENGTH (2048 + 32 + sizeof("://"))
 #endif
 
-__if_not_exists(tagLITEM)
+typedef struct tagXTLITEM
 {
-	typedef struct tagLITEM
-	{
-		UINT  mask;
-		int   iLink;
-		UINT  state;
-		UINT  stateMask;
-		WCHAR szID[MAX_LINKID_TEXT];
-		WCHAR szUrl[L_MAX_URL_LENGTH];
-	} LITEM, *PLITEM;
-}
+  UINT  mask;
+  int   iLink;
+  UINT  state;
+  UINT  stateMask;
+  WCHAR szID[MAX_LINKID_TEXT];
+  WCHAR szUrl[L_MAX_URL_LENGTH];
+} XTLITEM, *PXTLITEM;
 
-__if_not_exists(tagNMLINK)
+typedef struct tagMYNMLINK
 {
-	typedef struct tagNMLINK
-	{
-		NMHDR hdr;
-		LITEM item;
-	} NMLINK, *PNMLINK;
-}
-
+  NMHDR hdr;
+  XTLITEM item;
+} XTNMLINK, *PXTNMLINK;
 
 #ifndef PBS_MARQUEE
 #define PBS_MARQUEE 0x08
@@ -121,6 +125,28 @@ __if_not_exists(tagNMLINK)
 #ifndef SPI_GETCLIENTAREAANIMATION
 #define SPI_GETCLIENTAREAANIMATION 0x1042
 #endif
+
+//We need a version of the NONCLIENTMETRICS structure without the WINVER >= 0x0600 additions
+//to ensure we work correctly on down level operating systems. See the notes in the MSDN
+//regarding the NONCLIENTMETRICS structure
+typedef struct tagXTNONCLIENTMETRICS
+{
+  UINT    cbSize;
+  int     iBorderWidth;
+  int     iScrollWidth;
+  int     iScrollHeight;
+  int     iCaptionWidth;
+  int     iCaptionHeight;
+  LOGFONT lfCaptionFont;
+  int     iSmCaptionWidth;
+  int     iSmCaptionHeight;
+  LOGFONT lfSmCaptionFont;
+  int     iMenuWidth;
+  int     iMenuHeight;
+  LOGFONT lfMenuFont;
+  LOGFONT lfStatusFont;
+  LOGFONT lfMessageFont;
+} XTNONCLIENTMETRICS, *PXTNONCLIENTMETRICS, FAR* LPXTNONCLIENTMETRICS;
 
 
 ////////////////////////////////// Implementation /////////////////////////////
@@ -391,10 +417,10 @@ HRESULT CXTaskDialog::Layout()
 	}
 
 	//Create the metrics for the message box font
-	NONCLIENTMETRICS ncm;
+	XTNONCLIENTMETRICS ncm;
 	memset(&ncm, 0, sizeof(ncm));
 	ncm.cbSize = sizeof(ncm);
-	if (!SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, &ncm, 0))
+	if (!SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0))
 	{
 	  DWORD dwLastError = GetLastError();
 	  DeleteDC(hdc);
@@ -1085,12 +1111,8 @@ HRESULT CXTaskDialog::AddItem(CXTaskDialogItem::ControlType cType, UINT nID, con
 			    bThisIsFirstButton = (m_dlgItems[i]->m_ControlType != CXTaskDialogItem::BUTTON);
 			}
 			if ((m_pTaskConfig->nDefaultButton == 0 && bThisIsFirstButton) || (static_cast<int>(nID) == m_pTaskConfig->nDefaultButton))
-			{
 			  m_nIDDefaultButton = nID;
-				pDlgItem->m_dlgItemTemplate.style |= BS_DEFPUSHBUTTON;
-		  }
-			else
-				pDlgItem->m_dlgItemTemplate.style |= BS_PUSHBUTTON;
+  		pDlgItem->m_dlgItemTemplate.style |= BS_PUSHBUTTON;
 			break;
     }
 		case CXTaskDialogItem::CHECKBOX:
@@ -1779,14 +1801,6 @@ LRESULT CXTaskDialog::OnInitDialog(UINT /*nMsg*/, WPARAM /*wParam*/, LPARAM /*lP
   	  ctrlChild.SendMessage(PBM_SETMARQUEE, TRUE, InitialMarqueeUpdates);
 	}
 
-  //Select the default button if required
-  if (m_nIDDefaultButton != -1)
-  {
-	  HWND hWndChild = ::GetDlgItem(m_hWnd, m_nIDDefaultButton);
-    CWindow ctrlChild(hWndChild);
-    ctrlChild.SetFocus();
-  }
-	
 	//Set up the initial state of the radio buttons	
 	ATLASSERT(m_pTaskConfig);
 	if (m_pTaskConfig->cRadioButtons)
@@ -1954,11 +1968,22 @@ LRESULT CXTaskDialog::OnInitDialog(UINT /*nMsg*/, WPARAM /*wParam*/, LPARAM /*lP
   //Finally play any sound which is required now that dialog has initialized	
   PlaySound();
 	
+  //Set the default button if required
+  BOOL bSetDefault = FALSE;
+  if (m_nIDDefaultButton != -1)
+  {
+	  HWND hWndChild = ::GetDlgItem(m_hWnd, m_nIDDefaultButton);
+    CWindow ctrlChild(hWndChild);
+    SendMessage(DM_SETDEFID, m_nIDDefaultButton, 0);
+    ctrlChild.SetFocus();
+    bSetDefault = TRUE;
+  }
+	
 	//Do the TDN_CREATED notification
   if (m_pTaskConfig->pfCallback)
     m_pTaskConfig->pfCallback(m_hWnd, TDN_CREATED, 0, 0, m_pTaskConfig->lpCallbackData);
-
-	return 0;
+  
+	return bSetDefault ? FALSE : TRUE;
 }
 
 LRESULT CXTaskDialog::OnHelp(UINT /*nMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -2336,7 +2361,7 @@ LRESULT CXTaskDialog::OnTimer(UINT /*nMsg*/, WPARAM wParam, LPARAM /*lParam*/, B
 	  if (m_pTaskConfig->pfCallback)
 	  {
 	    DWORD dwCurrentTickCount = GetTickCount();
-	    if (m_pTaskConfig->pfCallback(m_hWnd, TDN_TIMER, dwCurrentTickCount - m_dwLastTickCount, 0, m_pTaskConfig->lpCallbackData) == S_FALSE)
+	    if (m_pTaskConfig->pfCallback(m_hWnd, TDN_TIMER, dwCurrentTickCount - m_dwLastTickCount, 0, m_pTaskConfig->lpCallbackData) == TRUE)
 	      m_dwLastTickCount = dwCurrentTickCount;
 	  }
 	}
@@ -2833,7 +2858,7 @@ LRESULT CXTaskDialog::OnSetButtonElevationRequiredState(UINT /*nMsg*/, WPARAM wP
 LRESULT CXTaskDialog::OnClick(int /*nID*/, LPNMHDR pnmh, BOOL& /*bHandled*/)
 {
   ATLASSERT(pnmh);
-  NMLINK* pnmLink = reinterpret_cast<NMLINK*>(pnmh);
+  XTNMLINK* pnmLink = reinterpret_cast<XTNMLINK*>(pnmh);
   ATLASSUME(pnmLink);
 
 	//Do the TDN_HYPERLINK_CLICKED notification

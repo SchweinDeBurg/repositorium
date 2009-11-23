@@ -50,8 +50,7 @@ public:
   };
 
 //Constructors / Templates
-	CXTaskDialogItem(ControlType cType) : m_ControlType(cType),
-	                                      m_dwAdditionalStyles(0)
+	CXTaskDialogItem(ControlType cType) : m_ControlType(cType)
 	{ 
 	  switch (m_ControlType)
 	  {
@@ -96,7 +95,6 @@ public:
 	ControlType     m_ControlType;
 	CStringW        m_sCaption;
 	CStringW        m_sSystemClass;
-	DWORD           m_dwAdditionalStyles;
 };
 
 #endif //__XTASKDIALOGITEM_H__
