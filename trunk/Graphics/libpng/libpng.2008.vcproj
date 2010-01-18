@@ -403,6 +403,10 @@
 				RelativePath=".\Source\pngconf.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Source\pngpriv.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\announce.txt"
