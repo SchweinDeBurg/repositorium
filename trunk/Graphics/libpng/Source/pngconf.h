@@ -22,10 +22,6 @@
 #ifndef PNGCONF_H
 #define PNGCONF_H
 
-#ifndef PNG_NO_LIMITS_H
-#  include <limits.h>
-#endif
-
 #if defined(LIBPNG_LIB_BUILD)
 
 /*
@@ -38,8 +34,6 @@
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400) && !defined(UNDER_CE)
 /* VC++ 8.0 or greater */
-
-#pragma once
 
 #define _STL_NOFORCE_MANIFEST
 #define _CRT_NOFORCE_MANIFEST
@@ -67,6 +61,10 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #endif /* _MSC_VER && UNDER_CE */
 
 #endif /* LIBPNG_LIB_BUILD */
+
+#ifndef PNG_NO_LIMITS_H
+#  include <limits.h>
+#endif
 
 /* Added at libpng-1.2.9 */
 
