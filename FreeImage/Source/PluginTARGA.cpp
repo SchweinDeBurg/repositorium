@@ -69,6 +69,8 @@ typedef struct tagTGAFOOTER {
 #pragma pack()
 #endif
 
+static const char *FI_MSG_ERROR_CORRUPTED = "Image data corrupted";
+
 // ----------------------------------------------------------
 // Image type
 //
@@ -105,7 +107,7 @@ typedef struct tagCacheIO {
 
 /**
 Returns TRUE on success and FAlSE if malloc fails
-Note however that I do not use this returned value in the code. 
+Note however that I do not use this returned value in the code.
 Allocating line cache even for a 100 000 wide 32bit bitmap will take under
 half a megabyte. Out of Mem is really not an issue!
 */
@@ -120,6 +122,7 @@ cacheIO_alloc(CacheIO *ch, FreeImageIO *io, fi_handle handle, size_t size) {
     ch->size = size;
     ch->io = io;
     ch->handle = handle;
+
     ch->ptr = ch->end;	//will force refill on first access
 
     return TRUE;
@@ -135,9 +138,13 @@ cacheIO_free(CacheIO *ch) {
 inline static BYTE
 cacheIO_getByte(CacheIO *ch) {
 	if(ch->ptr >= ch->end) {
+
+	  // need refill
+
 		ch->ptr = ch->home;
 		ch->io->read_proc(ch->ptr, sizeof(BYTE), (unsigned)ch->size, ch->handle);//### EOF - no problem?
 	}
+
 	BYTE result = *ch->ptr;
 	ch->ptr++;
 
@@ -147,12 +154,21 @@ cacheIO_getByte(CacheIO *ch) {
 inline static BYTE*
 cacheIO_getBytes(CacheIO *ch, size_t count /*must be < ch.size!*/) {
 	if(ch->ptr + count >= ch->end) {
-		// 'count' bytes might span two cache bounds, SEEK back to add them in the new cache
-		long read = (long)(ch->ptr - ch->home);
-		ch->io->seek_proc(ch->handle, -(((long)ch->size - read)), SEEK_CUR);
+
+	  // need refill
+
+		// 'count' bytes might span two cache bounds,
+		// SEEK back to add the remains of the current cache again into the new cache
+
+		long read = long(ch->ptr - ch->home);
+		long remaining = long(ch->size - read);
+
+		ch->io->seek_proc(ch->handle, -remaining, SEEK_CUR);
+
 		ch->ptr = ch->home;
 		ch->io->read_proc(ch->ptr, sizeof(BYTE), (unsigned)ch->size, ch->handle);//### EOF - no problem?
 	}
+
 	BYTE *result = ch->ptr;
 	ch->ptr += count;
 
@@ -464,6 +480,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						{
 							BYTE rle = 0;
 							BYTE *bits;
+							
+							// this is used to guard against writing beyond the end of the image (on corrupted rle block)
+							const BYTE* dib_end = FreeImage_GetBits(dib) + (FreeImage_GetPitch(dib)*FreeImage_GetHeight(dib)) + 1;//< one-past-last - to compare using '<' insted of '<='
 
 							// Compute the *rough* size of a line...
 							long pixels_offset = io->tell_proc(handle);
@@ -488,13 +507,20 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 								BOOL has_rle = rle & 0x80;
 								rle &= ~0x80;	// remove type-bit
 
-								BYTE rle_count = rle + 1;
+								BYTE packet_count = rle + 1;
+								
+								//packet_count might be corrupt, test if we are not about to write beyond the last image bit
+								if((bits+x) + packet_count > dib_end) {
+									FreeImage_OutputMessageProc(s_format_id, FI_MSG_ERROR_CORRUPTED);
+									cacheIO_free(&cache);
+									return (FIBITMAP *)dib;
+								}
 
 								if (has_rle) {
 
 									BYTE val = cacheIO_getByte(&cache);
 
-									for(int ix = 0; ix < rle_count; ix++) {
+									for(int ix = 0; ix < packet_count; ix++) {
 										bits[x++] = val;
 
 										if(x >= line){
@@ -508,9 +534,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 										}
 									}
 
-								} else { // !has_rle
+								} else {
 
-									for(int ix = 0; ix < rle_count; ix++) {
+								  // no rle
+
+									for(int ix = 0; ix < packet_count; ix++) {
 
 										BYTE val = cacheIO_getByte(&cache);
 										bits[x++] = val;
@@ -523,7 +551,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 												bits = Internal_GetScanLine(dib, y, flipvert);
 											}
 										}
-									}//< rle_count
+									}//< packet_count
+
 								}//< has_rle
 							}//< while y
 
@@ -623,6 +652,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						BYTE rle;
 						BYTE *bits;
 
+						// this is used to guard against writing beyond the end of the image (on corrupted rle block)
+						const BYTE* dib_end = FreeImage_GetBits(dib) + (FreeImage_GetPitch(dib)*FreeImage_GetHeight(dib)) + 1;//< one-past-last - to compare using '<' insted of '<='
+
 						// Compute the *rough* size of a line...
 						long pixels_offset = io->tell_proc(handle);
 						long sz = ((eof - pixels_offset) / header.is_height);
@@ -645,7 +677,14 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 							BOOL has_rle = rle & 0x80;
 							rle &= ~0x80; //remove type-bit
 
-							int rle_count = rle + 1;
+							int packet_count = rle + 1;
+
+							//packet_count might be corrupt, test if we are not about to write beyond the last image bit
+							if((bits+x) + packet_count*pixel_size > dib_end) {
+								FreeImage_OutputMessageProc(s_format_id, FI_MSG_ERROR_CORRUPTED);
+								cacheIO_free(&cache);
+								return (FIBITMAP *)dib;
+							}
 
 							if (has_rle) {
 
@@ -653,7 +692,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 #ifdef FREEIMAGE_BIGENDIAN
 								SwapShort(val);
 #endif
-									for (int ix = 0; ix < rle_count; ix++) {
+									for (int ix = 0; ix < packet_count; ix++) {
 										if (TARGA_LOAD_RGB888 & flags) {
 											bits[x + FI_RGBA_BLUE]  = (BYTE)((((*val & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F);
 											bits[x + FI_RGBA_GREEN] = (BYTE)((((*val & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) * 0xFF) / 0x1F);
@@ -678,7 +717,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 							} else {
 
-								for (int ix = 0; ix < rle_count; ix++) {
+							  // no rle
+
+								for (int ix = 0; ix < packet_count; ix++) {
 									WORD *val = (WORD*)cacheIO_getBytes(&cache, sizeof(WORD));
 
 #ifdef FREEIMAGE_BIGENDIAN
@@ -705,7 +746,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 										}
 									}
 
-								}//< rle_count
+								}//< packet_count
+
 							}//< has_rle
 						}//< while
 
@@ -776,6 +818,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 							BYTE rle;
 							BYTE *bits;
 
+						// this is used to guard against writing beyond the end of the image (on corrupted rle block)
+						const BYTE* dib_end = FreeImage_GetBits(dib) + (FreeImage_GetPitch(dib)*FreeImage_GetHeight(dib)) + 1;//< one-past-last - to compare using '<' insted of '<='
+
 							// Compute the *rough* size of a line...
 							long pixels_offset = io->tell_proc(handle);
 							long sz = ((eof - pixels_offset) / header.is_height);
@@ -797,13 +842,20 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 								BOOL has_rle = rle & 0x80;
 								rle &= ~0x80; //remove type-bit
 
-								BYTE rle_count = rle + 1;
+								BYTE packet_count = rle + 1;
+								
+								//packet_count might be corrupt, test if we are not about to write beyond the last image bit
+								if((bits+x) + packet_count*3 > dib_end) {
+									FreeImage_OutputMessageProc(s_format_id, FI_MSG_ERROR_CORRUPTED);
+									cacheIO_free(&cache);
+									return (FIBITMAP *)dib;
+								}
 
 								if (has_rle) {
 
 									FILE_BGR *val = (FILE_BGR*)cacheIO_getBytes(&cache, sizeof(FILE_BGR));
 
-									for (int ix = 0; ix < rle_count; ix++) {
+									for (int ix = 0; ix < packet_count; ix++) {
 										bits[x + FI_RGBA_BLUE]	= val->b;
 										bits[x + FI_RGBA_GREEN] = val->g;
 										bits[x + FI_RGBA_RED]	= val->r;
@@ -820,10 +872,13 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 												bits = Internal_GetScanLine(dib, y, flipvert);
 											}
 										}
-									}//<rle_count
-								} else { //<!has_rle
+									}//<packet_count
 
-									for (int ix = 0; ix < rle_count; ix++) {
+								} else {
+
+								  //no rle
+
+									for (int ix = 0; ix < packet_count; ix++) {
 										FILE_BGR *val = (FILE_BGR*)cacheIO_getBytes(&cache, sizeof(FILE_BGR));
 
 										bits[x + FI_RGBA_BLUE]	= val->b;
@@ -843,7 +898,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 											}
 										}
 
-									}//< rle_count
+									}//< packet_count
+
 								}//< has_rle
 							}//< while
 
@@ -861,12 +917,10 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 				case 32 :
 				{
-					int pixel_bits;
+					int pixel_bits = 32;
 
 					if (TARGA_LOAD_RGB888 & flags) {
 						pixel_bits = 24;
-					} else {
-						pixel_bits = 32;
 					}
 
 					const unsigned pixel_size = unsigned (pixel_bits) / 8;
@@ -909,7 +963,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 								bits[FI_RGBA_GREEN] = bgra->g;
 								bits[FI_RGBA_RED]	= bgra->r;
 
-								if ((TARGA_LOAD_RGB888 & flags) != TARGA_LOAD_RGB888) {
+								if (pixel_size > 3) {
 									bits[FI_RGBA_ALPHA] = bgra->a;
 								}
 
@@ -923,8 +977,12 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					}
 					case TGA_RLERGB://(32 bit)
 					{
+
 						BYTE rle;
 						BYTE *bits;
+
+						// this is used to guard against writing beyond the end of the image (on corrupted rle block)
+						const BYTE* dib_end = FreeImage_GetBits(dib) + (FreeImage_GetPitch(dib)*FreeImage_GetHeight(dib)) + 1;//< one-past-last - to compare using '<' insted of '<='
 
 						// Compute the *rough* size of a line...
 						long pixels_offset = io->tell_proc(handle);
@@ -948,22 +1006,31 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 							BOOL has_rle = rle & 0x80;
 							rle &= ~0x80; // remove type-bit
 
-							BYTE rle_count = rle + 1;
+							BYTE packet_count = rle + 1;
+
+							//packet_count might be corrupt, test if we are not about to write beyond the last image bit
+							if((bits+x) + packet_count*pixel_size > dib_end) {
+								FreeImage_OutputMessageProc(s_format_id, FI_MSG_ERROR_CORRUPTED);
+								cacheIO_free(&cache);
+								return (FIBITMAP *)dib;
+							}
 
 							if (has_rle) {
 
-								FILE_BGRA *val = (FILE_BGRA*)cacheIO_getBytes(&cache, sizeof(FILE_BGRA));
+                // read a pixel value from file...
+								FILE_BGRA *val = (FILE_BGRA*)cacheIO_getBytes(&cache, pixel_size);
 
-								for (int ix = 0; ix < rle_count; ix++) {
+                //...and fill packet_count pixels with it
+								for (int ix = 0; ix < packet_count; ix++) {
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
 									*(reinterpret_cast<unsigned*>(bits+x)) = *(reinterpret_cast<unsigned*> (val));
-#else // NOTE This is faster then doing reinterpret_cast + INPLACESWAP for RGB!
+#else // NOTE This is faster then doing reinterpret_cast to int + INPLACESWAP for RGB!
 									bits[x + FI_RGBA_BLUE]	= val->b;
 									bits[x + FI_RGBA_GREEN] = val->g;
 									bits[x + FI_RGBA_RED]	= val->r;
 									bits[x + FI_RGBA_ALPHA]	= val->a;
 #endif
-									x += 4;
+									x += pixel_size;
 
 									if(x >= line) {
 										x = 0;
@@ -976,10 +1043,14 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 										}
 									}
 								}
-							} else {//<!has_rle
+							} else {
 
-								for (int ix = 0; ix < rle_count; ix++) {
-									FILE_BGRA *val = (FILE_BGRA*)cacheIO_getBytes(&cache, sizeof(FILE_BGRA));
+							  // no rle commpresion
+
+                // copy packet_count pixels from file to dib
+								for (int ix = 0; ix < packet_count; ix++) {
+
+									FILE_BGRA *val = (FILE_BGRA*)cacheIO_getBytes(&cache, pixel_size);
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
 									*(reinterpret_cast<unsigned*>(bits+x)) = *(reinterpret_cast<unsigned*> (val));
 #else
@@ -988,12 +1059,12 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 									bits[x + FI_RGBA_RED]	= val->r;
 									bits[x + FI_RGBA_ALPHA]	= val->a;
 #endif
-									x += 4;
-									
+									x += pixel_size;
+
 									if(x >= line){
 										x = 0;
 										y++;
-										
+
 										if (fliphoriz) {
 											bits = Internal_GetScanLine(dib, header.is_height - y - 1, flipvert);
 										} else {
@@ -1001,7 +1072,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 										}
 									}
 
-								}//< rle_count
+								}//< packet_count
+
 							}//< has_rle
 						}//< while y
 
