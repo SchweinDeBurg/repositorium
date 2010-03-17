@@ -68,7 +68,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 } /* extern "C" */
 #endif
 
-#endif /* _MSC_VER && UNDER_CE */
+#endif /* _MSC_VER && !UNDER_CE */
 
 #endif /* OPENJPEG_LIB_BUILD */
 
