@@ -16,8 +16,6 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1400) && !defined(UNDER_CE)
 /* VC++ 8.0 or greater */
 
-#pragma once
-
 #define _STL_NOFORCE_MANIFEST
 #define _CRT_NOFORCE_MANIFEST
 #define _AFX_NOFORCE_MANIFEST
@@ -41,7 +39,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 } /* extern "C" */
 #endif
 
-#endif /* _MSC_VER && UNDER_CE */
+#endif /* _MSC_VER && !UNDER_CE */
 
 #endif /* LIBTIFF_LIB_BUILD */
 
