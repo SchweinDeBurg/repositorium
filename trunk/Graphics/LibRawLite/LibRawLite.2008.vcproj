@@ -412,6 +412,14 @@
 			RelativePath=".\copyright.txt"
 			>
 		</File>
+		<File
+			RelativePath=".\license.CDDL.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\license.LGPL.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
