@@ -31,6 +31,10 @@
 
 #include "opj_includes.h"
 
+#ifdef __SSE__
+#include <xmmintrin.h>
+#endif
+
 /* <summary> */
 /* This table contains the norms of the basis function of the reversible MCT. */
 /* </summary> */
