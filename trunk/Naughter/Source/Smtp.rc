@@ -89,6 +89,8 @@ BEGIN
                             "A graceful disconnect had occurred, Last Response: %1"
     IDS_PJNSMTP_FAIL_QP_ENCODE "Failed to QP encode data"
     IDS_PJNSMTP_FAIL_Q_ENCODE "Failed to Q encode data"
+    IDS_PJNSMTP_UNEXPECTED_STARTTLS_RESPONSE
+                            "Unexpected STARTTLS response, Last Response: %1"
 END
 
 #endif    // English (U.S.) resources

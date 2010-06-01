@@ -40,3 +40,4 @@
 #define IDS_PJNSMTP_GRACEFUL_DISCONNECT                        0x8024
 #define IDS_PJNSMTP_FAIL_QP_ENCODE                             0x8025
 #define IDS_PJNSMTP_FAIL_Q_ENCODE                              0x8026
+#define IDS_PJNSMTP_UNEXPECTED_STARTTLS_RESPONSE               0x8027

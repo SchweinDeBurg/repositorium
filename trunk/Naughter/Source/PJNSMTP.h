@@ -3,7 +3,7 @@ Module : PJNSMTP.H
 Purpose: Defines the interface for a MFC class encapsulation of the SMTP protocol
 Created: PJN / 22-05-1998
 
-Copyright (c) 1998 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -407,13 +407,20 @@ public:
     ptHTTP = 3
   };
 
+  enum ConnectionType
+  {
+    PlainText,
+    SSL_TLS,
+    STARTTLS
+  };
+
 //Constructors / Destructors
   CPJNSMTPConnection();
   virtual ~CPJNSMTPConnection();
 
 //Methods
 #ifndef CPJNSMTP_NOSSL
-  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25, BOOL bSSL = FALSE);
+  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25, ConnectionType connectionType = PlainText);
 #else
   void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25);
 #endif
@@ -479,6 +486,9 @@ protected:
 #endif
 
 //Methods
+#ifndef CPJNSMTP_NOSSL
+  virtual void DoSTARTTLS(LPCTSTR pszLocalName);
+#endif
 	virtual void AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword);
   virtual void ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername, LPCTSTR pszPassword, AuthenticationMethod am);
   virtual void ConnectSMTP(LPCTSTR pszLocalName);
@@ -519,7 +529,7 @@ protected:
   CSSLContext                 m_SSLCtx;                   //SSL Context
   CSSLSocket                  m_SSL;                      //SSL socket wrapper
 #endif
-  BOOL                        m_bSSL;                     //Are we connecting using SSL?
+  ConnectionType              m_ConnectionType;           //What type of connection are we using
   CWSocket                    m_Socket;                   //The socket connection to the SMTP server (if not using SSL)
   BOOL                        m_bConnected;               //Are we currently connected to the server 
   CString                     m_sLastCommandResponse;     //The full last response the server sent us  

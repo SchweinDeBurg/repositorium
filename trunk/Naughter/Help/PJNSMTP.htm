@@ -2,8 +2,14 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>CPJNSMTPConnection v2.84</title>
+<title>CPJNSMTPConnection v2.86</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
+
+<style type="text/css">
+.style1 {
+	margin-left: 40px;
+}
+</style>
 
 </head>
 
@@ -11,7 +17,7 @@
 
 <h2 align="left">
 <img src="PJNSMTP.gif" width="39" height="38" alt="PJNSMTP.gif (295 bytes)" /><strong>CPJNSMTPConnection 
-v2.84</strong></h2>
+v2.86</strong></h2>
 
 <p>Welcome to <strong>CPJNSMTPConnection</strong>, a collection of MFC classes to
 support the SMTP protocol. SMTP for those not familiar with all the internet protocols is
@@ -103,6 +109,8 @@ Protocol) which obsoletes the original SMTP RFC, you should read
 	http://www.activexperts.com/support/activemail/auth/</a> includes a good 
 	description of the AUTH LOGIN, AUTH PLAIN and AUTH CRAM-MD5 authentication 
 	schemes which is implemented by CPJNSMTPConnection.</li>
+	<li><a href="http://www.ietf.org/rfc/rfc3207.txt">RFC 3207</a> define how 
+	STARTTLS operates.</li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -142,11 +150,14 @@ Protocol) which obsoletes the original SMTP RFC, you should read
 	appropriate protocol is used.</li>
 	<li>As of v2.65, the classes include comprehensive support for DSN's 
 	(Delivery Status Notifications).</li>
-</ul>
-<ul>
 	<li>As of v2.70, the classes are only supported on VC 2005 or later.</li>
 	<li>As of v2.84, the classes include support for MDN's (Message Disposition 
 	Notifications)</li>
+	<li>As of v2.86, the classes support STARTTLS. This SMTP command allows a 
+	standard SMTP plain text connection to be made and assuming the SMTP server 
+	supports STARTTLS, the connection can be upgraded to a encrypted connection 
+	mid stream. Often SMTP servers only offer STARTTLS via port 25 instead of 
+	SSL / TLS on a different port.</li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -173,7 +184,7 @@ Protocol) which obsoletes the original SMTP RFC, you should read
 <h2><a name="Usage"></a><strong>Usage</strong> </h2>
 <ul>
 	<li>The classes are designed for VC 2005 or later. They will not compile on 
-	earlier releases of VC.</li>
+	earlier releases of VC, so please no more emails about Visual C 6 support!</li>
 	<li>To use the class in your code simply include PJNSMTP.cpp/h, SocMFC.cpp/h and PJNMD5.h in your project and #include 
 	PJNSMTP.h in which ever of your modules needs to make calls to the classes. 
 	You also need to copy all the IDS_PJNSMTP_* strings from the samples apps 
@@ -222,17 +233,15 @@ Protocol) which obsoletes the original SMTP RFC, you should read
 	PJNSMTPAppDlg.cpp module in the sample application which comes with the code.&nbsp;For example to send a message about this class, 
 	the code would look something like this (ignoring error handling&lt;gg&gt;):</li>
 </ul>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPConnection smtp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.Connect(_T(&quot;mail.someisp.com&quot;));<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CPJNSMTPMessage m;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-m.To.Add(CSMTPAddress(_T(&quot;someaddress@somedestination.com&quot;)));<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_From = 
-CSMTPAddress(&quot;adeveloper@someisp.com&quot;);<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.m_sSubject = _T(&quot;A Fellow developer!&quot;);<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m.AddTextBody(_T(&quot;if you can read this 
-then the CPJNSMTPConnection code is working&quot;));<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; smtp.SendMessage(m);</p>
+<pre class="style1">CPJNSMTPConnection smtp;
+smtp.Connect(_T(&quot;mail.someisp.com&quot;));
+CPJNSMTPMessage m;
+CPJNSMTPAddress toAddress(_T(&quot;someaddress@somedestination.com&quot;));
+m.m_To.Add(toAddress);
+m.m_From = CPJNSMTPAddress(_T(&quot;adeveloper@someisp.com&quot;));
+m.m_sSubject = _T(&quot;A Fellow developer!&quot;);
+m.AddTextBody(_T(&quot;If you can read this then the CPJNSMTPConnection code is working&quot;));
+smtp.SendMessage(m);</pre>
 <ul>
 	<li>Please note that the NTLM authentication support in the class is 
 	provided by using the SSPI (Security Support Provider Interface) interfaces 
@@ -254,14 +263,15 @@ then the CPJNSMTPConnection code is working&quot;));<br />
 	<br />
 	The code to accomplish this would be:<br />
 	<br />
-	CPJNSMTPBodyPart part;<br />
-	.<br />
-	.<br />
-	.<br />
-	part.SetContentID(_T(&quot;&lt;IMAGE_1&gt;&quot;));<br />
-	.<br />
-	.<br />
-	.<br />
+	<pre><p class="style1">CPJNSMTPBodyPart part;
+.
+.
+.
+part.SetContentID(_T(&quot;&lt;IMAGE_1&gt;&quot;));
+.
+.
+.
+</p></pre>
 	This is not really a problem with the class but more of a gotcha on the 
 	minutiae of using MHTML email.</li>
 </ul>
@@ -1256,7 +1266,7 @@ then the CPJNSMTPConnection code is working&quot;));<br />
 	the message. Thanks to Dmitriy Maksimov for reporting this issue.</li>
 	<li>Updated the sample app's project settings to more modern default values.</li>
 	<li>Updated the sample exe to ship with OpenSSL v0.98k</li>
-	<li>&nbsp;Fixed a bug in CPJNSMTPConnection::SendBodyPart where it would 
+	<li>Fixed a bug in CPJNSMTPConnection::SendBodyPart where it would 
 	cause errors from OpenSSL when trying to send a body of 0 bytes in size. 
 	This can occur when MHTML based emails are sent and you are using a 
 	&quot;multipart/related&quot; body part. Thanks to &quot;atota&quot; for reporting this issue</li>
@@ -1267,6 +1277,28 @@ then the CPJNSMTPConnection code is working&quot;));<br />
 	Notifications) as specified in RFC 3798. Thanks to Ron Brunton for prompting 
 	this update.</li>
 	<li>Rewrote CPJNSMTPMessage::SaveToDisk method to use CAtlFile</li>
+</ul>
+<p><strong>V2.85 (17 December 2009</strong><b>)</b></p>
+<ul>
+	<li>The sample app is now linked against the latest OpenSSL v0.9.8l dlls</li>
+	<li>Updated the sample code in the documentation to better describe how to use 
+the various classes. Thanks to Dionisis Kofos for reporting this issue.</li>
+</ul>
+<p><strong>V2.86 (23 May 2010</strong><b>)</b></p>
+<ul>
+	<li>Updated copyright details</li>
+	<li>Updated sample app to compile cleanly on Visual Studio 2010</li>
+	<li>The sample app is now linked against the latest OpenSSL v1.0.0 dlls</li>
+	<li>Removed an unused &quot;sRet&quot; variable in CPJNSMTPConnection::AuthCramMD5. 
+Thanks to Alain Danteny for reporting this issue</li>
+	<li>Replaced all calls to memcpy with memcpy_s</li>
+	<li>The code now supports STARTTLS encryption as defined in RFC 3207</li>
+	<li>If the call to DnsQuery fails, the error value is now preserved using 
+SetLastError</li>
+	<li>AddTextBody now sets the mime type of the root body part 
+multipart/alternative. This is a more appropriate value to use which is better 
+supported by more email clients. Thanks to Thane Hubbell for reporting this 
+issue.</li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1283,7 +1315,7 @@ then the CPJNSMTPConnection code is working&quot;));<br />
 <p>PJ Naughter<br />
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br />
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br />
-13 November 2009</p>
+23 May 2010</p>
 
 </body>
 
