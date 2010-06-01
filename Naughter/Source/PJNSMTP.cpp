@@ -454,8 +454,20 @@ History: PJN / 15-06-1998 1. Fixed the case where a single dot occurs on its own
          PJN / 13-11-2009 1. Now includes comprehensive support for MDN's (Message Disposition Notifications) as specified in RFC 3798. Thanks to 
                           Ron Brunton for prompting this update.
                           2. Rewrote CPJNSMTPMessage::SaveToDisk method to use CAtlFile
+         PJN / 17-12-2009 1. The sample app is now linked against the latest OpenSSL v0.9.8l dlls
+                          2. Updated the sample code in the documentation to better describe how to use the various classes. Thanks to Dionisis Kofos for reporting
+                          this issue.
+         PJN / 23-05-2010 1. Updated copyright details
+                          2. Updated sample app to compile cleanly on Visual Studio 2010
+                          3. The sample app is now linked against the latest OpenSSL v1.0.0 dlls
+                          4. Removed an unused "sRet" variable in CPJNSMTPConnection::AuthCramMD5. THanks to Alain Danteny for reporting this issue.
+                          5. Replaced all calls to memcpy with memcpy_s
+                          6. The code now supports STARTTLS encryption as defined in RFC 3207.
+                          7. If the call to DnsQuery fails, the error value is now preserved using SetLastError
+                          8. AddTextBody now sets the mime type of the root body part multipart/alternative. This is a more appropriate value to use which is better
+                          supported by more email clients. Thanks to Thane Hubbell for reporting this issue.
                           
-Copyright (c) 1998 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -1410,7 +1422,7 @@ CStringA CPJNSMTPBodyPart::FoldSubjectHeader(const CString& sSubject, const CStr
 }
 
 
-CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.84")), 
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.86")), 
                                      m_bMime(FALSE), 
                                      m_Priority(NoPriority),
                                      m_DSNReturnType(HeadersOnly),
@@ -1852,10 +1864,10 @@ void CPJNSMTPMessage::AddTextBody(const CString& sBody)
       //Create a text body part
       CPJNSMTPBodyPart oldRoot(m_RootPart);
 
-      //Reset the root body part to be multipart/mixed
+      //Reset the root body part to be multipart/alternative
       m_RootPart.SetCharset(oldRoot.GetCharset());
       m_RootPart.SetText(_T("This is a multi-part message in MIME format"));
-      m_RootPart.SetContentType(_T("multipart/mixed"));
+      m_RootPart.SetContentType(_T("multipart/alternative"));
 
       //Just add the text/plain body part (directly to the root)
       CPJNSMTPBodyPart text;
@@ -1885,10 +1897,10 @@ void CPJNSMTPMessage::AddHTMLBody(const CString& sBody, const CString& sContentB
     //Remember some of the old root settings before we write over it
     CPJNSMTPBodyPart oldRoot = m_RootPart;
 
-    //Reset the root body part to be multipart/mixed
+    //Reset the root body part to be multipart/alternative
     m_RootPart.SetCharset(oldRoot.GetCharset());
     m_RootPart.SetText(_T("This is a multi-part message in MIME format"));
-    m_RootPart.SetContentType(_T("multipart/mixed"));
+    m_RootPart.SetContentType(_T("multipart/alternative"));
 
     //Just add the text/html body part (directly to the root)
     CPJNSMTPBodyPart html;
@@ -2034,7 +2046,7 @@ void CPJNSMTPMessage::WriteToDisk(ATL::CAtlFile& file, CPJNSMTPBodyPart* pBodyPa
 
 CPJNSMTPConnection::CPJNSMTPConnection() : m_bConnected(FALSE), 
                                            m_nLastCommandResponseCode(0), 
-                                           m_bSSL(FALSE)
+                                           m_ConnectionType(PlainText)
 {
 #ifdef _DEBUG
   m_dwTimeout = 90000; //default timeout of 90 seconds when debugging
@@ -2145,7 +2157,7 @@ void CPJNSMTPConnection::_CreateSocket()
 {
 	m_Socket.Create();
 #ifndef CPJNSMTP_NOSSL
-	if (m_bSSL) 
+	if (m_ConnectionType == SSL_TLS) 
   {
 		m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
 		if (!m_SSL.Create(m_SSLCtx, m_Socket))
@@ -2181,7 +2193,7 @@ CString CPJNSMTPConnection::GetOpenSSLError()
 void CPJNSMTPConnection::_ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout)
 {
 #ifndef CPJNSMTP_NOSSL
-	if (m_bSSL) 
+	if (m_ConnectionType == SSL_TLS)
   {
 		if(!m_SSL.ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout)) 
 			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_SOCKS4_VIASSL, FACILITY_ITF, GetOpenSSLError());
@@ -2194,7 +2206,7 @@ void CPJNSMTPConnection::_ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPo
 void CPJNSMTPConnection::_ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort , LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP)
 {
 #ifndef CPJNSMTP_NOSSL
-	if (m_bSSL) 
+	if (m_ConnectionType == SSL_TLS)
   {
 		if (!m_SSL.ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP)) 
 			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_SOCKS5_VIASSL, FACILITY_ITF, GetOpenSSLError());
@@ -2208,7 +2220,7 @@ void CPJNSMTPConnection::_ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHos
                                               LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent)
 {
 #ifndef CPJNSMTP_NOSSL
-	if (m_bSSL) 
+	if (m_ConnectionType == SSL_TLS)
   {
 		if (!m_SSL.ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent))
 			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_HTTPPROXY_VIASSL, FACILITY_ITF, GetOpenSSLError());
@@ -2221,7 +2233,7 @@ void CPJNSMTPConnection::_ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHos
 void CPJNSMTPConnection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
 {
 #ifndef CPJNSMTP_NOSSL
-	if (m_bSSL) 
+	if (m_SSL.operator SSL*())
   {
 		if (!m_SSL.Connect(lpszHostAddress, nHostPort)) 
 			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_VIASSL, FACILITY_ITF, GetOpenSSLError());
@@ -2234,7 +2246,7 @@ void CPJNSMTPConnection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
 int CPJNSMTPConnection::_Send(const void* pBuffer, int nBuf)
 {
 #ifndef CPJNSMTP_NOSSL
-	if (m_bSSL) 
+	if (m_SSL.operator SSL*())
   {
 		int nSSLWrite = m_SSL.Send(pBuffer, nBuf);
     if (nSSLWrite < 1)
@@ -2249,7 +2261,7 @@ int CPJNSMTPConnection::_Send(const void* pBuffer, int nBuf)
 int CPJNSMTPConnection::_Receive(void *pBuffer, int nBuf)
 {
 #ifndef CPJNSMTP_NOSSL
-	if (m_bSSL) 
+	if (m_SSL.operator SSL*())
   {
 		int nSSLReceive = m_SSL.Receive(pBuffer, nBuf);
     if (nSSLReceive <= 0)
@@ -2268,7 +2280,7 @@ int CPJNSMTPConnection::_Receive(void *pBuffer, int nBuf)
 void CPJNSMTPConnection::_Close()
 {
 #ifndef CPJNSMTP_NOSSL
-	if (m_bSSL)
+	if (m_SSL.operator SSL*())
 		m_SSL.Close();
 	else 
 #endif
@@ -2278,7 +2290,7 @@ void CPJNSMTPConnection::_Close()
 BOOL CPJNSMTPConnection::_IsReadible(DWORD dwTimeout)
 {
 #ifndef CPJNSMTP_NOSSL
-	if (m_bSSL) 
+	if (m_SSL.operator SSL*())
 		return m_SSL.IsReadible(dwTimeout);
 	else 
 #endif
@@ -2286,7 +2298,7 @@ BOOL CPJNSMTPConnection::_IsReadible(DWORD dwTimeout)
 }
 
 #ifndef CPJNSMTP_NOSSL
-void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort, BOOL bSSL)
+void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort, ConnectionType connectionType)
 #else
 void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort)
 #endif
@@ -2296,9 +2308,9 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
   ASSERT(!m_bConnected);
 
 #ifndef CPJNSMTP_NOSSL
-  m_bSSL = bSSL;
+  m_ConnectionType = connectionType;
 #else
-  m_bSSL = FALSE;
+  m_ConnectionType = PlainText;
 #endif
 
   //Create the socket
@@ -2396,6 +2408,10 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
     if (!ReadCommandResponse(220))
       ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_SMTP_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
+	  //Negotiate STARTTLS if necessary
+	  if (m_ConnectionType == STARTTLS)
+		  DoSTARTTLS(m_sHeloHostname);
+
 	  //Negotiate Extended SMTP connection
 	  if (am != AUTH_NONE)
 		  ConnectESMTP(m_sHeloHostname, pszUsername, pszPassword, am);
@@ -2442,6 +2458,61 @@ CPJNSMTPConnection::AuthenticationMethod CPJNSMTPConnection::ChooseAuthenticatio
 		
   return am;
 }
+
+//This function implmements the STARTTLS functionality
+#ifndef CPJNSMTP_NOSSL
+void CPJNSMTPConnection::DoSTARTTLS(LPCTSTR pszLocalName)
+{
+  //Send the EHLO command
+	CStringA sBuf;
+	sBuf.Format("EHLO %s\r\n", CStringA(pszLocalName).operator LPCSTR());
+  try
+  {
+    _Send(sBuf.operator LPCSTR(), sBuf.GetLength());
+  }
+  catch(CWSocketException* pEx)
+  {
+    DWORD dwError = pEx->m_nError;
+    pEx->Delete();
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
+  }
+  
+  //check the response to the EHLO command
+  if (!ReadCommandResponse(250))
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_EHLO_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+
+  //Verify that the SMTP server supports it
+  CString sResponse(GetLastCommandResponse());
+  if (sResponse.Find(_T("STARTTLS")) == -1)
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_EHLO_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+
+  //Lets issue the STARTTLS command
+	sBuf = _T("STARTTLS\r\n");
+  try
+  {
+    _Send(sBuf.operator LPCSTR(), sBuf.GetLength());
+  }
+  catch(CWSocketException* pEx)
+  {
+    DWORD dwError = pEx->m_nError;
+    pEx->Delete();
+    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
+  }
+
+  //Check the response
+  if (!ReadCommandResponse(220))
+    ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_STARTTLS_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
+
+  //Hook up the SSL socket at this point
+	m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
+	if (!m_SSL.Create(m_SSLCtx, m_Socket))
+    ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CREATE_SSL_SOCKET, FACILITY_ITF, GetOpenSSLError());
+
+  //Do the SSL connect
+	if (SSL_connect(m_SSL) != 1)
+		ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_VIASSL, FACILITY_ITF, GetOpenSSLError());
+}
+#endif
 
 //This function connects using one of the Extended SMTP methods i.e. EHLO
 void CPJNSMTPConnection::ConnectESMTP(LPCTSTR pszLocalName, LPCTSTR pszUsername, LPCTSTR pszPassword, AuthenticationMethod am)
@@ -3483,7 +3554,6 @@ void CPJNSMTPConnection::AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword)
     ThrowPJNSMTPException(GetLastError(), FACILITY_WIN32);
   }
   SecureEmptyString(sAsciiPassword);
-  CString sRet(hash.Format(FALSE)); //CRAM-MD5 requires a lowercase hash
 	
 	//make the CRAM-MD5 response
 	CString sCramDigest(pszUsername);
@@ -3606,7 +3676,7 @@ SECURITY_STATUS CPJNSMTPConnection::NTLMAuthPhase2(PBYTE pBuf, DWORD cbBuf, DWOR
   *pcbRead = encode.ResultSize();
   if (*pcbRead >= cbBuf)
     return SEC_E_INSUFFICIENT_MEMORY;
-  memcpy(pBuf, encode.Result(), *pcbRead);
+  memcpy_s(pBuf, cbBuf, encode.Result(), *pcbRead);
 
   return SEC_E_OK;
 }
@@ -3652,7 +3722,8 @@ BOOL CPJNSMTPConnection::MXLookup(LPCTSTR lpszHostDomain,	CStringArray& arrHosts
   {
     //Do the DNS MX lookup  
 	  PDNS_RECORD pRec = NULL;
-	  if (m_lpfnDnsQuery(lpszHostDomain, DNS_TYPE_MX, fOptions, aipServers, &pRec, NULL) == ERROR_SUCCESS)
+    DNS_STATUS status = m_lpfnDnsQuery(lpszHostDomain, DNS_TYPE_MX, fOptions, aipServers, &pRec, NULL);
+	  if (status == ERROR_SUCCESS)
 	  {
       bSuccess = TRUE;
 
@@ -3669,6 +3740,8 @@ BOOL CPJNSMTPConnection::MXLookup(LPCTSTR lpszHostDomain,	CStringArray& arrHosts
 		  }
 		  m_lpfnDnsRecordListFree(pRecFirst, DnsFreeRecordList);
 	  }
+    else
+      SetLastError(status);
   }
   else
   {

@@ -27,7 +27,7 @@ History: PJN / 05-09-2005 1. Function pointer to CompleteAuthToken is now constr
                           mail servers. Thanks to Wouter Demuynck for reporting this issue.
          PJN / 31-05-2008 1. Code now compiles cleanly using Code Analysis (/analyze)
 
-Copyright (c) 2005 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2005 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -178,9 +178,6 @@ SECURITY_STATUS CNTLMClientAuth::NTLMAuthenticate(LPCTSTR pszUserName, LPCTSTR p
 
 SECURITY_STATUS CNTLMClientAuth::DoNTLMAuthentication(LPCTSTR pszUserName, LPCTSTR pszPassword, LPCTSTR pszDomain)
 {
-  BOOL fDone = FALSE;
-  DWORD cbIn = 0;
-  
   //Allocate some heap space to contain the in and out buffers for SSPI
   ATL::CHeapPtr<BYTE> inBuf;
   if (!inBuf.Allocate(m_dwBufferSize))
@@ -192,8 +189,8 @@ SECURITY_STATUS CNTLMClientAuth::DoNTLMAuthentication(LPCTSTR pszUserName, LPCTS
   
   DWORD cbMaxMessage = m_dwBufferSize;
   DWORD cbOut = cbMaxMessage;
-
-  SECURITY_STATUS ss = GenClientContext(NULL, 0, outBuf.m_pData, &cbOut, &fDone, pszUserName, pszPassword, pszDomain);
+  BOOL bDone = FALSE;
+  SECURITY_STATUS ss = GenClientContext(NULL, 0, outBuf.m_pData, &cbOut, &bDone, pszUserName, pszPassword, pszDomain);
   if (!SEC_SUCCESS(ss))
     return ss;
 
@@ -201,7 +198,8 @@ SECURITY_STATUS CNTLMClientAuth::DoNTLMAuthentication(LPCTSTR pszUserName, LPCTS
   if (!SEC_SUCCESS(ss))
     return ss;
 
-  while (!fDone) 
+  DWORD cbIn = 0;
+  while (!bDone) 
   {
     ss = NTLMAuthPhase2(inBuf.m_pData, m_dwBufferSize, &cbIn);
     if (!SEC_SUCCESS(ss))
@@ -209,7 +207,7 @@ SECURITY_STATUS CNTLMClientAuth::DoNTLMAuthentication(LPCTSTR pszUserName, LPCTS
 
     cbOut = cbMaxMessage;
 
-    ss = GenClientContext(inBuf.m_pData, cbIn, outBuf.m_pData, &cbOut, &fDone, pszUserName, pszPassword, pszDomain);
+    ss = GenClientContext(inBuf.m_pData, cbIn, outBuf.m_pData, &cbOut, &bDone, pszUserName, pszPassword, pszDomain);
     if (!SEC_SUCCESS(ss))
       return ss;
 

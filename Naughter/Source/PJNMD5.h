@@ -8,7 +8,7 @@ History: PJN / 18-05-2005 1. Fixed a compiler warning when compiled using Visual
                           necessary since the CRAM-MD5 authentication mechanism requires a lowercase MD5 hash. Thanks to 
                           Jian Peng for reporting this issue.
 
-Copyright (c) 2005 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2005 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -69,15 +69,15 @@ public:
     {
       int nChar = (m_byHash[i] & 0xF0) >> 4;
       if (nChar <= 9)
-        pString[i*2] = (TCHAR) (nChar + _T('0'));
+        pString[i*2] = static_cast<TCHAR>(nChar + _T('0'));
       else
-        pString[i*2] = (TCHAR) (nChar - 10 + (bUppercase ? _T('A') : _T('a')));
+        pString[i*2] = static_cast<TCHAR>(nChar - 10 + (bUppercase ? _T('A') : _T('a')));
 
       nChar = m_byHash[i] & 0x0F;
       if (nChar <= 9)
-        pString[i*2 + 1] = (TCHAR) (nChar + _T('0'));
+        pString[i*2 + 1] = static_cast<TCHAR>(nChar + _T('0'));
       else
-        pString[i*2 + 1] = (TCHAR) (nChar - 10 + (bUppercase ? _T('A') : _T('a')));
+        pString[i*2 + 1] = static_cast<TCHAR>(nChar - 10 + (bUppercase ? _T('A') : _T('a')));
     }
     pString[i*2] = _T('\0');
     sRet.ReleaseBuffer();
@@ -173,8 +173,8 @@ public:
     memset(k_ipad, 0, 64);
     BYTE k_opad[64]; //KEY XORd with opad
     memset(k_opad, 0, 64);
-    memcpy(k_ipad, pbyLocalKey, dwLocalKeySize);
-    memcpy(k_opad, pbyLocalKey, dwLocalKeySize);
+    memcpy_s(k_ipad, sizeof(k_ipad), pbyLocalKey, dwLocalKeySize);
+    memcpy_s(k_opad, sizeof(k_opad), pbyLocalKey, dwLocalKeySize);
 
     //XOR key with ipad and opad values
     for (int i=0; i<64; i++) 
@@ -245,7 +245,7 @@ public:
 
 protected:
 //Member variables
-  HCRYPTPROV m_hProv; //If you get a compilation error on this line, then you need to download, install and configure the MS Platform SDK if you are compiling the code under Visual C++ 6
+  HCRYPTPROV m_hProv;
 };
 
 #endif //__PJNMD5_H__
