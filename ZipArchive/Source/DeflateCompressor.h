@@ -140,7 +140,7 @@ protected:
 
 private:			
 	COptions m_options;
-	zarch_z_stream m_stream;
+	z_stream m_stream;
 };
 
 } // namespace

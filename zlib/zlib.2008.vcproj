@@ -329,7 +329,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\gzio.c"
+				RelativePath=".\Source\gzclose.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\gzlib.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\gzread.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\gzwrite.c"
 				>
 			</File>
 			<File
@@ -372,6 +384,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\deflate.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\gzguts.h"
 				>
 			</File>
 			<File

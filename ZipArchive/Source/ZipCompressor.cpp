@@ -28,12 +28,12 @@ CZipCompressor* CZipCompressor::CreateCompressor(WORD uMethod, CZipStorage* pSto
 
 void CZipCompressor::UpdateFileCrc(const void *pBuffer, DWORD uSize)
 {
-	m_pFile->m_uCrc32 = zarch_crc32(m_pFile->m_uCrc32, (zarch_Bytef*)pBuffer, uSize);
+	m_pFile->m_uCrc32 = z_crc32(m_pFile->m_uCrc32, (z_Bytef*)pBuffer, uSize);
 }
 
 void CZipCompressor::UpdateCrc(const void *pBuffer, DWORD uSize)
 {
-	m_uCrc32 = zarch_crc32(m_uCrc32, (zarch_Bytef*)pBuffer, uSize);
+	m_uCrc32 = z_crc32(m_uCrc32, (z_Bytef*)pBuffer, uSize);
 }
 
 void CZipCompressor::UpdateOptions(const COptionsMap& optionsMap)
