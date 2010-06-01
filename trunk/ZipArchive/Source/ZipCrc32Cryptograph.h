@@ -85,7 +85,7 @@ public:
 	*/
 	static const unsigned long* GetCRCTable()
 	{
-			return zarch_get_crc_table();
+			return z_get_crc_table();
 	}
 private:
 
@@ -104,7 +104,7 @@ private:
 	void CryptUpdateKeys(char c);
 	DWORD CryptCRC32(DWORD l, char c)
 	{
-		const unsigned long* CRC_TABLE = zarch_get_crc_table();
+		const unsigned long* CRC_TABLE = z_get_crc_table();
 		return CRC_TABLE[(l ^ c) & 0xff] ^ (l >> 8);
 	}
 	void CryptEncode(char &c)

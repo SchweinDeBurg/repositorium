@@ -1,5 +1,5 @@
 /* zconf.h -- configuration of the zlib compression library
- * Copyright (C) 1995-2005 Jean-loup Gailly.
+ * Copyright (C) 1995-2010 Jean-loup Gailly.
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
@@ -61,90 +61,124 @@ __declspec(selectany) int _forceMFCManifestCUR;
 /*
  * If you *really* need a unique prefix for all types and library functions,
  * compile with -DZ_PREFIX. The "standard" zlib should be compiled without it.
+ * Even better than compiling with -DZ_PREFIX would be to use configure to set
+ * this permanently in zconf.h using "./configure --zprefix".
  */
-#ifdef Z_PREFIX
-//#  define deflateInit		zarch_deflateInit
-#  define deflateInit_		zarch_deflateInit_
-#  define deflate			zarch_deflate
-#  define deflateEnd		zarch_deflateEnd
-//#  define deflateInit2	zarch_deflateInit2
-#  define deflateInit2_		zarch_deflateInit2_
-#  define deflateSetDictionary zarch_deflateSetDictionary
-#  define deflateCopy		zarch_deflateCopy
-#  define deflateReset		zarch_deflateReset
-#  define deflateParams		zarch_deflateParams
-#  define deflateBound		zarch_deflateBound
-#  define deflatePrime      zarch_deflatePrime
-#  define deflateSetHeader	zarch_deflateSetHeader
-#  define deflateTune		zarch_deflateTune
-//#  define inflateInit		zarch_inflateInit
-//#  define inflateInit2	zarch_inflateInit2
-#  define inflateInit2_		zarch_inflateInit2_
-#  define inflateInit_		zarch_inflateInit_
-#  define inflate			zarch_inflate
-#  define inflateEnd		zarch_inflateEnd
-#  define inflateSetDictionary zarch_inflateSetDictionary
-#  define inflateSync		zarch_inflateSync
-#  define inflateSyncPoint zarch_inflateSyncPoint
-#  define inflateCopy		zarch_inflateCopy
-#  define inflateReset		zarch_inflateReset
-//#  define inflateBackInit	zarch_inflateBackInit
-#  define inflateBackInit_	zarch_inflateBackInit_
-#  define inflateBack       zarch_inflateBack
-#  define inflateBackEnd    zarch_inflateBackEnd
-#  define inflatePrime		zarch_inflatePrime
-#  define inflateGetHeader	zarch_inflateGetHeader
-#  define compress			zarch_compress
-#  define compress2			zarch_compress2
-#  define compressBound		zarch_compressBound
-#  define uncompress		zarch_uncompress
-#  define adler32			zarch_adler32
-#  define adler32_combine	zarch_adler32_combine
-#  define crc32_combine		zarch_crc32_combine
-#  define deflate_copyright zarch_deflate_copyright
-#  define inflate_copyright zarch_inflate_copyright
-#  define crc32				zarch_crc32
-#  define get_crc_table		zarch_get_crc_table
-#  define zError            zarch_zError
-#  define z_stream			zarch_z_stream
-#  define z_stream_s		zarch_z_stream_s
-#  define alloc_func        zarch_alloc_func
-#  define free_func         zarch_free_func
-#  define in_func           zarch_in_func
-#  define out_func          zarch_out_func
-#  define Byte				zarch_Byte
-#  define uInt				zarch_uInt
-#  define uLong				zarch_uLong
-#  define uLongLong			zarch_uLongLong
-#  define Bytef				zarch_Bytef
-#  define charf				zarch_charf
-#  define intf				zarch_intf
-#  define uIntf				zarch_uIntf
-#  define uLongf			zarch_uLongf
-#  define voidpf			zarch_voidpf
-#  define voidp				zarch_voidp
-#  define deflate_state		zarch_deflate_state
-#  define deflate_slow		zarch_deflate_slow
-#  define deflate_fast		zarch_deflate_fast
-#  define deflate_stored	zarch_deflate_stored
-#  define z_streamp			zarch_z_streamp
-#  define deflate_rle		zarch_deflate_rle
-#  define inflate_state		zarch_inflate_state
-#  define inflate_fast		zarch_inflate_fast
-#  define inflate_table		zarch_inflate_table
-#  define updatewindow		zarch_updatewindow
-//#  define inflate_mode	zarch_inflate_mode
-//#  define send_bits		zarch_send_bits
-#  define zlibVersion		zarch_zlibVersion
-#  define zlibCompileFlags	zarch_zlibCompileFlags
-#  define zError			zarch_zError
-#  define _tr_init			zarch_tr_init
-#  define _tr_tally			zarch_tr_tally
-#  define _tr_flush_block	zarch_tr_flush_block
-#  define _tr_align			zarch_tr_align
-#  define _tr_stored_block	zarch_tr_stored_block
-#  define _dist_code		zarch_dist_code
-#  define _length_code		zarch_length_code
+#ifdef Z_PREFIX     /* may be set to #if 1 by ./configure */
+
+/* all linked symbols */
+#  define _dist_code            z__dist_code
+#  define _length_code          z__length_code
+#  define _tr_align             z__tr_align
+#  define _tr_flush_block       z__tr_flush_block
+#  define _tr_init              z__tr_init
+#  define _tr_stored_block      z__tr_stored_block
+#  define _tr_tally             z__tr_tally
+#  define adler32               z_adler32
+#  define adler32_combine       z_adler32_combine
+#  define adler32_combine64     z_adler32_combine64
+#  define compress              z_compress
+#  define compress2             z_compress2
+#  define compressBound         z_compressBound
+#  define crc32                 z_crc32
+#  define crc32_combine         z_crc32_combine
+#  define crc32_combine64       z_crc32_combine64
+#  define deflate               z_deflate
+#  define deflateBound          z_deflateBound
+#  define deflateCopy           z_deflateCopy
+#  define deflateEnd            z_deflateEnd
+#  define deflateInit2_         z_deflateInit2_
+#  define deflateInit_          z_deflateInit_
+#  define deflateParams         z_deflateParams
+#  define deflatePrime          z_deflatePrime
+#  define deflateReset          z_deflateReset
+#  define deflateSetDictionary  z_deflateSetDictionary
+#  define deflateSetHeader      z_deflateSetHeader
+#  define deflateTune           z_deflateTune
+#  define deflate_copyright     z_deflate_copyright
+#  define get_crc_table         z_get_crc_table
+#  define gz_error              z_gz_error
+#  define gz_intmax             z_gz_intmax
+#  define gz_strwinerror        z_gz_strwinerror
+#  define gzbuffer              z_gzbuffer
+#  define gzclearerr            z_gzclearerr
+#  define gzclose               z_gzclose
+#  define gzclose_r             z_gzclose_r
+#  define gzclose_w             z_gzclose_w
+#  define gzdirect              z_gzdirect
+#  define gzdopen               z_gzdopen
+#  define gzeof                 z_gzeof
+#  define gzerror               z_gzerror
+#  define gzflush               z_gzflush
+#  define gzgetc                z_gzgetc
+#  define gzgets                z_gzgets
+#  define gzoffset              z_gzoffset
+#  define gzoffset64            z_gzoffset64
+#  define gzopen                z_gzopen
+#  define gzopen64              z_gzopen64
+#  define gzprintf              z_gzprintf
+#  define gzputc                z_gzputc
+#  define gzputs                z_gzputs
+#  define gzread                z_gzread
+#  define gzrewind              z_gzrewind
+#  define gzseek                z_gzseek
+#  define gzseek64              z_gzseek64
+#  define gzsetparams           z_gzsetparams
+#  define gztell                z_gztell
+#  define gztell64              z_gztell64
+#  define gzungetc              z_gzungetc
+#  define gzwrite               z_gzwrite
+#  define inflate               z_inflate
+#  define inflateBack           z_inflateBack
+#  define inflateBackEnd        z_inflateBackEnd
+#  define inflateBackInit_      z_inflateBackInit_
+#  define inflateCopy           z_inflateCopy
+#  define inflateEnd            z_inflateEnd
+#  define inflateGetHeader      z_inflateGetHeader
+#  define inflateInit2_         z_inflateInit2_
+#  define inflateInit_          z_inflateInit_
+#  define inflateMark           z_inflateMark
+#  define inflatePrime          z_inflatePrime
+#  define inflateReset          z_inflateReset
+#  define inflateReset2         z_inflateReset2
+#  define inflateSetDictionary  z_inflateSetDictionary
+#  define inflateSync           z_inflateSync
+#  define inflateSyncPoint      z_inflateSyncPoint
+#  define inflateUndermine      z_inflateUndermine
+#  define inflate_copyright     z_inflate_copyright
+#  define inflate_fast          z_inflate_fast
+#  define inflate_table         z_inflate_table
+#  define uncompress            z_uncompress
+#  define zError                z_zError
+#  define zcalloc               z_zcalloc
+#  define zcfree                z_zcfree
+#  define zlibCompileFlags      z_zlibCompileFlags
+#  define zlibVersion           z_zlibVersion
+
+/* all zlib typedefs in zlib.h and zconf.h */
+#  define Byte                  z_Byte
+#  define Bytef                 z_Bytef
+#  define alloc_func            z_alloc_func
+#  define charf                 z_charf
+#  define free_func             z_free_func
+#  define gzFile                z_gzFile
+#  define gz_header             z_gz_header
+#  define gz_headerp            z_gz_headerp
+#  define in_func               z_in_func
+#  define intf                  z_intf
+#  define out_func              z_out_func
+#  define uInt                  z_uInt
+#  define uIntf                 z_uIntf
+#  define uLong                 z_uLong
+#  define uLongf                z_uLongf
+#  define voidp                 z_voidp
+#  define voidpc                z_voidpc
+#  define voidpf                z_voidpf
+
+/* all zlib structs in zlib.h and zconf.h */
+#  define gz_header_s           z_gz_header_s
+#  define internal_state        z_internal_state
+
 #endif
 
 #if defined(__MSDOS__) && !defined(MSDOS)
@@ -158,7 +192,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #endif
 #if defined(_WIN32) || defined(_WIN32_WCE) || defined(__WIN32__)
 #  ifndef WIN32
-#  define WIN32
+#    define WIN32
 #  endif
 #endif
 #if (defined(MSDOS) || defined(OS2) || defined(WINDOWS)) && !defined(WIN32)
@@ -216,11 +250,6 @@ __declspec(selectany) int _forceMFCManifestCUR;
 /* Some Mac compilers merge all .h files incorrectly: */
 #if defined(__MWERKS__)||defined(applec)||defined(THINK_C)||defined(__SC__)
 #  define NO_DUMMY_DECL
-#endif
-
-/* Windows CE is not have errno.h file: */
-#if defined(UNDER_CE) && !defined(NO_ERRNO_H)
-#  define NO_ERRNO_H
 #endif
 
 /* Maximum value for memLevel in deflateInit2 */
@@ -383,49 +412,75 @@ typedef uLong FAR uLongf;
    typedef Byte       *voidp;
 #endif
 
-#if 0           /* HAVE_UNISTD_H -- this line is updated by ./configure */
-#  include <sys/types.h> /* for off_t */
-#  include <unistd.h>    /* for SEEK_* and off_t */
-#  ifdef VMS
-#    include <unixio.h>   /* for off_t */
-#  endif
-#  define z_off_t  off_t
+#ifdef HAVE_UNISTD_H    /* may be set to #if 1 by ./configure */
+#  define Z_HAVE_UNISTD_H
 #endif
+
+#if !defined(UNDER_CE)
+#ifdef STDC
+#  include <sys/types.h>    /* for off_t */
+#endif
+#endif   /* UNDER_CE */
+
+/* a little trick to accommodate both "#define _LARGEFILE64_SOURCE" and
+ * "#define _LARGEFILE64_SOURCE 1" as requesting 64-bit operations, (even
+ * though the former does not conform to the LFS document), but considering
+ * both "#undef _LARGEFILE64_SOURCE" and "#define _LARGEFILE64_SOURCE 0" as
+ * equivalently requesting no 64-bit operations
+ */
+#if -_LARGEFILE64_SOURCE - -1 == 1
+#  undef _LARGEFILE64_SOURCE
+#endif
+
+#if defined(Z_HAVE_UNISTD_H) || defined(_LARGEFILE64_SOURCE)
+#  include <unistd.h>       /* for SEEK_* and off_t */
+#  ifdef VMS
+#    include <unixio.h>     /* for off_t */
+#  endif
+#  ifndef z_off_t
+#    define z_off_t off_t
+#  endif
+#endif
+
 #ifndef SEEK_SET
 #  define SEEK_SET        0       /* Seek from beginning of file.  */
 #  define SEEK_CUR        1       /* Seek from current position.  */
 #  define SEEK_END        2       /* Set file pointer to EOF plus "offset" */
 #endif
+
 #ifndef z_off_t
-#  define  z_off_t long
+#  define z_off_t long
+#endif
+
+#if defined(_LARGEFILE64_SOURCE) && _LFS64_LARGEFILE-0
+#  define z_off64_t off64_t
+#else
+#  define z_off64_t z_off_t
 #endif
 
 #if defined(__OS400__)
-#define NO_vsnprintf
+#  define NO_vsnprintf
 #endif
 
 #if defined(__MVS__)
 #  define NO_vsnprintf
-#  ifdef FAR
-#    undef FAR
-#  endif
 #endif
 
 /* MVS linker does not support external names larger than 8 bytes */
 #if defined(__MVS__)
-#   pragma map(deflateInit_,"DEIN")
-#   pragma map(deflateInit2_,"DEIN2")
-#   pragma map(deflateEnd,"DEEND")
-#   pragma map(deflateBound,"DEBND")
-#   pragma map(inflateInit_,"ININ")
-#   pragma map(inflateInit2_,"ININ2")
-#   pragma map(inflateEnd,"INEND")
-#   pragma map(inflateSync,"INSY")
-#   pragma map(inflateSetDictionary,"INSEDI")
-#   pragma map(compressBound,"CMBND")
-#   pragma map(inflate_table,"INTABL")
-#   pragma map(inflate_fast,"INFA")
-#   pragma map(inflate_copyright,"INCOPY")
+  #pragma map(deflateInit_,"DEIN")
+  #pragma map(deflateInit2_,"DEIN2")
+  #pragma map(deflateEnd,"DEEND")
+  #pragma map(deflateBound,"DEBND")
+  #pragma map(inflateInit_,"ININ")
+  #pragma map(inflateInit2_,"ININ2")
+  #pragma map(inflateEnd,"INEND")
+  #pragma map(inflateSync,"INSY")
+  #pragma map(inflateSetDictionary,"INSEDI")
+  #pragma map(compressBound,"CMBND")
+  #pragma map(inflate_table,"INTABL")
+  #pragma map(inflate_fast,"INFA")
+  #pragma map(inflate_copyright,"INCOPY")
 #endif
 
 #if defined(UNDER_CE)
