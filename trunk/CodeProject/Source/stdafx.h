@@ -55,6 +55,7 @@
 #include <afxdlgs.h>
 #include <afxext.h>
 #include <afxadv.h>
+#include <afxdtctl.h>
 #include <afxconv.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,6 +78,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <string>
 #if defined(_CPPLIB_VER) && defined(_DEBUG)
 #pragma warning(default: 4702)
 #endif	// _CPPLIB_VER && _DEBUG
