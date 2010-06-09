@@ -1534,7 +1534,7 @@
 		</Filter>
 		<Filter
 			Name="Help Files"
-			Filter="chm;HxS"
+			Filter="chm;HxS;htm"
 			>
 			<File
 				RelativePath=".\Help\CFileSpec.chm"
@@ -1542,6 +1542,19 @@
 			</File>
 			<File
 				RelativePath=".\Help\CFolderDialog.chm"
+				>
+			</File>
+			<File
+				RelativePath=".\Help\CGridListCtrlEx.chm"
+				>
+			</File>
+			<File
+				RelativePath=".\Help\CGridListCtrlEx.HxS"
+				>
+			</File>
+			<File
+				RelativePath=".\Help\CGridListCtrlExArticle.htm"
+				DeploymentContent="true"
 				>
 			</File>
 			<File
@@ -1903,6 +1916,111 @@
 			</File>
 			<File
 				RelativePath=".\Source\textfile.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Grid List Control"
+			Filter="h;cpp"
+			>
+			<File
+				RelativePath=".\Source\CGridColumnManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnManagerProfile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnManagerProfile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTrait.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTraitCombo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTraitCombo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTraitDateTime.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTraitDateTime.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTraitEdit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTraitEdit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTraitImage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTraitImage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTraitText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTraitText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridColumnTraitVisitor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridListCtrlEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridListCtrlEx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridListCtrlGroups.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridListCtrlGroups.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridRowTrait.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridRowTraitText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridRowTraitText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridRowTraitVisitor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridRowTraitXP.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CGridRowTraitXP.h"
 				>
 			</File>
 		</Filter>
