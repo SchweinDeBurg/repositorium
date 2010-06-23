@@ -4,9 +4,12 @@
 // Author:  Rolf Kristensen	
 // Source:  http://www.codeproject.com/KB/list/CGridListCtrlEx.aspx
 // License: Free to use for all (New BSD License)
-// Version: 1.7
+// Version: 1.8
 //
 // Change History:
+//	1.8 - Added checkbox support for all column editor types (See demo)
+//		  Added checkbox toggle for all selected rows
+//		  Added min and max width for columns
 //	1.7 - Added CGridColumnTraitImage, that provides checkbox editing
 //		  Renamed OnTraitCustomDraw() to OnCustomDrawCell()
 //		  Renamed OnTraitEditBegin() to OnEditBegin()
@@ -112,6 +115,7 @@ public:
 	void CellHitTest(const CPoint& pt, int& nRow, int& nCol) const;
 	BOOL GetCellRect(int nRow, int nCol, UINT nCode, CRect& rect);
 	inline int GetFocusCell() const { return m_FocusCell; }
+	virtual void SetFocusCell(int nCol, bool bRedraw = false);
 	virtual CWnd* EditCell(int nRow, int nCol, CPoint pt = CPoint(-1,-1));
 	bool IsCellEditorOpen() const;
 	bool IsCellCallback(int nRow, int nCol) const;
@@ -151,8 +155,7 @@ protected:
 
 	// Maintaining cell/subitem focus
 	int m_FocusCell;			//!< Column currently having focus (-1 means entire row)
-	void MoveFocusCell(bool bMoveRight);
-	void UpdateFocusCell(int nCol);
+	virtual void MoveFocusCell(bool bMoveRight);
 
 	// Maintaining Keyboard search
 	CString m_LastSearchString;	//!< Last search criteria for keyboard search
@@ -196,7 +199,7 @@ protected:
 	virtual void OnCustomDrawCell(int nRow, int nCol, NMLVCUSTOMDRAW* pLVCD, LRESULT* pResult);
 
 	// Cell editing handlers
-	virtual bool OnClickEditStart(int nRow, int nCol, CPoint pt);
+	virtual int OnClickEditStart(int nRow, int nCol, CPoint pt, bool bDblClick);
 	virtual CWnd* OnEditBegin(int nRow, int nCol, CPoint pt);
 	virtual bool OnEditComplete(int nRow, int nCol, CWnd* pEditor, LV_DISPINFO* pLVDI);
 
@@ -230,12 +233,14 @@ protected:
 	virtual afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	virtual afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	virtual afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+	virtual afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	virtual afx_msg void OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
 	virtual afx_msg LRESULT OnSetColumnWidth(WPARAM wParam, LPARAM lParam);
 	virtual afx_msg BOOL OnHeaderDividerDblClick(UINT, NMHDR* pNMHDR, LRESULT* pResult);
 	virtual afx_msg BOOL OnHeaderBeginResize(UINT id, NMHDR* pNmhdr, LRESULT* pResult);
 	virtual afx_msg BOOL OnHeaderBeginDrag(UINT, NMHDR* pNMHDR, LRESULT* pResult);
 	virtual afx_msg BOOL OnHeaderEndResize(UINT, NMHDR* pNMHDR, LRESULT* pResult);
+	virtual afx_msg BOOL OnHeaderItemChanging(UINT, NMHDR* pNMHDR, LRESULT* pResult);
 	virtual afx_msg BOOL OnHeaderEndDrag(UINT id, NMHDR* pNmhdr, LRESULT* pResult);
 	virtual afx_msg BOOL OnHeaderClick(NMHDR* pNMHDR, LRESULT* pResult);
 	virtual afx_msg BOOL OnToolNeedText(UINT id, NMHDR* pNMHDR, LRESULT* pResult);

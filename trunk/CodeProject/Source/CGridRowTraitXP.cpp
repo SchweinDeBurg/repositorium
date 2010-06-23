@@ -80,7 +80,7 @@ void CGridRowTraitXP::OnCustomDraw(CGridListCtrlEx& owner, NMLVCUSTOMDRAW* pLVCD
 				if (!(owner.GetExtendedStyle() & LVS_EX_FULLROWSELECT))
 					break;	// No drawing of selection color without full-row-select
 
-				if (owner.GetFocusRow()==nRow && owner.GetFocusCell()==nCol)
+				if (m_InvertCellSelection && owner.GetFocusRow()==nRow && owner.GetFocusCell()==nCol)
 				{
 					// No drawing of selection color for focus cell
 					if (pLVCD->clrTextBk > RGB(255,255,255))
@@ -118,7 +118,14 @@ void CGridRowTraitXP::OnCustomDraw(CGridListCtrlEx& owner, NMLVCUSTOMDRAW* pLVCD
 			CRect rcIcon, rcCell;
 			VERIFY( owner.GetCellRect(nRow, nCol, LVIR_ICON, rcIcon) );
 			VERIFY( owner.GetCellRect(nRow, nCol, LVIR_BOUNDS, rcCell) );
+			// When the label column is placed first it has a left-margin 
+			if (nCol==0 && nCol==owner.GetFirstVisibleColumn())
+			{
+				int cxborder = ::GetSystemMetrics(SM_CXBORDER);
+				rcCell.left += cxborder*2;
+			}
 
+			// Remove white margin between cell-image and cell-text
 			rcCell.right = rcIcon.right + 2;
 			CBrush brush(backColor);
 			pDC->FillRect(&rcCell, &brush);
@@ -127,9 +134,25 @@ void CGridRowTraitXP::OnCustomDraw(CGridListCtrlEx& owner, NMLVCUSTOMDRAW* pLVCD
 			COLORREF oldBkColor = pImageList->SetBkColor(backColor);
 			pImageList->Draw (	pDC,  
 								nImage,  
-								rcIcon.TopLeft(),  
+								rcIcon.TopLeft(),
 								ILD_NORMAL );
 			pImageList->SetBkColor(oldBkColor);
+
+			if (nCol==0 && owner.GetExtendedStyle() & LVS_EX_CHECKBOXES)
+			{
+				CImageList* pImageList = owner.GetImageList(LVSIL_STATE);
+				if (pImageList==NULL)
+					break;
+
+				int checkState = owner.GetCheck(nRow);
+				COLORREF oldBkColor = pImageList->SetBkColor(backColor);
+				pImageList->Draw (	pDC,  
+									checkState,  
+									rcCell.TopLeft(),
+									ILD_NORMAL );
+				pImageList->SetBkColor(oldBkColor);
+			}
+
 		} break;
 	}
 
