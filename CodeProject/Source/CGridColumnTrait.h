@@ -43,7 +43,8 @@ public:
 	//! @param nRow The index of the row
 	//! @param nCol The index of the column
 	//! @param pt The position clicked, in client coordinates.
-	virtual bool OnClickEditStart(CGridListCtrlEx& owner, int nRow, int nCol, CPoint pt) { return false; }
+	//! @return How should the cell editor be started (0 = No editor, 1 = Start Editor, 2 = Start Editor and block click-event)
+	virtual int OnClickEditStart(CGridListCtrlEx& owner, int nRow, int nCol, CPoint pt, bool bDblClick) { return 0; }
 
 	//! Override OnEditBegin() to provide your own special cell-edit control.
 	//!   - The edit control must inherit from CWnd
@@ -67,6 +68,14 @@ public:
 	//! @param bAscending Perform sorting in ascending or descending order
 	//! @return Is left value less than right value (-1) or equal (0) or larger (1)
 	virtual int OnSortRows(LPCTSTR pszLeftValue, LPCTSTR pszRightValue, bool bAscending) { return 0; }
+
+	//! Override OnSortRows() to provide your own special row sorting
+	//!
+	//! @param nLeftImageIdx Left image index
+	//! @param nRightImageIdx Right image index
+	//! @param bAscending Perform sorting in ascending or descending order
+	//! @return Is left value less than right value (-1) or equal (0) or larger (1)
+	virtual int OnSortRows(int nLeftImageIdx, int nRightImageIdx, bool bAscending) { return 0; }
 
 	//! Override Accept() and update CGridColumnTraitVisitor for new column-trait classes.
 	//!   - Will enable the use of the visitor-pattern ex. for serialization of column-traits
@@ -95,6 +104,8 @@ public:
 			,m_EditFocusFirst(true)
 			,m_Resizable(true)
 			,m_MetaFlags(0)
+			,m_MinWidth(-1)
+			,m_MaxWidth(-1)
 		{}
 		bool m_Visible;		//!< Column is visible or not
 		int  m_OrgWidth;	//!< Width it had before being hidden
@@ -105,6 +116,8 @@ public:
 		bool m_Editable;	//!< Cells in the column can be edited
 		bool m_EditFocusFirst;//!< Cells needs focus before edit mode can start
 		bool m_Resizable;	//!< Column width is resizable
+		int  m_MinWidth;	//!< Column width has a min size
+		int  m_MaxWidth;	//!< Column width has a max size
 
 		//! Meta-Flags (and data) can be used to store extra properties for a column
 		//! when deriving from CGridListCtrlEx.

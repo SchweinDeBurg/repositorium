@@ -9,7 +9,16 @@
 #include "CGridColumnManager.h"
 
 // WIN32 defines for group-support is only available from 2003 PSDK
-#if (_WIN32_WINNT >= 0x0501) && defined(_UNICODE)
+#if _WIN32_WINNT >= 0x0501
+
+// If using VS2008 then the MFC libary will complain that group mode is only available for Unicode builds
+//	- By default CGridListCtrlGroups will be disabled in non-Unicode mode
+//  - Define CGRIDLISTCTRLEX_GROUPMODE in stdafx.h to force group mode in non-unicode builds
+#if _MSC_VER < 1500 || defined UNICODE || defined CGRIDLISTCTRLEX_GROUPMODE
+
+#if _MSC_VER >= 1500 && defined CGRIDLISTCTRLEX_GROUPMODE
+#pragma warning(disable:4996)
+#endif
 
 BEGIN_MESSAGE_MAP(CGridListCtrlGroups, CGridListCtrlEx)
 #if _WIN32_WINNT >= 0x0600
@@ -1185,5 +1194,7 @@ AFX_INLINE BOOL CGridListCtrlGroups::IsGroupViewEnabled() const
 	return ListView_IsGroupViewEnabled(m_hWnd);
 }
 #endif // _MSC_VER < 1300
+
+#endif // _MSC_VER < 1500 || defined UNICODE || defined CGRIDLISTCTRLEX_GROUPMODE
 
 #endif // _WIN32_WINNT >= 0x0501
