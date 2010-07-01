@@ -33,12 +33,21 @@
 #include "config.h"
 #endif
 
+#if defined(UNDER_CE)
+#pragma warning(push, 3)
+#include <altcecrt.h>
+#include <winbase.h>
+#pragma warning(pop)
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <limits.h>      /* for SHRT_MIN, USHRT_MAX, etc */
 #include <assert.h>
+#if !defined(UNDER_CE)
 #include <errno.h>
+#endif
 #include <string>
 #include <algorithm>
 
@@ -731,10 +740,14 @@ bool Arg::parse_long_radix(const char* str,
   char buf[kMaxNumberLength+1];
   str = TerminateNumber(buf, str, n);
   char* end;
+#if !defined(UNDER_CE)
   errno = 0;
+#endif
   long r = strtol(str, &end, radix);
   if (end != str + n) return false;   // Leftover junk
+#if !defined(UNDER_CE)
   if (errno) return false;
+#endif
   if (dest == NULL) return true;
   *(reinterpret_cast<long*>(dest)) = r;
   return true;
@@ -749,10 +762,14 @@ bool Arg::parse_ulong_radix(const char* str,
   str = TerminateNumber(buf, str, n);
   if (str[0] == '-') return false;    // strtoul() on a negative number?!
   char* end;
+#if !defined(UNDER_CE)
   errno = 0;
+#endif
   unsigned long r = strtoul(str, &end, radix);
   if (end != str + n) return false;   // Leftover junk
+#if !defined(UNDER_CE)
   if (errno) return false;
+#endif
   if (dest == NULL) return true;
   *(reinterpret_cast<unsigned long*>(dest)) = r;
   return true;
@@ -817,7 +834,9 @@ bool Arg::parse_longlong_radix(const char* str,
   char buf[kMaxNumberLength+1];
   str = TerminateNumber(buf, str, n);
   char* end;
+#if !defined(UNDER_CE)
   errno = 0;
+#endif
 #if defined HAVE_STRTOQ
   long long r = strtoq(str, &end, radix);
 #elif defined HAVE_STRTOLL
@@ -830,7 +849,9 @@ bool Arg::parse_longlong_radix(const char* str,
 #error parse_longlong_radix: cannot convert input to a long-long
 #endif
   if (end != str + n) return false;   // Leftover junk
+#if !defined(UNDER_CE)
   if (errno) return false;
+#endif
   if (dest == NULL) return true;
   *(reinterpret_cast<long long*>(dest)) = r;
   return true;
@@ -849,7 +870,9 @@ bool Arg::parse_ulonglong_radix(const char* str,
   str = TerminateNumber(buf, str, n);
   if (str[0] == '-') return false;    // strtoull() on a negative number?!
   char* end;
+#if !defined(UNDER_CE)
   errno = 0;
+#endif
 #if defined HAVE_STRTOQ
   unsigned long long r = strtouq(str, &end, radix);
 #elif defined HAVE_STRTOLL
@@ -862,7 +885,9 @@ bool Arg::parse_ulonglong_radix(const char* str,
 #error parse_ulonglong_radix: cannot convert input to a long-long
 #endif
   if (end != str + n) return false;   // Leftover junk
+#if !defined(UNDER_CE)
   if (errno) return false;
+#endif
   if (dest == NULL) return true;
   *(reinterpret_cast<unsigned long long*>(dest)) = r;
   return true;
@@ -876,11 +901,15 @@ bool Arg::parse_double(const char* str, int n, void* dest) {
   if (n >= kMaxLength) return false;
   memcpy(buf, str, n);
   buf[n] = '\0';
+#if !defined(UNDER_CE)
   errno = 0;
+#endif
   char* end;
   double r = strtod(buf, &end);
   if (end != buf + n) return false;   // Leftover junk
+#if !defined(UNDER_CE)
   if (errno) return false;
+#endif
   if (dest == NULL) return true;
   *(reinterpret_cast<double*>(dest)) = r;
   return true;

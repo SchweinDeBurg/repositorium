@@ -22,7 +22,7 @@ them both to 0; an emulation function will be used. */
 
 /* Remove automatic CRT/MFC dependencies generation. */
 
-#if defined(_LIB) || defined(PCRE_PRIVATE_CRT)
+#if (defined(_LIB) || defined(PCRE_PRIVATE_CRT)) && !defined(UNDER_CE)
 
 /* See http://www.codeproject.com/KB/cpp/PrivateAssemblyProjects.aspx and
    http://blog.m-ri.de/index.php/2008/05/06/hotfix-fuer-usemsprivateassembliesh-und-vc-2008/
@@ -216,9 +216,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 
 /* Define to 1 if you have `_strtoi64'. */
 /* #undef HAVE__STRTOI64 */
-#if !defined(UNDER_CE)
 #define HAVE__STRTOI64 1
-#endif
 
 /* The value of LINK_SIZE determines the number of bytes used to store links
    as offsets within the compiled regex. The default is 2, which allows for
