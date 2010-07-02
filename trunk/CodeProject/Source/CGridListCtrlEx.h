@@ -7,10 +7,10 @@
 // Version: 1.8
 //
 // Change History:
-//	1.8 - Added checkbox support for all column editor types (See demo)
+//	1.8 - Added checkbox support for all column editor types (2010-07-01)
 //		  Added checkbox toggle for all selected rows
 //		  Added min and max width for columns
-//	1.7 - Added CGridColumnTraitImage, that provides checkbox editing
+//	1.7 - Added CGridColumnTraitImage, that provides checkbox editing (2009-12-12)
 //		  Renamed OnTraitCustomDraw() to OnCustomDrawCell()
 //		  Renamed OnTraitEditBegin() to OnEditBegin()
 //		  Renamed OnTraitEditComplete() to OnEditComplete()
@@ -49,8 +49,9 @@ template<class T> class COleDropTargetWnd;
 //!		- CGridColumnTraitCombo Implements cell editing using CComboBox
 //!		- CGridColumnTraitDateTime Implements cell editing using CDateTimeCtrl
 //!		- CGridColumnTraitImage Implements cell editing using cell-image (can mimic checkbox)
-//! - CGridRowTrait provides special behavior to rows
-//!		- CGridRowTraitXP Implements several improvement to the row drawing on WinXP
+//! - CGridRowTrait provides an interface to perform custom drawing at row level
+//!		- CGridRowTraitText implements alternate row coloring
+//!			- CGridRowTraitXP removes the white background for cell images on WinXP
 //! - CGridColumnManager provides column state persistence
 //!		- CGridColumnManagerProfile Implements persistence of column width and order of the visible columns
 //------------------------------------------------------------------------
@@ -180,6 +181,7 @@ protected:
 	double m_Margin;			//!< Current margin between original font and cell font
 
 	CString m_EmptyMarkupText;	//!< Text to display when list control is empty
+	bool m_InvalidateMarkupText;//!< Ensure that the empty markup text is cleared properly
 
 	// Maintaining drag drop
 	COleDropTargetWnd<CGridListCtrlEx>* m_pOleDropTarget;	//!< Maintains OLE drag drop target
@@ -250,6 +252,7 @@ protected:
 	virtual afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	virtual afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	virtual afx_msg void OnContextMenu(CWnd*, CPoint point);
+	virtual afx_msg void OnDestroy();
 	virtual afx_msg void OnPaint();
 	virtual afx_msg void OnKillFocus(CWnd* pNewWnd);
 	virtual afx_msg LRESULT OnCopy(WPARAM wParam, LPARAM lParam);

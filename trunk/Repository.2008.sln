@@ -88,8 +88,14 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibPCRE", "PCRE\LibPCRE.2008.vcproj", "{C3747F7E-4912-47AF-B447-2BED07B41F87}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibPosixPCRE", "PCRE\LibPosixPCRE.2008.vcproj", "{D024843C-E81D-4C68-8900-8B22BAAA336B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C3747F7E-4912-47AF-B447-2BED07B41F87} = {C3747F7E-4912-47AF-B447-2BED07B41F87}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibPCRE++", "PCRE\LibPCRE++.2008.vcproj", "{A0AE856C-02E9-4CAE-A34D-B13C0BF4FFB3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C3747F7E-4912-47AF-B447-2BED07B41F87} = {C3747F7E-4912-47AF-B447-2BED07B41F87}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

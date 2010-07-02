@@ -13,8 +13,6 @@ CGridColumnTraitImage::CGridColumnTraitImage()
 :m_SortImageIndex(false)
 ,m_ToggleSelection(false)
 {
-	// Checkbox should be flipped without needing cell-focus first
-	m_ColumnState.m_EditFocusFirst = false;
 }
 
 //------------------------------------------------------------------------
@@ -27,8 +25,6 @@ CGridColumnTraitImage::CGridColumnTraitImage(int nImageIndex, int nImageCount)
 :m_SortImageIndex(false)
 ,m_ToggleSelection(false)
 {
-	// Checkbox should be flipped without needing cell-focus first
-	m_ColumnState.m_EditFocusFirst = false;
 	for(int i = nImageIndex; i < nImageIndex + nImageCount; ++i)
 		AddImageIndex(i);
 }
@@ -69,6 +65,7 @@ void CGridColumnTraitImage::AddImageIndex(int nImageIdx)
 //!
 //! @param nImageIdx The index of the image in the list control imagelist
 //! @param strImageText The associated cell text to the image
+//! @param bEditable Is the cell editable when this image is displayed
 //------------------------------------------------------------------------
 void CGridColumnTraitImage::AddImageIndex(int nImageIdx, const CString& strImageText, bool bEditable)
 {
@@ -80,6 +77,7 @@ void CGridColumnTraitImage::AddImageIndex(int nImageIdx, const CString& strImage
 //!
 //! @param nImageIdx The index of the image in the list control imagelist
 //! @param strImageText The associated cell text to the image
+//! @param bEditable Is the cell editable when this image is displayed
 //------------------------------------------------------------------------
 void CGridColumnTraitImage::SetImageText(int nImageIdx, const CString& strImageText, bool bEditable)
 {
@@ -225,9 +223,9 @@ int CGridColumnTraitImage::OnClickEditStart(CGridListCtrlEx& owner, int nRow, in
 	bool startEdit = nRow!=-1 && nCol!=-1 && owner.GetFocusRow()==nRow && owner.GetFocusCell()==nCol && !bDblClick;
 
 	// Check if the cell can be edited without having focus first
-	if (!GetColumnState().m_EditFocusFirst)
+	if (m_ToggleSelection)
 	{
-		if (nCol==0 && m_ToggleSelection && owner.GetExtendedStyle() & LVS_EX_CHECKBOXES)
+		if (nCol==0 && owner.GetExtendedStyle() & LVS_EX_CHECKBOXES)
 		{
 			CRect iconRect;
 			if (!owner.GetCellRect(nRow, nCol, LVIR_ICON, iconRect) || !iconRect.PtInRect(pt))
@@ -241,17 +239,11 @@ int CGridColumnTraitImage::OnClickEditStart(CGridListCtrlEx& owner, int nRow, in
 		if (m_ImageIndexes.GetSize()==0)
 			return startEdit ? 1 : 0;	// No images to flip between
 
-		if (bDblClick && !m_ToggleSelection)
-			return startEdit ? 1 : 0;	// Only react to double-click when in checkbox-mode
-
 		CRect iconRect;
 		if (!owner.GetCellRect(nRow, nCol, LVIR_ICON, iconRect) || !iconRect.PtInRect(pt))
 			return startEdit ? 1 : 0;	// Didn't click the image icon
 
-		if (m_ToggleSelection)
-			return 2;	// Don't change focus or change selection
-		else
-			return 1;
+		return 2;	// Don't change focus or change selection
 	}
 
 	return startEdit ? 1 : 0;
