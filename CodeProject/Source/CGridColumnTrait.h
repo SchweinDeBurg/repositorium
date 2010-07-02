@@ -43,6 +43,7 @@ public:
 	//! @param nRow The index of the row
 	//! @param nCol The index of the column
 	//! @param pt The position clicked, in client coordinates.
+	//! @param bDblClick The position was double clicked
 	//! @return How should the cell editor be started (0 = No editor, 1 = Start Editor, 2 = Start Editor and block click-event)
 	virtual int OnClickEditStart(CGridListCtrlEx& owner, int nRow, int nCol, CPoint pt, bool bDblClick) { return 0; }
 
@@ -54,9 +55,20 @@ public:
 	//! @param owner The list control starting edit
 	//! @param nRow The index of the row for the cell to edit
 	//! @param nCol The index of the column for the cell to edit
+	//! @return Pointer to the cell editor to use (NULL if cell edit is not possible)
+	virtual CWnd* OnEditBegin(CGridListCtrlEx& owner, int nRow, int nCol) { return NULL; }
+
+	//! Override OnEditBegin() to provide your own special cell-edit control.
+	//!   - The edit control must inherit from CWnd
+	//!   - The edit control must delete itself when it looses focus
+	//!   - The edit control must send a LVN_ENDLABELEDIT message when edit is complete
+	//!
+	//! @param owner The list control starting edit
+	//! @param nRow The index of the row for the cell to edit
+	//! @param nCol The index of the column for the cell to edit
 	//! @param pt The position clicked, in client coordinates.
 	//! @return Pointer to the cell editor to use (NULL if cell edit is not possible)
-	virtual CWnd* OnEditBegin(CGridListCtrlEx& owner, int nRow, int nCol, CPoint pt) { return NULL; }
+	virtual CWnd* OnEditBegin(CGridListCtrlEx& owner, int nRow, int nCol, CPoint pt) { return OnEditBegin(owner, nRow, nCol); }
 
 	//! Override OnEditEnd() in case one need to change state after a cell-edit.
 	virtual void OnEditEnd() {}
@@ -101,7 +113,6 @@ public:
 			,m_AlwaysVisible(false)
 			,m_Sortable(true)
 			,m_Editable(true)
-			,m_EditFocusFirst(true)
 			,m_Resizable(true)
 			,m_MetaFlags(0)
 			,m_MinWidth(-1)
@@ -114,7 +125,6 @@ public:
 		bool m_AlwaysVisible;//!< Column can never be hidden
 		bool m_Sortable;	//!< Rows can be sorted according to column
 		bool m_Editable;	//!< Cells in the column can be edited
-		bool m_EditFocusFirst;//!< Cells needs focus before edit mode can start
 		bool m_Resizable;	//!< Column width is resizable
 		int  m_MinWidth;	//!< Column width has a min size
 		int  m_MaxWidth;	//!< Column width has a max size

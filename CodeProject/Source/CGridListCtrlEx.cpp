@@ -134,6 +134,7 @@ BEGIN_MESSAGE_MAP(CGridListCtrlEx, CListCtrl)
 	ON_WM_PAINT()		// OnPaint
 	ON_WM_CREATE()		// OnCreate
 	ON_WM_KILLFOCUS()	// OnKillFocus
+	ON_WM_DESTROY()		// OnDestroy
 	ON_MESSAGE(WM_COPY, OnCopy)	// Clipboard
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -155,6 +156,7 @@ CGridListCtrlEx::CGridListCtrlEx()
 	,m_Margin(1)		// Higher row-height (more room for edit-ctrl border)
 	,m_pDefaultRowTrait(new CGridRowTraitText)
 	,m_pColumnManager(new CGridColumnManager)
+	,m_InvalidateMarkupText(true)
 {}
 
 //------------------------------------------------------------------------
@@ -404,6 +406,8 @@ void CGridListCtrlEx::PreSubclassWindow()
 //------------------------------------------------------------------------
 int CGridListCtrlEx::InsertColumnTrait(int nCol, const CString& strColumnHeading, int nFormat, int nWidth, int nSubItem, CGridColumnTrait* pTrait)
 {
+	VERIFY(m_ColumnTraits.GetSize()==GetColumnCount());
+
 	if (pTrait!=NULL)
 	{
 		if (pTrait->GetColumnState().m_AlwaysHidden)
@@ -449,6 +453,7 @@ int CGridListCtrlEx::InsertHiddenLabelColumn()
 {
 	// Must be the label column
 	VERIFY(GetHeaderCtrl()->GetItemCount()==0);
+	VERIFY(m_ColumnTraits.GetSize()==0);
 
 	CGridColumnTrait* pColumTrait = new CGridColumnTrait;
 	pColumTrait->GetColumnState().m_AlwaysHidden = true;
@@ -1705,12 +1710,9 @@ int CGridListCtrlEx::OnClickEditStart(int nRow, int nCol, CPoint pt, bool bDblCl
 	if (GetKeyState(VK_SHIFT) < 0)
 		return 0;	// Row selection should not trigger cell edit
 
-	// Begin edit if the same cell is clicked twice
-	bool startEdit = nRow!=-1 && nCol!=-1 && GetFocusRow()==nRow && GetFocusCell()==nCol && !bDblClick;
-
 	CGridColumnTrait* pTrait = GetCellColumnTrait(nRow, nCol);
 	if (pTrait==NULL)
-		return startEdit ? 1 : 0;
+		return 0;
 
 	if (pTrait->IsCellReadOnly(*this, nRow, nCol, pt))
 		return 0;
@@ -3633,13 +3635,42 @@ void CGridListCtrlEx::SetEmptyMarkupText(const CString& strText)
 }
 
 //------------------------------------------------------------------------
+//! Notify that the window has been destroyed
+//------------------------------------------------------------------------
+void CGridListCtrlEx::OnDestroy()
+{
+	m_FocusCell = -1;
+	m_SortCol = -1;
+	m_Ascending = false;
+	m_UsingVisualStyle = false;
+	m_InvalidateMarkupText = true;
+
+	delete m_pOleDropTarget;
+	m_pOleDropTarget = NULL;
+
+	for(int nCol = GetColumnTraitSize()-1; nCol >= 0 ; --nCol)
+		DeleteColumnTrait(nCol);
+
+	CListCtrl::OnDestroy();
+}
+
+//------------------------------------------------------------------------
 //! WM_PAINT message handler called when needing to redraw list control.
 //! Used to display text when the list control is empty
 //------------------------------------------------------------------------
 void CGridListCtrlEx::OnPaint()
 {
+	// Ensure that the entire window is invalidated when the first item is added
+	if (m_InvalidateMarkupText && !m_EmptyMarkupText.IsEmpty() && GetItemCount() > 0)
+	{
+		m_InvalidateMarkupText = false;
+		Invalidate(TRUE);
+	}
+
 	if (GetItemCount()==0 && !m_EmptyMarkupText.IsEmpty())
 	{
+		m_InvalidateMarkupText = true;
+
 		// Show text string when list is empty
 		CPaintDC dc(this);
 
