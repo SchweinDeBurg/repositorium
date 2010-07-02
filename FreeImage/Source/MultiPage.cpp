@@ -49,6 +49,7 @@ struct BlockTypeS {
 
 	BlockTypeS(BlockType type) : m_type(type) {
 	}
+	virtual ~BlockTypeS() {}
 };
 
 struct BlockContinueus : public BlockTypeS {
