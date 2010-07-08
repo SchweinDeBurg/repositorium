@@ -422,7 +422,7 @@ FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options) {
 BOOL DLL_CALLCONV
 FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options) {
 
-	if (!dib) {
+	if (!FreeImage_HasPixels(dib)) {
 		return FALSE;
 	}
 	
@@ -778,9 +778,7 @@ FreeImage_AllocateEx(int width, int height, int bpp, const RGBQUAD *color, int o
 FIBITMAP * DLL_CALLCONV
 FreeImage_EnlargeCanvas(FIBITMAP *src, int left, int top, int right, int bottom, const void *color, int options) {
 
-	if (!src) {
-		return NULL;
-	}
+	if(!FreeImage_HasPixels(src)) return NULL;
 
 	// Just return a clone of the image, if left, top, right and bottom are
 	// all zero.
