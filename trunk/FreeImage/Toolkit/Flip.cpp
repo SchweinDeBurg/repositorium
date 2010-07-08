@@ -33,7 +33,7 @@ Flip the image horizontally along the vertical axis.
 */
 BOOL DLL_CALLCONV 
 FreeImage_FlipHorizontal(FIBITMAP *src) {
-	if (!src) return FALSE;
+	if (!FreeImage_HasPixels(src)) return FALSE;
 
 	unsigned line   = FreeImage_GetLine(src);
 	unsigned width	= FreeImage_GetWidth(src);
@@ -134,7 +134,7 @@ BOOL DLL_CALLCONV
 FreeImage_FlipVertical(FIBITMAP *src) {
 	BYTE *From, *Mid;
 
-	if (!src) return FALSE;
+	if (!FreeImage_HasPixels(src)) return FALSE;
 
 	// swap the buffer
 

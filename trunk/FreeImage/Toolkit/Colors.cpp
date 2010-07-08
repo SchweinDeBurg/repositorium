@@ -49,7 +49,7 @@ FreeImage_Invert(FIBITMAP *src) {
 	unsigned i, x, y, k;
 	BYTE *bits;
 
-	if (!src) return FALSE;
+	if (!FreeImage_HasPixels(src)) return FALSE;
 
 	int bpp = FreeImage_GetBPP(src);
 	
@@ -123,7 +123,7 @@ FreeImage_AdjustCurve(FIBITMAP *src, BYTE *LUT, FREE_IMAGE_COLOR_CHANNEL channel
 	unsigned x, y;
 	BYTE *bits = NULL;
 
-	if(!src || !LUT || (FreeImage_GetImageType(src) != FIT_BITMAP))
+	if(!FreeImage_HasPixels(src) || !LUT || (FreeImage_GetImageType(src) != FIT_BITMAP))
 		return FALSE;
 
 	int bpp = FreeImage_GetBPP(src);
@@ -245,7 +245,7 @@ BOOL DLL_CALLCONV
 FreeImage_AdjustGamma(FIBITMAP *src, double gamma) {
 	BYTE LUT[256];		// Lookup table
 
-	if(!src || (gamma <= 0))
+	if(!FreeImage_HasPixels(src) || (gamma <= 0))
 		return FALSE;
 	
 	// Build the lookup table
@@ -276,7 +276,7 @@ FreeImage_AdjustBrightness(FIBITMAP *src, double percentage) {
 	BYTE LUT[256];		// Lookup table
 	double value;
 
-	if(!src)
+	if(!FreeImage_HasPixels(src))
 		return FALSE;
 	
 	// Build the lookup table
@@ -302,7 +302,7 @@ FreeImage_AdjustContrast(FIBITMAP *src, double percentage) {
 	BYTE LUT[256];		// Lookup table
 	double value;
 
-	if(!src)
+	if(!FreeImage_HasPixels(src))
 		return FALSE;
 	
 	// Build the lookup table
@@ -331,7 +331,7 @@ FreeImage_GetHistogram(FIBITMAP *src, DWORD *histo, FREE_IMAGE_COLOR_CHANNEL cha
 	BYTE *bits = NULL;
 	unsigned x, y;
 
-	if(!src || !histo) return FALSE;
+	if(!FreeImage_HasPixels(src) || !histo) return FALSE;
 
 	unsigned width  = FreeImage_GetWidth(src);
 	unsigned height = FreeImage_GetHeight(src);
@@ -588,7 +588,7 @@ BOOL DLL_CALLCONV
 FreeImage_AdjustColors(FIBITMAP *dib, double brightness, double contrast, double gamma, BOOL invert) {
 	BYTE LUT[256];
 
-	if ((!dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) {
+	if (!FreeImage_HasPixels(dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) {
 		return FALSE;
 	}
 
@@ -641,7 +641,7 @@ unsigned DLL_CALLCONV
 FreeImage_ApplyColorMapping(FIBITMAP *dib, RGBQUAD *srccolors, RGBQUAD *dstcolors, unsigned count, BOOL ignore_alpha, BOOL swap) {
 	unsigned result = 0;
 
-	if ((!dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) {
+	if (!FreeImage_HasPixels(dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) {
 		return 0;
 	}
 
@@ -842,7 +842,7 @@ unsigned DLL_CALLCONV
 FreeImage_ApplyPaletteIndexMapping(FIBITMAP *dib, BYTE *srcindices,	BYTE *dstindices, unsigned count, BOOL swap) {
 	unsigned result = 0;
 
-	if ((!dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) {
+	if (!FreeImage_HasPixels(dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) {
 		return 0;
 	}
 

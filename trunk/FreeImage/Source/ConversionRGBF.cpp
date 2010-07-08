@@ -33,6 +33,8 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 	FIBITMAP *src = NULL;
 	FIBITMAP *dst = NULL;
 
+	if(!FreeImage_HasPixels(dib)) return NULL;
+
 	const FREE_IMAGE_TYPE src_type = FreeImage_GetImageType(dib);
 
 	// check for allowed conversions 
@@ -50,7 +52,11 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 			break;
 		}
 		case FIT_RGB16:
-			// allow conversion from 48-bit
+			// allow conversion from 48-bit RGB
+			src = dib;
+			break;
+		case FIT_RGBA16:
+			// allow conversion from 64-bit RGBA (ignore the alpha channel)
 			src = dib;
 			break;
 		case FIT_FLOAT:
@@ -58,7 +64,7 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 			src = dib;
 			break;
 		case FIT_RGBAF:
-			// allow conversion from 128-bit
+			// allow conversion from 128-bit RGBAF
 			src = dib;
 			break;
 		case FIT_RGBF:

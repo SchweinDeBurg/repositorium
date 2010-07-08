@@ -23,7 +23,7 @@
 // THIS DISCLAIMER.
 //
 // Use at your own risk!
-// ==========================================================
+// ========================================================== 
 
 #include "stdafx.h"
 
@@ -159,7 +159,7 @@ tiff_read_geotiff_profile(TIFF *tif, FIBITMAP *dib) {
 				FreeImage_SetTagID(tag, tag_id);
 				FreeImage_SetTagKey(tag, tag_lib.getTagFieldName(TagLib::GEOTIFF, tag_id, defaultKey));
 				FreeImage_SetTagDescription(tag, tag_lib.getTagDescription(TagLib::GEOTIFF, tag_id));
-				FreeImage_SetTagLength(tag, FreeImage_TagDataWidth((WORD)tag_type) * tag_count);
+				FreeImage_SetTagLength(tag, FreeImage_TagDataWidth(tag_type) * tag_count);
 				FreeImage_SetTagCount(tag, tag_count);
 				FreeImage_SetTagValue(tag, data);
 				FreeImage_SetMetadata(FIMD_GEOTIFF, dib, FreeImage_GetTagKey(tag), tag);
