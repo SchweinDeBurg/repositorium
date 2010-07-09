@@ -427,6 +427,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\GUI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\GUI.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\HistoryCombo.cpp"
 				>
 			</File>
