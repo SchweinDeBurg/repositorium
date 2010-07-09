@@ -156,4 +156,3 @@ protected:
 	UINT SendDragMessage(UINT nMessage);
 	
 };
-
