@@ -1319,6 +1319,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\FontComboBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\FontComboBox.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\FontSize.cpp"
 				>
 			</File>
@@ -1372,6 +1380,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\sizecbar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\SizeComboBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\SizeComboBox.h"
 				>
 			</File>
 			<File
