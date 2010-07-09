@@ -1343,6 +1343,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\GraphicsMisc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\GraphicsMisc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\HistoryCombo.cpp"
 				>
 			</File>
@@ -1412,6 +1420,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\StaticLink.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\StatusBarACT.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\StatusBarACT.h"
 				>
 			</File>
 			<File
