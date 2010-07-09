@@ -1431,6 +1431,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\XHtmlStatic.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XHtmlStatic.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\XHyperLink.cpp"
 				>
 			</File>
