@@ -1407,6 +1407,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\StaticLink.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\StaticLink.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\XColorStatic.cpp"
 				>
 			</File>
