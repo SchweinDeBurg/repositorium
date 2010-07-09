@@ -1865,6 +1865,15 @@
 			</Filter>
 		</Filter>
 		<Filter
+			Name="MAPI"
+			Filter="h;cpp"
+			>
+			<File
+				RelativePath=".\Source\SendFileTo.h"
+				>
+			</File>
+		</Filter>
+		<Filter
 			Name="Dialogs"
 			Filter="h;cpp"
 			>
