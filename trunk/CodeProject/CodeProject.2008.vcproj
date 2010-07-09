@@ -1319,6 +1319,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\DragDrop.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DragDrop.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\FontComboBox.cpp"
 				>
 			</File>
