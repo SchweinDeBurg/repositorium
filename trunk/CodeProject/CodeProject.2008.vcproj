@@ -2552,6 +2552,27 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Algorithm"
+			Filter="h;cpp"
+			>
+			<File
+				RelativePath=".\Source\Rijndael.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Rijndael.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\SHA2.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\SHA2.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
