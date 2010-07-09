@@ -2391,6 +2391,14 @@
 			Filter="h;cpp"
 			>
 			<File
+				RelativePath=".\Source\StdioFileEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\StdioFileEx.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\textfile.cpp"
 				>
 			</File>
