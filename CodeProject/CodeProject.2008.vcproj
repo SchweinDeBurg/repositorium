@@ -362,6 +362,19 @@
 			</File>
 		</Filter>
 		<Filter
+			Name="Memory"
+			Filter="h;cpp"
+			>
+			<File
+				RelativePath=".\Source\MemUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MemUtil.h"
+				>
+			</File>
+		</Filter>
+		<Filter
 			Name="Controls"
 			Filter="h;cpp"
 			>
