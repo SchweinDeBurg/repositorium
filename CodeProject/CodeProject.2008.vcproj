@@ -1430,6 +1430,14 @@
 				RelativePath=".\Source\XHyperLink.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Source\XPTabCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XPTabCtrl.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="CPPTooltip"
