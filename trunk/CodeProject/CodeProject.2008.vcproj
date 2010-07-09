@@ -2618,6 +2618,14 @@
 			Filter="h;cpp"
 			>
 			<File
+				RelativePath=".\Source\NewRandom.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\NewRandom.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\Rijndael.cpp"
 				>
 			</File>
