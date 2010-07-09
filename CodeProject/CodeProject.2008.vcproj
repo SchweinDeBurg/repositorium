@@ -1931,6 +1931,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\XmlNodeWrapper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\XmlNodeWrapper.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\XmlParser.cpp"
 				>
 			</File>
