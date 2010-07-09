@@ -2613,6 +2613,27 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Registry"
+			Filter="h;cpp"
+			>
+			<File
+				RelativePath=".\Source\AfxRegKey.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\AfxRegKey.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RegUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RegUtil.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
