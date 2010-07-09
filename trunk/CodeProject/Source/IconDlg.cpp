@@ -52,7 +52,7 @@ VERSION HISTORY:
 */
 /////////////////////////////////////////////////////////////////////////////
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "IconDlg.h"
 
 #if defined(__INTEL_COMPILER)
