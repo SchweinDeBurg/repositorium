@@ -2399,6 +2399,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\TextFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TextFile.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\TextFileDocument.cpp"
 				>
 			</File>
