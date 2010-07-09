@@ -54,9 +54,11 @@
 #include <afxcmn.h>
 #include <afxdlgs.h>
 #include <afxext.h>
+#include <afxpriv.h>
 #include <afxadv.h>
 #include <afxdtctl.h>
 #include <afxconv.h>
+#include <afxtempl.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // ATL headers
