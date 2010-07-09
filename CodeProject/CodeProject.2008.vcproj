@@ -1359,6 +1359,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\LockableHeaderCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\LockableHeaderCtrl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ReportCtrl.cpp"
 				>
 			</File>
