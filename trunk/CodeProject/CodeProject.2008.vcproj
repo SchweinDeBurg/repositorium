@@ -2598,6 +2598,14 @@
 			Filter="h;cpp"
 			>
 			<File
+				RelativePath=".\Source\Ini.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Ini.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\StdioFileEx.cpp"
 				>
 			</File>
