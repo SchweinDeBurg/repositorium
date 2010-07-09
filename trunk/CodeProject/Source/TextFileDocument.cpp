@@ -3,7 +3,7 @@
   */
 #include "stdafx.h"
 
-#include "textfile.h"
+#include "TextFileDocument.h"
 
 #if PEK_TX_TECHLEVEL == 0
  //Include iostream if running in ANSI mode.
