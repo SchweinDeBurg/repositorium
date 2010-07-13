@@ -395,11 +395,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\DragDrop.cpp"
+				RelativePath=".\Source\EnHeaderCtrl.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\DragDrop.h"
+				RelativePath=".\Source\EnHeaderCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnStatic.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnStatic.h"
 				>
 			</File>
 			<File
@@ -411,35 +419,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\FontSize.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\FontSize.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\GraphicsMisc.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\GraphicsMisc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\GUI.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\GUI.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\HistoryCombo.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\HistoryCombo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\HotKeyCtrlEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\HotKeyCtrlEx.h"
 				>
 			</File>
 			<File
@@ -512,14 +504,6 @@
 			</File>
 			<File
 				RelativePath=".\Source\StatusBarACT.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\Subclass.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\Subclass.h"
 				>
 			</File>
 			<File
@@ -2737,6 +2721,96 @@
 			</File>
 			<File
 				RelativePath=".\Source\RegUtil.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Misc"
+			Filter="h;cpp"
+			>
+			<File
+				RelativePath=".\Source\DeferWndMove.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DeferWndMove.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DragDrop.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DragDrop.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\FontSize.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\FontSize.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\GraphicsMisc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\GraphicsMisc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\GUI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\GUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Misc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Misc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Subclass.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Subclass.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Themed.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Themed.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Date &amp; Time"
+			Filter="h;cpp"
+			>
+			<File
+				RelativePath=".\Source\DateHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DateHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TimeHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TimeHelper.h"
 				>
 			</File>
 		</Filter>
