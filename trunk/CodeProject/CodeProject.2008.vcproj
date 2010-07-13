@@ -2588,6 +2588,14 @@
 			Filter="h;cpp"
 			>
 			<File
+				RelativePath=".\Source\EnString.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnString.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\StdString.h"
 				>
 			</File>
