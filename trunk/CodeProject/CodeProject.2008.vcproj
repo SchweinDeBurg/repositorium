@@ -1976,6 +1976,14 @@
 			Filter="h;cpp"
 			>
 			<File
+				RelativePath=".\Source\DriveInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DriveInfo.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\FileSpec.cpp"
 				>
 			</File>
