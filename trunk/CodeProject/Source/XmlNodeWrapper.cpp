@@ -50,14 +50,14 @@ CXmlNodeWrapper::~CXmlNodeWrapper()
 CString CXmlNodeWrapper::GetValue(LPCTSTR valueName)
 {
 	if (!IsValid())
-		return "";
+		return _T("");
 	
 	MSXML2::IXMLDOMNodePtr attribute = m_xmlnode->Getattributes()->getNamedItem(valueName);
 	if (attribute)
 	{
 		return (LPCSTR)attribute->Gettext();
 	}
-	return "";
+	return _T("");
 }
 
 BOOL CXmlNodeWrapper::IsValid()
@@ -249,7 +249,7 @@ CString CXmlNodeWrapper::GetXML()
 	if (IsValid())
 		return (LPCSTR)m_xmlnode->Getxml();
 	else
-		return "";
+		return _T("");
 }
 
 MSXML2::IXMLDOMNode* CXmlNodeWrapper::RemoveNode(MSXML2::IXMLDOMNodePtr pNode)
@@ -462,7 +462,7 @@ CString CXmlDocumentWrapper::Transform(LPCTSTR pathXSL) const
     }
 
     // else
-    return "";
+    return _T("");
 }
 
 MSXML2::IXMLDOMNode* CXmlDocumentWrapper::AsNode()
@@ -742,7 +742,7 @@ CString CXmlNodeWrapper::Name()
 {
 	if (IsValid())
 		return (LPCSTR)m_xmlnode->GetbaseName();
-	return "";
+	return _T("");
 }
 
 MSXML2::IXMLDOMNode* CXmlNodeWrapper::InsertAfter(MSXML2::IXMLDOMNode *refNode, MSXML2::IXMLDOMNode *pNode)
@@ -774,7 +774,7 @@ CString CXmlNodeWrapper::GetText()
 	if (IsValid())
 		return (LPCSTR)m_xmlnode->Gettext();
 	else
-		return "";
+		return _T("");
 }
 
 void CXmlNodeWrapper::ReplaceNode(MSXML2::IXMLDOMNode *pOldNode, MSXML2::IXMLDOMNode *pNewNode)
@@ -854,7 +854,7 @@ CString CXmlNodeWrapper::NodeType()
 	if (IsValid())
 		return (LPCSTR)m_xmlnode->GetnodeTypeString();
 
-	return "";
+	return _T("");
 }
 
 int CXmlNodeWrapper::NodeTypeVal()
