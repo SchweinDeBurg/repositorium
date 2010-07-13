@@ -515,6 +515,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\Subclass.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Subclass.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\XColorStatic.cpp"
 				>
 			</File>
