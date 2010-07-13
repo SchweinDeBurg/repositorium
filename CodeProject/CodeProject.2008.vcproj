@@ -1939,6 +1939,34 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ColorDef.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnBitmap.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnBitmap.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnBitmapEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnBitmapEx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ImageProcessors.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ImageProcessors.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\memdc.h"
 				>
 			</File>
