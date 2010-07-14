@@ -240,7 +240,7 @@ CString CTimeHelper::FormatTimeHMS(double dTime, int nUnitsFrom, BOOL bDecPlaces
 }
 
 CString CTimeHelper::FormatTimeHMS(double dTime, int nUnits, int nLeftOverUnits, 
-								   double dLeftOverMultiplier, BOOL bDecPlaces)
+	double dLeftOverMultiplier, BOOL bDecPlaces)
 {
 	CString sTime;
 	

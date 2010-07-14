@@ -82,7 +82,7 @@ void CCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 	// Check if we are drawing the static portion of the combobox
 	if (nItem < 0) 
-   {
+	{
 		// Get the text
 		sText = m_sText;
 
@@ -125,8 +125,8 @@ void CCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 void CCheckComboBox::RefreshMaxDropWidth()
 {
-   int nMaxWidth = CDialogHelper::CalcMaxTextWidth(*this, 0, TRUE) + 18;
-   SetDroppedWidth(nMaxWidth);
+	int nMaxWidth = CDialogHelper::CalcMaxTextWidth(*this, 0, TRUE) + 18;
+	SetDroppedWidth(nMaxWidth);
 }
 
 void CCheckComboBox::DrawItemText(HDC hdc, int nItem, CRect rText, const CString& sText, UINT nState)
@@ -197,16 +197,16 @@ void CCheckComboBox::RecalcText(BOOL bUpdate, BOOL bNotify)
 
 int CCheckComboBox::SelectString(int nStartAfter, LPCTSTR lpszString)
 {
-   CStringArray aItems;
+	CStringArray aItems;
 
-   if (Misc::ParseIntoArray(lpszString, aItems) > 1) // multiple items
-   {
-      SetChecked(aItems);
-      return GetCurSel();
-   }
-   
-   // else
-   return CAutoComboBox::SelectString(nStartAfter, lpszString);
+	if (Misc::ParseIntoArray(lpszString, aItems) > 1) // multiple items
+	{
+		SetChecked(aItems);
+		return GetCurSel();
+	}
+
+	// else
+	return CAutoComboBox::SelectString(nStartAfter, lpszString);
 }
 
 int CCheckComboBox::SetCheck(int nIndex, BOOL bFlag)

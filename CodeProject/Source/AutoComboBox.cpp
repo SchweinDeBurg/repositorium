@@ -186,7 +186,7 @@ int CAutoComboBox::FindStringExact(int nIndexStart, const CString& sItem, BOOL b
 		BOOL bContinue = TRUE;
 		
 		while (bContinue)
-        {
+		{
 			int nPrevFind = nFind;
 			nFind = CComboBox::FindStringExact(nFind, sItem);
 			
@@ -210,7 +210,7 @@ int CAutoComboBox::FindStringExact(int nIndexStart, const CString& sItem, BOOL b
 				
 				bContinue = !(sItem == sFind); // differ in case
 			}
-        }
+		}
 	}
 	else // special case: look for empty item
 	{
@@ -351,7 +351,7 @@ int CAutoComboBox::InsertUniqueItem(int nIndex, const CString& sItem)
 
 void CAutoComboBox::RefreshMaxDropWidth()
 {
-   CDialogHelper::RefreshMaxDropWidth(*this);
+	CDialogHelper::RefreshMaxDropWidth(*this);
 }
 
 void CAutoComboBox::OnSize(UINT nType, int cx, int cy) 
@@ -372,45 +372,45 @@ void CAutoComboBox::OnSize(UINT nType, int cx, int cy)
 
 int CAutoComboBox::AddUniqueItems(const CStringArray& aItems)
 {
-    int nItemCount = aItems.GetSize(), nCount = 0;
+	int nItemCount = aItems.GetSize(), nCount = 0;
 
 	// maintain order
-    for (int nItem = 0; nItem < nItemCount; nItem++)
-    {
-        if (AddUniqueItem(aItems[nItem], FALSE) != CB_ERR)
-            nCount++;
-    }
+	for (int nItem = 0; nItem < nItemCount; nItem++)
+	{
+		if (AddUniqueItem(aItems[nItem], FALSE) != CB_ERR)
+			nCount++;
+	}
 
-    return nCount ? 0 : CB_ERR;
+	return nCount ? 0 : CB_ERR;
 }
 
 int CAutoComboBox::AddUniqueItems(const CAutoComboBox& cbItems)
 {
-    CStringArray aItems;
+	CStringArray aItems;
 
-    if (cbItems.GetItems(aItems))
-        return AddUniqueItems(aItems);
+	if (cbItems.GetItems(aItems))
+		return AddUniqueItems(aItems);
 
-    // else
-    return 0;
+	// else
+	return 0;
 }
 
 int CAutoComboBox::GetItems(CStringArray& aItems) const
 {
-    int nItem = GetCount();
+	int nItem = GetCount();
 
-    aItems.RemoveAll();
-    aItems.SetSize(nItem);
+	aItems.RemoveAll();
+	aItems.SetSize(nItem);
 
-    while (nItem--)
-    {
-        CString sItem;
+	while (nItem--)
+	{
+		CString sItem;
 		GetLBText(nItem, sItem);
 
-        aItems.SetAt(nItem, sItem); // maintain order
-    }
+		aItems.SetAt(nItem, sItem); // maintain order
+	}
 
-    return aItems.GetSize();
+	return aItems.GetSize();
 }
 
 // messages destined for the edit control
@@ -550,9 +550,8 @@ BOOL CAutoComboBox::DeleteSelectedLBItem()
 		}
 		
 		// notify parent that we've been fiddling
-		CComboBox::GetParent()->SendMessage(WM_ACB_ITEMDELETED, 
-												MAKEWPARAM(CWnd::GetDlgCtrlID(), nSelItem), 
-												(LPARAM)(LPCTSTR)sSelItem);
+		CComboBox::GetParent()->SendMessage(WM_ACB_ITEMDELETED, MAKEWPARAM(CWnd::GetDlgCtrlID(), nSelItem), 
+			(LPARAM)(LPCTSTR)sSelItem);
 
 		return TRUE;
 	}

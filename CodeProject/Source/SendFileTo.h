@@ -25,12 +25,12 @@ public:
 		if (!fnSendMail)
 			return false;
 
-      MapiFileDesc fileDesc = { 0 };
-      fileDesc.nPosition = (ULONG)-1;
+		MapiFileDesc fileDesc = { 0 };
+		fileDesc.nPosition = (ULONG)-1;
 		fileDesc.lpszPathName = const_cast<LPTSTR>(static_cast<LPCTSTR>(strAttachmentFileName));
 		fileDesc.lpszFileName = const_cast<LPTSTR>(static_cast<LPCTSTR>(strAttachmentFileName));
 
-      MapiMessage message = { 0 };
+		MapiMessage message = { 0 };
 		message.lpszSubject = const_cast<LPTSTR>(static_cast<LPCTSTR>(strSubject));
 		message.lpszNoteText = const_cast<LPTSTR>(static_cast<LPCTSTR>(strBody));
 		message.nFileCount = strAttachmentFileName.IsEmpty() ? 0 : 1;

@@ -50,9 +50,9 @@ enum
 
 typedef struct tagTCMBTNCLK
 {
-    NMHDR hdr;
-    int iTab;
-    UINT flags;
+	NMHDR hdr;
+	int iTab;
+	UINT flags;
 } NMTCMBTNCLK;
 
 class CTabCtrlEx : public CXPTabCtrl

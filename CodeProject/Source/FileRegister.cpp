@@ -271,20 +271,20 @@ CString CFileRegister::GetRegisteredAppPath(BOOL bFilenameOnly)
 		}
 	}
 
-   if (!sAppPath.IsEmpty())
-   {
-	   // note: apps often have parameters after so we do this
-	   CString sDrive, sDir, sFName;
-	   FileMisc::SplitPath(sAppPath, &sDrive, &sDir, &sFName);
+	if (!sAppPath.IsEmpty())
+	{
+		// note: apps often have parameters after so we do this
+		CString sDrive, sDir, sFName;
+		FileMisc::SplitPath(sAppPath, &sDrive, &sDir, &sFName);
 
-	   sFName += _T(".exe");
-	   
-	   if (bFilenameOnly)
-		   sAppPath = sFName;
-	   else
-		   FileMisc::MakePath(sAppPath, sDrive, sDir, sFName);
-   }
-	
+		sFName += _T(".exe");
+
+		if (bFilenameOnly)
+			sAppPath = sFName;
+		else
+			FileMisc::MakePath(sAppPath, sDrive, sDir, sFName);
+	}
+
 	return sAppPath;
 }
 

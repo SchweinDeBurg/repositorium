@@ -80,39 +80,39 @@ BOOL CDeferWndMove::MoveWindow(CWnd* pWnd, int x, int y, int nWidth, int nHeight
 	if (!m_hdwp)
 		return FALSE;
 
-  ASSERT (pWnd->GetParent());
+	ASSERT (pWnd->GetParent());
 
-  // figure out what flags we need
+	// figure out what flags we need
 	int nFlags = SWP_NOACTIVATE | SWP_NOZORDER;
-  CRect rWnd;
+	CRect rWnd;
 
-  pWnd->GetWindowRect(rWnd);
-  pWnd->GetParent()->ScreenToClient(rWnd);
+	pWnd->GetWindowRect(rWnd);
+	pWnd->GetParent()->ScreenToClient(rWnd);
 
-  if (x == rWnd.left && y == rWnd.top)
-    nFlags |= SWP_NOMOVE;
+	if (x == rWnd.left && y == rWnd.top)
+		nFlags |= SWP_NOMOVE;
 
-  if (nWidth == rWnd.Width() && nHeight == rWnd.Height())
-    nFlags |= SWP_NOSIZE;
+	if (nWidth == rWnd.Width() && nHeight == rWnd.Height())
+		nFlags |= SWP_NOSIZE;
 
-  BOOL bNeedMove = !((nFlags & SWP_NOMOVE) && (nFlags & SWP_NOSIZE));
+	BOOL bNeedMove = !((nFlags & SWP_NOMOVE) && (nFlags & SWP_NOSIZE));
 
-  if (!bNeedMove)
-    return TRUE;
+	if (!bNeedMove)
+		return TRUE;
 
-  if (!bRepaint)
+	if (!bRepaint)
 		nFlags |= SWP_NOREDRAW;
 
-  HWND hWnd = pWnd->GetSafeHwnd();
+	HWND hWnd = pWnd->GetSafeHwnd();
 
 	m_hdwp = ::DeferWindowPos(m_hdwp, hWnd, HWND_BOTTOM, x, y, nWidth, nHeight, nFlags);
 
-  // fallback
+	// fallback
 	if (!m_hdwp)
-  {
-    ASSERT (0); // shouldn't fail but it might
-    ::SetWindowPos(hWnd, HWND_BOTTOM, x, y, nWidth, nHeight, nFlags);
-  }
+	{
+		ASSERT (0); // shouldn't fail but it might
+		::SetWindowPos(hWnd, HWND_BOTTOM, x, y, nWidth, nHeight, nFlags);
+	}
 
 	return TRUE;
 }
@@ -120,8 +120,8 @@ BOOL CDeferWndMove::MoveWindow(CWnd* pWnd, int x, int y, int nWidth, int nHeight
 BOOL CDeferWndMove::MoveWindow(CWnd* pWnd, LPCRECT lpRect, BOOL bRepaint)
 {
 	return MoveWindow(pWnd, lpRect->left, lpRect->top, 
-							      lpRect->right - lpRect->left,
-							      lpRect->bottom - lpRect->top, bRepaint);
+		lpRect->right - lpRect->left,
+		lpRect->bottom - lpRect->top, bRepaint);
 }
 
 CRect CDeferWndMove::OffsetCtrl(CWnd* pParent, UINT nCtrlID, int x, int y)

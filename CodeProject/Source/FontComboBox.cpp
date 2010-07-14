@@ -109,8 +109,8 @@ void CFontComboBox::OnDropdown()
    ============================================================*/
 {
 
-   int scroll = ::GetSystemMetrics(SM_CXVSCROLL);
-   SetDroppedWidth( m_maxWidth + scroll );
+	int scroll = ::GetSystemMetrics(SM_CXVSCROLL);
+	SetDroppedWidth( m_maxWidth + scroll );
 
 }
 

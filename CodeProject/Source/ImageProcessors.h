@@ -199,10 +199,10 @@ public:
 	CImageSysColorMapper() {}
 	virtual ~CImageSysColorMapper() {}
 
-	// 0x000000 (black)			-> COLOR_BTNTEXT        
-	// 0x808080 (dark gray)		-> COLOR_BTNSHADOW      
-	// 0xC0C0C0 (bright gray)	-> COLOR_BTNFACE        
-	// 0xFFFFFF (white)			-> COLOR_BTNHIGHLIGHT   
+	// 0x000000 (black)			-> COLOR_BTNTEXT
+	// 0x808080 (dark gray)		-> COLOR_BTNSHADOW
+	// 0xC0C0C0 (bright gray)	-> COLOR_BTNFACE
+	// 0xFFFFFF (white)			-> COLOR_BTNHIGHLIGHT
 	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
 								COLORREF crMask = -1);
 };
@@ -214,7 +214,7 @@ public:
 	virtual ~CImageEmbosser() {}
 
 	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+		COLORREF crMask = -1);
 };
 
 

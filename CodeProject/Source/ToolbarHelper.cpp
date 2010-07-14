@@ -333,7 +333,6 @@ LRESULT CToolbarHelper::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp
 		break;
 
 	case WM_KICKIDLE:
-//	    m_pToolbar->OnUpdateCmdUI((CFrameWnd*)GetCWnd(), FALSE);
 		break;
 
 	case WM_DESTROY:

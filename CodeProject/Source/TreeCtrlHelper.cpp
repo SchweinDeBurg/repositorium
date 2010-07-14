@@ -137,23 +137,23 @@ BOOL CTreeCtrlHelper::HasFocus(BOOL bIncEditing)
 
 void CTreeCtrlHelper::ExpandAll(BOOL bExpand, HTREEITEM hti)
 {
-   CHoldRedraw hr(m_tree);
+	CHoldRedraw hr(m_tree);
 
-   ExpandItem(hti, bExpand);
+	ExpandItem(hti, bExpand);
 }
 
 void CTreeCtrlHelper::ExpandItem(HTREEITEM hti, BOOL bExpand)
 {
-   if (hti)
-      m_tree.Expand(hti, bExpand ? TVE_EXPAND : TVE_COLLAPSE);
+	if (hti)
+		m_tree.Expand(hti, bExpand ? TVE_EXPAND : TVE_COLLAPSE);
 
-   HTREEITEM htiChild = m_tree.GetChildItem(hti);
+	HTREEITEM htiChild = m_tree.GetChildItem(hti);
 
-   while (htiChild)
-   {
-      ExpandItem(htiChild, bExpand);
-      htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
-   }
+	while (htiChild)
+	{
+		ExpandItem(htiChild, bExpand);
+		htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
+	}
 }
 
 void CTreeCtrlHelper::GetClientRect(LPRECT lpRect, HTREEITEM htiFrom)
@@ -448,24 +448,24 @@ BOOL CTreeCtrlHelper::IsParentItemExpanded(HTREEITEM hti, BOOL bRecursive) const
 void CTreeCtrlHelper::SetItemChecked(HTREEITEM hti, TCH_CHECK nChecked)
 {
 	int nCheckState = 0;
-   
-   switch (nChecked)
-   {
-   case TCHC_UNCHECKED:
-      nCheckState = INDEXTOSTATEIMAGEMASK(1);
-      break;
-      
-   case TCHC_CHECKED:
-      nCheckState = INDEXTOSTATEIMAGEMASK(2);
-      break;
-      
-   case TCHC_MIXED:
-      nCheckState = INDEXTOSTATEIMAGEMASK(3);
-      break;
-   }
 
-   if (nCheckState)
-	m_tree.SetItemState(hti, nCheckState, TVIS_STATEIMAGEMASK);
+	switch (nChecked)
+	{
+	case TCHC_UNCHECKED:
+		nCheckState = INDEXTOSTATEIMAGEMASK(1);
+		break;
+
+	case TCHC_CHECKED:
+		nCheckState = INDEXTOSTATEIMAGEMASK(2);
+		break;
+
+	case TCHC_MIXED:
+		nCheckState = INDEXTOSTATEIMAGEMASK(3);
+		break;
+	}
+
+	if (nCheckState)
+		m_tree.SetItemState(hti, nCheckState, TVIS_STATEIMAGEMASK);
 }
 
 void CTreeCtrlHelper::SetItemChecked(HTREEITEM hti, BOOL bChecked)

@@ -576,7 +576,7 @@ void CDockManager::OnMinMaxInfo(LPMINMAXINFO pMMI, BOOL /*bMain*/)
 {
 	if (Maximized())
 	{
-   		CSize sizeMin = GetMinMaximizedSize();
+		CSize sizeMin = GetMinMaximizedSize();
 		CRect rWork = GetWorkArea();
 		
 		if (m_nDockPos == DMP_BELOW)
@@ -592,7 +592,7 @@ void CDockManager::OnMinMaxInfo(LPMINMAXINFO pMMI, BOOL /*bMain*/)
 	}
 	else
 	{
-   		CSize sizeMin;
+		CSize sizeMin;
 		if (m_nDockPos == DMP_BELOW)
 		{
 			sizeMin.cx = max(m_sizeMainMin.cx, m_sizeDockMin.cx);
@@ -875,8 +875,8 @@ CRect CDockManager::GetWorkArea(BOOL bMaximized)
 
 		rWorkArea = mi.rcWork;
 
-      if (bMaximized)
-         rWorkArea.InflateRect(4, 4);
+		if (bMaximized)
+			rWorkArea.InflateRect(4, 4);
 	}
 
 	return rWorkArea;
@@ -884,25 +884,25 @@ CRect CDockManager::GetWorkArea(BOOL bMaximized)
 
 CSize CDockManager::GetMinMaximizedSize()
 {
-   CSize sizeMin = GetWorkArea().Size();
-   
-   if (IsDocked() && ::IsWindowVisible(ScGetHwnd()))
-   {
-      switch (m_nDockPos)
-      {
-      case DMP_LEFT:
-      case DMP_RIGHT:
-         sizeMin.cx = MINMAXSIZE;
-         break;
-      
-      case DMP_BELOW:
-         sizeMin.cy = MINMAXSIZE;
-         break;
-      
-      default:
-         ASSERT(0);
-      }
-   }
-   
-   return sizeMin;
+	CSize sizeMin = GetWorkArea().Size();
+
+	if (IsDocked() && ::IsWindowVisible(ScGetHwnd()))
+	{
+		switch (m_nDockPos)
+		{
+		case DMP_LEFT:
+		case DMP_RIGHT:
+			sizeMin.cx = MINMAXSIZE;
+			break;
+
+		case DMP_BELOW:
+			sizeMin.cy = MINMAXSIZE;
+			break;
+
+		default:
+			ASSERT(0);
+		}
+	}
+
+	return sizeMin;
 }

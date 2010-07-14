@@ -44,9 +44,9 @@ void Misc::CopyTexttoClipboard(const CString& sText, HWND hwnd)
 {
 	if (!::OpenClipboard(hwnd)) 
 		return; 
-	
-    ::EmptyClipboard(); 
-	
+
+	::EmptyClipboard(); 
+
     // Allocate a global memory object for the text. 
 	HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, (sText.GetLength() + 1) * sizeof(TCHAR)); 
 	
@@ -269,12 +269,12 @@ CString Misc::FormatArray(const CDWordArray& array, LPCTSTR szSep)
 	int nCount = array.GetSize();
 
 	if (nCount == 0)
-		return "";
+		return _T("");
 
 	CString sSep(szSep);
 
 	if (!szSep)
-		sSep = GetListSeparator() + ' ';
+		sSep = GetListSeparator() + _T(' ');
 
 	CString sText;
 

@@ -47,10 +47,10 @@ static CMap<int, int&, UINT, UINT&> g_mapWidths;
 
 COrderedTreeCtrl::COrderedTreeCtrl(DWORD dwGutterStyles) : 
 
-    // because CTreeCtrlHelper wants a reference passed
-    // to its constructor we have to pass '*this'. however
-    // the compiler complains because 'this' is not yet
-    // fully constructed.
+	// because CTreeCtrlHelper wants a reference passed
+	// to its constructor we have to pass '*this'. however
+	// the compiler complains because 'this' is not yet
+	// fully constructed.
 #pragma warning (disable: 4355)
 	m_ht(*this),
 #pragma warning (default: 4355)

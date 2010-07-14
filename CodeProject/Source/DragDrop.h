@@ -29,9 +29,9 @@ enum
 // bit flags used for window type in window map
 enum
 {
-    DDW_NONE   = 0x00,
-    DDW_SOURCE = 0x01,   // window is drag-drop source
-    DDW_TARGET = 0x02,   // window is drag-drop target
+	DDW_NONE   = 0x00,
+	DDW_SOURCE = 0x01,   // window is drag-drop source
+	DDW_TARGET = 0x02,   // window is drag-drop target
 };
 
 // Used to create drag-drop window map. Map is an array of these structs,

@@ -43,7 +43,7 @@ typedef unsigned long ULONG_PTR;
 
 CMenuIconMgr::CMenuIconMgr()
 {
-   
+
 }
 
 CMenuIconMgr::~CMenuIconMgr()
@@ -54,14 +54,14 @@ CMenuIconMgr::~CMenuIconMgr()
 
 BOOL CMenuIconMgr::Initialize(CWnd* pWnd)
 {
-   if (pWnd && !IsHooked())
-      return HookWindow(pWnd->GetSafeHwnd());
+	if (pWnd && !IsHooked())
+		return HookWindow(pWnd->GetSafeHwnd());
 
-   else if (!pWnd && IsHooked())
-	   return CSubclassWnd::HookWindow(NULL);
-   
-   // else
-   return TRUE;
+	else if (!pWnd && IsHooked())
+		return CSubclassWnd::HookWindow(NULL);
+
+	// else
+	return TRUE;
 }
 
 void CMenuIconMgr::ClearImages()
@@ -237,29 +237,29 @@ LRESULT CMenuIconMgr::WindowProc(HWND /*hRealWnd*/, UINT msg, WPARAM wp, LPARAM 
 
 BOOL CMenuIconMgr::OnDrawItem(int /*nIDCtl*/, LPDRAWITEMSTRUCT lpdis)
 {
-    if (lpdis == NULL || lpdis->CtlType != ODT_MENU)
-        return FALSE; // not for a menu
-	
-    HICON hIcon = LoadItemImage(lpdis->itemID);
-	
-    if (hIcon)
-    {
-        ICONINFO iconinfo;
-        GetIconInfo(hIcon, &iconinfo);
-		
-        BITMAP bitmap;
-        GetObject(iconinfo.hbmColor, sizeof(bitmap), &bitmap);
-		
-        ::DrawIconEx(lpdis->hDC, lpdis->rcItem.left, lpdis->rcItem.top, hIcon, 
-					bitmap.bmWidth, bitmap.bmHeight, 0, NULL, DI_IMAGE | DI_MASK);
-	
+	if (lpdis == NULL || lpdis->CtlType != ODT_MENU)
+		return FALSE; // not for a menu
+
+	HICON hIcon = LoadItemImage(lpdis->itemID);
+
+	if (hIcon)
+	{
+		ICONINFO iconinfo;
+		GetIconInfo(hIcon, &iconinfo);
+
+		BITMAP bitmap;
+		GetObject(iconinfo.hbmColor, sizeof(bitmap), &bitmap);
+
+		::DrawIconEx(lpdis->hDC, lpdis->rcItem.left, lpdis->rcItem.top, hIcon, 
+			bitmap.bmWidth, bitmap.bmHeight, 0, NULL, DI_IMAGE | DI_MASK);
+
 		// cleanup
 		::DeleteObject(iconinfo.hbmColor);
 		::DeleteObject(iconinfo.hbmMask);
 
 		return TRUE;
-    }
-	
+	}
+
 	return FALSE;
 }
 
@@ -267,62 +267,62 @@ void CMenuIconMgr::OnInitMenuPopup(CMenu* pMenu)
 {
 	ASSERT (pMenu);
 
-    MENUINFO mnfo;
-    mnfo.cbSize = sizeof(mnfo);
-    mnfo.fMask = MIM_STYLE;
-    mnfo.dwStyle = MNS_CHECKORBMP | MNS_AUTODISMISS;
+	MENUINFO mnfo;
+	mnfo.cbSize = sizeof(mnfo);
+	mnfo.fMask = MIM_STYLE;
+	mnfo.dwStyle = MNS_CHECKORBMP | MNS_AUTODISMISS;
 	::SetMenuInfo(pMenu->GetSafeHmenu(), &mnfo);
-	
-    MENUITEMINFO minfo;
-    minfo.cbSize = sizeof(minfo);
-	
-    for (UINT pos=0; pos<pMenu->GetMenuItemCount(); pos++)
-    {
-        minfo.fMask = MIIM_FTYPE | MIIM_ID;
-        pMenu->GetMenuItemInfo(pos, &minfo, TRUE);
-		
-        CString sItem;
-        pMenu->GetMenuString(pos, sItem, MF_BYPOSITION);
-		
-        HICON hIcon = LoadItemImage(minfo.wID);
-		
-        if (hIcon && !(minfo.fType & MFT_OWNERDRAW))
-        {
-            minfo.fMask = MIIM_BITMAP | MIIM_DATA;
-            minfo.hbmpItem = HBMMENU_CALLBACK;
-			
+
+	MENUITEMINFO minfo;
+	minfo.cbSize = sizeof(minfo);
+
+	for (UINT pos=0; pos<pMenu->GetMenuItemCount(); pos++)
+	{
+		minfo.fMask = MIIM_FTYPE | MIIM_ID;
+		pMenu->GetMenuItemInfo(pos, &minfo, TRUE);
+
+		CString sItem;
+		pMenu->GetMenuString(pos, sItem, MF_BYPOSITION);
+
+		HICON hIcon = LoadItemImage(minfo.wID);
+
+		if (hIcon && !(minfo.fType & MFT_OWNERDRAW))
+		{
+			minfo.fMask = MIIM_BITMAP | MIIM_DATA;
+			minfo.hbmpItem = HBMMENU_CALLBACK;
+
 			::SetMenuItemInfo(pMenu->GetSafeHmenu(), pos, TRUE, &minfo);
-        }
-    }
+		}
+	}
 }
 
 BOOL CMenuIconMgr::OnMeasureItem(int /*nIDCtl*/, LPMEASUREITEMSTRUCT lpmis)
 {
-    if ((lpmis==NULL)||(lpmis->CtlType != ODT_MENU))
-        return FALSE;
-	
-    lpmis->itemWidth = 16;
-    lpmis->itemHeight = 16;
-	
-    HICON hIcon = LoadItemImage(lpmis->itemID);
-	
-    if (hIcon)
-    {
-        ICONINFO iconinfo;
-        ::GetIconInfo(hIcon, &iconinfo);
-		
-        BITMAP bitmap;
-        ::GetObject(iconinfo.hbmColor, sizeof(bitmap), &bitmap);
-		
-        lpmis->itemWidth = bitmap.bmWidth;
-        lpmis->itemHeight = bitmap.bmHeight;
-	
+	if ((lpmis==NULL)||(lpmis->CtlType != ODT_MENU))
+		return FALSE;
+
+	lpmis->itemWidth = 16;
+	lpmis->itemHeight = 16;
+
+	HICON hIcon = LoadItemImage(lpmis->itemID);
+
+	if (hIcon)
+	{
+		ICONINFO iconinfo;
+		::GetIconInfo(hIcon, &iconinfo);
+
+		BITMAP bitmap;
+		::GetObject(iconinfo.hbmColor, sizeof(bitmap), &bitmap);
+
+		lpmis->itemWidth = bitmap.bmWidth;
+		lpmis->itemHeight = bitmap.bmHeight;
+
 		// cleanup
 		::DeleteObject(iconinfo.hbmColor);
 		::DeleteObject(iconinfo.hbmMask);
-		
+
 		return TRUE;
-    }
-	
+	}
+
 	return FALSE;
 }

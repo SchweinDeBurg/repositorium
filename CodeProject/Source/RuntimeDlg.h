@@ -168,7 +168,7 @@ protected:
 	static void BuildClassMap();
 	static CString GetControlClassName(CWnd* pWnd); // works up the derivation chain till it finds a 'standard' windows control class
 	static HWND CreateRichEdit(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, 
-							            int x, int y, int cx, int cy, HWND hwndParent);
+		int x, int y, int cx, int cy, HWND hwndParent);
     static int CalcLinesRequired(const CString& sText, int nWidthDLU);
 };
 

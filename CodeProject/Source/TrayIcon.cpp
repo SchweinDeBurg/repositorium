@@ -452,27 +452,27 @@ LRESULT CTrayIcon::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 
 BOOL CTrayIcon::ShowBalloon(LPCTSTR szText, LPCTSTR szTitle, DWORD dwIcon, UINT uTimeout)
 {
-    // Verify input parameters.
+	// Verify input parameters.
 	if (uTimeout <= 0)
 		return FALSE;
 
-    // The balloon tooltip text can be up to 255 chars long.
-    ASSERT(AfxIsValidString(szText));
-    ASSERT(lstrlen(szText) < 256);
+	// The balloon tooltip text can be up to 255 chars long.
+	ASSERT(AfxIsValidString(szText));
+	ASSERT(lstrlen(szText) < 256);
 
-    // The balloon title text can be up to 63 chars long.
-    if (szTitle)
-    {
-        ASSERT(AfxIsValidString( szTitle));
-        ASSERT(lstrlen(szTitle) < 64);
-    }
+	// The balloon title text can be up to 63 chars long.
+	if (szTitle)
+	{
+		ASSERT(AfxIsValidString( szTitle));
+		ASSERT(lstrlen(szTitle) < 64);
+	}
 
-    // dwBalloonIcon must be valid.
-    ASSERT(NIIF_NONE == dwIcon    || NIIF_INFO == dwIcon ||
-           NIIF_WARNING == dwIcon || NIIF_ERROR == dwIcon);
+	// dwBalloonIcon must be valid.
+	ASSERT(NIIF_NONE == dwIcon    || NIIF_INFO == dwIcon ||
+		NIIF_WARNING == dwIcon || NIIF_ERROR == dwIcon);
 
-    // The timeout must be between 10 and 30 seconds.
-    uTimeout = min(max(uTimeout, 10), 30);
+	// The timeout must be between 10 and 30 seconds.
+	uTimeout = min(max(uTimeout, 10), 30);
 
 	NOTIFYICONDATA_TI nid;
 
@@ -482,20 +482,20 @@ BOOL CTrayIcon::ShowBalloon(LPCTSTR szText, LPCTSTR szTitle, DWORD dwIcon, UINT 
 	nid.uFlags = NIF_INFO;
 //fabio_2005
 #if _MSC_VER >= 1300
-    _tcsncpy_s(nid.szInfo, szText, 256);
-    if (szTitle)
-        _tcsncpy_s(nid.szInfoTitle, szTitle, 64);
+	_tcsncpy_s(nid.szInfo, szText, 256);
+	if (szTitle)
+		_tcsncpy_s(nid.szInfoTitle, szTitle, 64);
 #else
-    _tcsncpy(nid.szInfo, szText, 256);
-    if (szTitle)
-        _tcsncpy(nid.szInfoTitle, szTitle, 64);
+	_tcsncpy(nid.szInfo, szText, 256);
+	if (szTitle)
+		_tcsncpy(nid.szInfoTitle, szTitle, 64);
 #endif
 
-    else
-        nid.szInfoTitle[0] = _T('\0');
+	else
+		nid.szInfoTitle[0] = _T('\0');
 
-    nid.dwInfoFlags = dwIcon;
-    nid.uTimeout = uTimeout * 1000;   // convert time to ms
+	nid.dwInfoFlags = dwIcon;
+	nid.uTimeout = uTimeout * 1000;   // convert time to ms
 
-    return Shell_NotifyIcon(NIM_MODIFY, (PNOTIFYICONDATA)&nid);
+	return Shell_NotifyIcon(NIM_MODIFY, (PNOTIFYICONDATA)&nid);
 }

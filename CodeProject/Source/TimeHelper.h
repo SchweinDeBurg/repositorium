@@ -75,7 +75,7 @@ protected:
 protected:
 	static BOOL Compare(int nFromUnits, int nToUnits); // 0=same, -1=nFrom < nTo else 1
 	static CString FormatTimeHMS(double dTime, int nUnits, int nLeftOverUnits, 
-								   double dLeftOverMultiplier, BOOL bDecPlaces);
+		double dLeftOverMultiplier, BOOL bDecPlaces);
 };
 
 #endif // !defined(AFX_TIMEHELPER_H__BA0C1E67_FAAA_4E65_8EF3_01B011ACFBBC__INCLUDED_)

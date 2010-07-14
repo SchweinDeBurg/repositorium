@@ -78,8 +78,8 @@ enum
 #else
 struct MOUSEHOOKSTRUCTEX
 {
-    MOUSEHOOKSTRUCT MOUSEHOOKSTRUCT;
-    DWORD mouseData;
+	MOUSEHOOKSTRUCT MOUSEHOOKSTRUCT;
+	DWORD mouseData;
 };
 #endif
 
@@ -109,19 +109,19 @@ protected:
 		INITHOOK(m_hMsgFilterHook, HM_MSGFILTER, WH_MSGFILTER, MsgFilterProc);
 		INITHOOK(m_hShellHook, HM_SHELL, WH_SHELL, ShellProc);
 		INITHOOK(m_hSysMsgFilterHook, HM_SYSMSGFILTER, WH_SYSMSGFILTER, SysMsgFilterProc);
-      INITHOOK(m_hMouseHook, HM_MOUSE, WH_MOUSE, MouseProc);
+		INITHOOK(m_hMouseHook, HM_MOUSE, WH_MOUSE, MouseProc);
 
 		m_sClassFilter = szClassFilter;
 
-      // detect whether on 2000 or later
-      OSVERSIONINFO OS;
-	
-      OS.dwOSVersionInfoSize=sizeof(OS);
-      ::GetVersionEx(&OS);
+		// detect whether on 2000 or later
+		OSVERSIONINFO OS;
 
-      m_b2000orLater = (OS.dwPlatformId == VER_PLATFORM_WIN32_NT &&
-                        OS.dwMajorVersion >= 5);
-            
+		OS.dwOSVersionInfoSize=sizeof(OS);
+		::GetVersionEx(&OS);
+
+		m_b2000orLater = (OS.dwPlatformId == VER_PLATFORM_WIN32_NT &&
+			OS.dwMajorVersion >= 5);
+
 		return TRUE;
 	}
 
@@ -151,7 +151,7 @@ protected:
 	HHOOK m_hShellHook;
 	HHOOK m_hSysMsgFilterHook;
 	CString m_sClassFilter;
-   BOOL m_b2000orLater;
+	BOOL m_b2000orLater;
 
 protected:
 	static MGRTYPE& GetInstance()
@@ -172,7 +172,7 @@ protected:
 		m_hMsgFilterHook = NULL;
 		m_hShellHook = NULL;
 		m_hSysMsgFilterHook = NULL;
-      m_b2000orLater = FALSE;
+		m_b2000orLater = FALSE;
 	}
 
 	// derived classes override whatever they need
@@ -208,9 +208,9 @@ protected:
 			if (GetInstance().ClassMatches(pwp->hwnd))
 			{
 				MSG msg = { pwp->hwnd, pwp->message, pwp->wParam, pwp->lParam, 0, { 0, 0 } };
-				
-            if (GetInstance().OnCallWndProc(msg))
-               return TRUE;
+
+				if (GetInstance().OnCallWndProc(msg))
+					return TRUE;
 			}
 		}
 		
@@ -233,8 +233,8 @@ protected:
 			{
 				MSG msg = { pwp->hwnd, pwp->message, pwp->wParam, pwp->lParam, 0, { 0, 0 } };
 				
-            if (GetInstance().OnCallWndRetProc(msg, pwp->lResult))
-               return TRUE;
+				if (GetInstance().OnCallWndRetProc(msg, pwp->lResult))
+					return TRUE;
 			}
 		}
 		
@@ -268,11 +268,11 @@ protected:
 #endif
 		
 		if (nCode == HC_ACTION)
-      {
-         if (GetInstance().OnForegroundIdle())
-            return TRUE;
-      }
-		
+		{
+			if (GetInstance().OnForegroundIdle())
+				return TRUE;
+		}
+
 		return CallNextHookEx(GetInstance().m_hForegroundIdleHook, nCode, wParam, lParam);
 	}
 
@@ -291,7 +291,7 @@ protected:
 			if (GetInstance().ClassMatches(pMsg->hwnd))
 			{
 				if (GetInstance().OnGetMessage(*pMsg))
-               return TRUE;
+					return TRUE;
 			}
 		}
 		
@@ -309,7 +309,7 @@ protected:
 		if (nCode == HC_ACTION)
 		{
 			if (GetInstance().OnKeyboard(wParam, lParam))
-            return TRUE;
+				return TRUE;
 		}
 		
 		return CallNextHookEx(GetInstance().m_hKeyboardHook, nCode, wParam, lParam);
@@ -322,8 +322,8 @@ protected:
 		// If this is a DLL, need to set up MFC state
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
 #endif
-		
-      MGRTYPE& mgr = GetInstance();
+
+		MGRTYPE& mgr = GetInstance();
 
 		if (nCode == HC_ACTION)
 		{
@@ -334,7 +334,7 @@ protected:
 #if _MSC_VER >= 1300
 
 				//fabio_2005	
-			   //fabio	
+				//fabio	
 				MOUSEHOOKSTRUCTEX* pInfoEx = (MOUSEHOOKSTRUCTEX*)pInfo;
 				if (!mgr.m_b2000orLater)
 				{
@@ -345,27 +345,27 @@ protected:
 					return TRUE;
 #else
 
-            if (mgr.m_b2000orLater)
-            {
-               MOUSEHOOKSTRUCTEX* pInfoEx = (MOUSEHOOKSTRUCTEX*)pInfo;
+				if (mgr.m_b2000orLater)
+				{
+					MOUSEHOOKSTRUCTEX* pInfoEx = (MOUSEHOOKSTRUCTEX*)pInfo;
 
-               if (mgr.OnMouseEx(wParam, *pInfoEx))
-                  return TRUE;
-            }
-            else
-            {
-				MOUSEHOOKSTRUCTEX infoEx;
-               infoEx.MOUSEHOOKSTRUCT = *pInfo;
-               infoEx.mouseData = 0;
+					if (mgr.OnMouseEx(wParam, *pInfoEx))
+						return TRUE;
+				}
+				else
+				{
+					MOUSEHOOKSTRUCTEX infoEx;
+					infoEx.MOUSEHOOKSTRUCT = *pInfo;
+					infoEx.mouseData = 0;
 
-               if (mgr.OnMouseEx(wParam, infoEx))
-                  return TRUE;
-            }
+					if (mgr.OnMouseEx(wParam, infoEx))
+						return TRUE;
+				}
 #endif
-			   
-         }
+
+			}
 		}
-		
+
 		return CallNextHookEx(mgr.m_hMouseHook, nCode, wParam, lParam);
 	}
 
@@ -382,10 +382,10 @@ protected:
 			MSG* pMsg = (MSG*)lParam;
 
 			if (GetInstance().ClassMatches(pMsg->hwnd))
-         {
-            if (GetInstance().OnMsgFilter(*pMsg, nCode))
-               return TRUE;
-         }
+			{
+				if (GetInstance().OnMsgFilter(*pMsg, nCode))
+					return TRUE;
+			}
 		}
 
 		return CallNextHookEx(GetInstance().m_hMsgFilterHook, nCode, wParam, lParam);
@@ -422,10 +422,10 @@ protected:
 			MSG* pMsg = (MSG*)lParam;
 
 			if (GetInstance().ClassMatches(pMsg->hwnd))
-         {
-            if (GetInstance().OnSysMsgFilter(*pMsg, nCode))
-               return TRUE;
-         }
+			{
+				if (GetInstance().OnSysMsgFilter(*pMsg, nCode))
+					return TRUE;
+			}
 		}
 		
 		return CallNextHookEx(GetInstance().m_hSysMsgFilterHook, nCode, wParam, lParam);

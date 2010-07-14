@@ -174,8 +174,8 @@ void CEnEdit::PreSubclassWindow()
 
 BOOL CEnEdit::PreTranslateMessage(MSG* pMsg) 
 {
-   if (m_tooltip.GetSafeHwnd())
-	   m_tooltip.RelayEvent(pMsg);
+	if (m_tooltip.GetSafeHwnd())
+		m_tooltip.RelayEvent(pMsg);
 	
 	return CMaskEdit::PreTranslateMessage(pMsg);
 }

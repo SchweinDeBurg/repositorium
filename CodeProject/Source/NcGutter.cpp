@@ -898,9 +898,9 @@ void CNcGutter::OnButtonDown(UINT nMsg, CPoint point)
 
 	// notify parent then hook window
 	NCGITEMCLICK ngic = { m_dwButtonDownItem,
-						  0,
-						  NCG_CLIENTCOLUMNID,
-						  nMsg, { point.x, point.y } };
+		0,
+		NCG_CLIENTCOLUMNID,
+		nMsg, { point.x, point.y } };
 
 	UINT nID = GetDlgCtrlID();
 
@@ -942,9 +942,9 @@ void CNcGutter::OnButtonUp(UINT nMsg, CPoint point)
 		{
 			// notify parent then hook window
 			NCGITEMCLICK ngic = { dwItem,
-									m_dwButtonDownItem,
-									NCG_CLIENTCOLUMNID,
-									nMsg, { point.x, point.y } };
+				m_dwButtonDownItem,
+				NCG_CLIENTCOLUMNID,
+				nMsg, { point.x, point.y } };
 
 			UINT nID = GetDlgCtrlID();
 
@@ -1539,7 +1539,7 @@ void CNcGutter::NcDrawHeaderColumn(CDC* pDC, int nColumn, CRect rColumn, CThemed
 		BOOL bClickable = (bHot && pCD->bClickable);
 
 		pTheme->DrawBackground(pDC, HP_HEADERITEM, bPressed ? HIS_PRESSED :
-								(bClickable ? HIS_HOT : HIS_NORMAL), rColumn);
+			(bClickable ? HIS_HOT : HIS_NORMAL), rColumn);
 	}
 
 	// text

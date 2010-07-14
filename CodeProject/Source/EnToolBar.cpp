@@ -110,10 +110,10 @@ BOOL CEnToolBar::SetImage(UINT nIDImage, COLORREF crMask)
 {
 	CEnBitmapEx bitmap;
 
-   if (!bitmap.LoadBitmap(nIDImage))
+	if (!bitmap.LoadBitmap(nIDImage))
 		return FALSE;
 
-   return SetImage(&bitmap, crMask);
+	return SetImage(&bitmap, crMask);
 }
 
 BOOL CEnToolBar::SetImage(const CString& sImagePath, COLORREF crMask)
@@ -123,7 +123,7 @@ BOOL CEnToolBar::SetImage(const CString& sImagePath, COLORREF crMask)
 	if (!bitmap.LoadImage(sImagePath))
 		return FALSE;
 
-   return SetImage(&bitmap, crMask);
+	return SetImage(&bitmap, crMask);
 }
 
 BOOL CEnToolBar::SetImage(CEnBitmapEx* pBitmap, COLORREF crMask)
@@ -131,8 +131,8 @@ BOOL CEnToolBar::SetImage(CEnBitmapEx* pBitmap, COLORREF crMask)
 	CEnBitmapEx bmDis;
 	bmDis.CopyImage(pBitmap); // for later
 	
-    if (crMask == NO_COLOR) // map 3d colors
-	   pBitmap->RemapSysColors();
+	if (crMask == NO_COLOR) // map 3d colors
+		pBitmap->RemapSysColors();
 	
 	// button size
 	BITMAP BM;
@@ -270,36 +270,36 @@ void CEnToolBar::RefreshDisabledImageList(CEnBitmapEx* pBitmap, COLORREF crMask)
 //fabio_2005
 void CEnToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 {
-    *pResult = CDRF_DODEFAULT;
-    LPNMTBCUSTOMDRAW lpNMCustomDraw = ( LPNMTBCUSTOMDRAW )pNMHDR;
-    
-    switch ( lpNMCustomDraw->nmcd.dwDrawStage )
-    {
-    case CDDS_PREPAINT:
+	*pResult = CDRF_DODEFAULT;
+	LPNMTBCUSTOMDRAW lpNMCustomDraw = ( LPNMTBCUSTOMDRAW )pNMHDR;
+
+	switch ( lpNMCustomDraw->nmcd.dwDrawStage )
+	{
+	case CDDS_PREPAINT:
 		OnEraseBkgnd(CDC::FromHandle(lpNMCustomDraw->nmcd.hdc));
 
 		*pResult = CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT;
 		break;
-		
-    case CDDS_POSTPAINT:
-       *pResult = CDRF_DODEFAULT | CDRF_NOTIFYITEMDRAW;
-       break;
-       
-    case CDDS_PREERASE:
-       *pResult = CDRF_SKIPDEFAULT | CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT;
-       break;
-       
-    case CDDS_ITEMPREPAINT:
-       *pResult = OnItemPrePaint(lpNMCustomDraw) | CDRF_NOTIFYPOSTPAINT;
-       break;
 
-    case CDDS_ITEMPOSTPAINT:
-       *pResult = OnItemPostPaint(lpNMCustomDraw);
-       break;
+	case CDDS_POSTPAINT:
+		*pResult = CDRF_DODEFAULT | CDRF_NOTIFYITEMDRAW;
+		break;
 
-    default:
-       break;
-    }
+	case CDDS_PREERASE:
+		*pResult = CDRF_SKIPDEFAULT | CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT;
+		break;
+
+	case CDDS_ITEMPREPAINT:
+		*pResult = OnItemPrePaint(lpNMCustomDraw) | CDRF_NOTIFYPOSTPAINT;
+		break;
+
+	case CDDS_ITEMPOSTPAINT:
+		*pResult = OnItemPostPaint(lpNMCustomDraw);
+		break;
+
+	default:
+		break;
+	}
 }
 
 BOOL CEnToolBar::OnEraseBkgnd(CDC* pDC)

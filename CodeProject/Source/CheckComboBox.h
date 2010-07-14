@@ -38,11 +38,11 @@
 
 class CCheckComboBox : public CAutoComboBox, public CSubclasser
 {
-// Construction
+	// Construction
 public:
 	CCheckComboBox(DWORD dwFlags = 0);
 
-//	BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
+	//	BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
 	BOOL GetCheck(int nIndex) const;
 	int GetChecked(CStringArray& aItems) const;
 	void SetChecked(const CStringArray& aItems);
@@ -54,7 +54,7 @@ public:
 	CString GetTooltip() const;
 
 	virtual int AddUniqueItem(const CString& sItem); // returns index or CB_ERR
-    virtual int SelectString(int nStartAfter, LPCTSTR lpszString);
+	virtual int SelectString(int nStartAfter, LPCTSTR lpszString);
 	int GetCurSel() const;
 
 protected:
@@ -63,12 +63,12 @@ protected:
 	mutable BOOL m_bDrawing;
 	BOOL m_bTextFits;
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CCheckComboBox)
-	public:
+public:
 	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
-	protected:
+protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
@@ -78,7 +78,7 @@ protected:
 	// for editbox
 	virtual LRESULT WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp);
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CCheckComboBox();
 
@@ -92,7 +92,7 @@ protected:
 	afx_msg BOOL OnEditchange();
 	afx_msg BOOL OnDropdown();
 	afx_msg void OnLBSelChange();
-	
+
 	DECLARE_MESSAGE_MAP()
 
 	virtual void OnCheckChange(int /*nIndex*/) {}

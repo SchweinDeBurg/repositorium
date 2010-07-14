@@ -142,25 +142,25 @@ CSize CEnString::FormatDCEx(CDC* pDC, int nWidth, int nStyle)
 	CString sFinalText = *this;
 
 	CSize sizeText = pDC->GetTextExtent(sFinalText);
-	CSize sizeEllipsis = pDC->GetTextExtent("...");
+	CSize sizeEllipsis = pDC->GetTextExtent(_T("..."));
 
 	bool bEndEllipsis = (nStyle == ES_END || nStyle == ES_WORD);
 	
 	// truncate string if too long adding ellipsis (...)
 	if ((sizeText.cx + sizeEllipsis.cx) > nWidth)
 	{
-	    while ((sizeText.cx + sizeEllipsis.cx) > nWidth)
-	    {
+		while ((sizeText.cx + sizeEllipsis.cx) > nWidth)
+		{
 			// truncate another char
 			if (bEndEllipsis)
 			{
 				sFinalText = sFinalText.Left(sFinalText.GetLength() - 1);
-				sizeText = pDC->GetTextExtent(CString("..." + sFinalText));
+				sizeText = pDC->GetTextExtent(CString(_T("...") + sFinalText));
 			}
 			else
 			{
 				sFinalText = sFinalText.Mid(1);
-		        sizeText = pDC->GetTextExtent(CString(sFinalText + "..."));
+				sizeText = pDC->GetTextExtent(CString(sFinalText + _T("...")));
 			}
 
 			if (sFinalText.IsEmpty())
@@ -168,9 +168,9 @@ CSize CEnString::FormatDCEx(CDC* pDC, int nWidth, int nStyle)
 		}
 			
 		if (bEndEllipsis)
-			sFinalText += "...";
+			sFinalText += _T("...");
 		else
-			sFinalText = "..." + sFinalText;
+			sFinalText = _T("...") + sFinalText;
 	}
 
 	*this = CEnString(sFinalText);

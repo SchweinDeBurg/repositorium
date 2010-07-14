@@ -36,17 +36,17 @@
 
 class CMouseWheelMgr : public CHookMgr<CMouseWheelMgr>  
 {
-   friend class CHookMgr<CMouseWheelMgr>;
+	friend class CHookMgr<CMouseWheelMgr>;
 
 public:
 	virtual ~CMouseWheelMgr();
- 	static BOOL Initialize();
+	static BOOL Initialize();
 
 protected:
 	CMouseWheelMgr();
- 	static CMouseWheelMgr& Instance() { return CHookMgr<CMouseWheelMgr>::GetInstance(); }
+	static CMouseWheelMgr& Instance() { return CHookMgr<CMouseWheelMgr>::GetInstance(); }
 
-  	virtual BOOL OnMouseEx(UINT uMouseMsg, const MOUSEHOOKSTRUCTEX& info);
+	virtual BOOL OnMouseEx(UINT uMouseMsg, const MOUSEHOOKSTRUCTEX& info);
 };
 
 #endif // !defined(AFX_MOUSEWHEELMGR_H__6738593F_D10B_45D9_ACA0_335DA7C0F630__INCLUDED_)

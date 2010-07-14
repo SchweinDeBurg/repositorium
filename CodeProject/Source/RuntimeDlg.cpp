@@ -367,7 +367,7 @@ BOOL CRuntimeDlg::AddControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD
 }
 
 BOOL CRuntimeDlg::AddRCControl(LPCTSTR szRCType, LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, 
-							   DWORD dwExStyle, int x, int y, int cx, int cy, UINT nID, UINT nIconID)
+	DWORD dwExStyle, int x, int y, int cx, int cy, UINT nID, UINT nIconID)
 {
 	CString sClass(szClass);
 	
@@ -401,7 +401,7 @@ BOOL CRuntimeDlg::AddRCControl(LPCTSTR szRCType, LPCTSTR szClass, LPCTSTR szCapt
 }
 
 BOOL CRuntimeDlg::AddRCControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, 
-							   DWORD dwExStyle, int x, int y, int cx, int cy, UINT nID, UINT nIconID)
+	DWORD dwExStyle, int x, int y, int cx, int cy, UINT nID, UINT nIconID)
 {
 	CString sClass = GetClassName(pWnd);
 	
@@ -637,9 +637,9 @@ int CRuntimeDlg::AddRCControls(const CString& sRCControls)
 
 BOOL CRuntimeDlg::PreTranslateMessage(MSG* pMsg)
 {
-   BOOL bChild = (GetStyle() & WS_CHILD);
-   BOOL bTab = (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_TAB);
-   
+	BOOL bChild = (GetStyle() & WS_CHILD);
+	BOOL bTab = (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_TAB);
+
 	// don't handle the enter/cancel keys in child dialogs
 /*
 	if (bChild)
@@ -650,18 +650,18 @@ BOOL CRuntimeDlg::PreTranslateMessage(MSG* pMsg)
 */
 	
 	// also filter out what look like accelerator keys 
- 	if (pMsg->message == WM_KEYDOWN)
- 	{
- 		if (pMsg->wParam != VK_CONTROL && (GetKeyState(VK_CONTROL) & 0x8000))
- 			return FALSE;
- 	}
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		if (pMsg->wParam != VK_CONTROL && (GetKeyState(VK_CONTROL) & 0x8000))
+			return FALSE;
+	}
 	
 	// filter out mouse moves because CDialog::PreTranslateMessage
 	// eats them and prevents tooltips working
 //	else if (pMsg->message == WM_MOUSEMOVE)
 //		return FALSE;
 	
-   return (bChild && !bTab) ? CWnd::PreTranslateMessage(pMsg) : CDialog::PreTranslateMessage(pMsg);
+	return (bChild && !bTab) ? CWnd::PreTranslateMessage(pMsg) : CDialog::PreTranslateMessage(pMsg);
 }
 
 
@@ -755,5 +755,5 @@ CString CRuntimeDlg::GetControlClassName(CWnd* pWnd)
 	
 	// means we did not find anything
 	ASSERT (0);
-	return "";
+	return _T("");
 }
