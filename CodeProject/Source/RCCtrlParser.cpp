@@ -426,7 +426,7 @@ int CRCCtrlParser::ExtractRCStyles(const CString& sStyles, CStringArray& aStyles
 
 	do
 	{
-		int nFind = sTemp.Find('|');
+		int nFind = sTemp.Find(_T('|'));
 
 		if (nFind == -1)
 		{
