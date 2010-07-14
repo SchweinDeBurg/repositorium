@@ -491,6 +491,30 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\RichEditBaseCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RichEditBaseCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RichEditHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RichEditHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RichEditNcBorder.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RichEditNcBorder.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\scbarcf.cpp"
 				>
 			</File>
