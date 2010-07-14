@@ -627,6 +627,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\TimeComboBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TimeComboBox.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ToolbarHelper.cpp"
 				>
 			</File>
@@ -3106,6 +3114,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\WinStyles.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\WndPrompt.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\WndPrompt.h"
 				>
 			</File>
 		</Filter>
