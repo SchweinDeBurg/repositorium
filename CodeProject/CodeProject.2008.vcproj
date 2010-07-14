@@ -507,6 +507,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\TabCtrlEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TabCtrlEx.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\XColorStatic.cpp"
 				>
 			</File>
@@ -2742,6 +2750,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\DragDrop.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnCommandLineInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnCommandLineInfo.h"
 				>
 			</File>
 			<File
