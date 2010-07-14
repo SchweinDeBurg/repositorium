@@ -531,6 +531,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\OrderedTreeCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\OrderedTreeCtrl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ReportCtrl.cpp"
 				>
 			</File>
@@ -624,6 +632,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\ToolbarHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TreeCtrlHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TreeCtrlHelper.h"
 				>
 			</File>
 			<File
@@ -2141,14 +2157,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\XmlNodeWrapper.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\XmlNodeWrapper.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\XmlParser.cpp"
 				>
 			</File>
@@ -2998,6 +3006,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\MouseWheelMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\NcGutter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\NcGutter.h"
 				>
 			</File>
 			<File
