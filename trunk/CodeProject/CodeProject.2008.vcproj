@@ -427,6 +427,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\EnToolBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnToolBar.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\FontComboBox.cpp"
 				>
 			</File>
@@ -568,6 +576,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\TabCtrlEx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ToolbarHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ToolbarHelper.h"
 				>
 			</File>
 			<File
@@ -2018,6 +2034,14 @@
 				RelativePath=".\Source\memdc.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Source\SysImageList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\SysImageList.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Path"
@@ -2909,6 +2933,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\RCCtrlParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RCCtrlParser.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\Subclass.cpp"
 				>
 			</File>
@@ -2934,6 +2966,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\WinClasses.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\WinStyles.h"
 				>
 			</File>
 		</Filter>

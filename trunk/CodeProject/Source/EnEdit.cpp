@@ -128,26 +128,6 @@ BOOL CEnEdit::InsertButton(int nPos, UINT nID, LPCTSTR szCaption, LPCTSTR szTip,
 	
 		if (!eb.hFont)
 			return FALSE;
-/*
-		LOGFONT lf;
-		HFONT hDef = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
-
-		if (GetObject(hDef, sizeof(lf), &lf))
-		{
-			lstrcpy(lf.lfFaceName, szFont);
-
-			if (bSymbolFont)
-			{
-				lf.lfCharSet = SYMBOL_CHARSET;
-				lf.lfQuality = ANTIALIASED_QUALITY;
-			}
-
-			eb.hFont = CreateFontIndirect(&lf);
-
-			if (!eb.hFont)
-				return FALSE;
-		}
-*/
 	}
 
 	m_aButtons.InsertAt(nPos, eb);
