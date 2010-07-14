@@ -1,5 +1,9 @@
 // EnBitmap.h: interface for the CEnBitmap class.
 //
+// credits: Peter Hendrix's CPicture implementation for the original IPicture code 
+//          Yves Maurer's GDIRotate implementation for the idea of working directly on 32 bit representations of bitmaps 
+//          Karl Lager's 'A Fast Algorithm for Rotating Bitmaps' 
+// 
 //////////////////////////////////////////////////////////////////////
 
 #if !defined(AFX_ENBITMAP_H__1FDE0A4E_8AB4_11D6_95AD_EFA89432A428__INCLUDED_)

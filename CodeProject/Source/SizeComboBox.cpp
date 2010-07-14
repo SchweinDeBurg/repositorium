@@ -19,6 +19,7 @@
 					"SelectFontSize" to select an entry by content.
 
    ========================================================================*/
+
 #include "stdafx.h"
 #include "SizeComboBox.h"
 

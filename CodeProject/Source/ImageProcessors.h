@@ -1,3 +1,9 @@
+// ImageProcessors.h: C32BitImageProcessor derivations (c) daniel godson 2002.
+//
+// credits: Karl Lager's 'A Fast Algorithm for Rotating Bitmaps' 
+// 
+//////////////////////////////////////////////////////////////////////
+
 #if !defined(AFX_IMAGEPROCESSORS_H__1FDE0A4E_8AB4_11D6_95AD_EFA89432A428__INCLUDED_)
 #define AFX_IMAGEPROCESSORS_H__1FDE0A4E_8AB4_11D6_95AD_EFA89432A428__INCLUDED_
 
