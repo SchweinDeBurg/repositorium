@@ -2945,6 +2945,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\EditShortcutMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EditShortcutMgr.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\EnCommandLineInfo.cpp"
 				>
 			</File>
@@ -3006,6 +3014,18 @@
 			</File>
 			<File
 				RelativePath=".\Source\HotTracker.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\LightBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\LightBox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\LimitSingleInstance.h"
 				>
 			</File>
 			<File
