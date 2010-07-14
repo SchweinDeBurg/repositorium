@@ -379,6 +379,38 @@
 			Filter="h;cpp"
 			>
 			<File
+				RelativePath=".\Source\AutoComboBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\AutoComboBox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CheckComboBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CheckComboBox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CheckListBoxEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CheckListBoxEx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ColorComboBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ColorComboBox.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ColourPicker.cpp"
 				>
 			</File>
@@ -392,6 +424,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\ColourPopup.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnCheckComboBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnCheckComboBox.h"
 				>
 			</File>
 			<File
@@ -1958,6 +1998,14 @@
 			Filter="h;cpp"
 			>
 			<File
+				RelativePath=".\Source\DialogHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DialogHelper.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ETSLayout.cpp"
 				>
 			</File>
@@ -1987,6 +2035,22 @@
 			</File>
 			<File
 				RelativePath=".\Source\IconDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PropertyPageHost.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PropertyPageHost.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RuntimeDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RuntimeDlg.h"
 				>
 			</File>
 		</Filter>
@@ -2841,6 +2905,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\DockManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DockManager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\DragDrop.cpp"
 				>
 			</File>
@@ -2894,6 +2966,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\GUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\HoldRedraw.h"
 				>
 			</File>
 			<File
@@ -2954,6 +3030,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\Themed.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TrayIcon.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TrayIcon.h"
 				>
 			</File>
 			<File
