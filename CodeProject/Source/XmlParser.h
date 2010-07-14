@@ -16,14 +16,14 @@ class CXmlElement
 public:
 	CXmlElement() 
 	{
-		//TRACE(_T("in CXmlElement\n"));
+		TRACE(_T("in CXmlElement\n"));
 		m_posFind = NULL;
 		m_pParentElement = NULL;
 	};
 
 	virtual ~CXmlElement() 
 	{
-		//TRACE(_T("in ~CXmlElement <%s>\n"), m_strName);
+		TRACE(_T("in ~CXmlElement <%s>\n"), m_strName);
 		CXmlListElement *pos = m_ChildElements.GetFirst();
 		while (pos != NULL && !pos->IsRoot())
 		{

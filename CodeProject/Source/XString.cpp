@@ -63,7 +63,6 @@
 #include <tchar.h>
 #include <crtdbg.h>
 #include "XString.h"
-//#include "XTrace.h"
 
 #if 0  // -----------------------------------------------------------
 #ifdef _DEBUG
@@ -424,8 +423,6 @@ int _tcsistrrep(const TCHAR * lpszStr,
 			pszStart += _tcslen(pszStart);
 		}
 
-		//TRACE("pszResultStr=<%s>\n", pszResultStr);
-
 		_ASSERTE(pszResultStr[nResultStrSize-2] == _T('\0'));
 
 		if (lpszResult && pszResultStr)
@@ -438,8 +435,6 @@ int _tcsistrrep(const TCHAR * lpszStr,
 		nSize = (int)_tcslen(pszResultStr);
 		delete [] pszResultStr;
 	}
-
-	//TRACE("_tcsistrrep returning %d\n", nSize);
 
 	return nSize;
 }

@@ -395,11 +395,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\EnEdit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnEdit.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\EnHeaderCtrl.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\EnHeaderCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnListCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EnListCtrl.h"
 				>
 			</File>
 			<File
@@ -448,6 +464,22 @@
 			</File>
 			<File
 				RelativePath=".\Source\LockableHeaderCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MaskEdit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MaskEdit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MonthComboBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MonthComboBox.h"
 				>
 			</File>
 			<File
@@ -2737,11 +2769,27 @@
 			Filter="h;cpp"
 			>
 			<File
+				RelativePath=".\Source\AutoFlag.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\AutoFlag.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\DeferWndMove.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\DeferWndMove.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DlgUnits.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DlgUnits.h"
 				>
 			</File>
 			<File
@@ -2758,6 +2806,22 @@
 			</File>
 			<File
 				RelativePath=".\Source\EnCommandLineInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\FileMisc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\FileMisc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\FileRegister.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\FileRegister.h"
 				>
 			</File>
 			<File
@@ -2785,11 +2849,39 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\HookMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\HotTracker.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\HotTracker.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\Misc.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\Misc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MouseWheelMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MouseWheelMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\OSVersion.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\OSVersion.h"
 				>
 			</File>
 			<File
@@ -2806,6 +2898,18 @@
 			</File>
 			<File
 				RelativePath=".\Source\Themed.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\WClassDefines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\WinClasses.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\WinClasses.h"
 				>
 			</File>
 		</Filter>
@@ -2827,6 +2931,27 @@
 			</File>
 			<File
 				RelativePath=".\Source\TimeHelper.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Menu"
+			Filter="h;cpp"
+			>
+			<File
+				RelativePath=".\Source\MenuEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MenuEx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MenuIconMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MenuIconMgr.h"
 				>
 			</File>
 		</Filter>

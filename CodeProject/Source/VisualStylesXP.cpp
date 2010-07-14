@@ -523,7 +523,7 @@ BOOL CVisualStylesXP::UseVisualStyles()
 
 		if (!GetCurrentThemeName(szName, MAX_PATH-1, szColor, MAX_PATH-1, NULL, 0))
 		{
-			//TRACE(_T("theme=<%ls>  color=<%ls>\n"), szName, szColor);
+			TRACE(_T("theme=<%ls>  color=<%ls>\n"), szName, szColor);
 			if ((_wcsicmp(szName, L"normalcolor") == 0) ||
 				(_wcsicmp(szName, L"homestead") == 0) ||
 				(_wcsicmp(szName, L"metallic") == 0))

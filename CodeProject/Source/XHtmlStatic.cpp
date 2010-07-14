@@ -1056,7 +1056,7 @@ void CXHTMLStatic::Draw(HDC hDC)
 			m_AnchorRectPtrs.Add(pRect);
 			m_AnchorUrls.Add(strAnchorText);
 			TRACE(_T("added anchor:  <%s>\n"), strAnchorText);
-			//TRACERECT(*pRect);
+			TRACERECT(*pRect);
 
 			if (m_bToolTip)
 			{
@@ -1135,7 +1135,7 @@ int CXHTMLStatic::FormatText(HDC hdc,
 {
 	TRACE(_T("in CXHTMLStatic::FormatText:  nInitialXOffset=%d  <%-20.20s>\n"), 
 		nInitialXOffset, lpszText);
-	//TRACERECT(*pRect);
+	TRACERECT(*pRect);
 
 	int		xStart, nWord, xNext, xLast, nLeftMargin;
 	TCHAR	*pText = (TCHAR *) lpszText;

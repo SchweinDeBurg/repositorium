@@ -930,8 +930,6 @@ void gen_codes (TState &state, ct_data *tree, int max_code)
         if (len == 0) continue;
         /* Now reverse the bits */
         tree[n].fc.code = (ush)bi_reverse(next_code[len]++, len);
-
-        //Tracec(tree != state.ts.static_ltree, "\nn %3d %c l %2d c %4x (%x) ", n, (isgraph(n) ? n : ' '), len, tree[n].fc.code, next_code[len]-1);
     }
 }
 
