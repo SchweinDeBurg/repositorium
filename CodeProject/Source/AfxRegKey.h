@@ -21,6 +21,14 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
+//*****************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - improved compatibility with the Unicode-based builds
+// - added AbstractSpoon Software copyright notice and licenese information
+// - taken out from the original ToDoList package for better sharing
+// - renamed to CAfxRegKey because of conflict with ATL/MFC shared CRegKey
+//*****************************************************************************
+
 #if !defined(AFX_REGKEY_H__E451D194_D4C3_11D1_AB17_0000E8425C3E__INCLUDED_)
 #define AFX_REGKEY_H__E451D194_D4C3_11D1_AB17_0000E8425C3E__INCLUDED_
 

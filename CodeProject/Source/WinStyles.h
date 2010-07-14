@@ -21,6 +21,13 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
+//*****************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - improved compatibility with the Unicode-based builds
+// - added AbstractSpoon Software copyright notice and licenese information
+// - taken out from the original ToDoList package for better sharing
+//*****************************************************************************
+
 #if !defined(AFX_STYLES_H__46AFC4E3_CC43_4E69_B5D3_2B6D1F501D0E__INCLUDED_)
 #define AFX_STYLES_H__46AFC4E3_CC43_4E69_B5D3_2B6D1F501D0E__INCLUDED_
 

@@ -21,6 +21,14 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
+//*****************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - improved compatibility with the Unicode-based builds
+// - added AbstractSpoon Software copyright notice and licenese information
+// - taken out from the original ToDoList package for better sharing
+// - renamed to CAfxRegKey because of conflict with ATL/MFC shared CRegKey
+//*****************************************************************************
+
 #include "stdafx.h"
 #include "AfxRegKey.h"
 #include <winerror.h>
@@ -304,11 +312,11 @@ CString CAfxRegKey::GetAppRegPath(LPCTSTR szAppName)
 		sAppName = AfxGetAppName();
 
 	// construct reg path
-	sRegPath = "Software\\";
+	sRegPath = _T("Software\\");
 	sRegPath += CString(AfxGetApp()->m_pszRegistryKey);
-	sRegPath += '\\';
+	sRegPath += _T('\\');
 	sRegPath += sAppName;
-	sRegPath += '\\';
+	sRegPath += _T('\\');
 
 	return sRegPath;
 }
@@ -480,7 +488,7 @@ BOOL CAfxRegKey::ImportSectionFromIni(const CString& sSection, CStdioFile& file,
 		if (sLine.IsEmpty())
 			continue;
 
-		else if (sLine[0] == '[')
+		else if (sLine[0] == _T('['))
 		{
 			// check for end tag
 			if (sLine[sLine.GetLength() - 1] == ']')
@@ -523,20 +531,20 @@ BOOL CAfxRegKey::ImportSectionFromIni(const CString& sSection, CStdioFile& file,
 						{
 							switch (sValue[nChar])
 							{
-							case '-':
+							case _T('-'):
 								bString = (nChar > 0);
 								break;
 
-							case '0':
-							case '1':
-							case '2':
-							case '3':
-							case '4':
-							case '5':
-							case '6':
-							case '7':
-							case '8':
-							case '9':
+							case _T('0'):
+							case _T('1'):
+							case _T('2'):
+							case _T('3'):
+							case _T('4'):
+							case _T('5'):
+							case _T('6'):
+							case _T('7'):
+							case _T('8'):
+							case _T('9'):
 								break; // okay
 
 							default:
@@ -550,7 +558,7 @@ BOOL CAfxRegKey::ImportSectionFromIni(const CString& sSection, CStdioFile& file,
 					if (bString)
 					{
 						// remove possible leading and trailing quotes
-						if (sValue.GetLength() && sValue[0] == '\"' && sValue[sValue.GetLength() - 1] == '\"')
+						if (sValue.GetLength() && sValue[0] == _T('\"') && sValue[sValue.GetLength() - 1] == _T('\"'))
 							reg.Write(sName, sValue.Mid(1, sValue.GetLength() - 2));
 						else
 							reg.Write(sName, sValue);

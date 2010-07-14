@@ -21,6 +21,13 @@
 //
 // 3. This notice may not be removed or altered from any source distribution.
 
+//*****************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - improved compatibility with the Unicode-based builds
+// - added AbstractSpoon Software copyright notice and licenese information
+// - taken out from the original ToDoList package for better sharing
+//*****************************************************************************
+
 #if !defined(AFX_CHECKLISTBOXEX_H__3862911F_2AC1_41DC_822D_CA68941B6FDC__INCLUDED_)
 #define AFX_CHECKLISTBOXEX_H__3862911F_2AC1_41DC_822D_CA68941B6FDC__INCLUDED_
 
