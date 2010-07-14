@@ -590,7 +590,7 @@ void CXHtmlTree::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 			crText  = pXTCD->ds.crText;
 			crTextBackground = pXTCD->ds.crTextBackground;
 			crBackground = pXTCD->ds.crBackground;
-			//TRACE(_T("crText=%08X  crBkgnd=%08X ~~~~~\n"), crText, crBackground);
+			TRACE(_T("crText=%08X  crBkgnd=%08X ~~~~~\n"), crText, crBackground);
 			bEnabled = pXTCD->bEnabled;
 			if ((hItem == hSelected) || 
 				(GetItemState(hItem, TVIF_STATE) & TVIS_DROPHILITED))
@@ -935,7 +935,7 @@ int CXHtmlTree::DrawItemText(CDC *pDC,
 	pDC->FillSolidRect(&rectText, crBackground);
 
 	CString str = lpszText;
-	//TRACE(_T("CXHtmlTree::DrawItemText:  crText=%08X  crBkgnd=%08X  <%s> ++++++\n"), crText, crBackground, str);
+	TRACE(_T("CXHtmlTree::DrawItemText:  crText=%08X  crBkgnd=%08X  <%s> ++++++\n"), crText, crBackground, str);
 
 	XHTMLTREEDATA *pXTCD = GetItemDataStruct(hItem);
 
@@ -1431,7 +1431,7 @@ void CXHtmlTree::OnMouseMove(UINT nFlags, CPoint point)
 		}
 
 		BOOL bOverAnchor = IsOverAnchor(hItem, point, &rect);
-		//TRACE(_T("bOverAnchor=%d\n"), bOverAnchor);
+		TRACE(_T("bOverAnchor=%d\n"), bOverAnchor);
 
 #ifdef XHTMLHTML
 		if (bOverAnchor)
@@ -1601,7 +1601,7 @@ void CXHtmlTree::OnTimer(UINT nIDEvent)
 
 		if (IsLeftButtonUp())
 		{
-			//TRACE(_T("mouse button is up >>>>>\n"));
+			TRACE(_T("mouse button is up >>>>>\n"));
 
 			KillTimer(nIDEvent);
 
@@ -1680,7 +1680,7 @@ void CXHtmlTree::OnTimer(UINT nIDEvent)
 
 		else		// left button is down
 		{
-			//TRACE(_T("mouse button is down >>>>>\n"));
+			TRACE(_T("mouse button is down >>>>>\n"));
 
 			if (m_bDragging)
 			{
@@ -1772,8 +1772,6 @@ CXHtmlTree& CXHtmlTree::SetCheck(HTREEITEM hItem, BOOL fCheck /*= TRUE*/)
 			pXTCD->bChecked = fCheck;
 
 			UINT nState = GetStateImage(hItem);
-
-			//TRACE(_T("nState=0x%X  nOldState=0x%X ~~~~~\n"), nState, nOldState);
 
 			SetItemState(hItem, INDEXTOSTATEIMAGEMASK(nState), TVIS_STATEIMAGEMASK);
 
@@ -2595,9 +2593,9 @@ BOOL CXHtmlTree::PreDisplayToolTip(BOOL bAlwaysRemoveHtml, CString& strToolTip)
 			GetItemRect(hItem, &rectText, TRUE);	// get rect for text
 			rectText.right = pXTCD->ds.nRightX;
 
-			//TRACE(_T("nRightX = %d\n"), pXTCD->ds.nRightX);
-			//TRACERECT(rectText);
-			//TRACERECT(rectClient);
+			TRACE(_T("nRightX = %d\n"), pXTCD->ds.nRightX);
+			TRACERECT(rectText);
+			TRACERECT(rectClient);
 
 			strToolTip = GetItemNote(hItem);
 			BOOL bNote = !strToolTip.IsEmpty();
@@ -3320,9 +3318,6 @@ BOOL CXHtmlTree::OnClick(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 			if (pXTCD->bEnabled && !m_bReadOnly)
 			{
 				SetCheck(hItem, !pXTCD->bChecked);
-
-				//BOOL bCheck = GetCheck(hItem);
-				//TRACE(_T("item %s checked\n"), bCheck ? _T("is") : _T("is not"));
 
 				if (m_bSelectFollowsCheck)
 					SelectItem(hItem);
@@ -4165,7 +4160,7 @@ BOOL CXHtmlTree::GetItemRect(HTREEITEM hItem, LPRECT lpRect, BOOL bTextOnly)
 			lpRect->right = pXTCD->ds.nRightX;
 		}
 
-		//TRACERECT(*lpRect);
+		TRACERECT(*lpRect);
 	}
 	return rc;
 }

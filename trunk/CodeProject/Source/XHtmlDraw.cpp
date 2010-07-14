@@ -1098,8 +1098,6 @@ BOOL CXHtmlDraw::IsOverAnchor(HWND hWnd, XHTMLDRAWSTRUCT * pXHDS)
 		GetCursorPos(&point);
 		::ScreenToClient(hWnd, &point);
 		RECT rect = pXHDS->rectAnchor;
-		//TRACERECT(rect);
-		//TRACEPOINT(point);
 		rc = ::PtInRect(&rect, point);
 		if (rc)
 		{
