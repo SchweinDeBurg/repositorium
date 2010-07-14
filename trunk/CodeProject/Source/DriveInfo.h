@@ -39,7 +39,7 @@ public:
 	static CString GetFullName(int nDrive);
 	static char GetLetter(int nDrive);
 	static int GetType(int nDrive);
-    static int GetPathType(LPCTSTR szPathName);
+	static int GetPathType(LPCTSTR szPathName);
 	static BOOL IsDriveAvailable(int nDrive);
 	static void FormatName(CString& sFileName);
 	static int GetDrive(LPCTSTR szPathName);
@@ -49,7 +49,7 @@ public:
 	static BOOL IsFixedPath(LPCTSTR szPathName);
 	static int IsReadonlyPath(LPCTSTR szPathName); // -1 = no such path, else TRUE/FALSE
 	static DWORD GetSerialNumber(int nDrive);
-   static BOOL IsUNCPath(LPCTSTR szPathName);
+	static BOOL IsUNCPath(LPCTSTR szPathName);
 };
 
 #endif

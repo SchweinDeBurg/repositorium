@@ -164,7 +164,7 @@ int CDriveInfo::GetType(int nDrive)
 
 int CDriveInfo::GetPathType(LPCTSTR szPathName) 
 { 
-    int nDrive = GetDrive(szPathName);
+	int nDrive = GetDrive(szPathName);
 
 	if (nDrive >= 0)
 		return GetType(nDrive);
@@ -173,7 +173,7 @@ int CDriveInfo::GetPathType(LPCTSTR szPathName)
 		return DRIVE_REMOTE;
 
 	else
-	    return DRIVE_UNKNOWN; 
+		return DRIVE_UNKNOWN; 
 }
 
 void CDriveInfo::FormatName(CString& sFilename) 

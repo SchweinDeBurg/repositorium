@@ -40,13 +40,13 @@
 
 struct NM_TRAYICON
 { 
-    NMHDR hdr; 
-    POINT ptAction; 
+	NMHDR hdr; 
+	POINT ptAction; 
 };
 
 class CTrayIcon : public CWnd, protected CSubclasser
 {
-// Construction
+	// Construction
 public:
 	CTrayIcon();
 	virtual ~CTrayIcon();
@@ -64,7 +64,7 @@ public:
 	BOOL ShowBalloon(LPCTSTR szText, LPCTSTR szTitle = NULL,
 		DWORD dwIcon = NIIF_NONE, UINT uTimeout = 5);
 
-// Attributes
+	// Attributes
 private:
 	CString m_sTip;
 	HICON m_hIcon;
@@ -76,10 +76,10 @@ private:
 	int m_nAnimationDelay;
 	int m_nCurIcon;
 
-// Generated message map functions
+	// Generated message map functions
 protected:
 	//{{AFX_MSG(CTrayIcon)
-    afx_msg LRESULT OnTrayIconNotify(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnTrayIconNotify(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnDestroy();
 	afx_msg void OnTimer(UINT nIDEvent);
 	//}}AFX_MSG

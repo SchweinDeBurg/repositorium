@@ -60,7 +60,7 @@ public:
 	BOOL ShowGutterPosColumn(BOOL bShow = TRUE); // returns TRUE if changed
 	BOOL IsGutterPosColumnShowing() const { return m_bShowingPosColumn; }
 	void SetGridlineColor(COLORREF color);
-    COLORREF GetGridlineColor() const { return m_crGridlines; }
+	COLORREF GetGridlineColor() const { return m_crGridlines; }
 
 	void EnableGutterStyle(DWORD dwStyle, BOOL bEnable = TRUE) { m_gutter.EnableStyle(dwStyle, bEnable); }
 	BOOL GutterHasStyle(DWORD dwStyle) const { return m_gutter.HasStyle(dwStyle); }

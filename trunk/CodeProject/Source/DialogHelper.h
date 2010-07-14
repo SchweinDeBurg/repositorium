@@ -61,8 +61,8 @@ public:
 
 	// font helper
 	static void SetFont(CWnd* pWnd, HFONT hFont, BOOL bRedraw = TRUE);
-    static HFONT GetFont(CWnd* pWnd);
-    static HFONT GetFont(HWND hWnd);
+	static HFONT GetFont(CWnd* pWnd);
+	static HFONT GetFont(HWND hWnd);
 	
 	// comboboxes
 	static int SetComboBoxItems(CComboBox& combo, const CStringArray& aItems);

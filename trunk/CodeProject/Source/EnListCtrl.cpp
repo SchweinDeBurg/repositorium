@@ -160,7 +160,7 @@ void CEnListCtrl::OnPaint()
 		}
 
 		paintdc.BitBlt(0, rClient.top, rClient.right, rClient.bottom, 
-					   &dc, 0, rClient.top, SRCCOPY);
+			&dc, 0, rClient.top, SRCCOPY);
 
 		dc.SelectObject(pOldBitmap);
 		ReleaseDC(&paintdc);

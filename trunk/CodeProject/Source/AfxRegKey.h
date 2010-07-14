@@ -78,9 +78,9 @@ protected:
 
 protected:
 	static LONG RecurseDeleteKey(HKEY key, LPCTSTR lpszKey);
-   BOOL ExportKeyToIni(const TCHAR* pszKey, CStdioFile& file) const;
-   BOOL ExportValueToIni(DWORD nIndex, CStdioFile& file) const;
-   BOOL ImportSectionFromIni(const CString& sSection, CStdioFile& file, CString& sNextSection);
+	BOOL ExportKeyToIni(const TCHAR* pszKey, CStdioFile& file) const;
+	BOOL ExportValueToIni(DWORD nIndex, CStdioFile& file) const;
+	BOOL ImportSectionFromIni(const CString& sSection, CStdioFile& file, CString& sNextSection);
 };
 
 #endif

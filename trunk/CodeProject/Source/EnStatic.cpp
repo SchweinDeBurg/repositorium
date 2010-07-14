@@ -97,7 +97,7 @@ BOOL CEnStatic::IsShowingGripper()
 
 		switch (nType)
 		{
-		case SS_LEFT:          
+		case SS_LEFT:
 		case SS_CENTER:
 		case SS_RIGHT:
 		case SS_SIMPLE:

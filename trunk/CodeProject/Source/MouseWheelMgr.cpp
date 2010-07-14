@@ -55,35 +55,35 @@ BOOL CMouseWheelMgr::Initialize()
 
 BOOL CMouseWheelMgr::OnMouseEx(UINT uMouseMsg, const MOUSEHOOKSTRUCTEX& info)
 {
-   if (uMouseMsg == WM_MOUSEWHEEL)
-   {
-	   //fabio_2005
+	if (uMouseMsg == WM_MOUSEWHEEL)
+	{
+		//fabio_2005
 #if _MSC_VER >= 1300
 
-      HWND hwndPt = ::WindowFromPoint(info.pt);
+		HWND hwndPt = ::WindowFromPoint(info.pt);
 
-      if (info.hwnd != hwndPt)  // does the window under the mouse have the focus.
-      {
-		  ::PostMessage(hwndPt, WM_MOUSEWHEEL, (info.mouseData & 0xffff0000), 
-						MAKELPARAM(info.pt.x, info.pt.y));
+		if (info.hwnd != hwndPt)  // does the window under the mouse have the focus.
+		{
+			::PostMessage(hwndPt, WM_MOUSEWHEEL, (info.mouseData & 0xffff0000), 
+				MAKELPARAM(info.pt.x, info.pt.y));
 
-		  return TRUE; // eat
-      }
-   }
+			return TRUE; // eat
+		}
+	}
 #else
 
-      HWND hwndPt = ::WindowFromPoint(info.MOUSEHOOKSTRUCT.pt);
+		HWND hwndPt = ::WindowFromPoint(info.MOUSEHOOKSTRUCT.pt);
 
-      if (info.MOUSEHOOKSTRUCT.hwnd != hwndPt)  // does the window under the mouse have the focus.
-      {
-		  ::PostMessage(hwndPt, WM_MOUSEWHEEL, (info.mouseData & 0xffff0000), 
-						MAKELPARAM(info.MOUSEHOOKSTRUCT.pt.x, info.MOUSEHOOKSTRUCT.pt.y));
+		if (info.MOUSEHOOKSTRUCT.hwnd != hwndPt)  // does the window under the mouse have the focus.
+		{
+			::PostMessage(hwndPt, WM_MOUSEWHEEL, (info.mouseData & 0xffff0000), 
+				MAKELPARAM(info.MOUSEHOOKSTRUCT.pt.x, info.MOUSEHOOKSTRUCT.pt.y));
 
-		  return TRUE; // eat
-      }
-   }
+			return TRUE; // eat
+		}
+	}
 
 #endif
-   // all else
-   return FALSE;
+	// all else
+	return FALSE;
 }

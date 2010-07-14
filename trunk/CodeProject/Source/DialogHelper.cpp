@@ -518,23 +518,23 @@ void CDialogHelper::SetFont(CWnd* pWnd, HFONT hFont, BOOL bRedraw)
 
 HFONT CDialogHelper::GetFont(CWnd* pWnd)
 {
-   if (pWnd)
-      return GetFont(pWnd->GetSafeHwnd());
+	if (pWnd)
+		return GetFont(pWnd->GetSafeHwnd());
 
-   return (HFONT)::GetStockObject(DEFAULT_GUI_FONT);
+	return (HFONT)::GetStockObject(DEFAULT_GUI_FONT);
 }
- 
+
 HFONT CDialogHelper::GetFont(HWND hWnd)
 {
-   if (hWnd)
-   {
-      HFONT hFont = (HFONT)::SendMessage(hWnd, WM_GETFONT, 0, 0);
+	if (hWnd)
+	{
+		HFONT hFont = (HFONT)::SendMessage(hWnd, WM_GETFONT, 0, 0);
 
-      if (hFont)
-         return hFont;
-   }
+		if (hFont)
+			return hFont;
+	}
 
-   return (HFONT)::GetStockObject(DEFAULT_GUI_FONT);
+	return (HFONT)::GetStockObject(DEFAULT_GUI_FONT);
 }
 
 int CDialogHelper::SetComboBoxItems(CComboBox& combo, const CStringArray& aItems)
@@ -729,15 +729,15 @@ int CDialogHelper::RefreshMaxDropWidth(CComboBox& combo, CDC* pDCRef)
  
 int CDialogHelper::CalcMaxTextWidth(CComboBox& combo, int nMinWidth, BOOL bDropped, CDC* pDCRef)
 {
-   CDC* pDC = pDCRef;
-   CFont* pOldFont = NULL;
-   
-   if (!pDC)
-   {
-      pDC = combo.GetDC();
-      pOldFont = pDC->SelectObject(combo.GetFont());
-   }
-      
+	CDC* pDC = pDCRef;
+	CFont* pOldFont = NULL;
+
+	if (!pDC)
+	{
+		pDC = combo.GetDC();
+		pOldFont = pDC->SelectObject(combo.GetFont());
+	}
+
 	CString sText;
 	int nMaxWidth = nMinWidth;
 	int nItem = combo.GetCount();
@@ -756,29 +756,29 @@ int CDialogHelper::CalcMaxTextWidth(CComboBox& combo, int nMinWidth, BOOL bDropp
 	int nWidth = pDC->GetTextExtent(sText).cx;
 	nMaxWidth = max(nMaxWidth, nWidth);
 
-   // dropped width needs some more space
-   if (bDropped)
-   {
-      // Add the avg width to prevent clipping
-      TEXTMETRIC tm;
-      pDC->GetTextMetrics(&tm);
-      nMaxWidth += tm.tmAveCharWidth;
+	// dropped width needs some more space
+	if (bDropped)
+	{
+		// Add the avg width to prevent clipping
+		TEXTMETRIC tm;
+		pDC->GetTextMetrics(&tm);
+		nMaxWidth += tm.tmAveCharWidth;
 
-      // Adjust the width for the vertical scroll bar and the left and right border.
-      if (combo.GetStyle() & WS_VSCROLL)
-         nMaxWidth += ::GetSystemMetrics(SM_CXVSCROLL);
-      
-      nMaxWidth += (2 * ::GetSystemMetrics(SM_CXEDGE));
-   }
+		// Adjust the width for the vertical scroll bar and the left and right border.
+		if (combo.GetStyle() & WS_VSCROLL)
+			nMaxWidth += ::GetSystemMetrics(SM_CXVSCROLL);
 
-   // cleanup
-   if (!pDCRef)
-   {
-      pDC->SelectObject(pOldFont);
-      combo.ReleaseDC(pDC);
-   }
+		nMaxWidth += (2 * ::GetSystemMetrics(SM_CXEDGE));
+	}
 
-   return nMaxWidth;
+	// cleanup
+	if (!pDCRef)
+	{
+		pDC->SelectObject(pOldFont);
+		combo.ReleaseDC(pDC);
+	}
+
+	return nMaxWidth;
 }
 
 BOOL CDialogHelper::IsChildOrSame(HWND hWnd, HWND hwndChild)
@@ -845,7 +845,7 @@ CString CDialogHelper::GetClassName(CWnd* pWnd)
 	ASSERT (pWnd);
 	
 	if (!pWnd)
-		return "";
+		return _T("");
 	
 	CString sName;
 	

@@ -238,32 +238,32 @@ struct CtrlStyle
 
 static CtrlStyle ControlStyles[] = 
 {
-   { _T("Button"), STYLE(BS_PUSHBUTTON), 0x0F, 0 },//        0x00000000L
-   { _T("Button"), STYLE(BS_DEFPUSHBUTTON), 0x0F, 0 },//     0x00000001L
-   { _T("Button"), STYLE(BS_CHECKBOX), 0x0F, 0 },//          0x00000002L
-   { _T("Button"), STYLE(BS_AUTOCHECKBOX), 0x0F, 0 },//      0x00000003L
-   { _T("Button"), STYLE(BS_RADIOBUTTON), 0x0F, 0 },//       0x00000004L
-   { _T("Button"), STYLE(BS_3STATE), 0x0F, 0 },//            0x00000005L
-   { _T("Button"), STYLE(BS_AUTO3STATE), 0x0F, 0 },//        0x00000006L
-   { _T("Button"), STYLE(BS_GROUPBOX), 0x0F, 0 },//          0x00000007L
-   { _T("Button"), STYLE(BS_USERBUTTON), 0x0F, 0 },//        0x00000008L
-   { _T("Button"), STYLE(BS_AUTORADIOBUTTON), 0x0F, 0 },//   0x00000009L
-   { _T("Button"), STYLE(BS_OWNERDRAW), 0x0F, 0 },//         0x0000000BL
-   { _T("Button"), STYLE(BS_LEFTTEXT), NOMASK, 0 },//        0x00000020L
-   { _T("Button"), STYLE(BS_TEXT), NOMASK, 0 }, //           0x00000000L
-   { _T("Button"), STYLE(BS_ICON), NOMASK, 0 }, //           0x00000040L
-   { _T("Button"), STYLE(BS_BITMAP), NOMASK, 0 },//          0x00000080L
-   { _T("Button"), STYLE(BS_LEFT), NOMASK, 0 }, //           0x00000100L
-   { _T("Button"), STYLE(BS_RIGHT), NOMASK, 0 },//           0x00000200L
-   { _T("Button"), STYLE(BS_CENTER), NOMASK, 0 },//          0x00000300L
-   { _T("Button"), STYLE(BS_TOP), NOMASK, 0 }, //            0x00000400L
-   { _T("Button"), STYLE(BS_BOTTOM), NOMASK, 0 },//          0x00000800L
-   { _T("Button"), STYLE(BS_VCENTER), NOMASK, 0 },//         0x00000C00L
-   { _T("Button"), STYLE(BS_PUSHLIKE), NOMASK, 0 },//        0x00001000L
-   { _T("Button"), STYLE(BS_MULTILINE), NOMASK, 0 },//       0x00002000L
-   { _T("Button"), STYLE(BS_NOTIFY), NOMASK, 0 },//          0x00004000L
-   { _T("Button"), STYLE(BS_FLAT), NOMASK, 0 }, //           0x00008000L
-   { _T("Button"), STYLE(BS_RIGHTBUTTON), NOMASK, 0 },//     BS_LEFTTEXT
+	{ _T("Button"), STYLE(BS_PUSHBUTTON), 0x0F, 0 },//        0x00000000L
+	{ _T("Button"), STYLE(BS_DEFPUSHBUTTON), 0x0F, 0 },//     0x00000001L
+	{ _T("Button"), STYLE(BS_CHECKBOX), 0x0F, 0 },//          0x00000002L
+	{ _T("Button"), STYLE(BS_AUTOCHECKBOX), 0x0F, 0 },//      0x00000003L
+	{ _T("Button"), STYLE(BS_RADIOBUTTON), 0x0F, 0 },//       0x00000004L
+	{ _T("Button"), STYLE(BS_3STATE), 0x0F, 0 },//            0x00000005L
+	{ _T("Button"), STYLE(BS_AUTO3STATE), 0x0F, 0 },//        0x00000006L
+	{ _T("Button"), STYLE(BS_GROUPBOX), 0x0F, 0 },//          0x00000007L
+	{ _T("Button"), STYLE(BS_USERBUTTON), 0x0F, 0 },//        0x00000008L
+	{ _T("Button"), STYLE(BS_AUTORADIOBUTTON), 0x0F, 0 },//   0x00000009L
+	{ _T("Button"), STYLE(BS_OWNERDRAW), 0x0F, 0 },//         0x0000000BL
+	{ _T("Button"), STYLE(BS_LEFTTEXT), NOMASK, 0 },//        0x00000020L
+	{ _T("Button"), STYLE(BS_TEXT), NOMASK, 0 }, //           0x00000000L
+	{ _T("Button"), STYLE(BS_ICON), NOMASK, 0 }, //           0x00000040L
+	{ _T("Button"), STYLE(BS_BITMAP), NOMASK, 0 },//          0x00000080L
+	{ _T("Button"), STYLE(BS_LEFT), NOMASK, 0 }, //           0x00000100L
+	{ _T("Button"), STYLE(BS_RIGHT), NOMASK, 0 },//           0x00000200L
+	{ _T("Button"), STYLE(BS_CENTER), NOMASK, 0 },//          0x00000300L
+	{ _T("Button"), STYLE(BS_TOP), NOMASK, 0 }, //            0x00000400L
+	{ _T("Button"), STYLE(BS_BOTTOM), NOMASK, 0 },//          0x00000800L
+	{ _T("Button"), STYLE(BS_VCENTER), NOMASK, 0 },//         0x00000C00L
+	{ _T("Button"), STYLE(BS_PUSHLIKE), NOMASK, 0 },//        0x00001000L
+	{ _T("Button"), STYLE(BS_MULTILINE), NOMASK, 0 },//       0x00002000L
+	{ _T("Button"), STYLE(BS_NOTIFY), NOMASK, 0 },//          0x00004000L
+	{ _T("Button"), STYLE(BS_FLAT), NOMASK, 0 }, //           0x00008000L
+	{ _T("Button"), STYLE(BS_RIGHTBUTTON), NOMASK, 0 },//     BS_LEFTTEXT
 
 	{ _T("Static"), STYLE(SS_LEFT), 0x1FL, 0 },//             0x00000000L
 	{ _T("Static"), STYLE(SS_CENTER), 0x1FL, 0 },//           0x00000001L
@@ -489,29 +489,29 @@ static CtrlStyle ControlStyles[] =
 	{ _T("SysAnimate32"), STYLE(ACS_TIMER), NOMASK, 0 },//                0x0008  // don't use threads... use timers
 
 	// uses styles from EDIT control
-   { _T("Richedit"), STYLE(ES_SAVESEL), NOMASK, 0 },//            0x00008000
-   { _T("Richedit"), STYLE(ES_SUNKEN), NOMASK, 0 },//             0x00004000
-   { _T("Richedit"), STYLE(ES_DISABLENOSCROLL), NOMASK, 0 },//    0x00002000
-   { _T("Richedit"), STYLE(ES_SELECTIONBAR), NOMASK, 0 },//       0x01000000
-   { _T("Richedit"), STYLE(ES_NOOLEDRAGDROP), NOMASK, 0 },//      0x00000008
-   // event mask is like extended styles
-   { _T("Richedit"), STYLE(ENM_NONE), 0x1L, 1 },//                0x00000000
-   { _T("Richedit"), STYLE(ENM_CHANGE), NOMASK, 1 },//            0x00000001
-   { _T("Richedit"), STYLE(ENM_UPDATE), NOMASK, 1 },//            0x00000002
-   { _T("Richedit"), STYLE(ENM_SCROLL), NOMASK, 1 },//            0x00000004
-   { _T("Richedit"), STYLE(ENM_KEYEVENTS), NOMASK, 1 },//         0x00010000
-   { _T("Richedit"), STYLE(ENM_MOUSEEVENTS), NOMASK, 1 },//       0x00020000
-   { _T("Richedit"), STYLE(ENM_REQUESTRESIZE), NOMASK, 1 },//     0x00040000
-   { _T("Richedit"), STYLE(ENM_SELCHANGE), NOMASK, 1 },//         0x00080000
-   { _T("Richedit"), STYLE(ENM_DROPFILES), NOMASK, 1 },//         0x00100000
-   { _T("Richedit"), STYLE(ENM_PROTECTED), NOMASK, 1 },//         0x00200000
-   { _T("Richedit"), STYLE(ENM_CORRECTTEXT), NOMASK, 1 },//       0x00400000     /* PenWin specific */
-   { _T("Richedit"), STYLE(ENM_SCROLLEVENTS), NOMASK, 1 },//      0x00000008
-   { _T("Richedit"), STYLE(ENM_DRAGDROPDONE), NOMASK, 1 },//      0x00000010
-   { _T("Richedit"), STYLE(ENM_IMECHANGE), NOMASK, 1 },//         0x00800000     /* unused by RE2.0 */
-   { _T("Richedit"), STYLE(ENM_LANGCHANGE), NOMASK, 1 },//        0x01000000
-   { _T("Richedit"), STYLE(ENM_OBJECTPOSITIONS), NOMASK, 1 },//   0x02000000
-   { _T("Richedit"), STYLE(ENM_LINK), NOMASK, 1 },//              0x04000000
+	{ _T("Richedit"), STYLE(ES_SAVESEL), NOMASK, 0 },//            0x00008000
+	{ _T("Richedit"), STYLE(ES_SUNKEN), NOMASK, 0 },//             0x00004000
+	{ _T("Richedit"), STYLE(ES_DISABLENOSCROLL), NOMASK, 0 },//    0x00002000
+	{ _T("Richedit"), STYLE(ES_SELECTIONBAR), NOMASK, 0 },//       0x01000000
+	{ _T("Richedit"), STYLE(ES_NOOLEDRAGDROP), NOMASK, 0 },//      0x00000008
+	// event mask is like extended styles
+	{ _T("Richedit"), STYLE(ENM_NONE), 0x1L, 1 },//                0x00000000
+	{ _T("Richedit"), STYLE(ENM_CHANGE), NOMASK, 1 },//            0x00000001
+	{ _T("Richedit"), STYLE(ENM_UPDATE), NOMASK, 1 },//            0x00000002
+	{ _T("Richedit"), STYLE(ENM_SCROLL), NOMASK, 1 },//            0x00000004
+	{ _T("Richedit"), STYLE(ENM_KEYEVENTS), NOMASK, 1 },//         0x00010000
+	{ _T("Richedit"), STYLE(ENM_MOUSEEVENTS), NOMASK, 1 },//       0x00020000
+	{ _T("Richedit"), STYLE(ENM_REQUESTRESIZE), NOMASK, 1 },//     0x00040000
+	{ _T("Richedit"), STYLE(ENM_SELCHANGE), NOMASK, 1 },//         0x00080000
+	{ _T("Richedit"), STYLE(ENM_DROPFILES), NOMASK, 1 },//         0x00100000
+	{ _T("Richedit"), STYLE(ENM_PROTECTED), NOMASK, 1 },//         0x00200000
+	{ _T("Richedit"), STYLE(ENM_CORRECTTEXT), NOMASK, 1 },//       0x00400000     /* PenWin specific */
+	{ _T("Richedit"), STYLE(ENM_SCROLLEVENTS), NOMASK, 1 },//      0x00000008
+	{ _T("Richedit"), STYLE(ENM_DRAGDROPDONE), NOMASK, 1 },//      0x00000010
+	{ _T("Richedit"), STYLE(ENM_IMECHANGE), NOMASK, 1 },//         0x00800000     /* unused by RE2.0 */
+	{ _T("Richedit"), STYLE(ENM_LANGCHANGE), NOMASK, 1 },//        0x01000000
+	{ _T("Richedit"), STYLE(ENM_OBJECTPOSITIONS), NOMASK, 1 },//   0x02000000
+	{ _T("Richedit"), STYLE(ENM_LINK), NOMASK, 1 },//              0x04000000
 
 	{ _T("SysDateTimePick32"), STYLE(DTS_UPDOWN), NOMASK, 0 },//           0x0001 // use UPDOWN instead of MONTHCAL
 	{ _T("SysDateTimePick32"), STYLE(DTS_SHOWNONE), NOMASK, 0 },//         0x0002 // allow a NONE selection
@@ -587,11 +587,11 @@ static CtrlStyle ControlStyles[] =
 
 #endif
 
-   { _T("tooltips_class32"), STYLE(TTS_ALWAYSTIP), NOMASK, 0 }, //   0x01
-   { _T("tooltips_class32"), STYLE(TTS_NOPREFIX), NOMASK, 0 }, //    0x02
-   { _T("tooltips_class32"), STYLE(TTS_NOANIMATE), NOMASK, 0 }, //   0x10
-   { _T("tooltips_class32"), STYLE(TTS_NOFADE), NOMASK, 0 }, //      0x20
-   { _T("tooltips_class32"), STYLE(TTS_BALLOON), NOMASK, 0 }, //     0x40
+	{ _T("tooltips_class32"), STYLE(TTS_ALWAYSTIP), NOMASK, 0 }, //   0x01
+	{ _T("tooltips_class32"), STYLE(TTS_NOPREFIX), NOMASK, 0 }, //    0x02
+	{ _T("tooltips_class32"), STYLE(TTS_NOANIMATE), NOMASK, 0 }, //   0x10
+	{ _T("tooltips_class32"), STYLE(TTS_NOFADE), NOMASK, 0 }, //      0x20
+	{ _T("tooltips_class32"), STYLE(TTS_BALLOON), NOMASK, 0 }, //     0x40
 
 };
 #endif

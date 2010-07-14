@@ -113,7 +113,7 @@ void CCheckListBoxEx::PreDrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	memcpy(&drawItem, lpDrawItemStruct, sizeof(DRAWITEMSTRUCT));
 
 	if ((((LONG)drawItem.itemID) >= 0) &&
-	   ((drawItem.itemAction & (ODA_DRAWENTIRE | ODA_SELECT)) != 0))
+		((drawItem.itemAction & (ODA_DRAWENTIRE | ODA_SELECT)) != 0))
 	{
 		CDC* pDC = CDC::FromHandle(drawItem.hDC);
 

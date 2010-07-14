@@ -155,13 +155,13 @@ CString FileMisc::FormatGetLastError(DWORD dwLastErr)
 	LPTSTR lpMessage;
 	DWORD dwErrCode = GetLastError();
 	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-				   FORMAT_MESSAGE_FROM_SYSTEM,
-				   NULL,               // no source buffer needed
-				   dwErrCode,          // error code for this message
-				   NULL,               // default language ID
-				   (LPTSTR)&lpMessage, // allocated by fcn
-				   NULL,               // minimum size of buffer
-				   NULL);              // no inserts
+		FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL,               // no source buffer needed
+		dwErrCode,          // error code for this message
+		NULL,               // default language ID
+		(LPTSTR)&lpMessage, // allocated by fcn
+		NULL,               // minimum size of buffer
+		NULL);              // no inserts
 
 
 	CString sError(lpMessage);
@@ -730,7 +730,7 @@ bool FileMisc::LoadFile(const TCHAR* szPathname, CString& sText)
 		if (file.GetLength())
 		{
 			// init size
-			CString sTemp('\0', (int)file.GetLength());
+			CString sTemp(_T('\0'), (int)file.GetLength());
 			sText = sTemp;
 
 			CString sLine;
@@ -781,7 +781,7 @@ CString FileMisc::GetTempFileName(LPCTSTR szPrefix, UINT uUnique)
 			return szTempFile;
 	}
 
-	return "";
+	return _T("");
 }
 
 CString FileMisc::GetTempFileName(LPCTSTR szFilename, LPCTSTR szExt)
@@ -797,30 +797,30 @@ CString FileMisc::GetTempFileName(LPCTSTR szFilename, LPCTSTR szExt)
 
 DWORD FileMisc::Run(HWND hwnd, LPCTSTR lpFile, LPCTSTR lpDirectory, int nShowCmd)
 {
-   CString sFile(lpFile), sParams;
-   int nHash = sFile.Find(_T('#'));
+	CString sFile(lpFile), sParams;
+	int nHash = sFile.Find(_T('#'));
 
-   if (nHash != -1)
-   {
-      sParams = sFile.Mid(nHash);
-      sFile = sFile.Left(nHash);
+	if (nHash != -1)
+	{
+		sParams = sFile.Mid(nHash);
+		sFile = sFile.Left(nHash);
 
-      CString sExt;
-      SplitPath(sFile, NULL, NULL, NULL, &sExt);
+		CString sExt;
+		SplitPath(sFile, NULL, NULL, NULL, &sExt);
 
-      CString sApp = CFileRegister::GetRegisteredAppPath(sExt);
+		CString sApp = CFileRegister::GetRegisteredAppPath(sExt);
 
-      if (!sApp.IsEmpty())
-      {
-         sFile = sApp;
-         sParams = lpFile;
-      }
-      else
-      {
-         sFile = lpFile;
-         sParams.Empty();
-      }
-   }
+		if (!sApp.IsEmpty())
+		{
+			sFile = sApp;
+			sParams = lpFile;
+		}
+		else
+		{
+			sFile = lpFile;
+			sParams.Empty();
+		}
+	}
 
 	DWORD dwRes = (DWORD)ShellExecute(hwnd, NULL, sFile, sParams, lpDirectory, nShowCmd);
 

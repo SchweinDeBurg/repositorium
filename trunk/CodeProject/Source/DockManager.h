@@ -63,7 +63,7 @@ public:
 	int GetDockedWidth(BOOL bMaximized) { return bMaximized ? m_nWidthDockedMax : m_nWidthDocked; }
 	int GetDockedHeight(BOOL bMaximized) { return bMaximized ? m_nHeightDockedMax : m_nHeightDocked; }
 
-   inline BOOL Maximized() { return ::IsZoomed(GetHwnd()); }
+	inline BOOL Maximized() { return ::IsZoomed(GetHwnd()); }
 
 protected:
 	DM_POS m_nDockPos, m_nLastDockPos;

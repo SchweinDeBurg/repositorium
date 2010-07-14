@@ -889,20 +889,20 @@ BOOL CImageContraster::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDes
 // color mapping
 struct COLORMAPPING
 {
-   COLORREF color;
-   UINT nSysColor;
+	COLORREF color;
+	UINT nSysColor;
 };
 
 static COLORMAPPING COLORMAPPINGS[] = 
 {
-   { 0x000000, COLOR_BTNTEXT },       // black
-   { 0x808080, COLOR_BTNSHADOW },     // dark gray
-   { 0xC0C0C0, COLOR_BTNFACE },       // bright gray
-   { 0xFFFFFF, COLOR_BTNHIGHLIGHT }   // white
+	{ 0x000000, COLOR_BTNTEXT },       // black
+	{ 0x808080, COLOR_BTNSHADOW },     // dark gray
+	{ 0xC0C0C0, COLOR_BTNFACE },       // bright gray
+	{ 0xFFFFFF, COLOR_BTNHIGHLIGHT }   // white
 };
 
 BOOL CImageSysColorMapper::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF /*crMask*/)
+	COLORREF /*crMask*/)
 {
 	static int NUMCOLORMAPS = sizeof(COLORMAPPINGS) / sizeof(COLORMAPPING);
 

@@ -566,27 +566,27 @@ BOOL CEnBitmap::Fill(RGBX* pPixels, CSize size, COLORREF color)
 
 BOOL CEnBitmap::Copy(HIMAGELIST hImageList)
 {
-   DeleteObject();
+	DeleteObject();
 
-   int nWidth = 0, nHeight = 0;
-   int nCount = ImageList_GetImageCount(hImageList);
+	int nWidth = 0, nHeight = 0;
+	int nCount = ImageList_GetImageCount(hImageList);
 
-   ImageList_GetIconSize(hImageList, &nWidth, &nHeight);
+	ImageList_GetIconSize(hImageList, &nWidth, &nHeight);
 
- 	HDC hdc = GetDC(NULL);
+	HDC hdc = GetDC(NULL);
 	HBITMAP hbmDest = ::CreateCompatibleBitmap(hdc, nWidth * nCount, nHeight);
-   HDC hdcMem = CreateCompatibleDC(hdc);
+	HDC hdcMem = CreateCompatibleDC(hdc);
 
-   HBITMAP hBMOld = (HBITMAP)::SelectObject(hdcMem, hbmDest);
+	HBITMAP hBMOld = (HBITMAP)::SelectObject(hdcMem, hbmDest);
 
-   for (int nIcon = 0; nIcon < nCount; nIcon++)
-   {
-      VERIFY (ImageList_Draw(hImageList, nIcon, hdcMem, nIcon * nWidth, 0, ILD_NORMAL));
-   }
+	for (int nIcon = 0; nIcon < nCount; nIcon++)
+	{
+		VERIFY (ImageList_Draw(hImageList, nIcon, hdcMem, nIcon * nWidth, 0, ILD_NORMAL));
+	}
 
-   // cleanup
-   ::SelectObject(hdcMem, hBMOld);
-   DeleteDC(hdcMem);
+	// cleanup
+	::SelectObject(hdcMem, hBMOld);
+	DeleteDC(hdcMem);
 
-   return Attach(hbmDest);
+	return Attach(hbmDest);
 }

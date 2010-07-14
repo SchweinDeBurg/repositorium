@@ -40,26 +40,26 @@ typedef DWORD (STDAPICALLTYPE *PFNGETTHEMEAPPPROPERTIES)();
 typedef HTHEME (STDAPICALLTYPE *PFNOPENTHEMEDATA)(HWND hwnd, LPCWSTR pszClassList);
 typedef HRESULT (STDAPICALLTYPE *PFNCLOSETHEMEDATA)(HTHEME hTheme);
 typedef HRESULT (STDAPICALLTYPE *PFNDRAWTHEMEBACKGROUND)(HTHEME hTheme, HDC hdc, int iPartId, int iStateId, 
-														 const RECT *pRect, const RECT *pClipRect);
+	const RECT *pRect, const RECT *pClipRect);
 typedef HRESULT (STDAPICALLTYPE *PFNDRAWTHEMEPARENTBACKGROUND)(HWND hWnd, HDC hdc, RECT *pRect);
 typedef HRESULT (STDAPICALLTYPE *PFNDRAWTHEMETEXT)(HTHEME hTheme, HDC hdc, int iPartId, int iStateId, 
-												   LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, 
-												   DWORD dwTextFlags2, const RECT *pRect);
+	LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, 
+	DWORD dwTextFlags2, const RECT *pRect);
 typedef HRESULT (STDAPICALLTYPE *PFNDRAWTHEMEEDGE)(HTHEME hTheme, HDC hdc, int iPartId, int iStateId, 
-												   const RECT *pDestRect, UINT uEdge, UINT uFlags, 
-												   RECT *pContentRect);
+	const RECT *pDestRect, UINT uEdge, UINT uFlags, 
+	RECT *pContentRect);
 typedef HRESULT (STDAPICALLTYPE *PFNDRAWTHEMEICON)(HTHEME hTheme, HDC hdc, int iPartId, int iStateId, 
-												   const RECT *pRect, HIMAGELIST himl, int iImageIndex);
+	const RECT *pRect, HIMAGELIST himl, int iImageIndex);
 typedef HRESULT (STDAPICALLTYPE *PFNDRAWTHEMEBORDER)(HTHEME hTheme, HDC hdc, int iStateId, const RECT *pRect);
 typedef HRESULT (STDAPICALLTYPE *PFNGETTHEMEPARTSIZE)(HTHEME hTheme, HDC hdc, int iPartId, int iStateId,
-                                                      RECT *prc, THEMESIZE eSize, SIZE *psz);
+	RECT *prc, THEMESIZE eSize, SIZE *psz);
 typedef HRESULT (STDAPICALLTYPE *PFNGETTHEMETEXTEXTENT)(HTHEME hTheme, HDC hdc, int iPartId, int iStateId, 
-													  LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, 
-													  const RECT *pBoundingRect, RECT *pExtentRect);
+	LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, 
+	const RECT *pBoundingRect, RECT *pExtentRect);
 typedef HRESULT (STDAPICALLTYPE *PFNGETTHEMECOLOR)(HTHEME hTheme, int iPartId, int iStateId, int iPropID,
-												   COLORREF* pColor);
+	COLORREF* pColor);
 typedef HRESULT (STDAPICALLTYPE *PFNGETTHEMEBACKGROUNDCONTENTRECT)(HTHEME hTheme, HDC hdc, int iPartId,
-												int iStateId, LPCRECT pBoundingRect, LPRECT pContentRect);
+	int iStateId, LPCRECT pBoundingRect, LPRECT pContentRect);
 
 
 #define WSTR(string) (LPCWSTR)COleVariant(string).bstrVal
