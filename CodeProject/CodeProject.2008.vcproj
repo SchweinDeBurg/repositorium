@@ -643,6 +643,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\TreeDragDropHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TreeDragDropHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TreeSelectionHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TreeSelectionHelper.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\XColorStatic.cpp"
 				>
 			</File>
