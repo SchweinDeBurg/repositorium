@@ -1,3 +1,25 @@
+/* ==========================================================================
+	File :			SizeComboBox.h
+
+	Class :			CSizeComboBox
+
+	Author :		Johan Rosengren, Abstrakt Mekanik AB
+					Iain Clarke
+
+	Date :			2005-05-06
+
+	Purpose :		"CSizeComboBox" is derived from "CComboBox" and is a simple 
+					combobox for displaying a selection of font sizes.
+
+	Description :	Simpel derived class with members to fill the box and 
+					select an entry by contents instead of index.
+
+	Usage :			Create as any combobox, and call "FillCombo" to fill 
+					the control with a selection of font sizes. Call 
+					"SelectFontSize" to select an entry by content.
+
+   ========================================================================*/
+
 #if !defined(AFX_SIZECOMBOBOX_H__8A810F5D_013B_43FE_9821_505F4AAF12D6__INCLUDED_)
 #define AFX_SIZECOMBOBOX_H__8A810F5D_013B_43FE_9821_505F4AAF12D6__INCLUDED_
 

@@ -1,5 +1,8 @@
 // XHTMLStatic.h  Version 1.4
 //
+// Author:  Hans Dietrich
+//          hdietrich@gmail.com
+//
 // This software is released into the public domain.  You are free to use it
 // in any way you like, except that you may not sell this source code.
 //

@@ -1,3 +1,27 @@
+/* ==========================================================================
+	File :			FontComboBox.h
+
+	Class :			CFontComboBox
+
+	Author :		Johan Rosengren, Abstrakt Mekanik AB
+					Iain Clarke
+
+	Date :			2005-05-06
+
+	Purpose :		CFontComboBox is derived from "CComboBox" and is an 
+					autosizing no-frills combobox for display of the fonts 
+					installed in the system.. 
+
+	Description :	Simpel derived class with members to fill the box, to 
+					autosize the dropdown and select an entry by name.
+
+	Usage :			Create as any combobox, and call "FillCombo" to fill 
+					the control with the names of the fonts installed in 
+					the system. Call "SelectFontName" to select a font by 
+					name.
+
+   ========================================================================*/
+
 #if !defined(AFX_FONTCOMBOBOX_H__B88A8EAC_D643_444C_B9B0_87CE8DC81E89__INCLUDED_)
 #define AFX_FONTCOMBOBOX_H__B88A8EAC_D643_444C_B9B0_87CE8DC81E89__INCLUDED_
 
