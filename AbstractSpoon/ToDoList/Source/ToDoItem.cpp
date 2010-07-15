@@ -46,7 +46,10 @@ static char THIS_FILE[]=__FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
+// C4995: name was marked as #pragma deprecated
+#pragma warning(disable: 4995)
 IMPLEMENT_FIXED_ALLOC(TODOITEM, 1024);
+#pragma warning(default: 4995)
 
 TODOITEM::TODOITEM(LPCTSTR szTitle, LPCTSTR szComments) :
 	sTitle(szTitle), 

@@ -168,7 +168,10 @@ protected:
 	static CString ToString(int nValue);
 	static CString ToString(double dValue);
 
+// C4995: name was marked as #pragma deprecated
+#pragma warning(disable: 4995)
 	DECLARE_FIXED_ALLOC(CXmlItem);
+#pragma warning(default: 4995)
 };
 
 class IXmlParse

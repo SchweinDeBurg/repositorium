@@ -126,8 +126,11 @@ public:
 	mutable COleDateTime dateEarliestDue;
 	mutable BOOL bGoodAsDone, bDue;
 	mutable int nSubtasksCount, nSubtasksDone;
-	
+
+// C4995: name was marked as #pragma deprecated
+#pragma warning(disable: 4995)
 	DECLARE_FIXED_ALLOC(TODOITEM);
+#pragma warning(default: 4995)
 };
 
 class TODOSTRUCTURE
