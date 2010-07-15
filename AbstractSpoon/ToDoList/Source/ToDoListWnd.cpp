@@ -89,11 +89,8 @@
 #include <direct.h>
 #include <math.h>
 
-#ifdef _AFXDLL
-//#  define COMPILE_MULTIMON_STUBS
-#endif
-
 #pragma warning(disable:4706)
+#define COMPILE_MULTIMON_STUBS
 #include <multimon.h>
 #pragma warning(default:4706)
 

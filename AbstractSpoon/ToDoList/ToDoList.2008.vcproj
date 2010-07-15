@@ -406,6 +406,42 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\Manifest.xml"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\Source\MergeToDoList.cpp"
 				>
 			</File>
@@ -660,42 +696,6 @@
 			<File
 				RelativePath=".\Source\ToDoItem.cpp"
 				>
-			</File>
-			<File
-				RelativePath=".\Source\ToDoList.exe.manifest"
-				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Source\ToDoListApp.cpp"
@@ -1207,6 +1207,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Common\IContentControl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\IEncryption.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Common\IImportExport.h"
 				>
 			</File>
@@ -1268,6 +1276,14 @@
 			</File>
 			<File
 				RelativePath="..\Common\PreferencesBase.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\ProgressDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\ProgressDlg.h"
 				>
 			</File>
 			<File

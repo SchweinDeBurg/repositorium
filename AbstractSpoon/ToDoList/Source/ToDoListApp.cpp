@@ -42,7 +42,6 @@
 #include "../../../CodeProject/Source/LimitSingleInstance.h"
 #include "../../../CodeProject/Source/EnCommandLineInfo.h"
 #include "../../../CodeProject/Source/DriveInfo.h"
-#include "../../Common/enfiledialog.h"
 #include "../../../CodeProject/Source/EnString.h"
 #include "../../../CodeProject/Source/AfxRegKey.h"
 #include "../../../CodeProject/Source/FileMisc.h"
@@ -494,7 +493,7 @@ BOOL CToDoListApp::InitPreferences(CEnCommandLineInfo* pInfo)
 
 	if (!bUseIni)
 	{
-		BOOL bFirstTime = !CRegKey::KeyExists(HKEY_CURRENT_USER, "Software\\Abstractspoon\\ToDoList");
+		BOOL bFirstTime = !CAfxRegKey::KeyExists(HKEY_CURRENT_USER, "Software\\Abstractspoon\\ToDoList");
 
 		if (bFirstTime) // first time
 		{
@@ -664,7 +663,7 @@ void CToDoListApp::OnImportPrefs()
 	
 	if (dialog.DoModal() == IDOK)
 	{
-		CRegKey reg;
+		CAfxRegKey reg;
 		
 		if (reg.Open(HKEY_CURRENT_USER, APPREGKEY) == ERROR_SUCCESS)
 		{
@@ -718,7 +717,7 @@ void CToDoListApp::OnExportPrefs()
 {
 	ASSERT (m_pszRegistryKey != NULL);
 
-	CRegKey reg;
+	CAfxRegKey reg;
 
 	if (reg.Open(HKEY_CURRENT_USER, APPREGKEY) == ERROR_SUCCESS)
 	{

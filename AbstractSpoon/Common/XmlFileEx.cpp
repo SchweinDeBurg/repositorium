@@ -38,7 +38,7 @@
 #include "../../CodeProject/Source/EnString.h"
 #include "IEncryption.h"
 #include "PasswordDialog.h"
-#include ".../../CodeProject/Source/Base64Coder.h"
+#include "../../Naughter/Source/Base64Coder.h"
 #include "XmlNodeWrapper.h"
 
 #ifdef _DEBUG
@@ -122,7 +122,7 @@ BOOL CXmlFileEx::Encrypt(LPCTSTR szPassword)
 		return FALSE;
 
 	// 3. convert the binary to a string
-	Base64Coder b64;
+	CBase64Coder b64;
 
 	b64.Encode(pEncrypted, nLenEncrypted);
 	const char* pEncodedDataBuffer = b64.EncodedMessage();
@@ -294,7 +294,7 @@ BOOL CXmlFileEx::Decrypt(LPCTSTR szInput, CString& sOutput, LPCTSTR szPassword)
 		return FALSE;
 
 	// 1. convert the input string back to binary
-	Base64Coder b64;
+	CBase64Coder b64;
 	b64.Decode(szInput);
 
 	DWORD nReqBufLen = 0;
