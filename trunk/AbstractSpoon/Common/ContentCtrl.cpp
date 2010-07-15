@@ -36,7 +36,7 @@
 #include "ContentCtrl.h"
 #include "../../CodeProject/Source/AutoFlag.h"
 #include "../../CodeProject/Source/Misc.h"
-#include "../../CodeProject/Source/UITheme.h"
+#include "UITheme.h"
 
 #include "IContentControl.h"
 #include "ISpellCheck.h"

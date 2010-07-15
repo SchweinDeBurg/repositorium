@@ -37,8 +37,10 @@
 #include "FilteredToDoCtrl.h"
 
 #include <math.h>
+
 #pragma warning(disable: 4201)
 #include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
