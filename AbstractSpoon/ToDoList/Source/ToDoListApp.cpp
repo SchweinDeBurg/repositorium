@@ -417,7 +417,7 @@ void CToDoListApp::DoHelp(const CString& /*sHelpRef*/)
 				{
 					CEnString sFilter(IDS_HELPFILEFILTER);
 					//fabio_2005
-					CEnFileDialog dialog(TRUE, "tdl", sHelpFile, OFN_PATHMUSTEXIST, sFilter);
+					CFileDialog dialog(TRUE, "tdl", sHelpFile, OFN_PATHMUSTEXIST, sFilter);
 
 					dialog.m_ofn.lpstrTitle = (LPCSTR)(LPCTSTR)sTitle;
 
@@ -658,7 +658,7 @@ void CToDoListApp::OnImportPrefs()
 	sIniPath.MakeLower();
 	sIniPath.Replace("exe", "ini");
 	
-	CEnFileDialog dialog(TRUE, "ini", sIniPath, 
+	CFileDialog dialog(TRUE, "ini", sIniPath, 
 						OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST, 
 						CEnString(IDS_INIFILEFILTER));
 	
@@ -729,7 +729,7 @@ void CToDoListApp::OnExportPrefs()
 		sIniPath.MakeLower();
 		sIniPath.Replace("exe", "ini");
 		
-		CEnFileDialog dialog(FALSE, "ini", sIniPath, OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY, 
+		CFileDialog dialog(FALSE, "ini", sIniPath, OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY, 
 							CEnString(IDS_INIFILEFILTER));
 		
 		if (dialog.DoModal() == IDOK)

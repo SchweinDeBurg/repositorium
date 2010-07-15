@@ -200,7 +200,7 @@ BOOL CToolsHelper::PrepareCmdline(const USERTOOL& tool, CString& sCmdline, const
 		if (GetFileAttributes(sTasklist) == 0xffffffff)
 		{
 			CEnString sTitle(IDS_SELECTTASKLIST_TITLE);
-			CEnFileDialog dialog(TRUE, GetDefaultFileExt(), NULL, OFN_OVERWRITEPROMPT, GetFileFilter());
+			CFileDialog dialog(TRUE, GetDefaultFileExt(), NULL, OFN_OVERWRITEPROMPT, GetFileFilter());
 			
 			dialog.m_ofn.lpstrTitle = sTitle;
 			
