@@ -99,6 +99,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibPCRE++", "PCRE\LibPCRE++
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AbstractSpoon", "AbstractSpoon", "{83F8863F-2EB6-48BF-8174-FB638768DE60}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ToDoList", "AbstractSpoon\ToDoList\ToDoList.2008.vcproj", "{66F653CA-5669-48BA-A47B-5A941ECEC448}"
+	ProjectSection(ProjectDependencies) = postProject
+		{55F49127-D37F-4C01-861A-55ACC3A71242} = {55F49127-D37F-4C01-861A-55ACC3A71242}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		MBCS Debug|Win32 = MBCS Debug|Win32
@@ -291,6 +296,14 @@ Global
 		{A0AE856C-02E9-4CAE-A34D-B13C0BF4FFB3}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
 		{A0AE856C-02E9-4CAE-A34D-B13C0BF4FFB3}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
 		{A0AE856C-02E9-4CAE-A34D-B13C0BF4FFB3}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
+		{66F653CA-5669-48BA-A47B-5A941ECEC448}.MBCS Debug|Win32.ActiveCfg = MBCS Debug|Win32
+		{66F653CA-5669-48BA-A47B-5A941ECEC448}.MBCS Debug|Win32.Build.0 = MBCS Debug|Win32
+		{66F653CA-5669-48BA-A47B-5A941ECEC448}.MBCS Release|Win32.ActiveCfg = MBCS Release|Win32
+		{66F653CA-5669-48BA-A47B-5A941ECEC448}.MBCS Release|Win32.Build.0 = MBCS Release|Win32
+		{66F653CA-5669-48BA-A47B-5A941ECEC448}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{66F653CA-5669-48BA-A47B-5A941ECEC448}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{66F653CA-5669-48BA-A47B-5A941ECEC448}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
+		{66F653CA-5669-48BA-A47B-5A941ECEC448}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -319,5 +332,6 @@ Global
 		{C3747F7E-4912-47AF-B447-2BED07B41F87} = {6BFEAF3E-FB05-4F0B-BF32-5A01C9FB6231}
 		{D024843C-E81D-4C68-8900-8B22BAAA336B} = {6BFEAF3E-FB05-4F0B-BF32-5A01C9FB6231}
 		{A0AE856C-02E9-4CAE-A34D-B13C0BF4FFB3} = {6BFEAF3E-FB05-4F0B-BF32-5A01C9FB6231}
+		{66F653CA-5669-48BA-A47B-5A941ECEC448} = {83F8863F-2EB6-48BF-8174-FB638768DE60}
 	EndGlobalSection
 EndGlobal
