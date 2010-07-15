@@ -40,30 +40,108 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-// Valik - WINVER needs defined for VC 7.1 will complain and define it to 0x0501 (Windows XP)
-#ifndef WINVER
-#define WINVER 0x0600	// Windows Vista
-#endif	// WINVER
+//////////////////////////////////////////////////////////////////////////////////////////////
+// unwanted warnings
 
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0600	// Windows Vista
+// nonstandard extension used : conversion from 'type' to 'type'
+#pragma warning(disable: 4239)
+// unreferenced local function has been removed
+#pragma warning(disable: 4505)
+// unreferenced inline function has been removed
+#pragma warning(disable: 4514)
+// function not inlined
+#pragma warning(disable: 4710)
+// identifier was truncated in the debug information
+#pragma warning(disable: 4786)
+
+// C4996: function or variable may be unsafe
+#define _CRT_SECURE_NO_WARNINGS
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// use WinXP/IE6 features
+
+#define WINVER 0x0501
+#define _WIN32_WINDOWS 0x0500
+#define _WIN32_IE 0x0600
+#define _WIN32_WINNT 0x0501
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// remove automatic CRT/MFC dependencies generation
+
+// see http://www.codeproject.com/KB/cpp/PrivateAssemblyProjects.aspx and
+// http://blog.m-ri.de/index.php/2008/05/06/hotfix-fuer-usemsprivateassembliesh-und-vc-2008/
+// by by Martin Richter for more information
+
+#define _STL_NOFORCE_MANIFEST
+#define _CRT_NOFORCE_MANIFEST
+#define _AFX_NOFORCE_MANIFEST
+#define _ATL_NOFORCE_MANIFEST
+
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
-#define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
+__declspec(selectany) int _forceCRTManifest;
+__declspec(selectany) int _forceMFCManifest;
+__declspec(selectany) int _forceAtlDllManifest;
 
-#include <afxwin.h>         // MFC core and standard components
+// the next symbols are used by the several versions of VC++ 9.0
+__declspec(selectany) int _forceCRTManifestRTM;
+__declspec(selectany) int _forceMFCManifestRTM;
+__declspec(selectany) int _forceMFCManifestCUR;
 
-#include <afxext.h>         // MFC extensions
-#include <afxcmn.h>			// MFC support for Windows Common Controls
-#include <afxdtctl.h>		// MFC support for Internet Explorer 4 Common Controls
+#ifdef __cplusplus
+}   // extern "C"
+#endif
 
-#include <afxole.h>
-#include <afxtempl.h>
-#include <afxpriv.h>
-#include <afxinet.h>
+//////////////////////////////////////////////////////////////////////////////////////////////
+// MFC headers
 
-#pragma warning(disable:4239)
-#pragma warning(disable:4505)
+#if (_MSC_VER >= 1300)
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
+#endif	// _MSC_VER
+
+#include <afxwin.h>        // MFC core and standard components
+#include <afxcmn.h>        // MFC common control classes
+#include <afxtempl.h>      // MFC collection template classes
+#include <afxdtctl.h>      // MFC date/time control classes
+#include <afxext.h>        // MFC extensions and customizable classes
+#include <afxpriv.h>       // MFC private classes
+#include <afxinet.h>       // MFC support for WinInet
+#include <afxole.h>        // MFC OLE support
+#include <afxdisp.h>       // MFC IDispatch & ClassFactory support
+#include <afxadv.h>        // MFC Advanced Classes
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// PSDK headers
+
+#include <shlwapi.h>       // light-weight utility APIs
+#include <multimon.h>      // stub module that fakes multiple monitor APIs
+#include <mmsystem.h>      // multimedia APIs
+#include <lmcons.h>        // LAN manager APIs
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// CRT headers
+
+#include <math.h>          // math library
+#include <locale.h>        // localization routines
+#include <float.h>         // constants for floating point values
+#include <direct.h>        // directory handling/creation
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// some tricks
+
+#if !defined(_countof)
+#define _countof(array) (sizeof(array) / sizeof(array[0]))
+#endif   // _countof
+
+// force ISO/IEC 14882 conformance in for loop scope
+#if (_MSC_VER < 1300)
+#define for if (false); else for
+#else
+#pragma conform(forScope, on)
+#endif   // _MSC_VER
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

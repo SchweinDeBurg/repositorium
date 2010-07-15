@@ -39,7 +39,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include <Windows.h>
+#include <windows.h>
 
 // function to be exported from dll to create instance of interface
 #ifdef _EXPORTING // declare this in project settings for dll _only_

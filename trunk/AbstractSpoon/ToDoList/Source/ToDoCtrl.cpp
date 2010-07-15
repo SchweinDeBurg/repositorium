@@ -70,7 +70,7 @@
 
 #include <windowsx.h>
 #include <float.h>
-#include <Lmcons.h>
+#include <lmcons.h>
 #include <math.h>
 #include <afxpriv.h>
 
