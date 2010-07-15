@@ -63,7 +63,10 @@ CString& TXT2HTML(CString& txt) { return CHtmlCharMap::ConvertToRep(txt); }
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+// C4995: name was marked as #pragma deprecated
+#pragma warning(disable: 4995)
 IMPLEMENT_FIXED_ALLOC(CXmlItem, 1024);
+#pragma warning(default: 4995)
 
 CXmlItem::CXmlItem(CXmlItem* pParent, LPCTSTR szName, LPCTSTR szValue, XI_TYPE nType) :
 m_pParent(pParent), m_pSibling(NULL), m_sName(szName), m_sValue(szValue), m_nType(nType)
