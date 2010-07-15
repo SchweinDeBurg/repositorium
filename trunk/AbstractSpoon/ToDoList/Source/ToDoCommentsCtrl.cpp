@@ -281,7 +281,7 @@ void CToDoCommentsCtrl::OnCommentsMenuCmd(UINT nCmdID)
 					sFile.Empty();
 			}
 						
-			CEnFileDialog dialog(TRUE, NULL, sFile);
+			CFileDialog dialog(TRUE, NULL, sFile);
 			dialog.m_ofn.lpstrTitle = "Select File";
 			
 			if (dialog.DoModal() == IDOK)

@@ -64,6 +64,13 @@ LPSTR CBase64Coder::EncodedMessage() const
 	return (LPSTR) m_pEBuffer;
 }
 
+PBYTE CBase64Coder::DecodedMessage(DWORD& nLenMessage) const
+{
+	nLenMessage = m_nDDataLen;
+
+	return m_pDBuffer;
+}
+
 LONG CBase64Coder::DecodedMessageSize() const 
 { 
 	return m_nDDataLen;

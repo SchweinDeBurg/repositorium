@@ -247,7 +247,7 @@ void CSpellCheckDlg::OnBrowse()
 	UpdateData();
 
 	CString sFilter = GetItemText(DLG_SCD_DICTFILTER, "Dictionaries (*.dic)|*.dic||");
-	CEnFileDialog dialog(TRUE, "dic", m_sSelDictionary, OFN_PATHMUSTEXIST, sFilter);
+	CFileDialog dialog(TRUE, "dic", m_sSelDictionary, OFN_PATHMUSTEXIST, sFilter);
 
 	dialog.m_ofn.lpstrTitle = GetItemText(DLG_SCD_BROWSETITLE, "Select Dictionary");
 
@@ -380,7 +380,7 @@ BOOL CSpellCheckDlg::OnInitDialog()
 		{
 			// notify user and browse for dll
 			CString sFilter = GetItemText(DLG_SCD_ENGINEFILTER, "SpellChecker Engines|*.dll||");
-			CEnFileDialog dialog(TRUE, "dll", m_sEnginePath, OFN_PATHMUSTEXIST, sFilter);
+			CFileDialog dialog(TRUE, "dll", m_sEnginePath, OFN_PATHMUSTEXIST, sFilter);
 
 			dialog.m_ofn.lpstrTitle = GetItemText(DLG_SCD_ENGINETITLE, "Locate Spell Check Engine");
 

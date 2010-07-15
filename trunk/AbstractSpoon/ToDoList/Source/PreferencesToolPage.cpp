@@ -475,7 +475,7 @@ void CPreferencesToolPage::OnImport()
 
 	while (bContinue)
 	{
-		CEnFileDialog dialog(TRUE, "ini", NULL, 
+		CFileDialog dialog(TRUE, "ini", NULL, 
 							OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST, 
 							CEnString(IDS_INIFILEFILTER));
 		

@@ -30,6 +30,7 @@ public:
 	virtual void	 Decode(LPCSTR sMessage);
 	virtual LPSTR  DecodedMessage() const;
 	virtual LPSTR  EncodedMessage() const;
+	virtual PBYTE		DecodedMessage(DWORD& nLenMessage) const;
 	virtual LONG	 DecodedMessageSize() const;
 	virtual LONG	 EncodedMessageSize() const;
 

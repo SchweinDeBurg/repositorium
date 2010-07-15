@@ -289,7 +289,7 @@ void CFileEdit::OnBtnClick(UINT nID)
 				BOOL bOpenFileDlg = !HasStyle(FES_SAVEAS);
 				DWORD dwFlags = bOpenFileDlg ? OFN_FILEMUSTEXIST : OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
 
-				CEnFileDialog dialog(bOpenFileDlg, NULL, sFilename, dwFlags, m_sFilter);
+				CFileDialog dialog(bOpenFileDlg, NULL, sFilename, dwFlags, m_sFilter);
 
 				dialog.m_ofn.lpstrTitle = FILEEDIT_BROWSE_TITLE;
 

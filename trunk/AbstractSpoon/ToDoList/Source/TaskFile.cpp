@@ -40,7 +40,7 @@
 
 #include "../../Common/TimeEdit.h"
 #include "../../../CodeProject/Source/DateHelper.h"
-#include "../../Common/Base64Coder.h"
+#include "../../../Naughter/Source/Base64Coder.h"
 #include "../../../CodeProject/Source/Misc.h"
 #include "../../../CodeProject/Source/FileMisc.h"
 
@@ -816,7 +816,7 @@ BOOL CTaskFile::SetTaskCustomComments(HTASKITEM hTask, const CString& sContent, 
 
 	if (!sContent.IsEmpty())
 	{
-		Base64Coder b64;
+		CBase64Coder b64;
 		b64.Encode((const PBYTE)(LPCTSTR)sContent, sContent.GetLength());
 
 		bRes = SetTaskCChar(hTask, TDL_TASKCUSTOMCOMMENTS, b64.EncodedMessage(), XIT_ATTRIB);
@@ -849,7 +849,7 @@ BOOL CTaskFile::GetTaskCustomComments(HTASKITEM hTask, CString& sContent, CStrin
 	if (sTemp.IsEmpty())
 		return FALSE;
 
-	Base64Coder b64;
+	CBase64Coder b64;
 	b64.Decode(sTemp);
 
 	unsigned long nLenContent;
