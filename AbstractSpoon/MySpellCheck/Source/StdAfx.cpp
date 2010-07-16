@@ -29,23 +29,10 @@
 //*****************************************************************************
 
 // StdAfx.cpp : source file that includes just the standard includes
-//	ToDoList.pch will be the pre-compiled header
+//	MySpellCheck.pch will be the pre-compiled header
 //	StdAfx.obj will contain the pre-compiled type information
 
 #include "StdAfx.h"
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-// import libraries
-
-#pragma comment(lib, "shlwapi.lib")
-#pragma comment(lib, "winmm.lib")
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-// entry-point symbol for the Unicode builds
-
-#if defined(UNICODE) || defined(_UNICODE)
-#pragma comment(linker, "/entry:wWinMainCRTStartup")
-#endif	// UNICODE
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // manifest dependencies
