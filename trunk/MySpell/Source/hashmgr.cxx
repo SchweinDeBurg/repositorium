@@ -58,12 +58,12 @@ HashMgr::HashMgr(const char* tpath)
 	tablesize = 0;
 	tableptr = NULL;
 	int ec = load_tables(tpath);
-	if(ec)
+	if (ec)
 	{
 		/* error condition - what should we do here */
 		fprintf(stderr, "Hash Manager Error : %d\n", ec);
 		fflush(stderr);
-		if(tableptr)
+		if (tableptr)
 		{
 			free(tableptr);
 		}
@@ -74,34 +74,34 @@ HashMgr::HashMgr(const char* tpath)
 
 HashMgr::~HashMgr()
 {
-	if(tableptr)
+	if (tableptr)
 	{
 		// now pass through hash table freeing up everything
 		// go through column by column of the table
-		for(int i = 0; i < tablesize; i++)
+		for (int i = 0; i < tablesize; i++)
 		{
 			struct hentry* pt = &tableptr[i];
 			struct hentry* nt = NULL;
-			if(pt)
+			if (pt)
 			{
-				if(pt->word)
+				if (pt->word)
 				{
 					free(pt->word);
 				}
-				if(pt->astr)
+				if (pt->astr)
 				{
 					free(pt->astr);
 				}
 				pt = pt->next;
 			}
-			while(pt)
+			while (pt)
 			{
 				nt = pt->next;
-				if(pt->word)
+				if (pt->word)
 				{
 					free(pt->word);
 				}
-				if(pt->astr)
+				if (pt->astr)
 				{
 					free(pt->astr);
 				}
@@ -121,16 +121,16 @@ HashMgr::~HashMgr()
 struct hentry* HashMgr::lookup(const char* word) const
 {
 	struct hentry* dp;
-	if(tableptr)
+	if (tableptr)
 	{
 		dp = &tableptr[hash(word)];
-		if(dp->word == NULL)
+		if (dp->word == NULL)
 		{
 			return NULL;
 		}
-		for(;  dp != NULL;  dp = dp->next)
+		for (;  dp != NULL;  dp = dp->next)
 		{
-			if(strcmp(word, dp->word) == 0)
+			if (strcmp(word, dp->word) == 0)
 			{
 				return dp;
 			}
@@ -148,18 +148,18 @@ int HashMgr::add_word(const char* word, int wl, const char* aff, int al)
 	int i = hash(word);
 	struct hentry* dp = &tableptr[i];
 	struct hentry* hp;
-	if(dp->word == NULL)
+	if (dp->word == NULL)
 	{
 		dp->wlen = wl;
 		dp->alen = al;
 		dp->word = mystrdup(word);
 		dp->astr = mystrdup(aff);
 		dp->next = NULL;
-		if((wl) && (dp->word == NULL))
+		if ((wl) && (dp->word == NULL))
 		{
 			return 1;
 		}
-		if((al) && (dp->astr == NULL))
+		if ((al) && (dp->astr == NULL))
 		{
 			return 1;
 		}
@@ -167,7 +167,7 @@ int HashMgr::add_word(const char* word, int wl, const char* aff, int al)
 	else
 	{
 		hp = (struct hentry*) malloc(sizeof(struct hentry));
-		if(hp == NULL)
+		if (hp == NULL)
 		{
 			return 1;
 		}
@@ -176,16 +176,16 @@ int HashMgr::add_word(const char* word, int wl, const char* aff, int al)
 		hp->word = mystrdup(word);
 		hp->astr = mystrdup(aff);
 		hp->next = NULL;
-		while(dp->next != NULL)
+		while (dp->next != NULL)
 		{
 			dp = dp->next;
 		}
 		dp->next = hp;
-		if((wl) && (hp->word == NULL))
+		if ((wl) && (hp->word == NULL))
 		{
 			return 1;
 		}
-		if((al) && (hp->astr == NULL))
+		if ((al) && (hp->astr == NULL))
 		{
 			return 1;
 		}
@@ -199,13 +199,13 @@ int HashMgr::add_word(const char* word, int wl, const char* aff, int al)
 struct hentry* HashMgr::walk_hashtable(int& col, struct hentry* hp) const
 {
 	//reset to start
-	if((col < 0) || (hp == NULL))
+	if ((col < 0) || (hp == NULL))
 	{
 		col = -1;
 		hp = NULL;
 	}
 
-	if(hp && hp->next != NULL)
+	if (hp && hp->next != NULL)
 	{
 		hp = hp->next;
 	}
@@ -214,12 +214,12 @@ struct hentry* HashMgr::walk_hashtable(int& col, struct hentry* hp) const
 		col++;
 		hp = (col < tablesize) ? &tableptr[col] : NULL;
 		// search for next non-blank column entry
-		while(hp && (hp->word == NULL))
+		while (hp && (hp->word == NULL))
 		{
 			col ++;
 			hp = (col < tablesize) ? &tableptr[col] : NULL;
 		}
-		if(col < tablesize)
+		if (col < tablesize)
 		{
 			return hp;
 		}
@@ -240,32 +240,32 @@ int HashMgr::load_tables(const char* tpath)
 
 	// raw dictionary - munched file
 	FILE* rawdict = fopen(tpath, "r");
-	if(rawdict == NULL)
+	if (rawdict == NULL)
 	{
 		return 1;
 	}
 
 	// first read the first line of file to get hash table size */
 	char ts[MAXDELEN];
-	if(! fgets(ts, MAXDELEN - 1, rawdict))
+	if (! fgets(ts, MAXDELEN - 1, rawdict))
 	{
 		return 2;
 	}
 	mychomp(ts);
 	tablesize = atoi(ts);
-	if(!tablesize)
+	if (!tablesize)
 	{
 		return 4;
 	}
 	tablesize = tablesize + 5;
-	if((tablesize % 2) == 0)
+	if ((tablesize % 2) == 0)
 	{
 		tablesize++;
 	}
 
 	// allocate the hash table
 	tableptr = (struct hentry*) calloc(tablesize, sizeof(struct hentry));
-	if(! tableptr)
+	if (! tableptr)
 	{
 		return 3;
 	}
@@ -273,12 +273,12 @@ int HashMgr::load_tables(const char* tpath)
 	// loop through all words on much list and add to hash
 	// table and create word and affix strings
 
-	while(fgets(ts, MAXDELEN - 1, rawdict))
+	while (fgets(ts, MAXDELEN - 1, rawdict))
 	{
 		mychomp(ts);
 		// split each line into word and affix char strings
 		ap = strchr(ts, '/');
-		if(ap)
+		if (ap)
 		{
 			*ap = '\0';
 			ap++;
@@ -293,7 +293,7 @@ int HashMgr::load_tables(const char* tpath)
 		wl = strlen(ts);
 
 		// add the word and its index
-		if(add_word(ts, wl, ap, al))
+		if (add_word(ts, wl, ap, al))
 		{
 			return 5;
 		};
@@ -311,11 +311,11 @@ int HashMgr::load_tables(const char* tpath)
 int HashMgr::hash(const char* word) const
 {
 	long  hv = 0;
-	for(int i = 0; i < 4  &&  *word != 0; i++)
+	for (int i = 0; i < 4  &&  *word != 0; i++)
 	{
 		hv = (hv << 8) | (*word++);
 	}
-	while(*word != 0)
+	while (*word != 0)
 	{
 		ROTATE(hv, ROTATE_LEN);
 		hv ^= (*word++);

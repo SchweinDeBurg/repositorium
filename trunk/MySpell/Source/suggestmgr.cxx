@@ -61,13 +61,13 @@ SuggestMgr::SuggestMgr(const char* tryme, int maxn,
 	pAMgr = aptr;
 	ctry = mystrdup(tryme);
 	ctryl = 0;
-	if(ctry)
+	if (ctry)
 	{
 		ctryl = strlen(ctry);
 	}
 	maxSug = maxn;
 	nosplitsugs = (0 == 1);
-	if(pAMgr)
+	if (pAMgr)
 	{
 		pAMgr->get_nosplitsugs();
 	}
@@ -77,7 +77,7 @@ SuggestMgr::SuggestMgr(const char* tryme, int maxn,
 SuggestMgr::~SuggestMgr()
 {
 	pAMgr = NULL;
-	if(ctry)
+	if (ctry)
 	{
 		free(ctry);
 	}
@@ -97,45 +97,45 @@ int SuggestMgr::suggest(char** wlst, int ns, const char* word)
 	int nsug = ns;
 
 	// did we swap the order of chars by mistake
-	if((nsug < maxSug) && (nsug > -1))
+	if ((nsug < maxSug) && (nsug > -1))
 	{
 		nsug = swapchar(wlst, word, nsug);
 	}
 
 	// perhaps we made chose the wrong char from a related set
-	if((nsug < maxSug) && (nsug > -1))
+	if ((nsug < maxSug) && (nsug > -1))
 	{
 		nsug = mapchars(wlst, word, nsug);
 	}
 
 	// perhaps we made a typical fault of spelling
-	if((nsug < maxSug) && (nsug > -1))
+	if ((nsug < maxSug) && (nsug > -1))
 	{
 		nsug = replchars(wlst, word, nsug);
 	}
 
 	// did we forget to add a char
-	if((nsug < maxSug) && (nsug > -1))
+	if ((nsug < maxSug) && (nsug > -1))
 	{
 		nsug = forgotchar(wlst, word, nsug);
 	}
 
 	// did we add a char that should not be there
-	if((nsug < maxSug) && (nsug > -1))
+	if ((nsug < maxSug) && (nsug > -1))
 	{
 		nsug = extrachar(wlst, word, nsug);
 	}
 
 	// did we just hit the wrong key in place of a good char
-	if((nsug < maxSug) && (nsug > -1))
+	if ((nsug < maxSug) && (nsug > -1))
 	{
 		nsug = badchar(wlst, word, nsug);
 	}
 
 	// perhaps we forgot to hit space and two words ran together
-	if(!nosplitsugs)
+	if (!nosplitsugs)
 	{
-		if((nsug < maxSug) && (nsug > -1))
+		if ((nsug < maxSug) && (nsug > -1))
 		{
 			nsug = twowords(wlst, word, nsug);
 		}
@@ -149,14 +149,14 @@ int SuggestMgr::suggest(char** wlst, int ns, const char* word)
 int SuggestMgr::mapchars(char** wlst, const char* word, int ns)
 {
 	int wl = strlen(word);
-	if(wl < 2 || ! pAMgr)
+	if (wl < 2 || ! pAMgr)
 	{
 		return ns;
 	}
 
 	int nummap = pAMgr->get_nummap();
 	struct mapentry* maptable = pAMgr->get_maptable();
-	if(maptable == NULL)
+	if (maptable == NULL)
 	{
 		return ns;
 	}
@@ -168,21 +168,21 @@ int SuggestMgr::mapchars(char** wlst, const char* word, int ns)
 int SuggestMgr::map_related(const char* word, int i, char** wlst, int ns, const mapentry* maptable, int nummap)
 {
 	char c = *(word + i);
-	if(c == 0)
+	if (c == 0)
 	{
 		int cwrd = 1;
-		for(int m = 0; m < ns; m++)
-			if(strcmp(word, wlst[m]) == 0)
+		for (int m = 0; m < ns; m++)
+			if (strcmp(word, wlst[m]) == 0)
 			{
 				cwrd = 0;
 			}
-		if((cwrd) && check(word, strlen(word)))
+		if ((cwrd) && check(word, strlen(word)))
 		{
-			if(ns < maxSug)
+			if (ns < maxSug)
 			{
 				wlst[ns] = mystrdup(word);
 				// fprintf(stderr,"map_related %d adding %s\n",ns, wlst[ns]); fflush(stderr);
-				if(wlst[ns] == NULL)
+				if (wlst[ns] == NULL)
 				{
 					return -1;
 				}
@@ -192,13 +192,13 @@ int SuggestMgr::map_related(const char* word, int i, char** wlst, int ns, const 
 		return ns;
 	}
 	int in_map = 0;
-	for(int j = 0; j < nummap; j++)
+	for (int j = 0; j < nummap; j++)
 	{
-		if(strchr(maptable[j].set, c) != 0)
+		if (strchr(maptable[j].set, c) != 0)
 		{
 			in_map = 1;
 			char* newword = _strdup(word);
-			for(int k = 0; k < maptable[j].len; k++)
+			for (int k = 0; k < maptable[j].len; k++)
 			{
 				*(newword + i) = *(maptable[j].set + k);
 				ns = map_related(newword, (i + 1), wlst, ns, maptable, nummap);
@@ -206,7 +206,7 @@ int SuggestMgr::map_related(const char* word, int i, char** wlst, int ns, const 
 			free(newword);
 		}
 	}
-	if(!in_map)
+	if (!in_map)
 	{
 		i++;
 		ns = map_related(word, i, wlst, ns, maptable, nummap);
@@ -226,46 +226,46 @@ int SuggestMgr::replchars(char** wlst, const char* word, int ns)
 	int cwrd;
 
 	int wl = strlen(word);
-	if(wl < 2 || ! pAMgr)
+	if (wl < 2 || ! pAMgr)
 	{
 		return ns;
 	}
 
 	int numrep = pAMgr->get_numrep();
 	struct replentry* reptable = pAMgr->get_reptable();
-	if(reptable == NULL)
+	if (reptable == NULL)
 	{
 		return ns;
 	}
 
-	for(int i = 0; i < numrep; i++)
+	for (int i = 0; i < numrep; i++)
 	{
 		r = word;
 		lenr = strlen(reptable[i].replacement);
 		lenp = strlen(reptable[i].pattern);
 		// search every occurence of the pattern in the word
-		while((r = strstr(r, reptable[i].pattern)) != NULL)
+		while ((r = strstr(r, reptable[i].pattern)) != NULL)
 		{
 			strcpy(candidate, word);
-			if(r - word + lenr + strlen(r + lenp) >= MAXSWL)
+			if (r - word + lenr + strlen(r + lenp) >= MAXSWL)
 			{
 				break;
 			}
 			strcpy(candidate + (r - word), reptable[i].replacement);
 			strcpy(candidate + (r - word) + lenr, r + lenp);
 			cwrd = 1;
-			for(int k = 0; k < ns; k++)
-				if(strcmp(candidate, wlst[k]) == 0)
+			for (int k = 0; k < ns; k++)
+				if (strcmp(candidate, wlst[k]) == 0)
 				{
 					cwrd = 0;
 				}
-			if((cwrd) && check(candidate, strlen(candidate)))
+			if ((cwrd) && check(candidate, strlen(candidate)))
 			{
-				if(ns < maxSug)
+				if (ns < maxSug)
 				{
 					wlst[ns] = mystrdup(candidate);
 					// fprintf(stderr,"replchars %d adding %s\n",ns,wlst[ns]); fflush(stderr);
-					if(wlst[ns] == NULL)
+					if (wlst[ns] == NULL)
 					{
 						return -1;
 					}
@@ -295,29 +295,29 @@ int SuggestMgr::badchar(char** wlst, const char* word, int ns)
 
 	// swap out each char one by one and try all the tryme
 	// chars in its place to see if that makes a good word
-	for(int i = 0; i < wl; i++)
+	for (int i = 0; i < wl; i++)
 	{
 		tmpc = candidate[i];
-		for(int j = 0; j < ctryl; j++)
+		for (int j = 0; j < ctryl; j++)
 		{
-			if(ctry[j] == tmpc)
+			if (ctry[j] == tmpc)
 			{
 				continue;
 			}
 			candidate[i] = ctry[j];
 			cwrd = 1;
-			for(int k = 0; k < ns; k++)
-				if(strcmp(candidate, wlst[k]) == 0)
+			for (int k = 0; k < ns; k++)
+				if (strcmp(candidate, wlst[k]) == 0)
 				{
 					cwrd = 0;
 				}
-			if((cwrd) && check(candidate, wl))
+			if ((cwrd) && check(candidate, wl))
 			{
-				if(ns < maxSug)
+				if (ns < maxSug)
 				{
 					wlst[ns] = mystrdup(candidate);
 					// fprintf(stderr,"bad_char %d adding %s\n",ns, wlst[ns]); fflush(stderr);
-					if(wlst[ns] == NULL)
+					if (wlst[ns] == NULL)
 					{
 						return -1;
 					}
@@ -344,28 +344,28 @@ int SuggestMgr::extrachar(char** wlst, const char* word, int ns)
 	int cwrd;
 
 	int wl = strlen(word);
-	if(wl < 2)
+	if (wl < 2)
 	{
 		return ns;
 	}
 
 	// try omitting one char of word at a time
 	strcpy(candidate, word + 1);
-	for(p = word, r = candidate;  *p != 0;)
+	for (p = word, r = candidate;  *p != 0;)
 	{
 		cwrd = 1;
-		for(int k = 0; k < ns; k++)
-			if(strcmp(candidate, wlst[k]) == 0)
+		for (int k = 0; k < ns; k++)
+			if (strcmp(candidate, wlst[k]) == 0)
 			{
 				cwrd = 0;
 			}
-		if((cwrd) && check(candidate, wl - 1))
+		if ((cwrd) && check(candidate, wl - 1))
 		{
-			if(ns < maxSug)
+			if (ns < maxSug)
 			{
 				wlst[ns] = mystrdup(candidate);
 				// fprintf(stderr,"extra_char %d adding %s\n",ns,wlst[ns]); fflush(stderr);
-				if(wlst[ns] == NULL)
+				if (wlst[ns] == NULL)
 				{
 					return -1;
 				}
@@ -394,23 +394,23 @@ int SuggestMgr::forgotchar(char** wlst, const char* word, int ns)
 
 	// try inserting a tryme character before every letter
 	strcpy(candidate + 1, word);
-	for(p = word, q = candidate;  *p != 0;)
+	for (p = word, q = candidate;  *p != 0;)
 	{
-		for(int i = 0;  i < ctryl;  i++)
+		for (int i = 0;  i < ctryl;  i++)
 		{
 			*q = ctry[i];
 			cwrd = 1;
-			for(int k = 0; k < ns; k++)
-				if(strcmp(candidate, wlst[k]) == 0)
+			for (int k = 0; k < ns; k++)
+				if (strcmp(candidate, wlst[k]) == 0)
 				{
 					cwrd = 0;
 				}
-			if((cwrd) && check(candidate, wl + 1))
+			if ((cwrd) && check(candidate, wl + 1))
 			{
-				if(ns < maxSug)
+				if (ns < maxSug)
 				{
 					wlst[ns] = mystrdup(candidate);
-					if(wlst[ns] == NULL)
+					if (wlst[ns] == NULL)
 					{
 						return -1;
 					}
@@ -426,22 +426,22 @@ int SuggestMgr::forgotchar(char** wlst, const char* word, int ns)
 	}
 
 	// now try adding one to end */
-	for(int i = 0;  i < ctryl;  i++)
+	for (int i = 0;  i < ctryl;  i++)
 	{
 		*q = ctry[i];
 		cwrd = 1;
-		for(int k = 0; k < ns; k++)
-			if(strcmp(candidate, wlst[k]) == 0)
+		for (int k = 0; k < ns; k++)
+			if (strcmp(candidate, wlst[k]) == 0)
 			{
 				cwrd = 0;
 			}
-		if((cwrd) && check(candidate, wl + 1))
+		if ((cwrd) && check(candidate, wl + 1))
 		{
-			if(ns < maxSug)
+			if (ns < maxSug)
 			{
 				wlst[ns] = mystrdup(candidate);
 				// fprintf(stderr,"forgot_char %d adding %s\n",ns,wlst[ns]); fflush(stderr);
-				if(wlst[ns] == NULL)
+				if (wlst[ns] == NULL)
 				{
 					return -1;
 				}
@@ -464,7 +464,7 @@ int SuggestMgr::twowords(char** wlst, const char* word, int ns)
 	char* p;
 
 	int wl = strlen(word);
-	if(wl < 3)
+	if (wl < 3)
 	{
 		return ns;
 	}
@@ -472,19 +472,19 @@ int SuggestMgr::twowords(char** wlst, const char* word, int ns)
 
 	// split the string into two pieces after every char
 	// if both pieces are good words make them a suggestion
-	for(p = candidate + 1;  p[1] != '\0';  p++)
+	for (p = candidate + 1;  p[1] != '\0';  p++)
 	{
 		p[-1] = *p;
 		*p = '\0';
-		if(check(candidate, strlen(candidate)))
+		if (check(candidate, strlen(candidate)))
 		{
-			if(check((p + 1), strlen(p + 1)))
+			if (check((p + 1), strlen(p + 1)))
 			{
 				*p = ' ';
-				if(ns < maxSug)
+				if (ns < maxSug)
 				{
 					wlst[ns] = mystrdup(candidate);
-					if(wlst[ns] == NULL)
+					if (wlst[ns] == NULL)
 					{
 						return -1;
 					}
@@ -513,23 +513,23 @@ int SuggestMgr::swapchar(char** wlst, const char* word, int ns)
 
 	// try swapping adjacent chars one by one
 	strcpy(candidate, word);
-	for(p = candidate;  p[1] != 0;  p++)
+	for (p = candidate;  p[1] != 0;  p++)
 	{
 		tmpc = *p;
 		*p = p[1];
 		p[1] = tmpc;
 		cwrd = 1;
-		for(int k = 0; k < ns; k++)
-			if(strcmp(candidate, wlst[k]) == 0)
+		for (int k = 0; k < ns; k++)
+			if (strcmp(candidate, wlst[k]) == 0)
 			{
 				cwrd = 0;
 			}
-		if((cwrd) && check(candidate, wl))
+		if ((cwrd) && check(candidate, wl))
 		{
-			if(ns < maxSug)
+			if (ns < maxSug)
 			{
 				wlst[ns] = mystrdup(candidate);
-				if(wlst[ns] == NULL)
+				if (wlst[ns] == NULL)
 				{
 					return -1;
 				}
@@ -557,7 +557,7 @@ int SuggestMgr::ngsuggest(char** wlst, char* word, HashMgr* pHMgr)
 	int sc;
 	int lp;
 
-	if(! pHMgr)
+	if (! pHMgr)
 	{
 		return 0;
 	}
@@ -566,7 +566,7 @@ int SuggestMgr::ngsuggest(char** wlst, char* word, HashMgr* pHMgr)
 	// keeping track of the MAX_ROOTS most similar root words
 	struct hentry* roots[MAX_ROOTS];
 	int scores[MAX_ROOTS];
-	for(i = 0; i < MAX_ROOTS; i++)
+	for (i = 0; i < MAX_ROOTS; i++)
 	{
 		roots[i] = NULL;
 		scores[i] = -100 * i;
@@ -577,16 +577,16 @@ int SuggestMgr::ngsuggest(char** wlst, char* word, HashMgr* pHMgr)
 
 	struct hentry* hp = NULL;
 	int col = -1;
-	while((hp = pHMgr->walk_hashtable(col, hp)))
+	while ((hp = pHMgr->walk_hashtable(col, hp)))
 	{
 		sc = ngram(3, word, hp->word, NGRAM_LONGER_WORSE);
-		if(sc > scores[lp])
+		if (sc > scores[lp])
 		{
 			scores[lp] = sc;
 			roots[lp] = hp;
 			int lval = sc;
-			for(j = 0; j < MAX_ROOTS; j++)
-				if(scores[j] < lval)
+			for (j = 0; j < MAX_ROOTS; j++)
+				if (scores[j] < lval)
 				{
 					lp = j;
 					lval = scores[j];
@@ -599,10 +599,10 @@ int SuggestMgr::ngsuggest(char** wlst, char* word, HashMgr* pHMgr)
 	// and score them to generate a minimum acceptable score
 	int thresh = 0;
 	char* mw = NULL;
-	for(int sp = 1; sp < 4; sp++)
+	for (int sp = 1; sp < 4; sp++)
 	{
 		mw = _strdup(word);
-		for(int k = sp; k < n; k += 4)
+		for (int k = sp; k < n; k += 4)
 		{
 			*(mw + k) = '*';
 		}
@@ -618,7 +618,7 @@ int SuggestMgr::ngsuggest(char** wlst, char* word, HashMgr* pHMgr)
 	// possible suggestions
 	char* guess[MAX_GUESS];
 	int gscore[MAX_GUESS];
-	for(i = 0; i < MAX_GUESS; i++)
+	for (i = 0; i < MAX_GUESS; i++)
 	{
 		guess[i] = NULL;
 		gscore[i] = -100 * i;
@@ -628,35 +628,35 @@ int SuggestMgr::ngsuggest(char** wlst, char* word, HashMgr* pHMgr)
 
 	struct guessword* glst;
 	glst = (struct guessword*) calloc(MAX_WORDS, sizeof(struct guessword));
-	if(! glst)
+	if (! glst)
 	{
 		return 0;
 	}
 
-	for(i = 0; i < MAX_ROOTS; i++)
+	for (i = 0; i < MAX_ROOTS; i++)
 	{
 
-		if(roots[i])
+		if (roots[i])
 		{
 			struct hentry* rp = roots[i];
 			int nw = pAMgr->expand_rootword(glst, MAX_WORDS, rp->word, rp->wlen,
 			                                rp->astr, rp->alen);
-			for(int k = 0; k < nw; k++)
+			for (int k = 0; k < nw; k++)
 			{
 				sc = ngram(n, word, glst[k].word, NGRAM_ANY_MISMATCH);
-				if(sc > thresh)
+				if (sc > thresh)
 				{
-					if(sc > gscore[lp])
+					if (sc > gscore[lp])
 					{
-						if(guess[lp])
+						if (guess[lp])
 						{
 							free(guess[lp]);
 						}
 						gscore[lp] = sc;
 						guess[lp] = glst[k].word;
 						lval = sc;
-						for(j = 0; j < MAX_GUESS; j++)
-							if(gscore[j] < lval)
+						for (j = 0; j < MAX_GUESS; j++)
+							if (gscore[j] < lval)
 							{
 								lp = j;
 								lval = gscore[j];
@@ -670,7 +670,7 @@ int SuggestMgr::ngsuggest(char** wlst, char* word, HashMgr* pHMgr)
 			}
 		}
 	}
-	if(glst)
+	if (glst)
 	{
 		free(glst);
 	}
@@ -680,18 +680,18 @@ int SuggestMgr::ngsuggest(char** wlst, char* word, HashMgr* pHMgr)
 
 	bubblesort(&guess[0], &gscore[0], MAX_GUESS);
 	int ns = 0;
-	for(i = 0; i < MAX_GUESS; i++)
+	for (i = 0; i < MAX_GUESS; i++)
 	{
-		if(guess[i])
+		if (guess[i])
 		{
 			int unique = 1;
-			for(j = i + 1; j < MAX_GUESS; j++)
-				if(guess[j])
-					if(!strcmp(guess[i], guess[j]))
+			for (j = i + 1; j < MAX_GUESS; j++)
+				if (guess[j])
+					if (!strcmp(guess[i], guess[j]))
 					{
 						unique = 0;
 					}
-			if(unique)
+			if (unique)
 			{
 				wlst[ns++] = guess[i];
 			}
@@ -712,15 +712,15 @@ int SuggestMgr::ngsuggest(char** wlst, char* word, HashMgr* pHMgr)
 int SuggestMgr::check(const char* word, int len)
 {
 	struct hentry* rv = NULL;
-	if(pAMgr)
+	if (pAMgr)
 	{
 		rv = pAMgr->lookup(word);
-		if(rv == NULL)
+		if (rv == NULL)
 		{
 			rv = pAMgr->affix_check(word, len);
 		}
 	}
-	if(rv)
+	if (rv)
 	{
 		return 1;
 	}
@@ -736,31 +736,31 @@ int SuggestMgr::ngram(int n, char* s1, const char* s2, int uselen)
 	int l1 = strlen(s1);
 	int l2 = strlen(s2);
 	int ns;
-	for(int j = 1; j <= n; j++)
+	for (int j = 1; j <= n; j++)
 	{
 		ns = 0;
-		for(int i = 0; i <= (l1 - j); i++)
+		for (int i = 0; i <= (l1 - j); i++)
 		{
 			char c = *(s1 + i + j);
 			*(s1 + i + j) = '\0';
-			if(strstr(s2, (s1 + i)))
+			if (strstr(s2, (s1 + i)))
 			{
 				ns++;
 			}
 			*(s1 + i + j) = c;
 		}
 		nscore = nscore + ns;
-		if(ns < 2)
+		if (ns < 2)
 		{
 			break;
 		}
 	}
 	ns = 0;
-	if(uselen == NGRAM_LONGER_WORSE)
+	if (uselen == NGRAM_LONGER_WORSE)
 	{
 		ns = (l2 - l1) - 2;
 	}
-	if(uselen == NGRAM_ANY_MISMATCH)
+	if (uselen == NGRAM_ANY_MISMATCH)
 	{
 		ns = abs(l2 - l1) - 2;
 	}
@@ -772,12 +772,12 @@ int SuggestMgr::ngram(int n, char* s1, const char* s2, int uselen)
 void SuggestMgr::bubblesort(char** rword, int* rsc, int n)
 {
 	int m = 1;
-	while(m < n)
+	while (m < n)
 	{
 		int j = m;
-		while(j > 0)
+		while (j > 0)
 		{
-			if(rsc[j-1] < rsc[j])
+			if (rsc[j-1] < rsc[j])
 			{
 				int sctmp = rsc[j-1];
 				char* wdtmp = rword[j-1];

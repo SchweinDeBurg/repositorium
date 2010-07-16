@@ -61,14 +61,14 @@ extern "C"
 {
 #endif
 
-__declspec(selectany) int _forceCRTManifest;
-__declspec(selectany) int _forceMFCManifest;
-__declspec(selectany) int _forceAtlDllManifest;
+	__declspec(selectany) int _forceCRTManifest;
+	__declspec(selectany) int _forceMFCManifest;
+	__declspec(selectany) int _forceAtlDllManifest;
 
 // the next symbols are used by the several versions of VC++ 9.0
-__declspec(selectany) int _forceCRTManifestRTM;
-__declspec(selectany) int _forceMFCManifestRTM;
-__declspec(selectany) int _forceMFCManifestCUR;
+	__declspec(selectany) int _forceCRTManifestRTM;
+	__declspec(selectany) int _forceMFCManifestRTM;
+	__declspec(selectany) int _forceMFCManifestCUR;
 
 #ifdef __cplusplus
 }   // extern "C"

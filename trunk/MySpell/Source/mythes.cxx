@@ -55,19 +55,19 @@ MyThes::MyThes(const char* idxpath, const char* datpath)
 	list = NULL;
 	offst = NULL;
 
-	if(thInitialize(idxpath, datpath) != 1)
+	if (thInitialize(idxpath, datpath) != 1)
 	{
 		fprintf(stderr, "Error - can't open %s or %s\n", idxpath, datpath);
 		fflush(stderr);
-		if(encoding)
+		if (encoding)
 		{
 			free((void*)encoding);
 		}
-		if(list)
+		if (list)
 		{
 			free((void*)list);
 		}
-		if(offst)
+		if (offst)
 		{
 			free((void*)offst);
 		}
@@ -78,11 +78,11 @@ MyThes::MyThes(const char* idxpath, const char* datpath)
 
 MyThes::~MyThes()
 {
-	if(thCleanup() != 1)
+	if (thCleanup() != 1)
 	{
 		/* did not cleanup properly - throw exception? */
 	}
-	if(encoding)
+	if (encoding)
 	{
 		free((void*)encoding);
 	}
@@ -97,7 +97,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
 
 	// open the index file
 	FILE* pifile = fopen(idxpath, "r");
-	if(!pifile)
+	if (!pifile)
 	{
 		pifile = NULL;
 		return 0;
@@ -116,7 +116,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
 	list = (char**)   calloc(idxsz, sizeof(char*));
 	offst = (unsigned int*) calloc(idxsz, sizeof(unsigned int));
 
-	if((!(list)) || (!(offst)))
+	if ((!(list)) || (!(offst)))
 	{
 		fprintf(stderr, "Error - bad memory allocation\n");
 		fflush(stderr);
@@ -125,12 +125,12 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
 
 	// now parse the remaining lines of the index
 	len = readLine(pifile, wrd, MAX_WD_LEN);
-	while(len > 0)
+	while (len > 0)
 	{
 		int np = mystr_indexOfChar(wrd, '|');
-		if(nw < idxsz)
+		if (nw < idxsz)
 		{
-			if(np >= 0)
+			if (np >= 0)
 			{
 				*(wrd + np) = '\0';
 				list[nw] = (char*)calloc(1, (np + 1));
@@ -148,7 +148,7 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
 
 	/* next open the data file */
 	pdfile = fopen(datpath, "r");
-	if(!pdfile)
+	if (!pdfile)
 	{
 		pdfile = NULL;
 		return 0;
@@ -161,27 +161,27 @@ int MyThes::thInitialize(const char* idxpath, const char* datpath)
 int MyThes::thCleanup()
 {
 	/* first close the data file */
-	if(pdfile)
+	if (pdfile)
 	{
 		fclose(pdfile);
 		pdfile = NULL;
 	}
 
 	/* now free up all the allocated strings on the list */
-	for(int i = 0; i < nw; i++)
+	for (int i = 0; i < nw; i++)
 	{
-		if(list[i])
+		if (list[i])
 		{
 			free(list[i]);
 			list[i] = 0;
 		}
 	}
 
-	if(list)
+	if (list)
 	{
 		free((void*)list);
 	}
-	if(offst)
+	if (offst)
 	{
 		free((void*)offst);
 	}
@@ -205,7 +205,7 @@ int MyThes::Lookup(const char* pText, int len, mentry** pme)
 	*pme = NULL;
 
 	// handle the case of missing file or file related errors
-	if(! pdfile)
+	if (! pdfile)
 	{
 		return 0;
 	}
@@ -219,7 +219,7 @@ int MyThes::Lookup(const char* pText, int len, mentry** pme)
 	/* find it in the list */
 	int idx = binsearch(wrd, list, nw);
 	free(wrd);
-	if(idx < 0)
+	if (idx < 0)
 	{
 		return 0;
 	}
@@ -227,7 +227,7 @@ int MyThes::Lookup(const char* pText, int len, mentry** pme)
 	// now seek to the offset
 	offset = (long) offst[idx];
 	int rc = fseek(pdfile, offset, SEEK_SET);
-	if(rc)
+	if (rc)
 	{
 		return 0;
 	}
@@ -236,20 +236,20 @@ int MyThes::Lookup(const char* pText, int len, mentry** pme)
 	// and allocate a list of meaning entries
 	char* buf = NULL;
 	buf  = (char*) malloc(MAX_LN_LEN);
-	if(!buf)
+	if (!buf)
 	{
 		return 0;
 	}
 	readLine(pdfile, buf, (MAX_LN_LEN - 1));
 	int np = mystr_indexOfChar(buf, '|');
-	if(np < 0)
+	if (np < 0)
 	{
 		free(buf);
 		return 0;
 	}
 	int nmeanings = atoi(buf + np + 1);
 	*pme = (mentry*) malloc(nmeanings * sizeof(mentry));
-	if(!(*pme))
+	if (!(*pme))
 	{
 		free(buf);
 		return 0;
@@ -259,7 +259,7 @@ int MyThes::Lookup(const char* pText, int len, mentry** pme)
 	mentry* pm = *(pme);
 	char dfn[MAX_WD_LEN];
 
-	for(int j = 0; j < nmeanings; j++)
+	for (int j = 0; j < nmeanings; j++)
 	{
 		readLine(pdfile, buf, (MAX_LN_LEN - 1));
 
@@ -271,7 +271,7 @@ int MyThes::Lookup(const char* pText, int len, mentry** pme)
 		char* p = buf;
 		char* pos = NULL;
 		np = mystr_indexOfChar(p, '|');
-		if(np >= 0)
+		if (np >= 0)
 		{
 			*(buf + np) = '\0';
 			pos = mystrdup(p);
@@ -286,7 +286,7 @@ int MyThes::Lookup(const char* pText, int len, mentry** pme)
 		int nf = 1;
 		char* d = p;
 		np = mystr_indexOfChar(d, '|');
-		while(np >= 0)
+		while (np >= 0)
 		{
 			nf++;
 			d = d + np + 1;
@@ -297,10 +297,10 @@ int MyThes::Lookup(const char* pText, int len, mentry** pme)
 
 		// fill in the synonym list
 		d = p;
-		for(int j = 0; j < nf; j++)
+		for (int j = 0; j < nf; j++)
 		{
 			np = mystr_indexOfChar(d, '|');
-			if(np > 0)
+			if (np > 0)
 			{
 				*(d + np) = '\0';
 				pm->psyns[j] = mystrdup(d);
@@ -315,7 +315,7 @@ int MyThes::Lookup(const char* pText, int len, mentry** pme)
 		// add pos to first synonym to create the definition
 		int k = strlen(pos);
 		int m = strlen(pm->psyns[0]);
-		if((k + m) < (MAX_WD_LEN - 1))
+		if ((k + m) < (MAX_WD_LEN - 1))
 		{
 			strncpy(dfn, pos, k);
 			*(dfn + k) = ' ';
@@ -340,34 +340,34 @@ int MyThes::Lookup(const char* pText, int len, mentry** pme)
 void MyThes::CleanUpAfterLookup(mentry** pme, int nmeanings)
 {
 
-	if(nmeanings == 0)
+	if (nmeanings == 0)
 	{
 		return;
 	}
-	if((*pme) == NULL)
+	if ((*pme) == NULL)
 	{
 		return;
 	}
 
 	mentry* pm = *pme;
 
-	for(int i = 0; i < nmeanings; i++)
+	for (int i = 0; i < nmeanings; i++)
 	{
 		int count = pm->count;
-		for(int j = 0; j < count; j++)
+		for (int j = 0; j < count; j++)
 		{
-			if(pm->psyns[j])
+			if (pm->psyns[j])
 			{
 				free(pm->psyns[j]);
 			}
 			pm->psyns[j] = NULL;
 		}
-		if(pm->psyns)
+		if (pm->psyns)
 		{
 			free(pm->psyns);
 		}
 		pm->psyns = NULL;
-		if(pm->defn)
+		if (pm->defn)
 		{
 			free(pm->defn);
 		}
@@ -393,7 +393,7 @@ void MyThes::CleanUpAfterLookup(mentry** pme, int nmeanings)
 int MyThes::readLine(FILE* pf, char* buf, int nc)
 {
 
-	if(fgets(buf, nc, pf))
+	if (fgets(buf, nc, pf))
 	{
 		mychomp(buf);
 		return strlen(buf);
@@ -415,23 +415,23 @@ int MyThes::binsearch(char* sw, char* list[], int nlst)
 	lp = 0;
 	up = nlst - 1;
 	indx = -1;
-	if(strcmp(sw, list[lp]) < 0)
+	if (strcmp(sw, list[lp]) < 0)
 	{
 		return -1;
 	}
-	if(strcmp(sw, list[up]) > 0)
+	if (strcmp(sw, list[up]) > 0)
 	{
 		return -1;
 	}
-	while(indx < 0)
+	while (indx < 0)
 	{
 		mp = (int)((lp + up) >> 1);
 		j = strcmp(sw, list[mp]);
-		if(j > 0)
+		if (j > 0)
 		{
 			lp = mp + 1;
 		}
-		else if(j < 0)
+		else if (j < 0)
 		{
 			up = mp - 1;
 		}
@@ -439,7 +439,7 @@ int MyThes::binsearch(char* sw, char* list[], int nlst)
 		{
 			indx = mp;
 		}
-		if(lp > up)
+		if (lp > up)
 		{
 			return -1;
 		}
@@ -449,7 +449,7 @@ int MyThes::binsearch(char* sw, char* list[], int nlst)
 
 char* MyThes::get_th_encoding()
 {
-	if(encoding)
+	if (encoding)
 	{
 		return encoding;
 	}
@@ -462,7 +462,7 @@ char* MyThes::mystrdup(const char* p)
 {
 	int sl = strlen(p) + 1;
 	char* d = (char*)malloc(sl);
-	if(d)
+	if (d)
 	{
 		memcpy(d, p, sl);
 		return d;
@@ -474,11 +474,11 @@ char* MyThes::mystrdup(const char* p)
 void MyThes::mychomp(char* s)
 {
 	int k = strlen(s);
-	if((k > 0) && ((*(s + k - 1) == '\r') || (*(s + k - 1) == '\n')))
+	if ((k > 0) && ((*(s + k - 1) == '\r') || (*(s + k - 1) == '\n')))
 	{
 		*(s + k - 1) = '\0';
 	}
-	if((k > 1) && (*(s + k - 2) == '\r'))
+	if ((k > 1) && (*(s + k - 2) == '\r'))
 	{
 		*(s + k - 2) = '\0';
 	}
@@ -489,7 +489,7 @@ void MyThes::mychomp(char* s)
 int MyThes::mystr_indexOfChar(const char* d, int c)
 {
 	char* p = strchr((char*)d, c);
-	if(p)
+	if (p)
 	{
 		return (int)(p - d);
 	}

@@ -66,7 +66,7 @@ MySpell::MySpell(const char* affpath, const char* dpath)
 	/* and finally set up the suggestion manager */
 	maxSug = 25;
 	pSMgr = new SuggestMgr(try_string, maxSug, pAMgr);
-	if(try_string)
+	if (try_string)
 	{
 		free(try_string);
 	}
@@ -75,15 +75,15 @@ MySpell::MySpell(const char* affpath, const char* dpath)
 
 MySpell::~MySpell()
 {
-	if(pSMgr)
+	if (pSMgr)
 	{
 		delete pSMgr;
 	}
-	if(pAMgr)
+	if (pAMgr)
 	{
 		delete pAMgr;
 	}
-	if(pHMgr)
+	if (pHMgr)
 	{
 		delete pHMgr;
 	}
@@ -91,7 +91,7 @@ MySpell::~MySpell()
 	pAMgr = NULL;
 	pHMgr = NULL;
 	csconv = NULL;
-	if(encoding)
+	if (encoding)
 	{
 		free(encoding);
 	}
@@ -120,7 +120,7 @@ int MySpell::cleanword(char* dest, const char* src, int* pcaptype, int* pabbrev)
 	const unsigned char* q = (const unsigned char*) src;
 
 	// first skip over any leading special characters
-	while((*q != '\0') && (strchr(special_chars, (int)(*q))))
+	while ((*q != '\0') && (strchr(special_chars, (int)(*q))))
 	{
 		q++;
 	}
@@ -129,17 +129,17 @@ int MySpell::cleanword(char* dest, const char* src, int* pcaptype, int* pabbrev)
 	// if a period comes after a normal char record its presence
 	*pabbrev = 0;
 	int nl = strlen((const char*)q);
-	while((nl > 0) && (strchr(special_chars, (int)(*(q + nl - 1)))))
+	while ((nl > 0) && (strchr(special_chars, (int)(*(q + nl - 1)))))
 	{
 		nl--;
 	}
-	if(*(q + nl) == '.')
+	if (*(q + nl) == '.')
 	{
 		*pabbrev = 1;
 	}
 
 	// if no characters are left it can't be an abbreviation and can't be capitalized
-	if(nl <= 0)
+	if (nl <= 0)
 	{
 		*pcaptype = NOCAP;
 		*pabbrev = 0;
@@ -151,14 +151,14 @@ int MySpell::cleanword(char* dest, const char* src, int* pcaptype, int* pabbrev)
 	int ncap = 0;
 	int nneutral = 0;
 	int nc = 0;
-	while(nl > 0)
+	while (nl > 0)
 	{
 		nc++;
-		if(csconv[(*q)].ccase)
+		if (csconv[(*q)].ccase)
 		{
 			ncap++;
 		}
-		if(csconv[(*q)].cupper == csconv[(*q)].clower)
+		if (csconv[(*q)].cupper == csconv[(*q)].clower)
 		{
 			nneutral++;
 		}
@@ -169,15 +169,15 @@ int MySpell::cleanword(char* dest, const char* src, int* pcaptype, int* pabbrev)
 	*p = '\0';
 
 	// now finally set the captype
-	if(ncap == 0)
+	if (ncap == 0)
 	{
 		*pcaptype = NOCAP;
 	}
-	else if((ncap == 1) && csconv[(unsigned char)(*dest)].ccase)
+	else if ((ncap == 1) && csconv[(unsigned char)(*dest)].ccase)
 	{
 		*pcaptype = INITCAP;
 	}
-	else if((ncap == nc) || ((ncap + nneutral) == nc))
+	else if ((ncap == nc) || ((ncap + nneutral) == nc))
 	{
 		*pcaptype = ALLCAP;
 	}
@@ -196,25 +196,25 @@ int MySpell::spell(const char* word)
 	char wspace[MAXWORDLEN+1];
 
 	int wl = strlen(word);
-	if(wl > (MAXWORDLEN - 1))
+	if (wl > (MAXWORDLEN - 1))
 	{
 		return 0;
 	}
 	int captype = 0;
 	int abbv = 0;
 	wl = cleanword(cw, word, &captype, &abbv);
-	if(wl == 0)
+	if (wl == 0)
 	{
 		return 1;
 	}
 
-	switch(captype)
+	switch (captype)
 	{
 		case HUHCAP:
 		case NOCAP:
 		{
 			rv = check(cw);
-			if((abbv) && !(rv))
+			if ((abbv) && !(rv))
 			{
 				memcpy(wspace, cw, wl);
 				*(wspace + wl) = '.';
@@ -229,16 +229,16 @@ int MySpell::spell(const char* word)
 			memcpy(wspace, cw, (wl + 1));
 			mkallsmall(wspace, csconv);
 			rv = check(wspace);
-			if(!rv)
+			if (!rv)
 			{
 				mkinitcap(wspace, csconv);
 				rv = check(wspace);
 			}
-			if(!rv)
+			if (!rv)
 			{
 				rv = check(cw);
 			}
-			if((abbv) && !(rv))
+			if ((abbv) && !(rv))
 			{
 				memcpy(wspace, cw, wl);
 				*(wspace + wl) = '.';
@@ -252,11 +252,11 @@ int MySpell::spell(const char* word)
 			memcpy(wspace, cw, (wl + 1));
 			mkallsmall(wspace, csconv);
 			rv = check(wspace);
-			if(!rv)
+			if (!rv)
 			{
 				rv = check(cw);
 			}
-			if((abbv) && !(rv))
+			if ((abbv) && !(rv))
 			{
 				memcpy(wspace, cw, wl);
 				*(wspace + wl) = '.';
@@ -266,7 +266,7 @@ int MySpell::spell(const char* word)
 			break;
 		}
 	}
-	if(rv)
+	if (rv)
 	{
 		return 1;
 	}
@@ -277,25 +277,25 @@ int MySpell::spell(const char* word)
 char* MySpell::check(const char* word)
 {
 	struct hentry* he = NULL;
-	if(pHMgr)
+	if (pHMgr)
 	{
 		he = pHMgr->lookup(word);
 	}
 
-	if((he == NULL) && (pAMgr))
+	if ((he == NULL) && (pAMgr))
 	{
 		// try stripping off affixes */
 		he = pAMgr->affix_check(word, strlen(word));
 
 		// try check compound word
-		if((he == NULL) && (pAMgr->get_compound()))
+		if ((he == NULL) && (pAMgr->get_compound()))
 		{
 			he = pAMgr->compound_check(word, strlen(word), (pAMgr->get_compound())[0]);
 		}
 
 	}
 
-	if(he)
+	if (he)
 	{
 		return he->word;
 	}
@@ -308,31 +308,31 @@ int MySpell::suggest(char** * slst, const char* word)
 {
 	char cw[MAXWORDLEN+1];
 	char wspace[MAXWORDLEN+1];
-	if(! pSMgr)
+	if (! pSMgr)
 	{
 		return 0;
 	}
 	int wl = strlen(word);
-	if(wl > (MAXWORDLEN - 1))
+	if (wl > (MAXWORDLEN - 1))
 	{
 		return 0;
 	}
 	int captype = 0;
 	int abbv = 0;
 	wl = cleanword(cw, word, &captype, &abbv);
-	if(wl == 0)
+	if (wl == 0)
 	{
 		return 0;
 	}
 
 	int ns = 0;
 	char** wlst = (char**) calloc(maxSug, sizeof(char*));
-	if(wlst == NULL)
+	if (wlst == NULL)
 	{
 		return 0;
 	}
 
-	switch(captype)
+	switch (captype)
 	{
 		case NOCAP:
 		{
@@ -344,18 +344,18 @@ int MySpell::suggest(char** * slst, const char* word)
 		{
 
 			ns = pSMgr->suggest(wlst, ns, cw);
-			if(ns != -1)
+			if (ns != -1)
 			{
 				memcpy(wspace, cw, (wl + 1));
 				mkallsmall(wspace, csconv);
-				if(ns)
+				if (ns)
 				{
 					ns = pSMgr->suggest(wlst, ns, wspace);
 				}
 				else
 				{
 					int ns2 = pSMgr->suggest(wlst, ns, wspace);
-					for(int j = ns; j < ns2; j++)
+					for (int j = ns; j < ns2; j++)
 					{
 						mkinitcap(wlst[j], csconv);
 					}
@@ -368,7 +368,7 @@ int MySpell::suggest(char** * slst, const char* word)
 		case HUHCAP:
 		{
 			ns = pSMgr->suggest(wlst, ns, cw);
-			if(ns != -1)
+			if (ns != -1)
 			{
 				memcpy(wspace, cw, (wl + 1));
 				mkallsmall(wspace, csconv);
@@ -382,32 +382,32 @@ int MySpell::suggest(char** * slst, const char* word)
 			memcpy(wspace, cw, (wl + 1));
 			mkallsmall(wspace, csconv);
 			ns = pSMgr->suggest(wlst, ns, wspace);
-			if(ns > 0)
+			if (ns > 0)
 			{
-				for(int j = 0; j < ns; j++)
+				for (int j = 0; j < ns; j++)
 				{
 					mkallcap(wlst[j], csconv);
 				}
 			}
-			if(ns != -1)
+			if (ns != -1)
 			{
 				ns = pSMgr->suggest(wlst, ns , cw);
 			}
 			break;
 		}
 	}
-	if(ns > 0)
+	if (ns > 0)
 	{
 		*slst = wlst;
 		return ns;
 	}
 	// try ngram approach since found nothing
-	if(ns == 0)
+	if (ns == 0)
 	{
 		ns = pSMgr->ngsuggest(wlst, cw, pHMgr);
-		if(ns)
+		if (ns)
 		{
-			switch(captype)
+			switch (captype)
 			{
 				case NOCAP:
 					break;
@@ -415,7 +415,7 @@ int MySpell::suggest(char** * slst, const char* word)
 					break;
 				case INITCAP:
 				{
-					for(int j = 0; j < ns; j++)
+					for (int j = 0; j < ns; j++)
 					{
 						mkinitcap(wlst[j], csconv);
 					}
@@ -424,7 +424,7 @@ int MySpell::suggest(char** * slst, const char* word)
 
 				case ALLCAP:
 				{
-					for(int j = 0; j < ns; j++)
+					for (int j = 0; j < ns; j++)
 					{
 						mkallcap(wlst[j], csconv);
 					}
@@ -435,16 +435,16 @@ int MySpell::suggest(char** * slst, const char* word)
 			return ns;
 		}
 	}
-	if(ns < 0)
+	if (ns < 0)
 	{
 		// we ran out of memory - we should free up as much as possible
-		for(int i = 0; i < maxSug; i++)
-			if(wlst[i] != NULL)
+		for (int i = 0; i < maxSug; i++)
+			if (wlst[i] != NULL)
 			{
 				free(wlst[i]);
 			}
 	}
-	if(wlst)
+	if (wlst)
 	{
 		free(wlst);
 	}
