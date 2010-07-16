@@ -4,6 +4,7 @@
 	Version="9,00"
 	Name="MySpellCheck"
 	ProjectGUID="{FF062B4A-0840-4466-8D24-D00DC620439E}"
+	RootNamespace="MySpellCheck"
 	Keyword="MFCDLLProj"
 	TargetFrameworkVersion="131072"
 	>
@@ -93,6 +94,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="$(InputDir)Source\Manifest.xml"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -186,6 +188,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="$(InputDir)Source\Manifest.xml"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -281,6 +284,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="$(InputDir)Source\Manifest.xml"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -374,6 +378,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="$(InputDir)Source\Manifest.xml"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -400,6 +405,42 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\Source\Manifest.xml"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
 			<File
 				RelativePath=".\Source\MySpellCheck.cpp"
 				>
@@ -447,7 +488,21 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Source\Resource.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\StdAfx.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
+			<File
+				RelativePath=".\Source\MySpellCheckRes.rc"
 				>
 			</File>
 		</Filter>
