@@ -58,7 +58,7 @@ CTDLWelcomeWizard::CTDLWelcomeWizard() : CPropertySheet("", NULL, 0)
 
 void CTDLWelcomeWizard::InitSheet()
 {
-	m_hFont = GraphicsMisc::CreateFont("Tahoma");
+	m_hFont = GraphicsMisc::CreateFont("MS Shell Dlg 2");
 
 	m_page1.AttachFont(m_hFont);
 	m_page2.AttachFont(m_hFont);
