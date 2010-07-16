@@ -58,9 +58,9 @@ DictMgr::DictMgr(const char* dictpath, const char* etype)
 	// load list of etype entries
 	numdict = 0;
 	pdentry = (dictentry*)malloc(MAXDICTIONARIES * sizeof(struct dictentry));
-	if(pdentry)
+	if (pdentry)
 	{
-		if(parse_file(dictpath, etype))
+		if (parse_file(dictpath, etype))
 		{
 			numdict = 0;
 			// no dictionary.lst found is okay
@@ -76,22 +76,22 @@ DictMgr::DictMgr(const char* dictpath, const char* etype)
 DictMgr::~DictMgr()
 {
 	dictentry* pdict = NULL;
-	if(pdentry)
+	if (pdentry)
 	{
 		pdict = pdentry;
-		for(int i = 0; i < numdict; i++)
+		for (int i = 0; i < numdict; i++)
 		{
-			if(pdict->lang)
+			if (pdict->lang)
 			{
 				free(pdict->lang);
 				pdict->lang = NULL;
 			}
-			if(pdict->region)
+			if (pdict->region)
 			{
 				free(pdict->region);
 				pdict->region = NULL;
 			}
-			if(pdict->filename)
+			if (pdict->filename)
 			{
 				free(pdict->filename);
 				pdict->filename = NULL;
@@ -117,7 +117,7 @@ int  DictMgr::parse_file(const char* dictpath, const char* etype)
 	// open the dictionary list file
 	FILE* dictlst;
 	dictlst = fopen(dictpath, "r");
-	if(!dictlst)
+	if (!dictlst)
 	{
 		return 1;
 	}
@@ -126,23 +126,23 @@ int  DictMgr::parse_file(const char* dictpath, const char* etype)
 	// descriptive structures
 
 	// read in each line ignoring any that dont start with etype
-	while(fgets(line, MAXDICTENTRYLEN, dictlst))
+	while (fgets(line, MAXDICTENTRYLEN, dictlst))
 	{
 		mychomp(line);
 
 		/* parse in a dictionary entry */
-		if(strncmp(line, etype, 4) == 0)
+		if (strncmp(line, etype, 4) == 0)
 		{
-			if(numdict < MAXDICTIONARIES)
+			if (numdict < MAXDICTIONARIES)
 			{
 				char* tp = line;
 				char* piece;
 				i = 0;
-				while((piece = mystrsep(&tp, ' ')))
+				while ((piece = mystrsep(&tp, ' ')))
 				{
-					if(*piece != '\0')
+					if (*piece != '\0')
 					{
-						switch(i)
+						switch (i)
 						{
 							case 0:
 								break;
@@ -150,7 +150,7 @@ int  DictMgr::parse_file(const char* dictpath, const char* etype)
 								pdict->lang = mystrdup(piece);
 								break;
 							case 2:
-								if(strcmp(piece, "ANY") == 0)
+								if (strcmp(piece, "ANY") == 0)
 								{
 									pdict->region = mystrdup("");
 								}
@@ -169,7 +169,7 @@ int  DictMgr::parse_file(const char* dictpath, const char* etype)
 					}
 					free(piece);
 				}
-				if(i == 4)
+				if (i == 4)
 				{
 					numdict++;
 					pdict++;

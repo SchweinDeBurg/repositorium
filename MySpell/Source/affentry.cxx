@@ -76,11 +76,11 @@ PfxEntry::PfxEntry(AffixMgr* pmgr, affentry* dp)
 PfxEntry::~PfxEntry()
 {
 	achar = '\0';
-	if(appnd)
+	if (appnd)
 	{
 		free(appnd);
 	}
-	if(strip)
+	if (strip)
 	{
 		free(strip);
 	}
@@ -98,21 +98,21 @@ char* PfxEntry::add(const char* word, int len)
 	char	        tword[MAXWORDLEN+1];
 
 	/* make sure all conditions match */
-	if((len > stripl) && (len >= numconds))
+	if ((len > stripl) && (len >= numconds))
 	{
 		unsigned char* cp = (unsigned char*) word;
-		for(cond = 0;  cond < numconds;  cond++)
+		for (cond = 0;  cond < numconds;  cond++)
 		{
-			if((conds[*cp++] & (1 << cond)) == 0)
+			if ((conds[*cp++] & (1 << cond)) == 0)
 			{
 				break;
 			}
 		}
-		if(cond >= numconds)
+		if (cond >= numconds)
 		{
 			/* we have a match so add prefix */
 			int tlen = 0;
-			if(appndl)
+			if (appndl)
 			{
 				strcpy(tword, appnd);
 				tlen += appndl;
@@ -145,13 +145,13 @@ struct hentry* PfxEntry::check(const char* word, int len)
 
 	tmpl = len - appndl;
 
-	if((tmpl > 0) && (tmpl + stripl >= numconds))
+	if ((tmpl > 0) && (tmpl + stripl >= numconds))
 	{
 
 		// generate new root word by removing prefix and adding
 		// back any characters that would have been stripped
 
-		if(stripl)
+		if (stripl)
 		{
 			strcpy(tmpword, strip);
 		}
@@ -163,9 +163,9 @@ struct hentry* PfxEntry::check(const char* word, int len)
 		// tested
 
 		cp = (unsigned char*)tmpword;
-		for(cond = 0;  cond < numconds;  cond++)
+		for (cond = 0;  cond < numconds;  cond++)
 		{
-			if((conds[*cp++] & (1 << cond)) == 0)
+			if ((conds[*cp++] & (1 << cond)) == 0)
 			{
 				break;
 			}
@@ -174,12 +174,12 @@ struct hentry* PfxEntry::check(const char* word, int len)
 		// if all conditions are met then check if resulting
 		// root word in the dictionary
 
-		if(cond >= numconds)
+		if (cond >= numconds)
 		{
 			tmpl += stripl;
-			if((he = pmyMgr->lookup(tmpword)) != NULL)
+			if ((he = pmyMgr->lookup(tmpword)) != NULL)
 			{
-				if(TESTAFF(he->astr, achar, he->alen))
+				if (TESTAFF(he->astr, achar, he->alen))
 				{
 					return he;
 				}
@@ -189,10 +189,10 @@ struct hentry* PfxEntry::check(const char* word, int len)
 			// if XPRODUCT is allowed, try again but now
 			// ross checked combined with a suffix
 
-			if(xpflg & XPRODUCT)
+			if (xpflg & XPRODUCT)
 			{
 				he = pmyMgr->suffix_check(tmpword, tmpl, XPRODUCT, (AffEntry*)this);
-				if(he)
+				if (he)
 				{
 					return he;
 				}
@@ -228,15 +228,15 @@ SfxEntry::SfxEntry(AffixMgr* pmgr, affentry* dp)
 SfxEntry::~SfxEntry()
 {
 	achar = '\0';
-	if(appnd)
+	if (appnd)
 	{
 		free(appnd);
 	}
-	if(rappnd)
+	if (rappnd)
 	{
 		free(rappnd);
 	}
-	if(strip)
+	if (strip)
 	{
 		free(strip);
 	}
@@ -254,27 +254,27 @@ char* SfxEntry::add(const char* word, int len)
 	char	        tword[MAXWORDLEN+1];
 
 	/* make sure all conditions match */
-	if((len > stripl) && (len >= numconds))
+	if ((len > stripl) && (len >= numconds))
 	{
 		unsigned char* cp = (unsigned char*)(word + len);
-		for(cond = numconds; --cond >= 0;)
+		for (cond = numconds; --cond >= 0;)
 		{
-			if((conds[*--cp] & (1 << cond)) == 0)
+			if ((conds[*--cp] & (1 << cond)) == 0)
 			{
 				break;
 			}
 		}
-		if(cond < 0)
+		if (cond < 0)
 		{
 			/* we have a match so add suffix */
 			strcpy(tword, word);
 			int tlen = len;
-			if(stripl)
+			if (stripl)
 			{
 				tlen -= stripl;
 			}
 			char* pp = (tword + tlen);
-			if(appndl)
+			if (appndl)
 			{
 				strcpy(pp, appnd);
 				tlen += appndl;
@@ -305,7 +305,7 @@ struct hentry* SfxEntry::check(const char* word, int len, int optflags, AffEntry
 	// if this suffix is being cross checked with a prefix
 	// but it does not support cross products skip it
 
-	if((optflags& XPRODUCT) != 0 && (xpflg& XPRODUCT) == 0)
+	if ((optflags& XPRODUCT) != 0 && (xpflg& XPRODUCT) == 0)
 	{
 		return NULL;
 	}
@@ -317,7 +317,7 @@ struct hentry* SfxEntry::check(const char* word, int len, int optflags, AffEntry
 
 	tmpl = len - appndl;
 
-	if((tmpl > 0)  && (tmpl + stripl >= numconds))
+	if ((tmpl > 0)  && (tmpl + stripl >= numconds))
 	{
 
 		// generate new root word by removing suffix and adding
@@ -326,7 +326,7 @@ struct hentry* SfxEntry::check(const char* word, int len, int optflags, AffEntry
 
 		strcpy(tmpword, word);
 		cp = (unsigned char*)(tmpword + tmpl);
-		if(stripl)
+		if (stripl)
 		{
 			strcpy((char*)cp, strip);
 			tmpl += stripl;
@@ -342,9 +342,9 @@ struct hentry* SfxEntry::check(const char* word, int len, int optflags, AffEntry
 		// this file for more info on exactly what is being
 		// tested
 
-		for(cond = numconds;  --cond >= 0;)
+		for (cond = numconds;  --cond >= 0;)
 		{
-			if((conds[*--cp] & (1 << cond)) == 0)
+			if ((conds[*--cp] & (1 << cond)) == 0)
 			{
 				break;
 			}
@@ -353,11 +353,11 @@ struct hentry* SfxEntry::check(const char* word, int len, int optflags, AffEntry
 		// if all conditions are met then check if resulting
 		// root word in the dictionary
 
-		if(cond < 0)
+		if (cond < 0)
 		{
-			if((he = pmyMgr->lookup(tmpword)) != NULL)
+			if ((he = pmyMgr->lookup(tmpword)) != NULL)
 			{
-				if(TESTAFF(he->astr, achar , he->alen) &&
+				if (TESTAFF(he->astr, achar , he->alen) &&
 				      ((optflags & XPRODUCT) == 0 ||
 				       TESTAFF(he->astr, ep->getFlag(), he->alen)))
 				{

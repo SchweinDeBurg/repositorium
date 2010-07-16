@@ -53,10 +53,10 @@ char* mystrsep(char** stringp, const char delim)
 	char* rv = NULL;
 	char* mp = *stringp;
 	int n = strlen(mp);
-	if(n > 0)
+	if (n > 0)
 	{
 		char* dp = (char*)memchr(mp, (int)((unsigned char)delim), n);
-		if(dp)
+		if (dp)
 		{
 			*stringp = dp + 1;
 			int nc = (int)((unsigned long)dp - (unsigned long)mp);
@@ -82,11 +82,11 @@ char* mystrsep(char** stringp, const char delim)
 char* mystrdup(const char* s)
 {
 	char* d = NULL;
-	if(s)
+	if (s)
 	{
 		int sl = strlen(s);
 		d = (char*) malloc(((sl + 1) * sizeof(char)));
-		if(d)
+		if (d)
 		{
 			memcpy(d, s, ((sl + 1)*sizeof(char)));
 		}
@@ -99,11 +99,11 @@ char* mystrdup(const char* s)
 void mychomp(char* s)
 {
 	int k = strlen(s);
-	if((k > 0) && ((*(s + k - 1) == '\r') || (*(s + k - 1) == '\n')))
+	if ((k > 0) && ((*(s + k - 1) == '\r') || (*(s + k - 1) == '\n')))
 	{
 		*(s + k - 1) = '\0';
 	}
-	if((k > 1) && (*(s + k - 2) == '\r'))
+	if ((k > 1) && (*(s + k - 2) == '\r'))
 	{
 		*(s + k - 2) = '\0';
 	}
@@ -114,15 +114,15 @@ void mychomp(char* s)
 char* myrevstrdup(const char* s)
 {
 	char* d = NULL;
-	if(s)
+	if (s)
 	{
 		int sl = strlen(s);
 		d = (char*) malloc((sl + 1) * sizeof(char));
-		if(d)
+		if (d)
 		{
 			const char* p = s + sl - 1;
 			char* q = d;
-			while(p >= s)
+			while (p >= s)
 			{
 				*q++ = *p--;
 			}
@@ -138,11 +138,11 @@ int isSubset(const char* s1, const char* s2)
 {
 	int l1 = strlen(s1);
 	int l2 = strlen(s2);
-	if(l1 > l2)
+	if (l1 > l2)
 	{
 		return 0;
 	}
-	if(strncmp(s2, s1, l1) == 0)
+	if (strncmp(s2, s1, l1) == 0)
 	{
 		return 1;
 	}
@@ -154,7 +154,7 @@ int isSubset(const char* s1, const char* s2)
 // return 1 if s1 is a leading subset of s2
 int isSubset(const char* s1, const char* s2)
 {
-	while(*s1 && (*s1 == *s2))
+	while (*s1 && (*s1 == *s2))
 	{
 		s1++;
 		s2++;
@@ -166,7 +166,7 @@ int isSubset(const char* s1, const char* s2)
 // return 1 if s1 (reversed) is a leading subset of end of s2
 int isRevSubset(const char* s1, const char* end_of_s2, int len)
 {
-	while((len > 0) && *s1 && (*s1 == *end_of_s2))
+	while ((len > 0) && *s1 && (*s1 == *end_of_s2))
 	{
 		s1++;
 		end_of_s2--;
@@ -180,7 +180,7 @@ int isRevSubset(const char* s1, const char* end_of_s2, int len)
 void enmkallcap(char* d, const char* p, const char* encoding)
 {
 	struct cs_info* csconv = get_current_cs(encoding);
-	while(*p != '\0')
+	while (*p != '\0')
 	{
 		*d++ = csconv[((unsigned char) *p)].cupper;
 		p++;
@@ -193,7 +193,7 @@ void enmkallcap(char* d, const char* p, const char* encoding)
 void enmkallsmall(char* d, const char* p, const char* encoding)
 {
 	struct cs_info* csconv = get_current_cs(encoding);
-	while(*p != '\0')
+	while (*p != '\0')
 	{
 		*d++ = csconv[((unsigned char) *p)].clower;
 		p++;
@@ -207,7 +207,7 @@ void enmkinitcap(char* d, const char* p, const char* encoding)
 {
 	struct cs_info* csconv = get_current_cs(encoding);
 	memcpy(d, p, (strlen(p) + 1));
-	if(*p != '\0')
+	if (*p != '\0')
 	{
 		*d = csconv[((unsigned char)*p)].cupper;
 	}
@@ -217,7 +217,7 @@ void enmkinitcap(char* d, const char* p, const char* encoding)
 // convert null terminated string to all caps
 void mkallcap(char* p, const struct cs_info* csconv)
 {
-	while(*p != '\0')
+	while (*p != '\0')
 	{
 		*p = csconv[((unsigned char) *p)].cupper;
 		p++;
@@ -228,7 +228,7 @@ void mkallcap(char* p, const struct cs_info* csconv)
 // convert null terminated string to all little
 void mkallsmall(char* p, const struct cs_info* csconv)
 {
-	while(*p != '\0')
+	while (*p != '\0')
 	{
 		*p = csconv[((unsigned char) *p)].clower;
 		p++;
@@ -239,7 +239,7 @@ void mkallsmall(char* p, const struct cs_info* csconv)
 // convert null terminated string to have intial capital
 void mkinitcap(char* p, const struct cs_info* csconv)
 {
-	if(*p != '\0')
+	if (*p != '\0')
 	{
 		*p = csconv[((unsigned char)*p)].cupper;
 	}
@@ -4179,9 +4179,9 @@ struct cs_info* get_current_cs(const char* es)
 {
 	struct cs_info* ccs = encds[0].cs_table;
 	int n = sizeof(encds) / sizeof(encds[0]);
-	for(int i = 0; i < n; i++)
+	for (int i = 0; i < n; i++)
 	{
-		if(strcmp(es, encds[i].enc_name) == 0)
+		if (strcmp(es, encds[i].enc_name) == 0)
 		{
 			ccs = encds[i].cs_table;
 		}
@@ -4217,9 +4217,9 @@ struct lang_map lang2enc[] =
 const char* get_default_enc(const char* lang)
 {
 	int n = sizeof(lang2enc) / sizeof(lang2enc[0]);
-	for(int i = 0; i < n; i++)
+	for (int i = 0; i < n; i++)
 	{
-		if(strcmp(lang, lang2enc[i].lang) == 0)
+		if (strcmp(lang, lang2enc[i].lang) == 0)
 		{
 			return lang2enc[i].def_enc;
 		}
