@@ -43,8 +43,8 @@
 class AffEntry
 {
 protected:
-	char *       appnd;
-	char *       strip;
+	char*        appnd;
+	char*        strip;
 	short        appndl;
 	short        stripl;
 	short        numconds;

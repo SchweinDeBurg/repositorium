@@ -51,9 +51,9 @@ struct hentry
 {
 	short    wlen;
 	short    alen;
-	char *   word;
-	char *   astr;
-	struct   hentry * next;
+	char*    word;
+	char*    astr;
+	struct   hentry* next;
 };
 
 #endif
