@@ -807,7 +807,7 @@ void CToDoListWnd::InitUIFont()
 {
 	m_fontMain.DeleteObject();
 
-	HFONT hFontUI = GraphicsMisc::CreateFont("Tahoma", 8);
+	HFONT hFontUI = GraphicsMisc::CreateFont("MS Shell Dlg 2", 8);
 
 	if (m_fontMain.Attach(hFontUI))
 		CDialogHelper::SetFont(this, m_fontMain); // will update all child controls
