@@ -55,22 +55,22 @@ class MySpell
 	AffixMgr*       pAMgr;
 	HashMgr*        pHMgr;
 	SuggestMgr*     pSMgr;
-	char *          encoding;
-	struct cs_info * csconv;
+	char*           encoding;
+	struct cs_info* csconv;
 	int             maxSug;
 
 public:
-	MySpell(const char * affpath, const char * dpath);
+	MySpell(const char* affpath, const char* dpath);
 	~MySpell();
 
-	int suggest(char*** slst, const char * word);
-	int spell(const char *);
-	char * get_dic_encoding();
+	int suggest(char** * slst, const char* word);
+	int spell(const char*);
+	char* get_dic_encoding();
 	bool isvalid();
 
 private:
-	int    cleanword(char *, const char *, int *, int *);
-	char * check(const char *);
+	int    cleanword(char*, const char*, int*, int*);
+	char* check(const char*);
 };
 
 #endif

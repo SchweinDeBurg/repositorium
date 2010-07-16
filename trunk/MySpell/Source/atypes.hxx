@@ -51,8 +51,8 @@
 
 struct affentry
 {
-	char * strip;
-	char * appnd;
+	char* strip;
+	char* appnd;
 	short  stripl;
 	short  appndl;
 	short  numconds;
@@ -61,18 +61,21 @@ struct affentry
 	char   conds[SETSIZE];
 };
 
-struct replentry {
-	char * pattern;
-	char * replacement;
+struct replentry
+{
+	char* pattern;
+	char* replacement;
 };
 
-struct mapentry {
-	char * set;
+struct mapentry
+{
+	char* set;
 	int len;
 };
 
-struct guessword {
-	char * word;
+struct guessword
+{
+	char* word;
 	bool allow;
 };
 

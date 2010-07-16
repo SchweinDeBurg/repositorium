@@ -49,21 +49,25 @@
 #pragma warning(disable:4706)
 
 // some utility functions
-extern void mychomp(char * s);
-extern char * mystrdup(const char * s);
-extern char * mystrsep(char ** stringp, const char delim);
+extern void mychomp(char* s);
+extern char* mystrdup(const char* s);
+extern char* mystrsep(char** stringp, const char delim);
 
-DictMgr::DictMgr(const char * dictpath, const char * etype)
+DictMgr::DictMgr(const char* dictpath, const char* etype)
 {
 	// load list of etype entries
 	numdict = 0;
-	pdentry = (dictentry *)malloc(MAXDICTIONARIES*sizeof(struct dictentry));
-	if (pdentry) {
-		if (parse_file(dictpath, etype)) {
+	pdentry = (dictentry*)malloc(MAXDICTIONARIES * sizeof(struct dictentry));
+	if(pdentry)
+	{
+		if(parse_file(dictpath, etype))
+		{
 			numdict = 0;
 			// no dictionary.lst found is okay
 		}
-	} else {
+	}
+	else
+	{
 		numdict = 0;
 	}
 }
@@ -71,19 +75,24 @@ DictMgr::DictMgr(const char * dictpath, const char * etype)
 
 DictMgr::~DictMgr()
 {
-	dictentry * pdict = NULL;
-	if (pdentry) {
+	dictentry* pdict = NULL;
+	if(pdentry)
+	{
 		pdict = pdentry;
-		for (int i=0;i<numdict;i++) {
-			if (pdict->lang) {
+		for(int i = 0; i < numdict; i++)
+		{
+			if(pdict->lang)
+			{
 				free(pdict->lang);
 				pdict->lang = NULL;
 			}
-			if (pdict->region) {
+			if(pdict->region)
+			{
 				free(pdict->region);
-				pdict->region=NULL;
+				pdict->region = NULL;
 			}
-			if (pdict->filename) {
+			if(pdict->filename)
+			{
 				free(pdict->filename);
 				pdict->filename = NULL;
 			}
@@ -98,17 +107,18 @@ DictMgr::~DictMgr()
 
 
 // read in list of etype entries and build up structure to describe them
-int  DictMgr::parse_file(const char * dictpath, const char * etype)
+int  DictMgr::parse_file(const char* dictpath, const char* etype)
 {
 
 	int i;
 	char line[MAXDICTENTRYLEN+1];
-	dictentry * pdict = pdentry;
+	dictentry* pdict = pdentry;
 
 	// open the dictionary list file
-	FILE * dictlst;
-	dictlst = fopen(dictpath,"r");
-	if (!dictlst) {
+	FILE* dictlst;
+	dictlst = fopen(dictpath, "r");
+	if(!dictlst)
+	{
 		return 1;
 	}
 
@@ -116,37 +126,57 @@ int  DictMgr::parse_file(const char * dictpath, const char * etype)
 	// descriptive structures
 
 	// read in each line ignoring any that dont start with etype
-	while (fgets(line,MAXDICTENTRYLEN,dictlst)) {
+	while(fgets(line, MAXDICTENTRYLEN, dictlst))
+	{
 		mychomp(line);
 
 		/* parse in a dictionary entry */
-		if (strncmp(line,etype,4) == 0) {
-			if (numdict < MAXDICTIONARIES) {
-				char * tp = line;
-				char * piece;
+		if(strncmp(line, etype, 4) == 0)
+		{
+			if(numdict < MAXDICTIONARIES)
+			{
+				char* tp = line;
+				char* piece;
 				i = 0;
-				while ((piece=mystrsep(&tp,' '))) {
-					if (*piece != '\0') {
-						switch(i) {
-							case 0: break;
-							case 1: pdict->lang = mystrdup(piece); break;
-							case 2: if (strcmp (piece, "ANY") == 0)
-											 pdict->region = mystrdup("");
-										 else
-											 pdict->region = mystrdup(piece);
-								  break;
-							case 3: pdict->filename = mystrdup(piece); break;
-							default: break;
+				while((piece = mystrsep(&tp, ' ')))
+				{
+					if(*piece != '\0')
+					{
+						switch(i)
+						{
+							case 0:
+								break;
+							case 1:
+								pdict->lang = mystrdup(piece);
+								break;
+							case 2:
+								if(strcmp(piece, "ANY") == 0)
+								{
+									pdict->region = mystrdup("");
+								}
+								else
+								{
+									pdict->region = mystrdup(piece);
+								}
+								break;
+							case 3:
+								pdict->filename = mystrdup(piece);
+								break;
+							default:
+								break;
 						}
 						i++;
 					}
 					free(piece);
 				}
-				if (i == 4) {
+				if(i == 4)
+				{
 					numdict++;
 					pdict++;
-				} else {
-					fprintf(stderr,"dictionary list corruption in line \"%s\"\n",line);
+				}
+				else
+				{
+					fprintf(stderr, "dictionary list corruption in line \"%s\"\n", line);
 					fflush(stderr);
 				}
 			}
@@ -157,7 +187,7 @@ int  DictMgr::parse_file(const char * dictpath, const char * etype)
 }
 
 // return text encoding of dictionary
-int DictMgr::get_list(dictentry ** ppentry)
+int DictMgr::get_list(dictentry** ppentry)
 {
 	*ppentry = pdentry;
 	return numdict;

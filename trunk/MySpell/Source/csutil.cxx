@@ -48,24 +48,28 @@
 // acts like strsep() but only uses a delim char and not
 // a delim string
 
-char * mystrsep(char ** stringp, const char delim)
+char* mystrsep(char** stringp, const char delim)
 {
-	char * rv = NULL;
-	char * mp = *stringp;
+	char* rv = NULL;
+	char* mp = *stringp;
 	int n = strlen(mp);
-	if (n > 0) {
-		char * dp = (char *)memchr(mp,(int)((unsigned char)delim),n);
-		if (dp) {
-			*stringp = dp+1;
+	if(n > 0)
+	{
+		char* dp = (char*)memchr(mp, (int)((unsigned char)delim), n);
+		if(dp)
+		{
+			*stringp = dp + 1;
 			int nc = (int)((unsigned long)dp - (unsigned long)mp);
-			rv = (char *) malloc(nc+1);
-			memcpy(rv,mp,nc);
-			*(rv+nc) = '\0';
+			rv = (char*) malloc(nc + 1);
+			memcpy(rv, mp, nc);
+			*(rv + nc) = '\0';
 			return rv;
-		} else {
-			rv = (char *) malloc(n+1);
+		}
+		else
+		{
+			rv = (char*) malloc(n + 1);
 			memcpy(rv, mp, n);
-			*(rv+n) = '\0';
+			*(rv + n) = '\0';
 			*stringp = mp + n;
 			return rv;
 		}
@@ -75,38 +79,53 @@ char * mystrsep(char ** stringp, const char delim)
 
 
 // replaces strdup with ansi version
-char * mystrdup(const char * s)
+char* mystrdup(const char* s)
 {
-	char * d = NULL;
-	if (s) {
+	char* d = NULL;
+	if(s)
+	{
 		int sl = strlen(s);
-		d = (char *) malloc(((sl+1) * sizeof(char)));
-		if (d) memcpy(d,s,((sl+1)*sizeof(char)));
+		d = (char*) malloc(((sl + 1) * sizeof(char)));
+		if(d)
+		{
+			memcpy(d, s, ((sl + 1)*sizeof(char)));
+		}
 	}
 	return d;
 }
 
 
 // remove cross-platform text line end characters
-void mychomp(char * s)
+void mychomp(char* s)
 {
 	int k = strlen(s);
-	if ((k > 0) && ((*(s+k-1)=='\r') || (*(s+k-1)=='\n'))) *(s+k-1) = '\0';
-	if ((k > 1) && (*(s+k-2) == '\r')) *(s+k-2) = '\0';
+	if((k > 0) && ((*(s + k - 1) == '\r') || (*(s + k - 1) == '\n')))
+	{
+		*(s + k - 1) = '\0';
+	}
+	if((k > 1) && (*(s + k - 2) == '\r'))
+	{
+		*(s + k - 2) = '\0';
+	}
 }
 
 
 //  does an ansi strdup of the reverse of a string
-char * myrevstrdup(const char * s)
+char* myrevstrdup(const char* s)
 {
-	char * d = NULL;
-	if (s) {
+	char* d = NULL;
+	if(s)
+	{
 		int sl = strlen(s);
-		d = (char *) malloc((sl+1) * sizeof(char));
-		if (d) {
-			const char * p = s + sl - 1;
-			char * q = d;
-			while (p >= s) *q++ = *p--;
+		d = (char*) malloc((sl + 1) * sizeof(char));
+		if(d)
+		{
+			const char* p = s + sl - 1;
+			char* q = d;
+			while(p >= s)
+			{
+				*q++ = *p--;
+			}
 			*q = '\0';
 		}
 	}
@@ -115,21 +134,28 @@ char * myrevstrdup(const char * s)
 
 #if 0
 // return 1 if s1 is a leading subset of s2
-int isSubset(const char * s1, const char * s2)
+int isSubset(const char* s1, const char* s2)
 {
 	int l1 = strlen(s1);
 	int l2 = strlen(s2);
-	if (l1 > l2) return 0;
-	if (strncmp(s2,s1,l1) == 0) return 1;
+	if(l1 > l2)
+	{
+		return 0;
+	}
+	if(strncmp(s2, s1, l1) == 0)
+	{
+		return 1;
+	}
 	return 0;
 }
 #endif
 
 
 // return 1 if s1 is a leading subset of s2
-int isSubset(const char * s1, const char * s2)
+int isSubset(const char* s1, const char* s2)
 {
-	while( *s1 && (*s1 == *s2) ) {
+	while(*s1 && (*s1 == *s2))
+	{
 		s1++;
 		s2++;
 	}
@@ -138,9 +164,10 @@ int isSubset(const char * s1, const char * s2)
 
 
 // return 1 if s1 (reversed) is a leading subset of end of s2
-int isRevSubset(const char * s1, const char * end_of_s2, int len)
+int isRevSubset(const char* s1, const char* end_of_s2, int len)
 {
-	while( (len > 0) && *s1 && (*s1 == *end_of_s2) ) {
+	while((len > 0) && *s1 && (*s1 == *end_of_s2))
+	{
 		s1++;
 		end_of_s2--;
 		len --;
@@ -150,10 +177,11 @@ int isRevSubset(const char * s1, const char * end_of_s2, int len)
 
 
 // convert null terminated string to all caps using encoding
-void enmkallcap(char * d, const char * p, const char * encoding)
+void enmkallcap(char* d, const char* p, const char* encoding)
 {
-	struct cs_info * csconv = get_current_cs(encoding);
-	while (*p != '\0') {
+	struct cs_info* csconv = get_current_cs(encoding);
+	while(*p != '\0')
+	{
 		*d++ = csconv[((unsigned char) *p)].cupper;
 		p++;
 	}
@@ -162,10 +190,11 @@ void enmkallcap(char * d, const char * p, const char * encoding)
 
 
 // convert null terminated string to all little using encoding
-void enmkallsmall(char * d, const char * p, const char * encoding)
+void enmkallsmall(char* d, const char* p, const char* encoding)
 {
-	struct cs_info * csconv = get_current_cs(encoding);
-	while (*p != '\0') {
+	struct cs_info* csconv = get_current_cs(encoding);
+	while(*p != '\0')
+	{
 		*d++ = csconv[((unsigned char) *p)].clower;
 		p++;
 	}
@@ -174,18 +203,22 @@ void enmkallsmall(char * d, const char * p, const char * encoding)
 
 
 // convert null terminated string to have intial capital using encoding
-void enmkinitcap(char * d, const char * p, const char * encoding)
+void enmkinitcap(char* d, const char* p, const char* encoding)
 {
-	struct cs_info * csconv = get_current_cs(encoding);
-	memcpy(d,p,(strlen(p)+1));
-	if (*p != '\0') *d= csconv[((unsigned char)*p)].cupper;
+	struct cs_info* csconv = get_current_cs(encoding);
+	memcpy(d, p, (strlen(p) + 1));
+	if(*p != '\0')
+	{
+		*d = csconv[((unsigned char)*p)].cupper;
+	}
 }
 
 
 // convert null terminated string to all caps
-void mkallcap(char * p, const struct cs_info * csconv)
+void mkallcap(char* p, const struct cs_info* csconv)
 {
-	while (*p != '\0') {
+	while(*p != '\0')
+	{
 		*p = csconv[((unsigned char) *p)].cupper;
 		p++;
 	}
@@ -193,9 +226,10 @@ void mkallcap(char * p, const struct cs_info * csconv)
 
 
 // convert null terminated string to all little
-void mkallsmall(char * p, const struct cs_info * csconv)
+void mkallsmall(char* p, const struct cs_info* csconv)
 {
-	while (*p != '\0') {
+	while(*p != '\0')
+	{
 		*p = csconv[((unsigned char) *p)].clower;
 		p++;
 	}
@@ -203,9 +237,12 @@ void mkallsmall(char * p, const struct cs_info * csconv)
 
 
 // convert null terminated string to have intial capital
-void mkinitcap(char * p, const struct cs_info * csconv)
+void mkinitcap(char* p, const struct cs_info* csconv)
 {
-	if (*p != '\0') *p = csconv[((unsigned char)*p)].cupper;
+	if(*p != '\0')
+	{
+		*p = csconv[((unsigned char)*p)].cupper;
+	}
 }
 
 
@@ -215,7 +252,8 @@ void mkinitcap(char * p, const struct cs_info * csconv)
 // encodings supported
 // supplying isupper, tolower, and toupper
 
-struct cs_info iso1_tbl[] = {
+struct cs_info iso1_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -475,7 +513,8 @@ struct cs_info iso1_tbl[] = {
 };
 
 
-struct cs_info iso2_tbl[] = {
+struct cs_info iso2_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -735,7 +774,8 @@ struct cs_info iso2_tbl[] = {
 };
 
 
-struct cs_info iso3_tbl[] = {
+struct cs_info iso3_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -994,7 +1034,8 @@ struct cs_info iso3_tbl[] = {
 	{ 0x00, 0xff, 0xff },
 };
 
-struct cs_info iso4_tbl[] = {
+struct cs_info iso4_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -1253,7 +1294,8 @@ struct cs_info iso4_tbl[] = {
 	{ 0x00, 0xff, 0xff },
 };
 
-struct cs_info iso5_tbl[] = {
+struct cs_info iso5_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -1512,7 +1554,8 @@ struct cs_info iso5_tbl[] = {
 	{ 0x00, 0xff, 0xaf },
 };
 
-struct cs_info iso6_tbl[] = {
+struct cs_info iso6_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -1771,7 +1814,8 @@ struct cs_info iso6_tbl[] = {
 	{ 0x00, 0xff, 0xff },
 };
 
-struct cs_info iso7_tbl[] = {
+struct cs_info iso7_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -2030,7 +2074,8 @@ struct cs_info iso7_tbl[] = {
 	{ 0x00, 0xff, 0xff },
 };
 
-struct cs_info iso8_tbl[] = {
+struct cs_info iso8_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -2289,7 +2334,8 @@ struct cs_info iso8_tbl[] = {
 	{ 0x00, 0xff, 0xff },
 };
 
-struct cs_info iso9_tbl[] = {
+struct cs_info iso9_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -2548,7 +2594,8 @@ struct cs_info iso9_tbl[] = {
 	{ 0x00, 0xff, 0xff },
 };
 
-struct cs_info iso10_tbl[] = {
+struct cs_info iso10_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -2807,7 +2854,8 @@ struct cs_info iso10_tbl[] = {
 	{ 0x00, 0xff, 0xff },
 };
 
-struct cs_info koi8r_tbl[] = {
+struct cs_info koi8r_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -3066,7 +3114,8 @@ struct cs_info koi8r_tbl[] = {
 	{ 0x01, 0xdf, 0xff },
 };
 
-struct cs_info cp1251_tbl[] = {
+struct cs_info cp1251_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -3325,7 +3374,8 @@ struct cs_info cp1251_tbl[] = {
 	{ 0x00, 0xff, 0xdf },
 };
 
-struct cs_info iso13_tbl[] = {
+struct cs_info iso13_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -3584,7 +3634,8 @@ struct cs_info iso13_tbl[] = {
 	{ 0x00, 0xFF, 0xFF },
 };
 
-struct cs_info iso14_tbl[] = {
+struct cs_info iso14_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -3844,7 +3895,8 @@ struct cs_info iso14_tbl[] = {
 };
 
 
-struct cs_info iscii_devanagari_tbl[] = {
+struct cs_info iscii_devanagari_tbl[] =
+{
 	{ 0x00, 0x00, 0x00 },
 	{ 0x00, 0x01, 0x01 },
 	{ 0x00, 0x02, 0x02 },
@@ -4103,30 +4155,34 @@ struct cs_info iscii_devanagari_tbl[] = {
 	{ 0x00, 0xff, 0xff },
 };
 
-struct enc_entry encds[] = {
-	{"ISO8859-1",iso1_tbl},
-	{"ISO8859-2",iso2_tbl},
-	{"ISO8859-3",iso3_tbl},
-	{"ISO8859-4",iso4_tbl},
-	{"ISO8859-5",iso5_tbl},
-	{"ISO8859-6",iso6_tbl},
-	{"ISO8859-7",iso7_tbl},
-	{"ISO8859-8",iso8_tbl},
-	{"ISO8859-9",iso9_tbl},
-	{"ISO8859-10",iso10_tbl},
-	{"KOI8-R",koi8r_tbl},
-	{"microsoft-cp1251",cp1251_tbl},
+struct enc_entry encds[] =
+{
+	{"ISO8859-1", iso1_tbl},
+	{"ISO8859-2", iso2_tbl},
+	{"ISO8859-3", iso3_tbl},
+	{"ISO8859-4", iso4_tbl},
+	{"ISO8859-5", iso5_tbl},
+	{"ISO8859-6", iso6_tbl},
+	{"ISO8859-7", iso7_tbl},
+	{"ISO8859-8", iso8_tbl},
+	{"ISO8859-9", iso9_tbl},
+	{"ISO8859-10", iso10_tbl},
+	{"KOI8-R", koi8r_tbl},
+	{"microsoft-cp1251", cp1251_tbl},
 	{"ISO8859-13", iso13_tbl},
 	{"ISO8859-14", iso14_tbl},
 	{"ISCII-DEVANAGARI", iscii_devanagari_tbl},
 };
 
 
-struct cs_info * get_current_cs(const char * es) {
-	struct cs_info * ccs = encds[0].cs_table;
+struct cs_info* get_current_cs(const char* es)
+{
+	struct cs_info* ccs = encds[0].cs_table;
 	int n = sizeof(encds) / sizeof(encds[0]);
-	for (int i = 0; i < n; i++) {
-		if (strcmp(es,encds[i].enc_name) == 0) {
+	for(int i = 0; i < n; i++)
+	{
+		if(strcmp(es, encds[i].enc_name) == 0)
+		{
 			ccs = encds[i].cs_table;
 		}
 	}
@@ -4134,33 +4190,37 @@ struct cs_info * get_current_cs(const char * es) {
 };
 
 
-struct lang_map lang2enc[] = {
-	{"ca","ISO8859-1"},
-	{"cs","ISO8859-2"},
-	{"da","ISO8859-1"},
-	{"de","ISO8859-1"},
-	{"el","ISO8859-7"},
-	{"en","ISO8859-1"},
-	{"es","ISO8859-1"},
-	{"fr","ISO8859-1"},
-	{"hr","ISO8859-2"},
-	{"hu","ISO8859-2"},
-	{"it","ISO8859-1"},
-	{"la","ISO8859-1"},
-	{"lv","ISO8859-13"},
-	{"nl","ISO8859-1"},
-	{"pl","ISO8859-2"},
-	{"pt","ISO8859-1"},
-	{"sv","ISO8859-1"},
-	{"ru","KOI8-R"},
-	{"bg","microsoft-cp1251"},
+struct lang_map lang2enc[] =
+{
+	{"ca", "ISO8859-1"},
+	{"cs", "ISO8859-2"},
+	{"da", "ISO8859-1"},
+	{"de", "ISO8859-1"},
+	{"el", "ISO8859-7"},
+	{"en", "ISO8859-1"},
+	{"es", "ISO8859-1"},
+	{"fr", "ISO8859-1"},
+	{"hr", "ISO8859-2"},
+	{"hu", "ISO8859-2"},
+	{"it", "ISO8859-1"},
+	{"la", "ISO8859-1"},
+	{"lv", "ISO8859-13"},
+	{"nl", "ISO8859-1"},
+	{"pl", "ISO8859-2"},
+	{"pt", "ISO8859-1"},
+	{"sv", "ISO8859-1"},
+	{"ru", "KOI8-R"},
+	{"bg", "microsoft-cp1251"},
 };
 
 
-const char * get_default_enc(const char * lang) {
+const char* get_default_enc(const char* lang)
+{
 	int n = sizeof(lang2enc) / sizeof(lang2enc[0]);
-	for (int i = 0; i < n; i++) {
-		if (strcmp(lang,lang2enc[i].lang) == 0) {
+	for(int i = 0; i < n; i++)
+	{
+		if(strcmp(lang, lang2enc[i].lang) == 0)
+		{
 			return lang2enc[i].def_enc;
 		}
 	}

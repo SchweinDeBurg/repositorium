@@ -46,7 +46,8 @@
 
 
 // a meaning with definition, count of synonyms and synonym list
-struct mentry {
+struct mentry
+{
 	char*  defn;
 	int  count;
 	char** psyns;
@@ -59,14 +60,14 @@ class MyThes
 	int  nw;                  /* number of entries in thesaurus */
 	char**  list;               /* stores word list */
 	unsigned int* offst;              /* stores offset list */
-	char *  encoding;           /* stores text encoding; */
+	char*   encoding;           /* stores text encoding; */
 
-	FILE  *pdfile;
+	FILE*  pdfile;
 
 	// disallow copy-constructor and assignment-operator for now
 	MyThes();
-	MyThes(const MyThes &);
-	MyThes & operator = (const MyThes &);
+	MyThes(const MyThes&);
+	MyThes& operator = (const MyThes&);
 
 public:
 	MyThes(const char* idxpath, const char* datpath);
@@ -77,7 +78,7 @@ public:
 	// when complete return the *original* meaning entry and count via
 	// CleanUpAfterLookup to properly handle memory deallocation
 
-	int Lookup(const char * pText, int len, mentry** pme);
+	int Lookup(const char* pText, int len, mentry** pme);
 
 	void CleanUpAfterLookup(mentry** pme, int nmean);
 
@@ -85,25 +86,25 @@ public:
 
 private:
 	// Open index and dat files and load list array
-	int thInitialize (const char* indxpath, const char* datpath);
+	int thInitialize(const char* indxpath, const char* datpath);
 
 	// internal close and cleanup dat and idx files
-	int thCleanup ();
+	int thCleanup();
 
 	// read a text line (\n terminated) stripping off line terminator
-	int readLine(FILE * pf, char * buf, int nc);
+	int readLine(FILE* pf, char* buf, int nc);
 
 	// binary search on null terminated character strings
-	int binsearch(char * wrd, char* list[], int nlst);
+	int binsearch(char* wrd, char* list[], int nlst);
 
 	// string duplication routine
-	char * mystrdup(const char * p);
+	char* mystrdup(const char* p);
 
 	// remove cross-platform text line end characters
-	void mychomp(char * s);
+	void mychomp(char* s);
 
 	// return index of char in string
-	int mystr_indexOfChar(const char * d, int c);
+	int mystr_indexOfChar(const char* d, int c);
 
 };
 
