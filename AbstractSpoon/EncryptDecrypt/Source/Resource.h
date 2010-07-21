@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by MySpellCheckRes.rc
+// Used by EncryptionRes.rc
 //
 
 // Next default values for new objects
