@@ -1,8 +1,8 @@
-// FMindImportExportApp.h : main header file for the FMINDIMPORTEXPORT DLL
+// GPExportApp.h : main header file for the GPEXPORT DLL
 //
 
-#if !defined(AFX_FMINDIMPORTEXPORT_H__656730B3_F1EA_4E8F_B4B9_3EA2EF865F7A__INCLUDED_)
-#define AFX_FMINDIMPORTEXPORT_H__656730B3_F1EA_4E8F_B4B9_3EA2EF865F7A__INCLUDED_
+#if !defined(AFX_GPEXPORT_H__DF3308EC_6319_429C_B017_039EE9E5AE4F__INCLUDED_)
+#define AFX_GPEXPORT_H__DF3308EC_6319_429C_B017_039EE9E5AE4F__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -15,21 +15,21 @@
 #include "Resource.h"		// main symbols
 
 /////////////////////////////////////////////////////////////////////////////
-// CFMindImportExportApp
-// See FMindImportExport.cpp for the implementation of this class
+// CGPExportApp
+// See GPExport.cpp for the implementation of this class
 //
 
-class CFMindImportExportApp : public CWinApp
+class CGPExportApp : public CWinApp
 {
 public:
-	CFMindImportExportApp();
+	CGPExportApp();
 
 // Overrides
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CFMindImportExportApp)
+	//{{AFX_VIRTUAL(CGPExportApp)
 	//}}AFX_VIRTUAL
 
-	//{{AFX_MSG(CFMindImportExportApp)
+	//{{AFX_MSG(CGPExportApp)
 		// NOTE - the ClassWizard will add and remove member functions here.
 		//    DO NOT EDIT what you see in these blocks of generated code !
 	//}}AFX_MSG
@@ -42,4 +42,4 @@ public:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_FMINDIMPORTEXPORT_H__656730B3_F1EA_4E8F_B4B9_3EA2EF865F7A__INCLUDED_)
+#endif // !defined(AFX_GPEXPORT_H__DF3308EC_6319_429C_B017_039EE9E5AE4F__INCLUDED_)
