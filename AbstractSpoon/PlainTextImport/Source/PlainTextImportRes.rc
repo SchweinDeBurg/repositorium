@@ -72,12 +72,12 @@ BEGIN
         BEGIN
             VALUE "Comments", "Compiler switches: /O1 /Ob1 /Oy /GF /EHsc /MD /Zp4 /Gy /W4 /TP."
             VALUE "CompanyName", "AbstractSpoon Software"
-            VALUE "FileDescription", "OutlookImpExp Component for ToDoList"
+            VALUE "FileDescription", "PlainTextImport Component for ToDoList"
             VALUE "FileVersion", "1.0.0.1"
-            VALUE "InternalName", "OutlookImpExp"
-            VALUE "LegalCopyright", "Copyright © 2008"
+            VALUE "InternalName", "PlainTextImport"
+            VALUE "LegalCopyright", "Copyright © 2006"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
-            VALUE "OriginalFilename", "OutlookImpExp.dll"
+            VALUE "OriginalFilename", "PlainTextImport.dll"
             VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."
             VALUE "ProductName", "ToDoList"
             VALUE "ProductVersion", "6.0"
@@ -95,44 +95,81 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Dialog
-//
-
-IDD_IMPORT_DIALOG DIALOG DISCARDABLE  0, 0, 250, 187
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Import Tasks from Outlook"
-FONT 8, "MS Shell Dlg 2"
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,137,166,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,193,166,50,14
-    LTEXT           "&Select tasks to import",IDC_STATIC,7,7,236,8
-    LISTBOX         IDC_TASKLIST,7,18,236,122,LBS_OWNERDRAWFIXED | 
-                    LBS_HASSTRINGS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | 
-                    WS_TABSTOP
-    CONTROL         "&Remove tasks from Outlook after importing",
-                    IDC_REMOVEOUTLOOKTASKS,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,144,149,10
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,7,159,236,1
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // DESIGNINFO
 //
 
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO DISCARDABLE 
 BEGIN
-    IDD_IMPORT_DIALOG, DIALOG
+    IDD_OPTIONSDIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 243
+        RIGHTMARGIN, 147
         TOPMARGIN, 7
-        BOTTOMMARGIN, 180
+        BOTTOMMARGIN, 79
     END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_OPTIONSDIALOG DLGINIT
+BEGIN
+    IDC_TABWIDTHS, 0x403, 4, 0
+0x6174, 0x0062, 
+    IDC_TABWIDTHS, 0x403, 8, 0
+0x2031, 0x7073, 0x6361, 0x0065, 
+    IDC_TABWIDTHS, 0x403, 9, 0
+0x2032, 0x7073, 0x6361, 0x7365, "\000" 
+    IDC_TABWIDTHS, 0x403, 9, 0
+0x2034, 0x7073, 0x6361, 0x7365, "\000" 
+    IDC_TABWIDTHS, 0x403, 9, 0
+0x2038, 0x7073, 0x6361, 0x7365, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_OPTIONSDIALOG DIALOG DISCARDABLE  0, 0, 154, 86
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Options"
+FONT 8, "MS Shell Dlg 2"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,42,64,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,97,64,50,14
+    COMBOBOX        IDC_TABWIDTHS,7,34,140,83,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    LTEXT           "Child tasks are delimited at each level using:",
+                    IDC_CBLABEL,7,23,140,8
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,7,56,140,1
+    CONTROL         "First Line represents the project title",
+                    IDC_PROJECTINCLUDED,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,7,140,10
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_IMPORTLABEL         "Child tasks are indented at each level with:"
+    IDS_EXPORTLABEL         "Indent child tasks at each level with:"
+    IDS_IMPORTTITLE         "Import Outline"
+    IDS_EXPORTTITLE         "Export Outline"
+    IDS_IMPORTPROJECTLABEL  "Import the first line as the project name"
+    IDS_EXPORTPROJECTLABEL  "Export the project name as the first line"
+END
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
