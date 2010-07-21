@@ -1,0 +1,256 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "Resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "Resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,2
+ PRODUCTVERSION 6,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "Compiler switches: /O1 /Ob1 /Oy /GF /EHsc /MD /Zp4 /Gy /W4 /TP."
+            VALUE "CompanyName", "AbstractSpoon Software"
+            VALUE "FileDescription", "RTFContentCtrl Dynamic Link Library"
+            VALUE "FileVersion", "1.0.0.2"
+            VALUE "InternalName", "RTFContentCtrl"
+            VALUE "LegalCopyright", "Copyright © AbstractSpoon 2005 & Johan Rosengren © 2005"
+            VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
+            VALUE "OriginalFilename", "RTFContentCtrl.dll"
+            VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."
+            VALUE "ProductName", "ToDoList"
+            VALUE "ProductVersion", "6.0"
+            VALUE "SpecialBuild", "Dependent on the non-shared Microsoft ® Visual C++ CRT redistributable version 9.0 SP1 with the ATL security update."
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+TOOLBAR_CONTROL TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      BUTTON_FONT
+    SEPARATOR
+    BUTTON      BUTTON_BOLD
+    BUTTON      BUTTON_ITALIC
+    BUTTON      BUTTON_UNDERLINE
+    BUTTON      BUTTON_STRIKETHRU
+    SEPARATOR
+    BUTTON      BUTTON_LEFTALIGN
+    BUTTON      BUTTON_CENTERALIGN
+    BUTTON      BUTTON_RIGHTALIGN
+    SEPARATOR
+    BUTTON      BUTTON_BULLET
+    BUTTON      BUTTON_NUMBER
+    SEPARATOR
+    BUTTON      BUTTON_OUTDENT
+    BUTTON      BUTTON_INDENT
+    SEPARATOR
+    BUTTON      BUTTON_TEXTCOLOR
+    BUTTON      BUTTON_BACKCOLOR
+    SEPARATOR
+    BUTTON      BUTTON_WORDWRAP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+TOOLBAR_CONTROL         BITMAP  DISCARDABLE     "BinRes\\Toolbar.bmp"
+IDB_TOOLBAR             BITMAP  DISCARDABLE     "BinRes\\Toolbar2.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_POPUP MENU DISCARDABLE 
+BEGIN
+    POPUP "edit"
+    BEGIN
+        MENUITEM "&Bold\tCtrl+B",               BUTTON_BOLD
+        MENUITEM "&Italic\tCtrl+I",             BUTTON_ITALIC
+        MENUITEM "&Underline\tCtrl+U",          BUTTON_UNDERLINE
+        MENUITEM "Stri&kethrough",              BUTTON_STRIKETHRU
+        MENUITEM SEPARATOR
+        MENUITEM "Superscript",                 ID_EDIT_SUPERSCRIPT
+        MENUITEM "Subscript",                   ID_EDIT_SUBSCRIPT
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
+        MENUITEM "Paste Simple (No formatting)\tCtrl+Shift+V", 
+                                                ID_EDIT_PASTESIMPLE
+        MENUITEM "Past&e Tasks as References",  ID_EDIT_PASTEASREF
+        MENUITEM "Delete\tDel",                 ID_EDIT_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "Select &All\tCtrl+A",         ID_EDIT_SELECT_ALL
+        MENUITEM SEPARATOR
+        MENUITEM "&Find...\tCtrl+F",            ID_EDIT_FIND
+        MENUITEM "&Replace...\tCtrl+H",         ID_EDIT_FINDREPLACE
+        MENUITEM SEPARATOR
+        MENUITEM "&Open Url",                   ID_EDIT_OPENURL
+        MENUITEM "Insert &File Link...",        ID_EDIT_FILEBROWSE
+        MENUITEM SEPARATOR
+        MENUITEM "C&heck Spelling",             ID_EDIT_SPELLCHECK
+        MENUITEM SEPARATOR
+        MENUITEM "Show &Formatting Toolbar",    ID_EDIT_SHOWTOOLBAR
+        MENUITEM "Show &Ruler",                 ID_EDIT_SHOWRULER
+        MENUITEM SEPARATOR
+        MENUITEM "Word Wrap",                   ID_EDIT_WORDWRAP
+    END
+    POPUP "unused"
+    BEGIN
+        MENUITEM "&Undo\tCtrl+Z",               ID_EDIT_UNDO
+        MENUITEM "&Redo\tCtrl+Y",               ID_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Insert &Horizontal Line",     ID_EDIT_HORZRULE
+        MENUITEM "",                            1
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    STRING_COLOR            "abc"
+    STRING_DEFAULT          "Automatic"
+    STRING_CUSTOM           "More Colours..."
+    IDS_FIND_TITLE          "Find In Comments"
+    IDS_REPLACE_TITLE       "Replace In Comments"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    BUTTON_FONT             "\nFont Dialog"
+    BUTTON_BOLD             "\nBold"
+    BUTTON_ITALIC           "\nItalic"
+    BUTTON_UNDERLINE        "\nUnderline"
+    BUTTON_LEFTALIGN        "\nLeft Align"
+    BUTTON_CENTERALIGN      "\nCentre Align"
+    BUTTON_RIGHTALIGN       "\nRight Align"
+    BUTTON_INDENT           "\nIncrease Indent"
+    BUTTON_OUTDENT          "\nDecrease Indent"
+    BUTTON_BULLET           "\nBullet List"
+    BUTTON_STRIKETHRU       "\nStrikethrough"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    BUTTON_TEXTCOLOR        "Text Colour"
+    BUTTON_BACKCOLOR        "Background Colour"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_COMMENTSGOTOERRMSG  "The selected file could not be opened.\n\nPlease check that the file exists and that there is an application \nregistered for opening the selected file type."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_EDIT_WORDWRAP        "\nWordwrap"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    BUTTON_WORDWRAP         "\nWord Wrap"
+    BUTTON_NUMBER           "\nNumbered List"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_COMMENTSCTRLCLICKMSG "Ctrl+Click to follow link"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

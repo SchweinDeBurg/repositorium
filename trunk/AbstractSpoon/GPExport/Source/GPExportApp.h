@@ -16,7 +16,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // CGPExportApp
-// See GPExport.cpp for the implementation of this class
+// See GPExportApp.cpp for the implementation of this class
 //
 
 class CGPExportApp : public CWinApp

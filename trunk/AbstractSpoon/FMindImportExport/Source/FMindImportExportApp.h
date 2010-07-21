@@ -16,7 +16,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // CFMindImportExportApp
-// See FMindImportExport.cpp for the implementation of this class
+// See FMindImportExportApp.cpp for the implementation of this class
 //
 
 class CFMindImportExportApp : public CWinApp

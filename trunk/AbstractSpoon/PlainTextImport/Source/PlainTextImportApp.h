@@ -16,7 +16,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // CPlainTextImportApp
-// See PlainTextImport.cpp for the implementation of this class
+// See PlainTextImportApp.cpp for the implementation of this class
 //
 
 class CPlainTextImportApp : public CWinApp

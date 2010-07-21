@@ -16,7 +16,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // CMLOImportApp
-// See MLOImport.cpp for the implementation of this class
+// See MLOImportApp.cpp for the implementation of this class
 //
 
 class CMLOImportApp : public CWinApp 

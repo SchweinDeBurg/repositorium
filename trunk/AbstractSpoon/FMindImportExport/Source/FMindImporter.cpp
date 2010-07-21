@@ -306,6 +306,8 @@ bool CFMindImporter::ImportTask(const CXmlItem* pFMTask, ITaskList7* pDestTaskFi
 
 CString CFMindImporter::GetTaskRichContent(const CXmlItem *pFMTask , const char *szRichType) const
 {
+	UNREFERENCED_PARAMETER(szRichType);
+
 	const CXmlItem* pXIRich = pFMTask->GetItem("richcontent");
 	
 	while (pXIRich)

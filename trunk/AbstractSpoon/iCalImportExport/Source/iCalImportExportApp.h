@@ -16,7 +16,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // CICalImportExportApp
-// See iCalImportExport.cpp for the implementation of this class
+// See iCalImportExportApp.cpp for the implementation of this class
 //
 
 class CICalImportExportApp : public CWinApp
