@@ -16,7 +16,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // COutlookImpExpApp
-// See OutlookImpExp.cpp for the implementation of this class
+// See OutlookImpExpApp.cpp for the implementation of this class
 //
 
 class COutlookImpExpApp : public CWinApp

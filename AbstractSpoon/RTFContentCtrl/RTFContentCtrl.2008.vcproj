@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="MLOImport"
-	ProjectGUID="{8CE77835-2DE4-48B1-B279-40D2B7522506}"
-	RootNamespace="MLOImport"
+	Name="RTFContentCtrl"
+	ProjectGUID="{12EE9BED-7352-46C3-8BEC-984A6B2174B8}"
+	RootNamespace="RTFContentCtrl"
 	Keyword="MFCDLLProj"
 	TargetFrameworkVersion="131072"
 	>
@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;MLOIMPORT_EXPORTS;_EXPORTING"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;RTFCONTENTCTRL_EXPORTS;_EXPORTING"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -76,7 +76,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)\MLOImport.dll"
+				OutputFile="$(OutDir)\RTFContentCtrl.dll"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
@@ -86,7 +86,7 @@
 				OptimizeForWindows98="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)\MLOImport.lib"
+				ImportLibrary="$(OutDir)\RTFContentCtrl.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -141,7 +141,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;MLOIMPORT_EXPORTS;_EXPORTING"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;RTFCONTENTCTRL_EXPORTS;_EXPORTING"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -169,7 +169,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)\MLOImport.dll"
+				OutputFile="$(OutDir)\RTFContentCtrl.dll"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
@@ -180,7 +180,7 @@
 				SetChecksum="true"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)\MLOImport.lib"
+				ImportLibrary="$(OutDir)\RTFContentCtrl.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -235,7 +235,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;MLOIMPORT_EXPORTS;_EXPORTING"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;RTFCONTENTCTRL_EXPORTS;_EXPORTING"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -266,7 +266,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)\MLOImport.dll"
+				OutputFile="$(OutDir)\RTFContentCtrl.dll"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
@@ -276,7 +276,7 @@
 				OptimizeForWindows98="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)\MLOImport.lib"
+				ImportLibrary="$(OutDir)\RTFContentCtrl.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -331,7 +331,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;MLOIMPORT_EXPORTS;_EXPORTING"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;RTFCONTENTCTRL_EXPORTS;_EXPORTING"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -359,7 +359,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/IGNORE:4089"
-				OutputFile="$(OutDir)\MLOImport.dll"
+				OutputFile="$(OutDir)\RTFContentCtrl.dll"
 				Version="1.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
@@ -370,7 +370,7 @@
 				SetChecksum="true"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="$(OutDir)\MLOImport.lib"
+				ImportLibrary="$(OutDir)\RTFContentCtrl.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -442,15 +442,31 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\MLOExporter.cpp"
+				RelativePath=".\Source\RRECRuler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\MLOImportApp.cpp"
+				RelativePath=".\Source\RRECToolbar.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\MLOImporter.cpp"
+				RelativePath=".\Source\RTF2HTMLConverter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RTFContentControl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RTFContentCtrlApp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RulerRichEdit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RulerRichEditCtrl.cpp"
 				>
 			</File>
 			<File
@@ -489,6 +505,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\Source\Util.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -496,23 +516,47 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Source\MLOExporter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\MLOImportApp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\MLOImporter.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\Resource.h"
 				>
 			</File>
 			<File
+				RelativePath=".\Source\RRECRuler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RRECToolbar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RTF2HTMLConverter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RTF2HTMLTree.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RTFContentControl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RTFContentCtrlApp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RulerRichEdit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RulerRichEditCtrl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Util.h"
 				>
 			</File>
 		</Filter>
@@ -522,7 +566,15 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\Source\MLOImportRes.rc"
+				RelativePath=".\Source\RTFContentCtrlRes.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\BinRes\Toolbar.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\BinRes\Toolbar2.bmp"
 				>
 			</File>
 		</Filter>
@@ -531,35 +583,35 @@
 			Filter="h;cpp"
 			>
 			<File
-				RelativePath="..\Common\PasswordDialog.cpp"
+				RelativePath="..\Common\HtmlCharMap.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\PasswordDialog.h"
+				RelativePath="..\Common\IContentControl.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\XmlFile.cpp"
+				RelativePath="..\Common\ITaskList.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\XmlFile.h"
+				RelativePath="..\Common\RichEditSpellCheck.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\XmlFileEx.cpp"
+				RelativePath="..\Common\RichEditSpellCheck.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\XmlFileEx.h"
+				RelativePath="..\Common\UITheme.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\XmlNodeWrapper.cpp"
+				RelativePath="..\Common\UrlRichEditCtrl.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\XmlNodeWrapper.h"
+				RelativePath="..\Common\UrlRichEditCtrl.h"
 				>
 			</File>
 		</Filter>
