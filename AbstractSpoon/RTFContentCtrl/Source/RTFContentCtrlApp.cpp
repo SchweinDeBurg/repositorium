@@ -122,9 +122,9 @@ void CRTFContentCtrlApp::Release()
 void CRTFContentCtrlApp::SetIniLocation(bool bRegistry, const char* szIniPathName)
 {
 	if (bRegistry)
-		m_pszRegistryKey = strdup(szIniPathName);
+		m_pszRegistryKey = _strdup(szIniPathName);
 	else
-		m_pszProfileName = strdup(szIniPathName);
+		m_pszProfileName = _strdup(szIniPathName);
 }
 
 int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent, 
