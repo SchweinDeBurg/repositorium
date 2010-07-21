@@ -88,10 +88,10 @@ __declspec(selectany) int _forceMFCManifestCUR;
 }   // extern "C"
 #endif
 
-#define WIN32_LEAN_AND_MEAN   // exclude rarely-used stuff from Windows headers
-
 //////////////////////////////////////////////////////////////////////////////////////////////
 // PSDK headers
+
+#define WIN32_LEAN_AND_MEAN   // exclude rarely-used stuff from Windows headers
 
 #include <windows.h>
 
