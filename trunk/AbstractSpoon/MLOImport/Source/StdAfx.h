@@ -11,6 +11,21 @@
 #endif // _MSC_VER > 1000
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+// unwanted warnings
+
+// unreferenced local function has been removed
+#pragma warning(disable: 4505)
+// unreferenced inline function has been removed
+#pragma warning(disable: 4514)
+// function not inlined
+#pragma warning(disable: 4710)
+// identifier was truncated in the debug information
+#pragma warning(disable: 4786)
+
+// C4996: function or variable may be unsafe
+#define _CRT_SECURE_NO_WARNINGS
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 // use WinXP/IE6 features
 
 #define WINVER 0x0501

@@ -1,40 +1,10 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
-//
-// This license applies to everything in the ToDoList package, except where
-// otherwise noted.
-//
-// This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the
-// use of this software. 
-//
-// Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it
-// freely, subject to the following restrictions:
-//
-// 1. The origin of this software must not be misrepresented; you must not
-// claim that you wrote the original software. If you use this software in a
-// product, an acknowledgment in the product documentation would be appreciated
-// but is not required.
-//
-// 2. Altered source versions must be plainly marked as such, and must not be
-// misrepresented as being the original software.
-//
-// 3. This notice may not be removed or altered from any source distribution.
-
-//*****************************************************************************
-// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
-// - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
-// - adjusted #include's paths
-//*****************************************************************************
-
 // StdAfx.h : include file for standard system include files,
 //  or project specific include files that are used frequently, but
 //      are changed infrequently
 //
 
-#if !defined(AFX_STDAFX_H__9A20C19C_8EAA_4A7F_BA94_8A23635C61EB__INCLUDED_)
-#define AFX_STDAFX_H__9A20C19C_8EAA_4A7F_BA94_8A23635C61EB__INCLUDED_
+#if !defined(AFX_STDAFX_H__5A190D2D_E201_4426_A84F_F179D194B25B__INCLUDED_)
+#define AFX_STDAFX_H__5A190D2D_E201_4426_A84F_F179D194B25B__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -94,16 +64,32 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-// PSDK headers
+// MFC headers
 
-#define WIN32_LEAN_AND_MEAN   // exclude rarely-used stuff from Windows headers
+#define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
 
-#include <windows.h>
+#include <afxwin.h>         // MFC core and standard components
+#include <afxext.h>         // MFC extensions
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-// CRT headers
+#ifndef _AFX_NO_OLE_SUPPORT
+#include <afxole.h>         // MFC OLE classes
+#include <afxodlgs.h>       // MFC OLE dialog classes
+#include <afxdisp.h>        // MFC Automation classes
+#endif // _AFX_NO_OLE_SUPPORT
 
-#include <stdlib.h>
+
+#ifndef _AFX_NO_DB_SUPPORT
+#include <afxdb.h>			// MFC ODBC database classes
+#endif // _AFX_NO_DB_SUPPORT
+
+#ifndef _AFX_NO_DAO_SUPPORT
+#include <afxdao.h>			// MFC DAO database classes
+#endif // _AFX_NO_DAO_SUPPORT
+
+#include <afxdtctl.h>		// MFC support for Internet Explorer 4 Common Controls
+#ifndef _AFX_NO_AFXCMN_SUPPORT
+#include <afxcmn.h>			// MFC support for Windows Common Controls
+#endif // _AFX_NO_AFXCMN_SUPPORT
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // some tricks
@@ -122,4 +108,4 @@ __declspec(selectany) int _forceMFCManifestCUR;
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_STDAFX_H__9A20C19C_8EAA_4A7F_BA94_8A23635C61EB__INCLUDED_)
+#endif // !defined(AFX_STDAFX_H__5A190D2D_E201_4426_A84F_F179D194B25B__INCLUDED_)
