@@ -97,7 +97,7 @@ private:
 
 
 
-template <class Type,class DataType2=NodeData<Type> > class Tree : private Ref<DataType2> {
+template <class Type,class DataType2 /*=NodeData<Type>*/ > class Tree : private Ref<DataType2> {
 	typedef Ref<DataType2> NodeBase;
 public:
 	typedef Tree<Type> Node;
