@@ -1,5 +1,5 @@
 // StdAfx.cpp : source file that includes just the standard includes
-//	EncryptDecrypt.pch will be the pre-compiled header
+//	MLOImport.pch will be the pre-compiled header
 //	StdAfx.obj will contain the pre-compiled type information
 
 #include "StdAfx.h"
