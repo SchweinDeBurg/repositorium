@@ -10,7 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include "../../Common/IImportExport.h"
-#include "../../Common/ITasklist.h"
+#include "../../Common/ITaskList.h"
 
 class CXmlItem;
 

@@ -3,8 +3,8 @@
 //      are changed infrequently
 //
 
-#if !defined(AFX_STDAFX_H__D8FDB667_3F97_4F31_9EFF_92372AD354E1__INCLUDED_)
-#define AFX_STDAFX_H__D8FDB667_3F97_4F31_9EFF_92372AD354E1__INCLUDED_
+#if !defined(AFX_STDAFX_H__82587D49_ACCE_467B_AD84_BC67643D7EFC__INCLUDED_)
+#define AFX_STDAFX_H__82587D49_ACCE_467B_AD84_BC67643D7EFC__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -93,4 +93,4 @@ __declspec(selectany) int _forceMFCManifestCUR;
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_STDAFX_H__D8FDB667_3F97_4F31_9EFF_92372AD354E1__INCLUDED_)
+#endif // !defined(AFX_STDAFX_H__82587D49_ACCE_467B_AD84_BC67643D7EFC__INCLUDED_)
