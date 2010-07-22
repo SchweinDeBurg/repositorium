@@ -149,7 +149,7 @@ HRESULT CRulerRichEdit::GetDragDropEffect(BOOL fDrag, DWORD grfKeyState, LPDWORD
 {
 	if (!fDrag) // allowable dest effects
 	{
-      BOOL bEnable = !(GetStyle() & ES_READONLY) && IsWindowEnabled();
+		BOOL bEnable = !(GetStyle() & ES_READONLY) && IsWindowEnabled();
 
 		if (!bEnable)
 			*pdwEffect = DROPEFFECT_NONE;
