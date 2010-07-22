@@ -44,7 +44,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CUrlRichEditCtrl window
 
-const UINT WM_UREN_CUSTOMURL = ::RegisterWindowMessage("WM_UREN_CUSTOMURL"); // lParam == full url
+const UINT WM_UREN_CUSTOMURL = ::RegisterWindowMessage(_T("WM_UREN_CUSTOMURL")); // lParam == full url
 
 struct URLITEM
 {
@@ -73,18 +73,33 @@ public:
 	CUrlRichEditCtrl();
 
 	BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
-	int GetUrlCount() const { return m_aUrls.GetSize(); }
+	int GetUrlCount() const
+	{
+		return m_aUrls.GetSize();
+	}
 	CString GetUrl(int nURL, BOOL bAsFile = FALSE) const;
 	void PathReplaceSel(LPCTSTR lpszPath, BOOL bFile);
 	BOOL GoToUrl(const CString& sUrl) const; // must exist
 	BOOL GoToUrl(int nUrl) const;
-	CPoint GetContextMenuPos() { return m_ptContextMenu; }
+	CPoint GetContextMenuPos()
+	{
+		return m_ptContextMenu;
+	}
 	int AddProtocol(LPCTSTR szProtocol, BOOL bWantNotify = TRUE);
 	void ParseAndFormatText(BOOL bForceReformat = FALSE);
-	int GetContextUrl() { return m_nContextUrl; }
+	int GetContextUrl()
+	{
+		return m_nContextUrl;
+	}
 
-	static void SetGotoErrorMsg(LPCTSTR szErrMsg) { s_sGotoErrMsg = szErrMsg; }
-	static void SetCtrlClickMsg(LPCTSTR szMsg) { s_sCtrlClickMsg = szMsg; }
+	static void SetGotoErrorMsg(LPCTSTR szErrMsg)
+	{
+		s_sGotoErrMsg = szErrMsg;
+	}
+	static void SetCtrlClickMsg(LPCTSTR szMsg)
+	{
+		s_sCtrlClickMsg = szMsg;
+	}
 
 	// Attributes
 protected:
@@ -136,11 +151,11 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-	virtual HRESULT QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT FAR *lpcfFormat,
+	virtual HRESULT QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT FAR* lpcfFormat,
 		DWORD reco, BOOL fReally, HGLOBAL hMetaPict);
 	virtual HRESULT GetDragDropEffect(BOOL fDrag, DWORD grfKeyState, LPDWORD pdwEffect);
-	virtual HRESULT GetContextMenu(WORD seltyp, LPOLEOBJECT lpoleobj, CHARRANGE FAR *lpchrg,
-		HMENU FAR *lphmenu);
+	virtual HRESULT GetContextMenu(WORD seltyp, LPOLEOBJECT lpoleobj, CHARRANGE FAR* lpchrg,
+		HMENU FAR* lphmenu);
 	virtual CLIPFORMAT GetAcceptableClipFormat(LPDATAOBJECT lpDataOb, CLIPFORMAT format);
 
 protected:
