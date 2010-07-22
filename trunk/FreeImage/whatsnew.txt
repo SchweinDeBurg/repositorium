@@ -11,7 +11,7 @@ Month day, 2010 - 3.14.0
 ! FreeImage now uses LibPNG 1.4.3
 ! FreeImage now uses LibJPEG 8b
 ! FreeImage now uses LibTIFF 3.9.4
-! FreeImage now uses LibRaw 0.10-Beta1
+! FreeImage now uses LibRaw 0.10-Beta2
 ! FreeImage now uses OpenJPEG 1.4.0 (SVN patch 2010-04-16)
 ! [Herve Drolon] FreeImage_AllocateT now builds a default greyscale palette for 8-bit images
 ! [Volodymyr Goncharov] FreeImage_LoadMultiBitmapFromMemory now supports read/write operations
@@ -33,6 +33,7 @@ Month day, 2010 - 3.14.0
 + [Herve Drolon] added FreeImage_HasPixels
 + [Herve Drolon] added FreeImage_FIFSupportsNoPixels
 + [Herve Drolon] added support for FIF_LOAD_NOPIXELS flag to JPEG & PNG plugins
++ [Mihail Naydenov] added support for 16-bit image types to FreeImage_Invert
 * [Herve Drolon] fixed FreeImage_GetFileType behavior with ANI file formats
 * [Herve Drolon] fixed loading of JNG with progressive-JPEG formats
 * [Mihail Naydenov] fixed loading of TGA with a corrupted rle count
@@ -46,6 +47,9 @@ Month day, 2010 - 3.14.0
 * [Herve Drolon] fixed the loading of RGBZ images in OpenEXR plugin
 * [Lucian Sabo] improved conversion from 1-, 4-, 8-bpp transparent images to 32-bpp
 * [Roy F.] fixed a bug in FreeImage_EnlargeCanvas (unable to crop an image on the right)
+* [Herve Drolon] fixed the loading of Exif with unusual IFD offset value
+* [Eberhard Mattes] fixed page numbering info when saving multipage TIFF
+* [Herve Drolon] fixed PluginPICT causing an infinite loop on a malformed PICT image
 
 December 22, 2009 - 3.13.1
 ! FreeImage now uses libTIFF 3.9.2
