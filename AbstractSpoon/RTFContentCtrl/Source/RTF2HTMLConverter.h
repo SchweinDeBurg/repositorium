@@ -14,19 +14,19 @@
 #include <afxtempl.h>
 
 //! Performs RTF<->HTML Conversion
-/*! 
-At the moment, only RTF->HTML conversion is supported. 
+/*!
+At the moment, only RTF->HTML conversion is supported.
 Supported RTF options are poor and simple. Refer to the additional feature & bug list to see which
 RTF options are implemented
 */
-class CRTF_HTMLConverter : public CObject  
+class CRTF_HTMLConverter : public CObject
 {
 public:
    //! Conversion direction (RTF<->HTML)
    typedef enum {
       c_modRTF2HTML, c_modHTML2RTF
    } TMode;
-   
+
    //! Construction
    /*! See TMode (Conversion Direction) */
 	CRTF_HTMLConverter(TMode enMode);
@@ -38,7 +38,7 @@ public:
    //! Streaming in of string and auto-perform conversion
    /*! Depending on conversion direction */
    friend CString& operator>> ( CString& is, CRTF_HTMLConverter& dt );
-   
+
    static bool Convert(const CString& sRtf, CString& sHtml, BOOL bWantHeaderFooter = TRUE);
    static int GetCodePage(const CString& sRtf);
    static BOOL HasMultiByteChars(const CString& sRtf);
@@ -92,7 +92,7 @@ protected:
    void R2H_GetRTFTags(const CString& strRTFSource, CStringArray& arrTgt);
    //! Resets the internal meta data structure
    /*! Meta data is data like charset etc.*/
-   void ResetMetaData();   
+   void ResetMetaData();
    //! Fills up internal meta data structure
    void R2H_SetMetaData(CRTFNode& NodeRoot);
    //! Interpretes an RTF tag and writes the coresponding HTML Tag(s)
@@ -101,7 +101,7 @@ protected:
    CString R2H_GetHTMLHeader();
    //! Gets the HTML Footer
    CString R2H_GetHTMLFooter();
-   
+
    //! Conversion direction (RTF<->HTML)
    TMode   m_enMode;
    //! RTF Code
@@ -130,6 +130,6 @@ private:
    CArray<COLORREF, COLORREF&> m_arrColors;
    //! Array of created html nodes
    CArray<CHTMLElement*, CHTMLElement*> m_arrHTMLElements;
-};    
+};
 
 #endif // !defined(AFX_RTF2HTMLCONVERTER_H__136CB6EA_55FC_4DBE_865E_753A7503A0DC__INCLUDED_)

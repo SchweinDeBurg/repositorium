@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -84,7 +84,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CRTFContentControl message handlers
 
-BOOL CRTFContentControl::Compress(const unsigned char* pContentSrc, int nLenSrc, 
+BOOL CRTFContentControl::Compress(const unsigned char* pContentSrc, int nLenSrc,
 								  unsigned char*& pContentDest, int& nLenDest)
 {
 	ULONG lDest = (int)(nLenSrc * 1.001) + 12; // zlib requirements
@@ -110,7 +110,7 @@ BOOL CRTFContentControl::Compress(const unsigned char* pContentSrc, int nLenSrc,
 	return (nRet == Z_OK);
 }
 
-BOOL CRTFContentControl::Decompress(const unsigned char* pContentSrc, int nLenSrc, 
+BOOL CRTFContentControl::Decompress(const unsigned char* pContentSrc, int nLenSrc,
 									unsigned char*& pContentDest, int& nLenDest)
 {
 	ASSERT (nLenSrc && strncmp((const char*)pContentSrc, RTFTAG, LENTAG) != 0);
@@ -137,13 +137,13 @@ BOOL CRTFContentControl::Decompress(const unsigned char* pContentSrc, int nLenSr
 	return (nRet == Z_OK);
 }
 
-void CRTFContentControl::OnChangeText() 
+void CRTFContentControl::OnChangeText()
 {
 	if (m_bAllowNotify && !GetRichEditCtrl().IsIMEComposing())
 		GetParent()->SendMessage(WM_TDCN_COMMENTSCHANGE);
 }
 
-void CRTFContentControl::OnKillFocus() 
+void CRTFContentControl::OnKillFocus()
 {
 	if (m_bAllowNotify)
 		GetParent()->SendMessage(WM_TDCN_COMMENTSKILLFOCUS);
@@ -170,15 +170,15 @@ int CRTFContentControl::GetContent(unsigned char* pContent) const
 int CRTFContentControl::GetContent(const CRTFContentControl* pCtrl, unsigned char* pContent)
 {
 	int nLen = 0;
-	
+
 	if (pContent)
 	{
 		CString sContent;
-		
+
 		// cast away constness
 		sContent = ((CRTFContentControl*)pCtrl)->GetRTF();
 		nLen = sContent.GetLength();
-		
+
 		// compress it
 		unsigned char* pCompressed = NULL;
 		int nLenCompressed = 0;
@@ -194,7 +194,7 @@ int CRTFContentControl::GetContent(const CRTFContentControl* pCtrl, unsigned cha
 	}
 	else
 		nLen = ((CRTFContentControl*)pCtrl)->GetRTFLength();
-	
+
 	return nLen;
 }
 
@@ -202,7 +202,7 @@ bool CRTFContentControl::SetContent(unsigned char* pContent, int nLength)
 {
 	unsigned char* pDecompressed = NULL;
 
-	// content may need decompressing 
+	// content may need decompressing
 	if (nLength && strncmp((const char*)pContent, RTFTAG, LENTAG) != 0)
 	{
 		int nLenDecompressed = 0;
@@ -228,8 +228,8 @@ bool CRTFContentControl::SetContent(unsigned char* pContent, int nLength)
 	GetRichEditCtrl().ParseAndFormatText(TRUE);
 
 	delete [] pDecompressed;
-	
-	return true; 
+
+	return true;
 }
 
 int CRTFContentControl::GetTextContent(char* szContent, int nLength) const
@@ -240,7 +240,7 @@ int CRTFContentControl::GetTextContent(char* szContent, int nLength) const
 	// else
 	if (nLength == -1)
 		nLength = lstrlen(szContent);
-	
+
 	GetWindowText(szContent, nLength);
 	return nLength;
 }
@@ -251,7 +251,7 @@ bool CRTFContentControl::SetTextContent(const char* szContent)
 	CReSaveCaret re(GetRichEditCtrl());
 
 	SendMessage(WM_SETTEXT, 0, (LPARAM)szContent);
-	return true; 
+	return true;
 }
 
 void CRTFContentControl::SetUITheme(const UITHEME* pTheme)
@@ -277,7 +277,7 @@ void CRTFContentControl::SetPreferenceLocation(const char* szKey)
 
 			m_bPrefsDone = TRUE;
 		}
-		
+
 		ShowToolbar(bShowToolbar);
 		ShowRuler(bShowRuler);
 		SetWordWrap(bWordWrap);
@@ -287,7 +287,7 @@ void CRTFContentControl::SetPreferenceLocation(const char* szKey)
 HWND CRTFContentControl::GetHwnd() const
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	
+
 	return GetSafeHwnd();
 }
 
@@ -325,7 +325,7 @@ void CRTFContentControl::CheckMenuItem(CMenu* pMenu, UINT nCmdID, BOOL bCheck)
 	pMenu->CheckMenuItem(nCmdID, MF_BYCOMMAND | (bCheck ? MF_CHECKED  : MF_UNCHECKED));
 }
 
-void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point) 
+void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	if (pWnd == &GetRichEditCtrl())
 	{
@@ -351,7 +351,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 				CharFormat	cf;
 				cf.dwMask = CFM_BOLD | CFM_ITALIC | CFM_UNDERLINE | CFM_COLOR;
 				re.GetSelectionCharFormat(cf);
-				
+
 				CheckMenuItem(pPopup, BUTTON_BOLD, (cf.dwEffects & CFE_BOLD));
 				CheckMenuItem(pPopup, BUTTON_ITALIC, (cf.dwEffects & CFE_ITALIC));
 				CheckMenuItem(pPopup, BUTTON_UNDERLINE, (cf.dwEffects & CFE_UNDERLINE));
@@ -380,7 +380,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 #ifndef _DEBUG
 				EnableMenuItem(pPopup, ID_EDIT_HORZRULE, FALSE);
 #endif
-				
+
 				int nUrl = re.GetContextUrl();
 				EnableMenuItem(pPopup, ID_EDIT_OPENURL, nUrl != -1);
 
@@ -388,7 +388,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 				{
 					CString sText, sMenu;
 					pPopup->GetMenuString(ID_EDIT_OPENURL, sMenu, MF_BYCOMMAND);
-					
+
 					sText.Format("%s: %s", sMenu, re.GetUrl(nUrl, TRUE));
 					pPopup->ModifyMenu(ID_EDIT_OPENURL, MF_BYCOMMAND, ID_EDIT_OPENURL, sText);
 				}
@@ -411,7 +411,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 					::ClientToScreen(m_rtf, &point);
 				}
 
-				UINT nCmdID = ::TrackPopupMenu(*pPopup, TPM_RETURNCMD | TPM_LEFTALIGN | TPM_LEFTBUTTON, 
+				UINT nCmdID = ::TrackPopupMenu(*pPopup, TPM_RETURNCMD | TPM_LEFTALIGN | TPM_LEFTBUTTON,
 												point.x, point.y, 0, *this, NULL);
 
 				switch (nCmdID)
@@ -483,7 +483,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 							// build single string containing each top level item as a different ref
 							CString sRefs, sRef;
 							HTASKITEM hClip = pClipboard->GetFirstTask();
-							
+
 							while (hClip)
 							{
 								if (sFileName.IsEmpty())
@@ -492,7 +492,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 									sRef.Format(" %s%s?%d", TDL_PROTOCOL, sFileName, pClipboard->GetTaskID(hClip));
 
 								sRefs += sRef;
-								
+
 								hClip = pClipboard->GetNextTask(hClip);
 							}
 
@@ -501,7 +501,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 						}
 					}
 					break;
-		
+
 				case ID_EDIT_DELETE:
 					re.ReplaceSel("");
 					break;
@@ -509,16 +509,16 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 				case ID_EDIT_SELECT_ALL:
 					re.SetSel(0, -1);
 					break;
-		
+
 				case ID_EDIT_OPENURL:
 					if (nUrl != -1)
 						re.GoToUrl(nUrl);
 					break;
-					
+
 				case ID_EDIT_FILEBROWSE:
 					{
 						CString sFile;
-						
+
 						if (nUrl != -1)
 						{
 							sFile = re.GetUrl(nUrl, TRUE);
@@ -526,22 +526,22 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 							if (GetFileAttributes(sFile) == 0xffffffff)
 								sFile.Empty();
 						}
-									
+
 						CFileDialog dialog(TRUE, NULL, sFile);
 						dialog.m_ofn.lpstrTitle = "Select File";
-						
+
 						if (dialog.DoModal() == IDOK)
 							re.PathReplaceSel(dialog.GetPathName(), TRUE);
 					}
 					break;
-		
+
 				case ID_EDIT_INSERTDATESTAMP:
 					{
 						COleDateTime date = COleDateTime::GetCurrentTime();
 						re.ReplaceSel(date.Format(), TRUE);
 					}
 					break;
-	
+
 				case ID_EDIT_SPELLCHECK:
 					GetParent()->PostMessage(WM_ICC_WANTSPELLCHECK);
 					break;
@@ -563,8 +563,8 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 	}
 }
 
-BOOL CRTFContentControl::IsClipboardEmpty() const 
-{ 
+BOOL CRTFContentControl::IsClipboardEmpty() const
+{
 	// try for any clipboard first
 	ITaskList* pClipboard = (ITaskList*)GetParent()->SendMessage(WM_TDCM_GETCLIPBOARD, 0, FALSE);
 	ITaskList4* pClip4 = GetITLInterface<ITaskList4>(pClipboard, IID_TASKLIST4);
@@ -574,15 +574,15 @@ BOOL CRTFContentControl::IsClipboardEmpty() const
 		return (pClipboard->GetFirstTask() == NULL);
 
 	// else try for 'our' clipboard only
-	return (!GetParent()->SendMessage(WM_TDCM_HASCLIPBOARD, 0, TRUE)); 
+	return (!GetParent()->SendMessage(WM_TDCM_HASCLIPBOARD, 0, TRUE));
 }
 
 BOOL CRTFContentControl::CanPaste()
 {
-	static CLIPFORMAT formats[] = 
-	{ 
+	static CLIPFORMAT formats[] =
+	{
 		(CLIPFORMAT)::RegisterClipboardFormat(CF_RTF),
-		(CLIPFORMAT)::RegisterClipboardFormat(CF_RETEXTOBJ), 
+		(CLIPFORMAT)::RegisterClipboardFormat(CF_RETEXTOBJ),
 		(CLIPFORMAT)::RegisterClipboardFormat(_T("Embedded Object")),
 		(CLIPFORMAT)::RegisterClipboardFormat(_T("Rich Text Format")),
 		CF_BITMAP,
@@ -592,35 +592,35 @@ BOOL CRTFContentControl::CanPaste()
 		CF_HDROP
 	};
 	const long formats_count = sizeof(formats) / sizeof(CLIPFORMAT);
-	
+
 	CUrlRichEditCtrl& re = GetRichEditCtrl();
-	
+
 	BOOL bCanPaste = FALSE;
-	
+
 	for( long i=0;  i<formats_count;  ++i )
 		bCanPaste |= re.CanPaste( formats[i] );
-	
+
 	return bCanPaste;
 }
 
-int CRTFContentControl::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CRTFContentControl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	CAutoFlag af(m_bAllowNotify, FALSE);
-	
+
 	if (CRulerRichEditCtrl::OnCreate(lpCreateStruct) == -1)
 		return -1;
-	
+
 	GetRichEditCtrl().SetEventMask(GetRichEditCtrl().GetEventMask() | ENM_CHANGE);
-	
+
 	// set max edit length
 	GetRichEditCtrl().LimitText(1024 * 1024 * 1024); // one gigabyte
-	
+
 	m_tbHelper.Initialize(&m_toolbar, this);
 
 	return 0;
 }
 
-bool CRTFContentControl::ProcessMessage(MSG* pMsg) 
+bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 {
 	// process editing shortcuts
 	switch (pMsg->message)
@@ -638,7 +638,7 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 
 				switch (pMsg->wParam)
 				{
-				case 'c': 
+				case 'c':
 				case 'C':
 					re.Copy();
 					return TRUE;
@@ -705,7 +705,7 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 				case 'z':
 				case 'Z':
 					return TRUE; // to prevent the richedit performing the undo
-					
+
 				case 'y':
 				case 'Y':
 					return TRUE; // to prevent the richedit performing the redo
@@ -741,10 +741,10 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 	return false;
 }
 
-void CRTFContentControl::OnDestroy() 
+void CRTFContentControl::OnDestroy()
 {
 	CRulerRichEditCtrl::OnDestroy();
-	
+
 	// save toolbar and ruler state
 	if (!m_sPrefKey.IsEmpty())
 	{
@@ -777,7 +777,7 @@ LRESULT CRTFContentControl::OnCustomUrl(WPARAM wp, LPARAM lp)
 
 }
 
-BOOL CRTFContentControl::PreTranslateMessage(MSG* pMsg) 
+BOOL CRTFContentControl::PreTranslateMessage(MSG* pMsg)
 {
 	return CRulerRichEditCtrl::PreTranslateMessage(pMsg);
 }

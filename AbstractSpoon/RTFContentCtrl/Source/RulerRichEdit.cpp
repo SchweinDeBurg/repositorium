@@ -2,24 +2,24 @@
 File :			RuleRichEdit.cpp
 
   Class :			CRulerRichEdit
-  
+
 	Author :		Johan Rosengren, Abstrakt Mekanik AB
 	Iain Clarke
-	
+
 	  Date :			2004-04-17
-	  
-		Purpose :		"CRulerRichEdit" is derived from "CWnd". 
-		
-		  Description :	The class, in addition to the normal "CWnd", 
-		  handles horizontal scrollbar messages - forcing an 
-		  update of the parent (to synchronize the ruler). The 
-		  change notification is called for the same reason. 
-		  "WM_GETDLGCODE" is handled, we want all keys in a 
+
+		Purpose :		"CRulerRichEdit" is derived from "CWnd".
+
+		  Description :	The class, in addition to the normal "CWnd",
+		  handles horizontal scrollbar messages - forcing an
+		  update of the parent (to synchronize the ruler). The
+		  change notification is called for the same reason.
+		  "WM_GETDLGCODE" is handled, we want all keys in a
 		  dialog box instantiation.
-		  
-			Usage :			This class is only useful as a child of the 
+
+			Usage :			This class is only useful as a child of the
 			"CRulerRichEditCtrl".
-			
+
 ========================================================================*/
 
 #include "StdAfx.h"
@@ -47,9 +47,9 @@ Access :		Public
 
   Return :		void
   Parameters :	none
-  
-	Usage :			
-	
+
+	Usage :
+
 	  ============================================================*/
 {
 	EnableToolTips();
@@ -63,9 +63,9 @@ Access :		Public
 
   Return :		void
   Parameters :	none
-  
-	Usage :			
-	
+
+	Usage :
+
 	  ============================================================*/
 {
 }
@@ -84,7 +84,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CRulerRichEdit message handlers
 
-void CRulerRichEdit::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) 
+void CRulerRichEdit::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 /* ============================================================
 Function :		CRulerRichEdit::OnHScroll
 Description :	Handles the "WM_HSCROLL" message.
@@ -94,33 +94,33 @@ Access :		Protected
   Parameters :	UINT nSBCode			-	Type of operation
   UINT nPos				-	New position
   CScrollBar* pScrollBar	-	Pointer to scrollbar
-  
+
 	Usage :			Called from MFC. Updates the ruler.
-	
+
 	  ============================================================*/
 {
-	
+
 	CUrlRichEditCtrl::OnHScroll( nSBCode, nPos, pScrollBar );
-	
+
 	if ( nSBCode == SB_THUMBTRACK )
 	{
 		SCROLLINFO	si;
 		ZeroMemory( &si, sizeof( SCROLLINFO ) );
 		si.cbSize = sizeof( SCROLLINFO );
 		GetScrollInfo( SB_HORZ, &si );
-		
+
 		si.nPos = nPos;
 		SetScrollInfo( SB_HORZ, &si );
-		
+
 		// notify parent
 		GetParent()->SendMessage(WM_COMMAND, MAKEWPARAM(GetDlgCtrlID(), EN_HSCROLL), (LPARAM)GetSafeHwnd());
 	}
 }
 
-LRESULT CRulerRichEdit::OnDropFiles(WPARAM wp, LPARAM lp) 
+LRESULT CRulerRichEdit::OnDropFiles(WPARAM wp, LPARAM lp)
 {
 	CWaitCursor cursor;
-	
+
 	if (Misc::KeyIsPressed(VK_SHIFT)) // insert
 	{
 		// restore selection
@@ -150,7 +150,7 @@ HRESULT CRulerRichEdit::GetDragDropEffect(BOOL fDrag, DWORD grfKeyState, LPDWORD
 	if (!fDrag) // allowable dest effects
 	{
       BOOL bEnable = !(GetStyle() & ES_READONLY) && IsWindowEnabled();
-		
+
 		if (!bEnable)
 			*pdwEffect = DROPEFFECT_NONE;
 		else
@@ -180,7 +180,7 @@ HRESULT CRulerRichEdit::GetDragDropEffect(BOOL fDrag, DWORD grfKeyState, LPDWORD
 			}
 
 			// make sure allowed type
-			if ((dwEffect & *pdwEffect) == dwEffect) 
+			if ((dwEffect & *pdwEffect) == dwEffect)
 				*pdwEffect = dwEffect;
 		}
 	}
@@ -221,66 +221,66 @@ BOOL CRulerRichEdit::GetParaFormat(PARAFORMAT &pf)
 	return (BOOL)::SendMessage(m_hWnd, EM_GETPARAFORMAT, 0, (LPARAM)&pf);
 }
 
-CLIPFORMAT CRulerRichEdit::GetAcceptableClipFormat(LPDATAOBJECT lpDataOb, CLIPFORMAT format) 
-{ 
+CLIPFORMAT CRulerRichEdit::GetAcceptableClipFormat(LPDATAOBJECT lpDataOb, CLIPFORMAT format)
+{
 	if (m_bPasteSimple)
 		return CF_TEXT;
-	
+
 	static CLIPFORMAT cfRtf = (CLIPFORMAT)::RegisterClipboardFormat(CF_RTF);
-	static CLIPFORMAT cfRtfObj = (CLIPFORMAT)::RegisterClipboardFormat(CF_RETEXTOBJ); 
-// 	static CLIPFORMAT cfOutlookObj1 = (CLIPFORMAT)::RegisterClipboardFormat("CFSTR_FILECONTENTS"); 
-// 	static CLIPFORMAT cfOutlookObj2 = (CLIPFORMAT)::RegisterClipboardFormat("CFSTR_FILEDESCRIPTORA"); 
-	
-	CLIPFORMAT formats[] = 
-	{ 
+	static CLIPFORMAT cfRtfObj = (CLIPFORMAT)::RegisterClipboardFormat(CF_RETEXTOBJ);
+// 	static CLIPFORMAT cfOutlookObj1 = (CLIPFORMAT)::RegisterClipboardFormat("CFSTR_FILECONTENTS");
+// 	static CLIPFORMAT cfOutlookObj2 = (CLIPFORMAT)::RegisterClipboardFormat("CFSTR_FILEDESCRIPTORA");
+
+	CLIPFORMAT formats[] =
+	{
 		CF_HDROP,
 		cfRtf,
-		cfRtfObj, 
+		cfRtfObj,
 		CF_BITMAP,
 		CF_TEXT,
 		CF_UNICODETEXT,
-		CF_METAFILEPICT,    
-		CF_SYLK,            
-		CF_DIF,             
-		CF_TIFF,            
-		CF_OEMTEXT,         
-		CF_DIB,             
-		CF_PALETTE,         
-		CF_PENDATA,         
-		CF_RIFF,            
-		CF_WAVE,            
+		CF_METAFILEPICT,
+		CF_SYLK,
+		CF_DIF,
+		CF_TIFF,
+		CF_OEMTEXT,
+		CF_DIB,
+		CF_PALETTE,
+		CF_PENDATA,
+		CF_RIFF,
+		CF_WAVE,
 //		cfOutlookObj1,
 //		cfOutlookObj2,
 		CF_ENHMETAFILE
 	};
-	
+
 	const long nNumFmts = sizeof(formats) / sizeof(CLIPFORMAT);
-	
+
 	COleDataObject dataobj;
     dataobj.Attach(lpDataOb, FALSE);
-    
+
 	for (int nFmt = 0; nFmt < nNumFmts; nFmt++)
 	{
 		if (format && format == formats[nFmt])
 			return format;
-		
+
 		if (dataobj.IsDataAvailable(formats[nFmt]))
 			return formats[nFmt];
 	}
-	
+
 	// all else
-	return CF_HDROP; 
+	return CF_HDROP;
 }
 
-UINT CRulerRichEdit::OnGetDlgCode() 
+UINT CRulerRichEdit::OnGetDlgCode()
 {
 	return DLGC_WANTALLKEYS;
 }
 
-void CRulerRichEdit::OnLButtonDblClk(UINT nFlags, CPoint point) 
+void CRulerRichEdit::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	SetCursor(AfxGetApp()->LoadStandardCursor(IDC_WAIT));
-	
+
 	CUrlRichEditCtrl::OnLButtonDblClk(nFlags, point);
 }
 
@@ -291,7 +291,7 @@ void CRulerRichEdit::Paste(BOOL bSimple)
 	else
 	{
 		CAutoFlag af(m_bPasteSimple, TRUE);
-		
+
 		CUrlRichEditCtrl::Paste();
 	}
 }
@@ -306,7 +306,7 @@ int CRulerRichEdit::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
 	pTI->rect = CRect(CPoint(point.x-1,point.y-1),CSize(2,2));
 	pTI->uFlags |= TTF_NOTBUTTON | TTF_ALWAYSTIP;
 	pTI->lpszText = LPSTR_TEXTCALLBACK;
-	
+
 	return nHit;
 */
 }

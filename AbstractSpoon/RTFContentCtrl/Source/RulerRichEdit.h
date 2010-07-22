@@ -2,24 +2,24 @@
 File :			RuleRichEdit.h
 
   Class :			CRulerRichEdit
-  
+
 	Author :		Johan Rosengren, Abstrakt Mekanik AB
 	Iain Clarke
-	
+
 	  Date :			2004-04-17
-	  
-		Purpose :		"CRulerRichEdit" is derived from "CWnd". 
-		
-		  Description :	The class, in addition to the normal "CWnd", 
-		  handles horizontal scrollbar messages - forcing an 
-		  update of the parent (to synchronize the ruler). The 
-		  change notification is called for the same reason. 
-		  "WM_GETDLGCODE" is handled, we want all keys in a 
+
+		Purpose :		"CRulerRichEdit" is derived from "CWnd".
+
+		  Description :	The class, in addition to the normal "CWnd",
+		  handles horizontal scrollbar messages - forcing an
+		  update of the parent (to synchronize the ruler). The
+		  change notification is called for the same reason.
+		  "WM_GETDLGCODE" is handled, we want all keys in a
 		  dialog box instantiation.
-		  
-			Usage :			This class is only useful as a child of the 
+
+			Usage :			This class is only useful as a child of the
 			"CRulerRichEditCtrl".
-			
+
 ========================================================================*/
 
 #if !defined(AFX_RULERRICHEDIT_H__E10A8ED3_2E1D_402E_A599_003214085F1A__INCLUDED_)

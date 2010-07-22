@@ -8,37 +8,37 @@
 
 	Date :			2004-04-17
 
-	Purpose :		"CRulerRichEditCtrl" is a "CWnd" derived class containing an 
+	Purpose :		"CRulerRichEditCtrl" is a "CWnd" derived class containing an
 					embedded RTF-control, a ruler-control with dragable tab-
-					positions and a formatting toolbar. The class can be used 
-					to - for example - add a complete mini-editor to a modal 
-					or modeless dialog box. 
+					positions and a formatting toolbar. The class can be used
+					to - for example - add a complete mini-editor to a modal
+					or modeless dialog box.
 
 	Description :	The class mainly handles mouse messages. The mouse
-					messages are sent from the ruler control, and are 
-					button down, where the a check is made for the cursor 
-					located on one of the tab-markers, mouse move, where an 
-					XORed line is drawn across the RTF-control and button up, 
-					where a new tab position is set. The class also handles 
-					the toolbar buttons, setting styles as 
+					messages are sent from the ruler control, and are
+					button down, where the a check is made for the cursor
+					located on one of the tab-markers, mouse move, where an
+					XORed line is drawn across the RTF-control and button up,
+					where a new tab position is set. The class also handles
+					the toolbar buttons, setting styles as
 					appropriate for the selected text.
 
-	Usage :			Add a "CRulerRichEditCtrl"-member to the parent class. 
-					Call Create to create the control. "GetRichEditCtrl" can 
-					be used to access the embedded RTF-control. Remember to 
+	Usage :			Add a "CRulerRichEditCtrl"-member to the parent class.
+					Call Create to create the control. "GetRichEditCtrl" can
+					be used to access the embedded RTF-control. Remember to
 					call "AfxInitRichEdit(2)"!
 
-					The contents can be saved to disk by calling "Save", and 
-					loaded from disk by calling "Load". The two functions 
-					will automatically display a file dialog if the file 
+					The contents can be saved to disk by calling "Save", and
+					loaded from disk by calling "Load". The two functions
+					will automatically display a file dialog if the file
 					name parameter of the calls are left empty.
 
-					"GetRTF" and "SetRTF" can be used to get and set the 
-					contents of the embedded RTF-control as RTF 
+					"GetRTF" and "SetRTF" can be used to get and set the
+					contents of the embedded RTF-control as RTF
 					respectively.
 
-					The ruler measures can be displayed as inches or 
-					centimeters, by calling "SetMode". "GetMode" will get the 
+					The ruler measures can be displayed as inches or
+					centimeters, by calling "SetMode". "GetMode" will get the
 					current mode.
 
    ========================================================================*/
@@ -87,7 +87,7 @@ static DWORD CALLBACK StreamOut(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pc
 
 	pFile->Write(pbBuff, cb);
 	*pcb = cb;
-	
+
 	return 0;
 }
 
@@ -97,7 +97,7 @@ static DWORD CALLBACK StreamOutLen(DWORD dwCookie, LPBYTE /*pbBuff*/, LONG cb, L
 
 	*pLen += cb;
 	*pcb = cb;
-	
+
 	return 0;
 
 }
@@ -175,11 +175,11 @@ CRulerRichEditCtrl::CRulerRichEditCtrl() : m_pen(PS_DOT, 0, RGB(0, 0, 0))
 	Function :		CRulerRichEditCtrl::CRulerRichEditCtrl
 	Description :	constructor
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
 
-	Usage :			
+	Usage :
 
    ============================================================*/
 {
@@ -194,7 +194,7 @@ CRulerRichEditCtrl::CRulerRichEditCtrl() : m_pen(PS_DOT, 0, RGB(0, 0, 0))
 	ShowToolbar();
 	ShowRuler();
 
-	m_cfDefault.dwMask = CFM_SIZE | CFM_FACE | CFM_BOLD | CFM_ITALIC | 
+	m_cfDefault.dwMask = CFM_SIZE | CFM_FACE | CFM_BOLD | CFM_ITALIC |
 						 CFM_UNDERLINE | CFM_STRIKEOUT | CFM_COLOR;
 	m_cfDefault.yHeight = 200;
 	m_cfDefault.dwEffects = CFE_AUTOBACKCOLOR | CFE_AUTOCOLOR;
@@ -208,11 +208,11 @@ CRulerRichEditCtrl::~CRulerRichEditCtrl()
 	Function :		CRulerRichEditCtrl::~CRulerRichEditCtrl
 	Description :	destructor
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
 
-	Usage :			
+	Usage :
 
    ============================================================*/
 {
@@ -230,16 +230,16 @@ BOOL CRulerRichEditCtrl::Create(DWORD dwStyle, const RECT &rect, CWnd* pParentWn
 	Function :		CRulerRichEditCtrl::Create
 	Description :	Creates the control and sub controls.
 	Access :		Public
-					
+
 	Return :		BOOL				-	"TRUE" if created OK.
-	Parameters :	DWORD dwStyle		-	Style of the control, 
-											normally "WS_CHILD" 
+	Parameters :	DWORD dwStyle		-	Style of the control,
+											normally "WS_CHILD"
 											and "WS_VISIBLE".
 					const RECT &rect	-	Placement rectangle.
 					CWnd* pParentWnd	-	Parent window.
 					UINT nID			-	Control ID
 					BOOL autohscroll	-	"TRUE" if the RTF-control
-											should have the 
+											should have the
 											"ES_AUTOHSCROLL" style
 											set.
 
@@ -306,7 +306,7 @@ BOOL CRulerRichEditCtrl::CreateRTFControl(BOOL autohscroll)
 	Function :		CRulerRichEditCtrl::CreateRTFControl
 	Description :	Creates the embedded RTF-control.
 	Access :		Private
-					
+
 	Return :		BOOL				-	"TRUE" if created ok.
 	Parameters :	BOOL autohscroll	-	"TRUE" if the RTF-control
 											should have the
@@ -370,7 +370,7 @@ void CRulerRichEditCtrl::UpdateEditRect()
 void CRulerRichEditCtrl::CreateMargins()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::CreateMargins
-	Description :	Sets the margins for the subcontrols and 
+	Description :	Sets the margins for the subcontrols and
 					the RTF-control edit rect.
 	Access :		Private
 
@@ -383,8 +383,8 @@ void CRulerRichEditCtrl::CreateMargins()
 {
 	UpdateEditRect();
 
-	// Get the diff between the window- and client 
-	// rect of the RTF-control. This gives the actual 
+	// Get the diff between the window- and client
+	// rect of the RTF-control. This gives the actual
 	// size of the RTF-control border.
 	CRect	r1;
 	CRect	r2;
@@ -393,7 +393,7 @@ void CRulerRichEditCtrl::CreateMargins()
 	m_rtf.GetClientRect(r2);
 	m_rtf.ClientToScreen(r2);
 
-	// Create the margin for the toolbar 
+	// Create the margin for the toolbar
 	// controls and the ruler.
 	m_margin = SCMARGIN * 2 + r2.left - r1.left;
 	m_ruler.SetMargin(m_margin);
@@ -403,7 +403,7 @@ void CRulerRichEditCtrl::CreateMargins()
 /////////////////////////////////////////////////////////////////////////////
 // CRulerRichEditCtrl message handlers
 
-int CRulerRichEditCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CRulerRichEditCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
@@ -418,7 +418,7 @@ int CRulerRichEditCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CreateRTFControl(autohscroll) && CreateToolbar() && CreateRuler())
 	{
 		CreateMargins();
-		SetReadOnly(GetReadOnly()); 
+		SetReadOnly(GetReadOnly());
 		UpdateToolbarButtons();
 
 		CRect rClient;
@@ -442,7 +442,7 @@ void CRulerRichEditCtrl::OnEnSelChange(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
 	// Update the toolbar
 	UpdateToolbarButtons();
-	
+
 	// Update ruler
 	UpdateTabStops();
 	m_ruler.Invalidate(FALSE);
@@ -473,7 +473,7 @@ LRESULT CRulerRichEditCtrl::OnSetFont(WPARAM wp, LPARAM /*lp*/)
 		// update default char format
 		strcpy(m_cfDefault.szFaceName, sFace);
 		m_cfDefault.yHeight = nPoint * 20;
-		
+
 		m_rtf.SetDefaultCharFormat(m_cfDefault);
 	}
 	// else eat it
@@ -481,16 +481,16 @@ LRESULT CRulerRichEditCtrl::OnSetFont(WPARAM wp, LPARAM /*lp*/)
 	return 0L;
 }
 
-void CRulerRichEditCtrl::OnPaint() 
+void CRulerRichEditCtrl::OnPaint()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnPaint
 	Description :	Paints the ruler.
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
-	Usage :			Called from MFC. 
+	Usage :			Called from MFC.
 
    ============================================================*/
 {
@@ -500,40 +500,40 @@ void CRulerRichEditCtrl::OnPaint()
 
 }
 
-BOOL CRulerRichEditCtrl::OnEraseBkgnd(CDC* /*pDC*/) 
+BOOL CRulerRichEditCtrl::OnEraseBkgnd(CDC* /*pDC*/)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnEraseBkgnd
 	Description :	Returns "TRUE" to avoid flicker.
 	Access :		Protected
-					
+
 	Return :		BOOL		-	Always "TRUE",
 	Parameters :	CDC* pDC	-	Not used
-					
-	Usage :			Called from MFC. 
+
+	Usage :			Called from MFC.
 
    ============================================================*/
 {
-	
+
 	return TRUE;
 
 }
 
-BOOL CRulerRichEditCtrl::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult) 
+BOOL CRulerRichEditCtrl::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnNotify
-	Description :	Called as the RTF-control is updated or 
+	Description :	Called as the RTF-control is updated or
 					the selection changes.
 	Access :		Protected
-					
+
 	Return :		BOOL				-	From base class
 	Parameters :	WPARAM wParam		-	Control ID
 					LPARAM lParam		-	Not interested
 					LRESULT* pResult	-	Not interested
-					
-	Usage :			Called from MFC. We must check the control 
-					every time the selection changes or the 
-					contents are changed, as the cursor might 
-					have entered a new paragraph, with new tab 
+
+	Usage :			Called from MFC. We must check the control
+					every time the selection changes or the
+					contents are changed, as the cursor might
+					have entered a new paragraph, with new tab
 					and/or font settings.
 
    ============================================================*/
@@ -541,66 +541,66 @@ BOOL CRulerRichEditCtrl::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult
 	return CWnd::OnNotify(wParam, lParam, pResult);
 }
 
-void CRulerRichEditCtrl::OnSize(UINT nType, int cx, int cy) 
+void CRulerRichEditCtrl::OnSize(UINT nType, int cx, int cy)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnSize
 	Description :	We resize the embedded RTF-control.
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	UINT nType	-	Not interested
 					int cx		-	New width
 					int cy		-	New height
-					
-	Usage :			Called from MFC. 
+
+	Usage :			Called from MFC.
 
    ============================================================*/
 {
 
 	CWnd::OnSize(nType, cx, cy);
-	
+
 	if (m_rtf.m_hWnd)
 	{
 		UpdateEditRect();
 		LayoutControls(cx, cy);
 
 	}
-	
+
 }
 
-void CRulerRichEditCtrl::OnSetFocus(CWnd* pOldWnd) 
+void CRulerRichEditCtrl::OnSetFocus(CWnd* pOldWnd)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnSetFocus
-	Description :	We handle over the focus to the embedded 
+	Description :	We handle over the focus to the embedded
 					RTF-control.
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	CWnd* pOldWnd	-	Not used
-					
-	Usage :			Called from MFC. 
+
+	Usage :			Called from MFC.
 
    ============================================================*/
 {
 
 	CWnd::OnSetFocus(pOldWnd);
 	m_rtf.SetFocus();
-	
+
 }
 
 LRESULT CRulerRichEditCtrl::OnGetScrollPos(WPARAM, LPARAM)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnGetScrollPos
-	Description :	The function handles the registered message 
-					"urm_GETSCROLLPOS", that is sent from the 
-					ruler to get the current scroll position 
+	Description :	The function handles the registered message
+					"urm_GETSCROLLPOS", that is sent from the
+					ruler to get the current scroll position
 					of the embedded RTF-control.
 	Access :		Protected
 
 	Return :		LRESULT		-	Current scroll pos
 	Parameters :	WPARAM mode	-	Not used
 					LPARAM pt	-	Not used
-					
+
 	Usage :			Called from MFC
 
    ============================================================*/
@@ -613,18 +613,18 @@ LRESULT CRulerRichEditCtrl::OnGetScrollPos(WPARAM, LPARAM)
 LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnTrackRuler
-	Description :	The function handles the registered message 
-					"urm_RULERACTION", that is sent from the 
+	Description :	The function handles the registered message
+					"urm_RULERACTION", that is sent from the
 					mouse handling mappings in the ruler control.
-					The function handles dragging of tabulator 
+					The function handles dragging of tabulator
 					points in the ruler.
 	Access :		Protected
-					
+
 	Return :		LRESULT		-	Not used
-	Parameters :	WPARAM mode	-	The type of mouse operation, 
+	Parameters :	WPARAM mode	-	The type of mouse operation,
 									"DOWN", "MOVE" or "UP"
 					LPARAM pt	-	Cursor point for the cursor.
-					
+
 	Usage :			Called from MFC.
 
    ============================================================*/
@@ -701,8 +701,8 @@ LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 					dc.LineTo(m_rulerPosition, rect.Height());
 
 					// Set up new line
-					// Calc min and max. We can not place this marker 
-					// before the previous or after the next. Neither 
+					// Calc min and max. We can not place this marker
+					// before the previous or after the next. Neither
 					// can we move the marker outside the ruler.
 					int pos = m_rtf.GetScrollPos(SB_HORZ);
 					int min = m_margin + m_offset;
@@ -734,11 +734,11 @@ LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 				// Erase previous line
 				CRect rect;
 				GetClientRect(rect);
-				
+
 				CClientDC dc(this);
 				dc.SelectObject(&m_pen);
 				dc.SetROP2(R2_XORPEN);
-				
+
 				dc.MoveTo(m_rulerPosition, toolbarHeight + 3);
 				dc.LineTo(m_rulerPosition, rect.Height());
 
@@ -756,7 +756,7 @@ LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 				double twip = (double)m_physicalInch / 1440;
 				int tabpos = m_tabs[ m_movingtab ];
 				tabpos = (int) ((double) tabpos / twip +.5);
-				para.rgxTabs[ m_movingtab ] = tabpos; 
+				para.rgxTabs[ m_movingtab ] = tabpos;
 
 				// Set tabs to control
 				m_rtf.SetParaFormat(para);
@@ -777,20 +777,20 @@ LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 LRESULT CRulerRichEditCtrl::OnSetText(WPARAM wParam, LPARAM lParam)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnSetText
-	Description :	The function handles the "WM_SETTEXT" 
-					message. The handler sets the text in the 
+	Description :	The function handles the "WM_SETTEXT"
+					message. The handler sets the text in the
 					RTF-control
 	Access :		Protected
-										
+
 	Return :		LRESULT			-	From the control
 	Parameters :	WPARAM wParam	-	Passed on
 					LPARAM lParam	-	Passed on
-					
+
 	Usage :			Called from MFC.
 
    ============================================================*/
 {
-	
+
 	return m_rtf.SendMessage(WM_SETTEXT, wParam, lParam);
 
 }
@@ -798,15 +798,15 @@ LRESULT CRulerRichEditCtrl::OnSetText(WPARAM wParam, LPARAM lParam)
 LRESULT CRulerRichEditCtrl::OnGetText(WPARAM wParam, LPARAM lParam)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnGetText
-	Description :	The function handles the "WM_GETTEXT" 
-					message. The handler gets the text from the 
+	Description :	The function handles the "WM_GETTEXT"
+					message. The handler gets the text from the
 					RTF-control
 	Access :		Protected
-										
+
 	Return :		LRESULT			-	From the control
 	Parameters :	WPARAM wParam	-	Passed on
 					LPARAM lParam	-	Passed on
-					
+
 	Usage :			Called from MFC.
 
    ============================================================*/
@@ -819,15 +819,15 @@ LRESULT CRulerRichEditCtrl::OnGetText(WPARAM wParam, LPARAM lParam)
 LRESULT CRulerRichEditCtrl::OnGetTextLength(WPARAM /*wParam*/, LPARAM /*lParam*/)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnGetTextLength
-	Description :	The function handles the "WM_GETTEXTLENGTH" 
-					message. The handler gets the length of 
+	Description :	The function handles the "WM_GETTEXTLENGTH"
+					message. The handler gets the length of
 					the text in the RTF-control
 	Access :		Protected
-										
+
 	Return :		LRESULT			-	From the control
 	Parameters :	WPARAM wParam	-	Passed on
 					LPARAM lParam	-	Passed on
-					
+
 	Usage :			Called from MFC.
 
    ============================================================*/
@@ -844,11 +844,11 @@ LRESULT CRulerRichEditCtrl::OnGetTextLength(WPARAM /*wParam*/, LPARAM /*lParam*/
 	Function :		CRulerRichEditCtrl::GetRTF
 	Description :	Returns the contents of the control as RTF.
 	Access :		Public
-					
+
 	Return :		CString	-	The RTF-contents of the control.
 	Parameters :	none
 
-	Usage :			Call this function to get a char buffer 
+	Usage :			Call this function to get a char buffer
 					with the contents of the embedded RTF-
 					control.
 
@@ -871,7 +871,7 @@ CString CRulerRichEditCtrl::GetRTF()
 
 	file.SeekToBegin();
 	file.Read((void*)szRTF, nLen);
-	
+
 	sRTF.ReleaseBuffer(nLen);
 	return sRTF;
 }
@@ -892,12 +892,12 @@ int CRulerRichEditCtrl::GetRTFLength()
 	Description :	Set the contents of the embedded RTF-
 					control from rtf.
 	Access :		Public
-					
+
 	Return :		void
-	Parameters :	const CString& rtf	-	The rtf-contents to 
+	Parameters :	const CString& rtf	-	The rtf-contents to
 											set.
-					
-	Usage :			Call this function to set the RTF-contents 
+
+	Usage :			Call this function to set the RTF-contents
 					of the control.
 
    ============================================================*/
@@ -927,18 +927,18 @@ void CRulerRichEditCtrl::SetRTF(const CString& rtf)
 BOOL CRulerRichEditCtrl::Save(CString& filename)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::Save
-	Description :	Saves the contents to the file filename. 
-					If filename is empty, a file dialog will 
-					be displayed and the selected name will be 
+	Description :	Saves the contents to the file filename.
+					If filename is empty, a file dialog will
+					be displayed and the selected name will be
 					returned in the "CString".
 	Access :		Public
-					
-	Return :		BOOL				-	"TRUE" if the file 
+
+	Return :		BOOL				-	"TRUE" if the file
 											was saved.
-	Parameters :	CString& filename	-	The file name to save 
+	Parameters :	CString& filename	-	The file name to save
 											to. Can be empty.
-					
-	Usage :			Call to save the contents of the embedded 
+
+	Usage :			Call to save the contents of the embedded
 					RTF-control do a file.
 
    ============================================================*/
@@ -964,18 +964,18 @@ BOOL CRulerRichEditCtrl::Save(CString& filename)
 BOOL CRulerRichEditCtrl::Load(CString& filename)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::Load
-	Description :	Loads the embedded RTF-control with the 
-					contents from the file filename. 
-					If filename is empty, a file dialog will 
-					be displayed and the selected name will be 
+	Description :	Loads the embedded RTF-control with the
+					contents from the file filename.
+					If filename is empty, a file dialog will
+					be displayed and the selected name will be
 					returned in the "CString".
 	Access :		Public
-					
-	Return :		BOOL				-	"TRUE" if the file 
+
+	Return :		BOOL				-	"TRUE" if the file
 											was loaded.
-	Parameters :	CString& filename	-	File name to load 
+	Parameters :	CString& filename	-	File name to load
 											from. Can be empty.
-					
+
 	Usage :			Call to load an RTF-file to the control.
 
    ============================================================*/
@@ -1002,14 +1002,14 @@ BOOL CRulerRichEditCtrl::Load(CString& filename)
 void CRulerRichEditCtrl::SetMode(int mode)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::SetMode
-	Description :	Sets the internal mode, that is, if the 
+	Description :	Sets the internal mode, that is, if the
 					ruler should display inches or centimeters.
 	Access :		Public
-					
+
 	Return :		void
-	Parameters :	int mode	-	Mode to use, "MODE_INCH" or 
+	Parameters :	int mode	-	Mode to use, "MODE_INCH" or
 									"MODE_METRIC" (default)
-					
+
 	Usage :			Call to change the mode.
 
    ============================================================*/
@@ -1022,11 +1022,11 @@ void CRulerRichEditCtrl::SetMode(int mode)
 int CRulerRichEditCtrl::GetMode() const
 /* ============================================================
 	Function :		CRulerRichEditCtrl::GetMode
-	Description :	Gets the mode, that is, either "MODE_INCH" or 
+	Description :	Gets the mode, that is, either "MODE_INCH" or
 					"MODE_METRIC", that is used to draw the ruler.
 	Access :		Public
-					
-	Return :		int		-	The mode, either "MODE_INCH" or 
+
+	Return :		int		-	The mode, either "MODE_INCH" or
 								"MODE_METRIC"
 	Parameters :	none
 
@@ -1044,7 +1044,7 @@ CRulerRichEdit& CRulerRichEditCtrl::GetRichEditCtrl()
 	Function :		CRulerRichEditCtrl::GetRichEditCtrl
 	Description :	Returns an alias to the embedded RTF-control.
 	Access :		Public
-					
+
 	Return :		CRichEditCtrl&	-	An alias to the rtf-control
 	Parameters :	none
 
@@ -1060,12 +1060,12 @@ CRulerRichEdit& CRulerRichEditCtrl::GetRichEditCtrl()
 /////////////////////////////////////////////////////////////////////////////
 // CRulerRichEditCtrl toolbar button handlers
 
-void CRulerRichEditCtrl::OnButtonFont() 
+void CRulerRichEditCtrl::OnButtonFont()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonFont
 	Description :	Button handler for the Font button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1079,12 +1079,12 @@ void CRulerRichEditCtrl::OnButtonFont()
 
 }
 
-void CRulerRichEditCtrl::OnButtonColor() 
+void CRulerRichEditCtrl::OnButtonColor()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonColor
 	Description :	Button handler for the Color button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1097,12 +1097,12 @@ void CRulerRichEditCtrl::OnButtonColor()
 
 }
 
-void CRulerRichEditCtrl::OnButtonBold() 
+void CRulerRichEditCtrl::OnButtonBold()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonBold
 	Description :	Button handler for the Bold button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1115,17 +1115,17 @@ void CRulerRichEditCtrl::OnButtonBold()
 
 }
 
-void CRulerRichEditCtrl::OnButtonStrikethrough() 
+void CRulerRichEditCtrl::OnButtonStrikethrough()
 {
 	DoStrikethrough();
 }
 
-void CRulerRichEditCtrl::OnButtonItalic() 
+void CRulerRichEditCtrl::OnButtonItalic()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonItalic
 	Description :	Button handler for the Italic button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1138,12 +1138,12 @@ void CRulerRichEditCtrl::OnButtonItalic()
 
 }
 
-void CRulerRichEditCtrl::OnButtonUnderline() 
+void CRulerRichEditCtrl::OnButtonUnderline()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonUnderline
 	Description :	Button handler for the Underline button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1156,12 +1156,12 @@ void CRulerRichEditCtrl::OnButtonUnderline()
 
 }
 
-void CRulerRichEditCtrl::OnButtonLeftAlign() 
+void CRulerRichEditCtrl::OnButtonLeftAlign()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonLeftAlign
 	Description :	Button handler for the Left aligned button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1174,12 +1174,12 @@ void CRulerRichEditCtrl::OnButtonLeftAlign()
 
 }
 
-void CRulerRichEditCtrl::OnButtonCenterAlign() 
+void CRulerRichEditCtrl::OnButtonCenterAlign()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonCenterAlign
 	Description :	Button handler for the Center button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1192,12 +1192,12 @@ void CRulerRichEditCtrl::OnButtonCenterAlign()
 
 }
 
-void CRulerRichEditCtrl::OnButtonRightAlign() 
+void CRulerRichEditCtrl::OnButtonRightAlign()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonRightAlign
 	Description :	Button handler for the Right-aligned button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1210,12 +1210,12 @@ void CRulerRichEditCtrl::OnButtonRightAlign()
 
 }
 
-void CRulerRichEditCtrl::OnButtonIndent() 
+void CRulerRichEditCtrl::OnButtonIndent()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonIndent
 	Description :	Button handler for the Indent button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1228,12 +1228,12 @@ void CRulerRichEditCtrl::OnButtonIndent()
 
 }
 
-void CRulerRichEditCtrl::OnButtonOutdent() 
+void CRulerRichEditCtrl::OnButtonOutdent()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonOutdent
 	Description :	Button handler for the outdent button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1246,12 +1246,12 @@ void CRulerRichEditCtrl::OnButtonOutdent()
 
 }
 
-void CRulerRichEditCtrl::OnButtonBullet() 
+void CRulerRichEditCtrl::OnButtonBullet()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonBullet
 	Description :	Button handler for the Bullet button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1264,12 +1264,12 @@ void CRulerRichEditCtrl::OnButtonBullet()
 
 }
 
-void CRulerRichEditCtrl::OnButtonNumberList() 
+void CRulerRichEditCtrl::OnButtonNumberList()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnButtonBullet
 	Description :	Button handler for the Bullet button
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1288,16 +1288,16 @@ void CRulerRichEditCtrl::OnButtonNumberList()
 void CRulerRichEditCtrl::SetTabStops(LPLONG tabs, int size)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::SetTabStops
-	Description :	Set the tab stops in the internal tab stop 
-					list from the RTF-control, converting the 
+	Description :	Set the tab stops in the internal tab stop
+					list from the RTF-control, converting the
 					twip values to physical pixels.
 	Access :		Private
-					
+
 	Return :		void
-	Parameters :	LPLONG tabs	-	A pointer to an array of 
+	Parameters :	LPLONG tabs	-	A pointer to an array of
 									"LONG" twip values.
 					int size	-	The size of "tabs"
-					
+
 	Usage :			Call to set the tab list.
 
    ============================================================*/
@@ -1321,11 +1321,11 @@ void CRulerRichEditCtrl::SetTabStops(LPLONG tabs, int size)
 void CRulerRichEditCtrl::UpdateTabStops()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::UpdateTabStops
-	Description :	Sets the tabs in the internal tab stop 
-					list, converting the twip physical (pixel) 
+	Description :	Sets the tabs in the internal tab stop
+					list, converting the twip physical (pixel)
 					position to twip values.
 	Access :		Private
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -1354,15 +1354,15 @@ LRESULT CRulerRichEditCtrl::OnUpdateToolbar(WPARAM /*wParam*/, LPARAM /*lParam*/
 void CRulerRichEditCtrl::UpdateToolbarButtons()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::UpdateToolbarButtons
-	Description :	Updates the toolbar button, by getting 
-					formatting information from the currently 
+	Description :	Updates the toolbar button, by getting
+					formatting information from the currently
 					selected text in the embedded RTF-control.
 	Access :		Private
-					
+
 	Return :		void
 	Parameters :	none
 
-	Usage :			Call as the selection changes in the 
+	Usage :			Call as the selection changes in the
 					RTF-control
 
    ============================================================*/
@@ -1419,18 +1419,18 @@ void CRulerRichEditCtrl::UpdateToolbarButtons()
 void CRulerRichEditCtrl::SetEffect(int mask, int effect)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::SetEffect
-	Description :	Sets the effect (bold, italic and/or 
-					underline) for the currently selected text 
+	Description :	Sets the effect (bold, italic and/or
+					underline) for the currently selected text
 					in the embedded RTF-control.
 	Access :		Private
-					
+
 	Return :		void
-	Parameters :	int mask	-	What effects are valid. See 
-									the documentation for 
+	Parameters :	int mask	-	What effects are valid. See
+									the documentation for
 									"CHARFORMAT".
-					int effect	-	What effects to set. See the 
+					int effect	-	What effects to set. See the
 									documentation for "CHARFORMAT".
-					
+
 	Usage :			Called internally from button handlers
 
    ============================================================*/
@@ -1450,7 +1450,7 @@ void CRulerRichEditCtrl::InsertHorizontalRule()
 {
 	ParaFormat	para(PFM_BORDER);
 	m_rtf.GetParaFormat(para);
-	
+
 	para.wBorders = 0x063f;
 	para.wBorderWidth = 257;
 	para.wBorderSpace = 10000;
@@ -1467,15 +1467,15 @@ void CRulerRichEditCtrl::InsertHorizontalRule()
 void CRulerRichEditCtrl::SetAlignment(int alignment)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::SetAlignment
-	Description :	Sets the alignment for the currently 
+	Description :	Sets the alignment for the currently
 					selected text in the embedded RTF-control.
 	Access :		Private
-					
+
 	Return :		void
 	Parameters :	int alignment	-	Alignment to set. See
 										documentation for
 										"PARAFORMAT"
-					
+
 	Usage :			Called internally from button handlers
 
    ============================================================*/
@@ -1497,10 +1497,10 @@ void CRulerRichEditCtrl::DoFont()
 	Description :	Externally accessible member to set the
 					font of the control
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
+
 	Usage :			Call to set the font of the selected text.
 
    ============================================================*/
@@ -1558,7 +1558,7 @@ void CRulerRichEditCtrl::DoFont()
 		cf.yHeight = dlg.GetSize() * 2;
 		lstrcpy(cf.szFaceName, dlg.GetFaceName());
 
-		cf.dwMask = CFM_FACE | CFM_SIZE | CFM_COLOR | CFM_BOLD | 
+		cf.dwMask = CFM_FACE | CFM_SIZE | CFM_COLOR | CFM_BOLD |
 					CFM_ITALIC | CFM_UNDERLINE | CFM_STRIKEOUT;
 		cf.dwEffects = 0;
 		cf.crTextColor = dlg.GetColor();
@@ -1588,15 +1588,15 @@ void CRulerRichEditCtrl::DoFont()
 void CRulerRichEditCtrl::SetCurrentFontName(const CString& font)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::SetCurrentFontName
-	Description :	Changes the font of the selected text in 
+	Description :	Changes the font of the selected text in
 					the editor to "font".
 	Access :		Public
-					
+
 	Return :		void
-	Parameters :	const CString& font	-	Font name of font 
+	Parameters :	const CString& font	-	Font name of font
 											to change to.
 
-	Usage :			Call to set the font of the selected text 
+	Usage :			Call to set the font of the selected text
 					in the editor.
 
    ============================================================*/
@@ -1612,16 +1612,16 @@ void CRulerRichEditCtrl::SetCurrentFontName(const CString& font)
 void CRulerRichEditCtrl::SetCurrentFontSize(int size)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::SetCurrentFontSize
-	Description :	Changes the size of the selected text in 
-					the editor to "size" (measured in 
+	Description :	Changes the size of the selected text in
+					the editor to "size" (measured in
 					typographical points).
 	Access :		Public
-					
+
 	Return :		void
-	Parameters :	int size	-	New size in typographical 
+	Parameters :	int size	-	New size in typographical
 									points
 
-	Usage :			Call to change the size of the selected 
+	Usage :			Call to change the size of the selected
 					text.
 
    ============================================================*/
@@ -1636,14 +1636,14 @@ void CRulerRichEditCtrl::SetCurrentFontSize(int size)
 void CRulerRichEditCtrl::SetCurrentFontColor(COLORREF color, BOOL bForeground)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::SetCurrentFontSize
-	Description :	Changes the color of the selected text in 
+	Description :	Changes the color of the selected text in
 					the editor to "color".
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	COLORREF color	-	New color
 
-	Usage :			Call to change the color of the selected 
+	Usage :			Call to change the color of the selected
 					text.
 
    ============================================================*/
@@ -1673,8 +1673,8 @@ void CRulerRichEditCtrl::SetCurrentFontColor(COLORREF color, BOOL bForeground)
 LRESULT CRulerRichEditCtrl::OnSetCurrentFontName(WPARAM font, LPARAM)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnSetCurrentFontName
-	Description :	Handler for the registered message 
-					"urm_SETCURRENTFONTNAME", called when the 
+	Description :	Handler for the registered message
+					"urm_SETCURRENTFONTNAME", called when the
 					font name is changed from the toolbar.
 	Access :		Protected
 
@@ -1691,20 +1691,20 @@ LRESULT CRulerRichEditCtrl::OnSetCurrentFontName(WPARAM font, LPARAM)
 	SetCurrentFontName(fnt);
 
 	return 0;
-	
+
 }
 
 LRESULT CRulerRichEditCtrl::OnSetCurrentFontSize(WPARAM, LPARAM size)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnSetCurrentFontSize
-	Description :	Handler for the registered message 
-					"urm_SETCURRENTFONTSIZE", called when the 
+	Description :	Handler for the registered message
+					"urm_SETCURRENTFONTSIZE", called when the
 					font size is changed from the toolbar.
 	Access :		Protected
 
 	Return :		LRESULT		-	Not used
 	Parameters :	WPARAM		-	Not used
-					LPARAM size	-	New font size in typographical 
+					LPARAM size	-	New font size in typographical
 									points of the selected text
 
 	Usage :			Called from MFC
@@ -1714,20 +1714,20 @@ LRESULT CRulerRichEditCtrl::OnSetCurrentFontSize(WPARAM, LPARAM size)
 
 	SetCurrentFontSize(size);
 	return 0;
-	
+
 }
 
 LRESULT CRulerRichEditCtrl::OnSetCurrentFontColor(WPARAM bForeground, LPARAM color)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::OnSetCurrentFontColor
-	Description :	Handler for the registered message 
-					"urm_SETCURRENTFONTCOLOR", called when the 
+	Description :	Handler for the registered message
+					"urm_SETCURRENTFONTCOLOR", called when the
 					font color is changed from the toolbar.
 	Access :		Protected
 
 	Return :		LRESULT		-	Not used
 	Parameters :	WPARAM		-	Not used
-					LPARAM		-	New color of the selected 
+					LPARAM		-	New color of the selected
 									text
 
 	Usage :			Called from MFC
@@ -1739,7 +1739,7 @@ LRESULT CRulerRichEditCtrl::OnSetCurrentFontColor(WPARAM bForeground, LPARAM col
 
 	m_rtf.SetFocus();
 	return 0;
-	
+
 }
 
 void CRulerRichEditCtrl::OnButtonTextColor()
@@ -1763,10 +1763,10 @@ void CRulerRichEditCtrl::DoColor()
 	Description :	Externally accessible member to set the
 					color of the selected text
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
+
 	Usage :			Call to set the color of the selected text.
 
    ============================================================*/
@@ -1803,11 +1803,11 @@ void CRulerRichEditCtrl::DoBold()
 	Description :	Externally accessible member to set/unset
 					the selected text to/from bold
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
-	Usage :			Call to toggle the selected text to/from 
+
+	Usage :			Call to toggle the selected text to/from
 					bold.
 
    ============================================================*/
@@ -1858,11 +1858,11 @@ void CRulerRichEditCtrl::DoItalic()
 	Description :	Externally accessible member to set/unset
 					the selected text to/from italic
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
-	Usage :			Call to toggle the selected text to/from 
+
+	Usage :			Call to toggle the selected text to/from
 					italic.
 
    ============================================================*/
@@ -1884,11 +1884,11 @@ void CRulerRichEditCtrl::DoUnderline()
 	Description :	Externally accessible member to set/unset
 					the selected text to/from underline
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
-	Usage :			Call to toggle the selected text to/from 
+
+	Usage :			Call to toggle the selected text to/from
 					underlined.
 
    ============================================================*/
@@ -1910,10 +1910,10 @@ void CRulerRichEditCtrl::DoLeftAlign()
 	Description :	Externally accessible member to set the
 					selected text to left aligned.
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
+
 	Usage :			Call to left-align the selected text
 
    ============================================================*/
@@ -1930,10 +1930,10 @@ void CRulerRichEditCtrl::DoCenterAlign()
 	Description :	Externally accessible member to set the
 					selected text to center aligned
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
+
 	Usage :			Call to center-align the selected text
 
    ============================================================*/
@@ -1950,10 +1950,10 @@ void CRulerRichEditCtrl::DoRightAlign()
 	Description :	Externally accessible member to set the
 					selected text to right aligned
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
+
 	Usage :			Call to right-align the selected text
 
    ============================================================*/
@@ -1968,16 +1968,16 @@ BOOL CRulerRichEditCtrl::FixupTabStops(ParaFormat& para)
 {
 	// returns TRUE if any changes were made to the tabstops
 	int t = MAX_TAB_STOPS;
-	
+
 	// find the last non-zero tabstop
-	while (t--) 
+	while (t--)
 	{
 		if (para.rgxTabs[t] != 0)
 			break;
 	}
 
 	// rebuild the tabs from the last non-zero element
-	if (t < MAX_TAB_STOPS - 1) 
+	if (t < MAX_TAB_STOPS - 1)
 	{
 		int nTabstop = (t >= 0) ? para.rgxTabs[t] : 0;
 
@@ -2000,10 +2000,10 @@ void CRulerRichEditCtrl::DoIndent()
 	Description :	Externally accessible member to indent the
 					selected text to the next tab position
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
+
 	Usage :			Call to indent the selected text
 
    ============================================================*/
@@ -2045,10 +2045,10 @@ void CRulerRichEditCtrl::DoOutdent()
 	Description :	Externally accessible member to outdent the
 					selected text to the previous tab position
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
+
 	Usage :			Call to outdent the selected text
 
    ============================================================*/
@@ -2081,15 +2081,15 @@ void CRulerRichEditCtrl::DoBullet()
 	Description :	Externally accessible member to set the
 					selected text to bulleted
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
+
 	Usage :			Call to set the selected text to bulleted.
 
    ============================================================*/
 {
-	
+
 	m_toolbar.GetToolBarCtrl().CheckButton(BUTTON_BULLET, !m_toolbar.IsButtonChecked(BUTTON_BULLET));
 
 	ParaFormat2	para(PFM_NUMBERING | PFM_OFFSET);
@@ -2110,21 +2110,21 @@ void CRulerRichEditCtrl::DoBullet()
 
 }
 
-void CRulerRichEditCtrl::DoNumberList() 
+void CRulerRichEditCtrl::DoNumberList()
 /* ============================================================
 	Function :		CRulerRichEditCtrl::DoBullet
 	Description :	Externally accessible member to set the
 					selected text to bulleted
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
-					
+
 	Usage :			Call to set the selected text to bulleted.
 
    ============================================================*/
 {
-	
+
 	m_toolbar.GetToolBarCtrl().CheckButton(BUTTON_NUMBER, !m_toolbar.IsButtonChecked(BUTTON_NUMBER));
 
 	ParaFormat2	para(PFM_NUMBERING | PFM_NUMBERINGSTYLE | PFM_NUMBERINGSTART | PFM_OFFSET);
@@ -2152,10 +2152,10 @@ void CRulerRichEditCtrl::ShowToolbar(BOOL show)
 	Function :		CRulerRichEditCtrl::ShowToolbar
 	Description :	Shows or hides the toolbar
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	BOOL show	-	"TRUE" to show
-					
+
 	Usage :			Call to show or hide the toolbar subcontrol
 
    ============================================================*/
@@ -2191,10 +2191,10 @@ void CRulerRichEditCtrl::ShowRuler(BOOL show)
 	Function :		CRulerRichEditCtrl::ShowRuler
 	Description :	Shows or hides the ruler
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	BOOL show	-	"TRUE" to show
-					
+
 	Usage :			Call to show or hide the ruler subcontrol
 
    ============================================================*/
@@ -2218,14 +2218,14 @@ void CRulerRichEditCtrl::ShowRuler(BOOL show)
 void CRulerRichEditCtrl::LayoutControls(int width, int height)
 /* ============================================================
 	Function :		CRulerRichEditCtrl::LayoutControls
-	Description :	Lays out the sub-controls depending on 
+	Description :	Lays out the sub-controls depending on
 					visibility.
 	Access :		Private
-					
+
 	Return :		void
 	Parameters :	int width	-	Width of control
 					int height	-	Height of control
-					
+
 	Usage :			Called internally to lay out the controls
 
    ============================================================*/
@@ -2260,10 +2260,10 @@ BOOL CRulerRichEditCtrl::IsToolbarVisible() const
 	Function :		CRulerRichEditCtrl::IsToolbarVisible
 	Description :	Returns if the toolbar is visible or not
 	Access :		Public
-					
+
 	Return :		BOOL	-	"TRUE" if visible
 	Parameters :	none
-					
+
 	Usage :			Call to get the visibility of the toolbar
 
    ============================================================*/
@@ -2278,10 +2278,10 @@ BOOL CRulerRichEditCtrl::IsRulerVisible() const
 	Function :		CRulerRichEditCtrl::IsRulerVisible
 	Description :	Returns if the ruler is visible or not
 	Access :		Public
-					
+
 	Return :		BOOL	-	"TRUE" if visible
 	Parameters :	none
-					
+
 	Usage :			Call to get the visibility of the ruler
 
    ============================================================*/
@@ -2296,11 +2296,11 @@ void CRulerRichEditCtrl::SetReadOnly(BOOL readOnly)
 	Function :		CRulerRichEditCtrl::SetReadOnly
 	Description :	Sets the control to read only or not.
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	BOOL readOnly	-	New read only state
-					
-	Usage :			Call to set the read only state of the 
+
+	Usage :			Call to set the read only state of the
 					control
 
    ============================================================*/
@@ -2326,11 +2326,11 @@ BOOL CRulerRichEditCtrl::GetReadOnly() const
 	Function :		CRulerRichEditCtrl::GetReadOnly
 	Description :	Returns if the control is read only or not
 	Access :		Public
-					
+
 	Return :		BOOL	-	"TRUE" if read only
 	Parameters :	none
-					
-	Usage :			Call to get the read only-state of the 
+
+	Usage :			Call to get the read only-state of the
 					control
 
    ============================================================*/
@@ -2340,7 +2340,7 @@ BOOL CRulerRichEditCtrl::GetReadOnly() const
 
 }
 
-void CRulerRichEditCtrl::OnEnable(BOOL bEnable) 
+void CRulerRichEditCtrl::OnEnable(BOOL bEnable)
 {
 	CWnd::OnEnable(bEnable);
 

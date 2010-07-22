@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -59,11 +59,11 @@ DLL_DECLSPEC IContent* CreateContentInterface()
 	return &theApp;//new CRTFContentCtrlApp;
 }
 
-DLL_DECLSPEC int GetInterfaceVersion() 
-{ 
+DLL_DECLSPEC int GetInterfaceVersion()
+{
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	return ICONTENTCTRL_VERSION; 
+	return ICONTENTCTRL_VERSION;
 }
 
 CRTFContentCtrlApp::CRTFContentCtrlApp()
@@ -76,7 +76,7 @@ const char* CRTFContentCtrlApp::GetTypeID() const
 
 	static CString sID;
 
-	Misc::GuidToString(RTF_TYPEID, sID); 
+	Misc::GuidToString(RTF_TYPEID, sID);
 
 	return sID;
 }
@@ -86,7 +86,7 @@ const char* CRTFContentCtrlApp::GetTypeDescription() const
 	return _T("Rich Text");
 }
 
-IContentControl* CRTFContentCtrlApp::CreateCtrl(unsigned short nCtrlID, unsigned long nStyle, 
+IContentControl* CRTFContentCtrlApp::CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
 						long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -127,7 +127,7 @@ void CRTFContentCtrlApp::SetIniLocation(bool bRegistry, const char* szIniPathNam
 		m_pszProfileName = _strdup(szIniPathName);
 }
 
-int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent, 
+int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
 									  int nLength, char*& szHtml)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -153,7 +153,7 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
 
 	CString sRtf((LPCSTR)pContent, nLength), sHtml;
 
-	// scan the string looking for anything that smells like a 
+	// scan the string looking for anything that smells like a
 	// multi-byte character, because CRTF_HTMLConverter can't
 	// handle that at the moment
 	if (!CRTF_HTMLConverter::HasMultiByteChars(sRtf))
@@ -174,7 +174,7 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
 		}
 	*/
 
-		// scan the string looking for anything that smells like a 
+		// scan the string looking for anything that smells like a
 		// multi-byte character, because CRTF_HTMLConverter can't
 		// handle that at the moment
 		if (!Misc::IsMultibyteString(sRtf))

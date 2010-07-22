@@ -8,14 +8,14 @@
 
 	Date :			2004-05-07
 
-	Purpose :		This class encapsulates a toolbar that can be used with 
-					"CRulerRichEditCtrl". The class is derived from "CEnToolBar", 
+	Purpose :		This class encapsulates a toolbar that can be used with
+					"CRulerRichEditCtrl". The class is derived from "CEnToolBar",
 					and manages a formatting toolbar
 
-	Description :	A "CEnToolBar"-derived class. Reads a toolbar resource 
-					with the ID "TOOLBAR_CONTROL" and adds combo controls for 
-					font name and -size, as well as a color picker at the 
-					positions "FONT_NAME_POS", "FONT_SIZE_POS" and 
+	Description :	A "CEnToolBar"-derived class. Reads a toolbar resource
+					with the ID "TOOLBAR_CONTROL" and adds combo controls for
+					font name and -size, as well as a color picker at the
+					positions "FONT_NAME_POS", "FONT_SIZE_POS" and
 					"FONT_COLOR_POS" respectively.
 
 	Usage :			Created by the rich edit mini-editor.
@@ -48,8 +48,8 @@ extern UINT urm_SETCURRENTFONTCOLOR;
 /////////////////////////////////////////////////////////////////////////////
 // CRRECToolBar
 
-CRRECToolBar::CRRECToolBar() : 
-	m_crBack(GetSysColor(COLOR_WINDOW)), 
+CRRECToolBar::CRRECToolBar() :
+	m_crBack(GetSysColor(COLOR_WINDOW)),
 	m_crText(GetSysColor(COLOR_WINDOWTEXT))
 {
 }
@@ -74,7 +74,7 @@ END_MESSAGE_MAP()
 
 BOOL CRRECToolBar::Create( CWnd* parent)
 {
-	if (CreateEx(parent, TBSTYLE_FLAT | TBSTYLE_WRAPABLE, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP/* | WS_CLIPCHILDREN*/, 
+	if (CreateEx(parent, TBSTYLE_FLAT | TBSTYLE_WRAPABLE, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP/* | WS_CLIPCHILDREN*/,
 				CRect(0, 0, 0, 0), TOOLBAR_CONTROL) && LoadToolBar(TOOLBAR_CONTROL))
 	{
 		SetImage(IDB_TOOLBAR, RGB(255, 0, 255));
@@ -100,7 +100,7 @@ BOOL CRRECToolBar::Create( CWnd* parent)
 		// Map in combo boxes
 		//
 
-		TBBUTTON buttons[] = 
+		TBBUTTON buttons[] =
 		{
 			{ 0, FONT_NAME_POS, 0, TBSTYLE_SEP, 0, NULL },
 			{ 0, -1, 0, TBSTYLE_SEP, 0, NULL },
@@ -124,7 +124,7 @@ BOOL CRRECToolBar::Create( CWnd* parent)
 		GetItemRect( FONT_NAME_POS, &rect );
 		rect.bottom += COMBO_HEIGHT;
 
-		if (!m_font.Create( WS_CHILD | WS_VSCROLL |	WS_VISIBLE | CBS_AUTOHSCROLL | 
+		if (!m_font.Create( WS_CHILD | WS_VSCROLL |	WS_VISIBLE | CBS_AUTOHSCROLL |
 							CBS_DROPDOWNLIST | CBS_SORT, rect, this, DROPDOWN_FONT ))
 			return FALSE;
 
@@ -136,8 +136,8 @@ BOOL CRRECToolBar::Create( CWnd* parent)
 		GetToolBarCtrl().SetButtonInfo( FONT_SIZE_POS, &tbi );
 		GetItemRect( FONT_SIZE_POS, &rect );
 		rect.bottom += COMBO_HEIGHT;
-		
-		if (!m_size.Create(WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST | 
+
+		if (!m_size.Create(WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST |
 							CBS_HASSTRINGS, rect, this, DROPDOWN_SIZE ))
 			return FALSE;
 
@@ -146,7 +146,7 @@ BOOL CRRECToolBar::Create( CWnd* parent)
 
 		return TRUE;
 	}
-	
+
 	return FALSE;
 }
 
@@ -173,7 +173,7 @@ BOOL CRRECToolBar::GetDroppedState() const
 			m_size.GetDroppedState();
 }
 
-void CRRECToolBar::OnSelchangeFont() 
+void CRRECToolBar::OnSelchangeFont()
 {
 
 	CString font;
@@ -182,10 +182,10 @@ void CRRECToolBar::OnSelchangeFont()
 	{
 		m_font.GetLBText( index, font );
 		GetParent()->SendMessage( urm_SETCURRENTFONTNAME, ( WPARAM ) ( LPCTSTR ) font, 0 );
-	}	
+	}
 }
 
-void CRRECToolBar::OnSelchangeSize() 
+void CRRECToolBar::OnSelchangeSize()
 {
 	int index = m_size.GetCurSel();
 
@@ -199,7 +199,7 @@ void CRRECToolBar::OnSelchangeSize()
 	}
 }
 
-LRESULT CRRECToolBar::OnColorButton( WPARAM color, LPARAM nCtrlID) 
+LRESULT CRRECToolBar::OnColorButton( WPARAM color, LPARAM nCtrlID)
 {
 	BOOL bForeground = (nCtrlID == BUTTON_TEXTCOLOR);
 
@@ -212,7 +212,7 @@ LRESULT CRRECToolBar::OnColorButton( WPARAM color, LPARAM nCtrlID)
 	UpdateWindow();
 
 	GetParent()->SendMessage( urm_SETCURRENTFONTCOLOR, bForeground, ( LPARAM ) color );
-	
+
 	return 0;
 }
 
@@ -246,13 +246,13 @@ void CRRECToolBar::SetFontColor( COLORREF color, BOOL bForeground )
 		Invalidate();
 }
 
-COLORREF CRRECToolBar::GetFontColor(BOOL bForeground, BOOL bTranslateDefault) 
-{ 
+COLORREF CRRECToolBar::GetFontColor(BOOL bForeground, BOOL bTranslateDefault)
+{
 	if (bForeground)
 	{
 		if (m_crText == CLR_DEFAULT && bTranslateDefault)
 			return GetSysColor(COLOR_WINDOWTEXT);
-		
+
 		// else
 		return m_crText;
 	}
@@ -260,7 +260,7 @@ COLORREF CRRECToolBar::GetFontColor(BOOL bForeground, BOOL bTranslateDefault)
 	{
 		if (m_crBack == CLR_DEFAULT && bTranslateDefault)
 			return GetSysColor(COLOR_WINDOW);
-		
+
 		// else
 		return m_crBack;
 	}
@@ -276,10 +276,10 @@ BOOL CRRECToolBar::SetButtonState(int nID, UINT nState)
 	return GetToolBarCtrl().SetState(nID, nState);
 }
 
-void CRRECToolBar::OnEnable(BOOL bEnable) 
+void CRRECToolBar::OnEnable(BOOL bEnable)
 {
 	CEnToolBar::OnEnable(bEnable);
-	
+
 	m_font.EnableWindow(bEnable);
 	m_size.EnableWindow(bEnable);
 }
@@ -301,12 +301,12 @@ BOOL CRRECToolBar::CheckButton(int nID, BOOL bChecked)
 	return SetButtonState(nID, nState);
 }
 
-void CRRECToolBar::OnSize(UINT nType, int cx, int cy) 
+void CRRECToolBar::OnSize(UINT nType, int cx, int cy)
 {
 	GetToolBarCtrl().SetButtonSize(m_sizeButton);
-	
+
 	CEnToolBar::OnSize(nType, cx, cy);
-	
+
 	CSize size(GetToolBarCtrl().GetButtonSize());
 
 	if (m_font.GetSafeHwnd())
@@ -315,19 +315,19 @@ void CRRECToolBar::OnSize(UINT nType, int cx, int cy)
 
 		// calc length after which we want to start shortening ctrls
 		GetItemRect(1, &rDiv); // divider
-		const int DEFCTRLSWIDTH = FONT_COMBO_WIDTH + SIZE_COMBO_WIDTH + 
+		const int DEFCTRLSWIDTH = FONT_COMBO_WIDTH + SIZE_COMBO_WIDTH +
 									(5 * rDiv.Width()) / 2; // 2.5 separators
 
 		// if the toolbar length is less than the default
-		// width of the embedded widgets we reduce the 
+		// width of the embedded widgets we reduce the
 		// font combo as far as we can.
 		TBBUTTONINFO tbi;
 		tbi.cbSize = sizeof( TBBUTTONINFO );
 		tbi.dwMask = TBIF_SIZE;  // By index
-		
+
 		CRect rect;
 		GetItemRect(FONT_NAME_POS, &rect);
-		
+
 		int nNewWidth = FONT_COMBO_WIDTH - max(0, DEFCTRLSWIDTH - cx);
 		nNewWidth = max(nNewWidth, MIN_FONT_COMBO_WIDTH);
 
@@ -336,11 +336,11 @@ void CRRECToolBar::OnSize(UINT nType, int cx, int cy)
 			rect.right = rect.left + nNewWidth;
 			rect.bottom += COMBO_HEIGHT;
 			GetDlgItem(DROPDOWN_FONT)->MoveWindow(rect);
-			
+
 			// update toolbar item size also
 			tbi.cx = (WORD)rect.Width();
 			GetToolBarCtrl().SetButtonInfo(FONT_NAME_POS, &tbi);
-			
+
 			// move the other two items to suit their toolbar rects
 			GetItemRect(FONT_SIZE_POS, &rect);
 			rect.bottom += COMBO_HEIGHT;
@@ -369,7 +369,7 @@ void CRRECToolBar::OnColorDropDown(NMHDR* pNMHDR, LRESULT* pResult)
 			defaultText.LoadString(STRING_DEFAULT);
 			customText.LoadString(STRING_CUSTOM);
 
-			new CColourPopup(CPoint(rButton.left, rButton.bottom), color, 
+			new CColourPopup(CPoint(rButton.left, rButton.bottom), color,
 							 this, nBtnID, defaultText, customText, TRUE);
 		}
 		break;

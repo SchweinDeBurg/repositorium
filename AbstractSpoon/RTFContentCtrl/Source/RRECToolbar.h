@@ -8,14 +8,14 @@
 
 	Date :			2004-05-07
 
-	Purpose :		This class encapsulates a toolbar that can be used with 
-					"CRulerRichEditCtrl". The class is derived from "CEnToolBar", 
+	Purpose :		This class encapsulates a toolbar that can be used with
+					"CRulerRichEditCtrl". The class is derived from "CEnToolBar",
 					and manages a formatting toolbar
 
-	Description :	A "CEnToolBar"-derived class. Reads a toolbar resource 
-					with the ID "TOOLBAR_CONTROL" and adds combo controls for 
-					font name and -size, as well as a color picker at the 
-					positions "FONT_NAME_POS", "FONT_SIZE_POS" and 
+	Description :	A "CEnToolBar"-derived class. Reads a toolbar resource
+					with the ID "TOOLBAR_CONTROL" and adds combo controls for
+					font name and -size, as well as a color picker at the
+					positions "FONT_NAME_POS", "FONT_SIZE_POS" and
 					"FONT_COLOR_POS" respectively.
 
 	Usage :			Created by the rich edit mini-editor.
