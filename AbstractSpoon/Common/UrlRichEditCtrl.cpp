@@ -47,25 +47,25 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-static LPSTR URLDELIMS[] =
+static LPTSTR URLDELIMS[] =
 {
-	" ",
-	"\n",
-	"\t",
-	", ",
-	". ",
-	//	";",
-	//	"[",
-	//	"]",
-	//	"(",
-	//	")"
-	"<",
-	"{",
-	"}",
+	_T(" "),
+	_T("\n"),
+	_T("\t"),
+	_T(", "),
+	_T(". "),
+	//	_T(";)",
+	//	_T("["),
+	//	_T("]"),
+	//	_T("("),
+	//	_T(")"),
+	_T("<"),
+	_T("{"),
+	_T("}")
 };
 
-const LPCTSTR FILEPREFIX = "file://";
-const CString ENDPUNCTUATION(".,;:(){}[]<>&*~?\\\"'");
+const LPCTSTR FILEPREFIX = _T("file://");
+const CString ENDPUNCTUATION(_T(".,;:(){}[]<>&*~?\\\"\'"));
 
 enum
 {
@@ -83,20 +83,22 @@ CUrlRichEditCtrl::CUrlRichEditCtrl() : m_nContextUrl(-1), m_nFileProtocol(-1)
 {
 	EnableToolTips();
 
-	AddProtocol("www.", FALSE);
-	AddProtocol("http://", FALSE);
-	AddProtocol("https://", FALSE);
-	AddProtocol("ftp://", FALSE);
-	AddProtocol("outlook:", FALSE);
-	AddProtocol("mailto:", FALSE);
-	AddProtocol("Notes://", FALSE);
-	AddProtocol("evernote://", FALSE);
-	AddProtocol("onenote:///", FALSE);
+	AddProtocol(_T("www."), FALSE);
+	AddProtocol(_T("http://"), FALSE);
+	AddProtocol(_T("https://"), FALSE);
+	AddProtocol(_T("ftp://"), FALSE);
+	AddProtocol(_T("outlook:"), FALSE);
+	AddProtocol(_T("mailto:"), FALSE);
+	AddProtocol(_T("Notes://"), FALSE);
+	AddProtocol(_T("evernote://"), FALSE);
+	AddProtocol(_T("onenote:///"), FALSE);
 
 	m_nFileProtocol = AddProtocol(FILEPREFIX, FALSE);
 
 	if (s_sCtrlClickMsg.IsEmpty())
-		s_sCtrlClickMsg = "Ctrl+Click to follow link";
+	{
+		s_sCtrlClickMsg = _T("Ctrl+Click to follow link");
+	}
 }
 
 CUrlRichEditCtrl::~CUrlRichEditCtrl()
@@ -147,8 +149,10 @@ int CUrlRichEditCtrl::MatchProtocol(LPCTSTR szText) const
 	{
 		const PROTOCOL& prot = m_aProtocols[nProt];
 
-		if (_strnicmp(szText, prot.sProtocol, prot.sProtocol.GetLength()) == 0)
+		if (_tcsnicmp(szText, prot.sProtocol, prot.sProtocol.GetLength()) == 0)
+		{
 			return nProt;
+		}
 	}
 
 	return -1;
@@ -172,7 +176,9 @@ LRESULT CUrlRichEditCtrl::OnDropFiles(WPARAM wp, LPARAM /*lp*/)
 	BOOL bEnable = !(GetStyle() & ES_READONLY) && IsWindowEnabled();
 
 	if (!bEnable)
+	{
 		return 0;
+	}
 
 	long nChar = -1;
 	GetSel(nChar, nChar);
@@ -183,12 +189,12 @@ LRESULT CUrlRichEditCtrl::OnDropFiles(WPARAM wp, LPARAM /*lp*/)
 
 	ASSERT(nFileCount != 0);
 
-	for (UINT i=0; i < nFileCount; i++)
+	for (UINT i = 0; i < nFileCount; i++)
 	{
 		::DragQueryFile((HDROP)wp, i, szFileName, _MAX_PATH);
 		::GetLongPathName(szFileName, szFileName, _MAX_PATH);
 
-		sFile = CreateFileLink(szFileName) + " ";
+		sFile = CreateFileLink(szFileName) + _T(" ");
 		sText += sFile;
 	}
 	::DragFinish((HDROP)wp);
@@ -197,38 +203,15 @@ LRESULT CUrlRichEditCtrl::OnDropFiles(WPARAM wp, LPARAM /*lp*/)
 	SetSel(m_crDropSel);
 
 	if (!sText.IsEmpty())
+	{
 		PathReplaceSel(sText, FALSE);
+	}
 
 	return FALSE;
 }
 
 int CUrlRichEditCtrl::CharFromPoint(const CPoint& point)
 {
-	/*	int nFirstLine = GetFirstVisibleLine();
-	int nLineCount = GetLineCount();
-
-	for (int nLine = nFirstLine; nLine < nLineCount; nLine++)
-	{
-	int nFirstChar = LineIndex(nLine);
-	CPoint ptChar = GetCharPos(nFirstChar);
-	int nLineHeight = GetLineHeight();
-
-	if (point.y >= ptChar.y && point.y < ptChar.y + nLineHeight)
-	{
-	int nLineLength = LineLength(nFirstChar);
-
-	for (int nChar = nFirstChar; nChar < (nFirstChar + nLineLength); nChar++)
-	{
-	ptChar = GetCharPos(nChar);
-
-	if (point.x < ptChar.x)
-	return nChar;
-	}
-	}
-	}
-
-	return GetTextLength();
-	*/
 	POINTL ptl = { point.x, point.y };
 
 	return SendMessage(EM_CHARFROMPOS, 0, (LPARAM)&ptl);
@@ -236,7 +219,7 @@ int CUrlRichEditCtrl::CharFromPoint(const CPoint& point)
 
 void CUrlRichEditCtrl::PreSubclassWindow()
 {
-	SetEventMask(GetEventMask() | ENM_CHANGE | ENM_DROPFILES | ENM_DRAGDROPDONE );
+	SetEventMask(GetEventMask() | ENM_CHANGE | ENM_DROPFILES | ENM_DRAGDROPDONE);
 	DragAcceptFiles();
 
 	// enable multilevel undo
@@ -279,10 +262,12 @@ LRESULT CUrlRichEditCtrl::OnSetFont(WPARAM /*wp*/, LPARAM /*lp*/)
 BOOL CUrlRichEditCtrl::IsDelim(LPCTSTR szText)
 {
 	if (!szText || !*szText)
-		return TRUE; // end of string
+	{
+		return TRUE;   // end of string
+	}
 
 	int nDelims = sizeof(URLDELIMS) / sizeof(LPCTSTR);
-	char ch = *szText;
+	TCHAR ch = *szText;
 
 	for (int nDelim = 0; nDelim < nDelims; nDelim++)
 	{
@@ -292,7 +277,9 @@ BOOL CUrlRichEditCtrl::IsDelim(LPCTSTR szText)
 		{
 			// test char after ch if 2 char delim
 			if (szDelim[1] == 0 || *(szText + 1) == szDelim[1])
+			{
 				return TRUE;
+			}
 		}
 	}
 
@@ -303,13 +290,15 @@ void CUrlRichEditCtrl::ParseAndFormatText(BOOL bForceReformat)
 {
 	AF_NOREENTRANT // prevent reentrancy
 
-		// parse the control content
-		CString sText;
+	// parse the control content
+	CString sText;
 	GetWindowText(sText);
 
 	// richedit2 uses '\r\n' whereas richedit uses just '\n'
 	if (!CWinClasses::IsClass(*this, WC_RICHEDIT))
-		sText.Replace("\r\n", "\n");
+	{
+		sText.Replace(_T("\r\n"), _T("\n"));
+	}
 
 	// parse the text into an array of URLPOS
 	CUrlArray aUrls;
@@ -320,7 +309,10 @@ void CUrlRichEditCtrl::ParseAndFormatText(BOOL bForceReformat)
 
 	while (*szText)
 	{
-		BYTE nChar = *szText;
+#if defined(UNICODE) || defined(_UNICODE)
+		// no-op
+#else
+		TCHAR nChar = *szText;
 
 		// if nChar < 0 then its a multibyte char and can't be part
 		// of a url, so we bump the text buffer by 2 but the pos by 1
@@ -331,6 +323,7 @@ void CUrlRichEditCtrl::ParseAndFormatText(BOOL bForceReformat)
 			nPos++;
 			continue;
 		}
+#endif   // UNICODE || _UNICODE
 
 		// if the previous item was not a delimiter then there's no
 		// point checking for a protocol match so we just update the
@@ -366,9 +359,13 @@ void CUrlRichEditCtrl::ParseAndFormatText(BOOL bForceReformat)
 
 		// check for <file://.....>
 		if (nProt == m_nFileProtocol && nPos > 0)
-			bBracedFile = (szText[-1] == '<');
+		{
+			bBracedFile = (szText[-1] == _T('<'));
+		}
 		else
+		{
 			bBracedFile = FALSE;
+		}
 
 		// find the end of the url (URLDELIMS)
 		int nLen = 0;
@@ -376,7 +373,7 @@ void CUrlRichEditCtrl::ParseAndFormatText(BOOL bForceReformat)
 
 		if (bBracedFile)
 		{
-			while (*szText && *szText != '>')
+			while (*szText && *szText != _T('>'))
 			{
 				szText++;
 				nLen++;
@@ -424,7 +421,9 @@ void CUrlRichEditCtrl::ParseAndFormatText(BOOL bForceReformat)
 		CRePauseUndo rep(*this);
 
 		if (bVisible)
+		{
 			SetRedraw(FALSE);
+		}
 
 		// save current selection
 		CHARRANGE crSel;
@@ -488,7 +487,9 @@ BOOL CUrlRichEditCtrl::UrlsMatch(const CUrlArray& aUrls)
 	int nUrls = aUrls.GetSize();
 
 	if (nUrls !=  m_aUrls.GetSize())
+	{
 		return FALSE;
+	}
 
 	// compare aUrls with m_aUrls to see if anything has changed
 	for (int nUrl = 0; nUrl < nUrls; nUrl++)
@@ -537,7 +538,7 @@ void CUrlRichEditCtrl::SetFirstVisibleLine(int nLine)
 			nPrevFirst = nFirst;
 			nFirst = GetFirstVisibleLine();
 		}
-		while  (nLine < nFirst && (nFirst != nPrevFirst));
+		while (nLine < nFirst && (nFirst != nPrevFirst));
 	}
 	else if (nLine > nFirst)
 	{
@@ -550,7 +551,7 @@ void CUrlRichEditCtrl::SetFirstVisibleLine(int nLine)
 			nPrevFirst = nFirst;
 			nFirst = GetFirstVisibleLine();
 		}
-		while  (nLine > nFirst && (nFirst != nPrevFirst));
+		while (nLine > nFirst && (nFirst != nPrevFirst));
 	}
 }
 
@@ -572,7 +573,7 @@ CPoint CUrlRichEditCtrl::GetCaretPos()
 {
 	if (GetFocus() != this)
 	{
-		ASSERT (0);
+		ASSERT(0);
 		return CPoint(0, 0);
 	}
 
@@ -586,7 +587,9 @@ CPoint CUrlRichEditCtrl::GetCaretPos()
 BOOL CUrlRichEditCtrl::GoToUrl(int nUrl) const
 {
 	if (nUrl < 0 || nUrl >= m_aUrls.GetSize())
+	{
 		return FALSE;
+	}
 
 	const URLITEM& urli = m_aUrls[nUrl];
 
@@ -595,11 +598,15 @@ BOOL CUrlRichEditCtrl::GoToUrl(int nUrl) const
 		CString sUrl = GetUrl(nUrl, TRUE);
 
 		if (FileMisc::Run(*this, sUrl) > 32)
+		{
 			return TRUE;
+		}
 
 		// else
 		if (!s_sGotoErrMsg.IsEmpty())
+		{
 			AfxMessageBox(s_sGotoErrMsg, MB_OK | MB_ICONEXCLAMATION);
+		}
 
 		return FALSE;
 	}
@@ -618,18 +625,24 @@ BOOL CUrlRichEditCtrl::GoToUrl(const CString& sUrl) const
 		const URLITEM& urli = m_aUrls[nUrl];
 
 		if (urli.sUrl.CompareNoCase(sUrl) == 0)
+		{
 			return GoToUrl(nUrl);
+		}
 	}
 
 	// didn't match then it might be a file
 	if (GetFileAttributes(sUrl) != 0xffffffff)
 	{
 		if (FileMisc::Run(*this, sUrl) > 32)
+		{
 			return TRUE;
+		}
 
 		// else
 		if (!s_sGotoErrMsg.IsEmpty())
+		{
 			AfxMessageBox(s_sGotoErrMsg, MB_OK | MB_ICONEXCLAMATION);
+		}
 	}
 
 	return FALSE;
@@ -644,7 +657,7 @@ LRESULT CUrlRichEditCtrl::SendNotifyCustomUrl(LPCTSTR szUrl) const
 // CUrlRichEditCtrl
 
 HRESULT CUrlRichEditCtrl::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT* lpcfFormat,
-														DWORD /*reco*/, BOOL /*fReally*/, HGLOBAL /*hMetaPict*/)
+      DWORD /*reco*/, BOOL /*fReally*/, HGLOBAL /*hMetaPict*/)
 {
 	BOOL bEnable = !(GetStyle() & ES_READONLY) && IsWindowEnabled();
 
@@ -674,10 +687,14 @@ CLIPFORMAT CUrlRichEditCtrl::GetAcceptableClipFormat(LPDATAOBJECT lpDataOb, CLIP
 	for (int nFmt = 0; nFmt < nNumFmts; nFmt++)
 	{
 		if (format && format == formats[nFmt])
+		{
 			return format;
+		}
 
 		if (dataobj.IsDataAvailable(formats[nFmt]))
+		{
 			return formats[nFmt];
+		}
 	}
 
 	return CF_TEXT;
@@ -690,7 +707,9 @@ HRESULT CUrlRichEditCtrl::GetDragDropEffect(BOOL fDrag, DWORD grfKeyState, LPDWO
 		BOOL bEnable = !(GetStyle() & ES_READONLY) && IsWindowEnabled();
 
 		if (!bEnable)
+		{
 			*pdwEffect = DROPEFFECT_NONE;
+		}
 		else
 		{
 			DWORD dwEffect = DROPEFFECT_NONE;
@@ -711,14 +730,20 @@ HRESULT CUrlRichEditCtrl::GetDragDropEffect(BOOL fDrag, DWORD grfKeyState, LPDWO
 			else // it's text
 			{
 				if ((grfKeyState & MK_CONTROL) == MK_CONTROL)
+				{
 					dwEffect = DROPEFFECT_COPY;
+				}
 
 				else // if ((grfKeyState & MK_SHIFT) == MK_SHIFT)
+				{
 					dwEffect = DROPEFFECT_MOVE;
+				}
 			}
 
 			if (dwEffect & *pdwEffect) // make sure allowed type
+			{
 				*pdwEffect = dwEffect;
+			}
 		}
 	}
 
@@ -740,7 +765,7 @@ void CUrlRichEditCtrl::TrackDragCursor()
 }
 
 HRESULT CUrlRichEditCtrl::GetContextMenu(WORD /*seltype*/, LPOLEOBJECT /*lpoleobj*/,
-													  CHARRANGE* /*lpchrg*/, HMENU* /*lphmenu*/)
+      CHARRANGE* /*lpchrg*/, HMENU* /*lphmenu*/)
 {
 	CPoint point = m_ptContextMenu;
 
@@ -759,7 +784,7 @@ void CUrlRichEditCtrl::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 CString CUrlRichEditCtrl::GetUrl(int nURL, BOOL bAsFile) const
 {
-	ASSERT (nURL >= 0 && nURL < m_aUrls.GetSize());
+	ASSERT(nURL >= 0 && nURL < m_aUrls.GetSize());
 
 	if (nURL >= 0 && nURL < m_aUrls.GetSize())
 	{
@@ -768,21 +793,23 @@ CString CUrlRichEditCtrl::GetUrl(int nURL, BOOL bAsFile) const
 		sUrlLower.MakeLower();
 
 		if (!bAsFile || sUrlLower.Find(FILEPREFIX) == -1)
+		{
 			return sUrl;
+		}
 
 		// else
-		if (sUrl.Find('#') ==  -1)
+		if (sUrl.Find(_T('#')) ==  -1)
 		{
 			sUrl = sUrl.Mid(sUrlLower.Find(FILEPREFIX) + lstrlen(FILEPREFIX));
-			sUrl.Replace("%20", " ");
-			sUrl.Replace('/', '\\');
+			sUrl.Replace(_T("%20"), _T(" "));
+			sUrl.Replace(_T('/'), _T('\\'));
 		}
 
 		return sUrl;
 	}
 
 	// else
-	return "";
+	return _T("");
 }
 
 CString CUrlRichEditCtrl::CreateFileLink(LPCTSTR szFile)
@@ -790,11 +817,13 @@ CString CUrlRichEditCtrl::CreateFileLink(LPCTSTR szFile)
 	CString sLink(szFile);
 
 	sLink = FILEPREFIX + sLink;
-	sLink.Replace('\\', '/');
+	sLink.Replace(_T('\\'), _T('/'));
 
 	// if the path contains spaces then brace it
-	if (sLink.Find(' ') != -1)
-		sLink = "<" + sLink + ">";
+	if (sLink.Find(_T(' ')) != -1)
+	{
+		sLink = _T("<") + sLink + _T(">");
+	}
 
 	return sLink;
 }
@@ -803,8 +832,10 @@ void CUrlRichEditCtrl::PathReplaceSel(LPCTSTR lpszPath, BOOL bFile)
 {
 	CString sPath(lpszPath);
 
-	if (bFile || sPath.Find(":\\") != -1 || sPath.Find("\\\\") != -1)
+	if (bFile || sPath.Find(_T(":\\")) != -1 || sPath.Find(_T("\\\\")) != -1)
+	{
 		sPath = CreateFileLink(lpszPath);
+	}
 
 	// add space fore and aft depending on selection
 	CHARRANGE crSel, crSelOrg;
@@ -813,10 +844,14 @@ void CUrlRichEditCtrl::PathReplaceSel(LPCTSTR lpszPath, BOOL bFile)
 
 	// enlarge to include end items
 	if (crSel.cpMin > 0)
+	{
 		crSel.cpMin--;
+	}
 
 	if (crSel.cpMax < GetTextLength() - 1)
+	{
 		crSel.cpMax++;
+	}
 
 	SetSel(crSel);
 	CString sSelText = GetSelText();
@@ -826,10 +861,14 @@ void CUrlRichEditCtrl::PathReplaceSel(LPCTSTR lpszPath, BOOL bFile)
 	if (!sSelText.IsEmpty())
 	{
 		if (!isspace(sSelText[0]))
-			sPath = ' ' + sPath;
+		{
+			sPath = _T(' ') + sPath;
+		}
 
 		if (!isspace(sSelText[sSelText.GetLength() - 1]))
-			sPath += ' ';
+		{
+			sPath += _T(' ');
+		}
 	}
 
 	ReplaceSel(sPath, TRUE);
@@ -897,7 +936,9 @@ void CUrlRichEditCtrl::OnRButtonDown(UINT nFlags, CPoint point)
 		GetSel(crSel);
 
 		if (nChar < crSel.cpMin || nChar > crSel.cpMax)
+		{
 			SetSel(nChar, nChar);
+		}
 	}
 
 	CRichEditBaseCtrl::OnRButtonDown(nFlags, point);
@@ -914,7 +955,9 @@ void CUrlRichEditCtrl::OnShowWindow(BOOL bShow, UINT nStatus)
 int CUrlRichEditCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CRichEditBaseCtrl::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 
 	SetEventMask(GetEventMask() | ENM_CHANGE | ENM_DROPFILES | ENM_DRAGDROPDONE | ENM_LINK);
 	DragAcceptFiles();
@@ -942,41 +985,45 @@ BOOL CUrlRichEditCtrl::OnNotifyLink(NMHDR* pNMHDR, LRESULT* pResult)
 
 	switch (pENL->msg)
 	{
-	case WM_SETCURSOR:
-		if (!bCtrl)
-		{
-			// because we're overriding the default behaviour we need to
-			// handle the cursor being over a selected block
-			CHARRANGE crSel;
-			GetSel(crSel);
+		case WM_SETCURSOR:
+			if (!bCtrl)
+			{
+				// because we're overriding the default behaviour we need to
+				// handle the cursor being over a selected block
+				CHARRANGE crSel;
+				GetSel(crSel);
 
-			CPoint ptCursor(GetMessagePos());
-			ScreenToClient(&ptCursor);
+				CPoint ptCursor(GetMessagePos());
+				ScreenToClient(&ptCursor);
 
-			LPCTSTR nCursor = IDC_ARROW;
+				LPCTSTR nCursor = IDC_ARROW;
 
-			int nChar = CharFromPoint(ptCursor);
+				int nChar = CharFromPoint(ptCursor);
 
-			if (nChar < crSel.cpMin || nChar > crSel.cpMax)
-				nCursor = IDC_IBEAM;
+				if (nChar < crSel.cpMin || nChar > crSel.cpMax)
+				{
+					nCursor = IDC_IBEAM;
+				}
 
-			SetCursor(AfxGetApp()->LoadStandardCursor(nCursor));
+				SetCursor(AfxGetApp()->LoadStandardCursor(nCursor));
 
-			*pResult = TRUE;
-			return TRUE;
-		}
-		break;
-
-	case WM_LBUTTONUP:
-		if (bCtrl)
-		{
-			if (GoToUrl(FindUrl(pENL->chrg)))
+				*pResult = TRUE;
 				return TRUE;
-		}
+			}
+			break;
 
-	case WM_RBUTTONUP:
-		m_nContextUrl = FindUrl(pENL->chrg);
-		break;
+		case WM_LBUTTONUP:
+			if (bCtrl)
+			{
+				if (GoToUrl(FindUrl(pENL->chrg)))
+				{
+					return TRUE;
+				}
+			}
+
+		case WM_RBUTTONUP:
+			m_nContextUrl = FindUrl(pENL->chrg);
+			break;
 	}
 
 	return FALSE;
@@ -991,7 +1038,9 @@ int CUrlRichEditCtrl::FindUrl(const CHARRANGE& cr)
 		const URLITEM& urli = m_aUrls[nUrl];
 
 		if (urli.cr.cpMax == cr.cpMax && urli.cr.cpMin == cr.cpMin)
+		{
 			return nUrl;
+		}
 	}
 
 	// not found
@@ -1009,7 +1058,9 @@ int CUrlRichEditCtrl::FindUrl(const CPoint& point)
 		const URLITEM& urli = m_aUrls[nUrl];
 
 		if (urli.cr.cpMax >= nPos && urli.cr.cpMin < nPos)
+		{
 			return nUrl;
+		}
 	}
 
 	// not found
@@ -1028,11 +1079,10 @@ int CUrlRichEditCtrl::FindUrlEx(const CPoint& point)
 
 		rUrl.bottom += GetLineHeight();
 
-		//		if (urli.cr.cpMax >= nPos && urli.cr.cpMin < nPos)
-		//			return nUrl;
-
 		if (rUrl.PtInRect(point))
+		{
 			return nUrl;
+		}
 	}
 
 	// not found
@@ -1063,7 +1113,7 @@ int CUrlRichEditCtrl::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
 	int nHit = MAKELONG(point.x, point.y);
 	pTI->hwnd = m_hWnd;
 	pTI->uId  = nHit;
-	pTI->rect = CRect(CPoint(point.x-1,point.y-1),CSize(2,2));
+	pTI->rect = CRect(CPoint(point.x - 1, point.y - 1), CSize(2, 2));
 	pTI->uFlags |= TTF_NOTBUTTON | TTF_ALWAYSTIP;
 	pTI->lpszText = LPSTR_TEXTCALLBACK;
 
@@ -1081,9 +1131,9 @@ void CUrlRichEditCtrl::OnNeedTooltip(UINT /*id*/, NMHDR* pNMHDR, LRESULT* pResul
 	if (FindUrlEx(point) != -1)
 	{
 #if _MSC_VER >= 1400
-		strcpy_s(pTTT->szText, s_sCtrlClickMsg);
+		_tcscpy_s(pTTT->szText, _countof(pTTT->szText), s_sCtrlClickMsg);
 #else
-		strcpy(pTTT->szText, s_sCtrlClickMsg);
+		_tcscpy(pTTT->szText, s_sCtrlClickMsg);
 #endif
 	}
 }
