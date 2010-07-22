@@ -75,7 +75,7 @@ BEGIN
             VALUE "FileDescription", "OutlookImpExp Component for ToDoList"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "OutlookImpExp"
-            VALUE "LegalCopyright", "Copyright © 2008"
+            VALUE "LegalCopyright", "Copyright © 2008 by AbstractSpoon"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
             VALUE "OriginalFilename", "OutlookImpExp.dll"
             VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."

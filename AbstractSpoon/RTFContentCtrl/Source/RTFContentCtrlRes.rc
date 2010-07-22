@@ -75,7 +75,7 @@ BEGIN
             VALUE "FileDescription", "RTFContentCtrl Dynamic Link Library"
             VALUE "FileVersion", "1.0.0.2"
             VALUE "InternalName", "RTFContentCtrl"
-            VALUE "LegalCopyright", "Copyright © AbstractSpoon 2005 & Johan Rosengren © 2005"
+            VALUE "LegalCopyright", "Copyright © 2005 by AbstractSpoon & Johan Rosengren"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
             VALUE "OriginalFilename", "RTFContentCtrl.dll"
             VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."

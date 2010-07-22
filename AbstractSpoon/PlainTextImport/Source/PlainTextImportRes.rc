@@ -75,7 +75,7 @@ BEGIN
             VALUE "FileDescription", "PlainTextImport Component for ToDoList"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "PlainTextImport"
-            VALUE "LegalCopyright", "Copyright © 2006"
+            VALUE "LegalCopyright", "Copyright © 2006 by AbstractSpoon"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
             VALUE "OriginalFilename", "PlainTextImport.dll"
             VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."

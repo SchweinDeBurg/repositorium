@@ -1,3 +1,12 @@
+// Copyright by Richard Butler.
+
+//*****************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - improved compatibility with the Unicode-based builds
+// - added AbstractSpoon Software copyright notice and licenese information
+// - adjusted #include's paths
+//*****************************************************************************
+
 // StdAfx.cpp : source file that includes just the standard includes
 //	EncryptDecrypt.pch will be the pre-compiled header
 //	StdAfx.obj will contain the pre-compiled type information

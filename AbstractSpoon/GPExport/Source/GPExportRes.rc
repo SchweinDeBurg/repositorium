@@ -75,7 +75,7 @@ BEGIN
             VALUE "FileDescription", "GPExport Component for ToDoList"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "GPExport"
-            VALUE "LegalCopyright", "Copyright © 2005"
+            VALUE "LegalCopyright", "Copyright © 2005 by AbstractSpoon"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
             VALUE "OriginalFilename", "GPExport.dll"
             VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."

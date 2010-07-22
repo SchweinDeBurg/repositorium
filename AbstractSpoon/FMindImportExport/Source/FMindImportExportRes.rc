@@ -75,7 +75,7 @@ BEGIN
             VALUE "FileDescription", "FMindImportExport Component for ToDoList"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "FMindImportExport"
-            VALUE "LegalCopyright", "Copyright © 2007"
+            VALUE "LegalCopyright", "Copyright © 2007 by AbstractSpoon"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
             VALUE "OriginalFilename", "FMindImportExport.dll"
             VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."
