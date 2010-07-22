@@ -23,7 +23,8 @@ class CRTF_HTMLConverter : public CObject
 {
 public:
 	//! Conversion direction (RTF<->HTML)
-	typedef enum {
+	typedef enum
+	{
 		c_modRTF2HTML, c_modHTML2RTF
 	} TMode;
 
@@ -34,10 +35,10 @@ public:
 	virtual ~CRTF_HTMLConverter();
 
 	//! Streaming out into string (Data has already been converted)
-	friend CString& operator<< ( CString& os, CRTF_HTMLConverter& dt );
+	friend CString& operator<< (CString& os, CRTF_HTMLConverter& dt);
 	//! Streaming in of string and auto-perform conversion
 	/*! Depending on conversion direction */
-	friend CString& operator>> ( CString& is, CRTF_HTMLConverter& dt );
+	friend CString& operator>> (CString& is, CRTF_HTMLConverter& dt);
 
 	static bool Convert(const CString& sRtf, CString& sHtml, BOOL bWantHeaderFooter = TRUE);
 	static int GetCodePage(const CString& sRtf);
@@ -48,7 +49,8 @@ public:
 	void SetTitle(const CString& strTitle);
 protected:
 	//! One RTF element ini {} braces
-	class CRTFNodeA {
+	class CRTFNodeA
+	{
 	public:
 		CString m_strName; //!< Name of node (primary attribute/RTF Tag)
 		CString m_strCode; //!< The node's whole code (with sub-nodes)
@@ -57,10 +59,12 @@ protected:
 	};
 
 	//! A html element
-	class CHTMLElement {
+	class CHTMLElement
+	{
 	public:
 		//! Type if a html node
-		typedef enum {
+		typedef enum
+		{
 			c_nodHTMLBegin,  //!< e.g. <b>
 			c_nodHTMLEnd,    //!< e.g. </b>
 			c_nodText,       //!< e.g. "this is a test>
@@ -80,7 +84,7 @@ protected:
 	//! Conversion RTF->HTML main routine
 	bool ConvertRTF2HTML(BOOL bWantHeaderFooter);
 	//! Helper, builds up RTF tree (see m_RTFTree)
-	CRTFNode R2H_BuildTree(const CString& strSource, CRTFNode* pNodeParent=NULL);
+	CRTFNode R2H_BuildTree(const CString& strSource, CRTFNode* pNodeParent = NULL);
 	//! Converts the HTML text (main node source) to HTML
 	void R2H_CreateHTMLElements(const CString& strRTFSource);
 	//! Gets the created HTML elements as HTML text

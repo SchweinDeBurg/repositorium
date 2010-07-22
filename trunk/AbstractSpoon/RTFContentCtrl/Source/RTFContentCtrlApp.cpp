@@ -87,7 +87,7 @@ const char* CRTFContentCtrlApp::GetTypeDescription() const
 }
 
 IContentControl* CRTFContentCtrlApp::CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
-						long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent)
+      long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -95,7 +95,9 @@ IContentControl* CRTFContentCtrlApp::CreateCtrl(unsigned short nCtrlID, unsigned
 	HINSTANCE hResDll = LoadLibrary("RTFContentCtrlLOC.dll");
 
 	if (hResDll)
+	{
 		AfxSetResourceHandle(hResDll);
+	}
 
 	CRTFContentControl* pControl = new CRTFContentControl;
 
@@ -122,18 +124,24 @@ void CRTFContentCtrlApp::Release()
 void CRTFContentCtrlApp::SetIniLocation(bool bRegistry, const char* szIniPathName)
 {
 	if (bRegistry)
+	{
 		m_pszRegistryKey = _strdup(szIniPathName);
+	}
 	else
+	{
 		m_pszProfileName = _strdup(szIniPathName);
+	}
 }
 
 int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
-									  int nLength, char*& szHtml)
+                                      int nLength, char*& szHtml)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	if (nLength == 0)
-		return 0; // nothing to convert
+	{
+		return 0;   // nothing to convert
+	}
 
 	// we may have to decompress it first
 	unsigned char* pDecompressed = NULL;
@@ -148,7 +156,9 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
 			nLength = nLenDecompressed;
 		}
 		else
+		{
 			return 0;
+		}
 	}
 
 	CString sRtf((LPCSTR)pContent, nLength), sHtml;
@@ -158,21 +168,21 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
 	// handle that at the moment
 	if (!CRTF_HTMLConverter::HasMultiByteChars(sRtf))
 	{
-	/*
-		// check the code page to see if it represents a multi-byte
-		// char set because we can't handle that at present
-		int nCodePage = CRTF_HTMLConverter::GetCodePage(sRtf);
+		/*
+			// check the code page to see if it represents a multi-byte
+			// char set because we can't handle that at present
+			int nCodePage = CRTF_HTMLConverter::GetCodePage(sRtf);
 
-		switch (nCodePage)
-		{
-		case 874:	// Thai
-		case 932:	// Japanese
-		case 936:	// Simplified Chinese
-		case 949:	// Korean
-		case 950:	// Traditional Chinese:
-			return 0;
-		}
-	*/
+			switch (nCodePage)
+			{
+			case 874:	// Thai
+			case 932:	// Japanese
+			case 936:	// Simplified Chinese
+			case 949:	// Korean
+			case 950:	// Traditional Chinese:
+				return 0;
+			}
+		*/
 
 		// scan the string looking for anything that smells like a
 		// multi-byte character, because CRTF_HTMLConverter can't
@@ -188,13 +198,19 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
 				szHtml[nLength] = 0;
 			}
 			else
-				nLength = 0; // reuse
+			{
+				nLength = 0;   // reuse
+			}
 		}
 		else
+		{
 			nLength = 0;
+		}
 	}
 	else
+	{
 		nLength = 0;
+	}
 
 	delete [] pDecompressed;
 
