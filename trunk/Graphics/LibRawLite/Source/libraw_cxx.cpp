@@ -664,7 +664,9 @@ int LibRaw::open_datastream(LibRaw_abstract_datastream *stream)
             S.width  += S.width  & 1;
         }
 
-    IO.shrink = P1.filters && (O.half_size || O.threshold || O.aber[0] != 1 || O.aber[2] != 1);
+    IO.shrink = P1.filters && (O.half_size ||
+	((O.threshold || O.aber[0] != 1 || O.aber[2] != 1) ));
+
     S.iheight = (S.height + IO.shrink) >> IO.shrink;
     S.iwidth  = (S.width  + IO.shrink) >> IO.shrink;
     
@@ -1611,6 +1613,7 @@ static const char  *static_camera_list[] =
 "Canon PowerShot S90",
 "Canon PowerShot SX1 IS",
 "Canon PowerShot SX110 IS (CHDK hack)",
+"Canon PowerShot SX20 IS (CHDK hack)",
 "Canon EOS D30",
 "Canon EOS D60",
 "Canon EOS 5D",
@@ -1780,6 +1783,7 @@ static const char  *static_camera_list[] =
 "Nikon D2X",
 "Nikon D2Xs",
 "Nikon D3",
+"Nikon D3s",
 "Nikon D3X",
 "Nikon D40",
 "Nikon D40X",
@@ -1842,6 +1846,7 @@ static const char  *static_camera_list[] =
 "Olympus E-520",
 "Olympus E-620",
 "Olympus E-P1",
+"Olympus E-P2",
 "Olympus E-PL1",
 "Olympus SP310",
 "Olympus SP320",
@@ -1861,6 +1866,7 @@ static const char  *static_camera_list[] =
 "Panasonic DMC-G1",
 "Panasonic DMC-G10",
 "Panasonic DMC-G2",
+"Panasonic DMC-GF1",
 "Panasonic DMC-GH1",
 "Panasonic DMC-L1",
 "Panasonic DMC-L10",
@@ -1898,6 +1904,7 @@ static const char  *static_camera_list[] =
 "Pixelink A782",
 "Rollei d530flex",
 "RoverShot 3320af",
+"Samsung EX1",
 "Samsung GX-1S",
 "Samsung GX-10",
 "Samsung NX-10",
@@ -1921,7 +1928,7 @@ static const char  *static_camera_list[] =
 "Sony DSLR-A330",
 "Sony DSLR-A350",
 "Sony DSLR-A380",
-"Sony DSLR-A450 (beta)",
+"Sony DSLR-A450",
 "Sony DSLR-A500",
 "Sony DSLR-A550",
 "Sony DSLR-A700",
