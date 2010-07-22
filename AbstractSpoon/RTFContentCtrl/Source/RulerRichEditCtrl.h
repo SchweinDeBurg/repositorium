@@ -1,45 +1,45 @@
 /* ==========================================================================
-	File :			RuleRichEditCtrl.cpp
+    File :          RuleRichEditCtrl.h
 
-	Class :			CRulerRichEditCtrl
+    Class :         CRulerRichEditCtrl
 
-	Author :		Johan Rosengren, Abstrakt Mekanik AB
-					Iain Clarke
+    Author :        Johan Rosengren, Abstrakt Mekanik AB
+                    Iain Clarke
 
-	Date :			2004-04-17
+    Date :          2004-04-17
 
-	Purpose :		"CRulerRichEditCtrl" is a "CWnd" derived class containing an
-					embedded RTF-control, a ruler-control with dragable tab-
-					positions and a formatting toolbar. The class can be used
-					to - for example - add a complete mini-editor to a modal
-					or modeless dialog box.
+    Purpose :       "CRulerRichEditCtrl" is a "CWnd" derived class containing an
+                    embedded RTF-control, a ruler-control with dragable tab-
+                    positions and a formatting toolbar. The class can be used
+                    to - for example - add a complete mini-editor to a modal
+                    or modeless dialog box.
 
-	Description :	The class mainly handles mouse messages. The mouse
-					messages are sent from the ruler control, and are
-					button down, where the a check is made for the cursor
-					located on one of the tab-markers, mouse move, where an
-					XORed line is drawn across the RTF-control and button up,
-					where a new tab position is set. The class also handles
-					the toolbar buttons, setting styles as
-					appropriate for the selected text.
+    Description :   The class mainly handles mouse messages. The mouse
+                    messages are sent from the ruler control, and are
+                    button down, where the a check is made for the cursor
+                    located on one of the tab-markers, mouse move, where an
+                    XORed line is drawn across the RTF-control and button up,
+                    where a new tab position is set. The class also handles
+                    the toolbar buttons, setting styles as
+                    appropriate for the selected text.
 
-	Usage :			Add a "CRulerRichEditCtrl"-member to the parent class.
-					Call Create to create the control. "GetRichEditCtrl" can
-					be used to access the embedded RTF-control. Remember to
-					call "AfxInitRichEdit(2)"!
+    Usage :         Add a "CRulerRichEditCtrl"-member to the parent class.
+                    Call Create to create the control. "GetRichEditCtrl" can
+                    be used to access the embedded RTF-control. Remember to
+                    call "AfxInitRichEdit(2)"!
 
-					The contents can be saved to disk by calling "Save", and
-					loaded from disk by calling "Load". The two functions
-					will automatically display a file dialog if the file
-					name parameter of the calls are left empty.
+                    The contents can be saved to disk by calling "Save", and
+                    loaded from disk by calling "Load". The two functions
+                    will automatically display a file dialog if the file
+                    name parameter of the calls are left empty.
 
-					"GetRTF" and "SetRTF" can be used to get and set the
-					contents of the embedded RTF-control as RTF
-					respectively.
+                    "GetRTF" and "SetRTF" can be used to get and set the
+                    contents of the embedded RTF-control as RTF
+                    respectively.
 
-					The ruler measures can be displayed as inches or
-					centimeters, by calling "SetMode". "GetMode" will get the
-					current mode.
+                    The ruler measures can be displayed as inches or
+                    centimeters, by calling "SetMode". "GetMode" will get the
+                    current mode.
 
    ========================================================================*/
 
@@ -62,17 +62,16 @@ struct CharFormat : public CHARFORMAT2
 {
 	CharFormat()
 	{
-		memset(this, 0, sizeof (CharFormat));
+		memset(this, 0, sizeof(CharFormat));
 		cbSize = sizeof(CharFormat);
 	};
-
 };
 
 struct ParaFormat2 : public PARAFORMAT2
 {
 	ParaFormat2(DWORD mask)
 	{
-		memset(this, 0, sizeof (ParaFormat2));
+		memset(this, 0, sizeof(ParaFormat2));
 		cbSize = sizeof(ParaFormat2);
 		dwMask = mask;
 	}
@@ -82,7 +81,7 @@ struct ParaFormat : public PARAFORMAT
 {
 	ParaFormat(DWORD mask)
 	{
-		memset(this, 0, sizeof (ParaFormat));
+		memset(this, 0, sizeof(ParaFormat));
 		cbSize = sizeof(ParaFormat);
 		dwMask = mask;
 	}
@@ -93,16 +92,15 @@ struct ParaFormat : public PARAFORMAT
 
 class CRulerRichEditCtrl : public CWnd
 {
-
 public:
 // Construction/creation/destruction
 	CRulerRichEditCtrl();
 	virtual ~CRulerRichEditCtrl();
-	virtual BOOL Create(DWORD dwStyle, const RECT &rect, CWnd* pParentWnd, UINT nID, BOOL autohscroll = FALSE);
+	virtual BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, BOOL autohscroll = FALSE);
 
 // Attributes
-	void	SetMode(int mode);
-	int		GetMode() const;
+	void    SetMode(int mode);
+	int     GetMode() const;
 
 	void ShowToolbar(BOOL show = TRUE);
 	void ShowRuler(BOOL show = TRUE);
@@ -111,16 +109,19 @@ public:
 	BOOL IsRulerVisible() const;
 
 	void SetWordWrap(BOOL bWrap = TRUE);
-	BOOL HasWordWrap() const { return m_bWordWrap; }
+	BOOL HasWordWrap() const
+	{
+		return m_bWordWrap;
+	}
 
 	CRulerRichEdit& GetRichEditCtrl();
 
 // Implementation
 	CString GetRTF();
 	int GetRTFLength();
-	void	SetRTF(const CString& rtf);
-	BOOL	Save(CString& filename);
-	BOOL	Load(CString& filename);
+	void    SetRTF(const CString& rtf);
+	BOOL    Save(CString& filename);
+	BOOL    Load(CString& filename);
 
 	void SetReadOnly(BOOL readOnly);
 	BOOL GetReadOnly() const;
@@ -151,7 +152,7 @@ protected:
 
 // Overrides
 	//{{AFX_VIRTUAL(CRulerRichEditCtrl)
-	protected:
+protected:
 	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 	//}}AFX_VIRTUAL
 
@@ -174,9 +175,9 @@ protected:
 	afx_msg void OnButtonOutdent();
 	afx_msg void OnButtonBullet();
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
-	afx_msg LRESULT OnSetText (WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnGetText (WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnGetTextLength (WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnSetText(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnGetText(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnGetTextLength(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnEnable(BOOL bEnable);
 	//}}AFX_MSG
 	afx_msg void OnButtonNumberList();
@@ -199,50 +200,49 @@ protected:
 
 protected:
 	// Internal data
-	int				m_rulerPosition;	// The x-position of the ruler line when dragging a tab
-	CPen			m_pen;				// The pen to use for drawing the XORed ruler line
+	int             m_rulerPosition;    // The x-position of the ruler line when dragging a tab
+	CPen            m_pen;              // The pen to use for drawing the XORed ruler line
 
-	CDWordArray		m_tabs;				// An array containing the tab-positions in device pixels
-	int				m_margin;			// The margin to use for the ruler and buttons
+	CDWordArray     m_tabs;             // An array containing the tab-positions in device pixels
+	int             m_margin;           // The margin to use for the ruler and buttons
 
-	int				m_physicalInch;		// The number of pixels for an inch on screen
-	int				m_movingtab;		// The tab-position being moved, or -1 if none
-	int				m_offset;			// Internal offset of the tab-marker being moved.
-	CharFormat		m_cfDefault;
+	int             m_physicalInch;     // The number of pixels for an inch on screen
+	int             m_movingtab;        // The tab-position being moved, or -1 if none
+	int             m_offset;           // Internal offset of the tab-marker being moved.
+	CharFormat      m_cfDefault;
 
-	BOOL			m_showToolbar;
-	BOOL			m_showRuler;
-	BOOL			m_readOnly;
-	BOOL			m_bWordWrap;
+	BOOL            m_showToolbar;
+	BOOL            m_showRuler;
+	BOOL            m_readOnly;
+	BOOL            m_bWordWrap;
 
 	// Sub-controls
-	CRulerRichEdit	m_rtf;
-	CRRECToolBar	m_toolbar;
-	CRRECRuler		m_ruler;
+	CRulerRichEdit  m_rtf;
+	CRRECToolBar    m_toolbar;
+	CRRECRuler      m_ruler;
 
 	// Handle to the RTF 2.0 dll
 //	HINSTANCE		m_richEditModule;
 
 	// Private helpers
-	void	SetTabStops(LPLONG tabs, int size);
-	void	UpdateTabStops();
+	void    SetTabStops(LPLONG tabs, int size);
+	void    UpdateTabStops();
 
-	BOOL	CreateToolbar();
-	BOOL	CreateRuler();
-	BOOL	CreateRTFControl(BOOL autohscroll);
-	void	CreateMargins();
+	BOOL    CreateToolbar();
+	BOOL    CreateRuler();
+	BOOL    CreateRTFControl(BOOL autohscroll);
+	void    CreateMargins();
 
-	void	UpdateToolbarButtons();
-	void	UpdateEditRect();
+	void    UpdateToolbarButtons();
+	void    UpdateEditRect();
 
-	void	SetEffect(int mask, int effect);
-	void	SetAlignment(int alignment);
+	void    SetEffect(int mask, int effect);
+	void    SetAlignment(int alignment);
 
-	void	LayoutControls(int width, int height);
+	void    LayoutControls(int width, int height);
 
 	BOOL FixupTabStops(ParaFormat& para);
 	void BuildTabStops(ParaFormat& para);
-
 };
 
 #endif // !defined(AFX_RULERRICHEDITCTRL_H__4CD13283_82E4_484A_83B4_DBAD5B64F17C__INCLUDED_)

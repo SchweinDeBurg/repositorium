@@ -65,9 +65,18 @@ public:
 	const char* GetTypeID() const;
 	void Release();
 	bool ProcessMessage(MSG* pMsg);
-	ISpellCheck* GetSpellCheckInterface() { return &m_reSpellCheck; }
-	bool Undo() { return GetRichEditCtrl().Undo() != 0; }
-	bool Redo() { return GetRichEditCtrl().Redo() != 0; }
+	ISpellCheck* GetSpellCheckInterface()
+	{
+		return &m_reSpellCheck;
+	}
+	bool Undo()
+	{
+		return GetRichEditCtrl().Undo() != 0;
+	}
+	bool Redo()
+	{
+		return GetRichEditCtrl().Redo() != 0;
+	}
 	void SetUITheme(const UITHEME* pTheme);
 	void SetPreferenceLocation(const char* szKey);
 
@@ -88,7 +97,7 @@ public:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CRTFContentControl)
-	public:
+public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	//}}AFX_VIRTUAL
 
@@ -116,7 +125,6 @@ protected:
 	static int GetContent(const CRTFContentControl* pCtrl, unsigned char* pContent);
 	static void EnableMenuItem(CMenu* pMenu, UINT nCmdID, BOOL bEnable);
 	static void CheckMenuItem(CMenu* pMenu, UINT nCmdID, BOOL bCheck);
-
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -39,7 +39,7 @@
 #endif // _MSC_VER > 1000
 
 #ifndef __AFXWIN_H__
-	#error include 'StdAfx.h' before including this file for PCH
+#error include 'StdAfx.h' before including this file for PCH
 #endif
 
 #include "Resource.h"		// main symbols
@@ -65,13 +65,12 @@ public:
 	const char* GetTypeDescription() const;
 
 	IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
-						long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent);
+		long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent);
 	void Release();
 	void SetIniLocation(bool bRegistry, const char* szIniPathName);
 
 	int ConvertToHtml(const unsigned char* pContent, int nLength,
-					  char*& szHtml);
-
+		char*& szHtml);
 };
 
 
