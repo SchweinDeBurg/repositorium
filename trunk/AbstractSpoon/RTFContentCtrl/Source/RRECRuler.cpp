@@ -8,19 +8,19 @@
 
 	Date :			2004-04-19
 
-	Purpose :		This class encapsulates a ruler that can be used with 
-					"CRulerRichEditCtrl". The class is derived from "CWnd", and 
-					draws a ruler. 
+	Purpose :		This class encapsulates a ruler that can be used with
+					"CRulerRichEditCtrl". The class is derived from "CWnd", and
+					draws a ruler.
 
-	Description :	A plain "CWnd"-derived class. The mouse messages 
-					"WM_LBUTTONDOWN", "WM_MOUSEMOVE" and "WM_LBUTTONUP" are handled, 
-					and a registered message is sent to the control parent.	
+	Description :	A plain "CWnd"-derived class. The mouse messages
+					"WM_LBUTTONDOWN", "WM_MOUSEMOVE" and "WM_LBUTTONUP" are handled,
+					and a registered message is sent to the control parent.
 
-	Usage :			Only tested with "CRulerRichEditCtrl". Add a member to the 
-					parent class, and create it with "Create". Handle the 
-					registered message "urm_RULERACTION" in the parent class. 
-					The parent class is also expected to handle 
-					"urm_GETSCROLLPOS", which should return the current 
+	Usage :			Only tested with "CRulerRichEditCtrl". Add a member to the
+					parent class, and create it with "Create". Handle the
+					registered message "urm_RULERACTION" in the parent class.
+					The parent class is also expected to handle
+					"urm_GETSCROLLPOS", which should return the current
 					horisontal scrollbar position.
 
    ========================================================================*/
@@ -42,11 +42,11 @@ CRRECRuler::CRRECRuler()
 	Function :		CRRECRuler::CRRECRuler
 	Description :	constructor
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
 
-	Usage :			
+	Usage :
 
    ============================================================*/
 {
@@ -62,11 +62,11 @@ CRRECRuler::~CRRECRuler()
 	Function :		CRRECRuler::~CRRECRuler
 	Description :	destructor
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	none
 
-	Usage :			
+	Usage :
 
    ============================================================*/
 {
@@ -87,12 +87,12 @@ BOOL CRRECRuler::Create( const CRect& rect, CWnd* parent, UINT id )
 	Function :		CRRECRuler::Create
 	Description :	Creates the ruler control
 	Access :		Public
-					
+
 	Return :		BOOL				-	Result, "TRUE" if ok.
 	Parameters :	const CRect& rect	-	Coordinate rect
 					CWnd* parent		-	Parent
 					UINT id				-	Child window id.
-					
+
 	Usage :			Call to create the ruler control
 
    ============================================================*/
@@ -112,10 +112,10 @@ void CRRECRuler::OnPaint()
 /* ============================================================
 	Function :		CRRECRuler::OnPaint
 	Description :	Handles the "WM_PAINT" message from Windows.
-					Draws the ruler to a memory "CDC" that is 
+					Draws the ruler to a memory "CDC" that is
 					blitted to the screen (double buffering)
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	none
 
@@ -159,7 +159,7 @@ void CRRECRuler::OnPaint()
 	// Frame the inside
 	CThemed th(this, "EDIT");
 
-	if (th.AreControlsThemed()) 
+	if (th.AreControlsThemed())
 	{
 		winRect.InflateRect(0, 1, 0, 1);
 
@@ -168,7 +168,7 @@ void CRRECRuler::OnPaint()
 		if (!bEnabled)
 			nState = ETS_DISABLED;
 		else if (GetStyle() & ES_READONLY)
-			
+
 			nState = ETS_READONLY;
 
 		th.DrawBackground(&dc, EP_EDITTEXT, nState, winRect);
@@ -194,7 +194,7 @@ void CRRECRuler::OnPaint()
 	dc.SetTextColor(crText);
 	dc.SelectStockObject( BLACK_PEN );
 	dc.SelectStockObject( DEFAULT_GUI_FONT );
-	
+
 	if( m_mode == MODE_INCH )
 	{
 		int inch4 = ( int ) ( ( double ) m_physicalInch / 4.0 +.5 );
@@ -280,20 +280,20 @@ void CRRECRuler::OnPaint()
 	dc.SelectObject( oldbmp );
 }
 
-BOOL CRRECRuler::OnEraseBkgnd( CDC* /*pDC*/ ) 
+BOOL CRRECRuler::OnEraseBkgnd( CDC* /*pDC*/ )
 /* ============================================================
 	Function :		CRRECRuler::OnEraseBkgnd
 	Description :	Returns "TRUE" to avoid flicker.
 	Access :		Protected
-					
+
 	Return :		BOOL		-	Always "TRUE"
 	Parameters :	CDC* pDC	-	Not used
-					
-	Usage :			Called from MFC. 
+
+	Usage :			Called from MFC.
 
    ============================================================*/
 {
-	
+
 	return TRUE;
 
 }
@@ -301,14 +301,14 @@ BOOL CRRECRuler::OnEraseBkgnd( CDC* /*pDC*/ )
 void CRRECRuler::SetMode( int mode )
 /* ============================================================
 	Function :		CRRECRuler::SetMode
-	Description :	Sets the internal mode, that is, if the 
+	Description :	Sets the internal mode, that is, if the
 					ruler should display inches or centimeters.
 	Access :		Public
-					
+
 	Return :		void
-	Parameters :	int mode	-	Mode to use, "MODE_INCH" or 
+	Parameters :	int mode	-	Mode to use, "MODE_INCH" or
 									"MODE_METRIC" (default)
-					
+
 	Usage :			Call to change the mode.
 
    ============================================================*/
@@ -330,10 +330,10 @@ void CRRECRuler::SetMargin( int margin )
 	Function :		CRRECRuler::SetMargin
 	Description :	Sets the margin, in pixels, of the ruler.
 	Access :		Public
-					
+
 	Return :		void
 	Parameters :	int margin	-	The margin to set
-					
+
 	Usage :			Call to set the margin of the ruler scale.
 
    ============================================================*/
@@ -353,11 +353,11 @@ void CRRECRuler::SetMargin( int margin )
 int CRRECRuler::GetMode() const
 /* ============================================================
 	Function :		CRRECRuler::GetMode
-	Description :	Gets the mode, that is, either "MODE_INCH" or 
+	Description :	Gets the mode, that is, either "MODE_INCH" or
 					"MODE_METRIC", that is used to draw the ruler.
 	Access :		Public
-					
-	Return :		int		-	The mode, either "MODE_INCH" or 
+
+	Return :		int		-	The mode, either "MODE_INCH" or
 								"MODE_METRIC"
 	Parameters :	none
 
@@ -373,14 +373,14 @@ int CRRECRuler::GetMode() const
 void CRRECRuler::SetTabStops( const CDWordArray& arr )
 /* ============================================================
 	Function :		CRRECRuler::SetTabStops
-	Description :	Sets the tab stops in the internal tab stop 
+	Description :	Sets the tab stops in the internal tab stop
 					array, in device pixels
 	Access :		Public
-					
+
 	Return :		void
-	Parameters :	const CDWordArray& arr	-	The array to 
+	Parameters :	const CDWordArray& arr	-	The array to
 												copy from
-					
+
 	Usage :			Call to set the tab stops of the ruler.
 
    ============================================================*/
@@ -403,15 +403,15 @@ void CRRECRuler::SetTabStops( const CDWordArray& arr )
 void CRRECRuler::OnLButtonDown(UINT nFlags, CPoint point)
 /* ============================================================
 	Function :		CRRECRuler::OnLButtonDown
-	Description :	Handles the "WM_LBUTTONDOWN" message. We send 
-					a message with the current cursor position 
+	Description :	Handles the "WM_LBUTTONDOWN" message. We send
+					a message with the current cursor position
 					to the parent control.
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	UINT nFlags		-	Not used
 					CPoint point	-	Cursor position
-					
+
 	Usage :			Called from MFC
 
    ============================================================*/
@@ -426,15 +426,15 @@ void CRRECRuler::OnLButtonDown(UINT nFlags, CPoint point)
 void CRRECRuler::OnLButtonUp(UINT nFlags, CPoint point)
 /* ============================================================
 	Function :		CRRECRuler::OnLButtonUp
-	Description :	Handles the "WM_LBUTTONUP" message. We send 
-					a message with the current cursor position 
+	Description :	Handles the "WM_LBUTTONUP" message. We send
+					a message with the current cursor position
 					to the parent control.
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	UINT nFlags		-	Not used
 					CPoint point	-	Cursor position
-					
+
 	Usage :			Called from MFC
 
    ============================================================*/
@@ -449,15 +449,15 @@ void CRRECRuler::OnLButtonUp(UINT nFlags, CPoint point)
 void CRRECRuler::OnMouseMove(UINT nFlags, CPoint point)
 /* ============================================================
 	Function :		CRRECRuler::OnMouseMove
-	Description :	Handles the "WM_MOUSEMOVE" message. We send 
-					a message with the current cursor position 
+	Description :	Handles the "WM_MOUSEMOVE" message. We send
+					a message with the current cursor position
 					to the parent control.
 	Access :		Protected
-					
+
 	Return :		void
 	Parameters :	UINT nFlags		-	Not used
 					CPoint point	-	Cursor position
-					
+
 	Usage :			Called from MFC
 
    ============================================================*/
@@ -468,7 +468,7 @@ void CRRECRuler::OnMouseMove(UINT nFlags, CPoint point)
 
 }
 
-void CRRECRuler::OnEnable(BOOL bEnable) 
+void CRRECRuler::OnEnable(BOOL bEnable)
 {
 	CWnd::OnEnable(bEnable);
 	Invalidate(FALSE);

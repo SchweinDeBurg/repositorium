@@ -17,7 +17,7 @@ private:
 	typedef unsigned long ULONG;
 	Data(Type *p=NULL) { if(!p) p=new Type; pData=p; dwRefs=1;};
 	ULONG AddRef() { dwRefs++; return dwRefs;};
- 	ULONG Release() { 
+ 	ULONG Release() {
 		dwRefs--; if(dwRefs==0) {delete this;return 0;} return dwRefs;};
 
 // accessors
@@ -34,7 +34,7 @@ private:
 
 template <class Type> class Ref {
 	typedef Data<Type> DataT;
-	
+
 public:
 	typedef unsigned long ULONG;
 	typedef unsigned long KEY;
@@ -48,39 +48,39 @@ public:
 	virtual ~Ref() {if(pData) pData->Release();};
 
 	//operators =
-	Ref &operator=(const Ref<Type> &rhs) 
+	Ref &operator=(const Ref<Type> &rhs)
 	{ Release(); pData=rhs.pData; if(pData) pData->AddRef(); return *this;};
-	Ref &operator=(const Type &t) 
+	Ref &operator=(const Type &t)
 	{ Release(); pData=new DataT(new Type(t)); return *this;};
-	Ref &operator=(Type *p) 
+	Ref &operator=(Type *p)
 	{ Release(); if(p) pData=new DataT(p); else pData=NULL; return *this;};
 	// operator ==
-	bool operator==(const Ref<Type> &rhs) 
+	bool operator==(const Ref<Type> &rhs)
 	{ return pData==rhs.pData;};
-	
+
 	Ref Clone() { if(!pData) return Ref(); return Ref(pData->get_Data());};
 	void Release() { if(pData) pData->Release(); pData=NULL;};
 	bool IsNull() { return pData==NULL;};
 
-// accessors	
+// accessors
 	Type *operator->() {return pData->operator->();};
 	Type &get_Data() { return pData->get_Data();};
 	operator Type&() { return pData->get_Data();};
 	KEY Key() { return ((KEY)pData)+1;};
-protected: 
+protected:
 	ULONG GetRefCount() { if(!pData) return 0; return pData->dwRefs;};
 	Ref(KEY key) { try{pData=(DataT*)(key-1);if(pData) pData->AddRef();}catch(...){pData=NULL;}};
 private:
 	Data<Type> *pData;
 	friend class Ref<Type>;
-// niama new	
+// niama new
 };
 
 
 
 template <class Type,class DataType2=NodeData<Type> > class Tree;
 template <class Type> class NodeData {
-private:	
+private:
 	typedef Ref<NodeData> NodeRef;
 	NodeData(const Type &Data) : tData(Data){};
 	NodeData(Type *pData) : tData(pData) {};
@@ -140,7 +140,7 @@ public:
 	Tree(const Tree<Type> &rhs) : NodeBase(rhs) {};
 	Tree(const NodeBase &rhs) : NodeBase(rhs) {};
 	Tree(KEY key) : NodeBase(key) {};
-	virtual ~Tree() 
+	virtual ~Tree()
 	{	// if RefCount==ChildsCount+1, now is the time for release this (i.e. remove all refs to parent from childs
 		ReleaseNode();
 	};

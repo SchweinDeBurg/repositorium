@@ -8,37 +8,37 @@
 
 	Date :			2004-04-17
 
-	Purpose :		"CRulerRichEditCtrl" is a "CWnd" derived class containing an 
+	Purpose :		"CRulerRichEditCtrl" is a "CWnd" derived class containing an
 					embedded RTF-control, a ruler-control with dragable tab-
-					positions and a formatting toolbar. The class can be used 
-					to - for example - add a complete mini-editor to a modal 
-					or modeless dialog box. 
+					positions and a formatting toolbar. The class can be used
+					to - for example - add a complete mini-editor to a modal
+					or modeless dialog box.
 
 	Description :	The class mainly handles mouse messages. The mouse
-					messages are sent from the ruler control, and are 
-					button down, where the a check is made for the cursor 
-					located on one of the tab-markers, mouse move, where an 
-					XORed line is drawn across the RTF-control and button up, 
-					where a new tab position is set. The class also handles 
-					the toolbar buttons, setting styles as 
+					messages are sent from the ruler control, and are
+					button down, where the a check is made for the cursor
+					located on one of the tab-markers, mouse move, where an
+					XORed line is drawn across the RTF-control and button up,
+					where a new tab position is set. The class also handles
+					the toolbar buttons, setting styles as
 					appropriate for the selected text.
 
-	Usage :			Add a "CRulerRichEditCtrl"-member to the parent class. 
-					Call Create to create the control. "GetRichEditCtrl" can 
-					be used to access the embedded RTF-control. Remember to 
+	Usage :			Add a "CRulerRichEditCtrl"-member to the parent class.
+					Call Create to create the control. "GetRichEditCtrl" can
+					be used to access the embedded RTF-control. Remember to
 					call "AfxInitRichEdit(2)"!
 
-					The contents can be saved to disk by calling "Save", and 
-					loaded from disk by calling "Load". The two functions 
-					will automatically display a file dialog if the file 
+					The contents can be saved to disk by calling "Save", and
+					loaded from disk by calling "Load". The two functions
+					will automatically display a file dialog if the file
 					name parameter of the calls are left empty.
 
-					"GetRTF" and "SetRTF" can be used to get and set the 
-					contents of the embedded RTF-control as RTF 
+					"GetRTF" and "SetRTF" can be used to get and set the
+					contents of the embedded RTF-control as RTF
 					respectively.
 
-					The ruler measures can be displayed as inches or 
-					centimeters, by calling "SetMode". "GetMode" will get the 
+					The ruler measures can be displayed as inches or
+					centimeters, by calling "SetMode". "GetMode" will get the
 					current mode.
 
    ========================================================================*/
@@ -214,7 +214,7 @@ protected:
 	BOOL			m_showRuler;
 	BOOL			m_readOnly;
 	BOOL			m_bWordWrap;
-	
+
 	// Sub-controls
 	CRulerRichEdit	m_rtf;
 	CRRECToolBar	m_toolbar;

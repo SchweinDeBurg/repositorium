@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -52,7 +52,7 @@
 //
 
 // {849CF988-79FE-418A-A40D-01FE3AFCAB2C}
-static const GUID RTF_TYPEID = 
+static const GUID RTF_TYPEID =
 { 0x849cf988, 0x79fe, 0x418a, { 0xa4, 0xd, 0x1, 0xfe, 0x3a, 0xfc, 0xab, 0x2c } };
 
 class CRTFContentCtrlApp : public IContent, public CWinApp
@@ -64,7 +64,7 @@ public:
 	const char* GetTypeID() const;
 	const char* GetTypeDescription() const;
 
-	IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle, 
+	IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
 						long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent);
 	void Release();
 	void SetIniLocation(bool bRegistry, const char* szIniPathName);
