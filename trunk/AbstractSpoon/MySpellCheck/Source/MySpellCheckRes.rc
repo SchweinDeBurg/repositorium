@@ -79,10 +79,10 @@ BEGIN
         BEGIN
             VALUE "Comments", "Compiler switches: /O1 /Ob1 /Oy /GF /EHsc /MD /Zp4 /Gy /W4 /TP."
             VALUE "CompanyName", "AbstractSpoon Software"
-            VALUE "FileDescription", "MySpellCheck library module"
+            VALUE "FileDescription", "MySpellCheck Component for ToDoList"
             VALUE "FileVersion", "6.0.7"
             VALUE "InternalName", "MySpellCheck"
-            VALUE "LegalCopyright", "Copyright © AbstractSpoon 2003-09"
+            VALUE "LegalCopyright", "Copyright © 2003-2009 by AbstractSpoon"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
             VALUE "OriginalFilename", "MySpellCheck.dll"
             VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."
