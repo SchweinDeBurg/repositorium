@@ -37,33 +37,33 @@
 
 // TDCMsg.h : header file
 //
-const LPCTSTR TDL_PROTOCOL = "tdl://";
+const LPCTSTR TDL_PROTOCOL = _T("tdl://");
 
 // notification messages
-const UINT WM_TDCN_MODIFY = ::RegisterWindowMessage("WM_TDCN_MODIFY"); // lParam == <TDC_ATTRIBUTE>
-const UINT WM_TDCN_SORT = ::RegisterWindowMessage("WM_TDCN_SORT"); 
-const UINT WM_TDCN_MINWIDTHCHANGE = ::RegisterWindowMessage("WM_TDCN_MINWIDTHCHANGE"); 
-const UINT WM_TDCN_COMMENTSCHANGE = ::RegisterWindowMessage("WM_TDCN_COMMENTSCHANGE");
-const UINT WM_TDCN_COMMENTSKILLFOCUS = ::RegisterWindowMessage("WM_TDCN_COMMENTSKILLFOCUS");
-const UINT WM_TDCN_TIMETRACK = ::RegisterWindowMessage("WM_TDCN_TIMETRACK"); // lParam = 0/1 => stop/start
-const UINT WM_TDCN_VIEWCHANGE = ::RegisterWindowMessage("WM_TDCN_VIEWCHANGE");
-const UINT WM_TDCN_RECREATERECURRINGTASK = ::RegisterWindowMessage("WM_TDCN_RECREATERECURRINGTASK");
+const UINT WM_TDCN_MODIFY = ::RegisterWindowMessage(_T("WM_TDCN_MODIFY")); // lParam == <TDC_ATTRIBUTE>
+const UINT WM_TDCN_SORT = ::RegisterWindowMessage(_T("WM_TDCN_SORT")); 
+const UINT WM_TDCN_MINWIDTHCHANGE = ::RegisterWindowMessage(_T("WM_TDCN_MINWIDTHCHANGE")); 
+const UINT WM_TDCN_COMMENTSCHANGE = ::RegisterWindowMessage(_T("WM_TDCN_COMMENTSCHANGE"));
+const UINT WM_TDCN_COMMENTSKILLFOCUS = ::RegisterWindowMessage(_T("WM_TDCN_COMMENTSKILLFOCUS"));
+const UINT WM_TDCN_TIMETRACK = ::RegisterWindowMessage(_T("WM_TDCN_TIMETRACK")); // lParam = 0/1 => stop/start
+const UINT WM_TDCN_VIEWCHANGE = ::RegisterWindowMessage(_T("WM_TDCN_VIEWCHANGE"));
+const UINT WM_TDCN_RECREATERECURRINGTASK = ::RegisterWindowMessage(_T("WM_TDCN_RECREATERECURRINGTASK"));
 
 // from the filterbar
-const UINT WM_FBN_FILTERCHNG = ::RegisterWindowMessage("WM_FBN_FILTERCHNG"); 
+const UINT WM_FBN_FILTERCHNG = ::RegisterWindowMessage(_T("WM_FBN_FILTERCHNG")); 
 
 // sent when one of the auto dropdown lists is changed
-const UINT WM_TDCN_LISTCHANGE = ::RegisterWindowMessage("WM_TDCN_LISTCHANGE"); // lParam == <TDC_ATTRIBUTE>
+const UINT WM_TDCN_LISTCHANGE = ::RegisterWindowMessage(_T("WM_TDCN_LISTCHANGE")); // lParam == <TDC_ATTRIBUTE>
 
 // request messages
-const UINT WM_TDCM_GETCLIPBOARD = ::RegisterWindowMessage("WM_TDCM_GETCLIPBOARD"); // lParam == match hwnd
-const UINT WM_TDCM_HASCLIPBOARD = ::RegisterWindowMessage("WM_TDCM_HASCLIPBOARD"); // lParam == match hwnd
-const UINT WM_TDCM_TASKISDONE = ::RegisterWindowMessage("WM_TDCM_TASKISDONE"); // format as WM_TDCM_TASKLINK
-const UINT WM_TDCM_TASKHASREMINDER = ::RegisterWindowMessage("WM_TDCM_TASKHASREMINDER"); // wParam = TaskID, lParam = TDC* 
+const UINT WM_TDCM_GETCLIPBOARD = ::RegisterWindowMessage(_T("WM_TDCM_GETCLIPBOARD")); // lParam == match hwnd
+const UINT WM_TDCM_HASCLIPBOARD = ::RegisterWindowMessage(_T("WM_TDCM_HASCLIPBOARD")); // lParam == match hwnd
+const UINT WM_TDCM_TASKISDONE = ::RegisterWindowMessage(_T("WM_TDCM_TASKISDONE")); // format as WM_TDCM_TASKLINK
+const UINT WM_TDCM_TASKHASREMINDER = ::RegisterWindowMessage(_T("WM_TDCM_TASKHASREMINDER")); // wParam = TaskID, lParam = TDC* 
 
 // instruction messages
 // sent when a task outside 'this' todoctrl needs displaying
-const UINT WM_TDCM_TASKLINK = ::RegisterWindowMessage("WM_TDCM_TASKLINK"); // wParam = taskID, lParam = taskfile
+const UINT WM_TDCM_TASKLINK = ::RegisterWindowMessage(_T("WM_TDCM_TASKLINK")); // wParam = taskID, lParam = taskfile
 
 // internal TDC message
 const UINT WM_TDC_RESTOREFOCUSEDITEM			= (WM_APP + 1);
