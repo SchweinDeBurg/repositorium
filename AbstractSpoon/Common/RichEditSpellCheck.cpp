@@ -86,14 +86,22 @@ const char* CRichEditSpellCheck::GetWord(const CHARRANGE& cr) const
 {
 	if (cr.cpMax > cr.cpMin)
 	{
-		static CString sWord;
+		static CStringA sWord;
 
 		TEXTRANGE tr;
 		tr.chrg = cr;
-		tr.lpstrText = sWord.GetBuffer(cr.cpMax - cr.cpMin);
 
+#if defined(UNICODE) || defined(_UNICODE)
+		CString strTemp;
+		tr.lpstrText = strTemp.GetBuffer(cr.cpMax - cr.cpMin);
+		m_re.SendMessage(EM_GETTEXTRANGE, 0, (LPARAM)&tr);
+		strTemp.ReleaseBuffer();
+		sWord = ATL::CT2A(strTemp);
+#else
+		tr.lpstrText = sWord.GetBuffer(cr.cpMax - cr.cpMin);
 		m_re.SendMessage(EM_GETTEXTRANGE, 0, (LPARAM)&tr);
 		sWord.ReleaseBuffer();
+#endif   // UNICODE || _UNICODE
 
 		return sWord;
 	}
@@ -140,7 +148,7 @@ void CRichEditSpellCheck::SelectCurrentWord()
 void CRichEditSpellCheck::ReplaceCurrentWord(const char* szWord)
 {
 	m_re.SetSel(m_crCurrentWord);
-	m_re.ReplaceSel(szWord, TRUE);
+	m_re.ReplaceSel(ATL::CA2T(szWord), TRUE);
 }
 
 void CRichEditSpellCheck::ClearSelection()

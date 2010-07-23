@@ -157,7 +157,7 @@ void CRRECRuler::OnPaint()
 	}
 
 	// Frame the inside
-	CThemed th(this, "EDIT");
+	CThemed th(this, _T("EDIT"));
 
 	if (th.AreControlsThemed())
 	{

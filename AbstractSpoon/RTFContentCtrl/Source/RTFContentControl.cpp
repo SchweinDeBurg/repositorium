@@ -113,7 +113,7 @@ BOOL CRTFContentControl::Compress(const unsigned char* pContentSrc, int nLenSrc,
 BOOL CRTFContentControl::Decompress(const unsigned char* pContentSrc, int nLenSrc,
                                     unsigned char*& pContentDest, int& nLenDest)
 {
-	ASSERT(nLenSrc && strncmp((const char*)pContentSrc, RTFTAG, LENTAG) != 0);
+	ASSERT(nLenSrc && _tcsncmp(ATL::CA2T((const char*)pContentSrc), RTFTAG, LENTAG) != 0);
 
 	// get the source length from the first 4 bytes
 	ULONG lDest = ((DWORD*)pContentSrc)[0];
@@ -215,7 +215,7 @@ bool CRTFContentControl::SetContent(unsigned char* pContent, int nLength)
 	unsigned char* pDecompressed = NULL;
 
 	// content may need decompressing
-	if (nLength && strncmp((const char*)pContent, RTFTAG, LENTAG) != 0)
+	if (nLength && _tcsncmp(ATL::CA2T((const char*)pContent), RTFTAG, LENTAG) != 0)
 	{
 		int nLenDecompressed = 0;
 
@@ -231,7 +231,7 @@ bool CRTFContentControl::SetContent(unsigned char* pContent, int nLength)
 	}
 
 	// content must begin with rtf tag or be empty
-	if (nLength && (nLength < LENTAG || strncmp((const char*)pContent, RTFTAG, LENTAG)))
+	if (nLength && (nLength < LENTAG || _tcsncmp(ATL::CA2T((const char*)pContent), RTFTAG, LENTAG)))
 	{
 		return false;
 	}
@@ -258,10 +258,17 @@ int CRTFContentControl::GetTextContent(char* szContent, int nLength) const
 	// else
 	if (nLength == -1)
 	{
-		nLength = lstrlen(szContent);
+		nLength = strlen(szContent);
 	}
 
+#if defined(UNICODE) || defined(_UNICODE)
+	CString strTemp;
+	GetWindowText(strTemp.GetBuffer(nLength), nLength);
+	strTemp.ReleaseBuffer();
+	wcstombs(szContent, strTemp, nLength + 1);
+#else
 	GetWindowText(szContent, nLength);
+#endif   // UNICODE || _UNICODE
 	return nLength;
 }
 
@@ -291,9 +298,9 @@ void CRTFContentControl::SetPreferenceLocation(const char* szKey)
 
 		if (!m_sPrefKey.IsEmpty() && !m_bPrefsDone)
 		{
-			bShowToolbar = AfxGetApp()->GetProfileInt(m_sPrefKey, "ShowToolbar", m_showToolbar);
-			bShowRuler = AfxGetApp()->GetProfileInt(m_sPrefKey, "ShowRuler", m_showRuler);
-			bWordWrap = AfxGetApp()->GetProfileInt(m_sPrefKey, "WordWrap", m_bWordWrap);
+			bShowToolbar = AfxGetApp()->GetProfileInt(m_sPrefKey, _T("ShowToolbar"), m_showToolbar);
+			bShowRuler = AfxGetApp()->GetProfileInt(m_sPrefKey, _T("ShowRuler"), m_showRuler);
+			bWordWrap = AfxGetApp()->GetProfileInt(m_sPrefKey, _T("WordWrap"), m_bWordWrap);
 
 			m_bPrefsDone = TRUE;
 		}
@@ -313,9 +320,15 @@ HWND CRTFContentControl::GetHwnd() const
 
 const char* CRTFContentControl::GetTypeID() const
 {
-	static CString sID;
+	static CStringA sID;
 
+#if defined(UNICODE) || defined(_UNICODE)
+	CString strTemp;
+	Misc::GuidToString(RTF_TYPEID, strTemp);
+	sID = ATL::CT2A(strTemp);
+#else
 	Misc::GuidToString(RTF_TYPEID, sID);
+#endif   // UNICODE || _UNICODE
 
 	return sID;
 }
@@ -409,7 +422,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 					CString sText, sMenu;
 					pPopup->GetMenuString(ID_EDIT_OPENURL, sMenu, MF_BYCOMMAND);
 
-					sText.Format("%s: %s", sMenu, re.GetUrl(nUrl, TRUE));
+					sText.Format(_T("%s: %s"), sMenu, re.GetUrl(nUrl, TRUE));
 					pPopup->ModifyMenu(ID_EDIT_OPENURL, MF_BYCOMMAND, ID_EDIT_OPENURL, sText);
 				}
 
@@ -487,13 +500,11 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 						// verify that we can get the corresponding filename
 						CString sFileName;
 						ITaskList4* pClip4 = GetITLInterface<ITaskList4>(pClipboard, IID_TASKLIST4);
-//						ITaskList4* pClip4 = NULL;
 
-//						if (S_OK == pClipboard->QueryInterface(IID_TASKLIST4, (void**)&pClip4))
 						if (pClip4)
 						{
-							sFileName = pClip4->GetAttribute(TDL_FILENAME);
-							sFileName.Replace(" ", "%20");
+							sFileName = pClip4->GetAttribute(ATL::CT2A(TDL_FILENAME));
+							sFileName.Replace(_T(" "), _T("%20"));
 						}
 						else // get the clipboard for just this tasklist
 						{
@@ -510,11 +521,11 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 							{
 								if (sFileName.IsEmpty())
 								{
-									sRef.Format(" %s%d", TDL_PROTOCOL, pClipboard->GetTaskID(hClip));
+									sRef.Format(_T(" %s%d"), TDL_PROTOCOL, pClipboard->GetTaskID(hClip));
 								}
 								else
 								{
-									sRef.Format(" %s%s?%d", TDL_PROTOCOL, sFileName, pClipboard->GetTaskID(hClip));
+									sRef.Format(_T(" %s%s?%d"), TDL_PROTOCOL, sFileName, pClipboard->GetTaskID(hClip));
 								}
 
 								sRefs += sRef;
@@ -529,7 +540,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 					break;
 
 					case ID_EDIT_DELETE:
-						re.ReplaceSel("");
+						re.ReplaceSel(_T(""));
 						break;
 
 					case ID_EDIT_SELECT_ALL:
@@ -558,7 +569,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 						}
 
 						CFileDialog dialog(TRUE, NULL, sFile);
-						dialog.m_ofn.lpstrTitle = "Select File";
+						dialog.m_ofn.lpstrTitle = _T("Select File");
 
 						if (dialog.DoModal() == IDOK)
 						{
@@ -601,7 +612,6 @@ BOOL CRTFContentControl::IsClipboardEmpty() const
 	ITaskList* pClipboard = (ITaskList*)GetParent()->SendMessage(WM_TDCM_GETCLIPBOARD, 0, FALSE);
 	ITaskList4* pClip4 = GetITLInterface<ITaskList4>(pClipboard, IID_TASKLIST4);
 
-//	if (S_OK == pClipboard->QueryInterface(IID_TASKLIST4, (void**)&pClip4))
 	if (pClip4)
 	{
 		return (pClipboard->GetFirstTask() == NULL);
@@ -675,53 +685,53 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 			{
 				switch (pMsg->wParam)
 				{
-					case 'c':
-					case 'C':
+					case _T('c'):
+					case _T('C'):
 						re.Copy();
 						return TRUE;
 
-					case 'v':
-					case 'V':
+					case _T('v'):
+					case _T('V'):
 						re.Paste(bShift);
 						return TRUE;
 
-					case 'x':
-					case 'X':
+					case _T('x'):
+					case _T('X'):
 						re.Cut();
 						return TRUE;
 
-					case 'a':
-					case 'A':
+					case _T('a'):
+					case _T('A'):
 						re.SetSel(0, -1);
 						return TRUE;
 
-					case 'b':
-					case 'B':
+					case _T('b'):
+					case _T('B'):
 						DoBold();
 						return TRUE;
 
-					case 'i':
-					case 'I':
+					case _T('i'):
+					case _T('I'):
 						DoItalic();
 						return TRUE;
 
-					case 'u':
-					case 'U':
+					case _T('u'):
+					case _T('U'):
 						DoUnderline();
 						return TRUE;
 
-					case 'l':
-					case 'L':
+					case _T('l'):
+					case _T('L'):
 						DoLeftAlign();
 						return TRUE;
 
-					case 'e':
-					case 'E':
+					case _T('e'):
+					case _T('E'):
 						DoCenterAlign();
 						return TRUE;
 
-					case 'r':
-					case 'R':
+					case _T('r'):
+					case _T('R'):
 						DoRightAlign();
 						return TRUE;
 
@@ -729,22 +739,22 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 						DoStrikethrough();
 						return TRUE;
 
-					case 'f':
-					case 'F':
+					case _T('f'):
+					case _T('F'):
 						re.DoEditFind();
 						return TRUE;
 
-					case 'h':
-					case 'H':
+					case _T('h'):
+					case _T('H'):
 						re.DoEditReplace();
 						return TRUE;
 
-					case 'z':
-					case 'Z':
+					case _T('z'):
+					case _T('Z'):
 						return TRUE; // to prevent the richedit performing the undo
 
-					case 'y':
-					case 'Y':
+					case _T('y'):
+					case _T('Y'):
 						return TRUE; // to prevent the richedit performing the redo
 				}
 			}
@@ -752,7 +762,7 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 			{
 				switch (pMsg->wParam)
 				{
-					case '\t':
+					case _T('\t'):
 					{
 						CHARRANGE cr;
 						re.GetSel(cr);
@@ -760,7 +770,7 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 						// if nothing is selected then just insert tabs
 						if (cr.cpMin == cr.cpMax)
 						{
-							re.ReplaceSel("\t");
+							re.ReplaceSel(_T("\t"));
 						}
 						else
 						{
@@ -791,9 +801,9 @@ void CRTFContentControl::OnDestroy()
 	// save toolbar and ruler state
 	if (!m_sPrefKey.IsEmpty())
 	{
-		AfxGetApp()->WriteProfileInt(m_sPrefKey, "ShowToolbar", IsToolbarVisible());
-		AfxGetApp()->WriteProfileInt(m_sPrefKey, "ShowRuler", IsRulerVisible());
-		AfxGetApp()->WriteProfileInt(m_sPrefKey, "WordWrap", HasWordWrap());
+		AfxGetApp()->WriteProfileInt(m_sPrefKey, _T("ShowToolbar"), IsToolbarVisible());
+		AfxGetApp()->WriteProfileInt(m_sPrefKey, _T("ShowRuler"), IsRulerVisible());
+		AfxGetApp()->WriteProfileInt(m_sPrefKey, _T("WordWrap"), HasWordWrap());
 	}
 }
 

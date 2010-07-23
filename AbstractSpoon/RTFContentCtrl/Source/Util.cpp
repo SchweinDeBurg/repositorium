@@ -14,7 +14,7 @@ CString LongToString(long newValue)
 	long lvalue;
 	CString str_rtc;
 	lvalue = newValue;
-	str_rtc.Format("%d", lvalue);
+	str_rtc.Format(_T("%d"), lvalue);
 	return str_rtc;
 } //LongToString()
 
@@ -33,7 +33,7 @@ long StringToLong(CString newValue)
 
 void StringToArray(const CString& strSrc, CStringArray& trgt)
 {
-	CString strDelimiter = ";";
+	CString strDelimiter = _T(";");
 	CString strElement;
 	long lPosition = 0;
 
@@ -42,7 +42,7 @@ void StringToArray(const CString& strSrc, CStringArray& trgt)
 		if ((strDelimiter.Find(strSrc.GetAt(lPosition)) >= 0))
 		{
 			trgt.Add(strElement);
-			strElement = "";
+			strElement = _T("");
 		}
 		else
 		{
