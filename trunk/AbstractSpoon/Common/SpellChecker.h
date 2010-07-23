@@ -45,7 +45,7 @@
 class CSpellChecker : public ISpellChecker, protected MySpell
 {
 public:
-	CSpellChecker(const char* szAffPath, const char* szDicPath);
+	CSpellChecker(const TCHAR* szAffPath, const TCHAR* szDicPath);
 	virtual ~CSpellChecker();
 
 	void Release(); // releases the interface

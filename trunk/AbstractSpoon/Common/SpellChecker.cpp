@@ -39,7 +39,8 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSpellChecker::CSpellChecker(const char* szAffPath, const char* szDicPath) : MySpell(szAffPath, szDicPath)
+CSpellChecker::CSpellChecker(const TCHAR* szAffPath, const TCHAR* szDicPath):
+	MySpell(ATL::CT2A(szAffPath), ATL::CT2A(szDicPath))
 {
 
 }
