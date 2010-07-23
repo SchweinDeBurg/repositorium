@@ -53,12 +53,10 @@ static char THIS_FILE[] = __FILE__;
 
 CFMindExporter::CFMindExporter()
 {
-
 }
 
 CFMindExporter::~CFMindExporter()
 {
-
 }
 
 bool CFMindExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)

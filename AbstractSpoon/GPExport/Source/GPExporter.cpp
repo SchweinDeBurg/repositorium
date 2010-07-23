@@ -54,12 +54,10 @@ const UINT ONEDAY = 24 * 60 * 60;
 
 CGPExporter::CGPExporter()
 {
-
 }
 
 CGPExporter::~CGPExporter()
 {
-
 }
 
 bool CGPExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
