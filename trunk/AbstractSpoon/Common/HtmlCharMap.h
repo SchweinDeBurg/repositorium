@@ -43,7 +43,7 @@
 
 struct HTMLCHARMAPITEM
 {
-	TCHAR c; // the character required
+	TBYTE c; // the character required
 	LPCTSTR szHtmlRep; // html representation
 };
 
@@ -235,7 +235,7 @@ public:
 protected:
 	static void Translate(LPCTSTR szHtmlRep, CString& sAppendTo)
 	{
-		static CMap<CString, LPCTSTR, TCHAR, TCHAR&> mapHtmlRep;
+		static CMap<CString, LPCTSTR, TBYTE, TBYTE&> mapHtmlRep;
 
 		// init map once only
 		if (!mapHtmlRep.GetCount())
@@ -246,7 +246,7 @@ protected:
 				mapHtmlRep.SetAt(HTMLCHARARRAY[nItem].szHtmlRep, HTMLCHARARRAY[nItem].c);
 		}
 
-		TCHAR c = 0;
+		TBYTE c = 0;
 
 		if (mapHtmlRep.Lookup(szHtmlRep, c))
 			sAppendTo += c;
