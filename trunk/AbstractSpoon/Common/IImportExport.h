@@ -146,7 +146,7 @@ public:
 	virtual const char* GetFileFilter() = 0;
 	virtual const char* GetFileExtension() = 0;
 
-	virtual bool Import(const char* szSrcFilePath, ITaskList* pDestTaskFile) = 0;
+	virtual bool Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile) = 0;
 };
 
 class IExportTasklist
@@ -159,7 +159,7 @@ public:
 	virtual const char* GetFileFilter() = 0;
 	virtual const char* GetFileExtension() = 0;
 
-	virtual bool Export(const ITaskList* pSrcTaskFile, const char* szDestFilePath, BOOL bSilent) = 0;
+	virtual bool Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent) = 0;
 };
 
 static void ReleaseImportInterface(IImportTasklist*& pInterface)
