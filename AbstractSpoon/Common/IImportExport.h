@@ -66,7 +66,7 @@ extern "C" DLL_DECLSPEC int GetInterfaceVersion();
 #pragma warning(disable:4505)
 
 // helper method
-static IImportTasklist* CreateImportInterface(const char* szDllPath)
+static IImportTasklist* CreateImportInterface(const TCHAR* szDllPath)
 {
 	IImportTasklist* pInterface = NULL;
 	HMODULE hDll = LoadLibrary(szDllPath);
@@ -91,7 +91,7 @@ static IImportTasklist* CreateImportInterface(const char* szDllPath)
 	return pInterface;
 }
 
-static IExportTasklist* CreateExportInterface(const char* szDllPath)
+static IExportTasklist* CreateExportInterface(const TCHAR* szDllPath)
 {
 	IExportTasklist* pInterface = NULL;
 	HMODULE hDll = LoadLibrary(szDllPath);
@@ -116,7 +116,7 @@ static IExportTasklist* CreateExportInterface(const char* szDllPath)
 	return pInterface;
 }
 
-static BOOL IsImportExportDll(const char* szDllPath)
+static BOOL IsImportExportDll(const TCHAR* szDllPath)
 {
 	HMODULE hDll = LoadLibrary(szDllPath);
 
