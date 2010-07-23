@@ -43,7 +43,7 @@
 
 struct XMLCHARMAPITEM
 {
-	TCHAR c; // the character required
+	TBYTE c; // the character required
 	LPCTSTR szXMLRep; // XML representation
 };
 
@@ -140,7 +140,7 @@ public:
 protected:
 	static int Translate(LPCTSTR szXMLRep, CString* pAppendTo)
 	{
-		static CMap<CString, LPCTSTR, TCHAR, TCHAR&> mapXMLRep;
+		static CMap<CString, LPCTSTR, TBYTE, TBYTE&> mapXMLRep;
 
 		// init map once only
 		if (!mapXMLRep.GetCount())
@@ -151,7 +151,7 @@ protected:
 				mapXMLRep.SetAt(XMLCHARARRAY[nItem].szXMLRep, XMLCHARARRAY[nItem].c);
 		}
 
-		TCHAR c = 0;
+		TBYTE c = 0;
 
 		if (mapXMLRep.Lookup(szXMLRep, c))
 		{
