@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -41,18 +41,30 @@
 
 #include "../../Common/IImportExport.h"
 
-class COutlookImporter : public IImportTasklist  
+class COutlookImporter : public IImportTasklist
 {
 public:
 	COutlookImporter();
 	virtual ~COutlookImporter();
 
-	void Release() { delete this; }
-	const char* GetMenuText() { return "Microsoft Outlook"; }
-	const char* GetFileFilter() { return NULL; }
-	const char* GetFileExtension() { return NULL; }
-	
-	bool Import(const char* szSrcFilePath, ITaskList* pDestTaskFile);
+	void Release()
+	{
+		delete this;
+	}
+	const char* GetMenuText()
+	{
+		return "Microsoft Outlook";
+	}
+	const char* GetFileFilter()
+	{
+		return NULL;
+	}
+	const char* GetFileExtension()
+	{
+		return NULL;
+	}
+
+	bool Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile);
 
 
 };

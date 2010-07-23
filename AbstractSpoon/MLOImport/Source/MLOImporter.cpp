@@ -48,12 +48,10 @@
 
 CMLOImporter::CMLOImporter()
 {
-
 }
 
 CMLOImporter::~CMLOImporter()
 {
-
 }
 
 bool CMLOImporter::Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile)

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -39,7 +39,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -49,15 +49,13 @@ static char THIS_FILE[]=__FILE__;
 
 COutlookImporter::COutlookImporter()
 {
-
 }
 
 COutlookImporter::~COutlookImporter()
 {
-
 }
 
-bool COutlookImporter::Import(const char* /*szSrcFilePath*/, ITaskList* pDestTaskFile)
+bool COutlookImporter::Import(const TCHAR* /*szSrcFilePath*/, ITaskList* pDestTaskFile)
 {
 	COutlookImportDlg dlg;
 
