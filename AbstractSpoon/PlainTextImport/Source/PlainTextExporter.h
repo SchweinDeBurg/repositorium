@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -42,25 +42,37 @@
 #include "../../Common/IImportExport.h"
 #include "../../Common/ITaskList.h" // for HTASKITEM
 
-class CPlainTextExporter : public IExportTasklist  
+class CPlainTextExporter : public IExportTasklist
 {
 public:
 	CPlainTextExporter();
 	virtual ~CPlainTextExporter();
 
-	void Release() { delete this; }
-	const char* GetMenuText() { return "Outline"; }
-	const char* GetFileFilter() { return "Text Files (*.txt)|*.txt||"; }
-	const char* GetFileExtension() { return "txt"; }
-	
-	virtual bool Export(const ITaskList* pSrcTaskFile, const char* szDestFilePath, BOOL bSilent);
+	void Release()
+	{
+		delete this;
+	}
+	const char* GetMenuText()
+	{
+		return "Outline";
+	}
+	const char* GetFileFilter()
+	{
+		return "Text Files (*.txt)|*.txt||";
+	}
+	const char* GetFileExtension()
+	{
+		return "txt";
+	}
+
+	virtual bool Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
 
 protected:
 	CString INDENT;
 
 protected:
-	void ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, 
-					CStdioFile& fileOut, int nDepth);
+	void ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask,
+	                CStdioFile& fileOut, int nDepth);
 };
 
 #endif // !defined(AFX_PLAINTEXTEXPORTER_H__69016DB3_5424_49DF_A877_962E83BC6E6B__INCLUDED_)

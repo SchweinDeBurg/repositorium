@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -53,10 +53,12 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 	if (dwReason == DLL_PROCESS_ATTACH)
 	{
 		TRACE0("AFXDLL.DLL Initializing!\n");
-		
+
 		// Extension DLL one-time initialization
 		if (!AfxInitExtensionModule(AfxdllDLL, hInstance))
+		{
 			return 0;
+		}
 
 		// Insert this DLL into the resource chain
 		// NOTE: If this Extension DLL is being implicitly linked to by

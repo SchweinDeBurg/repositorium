@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -46,8 +46,14 @@ class COptionsDlg : public CDialog
 public:
 	COptionsDlg(BOOL bImport, CWnd* pParent = NULL);   // standard constructor
 
-	CString GetIndent() const { return m_sIndent; }
-	BOOL GetWantProject() const { return m_bIncludeProject; }
+	CString GetIndent() const
+	{
+		return m_sIndent;
+	}
+	BOOL GetWantProject() const
+	{
+		return m_bIncludeProject;
+	}
 
 protected:
 // Dialog Data
@@ -63,7 +69,7 @@ protected:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(COptionsDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
