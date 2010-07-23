@@ -43,15 +43,16 @@
 
 struct XMLCHARMAPITEM
 {
-	unsigned char c; // the character required
+	TCHAR c; // the character required
 	LPCTSTR szXMLRep; // XML representation
 };
+
 static XMLCHARMAPITEM XMLCHARARRAY[] =
 {
-	{ '<', _T("&lt;") },
-	{ '>', _T("&gt;") },
-	{ '\"', _T("&quot;") },
-	{ '&', _T("&amp;") },
+	{ _T('<'), _T("&lt;") },
+	{ _T('>'), _T("&gt;") },
+	{ _T('\"'), _T("&quot;") },
+	{ _T('&'), _T("&amp;") },
 	// smart quotes
 	{ 0x91, _T("&#8216;") },
 	{ 0x92, _T("&#8217;") },
@@ -59,7 +60,6 @@ static XMLCHARMAPITEM XMLCHARARRAY[] =
 	{ 0x94, _T("&#8221;") },
 	// ellipsis
 	{ 0x85, _T("...") }
-
 };
 
 const INT SIZEOFXMLCHARARRAY = sizeof(XMLCHARARRAY) / sizeof(XMLCHARMAPITEM);
@@ -103,8 +103,11 @@ public:
 
 		for (int nChar = 0; nChar < sText.GetLength(); nChar++)
 		{
-			unsigned char c = sText[nChar];
+			TCHAR c = sText[nChar];
 
+#if defined(UNICODE) || defined(_UNICODE)
+			// no-op
+#else
 			// don't translate multibyte chars
 			if (IsDBCSLeadByte(c))
 			{
@@ -114,7 +117,10 @@ public:
 				nChar++; // bump pos
 			}
 			else
+#endif   // UNICODE || _UNICODE
+			{
 				Translate(c, &sResult);
+			}
 		}
 
 		sText = sResult;
@@ -134,7 +140,7 @@ public:
 protected:
 	static int Translate(LPCTSTR szXMLRep, CString* pAppendTo)
 	{
-		static CMap<CString, LPCTSTR, unsigned char, unsigned char&> mapXMLRep;
+		static CMap<CString, LPCTSTR, TCHAR, TCHAR&> mapXMLRep;
 
 		// init map once only
 		if (!mapXMLRep.GetCount())
@@ -145,7 +151,7 @@ protected:
 				mapXMLRep.SetAt(XMLCHARARRAY[nItem].szXMLRep, XMLCHARARRAY[nItem].c);
 		}
 
-		unsigned char c = 0;
+		TCHAR c = 0;
 
 		if (mapXMLRep.Lookup(szXMLRep, c))
 		{
@@ -159,13 +165,13 @@ protected:
 			if (pAppendTo)
 				(*pAppendTo) += szXMLRep;
 
-			return lstrlen(szXMLRep);
+			return _tcslen(szXMLRep);
 		}
 	}
 
-	static int Translate(unsigned char c, CString* pAppendTo)
+	static int Translate(TCHAR c, CString* pAppendTo)
 	{
-		static CMap<unsigned char, unsigned char, CString, LPCTSTR> mapChar;
+		static CMap<TCHAR, TCHAR, CString, LPCTSTR> mapChar;
 
 		// init map once only
 		if (!mapChar.GetCount())

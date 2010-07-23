@@ -43,7 +43,7 @@
 
 struct HTMLCHARMAPITEM
 {
-	unsigned char c; // the character required
+	TCHAR c; // the character required
 	LPCTSTR szHtmlRep; // html representation
 };
 
@@ -54,11 +54,11 @@ struct HTMLCHARMAPITEM
 static HTMLCHARMAPITEM HTMLCHARARRAY[] =
 {
 	// Special Regular ASCII HTML Characters (under 127)
-	{ '&', _T("&amp;")   }, //     ampersand
-	{ '<', _T("&lt;")    }, //     less than sign
-	{ '>', _T("&gt;")    }, //     greater than sign
-	{ '\"', _T("&quot;") }, //     double quotes
-	{ '\'', _T("&#39;")  }, //     single quote
+	{ _T('&'), _T("&amp;")   }, //     ampersand
+	{ _T('<'), _T("&lt;")    }, //     less than sign
+	{ _T('>'), _T("&gt;")    }, //     greater than sign
+	{ _T('\"'), _T("&quot;") }, //     double quotes
+	{ _T('\''), _T("&#39;")  }, //     single quote
 
 	// 128-159 Special Characters not defined in HTML4
 	{ 150, _T("&#150;")  }, // '–'
@@ -208,8 +208,11 @@ public:
 
 		for (int nChar = 0; nChar < sText.GetLength(); nChar++)
 		{
-			unsigned char c = sText[nChar];
+			TCHAR c = sText[nChar];
 
+#if defined(UNICODE) || defined(_UNICODE)
+			// no-op
+#else
 			// don't translate multibyte chars
 			if (IsDBCSLeadByte(c))
 			{
@@ -219,7 +222,10 @@ public:
 				nChar++; // bump pos
 			}
 			else
+#endif   // UNICODE || _UNICODE
+			{
 				Translate(c, sResult);
+			}
 		}
 
 		sText = sResult;
@@ -229,7 +235,7 @@ public:
 protected:
 	static void Translate(LPCTSTR szHtmlRep, CString& sAppendTo)
 	{
-		static CMap<CString, LPCTSTR, unsigned char, unsigned char&> mapHtmlRep;
+		static CMap<CString, LPCTSTR, TCHAR, TCHAR&> mapHtmlRep;
 
 		// init map once only
 		if (!mapHtmlRep.GetCount())
@@ -240,7 +246,7 @@ protected:
 				mapHtmlRep.SetAt(HTMLCHARARRAY[nItem].szHtmlRep, HTMLCHARARRAY[nItem].c);
 		}
 
-		unsigned char c = 0;
+		TCHAR c = 0;
 
 		if (mapHtmlRep.Lookup(szHtmlRep, c))
 			sAppendTo += c;
@@ -249,9 +255,9 @@ protected:
 	}
 
 
-	static void Translate(unsigned char c, CString& sAppendTo)
+	static void Translate(TCHAR c, CString& sAppendTo)
 	{
-		static CMap<unsigned char, unsigned char, CString, LPCTSTR> mapChar;
+		static CMap<TCHAR, TCHAR, CString, LPCTSTR> mapChar;
 
 		// init map once only
 		if (!mapChar.GetCount())
