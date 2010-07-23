@@ -55,8 +55,8 @@
 
 class ISpellChecker;
 
-typedef ISpellChecker* (*PFNCREATE)(const char*, const char*); // function prototype
-extern "C" DLL_DECLSPEC ISpellChecker* CreateSpellCheckerInterface(const char* szAffPath, const char* szDicPath); // single exported function
+typedef ISpellChecker* (*PFNCREATE)(const TCHAR*, const TCHAR*); // function prototype
+extern "C" DLL_DECLSPEC ISpellChecker* CreateSpellCheckerInterface(const TCHAR* szAffPath, const TCHAR* szDicPath); // single exported function
 
 typedef int (*PFNGETVERSION)(); // function prototype
 extern "C" DLL_DECLSPEC int GetInterfaceVersion();
@@ -64,7 +64,7 @@ extern "C" DLL_DECLSPEC int GetInterfaceVersion();
 #pragma warning(disable:4505)
 
 // helper method
-static ISpellChecker* CreateSpellCheckerInterface(const char* szDllPath, const char* szAffPath, const char* szDicPath)
+static ISpellChecker* CreateSpellCheckerInterface(const TCHAR* szDllPath, const TCHAR* szAffPath, const TCHAR* szDicPath)
 {
 	ISpellChecker* pInterface = NULL;
 	HMODULE hDll = LoadLibrary(szDllPath);
@@ -86,7 +86,7 @@ static ISpellChecker* CreateSpellCheckerInterface(const char* szDllPath, const c
 	return pInterface;
 }
 
-static BOOL IsSpellCheckDll(const char* szDllPath)
+static BOOL IsSpellCheckDll(const TCHAR* szDllPath)
 {
 	HMODULE hDll = LoadLibrary(szDllPath);
 

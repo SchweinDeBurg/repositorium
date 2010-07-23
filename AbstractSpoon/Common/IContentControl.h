@@ -50,7 +50,7 @@
 
 #define ICONTENTCTRL_VERSION 0x0002
 
-const UINT WM_ICC_WANTSPELLCHECK = ::RegisterWindowMessage("WM_ICC_WANTSPELLCHECK");
+const UINT WM_ICC_WANTSPELLCHECK = ::RegisterWindowMessage(_T("WM_ICC_WANTSPELLCHECK"));
 
 class IContent;
 class IContentControl;
@@ -65,7 +65,7 @@ extern "C" DLL_DECLSPEC int GetInterfaceVersion();
 #pragma warning(disable:4505)
 
 // helper method
-static IContent* CreateContentInterface(const char* szDllPath, int* pVer = 0)
+static IContent* CreateContentInterface(const TCHAR* szDllPath, int* pVer = 0)
 {
 	IContent* pInterface = NULL;
 	HMODULE hDll = LoadLibrary(szDllPath);
@@ -95,7 +95,7 @@ static IContent* CreateContentInterface(const char* szDllPath, int* pVer = 0)
 	return pInterface;
 }
 
-static BOOL IsContentDll(const char* szDllPath)
+static BOOL IsContentDll(const TCHAR* szDllPath)
 {
 	HMODULE hDll = LoadLibrary(szDllPath);
 
