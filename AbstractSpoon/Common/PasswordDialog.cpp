@@ -57,8 +57,8 @@ CPasswordDialog::CPasswordDialog(BOOL bConfirm, LPCTSTR szExplanation, CWnd* /*p
 	//}}AFX_DATA_INIT
 
 	// figure out how long the prompts might be
-	CString sPassword = GetItemText(IDC_PD_PASSWORDLABEL, "&Enter Password");
-	CString sConfirm = GetItemText(IDC_PD_CONFIRMLABEL, "&Confirm Password");
+	CString sPassword = GetItemText(IDC_PD_PASSWORDLABEL, _T("&Enter Password"));
+	CString sConfirm = GetItemText(IDC_PD_CONFIRMLABEL, _T("&Confirm Password"));
 
 	const int PROMPTLEN = max(m_bConfirm ? sConfirm.GetLength() : 0, sPassword.GetLength()) * 4;
 	const int EDITSTART = PROMPTLEN + 8;
@@ -69,20 +69,20 @@ CPasswordDialog::CPasswordDialog(BOOL bConfirm, LPCTSTR szExplanation, CWnd* /*p
 	const int YEXPOFFSET = (NULL == szExplanation) ? 0 : (nLines * 8 + 8);
 
 	if (szExplanation)
-		AddRCControl("LTEXT", "", szExplanation, 0, 0,7,7, EDITEND - 7, (nLines * 8), (UINT)IDC_STATIC);
+		AddRCControl(_T("LTEXT"), _T(""), szExplanation, 0, 0,7,7, EDITEND - 7, (nLines * 8), (UINT)IDC_STATIC);
 
-	AddRCControl("LTEXT", "", sPassword, 0, 0,7,9 + YEXPOFFSET,PROMPTLEN,8, IDC_PD_PASSWORDLABEL);
-	AddRCControl("EDITTEXT", "", "", WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART,7 + YEXPOFFSET,110,14, IDC_PD_PASSWORD);
+	AddRCControl(_T("LTEXT"), _T(""), sPassword, 0, 0,7,9 + YEXPOFFSET,PROMPTLEN,8, IDC_PD_PASSWORDLABEL);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART,7 + YEXPOFFSET,110,14, IDC_PD_PASSWORD);
 
 	if (m_bConfirm)
 	{
-		AddRCControl("LTEXT", "", sConfirm, 0, 0,7, 28 + YEXPOFFSET,PROMPTLEN,8, IDC_PD_CONFIRMLABEL);
-		AddRCControl("EDITTEXT", "", "", WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART,25 + YEXPOFFSET,110,14, IDC_PD_CONFIRM);
+		AddRCControl(_T("LTEXT"), _T(""), sConfirm, 0, 0,7, 28 + YEXPOFFSET,PROMPTLEN,8, IDC_PD_CONFIRMLABEL);
+		AddRCControl(_T("EDITTEXT"), _T(""), _T(""), WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART,25 + YEXPOFFSET,110,14, IDC_PD_CONFIRM);
 	}
 
-	AddRCControl("CONTROL", "Static", "", SS_ETCHEDHORZ, 0, 7,30 + YOFFSET + YEXPOFFSET, EDITEND - 7,1, (UINT)IDC_STATIC);
-	AddRCControl("DEFPUSHBUTTON", "", "OK", WS_DISABLED | WS_TABSTOP, 0, EDITEND - 50 - 4 - 50,40 + YOFFSET + YEXPOFFSET,50,14,IDOK);
-	AddRCControl("PUSHBUTTON", "", "Cancel", WS_TABSTOP, 0, EDITEND - 50,40 + YOFFSET + YEXPOFFSET,50,14,IDCANCEL);
+	AddRCControl(_T("CONTROL"), _T("Static"), _T(""), SS_ETCHEDHORZ, 0, 7,30 + YOFFSET + YEXPOFFSET, EDITEND - 7,1, (UINT)IDC_STATIC);
+	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_DISABLED | WS_TABSTOP, 0, EDITEND - 50 - 4 - 50,40 + YOFFSET + YEXPOFFSET,50,14,IDOK);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0, EDITEND - 50,40 + YOFFSET + YEXPOFFSET,50,14,IDCANCEL);
 }
 
 
@@ -110,10 +110,10 @@ END_MESSAGE_MAP()
 
 int CPasswordDialog::DoModal()
 {
-	CString sText = GetItemText(PD_TITLE, "Password Required");
+	CString sText = GetItemText(PD_TITLE, _T("Password Required"));
 	CString sTitle;
 
-	sTitle.Format("%s - %s", sText, AfxGetAppName());
+	sTitle.Format(_T("%s - %s"), sText, AfxGetAppName());
 
 	return CRuntimeDlg::DoModal(sTitle, RTD_DEFSTYLE, RTD_DEFEXSTYLE | WS_EX_TOPMOST);
 }
@@ -148,7 +148,7 @@ BOOL CPasswordDialog::RetrievePassword(BOOL bConfirm, CString& sPassword, LPCTST
 			{
 				if (dialog.GetConfirmation() != dialog.GetPassword())
 				{
-					szExplanation = GetItemText(DLG_PD_CONFIRMFAILED, "Passwords don't match");
+					szExplanation = GetItemText(DLG_PD_CONFIRMFAILED, _T("Passwords don't match"));
 					bContinue = TRUE;
 				}
 				else
