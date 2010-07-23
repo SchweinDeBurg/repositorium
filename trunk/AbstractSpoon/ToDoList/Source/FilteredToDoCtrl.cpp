@@ -86,7 +86,7 @@ CFilteredToDoCtrl::CFilteredToDoCtrl(CContentMgr& mgr, const CONTENTFORMAT& cfDe
 	{
 		const TDCCONTROL& ctrl = FTDCCONTROLS[nCtrl];
 
-		AddRCControl("CONTROL", ctrl.szClass, CEnString(ctrl.nIDCaption), 
+		AddRCControl(_T("CONTROL"), ctrl.szClass, CEnString(ctrl.nIDCaption), 
 					ctrl.dwStyle, ctrl.dwExStyle,
 					ctrl.nX, ctrl.nY, ctrl.nCx, ctrl.nCy, ctrl.nID);
 	}
@@ -209,7 +209,7 @@ BOOL CFilteredToDoCtrl::LoadTasks(const CTaskFile& file)
 		{
 			m_bListNeedRefilter = TRUE;
 
-			FTC_VIEW nView = (FTC_VIEW)prefs.GetProfileInt(sKey, "View", FTCV_TASKTREE);
+			FTC_VIEW nView = (FTC_VIEW)prefs.GetProfileInt(sKey, _T("View"), FTCV_TASKTREE);
 			SetView(nView);
 		}
 	}
@@ -221,44 +221,44 @@ BOOL CFilteredToDoCtrl::LoadTasks(const CTaskFile& file)
 
 void CFilteredToDoCtrl::RestoreFilter(const CPreferences& prefs)
 {
-	CString sKey = GetPreferencesKey("Filter");
+	CString sKey = GetPreferencesKey(_T("Filter"));
 
 	if (!sKey.IsEmpty())
 	{
-		m_filter.nFilter = (FILTER_TYPE)prefs.GetProfileInt(sKey, "Filter", FT_ALL);
-		m_filter.nPriority = prefs.GetProfileInt(sKey, "Priority", FT_ANYPRIORITY);
-		m_filter.nRisk = prefs.GetProfileInt(sKey, "Risk", FT_ANYRISK);
+		m_filter.nFilter = (FILTER_TYPE)prefs.GetProfileInt(sKey, _T("Filter"), FT_ALL);
+		m_filter.nPriority = prefs.GetProfileInt(sKey, _T("Priority"), FT_ANYPRIORITY);
+		m_filter.nRisk = prefs.GetProfileInt(sKey, _T("Risk"), FT_ANYRISK);
 
 		// cats
-		CString sCategory = prefs.GetProfileString(sKey, "Category");
+		CString sCategory = prefs.GetProfileString(sKey, _T("Category"));
 		Misc::ParseIntoArray(sCategory, m_filter.aCategories, TRUE);
 
 		// alloc to
-		CString sAllocTo = prefs.GetProfileString(sKey, "AllocTo");
+		CString sAllocTo = prefs.GetProfileString(sKey, _T("AllocTo"));
 		Misc::ParseIntoArray(sAllocTo, m_filter.aAllocTo, TRUE);
 
 		// alloc by
-		CString sAllocBy = prefs.GetProfileString(sKey, "AllocBy");
+		CString sAllocBy = prefs.GetProfileString(sKey, _T("AllocBy"));
 		Misc::ParseIntoArray(sAllocBy, m_filter.aAllocBy, TRUE);
 
 		// status
-		CString sStatus = prefs.GetProfileString(sKey, "Status");
+		CString sStatus = prefs.GetProfileString(sKey, _T("Status"));
 		Misc::ParseIntoArray(sStatus, m_filter.aStatus, TRUE);
 
 		// version
-		CString sVersion = prefs.GetProfileString(sKey, "Version");
+		CString sVersion = prefs.GetProfileString(sKey, _T("Version"));
 		Misc::ParseIntoArray(sVersion, m_filter.aVersions, TRUE);
 
 		// options
-		m_filter.SetFlag(FT_ANYCATEGORY, prefs.GetProfileInt(sKey, "AnyCategory", FALSE));
-		m_filter.SetFlag(FT_ANYALLOCTO, prefs.GetProfileInt(sKey, "AnyAllocTo", FALSE));
-// 		m_filter.SetFlag(FT_ANYSTATUS, prefs.GetProfileInt(sKey, "AnyStatus", FALSE));
-// 		m_filter.SetFlag(FT_ANYALLOCBY, prefs.GetProfileInt(sKey, "AnyAllocBy", FALSE));
+		m_filter.SetFlag(FT_ANYCATEGORY, prefs.GetProfileInt(sKey, _T("AnyCategory"), FALSE));
+		m_filter.SetFlag(FT_ANYALLOCTO, prefs.GetProfileInt(sKey, _T("AnyAllocTo"), FALSE));
+// 		m_filter.SetFlag(FT_ANYSTATUS, prefs.GetProfileInt(sKey, _T("AnyStatus"), FALSE));
+// 		m_filter.SetFlag(FT_ANYALLOCBY, prefs.GetProfileInt(sKey, _T("AnyAllocBy"), FALSE));
 // 		m_filter.SetFlag(FT_ANYVERSION, prefs.GetProfileInt(sKey, "AnyVersion", FALSE));
-		m_filter.SetFlag(FT_HIDEPARENTS, prefs.GetProfileInt(sKey, "HideParents", FALSE));
-		m_filter.SetFlag(FT_HIDEOVERDUE, prefs.GetProfileInt(sKey, "HideOverDue", FALSE));
-		m_filter.SetFlag(FT_HIDEDONE, prefs.GetProfileInt(sKey, "HideDone", FALSE));
-		m_filter.SetFlag(FT_HIDECOLLAPSED, prefs.GetProfileInt(sKey, "HideCollapsed", FALSE));
+		m_filter.SetFlag(FT_HIDEPARENTS, prefs.GetProfileInt(sKey, _T("HideParents"), FALSE));
+		m_filter.SetFlag(FT_HIDEOVERDUE, prefs.GetProfileInt(sKey, _T("HideOverDue"), FALSE));
+		m_filter.SetFlag(FT_HIDEDONE, prefs.GetProfileInt(sKey, _T("HideDone"), FALSE));
+		m_filter.SetFlag(FT_HIDECOLLAPSED, prefs.GetProfileInt(sKey, _T("HideCollapsed"), FALSE));
 	}
 
 	if (IsFilterSet(FTCV_TASKTREE))
@@ -267,29 +267,29 @@ void CFilteredToDoCtrl::RestoreFilter(const CPreferences& prefs)
 
 void CFilteredToDoCtrl::SaveFilter(CPreferences& prefs) const
 {
-	CString sKey = GetPreferencesKey("Filter");
+	CString sKey = GetPreferencesKey(_T("Filter"));
 
 	if (!sKey.IsEmpty())
 	{
-		prefs.WriteProfileInt(sKey, "Filter", m_filter.nFilter);
-		prefs.WriteProfileInt(sKey, "Priority", m_filter.nPriority);
-		prefs.WriteProfileInt(sKey, "Risk", m_filter.nRisk);
-		prefs.WriteProfileString(sKey, "AllocBy", Misc::FormatArray(m_filter.aAllocBy));
-		prefs.WriteProfileString(sKey, "Status", Misc::FormatArray(m_filter.aStatus));
-		prefs.WriteProfileString(sKey, "Version", Misc::FormatArray(m_filter.aVersions));
-		prefs.WriteProfileString(sKey, "AllocTo", Misc::FormatArray(m_filter.aAllocTo));
-		prefs.WriteProfileString(sKey, "Category", Misc::FormatArray(m_filter.aCategories));
+		prefs.WriteProfileInt(sKey, _T("Filter"), m_filter.nFilter);
+		prefs.WriteProfileInt(sKey, _T("Priority"), m_filter.nPriority);
+		prefs.WriteProfileInt(sKey, _T("Risk"), m_filter.nRisk);
+		prefs.WriteProfileString(sKey, _T("AllocBy"), Misc::FormatArray(m_filter.aAllocBy));
+		prefs.WriteProfileString(sKey, _T("Status"), Misc::FormatArray(m_filter.aStatus));
+		prefs.WriteProfileString(sKey, _T("Version"), Misc::FormatArray(m_filter.aVersions));
+		prefs.WriteProfileString(sKey, _T("AllocTo"), Misc::FormatArray(m_filter.aAllocTo));
+		prefs.WriteProfileString(sKey, _T("Category"), Misc::FormatArray(m_filter.aCategories));
 
 		// options
-		prefs.WriteProfileInt(sKey, "AnyAllocTo", m_filter.HasFlag(FT_ANYALLOCTO));
-		prefs.WriteProfileInt(sKey, "AnyCategory", m_filter.HasFlag(FT_ANYCATEGORY));
-// 		prefs.WriteProfileInt(sKey, "AnyAllocBy", m_filter.HasFlag(FT_ANYALLOCBY));
-// 		prefs.WriteProfileInt(sKey, "AnyStatus", m_filter.HasFlag(FT_ANYSTATUS));
-// 		prefs.WriteProfileInt(sKey, "AnyVersion", m_filter.HasFlag(FT_ANYVERSION));
-		prefs.WriteProfileInt(sKey, "HideParents", m_filter.HasFlag(FT_HIDEPARENTS));
-		prefs.WriteProfileInt(sKey, "HideOverDue", m_filter.HasFlag(FT_HIDEOVERDUE));
-		prefs.WriteProfileInt(sKey, "HideDone", m_filter.HasFlag(FT_HIDEDONE));
-		prefs.WriteProfileInt(sKey, "HideCollapsed", m_filter.HasFlag(FT_HIDECOLLAPSED));
+		prefs.WriteProfileInt(sKey, _T("AnyAllocTo"), m_filter.HasFlag(FT_ANYALLOCTO));
+		prefs.WriteProfileInt(sKey, _T("AnyCategory"), m_filter.HasFlag(FT_ANYCATEGORY));
+// 		prefs.WriteProfileInt(sKey, _T("AnyAllocBy"), m_filter.HasFlag(FT_ANYALLOCBY));
+// 		prefs.WriteProfileInt(sKey, _T("AnyStatus"), m_filter.HasFlag(FT_ANYSTATUS));
+// 		prefs.WriteProfileInt(sKey, _T("AnyVersion"), m_filter.HasFlag(FT_ANYVERSION));
+		prefs.WriteProfileInt(sKey, _T("HideParents"), m_filter.HasFlag(FT_HIDEPARENTS));
+		prefs.WriteProfileInt(sKey, _T("HideOverDue"), m_filter.HasFlag(FT_HIDEOVERDUE));
+		prefs.WriteProfileInt(sKey, _T("HideDone"), m_filter.HasFlag(FT_HIDEDONE));
+		prefs.WriteProfileInt(sKey, _T("HideCollapsed"), m_filter.HasFlag(FT_HIDECOLLAPSED));
 	}
 }
 
@@ -303,7 +303,7 @@ void CFilteredToDoCtrl::OnDestroy()
 		
 		// save view
 		if (!sKey.IsEmpty())
-			prefs.WriteProfileInt(sKey, "View", m_nCurView);
+			prefs.WriteProfileInt(sKey, _T("View"), m_nCurView);
 
 		SaveFilter(prefs);
 	}
@@ -322,14 +322,14 @@ void CFilteredToDoCtrl::BuildListColumns(BOOL bResizeCols)
 		const TDCCOLUMN& col = COLUMNS[nCol];
 		UINT nFmt = col.nAlignment == DT_RIGHT ? LVCFMT_RIGHT : LVCFMT_LEFT;
 		
-		m_list.InsertColumn(0, "", nFmt, 10);
+		m_list.InsertColumn(0, _T(""), nFmt, 10);
 	}
 
 	// title column
 	if (HasStyle(TDCS_RIGHTSIDECOLUMNS))
-		m_list.InsertColumn(0, "", LVCFMT_LEFT, 10);
+		m_list.InsertColumn(0, _T(""), LVCFMT_LEFT, 10);
 	else
-		m_list.InsertColumn(NUM_COLUMNS - 1, "", LVCFMT_LEFT, 10);
+		m_list.InsertColumn(NUM_COLUMNS - 1, _T(""), LVCFMT_LEFT, 10);
 
 	if (bResizeCols)
 		UpdateColumnWidths();
@@ -407,7 +407,7 @@ void CFilteredToDoCtrl::OnListGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult)
 		ASSERT (pTDI);
 		
 		// all else
-		lplvdi->item.pszText = (LPSTR)(LPCTSTR)pTDI->sTitle;
+		lplvdi->item.pszText = const_cast<LPTSTR>((LPCTSTR)pTDI->sTitle);
 	}
 }
 
@@ -1943,10 +1943,10 @@ void CFilteredToDoCtrl::DrawColumnHeaderText(CDC* pDC, int nCol, const CRect& rC
 		CString sPath = m_data.GetTaskPath(GetSelectedTaskID(), nColWidthInChars);
 			
 		if (!sPath.IsEmpty())
-			sColumn.Format("%s [%s]", CEnString(IDS_TDC_COLUMN_TASK), sPath);
+			sColumn.Format(_T("%s [%s]"), CEnString(IDS_TDC_COLUMN_TASK), sPath);
 	}
-	else if (sColumn == "%%")
-		sColumn = "%";
+	else if (sColumn == _T("%%"))
+		sColumn = _T("%");
 
 	const UINT DEFFLAGS = DT_END_ELLIPSIS | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX;
 	pDC->SetBkMode(TRANSPARENT);
@@ -1981,10 +1981,10 @@ void CFilteredToDoCtrl::DrawColumnHeaderText(CDC* pDC, int nCol, const CRect& rC
 	{
 		CFont* pOldFont = NULL;
 
-		if (CString(pCol->szFont).CompareNoCase("WingDings") == 0)
+		if (CString(pCol->szFont).CompareNoCase(_T("WingDings")) == 0)
 			pOldFont = pDC->SelectObject(&GraphicsMisc::WingDings());
 		
-		else if (CString(pCol->szFont).CompareNoCase("Marlett") == 0)
+		else if (CString(pCol->szFont).CompareNoCase(_T("Marlett")) == 0)
 			pOldFont = pDC->SelectObject(&GraphicsMisc::Marlett());
 		
 		pDC->DrawText(sColumn, rText, DEFFLAGS | pCol->nAlignment);
@@ -3758,9 +3758,9 @@ void CFilteredToDoCtrl::OnListGetInfoTip(NMHDR* pNMHDR, LRESULT* pResult)
 		{
 			//fabio_2005
 #if _MSC_VER >= 1400
-			strncpy_s(pLVGIT->pszText, pLVGIT->cchTextMax, FormatInfoTip(hti, pTDI), pLVGIT->cchTextMax);
+			_tcsncpy_s(pLVGIT->pszText, pLVGIT->cchTextMax, FormatInfoTip(hti, pTDI), pLVGIT->cchTextMax);
 #else
-			strncpy(pLVGIT->pszText, FormatInfoTip(hti, pTDI), pLVGIT->cchTextMax);
+			_tcsncpy(pLVGIT->pszText, FormatInfoTip(hti, pTDI), pLVGIT->cchTextMax);
 #endif
 		}
 	}
@@ -3790,17 +3790,17 @@ void CFilteredToDoCtrl::SaveSortState(CPreferences& prefs)
 	// create a new key using the filepath
 	ASSERT (GetSafeHwnd());
 	
-	CString sKey = GetPreferencesKey("SortState");
+	CString sKey = GetPreferencesKey(_T("SortState"));
 	
 	if (!sKey.IsEmpty())
 	{
-		prefs.WriteProfileInt(sKey, "ListMulti", m_bListMultiSort);
-		prefs.WriteProfileInt(sKey, "ListColumn", m_sortList.nBy1);
-		prefs.WriteProfileInt(sKey, "ListColumn2", m_sortList.nBy2);
-		prefs.WriteProfileInt(sKey, "ListColumn3", m_sortList.nBy3);
-		prefs.WriteProfileInt(sKey, "ListAscending", m_sortList.bAscending1);
-		prefs.WriteProfileInt(sKey, "ListAscending2", m_sortList.bAscending2);
-		prefs.WriteProfileInt(sKey, "ListAscending3", m_sortList.bAscending3);
+		prefs.WriteProfileInt(sKey, _T("ListMulti"), m_bListMultiSort);
+		prefs.WriteProfileInt(sKey, _T("ListColumn"), m_sortList.nBy1);
+		prefs.WriteProfileInt(sKey, _T("ListColumn2"), m_sortList.nBy2);
+		prefs.WriteProfileInt(sKey, _T("ListColumn3"), m_sortList.nBy3);
+		prefs.WriteProfileInt(sKey, _T("ListAscending"), m_sortList.bAscending1);
+		prefs.WriteProfileInt(sKey, _T("ListAscending2"), m_sortList.bAscending2);
+		prefs.WriteProfileInt(sKey, _T("ListAscending3"), m_sortList.bAscending3);
 	}
 
 	// base class
@@ -3809,18 +3809,18 @@ void CFilteredToDoCtrl::SaveSortState(CPreferences& prefs)
 
 void CFilteredToDoCtrl::LoadSortState(const CPreferences& prefs, LPCTSTR szFilePath)
 {
-	CString sKey = GetPreferencesKey("SortState", szFilePath);
+	CString sKey = GetPreferencesKey(_T("SortState"), szFilePath);
 	
 	if (!sKey.IsEmpty())
 	{
 		// is this the first time since we restored tree sorting (disabled in 5.6)
-		int nListSortBy = prefs.GetProfileInt(sKey, "ListColumn", -99);
+		int nListSortBy = prefs.GetProfileInt(sKey, _T("ListColumn"), -99);
 
 		if (nListSortBy == -99) // yes
 		{ 
 			// so we use whatever the tree has set
-			m_sortList.nBy1 = (TDC_SORTBY)prefs.GetProfileInt(sKey, "Column", TDC_UNSORTED);
-			m_sortList.bAscending1 = prefs.GetProfileInt(sKey, "Ascending", TRUE);
+			m_sortList.nBy1 = (TDC_SORTBY)prefs.GetProfileInt(sKey, _T("Column"), TDC_UNSORTED);
+			m_sortList.bAscending1 = prefs.GetProfileInt(sKey, _T("Ascending"), TRUE);
 
 			// and clear the tree's state
 			m_sort.nBy1 = TDC_UNSORTED;
@@ -3828,13 +3828,13 @@ void CFilteredToDoCtrl::LoadSortState(const CPreferences& prefs, LPCTSTR szFileP
 		}
 		else // each has separate settings
 		{
-			m_bListMultiSort = prefs.GetProfileInt(sKey, "ListMulti", FALSE);
-			m_sortList.nBy1 = (TDC_SORTBY)prefs.GetProfileInt(sKey, "ListColumn", TDC_UNSORTED);
-			m_sortList.nBy2 = (TDC_SORTBY)prefs.GetProfileInt(sKey, "ListColumn2", TDC_UNSORTED);
-			m_sortList.nBy3 = (TDC_SORTBY)prefs.GetProfileInt(sKey, "ListColumn3", TDC_UNSORTED);
-			m_sortList.bAscending1 = prefs.GetProfileInt(sKey, "ListAscending", TRUE);
-			m_sortList.bAscending2 = prefs.GetProfileInt(sKey, "ListAscending2", TRUE);
-			m_sortList.bAscending3 = prefs.GetProfileInt(sKey, "ListAscending3", TRUE);
+			m_bListMultiSort = prefs.GetProfileInt(sKey, _T("ListMulti"), FALSE);
+			m_sortList.nBy1 = (TDC_SORTBY)prefs.GetProfileInt(sKey, _T("ListColumn"), TDC_UNSORTED);
+			m_sortList.nBy2 = (TDC_SORTBY)prefs.GetProfileInt(sKey, _T("ListColumn2"), TDC_UNSORTED);
+			m_sortList.nBy3 = (TDC_SORTBY)prefs.GetProfileInt(sKey, _T("ListColumn3"), TDC_UNSORTED);
+			m_sortList.bAscending1 = prefs.GetProfileInt(sKey, _T("ListAscending"), TRUE);
+			m_sortList.bAscending2 = prefs.GetProfileInt(sKey, _T("ListAscending2"), TRUE);
+			m_sortList.bAscending3 = prefs.GetProfileInt(sKey, _T("ListAscending3"), TRUE);
 
 			CToDoCtrl::LoadSortState(prefs, szFilePath);
 		}

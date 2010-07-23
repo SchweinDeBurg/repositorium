@@ -83,7 +83,7 @@ public:
 	BOOL GetDueTaskTitlesOnly() const { return m_bDueTaskTitlesOnly; }
 	CString GetDueTaskStylesheet() const { return m_sDueTasksStylesheet; }
 	CString GetSaveExportStylesheet() const { return m_sSaveExportStylesheet; }
-	CString GetDueTaskPerson() const { return m_bOnlyShowDueTasksForPerson ? m_sDueTaskPerson : ""; }
+	CString GetDueTaskPerson() const { return m_bOnlyShowDueTasksForPerson ? m_sDueTaskPerson : _T(""); }
 	BOOL GetWarnAddDeleteArchive() const { return m_bWarnAddDeleteArchive; }
 	BOOL GetDontRemoveFlagged() const { return m_bDontRemoveFlagged; }
 	BOOL GetExpandTasksOnLoad() const { return m_bExpandTasks; }

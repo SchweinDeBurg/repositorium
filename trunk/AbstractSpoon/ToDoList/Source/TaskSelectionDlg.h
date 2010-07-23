@@ -40,7 +40,7 @@
 
 #include "TDLAttribListBox.h"
 
-const UINT WM_TASKSELDLG_CHANGE = ::RegisterWindowMessage("WM_TASKSELDLG_CHANGE");
+const UINT WM_TASKSELDLG_CHANGE = ::RegisterWindowMessage(_T("WM_TASKSELDLG_CHANGE"));
 
 enum TSD_ATTRIB
 {
@@ -78,15 +78,15 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CTaskSelectionDlg)
 	enum { IDD = IDD_TASKSELECTION_DIALOG };
-	int		m_nAttribOption;
+	int     m_nAttribOption;
 	//}}AFX_DATA
-	CTDLAttributeListBox	m_lbAttribList;
-	BOOL	m_bSelectedSubtasks;
-	BOOL	m_bCompletedTasks;
-	BOOL	m_bIncompleteTasks;
-	int		m_bSelectedTasks;
-    CString m_sRegKey;
-	BOOL	m_bShowSubtaskCheckbox;
+	CTDLAttributeListBox    m_lbAttribList;
+	BOOL    m_bSelectedSubtasks;
+	BOOL    m_bCompletedTasks;
+	BOOL    m_bIncompleteTasks;
+	int     m_bSelectedTasks;
+	CString m_sRegKey;
+	BOOL    m_bShowSubtaskCheckbox;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -106,7 +106,7 @@ protected:
 	afx_msg void OnIncludeDone();
 	afx_msg void OnIncludeNotDone();
 	virtual BOOL OnInitDialog();
-   afx_msg void OnDestroy();
+	afx_msg void OnDestroy();
 	DECLARE_MESSAGE_MAP()
 };
 

@@ -64,12 +64,12 @@ public:
 protected:
 // Dialog Data
 	//{{AFX_DATA(CExportDlg)
-	CComboBox	m_cbFormat;
-	CFileEdit	m_eExportPath;
-	int		m_nExportOption;
-	CString	m_sExportPath;
-	BOOL	m_bExportOneFile;
-	CString	m_sPathLabel;
+	CComboBox   m_cbFormat;
+	CFileEdit   m_eExportPath;
+	int     m_nExportOption;
+	CString m_sExportPath;
+	BOOL    m_bExportOneFile;
+	CString m_sPathLabel;
 	//}}AFX_DATA
 	CTaskSelectionDlg m_taskSel;
 	BOOL m_bSingleTaskList; 

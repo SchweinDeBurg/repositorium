@@ -104,7 +104,7 @@ namespace Misc
 	BOOL MatchAny(const CStringArray& array1, const CStringArray& array2, BOOL bCaseSensitive = FALSE);
 	CString FormatArray(const CStringArray& array, LPCTSTR szSep = NULL);
 	CString FormatArray(const CDWordArray& array, LPCTSTR szSep = NULL);
-	int ParseIntoArray(const CString& sText, CStringArray& array, BOOL bAllowEmpty = FALSE, CString sSep = "");
+	int ParseIntoArray(const CString& sText, CStringArray& array, BOOL bAllowEmpty = FALSE, CString sSep = _T(""));
 	int Find(const CStringArray& array, LPCTSTR szItem, BOOL bCaseSensitive = FALSE);
 	void Trace(const CStringArray& array);
 	int RemoveItems(const CStringArray& aItems, CStringArray& aFrom, BOOL bCaseSensitive = FALSE);

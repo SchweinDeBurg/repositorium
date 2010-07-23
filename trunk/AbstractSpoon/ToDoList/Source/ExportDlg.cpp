@@ -62,7 +62,7 @@ CExportDlg::CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL b
 	  m_bSingleTaskList(bSingleTaskList), 
 	  m_sFilePath(szFilePath), m_sOrgFilePath(szFilePath),
 	  m_sFolderPath(szFolderPath), m_sOrgFolderPath(szFolderPath),
-	  m_taskSel("Exporting", bShowSubtaskCheckbox),
+	  m_taskSel(_T("Exporting"), bShowSubtaskCheckbox),
 	  m_eExportPath(FES_COMBOSTYLEBTN | FES_SAVEAS)
 {
 	CPreferences prefs;
@@ -75,10 +75,10 @@ CExportDlg::CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL b
 	if (m_bSingleTaskList)
 		m_nExportOption = ACTIVETASKLIST;
 	else
-		m_nExportOption = prefs.GetProfileInt("Exporting", "ExportOption", ACTIVETASKLIST);
+		m_nExportOption = prefs.GetProfileInt(_T("Exporting"), _T("ExportOption"), ACTIVETASKLIST);
 
 	if (m_sFolderPath.IsEmpty())
-		m_sFolderPath = prefs.GetProfileString("Exporting", "LastFolder");
+		m_sFolderPath = prefs.GetProfileString(_T("Exporting"), _T("LastFolder"));
 
 	if (m_bSingleTaskList || m_nExportOption == ACTIVETASKLIST || m_bExportOneFile)
 	{
@@ -231,7 +231,7 @@ void CExportDlg::OnSelchangeFormatoptions()
 	}
 	else // disable path edit and remove file path
 	{
-		m_eExportPath.SetWindowText("");
+		m_eExportPath.SetWindowText(_T(""));
 		m_eExportPath.EnableWindow(FALSE);
 	}
 }
@@ -333,14 +333,14 @@ void CExportDlg::OnOK()
 	if (!m_bSingleTaskList)
 	{
 		CPreferences prefs;
-		prefs.WriteProfileInt("Exporting", "ExportOption", m_nExportOption);
+		prefs.WriteProfileInt(_T("Exporting"), _T("ExportOption"), m_nExportOption);
 
 		if (bExporterHasFileExt)
 		{
 			if (m_nExportOption == ALLTASKLISTS)
-				prefs.WriteProfileString("Exporting", "LastFolder", m_sExportPath);
+				prefs.WriteProfileString(_T("Exporting"), _T("LastFolder"), m_sExportPath);
 			else
-				prefs.WriteProfileString("Exporting", "LastFolder", m_sFolderPath);
+				prefs.WriteProfileString(_T("Exporting"), _T("LastFolder"), m_sFolderPath);
 		}
 	}
 }
@@ -405,5 +405,5 @@ CString CExportDlg::GetExportPath()
 		return m_sExportPath;
 
 	// else
-	return "";
+	return _T("");
 }

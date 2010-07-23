@@ -25,8 +25,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // CPopupEditCtrl window
 
-const UINT WM_PENDEDIT = ::RegisterWindowMessage("WM_PENDEDIT");
-const UINT WM_PCANCELEDIT = ::RegisterWindowMessage("WM_PCANCELEDIT");
+const UINT WM_PENDEDIT = ::RegisterWindowMessage(_T("WM_PENDEDIT"));
+const UINT WM_PCANCELEDIT = ::RegisterWindowMessage(_T("WM_PCANCELEDIT"));
 
 enum PEC_CLEANUP
 {

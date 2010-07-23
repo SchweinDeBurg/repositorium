@@ -89,8 +89,8 @@ BOOL CKeyboardShortcutDisplayDlg::OnInitDialog()
 	CRect rList;
 	m_lcShortcuts.GetClientRect(rList);
 
-	m_lcShortcuts.InsertColumn(0, "", LVCFMT_LEFT, 130);
-	m_lcShortcuts.InsertColumn(1, "", LVCFMT_LEFT, rList.Width() - 130 - GetSystemMetrics(SM_CXVSCROLL));
+	m_lcShortcuts.InsertColumn(0, _T(""), LVCFMT_LEFT, 130);
+	m_lcShortcuts.InsertColumn(1, _T(""), LVCFMT_LEFT, rList.Width() - 130 - GetSystemMetrics(SM_CXVSCROLL));
 
 	for (int nItem = 0; nItem < m_aMapping.GetSize(); nItem++)
 	{
@@ -103,7 +103,7 @@ BOOL CKeyboardShortcutDisplayDlg::OnInitDialog()
 			m_lcShortcuts.SetItemText(nIndex, 1, sItem.Mid(nDelim + 1));
 		}
 		else
-			m_lcShortcuts.InsertItem(nItem, "");
+			m_lcShortcuts.InsertItem(nItem, _T(""));
 	}
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -121,11 +121,11 @@ void CKeyboardShortcutDisplayDlg::OnCopyshortcuts()
 
 		if (nDelim != -1)
 		{
-			sLine.Format("%s\t\t%s\n", sItem.Left(nDelim), sItem.Mid(nDelim + 1));
+			sLine.Format(_T("%s\t\t%s\n"), sItem.Left(nDelim), sItem.Mid(nDelim + 1));
 			sText += sLine;
 		}
 		else
-			sText += "\n";
+			sText += _T("\n");
 	}
 
 	Misc::CopyTexttoClipboard(sText, *this);

@@ -58,7 +58,7 @@ struct CATCOLOR
 	COLORREF color;
 };
 
-const UINT WM_PUITCP_CATEGORYCHANGE = ::RegisterWindowMessage("WM_PUITCP_CATEGORYCHANGE");
+const UINT WM_PUITCP_CATEGORYCHANGE = ::RegisterWindowMessage(_T("WM_PUITCP_CATEGORYCHANGE"));
 
 typedef CArray<CATCOLOR, CATCOLOR&> CCatColorArray;
 

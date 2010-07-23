@@ -112,6 +112,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #include <afxole.h>        // MFC OLE support
 #include <afxdisp.h>       // MFC IDispatch & ClassFactory support
 #include <afxadv.h>        // MFC Advanced Classes
+#include <afxconv.h>       // Global UNICODE<>ANSI translation helpers
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // PSDK headers

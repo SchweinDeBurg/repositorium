@@ -57,13 +57,13 @@ COffsetDatesDlg::COffsetDatesDlg(CWnd* pParent /*=NULL*/)
 	// restore state
 	CPreferences prefs;
 
-	m_bOffsetStartDate = prefs.GetProfileInt("OffsetDates", "StartDate", FALSE);
-	m_bOffsetDueDate = prefs.GetProfileInt("OffsetDates", "DueDate", FALSE);
-	m_bOffsetDoneDate = prefs.GetProfileInt("OffsetDates", "DoneDate", FALSE);
-	m_bForward = prefs.GetProfileInt("OffsetDates", "Forward", 1);
-	m_nOffsetBy = prefs.GetProfileInt("OffsetDates", "Amount", 1);
-	m_nOffsetByUnits = prefs.GetProfileInt("OffsetDates", "AmountUnits", 0);
-	m_bOffsetSubtasks = prefs.GetProfileInt("OffsetDates", "Subtasks", 1);
+	m_bOffsetStartDate = prefs.GetProfileInt(_T("OffsetDates"), _T("StartDate"), FALSE);
+	m_bOffsetDueDate = prefs.GetProfileInt(_T("OffsetDates"), _T("DueDate"), FALSE);
+	m_bOffsetDoneDate = prefs.GetProfileInt(_T("OffsetDates"), _T("DoneDate"), FALSE);
+	m_bForward = prefs.GetProfileInt(_T("OffsetDates"), _T("Forward"), 1);
+	m_nOffsetBy = prefs.GetProfileInt(_T("OffsetDates"), _T("Amount"), 1);
+	m_nOffsetByUnits = prefs.GetProfileInt(_T("OffsetDates"), _T("AmountUnits"), 0);
+	m_bOffsetSubtasks = prefs.GetProfileInt(_T("OffsetDates"), _T("Subtasks"), 1);
 }
 
 
@@ -121,11 +121,11 @@ void COffsetDatesDlg::OnOK()
 	// save state
 	CPreferences prefs;
 
-	prefs.WriteProfileInt("OffsetDates", "StartDate", m_bOffsetStartDate);
-	prefs.WriteProfileInt("OffsetDates", "DueDate", m_bOffsetDueDate);
-	prefs.WriteProfileInt("OffsetDates", "DoneDate", m_bOffsetDoneDate);
-	prefs.WriteProfileInt("OffsetDates", "Forward", m_bForward);
-	prefs.WriteProfileInt("OffsetDates", "Amount", m_nOffsetBy);
-	prefs.WriteProfileInt("OffsetDates", "AmountUnits", m_nOffsetByUnits);
-	prefs.WriteProfileInt("OffsetDates", "Subtasks", m_bOffsetSubtasks);
+	prefs.WriteProfileInt(_T("OffsetDates"), _T("StartDate"), m_bOffsetStartDate);
+	prefs.WriteProfileInt(_T("OffsetDates"), _T("DueDate"), m_bOffsetDueDate);
+	prefs.WriteProfileInt(_T("OffsetDates"), _T("DoneDate"), m_bOffsetDoneDate);
+	prefs.WriteProfileInt(_T("OffsetDates"), _T("Forward"), m_bForward);
+	prefs.WriteProfileInt(_T("OffsetDates"), _T("Amount"), m_nOffsetBy);
+	prefs.WriteProfileInt(_T("OffsetDates"), _T("AmountUnits"), m_nOffsetByUnits);
+	prefs.WriteProfileInt(_T("OffsetDates"), _T("Subtasks"), m_bOffsetSubtasks);
 }
