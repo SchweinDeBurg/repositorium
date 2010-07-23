@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -47,27 +47,29 @@
 
 CPlainTextImporter::CPlainTextImporter()
 {
-
 }
 
 CPlainTextImporter::~CPlainTextImporter()
 {
-
 }
 
-bool CPlainTextImporter::Import(const char* szSrcFilePath, ITaskList* pDestTaskFile)
+bool CPlainTextImporter::Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile)
 {
 	COptionsDlg dialog(TRUE);
 
 	if (dialog.DoModal() != IDOK)
+	{
 		return false;
+	}
 
 	INDENT = dialog.GetIndent();
 
 	CStdioFile file;
 
 	if (!file.Open(szSrcFilePath, CFile::modeRead))
+	{
 		return false;
+	}
 
 	// else
 	ITaskList4* pITL4 = static_cast<ITaskList4*>(pDestTaskFile);
@@ -80,7 +82,7 @@ bool CPlainTextImporter::Import(const char* szSrcFilePath, ITaskList* pDestTaskF
 		sProjectName.TrimRight();
 		sProjectName.TrimLeft();
 
-		pITL4->SetProjectName(sProjectName);
+		pITL4->SetProjectName(ATL::CT2A(sProjectName));
 	}
 
 	// what follows are the tasks, indented to express subtasks
@@ -90,23 +92,29 @@ bool CPlainTextImporter::Import(const char* szSrcFilePath, ITaskList* pDestTaskF
 	ROOTDEPTH = -1; // gets set to the first task's depth
 
 	CString sLine;
-	
-	while (file.ReadString(sLine)) 
+
+	while (file.ReadString(sLine))
 	{
 		CString sTitle, sComments;
 
 		if (!GetTitleComments(sLine, sTitle, sComments))
+		{
 			continue;
+		}
 
 		// find the appropriate parent fro this task
 		HTASKITEM hParent = NULL;
 		int nDepth = GetDepth(sLine);
 
 		if (nDepth == nLastDepth) // sibling
+		{
 			hParent = hLastTask ? pITL4->GetTaskParent(hLastTask) : NULL;
+		}
 
 		else if (nDepth > nLastDepth) // child
+		{
 			hParent = hLastTask;
+		}
 
 		else if (hLastTask) // we need to work up the tree
 		{
@@ -118,11 +126,13 @@ bool CPlainTextImporter::Import(const char* szSrcFilePath, ITaskList* pDestTaskF
 				nLastDepth--;
 			}
 		}
-		
-		HTASKITEM hTask = pITL4->NewTask(sTitle, hParent);
+
+		HTASKITEM hTask = pITL4->NewTask(ATL::CT2A(sTitle), hParent);
 
 		if (!sComments.IsEmpty())
-			pITL4->SetTaskComments(hTask, sComments);
+		{
+			pITL4->SetTaskComments(hTask, ATL::CT2A(sComments));
+		}
 
 		// update state
 		hLastTask = hTask;
@@ -135,19 +145,25 @@ bool CPlainTextImporter::Import(const char* szSrcFilePath, ITaskList* pDestTaskF
 int CPlainTextImporter::GetDepth(const CString& sLine)
 {
 	if (INDENT.IsEmpty() || sLine.IsEmpty())
+	{
 		return 0;
+	}
 
 	// else
 	int nDepth = 0;
-	
-	if (INDENT == "\t")
+
+	if (INDENT == _T("\t"))
 	{
 		while (nDepth < sLine.GetLength())
 		{
-			if (sLine[nDepth] == '\t')
+			if (sLine[nDepth] == _T('\t'))
+			{
 				nDepth++;
+			}
 			else
+			{
 				break;
+			}
 		}
 	}
 	else // one or more spaces
@@ -157,18 +173,24 @@ int CPlainTextImporter::GetDepth(const CString& sLine)
 		while (nPos < sLine.GetLength())
 		{
 			if (sLine.Find(INDENT, nPos) == nPos)
+			{
 				nDepth++;
+			}
 			else
+			{
 				break;
+			}
 
 			// next
 			nPos = nDepth * INDENT.GetLength();
 		}
 	}
 
-	// set root depth if not set 
+	// set root depth if not set
 	if (ROOTDEPTH == -1)
+	{
 		ROOTDEPTH = nDepth;
+	}
 
 	// and take allowance for it
 	nDepth -= ROOTDEPTH;
@@ -176,11 +198,11 @@ int CPlainTextImporter::GetDepth(const CString& sLine)
 	return nDepth;
 }
 
-BOOL CPlainTextImporter::GetTitleComments(const CString& sLine, 
-										  CString& sTitle, CString& sComments)
+BOOL CPlainTextImporter::GetTitleComments(const CString& sLine,
+      CString& sTitle, CString& sComments)
 {
-	int nDelim = sLine.Find("|"); 
-	
+	int nDelim = sLine.Find(_T("|"));
+
 	if (nDelim != -1)
 	{
 		sTitle = sLine.Left(nDelim);

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -59,23 +59,29 @@ COptionsDlg::COptionsDlg(BOOL bImport, CWnd* pParent /*=NULL*/)
 	m_sTitle.LoadString(bImport ? IDS_IMPORTTITLE : IDS_EXPORTTITLE);
 	m_sProjectLabel.LoadString(bImport ? IDS_IMPORTPROJECTLABEL : IDS_EXPORTPROJECTLABEL);
 
-	m_bIncludeProject = AfxGetApp()->GetProfileInt("Importers\\PlainText", "IncludeProject", FALSE);
+	m_bIncludeProject = AfxGetApp()->GetProfileInt(_T("Importers\\PlainText"), _T("IncludeProject"), FALSE);
 
-	BOOL bSpaceIndent = AfxGetApp()->GetProfileInt("Importers\\PlainText", "UseSpaceIndents", -1);
+	BOOL bSpaceIndent = AfxGetApp()->GetProfileInt(_T("Importers\\PlainText"), _T("UseSpaceIndents"), -1);
 	int nSpaces = 2;
 
 	if (bSpaceIndent == -1) // first time
 	{
-		bSpaceIndent = AfxGetApp()->GetProfileInt("Preferences", "UseSpaceIndents", TRUE);
-		nSpaces = AfxGetApp()->GetProfileInt("Preferences", "TextIndent", 2);
+		bSpaceIndent = AfxGetApp()->GetProfileInt(_T("Preferences"), _T("UseSpaceIndents"), TRUE);
+		nSpaces = AfxGetApp()->GetProfileInt(_T("Preferences"), _T("TextIndent"), 2);
 	}
 	else
-		nSpaces = AfxGetApp()->GetProfileInt("Importers\\PlainText", "TextIndent", 2);
+	{
+		nSpaces = AfxGetApp()->GetProfileInt(_T("Importers\\PlainText"), _T("TextIndent"), 2);
+	}
 
 	if (bSpaceIndent)
+	{
 		m_nIndent = (int)((log((double)nSpaces) + 0.001) / log((double)2)) + 1;
+	}
 	else // tabs
+	{
 		m_nIndent = 0;
+	}
 }
 
 
@@ -92,13 +98,15 @@ void COptionsDlg::DoDataExchange(CDataExchange* pDX)
 	if (pDX->m_bSaveAndValidate)
 	{
 		if (m_nIndent == 0)
-			m_sIndent = "\t";
+		{
+			m_sIndent = _T("\t");
+		}
 		else
 		{
 			CString sSpaces;
 			m_cbIndent.GetLBText(m_nIndent, sSpaces);
 
-			m_sIndent = CString(' ', atoi(sSpaces));
+			m_sIndent = CString(_T(' '), _ttoi(sSpaces));
 		}
 	}
 }
@@ -112,15 +120,15 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // COptionsDlg message handlers
 
-BOOL COptionsDlg::OnInitDialog() 
+BOOL COptionsDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
+
 	SetWindowText(m_sTitle);
 	GetDlgItem(IDC_PROJECTINCLUDED)->SetWindowText(m_sProjectLabel);
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void COptionsDlg::OnOK()
@@ -128,7 +136,7 @@ void COptionsDlg::OnOK()
 	CDialog::OnOK();
 
 	// save state
-	AfxGetApp()->WriteProfileInt("Importers\\PlainText", "UseSpaceIndents", m_nIndent != 0);
-	AfxGetApp()->WriteProfileInt("Importers\\PlainText", "TextIndent", m_nIndent == 0 ? 0 : m_sIndent.GetLength());
-	AfxGetApp()->WriteProfileInt("Importers\\PlainText", "IncludeProject", m_bIncludeProject);
+	AfxGetApp()->WriteProfileInt(_T("Importers\\PlainText"), _T("UseSpaceIndents"), m_nIndent != 0);
+	AfxGetApp()->WriteProfileInt(_T("Importers\\PlainText"), _T("TextIndent"), m_nIndent == 0 ? 0 : m_sIndent.GetLength());
+	AfxGetApp()->WriteProfileInt(_T("Importers\\PlainText"), _T("IncludeProject"), m_bIncludeProject);
 }
