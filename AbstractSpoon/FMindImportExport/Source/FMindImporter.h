@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -43,20 +43,32 @@
 #include "../../Common/ITaskList.h"
 #include "../../Common/XmlFile.h"
 
-class CFMindImporter : public IImportTasklist  
+class CFMindImporter : public IImportTasklist
 {
 public:
 	CFMindImporter();
 	virtual ~CFMindImporter();
 	// interface implementation
-	void Release() { delete this; }
-	
+	void Release()
+	{
+		delete this;
+	}
+
 	// caller must copy only
-	const char* GetMenuText() { return "FreeMind"; }
-	const char* GetFileFilter() { return "FreeMind Files (*.mm)|*.mm||"; }
-	const char* GetFileExtension() { return "mm"; }
-	
-	bool Import(const char* szSrcFilePath, ITaskList* pDestTaskFile);
+	const char* GetMenuText()
+	{
+		return "FreeMind";
+	}
+	const char* GetFileFilter()
+	{
+		return "FreeMind Files (*.mm)|*.mm||";
+	}
+	const char* GetFileExtension()
+	{
+		return "mm";
+	}
+
+	bool Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile);
 
 protected:
 	bool ImportTask(const CXmlItem* pFMTask, ITaskList7* pDestTaskFile, HTASKITEM hParent) const;
