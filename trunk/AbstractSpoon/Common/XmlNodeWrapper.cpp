@@ -554,7 +554,7 @@ CString CXmlDocumentWrapper::Transform(LPCTSTR pathXSL) const
 	{
 		if (xsl.Load(pathXSL))
 		{
-			return (LPSTR)m_xmldoc->transformNode(xsl.AsNode());
+			return (LPTSTR)m_xmldoc->transformNode(xsl.AsNode());
 		}
 	}
 	catch (const _com_error& err)
@@ -613,7 +613,7 @@ CString CXmlDocumentWrapper::GetXML(BOOL bPreserveWhiteSpace) const
 
 CString CXmlDocumentWrapper::GetUrl() const
 {
-	return (LPSTR)m_xmldoc->Geturl();
+	return (LPTSTR)m_xmldoc->Geturl();
 }
 
 BOOL CXmlDocumentWrapper::IsVersion3orGreater()
