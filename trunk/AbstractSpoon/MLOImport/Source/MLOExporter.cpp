@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -42,7 +42,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -52,83 +52,97 @@ static char THIS_FILE[]=__FILE__;
 
 CMLOExporter::CMLOExporter()
 {
-
 }
 
-CMLOExporter::~CMLOExporter() 
+CMLOExporter::~CMLOExporter()
 {
-
 }
 
-bool CMLOExporter::Export(const ITaskList* pSrcTaskFile, const char* szDestFilePath, BOOL /*bSilent*/)
+bool CMLOExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
 {
-	CXmlFile fileDest("MyLifeOrganized-xml");
+	CXmlFile fileDest(_T("MyLifeOrganized-xml"));
 
 	const ITaskList7* pITL7 = GetITLInterface<ITaskList7>(pSrcTaskFile, IID_TASKLIST7);
-	ASSERT (pITL7);
+	ASSERT(pITL7);
 
 	// export tasks
-	CXmlItem* pXITasks = fileDest.AddItem("TaskTree");
+	CXmlItem* pXITasks = fileDest.AddItem(_T("TaskTree"));
 
 	if (!ExportTask(pITL7, pSrcTaskFile->GetFirstTask(), pXITasks))
+	{
 		return false;
+	}
 
 	// export resource allocations
 	ExportPlaces(pITL7, fileDest.Root());
 
 	// save result
-	VERIFY (fileDest.Save(szDestFilePath));
+	VERIFY(fileDest.Save(szDestFilePath));
 
 	return true;
 }
 
-bool CMLOExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, 
-							 CXmlItem* pXIDestParent)
+bool CMLOExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
+                              CXmlItem* pXIDestParent)
 {
 	if (!hTask)
+	{
 		return true;
+	}
 
 	// create a new item corresponding to pXITask at the dest
-	CXmlItem* pXIDestItem = pXIDestParent->AddItem("TaskNode");
+	CXmlItem* pXIDestItem = pXIDestParent->AddItem(_T("TaskNode"));
 
 	if (!pXIDestItem)
+	{
 		return false;
+	}
 
 	// copy across the appropriate attributes
-	pXIDestItem->AddItem("Caption", pSrcTaskFile->GetTaskTitle(hTask));
+	pXIDestItem->AddItem(_T("Caption"), ATL::CA2T(pSrcTaskFile->GetTaskTitle(hTask)));
 
-   // priority
-   int nPriority = pSrcTaskFile->GetTaskPriority(hTask, FALSE);
-   int nImportance = max(nPriority, 0) * 10;
+	// priority
+	int nPriority = pSrcTaskFile->GetTaskPriority(hTask, FALSE);
+	int nImportance = max(nPriority, 0) * 10;
 
-	pXIDestItem->AddItem("Importance", nImportance);
+	pXIDestItem->AddItem(_T("Importance"), nImportance);
 
 	// dates
 	time_t tDue = pSrcTaskFile->GetTaskDueDate(hTask, FALSE);
 	time_t tDone = pSrcTaskFile->GetTaskDoneDate(hTask);
 
 	if (tDone)
-		pXIDestItem->AddItem("CompletionDateTime", CDateHelper::FormatDate(tDone, DHFD_ISO));
+	{
+		pXIDestItem->AddItem(_T("CompletionDateTime"), CDateHelper::FormatDate(tDone, DHFD_ISO));
+	}
 
 	if (tDue)
-		pXIDestItem->AddItem("DueDateTime", CDateHelper::FormatDate(tDue, DHFD_ISO));
+	{
+		pXIDestItem->AddItem(_T("DueDateTime"), CDateHelper::FormatDate(tDue, DHFD_ISO));
+	}
 
-   // time estimate
-   char cTimeUnits;
-  	double dTimeEst = pSrcTaskFile->GetTaskTimeEstimate(hTask, cTimeUnits, FALSE);
-   
-   if (dTimeEst > 0.0)
-      pXIDestItem->AddItem("EstimateMax", CTimeHelper().GetTime(dTimeEst, cTimeUnits, THU_DAYS));
-	
+	// time estimate
+	char cTimeUnits;
+	double dTimeEst = pSrcTaskFile->GetTaskTimeEstimate(hTask, cTimeUnits, FALSE);
+
+	if (dTimeEst > 0.0)
+	{
+		pXIDestItem->AddItem(_T("EstimateMax"), CTimeHelper().GetTime(dTimeEst, cTimeUnits, THU_DAYS));
+	}
+
 	// comments
 	const char* szComments = pSrcTaskFile->GetTaskComments(hTask);
 
 	if (szComments && *szComments)
-		pXIDestItem->AddItem("Note", szComments);
+	{
+		pXIDestItem->AddItem(_T("Note"), ATL::CA2T(szComments));
+	}
 
 	// copy across first child
 	if (!ExportTask(pSrcTaskFile, pSrcTaskFile->GetFirstTask(hTask), pXIDestItem))
+	{
 		return false;
+	}
 
 	// copy across first sibling
 	return ExportTask(pSrcTaskFile, pSrcTaskFile->GetNextTask(hTask), pXIDestParent);
@@ -137,17 +151,19 @@ bool CMLOExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 void CMLOExporter::BuildPlacesMap(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CMapStringToString& mapPlaces)
 {
 	if (!hTask)
+	{
 		return;
+	}
 
 	int nCat = pSrcTaskFile->GetTaskCategoryCount(hTask);
-	
+
 	while (nCat--)
 	{
 		CString sCat = pSrcTaskFile->GetTaskCategory(hTask, nCat);
-      CString sCatUpper(sCat);
-      sCat.MakeUpper();
+		CString sCatUpper(sCat);
+		sCat.MakeUpper();
 
-      mapPlaces[sCatUpper] = sCat;
+		mapPlaces[sCatUpper] = sCat;
 	}
 
 	// children
@@ -159,12 +175,12 @@ void CMLOExporter::BuildPlacesMap(const ITaskList7* pSrcTaskFile, HTASKITEM hTas
 
 void CMLOExporter::ExportPlaces(const ITaskList7* pSrcTaskFile, CXmlItem* pDestPrj)
 {
-   CMapStringToString mapPlaces;
+	CMapStringToString mapPlaces;
 	BuildPlacesMap(pSrcTaskFile, pSrcTaskFile->GetFirstTask(), mapPlaces);
 
 	if (mapPlaces.GetCount())
 	{
-		CXmlItem* pXIResources = pDestPrj->AddItem("PlacesList");
+		CXmlItem* pXIResources = pDestPrj->AddItem(_T("PlacesList"));
 		CString sPlace, sPlaceUpper;
 
 		POSITION pos = mapPlaces.GetStartPosition();
@@ -172,11 +188,13 @@ void CMLOExporter::ExportPlaces(const ITaskList7* pSrcTaskFile, CXmlItem* pDestP
 		while (pos)
 		{
 			mapPlaces.GetNextAssoc(pos, sPlaceUpper, sPlace);
-			
-			CXmlItem* pXIRes = pXIResources->AddItem("TaskPlace");
+
+			CXmlItem* pXIRes = pXIResources->AddItem(_T("TaskPlace"));
 
 			if (pXIRes)
-				pXIRes->AddItem("Caption", sPlace);
+			{
+				pXIRes->AddItem(_T("Caption"), sPlace);
+			}
 		}
 	}
 }

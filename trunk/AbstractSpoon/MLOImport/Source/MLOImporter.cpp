@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -56,91 +56,107 @@ CMLOImporter::~CMLOImporter()
 
 }
 
-bool CMLOImporter::Import(const char* szSrcFilePath, ITaskList* pDestTaskFile)
+bool CMLOImporter::Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile)
 {
 	ITaskList5* pTL5 = GetITLInterface<ITaskList5>(pDestTaskFile, IID_TASKLIST5);
 
 	if (!pTL5)
+	{
 		return false;
+	}
 
 	CXmlFile file;
 
-	if (!file.Load(szSrcFilePath, "MyLifeOrganized-xml"))
+	if (!file.Load(szSrcFilePath, _T("MyLifeOrganized-xml")))
+	{
 		return false;
+	}
 
-	const CXmlItem* pXIMLOTree = file.GetItem("TaskTree");
+	const CXmlItem* pXIMLOTree = file.GetItem(_T("TaskTree"));
 
 	if (!pXIMLOTree)
+	{
 		return false;
+	}
 
-	const CXmlItem* pXIMLOTask = pXIMLOTree->GetItem("TaskNode");
+	const CXmlItem* pXIMLOTask = pXIMLOTree->GetItem(_T("TaskNode"));
 
 	if (!pXIMLOTask)
+	{
 		return false;
+	}
 
-	// this first node always seems to be untitled 
+	// this first node always seems to be untitled
 	// so we get the first subnode
-	pXIMLOTask = pXIMLOTask->GetItem("TaskNode");
+	pXIMLOTask = pXIMLOTask->GetItem(_T("TaskNode"));
 
 	if (!pXIMLOTask)
-		return true; // just means it was an empty tasklist
-	
+	{
+		return true;   // just means it was an empty tasklist
+	}
+
 	return ImportTask(pXIMLOTask, pTL5, NULL); // NULL ==  root
 }
 
 bool CMLOImporter::ImportTask(const CXmlItem* pXIMLOTask, ITaskList5* pDestTaskFile, HTASKITEM hParent) const
 {
-	ASSERT (pXIMLOTask);
+	ASSERT(pXIMLOTask);
 
-	HTASKITEM hTask = pDestTaskFile->NewTask(pXIMLOTask->GetItemValue("Caption"), hParent);
+	HTASKITEM hTask = pDestTaskFile->NewTask(ATL::CT2A(pXIMLOTask->GetItemValue(_T("Caption"))), hParent);
 
 	if (!hTask)
+	{
 		return false;
+	}
 
 	// priority (== Importance)
-	int nPriority = (pXIMLOTask->GetItemValueI("Importance") * 10) / 100;
+	int nPriority = (pXIMLOTask->GetItemValueI(_T("Importance")) * 10) / 100;
 
 	pDestTaskFile->SetTaskPriority(hTask, (unsigned char)nPriority);
 
 	// categories (== places)
-	const CXmlItem* pXIPlace = pXIMLOTask->GetItem("Places", "Place");
+	const CXmlItem* pXIPlace = pXIMLOTask->GetItem(_T("Places"), _T("Place"));
 
 	while (pXIPlace)
 	{
-		pDestTaskFile->AddTaskCategory(hTask, pXIPlace->GetValue());
+		pDestTaskFile->AddTaskCategory(hTask, ATL::CT2A(pXIPlace->GetValue()));
 		pXIPlace = pXIPlace->GetSibling();
 	}
 
 	// estimated time (== EstimateMax)
-	double dTimeEst = pXIMLOTask->GetItemValueF("EstimateMax"); // in days
+	double dTimeEst = pXIMLOTask->GetItemValueF(_T("EstimateMax")); // in days
 
 	pDestTaskFile->SetTaskTimeEstimate(hTask, dTimeEst, 'D');
 
 	// due date (== DueDateTime)
-	pDestTaskFile->SetTaskDueDate(hTask, GetDate(pXIMLOTask, "DueDateTime"));
+	pDestTaskFile->SetTaskDueDate(hTask, GetDate(pXIMLOTask, _T("DueDateTime")));
 
 	// completion (== CompletionDateTime)
-	pDestTaskFile->SetTaskDoneDate(hTask, GetDate(pXIMLOTask, "CompletionDateTime"));
+	pDestTaskFile->SetTaskDoneDate(hTask, GetDate(pXIMLOTask, _T("CompletionDateTime")));
 
 	// comments (== Note)
-	CString sComments = pXIMLOTask->GetItemValue("Note");
+	CString sComments = pXIMLOTask->GetItemValue(_T("Note"));
 
-	pDestTaskFile->SetTaskComments(hTask, sComments);
+	pDestTaskFile->SetTaskComments(hTask, ATL::CT2A(sComments));
 
 	// children
-	const CXmlItem* pXIMLOSubTask = pXIMLOTask->GetItem("TaskNode");
+	const CXmlItem* pXIMLOSubTask = pXIMLOTask->GetItem(_T("TaskNode"));
 
 	if (pXIMLOSubTask)
 	{
 		if (!ImportTask(pXIMLOSubTask, pDestTaskFile, hTask))
+		{
 			return false;
+		}
 	}
 
 	// siblings
 	pXIMLOTask = pXIMLOTask->GetSibling();
 
 	if (pXIMLOTask)
+	{
 		return ImportTask(pXIMLOTask, pDestTaskFile, hParent);
+	}
 
 	// else
 	return true;
@@ -149,10 +165,12 @@ bool CMLOImporter::ImportTask(const CXmlItem* pXIMLOTask, ITaskList5* pDestTaskF
 time_t CMLOImporter::GetDate(const CXmlItem* pXIMLOTask, LPCTSTR szDateField) const
 {
 	CString sDate = pXIMLOTask->GetItemValue(szDateField);
-   time_t date = 0;
+	time_t date = 0;
 
-   if (!CDateHelper::DecodeISODate(sDate, date))
-      date = 0;
+	if (!CDateHelper::DecodeISODate(sDate, date))
+	{
+		date = 0;
+	}
 
 	return date;
 }
