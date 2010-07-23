@@ -43,7 +43,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -54,11 +54,11 @@ static char THIS_FILE[]=__FILE__;
 CString CXmlFileEx::s_sPasswordExplanation(ENCRYPT_ENTERPWD);
 CString CXmlFileEx::s_sDecryptFailed(ENCRYPT_DECRYPTFAILED);
 
-const LPCTSTR ENCODEDDATA = "ENCODEDDATA";
-const LPCTSTR ENCODEDDATALEN = "DATALEN";
+const LPCTSTR ENCODEDDATA = _T("ENCODEDDATA");
+const LPCTSTR ENCODEDDATALEN = _T("DATALEN");
 
 CXmlFileEx::CXmlFileEx(LPCTSTR szRootItemName, LPCTSTR szPassword)
-: CXmlFile(szRootItemName), m_pEncryptor(NULL), m_sPassword(szPassword)
+	: CXmlFile(szRootItemName), m_pEncryptor(NULL), m_sPassword(szPassword)
 {
 
 }
@@ -69,7 +69,7 @@ CXmlFileEx::~CXmlFileEx()
 }
 
 void CXmlFileEx::SetUIStrings(UINT nIDPasswordExplanation,
-										UINT nIDDecryptFailed)
+                              UINT nIDDecryptFailed)
 {
 	s_sPasswordExplanation.LoadString(nIDPasswordExplanation);
 	s_sDecryptFailed.LoadString(nIDDecryptFailed);
@@ -79,14 +79,18 @@ void CXmlFileEx::SetUIStrings(UINT nIDPasswordExplanation,
 BOOL CXmlFileEx::Encrypt(LPCTSTR szPassword)
 {
 	if (!szPassword)
+	{
 		szPassword = m_sPassword;
+	}
 
 	if (!(*szPassword) || !InitEncryptor())
+	{
 		return FALSE;
+	}
 
 	// 1. export everything below the root to a string
 	CXmlDocumentWrapper doc;
-	doc.LoadXML("<a></a>");
+	doc.LoadXML(_T("<a></a>"));
 
 	CXmlNodeWrapper nodeDoc(doc.AsNode());
 
@@ -97,13 +101,13 @@ BOOL CXmlFileEx::Encrypt(LPCTSTR szPassword)
 	while (pos)
 	{
 		const CXmlItem* pXI = m_xiRoot.GetNextItem(pos);
-		ASSERT (pXI);
+		ASSERT(pXI);
 
 		while (pXI)
 		{
 			CString sItem = pXI->GetName();
 			CXmlNodeWrapper nodeChild(nodeDoc.InsertNode(nNode++, (LPCTSTR)sItem));
-			ASSERT (nodeChild.IsValid());
+			ASSERT(nodeChild.IsValid());
 
 			Export(pXI, &nodeChild);
 			sXml += nodeChild.GetXML();
@@ -117,9 +121,12 @@ BOOL CXmlFileEx::Encrypt(LPCTSTR szPassword)
 	unsigned char* pEncrypted = NULL;
 	int nLenEncrypted = 0;
 
-	if (!m_pEncryptor->Encrypt((unsigned char*)(LPCTSTR)sXml, sXml.GetLength() + 1, szPassword, // RB - Added sPassword parameter instead of NULL
-		pEncrypted, nLenEncrypted))
+	ATL::CT2A aInput(sXml);
+	if (!m_pEncryptor->Encrypt((unsigned char*)(LPSTR)aInput, sXml.GetLength() + 1, ATL::CT2A(szPassword), // RB - Added sPassword parameter instead of NULL
+	                           pEncrypted, nLenEncrypted))
+	{
 		return FALSE;
+	}
 
 	// 3. convert the binary to a string
 	CBase64Coder b64;
@@ -129,8 +136,8 @@ BOOL CXmlFileEx::Encrypt(LPCTSTR szPassword)
 
 	// 4. replace file contents with a single CDATA item
 	m_xiRoot.DeleteAllItems();
-	m_xiRoot.AddItem(ENCODEDDATA, pEncodedDataBuffer, XIT_CDATA);
-	m_xiRoot.AddItem("DATALEN", nLenEncrypted);
+	m_xiRoot.AddItem(ENCODEDDATA, ATL::CA2T(pEncodedDataBuffer), XIT_CDATA);
+	m_xiRoot.AddItem(_T("DATALEN"), nLenEncrypted);
 
 	// 5. cleanup
 	m_pEncryptor->FreeBuffer(pEncrypted);
@@ -146,7 +153,9 @@ BOOL CXmlFileEx::IsEncrypted()
 BOOL CXmlFileEx::Decrypt(LPCTSTR szPassword)
 {
 	if (!IsEncrypted())
-		return TRUE; // nothing to do
+	{
+		return TRUE;   // nothing to do
+	}
 
 	// we don't try to decrypt if no encryption capabilities
 	if (!CanEncrypt())
@@ -156,7 +165,9 @@ BOOL CXmlFileEx::Decrypt(LPCTSTR szPassword)
 	}
 
 	if (!szPassword)
+	{
 		szPassword = m_sPassword;
+	}
 
 	CXmlItem* pXI = GetEncryptedBlock();
 
@@ -171,8 +182,10 @@ BOOL CXmlFileEx::Decrypt(LPCTSTR szPassword)
 			{
 				CString sExplanation(s_sPasswordExplanation);
 
-				if (sExplanation.Find("%s") != -1)
+				if (sExplanation.Find(_T("%s")) != -1)
+				{
 					sExplanation.Format(s_sPasswordExplanation, GetFileName());
+				}
 
 				if (!CPasswordDialog::RetrievePassword(FALSE, sPassword, sExplanation))
 				{
@@ -190,7 +203,7 @@ BOOL CXmlFileEx::Decrypt(LPCTSTR szPassword)
 
 				sFile.TrimLeft();
 				sFile.TrimRight();
-				sFile = "<ROOT>" + sFile + "</ROOT>";
+				sFile = _T("<ROOT>") + sFile + _T("</ROOT>");
 
 				// delete the cdata item
 				m_xiRoot.DeleteItem(pXI);
@@ -219,8 +232,10 @@ BOOL CXmlFileEx::Decrypt(LPCTSTR szPassword)
 			{
 				CString sMessage(s_sDecryptFailed);
 
-				if (sMessage.Find("%s") != -1)
+				if (sMessage.Find(_T("%s")) != -1)
+				{
 					sMessage.Format(s_sDecryptFailed, GetFileName());
+				}
 
 				if (IDNO == AfxMessageBox(sMessage, MB_YESNO))
 				{
@@ -249,7 +264,7 @@ CXmlItem* CXmlFileEx::GetEncryptedBlock()
 		if (!pXI)
 		{
 			// backwards compatibility
-			pXI = GetItem("CDATA");
+			pXI = GetItem(_T("CDATA"));
 
 			if (!pXI)
 			{
@@ -279,11 +294,15 @@ BOOL CXmlFileEx::Open(LPCTSTR szFilePath, XF_OPEN nOpenFlags, BOOL bDecrypt)
 BOOL CXmlFileEx::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 {
 	if (!CXmlFile::LoadEx(szRootItemName, pCallback))
+	{
 		return FALSE;
+	}
 
 	// we assume the file is encrypted if it contains a single CDATA element
 	if (m_bDecrypt)
+	{
 		return Decrypt();
+	}
 
 	return TRUE;
 }
@@ -291,24 +310,28 @@ BOOL CXmlFileEx::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 BOOL CXmlFileEx::Decrypt(LPCTSTR szInput, CString& sOutput, LPCTSTR szPassword)
 {
 	if (!InitEncryptor())
+	{
 		return FALSE;
+	}
 
 	// 1. convert the input string back to binary
 	CBase64Coder b64;
-	b64.Decode(szInput);
+	b64.Decode(ATL::CT2A(szInput));
 
 	DWORD nReqBufLen = 0;
 	unsigned char* pDecodedDataBuffer = b64.DecodedMessage(nReqBufLen);
 
-	nReqBufLen = GetItemValueI("DATALEN");
+	nReqBufLen = GetItemValueI(_T("DATALEN"));
 
 	// 2. decrypt it
 	unsigned char* pDecrypted = NULL;
 	int nLenDecrypted = 0;
 
-	if (!m_pEncryptor->Decrypt((unsigned char*)pDecodedDataBuffer, nReqBufLen, szPassword,
-		pDecrypted, nLenDecrypted))
+	if (!m_pEncryptor->Decrypt((unsigned char*)pDecodedDataBuffer, nReqBufLen, ATL::CT2A(szPassword),
+	                           pDecrypted, nLenDecrypted))
+	{
 		return FALSE;
+	}
 
 	// 3. result should be a null-terminated string
 	sOutput = pDecrypted;
@@ -322,7 +345,9 @@ BOOL CXmlFileEx::Decrypt(LPCTSTR szInput, CString& sOutput, LPCTSTR szPassword)
 BOOL CXmlFileEx::InitEncryptor()
 {
 	if (m_pEncryptor)
+	{
 		return TRUE;
+	}
 
 	m_pEncryptor = CreateEncryptionInterface(_T("EncryptDecrypt.dll"));
 

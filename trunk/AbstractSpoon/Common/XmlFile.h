@@ -125,7 +125,10 @@ public:
 	BOOL IsAttribute(int nMaxAttribLen = 8192) const;
 	BOOL IsCDATA() const;
 	BOOL SetType(XI_TYPE nType);
-	XI_TYPE GetType() const { return m_nType; }
+	XI_TYPE GetType() const
+	{
+		return m_nType;
+	}
 
 	POSITION GetFirstItemPos() const;
 	const CXmlItem* GetNextItem(POSITION& pos) const;
