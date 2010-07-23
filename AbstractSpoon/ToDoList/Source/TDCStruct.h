@@ -697,7 +697,7 @@ struct SEARCHPARAM
 		case FT_TIME:
 			{
 				CString sVal;
-				sVal.Format("%.3f", dValue);
+				sVal.Format(_T("%.3f"), dValue);
 				return sVal;
 			}
 			break;
@@ -706,7 +706,7 @@ struct SEARCHPARAM
 		case FT_BOOL:
 			{
 				CString sVal;
-				sVal.Format("%d", nValue);
+				sVal.Format(_T("%d"), nValue);
 				return sVal;
 			}
 			break;
@@ -967,7 +967,7 @@ struct FTDCFILTER
 			// special case: if aItems2 is empty, test for empty
 			// string in aCategories
 			if (aItems2.GetSize() == 0)
-				return (Misc::Find(aItems1, "") != -1);
+				return (Misc::Find(aItems1, _T("")) != -1);
 			else
 				return Misc::MatchAny(aItems1, aItems2);
 		}
@@ -979,7 +979,7 @@ struct FTDCFILTER
 		if (aItems1.GetSize() == 1 && aItems1[0].IsEmpty())
 			return (aItems2.GetSize() == 0);
 
-		int nBlank = Misc::Find(aItems1, "");
+		int nBlank = Misc::Find(aItems1, _T(""));
 		
 		if (nBlank != -1)
 		{
@@ -989,7 +989,7 @@ struct FTDCFILTER
 			while (nBlank != -1)
 			{
 				aCopy.RemoveAt(nBlank);
-				nBlank = Misc::Find(aCopy, "");
+				nBlank = Misc::Find(aCopy, _T(""));
 			}
 			
 			// compare what's left

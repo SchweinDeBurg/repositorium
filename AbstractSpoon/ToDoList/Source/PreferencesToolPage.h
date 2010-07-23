@@ -49,7 +49,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesToolPage dialog
 
-const UINT WM_PTP_TESTTOOL = ::RegisterWindowMessage("WM_PTP_TESTTOOL");
+const UINT WM_PTP_TESTTOOL = ::RegisterWindowMessage(_T("WM_PTP_TESTTOOL"));
 
 class CPreferencesToolPage : public CPreferencesPageBase
 {

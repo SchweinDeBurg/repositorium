@@ -162,7 +162,7 @@ public:
 	int SetTaskColor(DWORD dwID, COLORREF color);
 	int SetTaskIconIndex(DWORD dwID, int nIndex);
 	int ClearTaskColor(DWORD dwID) { SetTaskColor(dwID, (COLORREF)-1); }
-	int SetTaskComments(DWORD dwID, LPCTSTR szComments, const CString& sCustomComments = "", LPCTSTR szCommentsTypeID = NULL);
+	int SetTaskComments(DWORD dwID, LPCTSTR szComments, const CString& sCustomComments = _T(""), LPCTSTR szCommentsTypeID = NULL);
 	int SetTaskCommentsType(DWORD dwID, LPCTSTR szCommentsTypeID);
 	int SetTaskPercent(DWORD dwID, int nPercent);
 	int SetTaskTimeEstimate(DWORD dwID, double dTime, int nUnits = TDITU_HOURS);

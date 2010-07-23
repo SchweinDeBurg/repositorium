@@ -42,7 +42,7 @@
 #include "../../CodeProject/Source/EnEdit.h"
 #include "../../CodeProject/Source/TimeHelper.h"
 
-const UINT WM_TEN_UNITSCHANGE = ::RegisterWindowMessage("WM_TEN_UNITSCHANGE"); // wParam == <CtrlID>, lParam = <prev units>
+const UINT WM_TEN_UNITSCHANGE = ::RegisterWindowMessage(_T("WM_TEN_UNITSCHANGE")); // wParam == <CtrlID>, lParam = <prev units>
 
 const int TEBTN_UNITS = 1;
 

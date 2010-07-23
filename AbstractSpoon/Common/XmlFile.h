@@ -225,8 +225,8 @@ public:
 	int GetLastFileError();
 
 	BOOL Export(CString& sOutput) const;
-	BOOL Transform(LPCTSTR szTransformPath, CString& sOutput, const CString& sEncoding = "") const;
-	BOOL TransformToFile(LPCTSTR szTransformPath, LPCTSTR szOutputPath, const CString& sEncoding = "") const;
+	BOOL Transform(LPCTSTR szTransformPath, CString& sOutput, const CString& sEncoding = _T("")) const;
+	BOOL TransformToFile(LPCTSTR szTransformPath, LPCTSTR szOutputPath, const CString& sEncoding = _T("")) const;
 	//static void EnableFormattedOutput(BOOL bEnable = TRUE);
 
 	const CXmlItem* Root() const;

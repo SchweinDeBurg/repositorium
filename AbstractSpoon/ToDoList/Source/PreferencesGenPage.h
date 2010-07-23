@@ -44,7 +44,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesGenPage dialog
 
-const UINT WM_PGP_CLEARMRU = ::RegisterWindowMessage("WM_PGP_CLEARMRU");
+const UINT WM_PGP_CLEARMRU = ::RegisterWindowMessage(_T("WM_PGP_CLEARMRU"));
 
 enum // tray options
 {

@@ -24,7 +24,7 @@ class CEnHeaderCtrl : public CHeaderCtrl
 public:
 	CEnHeaderCtrl();
 	void EnableTracking(BOOL bAllow) { m_bAllowTracking = bAllow; }
-	int AddColumn(int nCol, int nWidth, CString sTitle = "", int nFormat = HDF_LEFT, UINT uIDBitmap = 0);
+	int AddColumn(int nCol, int nWidth, CString sTitle = _T(""), int nFormat = HDF_LEFT, UINT uIDBitmap = 0);
 	BOOL SetColumnWidth(int nCol, int nWidth);
 	int GetColumnWidth(int nCol);
 

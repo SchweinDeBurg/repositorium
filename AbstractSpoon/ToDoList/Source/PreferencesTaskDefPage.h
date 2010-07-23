@@ -82,7 +82,7 @@ enum PTDP_LIST
 };
 // wParam = MAKEWPARAM(enum, 0 for delete, 1 for add)
 // lParam = LPCTSTR
-const UINT WM_PTDP_LISTCHANGE = ::RegisterWindowMessage("WM_PTDP_LISTCHANGE");
+const UINT WM_PTDP_LISTCHANGE = ::RegisterWindowMessage(_T("WM_PTDP_LISTCHANGE"));
 
 class CPreferencesTaskDefPage : public CPreferencesPageBase, public CDialogHelper
 {

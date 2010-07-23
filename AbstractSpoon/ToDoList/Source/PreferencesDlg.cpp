@@ -181,45 +181,45 @@ void CPreferencesDlg::OnHelp()
 {
 	// who is the active page?
 	int nSel = GetActiveIndex();
-	CString sHelpPage = "pref.htm";
+	CString sHelpPage = _T("pref.htm");
 	
 	switch (nSel)
 	{
 	case PREFPAGE_GEN:
-		sHelpPage += "#gen";
+		sHelpPage += _T("#gen");
 		break;
 		
 	case PREFPAGE_MULTIUSER:
-		sHelpPage += "#multiuser";
+		sHelpPage += _T("#multiuser");
 		break;
 		
 	case PREFPAGE_FILE:
 	case PREFPAGE_FILE2:
-		sHelpPage += "#file";
+		sHelpPage += _T("#file");
 		break;
 		
 	case PREFPAGE_UI:
-		sHelpPage += "#ui";
+		sHelpPage += _T("#ui");
 		break;
 		
 	case PREFPAGE_UITASK:
-		sHelpPage += "#uitask";
+		sHelpPage += _T("#uitask");
 		break;
 		
 	case PREFPAGE_TASK:
-		sHelpPage += "#tasks";
+		sHelpPage += _T("#tasks");
 		break;
 		
 	case PREFPAGE_TASKDEF:
-		sHelpPage += "#taskdefs";
+		sHelpPage += _T("#taskdefs");
 		break;
 		
 	case PREFPAGE_TOOL:
-		sHelpPage += "#tools";
+		sHelpPage += _T("#tools");
 		break;
 		
 	case PREFPAGE_SHORTCUT:
-		sHelpPage += "#shortcut";
+		sHelpPage += _T("#shortcut");
 		break;
 	}
 	
@@ -335,7 +335,7 @@ CString CPreferencesDlg::GetItemPath(HTREEITEM hti)
 	
 	while (hti)
 	{
-		sPath = m_tcPages.GetItemText(hti) + " > " + sPath;
+		sPath = m_tcPages.GetItemText(hti) + _T(" > ") + sPath;
 		hti = m_tcPages.GetParentItem(hti);
 	}
 	

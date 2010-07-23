@@ -41,7 +41,7 @@
 
 #include <afxole.h>
 
-const UINT WM_TLDT_DROPFILE = ::RegisterWindowMessage("WM_TLDT_DROPFILE"); // wparam = HTREEITEM or 0, lParam == (LPCTSTR)filepath
+const UINT WM_TLDT_DROPFILE = ::RegisterWindowMessage(_T("WM_TLDT_DROPFILE")); // wparam = HTREEITEM or 0, lParam == (LPCTSTR)filepath
 
 class CTaskListDropTarget : public COleDropTarget  
 {

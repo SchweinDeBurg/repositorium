@@ -168,7 +168,7 @@ protected:
 	void ExcludeControls(CDC* pDC, UINT nCtrlIDFrom, UINT nCtrlIDTo);
 
 	virtual CPoint GetInitialPos() const { return CPoint(-1, -1); }
-	virtual CString OverrideItemText(UINT /*nIDItem*/) { return ""; }
+	virtual CString OverrideItemText(UINT /*nIDItem*/) { return _T(""); }
 
 	inline BOOL IsEdit(UINT nCtrlID) { return CDialogHelper::IsEdit(this, nCtrlID); }
 

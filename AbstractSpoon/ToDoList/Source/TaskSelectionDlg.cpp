@@ -54,21 +54,21 @@ CTaskSelectionDlg::CTaskSelectionDlg(LPCTSTR szRegKey, BOOL bShowSubtaskCheckbox
 	//}}AFX_DATA_INIT
 	CPreferences prefs;
 
-	m_bCompletedTasks = prefs.GetProfileInt(m_sRegKey, "CompletedTasks", TRUE);
-	m_bIncompleteTasks = prefs.GetProfileInt(m_sRegKey, "IncompleteTasks", TRUE);
-	m_bSelectedTasks = prefs.GetProfileInt(m_sRegKey, "SelectedTasks", FALSE);
-	m_bSelectedSubtasks = prefs.GetProfileInt(m_sRegKey, "SelectedSubtasks", TRUE);
+	m_bCompletedTasks = prefs.GetProfileInt(m_sRegKey, _T("CompletedTasks"), TRUE);
+	m_bIncompleteTasks = prefs.GetProfileInt(m_sRegKey, _T("IncompleteTasks"), TRUE);
+	m_bSelectedTasks = prefs.GetProfileInt(m_sRegKey, _T("SelectedTasks"), FALSE);
+	m_bSelectedSubtasks = prefs.GetProfileInt(m_sRegKey, _T("SelectedSubtasks"), TRUE);
 
-	m_nAttribOption = prefs.GetProfileInt(m_sRegKey, "AttributeOption", TSDA_ALL);
+	m_nAttribOption = prefs.GetProfileInt(m_sRegKey, _T("AttributeOption"), TSDA_ALL);
 
 	CTDCAttributeArray aAttrib;
-	CString sGroup = m_sRegKey + "\\AttribVisibility";
-	int nAttrib = prefs.GetProfileInt(sGroup, "Count", 0);
+	CString sGroup = m_sRegKey + _T("\\AttribVisibility");
+	int nAttrib = prefs.GetProfileInt(sGroup, _T("Count"), 0);
 
 	while (nAttrib--)
 	{
 		CString sKey;
-		sKey.Format("att%d", nAttrib);
+		sKey.Format(_T("att%d"), nAttrib);
 
 		TDC_ATTRIBUTE att = (TDC_ATTRIBUTE)prefs.GetProfileInt(sGroup, sKey, 0);
 		aAttrib.Add(att);
@@ -149,23 +149,23 @@ void CTaskSelectionDlg::OnDestroy()
 	// save settings
 	CPreferences prefs;
 	
-	prefs.WriteProfileInt(m_sRegKey, "CompletedTasks", m_bCompletedTasks);
-	prefs.WriteProfileInt(m_sRegKey, "IncompleteTasks", m_bIncompleteTasks);
-	prefs.WriteProfileInt(m_sRegKey, "SelectedTasks", m_bSelectedTasks);
-	prefs.WriteProfileInt(m_sRegKey, "SelectedSubtasks", m_bSelectedSubtasks);
+	prefs.WriteProfileInt(m_sRegKey, _T("CompletedTasks"), m_bCompletedTasks);
+	prefs.WriteProfileInt(m_sRegKey, _T("IncompleteTasks"), m_bIncompleteTasks);
+	prefs.WriteProfileInt(m_sRegKey, _T("SelectedTasks"), m_bSelectedTasks);
+	prefs.WriteProfileInt(m_sRegKey, _T("SelectedSubtasks"), m_bSelectedSubtasks);
 
-	prefs.WriteProfileInt(m_sRegKey, "AttributeOption", m_nAttribOption);
+	prefs.WriteProfileInt(m_sRegKey, _T("AttributeOption"), m_nAttribOption);
 
 	CTDCAttributeArray aAttrib;
 	int nAttrib = m_lbAttribList.GetVisibleAttributes(aAttrib);
-	CString sGroup = m_sRegKey + "\\AttribVisibility";
+	CString sGroup = m_sRegKey + _T("\\AttribVisibility");
 
-	prefs.WriteProfileInt(sGroup, "Count", nAttrib);
+	prefs.WriteProfileInt(sGroup, _T("Count"), nAttrib);
 
 	while (nAttrib--)
 	{
 		CString sKey;
-		sKey.Format("att%d", nAttrib);
+		sKey.Format(_T("att%d"), nAttrib);
 
 		prefs.WriteProfileInt(sGroup, sKey, aAttrib[nAttrib]);
 	}

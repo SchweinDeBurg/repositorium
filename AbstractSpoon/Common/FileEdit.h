@@ -45,8 +45,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // CFileEdit window
 
-const UINT WM_FE_GETFILEICON = ::RegisterWindowMessage("WM_FE_GETFILEICON"); // lParam == <filepath>
-const UINT WM_FE_DISPLAYFILE = ::RegisterWindowMessage("WM_FE_DISPLAYFILE"); // lParam == <filepath>
+const UINT WM_FE_GETFILEICON = ::RegisterWindowMessage(_T("WM_FE_GETFILEICON")); // lParam == <filepath>
+const UINT WM_FE_DISPLAYFILE = ::RegisterWindowMessage(_T("WM_FE_DISPLAYFILE")); // lParam == <filepath>
 
 enum
 {

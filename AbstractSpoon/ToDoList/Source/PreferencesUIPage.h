@@ -91,7 +91,7 @@ public:
 	BOOL GetMultiSelFilters() const { return m_bMultiSelFilters; }
 	BOOL GetRestoreTasklistFilters() const { return m_bRestoreTasklistFilters; }
 	BOOL GetReFilterOnModify() const { return m_bAutoRefilter; }
-	CString GetUITheme() const { return m_bUseUITheme ? m_sUIThemeFile : ""; }
+	CString GetUITheme() const { return m_bUseUITheme ? m_sUIThemeFile : _T(""); }
 	BOOL GetEnableLightboxMgr() const { return m_bEnableLightboxMgr; }
 //	BOOL Get() const { return ; }
 

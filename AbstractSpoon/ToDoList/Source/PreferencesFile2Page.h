@@ -55,7 +55,7 @@ public:
 	~CPreferencesFile2Page();
 
 	BOOL GetBackupOnSave() const { return m_bBackupOnSave; }
-	CString GetBackupLocation() const { return m_bBackupOnSave ? m_sBackupLocation : ""; }
+	CString GetBackupLocation() const { return m_bBackupOnSave ? m_sBackupLocation : _T(""); }
 	int GetKeepBackupCount() const { return m_bBackupOnSave ? m_nKeepBackups : 0; }
 
 //	BOOL Get() const { return m_b; }

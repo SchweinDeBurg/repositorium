@@ -85,7 +85,7 @@ public:
 	static COleDateTimeSpan GetRemainingDueTime(const COleDateTime& date); // in days
 	static BOOL HasTime(const COleDateTime& date);
 	static void ParseTaskLink(const CString& sLink, DWORD& dwTaskID, CString& sFile);
-	static CString MakeTaskLink(DWORD dwTaskID, const CString& sFile = "");
+	static CString MakeTaskLink(DWORD dwTaskID, const CString& sFile = _T(""));
 
 	//  ------------------------------------------
 	
