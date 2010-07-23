@@ -180,7 +180,7 @@ void CColourPicker::DoColourPopup()
 	m_pPopup = new CColourPopup(CPoint(rect.left, rect.bottom),    // Point to display popup
 		GetColour(),                       // Selected colour
 		this,                              // parent
-		0,									// nID
+		0,                                 // nID
 		m_strDefaultText,                  // "Default" text area
 		m_strCustomText);                  // Custom Text
 
@@ -201,7 +201,7 @@ void CColourPicker::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	CSize Margins(::GetSystemMetrics(SM_CXEDGE), ::GetSystemMetrics(SM_CYEDGE));
 
 	// border
-	CThemed th(this, "EDIT");
+	CThemed th(this, _T("EDIT"));
 
 	if (th.AreControlsThemed())
 		th.DrawBackground(pDC, EP_EDITTEXT, ETS_NORMAL, rect);
