@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -44,21 +44,33 @@
 
 class CXmlItem;
 
-class CFMindExporter : public IExportTasklist  
+class CFMindExporter : public IExportTasklist
 {
 public:
 	CFMindExporter();
 	virtual ~CFMindExporter();
 	// interface implementation
-	void Release() { delete this; }
-	
+	void Release()
+	{
+		delete this;
+	}
+
 	// caller must copy only
-	const char* GetMenuText() { return "FreeMind"; }
-	const char* GetFileFilter() { return "FreeMind Files (*.mm)|*.mm||"; }
-	const char* GetFileExtension() { return "mm"; }
-	
-	bool Export(const ITaskList* pSrcTaskFile, const char* szDestFilePath, BOOL bSilent);
-	
+	const char* GetMenuText()
+	{
+		return "FreeMind";
+	}
+	const char* GetFileFilter()
+	{
+		return "FreeMind Files (*.mm)|*.mm||";
+	}
+	const char* GetFileExtension()
+	{
+		return "mm";
+	}
+
+	bool Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
+
 protected:
 	void ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CXmlItem* pXIDestParent , int LEVEL);
 	CString FormatDate(time_t tDate);
