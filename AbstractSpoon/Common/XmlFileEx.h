@@ -55,8 +55,14 @@ public:
 	CXmlFileEx(LPCTSTR szRootItemName = NULL, LPCTSTR szPassword = NULL);
 	virtual ~CXmlFileEx();
 
-	void SetPassword(LPCTSTR szPassword) { m_sPassword = szPassword; }
-	CString GetPassword() { return m_sPassword; }
+	void SetPassword(LPCTSTR szPassword)
+	{
+		m_sPassword = szPassword;
+	}
+	CString GetPassword()
+	{
+		return m_sPassword;
+	}
 
 	// allows for selective decrypting
 	BOOL Load(LPCTSTR szFilePath, LPCTSTR szRootItemName = NULL, IXmlParse* pCallback = NULL, BOOL bDecrypt = TRUE);
@@ -69,7 +75,7 @@ public:
 	static BOOL CanEncrypt(); // false if encryptor dll cannot be loaded
 
 	static void SetUIStrings(UINT nIDPasswordExplanation,
-		UINT nIDDecryptFailed);
+	                         UINT nIDDecryptFailed);
 
 protected:
 	IEncryption* m_pEncryptor;

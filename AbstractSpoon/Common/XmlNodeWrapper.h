@@ -45,7 +45,7 @@ class CXmlNodeWrapper
 {
 public:
 	CXmlNodeWrapper();
-	CXmlNodeWrapper(MSXML2::IXMLDOMNodePtr pNode,BOOL bAutoRelease = TRUE);
+	CXmlNodeWrapper(MSXML2::IXMLDOMNodePtr pNode, BOOL bAutoRelease = TRUE);
 	void operator=(MSXML2::IXMLDOMNodePtr pNode);
 	virtual ~CXmlNodeWrapper();
 
@@ -54,10 +54,10 @@ public:
 	CString GetAttribVal(int index);
 	CString GetAttribName(int index);
 	int NumAttributes();
-	void ReplaceNode(MSXML2::IXMLDOMNode* pOldNode,MSXML2::IXMLDOMNode* pNewNode);
+	void ReplaceNode(MSXML2::IXMLDOMNode* pOldNode, MSXML2::IXMLDOMNode* pNewNode);
 	CString GetText();
 	void SetText(LPCTSTR text);
-	MSXML2::IXMLDOMNode* InsertAfter(MSXML2::IXMLDOMNode *refNode, MSXML2::IXMLDOMNode *pNode);
+	MSXML2::IXMLDOMNode* InsertAfter(MSXML2::IXMLDOMNode* refNode, MSXML2::IXMLDOMNode* pNode);
 	CString Name();
 	MSXML2::IXMLDOMNodeList* FindNodes(LPCTSTR searchStr);
 	MSXML2::IXMLDOMNode* Parent();
@@ -68,8 +68,8 @@ public:
 	MSXML2::IXMLDOMDocument* ParentDocument();
 	CString GetXML();
 	MSXML2::IXMLDOMNode* RemoveNode(MSXML2::IXMLDOMNodePtr pNode);
-	MSXML2::IXMLDOMNode* InsertNode(int index,LPCTSTR nodeName);
-	MSXML2::IXMLDOMNode* InsertNode(int index,MSXML2::IXMLDOMNodePtr pNode);
+	MSXML2::IXMLDOMNode* InsertNode(int index, LPCTSTR nodeName);
+	MSXML2::IXMLDOMNode* InsertNode(int index, MSXML2::IXMLDOMNodePtr pNode);
 	MSXML2::IXMLDOMNode* AppendChild(MSXML2::IXMLDOMNodePtr pNode);
 	long NumNodes();
 	MSXML2::IXMLDOMNode* Detach();
@@ -78,17 +78,17 @@ public:
 	MSXML2::IXMLDOMNode* FindNode(LPCTSTR searchString);
 	MSXML2::IXMLDOMNode* GetPrevSibling();
 	MSXML2::IXMLDOMNode* GetNextSibling();
-	void SetValue(LPCTSTR valueName,LPCTSTR value);
-	void SetValue(LPCTSTR valueName,int value);
-	void SetValue(LPCTSTR valueName,short value);
-	void SetValue(LPCTSTR valueName,double value);
-	void SetValue(LPCTSTR valueName,float value);
-	void SetValue(LPCTSTR valueName,bool value);
+	void SetValue(LPCTSTR valueName, LPCTSTR value);
+	void SetValue(LPCTSTR valueName, int value);
+	void SetValue(LPCTSTR valueName, short value);
+	void SetValue(LPCTSTR valueName, double value);
+	void SetValue(LPCTSTR valueName, float value);
+	void SetValue(LPCTSTR valueName, bool value);
 	BOOL IsValid();
 	CString GetValue(LPCTSTR valueName);
 
 	// fixed version
-	static BSTR ConvertStringToBSTR(const char* pSrc);
+	static BSTR ConvertStringToBSTR(const TCHAR* pSrc);
 
 private:
 	BOOL m_bAutoRelease;

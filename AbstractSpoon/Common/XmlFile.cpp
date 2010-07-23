@@ -42,7 +42,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -53,9 +53,18 @@ static char THIS_FILE[]=__FILE__;
 
 #define TOBSTRING(szValue) CXmlNodeWrapper::ConvertStringToBSTR(szValue)
 
-CString& XML2TXT(CString& xml) { return CHtmlCharMap::ConvertFromRep(xml); } // we use the html map for backwards compatibility
-CString& TXT2XML(CString& txt) { return CXmlCharMap::ConvertToRep(txt); }
-CString& TXT2HTML(CString& txt) { return CHtmlCharMap::ConvertToRep(txt); }
+CString& XML2TXT(CString& xml)
+{
+	return CHtmlCharMap::ConvertFromRep(xml);   // we use the html map for backwards compatibility
+}
+CString& TXT2XML(CString& txt)
+{
+	return CXmlCharMap::ConvertToRep(txt);
+}
+CString& TXT2HTML(CString& txt)
+{
+	return CHtmlCharMap::ConvertToRep(txt);
+}
 
 //BOOL CXmlFile::s_bFormatOutput = FALSE;
 
@@ -69,13 +78,13 @@ IMPLEMENT_FIXED_ALLOC(CXmlItem, 1024);
 #pragma warning(default: 4995)
 
 CXmlItem::CXmlItem(CXmlItem* pParent, LPCTSTR szName, LPCTSTR szValue, XI_TYPE nType) :
-m_pParent(pParent), m_pSibling(NULL), m_sName(szName), m_sValue(szValue), m_nType(nType)
+	m_pParent(pParent), m_pSibling(NULL), m_sName(szName), m_sValue(szValue), m_nType(nType)
 {
 	ValidateString(m_sValue);
 }
 
 CXmlItem::CXmlItem(const CXmlItem& xi, CXmlItem* pParent) :
-m_pParent(pParent), m_pSibling(NULL), m_sName(xi.m_sName), m_sValue(xi.m_sValue), m_nType(xi.m_nType)
+	m_pParent(pParent), m_pSibling(NULL), m_sName(xi.m_sName), m_sValue(xi.m_sValue), m_nType(xi.m_nType)
 {
 	Copy(xi, TRUE);
 }
@@ -100,7 +109,9 @@ void CXmlItem::Copy(const CXmlItem& xi, BOOL bCopySiblings)
 		const CXmlItem* pXISibling = xi.GetSibling();
 
 		if (pXISibling)
+		{
 			m_pSibling = new CXmlItem(*pXISibling, m_pParent);
+		}
 	}
 
 	// copy children
@@ -109,7 +120,7 @@ void CXmlItem::Copy(const CXmlItem& xi, BOOL bCopySiblings)
 	while (pos)
 	{
 		const CXmlItem* pXIChild = xi.GetNextItem(pos);
-		ASSERT (pXIChild);
+		ASSERT(pXIChild);
 
 		AddItem(*pXIChild, TRUE);
 	}
@@ -121,7 +132,9 @@ void CXmlItem::Reset()
 	POSITION pos = m_lstItems.GetHeadPosition();
 
 	while (pos)
+	{
 		delete m_lstItems.GetNext(pos);
+	}
 
 	m_lstItems.RemoveAll();
 	/*
@@ -172,7 +185,9 @@ const CXmlItem* CXmlItem::GetItemEx(LPCTSTR szItemName, LPCTSTR szSubItem) const
 		{
 			// then subitem
 			if (szSubItem && *szSubItem)
+			{
 				return pXI->GetItemEx(szSubItem);
+			}
 
 			// else
 			return pXI;
@@ -232,7 +247,9 @@ const CXmlItem* CXmlItem::FindItemEx(LPCTSTR szItemName, LPCTSTR szItemValue, BO
 {
 	// check our name and value
 	if (m_sName.CompareNoCase(szItemName) == 0 && m_sValue.Compare(szItemValue) == 0)
+	{
 		return this;
+	}
 
 	const CXmlItem* pFound = NULL;
 
@@ -244,7 +261,7 @@ const CXmlItem* CXmlItem::FindItemEx(LPCTSTR szItemName, LPCTSTR szItemValue, BO
 		while (pos && !pFound)
 		{
 			const CXmlItem* pXIChild = GetNextItem(pos);
-			ASSERT (pXIChild);
+			ASSERT(pXIChild);
 
 			pFound = pXIChild->FindItemEx(szItemName, szItemValue, TRUE); // child will search its own siblings
 		}
@@ -257,7 +274,9 @@ const CXmlItem* CXmlItem::FindItemEx(LPCTSTR szItemName, LPCTSTR szItemValue, BO
 		const CXmlItem* pXISibling = GetSibling();
 
 		if (pXISibling)
+		{
 			pFound = pXISibling->FindItemEx(szItemName, szItemValue, TRUE);
+		}
 	}
 
 	return pFound;
@@ -268,7 +287,9 @@ CString CXmlItem::GetItemValue(LPCTSTR szItemName, LPCTSTR szSubItem) const
 	const CXmlItem* pXI = GetItem(szItemName, szSubItem);
 
 	if (pXI)
+	{
 		return pXI->GetValue();
+	}
 
 	// else
 	return "";
@@ -290,10 +311,12 @@ int CXmlItem::GetItemCount(LPCTSTR szItemName) const
 
 CXmlItem* CXmlItem::AddItem(LPCTSTR szName, LPCTSTR szValue, XI_TYPE nType)
 {
-	ASSERT (szName && *szName);
+	ASSERT(szName && *szName);
 
 	if (!(szName && *szName))
+	{
 		return NULL;
+	}
 
 	CXmlItem* pXI = new CXmlItem(this, szName, szValue, nType);
 
@@ -313,7 +336,9 @@ CXmlItem* CXmlItem::AddItem(CXmlItem* pXI)
 	CXmlItem* pXIParent = pXI->GetParent();
 
 	if (pXIParent && pXIParent != this)
+	{
 		pXIParent->RemoveItem(pXI);
+	}
 
 	pXI->m_pParent = this;
 
@@ -323,9 +348,13 @@ CXmlItem* CXmlItem::AddItem(CXmlItem* pXI)
 	CXmlItem* pXPExist = GetItem(pXI->GetName());
 
 	if (pXPExist)
+	{
 		pXPExist->AddSibling(pXI);
+	}
 	else
+	{
 		m_lstItems.AddTail(pXI);
+	}
 	//		m_mapItems[pXI->GetName()] = pXI;
 
 	return pXI;
@@ -348,7 +377,9 @@ CXmlItem* CXmlItem::SetItemValue(LPCTSTR szName, LPCTSTR sValue, XI_TYPE nType)
 	CXmlItem* pXI = GetItem(szName);
 
 	if (!pXI)
+	{
 		return AddItem(szName, sValue, nType);
+	}
 
 	// else already exists
 	pXI->SetValue(sValue);
@@ -373,7 +404,9 @@ BOOL CXmlItem::SetName(LPCTSTR szName)
 {
 	// can't have any siblings
 	if (!szName || !(*szName) || GetSibling())
+	{
 		return FALSE;
+	}
 
 	m_sName = szName;
 	return TRUE;
@@ -398,14 +431,18 @@ void CXmlItem::SetValue(double dValue)
 BOOL CXmlItem::RemoveItem(CXmlItem* pXI)
 {
 	if (!pXI)
+	{
 		return FALSE;
+	}
 
 	// lookup by name first
 	LPCTSTR szName = pXI->GetName();
 	CXmlItem* pXIMatch = GetItem(szName);
 
 	if (!pXIMatch)
+	{
 		return FALSE;
+	}
 
 	// now search the sibling chain looking for exact match
 	CXmlItem* pXIPrevSibling = NULL;
@@ -417,10 +454,12 @@ BOOL CXmlItem::RemoveItem(CXmlItem* pXI)
 	}
 
 	if (!pXIMatch) // no match
+	{
 		return FALSE;
+	}
 
 	// else
-	ASSERT (pXIMatch == pXI);
+	ASSERT(pXIMatch == pXI);
 
 	CXmlItem* pNextSibling = pXI->GetSibling();
 
@@ -479,21 +518,29 @@ BOOL CXmlItem::DeleteItem(LPCTSTR szItemName)
 
 BOOL CXmlItem::AddSibling(CXmlItem* pXI)
 {
-	ASSERT (pXI);
+	ASSERT(pXI);
 
 	if (!pXI)
+	{
 		return FALSE;
+	}
 
 	// must share the same name and parent
-	ASSERT (m_sName.CompareNoCase(pXI->GetName()) == 0 && m_pParent == pXI->GetParent());
+	ASSERT(m_sName.CompareNoCase(pXI->GetName()) == 0 && m_pParent == pXI->GetParent());
 
 	if (!(m_sName.CompareNoCase(pXI->GetName()) == 0 && m_pParent == pXI->GetParent()))
+	{
 		return FALSE;
+	}
 
 	if (!m_pSibling)
+	{
 		m_pSibling = pXI;
+	}
 	else
-		m_pSibling->AddSibling(pXI); // recursive
+	{
+		m_pSibling->AddSibling(pXI);   // recursive
+	}
 
 	return TRUE;
 }
@@ -507,7 +554,9 @@ POSITION CXmlItem::GetFirstItemPos() const
 const CXmlItem* CXmlItem::GetNextItem(POSITION& pos) const
 {
 	if (!pos)
+	{
 		return NULL;
+	}
 
 	// else
 	return m_lstItems.GetNext(pos);
@@ -524,7 +573,9 @@ const CXmlItem* CXmlItem::GetNextItem(POSITION& pos) const
 CXmlItem* CXmlItem::GetNextItem(POSITION& pos)
 {
 	if (!pos)
+	{
 		return NULL;
+	}
 
 	// else
 	return m_lstItems.GetNext(pos);
@@ -541,7 +592,9 @@ CXmlItem* CXmlItem::GetNextItem(POSITION& pos)
 BOOL CXmlItem::NameMatches(const CXmlItem* pXITest) const
 {
 	if (!pXITest)
+	{
 		return FALSE;
+	}
 
 	return NameMatches(pXITest->GetName());
 }
@@ -554,7 +607,9 @@ BOOL CXmlItem::NameMatches(LPCTSTR szName) const
 BOOL CXmlItem::ValueMatches(const CXmlItem* pXITest, BOOL bIgnoreCase) const
 {
 	if (!pXITest)
+	{
 		return FALSE;
+	}
 
 	// else
 	return ValueMatches(pXITest->GetValue(), bIgnoreCase);
@@ -563,7 +618,9 @@ BOOL CXmlItem::ValueMatches(const CXmlItem* pXITest, BOOL bIgnoreCase) const
 BOOL CXmlItem::ValueMatches(LPCTSTR szValue, BOOL bIgnoreCase) const
 {
 	if (bIgnoreCase)
+	{
 		return (m_sValue.CompareNoCase(szValue) == 0);
+	}
 
 	// else
 	return (m_sValue == szValue);
@@ -572,13 +629,17 @@ BOOL CXmlItem::ValueMatches(LPCTSTR szValue, BOOL bIgnoreCase) const
 BOOL CXmlItem::ItemValueMatches(const CXmlItem* pXITest, LPCTSTR szItemName, BOOL bIgnoreCase) const
 {
 	if (!szItemName || !*szItemName)
+	{
 		return FALSE;
+	}
 
 	const CXmlItem* pXIItem = GetItem(szItemName);
 	const CXmlItem* pXITestItem = pXITest->GetItem(szItemName);
 
 	if (pXIItem && pXITestItem)
+	{
 		return pXIItem->ValueMatches(pXITestItem, bIgnoreCase);
+	}
 
 	// else
 	return FALSE;
@@ -602,17 +663,23 @@ void CXmlItem::SortItemsF(LPCTSTR szItemName, LPCTSTR szKeyName, BOOL bAscending
 void CXmlItem::SortItems(LPCTSTR szItemName, LPCTSTR szKeyName, XI_SORTKEY nKey, BOOL bAscending)
 {
 	if (!szItemName || !szKeyName)
+	{
 		return;
+	}
 
 	// 1. sort immediate children first
 	CXmlItem* pXIItem = GetItem(szItemName);
 
 	if (!pXIItem)
+	{
 		return;
+	}
 
 	// make sure item has key value
 	if (!pXIItem->GetItem(szKeyName))
+	{
 		return;
+	}
 
 	// make sure at least one sibling exists
 	BOOL bContinue = (pXIItem->GetSibling() != NULL);
@@ -637,13 +704,17 @@ void CXmlItem::SortItems(LPCTSTR szItemName, LPCTSTR szKeyName, XI_SORTKEY nKey,
 			int nCompare = CompareItems(pXIItem, pXISibling, szKeyName, nKey);
 
 			if (!bAscending)
+			{
 				nCompare = -nCompare;
+			}
 
 			if (nCompare > 0)
 			{
 				// switch items
 				if (pXIPrev)
+				{
 					pXIPrev->m_pSibling = pXISibling;
+				}
 
 				else // we're at the head of the chain
 				{
@@ -678,7 +749,7 @@ void CXmlItem::SortItems(LPCTSTR szItemName, LPCTSTR szKeyName, XI_SORTKEY nKey,
 }
 
 int CXmlItem::CompareItems(const CXmlItem* pXIItem1, const CXmlItem* pXIItem2,
-									LPCTSTR szKeyName, XI_SORTKEY nKey)
+                           LPCTSTR szKeyName, XI_SORTKEY nKey)
 {
 	LPCTSTR szValue1 = pXIItem1->GetItemValue(szKeyName);
 	LPCTSTR szValue2 = pXIItem2->GetItemValue(szKeyName);
@@ -687,17 +758,17 @@ int CXmlItem::CompareItems(const CXmlItem* pXIItem1, const CXmlItem* pXIItem2,
 
 	switch (nKey)
 	{
-	case XISK_STRING:
-		dDiff = (double)CString(szValue1).CompareNoCase(szValue2);
-		break;
+		case XISK_STRING:
+			dDiff = (double)CString(szValue1).CompareNoCase(szValue2);
+			break;
 
-	case XISK_INT:
-		dDiff = (double)(_ttoi(szValue1) - _ttoi(szValue2));
-		break;
+		case XISK_INT:
+			dDiff = (double)(_ttoi(szValue1) - _ttoi(szValue2));
+			break;
 
-	case XISK_FLOAT:
-		dDiff = _tstof(szValue1) - _tstof(szValue2);
-		break;
+		case XISK_FLOAT:
+			dDiff = _tstof(szValue1) - _tstof(szValue2);
+			break;
 	}
 
 	return (dDiff < 0) ? -1 : ((dDiff > 0) ? 1 : 0);
@@ -708,21 +779,23 @@ void CXmlItem::ValidateString(CString& sText, char cReplace)
 	// remove nasties that XML does not like
 	int nLen = sText.GetLength();
 
-	for(int nChar = 0; nChar < nLen; nChar++)
+	for (int nChar = 0; nChar < nLen; nChar++)
 	{
 		UINT c = sText[nChar];
 
 		// some specific chars we don't like
 		switch (c)
 		{
-		case 0x2026: // ellipsis
-			sText.SetAt(nChar, cReplace);
-			break;
+			case 0x2026: // ellipsis
+				sText.SetAt(nChar, cReplace);
+				break;
 		}
 
 		if ((c < 0x20 && (c == 0x09 || c == 0x0A || c == 0x0D)) ||
-			(c >= 0x20 && c < 0x82) || c > 0x9F) // 0x82-0x9F are special windows chars
-			continue; // valid
+		      (c >= 0x20 && c < 0x82) || c > 0x9F) // 0x82-0x9F are special windows chars
+		{
+			continue;   // valid
+		}
 
 		// else
 		sText.SetAt(nChar, cReplace);
@@ -808,7 +881,7 @@ CXmlItem* CXmlItem::GetSibling()
 BOOL CXmlItem::SetType(XI_TYPE nType)
 {
 	// some sanity checks
-	ASSERT (nType == XIT_ELEMENT || !m_lstItems.GetCount());
+	ASSERT(nType == XIT_ELEMENT || !m_lstItems.GetCount());
 
 	m_nType = nType;
 
@@ -827,12 +900,16 @@ BOOL CXmlItem::IsAttribute(int nMaxAttribLen) const
 
 CString CXmlItem::ToString(int nValue)
 {
-	CString sValue; sValue.Format(_T("%d"), nValue); return sValue;
+	CString sValue;
+	sValue.Format(_T("%d"), nValue);
+	return sValue;
 }
 
 CString CXmlItem::ToString(double dValue)
 {
-	CString sValue; sValue.Format(_T("%.8f"), dValue); return sValue;
+	CString sValue;
+	sValue.Format(_T("%.8f"), dValue);
+	return sValue;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -851,18 +928,26 @@ CXmlFile::~CXmlFile()
 BOOL CXmlFile::Load(LPCTSTR szFilePath, LPCTSTR szRootItemName, IXmlParse* pCallback)
 {
 	if (!szFilePath || !*szFilePath)
+	{
 		return FALSE;
+	}
 
 	if (GetFileHandle() != (HANDLE)CFile::hFileNull)
+	{
 		Close();
+	}
 
 	if (!szRootItemName && *(m_xiRoot.GetName()))
+	{
 		szRootItemName = m_xiRoot.GetName();
+	}
 
 	m_pCallback = pCallback;
 
 	if (Open(szFilePath, XF_READ))
+	{
 		return LoadEx(szRootItemName, pCallback);
+	}
 
 	// else
 	return FALSE;
@@ -871,10 +956,14 @@ BOOL CXmlFile::Load(LPCTSTR szFilePath, LPCTSTR szRootItemName, IXmlParse* pCall
 BOOL CXmlFile::Save(LPCTSTR szFilePath)
 {
 	if (!szFilePath || !*szFilePath)
+	{
 		return FALSE;
+	}
 
 	if (GetFileHandle() != (HANDLE)CFile::hFileNull)
+	{
 		Close();
+	}
 
 	if (Open(szFilePath, XF_WRITE))
 	{
@@ -893,31 +982,37 @@ BOOL CXmlFile::Save(LPCTSTR szFilePath)
 BOOL CXmlFile::Open(LPCTSTR szFilePath, XF_OPEN nOpenFlag)
 {
 	if (!szFilePath || !*szFilePath)
+	{
 		return FALSE;
+	}
 
 	if (GetFileHandle() != (HANDLE)CFile::hFileNull)
+	{
 		Close();
+	}
 
 	BOOL bRes = FALSE;
 
 	switch (nOpenFlag)
 	{
-	case XF_READ:
-		bRes = CFile::Open(szFilePath, CFile::shareDenyNone | CFile::modeRead);
-		break;
+		case XF_READ:
+			bRes = CFile::Open(szFilePath, CFile::shareDenyNone | CFile::modeRead);
+			break;
 
-	case XF_WRITE:
-		bRes = CFile::Open(szFilePath, CFile::shareExclusive | CFile::modeWrite | CFile::modeCreate);
-		break;
+		case XF_WRITE:
+			bRes = CFile::Open(szFilePath, CFile::shareExclusive | CFile::modeWrite | CFile::modeCreate);
+			break;
 
-	case XF_READWRITE:
-		bRes = CFile::Open(szFilePath, CFile::shareExclusive | CFile::modeReadWrite |
-			CFile::modeCreate | CFile::modeNoTruncate);
-		break;
+		case XF_READWRITE:
+			bRes = CFile::Open(szFilePath, CFile::shareExclusive | CFile::modeReadWrite |
+			                   CFile::modeCreate | CFile::modeNoTruncate);
+			break;
 	}
 
 	if (!bRes)
+	{
 		m_nFileError = GetLastError();
+	}
 
 	return bRes;
 }
@@ -925,7 +1020,9 @@ BOOL CXmlFile::Open(LPCTSTR szFilePath, XF_OPEN nOpenFlag)
 BOOL CXmlFile::SaveEx()
 {
 	if (GetFileHandle() == (HANDLE)CFile::hFileNull)
+	{
 		return FALSE;
+	}
 
 	BOOL bRes = FALSE;
 	CString sXml;
@@ -948,7 +1045,9 @@ BOOL CXmlFile::SaveEx()
 
 			// verify file length matches length of xml
 			if (::GetFileSize(GetFileHandle(), NULL) == (DWORD)sXml.GetLength())
+			{
 				bRes = TRUE;
+			}
 		}
 		catch (...)
 		{
@@ -971,7 +1070,7 @@ BOOL CXmlFile::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 
 	// concatenate entire file into one long string
 	CString sLine;
-	char* pFileContents = NULL;
+	TCHAR* pFileContents = NULL;
 
 	try
 	{
@@ -979,11 +1078,11 @@ BOOL CXmlFile::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 
 		// preallocate string to avoid excessive memory allocations
 		DWORD dwLength = static_cast<DWORD>(GetLength());
-		pFileContents = new char[dwLength + 1];
+		pFileContents = new TCHAR[(dwLength / sizeof(TCHAR)) + 1];
 		ZeroMemory(pFileContents, dwLength + 1);
 
 		BOOL bContinue = TRUE;
-		char* pFilePtr = pFileContents;
+		TCHAR* pFilePtr = pFileContents;
 
 		while (bContinue)
 		{
@@ -1006,7 +1105,9 @@ BOOL CXmlFile::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 	}
 
 	if (!szRootItemName && m_xiRoot.GetNameLen())
+	{
 		szRootItemName = m_xiRoot.GetName();
+	}
 
 	m_pCallback = pCallback;
 
@@ -1027,16 +1128,22 @@ BOOL CXmlFile::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 
 				// then try again
 				if (!doc.LoadXML(sFile))
+				{
 					m_nFileError = XFL_BADMSXML;
+				}
 			}
 
 			// now read it into CXmlItem structures
 			if (m_nFileError == XFL_NONE)
 			{
 				if (!ParseRootItem(szRootItemName, &doc))
+				{
 					m_nFileError = XFL_MISSINGROOT;
+				}
 				else
+				{
 					bRes = TRUE;
+				}
 			}
 		}
 	}
@@ -1092,7 +1199,7 @@ void CXmlFile::FixInputString(CString& sXml, LPCTSTR szRootItem)
 
 BOOL CXmlFile::ParseRootItem(LPCTSTR szRootItemName, CXmlDocumentWrapper* pDoc)
 {
-	ASSERT (pDoc);
+	ASSERT(pDoc);
 
 	m_xiRoot.Reset();
 
@@ -1107,7 +1214,9 @@ BOOL CXmlFile::ParseRootItem(LPCTSTR szRootItemName, CXmlDocumentWrapper* pDoc)
 	pNode->Release();
 
 	if (0 != node.Name().CompareNoCase(sRootItem))
+	{
 		return FALSE;
+	}
 
 	m_sHeader = pDoc->GetHeader();
 
@@ -1129,7 +1238,9 @@ BOOL CXmlFile::ParseItem(CXmlItem& xi, CXmlNodeWrapper* pNode)
 		xi.AddItem(sName, sVal);
 
 		if (!ContinueParsing(sName, sVal))
+		{
 			return TRUE;
+		}
 	}
 
 	int nNumNodes = pNode->NumNodes();
@@ -1149,10 +1260,14 @@ BOOL CXmlFile::ParseItem(CXmlItem& xi, CXmlNodeWrapper* pNode)
 		XI_TYPE nType = XIT_ELEMENT;
 
 		if (nNodeType == MSXML2::NODE_CDATA_SECTION)
+		{
 			nType = XIT_CDATA;
+		}
 
 		else if (nNodeType == MSXML2::NODE_ATTRIBUTE)
+		{
 			nType = XIT_ATTRIB;
+		}
 
 		// if sName is empty then sVal relates to pNode
 		if (!sName.IsEmpty())
@@ -1160,7 +1275,9 @@ BOOL CXmlFile::ParseItem(CXmlItem& xi, CXmlNodeWrapper* pNode)
 			CXmlItem* pXI = xi.AddItem(sName, sVal, nType);
 
 			if (!ContinueParsing(sName, sVal))
+			{
 				return TRUE;
+			}
 
 			ParseItem(*pXI, &nodeChild);
 		}
@@ -1194,7 +1311,9 @@ BOOL CXmlFile::Export(CString& sOutput) const
 			sOutput = doc.GetXML(TRUE);
 
 			if (sOutput.IsEmpty()) // sanity check
+			{
 				m_nFileError = XFL_BADMSXML;
+			}
 			else
 			{
 				//if (s_bFormatOutput)
@@ -1215,7 +1334,9 @@ BOOL CXmlFile::Export(CString& sOutput) const
 BOOL CXmlFile::BuildDOM(CXmlDocumentWrapper* pDoc) const
 {
 	if (!pDoc || !pDoc->IsValid())
+	{
 		return FALSE;
+	}
 
 	// Valik - Change IXMLDOMNode* to IXMLDOMNodePtr to prevent an ambiguous symbol error (C2872) in VC 7.1
 	MSXML2::IXMLDOMNodePtr pNode = pDoc->AsNode();
@@ -1238,10 +1359,14 @@ BOOL CXmlFile::Transform(LPCTSTR szTransformPath, CString& sOutput, const CStrin
 		// encoding
 		// note: the Transform function always returns UTF-16
 		if (!sEncoding.IsEmpty())
+		{
 			sOutput.Replace(_T("UTF-16"), sEncoding);
+		}
 	}
 	else
+	{
 		sOutput.Empty();
+	}
 
 	return TRUE;
 }
@@ -1270,7 +1395,9 @@ BOOL CXmlFile::Export(const CXmlItem* pItem, CXmlNodeWrapper* pNode) const
 {
 	// own value
 	if (pItem->GetValueLen())
+	{
 		pNode->SetText(pItem->GetValue());
+	}
 
 	// attributes and items
 	POSITION pos = pItem->GetFirstItemPos();
@@ -1279,13 +1406,13 @@ BOOL CXmlFile::Export(const CXmlItem* pItem, CXmlNodeWrapper* pNode) const
 	while (pos)
 	{
 		const CXmlItem* pXIChild = pItem->GetNextItem(pos);
-		ASSERT (pXIChild);
+		ASSERT(pXIChild);
 
 		CString sItem = pXIChild->GetName();
 
 		if (pXIChild->IsAttribute())
 		{
-			ASSERT (!pXIChild->GetSibling());
+			ASSERT(!pXIChild->GetSibling());
 			pNode->SetValue(sItem, pXIChild->GetValue());
 		}
 		else if (pXIChild->IsCDATA())
@@ -1293,7 +1420,7 @@ BOOL CXmlFile::Export(const CXmlItem* pItem, CXmlNodeWrapper* pNode) const
 			// create a named node to wrap the CDATA
 			MSXML2::IXMLDOMNodePtr pChildNode = pNode->InsertNode(nNode++, (LPCTSTR)sItem);
 			MSXML2::IXMLDOMCDATASectionPtr pCData =
-				pNode->ParentDocument()->createCDATASection(TOBSTRING(pXIChild->GetValue()));
+			   pNode->ParentDocument()->createCDATASection(TOBSTRING(pXIChild->GetValue()));
 			pChildNode->appendChild(pCData);
 		}
 		else // node
@@ -1303,7 +1430,7 @@ BOOL CXmlFile::Export(const CXmlItem* pItem, CXmlNodeWrapper* pNode) const
 				// Valik - Change IXMLDOMNode* to IXMLDOMNodePtr to prevent an ambiguous symbol error (C2872) in VC 7.1
 				MSXML2::IXMLDOMNodePtr pChildNode = pNode->InsertNode(nNode++, (LPCTSTR)sItem);
 				CXmlNodeWrapper nodeChild(pChildNode);
-				ASSERT (nodeChild.IsValid());
+				ASSERT(nodeChild.IsValid());
 				pChildNode->Release();
 
 				Export(pXIChild, &nodeChild);
@@ -1488,7 +1615,8 @@ CString CXmlFile::GetHeader() const
 
 void CXmlFile::SetHeader(LPCTSTR szHeader)
 {
-	m_sHeader = szHeader; m_sHeader.MakeLower();
+	m_sHeader = szHeader;
+	m_sHeader.MakeLower();
 }
 
 void CXmlFile::SortItems(LPCTSTR szItemName, LPCTSTR szKeyName, BOOL bAscending)
