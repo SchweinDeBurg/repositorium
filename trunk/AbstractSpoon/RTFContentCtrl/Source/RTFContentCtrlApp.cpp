@@ -56,7 +56,7 @@ DLL_DECLSPEC IContent* CreateContentInterface()
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	return &theApp;//new CRTFContentCtrlApp;
+	return &theApp;
 }
 
 DLL_DECLSPEC int GetInterfaceVersion()
@@ -74,16 +74,22 @@ const char* CRTFContentCtrlApp::GetTypeID() const
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	static CString sID;
+	static CStringA sID;
 
+#if defined(UNICODE) || defined(_UNICODE)
+	CString strTemp;
+	Misc::GuidToString(RTF_TYPEID, strTemp);
+	sID = ATL::CT2A(strTemp);
+#else
 	Misc::GuidToString(RTF_TYPEID, sID);
+#endif   // UNICODE || _UNICODE
 
 	return sID;
 }
 
 const char* CRTFContentCtrlApp::GetTypeDescription() const
 {
-	return _T("Rich Text");
+	return "Rich Text";
 }
 
 IContentControl* CRTFContentCtrlApp::CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
@@ -92,7 +98,7 @@ IContentControl* CRTFContentCtrlApp::CreateCtrl(unsigned short nCtrlID, unsigned
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 	// load localized resources
-	HINSTANCE hResDll = LoadLibrary("RTFContentCtrlLOC.dll");
+	HINSTANCE hResDll = LoadLibrary(_T("RTFContentCtrlLOC.dll"));
 
 	if (hResDll)
 	{
@@ -125,11 +131,11 @@ void CRTFContentCtrlApp::SetIniLocation(bool bRegistry, const char* szIniPathNam
 {
 	if (bRegistry)
 	{
-		m_pszRegistryKey = _strdup(szIniPathName);
+		m_pszRegistryKey = ATL::CA2T(_strdup(szIniPathName));
 	}
 	else
 	{
-		m_pszProfileName = _strdup(szIniPathName);
+		m_pszProfileName = ATL::CA2T(_strdup(szIniPathName));
 	}
 }
 
@@ -146,7 +152,7 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
 	// we may have to decompress it first
 	unsigned char* pDecompressed = NULL;
 
-	if (strncmp((const char*)pContent, RTFTAG, LENTAG) != 0)
+	if (strncmp((const char*)pContent, ATL::CT2A(RTFTAG), LENTAG) != 0)
 	{
 		int nLenDecompressed = 0;
 

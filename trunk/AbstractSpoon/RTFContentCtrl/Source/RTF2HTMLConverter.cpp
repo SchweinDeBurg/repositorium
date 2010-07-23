@@ -16,8 +16,10 @@ static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
-const LPCTSTR MULTIBYTETAG = "\\'";
-const CString DELIM = " {}\\\r";
+#pragma warning(disable: 4189)
+
+const LPCTSTR MULTIBYTETAG = _T("\\'");
+const CString DELIM = _T(" {}\\\r");
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -28,7 +30,7 @@ CRTF_HTMLConverter::CRTF_HTMLConverter(TMode enMode)
 	ASSERT(enMode == c_modRTF2HTML); //vice versa unsupported at the moment
 	m_enMode = enMode;
 	m_RTFTree = new CRTFTree;
-	m_strTitle   = "RTF2HTML Generated Document";
+	m_strTitle = _T("RTF2HTML Generated Document");
 	ResetMetaData();
 }
 
@@ -45,10 +47,10 @@ void CRTF_HTMLConverter::SetTitle(const CString& strTitle)
 
 void CRTF_HTMLConverter::ResetMetaData()
 {
-	m_strCharset = "1252";
-	m_strActFontColor = "#000000";
-	m_strActFontName = "Arial";
-	m_strActFontSize = "10";
+	m_strCharset = _T("1252");
+	m_strActFontColor = _T("#000000");
+	m_strActFontName = _T("Arial");
+	m_strActFontSize = _T("10");
 	m_mapFontNames.RemoveAll();
 	m_arrColors.RemoveAll();
 	//   m_bTextSinceLastPara = FALSE;
@@ -64,14 +66,14 @@ void CRTF_HTMLConverter::ResetMetaData()
 bool CRTF_HTMLConverter::ConvertRTF2HTML(BOOL bWantHeaderFooter)
 {
 	//Initializing
-	m_strHTML = "";
+	m_strHTML = _T("");
 
 	//Check_Valid_RTF
-	m_strRTF.TrimRight("\n");
-	m_strRTF.TrimRight("\r");
+	m_strRTF.TrimRight(_T("\n"));
+	m_strRTF.TrimRight(_T("\r"));
 	CString strEndChar = m_strRTF.Right(1);
 	strEndChar;
-	if (!((m_strRTF.GetLength() >= 7) && (m_strRTF.Left(6) == "{\\rtf1")))
+	if (!((m_strRTF.GetLength() >= 7) && (m_strRTF.Left(6) == _T("{\\rtf1"))))
 	{
 		//Invalid RTF file. Must start with "{RTF1" and end with "}"
 		ASSERT(FALSE);
@@ -81,7 +83,7 @@ bool CRTF_HTMLConverter::ConvertRTF2HTML(BOOL bWantHeaderFooter)
 	// make sure it ends in a '}'
 	int nLen = m_strRTF.GetLength();
 
-	while (m_strRTF[nLen - 1] != '}')
+	while (m_strRTF[nLen - 1] != _T('}'))
 	{
 		nLen--;
 	}
@@ -91,10 +93,10 @@ bool CRTF_HTMLConverter::ConvertRTF2HTML(BOOL bWantHeaderFooter)
 		m_strRTF = m_strRTF.Left(nLen);
 	}
 
-	ASSERT(m_strRTF[nLen - 1] == '}');
+	ASSERT(m_strRTF[nLen - 1] == _T('}'));
 
 	// remove pictures (for now)
-	int nPicStart = m_strRTF.Find("{\\pict");
+	int nPicStart = m_strRTF.Find(_T("{\\pict"));
 
 	while (nPicStart != -1)
 	{
@@ -104,7 +106,7 @@ bool CRTF_HTMLConverter::ConvertRTF2HTML(BOOL bWantHeaderFooter)
 
 		while (nPicEnd < nLen)
 		{
-			if (m_strRTF[nPicEnd] == '}')
+			if (m_strRTF[nPicEnd] == _T('}'))
 			{
 				break;
 			}
@@ -128,7 +130,7 @@ bool CRTF_HTMLConverter::ConvertRTF2HTML(BOOL bWantHeaderFooter)
 		}
 
 		// next picture
-		nPicStart = m_strRTF.Find("{\\pict");
+		nPicStart = m_strRTF.Find(_T("{\\pict"));
 	}
 
 	//Clear internal members
@@ -154,7 +156,7 @@ bool CRTF_HTMLConverter::ConvertRTF2HTML(BOOL bWantHeaderFooter)
 	if (bWantHeaderFooter)
 	{
 		R2H_GetHTMLElements(m_strHTML);
-		m_strHTML = R2H_GetHTMLHeader() + m_strHTML + "\r\n" + R2H_GetHTMLFooter();
+		m_strHTML = R2H_GetHTMLHeader() + m_strHTML + _T("\r\n") + R2H_GetHTMLFooter();
 	}
 
 	return true;
@@ -178,21 +180,21 @@ bool CRTF_HTMLConverter::Convert(const CString& sRtf, CString& sHtml, BOOL bWant
 CString CRTF_HTMLConverter::R2H_GetHTMLHeader()
 {
 	CString strHTMLHeader;
-	strHTMLHeader += "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//DE\" \"http://www.w3.org/TR/html4/loose.dtd\">\r\n";
-	strHTMLHeader += "<html>\r\n";
-	strHTMLHeader += "  <head>\r\n";
-	strHTMLHeader += "     <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-" + m_strCharset + "\">\r\n";
-	strHTMLHeader += "     <title>" + m_strTitle + "</title>\r\n";
-	strHTMLHeader += "  </head>\r\n";
-	strHTMLHeader += "  <body>\r\n";
+	strHTMLHeader += _T("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//DE\" \"http://www.w3.org/TR/html4/loose.dtd\">\r\n");
+	strHTMLHeader += _T("<html>\r\n");
+	strHTMLHeader += _T("  <head>\r\n");
+	strHTMLHeader += _T("     <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-") + m_strCharset + _T("\">\r\n");
+	strHTMLHeader += _T("     <title>") + m_strTitle + _T("</title>\r\n");
+	strHTMLHeader += _T("  </head>\r\n");
+	strHTMLHeader += _T("  <body>\r\n");
 	return strHTMLHeader;
 }
 
 CString CRTF_HTMLConverter::R2H_GetHTMLFooter()
 {
 	CString strHTMLFooter;
-	strHTMLFooter += "  </body>\r\n";
-	strHTMLFooter += "</html>\r\n";
+	strHTMLFooter += _T("  </body>\r\n");
+	strHTMLFooter += _T("</html>\r\n");
 	return strHTMLFooter;
 }
 
@@ -201,21 +203,21 @@ CString CRTF_HTMLConverter::R2H_GetRTFTag(const CString& strRTFSource, long lPos
 	//Initializing
 	CString strTag;
 	ASSERT(lPos < strRTFSource.GetLength()); //lPos is POS(\) within strRTFSource
-	ASSERT(strRTFSource.GetAt(lPos) == '\\');
+	ASSERT(strRTFSource.GetAt(lPos) == _T('\\'));
 	int nCnt = 0;
-	char cFirstChar = 0;
+	TCHAR cFirstChar = 0;
 
 	//Starting from lPos, we say everything is an rtf element until \ or blank or { occurs
 	for (int iStrPos = lPos + 1; iStrPos < strRTFSource.GetLength(); iStrPos++)
 	{
-		char ChTest = strRTFSource[iStrPos];
+		TCHAR ChTest = strRTFSource[iStrPos];
 
 		if (DELIM.Find(ChTest) != -1)
 		{
 			break;   //designator terminated
 		}
 
-		if (nCnt >= 3 && cFirstChar == '\'')
+		if (nCnt >= 3 && cFirstChar == _T('\''))
 		{
 			break;
 		}
@@ -242,14 +244,14 @@ void CRTF_HTMLConverter::R2H_SetMetaData(CRTFNode& NodeRoot)
 	//Go thru RTF main string's global data
 	for (int iStrPos = 0; iStrPos < strRTFSource.GetLength(); iStrPos++)
 	{
-		char ChTest = strRTFSource[iStrPos];
+		TCHAR ChTest = strRTFSource[iStrPos];
 
-		if (ChTest == '\\')
+		if (ChTest == _T('\\'))
 		{
 			CString strTag = R2H_GetRTFTag(strRTFSource, iStrPos);
 			CString strTestTag;
 
-			strTestTag = "ansicpg";
+			strTestTag = _T("ansicpg");
 
 			if ((strTag.GetLength() >= strTestTag.GetLength()) && (strTag.Left(strTestTag.GetLength()) == strTestTag))
 			{
@@ -259,7 +261,7 @@ void CRTF_HTMLConverter::R2H_SetMetaData(CRTFNode& NodeRoot)
 
 			iStrPos += strTag.GetLength();
 
-			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos+1] == ' '))
+			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos+1] == _T(' ')))
 			{
 				iStrPos++;   //Ignore Blank after Tag
 			}
@@ -274,7 +276,7 @@ void CRTF_HTMLConverter::R2H_SetMetaData(CRTFNode& NodeRoot)
 	for (int iRTFNodes = 0; iRTFNodes < NodeRoot.Count; iRTFNodes++)
 	{
 		//Color table
-		if (NodeRoot.Nodes[iRTFNodes]->m_strName == "colortbl")
+		if (NodeRoot.Nodes[iRTFNodes]->m_strName == _T("colortbl"))
 		{
 			CString strColorTbl = NodeRoot.Nodes[iRTFNodes]->m_strThisCode;
 			strColorTbl.Delete(0, NodeRoot.Nodes[iRTFNodes]->m_strName.GetLength() + 1); //+1=leading \ (backslash)
@@ -299,19 +301,19 @@ void CRTF_HTMLConverter::R2H_SetMetaData(CRTFNode& NodeRoot)
 					{
 						CString strBaseColor = arrStrRGBs[iBaseColor];
 						CString strTestBaseColor;
-						strTestBaseColor = "red";
+						strTestBaseColor = _T("red");
 						if ((strBaseColor.GetLength() >= strTestBaseColor.GetLength()) && (strBaseColor.Left(strTestBaseColor.GetLength()) == strTestBaseColor))
 						{
 							strBaseColor.Delete(0, strTestBaseColor.GetLength());
 							r = StringToLong(strBaseColor);
 						}
-						strTestBaseColor = "green";
+						strTestBaseColor = _T("green");
 						if ((strBaseColor.GetLength() >= strTestBaseColor.GetLength()) && (strBaseColor.Left(strTestBaseColor.GetLength()) == strTestBaseColor))
 						{
 							strBaseColor.Delete(0, strTestBaseColor.GetLength());
 							g = StringToLong(strBaseColor);
 						}
-						strTestBaseColor = "blue";
+						strTestBaseColor = _T("blue");
 						if ((strBaseColor.GetLength() >= strTestBaseColor.GetLength()) && (strBaseColor.Left(strTestBaseColor.GetLength()) == strTestBaseColor))
 						{
 							strBaseColor.Delete(0, strTestBaseColor.GetLength());
@@ -325,17 +327,17 @@ void CRTF_HTMLConverter::R2H_SetMetaData(CRTFNode& NodeRoot)
 			continue;
 		}
 		//Font Table
-		if (NodeRoot.Nodes[iRTFNodes]->m_strName == "fonttbl")
+		if (NodeRoot.Nodes[iRTFNodes]->m_strName == _T("fonttbl"))
 		{
 			for (int iFontNodes = 0; iFontNodes < NodeRoot.Nodes[iRTFNodes].Count; iFontNodes++)
 			{
 				CString strFontName = NodeRoot.Nodes[iRTFNodes].Nodes[iFontNodes]->m_strName;
 				CString strFont = NodeRoot.Nodes[iRTFNodes].Nodes[iFontNodes]->m_strPlain;
-				ASSERT((strFontName.GetLength() >= 2) && (strFontName.Left(1) == "f")); //No valid RTF
+				ASSERT((strFontName.GetLength() >= 2) && (strFontName.Left(1) == _T("f"))); //No valid RTF
 				ASSERT(strFont.GetLength() > 0);
 				strFont.TrimLeft();
 				strFont.TrimRight();
-				strFont.Remove(';');
+				strFont.Remove(_T(';'));
 				m_mapFontNames.SetAt(strFontName, strFont);
 			} //for-each-font
 			continue;
@@ -349,29 +351,29 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 	CHTMLElement* pElement = NULL;
 
 	//Char attributes
-	if (strRTFTag == "b")
+	if (strRTFTag == _T("b"))
 	{
-		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLBegin, "b");
+		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLBegin, _T("b"));
 	}
-	else if (strRTFTag == "b0")
+	else if (strRTFTag == _T("b0"))
 	{
-		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLEnd, "b");
+		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLEnd, _T("b"));
 	}
-	else if (strRTFTag == "i")
+	else if (strRTFTag == _T("i"))
 	{
-		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLBegin, "i");
+		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLBegin, _T("i"));
 	}
-	else if (strRTFTag == "i0")
+	else if (strRTFTag == _T("i0"))
 	{
-		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLEnd, "i");
+		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLEnd, _T("i"));
 	}
-	else if (strRTFTag == "ul")
+	else if (strRTFTag == _T("ul"))
 	{
-		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLBegin, "u");
+		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLBegin, _T("u"));
 	}
-	else if (strRTFTag == "ulnone")
+	else if (strRTFTag == _T("ulnone"))
 	{
-		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLEnd, "u");
+		pElement = new CHTMLElement(CHTMLElement::c_nodHTMLEnd, _T("u"));
 	}
 	else
 	{
@@ -382,7 +384,7 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 	}
 
 	//Special character (umlaut)
-	strTestTag = "'";
+	strTestTag = _T("\'");
 	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) && (strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
 	{
 		CString strSpecialChar = strRTFTag;
@@ -390,11 +392,11 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 		ASSERT(strSpecialChar.GetLength() == 2); //Invalid RTF (must be 2-digit hex code)
 		strSpecialChar = strSpecialChar.Left(2);
 		pElement->m_enNodeType = CHTMLElement::c_nodText;
-		pElement->m_strNodeText = "&#x" + strSpecialChar + ";";
+		pElement->m_strNodeText = _T("&#x") + strSpecialChar + _T(";");
 	}
 
 	//Paragraph Tag
-	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag == "par"))
+	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag == _T("par")))
 	{
 		long lLastUnclosedPStart = -1;
 		//Look if we first must close paragraph
@@ -408,7 +410,7 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 			lLastUnclosedPStart=iLastElements;
 			break; //everything is OK
 			}
-				*/
+			*/
 		}
 		if (lLastUnclosedPStart >= 0)
 		{
@@ -420,11 +422,11 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 				CHTMLElement* pElementTest = m_arrHTMLElements[iLastPara];
 				if (pElementTest->m_enNodeType == CHTMLElement::c_nodText)
 				{
-					if ((pElementTest->m_strNodeText != "") &&
-					    (pElementTest->m_strNodeText != "\r") &&
-					    (pElementTest->m_strNodeText != "\n") &&
-					    (pElementTest->m_strNodeText != "\r\n") &&
-					    (pElementTest->m_strNodeText != "b"))
+					if ((pElementTest->m_strNodeText != _T("")) &&
+					    (pElementTest->m_strNodeText != _T("\r")) &&
+					    (pElementTest->m_strNodeText != _T("\n")) &&
+					    (pElementTest->m_strNodeText != _T("\r\n")) &&
+					    (pElementTest->m_strNodeText != _T("b")))
 					{
 						bLastParaEmpty = FALSE;
 					}
@@ -450,35 +452,35 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 		}
 		//Add paragraph tag (<p>
 		pElement->m_enNodeType = CHTMLElement::c_nodHTMLBegin;
-		pElement->m_strNodeText = "br";
+		pElement->m_strNodeText = _T("br");
 		//      pElement->m_strNodeText = "p";
 	}
 	// else Unknown RTF tag, just ignore
 
 	//Paragraph Alignment
-	strTestTag = "q";
+	strTestTag = _T("q");
 	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) && (strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
 	{
 		//Get RTF alignment
 		CString strAlignRTF, strAlignHTML;
 		pElement->m_enNodeType = CHTMLElement::c_nodHTMLBegin;
-		pElement->m_strNodeText = "font";
+		pElement->m_strNodeText = _T("font");
 		strAlignRTF = strRTFTag;
 		strAlignRTF.Delete(0, strTestTag.GetLength());
 		ASSERT(strAlignRTF.GetLength() == 1); //Invalid RTF
 
 		//Convert RTF options to HTML options
-		if (strAlignRTF == "l")
+		if (strAlignRTF == _T("l"))
 		{
-			strAlignHTML = "left";
+			strAlignHTML = _T("left");
 		}
-		else if (strAlignRTF == "r")
+		else if (strAlignRTF == _T("r"))
 		{
-			strAlignHTML = "right";
+			strAlignHTML = _T("right");
 		}
-		else if (strAlignRTF == "c")
+		else if (strAlignRTF == _T("c"))
 		{
-			strAlignHTML = "center";
+			strAlignHTML = _T("center");
 		}
 		else
 		{
@@ -489,27 +491,27 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 		for (int iLastElements = m_arrHTMLElements.GetSize() - 1; iLastElements >= 0; iLastElements--)
 		{
 			CHTMLElement* pElementTest = m_arrHTMLElements[iLastElements];
-			if ((pElementTest->m_enNodeType == CHTMLElement::c_nodHTMLBegin) && (pElementTest->m_strNodeText == "p"))
+			if ((pElementTest->m_enNodeType == CHTMLElement::c_nodHTMLBegin) && (pElementTest->m_strNodeText == _T("p")))
 			{
 				lLastParaStart = iLastElements;
 				break; //everything is OK
 			}
 		}
-		if ((lLastParaStart >= 0) && (strAlignHTML != ""))
+		if ((lLastParaStart >= 0) && (strAlignHTML != _T("")))
 		{
 			CHTMLElement* pElementPara = m_arrHTMLElements[lLastParaStart];
-			pElementPara->m_mapParams.SetAt("align", "\"" + strAlignHTML + "\"");
+			pElementPara->m_mapParams.SetAt(_T("align"), _T("\"") + strAlignHTML + _T("\""));
 		}
 
 	}
 
 	//font color
-	strTestTag = "cf";
+	strTestTag = _T("cf");
 	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) && (strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
 	{
 		CString strActColor;
 		pElement->m_enNodeType = CHTMLElement::c_nodHTMLBegin;
-		pElement->m_strNodeText = "font";
+		pElement->m_strNodeText = _T("font");
 		strActColor = strRTFTag;
 		strActColor.Delete(0, strTestTag.GetLength());
 		ASSERT(strActColor.GetLength() > 0); //Invalid RTF
@@ -523,28 +525,28 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 			g = GetGValue(ref);
 			b = GetBValue(ref);
 			CString strHTMLColor;
-			strHTMLColor.Format("#%02x%02x%02x", r, g, b);
+			strHTMLColor.Format(_T("#%02x%02x%02x"), r, g, b);
 			m_strActFontColor = strHTMLColor;
 		}
 	}
 	//font size
-	strTestTag = "fs";
+	strTestTag = _T("fs");
 	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) && (strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
 	{
 		pElement->m_enNodeType = CHTMLElement::c_nodHTMLBegin;
-		pElement->m_strNodeText = "font";
+		pElement->m_strNodeText = _T("font");
 		m_strActFontSize = strRTFTag;
 		m_strActFontSize.Delete(0, strTestTag.GetLength());
 		ASSERT(m_strActFontSize.GetLength() > 0); //Invalid RTF
 		m_strActFontSize = LongToString(StringToLong(m_strActFontSize) / 2); //RTF stores the doubled font size
 	}
 	//font name
-	strTestTag = "f"; //f+number
-	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) && (strRTFTag.Left(strTestTag.GetLength()) == strTestTag) && (strRTFTag.Mid(1).SpanIncluding("01234567890") == strRTFTag.Mid(1)))
+	strTestTag = _T("f"); //f+number
+	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) && (strRTFTag.Left(strTestTag.GetLength()) == strTestTag) && (strRTFTag.Mid(1).SpanIncluding(_T("01234567890")) == strRTFTag.Mid(1)))
 	{
 		CString strActFontDsgn = strRTFTag;
 		pElement->m_enNodeType = CHTMLElement::c_nodHTMLBegin;
-		pElement->m_strNodeText = "font";
+		pElement->m_strNodeText = _T("font");
 		ASSERT(strActFontDsgn.GetLength() > 0); //Invalid RTF
 		CString strActFontName;
 		BOOL bFound = m_mapFontNames.Lookup(strActFontDsgn, strActFontName);
@@ -556,18 +558,18 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 	}
 
 	//New font tag ?
-	if ((pElement->m_enNodeType == CHTMLElement::c_nodHTMLBegin) && (pElement->m_strNodeText == "font"))
+	if ((pElement->m_enNodeType == CHTMLElement::c_nodHTMLBegin) && (pElement->m_strNodeText == _T("font")))
 	{
 		BOOL bMustClose = FALSE;
 		//Look if we first must close paragraph
 		for (int iLastElements = m_arrHTMLElements.GetSize() - 1; iLastElements >= 0; iLastElements--)
 		{
 			CHTMLElement* pElementTest = m_arrHTMLElements[iLastElements];
-			if ((pElementTest->m_enNodeType == CHTMLElement::c_nodHTMLEnd) && (pElementTest->m_strNodeText == "font"))
+			if ((pElementTest->m_enNodeType == CHTMLElement::c_nodHTMLEnd) && (pElementTest->m_strNodeText == _T("font")))
 			{
 				break;   //everything is OK
 			}
-			if ((pElementTest->m_enNodeType == CHTMLElement::c_nodHTMLBegin) && (pElementTest->m_strNodeText == "font"))
+			if ((pElementTest->m_enNodeType == CHTMLElement::c_nodHTMLBegin) && (pElementTest->m_strNodeText == _T("font")))
 			{
 				bMustClose = TRUE;
 				break; //everything is OK
@@ -578,12 +580,12 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 			//Insert Closing </p>
 			CHTMLElement* pElementClose = new CHTMLElement();
 			pElementClose->m_enNodeType = CHTMLElement::c_nodHTMLEnd;
-			pElementClose->m_strNodeText = "font";
+			pElementClose->m_strNodeText = _T("font");
 			m_arrHTMLElements.Add(pElementClose);
 		}
 		//Set font tag options
-		pElement->m_mapParams.SetAt("color", "\"" + m_strActFontColor + "\"");
-		pElement->m_mapParams.SetAt("style", "\"font-size: " + m_strActFontSize + "pt; font-family:" + m_strActFontName + ";\"");
+		pElement->m_mapParams.SetAt(_T("color"), _T("\"") + m_strActFontColor + ("\""));
+		pElement->m_mapParams.SetAt(_T("style"), _T("\"font-size: ") + m_strActFontSize + _T("pt; font-family:") + m_strActFontName + _T(";\""));
 	}
 	if (pElement->m_enNodeType != CHTMLElement::c_nodInvalid)
 	{
@@ -601,12 +603,12 @@ void CRTF_HTMLConverter::R2H_GetRTFTags(const CString& strRTFSource, CStringArra
 	for (int iStrPos = 0; iStrPos < strRTFSource.GetLength(); iStrPos++)
 	{
 		CString strChTest = strRTFSource[iStrPos];
-		if (strChTest == "\\")
+		if (strChTest == _T("\\"))
 		{
 			CString strTag = R2H_GetRTFTag(strRTFSource, iStrPos);
 			arrTgt.Add(strTag);
 			iStrPos += strTag.GetLength();
-			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos+1] == ' '))
+			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos+1] == _T(' ')))
 			{
 				iStrPos++;   //Ignore Blank after Tag
 			}
@@ -618,7 +620,7 @@ void CRTF_HTMLConverter::R2H_GetRTFTags(const CString& strRTFSource, CStringArra
 //! Gets the created HTML elements as HTML text
 void CRTF_HTMLConverter::R2H_GetHTMLElements(CString& strHTML)
 {
-	strHTML = "";
+	strHTML = _T("");
 
 	// remove invalid trailing elements
 	int iElemCount = m_arrHTMLElements.GetSize();
@@ -638,7 +640,7 @@ void CRTF_HTMLConverter::R2H_GetHTMLElements(CString& strHTML)
 			sText.TrimLeft();
 			sText.TrimRight();
 
-			if (!sText.IsEmpty() && sText != "br" && sText != "\n" && sText != "\r\n")
+			if (!sText.IsEmpty() && sText != _T("br") && sText != _T("\n") && sText != _T("\r\n"))
 			{
 				iElemCount++; // we want this element
 				break;
@@ -684,7 +686,7 @@ void CRTF_HTMLConverter::R2H_GetHTMLElements(CString& strHTML)
 				mapOpenTags[pElem->m_strNodeText] = ++nCount;
 
 				// HTML element open tag
-				sElem = "<";
+				sElem = _T("<");
 				sElem += pElem->m_strNodeText;
 
 				// HTML element parameters (<font param1="test" param2="hugo">
@@ -695,14 +697,14 @@ void CRTF_HTMLConverter::R2H_GetHTMLElements(CString& strHTML)
 					CString strKey, strValue;
 					pElem->m_mapParams.GetNextAssoc(pos, strKey, strValue);
 
-					sElem += " " + strKey + " = " + strValue;
+					sElem += _T(" ") + strKey + _T(" = ") + strValue;
 				}
-				sElem += ">";
+				sElem += _T(">");
 			}
 		}
 		else if (pElem->m_enNodeType == CHTMLElement::c_nodHTMLEnd)
 		{
-			sElem.Format("</%s>", pElem->m_strNodeText);
+			sElem.Format(_T("</%s>"), pElem->m_strNodeText);
 
 			// decrement open tag count
 			int nCount = 0;
@@ -739,9 +741,9 @@ void CRTF_HTMLConverter::R2H_GetHTMLElements(CString& strHTML)
 		int nCount = 0;
 		mapOpenTags.GetNextAssoc(pos, sTag, nCount);
 
-		if (nCount && sTag != "br")
+		if (nCount && sTag != _T("br"))
 		{
-			sClose.Format("</%s>", sTag);
+			sClose.Format(_T("</%s>"), sTag);
 
 			while (nCount--)
 			{
@@ -756,13 +758,13 @@ void CRTF_HTMLConverter::R2H_GetHTMLElements(CString& strHTML)
 
 int CRTF_HTMLConverter::GetCodePage(const CString& sRtf)
 {
-	const CString CPGTAG("\\ansicpg");
+	const CString CPGTAG(_T("\\ansicpg"));
 
 	int nFind = sRtf.Find(CPGTAG);
 
 	if (nFind != -1)
 	{
-		return atoi((LPCTSTR)sRtf + (nFind + CPGTAG.GetLength()));
+		return _ttoi((LPCTSTR)sRtf + (nFind + CPGTAG.GetLength()));
 	}
 
 	return -1;
@@ -780,7 +782,7 @@ BOOL CRTF_HTMLConverter::HasMultiByteChars(const CString& sRtf)
 			return TRUE;
 		}
 
-		if (sRtf[nFind + 2] != 'B' || sRtf[nFind + 3] != '7')
+		if (sRtf[nFind + 2] != _T('B') || sRtf[nFind + 3] != _T('7'))
 		{
 			return TRUE;
 		}
@@ -799,47 +801,47 @@ void CRTF_HTMLConverter::R2H_CreateHTMLElements(const CString& strRTFSource)
 	{
 		CString strChTest = strRTFSource[iStrPos];
 #ifdef _DEBUG
-		const char* szPos = (LPCTSTR)strRTFSource + iStrPos;
+		const TCHAR* szPos = (LPCTSTR)strRTFSource + iStrPos;
 #endif
 
-		if (strChTest == "\\")
+		if (strChTest == _T("\\"))
 		{
 			// check for multi-byte char
 			/*
-						if (strRTFSource.Find(MULTIBYTETAG, iStrPos) == iStrPos)
-						{
-							// extract next two elements as a single wide char
-							CString sLow = strRTFSource.Mid(iStrPos + 2, 2);
-							CString sHigh = strRTFSource.Mid(iStrPos + 6, 2);
+			if (strRTFSource.Find(MULTIBYTETAG, iStrPos) == iStrPos)
+			{
+				// extract next two elements as a single wide char
+				CString sLow = strRTFSource.Mid(iStrPos + 2, 2);
+				CString sHigh = strRTFSource.Mid(iStrPos + 6, 2);
 
-							wchar_t wChar = (WORD)strtol(sHigh + sLow, NULL, 16);
-							CString sChar = Misc::WideToMultiByte(wChar);
+				wchar_t wChar = (WORD)strtol(sHigh + sLow, NULL, 16);
+				CString sChar = Misc::WideToMultiByte(wChar);
 
-							strCurrentText += sChar;
+				strCurrentText += sChar;
 
-							iStrPos += 7;
-							continue;
-						}
+				iStrPos += 7;
+				continue;
+			}
 			*/
 
 			//New tag
-			if (strCurrentText != "")
+			if (strCurrentText != _T(""))
 			{
 				CHTMLElement* pElement = new CHTMLElement();
 				pElement->m_enNodeType = CHTMLElement::c_nodText;
 				pElement->m_strNodeText = strCurrentText;
 				m_arrHTMLElements.Add(pElement);
-				strCurrentText = "";
+				strCurrentText = _T("");
 			}
 			CString strTag = R2H_GetRTFTag(strRTFSource, iStrPos);
 			R2H_InterpretTag(strTag);
 			iStrPos += strTag.GetLength();
-			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos+1] == ' '))
+			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos+1] == _T(' ')))
 			{
 				iStrPos++;   //Ignore Blank after Tag
 			}
 		}
-		else if (strChTest == "\n" || strChTest == "\r")
+		else if (strChTest == _T("\n") || strChTest == _T("\r"))
 		{
 			// line endings
 			strCurrentText += strChTest;
@@ -852,13 +854,13 @@ void CRTF_HTMLConverter::R2H_CreateHTMLElements(const CString& strRTFSource)
 	} //loop thru string
 
 	//Add last text
-	if (strCurrentText != "")
+	if (strCurrentText != _T(""))
 	{
 		CHTMLElement* pElement = new CHTMLElement();
 		pElement->m_enNodeType = CHTMLElement::c_nodText;
 		pElement->m_strNodeText = strCurrentText;
 		m_arrHTMLElements.Add(pElement);
-		strCurrentText = "";
+		strCurrentText = _T("");
 	}
 }
 
@@ -868,7 +870,7 @@ CRTF_HTMLConverter::CRTFNode CRTF_HTMLConverter::R2H_BuildTree(const CString& st
 	CString strName;
 
 	//Extract Node's Name
-	if ((strSource.GetLength() > 2) && (strSource[0] == '{') && (strSource[1] == '\\'))
+	if ((strSource.GetLength() > 2) && (strSource[0] == _T('{')) && (strSource[1] == _T('\\')))
 	{
 		int iStrCount = strSource.GetLength();
 		int iStrPos = 2;
@@ -905,24 +907,23 @@ CRTF_HTMLConverter::CRTFNode CRTF_HTMLConverter::R2H_BuildTree(const CString& st
 	}
 
 	// preallocate strings to make string building more efficient
-	char* szNodeNew = new char[strSource.GetLength() + 1];
+	TCHAR* szNodeNew = new TCHAR[strSource.GetLength() + 1];
 	int nLenNode = 0;
 
-	char* szThisCode = new char[strSource.GetLength() + 1];
+	TCHAR* szThisCode = new TCHAR[strSource.GetLength() + 1];
 	int nLenCode = 0;
 
 	//Looking for children
 	long lLevel = 0; //# Of opened '{'
 	int iStrPos, iStrCount = strNodeText.GetLength();
 
-	int nChildStart = strNodeText.Find('{');
+	int nChildStart = strNodeText.Find(_T('{'));
 	int nChildEnd = -1;
-
 
 	for (iStrPos = 0; iStrPos < iStrCount; iStrPos++)
 	{
-		char cTest = strNodeText[iStrPos];
-		if (cTest == '{')
+		TCHAR cTest = strNodeText[iStrPos];
+		if (cTest == _T('{'))
 		{
 			//New element
 			if (lLevel == 0)
@@ -948,7 +949,7 @@ CRTF_HTMLConverter::CRTFNode CRTF_HTMLConverter::R2H_BuildTree(const CString& st
 			//strThisCode+=cTest;
 		}
 
-		if (cTest == '}')
+		if (cTest == _T('}'))
 		{
 			ASSERT(lLevel > 0); //Invalid RTF, more closing } than opening ´{
 			lLevel--;
@@ -957,7 +958,6 @@ CRTF_HTMLConverter::CRTFNode CRTF_HTMLConverter::R2H_BuildTree(const CString& st
 				szNodeNew[nLenNode] = 0; // null terminate string
 				//Recurse (new Sub-Node (child) ready
 				R2H_BuildTree(szNodeNew, &nodeThis);
-//				R2H_BuildTree(strNodeNew,&nodeThis);
 			}
 			// else Nested Element, will be added during recurse
 		}
@@ -968,21 +968,20 @@ CRTF_HTMLConverter::CRTFNode CRTF_HTMLConverter::R2H_BuildTree(const CString& st
 
 	// Get the plain text (without \)
 	// reuse szNodeNew for efficiency
-	char* szPlain = szNodeNew;
+	TCHAR* szPlain = szNodeNew;
 	int nLenPlain = 0;
-//	CString strPlain;
 	iStrCount = strNodeText.GetLength();
 
 	for (iStrPos = 0; iStrPos < iStrCount; iStrPos++)
 	{
-		char cTest = strNodeText[iStrPos];
+		TCHAR cTest = strNodeText[iStrPos];
 
-		if (cTest == '\\')
+		if (cTest == _T('\\'))
 		{
 			CString strTag = R2H_GetRTFTag(strNodeText, iStrPos);
 			iStrPos += strTag.GetLength();
 
-			if (((iStrPos + 1) < strNodeText.GetLength()) && (strNodeText[iStrPos+1] == ' '))
+			if (((iStrPos + 1) < strNodeText.GetLength()) && (strNodeText[iStrPos+1] == _T(' ')))
 			{
 				iStrPos++;   //Ignore Blank after Tag
 			}

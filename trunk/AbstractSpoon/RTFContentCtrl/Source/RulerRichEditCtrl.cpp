@@ -62,8 +62,8 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 const int SCMARGIN = 4;
-const LPCTSTR FILEPREFIX = "file://";
-const LPCTSTR DEFAULTRTF = "{\\rtf1\\ansi\\deff0 \\f0\\fs60   }";
+const LPCTSTR FILEPREFIX = _T("file://");
+const LPCTSTR DEFAULTRTF = _T("{\\rtf1\\ansi\\deff0 \\f0\\fs60   }");
 
 const WORD PFN_NUMBERLIST = 0x0002;
 
@@ -123,7 +123,7 @@ static DWORD CALLBACK StreamIn(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG* pcb
 	STREAMINCOOKIE* pCookie = (STREAMINCOOKIE*)dwCookie;
 	int max = min(cb, pCookie->GetLength());
 
-	strncpy((LPSTR)pbBuff, pCookie->CopyFrom(), max);
+	strncpy((LPSTR)pbBuff, ATL::CT2A(pCookie->CopyFrom()), max);
 
 	*pcb = max;
 	pCookie->nStreamPos += max;
@@ -463,7 +463,7 @@ LRESULT CRulerRichEditCtrl::OnSetFont(WPARAM wp, LPARAM /*lp*/)
 		// lets have a backup plan
 		if (!m_toolbar.SetFontName(sFace))
 		{
-			sFace = "MS Sans Serif";
+			sFace = _T("MS Sans Serif");
 			nPoint = 9;
 			m_toolbar.SetFontName(sFace);
 		}
@@ -471,7 +471,7 @@ LRESULT CRulerRichEditCtrl::OnSetFont(WPARAM wp, LPARAM /*lp*/)
 		m_toolbar.SetFontSize(nPoint);
 
 		// update default char format
-		strcpy(m_cfDefault.szFaceName, sFace);
+		_tcscpy(m_cfDefault.szFaceName, sFace);
 		m_cfDefault.yHeight = nPoint * 20;
 
 		m_rtf.SetDefaultCharFormat(m_cfDefault);
