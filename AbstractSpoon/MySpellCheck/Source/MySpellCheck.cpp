@@ -44,7 +44,7 @@ BOOL APIENTRY DllMain( HANDLE /*hModule*/,
     return TRUE;
 }
 
-DLL_DECLSPEC ISpellChecker* CreateSpellCheckerInterface(const char* szAffPath, const char* szDicPath)
+DLL_DECLSPEC ISpellChecker* CreateSpellCheckerInterface(const TCHAR* szAffPath, const TCHAR* szDicPath)
 {
 	// some simple checks first
 	if (GetFileAttributes(szDicPath) == 0xffffffff)
