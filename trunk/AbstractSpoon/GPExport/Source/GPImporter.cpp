@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -42,7 +42,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -62,27 +62,35 @@ CGPImporter::~CGPImporter()
 
 }
 
-bool CGPImporter::Import(const char* szSrcFilePath, ITaskList* pDestTaskFile)
+bool CGPImporter::Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile)
 {
 	CXmlFile fileSrc;
 
-	if (!fileSrc.Load(szSrcFilePath, "project"))
+	if (!fileSrc.Load(szSrcFilePath, _T("project")))
+	{
 		return false;
+	}
 
-	const CXmlItem* pXISrcTasks = fileSrc.GetItem("tasks");
+	const CXmlItem* pXISrcTasks = fileSrc.GetItem(_T("tasks"));
 
 	if (!pXISrcTasks) // must exist
+	{
 		return false;
+	}
 
-	const CXmlItem* pXISrcTask = pXISrcTasks->GetItem("task");
+	const CXmlItem* pXISrcTask = pXISrcTasks->GetItem(_T("task"));
 
 	if (!pXISrcTask) // must exist
+	{
 		return false;
+	}
 
 	ITaskList7* pITL7 = GetITLInterface<ITaskList7>(pDestTaskFile, IID_TASKLIST7);
 
 	if (!ImportTask(pXISrcTask, pITL7, NULL))
+	{
 		return false;
+	}
 
 	// fix up resource allocations
 	FixupResourceAllocations(fileSrc.Root(), pITL7);
@@ -96,17 +104,17 @@ bool CGPImporter::Import(const char* szSrcFilePath, ITaskList* pDestTaskFile)
 void CGPImporter::FixupResourceAllocations(const CXmlItem* pXISrcPrj, ITaskList7* pDestTaskFile)
 {
 	BuildResourceMap(pXISrcPrj);
-			
-	const CXmlItem* pXIAllocations = pXISrcPrj->GetItem("allocations");
+
+	const CXmlItem* pXIAllocations = pXISrcPrj->GetItem(_T("allocations"));
 
 	if (pXIAllocations && m_mapResources.GetCount())
 	{
-		const CXmlItem* pXIAlloc = pXIAllocations->GetItem("allocation");
+		const CXmlItem* pXIAlloc = pXIAllocations->GetItem(_T("allocation"));
 
 		while (pXIAlloc)
 		{
-			int nTaskID = pXIAlloc->GetItemValueI("task-id");
-			int nResID = pXIAlloc->GetItemValueI("resource-id");
+			int nTaskID = pXIAlloc->GetItemValueI(_T("task-id"));
+			int nResID = pXIAlloc->GetItemValueI(_T("resource-id"));
 
 			// look up task
 			HTASKITEM hTask = NULL;
@@ -116,9 +124,11 @@ void CGPImporter::FixupResourceAllocations(const CXmlItem* pXISrcPrj, ITaskList7
 				CString sRes;
 
 				if (m_mapResources.Lookup(nResID, sRes) && !sRes.IsEmpty())
-					pDestTaskFile->AddTaskAllocatedTo(hTask, sRes);
+				{
+					pDestTaskFile->AddTaskAllocatedTo(hTask, ATL::CT2A(sRes));
+				}
 			}
-			
+
 			pXIAlloc = pXIAlloc->GetSibling();
 		}
 	}
@@ -127,78 +137,90 @@ void CGPImporter::FixupResourceAllocations(const CXmlItem* pXISrcPrj, ITaskList7
 bool CGPImporter::ImportTask(const CXmlItem* pXISrcTask, ITaskList7* pDestTaskFile, HTASKITEM htDestParent)
 {
 	if (!pXISrcTask)
+	{
 		return true;
+	}
 
-	CString sName = pXISrcTask->GetItemValue("name");
-	HTASKITEM hTask = pDestTaskFile->NewTask(sName, htDestParent);
-	ASSERT (hTask);
+	CString sName = pXISrcTask->GetItemValue(_T("name"));
+	HTASKITEM hTask = pDestTaskFile->NewTask(ATL::CT2A(sName), htDestParent);
+	ASSERT(hTask);
 
 	if (!hTask)
+	{
 		return false;
+	}
 
 	// attributes
 
-	// store GP id in external ID field and add to map to that we can 
+	// store GP id in external ID field and add to map to that we can
 	// set up the alloc to and dependencies afterwards
-	pDestTaskFile->SetTaskExternalID(hTask, pXISrcTask->GetItemValue("id"));
-	m_mapTasks[pXISrcTask->GetItemValueI("id")] = hTask;
+	pDestTaskFile->SetTaskExternalID(hTask, ATL::CT2A(pXISrcTask->GetItemValue(_T("id"))));
+	m_mapTasks[pXISrcTask->GetItemValueI(_T("id"))] = hTask;
 
 	// completion
-	int nPercentDone = pXISrcTask->GetItemValueI("complete");
+	int nPercentDone = pXISrcTask->GetItemValueI(_T("complete"));
 	pDestTaskFile->SetTaskPercentDone(hTask, (unsigned char)nPercentDone);
 
 	// dates
 	time_t tStart;
-	
-	if (CDateHelper::DecodeISODate(pXISrcTask->GetItemValue("start"), tStart))
+
+	if (CDateHelper::DecodeISODate(pXISrcTask->GetItemValue(_T("start")), tStart))
 	{
 		pDestTaskFile->SetTaskStartDate(hTask, tStart);
 
-		int nDuration = pXISrcTask->GetItemValueI("duration");
+		int nDuration = pXISrcTask->GetItemValueI(_T("duration"));
 
 		if (nDuration)
 		{
 			if (nPercentDone == 100)
-				pDestTaskFile->SetTaskDoneDate(hTask, tStart + (nDuration - 1) * ONEDAY); // gp dates are inclusive
+			{
+				pDestTaskFile->SetTaskDoneDate(hTask, tStart + (nDuration - 1) * ONEDAY);   // gp dates are inclusive
+			}
 			else
-				pDestTaskFile->SetTaskDueDate(hTask, tStart + (nDuration - 1) * ONEDAY); // gp dates are inclusive
+			{
+				pDestTaskFile->SetTaskDueDate(hTask, tStart + (nDuration - 1) * ONEDAY);   // gp dates are inclusive
+			}
 		}
 	}
 
 	// priority
-	int nPriority = pXISrcTask->GetItemValueI("priority");
+	int nPriority = pXISrcTask->GetItemValueI(_T("priority"));
 	pDestTaskFile->SetTaskPriority(hTask, (unsigned char)(nPriority * 3 + 2)); // 2, 5, 8
 
 	// file ref
-	CString sFileRef = pXISrcTask->GetItemValue("webLink");
+	CString sFileRef = pXISrcTask->GetItemValue(_T("webLink"));
 	sFileRef.TrimLeft();
 
 	if (!sFileRef.IsEmpty())
 	{
 		// decode file paths
-		if (sFileRef.Find("file://") == 0)
+		if (sFileRef.Find(_T("file://")) == 0)
 		{
 			sFileRef = sFileRef.Mid(7);
-			sFileRef.Replace("%20", "");
+			sFileRef.Replace(_T("%20"), _T(""));
 		}
 
-		pDestTaskFile->SetTaskFileReferencePath(hTask, sFileRef);
+		pDestTaskFile->SetTaskFileReferencePath(hTask, ATL::CT2A(sFileRef));
 	}
 
 	// comments
-	pDestTaskFile->SetTaskComments(hTask, pXISrcTask->GetItemValue("notes"));
+	pDestTaskFile->SetTaskComments(hTask, ATL::CT2A(pXISrcTask->GetItemValue(_T("notes"))));
 
 	// dependency
 	// we just set this to the GP id and fix it up later on once we
 	// have finished mapping all the tasks
-	const CXmlItem* pXIDepends = pXISrcTask->GetItem("depend");
+	const CXmlItem* pXIDepends = pXISrcTask->GetItem(_T("depend"));
 
-	if (pXIDepends && pXIDepends->GetItemValueI("type") == 3)
-		pDestTaskFile->SetTaskDependency(hTask, pXIDepends->GetItemValue("id"));
+	if (pXIDepends && pXIDepends->GetItemValueI(_T("type")) == 3)
+	{
+		pDestTaskFile->SetTaskDependency(hTask, ATL::CT2A(pXIDepends->GetItemValue(_T("id"))));
+	}
 
 	// children (?)
-	if (!ImportTask(pXISrcTask->GetItem("task"), pDestTaskFile, hTask))
+	if (!ImportTask(pXISrcTask->GetItem(_T("task")), pDestTaskFile, hTask))
+	{
 		return false;
+	}
 
 	// siblings
 	return ImportTask(pXISrcTask->GetSibling(), pDestTaskFile, htDestParent);
@@ -211,20 +233,20 @@ void CGPImporter::FixupDependencies(ITaskList7* pDestTaskFile, HTASKITEM hTask)
 		return;
 
 	CString sDepends = pDestTaskFile->GetTaskDependency(hTask, 0);
-	
+
 	if (!sDepends.IsEmpty())
 	{
 		int nDepends = atoi(sDepends);
-		
+
 		// look up task
 		HTASKITEM hDepends = NULL;
-		
+
 		if (m_mapTasks.Lookup(nDepends, hDepends) && hDepends)
 		{
 			// extract correct depends task ID
 			nDepends = pDestTaskFile->GetTaskID(hDepends);
 			sDepends.Format("%d", nDepends);
-			
+
 			pDestTaskFile->SetTaskDependency(hTask, sDepends);
 		}
 	}
@@ -241,15 +263,15 @@ void CGPImporter::BuildResourceMap(const CXmlItem* pXISrcPrj)
 {
 	m_mapResources.RemoveAll();
 
-	const CXmlItem* pXIResources = pXISrcPrj->GetItem("resources");
+	const CXmlItem* pXIResources = pXISrcPrj->GetItem(_T("resources"));
 
 	if (pXIResources)
 	{
-		const CXmlItem* pXIRes = pXIResources->GetItem("resource");
+		const CXmlItem* pXIRes = pXIResources->GetItem(_T("resource"));
 
 		while (pXIRes)
 		{
-			m_mapResources[pXIRes->GetItemValueI("id")] = pXIRes->GetItemValue("name");
+			m_mapResources[pXIRes->GetItemValueI(_T("id"))] = pXIRes->GetItemValue(_T("name"));
 			pXIRes = pXIRes->GetSibling();
 		}
 	}
