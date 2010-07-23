@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -42,21 +42,33 @@
 #include "../../Common/IImportExport.h"
 #include "../../Common/ITaskList.h"
 
-class CiCalImporter : public IImportTasklist  
+class CiCalImporter : public IImportTasklist
 {
 public:
 	CiCalImporter();
 	virtual ~CiCalImporter();
 
 	// interface implementation
-	void Release() { delete this; }
+	void Release()
+	{
+		delete this;
+	}
 
 	// caller must copy only
-	const char* GetMenuText() { return "iCalendar"; }
-	const char* GetFileFilter() { return "iCalendar Files (*.ics)|*.ics||"; }
-	const char* GetFileExtension() { return "ics"; }
+	const char* GetMenuText()
+	{
+		return "iCalendar";
+	}
+	const char* GetFileFilter()
+	{
+		return "iCalendar Files (*.ics)|*.ics||";
+	}
+	const char* GetFileExtension()
+	{
+		return "ics";
+	}
 
-	bool Import(const char* szSrcFilePath, ITaskList* pDestTaskFile);
+	bool Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile);
 };
 
 #endif // !defined(AFX_ICALIMPORTER_H__36D6AF21_80EA_4361_85E9_B9BCDB38F913__INCLUDED_)

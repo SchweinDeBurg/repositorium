@@ -50,12 +50,10 @@ static char THIS_FILE[] = __FILE__;
 
 CFMindImporter::CFMindImporter()
 {
-
 }
 
 CFMindImporter::~CFMindImporter()
 {
-
 }
 
 bool CFMindImporter::Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile)

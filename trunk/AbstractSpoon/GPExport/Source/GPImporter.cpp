@@ -54,12 +54,10 @@ const UINT ONEDAY = 24 * 60 * 60;
 
 CGPImporter::CGPImporter()
 {
-
 }
 
 CGPImporter::~CGPImporter()
 {
-
 }
 
 bool CGPImporter::Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile)
