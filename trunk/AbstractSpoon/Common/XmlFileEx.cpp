@@ -324,7 +324,7 @@ BOOL CXmlFileEx::InitEncryptor()
 	if (m_pEncryptor)
 		return TRUE;
 
-	m_pEncryptor = CreateEncryptionInterface("EncryptDecrypt.dll");
+	m_pEncryptor = CreateEncryptionInterface(_T("EncryptDecrypt.dll"));
 
 	return (m_pEncryptor != NULL);
 }

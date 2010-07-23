@@ -73,7 +73,7 @@ BOOL CContentMgr::Initialize()
 	CString sSearchPath = FileMisc::GetModuleFileName(), sFolder, sDrive;
 
 	FileMisc::SplitPath(sSearchPath, &sDrive, &sFolder);
-	FileMisc::MakePath(sSearchPath, sDrive, sFolder, "*", ".dll");
+	FileMisc::MakePath(sSearchPath, sDrive, sFolder, _T("*"), _T(".dll"));
 
 	BOOL bContinue = ff.FindFile(sSearchPath);
 
