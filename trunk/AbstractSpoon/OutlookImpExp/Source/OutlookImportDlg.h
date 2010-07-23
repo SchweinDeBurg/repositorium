@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -69,14 +69,17 @@ public:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(COutlookImportDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 	virtual void OnOK();
 
 // Implementation
 protected:
-	int DoModal() { return CDialog::DoModal(); }
+	int DoModal()
+	{
+		return CDialog::DoModal();
+	}
 
 	// Generated message map functions
 	//{{AFX_MSG(COutlookImportDlg)

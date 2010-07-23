@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -58,7 +58,7 @@ const int olFolderJournal		= 11;
 const int olFolderNotes			= 12;
 const int olFolderTasks			= 13;
 
-LPCTSTR PATHDELIM = " \\ ";
+LPCTSTR PATHDELIM = _T(" \\ ");
 
 /////////////////////////////////////////////////////////////////////////////
 // COutlookImportDlg dialog
@@ -69,7 +69,7 @@ COutlookImportDlg::COutlookImportDlg(CWnd* pParent /*=NULL*/)
 {
 	//{{AFX_DATA_INIT(COutlookImportDlg)
 	//}}AFX_DATA_INIT
-	m_bRemoveOutlookTasks = AfxGetApp()->GetProfileInt("Importers\\Outlook", "RemoveOutlookTasks", FALSE);
+	m_bRemoveOutlookTasks = AfxGetApp()->GetProfileInt(_T("Importers\\Outlook"), _T("RemoveOutlookTasks"), FALSE);
 }
 
 
@@ -98,30 +98,32 @@ BOOL COutlookImportDlg::ImportTasks(ITaskList* pDestTaskFile)
 	ASSERT(m_pDestTaskFile);
 
 	if (!m_pDestTaskFile)
+	{
 		return FALSE;
+	}
 
 	return (DoModal() == IDOK);
 }
 
-BOOL COutlookImportDlg::OnInitDialog() 
+BOOL COutlookImportDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
+
 	ASSERT(m_pOutlook == NULL);
 	m_pOutlook = new _Application;
 
-	if (m_pOutlook->CreateDispatch("Outlook.Application"))
+	if (m_pOutlook->CreateDispatch(_T("Outlook.Application")))
 	{
-		_NameSpace nmspc(m_pOutlook->GetNamespace("MAPI"));
+		_NameSpace nmspc(m_pOutlook->GetNamespace(_T("MAPI")));
 		nmspc.m_lpDispatch->AddRef(); // to keep it alive
 		MAPIFolder mapi(nmspc.GetDefaultFolder(olFolderTasks));
 		mapi.m_lpDispatch->AddRef(); // to keep it alive
 
 		AddFolderItemsToList(&mapi);
 	}
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void COutlookImportDlg::AddFolderItemsToList(MAPIFolder* pFolder, const CString& sPath)
@@ -140,7 +142,9 @@ void COutlookImportDlg::AddFolderItemsToList(MAPIFolder* pFolder, const CString&
 		CString sItem(task.GetSubject());
 
 		if (!sPath.IsEmpty())
-			sItem.Format("%s%s%s", sPath, PATHDELIM, task.GetSubject());
+		{
+			sItem.Format(_T("%s%s%s"), sPath, PATHDELIM, task.GetSubject());
+		}
 
 		int nIndex = m_lbTasks.AddString(sItem);
 
@@ -160,7 +164,9 @@ void COutlookImportDlg::AddFolderItemsToList(MAPIFolder* pFolder, const CString&
 		CString sSubPath(folder.GetName());
 
 		if (!sPath.IsEmpty())
-			sSubPath.Format("%s%s%s", sPath, PATHDELIM, folder.GetName());
+		{
+			sSubPath.Format(_T("%s%s%s"), sPath, PATHDELIM, folder.GetName());
+		}
 
 		AddFolderItemsToList(&folder, sSubPath);
 	}
@@ -173,14 +179,15 @@ void COutlookImportDlg::OnOK()
 	ASSERT(m_pOutlook && m_pDestTaskFile);
 
 	// make sure nothing has changed
-	_NameSpace nmspc(m_pOutlook->GetNamespace("MAPI"));
+	_NameSpace nmspc(m_pOutlook->GetNamespace(_T("MAPI")));
 	nmspc.m_lpDispatch->AddRef(); // to keep it alive
 	MAPIFolder mapi(nmspc.GetDefaultFolder(olFolderTasks));
 	mapi.m_lpDispatch->AddRef(); // to keep it alive
 	_Items items(mapi.GetItems());
 	items.m_lpDispatch->AddRef(); // to keep it alive
 
-	int nTaskCount = items.GetCount(); (nTaskCount);
+	int nTaskCount = items.GetCount();
+	(nTaskCount);
 	int nLBCount = m_lbTasks.GetCount();
 
 	// iterate the listbox items looking for checked items
@@ -196,18 +203,20 @@ void COutlookImportDlg::OnOK()
 			CString sTitle;
 			m_lbTasks.GetText(nItem, sTitle); // gets the full path
 
-			HTASKITEM hTask = m_pDestTaskFile->NewTask(sTitle);
+			HTASKITEM hTask = m_pDestTaskFile->NewTask(ATL::CT2A(sTitle));
 			ASSERT(hTask);
 
 			SetTaskAttributes(hTask, &task);
 
 			// delete the item as we go if required
 			if (m_bRemoveOutlookTasks)
+			{
 				DeleteTaskFromFolder(&task, &mapi);
+			}
 		}
 	}
 
-	AfxGetApp()->WriteProfileInt("Importers\\Outlook", "RemoveOutlookTasks", m_bRemoveOutlookTasks);
+	AfxGetApp()->WriteProfileInt(_T("Importers\\Outlook"), _T("RemoveOutlookTasks"), m_bRemoveOutlookTasks);
 }
 
 BOOL COutlookImportDlg::DeleteTaskFromFolder(_TaskItem* pTask, MAPIFolder* pFolder)
@@ -238,7 +247,9 @@ BOOL COutlookImportDlg::DeleteTaskFromFolder(_TaskItem* pTask, MAPIFolder* pFold
 		MAPIFolder folder(folders.Item(COleVariant((short)nItem)));
 
 		if (DeleteTaskFromFolder(pTask, &folder))
+		{
 			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -265,7 +276,7 @@ CString COutlookImportDlg::GetFullPath(_TaskItem* pTask)
 			sFolder = folder.GetName(); // will throw when we hit the highest level
 			sPath = sFolder + PATHDELIM + sPath;
 
-			lpd = folder.GetParent(); 
+			lpd = folder.GetParent();
 		}
 		catch (...)
 		{
@@ -280,41 +291,28 @@ CString COutlookImportDlg::GetFullPath(_TaskItem* pTask)
 void COutlookImportDlg::SetTaskAttributes(HTASKITEM hTask, _TaskItem* pTask)
 {
 	// set it's attributes
-	m_pDestTaskFile->SetTaskComments(hTask, pTask->GetBody());
-	m_pDestTaskFile->SetTaskCategory(hTask, pTask->GetCategories());
-	
+	m_pDestTaskFile->SetTaskComments(hTask, ATL::CT2A(pTask->GetBody()));
+	m_pDestTaskFile->SetTaskCategory(hTask, ATL::CT2A(pTask->GetCategories()));
+
 	if (pTask->GetComplete())
+	{
 		m_pDestTaskFile->SetTaskDoneDate(hTask, ConvertDate(pTask->GetDateCompleted()));
-	
+	}
+
 	m_pDestTaskFile->SetTaskDueDate(hTask, ConvertDate(pTask->GetDueDate()));
 	m_pDestTaskFile->SetTaskStartDate(hTask, ConvertDate(pTask->GetStartDate()));
 	m_pDestTaskFile->SetTaskCreationDate(hTask, ConvertDate(pTask->GetCreationTime()));
 	m_pDestTaskFile->SetTaskLastModified(hTask, ConvertDate(pTask->GetLastModificationTime()));
-	m_pDestTaskFile->SetTaskExternalID(hTask, pTask->GetEntryID());
-	m_pDestTaskFile->SetTaskAllocatedBy(hTask, pTask->GetDelegator());
-	m_pDestTaskFile->SetTaskAllocatedTo(hTask, pTask->GetOwner());
+	m_pDestTaskFile->SetTaskExternalID(hTask, ATL::CT2A(pTask->GetEntryID()));
+	m_pDestTaskFile->SetTaskAllocatedBy(hTask, ATL::CT2A(pTask->GetDelegator()));
+	m_pDestTaskFile->SetTaskAllocatedTo(hTask, ATL::CT2A(pTask->GetOwner()));
 	m_pDestTaskFile->SetTaskPriority(hTask, (unsigned char)(pTask->GetImportance() * 5));
-
-/*
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-	m_pDestTaskFile->SetTask(hTask, pTask->Get());
-*/
 }
 
-void COutlookImportDlg::OnDestroy() 
+void COutlookImportDlg::OnDestroy()
 {
 	CDialog::OnDestroy();
-	
+
 	delete m_pOutlook;
 	m_pOutlook = NULL;
 	m_pDestTaskFile = NULL;
@@ -323,7 +321,9 @@ void COutlookImportDlg::OnDestroy()
 time_t COutlookImportDlg::ConvertDate(DATE date)
 {
 	if (date <= 0.0)
+	{
 		return 0;
+	}
 
 	SYSTEMTIME st;
 	COleDateTime dt(date);
