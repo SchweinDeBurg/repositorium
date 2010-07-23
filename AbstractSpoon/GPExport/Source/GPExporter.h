@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -46,21 +46,33 @@
 
 class CXmlItem;
 
-class CGPExporter : public IExportTasklist  
+class CGPExporter : public IExportTasklist
 {
 public:
 	CGPExporter();
 	virtual ~CGPExporter();
 
 	// interface implementation
-	void Release() { delete this; }
+	void Release()
+	{
+		delete this;
+	}
 
 	// caller must copy only
-	const char* GetMenuText() { return "GanttProject"; }
-	const char* GetFileFilter() { return "GanttProject Files (*.gan)|*.gan||"; }
-	const char* GetFileExtension() { return "gan"; }
+	const char* GetMenuText()
+	{
+		return "GanttProject";
+	}
+	const char* GetFileFilter()
+	{
+		return "GanttProject Files (*.gan)|*.gan||";
+	}
+	const char* GetFileExtension()
+	{
+		return "gan";
+	}
 
-	bool Export(const ITaskList* pSrcTaskFile, const char* szDestFilePath, BOOL bSilent);
+	bool Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
 
 protected:
 	CMap<CString, LPCTSTR, int, int&> m_mapResources;

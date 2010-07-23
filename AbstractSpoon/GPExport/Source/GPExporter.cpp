@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -42,7 +42,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -57,56 +57,58 @@ CGPExporter::CGPExporter()
 
 }
 
-CGPExporter::~CGPExporter() 
+CGPExporter::~CGPExporter()
 {
 
 }
 
-bool CGPExporter::Export(const ITaskList* pSrcTaskFile, const char* szDestFilePath, BOOL /*bSilent*/)
+bool CGPExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
 {
-	CXmlFile fileDest("project");
+	CXmlFile fileDest(_T("project"));
 
 	const ITaskList7* pITL7 = GetITLInterface<ITaskList7>(pSrcTaskFile, IID_TASKLIST7);
-	ASSERT (pITL7);
+	ASSERT(pITL7);
 
 	// export resource allocations
 	ExportResources(pITL7, fileDest.Root());
 
 	// export tasks
-	CXmlItem* pXITasks = fileDest.AddItem("tasks");
-	CXmlItem* pXIAllocations = fileDest.AddItem("allocations");
+	CXmlItem* pXITasks = fileDest.AddItem(_T("tasks"));
+	CXmlItem* pXIAllocations = fileDest.AddItem(_T("allocations"));
 
 	if (!ExportTask(pITL7, pSrcTaskFile->GetFirstTask(), pXITasks, pXIAllocations))
+	{
 		return false;
+	}
 
 	// important display stuff for GP
 	SetupDisplay(fileDest.Root());
 	SetupCalendar(fileDest.Root());
 
 	// save result
-	VERIFY (fileDest.Save(szDestFilePath));
+	VERIFY(fileDest.Save(szDestFilePath));
 
 	return true;
 }
 
 void CGPExporter::SetupDisplay(CXmlItem* pDestPrj)
 {
-	CXmlItem* pXIDisplay = pDestPrj->AddItem("taskdisplaycolumns");
+	CXmlItem* pXIDisplay = pDestPrj->AddItem(_T("taskdisplaycolumns"));
 
-	CXmlItem* pXIColumn = pXIDisplay->AddItem("displaycolumn");
-	pXIColumn->SetItemValue("property-id", "tpd3");
-	pXIColumn->SetItemValue("order", "0");
-	pXIColumn->SetItemValue("width", "75");
+	CXmlItem* pXIColumn = pXIDisplay->AddItem(_T("displaycolumn"));
+	pXIColumn->SetItemValue(_T("property-id"), _T("tpd3"));
+	pXIColumn->SetItemValue(_T("order"), _T("0"));
+	pXIColumn->SetItemValue(_T("width"), _T("75"));
 
-	pXIColumn = pXIDisplay->AddItem("displaycolumn");
-	pXIColumn->SetItemValue("property-id", "tpd4");
-	pXIColumn->SetItemValue("order", "1");
-	pXIColumn->SetItemValue("width", "75");
+	pXIColumn = pXIDisplay->AddItem(_T("displaycolumn"));
+	pXIColumn->SetItemValue(_T("property-id"), _T("tpd4"));
+	pXIColumn->SetItemValue(_T("order"), _T("1"));
+	pXIColumn->SetItemValue(_T("width"), _T("75"));
 
-	pXIColumn = pXIDisplay->AddItem("displaycolumn");
-	pXIColumn->SetItemValue("property-id", "tpd5");
-	pXIColumn->SetItemValue("order", "2");
-	pXIColumn->SetItemValue("width", "75");
+	pXIColumn = pXIDisplay->AddItem(_T("displaycolumn"));
+	pXIColumn->SetItemValue(_T("property-id"), _T("tpd5"));
+	pXIColumn->SetItemValue(_T("order"), _T("2"));
+	pXIColumn->SetItemValue(_T("width"), _T("75"));
 }
 
 void CGPExporter::SetupCalendar(CXmlItem* pDestPrj)
@@ -114,8 +116,8 @@ void CGPExporter::SetupCalendar(CXmlItem* pDestPrj)
 	/*
 	<calendars>
 	<day-types>
-	<day-type id="0"/> 
-	<day-type id="1"/> 
+	<day-type id="0"/>
+	<day-type id="1"/>
 	<calendar id="1" name="default">
 	<default-week sun="1" mon="0" tue="0" wed="0"
 	thu="0" fri="0" sat="1"/>
@@ -123,52 +125,56 @@ void CGPExporter::SetupCalendar(CXmlItem* pDestPrj)
 	</day-types>
 	</calendars>
 	*/
-	
-	CXmlItem* pXICals = pDestPrj->AddItem("calendars");
-	CXmlItem* pXIDayTypes = pXICals->AddItem("day-types");
-	
-	CXmlItem* pXIDay = pXICals->AddItem("day-type");
-	pXIDay->SetItemValue("id", "0"); // weekday
-	
-	pXIDay = pXICals->AddItem("day-type");
-	pXIDay->SetItemValue("id", "1"); // weekend
-	
-	CXmlItem* pXICal = pXIDayTypes->AddItem("calendar");
-	
-	pXICal->SetItemValue("id", "1");
-	pXICal->SetItemValue("name", "default");
-	
-	CXmlItem* pXIWeek = pXICal->AddItem("default-week");
-	
-	pXIWeek->SetItemValue("sun", "1");
-	pXIWeek->SetItemValue("mon", "0");
-	pXIWeek->SetItemValue("tue", "0");
-	pXIWeek->SetItemValue("wed", "0");
-	pXIWeek->SetItemValue("thu", "0");
-	pXIWeek->SetItemValue("fri", "0");
-	pXIWeek->SetItemValue("sat", "1");
+
+	CXmlItem* pXICals = pDestPrj->AddItem(_T("calendars"));
+	CXmlItem* pXIDayTypes = pXICals->AddItem(_T("day-types"));
+
+	CXmlItem* pXIDay = pXICals->AddItem(_T("day-type"));
+	pXIDay->SetItemValue(_T("id"), _T("0")); // weekday
+
+	pXIDay = pXICals->AddItem(_T("day-type"));
+	pXIDay->SetItemValue(_T("id"), _T("1")); // weekend
+
+	CXmlItem* pXICal = pXIDayTypes->AddItem(_T("calendar"));
+
+	pXICal->SetItemValue(_T("id"), _T("1"));
+	pXICal->SetItemValue(_T("name"), _T("default"));
+
+	CXmlItem* pXIWeek = pXICal->AddItem(_T("default-week"));
+
+	pXIWeek->SetItemValue(_T("sun"), _T("1"));
+	pXIWeek->SetItemValue(_T("mon"), _T("0"));
+	pXIWeek->SetItemValue(_T("tue"), _T("0"));
+	pXIWeek->SetItemValue(_T("wed"), _T("0"));
+	pXIWeek->SetItemValue(_T("thu"), _T("0"));
+	pXIWeek->SetItemValue(_T("fri"), _T("0"));
+	pXIWeek->SetItemValue(_T("sat"), _T("1"));
 }
 
 
-bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, 
-							 CXmlItem* pXIDestParent, CXmlItem* pXIAllocations)
+bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
+                             CXmlItem* pXIDestParent, CXmlItem* pXIAllocations)
 {
 	if (!hTask)
+	{
 		return true;
+	}
 
 	// create a new item corresponding to pXITask at the dest
-	CXmlItem* pXIDestItem = pXIDestParent->AddItem("task");
+	CXmlItem* pXIDestItem = pXIDestParent->AddItem(_T("task"));
 
 	if (!pXIDestItem)
+	{
 		return false;
+	}
 
 	// copy across the appropriate attributes
 	int nTaskID = (int)pSrcTaskFile->GetTaskID(hTask);
-	pXIDestItem->AddItem("id", nTaskID);
-	pXIDestItem->AddItem("name", pSrcTaskFile->GetTaskTitle(hTask));
+	pXIDestItem->AddItem(_T("id"), nTaskID);
+	pXIDestItem->AddItem(_T("name"), ATL::CA2T(pSrcTaskFile->GetTaskTitle(hTask)));
 
 	// colour
-	pXIDestItem->AddItem("color", pSrcTaskFile->GetTaskAttribute(hTask, TDL_TASKTEXTWEBCOLOR));
+	pXIDestItem->AddItem(_T("color"), ATL::CA2T(pSrcTaskFile->GetTaskAttribute(hTask, ATL::CT2A(TDL_TASKTEXTWEBCOLOR))));
 
 	// dates
 	time_t tStart = pSrcTaskFile->GetTaskStartDate(hTask);
@@ -179,73 +185,69 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	if (!tStart)
 	{
 		if (tDue)
+		{
 			tStart = tDue;
+		}
 		else if (tDone)
+		{
 			tStart = tDone;
+		}
 
 		// else there are no dates so leave as-is
 	}
 
 	// if no due date then make something up
 	if (tStart && !tDue && !tDone)
+	{
 		tDue = tStart;
+	}
 
 	if (tStart && (tDue || tDone))
 	{
 		COleDateTime start(tStart);
-		pXIDestItem->AddItem("start", CDateHelper::FormatDate(start, DHFD_ISO));
+		pXIDestItem->AddItem(_T("start"), CDateHelper::FormatDate(start, DHFD_ISO));
 
 		if (tDone >= tStart) // completion date takes precedence
 		{
 			int nDays = CDateHelper::CalcDaysFromTo(start, tDone, TRUE);
-			pXIDestItem->AddItem("duration", nDays);
+			pXIDestItem->AddItem(_T("duration"), nDays);
 		}
 		else if (tDue >= tStart)
 		{
 			int nDays = CDateHelper::CalcDaysFromTo(start, tDue, TRUE);
-			pXIDestItem->AddItem("duration", nDays);
+			pXIDestItem->AddItem(_T("duration"), nDays);
 		}
 	}
 
 	// completion
 	if (tDone)
 	{
-		pXIDestItem->AddItem("complete", "100");
-		pXIDestItem->AddItem("priority", "-1");
+		pXIDestItem->AddItem(_T("complete"), _T("100"));
+		pXIDestItem->AddItem(_T("priority"), _T("-1"));
 	}
 	else
 	{
-		pXIDestItem->AddItem("complete", pSrcTaskFile->GetTaskPercentDone(hTask, TRUE));
+		pXIDestItem->AddItem(_T("complete"), pSrcTaskFile->GetTaskPercentDone(hTask, TRUE));
 
 		int nPriority = pSrcTaskFile->GetTaskPriority(hTask, TRUE);
-		
+
 		if (nPriority < 0)
-			pXIDestItem->AddItem("priority", "-1");
-		else if (nPriority <= 3)
-			pXIDestItem->AddItem("priority", 0); // low
-		else if (nPriority <= 6)
-			pXIDestItem->AddItem("priority", 1); // medium
-		else
-			pXIDestItem->AddItem("priority", 2); // high
-	}
-	
-/*
-	// dependency
-	CString sDepends = pSrcTaskFile->GetTaskAttribute(hTask, TDL_TASKDEPENDENCY);
-
-	if (!sDepends.IsEmpty())
-	{
-		int nDelim = sDepends.Find('?');
-
-		if (nDelim == -1) // must be a dependency in the same tasklist
 		{
-			CXmlItem* pXIDepends = pXIDestItem->AddItem("depend");
-
-			pXIDepends->AddItem("id", sDepends);
-			pXIDepends->AddItem("type", "3");
+			pXIDestItem->AddItem(_T("priority"), _T("-1"));
+		}
+		else if (nPriority <= 3)
+		{
+			pXIDestItem->AddItem(_T("priority"), 0);   // low
+		}
+		else if (nPriority <= 6)
+		{
+			pXIDestItem->AddItem(_T("priority"), 1);   // medium
+		}
+		else
+		{
+			pXIDestItem->AddItem(_T("priority"), 2);   // high
 		}
 	}
-*/
 
 	// file/weblink
 	CString sFileRef = pSrcTaskFile->GetTaskFileReferencePath(hTask);
@@ -254,19 +256,23 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	if (!sFileRef.IsEmpty())
 	{
 		// web or file link?
-		if (sFileRef.Find(":\\") == 1 || sFileRef.Find("\\\\") == 0)
-			sFileRef = "file://" + sFileRef;
+		if (sFileRef.Find(_T(":\\")) == 1 || sFileRef.Find(_T("\\\\")) == 0)
+		{
+			sFileRef = _T("file://") + sFileRef;
+		}
 
-		sFileRef.Replace(" ", "%20");
+		sFileRef.Replace(_T(" "), _T("%20"));
 
-		pXIDestItem->AddItem("webLink", sFileRef);
+		pXIDestItem->AddItem(_T("webLink"), sFileRef);
 	}
 
 	// comments
 	const char* szComments = pSrcTaskFile->GetTaskComments(hTask);
 
 	if (szComments && *szComments)
-		pXIDestItem->AddItem("notes", szComments, XIT_CDATA);
+	{
+		pXIDestItem->AddItem(_T("notes"), ATL::CA2T(szComments), XIT_CDATA);
+	}
 
 	// resource allocation
 	int nAllocTo = pSrcTaskFile->GetTaskAllocatedToCount(hTask);
@@ -278,22 +284,24 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 
 		if (m_mapResources.Lookup(sAllocTo, nResID))
 		{
-			CXmlItem* pXIAllocTo = pXIAllocations->AddItem("allocation");
+			CXmlItem* pXIAllocTo = pXIAllocations->AddItem(_T("allocation"));
 
 			if (pXIAllocTo)
 			{
-				pXIAllocTo->AddItem("task-id", nTaskID);
-				pXIAllocTo->AddItem("resource-id", nResID);
-				pXIAllocTo->AddItem("responsible", "true");
-				pXIAllocTo->AddItem("load", "100.0");
-				pXIAllocTo->AddItem("function", "Default:0");
+				pXIAllocTo->AddItem(_T("task-id"), nTaskID);
+				pXIAllocTo->AddItem(_T("resource-id"), nResID);
+				pXIAllocTo->AddItem(_T("responsible"), _T("true"));
+				pXIAllocTo->AddItem(_T("load"), _T("100.0"));
+				pXIAllocTo->AddItem(_T("function"), _T("Default:0"));
 			}
 		}
 	}
-	
+
 	// copy across first child
 	if (!ExportTask(pSrcTaskFile, pSrcTaskFile->GetFirstTask(hTask), pXIDestItem, pXIAllocations))
+	{
 		return false;
+	}
 
 	// copy across first sibling
 	return ExportTask(pSrcTaskFile, pSrcTaskFile->GetNextTask(hTask), pXIDestParent, pXIAllocations);
@@ -302,15 +310,17 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 void CGPExporter::BuildResourceMap(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CXmlItem* pDestPrj)
 {
 	if (!hTask)
+	{
 		return;
+	}
 
 	int nAllocTo = pSrcTaskFile->GetTaskAllocatedToCount(hTask);
-	
+
 	while (nAllocTo--)
 	{
 		CString sAllocTo = pSrcTaskFile->GetTaskAllocatedTo(hTask, nAllocTo);
 		int nID = 0;
-		
+
 		if (!m_mapResources.Lookup(sAllocTo, nID))
 		{
 			nID = m_mapResources.GetCount();
@@ -331,7 +341,7 @@ void CGPExporter::ExportResources(const ITaskList7* pSrcTaskFile, CXmlItem* pDes
 
 	if (m_mapResources.GetCount())
 	{
-		CXmlItem* pXIResources = pDestPrj->AddItem("resources");
+		CXmlItem* pXIResources = pDestPrj->AddItem(_T("resources"));
 		CString sRes;
 		int nResID;
 
@@ -340,14 +350,14 @@ void CGPExporter::ExportResources(const ITaskList7* pSrcTaskFile, CXmlItem* pDes
 		while (pos)
 		{
 			m_mapResources.GetNextAssoc(pos, sRes, nResID);
-			
-			CXmlItem* pXIRes = pXIResources->AddItem("resource");
+
+			CXmlItem* pXIRes = pXIResources->AddItem(_T("resource"));
 
 			if (pXIRes)
 			{
-				pXIRes->AddItem("name", sRes);
-				pXIRes->AddItem("id", nResID);
-				pXIRes->AddItem("function", "Default:0"); // crucial
+				pXIRes->AddItem(_T("name"), sRes);
+				pXIRes->AddItem(_T("id"), nResID);
+				pXIRes->AddItem(_T("function"), _T("Default:0")); // crucial
 			}
 		}
 	}
