@@ -173,7 +173,7 @@ CString CToDoCtrlData::GetTaskTitle(DWORD dwTaskID) const
 	if (pTDI)
 		return pTDI->sTitle;
 	
-	return "";
+	return _T("");
 }
 
 int CToDoCtrlData::GetTaskIconIndex(DWORD dwTaskID) const
@@ -193,7 +193,7 @@ CString CToDoCtrlData::GetTaskComments(DWORD dwTaskID) const
 	if (pTDI)
 		return pTDI->sComments;
 	
-	return "";
+	return _T("");
 }
 
 CString CToDoCtrlData::GetTaskCustomComments(DWORD dwTaskID, CString& sCommentsTypeID) const
@@ -208,7 +208,7 @@ CString CToDoCtrlData::GetTaskCustomComments(DWORD dwTaskID, CString& sCommentsT
 	
 	// else
 	sCommentsTypeID.Empty();
-	return "";
+	return _T("");
 }
 
 double CToDoCtrlData::GetTaskCost(DWORD dwTaskID) const
@@ -265,7 +265,7 @@ CString CToDoCtrlData::GetTaskAllocBy(DWORD dwTaskID) const
 	if (pTDI)
 		return pTDI->sAllocBy;
 	
-	return "";
+	return _T("");
 }
 
 CString CToDoCtrlData::GetTaskVersion(DWORD dwTaskID) const
@@ -275,7 +275,7 @@ CString CToDoCtrlData::GetTaskVersion(DWORD dwTaskID) const
 	if (pTDI)
 		return pTDI->sVersion;
 	
-	return "";
+	return _T("");
 }
 
 CString CToDoCtrlData::GetTaskStatus(DWORD dwTaskID) const
@@ -285,7 +285,7 @@ CString CToDoCtrlData::GetTaskStatus(DWORD dwTaskID) const
 	if (pTDI)
 		return pTDI->sStatus;
 	
-	return "";
+	return _T("");
 }
 
 int CToDoCtrlData::GetTaskCategories(DWORD dwTaskID, CStringArray& aCategories) const
@@ -302,12 +302,12 @@ int CToDoCtrlData::GetTaskCategories(DWORD dwTaskID, CStringArray& aCategories) 
 CString CToDoCtrlData::GetTaskPath(DWORD dwTaskID, int nMaxLen) const
 { 
 	if (nMaxLen == 0)
-		return "";
+		return _T("");
 	
 	TODOSTRUCTURE* pTDS = LocateTask(dwTaskID);
 	
 	if (!pTDS)
-		return "";
+		return _T("");
 	
 	int nMaxElementLen = -1;
 	CString sPath;
@@ -325,17 +325,17 @@ CString CToDoCtrlData::GetTaskPath(DWORD dwTaskID, int nMaxLen) const
 			ASSERT (pTDIParent);
 			
 			if (!pTDIParent)
-				return "";
+				return _T("");
 			
 			CString sParent = pTDIParent->sTitle;
 			nMaxParentLen = max(nMaxParentLen, sParent.GetLength());
 			
 			if (nMaxElementLen != -1 && sParent.GetLength() > nMaxElementLen)
-				sParent = sParent.Left(nMaxElementLen) + "...";
+				sParent = sParent.Left(nMaxElementLen) + _T("...");
 			
 			sParent.TrimLeft();
 			sParent.TrimRight();
-			sPath = sParent + " / "+ sPath;
+			sPath = sParent + _T(" / ") + sPath;
 			
 			pTDSParent = pTDSParent->GetParentTask();
 		}
@@ -372,7 +372,7 @@ int CToDoCtrlData::GetTaskDependents(DWORD dwTaskID, CDWordArray& aDependents) c
 		return 0;
 	
 	POSITION pos = m_mapID2TDI.GetStartPosition();
-	CEnString sTaskID("%d", dwTaskID);
+	CEnString sTaskID(_T("%d"), dwTaskID);
 	
 	CDWordArray aTemp;
 	
@@ -408,7 +408,7 @@ int CToDoCtrlData::GetTaskDependencies(DWORD dwTaskID, CDWordArray& aDepends) co
 		for (int nDepends = 0; nDepends < pTDI->aDependencies.GetSize(); nDepends++)
 		{
 			// we only handle 'same file' links
-			DWORD dwIDLink = atoi(pTDI->aDependencies[nDepends]);
+			DWORD dwIDLink = _ttoi(pTDI->aDependencies[nDepends]);
 			
 			if (dwIDLink && dwIDLink != dwTaskID)
 			{
@@ -453,7 +453,7 @@ BOOL CToDoCtrlData::TaskHasCircularDependencies(DWORD dwTaskID) const
 		for (int nDepends = 0; nDepends < pTDI->aDependencies.GetSize(); nDepends++)
 		{
 			// we only handle 'same file' links
-			DWORD dwIDLink = atoi(pTDI->aDependencies[nDepends]);
+			DWORD dwIDLink = _ttoi(pTDI->aDependencies[nDepends]);
 			
 			if (dwIDLink && FindDependency(dwIDLink, dwTaskID))
 				return TRUE;
@@ -481,7 +481,7 @@ BOOL CToDoCtrlData::FindDependency(DWORD dwTaskID, DWORD dwDependsID) const
 	for (int nDepends = 0; nDepends < pTDI->aDependencies.GetSize(); nDepends++)
 	{
 		// we only handle 'same file' links
-		DWORD dwIDLink = atoi(pTDI->aDependencies[nDepends]);
+		DWORD dwIDLink = _ttoi(pTDI->aDependencies[nDepends]);
 		
 		if (dwIDLink && FindDependency(dwIDLink, dwDependsID))
 			return TRUE;
@@ -497,7 +497,7 @@ CString CToDoCtrlData::GetTaskExtID(DWORD dwTaskID) const
 	if (pTDI)
 		return pTDI->sExternalID;
 	
-	return "";
+	return _T("");
 }
 
 CString CToDoCtrlData::GetTaskCreatedBy(DWORD dwTaskID) const
@@ -507,7 +507,7 @@ CString CToDoCtrlData::GetTaskCreatedBy(DWORD dwTaskID) const
 	if (pTDI)
 		return pTDI->sCreatedBy;
 	
-	return "";
+	return _T("");
 }
 
 COLORREF CToDoCtrlData::GetTaskColor(DWORD dwTaskID) const
@@ -621,7 +621,7 @@ CString CToDoCtrlData::GetTaskFileRef(DWORD dwTaskID) const
 	if (pTDI)
 		return pTDI->sFileRefPath;
 	
-	return "";
+	return _T("");
 }
 
 BOOL CToDoCtrlData::DeleteTask(DWORD dwTaskID)
@@ -1577,20 +1577,20 @@ int CToDoCtrlData::MapTimeUnits(const CString& sUnits)
 	
 	switch (sUnits[0])
 	{
-	case 'I':
-	case 'i': return TDITU_MINS;
+	case _T('I'):
+	case _T('i'): return TDITU_MINS;
 		
-	case 'D':
-	case 'd': return TDITU_DAYS;
+	case _T('D'):
+	case _T('d'): return TDITU_DAYS;
 		
-	case 'W':
-	case 'w': return TDITU_WEEKS;
+	case _T('W'):
+	case _T('w'): return TDITU_WEEKS;
 		
-	case 'M':
-	case 'm': return TDITU_MONTHS;
+	case _T('M'):
+	case _T('m'): return TDITU_MONTHS;
 		
-	case 'Y':
-	case 'y': return TDITU_YEARS;
+	case _T('Y'):
+	case _T('y'): return TDITU_YEARS;
 	}
 	
 	// all else
@@ -1601,15 +1601,15 @@ CString CToDoCtrlData::MapTimeUnits(int nUnits)
 {
 	switch (nUnits)
 	{
-	case TDITU_MINS:	return "I";
-	case TDITU_DAYS:	return "D";
-	case TDITU_WEEKS:	return "W";
-	case TDITU_MONTHS:	return "M";
-	case TDITU_YEARS:	return "Y";
+	case TDITU_MINS:     return _T("I");
+	case TDITU_DAYS:     return _T("D");
+	case TDITU_WEEKS:    return _T("W");
+	case TDITU_MONTHS:   return _T("M");
+	case TDITU_YEARS:    return _T("Y");
 	}
 	
 	// all else
-	return "H";
+	return _T("H");
 }
 
 BOOL CToDoCtrlData::BeginNewUndoAction(TDCUNDOACTIONTYPE nType)
@@ -3522,7 +3522,7 @@ BOOL CToDoCtrlData::TaskMatches(const CStringArray& aItems, const SEARCHPARAM& s
 		else
 			// special case: task has no item and param.aItems
 			// contains an empty item
-			bMatch = (Misc::Find(aSearchItems, "") != -1);
+			bMatch = (Misc::Find(aSearchItems, _T("")) != -1);
 	}
 	
 	// handle !=
@@ -3581,9 +3581,9 @@ BOOL CToDoCtrlData::TaskMatches(double dValue, const SEARCHPARAM& sp, SEARCHRESU
 		CString sMatch;
 		
 		if (bTime)
-			sMatch.Format("%.3f H", dValue);
+			sMatch.Format(_T("%.3f H"), dValue);
 		else
-			sMatch.Format("%.3f", dValue);
+			sMatch.Format(_T("%.3f"), dValue);
 		
 		result.aMatched.Add(sMatch);
 	}
@@ -3644,7 +3644,7 @@ BOOL CToDoCtrlData::TaskMatches(int nValue, const SEARCHPARAM& sp, SEARCHRESULT&
 		if (!(sp.op == FO_NOT_SET && bPriorityRisk))
 		{
 			CString sMatch;
-			sMatch.Format("%d", nValue);
+			sMatch.Format(_T("%d"), nValue);
 			result.aMatched.Add(sMatch);
 		}
 	}

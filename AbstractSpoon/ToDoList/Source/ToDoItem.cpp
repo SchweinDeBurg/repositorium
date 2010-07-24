@@ -243,17 +243,17 @@ void TODOITEM::ResetCalcs() const
 
 CString TODOITEM::GetFirstCategory() const
 {
-	return aCategories.GetSize() ? aCategories[0] : "";
+	return aCategories.GetSize() ? aCategories[0] : _T("");
 }
 
 CString TODOITEM::GetFirstAllocTo() const
 {
-	return aAllocTo.GetSize() ? aAllocTo[0] : "";
+	return aAllocTo.GetSize() ? aAllocTo[0] : _T("");
 }
 
 CString TODOITEM::GetFirstDependency() const
 {
-	return aDependencies.GetSize() ? aDependencies[0] : "";
+	return aDependencies.GetSize() ? aDependencies[0] : _T("");
 }
 
 BOOL TODOITEM::GetNextOccurence(COleDateTime& dtNext) const
@@ -313,13 +313,13 @@ void TODOITEM::ParseTaskLink(const CString& sLink, DWORD& dwTaskID, CString& sFi
 		sFile.TrimRight();
 		
 		CString sTaskID = sLink.Mid(nDiv + 1);
-		dwTaskID = atoi(sTaskID);
+		dwTaskID = _ttoi(sTaskID);
 	}
 	else if (!sLink.IsEmpty())
 	{
 		if (isdigit(sLink[0])) // number
 		{
-			dwTaskID = atoi(sLink);
+			dwTaskID = _ttoi(sLink);
 			sFile.Empty();
 		}
 		else
@@ -335,12 +335,12 @@ CString TODOITEM::MakeTaskLink(DWORD dwTaskID, const CString& sFile)
 	CString sLink;
 	
 	if (sFile.IsEmpty() && dwTaskID > 0)
-		sLink.Format("%d", dwTaskID);
+		sLink.Format(_T("%d"), dwTaskID);
 	
 	else if (!sFile.IsEmpty())
 	{
 		if (dwTaskID > 0)
-			sLink.Format("%s?%d", sFile, dwTaskID);
+			sLink.Format(_T("%s?%d"), sFile, dwTaskID);
 		else
 			sLink = sFile;
 	}

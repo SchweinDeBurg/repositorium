@@ -110,7 +110,7 @@ CString CToDoCtrlMgr::GetFilePath(int nIndex, BOOL bStrict) const
 	if (sPath.IsEmpty() && !bStrict)
 	{
 		TCITEM tci;
-		char szText[51];
+		TCHAR szText[51];
 
 		tci.mask = TCIF_TEXT;
 		tci.cchTextMax = 50;
@@ -447,7 +447,7 @@ int CToDoCtrlMgr::AddToDoCtrl(CFilteredToDoCtrl* pCtrl, BOOL bLoaded)
 
 	// add to tab
 	int nSel = m_aToDoCtrls.Add(tdci);
-	m_tabCtrl.InsertItem(nSel, "");
+	m_tabCtrl.InsertItem(nSel, _T(""));
 
 	UpdateTabItemText(nSel);
 	RefreshPathType(nSel);
@@ -488,11 +488,11 @@ void CToDoCtrlMgr::SetHasOwnColumns(int nIndex, BOOL bHas)
 void CToDoCtrlMgr::RestoreColumns(TDCITEM* pTDCI, const CPreferences& prefs)
 {
 	CTDCColumnArray aColumns;
-	CString sKey = pTDCI->pTDC->GetPreferencesKey("Columns");
+	CString sKey = pTDCI->pTDC->GetPreferencesKey(_T("Columns"));
 
 	if (!sKey.IsEmpty())
 	{
-		int nItem = prefs.GetProfileInt(sKey, "Count", -1);
+		int nItem = prefs.GetProfileInt(sKey, _T("Count"), -1);
 
 		if (nItem < 0)
 		{
@@ -505,7 +505,7 @@ void CToDoCtrlMgr::RestoreColumns(TDCITEM* pTDCI, const CPreferences& prefs)
 
 			while (nItem--)
 			{
-				int nCol = prefs.GetProfileInt(sKey, CEnString("Item%d", nItem), -1);
+				int nCol = prefs.GetProfileInt(sKey, CEnString(_T("Item%d"), nItem), -1);
 				
 				if (nCol != -1)
 					aColumns.Add((TDC_COLUMN)nCol);
@@ -520,7 +520,7 @@ void CToDoCtrlMgr::RestoreColumns(TDCITEM* pTDCI, const CPreferences& prefs)
 
 void CToDoCtrlMgr::SaveColumns(const TDCITEM* pTDCI, CPreferences& prefs) const
 {
-	CString sKey = pTDCI->pTDC->GetPreferencesKey("Columns");
+	CString sKey = pTDCI->pTDC->GetPreferencesKey(_T("Columns"));
 
 	if (!sKey.IsEmpty())
 	{		
@@ -529,13 +529,13 @@ void CToDoCtrlMgr::SaveColumns(const TDCITEM* pTDCI, CPreferences& prefs) const
 			CTDCColumnArray aColumns;
 			int nItem = pTDCI->pTDC->GetVisibleColumns(aColumns);
 			
-			prefs.WriteProfileInt(sKey, "Count", nItem);
+			prefs.WriteProfileInt(sKey, _T("Count"), nItem);
 			
 			while (nItem--)
-				prefs.WriteProfileInt(sKey, CEnString("Item%d", nItem), aColumns[nItem]);
+				prefs.WriteProfileInt(sKey, CEnString(_T("Item%d"), nItem), aColumns[nItem]);
 		}
 		else
-			prefs.WriteProfileInt(sKey, "Count", -1);
+			prefs.WriteProfileInt(sKey, _T("Count"), -1);
 	}
 }
 
@@ -570,7 +570,7 @@ void CToDoCtrlMgr::MoveToDoCtrl(int nIndex, int nNumPlaces)
 
 	// make copies of existing
 	TCITEM tci;
-	char szText[128];
+	TCHAR szText[128];
 	tci.mask = TCIF_TEXT | TCIF_IMAGE;
 	tci.pszText = szText;
 	tci.cchTextMax = 127;
@@ -606,12 +606,12 @@ CString CToDoCtrlMgr::GetArchivePath(LPCTSTR szFilePath) const
 	CString sArchivePath, sFilePath(szFilePath);
 	sFilePath.MakeLower();
 
-	if (!sFilePath.IsEmpty() && sFilePath.Find(".done") == -1) // don't archive archives!
+	if (!sFilePath.IsEmpty() && sFilePath.Find(_T(".done")) == -1) // don't archive archives!
 	{
 		CString sDrive, sPath, sFName, sExt;
 
 		FileMisc::SplitPath(sFilePath, &sDrive, &sPath, &sFName, &sExt);
-		FileMisc::MakePath(sArchivePath, sDrive, sPath, sFName, ".done" + sExt);
+		FileMisc::MakePath(sArchivePath, sDrive, sPath, sFName, _T(".done") + sExt);
 	}
 	
 	return sArchivePath;
@@ -723,7 +723,7 @@ CString CToDoCtrlMgr::UpdateTabItemText(int nIndex)
 		nIndex = GetSelToDoCtrl();
 		
 		if (nIndex < 0)
-			return "";
+			return _T("");
 	}
 	
 	TDCITEM& tdci = GetTDCItem(nIndex);
@@ -732,10 +732,10 @@ CString CToDoCtrlMgr::UpdateTabItemText(int nIndex)
 	CString sProjectName = tdci.GetFriendlyProjectName();
 
 	// double up ampersands to avoid unexpected underlining
-	sProjectName.Replace("&", "&&");
+	sProjectName.Replace(_T("&"), _T("&&"));
 
 	if (tdci.pTDC->IsModified() && !tdci.pTDC->IsReadOnly())
-		sProjectName += "*";
+		sProjectName += _T("*");
 	
 	// appropriate icon
 	int nImage = IM_NONE;
@@ -780,7 +780,7 @@ CString CToDoCtrlMgr::GetTabItemText(int nIndex) const
 	m_tabCtrl.GetItem(nIndex, &tci);
 
 	sText.ReleaseBuffer();
-	sText.Replace("&&", "&"); // remove doubled-up ampersands
+	sText.Replace(_T("&&"), _T("&")); // remove doubled-up ampersands
 
 	return sText;
 }
@@ -806,7 +806,7 @@ CString CToDoCtrlMgr::GetTabItemTooltip(int nIndex) const
 		break;
 	}
 
-	return "";
+	return _T("");
 }
 
 BOOL CToDoCtrlMgr::PathTypeSupportsSourceControl(TDCM_PATHTYPE nType) const

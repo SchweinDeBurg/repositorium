@@ -76,7 +76,7 @@ BOOL CToDoCtrlReminders::Initialize(CWnd* pNotify)
 	m_pWndNotify = pNotify;
 
 	// create ourselves so that we can receive timer messages
-	if (!Create("STATIC", "", WS_CHILD, CRect (0, 0, 0, 0), pNotify, 0xffff))
+	if (!Create(_T("STATIC"), _T(""), WS_CHILD, CRect (0, 0, 0, 0), pNotify, 0xffff))
 	{
 		m_pWndNotify = NULL;
 		return FALSE;
@@ -171,7 +171,7 @@ void CToDoCtrlReminders::SaveAndRemoveReminders(const CFilteredToDoCtrl& tdc)
 {
 	CPreferences prefs;
 	int nRemCount = 0, nRem = m_aReminders.GetSize();
-	CString sFileKey = "Reminders\\" + CPreferences::KeyFromFile(tdc.GetFilePath(), FALSE);
+	CString sFileKey = _T("Reminders\\") + CPreferences::KeyFromFile(tdc.GetFilePath(), FALSE);
 
 	while (nRem--)
 	{
@@ -180,21 +180,21 @@ void CToDoCtrlReminders::SaveAndRemoveReminders(const CFilteredToDoCtrl& tdc)
 		if (rem.pTDC == &tdc)
 		{
 			CString sKey;
-			sKey.Format("%s\\Reminder%d", sFileKey, nRem);
+			sKey.Format(_T("%s\\Reminder%d"), (LPCTSTR)sFileKey, nRem);
 
 			// note: we don't save the snooze value, this gets reset each time
-			prefs.WriteProfileInt(sKey, "TaskID", rem.dwTaskID);
-			prefs.WriteProfileDouble(sKey, "LeadIn", rem.dDaysLeadIn * 24 * 60); // save as minutes
-			prefs.WriteProfileInt(sKey, "FromWhen", rem.nFromWhen);
-			prefs.WriteProfileInt(sKey, "Enabled", rem.bEnabled);
-			prefs.WriteProfileString(sKey, "SoundFile", rem.sSoundFile);
+			prefs.WriteProfileInt(sKey, _T("TaskID"), rem.dwTaskID);
+			prefs.WriteProfileDouble(sKey, _T("LeadIn"), rem.dDaysLeadIn * 24 * 60); // save as minutes
+			prefs.WriteProfileInt(sKey, _T("FromWhen"), rem.nFromWhen);
+			prefs.WriteProfileInt(sKey, _T("Enabled"), rem.bEnabled);
+			prefs.WriteProfileString(sKey, _T("SoundFile"), rem.sSoundFile);
 
 			nRemCount++;
 			m_aReminders.RemoveAt(nRem);
 		}
 	}
 
-	prefs.WriteProfileInt(sFileKey, "NumReminders", nRemCount);
+	prefs.WriteProfileInt(sFileKey, _T("NumReminders"), nRemCount);
 
 	// kill timer if no reminders
 	if (m_aReminders.GetSize() == 0)
@@ -204,20 +204,20 @@ void CToDoCtrlReminders::SaveAndRemoveReminders(const CFilteredToDoCtrl& tdc)
 void CToDoCtrlReminders::LoadReminders(const CFilteredToDoCtrl& tdc)
 {
 	CPreferences prefs;
-	CString sFileKey = "Reminders\\" + CPreferences::KeyFromFile(tdc.GetFilePath(), FALSE);
-	int nRemCount = prefs.GetProfileInt(sFileKey, "NumReminders");
+	CString sFileKey = _T("Reminders\\") + CPreferences::KeyFromFile(tdc.GetFilePath(), FALSE);
+	int nRemCount = prefs.GetProfileInt(sFileKey, _T("NumReminders"));
 
 	for (int nRem = 0; nRem < nRemCount; nRem++)
 	{
 		CString sKey;
-		sKey.Format("%s\\Reminder%d", sFileKey, nRem);
+		sKey.Format(_T("%s\\Reminder%d"), (LPCTSTR)sFileKey, nRem);
 
 		TDCREMINDER rem;
-		rem.dwTaskID = prefs.GetProfileInt(sKey, "TaskID");
-		rem.dDaysLeadIn = prefs.GetProfileDouble(sKey, "LeadIn") / (24 * 60);
-		rem.nFromWhen = (TDC_REMINDER)prefs.GetProfileInt(sKey, "FromWhen");
-		rem.bEnabled = prefs.GetProfileInt(sKey, "Enabled");
-		rem.sSoundFile = prefs.GetProfileString(sKey, "SoundFile");
+		rem.dwTaskID = prefs.GetProfileInt(sKey, _T("TaskID"));
+		rem.dDaysLeadIn = prefs.GetProfileDouble(sKey, _T("LeadIn")) / (24 * 60);
+		rem.nFromWhen = (TDC_REMINDER)prefs.GetProfileInt(sKey, _T("FromWhen"));
+		rem.bEnabled = prefs.GetProfileInt(sKey, _T("Enabled"));
+		rem.sSoundFile = prefs.GetProfileString(sKey, _T("SoundFile"));
 		rem.pTDC = &tdc;
 
 		m_aReminders.Add(rem);
