@@ -735,7 +735,7 @@ CString CRuntimeDlg::GetControlClassName(CWnd* pWnd)
 	ASSERT (pWnd);
 	
 	if (!pWnd)
-		return "";
+		return _T("");
 	
 	// if there is no permanent mapping to this CWnd just return GetClassName()
 	// but only if it has a window handle attached else it must be a real CWnd
@@ -747,7 +747,7 @@ CString CRuntimeDlg::GetControlClassName(CWnd* pWnd)
 	// work our way up the derivation chain till we find a match
 	while (pRTClass)
 	{
-		CString sWinClass, sRTClass = pRTClass->m_lpszClassName;
+		CString sWinClass, sRTClass = ATL::CA2T(pRTClass->m_lpszClassName);
 		
 		if (s_mapClasses.Lookup(sRTClass, sWinClass))
 			return sWinClass;

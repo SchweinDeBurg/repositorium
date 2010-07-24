@@ -678,7 +678,7 @@ UINT COrderedTreeCtrl::GetWidth(int nNumber, CDC* pDC)
 		nWidth = pDC->GetTextExtent(sNumber).cx;
 	}
 	else if (nNumber == -1)
-		nWidth = pDC->GetTextExtent("...").cx;
+		nWidth = pDC->GetTextExtent(_T("...")).cx;
 	
 	g_mapWidths[nNumber] = nWidth;
 	return nWidth;

@@ -285,16 +285,16 @@ CString CDateHelper::FormatDate(const COleDateTime& date, DWORD dwFlags)
 	SYSTEMTIME st;
 
 	if (!date.GetAsSystemTime(st))
-		return "";
+		return _T("");
 
 	CString sFormat;
 
 	if (dwFlags & DHFD_ISO)
 	{
-		sFormat = "yyyy-MM-dd";
+		sFormat = _T("yyyy-MM-dd");
 
 		if (dwFlags & DHFD_DOW)
-			sFormat = "ddd " + sFormat;
+			sFormat = _T("ddd ") + sFormat;
 	}
 	else
 		sFormat = Misc::GetShortDateFormat(dwFlags & DHFD_DOW);
@@ -312,7 +312,7 @@ CString CDateHelper::FormatDate(const COleDateTime& date, DWORD dwFlags)
 		::GetTimeFormat(0, dwTimeFlags, &st, NULL, sTime.GetBuffer(50), 49);
 		sTime.ReleaseBuffer();
 
-		sDate += " " + sTime; 
+		sDate += _T(" ") + sTime; 
 	}
 
 	return sDate;
@@ -330,7 +330,7 @@ CString CDateHelper::GetWeekday(int nWeekday, BOOL bShort)
 
 	// data check
 	if (nWeekday < 1 || nWeekday> 7)
-		return "";
+		return _T("");
 
 	switch (nWeekday)
 	{
@@ -473,7 +473,7 @@ CString CDateHelper::GetMonth(int nMonth, BOOL bShort)
 
 	// data check
 	if (nMonth < 1 || nMonth> 12)
-		return "";
+		return _T("");
 
 	switch (nMonth)
 	{

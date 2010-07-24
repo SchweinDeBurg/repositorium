@@ -612,7 +612,7 @@ void CEnEdit::DrawButton(CDC* pDC, const CRect& rWindow, int nBtn, const CPoint&
 		
 		BOOL bEnabled = IsWindowEnabled() && eb.bEnabled;
 
-		int CHAR_HEIGHT = pDC->GetTextExtent("A").cy;
+		int CHAR_HEIGHT = pDC->GetTextExtent(_T("A")).cy;
 
 		int nVOffset = (rBtn.Height() - CHAR_HEIGHT + 1) / 2 - 1;
 		int nHOffset = (rBtn.Width() + 1) / 2;

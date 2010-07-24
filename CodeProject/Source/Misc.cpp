@@ -240,7 +240,7 @@ CString Misc::GetListSeparator()
 		
 		// If none found, use a comma
 		if (!sSep.GetLength())
-			sSep = ',';
+			sSep = _T(',');
 	}
 
 	return sSep;
@@ -251,12 +251,12 @@ CString Misc::FormatArray(const CStringArray& array, LPCTSTR szSep)
 	int nCount = array.GetSize();
 
 	if (nCount == 0)
-		return "";
+		return _T("");
 
 	CString sSep(szSep);
 
 	if (!szSep)
-		sSep = GetListSeparator() + ' ';
+		sSep = GetListSeparator() + _T(' ');
 
 	CString sText;
 
@@ -558,7 +558,7 @@ CString Misc::GetShortDateFormat(BOOL bIncDOW)
 
 	if (bIncDOW)
 	{
-		CString sTemp = "ddd "+ sFormat;
+		CString sTemp = _T("ddd ") + sFormat;
 		return sTemp;
 	}
 
@@ -600,13 +600,13 @@ BOOL Misc::IsMultibyteString(const CString& sText)
 	return FALSE;
 }
 
-CString Misc::WideToMultiByte(wchar_t nChar, UINT nCodePage)
+CStringA Misc::WideToMultiByte(wchar_t nChar, UINT nCodePage)
 {
 	char ach[4]; // assuming 3 bytes max in the multibyte encoding 
 
 	WideCharToMultiByte(nCodePage, 0, &nChar, 1, ach, sizeof(ach), 0, 0); 
 
-	return ach;
+	return CStringA(ach);
 }
 
 double Misc::Round(double dValue)

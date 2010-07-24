@@ -50,6 +50,10 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 // MFC headers
 
+#if (_MSC_VER >= 1300)
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
+#endif	// _MSC_VER
+
 #include <afxwin.h>
 #include <afxcmn.h>
 #include <afxdlgs.h>

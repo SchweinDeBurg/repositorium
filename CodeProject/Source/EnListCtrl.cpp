@@ -150,11 +150,11 @@ void CEnListCtrl::OnPaint()
 				sText.TrimRight();
 				sText.TrimLeft();
 
-				if (sText[0] != '(')
-					sText = "(" + sText;
+				if (sText[0] != _T('('))
+					sText = _T("(") + sText;
 
-				if (sText[sText.GetLength() - 1] != ')')
-					sText += ")";
+				if (sText[sText.GetLength() - 1] != _T(')'))
+					sText += _T(")");
 			
 				dc.SetTextColor(::GetSysColor(COLOR_WINDOWTEXT));
 				dc.SetBkColor(crBack);
@@ -580,7 +580,7 @@ void CEnListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		
 		// must paint the background of column 0 before the icons
 		if (bRes && (pStateList || pImageList))
-			pDC->ExtTextOut(0, rItem.top, ETO_CLIPPED | ETO_OPAQUE, CRect(0, rItem.top, lvc.cx, rItem.bottom), "", NULL);
+			pDC->ExtTextOut(0, rItem.top, ETO_CLIPPED | ETO_OPAQUE, CRect(0, rItem.top, lvc.cx, rItem.bottom), _T(""), NULL);
 
 		// state
 		if (pStateList && bRes)

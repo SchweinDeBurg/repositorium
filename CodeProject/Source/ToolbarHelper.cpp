@@ -473,7 +473,7 @@ BOOL CToolbarHelper::IsCmdEnabled(UINT nCmdID) const
 CString CToolbarHelper::GetTip(UINT nID, LPPOINT pPoint) const
 {
 	if (!nID)
-		return ""; // separator
+		return _T(""); // separator
 
 	// are we over the dropbutton?
 	BOOL bOverDropBtn = FALSE;

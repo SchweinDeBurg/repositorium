@@ -195,7 +195,7 @@ protected:
 	virtual COLORREF GetItemBackColor(int nItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const;
 	virtual CFont* GetItemFont(int /*nItem*/, int /*nSubItem*/) { return NULL; }
 	int GetImageStyle(BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const;
-	virtual CString GetNoItemsText() const { return ""; }
+	virtual CString GetNoItemsText() const { return _T(""); }
 
 	void DeleteAllColumnData();
 	virtual CColumnData* GetNewColumnData() const { return new CColumnData; }
