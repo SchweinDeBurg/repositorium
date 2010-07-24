@@ -71,7 +71,7 @@ class CDefaultContent : public IContent
 	int ConvertToHtml(const unsigned char* /*pContent*/, int /*nLength*/,
 						char*& /*szHtml*/) { return 0; } // not supported
 
-	void SetIniLocation(bool /*bRegistry*/, const char* /*szIniPathName*/) {}
+	void SetIniLocation(bool /*bRegistry*/, const TCHAR* /*szIniPathName*/) {}
 
 
 };

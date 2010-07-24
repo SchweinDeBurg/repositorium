@@ -95,9 +95,9 @@ BOOL CContentMgr::Initialize()
 					BOOL bRegistry = (AfxGetApp()->m_pszRegistryKey != NULL);
 
 					if (bRegistry)
-						pContent->SetIniLocation(TRUE, ATL::CT2A(AfxGetApp()->m_pszRegistryKey));
+						pContent->SetIniLocation(TRUE, AfxGetApp()->m_pszRegistryKey);
 					else // ini
-						pContent->SetIniLocation(FALSE, ATL::CT2A(AfxGetApp()->m_pszProfileName));
+						pContent->SetIniLocation(FALSE, AfxGetApp()->m_pszProfileName);
 
 					// save
 					m_aContent.Add(pContent);

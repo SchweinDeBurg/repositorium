@@ -119,7 +119,7 @@ public:
 	virtual IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
 		long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent) = 0;
 
-	virtual void SetIniLocation(bool bRegistry, const char* szIniPathName) = 0;
+	virtual void SetIniLocation(bool bRegistry, const TCHAR* szIniPathName) = 0;
 
 	virtual void Release() = 0;
 
