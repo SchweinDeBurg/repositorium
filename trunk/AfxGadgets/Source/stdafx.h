@@ -79,6 +79,10 @@ __declspec(selectany) int _forceMFCManifestCUR;
 //////////////////////////////////////////////////////////////////////////////////////////////
 // MFC headers
 
+#if (_MSC_VER >= 1300)
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
+#endif	// _MSC_VER
+
 #include <afxwin.h>        // MFC core and standard components
 #include <afxtempl.h>      // MFC collection template classes
 #include <afxcmn.h>        // MFC common control classes
