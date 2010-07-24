@@ -52,7 +52,7 @@ CFileRegister::CFileRegister(LPCTSTR szExt, LPCTSTR szFileType)
 	m_sFileType.TrimLeft();
 
 	if (!m_sExt.IsEmpty() && m_sExt[0] != _T('.'))
-		m_sExt = "." + m_sExt;
+		m_sExt = _T(".") + m_sExt;
 
 	// get the app path
 	GetModuleFileName(NULL, m_sAppPath.GetBuffer(_MAX_PATH), _MAX_PATH);

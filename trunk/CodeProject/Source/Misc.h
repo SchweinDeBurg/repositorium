@@ -50,7 +50,7 @@ namespace Misc
 	CString GetClipboardText(HWND hwnd); 
 	
 	BOOL IsMultibyteString(const CString& sText);
-	CString WideToMultiByte(wchar_t nChar, UINT nCodePage = CP_ACP);
+	CStringA WideToMultiByte(wchar_t nChar, UINT nCodePage = CP_ACP);
 	
 	BOOL GuidFromString(LPCTSTR szGuid, GUID& guid);
 	BOOL IsGuid(LPCTSTR szGuid);

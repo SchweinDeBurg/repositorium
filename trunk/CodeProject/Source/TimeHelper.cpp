@@ -240,7 +240,7 @@ CString CTimeHelper::FormatTimeHMS(double dTime, int nUnitsFrom, BOOL bDecPlaces
 
 	// handle negative times
 	if (bNegative)
-		sTime = "-" + sTime;
+		sTime = _T("-") + sTime;
 	
 	return sTime;
 	

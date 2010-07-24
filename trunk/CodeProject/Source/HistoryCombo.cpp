@@ -155,7 +155,7 @@ int CHistoryCombo::AddString(LPCTSTR lpszString)
 CString CHistoryCombo::LoadHistory(CRecentFileList* pListMRU, BOOL bSelectMostRecent/*=TRUE*/)
 {
   if (pListMRU == NULL)
-    return "";
+    return _T("");
 
   ResetContent(); // clear out any old items
   int nNumItems = pListMRU->GetSize();
@@ -176,8 +176,8 @@ CString CHistoryCombo::LoadHistory(LPCTSTR lpszSection, LPCTSTR lpszKeyPrefix,
 				   BOOL bSaveRestoreLastCurrent/*=TRUE*/, 
 				   LPCTSTR lpszKeyCurItem/*=NULL*/)
 {
-  if (lpszSection == NULL || lpszKeyPrefix == NULL || *lpszSection == '\0')
-    return "";
+  if (lpszSection == NULL || lpszKeyPrefix == NULL || *lpszSection == _T('\0'))
+    return _T("");
 
   ResetContent(); // clear out any old items
   m_sSection = lpszSection;
@@ -202,7 +202,7 @@ CString CHistoryCombo::LoadHistory(LPCTSTR lpszSection, LPCTSTR lpszKeyPrefix,
     if (!m_sKeyCurItem.IsEmpty())
       sKey = m_sKeyCurItem;
     else if (m_sKeyPrefix.IsEmpty())
-      sKey = "Last";
+      sKey = _T("Last");
     else
       sKey = m_sKeyPrefix;
     sText = pApp->GetProfileString(m_sSection, sKey);

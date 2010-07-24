@@ -79,7 +79,7 @@ CString CDriveInfo::GetVolume(int nDrive)
 		return sVolume;
 	}
 
-	return "";
+	return _T("");
 }
 
 CString CDriveInfo::GetRoot(int nDrive)
@@ -103,12 +103,12 @@ CString CDriveInfo::GetFullName(int nDrive)
 		sLetter = GetLetter(nDrive);
 		sVolume = GetVolume(nDrive);
 
-		sFullName = sVolume + " (" + sLetter + ":)";
+		sFullName = sVolume + _T(" (") + sLetter + _T(":)");
 
 		return sFullName;
 	}
 
-	return "";
+	return _T("");
 }
 
 float CDriveInfo::GetTotalBytes(int nDrive)
