@@ -72,12 +72,12 @@ enum
 
 static TIMEUNIT TIMEUNITS[] =
 {
-	{ THU_MINS,		"",	TIME_MIN_ABBREV,	ID_MINS },
-	{ THU_HOURS,	"",	TIME_HOUR_ABBREV,	ID_HOURS },
-	{ THU_DAYS,		"",	TIME_DAY_ABBREV,	ID_DAYS },
-	{ THU_WEEKS,	"",	TIME_WEEK_ABBREV,	ID_WEEKS },
-	{ THU_MONTHS,	"", TIME_MONTH_ABBREV,	ID_MONTHS },
-	{ THU_YEARS,	"",	TIME_YEAR_ABBREV,	ID_YEARS },
+	{ THU_MINS,     _T(""), TIME_MIN_ABBREV,    ID_MINS },
+	{ THU_HOURS,    _T(""), TIME_HOUR_ABBREV,   ID_HOURS },
+	{ THU_DAYS,     _T(""), TIME_DAY_ABBREV,    ID_DAYS },
+	{ THU_WEEKS,    _T(""), TIME_WEEK_ABBREV,   ID_WEEKS },
+	{ THU_MONTHS,   _T(""), TIME_MONTH_ABBREV,  ID_MONTHS },
+	{ THU_YEARS,    _T(""), TIME_YEAR_ABBREV,   ID_YEARS },
 };
 
 static LPCTSTR UNITLABELS[] =
@@ -118,19 +118,19 @@ CTimeEdit::CTimeEdit(int nUnits, int nMaxDecPlaces) : m_nUnits(nUnits), m_nMaxDe
 		{
 			//fabio_2005
 #if _MSC_VER >= 1400
-			strncpy_s(tu.szLabel, UNITLABELS[nUnit], LABELLEN - 1);
+			_tcsncpy_s(tu.szLabel, UNITLABELS[nUnit], LABELLEN - 1);
 #else
-			strncpy(tu.szLabel, UNITLABELS[nUnit], LABELLEN - 1);
+			_tcsncpy(tu.szLabel, UNITLABELS[nUnit], LABELLEN - 1);
 #endif
 
 			tu.szLabel[LABELLEN - 1] = 0;
 		}
 	}
 
-	SetMask(".0123456789", ME_LOCALIZEDECIMAL);
+	SetMask(_T(".0123456789"), ME_LOCALIZEDECIMAL);
 
 	CString sLabel;
-	sLabel.Format("%c", GetTimeUnit(nUnits).cAbbrLabel);
+	sLabel.Format(_T("%c"), GetTimeUnit(nUnits).cAbbrLabel);
 
 	AddButton(TEBTN_UNITS, sLabel, TIME_UNITS, CALC_BTNWIDTH);
 	SetDropMenuButton(TEBTN_UNITS);
@@ -151,7 +151,7 @@ void CTimeEdit::PreSubclassWindow()
 	CEnEdit::PreSubclassWindow();
 
 	CString sLabel;
-	sLabel.Format("%c", GetTimeUnit(m_nUnits).cAbbrLabel);
+	sLabel.Format(_T("%c"), GetTimeUnit(m_nUnits).cAbbrLabel);
 	SetButtonCaption(1, sLabel);
 }
 
@@ -188,7 +188,7 @@ void CTimeEdit::SetUnits(int nUnits)
 		if (GetSafeHwnd())
 		{
 			CString sLabel;
-			sLabel.Format("%c", GetTimeUnit(nUnits).cAbbrLabel);
+			sLabel.Format(_T("%c"), GetTimeUnit(nUnits).cAbbrLabel);
 			SetButtonCaption(1, sLabel);
 		}
 	}
@@ -287,9 +287,9 @@ void CTimeEdit::SetUnits(int nUnits, LPCTSTR szLongUnits, LPCTSTR szAbbrevUnits)
 			{
 				//fabio_2005
 #if _MSC_VER >= 1300
-				strncpy_s(tu.szLabel, szLongUnits, LABELLEN - 1);
+				_tcsncpy_s(tu.szLabel, szLongUnits, LABELLEN - 1);
 #else
-				strncpy(tu.szLabel, szLongUnits, LABELLEN - 1);
+				_tcsncpy(tu.szLabel, szLongUnits, LABELLEN - 1);
 #endif
 
 				tu.szLabel[LABELLEN - 1] = 0;

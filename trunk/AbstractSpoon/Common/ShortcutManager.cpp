@@ -414,14 +414,14 @@ void CShortcutManager::PrepareMenuItems(CMenu* pMenu) const
 
 		if (!sShortcut.IsEmpty())
 		{
-			sMenuText += '\t';
+			sMenuText += _T('\t');
 			sMenuText += sShortcut;
 		}
 
 		// update menu item text
-		minfo.dwTypeData = (LPSTR)(LPCTSTR)sMenuText;
-
+		minfo.dwTypeData = sMenuText.GetBuffer();
 		::SetMenuItemInfo(pMenu->GetSafeHmenu(), nItem, TRUE, &minfo);
+		sMenuText.ReleaseBuffer();
 	}
 }
 
@@ -447,7 +447,7 @@ int CShortcutManager::BuildMapping(CMenu* pMenu, LPCTSTR szParentName,
 		pMenu->GetMenuString(nItem, sMenuText, MF_BYPOSITION);
 
 		if (szParentName && *szParentName)
-			sItemText.Format("%s > %s", szParentName, sMenuText);
+			sItemText.Format(_T("%s > %s"), szParentName, sMenuText);
 		else
 			sItemText = sMenuText;
 
@@ -466,13 +466,13 @@ int CShortcutManager::BuildMapping(CMenu* pMenu, LPCTSTR szParentName,
 			if (dwShortcut)
 			{
 				CString sShortcut = GetShortcutText(dwShortcut), sItem;
-				sItem.Format("%s%c%s", sShortcut, cDelim, sItemText);
+				sItem.Format(_T("%s%c%s"), sShortcut, cDelim, sItemText);
 
 				// remove single '&'
 				// rather painful way to do it to avoid replacing '&&'
-				sItem.Replace("&&", "~~");
-				sItem.Remove('&');
-				sItem.Replace("~~", "&&");
+				sItem.Replace(_T("&&"), _T("~~"));
+				sItem.Remove(_T('&'));
+				sItem.Replace(_T("~~"), _T("&&"));
 
 				aMapping.Add(sItem);
 			}
@@ -481,7 +481,7 @@ int CShortcutManager::BuildMapping(CMenu* pMenu, LPCTSTR szParentName,
 
 	// add a space between sections unless already added
 	if (aMapping.GetSize() && !aMapping[aMapping.GetSize() - 1].IsEmpty())
-		aMapping.Add("");
+		aMapping.Add(_T(""));
 
 	return aMapping.GetSize();
 }
@@ -516,7 +516,7 @@ CString CShortcutManager::GetShortcutTextByCmd(UINT nCmdID)
 CString CShortcutManager::GetShortcutText(DWORD dwShortcut)
 {
 	if (!dwShortcut || dwShortcut == NO_SHORTCUT)
-		return "";
+		return _T("");
 
 	CString sText;
 
@@ -526,19 +526,19 @@ CString CShortcutManager::GetShortcutText(DWORD dwShortcut)
 	if (wModifiers & HOTKEYF_CONTROL)
 	{
 		sText += GetKeyName(VK_CONTROL);
-		sText += "+";
+		sText += _T("+");
 	}
 
 	if (wModifiers & HOTKEYF_SHIFT)
 	{
 		sText += GetKeyName(VK_SHIFT);
-		sText += "+";
+		sText += _T("+");
 	}
 
 	if (wModifiers & HOTKEYF_ALT)
 	{
 		sText += GetKeyName(VK_MENU);
-		sText += "+";
+		sText += _T("+");
 	}
 
 	CString sKey = GetKeyName(wVirtKeyCode, (wModifiers & HOTKEYF_EXT));
@@ -554,7 +554,7 @@ CString CShortcutManager::GetShortcutText(DWORD dwShortcut)
 CString CShortcutManager::GetKeyName(WORD wVirtKeyCode, BOOL bExtended)
 {
 	const int KEYNAMELEN = 64;
-	static char szKeyName[64];
+	static TCHAR szKeyName[64];
 
 	WORD wScanCode = (WORD)MapVirtualKey(wVirtKeyCode, 0);
 
@@ -574,15 +574,15 @@ void CShortcutManager::LoadSettings()
 	CPreferences prefs;
 
 	// load shortcuts overriding any defaults
-	int nItem = prefs.GetProfileInt("KeyboardShortcuts", "NumItems", 0);
+	int nItem = prefs.GetProfileInt(_T("KeyboardShortcuts"), _T("NumItems"), 0);
 
 	while (nItem--)
 	{
 		CString sKey;
-		sKey.Format("KeyboardShortcuts\\Item%02d", nItem);
+		sKey.Format(_T("KeyboardShortcuts\\Item%02d"), nItem);
 
-		UINT nCmdID = (UINT)prefs.GetProfileInt(sKey, "CmdID", 0);
-		DWORD dwShortcut = (DWORD)prefs.GetProfileInt(sKey, "Shortcut", 0);
+		UINT nCmdID = (UINT)prefs.GetProfileInt(sKey, _T("CmdID"), 0);
+		DWORD dwShortcut = (DWORD)prefs.GetProfileInt(sKey, _T("Shortcut"), 0);
 
 		if (nCmdID && dwShortcut)
 			SetShortcut(nCmdID, dwShortcut);
@@ -593,7 +593,7 @@ void CShortcutManager::SaveSettings()
 {
 	CPreferences prefs;
 
-	prefs.WriteProfileInt("KeyboardShortcuts", "NumItems", m_mapID2Shortcut.GetCount());
+	prefs.WriteProfileInt(_T("KeyboardShortcuts"), _T("NumItems"), m_mapID2Shortcut.GetCount());
 
 	POSITION pos = m_mapID2Shortcut.GetStartPosition();
 	int nItem = 0;
@@ -608,10 +608,10 @@ void CShortcutManager::SaveSettings()
 		if (nCmdID && dwShortcut)
 		{
 			CString sKey;
-			sKey.Format("KeyboardShortcuts\\Item%02d", nItem);
+			sKey.Format(_T("KeyboardShortcuts\\Item%02d"), nItem);
 
-			prefs.WriteProfileInt(sKey, "CmdID", nCmdID);
-			prefs.WriteProfileInt(sKey, "Shortcut", dwShortcut);
+			prefs.WriteProfileInt(sKey, _T("CmdID"), nCmdID);
+			prefs.WriteProfileInt(sKey, _T("Shortcut"), dwShortcut);
 
 			nItem++;
 		}

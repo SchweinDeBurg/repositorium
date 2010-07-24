@@ -54,31 +54,31 @@ m_nAnonLogin(nAnonymousLogin)
 	BOOL bShowAnonLogin = (m_nAnonLogin != ANONLOGIN_HIDE);
 	int LOGINOFFSET = 0;
 
-	AddRCControl("LTEXT", "", "Server:", 0, 0,7,10,24,8, IDC_SD_SERVERLABEL);
-	AddRCControl("COMBOBOX", "", "",CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP, 0,49,7,134,100, IDC_SD_SERVER);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Server:"), 0, 0,7,10,24,8, IDC_SD_SERVERLABEL);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""),CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP, 0,49,7,134,100, IDC_SD_SERVER);
 
 	if (bShowAnonLogin)
 	{
-		AddRCControl("CONTROL", "Button", "Anonymous Login", BS_AUTOCHECKBOX | WS_TABSTOP, 0, 49,29,134,10, IDC_SD_ANONLOGIN);
+		AddRCControl(_T("CONTROL"), _T("Button"), _T("Anonymous Login"), BS_AUTOCHECKBOX | WS_TABSTOP, 0, 49,29,134,10, IDC_SD_ANONLOGIN);
 		LOGINOFFSET = 20;
 	}
 
-	AddRCControl("LTEXT", "", "Username:",0, 0, 7,29 + LOGINOFFSET,35,8, IDC_SD_USERNAMELABEL);
-	AddRCControl("COMBOBOX", "", "",CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP, 0,49,27 + LOGINOFFSET,134,100, IDC_SD_USERNAME);
-	AddRCControl("LTEXT", "", "Password:",0, 0, 7,48 + LOGINOFFSET,34,8, IDC_SD_PASSWORDLABEL);
-	AddRCControl("EDITTEXT", "", "",ES_PASSWORD | ES_AUTOHSCROLL | WS_TABSTOP, 0,49,45 + LOGINOFFSET,134,14, IDC_SD_PASSWORD);
-	AddRCControl("CONTROL","Static", "",SS_ETCHEDHORZ, 0,7,65 + LOGINOFFSET,176,1, (UINT)IDC_STATIC);
-	AddRCControl("DEFPUSHBUTTON", "", "OK", WS_TABSTOP, 0, 77,74 + LOGINOFFSET,50,14,IDOK);
-	AddRCControl("PUSHBUTTON", "", "Cancel", WS_TABSTOP, 0,133,74 + LOGINOFFSET,50,14,IDCANCEL);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Username:"),0, 0, 7,29 + LOGINOFFSET,35,8, IDC_SD_USERNAMELABEL);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""),CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP, 0,49,27 + LOGINOFFSET,134,100, IDC_SD_USERNAME);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Password:"),0, 0, 7,48 + LOGINOFFSET,34,8, IDC_SD_PASSWORDLABEL);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""),ES_PASSWORD | ES_AUTOHSCROLL | WS_TABSTOP, 0,49,45 + LOGINOFFSET,134,14, IDC_SD_PASSWORD);
+	AddRCControl(_T("CONTROL"), _T("Static"), _T(""),SS_ETCHEDHORZ, 0,7,65 + LOGINOFFSET,176,1, (UINT)IDC_STATIC);
+	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_TABSTOP, 0, 77,74 + LOGINOFFSET,50,14,IDOK);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0,133,74 + LOGINOFFSET,50,14,IDCANCEL);
 
 	if (m_sServer.IsEmpty())
-		m_sServer = AfxGetApp()->GetProfileString("RemoteSettings", "LastServer");
+		m_sServer = AfxGetApp()->GetProfileString(_T("RemoteSettings"), _T("LastServer"));
 
 	if (m_sUsername.IsEmpty())
-		m_sUsername = AfxGetApp()->GetProfileString("RemoteSettings", "LastUsername");
+		m_sUsername = AfxGetApp()->GetProfileString(_T("RemoteSettings"), _T("LastUsername"));
 
 	if (m_nAnonLogin == ANONLOGIN_AUTO)
-		m_nAnonLogin = AfxGetApp()->GetProfileInt("RemoteSettings", "LastAnonLogin", ANONLOGIN_NO) ? ANONLOGIN_YES : ANONLOGIN_NO;
+		m_nAnonLogin = AfxGetApp()->GetProfileInt(_T("RemoteSettings"), _T("LastAnonLogin"), ANONLOGIN_NO) ? ANONLOGIN_YES : ANONLOGIN_NO;
 }
 
 void CServerDlg::DoDataExchange(CDataExchange* pDX)
@@ -128,14 +128,14 @@ BOOL CServerDlg::OnInitDialog()
 	CRuntimeDlg::OnInitDialog();
 
 	// popuplate comboboxes from registry
-	int nServer = AfxGetApp()->GetProfileInt("RemoteSettings", "ServerCount", 0);
+	int nServer = AfxGetApp()->GetProfileInt(_T("RemoteSettings"), _T("ServerCount"), 0);
 
 	while (nServer--)
 	{
 		CString sServer, sItem;
 
-		sItem.Format("Server%d", nServer);
-		sServer = AfxGetApp()->GetProfileString("RemoteSettings", sItem);
+		sItem.Format(_T("Server%d"), nServer);
+		sServer = AfxGetApp()->GetProfileString(_T("RemoteSettings"), sItem);
 
 		if (!sServer.IsEmpty() && m_cbServers.FindString(-1, sServer) == CB_ERR)
 			m_cbServers.InsertString(0, sServer);
@@ -147,14 +147,14 @@ BOOL CServerDlg::OnInitDialog()
 
 	m_cbServers.SelectString(-1, m_sServer);
 
-	int nName = AfxGetApp()->GetProfileInt("RemoteSettings", "UsernameCount", 0);
+	int nName = AfxGetApp()->GetProfileInt(_T("RemoteSettings"), _T("UsernameCount"), 0);
 
 	while (nName--)
 	{
 		CString sName, sItem;
 
-		sItem.Format("Username%d", nName);
-		sName = AfxGetApp()->GetProfileString("RemoteSettings", sItem);
+		sItem.Format(_T("Username%d"), nName);
+		sName = AfxGetApp()->GetProfileString(_T("RemoteSettings"), sItem);
 
 		if (!sName.IsEmpty() && m_cbUsernames.FindString(-1, sName) == CB_ERR)
 			m_cbUsernames.InsertString(0, sName);
@@ -180,38 +180,38 @@ void CServerDlg::OnOK()
 	// save server list to registry and last selected item
 	int nServer = m_cbServers.GetCount();
 
-	AfxGetApp()->WriteProfileInt("RemoteSettings", "ServerCount", nServer);
+	AfxGetApp()->WriteProfileInt(_T("RemoteSettings"), _T("ServerCount"), nServer);
 
 	while (nServer--)
 	{
 		CString sServer, sItem;
 
-		sItem.Format("Server%d", nServer);
+		sItem.Format(_T("Server%d"), nServer);
 		m_cbServers.GetLBText(nServer, sServer);
 
-		AfxGetApp()->WriteProfileString("RemoteSettings", sItem, sServer);
+		AfxGetApp()->WriteProfileString(_T("RemoteSettings"), sItem, sServer);
 	}
 
-	AfxGetApp()->WriteProfileString("RemoteSettings", "LastServer", m_sServer);
+	AfxGetApp()->WriteProfileString(_T("RemoteSettings"), _T("LastServer"), m_sServer);
 
 	// save username list to registry and last selected item
 	int nName = m_cbUsernames.GetCount();
 
-	AfxGetApp()->WriteProfileInt("RemoteSettings", "UsernameCount", nName);
+	AfxGetApp()->WriteProfileInt(_T("RemoteSettings"), _T("UsernameCount"), nName);
 
 	while (nName--)
 	{
 		CString sName, sItem;
 
-		sItem.Format("Username%d", nName);
+		sItem.Format(_T("Username%d"), nName);
 		m_cbUsernames.GetLBText(nName, sName);
 
 		if (!sName.IsEmpty())
-			AfxGetApp()->WriteProfileString("RemoteSettings", sItem, sName);
+			AfxGetApp()->WriteProfileString(_T("RemoteSettings"), sItem, sName);
 	}
 
-	AfxGetApp()->WriteProfileString("RemoteSettings", "LastUsername", m_sUsername);
-	AfxGetApp()->WriteProfileInt("RemoteSettings", "LastAnonLogin", m_nAnonLogin);
+	AfxGetApp()->WriteProfileString(_T("RemoteSettings"), _T("LastUsername"), m_sUsername);
+	AfxGetApp()->WriteProfileInt(_T("RemoteSettings"), _T("LastAnonLogin"), m_nAnonLogin);
 }
 
 void CServerDlg::OnAnonLogin()

@@ -292,7 +292,7 @@ CString CXmlItem::GetItemValue(LPCTSTR szItemName, LPCTSTR szSubItem) const
 	}
 
 	// else
-	return "";
+	return _T("");
 }
 
 int CXmlItem::GetItemCount(LPCTSTR szItemName) const

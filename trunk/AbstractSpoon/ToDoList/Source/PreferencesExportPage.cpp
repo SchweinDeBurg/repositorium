@@ -54,7 +54,7 @@ IMPLEMENT_DYNCREATE(CPreferencesExportPage, CPreferencesPageBase)
 
 CPreferencesExportPage::CPreferencesExportPage() : 
 		CPreferencesPageBase(CPreferencesExportPage::IDD), 
-			m_eTextIndent("0123456789"), m_eLineSpaces("0123456789")
+		m_eTextIndent(_T("0123456789")), m_eLineSpaces(_T("0123456789"))
 {
 //	m_psp.dwFlags &= ~PSP_HASHELP;
 
@@ -66,7 +66,7 @@ CPreferencesExportPage::CPreferencesExportPage() :
 	// add a 'reset' button to the charset field
 	m_eCharset.InsertButton(0, ID_RESETCHARSET, RESETBTN, 
 								CEnString(IDS_PEP_RESETCHARSET), 
-								DEF_BTNWIDTH + 4, "Wingdings");
+								DEF_BTNWIDTH + 4, _T("Wingdings"));
 }
 
 CPreferencesExportPage::~CPreferencesExportPage()
@@ -99,21 +99,21 @@ void CPreferencesExportPage::DoDataExchange(CDataExchange* pDX)
 	{
 		CString sSize;
 		m_cbFontSize.GetLBText(m_cbFontSize.GetCurSel(), sSize);
-		m_nHtmlFontSize = atoi(sSize);
+		m_nHtmlFontSize = _ttoi(sSize);
 	}
 	else
 	{
 		CString sSize;
-		sSize.Format("%d", m_nHtmlFontSize);
+		sSize.Format(_T("%d"), m_nHtmlFontSize);
 
 		if (CB_ERR == m_cbFontSize.SelectString(-1, sSize))
 		{
 			m_nHtmlFontSize = 3;
-			m_cbFontSize.SelectString(-1, "3");
+			m_cbFontSize.SelectString(-1, _T("3"));
 		}
 
 		m_cbFontSize.GetLBText(m_cbFontSize.GetCurSel(), sSize);
-		m_nHtmlFontSize = atoi(sSize);
+		m_nHtmlFontSize = _ttoi(sSize);
 	}
 }
 
@@ -156,7 +156,7 @@ void CPreferencesExportPage::OnChangeTextIndentType()
 CString CPreferencesExportPage::GetHtmlCharSet() const
 {
 	if (m_sHtmlCharSet.IsEmpty())
-		return "Windows - " + Misc::GetDefCharset();
+		return _T("Windows - ") + Misc::GetDefCharset();
 
 	// else
 	return m_sHtmlCharSet;
@@ -165,45 +165,42 @@ CString CPreferencesExportPage::GetHtmlCharSet() const
 
 void CPreferencesExportPage::LoadPreferences(const CPreferences& prefs)
 {
-	m_sHtmlFont = prefs.GetProfileString("Preferences", "HTMLFont", "Verdana");
-	m_bPreviewExport = prefs.GetProfileInt("Preferences", "PreviewSaveAs", TRUE);
-	m_nHtmlFontSize = prefs.GetProfileInt("Preferences", "HtmlFontSize", 2);
-	m_nTextIndent = prefs.GetProfileInt("Preferences", "TextIndent", 2);
-	m_nLineSpaces = prefs.GetProfileInt("Preferences", "LineSpaces", 8);
-	m_bExportVisibleOnly = prefs.GetProfileInt("Preferences", "ExportVisibleOnly", FALSE);
-	m_bExportParentTitleCommentsOnly = prefs.GetProfileInt("Preferences", "ExportParentTitleCommentsOnly", FALSE);
-	m_bExportSpaceForNotes = prefs.GetProfileInt("Preferences", "ExportSpaceForNotes", FALSE);
-	m_bUseSpaceIndents = prefs.GetProfileInt("Preferences", "UseSpaceIndents", TRUE);
+	m_sHtmlFont = prefs.GetProfileString(_T("Preferences"), _T("HTMLFont"), _T("Verdana"));
+	m_bPreviewExport = prefs.GetProfileInt(_T("Preferences"), _T("PreviewSaveAs"), TRUE);
+	m_nHtmlFontSize = prefs.GetProfileInt(_T("Preferences"), _T("HtmlFontSize"), 2);
+	m_nTextIndent = prefs.GetProfileInt(_T("Preferences"), _T("TextIndent"), 2);
+	m_nLineSpaces = prefs.GetProfileInt(_T("Preferences"), _T("LineSpaces"), 8);
+	m_bExportVisibleOnly = prefs.GetProfileInt(_T("Preferences"), _T("ExportVisibleOnly"), FALSE);
+	m_bExportParentTitleCommentsOnly = prefs.GetProfileInt(_T("Preferences"), _T("ExportParentTitleCommentsOnly"), FALSE);
+	m_bExportSpaceForNotes = prefs.GetProfileInt(_T("Preferences"), _T("ExportSpaceForNotes"), FALSE);
+	m_bUseSpaceIndents = prefs.GetProfileInt(_T("Preferences"), _T("UseSpaceIndents"), TRUE);
 
 	// default code page
-	CString sDefCharset = "Windows-" + Misc::GetDefCharset();
+	CString sDefCharset = _T("Windows-") + Misc::GetDefCharset();
 
-	m_sHtmlCharSet = prefs.GetProfileString("Preferences", "HtmlCharSet", sDefCharset);
-
-//	m_b = prefs.GetProfileInt("Preferences", "", FALSE);
+	m_sHtmlCharSet = prefs.GetProfileString(_T("Preferences"), _T("HtmlCharSet"), sDefCharset);
 }
 
 void CPreferencesExportPage::SavePreferences(CPreferences& prefs)
 {
 	// save settings
-	prefs.WriteProfileString("Preferences", "HTMLFont", m_sHtmlFont);
-	prefs.WriteProfileInt("Preferences", "HtmlFontSize", m_nHtmlFontSize);
-	prefs.WriteProfileInt("Preferences", "PreviewSaveAs", m_bPreviewExport);
-	prefs.WriteProfileInt("Preferences", "TextIndent", m_nTextIndent);
-	prefs.WriteProfileInt("Preferences", "LineSpaces", m_nLineSpaces);
-	prefs.WriteProfileInt("Preferences", "ExportVisibleOnly", m_bExportVisibleOnly);
-	prefs.WriteProfileInt("Preferences", "ExportParentTitleCommentsOnly", m_bExportParentTitleCommentsOnly);
-	prefs.WriteProfileInt("Preferences", "ExportSpaceForNotes", m_bExportSpaceForNotes);
-	prefs.WriteProfileString("Preferences", "HtmlCharSet", m_sHtmlCharSet);
-	prefs.WriteProfileInt("Preferences", "UseSpaceIndents", m_bUseSpaceIndents);
-//	prefs.WriteProfileInt("Preferences", "", m_b);
+	prefs.WriteProfileString(_T("Preferences"), _T("HTMLFont"), m_sHtmlFont);
+	prefs.WriteProfileInt(_T("Preferences"), _T("HtmlFontSize"), m_nHtmlFontSize);
+	prefs.WriteProfileInt(_T("Preferences"), _T("PreviewSaveAs"), m_bPreviewExport);
+	prefs.WriteProfileInt(_T("Preferences"), _T("TextIndent"), m_nTextIndent);
+	prefs.WriteProfileInt(_T("Preferences"), _T("LineSpaces"), m_nLineSpaces);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ExportVisibleOnly"), m_bExportVisibleOnly);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ExportParentTitleCommentsOnly"), m_bExportParentTitleCommentsOnly);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ExportSpaceForNotes"), m_bExportSpaceForNotes);
+	prefs.WriteProfileString(_T("Preferences"), _T("HtmlCharSet"), m_sHtmlCharSet);
+	prefs.WriteProfileInt(_T("Preferences"), _T("UseSpaceIndents"), m_bUseSpaceIndents);
 }
 
 LRESULT CPreferencesExportPage::OnEEBtnClick(WPARAM wp, LPARAM lp)
 {
 	if (wp == IDC_CHARSET && lp == ID_RESETCHARSET)
 	{
-		m_sHtmlCharSet = "Windows-" + Misc::GetDefCharset();
+		m_sHtmlCharSet = _T("Windows-") + Misc::GetDefCharset();
 		UpdateData(FALSE);
 	}
 

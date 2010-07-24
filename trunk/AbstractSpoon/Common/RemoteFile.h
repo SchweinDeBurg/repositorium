@@ -155,7 +155,7 @@ protected:
 	static BOOL ValidateLocalFolder(CString& sFolder, BOOL bAllowCreation);
 	static BOOL RemotePathIsFolder(const CString& sFolder);
 	static void DoProgress(CProgressDlg* pDlg, DWORD dwBytesRead, DWORD dwFileSize, BOOL bUpload);
-	static CString MakeRemotePath(const CString& sLocalPath, const CString& sRemoteDir, const char* szLocalRoot);
+	static CString MakeRemotePath(const CString& sLocalPath, const CString& sRemoteDir, const TCHAR* szLocalRoot);
 };
 
 #endif // !defined(AFX_REMOTEFILE_H__04648C98_565F_41B2_A1F7_E10E00800691__INCLUDED_)

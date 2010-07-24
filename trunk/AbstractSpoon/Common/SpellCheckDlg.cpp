@@ -54,7 +54,7 @@ CSpellCheckDlg::CSpellCheckDlg(LPCTSTR szDictionaryPath, ISpellCheck* pSpellChec
 m_pSpellChecker(NULL),
 m_reSpellCheck(m_reText),
 m_sSelDictionary(szDictionaryPath),
-m_stURL("http://wiki.services.openoffice.org/wiki/Dictionaries"),
+m_stURL(_T("http://wiki.services.openoffice.org/wiki/Dictionaries")),
 m_bMadeChanges(FALSE),
 m_ptTopLeft(-1, -1)
 {
@@ -66,31 +66,31 @@ void CSpellCheckDlg::InitDialog(ISpellCheck* pSpellCheck, LPCTSTR szText)
 	AfxEnableControlContainer();
 	AfxInitRichEdit();
 
-	AddRCControl("LTEXT", "", _T("Ac&tive Dictionary:"), 0,0, 7,9,65,8, IDC_SCD_DICTLABEL);
-	AddRCControl("COMBOBOX", "", "", CBS_DROPDOWNLIST | WS_TABSTOP, 0, 66, 8, 182,100, IDC_SCD_DICTIONARIES);
-	AddRCControl("PUSHBUTTON", "", _T("Bro&wse"),WS_TABSTOP, 0,256,7,50,14,IDC_SCD_BROWSE);
-	AddRCControl("LTEXT", "", _T("Download More Dictionaries"), WS_TABSTOP,0, 66,21,90,8,IDC_SCD_URL);
-	AddRCControl("LTEXT", "", _T("C&hecking Text:"), 0,0, 7,30,49,8, IDC_SCD_CHECKINGLABEL);
-	AddRCControl("CONTROL", "RICHEDIT", "",ES_MULTILINE | ES_AUTOVSCROLL | ES_NOHIDESEL |/*WS_BORDER | */ ES_READONLY | WS_VSCROLL | WS_TABSTOP | WS_DISABLED,0, 7,40,242,68,IDC_SCD_TEXT);
-	AddRCControl("PUSHBUTTON", "", _T("R&estart"),WS_TABSTOP, 0,256,40,50,14,IDC_SCD_RESTART);
-	AddRCControl("LTEXT", "", _T("Replace:"),0, 0,7,112,30,8, IDC_SCD_REPLACELABEL);
-	AddRCControl("LTEXT", "", "Static",0, 0,44,112,205,8,IDC_SCD_MISSPELTWORD);
-	AddRCControl("LTEXT", "", _T("&With:"),0, 0,7,124,18,8, IDC_SCD_WITHLABEL);
-	AddRCControl("LISTBOX", "", "", LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP | LBS_NOTIFY, 0,41,124,208,51, IDC_SCD_SUGGESTIONS);
-	AddRCControl("PUSHBUTTON", "", _T("&Replace"),WS_TABSTOP, 0,256,124,50,14,IDC_SCD_REPLACE);
-	AddRCControl("PUSHBUTTON", "", _T("&Next Word"),WS_TABSTOP, 0,256,144,50,14,IDC_SCD_NEXT);
-	AddRCControl("CONTROL", "static", "",SS_ETCHEDHORZ,0,7,182,299,1, (UINT)IDC_STATIC);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Ac&tive Dictionary:"), 0,0, 7,9,65,8, IDC_SCD_DICTLABEL);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWNLIST | WS_TABSTOP, 0, 66, 8, 182,100, IDC_SCD_DICTIONARIES);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Bro&wse"),WS_TABSTOP, 0,256,7,50,14,IDC_SCD_BROWSE);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Download More Dictionaries"), WS_TABSTOP,0, 66,21,90,8,IDC_SCD_URL);
+	AddRCControl(_T("LTEXT"), _T(""), _T("C&hecking Text:"), 0,0, 7,30,49,8, IDC_SCD_CHECKINGLABEL);
+	AddRCControl(_T("CONTROL"), _T("RICHEDIT"), _T(""),ES_MULTILINE | ES_AUTOVSCROLL | ES_NOHIDESEL |/*WS_BORDER | */ ES_READONLY | WS_VSCROLL | WS_TABSTOP | WS_DISABLED,0, 7,40,242,68,IDC_SCD_TEXT);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("R&estart"),WS_TABSTOP, 0,256,40,50,14,IDC_SCD_RESTART);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Replace:"),0, 0,7,112,30,8, IDC_SCD_REPLACELABEL);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Static"),0, 0,44,112,205,8,IDC_SCD_MISSPELTWORD);
+	AddRCControl(_T("LTEXT"), _T(""), _T("&With:"),0, 0,7,124,18,8, IDC_SCD_WITHLABEL);
+	AddRCControl(_T("LISTBOX"), _T(""), _T(""), LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP | LBS_NOTIFY, 0,41,124,208,51, IDC_SCD_SUGGESTIONS);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("&Replace"),WS_TABSTOP, 0,256,124,50,14,IDC_SCD_REPLACE);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("&Next Word"),WS_TABSTOP, 0,256,144,50,14,IDC_SCD_NEXT);
+	AddRCControl(_T("CONTROL"), _T("static"), _T(""),SS_ETCHEDHORZ,0,7,182,299,1, (UINT)IDC_STATIC);
 
 	if (!pSpellCheck)
 	{
-		AddRCControl("DEFPUSHBUTTON", "", BTN_OK, WS_TABSTOP, 0, 199,190,50,14,IDOK);
-		AddRCControl("PUSHBUTTON", "", BTN_CANCEL, WS_TABSTOP, 0,256,190,50,14,IDCANCEL);
+		AddRCControl(_T("DEFPUSHBUTTON"), _T(""), BTN_OK, WS_TABSTOP, 0, 199,190,50,14,IDOK);
+		AddRCControl(_T("PUSHBUTTON"), _T(""), BTN_CANCEL, WS_TABSTOP, 0,256,190,50,14,IDCANCEL);
 
 		SetText(szText);
 	}
 	else
 	{
-		AddRCControl("PUSHBUTTON", "", BTN_CLOSE, WS_TABSTOP, 0,256,190,50,14,IDCANCEL);
+		AddRCControl(_T("PUSHBUTTON"), _T(""), BTN_CLOSE, WS_TABSTOP, 0,256,190,50,14,IDCANCEL);
 
 		SetSpellCheck(pSpellCheck);
 	}
@@ -166,14 +166,14 @@ int CSpellCheckDlg::DoModal(BOOL bEndOnNoErrors)
 	if (m_ptTopLeft.x != -1 || m_ptTopLeft.y != -1)
 		dwFlags &= ~DS_CENTER;
 
-	return CRuntimeDlg::DoModal(GetItemText(SCD_TITLE, "Spell Checking"), dwFlags);
+	return CRuntimeDlg::DoModal(GetItemText(SCD_TITLE, _T("Spell Checking")), dwFlags);
 }
 
 BOOL CSpellCheckDlg::InitDictionary(LPCTSTR szDicPath)
 {
 	CString sAffixPath(szDicPath);
 	sAffixPath.MakeLower();
-	sAffixPath.Replace(".dic", ".aff");
+	sAffixPath.Replace(_T(".dic"), _T(".aff"));
 
 	ISpellChecker* pTemp = CreateSpellCheckerInterface(m_sEnginePath, sAffixPath, szDicPath);
 
@@ -246,10 +246,10 @@ void CSpellCheckDlg::OnBrowse()
 {
 	UpdateData();
 
-	CString sFilter = GetItemText(DLG_SCD_DICTFILTER, "Dictionaries (*.dic)|*.dic||");
-	CFileDialog dialog(TRUE, "dic", m_sSelDictionary, OFN_PATHMUSTEXIST, sFilter);
+	CString sFilter = GetItemText(DLG_SCD_DICTFILTER, _T("Dictionaries (*.dic)|*.dic||"));
+	CFileDialog dialog(TRUE, _T("dic"), m_sSelDictionary, OFN_PATHMUSTEXIST, sFilter);
 
-	dialog.m_ofn.lpstrTitle = GetItemText(DLG_SCD_BROWSETITLE, "Select Dictionary");
+	dialog.m_ofn.lpstrTitle = GetItemText(DLG_SCD_BROWSETITLE, _T("Select Dictionary"));
 
 	if (dialog.DoModal() == IDOK)
 	{
@@ -266,7 +266,7 @@ void CSpellCheckDlg::OnReplace()
 	UpdateData();
 	ASSERT (!m_sSuggestion.IsEmpty());
 
-	m_pSpellCheck->ReplaceCurrentWord(m_sSuggestion);
+	m_pSpellCheck->ReplaceCurrentWord(ATL::CT2A(m_sSuggestion));
 	m_pSpellCheck->ClearSelection();
 	m_bMadeChanges = TRUE;
 
@@ -330,9 +330,9 @@ BOOL CSpellCheckDlg::OnInitDialog()
 	CPreferences prefs;
 
 #ifndef _DEBUG
-	m_sEnginePath = prefs.GetProfileString("SpellChecker", "EnginePath", "MySpellCheck.dll");
+	m_sEnginePath = prefs.GetProfileString(_T("SpellChecker"), _T("EnginePath"), _T("MySpellCheck.dll"));
 #else
-	m_sEnginePath = "MySpellCheck.dll";
+	m_sEnginePath = _T("MySpellCheck.dll");
 #endif
 
 	if (!IsSpellCheckDll(m_sEnginePath))
@@ -340,7 +340,7 @@ BOOL CSpellCheckDlg::OnInitDialog()
 		CString sDllPath = FileMisc::GetModuleFileName(), sDrive, sFolder;
 
 		FileMisc::SplitPath(sDllPath, &sDrive, &sFolder);
-		FileMisc::MakePath(sDllPath, sDrive, sFolder, "*", ".dll");
+		FileMisc::MakePath(sDllPath, sDrive, sFolder, _T("*"), _T(".dll"));
 
 		m_sEnginePath = sDllPath;
 	}
@@ -349,14 +349,14 @@ BOOL CSpellCheckDlg::OnInitDialog()
 	m_bMadeChanges = FALSE;
 
 	// reload dictionary list
-	int nDicCount = prefs.GetProfileInt("SpellChecker", "DictionaryCount", 0);
+	int nDicCount = prefs.GetProfileInt(_T("SpellChecker"), _T("DictionaryCount"), 0);
 
 	for (int nDic = 0; nDic < nDicCount; nDic++)
 	{
 		CString sKey;
-		sKey.Format("Dictionary%d", nDic);
+		sKey.Format(_T("Dictionary%d"), nDic);
 
-		CString sPath = prefs.GetProfileString("SpellChecker", sKey);
+		CString sPath = prefs.GetProfileString(_T("SpellChecker"), sKey);
 
 		if (GetFileAttributes(sPath) != 0xffffffff)
 		{
@@ -366,23 +366,23 @@ BOOL CSpellCheckDlg::OnInitDialog()
 	}
 
 	if (m_sSelDictionary.IsEmpty())
-		m_sSelDictionary = prefs.GetProfileString("SpellChecker", "ActiveDictionary");
+		m_sSelDictionary = prefs.GetProfileString(_T("SpellChecker"), _T("ActiveDictionary"));
 
 	// check spell check engine is initialized
 	BOOL bCancel = FALSE;
 
 	if (!IsSpellCheckDll(m_sEnginePath))
 	{
-		CString sMsg = GetItemText(DLG_SCD_SETUPMSG, "Before you can spell check for the first time you need \nto specify the location of the Spell Checker.");
+		CString sMsg = GetItemText(DLG_SCD_SETUPMSG, _T("Before you can spell check for the first time you need \nto specify the location of the Spell Checker."));
 		bCancel = (IDCANCEL == AfxMessageBox(sMsg, MB_OKCANCEL));
 
 		while (!bCancel && !IsSpellCheckDll(m_sEnginePath))
 		{
 			// notify user and browse for dll
-			CString sFilter = GetItemText(DLG_SCD_ENGINEFILTER, "SpellChecker Engines|*.dll||");
-			CFileDialog dialog(TRUE, "dll", m_sEnginePath, OFN_PATHMUSTEXIST, sFilter);
+			CString sFilter = GetItemText(DLG_SCD_ENGINEFILTER, _T("SpellChecker Engines|*.dll||"));
+			CFileDialog dialog(TRUE, _T("dll"), m_sEnginePath, OFN_PATHMUSTEXIST, sFilter);
 
-			dialog.m_ofn.lpstrTitle = GetItemText(DLG_SCD_ENGINETITLE, "Locate Spell Check Engine");
+			dialog.m_ofn.lpstrTitle = GetItemText(DLG_SCD_ENGINETITLE, _T("Locate Spell Check Engine"));
 
 			if (dialog.DoModal() == IDOK)
 				m_sEnginePath = dialog.GetPathName();
@@ -450,7 +450,7 @@ BOOL CSpellCheckDlg::StartChecking(CHECKFROM nFrom)
 	}
 
 	// else reached the end so start again
-	ProcessMisspeltWord("");
+	ProcessMisspeltWord(_T(""));
 
 	return StartChecking(CH_START);
 }
@@ -469,7 +469,7 @@ void CSpellCheckDlg::ProcessMisspeltWord(LPCTSTR szWord)
 	}
 
 	// else
-	m_sMisspeltWord.Format("'%s'", szWord);
+	m_sMisspeltWord.Format(_T("\'%s\'"), szWord);
 	UpdateData(FALSE);
 
 	// set new selection
@@ -483,10 +483,10 @@ void CSpellCheckDlg::ProcessMisspeltWord(LPCTSTR szWord)
 		char** pSuggestions = NULL;
 		int nNumSuggestions = 0;
 
-		m_pSpellChecker->CheckSpelling(szWord, pSuggestions, nNumSuggestions);
+		m_pSpellChecker->CheckSpelling(ATL::CT2A(szWord), pSuggestions, nNumSuggestions);
 
 		for (int nSugg = 0; nSugg < nNumSuggestions; nSugg++)
-			m_lbSuggestions.AddString(pSuggestions[nSugg]);
+			m_lbSuggestions.AddString(ATL::CA2T(pSuggestions[nSugg]));
 
 		m_pSpellChecker->FreeSuggestions(pSuggestions);
 	}
@@ -511,7 +511,7 @@ void CSpellCheckDlg::HighlightWord(BOOL bHighlight)
 BOOL CSpellCheckDlg::IsWordMisspelt(LPCTSTR szWord)
 {
 	if (m_pSpellChecker)
-		return (m_pSpellChecker->CheckSpelling(szWord) == 0);
+		return (m_pSpellChecker->CheckSpelling(ATL::CT2A(szWord)) == 0);
 
 	return FALSE;
 }
@@ -551,22 +551,22 @@ void CSpellCheckDlg::OnDestroy()
 
 	CRuntimeDlg::OnDestroy();
 
-	prefs.WriteProfileString("SpellChecker", "EnginePath", m_sEnginePath);
-	prefs.WriteProfileString("SpellChecker", "ActiveDictionary", m_sSelDictionary);
+	prefs.WriteProfileString(_T("SpellChecker"), _T("EnginePath"), m_sEnginePath);
+	prefs.WriteProfileString(_T("SpellChecker"), _T("ActiveDictionary"), m_sSelDictionary);
 
 	// save dictionary list
 	int nDicCount = m_cbDictionaries.GetCount();
-	prefs.WriteProfileInt("SpellChecker", "DictionaryCount", nDicCount);
+	prefs.WriteProfileInt(_T("SpellChecker"), _T("DictionaryCount"), nDicCount);
 
 	for (int nDic = 0; nDic < nDicCount; nDic++)
 	{
 		CString sKey;
-		sKey.Format("Dictionary%d", nDic);
+		sKey.Format(_T("Dictionary%d"), nDic);
 
 		CString sPath;
 		m_cbDictionaries.GetLBText(nDic, sPath);
 
-		prefs.WriteProfileString("SpellChecker", sKey, sPath);
+		prefs.WriteProfileString(_T("SpellChecker"), sKey, sPath);
 	}
 }
 

@@ -65,16 +65,16 @@ struct FILERESULT
 		if (szFilePath)
 		{
 			sFilePath = szFilePath;
-			sFilePath.Replace('\\', '/');
+			sFilePath.Replace(_T('\\'), _T('/'));
 
-			char szFilename[_MAX_FNAME], szExt[_MAX_EXT];
+			TCHAR szFilename[_MAX_FNAME], szExt[_MAX_EXT];
 #if _MSC_VER >= 1400
-			_splitpath_s(szFilePath, NULL, 0, NULL, 0, szFilename, _MAX_FNAME, szExt, _MAX_EXT);
+			_tsplitpath_s(szFilePath, NULL, 0, NULL, 0, szFilename, _MAX_FNAME, szExt, _MAX_EXT);
 #else
-			_splitpath(szFilePath, NULL, NULL, szFilename, szExt);
+			_tsplitpath(szFilePath, NULL, NULL, szFilename, szExt);
 #endif
 
-			sFileName.Format("%s%s", szFilename, szExt);
+			sFileName.Format(_T("%s%s"), szFilename, szExt);
 		}
 	}
 
@@ -95,7 +95,7 @@ public:
 	int DoModal(DWORD dwOptions = RFD_DOWNLOAD | RFD_FILEMUSTEXIST | RFD_MULTISELECT, LPCTSTR szFilename = NULL);
 
 	BOOL IsRootFolder() { return m_bRoot; }
-	CString GetFolder() { return m_bRoot ? "" : m_sCurFolder; }
+	CString GetFolder() { return m_bRoot ? _T("") : m_sCurFolder; }
 	CString GetFirstPath();
 
 	int GetPathCount() { return m_aFiles.GetSize(); }
