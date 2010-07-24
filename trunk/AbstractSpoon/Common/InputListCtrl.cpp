@@ -356,7 +356,7 @@ void CInputListCtrl::AutoAdd(BOOL bRows, BOOL bCols)
 
 		// ensure there is at least one column
 		if (GetColumnCount() == 0)
-			InsertColumn(0, "", LVCFMT_LEFT, m_nAutoColWidth);
+			InsertColumn(0, _T(""), LVCFMT_LEFT, m_nAutoColWidth);
 		else if (bCols)
 			SetColumnWidth(0, m_nAutoColWidth);
 
@@ -374,8 +374,8 @@ void CInputListCtrl::AutoAdd(BOOL bRows, BOOL bCols)
 	{
 		m_bAutoAddCols = TRUE;
 
-		InsertColumn(GetColumnCount(), "", LVCFMT_LEFT, m_nAutoColWidth);
-		InsertItem(0, "");
+		InsertColumn(GetColumnCount(), _T(""), LVCFMT_LEFT, m_nAutoColWidth);
+		InsertItem(0, _T(""));
 		SetItemText(0, GetColumnCount() - 1, m_sAutoColPrompt);
 	}
 
@@ -615,7 +615,7 @@ void CInputListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 					case BROWSE:
 						CThemed::DrawFrameControl(this, pDC, rButton, DFC_BUTTON, DFCS_BUTTONPUSH);
-						pDC->DrawText("...", rButton, DT_CENTER | DT_VCENTER);
+						pDC->DrawText(_T("..."), rButton, DT_CENTER | DT_VCENTER);
 						break;
 					}
 				}
@@ -772,7 +772,7 @@ BOOL CInputListCtrl::DeleteSelectedCell()
 		}
 		else // clear the field
 		{
-			SetItemText(GetCurSel(), m_nCurCol, "");
+			SetItemText(GetCurSel(), m_nCurCol, _T(""));
 		}
 
 		// redraw
@@ -912,7 +912,7 @@ BOOL CInputListCtrl::DeleteAllItems(BOOL bIncludeCols)
 	{
 		// ensure there is at least one column
 		if (nNumCols == 0)
-			InsertColumn(0, "", LVCFMT_LEFT, m_nAutoColWidth);
+			InsertColumn(0, _T(""), LVCFMT_LEFT, m_nAutoColWidth);
 
 		int nIndex = InsertItem(0, m_sAutoRowPrompt, -1);
 		SetItemData(nIndex, PROMPT);
@@ -926,11 +926,11 @@ BOOL CInputListCtrl::DeleteAllItems(BOOL bIncludeCols)
 		// however, ensure there is at least one column
 		if (nNumCols == 0 || m_bAutoAddRows && nNumCols == 1)
 		{
-			InsertColumn(nNumCols, "", LVCFMT_LEFT, m_nAutoColWidth);
+			InsertColumn(nNumCols, _T(""), LVCFMT_LEFT, m_nAutoColWidth);
 			nNumCols++;
 		}
 
-		InsertItem(0, "");
+		InsertItem(0, _T(""));
 		SetItemText(0, nNumCols - 1, m_sAutoColPrompt);
 	}
 
@@ -1214,7 +1214,7 @@ void CInputListCtrl::OnEndEdit(UINT /*uIDCtrl*/, int* pResult)
 			{
 				if (m_bNotifyDuplicates)
 				{
-					sMessage.Format("The item '%s' already exists in the list", sText);
+					sMessage.Format(_T("The item '%s' already exists in the list"), sText);
 					AfxMessageBox(sMessage, MB_OK | MB_ICONEXCLAMATION);
 					SetFocus();
 				}
@@ -1235,7 +1235,7 @@ void CInputListCtrl::OnEndEdit(UINT /*uIDCtrl*/, int* pResult)
 				nNumCols = nLastCol;
 				while (nNumCols > 0)
 				{
-					SetItemText(nIndex, nNumCols, "");
+					SetItemText(nIndex, nNumCols, _T(""));
 					nNumCols--;
 				}
 
@@ -1252,7 +1252,7 @@ void CInputListCtrl::OnEndEdit(UINT /*uIDCtrl*/, int* pResult)
 			{
 				if (m_bNotifyDuplicates)
 				{
-					sMessage.Format("The item '%s' already exists in the list", sText);
+					sMessage.Format(_T("The item '%s' already exists in the list"), sText);
 					AfxMessageBox(sMessage, MB_OK | MB_ICONEXCLAMATION);
 					SetFocus();
 				}
@@ -1262,7 +1262,7 @@ void CInputListCtrl::OnEndEdit(UINT /*uIDCtrl*/, int* pResult)
 			}
 			else
 			{
-				nIndex = InsertColumn(GetColumnCount(), "", LVCFMT_LEFT, m_nAutoColWidth);
+				nIndex = InsertColumn(GetColumnCount(), _T(""), LVCFMT_LEFT, m_nAutoColWidth);
 				SetItemText(m_nEditItem, m_nEditCol + 1, m_sAutoColPrompt);
 				SetItemText(m_nEditItem, m_nEditCol, sText);
 
@@ -1270,7 +1270,7 @@ void CInputListCtrl::OnEndEdit(UINT /*uIDCtrl*/, int* pResult)
 				nNumRows = nLastRow;
 				while (nNumRows > 0)
 				{
-					SetItemText(nNumRows, nIndex, "");
+					SetItemText(nNumRows, nIndex, _T(""));
 					nNumRows--;
 				}
 
@@ -1288,7 +1288,7 @@ void CInputListCtrl::OnEndEdit(UINT /*uIDCtrl*/, int* pResult)
 			{
 				if (m_bNotifyDuplicates)
 				{
-					sMessage.Format("The item '%s' already exists in the list", sText);
+					sMessage.Format(_T("The item '%s' already exists in the list"), sText);
 					AfxMessageBox(sMessage, MB_OK | MB_ICONEXCLAMATION);
 					SetFocus();
 				}
@@ -1305,7 +1305,7 @@ void CInputListCtrl::OnEndEdit(UINT /*uIDCtrl*/, int* pResult)
 		}
 		else // remove item
 		{
-			SetItemText(m_nEditItem, m_nEditCol, "");
+			SetItemText(m_nEditItem, m_nEditCol, _T(""));
 			bItemDeleted = TRUE;
 			bNotifyParent = FALSE;
 			DeleteSelectedCell();

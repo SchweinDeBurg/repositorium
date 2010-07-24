@@ -92,7 +92,7 @@ void CEnRecentFileList::WriteList(CPreferences& prefs) const
 
 		CString sItem;
 		sItem.Format(m_strEntryFormat, nFile + 1);
-		prefs.WriteProfileString("MRU", sItem, m_arrNames[nFile]);
+		prefs.WriteProfileString(_T("MRU"), sItem, m_arrNames[nFile]);
 	}
 }
 
@@ -102,6 +102,6 @@ void CEnRecentFileList::ReadList(const CPreferences& prefs)
 	{
 		CString sItem;
 		sItem.Format(m_strEntryFormat, nFile + 1);
-		m_arrNames[nFile] = prefs.GetProfileString("MRU", sItem);
+		m_arrNames[nFile] = prefs.GetProfileString(_T("MRU"), sItem);
 	}
 }

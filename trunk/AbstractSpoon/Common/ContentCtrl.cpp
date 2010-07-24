@@ -126,7 +126,7 @@ void CContentCtrl::SetUITheme(const UITHEME* pTheme)
 void CContentCtrl::SetPreferenceLocation(LPCTSTR szKey)
 {
 	if (m_pContentCtrl)
-		m_pContentCtrl->SetPreferenceLocation(szKey);
+		m_pContentCtrl->SetPreferenceLocation(ATL::CT2A(szKey));
 }
 
 BOOL CContentCtrl::HasFocus() const
@@ -268,8 +268,8 @@ int CContentCtrl::GetTextContent(CString& sContent) const
 
 		if (nLen)
 		{
-			char* szContent = sContent.GetBufferSetLength(nLen);
-			VERIFY (nLen + 1 == m_pContentCtrl->GetTextContent(szContent, nLen + 1));
+			TCHAR* szContent = sContent.GetBufferSetLength(nLen);
+			VERIFY (nLen + 1 == m_pContentCtrl->GetTextContent(ATL::CT2A(szContent), nLen + 1));
 			sContent.ReleaseBuffer(nLen);
 			return nLen;
 		}
@@ -294,10 +294,10 @@ BOOL CContentCtrl::SetTextContent(const char* szContent)
 LPCTSTR CContentCtrl::GetTypeID() const
 {
 	if (m_pContentCtrl)
-		return m_pContentCtrl->GetTypeID();
+		return ATL::CA2T(m_pContentCtrl->GetTypeID());
 
 	// else
-	return "";
+	return _T("");
 }
 
 BOOL CContentCtrl::IsFormat(const CONTENTFORMAT& cf) const
