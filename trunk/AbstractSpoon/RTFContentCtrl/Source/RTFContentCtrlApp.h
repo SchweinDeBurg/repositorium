@@ -67,7 +67,7 @@ public:
 	IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
 		long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent);
 	void Release();
-	void SetIniLocation(bool bRegistry, const char* szIniPathName);
+	void SetIniLocation(bool bRegistry, const TCHAR* szIniPathName);
 
 	int ConvertToHtml(const unsigned char* pContent, int nLength,
 		char*& szHtml);

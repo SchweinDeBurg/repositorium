@@ -127,15 +127,15 @@ void CRTFContentCtrlApp::Release()
 //	delete this;
 }
 
-void CRTFContentCtrlApp::SetIniLocation(bool bRegistry, const char* szIniPathName)
+void CRTFContentCtrlApp::SetIniLocation(bool bRegistry, const TCHAR* szIniPathName)
 {
 	if (bRegistry)
 	{
-		m_pszRegistryKey = ATL::CA2T(_strdup(szIniPathName));
+		m_pszRegistryKey = _tcsdup(szIniPathName);
 	}
 	else
 	{
-		m_pszProfileName = ATL::CA2T(_strdup(szIniPathName));
+		m_pszProfileName = _tcsdup(szIniPathName);
 	}
 }
 
