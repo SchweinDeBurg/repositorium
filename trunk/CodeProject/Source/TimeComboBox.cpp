@@ -96,7 +96,7 @@ void CTimeComboBox::BuildCombo()
 {
 	if (GetCount() == 0)
 	{
-		/*for (int nHour = 0; nHour < 24; nHour++)
+		for (int nHour = 0; nHour < 24; nHour++)
 		{
 			if ((m_dwStyle & TCB_NOTIME) && nHour == 0)
 				AddString(_T("")); // empty item meaning 'no time'
@@ -105,7 +105,7 @@ void CTimeComboBox::BuildCombo()
 
 			if (m_dwStyle & TCB_HALFHOURS)
 				AddString(CTimeHelper::Format24HourTime(nHour, 30));
-		}*/
+		}
 	}
 }
 

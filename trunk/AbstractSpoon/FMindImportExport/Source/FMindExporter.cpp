@@ -67,7 +67,7 @@ bool CFMindExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFi
 	CXmlItem* firstItem = fileDest.Root()->AddItem(_T("node"), _T(""));
 
 
-	firstItem->AddItem(_T("TEXT"), ATL::CA2T(pSrcTaskFile->GetProjectName()));
+	firstItem->AddItem(_T("TEXT"), pSrcTaskFile->GetProjectName());
 	CXmlItem* hookItem = firstItem->AddItem(_T("hook"), _T(""));
 	hookItem->AddItem(_T("NAME"), _T("accessories/plugins/AutomaticLayout.properties"));
 
@@ -94,14 +94,13 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 		return;
 	}
 
-	char cTemp;
+	TCHAR cTemp;
 
 	// create a new item corresponding to pXITask at the dest
 	CXmlItem* pXIDestItem = pXIDestParent->AddItem(_T("node"));
 
 	// copy across the appropriate attributes
-	//pXIDestItem->AddItem("id", (int)pSrcTaskFile->GetTaskID(hTask));
-	pXIDestItem->AddItem(_T("TEXT"), ATL::CA2T(pSrcTaskFile->GetTaskTitle(hTask)));
+	pXIDestItem->AddItem(_T("TEXT"), pSrcTaskFile->GetTaskTitle(hTask));
 
 	CString sModified;
 	sModified.Format(_T("%i"), pSrcTaskFile->GetTaskLastModified(hTask) * 1000);
@@ -125,7 +124,7 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 
 	// comments
 	CXmlItem* pXIAttribs = NULL;
-	CString sComments = ATL::CA2T(pSrcTaskFile->GetTaskComments(hTask));
+	CString sComments = pSrcTaskFile->GetTaskComments(hTask);
 
 	if (!sComments.IsEmpty())
 	{
@@ -149,17 +148,17 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	//virtual bool SetTaskAllocatedBy(HTASKITEM hTask, const char* szAllocBy) = 0;
 	pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
 	pXIAttribs->AddItem(_T("NAME"), _T("TaskAllocatedBy"));
-	pXIAttribs->AddItem(_T("VALUE"), ATL::CA2T(pSrcTaskFile->GetTaskAllocatedBy(hTask)));
+	pXIAttribs->AddItem(_T("VALUE"), pSrcTaskFile->GetTaskAllocatedBy(hTask));
 
 	//virtual bool SetTaskStatus(HTASKITEM hTask, const char* szStatus) = 0;
 	pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
 	pXIAttribs->AddItem(_T("NAME"), _T("TaskStatus"));
-	pXIAttribs->AddItem(_T("VALUE"), ATL::CA2T(pSrcTaskFile->GetTaskStatus(hTask)));
+	pXIAttribs->AddItem(_T("VALUE"), pSrcTaskFile->GetTaskStatus(hTask));
 
 	//virtual bool SetTaskFileReferencePath(HTASKITEM hTask, const char* szFileRefpath) = 0;
 	pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
 	pXIAttribs->AddItem(_T("NAME"), _T("TaskFileReferencePath"));
-	pXIAttribs->AddItem(_T("VALUE"), ATL::CA2T(pSrcTaskFile->GetTaskFileReferencePath(hTask)));
+	pXIAttribs->AddItem(_T("VALUE"), pSrcTaskFile->GetTaskFileReferencePath(hTask));
 
 	//virtual bool SetTaskColor(HTASKITEM hTask, unsigned long nColor) = 0;
 	pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
@@ -241,7 +240,7 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	//virtual bool SetTaskCreatedBy(HTASKITEM hTask, const char* szCreatedBy) = 0;
 	pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
 	pXIAttribs->AddItem(_T("NAME"), _T("TaskCreatedBy"));
-	pXIAttribs->AddItem(_T("VALUE"), ATL::CA2T(pSrcTaskFile->GetTaskCreatedBy(hTask)));
+	pXIAttribs->AddItem(_T("VALUE"), pSrcTaskFile->GetTaskCreatedBy(hTask));
 
 	//virtual bool SetTaskCreationDate(HTASKITEM hTask, time_t tCreationDate) = 0;
 	pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
@@ -253,7 +252,7 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	//virtual bool SetTaskExternalID(HTASKITEM hTask, const char* szID) = 0;
 	pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
 	pXIAttribs->AddItem(_T("NAME"), _T("TaskExternalID"));
-	pXIAttribs->AddItem(_T("VALUE"), ATL::CA2T(pSrcTaskFile->GetTaskExternalID(hTask)));
+	pXIAttribs->AddItem(_T("VALUE"), pSrcTaskFile->GetTaskExternalID(hTask));
 
 	//virtual bool SetTaskCost(HTASKITEM hTask, double dCost) = 0;
 	pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
@@ -263,7 +262,7 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	//virtual bool SetTaskVersion(HTASKITEM hTask, const char* szVersion) = 0;
 	pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
 	pXIAttribs->AddItem(_T("NAME"), _T("TaskVersion"));
-	pXIAttribs->AddItem(_T("VALUE"), ATL::CA2T(pSrcTaskFile->GetTaskVersion(hTask)));
+	pXIAttribs->AddItem(_T("VALUE"), pSrcTaskFile->GetTaskVersion(hTask));
 
 	//virtual bool SetTaskRecurrence(HTASKITEM hTask, int& nRegularity, DWORD& dwSpecific1,
 	//								DWORD& dwSpecific2, BOOL& bRecalcFromDue) const = 0;
@@ -334,7 +333,7 @@ void CFMindExporter::AddTaskAllocTo(const ITaskList7* pSrcTaskFile, HTASKITEM hT
 
 		while (nCount--)
 		{
-			aItems.InsertAt(0, ATL::CA2T(pSrcTaskFile->GetTaskAllocatedTo(hTask, nCount)));
+			aItems.InsertAt(0, pSrcTaskFile->GetTaskAllocatedTo(hTask, nCount));
 		}
 
 		CXmlItem* pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
@@ -352,7 +351,7 @@ void CFMindExporter::AddTaskCategories(const ITaskList7* pSrcTaskFile, HTASKITEM
 
 		while (nCount--)
 		{
-			aItems.InsertAt(0, ATL::CA2T(pSrcTaskFile->GetTaskCategory(hTask, nCount)));
+			aItems.InsertAt(0, pSrcTaskFile->GetTaskCategory(hTask, nCount));
 		}
 
 		CXmlItem* pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
@@ -370,7 +369,7 @@ void CFMindExporter::AddTaskDependencies(const ITaskList7* pSrcTaskFile, HTASKIT
 
 		while (nCount--)
 		{
-			aItems.InsertAt(0, ATL::CA2T(pSrcTaskFile->GetTaskDependency(hTask, nCount)));
+			aItems.InsertAt(0, pSrcTaskFile->GetTaskDependency(hTask, nCount));
 		}
 
 		CXmlItem* pXIAttribs = pXIDestItem->AddItem(_T("attribute"));

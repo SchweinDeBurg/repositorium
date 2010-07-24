@@ -169,10 +169,10 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	// copy across the appropriate attributes
 	int nTaskID = (int)pSrcTaskFile->GetTaskID(hTask);
 	pXIDestItem->AddItem(_T("id"), nTaskID);
-	pXIDestItem->AddItem(_T("name"), ATL::CA2T(pSrcTaskFile->GetTaskTitle(hTask)));
+	pXIDestItem->AddItem(_T("name"), pSrcTaskFile->GetTaskTitle(hTask));
 
 	// colour
-	pXIDestItem->AddItem(_T("color"), ATL::CA2T(pSrcTaskFile->GetTaskAttribute(hTask, ATL::CT2A(TDL_TASKTEXTWEBCOLOR))));
+	pXIDestItem->AddItem(_T("color"), pSrcTaskFile->GetTaskAttribute(hTask, ATL::CT2A(TDL_TASKTEXTWEBCOLOR)));
 
 	// dates
 	time_t tStart = pSrcTaskFile->GetTaskStartDate(hTask);
@@ -248,7 +248,7 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	}
 
 	// file/weblink
-	CString sFileRef = ATL::CA2T(pSrcTaskFile->GetTaskFileReferencePath(hTask));
+	CString sFileRef = pSrcTaskFile->GetTaskFileReferencePath(hTask);
 	sFileRef.TrimLeft();
 
 	if (!sFileRef.IsEmpty())
@@ -265,11 +265,11 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	}
 
 	// comments
-	const char* szComments = pSrcTaskFile->GetTaskComments(hTask);
+	const TCHAR* szComments = pSrcTaskFile->GetTaskComments(hTask);
 
 	if (szComments && *szComments)
 	{
-		pXIDestItem->AddItem(_T("notes"), ATL::CA2T(szComments), XIT_CDATA);
+		pXIDestItem->AddItem(_T("notes"), szComments, XIT_CDATA);
 	}
 
 	// resource allocation
@@ -277,7 +277,7 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 
 	while (nAllocTo--)
 	{
-		CString sAllocTo = ATL::CA2T(pSrcTaskFile->GetTaskAllocatedTo(hTask, nAllocTo));
+		CString sAllocTo = pSrcTaskFile->GetTaskAllocatedTo(hTask, nAllocTo);
 		int nResID;
 
 		if (m_mapResources.Lookup(sAllocTo, nResID))
@@ -316,7 +316,7 @@ void CGPExporter::BuildResourceMap(const ITaskList7* pSrcTaskFile, HTASKITEM hTa
 
 	while (nAllocTo--)
 	{
-		CString sAllocTo = ATL::CA2T(pSrcTaskFile->GetTaskAllocatedTo(hTask, nAllocTo));
+		CString sAllocTo = pSrcTaskFile->GetTaskAllocatedTo(hTask, nAllocTo);
 		int nID = 0;
 
 		if (!m_mapResources.Lookup(sAllocTo, nID))

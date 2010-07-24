@@ -89,7 +89,7 @@ bool CPlainTextExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDe
 	// export report title as dummy task
 	if (bWantProject)
 	{
-		CString sTitle = ATL::CA2T(pITL4->GetReportTitle());
+		CString sTitle = pITL4->GetReportTitle();
 
 		if (sTitle.IsEmpty())
 		{
@@ -130,7 +130,7 @@ void CPlainTextExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTa
 	sTask += pSrcTaskFile->GetTaskTitle(hTask);
 
 	// comments
-	CString sComments = ATL::CA2T(pSrcTaskFile->GetTaskComments(hTask));
+	CString sComments = pSrcTaskFile->GetTaskComments(hTask);
 
 	if (!sComments.IsEmpty())
 	{
