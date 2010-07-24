@@ -99,7 +99,7 @@ bool CMLOExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	}
 
 	// copy across the appropriate attributes
-	pXIDestItem->AddItem(_T("Caption"), ATL::CA2T(pSrcTaskFile->GetTaskTitle(hTask)));
+	pXIDestItem->AddItem(_T("Caption"), pSrcTaskFile->GetTaskTitle(hTask));
 
 	// priority
 	int nPriority = pSrcTaskFile->GetTaskPriority(hTask, FALSE);
@@ -122,7 +122,7 @@ bool CMLOExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	}
 
 	// time estimate
-	char cTimeUnits;
+	TCHAR cTimeUnits;
 	double dTimeEst = pSrcTaskFile->GetTaskTimeEstimate(hTask, cTimeUnits, FALSE);
 
 	if (dTimeEst > 0.0)
@@ -131,11 +131,11 @@ bool CMLOExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	}
 
 	// comments
-	const char* szComments = pSrcTaskFile->GetTaskComments(hTask);
+	const TCHAR* szComments = pSrcTaskFile->GetTaskComments(hTask);
 
 	if (szComments && *szComments)
 	{
-		pXIDestItem->AddItem(_T("Note"), ATL::CA2T(szComments));
+		pXIDestItem->AddItem(_T("Note"), szComments);
 	}
 
 	// copy across first child
@@ -159,7 +159,7 @@ void CMLOExporter::BuildPlacesMap(const ITaskList7* pSrcTaskFile, HTASKITEM hTas
 
 	while (nCat--)
 	{
-		CString sCat = ATL::CA2T(pSrcTaskFile->GetTaskCategory(hTask, nCat));
+		CString sCat = pSrcTaskFile->GetTaskCategory(hTask, nCat);
 		CString sCatUpper(sCat);
 		sCat.MakeUpper();
 

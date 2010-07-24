@@ -126,13 +126,13 @@ void CiCalExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, c
 		COleDateTime dtDue(time_t(tDueDate + ONEDAY));
 		WriteString(fileOut, _T("DTEND;VALUE=DATE:%04d%02d%02d"), dtDue.GetYear(), dtDue.GetMonth(), dtDue.GetDay());
 
-		WriteString(fileOut, _T("SUMMARY:%s"), (LPTSTR)ATL::CA2T(pSrcTaskFile->GetTaskTitle(hTask)));
-		WriteString(fileOut, _T("DESCRIPTION:%s"), (LPTSTR)ATL::CA2T(pSrcTaskFile->GetTaskComments(hTask)));
-		WriteString(fileOut, _T("STATUS:%s"), (LPTSTR)ATL::CA2T(pSrcTaskFile->GetTaskStatus(hTask)));
-		WriteString(fileOut, _T("CATEGORIES:%s"), (LPTSTR)ATL::CA2T(pSrcTaskFile->GetTaskCategory(hTask)));
-		WriteString(fileOut, _T("URL:%s"), (LPTSTR)ATL::CA2T(pSrcTaskFile->GetTaskFileReferencePath(hTask)));
-		WriteString(fileOut, _T("ORGANIZER:%s"), (LPTSTR)ATL::CA2T(pSrcTaskFile->GetTaskAllocatedBy(hTask)));
-		WriteString(fileOut, _T("ATTENDEE:%s"), (LPTSTR)ATL::CA2T(pSrcTaskFile->GetTaskAllocatedTo(hTask)));
+		WriteString(fileOut, _T("SUMMARY:%s"), (LPTSTR)pSrcTaskFile->GetTaskTitle(hTask));
+		WriteString(fileOut, _T("DESCRIPTION:%s"), (LPTSTR)pSrcTaskFile->GetTaskComments(hTask));
+		WriteString(fileOut, _T("STATUS:%s"), (LPTSTR)pSrcTaskFile->GetTaskStatus(hTask));
+		WriteString(fileOut, _T("CATEGORIES:%s"), (LPTSTR)pSrcTaskFile->GetTaskCategory(hTask));
+		WriteString(fileOut, _T("URL:%s"), (LPTSTR)pSrcTaskFile->GetTaskFileReferencePath(hTask));
+		WriteString(fileOut, _T("ORGANIZER:%s"), (LPTSTR)pSrcTaskFile->GetTaskAllocatedBy(hTask));
+		WriteString(fileOut, _T("ATTENDEE:%s"), (LPTSTR)pSrcTaskFile->GetTaskAllocatedTo(hTask));
 		WriteString(fileOut, _T("UID:%s"), (LPCTSTR)sUID);
 
 		// parent child relationship
