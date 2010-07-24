@@ -1090,7 +1090,7 @@ BOOL CXmlFile::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 			bContinue = (nRead != dwLength);
 		}
 
-		pFileContents[dwLength] = 0;
+		pFileContents[dwLength / sizeof(TCHAR)] = 0;
 	}
 	catch (...)
 	{

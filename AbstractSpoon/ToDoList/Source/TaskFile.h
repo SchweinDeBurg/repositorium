@@ -88,7 +88,7 @@ public:
 	BOOL SetCheckedOutTo(const CString& sCheckedOutTo);
 	BOOL SetFileFormat(unsigned long lFormat);
 	BOOL SetLastModified(const CString& sLastMod);
-//	void SortTasksByID();
+	/*void SortTasksByID();*/
 	void SortTasksByPos();
 	BOOL SetCharSet(LPCTSTR szCharSet);
 	BOOL SetFileName(LPCTSTR szFilename);
@@ -107,7 +107,7 @@ public:
 	BOOL SetEarliestDueDate(const COleDateTime& date);
 	BOOL GetEarliestDueDate(COleDateTime& date) const;
 
-// 	BOOL SetCommentsType(LPCTSTR szID); 
+	/*BOOL SetCommentsType(LPCTSTR szID);*/
 	CString GetCommentsType() const; 
 
 	COleDateTime GetTaskLastModifiedOle(HTASKITEM hTask) const;
@@ -171,11 +171,11 @@ public:
 	// ITaskList7 implementation 
 	unsigned char GetTaskDependencyCount(HTASKITEM hTask) const;
 	bool AddTaskDependency(HTASKITEM hTask, const char* szDepends);
-	const char* GetTaskDependency(HTASKITEM hTask, int nIndex) const;
+	const TCHAR* GetTaskDependency(HTASKITEM hTask, int nIndex) const;
 
 	unsigned char GetTaskAllocatedToCount(HTASKITEM hTask) const;
 	bool AddTaskAllocatedTo(HTASKITEM hTask, const char* szAllocTo);
-	const char* GetTaskAllocatedTo(HTASKITEM hTask, int nIndex) const;
+	const TCHAR* GetTaskAllocatedTo(HTASKITEM hTask, int nIndex) const;
 
 	//////////////////////////////////////////////////////////////
 	// ITaskList6 implementation 
@@ -185,7 +185,7 @@ public:
 									DWORD& dwSpecific2, BOOL& bRecalcFromDue, int& nReuse) const;
 
 	bool SetTaskVersion(HTASKITEM hTask, const char* szVersion);
-	const char* GetTaskVersion(HTASKITEM hTask) const;
+	const TCHAR* GetTaskVersion(HTASKITEM hTask) const;
 
 	//////////////////////////////////////////////////////////////
 	// ITaskList5 implementation 
@@ -193,15 +193,15 @@ public:
 
 	//////////////////////////////////////////////////////////////
 	// ITaskList4 implementation 
-	const char* GetAttribute(const char* szAttrib) const;
+	const TCHAR* GetAttribute(const char* szAttrib) const;
 
-	const char* GetHtmlCharSet() const;
-	const char* GetReportTitle() const;
-	const char* GetReportDate() const;
+	const TCHAR* GetHtmlCharSet() const;
+	const TCHAR* GetReportTitle() const;
+	const TCHAR* GetReportDate() const;
 	double GetTaskCost(HTASKITEM hTask, BOOL bCalc) const;
 	unsigned char GetTaskCategoryCount(HTASKITEM hTask) const;
-	const char* GetTaskCategory(HTASKITEM hTask, int nIndex) const;
-	const char* GetTaskDependency(HTASKITEM hTask) const;
+	const TCHAR* GetTaskCategory(HTASKITEM hTask, int nIndex) const;
+	const TCHAR* GetTaskDependency(HTASKITEM hTask) const;
 
 	bool SetTaskCost(HTASKITEM hTask, double dCost);
 	bool SetTaskDependency(HTASKITEM hTask, const char* szDepends);
@@ -209,10 +209,10 @@ public:
 	//////////////////////////////////////////////////////////////
 	// ITaskList3 implementation 
 	time_t GetTaskDueDate(HTASKITEM hTask, BOOL bEarliest) const;
-	const char* GetTaskDueDateString(HTASKITEM hTask, BOOL bEarliest) const;
+	const TCHAR* GetTaskDueDateString(HTASKITEM hTask, BOOL bEarliest) const;
 	unsigned long GetTaskTextColor(HTASKITEM hTask) const;
 	int GetTaskRisk(HTASKITEM hTask, BOOL bHighest) const;
-	const char* GetTaskExternalID(HTASKITEM hTask) const;
+	const TCHAR* GetTaskExternalID(HTASKITEM hTask) const;
 
 	bool SetTaskRisk(HTASKITEM hTask, unsigned char nRisk);
 	bool SetTaskExternalID(HTASKITEM hTask, const char* szID);
@@ -220,9 +220,9 @@ public:
 	//////////////////////////////////////////////////////////////
 	// ITaskList2 implementation 
 	
-	const char* GetTaskCreatedBy(HTASKITEM hTask) const;
+	const TCHAR* GetTaskCreatedBy(HTASKITEM hTask) const;
 	time_t GetTaskCreationDate(HTASKITEM hTask) const;
-	const char* GetTaskCreationDateString(HTASKITEM hTask) const;
+	const TCHAR* GetTaskCreationDateString(HTASKITEM hTask) const;
 
 	bool SetTaskCreatedBy(HTASKITEM hTask, const char* szCreatedBy);
 	bool SetTaskCreationDate(HTASKITEM hTask, time_t tCreationDate);
@@ -234,8 +234,8 @@ public:
 	bool IsCheckedOut() const;
 	bool IsSourceControlled() const;
 	
-	const char* GetProjectName() const;
-	const char* GetCheckOutTo() const;
+	const TCHAR* GetProjectName() const;
+	const TCHAR* GetCheckOutTo() const;
 	
 	unsigned long GetFileFormat() const;
 	unsigned long GetFileVersion() const;
@@ -252,15 +252,15 @@ public:
 	HTASKITEM GetFirstTask(HTASKITEM hParent = NULL) const;
 	HTASKITEM GetNextTask(HTASKITEM hTask) const;
 
-	const char* GetTaskTitle(HTASKITEM hTask) const;
-	const char* GetTaskComments(HTASKITEM hTask) const;
-	const char* GetTaskAllocatedTo(HTASKITEM hTask) const;
-	const char* GetTaskAllocatedBy(HTASKITEM hTask) const;
-	const char* GetTaskCategory(HTASKITEM hTask) const;
-	const char* GetTaskStatus(HTASKITEM hTask) const;
-	const char* GetTaskFileReferencePath(HTASKITEM hTask) const;
-	const char* GetTaskWebColor(HTASKITEM hTask) const;
-	const char* GetTaskPriorityWebColor(HTASKITEM hTask) const;
+	const TCHAR* GetTaskTitle(HTASKITEM hTask) const;
+	const TCHAR* GetTaskComments(HTASKITEM hTask) const;
+	const TCHAR* GetTaskAllocatedTo(HTASKITEM hTask) const;
+	const TCHAR* GetTaskAllocatedBy(HTASKITEM hTask) const;
+	const TCHAR* GetTaskCategory(HTASKITEM hTask) const;
+	const TCHAR* GetTaskStatus(HTASKITEM hTask) const;
+	const TCHAR* GetTaskFileReferencePath(HTASKITEM hTask) const;
+	const TCHAR* GetTaskWebColor(HTASKITEM hTask) const;
+	const TCHAR* GetTaskPriorityWebColor(HTASKITEM hTask) const;
 
 	unsigned long GetTaskID(HTASKITEM hTask) const;
 	unsigned long GetTaskColor(HTASKITEM hTask) const;
@@ -269,17 +269,17 @@ public:
 	int GetTaskPriority(HTASKITEM hTask, BOOL bHighest) const;
 	unsigned char GetTaskPercentDone(HTASKITEM hTask, BOOL bCalc) const;
 
-	double GetTaskTimeEstimate(HTASKITEM hTask, char& cUnits, BOOL bCalc) const;
-	double GetTaskTimeSpent(HTASKITEM hTask, char& cUnits, BOOL bCalc) const;
+	double GetTaskTimeEstimate(HTASKITEM hTask, TCHAR& cUnits, BOOL bCalc) const;
+	double GetTaskTimeSpent(HTASKITEM hTask, TCHAR& cUnits, BOOL bCalc) const;
 
 	time_t GetTaskLastModified(HTASKITEM hTask) const;
 	time_t GetTaskDoneDate(HTASKITEM hTask) const;
 	time_t GetTaskDueDate(HTASKITEM hTask) const;
 	time_t GetTaskStartDate(HTASKITEM hTask) const;
 
-	const char* GetTaskDoneDateString(HTASKITEM hTask) const;
-	const char* GetTaskDueDateString(HTASKITEM hTask) const;
-	const char* GetTaskStartDateString(HTASKITEM hTask) const;
+	const TCHAR* GetTaskDoneDateString(HTASKITEM hTask) const;
+	const TCHAR* GetTaskDueDateString(HTASKITEM hTask) const;
+	const TCHAR* GetTaskStartDateString(HTASKITEM hTask) const;
 	
 	bool IsTaskDone(HTASKITEM hTask) const;
 	bool IsTaskDue(HTASKITEM hTask) const;
@@ -289,7 +289,7 @@ public:
 	bool IsTaskFlagged(HTASKITEM hTask) const;
 
 	bool TaskHasAttribute(HTASKITEM hTask, const char* szAttrib) const;
-	const char* GetTaskAttribute(HTASKITEM hTask, const char* szAttrib) const;
+	const TCHAR* GetTaskAttribute(HTASKITEM hTask, const char* szAttrib) const;
 	HTASKITEM GetTaskParent(HTASKITEM hTask) const;
 
 	/////////////////////////////////////////////////////
@@ -308,8 +308,8 @@ public:
 	bool SetTaskPriority(HTASKITEM hTask, unsigned char nPriority);
 	bool SetTaskPercentDone(HTASKITEM hTask, unsigned char nPercent);
 
-	bool SetTaskTimeEstimate(HTASKITEM hTask, double dTimeEst, char cUnits);
-	bool SetTaskTimeSpent(HTASKITEM hTask, double dTimeSpent, char cUnits);
+	bool SetTaskTimeEstimate(HTASKITEM hTask, double dTimeEst, TCHAR cUnits);
+	bool SetTaskTimeSpent(HTASKITEM hTask, double dTimeSpent, TCHAR cUnits);
 
 	bool SetTaskLastModified(HTASKITEM hTask, time_t tLastMod);
 	bool SetTaskDoneDate(HTASKITEM hTask, time_t tDoneDate);
@@ -343,7 +343,7 @@ protected:
 	unsigned char GetTaskUChar(HTASKITEM hTask, LPCTSTR szUCharItem) const;
 	unsigned long GetTaskULong(HTASKITEM hTask, LPCTSTR szULongItem) const;
 	int GetTaskInt(HTASKITEM hTask, LPCTSTR szIntItem) const;
-	const char* GetTaskCChar(HTASKITEM hTask, LPCTSTR szCCharItem) const;
+	const TCHAR* GetTaskCChar(HTASKITEM hTask, LPCTSTR szCCharItem) const;
 	double GetTaskDouble(HTASKITEM hTask, LPCTSTR szDoubleItem) const;
 
 	bool SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, time_t tVal, BOOL bIncTime);
@@ -354,12 +354,12 @@ protected:
 	bool SetTaskCChar(HTASKITEM hTask, LPCTSTR szCCharItem, const char* szVal, XI_TYPE nType = XIT_ATTRIB);
 	bool SetTaskDouble(HTASKITEM hTask, LPCTSTR szDoubleItem, double dVal);
 	bool SetTaskTime(HTASKITEM hTask, LPCTSTR szTimeItem, double dTime,
-					 LPCTSTR szUnitsItem, char cUnits);
+					 LPCTSTR szUnitsItem, TCHAR cUnits);
 
 	// for handling arrays at *task* level
 	bool AddTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag, 
 						  const char* szItemTag, const char* szItem);
-	const char* GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag, 
+	const TCHAR* GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag, 
 				  				 const char* szItemTag, int nIndex) const;
 	BOOL SetTaskArray(HTASKITEM hTask, const char* szNumItemTag, 
 				  	 const char* szItemTag, const CStringArray& aItems);

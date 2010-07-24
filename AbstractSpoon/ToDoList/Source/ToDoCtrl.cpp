@@ -5762,7 +5762,7 @@ BOOL CToDoCtrl::DelayLoad(LPCTSTR szFilePath, COleDateTime& dtEarliestDue)
 	{
 		// save off some of the header info
 		SetFilePath(szFilePath);
-		SetProjectName(ATL::CA2T(temp.GetProjectName()));
+		SetProjectName(temp.GetProjectName());
 		SetModified(FALSE);
 
 		m_bDelayLoaded = TRUE;
@@ -6103,8 +6103,8 @@ HTREEITEM CToDoCtrl::AddTaskToTreeItem(const CTaskFile& file, HTASKITEM hTask, H
 		pTDI->color = (COLORREF)file.GetTaskColor(hTask);
 		pTDI->nPercentDone = (int)file.GetTaskPercentDone(hTask, FALSE);
 		pTDI->sFileRefPath = file.GetTaskFileReferencePath(hTask);
-		pTDI->dTimeEstimate = file.GetTaskTimeEstimate(hTask, (char&)pTDI->nTimeEstUnits, FALSE);
-		pTDI->dTimeSpent = file.GetTaskTimeSpent(hTask, (char&)pTDI->nTimeSpentUnits, FALSE);
+		pTDI->dTimeEstimate = file.GetTaskTimeEstimate(hTask, (TCHAR&)pTDI->nTimeEstUnits, FALSE);
+		pTDI->dTimeSpent = file.GetTaskTimeSpent(hTask, (TCHAR&)pTDI->nTimeSpentUnits, FALSE);
 		pTDI->nPriority = (int)file.GetTaskPriority(hTask, FALSE);
 		pTDI->dateDue = file.GetTaskDueDateOle(hTask);
 		pTDI->dateStart = file.GetTaskStartDateOle(hTask);
@@ -7224,7 +7224,7 @@ void CToDoCtrl::PrepareTaskIDsForPaste(CTaskFile& tasks, HTASKITEM hTask, const 
 	}
 
 	// file reference
-	CString sFileRef = ATL::CA2T(tasks.GetTaskFileReferencePath(hTask));
+	CString sFileRef = tasks.GetTaskFileReferencePath(hTask);
 
 	if (PrepareTaskIDsForPaste(sFileRef, mapID))
 		tasks.SetTaskFileReferencePath(hTask, ATL::CT2A(sFileRef));
@@ -10908,7 +10908,7 @@ BOOL CToDoCtrl::CheckIn()
 
 		if (m_bSourceControlled)
 		{
-			CString sCheckedOutTo = ATL::CA2T(file.GetCheckOutTo());
+			CString sCheckedOutTo = file.GetCheckOutTo();
 
 			if (sCheckedOutTo.IsEmpty() || sCheckedOutTo == m_sMachineName) // its us
 			{

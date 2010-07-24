@@ -250,7 +250,7 @@ BOOL CTaskFile::CopyTask(HTASKITEM hSrcTask, const ITaskList* pSrcTasks, HTASKIT
 
 	if (hSrcTask) // NULL if src root
 	{
-		hDestTask = NewTask(pSrcTasks->GetTaskTitle(hSrcTask), hDestParent);
+		hDestTask = NewTask(ATL::CT2A(pSrcTasks->GetTaskTitle(hSrcTask)), hDestParent);
 		ASSERT (hDestTask);
 
 		if (!hDestTask)
@@ -258,12 +258,12 @@ BOOL CTaskFile::CopyTask(HTASKITEM hSrcTask, const ITaskList* pSrcTasks, HTASKIT
 
 		// the rest of the attributes
 		SetTaskID(hDestTask, pSrcTasks->GetTaskID(hSrcTask));
-		SetTaskComments(hDestTask, pSrcTasks->GetTaskComments(hSrcTask));
-		SetTaskAllocatedTo(hDestTask, pSrcTasks->GetTaskAllocatedTo(hSrcTask));
-		SetTaskAllocatedBy(hDestTask, pSrcTasks->GetTaskAllocatedBy(hSrcTask));
-		SetTaskCategory(hDestTask, pSrcTasks->GetTaskCategory(hSrcTask));
-		SetTaskStatus(hDestTask, pSrcTasks->GetTaskStatus(hSrcTask));
-		SetTaskFileReferencePath(hDestTask, pSrcTasks->GetTaskFileReferencePath(hSrcTask));
+		SetTaskComments(hDestTask, ATL::CT2A(pSrcTasks->GetTaskComments(hSrcTask)));
+		SetTaskAllocatedTo(hDestTask, ATL::CT2A(pSrcTasks->GetTaskAllocatedTo(hSrcTask)));
+		SetTaskAllocatedBy(hDestTask, ATL::CT2A(pSrcTasks->GetTaskAllocatedBy(hSrcTask)));
+		SetTaskCategory(hDestTask, ATL::CT2A(pSrcTasks->GetTaskCategory(hSrcTask)));
+		SetTaskStatus(hDestTask, ATL::CT2A(pSrcTasks->GetTaskStatus(hSrcTask)));
+		SetTaskFileReferencePath(hDestTask, ATL::CT2A(pSrcTasks->GetTaskFileReferencePath(hSrcTask)));
 		SetTaskColor(hDestTask, pSrcTasks->GetTaskColor(hSrcTask));
 		SetTaskPriority(hDestTask, pSrcTasks->GetTaskPriority(hSrcTask, FALSE));
 		SetTaskPercentDone(hDestTask, pSrcTasks->GetTaskPercentDone(hSrcTask, FALSE));
@@ -273,7 +273,7 @@ BOOL CTaskFile::CopyTask(HTASKITEM hSrcTask, const ITaskList* pSrcTasks, HTASKIT
 		SetTaskStartDate(hDestTask, pSrcTasks->GetTaskStartDate(hSrcTask));
 		SetTaskFlag(hDestTask, pSrcTasks->IsTaskFlagged(hSrcTask));
 
-		char cUnits;
+		TCHAR cUnits;
 		double dTime;
 		
 		dTime = pSrcTasks->GetTaskTimeEstimate(hSrcTask, cUnits, FALSE);
@@ -285,7 +285,7 @@ BOOL CTaskFile::CopyTask(HTASKITEM hSrcTask, const ITaskList* pSrcTasks, HTASKIT
 
 		if (pTL2)
 		{
-			SetTaskCreatedBy(hDestTask, pTL2->GetTaskCreatedBy(hSrcTask));
+			SetTaskCreatedBy(hDestTask, ATL::CT2A(pTL2->GetTaskCreatedBy(hSrcTask)));
 			SetTaskCreationDate(hDestTask, pTL2->GetTaskCreationDate(hSrcTask));
 		}
 
@@ -294,21 +294,21 @@ BOOL CTaskFile::CopyTask(HTASKITEM hSrcTask, const ITaskList* pSrcTasks, HTASKIT
 		if (pTL3)
 		{
 			SetTaskRisk(hDestTask, pTL3->GetTaskRisk(hSrcTask, FALSE));
-			SetTaskExternalID(hDestTask, pTL3->GetTaskExternalID(hSrcTask));
+			SetTaskExternalID(hDestTask, ATL::CT2A(pTL3->GetTaskExternalID(hSrcTask)));
 		}
 
 		const ITaskList4* pTL4 = GetITLInterface<ITaskList4>(pSrcTasks, IID_TASKLIST4);
 
 		if (pTL4)
 		{
-			SetTaskDependency(hDestTask, pTL4->GetTaskDependency(hSrcTask));
+			SetTaskDependency(hDestTask, ATL::CT2A(pTL4->GetTaskDependency(hSrcTask)));
 		}
 
 		const ITaskList6* pTL6 = GetITLInterface<ITaskList6>(pSrcTasks, IID_TASKLIST6);
 
 		if (pTL6)
 		{
-			SetTaskVersion(hDestTask, pTL6->GetTaskVersion(hSrcTask));
+			SetTaskVersion(hDestTask, ATL::CT2A(pTL6->GetTaskVersion(hSrcTask)));
 		}
 	}
 
@@ -450,34 +450,34 @@ bool CTaskFile::IsSourceControlled() const
 	return (NULL != GetItem(TDL_CHECKEDOUTTO));
 }
 
-const char* CTaskFile::GetProjectName() const
+const TCHAR* CTaskFile::GetProjectName() const
 {
-	return ATL::CT2A(GetItemValue(TDL_PROJECTNAME));
+	return GetItemValue(TDL_PROJECTNAME);
 }
 
-const char* CTaskFile::GetReportTitle() const
+const TCHAR* CTaskFile::GetReportTitle() const
 {
-	return ATL::CT2A(GetItemValue(TDL_REPORTTITLE));
+	return GetItemValue(TDL_REPORTTITLE);
 }
 
-const char* CTaskFile::GetHtmlCharSet() const
+const TCHAR* CTaskFile::GetHtmlCharSet() const
 {
-	return ATL::CT2A(GetItemValue(TDL_CHARSET));
+	return GetItemValue(TDL_CHARSET);
 }
 
-const char* CTaskFile::GetAttribute(const char* szAttrib) const
+const TCHAR* CTaskFile::GetAttribute(const char* szAttrib) const
 {
-	return ATL::CT2A(GetItemValue(ATL::CA2T(szAttrib)));
+	return GetItemValue(ATL::CA2T(szAttrib));
 }
 
-const char* CTaskFile::GetReportDate() const
+const TCHAR* CTaskFile::GetReportDate() const
 {
-	return ATL::CT2A(GetItemValue(TDL_REPORTDATE));
+	return GetItemValue(TDL_REPORTDATE);
 }
 
-const char* CTaskFile::GetCheckOutTo() const
+const TCHAR* CTaskFile::GetCheckOutTo() const
 {
-	return ATL::CT2A(GetItemValue(TDL_CHECKEDOUTTO));
+	return GetItemValue(TDL_CHECKEDOUTTO);
 }	
 
 unsigned long CTaskFile::GetFileFormat() const
@@ -844,25 +844,25 @@ BOOL CTaskFile::GetTaskCustomComments(HTASKITEM hTask, CString& sContent, CStrin
 	sType = GetTaskCChar(hTask, TDL_TASKCOMMENTSTYPE);
 
 	// custom comments
-	CStringA sTemp = GetTaskCChar(hTask, TDL_TASKCUSTOMCOMMENTS);
+	CString sTemp = GetTaskCChar(hTask, TDL_TASKCUSTOMCOMMENTS);
 
 	if (sTemp.IsEmpty())
 		return FALSE;
 
 	CBase64Coder b64;
-	b64.Decode(sTemp);
+	b64.Decode(ATL::CT2A(sTemp));
 
 	unsigned long nLenContent;
 	PBYTE pContent = b64.DecodedMessage(nLenContent);
 
 #if defined(UNICODE) || defined(_UNICODE)
-	sContent = ATL::CA2T((LPCSTR)pContent);
+	sContent = ATL::CA2W((PCHAR)pContent);
 #else
 	PBYTE szContent = (PBYTE)sContent.GetBuffer(nLenContent);
 	CopyMemory(szContent, pContent, nLenContent);
 	sContent.ReleaseBuffer(nLenContent);
-#endif   // UNICODE || _UNICODE
-	
+#endif	// UNICODE || _UNICODE
+
 	return nLenContent;
 }
 
@@ -981,7 +981,7 @@ HTASKITEM CTaskFile::GetNextTask(HTASKITEM hTask) const
 	return (HTASKITEM)pXITask->GetSibling();
 }
 
-const char* CTaskFile::GetTaskTitle(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskTitle(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKTITLE);
 }
@@ -994,22 +994,22 @@ int CTaskFile::GetTaskIconIndex(HTASKITEM hTask) const
 		return -1;
 }
 
-const char* CTaskFile::GetTaskComments(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskComments(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKCOMMENTS);
 }
 
-const char* CTaskFile::GetTaskAllocatedTo(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskAllocatedTo(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKALLOCTO);
 }
 
-const char* CTaskFile::GetTaskAllocatedBy(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskAllocatedBy(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKALLOCBY);
 }
 
-const char* CTaskFile::GetTaskCategory(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskCategory(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKCATEGORY);
 }
@@ -1019,7 +1019,7 @@ unsigned char CTaskFile::GetTaskCategoryCount(HTASKITEM hTask) const
 	return GetTaskUChar(hTask, TDL_TASKNUMCATEGORY);
 }
 
-const char* CTaskFile::GetTaskCategory(HTASKITEM hTask, int nIndex) const
+const TCHAR* CTaskFile::GetTaskCategory(HTASKITEM hTask, int nIndex) const
 {
 	return GetTaskArrayItem(hTask, ATL::CT2A(TDL_TASKNUMCATEGORY), ATL::CT2A(TDL_TASKCATEGORY), nIndex);
 }
@@ -1029,7 +1029,7 @@ unsigned char CTaskFile::GetTaskDependencyCount(HTASKITEM hTask) const
 	return GetTaskUChar(hTask, TDL_TASKNUMDEPENDENCY);
 }
 
-const char* CTaskFile::GetTaskDependency(HTASKITEM hTask, int nIndex) const
+const TCHAR* CTaskFile::GetTaskDependency(HTASKITEM hTask, int nIndex) const
 {
 	return GetTaskArrayItem(hTask, ATL::CT2A(TDL_TASKNUMDEPENDENCY), ATL::CT2A(TDL_TASKDEPENDENCY), nIndex);
 }
@@ -1039,27 +1039,27 @@ unsigned char CTaskFile::GetTaskAllocatedToCount(HTASKITEM hTask) const
 	return GetTaskUChar(hTask, TDL_TASKNUMALLOCTO);
 }
 
-const char* CTaskFile::GetTaskAllocatedTo(HTASKITEM hTask, int nIndex) const
+const TCHAR* CTaskFile::GetTaskAllocatedTo(HTASKITEM hTask, int nIndex) const
 {
 	return GetTaskArrayItem(hTask, ATL::CT2A(TDL_TASKNUMALLOCTO), ATL::CT2A(TDL_TASKALLOCTO), nIndex);
 }
 
-const char* CTaskFile::GetTaskDependency(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskDependency(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKDEPENDENCY);
 }
 
-const char* CTaskFile::GetTaskStatus(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskStatus(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKSTATUS);
 }
 
-const char* CTaskFile::GetTaskFileReferencePath(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskFileReferencePath(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKFILEREFPATH);
 }
 
-const char* CTaskFile::GetTaskCreatedBy(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskCreatedBy(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKCREATEDBY);
 }
@@ -1079,7 +1079,7 @@ unsigned long CTaskFile::GetTaskColor(HTASKITEM hTask) const
 	return GetTaskULong(hTask, TDL_TASKCOLOR);
 }
 
-const char* CTaskFile::GetTaskWebColor(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskWebColor(HTASKITEM hTask) const
 {
 	DWORD color = 0;
 
@@ -1088,12 +1088,12 @@ const char* CTaskFile::GetTaskWebColor(HTASKITEM hTask) const
 	else
 		color = GetTaskULong(hTask, TDL_TASKCOLOR);
 	
-	return ATL::CT2A(GetWebColor((COLORREF)color));
+	return GetWebColor((COLORREF)color);
 }
 
-const char* CTaskFile::GetTaskPriorityWebColor(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskPriorityWebColor(HTASKITEM hTask) const
 {
-	return ATL::CT2A(GetWebColor(GetTaskPriorityColor(hTask)));
+	return GetWebColor(GetTaskPriorityColor(hTask));
 }
 
 unsigned long CTaskFile::GetTaskPriorityColor(HTASKITEM hTask) const
@@ -1161,28 +1161,28 @@ bool CTaskFile::GetTaskRecurrence(HTASKITEM hTask, int& nRegularity, DWORD& dwSp
 	return false;
 }
 
-const char* CTaskFile::GetTaskVersion(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskVersion(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKVERSION);
 }
 
-double CTaskFile::GetTaskTimeEstimate(HTASKITEM hTask, char& cUnits, BOOL bCalc) const
+double CTaskFile::GetTaskTimeEstimate(HTASKITEM hTask, TCHAR& cUnits, BOOL bCalc) const
 {
 	cUnits = 0;
 	
 	if (bCalc && TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCALCTIMEESTIMATE)))
 	{
-		cUnits = 'H';
+		cUnits = _T('H');
 		return GetTaskDouble(hTask, TDL_TASKCALCTIMEESTIMATE);
 	}
 	else if (TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKTIMEESTUNITS)))
 	{
-		const char* szUnits = GetTaskCChar(hTask, TDL_TASKTIMEESTUNITS);
+		const TCHAR* szUnits = GetTaskCChar(hTask, TDL_TASKTIMEESTUNITS);
 		
 		if (szUnits && *szUnits)
 		{
 			// bug fix
-			cUnits = (char)atoi(szUnits);
+			cUnits = (TCHAR)_ttoi(szUnits);
 			
 			if (!cUnits)
 				cUnits = szUnits[0];
@@ -1190,12 +1190,12 @@ double CTaskFile::GetTaskTimeEstimate(HTASKITEM hTask, char& cUnits, BOOL bCalc)
 	}
 	
 	if (!cUnits)
-		cUnits = 'H';
+		cUnits = _T('H');
 	
 	return GetTaskDouble(hTask, TDL_TASKTIMEESTIMATE);
 }
 
-double CTaskFile::GetTaskTimeSpent(HTASKITEM hTask, char& cUnits, BOOL bCalc) const
+double CTaskFile::GetTaskTimeSpent(HTASKITEM hTask, TCHAR& cUnits, BOOL bCalc) const
 {
 	cUnits = 0;
 	
@@ -1206,12 +1206,12 @@ double CTaskFile::GetTaskTimeSpent(HTASKITEM hTask, char& cUnits, BOOL bCalc) co
 	}
 	else if (TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKTIMESPENTUNITS)))
 	{
-		const char* szUnits = GetTaskCChar(hTask, TDL_TASKTIMESPENTUNITS);
+		const TCHAR* szUnits = GetTaskCChar(hTask, TDL_TASKTIMESPENTUNITS);
 		
 		if (szUnits && *szUnits)
 		{
 			// bug fix
-			cUnits = (char)atoi(szUnits);
+			cUnits = (TCHAR)_ttoi(szUnits);
 			
 			if (!cUnits)
 				cUnits = szUnits[0];
@@ -1220,12 +1220,12 @@ double CTaskFile::GetTaskTimeSpent(HTASKITEM hTask, char& cUnits, BOOL bCalc) co
 	// backwards compatibility
 	else if (TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKTIMESPENTUNITS_OLD)))
 	{
-		const char* szUnits = GetTaskCChar(hTask, TDL_TASKTIMESPENTUNITS_OLD);
+		const TCHAR* szUnits = GetTaskCChar(hTask, TDL_TASKTIMESPENTUNITS_OLD);
 		
 		if (szUnits && *szUnits)
 		{
 			// bug fix
-			cUnits = (char)atoi(szUnits);
+			cUnits = (TCHAR)_ttoi(szUnits);
 			
 			if (!cUnits)
 				cUnits = szUnits[0];
@@ -1233,7 +1233,7 @@ double CTaskFile::GetTaskTimeSpent(HTASKITEM hTask, char& cUnits, BOOL bCalc) co
 	}
 	
 	if (!cUnits)
-		cUnits = 'H';
+		cUnits = _T('H');
 
 	if (TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKTIMESPENT)))
 		return GetTaskDouble(hTask, TDL_TASKTIMESPENT);
@@ -1270,7 +1270,7 @@ time_t CTaskFile::GetTaskDueDate(HTASKITEM hTask, BOOL bEarliest) const
 	return GetTaskDate(hTask, TDL_TASKDUEDATE, TRUE);
 }
 
-const char* CTaskFile::GetTaskDueDateString(HTASKITEM hTask, BOOL bEarliest) const
+const TCHAR* CTaskFile::GetTaskDueDateString(HTASKITEM hTask, BOOL bEarliest) const
 {
 	if (bEarliest && TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKEARLIESTDUEDATESTRING)))
 		return GetTaskCChar(hTask, TDL_TASKEARLIESTDUEDATESTRING);
@@ -1308,22 +1308,22 @@ COleDateTime CTaskFile::GetTaskCreationDateOle(HTASKITEM hTask) const
 	return GetTaskDateOle(hTask, TDL_TASKCREATIONDATE, FALSE);
 }
 
-const char* CTaskFile::GetTaskDoneDateString(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskDoneDateString(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKDONEDATESTRING);
 }
 
-const char* CTaskFile::GetTaskCreationDateString(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskCreationDateString(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKCREATIONDATESTRING);
 }
 
-const char* CTaskFile::GetTaskDueDateString(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskDueDateString(HTASKITEM hTask) const
 {
 	return GetTaskDueDateString(hTask, FALSE);
 }
 
-const char* CTaskFile::GetTaskStartDateString(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskStartDateString(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKSTARTDATESTRING);
 }
@@ -1376,12 +1376,12 @@ bool CTaskFile::TaskHasAttribute(HTASKITEM hTask, const char* szAttrib) const
 	return (pXIAttrib->GetItemValueI(_T("HIDE")) == 0);
 }
 
-const char* CTaskFile::GetTaskAttribute(HTASKITEM hTask, const char* szAttrib) const
+const TCHAR* CTaskFile::GetTaskAttribute(HTASKITEM hTask, const char* szAttrib) const
 {
 	CXmlItem* pXITask = NULL;
-	GET_TASK(pXITask, hTask, "");
+	GET_TASK(pXITask, hTask, _T(""));
 
-	return (ATL::CT2A(pXITask->GetItemValue(ATL::CA2T(szAttrib))));
+	return (pXITask->GetItemValue(ATL::CA2T(szAttrib)));
 }
 
 HTASKITEM CTaskFile::GetTaskParent(HTASKITEM hTask) const
@@ -1412,7 +1412,7 @@ int CTaskFile::GetTaskRisk(HTASKITEM hTask, BOOL bHighest) const
 	return GetTaskInt(hTask, TDL_TASKRISK);
 }
 
-const char* CTaskFile::GetTaskExternalID(HTASKITEM hTask) const
+const TCHAR* CTaskFile::GetTaskExternalID(HTASKITEM hTask) const
 {
 	return GetTaskCChar(hTask, TDL_TASKEXTERNALID);
 }
@@ -1550,13 +1550,13 @@ bool CTaskFile::SetTaskCost(HTASKITEM hTask, double dCost)
 	return SetTaskDouble(hTask, TDL_TASKCOST, dCost);
 }
 
-bool CTaskFile::SetTaskTimeEstimate(HTASKITEM hTask, double dTimeEst, char cUnits)
+bool CTaskFile::SetTaskTimeEstimate(HTASKITEM hTask, double dTimeEst, TCHAR cUnits)
 {
 	return SetTaskTime(hTask, TDL_TASKTIMEESTIMATE, dTimeEst,
 						TDL_TASKTIMEESTUNITS, cUnits);
 }
 
-bool CTaskFile::SetTaskTimeSpent(HTASKITEM hTask, double dTimeSpent, char cUnits)
+bool CTaskFile::SetTaskTimeSpent(HTASKITEM hTask, double dTimeSpent, TCHAR cUnits)
 {
 	return SetTaskTime(hTask, TDL_TASKTIMESPENT, dTimeSpent,
 						TDL_TASKTIMESPENTUNITS, cUnits);
@@ -1846,12 +1846,12 @@ int CTaskFile::GetTaskInt(HTASKITEM hTask, LPCTSTR szIntItem) const
 	return pXITask->GetItemValueI(szIntItem);
 }
 
-const char* CTaskFile::GetTaskCChar(HTASKITEM hTask, LPCTSTR szCCharItem) const
+const TCHAR* CTaskFile::GetTaskCChar(HTASKITEM hTask, LPCTSTR szCCharItem) const
 {
 	CXmlItem* pXITask = NULL;
 	GET_TASK(pXITask, hTask, NULL);
 
-	return ATL::CT2A(pXITask->GetItemValue(szCCharItem));
+	return pXITask->GetItemValue(szCCharItem);
 }
 
 double CTaskFile::GetTaskDouble(HTASKITEM hTask, LPCTSTR szDoubleItem) const
@@ -1951,34 +1951,34 @@ bool CTaskFile::SetTaskDouble(HTASKITEM hTask, LPCTSTR szDoubleItem, double dVal
 }
 
 bool CTaskFile::SetTaskTime(HTASKITEM hTask, LPCTSTR szTimeItem, double dTime,
-							LPCTSTR szUnitsItem, char cUnits)
+							LPCTSTR szUnitsItem, TCHAR cUnits)
 {
-  char* szUnits;
+  TCHAR* szUnits;
 
 	switch (cUnits)
 	{
-	case 'i': 
-	case 'I': szUnits = "I"; // minutes
+	case _T('i'): 
+	case _T('I'): szUnits = _T("I"); // minutes
     break;
 
-	case 'h': 
-	case 'H': szUnits = "H";
+	case _T('h'): 
+	case _T('H'): szUnits = _T("H");
     break;
 
-	case 'd': 
-	case 'D': szUnits = "D";
+	case _T('d'): 
+	case _T('D'): szUnits = _T("D");
     break;
 
-	case 'w':
-	case 'W': szUnits = "W";
+	case _T('w'):
+	case _T('W'): szUnits = _T("W");
     break;
 
-	case 'm': 
-	case 'M': szUnits = "M";
+	case _T('m'): 
+	case _T('M'): szUnits = _T("M");
     break;
 
-	case 'y': 
-	case 'Y': szUnits = "Y";
+	case _T('y'): 
+	case _T('Y'): szUnits = _T("Y");
     break;
 
 	default: // all else
@@ -1986,7 +1986,7 @@ bool CTaskFile::SetTaskTime(HTASKITEM hTask, LPCTSTR szTimeItem, double dTime,
 	}
 
 	return SetTaskDouble(hTask, szTimeItem, dTime) &&
-		  	SetTaskCChar(hTask, szUnitsItem, szUnits);
+		SetTaskCChar(hTask, szUnitsItem, ATL::CT2A(szUnits));
 }
 
 CString CTaskFile::GetWebColor(COLORREF color)
@@ -2001,7 +2001,7 @@ CString CTaskFile::GetWebColor(COLORREF color)
 	return sColor;
 }
 
-const char* CTaskFile::GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag, 
+const TCHAR* CTaskFile::GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag, 
 										const char* szItemTag, int nIndex) const
 {
 	if (nIndex == 0)
@@ -2097,7 +2097,7 @@ int CTaskFile::GetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
 	aItems.RemoveAll();
 
 	// first item
-	CString sItem = ATL::CA2T(GetTaskCChar(hTask, ATL::CA2T(szItemTag)));
+	CString sItem = GetTaskCChar(hTask, ATL::CA2T(szItemTag));
 
 	if (!sItem.IsEmpty())
 	{
@@ -2107,7 +2107,7 @@ int CTaskFile::GetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
 		int nCount = GetTaskUChar(hTask, ATL::CA2T(szNumItemTag));
 
 		for (int nItem = 1; nItem < nCount; nItem++)
-			aItems.Add(ATL::CA2T(GetTaskArrayItem(hTask, szNumItemTag, szItemTag, nItem)));
+			aItems.Add(GetTaskArrayItem(hTask, szNumItemTag, szItemTag, nItem));
 	}
 
 	return aItems.GetSize();

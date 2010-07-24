@@ -223,14 +223,14 @@ void CTaskListCsvExporter::AppendAttributeList(const ITaskList6* pTasks, HTASKIT
 										   LPCTSTR szNumAttribName, LPCTSTR szAttribName, 
                                           CString& sOutput) const
 {
-	int nItemCount = _ttoi(ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szNumAttribName))));
+	int nItemCount = _ttoi(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szNumAttribName)));
 
 	if (nItemCount <= 1)
 		AppendAttribute(pTasks, hTask, szAttribName, NULL, sOutput);
 
 	else // more than one (use plus sign as delimiter)
 	{
-		CString sAttribs = ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName)));
+		CString sAttribs = pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName));
 
 		for (int nItem = 1; nItem < nItemCount; nItem++)
 		{
@@ -238,7 +238,7 @@ void CTaskListCsvExporter::AppendAttributeList(const ITaskList6* pTasks, HTASKIT
 			sAttribName.Format(_T("%s%d"), szAttribName, nItem);
 
 			sAttribs += _T('+');
-			sAttribs += ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(sAttribName)));
+			sAttribs += pTasks->GetTaskAttribute(hTask, ATL::CT2A(sAttribName));
 		}
 
 		AppendAttribute(sAttribs, sOutput);
@@ -254,14 +254,14 @@ void CTaskListCsvExporter::AppendAttribute(const ITaskList6* pTasks, HTASKITEM h
 		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAttribName)))
 		{
 			CString sAttrib(szPrefix);
-			sAttrib += ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName)));
+			sAttrib += pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName));
 			
 			AppendAttribute(sAttrib, sOutput);
 		}
 		else if (szAltAttribName && pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAltAttribName)))
 		{
 			CString sAttrib(szPrefix);
-			sAttrib += ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAltAttribName)));
+			sAttrib += pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAltAttribName));
 			
 			AppendAttribute(sAttrib, sOutput);
 		}
