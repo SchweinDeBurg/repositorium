@@ -130,7 +130,7 @@ void CTDLRiskComboBox::BuildCombo()
 	for (int nLevel = 0; nLevel <= 10; nLevel++)
 	{
 		CString sRisk;
-		sRisk.Format("%d (%s)", nLevel, CEnString(IDS_TDC_SCALE[nLevel]));
+		sRisk.Format(_T("%d (%s)"), nLevel, CEnString(IDS_TDC_SCALE[nLevel]));
 		
 		AddString(sRisk);
 	}

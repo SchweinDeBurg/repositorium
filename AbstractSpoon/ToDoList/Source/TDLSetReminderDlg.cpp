@@ -65,7 +65,7 @@ CTDLSetReminderDlg::CTDLSetReminderDlg(CWnd* pParent /*=NULL*/)
 	//}}AFX_DATA_INIT
 
 	m_ePlaySound.SetFilter(CEnString(IDS_SOUNDFILEFILTER));
-	m_ePlaySound.AddButton(ID_PLAYSOUNDBTN, " > ", CEnString(IDS_PLAYSOUNDBTNTIP), CALC_BTNWIDTH);
+	m_ePlaySound.AddButton(ID_PLAYSOUNDBTN, _T(" > "), CEnString(IDS_PLAYSOUNDBTNTIP), CALC_BTNWIDTH);
 	m_ePlaySound.SetButtonTip(FEBTN_BROWSE, CEnString(IDS_BROWSE));
 }
 
@@ -103,13 +103,13 @@ int CTDLSetReminderDlg::DoModal(const TDCREMINDER& rem)
 
 	// if the sound file is empty then use last hint
 	if (m_sSoundFile.IsEmpty())
-		m_sSoundFile = AfxGetApp()->GetProfileString("Reminders", "SoundFile");
+		m_sSoundFile = AfxGetApp()->GetProfileString(_T("Reminders"), _T("SoundFile"));
 
 	int nRes = CDialog::DoModal();
 
 	// save off last specified sound file to be a hint next time
 	if (nRes == IDOK)
-		AfxGetApp()->WriteProfileString("Reminders", "SoundFile", m_sSoundFile);
+		AfxGetApp()->WriteProfileString(_T("Reminders"), _T("SoundFile"), m_sSoundFile);
 
 	return nRes;
 }

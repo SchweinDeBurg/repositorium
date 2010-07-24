@@ -277,27 +277,27 @@ void CTDLFilterBar::RefreshFilterControls(const CFilteredToDoCtrl& tdc)
 	CStringArray aItems;
 
 	tdc.GetAllocToNames(aItems);
-	aItems.Add(""); // add blank item to top
+	aItems.Add(_T("")); // add blank item to top
 	SetComboBoxItems(m_cbAllocToFilter, aItems);
 	
 	// alloc by filter
 	tdc.GetAllocByNames(aItems);
-	aItems.Add(""); // add blank item to top
+	aItems.Add(_T("")); // add blank item to top
 	SetComboBoxItems(m_cbAllocByFilter, aItems);
 	
 	// category filter
 	tdc.GetCategoryNames(aItems);
-	aItems.Add(""); // add blank item to top
+	aItems.Add(_T("")); // add blank item to top
 	SetComboBoxItems(m_cbCategoryFilter, aItems);
 	
 	// status filter
 	tdc.GetStatusNames(aItems);
-	aItems.Add(""); // add blank item to top
+	aItems.Add(_T("")); // add blank item to top
 	SetComboBoxItems(m_cbStatusFilter, aItems);
 	
 	// version filter
 	tdc.GetVersionNames(aItems);
-	aItems.Add(""); // add blank item to top
+	aItems.Add(_T("")); // add blank item to top
 	SetComboBoxItems(m_cbVersionFilter, aItems);
 	
 	// priority
@@ -627,7 +627,7 @@ BOOL CTDLFilterBar::OnToolTipNotify(UINT /*id*/, NMHDR* pNMHDR, LRESULT* /*pResu
 		{
 			// Set the tooltip text.
 			::SendMessage(pNMHDR->hwndFrom, TTM_SETMAXTIPWIDTH, 0, 300);
-			pTTT->lpszText = (LPSTR)(LPCTSTR)sTooltip;
+			pTTT->lpszText = const_cast<LPTSTR>((LPCTSTR)sTooltip);
 	        return TRUE;
 		}
     }

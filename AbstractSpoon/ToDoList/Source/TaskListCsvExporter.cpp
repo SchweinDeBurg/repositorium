@@ -70,7 +70,7 @@ CTaskListCsvExporter::~CTaskListCsvExporter()
 
 }
 
-bool CTaskListCsvExporter::Export(const ITaskList* pSrcTaskFile, const char* szDestFilePath, BOOL /*bSilent*/)
+bool CTaskListCsvExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
 {
 	const ITaskList6* pTasks6 = GetITLInterface<ITaskList6>(pSrcTaskFile, IID_TASKLIST6);
 	

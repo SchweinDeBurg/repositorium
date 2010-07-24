@@ -79,11 +79,11 @@ BOOL CTDLImportExportMgr::ExportTaskListToHtml(const ITaskList* pSrcTasks, LPCTS
 
 CString CTDLImportExportMgr::ExportTaskListToHtml(const ITaskList* pSrcTasks) const
 {
-	char szTempFile[MAX_PATH], szTempPath[MAX_PATH];
+	TCHAR szTempFile[MAX_PATH], szTempPath[MAX_PATH];
 		
 	if (!::GetTempPath(MAX_PATH, szTempPath) || 
-		!::GetTempFileName(szTempPath, "tdl", 0, szTempFile))
-		return "";
+		!::GetTempFileName(szTempPath, _T("tdl"), 0, szTempFile))
+		return _T("");
 		
 	CString sFile;
 
@@ -111,11 +111,11 @@ BOOL CTDLImportExportMgr::ExportTaskListToText(const ITaskList* pSrcTasks, LPCTS
 
 CString CTDLImportExportMgr::ExportTaskListToText(const ITaskList* pSrcTasks) const
 {
-	char szTempFile[MAX_PATH], szTempPath[MAX_PATH];
+	TCHAR szTempFile[MAX_PATH], szTempPath[MAX_PATH];
 		
 	if (!::GetTempPath(MAX_PATH, szTempPath) || 
-		!::GetTempFileName(szTempPath, "tdl", 0, szTempFile))
-		return "";
+		!::GetTempFileName(szTempPath, _T("tdl"), 0, szTempFile))
+		return _T("");
 		
 	CString sFile;
 
@@ -128,7 +128,7 @@ CString CTDLImportExportMgr::ExportTaskListToText(const ITaskList* pSrcTasks) co
 			CString sLine;
 
 			while (file.ReadString(sLine))
-				sFile += sLine + "\n";
+				sFile += sLine + _T("\n");
 		}
 	}
 
@@ -143,11 +143,11 @@ BOOL CTDLImportExportMgr::ExportTaskListToCsv(const ITaskList* pSrcTasks, LPCTST
 
 CString CTDLImportExportMgr::ExportTaskListToCsv(const ITaskList* pSrcTasks) const
 {
-	char szTempFile[MAX_PATH], szTempPath[MAX_PATH];
+	TCHAR szTempFile[MAX_PATH], szTempPath[MAX_PATH];
 		
 	if (!::GetTempPath(MAX_PATH, szTempPath) || 
-		!::GetTempFileName(szTempPath, "tdl", 0, szTempFile))
-		return "";
+		!::GetTempFileName(szTempPath, _T("tdl"), 0, szTempFile))
+		return _T("");
 		
 	CString sFile;
 
@@ -160,7 +160,7 @@ CString CTDLImportExportMgr::ExportTaskListToCsv(const ITaskList* pSrcTasks) con
 			CString sLine;
 
 			while (file.ReadString(sLine))
-				sFile += sLine + "\n";
+				sFile += sLine + _T("\n");
 		}
 	}
 

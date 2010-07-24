@@ -85,7 +85,14 @@ int CToDoCommentsCtrl::GetTextContent(char* szContent, int nLength) const
 	if (nLength == -1)
 		nLength = strlen(szContent) + 1; // inluding null
 
+#if defined(UNICODE) || defined(_UNICODE)
+	CString strTemp;
+	GetWindowText(strTemp.GetBuffer(nLength), nLength);
+	strTemp.ReleaseBuffer();
+	wcstombs(szContent, strTemp, nLength + 1);
+#else
 	GetWindowText(szContent, nLength);
+#endif   // UNICODE || _UNICODE
 	
 	return nLength;
 }
@@ -227,8 +234,8 @@ void CToDoCommentsCtrl::OnCommentsMenuCmd(UINT nCmdID)
 //			if (S_OK == pClipboard->QueryInterface(IID_TASKLIST4, (void**)&pClip4))
 			if (pClip4)
 			{
-				sFileName = pClip4->GetAttribute(TDL_FILENAME);
-				sFileName.Replace(" ", "%20");
+				sFileName = pClip4->GetAttribute(ATL::CT2A(TDL_FILENAME));
+				sFileName.Replace(_T(" "), _T("%20"));
 			}
 			else // get the clipboard for just this tasklist
 				pClipboard = (ITaskList*)GetParent()->SendMessage(WM_TDCM_GETCLIPBOARD, 0, TRUE);
@@ -242,9 +249,9 @@ void CToDoCommentsCtrl::OnCommentsMenuCmd(UINT nCmdID)
 				while (hClip)
 				{
 					if (sFileName.IsEmpty())
-						sRef.Format(" %s%d", TDL_PROTOCOL, pClipboard->GetTaskID(hClip));
+						sRef.Format(_T(" %s%d"), TDL_PROTOCOL, pClipboard->GetTaskID(hClip));
 					else
-						sRef.Format(" %s%s?%d", TDL_PROTOCOL, sFileName, pClipboard->GetTaskID(hClip));
+						sRef.Format(_T(" %s%s?%d"), TDL_PROTOCOL, (LPCTSTR)sFileName, pClipboard->GetTaskID(hClip));
 
 					sRefs += sRef;
 					
@@ -282,7 +289,7 @@ void CToDoCommentsCtrl::OnCommentsMenuCmd(UINT nCmdID)
 			}
 						
 			CFileDialog dialog(TRUE, NULL, sFile);
-			dialog.m_ofn.lpstrTitle = "Select File";
+			dialog.m_ofn.lpstrTitle = _T("Select File");
 			
 			if (dialog.DoModal() == IDOK)
 				PathReplaceSel(dialog.GetPathName(), TRUE);
@@ -379,7 +386,7 @@ void CToDoCommentsCtrl::OnUpdateCommentsMenuCmd(CCmdUI* pCmdUI)
 			pCmdUI->m_pMenu->GetMenuString(ID_COMMENTS_OPENURL, sMenu, 
 				MF_BYCOMMAND);
 			
-			sText.Format("%s: %s", sMenu, GetUrl(m_nContextUrl, TRUE));
+			sText.Format(_T("%s: %s"), sMenu, GetUrl(m_nContextUrl, TRUE));
 			pCmdUI->SetText(sText);
 		}
 		break;
@@ -451,7 +458,7 @@ void CToDoCommentsCtrl::OnDestroy()
 	CUrlRichEditCtrl::OnDestroy();
 	
 	if (!m_sPrefKey.IsEmpty())
-		AfxGetApp()->WriteProfileInt(m_sPrefKey, "WordWrap", m_bWordWrap);
+		AfxGetApp()->WriteProfileInt(m_sPrefKey, _T("WordWrap"), m_bWordWrap);
 }
 
 void CToDoCommentsCtrl::SetPreferenceLocation(const char* szKey)
@@ -465,7 +472,7 @@ void CToDoCommentsCtrl::SetPreferenceLocation(const char* szKey)
 
 		if (!m_sPrefKey.IsEmpty() && !m_bPrefsDone)
 		{
-			bWordWrap = AfxGetApp()->GetProfileInt(m_sPrefKey, "WordWrap", m_bWordWrap);
+			bWordWrap = AfxGetApp()->GetProfileInt(m_sPrefKey, _T("WordWrap"), m_bWordWrap);
 			m_bPrefsDone = TRUE;
 		}
 
@@ -506,49 +513,49 @@ bool CToDoCommentsCtrl::ProcessMessage(MSG* pMsg)
 		{
 			switch (pMsg->wParam)
 			{
-			case 'c': 
-			case 'C':
+			case _T('c'): 
+			case _T('C'):
 				Copy();
 				return TRUE;
 				
-			case 'v':
-			case 'V':
+			case _T('v'):
+			case _T('V'):
 				Paste();
 				return TRUE;
 				
-			case 'x':
-			case 'X':
+			case _T('x'):
+			case _T('X'):
 				Copy();
 				Clear();
 				return TRUE;
 				
-			case 'a':
-			case 'A':
+			case _T('a'):
+			case _T('A'):
 				SetSel(0, -1);
 				return TRUE;
 				
-			case 'f':
-			case 'F':
+			case _T('f'):
+			case _T('F'):
 				DoEditFind(IDS_FIND_TITLE);
 				return TRUE;
 				
-			case 'h':
-			case 'H':
+			case _T('h'):
+			case _T('H'):
 				DoEditReplace(IDS_REPLACE_TITLE);
 				return TRUE;
 				
-			case 'z':
-			case 'Z':
+			case _T('z'):
+			case _T('Z'):
 				return TRUE;
 				
-			case 'y':
-			case 'Y':
+			case _T('y'):
+			case _T('Y'):
 				return TRUE;
 			}
 		}
-		else if (pMsg->wParam == '\t')
+		else if (pMsg->wParam == _T('\t'))
 		{
-			ReplaceSel("\t", TRUE);
+			ReplaceSel(_T("\t"), TRUE);
 			return TRUE;
 		}
 	}

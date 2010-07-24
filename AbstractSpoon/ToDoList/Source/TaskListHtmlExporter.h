@@ -52,7 +52,7 @@ public:
 	const char* GetFileFilter() { return "Web Pages (*.html)|*.html||"; }
 	const char* GetFileExtension() { return "html"; }
 
-	bool Export(const ITaskList* pSrcTaskFile, const char* szDestFilePath, BOOL bSilent);
+	bool Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
     void Release() { delete this; }
 
 protected:

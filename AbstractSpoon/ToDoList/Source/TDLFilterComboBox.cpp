@@ -93,7 +93,7 @@ void CTDLFilterComboBox::FillCombo()
 		CEnString sFilter(TASK_FILTERS[nItem][0]);
 		UINT nFilter = TASK_FILTERS[nItem][1];
 
-		CEnString sText("%c)\t%s", 'A' + nItem, sFilter); 
+		CEnString sText(_T("%c)\t%s"), _T('A') + nItem, sFilter); 
 		int nIndex = AddString(sText);
 		ASSERT (nIndex != CB_ERR);
 

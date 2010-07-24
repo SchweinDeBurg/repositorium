@@ -198,20 +198,20 @@ int CTDLFilterDlg::DoModal(const CFilteredToDoCtrl& tdc,
 	// alloc filters
 	tdc.GetAllocToNames(m_aAllocTo);
 	tdc.GetAllocByNames(m_aAllocBy);
-	m_aAllocTo.Add(""); // add blank item to top
-	m_aAllocBy.Add(""); // add blank item to top
+	m_aAllocTo.Add(_T("")); // add blank item to top
+	m_aAllocBy.Add(_T("")); // add blank item to top
 	
 	// category filter
 	tdc.GetCategoryNames(m_aCategory);
-	m_aCategory.Add(""); // add blank item to top
+	m_aCategory.Add(_T("")); // add blank item to top
 	
 	// status filter
 	tdc.GetStatusNames(m_aStatus);
-	m_aStatus.Add(""); // add blank item to top
+	m_aStatus.Add(_T("")); // add blank item to top
 
 	// version filter
 	tdc.GetVersionNames(m_aVersion);
-	m_aVersion.Add(""); // add blank item to top
+	m_aVersion.Add(_T("")); // add blank item to top
 	
 	m_aPriorityColors.Copy(aPriorityColors);
 	m_nView = tdc.GetView();
@@ -321,7 +321,7 @@ BOOL CTDLFilterDlg::OnToolTipNotify(UINT /*id*/, NMHDR* pNMHDR, LRESULT* /*pResu
 		{
 			// Set the tooltip text.
 			::SendMessage(pNMHDR->hwndFrom, TTM_SETMAXTIPWIDTH, 0, 300);
-			pTTT->lpszText = (LPSTR)(LPCTSTR)sTooltip;
+			pTTT->lpszText = const_cast<LPTSTR>((LPCTSTR)sTooltip);
 	        return TRUE;
 		}
     }

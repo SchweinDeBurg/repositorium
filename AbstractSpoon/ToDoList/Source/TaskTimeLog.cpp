@@ -49,8 +49,8 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-LPCTSTR COLUMNHEADINGS = "Task ID, Time Spent (Hrs), User ID, End Date/Time, Start Date/Time";
-LPCTSTR LOGFORMAT = "%ld, %.3f, %s, %s, %s";
+LPCTSTR COLUMNHEADINGS = _T("Task ID, Time Spent (Hrs), User ID, End Date/Time, Start Date/Time");
+LPCTSTR LOGFORMAT = _T("%ld, %.3f, %s, %s, %s");
 
 CTaskTimeLog::CTaskTimeLog(LPCTSTR szRefPath) : m_sRefPath(szRefPath)
 {
@@ -93,9 +93,9 @@ CString CTaskTimeLog::GetLogPath(DWORD dwTaskID, BOOL bLogSeparately)
 	FileMisc::SplitPath(m_sRefPath, &sDrive, &sFolder, &sFileName);
 	
 	if (bLogSeparately)
-		sLogPath.Format("%s%s%s\\%ld_Log.csv", sDrive, sFolder, sFileName, dwTaskID);
+		sLogPath.Format(_T("%s%s%s\\%ld_Log.csv"), (LPCTSTR)sDrive, (LPCTSTR)sFolder, (LPCTSTR)sFileName, dwTaskID);
 	else
-		sLogPath.Format("%s%s%s_Log.csv", sDrive, sFolder, sFileName);
+		sLogPath.Format(_T("%s%s%s_Log.csv"), (LPCTSTR)sDrive, (LPCTSTR)sFolder, (LPCTSTR)sFileName);
 
 	return sLogPath;
 }
@@ -117,9 +117,9 @@ double CTaskTimeLog::CalcAccumulatedTime(DWORD dwTaskID, BOOL bLogSeparately)
 			// decode it
 			//fabio_2005
 #if _MSC_VER >= 1400
-			if (sscanf_s("%ld,%.3f", sLine, &dwLogID, &dLogTime) == 2)
+			if (_stscanf_s(_T("%ld,%.3f"), sLine, &dwLogID, &dLogTime) == 2)
 #else
-			if (sscanf("%ld,%.3f", sLine, &dwLogID, &dLogTime) == 2)
+			if (_stscanf(_T("%ld,%.3f"), sLine, &dwLogID, &dLogTime) == 2)
 #endif
 
 			{

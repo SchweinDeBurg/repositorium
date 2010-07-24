@@ -51,7 +51,7 @@ const LPCTSTR ENDL = _T("\n");
 
 CPlainTextExporter::CPlainTextExporter()
 {
-	INDENT = _T("\x20\x20");
+	INDENT = CString(_T(' '), 2);
 }
 
 CPlainTextExporter::~CPlainTextExporter()

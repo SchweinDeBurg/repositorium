@@ -246,13 +246,13 @@ void CTDLFindResultsListCtrl::RefreshUserPreferences()
 	CPreferences prefs;
 	
 	// update user completed tasks colour
-	if (prefs.GetProfileInt("Preferences", "SpecifyDoneColor", FALSE))
-		m_crDone = (COLORREF)prefs.GetProfileInt("Preferences\\Colors", "TaskDone", -1);
+	if (prefs.GetProfileInt(_T("Preferences"), _T("SpecifyDoneColor"), FALSE))
+		m_crDone = (COLORREF)prefs.GetProfileInt(_T("Preferences\\Colors"), _T("TaskDone"), -1);
 	else
 		m_crDone = (COLORREF)-1;
 
 	// update strike thru font
-	if (prefs.GetProfileInt("Preferences", "StrikethroughDone", FALSE))
+	if (prefs.GetProfileInt(_T("Preferences"), _T("StrikethroughDone"), FALSE))
 	{
 		if (!m_fontStrike.GetSafeHandle())
 			GraphicsMisc::CreateFont(m_fontStrike, (HFONT)SendMessage(WM_GETFONT), MFS_STRIKETHRU);
@@ -287,7 +287,7 @@ BOOL CTDLFindResultsListCtrl::AddHeaderRow(LPCTSTR szText, BOOL bSpaceAbove)
 	// add space above?
 	if (bSpaceAbove)
 	{
-		int nIndex = InsertItem(nPos, "");
+		int nIndex = InsertItem(nPos, _T(""));
 		SetItemData(nIndex, 0);
 		nPos++;
 	}

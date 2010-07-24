@@ -64,7 +64,7 @@ CTaskListHtmlExporter::~CTaskListHtmlExporter()
 
 }
 
-bool CTaskListHtmlExporter::Export(const ITaskList* pSrcTaskFile, const char* szDestFilePath, BOOL /*bSilent*/)
+bool CTaskListHtmlExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
 {
 	CPreferences prefs;
 

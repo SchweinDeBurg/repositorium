@@ -761,7 +761,7 @@ CString CToDoCtrlMgr::UpdateTabItemText(int nIndex)
 	m_tabCtrl.SetItem(nIndex, &tci);
 
 	// remove doubled-up ampersands
-	sProjectName.Replace("&&", "&");
+	sProjectName.Replace(_T("&&"), _T("&"));
 	
 	return sProjectName;
 }
