@@ -79,8 +79,8 @@ public:
 	virtual bool IsCheckedOut() const = 0;
 	virtual bool IsSourceControlled() const = 0;
 
-	virtual const char* GetProjectName() const = 0;
-	virtual const char* GetCheckOutTo() const = 0;
+	virtual const TCHAR* GetProjectName() const = 0;
+	virtual const TCHAR* GetCheckOutTo() const = 0;
 
 	virtual unsigned long GetFileFormat() const = 0;
 	virtual unsigned long GetFileVersion() const = 0;
@@ -95,15 +95,15 @@ public:
 	virtual HTASKITEM GetNextTask(HTASKITEM hTask) const = 0;
 
 	// get methods
-	virtual const char* GetTaskTitle(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskComments(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskAllocatedTo(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskAllocatedBy(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskCategory(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskStatus(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskFileReferencePath(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskWebColor(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskPriorityWebColor(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskTitle(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskComments(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskAllocatedTo(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskAllocatedBy(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskCategory(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskStatus(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskFileReferencePath(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskWebColor(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskPriorityWebColor(HTASKITEM hTask) const = 0;
 
 	virtual unsigned long GetTaskID(HTASKITEM hTask) const = 0;
 	virtual unsigned long GetTaskColor(HTASKITEM hTask) const = 0;
@@ -112,17 +112,17 @@ public:
 	virtual int GetTaskPriority(HTASKITEM hTask, BOOL bHighest) const = 0;
 	virtual unsigned char GetTaskPercentDone(HTASKITEM hTask, BOOL bCalc) const = 0;
 
-	virtual double GetTaskTimeEstimate(HTASKITEM hTask, char& cUnits, BOOL bCalc) const = 0;
-	virtual double GetTaskTimeSpent(HTASKITEM hTask, char& cUnits, BOOL bCalc) const = 0;
+	virtual double GetTaskTimeEstimate(HTASKITEM hTask, TCHAR& cUnits, BOOL bCalc) const = 0;
+	virtual double GetTaskTimeSpent(HTASKITEM hTask, TCHAR& cUnits, BOOL bCalc) const = 0;
 
 	virtual time_t GetTaskLastModified(HTASKITEM hTask) const = 0;
 	virtual time_t GetTaskDoneDate(HTASKITEM hTask) const = 0;
 	virtual time_t GetTaskDueDate(HTASKITEM hTask) const = 0;
 	virtual time_t GetTaskStartDate(HTASKITEM hTask) const = 0;
 
-	virtual const char* GetTaskDoneDateString(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskDueDateString(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskStartDateString(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskDoneDateString(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskDueDateString(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskStartDateString(HTASKITEM hTask) const = 0;
 
 	virtual bool IsTaskDone(HTASKITEM hTask) const = 0;
 	virtual bool IsTaskDue(HTASKITEM hTask) const = 0;
@@ -130,7 +130,7 @@ public:
 	virtual unsigned long GetTaskPosition(HTASKITEM hTask) const = 0;
 
 	virtual bool TaskHasAttribute(HTASKITEM hTask, const char* szAttrib) const = 0;
-	virtual const char* GetTaskAttribute(HTASKITEM hTask, const char* szAttrib) const = 0;
+	virtual const TCHAR* GetTaskAttribute(HTASKITEM hTask, const char* szAttrib) const = 0;
 	virtual HTASKITEM GetTaskParent(HTASKITEM hTask) const = 0;
 
 	// set methods
@@ -147,8 +147,8 @@ public:
 	virtual bool SetTaskPriority(HTASKITEM hTask, unsigned char nPriority) = 0;
 	virtual bool SetTaskPercentDone(HTASKITEM hTask, unsigned char nPercent) = 0;
 
-	virtual bool SetTaskTimeEstimate(HTASKITEM hTask, double dTimeEst, char cUnits) = 0;
-	virtual bool SetTaskTimeSpent(HTASKITEM hTask, double dTimeSpent, char cUnits) = 0;
+	virtual bool SetTaskTimeEstimate(HTASKITEM hTask, double dTimeEst, TCHAR cUnits) = 0;
+	virtual bool SetTaskTimeSpent(HTASKITEM hTask, double dTimeSpent, TCHAR cUnits) = 0;
 
 	virtual bool SetTaskLastModified(HTASKITEM hTask, time_t tLastMod) = 0;
 	virtual bool SetTaskDoneDate(HTASKITEM hTask, time_t tDoneDate) = 0;
@@ -167,9 +167,9 @@ class ITaskList2 : public ITaskList
 {
 	// new methods
 public:
-	virtual const char* GetTaskCreatedBy(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskCreatedBy(HTASKITEM hTask) const = 0;
 	virtual time_t GetTaskCreationDate(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskCreationDateString(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskCreationDateString(HTASKITEM hTask) const = 0;
 
 	virtual bool SetTaskCreatedBy(HTASKITEM hTask, const char* szCreatedBy) = 0;
 	virtual bool SetTaskCreationDate(HTASKITEM hTask, time_t tCreationDate) = 0;
@@ -180,10 +180,10 @@ class ITaskList3 : public ITaskList2
 	// new methods
 public:
 	virtual time_t GetTaskDueDate(HTASKITEM hTask, BOOL bEarliest) const = 0;
-	virtual const char* GetTaskDueDateString(HTASKITEM hTask, BOOL bEarliest) const = 0;
+	virtual const TCHAR* GetTaskDueDateString(HTASKITEM hTask, BOOL bEarliest) const = 0;
 	virtual unsigned long GetTaskTextColor(HTASKITEM hTask) const = 0;
 	virtual int GetTaskRisk(HTASKITEM hTask, BOOL bHighest) const = 0;
-	virtual const char* GetTaskExternalID(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskExternalID(HTASKITEM hTask) const = 0;
 
 	virtual bool SetTaskRisk(HTASKITEM hTask, unsigned char nRisk) = 0;
 	virtual bool SetTaskExternalID(HTASKITEM hTask, const char* szID) = 0;
@@ -193,15 +193,15 @@ class ITaskList4 : public ITaskList3
 {
 	// new methods
 public:
-	virtual const char* GetAttribute(const char* szAttrib) const = 0;
+	virtual const TCHAR* GetAttribute(const char* szAttrib) const = 0;
 
-	virtual const char* GetHtmlCharSet() const = 0;
-	virtual const char* GetReportTitle() const = 0;
-	virtual const char* GetReportDate() const = 0;
+	virtual const TCHAR* GetHtmlCharSet() const = 0;
+	virtual const TCHAR* GetReportTitle() const = 0;
+	virtual const TCHAR* GetReportDate() const = 0;
 	virtual double GetTaskCost(HTASKITEM hTask, BOOL bCalc) const = 0;
 	virtual unsigned char GetTaskCategoryCount(HTASKITEM hTask) const = 0;
-	virtual const char* GetTaskCategory(HTASKITEM hTask, int nIndex) const = 0;
-	virtual const char* GetTaskDependency(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskCategory(HTASKITEM hTask, int nIndex) const = 0;
+	virtual const TCHAR* GetTaskDependency(HTASKITEM hTask) const = 0;
 
 	virtual bool SetTaskCost(HTASKITEM hTask, double dCost) = 0;
 	virtual bool SetTaskDependency(HTASKITEM hTask, const char* szDepends) = 0;
@@ -224,7 +224,7 @@ public:
 		DWORD& dwSpecific2, BOOL& bRecalcFromDue, int& nReuse) const = 0;
 
 	virtual bool SetTaskVersion(HTASKITEM hTask, const char* szVersion) = 0;
-	virtual const char* GetTaskVersion(HTASKITEM hTask) const = 0;
+	virtual const TCHAR* GetTaskVersion(HTASKITEM hTask) const = 0;
 };
 
 class ITaskList7 : public ITaskList6
@@ -233,11 +233,11 @@ class ITaskList7 : public ITaskList6
 public:
 	virtual unsigned char GetTaskDependencyCount(HTASKITEM hTask) const = 0;
 	virtual bool AddTaskDependency(HTASKITEM hTask, const char* szDepends) = 0;
-	virtual const char* GetTaskDependency(HTASKITEM hTask, int nIndex) const = 0;
+	virtual const TCHAR* GetTaskDependency(HTASKITEM hTask, int nIndex) const = 0;
 
 	virtual unsigned char GetTaskAllocatedToCount(HTASKITEM hTask) const = 0;
 	virtual bool AddTaskAllocatedTo(HTASKITEM hTask, const char* szAllocTo) = 0;
-	virtual const char* GetTaskAllocatedTo(HTASKITEM hTask, int nIndex) const = 0;
+	virtual const TCHAR* GetTaskAllocatedTo(HTASKITEM hTask, int nIndex) const = 0;
 };
 
 #endif // _ITASKLIST_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_

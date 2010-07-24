@@ -126,7 +126,7 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		CString sComments, sPercent, sTimeEst, sTimeSpent, sFileRef;
 		CString sLastMod, sRisk, sExtID, sCreateDate, sCreateBy, sVersion;
 		CString sRecurrence, sDepends;
-		char cTemp;
+		TCHAR cTemp;
 
 		// ID
 		FormatAttribute(pTasks, hTask, TDL_TASKID, _T("(ID: %s) "), sID);
@@ -181,11 +181,11 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 
 		// fileref
 		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKFILEREFPATH)))
-			sFileRef.Format(_T("%s%s(link: %s)"), ENDL, (LPCTSTR)sTabs, (LPTSTR)ATL::CA2T(pTasks->GetTaskFileReferencePath(hTask)));
+			sFileRef.Format(_T("%s%s(link: %s)"), ENDL, (LPCTSTR)sTabs, (LPTSTR)pTasks->GetTaskFileReferencePath(hTask));
 		
 		// comments
 		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCOMMENTS)))
-			sComments.Format(_T("%s%s[%s]"), ENDL, (LPCTSTR)sTabs, (LPTSTR)ATL::CA2T(pTasks->GetTaskComments(hTask)));
+			sComments.Format(_T("%s%s[%s]"), ENDL, (LPCTSTR)sTabs, (LPTSTR)pTasks->GetTaskComments(hTask));
 
 		sItem.Format(_T("%d. %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"), 
 					nPos, (LPCTSTR)sID, (LPCTSTR)sPriority, (LPCTSTR)sPercent, (LPCTSTR)sTitle, (LPCTSTR)sRisk, 
@@ -207,8 +207,8 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		// title and date
 		const ITaskList4* pITL4 = static_cast<const ITaskList4*>(pTasks);
 
-		CString sTitle = ATL::CA2T(pITL4->GetReportTitle());
-		CString sDate = ATL::CA2T(pITL4->GetReportDate());
+		CString sTitle = pITL4->GetReportTitle();
+		CString sDate = pITL4->GetReportDate();
 
 		// note: do not append a trailing ENDL as this will be added 
 		// by the following code
@@ -254,7 +254,7 @@ BOOL CTaskListTxtExporter::FormatAttribute(const ITaskList6* pTasks, HTASKITEM h
 {
 	if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAttribName)))
 	{
-		sAttribText.Format(szFormat, (LPTSTR)ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName))));
+		sAttribText.Format(szFormat, (LPTSTR)pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName)));
 		return TRUE;
 	}
 
@@ -266,13 +266,13 @@ BOOL CTaskListTxtExporter::FormatAttributeList(const ITaskList6* pTasks, HTASKIT
 										   LPCTSTR szNumAttribName, LPCTSTR szAttribName, 
                                            LPCTSTR szFormat, CString& sAttribText)
 {
-	int nItemCount = _ttoi(ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szNumAttribName))));
+	int nItemCount = _ttoi(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szNumAttribName)));
 
 	if (nItemCount <= 1)
 		return FormatAttribute(pTasks, hTask, szAttribName, szFormat, sAttribText);
 
 	// else more than one (use plus sign as delimiter)
-	CString sAttribs = ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName)));
+	CString sAttribs = pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName));
 	
 	for (int nItem = 1; nItem < nItemCount; nItem++)
 	{

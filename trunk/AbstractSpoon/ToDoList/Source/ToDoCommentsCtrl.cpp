@@ -231,7 +231,6 @@ void CToDoCommentsCtrl::OnCommentsMenuCmd(UINT nCmdID)
 			CString sFileName;
 			ITaskList4* pClip4 = GetITLInterface<ITaskList4>(pClipboard, IID_TASKLIST4);
 
-//			if (S_OK == pClipboard->QueryInterface(IID_TASKLIST4, (void**)&pClip4))
 			if (pClip4)
 			{
 				sFileName = pClip4->GetAttribute(ATL::CT2A(TDL_FILENAME));
