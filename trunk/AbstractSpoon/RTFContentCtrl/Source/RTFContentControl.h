@@ -46,8 +46,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // CRTFContentControl window
 
-static LPCTSTR RTFTAG = _T("{\\rtf");
-static int LENTAG = _tcslen(RTFTAG);
+static LPCSTR RTFTAG = "{\\rtf";
+static int LENTAG = strlen(RTFTAG);
 
 class CRTFContentControl : public CRulerRichEditCtrl, public IContentControl
 {

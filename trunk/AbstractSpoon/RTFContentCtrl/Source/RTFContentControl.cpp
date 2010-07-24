@@ -113,7 +113,7 @@ BOOL CRTFContentControl::Compress(const unsigned char* pContentSrc, int nLenSrc,
 BOOL CRTFContentControl::Decompress(const unsigned char* pContentSrc, int nLenSrc,
                                     unsigned char*& pContentDest, int& nLenDest)
 {
-	ASSERT(nLenSrc && _tcsncmp(ATL::CA2T((const char*)pContentSrc), RTFTAG, LENTAG) != 0);
+	ASSERT(nLenSrc && strncmp((const char*)pContentSrc, RTFTAG, LENTAG) != 0);
 
 	// get the source length from the first 4 bytes
 	ULONG lDest = ((DWORD*)pContentSrc)[0];
@@ -215,7 +215,7 @@ bool CRTFContentControl::SetContent(unsigned char* pContent, int nLength)
 	unsigned char* pDecompressed = NULL;
 
 	// content may need decompressing
-	if (nLength && _tcsncmp(ATL::CA2T((const char*)pContent), RTFTAG, LENTAG) != 0)
+	if (nLength && strncmp((const char*)pContent, RTFTAG, LENTAG) != 0)
 	{
 		int nLenDecompressed = 0;
 
@@ -231,7 +231,7 @@ bool CRTFContentControl::SetContent(unsigned char* pContent, int nLength)
 	}
 
 	// content must begin with rtf tag or be empty
-	if (nLength && (nLength < LENTAG || _tcsncmp(ATL::CA2T((const char*)pContent), RTFTAG, LENTAG)))
+	if (nLength && (nLength < LENTAG || strncmp((const char*)pContent, RTFTAG, LENTAG)))
 	{
 		return false;
 	}

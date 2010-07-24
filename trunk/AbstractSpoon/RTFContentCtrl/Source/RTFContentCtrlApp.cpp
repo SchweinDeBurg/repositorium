@@ -152,7 +152,7 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
 	// we may have to decompress it first
 	unsigned char* pDecompressed = NULL;
 
-	if (strncmp((const char*)pContent, ATL::CT2A(RTFTAG), LENTAG) != 0)
+	if (strncmp((const char*)pContent, RTFTAG, LENTAG) != 0)
 	{
 		int nLenDecompressed = 0;
 

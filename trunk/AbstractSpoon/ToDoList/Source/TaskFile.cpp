@@ -1428,12 +1428,12 @@ bool CTaskFile::SetTaskComments(HTASKITEM hTask, const char* szComments)
 {
 	// if the first two chars are '\r\n' then we need to translate them 
 	// because otherwise MSXML will remove them
-	
 
-
-//	CString sComments(szComments);
-//	sComments.Replace("\r\n", "&#13;&#10;");
-//	return SetTaskCChar(hTask, TDL_TASKCOMMENTS, sComments, XIT_ITEM);
+	/*
+	CString sComments(szComments);
+	sComments.Replace("\r\n", "&#13;&#10;");
+	return SetTaskCChar(hTask, TDL_TASKCOMMENTS, sComments, XIT_ITEM);
+	*/
 
 	return SetTaskCChar(hTask, TDL_TASKCOMMENTS, szComments, XIT_ATTRIB);
 }
