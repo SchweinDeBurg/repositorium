@@ -91,7 +91,7 @@ CString CXmlNodeWrapper::GetValue(LPCTSTR valueName)
 	MSXML2::IXMLDOMNodePtr attribute = m_xmlnode->Getattributes()->getNamedItem(valueName);
 	if (attribute)
 	{
-		return (LPCSTR)attribute->Gettext();
+		return (LPCTSTR)attribute->Gettext();
 	}
 	return _T("");
 }
@@ -319,7 +319,7 @@ CString CXmlNodeWrapper::GetXML()
 {
 	if (IsValid())
 	{
-		return (LPCSTR)m_xmlnode->Getxml();
+		return (LPCTSTR)m_xmlnode->Getxml();
 	}
 	else
 	{
@@ -894,7 +894,7 @@ CString CXmlNodeWrapper::Name()
 {
 	if (IsValid())
 	{
-		return (LPCSTR)m_xmlnode->GetbaseName();
+		return (LPCTSTR)m_xmlnode->GetbaseName();
 	}
 	return _T("");
 }
@@ -931,7 +931,7 @@ CString CXmlNodeWrapper::GetText()
 {
 	if (IsValid())
 	{
-		return (LPCSTR)m_xmlnode->Gettext();
+		return (LPCTSTR)m_xmlnode->Gettext();
 	}
 	else
 	{
@@ -1017,7 +1017,7 @@ CString CXmlNodeWrapper::NodeType()
 {
 	if (IsValid())
 	{
-		return (LPCSTR)m_xmlnode->GetnodeTypeString();
+		return (LPCTSTR)m_xmlnode->GetnodeTypeString();
 	}
 
 	return _T("");

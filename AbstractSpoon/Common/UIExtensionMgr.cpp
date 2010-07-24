@@ -50,7 +50,6 @@ static char THIS_FILE[]=__FILE__;
 
 CUIExtension::CUIExtension(IUIExtension* pExt) : m_pExtension(pExt), m_pMapWindows(NULL)
 {
-
 }
 
 CUIExtension::~CUIExtension()
@@ -62,9 +61,9 @@ CUIExtension::~CUIExtension()
 CString CUIExtension::GetMenuText()
 {
 	if (m_pExtension)
-		return m_pExtension->GetMenuText();
+		return CString(ATL::CA2T(m_pExtension->GetMenuText()));
 
-	return "";
+	return _T("");
 }
 
 HICON CUIExtension::GetIcon()
@@ -231,7 +230,7 @@ void CUIExtensionMgr::Initialize()
 	CString sSearchPath = FileMisc::GetModuleFileName(), sFolder, sDrive;
 
 	FileMisc::SplitPath(sSearchPath, &sDrive, &sFolder);
-	FileMisc::MakePath(sSearchPath, sDrive, sFolder, "*", ".dll");
+	FileMisc::MakePath(sSearchPath, sDrive, sFolder, _T("*"), _T(".dll"));
 
 	BOOL bContinue = ff.FindFile(sSearchPath);
 

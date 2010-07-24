@@ -64,7 +64,7 @@ extern "C" DLL_DECLSPEC int GetInterfaceVersion();
 #pragma warning(disable:4189)
 
 // helper method
-static IUIExtension* CreateUIExtensionInterface(const char* szDllPath)
+static IUIExtension* CreateUIExtensionInterface(const TCHAR* szDllPath)
 {
 	IUIExtension* pInterface = NULL;
 	HMODULE hDll = LoadLibrary(szDllPath);
@@ -89,7 +89,7 @@ static IUIExtension* CreateUIExtensionInterface(const char* szDllPath)
 	return pInterface;
 }
 
-static BOOL IsUIExtemsionDll(const char* szDllPath)
+static BOOL IsUIExtemsionDll(const TCHAR* szDllPath)
 {
 	HMODULE hDll = LoadLibrary(szDllPath);
 

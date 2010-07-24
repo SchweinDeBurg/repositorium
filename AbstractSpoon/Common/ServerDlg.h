@@ -76,7 +76,7 @@ public:
 	CString GetPassword() { return m_sPassword; }
 	BOOL GetAnonynousLogin() { return (m_nAnonLogin == ANONLOGIN_YES); }
 
-	int DoModal() { return CRuntimeDlg::DoModal("Enter Remote Server Details"); }
+	int DoModal() { return CRuntimeDlg::DoModal(_T("Enter Remote Server Details")); }
 
 	// for overiding the default text for translating
 	static void SetItemText(UINT nIDItem, UINT nIDText);

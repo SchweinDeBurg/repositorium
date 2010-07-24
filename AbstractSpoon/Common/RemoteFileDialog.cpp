@@ -71,7 +71,7 @@ enum
 	RFDT_FILE
 };
 
-const LPCTSTR DEFFILTER = "All Files (*.*)|*.*||";
+const LPCTSTR DEFFILTER = _T("All Files (*.*)|*.*||");
 
 enum // columns
 {
@@ -104,21 +104,21 @@ m_bFilling(FALSE)
 	//}}AFX_DATA_INIT
 	SetBordersDLU(3);
 
-	AddRCControl("SCROLLBAR", "", "", SBS_RIGHTALIGN, 0,270,160,8,16, IDC_GRIPPER);
-	AddRCControl("EDITTEXT", "", "",ES_AUTOHSCROLL | WS_TABSTOP, 0,74,144,154,13, IDC_FILENAME);
-	AddRCControl("LTEXT", "", "Files of &type:", 0, 0,0,164,40,8,IDC_FILETYPESLABEL);
-	AddRCControl("COMBOBOX", "", "", CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP, 0,74,163,154,100,IDC_FILETYPES);
-	AddRCControl("DEFPUSHBUTTON", "", "OK", WS_TABSTOP, 0,230,143,50,14, IDOK);
-	AddRCControl("PUSHBUTTON", "", "Cancel", WS_TABSTOP, 0,230,162,50,14,IDCANCEL);
-	AddRCControl("LTEXT", "", "Current Folder:", 0, 0,0,7,47,8,IDC_CURFOLDERLABEL);
-	AddRCControl("EDITTEXT", "", "", ES_AUTOHSCROLL | ES_READONLY, 0,58,4,210,14,IDC_CURRENTFOLDER);
-	AddRCControl("CONTROL", "SysListView32", "", LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_LIST | LVS_SHAREIMAGELISTS | WS_TABSTOP, WS_EX_CLIENTEDGE,0,22,280,114,IDC_FILELIST);
-	AddRCControl("LTEXT", "", "Remote file &name:", 0, 0,0,146,66,8,IDC_FILENAMELABEL);
+	AddRCControl(_T("SCROLLBAR"), _T(""), _T(""), SBS_RIGHTALIGN, 0,270,160,8,16, IDC_GRIPPER);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""),ES_AUTOHSCROLL | WS_TABSTOP, 0,74,144,154,13, IDC_FILENAME);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Files of &type:"), 0, 0,0,164,40,8,IDC_FILETYPESLABEL);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP, 0,74,163,154,100,IDC_FILETYPES);
+	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_TABSTOP, 0,230,143,50,14, IDOK);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0,230,162,50,14,IDCANCEL);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Current Folder:"), 0, 0,0,7,47,8,IDC_CURFOLDERLABEL);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_AUTOHSCROLL | ES_READONLY, 0,58,4,210,14,IDC_CURRENTFOLDER);
+	AddRCControl(_T("CONTROL"), _T("SysListView32"), _T(""), LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_LIST | LVS_SHAREIMAGELISTS | WS_TABSTOP, WS_EX_CLIENTEDGE,0,22,280,114,IDC_FILELIST);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Remote file &name:"), 0, 0,0,146,66,8,IDC_FILENAMELABEL);
 
 	InitFilterArray(szFilters);
 
 	if (m_sCurFolder.IsEmpty())
-		m_sCurFolder = AfxGetApp()->GetProfileString("RemoteSettings\\LastFolder", m_sServer);
+		m_sCurFolder = AfxGetApp()->GetProfileString(_T("RemoteSettings\\LastFolder"), m_sServer);
 
 	if (m_sCurFolder.IsEmpty())
 		m_pConnection->GetCurrentDirectory(m_sCurFolder);
@@ -183,7 +183,7 @@ BOOL CRemoteFileDialog::OnInitDialog()
 		EndDialog(IDCANCEL);
 
 	if (FolderSelect())
-		GetDlgItem(IDC_FILENAMELABEL)->SetWindowText("Remote folder &name:");
+		GetDlgItem(IDC_FILENAMELABEL)->SetWindowText(_T("Remote folder &name:"));
 
 	// set up list image lists
 	if (m_silLarge.Initialize())
@@ -210,9 +210,9 @@ BOOL CRemoteFileDialog::OnInitDialog()
 	m_sFilterExt = m_aFilters[m_cbFileTypes.GetItemData(0)].sExt;
 
 	// add columns to filelist
-	m_lcFiles.InsertColumn(FILENAME, "Name", LVCFMT_LEFT, 150);
-	m_lcFiles.InsertColumn(FILESIZE, "Size", LVCFMT_RIGHT, 60);
-	m_lcFiles.InsertColumn(MODDATE, "Last Modified", LVCFMT_LEFT, 150);
+	m_lcFiles.InsertColumn(FILENAME, _T("Name"), LVCFMT_LEFT, 150);
+	m_lcFiles.InsertColumn(FILESIZE, _T("Size"), LVCFMT_RIGHT, 60);
+	m_lcFiles.InsertColumn(MODDATE, _T("Last Modified"), LVCFMT_LEFT, 150);
 
 	UpdateOKButton();
 
@@ -262,7 +262,7 @@ void CRemoteFileDialog::PostCreate()
 	}
 
 	// restore size
-	DWORD dwSize = AfxGetApp()->GetProfileInt("RemoteSettings", "LastSize", -1);
+	DWORD dwSize = AfxGetApp()->GetProfileInt(_T("RemoteSettings"), _T("LastSize"), -1);
 
 	if (dwSize != -1)
 	{
@@ -278,7 +278,7 @@ void CRemoteFileDialog::PostCreate()
 	}
 
 	// restore last view
-	int nView = AfxGetApp()->GetProfileInt("RemoteSettings", "LastView", LVS_LIST);
+	int nView = AfxGetApp()->GetProfileInt(_T("RemoteSettings"), _T("LastView"), LVS_LIST);
 	OnChangeView(VIEWIDS[nView]);
 
 	// init resize icon
@@ -301,19 +301,19 @@ int CRemoteFileDialog::DoModal(DWORD dwOptions, LPCTSTR szFilename)
 
 			m_eFilename.EnableStyle(FES_FOLDERS);
 
-			sCaption.Format("Save To Folder (%s)", m_sServer);
+			sCaption.Format(_T("Save To Folder (%s)"), (LPCTSTR)m_sServer);
 		}
 		else
-			sCaption.Format("Save As (%s)", m_sServer);
+			sCaption.Format(_T("Save As (%s)"), (LPCTSTR)m_sServer);
 	}
 	else // download
 	{
 		dwOptions |= RFD_FILEMUSTEXIST;
 
 		if (dwOptions & RFD_MULTISELECT)
-			sCaption.Format("Select Files to Download (%s)", m_sServer);
+			sCaption.Format(_T("Select Files to Download (%s)"), (LPCTSTR)m_sServer);
 		else
-			sCaption.Format("Select File to Download (%s)", m_sServer);
+			sCaption.Format(_T("Select File to Download (%s)"), (LPCTSTR)m_sServer);
 	}
 
 	m_sFilenames = szFilename;
@@ -401,7 +401,7 @@ void CRemoteFileDialog::OnDblclkFilelist(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 void CRemoteFileDialog::OnUpOneLevel()
 {
 	if (!(m_dwOptions & RFD_NONAVIGATE))
-		SetCurrentFolder("..");
+		SetCurrentFolder(_T(".."));
 }
 
 void CRemoteFileDialog::SetCurrentFolder(LPCTSTR szFolder)
@@ -413,9 +413,9 @@ void CRemoteFileDialog::SetCurrentFolder(LPCTSTR szFolder)
 		if (m_pConnection->SetCurrentDirectory(szFolder))
 			FillFileList();
 
-		else if (m_pConnection->SetCurrentDirectory("/"))
+		else if (m_pConnection->SetCurrentDirectory(_T("/")))
 		{
-			m_sCurFolder = "/";
+			m_sCurFolder = _T("/");
 			FillFileList();
 		}
 	}
@@ -428,10 +428,10 @@ void CRemoteFileDialog::FillFileList()
 	if (m_pConnection)
 	{
 		m_pConnection->GetCurrentDirectory(m_sCurFolder);
-		m_bRoot = (m_sCurFolder == "/");
+		m_bRoot = (m_sCurFolder == _T("/"));
 
 		if (m_bRoot)
-			m_sCurFolder = "(root)";
+			m_sCurFolder = _T("(root)");
 
 		UpdateData(FALSE);
 
@@ -457,16 +457,16 @@ void CRemoteFileDialog::FillFileList()
 
 				else if (!FolderSelect()) // check extension matches filter
 				{
-					BOOL bMatch = m_sFilterExt.IsEmpty() || m_sFilterExt == ".*";
+					BOOL bMatch = m_sFilterExt.IsEmpty() || m_sFilterExt == _T(".*");
 
 					if (!bMatch)
 					{
-						char szExt[_MAX_EXT] = "*";
+						TCHAR szExt[_MAX_EXT] = _T("*");
 						CString sFilename = ff.GetFileName();
-						_splitpath(sFilename, NULL, NULL, NULL, &szExt[1]);
+						_tsplitpath(sFilename, NULL, NULL, NULL, &szExt[1]);
 
 						CStringArray aFilterExt;
-						Misc::Split(m_sFilterExt, ';', aFilterExt);
+						Misc::Split(m_sFilterExt, _T(';'), aFilterExt);
 
 						bMatch = (Misc::Find(aFilterExt, szExt) != -1);
 					}
@@ -476,8 +476,7 @@ void CRemoteFileDialog::FillFileList()
 						FILETIME tLastMod;
 						ff.GetLastWriteTime(&tLastMod);
 
-						/*int nIndex = */
-						AddFileItem(ff.GetFileName(), RFDT_FILE, nID++, ff.GetLength(), &tLastMod);
+						AddFileItem(ff.GetFileName(), RFDT_FILE, nID++, (DWORD)ff.GetLength(), &tLastMod);
 					}
 				}
 			}
@@ -551,7 +550,7 @@ CString CRemoteFileDialog::FormatDate(double dDate)
 	if (dDate > 0.0)
 	{
 		COleDateTime date(dDate);
-		sDate.Format("%s %s", date.Format(VAR_DATEVALUEONLY), date.Format(VAR_TIMEVALUEONLY));
+		sDate.Format(_T("%s %s"), date.Format(VAR_DATEVALUEONLY), date.Format(VAR_TIMEVALUEONLY));
 	}
 
 	return sDate;
@@ -559,16 +558,16 @@ CString CRemoteFileDialog::FormatDate(double dDate)
 
 CString CRemoteFileDialog::FormatSize(DWORD dwSize)
 {
-	CString sSize("0 KB");
+	CString sSize(_T("0 KB"));
 
 	if (dwSize > 0 && dwSize < 1024)
-		sSize = "1 KB";
+		sSize = _T("1 KB");
 
 	else if (dwSize < (1024 * 1024))
-		sSize.Format("%d KB", dwSize / 1024);
+		sSize.Format(_T("%d KB"), dwSize / 1024);
 
 	else
-		sSize.Format("%.02f MB", dwSize / (1024.0 * 1024.0));
+		sSize.Format(_T("%.02f MB"), dwSize / (1024.0 * 1024.0));
 
 	return sSize;
 }
@@ -613,7 +612,6 @@ DWORD CRemoteFileDialog::GetItemSize(int nItem)
 
 void CRemoteFileDialog::OnItemchangedFilelist(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-	/*NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;*/
 	*pResult = 0;
 
 	if (m_bFilling)
@@ -633,7 +631,7 @@ void CRemoteFileDialog::OnItemchangedFilelist(NMHDR* /*pNMHDR*/, LRESULT* pResul
 			CString sFilePath(sFileName);
 
 			if (!m_bRoot)
-				sFilePath.Format("%s/%s", m_sCurFolder, sFileName);
+				sFilePath.Format(_T("%s/%s"), m_sCurFolder, sFileName);
 
 			m_aFiles.RemoveAll();
 			m_aFiles.Add(FILERESULT(sFilePath, GetItemSize(nSel)));
@@ -658,13 +656,13 @@ void CRemoteFileDialog::OnItemchangedFilelist(NMHDR* /*pNMHDR*/, LRESULT* pResul
 				CString sFilePath(sFileName);
 
 				if (!m_bRoot)
-					sFilePath.Format("%s/%s", m_sCurFolder, sFileName);
+					sFilePath.Format(_T("%s/%s"), m_sCurFolder, sFileName);
 
 				m_aFiles.Add(FILERESULT(sFilePath, GetItemSize(nItem)));
 
 				// update current filename
 				CString sItem;
-				sItem.Format("\"%s\" ", sFileName);
+				sItem.Format(_T("\"%s\" "), sFileName);
 				m_sFilenames += sItem;
 			}
 		}
@@ -680,14 +678,14 @@ void CRemoteFileDialog::InitFilterArray(LPCTSTR szFilters)
 	{
 		CString sFilters(szFilters);
 
-		int nFind = sFilters.Find('|');
+		int nFind = sFilters.Find(_T('|'));
 
 		while (nFind != -1)
 		{
 			CString sName = sFilters.Left(nFind);
 			sFilters = sFilters.Mid(nFind + 1);
 
-			nFind = sFilters.Find('|');
+			nFind = sFilters.Find(_T('|'));
 
 			if (nFind != -1)
 			{
@@ -697,14 +695,14 @@ void CRemoteFileDialog::InitFilterArray(LPCTSTR szFilters)
 				if (!sName.IsEmpty() && !sFilter.IsEmpty())
 					m_aFilters.Add(FILEFILTER(sName, sFilter));
 
-				nFind = sFilters.Find('|'); // next pair
+				nFind = sFilters.Find(_T('|')); // next pair
 			}
 		}
 	}
 
 	// add default if no filters found
 	if (!m_aFilters.GetSize())
-		m_aFilters.Add(FILEFILTER("All Files (*.*)", ""));
+		m_aFilters.Add(FILEFILTER(_T("All Files (*.*)"), _T("")));
 }
 
 void CRemoteFileDialog::OnOK()
@@ -713,12 +711,12 @@ void CRemoteFileDialog::OnOK()
 	UpdateFileResults();
 
 	// save the current state
-	AfxGetApp()->WriteProfileString("RemoteSettings\\LastFolder", m_sServer, m_bRoot ? "" : m_sCurFolder);
-	AfxGetApp()->WriteProfileInt("RemoteSettings", "LastView", (m_lcFiles.GetStyle() & LVS_TYPEMASK));
+	AfxGetApp()->WriteProfileString(_T("RemoteSettings\\LastFolder"), m_sServer, m_bRoot ? _T("") : m_sCurFolder);
+	AfxGetApp()->WriteProfileInt(_T("RemoteSettings"), _T("LastView"), (m_lcFiles.GetStyle() & LVS_TYPEMASK));
 
 	CRect rWindow;
 	GetWindowRect(rWindow);
-	AfxGetApp()->WriteProfileInt("RemoteSettings", "LastSize", MAKELONG(rWindow.Width(), rWindow.Height()));
+	AfxGetApp()->WriteProfileInt(_T("RemoteSettings"), _T("LastSize"), MAKELONG(rWindow.Width(), rWindow.Height()));
 
 	// don't end if nothing selected or if RFD_FILEMUSTEXIST is selected
 	// and no match can be found
@@ -800,10 +798,10 @@ void CRemoteFileDialog::OnViewMenu()
 
 	if (menu.CreatePopupMenu())
 	{
-		menu.InsertMenu(0, MF_STRING | MF_BYPOSITION, ID_VIEW_LARGEICON, "Lar&ge Icons");
-		menu.InsertMenu(1, MF_STRING | MF_BYPOSITION, ID_VIEW_SMALLICON, "S&mall Icons");
-		menu.InsertMenu(2, MF_STRING | MF_BYPOSITION, ID_VIEW_LIST, "&List");
-		menu.InsertMenu(3, MF_STRING | MF_BYPOSITION, ID_VIEW_DETAILS, "&Details");
+		menu.InsertMenu(0, MF_STRING | MF_BYPOSITION, ID_VIEW_LARGEICON, _T("Lar&ge Icons"));
+		menu.InsertMenu(1, MF_STRING | MF_BYPOSITION, ID_VIEW_SMALLICON, _T("S&mall Icons"));
+		menu.InsertMenu(2, MF_STRING | MF_BYPOSITION, ID_VIEW_LIST, _T("&List"));
+		menu.InsertMenu(3, MF_STRING | MF_BYPOSITION, ID_VIEW_DETAILS, _T("&Details"));
 
 		// check the appropriate one
 		int nView = (m_lcFiles.GetStyle() & LVS_TYPEMASK);
@@ -863,11 +861,11 @@ BOOL CRemoteFileDialog::OnToolbarNeedText(UINT /*id*/, NMHDR* pNMHDR, LRESULT* p
 	switch (nID)
 	{
 	case ID_VIEWMENU:
-		pTTT->lpszText = "View Menu";
+		pTTT->lpszText = _T("View Menu");
 		return TRUE;
 
 	case ID_UPONELEVEL:
-		pTTT->lpszText = "Up One Level";
+		pTTT->lpszText = _T("Up One Level");
 		return TRUE;
 	}
 
@@ -884,7 +882,7 @@ void CRemoteFileDialog::UpdateFileResults()
 	// we just parse m_sFilenames
 	CString sFileNames(m_sFilenames);
 	BOOL bMustExist = FileMustExist(); // for downloads
-	int nStartQuote = sFileNames.Find('\"');
+	int nStartQuote = sFileNames.Find(_T('\"'));
 
 	if (nStartQuote == -1)
 	{
@@ -899,7 +897,7 @@ void CRemoteFileDialog::UpdateFileResults()
 			CString sFilePath(sFileNames);
 
 			if (!m_bRoot)
-				sFilePath.Format("%s/%s", m_sCurFolder, sFileNames);
+				sFilePath.Format(_T("%s/%s"), m_sCurFolder, sFileNames);
 
 			m_aFiles.Add(FILERESULT(sFilePath, GetItemSize(nFindMatch)));
 		}
@@ -923,13 +921,13 @@ void CRemoteFileDialog::UpdateFileResults()
 					CString sFilePath(sFileName);
 
 					if (!m_bRoot)
-						sFilePath.Format("%s/%s", m_sCurFolder, sFileName);
+						sFilePath.Format(_T("%s/%s"), m_sCurFolder, sFileName);
 
 					m_aFiles.Add(FILERESULT(sFilePath, GetItemSize(nFindMatch)));
 				}
 
 				// next pair
-				nStartQuote = sFileNames.Find('\"', nEndQuote + 1);
+				nStartQuote = sFileNames.Find(_T('\"'), nEndQuote + 1);
 			}
 			else
 				nStartQuote = -1; // we're done
@@ -943,5 +941,5 @@ CString CRemoteFileDialog::GetFirstPath()
 		return m_aFiles[0].sFilePath;
 
 	// else
-	return "";
+	return _T("");
 }

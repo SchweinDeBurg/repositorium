@@ -119,7 +119,7 @@ void CTabbedComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			GetLBText(lpDrawItemStruct->itemID, sText);
 
 			// replace [\][t] with [\t]
-			sText.Replace("\\t", "\t");
+			sText.Replace(_T("\\t"), _T("\t"));
 
 			if (!sText.IsEmpty())
 				dc.TabbedTextOut(rText.left, rText.top, sText, 1, (int*)&TABSTOPS, rText.left);

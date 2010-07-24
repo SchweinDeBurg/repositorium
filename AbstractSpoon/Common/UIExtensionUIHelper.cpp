@@ -87,7 +87,7 @@ void CUIExtensionUIHelper::UpdateMenu(CCmdUI* pCmdUI, CMenuIconMgr& mgrIcon, BOO
 				CString sMenuItem, sText = m_mgrUIExt.GetUIExtensionMenuText(nExt);
 
 				if (nPos < 9)
-					sMenuItem.Format("&%d %s", nPos + 1, sText);
+					sMenuItem.Format(_T("&%d %s"), nPos + 1, sText);
 				else
 					sMenuItem = sText;
 
@@ -110,7 +110,7 @@ void CUIExtensionUIHelper::UpdateMenu(CCmdUI* pCmdUI, CMenuIconMgr& mgrIcon, BOO
 		else // if nothing to add just re-add placeholder
 		{
 			pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex, MF_BYPOSITION | MF_STRING | MF_GRAYED,
-				m_nStartID, "3rd Party Extensions");
+				m_nStartID, _T("3rd Party Extensions"));
 		}
 	}
 }
