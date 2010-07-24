@@ -129,13 +129,13 @@ void CTDLMultiSortDlg::BuildCombos()
 	}
 
 	// add blank item at top of 2nd and 3rd combo
-	int nIndex = m_cbSortBy2.InsertString(0, "");
+	int nIndex = m_cbSortBy2.InsertString(0, _T(""));
 	m_cbSortBy2.SetItemData(nIndex, TDC_UNSORTED);
 	
 	if (m_nSortBy2 == TDC_UNSORTED)
 		m_cbSortBy2.SetCurSel(nIndex);
 	
-	nIndex = m_cbSortBy3.InsertString(0, "");
+	nIndex = m_cbSortBy3.InsertString(0, _T(""));
 	m_cbSortBy3.SetItemData(nIndex, TDC_UNSORTED);
 	
 	if (m_nSortBy3 == TDC_UNSORTED)

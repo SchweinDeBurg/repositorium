@@ -299,8 +299,8 @@ BOOL CTDLFindTaskExpressionListCtrl::DeleteSelectedCell()
 		}
 		else if (nCol == VALUE) // clear text
 		{
-			SetItemText(nRow, nCol, "");
-			m_aSearchParams[nRow].sValue = "";
+			SetItemText(nRow, nCol, _T(""));
+			m_aSearchParams[nRow].sValue = _T("");
 		}
 	}
 	
@@ -453,15 +453,15 @@ void CTDLFindTaskExpressionListCtrl::PrepareEdit(int nRow, int /*nCol*/)
 	switch (sp.GetAttribType())
 	{
 	case FT_STRING:
-		m_editBox.SetMask("");
+		m_editBox.SetMask(_T(""));
 		break;
 		
 	case FT_INTEGER:
-		m_editBox.SetMask("1234567890");
+		m_editBox.SetMask(_T("1234567890"));
 		break;
 		
 	case FT_DOUBLE:
-		m_editBox.SetMask("1234567890.", ME_LOCALIZEDECIMAL);
+		m_editBox.SetMask(_T("1234567890."), ME_LOCALIZEDECIMAL);
 		break;
 
 	case FT_DATE:
@@ -820,7 +820,7 @@ void CTDLFindTaskExpressionListCtrl::OnAttribEditOK()
 
 		// clear the operator cell text if the operator was no longer valid
 		if (m_aSearchParams[nRow].op == FO_NONE)
-			SetItemText(nRow, OPERATOR, "");
+			SetItemText(nRow, OPERATOR, _T(""));
 
 		ValidateListData();
 	}
@@ -858,11 +858,11 @@ void CTDLFindTaskExpressionListCtrl::OnValueEditOK(NMHDR* pNMHDR, LRESULT* pResu
 		break;
 		
 	case FT_INTEGER:
-		sp.nValue = atoi(pDispInfo->item.pszText);
+		sp.nValue = _ttoi(pDispInfo->item.pszText);
 		break;
 		
 	case FT_DOUBLE:
-		sp.dValue = atof(pDispInfo->item.pszText);
+		sp.dValue = _tstof(pDispInfo->item.pszText);
 		break;
 		
 	case FT_DATE:
@@ -907,7 +907,7 @@ void CTDLFindTaskExpressionListCtrl::OnOperatorEditOK()
 			rule.nValue = 0;
 			rule.sValue.Empty();
 
-			SetItemText(nRow, VALUE, "");
+			SetItemText(nRow, VALUE, _T(""));
 		}
 
 		ValidateListData();
@@ -1018,12 +1018,12 @@ CString CTDLFindTaskExpressionListCtrl::GetAttribName(TDC_ATTRIBUTE attrib)
 			if (ATTRIBUTES[nAttrib].nAttribResID)
 				return CEnString(ATTRIBUTES[nAttrib].nAttribResID);
 			else
-				return "";
+				return _T("");
 		}
 	}
 
 	ASSERT (0); // not found
-	return "";
+	return _T("");
 }
 
 CString CTDLFindTaskExpressionListCtrl::GetOpName(FIND_OPERATOR op)
@@ -1037,12 +1037,12 @@ CString CTDLFindTaskExpressionListCtrl::GetOpName(FIND_OPERATOR op)
 			if (OPERATORS[nOp].nOpResID)
 				return CEnString(OPERATORS[nOp].nOpResID);
 			else
-				return "";
+				return _T("");
 		}
 	}
 
 	ASSERT (0); // not found
-	return "";
+	return _T("");
 }
 
 void CTDLFindTaskExpressionListCtrl::OnDateChange(NMHDR* pNMHDR, LRESULT* pResult)

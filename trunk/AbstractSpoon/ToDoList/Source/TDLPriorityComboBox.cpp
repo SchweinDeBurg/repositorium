@@ -196,7 +196,7 @@ void CTDLPriorityComboBox::BuildCombo()
 		int nPriority = m_bReverse ? 11 - nLevel : nLevel;
 		
 		CString sPriority;
-		sPriority.Format("%d (%s)", nPriority, CEnString(IDS_TDC_SCALE[nLevel]));
+		sPriority.Format(_T("%d (%s)"), nPriority, (LPCTSTR)CEnString(IDS_TDC_SCALE[nLevel]));
 		
 		AddColor(color, sPriority);
 	}

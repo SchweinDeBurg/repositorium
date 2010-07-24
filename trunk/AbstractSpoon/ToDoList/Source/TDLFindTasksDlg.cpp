@@ -279,24 +279,24 @@ void CTDLFindTasksDlg::LoadSettings()
 {
 	CPreferences prefs;
 
-	m_bAllTasklists = prefs.GetProfileInt("FindTasks", "SearchAllTaskLists", FALSE);
-	m_bAutoSelectSingles = prefs.GetProfileInt("FindTasks", "AutoSelectSingles", FALSE);
+	m_bAllTasklists = prefs.GetProfileInt(_T("FindTasks"), _T("SearchAllTaskLists"), FALSE);
+	m_bAutoSelectSingles = prefs.GetProfileInt(_T("FindTasks"), _T("AutoSelectSingles"), FALSE);
 
 	// include options
-	m_cbInclude.SetCheck(FI_COMPLETED, prefs.GetProfileInt("FindTasks", "IncludeDoneTasks", FALSE));
-//	m_cbInclude.SetCheck(FI_COLLAPSED, prefs.GetProfileInt("FindTasks", "IncludeCollapsedTasks", TRUE));
-	m_cbInclude.SetCheck(FI_PARENT, prefs.GetProfileInt("FindTasks", "IncludeParentTasks", TRUE));
+	m_cbInclude.SetCheck(FI_COMPLETED, prefs.GetProfileInt(_T("FindTasks"), _T("IncludeDoneTasks"), FALSE));
+//	m_cbInclude.SetCheck(FI_COLLAPSED, prefs.GetProfileInt(_T("FindTasks"), _T("IncludeCollapsedTasks"), TRUE));
+	m_cbInclude.SetCheck(FI_PARENT, prefs.GetProfileInt(_T("FindTasks"), _T("IncludeParentTasks"), TRUE));
 
 	if (m_bDockable)
 	{
 		DM_POS nPos = DMP_UNDOCKED, nLastPos = DMP_RIGHT;
-		DWORD dwTopLeft = (DWORD)prefs.GetProfileInt("FindTasks", "TopLeft", -1);
-		DWORD dwBottomRight = (DWORD)prefs.GetProfileInt("FindTasks", "BottomRight", -1);
+		DWORD dwTopLeft = (DWORD)prefs.GetProfileInt(_T("FindTasks"), _T("TopLeft"), -1);
+		DWORD dwBottomRight = (DWORD)prefs.GetProfileInt(_T("FindTasks"), _T("BottomRight"), -1);
 		
 		if (dwBottomRight != -1 && dwTopLeft != -1)
 		{
-			nPos = (DM_POS)prefs.GetProfileInt("FindTasks", "DockPos", DMP_UNDOCKED);
-			nLastPos = (DM_POS)prefs.GetProfileInt("FindTasks", "LastDockPos", DMP_RIGHT);
+			nPos = (DM_POS)prefs.GetProfileInt(_T("FindTasks"), _T("DockPos"), DMP_UNDOCKED);
+			nLastPos = (DM_POS)prefs.GetProfileInt(_T("FindTasks"), _T("LastDockPos"), DMP_RIGHT);
 
 			CRect rect(GET_X_LPARAM(dwTopLeft), GET_Y_LPARAM(dwTopLeft), 
 					GET_X_LPARAM(dwBottomRight), GET_Y_LPARAM(dwBottomRight));
@@ -316,11 +316,11 @@ void CTDLFindTasksDlg::LoadSettings()
 		// docked width/height
 		CSize rDef = GetMinDockedSize(nPos);
 		
-		int nWidthDocked = prefs.GetProfileInt("FindTasks", "DockedWidth", rDef.cx);
-		int nWidthDockedMax = prefs.GetProfileInt("FindTasks", "DockedWidthMax", -1);
+		int nWidthDocked = prefs.GetProfileInt(_T("FindTasks"), _T("DockedWidth"), rDef.cx);
+		int nWidthDockedMax = prefs.GetProfileInt(_T("FindTasks"), _T("DockedWidthMax"), -1);
 		
-		int nHeightDocked = prefs.GetProfileInt("FindTasks", "DockedHeight", rDef.cy);
-		int nHeightDockedMax = prefs.GetProfileInt("FindTasks", "DockedHeightMax", -1);
+		int nHeightDocked = prefs.GetProfileInt(_T("FindTasks"), _T("DockedHeight"), rDef.cy);
+		int nHeightDockedMax = prefs.GetProfileInt(_T("FindTasks"), _T("DockedHeightMax"), -1);
 		
 		m_dockMgr.Initialize(GetParent(), this, nPos, nLastPos,
 							nWidthDocked, nWidthDockedMax, nHeightDocked, nHeightDockedMax);
@@ -711,25 +711,25 @@ void CTDLFindTasksDlg::SaveSettings()
 
 	CPreferences prefs;
 	
-	prefs.WriteProfileInt("FindTasks", "SearchAllTaskLists", m_bAllTasklists);
-	prefs.WriteProfileInt("FindTasks", "AutoSelectSingles", m_bAutoSelectSingles);
+	prefs.WriteProfileInt(_T("FindTasks"), _T("SearchAllTaskLists"), m_bAllTasklists);
+	prefs.WriteProfileInt(_T("FindTasks"), _T("AutoSelectSingles"), m_bAutoSelectSingles);
 
 	// include settings
-	prefs.WriteProfileInt("FindTasks", "IncludeDoneTasks", m_cbInclude.GetCheck(FI_COMPLETED));
-//	prefs.WriteProfileInt("FindTasks", "IncludeCollapsedTasks", m_cbInclude.GetCheck(FI_COLLAPSED));
-	prefs.WriteProfileInt("FindTasks", "IncludeParentTasks", m_cbInclude.GetCheck(FI_PARENT));
+	prefs.WriteProfileInt(_T("FindTasks"), _T("IncludeDoneTasks"), m_cbInclude.GetCheck(FI_COMPLETED));
+//	prefs.WriteProfileInt(_T("FindTasks"), _T("IncludeCollapsedTasks"), m_cbInclude.GetCheck(FI_COLLAPSED));
+	prefs.WriteProfileInt(_T("FindTasks"), _T("IncludeParentTasks"), m_cbInclude.GetCheck(FI_PARENT));
 
 	// pos
 	CRect rDialog = m_dockMgr.GetUnDockedRect();
 	
-	prefs.WriteProfileInt("FindTasks", "TopLeft", MAKELPARAM(rDialog.left, rDialog.top));
-	prefs.WriteProfileInt("FindTasks", "BottomRight", MAKELPARAM(rDialog.right, rDialog.bottom));
-	prefs.WriteProfileInt("FindTasks", "DockPos", m_dockMgr.GetDockPos());
-	prefs.WriteProfileInt("FindTasks", "LastDockPos", m_dockMgr.GetLastDockPos());
-	prefs.WriteProfileInt("FindTasks", "DockedWidth", m_dockMgr.GetDockedWidth(FALSE));
-	prefs.WriteProfileInt("FindTasks", "DockedWidthMax", m_dockMgr.GetDockedWidth(TRUE));
-	prefs.WriteProfileInt("FindTasks", "DockedHeight", m_dockMgr.GetDockedHeight(FALSE));
-	prefs.WriteProfileInt("FindTasks", "DockedHeightMax", m_dockMgr.GetDockedHeight(TRUE));
+	prefs.WriteProfileInt(_T("FindTasks"), _T("TopLeft"), MAKELPARAM(rDialog.left, rDialog.top));
+	prefs.WriteProfileInt(_T("FindTasks"), _T("BottomRight"), MAKELPARAM(rDialog.right, rDialog.bottom));
+	prefs.WriteProfileInt(_T("FindTasks"), _T("DockPos"), m_dockMgr.GetDockPos());
+	prefs.WriteProfileInt(_T("FindTasks"), _T("LastDockPos"), m_dockMgr.GetLastDockPos());
+	prefs.WriteProfileInt(_T("FindTasks"), _T("DockedWidth"), m_dockMgr.GetDockedWidth(FALSE));
+	prefs.WriteProfileInt(_T("FindTasks"), _T("DockedWidthMax"), m_dockMgr.GetDockedWidth(TRUE));
+	prefs.WriteProfileInt(_T("FindTasks"), _T("DockedHeight"), m_dockMgr.GetDockedHeight(FALSE));
+	prefs.WriteProfileInt(_T("FindTasks"), _T("DockedHeightMax"), m_dockMgr.GetDockedHeight(TRUE));
 
 	// searches
 	SaveSearches();
@@ -1003,22 +1003,22 @@ void CTDLFindTasksDlg::OnSaveSearch()
 BOOL CTDLFindTasksDlg::LoadSearch(LPCTSTR szName, CSearchParamArray& params) const
 {
 	CPreferences prefs;
-	CEnString sKey("FindTasks\\Searches\\%s", szName);
+	CEnString sKey(_T("FindTasks\\Searches\\%s"), szName);
 
-	int nNumRules = prefs.GetProfileInt(sKey, "NumRules", 0);
+	int nNumRules = prefs.GetProfileInt(sKey, _T("NumRules"), 0);
 
 	for (int nRule = 0; nRule < nNumRules; nRule++)
 	{
-		CEnString sRule("%s\\Rule%d", sKey, nRule);
+		CEnString sRule(_T("%s\\Rule%d"), sKey, nRule);
 		SEARCHPARAM rule;
 
-		rule.attrib = (TDC_ATTRIBUTE)prefs.GetProfileInt(sRule, "Attribute", TDCA_NONE);
-		rule.op = (FIND_OPERATOR)prefs.GetProfileInt(sRule, "Operator", FO_EQUALS);
-		rule.bAnd = prefs.GetProfileInt(sRule, "And", TRUE);
-		rule.dwFlags = prefs.GetProfileInt(sRule, "Flags", 0);
+		rule.attrib = (TDC_ATTRIBUTE)prefs.GetProfileInt(sRule, _T("Attribute"), TDCA_NONE);
+		rule.op = (FIND_OPERATOR)prefs.GetProfileInt(sRule, _T("Operator"), FO_EQUALS);
+		rule.bAnd = prefs.GetProfileInt(sRule, _T("And"), TRUE);
+		rule.dwFlags = prefs.GetProfileInt(sRule, _T("Flags"), 0);
 
 		// read value
-		CString sValue = prefs.GetProfileString(sRule, "Value");
+		CString sValue = prefs.GetProfileString(sRule, _T("Value"));
 
 		switch (rule.GetAttribType())
 		{
@@ -1029,12 +1029,12 @@ BOOL CTDLFindTasksDlg::LoadSearch(LPCTSTR szName, CSearchParamArray& params) con
 		case FT_DATE:
 		case FT_DOUBLE:
 		case FT_TIME:
-			rule.dValue = atof(sValue);
+			rule.dValue = _tstof(sValue);
 			break;
 
 		case FT_INTEGER:
 		case FT_BOOL:
-			rule.nValue = atoi(sValue);
+			rule.nValue = _ttoi(sValue);
 			break;
 		}
 
@@ -1047,20 +1047,20 @@ BOOL CTDLFindTasksDlg::LoadSearch(LPCTSTR szName, CSearchParamArray& params) con
 BOOL CTDLFindTasksDlg::SaveSearch(LPCTSTR szName, const CSearchParamArray& params)
 {
 	CPreferences prefs;
-	CEnString sKey("FindTasks\\Searches\\%s", szName);
+	CEnString sKey(_T("FindTasks\\Searches\\%s"), szName);
 
-	prefs.WriteProfileInt(sKey, "NumRules", params.GetSize());
+	prefs.WriteProfileInt(sKey, _T("NumRules"), params.GetSize());
 
 	for (int nRule = 0; nRule < params.GetSize(); nRule++)
 	{
-		CEnString sRule("%s\\Rule%d", sKey, nRule);
+		CEnString sRule(_T("%s\\Rule%d"), sKey, nRule);
 		const SEARCHPARAM& rule = params[nRule];
 
-		prefs.WriteProfileInt(sRule, "Attribute", rule.attrib);
-		prefs.WriteProfileInt(sRule, "Operator", rule.op);
-		prefs.WriteProfileInt(sRule, "And", rule.bAnd);
-		prefs.WriteProfileString(sRule, "Value", rule.ValueAsString());
-		prefs.WriteProfileInt(sRule, "Flags", rule.dwFlags);
+		prefs.WriteProfileInt(sRule, _T("Attribute"), rule.attrib);
+		prefs.WriteProfileInt(sRule, _T("Operator"), rule.op);
+		prefs.WriteProfileInt(sRule, _T("And"), rule.bAnd);
+		prefs.WriteProfileString(sRule, _T("Value"), rule.ValueAsString());
+		prefs.WriteProfileInt(sRule, _T("Flags"), rule.dwFlags);
 	}
 
 	return TRUE;
@@ -1072,12 +1072,12 @@ int CTDLFindTasksDlg::LoadSearches()
 
 	m_cbSearches.ResetContent();
 
-	int nNumItems = prefs.GetProfileInt("FindTasks\\Searches", "NumSearches", 0);
+	int nNumItems = prefs.GetProfileInt(_T("FindTasks\\Searches"), _T("NumSearches"), 0);
 
 	for (int nItem = 0; nItem < nNumItems; nItem++)
 	{
-		CEnString sKey("Search%d", nItem);
-		CString sSearch = prefs.GetProfileString("FindTasks\\Searches", sKey);
+		CEnString sKey(_T("Search%d"), nItem);
+		CString sSearch = prefs.GetProfileString(_T("FindTasks\\Searches"), sKey);
 
 		// only add to the list if it can be loaded
 		CSearchParamArray dummy;
@@ -1087,7 +1087,7 @@ int CTDLFindTasksDlg::LoadSearches()
 	}
 
 	// restore last search
-	CString sSearch = prefs.GetProfileString("FindTasks\\Searches", "Current");
+	CString sSearch = prefs.GetProfileString(_T("FindTasks\\Searches"), _T("Current"));
 
 	// backup
 	if (m_cbSearches.FindStringExact(-1, sSearch) == CB_ERR)
@@ -1113,15 +1113,15 @@ int CTDLFindTasksDlg::SaveSearches()
 	CPreferences prefs;
 
 	int nNumSearches = m_cbSearches.GetCount();
-	prefs.WriteProfileInt("FindTasks\\Searches", "NumSearches", nNumSearches);
+	prefs.WriteProfileInt(_T("FindTasks\\Searches"), _T("NumSearches"), nNumSearches);
 
 	for (int nItem = 0; nItem < nNumSearches; nItem++)
 	{
-		CEnString sKey("Search%d", nItem);
+		CEnString sKey(_T("Search%d"), nItem);
 		CString sSearch;
 
 		m_cbSearches.GetLBText(nItem, sSearch);
-		prefs.WriteProfileString("FindTasks\\Searches", sKey, sSearch);
+		prefs.WriteProfileString(_T("FindTasks\\Searches"), sKey, sSearch);
 	}
 
 	// save active search
@@ -1135,7 +1135,7 @@ int CTDLFindTasksDlg::SaveSearches()
 	}
 */
 
-	prefs.WriteProfileString("FindTasks\\Searches", "Current", m_sActiveSearch);
+	prefs.WriteProfileString(_T("FindTasks\\Searches"), _T("Current"), m_sActiveSearch);
 
 	return m_cbSearches.GetCount();
 }
@@ -1314,7 +1314,7 @@ BOOL CTDLFindTasksDlg::OnToolTipNotify(UINT /*id*/, NMHDR* pNMHDR, LRESULT* /*pR
 		{
 			// Set the tooltip text.
 			::SendMessage(pNMHDR->hwndFrom, TTM_SETMAXTIPWIDTH, 0, 300);
-			pTTT->lpszText = (LPSTR)(LPCTSTR)sTooltip;
+			pTTT->lpszText = const_cast<LPTSTR>((LPCTSTR)sTooltip);
 	        return TRUE;
 		}
     }

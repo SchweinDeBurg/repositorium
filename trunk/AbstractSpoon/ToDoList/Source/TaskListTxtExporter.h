@@ -52,7 +52,7 @@ public:
 	const char* GetFileFilter() { return "Text Files (*.txt)|*.txt||"; }
 	const char* GetFileExtension() { return "txt"; }
 
-	bool Export(const ITaskList* pSrcTaskFile, const char* szDestFilePath, BOOL bSilent);
+	bool Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
     void Release() { delete this; }
 
 protected:

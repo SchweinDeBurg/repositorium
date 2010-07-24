@@ -57,10 +57,10 @@ CTDLImportDialog::CTDLImportDialog(const CImportExportMgr& mgr, CWnd* pParent /*
 	//}}AFX_DATA_INIT
 	CPreferences prefs;
 
-	m_bFromClipboard = prefs.GetProfileInt("Importing", "ImportOption", FALSE);
-	m_sFromFilePath = prefs.GetProfileString("Importing", "ImportFilePath");
-	m_nImportTo = prefs.GetProfileInt("Importing", "ImportToWhere", TDIT_SELECTEDTASK);
-	m_nFormatOption = prefs.GetProfileInt("Importing", "ImportFormat", 0);
+	m_bFromClipboard = prefs.GetProfileInt(_T("Importing"), _T("ImportOption"), FALSE);
+	m_sFromFilePath = prefs.GetProfileString(_T("Importing"), _T("ImportFilePath"));
+	m_nImportTo = prefs.GetProfileInt(_T("Importing"), _T("ImportToWhere"), TDIT_SELECTEDTASK);
+	m_nFormatOption = prefs.GetProfileInt(_T("Importing"), _T("ImportFormat"), 0);
 
 	m_nFormatOption = min(m_nFormatOption, mgr.GetNumImporters());
 }
@@ -159,10 +159,10 @@ void CTDLImportDialog::OnOK()
 	
 	CPreferences prefs;
 	
-	prefs.WriteProfileInt("Importing", "ImportOption", m_bFromClipboard);
-	prefs.WriteProfileString("Importing", "ImportFilePath", m_sFromFilePath);
-	prefs.WriteProfileInt("Importing", "ImportToWhere", m_nImportTo);
-	prefs.WriteProfileInt("Importing", "ImportFormat", m_nFormatOption);
+	prefs.WriteProfileInt(_T("Importing"), _T("ImportOption"), m_bFromClipboard);
+	prefs.WriteProfileString(_T("Importing"), _T("ImportFilePath"), m_sFromFilePath);
+	prefs.WriteProfileInt(_T("Importing"), _T("ImportToWhere"), m_nImportTo);
+	prefs.WriteProfileInt(_T("Importing"), _T("ImportFormat"), m_nFormatOption);
 
 	// retrieve clipboard text
 	if (CurImporterHasFilter())
@@ -195,12 +195,12 @@ BOOL CTDLImportDialog::GetImportFromClipboard() const
 
 CString CTDLImportDialog::GetImportFilePath() const
 {
-	return (m_bFromClipboard || !CurImporterHasFilter()) ? "" : m_sFromFilePath;
+	return (m_bFromClipboard || !CurImporterHasFilter()) ? _T("") : m_sFromFilePath;
 }
 
 CString CTDLImportDialog::GetImportClipboardText() const
 {
-	return (m_bFromClipboard && CurImporterHasFilter()) ? m_sClipboardText : "";
+	return (m_bFromClipboard && CurImporterHasFilter()) ? m_sClipboardText : _T("");
 }
 
 void CTDLImportDialog::OnSelchangeFormatoptions() 
@@ -224,7 +224,7 @@ void CTDLImportDialog::OnSelchangeFormatoptions()
 	if (bHadFilter && !bHasFilter)
 	{
 		GetDlgItem(IDC_FROMCLIPBOARDTEXT)->GetWindowText(m_sClipboardText); // update
-		GetDlgItem(IDC_FROMCLIPBOARDTEXT)->SetWindowText(""); // clear field
+		GetDlgItem(IDC_FROMCLIPBOARDTEXT)->SetWindowText(_T("")); // clear field
 	}
 	else if (!bHadFilter && bHasFilter)
 	{

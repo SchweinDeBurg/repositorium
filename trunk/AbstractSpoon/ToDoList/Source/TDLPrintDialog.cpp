@@ -52,7 +52,7 @@ static char THIS_FILE[] = __FILE__;
 CTDLPrintDialog::CTDLPrintDialog(LPCTSTR szTitle, BOOL bPreview, BOOL bShowSubtaskCheckbox, CWnd* pParent /*=NULL*/)
 	: CDialog(IDD_PRINT_DIALOG, pParent), 
 	m_bPreview(bPreview), 
-	m_taskSel("Print", bShowSubtaskCheckbox),
+	m_taskSel(_T("Print"), bShowSubtaskCheckbox),
 	m_sTitle(szTitle), 
 	m_eStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER))
 {
@@ -60,13 +60,13 @@ CTDLPrintDialog::CTDLPrintDialog(LPCTSTR szTitle, BOOL bPreview, BOOL bShowSubta
 	//}}AFX_DATA_INIT
 	CPreferences prefs;
 
-	m_bDate = prefs.GetProfileInt("Print", "WantDate", TRUE);
-	m_sStylesheet = prefs.GetProfileString("Print", "Stylesheet");
+	m_bDate = prefs.GetProfileInt(_T("Print"), _T("WantDate"), TRUE);
+	m_sStylesheet = prefs.GetProfileString(_T("Print"), _T("Stylesheet"));
 
 	// check whether user has set stylesheet in prefs
-	if (m_sStylesheet.IsEmpty() || prefs.GetProfileInt("Print", "DefaultStylesheet", FALSE))
+	if (m_sStylesheet.IsEmpty() || prefs.GetProfileInt(_T("Print"), _T("DefaultStylesheet"), FALSE))
 	{
-		CString sDefStylesheet = prefs.GetProfileString("Preferences", "PrintStylesheet");
+		CString sDefStylesheet = prefs.GetProfileString(_T("Preferences"), _T("PrintStylesheet"));
 
 		if (!sDefStylesheet.IsEmpty())
 			m_sStylesheet = sDefStylesheet;
@@ -106,12 +106,12 @@ void CTDLPrintDialog::OnOK()
 	// save settings
 	CPreferences prefs;
 
-	prefs.WriteProfileString("Print", "Stylesheet", m_bUseStylesheet ? m_sStylesheet : "");
+	prefs.WriteProfileString(_T("Print"), _T("Stylesheet"), m_bUseStylesheet ? m_sStylesheet : _T(""));
 
 	// we store whether this is the same as the default print stylesheet
 	// so we can update as it does
-	CString sDefStylesheet = prefs.GetProfileString("Preferences", "PrintStylesheet");
-	prefs.WriteProfileInt("Print", "DefaultStylesheet", (m_sStylesheet.CompareNoCase(sDefStylesheet) == 0));
+	CString sDefStylesheet = prefs.GetProfileString(_T("Preferences"), _T("PrintStylesheet"));
+	prefs.WriteProfileInt(_T("Print"), _T("DefaultStylesheet"), (m_sStylesheet.CompareNoCase(sDefStylesheet) == 0));
 }
 
 
@@ -132,7 +132,7 @@ BOOL CTDLPrintDialog::OnInitDialog()
 	GetDlgItem(IDC_STYLESHEET)->EnableWindow(m_bUseStylesheet);
 
 	// init the stylesheet folder to point to the resource folder
-	CString sXslFolder = FileMisc::GetModuleFolder() + "Resources";
+	CString sXslFolder = FileMisc::GetModuleFolder() + _T("Resources");
 	m_eStylesheet.SetCurrentFolder(sXslFolder);
 	
 	return TRUE;  // return TRUE unless you set the focus to a control

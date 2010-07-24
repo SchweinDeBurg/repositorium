@@ -89,11 +89,11 @@ BOOL CTDLTaskIconDlg::OnInitDialog()
 	{
 		CString sImage, sKey;
 
-		sKey.Format("Icon%d", nImage + 1);
-		sImage = prefs.GetProfileString("TaskIcons", sKey);
+		sKey.Format(_T("Icon%d"), nImage + 1);
+		sImage = prefs.GetProfileString(_T("TaskIcons"), sKey);
 
 		if (sImage.IsEmpty())
-			sImage.Format("%d", nImage + 1);
+			sImage.Format(_T("%d"), nImage + 1);
 		
 		m_lcIcons.InsertItem(nImage, sImage, nImage);
 	}
@@ -156,13 +156,13 @@ void CTDLTaskIconDlg::OnDestroy()
 		CString sImage, sKey, sText;
 
 		// only save the ones thsat have been modified
-		sImage.Format("%d", nImage + 1);
+		sImage.Format(_T("%d"), nImage + 1);
 		sText = m_lcIcons.GetItemText(nImage, 0);
 
 		if (sText != sImage)
 		{
-			sKey.Format("Icon%d", nImage + 1);
-			prefs.WriteProfileString("TaskIcons", sKey, sText);
+			sKey.Format(_T("Icon%d"), nImage + 1);
+			prefs.WriteProfileString(_T("TaskIcons"), sKey, sText);
 		}
 	}
 	

@@ -50,7 +50,7 @@ static char THIS_FILE[] = __FILE__;
 
 
 CTDLTransformDialog::CTDLTransformDialog(LPCTSTR szTitle, BOOL bShowSubtaskCheckbox, CWnd* pParent /*=NULL*/)
-	: CDialog(IDD_TRANSFORM_DIALOG, pParent), m_taskSel("Transform", bShowSubtaskCheckbox),
+	: CDialog(IDD_TRANSFORM_DIALOG, pParent), m_taskSel(_T("Transform"), bShowSubtaskCheckbox),
 		m_sTitle(szTitle), m_eStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER))
 
 {
@@ -59,8 +59,8 @@ CTDLTransformDialog::CTDLTransformDialog(LPCTSTR szTitle, BOOL bShowSubtaskCheck
 	// see what we had last time
 	CPreferences prefs;
 
-	m_sStylesheet = prefs.GetProfileString("Transform", "Stylesheet");
-	m_bDate = prefs.GetProfileInt("Transform", "WantDate", TRUE);
+	m_sStylesheet = prefs.GetProfileString(_T("Transform"), _T("Stylesheet"));
+	m_bDate = prefs.GetProfileInt(_T("Transform"), _T("WantDate"), TRUE);
 }
 
 
@@ -92,8 +92,8 @@ void CTDLTransformDialog::OnOK()
 
 	CPreferences prefs;
 
-	prefs.WriteProfileString("Transform", "Stylesheet", m_sStylesheet);
-	prefs.WriteProfileInt("Transform", "WantDate", m_bDate);
+	prefs.WriteProfileString(_T("Transform"), _T("Stylesheet"), m_sStylesheet);
+	prefs.WriteProfileInt(_T("Transform"), _T("WantDate"), m_bDate);
 }
 
 
@@ -105,7 +105,7 @@ BOOL CTDLTransformDialog::OnInitDialog()
 	GetDlgItem(IDOK)->EnableWindow(GetFileAttributes(m_sStylesheet) != 0xffffffff);
 	
 	// init the stylesheet folder to point to the resource folder
-	CString sXslFolder = FileMisc::GetModuleFolder() + "Resources";
+	CString sXslFolder = FileMisc::GetModuleFolder() + _T("Resources");
 	m_eStylesheet.SetCurrentFolder(sXslFolder);
 
 	return TRUE;  // return TRUE unless you set the focus to a control

@@ -6061,7 +6061,7 @@ BOOL CToDoCtrl::ArchiveTasks(LPCTSTR szArchivePath, const CTaskFile& tasks)
 	{
 		file.SetArchive(true);
 		file.SetFileFormat(FILEFORMAT_CURRENT);
-		file.SetProjectName(CEnString(_T("%s (%s)"), m_sProjectName, CEnString(IDS_TDC_ARCHIVEPROJECT)));
+		file.SetProjectName(ATL::CT2A(CEnString(_T("%s (%s)"), (LPCTSTR)m_sProjectName, (LPCTSTR)CEnString(IDS_TDC_ARCHIVEPROJECT))));
 		file.SetNextUniqueID(1);
 		file.SetFileVersion(1);
 		file.SetLastModified(CDateHelper::FormatCurrentDate(TRUE));
@@ -6220,15 +6220,15 @@ void CToDoCtrl::OnTreeGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult)
 			if (m_data.GetSubtaskTotals(GetTaskID(hti), nSubtasksCount, nSubtasksDone))
 			{
 				static CString sText;
-				sText.Format(_T("(%d/%d) %s"), nSubtasksDone, nSubtasksCount, pTDI->sTitle);
+				sText.Format(_T("(%d/%d) %s"), nSubtasksDone, nSubtasksCount, (LPCTSTR)pTDI->sTitle);
 
-				lptvdi->item.pszText = (LPCTSTR)sText;
+				lptvdi->item.pszText = const_cast<LPTSTR>((LPCTSTR)sText);
 				return;
 			}
 		}
 
 		// all else
-		lptvdi->item.pszText = (LPCTSTR)pTDI->sTitle;
+		lptvdi->item.pszText = const_cast<LPTSTR>((LPCTSTR)pTDI->sTitle);
 	}
 }
 
@@ -10389,7 +10389,7 @@ BOOL CToDoCtrl::SetTaskAttributes(const TODOITEM* pTDI, const TODOSTRUCTURE* pTD
 			if (CONTENTFORMAT(pTDI->sCommentsTypeID).FormatIsText())
 			{
 				if (!pTDI->sComments.IsEmpty() || pTDI->sCommentsTypeID != m_cfDefault)
-					file.SetTaskCustomComments(hTask, "", pTDI->sCommentsTypeID);
+					file.SetTaskCustomComments(hTask, _T(""), pTDI->sCommentsTypeID);
 			}
 			// else we save the custom comments either if there are any comments or if the
 			// comments type is different from the default
@@ -10400,8 +10400,8 @@ BOOL CToDoCtrl::SetTaskAttributes(const TODOITEM* pTDI, const TODOSTRUCTURE* pTD
 	else if (bDone)
 	{
 		file.SetTaskDoneDate(hTask, pTDI->dateDone);
-		file.HideAttribute(hTask, TDL_TASKDONEDATE);
-		file.HideAttribute(hTask, TDL_TASKDONEDATESTRING);
+		file.HideAttribute(hTask, ATL::CT2A(TDL_TASKDONEDATE));
+		file.HideAttribute(hTask, ATL::CT2A(TDL_TASKDONEDATESTRING));
 	}
 
 	// task color
@@ -10475,7 +10475,7 @@ BOOL CToDoCtrl::AddTreeItemToTaskFile(HTREEITEM hti, CTaskFile& file, HTASKITEM 
 
 		CString sTitle = pTDI->sTitle;
 
-		HTASKITEM hTask = file.NewTask(sTitle, hParentTask, dwTaskID);
+		HTASKITEM hTask = file.NewTask(ATL::CT2A(sTitle), hParentTask, dwTaskID);
 		ASSERT(hTask);
 
 		if (!hTask)
@@ -10599,17 +10599,17 @@ void CToDoCtrl::SaveSortState(CPreferences& prefs)
 	// create a new key using the filepath
 	ASSERT (GetSafeHwnd());
 
-	CString sKey = GetPreferencesKey("SortState");
+	CString sKey = GetPreferencesKey(_T("SortState"));
 
 	if (!sKey.IsEmpty())
 	{
-		prefs.WriteProfileInt(sKey, "Multi", m_bMultiSort);
-		prefs.WriteProfileInt(sKey, "Column", m_sort.nBy1);
-		prefs.WriteProfileInt(sKey, "Column2", m_sort.nBy2);
-		prefs.WriteProfileInt(sKey, "Column3", m_sort.nBy3);
-		prefs.WriteProfileInt(sKey, "Ascending", m_sort.bAscending1);
-		prefs.WriteProfileInt(sKey, "Ascending2", m_sort.bAscending2);
-		prefs.WriteProfileInt(sKey, "Ascending3", m_sort.bAscending3);
+		prefs.WriteProfileInt(sKey, _T("Multi"), m_bMultiSort);
+		prefs.WriteProfileInt(sKey, _T("Column"), m_sort.nBy1);
+		prefs.WriteProfileInt(sKey, _T("Column2"), m_sort.nBy2);
+		prefs.WriteProfileInt(sKey, _T("Column3"), m_sort.nBy3);
+		prefs.WriteProfileInt(sKey, _T("Ascending"), m_sort.bAscending1);
+		prefs.WriteProfileInt(sKey, _T("Ascending2"), m_sort.bAscending2);
+		prefs.WriteProfileInt(sKey, _T("Ascending3"), m_sort.bAscending3);
 	}
 }
 
@@ -10625,9 +10625,9 @@ CString CToDoCtrl::GetPreferencesKey(LPCTSTR szSubKey, LPCTSTR szFilePath) const
 		sFilePath = CPreferences::KeyFromFile(sFilePath);
 
 		if (szSubKey && *szSubKey)
-			sKey.Format("FileStates\\%s\\%s", sFilePath, szSubKey);
+			sKey.Format(_T("FileStates\\%s\\%s"), sFilePath, szSubKey);
 		else
-			sKey.Format("FileStates\\%s", sFilePath);
+			sKey.Format(_T("FileStates\\%s"), sFilePath);
 	}
 
 	return sKey;
@@ -10635,19 +10635,19 @@ CString CToDoCtrl::GetPreferencesKey(LPCTSTR szSubKey, LPCTSTR szFilePath) const
 
 void CToDoCtrl::LoadSortState(const CPreferences& prefs, LPCTSTR szFilePath)
 {
-	CString sKey = GetPreferencesKey("SortState", szFilePath);
+	CString sKey = GetPreferencesKey(_T("SortState"), szFilePath);
 
 	if (!sKey.IsEmpty())
 	{
 		TDC_SORTBY nDefSort = TDC_UNSORTED;
 
-		m_bMultiSort = prefs.GetProfileInt(sKey, "Multi", FALSE);
-		m_sort.nBy1 = (TDC_SORTBY)prefs.GetProfileInt(sKey, "Column", nDefSort);
-		m_sort.nBy2 = (TDC_SORTBY)prefs.GetProfileInt(sKey, "Column2", TDC_UNSORTED);
-		m_sort.nBy3 = (TDC_SORTBY)prefs.GetProfileInt(sKey, "Column3", TDC_UNSORTED);
-		m_sort.bAscending1 = prefs.GetProfileInt(sKey, "Ascending", TRUE);
-		m_sort.bAscending2 = prefs.GetProfileInt(sKey, "Ascending2", TRUE);
-		m_sort.bAscending3 = prefs.GetProfileInt(sKey, "Ascending3", TRUE);
+		m_bMultiSort = prefs.GetProfileInt(sKey, _T("Multi"), FALSE);
+		m_sort.nBy1 = (TDC_SORTBY)prefs.GetProfileInt(sKey, _T("Column"), nDefSort);
+		m_sort.nBy2 = (TDC_SORTBY)prefs.GetProfileInt(sKey, _T("Column2"), TDC_UNSORTED);
+		m_sort.nBy3 = (TDC_SORTBY)prefs.GetProfileInt(sKey, _T("Column3"), TDC_UNSORTED);
+		m_sort.bAscending1 = prefs.GetProfileInt(sKey, _T("Ascending"), TRUE);
+		m_sort.bAscending2 = prefs.GetProfileInt(sKey, _T("Ascending2"), TRUE);
+		m_sort.bAscending3 = prefs.GetProfileInt(sKey, _T("Ascending3"), TRUE);
 
 		// backward compatibility
 		m_sort.nBy1 = max(m_sort.nBy1, TDC_UNSORTED);
@@ -10661,20 +10661,20 @@ void CToDoCtrl::SaveSplitPos(CPreferences& prefs)
 	CString sKey = GetPreferencesKey(); // no subkey
 
 	if (!sKey.IsEmpty())
-		prefs.WriteProfileInt(sKey, "SplitPos", m_nCommentsSize);
+		prefs.WriteProfileInt(sKey, _T("SplitPos"), m_nCommentsSize);
 
 	if (HasStyle(TDCS_SHAREDCOMMENTSHEIGHT))
-		prefs.WriteProfileInt("FileStates", "SharedSplitPos", s_nCommentsSize);
+		prefs.WriteProfileInt(_T("FileStates"), _T("SharedSplitPos"), s_nCommentsSize);
 }
 
 void CToDoCtrl::LoadSplitPos(const CPreferences& prefs)
 {
-	s_nCommentsSize = prefs.GetProfileInt("FileStates", "SharedSplitPos", DEFCOMMENTSIZE);
+	s_nCommentsSize = prefs.GetProfileInt(_T("FileStates"), _T("SharedSplitPos"), DEFCOMMENTSIZE);
 
 	CString sKey = GetPreferencesKey(); // no subkey
 
 	if (!sKey.IsEmpty())
-		m_nCommentsSize = prefs.GetProfileInt(sKey, "SplitPos", DEFCOMMENTSIZE);
+		m_nCommentsSize = prefs.GetProfileInt(sKey, _T("SplitPos"), DEFCOMMENTSIZE);
 	else
 		m_nCommentsSize = s_nCommentsSize;
 }
@@ -10689,17 +10689,17 @@ void CToDoCtrl::SaveExpandedState(CPreferences& prefs)
 
 	// create a new key using the filepath and simply save the ID 
 	// of every expanded item
-	CString sKey = GetPreferencesKey("ExpandedState");
+	CString sKey = GetPreferencesKey(_T("ExpandedState"));
 
 	if (!sKey.IsEmpty())
 	{
 		int nCount = SaveTreeExpandedState(prefs, sKey);
 
 		// save expanded count
-		prefs.WriteProfileInt(sKey, "Count", nCount);
+		prefs.WriteProfileInt(sKey, _T("Count"), nCount);
 
 		// and selected item
-		prefs.WriteProfileInt(sKey, "SelItem", GetSelectedTaskID());
+		prefs.WriteProfileInt(sKey, _T("SelItem"), GetSelectedTaskID());
 	}
 }
 
@@ -10707,13 +10707,13 @@ HTREEITEM CToDoCtrl::LoadExpandedState(const CPreferences& prefs, BOOL bResetSel
 {
 	ASSERT (GetSafeHwnd());
 
-	CString sKey = GetPreferencesKey("ExpandedState");
+	CString sKey = GetPreferencesKey(_T("ExpandedState"));
 
 	if (!sKey.IsEmpty())
 		LoadTreeExpandedState(prefs, sKey);
 
 	// restore prev selected item
-	UINT uID = prefs.GetProfileInt(sKey, "SelItem", 0);
+	UINT uID = prefs.GetProfileInt(sKey, _T("SelItem"), 0);
 	HTREEITEM hti = NULL;
 
 	if (uID)
@@ -10736,7 +10736,7 @@ void CToDoCtrl::LoadTreeExpandedState(const CPreferences& prefs, LPCTSTR szRegKe
 {
 	ASSERT (szRegKey && *szRegKey);
 
-	int nCount = prefs.GetProfileInt(szRegKey, "Count", 0);
+	int nCount = prefs.GetProfileInt(szRegKey, _T("Count"), 0);
 
 	if (!nCount)
 		return;
@@ -10749,7 +10749,7 @@ void CToDoCtrl::LoadTreeExpandedState(const CPreferences& prefs, LPCTSTR szRegKe
 
 	while (nCount--)
 	{
-		sItem.Format("Item%d", nCount);
+		sItem.Format(_T("Item%d"), nCount);
 
 		DWORD dwTaskID = (DWORD)prefs.GetProfileInt(szRegKey, sItem, 0);
 		HTREEITEM hti = NULL;
@@ -10771,7 +10771,7 @@ int CToDoCtrl::SaveTreeExpandedState(CPreferences& prefs, LPCTSTR szRegKey, HTRE
 		if (tch.IsItemExpanded(htiChild) > 0)
 		{
 			CString sItem;
-			sItem.Format("Item%d", nCount);
+			sItem.Format(_T("Item%d"), nCount);
 
 			prefs.WriteProfileInt(szRegKey, sItem, (int)GetTaskID(htiChild));
 			nCount++;
@@ -10908,11 +10908,11 @@ BOOL CToDoCtrl::CheckIn()
 
 		if (m_bSourceControlled)
 		{
-			CString sCheckedOutTo = file.GetCheckOutTo();
+			CString sCheckedOutTo = ATL::CA2T(file.GetCheckOutTo());
 
 			if (sCheckedOutTo.IsEmpty() || sCheckedOutTo == m_sMachineName) // its us
 			{
-				file.SetCheckedOutTo(""); // retain the item
+				file.SetCheckedOutTo(_T("")); // retain the item
 
 				// and rewrite the file but keeping the same timestamp
 				FILETIME ftMod;
@@ -11270,7 +11270,7 @@ void CToDoCtrl::SpellcheckSelectedTask(BOOL bTitle)
 
 	// one off spell check
 	CSpellCheckDlg dialog;
-	dialog.SetDictionaryDownloadUrl("http://www.abstractspoon.com/dictionaries.html");
+	dialog.SetDictionaryDownloadUrl(_T("http://www.abstractspoon.com/dictionaries.html"));
 
 	SpellcheckItem(GetSelectedItem(), &dialog, bTitle, TRUE);
 }
@@ -11301,7 +11301,7 @@ void CToDoCtrl::Spellcheck()
 
 	// top level items
 	CSpellCheckDlg dialog;
-	dialog.SetDictionaryDownloadUrl("http://www.abstractspoon.com/dictionaries.html");
+	dialog.SetDictionaryDownloadUrl(_T("http://www.abstractspoon.com/dictionaries.html"));
 
 	HTREEITEM hti = m_tree.GetChildItem(NULL);
 
@@ -11763,11 +11763,11 @@ void CToDoCtrl::ParseTaskLink(LPCTSTR szLink, DWORD& dwTaskID, CString& sFile)
 	int nProtocol = sLink.Find(TDL_PROTOCOL);
 
 	if (nProtocol != -1)
-		sLink = sLink.Mid(nProtocol + strlen(TDL_PROTOCOL));
+		sLink = sLink.Mid(nProtocol + _tcslen(TDL_PROTOCOL));
 
 	// cleanup
-	sLink.Replace("%20", " ");
-	sLink.Replace("/", "\\");
+	sLink.Replace(_T("%20"), _T(" "));
+	sLink.Replace(_T("/"), _T("\\"));
 
 	// parse the url
 	TODOITEM::ParseTaskLink(sLink, dwTaskID, sFile);

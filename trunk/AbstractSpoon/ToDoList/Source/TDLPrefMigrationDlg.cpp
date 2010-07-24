@@ -78,9 +78,9 @@ BOOL CTDLPrefMigrationDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
-	m_sAnimationFilePath = FileMisc::GetTempFileName("tdl_migrate", "avi");
+	m_sAnimationFilePath = FileMisc::GetTempFileName(_T("tdl_migrate"), _T("avi"));
 
-	if (FileMisc::ExtractResource("Shell32.dll", 161, "AVI", m_sAnimationFilePath))
+	if (FileMisc::ExtractResource(_T("shell32.dll"), 161, _T("AVI"), m_sAnimationFilePath))
 		m_animation.Open(m_sAnimationFilePath);
 
 	CenterWindow();

@@ -47,8 +47,8 @@ static char THIS_FILE[]=__FILE__;
 
 class CDefaultContent : public IContent
 {
-	const char* GetTypeID() const { static LPCTSTR sID = "PLAIN_TEXT"; return sID; }
-	const char* GetTypeDescription() const { static LPCTSTR sDesc = "Simple Text"; return sDesc; }
+	const char* GetTypeID() const { static LPCSTR sID = "PLAIN_TEXT"; return sID; }
+	const char* GetTypeDescription() const { static LPCSTR sDesc = "Simple Text"; return sDesc; }
 
 	IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle, 
 						long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent)
