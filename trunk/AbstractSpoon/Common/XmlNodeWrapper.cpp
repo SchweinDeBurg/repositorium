@@ -583,7 +583,7 @@ CString CXmlDocumentWrapper::GetXML(BOOL bPreserveWhiteSpace) const
 	if (IsValid())
 	{
 		m_xmldoc->put_preserveWhiteSpace(bPreserveWhiteSpace ? VARIANT_TRUE : VARIANT_FALSE);
-		sXml = (LPCSTR)m_xmldoc->Getxml();
+		sXml = ATL::CW2T(m_xmldoc->Getxml());
 
 		// Getxml doesn't return entire header so we need to fix it up here
 		CString sHeader = GetHeader(TRUE);
