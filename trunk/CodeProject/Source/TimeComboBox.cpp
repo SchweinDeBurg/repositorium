@@ -94,12 +94,19 @@ int CTimeComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CTimeComboBox::BuildCombo()
 {
+	// IMPORTANT!
+	// Comclt32.dll version 5.0 or later: If CBS_LOWERCASE or CBS_UPPERCASE is set,
+	// the Unicode version of CB_ADDSTRING alters the string. If using read-only
+	// global memory, this causes the application to fail.
+
+	TCHAR szEmpty[1] = { 0 };
+
 	if (GetCount() == 0)
 	{
 		for (int nHour = 0; nHour < 24; nHour++)
 		{
-			if ((m_dwStyle & TCB_NOTIME) && nHour == 0)
-				AddString(_T("")); // empty item meaning 'no time'
+			if ((m_dwStyle & TCB_NOTIME) != 0 && nHour == 0)
+				AddString(szEmpty); // empty item meaning 'no time'
 			else
 				AddString(CTimeHelper::Format24HourTime(nHour, 0));
 
@@ -161,7 +168,7 @@ double CTimeComboBox::Get24HourTime() const
 
 	if (sTime.IsEmpty())
 	{
-		if (m_dwStyle & TCB_NOTIME)
+		if ((m_dwStyle & TCB_NOTIME) != 0)
 			return 0; // midnight
 		else
 			return -1; // error
