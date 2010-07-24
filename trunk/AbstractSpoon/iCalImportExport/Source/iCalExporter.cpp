@@ -68,7 +68,7 @@ bool CiCalExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFil
 		WriteString(fileOut, _T("VERSION:2.0.0"));
 
 		// export first task
-		ExportTask(pSrcTaskFile, pSrcTaskFile->GetFirstTask(), "", fileOut);
+		ExportTask(pSrcTaskFile, pSrcTaskFile->GetFirstTask(), _T(""), fileOut);
 
 		// footer
 		WriteString(fileOut, _T("END:VCALENDAR"));

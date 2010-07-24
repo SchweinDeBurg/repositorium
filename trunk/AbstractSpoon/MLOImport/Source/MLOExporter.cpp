@@ -159,7 +159,7 @@ void CMLOExporter::BuildPlacesMap(const ITaskList7* pSrcTaskFile, HTASKITEM hTas
 
 	while (nCat--)
 	{
-		CString sCat = pSrcTaskFile->GetTaskCategory(hTask, nCat);
+		CString sCat = ATL::CA2T(pSrcTaskFile->GetTaskCategory(hTask, nCat));
 		CString sCatUpper(sCat);
 		sCat.MakeUpper();
 

@@ -584,7 +584,7 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 			m_arrHTMLElements.Add(pElementClose);
 		}
 		//Set font tag options
-		pElement->m_mapParams.SetAt(_T("color"), _T("\"") + m_strActFontColor + ("\""));
+		pElement->m_mapParams.SetAt(_T("color"), _T("\"") + m_strActFontColor + _T("\""));
 		pElement->m_mapParams.SetAt(_T("style"), _T("\"font-size: ") + m_strActFontSize + _T("pt; font-family:") + m_strActFontName + _T(";\""));
 	}
 	if (pElement->m_enNodeType != CHTMLElement::c_nodInvalid)
@@ -602,7 +602,7 @@ void CRTF_HTMLConverter::R2H_GetRTFTags(const CString& strRTFSource, CStringArra
 	//Go thru RTF main string
 	for (int iStrPos = 0; iStrPos < strRTFSource.GetLength(); iStrPos++)
 	{
-		CString strChTest = strRTFSource[iStrPos];
+		CString strChTest(strRTFSource[iStrPos]);
 		if (strChTest == _T("\\"))
 		{
 			CString strTag = R2H_GetRTFTag(strRTFSource, iStrPos);
@@ -799,7 +799,7 @@ void CRTF_HTMLConverter::R2H_CreateHTMLElements(const CString& strRTFSource)
 	CString strCurrentText;
 	for (int iStrPos = 0; iStrPos < strRTFSource.GetLength(); iStrPos++)
 	{
-		CString strChTest = strRTFSource[iStrPos];
+		CString strChTest(strRTFSource[iStrPos]);
 #ifdef _DEBUG
 		const TCHAR* szPos = (LPCTSTR)strRTFSource + iStrPos;
 #endif

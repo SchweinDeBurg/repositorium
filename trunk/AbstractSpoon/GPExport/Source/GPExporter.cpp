@@ -248,7 +248,7 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	}
 
 	// file/weblink
-	CString sFileRef = pSrcTaskFile->GetTaskFileReferencePath(hTask);
+	CString sFileRef = ATL::CA2T(pSrcTaskFile->GetTaskFileReferencePath(hTask));
 	sFileRef.TrimLeft();
 
 	if (!sFileRef.IsEmpty())
@@ -277,7 +277,7 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 
 	while (nAllocTo--)
 	{
-		CString sAllocTo = pSrcTaskFile->GetTaskAllocatedTo(hTask, nAllocTo);
+		CString sAllocTo = ATL::CA2T(pSrcTaskFile->GetTaskAllocatedTo(hTask, nAllocTo));
 		int nResID;
 
 		if (m_mapResources.Lookup(sAllocTo, nResID))
@@ -316,7 +316,7 @@ void CGPExporter::BuildResourceMap(const ITaskList7* pSrcTaskFile, HTASKITEM hTa
 
 	while (nAllocTo--)
 	{
-		CString sAllocTo = pSrcTaskFile->GetTaskAllocatedTo(hTask, nAllocTo);
+		CString sAllocTo = ATL::CA2T(pSrcTaskFile->GetTaskAllocatedTo(hTask, nAllocTo));
 		int nID = 0;
 
 		if (!m_mapResources.Lookup(sAllocTo, nID))

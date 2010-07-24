@@ -125,7 +125,7 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 
 	// comments
 	CXmlItem* pXIAttribs = NULL;
-	CString sComments = pSrcTaskFile->GetTaskComments(hTask);
+	CString sComments = ATL::CA2T(pSrcTaskFile->GetTaskComments(hTask));
 
 	if (!sComments.IsEmpty())
 	{
@@ -322,7 +322,7 @@ CString CFMindExporter::FormatDate(time_t tDate)
 	}
 
 	// else
-	return "";
+	return _T("");
 }
 
 void CFMindExporter::AddTaskAllocTo(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CXmlItem* pXIDestItem)
@@ -334,7 +334,7 @@ void CFMindExporter::AddTaskAllocTo(const ITaskList7* pSrcTaskFile, HTASKITEM hT
 
 		while (nCount--)
 		{
-			aItems.InsertAt(0, pSrcTaskFile->GetTaskAllocatedTo(hTask, nCount));
+			aItems.InsertAt(0, ATL::CA2T(pSrcTaskFile->GetTaskAllocatedTo(hTask, nCount)));
 		}
 
 		CXmlItem* pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
@@ -352,7 +352,7 @@ void CFMindExporter::AddTaskCategories(const ITaskList7* pSrcTaskFile, HTASKITEM
 
 		while (nCount--)
 		{
-			aItems.InsertAt(0, pSrcTaskFile->GetTaskCategory(hTask, nCount));
+			aItems.InsertAt(0, ATL::CA2T(pSrcTaskFile->GetTaskCategory(hTask, nCount)));
 		}
 
 		CXmlItem* pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
@@ -370,7 +370,7 @@ void CFMindExporter::AddTaskDependencies(const ITaskList7* pSrcTaskFile, HTASKIT
 
 		while (nCount--)
 		{
-			aItems.InsertAt(0, pSrcTaskFile->GetTaskDependency(hTask, nCount));
+			aItems.InsertAt(0, ATL::CA2T(pSrcTaskFile->GetTaskDependency(hTask, nCount)));
 		}
 
 		CXmlItem* pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
