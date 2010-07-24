@@ -58,8 +58,8 @@ public:
 	// ICustomControl implementation
 	int GetContent(unsigned char* pContent) const;
 	bool SetContent(unsigned char* pContent, int nLength);
-	int GetTextContent(char* szContent, int nLength = -1) const;
-	bool SetTextContent(const char* szContent);
+	int GetTextContent(TCHAR* szContent, int nLength = -1) const;
+	bool SetTextContent(const TCHAR* szContent);
 	void SetReadOnly(bool bReadOnly);
 	HWND GetHwnd() const;
 	const char* GetTypeID() const;

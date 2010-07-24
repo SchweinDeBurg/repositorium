@@ -76,28 +76,21 @@ CToDoCommentsCtrl::~CToDoCommentsCtrl()
 /////////////////////////////////////////////////////////////////////////////
 // IContentCtrl
 
-int CToDoCommentsCtrl::GetTextContent(char* szContent, int nLength) const
+int CToDoCommentsCtrl::GetTextContent(TCHAR* szContent, int nLength) const
 {
 	if (!szContent)
 		return GetWindowTextLength();
 
 	// else
 	if (nLength == -1)
-		nLength = strlen(szContent) + 1; // inluding null
+		nLength = _tcslen(szContent) + 1; // inluding null
 
-#if defined(UNICODE) || defined(_UNICODE)
-	CString strTemp;
-	GetWindowText(strTemp.GetBuffer(nLength), nLength);
-	strTemp.ReleaseBuffer();
-	wcstombs(szContent, strTemp, nLength + 1);
-#else
 	GetWindowText(szContent, nLength);
-#endif   // UNICODE || _UNICODE
 	
 	return nLength;
 }
 
-bool CToDoCommentsCtrl::SetTextContent(const char* szContent) 
+bool CToDoCommentsCtrl::SetTextContent(const TCHAR* szContent) 
 { 
 	CReSaveCaret re(*this);
 	SendMessage(WM_SETTEXT, 0, (LPARAM)szContent);

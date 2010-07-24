@@ -1,5 +1,5 @@
 /* ==========================================================================
-    File :          RuleRichEdit.cpp
+    File :          RulerRichEdit.cpp
 
     Class :         CRulerRichEdit
 
