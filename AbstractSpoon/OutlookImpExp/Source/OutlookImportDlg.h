@@ -91,7 +91,7 @@ protected:
 protected:
 	static time_t ConvertDate(DATE date);
 
-	void AddFolderItemsToList(MAPIFolder* pFolder, const CString& sPath = "");
+	void AddFolderItemsToList(MAPIFolder* pFolder, const CString& sPath = _T(""));
 	void SetTaskAttributes(HTASKITEM hTask, _TaskItem* pTask);
 	BOOL DeleteTaskFromFolder(_TaskItem* pTask, MAPIFolder* pFolder);
 

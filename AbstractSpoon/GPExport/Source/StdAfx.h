@@ -96,6 +96,10 @@ __declspec(selectany) int _forceMFCManifestCUR;
 //////////////////////////////////////////////////////////////////////////////////////////////
 // MFC headers
 
+#if (_MSC_VER >= 1300)
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
+#endif	// _MSC_VER
+
 #define VC_EXTRALEAN        // Exclude rarely-used stuff from Windows headers
 
 #include <afxwin.h>         // MFC core and standard components

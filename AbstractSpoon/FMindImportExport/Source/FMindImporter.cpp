@@ -375,7 +375,7 @@ CString CFMindImporter::GetTaskRichContent(const CXmlItem* pFMTask , const char*
 	}
 
 	// else
-	return "";
+	return _T("");
 }
 
 //Java Time date to CTime
@@ -417,7 +417,7 @@ CString CFMindImporter::GetAttribValueS(const CXmlItem* pFMTask , const char* sz
 	const CXmlItem* pXIAttrib = pFMTask->GetItem(_T("attribute"));
 	if (pXIAttrib == NULL)
 	{
-		return "";
+		return _T("");
 	}
 
 	while (pXIAttrib)
@@ -438,7 +438,7 @@ CString CFMindImporter::GetAttribValueS(const CXmlItem* pFMTask , const char* sz
 
 		pXIAttrib = pXIAttrib->GetSibling();
 	}
-	return "";
+	return _T("");
 }
 
 int CFMindImporter::GetAttribValueI(const CXmlItem* pFMTask , const char* szAttribName) const
