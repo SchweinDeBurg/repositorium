@@ -1034,16 +1034,14 @@ BOOL CXmlFile::SaveEx()
 			Seek(0, CFile::begin);
 
 			// write the xml
-			Write((const void*)(LPCTSTR)sXml, sXml.GetLength());
-
-			// make sure it's all sent to disk
-			//			Flush();
+			ATL::CT2A aXmlText(sXml);
+			Write((const void*)(LPSTR)aXmlText, strlen(aXmlText));
 
 			// update the file end
 			VERIFY(::SetEndOfFile(GetFileHandle()));
 
 			// verify file length matches length of xml
-			if (::GetFileSize(GetFileHandle(), NULL) == (DWORD)sXml.GetLength())
+			if (::GetFileSize(GetFileHandle(), NULL) == (DWORD)strlen(aXmlText))
 			{
 				bRes = TRUE;
 			}
@@ -1313,7 +1311,6 @@ BOOL CXmlFile::Export(CString& sOutput) const
 			}
 			else
 			{
-				//if (s_bFormatOutput)
 				sOutput.Replace(_T("><"), _T(">\r\n<"));
 
 				bRes = TRUE;
