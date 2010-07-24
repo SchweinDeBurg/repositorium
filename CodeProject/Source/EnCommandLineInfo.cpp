@@ -52,7 +52,6 @@ CEnCommandLineInfo::CEnCommandLineInfo()
 
 CEnCommandLineInfo::~CEnCommandLineInfo()
 {
-
 }
 
 void CEnCommandLineInfo::ParseParam(LPCTSTR lpszParam, BOOL bFlag, BOOL bLast)

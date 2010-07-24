@@ -44,7 +44,6 @@ CChartGrid::CChartGrid()
 
 CChartGrid::~CChartGrid()
 {
-
 }
 
 void CChartGrid::AddTick(int Position)

@@ -171,12 +171,10 @@ CTreeDragDropHelper::CTreeDragDropHelper(CTreeSelectionHelper& selection,
 													  m_htiDropTarget(NULL), m_htiDropAfter(NULL), m_bEnabled(FALSE), 
 													  m_nScrollTimer(0), m_nExpandTimer(0)
 {
-
 }
 
 CTreeDragDropHelper::~CTreeDragDropHelper()
 {
-
 }
 
 BOOL CTreeDragDropHelper::Initialize(CWnd* pOwner, BOOL bEnabled, BOOL bAllowNcDrag)

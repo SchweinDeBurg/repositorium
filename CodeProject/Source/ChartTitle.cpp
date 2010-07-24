@@ -45,7 +45,6 @@ CChartTitle::CChartTitle(CChartCtrl* pParent)
 
 CChartTitle::~CChartTitle()
 {
-
 }
 
 void CChartTitle::SetFont(int iPointSize, const TChartString& strFaceName)

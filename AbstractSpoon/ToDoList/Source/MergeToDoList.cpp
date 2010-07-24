@@ -54,7 +54,6 @@ CMergeToDoList::CMergeToDoList(TDL_MERGEBY nBy, TDL_MERGEHOW nHow)
 
 CMergeToDoList::~CMergeToDoList()
 {
-
 }
 
 int CMergeToDoList::Merge(LPCTSTR szSrcPath, LPCTSTR szDestPath)

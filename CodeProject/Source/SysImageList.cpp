@@ -56,12 +56,10 @@ m_nHtmlImage(-1),
 m_hImageList(NULL),
 m_nRemoteFolderImage(-1)
 {
-
 }
 
 CSysImageList::~CSysImageList()
 {
-
 }
 
 BOOL CSysImageList::Initialize()

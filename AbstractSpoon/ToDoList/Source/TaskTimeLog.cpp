@@ -58,7 +58,6 @@ CTaskTimeLog::CTaskTimeLog(LPCTSTR szRefPath) : m_sRefPath(szRefPath)
 
 CTaskTimeLog::~CTaskTimeLog()
 {
-
 }
 
 BOOL CTaskTimeLog::LogTime(DWORD dwTaskID, double dTime, BOOL bLogSeparately)

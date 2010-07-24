@@ -56,7 +56,6 @@ CTaskListDropTarget::CTaskListDropTarget() : m_pParent(NULL), m_nLVPrevHilite(-1
 
 CTaskListDropTarget::~CTaskListDropTarget()
 {
-
 }
 
 BOOL CTaskListDropTarget::Register(CWnd* pTarget, CWnd* pParent)

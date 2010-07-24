@@ -53,12 +53,10 @@ static char THIS_FILE[]=__FILE__;
 
 CRichEditNcBorder::CRichEditNcBorder() : m_bThemedBorder(FALSE)
 {
-
 }
 
 CRichEditNcBorder::~CRichEditNcBorder()
 {
-
 }
 
 BOOL CRichEditNcBorder::Initialize(HWND hwndRichEdit)

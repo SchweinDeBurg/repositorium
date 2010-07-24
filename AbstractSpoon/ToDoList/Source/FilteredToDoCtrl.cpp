@@ -101,7 +101,6 @@ CFilteredToDoCtrl::CFilteredToDoCtrl(CContentMgr& mgr, const CONTENTFORMAT& cfDe
 
 CFilteredToDoCtrl::~CFilteredToDoCtrl()
 {
-
 }
 
 BEGIN_MESSAGE_MAP(CFilteredToDoCtrl, CToDoCtrl)

@@ -42,12 +42,10 @@
 CSpellChecker::CSpellChecker(const TCHAR* szAffPath, const TCHAR* szDicPath):
 	MySpell(ATL::CT2A(szAffPath), ATL::CT2A(szDicPath))
 {
-
 }
 
 CSpellChecker::~CSpellChecker()
 {
-
 }
 
 bool CSpellChecker::IsValid()

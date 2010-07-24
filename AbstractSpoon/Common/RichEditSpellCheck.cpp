@@ -52,7 +52,6 @@ CRichEditSpellCheck::CRichEditSpellCheck(CRichEditCtrl& re) : m_re(re)
 
 CRichEditSpellCheck::~CRichEditSpellCheck()
 {
-
 }
 
 const char* CRichEditSpellCheck::GetFirstWord() const

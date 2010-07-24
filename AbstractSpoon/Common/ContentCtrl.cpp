@@ -62,7 +62,6 @@ BOOL CONTENTFORMAT::FormatIsText() const
 CContentCtrl::CContentCtrl(IContentControl* pContentCtrl) :
 m_pContentCtrl(pContentCtrl), m_bSettingContent(FALSE)
 {
-
 }
 
 CContentCtrl::~CContentCtrl()

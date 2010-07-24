@@ -149,7 +149,6 @@ CRCCtrlParser::CRCCtrlParser(LPCTSTR szRCControls)
 
 CRCCtrlParser::~CRCCtrlParser()
 {
-
 }
 
 int CRCCtrlParser::ParseRCControls(const CString& sRCControls)

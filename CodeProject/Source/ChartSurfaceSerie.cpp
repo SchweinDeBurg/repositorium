@@ -37,12 +37,10 @@ static char THIS_FILE[]=__FILE__;
 CChartSurfaceSerie::CChartSurfaceSerie(CChartCtrl* pParent) 
  : CChartSerie(pParent), m_FillStyle(fsHatchDownDiag), m_bHorizontal(true)
 {
-
 }
 
 CChartSurfaceSerie::~CChartSurfaceSerie()
 {
-
 }
 
 void CChartSurfaceSerie::Draw(CDC* pDC)

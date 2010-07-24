@@ -48,12 +48,10 @@ static char THIS_FILE[]=__FILE__;
 CTreeSelectionHelper::CTreeSelectionHelper(CTreeCtrl& tree) : 
 m_tree(tree), m_nCurSelection(0), m_htiAnchor(NULL), m_tch(tree)
 {
-
 }
 
 CTreeSelectionHelper::~CTreeSelectionHelper()
 {
-
 }
 
 BOOL CTreeSelectionHelper::SetItem(HTREEITEM hti, TSH_SELECT nState, BOOL bRedraw)

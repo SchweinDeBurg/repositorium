@@ -51,7 +51,6 @@ CChartLineSerie::CChartLineSerie(CChartCtrl* pParent) : CChartSerie(pParent)
 
 CChartLineSerie::~CChartLineSerie()
 {
-
 }
 
 void CChartLineSerie::SetPenStyle(int NewStyle)  

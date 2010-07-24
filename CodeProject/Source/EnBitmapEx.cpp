@@ -22,12 +22,10 @@ static char THIS_FILE[]=__FILE__;
 
 CEnBitmapEx::CEnBitmapEx(COLORREF crBkgnd) : CEnBitmap(crBkgnd)
 {
-
 }
 
 CEnBitmapEx::~CEnBitmapEx()
 {
-
 }
 
 BOOL CEnBitmapEx::LoadSysBitmap(UINT nID)

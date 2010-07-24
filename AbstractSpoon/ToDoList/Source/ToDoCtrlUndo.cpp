@@ -48,7 +48,6 @@ static char THIS_FILE[]=__FILE__;
 
 CToDoCtrlUndo::CToDoCtrlUndo() : m_nActiveAction(TDCUAT_NONE)
 {
-
 }
 
 CToDoCtrlUndo::~CToDoCtrlUndo()

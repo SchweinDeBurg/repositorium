@@ -52,12 +52,10 @@ static char THIS_FILE[]=__FILE__;
 CUIExtensionUIHelper::CUIExtensionUIHelper(const CUIExtensionMgr& mgrUIExt, UINT nStart, int nSize) :
 m_mgrUIExt(mgrUIExt), m_nStartID(nStart), m_nSize(nSize)
 {
-
 }
 
 CUIExtensionUIHelper::~CUIExtensionUIHelper()
 {
-
 }
 
 void CUIExtensionUIHelper::UpdateMenu(CCmdUI* pCmdUI, CMenuIconMgr& mgrIcon, BOOL bEnabled) const

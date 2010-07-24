@@ -64,7 +64,6 @@ static char THIS_FILE[]=__FILE__;
 
 CMenuEx::CMenuEx()
 {
-
 }
 
 CMenuEx::~CMenuEx()

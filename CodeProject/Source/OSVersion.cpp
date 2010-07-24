@@ -47,12 +47,10 @@ static char THIS_FILE[]=__FILE__;
 
 COSVersion::COSVersion()
 {
-
 }
 
 COSVersion::~COSVersion()
 {
-
 }
 
 OSVERSION COSVersion::GetOSVersion()

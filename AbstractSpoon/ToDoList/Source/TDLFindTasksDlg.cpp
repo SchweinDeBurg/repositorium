@@ -82,7 +82,6 @@ CTDLFindTasksDlg::CTDLFindTasksDlg(CWnd* pParent /*=NULL*/)
 
 CTDLFindTasksDlg::~CTDLFindTasksDlg()
 {
-
 }
 
 void CTDLFindTasksDlg::DoDataExchange(CDataExchange* pDX)

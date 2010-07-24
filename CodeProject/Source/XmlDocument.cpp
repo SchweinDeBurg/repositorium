@@ -53,14 +53,13 @@ CXmlDocument::CXmlDocument()
 
 CXmlDocument::~CXmlDocument()
 {
-
 }
 
 /********************************************************************/
-/*																	*/
-/* Function name : DeleteContents									*/
-/* Description   : Initialize variables to their initial values.	*/
-/*																	*/
+/*                                                                  */
+/* Function name : DeleteContents                                   */
+/* Description   : Initialize variables to their initial values.    */
+/*                                                                  */
 /********************************************************************/
 void CXmlDocument::DeleteContents()
 {
@@ -79,10 +78,10 @@ void CXmlDocument::DeleteContents()
 }
 
 /********************************************************************/
-/*																	*/
-/* Function name : Parse											*/
-/* Description   : Parse XML data.									*/
-/*																	*/
+/*                                                                  */
+/* Function name : Parse                                            */
+/* Description   : Parse XML data.                                  */
+/*                                                                  */
 /********************************************************************/
 BOOL CXmlDocument::Parse(LPCTSTR lpszString)
 {
@@ -214,14 +213,14 @@ BOOL CXmlDocument::Parse(LPCTSTR lpszString)
 }
 
 /********************************************************************/
-/*																	*/
-/* Function name : ValidateTag										*/
-/* Description   : Determine type and name of the tag.				*/
-/*				   0 = start tag									*/
-/*				   1 = end tag										*/
-/*				   2 = start-end tag								*/
-/*				   -1 = comments or declaration						*/
-/*																	*/
+/*                                                                  */
+/* Function name : ValidateTag                                      */
+/* Description   : Determine type and name of the tag.              */
+/*                 0 = start tag                                    */
+/*                 1 = end tag                                      */
+/*                 2 = start-end tag                                */
+/*                 -1 = comments or declaration                     */
+/*                                                                  */
 /********************************************************************/
 int CXmlDocument::ValidateTag(CString &strTag, CString &strResult)
 {
@@ -274,10 +273,10 @@ int CXmlDocument::ValidateTag(CString &strTag, CString &strResult)
 }
 
 /********************************************************************/
-/*																	*/
-/* Function name : GetFirstChild									*/
-/* Description   : Get first child of element.						*/
-/*																	*/
+/*                                                                  */
+/* Function name : GetFirstChild                                    */
+/* Description   : Get first child of element.                      */
+/*                                                                  */
 /********************************************************************/
 CXmlElement *CXmlDocument::GetFirstChild(CXmlElement *pElement) 
 {
@@ -294,10 +293,10 @@ CXmlElement *CXmlDocument::GetFirstChild(CXmlElement *pElement)
 }
 
 /********************************************************************/
-/*																	*/
-/* Function name : GetNextSibling									*/
-/* Description   : Get next child of specified element.				*/
-/*																	*/
+/*                                                                  */
+/* Function name : GetNextSibling                                   */
+/* Description   : Get next child of specified element.             */
+/*                                                                  */
 /********************************************************************/
 CXmlElement *CXmlDocument::GetNextSibling(CXmlElement *pElement) 
 {
@@ -308,10 +307,10 @@ CXmlElement *CXmlDocument::GetNextSibling(CXmlElement *pElement)
 }
 
 /********************************************************************/
-/*																	*/
-/* Function name : FindElement										*/
-/* Description   : Find first occurence of specified tag.			*/
-/*																	*/
+/*                                                                  */
+/* Function name : FindElement                                      */
+/* Description   : Find first occurence of specified tag.           */
+/*                                                                  */
 /********************************************************************/
 CXmlElement *CXmlDocument::FindElement(CXmlElement *pElement, LPCTSTR lpszName) 
 {
@@ -333,10 +332,10 @@ CXmlElement *CXmlDocument::FindElement(CXmlElement *pElement, LPCTSTR lpszName)
 }
 
 /********************************************************************/
-/*																	*/
-/* Function name : FindNextElement									*/
-/* Description   : Find next occurence of specified tag				*/
-/*																	*/
+/*                                                                  */
+/* Function name : FindNextElement                                  */
+/* Description   : Find next occurence of specified tag             */
+/*                                                                  */
 /********************************************************************/
 CXmlElement *CXmlDocument::FindNextElement(CXmlElement *pElement) 
 {
@@ -352,10 +351,10 @@ CXmlElement *CXmlDocument::FindNextElement(CXmlElement *pElement)
 }
 
 /********************************************************************/
-/*																	*/
-/* Function name : AddElement										*/
-/* Description   : Add new element									*/
-/*																	*/
+/*                                                                  */
+/* Function name : AddElement                                       */
+/* Description   : Add new element                                  */
+/*                                                                  */
 /********************************************************************/
 CXmlElement *CXmlDocument::AddElement(CXmlElement *pElement, LPCTSTR lpszName, LPCTSTR lpszData, LPCTSTR lpszAttributes) 
 {
@@ -382,10 +381,10 @@ CXmlElement *CXmlDocument::AddElement(CXmlElement *pElement, LPCTSTR lpszName, L
 
 #if 0  // -----------------------------------------------------------
 /********************************************************************/
-/*																	*/
-/* Function name : Generate											*/
-/* Description   : Generate a XML string from elements				*/
-/*																	*/
+/*                                                                  */
+/* Function name : Generate                                         */
+/* Description   : Generate a XML string from elements              */
+/*                                                                  */
 /********************************************************************/
 CString CXmlDocument::Generate()
 {
@@ -401,10 +400,10 @@ CString CXmlDocument::Generate()
 }
 
 /********************************************************************/
-/*																	*/
-/* Function name : CreateTag										*/
-/* Description   : Create tag and tags from all child elements		*/
-/*																	*/
+/*                                                                  */
+/* Function name : CreateTag                                        */
+/* Description   : Create tag and tags from all child elements      */
+/*                                                                  */
 /********************************************************************/
 BOOL CXmlDocument::CreateTag(CXmlElement *pElement, CString &strResult)
 {
@@ -468,10 +467,10 @@ BOOL CXmlDocument::CreateTag(CXmlElement *pElement, CString &strResult)
 }
 
 /********************************************************************/
-/*																	*/
-/* Function name : Load												*/
-/* Description   : Load document from file							*/
-/*																	*/
+/*                                                                  */
+/* Function name : Load                                             */
+/* Description   : Load document from file                          */
+/*                                                                  */
 /********************************************************************/
 BOOL CXmlDocument::Load(LPCTSTR lpszFileName)
 {
@@ -528,10 +527,10 @@ BOOL CXmlDocument::Load(LPCTSTR lpszFileName)
 }
 
 /********************************************************************/
-/*																	*/
-/* Function name : Store											*/
-/* Description   : Save document to file							*/
-/*																	*/
+/*                                                                  */
+/* Function name : Store                                            */
+/* Description   : Save document to file                            */
+/*                                                                  */
 /********************************************************************/
 BOOL CXmlDocument::Store(LPCTSTR lpszFileName)
 {

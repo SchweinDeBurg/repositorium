@@ -50,12 +50,10 @@ static char THIS_FILE[]=__FILE__;
 
 CEditShortcutMgr::CEditShortcutMgr()
 {
-
 }
 
 CEditShortcutMgr::~CEditShortcutMgr()
 {
-
 }
 
 BOOL CEditShortcutMgr::Initialize(DWORD dwSelectAllShortcut)

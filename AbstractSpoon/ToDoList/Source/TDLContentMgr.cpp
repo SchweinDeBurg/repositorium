@@ -82,12 +82,10 @@ class CDefaultContent : public IContent
 
 CTDLContentMgr::CTDLContentMgr() 
 {
-
 }
 
 CTDLContentMgr::~CTDLContentMgr()
 {
-
 }
 
 BOOL CTDLContentMgr::Initialize()

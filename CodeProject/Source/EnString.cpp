@@ -89,12 +89,10 @@ CEnString::CEnString(UINT nFormatID, int nData)
 
 CEnString::CEnString(const CString& str) : CString(str)
 {
-
 }
 
 CEnString::~CEnString()
 {
-
 }
 
 CSize CEnString::FormatDC(CDC* pDC, int nWidth, int nStyle)

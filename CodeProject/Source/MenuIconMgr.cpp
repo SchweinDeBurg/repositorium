@@ -50,7 +50,6 @@ typedef unsigned long ULONG_PTR;
 
 CMenuIconMgr::CMenuIconMgr()
 {
-
 }
 
 CMenuIconMgr::~CMenuIconMgr()

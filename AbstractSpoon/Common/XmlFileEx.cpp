@@ -60,12 +60,10 @@ const LPCTSTR ENCODEDDATALEN = _T("DATALEN");
 CXmlFileEx::CXmlFileEx(LPCTSTR szRootItemName, LPCTSTR szPassword)
 	: CXmlFile(szRootItemName), m_pEncryptor(NULL), m_sPassword(szPassword)
 {
-
 }
 
 CXmlFileEx::~CXmlFileEx()
 {
-
 }
 
 void CXmlFileEx::SetUIStrings(UINT nIDPasswordExplanation,
