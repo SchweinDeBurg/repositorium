@@ -248,7 +248,7 @@ bool CRTFContentControl::SetContent(unsigned char* pContent, int nLength)
 	return true;
 }
 
-int CRTFContentControl::GetTextContent(char* szContent, int nLength) const
+int CRTFContentControl::GetTextContent(TCHAR* szContent, int nLength) const
 {
 	if (!szContent)
 	{
@@ -258,21 +258,14 @@ int CRTFContentControl::GetTextContent(char* szContent, int nLength) const
 	// else
 	if (nLength == -1)
 	{
-		nLength = strlen(szContent);
+		nLength = _tcslen(szContent);
 	}
 
-#if defined(UNICODE) || defined(_UNICODE)
-	CString strTemp;
-	GetWindowText(strTemp.GetBuffer(nLength), nLength);
-	strTemp.ReleaseBuffer();
-	wcstombs(szContent, strTemp, nLength + 1);
-#else
 	GetWindowText(szContent, nLength);
-#endif   // UNICODE || _UNICODE
 	return nLength;
 }
 
-bool CRTFContentControl::SetTextContent(const char* szContent)
+bool CRTFContentControl::SetTextContent(const TCHAR* szContent)
 {
 	CAutoFlag af(m_bAllowNotify, TRUE);
 	CReSaveCaret re(GetRichEditCtrl());

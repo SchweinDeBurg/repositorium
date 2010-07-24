@@ -140,8 +140,8 @@ public:
 	virtual const char* GetTypeID() const = 0;
 
 	// text content if supported. return false if not supported
-	virtual int GetTextContent(char* szContent, int nLength = -1) const = 0;
-	virtual bool SetTextContent(const char* szContent) = 0;
+	virtual int GetTextContent(TCHAR* szContent, int nLength = -1) const = 0;
+	virtual bool SetTextContent(const TCHAR* szContent) = 0;
 
 	virtual void SetReadOnly(bool bReadOnly) = 0;
 	virtual HWND GetHwnd() const = 0;

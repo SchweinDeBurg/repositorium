@@ -268,7 +268,7 @@ int CContentCtrl::GetTextContent(CString& sContent) const
 		if (nLen)
 		{
 			TCHAR* szContent = sContent.GetBufferSetLength(nLen);
-			VERIFY (nLen + 1 == m_pContentCtrl->GetTextContent(ATL::CT2A(szContent), nLen + 1));
+			VERIFY (nLen + 1 == m_pContentCtrl->GetTextContent(szContent, nLen + 1));
 			sContent.ReleaseBuffer(nLen);
 			return nLen;
 		}
@@ -279,7 +279,7 @@ int CContentCtrl::GetTextContent(CString& sContent) const
 	return 0;
 }
 
-BOOL CContentCtrl::SetTextContent(const char* szContent)
+BOOL CContentCtrl::SetTextContent(const TCHAR* szContent)
 {
 	CAutoFlag af(m_bSettingContent, TRUE);
 

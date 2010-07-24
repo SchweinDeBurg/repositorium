@@ -383,7 +383,7 @@ void CToDoCtrl::UpdateComments(BOOL bSaveAndValidate)
 		// if we can't set the custom comments or
 		// there are no custom comments then try setting the text comments
 		if (!m_ctrlComments.SetContent(m_sCustomComments) || m_sCustomComments.IsEmpty())
-			m_ctrlComments.SetTextContent(ATL::CT2A(m_sTextComments));
+			m_ctrlComments.SetTextContent(m_sTextComments);
 	}
 }
 
@@ -859,10 +859,10 @@ BOOL CToDoCtrl::SetCommentsFont(HFONT hFont, BOOL bResendComments)
 			if (m_sCustomComments.GetLength())
 			{
 				if (!m_ctrlComments.SetContent(m_sCustomComments))
-					m_ctrlComments.SetTextContent(ATL::CT2A(m_sTextComments));
+					m_ctrlComments.SetTextContent(m_sTextComments);
 			}
 			else
-				m_ctrlComments.SetTextContent(ATL::CT2A(m_sTextComments));
+				m_ctrlComments.SetTextContent(m_sTextComments);
 		}
 	}
 
@@ -2234,7 +2234,7 @@ BOOL CToDoCtrl::SetSelectedTaskComments(LPCTSTR szComments, const CString& sCust
 				sCustomComments.IsEmpty())
 			{
 				// else text comments
-				m_ctrlComments.SetTextContent(ATL::CT2A(szComments));
+				m_ctrlComments.SetTextContent(szComments);
 			}
 		}
 

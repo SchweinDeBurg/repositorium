@@ -1,5 +1,5 @@
 /* ==========================================================================
-    File :          RuleRichEdit.h
+    File :          RulerRichEdit.h
 
     Class :         CRulerRichEdit
 

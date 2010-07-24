@@ -55,8 +55,8 @@ public:
 
 	// IContentControl implementation
 	// supports plain text content only
-	int GetTextContent(char* szContent, int nLength) const;
-	bool SetTextContent(const char* szContent);
+	int GetTextContent(TCHAR* szContent, int nLength) const;
+	bool SetTextContent(const TCHAR* szContent);
 	int GetContent(unsigned char* /*pContent*/) const { return 0; }
 	bool SetContent(unsigned char* /*pContent*/, int /*nLength*/) { return false; }
 	void SetReadOnly(bool bReadOnly);

@@ -65,7 +65,7 @@ public:
 
 	BOOL SetContent(unsigned char* pContent, int nLength);
 	BOOL SetContent(const CString& sContent);
-	BOOL SetTextContent(const char* szContent);
+	BOOL SetTextContent(const TCHAR* szContent);
 	BOOL SettingContent() { return m_bSettingContent; }
 
 	LPCTSTR GetTypeID() const;
