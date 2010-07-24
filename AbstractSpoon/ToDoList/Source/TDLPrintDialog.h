@@ -51,7 +51,7 @@ public:
 	CTDLPrintDialog(LPCTSTR szTitle, BOOL bPreview = FALSE, BOOL bShowSubtaskCheckbox = TRUE, CWnd* pParent = NULL);   // standard constructor
 
 	BOOL GetWantDate() { return m_bDate; }
-	CString GetStylesheet() const { return m_bUseStylesheet ? m_sStylesheet : ""; }
+	CString GetStylesheet() const { return m_bUseStylesheet ? m_sStylesheet : _T(""); }
 	CString GetTitle() const { return m_sTitle; }
 
 	const CTaskSelectionDlg& GetTaskSelection() const { return m_taskSel; }

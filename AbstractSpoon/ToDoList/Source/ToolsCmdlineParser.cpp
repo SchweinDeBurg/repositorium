@@ -55,23 +55,23 @@ CToolsCmdlineParser::CToolsCmdlineParser(LPCTSTR szCmdLine)
 	// init static map first time only
 	if (s_mapTypes.GetCount() == 0)
 	{
-		s_mapTypes["pathname"] = CLAT_PATHNAME;
-		s_mapTypes["filetitle"] = CLAT_FILETITLE;
-		s_mapTypes["folder"] = CLAT_FOLDER;
-		s_mapTypes["filename"] = CLAT_FILENAME;
-		s_mapTypes["seltid"] = CLAT_SELTASKID;
-		s_mapTypes["selttitle"] = CLAT_SELTASKTITLE;
-		s_mapTypes["userfile"] = CLAT_USERFILE;
-		s_mapTypes["userfolder"] = CLAT_USERFOLDER;
-		s_mapTypes["usertext"] = CLAT_USERTEXT;
-		s_mapTypes["userdate"] = CLAT_USERDATE;
-		s_mapTypes["todaysdate"] = CLAT_TODAYSDATE;
-		s_mapTypes["todolist"] = CLAT_TODOLIST;
-		s_mapTypes["seltextid"] = CLAT_SELTASKEXTID;
-		s_mapTypes["seltcomments"] = CLAT_SELTASKCOMMENTS;
-		s_mapTypes["seltfile"] = CLAT_SELTASKFILELINK;
-		s_mapTypes["seltallocby"] = CLAT_SELTASKALLOCBY;
-		s_mapTypes["seltallocto"] = CLAT_SELTASKALLOCTO;
+		s_mapTypes[_T("pathname")] = CLAT_PATHNAME;
+		s_mapTypes[_T("filetitle")] = CLAT_FILETITLE;
+		s_mapTypes[_T("folder")] = CLAT_FOLDER;
+		s_mapTypes[_T("filename")] = CLAT_FILENAME;
+		s_mapTypes[_T("seltid")] = CLAT_SELTASKID;
+		s_mapTypes[_T("selttitle")] = CLAT_SELTASKTITLE;
+		s_mapTypes[_T("userfile")] = CLAT_USERFILE;
+		s_mapTypes[_T("userfolder")] = CLAT_USERFOLDER;
+		s_mapTypes[_T("usertext")] = CLAT_USERTEXT;
+		s_mapTypes[_T("userdate")] = CLAT_USERDATE;
+		s_mapTypes[_T("todaysdate")] = CLAT_TODAYSDATE;
+		s_mapTypes[_T("todolist")] = CLAT_TODOLIST;
+		s_mapTypes[_T("seltextid")] = CLAT_SELTASKEXTID;
+		s_mapTypes[_T("seltcomments")] = CLAT_SELTASKCOMMENTS;
+		s_mapTypes[_T("seltfile")] = CLAT_SELTASKFILELINK;
+		s_mapTypes[_T("seltallocby")] = CLAT_SELTASKALLOCBY;
+		s_mapTypes[_T("seltallocto")] = CLAT_SELTASKALLOCTO;
 	}
 
 	SetCmdLine(szCmdLine);
@@ -143,7 +143,7 @@ BOOL CToolsCmdlineParser::ReplaceArgument(CLA_TYPE nType, LPCTSTR szValue)
 BOOL CToolsCmdlineParser::ReplaceArgument(CLA_TYPE nType, DWORD dwValue)
 {
 	CString sValue;
-	sValue.Format("%d", dwValue);
+	sValue.Format(_T("%d"), dwValue);
 
 	return ReplaceArgument(nType, sValue);
 }
@@ -281,18 +281,18 @@ void CToolsCmdlineParser::ParseCmdLine()
 {
 	CString sCmdLine(m_sCmdLine); // preserve original
 
-	int n$Find = sCmdLine.Find('$');
+	int n$Find = sCmdLine.Find(_T('$'));
 
 	while (-1 != n$Find)
 	{
 		// find opening bracket
-		int nOpenFind = sCmdLine.Find('(', n$Find);
+		int nOpenFind = sCmdLine.Find(_T('('), n$Find);
 
 		if (nOpenFind == -1)
 			break;
 
 		// find closing bracket
-		int nCloseFind = sCmdLine.Find(')', nOpenFind);
+		int nCloseFind = sCmdLine.Find(_T(')'), nOpenFind);
 
 		if (nCloseFind == -1)
 			break;
@@ -307,29 +307,29 @@ void CToolsCmdlineParser::ParseCmdLine()
 		{
 			sType = sVarArgs.Left(nComma1Find);
 
-			nComma2Find = sVarArgs.Find(',', nComma1Find + 1);
+			nComma2Find = sVarArgs.Find(_T(','), nComma1Find + 1);
 
 			if (nComma2Find != -1)
 			{
 				sName = sVarArgs.Mid(nComma1Find + 1, nComma2Find - nComma1Find - 1);
 
-				int nComma3Find = sVarArgs.Find(',', nComma2Find + 1);
+				int nComma3Find = sVarArgs.Find(_T(','), nComma2Find + 1);
 
 				if (nComma3Find != -1)
 				{
 					// this comma can either be a comma in the label string
 					// or the delimeter before 'vardefvalue'
 					// we determine which of these it is by looking for double quotes
-					int nQuoteStartFind = sVarArgs.Find('\"', nComma2Find + 1);
+					int nQuoteStartFind = sVarArgs.Find(_T('\"'), nComma2Find + 1);
 
 					// and seeing if they preceed nComma3Find
 					if (nQuoteStartFind != -1 && nQuoteStartFind < nComma3Find)
 					{
 						// now look for closing quotes
-						int nQuoteEndFind = sVarArgs.Find('\"', nQuoteStartFind + 1);
+						int nQuoteEndFind = sVarArgs.Find(_T('\"'), nQuoteStartFind + 1);
 
 						if (nQuoteEndFind != -1) // test for nComma3Find again cos it was previously a false find
-							nComma3Find = sVarArgs.Find(',', nQuoteEndFind + 1);
+							nComma3Find = sVarArgs.Find(_T(','), nQuoteEndFind + 1);
 						else
 							nComma3Find = -1; // safest thing to do because no end quotes found
 					}
@@ -339,7 +339,7 @@ void CToolsCmdlineParser::ParseCmdLine()
 						sLabel = sVarArgs.Mid(nComma2Find + 1, nComma3Find - nComma2Find - 1);
 						sDefValue = sVarArgs.Mid(nComma3Find + 1);
 
-						sDefValue.Replace("\"", ""); // remove double quotes
+						sDefValue.Replace(_T("\""), _T("")); // remove double quotes
 					}
 					else
 						sLabel = sVarArgs.Mid(nComma2Find + 1);
@@ -347,7 +347,7 @@ void CToolsCmdlineParser::ParseCmdLine()
 				else
 					sLabel = sVarArgs.Mid(nComma2Find + 1);
 
-				sLabel.Replace("\"", ""); // remove double quotes
+				sLabel.Replace(_T("\""), _T("")); // remove double quotes
 			}
 			else
 				sName = sVarArgs.Mid(nComma1Find);

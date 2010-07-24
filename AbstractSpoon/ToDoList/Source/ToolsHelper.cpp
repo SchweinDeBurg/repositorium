@@ -157,7 +157,7 @@ void CToolsHelper::UpdateMenu(CCmdUI* pCmdUI, const CUserToolArray& tools, CMenu
 					CString sMenuItem;
 					
 					if (nPos < 9)
-						sMenuItem.Format("&%d %s", nPos + 1, tool.sToolName);
+						sMenuItem.Format(_T("&%d %s"), nPos + 1, tool.sToolName);
 					else
 						sMenuItem = tool.sToolName;
 					
@@ -349,8 +349,8 @@ LPCTSTR CToolsHelper::GetFileFilter()
 
 LPCTSTR CToolsHelper::GetDefaultFileExt()
 {
-	static LPCTSTR TDLEXT = "tdl";
-	static LPCTSTR XMLEXT = "xml";
+	static LPCTSTR TDLEXT = _T("tdl");
+	static LPCTSTR XMLEXT = _T("xml");
 
 	return m_bTDLEnabled ? TDLEXT : XMLEXT;
 }

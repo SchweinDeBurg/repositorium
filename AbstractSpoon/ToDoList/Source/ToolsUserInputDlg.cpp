@@ -123,7 +123,7 @@ CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp) : CRuntim
 
 					// if sDefValue is empty see if we previously saved a value for this control 
 					if (tuii.sDefValue.IsEmpty())
-						tuii.sDefValue = prefs.GetProfileString("Tools\\UserInput", tuii.sLabel);
+						tuii.sDefValue = prefs.GetProfileString(_T("Tools\\UserInput"), tuii.sLabel);
 
 					m_aInputItems.Add(tuii);
 				}
@@ -147,7 +147,7 @@ CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp) : CRuntim
 			if (AddRCControl(tuii.pCtrl, tuii.sDefValue, tuii.nStyle, WS_EX_CLIENTEDGE, ITEM_X, nYPos, tuii.sizeDLU.cx, tuii.sizeDLU.cy, tuii.nCtrlID))
 			{
 				// add label
-				AddRCControl("LTEXT", NULL, tuii.sLabel, SS_CENTERIMAGE, 0, 0, nYPos, ITEM_X - LABEL_X - 3, tuii.sizeDLU.cy, 0);
+				AddRCControl(_T("LTEXT"), NULL, tuii.sLabel, SS_CENTERIMAGE, 0, 0, nYPos, ITEM_X - LABEL_X - 3, tuii.sizeDLU.cy, 0);
 
 				nYPos += (tuii.sizeDLU.cy + SPACING);
 
@@ -158,11 +158,11 @@ CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp) : CRuntim
 
 		// add ok and cancel buttons at the bottom right with a preceding line
 		nYPos += SPACING;
-		AddRCControl("CONTROL", "static", NULL, SS_ETCHEDFRAME, 0, 0, nYPos, nMaxWidth - LABEL_X, 1, 0);
+		AddRCControl(_T("CONTROL"), _T("static"), NULL, SS_ETCHEDFRAME, 0, 0, nYPos, nMaxWidth - LABEL_X, 1, 0);
 		nYPos += SPACING * 2;
 
-		AddRCControl("PUSHBUTTON", NULL, "OK", 0, 0, nMaxWidth - 2 * BTN_CX - SPACING, nYPos, BTN_CX, BTN_CY, IDOK);
-		AddRCControl("PUSHBUTTON", NULL, "Cancel", 0, 0, nMaxWidth - BTN_CX, nYPos, BTN_CX, BTN_CY, IDCANCEL);
+		AddRCControl(_T("PUSHBUTTON"), NULL, _T("OK"), 0, 0, nMaxWidth - 2 * BTN_CX - SPACING, nYPos, BTN_CX, BTN_CY, IDOK);
+		AddRCControl(_T("PUSHBUTTON"), NULL, _T("Cancel"), 0, 0, nMaxWidth - BTN_CX, nYPos, BTN_CX, BTN_CY, IDCANCEL);
 	}
 }
 
@@ -208,7 +208,7 @@ void CToolsUserInputDlg::OnOK()
 		tuii.pCtrl->GetWindowText(sResult);
 
 		// save to registry
-		AfxGetApp()->WriteProfileString("Tools\\UserInput", tuii.sLabel, sResult);
+		AfxGetApp()->WriteProfileString(_T("Tools\\UserInput"), tuii.sLabel, sResult);
 
 		switch (tuii.nType)
 		{
@@ -216,8 +216,8 @@ void CToolsUserInputDlg::OnOK()
 			// make sure folders are terminated
 			sResult.TrimRight();
 
-			if (sResult.Right(1) != "\\")
-				sResult += '\\';
+			if (sResult.Right(1) != _T("\\"))
+				sResult += _T('\\');
 			break;
 
 		case CLAT_USERDATE:
@@ -228,7 +228,7 @@ void CToolsUserInputDlg::OnOK()
 				if (GDT_VALID == tuii.pCtrl->SendMessage(DTM_GETSYSTEMTIME, 0, (LPARAM) &sysTime))
 				{
 					COleDateTime date(sysTime);
-					sResult = date.Format("%Y-%m-%d");
+					sResult = date.Format(_T("%Y-%m-%d"));
 				}
 				else
 					ASSERT(0);
@@ -261,9 +261,9 @@ BOOL CToolsUserInputDlg::OnInitDialog()
 				ZeroMemory(&sysTime, sizeof(sysTime));
 //fabio_2005
 #if _MSC_VER >= 1400
-				int nRes = sscanf_s(tuii.sDefValue, "%d-%d-%d", &sysTime.wYear, &sysTime.wMonth, &sysTime.wDay);
+				int nRes = _stscanf_s(tuii.sDefValue, _T("%d-%d-%d"), &sysTime.wYear, &sysTime.wMonth, &sysTime.wDay);
 #else
-				int nRes = sscanf(tuii.sDefValue, "%d-%d-%d", &sysTime.wYear, &sysTime.wMonth, &sysTime.wDay);
+				int nRes = _stscanf(tuii.sDefValue, _T("%d-%d-%d"), &sysTime.wYear, &sysTime.wMonth, &sysTime.wDay);
 #endif
 
 				if (nRes == 3)

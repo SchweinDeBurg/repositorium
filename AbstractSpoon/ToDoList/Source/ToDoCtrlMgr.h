@@ -95,7 +95,7 @@ public:
 	CString GetUrl(int nIndex) const;
 	BOOL GetWebDetails(int nIndex, CString& sServer, CString& sPath, CString& sUser, CString& sPassword) const;
 	void SetWebDetails(int nIndex, LPCTSTR szServer, LPCTSTR szUrl, LPCTSTR szUser, LPCTSTR szPassword);
-	void ClearWebDetails(int nIndex) { SetWebDetails(nIndex, "", "", "", ""); }
+	void ClearWebDetails(int nIndex) { SetWebDetails(nIndex, _T(""), _T(""), _T(""), _T("")); }
 
 	BOOL RefreshLastModified(int nIndex); // true if changed
 	time_t GetLastModified(int nIndex) const;

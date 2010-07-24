@@ -53,10 +53,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // CTDLFindTasksDlg dialog
 
-const UINT WM_FTD_FIND = ::RegisterWindowMessage("WM_FTD_FIND");
-const UINT WM_FTD_SELECTRESULT = ::RegisterWindowMessage("WM_FTD_SELECTRESULT");
-const UINT WM_FTD_SELECTALL = ::RegisterWindowMessage("WM_FTD_SELECTALL");
-const UINT WM_FTD_CLOSE = ::RegisterWindowMessage("WM_FTD_CLOSE");
+const UINT WM_FTD_FIND = ::RegisterWindowMessage(_T("WM_FTD_FIND"));
+const UINT WM_FTD_SELECTRESULT = ::RegisterWindowMessage(_T("WM_FTD_SELECTRESULT"));
+const UINT WM_FTD_SELECTALL = ::RegisterWindowMessage(_T("WM_FTD_SELECTALL"));
+const UINT WM_FTD_CLOSE = ::RegisterWindowMessage(_T("WM_FTD_CLOSE"));
 
 class CTDLFindTasksDlg : public CDialog
 {

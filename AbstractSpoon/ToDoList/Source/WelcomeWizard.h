@@ -141,7 +141,7 @@ public:
 
 	void AttachFont(HFONT hFont) { m_hFont = hFont; }
 	BOOL GetHideAttributes() const { return m_bHideAttrib; }
-	CString GetSampleFilePath() const { return m_bViewSample ? m_sSampleTaskList : ""; }
+	CString GetSampleFilePath() const { return m_bViewSample ? m_sSampleTaskList : _T(""); }
 
 protected:
 // Dialog Data

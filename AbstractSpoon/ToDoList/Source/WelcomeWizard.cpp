@@ -51,14 +51,14 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNAMIC(CTDLWelcomeWizard, CPropertySheet)
 
-CTDLWelcomeWizard::CTDLWelcomeWizard() : CPropertySheet("", NULL, 0)
+CTDLWelcomeWizard::CTDLWelcomeWizard() : CPropertySheet(_T(""), NULL, 0)
 {
 	InitSheet();
 }
 
 void CTDLWelcomeWizard::InitSheet()
 {
-	m_hFont = GraphicsMisc::CreateFont("MS Shell Dlg 2");
+	m_hFont = GraphicsMisc::CreateFont(_T("MS Shell Dlg 2"));
 
 	m_page1.AttachFont(m_hFont);
 	m_page2.AttachFont(m_hFont);
@@ -228,8 +228,8 @@ CTDLWelcomePage3::CTDLWelcomePage3() : CPropertyPage(CTDLWelcomePage3::IDD)
 	m_bHideAttrib = 1;
 	m_bViewSample = 1;
 	//}}AFX_DATA_INIT
-	CString sResFolder = FileMisc::GetModuleFolder() + "Resources";
-	FileMisc::MakePath(m_sSampleTaskList, NULL, sResFolder, "Introduction.tdl");
+	CString sResFolder = FileMisc::GetModuleFolder() + _T("Resources");
+	FileMisc::MakePath(m_sSampleTaskList, NULL, sResFolder, _T("Introduction.tdl"));
 
 	CString sFilter;
 	sFilter.LoadString(IDS_TDLFILEFILTER);

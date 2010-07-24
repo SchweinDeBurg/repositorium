@@ -73,11 +73,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // CToDoListWnd dialog
 
-const UINT WM_TDL_SHOWWINDOW = ::RegisterWindowMessage("WM_TDL_SHOWWINDOW");
-const UINT WM_TDL_GETVERSION = ::RegisterWindowMessage("WM_TDL_GETVERSION");
-const UINT WM_TDL_ISCLOSING = ::RegisterWindowMessage("WM_TDL_ISCLOSING");
-const UINT WM_TDL_REFRESHPREFS = ::RegisterWindowMessage("WM_TDL_REFRESHPREFS");
-const UINT WM_TDL_RESTORE = ::RegisterWindowMessage("WM_TDL_RESTORE");
+const UINT WM_TDL_SHOWWINDOW = ::RegisterWindowMessage(_T("WM_TDL_SHOWWINDOW"));
+const UINT WM_TDL_GETVERSION = ::RegisterWindowMessage(_T("WM_TDL_GETVERSION"));
+const UINT WM_TDL_ISCLOSING = ::RegisterWindowMessage(_T("WM_TDL_ISCLOSING"));
+const UINT WM_TDL_REFRESHPREFS = ::RegisterWindowMessage(_T("WM_TDL_REFRESHPREFS"));
+const UINT WM_TDL_RESTORE = ::RegisterWindowMessage(_T("WM_TDL_RESTORE"));
 
 // WM_COPYDATA 
 enum 
@@ -86,7 +86,7 @@ enum
 	ADDNEWTASK,     // data is char*
 	SETCOMMENTS,    // data is char*
 	SELECTTASK,     // data is DWORD
-	IMPORTFILE,		// data is char*
+	IMPORTFILE,     // data is char*
 };
 
 // creation flags

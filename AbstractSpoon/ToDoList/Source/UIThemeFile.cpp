@@ -46,14 +46,12 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CUIThemeFile::CUIThemeFile() : CXmlFile("TODOLIST")
+CUIThemeFile::CUIThemeFile() : CXmlFile(_T("TODOLIST"))
 {
-
 }
 
 CUIThemeFile::~CUIThemeFile()
 {
-
 }
 
 BOOL CUIThemeFile::LoadThemeFile(LPCTSTR szThemeFile)
@@ -61,7 +59,7 @@ BOOL CUIThemeFile::LoadThemeFile(LPCTSTR szThemeFile)
 	if (!CXmlFile::Load(szThemeFile))
 		return FALSE;
 
-	if (!GetItem("UITHEME"))
+	if (!GetItem(_T("UITHEME")))
 		return FALSE;
 
 	// else
@@ -72,20 +70,20 @@ void CUIThemeFile::GetTheme(UITHEME& theme) const
 {
 	theme.nStyle = GetStyle();
 
-	theme.crAppBackDark = GetColor("APPBACKDARK");
-	theme.crAppBackLight = GetColor("APPBACKLIGHT");
-	theme.crAppLines = GetColor("APPLINES");
-	//theme.crAppText = GetColor("APPTEXT");
-	theme.crMenuBack = GetColor("MENUBACK");
-	theme.crToolbarDark = GetColor("TOOLBARDARK");
-	theme.crToolbarLight = GetColor("TOOLBARLIGHT");
-	theme.crStatusBarDark = GetColor("STATUSBARDARK");
-	theme.crStatusBarLight = GetColor("STATUSBARLIGHT");
+	theme.crAppBackDark = GetColor(_T("APPBACKDARK"));
+	theme.crAppBackLight = GetColor(_T("APPBACKLIGHT"));
+	theme.crAppLines = GetColor(_T("APPLINES"));
+	//theme.crAppText = GetColor(_T("APPTEXT");
+	theme.crMenuBack = GetColor(_T("MENUBACK"));
+	theme.crToolbarDark = GetColor(_T("TOOLBARDARK"));
+	theme.crToolbarLight = GetColor(_T("TOOLBARLIGHT"));
+	theme.crStatusBarDark = GetColor(_T("STATUSBARDARK"));
+	theme.crStatusBarLight = GetColor(_T("STATUSBARLIGHT"));
 }
 
 COLORREF CUIThemeFile::GetColor(LPCTSTR szName) const
 {
-	const CXmlItem* pXIName = FindItem("NAME", szName);
+	const CXmlItem* pXIName = FindItem(_T("NAME"), szName);
 
 	if (!pXIName)
 		return UIT_NOCOLOR;
@@ -93,24 +91,24 @@ COLORREF CUIThemeFile::GetColor(LPCTSTR szName) const
 	const CXmlItem* pXIColor = pXIName->GetParent();
 	ASSERT(pXIColor);
 
-	BYTE bRed = (BYTE)pXIColor->GetItemValueI("R");
-	BYTE bGreen = (BYTE)pXIColor->GetItemValueI("G");
-	BYTE bBlue = (BYTE)pXIColor->GetItemValueI("B");
+	BYTE bRed = (BYTE)pXIColor->GetItemValueI(_T("R"));
+	BYTE bGreen = (BYTE)pXIColor->GetItemValueI(_T("G"));
+	BYTE bBlue = (BYTE)pXIColor->GetItemValueI(_T("B"));
 
 	return RGB(bRed, bGreen, bBlue);
 }
 
 UI_STYLE CUIThemeFile::GetStyle() const
 {
-	const CXmlItem* pXITheme = GetItem("UITHEME");
+	const CXmlItem* pXITheme = GetItem(_T("UITHEME"));
 	ASSERT (pXITheme);
 
 	if (!pXITheme)
 		return UIS_GRADIENT;
 
-	CString sStyle = pXITheme->GetItemValue("STYLE");
+	CString sStyle = pXITheme->GetItemValue(_T("STYLE"));
 
-	if (sStyle == "GLASS")
+	if (sStyle == _T("GLASS"))
 		return UIS_GLASS;
 
 	// else

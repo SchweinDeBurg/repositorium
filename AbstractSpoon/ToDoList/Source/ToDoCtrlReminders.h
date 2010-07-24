@@ -41,7 +41,7 @@
 #include <afxtempl.h>
 #include "TDCStruct.h"
 
-const UINT WM_TD_REMINDER = ::RegisterWindowMessage("WM_TD_REMINDER");
+const UINT WM_TD_REMINDER = ::RegisterWindowMessage(_T("WM_TD_REMINDER"));
 
 /////////////////////////////////////////////////////////////////////////////
 // CToDoCtrlReminders window
