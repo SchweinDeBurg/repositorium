@@ -142,12 +142,12 @@ HTREEITEM CPreferencesShortcutsPage::AddMenuItem(HTREEITEM htiParent, const CMen
 	pMenu->GetMenuString(nPos, sItem, MF_BYPOSITION);
 
 	// remove '&'
-	sItem.Replace("&&", "~~~");
-	sItem.Replace("&", "");
-	sItem.Replace("~~~", "&");
+	sItem.Replace(_T("&&"), _T("~~~"));
+	sItem.Replace(_T("&"), _T(""));
+	sItem.Replace(_T("~~~"), _T("&"));
 	
 	// remove everything after '\t'
-	int nTab = sItem.Find('\t');
+	int nTab = sItem.Find(_T('\t'));
 	
 	if (nTab >= 0)
 		sItem = sItem.Left(nTab);
@@ -621,5 +621,4 @@ void CPreferencesShortcutsPage::LoadPreferences(const CPreferences& /*prefs*/)
 
 void CPreferencesShortcutsPage::SavePreferences(CPreferences& /*prefs*/)
 {
-
 }

@@ -55,19 +55,17 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-const LPCTSTR SPACE = " ";
-const LPCTSTR ENDL = "\n";
-const LPCTSTR ONEDBLQUOTE = "\"";
-const LPCTSTR TWODBLQUOTE = "\"\"";
+const LPCTSTR SPACE = _T(" ");
+const LPCTSTR ENDL = _T("\n");
+const LPCTSTR ONEDBLQUOTE = _T("\"");
+const LPCTSTR TWODBLQUOTE = _T("\"\"");
 
 CTaskListCsvExporter::CTaskListCsvExporter()
 {
-
 }
 
 CTaskListCsvExporter::~CTaskListCsvExporter()
 {
-
 }
 
 bool CTaskListCsvExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
@@ -81,12 +79,12 @@ bool CTaskListCsvExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* sz
 	CPreferences prefs;
 
 	DELIM = Misc::GetListSeparator();
-	ROUNDTIMEFRACTIONS = prefs.GetProfileInt("Preferences", "RoundTimeFractions", FALSE);
+	ROUNDTIMEFRACTIONS = prefs.GetProfileInt(_T("Preferences"), _T("RoundTimeFractions"), FALSE);
 
-	if (prefs.GetProfileInt("Preferences", "UseSpaceIndents", TRUE))
-		INDENT = CString(' ', prefs.GetProfileInt("Preferences", "TextIndent", 2));
+	if (prefs.GetProfileInt(_T("Preferences"), _T("UseSpaceIndents"), TRUE))
+		INDENT = CString(_T(' '), prefs.GetProfileInt(_T("Preferences"), _T("TextIndent"), 2));
 	else
-		INDENT = "  "; // don't use tabs - excel strips them off
+		INDENT = _T("  "); // don't use tabs - excel strips them off
 
 	CStdioFile fileOut;
 
@@ -98,7 +96,7 @@ bool CTaskListCsvExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* sz
 		
 		CString sOutput;
 
-		if (!ExportTask(pTasks6, NULL, 0, 0, "", sOutput).IsEmpty())
+		if (!ExportTask(pTasks6, NULL, 0, 0, _T(""), sOutput).IsEmpty())
 		{
 			fileOut.WriteString(ColumnHeadings());
 			fileOut.WriteString(sOutput);
@@ -125,7 +123,7 @@ CString& CTaskListCsvExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 	CString sPos; // becomes parent pos for sub-tasks
 
 	// handle locale specific decimal separator
-	setlocale(LC_NUMERIC, "");
+	_tsetlocale(LC_NUMERIC, _T(""));
 
 	if (hTask)
 	{
@@ -133,13 +131,13 @@ CString& CTaskListCsvExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		if (WantAttribute(TDL_TASKPOS))
 		{
 			// if there is a POS child item then this replaces nPos
-			if (pTasks->TaskHasAttribute(hTask, TDL_TASKPOS))
+			if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPOS)))
 				nPos = pTasks->GetTaskPosition(hTask);
 
 			if (nDepth == 1) // top level tasks
-				sPos.Format("%d", nPos);
+				sPos.Format(_T("%d"), nPos);
 			else
-				sPos.Format("%s.%d", sParentPos, nPos);
+				sPos.Format(_T("%s.%d"), (LPCTSTR)sParentPos, nPos);
 
 			AppendAttribute(sPos, sOutput);
 		}
@@ -206,14 +204,14 @@ CString& CTaskListCsvExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 //		sOutput += ENDL;
 
 	// restore decimal separator to '.'
-	setlocale(LC_NUMERIC, "English");
+	_tsetlocale(LC_NUMERIC, _T("English"));
 
 	return sOutput;
 }
 
 void CTaskListCsvExporter::CheckAddAttribtoList(const ITaskList6* pTasks, HTASKITEM hTask, LPCTSTR szAttribName)
 {
-	if (pTasks->TaskHasAttribute(hTask, szAttribName))
+	if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAttribName)))
 	{
 		// have we already got it ?
 		if (!WantAttribute(szAttribName))
@@ -225,22 +223,22 @@ void CTaskListCsvExporter::AppendAttributeList(const ITaskList6* pTasks, HTASKIT
 										   LPCTSTR szNumAttribName, LPCTSTR szAttribName, 
                                           CString& sOutput) const
 {
-	int nItemCount = atoi(pTasks->GetTaskAttribute(hTask, szNumAttribName));
+	int nItemCount = _ttoi(ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szNumAttribName))));
 
 	if (nItemCount <= 1)
 		AppendAttribute(pTasks, hTask, szAttribName, NULL, sOutput);
 
 	else // more than one (use plus sign as delimiter)
 	{
-		CString sAttribs = pTasks->GetTaskAttribute(hTask, szAttribName);
+		CString sAttribs = ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName)));
 
 		for (int nItem = 1; nItem < nItemCount; nItem++)
 		{
 			CString sAttribName;
-			sAttribName.Format("%s%d", szAttribName, nItem);
+			sAttribName.Format(_T("%s%d"), szAttribName, nItem);
 
-			sAttribs += '+';
-			sAttribs += pTasks->GetTaskAttribute(hTask, sAttribName);
+			sAttribs += _T('+');
+			sAttribs += ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(sAttribName)));
 		}
 
 		AppendAttribute(sAttribs, sOutput);
@@ -253,17 +251,17 @@ void CTaskListCsvExporter::AppendAttribute(const ITaskList6* pTasks, HTASKITEM h
 {
 	if (WantAttribute(szAttribName) || (szAltAttribName && WantAttribute(szAltAttribName)))
 	{
-		if (pTasks->TaskHasAttribute(hTask, szAttribName))
+		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAttribName)))
 		{
 			CString sAttrib(szPrefix);
-			sAttrib += pTasks->GetTaskAttribute(hTask, szAttribName);
+			sAttrib += ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName)));
 			
 			AppendAttribute(sAttrib, sOutput);
 		}
-		else if (szAltAttribName && pTasks->TaskHasAttribute(hTask, szAltAttribName))
+		else if (szAltAttribName && pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAltAttribName)))
 		{
 			CString sAttrib(szPrefix);
-			sAttrib += pTasks->GetTaskAttribute(hTask, szAltAttribName);
+			sAttrib += ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAltAttribName)));
 			
 			AppendAttribute(sAttrib, sOutput);
 		}
@@ -319,7 +317,7 @@ CString CTaskListCsvExporter::CheckGetColumnHeading(LPCTSTR szAttribName, UINT n
 		return CEnString(nIDHeading) + DELIM;
 
 	// else
-	return "";
+	return _T("");
 }
 
 CString CTaskListCsvExporter::ColumnHeadings() const

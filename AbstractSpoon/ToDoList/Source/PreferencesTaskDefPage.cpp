@@ -75,7 +75,7 @@ CPreferencesTaskDefPage::CPreferencesTaskDefPage() :
 	m_aAttribPrefs.Add(ATTRIBPREF(IDS_PTDP_VERSION, PTPA_VERSION, -1)); 
 	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_STARTDATE, PTPA_STARTDATE, -1)); 
 
-	m_eCost.SetMask(".0123456789", ME_LOCALIZEDECIMAL);
+	m_eCost.SetMask(_T(".0123456789"), ME_LOCALIZEDECIMAL);
 }
 
 CPreferencesTaskDefPage::~CPreferencesTaskDefPage()
@@ -352,17 +352,17 @@ int CPreferencesTaskDefPage::GetParentAttribsUsed(CTDCAttributeArray& aAttribs, 
 			{
 				switch (m_aAttribPrefs[nIndex].nAttrib)
 				{
-				case PTPA_PRIORITY: aAttribs.Add(TDCA_PRIORITY); break;
-				case PTPA_COLOR:	aAttribs.Add(TDCA_COLOR); break;
-				case PTPA_ALLOCTO:	aAttribs.Add(TDCA_ALLOCTO); break;
-				case PTPA_ALLOCBY:	aAttribs.Add(TDCA_ALLOCBY); break;
-				case PTPA_STATUS:	aAttribs.Add(TDCA_STATUS); break;
-				case PTPA_CATEGORY: aAttribs.Add(TDCA_CATEGORY); break;
-				case PTPA_TIMEEST:	aAttribs.Add(TDCA_TIMEEST); break;
-				case PTPA_RISK:		aAttribs.Add(TDCA_RISK); break;
-				case PTPA_DUEDATE:	aAttribs.Add(TDCA_DUEDATE); break;
-				case PTPA_VERSION:	aAttribs.Add(TDCA_VERSION); break;
-				case PTPA_STARTDATE:aAttribs.Add(TDCA_STARTDATE); break;
+					case PTPA_PRIORITY: aAttribs.Add(TDCA_PRIORITY); break;
+					case PTPA_COLOR:    aAttribs.Add(TDCA_COLOR); break;
+					case PTPA_ALLOCTO:  aAttribs.Add(TDCA_ALLOCTO); break;
+					case PTPA_ALLOCBY:  aAttribs.Add(TDCA_ALLOCBY); break;
+					case PTPA_STATUS:   aAttribs.Add(TDCA_STATUS); break;
+					case PTPA_CATEGORY: aAttribs.Add(TDCA_CATEGORY); break;
+					case PTPA_TIMEEST:  aAttribs.Add(TDCA_TIMEEST); break;
+					case PTPA_RISK:     aAttribs.Add(TDCA_RISK); break;
+					case PTPA_DUEDATE:  aAttribs.Add(TDCA_DUEDATE); break;
+					case PTPA_VERSION:  aAttribs.Add(TDCA_VERSION); break;
+					case PTPA_STARTDATE:aAttribs.Add(TDCA_STARTDATE); break;
 				}
 			}
 		}
@@ -414,22 +414,22 @@ HBRUSH CPreferencesTaskDefPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 void CPreferencesTaskDefPage::LoadPreferences(const CPreferences& prefs)
 {
 	// load settings
-	m_nDefPriority = prefs.GetProfileInt("Preferences", "DefaultPriority", 5); 
-	m_nDefRisk = prefs.GetProfileInt("Preferences", "DefaultRisk", 0); 
-	m_sDefAllocTo = prefs.GetProfileString("Preferences", "DefaultAllocTo");
-	m_sDefAllocBy = prefs.GetProfileString("Preferences", "DefaultAllocBy");
-	m_sDefStatus = prefs.GetProfileString("Preferences", "DefaultStatus");
-	m_sDefCategory = prefs.GetProfileString("Preferences", "DefaultCategory");
-	m_sDefCreatedBy = prefs.GetProfileString("Preferences", "DefaultCreatedBy");
-	m_crDef = prefs.GetProfileInt("Preferences", "DefaultColor", 0);
-	m_bInheritParentAttributes = prefs.GetProfileInt("Preferences", "InheritParentAttributes", prefs.GetProfileInt("Preferences", "UseParentAttributes"));
-	m_bUpdateInheritAttributes = prefs.GetProfileInt("Preferences", "UpdateInheritAttributes", FALSE);
-	m_bUseCreationForDefStartDate = prefs.GetProfileInt("Preferences", "UseCreationForDefStartDate", TRUE);
-	m_dDefCost = Misc::Atof(prefs.GetProfileString("Preferences", "DefaultCost", "0"));
-	m_dDefTimeEst = prefs.GetProfileDouble("Preferences", "DefaultTimeEstimate", 0);
-	m_eTimeEst.SetUnits(prefs.GetProfileInt("Preferences", "DefaultTimeEstUnits", THU_HOURS));
-	m_dDefTimeSpent = prefs.GetProfileDouble("Preferences", "DefaultTimeSpent", 0);
-	m_eTimeSpent.SetUnits(prefs.GetProfileInt("Preferences", "DefaultTimeSpentUnits", THU_HOURS));
+	m_nDefPriority = prefs.GetProfileInt(_T("Preferences"), _T("DefaultPriority"), 5); 
+	m_nDefRisk = prefs.GetProfileInt(_T("Preferences"), _T("DefaultRisk"), 0); 
+	m_sDefAllocTo = prefs.GetProfileString(_T("Preferences"), _T("DefaultAllocTo"));
+	m_sDefAllocBy = prefs.GetProfileString(_T("Preferences"), _T("DefaultAllocBy"));
+	m_sDefStatus = prefs.GetProfileString(_T("Preferences"), _T("DefaultStatus"));
+	m_sDefCategory = prefs.GetProfileString(_T("Preferences"), _T("DefaultCategory"));
+	m_sDefCreatedBy = prefs.GetProfileString(_T("Preferences"), _T("DefaultCreatedBy"));
+	m_crDef = prefs.GetProfileInt(_T("Preferences"), _T("DefaultColor"), 0);
+	m_bInheritParentAttributes = prefs.GetProfileInt(_T("Preferences"), _T("InheritParentAttributes"), prefs.GetProfileInt(_T("Preferences"), _T("UseParentAttributes")));
+	m_bUpdateInheritAttributes = prefs.GetProfileInt(_T("Preferences"), _T("UpdateInheritAttributes"), FALSE);
+	m_bUseCreationForDefStartDate = prefs.GetProfileInt(_T("Preferences"), _T("UseCreationForDefStartDate"), TRUE);
+	m_dDefCost = Misc::Atof(prefs.GetProfileString(_T("Preferences"), _T("DefaultCost"), _T("0")));
+	m_dDefTimeEst = prefs.GetProfileDouble(_T("Preferences"), _T("DefaultTimeEstimate"), 0);
+	m_eTimeEst.SetUnits(prefs.GetProfileInt(_T("Preferences"), _T("DefaultTimeEstUnits"), THU_HOURS));
+	m_dDefTimeSpent = prefs.GetProfileDouble(_T("Preferences"), _T("DefaultTimeSpent"), 0);
+	m_eTimeSpent.SetUnits(prefs.GetProfileInt(_T("Preferences"), _T("DefaultTimeSpentUnits"), THU_HOURS));
 	
    // attribute use
 	int nIndex = m_aAttribPrefs.GetSize();
@@ -437,37 +437,37 @@ void CPreferencesTaskDefPage::LoadPreferences(const CPreferences& prefs)
 	while (nIndex--)
 	{
 		CString sKey;
-		sKey.Format("Attrib%d", m_aAttribPrefs[nIndex].nAttrib);
+		sKey.Format(_T("Attrib%d"), m_aAttribPrefs[nIndex].nAttrib);
 		
-		m_aAttribPrefs[nIndex].bUse = prefs.GetProfileInt("Preferences\\AttribUse", sKey, FALSE);
+		m_aAttribPrefs[nIndex].bUse = prefs.GetProfileInt(_T("Preferences\\AttribUse"), sKey, FALSE);
 	}
 
 	// combo lists
-	prefs.GetArrayItems("Preferences\\CategoryList", m_aDefCats);
-	prefs.GetArrayItems("Preferences\\StatusList", m_aDefStatus);
-	prefs.GetArrayItems("Preferences\\AllocToList", m_aDefAllocTo);
-	prefs.GetArrayItems("Preferences\\AllocByList", m_aDefAllocBy);
+	prefs.GetArrayItems(_T("Preferences\\CategoryList"), m_aDefCats);
+	prefs.GetArrayItems(_T("Preferences\\StatusList"), m_aDefStatus);
+	prefs.GetArrayItems(_T("Preferences\\AllocToList"), m_aDefAllocTo);
+	prefs.GetArrayItems(_T("Preferences\\AllocByList"), m_aDefAllocBy);
 }
 
 void CPreferencesTaskDefPage::SavePreferences(CPreferences& prefs)
 {
 	// save settings
-	prefs.WriteProfileInt("Preferences", "DefaultPriority", m_nDefPriority);
-	prefs.WriteProfileInt("Preferences", "DefaultRisk", m_nDefRisk);
-	prefs.WriteProfileString("Preferences", "DefaultAllocTo", m_sDefAllocTo);
-	prefs.WriteProfileString("Preferences", "DefaultAllocBy", m_sDefAllocBy);
-	prefs.WriteProfileString("Preferences", "DefaultStatus", m_sDefStatus);
-	prefs.WriteProfileString("Preferences", "DefaultCategory", m_sDefCategory);
-	prefs.WriteProfileString("Preferences", "DefaultCreatedBy", m_sDefCreatedBy);
-	prefs.WriteProfileInt("Preferences", "DefaultColor", m_crDef);
-	prefs.WriteProfileInt("Preferences", "InheritParentAttributes", m_bInheritParentAttributes);
-	prefs.WriteProfileInt("Preferences", "UpdateInheritAttributes", m_bUpdateInheritAttributes);
-	prefs.WriteProfileInt("Preferences", "UseCreationForDefStartDate", m_bUseCreationForDefStartDate);
-	prefs.WriteProfileDouble("Preferences", "DefaultCost", m_dDefCost);
-	prefs.WriteProfileDouble("Preferences", "DefaultTimeEstimate", m_dDefTimeEst);
-	prefs.WriteProfileInt("Preferences", "DefaultTimeEstUnits", m_eTimeEst.GetUnits());
-	prefs.WriteProfileDouble("Preferences", "DefaultTimeSpent", m_dDefTimeSpent);
-	prefs.WriteProfileInt("Preferences", "DefaultTimeSpentUnits", m_eTimeSpent.GetUnits());
+	prefs.WriteProfileInt(_T("Preferences"), _T("DefaultPriority"), m_nDefPriority);
+	prefs.WriteProfileInt(_T("Preferences"), _T("DefaultRisk"), m_nDefRisk);
+	prefs.WriteProfileString(_T("Preferences"), _T("DefaultAllocTo"), m_sDefAllocTo);
+	prefs.WriteProfileString(_T("Preferences"), _T("DefaultAllocBy"), m_sDefAllocBy);
+	prefs.WriteProfileString(_T("Preferences"), _T("DefaultStatus"), m_sDefStatus);
+	prefs.WriteProfileString(_T("Preferences"), _T("DefaultCategory"), m_sDefCategory);
+	prefs.WriteProfileString(_T("Preferences"), _T("DefaultCreatedBy"), m_sDefCreatedBy);
+	prefs.WriteProfileInt(_T("Preferences"), _T("DefaultColor"), m_crDef);
+	prefs.WriteProfileInt(_T("Preferences"), _T("InheritParentAttributes"), m_bInheritParentAttributes);
+	prefs.WriteProfileInt(_T("Preferences"), _T("UpdateInheritAttributes"), m_bUpdateInheritAttributes);
+	prefs.WriteProfileInt(_T("Preferences"), _T("UseCreationForDefStartDate"), m_bUseCreationForDefStartDate);
+	prefs.WriteProfileDouble(_T("Preferences"), _T("DefaultCost"), m_dDefCost);
+	prefs.WriteProfileDouble(_T("Preferences"), _T("DefaultTimeEstimate"), m_dDefTimeEst);
+	prefs.WriteProfileInt(_T("Preferences"), _T("DefaultTimeEstUnits"), m_eTimeEst.GetUnits());
+	prefs.WriteProfileDouble(_T("Preferences"), _T("DefaultTimeSpent"), m_dDefTimeSpent);
+	prefs.WriteProfileInt(_T("Preferences"), _T("DefaultTimeSpentUnits"), m_eTimeSpent.GetUnits());
 	
 	// attribute usage
 	int nIndex = m_aAttribPrefs.GetSize();
@@ -475,13 +475,13 @@ void CPreferencesTaskDefPage::SavePreferences(CPreferences& prefs)
 	while (nIndex--)
 	{
 		CString sKey;
-		sKey.Format("Attrib%d", m_aAttribPrefs[nIndex].nAttrib);
+		sKey.Format(_T("Attrib%d"), m_aAttribPrefs[nIndex].nAttrib);
 
-		prefs.WriteProfileInt("Preferences\\AttribUse", sKey, m_aAttribPrefs[nIndex].bUse);
+		prefs.WriteProfileInt(_T("Preferences\\AttribUse"), sKey, m_aAttribPrefs[nIndex].bUse);
 	}
 
-	prefs.WriteArrayItems(m_aDefCats, "Preferences\\CategoryList");
-	prefs.WriteArrayItems(m_aDefStatus, "Preferences\\StatusList");
-	prefs.WriteArrayItems(m_aDefAllocTo, "Preferences\\AllocToList");
-	prefs.WriteArrayItems(m_aDefAllocBy, "Preferences\\AllocByList");
+	prefs.WriteArrayItems(m_aDefCats, _T("Preferences\\CategoryList"));
+	prefs.WriteArrayItems(m_aDefStatus, _T("Preferences\\StatusList"));
+	prefs.WriteArrayItems(m_aDefAllocTo, _T("Preferences\\AllocToList"));
+	prefs.WriteArrayItems(m_aDefAllocBy, _T("Preferences\\AllocByList"));
 }

@@ -52,7 +52,7 @@ static char THIS_FILE[]=__FILE__;
 
 CTDLRecurringTaskEdit::CTDLRecurringTaskEdit() : m_bInOnSetReadOnly(FALSE)
 {
-	AddButton(REBTN_OPTIONS, "...", "Options");
+	AddButton(REBTN_OPTIONS, _T("..."), _T("Options"));
 }
 
 CTDLRecurringTaskEdit::~CTDLRecurringTaskEdit()

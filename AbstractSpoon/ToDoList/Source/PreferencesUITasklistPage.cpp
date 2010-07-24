@@ -178,14 +178,14 @@ void CPreferencesUITasklistPage::SaveColumns() const
 	CTDCColumnArray aCols;
 
 	int nCol = m_lbColumnVisibility.GetVisibleColumns(aCols);
-	prefs.WriteProfileInt("Preferences\\ColumnVisibility", "Count", nCol);
+	prefs.WriteProfileInt(_T("Preferences\\ColumnVisibility"), _T("Count"), nCol);
 
 	while (nCol--)
 	{
 		CString sKey;
-		sKey.Format("Col%d", nCol);
+		sKey.Format(_T("Col%d"), nCol);
 
-		prefs.WriteProfileInt("Preferences\\ColumnVisibility", sKey, aCols[nCol]);
+		prefs.WriteProfileInt(_T("Preferences\\ColumnVisibility"), sKey, aCols[nCol]);
 	}
 }
 
@@ -193,16 +193,16 @@ void CPreferencesUITasklistPage::LoadPreferences(const CPreferences& prefs)
 {
 	// column visibility
 	CTDCColumnArray aCols;
-	int nCol = prefs.GetProfileInt("Preferences\\ColumnVisibility", "Count", -1);
+	int nCol = prefs.GetProfileInt(_T("Preferences\\ColumnVisibility"), _T("Count"), -1);
 
 	if (nCol == -1) // backward compat required
 	{
 		for (int nCol = 0; ; nCol++)
 		{
 			CString sKey;
-			sKey.Format("Col%d", nCol);
+			sKey.Format(_T("Col%d"), nCol);
 			
-			BOOL bVisible = prefs.GetProfileInt("Preferences\\ColumnVisibility", sKey, -1);
+			BOOL bVisible = prefs.GetProfileInt(_T("Preferences\\ColumnVisibility"), sKey, -1);
 			
 			if (bVisible == -1)
 				break; // all done
@@ -219,9 +219,9 @@ void CPreferencesUITasklistPage::LoadPreferences(const CPreferences& prefs)
 		while (nCol--)
 		{
 			CString sKey;
-			sKey.Format("Col%d", nCol);
+			sKey.Format(_T("Col%d"), nCol);
 
-			TDC_COLUMN col = (TDC_COLUMN)prefs.GetProfileInt("Preferences\\ColumnVisibility", sKey, -1);
+			TDC_COLUMN col = (TDC_COLUMN)prefs.GetProfileInt(_T("Preferences\\ColumnVisibility"), sKey, -1);
 
 			if (col != (TDC_COLUMN)-1)
 				aCols.Add(col);
@@ -231,34 +231,33 @@ void CPreferencesUITasklistPage::LoadPreferences(const CPreferences& prefs)
 	m_lbColumnVisibility.SetVisibleColumns(aCols);
 
 	// prefs
-	m_bShowInfoTips = prefs.GetProfileInt("Preferences", "ShowInfoTips", FALSE);
-	m_bShowComments = prefs.GetProfileInt("Preferences", "ShowComments", TRUE);
-	m_bDisplayFirstCommentLine = prefs.GetProfileInt("Preferences", "DisplayFirstCommentLine", FALSE);
-	m_bStrikethroughDone = prefs.GetProfileInt("Preferences", "StrikethroughDone", TRUE);
-	m_bShowPathInHeader = prefs.GetProfileInt("Preferences", "ShowPathInHeader", TRUE);
-	m_bFullRowSelection = prefs.GetProfileInt("Preferences", "FullRowSelection", FALSE);
-	m_bTreeCheckboxes = prefs.GetProfileInt("Preferences", "TreeCheckboxes", TRUE);
-	m_bUseISOForDates = prefs.GetProfileInt("Preferences", "DisplayDatesInISO", FALSE);
-	m_bShowWeekdayInDates = prefs.GetProfileInt("Preferences", "ShowWeekdayInDates", FALSE);
-	m_bShowParentsAsFolders = prefs.GetProfileInt("Preferences", "ShowParentsAsFolders", TRUE);
-	m_nMaxInfoTipCommentsLength = prefs.GetProfileInt("Preferences", "MaxInfoTipCommentsLength", 100);
-	m_bLimitInfoTipCommentsLength = prefs.GetProfileInt("Preferences", "LimitInfoTipCommentsLength", TRUE);
-	m_bHidePercentForDoneTasks = prefs.GetProfileInt("Preferences", "HidePercentForDoneTasks", TRUE);
-	m_bHideStartDueForDoneTasks = prefs.GetProfileInt("Preferences", "HideStartDueForDoneTasks", TRUE);
-	m_bHideZeroTimeCost = prefs.GetProfileInt("Preferences", "HideZeroTimeEst", TRUE);
-	m_bShowPercentAsProgressbar = prefs.GetProfileInt("Preferences", "ShowPercentAsProgressbar", FALSE);
-	m_bRoundTimeFractions = prefs.GetProfileInt("Preferences", "RoundTimeFractions", FALSE);
-	m_bShowNonFilesAsText = prefs.GetProfileInt("Preferences", "ShowNonFilesAsText", FALSE);
-	m_bUseHMSTimeFormat = prefs.GetProfileInt("Preferences", "UseHMSTimeFormat", FALSE);
-	m_bAutoFocusTasklist = prefs.GetProfileInt("Preferences", "AutoFocusTasklist", FALSE);
-	m_bShowSubtaskCompletion = prefs.GetProfileInt("Preferences", "ShowSubtaskCompletion", FALSE);
-	m_bShowColumnsOnRight = prefs.GetProfileInt("Preferences", "ShowColumnsOnRight", FALSE);
-	m_bHideDueTimeField = prefs.GetProfileInt("Preferences", "HideDueTimeField", FALSE);
-	m_bHideStartTimeField = prefs.GetProfileInt("Preferences", "HideStartTimeField", FALSE);
-	m_bHideDoneTimeField = prefs.GetProfileInt("Preferences", "HideDoneTimeField", FALSE);
-	m_bLimitColumnWidths = prefs.GetProfileInt("Preferences", "LimitColumnWidths", FALSE);
-	m_nMaxColumnWidth = prefs.GetProfileInt("Preferences", "MaxColumnWidth", 60);
-//	m_b = prefs.GetProfileInt("Preferences", "", FALSE);
+	m_bShowInfoTips = prefs.GetProfileInt(_T("Preferences"), _T("ShowInfoTips"), FALSE);
+	m_bShowComments = prefs.GetProfileInt(_T("Preferences"), _T("ShowComments"), TRUE);
+	m_bDisplayFirstCommentLine = prefs.GetProfileInt(_T("Preferences"), _T("DisplayFirstCommentLine"), FALSE);
+	m_bStrikethroughDone = prefs.GetProfileInt(_T("Preferences"), _T("StrikethroughDone"), TRUE);
+	m_bShowPathInHeader = prefs.GetProfileInt(_T("Preferences"), _T("ShowPathInHeader"), TRUE);
+	m_bFullRowSelection = prefs.GetProfileInt(_T("Preferences"), _T("FullRowSelection"), FALSE);
+	m_bTreeCheckboxes = prefs.GetProfileInt(_T("Preferences"), _T("TreeCheckboxes"), TRUE);
+	m_bUseISOForDates = prefs.GetProfileInt(_T("Preferences"), _T("DisplayDatesInISO"), FALSE);
+	m_bShowWeekdayInDates = prefs.GetProfileInt(_T("Preferences"), _T("ShowWeekdayInDates"), FALSE);
+	m_bShowParentsAsFolders = prefs.GetProfileInt(_T("Preferences"), _T("ShowParentsAsFolders"), TRUE);
+	m_nMaxInfoTipCommentsLength = prefs.GetProfileInt(_T("Preferences"), _T("MaxInfoTipCommentsLength"), 100);
+	m_bLimitInfoTipCommentsLength = prefs.GetProfileInt(_T("Preferences"), _T("LimitInfoTipCommentsLength"), TRUE);
+	m_bHidePercentForDoneTasks = prefs.GetProfileInt(_T("Preferences"), _T("HidePercentForDoneTasks"), TRUE);
+	m_bHideStartDueForDoneTasks = prefs.GetProfileInt(_T("Preferences"), _T("HideStartDueForDoneTasks"), TRUE);
+	m_bHideZeroTimeCost = prefs.GetProfileInt(_T("Preferences"), _T("HideZeroTimeEst"), TRUE);
+	m_bShowPercentAsProgressbar = prefs.GetProfileInt(_T("Preferences"), _T("ShowPercentAsProgressbar"), FALSE);
+	m_bRoundTimeFractions = prefs.GetProfileInt(_T("Preferences"), _T("RoundTimeFractions"), FALSE);
+	m_bShowNonFilesAsText = prefs.GetProfileInt(_T("Preferences"), _T("ShowNonFilesAsText"), FALSE);
+	m_bUseHMSTimeFormat = prefs.GetProfileInt(_T("Preferences"), _T("UseHMSTimeFormat"), FALSE);
+	m_bAutoFocusTasklist = prefs.GetProfileInt(_T("Preferences"), _T("AutoFocusTasklist"), FALSE);
+	m_bShowSubtaskCompletion = prefs.GetProfileInt(_T("Preferences"), _T("ShowSubtaskCompletion"), FALSE);
+	m_bShowColumnsOnRight = prefs.GetProfileInt(_T("Preferences"), _T("ShowColumnsOnRight"), FALSE);
+	m_bHideDueTimeField = prefs.GetProfileInt(_T("Preferences"), _T("HideDueTimeField"), FALSE);
+	m_bHideStartTimeField = prefs.GetProfileInt(_T("Preferences"), _T("HideStartTimeField"), FALSE);
+	m_bHideDoneTimeField = prefs.GetProfileInt(_T("Preferences"), _T("HideDoneTimeField"), FALSE);
+	m_bLimitColumnWidths = prefs.GetProfileInt(_T("Preferences"), _T("LimitColumnWidths"), FALSE);
+	m_nMaxColumnWidth = prefs.GetProfileInt(_T("Preferences"), _T("MaxColumnWidth"), 60);
 }
 
 void CPreferencesUITasklistPage::SavePreferences(CPreferences& prefs)
@@ -268,47 +267,46 @@ void CPreferencesUITasklistPage::SavePreferences(CPreferences& prefs)
 	CTDCColumnArray aCols;
 	int nCol = m_lbColumnVisibility.GetVisibleColumns(aCols);
 
-	prefs.WriteProfileInt("Preferences\\ColumnVisibility", "Count", nCol);
+	prefs.WriteProfileInt(_T("Preferences\\ColumnVisibility"), _T("Count"), nCol);
 
 	while (nCol--)
 	{
 		CString sKey;
-		sKey.Format("Col%d", nCol);
+		sKey.Format(_T("Col%d"), nCol);
 
-		prefs.WriteProfileInt("Preferences\\ColumnVisibility", sKey, aCols[nCol]);
+		prefs.WriteProfileInt(_T("Preferences\\ColumnVisibility"), sKey, aCols[nCol]);
 	}
 
 	// save settings
-	prefs.WriteProfileInt("Preferences", "ShowInfoTips", m_bShowInfoTips);
-	prefs.WriteProfileInt("Preferences", "ShowComments", m_bShowComments);
-	prefs.WriteProfileInt("Preferences", "DisplayFirstCommentLine", m_bDisplayFirstCommentLine);
-	prefs.WriteProfileInt("Preferences", "ShowPercentColumn", m_bShowPercentColumn);
-	prefs.WriteProfileInt("Preferences", "ShowPriorityColumn", m_bShowPriorityColumn);
-	prefs.WriteProfileInt("Preferences", "StrikethroughDone", m_bStrikethroughDone);
-	prefs.WriteProfileInt("Preferences", "ShowPathInHeader", m_bShowPathInHeader);
-	prefs.WriteProfileInt("Preferences", "FullRowSelection", m_bFullRowSelection);
-	prefs.WriteProfileInt("Preferences", "TreeCheckboxes", m_bTreeCheckboxes);
-	prefs.WriteProfileInt("Preferences", "DisplayDatesInISO", m_bUseISOForDates);
-	prefs.WriteProfileInt("Preferences", "ShowWeekdayInDates", m_bShowWeekdayInDates);
-	prefs.WriteProfileInt("Preferences", "ShowParentsAsFolders", m_bShowParentsAsFolders);
-	prefs.WriteProfileInt("Preferences", "MaxInfoTipCommentsLength", max(m_nMaxInfoTipCommentsLength, 0));
-	prefs.WriteProfileInt("Preferences", "LimitInfoTipCommentsLength", m_bLimitInfoTipCommentsLength);
-	prefs.WriteProfileInt("Preferences", "HidePercentForDoneTasks", m_bHidePercentForDoneTasks);
-	prefs.WriteProfileInt("Preferences", "HideStartDueForDoneTasks", m_bHideStartDueForDoneTasks);
-	prefs.WriteProfileInt("Preferences", "HideZeroTimeEst", m_bHideZeroTimeCost);
-	prefs.WriteProfileInt("Preferences", "ShowPercentAsProgressbar", m_bShowPercentAsProgressbar);
-	prefs.WriteProfileInt("Preferences", "RoundTimeFractions", m_bRoundTimeFractions);
-	prefs.WriteProfileInt("Preferences", "ShowNonFilesAsText", m_bShowNonFilesAsText);
-	prefs.WriteProfileInt("Preferences", "UseHMSTimeFormat", m_bUseHMSTimeFormat);
-	prefs.WriteProfileInt("Preferences", "AutoFocusTasklist", m_bAutoFocusTasklist);
-	prefs.WriteProfileInt("Preferences", "ShowSubtaskCompletion", m_bShowSubtaskCompletion);
-	prefs.WriteProfileInt("Preferences", "ShowColumnsOnRight", m_bShowColumnsOnRight);
-	prefs.WriteProfileInt("Preferences", "HideDueTimeField", m_bHideDueTimeField);
-	prefs.WriteProfileInt("Preferences", "HideStartTimeField", m_bHideStartTimeField);
-	prefs.WriteProfileInt("Preferences", "HideDoneTimeField", m_bHideDoneTimeField);
-	prefs.WriteProfileInt("Preferences", "LimitColumnWidths", m_bLimitColumnWidths);
-	prefs.WriteProfileInt("Preferences", "MaxColumnWidth", m_nMaxColumnWidth);
-//	prefs.WriteProfileInt("Preferences", "", m_b);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowInfoTips"), m_bShowInfoTips);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowComments"), m_bShowComments);
+	prefs.WriteProfileInt(_T("Preferences"), _T("DisplayFirstCommentLine"), m_bDisplayFirstCommentLine);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowPercentColumn"), m_bShowPercentColumn);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowPriorityColumn"), m_bShowPriorityColumn);
+	prefs.WriteProfileInt(_T("Preferences"), _T("StrikethroughDone"), m_bStrikethroughDone);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowPathInHeader"), m_bShowPathInHeader);
+	prefs.WriteProfileInt(_T("Preferences"), _T("FullRowSelection"), m_bFullRowSelection);
+	prefs.WriteProfileInt(_T("Preferences"), _T("TreeCheckboxes"), m_bTreeCheckboxes);
+	prefs.WriteProfileInt(_T("Preferences"), _T("DisplayDatesInISO"), m_bUseISOForDates);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowWeekdayInDates"), m_bShowWeekdayInDates);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowParentsAsFolders"), m_bShowParentsAsFolders);
+	prefs.WriteProfileInt(_T("Preferences"), _T("MaxInfoTipCommentsLength"), max(m_nMaxInfoTipCommentsLength, 0));
+	prefs.WriteProfileInt(_T("Preferences"), _T("LimitInfoTipCommentsLength"), m_bLimitInfoTipCommentsLength);
+	prefs.WriteProfileInt(_T("Preferences"), _T("HidePercentForDoneTasks"), m_bHidePercentForDoneTasks);
+	prefs.WriteProfileInt(_T("Preferences"), _T("HideStartDueForDoneTasks"), m_bHideStartDueForDoneTasks);
+	prefs.WriteProfileInt(_T("Preferences"), _T("HideZeroTimeEst"), m_bHideZeroTimeCost);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowPercentAsProgressbar"), m_bShowPercentAsProgressbar);
+	prefs.WriteProfileInt(_T("Preferences"), _T("RoundTimeFractions"), m_bRoundTimeFractions);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowNonFilesAsText"), m_bShowNonFilesAsText);
+	prefs.WriteProfileInt(_T("Preferences"), _T("UseHMSTimeFormat"), m_bUseHMSTimeFormat);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoFocusTasklist"), m_bAutoFocusTasklist);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowSubtaskCompletion"), m_bShowSubtaskCompletion);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowColumnsOnRight"), m_bShowColumnsOnRight);
+	prefs.WriteProfileInt(_T("Preferences"), _T("HideDueTimeField"), m_bHideDueTimeField);
+	prefs.WriteProfileInt(_T("Preferences"), _T("HideStartTimeField"), m_bHideStartTimeField);
+	prefs.WriteProfileInt(_T("Preferences"), _T("HideDoneTimeField"), m_bHideDoneTimeField);
+	prefs.WriteProfileInt(_T("Preferences"), _T("LimitColumnWidths"), m_bLimitColumnWidths);
+	prefs.WriteProfileInt(_T("Preferences"), _T("MaxColumnWidth"), m_nMaxColumnWidth);
 }
 
 

@@ -144,6 +144,12 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #pragma conform(forScope, on)
 #endif   // _MSC_VER
 
+// helper macro STRINGIZE
+// converts the parameter 'text' to a string after
+// macro replacement on 'text' has been performed
+#define STRINGIZE(text) STRINGIZE_IMPL(text)
+#define STRINGIZE_IMPL(text) #text
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
