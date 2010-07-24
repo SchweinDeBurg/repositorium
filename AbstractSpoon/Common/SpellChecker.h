@@ -54,7 +54,6 @@ public:
 	void FreeSuggestions(char**& pSuggestions);
 
 	bool IsValid();
-
 };
 
 #endif // !defined(AFX_SPELLCHECKER_H__74596014_29E0_4289_9BC7_28A7996FA37B__INCLUDED_)

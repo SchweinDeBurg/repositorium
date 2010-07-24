@@ -798,7 +798,6 @@ int CXmlNodeListWrapper::Count()
 	{
 		return 0;
 	}
-
 }
 
 BOOL CXmlNodeListWrapper::IsValid()

@@ -78,7 +78,6 @@ protected:
 
 protected:
 	static CString& Clean(CString& sText);
-
 };
 
 #endif // !defined(AFX_IMPORTEXPORTMGR_H__C258D849_69ED_46A7_A2F0_351C5C9FB3B3__INCLUDED_)

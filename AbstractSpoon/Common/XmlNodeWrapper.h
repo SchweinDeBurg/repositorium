@@ -145,7 +145,6 @@ public:
 private:
 	MSXML2::IXMLDOMNodeListPtr m_xmlnodelist;
 
-
 };
 
 #endif // !defined(AFX_XMLNODEWRAPPER_H__43622334_FDEB_4175_9E6D_19BBAA3992A5__INCLUDED_)

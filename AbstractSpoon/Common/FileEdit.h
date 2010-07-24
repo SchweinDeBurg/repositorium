@@ -123,7 +123,6 @@ protected:
 	CRect GetIconRect() const; // screen coords
 	inline BOOL HasStyle(int nStyle) const { return (m_nStyle & nStyle); }
 	void DrawFileIcon(CDC* pDC, const CRect& rWindow);
-
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -949,7 +949,6 @@ void CUrlRichEditCtrl::OnShowWindow(BOOL bShow, UINT nStatus)
 	CRichEditBaseCtrl::OnShowWindow(bShow, nStatus);
 
 	// TODO: Add your message handler code here
-
 }
 
 int CUrlRichEditCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
