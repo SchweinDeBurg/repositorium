@@ -47,12 +47,10 @@ static char THIS_FILE[]=__FILE__;
 
 CMouseWheelMgr::CMouseWheelMgr()
 {
-
 }
 
 CMouseWheelMgr::~CMouseWheelMgr()
 {
-
 }
 
 BOOL CMouseWheelMgr::Initialize()

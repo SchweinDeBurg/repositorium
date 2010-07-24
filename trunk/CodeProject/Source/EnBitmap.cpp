@@ -59,12 +59,10 @@ BOOL C32BitImageProcessor::ProcessPixels(RGBX* pSrcPixels, CSize /*sizeSrc*/, RG
 
 CEnBitmap::CEnBitmap(COLORREF crBkgnd) : m_crBkgnd(crBkgnd)
 {
-
 }
 
 CEnBitmap::~CEnBitmap()
 {
-
 }
 
 BOOL CEnBitmap::LoadImage(UINT uIDRes, LPCTSTR szResourceType, HMODULE hInst, COLORREF crBack)

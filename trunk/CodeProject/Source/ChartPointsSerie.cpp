@@ -44,7 +44,6 @@ CChartPointsSerie::CChartPointsSerie(CChartCtrl* pParent)
 
 CChartPointsSerie::~CChartPointsSerie()
 {
-
 }
 void CChartPointsSerie::SetPointSize(int XSize, int YSize)
 {

@@ -110,7 +110,6 @@ CXHtmlDraw::CXHtmlDraw(UINT nMaxText /*= XHTMLDRAW_MAX_TEXT*/)
 // dtor
 CXHtmlDraw::~CXHtmlDraw()
 {
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////

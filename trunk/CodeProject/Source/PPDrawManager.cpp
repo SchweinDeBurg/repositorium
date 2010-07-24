@@ -23,12 +23,10 @@ static char THIS_FILE[]=__FILE__;
 
 CPPDrawManager::CPPDrawManager()
 {
-
 }
 
 CPPDrawManager::~CPPDrawManager()
 {
-
 }
 
 void CPPDrawManager::GetSizeOfIcon(HICON hIcon, LPSIZE pSize) const

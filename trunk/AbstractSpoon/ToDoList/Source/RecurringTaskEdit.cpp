@@ -57,7 +57,6 @@ CTDLRecurringTaskEdit::CTDLRecurringTaskEdit() : m_bInOnSetReadOnly(FALSE)
 
 CTDLRecurringTaskEdit::~CTDLRecurringTaskEdit()
 {
-
 }
 
 BEGIN_MESSAGE_MAP(CTDLRecurringTaskEdit, CEnEdit)

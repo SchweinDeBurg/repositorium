@@ -786,7 +786,6 @@ void CXmlNodeListWrapper::operator=(MSXML2::IXMLDOMNodeListPtr pList)
 
 CXmlNodeListWrapper::~CXmlNodeListWrapper()
 {
-
 }
 
 int CXmlNodeListWrapper::Count()

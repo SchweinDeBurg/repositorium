@@ -63,12 +63,10 @@ enum
 CShortcutManager::CShortcutManager(BOOL bAutoSendCmds)
 : m_bAutoSendCmds(bAutoSendCmds), m_wInvalidComb(0), m_wFallbackModifiers(0)
 {
-
 }
 
 CShortcutManager::~CShortcutManager()
 {
-
 }
 
 BOOL CShortcutManager::Initialize(CWnd* pOwner, WORD wInvalidComb, WORD wFallbackModifiers)

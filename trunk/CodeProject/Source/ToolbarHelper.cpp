@@ -67,12 +67,10 @@ public:
 
 CToolbarHelper::CToolbarHelper() : m_pToolbar(NULL), m_bMultiline(FALSE), m_nMultilineWidth(200)
 {
-
 }
 
 CToolbarHelper::~CToolbarHelper()
 {
-
 }
 
 BOOL CToolbarHelper::Initialize(CToolBar* pToolbar, CWnd* pToolbarParent)

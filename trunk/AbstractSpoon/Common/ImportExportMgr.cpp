@@ -50,7 +50,6 @@ static char THIS_FILE[]=__FILE__;
 
 CImportExportMgr::CImportExportMgr() : m_bInitialized(FALSE)
 {
-
 }
 
 CImportExportMgr::~CImportExportMgr()

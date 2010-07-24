@@ -138,7 +138,6 @@ CTimeEdit::CTimeEdit(int nUnits, int nMaxDecPlaces) : m_nUnits(nUnits), m_nMaxDe
 
 CTimeEdit::~CTimeEdit()
 {
-
 }
 
 BEGIN_MESSAGE_MAP(CTimeEdit, CEnEdit)

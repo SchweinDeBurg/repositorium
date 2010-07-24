@@ -206,7 +206,6 @@ UIEXTENSIONWINDOW* CUIExtension::FindWindow(DWORD dwItemData) const
 
 CUIExtensionMgr::CUIExtensionMgr() : m_bInitialized(FALSE)
 {
-
 }
 
 CUIExtensionMgr::~CUIExtensionMgr()

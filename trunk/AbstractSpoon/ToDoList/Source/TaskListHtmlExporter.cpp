@@ -61,7 +61,6 @@ CTaskListHtmlExporter::CTaskListHtmlExporter()
 
 CTaskListHtmlExporter::~CTaskListHtmlExporter()
 {
-
 }
 
 bool CTaskListHtmlExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)

@@ -51,12 +51,10 @@ static char THIS_FILE[]=__FILE__;
 
 CTDLImportExportMgr::CTDLImportExportMgr()
 {
-
 }
 
 CTDLImportExportMgr::~CTDLImportExportMgr()
 {
-
 }
 
 void CTDLImportExportMgr::Initialize()

@@ -50,12 +50,10 @@ static char THIS_FILE[]=__FILE__;
 
 CWndPrompt::CWndPrompt() : m_nCheckMsg(0), m_lCheckResult(0), m_nVertOffset(0)
 {
-
 }
 
 CWndPrompt::~CWndPrompt()
 {
-
 }
 
 BOOL CWndPrompt::Initialize(HWND hWnd, LPCTSTR szPrompt, UINT nCheckMsg, LRESULT lRes, int nVertOffset)

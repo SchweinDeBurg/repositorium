@@ -63,12 +63,10 @@ CDockManager::CDockManager() :
 	m_sizeMainMin(-1, -1),
 	m_sizeDockMin(-1, -1)
 {
-
 }
 
 CDockManager::~CDockManager()
 {
-
 }
 
 BOOL CDockManager::Initialize(CWnd* pMainWnd, CWnd* pDockWnd, 

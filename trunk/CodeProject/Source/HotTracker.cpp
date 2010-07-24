@@ -55,12 +55,10 @@ static char THIS_FILE[]=__FILE__;
 
 CHotTracker::CHotTracker() : m_nHotRect(-1)
 {
-
 }
 
 CHotTracker::~CHotTracker()
 {
-
 }
 
 BOOL CHotTracker::Initialize(CWnd* pWnd)

@@ -79,7 +79,6 @@ CToolsCmdlineParser::CToolsCmdlineParser(LPCTSTR szCmdLine)
 
 CToolsCmdlineParser::~CToolsCmdlineParser()
 {
-
 }
 
 void CToolsCmdlineParser::SetCmdLine(LPCTSTR szCmdLine)

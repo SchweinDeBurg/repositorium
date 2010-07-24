@@ -54,7 +54,6 @@ CEnRecentFileList::CEnRecentFileList(UINT nStart, LPCTSTR lpszSection,
 
 CEnRecentFileList::~CEnRecentFileList()
 {
-
 }
 
 void CEnRecentFileList::UpdateMenu(CCmdUI* pCmdUI)

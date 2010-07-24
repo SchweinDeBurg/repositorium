@@ -922,7 +922,6 @@ CXmlFile::CXmlFile(LPCTSTR szRootItemName) : m_xiRoot(NULL, szRootItemName)
 
 CXmlFile::~CXmlFile()
 {
-
 }
 
 BOOL CXmlFile::Load(LPCTSTR szFilePath, LPCTSTR szRootItemName, IXmlParse* pCallback)

@@ -64,7 +64,6 @@ CTimeHelper::CTimeHelper() : m_dHours2Days(HOURS2DAYS), m_dDaysToWeeks(DAYS2WEEK
 CTimeHelper::CTimeHelper(double dHoursInDay, double dDaysInWeek) 
 	: m_dHours2Days(dHoursInDay), m_dDaysToWeeks(dDaysInWeek)
 {
-
 }
 
 

@@ -49,7 +49,6 @@ static char THIS_FILE[]=__FILE__;
 
 CContentMgr::CContentMgr() : m_bInitialized(FALSE), m_bSomeBadVersions(FALSE)
 {
-
 }
 
 CContentMgr::~CContentMgr()
