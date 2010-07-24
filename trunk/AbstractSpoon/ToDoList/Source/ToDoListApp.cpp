@@ -66,18 +66,18 @@ CLimitSingleInstance g_SingleInstanceObj(_T("{3A4EFC98-9BA9-473D-A3CF-6B0FE64447
 
 BOOL CALLBACK FindOtherInstance(HWND hwnd, LPARAM lParam);
 
-const LPCTSTR REGKEY = "AbstractSpoon";
-const LPCTSTR APPREGKEY = "Software\\AbstractSpoon\\ToDoList";
+const LPCTSTR REGKEY = _T("AbstractSpoon");
+const LPCTSTR APPREGKEY = _T("Software\\AbstractSpoon\\ToDoList");
 
-const LPCTSTR ONLINEHELP = "http://abstractspoon.pbwiki.com/OnlineDocumentation"; 
-const LPCTSTR CONTACTUS = "mailto:abstractspoon2@optusnet.com.au"; 
-const LPCTSTR FEEDBACKANDSUPPORT = "http://www.codeproject.com/tools/todolist2.asp"; 
-const LPCTSTR LICENSE = "http://www.opensource.org/licenses/eclipse-1.0.php"; 
-const LPCTSTR ONLINE = "http://www.abstractspoon.com/tdl_resources.html"; 
-const LPCTSTR WIKI = "http://abstractspoon.pbwiki.com/"; 
-const LPCTSTR DONATE = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=abstractspoon2%40optusnet%2ecom%2eau&item_name=Software"; 
+const LPCTSTR ONLINEHELP = _T("http://abstractspoon.pbwiki.com/OnlineDocumentation"); 
+const LPCTSTR CONTACTUS = _T("mailto:abstractspoon2@optusnet.com.au"); 
+const LPCTSTR FEEDBACKANDSUPPORT = _T("http://www.codeproject.com/tools/todolist2.asp"); 
+const LPCTSTR LICENSE = _T("http://www.opensource.org/licenses/eclipse-1.0.php"); 
+const LPCTSTR ONLINE = _T("http://www.abstractspoon.com/tdl_resources.html"); 
+const LPCTSTR WIKI = _T("http://abstractspoon.pbwiki.com/"); 
+const LPCTSTR DONATE = _T("https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=abstractspoon2%40optusnet%2ecom%2eau&item_name=Software"); 
 
-const char FILESTATEKEY[] = "FileStates";
+const TCHAR FILESTATEKEY[] = _T("FileStates");
 const UINT LENFILESTATEKEY = sizeof (FILESTATEKEY);
 
 /////////////////////////////////////////////////////////////////////////////
@@ -124,7 +124,7 @@ BOOL CToDoListApp::InitInstance()
 
 	// load localized resources
 	CEnString sResVersion(IDS_RES_VERSION);
-	HINSTANCE hResDll = /*Afx*/LoadLibrary("ToDoListLOC.dll");
+	HINSTANCE hResDll = /*Afx*/LoadLibrary(_T("ToDoListLOC.dll"));
 
 	if (hResDll)
 	{
@@ -135,7 +135,7 @@ BOOL CToDoListApp::InitInstance()
 		AfxSetResourceHandle(hResDll);
 
 		// allow user to proceed but warn them
-		if (atoi(sResVersion) != atoi(szResVer))
+		if (_ttoi(sResVersion) != _ttoi(szResVer))
 			AfxMessageBox(IDS_MISMATCHEDRESOURCES);
 	}
 
@@ -145,8 +145,8 @@ BOOL CToDoListApp::InitInstance()
 		return FALSE;
 
 	// see if the user just wants to see the commandline options
-	if (cmdInfo.HasOption("h") || cmdInfo.HasOption("help") || 
-		cmdInfo.HasOption("?"))
+	if (cmdInfo.HasOption(_T("h")) || cmdInfo.HasOption(_T("help")) || 
+		cmdInfo.HasOption(_T("?")))
 	{
 		AfxMessageBox(IDS_COMMANDLINEOPTIONS, MB_OK | MB_ICONINFORMATION);
 		return FALSE;
@@ -190,27 +190,27 @@ BOOL CToDoListApp::InitInstance()
 			// new task?
 			CString sValue;
 			
-			if (cmdInfo.GetOption("nt", sValue))
+			if (cmdInfo.GetOption(_T("nt"), sValue))
 			{
 				SendDataMessage(hWnd, ADDNEWTASK, sValue);
 				
-				if (cmdInfo.GetOption("cm", sValue))
+				if (cmdInfo.GetOption(_T("cm"), sValue))
 				{
 					// replace [\][n] with [\n]
-					sValue.Replace("\\n", "\n");
+					sValue.Replace(_T("\\n"), _T("\n"));
 					SendDataMessage(hWnd, SETCOMMENTS, sValue);
 				}
 			}
 			// or select task
-			else if (cmdInfo.GetOption("tid", sValue))
+			else if (cmdInfo.GetOption(_T("tid"), sValue))
 			{
-				DWORD dwID = atoi(sValue);
+				DWORD dwID = _ttoi(sValue);
 
 				if (dwID)
 					SendDataMessage(hWnd, SELECTTASK, dwID);
 			}
 			// or merge/import
-			else if (cmdInfo.GetOption("m", sValue))
+			else if (cmdInfo.GetOption(_T("m"), sValue))
 			{
 				if (!sValue.IsEmpty())
 					SendDataMessage(hWnd, IMPORTFILE, sValue);
@@ -220,9 +220,9 @@ BOOL CToDoListApp::InitInstance()
 		}
 	}
 
-	BOOL bForceVisible = cmdInfo.HasOption("v");
-	BOOL bPasswordPrompting = !cmdInfo.HasOption("x");
-	BOOL bLogging = cmdInfo.HasOption("l");
+	BOOL bForceVisible = cmdInfo.HasOption(_T("v"));
+	BOOL bPasswordPrompting = !cmdInfo.HasOption(_T("x"));
+	BOOL bLogging = cmdInfo.HasOption(_T("l"));
 
 	DWORD dwFlags = (bForceVisible ? TLD_FORCEVISIBLE : 0) |
 					(bPasswordPrompting ? TLD_PASSWORDPROMPTING : 0) |
@@ -238,27 +238,27 @@ BOOL CToDoListApp::InitInstance()
 		// new task?
 		CString sValue;
 		
-		if (cmdInfo.GetOption("nt", sValue))
+		if (cmdInfo.GetOption(_T("nt"), sValue))
 		{
 			SendDataMessage(hWnd, ADDNEWTASK, sValue);
 
-			if (cmdInfo.GetOption("cm", sValue))
+			if (cmdInfo.GetOption(_T("cm"), sValue))
 			{
 				// replace [\][n] with [\n]
-				sValue.Replace("\\n", "\n");
+				sValue.Replace(_T("\\n"), _T("\n"));
 				SendDataMessage(hWnd, SETCOMMENTS, sValue);
 			}
 		}
 		// or select task
-		else if (cmdInfo.GetOption("tid", sValue))
+		else if (cmdInfo.GetOption(_T("tid"), sValue))
 		{
-			DWORD dwID = atoi(sValue);
+			DWORD dwID = _ttoi(sValue);
 			
 			if (dwID)
 				SendDataMessage(hWnd, SELECTTASK, dwID);
 		}
 		// or merge/import
-		else if (cmdInfo.GetOption("m", sValue))
+		else if (cmdInfo.GetOption(_T("m"), sValue))
 		{
 			if (!sValue.IsEmpty())
 				SendDataMessage(hWnd, IMPORTFILE, sValue);
@@ -280,7 +280,7 @@ BOOL CToDoListApp::ParseCommandLine(CEnCommandLineInfo* pInfo)
 	// check for task link
 	CString sLink;
 
-	if (pInfo->GetOption("l", sLink) && sLink.Find(TDL_PROTOCOL) != -1)
+	if (pInfo->GetOption(_T("l"), sLink) && sLink.Find(TDL_PROTOCOL) != -1)
 	{
 		CString sFilePath;
 		DWORD dwID = 0;
@@ -290,21 +290,21 @@ BOOL CToDoListApp::ParseCommandLine(CEnCommandLineInfo* pInfo)
 		if (!sFilePath.IsEmpty() && dwID)
 		{
 			// remove possible trailing slash on file path
-			sFilePath.TrimRight('\\');
+			sFilePath.TrimRight(_T('\\'));
 
 			// replace possible %20 by spaces
-			sFilePath.Replace("%20", " ");
+			sFilePath.Replace(_T("%20"), _T(" "));
 
 			// verify the file existence unless the path is relative
 			if (/*PathIsRelative(sFilePath) || */FileMisc::FileExists(sFilePath))
 			{
 				pInfo->m_strFileName = sFilePath;
-				pInfo->SetOption("tid", dwID);
+				pInfo->SetOption(_T("tid"), dwID);
 			}
 			else
 			{
 				pInfo->m_strFileName.Empty();
-				pInfo->DeleteOption("tid");
+				pInfo->DeleteOption(_T("tid"));
 				AfxMessageBox(CEnString(IDS_TDLLINKLOADFAILED, sFilePath));
 
 				return FALSE;
@@ -336,7 +336,7 @@ BOOL CToDoListApp::SendDataMessage(HWND hwnd, int nType, DWORD dwData)
 
 BOOL CToDoListApp::SendDataMessage(HWND hwnd, int nType, LPCTSTR szData)
 {
-   return SendDataMessage(hwnd, nType, strlen(szData) + 1, (LPVOID)szData);
+   return SendDataMessage(hwnd, nType, _tcslen(szData) + 1, (LPVOID)szData);
 }
 
 BOOL CALLBACK FindOtherInstance(HWND hwnd, LPARAM lParam)
@@ -449,7 +449,7 @@ BOOL CToDoListApp::InitPreferences(CEnCommandLineInfo* pInfo)
     // try command line first
     CString sIniPath;
 
-    if (pInfo->GetOption("i", sIniPath) && !sIniPath.IsEmpty())
+    if (pInfo->GetOption(_T("i"), sIniPath) && !sIniPath.IsEmpty())
     {
 		// prefix application path if path is relative
 		if (PathIsRelative(sIniPath))
@@ -462,38 +462,38 @@ BOOL CToDoListApp::InitPreferences(CEnCommandLineInfo* pInfo)
 	// ini file of the same name
 	if (!bUseIni && !pInfo->m_strFileName.IsEmpty())
 	{
-	    sIniPath = pInfo->m_strFileName;
-		FileMisc::ReplaceExtension(sIniPath, "ini");
+		sIniPath = pInfo->m_strFileName;
+		FileMisc::ReplaceExtension(sIniPath, _T("ini"));
 
-        bUseIni = FileMisc::FileExists(sIniPath);
+		bUseIni = FileMisc::FileExists(sIniPath);
 
 		// if we found one then make sure it does not have single 
 		// instance specified
 		if (bUseIni)
-			WriteProfileInt("Preferences", "MultiInstance", TRUE);
+			WriteProfileInt(_T("Preferences"), _T("MultiInstance"), TRUE);
 	}
 
-    // else try for an ini file having the same name as the executable
+	// else try for an ini file having the same name as the executable
 	if (!bUseIni)
-    {
-        // then try current working dir
-		FileMisc::MakePath(sIniPath, NULL, FileMisc::GetCwd(), sAppName, ".ini");
+	{
+		// then try current working dir
+		FileMisc::MakePath(sIniPath, NULL, FileMisc::GetCwd(), sAppName, _T(".ini"));
 		bUseIni = FileMisc::FileExists(sIniPath);
 
 		// followed by app folder
-        if (!bUseIni)
+		if (!bUseIni)
 		{
-			FileMisc::MakePath(sIniPath, sDrive, sFolder, sAppName, ".ini");
-    		bUseIni = FileMisc::FileExists(sIniPath);
+			FileMisc::MakePath(sIniPath, sDrive, sFolder, sAppName, _T(".ini"));
+			bUseIni = FileMisc::FileExists(sIniPath);
 		}
-   }
+	}
 
 	// then try registry
 	CTDLWelcomeWizard* pWizard = NULL;
 
 	if (!bUseIni)
 	{
-		BOOL bFirstTime = !CAfxRegKey::KeyExists(HKEY_CURRENT_USER, "Software\\Abstractspoon\\ToDoList");
+		BOOL bFirstTime = !CAfxRegKey::KeyExists(HKEY_CURRENT_USER, _T("Software\\AbstractSpoon\\ToDoList"));
 
 		if (bFirstTime) // first time
 		{
@@ -513,10 +513,10 @@ BOOL CToDoListApp::InitPreferences(CEnCommandLineInfo* pInfo)
 	if (bUseIni)
 	{
 		free((void*)m_pszProfileName);
-		m_pszProfileName = _strdup(sIniPath);
+		m_pszProfileName = _tcsdup(sIniPath);
 	}
 	else
-		SetRegistryKey(_T(REGKEY));
+		SetRegistryKey(REGKEY);
 
 	if (pWizard)
 	{
@@ -526,14 +526,14 @@ BOOL CToDoListApp::InitPreferences(CEnCommandLineInfo* pInfo)
 		if (pWizard->GetShareTasklists()) 
 		{
 			// set up source control for remote tasklists
-			prefs.WriteProfileInt("Preferences", "EnableSourceControl", TRUE);
-			prefs.WriteProfileInt("Preferences", "SourceControlLanOnly", TRUE);
-			prefs.WriteProfileInt("Preferences", "AutoCheckOut", TRUE);
-			prefs.WriteProfileInt("Preferences", "CheckoutOnCheckin", TRUE);
-			prefs.WriteProfileInt("Preferences", "CheckinOnClose", TRUE);
-			prefs.WriteProfileInt("Preferences", "CheckinNoEditTime", 1);
-			prefs.WriteProfileInt("Preferences", "CheckinNoEdit", TRUE);
-			prefs.WriteProfileInt("Preferences", "Use3rdPartySourceControl", FALSE);
+			prefs.WriteProfileInt(_T("Preferences"), _T("EnableSourceControl"), TRUE);
+			prefs.WriteProfileInt(_T("Preferences"), _T("SourceControlLanOnly"), TRUE);
+			prefs.WriteProfileInt(_T("Preferences"), _T("AutoCheckOut"), TRUE);
+			prefs.WriteProfileInt(_T("Preferences"), _T("CheckoutOnCheckin"), TRUE);
+			prefs.WriteProfileInt(_T("Preferences"), _T("CheckinOnClose"), TRUE);
+			prefs.WriteProfileInt(_T("Preferences"), _T("CheckinNoEditTime"), 1);
+			prefs.WriteProfileInt(_T("Preferences"), _T("CheckinNoEdit"), TRUE);
+			prefs.WriteProfileInt(_T("Preferences"), _T("Use3rdPartySourceControl"), FALSE);
 		}
 
 		// setup default columns
@@ -541,22 +541,21 @@ BOOL CToDoListApp::InitPreferences(CEnCommandLineInfo* pInfo)
 		pWizard->GetVisibleColumns(aColumns);
 
 		int nCol = aColumns.GetSize();
-		prefs.WriteProfileInt("Preferences\\ColumnVisibility", "Count", nCol);
+		prefs.WriteProfileInt(_T("Preferences\\ColumnVisibility"), _T("Count"), nCol);
 
 		while (nCol--)
 		{
 			CString sKey;
-			sKey.Format("Col%d", nCol);
+			sKey.Format(_T("Col%d"), nCol);
 
-			prefs.WriteProfileInt("Preferences\\ColumnVisibility", sKey, aColumns[nCol]);
+			prefs.WriteProfileInt(_T("Preferences\\ColumnVisibility"), sKey, aColumns[nCol]);
 		}
 
 		if (pWizard->GetHideAttributes())
 		{
 			// hide clutter
-			prefs.WriteProfileInt("Preferences", "ShowCtrlsAsColumns", TRUE);
-			prefs.WriteProfileInt("Preferences", "ShowEditMenuAsColumns", TRUE);
-			//prefs.WriteProfileInt("Settings", "ShowFilterBar", FALSE);
+			prefs.WriteProfileInt(_T("Preferences"), _T("ShowCtrlsAsColumns"), TRUE);
+			prefs.WriteProfileInt(_T("Preferences"), _T("ShowEditMenuAsColumns"), TRUE);
 		}
 
 		// set up initial file
@@ -576,25 +575,25 @@ BOOL CToDoListApp::InitPreferences(CEnCommandLineInfo* pInfo)
 void CToDoListApp::UpgradePreferences(BOOL /*bUseIni*/)
 {
 	CPreferences prefs;
-	BOOL bIconColumn = prefs.GetProfileInt("Preferences", "IconColumn");
+	BOOL bIconColumn = prefs.GetProfileInt(_T("Preferences"), _T("IconColumn"));
 
 	if (bIconColumn)
 		return; // already fixed
 
-	prefs.WriteProfileInt("Preferences", "IconColumn", TRUE);
+	prefs.WriteProfileInt(_T("Preferences"), _T("IconColumn"), TRUE);
 
 	// add icon column to default columns
-	int nCol = prefs.GetProfileInt("Preferences\\ColumnVisibility", "Count", -1);
+	int nCol = prefs.GetProfileInt(_T("Preferences\\ColumnVisibility"), _T("Count"), -1);
 
 	if (nCol >= 0)
 	{
 		CString sKey;
-		sKey.Format("Col%d", nCol);
+		sKey.Format(_T("Col%d"), nCol);
 
-		prefs.WriteProfileInt("Preferences\\ColumnVisibility", sKey, TDCC_ICON);
+		prefs.WriteProfileInt(_T("Preferences\\ColumnVisibility"), sKey, TDCC_ICON);
 
 		nCol++;
-		prefs.WriteProfileInt("Preferences\\ColumnVisibility", "Count", nCol);
+		prefs.WriteProfileInt(_T("Preferences\\ColumnVisibility"), _T("Count"), nCol);
 	}
 
 	// we don't handle the registry because it's too hard (for now)
@@ -618,22 +617,22 @@ void CToDoListApp::UpgradePreferences(BOOL /*bUseIni*/)
 			// split the path
 			CStringArray aSubSections;
 			
-			if (Misc::ParseIntoArray(sSection, aSubSections, FALSE, "\\") == 3)
+			if (Misc::ParseIntoArray(sSection, aSubSections, FALSE, _T("\\")) == 3)
 			{
-				if (aSubSections[2] == "Columns")
+				if (aSubSections[2] == _T("Columns"))
 				{
 					// add icon column
-					int nCol = prefs.GetProfileInt(sSection, "Count", -1);
+					int nCol = prefs.GetProfileInt(sSection, _T("Count"), -1);
 
 					if (nCol >= 0)
 					{
 						CString sKey;
-						sKey.Format("Item%d", nCol);
+						sKey.Format(_T("Item%d"), nCol);
 
 						prefs.WriteProfileInt(sSection, sKey, TDCC_ICON);
 
 						nCol++;
-						prefs.WriteProfileInt(sSection, "Count", nCol);
+						prefs.WriteProfileInt(sSection, _T("Count"), nCol);
 					}
 				}
 			}
@@ -655,9 +654,9 @@ void CToDoListApp::OnImportPrefs()
 	// default location is always app folder
 	CString sIniPath = FileMisc::GetModuleFileName();
 	sIniPath.MakeLower();
-	sIniPath.Replace("exe", "ini");
+	sIniPath.Replace(_T("exe"), _T("ini"));
 	
-	CFileDialog dialog(TRUE, "ini", sIniPath, 
+	CFileDialog dialog(TRUE, _T("ini"), sIniPath, 
 						OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST, 
 						CEnString(IDS_INIFILEFILTER));
 	
@@ -681,7 +680,7 @@ void CToDoListApp::OnImportPrefs()
 					{
 						// renames existing prefs file
 						CString sNewName(sIniPath);
-						sNewName += ".bak";
+						sNewName += _T(".bak");
 						
 						if (GetFileAttributes(sNewName) != 0xffffffff)
 							DeleteFile(sNewName);
@@ -689,7 +688,7 @@ void CToDoListApp::OnImportPrefs()
 						if (MoveFile(sIniPath, sNewName))
 						{
 							// and initialize the registry 
-							SetRegistryKey(_T(REGKEY));
+							SetRegistryKey(REGKEY);
 							
 							// reset prefs
 							m_pMainWnd->SendMessage(WM_TDL_REFRESHPREFS);
@@ -726,9 +725,9 @@ void CToDoListApp::OnExportPrefs()
 
 		CString sIniPath(sAppPath);
 		sIniPath.MakeLower();
-		sIniPath.Replace("exe", "ini");
+		sIniPath.Replace(_T("exe"), _T("ini"));
 		
-		CFileDialog dialog(FALSE, "ini", sIniPath, OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY, 
+		CFileDialog dialog(FALSE, _T("ini"), sIniPath, OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY, 
 							CEnString(IDS_INIFILEFILTER));
 		
 		if (dialog.DoModal() == IDOK)
@@ -753,7 +752,7 @@ void CToDoListApp::OnExportPrefs()
 						m_pszRegistryKey = NULL;
 						
 						free((void*)m_pszProfileName);
-						m_pszProfileName = _strdup(sIniPath);
+						m_pszProfileName = _tcsdup(sIniPath);
 						
 						// reset prefs
 						m_pMainWnd->SendMessage(WM_TDL_REFRESHPREFS);

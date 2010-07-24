@@ -93,7 +93,7 @@ CString CToDoCtrlFind::GetLongestVisibleExternalID(HTREEITEM hti) const
 	TODOITEM* pTDI = GetTask(hti);
 	
 	if (!pTDI)
-		return "";
+		return _T("");
 	
 	return GetLongestVisibleExternalID(hti, pTDI);
 }
@@ -122,7 +122,7 @@ CString CToDoCtrlFind::GetLongestVisibleAllocTo(HTREEITEM hti) const
 	TODOITEM* pTDI = GetTask(hti);
 	
 	if (!pTDI)
-		return "";
+		return _T("");
 	
 	return GetLongestVisibleAllocTo(hti, pTDI);
 }
@@ -230,7 +230,7 @@ CString CToDoCtrlFind::GetLongestVisibleCategory(HTREEITEM hti) const
 	TODOITEM* pTDI = GetTask(hti);
 	
 	if (!pTDI)
-		return "";
+		return _T("");
 	
 	return GetLongestVisibleCategory(hti, pTDI);
 }
@@ -242,7 +242,7 @@ CString CToDoCtrlFind::GetLongestVisibleTime(HTREEITEM hti, int nDefUnits, BOOL 
 	TODOSTRUCTURE* pTDS = m_data.LocateTask(GetTaskID(hti));
 	
 	if (!pTDI || !pTDS)
-		return "";
+		return _T("");
 	
 	return GetLongestVisibleTime(hti, pTDI, pTDS, nDefUnits, bTimeEst);
 }

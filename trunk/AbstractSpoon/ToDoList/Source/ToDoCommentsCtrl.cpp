@@ -83,7 +83,7 @@ int CToDoCommentsCtrl::GetTextContent(char* szContent, int nLength) const
 
 	// else
 	if (nLength == -1)
-		nLength = lstrlen(szContent) + 1; // inluding null
+		nLength = strlen(szContent) + 1; // inluding null
 
 	GetWindowText(szContent, nLength);
 	

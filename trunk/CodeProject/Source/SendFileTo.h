@@ -15,7 +15,7 @@ public:
 		if (!hWndParent || !::IsWindow(hWndParent))
 			return false;
 
-		HINSTANCE hMAPI = ::LoadLibraryA(_T("MAPI32.DLL"));
+		HINSTANCE hMAPI = ::LoadLibrary(_T("MAPI32.DLL"));
 		if (!hMAPI)
 			return false;
 
@@ -25,14 +25,19 @@ public:
 		if (!fnSendMail)
 			return false;
 
+		ATL::CT2A aPathName(strAttachmentFileName);
+
 		MapiFileDesc fileDesc = { 0 };
 		fileDesc.nPosition = (ULONG)-1;
-		fileDesc.lpszPathName = const_cast<LPTSTR>(static_cast<LPCTSTR>(strAttachmentFileName));
-		fileDesc.lpszFileName = const_cast<LPTSTR>(static_cast<LPCTSTR>(strAttachmentFileName));
+		fileDesc.lpszPathName = aPathName;
+		fileDesc.lpszFileName = aPathName;
+
+		ATL::CT2A aSubject(strSubject);
+		ATL::CT2A aNoteText(strBody);
 
 		MapiMessage message = { 0 };
-		message.lpszSubject = const_cast<LPTSTR>(static_cast<LPCTSTR>(strSubject));
-		message.lpszNoteText = const_cast<LPTSTR>(static_cast<LPCTSTR>(strBody));
+		message.lpszSubject = aSubject;
+		message.lpszNoteText = aNoteText;
 		message.nFileCount = strAttachmentFileName.IsEmpty() ? 0 : 1;
 		message.lpFiles = strAttachmentFileName.IsEmpty() ? NULL : &fileDesc;
 
