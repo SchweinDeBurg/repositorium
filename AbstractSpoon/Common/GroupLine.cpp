@@ -111,7 +111,7 @@ LRESULT CGroupLine::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 
 			CSize sizeText = dc.GetTextExtent(sText); // default
 
-			if (theme.Open(pWnd, "BUTTON"))
+			if (theme.Open(pWnd, _T("BUTTON")))
 			{
 				theme.DrawText(&dc, BP_GROUPBOX, GBS_NORMAL, sText, nFlags, 0, rClient);
 

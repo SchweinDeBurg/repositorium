@@ -52,9 +52,9 @@ CColorDialog(clrInit, dwFlags, pParentWnd)
 	for (int nColor = 0; nColor < 16; nColor++)
 	{
 		CString sKey;
-		sKey.Format("CustomColor%d", nColor);
+		sKey.Format(_T("CustomColor%d"), nColor);
 
-		COLORREF color = (COLORREF)AfxGetApp()->GetProfileInt("ColorDialog", sKey, (int)RGB(255, 255, 255));
+		COLORREF color = (COLORREF)AfxGetApp()->GetProfileInt(_T("ColorDialog"), sKey, (int)RGB(255, 255, 255));
 		m_cc.lpCustColors[nColor] = color;
 	}
 }
@@ -67,10 +67,10 @@ CEnColorDialog::~CEnColorDialog()
 	for (int nColor = 0; nColor < 16; nColor++)
 	{
 		CString sKey;
-		sKey.Format("CustomColor%d", nColor);
+		sKey.Format(_T("CustomColor%d"), nColor);
 
 		int nColorVal = (int)pColors[nColor];
-		AfxGetApp()->WriteProfileInt("ColorDialog", sKey, nColorVal);
+		AfxGetApp()->WriteProfileInt(_T("ColorDialog"), sKey, nColorVal);
 	}
 }
 

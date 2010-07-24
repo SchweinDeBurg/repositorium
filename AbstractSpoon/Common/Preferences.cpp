@@ -102,7 +102,7 @@ CPreferences::CPreferences()
 							sValue.TrimLeft();
 
 							// remove quotes
-							sValue.Replace("\"", "");
+							sValue.Replace(_T("\""), _T(""));
 
 							if (!sEntry.IsEmpty())
 								SetEntryValue(*pCurSection, sEntry, sValue);
@@ -140,7 +140,7 @@ CPreferences::~CPreferences()
 					INISECTION* pSection = s_aIni[nSection];
 
 					CString sLine;
-					sLine.Format("[%s]\n", pSection->sSection);
+					sLine.Format(_T("[%s]\n"), pSection->sSection);
 
 					file.WriteString(sLine);
 
@@ -154,7 +154,7 @@ CPreferences::~CPreferences()
 
 						pSection->aEntries.GetNextAssoc(pos, sDummy, ie);
 
-						sLine.Format("%s=%s\n", ie.sName, ie.sValue);
+						sLine.Format(_T("%s=%s\n"), ie.sName, ie.sValue);
 						file.WriteString(sLine);
 					}
 				}
@@ -176,14 +176,14 @@ CPreferences::~CPreferences()
 CString CPreferences::ToString(int nValue)
 {
 	CString sValue;
-	sValue.Format("%ld", nValue);
+	sValue.Format(_T("%ld"), nValue);
 	return sValue;
 }
 
 CString CPreferences::ToString(double dValue)
 {
 	CString sValue;
-	sValue.Format("%.6f", dValue);
+	sValue.Format(_T("%.6f"), dValue);
 	return sValue;
 }
 
@@ -196,7 +196,7 @@ UINT CPreferences::GetProfileInt(LPCTSTR lpszSection, LPCTSTR lpszEntry, int nDe
 		if (sValue.IsEmpty())
 			return nDefault;
 		else
-			return atol(sValue);
+			return _ttol(sValue);
 	}
 	else
 		return AfxGetApp()->GetProfileInt(lpszSection, lpszEntry, nDefault);
@@ -265,13 +265,13 @@ BOOL CPreferences::WriteProfileDouble(LPCTSTR lpszSection, LPCTSTR lpszEntry, do
 int CPreferences::GetArrayItems(LPCTSTR lpszSection, CStringArray& aItems) const
 {
 	aItems.RemoveAll();
-	int nCount = GetProfileInt(lpszSection, "ItemCount", 0);
+	int nCount = GetProfileInt(lpszSection, _T("ItemCount"), 0);
 
 	// items
 	for (int nItem = 0; nItem < nCount; nItem++)
 	{
 		CString sItemKey, sItem;
-		sItemKey.Format("Item%d", nItem);
+		sItemKey.Format(_T("Item%d"), nItem);
 		sItem = GetProfileString(lpszSection, sItemKey);
 
 		if (!sItem.IsEmpty())
@@ -289,12 +289,12 @@ void CPreferences::WriteArrayItems(const CStringArray& aItems, LPCTSTR lpszSecti
 	for (int nItem = 0; nItem < nCount; nItem++)
 	{
 		CString sItemKey;
-		sItemKey.Format("Item%d", nItem);
+		sItemKey.Format(_T("Item%d"), nItem);
 		WriteProfileString(lpszSection, sItemKey, aItems[nItem]);
 	}
 
 	// item count
-	WriteProfileInt(lpszSection, "ItemCount", nCount);
+	WriteProfileInt(lpszSection, _T("ItemCount"), nCount);
 }
 
 CString CPreferences::GetEntryValue(INISECTION& section, LPCTSTR lpszEntry, LPCTSTR lpszDefault)

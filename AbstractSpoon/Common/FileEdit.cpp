@@ -47,8 +47,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CFileEdit
 
-const LPCTSTR FILEMASK = "*?\"<>|";
-const LPCTSTR URLMASK = "*\"<>|";
+const LPCTSTR FILEMASK = _T("*?\"<>|");
+const LPCTSTR URLMASK = _T("*\"<>|");
 
 const UINT VIEWBTN = 0x24;
 const UINT BROWSEBTN = 0x31;
@@ -62,14 +62,14 @@ ICON_WIDTH(20),
 m_sFolderPrompt(FILEEDIT_SELECTFOLDER)
 {
 	if (!(m_nStyle & FES_NOBROWSE))
-		AddButton(FEBTN_BROWSE, BROWSEBTN, FILEEDIT_BROWSE, DEF_BTNWIDTH, "Wingdings");
+		AddButton(FEBTN_BROWSE, BROWSEBTN, FILEEDIT_BROWSE, DEF_BTNWIDTH, _T("Wingdings"));
 
 	if (m_nStyle & FES_GOBUTTON)
 	{
 		BOOL bFolders = (m_nStyle & FES_FOLDERS);
 
 		AddButton(FEBTN_GO, VIEWBTN, bFolders ? FILEEDIT_VIEWFOLDER : FILEEDIT_VIEW,
-			CALC_BTNWIDTH, "Wingdings");
+			CALC_BTNWIDTH, _T("Wingdings"));
 	}
 
 	// mask

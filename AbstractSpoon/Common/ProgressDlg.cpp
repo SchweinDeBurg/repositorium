@@ -59,11 +59,11 @@ CProgressDlg::CProgressDlg(BOOL bCancelButton, CWnd* /*pParent*/ /*=NULL*/) : m_
 	//}}AFX_DATA_INIT
 
 	if (bCancelButton)
-		AddRCControl("PUSHBUTTON", "", "Cancel", 0, 0, 67,73,50,14,IDCANCEL);
+		AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), 0, 0, 67,73,50,14,IDCANCEL);
 
-	AddRCControl("CONTROL", "msctls_progress32", "", 0, 0, 7,55, 172,9, IDC_PROGRESSBAR);
-	AddRCControl("LTEXT", "", "", 0, 0, 7,7,172,30, IDC_DESCRIPTION);
-	AddRCControl("LTEXT", "", "", 0, 0, 7,42,172,8, IDC_PROGRESS);
+	AddRCControl(_T("CONTROL"), _T("msctls_progress32"), _T(""), 0, 0, 7,55, 172,9, IDC_PROGRESSBAR);
+	AddRCControl(_T("LTEXT"), _T(""), _T(""), 0, 0, 7,7,172,30, IDC_DESCRIPTION);
+	AddRCControl(_T("LTEXT"), _T(""), _T(""), 0, 0, 7,42,172,8, IDC_PROGRESS);
 }
 
 

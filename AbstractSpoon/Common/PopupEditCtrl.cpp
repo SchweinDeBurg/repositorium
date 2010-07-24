@@ -99,7 +99,7 @@ BOOL CPopupEditCtrl::Create(CWnd* pParentWnd, UINT nID, DWORD dwFlags)
 	else // popup
 	{
 		DWORD dwExFlags = 0;//(bBorder && bThemed) ? WS_EX_CLIENTEDGE : 0;
-		return CWnd::CreateEx(dwExFlags, "EDIT", NULL, dwStyle, 0, 0, 0, 0, pParentWnd->m_hWnd, (HMENU)NULL);
+		return CWnd::CreateEx(dwExFlags, _T("EDIT"), NULL, dwStyle, 0, 0, 0, 0, pParentWnd->m_hWnd, (HMENU)NULL);
 	}
 
 	return FALSE;

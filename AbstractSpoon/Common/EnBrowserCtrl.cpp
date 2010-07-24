@@ -82,7 +82,7 @@ void CEnBrowserCtrl::Print(LPCTSTR szFile)
 	//		ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, NULL, NULL);
 	else
 	{
-		COleVariant vFlags(0L), vFrame(""), vData(""), vHeaders("");
+		COleVariant vFlags(0L), vFrame(_T("")), vData(_T("")), vHeaders(_T(""));
 
 		// navigate to print file
 		m_nAction = EBC_PRINT;
@@ -97,7 +97,7 @@ void CEnBrowserCtrl::PrintPreview(LPCTSTR szFile)
 	//		ExecWB(OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_DONTPROMPTUSER, NULL, NULL);
 	else
 	{
-		COleVariant vFlags(0L), vFrame(""), vData(""), vHeaders("");
+		COleVariant vFlags(0L), vFrame(_T("")), vData(_T("")), vHeaders(_T(""));
 
 		// navigate to print file
 		m_nAction = EBC_PRINTPREVIEW;

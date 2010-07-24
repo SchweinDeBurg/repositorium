@@ -96,9 +96,9 @@ BOOL CContentMgr::Initialize()
 					BOOL bRegistry = (AfxGetApp()->m_pszRegistryKey != NULL);
 
 					if (bRegistry)
-						pContent->SetIniLocation(TRUE, AfxGetApp()->m_pszRegistryKey);
+						pContent->SetIniLocation(TRUE, ATL::CT2A(AfxGetApp()->m_pszRegistryKey));
 					else // ini
-						pContent->SetIniLocation(FALSE, AfxGetApp()->m_pszProfileName);
+						pContent->SetIniLocation(FALSE, ATL::CT2A(AfxGetApp()->m_pszProfileName));
 
 					// save
 					m_aContent.Add(pContent);
@@ -126,31 +126,31 @@ int CContentMgr::GetNumContent() const
 CString CContentMgr::GetContentTypeID(int nContent) const
 {
 	if (!m_bInitialized)
-		return "";
+		return _T("");
 
 	if (nContent >= 0 && nContent < m_aContent.GetSize())
 	{
 		ASSERT (m_aContent[nContent] != NULL);
-		return m_aContent[nContent]->GetTypeID();
+		return CString(ATL::CA2T(m_aContent[nContent]->GetTypeID()));
 	}
 
 	// else
-	return "";
+	return _T("");
 }
 
 CString CContentMgr::GetContentTypeDescription(int nContent) const
 {
 	if (!m_bInitialized)
-		return "";
+		return _T("");
 
 	if (nContent >= 0 && nContent < m_aContent.GetSize())
 	{
 		ASSERT (m_aContent[nContent] != NULL);
-		return m_aContent[nContent]->GetTypeDescription();
+		return CString(ATL::CA2T(m_aContent[nContent]->GetTypeDescription()));
 	}
 
 	// else
-	return "";
+	return _T("");
 }
 
 BOOL CContentMgr::ContentFormatIsText(int nContent) const

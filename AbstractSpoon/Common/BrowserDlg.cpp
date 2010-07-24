@@ -51,7 +51,7 @@ CBrowserDlg::CBrowserDlg(BOOL bBrowser) : CRuntimeDlg(), m_bBrowser(bBrowser)
 	//{{AFX_DATA_INIT(CBrowserDlg)
 	// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
-	AddControl("static", "", WS_CHILD, 0, 0, 0, 0, 0, (UINT)-1);
+	AddControl(_T("static"), _T(""), WS_CHILD, 0, 0, 0, 0, 0, (UINT)-1);
 }
 
 
@@ -98,7 +98,7 @@ BOOL CBrowserDlg::Create(LPCTSTR szCaption, LPCTSTR szUrlPath, CWnd* pParentWnd)
 
 BOOL CBrowserDlg::Navigate(LPCTSTR szUrlPath)
 {
-	COleVariant vFlags(0L), vFrame(""), vData(""), vHeaders("");
+	COleVariant vFlags(0L), vFrame(_T("")), vData(_T("")), vHeaders(_T(""));
 	m_browser.Navigate(szUrlPath, vFlags, vFrame, vData, vHeaders);
 
 	return TRUE;
@@ -112,10 +112,10 @@ BOOL CBrowserDlg::OnInitDialog()
 	{
 		AfxEnableControlContainer();
 
-		if (m_browser.Create("", WS_CHILD | WS_TABSTOP | WS_VISIBLE, CRect(0, 0, 400, 400),
+		if (m_browser.Create(_T(""), WS_CHILD | WS_TABSTOP | WS_VISIBLE, CRect(0, 0, 400, 400),
 			this, 1))
 		{
-			COleVariant vFlags(0L), vFrame(""), vData(""), vHeaders("");
+			COleVariant vFlags(0L), vFrame(_T("")), vData(_T("")), vHeaders(_T(""));
 			m_browser.Navigate(m_sUrl, vFlags, vFrame, vData, vHeaders);
 		}
 	}
@@ -131,12 +131,12 @@ BOOL CBrowserDlg::OnInitDialog()
 			while (file.ReadString(sLine))
 			{
 				sFile += sLine;
-				sFile += '\n';
+				sFile += _T('\n');
 			}
 
 			// replace carriage returns by linefeed/cr because that's
 			// what edit control prefer
-			sFile.Replace("\n", "\r\n");
+			sFile.Replace(_T("\n"), _T("\r\n"));
 
 			m_edit.SetWindowText(sFile);
 		}

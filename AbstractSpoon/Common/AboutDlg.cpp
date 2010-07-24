@@ -69,7 +69,7 @@ CAboutDlg::CAboutDlg(UINT nAppIconID, AB_STYLE nStyle,
 	SetBordersDLU(5);
 
 	// icon
-	AddRCControl("ICON", "", "", SS_ICON, 0, 5,5,20,20, IDC_APPICON);
+	AddRCControl(_T("ICON"), _T(""), _T(""), SS_ICON, 0, 5,5,20,20, IDC_APPICON);
 
 	// variable height items
 	const UINT ITEMIDS[] = { IDC_APPNAME, IDC_APPDESCRIPTION, IDC_COPYRIGHT, IDC_LICENSE };
@@ -84,9 +84,9 @@ CAboutDlg::CAboutDlg(UINT nAppIconID, AB_STYLE nStyle,
 
 		// special case: copyright
 		if (nItem == 2 && m_nStyle == ABS_EDITCOPYRIGHT)
-			AddRCControl("CONTROL", "RICHEDIT", "", ES_READONLY | ES_MULTILINE | WS_VSCROLL, 0, 36, nTop, 167, nHeight, ITEMIDS[nItem]);
+			AddRCControl(_T("CONTROL"), _T("RICHEDIT"), _T(""), ES_READONLY | ES_MULTILINE | WS_VSCROLL, 0, 36, nTop, 167, nHeight, ITEMIDS[nItem]);
 		else
-			AddRCControl("LTEXT", "", "", SS_NOPREFIX, 0, 36, nTop, 167, nHeight, ITEMIDS[nItem]);
+			AddRCControl(_T("LTEXT"), _T(""), _T(""), SS_NOPREFIX, 0, 36, nTop, 167, nHeight, ITEMIDS[nItem]);
 
 		nTop += nHeight;
 
@@ -95,8 +95,8 @@ CAboutDlg::CAboutDlg(UINT nAppIconID, AB_STYLE nStyle,
 	}
 
 	// divider and ok button
-	AddRCControl("CONTROL", "static", "", SS_ETCHEDHORZ, 0, 7, nTop + 4, 196, 1, IDC_DIVIDER);
-	AddRCControl("DEFPUSHBUTTON", "", BTN_OK, WS_GROUP | BS_DEFPUSHBUTTON, 0, 79, nTop + 10, 50, 14, IDOK);
+	AddRCControl(_T("CONTROL"), _T("static"), _T(""), SS_ETCHEDHORZ, 0, 7, nTop + 4, 196, 1, IDC_DIVIDER);
+	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), BTN_OK, WS_GROUP | BS_DEFPUSHBUTTON, 0, 79, nTop + 10, 50, 14, IDOK);
 
 	m_hIcon = AfxGetApp()->LoadIcon(nAppIconID);
 }

@@ -183,7 +183,7 @@ void CPreferencesDlgBase::LoadPreferences()
 
 	// initial page
 	if (m_nInitPage < 0 || m_nInitPage >= m_pphost.GetPageCount())
-		m_nInitPage = prefs.GetProfileInt("Preferences", "StartPage", 0);
+		m_nInitPage = prefs.GetProfileInt(_T("Preferences"), _T("StartPage"), 0);
 }
 
 void CPreferencesDlgBase::SavePreferences()
@@ -202,7 +202,7 @@ void CPreferencesDlgBase::SavePreferences()
 			pPage->SavePreferences(prefs);
 	}
 
-	prefs.WriteProfileInt("Preferences", "StartPage", m_pphost.GetActiveIndex());
+	prefs.WriteProfileInt(_T("Preferences"), _T("StartPage"), m_pphost.GetActiveIndex());
 }
 
 
