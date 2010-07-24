@@ -445,8 +445,8 @@ void CXmlDocumentWrapper::SetHeader(LPCTSTR szHeader)
 {
 	if (IsValid())
 	{
-		_bstr_t name(CXmlNodeWrapper::ConvertStringToBSTR(_T("xml")), FALSE);
-		_bstr_t bstr(CXmlNodeWrapper::ConvertStringToBSTR(szHeader), FALSE);
+		_bstr_t name(CXmlNodeWrapper::ConvertStringToBSTR("xml"), FALSE);
+		_bstr_t bstr(CXmlNodeWrapper::ConvertStringToBSTR(ATL::CT2A(szHeader)), FALSE);
 
 		MSXML2::IXMLDOMProcessingInstructionPtr pHdr = m_xmldoc->createProcessingInstruction(name, bstr);
 
@@ -501,7 +501,7 @@ BOOL CXmlDocumentWrapper::Load(LPCTSTR path, BOOL bPreserveWhiteSpace)
 	m_xmldoc->put_preserveWhiteSpace(bPreserveWhiteSpace ? VARIANT_TRUE : VARIANT_FALSE);
 	m_xmldoc->put_async(VARIANT_FALSE);
 
-	_bstr_t bstr(CXmlNodeWrapper::ConvertStringToBSTR(path), FALSE);
+	_bstr_t bstr(CXmlNodeWrapper::ConvertStringToBSTR(ATL::CT2A(path)), FALSE);
 
 	return (VARIANT_TRUE == m_xmldoc->load(bstr));
 }
@@ -513,9 +513,9 @@ BOOL CXmlDocumentWrapper::LoadXML(LPCTSTR xml/*, BOOL bPreserveWhiteSpace*/)
 		return FALSE;
 	}
 
-	//m_xmldoc->put_preserveWhiteSpace(bPreserveWhiteSpace ? VARIANT_TRUE : VARIANT_FALSE);
+	/*m_xmldoc->put_preserveWhiteSpace(bPreserveWhiteSpace ? VARIANT_TRUE : VARIANT_FALSE);*/
 
-	_bstr_t bstr(CXmlNodeWrapper::ConvertStringToBSTR(xml), FALSE);
+	_bstr_t bstr(CXmlNodeWrapper::ConvertStringToBSTR(ATL::CT2A(xml)), FALSE);
 
 	return (VARIANT_TRUE == m_xmldoc->loadXML(bstr));
 }
@@ -529,7 +529,7 @@ BOOL CXmlDocumentWrapper::Save(LPCTSTR path, BOOL bPreserveWhiteSpace)
 
 	try
 	{
-		_bstr_t bPath(CXmlNodeWrapper::ConvertStringToBSTR(path), FALSE);
+		_bstr_t bPath(CXmlNodeWrapper::ConvertStringToBSTR(ATL::CT2A(path)), FALSE);
 
 		if (bPath.length() == 0)
 		{
@@ -643,7 +643,7 @@ BOOL CXmlDocumentWrapper::IsVersion3orGreater()
 //------------------------//
 // Convert char * to BSTR //
 //------------------------//
-BSTR CXmlNodeWrapper::ConvertStringToBSTR(const TCHAR* pSrc)
+BSTR CXmlNodeWrapper::ConvertStringToBSTR(const char* pSrc)
 {
 	if (!pSrc)
 	{
@@ -651,11 +651,6 @@ BSTR CXmlNodeWrapper::ConvertStringToBSTR(const TCHAR* pSrc)
 	}
 
 	BSTR wsOut(NULL);
-
-#if defined(UNICODE) || defined(_UNICODE)
-	DWORD cwch = _tcslen(pSrc);
-	wsOut = ::SysAllocStringLen(pSrc, cwch);
-#else
 	DWORD cwch = ::MultiByteToWideChar(CP_ACP, 0, pSrc, -1, NULL, 0);//get size minus NULL terminator
 
 	if (cwch)
@@ -677,7 +672,6 @@ BSTR CXmlNodeWrapper::ConvertStringToBSTR(const TCHAR* pSrc)
 		}
 
 	};
-#endif   // UNICODE || _UNICODE
 
 	return wsOut;
 };
@@ -920,7 +914,7 @@ void CXmlNodeWrapper::SetText(LPCTSTR text)
 {
 	if (IsValid())
 	{
-		_bstr_t bstr(ConvertStringToBSTR(text), FALSE);
+		_bstr_t bstr(ConvertStringToBSTR(ATL::CT2A(text)), FALSE);
 		m_xmlnode->Puttext(bstr);
 	}
 }
