@@ -1068,8 +1068,7 @@ BOOL CXmlFile::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 	}
 
 	// concatenate entire file into one long string
-	CString sLine;
-	TCHAR* pFileContents = NULL;
+	char* pFileContents = NULL;
 
 	try
 	{
@@ -1077,11 +1076,11 @@ BOOL CXmlFile::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 
 		// preallocate string to avoid excessive memory allocations
 		DWORD dwLength = static_cast<DWORD>(GetLength());
-		pFileContents = new TCHAR[(dwLength / sizeof(TCHAR)) + 1];
+		pFileContents = new char[dwLength + 1];
 		ZeroMemory(pFileContents, dwLength + 1);
 
 		BOOL bContinue = TRUE;
-		TCHAR* pFilePtr = pFileContents;
+		char* pFilePtr = pFileContents;
 
 		while (bContinue)
 		{
@@ -1090,7 +1089,7 @@ BOOL CXmlFile::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 			bContinue = (nRead != dwLength);
 		}
 
-		pFileContents[dwLength / sizeof(TCHAR)] = 0;
+		pFileContents[dwLength] = 0;
 	}
 	catch (...)
 	{
@@ -1110,7 +1109,7 @@ BOOL CXmlFile::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 
 	m_pCallback = pCallback;
 
-	LPCTSTR szFile = pFileContents;
+	LPCSTR szFile = pFileContents;
 	BOOL bRes = FALSE;
 
 	try
@@ -1119,7 +1118,7 @@ BOOL CXmlFile::LoadEx(LPCTSTR szRootItemName, IXmlParse* pCallback)
 
 		if (doc.IsValid())
 		{
-			if (!doc.LoadXML(szFile))
+			if (!doc.LoadXML(ATL::CA2T(szFile)))
 			{
 				// try removing any bad chars
 				CString sFile(szFile);
@@ -1418,7 +1417,7 @@ BOOL CXmlFile::Export(const CXmlItem* pItem, CXmlNodeWrapper* pNode) const
 			// create a named node to wrap the CDATA
 			MSXML2::IXMLDOMNodePtr pChildNode = pNode->InsertNode(nNode++, (LPCTSTR)sItem);
 			MSXML2::IXMLDOMCDATASectionPtr pCData =
-			   pNode->ParentDocument()->createCDATASection(TOBSTRING(pXIChild->GetValue()));
+			   pNode->ParentDocument()->createCDATASection(TOBSTRING(ATL::CT2A(pXIChild->GetValue())));
 			pChildNode->appendChild(pCData);
 		}
 		else // node

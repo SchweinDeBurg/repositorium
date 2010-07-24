@@ -88,7 +88,7 @@ public:
 	CString GetValue(LPCTSTR valueName);
 
 	// fixed version
-	static BSTR ConvertStringToBSTR(const TCHAR* pSrc);
+	static BSTR ConvertStringToBSTR(const char* pSrc);
 
 private:
 	BOOL m_bAutoRelease;
