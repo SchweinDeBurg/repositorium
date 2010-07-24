@@ -87,11 +87,11 @@ void CPreferencesFile2Page::DoDataExchange(CDataExchange* pDX)
 		if (!CDialogHelper::SelectItemByValue(m_cbKeepBackups, m_nKeepBackups))
 		{
 			if (m_nKeepBackups == 0) // all
-				m_cbKeepBackups.SelectString(-1, "All");
+				m_cbKeepBackups.SelectString(-1, _T("All"));
 			else
 			{
 				m_nKeepBackups = 10;
-				m_cbKeepBackups.SelectString(-1, "10");
+				m_cbKeepBackups.SelectString(-1, _T("10"));
 			}
 		}
 	}
@@ -126,20 +126,17 @@ BOOL CPreferencesFile2Page::OnInitDialog()
 
 void CPreferencesFile2Page::LoadPreferences(const CPreferences& prefs)
 {
-	m_bBackupOnSave = prefs.GetProfileInt("Preferences", "BackupOnSave", TRUE);
-	m_sBackupLocation = prefs.GetProfileString("Preferences", "BackupLocation", "backup");
-	m_nKeepBackups = prefs.GetProfileInt("Preferences", "KeepBackups", 10);
-//	m_b = prefs.GetProfileInt("Preferences", "", FALSE);
+	m_bBackupOnSave = prefs.GetProfileInt(_T("Preferences"), _T("BackupOnSave"), TRUE);
+	m_sBackupLocation = prefs.GetProfileString(_T("Preferences"), _T("BackupLocation"), _T("backup"));
+	m_nKeepBackups = prefs.GetProfileInt(_T("Preferences"), _T("KeepBackups"), 10);
 }
 
 void CPreferencesFile2Page::SavePreferences(CPreferences& prefs)
 {
 	// save settings
-	prefs.WriteProfileInt("Preferences", "BackupOnSave", m_bBackupOnSave);
-	prefs.WriteProfileString("Preferences", "BackupLocation", m_sBackupLocation);
-	prefs.WriteProfileInt("Preferences", "KeepBackups", m_nKeepBackups);
-
-//	prefs.WriteProfileInt("Preferences", "", m_b);
+	prefs.WriteProfileInt(_T("Preferences"), _T("BackupOnSave"), m_bBackupOnSave);
+	prefs.WriteProfileString(_T("Preferences"), _T("BackupLocation"), m_sBackupLocation);
+	prefs.WriteProfileInt(_T("Preferences"), _T("KeepBackups"), m_nKeepBackups);
 }
 
 void CPreferencesFile2Page::OnBackuponsave() 

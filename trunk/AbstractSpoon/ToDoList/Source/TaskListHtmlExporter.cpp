@@ -53,7 +53,7 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-const LPCTSTR ENDL = "\n";
+const LPCTSTR ENDL = _T("\n");
 
 CTaskListHtmlExporter::CTaskListHtmlExporter()
 {
@@ -68,29 +68,29 @@ bool CTaskListHtmlExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* s
 {
 	CPreferences prefs;
 
-	CString sFont = prefs.GetProfileString("Preferences", "HTMLFont", "Verdana");
-	int nFontSize = prefs.GetProfileInt("Preferences", "HtmlFontSize", 3);
+	CString sFont = prefs.GetProfileString(_T("Preferences"), _T("HTMLFont"), _T("Verdana"));
+	int nFontSize = prefs.GetProfileInt(_T("Preferences"), _T("HtmlFontSize"), 3);
 
-	DEFAULTFONT.Format("<font face='%s' size='%d'>", sFont, nFontSize);
+	DEFAULTFONT.Format(_T("<font face='%s' size='%d'>"), (LPCTSTR)sFont, nFontSize);
 	HTMLNOTES.Empty();
 
-	if (prefs.GetProfileInt("Preferences", "ExportSpaceForNotes", FALSE))
+	if (prefs.GetProfileInt(_T("Preferences"), _T("ExportSpaceForNotes"), FALSE))
 	{
-		int nLine = prefs.GetProfileInt("Preferences", "LineSpaces", 8);
+		int nLine = prefs.GetProfileInt(_T("Preferences"), _T("LineSpaces"), 8);
 
 		if (nLine > 0)
 		{
-			HTMLNOTES = "<pre>";
+			HTMLNOTES = _T("<pre>");
 
 			while (nLine--)
-				HTMLNOTES += "\n";
+				HTMLNOTES += _T("\n");
 
-			HTMLNOTES += "</pre>";
+			HTMLNOTES += _T("</pre>");
 		}
 	}
 
-	STRIKETHRUDONE = prefs.GetProfileInt("Preferences", "StrikethroughDone", TRUE);
-	ROUNDTIMEFRACTIONS = prefs.GetProfileInt("Preferences", "RoundTimeFractions", FALSE);
+	STRIKETHRUDONE = prefs.GetProfileInt(_T("Preferences"), _T("StrikethroughDone"), TRUE);
+	ROUNDTIMEFRACTIONS = prefs.GetProfileInt(_T("Preferences"), _T("RoundTimeFractions"), FALSE);
 
 	CStdioFile fileOut;
 
@@ -101,11 +101,11 @@ bool CTaskListHtmlExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* s
 
 		if (!ExportTask(pTasks6, NULL, 0, 0, sOutput).IsEmpty())
 		{
-			fileOut.WriteString("<html>\n<head>\n");
+			fileOut.WriteString(_T("<html>\n<head>\n"));
 			fileOut.WriteString(FormatCharSet(pTasks6));
-			fileOut.WriteString("</head>\n<body>\n");
+			fileOut.WriteString(_T("</head>\n<body>\n"));
 			fileOut.WriteString(sOutput);
-			fileOut.WriteString("</body>\n</html>\n");
+			fileOut.WriteString(_T("</body>\n</html>\n"));
 			return true;
 		}
 	}
@@ -116,10 +116,10 @@ bool CTaskListHtmlExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* s
 CString CTaskListHtmlExporter::FormatCharSet(const ITaskList6* pTasks) const
 {
 	// charset
-	CString sCharSet, sCS = pTasks->GetHtmlCharSet();
+	CString sCharSet, sCS = ATL::CA2T(pTasks->GetHtmlCharSet());
 
 	if (!sCS.IsEmpty())
-		sCharSet.Format("<meta http-equiv=\"content-type\" content=\"text/html; charset=%s\">\n", sCS);
+		sCharSet.Format(_T("<meta http-equiv=\"content-type\" content=\"text/html; charset=%s\">\n"), (LPCTSTR)sCS);
 
 	return sCharSet;
 }
@@ -127,31 +127,31 @@ CString CTaskListHtmlExporter::FormatCharSet(const ITaskList6* pTasks) const
 CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hTask, int nDepth, int nPos, CString& sOutput) const
 {
 	// handle locale specific decimal separator
-	setlocale(LC_NUMERIC, "");
+	_tsetlocale(LC_NUMERIC, _T(""));
 
 	// if depth == 0 then we're at the root so just add sub-tasks
 	// else insert pItem first
 	if (nDepth > 0)
 	{
 		// if there is a POS child item then this replaces nPos
-		if (pTasks->TaskHasAttribute(hTask, TDL_TASKPOS))
+		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPOS)))
 			nPos = pTasks->GetTaskPosition(hTask);
 
 		CString sTitle, sID, sItem, sPriority, sStartDate, sDueDate, sDoneDate;
-		CString sAllocTo, sAllocBy, sCategory, sStatus, sColor("#000000");
+		CString sAllocTo, sAllocBy, sCategory, sStatus, sColor(_T("#000000"));
 		CString sComments, sPercent, sTimeEst, sTimeSpent, sFileRef;
 		CString sLastMod, sRisk, sExtID, sCreateDate, sCreateBy, sCost;
 		CString sVersion, sRecurrence, sDepends;
 		char cTemp;
 
 		// ID
-		FormatAttribute(pTasks, hTask, TDL_TASKID, "(ID: %s) ", sID);
+		FormatAttribute(pTasks, hTask, TDL_TASKID, _T("(ID: %s) "), sID);
 
 		// title
 		if (nDepth == 1) // toplevel == bold
-			sTitle.Format("<b>%s</b>", pTasks->GetTaskTitle(hTask));
+			sTitle.Format(_T("<b>%s</b>"), (LPTSTR)ATL::CA2T(pTasks->GetTaskTitle(hTask)));
 		else
-			sTitle = pTasks->GetTaskTitle(hTask);
+			sTitle = ATL::CA2T(pTasks->GetTaskTitle(hTask));
 
 		// priority, start/due/done dates
 		int nPercent = pTasks->GetTaskPercentDone(hTask, TRUE);
@@ -160,68 +160,68 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 
 		// format color string
 		if (bDone)
-			sColor = "#c4c4c4";
+			sColor = _T("#c4c4c4");
 		else
 			sColor = pTasks->GetTaskWebColor(hTask);
 
-		if (bDone && pTasks->TaskHasAttribute(hTask, TDL_TASKDONEDATESTRING))
-			sDoneDate.Format(" (completed: %s)", pTasks->GetTaskDoneDateString(hTask));
+		if (bDone && pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKDONEDATESTRING)))
+			sDoneDate.Format(_T(" (completed: %s)"), (LPTSTR)ATL::CA2T(pTasks->GetTaskDoneDateString(hTask)));
 		else
 		{
-			if (pTasks->TaskHasAttribute(hTask, TDL_TASKHIGHESTPRIORITY) ||
-				pTasks->TaskHasAttribute(hTask, TDL_TASKPRIORITY))
+			if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKHIGHESTPRIORITY)) ||
+				pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPRIORITY)))
 			{
 				int nPriority = pTasks->GetTaskPriority(hTask, TRUE);
 
 				if (nPriority >= 0)
 				{
-					CString sPriorityCol = pTasks->GetTaskPriorityWebColor(hTask);
-					sPriority.Format("[<font color='%s'>%d</font>] ", sPriorityCol, nPriority);
+					CString sPriorityCol = ATL::CA2T(pTasks->GetTaskPriorityWebColor(hTask));
+					sPriority.Format(_T("[<font color='%s'>%d</font>] "), (LPCTSTR)sPriorityCol, nPriority);
 				}
 				else
-					sPriority = "[ ]";
+					sPriority = _T("[ ]");
 			}
 
-			FormatAttribute(pTasks, hTask, TDL_TASKSTARTDATESTRING, " (start: %s)", sStartDate);
-			FormatAttribute(pTasks, hTask, TDL_TASKDUEDATESTRING, " (due: %s)", sDueDate);
+			FormatAttribute(pTasks, hTask, TDL_TASKSTARTDATESTRING, _T(" (start: %s)"), sStartDate);
+			FormatAttribute(pTasks, hTask, TDL_TASKDUEDATESTRING, _T(" (due: %s)"), sDueDate);
 
-			if (pTasks->TaskHasAttribute(hTask, TDL_TASKTIMEESTIMATE) ||
-				pTasks->TaskHasAttribute(hTask, TDL_TASKCALCTIMEESTIMATE))
-				sTimeEst.Format(" (time est: %.*f hrs)", nTimePlaces, pTasks->GetTaskTimeEstimate(hTask, cTemp, TRUE));
+			if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKTIMEESTIMATE)) ||
+				pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCALCTIMEESTIMATE)))
+				sTimeEst.Format(_T(" (time est: %.*f hrs)"), nTimePlaces, pTasks->GetTaskTimeEstimate(hTask, cTemp, TRUE));
 
-			if (pTasks->TaskHasAttribute(hTask, TDL_TASKPERCENTDONE))
-				sPercent.Format(" (%d%%) ", nPercent);
+			if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPERCENTDONE)))
+				sPercent.Format(_T(" (%d%%) "), nPercent);
 		}
 
-		if (pTasks->TaskHasAttribute(hTask, TDL_TASKTIMESPENT) ||
-			pTasks->TaskHasAttribute(hTask, TDL_TASKCALCTIMESPENT))
-			sTimeSpent.Format(" (time spent: %.*f hrs)", nTimePlaces, pTasks->GetTaskTimeSpent(hTask, cTemp, TRUE));
+		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKTIMESPENT)) ||
+			pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCALCTIMESPENT)))
+			sTimeSpent.Format(_T(" (time spent: %.*f hrs)"), nTimePlaces, pTasks->GetTaskTimeSpent(hTask, cTemp, TRUE));
 		
-		FormatAttribute(pTasks, hTask, TDL_TASKCREATIONDATESTRING, " (created: %s)", sCreateDate);
-		FormatAttribute(pTasks, hTask, TDL_TASKCREATEDBY, " (created by: %s)", sCreateBy);
-		FormatAttributeList(pTasks, hTask, TDL_TASKNUMALLOCTO, TDL_TASKALLOCTO, " (allocated to: %s)", sAllocTo);
-		FormatAttribute(pTasks, hTask, TDL_TASKALLOCBY, " (allocated by: %s)", sAllocBy);
-		FormatAttributeList(pTasks, hTask, TDL_TASKNUMCATEGORY, TDL_TASKCATEGORY, " (category: %s)", sCategory);
-		FormatAttribute(pTasks, hTask, TDL_TASKSTATUS, " (status: %s)", sStatus);
-		FormatAttribute(pTasks, hTask, TDL_TASKRISK, " (risk: %s)", sRisk);
-		FormatAttribute(pTasks, hTask, TDL_TASKEXTERNALID, " (ext.ID: %s)", sExtID);
-		FormatAttribute(pTasks, hTask, TDL_TASKLASTMODSTRING, " (last mod: %s)", sLastMod);
-		FormatAttribute(pTasks, hTask, TDL_TASKCOST, " (cost: %s)", sCost);
-		FormatAttribute(pTasks, hTask, TDL_TASKVERSION, " (version: %s)", sVersion);
-		FormatAttribute(pTasks, hTask, TDL_TASKRECURRENCE, " (occurs: %s)", sRecurrence);
-		FormatAttribute(pTasks, hTask, TDL_TASKDEPENDENCY, " (depends on: %s)", sDepends);
+		FormatAttribute(pTasks, hTask, TDL_TASKCREATIONDATESTRING, _T(" (created: %s)"), sCreateDate);
+		FormatAttribute(pTasks, hTask, TDL_TASKCREATEDBY, _T(" (created by: %s)"), sCreateBy);
+		FormatAttributeList(pTasks, hTask, TDL_TASKNUMALLOCTO, TDL_TASKALLOCTO, _T(" (allocated to: %s)"), sAllocTo);
+		FormatAttribute(pTasks, hTask, TDL_TASKALLOCBY, _T(" (allocated by: %s)"), sAllocBy);
+		FormatAttributeList(pTasks, hTask, TDL_TASKNUMCATEGORY, TDL_TASKCATEGORY, _T(" (category: %s)"), sCategory);
+		FormatAttribute(pTasks, hTask, TDL_TASKSTATUS, _T(" (status: %s)"), sStatus);
+		FormatAttribute(pTasks, hTask, TDL_TASKRISK, _T(" (risk: %s)"), sRisk);
+		FormatAttribute(pTasks, hTask, TDL_TASKEXTERNALID, _T(" (ext.ID: %s)"), sExtID);
+		FormatAttribute(pTasks, hTask, TDL_TASKLASTMODSTRING, _T(" (last mod: %s)"), sLastMod);
+		FormatAttribute(pTasks, hTask, TDL_TASKCOST, _T(" (cost: %s)"), sCost);
+		FormatAttribute(pTasks, hTask, TDL_TASKVERSION, _T(" (version: %s)"), sVersion);
+		FormatAttribute(pTasks, hTask, TDL_TASKRECURRENCE, _T(" (occurs: %s)"), sRecurrence);
+		FormatAttribute(pTasks, hTask, TDL_TASKDEPENDENCY, _T(" (depends on: %s)"), sDepends);
 
 		// fileref
-		if (pTasks->TaskHasAttribute(hTask, TDL_TASKFILEREFPATH))
+		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKFILEREFPATH)))
 		{
-			CString sFilePath = pTasks->GetTaskFileReferencePath(hTask);
-			sFileRef.Format("<br>(link: <a href=\"%s\">%s</a>)", sFilePath, sFilePath);
+			CString sFilePath = ATL::CA2T(pTasks->GetTaskFileReferencePath(hTask));
+			sFileRef.Format(_T("<br>(link: <a href=\"%s\">%s</a>)"), (LPCTSTR)sFilePath, (LPCTSTR)sFilePath);
 		}
 		
 		// comments
-		if (pTasks->TaskHasAttribute(hTask, TDL_TASKHTMLCOMMENTS))
+		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKHTMLCOMMENTS)))
 		{
-			CString sItemComments = pTasks->GetTaskAttribute(hTask, TDL_TASKHTMLCOMMENTS);
+			CString sItemComments = ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(TDL_TASKHTMLCOMMENTS)));
 			sItemComments.TrimRight();
 
 			if (!sItemComments.IsEmpty())
@@ -229,30 +229,31 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 				// note: we reset the font after the comments because the font
 				// face and size may well have been changed
 				sComments.Format(bDone ? 
-							"<br><blockquote><font color='#c4c4c4'>[</font>%s%s<font color='#c4c4c4'>]</font></blockquote>" : 
-							"<br><blockquote>[%s%s]</blockquote>", 
-							sItemComments, DEFAULTFONT);
+					_T("<br><blockquote><font color='#c4c4c4'>[</font>%s%s<font color='#c4c4c4'>]</font></blockquote>") : 
+					_T("<br><blockquote>[%s%s]</blockquote>"), 
+					(LPCTSTR)sItemComments, (LPCTSTR)DEFAULTFONT);
 			}
 		}
-		else if (pTasks->TaskHasAttribute(hTask, TDL_TASKCOMMENTS))
+		else if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCOMMENTS)))
 		{
-			CString sItemComments = pTasks->GetTaskComments(hTask);
+			CString sItemComments = ATL::CA2T(pTasks->GetTaskComments(hTask));
 			sItemComments.TrimRight();
 
 			if (!sItemComments.IsEmpty())
 			{
 				TXT2XML(sItemComments); // TODO
 
-				sComments.Format(bDone ? "<br><blockquote><font color='#c4c4c4'>[%s] </font></blockquote>" : 
-										"<br><blockquote><font color='#606060'>[%s] </font></blockquote>", 
-								sItemComments);
+				sComments.Format(bDone ?
+					_T("<br><blockquote><font color='#c4c4c4'>[%s] </font></blockquote>") : 
+					_T("<br><blockquote><font color='#606060'>[%s] </font></blockquote>"), 
+					(LPCTSTR)sItemComments);
 
 				// replace carriage returns with <br>
-				sComments.Replace(ENDL, "<br>");
-				sComments.Replace("\n", "<br>");
+				sComments.Replace(ENDL, _T("<br>"));
+				sComments.Replace(_T("\n"), _T("<br>"));
 
 				// replace tab characters with multiple &nbsp;
-				sComments.Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+				sComments.Replace(_T("\t"), _T("&nbsp;&nbsp;&nbsp;&nbsp;"));
 			}
 		}
 
@@ -261,26 +262,27 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 		if (bDone)
 		{
 			if (STRIKETHRUDONE)
-				sFormat = "%s%s%s<font color='%s'><s>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</s></font>%s<s>%s</s>%s";
+				sFormat = _T("%s%s%s<font color='%s'><s>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</s></font>%s<s>%s</s>%s");
 			else
-				sFormat = "%s%s%s<font color='%s'>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</font>%s%s%s";
+				sFormat = _T("%s%s%s<font color='%s'>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</font>%s%s%s");
 		}
 		else
-			sFormat = "%s%s%s<font color='%s'>%s</font>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s";
+			sFormat = _T("%s%s%s<font color='%s'>%s</font>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s");
 
-		sItem.Format(sFormat, sID, sPriority, sPercent, sColor, sTitle, sRisk, 
-					sAllocTo, sAllocBy, sDepends, sVersion, sRecurrence, sCategory, sStatus, 
-					sCreateDate, sCreateBy, sStartDate, sDueDate, sTimeEst, sTimeSpent, 
-					sCost, sDoneDate, sExtID, sLastMod, sComments, sFileRef);
+		sItem.Format(sFormat, (LPCTSTR)sID, (LPCTSTR)sPriority, (LPCTSTR)sPercent, (LPCTSTR)sColor, (LPCTSTR)sTitle,
+			(LPCTSTR)sRisk, (LPCTSTR)sAllocTo, (LPCTSTR)sAllocBy, (LPCTSTR)sDepends, (LPCTSTR)sVersion,
+			(LPCTSTR)sRecurrence, (LPCTSTR)sCategory, (LPCTSTR)sStatus, (LPCTSTR)sCreateDate, (LPCTSTR)sCreateBy,
+			(LPCTSTR)sStartDate, (LPCTSTR)sDueDate, (LPCTSTR)sTimeEst, (LPCTSTR)sTimeSpent, (LPCTSTR)sCost,
+			(LPCTSTR)sDoneDate, (LPCTSTR)sExtID, (LPCTSTR)sLastMod, (LPCTSTR)sComments, (LPCTSTR)sFileRef);
 
 		// notes section
 		if (!bDone)
 			sItem += HTMLNOTES;
 
 		if (nDepth == 1) // toplevel
-			sOutput += "<br>";
+			sOutput += _T("<br>");
 
-		sOutput += "<li>";
+		sOutput += _T("<li>");
 		sOutput += sItem;
 	}
 	else
@@ -288,19 +290,19 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 		sOutput += DEFAULTFONT;
 
 		// title and date
-		CString sTitle = pTasks->GetReportTitle();
-		CString sDate = pTasks->GetReportDate();
+		CString sTitle = ATL::CA2T(pTasks->GetReportTitle());
+		CString sDate = ATL::CA2T(pTasks->GetReportDate());
 
 		if (!sTitle.IsEmpty())
 		{
 			CString sProjTitle;
-			sProjTitle.Format("<h2>%s</h2>%s<br>", sTitle, sDate);
+			sProjTitle.Format(_T("<h2>%s</h2>%s<br>"), (LPCTSTR)sTitle, (LPCTSTR)sDate);
 			sOutput += sProjTitle;
 		}
 		else if (!sDate.IsEmpty())
 		{
 			sOutput += sDate;
-			sOutput += "<br>";
+			sOutput += _T("<br>");
 		}
 
 	}
@@ -311,7 +313,7 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 	if (hTask) // at least one sub-task
 	{
 		sOutput += ENDL;
-		sOutput += "<ol>";
+		sOutput += _T("<ol>");
 		sOutput += ENDL;
 
 		int nChildPos = 1;
@@ -326,21 +328,21 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 		}
 
 		// end ordered list
-		sOutput += "</ol>";
+		sOutput += _T("</ol>");
 		sOutput += ENDL;
 	}
 
 	// end of item
 	if (nDepth > 0)
 	{
-		sOutput += "</li>";
+		sOutput += _T("</li>");
 		sOutput += ENDL;
 	}
 	else
-		sOutput += "</font>"; // we're done
+		sOutput += _T("</font>"); // we're done
 
 	// restore decimal separator to '.'
-	setlocale(LC_NUMERIC, "English");
+	_tsetlocale(LC_NUMERIC, _T("English"));
 
 	return sOutput;
 }
@@ -348,9 +350,9 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 BOOL CTaskListHtmlExporter::FormatAttribute(const ITaskList6* pTasks, HTASKITEM hTask, 
 										   LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
 {
-	if (pTasks->TaskHasAttribute(hTask, szAttribName))
+	if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAttribName)))
 	{
-		sAttribText.Format(szFormat, pTasks->GetTaskAttribute(hTask, szAttribName));
+		sAttribText.Format(szFormat, pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName)));
 		return TRUE;
 	}
 
@@ -361,21 +363,21 @@ BOOL CTaskListHtmlExporter::FormatAttributeList(const ITaskList6* pTasks, HTASKI
 										   LPCTSTR szNumAttribName, LPCTSTR szAttribName, 
                                            LPCTSTR szFormat, CString& sAttribText)
 {
-	int nItemCount = atoi(pTasks->GetTaskAttribute(hTask, szNumAttribName));
+	int nItemCount = atoi(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szNumAttribName)));
 
 	if (nItemCount <= 1)
 		return FormatAttribute(pTasks, hTask, szAttribName, szFormat, sAttribText);
 
 	// else more than one (use plus sign as delimiter)
-	CString sAttribs = pTasks->GetTaskAttribute(hTask, szAttribName);
+	CString sAttribs = ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName)));
 	
 	for (int nItem = 1; nItem < nItemCount; nItem++)
 	{
 		CString sAttribName;
-		sAttribName.Format("%s%d", szAttribName, nItem);
+		sAttribName.Format(_T("%s%d"), szAttribName, nItem);
 		
-		sAttribs += '+';
-		sAttribs += pTasks->GetTaskAttribute(hTask, sAttribName);
+		sAttribs += _T('+');
+		sAttribs += ATL::CA2T(pTasks->GetTaskAttribute(hTask, ATL::CT2A(sAttribName)));
 	}
 	
 	sAttribText.Format(szFormat, sAttribs);

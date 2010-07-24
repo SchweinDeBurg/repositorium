@@ -195,82 +195,78 @@ void CPreferencesTaskPage::OnAutocalcpercentdone()
 void CPreferencesTaskPage::LoadPreferences(const CPreferences& prefs)
 {
 	// load settings
-	m_bTreatSubCompletedAsDone = prefs.GetProfileInt("Preferences", "TreatSubCompletedAsDone", TRUE);
-	m_bAveragePercentSubCompletion = prefs.GetProfileInt("Preferences", "AveragePercentSubCompletion", TRUE);
-	m_bIncludeDoneInAverageCalc = prefs.GetProfileInt("Preferences", "IncludeDoneInAverageCalc", TRUE);
-	m_bUseEarliestDueDate = prefs.GetProfileInt("Preferences", "UseEarliestDueDate", FALSE);
-	m_bUsePercentDoneInTimeEst = prefs.GetProfileInt("Preferences", "UsePercentDoneInTimeEst", TRUE);
-	m_bUseHighestPriority = prefs.GetProfileInt("Preferences", "UseHighestPriority", FALSE);
-	m_bAutoCalcTimeEst = prefs.GetProfileInt("Preferences", "AutoCalcTimeEst", FALSE);
-	m_bIncludeDoneInPriorityCalc = prefs.GetProfileInt("Preferences", "IncludeDoneInPriorityCalc", FALSE);
-	m_bAutoCalcPercentDone = prefs.GetProfileInt("Preferences", "AutoCalcPercentDone", FALSE);
-	m_sDaysInWeek = prefs.GetProfileString("Preferences", "DaysInWeek", "5.00");
-	m_sHoursInDay = prefs.GetProfileString("Preferences", "HoursInDay", "8.00");
-	m_bLogTime = prefs.GetProfileInt("Preferences", "LogTime", TRUE);
-	m_bLogTasksSeparately = prefs.GetProfileInt("Preferences", "LogTasksSeparately", FALSE);
-	m_bExclusiveTimeTracking = prefs.GetProfileInt("Preferences", "ExclusiveTimeTracking", FALSE);
-	m_bAllowParentTimeTracking = prefs.GetProfileInt("Preferences", "AllowParentTimeTracking", TRUE);
-	m_bAutoAdjustDependents = prefs.GetProfileInt("Preferences", "AutoAdjustDependents", FALSE);
-	m_bDueTasksHaveHighestPriority = prefs.GetProfileInt("Preferences", "DueTasksHaveHighestPriority", FALSE);
-	m_bDoneTasksHaveLowestPriority = prefs.GetProfileInt("Preferences", "DoneTasksHaveLowestPriority", TRUE);
-	m_bNoDueDateDueToday = prefs.GetProfileInt("Preferences", "NoDueDateIsDueToday", FALSE);
+	m_bTreatSubCompletedAsDone = prefs.GetProfileInt(_T("Preferences"), _T("TreatSubCompletedAsDone"), TRUE);
+	m_bAveragePercentSubCompletion = prefs.GetProfileInt(_T("Preferences"), _T("AveragePercentSubCompletion"), TRUE);
+	m_bIncludeDoneInAverageCalc = prefs.GetProfileInt(_T("Preferences"), _T("IncludeDoneInAverageCalc"), TRUE);
+	m_bUseEarliestDueDate = prefs.GetProfileInt(_T("Preferences"), _T("UseEarliestDueDate"), FALSE);
+	m_bUsePercentDoneInTimeEst = prefs.GetProfileInt(_T("Preferences"), _T("UsePercentDoneInTimeEst"), TRUE);
+	m_bUseHighestPriority = prefs.GetProfileInt(_T("Preferences"), _T("UseHighestPriority"), FALSE);
+	m_bAutoCalcTimeEst = prefs.GetProfileInt(_T("Preferences"), _T("AutoCalcTimeEst"), FALSE);
+	m_bIncludeDoneInPriorityCalc = prefs.GetProfileInt(_T("Preferences"), _T("IncludeDoneInPriorityCalc"), FALSE);
+	m_bAutoCalcPercentDone = prefs.GetProfileInt(_T("Preferences"), _T("AutoCalcPercentDone"), FALSE);
+	m_sDaysInWeek = prefs.GetProfileString(_T("Preferences"), _T("DaysInWeek"), _T("5.00"));
+	m_sHoursInDay = prefs.GetProfileString(_T("Preferences"), _T("HoursInDay"), _T("8.00"));
+	m_bLogTime = prefs.GetProfileInt(_T("Preferences"), _T("LogTime"), TRUE);
+	m_bLogTasksSeparately = prefs.GetProfileInt(_T("Preferences"), _T("LogTasksSeparately"), FALSE);
+	m_bExclusiveTimeTracking = prefs.GetProfileInt(_T("Preferences"), _T("ExclusiveTimeTracking"), FALSE);
+	m_bAllowParentTimeTracking = prefs.GetProfileInt(_T("Preferences"), _T("AllowParentTimeTracking"), TRUE);
+	m_bAutoAdjustDependents = prefs.GetProfileInt(_T("Preferences"), _T("AutoAdjustDependents"), FALSE);
+	m_bDueTasksHaveHighestPriority = prefs.GetProfileInt(_T("Preferences"), _T("DueTasksHaveHighestPriority"), FALSE);
+	m_bDoneTasksHaveLowestPriority = prefs.GetProfileInt(_T("Preferences"), _T("DoneTasksHaveLowestPriority"), TRUE);
+	m_bNoDueDateDueToday = prefs.GetProfileInt(_T("Preferences"), _T("NoDueDateIsDueToday"), FALSE);
 
-	m_bWeightPercentCompletionByTimeEst = prefs.GetProfileInt("Preferences", "WeightPercentCompletionByTimeEst", FALSE);
-	m_bWeightPercentCompletionByPriority = prefs.GetProfileInt("Preferences", "WeightPercentCompletionByPriority", FALSE);
-	m_bWeightPercentCompletionByNumSubtasks = prefs.GetProfileInt("Preferences", "WeightPercentCompletionByNumSubtasks", TRUE);
+	m_bWeightPercentCompletionByTimeEst = prefs.GetProfileInt(_T("Preferences"), _T("WeightPercentCompletionByTimeEst"), FALSE);
+	m_bWeightPercentCompletionByPriority = prefs.GetProfileInt(_T("Preferences"), _T("WeightPercentCompletionByPriority"), FALSE);
+	m_bWeightPercentCompletionByNumSubtasks = prefs.GetProfileInt(_T("Preferences"), _T("WeightPercentCompletionByNumSubtasks"), TRUE);
 
 	// backwards compatibility: Weight by Num Tasks must be turned on for 
 	// Weight by Priority and Weight by Time Estimate
 	m_bWeightPercentCompletionByNumSubtasks |= m_bWeightPercentCompletionByPriority;
 	m_bWeightPercentCompletionByNumSubtasks |= m_bWeightPercentCompletionByTimeEst;
 
-	m_bTrackNonActiveTasklists = prefs.GetProfileInt("Preferences", "TrackNonActiveTasklists", TRUE);
-	m_bTrackNonSelectedTasks = prefs.GetProfileInt("Preferences", "TrackNonSelectedTasks", TRUE);
-	m_bTrackOnScreenSaver = prefs.GetProfileInt("Preferences", "TrackOnScreenSaver", TRUE);
-	m_bTrackHibernated = prefs.GetProfileInt("Preferences", "AllowTrackingWhenHibernated", FALSE);
+	m_bTrackNonActiveTasklists = prefs.GetProfileInt(_T("Preferences"), _T("TrackNonActiveTasklists"), TRUE);
+	m_bTrackNonSelectedTasks = prefs.GetProfileInt(_T("Preferences"), _T("TrackNonSelectedTasks"), TRUE);
+	m_bTrackOnScreenSaver = prefs.GetProfileInt(_T("Preferences"), _T("TrackOnScreenSaver"), TRUE);
+	m_bTrackHibernated = prefs.GetProfileInt(_T("Preferences"), _T("AllowTrackingWhenHibernated"), FALSE);
 
 	// fix up m_bAveragePercentSubCompletion because it's overridden by m_bAutoCalcPercentDone
 	if (m_bAutoCalcPercentDone)
 		m_bAveragePercentSubCompletion = FALSE;
-
-//	m_b = prefs.GetProfileInt("Preferences", "", FALSE);
 }
 
 void CPreferencesTaskPage::SavePreferences(CPreferences& prefs)
 {
 	// save settings
-	prefs.WriteProfileInt("Preferences", "TreatSubCompletedAsDone", m_bTreatSubCompletedAsDone);
-	prefs.WriteProfileInt("Preferences", "AveragePercentSubCompletion", m_bAveragePercentSubCompletion);
-	prefs.WriteProfileInt("Preferences", "IncludeDoneInAverageCalc", m_bIncludeDoneInAverageCalc);
-	prefs.WriteProfileInt("Preferences", "UseEarliestDueDate", m_bUseEarliestDueDate);
-	prefs.WriteProfileInt("Preferences", "UsePercentDoneInTimeEst", m_bUsePercentDoneInTimeEst);
-	prefs.WriteProfileInt("Preferences", "UseHighestPriority", m_bUseHighestPriority);
-	prefs.WriteProfileInt("Preferences", "AutoCalcTimeEst", m_bAutoCalcTimeEst);
-	prefs.WriteProfileInt("Preferences", "IncludeDoneInPriorityCalc", m_bIncludeDoneInPriorityCalc);
-	prefs.WriteProfileInt("Preferences", "WeightPercentCompletionByTimeEst", m_bWeightPercentCompletionByTimeEst);
-	prefs.WriteProfileInt("Preferences", "WeightPercentCompletionByPriority", m_bWeightPercentCompletionByPriority);
-	prefs.WriteProfileInt("Preferences", "WeightPercentCompletionByNumSubtasks", m_bWeightPercentCompletionByNumSubtasks);
-	prefs.WriteProfileInt("Preferences", "AutoCalcPercentDone", m_bAutoCalcPercentDone);
-	prefs.WriteProfileInt("Preferences", "TrackNonSelectedTasks", m_bTrackNonSelectedTasks);
-	prefs.WriteProfileInt("Preferences", "TrackNonActiveTasklists", m_bTrackNonActiveTasklists);
-	prefs.WriteProfileInt("Preferences", "TrackOnScreenSaver", m_bTrackOnScreenSaver);
-	prefs.WriteProfileInt("Preferences", "AllowTrackingWhenHibernated", m_bTrackHibernated);
-	prefs.WriteProfileInt("Preferences", "LogTime", m_bLogTime);
-	prefs.WriteProfileInt("Preferences", "LogTasksSeparately", m_bLogTasksSeparately);
-	prefs.WriteProfileInt("Preferences", "ExclusiveTimeTracking", m_bExclusiveTimeTracking);
-	prefs.WriteProfileInt("Preferences", "AllowParentTimeTracking", m_bAllowParentTimeTracking);
-	prefs.WriteProfileInt("Preferences", "AutoAdjustDependents", m_bAutoAdjustDependents);
-	prefs.WriteProfileInt("Preferences", "DueTasksHaveHighestPriority", m_bDueTasksHaveHighestPriority);
-	prefs.WriteProfileInt("Preferences", "DoneTasksHaveLowestPriority", m_bDoneTasksHaveLowestPriority);
-	prefs.WriteProfileInt("Preferences", "NoDueDateIsDueToday", m_bNoDueDateDueToday);
+	prefs.WriteProfileInt(_T("Preferences"), _T("TreatSubCompletedAsDone"), m_bTreatSubCompletedAsDone);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AveragePercentSubCompletion"), m_bAveragePercentSubCompletion);
+	prefs.WriteProfileInt(_T("Preferences"), _T("IncludeDoneInAverageCalc"), m_bIncludeDoneInAverageCalc);
+	prefs.WriteProfileInt(_T("Preferences"), _T("UseEarliestDueDate"), m_bUseEarliestDueDate);
+	prefs.WriteProfileInt(_T("Preferences"), _T("UsePercentDoneInTimeEst"), m_bUsePercentDoneInTimeEst);
+	prefs.WriteProfileInt(_T("Preferences"), _T("UseHighestPriority"), m_bUseHighestPriority);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoCalcTimeEst"), m_bAutoCalcTimeEst);
+	prefs.WriteProfileInt(_T("Preferences"), _T("IncludeDoneInPriorityCalc"), m_bIncludeDoneInPriorityCalc);
+	prefs.WriteProfileInt(_T("Preferences"), _T("WeightPercentCompletionByTimeEst"), m_bWeightPercentCompletionByTimeEst);
+	prefs.WriteProfileInt(_T("Preferences"), _T("WeightPercentCompletionByPriority"), m_bWeightPercentCompletionByPriority);
+	prefs.WriteProfileInt(_T("Preferences"), _T("WeightPercentCompletionByNumSubtasks"), m_bWeightPercentCompletionByNumSubtasks);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoCalcPercentDone"), m_bAutoCalcPercentDone);
+	prefs.WriteProfileInt(_T("Preferences"), _T("TrackNonSelectedTasks"), m_bTrackNonSelectedTasks);
+	prefs.WriteProfileInt(_T("Preferences"), _T("TrackNonActiveTasklists"), m_bTrackNonActiveTasklists);
+	prefs.WriteProfileInt(_T("Preferences"), _T("TrackOnScreenSaver"), m_bTrackOnScreenSaver);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AllowTrackingWhenHibernated"), m_bTrackHibernated);
+	prefs.WriteProfileInt(_T("Preferences"), _T("LogTime"), m_bLogTime);
+	prefs.WriteProfileInt(_T("Preferences"), _T("LogTasksSeparately"), m_bLogTasksSeparately);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ExclusiveTimeTracking"), m_bExclusiveTimeTracking);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AllowParentTimeTracking"), m_bAllowParentTimeTracking);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoAdjustDependents"), m_bAutoAdjustDependents);
+	prefs.WriteProfileInt(_T("Preferences"), _T("DueTasksHaveHighestPriority"), m_bDueTasksHaveHighestPriority);
+	prefs.WriteProfileInt(_T("Preferences"), _T("DoneTasksHaveLowestPriority"), m_bDoneTasksHaveLowestPriority);
+	prefs.WriteProfileInt(_T("Preferences"), _T("NoDueDateIsDueToday"), m_bNoDueDateDueToday);
 
 	// validate time periods before writing
-	m_sHoursInDay.Format("%.2f", GetHoursInOneDay());
-	m_sDaysInWeek.Format("%.2f", GetDaysInOneWeek());
-	prefs.WriteProfileString("Preferences", "DaysInWeek", m_sDaysInWeek);
-	prefs.WriteProfileString("Preferences", "HoursInDay", m_sHoursInDay);
-
-//	prefs.WriteProfileInt("Preferences", "", m_b);
+	m_sHoursInDay.Format(_T("%.2f"), GetHoursInOneDay());
+	m_sDaysInWeek.Format(_T("%.2f"), GetDaysInOneWeek());
+	prefs.WriteProfileString(_T("Preferences"), _T("DaysInWeek"), m_sDaysInWeek);
+	prefs.WriteProfileString(_T("Preferences"), _T("HoursInDay"), m_sHoursInDay);
 }
 
 

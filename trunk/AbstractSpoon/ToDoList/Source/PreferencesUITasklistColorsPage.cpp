@@ -122,18 +122,18 @@ void CPreferencesUITasklistColorsPage::DoDataExchange(CDataExchange* pDX)
 
 		// tree
 		m_cbTreeFontSize.GetLBText(m_cbTreeFontSize.GetCurSel(), sSize);
-		m_nTreeFontSize = atoi(sSize);
+		m_nTreeFontSize = _ttoi(sSize);
 
 		// comments
 		m_cbCommentsFontSize.GetLBText(m_cbCommentsFontSize.GetCurSel(), sSize);
-		m_nCommentsFontSize = atoi(sSize);
+		m_nCommentsFontSize = _ttoi(sSize);
 	}
 	else
 	{
 		CString sFontSize;
 
 		// tree
-		sFontSize.Format("%d", m_nTreeFontSize);
+		sFontSize.Format(_T("%d"), m_nTreeFontSize);
 
 		if (CB_ERR == m_cbTreeFontSize.SelectString(-1, sFontSize))
 		{
@@ -142,7 +142,7 @@ void CPreferencesUITasklistColorsPage::DoDataExchange(CDataExchange* pDX)
 		}
 
 		// comments
-		sFontSize.Format("%d", m_nCommentsFontSize);
+		sFontSize.Format(_T("%d"), m_nCommentsFontSize);
 
 		if (CB_ERR == m_cbCommentsFontSize.SelectString(-1, sFontSize))
 		{
@@ -700,32 +700,32 @@ void CPreferencesUITasklistColorsPage::AddCategory(LPCTSTR szCategory)
 
 void CPreferencesUITasklistColorsPage::LoadPreferences(const CPreferences& prefs)
 {
-	m_crLow = prefs.GetProfileInt("Preferences\\Colors", "Low", PRIORITYLOWCOLOR);
-	m_crHigh = prefs.GetProfileInt("Preferences\\Colors", "High", PRIORITYHIGHCOLOR);
+	m_crLow = prefs.GetProfileInt(_T("Preferences\\Colors"), _T("Low"), PRIORITYLOWCOLOR);
+	m_crHigh = prefs.GetProfileInt(_T("Preferences\\Colors"), _T("High"), PRIORITYHIGHCOLOR);
 
-	m_aPriorityColors.Add(prefs.GetProfileInt("Preferences\\Colors", "P0", RGB(30, 225, 0)));
-	m_aPriorityColors.Add(prefs.GetProfileInt("Preferences\\Colors", "P1", RGB(30, 225, 0)));
-	m_aPriorityColors.Add(prefs.GetProfileInt("Preferences\\Colors", "P2", RGB(30, 225, 0)));
-	m_aPriorityColors.Add(prefs.GetProfileInt("Preferences\\Colors", "P3", RGB(30, 225, 0)));
-	m_aPriorityColors.Add(prefs.GetProfileInt("Preferences\\Colors", "P4", RGB(0, 0, 255)));
-	m_aPriorityColors.Add(prefs.GetProfileInt("Preferences\\Colors", "P5", RGB(0, 0, 255)));
-	m_aPriorityColors.Add(prefs.GetProfileInt("Preferences\\Colors", "P6", RGB(0, 0, 255)));
-	m_aPriorityColors.Add(prefs.GetProfileInt("Preferences\\Colors", "P7", RGB(0, 0, 255)));
-	m_aPriorityColors.Add(prefs.GetProfileInt("Preferences\\Colors", "P8", RGB(255, 0, 0)));
-	m_aPriorityColors.Add(prefs.GetProfileInt("Preferences\\Colors", "P9", RGB(255, 0, 0)));
-	m_aPriorityColors.Add(prefs.GetProfileInt("Preferences\\Colors", "P10", RGB(255, 0, 0)));
+	m_aPriorityColors.Add(prefs.GetProfileInt(_T("Preferences\\Colors"), _T("P0"), RGB(30, 225, 0)));
+	m_aPriorityColors.Add(prefs.GetProfileInt(_T("Preferences\\Colors"), _T("P1"), RGB(30, 225, 0)));
+	m_aPriorityColors.Add(prefs.GetProfileInt(_T("Preferences\\Colors"), _T("P2"), RGB(30, 225, 0)));
+	m_aPriorityColors.Add(prefs.GetProfileInt(_T("Preferences\\Colors"), _T("P3"), RGB(30, 225, 0)));
+	m_aPriorityColors.Add(prefs.GetProfileInt(_T("Preferences\\Colors"), _T("P4"), RGB(0, 0, 255)));
+	m_aPriorityColors.Add(prefs.GetProfileInt(_T("Preferences\\Colors"), _T("P5"), RGB(0, 0, 255)));
+	m_aPriorityColors.Add(prefs.GetProfileInt(_T("Preferences\\Colors"), _T("P6"), RGB(0, 0, 255)));
+	m_aPriorityColors.Add(prefs.GetProfileInt(_T("Preferences\\Colors"), _T("P7"), RGB(0, 0, 255)));
+	m_aPriorityColors.Add(prefs.GetProfileInt(_T("Preferences\\Colors"), _T("P8"), RGB(255, 0, 0)));
+	m_aPriorityColors.Add(prefs.GetProfileInt(_T("Preferences\\Colors"), _T("P9"), RGB(255, 0, 0)));
+	m_aPriorityColors.Add(prefs.GetProfileInt(_T("Preferences\\Colors"), _T("P10"), RGB(255, 0, 0)));
 
 	// category colors
-	int nColor, nNumColor = prefs.GetProfileInt("Preferences\\CatColors", "Count", 0);
+	int nColor, nNumColor = prefs.GetProfileInt(_T("Preferences\\CatColors"), _T("Count"), 0);
 
 	for (nColor = 0; nColor < nNumColor; nColor++)
 	{
 		CString sKey;
-		sKey.Format("Preferences\\CatColors\\P%d", nColor);
+		sKey.Format(_T("Preferences\\CatColors\\P%d"), nColor);
 
 		CATCOLOR cc;
-		cc.color = prefs.GetProfileInt(sKey, "Color", 0);
-		cc.sCategory = prefs.GetProfileString(sKey, "Category");
+		cc.color = prefs.GetProfileInt(sKey, _T("Color"), 0);
+		cc.sCategory = prefs.GetProfileString(sKey, _T("Category"));
 
 		if (!cc.sCategory.IsEmpty())
 		{
@@ -736,7 +736,7 @@ void CPreferencesUITasklistColorsPage::LoadPreferences(const CPreferences& prefs
 
 	// add in the users default categories
 	CStringArray aDefCats;
-	prefs.GetArrayItems("Preferences\\CategoryList", aDefCats);
+	prefs.GetArrayItems(_T("Preferences\\CategoryList"), aDefCats);
 
 	int nDefColor = aDefCats.GetSize();
 
@@ -760,92 +760,92 @@ void CPreferencesUITasklistColorsPage::LoadPreferences(const CPreferences& prefs
 	}
 	
 	// prefs
-	m_bColorPriority = prefs.GetProfileInt("Preferences", "ColorPriority", TRUE);
-	m_bGradientPriorityColors = !prefs.GetProfileInt("Preferences", "IndividualPriorityColors", FALSE);
-	m_sTreeFont = prefs.GetProfileString("Preferences", "TreeFont", "Arial");
-	m_nTreeFontSize = prefs.GetProfileInt("Preferences", "FontSize", 8);
-	m_bSpecifyTreeFont = prefs.GetProfileInt("Preferences", "SpecifyTreeFont", FALSE);
-	m_sCommentsFont = prefs.GetProfileString("Preferences", "CommentsFont", "Arial");
-	m_nCommentsFontSize = prefs.GetProfileInt("Preferences", "CommentsFontSize", 8);
-	m_bSpecifyCommentsFont = prefs.GetProfileInt("Preferences", "SpecifyCommentsFont", TRUE);
-	m_bSpecifyGridColor = prefs.GetProfileInt("Preferences", "SpecifyGridColor", TRUE);
-	m_crGridlines = prefs.GetProfileInt("Preferences\\Colors", "Gridlines", GRIDLINECOLOR);
-	m_bSpecifyDoneColor = prefs.GetProfileInt("Preferences", "SpecifyDoneColor", TRUE);
-	m_bSpecifyDueColor = prefs.GetProfileInt("Preferences", "SpecifyDueColor", TRUE);
-	m_bSpecifyDueTodayColor = prefs.GetProfileInt("Preferences", "SpecifyDueTodayColor", TRUE);
-	m_crDone = prefs.GetProfileInt("Preferences\\Colors", "TaskDone", TASKDONECOLOR);
-	m_crDue = prefs.GetProfileInt("Preferences\\Colors", "TaskDue", TASKDUECOLOR);
-	m_crDueToday = prefs.GetProfileInt("Preferences\\Colors", "TaskDueToday", TASKDUECOLOR);
-	m_bColorTaskBackground = prefs.GetProfileInt("Preferences", "ColorTaskBackground", FALSE);
-	m_bCommentsUseTreeFont = prefs.GetProfileInt("Preferences", "CommentsUseTreeFont", FALSE);
-	m_bHLSColorGradient = prefs.GetProfileInt("Preferences", "HLSColorGradient", TRUE);
-	m_bHidePriorityNumber = prefs.GetProfileInt("Preferences", "HidePriorityNumber", FALSE);
-	m_bAlternateLineColor = prefs.GetProfileInt("Preferences", "AlternateLineColor", TRUE);
-	m_crAltLine = prefs.GetProfileInt("Preferences\\Colors", "AlternateLines", ALTERNATELINECOLOR);
-	m_bSpecifyFlaggedColor = prefs.GetProfileInt("Preferences", "FlaggedColor", FALSE);
-	m_crFlagged = prefs.GetProfileInt("Preferences\\Colors", "Flagged", FLAGGEDCOLOR);
+	m_bColorPriority = prefs.GetProfileInt(_T("Preferences"), _T("ColorPriority"), TRUE);
+	m_bGradientPriorityColors = !prefs.GetProfileInt(_T("Preferences"), _T("IndividualPriorityColors"), FALSE);
+	m_sTreeFont = prefs.GetProfileString(_T("Preferences"), _T("TreeFont"), _T("Arial"));
+	m_nTreeFontSize = prefs.GetProfileInt(_T("Preferences"), _T("FontSize"), 8);
+	m_bSpecifyTreeFont = prefs.GetProfileInt(_T("Preferences"), _T("SpecifyTreeFont"), FALSE);
+	m_sCommentsFont = prefs.GetProfileString(_T("Preferences"), _T("CommentsFont"), _T("Arial"));
+	m_nCommentsFontSize = prefs.GetProfileInt(_T("Preferences"), _T("CommentsFontSize"), 8);
+	m_bSpecifyCommentsFont = prefs.GetProfileInt(_T("Preferences"), _T("SpecifyCommentsFont"), TRUE);
+	m_bSpecifyGridColor = prefs.GetProfileInt(_T("Preferences"), _T("SpecifyGridColor"), TRUE);
+	m_crGridlines = prefs.GetProfileInt(_T("Preferences\\Colors"), _T("Gridlines"), GRIDLINECOLOR);
+	m_bSpecifyDoneColor = prefs.GetProfileInt(_T("Preferences"), _T("SpecifyDoneColor"), TRUE);
+	m_bSpecifyDueColor = prefs.GetProfileInt(_T("Preferences"), _T("SpecifyDueColor"), TRUE);
+	m_bSpecifyDueTodayColor = prefs.GetProfileInt(_T("Preferences"), _T("SpecifyDueTodayColor"), TRUE);
+	m_crDone = prefs.GetProfileInt(_T("Preferences\\Colors"), _T("TaskDone"), TASKDONECOLOR);
+	m_crDue = prefs.GetProfileInt(_T("Preferences\\Colors"), _T("TaskDue"), TASKDUECOLOR);
+	m_crDueToday = prefs.GetProfileInt(_T("Preferences\\Colors"), _T("TaskDueToday"), TASKDUECOLOR);
+	m_bColorTaskBackground = prefs.GetProfileInt(_T("Preferences"), _T("ColorTaskBackground"), FALSE);
+	m_bCommentsUseTreeFont = prefs.GetProfileInt(_T("Preferences"), _T("CommentsUseTreeFont"), FALSE);
+	m_bHLSColorGradient = prefs.GetProfileInt(_T("Preferences"), _T("HLSColorGradient"), TRUE);
+	m_bHidePriorityNumber = prefs.GetProfileInt(_T("Preferences"), _T("HidePriorityNumber"), FALSE);
+	m_bAlternateLineColor = prefs.GetProfileInt(_T("Preferences"), _T("AlternateLineColor"), TRUE);
+	m_crAltLine = prefs.GetProfileInt(_T("Preferences\\Colors"), _T("AlternateLines"), ALTERNATELINECOLOR);
+	m_bSpecifyFlaggedColor = prefs.GetProfileInt(_T("Preferences"), _T("FlaggedColor"), FALSE);
+	m_crFlagged = prefs.GetProfileInt(_T("Preferences\\Colors"), _T("Flagged"), FLAGGEDCOLOR);
 
 	// bkwds compatibility
-	if (prefs.GetProfileInt("Preferences", "ColorByPriority", FALSE))
+	if (prefs.GetProfileInt(_T("Preferences"), _T("ColorByPriority"), FALSE))
 		m_nTextColorOption = COLOROPT_PRIORITY;
 
-	m_nTextColorOption = prefs.GetProfileInt("Preferences", "TextColorOption", m_nTextColorOption);
+	m_nTextColorOption = prefs.GetProfileInt(_T("Preferences"), _T("TextColorOption"), m_nTextColorOption);
 }
 
 void CPreferencesUITasklistColorsPage::SavePreferences(CPreferences& prefs)
 {
 	// save settings
 	// priority colors
-	prefs.WriteProfileInt("Preferences\\Colors", "Low", m_crLow);
-	prefs.WriteProfileInt("Preferences\\Colors", "High", m_crHigh);
+	prefs.WriteProfileInt(_T("Preferences\\Colors"), _T("Low"), m_crLow);
+	prefs.WriteProfileInt(_T("Preferences\\Colors"), _T("High"), m_crHigh);
 
 	int nColor = 11;
 
 	while (nColor--)
 	{
 		CString sKey;
-		sKey.Format("P%d", nColor);
-		prefs.WriteProfileInt("Preferences\\Colors", sKey, m_aPriorityColors[nColor]);
+		sKey.Format(_T("P%d"), nColor);
+		prefs.WriteProfileInt(_T("Preferences\\Colors"), sKey, m_aPriorityColors[nColor]);
 	}
 
 	// category colors
 	int nNumColor = m_aCategoryColors.GetSize();
-	prefs.WriteProfileInt("Preferences\\CatColors", "Count", nNumColor);
+	prefs.WriteProfileInt(_T("Preferences\\CatColors"), _T("Count"), nNumColor);
 
 	for (nColor = 0; nColor < nNumColor; nColor++)
 	{
 		CString sKey;
-		sKey.Format("Preferences\\CatColors\\P%d", nColor);
+		sKey.Format(_T("Preferences\\CatColors\\P%d"), nColor);
 
 		const CATCOLOR& cc = m_aCategoryColors[nColor];
-		prefs.WriteProfileInt(sKey, "Color", cc.color);
-		prefs.WriteProfileString(sKey, "Category", cc.sCategory);
+		prefs.WriteProfileInt(sKey, _T("Color"), cc.color);
+		prefs.WriteProfileString(sKey, _T("Category"), cc.sCategory);
 	}
 
 	// save settings
-	prefs.WriteProfileInt("Preferences", "TextColorOption", m_nTextColorOption);
-	prefs.WriteProfileInt("Preferences", "ColorPriority", m_bColorPriority);
-	prefs.WriteProfileInt("Preferences", "IndividualPriorityColors", !m_bGradientPriorityColors);
-	prefs.WriteProfileString("Preferences", "TreeFont", m_sTreeFont);
-	prefs.WriteProfileInt("Preferences", "FontSize", m_nTreeFontSize);
-	prefs.WriteProfileInt("Preferences", "SpecifyTreeFont", m_bSpecifyTreeFont);
-	prefs.WriteProfileString("Preferences", "CommentsFont", m_sCommentsFont);
-	prefs.WriteProfileInt("Preferences", "CommentsFontSize", m_nCommentsFontSize);
-	prefs.WriteProfileInt("Preferences", "SpecifyCommentsFont", m_bSpecifyCommentsFont);
-	prefs.WriteProfileInt("Preferences", "SpecifyGridColor", m_bSpecifyGridColor);
-	prefs.WriteProfileInt("Preferences\\Colors", "Gridlines", m_crGridlines);
-	prefs.WriteProfileInt("Preferences", "SpecifyDoneColor", m_bSpecifyDoneColor);
-	prefs.WriteProfileInt("Preferences\\Colors", "TaskDone", m_crDone);
-	prefs.WriteProfileInt("Preferences", "SpecifyDueColor", m_bSpecifyDueColor);
-	prefs.WriteProfileInt("Preferences\\Colors", "TaskDue", m_crDue);
-	prefs.WriteProfileInt("Preferences", "SpecifyDueTodayColor", m_bSpecifyDueTodayColor);
-	prefs.WriteProfileInt("Preferences\\Colors", "TaskDueToday", m_crDueToday);
-	prefs.WriteProfileInt("Preferences", "ColorTaskBackground", m_bColorTaskBackground);
-	prefs.WriteProfileInt("Preferences", "CommentsUseTreeFont", m_bCommentsUseTreeFont);
-	prefs.WriteProfileInt("Preferences", "HLSColorGradient", m_bHLSColorGradient);
-	prefs.WriteProfileInt("Preferences", "HidePriorityNumber", m_bHidePriorityNumber);
-	prefs.WriteProfileInt("Preferences\\Colors", "AlternateLines", m_crAltLine);
-	prefs.WriteProfileInt("Preferences", "AlternateLineColor", m_bAlternateLineColor);
-	prefs.WriteProfileInt("Preferences", "FlaggedColor", m_bSpecifyFlaggedColor);
-	prefs.WriteProfileInt("Preferences\\Colors", "Flagged", m_crFlagged);
+	prefs.WriteProfileInt(_T("Preferences"), _T("TextColorOption"), m_nTextColorOption);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ColorPriority"), m_bColorPriority);
+	prefs.WriteProfileInt(_T("Preferences"), _T("IndividualPriorityColors"), !m_bGradientPriorityColors);
+	prefs.WriteProfileString(_T("Preferences"), _T("TreeFont"), m_sTreeFont);
+	prefs.WriteProfileInt(_T("Preferences"), _T("FontSize"), m_nTreeFontSize);
+	prefs.WriteProfileInt(_T("Preferences"), _T("SpecifyTreeFont"), m_bSpecifyTreeFont);
+	prefs.WriteProfileString(_T("Preferences"), _T("CommentsFont"), m_sCommentsFont);
+	prefs.WriteProfileInt(_T("Preferences"), _T("CommentsFontSize"), m_nCommentsFontSize);
+	prefs.WriteProfileInt(_T("Preferences"), _T("SpecifyCommentsFont"), m_bSpecifyCommentsFont);
+	prefs.WriteProfileInt(_T("Preferences"), _T("SpecifyGridColor"), m_bSpecifyGridColor);
+	prefs.WriteProfileInt(_T("Preferences\\Colors"), _T("Gridlines"), m_crGridlines);
+	prefs.WriteProfileInt(_T("Preferences"), _T("SpecifyDoneColor"), m_bSpecifyDoneColor);
+	prefs.WriteProfileInt(_T("Preferences\\Colors"), _T("TaskDone"), m_crDone);
+	prefs.WriteProfileInt(_T("Preferences"), _T("SpecifyDueColor"), m_bSpecifyDueColor);
+	prefs.WriteProfileInt(_T("Preferences\\Colors"), _T("TaskDue"), m_crDue);
+	prefs.WriteProfileInt(_T("Preferences"), _T("SpecifyDueTodayColor"), m_bSpecifyDueTodayColor);
+	prefs.WriteProfileInt(_T("Preferences\\Colors"), _T("TaskDueToday"), m_crDueToday);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ColorTaskBackground"), m_bColorTaskBackground);
+	prefs.WriteProfileInt(_T("Preferences"), _T("CommentsUseTreeFont"), m_bCommentsUseTreeFont);
+	prefs.WriteProfileInt(_T("Preferences"), _T("HLSColorGradient"), m_bHLSColorGradient);
+	prefs.WriteProfileInt(_T("Preferences"), _T("HidePriorityNumber"), m_bHidePriorityNumber);
+	prefs.WriteProfileInt(_T("Preferences\\Colors"), _T("AlternateLines"), m_crAltLine);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AlternateLineColor"), m_bAlternateLineColor);
+	prefs.WriteProfileInt(_T("Preferences"), _T("FlaggedColor"), m_bSpecifyFlaggedColor);
+	prefs.WriteProfileInt(_T("Preferences\\Colors"), _T("Flagged"), m_crFlagged);
 }

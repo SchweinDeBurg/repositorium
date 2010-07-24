@@ -145,35 +145,34 @@ void CPreferencesUIPage::OnSelchangeCommentsformat()
 void CPreferencesUIPage::LoadPreferences(const CPreferences& prefs)
 {
 	// load settings
-	m_bShowCtrlsAsColumns = prefs.GetProfileInt("Preferences", "ShowCtrlsAsColumns", FALSE);
-	m_bShowEditMenuAsColumns = prefs.GetProfileInt("Preferences", "ShowEditMenuAsColumns", FALSE);
-	m_bShowCommentsAlways = prefs.GetProfileInt("Preferences", "ShowCommentsAlways", FALSE);
-	m_bAutoReposCtrls = prefs.GetProfileInt("Preferences", "AutoReposCtrls", TRUE);
-	m_bSpecifyToolbarImage = prefs.GetProfileInt("Preferences", "SpecifyToolbarImage", FALSE);
-	m_bSharedCommentsHeight = prefs.GetProfileInt("Preferences", "SharedCommentsHeight", TRUE);
-	m_bAutoHideTabbar = prefs.GetProfileInt("Preferences", "AutoHideTabbar", TRUE);
-	m_bStackTabbarItems = prefs.GetProfileInt("Preferences", "StackTabbarItems", FALSE);
-	m_bRightAlignLabels = prefs.GetProfileInt("Preferences", "RightAlignLabels", TRUE);
-	m_bFocusTreeOnEnter = prefs.GetProfileInt("Preferences", "FocusTreeOnEnter", FALSE);
-	m_nNewTaskPos = prefs.GetProfileInt("Preferences", "NewTaskPos", PUIP_BELOW);
-	m_nNewSubtaskPos = prefs.GetProfileInt("Preferences", "NewSubtaskPos", PUIP_BOTTOM);
-	m_bKeepTabsOrdered = prefs.GetProfileInt("Preferences", "KeepTabsOrdered", FALSE);
-	m_bShowTasklistCloseButton = prefs.GetProfileInt("Preferences", "ShowTasklistCloseButton", TRUE);
-	m_bSortDoneTasksAtBottom = prefs.GetProfileInt("Preferences", "SortDoneTasksAtBottom", TRUE);
-	m_bRTLComments = prefs.GetProfileInt("Preferences", "RTLComments", FALSE);
-	m_nCommentsPos = prefs.GetProfileInt("Preferences", "VertComments", PUIP_RIGHTCOMMENTS);
-	m_bMultiSelFilters = prefs.GetProfileInt("Preferences", "MultiSelFilters", TRUE);
-	m_bRestoreTasklistFilters = prefs.GetProfileInt("Preferences", "RestoreTasklistFilters", TRUE);
-	m_bAutoRefilter = prefs.GetProfileInt("Preferences", "AutoRefilter", TRUE);
-	m_bEnableLightboxMgr = prefs.GetProfileInt("Preferences", "EnableLightboxMgr", COSVersion() <= OSV_XP);
-	m_bUseUITheme = CThemed::IsThemeActive() && prefs.GetProfileInt("Preferences", "UseUITheme", TRUE);
-//	m_b = prefs.GetProfileInt("Preferences", "", FALSE);
+	m_bShowCtrlsAsColumns = prefs.GetProfileInt(_T("Preferences"), _T("ShowCtrlsAsColumns"), FALSE);
+	m_bShowEditMenuAsColumns = prefs.GetProfileInt(_T("Preferences"), _T("ShowEditMenuAsColumns"), FALSE);
+	m_bShowCommentsAlways = prefs.GetProfileInt(_T("Preferences"), _T("ShowCommentsAlways"), FALSE);
+	m_bAutoReposCtrls = prefs.GetProfileInt(_T("Preferences"), _T("AutoReposCtrls"), TRUE);
+	m_bSpecifyToolbarImage = prefs.GetProfileInt(_T("Preferences"), _T("SpecifyToolbarImage"), FALSE);
+	m_bSharedCommentsHeight = prefs.GetProfileInt(_T("Preferences"), _T("SharedCommentsHeight"), TRUE);
+	m_bAutoHideTabbar = prefs.GetProfileInt(_T("Preferences"), _T("AutoHideTabbar"), TRUE);
+	m_bStackTabbarItems = prefs.GetProfileInt(_T("Preferences"), _T("StackTabbarItems"), FALSE);
+	m_bRightAlignLabels = prefs.GetProfileInt(_T("Preferences"), _T("RightAlignLabels"), TRUE);
+	m_bFocusTreeOnEnter = prefs.GetProfileInt(_T("Preferences"), _T("FocusTreeOnEnter"), FALSE);
+	m_nNewTaskPos = prefs.GetProfileInt(_T("Preferences"), _T("NewTaskPos"), PUIP_BELOW);
+	m_nNewSubtaskPos = prefs.GetProfileInt(_T("Preferences"), _T("NewSubtaskPos"), PUIP_BOTTOM);
+	m_bKeepTabsOrdered = prefs.GetProfileInt(_T("Preferences"), _T("KeepTabsOrdered"), FALSE);
+	m_bShowTasklistCloseButton = prefs.GetProfileInt(_T("Preferences"), _T("ShowTasklistCloseButton"), TRUE);
+	m_bSortDoneTasksAtBottom = prefs.GetProfileInt(_T("Preferences"), _T("SortDoneTasksAtBottom"), TRUE);
+	m_bRTLComments = prefs.GetProfileInt(_T("Preferences"), _T("RTLComments"), FALSE);
+	m_nCommentsPos = prefs.GetProfileInt(_T("Preferences"), _T("VertComments"), PUIP_RIGHTCOMMENTS);
+	m_bMultiSelFilters = prefs.GetProfileInt(_T("Preferences"), _T("MultiSelFilters"), TRUE);
+	m_bRestoreTasklistFilters = prefs.GetProfileInt(_T("Preferences"), _T("RestoreTasklistFilters"), TRUE);
+	m_bAutoRefilter = prefs.GetProfileInt(_T("Preferences"), _T("AutoRefilter"), TRUE);
+	m_bEnableLightboxMgr = prefs.GetProfileInt(_T("Preferences"), _T("EnableLightboxMgr"), COSVersion() <= OSV_XP);
+	m_bUseUITheme = CThemed::IsThemeActive() && prefs.GetProfileInt(_T("Preferences"), _T("UseUITheme"), TRUE);
 
 	// set default theme to blue
 	if (CThemed::IsThemeActive())
 	{
-		CString sDefault = FileMisc::GetModuleFolder() + "Resources\\ThemeBlue.xml";
-		m_sUIThemeFile = prefs.GetProfileString("Preferences", "UIThemeFile", sDefault);
+		CString sDefault = FileMisc::GetModuleFolder() + _T("Resources\\ThemeBlue.xml");
+		m_sUIThemeFile = prefs.GetProfileString(_T("Preferences"), _T("UIThemeFile"), sDefault);
 	}
 	else
 		m_sUIThemeFile.Empty();
@@ -181,12 +180,12 @@ void CPreferencesUIPage::LoadPreferences(const CPreferences& prefs)
 	// comments format
 	if (m_cbCommentsFmt.IsInitialized())
 	{
-		m_cfDefault = prefs.GetProfileString("Preferences", "DefaultCommentsFormatID");
+		m_cfDefault = prefs.GetProfileString(_T("Preferences"), _T("DefaultCommentsFormatID"));
 		m_nDefaultCommentsFormat = m_cbCommentsFmt.SetSelectedFormat(m_cfDefault);
 
 		// fallback
 		if (m_nDefaultCommentsFormat == CB_ERR)
-			m_nDefaultCommentsFormat = prefs.GetProfileInt("Preferences", "DefaultCommentsFormat", -1);
+			m_nDefaultCommentsFormat = prefs.GetProfileInt(_T("Preferences"), _T("DefaultCommentsFormat"), -1);
 
 		if (m_nDefaultCommentsFormat == CB_ERR || m_nDefaultCommentsFormat >= m_cbCommentsFmt.GetCount())
 		{
@@ -203,36 +202,35 @@ void CPreferencesUIPage::LoadPreferences(const CPreferences& prefs)
 void CPreferencesUIPage::SavePreferences(CPreferences& prefs)
 {
 	// save settings
-	prefs.WriteProfileInt("Preferences", "ShowCtrlsAsColumns", m_bShowCtrlsAsColumns);
-	prefs.WriteProfileInt("Preferences", "ShowEditMenuAsColumns", m_bShowEditMenuAsColumns);
-	prefs.WriteProfileInt("Preferences", "ShowCommentsAlways", m_bShowCommentsAlways);
-	prefs.WriteProfileInt("Preferences", "AutoReposCtrls", m_bAutoReposCtrls);
-	prefs.WriteProfileInt("Preferences", "SpecifyToolbarImage", m_bSpecifyToolbarImage);
-	prefs.WriteProfileInt("Preferences", "SharedCommentsHeight", m_bSharedCommentsHeight);
-	prefs.WriteProfileInt("Preferences", "AutoHideTabbar", m_bAutoHideTabbar);
-	prefs.WriteProfileInt("Preferences", "StackTabbarItems", m_bStackTabbarItems);
-	prefs.WriteProfileInt("Preferences", "RightAlignLabels", m_bRightAlignLabels);
-	prefs.WriteProfileInt("Preferences", "FocusTreeOnEnter", m_bFocusTreeOnEnter);
-	prefs.WriteProfileInt("Preferences", "NewTaskPos", m_nNewTaskPos);
-	prefs.WriteProfileInt("Preferences", "NewSubtaskPos", m_nNewSubtaskPos);
-	prefs.WriteProfileInt("Preferences", "KeepTabsOrdered", m_bKeepTabsOrdered);
-	prefs.WriteProfileInt("Preferences", "ShowTasklistCloseButton", m_bShowTasklistCloseButton);
-	prefs.WriteProfileInt("Preferences", "SortDoneTasksAtBottom", m_bSortDoneTasksAtBottom);
-	prefs.WriteProfileInt("Preferences", "RTLComments", m_bRTLComments);
-	prefs.WriteProfileInt("Preferences", "VertComments", m_nCommentsPos);
-	prefs.WriteProfileInt("Preferences", "MultiSelFilters", m_bMultiSelFilters);
-	prefs.WriteProfileInt("Preferences", "RestoreTasklistFilters", m_bRestoreTasklistFilters);
-	prefs.WriteProfileInt("Preferences", "AutoRefilter", m_bAutoRefilter);
-	prefs.WriteProfileString("Preferences", "UIThemeFile", m_sUIThemeFile);
-	prefs.WriteProfileInt("Preferences", "UseUITheme", m_bUseUITheme);
-	prefs.WriteProfileInt("Preferences", "EnableLightboxMgr", m_bEnableLightboxMgr);
-//	prefs.WriteProfileInt("Preferences", "", m_b);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowCtrlsAsColumns"), m_bShowCtrlsAsColumns);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowEditMenuAsColumns"), m_bShowEditMenuAsColumns);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowCommentsAlways"), m_bShowCommentsAlways);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoReposCtrls"), m_bAutoReposCtrls);
+	prefs.WriteProfileInt(_T("Preferences"), _T("SpecifyToolbarImage"), m_bSpecifyToolbarImage);
+	prefs.WriteProfileInt(_T("Preferences"), _T("SharedCommentsHeight"), m_bSharedCommentsHeight);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoHideTabbar"), m_bAutoHideTabbar);
+	prefs.WriteProfileInt(_T("Preferences"), _T("StackTabbarItems"), m_bStackTabbarItems);
+	prefs.WriteProfileInt(_T("Preferences"), _T("RightAlignLabels"), m_bRightAlignLabels);
+	prefs.WriteProfileInt(_T("Preferences"), _T("FocusTreeOnEnter"), m_bFocusTreeOnEnter);
+	prefs.WriteProfileInt(_T("Preferences"), _T("NewTaskPos"), m_nNewTaskPos);
+	prefs.WriteProfileInt(_T("Preferences"), _T("NewSubtaskPos"), m_nNewSubtaskPos);
+	prefs.WriteProfileInt(_T("Preferences"), _T("KeepTabsOrdered"), m_bKeepTabsOrdered);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowTasklistCloseButton"), m_bShowTasklistCloseButton);
+	prefs.WriteProfileInt(_T("Preferences"), _T("SortDoneTasksAtBottom"), m_bSortDoneTasksAtBottom);
+	prefs.WriteProfileInt(_T("Preferences"), _T("RTLComments"), m_bRTLComments);
+	prefs.WriteProfileInt(_T("Preferences"), _T("VertComments"), m_nCommentsPos);
+	prefs.WriteProfileInt(_T("Preferences"), _T("MultiSelFilters"), m_bMultiSelFilters);
+	prefs.WriteProfileInt(_T("Preferences"), _T("RestoreTasklistFilters"), m_bRestoreTasklistFilters);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoRefilter"), m_bAutoRefilter);
+	prefs.WriteProfileString(_T("Preferences"), _T("UIThemeFile"), m_sUIThemeFile);
+	prefs.WriteProfileInt(_T("Preferences"), _T("UseUITheme"), m_bUseUITheme);
+	prefs.WriteProfileInt(_T("Preferences"), _T("EnableLightboxMgr"), m_bEnableLightboxMgr);
 
 	// comments format
 	if (m_pContentMgr)
 	{
-		prefs.WriteProfileInt("Preferences", "DefaultCommentsFormat", m_nDefaultCommentsFormat);
-		prefs.WriteProfileString("Preferences", "DefaultCommentsFormatID", m_cfDefault);
+		prefs.WriteProfileInt(_T("Preferences"), _T("DefaultCommentsFormat"), m_nDefaultCommentsFormat);
+		prefs.WriteProfileString(_T("Preferences"), _T("DefaultCommentsFormatID"), m_cfDefault);
 	}
 }
 

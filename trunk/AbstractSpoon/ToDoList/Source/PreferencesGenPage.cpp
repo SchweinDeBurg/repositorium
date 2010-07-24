@@ -159,42 +159,40 @@ void CPreferencesGenPage::OnClearMRU()
 void CPreferencesGenPage::LoadPreferences(const CPreferences& prefs)
 {
 	// load settings
-	m_bAlwaysOnTop = prefs.GetProfileInt("Preferences", "AlwaysOnTop", FALSE);
-	m_bUseSysTray = prefs.GetProfileInt("Preferences", "UseSysTray", FALSE);
-	m_bConfirmDelete = prefs.GetProfileInt("Preferences", "ConfirmDelete", FALSE);
-	m_bConfirmSaveOnExit = prefs.GetProfileInt("Preferences", "ConfirmSaveOnExit", TRUE);
-	m_bMultiInstance = prefs.GetProfileInt("Preferences", "MultiInstance", FALSE);
-	m_bShowOnStartup = prefs.GetProfileInt("Preferences", "ShowOnStartup", TRUE);
-	m_nSysTrayOption = prefs.GetProfileInt("Preferences", "SysTrayOption", STO_ONCLOSE);
-	m_bToggleTrayVisibility = prefs.GetProfileInt("Preferences", "ToggleTrayVisibility", FALSE);
-	m_dwGlobalHotkey = prefs.GetProfileInt("Preferences", "GlobalHotkey", 0);
+	m_bAlwaysOnTop = prefs.GetProfileInt(_T("Preferences"), _T("AlwaysOnTop"), FALSE);
+	m_bUseSysTray = prefs.GetProfileInt(_T("Preferences"), _T("UseSysTray"), FALSE);
+	m_bConfirmDelete = prefs.GetProfileInt(_T("Preferences"), _T("ConfirmDelete"), FALSE);
+	m_bConfirmSaveOnExit = prefs.GetProfileInt(_T("Preferences"), _T("ConfirmSaveOnExit"), TRUE);
+	m_bMultiInstance = prefs.GetProfileInt(_T("Preferences"), _T("MultiInstance"), FALSE);
+	m_bShowOnStartup = prefs.GetProfileInt(_T("Preferences"), _T("ShowOnStartup"), TRUE);
+	m_nSysTrayOption = prefs.GetProfileInt(_T("Preferences"), _T("SysTrayOption"), STO_ONCLOSE);
+	m_bToggleTrayVisibility = prefs.GetProfileInt(_T("Preferences"), _T("ToggleTrayVisibility"), FALSE);
+	m_dwGlobalHotkey = prefs.GetProfileInt(_T("Preferences"), _T("GlobalHotkey"), 0);
 	m_bSpecifyGlobalHotkey = (m_dwGlobalHotkey ? 1 : 0);
-	m_bAddFilesToMRU = prefs.GetProfileInt("Preferences", "AddFilesToMRU", TRUE);
-	m_bEnableTDLExtension = prefs.GetProfileInt("Preferences", "EnableTDLExtension", TRUE);
-	m_bEnableTDLProtocol = prefs.GetProfileInt("Preferences", "EnableTDLProtocol", FALSE);
-	m_bAutoCheckForUpdates = prefs.GetProfileInt("Preferences", "AutoCheckForUpdates", FALSE);
-	m_bEscapeMinimizes = prefs.GetProfileInt("Preferences", "EscapeMinimizes", TRUE);
-	m_bEnableDelayedLoading = prefs.GetProfileInt("Preferences", "EnableDelayedLoading", TRUE);
-//	m_b = prefs.GetProfileInt("Preferences", "", TRUE);
+	m_bAddFilesToMRU = prefs.GetProfileInt(_T("Preferences"), _T("AddFilesToMRU"), TRUE);
+	m_bEnableTDLExtension = prefs.GetProfileInt(_T("Preferences"), _T("EnableTDLExtension"), TRUE);
+	m_bEnableTDLProtocol = prefs.GetProfileInt(_T("Preferences"), _T("EnableTDLProtocol"), FALSE);
+	m_bAutoCheckForUpdates = prefs.GetProfileInt(_T("Preferences"), _T("AutoCheckForUpdates"), FALSE);
+	m_bEscapeMinimizes = prefs.GetProfileInt(_T("Preferences"), _T("EscapeMinimizes"), TRUE);
+	m_bEnableDelayedLoading = prefs.GetProfileInt(_T("Preferences"), _T("EnableDelayedLoading"), TRUE);
 }
 
 void CPreferencesGenPage::SavePreferences(CPreferences& prefs)
 {
 	// save settings
-	prefs.WriteProfileInt("Preferences", "AlwaysOnTop", m_bAlwaysOnTop);
-	prefs.WriteProfileInt("Preferences", "UseSysTray", m_bUseSysTray);
-	prefs.WriteProfileInt("Preferences", "ConfirmDelete", m_bConfirmDelete);
-	prefs.WriteProfileInt("Preferences", "ConfirmSaveOnExit", m_bConfirmSaveOnExit);
-	prefs.WriteProfileInt("Preferences", "ShowOnStartup", m_bShowOnStartup);
-	prefs.WriteProfileInt("Preferences", "SysTrayOption", m_nSysTrayOption);
-	prefs.WriteProfileInt("Preferences", "ToggleTrayVisibility", m_bToggleTrayVisibility);
-	prefs.WriteProfileInt("Preferences", "MultiInstance", m_bMultiInstance);
-	prefs.WriteProfileInt("Preferences", "GlobalHotkey", (m_bSpecifyGlobalHotkey ? m_dwGlobalHotkey : 0));
-	prefs.WriteProfileInt("Preferences", "AddFilesToMRU", m_bAddFilesToMRU);
-	prefs.WriteProfileInt("Preferences", "EnableTDLExtension", m_bEnableTDLExtension);
-	prefs.WriteProfileInt("Preferences", "EnableTDLProtocol", m_bEnableTDLProtocol);
-	prefs.WriteProfileInt("Preferences", "AutoCheckForUpdates", m_bAutoCheckForUpdates);
-	prefs.WriteProfileInt("Preferences", "EscapeMinimizes", m_bEscapeMinimizes);
-	prefs.WriteProfileInt("Preferences", "EnableDelayedLoading", m_bEnableDelayedLoading);
-//	prefs.WriteProfileInt("Preferences", "", m_b);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AlwaysOnTop"), m_bAlwaysOnTop);
+	prefs.WriteProfileInt(_T("Preferences"), _T("UseSysTray"), m_bUseSysTray);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ConfirmDelete"), m_bConfirmDelete);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ConfirmSaveOnExit"), m_bConfirmSaveOnExit);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ShowOnStartup"), m_bShowOnStartup);
+	prefs.WriteProfileInt(_T("Preferences"), _T("SysTrayOption"), m_nSysTrayOption);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ToggleTrayVisibility"), m_bToggleTrayVisibility);
+	prefs.WriteProfileInt(_T("Preferences"), _T("MultiInstance"), m_bMultiInstance);
+	prefs.WriteProfileInt(_T("Preferences"), _T("GlobalHotkey"), (m_bSpecifyGlobalHotkey ? m_dwGlobalHotkey : 0));
+	prefs.WriteProfileInt(_T("Preferences"), _T("AddFilesToMRU"), m_bAddFilesToMRU);
+	prefs.WriteProfileInt(_T("Preferences"), _T("EnableTDLExtension"), m_bEnableTDLExtension);
+	prefs.WriteProfileInt(_T("Preferences"), _T("EnableTDLProtocol"), m_bEnableTDLProtocol);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoCheckForUpdates"), m_bAutoCheckForUpdates);
+	prefs.WriteProfileInt(_T("Preferences"), _T("EscapeMinimizes"), m_bEscapeMinimizes);
+	prefs.WriteProfileInt(_T("Preferences"), _T("EnableDelayedLoading"), m_bEnableDelayedLoading);
 }

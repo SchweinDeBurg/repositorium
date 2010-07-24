@@ -82,28 +82,28 @@ void CPreferencesMultiUserPage::DoDataExchange(CDataExchange* pDX)
 	{
 		CString sFreq;
 		m_cbRemoteFileCheck.GetLBText(m_cbRemoteFileCheck.GetCurSel(), sFreq);
-		m_nRemoteFileCheckFreq = atoi(sFreq);
+		m_nRemoteFileCheckFreq = _ttoi(sFreq);
 
 		m_cbNoEditTime.GetLBText(m_cbNoEditTime.GetCurSel(), sFreq);
-		m_nCheckinNoEditTime = atoi(sFreq);
+		m_nCheckinNoEditTime = _ttoi(sFreq);
 	}
 	else
 	{
 		CString sFreq;
-		sFreq.Format("%d", m_nRemoteFileCheckFreq);
+		sFreq.Format(_T("%d"), m_nRemoteFileCheckFreq);
 
 		if (CB_ERR == m_cbRemoteFileCheck.SelectString(-1, sFreq))
 		{
 			m_nRemoteFileCheckFreq = 30;
-			m_cbRemoteFileCheck.SelectString(-1, "30");
+			m_cbRemoteFileCheck.SelectString(-1, _T("30"));
 		}
 
-		sFreq.Format("%d", m_nCheckinNoEditTime);
+		sFreq.Format(_T("%d"), m_nCheckinNoEditTime);
 
 		if (CB_ERR == m_cbNoEditTime.SelectString(-1, sFreq))
 		{
 			m_nCheckinNoEditTime = 0;
-			m_cbRemoteFileCheck.SelectString(-1, "10");
+			m_cbRemoteFileCheck.SelectString(-1, _T("10"));
 		}
 	}
 }
@@ -201,38 +201,37 @@ void CPreferencesMultiUserPage::OnCheckinonnoedit()
 
 void CPreferencesMultiUserPage::LoadPreferences(const CPreferences& prefs)
 {
-	m_bEnableSourceControl = prefs.GetProfileInt("Preferences", "EnableSourceControl", FALSE);
-	m_bSourceControlLanOnly = prefs.GetProfileInt("Preferences", "SourceControlLanOnly", TRUE);
-	m_bPromptReloadOnWritable = prefs.GetProfileInt("Preferences", "PromptReloadOnWritable", TRUE);
-	m_bAutoCheckOut = prefs.GetProfileInt("Preferences", "AutoCheckOut", FALSE);
-	m_bPromptReloadOnTimestamp = prefs.GetProfileInt("Preferences", "PromptReloadOnTimestamp", TRUE);
-	m_bCheckoutOnCheckin = prefs.GetProfileInt("Preferences", "CheckoutOnCheckin", TRUE);
-	m_nReadonlyReloadOption = prefs.GetProfileInt("Preferences", "ReadonlyReloadOption", RO_ASK) - 1;
-	m_nTimestampReloadOption = prefs.GetProfileInt("Preferences", "TimestampReloadOption", RO_ASK) - 1;
-	m_bCheckinOnClose = prefs.GetProfileInt("Preferences", "CheckinOnClose", TRUE);
-	m_nRemoteFileCheckFreq = prefs.GetProfileInt("Preferences", "RemoteFileCheckFrequency", 30);
-	m_nCheckinNoEditTime = prefs.GetProfileInt("Preferences", "CheckinNoEditTime", 1);
-	m_bCheckinNoChange = prefs.GetProfileInt("Preferences", "CheckinNoEdit", TRUE);
-	m_bUse3rdPartySourceControl = !m_bEnableSourceControl && prefs.GetProfileInt("Preferences", "Use3rdPartySourceControl", FALSE);
+	m_bEnableSourceControl = prefs.GetProfileInt(_T("Preferences"), _T("EnableSourceControl"), FALSE);
+	m_bSourceControlLanOnly = prefs.GetProfileInt(_T("Preferences"), _T("SourceControlLanOnly"), TRUE);
+	m_bPromptReloadOnWritable = prefs.GetProfileInt(_T("Preferences"), _T("PromptReloadOnWritable"), TRUE);
+	m_bAutoCheckOut = prefs.GetProfileInt(_T("Preferences"), _T("AutoCheckOut"), FALSE);
+	m_bPromptReloadOnTimestamp = prefs.GetProfileInt(_T("Preferences"), _T("PromptReloadOnTimestamp"), TRUE);
+	m_bCheckoutOnCheckin = prefs.GetProfileInt(_T("Preferences"), _T("CheckoutOnCheckin"), TRUE);
+	m_nReadonlyReloadOption = prefs.GetProfileInt(_T("Preferences"), _T("ReadonlyReloadOption"), RO_ASK) - 1;
+	m_nTimestampReloadOption = prefs.GetProfileInt(_T("Preferences"), _T("TimestampReloadOption"), RO_ASK) - 1;
+	m_bCheckinOnClose = prefs.GetProfileInt(_T("Preferences"), _T("CheckinOnClose"), TRUE);
+	m_nRemoteFileCheckFreq = prefs.GetProfileInt(_T("Preferences"), _T("RemoteFileCheckFrequency"), 30);
+	m_nCheckinNoEditTime = prefs.GetProfileInt(_T("Preferences"), _T("CheckinNoEditTime"), 1);
+	m_bCheckinNoChange = prefs.GetProfileInt(_T("Preferences"), _T("CheckinNoEdit"), TRUE);
+	m_bUse3rdPartySourceControl = !m_bEnableSourceControl && prefs.GetProfileInt(_T("Preferences"), _T("Use3rdPartySourceControl"), FALSE);
 }
 
 void CPreferencesMultiUserPage::SavePreferences(CPreferences& prefs)
 {
 	// save settings
-	prefs.WriteProfileInt("Preferences", "PromptReloadOnWritable", m_bPromptReloadOnWritable);
-	prefs.WriteProfileInt("Preferences", "PromptReloadOnTimestamp", m_bPromptReloadOnTimestamp);
-	prefs.WriteProfileInt("Preferences", "EnableSourceControl", m_bEnableSourceControl);
-	prefs.WriteProfileInt("Preferences", "SourceControlLanOnly", m_bSourceControlLanOnly);
-	prefs.WriteProfileInt("Preferences", "AutoCheckOut", m_bAutoCheckOut);
-	prefs.WriteProfileInt("Preferences", "CheckoutOnCheckin", m_bCheckoutOnCheckin);
-	prefs.WriteProfileInt("Preferences", "ReadonlyReloadOption", m_nReadonlyReloadOption + 1);
-	prefs.WriteProfileInt("Preferences", "TimestampReloadOption", m_nTimestampReloadOption + 1);
-	prefs.WriteProfileInt("Preferences", "CheckinOnClose", m_bCheckinOnClose);
-	prefs.WriteProfileInt("Preferences", "RemoteFileCheckFrequency", m_nRemoteFileCheckFreq);
-	prefs.WriteProfileInt("Preferences", "CheckinNoEditTime", m_nCheckinNoEditTime);
-	prefs.WriteProfileInt("Preferences", "CheckinNoEdit", m_bCheckinNoChange);
-	prefs.WriteProfileInt("Preferences", "Use3rdPartySourceControl", m_bUse3rdPartySourceControl);
-//	prefs.WriteProfileInt("Preferences", "", m_b);
+	prefs.WriteProfileInt(_T("Preferences"), _T("PromptReloadOnWritable"), m_bPromptReloadOnWritable);
+	prefs.WriteProfileInt(_T("Preferences"), _T("PromptReloadOnTimestamp"), m_bPromptReloadOnTimestamp);
+	prefs.WriteProfileInt(_T("Preferences"), _T("EnableSourceControl"), m_bEnableSourceControl);
+	prefs.WriteProfileInt(_T("Preferences"), _T("SourceControlLanOnly"), m_bSourceControlLanOnly);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoCheckOut"), m_bAutoCheckOut);
+	prefs.WriteProfileInt(_T("Preferences"), _T("CheckoutOnCheckin"), m_bCheckoutOnCheckin);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ReadonlyReloadOption"), m_nReadonlyReloadOption + 1);
+	prefs.WriteProfileInt(_T("Preferences"), _T("TimestampReloadOption"), m_nTimestampReloadOption + 1);
+	prefs.WriteProfileInt(_T("Preferences"), _T("CheckinOnClose"), m_bCheckinOnClose);
+	prefs.WriteProfileInt(_T("Preferences"), _T("RemoteFileCheckFrequency"), m_nRemoteFileCheckFreq);
+	prefs.WriteProfileInt(_T("Preferences"), _T("CheckinNoEditTime"), m_nCheckinNoEditTime);
+	prefs.WriteProfileInt(_T("Preferences"), _T("CheckinNoEdit"), m_bCheckinNoChange);
+	prefs.WriteProfileInt(_T("Preferences"), _T("Use3rdPartySourceControl"), m_bUse3rdPartySourceControl);
 }
 
 void CPreferencesMultiUserPage::OnUse3rdpartysourcectrl() 

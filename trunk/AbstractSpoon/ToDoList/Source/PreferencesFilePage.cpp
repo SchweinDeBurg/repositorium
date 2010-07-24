@@ -124,7 +124,7 @@ void CPreferencesFilePage::DoDataExchange(CDataExchange* pDX)
 			if (!CDialogHelper::SelectItemByValue(m_cbAutoSave, m_nAutoSaveFrequency))
 			{
 				m_nAutoSaveFrequency = 5;
-				m_cbAutoSave.SelectString(-1, "5");
+				m_cbAutoSave.SelectString(-1, _T("5"));
 			}
 		}
 		else
@@ -191,7 +191,7 @@ BOOL CPreferencesFilePage::OnInitDialog()
 	m_cbOtherExporters.SetCurSel(m_nOtherExporter);
 
 	// init the stylesheet folder to point to the resource folder
-	CString sXslFolder = FileMisc::GetModuleFolder() + "Resources";
+	CString sXslFolder = FileMisc::GetModuleFolder() + _T("Resources");
 	m_eSaveExportStylesheet.SetCurrentFolder(sXslFolder);
 	m_eDueTaskStylesheet.SetCurrentFolder(sXslFolder);
 	
@@ -245,7 +245,7 @@ CString CPreferencesFilePage::GetAutoExportFolderPath() const
 	if (m_bAutoExport && m_bExportToFolder)
 		return m_sExportFolderPath;
 	else
-		return "";
+		return _T("");
 }
 
 void CPreferencesFilePage::OnNotifyDueOnLoad() 
@@ -294,37 +294,36 @@ void CPreferencesFilePage::OnOnlyshowduetaskforperson()
 
 void CPreferencesFilePage::LoadPreferences(const CPreferences& prefs)
 {
-	m_bNotifyDueOnLoad = prefs.GetProfileInt("Preferences", "NotifyDue", FALSE);
-	m_bNotifyDueOnSwitch = prefs.GetProfileInt("Preferences", "NotifyDueOnSwitch", FALSE);
-	m_bAutoArchive = prefs.GetProfileInt("Preferences", "AutoArchive", FALSE);
-	m_bNotifyReadOnly = prefs.GetProfileInt("Preferences", "NotifyReadOnly", TRUE);
-	m_bRemoveArchivedTasks = prefs.GetProfileInt("Preferences", "RemoveArchivedTasks", TRUE);
-	m_bRemoveOnlyOnAbsoluteCompletion = prefs.GetProfileInt("Preferences", "RemoveOnlyOnAbsoluteCompletion", TRUE);
-	m_nAutoSaveFrequency = prefs.GetProfileInt("Preferences", "AutoSaveFrequency", 1);
-	m_bAutoExport = prefs.GetProfileInt("Preferences", "AutoHtmlExport", FALSE);
-	m_sExportFolderPath = prefs.GetProfileString("Preferences", "ExportFolderPath", "");
-	m_nNotifyDueByOnLoad = prefs.GetProfileInt("Preferences", "NotifyDueBy", PFP_DUETODAY);
-	m_nNotifyDueByOnSwitch = prefs.GetProfileInt("Preferences", "NotifyDueByOnSwitch", PFP_DUETODAY);
-	m_bDisplayDueTasksInHtml = prefs.GetProfileInt("Preferences", "DisplayDueTasksInHtml", TRUE);
-	m_bRefreshFindOnLoad = prefs.GetProfileInt("Preferences", "RefreshFindOnLoad", FALSE);
-	m_bDueTaskTitlesOnly = prefs.GetProfileInt("Preferences", "DueTaskTitlesOnly", FALSE);
-	m_sDueTasksStylesheet = prefs.GetProfileString("Preferences", "DueTasksStylesheet", FALSE);
-	m_sSaveExportStylesheet = prefs.GetProfileString("Preferences", "SaveExportStylesheet");
-	m_sDueTaskPerson = prefs.GetProfileString("Preferences", "DueTaskPerson");
-	m_bWarnAddDeleteArchive = prefs.GetProfileInt("Preferences", "WarnAddDeleteArchive", TRUE);
-	m_bDontRemoveFlagged = prefs.GetProfileInt("Preferences", "DontRemoveFlagged", FALSE);
-	m_bExpandTasks = prefs.GetProfileInt("Preferences", "ExpandTasks", FALSE);
-	m_bAutoSaveOnSwitchTasklist = prefs.GetProfileInt("Preferences", "AutoSaveOnSwitchTasklist", FALSE);
-	m_bAutoSaveOnSwitchApp = prefs.GetProfileInt("Preferences", "AutoSaveOnSwitchApp", FALSE);
-	m_bOtherExport = prefs.GetProfileInt("Preferences", "OtherExport", FALSE);
-	m_nOtherExporter = prefs.GetProfileInt("Preferences", "OtherExporter", 1);
-//	m_b = prefs.GetProfileInt("Preferences", "", FALSE);
+	m_bNotifyDueOnLoad = prefs.GetProfileInt(_T("Preferences"), _T("NotifyDue"), FALSE);
+	m_bNotifyDueOnSwitch = prefs.GetProfileInt(_T("Preferences"), _T("NotifyDueOnSwitch"), FALSE);
+	m_bAutoArchive = prefs.GetProfileInt(_T("Preferences"), _T("AutoArchive"), FALSE);
+	m_bNotifyReadOnly = prefs.GetProfileInt(_T("Preferences"), _T("NotifyReadOnly"), TRUE);
+	m_bRemoveArchivedTasks = prefs.GetProfileInt(_T("Preferences"), _T("RemoveArchivedTasks"), TRUE);
+	m_bRemoveOnlyOnAbsoluteCompletion = prefs.GetProfileInt(_T("Preferences"), _T("RemoveOnlyOnAbsoluteCompletion"), TRUE);
+	m_nAutoSaveFrequency = prefs.GetProfileInt(_T("Preferences"), _T("AutoSaveFrequency"), 1);
+	m_bAutoExport = prefs.GetProfileInt(_T("Preferences"), _T("AutoHtmlExport"), FALSE);
+	m_sExportFolderPath = prefs.GetProfileString(_T("Preferences"), _T("ExportFolderPath"), _T(""));
+	m_nNotifyDueByOnLoad = prefs.GetProfileInt(_T("Preferences"), _T("NotifyDueBy"), PFP_DUETODAY);
+	m_nNotifyDueByOnSwitch = prefs.GetProfileInt(_T("Preferences"), _T("NotifyDueByOnSwitch"), PFP_DUETODAY);
+	m_bDisplayDueTasksInHtml = prefs.GetProfileInt(_T("Preferences"), _T("DisplayDueTasksInHtml"), TRUE);
+	m_bRefreshFindOnLoad = prefs.GetProfileInt(_T("Preferences"), _T("RefreshFindOnLoad"), FALSE);
+	m_bDueTaskTitlesOnly = prefs.GetProfileInt(_T("Preferences"), _T("DueTaskTitlesOnly"), FALSE);
+	m_sDueTasksStylesheet = prefs.GetProfileString(_T("Preferences"), _T("DueTasksStylesheet"), FALSE);
+	m_sSaveExportStylesheet = prefs.GetProfileString(_T("Preferences"), _T("SaveExportStylesheet"));
+	m_sDueTaskPerson = prefs.GetProfileString(_T("Preferences"), _T("DueTaskPerson"));
+	m_bWarnAddDeleteArchive = prefs.GetProfileInt(_T("Preferences"), _T("WarnAddDeleteArchive"), TRUE);
+	m_bDontRemoveFlagged = prefs.GetProfileInt(_T("Preferences"), _T("DontRemoveFlagged"), FALSE);
+	m_bExpandTasks = prefs.GetProfileInt(_T("Preferences"), _T("ExpandTasks"), FALSE);
+	m_bAutoSaveOnSwitchTasklist = prefs.GetProfileInt(_T("Preferences"), _T("AutoSaveOnSwitchTasklist"), FALSE);
+	m_bAutoSaveOnSwitchApp = prefs.GetProfileInt(_T("Preferences"), _T("AutoSaveOnSwitchApp"), FALSE);
+	m_bOtherExport = prefs.GetProfileInt(_T("Preferences"), _T("OtherExport"), FALSE);
+	m_nOtherExporter = prefs.GetProfileInt(_T("Preferences"), _T("OtherExporter"), 1);
 
 	// these are dependent on the values they control for backward compat
-	m_bOnlyShowDueTasksForPerson = prefs.GetProfileInt("Preferences", "OnlyShowDueTasksForPerson", !m_sDueTaskPerson.IsEmpty());
-	m_bUseStylesheetForSaveExport = prefs.GetProfileInt("Preferences", "UseStylesheetForSaveExport", !m_sSaveExportStylesheet.IsEmpty());
-	m_bUseStyleSheetForDueTasks = prefs.GetProfileInt("Preferences", "UseStylesheetForDueTasks", !m_sDueTasksStylesheet.IsEmpty());
-	m_bExportToFolder = prefs.GetProfileInt("Preferences", "ExportToFolder", !m_sExportFolderPath.IsEmpty());
+	m_bOnlyShowDueTasksForPerson = prefs.GetProfileInt(_T("Preferences"), _T("OnlyShowDueTasksForPerson"), !m_sDueTaskPerson.IsEmpty());
+	m_bUseStylesheetForSaveExport = prefs.GetProfileInt(_T("Preferences"), _T("UseStylesheetForSaveExport"), !m_sSaveExportStylesheet.IsEmpty());
+	m_bUseStyleSheetForDueTasks = prefs.GetProfileInt(_T("Preferences"), _T("UseStylesheetForDueTasks"), !m_sDueTasksStylesheet.IsEmpty());
+	m_bExportToFolder = prefs.GetProfileInt(_T("Preferences"), _T("ExportToFolder"), !m_sExportFolderPath.IsEmpty());
 
 	m_sExportFolderPath.TrimLeft();
 	m_sExportFolderPath.TrimRight();
@@ -335,36 +334,34 @@ void CPreferencesFilePage::LoadPreferences(const CPreferences& prefs)
 void CPreferencesFilePage::SavePreferences(CPreferences& prefs)
 {
 	// save settings
-	prefs.WriteProfileInt("Preferences", "NotifyDue", m_bNotifyDueOnLoad);
-	prefs.WriteProfileInt("Preferences", "NotifyDueOnSwitch", m_bNotifyDueOnSwitch);
-	prefs.WriteProfileInt("Preferences", "AutoArchive", m_bAutoArchive);
-	prefs.WriteProfileInt("Preferences", "NotifyReadOnly", m_bNotifyReadOnly);
-	prefs.WriteProfileInt("Preferences", "RemoveArchivedTasks", m_bRemoveArchivedTasks);
-	prefs.WriteProfileInt("Preferences", "RemoveOnlyOnAbsoluteCompletion", m_bRemoveOnlyOnAbsoluteCompletion);
-	prefs.WriteProfileInt("Preferences", "AutoSaveFrequency", m_nAutoSaveFrequency);
-	prefs.WriteProfileInt("Preferences", "AutoHtmlExport", m_bAutoExport);
-	prefs.WriteProfileInt("Preferences", "ExportToFolder", m_bExportToFolder);
-	prefs.WriteProfileString("Preferences", "ExportFolderPath", m_sExportFolderPath);
-	prefs.WriteProfileInt("Preferences", "NotifyDueBy", m_nNotifyDueByOnLoad);
-	prefs.WriteProfileInt("Preferences", "NotifyDueByOnSwitch", m_nNotifyDueByOnSwitch);
-	prefs.WriteProfileInt("Preferences", "DisplayDueTasksInHtml", m_bDisplayDueTasksInHtml);
-	prefs.WriteProfileInt("Preferences", "RefreshFindOnLoad", m_bRefreshFindOnLoad);
-	prefs.WriteProfileInt("Preferences", "DueTaskTitlesOnly", m_bDueTaskTitlesOnly);
-	prefs.WriteProfileInt("Preferences", "UseStylesheetForDueTasks", m_bUseStyleSheetForDueTasks);
-	prefs.WriteProfileString("Preferences", "DueTasksStylesheet", m_sDueTasksStylesheet);
-	prefs.WriteProfileInt("Preferences", "UseStylesheetForSaveExport", m_bUseStylesheetForSaveExport);
-	prefs.WriteProfileString("Preferences", "SaveExportStylesheet", m_sSaveExportStylesheet);
-	prefs.WriteProfileInt("Preferences", "OnlyShowDueTasksForPerson", m_bOnlyShowDueTasksForPerson);
-	prefs.WriteProfileString("Preferences", "DueTaskPerson", m_sDueTaskPerson);
-	prefs.WriteProfileInt("Preferences", "WarnAddDeleteArchive", m_bWarnAddDeleteArchive);
-	prefs.WriteProfileInt("Preferences", "DontRemoveFlagged", m_bDontRemoveFlagged);
-	prefs.WriteProfileInt("Preferences", "ExpandTasks", m_bExpandTasks);
-	prefs.WriteProfileInt("Preferences", "AutoSaveOnSwitchTasklist", m_bAutoSaveOnSwitchTasklist);
-	prefs.WriteProfileInt("Preferences", "AutoSaveOnSwitchApp", m_bAutoSaveOnSwitchApp);
-	prefs.WriteProfileInt("Preferences", "OtherExport", m_bOtherExport);
-	prefs.WriteProfileInt("Preferences", "OtherExporter", m_nOtherExporter);
-
-//	prefs.WriteProfileInt("Preferences", "", m_b);
+	prefs.WriteProfileInt(_T("Preferences"), _T("NotifyDue"), m_bNotifyDueOnLoad);
+	prefs.WriteProfileInt(_T("Preferences"), _T("NotifyDueOnSwitch"), m_bNotifyDueOnSwitch);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoArchive"), m_bAutoArchive);
+	prefs.WriteProfileInt(_T("Preferences"), _T("NotifyReadOnly"), m_bNotifyReadOnly);
+	prefs.WriteProfileInt(_T("Preferences"), _T("RemoveArchivedTasks"), m_bRemoveArchivedTasks);
+	prefs.WriteProfileInt(_T("Preferences"), _T("RemoveOnlyOnAbsoluteCompletion"), m_bRemoveOnlyOnAbsoluteCompletion);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoSaveFrequency"), m_nAutoSaveFrequency);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoHtmlExport"), m_bAutoExport);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ExportToFolder"), m_bExportToFolder);
+	prefs.WriteProfileString(_T("Preferences"), _T("ExportFolderPath"), m_sExportFolderPath);
+	prefs.WriteProfileInt(_T("Preferences"), _T("NotifyDueBy"), m_nNotifyDueByOnLoad);
+	prefs.WriteProfileInt(_T("Preferences"), _T("NotifyDueByOnSwitch"), m_nNotifyDueByOnSwitch);
+	prefs.WriteProfileInt(_T("Preferences"), _T("DisplayDueTasksInHtml"), m_bDisplayDueTasksInHtml);
+	prefs.WriteProfileInt(_T("Preferences"), _T("RefreshFindOnLoad"), m_bRefreshFindOnLoad);
+	prefs.WriteProfileInt(_T("Preferences"), _T("DueTaskTitlesOnly"), m_bDueTaskTitlesOnly);
+	prefs.WriteProfileInt(_T("Preferences"), _T("UseStylesheetForDueTasks"), m_bUseStyleSheetForDueTasks);
+	prefs.WriteProfileString(_T("Preferences"), _T("DueTasksStylesheet"), m_sDueTasksStylesheet);
+	prefs.WriteProfileInt(_T("Preferences"), _T("UseStylesheetForSaveExport"), m_bUseStylesheetForSaveExport);
+	prefs.WriteProfileString(_T("Preferences"), _T("SaveExportStylesheet"), m_sSaveExportStylesheet);
+	prefs.WriteProfileInt(_T("Preferences"), _T("OnlyShowDueTasksForPerson"), m_bOnlyShowDueTasksForPerson);
+	prefs.WriteProfileString(_T("Preferences"), _T("DueTaskPerson"), m_sDueTaskPerson);
+	prefs.WriteProfileInt(_T("Preferences"), _T("WarnAddDeleteArchive"), m_bWarnAddDeleteArchive);
+	prefs.WriteProfileInt(_T("Preferences"), _T("DontRemoveFlagged"), m_bDontRemoveFlagged);
+	prefs.WriteProfileInt(_T("Preferences"), _T("ExpandTasks"), m_bExpandTasks);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoSaveOnSwitchTasklist"), m_bAutoSaveOnSwitchTasklist);
+	prefs.WriteProfileInt(_T("Preferences"), _T("AutoSaveOnSwitchApp"), m_bAutoSaveOnSwitchApp);
+	prefs.WriteProfileInt(_T("Preferences"), _T("OtherExport"), m_bOtherExport);
+	prefs.WriteProfileInt(_T("Preferences"), _T("OtherExporter"), m_nOtherExporter);
 }
 
 void CPreferencesFilePage::OnHtmlexport() 

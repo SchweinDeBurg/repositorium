@@ -101,7 +101,7 @@ DROPEFFECT CTaskListDropTarget::OnDragOver(CWnd* pWnd, COleDataObject* pObject, 
 	if (!pWnd->IsWindowEnabled())
 		return DROPEFFECT_NONE;
 
-	BOOL bFilename = pObject->IsDataAvailable((CLIPFORMAT)::RegisterClipboardFormat("FileName"));
+	BOOL bFilename = pObject->IsDataAvailable((CLIPFORMAT)::RegisterClipboardFormat(_T("FileName")));
 	BOOL bFileDrop = pObject->IsDataAvailable(CF_HDROP);
 
 	if (bFilename || bFileDrop)
@@ -236,15 +236,15 @@ CString CTaskListDropTarget::GetLongPathName(LPCTSTR szShortPath)
 	CString sLongPath(szShortPath);
 
 	// must link dynamically to kernel32 else problem with win95/NT4
-	HMODULE hLib = LoadLibrary("kernel32.dll");
+	HMODULE hLib = LoadLibrary(_T("kernel32.dll"));
 
 	if (hLib)
 	{
-		FNGETLONGPATHNAME pFN = (FNGETLONGPATHNAME)GetProcAddress(hLib, "GetLongPathNameA");
+		FNGETLONGPATHNAME pFN = (FNGETLONGPATHNAME)GetProcAddress(hLib, STRINGIZE(GetLongPathName));
 
 		if (pFN)
 		{
-			char szLongPath[MAX_PATH + 1];
+			TCHAR szLongPath[MAX_PATH + 1];
 			pFN(szShortPath, szLongPath, MAX_PATH);
 
 			sLongPath = szLongPath;
@@ -260,7 +260,7 @@ BOOL CTaskListDropTarget::GetDroppedFilePath(COleDataObject* pObject, CString& s
 	sFilename.Empty();
 
 	// first try
-	CLIPFORMAT cf = (CLIPFORMAT)::RegisterClipboardFormat("FileName");
+	CLIPFORMAT cf = (CLIPFORMAT)::RegisterClipboardFormat(_T("FileName"));
 
 	if (pObject->IsDataAvailable(cf))
 	{
