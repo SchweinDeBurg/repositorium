@@ -162,7 +162,6 @@ static HTMLCHARMAPITEM HTMLCHARARRAY[] =
 	{ 253, _T("&yacute;")}, // '?' latin small letter y with acute
 	{ 254, _T("&thorn;") }, // '?' latin small letter thorn
 	{ 255, _T("&yuml;")  }, // 'ÿ' latin small letter y with diaeresis
-
 };
 
 const INT SIZEOFHTMLCHARARRAY = sizeof(HTMLCHARARRAY) / sizeof(HTMLCHARMAPITEM);

@@ -56,7 +56,6 @@ protected:
 	const CUIExtensionMgr& m_mgrUIExt;
 	UINT m_nStartID;
 	int m_nSize;
-
 };
 
 #endif // !defined(AFX_UIEXTENSIONUIHELPER_H__AC709E3B_C876_43D8_A965_CAD2D2E7AD34__INCLUDED_)

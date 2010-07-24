@@ -112,7 +112,6 @@ public:
 
 	// frees a previously returned buffer and sets the ptr to NULL
 	virtual void FreeSuggestions(char**& pSuggestions) = 0;
-
 };
 
 static void ReleaseSpellCheckerInterface(ISpellChecker*& pInterface)

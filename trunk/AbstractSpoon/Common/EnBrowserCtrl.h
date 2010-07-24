@@ -74,7 +74,6 @@ protected:
 
 protected:
 	BOOL SafeExecWB(long cmdID, long cmdexecopt, VARIANT* pvaIn, VARIANT* pvaOut);
-
 };
 
 /////////////////////////////////////////////////////////////////////////////

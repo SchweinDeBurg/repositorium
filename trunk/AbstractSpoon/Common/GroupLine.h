@@ -52,7 +52,6 @@ public:
 
 protected:
 	virtual LRESULT WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp);
-
 };
 
 class CGroupLineManager

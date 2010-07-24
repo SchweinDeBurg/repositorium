@@ -1193,7 +1193,6 @@ void CXmlFile::FixInputString(CString& sXml, LPCTSTR szRootItem)
 			*/
 		}
 	}
-
 }
 
 BOOL CXmlFile::ParseRootItem(LPCTSTR szRootItemName, CXmlDocumentWrapper* pDoc)

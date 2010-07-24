@@ -118,7 +118,6 @@ public:
 	// eg for buffer allocated with 'new' use 'delete []'
 	// eg for buffer allocated with 'strdup' use 'free'
 	virtual void FreeBuffer(unsigned char*& pBuffer) = 0;
-
 };
 
 static void ReleaseEncryptionInterface(IEncryption*& pInterface)

@@ -173,7 +173,6 @@ protected:
 	static BOOL IsDelim(LPCTSTR szText);
 	static void InsertInOrder(URLITEM& urli, CUrlArray& aUrls);
 	static CString CreateFileLink(LPCTSTR szFile);
-
 };
 
 /////////////////////////////////////////////////////////////////////////////

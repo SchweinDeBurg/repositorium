@@ -85,7 +85,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-
 };
 
 //{{AFX_INSERT_LOCATION}}

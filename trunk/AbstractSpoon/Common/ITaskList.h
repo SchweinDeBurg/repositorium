@@ -160,7 +160,6 @@ public:
 	// new methods
 	virtual bool SetTaskFlag(HTASKITEM hTask, bool bFlag) = 0;
 	virtual bool IsTaskFlagged(HTASKITEM hTask) const = 0;
-
 };
 
 class ITaskList2 : public ITaskList

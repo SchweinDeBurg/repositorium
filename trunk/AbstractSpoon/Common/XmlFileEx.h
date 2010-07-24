@@ -89,7 +89,6 @@ protected:
 	BOOL InitEncryptor();
 	BOOL IsEncrypted();
 	CXmlItem* GetEncryptedBlock();
-
 };
 
 #endif // !defined(AFX_XMLFILEEX_H__C7DFA5B5_2B36_4D63_942C_9054EF4240CB__INCLUDED_)
