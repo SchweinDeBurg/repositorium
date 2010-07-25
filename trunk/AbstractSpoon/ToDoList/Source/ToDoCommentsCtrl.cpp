@@ -478,6 +478,7 @@ void CToDoCommentsCtrl::SetPreferenceLocation(const char* szKey)
 LRESULT CToDoCommentsCtrl::OnSetWordWrap(WPARAM wp, LPARAM lp)
 {
 	ASSERT (lp == (LPARAM)GetSafeHwnd());
+	(lp);   // avoid C4100: unreferenced formal parameter in the non-debug builds
 	
 	SetWordWrap(wp);
 	return 0L;
