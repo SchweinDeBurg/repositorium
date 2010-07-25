@@ -1975,7 +1975,7 @@ void CToDoListWnd::LoadSettings()
 	CTimeHelper::SetDaysInOneWeek(userPrefs.GetDaysInOneWeek());
 
 	// support for .tdl
-	CFileRegister filereg(_T("tdl"), _T("tdl_Tasklist"));
+	CFileRegister filereg(_T("tdl"), _T("tdl_TaskList"));
 
 	if (userPrefs.GetEnableTDLExtension())
 		filereg.RegisterFileType(_T("Tasklist"), 0);
@@ -3662,7 +3662,7 @@ void CToDoListWnd::EnsureVisible()
 
 void CToDoListWnd::OnAbout() 
 {
-	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.0.6</b>"),
+	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.0.7</b>"),
 		CEnString(IDS_ABOUTHEADING), CEnString(IDS_ABOUTCOPYRIGHT), CEnString(IDS_LICENSE), 1, 2, 8);
 
 	dialog.DoModal();
@@ -3735,7 +3735,7 @@ void CToDoListWnd::DoPreferences(int nInitPage)
 		// support for .tdl
 		if (curPrefs.GetEnableTDLExtension() != userPrefs.GetEnableTDLExtension())
 		{
-			CFileRegister filereg(_T("tdl"), _T("tdl_Tasklist"));
+			CFileRegister filereg(_T("tdl"), _T("tdl_TaskList"));
 
 			if (userPrefs.GetEnableTDLExtension())
 				filereg.RegisterFileType(_T("Tasklist"), 0);

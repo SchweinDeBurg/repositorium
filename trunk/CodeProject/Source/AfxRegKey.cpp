@@ -185,7 +185,7 @@ LONG CAfxRegKey::Write(const TCHAR* pszItem, const TCHAR* pszVal)
 	ASSERT(pszVal);
 	ASSERT(AfxIsValidAddress(pszVal, _tcslen(pszVal), FALSE));
 
-	return ::RegSetValueEx(m_hKey, pszItem, 0L, REG_SZ, (const BYTE*)pszVal, _tcslen(pszVal) + 1);
+	return ::RegSetValueEx(m_hKey, pszItem, 0L, REG_SZ, (const BYTE*)pszVal, (_tcslen(pszVal) + 1) * sizeof(TCHAR));
 }
 
 LONG CAfxRegKey::Write(const TCHAR* pszItem, const BYTE* pData, DWORD dwLength) 
