@@ -2194,7 +2194,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_EXIT
     END
-    POPUP "&New Task"
+    POPUP "&Create"
     BEGIN
         MENUITEM "N&ew Task at Top",            ID_NEWTASK_ATTOP
         MENUITEM "Ne&w Task at Bottom",         ID_NEWTASK_ATBOTTOM
@@ -2384,36 +2384,36 @@ BEGIN
         MENUITEM "Move Task &Left (Up One Level)", ID_MOVETASKLEFT
         MENUITEM "Move Task &Right (Down One Level)", ID_MOVETASKRIGHT
     END
-    POPUP "&Sort By"
+    POPUP "&Sort"
     BEGIN
         MENUITEM "Multi-Sort...",               ID_SORT_MULTI
         MENUITEM SEPARATOR
-        MENUITEM "&Allocated By",               ID_SORT_BYALLOCBY
-        MENUITEM "&Allocated To",               ID_SORT_BYALLOCTO
-        MENUITEM "&Category",                   ID_SORT_BYCATEGORY
-        MENUITEM "C&ompleted Date",             ID_SORT_BYDONEDATE
-        MENUITEM "C&ompleted Status",           ID_SORT_BYDONE
-        MENUITEM "&Cost",                       ID_SORT_BYCOST
-        MENUITEM "Created B&y",                 ID_SORT_BYCREATEDBY
-        MENUITEM "C&reation Date",              ID_SORT_BYCREATIONDATE
-        MENUITEM "D&ue Date",                   ID_SORT_BYDUEDATE
-        MENUITEM "&External ID",                ID_SORT_BYEXTERNALID
-        MENUITEM "&Flag",                       ID_SORT_BYFLAG
-        MENUITEM "Icon",                        ID_SORT_BYICON
-        MENUITEM "&Modified Date",              ID_SORT_BYMODIFYDATE
-        MENUITEM "Percent Co&mplete",           ID_SORT_BYPERCENT
-        MENUITEM "&Priority",                   ID_SORT_BYPRIORITY
-        MENUITEM "Recently Modified",           ID_SORT_BYRECENTEDIT
-        MENUITEM "R&ecurrence",                 ID_SORT_BYRECURRENCE
-        MENUITEM "&Remaining Time",             ID_SORT_BYREMAINING
-        MENUITEM "&Risk",                       ID_SORT_BYRISK
-        MENUITEM "&Start Date",                 ID_SORT_BYSTARTDATE
-        MENUITEM "&Status",                     ID_SORT_BYSTATUS
-        MENUITEM "Task &ID",                    ID_SORT_BYID
-        MENUITEM "&Task Name",                  ID_SORT_BYNAME
-        MENUITEM "Ti&me Estimate",              ID_SORT_BYTIMEEST
-        MENUITEM "Time &Spent",                 ID_SORT_BYTIMESPENT
-        MENUITEM "&Version",                    ID_SORT_BYVERSION
+        MENUITEM "By &Allocated By",            ID_SORT_BYALLOCBY
+        MENUITEM "By &Allocated To",            ID_SORT_BYALLOCTO
+        MENUITEM "By &Category",                ID_SORT_BYCATEGORY
+        MENUITEM "By C&ompleted Date",          ID_SORT_BYDONEDATE
+        MENUITEM "By C&ompleted Status",        ID_SORT_BYDONE
+        MENUITEM "By &Cost",                    ID_SORT_BYCOST
+        MENUITEM "By Created B&y",              ID_SORT_BYCREATEDBY
+        MENUITEM "By C&reation Date",           ID_SORT_BYCREATIONDATE
+        MENUITEM "By D&ue Date",                ID_SORT_BYDUEDATE
+        MENUITEM "By &External ID",             ID_SORT_BYEXTERNALID
+        MENUITEM "By &Flag",                    ID_SORT_BYFLAG
+        MENUITEM "By Icon",                     ID_SORT_BYICON
+        MENUITEM "By &Modified Date",           ID_SORT_BYMODIFYDATE
+        MENUITEM "By Percent Co&mplete",        ID_SORT_BYPERCENT
+        MENUITEM "By &Priority",                ID_SORT_BYPRIORITY
+        MENUITEM "By Recently Modified",        ID_SORT_BYRECENTEDIT
+        MENUITEM "By R&ecurrence",              ID_SORT_BYRECURRENCE
+        MENUITEM "By &Remaining Time",          ID_SORT_BYREMAINING
+        MENUITEM "By &Risk",                    ID_SORT_BYRISK
+        MENUITEM "By &Start Date",              ID_SORT_BYSTARTDATE
+        MENUITEM "By &Status",                  ID_SORT_BYSTATUS
+        MENUITEM "By Task &ID",                 ID_SORT_BYID
+        MENUITEM "By &Task Name",               ID_SORT_BYNAME
+        MENUITEM "By Ti&me Estimate",           ID_SORT_BYTIMEEST
+        MENUITEM "By Time &Spent",              ID_SORT_BYTIMESPENT
+        MENUITEM "By &Version",                 ID_SORT_BYVERSION
         MENUITEM SEPARATOR
         MENUITEM "&Unsorted",                   ID_SORT_NONE
     END
@@ -2593,7 +2593,7 @@ BEGIN
     END
     POPUP "TaskContext"
     BEGIN
-        POPUP "New Task"
+        POPUP "Create New Task"
         BEGIN
             MENUITEM "At T&op",                     ID_NEWTASK_ATTOP
             MENUITEM "At Botto&m",                  ID_NEWTASK_ATBOTTOM
@@ -2607,7 +2607,7 @@ BEGIN
             MENUITEM "&After Task",                 ID_NEWTASK_AFTERSELECTEDTASK
 
         END
-        POPUP "New Subtask"
+        POPUP "Create New Subtask"
         BEGIN
             MENUITEM "At &Top of Task",             ID_NEWSUBTASK_ATTOP
             MENUITEM "At &Bottom of Task",          ID_NEWSUBTASK_ATBOTTOM
