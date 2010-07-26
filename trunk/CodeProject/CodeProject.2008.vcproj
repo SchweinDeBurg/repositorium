@@ -643,6 +643,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\TransparentListBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TransparentListBox.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\TreeCtrlHelper.cpp"
 				>
 			</File>
@@ -3098,6 +3106,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\TrayIcon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\VersionInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\VersionInfo.h"
 				>
 			</File>
 			<File

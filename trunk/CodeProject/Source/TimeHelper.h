@@ -43,12 +43,12 @@
 
 enum 
 {
-	THU_MINS	= 'I',
-	THU_HOURS	= 'H',
-	THU_DAYS	= 'D',
-	THU_WEEKS	= 'W',
-	THU_MONTHS	= 'M',
-	THU_YEARS	= 'Y',
+	THU_MINS    = 'I',
+	THU_HOURS   = 'H',
+	THU_DAYS    = 'D',
+	THU_WEEKS   = 'W',
+	THU_MONTHS  = 'M',
+	THU_YEARS   = 'Y',
 };
 
 class CTimeHelper  

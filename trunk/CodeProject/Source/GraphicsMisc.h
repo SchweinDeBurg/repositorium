@@ -41,7 +41,7 @@
 
 enum { MFS_BOLD = 0x01, MFS_ITALIC = 0x02, MFS_UNDERLINED = 0x04, MFS_STRIKETHRU = 0x08, MFS_SYMBOL = 0x10};
 
-namespace GraphicsMisc  
+namespace GraphicsMisc
 {
 	void DrawGradient(HDC hdc, LPRECT pRect, COLORREF crFrom, COLORREF crTo, BOOL bHorz);
 	
