@@ -145,6 +145,8 @@ IDR_CALENDAR MENU DISCARDABLE
 BEGIN
     POPUP "&View"
     BEGIN
+        MENUITEM "Go To &Today",                ID_GOTOTODAY
+        MENUITEM SEPARATOR
         MENUITEM "&Mini-Calendar",              ID_VIEW_MINICALENDAR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUSBAR
         MENUITEM "&Weekends",                   ID_VIEW_WEEKENDS
@@ -164,8 +166,10 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Completed Tasks...",         ID_VIEW_COMPLETEDTASKS
     END
-    MENUITEM "Go To &Today",                ID_GOTOTODAY
-    MENUITEM "Check for &Updates",          ID_CHECKFORUPDATES
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "Check for &Updates...",          ID_CHECKFORUPDATES
+    END
 END
 
 
