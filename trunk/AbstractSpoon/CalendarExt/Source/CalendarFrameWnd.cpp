@@ -33,7 +33,7 @@ static char THIS_FILE[] = __FILE__;
 #define CALENDAR_INI_KEY_WINDOWSIZE         _T("WindowSize")
 #define CALENDAR_INI_KEY_COMPLETEDTASKS     _T("CompletedTasks")
 
-const int g_nMiniCalWidth = 160;
+const int g_nMiniCalWidth = 172;
 
 /////////////////////////////////////////////////////////////////////////////
 // CCalendarFrameWnd
@@ -41,15 +41,15 @@ const int g_nMiniCalWidth = 160;
 IMPLEMENT_DYNAMIC(CCalendarFrameWnd, CFrameWnd)
 
 CCalendarFrameWnd::CCalendarFrameWnd():
-	m_hParentOfFrame(NULL),
-	m_pCalendarData(NULL),
-	m_nNumVisibleWeeks(0),
-	m_bShowMiniCalendar(FALSE),
-	m_bShowStatusBar(FALSE),
-	m_bShowWeekends(FALSE),
-	m_bWindowMaximized(FALSE),
-	m_rcWindowSize(0, 0, 0, 0),
-	m_dwStyleCompletedTasks(0)
+m_hParentOfFrame(NULL),
+m_pCalendarData(NULL),
+m_nNumVisibleWeeks(0),
+m_bShowMiniCalendar(FALSE),
+m_bShowStatusBar(FALSE),
+m_bShowWeekends(FALSE),
+m_bWindowMaximized(FALSE),
+m_rcWindowSize(0, 0, 0, 0),
+m_dwStyleCompletedTasks(0)
 {
 	m_pCalendarData = new CCalendarData;
 
