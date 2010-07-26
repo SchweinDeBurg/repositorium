@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="windows-1252"?> - locale encoding (optional but will be added if not present)
+
+<TODOLIST> - task list root item (must be present)
+
+	<PROJECTNAME>			- descriptive name displayed in the UI and used when exporting
+	<FILEFORMAT>			- denotes the save format to prevent older todolists overwriting new format tasklists (internal only)
+	<NEXTUNIQUEID>			- all items are uniquely identified. this is the next id to be allocated after loading a tasklist
+	<LASTSORTBY>			- denotes the last column sorted by (internal only)
+	<FILEVERSION>			- incremented everytime the file is changed (internal only)
+	<LASTSORTDIR>			- denotes ascending/descending/not set (internal only)
+	<LASTMODIFIED>			- denotes the day the file was last modified (ISO format)
+	<ARCHIVE>				- presence denotes that this tasklist is an archive (internal only)
+	<CHECKEDOUTTO>			- computer name of user who currently has tasklist checked out (internal only)
+	<CUSTOMCOMMENTSTYPE>	- GUID identifying the plugin responsible for providing custom comments (internal only)  
+	<REPORTTITLE>			- user defined string (used in exporting)
+	<REPORTDATE>			- long date in user's locale (used in exporting)		
+	<FILENAME>				- the tasklist's filename (used in exporting)	
+
+    	<TASK>
+	
+		note: there is no strict guarantee that these attributes will all be present. this decision
+		was made to keep tasklist sizes down and to reflect the users actual choices. 
+		eg. the DUEDATE attribute is not present if the checkbox was not selected in the user interface
+	
+    		<TITLE>					- descriptive name
+    		<PRIORITY>				- 0-10
+    		<PERCENTDONE>			- 0-100. note: this value may be less than 100 even if the task is completed 
+    		<STARTDATE>				- start date in MS OLE format (days since 30/12/1899)
+    		<STARTDATESTRING>		- start date as ISO formatted string
+    		<DUEDATE>				- due date in MS OLE format (days since 30/12/1899)
+    		<DUEDATESTRING>			- due date as ISO formatted string
+			<DONEDATE>				- completed date in MS OLE format (days since 30/12/1899)
+			<DONEDATESTRING>		- completed date as ISO formatted string
+    		<PERSON>				- user defined person to whom task has been allocated
+    		<ALLOCBY>				- user defined person who allocated this task
+    		<NUMCATEGORY>			- count of user defined categories to which this task belongs
+    		<CATEGORY>				- first user defined category of this task
+    		<CATEGORY1-n>			- subsequent user defined categories of this task
+    		<STATUS>				- user defined status of this task
+    		<TIMEESTIMATE>			- estimated time to complete in the specified units
+			<TIMEESTUNITS>			- units of time estimate
+    		<TIMESPENT>				- amount of time currently spent on task in the specified units
+			<TIMESPENTUNITS>		- units of time spent
+    		<FILEREFPATH>			- associated file (can be relative to original tasklist location)
+    		<COMMENTS>				- unformatted text
+			<CUSTOMCOMMENTS>		- comments in a custom format tat have been base64 encoded 	
+			<HTMLCOMMENTS>		    - custom comments converted to HTML and stored in a CDATA block
+    		<COLOUR>				- user specified color
+			<RISK>		            - 0-10
+			<EXTERNALID>		    - user defined string
+			<COST>					- cost in undefined units
+			<DEPENDS>				- ID of a task on which this task is dependent
+
+			note: the following attributes correspond to choices made regarding how 
+			(typically) parent attributes are to be displayed. These attributes are ignored when
+			the tasklist is reloaded and are recalculated as required.
+
+			<HIGHESTPRIORITY>		- the highest of this task and its subtasks' priorities
+			<CALCPERCENTDONE>		- the calculated percentage completion
+			<EARLIESTDUEDATE>		- the earliest of this task and its subtasks' due dates
+			<EARLIESTDUEDATESTRING> - the earliest due date as ISO formatted string
+			<CALCTIMEESTIMATE>		- the accumulated time estimate in hours
+			<CALCTIMESPENT>			- the accumulated time spent in hours
+			<HIGHESTRISK>			- the highest of this task and its subtasks' risks		
+			<CALCCOST>				- the accumulated cost		
+			<TEXTCOLOR>				- the actual colour of the task title string
+			<TEXTWEBCOLOR>			- text colour in html compliant format		
+			<PRIORITYCOLOR>			- the colour of the selected priority level
+			<PRIORITYWEBCOLOR>		- priority colour in html compliant format
+
+			note: The following attributes cannot be user modified
+	
+			<CREATIONDATE>			- date and time the task was created in MS OLE format (days since 30/12/1899)
+			<CREATIONDATESTRING>	- creation date as ISO formatted string	
+			<CREATEDBY>				- user (eprson currently lgged into the computer) who created the task
+    		<POS>					- ordered position (used only for exporting)
+	   		<LASTMOD>				- date/time of last modification in MS OLE format  (internal - useful for synchronizing tasks with 3rd party tools)
+	   		<LASTMODSTRING>			- last mod date as ISO formatted string
+    		<ID>					- unique id (internal. unique only to this tasklist)
+
+    		<TASK>					- child task(s)
+    		:
+    		</TASK>
+    		
+	</TASK>
+	
+	<TASK> - sibling task(s)
+	:
+	</TASK>
+	
+</TODOLIST>
+
+
