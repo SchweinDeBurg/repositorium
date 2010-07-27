@@ -1908,7 +1908,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
-	if ((dib != NULL) && (handle != NULL) && (data != NULL)) {
+	if (!dib || !handle || !data) {
+		return FALSE;
+	}
+
+	try {
 		fi_TIFFIO *fio = (fi_TIFFIO*)data;
 		TIFF *out = fio->tif;
 
@@ -2202,9 +2206,11 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			TIFFWriteDirectory(out);		
 
 		return TRUE;
-	}
 
-	return FALSE;
+	} catch(const char *text) {
+		FreeImage_OutputMessageProc(s_format_id, text);
+		return FALSE;
+	}
 }
 
 // ==========================================================

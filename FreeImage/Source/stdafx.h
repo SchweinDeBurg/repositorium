@@ -78,6 +78,9 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #include <float.h>
 
 #ifdef _WIN32
+#define NOMINMAX
+using std::min;
+using std::max;
 #include <windows.h>
 #include <tchar.h>
 #include <atlbase.h>
