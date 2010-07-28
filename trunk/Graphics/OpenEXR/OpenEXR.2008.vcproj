@@ -397,6 +397,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\IlmImf\ImfAcesFile.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\IlmImf\ImfAttribute.cpp"
 					>
 				</File>
@@ -509,6 +513,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\IlmImf\ImfMultiView.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\IlmImf\ImfOpaqueAttribute.cpp"
 					>
 				</File>
@@ -566,6 +574,10 @@
 				</File>
 				<File
 					RelativePath=".\Source\IlmImf\ImfStringAttribute.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\IlmImf\ImfStringVectorAttribute.cpp"
 					>
 				</File>
 				<File
@@ -755,6 +767,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\IlmImf\ImfAcesFile.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\IlmImf\ImfArray.h"
 					>
 				</File>
@@ -780,6 +796,10 @@
 				</File>
 				<File
 					RelativePath=".\Source\IlmImf\ImfChannelListAttribute.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\IlmImf\ImfCheckedArithmetic.h"
 					>
 				</File>
 				<File
@@ -887,6 +907,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\IlmImf\ImfMultiView.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\IlmImf\ImfName.h"
 					>
 				</File>
@@ -956,6 +980,10 @@
 				</File>
 				<File
 					RelativePath=".\Source\IlmImf\ImfStringAttribute.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\IlmImf\ImfStringVectorAttribute.h"
 					>
 				</File>
 				<File
@@ -1159,6 +1187,227 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Documentation"
+			Filter="pdf"
+			>
+			<File
+				RelativePath=".\Documentation\MultiViewOpenEXR.pdf"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Documentation\OpenEXRColorManagement.pdf"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Documentation\OpenEXRFileLayout.pdf"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Documentation\OpenEXRViewers.pdf"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Documentation\ReadingAndWritingImageFiles.pdf"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Documentation\TechnicalIntroduction.pdf"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\authors.txt"

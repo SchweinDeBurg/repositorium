@@ -48,6 +48,7 @@
 #include <ImfPizCompressor.h>
 #include <ImfPxr24Compressor.h>
 #include <ImfB44Compressor.h>
+#include <ImfCheckedArithmetic.h>
 
 namespace Imf {
 
@@ -111,7 +112,7 @@ isValidCompression (Compression c)
 
 
 Compressor *
-newCompressor (Compression c, int maxScanLineSize, const Header &hdr)
+newCompressor (Compression c, size_t maxScanLineSize, const Header &hdr)
 {
     switch (c)
     {
@@ -152,15 +153,15 @@ newCompressor (Compression c, int maxScanLineSize, const Header &hdr)
 
 Compressor *
 newTileCompressor (Compression c,
-		   int tileLineSize,
-		   int numTileLines,
+		   size_t tileLineSize,
+		   size_t numTileLines,
 		   const Header &hdr)
 {
     switch (c)
     {
       case RLE_COMPRESSION:
 
-	return new RleCompressor (hdr, tileLineSize * numTileLines);
+	return new RleCompressor (hdr, uiMult (tileLineSize, numTileLines));
 
       case ZIPS_COMPRESSION:
       case ZIP_COMPRESSION:
