@@ -38,7 +38,7 @@
 
 //----------------------------------------------------------------------------
 //
-//	Specializations of the Vec2<T> and Vec3<T> templates.
+//      Specializations of the Vec2<T> and Vec3<T> templates.
 //
 //----------------------------------------------------------------------------
 
@@ -62,16 +62,16 @@ normalizeOrThrow(Vec2<T> &v)
     int axis = -1;
     for (int i = 0; i < 2; i ++)
     {
-	if (v[i] != 0)
-	{
-	    if (axis != -1)
-	    {
-		throw IntVecNormalizeExc ("Cannot normalize an integer "
-					  "vector unless it is parallel "
-					  "to a principal axis");
-	    }
-	    axis = i;
-	}
+        if (v[i] != 0)
+        {
+            if (axis != -1)
+            {
+                throw IntVecNormalizeExc ("Cannot normalize an integer "
+                                          "vector unless it is parallel "
+                                          "to a principal axis");
+            }
+            axis = i;
+        }
     }
     v[axis] = (v[axis] > 0) ? 1 : -1;
     return true;
@@ -85,16 +85,39 @@ normalizeOrThrow(Vec3<T> &v)
     int axis = -1;
     for (int i = 0; i < 3; i ++)
     {
-	if (v[i] != 0)
-	{
-	    if (axis != -1)
-	    {
-		throw IntVecNormalizeExc ("Cannot normalize an integer "
-					  "vector unless it is parallel "
-					  "to a principal axis");
-	    }
-	    axis = i;
-	}
+        if (v[i] != 0)
+        {
+            if (axis != -1)
+            {
+                throw IntVecNormalizeExc ("Cannot normalize an integer "
+                                          "vector unless it is parallel "
+                                          "to a principal axis");
+            }
+            axis = i;
+        }
+    }
+    v[axis] = (v[axis] > 0) ? 1 : -1;
+    return true;
+}
+
+
+template<class T>
+bool
+normalizeOrThrow(Vec4<T> &v)
+{
+    int axis = -1;
+    for (int i = 0; i < 4; i ++)
+    {
+        if (v[i] != 0)
+        {
+            if (axis != -1)
+            {
+                throw IntVecNormalizeExc ("Cannot normalize an integer "
+                                          "vector unless it is parallel "
+                                          "to a principal axis");
+            }
+            axis = i;
+        }
     }
     v[axis] = (v[axis] > 0) ? 1 : -1;
     return true;
@@ -109,7 +132,7 @@ template <>
 short
 Vec2<short>::length () const
 {
-    float lenF = Math<float>::sqrt (dot (*this));
+    float lenF = Math<float>::sqrt ((float)dot (*this));
     short lenS = (short) (lenF + 0.5f);
     return lenS;
 }
@@ -127,7 +150,7 @@ const Vec2<short> &
 Vec2<short>::normalizeExc () throw (Iex::MathExc)
 {
     if ((x == 0) && (y == 0))
-	throw NullVecExc ("Cannot normalize null vector.");
+        throw NullVecExc ("Cannot normalize null vector.");
 
     normalizeOrThrow<short>(*this);
     return *this;
@@ -155,7 +178,7 @@ Vec2<short>
 Vec2<short>::normalizedExc () const throw (Iex::MathExc)
 {
     if ((x == 0) && (y == 0))
-	throw NullVecExc ("Cannot normalize null vector.");
+        throw NullVecExc ("Cannot normalize null vector.");
 
     Vec2<short> v(*this);
     normalizeOrThrow<short>(v);
@@ -178,7 +201,7 @@ template <>
 int
 Vec2<int>::length () const
 {
-    float lenF = Math<float>::sqrt (dot (*this));
+    float lenF = Math<float>::sqrt ((float)dot (*this));
     int lenI = (int) (lenF + 0.5f);
     return lenI;
 }
@@ -196,7 +219,7 @@ const Vec2<int> &
 Vec2<int>::normalizeExc () throw (Iex::MathExc)
 {
     if ((x == 0) && (y == 0))
-	throw NullVecExc ("Cannot normalize null vector.");
+        throw NullVecExc ("Cannot normalize null vector.");
 
     normalizeOrThrow<int>(*this);
     return *this;
@@ -224,7 +247,7 @@ Vec2<int>
 Vec2<int>::normalizedExc () const throw (Iex::MathExc)
 {
     if ((x == 0) && (y == 0))
-	throw NullVecExc ("Cannot normalize null vector.");
+        throw NullVecExc ("Cannot normalize null vector.");
 
     Vec2<int> v(*this);
     normalizeOrThrow<int>(v);
@@ -247,7 +270,7 @@ template <>
 short
 Vec3<short>::length () const
 {
-    float lenF = Math<float>::sqrt (dot (*this));
+    float lenF = Math<float>::sqrt ((float)dot (*this));
     short lenS = (short) (lenF + 0.5f);
     return lenS;
 }
@@ -265,7 +288,7 @@ const Vec3<short> &
 Vec3<short>::normalizeExc () throw (Iex::MathExc)
 {
     if ((x == 0) && (y == 0) && (z == 0))
-	throw NullVecExc ("Cannot normalize null vector.");
+        throw NullVecExc ("Cannot normalize null vector.");
 
     normalizeOrThrow<short>(*this);
     return *this;
@@ -293,7 +316,7 @@ Vec3<short>
 Vec3<short>::normalizedExc () const throw (Iex::MathExc)
 {
     if ((x == 0) && (y == 0) && (z == 0))
-	throw NullVecExc ("Cannot normalize null vector.");
+        throw NullVecExc ("Cannot normalize null vector.");
 
     Vec3<short> v(*this);
     normalizeOrThrow<short>(v);
@@ -316,7 +339,7 @@ template <>
 int
 Vec3<int>::length () const
 {
-    float lenF = Math<float>::sqrt (dot (*this));
+    float lenF = Math<float>::sqrt ((float)dot (*this));
     int lenI = (int) (lenF + 0.5f);
     return lenI;
 }
@@ -334,7 +357,7 @@ const Vec3<int> &
 Vec3<int>::normalizeExc () throw (Iex::MathExc)
 {
     if ((x == 0) && (y == 0) && (z == 0))
-	throw NullVecExc ("Cannot normalize null vector.");
+        throw NullVecExc ("Cannot normalize null vector.");
 
     normalizeOrThrow<int>(*this);
     return *this;
@@ -362,7 +385,7 @@ Vec3<int>
 Vec3<int>::normalizedExc () const throw (Iex::MathExc)
 {
     if ((x == 0) && (y == 0) && (z == 0))
-	throw NullVecExc ("Cannot normalize null vector.");
+        throw NullVecExc ("Cannot normalize null vector.");
 
     Vec3<int> v(*this);
     normalizeOrThrow<int>(v);
@@ -378,5 +401,142 @@ Vec3<int>::normalizedNonNull () const
     return v;
 }
 
+
+// Vec4<short>
+
+template <> 
+short
+Vec4<short>::length () const
+{
+    float lenF = Math<float>::sqrt ((float)dot (*this));
+    short lenS = (short) (lenF + 0.5f);
+    return lenS;
+}
+
+template <>
+const Vec4<short> &
+Vec4<short>::normalize ()
+{
+    normalizeOrThrow<short>(*this);
+    return *this;
+}
+
+template <>
+const Vec4<short> &
+Vec4<short>::normalizeExc () throw (Iex::MathExc)
+{
+    if ((x == 0) && (y == 0) && (z == 0) && (w == 0))
+        throw NullVecExc ("Cannot normalize null vector.");
+
+    normalizeOrThrow<short>(*this);
+    return *this;
+}
+
+template <>
+const Vec4<short> &
+Vec4<short>::normalizeNonNull ()
+{
+    normalizeOrThrow<short>(*this);
+    return *this;
+}
+
+template <>
+Vec4<short>
+Vec4<short>::normalized () const
+{
+    Vec4<short> v(*this);
+    normalizeOrThrow<short>(v);
+    return v;
+}
+
+template <>
+Vec4<short>
+Vec4<short>::normalizedExc () const throw (Iex::MathExc)
+{
+    if ((x == 0) && (y == 0) && (z == 0) && (w == 0))
+        throw NullVecExc ("Cannot normalize null vector.");
+
+    Vec4<short> v(*this);
+    normalizeOrThrow<short>(v);
+    return v;
+}
+
+template <>
+Vec4<short>
+Vec4<short>::normalizedNonNull () const
+{
+    Vec4<short> v(*this);
+    normalizeOrThrow<short>(v);
+    return v;
+}
+
+
+// Vec4<int>
+
+template <> 
+int
+Vec4<int>::length () const
+{
+    float lenF = Math<float>::sqrt ((float)dot (*this));
+    int lenI = (int) (lenF + 0.5f);
+    return lenI;
+}
+
+template <>
+const Vec4<int> &
+Vec4<int>::normalize ()
+{
+    normalizeOrThrow<int>(*this);
+    return *this;
+}
+
+template <>
+const Vec4<int> &
+Vec4<int>::normalizeExc () throw (Iex::MathExc)
+{
+    if ((x == 0) && (y == 0) && (z == 0) && (w == 0))
+        throw NullVecExc ("Cannot normalize null vector.");
+
+    normalizeOrThrow<int>(*this);
+    return *this;
+}
+
+template <>
+const Vec4<int> &
+Vec4<int>::normalizeNonNull ()
+{
+    normalizeOrThrow<int>(*this);
+    return *this;
+}
+
+template <>
+Vec4<int>
+Vec4<int>::normalized () const
+{
+    Vec4<int> v(*this);
+    normalizeOrThrow<int>(v);
+    return v;
+}
+
+template <>
+Vec4<int>
+Vec4<int>::normalizedExc () const throw (Iex::MathExc)
+{
+    if ((x == 0) && (y == 0) && (z == 0) && (w == 0))
+        throw NullVecExc ("Cannot normalize null vector.");
+
+    Vec4<int> v(*this);
+    normalizeOrThrow<int>(v);
+    return v;
+}
+
+template <>
+Vec4<int>
+Vec4<int>::normalizedNonNull () const
+{
+    Vec4<int> v(*this);
+    normalizeOrThrow<int>(v);
+    return v;
+}
 
 } // namespace Imath

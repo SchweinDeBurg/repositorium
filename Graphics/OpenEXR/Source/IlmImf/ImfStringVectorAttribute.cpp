@@ -1,7 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 //
-// Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
-// Digital Ltd. LLC
+// Copyright (c) 2007, Weta Digital Ltd
 // 
 // All rights reserved.
 // 
@@ -14,7 +13,7 @@
 // copyright notice, this list of conditions and the following disclaimer
 // in the documentation and/or other materials provided with the
 // distribution.
-// *       Neither the name of Industrial Light & Magic nor the names of
+// *       Neither the name of Weta Digital nor the names of
 // its contributors may be used to endorse or promote products derived
 // from this software without specific prior written permission. 
 // 
@@ -34,40 +33,64 @@
 
 
 
-#ifndef INCLUDED_IMATHEXC_H
-#define INCLUDED_IMATHEXC_H
+#include "stdafx.h"
 
-
-//-----------------------------------------------
+//-----------------------------------------------------------------------------
 //
-//	Imath library-specific exceptions
+//	class StringAttribute
 //
-//-----------------------------------------------
+//-----------------------------------------------------------------------------
 
-#include "../Iex/IexBaseExc.h"
-
-namespace Imath {
+#include <ImfStringVectorAttribute.h>
 
 
-DEFINE_EXC (NullVecExc, ::Iex::MathExc)		// Attempt to normalize
-						// null vector
+namespace Imf {
 
-DEFINE_EXC (InfPointExc, ::Iex::MathExc)	// Attempt to normalize
-                                                // a point at infinity
 
-DEFINE_EXC (NullQuatExc, ::Iex::MathExc) 	// Attempt to normalize
-						// null quaternion
+template <>
+const char *
+StringVectorAttribute::staticTypeName ()
+{
+    return "stringvector";
+}
 
-DEFINE_EXC (SingMatrixExc, ::Iex::MathExc)	// Attempt to invert
-						// singular matrix
 
-DEFINE_EXC (ZeroScaleExc, ::Iex::MathExc)	// Attempt to remove zero
-						// scaling from matrix
+template <>
+void
+StringVectorAttribute::writeValueTo (OStream &os, int version) const
+{
+    int size = _value.size();
 
-DEFINE_EXC (IntVecNormalizeExc, ::Iex::MathExc)	// Attempt to normalize
-						// a vector of whose elements
-                                                // are an integer type
+    for (int i = 0; i < size; i++)
+    {
+        int strSize = _value[i].size();
+        Xdr::write <StreamIO> (os, strSize);
+	Xdr::write <StreamIO> (os, &_value[i][0], strSize);
+    }
+}
 
-} // namespace Imath
 
-#endif
+template <>
+void
+StringVectorAttribute::readValueFrom (IStream &is, int size, int version)
+{
+    int read = 0;
+
+    while (read < size)
+    {   
+       int strSize;
+       Xdr::read <StreamIO> (is, strSize);
+       read += Xdr::size<int>();       
+
+       std::string str;
+       str.resize (strSize);
+  
+       Xdr::read<StreamIO> (is, &str[0], strSize);
+       read += strSize;
+
+       _value.push_back (str);
+    }
+}
+
+
+} // namespace Imf

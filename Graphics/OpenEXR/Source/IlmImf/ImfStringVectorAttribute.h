@@ -1,7 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 //
-// Copyright (c) 2002, Industrial Light & Magic, a division of Lucas
-// Digital Ltd. LLC
+// Copyright (c) 2007, Weta Digital Ltd
 // 
 // All rights reserved.
 // 
@@ -14,7 +13,7 @@
 // copyright notice, this list of conditions and the following disclaimer
 // in the documentation and/or other materials provided with the
 // distribution.
-// *       Neither the name of Industrial Light & Magic nor the names of
+// *       Neither the name of Weta Digital nor the names of
 // its contributors may be used to endorse or promote products derived
 // from this software without specific prior written permission. 
 // 
@@ -34,40 +33,34 @@
 
 
 
-#ifndef INCLUDED_IMATHEXC_H
-#define INCLUDED_IMATHEXC_H
+#ifndef INCLUDED_IMF_STRINGVECTOR_ATTRIBUTE_H
+#define INCLUDED_IMF_STRINGVECTOR_ATTRIBUTE_H
 
-
-//-----------------------------------------------
+//-----------------------------------------------------------------------------
 //
-//	Imath library-specific exceptions
+//	class StringVectorAttribute
 //
-//-----------------------------------------------
+//-----------------------------------------------------------------------------
 
-#include "../Iex/IexBaseExc.h"
+#include <ImfAttribute.h>
+#include <string>
+#include <vector>
 
-namespace Imath {
+
+namespace Imf {
+
+typedef std::vector<std::string> StringVector;
+typedef TypedAttribute<StringVector> StringVectorAttribute;
+template <> const char *StringVectorAttribute::staticTypeName ();
+template <> void StringVectorAttribute::writeValueTo (OStream &, int) const;
+template <> void StringVectorAttribute::readValueFrom (IStream &, int, int);
 
 
-DEFINE_EXC (NullVecExc, ::Iex::MathExc)		// Attempt to normalize
-						// null vector
+} // namespace Imf
 
-DEFINE_EXC (InfPointExc, ::Iex::MathExc)	// Attempt to normalize
-                                                // a point at infinity
-
-DEFINE_EXC (NullQuatExc, ::Iex::MathExc) 	// Attempt to normalize
-						// null quaternion
-
-DEFINE_EXC (SingMatrixExc, ::Iex::MathExc)	// Attempt to invert
-						// singular matrix
-
-DEFINE_EXC (ZeroScaleExc, ::Iex::MathExc)	// Attempt to remove zero
-						// scaling from matrix
-
-DEFINE_EXC (IntVecNormalizeExc, ::Iex::MathExc)	// Attempt to normalize
-						// a vector of whose elements
-                                                // are an integer type
-
-} // namespace Imath
+// Metrowerks compiler wants the .cpp file inlined, too
+#ifdef __MWERKS__
+#include <ImfStringVectorAttribute.cpp>
+#endif
 
 #endif
