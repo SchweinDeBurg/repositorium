@@ -417,6 +417,8 @@ int CRulerRichEditCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	if (CreateRTFControl(autohscroll) && CreateToolbar() && CreateRuler())
 	{
+		SetWordWrap(TRUE);
+
 		CreateMargins();
 		SetReadOnly(GetReadOnly());
 		UpdateToolbarButtons();
