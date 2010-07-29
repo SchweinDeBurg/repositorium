@@ -125,6 +125,7 @@ end;
 [Files]
 ;; core application files
 Source: ".\ToDoList\Output.2008\x86\Release\Unicode\ToDoList.exe"; DestDir: "{app}"
+Source: ".\ToDoList\Resources\*"; Excludes: ".svn"; DestDir: "{app}\Resources"
 Source: ".\CalendarExt\Output.2008\x86\Release\Unicode\CalendarExt.dll"; DestDir: "{app}"
 Source: ".\EncryptDecrypt\Output.2008\x86\Release\Unicode\EncryptDecrypt.dll"; DestDir: "{app}"
 Source: ".\FMindImportExport\Output.2008\x86\Release\Unicode\FMindImportExport.dll"; DestDir: "{app}"
