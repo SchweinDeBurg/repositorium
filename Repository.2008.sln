@@ -98,6 +98,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibPCRE++", "PCRE\LibPCRE++
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AbstractSpoon", "AbstractSpoon", "{83F8863F-2EB6-48BF-8174-FB638768DE60}"
+	ProjectSection(SolutionItems) = preProject
+		AbstractSpoon\EclipsePublicLicense.rtf = AbstractSpoon\EclipsePublicLicense.rtf
+		AbstractSpoon\ToDoListSetup.iss = AbstractSpoon\ToDoListSetup.iss
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ToDoList", "AbstractSpoon\ToDoList\ToDoList.2008.vcproj", "{66F653CA-5669-48BA-A47B-5A941ECEC448}"
 	ProjectSection(ProjectDependencies) = postProject
