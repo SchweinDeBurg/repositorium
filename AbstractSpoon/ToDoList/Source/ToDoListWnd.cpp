@@ -3662,7 +3662,7 @@ void CToDoListWnd::EnsureVisible()
 
 void CToDoListWnd::OnAbout() 
 {
-	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.0.8</b>"),
+	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.0.8</b> (mod by Elijah Zarezky)"),
 		CEnString(IDS_ABOUTHEADING), CEnString(IDS_ABOUTCOPYRIGHT), CEnString(IDS_LICENSE), 1, 2, 8);
 
 	dialog.DoModal();

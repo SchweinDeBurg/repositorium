@@ -2173,7 +2173,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "About...",                    ID_ABOUT
         MENUITEM SEPARATOR
-        MENUITEM "AbstractSpoon (c) 2003-09",   ID_TRAYICON, GRAYED
+        MENUITEM "AbstractSpoon © 2003-09",   ID_TRAYICON, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit ToDoList",              ID_TRAYICON_CLOSE
     END
@@ -2593,7 +2593,7 @@ BEGIN
     IDS_DUETHISMONTH        "The following tasks are due by the end of this month"
     IDS_DUENEXTMONTH        "The following tasks are due by the end of next month"
     IDS_DUETASKS_TITLE      "Due Tasks: %s"
-    IDS_ABOUTCOPYRIGHT      "Copyright (c) 2003-09 AbstractSpoon Software\n   (www.abstractspoon.com)\n\nInstaller (c) Power Programmer\n   (www.powerprogrammer.co.uk)\n\nToolbar Icons (some) (c) AWIcons\n   (www.awicons.com)\r\n\r\nCredits:\r\n\r\n- Paul DiLascia (of course)\r\n- d3m0n (Calendar Plugin and Testing)\r\n- :floyd: (part of the System Tray code)\r\n- Hans Dietrich (HTML control)\r\n- Armen Hakobyan (Enhanced folder dialog)\r\n- Open Office (Spellcheck Engine and Dictionaries)\r\n- Alex Hazanov (MSXML wrapper classes)\r\n- Richard Butler (Encryption)\r\n- Johan Rosengren (Original RTF comments control)\r\n- Daniel Beutler  (RTF2HTML conversion)\r\n- Valik (Plain Text importer)\r\n- Patchou (RichEdit border theming)\r\n- =[ Abin ]= (Ini class for tools importing)\r\n- Alex Cohn (Menu icon code)\r\n- Paul S. Vickery (Statusbar)"
+    IDS_ABOUTCOPYRIGHT      "Copyright © 2003-09 AbstractSpoon Software\n   (www.abstractspoon.com)\n\nInstaller © Power Programmer\n   (www.powerprogrammer.co.uk)\n\nToolbar Icons (some) © AWIcons\n   (www.awicons.com)\n\nModifications © by Elijah Zarezky:\n- fully Unicode-aware build\n- private CRT/MFC assemblies v9.0.30729.4148\n- Inno Setup installer\r\n\r\nCredits:\r\n\r\n- Paul DiLascia (of course)\r\n- d3m0n (Calendar Plugin and Testing)\r\n- :floyd: (part of the System Tray code)\r\n- Hans Dietrich (HTML control)\r\n- Armen Hakobyan (Enhanced folder dialog)\r\n- Open Office (Spellcheck Engine and Dictionaries)\r\n- Alex Hazanov (MSXML wrapper classes)\r\n- Richard Butler (Encryption)\r\n- Johan Rosengren (Original RTF comments control)\r\n- Daniel Beutler  (RTF2HTML conversion)\r\n- Valik (Plain Text importer)\r\n- Patchou (RichEdit border theming)\r\n- =[ Abin ]= (Ini class for tools importing)\r\n- Alex Cohn (Menu icon code)\r\n- Paul S. Vickery (Statusbar)"
 END
 
 STRINGTABLE 
@@ -2618,7 +2618,7 @@ END
 STRINGTABLE 
 BEGIN
     IDS_RECENTFILES         "Recent Tasklists"
-    IDS_COPYRIGHT           "ToDoList (c) AbstractSpoon"
+    IDS_COPYRIGHT           "ToDoList © AbstractSpoon"
     IDS_SAVETASKLIST_TITLE  "Save Tasklist '%s'"
     IDS_SAVEREADONLY        "The file '%s' is read-only.\n\nPlease select another filename"
     IDS_PREF_UISORTING      "User Interface>General>Sorting"
@@ -2931,7 +2931,7 @@ BEGIN
     IDS_BADPLUGINTITLE      "Plugins Out of Date"
     IDS_FIXDEPENDEESTITLE   "Validate Task Dates"
     IDS_FIXDEPENDEES        "Would you like to validate all task dates against their dependencies?"
-    IDS_LICENSE             "ToDoList is freeware licensed under an <br><a href=""http://www.opensource.org/licenses/eclipse-1.0.php"">Eclipse Public License 1.0</a>."
+    IDS_LICENSE             "ToDoList is freeware licensed under an <br><a href=""http://www.opensource.org/licenses/eclipse-1.0.php""><font color=""#0000FF"">Eclipse Public License 1.0</font></a>"
     IDS_SETFOCUS2TASKLIST   "Sets the focus to the tasklist"
     IDS_NOWUW               "Before you can download updates you need to install the Web Update Wizard component (and then try again).\n\nWould you like to download the Web Update Wizard now?"
     IDS_NOALLOCTO           "<unallocated>"
@@ -2944,7 +2944,7 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDR_MAINFRAME           "ToDoList (c) AbstractSpoon"
+    IDR_MAINFRAME           "ToDoList © AbstractSpoon"
     IDS_SAMPLETASK          "Sample Task"
     IDS_BACKUPFILEFOUND     "ToDoList has detected a backup version of file '%s', \nwhich suggests that there was previously a problem saving the tasklist.\n\nWould you like to restore the backup?"
     IDS_SAMPLETEXT          "Sample Text"
