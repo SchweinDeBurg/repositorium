@@ -376,7 +376,7 @@
 		</Filter>
 		<Filter
 			Name="Controls"
-			Filter="h;cpp"
+			Filter="h;c;cpp"
 			>
 			<File
 				RelativePath=".\Source\AutoComboBox.cpp"
@@ -536,6 +536,50 @@
 			</File>
 			<File
 				RelativePath=".\Source\OrderedTreeCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\propertyGrid.c"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAs="2"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\propertyGrid.h"
 				>
 			</File>
 			<File
@@ -2688,6 +2732,42 @@
 			</File>
 			<File
 				RelativePath=".\Help\HistoryComboBox.chm"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Help\propertyGrid.chm"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
