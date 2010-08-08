@@ -80,10 +80,10 @@
 /// @struct tagPROPGRIDFDITEM
 /// @brief This is additional data associated with a property grid file dialog item
 typedef struct tagPROPGRIDFDITEM {
-    LPTSTR lpszDlgTitle; ///< Dialog title
-    LPTSTR lpszFilePath; ///< Initial path
-    LPTSTR lpszFilter;   ///< Double null terminated filter string
-    LPTSTR lpszDefExt;   ///< Default extension
+	LPTSTR lpszDlgTitle; ///< Dialog title
+	LPTSTR lpszFilePath; ///< Initial path
+	LPTSTR lpszFilter;   ///< Double null terminated filter string
+	LPTSTR lpszDefExt;   ///< Default extension
 } PROPGRIDFDITEM, *LPPROPGRIDFDITEM;
 
 /// @var PROPGRIDFONTITEM
@@ -95,8 +95,8 @@ typedef struct tagPROPGRIDFDITEM {
 /// @struct tagPROPGRIDFONTITEM
 /// @brief This is additional data associated with a property grid font item
 typedef struct tagPROPGRIDFONTITEM {
-    LOGFONT logFont; ///< Logical font struct
-    COLORREF crFont; ///< Text color
+	LOGFONT logFont; ///< Logical font struct
+	COLORREF crFont; ///< Text color
 } PROPGRIDFONTITEM, *LPPROPGRIDFONTITEM;
 
 /// @var PROPGRIDITEM
@@ -108,12 +108,12 @@ typedef struct tagPROPGRIDFONTITEM {
 /// @struct tagPROPGRIDITEM
 /// @brief This is the data associated with a property grid item
 typedef struct tagPROPGRIDITEM {
-    LPTSTR lpszCatalog;   ///< Catalog (group) name
-    LPTSTR lpszPropName;  ///< Property (item) name
-    LPTSTR lpszzCmbItems; ///< Double null terminated list of strings
-    LPTSTR lpszPropDesc;  ///< Property (item) description
-    LPARAM lpCurValue;    ///< Property (item) value
-    INT    iItemType;     ///< Property (item) type identifier
+	LPTSTR lpszCatalog;   ///< Catalog (group) name
+	LPTSTR lpszPropName;  ///< Property (item) name
+	LPTSTR lpszzCmbItems; ///< Double null terminated list of strings
+	LPTSTR lpszPropDesc;  ///< Property (item) description
+	LPARAM lpCurValue;    ///< Property (item) value
+	INT    iItemType;     ///< Property (item) type identifier
 } PROPGRIDITEM, *LPPROPGRIDITEM;
 
 /// @var NMPROPGRID
@@ -125,8 +125,8 @@ typedef struct tagPROPGRIDITEM {
 /// @struct tagNMPROPGRID
 /// @brief This is the data associated with a property grid notification
 typedef struct tagNMPROPGRID {
-    NMHDR hdr;  ///< Notification message header
-    INT iIndex; ///< Index of a property grid item
+	NMHDR hdr;  ///< Notification message header
+	INT iIndex; ///< Index of a property grid item
 } NMPROPGRID, *LPNMPROPGRID;
 
 #define PGN_PROPERTYCHANGE WM_USER + 0x2A  ///<property grid Property changed notification message
@@ -363,9 +363,9 @@ typedef struct tagNMPROPGRID {
 ///
 /// @returns No return value.
 #define PropGrid_ItemInit(pgi) \
-    (pgi.lpszCatalog = NULL,  pgi.lpszPropName = NULL, \
-    pgi.lpszzCmbItems = NULL,  pgi.lpszPropDesc = NULL, \
-    pgi.lpCurValue = 0,  pgi.iItemType = 0)
+	(pgi.lpszCatalog = NULL,  pgi.lpszPropName = NULL, \
+	pgi.lpszzCmbItems = NULL,  pgi.lpszPropDesc = NULL, \
+	pgi.lpCurValue = 0,  pgi.iItemType = 0)
 
 /// @}
 
