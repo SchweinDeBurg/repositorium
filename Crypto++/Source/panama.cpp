@@ -31,7 +31,8 @@ void Panama_SSE2_Pull(size_t count, word32 *state, word32 *z, const word32 *y);
 
 #ifdef CRYPTOPP_GENERATE_X64_MASM
 	Panama_SSE2_Pull	PROC FRAME
-	alloc_stack(2*16+8)
+	rex_push_reg rdi
+	alloc_stack(2*16)
 	save_xmm128 xmm6, 0h
 	save_xmm128 xmm7, 10h
 	.endprolog
@@ -39,8 +40,8 @@ void Panama_SSE2_Pull(size_t count, word32 *state, word32 *z, const word32 *y);
 #pragma warning(disable: 4731)	// frame pointer register 'ebp' modified by inline assembly code
 void CRYPTOPP_NOINLINE Panama_SSE2_Pull(size_t count, word32 *state, word32 *z, const word32 *y)
 {
-#ifdef __GNUC__
-	__asm__ __volatile__
+#ifdef CRYPTOPP_GNU_STYLE_INLINE_ASSEMBLY
+	asm __volatile__
 	(
 		".intel_syntax noprefix;"
 		AS_PUSH_IF86(	bx)
@@ -284,7 +285,7 @@ void CRYPTOPP_NOINLINE Panama_SSE2_Pull(size_t count, word32 *state, word32 *z, 
 	#endif
 	ASL(5)
 
-#ifdef __GNUC__
+#ifdef CRYPTOPP_GNU_STYLE_INLINE_ASSEMBLY
 		AS_POP_IF86(	bx)
 		".att_syntax prefix;"
 			:
@@ -300,7 +301,8 @@ void CRYPTOPP_NOINLINE Panama_SSE2_Pull(size_t count, word32 *state, word32 *z, 
 #ifdef CRYPTOPP_GENERATE_X64_MASM
 	movdqa	xmm6, [rsp + 0h]
 	movdqa	xmm7, [rsp + 10h]
-	add		rsp, 2*16+8
+	add rsp, 2*16
+	pop	rdi
 	ret
 	Panama_SSE2_Pull ENDP
 #else
@@ -461,7 +463,7 @@ void PanamaCipherPolicy<B>::CipherResynchronize(byte *keystreamBuffer, const byt
 	}
 
 #if CRYPTOPP_BOOL_SSE2_ASM_AVAILABLE || defined(CRYPTOPP_X64_MASM_AVAILABLE)
-	if (B::ToEnum() == LITTLE_ENDIAN_ORDER && HasSSE2())
+	if (B::ToEnum() == LITTLE_ENDIAN_ORDER && HasSSE2() && !IsP4())		// SSE2 code is slower on P4 Prescott
 		Panama_SSE2_Pull(32, this->m_state, NULL, NULL);
 	else
 #endif
