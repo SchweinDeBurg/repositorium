@@ -148,6 +148,11 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (type == FIT_BITMAP) ? TRUE : FALSE;
 }
 
+static BOOL DLL_CALLCONV
+SupportsNoPixels() {
+	return TRUE;
+}
+
 // ----------------------------------------------------------
 
 static FIBITMAP * DLL_CALLCONV
@@ -159,7 +164,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
     try {
 		char *str;
-
+		
+		BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+		
 		//find the starting brace
 		if( !FindChar(io, handle,'{') )
 			throw "Could not find starting brace";
@@ -177,9 +184,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		free(str);
 
         if (colors > 256) {
-			dib = FreeImage_Allocate(width, height, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
+			dib = FreeImage_AllocateHeader(header_only, width, height, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
 		} else {
-			dib = FreeImage_Allocate(width, height, 8);
+			dib = FreeImage_AllocateHeader(header_only, width, height, 8);
 		}
 
 		//build a map of color chars to rgb values
@@ -293,6 +300,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			free(str);
 		}
 		//done parsing color map
+
+		if(header_only) {
+			// header only mode
+			return dib;
+		}
 
 		//read in pixel data
 		for(int y = 0; y < height; y++ ) {
@@ -472,5 +484,6 @@ InitXPM(Plugin *plugin, int format_id)
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
 	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_no_pixels_proc = SupportsNoPixels;
 }
 
