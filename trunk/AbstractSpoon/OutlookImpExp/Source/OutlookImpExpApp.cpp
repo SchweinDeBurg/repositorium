@@ -52,7 +52,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 
 	if (dwReason == DLL_PROCESS_ATTACH)
 	{
-		TRACE0("AFXDLL.DLL Initializing!\n");
+		TRACE0("OutlookImpExp.dll initializing...\n");
 
 		// Extension DLL one-time initialization
 		if (!AfxInitExtensionModule(AfxdllDLL, hInstance))
@@ -76,7 +76,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 	}
 	else if (dwReason == DLL_PROCESS_DETACH)
 	{
-		TRACE0("AFXDLL.DLL Terminating!\n");
+		TRACE0("OutlookImpExp.dll terminating...\n");
 		// Terminate the library before destructors are called
 		AfxTermExtensionModule(AfxdllDLL);
 	}

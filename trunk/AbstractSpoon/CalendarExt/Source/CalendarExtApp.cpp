@@ -30,7 +30,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 
 	if (dwReason == DLL_PROCESS_ATTACH)
 	{
-		TRACE0("CalendarExt.dllL initializing!\n");
+		TRACE0("CalendarExt.dll initializing...\n");
 		
 		// Extension DLL one-time initialization
 		if (!AfxInitExtensionModule(CalendarExtDLL, hInstance))
@@ -52,7 +52,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 	}
 	else if (dwReason == DLL_PROCESS_DETACH)
 	{
-		TRACE0("CalendarExt.dll terminating!\n");
+		TRACE0("CalendarExt.dll terminating...\n");
 		// Terminate the library before destructors are called
 		AfxTermExtensionModule(CalendarExtDLL);
 	}
