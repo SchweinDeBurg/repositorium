@@ -125,7 +125,8 @@ end;
 [Files]
 ;; core application files
 Source: ".\ToDoList\Output.2008\x86\Release\Unicode\ToDoList.exe"; DestDir: "{app}"
-Source: ".\ToDoList\Resources\*"; Excludes: ".svn"; DestDir: "{app}\Resources"
+Source: ".\ToDoList\AppData\Introduction.tdl"; DestDir: "{commonappdata}\AbstractSpoon\ToDoList"; Flags: ignoreversion
+Source: ".\ToDoList\Resources\*"; Excludes: ".svn"; DestDir: "{app}\Resources"; Flags: ignoreversion
 Source: ".\CalendarExt\Output.2008\x86\Release\Unicode\CalendarExt.dll"; DestDir: "{app}"
 Source: ".\EncryptDecrypt\Output.2008\x86\Release\Unicode\EncryptDecrypt.dll"; DestDir: "{app}"
 Source: ".\FMindImportExport\Output.2008\x86\Release\Unicode\FMindImportExport.dll"; DestDir: "{app}"
@@ -166,6 +167,11 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\ToDoList"; Filenam
 
 [INI]
 Filename: "{app}\ToDoList.url"; Section: "InternetShortcut"; Key: "URL"; String: "http://zarezky.spb.ru/projects/afx_scratch.html"
+
+[Registry]
+Root: HKCU; Subkey: "Software\AbstractSpoon"; Flags: dontcreatekey uninsdeletekeyifempty
+Root: HKCU; Subkey: "Software\AbstractSpoon\RTFContentCtrl.INI"; Flags: dontcreatekey uninsdeletekey
+Root: HKCU; Subkey: "Software\AbstractSpoon\ToDoList"; Flags: dontcreatekey uninsdeletekey
 
 [Tasks]
 Name: desktopicon; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"; Flags: unchecked
