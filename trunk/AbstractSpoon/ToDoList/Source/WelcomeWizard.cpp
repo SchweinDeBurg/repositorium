@@ -228,14 +228,18 @@ CTDLWelcomePage3::CTDLWelcomePage3() : CPropertyPage(CTDLWelcomePage3::IDD)
 	m_bHideAttrib = 1;
 	m_bViewSample = 1;
 	//}}AFX_DATA_INIT
-	CString sResFolder = FileMisc::GetModuleFolder() + _T("Resources");
+	CString sResFolder;
+	::SHGetSpecialFolderPath(NULL, sResFolder.GetBuffer(_MAX_PATH), CSIDL_COMMON_APPDATA, TRUE);
+	sResFolder.ReleaseBuffer();
+	sResFolder.TrimRight(_T('\\'));
+	sResFolder += _T("\\AbstractSpoon\\ToDoList");
 	FileMisc::MakePath(m_sSampleTaskList, NULL, sResFolder, _T("Introduction.tdl"));
 
 	CString sFilter;
 	sFilter.LoadString(IDS_TDLFILEFILTER);
 	m_eSampleTasklist.SetFilter(sFilter);
 
-	m_psp.dwFlags &= ~(PSP_HASHELP);		
+	m_psp.dwFlags &= ~(PSP_HASHELP);
 }
 
 CTDLWelcomePage3::~CTDLWelcomePage3()

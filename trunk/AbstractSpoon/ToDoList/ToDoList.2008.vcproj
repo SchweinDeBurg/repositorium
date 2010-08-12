@@ -1429,46 +1429,10 @@
 		</Filter>
 		<Filter
 			Name="Theme &amp; Styler Files"
-			Filter="xml;xsl;tdl"
+			Filter="xml;xsl"
 			>
 			<File
 				RelativePath=".\Resources\flat_sorted_todolist.xsl"
-				>
-				<FileConfiguration
-					Name="MBCS Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MBCS Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\Resources\Introduction.tdl"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
@@ -2266,6 +2230,47 @@
 			</File>
 			<File
 				RelativePath=".\Resources\ru_RU.dic"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+		</Filter>
+		<Filter
+			Name="Sample Files"
+			Filter="tdl"
+			>
+			<File
+				RelativePath=".\AppData\Introduction.tdl"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
