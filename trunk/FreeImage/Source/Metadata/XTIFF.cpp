@@ -38,6 +38,8 @@
 #include "FreeImageTag.h"
 #include "FIRational.h"
 
+#if !defined(FREEIMAGE_NO_TIFF)
+
 // ----------------------------------------------------------
 //   Extended TIFF Directory GEO Tag Support
 // ----------------------------------------------------------
@@ -526,3 +528,5 @@ BOOL tiff_read_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib) {
 	return TRUE;
 
 }
+
+#endif   // FREEIMAGE_NO_TIFF

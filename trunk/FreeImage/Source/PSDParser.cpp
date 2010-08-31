@@ -28,6 +28,8 @@
 #include "Utilities.h"
 #include "PSDParser.h"
 
+#if !defined(FREEIMAGE_NO_PSD)
+
 // --------------------------------------------------------------------------
 
 // PSD signature (= '8BPS')
@@ -1038,3 +1040,5 @@ FIBITMAP* psdParser::Load(FreeImageIO *io, fi_handle handle, int s_format_id, in
 
 	return Bitmap;
 } 
+
+#endif   // FREEIMAGE_NO_PSD
