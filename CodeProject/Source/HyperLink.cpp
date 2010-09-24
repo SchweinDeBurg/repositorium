@@ -438,8 +438,9 @@ void CHyperLink::AdjustWindow()
     CString strWndText;
     GetWindowText(strWndText);
 	
-    CDC* pDC = GetDC();	
+    CDC* pDC = GetDC();
     CFont* pOldFont = pDC->SelectObject(&m_Font);
+    pDC->SetTextCharacterExtra(1);
     CSize Extent = pDC->GetTextExtent(strWndText);
     pDC->SelectObject(pOldFont);
     ReleaseDC(pDC);
