@@ -651,7 +651,15 @@
 			</Filter>
 		</Filter>
 		<File
+			RelativePath=".\Authors.txt"
+			>
+		</File>
+		<File
 			RelativePath=".\ChangeLog.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\Hacking.txt"
 			>
 		</File>
 		<File
