@@ -713,36 +713,47 @@ for (;;)
     case OP_FAIL:
     MRRETURN(MATCH_NOMATCH);
 
+    /* COMMIT overrides PRUNE, SKIP, and THEN */
+     
     case OP_COMMIT:
     RMATCH(eptr, ecode + _pcre_OP_lengths[*ecode], offset_top, md,
       ims, eptrb, flags, RM52);
-    if (rrc != MATCH_NOMATCH) RRETURN(rrc);
+    if (rrc != MATCH_NOMATCH && rrc != MATCH_PRUNE &&
+        rrc != MATCH_SKIP && rrc != MATCH_SKIP_ARG && 
+        rrc != MATCH_THEN) 
+      RRETURN(rrc);
     MRRETURN(MATCH_COMMIT);
 
+    /* PRUNE overrides THEN */
+     
     case OP_PRUNE:
     RMATCH(eptr, ecode + _pcre_OP_lengths[*ecode], offset_top, md,
       ims, eptrb, flags, RM51);
-    if (rrc != MATCH_NOMATCH) RRETURN(rrc);
+    if (rrc != MATCH_NOMATCH && rrc != MATCH_THEN) RRETURN(rrc);
     MRRETURN(MATCH_PRUNE);
 
     case OP_PRUNE_ARG:
     RMATCH(eptr, ecode + _pcre_OP_lengths[*ecode] + ecode[1], offset_top, md,
       ims, eptrb, flags, RM56);
-    if (rrc != MATCH_NOMATCH) RRETURN(rrc);
+    if (rrc != MATCH_NOMATCH && rrc != MATCH_THEN) RRETURN(rrc);
     md->mark = ecode + 2;
     RRETURN(MATCH_PRUNE);
 
+    /* SKIP overrides PRUNE and THEN */
+     
     case OP_SKIP:
     RMATCH(eptr, ecode + _pcre_OP_lengths[*ecode], offset_top, md,
       ims, eptrb, flags, RM53);
-    if (rrc != MATCH_NOMATCH) RRETURN(rrc);
+    if (rrc != MATCH_NOMATCH && rrc != MATCH_PRUNE && rrc != MATCH_THEN) 
+      RRETURN(rrc);
     md->start_match_ptr = eptr;   /* Pass back current position */
     MRRETURN(MATCH_SKIP);
 
     case OP_SKIP_ARG:
     RMATCH(eptr, ecode + _pcre_OP_lengths[*ecode] + ecode[1], offset_top, md,
       ims, eptrb, flags, RM57);
-    if (rrc != MATCH_NOMATCH) RRETURN(rrc);
+    if (rrc != MATCH_NOMATCH && rrc != MATCH_PRUNE && rrc != MATCH_THEN) 
+      RRETURN(rrc);
 
     /* Pass back the current skip name by overloading md->start_match_ptr and
     returning the special MATCH_SKIP_ARG return code. This will either be
@@ -751,18 +762,25 @@ for (;;)
 
     md->start_match_ptr = ecode + 2;
     RRETURN(MATCH_SKIP_ARG);
+    
+    /* For THEN (and THEN_ARG) we pass back the address of the bracket or
+    the alt that is at the start of the current branch. This makes it possible 
+    to skip back past alternatives that precede the THEN within the current 
+    branch. */ 
 
     case OP_THEN:
     RMATCH(eptr, ecode + _pcre_OP_lengths[*ecode], offset_top, md,
       ims, eptrb, flags, RM54);
     if (rrc != MATCH_NOMATCH) RRETURN(rrc);
+    md->start_match_ptr = ecode - GET(ecode, 1);
     MRRETURN(MATCH_THEN);
 
     case OP_THEN_ARG:
-    RMATCH(eptr, ecode + _pcre_OP_lengths[*ecode] + ecode[1], offset_top, md,
-      ims, eptrb, flags, RM58);
+    RMATCH(eptr, ecode + _pcre_OP_lengths[*ecode] + ecode[1+LINK_SIZE], 
+      offset_top, md, ims, eptrb, flags, RM58);
     if (rrc != MATCH_NOMATCH) RRETURN(rrc);
-    md->mark = ecode + 2;
+    md->start_match_ptr = ecode - GET(ecode, 1);
+    md->mark = ecode + LINK_SIZE + 2;
     RRETURN(MATCH_THEN);
 
     /* Handle a capturing bracket. If there is space in the offset vector, save
@@ -807,7 +825,9 @@ for (;;)
         {
         RMATCH(eptr, ecode + _pcre_OP_lengths[*ecode], offset_top, md,
           ims, eptrb, flags, RM1);
-        if (rrc != MATCH_NOMATCH && rrc != MATCH_THEN) RRETURN(rrc);
+        if (rrc != MATCH_NOMATCH &&
+            (rrc != MATCH_THEN || md->start_match_ptr != ecode))
+          RRETURN(rrc);
         md->capture_last = save_capture_last;
         ecode += GET(ecode, 1);
         }
@@ -868,7 +888,9 @@ for (;;)
 
       RMATCH(eptr, ecode + _pcre_OP_lengths[*ecode], offset_top, md, ims,
         eptrb, flags, RM2);
-      if (rrc != MATCH_NOMATCH && rrc != MATCH_THEN) RRETURN(rrc);
+      if (rrc != MATCH_NOMATCH &&
+          (rrc != MATCH_THEN || md->start_match_ptr != ecode))
+        RRETURN(rrc);
       ecode += GET(ecode, 1);
       }
     /* Control never reaches here. */
@@ -1069,7 +1091,8 @@ for (;;)
         ecode += 1 + LINK_SIZE + GET(ecode, LINK_SIZE + 2);
         while (*ecode == OP_ALT) ecode += GET(ecode, 1);
         }
-      else if (rrc != MATCH_NOMATCH && rrc != MATCH_THEN)
+      else if (rrc != MATCH_NOMATCH &&
+              (rrc != MATCH_THEN || md->start_match_ptr != ecode))
         {
         RRETURN(rrc);         /* Need braces because of following else */
         }
@@ -1197,7 +1220,9 @@ for (;;)
         mstart = md->start_match_ptr;   /* In case \K reset it */
         break;
         }
-      if (rrc != MATCH_NOMATCH && rrc != MATCH_THEN) RRETURN(rrc);
+      if (rrc != MATCH_NOMATCH &&
+          (rrc != MATCH_THEN || md->start_match_ptr != ecode))
+        RRETURN(rrc);
       ecode += GET(ecode, 1);
       }
     while (*ecode == OP_ALT);
@@ -1231,7 +1256,9 @@ for (;;)
         do ecode += GET(ecode,1); while (*ecode == OP_ALT);
         break;
         }
-      if (rrc != MATCH_NOMATCH && rrc != MATCH_THEN) RRETURN(rrc);
+      if (rrc != MATCH_NOMATCH &&
+          (rrc != MATCH_THEN || md->start_match_ptr != ecode))
+        RRETURN(rrc);
       ecode += GET(ecode,1);
       }
     while (*ecode == OP_ALT);
@@ -1368,7 +1395,8 @@ for (;;)
             (pcre_free)(new_recursive.offset_save);
           MRRETURN(MATCH_MATCH);
           }
-        else if (rrc != MATCH_NOMATCH && rrc != MATCH_THEN)
+        else if (rrc != MATCH_NOMATCH &&
+                (rrc != MATCH_THEN || md->start_match_ptr != ecode))
           {
           DPRINTF(("Recursion gave error %d\n", rrc));
           if (new_recursive.offset_save != stacksave)
@@ -1411,7 +1439,9 @@ for (;;)
         mstart = md->start_match_ptr;
         break;
         }
-      if (rrc != MATCH_NOMATCH && rrc != MATCH_THEN) RRETURN(rrc);
+      if (rrc != MATCH_NOMATCH &&
+          (rrc != MATCH_THEN || md->start_match_ptr != ecode))
+        RRETURN(rrc);
       ecode += GET(ecode,1);
       }
     while (*ecode == OP_ALT);
