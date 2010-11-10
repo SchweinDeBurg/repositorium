@@ -5640,6 +5640,7 @@ if ((options & ~PUBLIC_EXEC_OPTIONS) != 0) return PCRE_ERROR_BADOPTION;
 if (re == NULL || subject == NULL ||
    (offsets == NULL && offsetcount > 0)) return PCRE_ERROR_NULL;
 if (offsetcount < 0) return PCRE_ERROR_BADCOUNT;
+if (start_offset < 0 || start_offset > length) return PCRE_ERROR_BADOFFSET;
 
 /* This information is for finding all the numbers associated with a given
 name, for condition testing. */
@@ -5806,16 +5807,14 @@ back the character offset. */
 #ifdef SUPPORT_UTF8
 if (utf8 && (options & PCRE_NO_UTF8_CHECK) == 0)
   {
-  if (_pcre_valid_utf8((USPTR)subject, length) >= 0)
-    return PCRE_ERROR_BADUTF8;
+  int tb; 
+  if ((tb = _pcre_valid_utf8((USPTR)subject, length)) >= 0)
+    return (tb == length && md->partial > 1)? 
+      PCRE_ERROR_SHORTUTF8 : PCRE_ERROR_BADUTF8;
   if (start_offset > 0 && start_offset < length)
     {
-    int tb = ((USPTR)subject)[start_offset];
-    if (tb > 127)
-      {
-      tb &= 0xc0;
-      if (tb != 0 && tb != 0xc0) return PCRE_ERROR_BADUTF8_OFFSET;
-      }
+    tb = ((USPTR)subject)[start_offset] & 0xc0;
+    if (tb == 0x80) return PCRE_ERROR_BADUTF8_OFFSET;
     }
   }
 #endif
