@@ -159,6 +159,8 @@ both, so we keep them all distinct. */
 #define PCRE_ERROR_RECURSIONLIMIT (-21)
 #define PCRE_ERROR_NULLWSLIMIT    (-22)  /* No longer actually used */
 #define PCRE_ERROR_BADNEWLINE     (-23)
+#define PCRE_ERROR_BADOFFSET      (-24)
+#define PCRE_ERROR_SHORTUTF8      (-25)
 
 /* Request types for pcre_fullinfo() */
 
