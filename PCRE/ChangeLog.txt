@@ -66,6 +66,42 @@ Version 8.11 10-Oct-2010
     
 12. Added an optional parentheses number to the -o and --only-matching options
     of pcregrep. 
+    
+13. Imitating Perl's /g action for multiple matches is tricky when the pattern
+    can match an empty string. The code to do it in pcretest and pcredemo 
+    needed fixing:
+    
+    (a) When the newline convention was "crlf", pcretest got it wrong, skipping
+        only one byte after an empty string match just before CRLF (this case
+        just got forgotten; "any" and "anycrlf" were OK).
+        
+    (b) The pcretest code also had a bug, causing it to loop forever in UTF-8
+        mode when an empty string match preceded an ASCII character followed by 
+        a non-ASCII character. (The code for advancing by one character rather
+        than one byte was nonsense.) 
+        
+    (c) The pcredemo.c sample program did not have any code at all to handle
+        the cases when CRLF is a valid newline sequence. 
+        
+14. Neither pcre_exec() nor pcre_dfa_exec() was checking that the value given
+    as a starting offset was within the subject string. There is now a new
+    error, PCRE_ERROR_BADOFFSET, which is returned if the starting offset is 
+    negative or greater than the length of the string. In order to test this, 
+    pcretest is extended to allow the setting of negative starting offsets.
+    
+15. In both pcre_exec() and pcre_dfa_exec() the code for checking that the 
+    starting offset points to the beginning of a UTF-8 character was 
+    unnecessarily clumsy. I tidied it up.  
+    
+16. Added PCRE_ERROR_SHORTUTF8 to make it possible to distinguish between a
+    bad UTF-8 sequence and one that is incomplete. 
+    
+17. Nobody had reported that the --include_dir option, which was added in 
+    release 7.7 should have been called --include-dir (hyphen, not underscore) 
+    for compatibility with GNU grep. I have changed it to --include-dir, but 
+    left --include_dir as an undocumented synonym, and the same for 
+    --exclude-dir, though that is not available in GNU grep, at least as of 
+    release 2.5.4. 
 
 
 Version 8.10 25-Jun-2010
