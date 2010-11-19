@@ -445,6 +445,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\ConversionUINT16.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\Halftoning.cpp"
 					>
 				</File>
