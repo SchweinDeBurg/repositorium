@@ -49,18 +49,18 @@ Global
 		{41D117F4-7C9F-46D9-A94F-59A0EE59D0E8}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).ActiveCfg = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
 		{41D117F4-7C9F-46D9-A94F-59A0EE59D0E8}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Build.0 = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
 		{41D117F4-7C9F-46D9-A94F-59A0EE59D0E8}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Deploy.0 = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
-		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I).ActiveCfg = Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
-		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Build.0 = Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
-		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Deploy.0 = Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
-		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).ActiveCfg = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
-		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Build.0 = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
-		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Deploy.0 = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
 		{784DB461-73A9-484C-BB8C-3ED0F721A413}.Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I).ActiveCfg = Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
 		{784DB461-73A9-484C-BB8C-3ED0F721A413}.Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Build.0 = Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
 		{784DB461-73A9-484C-BB8C-3ED0F721A413}.Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Deploy.0 = Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
 		{784DB461-73A9-484C-BB8C-3ED0F721A413}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).ActiveCfg = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
 		{784DB461-73A9-484C-BB8C-3ED0F721A413}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Build.0 = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
 		{784DB461-73A9-484C-BB8C-3ED0F721A413}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Deploy.0 = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
+		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I).ActiveCfg = Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
+		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Build.0 = Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
+		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Deploy.0 = Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
+		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).ActiveCfg = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
+		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Build.0 = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
+		{E7448A28-3414-4FD9-8847-8288D51FB04E}.Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I).Deploy.0 = Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,7 +69,7 @@ Global
 		{CC1E3C61-4C85-41E1-8AE2-BAB9B9AC363B} = {175A8388-3BBA-4694-97EB-BCBB5EEEACF2}
 		{0420A41F-0464-4FAC-B042-6227314A7379} = {842A174A-6383-4F08-B1A4-346136C18B06}
 		{41D117F4-7C9F-46D9-A94F-59A0EE59D0E8} = {32DF6192-08AB-445C-974D-4A2450D1B9D3}
-		{E7448A28-3414-4FD9-8847-8288D51FB04E} = {32DF6192-08AB-445C-974D-4A2450D1B9D3}
 		{784DB461-73A9-484C-BB8C-3ED0F721A413} = {32DF6192-08AB-445C-974D-4A2450D1B9D3}
+		{E7448A28-3414-4FD9-8847-8288D51FB04E} = {32DF6192-08AB-445C-974D-4A2450D1B9D3}
 	EndGlobalSection
 EndGlobal
