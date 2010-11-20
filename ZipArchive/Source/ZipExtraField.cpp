@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "_ZipExtraField.h"
+#include "Private/ZipExtraField.h"
 
 CZipArray<WORD> CZipExtraField::m_aNoSizeExtraHeadersID;
 

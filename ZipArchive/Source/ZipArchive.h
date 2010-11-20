@@ -37,17 +37,17 @@
 #endif
 
 #include "_features.h"
-#include "_ZipException.h"
+#include "Private/ZipException.h"
 #include "ZipAutoBuffer.h"
 #include "ZipCentralDir.h"	
 #include "ZipStorage.h"
 #include "ZipPathComponent.h"
 #include "ZipString.h"
 #include "ZipExport.h"
-#include "_ZipCryptograph.h"
+#include "Private/ZipCryptograph.h"
 #include "FileFilter.h"
 #include "DirEnumerator.h"
-#include "_ZipCompressor.h"
+#include "Private/ZipCompressor.h"
 #include "ZipCallbackProvider.h"
 #include "BitFlag.h"
 

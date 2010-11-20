@@ -23,8 +23,8 @@
 #endif	
 
 #include "ZipPlatform.h"
-#include "_ZipFileHeader.h"
-#include "_ZipException.h"
+#include "Private/ZipFileHeader.h"
+#include "Private/ZipException.h"
 #include "ZipAutoBuffer.h"
 
 #include <utime.h>

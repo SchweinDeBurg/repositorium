@@ -13,15 +13,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "_ZipFileHeader.h"
+#include "Private/ZipFileHeader.h"
 #include "ZipAutoBuffer.h"
-#include "_ZipArchive.h"
+#include "Private/ZipArchive.h"
 #include "ZipPlatform.h"
 #include "ZipCompatibility.h"
 #include <time.h>
 
 #include "ZipCrc32Cryptograph.h"
-#include "_BytesWriter.h"
+#include "Private/BytesWriter.h"
 #include "_features.h"
 #include "../../zlib/Source/zlib.h"
 

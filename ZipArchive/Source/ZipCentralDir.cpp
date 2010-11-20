@@ -16,10 +16,10 @@
 #include "stdafx.h"
 //#include <string>
 #include "ZipCentralDir.h"
-#include "_ZipArchive.h"
+#include "Private/ZipArchive.h"
 #include "ZipFileMapping.h"
 #include "ZipPlatform.h"
-#include "_BytesWriter.h"
+#include "Private/BytesWriter.h"
 
 #if defined(__INTEL_COMPILER)
 // remark #279: controlling expression is constant

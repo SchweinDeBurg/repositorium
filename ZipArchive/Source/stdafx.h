@@ -15,5 +15,5 @@
 #if defined(ZIP_ARCHIVE_FULL)
 #include "../../../ZipArchiveFull/Source/stdafx.h"
 #else
-#include "_stdafx.h"
+#include "Private/StdAfxGPL.h"
 #endif   // ZIP_ARCHIVE_FULL

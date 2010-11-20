@@ -24,7 +24,7 @@
 
 #include "_features.h"
 #include "ZipFile.h"
-#include "_ZipException.h"
+#include "Private/ZipException.h"
 #include "ZipPlatform.h"
 #include "BitFlag.h"
 

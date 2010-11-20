@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "_ZipException.h"
+#include "Private/ZipException.h"
 #include "_features.h"
 #include "../../zlib/Source/zlib.h"
 

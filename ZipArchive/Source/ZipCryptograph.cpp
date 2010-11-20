@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "_ZipCryptograph.h"
+#include "Private/ZipCryptograph.h"
 #include "ZipCrc32Cryptograph.h"
 
 CZipCryptograph* CZipCryptograph::CreateCryptograph(int iEncryptionMethod)

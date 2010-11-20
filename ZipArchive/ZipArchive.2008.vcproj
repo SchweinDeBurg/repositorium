@@ -460,43 +460,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Source\_BytesWriter.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\_features.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\_platform.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\_stdafx.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\_ZipArchive.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\_ZipCompressor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\_ZipCryptograph.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\_ZipException.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\_ZipExtraField.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\_ZipFileHeader.h"
 				>
 			</File>
 			<File
@@ -698,6 +666,43 @@
 			>
 			<File
 				RelativePath=".\Help\ZipArchive.chm"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Private Files"
+			Filter="h"
+			>
+			<File
+				RelativePath=".\Source\Private\BytesWriter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Private\StdAfxGPL.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Private\ZipArchive.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Private\ZipCompressor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Private\ZipCryptograph.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Private\ZipException.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Private\ZipExtraField.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Private\ZipFileHeader.h"
 				>
 			</File>
 		</Filter>

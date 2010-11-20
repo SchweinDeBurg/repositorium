@@ -30,10 +30,10 @@
 
 #include "ZipExport.h"
 #include "ZipAutoBuffer.h"
-#include "_ZipFileHeader.h"
+#include "Private/ZipFileHeader.h"
 #include "ZipStorage.h"
-#include "_ZipCryptograph.h"
-#include "_ZipException.h"
+#include "Private/ZipCryptograph.h"
+#include "Private/ZipException.h"
 
 /**
 	A base class for compressors used in compression and decompression of data.

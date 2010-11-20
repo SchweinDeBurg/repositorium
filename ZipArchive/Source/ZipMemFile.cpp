@@ -14,7 +14,7 @@
 
 #include "stdafx.h"
 #include "ZipMemFile.h"
-#include "_ZipException.h"
+#include "Private/ZipException.h"
 
 #if defined(__INTEL_COMPILER)
 // warning #186: pointless comparison of unsigned integer with zero

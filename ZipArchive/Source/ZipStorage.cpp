@@ -14,7 +14,7 @@
 
 #include "stdafx.h"
 #include "ZipStorage.h"
-#include "_ZipArchive.h"
+#include "Private/ZipArchive.h"
 #include "ZipPlatform.h"
 
 #if defined(__INTEL_COMPILER)

@@ -30,8 +30,8 @@
 	#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
 #endif
 
-#include "_ZipException.h"
-#include "_ZipFileHeader.h"
+#include "Private/ZipException.h"
+#include "Private/ZipFileHeader.h"
 #include "ZipAutoBuffer.h"
 #include "ZipCollections.h"
 #include "ZipCompatibility.h"
