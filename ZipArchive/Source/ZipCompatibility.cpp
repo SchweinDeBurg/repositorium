@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -27,15 +27,6 @@
 #pragma warning(disable: 1419)
 #endif	// __INTEL_COMPILER
 
-
-enum iInternalAttr
-{
-	attROnly	= 0x01,	
-	attHidd		= 0x02,
-	attSys		= 0x04,
-	attDir		= 0x10,
-	attArch		= 0x20
-};
 // *********************** WINDOWS **************************
 #ifndef _WIN32
 	#define FILE_ATTRIBUTE_READONLY             0x00000001  
@@ -51,10 +42,12 @@ enum iInternalAttr
 #define CREATE_USER_PERMISSIONS(x) ((x & 0x0007) << 6)
 
 #define GROUP_PERMISSIONS_MASK 0x0038
+#define EXTRACT_GROUP_PERMISSIONS(x) ((x & GROUP_PERMISSIONS_MASK) >> 3)
 #define CREATE_GROUP_PERMISSIONS(x) ((x & 0x0007) << 3)
 
 
 #define OTHER_PERMISSIONS_MASK  0x0007
+#define EXTRACT_OTHER_PERMISSIONS(x) ((x & OTHER_PERMISSIONS_MASK))
 #define CREATE_OTHER_PERMISSIONS(x) (x & 0x0007)
 
 #define UNIX_DIRECTORY_ATTRIBUTE 0x4000
@@ -99,7 +92,7 @@ conv_func conv_funcs[21] = {AttrDos,
 
 DWORD ZipCompatibility::ConvertToSystem(DWORD uAttr, int iFromSystem, int iToSystem)
 {
-	if (iToSystem != iFromSystem && iFromSystem < 11 && iToSystem < 11)
+	if (iToSystem != iFromSystem && iFromSystem < zcLast && iToSystem < zcLast)
 	{
 		conv_func p = conv_funcs[iFromSystem], q = conv_funcs[iToSystem];
 		if (p && q)
@@ -110,13 +103,23 @@ DWORD ZipCompatibility::ConvertToSystem(DWORD uAttr, int iFromSystem, int iToSys
 	return uAttr; 
 }
 
+DWORD ZipCompatibility::GetAsInternalAttributes(DWORD uAttr, int iFromSystem)
+{
+	if (iFromSystem < zcLast)
+	{
+		conv_func f = conv_funcs[iFromSystem];
+		if (!f)
+			CZipException::Throw(CZipException::platfNotSupp);
+		return f(uAttr, true);
+	}
+	return uAttr;
+}
+
 
 DWORD AttrDos(DWORD uAttr, bool )
 {
 	return uAttr;	
 }
-
-
 
 DWORD AttrUnix(DWORD uAttr, bool bFrom)
 {
@@ -127,6 +130,8 @@ DWORD AttrUnix(DWORD uAttr, bool bFrom)
 		if (isDir)
 			uNewAttr = attDir;
 
+		DWORD uGroupAttr = EXTRACT_GROUP_PERMISSIONS(uAttr);
+		DWORD uOtherAttr = EXTRACT_OTHER_PERMISSIONS(uAttr);
 		uAttr = EXTRACT_USER_PERMISSIONS (uAttr);
 
 		// we may set archive attribute if the file hasn't got the execute permissions
@@ -137,20 +142,19 @@ DWORD AttrUnix(DWORD uAttr, bool bFrom)
 		if (!(uAttr & UNIX_WRITE)) 
 		    uNewAttr |= attROnly;
 
-	    if (!(uAttr & UNIX_READ)) 
+	    if (!(uGroupAttr & UNIX_READ) && !(uOtherAttr & UNIX_READ)) 
 		    uNewAttr |= attHidd;
 	}
 	else
 	{
 
-		uNewAttr = 0;
+		uNewAttr = CREATE_USER_PERMISSIONS (UNIX_READ);
 
 		// we cannot assume that if the file hasn't the archive attribute set		
 		// then it is executable and set execute permissions
 
 		if (!(uAttr & attHidd)) 
-			uNewAttr |= (CREATE_OTHER_PERMISSIONS (UNIX_READ) | CREATE_GROUP_PERMISSIONS (UNIX_READ)) |
-				CREATE_USER_PERMISSIONS (UNIX_READ);
+			uNewAttr |= (CREATE_OTHER_PERMISSIONS (UNIX_READ) | CREATE_GROUP_PERMISSIONS (UNIX_READ));
 							
 
 		if (!(uAttr & attROnly))
@@ -234,6 +238,12 @@ void ZipCompatibility::SlashBackslashChg(CZipString& szFileName, bool bReplaceSl
 		c2 = t1;
 	}
 	szFileName.Replace(c2, c1);
+}
+
+void ZipCompatibility::NormalizePathSeparators(CZipString& szFileName)
+{
+	int iPlatform = ZipPlatform::GetSystemID();
+	ZipCompatibility::SlashBackslashChg(szFileName, iPlatform == ZipCompatibility::zcDosFat || iPlatform == ZipCompatibility::zcNtfs);
 }
 
 UINT ZipCompatibility::GetDefaultNameCodePage(int iPlatform)

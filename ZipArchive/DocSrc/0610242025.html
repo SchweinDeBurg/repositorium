@@ -44,7 +44,7 @@
 		The ZipArchive Library provides several methods for searching for files in an archive.
 		<ul>
 			<li>You can set the global archive case-sensitivity with the<br />
-				<a class="linkapi" href="classCZipArchive.html#ec981beb4dfb55e4a2f054c410ee3031">CZipArchive::SetCaseSensitivity()</a> method.</li>
+				<a class="linkapi" href="classCZipArchive.html#aec981beb4dfb55e4a2f054c410ee3031">CZipArchive::SetCaseSensitivity()</a> method.</li>
 		</ul>
 		<h2 id="findfast" name="findfast" class="kb">
 			Searching by Names: the Find Fast Feature</h2>
@@ -52,19 +52,20 @@
 		names of files in an archive. The search methods perform a binary-search on this
 		array for the fastest results. This array is built automatically when you use one
 		of the below methods for the first time. If you want to build the array in a more
-		convenient time for you, use the <a class="linkapi" href="classCZipArchive.html#674015911b66a42299b60e04c33dd35b">CZipArchive::EnableFindFast()</a>
+		convenient time for you, use the <a class="linkapi" href="classCZipArchive.html#a674015911b66a42299b60e04c33dd35b">CZipArchive::EnableFindFast()</a>
 		method. These methods require using names the way they appear in archive (considering
 		the case-sensitivity settings) - no wildcards are allowed.
 		<ul>
-			<li>To find a single file in an archive, call the <a class="linkapi" href="classCZipArchive.html#d5e73dc606a51b2708ad8c3ee87b3906">CZipArchive::FindFile()</a>
+			<li>To find a single file in an archive, call the <a class="linkapi" href="classCZipArchive.html#ad5e73dc606a51b2708ad8c3ee87b3906">CZipArchive::FindFile()</a>
 				method.</li>
-			<li>To find multiple files by their names, call the <a class="linkapi" href="classCZipArchive.html#95573d33042d4adc73f36f4b1a7a0b3a">CZipArchive::GetIndexes()</a>
+			<li>To find multiple files by their names, call the <a class="linkapi" href="classCZipArchive.html#a95573d33042d4adc73f36f4b1a7a0b3a">CZipArchive::GetIndexes()</a>
 				method.</li>
 		</ul>
 		You can find real indexes (such than can be used as arguments of other archive processing
-		methods) of the sorted files using the <a class="linkapi" href="classCZipArchive.html#d5f980abfefe3f4e075da12623d13274">CZipArchive::GetFindFastIndex()</a>
+		methods) of the sorted files using the <a class="linkapi" href="classCZipArchive.html#ad5f980abfefe3f4e075da12623d13274">CZipArchive::GetFindFastIndex()</a>
 		method.
-		<div class="codetitle">Sample Code</div><pre class="fragment">    CZipArchive zip;
+		<div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// open an existing archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     ZIP_INDEX_TYPE index = zip.FindFile(_T(<span class="stringliteral">"file1.dat"</span>));
@@ -98,10 +99,10 @@
 <span class="preprocessor">#endif</span>
 <span class="preprocessor"></span>        }
     }
-</pre>
+</pre></div> 
 		<h2 id="match" name="match" class="kb">
 			Searching by Wildcards</h2>
-		To search for files in an archive using wildcards, use the <a class="linkapi" href="classCZipArchive.html#b6d202ba9404fb24e27c23497638b6e0">CZipArchive::FindMatches()</a>
+		To search for files in an archive using wildcards, use the <a class="linkapi" href="classCZipArchive.html#ab6d202ba9404fb24e27c23497638b6e0">CZipArchive::FindMatches()</a>
 		method. This method does not use the <a class="linkindex" href="#findfast">Find Fast</a>feature.
 		<h3 id="wildcards" name="wildcards" class="kb">
 			Pattern Matching</h3>
@@ -127,7 +128,8 @@
 		look for example like this: <code>[0 - 9a - zA - Z_]</code>. This <strong>set</strong>
 		is the minimal set of characters allowed in the <strong>set</strong> pattern construct.
 		Other characters are allowed (only 8-bit characters), if your system supports them.
-		<div class="codetitle">Sample Code</div><pre class="fragment">    CZipArchive zip;
+		<div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// open an existing archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     CZipIndexesArray indexes;
@@ -146,7 +148,7 @@
 <span class="preprocessor">#endif</span>
 <span class="preprocessor"></span>    }
     zip.Close();
-</pre>
+</pre></div> 
 		<h4 id="api" name="api" class="kb">
 			Searching for Files in Specified Directory</h4>
 		To find all files that are located in a particular directory inside of an archive,
@@ -154,12 +156,12 @@
 		<h2 id="api" name="api" class="kb">
 			See Also API Links</h2>
 		<ul class="non">
-			<li><a class="linkapi" href="classCZipArchive.html#ec981beb4dfb55e4a2f054c410ee3031">CZipArchive::SetCaseSensitivity()</a></li>
-			<li><a class="linkapi" href="classCZipArchive.html#674015911b66a42299b60e04c33dd35b">CZipArchive::EnableFindFast()</a></li>
-			<li><a class="linkapi" href="classCZipArchive.html#d5e73dc606a51b2708ad8c3ee87b3906">CZipArchive::FindFile()</a></li>
-			<li><a class="linkapi" href="classCZipArchive.html#95573d33042d4adc73f36f4b1a7a0b3a">CZipArchive::GetIndexes()</a></li>
-			<li><a class="linkapi" href="classCZipArchive.html#d5f980abfefe3f4e075da12623d13274">CZipArchive::GetFindFastIndex()</a></li>
-			<li><a class="linkapi" href="classCZipArchive.html#b6d202ba9404fb24e27c23497638b6e0">CZipArchive::FindMatches()</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#aec981beb4dfb55e4a2f054c410ee3031">CZipArchive::SetCaseSensitivity()</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#a674015911b66a42299b60e04c33dd35b">CZipArchive::EnableFindFast()</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#ad5e73dc606a51b2708ad8c3ee87b3906">CZipArchive::FindFile()</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#a95573d33042d4adc73f36f4b1a7a0b3a">CZipArchive::GetIndexes()</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#ad5f980abfefe3f4e075da12623d13274">CZipArchive::GetFindFastIndex()</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#ab6d202ba9404fb24e27c23497638b6e0">CZipArchive::FindMatches()</a></li>
 		</ul>
 	
         </div>
@@ -168,7 +170,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2009 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2010 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

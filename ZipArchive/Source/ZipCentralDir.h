@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -147,6 +147,7 @@ public:
 			m_uEntriesNumber = 0;
 			m_uSize = 0;  
 			m_uOffset = 0;
+			m_iLastIndexAdded = ZIP_FILE_INDEX_UNSPECIFIED;
 		}
 		bool CheckIfOK_1()
 		{
@@ -187,6 +188,11 @@ public:
 		*/
 		bool m_bFindFastEnabled;	
 
+		/**
+			The index of the recently added file.
+		*/
+		ZIP_INDEX_TYPE m_iLastIndexAdded;
+
 	private:
 		/**
 			The method used in string comparisons. It is set depending on the current case-sensitivity.
@@ -226,15 +232,8 @@ public:
 
 	/**
 		Reads the central directory from the archive.
-
-		\param bExhaustiveRead
-			\c true, if the exhaustive read should be performed, \c false otherwise.
-
-		
-		\see
-			CZipArchive::SetExhaustiveRead
 	*/
-	void Read(bool bExhaustiveRead);
+	void Read();
 
 	/**
 		Opens the file with the given index.
@@ -316,6 +315,17 @@ public:
 
 	*/	
 	CZipFileHeader* AddNewFile(const CZipFileHeader & header, ZIP_INDEX_TYPE uReplaceIndex, int iLevel, bool bRichHeaderTemplateCopy = false);
+
+	/** 
+		Returns the index of the recently added file (if any).
+
+		\return
+			The index of the recently added file or \c ZIP_FILE_INDEX_UNSPECIFIED if the index is unknown.
+	*/
+	ZIP_INDEX_TYPE GetLastIndexAdded() const
+	{
+		return m_pInfo ? m_pInfo->m_iLastIndexAdded : ZIP_FILE_INDEX_UNSPECIFIED;
+	}
 
 	/**
 		Removes physically the central directory from the archive.
@@ -489,6 +499,14 @@ public:
 			CZipArchive::SetIgnoredConsistencyChecks
 	*/
 	int m_iIgnoredChecks;
+
+	/**
+		The currently set special flags.
+
+		\see
+			CZipArchive::SetSpecialFlags
+	*/
+	ZipArchiveLib::CBitFlag m_specialFlags;
 
 	/**
 		Returns the value indicating whether the specified consistency check should be performed.
@@ -742,15 +760,8 @@ protected:
 
 	/**
 		Reads file headers from the archive.
-
-		\param bExhaustiveRead
-			\c true, if the exhaustive read should be performed, \c false otherwise.
-
-		
-		\see
-			CZipArchive::SetExhaustiveRead
 	*/
-	void ReadHeaders(bool bExhaustiveRead);
+	void ReadHeaders();
 
 	/**
 		Frees the memory allocated for the CZipFileHeader structures.

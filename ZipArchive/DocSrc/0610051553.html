@@ -144,7 +144,7 @@
 		<ul>
 			<li>Splitting and spanning are compatible with PKZIP and WinZip.</li>
 			<li>Binary splitting is compatible e.g. with 7-Zip, but is not compatible with WinZip.</li>
-			<li>To set a callback object for splitting or spanning use the <a class="linkapi" href="classCZipArchive.html#7f0aeb9a7368afd0689149485bd7ca5b">CZipArchive::SetSegmCallback()</a> method.The class of the callback object must
+			<li>To set a callback object for splitting or spanning use the <a class="linkapi" href="classCZipArchive.html#a7f0aeb9a7368afd0689149485bd7ca5b">CZipArchive::SetSegmCallback()</a> method.The class of the callback object must
 				be derived from the <a class="linkapi" href="structCZipSegmCallback.html">CZipSegmCallback</a> class. </li>
 			<li>The ZipArchive Library does not allow direct modifications of existing segmented
 				archives. However you can apply changes to an existing segmented archive by creating
@@ -152,23 +152,24 @@
 				methods. These methods will copy compressed data from the old archive without decompression.
 				You can find more information about this method here: <a class="linkkb" href="0610231446.html#get">Compressing Data</a>.</li>
 			<li>The <code>CZipArchive</code> class uses a write buffer to optimize the speed of
-				write operations. You can change its size with the <a class="linkapi" href="classCZipArchive.html#be06c912f3dbacfe3d327d7c7a2d0e88">CZipArchive::SetAdvanced()</a>
+				write operations. You can change its size with the <a class="linkapi" href="classCZipArchive.html#abe06c912f3dbacfe3d327d7c7a2d0e88">CZipArchive::SetAdvanced()</a>
 				method (set the first argument). While creating a segmented archive, set the size
 				of the buffer to the maximum size of the volume for the best performance.</li>
 			<li>To determine the total number of volumes in an archive, first request the central
-				directory information using the <a class="linkapi" href="classCZipArchive.html#fbf6eb8ce378ec0812f0ccb7827e8e79">CZipArchive::GetCentralDirInfo()</a>
+				directory information using the <a class="linkapi" href="classCZipArchive.html#afbf6eb8ce378ec0812f0ccb7827e8e79">CZipArchive::GetCentralDirInfo()</a>
 				method. The total number of volumes can be then obtained by adding one to the<br />
-				<a class="linkapi" href="structCZipCentralDir_1_1CInfo.html#358ccf93954d97ad44ed35f4bbf1c704">CZipCentralDir::CInfo::m_uLastVolume</a> value, as illustrated
+				<a class="linkapi" href="structCZipCentralDir_1_1CInfo.html#a358ccf93954d97ad44ed35f4bbf1c704">CZipCentralDir::CInfo::m_uLastVolume</a> value, as illustrated
 				in the sample code below.
 				<br />
-				<div class="codetitle">Sample Code</div><pre class="fragment">    CZipArchive zip;    
+				<div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment">    CZipArchive zip;    
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     CZipCentralDir::CInfo info;
     zip.GetCentralDirInfo(info);
     ZIP_VOLUME_TYPE uTotalSegments = info.m_uLastVolume + 1;
     <span class="comment">// ...</span>
     zip.Close();    
-</pre>
+</pre></div> 
 			</li>
 		</ul>
 		<h3 id="conv" name="conv" class="kb">
@@ -256,10 +257,11 @@
 		to use volumes sizes not smaller than 64KB.
 		<p />
 		Under Linux/Mac OS X, when you are opening an existing split archive, use <code>CZipArchive::zipOpenSplit</code>
-		mode when calling the <a class="linkapi" href="classCZipArchive.html#3d3ae4cf7f48f19120924ebe1e4b7386">CZipArchive::Open(LPCTSTR)</a> method.
-		This is caused by the lack of the implementation of the <a class="linkapi" href="namespaceZipPlatform.html#fd9f8021d83764be0fb27ea940222796">ZipPlatform::IsDriveRemovable()</a>
+		mode when calling the <a class="linkapi" href="classCZipArchive.html#a3d3ae4cf7f48f19120924ebe1e4b7386">CZipArchive::Open(LPCTSTR)</a> method.
+		This is caused by the lack of the implementation of the <a class="linkapi" href="namespaceZipPlatform.html#afd9f8021d83764be0fb27ea940222796">ZipPlatform::IsDriveRemovable()</a>
 		function and the device containing the archive is always assumed to be removable.
-		<div class="codetitle">Sample Code</div><pre class="fragment">    LPCTSTR zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
+		<div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment">    LPCTSTR zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
     CZipArchive zip;    
     <span class="comment">// specify the segment size to be 1MB</span>
     zip.Open(zipFileName, CZipArchive::zipCreateSplit, 1024 * 1024);    
@@ -271,19 +273,19 @@
     <span class="comment">// under Linux/Mac OS X, call instead: zip.Open(zipFileName, CZipArchive::zipOpenSplit);</span>
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"big.ext"</span>));
     zip.Close();
-</pre>
+</pre></div> 
 		<h3 id="splitCallback" name="splitCallback" class="kb">
 			Using Callback with Split Archives</h3>
 		Using callback with split archives is not necessary, but possible. This is useful
 		when you e.g. need to have the possibility to prompt a user for a location of a
 		volume or perform some other actions.
 		<p />
-		When the callback is set, the <a class="linkapi" href="structCZipCallback.html#27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback</a>
+		When the callback is set, the <a class="linkapi" href="structCZipCallback.html#a27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback</a>
 		method will be called every time a volume changes.
 		<ul>
-			<li>The reason for calling the callback is stored in <a class="linkapi" href="structCZipSegmCallback.html#58447cfa3f1e7b3d3343271cf2509812">CZipSegmCallback::m_iCode</a>
-				and takes one of the <a class="linkapi" href="structCZipSegmCallback.html#6621231bf0bfde4a9646f810a01a3901">CZipSegmCallback::SegmCodes</a> values.</li>
-			<li>You can change the filename and path of the current volume by modifying the <a class="linkapi" href="structCZipCallback.html#132345e5a62fd08a249cabc01383af6f">CZipCallback::m_szExternalFile</a> variable. When the callback
+			<li>The reason for calling the callback is stored in <a class="linkapi" href="structCZipSegmCallback.html#a58447cfa3f1e7b3d3343271cf2509812">CZipSegmCallback::m_iCode</a>
+				and takes one of the <a class="linkapi" href="structCZipSegmCallback.html#a6621231bf0bfde4a9646f810a01a3901">CZipSegmCallback::SegmCodes</a> values.</li>
+			<li>You can change the filename and path of the current volume by modifying the <a class="linkapi" href="structCZipCallback.html#a132345e5a62fd08a249cabc01383af6f">CZipCallback::m_szExternalFile</a> variable. When the callback
 				is called, this variable holds the full path to the volume file as expected by the
 				library. You can change this variable and the library will create the volume file
 				under a new name or location. For implementing a custom naming scheme it is recommended
@@ -291,8 +293,8 @@
 				instead.</li>
 			<li>The number of the disk needed for reading or writing is stored in
 				<br />
-				<a class="linkapi" href="structCZipSegmCallback.html#bbf4160b8992b7694cc7a686693ed452">CZipSegmCallback::m_uVolumeNeeded</a>.</li>
-			<li>To abort the archive processing, return <code>false</code> from this method. A <a class="linkapi" href="classCZipException.html">CZipException</a> will be thrown with the <a class="linkapi" href="classCZipException.html#a4f3fc7c792e57a0a6881b6ea48725afa9beec1f47e84433e4e60b98e922f6d0">CZipException::aborted</a>
+				<a class="linkapi" href="structCZipSegmCallback.html#abbf4160b8992b7694cc7a686693ed452">CZipSegmCallback::m_uVolumeNeeded</a>.</li>
+			<li>To abort the archive processing, return <code>false</code> from this method. A <a class="linkapi" href="classCZipException.html">CZipException</a> will be thrown with the <a class="linkapi" href="classCZipException.html#aa4f3fc7c792e57a0a6881b6ea48725afaa9beec1f47e84433e4e60b98e922f6d0">CZipException::aborted</a>
 				code.</li>
 			<li>The value of the <code>uProgress</code> parameter is set to <code>0</code> apart
 				from the time when the callback is called for the last volume. It is then set to
@@ -308,9 +310,10 @@
 				</ul>
 			</li>
 		</ul>
-		<div class="codetitle">Sample Code</div><pre class="fragment"><span class="keyword">class </span>CSplitCallback : <span class="keyword">public</span> CZipSegmCallback
+		<div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment"><span class="keyword">class </span>CSplitCallback : <span class="keyword">public</span> CZipSegmCallback
 {
-    <span class="keywordtype">bool</span> Callback(ZIP_SIZE_TYPE uProgress)
+    <span class="keywordtype">bool</span> Callback(ZIP_SIZE_TYPE)
     {
         <span class="keywordflow">switch</span> (m_iCode)
         {
@@ -376,7 +379,7 @@
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"big.ext"</span>));
     zip.Close();
 }
-</pre>
+</pre></div> 
 		<h3 id="splitNames" name="splitNames" class="kb">
 			Custom Naming Scheme of Volumes</h3>
 		You can implement a custom naming scheme of volumes for split archives. In order
@@ -384,21 +387,22 @@
 		<ul>
 			<li>Create a class derived from the <a class="linkapi" href="classCZipSplitNamesHandler.html">CZipSplitNamesHandler</a>
 				class. </li>
-			<li>Implement the <a class="linkapi" href="classCZipSplitNamesHandler.html#8b2890d86dd61be5fbd24ea9875b0add">CZipSplitNamesHandler::GetVolumeName()</a>
+			<li>Implement the <a class="linkapi" href="classCZipSplitNamesHandler.html#a8b2890d86dd61be5fbd24ea9875b0add">CZipSplitNamesHandler::GetVolumeName()</a>
 				method.</li>
-			<li>For binary split, implement also the <a class="linkapi" href="classCZipSplitNamesHandler.html#4d4c44f9b8b0ea54c723cc3d1b842cdd">CZipSplitNamesHandler::GetVolumeNumber()</a>
+			<li>For binary split, implement also the <a class="linkapi" href="classCZipSplitNamesHandler.html#a4d4c44f9b8b0ea54c723cc3d1b842cdd">CZipSplitNamesHandler::GetVolumeNumber()</a>
 				method. It should return <code>0</code> when the volume number could not be recognized.</li>
 			<li>Set the instance of the created class to be used for custom naming scheme with the
-				<a class="linkapi" href="classCZipArchive.html#0cab93e835c4d5b3309f5672416f673b">CZipArchive::SetSplitNamesHandler(CZipSplitNamesHandler&amp;)</a>
+				<a class="linkapi" href="classCZipArchive.html#a0cab93e835c4d5b3309f5672416f673b">CZipArchive::SetSplitNamesHandler(CZipSplitNamesHandler&amp;)</a>
 				or<br />
-				<a class="linkapi" href="classCZipArchive.html#35f9982583097cbbf23892e46196060e">CZipArchive::SetSplitNamesHandler(CZipSplitNamesHandler*, bool)</a>
+				<a class="linkapi" href="classCZipArchive.html#a35f9982583097cbbf23892e46196060e">CZipArchive::SetSplitNamesHandler(CZipSplitNamesHandler*, bool)</a>
 				method<br />
 				before opening an archive. It needs to be done before every opening of an archive.</li>
 		</ul>
 		If the last volume name is different from the archive name, you can retrieve it
-		when closing the archive (it is the return value of the <a class="linkapi" href="classCZipArchive.html#f5a360f32249b89ff32b69ad436416b7">CZipArchive::Close()</a>
+		when closing the archive (it is the return value of the <a class="linkapi" href="classCZipArchive.html#af5a360f32249b89ff32b69ad436416b7">CZipArchive::Close()</a>
 		method).
-		<div class="codetitle">Sample Code</div><pre class="fragment"><span class="keyword">class </span>CCustomNamesHandler : <span class="keyword">public</span> CZipSplitNamesHandler
+		<div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment"><span class="keyword">class </span>CCustomNamesHandler : <span class="keyword">public</span> CZipSplitNamesHandler
 {
 <span class="keyword">public</span>:
     CZipString GetVolumeName(<span class="keyword">const</span> CZipString&amp; archiveName, 
@@ -450,7 +454,7 @@
     zip.Close();
     
 }
-</pre>
+</pre></div> 
 		<h3 id="splitBinary" name="splitBinary" class="kb">
 			Binary Split</h3>
 		The binary splitting produces archives with the internal structure of a single-segment
@@ -499,7 +503,7 @@
 						Last&nbsp;Volume's&nbsp;Filename
 					</td>
 					<td>
-						The same as the filename of the archive provided to the <a class="linkapi" href="classCZipArchive.html#3d3ae4cf7f48f19120924ebe1e4b7386">CZipArchive::Open(LPCTSTR)</a>
+						The same as the filename of the archive provided to the <a class="linkapi" href="classCZipArchive.html#a3d3ae4cf7f48f19120924ebe1e4b7386">CZipArchive::Open(LPCTSTR)</a>
 						method (does not contain a volume number).
 					</td>
 					<td>
@@ -525,14 +529,15 @@
 						The mode is automatically detected. You need to open the last volume.
 					</td>
 					<td>
-						You need to specify <a class="linkapi" href="classCZipArchive.html#5d80f4df2aa34edda55d5fb98cffafdbf374a2121958af7bbc33da4620b0d414">CZipArchive::zipOpenBinSplit</a> when
-						calling the <a class="linkapi" href="classCZipArchive.html#3d3ae4cf7f48f19120924ebe1e4b7386">CZipArchive::Open(LPCTSTR)</a> method. You
+						You need to specify <a class="linkapi" href="classCZipArchive.html#a5d80f4df2aa34edda55d5fb98cffafdbaf374a2121958af7bbc33da4620b0d414">CZipArchive::zipOpenBinSplit</a> when
+						calling the <a class="linkapi" href="classCZipArchive.html#a3d3ae4cf7f48f19120924ebe1e4b7386">CZipArchive::Open(LPCTSTR)</a> method. You
 						need to open the last volume.
 					</td>
 				</tr>
 			</table>
 		</div>
-		<div class="codetitle">Sample Code</div><pre class="fragment">    CZipString zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
+		<div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment">    CZipString zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
     CZipArchive zip;    
     <span class="comment">// specify the segment size to be 1MB</span>
     zip.Open(zipFileName, CZipArchive::zipCreateBinSplit, 1024 * 1024);    
@@ -548,34 +553,35 @@
     zip.Open(zipFileName, CZipArchive::zipOpenBinSplit);    
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"big.ext"</span>));
     zip.Close();
-</pre>
+</pre></div> 
 		<h2 id="span" name="span" class="kb">
 			Spanning: Use on Removable Media</h2>
 		<ul>
 			<li>A spanned archive is located on removable media and you need to specify a callback
-				object (with the <a class="linkapi" href="classCZipArchive.html#7f0aeb9a7368afd0689149485bd7ca5b">CZipArchive::SetSegmCallback()</a> method).
+				object (with the <a class="linkapi" href="classCZipArchive.html#a7f0aeb9a7368afd0689149485bd7ca5b">CZipArchive::SetSegmCallback()</a> method).
 				Setting the callback object is needed for creation as well as for extraction of
 				spanned archives.</li>
-			<li>The <a class="linkapi" href="structCZipCallback.html#27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback</a> method will be called every
+			<li>The <a class="linkapi" href="structCZipCallback.html#a27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback</a> method will be called every
 				time a disk change is needed.
 				<ul>
-					<li>The reason for calling the callback is stored in <a class="linkapi" href="structCZipSegmCallback.html#58447cfa3f1e7b3d3343271cf2509812">CZipSegmCallback::m_iCode</a>
-						and takes one of the <a class="linkapi" href="structCZipSegmCallback.html#6621231bf0bfde4a9646f810a01a3901">CZipSegmCallback::SegmCodes</a> values.</li>
+					<li>The reason for calling the callback is stored in <a class="linkapi" href="structCZipSegmCallback.html#a58447cfa3f1e7b3d3343271cf2509812">CZipSegmCallback::m_iCode</a>
+						and takes one of the <a class="linkapi" href="structCZipSegmCallback.html#a6621231bf0bfde4a9646f810a01a3901">CZipSegmCallback::SegmCodes</a> values.</li>
 					<li>The value of the <code>uProgress</code> parameter of the callback method is the
 						minimum number of free bytes required on the disk. </li>
 					<li>The number of the disk needed for reading or writing is stored in
 						<br />
-						<a class="linkapi" href="structCZipSegmCallback.html#bbf4160b8992b7694cc7a686693ed452">CZipSegmCallback::m_uVolumeNeeded</a>.</li>
-					<li>To abort the archive processing, return <code>false</code> from this method. A <a class="linkapi" href="classCZipException.html">CZipException</a> will be thrown with the <a class="linkapi" href="classCZipException.html#a4f3fc7c792e57a0a6881b6ea48725afa9beec1f47e84433e4e60b98e922f6d0">CZipException::aborted</a>
+						<a class="linkapi" href="structCZipSegmCallback.html#abbf4160b8992b7694cc7a686693ed452">CZipSegmCallback::m_uVolumeNeeded</a>.</li>
+					<li>To abort the archive processing, return <code>false</code> from this method. A <a class="linkapi" href="classCZipException.html">CZipException</a> will be thrown with the <a class="linkapi" href="classCZipException.html#aa4f3fc7c792e57a0a6881b6ea48725afaa9beec1f47e84433e4e60b98e922f6d0">CZipException::aborted</a>
 						code.</li>
 				</ul>
 			</li>
 		</ul>
-		<div class="codetitle">Sample Code</div><pre class="fragment"><span class="preprocessor">#include &lt;conio.h&gt;</span> <span class="comment">// for _getch()</span>
+		<div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;conio.h&gt;</span> <span class="comment">// for _getch()</span>
 
 <span class="keyword">class </span>CSpanCallback : <span class="keyword">public</span> CZipSegmCallback
 {
-    <span class="keywordtype">bool</span> Callback(ZIP_SIZE_TYPE uProgress)
+    <span class="keywordtype">bool</span> Callback(ZIP_SIZE_TYPE)
     {
         <span class="keywordflow">switch</span> (m_iCode)
         {
@@ -624,13 +630,13 @@
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"big.ext"</span>));
     zip.Close();
 }
-</pre>
+</pre></div> 
 		<h3 id="spanLast" name="spanLast" class="kb">
 			Detecting Last Disk in Drive</h3>
 		When extracting a spanned archive, you need to insert the last disk into the drive
 		before opening the archive. The central directory written on it and the extraction
 		starts from reading the central directory. There is no simple way to detect, if
-		the right disk is in the drive, but the ZipArchive Library throws the <a class="linkapi" href="classCZipException.html">CZipException</a> with the <a class="linkapi" href="classCZipException.html#a4f3fc7c792e57a0a6881b6ea48725af62c9a10984629c00e661ef7e218dc1b0">CZipException::cdirNotFound</a>
+		the right disk is in the drive, but the ZipArchive Library throws the <a class="linkapi" href="classCZipException.html">CZipException</a> with the <a class="linkapi" href="classCZipException.html#aa4f3fc7c792e57a0a6881b6ea48725afa62c9a10984629c00e661ef7e218dc1b0">CZipException::cdirNotFound</a>
 		code, when the archive you are trying to open does not have the central directory.
 		In case of a spanned archive, it may mean that a user has not inserted the last
 		disk into the drive.
@@ -640,10 +646,10 @@
 			Invalid Last Disk</h4>
 		To recover from the situation when a user does not insert the last disk:
 		<ul class="dec">
-			<li>Catch the exception and verify its code. The code should be <a class="linkapi" href="classCZipException.html#a4f3fc7c792e57a0a6881b6ea48725af62c9a10984629c00e661ef7e218dc1b0">CZipException::cdirNotFound</a>. Other codes may indicate a corrupted archive
+			<li>Catch the exception and verify its code. The code should be <a class="linkapi" href="classCZipException.html#aa4f3fc7c792e57a0a6881b6ea48725afa62c9a10984629c00e661ef7e218dc1b0">CZipException::cdirNotFound</a>. Other codes may indicate a corrupted archive
 				or file access problem.</li>
-			<li>Close the archive with the <a class="linkapi" href="classCZipArchive.html#f5a360f32249b89ff32b69ad436416b7">CZipArchive::Close()</a> method,
-				passing <a class="linkapi" href="classCZipArchive.html#ef1712a894641d675903b34c815de80264383ab2ba2586c69af5add1a1c6d665">CZipArchive::afAfterException</a> as the <code>iAfterException</code>
+			<li>Close the archive with the <a class="linkapi" href="classCZipArchive.html#af5a360f32249b89ff32b69ad436416b7">CZipArchive::Close()</a> method,
+				passing <a class="linkapi" href="classCZipArchive.html#aef1712a894641d675903b34c815de802a64383ab2ba2586c69af5add1a1c6d665">CZipArchive::afAfterException</a> as the <code>iAfterException</code>
 				parameter.</li>
 			<li>Prompt the user for the last disk again.</li>
 			<li>Open the archive.</li>
@@ -656,7 +662,7 @@
 		extraction:
 		<ul class="dec">
 			<li>Catch the exception.</li>
-			<li>Call the <a class="linkapi" href="classCZipArchive.html#496a2104e2557858c05e722158c865e0">CZipArchive::ResetCurrentVolume()</a>. This will
+			<li>Call the <a class="linkapi" href="classCZipArchive.html#a496a2104e2557858c05e722158c865e0">CZipArchive::ResetCurrentVolume()</a>. This will
 				also close any file opened for extraction.</li>
 			<li>Prompt the user for the correct disk.</li>
 			<li>Retry the extraction of the file from the beginning.</li>
@@ -666,23 +672,23 @@
 		While processing a segmented archive the following callbacks that are called are
 		the most important:
 		<ul class="non">
-			<li><a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f117344e48c2f0d8f6bd1de700e56927c55de8">CZipActionCallback::cbAdd</a></li>
-			<li><a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f1173410ea05b0de77ed3df7719cd321c0d22f">CZipActionCallback::cbAddTmp</a></li>
-			<li><a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f11734a4792345795d95ef78e25826b893b58c">CZipActionCallback::cbAddStore</a></li>
-			<li><a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f117346b92922ec8ce88d0ad043878fb096d97">CZipActionCallback::cbExtract</a></li>
-			<li><a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f1173493b49690cff50f46013d99a76357ef78">CZipActionCallback::cbSave</a></li>
+			<li><a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734a4e48c2f0d8f6bd1de700e56927c55de8">CZipActionCallback::cbAdd</a></li>
+			<li><a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734a10ea05b0de77ed3df7719cd321c0d22f">CZipActionCallback::cbAddTmp</a></li>
+			<li><a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734aa4792345795d95ef78e25826b893b58c">CZipActionCallback::cbAddStore</a></li>
+			<li><a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734a6b92922ec8ce88d0ad043878fb096d97">CZipActionCallback::cbExtract</a></li>
+			<li><a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734a93b49690cff50f46013d99a76357ef78">CZipActionCallback::cbSave</a></li>
 		</ul>
 		To read more about using callback objects, see <a class="linkkb" href="0610231200.html">Progress Notifications: Using Callback Objects</a>.
 		<h2 id="api" name="api" class="kb">
 			See Also API Links</h2>
 		<ul class="non">
-			<li><a class="linkapi" href="classCZipArchive.html#3d3ae4cf7f48f19120924ebe1e4b7386">CZipArchive::Open(LPCTSTR)</a></li>
-			<li><a class="linkapi" href="classCZipArchive.html#7f0aeb9a7368afd0689149485bd7ca5b">CZipArchive::SetSegmCallback()</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#a3d3ae4cf7f48f19120924ebe1e4b7386">CZipArchive::Open(LPCTSTR)</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#a7f0aeb9a7368afd0689149485bd7ca5b">CZipArchive::SetSegmCallback()</a></li>
 			<li><a class="linkapi" href="structCZipSegmCallback.html">CZipSegmCallback</a></li>
 			<li><a class="linkapi" href="classCZipSplitNamesHandler.html">CZipSplitNamesHandler</a> </li>
-			<li><a class="linkapi" href="classCZipArchive.html#0cab93e835c4d5b3309f5672416f673b">CZipArchive::SetSplitNamesHandler(CZipSplitNamesHandler&amp;)</a></li>
-			<li><a class="linkapi" href="classCZipArchive.html#35f9982583097cbbf23892e46196060e">CZipArchive::SetSplitNamesHandler(CZipSplitNamesHandler*, 				bool)</a></li>
-			<li><a class="linkapi" href="classCZipArchive.html#be06c912f3dbacfe3d327d7c7a2d0e88">CZipArchive::SetAdvanced()</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#a0cab93e835c4d5b3309f5672416f673b">CZipArchive::SetSplitNamesHandler(CZipSplitNamesHandler&amp;)</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#a35f9982583097cbbf23892e46196060e">CZipArchive::SetSplitNamesHandler(CZipSplitNamesHandler*, 				bool)</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#abe06c912f3dbacfe3d327d7c7a2d0e88">CZipArchive::SetAdvanced()</a></li>
 		</ul>
 	
         </div>
@@ -691,7 +697,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2009 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2010 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

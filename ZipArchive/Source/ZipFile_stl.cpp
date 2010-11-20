@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -125,7 +125,10 @@ bool CZipFile::Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow)
 
 void CZipFile::SetLength(ULONGLONG uNewLen)
 {
-	ZipPlatform::TruncateFile(m_hFile, uNewLen);
+	if (!ZipPlatform::TruncateFile(m_hFile, uNewLen))
+	{
+		ThrowError();
+	}
 }
 
 ZIP_FILE_USIZE CZipFile::GetPosition() const

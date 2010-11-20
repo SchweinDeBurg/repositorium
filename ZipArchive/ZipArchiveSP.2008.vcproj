@@ -571,131 +571,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Misc Text Files"
-			Filter="txt"
-			>
-			<File
-				RelativePath=".\MiscText\Appnote.txt"
-				>
-				<FileConfiguration
-					Name="Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MiscText\ChangeLog.txt"
-				>
-				<FileConfiguration
-					Name="Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MiscText\faq.txt"
-				>
-				<FileConfiguration
-					Name="Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MiscText\gpl.txt"
-				>
-				<FileConfiguration
-					Name="Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MiscText\License.txt"
-				>
-				<FileConfiguration
-					Name="Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MiscText\Readme.txt"
-				>
-				<FileConfiguration
-					Name="Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-		</Filter>
-		<Filter
 			Name="Help Files"
 			Filter="chm"
 			>
@@ -720,6 +595,66 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\_readme.txt"
+			>
+			<FileConfiguration
+				Name="Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\Appnote.txt"
+			>
+			<FileConfiguration
+				Name="Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\License.txt"
+			>
+			<FileConfiguration
+				Name="Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Smartphone Release|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

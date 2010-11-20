@@ -52,7 +52,7 @@
                 in blocks where some blocks are considered to be synchronization blocks. The decompression
                 can then start from any of the synchronization blocks.</li>
             <li>Only deflate compression method supports creating seekable data. The deflate method
-                is used by default by the <a class="linkapi" href="classCZipArchive.html">CZipArchive</a> class (see <a class="linkapi" href="classCZipArchive.html#297a68eee12eb680c945a420ae407db0">CZipArchive::SetCompressionMethod()</a>).</li>
+                is used by default by the <a class="linkapi" href="classCZipArchive.html">CZipArchive</a> class (see <a class="linkapi" href="classCZipArchive.html#a297a68eee12eb680c945a420ae407db0">CZipArchive::SetCompressionMethod()</a>).</li>
             <li>The seekable compressed data cannot be encrypted, because encryption is applied
                 after data is compressed.</li>
             <li>The seekable compressed data can be created in segmented archives.</li>
@@ -72,12 +72,13 @@
             Necessary Code Setup</h3>
         To use the seeking feature, it is needed to include the proper header and use the
         <code>ZipArchiveLib</code> namespace as provided in the sample code below.
-        <div class="codetitle">Sample Code</div><pre class="fragment"><span class="comment">// This header needs to be included.</span>
+        <div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment"><span class="comment">// This header needs to be included.</span>
 <span class="preprocessor">#include "DeflateCompressor.h"</span>
 
 <span class="comment">// Use the following namespace or prefix the classes with its name.</span>
 <span class="keyword">using namespace </span>ZipArchiveLib;
-</pre>
+</pre></div> 
         All the following samples assume that the above declarations are already made.
         <h2 id="creating" name="creating" class="kb">
             Creating Seekable Data</h2>
@@ -101,7 +102,8 @@
             method for that. You will need this array when you will be performing seeking in
             the compressed data later.
         </p>
-        <div class="codetitle">Sample Code</div><pre class="fragment">    CZipArchive zip;
+        <div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\archive.zip"</span>), CZipArchive::zipCreate);
 
     <span class="comment">// Request frequent creating of the synchronization blocks</span>
@@ -145,7 +147,7 @@
     <span class="comment">// ...</span>
 
     zip.Close();
-</pre>
+</pre></div> 
         <h3 id="stat" name="stat" class="kb">
             Determining Statistics of the Compressed Data</h3>
         To find the balance between the compression ratio and the frequency of creating
@@ -154,7 +156,7 @@
         <br />
         <code>ZipArchiveLib::CDeflateCompressor::COptions::m_iSyncRatio</code>
         value and see how the block sizes change with respect to the compression ratio<br />
-        (see <a class="linkapi" href="classCZipFileHeader.html#e80838388b3587fe2d43109b1177016a">CZipFileHeader::GetCompressionRatio()</a>).
+        (see <a class="linkapi" href="classCZipFileHeader.html#ae80838388b3587fe2d43109b1177016a">CZipFileHeader::GetCompressionRatio()</a>).
         <h2 id="seek" name="seek" class="kb">
             Seeking in Compressed Data</h2>
         <p>
@@ -168,11 +170,12 @@
         </p>
         <p>
             The seeking operation causes CRC value to be ignored while decompressing data. It
-            has the same effect as calling the <a class="linkapi" href="classCZipArchive.html#6c97370520628da3908d7dca9b58fdeb">CZipArchive::SetIgnoredConsistencyChecks()</a>
-            method with the <a class="linkapi" href="classCZipArchive.html#23977e24b0930a40a83c0e4075860e4df524b056991ec9941b55c5c49e3794c2">CZipArchive::checkLocalCRC</a> argument
+            has the same effect as calling the <a class="linkapi" href="classCZipArchive.html#a6c97370520628da3908d7dca9b58fdeb">CZipArchive::SetIgnoredConsistencyChecks()</a>
+            method with the <a class="linkapi" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4daf524b056991ec9941b55c5c49e3794c2">CZipArchive::checkLocalCRC</a> argument
             for the current file.
         </p>
-        <div class="codetitle">Sample Code</div><pre class="fragment">    <span class="comment">// ... continues the previous sample</span>
+        <div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment">    <span class="comment">// ... continues the previous sample</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\archive.zip"</span>));
 
     <span class="comment">// Load the offsets array from the buffer where it was saved before.</span>
@@ -186,19 +189,20 @@
     ASSERT(pPair);
 
     <span class="comment">// Extract the file starting from the found offset.</span>
-    zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">true</span>, NULL, pPair);
+    zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">true</span>, NULL, ZipPlatform::dfmRegular, pPair);
 
     zip.Close();
-</pre>
+</pre></div> 
         <h3 id="multi" name="multi" class="kb">
             Multiple Seeking in Data</h3>
         You can perform multiple seek and extract operations on a file that is opened for
         decompression. This is possible only using the advanced decompression method (see
         <a class="linkkb" href="0610241003.html#advanced">Extracting Data and Testing Archives</a> for more information). To seek,
         use the <code>CZipArchive::SeekInFile()</code> method and then you
-        can start decompressing a file with calls to the <a class="linkapi" href="classCZipArchive.html#debd2684eca1d30e3ba50865c11a7cc6">CZipArchive::ReadFile()</a>
+        can start decompressing a file with calls to the <a class="linkapi" href="classCZipArchive.html#adebd2684eca1d30e3ba50865c11a7cc6">CZipArchive::ReadFile()</a>
         method.
-        <div class="codetitle">Sample Code</div><pre class="fragment">    <span class="comment">// ... continues the previous sample</span>
+        <div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment">    <span class="comment">// ... continues the previous sample</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\archive.zip"</span>));
 
     <span class="comment">// Load the offsets array from the buffer where it was saved before.</span>
@@ -245,7 +249,7 @@
     <span class="comment">// ...</span>
 
     zip.Close();
-</pre>
+</pre></div> 
         <h2 id="extra" name="extra" class="kb">
             Preserving Offsets Array</h2>
         <p>
@@ -272,7 +276,8 @@
             Library must be compiled with the Zip64 support (see <a class="linkkb" href="0610051629.html">Zip64 Format: Crossing the Limits of File Sizes and Number of Files and Segments</a>
             for more information about Zip64 support).
         </p>
-        <div class="codetitle">Sample Code</div><pre class="fragment">    CZipArchive zip;
+        <div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\archive.zip"</span>), CZipArchive::zipCreate);
 
     <span class="comment">// Request creating of the synchronization blocks.</span>
@@ -312,19 +317,19 @@
     <span class="comment">// ...</span>
 
     zip.Close();
-</pre>
+</pre></div> 
         <h2 id="api" name="api" class="kb">
             See Also API Links</h2>
         <ul class="non">
-            <li><a class="linkapi" href="classCZipArchive.html#aa14ea39420cb30f3ac5bfe0adfea8ad">CZipArchive::SetCompressionOptions()</a></li>
+            <li><a class="linkapi" href="classCZipArchive.html#aaa14ea39420cb30f3ac5bfe0adfea8ad">CZipArchive::SetCompressionOptions()</a></li>
             <li><code>ZipArchiveLib::CDeflateCompressor::COptions::m_iSyncRatio</code></li>
             <li><code>ZipArchiveLib::CDeflateCompressor::GetOffsetsArray()</code></li>
             <li><code>CZipCompressor::COffsetsArray::GetStatistics()</code></li>
             <li><code>CZipCompressor::COffsetsArray::Save()</code></li>
             <li><code>CZipCompressor::COffsetsArray::Load()</code></li>
             <li><code>CZipArchive::SeekInFile()</code></li>
-            <li><a class="linkapi" href="classCZipArchive.html#80006e2eed2778115c1d0206728d7dc5">CZipArchive::ExtractFile(ZIP_INDEX_TYPE, LPCTSTR)</a></li>
-            <li><a class="linkapi" href="classCZipArchive.html#5131edf4dcb5cb6da096fb688c72d9b0">CZipArchive::ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;)</a></li>
+            <li><a class="linkapi" href="classCZipArchive.html#afc74ef6df3ccbb27e1855b4cd52004f7">CZipArchive::ExtractFile(ZIP_INDEX_TYPE, LPCTSTR)</a></li>
+            <li><a class="linkapi" href="classCZipArchive.html#a5131edf4dcb5cb6da096fb688c72d9b0">CZipArchive::ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;)</a></li>
         </ul>
     
         </div>
@@ -333,7 +338,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2009 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2010 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

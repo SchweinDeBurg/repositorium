@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -47,6 +47,7 @@ CZipCentralDir::CZipCentralDir()
 	m_pFindArray = NULL;	
 	m_pOpenedFile = NULL;
 	m_iIgnoredChecks = 0;
+	m_specialFlags = CZipArchive::sfNone;	
 	InitUnicode();
 }
 
@@ -98,7 +99,7 @@ CZipCentralDir::~CZipCentralDir()
 	DestroySharedData();
 }
 
-void CZipCentralDir::Read(bool bExhaustiveRead)
+void CZipCentralDir::Read()
 {
 	if (!m_pStorage)
 	{
@@ -145,8 +146,7 @@ void CZipCentralDir::Read(bool bExhaustiveRead)
 		m_pInfo->m_pszComment.Allocate(uCommentSize);
 		m_pStorage->Read(m_pInfo->m_pszComment, uCommentSize, true);
 	}
-
-	if ( m_pInfo->NeedsZip64() )
+	if (m_pInfo->NeedsZip64())
 	{
 		if (isBinary || m_pInfo->m_uEndOffset >= CENTRAL_DIR_END64_LOCATOR_SIZE)
 		{
@@ -185,7 +185,7 @@ void CZipCentralDir::Read(bool bExhaustiveRead)
 	if (!m_pInfo->m_uSize)
 		return;
 
-	ReadHeaders(bExhaustiveRead);
+	ReadHeaders();
 }
 
 
@@ -195,14 +195,13 @@ void CZipCentralDir::ThrowError(int err) const
 }
 
 
-void CZipCentralDir::ReadHeaders(bool bExhaustiveRead)
+void CZipCentralDir::ReadHeaders()
 {
 	if (!m_pStorage->IsBinarySplit())
 		m_pStorage->Seek(m_pInfo->m_uOffset);
 	else
 		m_pStorage->SeekInBinary(m_pInfo->m_uOffset, true);
 		
-	
 	RemoveHeaders(); //just in case
 	for (ZIP_INDEX_TYPE i = 0; i < m_pInfo->m_uEntriesNumber; i++)
 	{
@@ -213,7 +212,7 @@ void CZipCentralDir::ReadHeaders(bool bExhaustiveRead)
 			ThrowError(CZipException::badZipFile);
 	}
 
-	if (bExhaustiveRead)
+	if (m_specialFlags.IsSetAny(CZipArchive::sfExhaustiveRead))
 		{
 			ZIP_FILE_USIZE uPosition = m_pStorage->GetPosition();
 			// different offset, or different parts
@@ -245,6 +244,7 @@ void CZipCentralDir::Close()
 	m_pInfo = NULL;
 	m_pHeaders = NULL;
 	m_pFindArray = NULL;
+	m_specialFlags = CZipArchive::sfNone;
 	InitUnicode();
 }
 
@@ -352,7 +352,7 @@ CZipFileHeader* CZipCentralDir::AddNewFile(const CZipFileHeader & header, ZIP_IN
 
 	if (m_pInfo->m_bFindFastEnabled)
 		InsertFindFastElement(pHeader, uIndex); // GetCount > 0, because we have just added a header
-
+	m_pInfo->m_iLastIndexAdded = uIndex;
 	return pHeader;
 }
 
@@ -622,30 +622,38 @@ void CZipCentralDir::WriteCentralEnd()
 
 void CZipCentralDir::RemoveAll()
 {
+	m_pInfo->m_iLastIndexAdded = ZIP_FILE_INDEX_UNSPECIFIED;
 	ClearFindFastArray();
 	RemoveHeaders();
 }
 
 ZIP_INDEX_TYPE CZipCentralDir::RemoveFindFastElement(CZipFileHeader* pHeader, bool bShift)
 {
-	ZIP_INDEX_TYPE i = FindFileNameIndex(pHeader->GetFileName());
-	ASSERT(i != ZIP_FILE_INDEX_NOT_FOUND);
-	CZipFindFast* pFindFast = (*m_pFindArray)[(ZIP_ARRAY_SIZE_TYPE)i];
-	ZIP_INDEX_TYPE uElementIndex = pFindFast->m_uIndex;
-	delete pFindFast;
-	m_pFindArray->RemoveAt((ZIP_ARRAY_SIZE_TYPE)i);
-	// shift down the indexes
-	
-	if (bShift)
+	// FindFileNameIndex(pHeader->GetFileName()) will not work as the file might have been just renamed
+	ZIP_ARRAY_SIZE_TYPE count = m_pFindArray->GetSize();
+	for (ZIP_ARRAY_SIZE_TYPE i = 0; i < count; i++)
 	{
-		ZIP_INDEX_TYPE uSize = (ZIP_INDEX_TYPE)m_pFindArray->GetSize();
-		for (ZIP_INDEX_TYPE j = 0; j < uSize; j++)
+		CZipFindFast* pFindFast = (*m_pFindArray)[i];
+		if (pFindFast->m_pHeader == pHeader)
 		{
-			if ((*m_pFindArray)[(ZIP_ARRAY_SIZE_TYPE)j]->m_uIndex > uElementIndex)
-				(*m_pFindArray)[(ZIP_ARRAY_SIZE_TYPE)j]->m_uIndex--;
+			ZIP_INDEX_TYPE uElementIndex = pFindFast->m_uIndex;
+			delete pFindFast;
+			m_pFindArray->RemoveAt((ZIP_ARRAY_SIZE_TYPE)i);
+			// shift down the indexes
+			if (bShift)
+			{
+				ZIP_INDEX_TYPE uSize = (ZIP_INDEX_TYPE)m_pFindArray->GetSize();
+				for (ZIP_INDEX_TYPE j = 0; j < uSize; j++)
+				{
+					if ((*m_pFindArray)[(ZIP_ARRAY_SIZE_TYPE)j]->m_uIndex > uElementIndex)
+						(*m_pFindArray)[(ZIP_ARRAY_SIZE_TYPE)j]->m_uIndex--;
+				}
+			}
+			return uElementIndex;
 		}
 	}
-	return uElementIndex;
+	ASSERT(FALSE);	
+	return ZIP_FILE_INDEX_NOT_FOUND;
 }
 
 void CZipCentralDir::RemoveFile(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uIndex, bool bShift)
@@ -674,6 +682,13 @@ void CZipCentralDir::RemoveFile(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uIndex, 
 	{
 		delete pHeader;
 		m_pHeaders->RemoveAt((ZIP_ARRAY_SIZE_TYPE)uIndex);
+		if (m_pInfo->m_iLastIndexAdded != ZIP_FILE_INDEX_UNSPECIFIED)
+		{
+			if (m_pInfo->m_iLastIndexAdded == uIndex)
+				m_pInfo->m_iLastIndexAdded = ZIP_FILE_INDEX_UNSPECIFIED;
+			else if (m_pInfo->m_iLastIndexAdded > uIndex)
+				m_pInfo->m_iLastIndexAdded--;
+		}
 	}
 }
 
