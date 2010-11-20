@@ -28,8 +28,10 @@
 
 #include "_platform.h"
 
-#ifdef _ZIP_IMPL_STL
+#if defined(_ZIP_IMPL_STL)
 	#include "ZipString_stl.h"
+#elif defined(_ZIP_IMPL_ATL)
+	#include "ZipString_atl.h"
 #else
 	#include "ZipString_mfc.h"
 #endif

@@ -28,12 +28,13 @@
 /************ Feel free to adjust the definitions in the following block ************/
 /************************************ BLOCK START ***********************************/
 
+//#define _ZIP_IMPL_ATL
 #define _ZIP_IMPL_MFC
 //#define _ZIP_SYSTEM_LINUX
 
 #if defined(UNDER_CE)
 
-#if !defined(_ZIP_IMPL_MFC)
+#if !defined(_ZIP_IMPL_MFC) && !defined(_ZIP_IMPL_ATL)
 
 #define _ZIP_IMPL_STL
 
@@ -42,7 +43,7 @@
 #pragma warning(pop)
 #include <altcecrt.h>
 
-#endif   // !_ZIP_IMPL_MFC
+#endif   // !_ZIP_IMPL_MFC && !_ZIP_IMPL_ATL
 
 #pragma comment(linker, "/nodefaultlib:libc.lib")
 #pragma comment(linker, "/nodefaultlib:libcd.lib")
@@ -62,7 +63,7 @@
 /************************************* BLOCK END ***********************************/
 /********* The contents below this line are not intended for modification **********/
 
-#ifndef _ZIP_IMPL_MFC
+#if !defined(_ZIP_IMPL_MFC) && !defined(_ZIP_IMPL_ATL)
 	#define _ZIP_IMPL_STL
 #else
 	#ifdef _ZIP_IMPL_STL
@@ -78,10 +79,16 @@
 	#endif
 #endif
 
-#if defined (_ZIP_SYSTEM_LINUX) && defined (_ZIP_IMPL_MFC)
-	#undef _ZIP_IMPL_MFC
-	#define _ZIP_IMPL_STL
-	#error Using MFC under a non-Windows platform is not supported
+#if defined (_ZIP_SYSTEM_LINUX)
+	#if defined (_ZIP_IMPL_MFC)
+		#undef _ZIP_IMPL_MFC
+		#define _ZIP_IMPL_STL
+		#error Using MFC under a non-Windows platform is not supported
+	#elif defined (_ZIP_IMPL_ATL)
+		#undef _ZIP_IMPL_ATL
+		#define _ZIP_IMPL_STL
+		#error Using ATL under a non-Windows platform is not supported
+	#endif   // _ZIP_IMPL_*
 #endif
 
 #endif // !defined(ZIPARCHIVE_PLATFORM_DOT_H)

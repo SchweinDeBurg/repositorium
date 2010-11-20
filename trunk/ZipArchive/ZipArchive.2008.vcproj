@@ -414,6 +414,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ZipFile_atl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ZipFile_mfc.cpp"
 				>
 			</File>
@@ -496,6 +500,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\std_atl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\std_mfc.h"
 				>
 			</File>
@@ -544,6 +552,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ZipCollections_atl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ZipCollections_mfc.h"
 				>
 			</File>
@@ -585,6 +597,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\ZipFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ZipFile_atl.h"
 				>
 			</File>
 			<File
@@ -645,6 +661,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\ZipString.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ZipString_atl.h"
 				>
 			</File>
 			<File

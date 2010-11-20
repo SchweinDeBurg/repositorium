@@ -56,10 +56,15 @@ bool ZipPlatform::GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize)
 		if (ret)
 			dSize = (ZIP_SIZE_TYPE)size;
 	}
-#ifdef _ZIP_IMPL_MFC
+#if defined(_ZIP_IMPL_MFC)
 	catch(CZipBaseException* e)
 	{
 		e->Delete();
+		ret = false;
+	}
+#elif defined(_ZIP_IMPL_ATL)
+	catch (const CZipBaseException& /*err*/)
+	{
 		ret = false;
 	}
 #else
@@ -73,10 +78,15 @@ bool ZipPlatform::GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize)
 	{
 		f.Close();
 	}
-#ifdef _ZIP_IMPL_MFC
+#if defined(_ZIP_IMPL_MFC)
 	catch(CZipBaseException* e)
 	{
 		e->Delete();
+	}
+#elif defined(_ZIP_IMPL_ATL)
+	catch (const CZipBaseException& /*err*/)
+	{
+		ret = false;
 	}
 #else
 	catch(CZipBaseException e)

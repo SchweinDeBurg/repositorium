@@ -21,8 +21,10 @@
 #ifndef ZIPARCHIVE_ZIPBASEEXCEPTION_DOT_H
 #define ZIPARCHIVE_ZIPBASEEXCEPTION_DOT_H
 
-	#ifdef _ZIP_IMPL_STL
+	#if defined(_ZIP_IMPL_STL)
 		typedef std::exception CZipBaseException;
+	#elif defined(_ZIP_IMPL_ATL)
+		typedef ATL::CAtlException CZipBaseException;
 	#else
 		typedef CException CZipBaseException;
 #endif
