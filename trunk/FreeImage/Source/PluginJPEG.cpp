@@ -28,6 +28,8 @@
 
 #include "stdafx.h"
 
+#if !defined(FREEIMAGE_NO_JPEG)
+
 #ifdef _MSC_VER 
 #pragma warning (disable : 4786) // identifier was truncated to 'number' characters
 #endif
@@ -1723,3 +1725,5 @@ InitJPEG(Plugin *plugin, int format_id) {
 	plugin->supports_icc_profiles_proc = SupportsICCProfiles;
 	plugin->supports_no_pixels_proc = SupportsNoPixels;
 }
+
+#endif   // FREEIMAGE_NO_JPEG
