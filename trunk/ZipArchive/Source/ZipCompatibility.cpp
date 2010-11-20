@@ -15,10 +15,10 @@
 #include "stdafx.h"
 #include "ZipCompatibility.h"
 #include "ZipPlatform.h"
-#include "_ZipException.h"
+#include "Private/ZipException.h"
 #include "ZipAutoBuffer.h"
-#include "_ZipFileHeader.h"
-#include "_ZipArchive.h"
+#include "Private/ZipFileHeader.h"
+#include "Private/ZipArchive.h"
 
 #if defined(__INTEL_COMPILER)
 // remark #1418: external definition with no prior declaration

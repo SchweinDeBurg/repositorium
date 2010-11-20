@@ -37,7 +37,7 @@
 #include "ZipCallback.h"
 #include "BitFlag.h"
 #include "ZipSplitNamesHandler.h"
-#include "_ZipException.h"
+#include "Private/ZipException.h"
 #include "ZipCollections.h"
 
 #if defined(__INTEL_COMPILER)

@@ -15,7 +15,7 @@
 #include "stdafx.h"
 #include "ZipFile.h"
 #include "ZipPlatform.h"
-#include "_ZipException.h"
+#include "Private/ZipException.h"
 
 #if defined(__INTEL_COMPILER)
 // remark #279: controlling expression is constant

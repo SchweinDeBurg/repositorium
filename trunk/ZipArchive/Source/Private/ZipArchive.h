@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #if defined(ZIP_ARCHIVE_FULL)
-#include "../../../ZipArchiveFull/Source/ZipException.h"
+#include "../../../../ZipArchiveFull/Source/ZipArchive.h"
 #else
-#include "ZipException.h"
+#include "../ZipArchive.h"
 #endif   // ZIP_ARCHIVE_FULL

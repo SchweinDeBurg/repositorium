@@ -42,9 +42,9 @@
 
 #include "ZipCompatibility.h"
 #include "ZipCollections.h"
-#include "_ZipExtraField.h"
+#include "Private/ZipExtraField.h"
 #include "ZipStringStoreSettings.h"
-#include "_ZipCryptograph.h"
+#include "Private/ZipCryptograph.h"
 #include "BitFlag.h"
 
 

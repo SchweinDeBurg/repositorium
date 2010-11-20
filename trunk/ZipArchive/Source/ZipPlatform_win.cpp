@@ -20,8 +20,8 @@
 
 #include "_platform.h"
 #include "ZipPlatform.h"
-#include "_ZipFileHeader.h"
-#include "_ZipException.h"
+#include "Private/ZipFileHeader.h"
+#include "Private/ZipException.h"
 #include "ZipAutoBuffer.h"
 
 #if !defined(UNDER_CE)

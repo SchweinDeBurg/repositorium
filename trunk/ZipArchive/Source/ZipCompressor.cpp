@@ -13,8 +13,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "_ZipCompressor.h"
-#include "_BytesWriter.h"
+#include "Private/ZipCompressor.h"
+#include "Private/BytesWriter.h"
 #include "DeflateCompressor.h"
 
 using namespace ZipArchiveLib;

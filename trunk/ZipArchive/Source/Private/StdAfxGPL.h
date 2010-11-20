@@ -62,8 +62,8 @@ __declspec(selectany) int _forceMFCManifestCUR;
 
 #endif   // ZIPARCHIVE_LIB_BUILD
 
-#include "_features.h"
-#include "_platform.h"
+#include "../_features.h"
+#include "../_platform.h"
 
 #if _MSC_VER > 1000
 	#pragma once
@@ -84,9 +84,9 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #endif
 
 #ifdef _ZIP_IMPL_STL
-	#include "std_stl.h"
+	#include "../std_stl.h"
 #else
-	#include "std_mfc.h"
+	#include "../std_mfc.h"
 #endif
 
 // force ISO/IEC 14882 conformance in for loop scope

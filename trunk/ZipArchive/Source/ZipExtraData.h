@@ -27,7 +27,7 @@
 
 #include "ZipExport.h"
 #include "ZipAutoBuffer.h"
-#include "_ZipExtraField.h"
+#include "Private/ZipExtraField.h"
 #include <memory.h>
 
 /**

@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #if defined(ZIP_ARCHIVE_FULL)
-#include "../../../ZipArchiveFull/Source/ZipFileHeader.h"
+#include "../../../../ZipArchiveFull/Source/ZipFileHeader.h"
 #else
-#include "ZipFileHeader.h"
+#include "../ZipFileHeader.h"
 #endif   // ZIP_ARCHIVE_FULL

@@ -13,11 +13,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "_ZipArchive.h"
+#include "Private/ZipArchive.h"
 #include "ZipPlatform.h"
 #include "ZipCompatibility.h"
 #include "Wildcard.h"
-#include "_BytesWriter.h"
+#include "Private/BytesWriter.h"
 
 #include <time.h>
 

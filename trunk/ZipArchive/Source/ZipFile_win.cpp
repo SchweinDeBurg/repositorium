@@ -18,7 +18,7 @@
 
 #include "_features.h"
 #include "ZipFile.h"
-#include "_ZipException.h"
+#include "Private/ZipException.h"
 #include "ZipPathComponent.h"
 #include "BitFlag.h"
 
