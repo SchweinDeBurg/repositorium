@@ -83,8 +83,10 @@ __declspec(selectany) int _forceMFCManifestCUR;
 	#define ZIPINLINE
 #endif
 
-#ifdef _ZIP_IMPL_STL
+#if defined(_ZIP_IMPL_STL)
 	#include "../std_stl.h"
+#elif defined(_ZIP_IMPL_ATL)
+	#include "../std_atl.h"
 #else
 	#include "../std_mfc.h"
 #endif

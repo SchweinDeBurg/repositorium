@@ -29,8 +29,10 @@
 #include "_platform.h"
 #include "ZipExport.h"
 
-#ifdef _ZIP_IMPL_STL
+#if defined(_ZIP_IMPL_STL)
 	#include "ZipCollections_stl.h"
+#elif defined(_ZIP_IMPL_ATL)
+	#include "ZipCollections_atl.h"
 #else
 	#include "ZipCollections_mfc.h"	
 #endif

@@ -39,6 +39,8 @@
 
 #if (defined _ZIP_IMPL_STL && (!defined _ZIP_FILE_IMPLEMENTATION || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_DEFAULT)) || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
 	#include "ZipFile_stl.h"
+#elif defined(_ZIP_IMPL_ATL) && (!defined _ZIP_FILE_IMPLEMENTATION || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_DEFAULT)
+	#include "ZipFile_atl.h"
 #elif _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_WIN
 	#include "ZipFile_win.h"
 #else
