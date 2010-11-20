@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -189,28 +189,36 @@ ZIPINLINE void ZipPlatform::AnsiOem(CZipAutoBuffer& buffer, bool bAnsiToOem)
 	// not implemented
 }
 
-ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow)
+ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow, int iMode)
 {
+	if ((iMode & ZipPlatform::dfmRemoveReadOnly) != 0)
+	{
+		DWORD attr;
+		if (ZipPlatform::GetFileAttr(lpszFileName, attr)
+			&& (ZipCompatibility::GetAsInternalAttributes(attr, ZipPlatform::GetSystemID()) & ZipCompatibility::attROnly) != 0)
+		{
+			ZipPlatform::SetFileAttr(lpszFileName, ZipPlatform::GetDefaultAttributes());
+		}
+	}
 	if (unlink(lpszFileName) != 0)
 		if (bThrow)
 			CZipException::Throw(CZipException::notRemoved, lpszFileName);
 		else 
 			return false;
 	return true;
-
-
 }
-ZIPINLINE  bool ZipPlatform::RenameFile( LPCTSTR lpszOldName, LPCTSTR lpszNewName , bool bThrow)
-{
 
+ZIPINLINE  bool ZipPlatform::RenameFile( LPCTSTR lpszOldName, LPCTSTR lpszNewName, bool bThrow)
+{	
 	if (rename(lpszOldName, lpszNewName) != 0)
+	{
 		if (bThrow)
 			CZipException::Throw(CZipException::notRenamed, lpszOldName);
-		else 
-			return false;
-		return true;
-
+		return false;
+	}
+	return true;
 }
+
 ZIPINLINE  bool ZipPlatform::IsDirectory(DWORD uAttr)
 {
 	return S_ISDIR(uAttr) != 0;

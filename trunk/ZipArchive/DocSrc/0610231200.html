@@ -46,35 +46,35 @@
 		archive processing.
 		<ul>
 			<li>You can set separate callback objects for different progress notifications.</li>
-			<li>You can set one callback object for multiple progress notifications. Examine <a class="linkapi" href="structCZipActionCallback.html#bc0a90bcffefb9629ffa9c8421173338">CZipActionCallback::m_iType</a> to determine the current action
+			<li>You can set one callback object for multiple progress notifications. Examine <a class="linkapi" href="structCZipActionCallback.html#abc0a90bcffefb9629ffa9c8421173338">CZipActionCallback::m_iType</a> to determine the current action
 				type.</li>
 			<li>To read about callbacks in a spanning archive, see <a class="linkkb" href="0610051553.html#span">Segmented Archives: Splitting and Spanning</a>.</li>
 		</ul>
 		<h2 id="callback" name="callback" class="kb">
 			Creating Callback Objects</h2>
-		To be notified about the progress of various actions (see <a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f11734">CZipActionCallback::CallbackType</a>
+		To be notified about the progress of various actions (see <a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734">CZipActionCallback::CallbackType</a>
 		for possibilities), you need to:
 		<ul class="dec">
 			<li>Define your own callback class derived from <a class="linkapi" href="structCZipActionCallback.html">CZipActionCallback</a>.</li>
-			<li>Override at least the <a class="linkapi" href="structCZipCallback.html#27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback()</a> method.</li>
-			<li>Create an object of this class, and set it as a callback object with the <a class="linkapi" href="classCZipArchive.html#a5db2354fbabea4a82bb1e242caebf7f">CZipArchive::SetCallback()</a> method. Make sure that the object
+			<li>Override at least the <a class="linkapi" href="structCZipCallback.html#a27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback()</a> method.</li>
+			<li>Create an object of this class, and set it as a callback object with the <a class="linkapi" href="classCZipArchive.html#aa5db2354fbabea4a82bb1e242caebf7f">CZipArchive::SetCallback()</a> method. Make sure that the object
 				is not destroyed throughout the whole processing.</li>
 			<li>Start processing an archive, the notifications about the progress will be coming
-				to the overridden <a class="linkapi" href="structCZipCallback.html#27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback()</a> method.
+				to the overridden <a class="linkapi" href="structCZipCallback.html#a27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback()</a> method.
 				The value of the <code>uProgress</code> parameter of the callback method is the
 				amount of data just processed.
 				<ul>
 					<li>The value informs about the number of files processed when<br />
-						<a class="linkapi" href="structCZipActionCallback.html#bc0a90bcffefb9629ffa9c8421173338">CZipActionCallback::m_iType</a> is one of:
+						<a class="linkapi" href="structCZipActionCallback.html#abc0a90bcffefb9629ffa9c8421173338">CZipActionCallback::m_iType</a> is one of:
 						<ul>
-							<li><a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f117349564a0b741f08d4ab4e1ee727e092bf9">CZipActionCallback::cbDeleteCnt</a></li>
-							<li><a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f1173493b49690cff50f46013d99a76357ef78">CZipActionCallback::cbSave</a></li>
-							<li><a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f11734a5d3fd07218d767d451b4f1596bba296">CZipActionCallback::cbCalculateForMulti</a></li>
-							<li><a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f11734345c1ebabd368ffbe9bfba8fed7717ff">CZipActionCallback::cbEncryptPrepare</a></li>
+							<li><a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734a9564a0b741f08d4ab4e1ee727e092bf9">CZipActionCallback::cbDeleteCnt</a></li>
+							<li><a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734a93b49690cff50f46013d99a76357ef78">CZipActionCallback::cbSave</a></li>
+							<li><a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734aa5d3fd07218d767d451b4f1596bba296">CZipActionCallback::cbCalculateForMulti</a></li>
+							<li><a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734a345c1ebabd368ffbe9bfba8fed7717ff">CZipActionCallback::cbEncryptPrepare</a></li>
 						</ul>
 					</li>
 					<li>The value informs about the number of bytes processed when<br />
-						<a class="linkapi" href="structCZipActionCallback.html#bc0a90bcffefb9629ffa9c8421173338">CZipActionCallback::m_iType</a> is other than the above.</li>
+						<a class="linkapi" href="structCZipActionCallback.html#abc0a90bcffefb9629ffa9c8421173338">CZipActionCallback::m_iType</a> is other than the above.</li>
 				</ul>
 			</li>
 			<li>Examine members of the <a class="linkapi" href="structCZipActionCallback.html">CZipActionCallback</a> object to
@@ -88,25 +88,26 @@
 		class to be notified about starting and ending stages of the process. The methods
 		are called in the following order:
 		<ul class="dec">
-			<li><a class="linkapi" href="structCZipActionCallback.html#8fd783e7f5a87dd1bf874749d6899195">CZipActionCallback::Init()</a> - called once when the operation
+			<li><a class="linkapi" href="structCZipActionCallback.html#a8fd783e7f5a87dd1bf874749d6899195">CZipActionCallback::Init()</a> - called once when the operation
 				begins.</li>
-			<li><a class="linkapi" href="structCZipActionCallback.html#594ca1dae25d40c54ba813f5e289a063">CZipActionCallback::SetTotal()</a> - called when the amount
+			<li><a class="linkapi" href="structCZipActionCallback.html#a594ca1dae25d40c54ba813f5e289a063">CZipActionCallback::SetTotal()</a> - called when the amount
 				of data to process has been calculated.</li>
-			<li><a class="linkapi" href="structCZipCallback.html#27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback()</a> - called after processing
+			<li><a class="linkapi" href="structCZipCallback.html#a27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback()</a> - called after processing
 				a chunk of data.</li>
-			<li><a class="linkapi" href="structCZipActionCallback.html#a644e3e72e4481fcfe03a8e97d0fcf2e">CZipActionCallback::CallbackEnd()</a> - called once when
+			<li><a class="linkapi" href="structCZipActionCallback.html#aa644e3e72e4481fcfe03a8e97d0fcf2e">CZipActionCallback::CallbackEnd()</a> - called once when
 				the operation finishes.</li>
 		</ul>
 		<h3 id="step" name="step" class="kb">
 			Controlling the Frequency of Calling Callbacks</h3>
-		To control how often the <a class="linkapi" href="structCZipCallback.html#27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback()</a> method
-		is called, override the <a class="linkapi" href="structCZipActionCallback.html#a46f7eb83d53542b279c194cb3699cad">CZipActionCallback::GetStepSize()</a>
+		To control how often the <a class="linkapi" href="structCZipCallback.html#a27652d72804471adabcdcc18274bbbf5">CZipCallback::Callback()</a> method
+		is called, override the <a class="linkapi" href="structCZipActionCallback.html#aa46f7eb83d53542b279c194cb3699cad">CZipActionCallback::GetStepSize()</a>
 		method and return the step size value for a given callback type. If you use one
 		<a class="linkapi" href="structCZipActionCallback.html">CZipActionCallback</a> object for multiple callback types,
 		you may find out for which callback type the step size is requested by examining
-		the <a class="linkapi" href="structCZipActionCallback.html#bc0a90bcffefb9629ffa9c8421173338">CZipActionCallback::m_iType</a> value from within the
-		<a class="linkapi" href="structCZipActionCallback.html#a46f7eb83d53542b279c194cb3699cad">CZipActionCallback::GetStepSize()</a> method.
-		<div class="codetitle">Sample Code</div><pre class="fragment"><span class="keyword">class </span>CProgressCallback : <span class="keyword">public</span> CZipActionCallback
+		the <a class="linkapi" href="structCZipActionCallback.html#abc0a90bcffefb9629ffa9c8421173338">CZipActionCallback::m_iType</a> value from within the
+		<a class="linkapi" href="structCZipActionCallback.html#aa46f7eb83d53542b279c194cb3699cad">CZipActionCallback::GetStepSize()</a> method.
+		<div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment"><span class="keyword">class </span>CProgressCallback : <span class="keyword">public</span> CZipActionCallback
 {    
     <span class="keywordtype">void</span> Init(LPCTSTR lpszFileInZip, LPCTSTR lpszExternalFile) 
     {
@@ -130,7 +131,7 @@
         _tprintf(_T(<span class="stringliteral">"\r\n%s...\r\n"</span>), lpszAction);
     }
 
-    <span class="keywordtype">bool</span> Callback(ZIP_SIZE_TYPE uProgress)
+    <span class="keywordtype">bool</span> Callback(ZIP_SIZE_TYPE)
     {
 <span class="preprocessor">#ifdef _ZIP_ZIP64</span>
 <span class="preprocessor"></span>        _tprintf(_T(<span class="stringliteral">"Processed %I64u of %I64u (%I64u left)            \r"</span>), 
@@ -164,29 +165,30 @@
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"file.ext"</span>));
     zip.Close();
 }
-</pre>
+</pre></div> 
 		<h2 id="multi" name="multi" class="kb">
 			Multiple Actions Callbacks</h2>
 		When processing multiple files in one step, there is additional information available
-		about the global progress. It is available for <a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f1173494550e0831aaada340628dac6bf16f6c">CZipActionCallback::cbMultiActions</a>
-		callback types. It can be requested with the <a class="linkapi" href="structCZipActionCallback.html#b2982e5cb38c990f3ce55bb729cdf107">CZipActionCallback::GetMultiActionsInfo()</a>
+		about the global progress. It is available for <a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734a94550e0831aaada340628dac6bf16f6c">CZipActionCallback::cbMultiActions</a>
+		callback types. It can be requested with the <a class="linkapi" href="structCZipActionCallback.html#ab2982e5cb38c990f3ce55bb729cdf107">CZipActionCallback::GetMultiActionsInfo()</a>
 		method call.
 		<h3 id="multiOrder" name="multiOrder" class="kb">
 			Order of Methods Calls</h3>
 		There are additional methods called when processing multiple files. They are
 		called in the following order:
 		<ul class="dec">
-			<li><a class="linkapi" href="structCZipActionCallback.html#922cb079799623080513c6a7eda0a8ec">CZipActionCallback::MultiActionsInit()</a> - called once
+			<li><a class="linkapi" href="structCZipActionCallback.html#a922cb079799623080513c6a7eda0a8ec">CZipActionCallback::MultiActionsInit()</a> - called once
 				before the whole processing starts.</li>
 			<li>For each file being processed, normal method calls are performed (see <a href="#order" class="linkkb">above</a>).</li>
-			<li><a class="linkapi" href="structCZipActionCallback.html#09d65fd010741163ede569ea82f231e9">CZipActionCallback::MultiActionsNext()</a> - called after
+			<li><a class="linkapi" href="structCZipActionCallback.html#a09d65fd010741163ede569ea82f231e9">CZipActionCallback::MultiActionsNext()</a> - called after
 				every file processed.</li>
-			<li><a class="linkapi" href="structCZipActionCallback.html#e751a04bf6ac3a3e704a2f43e6fcff37">CZipActionCallback::MultiActionsEnd()</a> - called once
+			<li><a class="linkapi" href="structCZipActionCallback.html#ae751a04bf6ac3a3e704a2f43e6fcff37">CZipActionCallback::MultiActionsEnd()</a> - called once
 				when the whole processing finishes.</li>
 		</ul>
-		<div class="codetitle">Sample Code</div><pre class="fragment"><span class="keyword">class </span>CMultiProgressCallback : <span class="keyword">public</span> CZipActionCallback
+		<div class="codetitle">Sample Code</div>
+<div class="fragment"><pre class="fragment"><span class="keyword">class </span>CMultiProgressCallback : <span class="keyword">public</span> CZipActionCallback
 {    
-    <span class="keywordtype">bool</span> Callback(ZIP_SIZE_TYPE uProgress)
+    <span class="keywordtype">bool</span> Callback(ZIP_SIZE_TYPE)
     {
         <span class="keywordflow">if</span> (m_iType == cbCalculateForMulti)
         {
@@ -256,14 +258,14 @@
     zip.AddNewFiles(_T(<span class="stringliteral">"C:\\Temp"</span>), _T(<span class="stringliteral">"*.bin"</span>), <span class="keyword">false</span>);
     zip.Close();
 }
-</pre>
+</pre></div> 
 		<h2 id="api" name="api" class="kb">
 			See Also API Links</h2>
 		<ul class="non">
-			<li><a class="linkapi" href="classCZipArchive.html#a5db2354fbabea4a82bb1e242caebf7f">CZipArchive::SetCallback()</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#aa5db2354fbabea4a82bb1e242caebf7f">CZipArchive::SetCallback()</a></li>
 			<li><a class="linkapi" href="structCZipActionCallback.html">CZipActionCallback</a></li>
-			<li><a class="linkapi" href="structCZipActionCallback.html#987550875690c39c4278cc65e4f11734">CZipActionCallback::CallbackType</a></li>
-			<li><a class="linkapi" href="structCZipActionCallback.html#a46f7eb83d53542b279c194cb3699cad">CZipActionCallback::GetStepSize()</a></li>
+			<li><a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734">CZipActionCallback::CallbackType</a></li>
+			<li><a class="linkapi" href="structCZipActionCallback.html#aa46f7eb83d53542b279c194cb3699cad">CZipActionCallback::GetStepSize()</a></li>
 		</ul>
 	
         </div>
@@ -272,7 +274,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2009 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2010 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>
