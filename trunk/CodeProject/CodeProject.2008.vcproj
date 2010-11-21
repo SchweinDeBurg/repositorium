@@ -2901,6 +2901,14 @@
 			Filter="h;cpp"
 			>
 			<File
+				RelativePath=".\Source\Compression.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Compression.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\XZip.cpp"
 				>
 			</File>
