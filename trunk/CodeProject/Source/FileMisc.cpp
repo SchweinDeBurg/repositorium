@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 #include "stdafx.h"
@@ -488,6 +489,11 @@ CString FileMisc::GetCwd()
 	return szCwd;
 }
 
+void FileMisc::SetCwd(const CString& sCwd)
+{
+	SetCurrentDirectory(sCwd);
+}
+
 CString FileMisc::GetModuleFolder(HMODULE hMod) 
 { 
 	return GetFolderFromFilePath(GetModuleFileName(hMod)); 
@@ -921,6 +927,26 @@ CString FileMisc::GetModuleFileName(HMODULE hMod)
 	return sModulePath;
 }
 
+CString FileMisc::GetWindowsFolder()
+{
+	CString sFolder;
+
+	::GetWindowsDirectory(sFolder.GetBuffer(MAX_PATH + 1), MAX_PATH);
+	sFolder.ReleaseBuffer();
+
+	return sFolder;
+}
+
+CString FileMisc::GetWindowsSystemFolder()
+{
+	CString sFolder;
+
+	::GetSystemDirectory(sFolder.GetBuffer(MAX_PATH + 1), MAX_PATH);
+	sFolder.ReleaseBuffer();
+
+	return sFolder;
+}
+
 bool FileMisc::ExtractResource(LPCTSTR szModulePath, UINT nID, LPCTSTR szType, const CString& sTempFilePath)
 {
 	HMODULE hModule = LoadLibrary(szModulePath);
@@ -971,11 +997,22 @@ CString& FileMisc::MakePath(CString& sPath, const TCHAR* szDrive, const TCHAR* s
 	return sPath;
 }
 
-CString FileMisc::GetFullPath(const CString& sFilePath)
+CString FileMisc::GetFullPath(const CString& sFilePath, BOOL bFromApp)
 {
+	CString sCwd;
+	
+	if (bFromApp)
+	{
+		sCwd = GetCwd();
+		SetCurrentDirectory(GetModuleFolder());
+	}
+
 	TCHAR szFullPath[MAX_PATH+1];
 
 	_tfullpath(szFullPath, sFilePath, MAX_PATH);
+
+	if (!sCwd.IsEmpty())
+		SetCurrentDirectory(sCwd);
 
 	return szFullPath;
 }

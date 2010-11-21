@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 #ifndef _MISCFILE_FUNCTIONS_H_
@@ -108,6 +109,7 @@ namespace FileMisc
 	bool PathHasWildcard(const TCHAR* szFilePath);
 
 	CString GetCwd();
+	void SetCwd(const CString& sCwd);
 
 	int FindFiles(const CString& sFolder, CStringArray& aFiles, LPCTSTR szPattern = _T("*.*"));
 
@@ -129,12 +131,15 @@ namespace FileMisc
 	CString GetModuleFileName(HMODULE hMod = NULL);
 	CString GetModuleFolder(HMODULE hMod = NULL);
 
+	CString GetWindowsFolder();
+	CString GetWindowsSystemFolder();
+
 	void SplitPath(const TCHAR* szPath, CString* pDrive, CString* pDir = NULL, CString* pFName = NULL,
 		CString* pExt = NULL);
 	CString& MakePath(CString& sPath, const TCHAR* szDrive, const TCHAR* szDir = NULL, const TCHAR* szFName = NULL,
 		const TCHAR* szExt = NULL);
 	
-	CString GetFullPath(const CString& sFilePath);
+	CString GetFullPath(const CString& sFilePath, BOOL bFromApp = FALSE);
 	BOOL IsSameFile(const CString& sFilePath1, const CString& sFilePath2);
 
 	CString GetFolderFromFilePath(const TCHAR* szFilePath);
