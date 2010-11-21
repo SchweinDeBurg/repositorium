@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 // GraphicsMisc.h: interface for the GraphicsMisc class.
@@ -65,6 +66,28 @@ namespace GraphicsMisc
 	COLORREF Lighter(COLORREF color, double dAmount);
 	COLORREF Darker(COLORREF color, double dAmount);
 
+	BOOL EnableAeroPeak(HWND hWnd, BOOL bEnable = TRUE);
+	BOOL EnableFlip3D(HWND hWnd, BOOL bEnable = TRUE);
+	
+	template <class TYPE>
+	BOOL DwmSetWindowAttribute(HWND hWnd, DWORD dwAttrib, TYPE* type)
+	{
+		HMODULE hMod = ::LoadLibrary(_T("Dwmapi.dll"));
+		
+		if (hMod)
+		{
+			typedef HRESULT (*PFNDWMSETWINDOWATTRIBUTE)(HWND, DWORD, LPCVOID, DWORD);
+			PFNDWMSETWINDOWATTRIBUTE pFn = (PFNDWMSETWINDOWATTRIBUTE)::GetProcAddress(hMod, "DwmSetWindowAttribute");
+			
+			if (pFn)
+			{
+				HRESULT hr = pFn(hWnd, dwAttrib, type, sizeof(*type));
+				return SUCCEEDED(hr);
+			}
+		}
+		
+		return FALSE;
+	}
 };
 
 #endif // !defined(AFX_GRAPHICSMISC_H__A3408501_A44D_407B_A8C3_B6AB31370CD2__INCLUDED_)
