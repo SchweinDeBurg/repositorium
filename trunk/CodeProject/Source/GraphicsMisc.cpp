@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 // GraphicsMisc.cpp: implementation of the GraphicsMisc class.
@@ -316,4 +317,27 @@ COLORREF GraphicsMisc::Darker(COLORREF color, double dAmount)
 	blue = max(0, blue);
 	
 	return RGB(red, green, blue);
+}
+
+BOOL GraphicsMisc::EnableAeroPeak(HWND hWnd, BOOL bEnable)
+{
+#ifndef DWMWA_DISALLOW_PEEK
+# define DWMWA_DISALLOW_PEEK 11
+#endif
+
+  return DwmSetWindowAttribute(hWnd, DWMWA_DISALLOW_PEEK, &bEnable);
+}
+
+BOOL GraphicsMisc::EnableFlip3D(HWND hWnd, BOOL bEnable)
+{
+#ifndef DWMWA_FLIP3D_POLICY
+# define DWMWA_FLIP3D_POLICY 8
+# define DWMFLIP3D_DEFAULT      0
+# define DWMFLIP3D_EXCLUDEBELOW 1
+# define DWMFLIP3D_EXCLUDEABOVE 2
+#endif
+
+  int nPolicy = bEnable ? DWMFLIP3D_DEFAULT : DWMFLIP3D_EXCLUDEBELOW;
+
+  return DwmSetWindowAttribute(hWnd, DWMWA_DISALLOW_PEEK, &nPolicy);
 }
