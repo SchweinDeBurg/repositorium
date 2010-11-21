@@ -493,15 +493,12 @@ void CEnListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	CDC* pDC;
 	CRect rText, rItem, rClient, rHeader;
 	COLORREF crOldText, crOldBack;
-	int nItem, nCol;
-	BOOL bRes;
-	int nWidth, nFormat, nXPos, nYPos;
 	CSize sizeText;
 	LV_COLUMN lvc;
 //	CPen* pOldPen;
 	CImageList* pImageList;
 	CImageList* pStateList;
-	int nState, nImage = -1, nImageStyle, nImageWidth = 0;
+	int nImage = -1;
 	BOOL bItemFocused, bListFocused, bSelected, bDropHighlighted, bSelAlways;
 	UINT uStyle, uState;
 	CSize sizeState(0, 0), sizeImage(0, 0);
@@ -513,7 +510,7 @@ void CEnListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	pDC->SetROP2(R2_COPYPEN);
 
 	// init helper variables
-	nItem = lpDrawItemStruct->itemID;
+	int nItem = lpDrawItemStruct->itemID;
 	GetItemRect(nItem, rItem, LVIR_BOUNDS);//lpDrawItemStruct->rcItem;
 	GetClientRect(&rClient);
 
@@ -568,15 +565,15 @@ void CEnListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	if (lpDrawItemStruct->itemAction & (ODA_DRAWENTIRE | ODA_SELECT))
 	{
 		// setup colors and pens
-		nImageStyle = GetImageStyle(bSelected, bDropHighlighted, bListFocused);
+		int nImageStyle = GetImageStyle(bSelected, bDropHighlighted, bListFocused);
 
 		// draw item images if required
-		nImageWidth = 0;
+		int nImageWidth = 0;
 
 		// make sure there is enough space
 		lvc.mask = LVCF_WIDTH | LVCF_FMT;
-		nCol = 0;
-		bRes = GetColumn(nCol, &lvc);
+		int nCol = 0;
+		BOOL bRes = GetColumn(nCol, &lvc);
 		
 		// must paint the background of column 0 before the icons
 		if (bRes && (pStateList || pImageList))
@@ -585,7 +582,7 @@ void CEnListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		// state
 		if (pStateList && bRes)
 		{
-			nState = (GetItemState(nItem, LVIS_STATEIMAGEMASK) & LVIS_STATEIMAGEMASK);
+			int nState = (GetItemState(nItem, LVIS_STATEIMAGEMASK) & LVIS_STATEIMAGEMASK);
 			nState = nState >> 12;
 
 			if (lvc.cx > sizeState.cx)
@@ -610,8 +607,8 @@ void CEnListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		{
 			// save width and format because GetItem overwrites
 			// if first column deduct width of image if exists
-			nWidth = (nCol == 0) ? lvc.cx - nImageWidth - nIndent : lvc.cx;
-			nFormat = (lvc.fmt & LVCFMT_JUSTIFYMASK);
+			int nWidth = (nCol == 0) ? lvc.cx - nImageWidth - nIndent : lvc.cx;
+			int nFormat = (lvc.fmt & LVCFMT_JUSTIFYMASK);
 
 			// get next item
 			bRes = GetColumn(nCol + 1, &lvc);
@@ -629,9 +626,11 @@ void CEnListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			sizeText = sText.FormatDC(pDC, nWidth, GetColumnFormat(nCol));
 
 			// set y pos of first char
-			nYPos = rText.top + (rText.Height() - sizeText.cy) / 2;
+			int nYPos = rText.top + (rText.Height() - sizeText.cy) / 2;
 
 			// set x pos of first char
+			int nXPos = 0;
+
 			switch (nFormat)
 			{
 				case LVCFMT_CENTER:
@@ -793,7 +792,6 @@ BOOL CEnListCtrl::SetTooltipCtrlText(CString sText)
 void CEnListCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	int nSel;
-	int nCol0Start, nCol0End;
 	BOOL bChangedEditLabels = FALSE;
 
 	// if the list is in report mode AND supports label editing then
@@ -804,6 +802,7 @@ void CEnListCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	{
 		if (GetStyle() & LVS_EDITLABELS)
 		{
+			int nCol0Start, nCol0End;
 			GetColumnExtents(0, nCol0Start, nCol0End);
 
 			if (GetImageList(LVSIL_SMALL))
@@ -1089,7 +1088,6 @@ void CEnListCtrl::OnSize(UINT nType, int cx, int cy)
 	bInOnSize = TRUE;
 
 	CRect rClient, rPrev;
-	int nCol, nNumCols, nColStart = 0, nColEnd = 0;
 //	HD_LAYOUT   hdLayout;
 	WINDOWPOS   wpos;
 
@@ -1111,6 +1109,7 @@ void CEnListCtrl::OnSize(UINT nType, int cx, int cy)
 	// stretch the appropriate columns if in report mode
 	if (m_nCurView == LVS_REPORT)
 	{
+		int nCol, nNumCols, nColStart = 0, nColEnd = 0;
 		GetClientRect(rClient);
 
 		// get the start of the last column
