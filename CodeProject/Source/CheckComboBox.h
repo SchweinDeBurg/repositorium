@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 #if !defined(AFX_CHECKCOMBOBOX_H__4DDD3C3D_BDB7_4F07_9C50_75495F6E7F66__INCLUDED_)
@@ -34,6 +35,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
 // CheckComboBox.h : header file
 //
 
@@ -113,8 +115,6 @@ protected:
 	virtual void RefreshMaxDropWidth();
 	virtual void HandleReturnKey();
 	virtual CString GetSelectedItem() const;
-
-
 };
 
 /////////////////////////////////////////////////////////////////////////////

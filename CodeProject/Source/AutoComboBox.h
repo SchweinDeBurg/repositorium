@@ -35,6 +35,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
 // AutoComboBox.h : header file
 //
 
@@ -133,7 +134,6 @@ protected:
 	virtual void HandleReturnKey();
 	void NotifyParent(UINT nIDNotify);
 	virtual CString GetSelectedItem() const;
-
 };
 
 /////////////////////////////////////////////////////////////////////////////
