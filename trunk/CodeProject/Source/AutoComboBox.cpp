@@ -90,7 +90,6 @@ void AFXAPI DDX_AutoCBString(CDataExchange* pDX, int nIDC, CString& value)
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 // CAutoComboBox
 
@@ -101,7 +100,6 @@ CAutoComboBox::CAutoComboBox(DWORD dwFlags) : m_dwFlags(dwFlags), m_hwndListbox(
 CAutoComboBox::~CAutoComboBox()
 {
 }
-
 
 BEGIN_MESSAGE_MAP(CAutoComboBox, CComboBox)
 	//{{AFX_MSG_MAP(CAutoComboBox)
@@ -183,14 +181,6 @@ CString CAutoComboBox::GetSelectedItem() const
 
 	return sSel;
 }
-
-/*
-BOOL CAutoComboBox::OnKillfocus() 
-{
-HandleReturnKey();
-return FALSE; // continue routing
-}
-*/
 
 int CAutoComboBox::FindStringExact(int nIndexStart, const CString& sItem, BOOL bCaseSensitive) const
 {
