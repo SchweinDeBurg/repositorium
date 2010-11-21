@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 #if !defined(AFX_AUTOCOMBOBOX_H__34DD95FF_CCAE_4D8E_9162_D860B65CD448__INCLUDED_)
@@ -45,9 +46,9 @@ const UINT WM_ACB_ITEMDELETED = ::RegisterWindowMessage(_T("WM_ACB_ITEMDELETED")
 
 enum 
 {
-	ACBS_ALLOWDELETE	= 0x01,
-	ACBS_CASESENSITIVE	= 0x02,
-	ACBS_ADDTOSTART		= 0x04,
+	ACBS_ALLOWDELETE   = 0x01,
+	ACBS_CASESENSITIVE = 0x02,
+	ACBS_ADDTOSTART    = 0x04,
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -62,45 +63,46 @@ class CAutoComboBox : public CComboBox, protected CSubclassWnd
 public:
 	CAutoComboBox(DWORD dwFlags = 0);
 	virtual ~CAutoComboBox();
-	
+
 	// Operations
 public:
-    virtual int AddString(LPCTSTR szItem) { return AddUniqueItem(szItem); }
-    virtual int InsertString(int nIndex, LPCTSTR szItem) { return InsertUniqueItem(nIndex, szItem); }
+	virtual int AddString(LPCTSTR szItem) { return AddUniqueItem(szItem); }
+	virtual int InsertString(int nIndex, LPCTSTR szItem) { return InsertUniqueItem(nIndex, szItem); }
 
 	virtual int DeleteString(UINT nIndex) { return CComboBox::DeleteString(nIndex);	}
 	virtual int DeleteString(LPCTSTR szItem, BOOL bCaseSensitive = FALSE);
 
 	virtual int DeleteItems(const CStringArray& aItems, BOOL bCaseSensitive = FALSE); // returns deleted count
-	
+
 	virtual int AddUniqueItem(const CString& sItem); // returns index or CB_ERR
-    virtual int InsertUniqueItem(int nIndex, const CString& sItem); // returns index or CB_ERR
-	
-    virtual int AddUniqueItems(const CStringArray& aItems); // returns num items added
-    virtual int AddUniqueItems(const CAutoComboBox& cbItems); // returns num items added
-	
-    virtual int GetItems(CStringArray& aItems) const; // returns item count
-    virtual int SelectString(int nStartAfter, LPCTSTR lpszString) { return CComboBox::SelectString(nStartAfter, lpszString); }
-	
-    // helpers
-    int FindStringExact(int nIndexStart, const CString& sItem, BOOL bCaseSensitive) const;
-    int FindStringExact(int nIndexStart, LPCTSTR lpszFind) const
-		{ return FindStringExact(nIndexStart, lpszFind, FALSE); }
+	virtual int InsertUniqueItem(int nIndex, const CString& sItem); // returns index or CB_ERR
+
+	virtual int AddUniqueItems(const CStringArray& aItems); // returns num items added
+	virtual int AddUniqueItems(const CAutoComboBox& cbItems); // returns num items added
+
+	virtual int GetItems(CStringArray& aItems) const; // returns item count
+	virtual int SelectString(int nStartAfter, LPCTSTR lpszString) { return CComboBox::SelectString(nStartAfter, lpszString); }
+
+	// helpers
+	int FindStringExact(int nIndexStart, const CString& sItem, BOOL bCaseSensitive) const;
+	int FindStringExact(int nIndexStart, LPCTSTR lpszFind) const
+	{ return FindStringExact(nIndexStart, lpszFind, FALSE); }
 
 	void Flush() { if (m_bEditChange) HandleReturnKey(); }
-	
+
 protected:
 	DWORD m_dwFlags;
 	HWND m_hwndListbox;
 	BOOL m_bEditChange;
-	
+	BOOL m_bClosingUp;
+
 	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAutoComboBox)
 protected:
 	//}}AFX_VIRTUAL
 	virtual LRESULT WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp);
-	
+
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CAutoComboBox)
@@ -108,24 +110,25 @@ protected:
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
 	//}}AFX_MSG
+	afx_msg BOOL OnSelEndCancel();
 	afx_msg BOOL OnSelEndOK();
 	afx_msg BOOL OnSelChange();
 	afx_msg BOOL OnDropDown();
 	afx_msg BOOL OnCloseUp();
 	afx_msg BOOL OnEditChange();
-//	afx_msg BOOL OnKillFocus();
-	
+	//	afx_msg BOOL OnKillFocus();
+
 	DECLARE_MESSAGE_MAP()
-		
+
 protected:
 	virtual BOOL DeleteSelectedLBItem();
 	virtual void RefreshMaxDropWidth();
-	
+
 	BOOL AllowDelete() const { return Misc::HasFlag(m_dwFlags, ACBS_ALLOWDELETE); }
 	BOOL CaseSensitive() const { return Misc::HasFlag(m_dwFlags, ACBS_CASESENSITIVE); }
 	BOOL AddToStart() const { return Misc::HasFlag(m_dwFlags, ACBS_ADDTOSTART); }
 	int AddUniqueItem(const CString& sItem, BOOL bAddToStart);
-	
+
 	BOOL IsSimpleCombo();
 	virtual void HandleReturnKey();
 	void NotifyParent(UINT nIDNotify);
