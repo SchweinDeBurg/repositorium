@@ -139,15 +139,13 @@ void CEnHeaderCtrl::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 void CEnHeaderCtrl::OnLButtonDown(UINT nFlags, CPoint point) 
 {
-	int nCol, nDivider;
-
 	// see OnBeginTrackHeader for why the following trickery is required
 	if (!m_bAllowTracking)
 	{
 		// check to see whether the mouse is over the divider and if it is
 		// shift the y coord off the header 
-		nCol = 0;
-		nDivider = 0;
+		int nCol = 0;
+		int nDivider = 0;
 
 		while (nCol < GetItemCount())
 		{
