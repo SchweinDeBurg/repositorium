@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 // LightBox.cpp: implementation of the CLightBox class.
@@ -168,7 +169,8 @@ BOOL CLightBoxMgr::AttachLightBox(CWnd* pWnd)
 
 IMPLEMENT_DYNAMIC(CLightBox, CRuntimeDlg)
 
-CLightBox::CLightBox() : m_pSetLayeredWindowAttributes(NULL)
+CLightBox::CLightBox() : m_crBkgnd(GetSysColor(COLOR_3DHILIGHT)), m_nOpaquePercent(50), 
+						m_pSetLayeredWindowAttributes(NULL)
 {
 	
 }
@@ -199,7 +201,7 @@ BOOL CLightBox::Initialize(CWnd* pWnd, COLORREF crBkgnd, int nOpaquePercent)
 	if (HookWindow(*pWnd))
 	{
 		// create ourselves hidden
-		if (!CRuntimeDlg::Create(_T(""), WS_POPUP | WS_CAPTION, RTD_DEFEXSTYLE, rectAuto, GetCWnd()))
+		if (!CRuntimeDlg::Create(_T(""), WS_POPUP | WS_CAPTION | WS_DISABLED, RTD_DEFEXSTYLE, rectAuto, GetCWnd()))
 			return FALSE;
 		
 		ModifyStyleEx(0, WS_EX_LAYERED);
