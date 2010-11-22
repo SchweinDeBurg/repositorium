@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 #if !defined(AFX_PROPERTYPAGEHOST_H__43CF5AE7_C70B_443D_BC8B_7DA1D0E082DD__INCLUDED_)
@@ -61,11 +62,13 @@ public:
 	BOOL Create(LPRECT lpRect, CWnd* pParent, UINT uCtrlID = AFX_IDW_PANE_FIRST);
 	BOOL Create(UINT nRefCtrlID, CWnd* pParent, UINT uCtrlID = AFX_IDW_PANE_FIRST);
 	void OnOK();
+	void OnApply();
 	
 	int GetActiveIndex() const;
 	int FindPage(CPropertyPage* pPage);
 
 	CPropertyPage* GetActivePage();
+	int GetPageIndex(const CPropertyPage* pPage) const;
 	CPropertyPage* GetPage(int nIndex);
 	const CPropertyPage* GetPage(int nIndex) const;
 	CPropertyPage* FindPage(DWORD dwItemData);
@@ -76,6 +79,9 @@ public:
 	int GetPageCount() { return m_aPages.GetSize(); }
 	CString GetPageTitle(int nIndex) const;
 	DWORD GetPageItemData(int nIndex) const;
+
+	BOOL EnsurePageCreated(int nIndex);
+	BOOL EnsurePageCreated(const CPropertyPage* pPage);
 	BOOL IsPageCreated(int nIndex) const;
 
 	void ForwardMessage(UINT nMsg) { m_aForwardMsgs.Add(nMsg); }
