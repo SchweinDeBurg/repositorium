@@ -197,7 +197,7 @@ CRichEditBaseCtrl::CRichEditOleCallback::Release()
 
 HRESULT STDMETHODCALLTYPE 
 CRichEditBaseCtrl::CRichEditOleCallback::GetInPlaceContext(LPOLEINPLACEFRAME FAR *lplpFrame,
-	LPOLEINPLACEUIWINDOW FAR *lplpDoc, LPOLEINPLACEFRAMEINFO lpFrameInfo)
+																			  LPOLEINPLACEUIWINDOW FAR *lplpDoc, LPOLEINPLACEFRAMEINFO lpFrameInfo)
 {
 	if (m_pOwner)
 		return m_pOwner->GetInPlaceContext(lplpFrame, lplpDoc, lpFrameInfo);
@@ -240,7 +240,7 @@ CRichEditBaseCtrl::CRichEditOleCallback::DeleteObject(LPOLEOBJECT lpoleobj)
 
 HRESULT STDMETHODCALLTYPE 
 CRichEditBaseCtrl::CRichEditOleCallback::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT FAR *lpcfFormat,
-	DWORD reco, BOOL fReally, HGLOBAL hMetaPict)
+																			DWORD reco, BOOL fReally, HGLOBAL hMetaPict)
 {
 	if (m_pOwner)
 		return m_pOwner->QueryAcceptData(lpdataobj, lpcfFormat, reco, fReally, hMetaPict);
@@ -281,7 +281,7 @@ CRichEditBaseCtrl::CRichEditOleCallback::GetDragDropEffect(BOOL fDrag, DWORD grf
 
 HRESULT STDMETHODCALLTYPE 
 CRichEditBaseCtrl::CRichEditOleCallback::GetContextMenu(WORD seltyp, LPOLEOBJECT lpoleobj, CHARRANGE FAR *lpchrg,
-	HMENU FAR *lphmenu)
+																		  HMENU FAR *lphmenu)
 {
 	if (m_pOwner)
 		return m_pOwner->GetContextMenu(seltyp, lpoleobj, lpchrg, lphmenu);
@@ -405,7 +405,7 @@ void CRichEditBaseCtrl::OnFindNext(LPCTSTR lpszFind, BOOL bNext, BOOL bCase, BOO
 }
 
 void CRichEditBaseCtrl::OnReplaceSel(LPCTSTR lpszFind, BOOL bNext, BOOL bCase,
-	BOOL bWord, LPCTSTR lpszReplace)
+												 BOOL bWord, LPCTSTR lpszReplace)
 {
 	ASSERT_VALID(this);
 

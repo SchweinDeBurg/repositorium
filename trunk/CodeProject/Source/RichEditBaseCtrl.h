@@ -46,14 +46,14 @@ class FIND_STATE;  // private to implementation
 
 class CRichEditBaseCtrl : public CRichEditCtrl
 {
-// Construction
+	// Construction
 public:
 	CRichEditBaseCtrl();
 	virtual ~CRichEditBaseCtrl();
 
 	void DoEditFind(UINT nIDTitle = 0);
 	void DoEditReplace(UINT nIDTitle = 0);
-	
+
 	BOOL Undo();
 	BOOL Redo();
 
@@ -61,7 +61,7 @@ public:
 protected:
 	long m_lInitialSearchPos;
 	BOOL m_bFirstSearch;
-	
+
 	struct FIND_STATE
 	{
 		FIND_STATE() : pFindReplaceDlg(NULL), bFindOnly(FALSE), bCase(FALSE), bNext(TRUE), bWord(FALSE) { }
@@ -75,17 +75,17 @@ protected:
 		BOOL bWord; // TRUE==match whole word, FALSE==not
 	};
 	FIND_STATE m_findState;
-	
+
 	// Operations
 public:
-	
+
 	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CRichEditBaseCtrl)
 protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
-	
+
 	// Implementation
 protected:
 	class CRichEditOleCallback : public IRichEditOleCallback
@@ -93,9 +93,9 @@ protected:
 	public:
 		CRichEditOleCallback();
 		virtual ~CRichEditOleCallback();
-		
+
 		void SetOwner(CRichEditBaseCtrl* pOwner) { m_pOwner = pOwner; }
-		
+
 		// IRichEditOleCallback
 		virtual HRESULT STDMETHODCALLTYPE GetNewStorage(LPSTORAGE* lplpstg);
 		virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void ** ppvObject);
@@ -113,19 +113,19 @@ protected:
 		virtual HRESULT STDMETHODCALLTYPE GetDragDropEffect(BOOL fDrag, DWORD grfKeyState, LPDWORD pdwEffect);
 		virtual HRESULT STDMETHODCALLTYPE GetContextMenu(WORD seltyp, LPOLEOBJECT lpoleobj, CHARRANGE FAR *lpchrg,
 			HMENU FAR *lphmenu);
-		
+
 	protected:
 		int m_iNumStorages;
 		IStorage* m_pStorage;
 		DWORD m_dwRef;
 		CRichEditBaseCtrl* m_pOwner;
 	};
-	
+
 	friend class CRichEditOleCallback;
-	
+
 protected:
 	CRichEditOleCallback m_callback;
-	
+
 	// Generated message map functions
 protected:
 	virtual HRESULT GetNewStorage(LPSTORAGE* /*lplpstg*/) { return S_OK; }
@@ -141,22 +141,22 @@ protected:
 	virtual HRESULT GetDragDropEffect(BOOL /*fDrag*/, DWORD /*grfKeyState*/, LPDWORD /*pdwEffect*/) { return S_OK; }
 	virtual HRESULT GetContextMenu(WORD /*seltyp*/, LPOLEOBJECT /*lpoleobj*/, CHARRANGE FAR* /*lpchrg*/,
 		HMENU FAR* /*lphmenu*/) { return S_OK; }
-	
+
 	virtual void OnFindNext(LPCTSTR lpszFind, BOOL bNext, BOOL bCase, BOOL bWord);
 	virtual void OnReplaceSel(LPCTSTR lpszFind, BOOL bNext, BOOL bCase,
 		BOOL bWord, LPCTSTR lpszReplace);
 	virtual void OnReplaceAll(LPCTSTR lpszFind, LPCTSTR lpszReplace,
 		BOOL bCase, BOOL bWord);
 	virtual void OnTextNotFound(LPCTSTR lpszFind);
-	
+
 	//{{AFX_MSG(CRichEditBaseCtrl)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	//}}AFX_MSG
 	afx_msg LRESULT OnFindReplaceCmd(WPARAM, LPARAM lParam);
-	
+
 	DECLARE_MESSAGE_MAP()
-		
-		
+
+
 	void AdjustDialogPosition(CDialog* pDlg);
 	BOOL FindText(LPCTSTR lpszFind, BOOL bCase = TRUE, BOOL bWord = TRUE);
 	BOOL FindTextSimple(LPCTSTR lpszFind, BOOL bCase = TRUE,
