@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 // Misc.h: interface for the CMisc class.
@@ -108,6 +109,8 @@ namespace Misc
 	int Find(const CStringArray& array, LPCTSTR szItem, BOOL bCaseSensitive = FALSE);
 	void Trace(const CStringArray& array);
 	int RemoveItems(const CStringArray& aItems, CStringArray& aFrom, BOOL bCaseSensitive = FALSE);
+	int AddUniqueItems(const CStringArray& aItems, CStringArray& aTo, BOOL bCaseSensitive = FALSE);
+	int AddUniqueItem(const CString& sItem, CStringArray& aTo, BOOL bCaseSensitive = FALSE);
 
 	void SortArray(CStringArray& array, BOOL bAscending = TRUE);
 
@@ -124,6 +127,7 @@ namespace Misc
 
 	int CompareVersions(LPCTSTR szVersion1, LPCTSTR szVersion2);
 	int Split(const CString& sText, TCHAR cDelim, CStringArray& aValues);
+	int Split(const CString& sText, const CString& sDelim, CStringArray& aValues);
 
 	double Round(double dValue);
 	float Round(float fValue);
