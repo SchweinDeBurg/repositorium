@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 // PropertyPageHost.cpp : implementation file
@@ -149,7 +150,12 @@ LRESULT CPropertyPageHost::OnGetCurrentPageHwnd(WPARAM /*wParam*/, LPARAM /*lPar
 	return pActive ? (LRESULT)pActive->GetSafeHwnd() : NULL;
 }
 
-BOOL CPropertyPageHost::SetActivePage(int nIndex, BOOL bAndFocus)
+BOOL CPropertyPageHost::EnsurePageCreated(const CPropertyPage* pPage)
+{
+	return EnsurePageCreated(GetPageIndex(pPage));
+}
+
+BOOL CPropertyPageHost::EnsurePageCreated(int nIndex)
 {
 	if (nIndex < 0 || nIndex >= m_aPages.GetSize())
 		return FALSE;
@@ -159,10 +165,7 @@ BOOL CPropertyPageHost::SetActivePage(int nIndex, BOOL bAndFocus)
 	if (!pPage)
 		return FALSE;
 
-	CWnd* pFocus = GetFocus();
-	BOOL bNeedCreate = (pPage->GetSafeHwnd() == NULL);
-
-	if (bNeedCreate) // first time only
+	if (pPage->GetSafeHwnd() == NULL) // first time only
 	{
 		if (!pPage->Create(pPage->m_psp.pszTemplate, this))
 			return FALSE;
@@ -195,6 +198,24 @@ BOOL CPropertyPageHost::SetActivePage(int nIndex, BOOL bAndFocus)
 		pPage->SetParent(this);
 		pPage->MoveWindow(rClient);
 	}
+
+	return (pPage->GetSafeHwnd() != NULL);
+}
+
+BOOL CPropertyPageHost::SetActivePage(int nIndex, BOOL bAndFocus)
+{
+	if (nIndex < 0 || nIndex >= m_aPages.GetSize())
+		return FALSE;
+
+	CPropertyPage* pPage = m_aPages[nIndex].pPage;
+
+	if (!pPage)
+		return FALSE;
+
+	CWnd* pFocus = GetFocus();
+
+	if (!EnsurePageCreated(nIndex))
+		return FALSE;
 
 	// hide the current page provided it's not just about to be reshown
 	BOOL bSamePage = (m_nSelIndex == nIndex);
@@ -388,6 +409,18 @@ void CPropertyPageHost::OnOK()
 		}
 	}
 }
+void CPropertyPageHost::OnApply()
+{
+	int nPage = m_aPages.GetSize();
+
+	while (nPage--)
+	{
+		CPropertyPage* pPage = m_aPages[nPage].pPage;
+
+		if (pPage && pPage->GetSafeHwnd())
+			pPage->UpdateData();
+	}
+}
 
 int CPropertyPageHost::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
@@ -448,4 +481,17 @@ CPropertyPage* CPropertyPageHost::FindPage(DWORD dwItemData)
 	}
 
 	return NULL;
+}
+
+int CPropertyPageHost::GetPageIndex(const CPropertyPage* pPage) const
+{
+	int nPage = m_aPages.GetSize();
+
+	while (nPage--)
+	{
+		if (m_aPages[nPage].pPage == pPage)
+			return nPage;
+	}
+
+	return -1;
 }

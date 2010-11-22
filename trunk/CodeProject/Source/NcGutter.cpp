@@ -1427,7 +1427,7 @@ void CNcGutter::OnNcPaint()
 
 #ifdef _DEBUG
 	static int nCount = 0;
-//	TRACE ("CNcGutter::OnNcPaint(%d)\n", ++nCount);
+	TRACE (_T("CNcGutter::OnNcPaint(%d)\n"), ++nCount);
 #endif
 
 	if (GetGutterWidth() > 0 && dcMem.CreateCompatibleDC(NULL) &&
