@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 // CDriveInfo.cpp
@@ -39,7 +40,6 @@ float CDriveInfo::GetFreeBytes(int nDrive)
 {
 	CString sRoot;
 	unsigned long totalClusters, freeClusters, sectors, bytes;
-	float fSpace;
 
 	ASSERT (nDrive > 0 && nDrive <= 26);
 
@@ -51,7 +51,7 @@ float CDriveInfo::GetFreeBytes(int nDrive)
 	
 		// do maths like this to avoid truncation
 		// errors
-		fSpace = (float)sectors;
+		float fSpace = (float)sectors;
 		fSpace *= bytes;
 		fSpace *= freeClusters;
 		fSpace /= 1048576;
@@ -115,7 +115,6 @@ float CDriveInfo::GetTotalBytes(int nDrive)
 {
 	CString sRoot;
 	unsigned long totalClusters, freeClusters, sectors, bytes;
-	float fSpace;
 
 	ASSERT (nDrive > 0 && nDrive <= 26);
 
@@ -127,7 +126,7 @@ float CDriveInfo::GetTotalBytes(int nDrive)
 	
 		// do maths like this to avoid truncation
 		// errors
-		fSpace = (float)sectors;
+		float fSpace = (float)sectors;
 		fSpace *= bytes;
 		fSpace *= totalClusters;
 		fSpace /= 1048576;
