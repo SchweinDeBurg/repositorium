@@ -51,9 +51,9 @@ class CDragDropTreeData : public CDragDropData
 public:
 	CDragDropTreeData(const CTreeSelectionHelper& selection) :
 		m_tree(selection.TreeCtrl()), m_ptDrawOffset(0)
-		{
-			selection.CopySelection(m_selection);
-		}
+	{
+		selection.CopySelection(m_selection);
+	}
 
 protected:
 	virtual CSize OnGetDragSize(CDC& /*dc*/)

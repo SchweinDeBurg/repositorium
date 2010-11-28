@@ -120,6 +120,7 @@ class CRichEditHelper
 {
 public:
 	static BOOL CreateRichEdit20(CWnd& wnd, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
+	static BOOL CreateRichEdit50(CWnd& wnd, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
 	static BOOL InitRichEdit();
 	static void ClearUndo(HWND hWnd);
 //	static BOOL Redo(HWND hWnd);

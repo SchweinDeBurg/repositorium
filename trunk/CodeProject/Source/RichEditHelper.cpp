@@ -138,9 +138,16 @@ BOOL CRichEditHelper::CreateRichEdit20(CWnd& wnd, DWORD dwStyle, const RECT& rec
 	return wnd.Create(WC_RICHEDIT20, _T(""), dwStyle, rect, pParentWnd, nID);
 }
 
+BOOL CRichEditHelper::CreateRichEdit50(CWnd& wnd, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID)
+{
+	InitRichEdit();
+	return wnd.Create(ATL::CW2T(MSFTEDIT_CLASS), _T(""), dwStyle, rect, pParentWnd, nID);
+}
+
 BOOL CRichEditHelper::InitRichEdit()
 {
 	static HINSTANCE hRichEdit20 = NULL;
+	static HINSTANCE hRichEdit50 = NULL;
 
 	if (!AfxInitRichEdit())
 		return FALSE;
@@ -148,7 +155,10 @@ BOOL CRichEditHelper::InitRichEdit()
 	if (!hRichEdit20)
 		hRichEdit20 = LoadLibrary(_T("riched20.dll"));
 
-	return (hRichEdit20 != NULL);
+	if (!hRichEdit50)
+		hRichEdit50 = LoadLibrary(_T("msftedit.dll"));
+
+	return (hRichEdit20 != NULL || hRichEdit50 != NULL);
 }
 
 void CRichEditHelper::ClearUndo(HWND hWnd)
