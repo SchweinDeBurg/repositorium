@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 // RichEditBaseCtrl.cpp : implementation file
@@ -34,6 +35,9 @@
 #include "stdafx.h"
 #include "RichEditBaseCtrl.h"
 #include "RichEditHelper.h"
+#include "WinClasses.h"
+#include "WClassDefines.h"
+#include "AutoFlag.h"
 
 #include <atlconv.h>
 
@@ -48,7 +52,7 @@ const UINT WM_FINDREPLACE = ::RegisterWindowMessage(FINDMSGSTRING);
 /////////////////////////////////////////////////////////////////////////////
 // CRichEditBaseCtrl
 
-CRichEditBaseCtrl::CRichEditBaseCtrl()
+CRichEditBaseCtrl::CRichEditBaseCtrl() : m_bEnableSelectOnFocus(FALSE), m_bInOnFocus(FALSE)
 {
 	m_callback.SetOwner(this);
 }
@@ -62,8 +66,11 @@ CRichEditBaseCtrl::~CRichEditBaseCtrl()
 BEGIN_MESSAGE_MAP(CRichEditBaseCtrl, CRichEditCtrl)
 	//{{AFX_MSG_MAP(CRichEditBaseCtrl)
 	ON_WM_CREATE()
+	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
 	ON_REGISTERED_MESSAGE(WM_FINDREPLACE, OnFindReplaceCmd)
+	ON_WM_SETFOCUS()
+	ON_MESSAGE(EM_SETSEL, OnEditSetSelection)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -74,9 +81,39 @@ int CRichEditBaseCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CRichEditCtrl::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
+	ASSERT_VALID(this);
+
 	SetOLECallback(&m_callback);
 
 	return 0;
+}
+
+void CRichEditBaseCtrl::OnSetFocus(CWnd* pOldWnd)
+{
+	CAutoFlag af(m_bInOnFocus, TRUE);
+
+	CRichEditCtrl::OnSetFocus(pOldWnd);
+}
+
+LRESULT CRichEditBaseCtrl::OnEditSetSelection(WPARAM /*wParam*/, LPARAM /*lParam*/)
+{
+	if (m_bEnableSelectOnFocus || !m_bInOnFocus)
+		return Default();
+
+	// else
+	return 0L;
+}
+
+void CRichEditBaseCtrl::OnDestroy()
+{
+	// destroy the find dialog. it will delete itself
+	if (m_findState.pFindReplaceDlg)
+	{
+		m_findState.pFindReplaceDlg->DestroyWindow();
+		m_findState.pFindReplaceDlg = NULL;
+	}
+
+	CRichEditCtrl::OnDestroy();
 }
 
 void CRichEditBaseCtrl::PreSubclassWindow() 
@@ -95,6 +132,47 @@ BOOL CRichEditBaseCtrl::Redo()
 {
 	return CTextDocument(GetSafeHwnd()).Redo();
 }
+
+CString CRichEditBaseCtrl::GetTextRange(const CHARRANGE& cr) 
+{
+	int nLength = int(cr.cpMax - cr.cpMin + 1);
+
+#if !defined(_UNICODE) && !defined(UNICODE)
+
+	// create an ANSI buffer 
+	char* szChar = new char[nLength];
+
+	// create a Unicode (Wide Character) buffer of the same length
+	LPWSTR lpszWChar = new WCHAR[nLength];
+
+	TEXTRANGEW tr;
+	tr.chrg = cr;
+	tr.lpstrText = lpszWChar;
+	SendMessage(EM_GETTEXTRANGE, 0, (LPARAM)&tr);
+
+	// Convert the Unicode text to ANSI.
+	WideCharToMultiByte(CP_ACP, 0, lpszWChar, -1, szChar, nLength, NULL, NULL);
+
+	delete lpszWChar;
+
+#else
+
+	WCHAR* szChar = new WCHAR[nLength];
+
+	TEXTRANGE tr;
+	tr.chrg = cr;
+	tr.lpstrText = szChar;
+	SendMessage(EM_GETTEXTRANGE, 0, (LPARAM)&tr);
+
+#endif   // !_UNICODE && !UNICODE
+
+	CString sText(szChar);
+	delete [] szChar;
+
+	return sText;
+}
+
+
 
 CRichEditBaseCtrl::CRichEditOleCallback::CRichEditOleCallback() : m_pOwner(NULL)
 {
@@ -330,7 +408,6 @@ void CRichEditBaseCtrl::AdjustDialogPosition(CDialog* pDlg)
 void CRichEditBaseCtrl::DoEditFindReplace(BOOL bFindOnly, UINT nIDTitle)
 {
 	ASSERT_VALID(this);
-	m_bFirstSearch = TRUE;
 
 	if (m_findState.pFindReplaceDlg != NULL)
 	{
@@ -349,12 +426,15 @@ void CRichEditBaseCtrl::DoEditFindReplace(BOOL bFindOnly, UINT nIDTitle)
 		}
 	}
 	CString strFind = GetSelText();
+
 	// if selection is empty or spans multiple lines use old find text
 	if (strFind.IsEmpty() || (strFind.FindOneOf(_T("\n\r")) != -1))
 		strFind = m_findState.strFind;
+
 	CString strReplace = m_findState.strReplace;
 	m_findState.pFindReplaceDlg = new CFindReplaceDialog;
 	ASSERT(m_findState.pFindReplaceDlg != NULL);
+
 	DWORD dwFlags = NULL;
 	if (m_findState.bNext)
 		dwFlags |= FR_DOWN;
@@ -362,10 +442,11 @@ void CRichEditBaseCtrl::DoEditFindReplace(BOOL bFindOnly, UINT nIDTitle)
 		dwFlags |= FR_MATCHCASE;
 	if (m_findState.bWord)
 		dwFlags |= FR_WHOLEWORD;
+
 	// hide stuff that RichEdit doesn't support
 	dwFlags |= FR_HIDEUPDOWN;
-	if (!m_findState.pFindReplaceDlg->Create(bFindOnly, strFind,
-		strReplace, dwFlags, this))
+
+	if (!m_findState.pFindReplaceDlg->Create(bFindOnly, strFind, strReplace, dwFlags, this))
 	{
 		m_findState.pFindReplaceDlg = NULL;
 		ASSERT_VALID(this);
@@ -401,6 +482,7 @@ void CRichEditBaseCtrl::OnFindNext(LPCTSTR lpszFind, BOOL bNext, BOOL bCase, BOO
 		TextNotFound(m_findState.strFind);
 	else
 		AdjustDialogPosition(m_findState.pFindReplaceDlg);
+
 	ASSERT_VALID(this);
 }
 
@@ -430,6 +512,7 @@ void CRichEditBaseCtrl::OnReplaceSel(LPCTSTR lpszFind, BOOL bNext, BOOL bCase,
 		TextNotFound(m_findState.strFind);
 	else
 		AdjustDialogPosition(m_findState.pFindReplaceDlg);
+
 	ASSERT_VALID(this);
 }
 
@@ -534,17 +617,20 @@ BOOL CRichEditBaseCtrl::FindTextSimple()
 BOOL CRichEditBaseCtrl::FindTextSimple(LPCTSTR lpszFind, BOOL bCase, BOOL bWord)
 {
 	ASSERT(lpszFind != NULL);
+
+	if (!lpszFind || !*lpszFind)
+		return FALSE;
+
+	// get the current selection because this is where we 
+	// always start searching from
 	FINDTEXTEX ft;
-
 	GetSel(ft.chrg);
-	if (m_bFirstSearch)
-	{
-		m_lInitialSearchPos = ft.chrg.cpMin;
-		m_bFirstSearch = FALSE;
-	}
 
+	// convert text to multibyte string for RichEdit50W
 	ft.lpstrText = lpszFind;
-	if (ft.chrg.cpMin != ft.chrg.cpMax) // i.e. there is a selection
+
+	// is there is a selection? for instance, previously found text
+	if (ft.chrg.cpMin < ft.chrg.cpMax)
 	{
 
 #ifndef _UNICODE
@@ -552,10 +638,13 @@ BOOL CRichEditBaseCtrl::FindTextSimple(LPCTSTR lpszFind, BOOL bCase, BOOL bWord)
 		// increment by one extra byte.
 		TEXTRANGE textRange;
 		TCHAR ch[2];
+
 		textRange.chrg.cpMin = ft.chrg.cpMin;
 		textRange.chrg.cpMax = ft.chrg.cpMin + 1;
 		textRange.lpstrText = ch;
+
 		SendMessage(EM_GETTEXTRANGE, 0, (LPARAM)&textRange);
+
 		if (_istlead(ch[0]))
 		{
 			ASSERT(ft.chrg.cpMax - ft.chrg.cpMin >= 2);
@@ -563,34 +652,27 @@ BOOL CRichEditBaseCtrl::FindTextSimple(LPCTSTR lpszFind, BOOL bCase, BOOL bWord)
 		}
 #endif
 
+		// then shift the selection start forward a char so that we don't simply
+		// find the already selected text.
 		ft.chrg.cpMin++;
 	}
 
-	if (m_lInitialSearchPos >= 0)
-		ft.chrg.cpMax = GetTextLength();
-	else
-		ft.chrg.cpMax = GetTextLength()+m_lInitialSearchPos;
+	// always search to the end of the text
+	ft.chrg.cpMax = GetTextLength();
 
 	DWORD dwFlags = FR_DOWN;
-
 	dwFlags |= bCase ? FR_MATCHCASE : 0;
 	dwFlags |= bWord ? FR_WHOLEWORD : 0;
 
 	// if we find the text return TRUE
 	if (FindAndSelect(dwFlags, ft) != -1)
 		return TRUE;
-	// if the original starting point was not the beginning of the buffer
-	// and we haven't already been here
-	else if (m_lInitialSearchPos > 0)
-	{
-		ft.chrg.cpMin = 0;
-		ft.chrg.cpMax = m_lInitialSearchPos;
-		m_lInitialSearchPos = m_lInitialSearchPos - GetTextLength();
-		return FindAndSelect(dwFlags, ft) != -1;
-	}
-	// not found
-	else
-		return FALSE;
+
+	// else we need to restart the search from the beginning
+	ft.chrg.cpMin = 0;
+	ft.chrg.cpMax = GetTextLength();
+
+	return (FindAndSelect(dwFlags, ft) != -1);
 }
 
 long CRichEditBaseCtrl::FindAndSelect(DWORD dwFlags, FINDTEXTEX& ft)
@@ -606,14 +688,8 @@ long CRichEditBaseCtrl::FindAndSelect(DWORD dwFlags, FINDTEXTEX& ft)
 	return index;
 }
 
-void CRichEditBaseCtrl::TextNotFound(LPCTSTR lpszFind)
+void CRichEditBaseCtrl::TextNotFound(LPCTSTR /*lpszFind*/)
 {
 	ASSERT_VALID(this);
-	m_bFirstSearch = TRUE;
-	OnTextNotFound(lpszFind);
-}
-
-void CRichEditBaseCtrl::OnTextNotFound(LPCTSTR)
-{
 	MessageBeep(MB_ICONHAND);
 }

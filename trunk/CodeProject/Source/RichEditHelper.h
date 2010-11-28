@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 // RichEditHelper.h: interface for the CRichEditHelper class.
