@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 #if !defined(AFX_RICHEDITBASECTRL_H__E7F84BEA_24A6_42D4_BE92_4B8891484048__INCLUDED_)
@@ -57,10 +58,13 @@ public:
 	BOOL Undo();
 	BOOL Redo();
 
+	CString GetTextRange(const CHARRANGE& cr);
+	void EnableSelectOnFocus(BOOL bEnable) { m_bEnableSelectOnFocus = bEnable; }
+
 	// Attributes
 protected:
-	long m_lInitialSearchPos;
-	BOOL m_bFirstSearch;
+	BOOL m_bEnableSelectOnFocus;
+	BOOL m_bInOnFocus;
 
 	struct FIND_STATE
 	{
@@ -147,13 +151,15 @@ protected:
 		BOOL bWord, LPCTSTR lpszReplace);
 	virtual void OnReplaceAll(LPCTSTR lpszFind, LPCTSTR lpszReplace,
 		BOOL bCase, BOOL bWord);
-	virtual void OnTextNotFound(LPCTSTR lpszFind);
-
+	
 	//{{AFX_MSG(CRichEditBaseCtrl)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	//}}AFX_MSG
-	afx_msg LRESULT OnFindReplaceCmd(WPARAM, LPARAM lParam);
-
+	afx_msg LRESULT OnFindReplaceCmd(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnDestroy();
+	afx_msg void OnSetFocus(CWnd* pOldWnd);
+	afx_msg LRESULT OnEditSetSelection(WPARAM wParam, LPARAM lParam);
+	
 	DECLARE_MESSAGE_MAP()
 
 
