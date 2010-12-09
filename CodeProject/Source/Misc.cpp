@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -27,6 +27,19 @@
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
 // - merged with ToDoList version 6.1 sources
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // Misc.cpp: implementation of the CMisc class.
@@ -42,46 +55,50 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
 //////////////////////////////////////////////////////////////////////
 
-void Misc::CopyTexttoClipboard(const CString& sText, HWND hwnd) 
+void Misc::CopyTexttoClipboard(const CString& sText, HWND hwnd)
 {
-	if (!::OpenClipboard(hwnd)) 
-		return; 
+	if (!::OpenClipboard(hwnd))
+	{
+		return;
+	}
 
-	::EmptyClipboard(); 
+	::EmptyClipboard();
 
-	// Allocate a global memory object for the text. 
-	HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, (sText.GetLength() + 1) * sizeof(TCHAR)); 
+	// Allocate a global memory object for the text.
+	HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, (sText.GetLength() + 1) * sizeof(TCHAR));
 
-	if (!hglbCopy) 
-	{ 
-		CloseClipboard(); 
-		return; 
-	} 
+	if (!hglbCopy)
+	{
+		CloseClipboard();
+		return;
+	}
 
-	// Lock the handle and copy the text to the buffer. 
-	LPTSTR lptstrCopy = (LPTSTR)GlobalLock(hglbCopy); 
+	// Lock the handle and copy the text to the buffer.
+	LPTSTR lptstrCopy = (LPTSTR)GlobalLock(hglbCopy);
 
-	memcpy(lptstrCopy, (LPVOID)(LPCTSTR)sText, sText.GetLength() * sizeof(TCHAR)); 
+	memcpy(lptstrCopy, (LPVOID)(LPCTSTR)sText, sText.GetLength() * sizeof(TCHAR));
 
-	lptstrCopy[sText.GetLength()] = (TCHAR) 0;    // null character 
-	GlobalUnlock(hglbCopy); 
+	lptstrCopy[sText.GetLength()] = (TCHAR) 0;    // null character
+	GlobalUnlock(hglbCopy);
 
-	// Place the handle on the clipboard. 
-	::SetClipboardData(CF_TEXT, hglbCopy); 
+	// Place the handle on the clipboard.
+	::SetClipboardData(CF_TEXT, hglbCopy);
 
 	::CloseClipboard();
 }
 
 CString Misc::GetClipboardText(HWND hwnd)
 {
-	if (!::OpenClipboard(hwnd)) 
-		return _T(""); 
+	if (!::OpenClipboard(hwnd))
+	{
+		return _T("");
+	}
 
 	HANDLE hData = ::GetClipboardData(CF_TEXT);
 	TCHAR* buffer = (TCHAR*)GlobalLock(hData);
@@ -127,9 +144,13 @@ BOOL Misc::GuidToString(const GUID& guid, CString& sGuid)
 #endif   // UNICODE || _UNICODE
 
 	if (RPC_S_OK == UuidToString((GUID*)&guid, &pszGuid))
+	{
 		sGuid = CString((LPCTSTR)pszGuid);
+	}
 	else
+	{
 		sGuid.Empty();
+	}
 
 	RpcStringFree(&pszGuid);
 
@@ -190,7 +211,9 @@ int Misc::Split(const CString& sText, const CString& sDelim, CStringArray& aValu
 
 	// add whatever's left
 	if (!sTextCopy.IsEmpty())
+	{
 		aValues.Add(sTextCopy);
+	}
 
 	return aValues.GetSize();
 }
@@ -246,7 +269,9 @@ CString Misc::GetListSeparator()
 
 		// If none found, use a comma
 		if (!sSep.GetLength())
+		{
 			sSep = _T(',');
+		}
 	}
 
 	return sSep;
@@ -257,19 +282,25 @@ CString Misc::FormatArray(const CStringArray& array, LPCTSTR szSep)
 	int nCount = array.GetSize();
 
 	if (nCount == 0)
+	{
 		return _T("");
+	}
 
 	CString sSep(szSep);
 
 	if (!szSep)
+	{
 		sSep = GetListSeparator() + _T(' ');
+	}
 
 	CString sText;
 
 	for (int nItem = 0; nItem < nCount; nItem++)
 	{
 		if (nItem > 0 && array[nItem].GetLength())
+		{
 			sText += sSep;
+		}
 
 		sText += array[nItem];
 	}
@@ -282,12 +313,16 @@ CString Misc::FormatArray(const CDWordArray& array, LPCTSTR szSep)
 	int nCount = array.GetSize();
 
 	if (nCount == 0)
+	{
 		return _T("");
+	}
 
 	CString sSep(szSep);
 
 	if (!szSep)
+	{
 		sSep = GetListSeparator() + _T(' ');
+	}
 
 	CString sText;
 
@@ -297,7 +332,9 @@ CString Misc::FormatArray(const CDWordArray& array, LPCTSTR szSep)
 		sItem.Format(_T("%ld"), array[nItem]);
 
 		if (nItem > 0)
+		{
 			sText += sSep;
+		}
 
 		sText += sItem;
 	}
@@ -310,7 +347,9 @@ void Misc::Trace(const CStringArray& array)
 	int nCount = array.GetSize();
 
 	for (int nItem = 0; nItem < nCount; nItem++)
+	{
 		TRACE(_T("%s, "), array[nItem]);
+	}
 
 	TRACE(_T("\n"));
 }
@@ -320,7 +359,9 @@ int Misc::ParseIntoArray(const CString& sText, CStringArray& array, BOOL bAllowE
 	array.RemoveAll();
 
 	if (sSep.IsEmpty())
+	{
 		sSep = GetListSeparator();
+	}
 
 	int nSepPrev = -1;
 	int nSep = sText.Find(sSep);
@@ -332,7 +373,9 @@ int Misc::ParseIntoArray(const CString& sText, CStringArray& array, BOOL bAllowE
 		sItem.TrimRight();
 
 		if (bAllowEmpty || !sItem.IsEmpty())
+		{
 			array.Add(sItem);
+		}
 
 		nSepPrev = nSep;
 		nSep = sText.Find(sSep, nSepPrev + 1);
@@ -347,7 +390,9 @@ int Misc::ParseIntoArray(const CString& sText, CStringArray& array, BOOL bAllowE
 		sItem.TrimRight();
 
 		if (bAllowEmpty || !sItem.IsEmpty())
+		{
 			array.Add(sItem);
+		}
 	}
 
 	return array.GetSize();
@@ -359,7 +404,9 @@ BOOL Misc::ArraysMatch(const CStringArray& array1, const CStringArray& array2, B
 	int nSize2 = array2.GetSize();
 
 	if (nSize1 != nSize2)
+	{
 		return 0;
+	}
 
 	if (bOrderSensitive)
 	{
@@ -369,12 +416,16 @@ BOOL Misc::ArraysMatch(const CStringArray& array1, const CStringArray& array2, B
 			if (bCaseSensitive)
 			{
 				if (array1[nItem1] != array2[nItem1])
+				{
 					return FALSE;
+				}
 			}
-			else 
+			else
 			{
 				if (array1[nItem1].CompareNoCase(array2[nItem1]) != 0)
+				{
 					return FALSE;
+				}
 			}
 		}
 
@@ -390,20 +441,26 @@ BOOL Misc::ArraysMatch(const CStringArray& array1, const CStringArray& array2, B
 		for (int nItem2 = 0; nItem2 < nSize2 && !bMatch; nItem2++)
 		{
 			if (bCaseSensitive)
+			{
 				bMatch = (array1[nItem1] == array2[nItem2]);
+			}
 			else
+			{
 				bMatch = (array1[nItem1].CompareNoCase(array2[nItem2]) == 0);
+			}
 		}
 
 		// no-match found == not the same
 		if (!bMatch)
+		{
 			return FALSE;
+		}
 	}
 
 	return TRUE;
 }
 
-BOOL Misc::MatchAny(const CStringArray& array1, const CStringArray& array2, BOOL bCaseSensitive) 
+BOOL Misc::MatchAny(const CStringArray& array1, const CStringArray& array2, BOOL bCaseSensitive)
 {
 	int nSize1 = array1.GetSize();
 	int nSize2 = array2.GetSize();
@@ -416,12 +473,16 @@ BOOL Misc::MatchAny(const CStringArray& array1, const CStringArray& array2, BOOL
 			if (bCaseSensitive)
 			{
 				if (array1[nItem1] == array2[nItem2])
+				{
 					return TRUE;
+				}
 			}
 			else
 			{
 				if (array1[nItem1].CompareNoCase(array2[nItem2]) == 0)
+				{
 					return TRUE;
+				}
 			}
 		}
 	}
@@ -431,7 +492,7 @@ BOOL Misc::MatchAny(const CStringArray& array1, const CStringArray& array2, BOOL
 
 int Misc::Find(const CStringArray& array, LPCTSTR szItem, BOOL bCaseSensitive)
 {
-	ASSERT (szItem);
+	ASSERT(szItem);
 	int nSize = array.GetSize();
 
 	for (int nItem = 0; nItem < nSize; nItem++)
@@ -441,17 +502,23 @@ int Misc::Find(const CStringArray& array, LPCTSTR szItem, BOOL bCaseSensitive)
 
 		// special case: empty item
 		if (sItem.IsEmpty() && !szItem[0])
+		{
 			return nItem;
+		}
 
 		if (bCaseSensitive)
 		{
 			if (sItem == szItem)
+			{
 				return nItem;
+			}
 		}
 		else
 		{
 			if (sItem.CompareNoCase(szItem) == 0)
+			{
 				return nItem;
+			}
 		}
 	}
 
@@ -485,7 +552,9 @@ int Misc::AddUniqueItems(const CStringArray& aItems, CStringArray& aTo, BOOL bCa
 	while (nItem--)
 	{
 		if (AddUniqueItem(aItems[nItem], aTo, bCaseSensitive))
+		{
 			nAdded++;
+		}
 	}
 
 	return nAdded;
@@ -494,7 +563,9 @@ int Misc::AddUniqueItems(const CStringArray& aItems, CStringArray& aTo, BOOL bCa
 BOOL Misc::AddUniqueItem(const CString& sItem, CStringArray& aTo, BOOL bCaseSensitive)
 {
 	if (sItem.IsEmpty())
+	{
 		return FALSE;
+	}
 
 	int nFind = Find(aTo, sItem, bCaseSensitive);
 
@@ -551,7 +622,9 @@ CString Misc::GetTimeFormat(BOOL bIncSeconds)
 		CString sTemp(sFormat);
 
 		if (!sTemp.Replace(GetTimeSeparator() + _T("ss"), _T("")))
+		{
 			sTemp.Replace(GetTimeSeparator() + _T("s"), _T(""));
+		}
 
 		return sTemp;
 	}
@@ -575,7 +648,9 @@ CString Misc::GetTimeSeparator()
 
 		// If none found, use a dot
 		if (!sSep.GetLength())
+		{
 			sSep = ":";
+		}
 	}
 
 	return sSep;
@@ -617,7 +692,9 @@ CString Misc::GetDecimalSeparator()
 
 		// If none found, use a dot
 		if (!sSep.GetLength())
-			sSep = ".";
+		{
+			sSep = _T(".");
+		}
 	}
 
 	return sSep;
@@ -630,7 +707,9 @@ BOOL Misc::IsMultibyteString(const CString& sText)
 	while (nChar--)
 	{
 		if (IsDBCSLeadByte((BYTE)sText[nChar]))
+		{
 			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -638,9 +717,9 @@ BOOL Misc::IsMultibyteString(const CString& sText)
 
 CStringA Misc::WideToMultiByte(wchar_t nChar, UINT nCodePage)
 {
-	char ach[4]; // assuming 3 bytes max in the multibyte encoding 
+	char ach[4]; // assuming 3 bytes max in the multibyte encoding
 
-	WideCharToMultiByte(nCodePage, 0, &nChar, 1, ach, sizeof(ach), 0, 0); 
+	WideCharToMultiByte(nCodePage, 0, &nChar, 1, ach, sizeof(ach), 0, 0);
 
 	return CStringA(ach);
 }
@@ -650,16 +729,24 @@ double Misc::Round(double dValue)
 	if (dValue > 0)
 	{
 		if ((dValue - (int)dValue) > 0.5)
+		{
 			return ceil(dValue);
+		}
 		else
+		{
 			return floor(dValue);
+		}
 	}
 	else
 	{
 		if ((dValue - (int)dValue) > -0.5)
+		{
 			return floor(dValue);
+		}
 		else
+		{
 			return ceil(dValue);
+		}
 	}
 }
 
@@ -677,9 +764,13 @@ double Misc::Atof(const CString& sValue)
 	TCHAR* szLocale = _tcsdup(_tsetlocale(LC_NUMERIC, NULL));
 
 	if (sValue.Find('.') != -1)
+	{
 		_tsetlocale(LC_NUMERIC, _T("English"));
+	}
 	else
+	{
 		_tsetlocale(LC_NUMERIC, _T(""));
+	}
 
 	double dVal = (double)_tstof(sValue);
 
@@ -687,16 +778,16 @@ double Misc::Atof(const CString& sValue)
 	_tsetlocale(LC_NUMERIC, szLocale);
 	free(szLocale);
 
-	return dVal; 
+	return dVal;
 }
 
 BOOL Misc::IsWorkStationLocked()
 {
 	// note: we can't call OpenInputDesktop directly because it's not
 	// available on win 9x
-	typedef HDESK (WINAPI *PFNOPENDESKTOP)(LPSTR lpszDesktop, DWORD dwFlags, BOOL fInherit, ACCESS_MASK dwDesiredAccess);
-	typedef BOOL (WINAPI *PFNCLOSEDESKTOP)(HDESK hDesk);
-	typedef BOOL (WINAPI *PFNSWITCHDESKTOP)(HDESK hDesk);
+	typedef HDESK(WINAPI * PFNOPENDESKTOP)(LPSTR lpszDesktop, DWORD dwFlags, BOOL fInherit, ACCESS_MASK dwDesiredAccess);
+	typedef BOOL (WINAPI * PFNCLOSEDESKTOP)(HDESK hDesk);
+	typedef BOOL (WINAPI * PFNSWITCHDESKTOP)(HDESK hDesk);
 
 	// load user32.dll once only
 	static HMODULE hUser32 = LoadLibrary(_T("user32.dll"));
@@ -728,7 +819,7 @@ BOOL Misc::IsWorkStationLocked()
 }
 
 #ifndef SPI_GETSCREENSAVERRUNNING
-#  define SPI_GETSCREENSAVERRUNNING 114
+#define SPI_GETSCREENSAVERRUNNING 114
 #endif
 
 BOOL Misc::IsScreenSaverActive()
@@ -736,7 +827,7 @@ BOOL Misc::IsScreenSaverActive()
 	BOOL bSSIsRunning = FALSE;
 	::SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &bSSIsRunning, 0);
 
-	return bSSIsRunning; 
+	return bSSIsRunning;
 }
 
 int Misc::CompareVersions(LPCTSTR szVersion1, LPCTSTR szVersion2)
@@ -744,7 +835,9 @@ int Misc::CompareVersions(LPCTSTR szVersion1, LPCTSTR szVersion2)
 	// if the first character of either string is not a number
 	// then fall back on a standard string comparison
 	if (!szVersion1 || !isdigit(szVersion1[0]) || !szVersion2 || !isdigit(szVersion2[0]))
+	{
 		return _tcscmp(szVersion1, szVersion2);
+	}
 
 	CStringArray aVer1, aVer2;
 
@@ -758,20 +851,28 @@ int Misc::CompareVersions(LPCTSTR szVersion1, LPCTSTR szVersion2)
 		int nOther = _ttoi(aVer2[nItem]);
 
 		if (nThis < nOther)
+		{
 			return -1;
+		}
 
 		else if (nThis > nOther)
+		{
 			return 1;
+		}
 
 		// else try next item
 	}
 
 	// if we got here then compare array lengths
 	if (aVer1.GetSize() < aVer2.GetSize())
+	{
 		return -1;
+	}
 
 	else if (aVer1.GetSize() > aVer2.GetSize())
+	{
 		return 1;
+	}
 
 	// else
 	return 0;
@@ -791,7 +892,9 @@ BOOL Misc::FindWord(LPCTSTR szWord, LPCTSTR szText, BOOL bCaseSensitive, BOOL bM
 	CString sWord(szWord), sText(szText);
 
 	if (sWord.GetLength() > sText.GetLength())
+	{
 		return FALSE;
+	}
 
 	sWord.TrimLeft();
 	sWord.TrimRight();
@@ -805,7 +908,9 @@ BOOL Misc::FindWord(LPCTSTR szWord, LPCTSTR szText, BOOL bCaseSensitive, BOOL bM
 	int nFind = sText.Find(sWord);
 
 	if (nFind == -1)
+	{
 		return FALSE;
+	}
 
 	else if (bMatchWholeWord) // test whole word
 	{
@@ -816,18 +921,28 @@ BOOL Misc::FindWord(LPCTSTR szWord, LPCTSTR szText, BOOL bCaseSensitive, BOOL bM
 
 		// prev
 		if (nFind == 0) // word starts at start
-			cPrevChar = ' '; // known delim
+		{
+			cPrevChar = _T(' ');   // known delim
+		}
 		else
+		{
 			cPrevChar = sText[nFind - 1];
+		}
 
 		// next
 		if ((nFind + sWord.GetLength()) < sText.GetLength())
+		{
 			cNextChar = sText[nFind + sWord.GetLength()];
+		}
 		else
-			cNextChar = ' '; // known delim
+		{
+			cNextChar = _T(' ');   // known delim
+		}
 
 		if (DELIMS.Find(cPrevChar) == -1 || DELIMS.Find(cNextChar) == -1)
+		{
 			return FALSE;
+		}
 	}
 
 	return TRUE;
@@ -846,26 +961,30 @@ int Misc::ParseSearchString(LPCTSTR szLookFor, CStringArray& aWords)
 	{
 		switch (szLookFor[nPos])
 		{
-		case ' ': // word break
-			if (bInQuotes)
-				sWord += szLookFor[nPos];
-			else
+			case _T(' '): // word break
+				if (bInQuotes)
+				{
+					sWord += szLookFor[nPos];
+				}
+				else
+				{
+					bAddWord = TRUE;
+				}
+				break;
+
+			case _T('\"'):
+				// whether its the start or end we add the current word
+				// and flip bInQuotes
+				bInQuotes = !bInQuotes;
 				bAddWord = TRUE;
-			break;
+				break;
 
-		case '\"':
-			// whether its the start or end we add the current word
-			// and flip bInQuotes
-			bInQuotes = !bInQuotes;
-			bAddWord = TRUE;
-			break;
+			default: // everything else
+				sWord += szLookFor[nPos];
 
-		default: // everything else
-			sWord += szLookFor[nPos];
-
-			// also if its the last char then add it
-			bAddWord = (nPos == nLen - 1);
-			break;
+				// also if its the last char then add it
+				bAddWord = (nPos == nLen - 1);
+				break;
 		}
 
 		if (bAddWord)
@@ -874,7 +993,9 @@ int Misc::ParseSearchString(LPCTSTR szLookFor, CStringArray& aWords)
 			sWord.TrimRight();
 
 			if (!sWord.IsEmpty())
+			{
 				aWords.Add(sWord);
+			}
 
 			sWord.Empty(); // next word
 		}
@@ -927,9 +1048,9 @@ CString Misc::FormatCost(double dCost)
 	return sValue;
 }
 
-BOOL Misc::KeyIsPressed(DWORD dwVirtKey) 
-{ 
-	return (GetKeyState(dwVirtKey) & 0x8000); 
+BOOL Misc::KeyIsPressed(DWORD dwVirtKey)
+{
+	return (GetKeyState(dwVirtKey) & 0x8000);
 }
 
 BOOL Misc::IsCursorKeyPressed(DWORD dwKeys)
@@ -937,18 +1058,22 @@ BOOL Misc::IsCursorKeyPressed(DWORD dwKeys)
 	if (dwKeys & MKC_LEFTRIGHT)
 	{
 		if (KeyIsPressed(VK_RIGHT) || KeyIsPressed(VK_LEFT) ||
-			KeyIsPressed(VK_HOME) || KeyIsPressed(VK_END))
+				KeyIsPressed(VK_HOME) || KeyIsPressed(VK_END))
+		{
 			return TRUE;
+		}
 	}
 
 	if (dwKeys & MKC_UPDOWN)
 	{
 		if (KeyIsPressed(VK_NEXT) || KeyIsPressed(VK_DOWN) ||
-			KeyIsPressed(VK_UP) || KeyIsPressed(VK_PRIOR))
+				KeyIsPressed(VK_UP) || KeyIsPressed(VK_PRIOR))
+		{
 			return TRUE;
+		}
 	}
 
-	// else 
+	// else
 	return FALSE;
 }
 
@@ -958,11 +1083,11 @@ BOOL Misc::IsCursorKey(DWORD dwVirtKey, DWORD dwKeys)
 	{
 		switch (dwVirtKey)
 		{
-		case VK_RIGHT:
-		case VK_LEFT:
-		case VK_HOME:
-		case VK_END:
-			return TRUE;
+			case VK_RIGHT:
+			case VK_LEFT:
+			case VK_HOME:
+			case VK_END:
+				return TRUE;
 		}
 	}
 
@@ -970,54 +1095,70 @@ BOOL Misc::IsCursorKey(DWORD dwVirtKey, DWORD dwKeys)
 	{
 		switch (dwVirtKey)
 		{
-		case VK_NEXT:  
-		case VK_DOWN:
-		case VK_UP:
-		case VK_PRIOR: 
-			return TRUE;
+			case VK_NEXT:
+			case VK_DOWN:
+			case VK_UP:
+			case VK_PRIOR:
+				return TRUE;
 		}
 	}
 
-	// else 
+	// else
 	return FALSE;
 }
 
-BOOL Misc::ModKeysArePressed(DWORD dwKeys) 
+BOOL Misc::ModKeysArePressed(DWORD dwKeys)
 {
 	// test for failure
 	if (dwKeys & MKS_CTRL)
 	{
 		if (!KeyIsPressed(VK_CONTROL))
+		{
 			return FALSE;
+		}
 	}
 	else if (KeyIsPressed(VK_CONTROL))
+	{
 		return FALSE;
+	}
 
 	if (dwKeys & MKS_SHIFT)
 	{
 		if (!KeyIsPressed(VK_SHIFT))
+		{
 			return FALSE;
+		}
 	}
 	else if (KeyIsPressed(VK_SHIFT))
+	{
 		return FALSE;
+	}
 
 	if (dwKeys & MKS_ALT)
 	{
 		if (!KeyIsPressed(VK_MENU))
+		{
 			return FALSE;
+		}
 	}
 	else if (KeyIsPressed(VK_MENU))
+	{
 		return FALSE;
+	}
 
 	return TRUE;
 }
 
-BOOL Misc::HasFlag(DWORD dwFlags, DWORD dwFlag) 
-{ 
+BOOL Misc::HasFlag(DWORD dwFlags, DWORD dwFlag)
+{
 	if ((dwFlags & dwFlag) == dwFlag)
+	{
 		return TRUE;
+	}
 	else
-		return FALSE; 
+	{
+		return FALSE;
+	}
 }
 
 // private method for implementing the bubblesort
@@ -1051,8 +1192,10 @@ void Misc::SortArray(CStringArray& array, BOOL bAscending)
 	{
 		bNotDone = FALSE;
 
-		for(int pos = 0; pos < array.GetUpperBound(); pos++)
+		for (int pos = 0; pos < array.GetUpperBound(); pos++)
+		{
 			bNotDone |= CompareAndSwap(array, pos, bAscending);
+		}
 	}
 }
 

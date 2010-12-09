@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -27,6 +27,19 @@
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
 // - merged with ToDoList version 6.1 sources
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // Misc.h: interface for the CMisc class.
@@ -45,14 +58,14 @@
 enum { MKS_CTRL = 0x01, MKS_SHIFT = 0x02, MKS_ALT = 0x04 };
 enum { MKC_LEFTRIGHT = 0x01, MKC_UPDOWN = 0x02, MKC_ANY = (MKC_LEFTRIGHT | MKC_UPDOWN) };
 
-namespace Misc  
+namespace Misc
 {
-	void CopyTexttoClipboard(const CString& sText, HWND hwnd); 
-	CString GetClipboardText(HWND hwnd); 
-	
+	void CopyTexttoClipboard(const CString& sText, HWND hwnd);
+	CString GetClipboardText(HWND hwnd);
+
 	BOOL IsMultibyteString(const CString& sText);
 	CStringA WideToMultiByte(wchar_t nChar, UINT nCodePage = CP_ACP);
-	
+
 	BOOL GuidFromString(LPCTSTR szGuid, GUID& guid);
 	BOOL IsGuid(LPCTSTR szGuid);
 	BOOL GuidToString(const GUID& guid, CString& sGuid);
@@ -60,15 +73,17 @@ namespace Misc
 	void NullGuid(GUID& guid);
 	BOOL SameGuids(const GUID& guid1, const GUID& guid2);
 
-	template <class T> 
+	template <class T>
 	BOOL ArraysMatch(const T& array1, const T& array2, BOOL bOrderSensitive = FALSE)
 	{
 		int nSize1 = array1.GetSize();
 		int nSize2 = array2.GetSize();
-		
+
 		if (nSize1 != nSize2)
+		{
 			return 0;
-		
+		}
+
 		if (bOrderSensitive)
 		{
 			for (int nItem1 = 0; nItem1 < nSize1; nItem1++)
@@ -77,31 +92,37 @@ namespace Misc
 				BOOL bMatch = (array1[nItem1] == array2[nItem1]);
 
 				if (!bMatch)
+				{
 					return FALSE;
+				}
 			}
-			
+
 			return TRUE;
 		}
-		
+
 		// else order not important
 		for (int nItem1 = 0; nItem1 < nSize1; nItem1++)
 		{
 			BOOL bMatch = FALSE;
-			
+
 			// look for matching item
 			for (int nItem2 = 0; nItem2 < nSize2 && !bMatch; nItem2++)
+			{
 				bMatch = (array1[nItem1] == array2[nItem2]);
-			
+			}
+
 			// no-match found == not the same
 			if (!bMatch)
+			{
 				return FALSE;
+			}
 		}
-		
+
 		return TRUE;
 	}
 
-	BOOL ArraysMatch(const CStringArray& array1, const CStringArray& array2, 
-					 BOOL bOrderSensitive = FALSE, BOOL bCaseSensitive = FALSE);
+	BOOL ArraysMatch(const CStringArray& array1, const CStringArray& array2,
+		BOOL bOrderSensitive = FALSE, BOOL bCaseSensitive = FALSE);
 	BOOL MatchAny(const CStringArray& array1, const CStringArray& array2, BOOL bCaseSensitive = FALSE);
 	CString FormatArray(const CStringArray& array, LPCTSTR szSep = NULL);
 	CString FormatArray(const CDWordArray& array, LPCTSTR szSep = NULL);
@@ -144,7 +165,7 @@ namespace Misc
 	int ParseSearchString(LPCTSTR szLookFor, CStringArray& aWords);
 	BOOL FindWord(LPCTSTR szWord, LPCTSTR szText, BOOL bCaseSensitive, BOOL bMatchWholeWord);
 
-	BOOL ModKeysArePressed(DWORD dwKeys); 
+	BOOL ModKeysArePressed(DWORD dwKeys);
 	BOOL KeyIsPressed(DWORD dwVirtKey);
 	BOOL IsCursorKey(DWORD dwVirtKey, DWORD dwKeys = MKC_ANY);
 	BOOL IsCursorKeyPressed(DWORD dwKeys = MKC_ANY);
