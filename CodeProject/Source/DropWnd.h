@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // DropWnd.h : header file
-// 
+//
 // CAdvComboBox Control
 // Version: 2.1
 // Date: September 2002
@@ -8,9 +8,9 @@
 // Email: Mathias@inorbit.com
 // Copyright (c) 2002. All Rights Reserved.
 //
-// This code, in compiled form or as source code, may be redistributed 
-// unmodified PROVIDING it is not sold for profit without the authors 
-// written consent, and providing that this notice and the authors name 
+// This code, in compiled form or as source code, may be redistributed
+// unmodified PROVIDING it is not sold for profit without the authors
+// written consent, and providing that this notice and the authors name
 // and all copyright notices remains intact.
 //
 // This file is provided "as is" with no expressed or implied warranty.
@@ -47,10 +47,14 @@ typedef struct _LIST_ITEM
 
 	BOOL operator <(_LIST_ITEM other)
 	{
-		if( strText < other.strText )
+		if (strText < other.strText)
+		{
 			return TRUE;
+		}
 		else
+		{
 			return FALSE;
+		}
 	}
 } LIST_ITEM, *PLIST_ITEM;
 
@@ -62,31 +66,38 @@ typedef struct _LIST_ITEM
 
 class CDropWnd : public CWnd
 {
-// Construction
+	// Construction
 public:
-	CDropWnd( CWnd* pComboParent, list<LIST_ITEM> &itemlist, DWORD dwACBStyle );
+	CDropWnd(CWnd* pComboParent, list<LIST_ITEM> &itemlist, DWORD dwACBStyle);
 
-// Attributes
+	// Attributes
 public:
-	CDropListBox*	GetListBoxPtr() { return m_listbox; }
-	CDropScrollBar* GetScrollBarPtr() { return m_scrollbar; }
+	CDropListBox*	GetListBoxPtr()
+	{
+		return m_listbox;
+	}
+	CDropScrollBar* GetScrollBarPtr()
+	{
+		return m_scrollbar;
+	}
 
-// Operations
+	// Operations
 public:
-	list<LIST_ITEM>& GetList() { return m_list; }
+	list<LIST_ITEM>& GetList()
+	{
+		return m_list;
+	}
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDropWnd)
 public:
-	//virtual BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, 
-	//	UINT nID, CCreateContext* pContext = NULL);
 	virtual BOOL DestroyWindow();
 protected:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CDropWnd();
 
@@ -101,8 +112,8 @@ protected:
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 	//}}AFX_MSG
-	afx_msg LONG OnSetCapture( WPARAM wParam, LPARAM lParam );
-	afx_msg LONG OnReleaseCapture( WPARAM wParam, LPARAM lParam );
+	afx_msg LONG OnSetCapture(WPARAM wParam, LPARAM lParam);
+	afx_msg LONG OnReleaseCapture(WPARAM wParam, LPARAM lParam);
 
 	//+++
 #if (_MSC_VER > 1200)
@@ -114,8 +125,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-	int m_nMaxX;	//+++
-	int m_nMaxY;	//+++
+	int m_nMaxX;   //+++
+	int m_nMaxY;   //+++
 	CDropListBox* m_listbox;
 	CRect m_rcList;
 	CDropScrollBar* m_scrollbar;
