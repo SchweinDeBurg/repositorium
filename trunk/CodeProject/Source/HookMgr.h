@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // HookMgr.h: interface for the CHookMgr class.
@@ -42,41 +55,43 @@
 static inline BOOL ClassMatches(HWND hwnd, LPCTSTR szClassType)
 {
 	if (!szClassType || !_tcslen(szClassType))
+	{
 		return TRUE;
-	
+	}
+
 	// else
 	static TCHAR szClassName[40];
 	::GetClassName(hwnd, szClassName, 40);
-	
+
 	return (_tcsicmp(szClassType, szClassName) == 0);
 }
 
 #define INITHOOK(hook, flag, type, function) \
 { \
 	if (dwOptions & flag) \
-		hook = SetWindowsHookEx(type, function, NULL, GetCurrentThreadId()); \
+	hook = SetWindowsHookEx(type, function, NULL, GetCurrentThreadId()); \
 }
 
 #define RELEASEHOOK(hook) \
 { \
 	if (hook) \
-		UnhookWindowsHookEx(hook); \
-\
+	UnhookWindowsHookEx(hook); \
+	\
 	hook = NULL; \
 }
 
-enum 
+enum
 {
-	HM_CALLWNDPROC		= 0x0001,
-	HM_CALLWNDPROCRET	= 0x0002,
-	HM_CBT				= 0x0004,
-	HM_FOREGROUNDIDLE	= 0x0008,
-	HM_GETMESSAGE		= 0x0010,
-	HM_KEYBOARD			= 0x0020,
-	HM_MOUSE 			= 0x0040,
-	HM_MSGFILTER		= 0x0100,
-	HM_SHELL	   		= 0x0200,
-	HM_SYSMSGFILTER	= 0x0400,
+	HM_CALLWNDPROC      = 0x0001,
+	HM_CALLWNDPROCRET   = 0x0002,
+	HM_CBT              = 0x0004,
+	HM_FOREGROUNDIDLE   = 0x0008,
+	HM_GETMESSAGE       = 0x0010,
+	HM_KEYBOARD         = 0x0020,
+	HM_MOUSE            = 0x0040,
+	HM_MSGFILTER        = 0x0100,
+	HM_SHELL            = 0x0200,
+	HM_SYSMSGFILTER     = 0x0400,
 };
 
 //
@@ -96,10 +111,13 @@ struct MOUSEHOOKSTRUCTEX
 #endif
 
 template<class MGRTYPE>
-class CHookMgr  
+class CHookMgr
 {
 public:
-	virtual ~CHookMgr() { Release(); }
+	virtual ~CHookMgr()
+	{
+		Release();
+	}
 
 
 protected:
@@ -123,7 +141,7 @@ protected:
 		// detect whether on 2000 or later
 		OSVERSIONINFO OS;
 
-		OS.dwOSVersionInfoSize=sizeof(OS);
+		OS.dwOSVersionInfoSize = sizeof(OS);
 		::GetVersionEx(&OS);
 
 		m_b2000orLater = (OS.dwPlatformId == VER_PLATFORM_WIN32_NT &&
@@ -162,9 +180,9 @@ protected:
 
 protected:
 	static MGRTYPE& GetInstance()
-	{ 
-		static MGRTYPE manager; 
-		return manager; 
+	{
+		static MGRTYPE manager;
+		return manager;
 	}
 
 	CHookMgr() // cannot instanciate one of these directly
@@ -183,16 +201,56 @@ protected:
 	}
 
 	// derived classes override whatever they need
-	virtual BOOL OnCallWndProc(const MSG& /*msg*/) { ASSERT (0); return FALSE; }
-	virtual BOOL OnCallWndRetProc(const MSG& /*msg*/, LRESULT /*lResult*/) { ASSERT (0); return FALSE; }
-	virtual BOOL OnCbt(int /*nCode*/, WPARAM /*wParam*/, LPARAM /*lParam*/) { ASSERT (0); return FALSE; }
-	virtual BOOL OnForegroundIdle() { ASSERT (0); return FALSE; }
-	virtual BOOL OnGetMessage(const MSG& /*msg*/) { ASSERT (0); return FALSE; }
-	virtual BOOL OnKeyboard(UINT /*uVirtKey*/, UINT /*uFlags*/) { ASSERT (0); return FALSE; }
-	virtual BOOL OnMsgFilter(const MSG& /*msg*/, int /*nEvent*/) { ASSERT (0); return FALSE; }
-	virtual BOOL OnShell(int /*nCode*/, WPARAM /*wParam*/, LPARAM /*lParam*/) { ASSERT (0); return FALSE; }
-	virtual BOOL OnSysMsgFilter(const MSG& /*msg*/, int /*nEvent*/) { ASSERT (0); return FALSE; }
-	virtual BOOL OnMouseEx(UINT /*uMouseMsg*/, const MOUSEHOOKSTRUCTEX& /*info*/) { ASSERT (0); return FALSE; }
+	virtual BOOL OnCallWndProc(const MSG& /*msg*/)
+	{
+		ASSERT(0);
+		return FALSE;
+	}
+	virtual BOOL OnCallWndRetProc(const MSG& /*msg*/, LRESULT /*lResult*/)
+	{
+		ASSERT(0);
+		return FALSE;
+	}
+	virtual BOOL OnCbt(int /*nCode*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
+	{
+		ASSERT(0);
+		return FALSE;
+	}
+	virtual BOOL OnForegroundIdle()
+	{
+		ASSERT(0);
+		return FALSE;
+	}
+	virtual BOOL OnGetMessage(const MSG& /*msg*/)
+	{
+		ASSERT(0);
+		return FALSE;
+	}
+	virtual BOOL OnKeyboard(UINT /*uVirtKey*/, UINT /*uFlags*/)
+	{
+		ASSERT(0);
+		return FALSE;
+	}
+	virtual BOOL OnMsgFilter(const MSG& /*msg*/, int /*nEvent*/)
+	{
+		ASSERT(0);
+		return FALSE;
+	}
+	virtual BOOL OnShell(int /*nCode*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
+	{
+		ASSERT(0);
+		return FALSE;
+	}
+	virtual BOOL OnSysMsgFilter(const MSG& /*msg*/, int /*nEvent*/)
+	{
+		ASSERT(0);
+		return FALSE;
+	}
+	virtual BOOL OnMouseEx(UINT /*uMouseMsg*/, const MOUSEHOOKSTRUCTEX& /*info*/)
+	{
+		ASSERT(0);
+		return FALSE;
+	}
 
 	inline BOOL ClassMatches(HWND hwnd)
 	{
@@ -207,7 +265,7 @@ protected:
 		// If this is a DLL, need to set up MFC state
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
 #endif
-		
+
 		if (nCode == HC_ACTION)
 		{
 			CWPSTRUCT* pwp = (CWPSTRUCT*)lParam;
@@ -217,10 +275,12 @@ protected:
 				MSG msg = { pwp->hwnd, pwp->message, pwp->wParam, pwp->lParam, 0, { 0, 0 } };
 
 				if (GetInstance().OnCallWndProc(msg))
+				{
 					return TRUE;
+				}
 			}
 		}
-		
+
 		return CallNextHookEx(GetInstance().m_hCallWndHook, nCode, wParam, lParam);
 	}
 
@@ -231,7 +291,7 @@ protected:
 		// If this is a DLL, need to set up MFC state
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
 #endif
-		
+
 		if (nCode == HC_ACTION)
 		{
 			CWPRETSTRUCT* pwp = (CWPRETSTRUCT*)lParam;
@@ -239,12 +299,14 @@ protected:
 			if (GetInstance().ClassMatches(pwp->hwnd))
 			{
 				MSG msg = { pwp->hwnd, pwp->message, pwp->wParam, pwp->lParam, 0, { 0, 0 } };
-				
+
 				if (GetInstance().OnCallWndRetProc(msg, pwp->lResult))
+				{
 					return TRUE;
+				}
 			}
 		}
-		
+
 		return CallNextHookEx(GetInstance().m_hCallWndHook, nCode, wParam, lParam);
 	}
 
@@ -255,13 +317,15 @@ protected:
 		// If this is a DLL, need to set up MFC state
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
 #endif
-		
+
 		if (nCode == HC_ACTION)
 		{
 			if (GetInstance().OnCbt(nCode, wParam, lParam))
+			{
 				return TRUE;
+			}
 		}
-		
+
 		// else
 		return CallNextHookEx(GetInstance().m_hCbtHook, nCode, wParam, lParam);
 	}
@@ -273,11 +337,13 @@ protected:
 		// If this is a DLL, need to set up MFC state
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
 #endif
-		
+
 		if (nCode == HC_ACTION)
 		{
 			if (GetInstance().OnForegroundIdle())
+			{
 				return TRUE;
+			}
 		}
 
 		return CallNextHookEx(GetInstance().m_hForegroundIdleHook, nCode, wParam, lParam);
@@ -298,10 +364,12 @@ protected:
 			if (GetInstance().ClassMatches(pMsg->hwnd))
 			{
 				if (GetInstance().OnGetMessage(*pMsg))
+				{
 					return TRUE;
+				}
 			}
 		}
-		
+
 		return CallNextHookEx(GetInstance().m_hGetMessageHook, nCode, wParam, lParam);
 	}
 
@@ -312,13 +380,15 @@ protected:
 		// If this is a DLL, need to set up MFC state
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
 #endif
-		
+
 		if (nCode == HC_ACTION)
 		{
 			if (GetInstance().OnKeyboard(wParam, lParam))
+			{
 				return TRUE;
+			}
 		}
-		
+
 		return CallNextHookEx(GetInstance().m_hKeyboardHook, nCode, wParam, lParam);
 	}
 
@@ -339,9 +409,7 @@ protected:
 			if (mgr.ClassMatches(pInfo->hwnd))
 			{
 #if _MSC_VER >= 1300
-
-				//fabio_2005	
-				//fabio	
+				//fabio_2005
 				MOUSEHOOKSTRUCTEX* pInfoEx = (MOUSEHOOKSTRUCTEX*)pInfo;
 				if (!mgr.m_b2000orLater)
 				{
@@ -349,15 +417,18 @@ protected:
 
 				}
 				if (mgr.OnMouseEx(wParam, *pInfoEx))
+				{
 					return TRUE;
+				}
 #else
-
 				if (mgr.m_b2000orLater)
 				{
 					MOUSEHOOKSTRUCTEX* pInfoEx = (MOUSEHOOKSTRUCTEX*)pInfo;
 
 					if (mgr.OnMouseEx(wParam, *pInfoEx))
+					{
 						return TRUE;
+					}
 				}
 				else
 				{
@@ -366,10 +437,11 @@ protected:
 					infoEx.mouseData = 0;
 
 					if (mgr.OnMouseEx(wParam, infoEx))
+					{
 						return TRUE;
+					}
 				}
 #endif
-
 			}
 		}
 
@@ -383,7 +455,7 @@ protected:
 		// If this is a DLL, need to set up MFC state
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
 #endif
-		
+
 		if (nCode == HC_ACTION)
 		{
 			MSG* pMsg = (MSG*)lParam;
@@ -391,7 +463,9 @@ protected:
 			if (GetInstance().ClassMatches(pMsg->hwnd))
 			{
 				if (GetInstance().OnMsgFilter(*pMsg, nCode))
+				{
 					return TRUE;
+				}
 			}
 		}
 
@@ -405,13 +479,15 @@ protected:
 		// If this is a DLL, need to set up MFC state
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
 #endif
-		
+
 		if (GetInstance().OnShell(nCode, wParam, lParam))
 		{
 			if (nCode == HSHELL_APPCOMMAND)
+			{
 				return TRUE;
+			}
 		}
-		
+
 		// else
 		return 0;//CallNextHookEx(GetInstance().m_hShellHook, nCode, wParam, lParam);
 	}
@@ -423,7 +499,7 @@ protected:
 		// If this is a DLL, need to set up MFC state
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
 #endif
-		
+
 		if (nCode == HC_ACTION)
 		{
 			MSG* pMsg = (MSG*)lParam;
@@ -431,10 +507,12 @@ protected:
 			if (GetInstance().ClassMatches(pMsg->hwnd))
 			{
 				if (GetInstance().OnSysMsgFilter(*pMsg, nCode))
+				{
 					return TRUE;
+				}
 			}
 		}
-		
+
 		return CallNextHookEx(GetInstance().m_hSysMsgFilterHook, nCode, wParam, lParam);
 	}
 
