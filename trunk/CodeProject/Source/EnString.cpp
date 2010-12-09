@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // EnString.cpp: implementation of the CEnString class.
@@ -37,7 +50,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -49,7 +62,7 @@ CEnString::CEnString() : CString()
 {
 }
 
-CEnString::CEnString(LPCTSTR lpszFormat, ... )
+CEnString::CEnString(LPCTSTR lpszFormat, ...)
 {
 	if (lpszFormat)
 	{
@@ -70,9 +83,13 @@ CEnString::CEnString(UINT nFormatID, LPCTSTR szText)
 		VERIFY(strFormat.LoadString(nFormatID) != 0);
 
 		if (szText && *szText)
+		{
 			Format(strFormat, szText);
+		}
 		else
+		{
 			*this = strFormat;
+		}
 	}
 }
 
@@ -102,22 +119,24 @@ CSize CEnString::FormatDC(CDC* pDC, int nWidth, int nStyle)
 
 	// special case: ES_START
 	if (nStyle == ES_START)
+	{
 		FormatDCEx(pDC, nWidth, nStyle);
+	}
 	else
 	{
 		switch (nStyle)
 		{
-			case ES_END:
-				uFlags |= DT_END_ELLIPSIS;
-				break;
+		case ES_END:
+			uFlags |= DT_END_ELLIPSIS;
+			break;
 
-			case ES_WORD:
-				uFlags |= DT_WORD_ELLIPSIS;
-				break;
+		case ES_WORD:
+			uFlags |= DT_WORD_ELLIPSIS;
+			break;
 
-			case ES_PATH:
-				uFlags |= DT_PATH_ELLIPSIS;
-				break;
+		case ES_PATH:
+			uFlags |= DT_PATH_ELLIPSIS;
+			break;
 		}
 
 		::DrawText(pDC->GetSafeHdc(), GetBuffer(GetLength() + 4), -1, rect, uFlags);
@@ -125,7 +144,9 @@ CSize CEnString::FormatDC(CDC* pDC, int nWidth, int nStyle)
 
 		// if its still too big then do our internal version
 		if (rect.Width() > nWidth)
+		{
 			FormatDCEx(pDC, nWidth, nStyle);
+		}
 	}
 
 	return pDC->GetTextExtent(*this);
@@ -150,7 +171,7 @@ CSize CEnString::FormatDCEx(CDC* pDC, int nWidth, int nStyle)
 	CSize sizeEllipsis = pDC->GetTextExtent(_T("..."));
 
 	bool bEndEllipsis = (nStyle == ES_END || nStyle == ES_WORD);
-	
+
 	// truncate string if too long adding ellipsis (...)
 	if ((sizeText.cx + sizeEllipsis.cx) > nWidth)
 	{
@@ -169,13 +190,19 @@ CSize CEnString::FormatDCEx(CDC* pDC, int nWidth, int nStyle)
 			}
 
 			if (sFinalText.IsEmpty())
+			{
 				break;
+			}
 		}
-			
+
 		if (bEndEllipsis)
+		{
 			sFinalText += _T("...");
+		}
 		else
+		{
 			sFinalText = _T("...") + sFinalText;
+		}
 	}
 
 	*this = CEnString(sFinalText);
