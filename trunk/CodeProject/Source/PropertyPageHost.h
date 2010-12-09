@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -27,6 +27,19 @@
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
 // - merged with ToDoList version 6.1 sources
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_PROPERTYPAGEHOST_H__43CF5AE7_C70B_443D_BC8B_7DA1D0E082DD__INCLUDED_)
@@ -45,8 +58,8 @@
 
 struct PAGEITEM
 {
-	PAGEITEM(CPropertyPage* _pPage = NULL, LPCTSTR szTitle = NULL, DWORD dwData = 0) : 
-			pPage(_pPage), sTitle(szTitle), dwItemData(dwData) {}
+	PAGEITEM(CPropertyPage* _pPage = NULL, LPCTSTR szTitle = NULL, DWORD dwData = 0) :
+	pPage(_pPage), sTitle(szTitle), dwItemData(dwData) {}
 
 	CPropertyPage* pPage;
 	CString sTitle;
@@ -55,7 +68,7 @@ struct PAGEITEM
 
 class CPropertyPageHost : public CWnd
 {
-// Construction
+	// Construction
 public:
 	CPropertyPageHost();
 
@@ -63,7 +76,7 @@ public:
 	BOOL Create(UINT nRefCtrlID, CWnd* pParent, UINT uCtrlID = AFX_IDW_PANE_FIRST);
 	void OnOK();
 	void OnApply();
-	
+
 	int GetActiveIndex() const;
 	int FindPage(CPropertyPage* pPage);
 
@@ -76,7 +89,10 @@ public:
 	BOOL AddPage(CPropertyPage* pPage, LPCTSTR szTitle = NULL, DWORD dwItemData = 0);
 	BOOL SetActivePage(int nIndex, BOOL bAndFocus = TRUE);
 	BOOL SetActivePage(CPropertyPage* pPage, BOOL bAndFocus = TRUE);
-	int GetPageCount() { return m_aPages.GetSize(); }
+	int GetPageCount()
+	{
+		return m_aPages.GetSize();
+	}
 	CString GetPageTitle(int nIndex) const;
 	DWORD GetPageItemData(int nIndex) const;
 
@@ -84,21 +100,24 @@ public:
 	BOOL EnsurePageCreated(const CPropertyPage* pPage);
 	BOOL IsPageCreated(int nIndex) const;
 
-	void ForwardMessage(UINT nMsg) { m_aForwardMsgs.Add(nMsg); }
+	void ForwardMessage(UINT nMsg)
+	{
+		m_aForwardMsgs.Add(nMsg);
+	}
 
 protected:
 	CArray<PAGEITEM, PAGEITEM&> m_aPages;
 	int m_nSelIndex;
 	CUIntArray m_aForwardMsgs;
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CPropertyPageHost)
-	public:
+public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CPropertyPageHost();
 
