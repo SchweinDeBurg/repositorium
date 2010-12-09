@@ -18,7 +18,7 @@
 //     it in any way you like, except that you may not sell this source code.
 //
 //     This software is provided "as is" with no expressed or implied warranty.
-//     I accept no liability for any damage or loss of business that this 
+//     I accept no liability for any damage or loss of business that this
 //     software may cause.
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -83,14 +83,14 @@ CXListCtrl::CXListCtrl()
 
 	m_dwExtendedStyleX      = 0;
 	m_bHeaderIsSubclassed   = FALSE;
-	m_bUseEllipsis          = TRUE;			//+++
-	m_bListModified         = FALSE;		//+++
+	m_bUseEllipsis          = TRUE;         //+++
+	m_bListModified         = FALSE;        //+++
 	m_bInitialCheck         = FALSE;
 	m_strInitialString      = _T("");
-	m_nPadding              = 5;			//+++
-	m_pEdit                 = NULL;			//+++
-	m_nEditItem             = 0;			//+++
-	m_nEditSubItem          = 0;			//+++
+	m_nPadding              = 5;            //+++
+	m_pEdit                 = NULL;         //+++
+	m_nEditItem             = 0;            //+++
+	m_nEditSubItem          = 0;            //+++
 
 	GetColors();
 }
@@ -101,10 +101,14 @@ CXListCtrl::~CXListCtrl()
 {
 #ifndef DO_NOT_INCLUDE_XCOMBOLIST
 	if (m_pCombo)
+	{
 		delete m_pCombo;
+	}
 #endif
 	if (m_pEdit)
+	{
 		delete m_pEdit;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -145,7 +149,9 @@ int CXListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CXListCtrl::SubclassHeaderControl()
 {
 	if (m_bHeaderIsSubclassed)
+	{
 		return;
+	}
 
 	// if the list control has a header control window, then
 	// subclass it
@@ -171,8 +177,8 @@ BOOL CXListCtrl::OnClick(NMHDR* pNMHDR, LRESULT* pResult)
 
 	pNMHDR   = pNMHDR;
 	*pResult = 0;
-	return FALSE;		// return FALSE to send message to parent also -
-						// NOTE:  MSDN documentation is incorrect
+	return FALSE;   // return FALSE to send message to parent also -
+	// NOTE:  MSDN documentation is incorrect
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -205,10 +211,10 @@ void CXListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 		// Windows to draw the subitem itself, but it will use the new colors
 		// we set here.
 
-		int nItem = static_cast<int> (pLVCD->nmcd.dwItemSpec);
+		int nItem = static_cast<int>(pLVCD->nmcd.dwItemSpec);
 		int nSubItem = pLVCD->iSubItem;
 
-		XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) pLVCD->nmcd.lItemlParam;
+		XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) pLVCD->nmcd.lItemlParam;
 		ASSERT(pXLCD);
 
 		COLORREF crText  = m_crWindowText;
@@ -220,7 +226,9 @@ void CXListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 			crBkgnd = pXLCD[nSubItem].crBackground;
 
 			if (!pXLCD[0].bEnabled)
+			{
 				crText = m_crGrayText;
+			}
 		}
 
 		// store the colors back in the NMLVCUSTOMDRAW struct
@@ -235,13 +243,13 @@ void CXListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 		{
 			DrawProgress(nItem, nSubItem, pDC, crText, crBkgnd, rect, pXLCD);
 
-			*pResult = CDRF_SKIPDEFAULT;	// We've painted everything.
+			*pResult = CDRF_SKIPDEFAULT;   // We've painted everything.
 		}
 		else if (pXLCD && (pXLCD[nSubItem].nCheckedState != -1))
 		{
 			DrawCheckbox(nItem, nSubItem, pDC, crText, crBkgnd, rect, pXLCD);
 
-			*pResult = CDRF_SKIPDEFAULT;	// We've painted everything.
+			*pResult = CDRF_SKIPDEFAULT;   // We've painted everything.
 		}
 		else
 		{
@@ -249,7 +257,7 @@ void CXListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 
 			DrawText(nItem, nSubItem, pDC, crText, crBkgnd, rect, pXLCD);
 
-			*pResult = CDRF_SKIPDEFAULT;	// We've painted everything.
+			*pResult = CDRF_SKIPDEFAULT;   // We've painted everything.
 		}
 	}
 }
@@ -257,12 +265,12 @@ void CXListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 ///////////////////////////////////////////////////////////////////////////////
 // DrawProgress
 void CXListCtrl::DrawProgress(int nItem,
-							  int nSubItem,
-							  CDC *pDC,
-							  COLORREF crText,
-							  COLORREF /*crBkgnd*/,
-							  CRect& rect,
-							  XLISTCTRLDATA *pXLCD)
+	int nSubItem,
+	CDC* pDC,
+	COLORREF crText,
+	COLORREF /*crBkgnd*/,
+	CRect& rect,
+	XLISTCTRLDATA* pXLCD)
 {
 	UNUSED_ALWAYS(nItem);
 
@@ -275,13 +283,13 @@ void CXListCtrl::DrawProgress(int nItem,
 	}
 
 	rect.bottom -= 1;
-	rect.left += 1;		// leave margin in case row is highlighted
+	rect.left += 1;   // leave margin in case row is highlighted
 
 	// fill interior with light gray
-	pDC->FillSolidRect(rect, RGB(224,224,224));
+	pDC->FillSolidRect(rect, RGB(224, 224, 224));
 
 	// draw border
-	pDC->Draw3dRect(&rect, RGB(0,0,0), m_crBtnShadow);
+	pDC->Draw3dRect(&rect, RGB(0, 0, 0), m_crBtnShadow);
 
 	if (pXLCD[nSubItem].nProgressPercent > 0)
 	{
@@ -303,9 +311,13 @@ void CXListCtrl::DrawProgress(int nItem,
 			CString str, format;
 			format = pXLCD[nSubItem].strProgressMessage;
 			if (format.IsEmpty())
+			{
 				str.Format(_T("%d%%"), pXLCD[nSubItem].nProgressPercent);
+			}
 			else
+			{
 				str.Format(format, pXLCD[nSubItem].nProgressPercent);
+			}
 
 			pDC->SetBkMode(TRANSPARENT);
 
@@ -314,15 +326,15 @@ void CXListCtrl::DrawProgress(int nItem,
 			TextRect.DeflateRect(1, 1);
 
 			CRgn rgn;
-			rgn.CreateRectRgn(LeftRect.left, LeftRect.top, LeftRect.right, 
-					LeftRect.bottom);
+			rgn.CreateRectRgn(LeftRect.left, LeftRect.top, LeftRect.right,
+				LeftRect.bottom);
 			pDC->SelectClipRgn(&rgn);
 			pDC->SetTextColor(m_crHighLightText);//crBkgnd);
 			pDC->DrawText(str, &TextRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
 			rgn.DeleteObject();
-			rgn.CreateRectRgn(RightRect.left, RightRect.top, RightRect.right, 
-					RightRect.bottom);
+			rgn.CreateRectRgn(RightRect.left, RightRect.top, RightRect.right,
+				RightRect.bottom);
 			pDC->SelectClipRgn(&rgn);
 			pDC->SetTextColor(crText);
 			pDC->DrawText(str, &TextRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
@@ -335,12 +347,12 @@ void CXListCtrl::DrawProgress(int nItem,
 ///////////////////////////////////////////////////////////////////////////////
 // DrawCheckbox
 void CXListCtrl::DrawCheckbox(int nItem,
-							  int nSubItem,
-							  CDC *pDC,
-							  COLORREF crText,
-							  COLORREF crBkgnd,
-							  CRect& rect,
-							  XLISTCTRLDATA *pXLCD)
+	int nSubItem,
+	CDC* pDC,
+	COLORREF crText,
+	COLORREF crBkgnd,
+	CRect& rect,
+	XLISTCTRLDATA* pXLCD)
 {
 	ASSERT(pDC);
 	ASSERT(pXLCD);
@@ -357,8 +369,8 @@ void CXListCtrl::DrawCheckbox(int nItem,
 	CRect chkboxrect;
 	chkboxrect = rect;
 	chkboxrect.bottom -= 1;
-	chkboxrect.left += 9;		// line up checkbox with header checkbox
-	chkboxrect.right = chkboxrect.left + chkboxrect.Height();	// width = height
+	chkboxrect.left += 9;   // line up checkbox with header checkbox
+	chkboxrect.right = chkboxrect.left + chkboxrect.Height();   // width = height
 
 	CString str;
 	str = GetItemText(nItem, nSubItem);
@@ -367,7 +379,7 @@ void CXListCtrl::DrawCheckbox(int nItem,
 	{
 		// center the checkbox
 
-		chkboxrect.left = rect.left + rect.Width()/2 - chkboxrect.Height()/2 - 1;
+		chkboxrect.left = rect.left + rect.Width() / 2 - chkboxrect.Height() / 2 - 1;
 		chkboxrect.right = chkboxrect.left + chkboxrect.Height();
 	}
 
@@ -375,20 +387,24 @@ void CXListCtrl::DrawCheckbox(int nItem,
 	pDC->FillSolidRect(&chkboxrect, m_crWindow);
 
 	// draw border
-	CBrush brush(RGB(51,102,153));
+	CBrush brush(RGB(51, 102, 153));
 	pDC->FrameRect(&chkboxrect, &brush);
 
 	if (pXLCD[nSubItem].nCheckedState == 1)
 	{
-		CPen *pOldPen = NULL;
+		CPen* pOldPen = NULL;
 
 		CPen graypen(PS_SOLID, 1, m_crGrayText);
-		CPen blackpen(PS_SOLID, 1, RGB(51,153,51));
+		CPen blackpen(PS_SOLID, 1, RGB(51, 153, 51));
 
 		if (pXLCD[0].bEnabled)
+		{
 			pOldPen = pDC->SelectObject(&blackpen);
+		}
 		else
+		{
 			pOldPen = pDC->SelectObject(&graypen);
+		}
 
 		// draw the checkmark
 		int x = chkboxrect.left + 9;
@@ -398,20 +414,22 @@ void CXListCtrl::DrawCheckbox(int nItem,
 		for (i = 0; i < 4; i++)
 		{
 			pDC->MoveTo(x, y);
-			pDC->LineTo(x, y+3);
+			pDC->LineTo(x, y + 3);
 			x--;
 			y++;
 		}
 		for (i = 0; i < 3; i++)
 		{
 			pDC->MoveTo(x, y);
-			pDC->LineTo(x, y+3);
+			pDC->LineTo(x, y + 3);
 			x--;
 			y--;
 		}
 
 		if (pOldPen)
+		{
 			pDC->SelectObject(pOldPen);
+		}
 	}
 
 	if (!str.IsEmpty())
@@ -423,9 +441,11 @@ void CXListCtrl::DrawCheckbox(int nItem,
 		textrect = rect;
 		textrect.left = chkboxrect.right + 4;
 
-		UINT nFormat = DT_LEFT | DT_VCENTER | DT_SINGLELINE;	//+++
+		UINT nFormat = DT_LEFT | DT_VCENTER | DT_SINGLELINE;   //+++
 		if (m_bUseEllipsis)
+		{
 			nFormat |= DT_END_ELLIPSIS;
+		}
 
 		pDC->DrawText(str, &textrect, nFormat);
 	}
@@ -434,9 +454,9 @@ void CXListCtrl::DrawCheckbox(int nItem,
 ///////////////////////////////////////////////////////////////////////////////
 // GetDrawColors
 void CXListCtrl::GetDrawColors(int nItem,
-							   int nSubItem,
-							   COLORREF& colorText,
-							   COLORREF& colorBkgnd)
+	int nSubItem,
+	COLORREF& colorText,
+	COLORREF& colorBkgnd)
 {
 	DWORD dwStyle    = GetStyle();
 	DWORD dwExStyle  = GetExtendedStyle();
@@ -467,7 +487,7 @@ void CXListCtrl::GetDrawColors(int nItem,
 				}
 			}
 		}
-		else	// not full row select
+		else   // not full row select
 		{
 			if (nSubItem == 0)
 			{
@@ -500,12 +520,12 @@ void CXListCtrl::GetDrawColors(int nItem,
 ///////////////////////////////////////////////////////////////////////////////
 // DrawImage
 int CXListCtrl::DrawImage(int nItem,
-						  int nSubItem,
-						  CDC* pDC,
-						  COLORREF crText,
-						  COLORREF crBkgnd,
-						  CRect rect,
-  						  XLISTCTRLDATA *pXLCD)
+	int nSubItem,
+	CDC* pDC,
+	COLORREF crText,
+	COLORREF crBkgnd,
+	CRect rect,
+	XLISTCTRLDATA* pXLCD)
 {
 	if (rect.IsRectEmpty())
 	{
@@ -528,10 +548,14 @@ int CXListCtrl::DrawImage(int nItem,
 
 		int nImage = -1;
 		if (pXLCD)
+		{
 			nImage = pXLCD[nSubItem].nImage;
+		}
 
 		if (nImage == -1)
+		{
 			return 0;
+		}
 
 		if (pImageList->GetImageInfo(nImage, &info))
 		{
@@ -571,12 +595,12 @@ int CXListCtrl::DrawImage(int nItem,
 ///////////////////////////////////////////////////////////////////////////////
 // DrawText
 void CXListCtrl::DrawText(int nItem,
-						  int nSubItem,
-						  CDC *pDC,
-						  COLORREF crText,
-						  COLORREF crBkgnd,
-						  CRect& rect,
-						  XLISTCTRLDATA *pXLCD)
+	int nSubItem,
+	CDC* pDC,
+	COLORREF crText,
+	COLORREF crBkgnd,
+	CRect& rect,
+	XLISTCTRLDATA* pXLCD)
 {
 	ASSERT(pDC);
 	ASSERT(pXLCD);
@@ -601,22 +625,30 @@ void CXListCtrl::DrawText(int nItem,
 		m_HeaderCtrl.GetItem(nSubItem, &hditem);
 		int nFmt = hditem.fmt & HDF_JUSTIFYMASK;
 		UINT nFormat = DT_VCENTER | DT_SINGLELINE;
-		if (m_bUseEllipsis)								//+++
+		if (m_bUseEllipsis)   //+++
+		{
 			nFormat |= DT_END_ELLIPSIS;
+		}
 		if (nFmt == HDF_CENTER)
+		{
 			nFormat |= DT_CENTER;
+		}
 		else if (nFmt == HDF_LEFT)
+		{
 			nFormat |= DT_LEFT;
+		}
 		else
+		{
 			nFormat |= DT_RIGHT;
+		}
 
-		CFont *pOldFont = NULL;
+		CFont* pOldFont = NULL;
 		CFont boldfont;
 
 		// check if bold specified for subitem
 		if (pXLCD && pXLCD[nSubItem].bBold)
 		{
-			CFont *font = pDC->GetCurrentFont();
+			CFont* font = pDC->GetCurrentFont();
 			if (font)
 			{
 				LOGFONT lf;
@@ -629,29 +661,35 @@ void CXListCtrl::DrawText(int nItem,
 		pDC->SetBkMode(TRANSPARENT);
 		pDC->SetTextColor(crText);
 		pDC->SetBkColor(crBkgnd);
-		rect.DeflateRect(m_nPadding, 0);			//+++
+		rect.DeflateRect(m_nPadding, 0);   //+++
 		pDC->DrawText(str, &rect, nFormat);
-		rect.InflateRect(m_nPadding, 0);			//+++
+		rect.InflateRect(m_nPadding, 0);   //+++
 		if (pOldFont)
+		{
 			pDC->SelectObject(pOldFont);
+		}
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // GetSubItemRect
 BOOL CXListCtrl::GetSubItemRect(int nItem,
-								int nSubItem,
-								int nArea,
-								CRect& rect)
+	int nSubItem,
+	int nArea,
+	CRect& rect)
 {
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 
 	BOOL bRC = CListCtrl::GetSubItemRect(nItem, nSubItem, nArea, rect);
 
@@ -713,19 +751,23 @@ void CXListCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	{
 #ifndef DO_NOT_INCLUDE_XCOMBOLIST
 		if (m_pCombo)
+		{
 			OnComboEscape(0, 0);
+		}
 #endif
 	}
 	else
 	{
-		XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+		XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 		if (!pXLCD)
 		{
 			return;
 		}
 
 		if (!pXLCD[0].bEnabled)
+		{
 			return;
+		}
 
 		CRect rect;
 
@@ -768,12 +810,14 @@ void CXListCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 
 				UpdateSubItem(nItem, nSubItem);
 
-				CWnd *pWnd = GetParent();
+				CWnd* pWnd = GetParent();
 				if (!pWnd)
+				{
 					pWnd = GetOwner();
+				}
 				if (pWnd && ::IsWindow(pWnd->m_hWnd))
-					pWnd->SendMessage(WM_XLISTCTRL_CHECKBOX_CLICKED, 
-								nItem, nSubItem);
+					pWnd->SendMessage(WM_XLISTCTRL_CHECKBOX_CLICKED,
+					nItem, nSubItem);
 
 				// now update checkbox in header
 
@@ -783,9 +827,13 @@ void CXListCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 					int nCheckedCount = CountCheckedItems(nSubItem);
 
 					if (nCheckedCount == GetItemCount())
+					{
 						SetHeaderCheckedState(nSubItem, XHEADERCTRL_CHECKED_IMAGE);
+					}
 					else
+					{
 						SetHeaderCheckedState(nSubItem, XHEADERCTRL_UNCHECKED_IMAGE);
+					}
 				}
 			}
 			else if (pXLCD[nSubItem].bCombo)
@@ -806,7 +854,7 @@ void CXListCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnRButtonDown - added so we can ignore disabled items
-void CXListCtrl::OnRButtonDown(UINT nFlags, CPoint point) 
+void CXListCtrl::OnRButtonDown(UINT nFlags, CPoint point)
 {
 	XLISTCTRL_TRACE(_T("in CXListCtrl::OnRButtonDown\n"));
 
@@ -825,14 +873,16 @@ void CXListCtrl::OnRButtonDown(UINT nFlags, CPoint point)
 
 	if (nItem != -1)
 	{
-		XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+		XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 		if (!pXLCD)
 		{
 			return;
 		}
 
 		if (!pXLCD[0].bEnabled)
+		{
 			return;
+		}
 	}
 
 	CListCtrl::OnRButtonDown(nFlags, point);
@@ -840,10 +890,10 @@ void CXListCtrl::OnRButtonDown(UINT nFlags, CPoint point)
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnNcLButtonDown
-void CXListCtrl::OnNcLButtonDown(UINT nHitTest, CPoint point) 
+void CXListCtrl::OnNcLButtonDown(UINT nHitTest, CPoint point)
 {
 	TRACE(_T("in CXListCtrl::OnNcLButtonDown\n"));
-	
+
 	if (m_pEdit)
 	{
 		OnXEditKillFocus(0, 0);
@@ -856,7 +906,7 @@ void CXListCtrl::OnNcLButtonDown(UINT nHitTest, CPoint point)
 // OnPaint
 void CXListCtrl::OnPaint()
 {
-    Default();
+	Default();
 	if (GetItemCount() <= 0)
 	{
 		CDC* pDC = GetDC();
@@ -897,22 +947,28 @@ int CXListCtrl::InsertItem(const LVITEM* pItem)
 {
 	ASSERT(pItem->iItem >= 0);
 	if (pItem->iItem < 0)
+	{
 		return -1;
+	}
 
 	int index = CListCtrl::InsertItem(pItem);
 
 	if (index < 0)
+	{
 		return index;
+	}
 
-	XLISTCTRLDATA *pXLCD = new XLISTCTRLDATA [GetColumns()];
+	XLISTCTRLDATA* pXLCD = new XLISTCTRLDATA [GetColumns()];
 	ASSERT(pXLCD);
 	if (!pXLCD)
+	{
 		return -1;
+	}
 
 	pXLCD[0].crText       = m_crWindowText;
 	pXLCD[0].crBackground = m_crWindow;
 	pXLCD[0].nImage       = pItem->iImage;
-	pXLCD[0].dwItemData   = pItem->lParam;	//+++
+	pXLCD[0].dwItemData   = pItem->lParam;   //+++
 
 	CListCtrl::SetItemData(index, (DWORD) pXLCD);
 
@@ -925,34 +981,42 @@ int CXListCtrl::InsertItem(int nItem, LPCTSTR lpszItem)
 {
 	ASSERT(nItem >= 0);
 	if (nItem < 0)
+	{
 		return -1;
+	}
 
 	return InsertItem(nItem,
-					  lpszItem,
-					  m_crWindowText,
-					  m_crWindow);
+		lpszItem,
+		m_crWindowText,
+		m_crWindow);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // InsertItem
 int CXListCtrl::InsertItem(int nItem,
-						   LPCTSTR lpszItem,
-						   COLORREF crText,
-						   COLORREF crBackground)
+	LPCTSTR lpszItem,
+	COLORREF crText,
+	COLORREF crBackground)
 {
 	ASSERT(nItem >= 0);
 	if (nItem < 0)
+	{
 		return -1;
+	}
 
 	int index = CListCtrl::InsertItem(nItem, lpszItem);
 
 	if (index < 0)
+	{
 		return index;
+	}
 
-	XLISTCTRLDATA *pXLCD = new XLISTCTRLDATA [GetColumns()];
+	XLISTCTRLDATA* pXLCD = new XLISTCTRLDATA [GetColumns()];
 	ASSERT(pXLCD);
 	if (!pXLCD)
+	{
 		return -1;
+	}
 
 	pXLCD[0].crText       = crText;
 	pXLCD[0].crBackground = crBackground;
@@ -969,14 +1033,18 @@ int CXListCtrl::SetItem(const LVITEM* pItem)
 {
 	ASSERT(pItem->iItem >= 0);
 	if (pItem->iItem < 0)
+	{
 		return -1;
+	}
 
 	BOOL rc = CListCtrl::SetItem(pItem);
 
 	if (!rc)
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(pItem->iItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(pItem->iItem);
 	if (pXLCD)
 	{
 		pXLCD[pItem->iSubItem].nImage = pItem->iImage;
@@ -998,18 +1066,24 @@ BOOL CXListCtrl::SetItemImage(int nItem, int nSubItem, int nImage)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 
 	BOOL rc = TRUE;
 
 	if (nItem < 0)
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (pXLCD)
 	{
 		pXLCD[nSubItem].nImage = nImage;
@@ -1027,11 +1101,15 @@ BOOL CXListCtrl::SetItemText(int nItem, int nSubItem, LPCTSTR lpszText)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 
 	BOOL rc = CListCtrl::SetItemText(nItem, nSubItem, lpszText);
 
@@ -1048,26 +1126,34 @@ BOOL CXListCtrl::SetItemText(int nItem, int nSubItem, LPCTSTR lpszText)
 // color will be set to the default Windows color.
 //
 BOOL CXListCtrl::SetItemText(int nItem, int nSubItem, LPCTSTR lpszText,
-					COLORREF crText, COLORREF crBackground)
+	COLORREF crText, COLORREF crBackground)
 {
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 
 	BOOL rc = TRUE;
 
 	if (nItem < 0)
+	{
 		return FALSE;
+	}
 
 	if (lpszText)
+	{
 		rc = CListCtrl::SetItemText(nItem, nSubItem, lpszText);
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (pXLCD)
 	{
 		pXLCD[nSubItem].crText       = (crText == -1) ? m_crWindowText : crText;
@@ -1086,11 +1172,15 @@ BOOL CXListCtrl::DeleteItem(int nItem)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (pXLCD)
+	{
 		delete [] pXLCD;
+	}
 	CListCtrl::SetItemData(nItem, 0);
 	return CListCtrl::DeleteItem(nItem);
 }
@@ -1102,9 +1192,11 @@ BOOL CXListCtrl::DeleteAllItems()
 	int n = GetItemCount();
 	for (int i = 0; i < n; i++)
 	{
-		XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(i);
+		XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(i);
 		if (pXLCD)
+		{
 			delete [] pXLCD;
+		}
 		CListCtrl::SetItemData(i, 0);
 	}
 
@@ -1118,9 +1210,11 @@ void CXListCtrl::OnDestroy()
 	int n = GetItemCount();
 	for (int i = 0; i < n; i++)
 	{
-		XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(i);
+		XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(i);
 		if (pXLCD)
+		{
 			delete [] pXLCD;
+		}
 		CListCtrl::SetItemData(i, 0);
 	}
 
@@ -1136,13 +1230,17 @@ BOOL CXListCtrl::SetEdit(int nItem, int nSubItem)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -1169,20 +1267,24 @@ BOOL CXListCtrl::SetEdit(int nItem, int nSubItem)
 // specifier "%d":  e.g., "Pct %d%%"
 //
 BOOL CXListCtrl::SetProgress(int nItem,
-							 int nSubItem,
-							 BOOL bShowProgressText /*= TRUE*/,
-							 LPCTSTR lpszProgressText /*= NULL*/)
+	int nSubItem,
+	BOOL bShowProgressText /*= TRUE*/,
+	LPCTSTR lpszProgressText /*= NULL*/)
 {
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -1205,13 +1307,17 @@ void CXListCtrl::DeleteProgress(int nItem, int nSubItem)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return;
@@ -1230,15 +1336,19 @@ void CXListCtrl::UpdateProgress(int nItem, int nSubItem, int nPercent)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return;
+	}
 
 	ASSERT(nPercent >= 0 && nPercent <= 100);
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return;
@@ -1256,14 +1366,18 @@ BOOL CXListCtrl::SetCheckbox(int nItem, int nSubItem, int nCheckedState)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 	ASSERT(nCheckedState == 0 || nCheckedState == 1 || nCheckedState == -1);
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -1283,9 +1397,13 @@ BOOL CXListCtrl::SetCheckbox(int nItem, int nSubItem, int nCheckedState)
 		int nCheckedCount = CountCheckedItems(nSubItem);
 
 		if (nCheckedCount == GetItemCount())
+		{
 			SetHeaderCheckedState(nSubItem, XHEADERCTRL_CHECKED_IMAGE);
+		}
 		else
+		{
 			SetHeaderCheckedState(nSubItem, XHEADERCTRL_UNCHECKED_IMAGE);
+		}
 	}
 
 	return TRUE;
@@ -1298,13 +1416,17 @@ int CXListCtrl::GetCheckbox(int nItem, int nSubItem)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return -1;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return -1;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return -1;
@@ -1324,9 +1446,11 @@ BOOL CXListCtrl::GetEnabled(int nItem)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -1342,9 +1466,11 @@ BOOL CXListCtrl::SetEnabled(int nItem, BOOL bEnable)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -1367,13 +1493,17 @@ BOOL CXListCtrl::SetBold(int nItem, int nSubItem, BOOL bBold)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -1394,13 +1524,17 @@ BOOL CXListCtrl::GetBold(int nItem, int nSubItem)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -1412,18 +1546,22 @@ BOOL CXListCtrl::GetBold(int nItem, int nSubItem)
 
 ///////////////////////////////////////////////////////////////////////////////
 // GetModified
-BOOL CXListCtrl::GetModified(int nItem, int nSubItem)					//+++
+BOOL CXListCtrl::GetModified(int nItem, int nSubItem)   //+++
 {
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -1435,18 +1573,22 @@ BOOL CXListCtrl::GetModified(int nItem, int nSubItem)					//+++
 
 ///////////////////////////////////////////////////////////////////////////////
 // SetModified
-void CXListCtrl::SetModified(int nItem, int nSubItem, BOOL bModified)	//+++
+void CXListCtrl::SetModified(int nItem, int nSubItem, BOOL bModified)   //+++
 {
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (pXLCD)
 	{
 		// set modified flag
@@ -1456,18 +1598,22 @@ void CXListCtrl::SetModified(int nItem, int nSubItem, BOOL bModified)	//+++
 
 ///////////////////////////////////////////////////////////////////////////////
 // GetItemCheckedState
-int CXListCtrl::GetItemCheckedState(int nItem, int nSubItem)		//+++
+int CXListCtrl::GetItemCheckedState(int nItem, int nSubItem)   //+++
 {
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return -1;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return -1;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return -1;
@@ -1479,18 +1625,22 @@ int CXListCtrl::GetItemCheckedState(int nItem, int nSubItem)		//+++
 
 ///////////////////////////////////////////////////////////////////////////////
 // SetItemCheckedState
-void CXListCtrl::SetItemCheckedState(int nItem, int nSubItem, int nCheckedState)		//+++
+void CXListCtrl::SetItemCheckedState(int nItem, int nSubItem, int nCheckedState)   //+++
 {
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (pXLCD)
 	{
 		// update checked state
@@ -1502,24 +1652,28 @@ void CXListCtrl::SetItemCheckedState(int nItem, int nSubItem, int nCheckedState)
 
 ///////////////////////////////////////////////////////////////////////////////
 // GetItemColors
-BOOL CXListCtrl::GetItemColors(int nItem,								//+++
-							   int nSubItem, 
-							   COLORREF& crText, 
-							   COLORREF& crBackground)
+BOOL CXListCtrl::GetItemColors(int nItem,   //+++
+	int nSubItem,
+	COLORREF& crText,
+	COLORREF& crBackground)
 {
-	crText = RGB(0,0,0);
-	crBackground = RGB(0,0,0);
-	
+	crText = RGB(0, 0, 0);
+	crBackground = RGB(0, 0, 0);
+
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -1533,21 +1687,25 @@ BOOL CXListCtrl::GetItemColors(int nItem,								//+++
 
 ///////////////////////////////////////////////////////////////////////////////
 // SetItemColors
-void CXListCtrl::SetItemColors(int nItem,								//+++
-							   int nSubItem, 
-							   COLORREF crText, 
-							   COLORREF crBackground)
+void CXListCtrl::SetItemColors(int nItem,   //+++
+	int nSubItem,
+	COLORREF crText,
+	COLORREF crBackground)
 {
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (pXLCD)
 	{
 		pXLCD[nSubItem].crText = crText;
@@ -1561,30 +1719,38 @@ void CXListCtrl::SetItemColors(int nItem,								//+++
 // Note:  SetItemText may also be used to set the initial combo selection.
 //
 BOOL CXListCtrl::SetComboBox(int nItem,
-							 int nSubItem,
-							 BOOL bEnableCombo,
-							 CStringArray *psa,		// should not be allocated on stack
-							 int nComboListHeight,
-							 int nInitialComboSel,
-							 BOOL bSort /*= FALSE*/)
+	int nSubItem,
+	BOOL bEnableCombo,
+	CStringArray* psa,   // should not be allocated on stack
+	int nComboListHeight,
+	int nInitialComboSel,
+	BOOL bSort /*= FALSE*/)
 {
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 	ASSERT(psa);
 	if (!psa)
+	{
 		return FALSE;
+	}
 	ASSERT(nComboListHeight > 0);
 	ASSERT(nInitialComboSel >= 0 && nInitialComboSel < psa->GetSize());
 	if ((nInitialComboSel < 0) || (nInitialComboSel >= psa->GetSize()))
+	{
 		nInitialComboSel = 0;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -1597,7 +1763,9 @@ BOOL CXListCtrl::SetComboBox(int nItem,
 	{
 		// sort CStringArray before setting initial selection
 		if (bSort)
+		{
 			CSortCStringArray::SortCStringArray(psa);
+		}
 
 		pXLCD[nSubItem].psa = psa;
 		pXLCD[nSubItem].nComboListHeight = nComboListHeight;
@@ -1626,16 +1794,20 @@ BOOL CXListCtrl::SetComboBox(int nItem,
 //
 // Actually this does nothing more than GetItemText()
 //
-CString	CXListCtrl::GetComboText(int nItem, int nSubItem)
+CString CXListCtrl::GetComboText(int nItem, int nSubItem)
 {
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return _T("");
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return _T("");
+	}
 
 	CString str;
 	str = _T("");
@@ -1654,7 +1826,9 @@ BOOL CXListCtrl::SetCurSel(int nItem, BOOL bEnsureVisible /*= FALSE*/)
 
 	//+++
 	if (bEnsureVisible)
+	{
 		EnsureVisible(nItem, FALSE);
+	}
 
 	return bRet;
 }
@@ -1669,7 +1843,9 @@ int CXListCtrl::GetCurSel()
 	POSITION pos = GetFirstSelectedItemPosition();
 	int nSelectedItem = -1;
 	if (pos != NULL)
+	{
 		nSelectedItem = GetNextSelectedItem(pos);
+	}
 	return nSelectedItem;
 }
 
@@ -1680,11 +1856,15 @@ void CXListCtrl::UpdateSubItem(int nItem, int nSubItem)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return;
+	}
 
 	CRect rect;
 	if (nSubItem == -1)
@@ -1720,9 +1900,11 @@ DWORD CXListCtrl::GetItemData(int nItem)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return 0;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return 0;
@@ -1738,9 +1920,11 @@ BOOL CXListCtrl::SetItemData(int nItem, DWORD dwData)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -1765,7 +1949,9 @@ int CXListCtrl::GetHeaderCheckedState(int nSubItem)
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return -1;
+	}
 
 	HDITEM hditem;
 
@@ -1782,7 +1968,9 @@ BOOL CXListCtrl::SetHeaderCheckedState(int nSubItem, int nCheckedState)
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 	ASSERT(nCheckedState == 0 || nCheckedState == 1 || nCheckedState == 2);
 
 	HDITEM hditem;
@@ -1816,7 +2004,7 @@ BOOL CXListCtrl::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
 
 		for (int nItem = 0; nItem < GetItemCount(); nItem++)
 		{
-			XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+			XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 			if (!pXLCD)
 			{
 				continue;
@@ -1833,8 +2021,8 @@ BOOL CXListCtrl::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 
 	*pResult = 0;
-	return FALSE;		// return FALSE to send message to parent also -
-						// NOTE:  MSDN documentation is incorrect
+	return FALSE;   // return FALSE to send message to parent also -
+	// NOTE:  MSDN documentation is incorrect
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1844,20 +2032,24 @@ int CXListCtrl::CountCheckedItems(int nSubItem)
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return 0;
+	}
 
 	int nCount = 0;
 
 	for (int nItem = 0; nItem < GetItemCount(); nItem++)
 	{
-		XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+		XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 		if (!pXLCD)
 		{
 			continue;
 		}
 
 		if (pXLCD[nSubItem].nCheckedState == 1)
+		{
 			nCount++;
+		}
 	}
 
 	return nCount;
@@ -1913,12 +2105,12 @@ void CXListCtrl::OnSysColorChange()
 //
 void CXListCtrl::OnTimer(UINT nIDEvent)
 {
-	if (nIDEvent == 1)			// timer set when combo is created
+	if (nIDEvent == 1)   // timer set when combo is created
 	{
 		KillTimer(nIDEvent);
 		UnlockWindowUpdate();
 	}
-	else if (nIDEvent == 2)		// close combo listbox
+	else if (nIDEvent == 2)   // close combo listbox
 	{
 		KillTimer(nIDEvent);
 
@@ -1932,7 +2124,7 @@ void CXListCtrl::OnTimer(UINT nIDEvent)
 		}
 		m_pCombo = NULL;
 	}
-	else if (nIDEvent == 3)		// get combo listbox selection, then close combo listbox
+	else if (nIDEvent == 3)   // get combo listbox selection, then close combo listbox
 	{
 		KillTimer(nIDEvent);
 
@@ -1957,8 +2149,8 @@ void CXListCtrl::OnTimer(UINT nIDEvent)
 					{
 						// string is not the same, mark item as modified
 
-						XLISTCTRLDATA *pXLCD = 
-							(XLISTCTRLDATA *) CListCtrl::GetItemData(m_nComboItem);
+						XLISTCTRLDATA* pXLCD =
+							(XLISTCTRLDATA*) CListCtrl::GetItemData(m_nComboItem);
 
 						if (pXLCD)
 						{
@@ -1967,12 +2159,14 @@ void CXListCtrl::OnTimer(UINT nIDEvent)
 						}
 					}
 
-					CWnd *pWnd = GetParent();
+					CWnd* pWnd = GetParent();
 					if (!pWnd)
+					{
 						pWnd = GetOwner();
+					}
 					if (pWnd && ::IsWindow(pWnd->m_hWnd))
-						pWnd->SendMessage(WM_XLISTCTRL_COMBO_SELECTION, 
-									m_nComboItem, m_nComboSubItem);
+						pWnd->SendMessage(WM_XLISTCTRL_COMBO_SELECTION,
+						m_nComboItem, m_nComboSubItem);
 				}
 			}
 
@@ -1981,7 +2175,7 @@ void CXListCtrl::OnTimer(UINT nIDEvent)
 		}
 		m_pCombo = NULL;
 	}
-	else if (nIDEvent == 4)		// get combo listbox selection
+	else if (nIDEvent == 4)   // get combo listbox selection
 	{
 		KillTimer(nIDEvent);
 
@@ -2015,7 +2209,6 @@ LRESULT CXListCtrl::OnComboEscape(WPARAM, LPARAM)
 {
 	XLISTCTRL_TRACE(_T("in CXListCtrl::OnComboEscape\n"));
 	SetTimer(2, 50, NULL);
-	//UpdateSubItem(m_nComboItem, m_nComboSubItem);
 	return 0;
 }
 
@@ -2028,21 +2221,20 @@ LRESULT CXListCtrl::OnComboComplete(WPARAM, LPARAM)
 	return 0;
 }
 
-#endif		// #ifndef DO_NOT_INCLUDE_XCOMBOLIST
+#endif   // #ifndef DO_NOT_INCLUDE_XCOMBOLIST
 
 #ifndef NO_XLISTCTRL_TOOL_TIPS
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnToolHitTest
-int CXListCtrl::OnToolHitTest(CPoint point, TOOLINFO * pTI) const
+int CXListCtrl::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
 {
 	LVHITTESTINFO lvhitTestInfo;
-	
+
 	lvhitTestInfo.pt = point;
-	
+
 	int nItem = ListView_SubItemHitTest(this->m_hWnd, &lvhitTestInfo);
 	int nSubItem = lvhitTestInfo.iSubItem;
-	//XLISTCTRL_TRACE(_T("in CToolTipListCtrl::OnToolHitTest: %d,%d\n"), nItem, nSubItem);
 
 	UINT nFlags = lvhitTestInfo.flags;
 
@@ -2053,20 +2245,20 @@ int CXListCtrl::OnToolHitTest(CPoint point, TOOLINFO * pTI) const
 		// If it did fall on a list item,
 		// and it was also hit one of the
 		// item specific subitems we wish to show tool tips for
-		
+
 		// get the client (area occupied by this control
 		RECT rcClient;
 		GetClientRect(&rcClient);
-		
+
 		// fill in the TOOLINFO structure
 		pTI->hwnd = m_hWnd;
-		pTI->uId = (UINT) (nItem * 1000 + nSubItem + 1);
+		pTI->uId = (UINT)(nItem * 1000 + nSubItem + 1);
 		pTI->lpszText = LPSTR_TEXTCALLBACK;
 		pTI->rect = rcClient;
-		
-		return pTI->uId;	// By returning a unique value per listItem,
-							// we ensure that when the mouse moves over another
-							// list item, the tooltip will change
+
+		return pTI->uId;   // By returning a unique value per listItem,
+		// we ensure that when the mouse moves over another
+		// list item, the tooltip will change
 	}
 	else
 	{
@@ -2077,41 +2269,42 @@ int CXListCtrl::OnToolHitTest(CPoint point, TOOLINFO * pTI) const
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnToolTipText
-BOOL CXListCtrl::OnToolTipText(UINT /*id*/, NMHDR * pNMHDR, LRESULT * pResult)
+BOOL CXListCtrl::OnToolTipText(UINT /*id*/, NMHDR* pNMHDR, LRESULT* pResult)
 {
 	UINT nID = pNMHDR->idFrom;
-	//XLISTCTRL_TRACE(_T("in CXListCtrl::OnToolTipText: id=%d\n"), nID);
-	
+
 	// check if this is the automatic tooltip of the control
-	if (nID == 0) 
-		return TRUE;	// do not allow display of automatic tooltip,
-						// or our tooltip will disappear
-	
+	if (nID == 0)
+	{
+		return TRUE;   // do not allow display of automatic tooltip,
+	}
+	// or our tooltip will disappear
+
 	// handle both ANSI and UNICODE versions of the message
 	TOOLTIPTEXTA* pTTTA = (TOOLTIPTEXTA*)pNMHDR;
 	TOOLTIPTEXTW* pTTTW = (TOOLTIPTEXTW*)pNMHDR;
-	
+
 	*pResult = 0;
-	
+
 	// get the mouse position
 	const MSG* pMessage;
 	pMessage = GetCurrentMessage();
 	ASSERT(pMessage);
 	CPoint pt;
-	pt = pMessage->pt;		// get the point from the message
-	ScreenToClient(&pt);	// convert the point's coords to be relative to this control
-	
+	pt = pMessage->pt;   // get the point from the message
+	ScreenToClient(&pt);   // convert the point's coords to be relative to this control
+
 	// see if the point falls onto a list item
-	
+
 	LVHITTESTINFO lvhitTestInfo;
-	
+
 	lvhitTestInfo.pt = pt;
-	
+
 	int nItem = SubItemHitTest(&lvhitTestInfo);
 	int nSubItem = lvhitTestInfo.iSubItem;
-	
+
 	UINT nFlags = lvhitTestInfo.flags;
-	
+
 	// nFlags is 0 if the SubItemHitTest fails
 	// Therefore, 0 & <anything> will equal false
 	if (nFlags & LVHT_ONITEMLABEL)
@@ -2119,11 +2312,11 @@ BOOL CXListCtrl::OnToolTipText(UINT /*id*/, NMHDR * pNMHDR, LRESULT * pResult)
 		// If it did fall on a list item,
 		// and it was also hit one of the
 		// item specific subitems we wish to show tooltips for
-		
+
 		CString strToolTip;
 		strToolTip = _T("");
 
-		XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+		XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 		if (pXLCD)
 		{
 			strToolTip = pXLCD[nSubItem].strToolTip;
@@ -2132,27 +2325,35 @@ BOOL CXListCtrl::OnToolTipText(UINT /*id*/, NMHDR * pNMHDR, LRESULT * pResult)
 		if (!strToolTip.IsEmpty())
 		{
 			// If there was a CString associated with the list item,
-			// copy it's text (up to 80 characters worth, limitation 
-			// of the TOOLTIPTEXT structure) into the TOOLTIPTEXT 
+			// copy it's text (up to 80 characters worth, limitation
+			// of the TOOLTIPTEXT structure) into the TOOLTIPTEXT
 			// structure's szText member
-			
+
 #ifndef _UNICODE
 			if (pNMHDR->code == TTN_NEEDTEXTA)
+			{
 				lstrcpyn(pTTTA->szText, strToolTip, 80);
+			}
 			else
+			{
 				_mbstowcsz(pTTTW->szText, strToolTip, 80);
+			}
 #else
 			if (pNMHDR->code == TTN_NEEDTEXTA)
+			{
 				_wcstombsz(pTTTA->szText, strToolTip, 80);
+			}
 			else
+			{
 				lstrcpyn(pTTTW->szText, strToolTip, 80);
+			}
 #endif
 			return FALSE;	 // we found a tool tip,
 		}
 	}
-	
-	return FALSE;	// we didn't handle the message, let the 
-					// framework continue propagating the message
+
+	return FALSE;   // we didn't handle the message, let the
+	// framework continue propagating the message
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2162,13 +2363,17 @@ BOOL CXListCtrl::SetItemToolTipText(int nItem, int nSubItem, LPCTSTR lpszToolTip
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return FALSE;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return FALSE;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		return FALSE;
@@ -2189,13 +2394,17 @@ CString CXListCtrl::GetItemToolTipText(int nItem, int nSubItem)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return strToolTip;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return strToolTip;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (pXLCD)
 	{
 		strToolTip = pXLCD[nSubItem].strToolTip;
@@ -2213,10 +2422,12 @@ void CXListCtrl::DeleteAllToolTips()
 
 	for (int nItem = 0; nItem < nRow; nItem++)
 	{
-		XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+		XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 		if (pXLCD)
 			for (int nSubItem = 0; nSubItem < nCol; nSubItem++)
+			{
 				pXLCD[nSubItem].strToolTip = _T("");
+			}
 	}
 }
 
@@ -2230,18 +2441,24 @@ void CXListCtrl::DrawComboBox(int nItem, int nSubItem)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return;
+	}
 
 	// Make sure that nSubItem is valid
 	ASSERT(GetColumnWidth(nSubItem) >= 5);
 	if (GetColumnWidth(nSubItem) < 5)
+	{
 		return;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		ASSERT(FALSE);
@@ -2249,7 +2466,9 @@ void CXListCtrl::DrawComboBox(int nItem, int nSubItem)
 	}
 
 	if (!pXLCD[0].bEnabled)
+	{
 		return;
+	}
 
 #ifdef _DEBUG
 	DWORD dwExStyle = GetExtendedStyle();
@@ -2263,7 +2482,9 @@ void CXListCtrl::DrawComboBox(int nItem, int nSubItem)
 	// Get the column offset
 	int offset = 0;
 	for (int i = 0; i < nSubItem; i++)
+	{
 		offset += GetColumnWidth(i);
+	}
 
 	CRect rect;
 	GetSubItemRect(nItem, nSubItem, LVIR_BOUNDS, rect);
@@ -2286,14 +2507,14 @@ void CXListCtrl::DrawComboBox(int nItem, int nSubItem)
 
 		DWORD dwStyle = CBS_DROPDOWNLIST | WS_POPUP | WS_VISIBLE ;
 
-		BOOL bSuccess = m_pCombo->CreateEx(WS_EX_CONTROLPARENT, 
-										   ADVCOMBOBOXCTRL_CLASSNAME, 
-										   _T(""),
-										   dwStyle,
-										   m_rectComboList,
-										   this, 
-										   0, 
-										   NULL);
+		BOOL bSuccess = m_pCombo->CreateEx(WS_EX_CONTROLPARENT,
+			ADVCOMBOBOXCTRL_CLASSNAME,
+			_T(""),
+			dwStyle,
+			m_rectComboList,
+			this,
+			0,
+			NULL);
 
 		if (bSuccess)
 		{
@@ -2309,10 +2530,12 @@ void CXListCtrl::DrawComboBox(int nItem, int nSubItem)
 					{
 						s = pXLCD[nSubItem].psa->GetAt(i);
 						if (!s.IsEmpty())
+						{
 							m_pCombo->AddString(s);
+						}
 					}
 				}
-				catch(...)
+				catch (...)
 				{
 					TRACE(_T("ERROR - exception in CXListCtrl::DrawComboBox\n"));
 					TRACE(_T("==>  Attempting to access psa pointer;  string array must be a class\n"));
@@ -2342,7 +2565,7 @@ void CXListCtrl::DrawComboBox(int nItem, int nSubItem)
 						pXLCD[nSubItem].nInitialComboSel = -1; // default after first time
 					}
 				}
-				catch(...)
+				catch (...)
 				{
 					TRACE(_T("ERROR - exception in CXListCtrl::DrawComboBox\n"));
 					TRACE(_T("==>  Attempting to access psa pointer;  string array must be a class\n"));
@@ -2351,7 +2574,9 @@ void CXListCtrl::DrawComboBox(int nItem, int nSubItem)
 			}
 
 			if (str.IsEmpty())
+			{
 				str = GetItemText(nItem, nSubItem);
+			}
 
 			if (str.IsEmpty())
 			{
@@ -2371,7 +2596,9 @@ void CXListCtrl::DrawComboBox(int nItem, int nSubItem)
 				XLISTCTRL_TRACE(_T("FindStringExact returned %d\n"), index);
 
 				if (index == LB_ERR)
+				{
 					index = 0;
+				}
 			}
 			m_pCombo->SetCurSel(index);
 			m_pCombo->GetLBText(index, m_strInitialString);
@@ -2397,18 +2624,24 @@ void CXListCtrl::DrawEdit(int nItem, int nSubItem)
 	ASSERT(nItem >= 0);
 	ASSERT(nItem < GetItemCount());
 	if ((nItem < 0) || nItem >= GetItemCount())
+	{
 		return;
+	}
 	ASSERT(nSubItem >= 0);
 	ASSERT(nSubItem < GetColumns());
 	if ((nSubItem < 0) || nSubItem >= GetColumns())
+	{
 		return;
+	}
 
 	// Make sure that nSubItem is valid
 	ASSERT(GetColumnWidth(nSubItem) >= 5);
 	if (GetColumnWidth(nSubItem) < 5)
+	{
 		return;
+	}
 
-	XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(nItem);
+	XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(nItem);
 	if (!pXLCD)
 	{
 		ASSERT(FALSE);
@@ -2416,7 +2649,9 @@ void CXListCtrl::DrawEdit(int nItem, int nSubItem)
 	}
 
 	if (!pXLCD[0].bEnabled)
+	{
 		return;
+	}
 
 #ifdef _DEBUG
 	DWORD dwExStyle = GetExtendedStyle();
@@ -2428,13 +2663,17 @@ void CXListCtrl::DrawEdit(int nItem, int nSubItem)
 #endif
 
 	// make sure that the item is visible
-	if (!EnsureVisible(nItem, TRUE)) 
+	if (!EnsureVisible(nItem, TRUE))
+	{
 		return;
+	}
 
 	// get the column offset
 	int offset = 0;
 	for (int i = 0; i < nSubItem; i++)
+	{
 		offset += GetColumnWidth(i);
+	}
 
 	CRect rect;
 	GetItemRect(nItem, &rect, LVIR_BOUNDS);
@@ -2457,20 +2696,28 @@ void CXListCtrl::DrawEdit(int nItem, int nSubItem)
 	GetColumn(nSubItem, &lvcol);
 	DWORD dwStyle = 0;
 	if ((lvcol.fmt & LVCFMT_JUSTIFYMASK) == LVCFMT_LEFT)
+	{
 		dwStyle = ES_LEFT;
+	}
 	else if ((lvcol.fmt & LVCFMT_JUSTIFYMASK) == LVCFMT_RIGHT)
+	{
 		dwStyle = ES_RIGHT;
-	else dwStyle = ES_CENTER;
+	}
+	else
+	{
+		dwStyle = ES_CENTER;
+	}
 
 	dwStyle |= WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_LEFT /*| WS_BORDER*/ ;
 
-	//rect.top -= 2;
 	rect.bottom += 1;
 	rect.left += offset + 2;
 	rect.right = rect.left + GetColumnWidth(nSubItem) - 4;
 
-	if (rect.right > rectClient.right) 
+	if (rect.right > rectClient.right)
+	{
 		rect.right = rectClient.right;
+	}
 
 	m_strInitialString = GetItemText(nItem, nSubItem);
 
@@ -2543,7 +2790,7 @@ LRESULT CXListCtrl::OnXEditKillFocus(WPARAM, LPARAM)
 
 		// string is not the same, mark item as modified
 
-		XLISTCTRLDATA *pXLCD = (XLISTCTRLDATA *) CListCtrl::GetItemData(m_nEditItem);
+		XLISTCTRLDATA* pXLCD = (XLISTCTRLDATA*) CListCtrl::GetItemData(m_nEditItem);
 		if (pXLCD)
 		{
 			pXLCD[m_nEditSubItem].bModified = TRUE;
@@ -2553,25 +2800,29 @@ LRESULT CXListCtrl::OnXEditKillFocus(WPARAM, LPARAM)
 
 	UpdateSubItem(m_nEditItem, m_nEditSubItem);
 
-	CWnd *pWnd = GetParent();
+	CWnd* pWnd = GetParent();
 	if (!pWnd)
+	{
 		pWnd = GetOwner();
+	}
 	if (pWnd && ::IsWindow(pWnd->m_hWnd))
-		pWnd->SendMessage(WM_XLISTCTRL_EDIT_END, 
-					m_nEditItem, m_nEditSubItem);
+		pWnd->SendMessage(WM_XLISTCTRL_EDIT_END,
+		m_nEditItem, m_nEditSubItem);
 
 	return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnEraseBkgnd
-BOOL CXListCtrl::OnEraseBkgnd(CDC* pDC) 
+BOOL CXListCtrl::OnEraseBkgnd(CDC* pDC)
 {
 	CRect rectClip, rectTop, rectBottom, rectRight;
 	int nItemCount = GetItemCount();
 
 	if (!nItemCount) // Empty XListCtrl, nothing to do, CListCtrl will
-		return CListCtrl::OnEraseBkgnd(pDC); // erase the Background
+	{
+		return CListCtrl::OnEraseBkgnd(pDC);   // erase the Background
+	}
 
 	if (pDC->GetClipBox(&rectClip) == ERROR)
 	{
@@ -2581,7 +2832,7 @@ BOOL CXListCtrl::OnEraseBkgnd(CDC* pDC)
 
 	int nFirstRow = GetTopIndex();
 	int nLastRow = nFirstRow + GetCountPerPage();
-	nLastRow = min (nLastRow, nItemCount - 1); // Last Item displayed in Ctrl
+	nLastRow = min(nLastRow, nItemCount - 1);  // Last Item displayed in Ctrl
 
 	CListCtrl::GetSubItemRect(nFirstRow, 0, LVIR_BOUNDS, rectTop);
 	CListCtrl::GetSubItemRect(nLastRow, 0, LVIR_BOUNDS, rectBottom);
@@ -2610,17 +2861,19 @@ BOOL CXListCtrl::OnEraseBkgnd(CDC* pDC)
 //+++
 int CXListCtrl::FindDataItem(DWORD dwData)
 {
-	for (int nItem = 0; nItem < GetItemCount(); nItem++) 
+	for (int nItem = 0; nItem < GetItemCount(); nItem++)
 	{
 		if (GetItemData(nItem) == dwData)
+		{
 			return nItem;
+		}
 	}
 	return -1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnKeyDown - check for disabled items
-void CXListCtrl::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) 
+void CXListCtrl::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	XLISTCTRL_TRACE(_T("in CXListCtrl::OnKeyDown\n"));
 
@@ -2699,6 +2952,6 @@ void CXListCtrl::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 		}
 
-		SetCurSel(nTrial, TRUE);	// set new selection, scroll into view
+		SetCurSel(nTrial, TRUE);   // set new selection, scroll into view
 	}
 }
