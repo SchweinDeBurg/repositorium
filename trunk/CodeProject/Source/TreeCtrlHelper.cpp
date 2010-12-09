@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TreeCtrlHelper.cpp: implementation of the CTreeCtrlHelper class.
@@ -38,7 +51,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -60,14 +73,14 @@ CTreeCtrlHelper::~CTreeCtrlHelper()
 
 CMapIndices& CTreeCtrlHelper::VIMap()
 {
-	ASSERT (m_pVisibleIndices);
+	ASSERT(m_pVisibleIndices);
 
 	return *m_pVisibleIndices;
 }
-	
+
 const CMapIndices& CTreeCtrlHelper::VIMap() const
 {
-	ASSERT (m_pVisibleIndices);
+	ASSERT(m_pVisibleIndices);
 
 	return *m_pVisibleIndices;
 }
@@ -79,13 +92,17 @@ BOOL CTreeCtrlHelper::SelectItem(HTREEITEM hti)
 
 	// won't auto edit if item already selected
 	if (hti && m_tree.GetSelectedItem() == hti)
+	{
 		return FALSE;
+	}
 
 	m_tree.SelectItem(hti);
 
 	// restore focus if required
 	if (pFocus)
+	{
 		pFocus->PostMessage(WM_SETFOCUS);
+	}
 
 	return TRUE;
 }
@@ -93,10 +110,14 @@ BOOL CTreeCtrlHelper::SelectItem(HTREEITEM hti)
 int CTreeCtrlHelper::GetItemHeight(HTREEITEM hti)
 {
 	if (hti == NULL)
+	{
 		hti = m_tree.GetChildItem(NULL);
+	}
 
 	if (hti == NULL)
-		return 16;//CDlgUnits(m_tree).ToPixelsY(12);
+	{
+		return 16;   //CDlgUnits(m_tree).ToPixelsY(12);
+	}
 
 	// else
 	CRect rItem;
@@ -107,17 +128,17 @@ int CTreeCtrlHelper::GetItemHeight(HTREEITEM hti)
 
 int CTreeCtrlHelper::GetItemPos(HTREEITEM hti, HTREEITEM htiParent)
 {
-	ASSERT (m_tree.GetParentItem(hti) == htiParent);
-	
+	ASSERT(m_tree.GetParentItem(hti) == htiParent);
+
 	int nPos = 1;
 	HTREEITEM htiChild = m_tree.GetChildItem(htiParent);
-	
+
 	while (htiChild && htiChild != hti)
 	{
 		nPos++;
 		htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
 	}
-	
+
 	return nPos;
 }
 
@@ -125,20 +146,20 @@ int CTreeCtrlHelper::GetItemLevel(HTREEITEM hti)
 {
 	int nLevel = 0;
 	hti = m_tree.GetParentItem(hti);
-	
+
 	while (hti)
 	{
 		nLevel++;
 		hti = m_tree.GetParentItem(hti);
 	}
-	
+
 	return nLevel;
 }
 
 BOOL CTreeCtrlHelper::HasFocus(BOOL bIncEditing)
 {
 	CWnd* pFocus = m_tree.GetFocus();
-	
+
 	return (pFocus && (pFocus == &m_tree || (bIncEditing && pFocus == m_tree.GetEditControl())));
 }
 
@@ -152,7 +173,9 @@ void CTreeCtrlHelper::ExpandAll(BOOL bExpand, HTREEITEM hti)
 void CTreeCtrlHelper::ExpandItem(HTREEITEM hti, BOOL bExpand)
 {
 	if (hti)
+	{
 		m_tree.Expand(hti, bExpand ? TVE_EXPAND : TVE_COLLAPSE);
+	}
 
 	HTREEITEM htiChild = m_tree.GetChildItem(hti);
 
@@ -182,7 +205,7 @@ HTREEITEM CTreeCtrlHelper::GetFirstVisibleTopLevelItem(int& nPos)
 
 	// iterate the top level items to find out what pos this is
 	nPos = GetItemPos(htiTopVis, NULL);
-	
+
 	return htiTopVis;
 }
 
@@ -196,21 +219,23 @@ HTREEITEM CTreeCtrlHelper::GetTopLevelParentItem(HTREEITEM hti)
 		htiPrevParent = hti;
 		hti = m_tree.GetParentItem(hti);
 	}
-	
+
 	return htiPrevParent;
 }
 
 void CTreeCtrlHelper::InvalidateItem(HTREEITEM hti, BOOL bChildren)
 {
 	CRect rItem;
-	
+
 	if (m_tree.GetItemRect(hti, rItem, FALSE))
+	{
 		m_tree.InvalidateRect(rItem);
-	
+	}
+
 	if (bChildren && IsItemExpanded(hti) > 0)
 	{
 		HTREEITEM htiChild = m_tree.GetChildItem(hti);
-		
+
 		while (htiChild)
 		{
 			InvalidateItem(htiChild, TRUE);
@@ -222,29 +247,29 @@ void CTreeCtrlHelper::InvalidateItem(HTREEITEM hti, BOOL bChildren)
 int CTreeCtrlHelper::BuildVisibleIndexMap(CMapIndices& index)
 {
 	index.RemoveAll();
-	
+
 	HTREEITEM hti = m_tree.GetChildItem(NULL);
-	
+
 	while (hti)
 	{
 		AddVisibleItemToIndex(index, hti);
 		hti = m_tree.GetNextItem(hti, TVGN_NEXT);
 	}
-	
+
 	return index.GetCount();
 }
 
 void CTreeCtrlHelper::AddVisibleItemToIndex(CMapIndices& index, HTREEITEM hti)
 {
-	ASSERT (hti);
-	
+	ASSERT(hti);
+
 	int nIndex = index.GetCount();
 	index[hti] = nIndex;
-	
+
 	if (IsItemExpanded(hti) > 0)
 	{
 		HTREEITEM htiChild = m_tree.GetChildItem(hti);
-		
+
 		while (htiChild)
 		{
 			AddVisibleItemToIndex(index, htiChild);
@@ -262,7 +287,7 @@ void CTreeCtrlHelper::EnsureVisibleEx(HTREEITEM hti, BOOL bVPartialOK, BOOL bHPa
 		CRect rClient, rText, rIntersect;
 
 		m_tree.GetClientRect(rClient);
-	
+
 		BOOL bNeedHScroll = TRUE, bNeedVScroll = TRUE;
 
 		// vertically
@@ -271,7 +296,9 @@ void CTreeCtrlHelper::EnsureVisibleEx(HTREEITEM hti, BOOL bVPartialOK, BOOL bHPa
 		if (rIntersect.IntersectRect(rClient, rItem))
 		{
 			if (bVPartialOK || (rItem.top >= rClient.top && rItem.bottom <= rClient.bottom))
+			{
 				bNeedVScroll = FALSE;
+			}
 		}
 
 		// horizontally
@@ -281,12 +308,16 @@ void CTreeCtrlHelper::EnsureVisibleEx(HTREEITEM hti, BOOL bVPartialOK, BOOL bHPa
 		if (rIntersect.IntersectRect(rClient, rText))
 		{
 			if (bHPartialOK || (rText.left >= rClient.left && rText.right <= rClient.right))
+			{
 				bNeedHScroll = FALSE;
+			}
 		}
 
 		// see if we're close enough already
 		if (!bNeedVScroll && !bNeedHScroll)
+		{
 			return;
+		}
 
 		CHoldRedraw hr(m_tree);
 
@@ -300,18 +331,20 @@ void CTreeCtrlHelper::EnsureVisibleEx(HTREEITEM hti, BOOL bVPartialOK, BOOL bHPa
 			m_tree.GetItemRect(hti, rItem, FALSE);
 
 			CRect rOrg(rItem);
-			
+
 			if (rItem.top < rClient.top || (bVPartialOK && rItem.bottom < rClient.top))
 			{
 				while (rClient.top > (bVPartialOK ? rItem.bottom : rItem.top))
 				{
 					m_tree.SendMessage(WM_VSCROLL, SB_LINEUP);
 					m_tree.GetItemRect(hti, rItem, TRUE); // check again
-					
+
 					// check for no change
 					if (rItem == rOrg)
+					{
 						break;
-					
+					}
+
 					rOrg = rItem;
 				}
 			}
@@ -321,15 +354,17 @@ void CTreeCtrlHelper::EnsureVisibleEx(HTREEITEM hti, BOOL bVPartialOK, BOOL bHPa
 				{
 					m_tree.SendMessage(WM_VSCROLL, SB_LINEDOWN);
 					m_tree.GetItemRect(hti, rItem, TRUE); // check again
-					
+
 					// check for no change
 					if (rItem == rOrg)
+					{
 						break;
-					
+					}
+
 					rOrg = rItem;
 				}
 			}
-			
+
 			bNeedVScroll = TRUE;
 		}
 
@@ -355,7 +390,9 @@ void CTreeCtrlHelper::EnsureVisibleEx(HTREEITEM hti, BOOL bVPartialOK, BOOL bHPa
 
 					// check for no change
 					if (rItem == rOrg)
+					{
 						break;
+					}
 
 					rOrg = rItem;
 				}
@@ -369,7 +406,9 @@ void CTreeCtrlHelper::EnsureVisibleEx(HTREEITEM hti, BOOL bVPartialOK, BOOL bHPa
 
 					// check for no change
 					if (rItem == rOrg)
+					{
 						break;
+					}
 
 					rOrg = rItem;
 				}
@@ -377,7 +416,9 @@ void CTreeCtrlHelper::EnsureVisibleEx(HTREEITEM hti, BOOL bVPartialOK, BOOL bHPa
 		}
 	}
 	else
+	{
 		m_tree.EnsureVisible(hti);
+	}
 }
 
 BOOL CTreeCtrlHelper::ItemLineIsOdd(CMapIndices& index, HTREEITEM hti)
@@ -385,13 +426,17 @@ BOOL CTreeCtrlHelper::ItemLineIsOdd(CMapIndices& index, HTREEITEM hti)
 	// simple check on whether Visible item map has been created
 	// for the first time
 	if (!index.GetCount() && m_tree.GetCount())
+	{
 		BuildVisibleIndexMap(index);
-	
+	}
+
 	int nIndex = -1;
-	
+
 	if (index.Lookup(hti, nIndex))
+	{
 		return (nIndex % 2);
-	
+	}
+
 	return FALSE;
 }
 
@@ -401,7 +446,7 @@ void CTreeCtrlHelper::SetItemIntegral(HTREEITEM hti, int iIntegral)
 	tvi.mask = TVIF_HANDLE | TVIF_INTEGRAL;
 	tvi.hItem = hti;
 	tvi.iIntegral = iIntegral;
-	
+
 	m_tree.SetItem((LPTVITEM)&tvi);
 }
 
@@ -412,7 +457,9 @@ int CTreeCtrlHelper::IsItemExpanded(HTREEITEM hti, BOOL bFully) const
 #endif
 	// is it a parent
 	if (!m_tree.ItemHasChildren(hti))
+	{
 		return -1;
+	}
 
 	// check children (check for first failure)
 	if (bFully)
@@ -422,7 +469,9 @@ int CTreeCtrlHelper::IsItemExpanded(HTREEITEM hti, BOOL bFully) const
 		while (htiChild)
 		{
 			if (IsItemExpanded(htiChild, TRUE) == FALSE)
+			{
 				return FALSE;
+			}
 
 			htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
 		}
@@ -437,12 +486,16 @@ BOOL CTreeCtrlHelper::IsParentItemExpanded(HTREEITEM hti, BOOL bRecursive) const
 	HTREEITEM htiParent = m_tree.GetParentItem(hti);
 
 	if (!htiParent) // root
-		return TRUE; // always expanded
+	{
+		return TRUE;   // always expanded
+	}
 
 	else if (IsItemExpanded(htiParent))
 	{
 		if (!bRecursive)
+		{
 			return TRUE;
+		}
 
 		// else recursive call
 		return IsParentItemExpanded(htiParent, TRUE);
@@ -472,7 +525,9 @@ void CTreeCtrlHelper::SetItemChecked(HTREEITEM hti, TCH_CHECK nChecked)
 	}
 
 	if (nCheckState)
+	{
 		m_tree.SetItemState(hti, nCheckState, TVIS_STATEIMAGEMASK);
+	}
 }
 
 void CTreeCtrlHelper::SetItemChecked(HTREEITEM hti, BOOL bChecked)
@@ -489,16 +544,18 @@ TCH_CHECK CTreeCtrlHelper::GetItemCheckState(HTREEITEM hti) const
 HTREEITEM CTreeCtrlHelper::GetTopLevelParentItem(HTREEITEM hti) const
 {
 	if (!hti)
+	{
 		return NULL;
-	
+	}
+
 	HTREEITEM htiParent = m_tree.GetParentItem(hti);
-	
+
 	while (htiParent)
 	{
 		hti = htiParent; // cache this because the next parent might be the root
 		htiParent = m_tree.GetParentItem(hti);
 	}
-	
+
 	return hti; // return the one before the root
 }
 
@@ -506,24 +563,32 @@ HTREEITEM CTreeCtrlHelper::GetNextTopLevelItem(HTREEITEM hti, BOOL bNext) const
 {
 	HTREEITEM htiParent = GetTopLevelParentItem(hti);
 	HTREEITEM htiGoto = NULL;
-	
+
 	if (htiParent)
 	{
 		if (bNext)
+		{
 			htiGoto = m_tree.GetNextItem(htiParent, TVGN_NEXT);
+		}
 		else
 		{
 			// if the item is not htiParent then jump to it first
 			if (hti != htiParent)
+			{
 				htiGoto = htiParent;
+			}
 			else
+			{
 				htiGoto = m_tree.GetNextItem(htiParent, TVGN_PREVIOUS);
+			}
 
 			if (htiGoto == hti)
-				htiGoto = NULL; // nowhere to go
+			{
+				htiGoto = NULL;   // nowhere to go
+			}
 		}
 	}
-		
+
 	return htiGoto;
 }
 
@@ -596,7 +661,9 @@ HTREEITEM CTreeCtrlHelper::GetNextPageVisibleItem(HTREEITEM hti) const
 			hti = GetNextVisibleItem(hti);
 
 			if (hti)
+			{
 				htiNext = hti;
+			}
 		}
 	}
 	else // we keep going until we're the last visible item
@@ -606,11 +673,15 @@ HTREEITEM CTreeCtrlHelper::GetNextPageVisibleItem(HTREEITEM hti) const
 		while (hti)
 		{
 			hti = m_tree.GetNextVisibleItem(hti);
-			
+
 			if (hti && IsFullyVisible(hti))
+			{
 				htiNext = hti;
+			}
 			else
+			{
 				hti = NULL;
+			}
 		}
 	}
 
@@ -634,7 +705,9 @@ HTREEITEM CTreeCtrlHelper::GetPrevPageVisibleItem(HTREEITEM hti) const
 			hti = GetPrevVisibleItem(hti);
 
 			if (hti)
+			{
 				htiPrev = hti;
+			}
 		}
 	}
 	else // we keep going until we're the first visible item
@@ -644,11 +717,15 @@ HTREEITEM CTreeCtrlHelper::GetPrevPageVisibleItem(HTREEITEM hti) const
 		while (hti)
 		{
 			hti = m_tree.GetPrevVisibleItem(hti);
-			
+
 			if (hti && IsFullyVisible(hti))
+			{
 				htiPrev = hti;
+			}
 			else
+			{
 				hti = NULL;
+			}
 		}
 	}
 
@@ -658,15 +735,17 @@ HTREEITEM CTreeCtrlHelper::GetPrevPageVisibleItem(HTREEITEM hti) const
 HTREEITEM CTreeCtrlHelper::GetNextVisibleItem(HTREEITEM hti, BOOL bAllowChildren) const
 {
 	HTREEITEM htiNext = NULL;
-	
+
 	// try our first child if we're expanded
 	if (bAllowChildren && IsItemExpanded(hti) > 0)
+	{
 		htiNext = m_tree.GetChildItem(hti);
+	}
 	else
 	{
 		// try next sibling
 		htiNext = m_tree.GetNextItem(hti, TVGN_NEXT);
-		
+
 		// finally look up the parent chain as far as we can
 		if (!htiNext)
 		{
@@ -677,13 +756,17 @@ HTREEITEM CTreeCtrlHelper::GetNextVisibleItem(HTREEITEM hti, BOOL bAllowChildren
 				htiParent = m_tree.GetParentItem(htiParent);
 
 				if (htiParent)
+				{
 					htiNext = m_tree.GetNextItem(htiParent, TVGN_NEXT);
+				}
 			}
 		}
 	}
 
 	if (htiNext == TVI_ROOT || htiNext == hti)
+	{
 		return NULL;
+	}
 
 	// else
 	return htiNext;
@@ -692,15 +775,17 @@ HTREEITEM CTreeCtrlHelper::GetNextVisibleItem(HTREEITEM hti, BOOL bAllowChildren
 HTREEITEM CTreeCtrlHelper::GetNextItem(HTREEITEM hti) const
 {
 	HTREEITEM htiNext = NULL;
-	
+
 	// try our first child if we have one
 	if (m_tree.ItemHasChildren(hti))
+	{
 		htiNext = m_tree.GetChildItem(hti);
+	}
 	else
 	{
 		// try next sibling
 		htiNext = m_tree.GetNextItem(hti, TVGN_NEXT);
-		
+
 		// finally look up the parent chain as far as we can
 		if (!htiNext)
 		{
@@ -711,13 +796,17 @@ HTREEITEM CTreeCtrlHelper::GetNextItem(HTREEITEM hti) const
 				htiParent = m_tree.GetParentItem(htiParent);
 
 				if (htiParent)
+				{
 					htiNext = m_tree.GetNextItem(htiParent, TVGN_NEXT);
+				}
 			}
 		}
 	}
 
 	if (htiNext == TVI_ROOT || htiNext == hti)
+	{
 		return NULL;
+	}
 
 	// else
 	return htiNext;
@@ -727,20 +816,26 @@ HTREEITEM CTreeCtrlHelper::GetPrevItem(HTREEITEM hti) const
 {
 	// try our prior sibling
 	HTREEITEM htiPrev = m_tree.GetNextItem(hti, TVGN_PREVIOUS);
-	
+
 	// if we have one then first try its last child
 	if (htiPrev)
 	{
 		if (m_tree.ItemHasChildren(htiPrev))
+		{
 			htiPrev = GetLastChildItem(htiPrev);
+		}
 
 		// else we settle for htiPrev as-is
 	}
 	else // get parent
+	{
 		htiPrev = m_tree.GetParentItem(hti);
+	}
 
 	if (htiPrev == TVI_ROOT || htiPrev == hti)
+	{
 		return NULL;
+	}
 
 	// else
 	return htiPrev;
@@ -751,14 +846,14 @@ HTREEITEM CTreeCtrlHelper::GetPrevVisibleItem(HTREEITEM hti, BOOL bAllowChildren
 {
 	// try our prior sibling
 	HTREEITEM htiPrev = m_tree.GetNextItem(hti, TVGN_PREVIOUS);
-	
+
 	// if we have one then first try its last child
 	if (htiPrev)
 	{
 		if (bAllowChildren && IsItemExpanded(htiPrev) > 0)
 		{
 			HTREEITEM htiChild = m_tree.GetChildItem(htiPrev);
-			
+
 			while (htiChild)
 			{
 				htiPrev = htiChild;
@@ -768,10 +863,14 @@ HTREEITEM CTreeCtrlHelper::GetPrevVisibleItem(HTREEITEM hti, BOOL bAllowChildren
 		// else we settle for htiPrev as-is
 	}
 	else // get parent
+	{
 		htiPrev = m_tree.GetParentItem(hti);
+	}
 
 	if (htiPrev == TVI_ROOT || htiPrev == hti)
+	{
 		return NULL;
+	}
 
 	// else
 	return htiPrev;
@@ -791,7 +890,9 @@ int CTreeCtrlHelper::FindItem(HTREEITEM htiFind, HTREEITEM htiStart)
 {
 	// try same first
 	if (htiFind == htiStart)
+	{
 		return 0;
+	}
 
 	// then try up
 	HTREEITEM htiPrev = GetPrevVisibleItem(htiStart);
@@ -799,7 +900,9 @@ int CTreeCtrlHelper::FindItem(HTREEITEM htiFind, HTREEITEM htiStart)
 	while (htiPrev)
 	{
 		if (htiPrev == htiFind)
+		{
 			return -1;
+		}
 
 		htiPrev = GetPrevVisibleItem(htiPrev);
 	}
@@ -810,7 +913,9 @@ int CTreeCtrlHelper::FindItem(HTREEITEM htiFind, HTREEITEM htiStart)
 	while (htiNext)
 	{
 		if (htiNext == htiFind)
+		{
 			return 1;
+		}
 
 		htiNext = GetNextVisibleItem(htiNext);
 	}
@@ -832,12 +937,14 @@ void CTreeCtrlHelper::SetItemBold(HTREEITEM hti, BOOL bBold)
 void CTreeCtrlHelper::SetItemStateEx(HTREEITEM hti, UINT nState, UINT nMask, BOOL bChildren)
 {
 	if (hti)
+	{
 		m_tree.SetItemState(hti, nState, nMask);
+	}
 
 	if (bChildren)
 	{
 		HTREEITEM htiChild = m_tree.GetChildItem(hti);
-		
+
 		while (htiChild)
 		{
 			SetItemStateEx(htiChild, nState, nMask, TRUE);
@@ -855,7 +962,7 @@ void CTreeCtrlHelper::SetTopLevelItemsBold(BOOL bBold)
 	if (bBold)
 	{
 		HTREEITEM hti = m_tree.GetChildItem(NULL);
-		
+
 		while (hti)
 		{
 			SetItemBold(hti, TRUE);
@@ -868,28 +975,30 @@ HTREEITEM CTreeCtrlHelper::FindItem(DWORD dwID, HTREEITEM htiStart) const
 {
 	// try htiStart first
 	if (htiStart && m_tree.GetItemData(htiStart) == dwID)
+	{
 		return htiStart;
-	
+	}
+
 	// else try htiStart's children
 	HTREEITEM htiFound = NULL;
 	HTREEITEM htiChild = m_tree.GetChildItem(htiStart);
-	
+
 	while (htiChild && !htiFound)
 	{
 		htiFound = FindItem(dwID, htiChild);
 		htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
 	}
-	
+
 	return htiFound;
 }
 
 void CTreeCtrlHelper::BuildHTIMap(CHTIMap& mapHTI, HTREEITEM htiRoot) const
 {
 	mapHTI.RemoveAll();
-	
+
 	// traverse top-level items
 	HTREEITEM hti = m_tree.GetChildItem(htiRoot);
-	
+
 	while (hti)
 	{
 		UpdateHTIMapEntry(mapHTI, hti);
@@ -901,10 +1010,10 @@ void CTreeCtrlHelper::UpdateHTIMapEntry(CHTIMap& mapHTI, HTREEITEM hti) const
 {
 	// update our own mapping
 	mapHTI[m_tree.GetItemData(hti)] = hti;
-	
+
 	// then our children
 	HTREEITEM htiChild = m_tree.GetChildItem(hti);
-	
+
 	while (htiChild)
 	{
 		UpdateHTIMapEntry(mapHTI, htiChild);

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TreeSelectionHelper.h: interface for the CTreeSelectionHelper class.
@@ -46,7 +59,10 @@ class CHTIList : public CList<HTREEITEM, HTREEITEM>
 {
 public:
 	CHTIList() {}
-	CHTIList(const CHTIList& list) { Copy(list); }
+	CHTIList(const CHTIList& list)
+	{
+		Copy(list);
+	}
 
 	const CHTIList& CHTIList::operator=(const CHTIList& list)
 	{
@@ -60,7 +76,9 @@ public:
 		POSITION pos = list.GetHeadPosition();
 
 		while (pos)
+		{
 			AddTail(list.GetNext(pos));
+		}
 	}
 };
 
@@ -71,7 +89,7 @@ enum TSH_SELECT
 	TSHS_SELECT,
 };
 
-class CTreeSelectionHelper  
+class CTreeSelectionHelper
 {
 public:
 	CTreeSelectionHelper(CTreeCtrl& tree);
@@ -81,8 +99,14 @@ public:
 	BOOL SetItems(HTREEITEM htiFrom, HTREEITEM htiTo, TSH_SELECT nState, BOOL bRedraw = TRUE);
 	BOOL SetItem(HTREEITEM hti, TSH_SELECT nState, BOOL bRedraw = TRUE);
 
-	inline BOOL AddItem(HTREEITEM hti, BOOL bRedraw = TRUE) { return SetItem(hti, TSHS_SELECT, bRedraw); }
-	inline BOOL ToggleItem(HTREEITEM hti, BOOL bRedraw = TRUE) { return SetItem(hti, TSHS_TOGGLE, bRedraw); }
+	inline BOOL AddItem(HTREEITEM hti, BOOL bRedraw = TRUE)
+	{
+		return SetItem(hti, TSHS_SELECT, bRedraw);
+	}
+	inline BOOL ToggleItem(HTREEITEM hti, BOOL bRedraw = TRUE)
+	{
+		return SetItem(hti, TSHS_TOGGLE, bRedraw);
+	}
 	BOOL RemoveItem(HTREEITEM hti, BOOL bRemoveFromHistory = FALSE, BOOL bRedraw = TRUE);
 
 	BOOL RemoveAll(BOOL bRemoveFromHistory = FALSE, BOOL bRedraw = TRUE);
@@ -90,15 +114,36 @@ public:
 	BOOL ToggleItems(HTREEITEM htiFrom, HTREEITEM htiTo, BOOL bRedraw = TRUE);
 	BOOL AddAll(BOOL bRedraw = TRUE);
 
-	inline HTREEITEM GetFirstItem() const { return GetCount() ? m_lstSelection.GetHead() : NULL; }
-	inline HTREEITEM GetLastItem() const { return GetCount() ? m_lstSelection.GetTail() : NULL; }
-	inline POSITION GetFirstItemPos() const { return m_lstSelection.GetHeadPosition(); }
-	inline HTREEITEM GetNextItem(POSITION& pos) const { return m_lstSelection.GetNext(pos); }
-	inline int GetCount() const { return m_lstSelection.GetCount(); }
-	inline BOOL HasItem(HTREEITEM hti) const { return (m_lstSelection.Find(hti) != NULL); }
+	inline HTREEITEM GetFirstItem() const
+	{
+		return GetCount() ? m_lstSelection.GetHead() : NULL;
+	}
+	inline HTREEITEM GetLastItem() const
+	{
+		return GetCount() ? m_lstSelection.GetTail() : NULL;
+	}
+	inline POSITION GetFirstItemPos() const
+	{
+		return m_lstSelection.GetHeadPosition();
+	}
+	inline HTREEITEM GetNextItem(POSITION& pos) const
+	{
+		return m_lstSelection.GetNext(pos);
+	}
+	inline int GetCount() const
+	{
+		return m_lstSelection.GetCount();
+	}
+	inline BOOL HasItem(HTREEITEM hti) const
+	{
+		return (m_lstSelection.Find(hti) != NULL);
+	}
 	BOOL IsItemSelected(HTREEITEM hti, BOOL bCheckParents) const;
 
-	inline void CopySelection(CHTIList& selection) const { selection = m_lstSelection; }
+	inline void CopySelection(CHTIList& selection) const
+	{
+		selection = m_lstSelection;
+	}
 
 	BOOL ContainsAllItems() const;
 	void InvalidateAll(BOOL bErase = TRUE);
@@ -115,16 +160,24 @@ public:
 	static int SortProc(const void* item1, const void* item2);
 
 	// removes any items which are children of other items in the list
-	void RemoveChildDuplicates() { RemoveChildDuplicates(m_lstSelection, m_tree); }
+	void RemoveChildDuplicates()
+	{
+		RemoveChildDuplicates(m_lstSelection, m_tree);
+	}
 	static void RemoveChildDuplicates(CHTIList& selection, const CTreeCtrl& tree);
 
 	// returns TRUE if any direct ancestor is selected
 	BOOL HasSelectedParent(HTREEITEM hti) const;
-	BOOL AnchorHasSelectedParent() const { return HasSelectedParent(m_htiAnchor); }
+	BOOL AnchorHasSelectedParent() const
+	{
+		return HasSelectedParent(m_htiAnchor);
+	}
 	int GetUniqueParents(CHTIList& lstParents) const;
 
 	inline BOOL IsItemExpanded(HTREEITEM hti) const
-		{ return (m_tree.GetItemState(hti, TVIS_EXPANDED) & TVIS_EXPANDED); }
+	{
+		return (m_tree.GetItemState(hti, TVIS_EXPANDED) & TVIS_EXPANDED);
+	}
 
 	// history
 	BOOL NextSelection(BOOL bRedraw = TRUE);
@@ -134,10 +187,19 @@ public:
 	void ClearHistory();
 	void RemoveItemFromHistory(HTREEITEM hti);
 
-	const CTreeCtrl& TreeCtrl() const { return m_tree; }
+	const CTreeCtrl& TreeCtrl() const
+	{
+		return m_tree;
+	}
 
-	void SetAnchor(HTREEITEM htiAnchor) { m_htiAnchor = htiAnchor; }
-	HTREEITEM GetAnchor() const { return m_htiAnchor; }
+	void SetAnchor(HTREEITEM htiAnchor)
+	{
+		m_htiAnchor = htiAnchor;
+	}
+	HTREEITEM GetAnchor() const
+	{
+		return m_htiAnchor;
+	}
 
 	void GetAnchorSel(HTREEITEM& htiAnchor, HTREEITEM& htiTreeSel) const;
 	void UpdateAnchorSel(HTREEITEM htiPrev, HTREEITEM htiNew, HTREEITEM& htiAnchor, HTREEITEM& htiTreeSel) const;
@@ -159,7 +221,10 @@ protected:
 	{
 	public:
 		CIDArray() {}
-		CIDArray(const CIDArray& arr) { Copy(arr); }
+		CIDArray(const CIDArray& arr)
+		{
+			Copy(arr);
+		}
 
 		const CIDArray& CIDArray::operator=(const CIDArray& arr)
 		{
@@ -190,7 +255,7 @@ protected:
 	int FindPrevValidSelection() const;
 	int FindNextValidSelection() const;
 
-	static void BuildOrderedSelection(CHTIList& selection, const CTreeCtrl& tree, 
+	static void BuildOrderedSelection(CHTIList& selection, const CTreeCtrl& tree,
 		HTREEITEM hti, CHTIList& lstOrdered);
 
 };

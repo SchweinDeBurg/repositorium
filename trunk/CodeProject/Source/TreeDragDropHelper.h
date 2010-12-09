@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TreeDragDropHelper.h: interface for the CTreeDragDropHelper class.
@@ -64,14 +77,23 @@ public:
 	virtual ~CTreeDragDropHelper();
 
 	BOOL Initialize(CWnd* pOwner, BOOL bEnabled = TRUE, BOOL bAllowNcDrag = TRUE);
-	void EnableDragDrop(BOOL bEnable) { m_bEnabled = bEnable; }
+	void EnableDragDrop(BOOL bEnable)
+	{
+		m_bEnabled = bEnable;
+	}
 	UINT ProcessMessage(const MSG* pMsg);
 
 	BOOL AddTargetWnd(CWnd* pWnd);
 
 	BOOL GetDropTarget(HTREEITEM& htiDrop, HTREEITEM& htiAfter);
-	BOOL IsDragging() { return m_ddMgr.IsDragging(); }
-	void CancelDrag() { m_ddMgr.CancelDrag(); }
+	BOOL IsDragging()
+	{
+		return m_ddMgr.IsDragging();
+	}
+	void CancelDrag()
+	{
+		m_ddMgr.CancelDrag();
+	}
 
 	// helpers
 	static HTREEITEM CopyTree(CTreeCtrl& tree, HTREEITEM hDest, HTREEITEM hSrc, DDWHERE nWhere, DWORD dwCallbackFlags = 0);
@@ -101,7 +123,11 @@ protected:
 	static void BuildCopy(CTreeCtrl& tree, const HTREEITEM hti, TDDHCOPY* pCopy);
 	static HTREEITEM CopyTree(CTreeCtrl& tree, HTREEITEM hDest, const TDDHCOPY* pSrc, DDWHERE nWhere, DWORD dwCallbackFlags = 0);
 
-	HTREEITEM HitTest(CPoint pt) const { DDWHERE nWhere; return HitTest(pt, nWhere); }
+	HTREEITEM HitTest(CPoint pt) const
+	{
+		DDWHERE nWhere;
+		return HitTest(pt, nWhere);
+	}
 	HTREEITEM HitTest(CPoint pt, DDWHERE& nWhere) const;
 	HTREEITEM HighlightDropTarget(CPoint point);
 	HTREEITEM HighlightDropTarget(); // get current cursor pos
