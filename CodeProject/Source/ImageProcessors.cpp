@@ -1,7 +1,49 @@
+// Copyright (C) 2003-2005 AbstractSpoon Software.
+//
+// This license applies to everything in the ToDoList package, except where
+// otherwise noted.
+//
+// This software is provided 'as-is', without any express or implied warranty.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+// claim that you wrote the original software. If you use this software in a
+// product, an acknowledgment in the product documentation would be appreciated
+// but is not required.
+//
+// 2. Altered source versions must be plainly marked as such, and must not be
+// misrepresented as being the original software.
+//
+// 3. This notice may not be removed or altered from any source distribution.
+
+//*****************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - added AbstractSpoon Software copyright notice and licenese information
+// - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+//*****************************************************************************
+
 // ImageProcessors.cpp: C32BitImageProcessor derivations (c) daniel godson 2002.
 //
-// credits: Karl Lager's 'A Fast Algorithm for Rotating Bitmaps' 
-// 
+// credits: Karl Lager's 'A Fast Algorithm for Rotating Bitmaps'
+//
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -11,7 +53,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -21,16 +63,20 @@ static char THIS_FILE[]=__FILE__;
 const double PI = 3.14159265358979323846;
 
 CImageRotator::CImageRotator(int nDegrees, BOOL bEnableWeighting)
-	: C32BitImageProcessor(bEnableWeighting)
+: C32BitImageProcessor(bEnableWeighting)
 {
 	// normalize the angle
 	while (nDegrees >= 360)
+	{
 		nDegrees -= 360;
+	}
 
 	while (nDegrees < 0)
+	{
 		nDegrees += 360;
+	}
 
-	ASSERT (nDegrees >= 0 && nDegrees < 360);
+	ASSERT(nDegrees >= 0 && nDegrees < 360);
 
 	m_dRadians = nDegrees * PI / 180;
 }
@@ -39,12 +85,16 @@ CImageRotator::CImageRotator(double dRadians)
 {
 	// normalize the angle
 	while (dRadians >= 2 * PI)
+	{
 		dRadians -= 2 * PI;
+	}
 
 	while (dRadians <= 0)
+	{
 		dRadians += 2 * PI;
+	}
 
-	ASSERT (dRadians >= 0 && dRadians < 2 * PI);
+	ASSERT(dRadians >= 0 && dRadians < 2 * PI);
 
 	m_dRadians = dRadians;
 }
@@ -56,7 +106,9 @@ CImageRotator::~CImageRotator()
 CSize CImageRotator::CalcDestSize(CSize sizeSrc)
 {
 	if (!m_dRadians || !sizeSrc.cx || !sizeSrc.cy)
+	{
 		return sizeSrc;
+	}
 
 	// calculate the four rotated corners
 	double dCosA = cos(m_dRadians);
@@ -79,17 +131,19 @@ CSize CImageRotator::CalcDestSize(CSize sizeSrc)
 	// find the max absolute values in each direction
 	int nMaxY = max(abs(ptTopLeft.y), max(abs(ptTopRight.y), max(abs(ptBottomLeft.y), abs(ptBottomRight.y))));
 	int nMaxX = max(abs(ptTopLeft.x), max(abs(ptTopRight.x), max(abs(ptBottomLeft.x), abs(ptBottomRight.x))));
-	
+
 	return CSize((nMaxX + 1) * 2, (nMaxY + 1) * 2);
 }
 
-BOOL CImageRotator::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF /*crMask*/)
+BOOL CImageRotator::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF /*crMask*/)
 {
 	BOOL bRes = TRUE;
 
 	if (!m_dRadians)
+	{
 		bRes = C32BitImageProcessor::ProcessPixels(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 	else
 	{
 		// note: we also need to translate the coords after rotating
@@ -100,7 +154,7 @@ BOOL CImageRotator::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPi
 		rSrc.OffsetRect(-sizeSrcOffset);
 
 		// note: traversing the src bitmap leads to artifacts in the destination image
-		// what we do is to traverse the destination bitmaps and compute the equivalent 
+		// what we do is to traverse the destination bitmaps and compute the equivalent
 		// source color - credit for this observation goes to Yves Maurer (GDIRotate) 2002
 		double dCosA = cos(m_dRadians);
 		double dSinA = sin(m_dRadians);
@@ -128,13 +182,13 @@ BOOL CImageRotator::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPi
 					{
 						ptSrc.Offset(sizeSrcOffset);
 						RGBX* pRGBSrc = &pSrcPixels[ptSrc.y * sizeSrc.cx + ptSrc.x];
-						
+
 						pDestPixels[nPixel] = *pRGBSrc;
 					}
 					else
-						CalcWeightedColor(pSrcPixels, sizeSrc, 
-										dSrcX + sizeSrcOffset.cx, dSrcY + sizeSrcOffset.cy,
-										pDestPixels[nPixel]);
+						CalcWeightedColor(pSrcPixels, sizeSrc,
+						dSrcX + sizeSrcOffset.cx, dSrcY + sizeSrcOffset.cy,
+						pDestPixels[nPixel]);
 				}
 			}
 		}
@@ -146,7 +200,7 @@ BOOL CImageRotator::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPi
 ///////
 
 CImageShearer::CImageShearer(int nHorz, int nVert, BOOL bEnableWeighting)
-	: C32BitImageProcessor(bEnableWeighting), m_nHorz(nHorz), m_nVert(nVert)
+: C32BitImageProcessor(bEnableWeighting), m_nHorz(nHorz), m_nVert(nVert)
 {
 }
 
@@ -159,13 +213,15 @@ CSize CImageShearer::CalcDestSize(CSize sizeSrc)
 	return CSize(sizeSrc.cx + abs(m_nHorz), sizeSrc.cy + abs(m_nVert));
 }
 
-BOOL CImageShearer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF /*crMask*/)
+BOOL CImageShearer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF /*crMask*/)
 {
 	BOOL bRes = TRUE;
 
 	if (!m_nHorz && !m_nVert)
+	{
 		bRes = C32BitImageProcessor::ProcessPixels(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 	else
 	{
 		// shears +ve (down) or -ve (up)
@@ -175,10 +231,14 @@ BOOL CImageShearer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPi
 
 			// calc the offset to src Y coord
 			if (m_nVert > 0)
+			{
 				dYOffset = (double)m_nVert * nX / sizeDest.cx;
-				
+			}
+
 			else if (m_nVert < 0)
-				dYOffset = (double)-m_nVert * (sizeDest.cx - nX) / sizeDest.cx;
+			{
+				dYOffset = (double) - m_nVert * (sizeDest.cx - nX) / sizeDest.cx;
+			}
 
 			// shears +ve (right) or -ve (left)
 			for (int nY = 0; nY < sizeDest.cy; nY++)
@@ -187,10 +247,14 @@ BOOL CImageShearer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPi
 
 				// calc the offset to src X coord
 				if (m_nHorz < 0)
-					dXOffset = (double)-m_nHorz * nY / sizeDest.cy;
-				
+				{
+					dXOffset = (double) - m_nHorz * nY / sizeDest.cy;
+				}
+
 				else if (m_nHorz > 0)
+				{
 					dXOffset = (double)m_nHorz * (sizeDest.cy - nY) / sizeDest.cy;
+				}
 
 				double dSrcX = nX - dXOffset;
 				double dSrcY = nY - dYOffset;
@@ -203,8 +267,8 @@ BOOL CImageShearer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPi
 						pDestPixels[nY * sizeDest.cx + nX] = *pRGBSrc;
 					}
 					else
-						CalcWeightedColor(pSrcPixels, sizeSrc, dSrcX, dSrcY, 
-											pDestPixels[nY * sizeDest.cx + nX]);
+						CalcWeightedColor(pSrcPixels, sizeSrc, dSrcX, dSrcY,
+						pDestPixels[nY * sizeDest.cx + nX]);
 				}
 			}
 		}
@@ -216,12 +280,12 @@ BOOL CImageShearer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPi
 ///////
 
 CImageGrayer::CImageGrayer()
-	: m_dRedFactor(0), m_dGreenFactor(0), m_dBlueFactor(0), m_bDefault(TRUE)
+: m_dRedFactor(0), m_dGreenFactor(0), m_dBlueFactor(0), m_bDefault(TRUE)
 {
 }
 
 CImageGrayer::CImageGrayer(double dRedFactor, double dGreenFactor, double dBlueFactor)
-	: m_dRedFactor(dRedFactor), m_dGreenFactor(dGreenFactor), m_dBlueFactor(dBlueFactor), m_bDefault(FALSE)
+: m_dRedFactor(dRedFactor), m_dGreenFactor(dGreenFactor), m_dBlueFactor(dBlueFactor), m_bDefault(FALSE)
 {
 }
 
@@ -229,11 +293,11 @@ CImageGrayer::~CImageGrayer()
 {
 }
 
-BOOL CImageGrayer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask)
+BOOL CImageGrayer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF crMask)
 {
 	UNREFERENCED_PARAMETER(sizeDest);
-	ASSERT (sizeSrc == sizeDest);
+	ASSERT(sizeSrc == sizeDest);
 
 	for (int nX = 0; nX < sizeSrc.cx; nX++)
 	{
@@ -245,12 +309,18 @@ BOOL CImageGrayer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPix
 			if (crMask == -1 || !(crMask == *pRGBSrc))
 			{
 				if (m_bDefault)
+				{
 					pRGBDest->MakeGray(*pRGBSrc);
+				}
 				else
+				{
 					pRGBDest->MakeGray(*pRGBSrc, m_dRedFactor, m_dGreenFactor, m_dBlueFactor);
+				}
 			}
 			else
+			{
 				*pRGBDest = *pRGBSrc;
+			}
 		}
 	}
 
@@ -267,14 +337,16 @@ CImageLightener::~CImageLightener()
 {
 }
 
-BOOL CImageLightener::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask)
+BOOL CImageLightener::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF crMask)
 {
-	ASSERT (sizeSrc == sizeDest);
+	ASSERT(sizeSrc == sizeDest);
 	BOOL bRes = TRUE;
 
 	if (m_dAmount == 0)
+	{
 		bRes = C32BitImageProcessor::ProcessPixels(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 	else
 	{
 		for (int nX = 0; nX < sizeSrc.cx; nX++)
@@ -295,7 +367,9 @@ BOOL CImageLightener::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDest
 					RGBX::HLS2RGB(hls, *pRGBDest);
 				}
 				else
+				{
 					*pRGBDest = *pRGBSrc;
+				}
 			}
 		}
 	}
@@ -314,21 +388,24 @@ CImageBlurrer::~CImageBlurrer()
 {
 }
 
-BOOL CImageBlurrer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF /*crMask*/)
+BOOL CImageBlurrer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF /*crMask*/)
 {
 	BOOL bRes = TRUE;
 
 	if (m_nAmount == 0)
+	{
 		bRes = C32BitImageProcessor::ProcessPixels(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 	else
 	{
-		ASSERT (sizeSrc == sizeDest);
+		ASSERT(sizeSrc == sizeDest);
 
 		char nPeak = (char)(0.5 * (110 - m_nAmount));
-		char cMask[9] = { 1, 1, 1, 
-						  1, nPeak, 1, 
-						  1, 1, 1 };
+		char cMask[9] = { 1, 1, 1,
+			1, nPeak, 1,
+			1, 1, 1
+		};
 
 		for (int nX = 0; nX < sizeSrc.cx; nX++)
 		{
@@ -380,25 +457,28 @@ CImageSharpener::~CImageSharpener()
 {
 }
 
-BOOL CImageSharpener::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF /*crMask*/)
+BOOL CImageSharpener::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF /*crMask*/)
 {
 	BOOL bRes = TRUE;
 
 	if (m_nAmount == 0)
+	{
 		bRes = C32BitImageProcessor::ProcessPixels(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 	else
 	{
-		ASSERT (sizeSrc == sizeDest);
+		ASSERT(sizeSrc == sizeDest);
 
 		double dMinMaxRatio = (double)1 / (1 + (100 - m_nAmount) * 0.5);
 
 		double dMaxFactor = 1 / (4 * (1 + dMinMaxRatio));
 		double dMinFactor = dMaxFactor * dMinMaxRatio;
 
-		double dMask[9] = { -dMinFactor, -dMaxFactor, -dMinFactor, 
-							-dMaxFactor, 2, -dMaxFactor, 
-							-dMinFactor, -dMaxFactor, -dMinFactor };
+		double dMask[9] = { -dMinFactor, -dMaxFactor, -dMinFactor,
+			-dMaxFactor, 2, -dMaxFactor,
+			-dMinFactor, -dMaxFactor, -dMinFactor
+		};
 
 		for (int nX = 0; nX < sizeSrc.cx; nX++)
 		{
@@ -412,7 +492,7 @@ BOOL CImageSharpener::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDest
 				{
 					double dRed = 0, dGreen = 0, dBlue = 0;
 					int nSubCount = 0;
-					
+
 					for (int nSubX = nX - 1; nSubX <= nX + 1; nSubX++)
 					{
 						for (int nSubY = nY - 1; nSubY <= nY + 1; nSubY++)
@@ -420,17 +500,17 @@ BOOL CImageSharpener::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDest
 							RGBX* pRGBSub = &pSrcPixels[nSubY * sizeSrc.cx + nSubX];
 
 							double dVMask = dMask[nSubCount];
-							
+
 							dRed += pRGBSub->btRed * dVMask;
 							dGreen += pRGBSub->btGreen * dVMask;
 							dBlue += pRGBSub->btBlue * dVMask;
-							
+
 							nSubCount++;
 						}
 					}
 
 					RGBX* pRGBDest = &pDestPixels[nY * sizeDest.cx + nX];
-					
+
 					dRed = min(255, dRed);
 					dGreen = min(255, dGreen);
 					dBlue = min(255, dBlue);
@@ -451,15 +531,16 @@ BOOL CImageSharpener::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDest
 
 ////////
 
-BOOL CImageEmbosser::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask)
+BOOL CImageEmbosser::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF crMask)
 {
-	ASSERT (sizeSrc == sizeDest);
-	
-	double dMask[9] = { -0.5, 0, 0, 
-						0, 1, 0, 
-						0, 0, 0 };
-	
+	ASSERT(sizeSrc == sizeDest);
+
+	double dMask[9] = { -0.5, 0, 0,
+		0, 1, 0,
+		0, 0, 0
+	};
+
 	for (int nX = 0; nX < sizeSrc.cx; nX++)
 	{
 		for (int nY = 0; nY < sizeSrc.cy; nY++)
@@ -477,13 +558,13 @@ BOOL CImageEmbosser::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestP
 				{
 					double dRed = 0, dGreen = 0, dBlue = 0;
 					int nSubCount = 0;
-					
+
 					for (int nSubX = nX - 1; nSubX <= nX + 1; nSubX++)
 					{
 						for (int nSubY = nY - 1; nSubY <= nY + 1; nSubY++)
 						{
 							RGBX* pRGBSub = &pSrcPixels[nSubY * sizeSrc.cx + nSubX];
-						
+
 							double dVMask = dMask[nSubCount];
 
 							if (dVMask != 0)
@@ -492,18 +573,18 @@ BOOL CImageEmbosser::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestP
 								dGreen += pRGBSub->btGreen * dVMask;
 								dBlue += pRGBSub->btBlue * dVMask;
 							}
-							
+
 							nSubCount++;
 						}
 					}
-				
+
 					dRed = min(255, dRed + 128);
 					dGreen = min(255, dGreen + 128);
 					dBlue = min(255, dBlue + 128);
 					dRed = max(0, dRed);
 					dGreen = max(0, dGreen);
 					dBlue = max(0, dBlue);
-					
+
 					pRGBDest->btRed = (BYTE)dRed;
 					pRGBDest->btGreen = (BYTE)dGreen;
 					pRGBDest->btBlue = (BYTE)dBlue;
@@ -523,10 +604,12 @@ BOOL CImageEmbosser::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestP
 
 CImageResizer::CImageResizer(double dFactor) : m_dFactor(dFactor)
 {
-	ASSERT (m_dFactor > 0);
+	ASSERT(m_dFactor > 0);
 
 	if (m_dFactor > 1)
+	{
 		m_bWeightingEnabled = TRUE;
+	}
 }
 
 CImageResizer::~CImageResizer()
@@ -538,32 +621,42 @@ CSize CImageResizer::CalcDestSize(CSize sizeSrc)
 	return CSize((int)(sizeSrc.cx * m_dFactor), (int)(sizeSrc.cy * m_dFactor));
 }
 
-BOOL CImageResizer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF /*crMask*/)
+BOOL CImageResizer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF /*crMask*/)
 {
 	BOOL bRes = TRUE;
 
 	if (m_dFactor <= 0)
+	{
 		return FALSE;
+	}
 
 	if (m_dFactor == 1)
+	{
 		bRes = C32BitImageProcessor::ProcessPixels(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 
 	else if (m_dFactor > 1)
+	{
 		bRes = Enlarge(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 
 	else
+	{
 		bRes = Shrink(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 
 	return TRUE;
 }
 
 BOOL CImageResizer::Enlarge(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest)
 {
-	ASSERT (m_dFactor > 1);
+	ASSERT(m_dFactor > 1);
 
 	if (m_dFactor <= 1)
+	{
 		return FALSE;
+	}
 
 	double dFactor = 1 / m_dFactor;
 	double dXSrc = 0;
@@ -587,10 +680,12 @@ BOOL CImageResizer::Enlarge(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, 
 
 BOOL CImageResizer::Shrink(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest)
 {
-	ASSERT (m_dFactor < 1 && m_dFactor > 0);
+	ASSERT(m_dFactor < 1 && m_dFactor > 0);
 
 	if (m_dFactor >= 1 || m_dFactor <= 0)
+	{
 		return FALSE;
+	}
 
 	double dFactor = 1 / m_dFactor;
 	double dXEnd = -dFactor / 2;
@@ -606,7 +701,9 @@ BOOL CImageResizer::Shrink(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, C
 		nXEnd = min(sizeSrc.cx - 1, (int)dXEnd + 1);
 
 		if (nXStart > nXEnd)
+		{
 			continue;
+		}
 
 		for (int nY = 0; nY < sizeDest.cy; nY++)
 		{
@@ -615,7 +712,9 @@ BOOL CImageResizer::Shrink(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, C
 			nYEnd = min(sizeSrc.cy - 1, (int)dYEnd + 1);
 
 			if (nYStart > nYEnd)
+			{
 				continue;
+			}
 
 			int nCount = 0, nRed = 0, nGreen = 0, nBlue = 0;
 
@@ -654,8 +753,8 @@ CImageNegator::~CImageNegator()
 {
 }
 
-BOOL CImageNegator::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize /*sizeDest*/, 
-								COLORREF /*crMask*/)
+BOOL CImageNegator::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize /*sizeDest*/,
+	COLORREF /*crMask*/)
 {
 	for (int nX = 0; nX < sizeSrc.cx; nX++)
 	{
@@ -683,8 +782,8 @@ CImageFlipper::~CImageFlipper()
 {
 }
 
-BOOL CImageFlipper::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF /*crMask*/)
+BOOL CImageFlipper::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF /*crMask*/)
 {
 	for (int nX = 0; nX < sizeSrc.cx; nX++)
 	{
@@ -714,13 +813,15 @@ CColorReplacer::~CColorReplacer()
 {
 }
 
-BOOL CColorReplacer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF /*crMask*/)
+BOOL CColorReplacer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF /*crMask*/)
 {
 	BOOL bRes = TRUE;
 
 	if (m_crFrom == m_crTo)
+	{
 		bRes = C32BitImageProcessor::ProcessPixels(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 	else
 	{
 		RGBX rgbFrom(m_crFrom), rgbTo(m_crTo);
@@ -733,9 +834,13 @@ BOOL CColorReplacer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestP
 				RGBX* pRGBDest = &pDestPixels[nY * sizeDest.cx + nX];
 
 				if (*pRGBSrc == rgbFrom)
+				{
 					*pRGBDest = rgbTo;
+				}
 				else
+				{
 					*pRGBDest = *pRGBSrc;
+				}
 			}
 		}
 	}
@@ -753,16 +858,20 @@ CImageColorizer::~CImageColorizer()
 {
 }
 
-BOOL CImageColorizer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF /*crMask*/)
+BOOL CImageColorizer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF /*crMask*/)
 {
 	BOOL bRes = TRUE;
 
 	if (m_color == 0)
+	{
 		FillMemory(pDestPixels, sizeDest.cx * sizeDest.cy * 4, 0);
+	}
 
 	else if (m_color == RGB(255, 255, 255))
+	{
 		return CImageGrayer::ProcessPixels(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 
 	else
 	{
@@ -770,7 +879,9 @@ BOOL CImageColorizer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDest
 		int nColorLum = rgb.Luminance();
 
 		if (!nColorLum)
+		{
 			FillMemory(pDestPixels, sizeDest.cx * sizeDest.cy * 4, 0);
+		}
 		else
 		{
 			for (int nX = 0; nX < sizeSrc.cx; nX++)
@@ -783,7 +894,7 @@ BOOL CImageColorizer::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDest
 					pRGBDest->MakeGray(*pRGBSrc);
 
 					int nPixelLum = pRGBDest->Luminance();
-					
+
 					pRGBDest->btRed = (BYTE)min(255, MulDiv((int)rgb.btRed, nPixelLum, nColorLum));
 					pRGBDest->btGreen = (BYTE)min(255, MulDiv((int)rgb.btGreen, nPixelLum, nColorLum));
 					pRGBDest->btBlue = (BYTE)min(255, MulDiv((int)rgb.btBlue, nPixelLum, nColorLum));
@@ -806,25 +917,27 @@ CImageTinter::~CImageTinter()
 {
 }
 
-BOOL CImageTinter::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask)
+BOOL CImageTinter::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF crMask)
 {
 	BOOL bRes = TRUE;
 
 	if (!m_nAmount)
+	{
 		bRes = C32BitImageProcessor::ProcessPixels(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 	else
 	{
 		RGBX rgb(m_color);
 		float fFactor = m_nAmount / 100.0f;
-		
+
 		for (int nX = 0; nX < sizeSrc.cx; nX++)
 		{
 			for (int nY = 0; nY < sizeSrc.cy; nY++)
 			{
 				RGBX* pRGBSrc = &pSrcPixels[nY * sizeSrc.cx + nX];
 				RGBX* pRGBDest = &pDestPixels[nY * sizeDest.cx + nX];
-				
+
 				if (crMask == -1 || !(crMask == *pRGBSrc))
 				{
 					pRGBDest->btRed = (BYTE)min(255, max(0, (int)(pRGBSrc->btRed + (int)(rgb.btRed * fFactor))));
@@ -832,7 +945,9 @@ BOOL CImageTinter::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPix
 					pRGBDest->btBlue = (BYTE)min(255, max(0, (int)(pRGBSrc->btBlue + (int)(rgb.btBlue * fFactor))));
 				}
 				else
+				{
 					*pRGBDest = *pRGBSrc;
+				}
 			}
 		}
 	}
@@ -851,13 +966,15 @@ CImageContraster::~CImageContraster()
 {
 }
 
-BOOL CImageContraster::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask)
+BOOL CImageContraster::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF crMask)
 {
 	BOOL bRes = TRUE;
 
 	if (!m_nAmount)
+	{
 		bRes = C32BitImageProcessor::ProcessPixels(pSrcPixels, sizeSrc, pDestPixels, sizeDest);
+	}
 	else
 	{
 		float fFactor = 1.0f + m_nAmount / 100.0f;
@@ -876,7 +993,9 @@ BOOL CImageContraster::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDes
 					pRGBDest->btBlue = (BYTE)max(0, min(255, (int)((pRGBSrc->btBlue - 128) * fFactor) + 128));
 				}
 				else
+				{
 					*pRGBDest = *pRGBSrc;
+				}
 			}
 		}
 	}
@@ -893,7 +1012,7 @@ struct COLORMAPPING
 	UINT nSysColor;
 };
 
-static COLORMAPPING COLORMAPPINGS[] = 
+static COLORMAPPING COLORMAPPINGS[] =
 {
 	{ 0x000000, COLOR_BTNTEXT },       // black
 	{ 0x808080, COLOR_BTNSHADOW },     // dark gray
@@ -901,7 +1020,7 @@ static COLORMAPPING COLORMAPPINGS[] =
 	{ 0xFFFFFF, COLOR_BTNHIGHLIGHT }   // white
 };
 
-BOOL CImageSysColorMapper::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
+BOOL CImageSysColorMapper::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
 	COLORREF /*crMask*/)
 {
 	static int NUMCOLORMAPS = sizeof(COLORMAPPINGS) / sizeof(COLORMAPPING);
@@ -920,7 +1039,7 @@ BOOL CImageSysColorMapper::ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* 
 			pDestPixels = pTemp;
 		}
 	}
-	
+
 	return TRUE;
 }
 
