@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -27,6 +27,19 @@
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
 // - merged with ToDoList version 6.1 sources
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // CheckComboBox.cpp : implementation file
@@ -74,7 +87,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CCheckComboBox message handlers
 
-void CCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) 
+void CCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
 	HDC hdc = lpDrawItemStruct->hDC;
 
@@ -88,7 +101,7 @@ void CCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	int nCheck = 0;
 
 	// Check if we are drawing the static portion of the combobox
-	if (nItem < 0) 
+	if (nItem < 0)
 	{
 		// Get the text
 		sText = m_sText;
@@ -112,7 +125,7 @@ void CCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		rcText.left = rcBitmap.right;
 	}
 
-	if (nCheck > 0) 
+	if (nCheck > 0)
 	{
 		SetBkColor(hdc, GetSysColor(COLOR_WINDOW));
 		SetTextColor(hdc, GetSysColor(COLOR_WINDOWTEXT));
@@ -120,14 +133,18 @@ void CCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		UINT nState = DFCS_BUTTONCHECK;
 
 		if (nCheck > 1)
+		{
 			nState |= DFCS_CHECKED;
+		}
 
 		// Draw the checkmark using DrawFrameControl
 		CThemed::DrawFrameControl(ScGetCWnd(), CDC::FromHandle(hdc), rcBitmap, DFC_BUTTON, nState);
 	}
 
 	if (nCheck > 0 || IsType(CBS_DROPDOWNLIST))
+	{
 		DrawItemText(hdc, nItem, rcText, sText, lpDrawItemStruct->itemState);
+	}
 }
 
 void CCheckComboBox::RefreshMaxDropWidth()
@@ -138,17 +155,17 @@ void CCheckComboBox::RefreshMaxDropWidth()
 
 void CCheckComboBox::DrawItemText(HDC hdc, int nItem, CRect rText, const CString& sText, UINT nState)
 {
-	if (nState & (ODS_GRAYED | ODS_DISABLED)) 
+	if (nState & (ODS_GRAYED | ODS_DISABLED))
 	{
 		SetBkColor(hdc, GetSysColor(COLOR_3DFACE));
 		SetTextColor(hdc, GetSysColor(COLOR_3DSHADOW));
 	}
-	else if (nState & ODS_SELECTED) 
+	else if (nState & ODS_SELECTED)
 	{
 		SetBkColor(hdc, GetSysColor(COLOR_HIGHLIGHT));
 		SetTextColor(hdc, GetSysColor(COLOR_HIGHLIGHTTEXT));
 	}
-	else 
+	else
 	{
 		SetBkColor(hdc, GetSysColor(COLOR_WINDOW));
 		SetTextColor(hdc, GetSysColor(COLOR_WINDOWTEXT));
@@ -159,7 +176,7 @@ void CCheckComboBox::DrawItemText(HDC hdc, int nItem, CRect rText, const CString
 
 	rText.DeflateRect(2, 0);
 
-	// update 'text fits' flag 
+	// update 'text fits' flag
 	if (nItem < 0)
 	{
 		CSize sizeText;
@@ -170,8 +187,10 @@ void CCheckComboBox::DrawItemText(HDC hdc, int nItem, CRect rText, const CString
 	DrawText(hdc, sText, sText.GetLength(), &rText, DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS | DT_NOPREFIX);
 	rText.InflateRect(2, 0);
 
-	if ((nState & (ODS_FOCUS|ODS_SELECTED)) == (ODS_FOCUS|ODS_SELECTED))
+	if ((nState & (ODS_FOCUS | ODS_SELECTED)) == (ODS_FOCUS | ODS_SELECTED))
+	{
 		DrawFocusRect(hdc, &rText);
+	}
 }
 
 void CCheckComboBox::CheckAll(BOOL bCheck)
@@ -179,7 +198,9 @@ void CCheckComboBox::CheckAll(BOOL bCheck)
 	int nCount = GetCount();
 
 	for (int i = 0; i < nCount; i++)
+	{
 		SetCheck(i, bCheck);
+	}
 }
 
 void CCheckComboBox::RecalcText(BOOL bUpdate, BOOL bNotify)
@@ -198,10 +219,14 @@ void CCheckComboBox::RecalcText(BOOL bUpdate, BOOL bNotify)
 
 			// notify parent
 			if (bNotify && m_sText != sText)
+			{
 				NotifyParent(CBN_EDITCHANGE);
+			}
 		}
 		else
+		{
 			SetWindowText(sText);
+		}
 	}
 
 	m_sText = sText;
@@ -226,7 +251,9 @@ int CCheckComboBox::SetCheck(int nIndex, BOOL bFlag)
 	int nResult = SetItemData(nIndex, bFlag);
 
 	if (nResult < 0)
+	{
 		return nResult;
+	}
 
 	// derived classes
 	OnCheckChange(nIndex);
@@ -248,7 +275,9 @@ BOOL CCheckComboBox::GetCheck(int nIndex) const
 void CCheckComboBox::ParseText()
 {
 	if (IsType(CBS_DROPDOWNLIST))
+	{
 		return;
+	}
 
 	CString sEditText;
 	GetDlgItem(1001)->GetWindowText(sEditText);
@@ -257,7 +286,9 @@ void CCheckComboBox::ParseText()
 	int nCount = GetCount();
 
 	for (int i = 0; i < nCount; i++)
+	{
 		SetItemData(i, 0);
+	}
 
 	// now parse the text and set the check states
 	CStringArray aText;
@@ -271,12 +302,16 @@ void CCheckComboBox::ParseText()
 			int nIndex = FindStringExact(-1, aText[nText]);
 
 			if (nIndex != CB_ERR)
+			{
 				SetItemData(nIndex, 1);
+			}
 		}
 	}
 
 	if (GetDroppedState())
+	{
 		ScGetCWnd()->Invalidate();
+	}
 
 	// Redraw the window
 	CComboBox::Invalidate(FALSE);
@@ -285,25 +320,27 @@ void CCheckComboBox::ParseText()
 // this handles messages destined for the dropped listbox
 LRESULT CCheckComboBox::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 {
-	switch (msg) 
+	switch (msg)
 	{
 		// Make the combobox always return -1 as the current selection for
 		// combos without an edit potion when drawing. This
 		// causes the lpDrawItemStruct->itemID in DrawItem() to be -1
 		// when the always-visible-portion of the combo is drawn
-	case LB_GETCURSEL: 
+	case LB_GETCURSEL:
 		if (IsType(CBS_DROPDOWNLIST) && m_bDrawing)
+		{
 			return -1;
+		}
 		break;
 
 	case WM_CHAR: // sent by the edit control
-		if (wp == VK_SPACE && GetDroppedState()) 
+		if (wp == VK_SPACE && GetDroppedState())
 		{
 			// Get the current selection
 			INT nIndex = GetCurSel();
 
 			CRect rcItem;
-			::SendMessage(hRealWnd, LB_GETITEMRECT, nIndex, (LONG)(VOID *)&rcItem);
+			::SendMessage(hRealWnd, LB_GETITEMRECT, nIndex, (LONG)(VOID*)&rcItem);
 			::InvalidateRect(hRealWnd, rcItem, FALSE);
 
 			// Invert the check mark
@@ -312,13 +349,15 @@ LRESULT CCheckComboBox::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM 
 
 			// Notify that selection has changed
 			if (IsType(CBS_DROPDOWNLIST))
+			{
 				NotifyParent(CBN_SELCHANGE);
+			}
 
 			return 0;
 		}
 		break;
 
-	case WM_LBUTTONDOWN: 
+	case WM_LBUTTONDOWN:
 		{
 			CPoint pt(lp);
 			int nItem = GetCount();
@@ -337,7 +376,9 @@ LRESULT CCheckComboBox::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM 
 
 					// Notify that selection has changed
 					if (IsType(CBS_DROPDOWNLIST))
+					{
 						NotifyParent(CBN_SELCHANGE);
+					}
 
 					return 0;
 				}
@@ -347,12 +388,14 @@ LRESULT CCheckComboBox::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM 
 		// window when clicked outside)
 		break;
 
-	case WM_LBUTTONUP: 
+	case WM_LBUTTONUP:
 		{
 			// Don't do anything here. This causes the combobox popup
 			// windows to remain open after a selection has been made
 			if (IsType(CBS_SIMPLE))
+			{
 				return 0;
+			}
 			else
 			{
 				LRESULT lr = CSubclasser::ScWindowProc(hRealWnd, msg, wp, lp);
@@ -392,63 +435,71 @@ int CCheckComboBox::AddUniqueItem(const CString& sItem)
 	int nIndex = CAutoComboBox::AddUniqueItem(sItem);
 
 	if (nIndex != CB_ERR)
+	{
 		SetItemData(nIndex, 1);
+	}
 
 	return nIndex;
 }
 
-HBRUSH CCheckComboBox::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
+HBRUSH CCheckComboBox::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CAutoComboBox::OnCtlColor(pDC, pWnd, nCtlColor);
 
 	// hook list box
 	if (nCtlColor == CTLCOLOR_LISTBOX && !ScIsHooked())
+	{
 		ScHookWindow(pWnd->GetSafeHwnd());
+	}
 
 	return hbr;
 }
 
-void CCheckComboBox::PreSubclassWindow() 
+void CCheckComboBox::PreSubclassWindow()
 {
-	if (!m_bItemHeightSet) 
+	if (!m_bItemHeightSet)
 	{
 		m_bItemHeightSet = TRUE;
 
 		CDlgUnits dlu(CComboBox::GetParent());
-		SetItemHeight(-1, dlu.ToPixelsY(9)); 
+		SetItemHeight(-1, dlu.ToPixelsY(9));
 	}
 
 	CAutoComboBox::PreSubclassWindow();
 }
 
-int CCheckComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CCheckComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CAutoComboBox::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 
-	if (!m_bItemHeightSet) 
+	if (!m_bItemHeightSet)
 	{
 		m_bItemHeightSet = TRUE;
 
 		CDlgUnits dlu(CComboBox::GetParent());
-		SetItemHeight(-1, dlu.ToPixelsY(9)); 
+		SetItemHeight(-1, dlu.ToPixelsY(9));
 	}
 
 	return 0;
 }
 
-BOOL CCheckComboBox::OnEditchange() 
+BOOL CCheckComboBox::OnEditchange()
 {
 	// update check states
 	if (GetDroppedState())
+	{
 		ParseText();
+	}
 
 	m_bEditChange = TRUE;
 
 	return FALSE; // pass to parent
 }
 
-BOOL CCheckComboBox::OnDropdown() 
+BOOL CCheckComboBox::OnDropdown()
 {
 	ParseText();
 	RecalcText(FALSE); // updates m_sText
@@ -470,7 +521,9 @@ LRESULT CCheckComboBox::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp
 		else if (wp == VK_RETURN)
 		{
 			if (GetDroppedState())
+			{
 				ShowDropDown(FALSE);
+			}
 
 			HandleReturnKey();
 			return 0L; // eat
@@ -536,7 +589,7 @@ BOOL CCheckComboBox::DeleteSelectedLBItem()
 		return TRUE;
 	}
 
-	// else 
+	// else
 	return FALSE;
 }
 
@@ -555,7 +608,7 @@ int CCheckComboBox::GetChecked(CStringArray& aItems) const
 
 			aItems.Add(sItem);
 		}
-	}	
+	}
 
 	return aItems.GetSize();
 }
@@ -574,7 +627,9 @@ void CCheckComboBox::SetChecked(const CStringArray& aItems)
 	int nCount = GetCount();
 
 	for (int i = 0; i < nCount; i++)
+	{
 		SetItemData(i, 0);
+	}
 
 	// now set the check states
 	int nItem = aItems.GetSize(), nChecked = 0;
@@ -592,13 +647,15 @@ void CCheckComboBox::SetChecked(const CStringArray& aItems)
 	RecalcText(TRUE, FALSE);
 
 	if (GetDroppedState())
+	{
 		ScGetCWnd()->Invalidate();
+	}
 
 	// Redraw the window
 	CComboBox::Invalidate(FALSE);
 }
 
-void CCheckComboBox::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) 
+void CCheckComboBox::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_DOWN && !GetDroppedState())
 	{
@@ -616,7 +673,9 @@ int CCheckComboBox::GetCheckedCount() const
 	for (int nItem = 0; nItem < GetCount(); nItem++)
 	{
 		if (GetCheck(nItem))
+		{
 			nCount++;
+		}
 	}
 
 	return nCount;
@@ -625,7 +684,9 @@ int CCheckComboBox::GetCheckedCount() const
 CString CCheckComboBox::GetTooltip() const
 {
 	if (!m_bTextFits)
+	{
 		return FormatCheckedItems(_T("\n"));
+	}
 
 	// else
 	return _T("");
