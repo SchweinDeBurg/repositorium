@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -27,6 +27,19 @@
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
 // - merged with ToDoList version 6.1 sources
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // CDriveInfo.cpp
@@ -41,14 +54,14 @@ float CDriveInfo::GetFreeBytes(int nDrive)
 	CString sRoot;
 	unsigned long totalClusters, freeClusters, sectors, bytes;
 
-	ASSERT (nDrive > 0 && nDrive <= 26);
+	ASSERT(nDrive > 0 && nDrive <= 26);
 
 	if (IsDriveAvailable(nDrive))
 	{
 		sRoot = GetRoot(nDrive);
-	
+
 		::GetDiskFreeSpace(sRoot, &sectors, &bytes, &freeClusters, &totalClusters);
-	
+
 		// do maths like this to avoid truncation
 		// errors
 		float fSpace = (float)sectors;
@@ -58,7 +71,7 @@ float CDriveInfo::GetFreeBytes(int nDrive)
 
 		return fSpace;
 	}
-	
+
 	return 0.0f;
 }
 
@@ -66,7 +79,7 @@ CString CDriveInfo::GetVolume(int nDrive)
 {
 	CString sVolume, sRoot;
 
-	ASSERT (nDrive > 0 && nDrive <= 26);
+	ASSERT(nDrive > 0 && nDrive <= 26);
 
 	if (IsDriveAvailable(nDrive))
 	{
@@ -96,7 +109,7 @@ CString CDriveInfo::GetFullName(int nDrive)
 {
 	CString sFullName, sLetter, sVolume;
 
-	ASSERT (nDrive > 0 && nDrive <= 26);
+	ASSERT(nDrive > 0 && nDrive <= 26);
 
 	if (IsDriveAvailable(nDrive))
 	{
@@ -116,14 +129,14 @@ float CDriveInfo::GetTotalBytes(int nDrive)
 	CString sRoot;
 	unsigned long totalClusters, freeClusters, sectors, bytes;
 
-	ASSERT (nDrive > 0 && nDrive <= 26);
+	ASSERT(nDrive > 0 && nDrive <= 26);
 
 	if (IsDriveAvailable(nDrive))
 	{
 		sRoot = GetRoot(nDrive);
-	
+
 		::GetDiskFreeSpace(sRoot, &sectors, &bytes, &freeClusters, &totalClusters);
-	
+
 		// do maths like this to avoid truncation
 		// errors
 		float fSpace = (float)sectors;
@@ -133,13 +146,13 @@ float CDriveInfo::GetTotalBytes(int nDrive)
 
 		return fSpace;
 	}
-	
+
 	return 0.0f;
 }
 
 char CDriveInfo::GetLetter(int nDrive)
 {
-	ASSERT (nDrive > 0 && nDrive <= 26);
+	ASSERT(nDrive > 0 && nDrive <= 26);
 
 	return (char)(nDrive + 'A' - 1);
 }
@@ -148,11 +161,13 @@ int CDriveInfo::GetType(int nDrive)
 {
 	CString sVolume;
 
-	ASSERT (nDrive > 0 && nDrive <= 26);
+	ASSERT(nDrive > 0 && nDrive <= 26);
 
 	// shortcut to avoid floppy access
-	if (nDrive ==1 || nDrive == 2)
+	if (nDrive == 1 || nDrive == 2)
+	{
 		return DRIVE_REMOVABLE;
+	}
 
 	if (IsDriveAvailable(nDrive))
 	{
@@ -160,33 +175,43 @@ int CDriveInfo::GetType(int nDrive)
 		FormatName(sVolume);
 
 		if (sVolume.Find(_T("Host")) >= 0)
+		{
 			return DRIVE_HOST;
+		}
 		else
+		{
 			return ::GetDriveType(GetRoot(nDrive));
+		}
 	}
 
 	return DRIVE_UNKNOWN;
 }
 
-int CDriveInfo::GetPathType(LPCTSTR szPathName) 
-{ 
+int CDriveInfo::GetPathType(LPCTSTR szPathName)
+{
 	int nDrive = GetDrive(szPathName);
 
 	if (nDrive >= 0)
+	{
 		return GetType(nDrive);
+	}
 
 	else if (IsRemotePath(szPathName) > 0)
+	{
 		return DRIVE_REMOTE;
+	}
 
 	else
-		return DRIVE_UNKNOWN; 
+	{
+		return DRIVE_UNKNOWN;
+	}
 }
 
-void CDriveInfo::FormatName(CString& sFilename) 
+void CDriveInfo::FormatName(CString& sFilename)
 {
 	CString sTemp, sChar;
 	int nLen, nChar;
-	TCHAR cChar, cLastChar = _T(' '); // space 
+	TCHAR cChar, cLastChar = _T(' '); // space
 
 	// this function accepts pathnames and names with spaces
 	sFilename.MakeLower();
@@ -222,7 +247,9 @@ BOOL CDriveInfo::IsDriveAvailable(int nDrive)
 
 	// if change successful change back before return
 	if (nRes == 0)
+	{
 		_chdrive(nCurDrive);
+	}
 
 	return (nRes == 0) ? TRUE : FALSE;
 }
@@ -236,15 +263,15 @@ int CDriveInfo::GetDrive(LPCTSTR szPathName)
 {
 	TCHAR cDrive;
 	int nDrive = 0;
-	
+
 	if (_tcsstr(szPathName, _T(":")) == szPathName + 1)
 	{
 		cDrive = szPathName[0];
 		cDrive = (TCHAR)toupper(cDrive);
 		nDrive = cDrive - 64;
-		
+
 	}
-	
+
 	return nDrive ? nDrive : -1;
 }
 
@@ -255,7 +282,9 @@ BOOL CDriveInfo::IsMappedPath(LPCTSTR szPathName)
 	nDrive = GetDrive(szPathName);
 
 	if (nDrive <= 0)
+	{
 		return FALSE;
+	}
 
 	return (GetType(nDrive) == DRIVE_REMOTE);
 }
@@ -265,11 +294,13 @@ BOOL CDriveInfo::IsRemotePath(LPCTSTR szPathName, BOOL bAllowFileCheck)
 	if (bAllowFileCheck)
 	{
 		DWORD dwAttr = ::GetFileAttributes(szPathName);
-		
+
 		if (dwAttr == 0xffffffff)
+		{
 			return -1;
+		}
 	}
-	
+
 	return (IsUNCPath(szPathName) || IsMappedPath(szPathName));
 }
 
@@ -278,7 +309,9 @@ BOOL CDriveInfo::IsFixedPath(LPCTSTR szPathName)
 	int nDrive = GetDrive(szPathName);
 
 	if (nDrive == -1) // unknown
+	{
 		return FALSE;
+	}
 
 	return (GetType(nDrive) == DRIVE_FIXED);
 }
@@ -288,7 +321,9 @@ BOOL CDriveInfo::IsRemovablePath(LPCTSTR szPathName)
 	int nDrive = GetDrive(szPathName);
 
 	if (nDrive == -1) // unknown
+	{
 		return FALSE;
+	}
 
 	return (GetType(nDrive) == DRIVE_REMOVABLE);
 }
@@ -298,7 +333,9 @@ BOOL CDriveInfo::IsReadonlyPath(LPCTSTR szPathName)
 	DWORD dwAttr = ::GetFileAttributes(szPathName);
 
 	if (dwAttr == 0xffffffff)
+	{
 		return -1;
+	}
 
 	// else
 	return (dwAttr & FILE_ATTRIBUTE_READONLY);
@@ -307,12 +344,16 @@ BOOL CDriveInfo::IsReadonlyPath(LPCTSTR szPathName)
 DWORD CDriveInfo::GetSerialNumber(int nDrive)
 {
 	if (GetType(nDrive) != DRIVE_FIXED)
+	{
 		return 0;
+	}
 
 	DWORD dwHDSerialNum = 0;
 
 	if (!GetVolumeInformation(GetRoot(nDrive), NULL, 0, &dwHDSerialNum, NULL, NULL, NULL, 0))
-		return (DWORD)-1;
+	{
+		return (DWORD) - 1;
+	}
 
 	return dwHDSerialNum;
 }
