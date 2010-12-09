@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_COLORCOMBOBOX_H__47DE226A_7C73_48BA_AE5B_E43B90D752A9__INCLUDED_)
@@ -42,29 +55,29 @@
 
 class CColorComboBox : public CComboBox
 {
-// Construction
+	// Construction
 public:
 	CColorComboBox();
 
-// Operations
+	// Operations
 public:
 	int AddColor(COLORREF color, LPCTSTR szDescription = NULL);
 	int InsertColor(int nIndex, COLORREF color, LPCTSTR szDescription = NULL);
 
-// Attributes
+	// Attributes
 protected:
 	BOOL m_bResized;
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CColorComboBox)
-	public:
-	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct); 
-	protected:
+public:
+	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
+protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CColorComboBox();
 
