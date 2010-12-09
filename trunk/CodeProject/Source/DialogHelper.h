@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // DialogHelper.h: interface for the CDialogHelper class.
@@ -70,14 +83,14 @@ public:
 	static void SetFont(CWnd* pWnd, HFONT hFont, BOOL bRedraw = TRUE);
 	static HFONT GetFont(CWnd* pWnd);
 	static HFONT GetFont(HWND hWnd);
-	
+
 	// comboboxes
 	static int SetComboBoxItems(CComboBox& combo, const CStringArray& aItems);
 	static int RefreshMaxDropWidth(CComboBox& combo, CDC* pDCRef = NULL);
 	static int CalcMaxTextWidth(CComboBox& combo, int nMinWidth = 0, BOOL bDropped = FALSE, CDC* pDCRef = NULL);
 	static BOOL SelectItemByValue(CComboBox& combo, int nValue);
 	static int GetSelectedItemAsValue(const CComboBox& combo);
-	
+
 	// better dialog control shortcut handling
 	static BOOL ProcessDialogControlShortcut(const MSG* pMsg);
 	static UINT GetShortcut(const CString& sText);
@@ -123,7 +136,10 @@ protected:
 	BOOL UpdateDataEx(CWnd* pWnd, int nIDC, float& value, BOOL bSaveAndValidate = TRUE);
 	BOOL UpdateDataEx(CWnd* pWnd, int nIDC, double& value, BOOL bSaveAndValidate = TRUE);
 	BOOL UpdateDataEx(CWnd* pWnd, int nIDC, CWnd& ctrl, BOOL bSaveAndValidate = TRUE);
-	BOOL InUpdateEx() { return m_bInUpdateEx; }
+	BOOL InUpdateEx()
+	{
+		return m_bInUpdateEx;
+	}
 
 	// for combo and listboxes only
 	BOOL UpdateDataExact(CWnd* pWnd, int nIDC, CString& value, BOOL bSaveAndValidate = TRUE);
