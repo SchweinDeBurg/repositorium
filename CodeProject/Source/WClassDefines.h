@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_WCDEFINES_H__E2EFA8F0_B9CD_41AB_98FD_812C963B7ACC__INCLUDED_)
@@ -37,8 +50,8 @@
 
 //////////////////////////
 
-#define WC_BUTTONA              "Button"	// ansi
-#define WC_BUTTONW              L"Button"	// wide
+#define WC_BUTTONA              "Button"    // ansi
+#define WC_BUTTONW              L"Button"   // wide
 
 #ifdef UNICODE
 #define WC_BUTTON               WC_BUTTONW
@@ -48,8 +61,8 @@
 
 //////////////////////////
 
-#define WC_STATICA              "Static"	// ansi
-#define WC_STATICW              L"Static"	// wide
+#define WC_STATICA              "Static"    // ansi
+#define WC_STATICW              L"Static"   // wide
 
 #ifdef UNICODE
 #define WC_STATIC               WC_STATICW
@@ -59,8 +72,8 @@
 
 //////////////////////////
 
-#define WC_EDITA              "Edit"	// ansi
-#define WC_EDITW              L"Edit"	// wide
+#define WC_EDITA              "Edit"    // ansi
+#define WC_EDITW              L"Edit"   // wide
 
 #ifdef UNICODE
 #define WC_EDIT               WC_EDITW
@@ -70,8 +83,8 @@
 
 //////////////////////////
 
-#define WC_COMBOBOXA              "ComboBox"	// ansi
-#define WC_COMBOBOXW              L"ComboBox"	// wide
+#define WC_COMBOBOXA              "ComboBox"    // ansi
+#define WC_COMBOBOXW              L"ComboBox"   // wide
 
 #ifdef UNICODE
 #define WC_COMBOBOX               WC_COMBOBOXW
@@ -81,8 +94,8 @@
 
 //////////////////////////
 
-#define WC_COMBOLBOXA              "ComboLBox"	// ansi
-#define WC_COMBOLBOXW              L"ComboLBox"	// wide
+#define WC_COMBOLBOXA              "ComboLBox"  // ansi
+#define WC_COMBOLBOXW              L"ComboLBox" // wide
 
 #ifdef UNICODE
 #define WC_COMBOLBOX               WC_COMBOLBOXW
@@ -92,8 +105,8 @@
 
 //////////////////////////
 
-#define WC_LISTBOXA              "ListBox"	// ansi
-#define WC_LISTBOXW              L"ListBox"	// wide
+#define WC_LISTBOXA              "ListBox"  // ansi
+#define WC_LISTBOXW              L"ListBox" // wide
 
 #ifdef UNICODE
 #define WC_LISTBOX               WC_LISTBOXW
@@ -103,8 +116,8 @@
 
 //////////////////////////
 
-#define WC_CHECKLISTBOXA         "CheckListBox"	// ansi
-#define WC_CHECKLISTBOXW         L"CheckListBox"	// wide
+#define WC_CHECKLISTBOXA         "CheckListBox"     // ansi
+#define WC_CHECKLISTBOXW         L"CheckListBox"    // wide
 
 #ifdef UNICODE
 #define WC_CHECKLISTBOX          WC_CHECKLISTBOXW
@@ -116,8 +129,8 @@
 
 #ifndef WC_SCROLLBARA
 
-#define WC_SCROLLBARA              "Scrollbar"	// ansi
-#define WC_SCROLLBARW              L"Scrollbar"	// wide
+#define WC_SCROLLBARA              "Scrollbar"  // ansi
+#define WC_SCROLLBARW              L"Scrollbar" // wide
 
 #ifdef UNICODE
 #define WC_SCROLLBAR               WC_SCROLLBARW
@@ -129,8 +142,8 @@
 
 //////////////////////////
 
-#define WC_TOOLBARA              "toolbarwindow32"	// ansi
-#define WC_TOOLBARW              L"toolbarwindow32"	// wide
+#define WC_TOOLBARA              "toolbarwindow32"  // ansi
+#define WC_TOOLBARW              L"toolbarwindow32" // wide
 
 #ifdef UNICODE
 #define WC_TOOLBAR               WC_TOOLBARW
@@ -140,8 +153,8 @@
 
 //////////////////////////
 
-#define WC_SPINA              "msctls_updown32"	// ansi
-#define WC_SPINW              L"msctls_updown32"	// wide
+#define WC_SPINA              "msctls_updown32"     // ansi
+#define WC_SPINW              L"msctls_updown32"    // wide
 
 #ifdef UNICODE
 #define WC_SPIN               WC_SPINW
@@ -151,8 +164,8 @@
 
 //////////////////////////
 
-#define WC_PROGRESSA              "msctls_progress32"	// ansi
-#define WC_PROGRESSW              L"msctls_progress32"	// wide
+#define WC_PROGRESSA              "msctls_progress32"   // ansi
+#define WC_PROGRESSW              L"msctls_progress32"  // wide
 
 #ifdef UNICODE
 #define WC_PROGRESS               WC_PROGRESSW
@@ -162,8 +175,8 @@
 
 //////////////////////////
 
-#define WC_SLIDERA              "msctls_trackbar32"	// ansi
-#define WC_SLIDERW              L"msctls_trackbar32"	// wide
+#define WC_SLIDERA              "msctls_trackbar32"     // ansi
+#define WC_SLIDERW              L"msctls_trackbar32"    // wide
 
 #ifdef UNICODE
 #define WC_SLIDER               WC_SLIDERW
@@ -173,8 +186,8 @@
 
 //////////////////////////
 
-#define WC_HOTKEYA              "msctls_hotkey32"	// ansi
-#define WC_HOTKEYW              L"msctls_hotkey32"	// wide
+#define WC_HOTKEYA              "msctls_hotkey32"   // ansi
+#define WC_HOTKEYW              L"msctls_hotkey32"  // wide
 
 #ifdef UNICODE
 #define WC_HOTKEY               WC_HOTKEYW
@@ -184,8 +197,8 @@
 
 //////////////////////////
 
-#define WC_SHELLDLLDEFVIEWA              "SHELLDLL_DefView"	// ansi
-#define WC_SHELLDLLDEFVIEWW              L"SHELLDLL_DefView"	// wide
+#define WC_SHELLDLLDEFVIEWA              "SHELLDLL_DefView"     // ansi
+#define WC_SHELLDLLDEFVIEWW              L"SHELLDLL_DefView"    // wide
 
 #ifdef UNICODE
 #define WC_SHELLDLLDEFVIEW               WC_SHELLDLLDEFVIEWW
@@ -195,8 +208,8 @@
 
 //////////////////////////
 
-#define WC_STATUSBARA              "msctls_statusbar32"	// ansi
-#define WC_STATUSBARW              L"msctls_statusbar32"	// wide
+#define WC_STATUSBARA              "msctls_statusbar32"     // ansi
+#define WC_STATUSBARW              L"msctls_statusbar32"    // wide
 
 #ifdef UNICODE
 #define WC_STATUSBAR               WC_STATUSBARW
@@ -206,8 +219,8 @@
 
 //////////////////////////
 
-#define WC_ANIMATEA              "SysAnimate32"	// ansi
-#define WC_ANIMATEW              L"SysAnimate32"	// wide
+#define WC_ANIMATEA              "SysAnimate32"     // ansi
+#define WC_ANIMATEW              L"SysAnimate32"    // wide
 
 #ifdef UNICODE
 #define WC_ANIMATE               WC_ANIMATEW
@@ -217,8 +230,8 @@
 
 //////////////////////////
 
-#define WC_RICHEDITA              "Richedit"	// ansi
-#define WC_RICHEDITW              L"Richedit"	// wide
+#define WC_RICHEDITA              "Richedit"    // ansi
+#define WC_RICHEDITW              L"Richedit"   // wide
 
 #ifdef UNICODE
 #define WC_RICHEDIT               WC_RICHEDITW
@@ -228,8 +241,8 @@
 
 //////////////////////////
 
-#define WC_RICHEDIT20A              "RichEdit20A"	// ansi
-#define WC_RICHEDIT20W              L"RichEdit20W"	// wide
+#define WC_RICHEDIT20A              "RichEdit20A"   // ansi
+#define WC_RICHEDIT20W              L"RichEdit20W"  // wide
 
 #ifdef UNICODE
 #define WC_RICHEDIT20               WC_RICHEDIT20W
@@ -239,8 +252,8 @@
 
 //////////////////////////
 
-#define WC_RICHEDIT50A              "RichEdit50W"	// ansi
-#define WC_RICHEDIT50W              L"RichEdit50W"	// wide
+#define WC_RICHEDIT50A              "RichEdit50W"   // ansi
+#define WC_RICHEDIT50W              L"RichEdit50W"  // wide
 
 #ifdef UNICODE
 #define WC_RICHEDIT50               WC_RICHEDIT50W
@@ -250,8 +263,8 @@
 
 //////////////////////////
 
-#define WC_DATETIMEPICKA              "SysDateTimePick32"	// ansi
-#define WC_DATETIMEPICKW              L"SysDateTimePick32"	// wide
+#define WC_DATETIMEPICKA              "SysDateTimePick32"   // ansi
+#define WC_DATETIMEPICKW              L"SysDateTimePick32"  // wide
 
 #ifdef UNICODE
 #define WC_DATETIMEPICK               WC_DATETIMEPICKW
@@ -261,8 +274,8 @@
 
 //////////////////////////
 
-#define WC_MONTHCALA              "SysMonthCal32"	// ansi
-#define WC_MONTHCALW              L"SysMonthCal32"	// wide
+#define WC_MONTHCALA              "SysMonthCal32"   // ansi
+#define WC_MONTHCALW              L"SysMonthCal32"  // wide
 
 #ifdef UNICODE
 #define WC_MONTHCAL               WC_MONTHCALW
@@ -272,8 +285,8 @@
 
 //////////////////////////
 
-#define WC_REBARA              "ReBarWindow32"	// ansi
-#define WC_REBARW              L"ReBarWindow32"	// wide
+#define WC_REBARA              "ReBarWindow32"  // ansi
+#define WC_REBARW              L"ReBarWindow32" // wide
 
 #ifdef UNICODE
 #define WC_REBAR               WC_REBARW
@@ -283,8 +296,8 @@
 
 //////////////////////////
 
-#define WC_DIALOGBOXA              "#32770"	// ansi
-#define WC_DIALOGBOXW              L"#32770"	// wide
+#define WC_DIALOGBOXA              "#32770"     // ansi
+#define WC_DIALOGBOXW              L"#32770"    // wide
 
 #ifdef UNICODE
 #define WC_DIALOGBOX               WC_DIALOGBOXW
@@ -294,8 +307,8 @@
 
 //////////////////////////
 
-#define WC_MDICLIENTA              "MDIClient"	// ansi
-#define WC_MDICLIENTW              L"MDIClient"	// wide
+#define WC_MDICLIENTA              "MDIClient"  // ansi
+#define WC_MDICLIENTW              L"MDIClient" // wide
 
 #ifdef UNICODE
 #define WC_MDICLIENT               WC_MDICLIENTW
@@ -305,8 +318,8 @@
 
 //////////////////////////
 
-#define WC_TOOLTIPSA              "tooltips_class32"	// ansi
-#define WC_TOOLTIPSW              L"tooltips_class32"	// wide
+#define WC_TOOLTIPSA              "tooltips_class32"    // ansi
+#define WC_TOOLTIPSW              L"tooltips_class32"   // wide
 
 #ifdef UNICODE
 #define WC_TOOLTIPS               WC_TOOLTIPSW
@@ -316,8 +329,8 @@
 
 //////////////////////////
 
-#define WC_THUMBNAILVIEWA              "ThumbnailVwExtWnd32"	// ansi
-#define WC_THUMBNAILVIEWW              L"ThumbnailVwExtWnd32"	// wide
+#define WC_THUMBNAILVIEWA              "ThumbnailVwExtWnd32"    // ansi
+#define WC_THUMBNAILVIEWW              L"ThumbnailVwExtWnd32"   // wide
 
 #ifdef UNICODE
 #define WC_THUMBNAILVIEW               WC_THUMBNAILVIEWW
@@ -327,8 +340,8 @@
 
 //////////////////////////
 
-#define WC_IEA              "Internet Explorer_Server"	// ansi
-#define WC_IEW              L"Internet Explorer_Server"	// wide
+#define WC_IEA              "Internet Explorer_Server"  // ansi
+#define WC_IEW              L"Internet Explorer_Server" // wide
 
 #ifdef UNICODE
 #define WC_IE               WC_IEW
@@ -338,8 +351,8 @@
 
 //////////////////////////
 
-#define WC_SHDOCOBJVWA              "Shell DocObject View"	// ansi
-#define WC_SHDOCOBJVWW              L"Shell DocObject View"	// wide
+#define WC_SHDOCOBJVWA              "Shell DocObject View"  // ansi
+#define WC_SHDOCOBJVWW              L"Shell DocObject View" // wide
 
 #ifdef UNICODE
 #define WC_SHDOCOBJVW               WC_SHDOCOBJVWW
@@ -349,8 +362,8 @@
 
 //////////////////////////
 
-#define WC_SHELLEMBEDDINGA              "Shell Embedding"	// ansi
-#define WC_SHELLEMBEDDINGW              L"Shell Embedding"	// wide
+#define WC_SHELLEMBEDDINGA              "Shell Embedding"   // ansi
+#define WC_SHELLEMBEDDINGW              L"Shell Embedding"  // wide
 
 #ifdef UNICODE
 #define WC_SHELLEMBEDDING               WC_SHELLEMBEDDINGW
@@ -360,8 +373,8 @@
 
 //////////////////////////
 
-#define WC_CONTROLBARA              "AfxControlBar"	// ansi
-#define WC_CONTROLBARW              L"AfxControlBar"	// wide
+#define WC_CONTROLBARA              "AfxControlBar"     // ansi
+#define WC_CONTROLBARW              L"AfxControlBar"    // wide
 
 #ifdef UNICODE
 #define WC_CONTROLBAR               WC_CONTROLBARW
@@ -371,8 +384,8 @@
 
 //////////////////////////
 
-#define WC_MFCDIALOGBARA              "MfcDialogBar"	// ansi
-#define WC_MFCDIALOGBARW              L"MfcDialogBar"	// wide
+#define WC_MFCDIALOGBARA              "MfcDialogBar"    // ansi
+#define WC_MFCDIALOGBARW              L"MfcDialogBar"   // wide
 
 #ifdef UNICODE
 #define WC_MFCDIALOGBAR               WC_MFCDIALOGBARW
@@ -382,8 +395,8 @@
 
 //////////////////////////
 
-#define WC_MFCVIEWA              "MfcView"	// ansi
-#define WC_MFCVIEWW              L"MfcView"	// wide
+#define WC_MFCVIEWA              "MfcView"  // ansi
+#define WC_MFCVIEWW              L"MfcView" // wide
 
 #ifdef UNICODE
 #define WC_MFCVIEW               WC_MFCVIEWW
@@ -393,8 +406,8 @@
 
 //////////////////////////
 
-#define WC_MFCMDICHILDA              "MfcFrameMDIChild"	// ansi
-#define WC_MFCMDICHILDW              L"MfcFrameMDIChild"	// wide
+#define WC_MFCMDICHILDA              "MfcFrameMDIChild"     // ansi
+#define WC_MFCMDICHILDW              L"MfcFrameMDIChild"    // wide
 
 #ifdef UNICODE
 #define WC_MFCMDICHILD               WC_MFCMDICHILDW
@@ -404,8 +417,8 @@
 
 //////////////////////////
 
-#define WC_MFCMDIFRAMEA              "MfcFrameMDI"	// ansi
-#define WC_MFCMDIFRAMEW              L"MfcFrameMDI"	// wide
+#define WC_MFCMDIFRAMEA              "MfcFrameMDI"  // ansi
+#define WC_MFCMDIFRAMEW              L"MfcFrameMDI" // wide
 
 #ifdef UNICODE
 #define WC_MFCMDIFRAME               WC_MFCMDIFRAMEW
@@ -415,8 +428,8 @@
 
 //////////////////////////
 
-#define WC_MFCSPLITTERA              "MfcSplitter"	// ansi
-#define WC_MFCSPLITTERW              L"MfcSplitter"	// wide
+#define WC_MFCSPLITTERA              "MfcSplitter"  // ansi
+#define WC_MFCSPLITTERW              L"MfcSplitter" // wide
 
 #ifdef UNICODE
 #define WC_MFCSPLITTER               WC_MFCSPLITTERW
@@ -426,8 +439,8 @@
 
 //////////////////////////
 
-#define WC_MFCFRAMEA              "MfcFrame"	// ansi
-#define WC_MFCFRAMEW              L"MfcFrame"	// wide
+#define WC_MFCFRAMEA              "MfcFrame"    // ansi
+#define WC_MFCFRAMEW              L"MfcFrame"   // wide
 
 #ifdef UNICODE
 #define WC_MFCFRAME               WC_MFCFRAMEW
@@ -437,8 +450,8 @@
 
 //////////////////////////
 
-#define WC_MFCMINIDOCKFRAMEA          "MfcFrameMiniDock"	// ansi
-#define WC_MFCMINIDOCKFRAMEW          L"MfcFrameMiniDock"	// wide
+#define WC_MFCMINIDOCKFRAMEA          "MfcFrameMiniDock"    // ansi
+#define WC_MFCMINIDOCKFRAMEW          L"MfcFrameMiniDock"   // wide
 
 #ifdef UNICODE
 #define WC_MFCMINIDOCKFRAME           WC_MFCMINIDOCKFRAMEW
@@ -448,8 +461,8 @@
 
 //////////////////////////
 
-#define WC_MFCMINIFRAMEA              "MfcFrameMini"	// ansi
-#define WC_MFCMINIFRAMEW              L"MfcFrameMini"	// wide
+#define WC_MFCMINIFRAMEA              "MfcFrameMini"    // ansi
+#define WC_MFCMINIFRAMEW              L"MfcFrameMini"   // wide
 
 #ifdef UNICODE
 #define WC_MFCMINIFRAME               WC_MFCMINIFRAMEW
@@ -459,8 +472,8 @@
 
 //////////////////////////
 
-#define WC_MFCWNDA		          "MfcWnd"	// ansi
-#define WC_MFCWNDW              L"MfcWnd"	// wide
+#define WC_MFCWNDA                "MfcWnd"  // ansi
+#define WC_MFCWNDW              L"MfcWnd"   // wide
 
 #ifdef UNICODE
 #define WC_MFCWND               WC_MFCWNDW
@@ -470,8 +483,8 @@
 
 //////////////////////////
 
-#define WC_MENUA              "#32768"	// ansi
-#define WC_MENUW              L"#32768"	// wide
+#define WC_MENUA              "#32768"  // ansi
+#define WC_MENUW              L"#32768" // wide
 
 #ifdef UNICODE
 #define WC_MENU               WC_MENUW

@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_STYLES_H__46AFC4E3_CC43_4E69_B5D3_2B6D1F501D0E__INCLUDED_)
@@ -45,53 +58,53 @@ struct Style
 
 #define STYLE(s) _T(#s), (DWORD)s
 
-static Style ClassStyles[] = 
+static Style ClassStyles[] =
 {
-	{ STYLE(CS_VREDRAW) }, //		0x0001
-	{ STYLE(CS_HREDRAW) }, //		0x0002
-	{ STYLE(CS_DBLCLKS) }, //		0x0008
-	{ STYLE(CS_OWNDC) }, //			0x0020
-	{ STYLE(CS_CLASSDC) }, //		0x0040
-	{ STYLE(CS_PARENTDC) }, //		0x0080
-	{ STYLE(CS_NOCLOSE) }, //		0x0200
-	{ STYLE(CS_SAVEBITS) }, //		0x0800
+	{ STYLE(CS_VREDRAW) }, //       0x0001
+	{ STYLE(CS_HREDRAW) }, //       0x0002
+	{ STYLE(CS_DBLCLKS) }, //       0x0008
+	{ STYLE(CS_OWNDC) }, //         0x0020
+	{ STYLE(CS_CLASSDC) }, //       0x0040
+	{ STYLE(CS_PARENTDC) }, //      0x0080
+	{ STYLE(CS_NOCLOSE) }, //       0x0200
+	{ STYLE(CS_SAVEBITS) }, //      0x0800
 	{ STYLE(CS_BYTEALIGNCLIENT) },//0x1000
 	{ STYLE(CS_BYTEALIGNWINDOW) },//0x2000
-	{ STYLE(CS_GLOBALCLASS) }, //	0x4000
-	{ STYLE(CS_IME) } //			0x00010000
+	{ STYLE(CS_GLOBALCLASS) }, //   0x4000
+	{ STYLE(CS_IME) } //            0x00010000
 };
 
 ///////
 
-static Style WindowStyles[] = 
+static Style WindowStyles[] =
 {
-	{ STYLE(WS_OVERLAPPED) }, //	0x00000000L
-	{ STYLE(WS_POPUP) }, //			0x80000000L
-	{ STYLE(WS_CHILD) }, //			0x40000000L
-	{ STYLE(WS_MINIMIZE) }, //		0x20000000L
-	{ STYLE(WS_VISIBLE) }, //		0x10000000L
-	{ STYLE(WS_DISABLED) }, //		0x08000000L
-	{ STYLE(WS_CLIPSIBLINGS) }, //	0x04000000L
-	{ STYLE(WS_CLIPCHILDREN) }, //	0x02000000L
-	{ STYLE(WS_MAXIMIZE) }, //		0x01000000L
-	{ STYLE(WS_CAPTION) }, //		0x00C00000L
-	{ STYLE(WS_BORDER) }, //		0x00800000L
-	{ STYLE(WS_DLGFRAME) }, //		0x00400000L
-	{ STYLE(WS_VSCROLL) }, //		0x00200000L
-	{ STYLE(WS_HSCROLL) }, //		0x00100000L
-	{ STYLE(WS_SYSMENU) }, //		0x00080000L
-	{ STYLE(WS_THICKFRAME) }, //	0x00040000L
-	{ STYLE(WS_GROUP) }, //			0x00020000L
-	{ STYLE(WS_TABSTOP) }, //		0x00010000L
-	{ STYLE(WS_MINIMIZEBOX) },//	0x00020000L
-	{ STYLE(WS_MAXIMIZEBOX) }//	0x00010000L
-//	{ STYLE(WS_TILED) }, // duplicate
-//	{ STYLE(WS_ICONIC) }, // duplicate
-//	{ STYLE(WS_SIZEBOX) }, // duplicate
-//	{ STYLE(WS_TILEDWINDOW) }, // duplicate
-//	{ STYLE(WS_OVERLAPPEDWINDOW) }, // aggregate style
-//	{ STYLE(WS_POPUPWINDOW) }, // aggregate style
-//	{ STYLE(WS_CHILDWINDOW) }, // duplicate
+	{ STYLE(WS_OVERLAPPED) }, //    0x00000000L
+	{ STYLE(WS_POPUP) }, //         0x80000000L
+	{ STYLE(WS_CHILD) }, //         0x40000000L
+	{ STYLE(WS_MINIMIZE) }, //      0x20000000L
+	{ STYLE(WS_VISIBLE) }, //       0x10000000L
+	{ STYLE(WS_DISABLED) }, //      0x08000000L
+	{ STYLE(WS_CLIPSIBLINGS) }, //  0x04000000L
+	{ STYLE(WS_CLIPCHILDREN) }, //  0x02000000L
+	{ STYLE(WS_MAXIMIZE) }, //      0x01000000L
+	{ STYLE(WS_CAPTION) }, //       0x00C00000L
+	{ STYLE(WS_BORDER) }, //        0x00800000L
+	{ STYLE(WS_DLGFRAME) }, //      0x00400000L
+	{ STYLE(WS_VSCROLL) }, //       0x00200000L
+	{ STYLE(WS_HSCROLL) }, //       0x00100000L
+	{ STYLE(WS_SYSMENU) }, //       0x00080000L
+	{ STYLE(WS_THICKFRAME) }, //    0x00040000L
+	{ STYLE(WS_GROUP) }, //         0x00020000L
+	{ STYLE(WS_TABSTOP) }, //       0x00010000L
+	{ STYLE(WS_MINIMIZEBOX) },//    0x00020000L
+	{ STYLE(WS_MAXIMIZEBOX) }// 0x00010000L
+	//{ STYLE(WS_TILED) }, // duplicate
+	//{ STYLE(WS_ICONIC) }, // duplicate
+	//{ STYLE(WS_SIZEBOX) }, // duplicate
+	//{ STYLE(WS_TILEDWINDOW) }, // duplicate
+	//{ STYLE(WS_OVERLAPPEDWINDOW) }, // aggregate style
+	//{ STYLE(WS_POPUPWINDOW) }, // aggregate style
+	//{ STYLE(WS_CHILDWINDOW) }, // duplicate
 };
 
 const int NUMWNDSTYLES = sizeof(WindowStyles) / sizeof(Style);
@@ -103,7 +116,9 @@ static UINT LookupWndStyle(LPCTSTR szStyle)
 	while (nStyle--)
 	{
 		if (lstrcmp(szStyle, WindowStyles[nStyle].szStyle) == 0)
+		{
 			return WindowStyles[nStyle].dwStyle;
+		}
 	}
 
 	return 0;
@@ -111,29 +126,29 @@ static UINT LookupWndStyle(LPCTSTR szStyle)
 
 ////////
 
-static Style WindowExStyles[] = 
+static Style WindowExStyles[] =
 {
-	{ STYLE(WS_EX_DLGMODALFRAME) }, //	0x00000001L
-	{ STYLE(WS_EX_NOPARENTNOTIFY) }, //	0x00000004L
-	{ STYLE(WS_EX_TOPMOST) }, //		0x00000008L
-	{ STYLE(WS_EX_ACCEPTFILES) }, //	0x00000010L
-	{ STYLE(WS_EX_TRANSPARENT) }, //	0x00000020L
-	{ STYLE(WS_EX_MDICHILD) }, //		0x00000040L
-	{ STYLE(WS_EX_TOOLWINDOW) }, //		0x00000080L
-	{ STYLE(WS_EX_WINDOWEDGE) }, //		0x00000100L
-	{ STYLE(WS_EX_CLIENTEDGE) }, //		0x00000200L
-	{ STYLE(WS_EX_CONTEXTHELP) }, //	0x00000400L
-	{ STYLE(WS_EX_RIGHT) },	 // 		0x00001000L
-	{ STYLE(WS_EX_LEFT) }, //			0x00000000L
-	{ STYLE(WS_EX_RTLREADING) }, //		0x00002000L
-	{ STYLE(WS_EX_LTRREADING) }, //		0x00000000L
-	{ STYLE(WS_EX_LEFTSCROLLBAR) }, //	0x00004000L
+	{ STYLE(WS_EX_DLGMODALFRAME) }, //  0x00000001L
+	{ STYLE(WS_EX_NOPARENTNOTIFY) }, // 0x00000004L
+	{ STYLE(WS_EX_TOPMOST) }, //        0x00000008L
+	{ STYLE(WS_EX_ACCEPTFILES) }, //    0x00000010L
+	{ STYLE(WS_EX_TRANSPARENT) }, //    0x00000020L
+	{ STYLE(WS_EX_MDICHILD) }, //       0x00000040L
+	{ STYLE(WS_EX_TOOLWINDOW) }, //     0x00000080L
+	{ STYLE(WS_EX_WINDOWEDGE) }, //     0x00000100L
+	{ STYLE(WS_EX_CLIENTEDGE) }, //     0x00000200L
+	{ STYLE(WS_EX_CONTEXTHELP) }, //    0x00000400L
+	{ STYLE(WS_EX_RIGHT) },  //         0x00001000L
+	{ STYLE(WS_EX_LEFT) }, //           0x00000000L
+	{ STYLE(WS_EX_RTLREADING) }, //     0x00002000L
+	{ STYLE(WS_EX_LTRREADING) }, //     0x00000000L
+	{ STYLE(WS_EX_LEFTSCROLLBAR) }, //  0x00004000L
 	{ STYLE(WS_EX_RIGHTSCROLLBAR) }, // 0x00000000L
-	{ STYLE(WS_EX_CONTROLPARENT) }, //	0x00010000L
-	{ STYLE(WS_EX_STATICEDGE) }, //		0x00020000L
-	{ STYLE(WS_EX_APPWINDOW) } //		0x00040000L
-//	{ STYLE(WS_EX_OVERLAPPEDWINDOW) }, // aggregate style
-//	{ STYLE(WS_EX_PALETTEWINDOW) }, // aggregate style
+	{ STYLE(WS_EX_CONTROLPARENT) }, //  0x00010000L
+	{ STYLE(WS_EX_STATICEDGE) }, //     0x00020000L
+	{ STYLE(WS_EX_APPWINDOW) } //       0x00040000L
+	//{ STYLE(WS_EX_OVERLAPPEDWINDOW) }, // aggregate style
+	//{ STYLE(WS_EX_PALETTEWINDOW) }, // aggregate style
 };
 
 const int NUMWNDEXSTYLES = sizeof(WindowExStyles) / sizeof(Style);
@@ -145,7 +160,9 @@ static UINT LookupWndExStyle(LPCTSTR szStyle)
 	while (nStyle--)
 	{
 		if (lstrcmp(szStyle, WindowExStyles[nStyle].szStyle) == 0)
+		{
 			return WindowExStyles[nStyle].dwStyle;
+		}
 	}
 
 	return 0;
@@ -153,7 +170,7 @@ static UINT LookupWndExStyle(LPCTSTR szStyle)
 
 //////
 
-static Style HitTests[] = 
+static Style HitTests[] =
 {
 	{ STYLE(HTERROR) }, //             (-2)
 	{ STYLE(HTTRANSPARENT) }, //       (-1)
@@ -194,16 +211,16 @@ struct Control
 	DWORD dwExStyleMsg; // msg to send to control to retrieve Ex styles
 };
 
-static Control Controls[] = 
+static Control Controls[] =
 {
-	{ _T("Button"), _T(""), 0 }, 
+	{ _T("Button"), _T(""), 0 },
 	{ _T("Static"), _T(""), 0 },
 	{ _T("Edit"), _T(""), 0 },
 	{ _T("ComboBox"), _T(""), 0 },
 	{ _T("ComboLBox"), _T("ListBox"), 0 }, // drop list for the combo box
 	{ _T("ListBox"), _T(""), 0 },
 	{ _T("Scrollbar"), _T(""), 0 },
-	{ _T("toolbarwindow32"), _T("CommonControl"), TB_GETEXTENDEDSTYLE }, 
+	{ _T("toolbarwindow32"), _T("CommonControl"), TB_GETEXTENDEDSTYLE },
 	{ _T("msctls_updown32"), _T(""), 0 },
 	{ _T("msctls_progress32"), _T(""), 0 },
 	{ _T("msctls_trackbar32"), _T(""), 0 },
@@ -243,7 +260,7 @@ struct CtrlStyle
 
 ////////
 
-static CtrlStyle ControlStyles[] = 
+static CtrlStyle ControlStyles[] =
 {
 	{ _T("Button"), STYLE(BS_PUSHBUTTON), 0x0F, 0 },//        0x00000000L
 	{ _T("Button"), STYLE(BS_DEFPUSHBUTTON), 0x0F, 0 },//     0x00000001L
@@ -412,13 +429,13 @@ static CtrlStyle ControlStyles[] =
 	{ _T("msctls_trackbar32"), STYLE(TBS_NOTHUMB), NOMASK, 0 },//              0x0080
 	{ _T("msctls_trackbar32"), STYLE(TBS_TOOLTIPS), NOMASK, 0 },//             0x0100
 
-//	{ _T("msctls_hotkey32"), // has no styles
+	//	{ _T("msctls_hotkey32"), // has no styles
 
 	{ _T("SysListView32"), STYLE(LVS_ICON), LVS_TYPEMASK, 0 },//           0x0000
 	{ _T("SysListView32"), STYLE(LVS_REPORT), LVS_TYPEMASK, 0 },//         0x0001
 	{ _T("SysListView32"), STYLE(LVS_SMALLICON), LVS_TYPEMASK, 0 },//      0x0002
 	{ _T("SysListView32"), STYLE(LVS_LIST), LVS_TYPEMASK, 0 },//           0x0003
-//	{ _T("SysListView32"), STYLE(LVS_TYPEMASK), NOMASK, 0 },//             0x0003
+	//	{ _T("SysListView32"), STYLE(LVS_TYPEMASK), NOMASK, 0 },//             0x0003
 	{ _T("SysListView32"), STYLE(LVS_SINGLESEL), NOMASK, 0 },//            0x0004
 	{ _T("SysListView32"), STYLE(LVS_SHOWSELALWAYS), NOMASK, 0 },//        0x0008
 	{ _T("SysListView32"), STYLE(LVS_SORTASCENDING), NOMASK, 0 },//        0x0010
@@ -429,10 +446,10 @@ static CtrlStyle ControlStyles[] =
 	{ _T("SysListView32"), STYLE(LVS_EDITLABELS), NOMASK, 0 },//           0x0200
 	{ _T("SysListView32"), STYLE(LVS_OWNERDATA), NOMASK, 0 },//            0x1000
 	{ _T("SysListView32"), STYLE(LVS_NOSCROLL), NOMASK, 0 },//             0x2000
-//	{ _T("SysListView32"), STYLE(LVS_TYPESTYLEMASK), NOMASK, 0 },//        0xfc00
+	//	{ _T("SysListView32"), STYLE(LVS_TYPESTYLEMASK), NOMASK, 0 },//        0xfc00
 	{ _T("SysListView32"), STYLE(LVS_ALIGNTOP), LVS_ALIGNMASK, 0 },//      0x0000
 	{ _T("SysListView32"), STYLE(LVS_ALIGNLEFT), LVS_ALIGNMASK, 0 },//     0x0800
-//	{ _T("SysListView32"), STYLE(LVS_ALIGNMASK), NOMASK, 0 },//            0x0c00
+	//	{ _T("SysListView32"), STYLE(LVS_ALIGNMASK), NOMASK, 0 },//            0x0c00
 	{ _T("SysListView32"), STYLE(LVS_OWNERDRAWFIXED), NOMASK, 0 },//       0x0400
 	{ _T("SysListView32"), STYLE(LVS_NOCOLUMNHEADER), NOMASK, 0 },//       0x4000
 	{ _T("SysListView32"), STYLE(LVS_NOSORTHEADER), NOMASK, 0 },//         0x8000
@@ -534,10 +551,10 @@ static CtrlStyle ControlStyles[] =
 	{ _T("SysMonthCal32"), STYLE(MCS_NOTODAYCIRCLE), NOMASK, 0 },//    0x0008
 	{ _T("SysMonthCal32"), STYLE(MCS_NOTODAY), NOMASK, 0 },//          0x0010
 
-//	{ _T("SysIPAddress32"), // no styles
+	//	{ _T("SysIPAddress32"), // no styles
 
 	{ _T("SysPager32"), STYLE(PGS_VERT), 0x1L, 0 },//                   0x00000000
-	{ _T("SysPager32"), STYLE(PGS_HORZ ), 0x1L, 0 },//                  0x00000001
+	{ _T("SysPager32"), STYLE(PGS_HORZ), 0x1L, 0 }, //                  0x00000001
 	{ _T("SysPager32"), STYLE(PGS_AUTOSCROLL), NOMASK, 0 },//           0x00000002
 	{ _T("SysPager32"), STYLE(PGS_DRAGNDROP), NOMASK, 0 },//            0x00000004
 
@@ -584,13 +601,13 @@ static CtrlStyle ControlStyles[] =
 	{ _T("DialogBox"), STYLE(DS_CENTERMOUSE), NOMASK, 0 },//       0x1000L
 	{ _T("DialogBox"), STYLE(DS_CONTEXTHELP), NOMASK, 0 },//       0x2000L
 
-//	{ _T("MDIClient"), // no styles
+	//	{ _T("MDIClient"), // no styles
 
 #ifndef TTS_NOANIMATE
 
-	#define TTS_NOANIMATE           0x10
-	#define TTS_NOFADE              0x20
-	#define TTS_BALLOON             0x40
+#define TTS_NOANIMATE           0x10
+#define TTS_NOFADE              0x20
+#define TTS_BALLOON             0x40
 
 #endif
 
@@ -612,7 +629,9 @@ static UINT LookupCtrlStyle(LPCTSTR szStyle)
 	while (nStyle--)
 	{
 		if (lstrcmp(szStyle, ControlStyles[nStyle].szStyle) == 0)
+		{
 			return ControlStyles[nStyle].dwStyle;
+		}
 	}
 
 	return 0;

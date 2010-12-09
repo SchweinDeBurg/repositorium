@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // WndPrompt.cpp: implementation of the CWndPrompt class.
@@ -40,7 +53,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -58,10 +71,10 @@ CWndPrompt::~CWndPrompt()
 
 BOOL CWndPrompt::Initialize(HWND hWnd, LPCTSTR szPrompt, UINT nCheckMsg, LRESULT lRes, int nVertOffset)
 {
-	ASSERT (hWnd);
-	ASSERT (!IsHooked());
-	ASSERT (szPrompt && *szPrompt);
-	ASSERT (nCheckMsg);
+	ASSERT(hWnd);
+	ASSERT(!IsHooked());
+	ASSERT(szPrompt && *szPrompt);
+	ASSERT(nCheckMsg);
 
 	if (!IsHooked() && hWnd && szPrompt && *szPrompt && nCheckMsg)
 	{
@@ -72,9 +85,11 @@ BOOL CWndPrompt::Initialize(HWND hWnd, LPCTSTR szPrompt, UINT nCheckMsg, LRESULT
 			m_lCheckResult = lRes;
 			m_sClass = CWinClasses::GetClass(hWnd);
 			m_nVertOffset = max(nVertOffset, 0);
-			
+
 			if (WantPrompt())
+			{
 				Invalidate();
+			}
 
 			return TRUE;
 		}
@@ -85,15 +100,17 @@ BOOL CWndPrompt::Initialize(HWND hWnd, LPCTSTR szPrompt, UINT nCheckMsg, LRESULT
 
 void CWndPrompt::SetPrompt(LPCTSTR szPrompt)
 {
-	ASSERT (IsHooked());
-	ASSERT (szPrompt && *szPrompt);
+	ASSERT(IsHooked());
+	ASSERT(szPrompt && *szPrompt);
 
 	if (IsHooked() && szPrompt && *szPrompt)
 	{
 		m_sPrompt = szPrompt;
 
 		if (WantPrompt())
+		{
 			Invalidate();
+		}
 	}
 }
 
@@ -104,7 +121,9 @@ LRESULT CWndPrompt::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 	case WM_KILLFOCUS:
 	case WM_SETFOCUS:
 		if (CWinClasses::IsEditControl(hRealWnd) && WantPrompt(FALSE))
+		{
 			Invalidate();
+		}
 		break;
 
 	case WM_PRINT:
@@ -127,18 +146,22 @@ LRESULT CWndPrompt::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 	return CSubclassWnd::WindowProc(hRealWnd, msg, wp, lp);
 }
 
-BOOL CWndPrompt::WantPrompt(BOOL bCheckFocus) 
-{ 
-	BOOL bWantPrompt = (SendMessage(m_nCheckMsg) == m_lCheckResult); 
+BOOL CWndPrompt::WantPrompt(BOOL bCheckFocus)
+{
+	BOOL bWantPrompt = (SendMessage(m_nCheckMsg) == m_lCheckResult);
 	HWND hWnd = GetHwnd();
 
 	if (bWantPrompt && CWinClasses::IsEditControl(hWnd))
 	{
 		if (bCheckFocus)
+		{
 			bWantPrompt = (GetFocus() != hWnd);
+		}
 
 		if (bWantPrompt)
+		{
 			bWantPrompt = (IsWindowEnabled() && !(GetStyle() & ES_READONLY));
+		}
 	}
 
 	return bWantPrompt;
@@ -148,7 +171,7 @@ void CWndPrompt::DrawPrompt(HDC hdc)
 {
 	if (WantPrompt())
 	{
-		ASSERT (m_sPrompt.GetLength());
+		ASSERT(m_sPrompt.GetLength());
 
 		HDC hdcOrg = hdc;
 		int nSaveDC = 0;
@@ -158,17 +181,19 @@ void CWndPrompt::DrawPrompt(HDC hdc)
 			hdc = GetDC(GetHwnd());
 			nSaveDC = ::SaveDC(hdc);
 		}
-		
+
 		CRect rClient;
 		GetClientRect(rClient);
 		rClient.DeflateRect(2, 1);
 		rClient.top += m_nVertOffset;
-		
+
 		HFONT hFont = (HFONT)SendMessage(WM_GETFONT);
-		
+
 		if (!hFont)
+		{
 			hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
-		
+		}
+
 		::SelectObject(hdc, hFont);
 
 		::SetBkColor(hdc, GetSysColor(COLOR_WINDOW));
@@ -176,7 +201,7 @@ void CWndPrompt::DrawPrompt(HDC hdc)
 
 		::SetTextColor(hdc, GetSysColor(COLOR_3DSHADOW));
 		::DrawText(hdc, m_sPrompt, m_sPrompt.GetLength(), rClient, DT_TOP | DT_LEFT | DT_NOPREFIX);
-		
+
 		if (!hdcOrg)
 		{
 			::RestoreDC(hdc, nSaveDC);
@@ -204,7 +229,9 @@ CWndPromptManager::~CWndPromptManager()
 		m_mapWnds.GetNextAssoc(pos, hwnd, pWnd);
 
 		if (pWnd->IsValid())
+		{
 			pWnd->HookWindow(NULL);
+		}
 
 		delete pWnd;
 	}
@@ -227,7 +254,9 @@ BOOL CWndPromptManager::SetPrompt(HWND hWnd, LPCTSTR szPrompt, UINT nCheckMsg, L
 				m_mapWnds.RemoveKey(hWnd);
 			}
 			else // update prompt
+			{
 				pWnd->SetPrompt(szPrompt);
+			}
 
 			return TRUE;
 		}
@@ -248,7 +277,7 @@ BOOL CWndPromptManager::SetPrompt(HWND hWnd, LPCTSTR szPrompt, UINT nCheckMsg, L
 		m_mapWnds[hWnd] = pWnd;
 		return TRUE;
 	}
-	
+
 	// else
 	delete pWnd;
 	return FALSE;
@@ -259,13 +288,13 @@ BOOL CWndPromptManager::SetPrompt(HWND hWnd, UINT nIDPrompt, UINT nCheckMsg, LRE
 	return SetPrompt(hWnd, CEnString(nIDPrompt), nCheckMsg, lRes, nVertOffset);
 }
 
-BOOL CWndPromptManager::SetPrompt(UINT nIDCtrl, HWND hwndParent, LPCTSTR szPrompt, UINT nCheckMsg, 
+BOOL CWndPromptManager::SetPrompt(UINT nIDCtrl, HWND hwndParent, LPCTSTR szPrompt, UINT nCheckMsg,
 	LRESULT lRes, int nVertOffset)
 {
 	return SetPrompt(GetDlgItem(hwndParent, nIDCtrl), szPrompt, nCheckMsg, lRes, nVertOffset);
 }
 
-BOOL CWndPromptManager::SetPrompt(UINT nIDCtrl, HWND hwndParent, UINT nIDPrompt, UINT nCheckMsg, 
+BOOL CWndPromptManager::SetPrompt(UINT nIDCtrl, HWND hwndParent, UINT nIDPrompt, UINT nCheckMsg,
 	LRESULT lRes, int nVertOffset)
 {
 	return SetPrompt(nIDCtrl, hwndParent, CEnString(nIDPrompt), nCheckMsg, lRes, nVertOffset);
@@ -286,7 +315,9 @@ BOOL CWndPromptManager::SetEditPrompt(UINT nIDEdit, HWND hwndParent, UINT nIDPro
 BOOL CWndPromptManager::SetEditPrompt(HWND hwndEdit, LPCTSTR szPrompt)
 {
 	if (!CWinClasses::IsEditControl(hwndEdit))
+	{
 		return FALSE;
+	}
 
 	return SetPrompt(hwndEdit, szPrompt, WM_GETTEXTLENGTH);
 }
@@ -312,9 +343,11 @@ BOOL CWndPromptManager::SetComboEditPrompt(HWND hwndCombo, LPCTSTR szPrompt)
 {
 	CString sClass = CWinClasses::GetClass(hwndCombo);
 
-	if (!CWinClasses::IsClass(sClass, WC_COMBOBOX) && 
+	if (!CWinClasses::IsClass(sClass, WC_COMBOBOX) &&
 		!CWinClasses::IsClass(sClass, WC_COMBOBOXEX))
+	{
 		return FALSE;
+	}
 
 	return SetPrompt(1001, hwndCombo, szPrompt, WM_GETTEXTLENGTH);
 }
@@ -335,17 +368,21 @@ BOOL CWndPromptManager::SetComboPrompt(HWND hwndCombo, LPCTSTR szPrompt)
 {
 	CString sClass = CWinClasses::GetClass(hwndCombo);
 
-	if (!CWinClasses::IsClass(sClass, WC_COMBOBOX) && 
+	if (!CWinClasses::IsClass(sClass, WC_COMBOBOX) &&
 		!CWinClasses::IsClass(sClass, WC_COMBOBOXEX))
+	{
 		return FALSE;
+	}
 
-	// if the combo has an edit field then this is where the 
+	// if the combo has an edit field then this is where the
 	// prompt must be set
 	UINT nStyle = GetWindowLong(hwndCombo, GWL_STYLE);
 
 	if ((nStyle & 0xf) != CBS_DROPDOWNLIST)
+	{
 		return SetComboEditPrompt(hwndCombo, szPrompt);
-	
+	}
+
 	// else
 	return SetPrompt(hwndCombo, szPrompt, WM_GETTEXTLENGTH);
 }
