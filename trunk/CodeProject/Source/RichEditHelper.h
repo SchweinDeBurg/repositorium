@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -27,6 +27,19 @@
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
 // - merged with ToDoList version 6.1 sources
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // RichEditHelper.h: interface for the CRichEditHelper class.
@@ -44,11 +57,12 @@
 #include <richole.h>
 
 #if !defined EM_SETTYPOGRAPHYOPTIONS
-#	define EM_SETTYPOGRAPHYOPTIONS (WM_USER + 202)
-#	define EM_GETTYPOGRAPHYOPTIONS (WM_USER + 203)
-#	define TO_ADVANCEDTYPOGRAPHY 1
-#	define TO_SIMPLELINEBREAK 2 
+#define EM_SETTYPOGRAPHYOPTIONS (WM_USER + 202)
+#define EM_GETTYPOGRAPHYOPTIONS (WM_USER + 203)
+#define TO_ADVANCEDTYPOGRAPHY 1
+#define TO_SIMPLELINEBREAK 2
 #endif
+
 struct ITextDocument;
 
 class CReBase
@@ -66,13 +80,19 @@ class CTextDocument : public CReBase
 public:
 	CTextDocument(HWND hwndRichEdit);
 	virtual ~CTextDocument();
-	
-	BOOL Valid() const { return (m_pDoc != NULL);	}
-	operator ITextDocument*() { return m_pDoc; }
+
+	BOOL Valid() const
+	{
+		return (m_pDoc != NULL);
+	}
+	operator ITextDocument* ()
+	{
+		return m_pDoc;
+	}
 
 	BOOL Undo();
 	BOOL Redo();
-	
+
 protected:
 	ITextDocument* m_pDoc;
 	LPRICHEDITOLE m_pRichEditOle;
@@ -100,21 +120,21 @@ class CReFileObject : public CReBase
 public:
 	CReFileObject(HWND hwndRichEdit);
 	virtual ~CReFileObject();
-	
+
 	BOOL Insert(LPCTSTR szFilePath);
-	
+
 protected:
 	LPRICHEDITOLE m_pRichEditOle;
 	LPOLEOBJECT m_pObject;
 	LPSTORAGE m_pStorage;
 	LPOLECLIENTSITE m_pClientSite;
-	
+
 protected:
 	void Reset();
-	
+
 	BOOL Create(LPCTSTR szFilePath);
 	BOOL GetReObject(REOBJECT& reObj) const;
-	
+
 };
 
 class CRichEditHelper
@@ -124,7 +144,6 @@ public:
 	static BOOL CreateRichEdit50(CWnd& wnd, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
 	static BOOL InitRichEdit();
 	static void ClearUndo(HWND hWnd);
-//	static BOOL Redo(HWND hWnd);
 
 protected:
 };

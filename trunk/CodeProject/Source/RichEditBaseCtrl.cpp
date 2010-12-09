@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -27,6 +27,19 @@
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
 // - merged with ToDoList version 6.1 sources
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // RichEditBaseCtrl.cpp : implementation file
@@ -76,10 +89,12 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CRichEditBaseCtrl message handlers
 
-int CRichEditBaseCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CRichEditBaseCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CRichEditCtrl::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 
 	ASSERT_VALID(this);
 
@@ -98,7 +113,9 @@ void CRichEditBaseCtrl::OnSetFocus(CWnd* pOldWnd)
 LRESULT CRichEditBaseCtrl::OnEditSetSelection(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	if (m_bEnableSelectOnFocus || !m_bInOnFocus)
+	{
 		return Default();
+	}
 
 	// else
 	return 0L;
@@ -116,7 +133,7 @@ void CRichEditBaseCtrl::OnDestroy()
 	CRichEditCtrl::OnDestroy();
 }
 
-void CRichEditBaseCtrl::PreSubclassWindow() 
+void CRichEditBaseCtrl::PreSubclassWindow()
 {
 	SetOLECallback(&m_callback);
 
@@ -133,13 +150,13 @@ BOOL CRichEditBaseCtrl::Redo()
 	return CTextDocument(GetSafeHwnd()).Redo();
 }
 
-CString CRichEditBaseCtrl::GetTextRange(const CHARRANGE& cr) 
+CString CRichEditBaseCtrl::GetTextRange(const CHARRANGE& cr)
 {
 	int nLength = int(cr.cpMax - cr.cpMin + 1);
 
 #if !defined(_UNICODE) && !defined(UNICODE)
 
-	// create an ANSI buffer 
+	// create an ANSI buffer
 	char* szChar = new char[nLength];
 
 	// create a Unicode (Wide Character) buffer of the same length
@@ -172,8 +189,6 @@ CString CRichEditBaseCtrl::GetTextRange(const CHARRANGE& cr)
 	return sText;
 }
 
-
-
 CRichEditBaseCtrl::CRichEditOleCallback::CRichEditOleCallback() : m_pOwner(NULL)
 {
 	m_pStorage = NULL;
@@ -181,14 +196,14 @@ CRichEditBaseCtrl::CRichEditOleCallback::CRichEditOleCallback() : m_pOwner(NULL)
 	m_dwRef = 0;
 
 	// set up OLE storage
-	HRESULT hResult = ::StgCreateDocfile(NULL, STGM_TRANSACTED | 
+	HRESULT hResult = ::StgCreateDocfile(NULL, STGM_TRANSACTED |
 		STGM_READWRITE | STGM_SHARE_EXCLUSIVE | STGM_CREATE | STGM_DELETEONRELEASE,
-		0, &m_pStorage );
+		0, &m_pStorage);
 
-	if ( m_pStorage == NULL ||
-		hResult != S_OK )
+	if (m_pStorage == NULL ||
+		hResult != S_OK)
 	{
-		AfxThrowOleException( hResult );
+		AfxThrowOleException(hResult);
 	}
 }
 
@@ -201,8 +216,7 @@ CRichEditBaseCtrl::CRichEditOleCallback::~CRichEditOleCallback()
 	}
 }
 
-
-HRESULT STDMETHODCALLTYPE 
+HRESULT STDMETHODCALLTYPE
 CRichEditBaseCtrl::CRichEditOleCallback::GetNewStorage(LPSTORAGE* lplpstg)
 {
 	m_iNumStorages++;
@@ -214,27 +228,27 @@ CRichEditBaseCtrl::CRichEditOleCallback::GetNewStorage(LPSTORAGE* lplpstg)
 	swprintf(tName, L"REOLEStorage%d", m_iNumStorages);
 #endif
 
-	HRESULT hResult = m_pStorage->CreateStorage(tName, 
-		STGM_TRANSACTED | STGM_READWRITE | STGM_SHARE_EXCLUSIVE | STGM_CREATE ,
-		0, 0, lplpstg );
+	HRESULT hResult = m_pStorage->CreateStorage(tName,
+		STGM_TRANSACTED | STGM_READWRITE | STGM_SHARE_EXCLUSIVE | STGM_CREATE,
+		0, 0, lplpstg);
 
-	if (hResult != S_OK )
+	if (hResult != S_OK)
 	{
-		::AfxThrowOleException( hResult );
+		::AfxThrowOleException(hResult);
 	}
 
 	return hResult;
 }
 
-HRESULT STDMETHODCALLTYPE 
-CRichEditBaseCtrl::CRichEditOleCallback::QueryInterface(REFIID iid, void ** ppvObject)
+HRESULT STDMETHODCALLTYPE
+CRichEditBaseCtrl::CRichEditOleCallback::QueryInterface(REFIID iid, void** ppvObject)
 {
 
 	HRESULT hr = S_OK;
 	*ppvObject = NULL;
 
-	if ( iid == IID_IUnknown ||
-		iid == IID_IRichEditOleCallback )
+	if (iid == IID_IUnknown ||
+		iid == IID_IRichEditOleCallback)
 	{
 		*ppvObject = this;
 		AddRef();
@@ -248,21 +262,21 @@ CRichEditBaseCtrl::CRichEditOleCallback::QueryInterface(REFIID iid, void ** ppvO
 	return hr;
 }
 
-ULONG STDMETHODCALLTYPE 
+ULONG STDMETHODCALLTYPE
 CRichEditBaseCtrl::CRichEditOleCallback::AddRef()
 {
 	return ++m_dwRef;
 }
 
-
-
-ULONG STDMETHODCALLTYPE 
+ULONG STDMETHODCALLTYPE
 CRichEditBaseCtrl::CRichEditOleCallback::Release()
 {
-	if ( --m_dwRef == 0 )
+	if (--m_dwRef == 0)
 	{
 		if (m_pStorage)
+		{
 			m_pStorage->Release();
+		}
 
 		m_pStorage = NULL;
 
@@ -272,97 +286,104 @@ CRichEditBaseCtrl::CRichEditOleCallback::Release()
 	return m_dwRef;
 }
 
-
-HRESULT STDMETHODCALLTYPE 
-CRichEditBaseCtrl::CRichEditOleCallback::GetInPlaceContext(LPOLEINPLACEFRAME FAR *lplpFrame,
-																			  LPOLEINPLACEUIWINDOW FAR *lplpDoc, LPOLEINPLACEFRAMEINFO lpFrameInfo)
+HRESULT STDMETHODCALLTYPE
+CRichEditBaseCtrl::CRichEditOleCallback::GetInPlaceContext(LPOLEINPLACEFRAME FAR* lplpFrame,
+	LPOLEINPLACEUIWINDOW FAR* lplpDoc, LPOLEINPLACEFRAMEINFO lpFrameInfo)
 {
 	if (m_pOwner)
+	{
 		return m_pOwner->GetInPlaceContext(lplpFrame, lplpDoc, lpFrameInfo);
+	}
 
 	return S_OK;
 }
 
-
-HRESULT STDMETHODCALLTYPE 
+HRESULT STDMETHODCALLTYPE
 CRichEditBaseCtrl::CRichEditOleCallback::ShowContainerUI(BOOL fShow)
 {
 	if (m_pOwner)
+	{
 		return m_pOwner->ShowContainerUI(fShow);
+	}
 
 	return S_OK;
 }
 
-
-
-HRESULT STDMETHODCALLTYPE 
+HRESULT STDMETHODCALLTYPE
 CRichEditBaseCtrl::CRichEditOleCallback::QueryInsertObject(LPCLSID lpclsid, LPSTORAGE lpstg, LONG cp)
 {
 	if (m_pOwner)
+	{
 		return m_pOwner->QueryInsertObject(lpclsid, lpstg, cp);
+	}
 
 	return S_OK;
 }
 
-
-HRESULT STDMETHODCALLTYPE 
+HRESULT STDMETHODCALLTYPE
 CRichEditBaseCtrl::CRichEditOleCallback::DeleteObject(LPOLEOBJECT lpoleobj)
 {
 	if (m_pOwner)
+	{
 		return m_pOwner->DeleteObject(lpoleobj);
+	}
 
 	return S_OK;
 }
 
-
-
-HRESULT STDMETHODCALLTYPE 
-CRichEditBaseCtrl::CRichEditOleCallback::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT FAR *lpcfFormat,
-																			DWORD reco, BOOL fReally, HGLOBAL hMetaPict)
+HRESULT STDMETHODCALLTYPE
+CRichEditBaseCtrl::CRichEditOleCallback::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT FAR* lpcfFormat,
+	DWORD reco, BOOL fReally, HGLOBAL hMetaPict)
 {
 	if (m_pOwner)
+	{
 		return m_pOwner->QueryAcceptData(lpdataobj, lpcfFormat, reco, fReally, hMetaPict);
+	}
 
 	return S_OK;
 }
 
-
-HRESULT STDMETHODCALLTYPE 
+HRESULT STDMETHODCALLTYPE
 CRichEditBaseCtrl::CRichEditOleCallback::ContextSensitiveHelp(BOOL fEnterMode)
 {
 	if (m_pOwner)
+	{
 		return m_pOwner->ContextSensitiveHelp(fEnterMode);
+	}
 
 	return S_OK;
 }
 
-
-
-HRESULT STDMETHODCALLTYPE 
-CRichEditBaseCtrl::CRichEditOleCallback::GetClipboardData(CHARRANGE FAR *lpchrg, DWORD reco, LPDATAOBJECT FAR *lplpdataobj)
+HRESULT STDMETHODCALLTYPE
+CRichEditBaseCtrl::CRichEditOleCallback::GetClipboardData(CHARRANGE FAR* lpchrg, DWORD reco, LPDATAOBJECT FAR* lplpdataobj)
 {
 	if (m_pOwner)
+	{
 		return m_pOwner->GetClipboardData(lpchrg, reco, lplpdataobj);
+	}
 
 	return E_NOTIMPL;
 }
 
-
-HRESULT STDMETHODCALLTYPE 
+HRESULT STDMETHODCALLTYPE
 CRichEditBaseCtrl::CRichEditOleCallback::GetDragDropEffect(BOOL fDrag, DWORD grfKeyState, LPDWORD pdwEffect)
 {
 	if (m_pOwner)
+	{
 		return m_pOwner->GetDragDropEffect(fDrag, grfKeyState, pdwEffect);
+	}
 
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE 
-CRichEditBaseCtrl::CRichEditOleCallback::GetContextMenu(WORD seltyp, LPOLEOBJECT lpoleobj, CHARRANGE FAR *lpchrg,
-																		  HMENU FAR *lphmenu)
+HRESULT STDMETHODCALLTYPE
+CRichEditBaseCtrl::CRichEditOleCallback::GetContextMenu(WORD seltyp, LPOLEOBJECT lpoleobj, CHARRANGE FAR* lpchrg,
+	HMENU FAR* lphmenu)
 {
 	if (m_pOwner)
+	{
 		return m_pOwner->GetContextMenu(seltyp, lpoleobj, lpchrg, lphmenu);
+	}
 
 	return S_OK;
 }
@@ -394,12 +415,16 @@ void CRichEditBaseCtrl::AdjustDialogPosition(CDialog* pDlg)
 	if (rectDlg.PtInRect(point))
 	{
 		if (point.y > rectDlg.Height())
+		{
 			rectDlg.OffsetRect(0, point.y - rectDlg.bottom - 20);
+		}
 		else
 		{
 			int nVertExt = GetSystemMetrics(SM_CYSCREEN);
 			if (point.y + rectDlg.Height() < nVertExt)
+			{
 				rectDlg.OffsetRect(0, 40 + point.y - rectDlg.top);
+			}
 		}
 		pDlg->MoveWindow(&rectDlg);
 	}
@@ -429,7 +454,9 @@ void CRichEditBaseCtrl::DoEditFindReplace(BOOL bFindOnly, UINT nIDTitle)
 
 	// if selection is empty or spans multiple lines use old find text
 	if (strFind.IsEmpty() || (strFind.FindOneOf(_T("\n\r")) != -1))
+	{
 		strFind = m_findState.strFind;
+	}
 
 	CString strReplace = m_findState.strReplace;
 	m_findState.pFindReplaceDlg = new CFindReplaceDialog;
@@ -437,11 +464,17 @@ void CRichEditBaseCtrl::DoEditFindReplace(BOOL bFindOnly, UINT nIDTitle)
 
 	DWORD dwFlags = NULL;
 	if (m_findState.bNext)
+	{
 		dwFlags |= FR_DOWN;
+	}
 	if (m_findState.bCase)
+	{
 		dwFlags |= FR_MATCHCASE;
+	}
 	if (m_findState.bWord)
+	{
 		dwFlags |= FR_WHOLEWORD;
+	}
 
 	// hide stuff that RichEdit doesn't support
 	dwFlags |= FR_HIDEUPDOWN;
@@ -479,15 +512,19 @@ void CRichEditBaseCtrl::OnFindNext(LPCTSTR lpszFind, BOOL bNext, BOOL bCase, BOO
 	m_findState.bNext = bNext;
 
 	if (!FindText())
+	{
 		TextNotFound(m_findState.strFind);
+	}
 	else
+	{
 		AdjustDialogPosition(m_findState.pFindReplaceDlg);
+	}
 
 	ASSERT_VALID(this);
 }
 
 void CRichEditBaseCtrl::OnReplaceSel(LPCTSTR lpszFind, BOOL bNext, BOOL bCase,
-												 BOOL bWord, LPCTSTR lpszReplace)
+	BOOL bWord, LPCTSTR lpszReplace)
 {
 	ASSERT_VALID(this);
 
@@ -500,18 +537,26 @@ void CRichEditBaseCtrl::OnReplaceSel(LPCTSTR lpszFind, BOOL bNext, BOOL bCase,
 	if (!SameAsSelected(m_findState.strFind, m_findState.bCase, m_findState.bWord))
 	{
 		if (!FindText())
+		{
 			TextNotFound(m_findState.strFind);
+		}
 		else
+		{
 			AdjustDialogPosition(m_findState.pFindReplaceDlg);
+		}
 		return;
 	}
 
 	ReplaceSel(m_findState.strReplace);
 
 	if (!FindText())
+	{
 		TextNotFound(m_findState.strFind);
+	}
 	else
+	{
 		AdjustDialogPosition(m_findState.pFindReplaceDlg);
+	}
 
 	ASSERT_VALID(this);
 }
@@ -542,7 +587,7 @@ void CRichEditBaseCtrl::OnReplaceAll(LPCTSTR lpszFind, LPCTSTR lpszReplace, BOOL
 	do
 	{
 		ReplaceSel(m_findState.strReplace);
-	} 
+	}
 	while (FindTextSimple());
 
 	TextNotFound(m_findState.strFind);
@@ -559,7 +604,9 @@ LRESULT CRichEditBaseCtrl::OnFindReplaceCmd(WPARAM, LPARAM lParam)
 
 	ASSERT(pDialog == m_findState.pFindReplaceDlg);
 	if (pDialog->IsTerminating())
+	{
 		m_findState.pFindReplaceDlg = NULL;
+	}
 	else if (pDialog->FindNext())
 	{
 		OnFindNext(pDialog->GetFindString(), pDialog->SearchDown(),
@@ -589,7 +636,9 @@ BOOL CRichEditBaseCtrl::SameAsSelected(LPCTSTR lpszCompare, BOOL bCase, BOOL /*b
 	long lStartChar, lEndChar;
 	GetSel(lStartChar, lEndChar);
 	if (nLen != (size_t)(lEndChar - lStartChar))
+	{
 		return FALSE;
+	}
 
 	// length is the same, check contents
 	CString strSelect = GetSelText();
@@ -619,9 +668,11 @@ BOOL CRichEditBaseCtrl::FindTextSimple(LPCTSTR lpszFind, BOOL bCase, BOOL bWord)
 	ASSERT(lpszFind != NULL);
 
 	if (!lpszFind || !*lpszFind)
+	{
 		return FALSE;
+	}
 
-	// get the current selection because this is where we 
+	// get the current selection because this is where we
 	// always start searching from
 	FINDTEXTEX ft;
 	GetSel(ft.chrg);
@@ -666,7 +717,9 @@ BOOL CRichEditBaseCtrl::FindTextSimple(LPCTSTR lpszFind, BOOL bCase, BOOL bWord)
 
 	// if we find the text return TRUE
 	if (FindAndSelect(dwFlags, ft) != -1)
+	{
 		return TRUE;
+	}
 
 	// else we need to restart the search from the beginning
 	ft.chrg.cpMin = 0;
@@ -680,10 +733,14 @@ long CRichEditBaseCtrl::FindAndSelect(DWORD dwFlags, FINDTEXTEX& ft)
 	long index = (long)::SendMessage(m_hWnd, EM_FINDTEXTEX, dwFlags, (LPARAM)&ft);
 
 	if (index == -1)
+	{
 		index = (long)::SendMessage(m_hWnd, EM_FINDTEXTEXW, dwFlags, (LPARAM)&ft);
+	}
 
 	if (index != -1) // i.e. we found something
+	{
 		SetSel(ft.chrgText);
+	}
 
 	return index;
 }
