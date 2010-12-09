@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // EnCommandLineInfo.h: interface for the CEnCommandLineInfo class.
@@ -39,21 +52,21 @@
 #pragma once
 #endif // _MSC_VER >= 1000
 
-class CEnCommandLineInfo : public CCommandLineInfo  
+class CEnCommandLineInfo : public CCommandLineInfo
 {
 public:
 	CEnCommandLineInfo();
 	virtual ~CEnCommandLineInfo();
 
-	BOOL HasOption(LPCTSTR szFlag) const; 
-	BOOL GetOption(LPCTSTR szFlag, CStringArray& aParams) const; 
-	BOOL GetOption(LPCTSTR szFlag, CString& sParam) const; 
-	CString GetOption(LPCTSTR szFlag) const; 
+	BOOL HasOption(LPCTSTR szFlag) const;
+	BOOL GetOption(LPCTSTR szFlag, CStringArray& aParams) const;
+	BOOL GetOption(LPCTSTR szFlag, CString& sParam) const;
+	CString GetOption(LPCTSTR szFlag) const;
 
 	void DeleteOption(LPCTSTR szFlag);
 
-	BOOL SetOption(LPCTSTR szFlag, LPCTSTR szParam); 
-	BOOL SetOption(LPCTSTR szFlag, DWORD dwParam); 
+	BOOL SetOption(LPCTSTR szFlag, LPCTSTR szParam);
+	BOOL SetOption(LPCTSTR szFlag, DWORD dwParam);
 
 	static CString ResolveShortcut(LPCTSTR szShortcut);
 
