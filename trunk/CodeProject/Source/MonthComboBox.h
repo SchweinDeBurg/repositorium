@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_MONTHCOMBOBOX_H__4E52F369_8A97_4166_8EA2_32292F13A09A__INCLUDED_)
@@ -42,24 +55,24 @@
 
 class CMonthComboBox : public CComboBox
 {
-// Construction
+	// Construction
 public:
 	CMonthComboBox();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CMonthComboBox)
-	protected:
+protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CMonthComboBox();
 
