@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // CDialogHelper.cpp: implementation of the CDialogHelper class.
@@ -47,7 +60,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -59,30 +72,32 @@ BOOL DH_SimpleScanf(LPCTSTR lpszText, LPCTSTR lpszFormat, va_list pData)
 	ASSERT(lpszText != NULL);
 	ASSERT(lpszFormat != NULL);
 
-	ASSERT(*lpszFormat == '%');
+	ASSERT(*lpszFormat == _T('%'));
 	lpszFormat++;        // skip '%'
 
 	BOOL bLong = FALSE;
 	BOOL bShort = FALSE;
-	if (*lpszFormat == 'l')
+	if (*lpszFormat == _T('l'))
 	{
 		bLong = TRUE;
 		lpszFormat++;
 	}
-	else if (*lpszFormat == 's')
+	else if (*lpszFormat == _T('s'))
 	{
 		bShort = TRUE;
 		lpszFormat++;
 	}
 
-	ASSERT(*lpszFormat == 'd' || *lpszFormat == 'u');
-	ASSERT(lpszFormat[1] == '\0');
+	ASSERT(*lpszFormat == _T('d') || *lpszFormat == _T('u'));
+	ASSERT(lpszFormat[1] == _T('\0'));
 
-	while (*lpszText == ' ' || *lpszText == '\t')
+	while (*lpszText == _T(' ') || *lpszText == _T('\t'))
+	{
 		lpszText++;
+	}
 	TCHAR chFirst = lpszText[0];
 	long l, l2;
-	if (*lpszFormat == 'd')
+	if (*lpszFormat == _T('d'))
 	{
 		// signed
 		l = _tcstol(lpszText, (LPTSTR*)&lpszText, 10);
@@ -91,23 +106,33 @@ BOOL DH_SimpleScanf(LPCTSTR lpszText, LPCTSTR lpszFormat, va_list pData)
 	else
 	{
 		// unsigned
-		if (*lpszText == '-')
+		if (*lpszText == _T('-'))
+		{
 			return FALSE;
+		}
 		l = (long)_tcstoul(lpszText, (LPTSTR*)&lpszText, 10);
 		l2 = (unsigned int)l;
 	}
-	if (l == 0 && chFirst != '0')
+	if (l == 0 && chFirst != _T('0'))
+	{
 		return FALSE;   // could not convert
+	}
 
-	while (*lpszText == ' ' || *lpszText == '\t')
+	while (*lpszText == _T(' ') || *lpszText == _T('\t'))
+	{
 		lpszText++;
-	if (*lpszText != '\0')
+	}
+	if (*lpszText != _T('\0'))
+	{
 		return FALSE;   // not terminated properly
+	}
 
 	if (bShort)
 	{
 		if ((short)l != l)
+		{
 			return FALSE;   // too big for short
+		}
 		*va_arg(pData, short*) = (short)l;
 	}
 	else
@@ -124,18 +149,26 @@ BOOL DH_SimpleScanf(LPCTSTR lpszText, LPCTSTR lpszFormat, va_list pData)
 BOOL DH_SimpleFloatParse(LPCTSTR lpszText, double& d)
 {
 	ASSERT(lpszText != NULL);
-	while (*lpszText == ' ' || *lpszText == '\t')
+	while (*lpszText == _T(' ') || *lpszText == _T('\t'))
+	{
 		lpszText++;
+	}
 
 	TCHAR chFirst = lpszText[0];
 	d = _tcstod(lpszText, (LPTSTR*)&lpszText);
-	if (d == 0.0 && chFirst != '0')
+	if (d == 0.0 && chFirst != _T('0'))
+	{
 		return FALSE;   // could not convert
-	while (*lpszText == ' ' || *lpszText == '\t')
+	}
+	while (*lpszText == _T(' ') || *lpszText == _T('\t'))
+	{
 		lpszText++;
+	}
 
-	if (*lpszText != '\0')
+	if (*lpszText != _T('\0'))
+	{
 		return FALSE;   // not terminated properly
+	}
 
 	return TRUE;
 }
@@ -152,29 +185,27 @@ void DH_DDX_TextWithFormat(CDataExchange* pDX, int nIDC, LPCTSTR lpszFormat, UIN
 		// the following works for %d, %u, %ld, %lu
 		::GetWindowText(hWndCtrl, szT, sizeof(szT) / sizeof(TCHAR));
 
-// *******************************************************************
+		// *******************************************************************
 		if (_tcslen(szT) == 0)
+		{
 			//fabio_2005
 #if _MSC_VER >= 1400
 			_tcscpy_s(szT, _T("0"));
 #else
 			_tcscpy(szT, _T("0"));
 #endif
+		}
 
-// *******************************************************************
+		// *******************************************************************
 
 		if (!DH_SimpleScanf(szT, lpszFormat, pData))
 		{
-// *******************************************************************
-//			AfxMessageBox(nIDPrompt);
-//			pDX->Fail();        // throws exception
-// *******************************************************************
 		}
 	}
 	else
 	{
 		wvsprintf(szT, lpszFormat, pData);
-			// does not support floating point numbers - see dlgfloat.cpp
+		// does not support floating point numbers - see dlgfloat.cpp
 		SetWindowText(hWndCtrl, szT);
 	}
 
@@ -197,12 +228,14 @@ void DH_TextFloatFormat(CDataExchange* pDX, int nIDC, void* pData, double value,
 
 		// *******************************************************************
 		if (_tcslen(szBuffer) == 0)
+		{
 			//fabio_2005
 #if _MSC_VER >= 1400
 			_tcscpy_s(szBuffer, _T("0"));
 #else
 			_tcscpy(szBuffer, _T("0"));
 #endif
+		}
 
 		// *******************************************************************
 
@@ -210,15 +243,15 @@ void DH_TextFloatFormat(CDataExchange* pDX, int nIDC, void* pData, double value,
 
 		if (!DH_SimpleFloatParse(szBuffer, d))
 		{
-// *******************************************************************
-//			AfxMessageBox(nIDPrompt);
-//			pDX->Fail();        // throws exception
-// *******************************************************************
 		}
 		if (nSizeGcvt == FLT_DIG)
+		{
 			*((float*)pData) = (float)d;
+		}
 		else
+		{
 			*((double*)pData) = d;
+		}
 	}
 	else
 	{
@@ -246,55 +279,73 @@ void CDialogHelper::DDX_Text(CDataExchange* pDX, int nIDC, BYTE& value)
 
 		if (n > 255)
 		{
-// *******************************************************************
-//			AfxMessageBox(AFX_IDP_PARSE_BYTE);
-//			pDX->Fail();        // throws exception
-// *******************************************************************
 		}
 		value = (BYTE)n;
 	}
 	else
+	{
 		DH_DDX_TextWithFormat(pDX, nIDC, _T("%u"), AFX_IDP_PARSE_BYTE, n);
+	}
 }
 
 void CDialogHelper::DDX_Text(CDataExchange* pDX, int nIDC, short& value)
 {
 	if (pDX->m_bSaveAndValidate)
+	{
 		DH_DDX_TextWithFormat(pDX, nIDC, _T("%sd"), AFX_IDP_PARSE_INT, &value);
+	}
 	else
+	{
 		DH_DDX_TextWithFormat(pDX, nIDC, _T("%hd"), AFX_IDP_PARSE_INT, value);
+	}
 }
 
 void CDialogHelper::DDX_Text(CDataExchange* pDX, int nIDC, int& value)
 {
 	if (pDX->m_bSaveAndValidate)
+	{
 		DH_DDX_TextWithFormat(pDX, nIDC, _T("%d"), AFX_IDP_PARSE_INT, &value);
+	}
 	else
+	{
 		DH_DDX_TextWithFormat(pDX, nIDC, _T("%d"), AFX_IDP_PARSE_INT, value);
+	}
 }
 
 void CDialogHelper::DDX_Text(CDataExchange* pDX, int nIDC, UINT& value)
 {
 	if (pDX->m_bSaveAndValidate)
+	{
 		DH_DDX_TextWithFormat(pDX, nIDC, _T("%u"), AFX_IDP_PARSE_UINT, &value);
+	}
 	else
+	{
 		DH_DDX_TextWithFormat(pDX, nIDC, _T("%u"), AFX_IDP_PARSE_UINT, value);
+	}
 }
 
 void CDialogHelper::DDX_Text(CDataExchange* pDX, int nIDC, long& value)
 {
 	if (pDX->m_bSaveAndValidate)
+	{
 		DH_DDX_TextWithFormat(pDX, nIDC, _T("%ld"), AFX_IDP_PARSE_INT, &value);
+	}
 	else
+	{
 		DH_DDX_TextWithFormat(pDX, nIDC, _T("%ld"), AFX_IDP_PARSE_INT, value);
+	}
 }
 
 void CDialogHelper::DDX_Text(CDataExchange* pDX, int nIDC, DWORD& value)
 {
 	if (pDX->m_bSaveAndValidate)
+	{
 		DH_DDX_TextWithFormat(pDX, nIDC, _T("%lu"), AFX_IDP_PARSE_UINT, &value);
+	}
 	else
+	{
 		DH_DDX_TextWithFormat(pDX, nIDC, _T("%lu"), AFX_IDP_PARSE_UINT, value);
+	}
 }
 
 void CDialogHelper::DDX_Text(CDataExchange* pDX, int nIDC, CString& value)
@@ -347,7 +398,9 @@ BOOL CDialogHelper::UpdateDataEx(CWnd* pWnd, int nIDC, int& value, BOOL bSaveAnd
 	HWND hCtrl = dx.PrepareCtrl(nIDC);
 
 	if (!hCtrl)
+	{
 		return FALSE;
+	}
 
 	CString sClass;
 
@@ -355,34 +408,46 @@ BOOL CDialogHelper::UpdateDataEx(CWnd* pWnd, int nIDC, int& value, BOOL bSaveAnd
 	sClass.ReleaseBuffer();
 
 	if (CWinClasses::IsEditControl(hCtrl))
+	{
 		DDX_Text(&dx, nIDC, value);
+	}
 
 	else if (CWinClasses::IsClass(hCtrl, WC_COMBOBOX))
+	{
 		DDX_CBIndex(&dx, nIDC, value);
+	}
 
 	else if (CWinClasses::IsClass(hCtrl, WC_LISTBOX))
+	{
 		DDX_LBIndex(&dx, nIDC, value);
+	}
 
 	else if (CWinClasses::IsClass(hCtrl, WC_SCROLLBAR))
+	{
 		DDX_Scroll(&dx, nIDC, value);
+	}
 
 	else if (CWinClasses::IsClass(hCtrl, WC_BUTTON))
 	{
 		DWORD dwStyle = GetWindowLong(hCtrl, GWL_STYLE);
 
 		if ((dwStyle & BS_CHECKBOX) == BS_CHECKBOX)
+		{
 			DDX_Check(&dx, nIDC, value);
+		}
 		else if ((dwStyle & BS_RADIOBUTTON) == BS_RADIOBUTTON)
+		{
 			DDX_Radio(&dx, nIDC, value);
+		}
 		else
 		{
-			ASSERT (0);
+			ASSERT(0);
 			return FALSE;
 		}
 	}
 	else
 	{
-		ASSERT (0);
+		ASSERT(0);
 		return FALSE;
 	}
 
@@ -429,20 +494,27 @@ BOOL CDialogHelper::UpdateDataEx(CWnd* pWnd, int nIDC, CString& value, BOOL bSav
 	HWND hCtrl = dx.PrepareCtrl(nIDC);
 
 	if (!hCtrl)
+	{
 		return FALSE;
+	}
 
 	if (CWinClasses::IsEditControl(hCtrl))
+	{
 		DDX_Text(&dx, nIDC, value);
+	}
 
 	else if (CWinClasses::IsClass(hCtrl, WC_COMBOBOX))
+	{
 		DDX_CBString(&dx, nIDC, value);
+	}
 
 	else if (CWinClasses::IsClass(hCtrl, WC_LISTBOX))
+	{
 		DDX_LBString(&dx, nIDC, value);
+	}
 
 	else
 	{
-//		ASSERT (0);
 		return FALSE;
 	}
 
@@ -459,17 +531,23 @@ BOOL CDialogHelper::UpdateDataExact(CWnd* pWnd, int nIDC, CString& value, BOOL b
 	HWND hCtrl = dx.PrepareCtrl(nIDC);
 
 	if (!hCtrl)
+	{
 		return FALSE;
+	}
 
 	else if (CWinClasses::IsClass(hCtrl, WC_COMBOBOX))
+	{
 		DDX_CBStringExact(&dx, nIDC, value);
+	}
 
 	else if (CWinClasses::IsClass(hCtrl, WC_LISTBOX))
+	{
 		DDX_LBStringExact(&dx, nIDC, value);
+	}
 
 	else
 	{
-		ASSERT (0);
+		ASSERT(0);
 		return FALSE;
 	}
 
@@ -511,7 +589,9 @@ void CDialogHelper::SetFont(CWnd* pWnd, HFONT hFont, BOOL bRedraw)
 	// don't send to toolbar as it causes all sorts of problems with drop buttons
 	// but do send to a toolbar's children
 	if (!pWnd->IsKindOf(RUNTIME_CLASS(CToolBar)))
+	{
 		pWnd->SendMessage(WM_SETFONT, (WPARAM)hFont, bRedraw);
+	}
 
 	// children
 	CWnd* pChild = pWnd->GetWindow(GW_CHILD);
@@ -526,7 +606,9 @@ void CDialogHelper::SetFont(CWnd* pWnd, HFONT hFont, BOOL bRedraw)
 HFONT CDialogHelper::GetFont(CWnd* pWnd)
 {
 	if (pWnd)
+	{
 		return GetFont(pWnd->GetSafeHwnd());
+	}
 
 	return (HFONT)::GetStockObject(DEFAULT_GUI_FONT);
 }
@@ -538,7 +620,9 @@ HFONT CDialogHelper::GetFont(HWND hWnd)
 		HFONT hFont = (HFONT)::SendMessage(hWnd, WM_GETFONT, 0, 0);
 
 		if (hFont)
+		{
 			return hFont;
+		}
 	}
 
 	return (HFONT)::GetStockObject(DEFAULT_GUI_FONT);
@@ -547,9 +631,11 @@ HFONT CDialogHelper::GetFont(HWND hWnd)
 int CDialogHelper::SetComboBoxItems(CComboBox& combo, const CStringArray& aItems)
 {
 	combo.ResetContent();
-	
+
 	for (int nItem = 0; nItem < aItems.GetSize(); nItem++)
+	{
 		combo.AddString(aItems[nItem]);
+	}
 
 	return combo.GetCount();
 }
@@ -558,17 +644,23 @@ BOOL CDialogHelper::ProcessDialogControlShortcut(const MSG* pMsg)
 {
 	// message id must be WM_KEYDOWN and alt key must be pressed
 	if (pMsg->message != WM_SYSKEYDOWN || pMsg->wParam == VK_MENU)
+	{
 		return FALSE;
+	}
 
 	if (!Misc::ModKeysArePressed(MKS_ALT))
+	{
 		return FALSE;
+	}
 
 	// convert shortcut from virtual key to char
 	UINT nShortcut = MapVirtualKey(pMsg->wParam, 2);
 
 	if (!nShortcut)
+	{
 		return FALSE;
-		
+	}
+
 	// find the next control having this accelerator
 	CWnd* pFocus = CWnd::GetFocus();
 
@@ -593,7 +685,7 @@ void CDialogHelper::ClipChild(CDC* pDC, CWnd* pWnd, UINT nChildID)
 	if (pChild)
 	{
 		CRect rChild;
-	
+
 		pChild->GetWindowRect(rChild);
 		pWnd->ScreenToClient(rChild);
 		pDC->ExcludeClipRect(rChild);
@@ -607,7 +699,7 @@ void CDialogHelper::ClipChild(CDC* pDC, CWnd* pChild)
 	if (pParent)
 	{
 		CRect rChild;
-	
+
 		pChild->GetWindowRect(rChild);
 		pParent->ScreenToClient(rChild);
 		pDC->ExcludeClipRect(rChild);
@@ -630,7 +722,9 @@ CWnd* CDialogHelper::FindNextMatch(CWnd* pCurrent, UINT nShortcut)
 	CWnd* pTop = pCurrent->GetParent();
 
 	while (pTop && !(pTop->GetStyle() & WS_CAPTION))
+	{
 		pTop = pTop->GetParent();
+	}
 
 	if (pTop && pTop != pCurrent)
 	{
@@ -646,7 +740,9 @@ CWnd* CDialogHelper::FindNextMatch(CWnd* pCurrent, UINT nShortcut)
 			pChild = pTop->GetNextDlgTabItem(pChild);
 
 			if (pChild == pFirst)
+			{
 				break;
+			}
 		}
 
 		if (lstWnds.GetCount() > 1)
@@ -667,7 +763,9 @@ CWnd* CDialogHelper::FindNextMatch(CWnd* pCurrent, UINT nShortcut)
 				lstWnds.RemoveHead();
 			}
 			else
+			{
 				TRACE(_T("CDialogHelper::FindNextMatch(pCurrent not found)\n"));
+			}
 
 			// now traverse the list looking for preceding static
 			// labels with a matching accelerator
@@ -686,7 +784,9 @@ CWnd* CDialogHelper::FindNextMatch(CWnd* pCurrent, UINT nShortcut)
 					pPrev->GetWindowText(sText);
 
 					if (!sText.IsEmpty() && GetShortcut(sText) == nShortcut)
+					{
 						return pChild;
+					}
 				}
 			}
 		}
@@ -700,8 +800,10 @@ UINT CDialogHelper::GetShortcut(const CString& sText)
 {
 	for (int nChar = 0; nChar < sText.GetLength() - 1; nChar++)
 	{
-		if (sText[nChar] == '&' && sText[nChar + 1] != '&')
+		if (sText[nChar] == _T('&') && sText[nChar + 1] != _T('&'))
+		{
 			return toupper(sText[nChar + 1]);
+		}
 	}
 
 	// no shortcut
@@ -711,7 +813,7 @@ UINT CDialogHelper::GetShortcut(const CString& sText)
 UINT CDialogHelper::MessageBoxEx(CWnd* pWnd, UINT nIDText, UINT nIDCaption, UINT nType)
 {
 	CString sText;
-	
+
 	sText.LoadString(nIDText);
 
 	return MessageBoxEx(pWnd, sText, nIDCaption, nType);
@@ -720,7 +822,7 @@ UINT CDialogHelper::MessageBoxEx(CWnd* pWnd, UINT nIDText, UINT nIDCaption, UINT
 UINT CDialogHelper::MessageBoxEx(CWnd* pWnd, LPCTSTR szText, UINT nIDCaption, UINT nType)
 {
 	CString sCaption;
-	
+
 	sCaption.LoadString(nIDCaption);
 
 	return pWnd->MessageBox(szText, sCaption, nType);
@@ -728,12 +830,12 @@ UINT CDialogHelper::MessageBoxEx(CWnd* pWnd, LPCTSTR szText, UINT nIDCaption, UI
 
 int CDialogHelper::RefreshMaxDropWidth(CComboBox& combo, CDC* pDCRef)
 {
-   int nWidth = CalcMaxTextWidth(combo, 0, TRUE, pDCRef);
-   combo.SetDroppedWidth(nWidth);
+	int nWidth = CalcMaxTextWidth(combo, 0, TRUE, pDCRef);
+	combo.SetDroppedWidth(nWidth);
 
-   return nWidth;
+	return nWidth;
 }
- 
+
 int CDialogHelper::CalcMaxTextWidth(CComboBox& combo, int nMinWidth, BOOL bDropped, CDC* pDCRef)
 {
 	CDC* pDC = pDCRef;
@@ -748,11 +850,11 @@ int CDialogHelper::CalcMaxTextWidth(CComboBox& combo, int nMinWidth, BOOL bDropp
 	CString sText;
 	int nMaxWidth = nMinWidth;
 	int nItem = combo.GetCount();
-	
+
 	while (nItem--)
 	{
 		combo.GetLBText(nItem, sText);
-		
+
 		int nWidth = pDC->GetTextExtent(sText).cx;
 		nMaxWidth = max(nMaxWidth, nWidth);
 	}
@@ -773,7 +875,9 @@ int CDialogHelper::CalcMaxTextWidth(CComboBox& combo, int nMinWidth, BOOL bDropp
 
 		// Adjust the width for the vertical scroll bar and the left and right border.
 		if (combo.GetStyle() & WS_VSCROLL)
+		{
 			nMaxWidth += ::GetSystemMetrics(SM_CXVSCROLL);
+		}
 
 		nMaxWidth += (2 * ::GetSystemMetrics(SM_CXEDGE));
 	}
@@ -813,35 +917,43 @@ BOOL CDialogHelper::ControlWantsEnter(HWND hwnd)
 {
 	CString sClass = CWinClasses::GetClass(hwnd);
 	DWORD dwStyle = ::GetWindowLong(hwnd, GWL_STYLE);
-	
+
 	if (CWinClasses::IsClass(sClass, WC_COMBOBOX))
 	{
 		// check if dropped
 		if (SendMessage(hwnd, CB_GETDROPPEDSTATE, 0, 0))
+		{
 			return TRUE;
+		}
 	}
 	// also check for combo's edit box and edits with ES_WANTRETURN
 	else if (CWinClasses::IsClass(sClass, WC_EDIT))
 	{
 		if (dwStyle & ES_WANTRETURN)
+		{
 			return TRUE;
-		
+		}
+
 		HWND hwndParent = ::GetParent(hwnd);
 
 		if (hwndParent)
 		{
 			// check if parent is dropped combo
-			if (CWinClasses::IsClass(hwndParent, WC_COMBOBOX) && 
+			if (CWinClasses::IsClass(hwndParent, WC_COMBOBOX) &&
 				::SendMessage(hwndParent, CB_GETDROPPEDSTATE, 0, 0))
+			{
 				return TRUE;
+			}
 
-		}		
+		}
 	}
 	// and also richedit with ES_WANTRETURN
 	else if (CWinClasses::IsRichEditControl(sClass))
 	{
 		if (dwStyle & ES_WANTRETURN)
+		{
 			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -849,16 +961,18 @@ BOOL CDialogHelper::ControlWantsEnter(HWND hwnd)
 
 CString CDialogHelper::GetClassName(CWnd* pWnd)
 {
-	ASSERT (pWnd);
-	
+	ASSERT(pWnd);
+
 	if (!pWnd)
+	{
 		return _T("");
-	
+	}
+
 	CString sName;
-	
+
 	::GetClassName(*pWnd, sName.GetBuffer(128), 127);
 	sName.ReleaseBuffer();
-	
+
 	return sName;
 }
 
@@ -866,10 +980,12 @@ CString CDialogHelper::GetClassName(CWnd* pWnd)
 CRect CDialogHelper::OffsetCtrl(CWnd* pParent, UINT nCtrlID, int x, int y)
 {
 	CWnd* pCtrl = pParent->GetDlgItem(nCtrlID);
-	
+
 	if (pCtrl)
+	{
 		return OffsetCtrl(pParent, pCtrl, x, y);
-	
+	}
+
 	return CRect(0, 0, 0, 0);
 }
 
@@ -882,7 +998,7 @@ CRect CDialogHelper::OffsetCtrl(CWnd* pParent, CWnd* pChild, int x, int y)
 
 	pChild->GetWindowRect(rChild);
 	pParent->ScreenToClient(rChild);
-	
+
 	if (x || y)
 	{
 		rChild.OffsetRect(x, y);
@@ -896,22 +1012,22 @@ CRect CDialogHelper::OffsetCtrl(CWnd* pParent, CWnd* pChild, int x, int y)
 CRect CDialogHelper::MoveCtrl(CWnd* pParent, UINT nCtrlID, int x, int y)
 {
 	CWnd* pCtrl = pParent->GetDlgItem(nCtrlID);
-	
+
 	if (pCtrl)
 	{
 		CRect rChild;
 		pCtrl->GetWindowRect(rChild);
 		pParent->ScreenToClient(rChild);
-		
+
 		if (x || y)
 		{
 			rChild.OffsetRect(x - rChild.left, y - rChild.top);
 			pCtrl->MoveWindow(rChild);
 		}
-		
+
 		return rChild;
 	}
-	
+
 	return CRect(0, 0, 0, 0);
 }
 
@@ -919,27 +1035,29 @@ CRect CDialogHelper::MoveCtrl(CWnd* pParent, UINT nCtrlID, int x, int y)
 CRect CDialogHelper::ResizeCtrl(CWnd* pParent, UINT nCtrlID, int cx, int cy)
 {
 	CWnd* pCtrl = pParent->GetDlgItem(nCtrlID);
-	
+
 	if (pCtrl)
 	{
 		CRect rChild, rParent;
 		pCtrl->GetWindowRect(rChild);
 		pParent->ScreenToClient(rChild);
 		pParent->GetClientRect(rParent);
-		
+
 		if (cx || cy)
 		{
 			rChild.right += cx;
 			rChild.bottom += cy;
-			
+
 			// make sure it also intersects with parent
 			if (rChild.IntersectRect(rChild, rParent))
+			{
 				pCtrl->MoveWindow(rChild);
+			}
 		}
-		
+
 		return rChild;
 	}
-	
+
 	return CRect(0, 0, 0, 0);
 }
 
@@ -950,10 +1068,12 @@ void CDialogHelper::SetControlState(CWnd* pParent, UINT nCtrlID, RT_CTRLSTATE nS
 
 void CDialogHelper::SetControlsState(CWnd* pParent, UINT nCtrlIDFrom, UINT nCtrlIDTo, RT_CTRLSTATE nState)
 {
-	ASSERT (pParent);
-	
+	ASSERT(pParent);
+
 	for (UINT nID = nCtrlIDFrom; nID <= nCtrlIDTo; nID++)
+	{
 		SetControlState(::GetDlgItem(*pParent, nID), nState);
+	}
 }
 
 void CDialogHelper::SetControlState(HWND hCtrl, RT_CTRLSTATE nState)
@@ -964,15 +1084,17 @@ void CDialogHelper::SetControlState(HWND hCtrl, RT_CTRLSTATE nState)
 		{
 		case RTCS_ENABLED:
 			::EnableWindow(hCtrl, TRUE);
-			
+
 			if (IsEdit(hCtrl))
+			{
 				::SendMessage(hCtrl, EM_SETREADONLY, FALSE, 0);
+			}
 			break;
-			
+
 		case RTCS_DISABLED:
 			::EnableWindow(hCtrl, FALSE);
 			break;
-			
+
 		case RTCS_READONLY:
 			if (IsEdit(hCtrl))
 			{
@@ -992,25 +1114,27 @@ void CDialogHelper::SetControlState(HWND hCtrl, RT_CTRLSTATE nState)
 BOOL CDialogHelper::IsEdit(HWND hCtrl)
 {
 	CString sClass = CWinClasses::GetClass(hCtrl);
-	
+
 	return (CWinClasses::IsClass(sClass, WC_EDIT) ||
 		CWinClasses::IsClass(sClass, WC_RICHEDIT) ||
 		CWinClasses::IsClass(sClass, WC_RICHEDIT20));
 }
 
-BOOL CDialogHelper::IsEdit(CWnd* pParent, UINT nCtrlID) 
-{ 
-	ASSERT (pParent);
-	
-	return IsEdit(::GetDlgItem(*pParent, nCtrlID)); 
+BOOL CDialogHelper::IsEdit(CWnd* pParent, UINT nCtrlID)
+{
+	ASSERT(pParent);
+
+	return IsEdit(::GetDlgItem(*pParent, nCtrlID));
 }
 
 void CDialogHelper::ShowControls(CWnd* pParent, UINT nCtrlIDFrom, UINT nCtrlIDTo, BOOL bShow)
 {
-	ASSERT (pParent);
-	
+	ASSERT(pParent);
+
 	for (UINT nID = nCtrlIDFrom; nID <= nCtrlIDTo; nID++)
+	{
 		ShowControl(pParent, nID, bShow);
+	}
 }
 
 void CDialogHelper::ShowControl(CWnd* pParent, UINT nCtrlID, BOOL bShow)
@@ -1021,15 +1145,17 @@ void CDialogHelper::ShowControl(CWnd* pParent, UINT nCtrlID, BOOL bShow)
 void CDialogHelper::ShowControl(CWnd* pCtrl, BOOL bShow)
 {
 	if (!pCtrl)
+	{
 		return;
-	
+	}
+
 	pCtrl->ShowWindow(bShow ? SW_SHOW : SW_HIDE);
 }
 
 void CDialogHelper::ExcludeControls(CWnd* pParent, CDC* pDC, UINT nCtrlIDFrom, UINT nCtrlIDTo)
 {
-	ASSERT (pParent);
-	
+	ASSERT(pParent);
+
 	for (UINT nID = nCtrlIDFrom; nID <= nCtrlIDTo; nID++)
 	{
 		HWND hWnd = ::GetDlgItem(*pParent, nID);
@@ -1038,16 +1164,18 @@ void CDialogHelper::ExcludeControls(CWnd* pParent, CDC* pDC, UINT nCtrlIDFrom, U
 		DWORD dwExStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 
 		if (::IsWindowVisible(hWnd) && !(dwExStyle & WS_EX_TRANSPARENT))
+		{
 			pDC->ExcludeClipRect(OffsetCtrl(pParent, nID));
+		}
 	}
 }
 
 void CDialogHelper::ExcludeChildren(CWnd* pParent, CDC* pDC)
 {
-	ASSERT (pParent);
+	ASSERT(pParent);
 
 	CWnd* pChild = pParent->GetWindow(GW_CHILD);
-	
+
 	while (pChild)
 	{
 		ExcludeChild(pParent, pDC, pChild);
@@ -1057,12 +1185,14 @@ void CDialogHelper::ExcludeChildren(CWnd* pParent, CDC* pDC)
 
 void CDialogHelper::ExcludeChild(CWnd* pParent, CDC* pDC, CWnd* pChild)
 {
-	ASSERT (pParent);
-	ASSERT (pChild);
+	ASSERT(pParent);
+	ASSERT(pChild);
 
 	// don't clip transparent controls
 	DWORD dwExStyle = ::GetWindowLong(*pChild, GWL_EXSTYLE);
 
 	if (pChild->IsWindowVisible() && !(dwExStyle & WS_EX_TRANSPARENT))
+	{
 		pDC->ExcludeClipRect(OffsetCtrl(pParent, pChild));
+	}
 }
