@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,12 +26,25 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // EnListCtrl.h : header file
 //
 #if !defined ( ENLISTCTRL_H )
-#define ENLISTCTRL_H 
+#define ENLISTCTRL_H
 
 #include "EnHeaderCtrl.h"
 #include "EnString.h"
@@ -41,19 +54,23 @@
 /////////////////////////////////////////////////////////////////////////////
 // CEnListCtrl window
 
-#define LVN_USERSELCHANGE			(LVN_FIRST-21)
-#define LVN_COPY					(LVN_FIRST-22)
-#define LVN_CUT						(LVN_FIRST-23)
-#define LVN_PASTE					(LVN_FIRST-24)
-#define LVN_DELETE					(LVN_FIRST-25)
-#define LVN_USERSELCHANGEDBLCLK		(LVN_FIRST-26)
-#define LVN_CHECKCHANGE				(LVN_FIRST-40)
+#define LVN_USERSELCHANGE           (LVN_FIRST-21)
+#define LVN_COPY                    (LVN_FIRST-22)
+#define LVN_CUT                     (LVN_FIRST-23)
+#define LVN_PASTE                   (LVN_FIRST-24)
+#define LVN_DELETE                  (LVN_FIRST-25)
+#define LVN_USERSELCHANGEDBLCLK     (LVN_FIRST-26)
+#define LVN_CHECKCHANGE             (LVN_FIRST-40)
 
 // helper class for extending column data
 class CColumnData
 {
 public:
-	CColumnData() { crText = ::GetSysColor(COLOR_WINDOWTEXT); nFormat = ES_END; }
+	CColumnData()
+	{
+		crText = ::GetSysColor(COLOR_WINDOWTEXT);
+		nFormat = ES_END;
+	}
 	COLORREF crText;
 	int nFormat;
 };
@@ -62,14 +79,14 @@ class CEnListCtrl : public CListCtrl
 {
 	DECLARE_DYNAMIC(CEnListCtrl)
 
-		// Construction
+	// Construction
 public:
 	CEnHeaderCtrl* GetHeader();
 	const CEnHeaderCtrl* GetHeader() const;
 	virtual int SetCurSel(int nIndex, bool bNotifyParent = FALSE); // single selection
 	virtual int GetCurSel() const;
 	void SetMulSel(int nIndexStart, int nIndexEnd, BOOL bSelect = TRUE, BOOL bNotifyParent = FALSE); // multiple selection
-	void SetItemFocus(int nIndex, BOOL bFocused); 
+	void SetItemFocus(int nIndex, BOOL bFocused);
 	int GetFirstSel() const;
 	int GetNextSel(int nPrevSel) const;
 	int GetLastSel() const;
@@ -81,9 +98,15 @@ public:
 	void EnableHeaderTracking(BOOL bAllow);
 	void ShowGrid(BOOL bVert, BOOL bHorz);
 	void IsShowingGrid(BOOL& bVert, BOOL& bHorz) const
-		{ bVert = m_bVertGrid; bHorz = m_bHorzGrid; }
+	{
+		bVert = m_bVertGrid;
+		bHorz = m_bHorzGrid;
+	}
 	void SetView(int nView);
-	int GetView() const { return m_nCurView; }
+	int GetView() const
+	{
+		return m_nCurView;
+	}
 	int GetFocusedItem() const;
 	void SetLastColumnStretchy(BOOL bStretchy);
 	void SetFirstColumnStretchy(BOOL bStretchy);
@@ -93,22 +116,40 @@ public:
 	BOOL SetTooltipCtrlText(CString sText);
 	BOOL SetItemHeight(int nHeight);
 	void DeleteAllColumns();
-	void SetReadOnly(BOOL bReadOnly) { m_bReadOnly = bReadOnly; }
-	BOOL IsReadOnly() const { return m_bReadOnly; }
+	void SetReadOnly(BOOL bReadOnly)
+	{
+		m_bReadOnly = bReadOnly;
+	}
+	BOOL IsReadOnly() const
+	{
+		return m_bReadOnly;
+	}
 	BOOL SelectDropTarget(int nItem);
 	void SetItemImage(int nItem, int nImage);
 	BOOL IsItemSelected(int nItem) const;
-	void SetSortAscending(BOOL bAscending) { m_bSortAscending = bAscending; }
-	BOOL GetSortAscending() const { return m_bSortAscending; }
+	void SetSortAscending(BOOL bAscending)
+	{
+		m_bSortAscending = bAscending;
+	}
+	BOOL GetSortAscending() const
+	{
+		return m_bSortAscending;
+	}
 	virtual void Sort();
-	void EnableSorting(BOOL bEnable) { m_bSortingEnabled = bEnable; }
+	void EnableSorting(BOOL bEnable)
+	{
+		m_bSortingEnabled = bEnable;
+	}
 	void SetItemIndent(int nItem, int nIndent);
 	int GetItemIndent(int nItem) const;
 	void EnableAlternateRowColoring(BOOL bEnable = TRUE);
-	
+
 	// column methods
 	int GetColumnCount() const;
-	int GetSortColumn() const { return m_nSortColumn; }
+	int GetSortColumn() const
+	{
+		return m_nSortColumn;
+	}
 	void SetSortColumn(int nColumn, BOOL bResort = TRUE);
 	COLORREF GetColumnColor(int nCol) const;
 	void SetColumnColor(int nCol, COLORREF color);
@@ -116,7 +157,7 @@ public:
 	int GetColumnFormat(int nCol) const;
 	BOOL SetColumnText(int nCol, LPCTSTR szText);
 
-// Attributes
+	// Attributes
 protected:
 	CEnHeaderCtrl m_header;
 	BOOL m_bVertGrid, m_bHorzGrid;
@@ -141,24 +182,24 @@ protected:
 	BOOL m_bAlternateRowColoring;
 
 private:
-	CMap<int, int, CColumnData*, CColumnData*> m_mapColumnData; 
-	CMap<DWORD, DWORD, CString, CString&> m_mapSortStrings; 
+	CMap<int, int, CColumnData*, CColumnData*> m_mapColumnData;
+	CMap<DWORD, DWORD, CString, CString&> m_mapSortStrings;
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CEnListCtrl)
-	public:
+public:
 	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
+protected:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CEnListCtrl();
 
@@ -181,7 +222,7 @@ protected:
 	afx_msg void OnColumnClick(NMHDR* pNMHDR, LPARAM* lParam);
 	DECLARE_MESSAGE_MAP()
 
-// helpers
+	// helpers
 	int GetImageIndex(int nItem, int nSubItem) const;
 	virtual void Copy() {} // derived class override provides logic
 	virtual void Delete() {} // derived class override provides logic
@@ -193,12 +234,21 @@ protected:
 	virtual int CompareItems(DWORD dwItemData1, DWORD dwItemData2, int nSortColumn);
 	virtual COLORREF GetItemTextColor(int nItem, int nSubItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const;
 	virtual COLORREF GetItemBackColor(int nItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const;
-	virtual CFont* GetItemFont(int /*nItem*/, int /*nSubItem*/) { return NULL; }
+	virtual CFont* GetItemFont(int /*nItem*/, int /*nSubItem*/)
+	{
+		return NULL;
+	}
 	int GetImageStyle(BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const;
-	virtual CString GetNoItemsText() const { return _T(""); }
+	virtual CString GetNoItemsText() const
+	{
+		return _T("");
+	}
 
 	void DeleteAllColumnData();
-	virtual CColumnData* GetNewColumnData() const { return new CColumnData; }
+	virtual CColumnData* GetNewColumnData() const
+	{
+		return new CColumnData;
+	}
 	CColumnData* CreateColumnData(int nCol);
 	const CColumnData* GetColumnData(int nCol) const;
 	void BuildSortMap(int nCol);
