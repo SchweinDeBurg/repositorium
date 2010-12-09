@@ -3,7 +3,7 @@
 // Author:  Hans Dietrich
 //          hdietrich@gmail.com
 //
-// This code is based on "Outlook 98-Style FlatHeader Control" 
+// This code is based on "Outlook 98-Style FlatHeader Control"
 // by Maarten Hoeben.
 //
 // See http://www.codeguru.com/listview/FlatHeader.shtml
@@ -13,7 +13,7 @@
 //     it in any way you like, except that you may not sell this source code.
 //
 //     This software is provided "as is" with no expressed or implied warranty.
-//     I accept no liability for any damage or loss of business that this 
+//     I accept no liability for any damage or loss of business that this
 //     software may cause.
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,10 +56,10 @@ CXHeaderCtrl::CXHeaderCtrl()
 	m_cr3DFace        = ::GetSysColor(COLOR_3DFACE);
 	m_crBtnText       = ::GetSysColor(COLOR_BTNTEXT);
 
-	m_pListCtrl       = NULL;			//+++
-	m_nFormat         = DT_DEFAULT;		//+++
-	m_rgbText         = m_crBtnText;	//+++
-	m_bDividerLines   = TRUE;			//+++
+	m_pListCtrl       = NULL;           //+++
+	m_nFormat         = DT_DEFAULT;     //+++
+	m_rgbText         = m_crBtnText;    //+++
+	m_bDividerLines   = TRUE;           //+++
 	m_bDoubleBuffer   = TRUE;
 	m_iSpacing        = 6;
 	m_sizeArrow.cx    = 8;
@@ -82,27 +82,27 @@ CXHeaderCtrl::~CXHeaderCtrl()
 // ModifyProperty
 BOOL CXHeaderCtrl::ModifyProperty(WPARAM wParam, LPARAM lParam)
 {
-	switch(wParam)
+	switch (wParam)
 	{
-		case FH_PROPERTY_SPACING:
-			m_iSpacing = (int)lParam;
-			break;
+	case FH_PROPERTY_SPACING:
+		m_iSpacing = (int)lParam;
+		break;
 
-		case FH_PROPERTY_ARROW:
-			m_sizeArrow.cx = LOWORD(lParam);
-			m_sizeArrow.cy = HIWORD(lParam);
-			break;
+	case FH_PROPERTY_ARROW:
+		m_sizeArrow.cx = LOWORD(lParam);
+		m_sizeArrow.cy = HIWORD(lParam);
+		break;
 
-		case FH_PROPERTY_STATICBORDER:
-			m_bStaticBorder = (BOOL)lParam;
-			break;
+	case FH_PROPERTY_STATICBORDER:
+		m_bStaticBorder = (BOOL)lParam;
+		break;
 
-		case FH_PROPERTY_DONTDROPCURSOR:
-			m_nDontDropCursor = (UINT)lParam;
-			break;
+	case FH_PROPERTY_DONTDROPCURSOR:
+		m_nDontDropCursor = (UINT)lParam;
+		break;
 
-		default:
-			return FALSE;
+	default:
+		return FALSE;
 	}
 
 	Invalidate();
@@ -115,12 +115,14 @@ void CXHeaderCtrl::DrawCtrl(CDC* pDC)
 {
 	CRect rectClip;
 	if (pDC->GetClipBox(&rectClip) == ERROR)
+	{
 		return;
+	}
 
 	CRect rectClient, rectItem;
 	GetClientRect(&rectClient);
 
-    pDC->FillSolidRect(rectClip, m_cr3DFace);
+	pDC->FillSolidRect(rectClip, m_cr3DFace);
 
 	int iItems = GetItemCount();
 	ASSERT(iItems >= 0);
@@ -143,7 +145,7 @@ void CXHeaderCtrl::DrawCtrl(CDC* pDC)
 		TCHAR szText[FLATHEADER_TEXT_MAX];
 
 		HDITEM hditem;
-		hditem.mask = HDI_WIDTH|HDI_FORMAT|HDI_TEXT|HDI_IMAGE|HDI_BITMAP;
+		hditem.mask = HDI_WIDTH | HDI_FORMAT | HDI_TEXT | HDI_IMAGE | HDI_BITMAP;
 		hditem.pszText = szText;
 		hditem.cchTextMax = sizeof(szText);
 		VERIFY(GetItem(iItem, &hditem));
@@ -172,23 +174,20 @@ void CXHeaderCtrl::DrawCtrl(CDC* pDC)
 				rectItem.DeflateRect(m_iSpacing, 0);
 				DrawItem(pDC, rectItem, &hditem);
 				rectItem.InflateRect(m_iSpacing, 0);
-
-				//if (m_nClickFlags & MK_LBUTTON && m_iHotIndex == iItem && m_hdhtiHotItem.flags & HHT_ONHEADER)
-				//	pDC->InvertRect(rectItem);
 			}
 
-			if (i < iItems-1)
+			if (i < iItems - 1)
 			{
 				// draw divider lines
-				if (m_bDividerLines)		//+++
+				if (m_bDividerLines)   //+++
 				{
 					pDC->SelectObject(&penShadow);
-					pDC->MoveTo(rectItem.right-1, rectItem.top+2);
-					pDC->LineTo(rectItem.right-1, rectItem.bottom-2);
+					pDC->MoveTo(rectItem.right - 1, rectItem.top + 2);
+					pDC->LineTo(rectItem.right - 1, rectItem.bottom - 2);
 
 					pDC->SelectObject(&penHighLight);
-					pDC->MoveTo(rectItem.right, rectItem.top+2);
-					pDC->LineTo(rectItem.right, rectItem.bottom-2);
+					pDC->MoveTo(rectItem.right, rectItem.top + 2);
+					pDC->LineTo(rectItem.right, rectItem.bottom - 2);
 				}
 			}
 		}
@@ -234,13 +233,15 @@ void CXHeaderCtrl::DrawItem(CDC* pDC, CRect rect, LPHDITEM lphdi)
 
 		pBitmap = CBitmap::FromHandle(lphdi->hbm);
 		if (pBitmap)
+		{
 			VERIFY(pBitmap->GetObject(sizeof(BITMAP), &BitmapInfo));
+		}
 	}
 
-	rect.left += ((iWidth = DrawImage(pDC, rect, lphdi, FALSE)) != 0) ? 
+	rect.left += ((iWidth = DrawImage(pDC, rect, lphdi, FALSE)) != 0) ?
 		iWidth + m_iSpacing : 0;
 
-	rect.right -= ((iWidth = DrawBitmap(pDC, rect, lphdi, pBitmap, &BitmapInfo, TRUE)) != 0) ? 
+	rect.right -= ((iWidth = DrawBitmap(pDC, rect, lphdi, pBitmap, &BitmapInfo, TRUE)) != 0) ?
 		iWidth + m_iSpacing : 0;
 
 	DrawText(pDC, rect, lphdi);
@@ -260,12 +261,16 @@ int CXHeaderCtrl::DrawImage(CDC* pDC, CRect rect, LPHDITEM lphdi, BOOL bRight)
 		{
 			POINT point;
 
-			point.y = rect.CenterPoint().y - ((m_sizeImage.cy+1) >> 1);
+			point.y = rect.CenterPoint().y - ((m_sizeImage.cy + 1) >> 1);
 
 			if (bRight)
+			{
 				point.x = rect.right - m_sizeImage.cx;
+			}
 			else
+			{
 				point.x = rect.left;
+			}
 
 			SIZE size;
 			size.cx = rect.Width() < m_sizeImage.cx ? rect.Width() : m_sizeImage.cx;
@@ -289,7 +294,7 @@ int CXHeaderCtrl::DrawImage(CDC* pDC, CRect rect, LPHDITEM lphdi, BOOL bRight)
 
 			// center the checkbox
 
-			int h = 13;	// height and width are the same
+			int h = 13;   // height and width are the same
 			chkboxrect.right = chkboxrect.left + h;
 			chkboxrect.top = rect.top + (rect.Height() - h) / 2;
 			chkboxrect.bottom = chkboxrect.top + h;
@@ -299,13 +304,13 @@ int CXHeaderCtrl::DrawImage(CDC* pDC, CRect rect, LPHDITEM lphdi, BOOL bRight)
 			pDC->FillSolidRect(&chkboxrect, ::GetSysColor(COLOR_WINDOW));
 
 			// draw border
-			CBrush brush(RGB(51,102,153));
+			CBrush brush(RGB(51, 102, 153));
 			pDC->FrameRect(&chkboxrect, &brush);
 
 			if (lphdi->iImage == XHEADERCTRL_CHECKED_IMAGE)
 			{
-				CPen blackpen(PS_SOLID, 1, RGB(51,153,51));
-				CPen * pOldPen = pDC->SelectObject(&blackpen);
+				CPen blackpen(PS_SOLID, 1, RGB(51, 153, 51));
+				CPen* pOldPen = pDC->SelectObject(&blackpen);
 
 				// draw the checkmark
 				int x = chkboxrect.left + 9;
@@ -315,20 +320,22 @@ int CXHeaderCtrl::DrawImage(CDC* pDC, CRect rect, LPHDITEM lphdi, BOOL bRight)
 				for (i = 0; i < 4; i++)
 				{
 					pDC->MoveTo(x, y);
-					pDC->LineTo(x, y+3);
+					pDC->LineTo(x, y + 3);
 					x--;
 					y++;
 				}
 				for (i = 0; i < 3; i++)
 				{
 					pDC->MoveTo(x, y);
-					pDC->LineTo(x, y+3);
+					pDC->LineTo(x, y + 3);
 					x--;
 					y--;
 				}
 
 				if (pOldPen)
+				{
 					pDC->SelectObject(pOldPen);
+				}
 			}
 
 			pDC->SetBkColor(rgbBackground);
@@ -346,12 +353,12 @@ int CXHeaderCtrl::DrawImage(CDC* pDC, CRect rect, LPHDITEM lphdi, BOOL bRight)
 
 ///////////////////////////////////////////////////////////////////////////////
 // DrawBitmap
-int CXHeaderCtrl::DrawBitmap(CDC* pDC, 
-								CRect rect, 
-								LPHDITEM lphdi, 
-								CBitmap* pBitmap, 
-								BITMAP* pBitmapInfo, 
-								BOOL bRight)
+int CXHeaderCtrl::DrawBitmap(CDC* pDC,
+	CRect rect,
+	LPHDITEM lphdi,
+	CBitmap* pBitmap,
+	BITMAP* pBitmapInfo,
+	BOOL bRight)
 {
 	UNUSED_ALWAYS(lphdi);
 
@@ -367,28 +374,36 @@ int CXHeaderCtrl::DrawBitmap(CDC* pDC,
 			point.y = rect.CenterPoint().y - (pBitmapInfo->bmHeight >> 1);
 
 			if (bRight)
+			{
 				point.x = rect.right - iWidth;
+			}
 			else
+			{
 				point.x = rect.left;
+			}
 
 			CDC dc;
-			if (dc.CreateCompatibleDC(pDC) == TRUE) 
+			if (dc.CreateCompatibleDC(pDC) == TRUE)
 			{
-				CBitmap * pOldBitmap = dc.SelectObject(pBitmap);
+				CBitmap* pOldBitmap = dc.SelectObject(pBitmap);
 				iWidth = pDC->BitBlt(
-					point.x, point.y, 
-					pBitmapInfo->bmWidth, pBitmapInfo->bmHeight, 
-					&dc, 
-					0, 0, 
+					point.x, point.y,
+					pBitmapInfo->bmWidth, pBitmapInfo->bmHeight,
+					&dc,
+					0, 0,
 					SRCCOPY
-				) ? iWidth:0;
+					) ? iWidth : 0;
 				dc.SelectObject(pOldBitmap);
 			}
-			else 
+			else
+			{
 				iWidth = 0;
+			}
 		}
 		else
+		{
 			iWidth = 0;
+		}
 	}
 
 	return iWidth;
@@ -401,15 +416,15 @@ int CXHeaderCtrl::DrawText(CDC* pDC, CRect rect, LPHDITEM lphdi)
 	CSize size = pDC->GetTextExtent(lphdi->pszText);
 
 #if 0  // -----------------------------------------------------------
-	pDC->SetTextColor(RGB(0,0,255));
+	pDC->SetTextColor(RGB(0, 0, 255));
 
 	if (rect.Width() > 0 && lphdi->mask & HDI_TEXT && lphdi->fmt & HDF_STRING)
 	{
 		size = pDC->GetTextExtent(lphdi->pszText);
 
 		// always center column headers
-		pDC->DrawText(lphdi->pszText, -1, rect, 
-			DT_CENTER|DT_END_ELLIPSIS|DT_SINGLELINE|DT_VCENTER);
+		pDC->DrawText(lphdi->pszText, -1, rect,
+			DT_CENTER | DT_END_ELLIPSIS | DT_SINGLELINE | DT_VCENTER);
 	}
 #endif // -----------------------------------------------------------
 
@@ -426,14 +441,20 @@ int CXHeaderCtrl::DrawText(CDC* pDC, CRect rect, LPHDITEM lphdi)
 			// default to whatever alignment the column is set to
 
 			if (lphdi->fmt & LVCFMT_CENTER)
+			{
 				nFormat = DT_CENTER;
+			}
 			else if (lphdi->fmt & LVCFMT_RIGHT)
+			{
 				nFormat = DT_RIGHT;
+			}
 			else
+			{
 				nFormat = DT_LEFT;
+			}
 		}
 
-		pDC->DrawText(lphdi->pszText, -1, rect, 
+		pDC->DrawText(lphdi->pszText, -1, rect,
 			nFormat | DT_END_ELLIPSIS | DT_SINGLELINE | DT_VCENTER);
 	}
 
@@ -480,19 +501,21 @@ LRESULT CXHeaderCtrl::OnLayout(WPARAM, LPARAM lParam)
 	LPHDLAYOUT lphdlayout = (LPHDLAYOUT)lParam;
 
 	if (m_bStaticBorder)
-		lphdlayout->prc->right += GetSystemMetrics(SM_CXBORDER)*2;
+	{
+		lphdlayout->prc->right += GetSystemMetrics(SM_CXBORDER) * 2;
+	}
 
 	return CHeaderCtrl::DefWindowProc(HDM_LAYOUT, 0, lParam);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnSysColorChange
-void CXHeaderCtrl::OnSysColorChange() 
+void CXHeaderCtrl::OnSysColorChange()
 {
 	XLISTCTRL_TRACE(_T("in CXHeaderCtrl::OnSysColorChange\n"));
 
 	CHeaderCtrl::OnSysColorChange();
-	
+
 	m_cr3DHighLight = ::GetSysColor(COLOR_3DHIGHLIGHT);
 	m_cr3DShadow    = ::GetSysColor(COLOR_3DSHADOW);
 	m_cr3DFace      = ::GetSysColor(COLOR_3DFACE);
@@ -501,7 +524,7 @@ void CXHeaderCtrl::OnSysColorChange()
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnEraseBkgnd
-BOOL CXHeaderCtrl::OnEraseBkgnd(CDC* pDC) 
+BOOL CXHeaderCtrl::OnEraseBkgnd(CDC* pDC)
 {
 	UNUSED_ALWAYS(pDC);
 	return TRUE;
@@ -509,24 +532,24 @@ BOOL CXHeaderCtrl::OnEraseBkgnd(CDC* pDC)
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnPaint
-void CXHeaderCtrl::OnPaint() 
+void CXHeaderCtrl::OnPaint()
 {
-    CPaintDC dc(this);
+	CPaintDC dc(this);
 
-    if (m_bDoubleBuffer)
-    {
-        CMemDC MemDC(&dc);
-        DrawCtrl(&MemDC);
-    }
-    else
-        DrawCtrl(&dc);
+	if (m_bDoubleBuffer)
+	{
+		CMemDC MemDC(&dc);
+		DrawCtrl(&MemDC);
+	}
+	else
+	{
+		DrawCtrl(&dc);
+	}
 }
 
-void CXHeaderCtrl::OnLButtonDblClk(UINT nFlags, CPoint point) 
+void CXHeaderCtrl::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	XLISTCTRL_TRACE(_T("in CXHeaderCtrl::OnLButtonDblClk\n"));
 
 	SendMessage(WM_LBUTTONDOWN, nFlags, MAKELPARAM(point.x, point.y));
-
-	//CHeaderCtrl::OnLButtonDown(nFlags, point);
 }
