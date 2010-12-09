@@ -31,8 +31,8 @@
 // heavily modified and extended by .dan.g. abstractspoon
 
 #ifndef GET_X_LPARAM
-	#define GET_X_LPARAM(lp)	((int)(short)LOWORD(lp))
-	#define GET_Y_LPARAM(lp)	((int)(short)HIWORD(lp))
+#define GET_X_LPARAM(lp)    ((int)(short)LOWORD(lp))
+#define GET_Y_LPARAM(lp)    ((int)(short)HIWORD(lp))
 #endif
 
 class CSubclassWnd;
@@ -53,22 +53,37 @@ public:
 	virtual ~CSubclassWnd();
 
 	virtual BOOL HookWindow(HWND hRealWnd, CSubclasser* pSubclasser = NULL);
-	virtual BOOL IsValid() const { return IsValidHook(); }
+	virtual BOOL IsValid() const
+	{
+		return IsValidHook();
+	}
 
-	inline HWND GetHwnd() const { return m_hWndHooked; }
-	inline CWnd* GetCWnd() const { return CWnd::FromHandle(m_hWndHooked); }
+	inline HWND GetHwnd() const
+	{
+		return m_hWndHooked;
+	}
+	inline CWnd* GetCWnd() const
+	{
+		return CWnd::FromHandle(m_hWndHooked);
+	}
 
-	static void SetCallback(ISubclassCallback* pCallback) { s_pCallback = pCallback; }
+	static void SetCallback(ISubclassCallback* pCallback)
+	{
+		s_pCallback = pCallback;
+	}
 
-	void TraceMessages(BOOL bTrace) { m_bTracing = bTrace; };
+	void TraceMessages(BOOL bTrace)
+	{
+		m_bTracing = bTrace;
+	};
 
 protected:
-	HWND			m_hWndHooked;		// the window hooked
-	WNDPROC			m_pOldWndProc;		// ..and original window proc
-	CSubclassWnd*	m_pNext;			// next in chain of hooks for this window
-	CSubclasser*	m_pSubclasser;
-	BOOL			m_bPreMFCSubclass;
-	BOOL			m_bTracing;
+	HWND            m_hWndHooked;       // the window hooked
+	WNDPROC         m_pOldWndProc;      // ..and original window proc
+	CSubclassWnd*   m_pNext;            // next in chain of hooks for this window
+	CSubclasser*    m_pSubclasser;
+	BOOL            m_bPreMFCSubclass;
+	BOOL            m_bTracing;
 
 	static ISubclassCallback* s_pCallback;
 
@@ -79,22 +94,61 @@ protected:
 	virtual void PostDetachWindow() { }
 
 	// Subclass a window. Hook(NULL) to unhook (automatic on WM_NCDESTROY)
-	virtual BOOL IsHooked() const { return m_hWndHooked != NULL; }
-	virtual BOOL IsValidHook() const { return ::IsWindow(m_hWndHooked); }
+	virtual BOOL IsHooked() const
+	{
+		return m_hWndHooked != NULL;
+	}
+	virtual BOOL IsValidHook() const
+	{
+		return ::IsWindow(m_hWndHooked);
+	}
 
-	inline DWORD GetExStyle() const { return ::GetWindowLong(m_hWndHooked, GWL_EXSTYLE); }
-	inline DWORD GetStyle() const { return ::GetWindowLong(m_hWndHooked, GWL_STYLE); }
-	inline BOOL HasExStyle(DWORD dwExStyle) const { return (GetExStyle() & dwExStyle) == dwExStyle; }
-	inline BOOL HasStyle(DWORD dwStyle) const { return (GetStyle() & dwStyle) == dwStyle; }
+	inline DWORD GetExStyle() const
+	{
+		return ::GetWindowLong(m_hWndHooked, GWL_EXSTYLE);
+	}
+	inline DWORD GetStyle() const
+	{
+		return ::GetWindowLong(m_hWndHooked, GWL_STYLE);
+	}
+	inline BOOL HasExStyle(DWORD dwExStyle) const
+	{
+		return (GetExStyle() & dwExStyle) == dwExStyle;
+	}
+	inline BOOL HasStyle(DWORD dwStyle) const
+	{
+		return (GetStyle() & dwStyle) == dwStyle;
+	}
 
-	inline HWND GetParent() const { return ::GetParent(m_hWndHooked); }
-	inline void GetClientRect(LPRECT pRect) const { ::GetClientRect(m_hWndHooked, pRect); }
-	inline void GetWindowRect(LPRECT pRect) const { ::GetWindowRect(m_hWndHooked, pRect); }
-	inline void Invalidate(BOOL bErase = TRUE) const { ::InvalidateRect(m_hWndHooked, NULL, bErase); }
-	inline BOOL IsWindowEnabled() const { return ::IsWindowEnabled(m_hWndHooked); }
-	inline BOOL IsWindowVisible() const { return ::IsWindowVisible(m_hWndHooked); }
+	inline HWND GetParent() const
+	{
+		return ::GetParent(m_hWndHooked);
+	}
+	inline void GetClientRect(LPRECT pRect) const
+	{
+		::GetClientRect(m_hWndHooked, pRect);
+	}
+	inline void GetWindowRect(LPRECT pRect) const
+	{
+		::GetWindowRect(m_hWndHooked, pRect);
+	}
+	inline void Invalidate(BOOL bErase = TRUE) const
+	{
+		::InvalidateRect(m_hWndHooked, NULL, bErase);
+	}
+	inline BOOL IsWindowEnabled() const
+	{
+		return ::IsWindowEnabled(m_hWndHooked);
+	}
+	inline BOOL IsWindowVisible() const
+	{
+		return ::IsWindowVisible(m_hWndHooked);
+	}
 
-	inline UINT GetDlgCtrlID() const { return ::GetDlgCtrlID(m_hWndHooked); }
+	inline UINT GetDlgCtrlID() const
+	{
+		return ::GetDlgCtrlID(m_hWndHooked);
+	}
 
 	void ClientToWindow(LPRECT pRect) const;
 	void ScreenToClient(LPRECT pRect) const;
@@ -105,8 +159,14 @@ protected:
 	void ClientToScreen(LPPOINT pPoint) const;
 	void ScreenToWindow(LPPOINT pPoint) const;
 
-	void SetRedraw(BOOL bRedraw = TRUE) { ::SendMessage(m_hWndHooked, WM_SETREDRAW, bRedraw, 0); }
-	virtual void Redraw() const { Invalidate(); }
+	void SetRedraw(BOOL bRedraw = TRUE)
+	{
+		::SendMessage(m_hWndHooked, WM_SETREDRAW, bRedraw, 0);
+	}
+	virtual void Redraw() const
+	{
+		Invalidate();
+	}
 
 	virtual BOOL PostMessage(UINT message, WPARAM wParam = 0, LPARAM lParam = 0) const;
 	virtual BOOL SendMessage(UINT message, WPARAM wParam = 0, LPARAM lParam = 0) const;
@@ -131,11 +191,14 @@ protected:
 
 	virtual LRESULT ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 	{
-		ASSERT(hRealWnd == m_subclass.GetHwnd()); 
-		return m_subclass.WindowProc(hRealWnd, msg, wp, lp); 
+		ASSERT(hRealWnd == m_subclass.GetHwnd());
+		return m_subclass.WindowProc(hRealWnd, msg, wp, lp);
 	}
 
-	virtual CSubclasser* GetTopSubclasser() { return this; }
+	virtual CSubclasser* GetTopSubclasser()
+	{
+		return this;
+	}
 
 	// this is called only when m_subclass.m_hWndHooked is detached as a result
 	// of receiving WM_NCDESTROY else m_subclass.HookWindow(NULL) was called
@@ -143,29 +206,51 @@ protected:
 	virtual void ScPostDetachWindow() { }
 
 	// Subclass a window. Hook(NULL) to unhook (automatic on WM_NCDESTROY)
-	inline operator HWND() const { return m_subclass.GetHwnd(); }
-	inline BOOL ScHookWindow(HWND hWnd) { return m_subclass.HookWindow(hWnd, GetTopSubclasser()); }
-	inline BOOL ScIsHooked() { return m_subclass.IsHooked(); }
-	inline BOOL ScIsValidHook() { return m_subclass.IsValidHook(); }
-	inline CWnd* ScGetCWnd() { return m_subclass.GetCWnd(); }
-	inline HWND ScGetHwnd() { return m_subclass.GetHwnd(); }
+	inline operator HWND() const
+	{
+		return m_subclass.GetHwnd();
+	}
+	inline BOOL ScHookWindow(HWND hWnd)
+	{
+		return m_subclass.HookWindow(hWnd, GetTopSubclasser());
+	}
+	inline BOOL ScIsHooked()
+	{
+		return m_subclass.IsHooked();
+	}
+	inline BOOL ScIsValidHook()
+	{
+		return m_subclass.IsValidHook();
+	}
+	inline CWnd* ScGetCWnd()
+	{
+		return m_subclass.GetCWnd();
+	}
+	inline HWND ScGetHwnd()
+	{
+		return m_subclass.GetHwnd();
+	}
 
 	inline BOOL ScPostMessage(UINT message, WPARAM wParam = 0, LPARAM lParam = 0)
-		{ return m_subclass.PostMessage(message, wParam, lParam); }
+	{
+		return m_subclass.PostMessage(message, wParam, lParam);
+	}
 
 	BOOL ScSendMessage(UINT message, WPARAM wParam = 0, LPARAM lParam = 0)
-		{ return m_subclass.SendMessage(message, wParam, lParam); }
+	{
+		return m_subclass.SendMessage(message, wParam, lParam);
+	}
 
 protected:
 	CSubclassWnd m_subclass;
 
 protected:
-	LRESULT ScDefault(HWND hRealWnd) 
-	{ 
+	LRESULT ScDefault(HWND hRealWnd)
+	{
 		UNREFERENCED_PARAMETER(hRealWnd);
-		
-		ASSERT(hRealWnd == m_subclass.GetHwnd()); 
-		return m_subclass.Default(); 
+
+		ASSERT(hRealWnd == m_subclass.GetHwnd());
+		return m_subclass.Default();
 	} // in time we will have mutiple subclassed wnds
 };
 

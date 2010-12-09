@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////
-// 1997 Microsoft Systems Journal. 
+// 1997 Microsoft Systems Journal.
 // If this program works, it was written by Paul DiLascia.
 // If not, I don't know who wrote it.
 //
@@ -21,7 +21,7 @@ static char THIS_FILE[] = __FILE__;
 // attached to a window is stored in the map; all other CSubclassWnd's for that
 // window are then chained via CSubclassWnd::m_pNext.
 //
-class CSubclassWndMap : private CMapPtrToPtr 
+class CSubclassWndMap : private CMapPtrToPtr
 {
 public:
 	CSubclassWndMap();
@@ -36,15 +36,15 @@ public:
 // This trick is used so the hook map isn't
 // instantiated until someone actually requests it.
 //
-#define	theHookMap	(CSubclassWndMap::GetHookMap())
-#define	theSafeMap	(CSubclassWnd::GetValidMap())
+#define theHookMap (CSubclassWndMap::GetHookMap())
+#define theSafeMap (CSubclassWnd::GetValidMap())
 
 ISubclassCallback* CSubclassWnd::s_pCallback = NULL;
 
 CSubclassWnd::CSubclassWnd() : m_bPreMFCSubclass(FALSE), m_bTracing(FALSE)
 {
 	m_pNext = NULL;
-	m_pOldWndProc = NULL;	
+	m_pOldWndProc = NULL;
 	m_hWndHooked  = NULL;
 	m_pSubclasser = NULL;
 }
@@ -52,10 +52,12 @@ CSubclassWnd::CSubclassWnd() : m_bPreMFCSubclass(FALSE), m_bTracing(FALSE)
 CSubclassWnd::~CSubclassWnd()
 {
 	if (m_hWndHooked)
+	{
 		HookWindow((HWND)NULL);
+	}
 
-	ASSERT(m_hWndHooked==NULL);		// can't destroy while still hooked!
-	ASSERT(m_pOldWndProc==NULL);
+	ASSERT(m_hWndHooked == NULL);   // can't destroy while still hooked!
+	ASSERT(m_pOldWndProc == NULL);
 }
 
 //////////////////
@@ -66,18 +68,22 @@ CSubclassWnd::~CSubclassWnd()
 
 BOOL CSubclassWnd::HookWindow(HWND hWnd, CSubclasser* pSubclasser)
 {
-	if (hWnd) 
+	if (hWnd)
 	{
 		// Hook the window
 		ASSERT(m_hWndHooked == NULL);
 
 		if (m_hWndHooked) // only once
+		{
 			return FALSE;
+		}
 
 		ASSERT(::IsWindow(hWnd));
 
 		if (!::IsWindow(hWnd))
+		{
 			return FALSE;
+		}
 
 		m_hWndHooked = hWnd;
 
@@ -86,28 +92,32 @@ BOOL CSubclassWnd::HookWindow(HWND hWnd, CSubclasser* pSubclasser)
 
 		m_pSubclasser = pSubclasser;
 		m_bPreMFCSubclass = (CWnd::FromHandlePermanent(hWnd) == NULL);
-	} 
-	else 
+	}
+	else
 	{
 		// Unhook the window
-		if (m_hWndHooked) 
+		if (m_hWndHooked)
 		{
 			// if we hooked this window PRIOR to MFC subclassing via DDX_Control,
 			// then MFC will assert when it destructs the attached control because
 			// the HWND does not get correctly detached presumably because the WndProc
-			// has been mucked about by MFC. 
+			// has been mucked about by MFC.
 			// so we unsubclass and then resubclass to keep MFC happy, although
 			// the app using this may need more care in the implementation of
 			// their PreSubclassWindow() overrides
 			CWnd* pPerm = CWnd::FromHandlePermanent(m_hWndHooked);
 
 			if (m_bPreMFCSubclass && pPerm)
+			{
 				pPerm->UnsubclassWindow();
+			}
 
-			theHookMap.Remove(this);				// Remove from map
+			theHookMap.Remove(this);   // Remove from map
 
 			if (m_bPreMFCSubclass && pPerm)
+			{
 				pPerm->SubclassWindow(m_hWndHooked);
+			}
 		}
 
 		theSafeMap.RemoveKey((void*)this);
@@ -124,7 +134,7 @@ BOOL CSubclassWnd::HookWindow(HWND hWnd, CSubclasser* pSubclasser)
 
 //////////////////
 // Window proc-like virtual function which specific CSubclassWnds will
-// override to do stuff. Default passes the message to the next hook; 
+// override to do stuff. Default passes the message to the next hook;
 // the last hook passes the message to the original window.
 // You MUST call this at the end of your WindowProc if you want the real
 // window to get the message. This is just like CWnd::WindowProc, except that
@@ -132,14 +142,18 @@ BOOL CSubclassWnd::HookWindow(HWND hWnd, CSubclasser* pSubclasser)
 //
 LRESULT CSubclassWnd::WindowProc(HWND /*hRealWnd*/, UINT msg, WPARAM wp, LPARAM lp)
 {
-	ASSERT (::IsWindow(m_hWndHooked));
+	ASSERT(::IsWindow(m_hWndHooked));
 
 	if (!::IsWindow(m_hWndHooked))
+	{
 		return 0;
+	}
 
 #ifdef _DEBUG
 	if (m_bTracing)
+	{
 		TRACE(_T("CSubclassWnd::WindowProc(msg = %d)\n"), msg);
+	}
 #endif
 
 	ASSERT(m_pOldWndProc);
@@ -147,12 +161,18 @@ LRESULT CSubclassWnd::WindowProc(HWND /*hRealWnd*/, UINT msg, WPARAM wp, LPARAM 
 	if (m_pNext)
 	{
 		if (m_pNext->m_pSubclasser)
+		{
 			return m_pNext->m_pSubclasser->ScWindowProc(m_hWndHooked, msg, wp, lp);
+		}
 		else
+		{
 			return m_pNext->WindowProc(m_hWndHooked, msg, wp, lp);
+		}
 	}
-	else	
+	else
+	{
 		return ::CallWindowProc(m_pOldWndProc, m_hWndHooked, msg, wp, lp);
+	}
 }
 
 //////////////////
@@ -161,10 +181,12 @@ LRESULT CSubclassWnd::WindowProc(HWND /*hRealWnd*/, UINT msg, WPARAM wp, LPARAM 
 //
 LRESULT CSubclassWnd::Default()
 {
-	ASSERT (::IsWindow(m_hWndHooked));
+	ASSERT(::IsWindow(m_hWndHooked));
 
 	if (!::IsWindow(m_hWndHooked))
+	{
 		return 0;
+	}
 
 	// MFC stores current MSG in thread state
 	MSG& curMsg = AfxGetThreadState()->m_lastSentMsg;
@@ -177,7 +199,7 @@ LRESULT CSubclassWnd::Default()
 const MSG* CSubclassWnd::GetCurrentMessage()
 {
 	static MSG curMsg;
-	
+
 	curMsg = AfxGetThreadState()->m_lastSentMsg;
 	return &curMsg;
 }
@@ -200,7 +222,7 @@ LRESULT CALLBACK CSubclassWnd::HookWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARA
 	//
 	MSG& curMsg = AfxGetThreadState()->m_lastSentMsg;
 	MSG  oldMsg = curMsg;   // save for nesting
-	curMsg.hwnd		= hwnd;
+	curMsg.hwnd = hwnd;
 	curMsg.message = msg;
 	curMsg.wParam  = wp;
 	curMsg.lParam  = lp;
@@ -209,22 +231,24 @@ LRESULT CALLBACK CSubclassWnd::HookWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARA
 	CSubclassWnd* pSubclassWnd = theHookMap.Lookup(hwnd);
 
 	if (!pSubclassWnd)
+	{
 		return 0;
+	}
 
 	// see if this is a re-entrant call
 	BOOL bInHookWndProc = FALSE;
 
-	VERIFY (theSafeMap.Lookup((void*)pSubclassWnd, (void*&)bInHookWndProc));
-	ASSERT (!bInHookWndProc);
+	VERIFY(theSafeMap.Lookup((void*)pSubclassWnd, (void*&)bInHookWndProc));
+	ASSERT(!bInHookWndProc);
 
 	LRESULT lr;
 
-	if (msg == WM_NCDESTROY) 
+	if (msg == WM_NCDESTROY)
 	{
 #ifdef _DEBUG
 		TCHAR szClass[30];
 		GetClassName(hwnd, szClass, _countof(szClass));
-		TRACE (_T("CSubclassWnd::HookWndProc(%s, WM_NCDESTROY)\n"), szClass);
+		TRACE(_T("CSubclassWnd::HookWndProc(%s, WM_NCDESTROY)\n"), szClass);
 #endif
 
 		// Window is being destroyed: unhook all hooks (for this window)
@@ -235,9 +259,11 @@ LRESULT CALLBACK CSubclassWnd::HookWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARA
 		lr = ::CallWindowProc(wndproc, hwnd, msg, wp, lp);
 
 		if (s_pCallback)
+		{
 			s_pCallback->PostNcDestroy(hwnd);
-	} 
-	else 
+		}
+	}
+	else
 	{
 		if (pSubclassWnd->m_pSubclasser)
 		{
@@ -248,7 +274,6 @@ LRESULT CALLBACK CSubclassWnd::HookWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARA
 		{
 			if (msg == WM_DESTROY)
 			{
-				//CWnd* pWnd = CWnd::FromHandle(hwnd);
 			}
 			// pass to msg hook
 			lr = pSubclassWnd->WindowProc(pSubclassWnd->GetHwnd(), msg, wp, lp);
@@ -257,14 +282,16 @@ LRESULT CALLBACK CSubclassWnd::HookWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARA
 
 	theSafeMap[(void*)pSubclassWnd] = NULL;
 
-	curMsg = oldMsg;			// pop state
+	curMsg = oldMsg;   // pop state
 	return lr;
 }
 
 BOOL CSubclassWnd::PostMessage(UINT message, WPARAM wParam, LPARAM lParam) const
 {
 	if (IsValid())
+	{
 		return ::PostMessage(m_hWndHooked, message, wParam, lParam);
+	}
 
 	// else
 	return FALSE;
@@ -273,7 +300,9 @@ BOOL CSubclassWnd::PostMessage(UINT message, WPARAM wParam, LPARAM lParam) const
 BOOL CSubclassWnd::SendMessage(UINT message, WPARAM wParam, LPARAM lParam) const
 {
 	if (IsValid())
+	{
 		return ::SendMessage(m_hWndHooked, message, wParam, lParam);
+	}
 
 	// else
 	return FALSE;
@@ -355,12 +384,11 @@ CSubclassWndMap::CSubclassWndMap()
 
 CSubclassWndMap::~CSubclassWndMap()
 {
-//	ASSERT(IsEmpty());	// all hooks should be removed!	
 }
 
 //////////////////
 // Get the one and only global hook map
-// 
+//
 CSubclassWndMap& CSubclassWndMap::GetHookMap()
 {
 	// By creating theMap here, C++ doesn't instantiate it until/unless
@@ -381,18 +409,15 @@ void CSubclassWndMap::Add(HWND hwnd, CSubclassWnd* pSubclassWnd)
 	// Add to front of list
 	pSubclassWnd->m_pNext = Lookup(hwnd);
 	SetAt(hwnd, pSubclassWnd);
-	
-	// If this is the first hook added, subclass the window
-	if (pSubclassWnd->m_pNext == NULL) 
-	{
-		//WNDPROC wndProc = (WNDPROC)GetWindowLong(hwnd, GWL_WNDPROC);
 
-		pSubclassWnd->m_pOldWndProc = 
+	// If this is the first hook added, subclass the window
+	if (pSubclassWnd->m_pNext == NULL)
+	{
+		pSubclassWnd->m_pOldWndProc =
 			(WNDPROC)SetWindowLong(hwnd, GWL_WNDPROC, (DWORD)CSubclassWnd::HookWndProc);
-	} 
+	}
 	else // just copy wndproc from next hook
 	{
-		
 		pSubclassWnd->m_pOldWndProc = pSubclassWnd->m_pNext->m_pOldWndProc;
 	}
 	ASSERT(pSubclassWnd->m_pOldWndProc);
@@ -407,28 +432,34 @@ void CSubclassWndMap::Remove(CSubclassWnd* pUnHook)
 	ASSERT(hwnd && ::IsWindow(hwnd));
 
 	CSubclassWnd* pHook = Lookup(hwnd);
-//	ASSERT(pHook);
+	//	ASSERT(pHook);
 
 	if (!pHook)
+	{
 		return;
+	}
 
-	if (pHook == pUnHook) 
+	if (pHook == pUnHook)
 	{
 		// hook to remove is the one in the hash table: replace w/next
 		if (pHook->m_pNext)
+		{
 			SetAt(hwnd, pHook->m_pNext);
-		else 
+		}
+		else
 		{
 			// This is the last hook for this window: restore wnd proc
 			RemoveKey(hwnd);
 			SetWindowLong(hwnd, GWL_WNDPROC, (DWORD)pHook->m_pOldWndProc);
 		}
-	} 
-	else 
+	}
+	else
 	{
 		// Hook to remove is in the middle: just remove from linked list
 		while (pHook->m_pNext && pHook->m_pNext != pUnHook)
+		{
 			pHook = pHook->m_pNext;
+		}
 
 		if (pHook)
 		{
@@ -445,19 +476,27 @@ void CSubclassWndMap::RemoveAll(HWND hwnd)
 {
 	CSubclassWnd* pSubclassWnd;
 
-	while ((pSubclassWnd = Lookup(hwnd))!=NULL)
+	while ((pSubclassWnd = Lookup(hwnd)) != NULL)
 	{
 		if (pSubclassWnd->m_pSubclasser)
+		{
 			pSubclassWnd->m_pSubclasser->ScPreDetachWindow();
+		}
 		else
+		{
 			pSubclassWnd->PreDetachWindow();
+		}
 
-		pSubclassWnd->HookWindow((HWND)NULL);	// (unhook)
+		pSubclassWnd->HookWindow((HWND)NULL);   // (unhook)
 
 		if (pSubclassWnd->m_pSubclasser)
+		{
 			pSubclassWnd->m_pSubclasser->ScPostDetachWindow();
+		}
 		else
+		{
 			pSubclassWnd->PostDetachWindow();
+		}
 	}
 }
 
@@ -469,9 +508,9 @@ CSubclassWnd* CSubclassWndMap::Lookup(HWND hwnd)
 	CSubclassWnd* pFound = NULL;
 
 	if (!CMapPtrToPtr::Lookup(hwnd, (void*&)pFound))
+	{
 		return NULL;
-
-//	ASSERT_KINDOF(CSubclassWnd, pFound);
+	}
 
 	return pFound;
 }
