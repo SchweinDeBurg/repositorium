@@ -40,6 +40,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // AutoComboBox.cpp : implementation file
@@ -611,7 +612,8 @@ BOOL CAutoComboBox::DeleteSelectedLBItem()
 		}
 
 		// notify parent that we've been fiddling
-		CComboBox::GetParent()->SendMessage(WM_ACB_ITEMDELETED, MAKEWPARAM(CWnd::GetDlgCtrlID(), nSelItem),
+		CComboBox::GetParent()->SendMessage(WM_ACB_ITEMDELETED,
+			MAKEWPARAM(CWnd::GetDlgCtrlID(), nSelItem),
 			(LPARAM)(LPCTSTR)sSelItem);
 
 		return TRUE;
