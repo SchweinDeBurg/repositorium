@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // OSVersion.cpp: implementation of the COSVersion class.
@@ -37,7 +50,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -61,9 +74,9 @@ OSVERSION COSVersion::GetOSVersion()
 	{
 		OSVERSIONINFO vinfo;
 		vinfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-		
+
 		BOOL rslt = GetVersionEx(&vinfo);
-		
+
 		if (rslt)
 		{
 			switch (vinfo.dwPlatformId)
@@ -72,62 +85,62 @@ OSVERSION COSVersion::GetOSVersion()
 				switch (vinfo.dwMajorVersion)
 				{
 				case 3: // nt351
-					ASSERT (0); // not supported
+					ASSERT(0);  // not supported
 					break;
-					
+
 				case 4: // nt4
 					nVersion = OSV_NT4;
 					break;
-					
+
 				case 5: // >= w2k
 					switch (vinfo.dwMinorVersion)
 					{
 					case 0: // w2k
 						nVersion = OSV_2K;
 						break;
-						
+
 					case 1: // xp
 						nVersion = OSV_XP;
 						break;
-						
+
 					default: // > xp
 						nVersion = OSV_XPP;
 						break;
 					}
 					break;
-					
-					default: // > xp
-						nVersion = OSV_XPP;
-						break;
+
+				default: // > xp
+					nVersion = OSV_XPP;
+					break;
 				}
 				break;
-				
-				case VER_PLATFORM_WIN32_WINDOWS:
-					ASSERT (vinfo.dwMajorVersion == 4);
-					
-					switch (vinfo.dwMinorVersion)
-					{
-					case 0: 
-						nVersion = OSV_95;
-						break;
-						
-					case 10:
-						nVersion = OSV_98;
-						break;
-						
-					case 90:
-						nVersion = OSV_ME;
-						break;
-						
-					default:
-						ASSERT (0);
-						break;
-					}
+
+			case VER_PLATFORM_WIN32_WINDOWS:
+				ASSERT(vinfo.dwMajorVersion == 4);
+
+				switch (vinfo.dwMinorVersion)
+				{
+				case 0:
+					nVersion = OSV_95;
 					break;
-					
-					default:
-						ASSERT (0);
-						break;
+
+				case 10:
+					nVersion = OSV_98;
+					break;
+
+				case 90:
+					nVersion = OSV_ME;
+					break;
+
+				default:
+					ASSERT(0);
+					break;
+				}
+				break;
+
+			default:
+				ASSERT(0);
+				break;
 			}
 		}
 	}
