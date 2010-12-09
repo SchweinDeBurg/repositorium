@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TimeHelper.h: interface for the CTimeHelper class.
@@ -41,7 +54,7 @@
 
 #include <afxtempl.h>
 
-enum 
+enum
 {
 	THU_MINS    = 'I',
 	THU_HOURS   = 'H',
@@ -51,7 +64,7 @@ enum
 	THU_YEARS   = 'Y',
 };
 
-class CTimeHelper  
+class CTimeHelper
 {
 public:
 	CTimeHelper(); // uses statically defined hours and days
@@ -65,8 +78,14 @@ public:
 public:
 	static BOOL SetHoursInOneDay(double dHours);
 	static BOOL SetDaysInOneWeek(double dDays);
-	static double GetHoursInOneDay() { return HOURS2DAYS; }
-	static double GetDaysInOneWeek() { return DAYS2WEEKS; }
+	static double GetHoursInOneDay()
+	{
+		return HOURS2DAYS;
+	}
+	static double GetDaysInOneWeek()
+	{
+		return DAYS2WEEKS;
+	}
 	static void SetUnits(int nUnits, LPCTSTR szUnits);
 	static void SetUnits(int nUnits, TCHAR cUnits);
 	static TCHAR GetUnits(int nUnits);
@@ -81,7 +100,7 @@ protected:
 
 protected:
 	static BOOL Compare(int nFromUnits, int nToUnits); // 0=same, -1=nFrom < nTo else 1
-	static CString FormatTimeHMS(double dTime, int nUnits, int nLeftOverUnits, 
+	static CString FormatTimeHMS(double dTime, int nUnits, int nLeftOverUnits,
 		double dLeftOverMultiplier, BOOL bDecPlaces);
 };
 
