@@ -1,46 +1,49 @@
 //_ **********************************************************
-//_ 
-//_ Name: EnHeaderCtrl.h 
-//_ Purpose: 
-//_ Created: 15 September 1998 
+//_
+//_ Name: EnHeaderCtrl.h
+//_ Purpose:
+//_ Created: 15 September 1998
 //_ Author: D.R.Godson
-//_ Modified By: 
-//_ 
-//_ Copyright (c) 1998 Brilliant Digital Entertainment Inc. 
-//_ 
+//_ Modified By:
+//_
+//_ Copyright (c) 1998 Brilliant Digital Entertainment Inc.
+//_
 //_ **********************************************************
 
 // EnHeaderCtrl.h : header file
 //
 #if !defined ( ENHEADERCTRL_H )
-#define ENHEADERCTRL_H 
+#define ENHEADERCTRL_H
 
 /////////////////////////////////////////////////////////////////////////////
 // CEnHeaderCtrl window
 
 class CEnHeaderCtrl : public CHeaderCtrl
 {
-// Construction
+	// Construction
 public:
 	CEnHeaderCtrl();
-	void EnableTracking(BOOL bAllow) { m_bAllowTracking = bAllow; }
+	void EnableTracking(BOOL bAllow)
+	{
+		m_bAllowTracking = bAllow;
+	}
 	int AddColumn(int nCol, int nWidth, CString sTitle = _T(""), int nFormat = HDF_LEFT, UINT uIDBitmap = 0);
 	BOOL SetColumnWidth(int nCol, int nWidth);
 	int GetColumnWidth(int nCol);
 
-// Attributes
+	// Attributes
 private:
 	BOOL m_bAllowTracking;
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CEnHeaderCtrl)
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CEnHeaderCtrl();
 
