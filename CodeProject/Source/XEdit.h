@@ -12,27 +12,27 @@ extern UINT WM_XEDIT_VK_ESCAPE;
 
 class CXEdit : public CEdit
 {
-// Construction
+	// Construction
 public:
-	CXEdit(CWnd *pParent, LPCTSTR lpszText);
+	CXEdit(CWnd* pParent, LPCTSTR lpszText);
 	virtual ~CXEdit();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CXEdit)
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
-	CWnd *	m_pParent;
+	CWnd* 	m_pParent;
 	CString	m_strText;
 	BOOL	m_bMessageSent;
 
