@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // EnToolBar.cpp : implementation file
@@ -44,7 +57,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-const UINT WM_REFRESHBUTTONSTATES = WM_APP+1;
+const UINT WM_REFRESHBUTTONSTATES = WM_APP + 1;
 
 /////////////////////////////////////////////////////////////////////////////
 // CEnToolBar
@@ -62,11 +75,11 @@ CEnToolBar::~CEnToolBar()
 
 BEGIN_MESSAGE_MAP(CEnToolBar, CToolBar)
 	//{{AFX_MSG_MAP(CEnToolBar)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
+	// NOTE - the ClassWizard will add and remove mapping macros here.
 	//}}AFX_MSG_MAP
-ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, OnCustomDraw)
-ON_WM_SETTINGCHANGE()
-ON_MESSAGE(WM_REFRESHBUTTONSTATES, OnRefreshButtonStates)
+	ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, OnCustomDraw)
+	ON_WM_SETTINGCHANGE()
+	ON_MESSAGE(WM_REFRESHBUTTONSTATES, OnRefreshButtonStates)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -77,7 +90,9 @@ BOOL CEnToolBar::LoadToolBar(LPCTSTR lpszResourceName, LPCTSTR szImagePath)
 	if (CToolBar::LoadToolBar(lpszResourceName))
 	{
 		if (szImagePath && ::GetFileAttributes(szImagePath) != 0xffffffff)
+		{
 			SetImage(szImagePath);
+		}
 		else
 		{
 			GetToolBarCtrl().SetDisabledImageList(NULL);
@@ -100,7 +115,9 @@ BOOL CEnToolBar::LoadToolBar(UINT nIDResource, UINT nIDImage)
 	if (CToolBar::LoadToolBar(MAKEINTRESOURCE(nIDResource)))
 	{
 		if (nIDImage)
+		{
 			SetImage(nIDImage);
+		}
 		else
 		{
 			GetToolBarCtrl().SetDisabledImageList(NULL);
@@ -118,7 +135,9 @@ BOOL CEnToolBar::SetImage(UINT nIDImage, COLORREF crMask)
 	CEnBitmapEx bitmap;
 
 	if (!bitmap.LoadBitmap(nIDImage))
+	{
 		return FALSE;
+	}
 
 	return SetImage(&bitmap, crMask);
 }
@@ -128,7 +147,9 @@ BOOL CEnToolBar::SetImage(const CString& sImagePath, COLORREF crMask)
 	CEnBitmapEx bitmap;
 
 	if (!bitmap.LoadImage(sImagePath))
+	{
 		return FALSE;
+	}
 
 	return SetImage(&bitmap, crMask);
 }
@@ -137,60 +158,68 @@ BOOL CEnToolBar::SetImage(CEnBitmapEx* pBitmap, COLORREF crMask)
 {
 	CEnBitmapEx bmDis;
 	bmDis.CopyImage(pBitmap); // for later
-	
+
 	if (crMask == NO_COLOR) // map 3d colors
+	{
 		pBitmap->RemapSysColors();
-	
+	}
+
 	// button size
 	BITMAP BM;
 	pBitmap->GetBitmap(&BM);
-	
+
 	int nCount = GetButtonCount(TRUE);
-	ASSERT (nCount);
-	
+	ASSERT(nCount);
+
 	if (!nCount)
+	{
 		return FALSE;
-	
+	}
+
 	CSize sizeBmp((BM.bmWidth / nCount), BM.bmHeight);
 	CSize sizeBtn(sizeBmp.cx + 7, sizeBmp.cy + 7);
-	
+
 	SetSizes(sizeBtn, sizeBmp);
 
 	m_ilNormal.DeleteImageList();
-	
-	if (m_ilNormal.Create(sizeBmp.cx, sizeBmp.cy, ILC_COLOR32 | ILC_MASK, 0, 1)) 
+
+	if (m_ilNormal.Create(sizeBmp.cx, sizeBmp.cy, ILC_COLOR32 | ILC_MASK, 0, 1))
 	{
 		m_ilNormal.Add(pBitmap, crMask);
-				
+
 		CImageList* pILPrev = GetToolBarCtrl().SetImageList(&m_ilNormal);
 
 		if (pILPrev)
-			pILPrev->DeleteImageList(); // cleanup
+		{
+			pILPrev->DeleteImageList();   // cleanup
+		}
 
 		pILPrev = GetToolBarCtrl().SetHotImageList(&m_ilNormal);
 
 		if (pILPrev)
-			pILPrev->DeleteImageList(); // cleanup
-		
+		{
+			pILPrev->DeleteImageList();   // cleanup
+		}
+
 		RefreshDisabledImageList(&bmDis, crMask);
 		return TRUE;
 	}
-	
-	// else 
+
+	// else
 	return FALSE;
 }
 
 BOOL CEnToolBar::GrayScale(CEnBitmapEx* pBitmap, COLORREF crMask)
 {
-	// create 'nice' disabled imagelist 
+	// create 'nice' disabled imagelist
 	C32BIPArray aProcessors;
-//	CImageSysColorMapper ip1;
+	//	CImageSysColorMapper ip1;
 	CImageGrayer ip2(0.33, 0.33, 0.33);
 	CImageLightener ip3(0.2);
 	CImageTinter ip4(GetSysColor(COLOR_3DSHADOW), 10);
 	CImageContraster ip5(-30);
 
-//	aProcessors.Add(&ip1);
+	//	aProcessors.Add(&ip1);
 	aProcessors.Add(&ip2);
 	aProcessors.Add(&ip3);
 	aProcessors.Add(&ip4);
@@ -210,7 +239,9 @@ int CEnToolBar::GetButtonCount(BOOL bIgnoreSeparators) const
 		while (nBtn--)
 		{
 			if (GetItemID(nBtn) == ID_SEPARATOR)
+			{
 				nCount--;
+			}
 		}
 	}
 
@@ -221,23 +252,33 @@ void CEnToolBar::SetBackgroundColors(COLORREF crFrom, COLORREF crTo, BOOL bGradi
 {
 	m_crFrom = crFrom;
 
-	if (crTo == (COLORREF)-1)
+	if (crTo == (COLORREF) - 1)
+	{
 		m_crTo = m_crFrom;
+	}
 	else
+	{
 		m_crTo = crTo;
+	}
 
 	m_bGradient = bGradient;
 
 	if (GetSafeHwnd())
+	{
 		Invalidate();
+	}
 }
 
 void CEnToolBar::RefreshButtonStates(BOOL bImmediate)
 {
 	if (bImmediate)
+	{
 		OnUpdateCmdUI((CFrameWnd*)GetParent(), FALSE);
+	}
 	else
+	{
 		PostMessage(WM_REFRESHBUTTONSTATES);
+	}
 }
 
 LRESULT CEnToolBar::OnRefreshButtonStates(WPARAM /*wp*/, LPARAM /*lp*/)
@@ -246,30 +287,34 @@ LRESULT CEnToolBar::OnRefreshButtonStates(WPARAM /*wp*/, LPARAM /*lp*/)
 	return 0L;
 }
 
-void CEnToolBar::RefreshDisabledImageList(CEnBitmapEx* pBitmap, COLORREF crMask) 
+void CEnToolBar::RefreshDisabledImageList(CEnBitmapEx* pBitmap, COLORREF crMask)
 {
 	// not under win9x
 	if (COSVersion() >= OSV_NT4)
 	{
-		// create 'nice' disabled imagelist 
+		// create 'nice' disabled imagelist
 
 		if (GrayScale(pBitmap, crMask))
 		{
 			if (crMask == NO_COLOR) // map 3d colors
+			{
 				pBitmap->RemapSysColors();
+			}
 
 			// button size
 			int nCx = m_sizeImage.cx, nCy = m_sizeImage.cy;
-			
+
 			m_ilDisabled.DeleteImageList();
 			m_ilDisabled.Create(nCx, nCy, ILC_COLOR24 | ILC_MASK, 0, 1);
 			m_ilDisabled.Add(pBitmap, crMask);
-			
+
 			CImageList* pILPrev = GetToolBarCtrl().SetDisabledImageList(&m_ilDisabled);
 
 			if (pILPrev)
-				pILPrev->DeleteImageList(); // cleanup
-		
+			{
+				pILPrev->DeleteImageList();   // cleanup
+			}
+
 			Invalidate();
 		}
 	}
@@ -278,9 +323,9 @@ void CEnToolBar::RefreshDisabledImageList(CEnBitmapEx* pBitmap, COLORREF crMask)
 void CEnToolBar::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	*pResult = CDRF_DODEFAULT;
-	LPNMTBCUSTOMDRAW lpNMCustomDraw = ( LPNMTBCUSTOMDRAW )pNMHDR;
+	LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
 
-	switch ( lpNMCustomDraw->nmcd.dwDrawStage )
+	switch (lpNMCustomDraw->nmcd.dwDrawStage)
 	{
 	case CDDS_PREPAINT:
 		OnEraseBkgnd(CDC::FromHandle(lpNMCustomDraw->nmcd.hdc));
@@ -317,7 +362,9 @@ BOOL CEnToolBar::OnEraseBkgnd(CDC* pDC)
 	if (HasBkgndColor())
 	{
 		if (m_crTo == m_crFrom)
+		{
 			pDC->FillSolidRect(rClient, m_crFrom);
+		}
 		else
 		{
 			int nRows = GetRowCount();
@@ -328,9 +375,11 @@ BOOL CEnToolBar::OnEraseBkgnd(CDC* pDC)
 				CRect rRow(rClient);
 				rRow.top = nRow * nRowHeight;
 				rRow.bottom = rRow.top + nRowHeight;
-				
+
 				if (m_bGradient)
+				{
 					GraphicsMisc::DrawGradient(pDC->GetSafeHdc(), rRow, m_crFrom, m_crTo, FALSE);
+				}
 				else
 				{
 					rRow.bottom = rRow.top + (nRowHeight * 2) / 5; // based on Outlook 2007
@@ -344,7 +393,9 @@ BOOL CEnToolBar::OnEraseBkgnd(CDC* pDC)
 		}
 	}
 	else
+	{
 		pDC->FillSolidRect(rClient, GetSysColor(COLOR_3DFACE));
+	}
 
 	return TRUE;
 }
@@ -361,7 +412,7 @@ void CEnToolBar::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 	{
 		UINT nBtnID = GetItemID(nBtn);
 		DWORD dwStyle = GetButtonStyle(nBtn);
-		
+
 		if (dwStyle & TBSTYLE_DROPDOWN)
 		{
 			SetButtonStyle(nBtn, dwStyle & ~TBSTYLE_DROPDOWN);
@@ -379,7 +430,7 @@ void CEnToolBar::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 	{
 		int nBtn = CommandToIndex(aDropBtns[nItem]);
 		DWORD dwStyle = GetButtonStyle(nBtn);
-	
+
 		SetButtonStyle(nBtn, dwStyle | TBSTYLE_DROPDOWN);
 	}
 }
@@ -387,8 +438,8 @@ void CEnToolBar::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 int CEnToolBar::CalcHeightRequired(int cx) const
 {
 	int nRows = CalcRowsRequired(cx);
-	int nRowHeight = (nRows == 1) ? (m_sizeButton.cy + 2) : 
-					(nRows < 4) ? (m_sizeButton.cy + 4) : (m_sizeButton.cy + 6);
+	int nRowHeight = (nRows == 1) ? (m_sizeButton.cy + 2) :
+		(nRows < 4) ? (m_sizeButton.cy + 4) : (m_sizeButton.cy + 6);
 
 	return nRows * nRowHeight;
 }
@@ -411,7 +462,7 @@ int CEnToolBar::CalcRowsRequired(int cx) const
 				nXPos = 0;
 			}
 		}
-		
+
 		// else
 		nXPos += rBtn.Width();
 	}
@@ -422,7 +473,7 @@ int CEnToolBar::CalcRowsRequired(int cx) const
 int CEnToolBar::Resize(int cx, CPoint ptTopLeft)
 {
 	int nHeight = CalcHeightRequired(cx);
-	
+
 	CRect rToolbar(ptTopLeft, CSize(cx, nHeight));
 
 	MoveWindow(rToolbar);

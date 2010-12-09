@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_ENTOOLBAR_H__9AA29CEC_1405_4BBC_BBD0_94C1BD6D3120__INCLUDED_)
@@ -40,7 +53,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CEnToolBar window
 
-const COLORREF NO_COLOR = (COLORREF)-1;
+const COLORREF NO_COLOR = (COLORREF) - 1;
 
 class CEnBitmapEx;
 
@@ -50,35 +63,35 @@ class CEnToolBar : public CToolBar
 public:
 	CEnToolBar();
 	virtual ~CEnToolBar();
-	
+
 	BOOL LoadToolBar(LPCTSTR lpszResourceName, LPCTSTR szImagePath = NULL);
 	BOOL LoadToolBar(UINT nIDResource, LPCTSTR szImagePath = NULL);
 	BOOL LoadToolBar(UINT nIDResource, UINT nIDImage);
 	BOOL SetImage(const CString& sImagePath, COLORREF crMask = NO_COLOR);
 	BOOL SetImage(UINT nIDImage, COLORREF crMask = NO_COLOR);
 	int GetButtonCount(BOOL bIgnoreSeparators = FALSE) const;
-	
+
 	void RefreshButtonStates(BOOL bImmediate = TRUE);
 	void SetBackgroundColors(COLORREF crFrom, COLORREF crTo, BOOL bGradient);
 
 	int CalcHeightRequired(int cx) const;
 	int Resize(int cx, CPoint ptTopLeft);
 
-	
+
 	// Attributes
 protected:
 	CImageList m_ilDisabled, m_ilNormal;
 	COLORREF m_crFrom, m_crTo;
 	BOOL m_bGradient;
-	
+
 	// Operations
 public:
-	
+
 	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CEnToolBar)
 	//}}AFX_VIRTUAL
-	
+
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CEnToolBar)
@@ -88,20 +101,29 @@ protected:
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
 	afx_msg LRESULT OnRefreshButtonStates(WPARAM wp, LPARAM lp);
 	DECLARE_MESSAGE_MAP()
-		
-	virtual LRESULT OnItemPrePaint(LPNMTBCUSTOMDRAW /*lpNMCustomDraw*/) { return CDRF_DODEFAULT; }
-	virtual LRESULT OnItemPostPaint(LPNMTBCUSTOMDRAW /*lpNMCustomDraw*/) { return CDRF_DODEFAULT; }
-	
+
+	virtual LRESULT OnItemPrePaint(LPNMTBCUSTOMDRAW /*lpNMCustomDraw*/)
+	{
+		return CDRF_DODEFAULT;
+	}
+	virtual LRESULT OnItemPostPaint(LPNMTBCUSTOMDRAW /*lpNMCustomDraw*/)
+	{
+		return CDRF_DODEFAULT;
+	}
+
 	// pseudo message handler
 	BOOL OnEraseBkgnd(CDC* pDC);
-	
+
 	BOOL SetImage(CEnBitmapEx* pBitmap, COLORREF crMask);
 	void RefreshDisabledImageList(CEnBitmapEx* pBitmap, COLORREF crMask);
 
 	static BOOL GrayScale(CEnBitmapEx* pBitmap, COLORREF crMask = GetSysColor(COLOR_3DFACE));
 
-	BOOL HasBkgndColor() const { return m_crFrom != NO_COLOR; }
-	
+	BOOL HasBkgndColor() const
+	{
+		return m_crFrom != NO_COLOR;
+	}
+
 	int GetRowCount() const;
 	int GetRowHeight() const;
 
