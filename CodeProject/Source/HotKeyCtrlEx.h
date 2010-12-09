@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_HOTKEYCTRLEX_H__D798C9D0_5F7D_42A1_BA5C_0411A65D234B__INCLUDED_)
@@ -42,27 +55,27 @@
 
 class CHotKeyCtrlEx : public CHotKeyCtrl
 {
-// Construction
+	// Construction
 public:
 	CHotKeyCtrlEx(BOOL bGlobal = FALSE);
 
 	void SetHotKey(WORD wVirtualKeyCode, WORD wModifiers);
 	void SetHotKey(DWORD dwHotkey);
 
-// Attributes
+	// Attributes
 protected:
 	WORD m_wInvalidComb;
 	WORD m_wModifiers;
 	BOOL m_bGlobal;
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CHotKeyCtrlEx)
-	public:
+public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CHotKeyCtrlEx();
 
