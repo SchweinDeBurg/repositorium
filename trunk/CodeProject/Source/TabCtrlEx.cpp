@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TabCtrlEx.cpp : implementation file
@@ -64,15 +77,19 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTabCtrlEx message handlers
 
-void CTabCtrlEx::OnPaint() 
+void CTabCtrlEx::OnPaint()
 {
 	CPaintDC dc(this); // device context for painting
-	
+
 	// always do default
-	if(!IsExtendedTabThemedXP())
+	if (!IsExtendedTabThemedXP())
+	{
 		DefWindowProc(WM_PAINT, (WPARAM)dc.m_hDC, 0L);
+	}
 	else
+	{
 		CXPTabCtrl::DoPaint(&dc);
+	}
 
 	// then post draw if required
 	if (m_dwFlags & TCE_POSTDRAW)
@@ -86,18 +103,18 @@ void CTabCtrlEx::OnPaint()
 		dis.hwndItem = GetSafeHwnd();
 		dis.hDC = dc;
 		dis.itemAction = ODA_DRAWENTIRE;
-		
-		// paint the tabs 
+
+		// paint the tabs
 		int nTab = GetItemCount();
 		int nSel = GetCurSel();
-		
+
 		while (nTab--)
 		{
 			if (nTab != nSel)
 			{
 				dis.itemID = nTab;
 				dis.itemState = 0;
-				
+
 				VERIFY(GetItemRect(nTab, &dis.rcItem));
 
 				dis.rcItem.bottom -= 2;
@@ -106,21 +123,25 @@ void CTabCtrlEx::OnPaint()
 				dis.rcItem.right -= 2;
 
 				if (CRect().IntersectRect(rClip, &dis.rcItem))
+				{
 					GetParent()->SendMessage(WM_DRAWITEM, dis.CtlID, (LPARAM)&dis);
+				}
 			}
 		}
-		
+
 		// now selected tab
 		if (nSel != -1)
 		{
 			dis.itemID = nSel;
 			dis.itemState = ODS_SELECTED;
-			
+
 			VERIFY(GetItemRect(nSel, &dis.rcItem));
 			dis.rcItem.bottom += 2;
-			
+
 			if (CRect().IntersectRect(rClip, &dis.rcItem))
+			{
 				GetParent()->SendMessage(WM_DRAWITEM, dis.CtlID, (LPARAM)&dis);
+			}
 		}
 	}
 }
@@ -128,15 +149,17 @@ void CTabCtrlEx::OnPaint()
 void CTabCtrlEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
 	if (m_dwFlags & TCE_POSTDRAW)
-		return; // ignore because we probably sent it
+	{
+		return;   // ignore because we probably sent it
+	}
 
 	CXPTabCtrl::DrawItem(lpDrawItemStruct);
 }
 
-void CTabCtrlEx::OnMButtonDown(UINT nFlags, CPoint point) 
+void CTabCtrlEx::OnMButtonDown(UINT nFlags, CPoint point)
 {
 	CXPTabCtrl::OnMButtonDown(nFlags, point);
-		
+
 	if (m_dwFlags & TCE_MBUTTONCLICK)
 	{
 		TCHITTESTINFO tchi = { { point.x, point.y }, 0 };
@@ -149,7 +172,7 @@ void CTabCtrlEx::OnMButtonDown(UINT nFlags, CPoint point)
 	}
 }
 
-void CTabCtrlEx::OnMButtonUp(UINT nFlags, CPoint point) 
+void CTabCtrlEx::OnMButtonUp(UINT nFlags, CPoint point)
 {
 	if ((m_dwFlags & TCE_MBUTTONCLICK) && m_bMBtnDown)
 	{
@@ -157,9 +180,9 @@ void CTabCtrlEx::OnMButtonUp(UINT nFlags, CPoint point)
 		int nYBorder = GetSystemMetrics(SM_CYDOUBLECLK) / 2;
 
 		CRect rect(m_ptMBtnDown.x - nXBorder,
-					m_ptMBtnDown.y - nYBorder,
-					m_ptMBtnDown.x + nXBorder,
-					m_ptMBtnDown.y + nYBorder);
+			m_ptMBtnDown.y - nYBorder,
+			m_ptMBtnDown.x + nXBorder,
+			m_ptMBtnDown.y + nYBorder);
 
 		if (rect.PtInRect(point))
 		{
@@ -174,17 +197,17 @@ void CTabCtrlEx::OnMButtonUp(UINT nFlags, CPoint point)
 		}
 
 		m_bMBtnDown = FALSE;
-	}	
-	
+	}
+
 	CXPTabCtrl::OnMButtonUp(nFlags, point);
 }
 
-void CTabCtrlEx::OnCaptureChanged(CWnd *pWnd) 
+void CTabCtrlEx::OnCaptureChanged(CWnd* pWnd)
 {
 	if ((m_dwFlags & TCE_MBUTTONCLICK) && m_bMBtnDown)
 	{
 		m_bMBtnDown = FALSE;
 	}
-	
+
 	CXPTabCtrl::OnCaptureChanged(pWnd);
 }
