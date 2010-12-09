@@ -40,6 +40,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // CDriveInfo.cpp
@@ -261,12 +262,11 @@ BOOL CDriveInfo::IsUNCPath(LPCTSTR szPathName)
 
 int CDriveInfo::GetDrive(LPCTSTR szPathName)
 {
-	TCHAR cDrive;
 	int nDrive = 0;
 
 	if (_tcsstr(szPathName, _T(":")) == szPathName + 1)
 	{
-		cDrive = szPathName[0];
+		TCHAR cDrive = szPathName[0];
 		cDrive = (TCHAR)toupper(cDrive);
 		nDrive = cDrive - 64;
 

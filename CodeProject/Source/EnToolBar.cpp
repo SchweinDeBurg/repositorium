@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // EnToolBar.cpp : implementation file
@@ -213,13 +214,11 @@ BOOL CEnToolBar::GrayScale(CEnBitmapEx* pBitmap, COLORREF crMask)
 {
 	// create 'nice' disabled imagelist
 	C32BIPArray aProcessors;
-	//	CImageSysColorMapper ip1;
 	CImageGrayer ip2(0.33, 0.33, 0.33);
 	CImageLightener ip3(0.2);
 	CImageTinter ip4(GetSysColor(COLOR_3DSHADOW), 10);
 	CImageContraster ip5(-30);
 
-	//	aProcessors.Add(&ip1);
 	aProcessors.Add(&ip2);
 	aProcessors.Add(&ip3);
 	aProcessors.Add(&ip4);
