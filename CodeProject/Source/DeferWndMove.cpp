@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // DeferWndMove.cpp: implementation of the CDeferWndMove class.
@@ -37,7 +50,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -48,46 +61,56 @@ static char THIS_FILE[]=__FILE__;
 CDeferWndMove::CDeferWndMove(int nNumWindows) : m_hdwp(NULL)
 {
 	if (nNumWindows)
+	{
 		BeginMove(nNumWindows);
+	}
 }
 
 CDeferWndMove::~CDeferWndMove()
 {
 	if (m_hdwp)
+	{
 		EndMove();
+	}
 }
 
 BOOL CDeferWndMove::BeginMove(int nNumWindows)
 {
-	ASSERT (nNumWindows > 0);
+	ASSERT(nNumWindows > 0);
 
 	if (m_hdwp)
+	{
 		EndMove();
+	}
 
 	if (nNumWindows > 0)
+	{
 		m_hdwp = ::BeginDeferWindowPos(nNumWindows);
+	}
 
 	return (m_hdwp != NULL);
 }
 
 BOOL CDeferWndMove::EndMove()
 {
-	ASSERT (m_hdwp);
+	ASSERT(m_hdwp);
 
 	BOOL bRes = ::EndDeferWindowPos(m_hdwp);
-  m_hdwp = NULL;
+	m_hdwp = NULL;
 
-  return bRes;
+	return bRes;
 }
 
 BOOL CDeferWndMove::MoveWindow(CWnd* pWnd, int x, int y, int nWidth, int nHeight, BOOL bRepaint)
 {
-	ASSERT (m_hdwp);
+	ASSERT(m_hdwp);
 
 	if (!m_hdwp)
+	{
 		return FALSE;
+	}
 
-	ASSERT (pWnd->GetParent());
+	ASSERT(pWnd->GetParent());
 
 	// figure out what flags we need
 	int nFlags = SWP_NOACTIVATE | SWP_NOZORDER;
@@ -97,18 +120,26 @@ BOOL CDeferWndMove::MoveWindow(CWnd* pWnd, int x, int y, int nWidth, int nHeight
 	pWnd->GetParent()->ScreenToClient(rWnd);
 
 	if (x == rWnd.left && y == rWnd.top)
+	{
 		nFlags |= SWP_NOMOVE;
+	}
 
 	if (nWidth == rWnd.Width() && nHeight == rWnd.Height())
+	{
 		nFlags |= SWP_NOSIZE;
+	}
 
 	BOOL bNeedMove = !((nFlags & SWP_NOMOVE) && (nFlags & SWP_NOSIZE));
 
 	if (!bNeedMove)
+	{
 		return TRUE;
+	}
 
 	if (!bRepaint)
+	{
 		nFlags |= SWP_NOREDRAW;
+	}
 
 	HWND hWnd = pWnd->GetSafeHwnd();
 
@@ -117,7 +148,7 @@ BOOL CDeferWndMove::MoveWindow(CWnd* pWnd, int x, int y, int nWidth, int nHeight
 	// fallback
 	if (!m_hdwp)
 	{
-		ASSERT (0); // shouldn't fail but it might
+		ASSERT(0);  // shouldn't fail but it might
 		::SetWindowPos(hWnd, HWND_BOTTOM, x, y, nWidth, nHeight, nFlags);
 	}
 
@@ -126,7 +157,7 @@ BOOL CDeferWndMove::MoveWindow(CWnd* pWnd, int x, int y, int nWidth, int nHeight
 
 BOOL CDeferWndMove::MoveWindow(CWnd* pWnd, LPCRECT lpRect, BOOL bRepaint)
 {
-	return MoveWindow(pWnd, lpRect->left, lpRect->top, 
+	return MoveWindow(pWnd, lpRect->left, lpRect->top,
 		lpRect->right - lpRect->left,
 		lpRect->bottom - lpRect->top, bRepaint);
 }
@@ -193,7 +224,9 @@ CRect CDeferWndMove::ResizeCtrl(CWnd* pParent, UINT nCtrlID, int cx, int cy)
 
 			// make sure it also intersects with parent
 			if (rChild.IntersectRect(rChild, rParent))
-				MoveWindow(pCtrl, rChild); // our own version
+			{
+				MoveWindow(pCtrl, rChild);   // our own version
+			}
 		}
 
 		return rChild;
