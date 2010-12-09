@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -27,6 +27,19 @@
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
 // - merged with ToDoList version 6.1 sources
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #ifndef _MISCFILE_FUNCTIONS_H_
@@ -41,22 +54,22 @@
 class CFileBackup
 {
 public:
-	CFileBackup(const CString& sFile = _T(""), 
-				const CString& sFolder = _T(""), 
-				BOOL bTimeStamp = FALSE, 
-				const CString& sExt = _T(".bak"));
+	CFileBackup(const CString& sFile = _T(""),
+		const CString& sFolder = _T(""),
+		BOOL bTimeStamp = FALSE,
+		const CString& sExt = _T(".bak"));
 	~CFileBackup();
 
-	BOOL MakeBackup(const CString& sFile, 
-					const CString& sFolder = _T(""), 
-					BOOL bTimeStamp = FALSE, 
-					const CString& sExt = _T(".bak"));
+	BOOL MakeBackup(const CString& sFile,
+		const CString& sFolder = _T(""),
+		BOOL bTimeStamp = FALSE,
+		const CString& sExt = _T(".bak"));
 	BOOL RestoreBackup();
 
 	static CString BuildBackupPath(const CString& sFile,
-					const CString& sFolder = _T(""),
-					BOOL bTimeStamp = FALSE,
-					const CString& sExt = _T(".bak"));
+		const CString& sFolder = _T(""),
+		BOOL bTimeStamp = FALSE,
+		const CString& sExt = _T(".bak"));
 
 protected:
 	CString m_sFile, m_sBackup;
@@ -65,10 +78,10 @@ protected:
 class CTempFileBackup : public CFileBackup
 {
 public:
-	CTempFileBackup(const CString& sFile = _T(""), 
-					const CString& sFolder = _T(""), 
-					BOOL bTimeStamp = FALSE, 
-					const CString& sExt = _T(".bak"));	
+	CTempFileBackup(const CString& sFile = _T(""),
+		const CString& sFolder = _T(""),
+		BOOL bTimeStamp = FALSE,
+		const CString& sExt = _T(".bak"));
 	~CTempFileBackup(); // auto deletes backup file
 
 };
@@ -85,21 +98,21 @@ namespace FileMisc
 	bool ResetLastModified(const TCHAR* szPath); // resets to current time
 	double GetFileSize(const TCHAR* szPath);
 
-	bool RemoveFolder(const TCHAR* szFolder, 
-					  HANDLE hTerminate = NULL, 
-					  BOOL bProcessMsgLoop = TRUE);
+	bool RemoveFolder(const TCHAR* szFolder,
+		HANDLE hTerminate = NULL,
+		BOOL bProcessMsgLoop = TRUE);
 
-	bool DeleteFolderContents(const TCHAR* szFolder, 
-							  BOOL bIncludeSubFolders, 
-							  const TCHAR* szFileMask, 
-							  HANDLE hTerminate = NULL, 
-							  BOOL bProcessMsgLoop = TRUE);
+	bool DeleteFolderContents(const TCHAR* szFolder,
+		BOOL bIncludeSubFolders,
+		const TCHAR* szFileMask,
+		HANDLE hTerminate = NULL,
+		BOOL bProcessMsgLoop = TRUE);
 
-	double GetFolderSize(const TCHAR* szFolder, 
-						 BOOL bIncludeSubFolders = TRUE, 
-						 const TCHAR* szFileMask = NULL, 
-						 HANDLE hTerminate = NULL, 
-						 BOOL bProcessMsgLoop = TRUE);
+	double GetFolderSize(const TCHAR* szFolder,
+		BOOL bIncludeSubFolders = TRUE,
+		const TCHAR* szFileMask = NULL,
+		HANDLE hTerminate = NULL,
+		BOOL bProcessMsgLoop = TRUE);
 
 	bool CreateFolder(const TCHAR* szFolder);
 	bool CreateFolderFromFilePath(const TCHAR* szFilePath);
@@ -116,7 +129,7 @@ namespace FileMisc
 	CString& ValidateFilename(CString& sFilename, LPCTSTR szReplace = _T(""));
 	CString& ValidateFilepath(CString& sFilepath, LPCTSTR szReplace = _T(""));
 	void ReplaceExtension(CString& szFilePath, const TCHAR* szExt);
-	
+
 	CString GetTempFolder();
 	CString GetTempFileName(LPCTSTR szPrefix, UINT uUnique = 0);
 	CString GetTempFileName(LPCTSTR szFilename, LPCTSTR szExt);
@@ -138,7 +151,7 @@ namespace FileMisc
 		CString* pExt = NULL);
 	CString& MakePath(CString& sPath, const TCHAR* szDrive, const TCHAR* szDir = NULL, const TCHAR* szFName = NULL,
 		const TCHAR* szExt = NULL);
-	
+
 	CString GetFullPath(const CString& sFilePath, BOOL bFromApp = FALSE);
 	BOOL IsSameFile(const CString& sFilePath1, const CString& sFilePath2);
 
@@ -146,30 +159,30 @@ namespace FileMisc
 	CString GetFileNameFromPath(const TCHAR* szFilepath, BOOL bIncExtension = TRUE);
 
 	// will delete the source folder on success
-	bool MoveFolder(const TCHAR* szSrcFolder, 
-					const TCHAR* szDestFolder, 
-					HANDLE hTerminate = NULL, 
-					BOOL bProcessMsgLoop = TRUE);
+	bool MoveFolder(const TCHAR* szSrcFolder,
+		const TCHAR* szDestFolder,
+		HANDLE hTerminate = NULL,
+		BOOL bProcessMsgLoop = TRUE);
 
-	bool CopyFolder(const TCHAR* szSrcFolder, 
-					const TCHAR* szDestFolder, 
-					HANDLE hTerminate = NULL, 
-					BOOL bProcessMsgLoop = TRUE);
+	bool CopyFolder(const TCHAR* szSrcFolder,
+		const TCHAR* szDestFolder,
+		HANDLE hTerminate = NULL,
+		BOOL bProcessMsgLoop = TRUE);
 
 	// will delete the source folder only if file mask was "*.*"
-	bool MoveFolder(const TCHAR* szSrcFolder, 
-					const TCHAR* szDestFolder, 
-					BOOL bIncludeSubFolders, 
-					const TCHAR* szFileMask, 
-					HANDLE hTerminate = NULL, 
-					BOOL bProcessMsgLoop = TRUE);
+	bool MoveFolder(const TCHAR* szSrcFolder,
+		const TCHAR* szDestFolder,
+		BOOL bIncludeSubFolders,
+		const TCHAR* szFileMask,
+		HANDLE hTerminate = NULL,
+		BOOL bProcessMsgLoop = TRUE);
 
-	bool CopyFolder(const TCHAR* szSrcFolder, 
-					const TCHAR* szDestFolder, 
-					BOOL bIncludeSubFolders, 
-					const TCHAR* szFileMask, 
-					HANDLE hTerminate = NULL, 
-					BOOL bProcessMsgLoop = TRUE);
+	bool CopyFolder(const TCHAR* szSrcFolder,
+		const TCHAR* szDestFolder,
+		BOOL bIncludeSubFolders,
+		const TCHAR* szFileMask,
+		HANDLE hTerminate = NULL,
+		BOOL bProcessMsgLoop = TRUE);
 
 	// append a line of text to a text file
 	bool AppendLineToFile(LPCTSTR szPathname, LPCTSTR szLine);
