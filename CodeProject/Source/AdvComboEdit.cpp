@@ -32,17 +32,17 @@ CAdvComboEdit::~CAdvComboEdit()
 /////////////////////////////////////////////////////////////////////////////
 // CAdvComboEdit message handlers
 
-void CAdvComboEdit::OnTimer(UINT nIDEvent) 
+void CAdvComboEdit::OnTimer(UINT nIDEvent)
 {
 	KillTimer(nIDEvent);
 	SetForegroundWindow();
-	
+
 	CEdit::OnTimer(nIDEvent);
 }
 
-void CAdvComboEdit::PreSubclassWindow() 
+void CAdvComboEdit::PreSubclassWindow()
 {
 	XLISTCTRL_TRACE(_T("in CAdvComboEdit::PreSubclassWindow\n"));
-	SetTimer(1, 100, NULL);	
+	SetTimer(1, 100, NULL);
 	CEdit::PreSubclassWindow();
 }
