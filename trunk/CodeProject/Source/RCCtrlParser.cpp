@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // RCCtrlParser.cpp: implementation of the CRCCtrlParser class.
@@ -62,7 +75,7 @@ enum RCTYPE
 	RADIOBUTTON,
 	RTEXT,
 	SCROLLBAR,
-	STATE3, 
+	STATE3,
 };
 
 struct RCCTRLTYPE
@@ -73,9 +86,9 @@ struct RCCTRLTYPE
 	DWORD dwDefStyle;
 };
 
-#define MAKERCTYPE(type) _T(#type), (RCTYPE)type 
+#define MAKERCTYPE(type) _T(#type), (RCTYPE)type
 
-static RCCTRLTYPE RCCTRLTYPES[] = 
+static RCCTRLTYPE RCCTRLTYPES[] =
 {
 	{ MAKERCTYPE(AUTO3STATE), _T("button"), BS_AUTO3STATE | WS_TABSTOP },
 	{ MAKERCTYPE(AUTOCHECKBOX), _T("button"), BS_AUTOCHECKBOX | WS_TABSTOP },
@@ -83,7 +96,7 @@ static RCCTRLTYPE RCCTRLTYPES[] =
 	{ MAKERCTYPE(CHECKBOX), _T("button"), BS_CHECKBOX | WS_TABSTOP },
 	{ MAKERCTYPE(COMBOBOX), _T("combobox"), CBS_SIMPLE | WS_TABSTOP },
 	{ MAKERCTYPE(CONTROL), NULL, 0 },
-	{ MAKERCTYPE(CTEXT), _T("static"), SS_CENTER | WS_GROUP }, 
+	{ MAKERCTYPE(CTEXT), _T("static"), SS_CENTER | WS_GROUP },
 	{ MAKERCTYPE(DEFPUSHBUTTON), _T("button"), BS_DEFPUSHBUTTON | WS_TABSTOP },
 	{ MAKERCTYPE(EDITTEXT), _T("edit"), ES_LEFT | WS_BORDER | WS_TABSTOP },
 	{ MAKERCTYPE(GROUPBOX), _T("button"), BS_GROUPBOX },
@@ -104,7 +117,7 @@ const int NUMRCTYPES = sizeof(RCCTRLTYPES) / sizeof(RCCTRLTYPE);
 
 // list of classes requiring WS_EX_CLIENTEDGE by default
 
-static LPCTSTR szCtrlsWantingClientEdge[] = 
+static LPCTSTR szCtrlsWantingClientEdge[] =
 {
 	_T("Edit"),
 	_T("ComboBox"),
@@ -118,20 +131,20 @@ static LPCTSTR szCtrlsWantingClientEdge[] =
 	_T("SysIPAddress32"),
 	_T("SysPager32"),
 	_T("ComboBoxEx32")
-//	"Button", 
-//	"Static",
-//	"Scrollbar",
-//	"toolbarwindow32",
-//	"msctls_updown32",
-//	"msctls_progress32",
-//	"msctls_trackbar32",
-//	"SysTabControl32",
-//	"SysAnimate32",
-//	"SysMonthCal32",
-//	"msctls_statusbar32",
-//	"ReBarWindow32",
-//	"SysHeader32",
-//	"tooltips_class32",
+	//"Button",
+	//"Static",
+	//"Scrollbar",
+	//"toolbarwindow32",
+	//"msctls_updown32",
+	//"msctls_progress32",
+	//"msctls_trackbar32",
+	//"SysTabControl32",
+	//"SysAnimate32",
+	//"SysMonthCal32",
+	//"msctls_statusbar32",
+	//"ReBarWindow32",
+	//"SysHeader32",
+	//"tooltips_class32",
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -144,7 +157,9 @@ static LPCTSTR szCtrlsWantingClientEdge[] =
 CRCCtrlParser::CRCCtrlParser(LPCTSTR szRCControls)
 {
 	if (szRCControls)
+	{
 		ParseRCControls(szRCControls);
+	}
 }
 
 CRCCtrlParser::~CRCCtrlParser()
@@ -194,9 +209,11 @@ BOOL CRCCtrlParser::AddRCControl(const CString& sRCCtrl)
 	UINT nIconID;
 
 	int nType = ParseRCControl(sRCCtrl, sCaption, uID, sClass, dwStyle, pos, size, dwExStyle, nIconID);
-	
+
 	if (nType == -1)
+	{
 		return FALSE;
+	}
 
 	RTCONTROL rtc(NULL, sClass, sCaption, dwStyle, dwExStyle, CRect(pos, size), uID, TRUE);
 	rtc.m_nIconID = nIconID;
@@ -222,21 +239,23 @@ int CRCCtrlParser::FindNextRCControl(const CString& sRCControls, int nStart)
 	return nFirstFind;
 }
 
-int CRCCtrlParser::ParseRCControl(const CString& sRCCtrl, CString& sCaption, UINT& uID, CString& sClass, 
-								  DWORD& dwStyle, POINT& pos, SIZE& size, DWORD& dwExStyle, UINT& nIconID)
+int CRCCtrlParser::ParseRCControl(const CString& sRCCtrl, CString& sCaption, UINT& uID, CString& sClass,
+	DWORD& dwStyle, POINT& pos, SIZE& size, DWORD& dwExStyle, UINT& nIconID)
 {
 	int nIndex = GetRCControlTypeIndex(sRCCtrl);
 
 	if (nIndex == -1)
+	{
 		return -1;
+	}
 
 	CString sID, sStyle, sX, sY, sCx, sCy, sExStyle, sIconID;
 
 	switch (RCCTRLTYPES[nIndex].nType)
 	{
-	// 'CONTROL' definitions always take the same form:
+		// 'CONTROL' definitions always take the same form:
 
-	// caption, id, class, style, x, y, cx, cy, exstyle
+		// caption, id, class, style, x, y, cx, cy, exstyle
 	case CONTROL:
 		{
 			CString* pItems[] = { &sCaption, &sID, &sClass, &sStyle, &sX, &sY, &sCx, &sCy, &sExStyle };
@@ -244,9 +263,9 @@ int CRCCtrlParser::ParseRCControl(const CString& sRCCtrl, CString& sCaption, UIN
 		}
 		break;
 
-	// older window control definitions have 3 forms:
+		// older window control definitions have 3 forms:
 
-	// 1. caption, id, x, y, cx, cy, style, exstyle
+		// 1. caption, id, x, y, cx, cy, style, exstyle
 	case AUTO3STATE:
 	case AUTOCHECKBOX:
 	case AUTORADIOBUTTON:
@@ -265,8 +284,8 @@ int CRCCtrlParser::ParseRCControl(const CString& sRCCtrl, CString& sCaption, UIN
 			ExtractRCItems(sRCCtrl, RCCTRLTYPES[nIndex].szType, pItems, sizeof(pItems) / sizeof(CString*));
 		}
 		break;
-		
-	// 2. id, x, y, cx, cy, style, exstyle
+
+		// 2. id, x, y, cx, cy, style, exstyle
 	case SCROLLBAR:
 	case COMBOBOX:
 	case EDITTEXT:
@@ -277,14 +296,14 @@ int CRCCtrlParser::ParseRCControl(const CString& sRCCtrl, CString& sCaption, UIN
 		}
 		break;
 
-	// 3. iconid, id, x, y, cx, cy
+		// 3. iconid, id, x, y, cx, cy
 	case ICON:
 		{
 			CString* pItems[] = { &sIconID, &sID, &sX, &sY, &sCx, &sCy };
 			ExtractRCItems(sRCCtrl, RCCTRLTYPES[nIndex].szType, pItems, sizeof(pItems) / sizeof(CString*));
 		}
 		break;
-	
+
 	default:
 		nIndex = -1;
 	}
@@ -294,7 +313,9 @@ int CRCCtrlParser::ParseRCControl(const CString& sRCCtrl, CString& sCaption, UIN
 	{
 		// class names for predefined classes
 		if (sClass.IsEmpty())
+		{
 			sClass = RCCTRLTYPES[nIndex].szClass;
+		}
 
 		// styles
 		dwStyle = ParseRCStyles(sClass, sStyle);
@@ -306,13 +327,17 @@ int CRCCtrlParser::ParseRCControl(const CString& sRCCtrl, CString& sCaption, UIN
 
 		// default styles if no styles specified
 		if (!dwStyle)
+		{
 			dwStyle = RCCTRLTYPES[nIndex].dwDefStyle;
+		}
 
 		dwStyle |= WS_CHILD | (bVisible ? WS_VISIBLE : 0); // always
 
 		// add client-edge depending on class name
 		if (CtrlWantsClientEdge(sClass))
+		{
 			dwExStyle |= WS_EX_CLIENTEDGE;
+		}
 
 		uID = _ttoi(sID);
 		pos.x = _ttoi(sX);
@@ -336,12 +361,14 @@ void CRCCtrlParser::ExtractRCItems(const CString& sRCCtrl, LPCTSTR szType, CStri
 
 	while (nItem < nMaxItems)
 	{
-		// if the first char is a double quote then we need to ignore 
+		// if the first char is a double quote then we need to ignore
 		// commas till we find the end quote
 		int nStart = 0;
 
 		if (sTemp[0] == _T('\"'))
+		{
 			nStart = sTemp.Find(_T('\"'), 1);
+		}
 
 		int nFind = sTemp.Find(_T(','), nStart);
 
@@ -371,7 +398,9 @@ int CRCCtrlParser::GetRCControlTypeIndex(const CString& sRCCtrl)
 	while (nType--)
 	{
 		if (0 == sRCCtrl.Find(RCCTRLTYPES[nType].szType))
+		{
 			return nType;
+		}
 	}
 
 	return -1;
@@ -390,10 +419,12 @@ DWORD CRCCtrlParser::ParseRCStyles(LPCTSTR /*szClass*/, const CString& sStyle)
 		{
 			// note: invisible controls are handled via 'NOT WS_VISIBLE'
 			// so we must handle this explicitly via a hack
-			// we can reuse WS_POPUP because this will _never_ appear for 
+			// we can reuse WS_POPUP because this will _never_ appear for
 			// a child control (i hope)
 			if (CString(aStyles[nStyle]).CompareNoCase(_T("NOT WS_VISIBLE")) == 0)
+			{
 				dwStyle |= WS_NOTVISIBLE;
+			}
 			else
 			{
 				dwStyle |= LookupWndStyle(aStyles[nStyle]);
@@ -439,7 +470,9 @@ int CRCCtrlParser::ExtractRCStyles(const CString& sStyles, CStringArray& aStyles
 			sTemp.TrimRight();
 
 			if (sTemp.GetLength())
+			{
 				aStyles.Add(sTemp);
+			}
 			break;
 		}
 		else
@@ -451,7 +484,9 @@ int CRCCtrlParser::ExtractRCStyles(const CString& sStyles, CStringArray& aStyles
 			sTemp.TrimLeft();
 
 			if (sStyle.GetLength())
+			{
 				aStyles.Add(sStyle);
+			}
 		}
 
 	}
@@ -468,7 +503,9 @@ BOOL CRCCtrlParser::CtrlWantsClientEdge(LPCTSTR szClass)
 	while (nClass--)
 	{
 		if (sClass.CompareNoCase(szCtrlsWantingClientEdge[nClass]) == 0)
+		{
 			return TRUE;
+		}
 	}
 
 	return FALSE; // no match
@@ -481,7 +518,9 @@ DWORD CRCCtrlParser::GetDefaultStyles(LPCTSTR szRCType)
 	while (nType--)
 	{
 		if (_tcsicmp(RCCTRLTYPES[nType].szType, szRCType) == 0)
+		{
 			return RCCTRLTYPES[nType].dwDefStyle;
+		}
 	}
 
 	return 0;
