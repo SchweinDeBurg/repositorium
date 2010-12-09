@@ -39,10 +39,10 @@ END_MESSAGE_MAP()
 
 ///////////////////////////////////////////////////////////////////////////////
 // ctor
-CXComboList::CXComboList(CWnd *pParent) :
-	m_pParent(pParent),
-	m_nCount(0),
-	m_bFirstTime(TRUE)
+CXComboList::CXComboList(CWnd* pParent) :
+m_pParent(pParent),
+m_nCount(0),
+m_bFirstTime(TRUE)
 {
 	ASSERT(m_pParent);
 }
@@ -58,7 +58,9 @@ void CXComboList::SetActive(int nScrollBarWidth)
 	XLISTCTRL_TRACE(_T("in CXComboList::SetActive\n"));
 
 	if (!::IsWindow(m_ListBox.m_hWnd))
+	{
 		return;
+	}
 
 	m_ListBox.SetFocus();
 
@@ -77,7 +79,7 @@ void CXComboList::SetActive(int nScrollBarWidth)
 		lbrect.top   += 1;
 		lbrect.bottom = lbrect.top + (rect.Height() / nItemHeight) * nItemHeight;
 		lbrect.left  += 1;
-		lbrect.right -= nScrollBarWidth;		
+		lbrect.right -= nScrollBarWidth;
 
 		int nItemsInView = (lbrect.Height()) / nItemHeight;
 
@@ -103,18 +105,24 @@ void CXComboList::SetActive(int nScrollBarWidth)
 		si.nMin = 0;
 		si.nMax = m_ListBox.GetCount();
 		if (si.nMax < 0)
+		{
 			si.nMax = 1;
+		}
 		si.nPage = nItemsInView;
 		int nCurSel = m_ListBox.GetCurSel();
 		if (nCurSel == LB_ERR || nCurSel < 0)
+		{
 			nCurSel = 0;
+		}
 		si.nPos = nCurSel;
 
 		// set top index, to force selected item to be in view
 		m_ListBox.SetTopIndex(nCurSel > 0 ? nCurSel - 1 : 0);
 
 		if (si.nPos < 0)
+		{
 			si.nPos = 0;
+		}
 		m_wndSBVert.SetScrollInfo(&si);
 		m_wndSBVert.SetScrollPos(si.nPos, TRUE);
 
@@ -136,35 +144,35 @@ CScrollBar* CXComboList::GetScrollBarCtrl(int nBar)
 // SendRegisteredMessage
 void CXComboList::SendRegisteredMessage(UINT nMsg, WPARAM wParam, LPARAM lParam)
 {
-	CWnd *pWnd = m_pParent;
+	CWnd* pWnd = m_pParent;
 	if (pWnd)
+	{
 		pWnd->SendMessage(nMsg, wParam, lParam);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnLButtonDown
-void CXComboList::OnLButtonDown(UINT nFlags, CPoint point) 
+void CXComboList::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	SendRegisteredMessage(WM_XCOMBOLIST_LBUTTONUP, 0, 0);
-	CWnd::OnLButtonUp(nFlags, point);	//????? why up
+	CWnd::OnLButtonUp(nFlags, point);   //????? why up
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // PreTranslateMessage
-BOOL CXComboList::PreTranslateMessage(MSG* pMsg) 
+BOOL CXComboList::PreTranslateMessage(MSG* pMsg)
 {
 	switch (pMsg->message)
 	{
-		case WM_KEYDOWN:
+	case WM_KEYDOWN:
 		{
 			///////////////////////////////////////////////////////////////////
-			// we need to trap all cursor keys & alpha keys to reposition the 
+			// we need to trap all cursor keys & alpha keys to reposition the
 			// scroll bar
 			///////////////////////////////////////////////////////////////////
 
-			//XLISTCTRL_TRACE("   WM_KEYDOWN\n");
-
-			SCROLLINFO si = 
+			SCROLLINFO si =
 			{
 				sizeof(SCROLLINFO),
 				SIF_ALL | SIF_DISABLENOSCROLL,
@@ -173,70 +181,76 @@ BOOL CXComboList::PreTranslateMessage(MSG* pMsg)
 			BOOL bSetScrollInfo = FALSE;
 			int nIndex = 0;
 			if (::IsWindow(m_ListBox.m_hWnd))
+			{
 				nIndex = m_ListBox.GetCurSel();
+			}
 			if (nIndex == LB_ERR || nIndex < 0)
+			{
 				nIndex = 0;
+			}
 
 			// use index from listbox, because scroll position cannot be relied
 			// upon here
 
 			switch (pMsg->wParam)
 			{
-				case VK_RETURN:
-					SendRegisteredMessage(WM_XCOMBOLIST_VK_RETURN, 0, 0);
-					break;
+			case VK_RETURN:
+				SendRegisteredMessage(WM_XCOMBOLIST_VK_RETURN, 0, 0);
+				break;
 
-				case VK_ESCAPE:
-					SendRegisteredMessage(WM_XCOMBOLIST_VK_ESCAPE, 0, 0);
-					break;
+			case VK_ESCAPE:
+				SendRegisteredMessage(WM_XCOMBOLIST_VK_ESCAPE, 0, 0);
+				break;
 
 				// handle scrolling messages
-				case VK_DOWN:
-					si.nPos = nIndex + 1;
-					bSetScrollInfo = TRUE;
-					break;
+			case VK_DOWN:
+				si.nPos = nIndex + 1;
+				bSetScrollInfo = TRUE;
+				break;
 
-				case VK_END:
-					si.nPos = si.nMax;
-					bSetScrollInfo = TRUE;
-					break;
+			case VK_END:
+				si.nPos = si.nMax;
+				bSetScrollInfo = TRUE;
+				break;
 
-				case VK_HOME:
-					si.nPos = 0;
-					bSetScrollInfo = TRUE;
-					break;
+			case VK_HOME:
+				si.nPos = 0;
+				bSetScrollInfo = TRUE;
+				break;
 
-				case VK_NEXT:			// PAGE DOWN
-					si.nPos = nIndex + (si.nPage-1);
-					bSetScrollInfo = TRUE;
-					break;
+			case VK_NEXT:   // PAGE DOWN
+				si.nPos = nIndex + (si.nPage - 1);
+				bSetScrollInfo = TRUE;
+				break;
 
-				case VK_PRIOR:			// PAGE UP
-					si.nPos = nIndex - (si.nPage - 1);
-					bSetScrollInfo = TRUE;
-					break;
+			case VK_PRIOR:   // PAGE UP
+				si.nPos = nIndex - (si.nPage - 1);
+				bSetScrollInfo = TRUE;
+				break;
 
-				case VK_UP:
-					si.nPos = nIndex - 1;
-					bSetScrollInfo = TRUE;
-					break;
+			case VK_UP:
+				si.nPos = nIndex - 1;
+				bSetScrollInfo = TRUE;
+				break;
 
-				default:
-					if (pMsg->wParam >= 0x41/*VK_A*/ && pMsg->wParam <= 0x5A/*VK_Z*/)
+			default:
+				if (pMsg->wParam >= 0x41/*VK_A*/ && pMsg->wParam <= 0x5A/*VK_Z*/)
+				{
+					// this was an alpha key - try to find listbox index
+					CString strAlpha;
+					strAlpha = (_TCHAR) pMsg->wParam;
+					int nIndex2 = 0;
+					if (::IsWindow(m_ListBox.m_hWnd))
 					{
-						// this was an alpha key - try to find listbox index
-						CString strAlpha;
-						strAlpha = (_TCHAR) pMsg->wParam;
-						int nIndex2 = 0;
-						if (::IsWindow(m_ListBox.m_hWnd))
-							nIndex2 = m_ListBox.FindString(nIndex, strAlpha);
-						if (nIndex2 != LB_ERR)
-						{
-							si.nPos = nIndex2;
-							bSetScrollInfo = TRUE;
-						}
+						nIndex2 = m_ListBox.FindString(nIndex, strAlpha);
 					}
-					break;
+					if (nIndex2 != LB_ERR)
+					{
+						si.nPos = nIndex2;
+						bSetScrollInfo = TRUE;
+					}
+				}
+				break;
 			}
 
 			if (bSetScrollInfo)
@@ -246,26 +260,30 @@ BOOL CXComboList::PreTranslateMessage(MSG* pMsg)
 
 				// update scrollbar
 				if (si.nPos < 0)
+				{
 					si.nPos = 0;
+				}
 				if (si.nPos > si.nMax)
+				{
 					si.nPos = si.nMax;
+				}
 				m_wndSBVert.SetScrollInfo(&si);
 			}
 
 			break;
 		}
 
-		case WM_LBUTTONUP:
-			SendRegisteredMessage(WM_XCOMBOLIST_LBUTTONUP, 0, 0);
-			break;
+	case WM_LBUTTONUP:
+		SendRegisteredMessage(WM_XCOMBOLIST_LBUTTONUP, 0, 0);
+		break;
 	}
-	
+
 	return CWnd::PreTranslateMessage(pMsg);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnKillFocus
-void CXComboList::OnKillFocus(CWnd* pNewWnd) 
+void CXComboList::OnKillFocus(CWnd* pNewWnd)
 {
 	XLISTCTRL_TRACE(_T("in CXComboList::OnKillFocus\n"));
 
@@ -280,25 +298,27 @@ void CXComboList::OnKillFocus(CWnd* pNewWnd)
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnCreate
-int CXComboList::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CXComboList::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	XLISTCTRL_TRACE(_T("in CXComboList::OnCreate\n"));
 
 	if (CWnd::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 
-	CRect rect2(0,0,0,0);
+	CRect rect2(0, 0, 0, 0);
 
 	// create the listbox that we're wrapping
-	VERIFY(m_ListBox.Create(WS_VISIBLE|WS_CHILD|LBS_NOINTEGRALHEIGHT/*|WS_BORDER*/,
+	VERIFY(m_ListBox.Create(WS_VISIBLE | WS_CHILD | LBS_NOINTEGRALHEIGHT/*|WS_BORDER*/,
 		rect2, this, 0));
 
 	// create the vertical scrollbar
-	VERIFY(m_wndSBVert.Create(WS_VISIBLE|WS_CHILD|SBS_VERT,
+	VERIFY(m_wndSBVert.Create(WS_VISIBLE | WS_CHILD | SBS_VERT,
 		rect2, this, 0));
 
 	// set font from parent
-	CFont *font = GetParent()->GetFont();
+	CFont* font = GetParent()->GetFont();
 	if (font)
 	{
 		SetFont(font, FALSE);
@@ -310,71 +330,79 @@ int CXComboList::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnVScroll
-void CXComboList::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar*) 
+void CXComboList::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar*)
 {
 	if (!::IsWindow(m_ListBox.m_hWnd))
+	{
 		return;
+	}
 
 	// forward scroll message to listbox
 	const MSG* pMsg = GetCurrentMessage();
 	m_ListBox.SendMessage(WM_VSCROLL, pMsg->wParam, pMsg->lParam);
 
-    SCROLLINFO si = 
+	SCROLLINFO si =
 	{
-        sizeof(SCROLLINFO),
-        SIF_ALL | SIF_DISABLENOSCROLL,
-    };
+		sizeof(SCROLLINFO),
+		SIF_ALL | SIF_DISABLENOSCROLL,
+	};
 	m_wndSBVert.GetScrollInfo(&si);
 
-    switch (nSBCode) 
+	switch (nSBCode)
 	{
-		case SB_BOTTOM:			// scroll to bottom
-			si.nPos = si.nMax;
-			break;
-		case SB_TOP:			// scroll to top
-			si.nPos = 0;
-			break;
-		case SB_PAGEDOWN:		// scroll one page down
-			si.nPos += si.nPage;
-			break;
-		case SB_PAGEUP:			// scroll one page up
-			si.nPos -= si.nPage;
-			break;
-		case SB_LINEDOWN:		// scroll one line up
-			si.nPos += 1;
-			break;
-		case SB_LINEUP:			// scroll one line up
-			si.nPos -= 1;
-			break;
-		case SB_THUMBTRACK:		// drag scroll box to specified position. The 
-								// current position is provided in nPos
-		case SB_THUMBPOSITION:	// scroll to the absolute position. The current 
-								// position is provided in nPos
-			si.nPos = nPos;        
-			break;
-		case SB_ENDSCROLL:		// end scroll
-			return;
-		default:
-			break;
+	case SB_BOTTOM:   // scroll to bottom
+		si.nPos = si.nMax;
+		break;
+	case SB_TOP:   // scroll to top
+		si.nPos = 0;
+		break;
+	case SB_PAGEDOWN:   // scroll one page down
+		si.nPos += si.nPage;
+		break;
+	case SB_PAGEUP:   // scroll one page up
+		si.nPos -= si.nPage;
+		break;
+	case SB_LINEDOWN:   // scroll one line up
+		si.nPos += 1;
+		break;
+	case SB_LINEUP:   // scroll one line up
+		si.nPos -= 1;
+		break;
+	case SB_THUMBTRACK:   // drag scroll box to specified position
+		// The current position is provided in nPos
+	case SB_THUMBPOSITION:   // scroll to the absolute position
+		// The current position is provided in nPos
+		si.nPos = nPos;
+		break;
+	case SB_ENDSCROLL:   // end scroll
+		return;
+	default:
+		break;
 	}
 
 	if (si.nPos < 0)
+	{
 		si.nPos = 0;
+	}
 	if (si.nPos > si.nMax)
+	{
 		si.nPos = si.nMax;
+	}
 	m_wndSBVert.SetScrollInfo(&si);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnDestroy
-void CXComboList::OnDestroy() 
+void CXComboList::OnDestroy()
 {
 	XLISTCTRL_TRACE(_T("in CXComboList::OnDestroy\n"));
 
 	KillTimer(1);
 
 	if (::IsWindow(m_ListBox.m_hWnd))
+	{
 		m_ListBox.DestroyWindow();
+	}
 
 
 	CWnd::OnDestroy();
@@ -382,12 +410,14 @@ void CXComboList::OnDestroy()
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnTimer
-void CXComboList::OnTimer(UINT nIDEvent) 
+void CXComboList::OnTimer(UINT nIDEvent)
 {
 	UNUSED_ALWAYS(nIDEvent);
 
 	if (!::IsWindow(m_ListBox.m_hWnd))
+	{
 		return;
+	}
 
 	// get current mouse position
 	POINT point;
@@ -396,7 +426,6 @@ void CXComboList::OnTimer(UINT nIDEvent)
 
 	BOOL bOutside;
 	int nIndex = m_ListBox.ItemFromPoint(point, bOutside);
-	//XLISTCTRL_TRACE("   nIndex=%d  bOutside=%d\n", nIndex, bOutside);
 
 	if (!bOutside)
 	{
@@ -404,6 +433,8 @@ void CXComboList::OnTimer(UINT nIDEvent)
 
 		if (nIndex != nCurSel)
 			if (nIndex >= 0 && nIndex < m_ListBox.GetCount())
+			{
 				m_ListBox.SetCurSel(nIndex);
+			}
 	}
 }

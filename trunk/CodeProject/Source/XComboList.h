@@ -25,15 +25,15 @@ extern UINT NEAR WM_XCOMBOLIST_LBUTTONUP;
 
 class CXComboList : public CWnd
 {
-// Construction
+	// Construction
 public:
-	CXComboList(CWnd *pParent);
+	CXComboList(CWnd* pParent);
 	virtual ~CXComboList();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
 	void SetActive(int nScrollBarWidth);
 
@@ -66,7 +66,7 @@ public:
 		m_ListBox.SetFont(pFont, bRedraw);
 	}
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CXComboList)
 public:
@@ -74,13 +74,13 @@ public:
 	virtual CScrollBar* GetScrollBarCtrl(int nBar);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
-	CListBox	m_ListBox;
-	CScrollBar	m_wndSBVert;
-	CWnd *		m_pParent;
-	int			m_nCount;
-	BOOL		m_bFirstTime;
+	CListBox    m_ListBox;
+	CScrollBar  m_wndSBVert;
+	CWnd*       m_pParent;
+	int         m_nCount;
+	BOOL        m_bFirstTime;
 
 	void SendRegisteredMessage(UINT nMsg, WPARAM wParam, LPARAM lParam);
 
