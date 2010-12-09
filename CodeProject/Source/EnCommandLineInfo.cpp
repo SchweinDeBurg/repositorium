@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // EnCommandLineInfo.cpp: implementation of the CEnCommandLineInfo class.
@@ -37,7 +50,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -47,7 +60,7 @@ static char THIS_FILE[]=__FILE__;
 
 CEnCommandLineInfo::CEnCommandLineInfo()
 {
-	m_nLastParameter = -1;		
+	m_nLastParameter = -1;
 }
 
 CEnCommandLineInfo::~CEnCommandLineInfo()
@@ -58,15 +71,15 @@ void CEnCommandLineInfo::ParseParam(LPCTSTR lpszParam, BOOL bFlag, BOOL bLast)
 {
 	CString sLookup;
 
-	if (bFlag) 
+	if (bFlag)
 	{
 		m_sLastOption = lpszParam; 	   // save in case other value specified
 		m_sLastOption.MakeUpper();
 
 		// this is a "flag" (begins with / or -)
 		m_mapCommandLine[m_sLastOption] = _T("");    // default value is "TRUE"
-		m_nLastParameter = -1;		
-	} 
+		m_nLastParameter = -1;
+	}
 	else if (!m_sLastOption.IsEmpty()) // must be a parameter for the last option
 	{
 		m_nLastParameter++;
@@ -74,7 +87,7 @@ void CEnCommandLineInfo::ParseParam(LPCTSTR lpszParam, BOOL bFlag, BOOL bLast)
 		sLookup.Format(_T("%s_PARAMETER_%d"), m_sLastOption, m_nLastParameter);
 		m_mapCommandLine[sLookup] = lpszParam;
 	}
-	
+
 	// Call base class so MFC can see this param/token.
 	CCommandLineInfo::ParseParam(lpszParam, bFlag, bLast);
 
@@ -90,9 +103,13 @@ void CEnCommandLineInfo::ParseParam(LPCTSTR lpszParam, BOOL bFlag, BOOL bLast)
 		if (dwAttrib == 0xffffffff)
 		{
 			if (GetFileAttributes(lpszParam) != 0xffffffff)
+			{
 				m_strFileName = lpszParam;
+			}
 			else
+			{
 				m_strFileName.Empty();
+			}
 		}
 	}
 }
@@ -103,7 +120,9 @@ BOOL CEnCommandLineInfo::GetOption(LPCTSTR szFlag, CStringArray& aParams) const
 	sFlag.MakeUpper();
 
 	if (!m_mapCommandLine.Lookup(sFlag, sParameter))
+	{
 		return FALSE;
+	}
 
 	aParams.RemoveAll();
 
@@ -128,7 +147,9 @@ BOOL CEnCommandLineInfo::SetOption(LPCTSTR szFlag, LPCTSTR szParam)
 
 	// option cannot already exist
 	if (m_mapCommandLine.Lookup(sFlag, sParameter))
+	{
 		return FALSE;
+	}
 
 	// create flag
 	m_mapCommandLine[sFlag] = _T("");
@@ -155,7 +176,9 @@ BOOL CEnCommandLineInfo::GetOption(LPCTSTR szFlag, CString& sParam) const
 	if (GetOption(szFlag, aParams))
 	{
 		if (aParams.GetSize())
+		{
 			sParam = aParams[0];
+		}
 
 		return TRUE;
 	}
@@ -174,7 +197,7 @@ CString CEnCommandLineInfo::GetOption(LPCTSTR szFlag) const
 BOOL CEnCommandLineInfo::HasOption(LPCTSTR szFlag) const
 {
 	CString sOption;
-	
+
 	return GetOption(szFlag, sOption);
 }
 
@@ -187,27 +210,29 @@ CString CEnCommandLineInfo::ResolveShortcut(LPCTSTR szShortcut)
 {
 	// start by checking its a valid file
 	if (::GetFileAttributes(szShortcut) == 0xffffffff)
+	{
 		return _T("");
+	}
 
-    CoInitialize(NULL);
+	CoInitialize(NULL);
 
 	HRESULT hResult;
 	IShellLink*	psl;
 	CString sTarget(szShortcut);
-	
+
 	hResult = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER,
-								IID_IShellLink, (LPVOID*)&psl);
-	
+		IID_IShellLink, (LPVOID*)&psl);
+
 	if (SUCCEEDED(hResult))
 	{
 		LPPERSISTFILE ppf;
-		
+
 		hResult = psl->QueryInterface(IID_IPersistFile, (LPVOID*)&ppf);
 
 		if (SUCCEEDED(hResult))
 		{
 			hResult = ppf->Load(ATL::CT2OLE(szShortcut), STGM_READ);
-			
+
 			if (SUCCEEDED(hResult))
 			{
 				hResult = psl->Resolve(NULL, SLR_ANY_MATCH | SLR_NO_UI);
@@ -216,8 +241,8 @@ CString CEnCommandLineInfo::ResolveShortcut(LPCTSTR szShortcut)
 				{
 					TCHAR szPath[MAX_PATH];
 					WIN32_FIND_DATA wfd;
-					
-//fabio_2005
+
+					//fabio_2005
 #if _MSC_VER >= 1400
 					_tcscpy_s(szPath, _countof(szPath), szShortcut);
 #else
@@ -226,17 +251,19 @@ CString CEnCommandLineInfo::ResolveShortcut(LPCTSTR szShortcut)
 					hResult = psl->GetPath(szPath, MAX_PATH, (WIN32_FIND_DATA*)&wfd, SLGP_SHORTPATH);
 
 					if (SUCCEEDED(hResult))
+					{
 						sTarget = CString(szPath);
+					}
 				}
 			}
-		
+
 			ppf->Release();
 		}
-		
+
 		psl->Release();
 	}
 
 	CoUninitialize();
-	
+
 	return sTarget;
 }
