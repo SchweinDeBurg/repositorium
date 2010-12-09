@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // SysImageList.cpp: implementation of the CSysImageList class.
@@ -41,7 +54,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -65,7 +78,9 @@ CSysImageList::~CSysImageList()
 BOOL CSysImageList::Initialize()
 {
 	if (m_hImageList)
+	{
 		return TRUE;
+	}
 
 	// set up system image list
 	TCHAR szWindows[MAX_PATH];
@@ -93,7 +108,9 @@ BOOL CSysImageList::Initialize()
 int CSysImageList::GetImageIndex(LPCTSTR szFile)
 {
 	if (!m_hImageList && !Initialize())
+	{
 		return -1;
+	}
 
 	SHFILEINFO sfi;
 
@@ -101,7 +118,9 @@ int CSysImageList::GetImageIndex(LPCTSTR szFile)
 	HIMAGELIST hIL = (HIMAGELIST)SHGetFileInfo(szFile, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), nFlags);
 
 	if (hIL)
+	{
 		return sfi.iIcon;
+	}
 
 	return -1;
 }
@@ -109,13 +128,17 @@ int CSysImageList::GetImageIndex(LPCTSTR szFile)
 int CSysImageList::GetFileImageIndex(LPCTSTR szFilePath, BOOL bFailUnKnown)
 {
 	if (!m_hImageList && !Initialize() || !szFilePath || !(*szFilePath))
+	{
 		return -1;
+	}
 
 	// test for web protocol
 	if (IsWebAddress(szFilePath))
 	{
 		if (m_nHtmlImage == -1)
+		{
 			m_nHtmlImage = GetImageIndex(_T("test.html"));
+		}
 
 		return m_nHtmlImage;
 	}
@@ -131,23 +154,31 @@ int CSysImageList::GetFileImageIndex(LPCTSTR szFilePath, BOOL bFailUnKnown)
 		if (CDriveInfo::IsRemotePath(szFilePath, FALSE))
 		{
 			if (m_nRemoteFolderImage == -1)
+			{
 				m_nRemoteFolderImage = GetImageIndex(_T("\\\\dummy\\."));
+			}
 
 			return m_nRemoteFolderImage;
 		}
 
 		// else
 		if (FileMisc::FolderExists(szFilePath))
+		{
 			return m_nFolderImage;
+		}
 	}
 
 	// fail if no extension
 	if (bFailUnKnown && sExt.IsEmpty())
+	{
 		return -1;
+	}
 
 	// use the entire path if <= MAX_PATH in length else just the extension
 	if (lstrlen(szFilePath) > MAX_PATH)
+	{
 		szFilePath = sExt;
+	}
 
 	// else
 	SHFILEINFO sfi;
@@ -155,12 +186,14 @@ int CSysImageList::GetFileImageIndex(LPCTSTR szFilePath, BOOL bFailUnKnown)
 	UINT nFlags = SHGFI_SYSICONINDEX | SHGFI_USEFILEATTRIBUTES | (m_bLargeIcons ? SHGFI_ICON : SHGFI_SMALLICON);
 	HIMAGELIST hIL = (HIMAGELIST)SHGetFileInfo(szFilePath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), nFlags);
 
-	ASSERT (!hIL || hIL == m_hImageList);
+	ASSERT(!hIL || hIL == m_hImageList);
 
 	m_hImageList = hIL;
 
 	if (!hIL)
+	{
 		return -1;
+	}
 
 	return sfi.iIcon;
 }
@@ -168,7 +201,9 @@ int CSysImageList::GetFileImageIndex(LPCTSTR szFilePath, BOOL bFailUnKnown)
 int CSysImageList::GetFolderImageIndex()
 {
 	if (!m_hImageList && !Initialize())
+	{
 		return -1;
+	}
 
 	return m_nFolderImage;
 }
@@ -184,12 +219,16 @@ HICON CSysImageList::ExtractAppIcon()
 HICON CSysImageList::ExtractFileIcon(LPCTSTR szFilePath)
 {
 	if (!m_hImageList && !Initialize())
+	{
 		return NULL;
+	}
 
 	int nIndex = GetFileImageIndex(szFilePath);
 
 	if (nIndex != -1)
+	{
 		return ImageList_GetIcon(m_hImageList, nIndex, 0);
+	}
 
 	return NULL;
 }
@@ -197,7 +236,9 @@ HICON CSysImageList::ExtractFileIcon(LPCTSTR szFilePath)
 HICON CSysImageList::ExtractFolderIcon()
 {
 	if (!m_hImageList && !Initialize())
+	{
 		return NULL;
+	}
 
 	return ImageList_GetIcon(m_hImageList, m_nFolderImage, 0);
 }
@@ -207,7 +248,9 @@ const CImageList* CSysImageList::GetImageList() const
 	CImageList* pIL = CImageList::FromHandle(m_hImageList);
 
 	if (pIL)
+	{
 		return pIL;
+	}
 
 	// else
 	static CImageList il;
@@ -217,12 +260,16 @@ const CImageList* CSysImageList::GetImageList() const
 CImageList* CSysImageList::GetImageList()
 {
 	if (!m_hImageList)
+	{
 		Initialize();
+	}
 
 	CImageList* pIL = CImageList::FromHandle(m_hImageList);
 
 	if (pIL)
+	{
 		return pIL;
+	}
 
 	// else backup plan
 	static CImageList il;
@@ -232,7 +279,9 @@ CImageList* CSysImageList::GetImageList()
 HIMAGELIST CSysImageList::GetHImageList()
 {
 	if (!m_hImageList)
+	{
 		Initialize();
+	}
 
 	return m_hImageList;
 }
@@ -240,7 +289,9 @@ HIMAGELIST CSysImageList::GetHImageList()
 BOOL CSysImageList::IsWebAddress(LPCTSTR szFilePath)
 {
 	if (::PathIsURL(szFilePath))
+	{
 		return TRUE;
+	}
 
 	// check for www.
 	return (CString(szFilePath).Find(_T("www.")) == 0);
