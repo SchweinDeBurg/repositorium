@@ -1,9 +1,51 @@
+// Copyright (C) 2003-2005 AbstractSpoon Software.
+//
+// This license applies to everything in the ToDoList package, except where
+// otherwise noted.
+//
+// This software is provided 'as-is', without any express or implied warranty.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+// claim that you wrote the original software. If you use this software in a
+// product, an acknowledgment in the product documentation would be appreciated
+// but is not required.
+//
+// 2. Altered source versions must be plainly marked as such, and must not be
+// misrepresented as being the original software.
+//
+// 3. This notice may not be removed or altered from any source distribution.
+
+//*****************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - added AbstractSpoon Software copyright notice and licenese information
+// - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+//*****************************************************************************
+
 // EnBitmap.cpp: implementation of the CEnBitmap class (c) daniel godson 2002.
 //
-// credits: Peter Hendrix's CPicture implementation for the original IPicture code 
-//          Yves Maurer's GDIRotate implementation for the idea of working directly on 32 bit representations of bitmaps 
-//          Karl Lager's 'A Fast Algorithm for Rotating Bitmaps' 
-// 
+// credits: Peter Hendrix's CPicture implementation for the original IPicture code
+//          Yves Maurer's GDIRotate implementation for the idea of working directly on 32 bit representations of bitmaps
+//          Karl Lager's 'A Fast Algorithm for Rotating Bitmaps'
+//
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -13,13 +55,13 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
 const int HIMETRIC_INCH	= 2540;
 
-enum 
+enum
 {
 	FT_BMP,
 	FT_ICO,
@@ -39,18 +81,18 @@ C32BitImageProcessor::~C32BitImageProcessor()
 {
 }
 
-CSize C32BitImageProcessor::CalcDestSize(CSize sizeSrc) 
-{ 
+CSize C32BitImageProcessor::CalcDestSize(CSize sizeSrc)
+{
 	return sizeSrc; // default
 }
 
-BOOL C32BitImageProcessor::ProcessPixels(RGBX* pSrcPixels, CSize /*sizeSrc*/, RGBX* pDestPixels, 
-										CSize sizeDest, COLORREF /*crMask*/)
-{ 
+BOOL C32BitImageProcessor::ProcessPixels(RGBX* pSrcPixels, CSize /*sizeSrc*/, RGBX* pDestPixels,
+	CSize sizeDest, COLORREF /*crMask*/)
+{
 	CopyMemory(pDestPixels, pSrcPixels, sizeDest.cx * 4 * sizeDest.cy); // default
 	return TRUE;
 }
- 
+
 // C32BitImageProcessor::CalcWeightedColor(...) is inlined in EnBitmap.h
 
 //////////////////////////////////////////////////////////////////////
@@ -70,7 +112,9 @@ BOOL CEnBitmap::LoadImage(UINT uIDRes, LPCTSTR szResourceType, HMODULE hInst, CO
 	ASSERT(m_hObject == NULL);      // only attach once, detach on destroy
 
 	if (m_hObject != NULL)
+	{
 		return FALSE;
+	}
 
 	return Attach(LoadImageResource(uIDRes, szResourceType, hInst, crBack == -1 ? m_crBkgnd : crBack));
 }
@@ -80,7 +124,9 @@ BOOL CEnBitmap::LoadImage(LPCTSTR szImagePath, COLORREF crBack)
 	ASSERT(m_hObject == NULL);      // only attach once, detach on destroy
 
 	if (m_hObject != NULL)
+	{
 		return FALSE;
+	}
 
 	return Attach(LoadImageFile(szImagePath, crBack == -1 ? m_crBkgnd : crBack));
 }
@@ -91,23 +137,23 @@ HBITMAP CEnBitmap::LoadImageFile(LPCTSTR szImagePath, COLORREF crBack)
 
 	switch (nType)
 	{
-		case FT_BMP:
-			// the reason for this is that i suspect it is more efficient to load
-			// bmps this way since it avoids creating device contexts etc that the 
-			// IPicture methods requires. that method however is still valuable
-			// since it handles other image types and transparency
-			return (HBITMAP)::LoadImage(NULL, szImagePath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS);
+	case FT_BMP:
+		// the reason for this is that i suspect it is more efficient to load
+		// bmps this way since it avoids creating device contexts etc that the
+		// IPicture methods requires. that method however is still valuable
+		// since it handles other image types and transparency
+		return (HBITMAP)::LoadImage(NULL, szImagePath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS);
 
-		case FT_UNKNOWN:
-			break;
+	case FT_UNKNOWN:
+		break;
 
-		default: // all the rest
+	default: // all the rest
 		{
 			IPicture* pPicture = NULL;
-			
+
 			HBITMAP hbm = NULL;
 			HRESULT hr = OleLoadPicturePath(ATL::CT2OLE(szImagePath), NULL, 0, crBack, IID_IPicture, (LPVOID*)&pPicture);
-					
+
 			if (SUCCEEDED(hr) && pPicture)
 			{
 				hbm = ExtractBitmap(pPicture, crBack);
@@ -133,7 +179,7 @@ HBITMAP CEnBitmap::LoadImageResource(UINT uIDRes, LPCTSTR szResourceType, HMODUL
 		if (nSize > 0)
 		{
 			pBuff = new BYTE[nSize];
-			
+
 			// this loads it
 			if (GetResource(MAKEINTRESOURCE(uIDRes), szResourceType, hInst, pBuff, nSize))
 			{
@@ -145,7 +191,7 @@ HBITMAP CEnBitmap::LoadImageResource(UINT uIDRes, LPCTSTR szResourceType, HMODUL
 					pPicture->Release();
 				}
 			}
-			
+
 			delete [] pBuff;
 		}
 	}
@@ -165,7 +211,7 @@ IPicture* CEnBitmap::LoadFromBuffer(BYTE* pBuff, int nSize)
 
 	if (CreateStreamOnHGlobal(hGlobal, TRUE, &pStream) == S_OK)
 	{
-		OleLoadPicture(pStream, nSize, FALSE, IID_IPicture, (LPVOID *)&pPicture);
+		OleLoadPicture(pStream, nSize, FALSE, IID_IPicture, (LPVOID*)&pPicture);
 		pStream->Release();
 	}
 
@@ -173,29 +219,33 @@ IPicture* CEnBitmap::LoadFromBuffer(BYTE* pBuff, int nSize)
 }
 
 BOOL CEnBitmap::GetResource(LPCTSTR lpName, LPCTSTR lpType, HMODULE hInst, void* pResource, int& nBufSize)
-{ 
-	HRSRC		hResInfo;
-	HANDLE		hRes;
-	LPSTR		lpRes	= NULL; 
-	bool		bResult	= FALSE;
+{
+	HRSRC       hResInfo;
+	HANDLE      hRes;
+	LPSTR       lpRes   = NULL;
+	bool        bResult = FALSE;
 
 	// Find the resource
 	hResInfo = FindResource(hInst, lpName, lpType);
 
-	if (hResInfo == NULL) 
+	if (hResInfo == NULL)
+	{
 		return false;
+	}
 
 	// Load the resource
 	hRes = LoadResource(hInst, hResInfo);
 
-	if (hRes == NULL) 
+	if (hRes == NULL)
+	{
 		return false;
+	}
 
 	// Lock the resource
 	lpRes = (char*)LockResource(hRes);
 
 	if (lpRes != NULL)
-	{ 
+	{
 		if (pResource == NULL)
 		{
 			nBufSize = SizeofResource(hInst, hResInfo);
@@ -208,9 +258,9 @@ BOOL CEnBitmap::GetResource(LPCTSTR lpName, LPCTSTR lpType, HMODULE hInst, void*
 				memcpy(pResource, lpRes, nBufSize);
 				bResult = true;
 			}
-		} 
+		}
 
-		UnlockResource(hRes);  
+		UnlockResource(hRes);
 	}
 
 	// Free the resource
@@ -224,7 +274,9 @@ HBITMAP CEnBitmap::ExtractBitmap(IPicture* pPicture, COLORREF crBack)
 	ASSERT(pPicture);
 
 	if (!pPicture)
+	{
 		return NULL;
+	}
 
 	CBitmap bmMem;
 	CDC dcMem;
@@ -237,7 +289,7 @@ HBITMAP CEnBitmap::ExtractBitmap(IPicture* pPicture, COLORREF crBack)
 
 		pPicture->get_Width(&hmWidth);
 		pPicture->get_Height(&hmHeight);
-		
+
 		int nWidth	= MulDiv(hmWidth, pDC->GetDeviceCaps(LOGPIXELSX), HIMETRIC_INCH);
 		int nHeight	= MulDiv(hmHeight, pDC->GetDeviceCaps(LOGPIXELSY), HIMETRIC_INCH);
 
@@ -246,10 +298,12 @@ HBITMAP CEnBitmap::ExtractBitmap(IPicture* pPicture, COLORREF crBack)
 			CBitmap* pOldBM = dcMem.SelectObject(&bmMem);
 
 			if (crBack != -1)
+			{
 				dcMem.FillSolidRect(0, 0, nWidth, nHeight, crBack);
-			
+			}
+
 			HRESULT hr = pPicture->Render(dcMem, 0, 0, nWidth, nHeight, 0, hmHeight, hmWidth, -hmHeight, NULL);
-			ASSERT (SUCCEEDED(hr));
+			ASSERT(SUCCEEDED(hr));
 
 			// cleanup
 			dcMem.SelectObject(pOldBM);
@@ -264,7 +318,9 @@ HBITMAP CEnBitmap::ExtractBitmap(IPicture* pPicture, COLORREF crBack)
 BOOL CEnBitmap::CopyToClipboard(HWND hWnd) const
 {
 	if (!GetSafeHandle())
+	{
 		return FALSE;
+	}
 
 	if (::OpenClipboard(hWnd))
 	{
@@ -283,7 +339,9 @@ BOOL CEnBitmap::CopyImageFileToClipboard(LPCTSTR szImagePath, COLORREF crBack)
 	CEnBitmap bm;
 
 	if (bm.LoadImage(szImagePath, crBack))
+	{
 		return bm.CopyToClipboard();
+	}
 
 	return FALSE;
 }
@@ -294,16 +352,24 @@ int CEnBitmap::GetFileType(LPCTSTR szImagePath)
 	sPath.MakeUpper();
 
 	if (sPath.Find(_T(".BMP")) > 0)
+	{
 		return FT_BMP;
+	}
 
 	else if (sPath.Find(_T(".ICO")) > 0)
+	{
 		return FT_ICO;
+	}
 
 	else if (sPath.Find(_T(".JPG")) > 0 || sPath.Find(_T(".JPEG")) > 0)
+	{
 		return FT_JPG;
+	}
 
 	else if (sPath.Find(_T(".GIF")) > 0)
+	{
 		return FT_GIF;
+	}
 
 	// else
 	return FT_UNKNOWN;
@@ -320,13 +386,17 @@ BOOL CEnBitmap::ProcessImage(C32BitImageProcessor* pProcessor, COLORREF crMask)
 
 BOOL CEnBitmap::ProcessImage(C32BIPArray& aProcessors, COLORREF crMask)
 {
-	ASSERT (GetSafeHandle());
+	ASSERT(GetSafeHandle());
 
 	if (!GetSafeHandle())
+	{
 		return FALSE;
+	}
 
 	if (!aProcessors.GetSize())
+	{
 		return TRUE;
+	}
 
 	int nProcessor, nCount = aProcessors.GetSize();
 
@@ -334,7 +404,9 @@ BOOL CEnBitmap::ProcessImage(C32BIPArray& aProcessors, COLORREF crMask)
 	BITMAP BM;
 
 	if (!GetBitmap(&BM))
+	{
 		return FALSE;
+	}
 
 	CSize sizeSrc(BM.bmWidth, BM.bmHeight);
 	CSize sizeDest(sizeSrc), sizeMax(sizeSrc);
@@ -349,12 +421,16 @@ BOOL CEnBitmap::ProcessImage(C32BIPArray& aProcessors, COLORREF crMask)
 	RGBX* pSrcPixels = GetDIBits32();
 
 	if (!pSrcPixels)
+	{
 		return FALSE;
+	}
 
 	RGBX* pDestPixels = new RGBX[sizeMax.cx * sizeMax.cy];
 
 	if (!pDestPixels)
+	{
 		return FALSE;
+	}
 
 	Fill(pDestPixels, sizeMax, m_crBkgnd);
 
@@ -381,7 +457,7 @@ BOOL CEnBitmap::ProcessImage(C32BIPArray& aProcessors, COLORREF crMask)
 
 		sizeSrc = sizeDest;
 		sizeDest = aProcessors[nProcessor]->CalcDestSize(sizeSrc);
-		
+
 		bRes = aProcessors[nProcessor]->ProcessPixels(pSrcPixels, sizeSrc, pDestPixels, sizeDest, crMask);
 	}
 
@@ -409,7 +485,9 @@ BOOL CEnBitmap::ProcessImage(C32BIPArray& aProcessors, COLORREF crMask)
 			::ReleaseDC(NULL, hdc);
 
 			if (!bRes)
+			{
 				::DeleteObject(hbmSrc);
+			}
 		}
 	}
 
@@ -424,9 +502,11 @@ RGBX* CEnBitmap::GetDIBits32()
 	BITMAPINFO bi;
 
 	int nHeight = PrepareBitmapInfo32(bi);
-	
+
 	if (!nHeight)
+	{
 		return FALSE;
+	}
 
 	BYTE* pBits = (BYTE*)new BYTE[bi.bmiHeader.biSizeImage];
 	HDC hdc = GetDC(NULL);
@@ -445,12 +525,16 @@ RGBX* CEnBitmap::GetDIBits32()
 BOOL CEnBitmap::PrepareBitmapInfo32(BITMAPINFO& bi, HBITMAP hBitmap)
 {
 	if (!hBitmap)
+	{
 		hBitmap = (HBITMAP)GetSafeHandle();
+	}
 
 	BITMAP BM;
 
 	if (!::GetObject(hBitmap, sizeof(BM), &BM))
+	{
 		return FALSE;
+	}
 
 	bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
 	bi.bmiHeader.biWidth = BM.bmWidth;
@@ -467,16 +551,20 @@ BOOL CEnBitmap::PrepareBitmapInfo32(BITMAPINFO& bi, HBITMAP hBitmap)
 
 BOOL CEnBitmap::CopyImage(HBITMAP hBitmap)
 {
-	ASSERT (hBitmap);
-	
+	ASSERT(hBitmap);
+
 	if (!hBitmap)
+	{
 		return FALSE;
-	
+	}
+
 	BITMAPINFO bi;
 	int nHeight = PrepareBitmapInfo32(bi, hBitmap);
 
 	if (!nHeight)
+	{
 		return FALSE;
+	}
 
 	BYTE* pBits = (BYTE*)new BYTE[bi.bmiHeader.biSizeImage];
 	HDC hdc = GetDC(NULL);
@@ -507,7 +595,9 @@ BOOL CEnBitmap::CopyImage(HBITMAP hBitmap)
 BOOL CEnBitmap::CopyImage(CBitmap* pBitmap)
 {
 	if (!pBitmap)
+	{
 		return FALSE;
+	}
 
 	return CopyImage((HBITMAP)pBitmap->GetSafeHandle());
 }
@@ -515,13 +605,19 @@ BOOL CEnBitmap::CopyImage(CBitmap* pBitmap)
 BOOL CEnBitmap::Fill(RGBX* pPixels, CSize size, COLORREF color)
 {
 	if (!pPixels)
+	{
 		return FALSE;
+	}
 
 	if (color == -1 || color == RGB(255, 255, 255))
-		FillMemory(pPixels, size.cx * 4 * size.cy, 255); // white
+	{
+		FillMemory(pPixels, size.cx * 4 * size.cy, 255);   // white
+	}
 
 	else if (color == 0)
-		FillMemory(pPixels, size.cx * 4 * size.cy, 0); // black
+	{
+		FillMemory(pPixels, size.cx * 4 * size.cy, 0);   // black
+	}
 
 	else
 	{
@@ -534,7 +630,9 @@ BOOL CEnBitmap::Fill(RGBX* pPixels, CSize size, COLORREF color)
 		while (1)
 		{
 			if (nSize > size.cx)
+			{
 				break;
+			}
 
 			// else
 			int nAmount = min(size.cx - nSize, nSize) * 4;
@@ -549,7 +647,9 @@ BOOL CEnBitmap::Fill(RGBX* pPixels, CSize size, COLORREF color)
 		while (1)
 		{
 			if (nRow > size.cy)
+			{
 				break;
+			}
 
 			// else
 			int nAmount = min(size.cy - nRow, nRow) * size.cx * 4;
@@ -579,7 +679,7 @@ BOOL CEnBitmap::Copy(HIMAGELIST hImageList)
 
 	for (int nIcon = 0; nIcon < nCount; nIcon++)
 	{
-		VERIFY (ImageList_Draw(hImageList, nIcon, hdcMem, nIcon * nWidth, 0, ILD_NORMAL));
+		VERIFY(ImageList_Draw(hImageList, nIcon, hdcMem, nIcon * nWidth, 0, ILD_NORMAL));
 	}
 
 	// cleanup
