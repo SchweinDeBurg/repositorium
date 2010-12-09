@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // EnCheckComboBox.cpp : implementation file
@@ -45,8 +58,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CEnCheckComboBox
 
-CEnCheckComboBox::CEnCheckComboBox(BOOL bMulti, UINT nIDNoneString, UINT nIDAnyString) : 
-	CCheckComboBox(ACBS_ALLOWDELETE), m_bMultiSel(bMulti), m_nIDNoneString(nIDNoneString), m_nIDAnyString(nIDAnyString)
+CEnCheckComboBox::CEnCheckComboBox(BOOL bMulti, UINT nIDNoneString, UINT nIDAnyString) :
+CCheckComboBox(ACBS_ALLOWDELETE), m_bMultiSel(bMulti), m_nIDNoneString(nIDNoneString), m_nIDAnyString(nIDAnyString)
 {
 }
 
@@ -56,9 +69,9 @@ CEnCheckComboBox::~CEnCheckComboBox()
 
 
 BEGIN_MESSAGE_MAP(CEnCheckComboBox, CCheckComboBox)
-//{{AFX_MSG_MAP(CEnCheckComboBox)
-//}}AFX_MSG_MAP
-ON_CONTROL(LBN_SELCHANGE, 1000, OnLBSelChange)
+	//{{AFX_MSG_MAP(CEnCheckComboBox)
+	//}}AFX_MSG_MAP
+	ON_CONTROL(LBN_SELCHANGE, 1000, OnLBSelChange)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -67,11 +80,13 @@ END_MESSAGE_MAP()
 BOOL CEnCheckComboBox::EnableMultiSelection(BOOL bEnable)
 {
 	if (bEnable == m_bMultiSel)
+	{
 		return TRUE;
-	
+	}
+
 	m_bMultiSel = bEnable;
 
-	// if changing from multi selection and only one item was 
+	// if changing from multi selection and only one item was
 	// selected then set that as the single selection else clear all
 	if (!m_bMultiSel)
 	{
@@ -88,10 +103,10 @@ BOOL CEnCheckComboBox::EnableMultiSelection(BOOL bEnable)
 			m_sText.Empty();
 		}
 	}
-	else 
+	else
 	{
 		// set the current selection to whatever was singly selected
-		// provided it's not blank		
+		// provided it's not blank
 		CheckAll(FALSE);
 
 		int nSel = GetCurSel();
@@ -102,17 +117,21 @@ BOOL CEnCheckComboBox::EnableMultiSelection(BOOL bEnable)
 			GetLBText(nSel, sItem);
 
 			if (!sItem.IsEmpty())
+			{
 				SetCheck(nSel, TRUE);
+			}
 		}
 	}
-	
+
 	if (GetSafeHwnd())
+	{
 		CComboBox::Invalidate();
-	
+	}
+
 	return TRUE;
 }
 
-void CEnCheckComboBox::PreSubclassWindow() 
+void CEnCheckComboBox::PreSubclassWindow()
 {
 	CCheckComboBox::PreSubclassWindow();
 }
@@ -121,8 +140,10 @@ void CEnCheckComboBox::PreSubclassWindow()
 BOOL CEnCheckComboBox::GetCheck(int nIndex) const
 {
 	if (m_bMultiSel)
+	{
 		return CCheckComboBox::GetCheck(nIndex);
-	
+	}
+
 	// else
 	return (nIndex != CB_ERR && CComboBox::GetCurSel() == nIndex);
 }
@@ -130,11 +151,13 @@ BOOL CEnCheckComboBox::GetCheck(int nIndex) const
 int CEnCheckComboBox::GetChecked(CStringArray& aItems) const
 {
 	if (m_bMultiSel)
+	{
 		return CCheckComboBox::GetChecked(aItems);
-	
+	}
+
 	// else
 	aItems.RemoveAll();
-	
+
 	if (CComboBox::GetCurSel() != CB_ERR)
 	{
 		CString sItem;
@@ -142,55 +165,73 @@ int CEnCheckComboBox::GetChecked(CStringArray& aItems) const
 
 		// we don't add the blank item
 		if (!sItem.IsEmpty())
+		{
 			aItems.Add(sItem);
+		}
 	}
-	
+
 	return aItems.GetSize();
 }
 
 void CEnCheckComboBox::SetChecked(const CStringArray& aItems)
 {
 	if (m_bMultiSel)
+	{
 		CCheckComboBox::SetChecked(aItems);
+	}
 	else
 	{
 		if (aItems.GetSize() == 0)
+		{
 			SetCurSel(-1);
+		}
 		else
+		{
 			SelectString(0, aItems[0]);
+		}
 	}
 }
 
 int CEnCheckComboBox::SetCheck(int nIndex, BOOL bCheck)
 {
 	if (m_bMultiSel)
+	{
 		return CCheckComboBox::SetCheck(nIndex, bCheck);
+	}
 
 	// else
 	if (bCheck)
+	{
 		SetCurSel(nIndex);
-	
+	}
+
 	else if (nIndex == GetCurSel())
+	{
 		SetCurSel(-1);
+	}
 
 	return nIndex;
 }
 
-void CEnCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) 
+void CEnCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
 	if (m_bMultiSel) // sanity check
+	{
 		CCheckComboBox::DrawItem(lpDrawItemStruct);
+	}
 	else
 	{
 		CString sText(m_sText);
-		
+
 		if (lpDrawItemStruct->itemID != -1)
+		{
 			GetLBText(lpDrawItemStruct->itemID, sText);
-		
-		DrawItemText(lpDrawItemStruct->hDC, 
+		}
+
+		DrawItemText(lpDrawItemStruct->hDC,
 			lpDrawItemStruct->itemID,
 			lpDrawItemStruct->rcItem,
-			sText, 
+			sText,
 			lpDrawItemStruct->itemState);
 	}
 }
@@ -199,9 +240,11 @@ LRESULT CEnCheckComboBox::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARA
 {
 	// we don't prevent the base class from hooking the droplist
 	// if single selecting, we just bypass it
-	if (m_bMultiSel) 
+	if (m_bMultiSel)
+	{
 		return CCheckComboBox::ScWindowProc(hRealWnd, msg, wp, lp);
-	
+	}
+
 	// else
 	return CSubclasser::ScWindowProc(hRealWnd, msg, wp, lp);
 }
@@ -209,8 +252,10 @@ LRESULT CEnCheckComboBox::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARA
 LRESULT CEnCheckComboBox::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 {
 	if (m_bMultiSel)
+	{
 		return CCheckComboBox::WindowProc(hRealWnd, msg, wp, lp);
-	
+	}
+
 	// else
 	return CAutoComboBox::WindowProc(hRealWnd, msg, wp, lp);
 }
@@ -218,8 +263,10 @@ LRESULT CEnCheckComboBox::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM 
 void CEnCheckComboBox::OnLBSelChange()
 {
 	if (m_bMultiSel)
+	{
 		CCheckComboBox::OnLBSelChange();
-	
+	}
+
 	// else
 	CComboBox::Default();
 }
@@ -228,13 +275,17 @@ void CEnCheckComboBox::DrawItemText(HDC hdc, int nItem, CRect rText, const CStri
 {
 	CString sEnText(sText);
 	CString sNone(_T("<none>")), sAny(_T("<any>"));
-	
+
 	if (m_nIDNoneString)
+	{
 		sNone.LoadString(m_nIDNoneString);
-	
+	}
+
 	if (m_nIDAnyString)
+	{
 		sAny.LoadString(m_nIDAnyString);
-	
+	}
+
 	if (m_bMultiSel)
 	{
 		// if drawing the comma-delimited list and it includes a blank
@@ -244,19 +295,27 @@ void CEnCheckComboBox::DrawItemText(HDC hdc, int nItem, CRect rText, const CStri
 			int nBlank = FindStringExact(0, _T(""));
 
 			if (nBlank != -1 && GetCheck(nBlank))
+			{
 				sEnText = sEnText.Left(nBlank) + sNone + sEnText.Mid(nBlank);
+			}
 
 			else if (sEnText.IsEmpty())
+			{
 				sEnText = sAny;
+			}
 		}
-		else if (nItem != -1 && sEnText.IsEmpty()) 
+		else if (nItem != -1 && sEnText.IsEmpty())
+		{
 			sEnText = sNone;
+		}
 	}
 	else
 	{
 		if (nItem == -1 || sEnText.IsEmpty())
+		{
 			sEnText = sAny;
+		}
 	}
-	
+
 	CCheckComboBox::DrawItemText(hdc, nItem, rText, sEnText, nState);
 }
