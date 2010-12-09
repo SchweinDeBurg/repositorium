@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // AdvComboEdit.cpp : implementation file
 //
-// CAdvComboEdit Control
+// CAdvComboBox Control
 // Version: 2.1
 // Date: September 2002
 // Author: Mathias Tunared
