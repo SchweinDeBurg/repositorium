@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // LimitSingleInstance.h: interface for the CLimitSingleInstance class.
@@ -39,7 +52,7 @@
 #pragma once
 #endif // _MSC_VER >= 1000
 
-#include <windows.h> 
+#include <windows.h>
 
 //this code is from Q243953 in case you lose the article and wonder
 //where this code came from...
@@ -48,9 +61,9 @@ class CLimitSingleInstance
 protected:
 	DWORD  m_dwLastError;
 	HANDLE m_hMutex;
-	
+
 public:
-	CLimitSingleInstance(TCHAR *strMutexName)
+	CLimitSingleInstance(TCHAR* strMutexName)
 	{
 		//be sure to use a name that is unique for this application otherwise
 		//two apps may think they are the same if they are using same name for
@@ -58,8 +71,8 @@ public:
 		m_hMutex = CreateMutex(NULL, FALSE, strMutexName); //do early
 		m_dwLastError = GetLastError(); //save for use later...
 	}
-	
-	~CLimitSingleInstance() 
+
+	~CLimitSingleInstance()
 	{
 		if (m_hMutex)  //don't forget to close handles...
 		{
@@ -67,8 +80,8 @@ public:
 			m_hMutex = NULL; //good habit to be in
 		}
 	}
-	
-	BOOL IsAnotherInstanceRunning() 
+
+	BOOL IsAnotherInstanceRunning()
 	{
 		return (ERROR_ALREADY_EXISTS == m_dwLastError);
 	}
