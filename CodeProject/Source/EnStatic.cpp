@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // EnStatic.cpp : implementation file
@@ -73,12 +86,14 @@ void CEnStatic::EnableGripper(BOOL bEnable)
 	bEnable = bEnable ? 1 : 0;
 
 	if (GetSafeHwnd() && m_bGripper != bEnable)
+	{
 		Invalidate();
+	}
 
 	m_bGripper = bEnable;
 }
 
-void CEnStatic::OnPaint() 
+void CEnStatic::OnPaint()
 {
 	if (IsShowingGripper())
 	{
@@ -86,14 +101,16 @@ void CEnStatic::OnPaint()
 
 		// default first
 		DefWindowProc(WM_PAINT, (WPARAM)(HDC)dc, 0);
-		
+
 		// then the gripper
 		CThemed::DrawFrameControl(this, &dc, GetGripperRect(), DFC_SCROLL, DFCS_SCROLLSIZEGRIP);
-		
+
 		return;
 	}
 	else // all else
+	{
 		Default();
+	}
 }
 
 BOOL CEnStatic::IsShowingGripper()
@@ -116,11 +133,13 @@ BOOL CEnStatic::IsShowingGripper()
 	return FALSE;
 }
 
-void CEnStatic::OnSize(UINT nType, int cx, int cy) 
+void CEnStatic::OnSize(UINT nType, int cx, int cy)
 {
 	if (IsShowingGripper())
+	{
 		Invalidate();
-	
+	}
+
 	CStatic::OnSize(nType, cx, cy);
 }
 
@@ -141,27 +160,23 @@ UINT CEnStatic::OnNcHitTest(CPoint point)
 		ClientToScreen(rClient);
 
 		if (rClient.PtInRect(point))
+		{
 			return HTBOTTOMRIGHT;
+		}
 	}
-	
+
 	return CStatic::OnNcHitTest(point);
 }
 
-BOOL CEnStatic::OnEraseBkgnd(CDC* pDC) 
+BOOL CEnStatic::OnEraseBkgnd(CDC* pDC)
 {
-	// if our parent has 'WS_CLIPCHILDREN' then we must draw ourselves
-/*	if (GetParent()->GetStyle() & WS_CLIPCHILDREN)
-	{
-		CRect rClient;
-		GetClientRect(rClient);
-		pDC->FillSolidRect(rClient, GetSysColor(COLOR_3DFACE));
-	}
-*/
 	CStatic::OnEraseBkgnd(pDC);
 
 	// draw gripper here too
 	if (IsShowingGripper())
+	{
 		pDC->DrawFrameControl(GetGripperRect(), DFC_SCROLL, DFCS_SCROLLSIZEGRIP);
+	}
 
 	return TRUE;
 }
@@ -179,12 +194,14 @@ CRect CEnStatic::GetGripperRect()
 		return rClient;
 	}
 	else
+	{
 		return CRect(0, 0, 0, 0);
+	}
 }
 
-void CEnStatic::OnWindowPosChanging(WINDOWPOS FAR* lpwndpos) 
+void CEnStatic::OnWindowPosChanging(WINDOWPOS FAR* lpwndpos)
 {
 	CStatic::OnWindowPosChanging(lpwndpos);
-	
+
 	InvalidateRect(GetGripperRect(), FALSE);
 }
