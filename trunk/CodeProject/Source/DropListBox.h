@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // DropListBox.h : header file
-// 
+//
 // CAdvComboBox Control
 // Version: 2.1
 // Date: September 2002
@@ -8,9 +8,9 @@
 // Email: Mathias@inorbit.com
 // Copyright (c) 2002. All Rights Reserved.
 //
-// This code, in compiled form or as source code, may be redistributed 
-// unmodified PROVIDING it is not sold for profit without the authors 
-// written consent, and providing that this notice and the authors name 
+// This code, in compiled form or as source code, may be redistributed
+// unmodified PROVIDING it is not sold for profit without the authors
+// written consent, and providing that this notice and the authors name
 // and all copyright notices remains intact.
 //
 // This file is provided "as is" with no expressed or implied warranty.
@@ -25,10 +25,10 @@
 #include "DropWnd.h"
 #include "DropScrollBar.h"
 
-#define WM_SELECTED_ITEM		(WM_USER+1)
-#define WM_DESTROY_DROPLIST		(WM_USER+2)
-#define WM_VRC_SETCAPTURE		(WM_USER+3)
-#define WM_VRC_RELEASECAPTURE	(WM_USER+4)
+#define WM_SELECTED_ITEM        (WM_USER+1)
+#define WM_DESTROY_DROPLIST     (WM_USER+2)
+#define WM_VRC_SETCAPTURE       (WM_USER+3)
+#define WM_VRC_RELEASECAPTURE   (WM_USER+4)
 
 class CDropScrollBar;
 
@@ -37,31 +37,31 @@ class CDropScrollBar;
 
 class CDropListBox : public CListBox
 {
-// Construction
+	// Construction
 public:
-	CDropListBox( CWnd* pComboParent, CDropScrollBar* pScroll );
+	CDropListBox(CWnd* pComboParent, CDropScrollBar* pScroll);
 
-// Attributes
+	// Attributes
 public:
 	int GetMaxVisibleItems();
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDropListBox)
 public:
 	virtual BOOL DestroyWindow();
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
-	int SetCurSel( int nSelect );
-	void SetDLBStyle( DWORD dwStyle );
-	int AddListItem( LIST_ITEM& item );
-	void GetTextSize( LPCTSTR lpszText, int nCount, CSize& size );
-	void SetTopIdx( int nPos, BOOL bUpdateScrollbar = FALSE );
+	int SetCurSel(int nSelect);
+	void SetDLBStyle(DWORD dwStyle);
+	int AddListItem(LIST_ITEM& item);
+	void GetTextSize(LPCTSTR lpszText, int nCount, CSize& size);
+	void SetTopIdx(int nPos, BOOL bUpdateScrollbar = FALSE);
 	int GetBottomIndex();
 	virtual ~CDropListBox();
 
@@ -74,8 +74,8 @@ protected:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	//}}AFX_MSG
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg LONG OnSetCapture( WPARAM wParam, LPARAM lParam );
-	afx_msg LONG OnReleaseCapture( WPARAM wParam, LPARAM lParam );
+	afx_msg LONG OnSetCapture(WPARAM wParam, LPARAM lParam);
+	afx_msg LONG OnReleaseCapture(WPARAM wParam, LPARAM lParam);
 
 	DECLARE_MESSAGE_MAP()
 
