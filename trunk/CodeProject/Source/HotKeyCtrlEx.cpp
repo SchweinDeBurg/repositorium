@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // HotKeyCtrlEx.cpp : implementation file
@@ -43,8 +56,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CHotKeyCtrlEx
 
-CHotKeyCtrlEx::CHotKeyCtrlEx(BOOL bGlobal) : 
-	m_wInvalidComb(0), m_wModifiers(0), m_bGlobal(bGlobal)
+CHotKeyCtrlEx::CHotKeyCtrlEx(BOOL bGlobal) :
+m_wInvalidComb(0), m_wModifiers(0), m_bGlobal(bGlobal)
 {
 }
 
@@ -80,23 +93,23 @@ void CHotKeyCtrlEx::SetHotKey(DWORD dwHotkey)
 	SetHotKey(LOWORD(dwHotkey), HIWORD(dwHotkey));
 }
 
-BOOL CHotKeyCtrlEx::PreTranslateMessage(MSG* pMsg) 
+BOOL CHotKeyCtrlEx::PreTranslateMessage(MSG* pMsg)
 {
 	if (pMsg->message == WM_KEYDOWN && pMsg->hwnd == *this)
 	{
 		UINT nChar = pMsg->wParam;
 		UINT nFlags = HIWORD(pMsg->lParam);
-		
+
 		BOOL bCtrl = (GetKeyState(VK_CONTROL) & 0x8000);
 		BOOL bShift = (GetKeyState(VK_SHIFT) & 0x8000);
 		BOOL bAlt = (GetKeyState(VK_MENU) & 0x8000);
 		BOOL bExtended = (nFlags & 0x100);
-		
+
 		WORD wModifiers = (WORD)((bCtrl ? HOTKEYF_CONTROL : 0) |
 			(bShift ? HOTKEYF_SHIFT : 0) |
 			(bAlt ? HOTKEYF_ALT : 0) |
 			(bExtended ? HOTKEYF_EXT : 0));
-		
+
 		switch (nChar)
 		{
 		case VK_DELETE:
@@ -138,7 +151,9 @@ BOOL CHotKeyCtrlEx::PreTranslateMessage(MSG* pMsg)
 				bFail |= ((m_wInvalidComb & HKCOMB_SCA) && bCtrl && bShift && bAlt);
 
 				if (bFail)
+				{
 					wModifiers = (WORD)(m_wModifiers | (bExtended ? HOTKEYF_EXT : 0));
+				}
 
 				SetHotKey((WORD)nChar, wModifiers);
 
@@ -152,16 +167,18 @@ BOOL CHotKeyCtrlEx::PreTranslateMessage(MSG* pMsg)
 			// keys not allowed as global (MS reserved)
 		case VK_F12:
 			if (m_bGlobal && !bCtrl && !bShift && !bAlt)
-				return TRUE; // eat
+			{
+				return TRUE;   // eat
+			}
 			break;
 
 			// keys having too much meaning elsewhere
 		case VK_RETURN:
 		case VK_CANCEL:
 			return TRUE; // eat
-			
+
 		}
 	}
-	
+
 	return CHotKeyCtrl::PreTranslateMessage(pMsg);
 }
