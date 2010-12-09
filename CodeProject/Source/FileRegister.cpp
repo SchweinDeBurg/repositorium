@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // FileRegister.cpp: implementation of the CFileRegister class.
@@ -52,13 +65,15 @@ CFileRegister::CFileRegister(LPCTSTR szExt, LPCTSTR szFileType)
 	m_sFileType.TrimLeft();
 
 	if (!m_sExt.IsEmpty() && m_sExt[0] != _T('.'))
+	{
 		m_sExt = _T(".") + m_sExt;
+	}
 
 	// get the app path
 	GetModuleFileName(NULL, m_sAppPath.GetBuffer(_MAX_PATH), _MAX_PATH);
 	m_sAppPath.ReleaseBuffer();
 
-	ASSERT (!m_sAppPath.IsEmpty());
+	ASSERT(!m_sAppPath.IsEmpty());
 }
 
 CFileRegister::~CFileRegister()
@@ -74,11 +89,13 @@ BOOL CFileRegister::RegisterFileType(LPCTSTR szFileDesc, int nIcon, BOOL bAllowS
 	CString sMessage;
 	BOOL bSuccess = TRUE, bChange = FALSE;
 
-	ASSERT (!m_sExt.IsEmpty());
-	ASSERT (!m_sFileType.IsEmpty());
+	ASSERT(!m_sExt.IsEmpty());
+	ASSERT(!m_sFileType.IsEmpty());
 
 	if (m_sExt.IsEmpty() || m_sFileType.IsEmpty())
+	{
 		return FALSE;
+	}
 
 	if (reg.Open(HKEY_CLASSES_ROOT, m_sExt) == ERROR_SUCCESS)
 	{
@@ -91,14 +108,16 @@ BOOL CFileRegister::RegisterFileType(LPCTSTR szFileDesc, int nIcon, BOOL bAllowS
 			{
 				sMessage.Format(_T("The file extension %s is used by %s for its %s.\n\nWould you like %s to be the default application for this file type."),
 					m_sExt, AfxGetAppName(), szFileDesc, AfxGetAppName());
-				
+
 				nRet = AfxMessageBox(sMessage, MB_YESNO | MB_ICONQUESTION);
 			}
 
 			bChange = TRUE;
 		}
 		else
+		{
 			bChange = sEntry.IsEmpty();
+		}
 
 		// if not no then set
 		if (nRet != IDNO)
@@ -120,15 +139,21 @@ BOOL CFileRegister::RegisterFileType(LPCTSTR szFileDesc, int nIcon, BOOL bAllowS
 					if (bAllowShellOpen)
 					{
 						if (szParams)
+						{
 							sShellOpen = _T("\"") + m_sAppPath + _T("\" \"%1\" ") + CString(szParams);
+						}
 						else
+						{
 							sShellOpen = _T("\"") + m_sAppPath + _T("\" \"%1\"");
+						}
 					}
 
 					bSuccess &= (reg.Write(_T(""), sShellOpen) == ERROR_SUCCESS);
 				}
 				else
+				{
 					bSuccess = FALSE;
+				}
 
 				// icons
 				reg.Close();
@@ -140,19 +165,29 @@ BOOL CFileRegister::RegisterFileType(LPCTSTR szFileDesc, int nIcon, BOOL bAllowS
 					bSuccess &= (reg.Write(_T(""), sIconPath) == ERROR_SUCCESS);
 				}
 				else
+				{
 					bSuccess = FALSE;
+				}
 			}
 			else
-				bSuccess = FALSE; 
+			{
+				bSuccess = FALSE;
+			}
 		}
 		else
+		{
 			bSuccess = FALSE;
+		}
 	}
 	else
+	{
 		bSuccess = FALSE;
+	}
 
 	if (bSuccess && bChange)
+	{
 		SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
+	}
 
 	return bSuccess;
 }
@@ -164,25 +199,33 @@ BOOL CFileRegister::UnRegisterFileType()
 	CString sEntry;
 	BOOL bSuccess = FALSE;
 
-	ASSERT (!m_sExt.IsEmpty());
+	ASSERT(!m_sExt.IsEmpty());
 
 	if (m_sExt.IsEmpty())
+	{
 		return FALSE;
+	}
 
 	if (reg.Open(HKEY_CLASSES_ROOT, m_sExt) == ERROR_SUCCESS)
 	{
 		reg.Read(_T(""), sEntry);
 
 		if (sEntry.IsEmpty())
-			return TRUE; // we werent the register app so all's well
+		{
+			return TRUE;   // we werent the register app so all's well
+		}
 
-		ASSERT (!m_sFileType.IsEmpty());
+		ASSERT(!m_sFileType.IsEmpty());
 
 		if (m_sFileType.IsEmpty())
+		{
 			return FALSE;
+		}
 
 		if (sEntry.CompareNoCase(m_sFileType) != 0)
-			return TRUE; // we werent the register app so all's well
+		{
+			return TRUE;   // we werent the register app so all's well
+		}
 
 		// else delete the keys
 		reg.Close();
@@ -198,10 +241,12 @@ BOOL CFileRegister::UnRegisterFileType()
 
 BOOL CFileRegister::IsRegisteredAppInstalled()
 {
-	ASSERT (!m_sExt.IsEmpty());
+	ASSERT(!m_sExt.IsEmpty());
 
 	if (m_sExt.IsEmpty())
+	{
 		return FALSE;
+	}
 
 	CString sRegAppPath = GetRegisteredAppPath();
 
@@ -220,10 +265,12 @@ BOOL CFileRegister::IsRegisteredApp()
 	CAfxRegKey reg;
 	CString sEntry;
 
-	ASSERT (!m_sExt.IsEmpty());
+	ASSERT(!m_sExt.IsEmpty());
 
 	if (m_sExt.IsEmpty())
+	{
 		return FALSE;
+	}
 
 	// if the file type is not empty we check the file type first
 	if (!m_sFileType.IsEmpty())
@@ -233,7 +280,9 @@ BOOL CFileRegister::IsRegisteredApp()
 			reg.Read(_T(""), sEntry);
 
 			if (sEntry.IsEmpty() || sEntry.CompareNoCase(m_sFileType) != 0)
+			{
 				return FALSE;
+			}
 		}
 	}
 
@@ -246,7 +295,9 @@ BOOL CFileRegister::IsRegisteredApp()
 		FileMisc::SplitPath(m_sAppPath, NULL, NULL, &sFName, &sExt);
 
 		if (sRegAppFileName.CompareNoCase(sFName + sExt) == 0)
+		{
 			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -257,7 +308,7 @@ CString CFileRegister::GetRegisteredAppPath(BOOL bFilenameOnly)
 	CAfxRegKey reg;
 	CString sEntry, sAppPath;
 
-	ASSERT (!m_sExt.IsEmpty());
+	ASSERT(!m_sExt.IsEmpty());
 
 	if (reg.Open(HKEY_CLASSES_ROOT, m_sExt) == ERROR_SUCCESS)
 	{
@@ -273,7 +324,9 @@ CString CFileRegister::GetRegisteredAppPath(BOOL bFilenameOnly)
 
 				// app to open file
 				if (reg.Open(HKEY_CLASSES_ROOT, sEntry + CString(_T("\\shell\\open\\command"))) == ERROR_SUCCESS)
+				{
 					reg.Read(_T(""), sAppPath);
+				}
 			}
 		}
 	}
@@ -287,9 +340,13 @@ CString CFileRegister::GetRegisteredAppPath(BOOL bFilenameOnly)
 		sFName += _T(".exe");
 
 		if (bFilenameOnly)
+		{
 			sAppPath = sFName;
+		}
 		else
+		{
 			FileMisc::MakePath(sAppPath, sDrive, sDir, sFName);
+		}
 	}
 
 	return sAppPath;
