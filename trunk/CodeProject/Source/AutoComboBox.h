@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -45,7 +45,7 @@
 const UINT WM_ACB_ITEMADDED = ::RegisterWindowMessage(_T("WM_ACB_ITEMADDED"));
 const UINT WM_ACB_ITEMDELETED = ::RegisterWindowMessage(_T("WM_ACB_ITEMDELETED"));
 
-enum 
+enum
 {
 	ACBS_ALLOWDELETE   = 0x01,
 	ACBS_CASESENSITIVE = 0x02,
@@ -67,10 +67,19 @@ public:
 
 	// Operations
 public:
-	virtual int AddString(LPCTSTR szItem) { return AddUniqueItem(szItem); }
-	virtual int InsertString(int nIndex, LPCTSTR szItem) { return InsertUniqueItem(nIndex, szItem); }
+	virtual int AddString(LPCTSTR szItem)
+	{
+		return AddUniqueItem(szItem);
+	}
+	virtual int InsertString(int nIndex, LPCTSTR szItem)
+	{
+		return InsertUniqueItem(nIndex, szItem);
+	}
 
-	virtual int DeleteString(UINT nIndex) { return CComboBox::DeleteString(nIndex);	}
+	virtual int DeleteString(UINT nIndex)
+	{
+		return CComboBox::DeleteString(nIndex);
+	}
 	virtual int DeleteString(LPCTSTR szItem, BOOL bCaseSensitive = FALSE);
 
 	virtual int DeleteItems(const CStringArray& aItems, BOOL bCaseSensitive = FALSE); // returns deleted count
@@ -82,14 +91,25 @@ public:
 	virtual int AddUniqueItems(const CAutoComboBox& cbItems); // returns num items added
 
 	virtual int GetItems(CStringArray& aItems) const; // returns item count
-	virtual int SelectString(int nStartAfter, LPCTSTR lpszString) { return CComboBox::SelectString(nStartAfter, lpszString); }
+	virtual int SelectString(int nStartAfter, LPCTSTR lpszString)
+	{
+		return CComboBox::SelectString(nStartAfter, lpszString);
+	}
 
 	// helpers
 	int FindStringExact(int nIndexStart, const CString& sItem, BOOL bCaseSensitive) const;
 	int FindStringExact(int nIndexStart, LPCTSTR lpszFind) const
-	{ return FindStringExact(nIndexStart, lpszFind, FALSE); }
+	{
+		return FindStringExact(nIndexStart, lpszFind, FALSE);
+	}
 
-	void Flush() { if (m_bEditChange) HandleReturnKey(); }
+	void Flush()
+	{
+		if (m_bEditChange)
+		{
+			HandleReturnKey();
+		}
+	}
 
 protected:
 	DWORD m_dwFlags;
@@ -125,9 +145,18 @@ protected:
 	virtual BOOL DeleteSelectedLBItem();
 	virtual void RefreshMaxDropWidth();
 
-	BOOL AllowDelete() const { return Misc::HasFlag(m_dwFlags, ACBS_ALLOWDELETE); }
-	BOOL CaseSensitive() const { return Misc::HasFlag(m_dwFlags, ACBS_CASESENSITIVE); }
-	BOOL AddToStart() const { return Misc::HasFlag(m_dwFlags, ACBS_ADDTOSTART); }
+	BOOL AllowDelete() const
+	{
+		return Misc::HasFlag(m_dwFlags, ACBS_ALLOWDELETE);
+	}
+	BOOL CaseSensitive() const
+	{
+		return Misc::HasFlag(m_dwFlags, ACBS_CASESENSITIVE);
+	}
+	BOOL AddToStart() const
+	{
+		return Misc::HasFlag(m_dwFlags, ACBS_ADDTOSTART);
+	}
 	int AddUniqueItem(const CString& sItem, BOOL bAddToStart);
 
 	BOOL IsSimpleCombo();

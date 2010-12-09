@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -57,13 +57,13 @@ void AFXAPI DDX_AutoCBString(CDataExchange* pDX, int nIDC, CString& value)
 	else
 	{
 		// try exact first
-		int nIndex = (int)::SendMessage(hWndCtrl, CB_FINDSTRINGEXACT, (WPARAM)-1,
+		int nIndex = (int)::SendMessage(hWndCtrl, CB_FINDSTRINGEXACT, (WPARAM) - 1,
 			(LPARAM)(LPCTSTR)value);
 
 		// then partial
 		if (nIndex == CB_ERR)
 		{
-			nIndex = ::SendMessage(hWndCtrl, CB_SELECTSTRING, (WPARAM)-1, (LPARAM)(LPCTSTR)value);
+			nIndex = ::SendMessage(hWndCtrl, CB_SELECTSTRING, (WPARAM) - 1, (LPARAM)(LPCTSTR)value);
 
 			// if there's a match, check its not partial
 			if (nIndex != CB_ERR)
@@ -74,7 +74,9 @@ void AFXAPI DDX_AutoCBString(CDataExchange* pDX, int nIDC, CString& value)
 				sItem.ReleaseBuffer();
 
 				if (value.CompareNoCase(sItem))
+				{
 					nIndex = CB_ERR;
+				}
 			}
 		}
 
@@ -82,7 +84,9 @@ void AFXAPI DDX_AutoCBString(CDataExchange* pDX, int nIDC, CString& value)
 		{
 			// add it and then select it if not empty
 			if (!value.IsEmpty())
+			{
 				nIndex = ::SendMessage(hWndCtrl, CB_ADDSTRING, 0, (LPARAM)(LPCTSTR)value);
+			}
 
 		}
 
@@ -123,9 +127,13 @@ BOOL CAutoComboBox::OnCloseUp()
 
 	// notify parent of (possible) selection change
 	if (m_bEditChange)
+	{
 		NotifyParent(CBN_SELCHANGE);
+	}
 	else
+	{
 		NotifyParent(CBN_SELENDCANCEL);
+	}
 
 	return FALSE; // pass to parent
 }
@@ -162,8 +170,10 @@ BOOL CAutoComboBox::OnSelChange()
 	{
 		int nSel = GetCurSel();
 
-		if (nSel < GetCount() )
+		if (nSel < GetCount())
+		{
 			SetWindowText(GetSelectedItem());
+		}
 	}
 
 	// eat notification if dropped down
@@ -177,7 +187,9 @@ CString CAutoComboBox::GetSelectedItem() const
 	int nSel = GetCurSel();
 
 	if (nSel != CB_ERR)
+	{
 		GetLBText(nSel, sSel);
+	}
 
 	return sSel;
 }
@@ -205,12 +217,14 @@ int CAutoComboBox::FindStringExact(int nIndexStart, const CString& sItem, BOOL b
 				bContinue = FALSE;
 			}
 			else if (!bCaseSensitive)
+			{
 				bContinue = FALSE;
+			}
 			else
 			{
 				// else if (bCaseSensitive)
-				ASSERT (nFind != CB_ERR);
-				ASSERT (bCaseSensitive);
+				ASSERT(nFind != CB_ERR);
+				ASSERT(bCaseSensitive);
 
 				// test for real exactness because FindStringExact is not case sensitive
 				CString sFind;
@@ -230,7 +244,9 @@ int CAutoComboBox::FindStringExact(int nIndexStart, const CString& sItem, BOOL b
 			GetLBText(nFind, sLBItem);
 
 			if (sLBItem.IsEmpty())
+			{
 				break;
+			}
 		}
 	}
 
@@ -242,7 +258,9 @@ int CAutoComboBox::DeleteString(LPCTSTR szItem, BOOL bCaseSensitive)
 	int nItem = FindStringExact(-1, szItem, bCaseSensitive);
 
 	if (nItem != CB_ERR)
+	{
 		return DeleteString(nItem);
+	}
 
 	// else
 	return CB_ERR;
@@ -256,7 +274,9 @@ int CAutoComboBox::DeleteItems(const CStringArray& aItems, BOOL bCaseSensitive)
 	while (nItem--)
 	{
 		if (DeleteString(aItems[nItem], bCaseSensitive) != CB_ERR)
+		{
 			nDeleted++;
+		}
 	}
 
 	return nDeleted;
@@ -275,7 +295,9 @@ int CAutoComboBox::AddUniqueItem(const CString& sItem, BOOL bAddToStart)
 int CAutoComboBox::InsertUniqueItem(int nIndex, const CString& sItem)
 {
 	if (nIndex < 0 || nIndex > GetCount())
-		nIndex = -1; // insert at end if not exists
+	{
+		nIndex = -1;   // insert at end if not exists
+	}
 
 	if (!sItem.IsEmpty())
 	{
@@ -287,7 +309,9 @@ int CAutoComboBox::InsertUniqueItem(int nIndex, const CString& sItem)
 			GetLBText(nFind, sLBItem);
 
 			if (nIndex == -1)
-				nIndex = nFind; // leave it in it's current position
+			{
+				nIndex = nFind;   // leave it in it's current position
+			}
 
 			if (nIndex != nFind || sItem != sLBItem)
 			{
@@ -296,7 +320,9 @@ int CAutoComboBox::InsertUniqueItem(int nIndex, const CString& sItem)
 				CString sSelItem;
 
 				if (nSel != CB_ERR)
+				{
 					GetLBText(nSel, sSelItem);
+				}
 
 				// be sure to transfer item data
 				DWORD dwItemData = GetItemData(nFind);
@@ -304,18 +330,26 @@ int CAutoComboBox::InsertUniqueItem(int nIndex, const CString& sItem)
 				DeleteString(nFind); // remove original
 
 				if (HasStyle(CBS_SORT))
-					nIndex = CComboBox::AddString(sItem); // re-insert
+				{
+					nIndex = CComboBox::AddString(sItem);   // re-insert
+				}
 				else
-					nIndex = CComboBox::InsertString(nIndex, sItem); // re-insert
+				{
+					nIndex = CComboBox::InsertString(nIndex, sItem);   // re-insert
+				}
 
 				SetItemData(nIndex, dwItemData);
 
 				if (nIndex != CB_ERR)
+				{
 					RefreshMaxDropWidth();
+				}
 
 				// restore selection
 				if (nSel != CB_ERR)
+				{
 					SelectString(-1, sSelItem);
+				}
 
 				return nIndex;
 			}
@@ -323,12 +357,18 @@ int CAutoComboBox::InsertUniqueItem(int nIndex, const CString& sItem)
 		else
 		{
 			if (HasStyle(CBS_SORT))
-				nIndex = CComboBox::AddString(sItem); // re-insert
+			{
+				nIndex = CComboBox::AddString(sItem);   // re-insert
+			}
 			else
-				nIndex = CComboBox::InsertString(nIndex, sItem); // re-insert
+			{
+				nIndex = CComboBox::InsertString(nIndex, sItem);   // re-insert
+			}
 
 			if (nIndex != CB_ERR)
+			{
 				RefreshMaxDropWidth();
+			}
 
 			return nIndex;
 		}
@@ -342,7 +382,7 @@ void CAutoComboBox::RefreshMaxDropWidth()
 	CDialogHelper::RefreshMaxDropWidth(*this);
 }
 
-void CAutoComboBox::OnSize(UINT nType, int cx, int cy) 
+void CAutoComboBox::OnSize(UINT nType, int cx, int cy)
 {
 	CWnd* pEdit = GetDlgItem(1001);
 
@@ -352,10 +392,12 @@ void CAutoComboBox::OnSize(UINT nType, int cx, int cy)
 		CHoldRedraw hr(*pEdit);
 		CComboBox::OnSize(nType, cx, cy);
 
-		pEdit->SendMessage(EM_SETSEL, (UINT)-1, 0);
+		pEdit->SendMessage(EM_SETSEL, (UINT) - 1, 0);
 	}
 	else
+	{
 		CComboBox::OnSize(nType, cx, cy);
+	}
 }
 
 int CAutoComboBox::AddUniqueItems(const CStringArray& aItems)
@@ -366,7 +408,9 @@ int CAutoComboBox::AddUniqueItems(const CStringArray& aItems)
 	for (int nItem = 0; nItem < nItemCount; nItem++)
 	{
 		if (AddUniqueItem(aItems[nItem], FALSE) != CB_ERR)
+		{
 			nCount++;
+		}
 	}
 
 	return nCount ? 0 : CB_ERR;
@@ -377,7 +421,9 @@ int CAutoComboBox::AddUniqueItems(const CAutoComboBox& cbItems)
 	CStringArray aItems;
 
 	if (cbItems.GetItems(aItems))
+	{
 		return AddUniqueItems(aItems);
+	}
 
 	// else
 	return 0;
@@ -420,7 +466,9 @@ LRESULT CAutoComboBox::WindowProc(HWND /*hRealWnd*/, UINT msg, WPARAM wp, LPARAM
 		else if (wp == VK_RETURN)
 		{
 			if (GetDroppedState() && !IsSimpleCombo())
+			{
 				ShowDropDown(FALSE);
+			}
 
 			HandleReturnKey();
 
@@ -443,14 +491,18 @@ LRESULT CAutoComboBox::WindowProc(HWND /*hRealWnd*/, UINT msg, WPARAM wp, LPARAM
 			{
 				// can be simple or not dropped
 				if (IsSimpleCombo() || !GetDroppedState())
+				{
 					return DLGC_WANTALLKEYS;
+				}
 			}
 		}
 		break;
 
 	case WM_KILLFOCUS:
 		if (m_bEditChange)
+		{
 			HandleReturnKey();
+		}
 		break;
 	}
 
@@ -469,13 +521,15 @@ void CAutoComboBox::HandleReturnKey()
 		int nAdd = AddUniqueItem(sEdit);
 
 		if (nAdd != CB_ERR)
-			CComboBox::GetParent()->SendMessage(WM_ACB_ITEMADDED, 
+			CComboBox::GetParent()->SendMessage(WM_ACB_ITEMADDED,
 			MAKEWPARAM(CWnd::GetDlgCtrlID(), nAdd),
 			(LPARAM)(LPCTSTR)sEdit);
 		else // send a possible selection change
 		{
 			if (!sEdit.IsEmpty())
+			{
 				SelectString(-1, sEdit);
+			}
 
 			NotifyParent(CBN_SELCHANGE);
 		}
@@ -498,17 +552,21 @@ BOOL CAutoComboBox::IsSimpleCombo()
 	return ((CComboBox::GetStyle() & 0xf) == CBS_SIMPLE);
 }
 
-HBRUSH CAutoComboBox::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
+HBRUSH CAutoComboBox::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CComboBox::OnCtlColor(pDC, pWnd, nCtlColor);
 
 	// save handle of listbox window
 	if (AllowDelete() && !m_hwndListbox && nCtlColor == CTLCOLOR_LISTBOX)
+	{
 		m_hwndListbox = pWnd->GetSafeHwnd();
+	}
 
 	// and hook edit box
 	if (nCtlColor == CTLCOLOR_EDIT && !IsHooked())
+	{
 		HookWindow(pWnd->GetSafeHwnd());
+	}
 
 	return hbr;
 }
@@ -525,7 +583,9 @@ BOOL CAutoComboBox::DeleteSelectedLBItem()
 
 		// save existing selection
 		if (nCurSel != -1)
+		{
 			GetWindowText(sCurItem);
+		}
 
 		GetLBText(nSelItem, sSelItem); // need this for notifying parent
 		::SendMessage(*this, CB_DELETESTRING, nSelItem, 0);
@@ -538,7 +598,7 @@ BOOL CAutoComboBox::DeleteSelectedLBItem()
 		}
 
 		// notify parent that we've been fiddling
-		CComboBox::GetParent()->SendMessage(WM_ACB_ITEMDELETED, MAKEWPARAM(CWnd::GetDlgCtrlID(), nSelItem), 
+		CComboBox::GetParent()->SendMessage(WM_ACB_ITEMDELETED, MAKEWPARAM(CWnd::GetDlgCtrlID(), nSelItem),
 			(LPARAM)(LPCTSTR)sSelItem);
 
 		return TRUE;
@@ -548,7 +608,7 @@ BOOL CAutoComboBox::DeleteSelectedLBItem()
 	return FALSE;
 }
 
-void CAutoComboBox::OnKillFocus(CWnd* pNewWnd) 
+void CAutoComboBox::OnKillFocus(CWnd* pNewWnd)
 {
 	CComboBox::OnKillFocus(pNewWnd);
 
