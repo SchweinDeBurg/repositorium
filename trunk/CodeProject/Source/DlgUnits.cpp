@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // DlgUnits.cpp: implementation of the CDlgUnits class.
@@ -38,7 +51,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -51,7 +64,7 @@ CDlgUnits::CDlgUnits(HWND hWnd) : m_hWnd(NULL)
 	if (!hWnd || !CWinClasses::IsDialog(hWnd))
 	{
 		DWORD dwDLBU = ::GetDialogBaseUnits();
-		
+
 		m_dlgBaseUnits.cx = LOWORD(dwDLBU);
 		m_dlgBaseUnits.cy = HIWORD(dwDLBU);
 	}
@@ -67,7 +80,7 @@ CDlgUnits::CDlgUnits(CWnd* pWnd) : m_hWnd(NULL)
 	if (!pWnd || !pWnd->GetSafeHwnd() || !CWinClasses::IsDialog(*pWnd))
 	{
 		DWORD dwDLBU = ::GetDialogBaseUnits();
-		
+
 		m_dlgBaseUnits.cx = LOWORD(dwDLBU);
 		m_dlgBaseUnits.cy = HIWORD(dwDLBU);
 	}
@@ -88,11 +101,13 @@ int CDlgUnits::ToPixelsX(int x) const
 	{
 		CRect rect(0, 0, x, 0);
 		MapDialogRect(m_hWnd, rect);
-	
+
 		return rect.right;
 	}
 	else
+	{
 		return MulDiv(x, m_dlgBaseUnits.cx, 4);
+	}
 }
 
 int CDlgUnits::ToPixelsY(int y) const
@@ -101,11 +116,13 @@ int CDlgUnits::ToPixelsY(int y) const
 	{
 		CRect rect(0, 0, 0, y);
 		MapDialogRect(m_hWnd, rect);
-	
+
 		return rect.bottom;
 	}
 	else
+	{
 		return MulDiv(y, m_dlgBaseUnits.cy, 8);
+	}
 }
 
 void CDlgUnits::ToPixels(long& x, long& y) const
