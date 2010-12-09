@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_CHECKLISTBOXEX_H__3862911F_2AC1_41DC_822D_CA68941B6FDC__INCLUDED_)
@@ -42,34 +55,34 @@
 
 class CCheckListBoxEx : public CCheckListBox
 {
-// Construction
+	// Construction
 public:
 	CCheckListBoxEx();
 
-// Attributes
+	// Attributes
 protected:
 	CImageList m_ilCheck;
 	UINT m_nImageHeight;
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CCheckListBoxEx)
-	public:
+public:
 	virtual BOOL OnChildNotify(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pLResult);
 	//}}AFX_VIRTUAL
 	virtual void PreSubclassWindow();
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CCheckListBoxEx();
 
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CCheckListBoxEx)
-		// NOTE - the ClassWizard will add and remove member functions here.
+	// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_MSG
 	afx_msg void OnDestroy();
 	afx_msg LRESULT OnSetFont(WPARAM , LPARAM);
