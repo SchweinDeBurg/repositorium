@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // WinClasses.cpp: implementation of the CWinClasses class.
@@ -40,7 +53,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -51,8 +64,8 @@ void TRACEWND(LPCTSTR szFunctionName, HWND hWnd)
 	if (hWnd)
 	{
 		CString sText;
-		//		pWnd->GetWindowText(sText);
-		TRACE (_T("%s(%s, %s, id = %d)\n"), szFunctionName, CWinClasses::GetClass(hWnd), sText, GetDlgCtrlID(hWnd));
+		CWnd::FromHandle(hWnd)->GetWindowText(sText);
+		TRACE(_T("%s(%s, %s, id = %d)\n"), szFunctionName, CWinClasses::GetClass(hWnd), sText, GetDlgCtrlID(hWnd));
 	}
 }
 #else
@@ -86,7 +99,9 @@ CString CWinClasses::GetClass(HWND hWnd)
 BOOL CWinClasses::IsClass(HWND hWnd, LPCTSTR szClass)
 {
 	if (hWnd)
+	{
 		return IsClass(szClass, GetClass(hWnd));
+	}
 
 	return FALSE;
 }
@@ -98,7 +113,9 @@ BOOL CWinClasses::IsClassEx(HWND hWnd, LPCTSTR szClass)
 		CString sClass = GetClassEx(hWnd);
 
 		if (IsClass(sClass, szClass))
+		{
 			return TRUE;
+		}
 		else
 		{
 			CWnd* pWnd = CWnd::FromHandlePermanent(hWnd);
@@ -106,34 +123,54 @@ BOOL CWinClasses::IsClassEx(HWND hWnd, LPCTSTR szClass)
 			if (pWnd)
 			{
 				if (sClass == WC_MFCWND)
+				{
 					return TRUE;
+				}
 
 				else if (IsClass(sClass, WC_MFCFRAME) && pWnd->IsKindOf(RUNTIME_CLASS(CFrameWnd)))
+				{
 					return TRUE;
+				}
 
 				else if (IsClass(sClass, WC_MFCVIEW) && pWnd->IsKindOf(RUNTIME_CLASS(CView)))
+				{
 					return TRUE;
+				}
 
 				else if (IsClass(sClass, WC_MFCMDIFRAME) && pWnd->IsKindOf(RUNTIME_CLASS(CMDIFrameWnd)))
+				{
 					return TRUE;
+				}
 
 				else if (IsClass(sClass, WC_MFCMDICHILD) && pWnd->IsKindOf(RUNTIME_CLASS(CMDIChildWnd)))
+				{
 					return TRUE;
+				}
 
 				else if (IsClass(sClass, WC_MFCMINIDOCKFRAME) && pWnd->IsKindOf(RUNTIME_CLASS(CMiniDockFrameWnd)))
+				{
 					return TRUE;
+				}
 
 				else if (IsClass(sClass, WC_MFCMINIFRAME) && pWnd->IsKindOf(RUNTIME_CLASS(CMiniFrameWnd)))
+				{
 					return TRUE;
+				}
 
 				else if (IsClass(sClass, WC_MFCSPLITTER) && pWnd->IsKindOf(RUNTIME_CLASS(CSplitterWnd)))
+				{
 					return TRUE;
+				}
 
 				else if (IsClass(sClass, WC_MFCDIALOGBAR) && pWnd->IsKindOf(RUNTIME_CLASS(CDialogBar)))
+				{
 					return TRUE;
+				}
 
 				else if (IsClass(sClass, WC_CONTROLBAR) && pWnd->IsKindOf(RUNTIME_CLASS(CControlBar)))
+				{
 					return TRUE;
+				}
 			}
 		}
 	}
@@ -144,13 +181,17 @@ BOOL CWinClasses::IsClassEx(HWND hWnd, LPCTSTR szClass)
 BOOL CWinClasses::IsClassEx(LPCTSTR szClass, LPCTSTR szWndClass)
 {
 	if (IsClass(szClass, szWndClass)) // string comparison
+	{
 		return TRUE;
+	}
 
 	else if (IsClass(szWndClass, WC_MFCFRAME)) // handle frame derivatives
 	{
 		if (IsClass(szClass, WC_MFCMDIFRAME) || IsClass(szClass, WC_MFCMDICHILD) ||
 			IsClass(szClass, WC_MFCMINIDOCKFRAME) || IsClass(szClass, WC_MFCMINIFRAME))
+		{
 			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -170,34 +211,54 @@ CString CWinClasses::GetClassEx(HWND hWnd)
 		{
 			// must do the check in order of most derived class first
 			if (pWnd->IsKindOf(RUNTIME_CLASS(CView)))
+			{
 				return WC_MFCVIEW;
+			}
 
 			else if (pWnd->IsKindOf(RUNTIME_CLASS(CMDIFrameWnd)))
+			{
 				return WC_MFCMDIFRAME;
+			}
 
 			else if (pWnd->IsKindOf(RUNTIME_CLASS(CMDIChildWnd)))
+			{
 				return WC_MFCMDICHILD;
+			}
 
 			else if (pWnd->IsKindOf(RUNTIME_CLASS(CMiniDockFrameWnd)))
+			{
 				return WC_MFCMINIDOCKFRAME;
+			}
 
 			else if (pWnd->IsKindOf(RUNTIME_CLASS(CMiniFrameWnd)))
+			{
 				return WC_MFCMINIFRAME;
+			}
 
 			else if (pWnd->IsKindOf(RUNTIME_CLASS(CFrameWnd))) // this is the catch all for frame wnds
+			{
 				return WC_MFCFRAME;
+			}
 
 			else if (pWnd->IsKindOf(RUNTIME_CLASS(CSplitterWnd)))
+			{
 				return WC_MFCSPLITTER;
+			}
 
 			else if (pWnd->IsKindOf(RUNTIME_CLASS(CDialogBar)))
+			{
 				return WC_MFCDIALOGBAR;
+			}
 
 			else if (pWnd->IsKindOf(RUNTIME_CLASS(CControlBar)))
+			{
 				return WC_CONTROLBAR;
+			}
 
 			else
-				return WC_MFCWND; // catch all for all window classes
+			{
+				return WC_MFCWND;   // catch all for all window classes
+			}
 		}
 	}
 	// handle CCheckListBox
@@ -206,7 +267,9 @@ CString CWinClasses::GetClassEx(HWND hWnd)
 		CWnd* pWnd = CWnd::FromHandlePermanent(hWnd);
 
 		if (pWnd && pWnd->IsKindOf(RUNTIME_CLASS(CCheckListBox)))
+		{
 			return WC_CHECKLISTBOX;
+		}
 	}
 
 	return sClass;
@@ -261,7 +324,9 @@ BOOL CWinClasses::IsEditControl(HWND hWnd)
 	CString sClass = GetClass(hWnd);
 
 	if (IsRichEditControl(sClass))
+	{
 		return TRUE;
+	}
 
 	return IsClass(sClass, WC_EDIT);
 }
@@ -274,8 +339,8 @@ BOOL CWinClasses::IsRichEditControl(HWND hWnd)
 BOOL CWinClasses::IsRichEditControl(LPCTSTR szClass)
 {
 	return (IsClass(szClass, WC_RICHEDIT) ||
-			IsClass(szClass, WC_RICHEDIT20) ||
-			IsClass(szClass, WC_RICHEDIT50));
+		IsClass(szClass, WC_RICHEDIT20) ||
+		IsClass(szClass, WC_RICHEDIT50));
 }
 
 BOOL CWinClasses::IsDialog(HWND hWnd)

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // WndPrompt.h: interface for the CWndPrompt class.
@@ -42,7 +55,7 @@
 #include "Subclass.h"
 #include <afxtempl.h>
 
-class CWndPrompt : public CSubclassWnd  
+class CWndPrompt : public CSubclassWnd
 {
 public:
 	CWndPrompt();
@@ -70,15 +83,15 @@ public:
 	CWndPromptManager();
 	virtual ~CWndPromptManager();
 
-	BOOL SetPrompt(UINT nIDCtrl, HWND hwndParent, LPCTSTR szPrompt, 
-					UINT nCheckMsg, LRESULT lRes = 0, int nVertOffset = 0);
-	BOOL SetPrompt(HWND hWnd, LPCTSTR szPrompt, UINT nCheckMsg, 
-					LRESULT lRes = 0, int nVertOffset = 0);
+	BOOL SetPrompt(UINT nIDCtrl, HWND hwndParent, LPCTSTR szPrompt,
+		UINT nCheckMsg, LRESULT lRes = 0, int nVertOffset = 0);
+	BOOL SetPrompt(HWND hWnd, LPCTSTR szPrompt, UINT nCheckMsg,
+		LRESULT lRes = 0, int nVertOffset = 0);
 
-	BOOL SetPrompt(UINT nIDCtrl, HWND hwndParent, UINT nIDPrompt, 
-					UINT nCheckMsg, LRESULT lRes = 0, int nVertOffset = 0);
-	BOOL SetPrompt(HWND hWnd, UINT nIDPrompt, UINT nCheckMsg, 
-					LRESULT lRes = 0, int nVertOffset = 0);
+	BOOL SetPrompt(UINT nIDCtrl, HWND hwndParent, UINT nIDPrompt,
+		UINT nCheckMsg, LRESULT lRes = 0, int nVertOffset = 0);
+	BOOL SetPrompt(HWND hWnd, UINT nIDPrompt, UINT nCheckMsg,
+		LRESULT lRes = 0, int nVertOffset = 0);
 
 	// special cases
 	BOOL SetEditPrompt(UINT nIDEdit, HWND hwndParent, LPCTSTR szPrompt);
