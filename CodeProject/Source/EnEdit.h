@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_ENEDIT_H__65D418F0_0107_431F_95B2_E31BF25FF286__INCLUDED_)
@@ -51,7 +64,7 @@ const UINT WM_EE_BTNCLICK = ::RegisterWindowMessage(_T("WM_EE_BTNCLICK")); // wP
 
 class CEnEdit : public CMaskEdit
 {
-// Construction
+	// Construction
 public:
 	CEnEdit(BOOL bComboStyle = TRUE, LPCTSTR szMask = NULL, DWORD dwFlags = 0);
 
@@ -71,7 +84,7 @@ public:
 
 	void SetBorders(int nTop, int nBottom);
 
-// Attributes
+	// Attributes
 protected:
 	struct EDITBTN
 	{
@@ -93,17 +106,17 @@ protected:
 	CHotTracker m_hotTrack;
 	int m_nTopBorder, m_nBottomBorder;
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CEnEdit)
-	public:
+public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
+protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 	virtual void OnSetReadOnly(BOOL /*bReadOnly*/) {}
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CEnEdit();
 
@@ -137,8 +150,8 @@ protected:
 	int ButtonHitTest(CPoint ptScreen) const;
 	int ButtonHitTest(UINT nID) const;
 	int GetButtonWidth(int nBtn) const;
-	BOOL InsertButton(int nPos, UINT nID, LPCTSTR szCaption, LPCTSTR szTip, int nWidth, 
-						LPCTSTR szFont, BOOL bSymbolFont);
+	BOOL InsertButton(int nPos, UINT nID, LPCTSTR szCaption, LPCTSTR szTip, int nWidth,
+		LPCTSTR szFont, BOOL bSymbolFont);
 
 };
 
