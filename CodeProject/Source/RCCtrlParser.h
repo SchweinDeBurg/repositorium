@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // RCCtrlParser.h: interface for the CRCCtrlParser class.
@@ -45,35 +58,35 @@ public:
 	RTCONTROL()
 	{
 		m_pWnd = NULL;
-		m_dwStyle = 0; 
-		m_dwExStyle = 0; 
+		m_dwStyle = 0;
+		m_dwExStyle = 0;
 		m_rect.SetRectEmpty();
 		m_nID = 0;
 		m_bDLU = FALSE;
 		m_nIconID = 0;
 	}
 
-	RTCONTROL(CWnd* pWnd, LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, 
-				const CRect& rect, UINT nID, BOOL bDLU, UINT nIconID = 0) 
+	RTCONTROL(CWnd* pWnd, LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
+		const CRect& rect, UINT nID, BOOL bDLU, UINT nIconID = 0)
 	{
-		ASSERT (pWnd || lstrlen(szClass));
+		ASSERT(pWnd || lstrlen(szClass));
 
 		m_pWnd = pWnd;
 		m_sClass = szClass;
-		m_sCaption = szCaption; 
-		m_dwStyle = dwStyle; 
-		m_dwExStyle = dwExStyle; 
+		m_sCaption = szCaption;
+		m_dwStyle = dwStyle;
+		m_dwExStyle = dwExStyle;
 		m_rect = rect;
 		m_nID = nID;
 		m_bDLU = bDLU;
-		m_nIconID = nIconID; 
+		m_nIconID = nIconID;
 	}
-		
+
 	CWnd* m_pWnd;
 	CString m_sClass;
-	CString m_sCaption; 
-	DWORD m_dwStyle; 
-	DWORD m_dwExStyle; 
+	CString m_sCaption;
+	DWORD m_dwStyle;
+	DWORD m_dwExStyle;
 	CRect m_rect;
 	UINT m_nID;
 	BOOL m_bDLU;
@@ -86,7 +99,7 @@ typedef CList<RTCONTROL, RTCONTROL&> CRTCtrlList;
 // special style equivalent to "NOT VISIBLE" in RC definition
 const UINT WS_NOTVISIBLE = WS_POPUP;
 
-class CRCCtrlParser  
+class CRCCtrlParser
 {
 public:
 	CRCCtrlParser(LPCTSTR szRCControls = NULL);
