@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_ORDEREDTREECTRL_H__7E73ADE2_3848_4ED1_9E8B_8881813B4262__INCLUDED_)
@@ -47,9 +60,9 @@
 #define OTC_GRIDCOLOR ::GetSysColor(COLOR_3DFACE)
 #define OTC_POSCOLUMNID (NCG_CLIENTCOLUMNID - 1)
 
-class COrderedTreeCtrl : public CTreeCtrl//, public CTreeCtrlHelper
+class COrderedTreeCtrl : public CTreeCtrl
 {
-// Construction
+	// Construction
 public:
 	COrderedTreeCtrl(DWORD dwGutterStyles = NCGS_SHOWHEADER);
 	virtual ~COrderedTreeCtrl();
@@ -60,32 +73,71 @@ public:
 	void SetGutterColumnHeaderTitle(UINT nColID, UINT nSymbol, LPCTSTR szFont = NULL);
 	void EnableGutterColumnHeaderClicking(UINT nColID, BOOL bEnable = TRUE);
 	void SetGutterColumnSort(UINT nColID, NCGSORT nSortDir);
-	int GetColumnWidth(UINT nColID) const { return m_gutter.GetColumnWidth(nColID); }
+	int GetColumnWidth(UINT nColID) const
+	{
+		return m_gutter.GetColumnWidth(nColID);
+	}
 	void SetColumnTextAlignment(UINT nColID, UINT nTextAlign, BOOL bRedraw = TRUE);
 	UINT GetColumnTextAlignment(UINT nColID) const;
 
 	BOOL ShowGutterPosColumn(BOOL bShow = TRUE); // returns TRUE if changed
-	BOOL IsGutterPosColumnShowing() const { return m_bShowingPosColumn; }
+	BOOL IsGutterPosColumnShowing() const
+	{
+		return m_bShowingPosColumn;
+	}
 	void SetGridlineColor(COLORREF color);
-	COLORREF GetGridlineColor() const { return m_crGridlines; }
+	COLORREF GetGridlineColor() const
+	{
+		return m_crGridlines;
+	}
 
-	void EnableGutterStyle(DWORD dwStyle, BOOL bEnable = TRUE) { m_gutter.EnableStyle(dwStyle, bEnable); }
-	BOOL GutterHasStyle(DWORD dwStyle) const { return m_gutter.HasStyle(dwStyle); }
-	
-	inline void RedrawGutter() { m_gutter.Redraw(); }
-	inline void RedrawGutterItem(DWORD dwItem) { m_gutter.RedrawItem(dwItem); }
-	inline void RecalcGutter(BOOL bForceRedraw = TRUE) { m_gutter.RecalcGutter(bForceRedraw); }
-	inline BOOL RecalcGutterColumn(UINT nColID) { return m_gutter.RecalcColumn(nColID); }
-	inline int GetGutterWidth() const { return m_gutter.GetGutterWidth(); }
+	void EnableGutterStyle(DWORD dwStyle, BOOL bEnable = TRUE)
+	{
+		m_gutter.EnableStyle(dwStyle, bEnable);
+	}
+	BOOL GutterHasStyle(DWORD dwStyle) const
+	{
+		return m_gutter.HasStyle(dwStyle);
+	}
 
-	inline COLORREF GetAlternateLineColor() const { return m_crAltLines; }
+	inline void RedrawGutter()
+	{
+		m_gutter.Redraw();
+	}
+	inline void RedrawGutterItem(DWORD dwItem)
+	{
+		m_gutter.RedrawItem(dwItem);
+	}
+	inline void RecalcGutter(BOOL bForceRedraw = TRUE)
+	{
+		m_gutter.RecalcGutter(bForceRedraw);
+	}
+	inline BOOL RecalcGutterColumn(UINT nColID)
+	{
+		return m_gutter.RecalcColumn(nColID);
+	}
+	inline int GetGutterWidth() const
+	{
+		return m_gutter.GetGutterWidth();
+	}
+
+	inline COLORREF GetAlternateLineColor() const
+	{
+		return m_crAltLines;
+	}
 	void SetAlternateLineColor(COLORREF color);
 	COLORREF GetItemLineColor(HTREEITEM hti);
 
 	BOOL PtInHeader(CPoint ptScreen) const;
 
-	CTreeCtrlHelper& TCH() { return m_ht; }
-	const CTreeCtrlHelper& TCH() const { return m_ht; }
+	CTreeCtrlHelper& TCH()
+	{
+		return m_ht;
+	}
+	const CTreeCtrlHelper& TCH() const
+	{
+		return m_ht;
+	}
 
 	CString FormatPosition(DWORD dwItem, DWORD dwParentItem, int nLevel = -1, int nPos = -1);
 
@@ -96,10 +148,10 @@ protected:
 	BOOL m_bWantInit;
 	CTreeCtrlHelper m_ht;
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(COrderedTreeCtrl)
-	protected:
+protected:
 	virtual void PreSubclassWindow();
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	//}}AFX_VIRTUAL
@@ -135,8 +187,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-	void NcDrawItem(CDC* pDC, DWORD dwItem, DWORD dwParentItem, UINT nColID, CRect& rItem, 
-					int nLevel, int nPos, const CRect& rWindow);
+	void NcDrawItem(CDC* pDC, DWORD dwItem, DWORD dwParentItem, UINT nColID, CRect& rItem,
+		int nLevel, int nPos, const CRect& rWindow);
 	void PostNcDrawItem(CDC* pDC, DWORD dwItem, const CRect& rItem, int nLevel);
 	void PostNcDraw(CDC* pDC, const CRect& rWindow);
 
