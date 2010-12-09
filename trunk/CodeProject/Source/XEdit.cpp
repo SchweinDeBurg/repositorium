@@ -28,10 +28,10 @@ END_MESSAGE_MAP()
 
 ///////////////////////////////////////////////////////////////////////////////
 // ctor
-CXEdit::CXEdit(CWnd *pParent, LPCTSTR lpszText) :
-	m_pParent(pParent),
-	m_strText(lpszText),
-	m_bMessageSent(FALSE)
+CXEdit::CXEdit(CWnd* pParent, LPCTSTR lpszText) :
+m_pParent(pParent),
+m_strText(lpszText),
+m_bMessageSent(FALSE)
 {
 	XLISTCTRL_TRACE(_T("in CXEdit::CXEdit\n"));
 }
@@ -50,7 +50,9 @@ void CXEdit::SendRegisteredMessage(UINT nMsg, WPARAM wParam /*= 0*/, LPARAM lPar
 	BOOL bMessageSent = m_bMessageSent;
 	m_bMessageSent = TRUE;
 	if (m_pParent && ::IsWindow(m_pParent->m_hWnd) && !bMessageSent)
+	{
 		m_pParent->SendMessage(nMsg, wParam, lParam);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,7 +62,9 @@ int CXEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	XLISTCTRL_TRACE(_T("in CXEdit::OnCreate\n"));
 
 	if (CEdit::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 
 	// set the proper font
 	if (!m_pParent)
@@ -70,9 +74,11 @@ int CXEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	if (m_pParent && ::IsWindow(m_pParent->m_hWnd))
 	{
-		CFont * pFont = m_pParent->GetFont();
+		CFont* pFont = m_pParent->GetFont();
 		if (pFont)
+		{
 			SetFont(pFont);
+		}
 	}
 	else
 	{
@@ -89,30 +95,29 @@ int CXEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnPaint
-void CXEdit::OnPaint() 
+void CXEdit::OnPaint()
 {
 	CRect rect;
 	GetClientRect(&rect);
 	rect.right += 2;
 
-	CDC * pDC = GetDC();
+	CDC* pDC = GetDC();
 	pDC->FillSolidRect(&rect, ::GetSysColor(COLOR_WINDOW));
 	ReleaseDC(pDC);
 
-	CEdit::OnPaint();		// let CEdit draw the text
+	CEdit::OnPaint();   // let CEdit draw the text
 
 	//rect.right -= 2;
 	rect.left -= 1;
 	rect.top -= 1;
-	rect.bottom -=1;
+	rect.bottom -= 1;
 
 	pDC = GetDC();
 
 	// don't erase the text that CEdit has just drawn
-	CBrush * pOldBrush = (CBrush *) pDC->SelectStockObject(NULL_BRUSH);
-	//CPen pen(PS_SOLID, 1, ::GetSysColor(COLOR_BTNSHADOW));
-	CPen pen(PS_SOLID, 1, ::GetSysColor(COLOR_INACTIVECAPTION));	// same as combobox
-	CPen *pOldPen = pDC->SelectObject(&pen);
+	CBrush* pOldBrush = (CBrush*) pDC->SelectStockObject(NULL_BRUSH);
+	CPen pen(PS_SOLID, 1, ::GetSysColor(COLOR_INACTIVECAPTION));   // same as combobox
+	CPen* pOldPen = pDC->SelectObject(&pen);
 	pDC->Rectangle(&rect);
 	pDC->SelectObject(pOldPen);
 	pDC->SelectObject(pOldBrush);
@@ -144,7 +149,7 @@ BOOL CXEdit::PreTranslateMessage(MSG* pMsg)
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnChar
-void CXEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) 
+void CXEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	// handle escape and return, in case edit does NOT have focus
 
@@ -161,7 +166,7 @@ void CXEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 			return;
 		}
 	}
-	
+
 	CEdit::OnChar(nChar, nRepCnt, nFlags);
 }
 
@@ -176,7 +181,7 @@ void CXEdit::OnKillFocus(CWnd* pNewWnd)
 
 ///////////////////////////////////////////////////////////////////////////////
 // OnDestroy
-void CXEdit::OnDestroy() 
+void CXEdit::OnDestroy()
 {
 	XLISTCTRL_TRACE(_T("in CXEdit::OnDestroy\n"));
 	ReleaseCapture();
