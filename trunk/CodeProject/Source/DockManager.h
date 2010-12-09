@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // DockManager.h: interface for the CDockManager class.
@@ -49,28 +62,49 @@ enum DM_POS
 	DMP_BELOW,
 };
 
-class CDockManager : public CSubclassWnd, public CSubclasser  
+class CDockManager : public CSubclassWnd, public CSubclasser
 {
 public:
 	CDockManager();
 	virtual ~CDockManager();
 
-	BOOL Initialize(CWnd* pMainWnd, CWnd* pDockWnd, 
-					DM_POS nPos = DMP_UNDOCKED,	DM_POS nLastPos = DMP_RIGHT,
-					int nWidthDocked = -1, int nWidthDockedMax = -1, 
-					int nHeightDocked = -1, int nHeightDockedMax = -1);
-	BOOL Initialized() { return IsHooked(); }
+	BOOL Initialize(CWnd* pMainWnd, CWnd* pDockWnd,
+		DM_POS nPos = DMP_UNDOCKED,	DM_POS nLastPos = DMP_RIGHT,
+		int nWidthDocked = -1, int nWidthDockedMax = -1,
+		int nHeightDocked = -1, int nHeightDockedMax = -1);
+	BOOL Initialized()
+	{
+		return IsHooked();
+	}
 	BOOL Dock(DM_POS nPos);
 	BOOL UnDock();
 
-	inline DM_POS GetDockPos() { return m_nDockPos; }
-	inline DM_POS GetLastDockPos() { return IsDocked() ? m_nDockPos : m_nLastDockPos; }
-	inline BOOL IsDocked() { return m_nDockPos != DMP_UNDOCKED; }
+	inline DM_POS GetDockPos()
+	{
+		return m_nDockPos;
+	}
+	inline DM_POS GetLastDockPos()
+	{
+		return IsDocked() ? m_nDockPos : m_nLastDockPos;
+	}
+	inline BOOL IsDocked()
+	{
+		return m_nDockPos != DMP_UNDOCKED;
+	}
 	CRect GetUnDockedRect();
-	int GetDockedWidth(BOOL bMaximized) { return bMaximized ? m_nWidthDockedMax : m_nWidthDocked; }
-	int GetDockedHeight(BOOL bMaximized) { return bMaximized ? m_nHeightDockedMax : m_nHeightDocked; }
+	int GetDockedWidth(BOOL bMaximized)
+	{
+		return bMaximized ? m_nWidthDockedMax : m_nWidthDocked;
+	}
+	int GetDockedHeight(BOOL bMaximized)
+	{
+		return bMaximized ? m_nHeightDockedMax : m_nHeightDocked;
+	}
 
-	inline BOOL Maximized() { return ::IsZoomed(GetHwnd()); }
+	inline BOOL Maximized()
+	{
+		return ::IsZoomed(GetHwnd());
+	}
 
 protected:
 	DM_POS m_nDockPos, m_nLastDockPos;
@@ -84,16 +118,19 @@ protected:
 protected:
 	virtual LRESULT WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp); // main wnd
 	virtual LRESULT ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp); // dock wnd
-	virtual CSubclasser* GetTopSubclasser() { return this; }
+	virtual CSubclasser* GetTopSubclasser()
+	{
+		return this;
+	}
 
 	void UpdateDockWindowPos();
 	void UpdateMainWindowPos();
-	
+
 	CRect GetWorkArea(BOOL bMaximized = TRUE);
 	void MoveWindow(CWnd* pWnd, CRect rect);
 	CSize GetMinMaximizedSize();
 	void FitDockWindowToWorkArea();
-	
+
 	// pseudo message handlers
 	void OnMaximize();
 	void OnRestore();
