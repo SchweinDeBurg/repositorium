@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -27,6 +27,19 @@
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
 // - merged with ToDoList version 6.1 sources
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // GraphicsMisc.h: interface for the GraphicsMisc class.
@@ -45,7 +58,7 @@ enum { MFS_BOLD = 0x01, MFS_ITALIC = 0x02, MFS_UNDERLINED = 0x04, MFS_STRIKETHRU
 namespace GraphicsMisc
 {
 	void DrawGradient(HDC hdc, LPRECT pRect, COLORREF crFrom, COLORREF crTo, BOOL bHorz);
-	
+
 	HFONT CreateFont(HFONT hFont, DWORD dwFlags = 0);
 	HFONT CreateFont(LPCTSTR szFaceName, int nPoint = -1, DWORD dwFlags = 0);
 	BOOL CreateFont(CFont& font, LPCTSTR szFaceName, int nPoint = -1, DWORD dwFlags = 0);
@@ -68,24 +81,24 @@ namespace GraphicsMisc
 
 	BOOL EnableAeroPeak(HWND hWnd, BOOL bEnable = TRUE);
 	BOOL EnableFlip3D(HWND hWnd, BOOL bEnable = TRUE);
-	
+
 	template <class TYPE>
 	BOOL DwmSetWindowAttribute(HWND hWnd, DWORD dwAttrib, TYPE* type)
 	{
 		HMODULE hMod = ::LoadLibrary(_T("Dwmapi.dll"));
-		
+
 		if (hMod)
 		{
-			typedef HRESULT (*PFNDWMSETWINDOWATTRIBUTE)(HWND, DWORD, LPCVOID, DWORD);
+			typedef HRESULT(*PFNDWMSETWINDOWATTRIBUTE)(HWND, DWORD, LPCVOID, DWORD);
 			PFNDWMSETWINDOWATTRIBUTE pFn = (PFNDWMSETWINDOWATTRIBUTE)::GetProcAddress(hMod, "DwmSetWindowAttribute");
-			
+
 			if (pFn)
 			{
 				HRESULT hr = pFn(hWnd, dwAttrib, type, sizeof(*type));
 				return SUCCEEDED(hr);
 			}
 		}
-		
+
 		return FALSE;
 	}
 };
