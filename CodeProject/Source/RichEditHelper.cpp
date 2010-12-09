@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -27,6 +27,19 @@
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
 // - merged with ToDoList version 6.1 sources
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // RichEditHelper.cpp: implementation of the CRichEditHelper class.
@@ -43,7 +56,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -51,8 +64,8 @@ static char THIS_FILE[]=__FILE__;
 	EXTERN_C const GUID CDECL name \
 	= { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }
 
-DEFINE_GUIDXXX(IID_ITextDocument,0x8CC497C0,0xA1DF,0x11CE,0x80,0x98,
-	0x00,0xAA,0x00,0x47,0xBE,0x5D);
+DEFINE_GUIDXXX(IID_ITextDocument, 0x8CC497C0, 0xA1DF, 0x11CE, 0x80, 0x98,
+	0x00, 0xAA, 0x00, 0x47, 0xBE, 0x5D);
 
 #define RELEASE_INTERFACE(i) if (i) { i->Release(); i = NULL; }
 
@@ -78,9 +91,13 @@ CReSaveCaret::CReSaveCaret(HWND hwndRichEdit) : CReBase(hwndRichEdit)
 
 	// if the caret is at the end of the text then set it to LONG_MAX
 	if (cr.cpMax == SendMessage(m_hwndRichedit, WM_GETTEXTLENGTH, 0, 0))
+	{
 		m_lCaret = LONG_MAX;
+	}
 	else
+	{
 		m_lCaret = cr.cpMax;
+	}
 }
 
 CReSaveCaret::~CReSaveCaret()
@@ -95,16 +112,22 @@ CTextDocument::CTextDocument(HWND hwndRichEdit) : CReBase(hwndRichEdit), m_pDoc(
 	SendMessage(hwndRichEdit, EM_GETOLEINTERFACE, 0, (LPARAM)&m_pRichEditOle);
 
 	if (m_pRichEditOle)
+	{
 		m_pRichEditOle->QueryInterface(IID_ITextDocument, (void**)&m_pDoc);
+	}
 }
 
 CTextDocument::~CTextDocument()
 {
 	if (m_pDoc)
+	{
 		m_pDoc->Release();
+	}
 
 	if (m_pRichEditOle)
+	{
 		m_pRichEditOle->Release();
+	}
 }
 
 BOOL CTextDocument::Undo()
@@ -122,13 +145,17 @@ BOOL CTextDocument::Redo()
 CRePauseUndo::CRePauseUndo(HWND hwndRichEdit) : CTextDocument(hwndRichEdit)
 {
 	if (m_hwndRichedit && Valid())
+	{
 		m_pDoc->Undo(tomSuspend, NULL);
+	}
 }
 
 CRePauseUndo::~CRePauseUndo()
 {
 	if (m_hwndRichedit && Valid())
+	{
 		m_pDoc->Undo(tomResume, NULL);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -151,13 +178,19 @@ BOOL CRichEditHelper::InitRichEdit()
 	static HINSTANCE hRichEdit50 = NULL;
 
 	if (!AfxInitRichEdit())
+	{
 		return FALSE;
+	}
 
 	if (!hRichEdit20)
+	{
 		hRichEdit20 = LoadLibrary(_T("riched20.dll"));
+	}
 
 	if (!hRichEdit50)
+	{
 		hRichEdit50 = LoadLibrary(_T("msftedit.dll"));
+	}
 
 	return (hRichEdit20 != NULL || hRichEdit50 != NULL);
 }
@@ -166,8 +199,8 @@ void CRichEditHelper::ClearUndo(HWND hWnd)
 {
 	ASSERT(hWnd);
 
-	ITextDocument *pDoc;
-	IUnknown *pUnk = NULL;
+	ITextDocument* pDoc;
+	IUnknown* pUnk = NULL;
 
 	SendMessage(hWnd, EM_GETOLEINTERFACE, 0, (LPARAM)&pUnk);
 
@@ -185,9 +218,8 @@ void CRichEditHelper::ClearUndo(HWND hWnd)
 
 //////////////////////////////////////////////////////////////////////
 
-CReFileObject::CReFileObject(HWND hwndRichEdit) : 
+CReFileObject::CReFileObject(HWND hwndRichEdit) :
 CReBase(hwndRichEdit), m_pObject(NULL), m_pClientSite(NULL), m_pRichEditOle(NULL), m_pStorage(NULL)
-
 {
 	SendMessage(m_hwndRichedit, EM_GETOLEINTERFACE, 0, (LPARAM)&m_pRichEditOle);
 }
@@ -201,12 +233,16 @@ CReFileObject::~CReFileObject()
 BOOL CReFileObject::Create(LPCTSTR szFilePath)
 {
 	if (!m_pRichEditOle)
+	{
 		return FALSE;
+	}
 
 	DWORD dwFileAttrib = GetFileAttributes(szFilePath);
 
 	if (dwFileAttrib == 0xffffffff || (dwFileAttrib & FILE_ATTRIBUTE_DIRECTORY))
+	{
 		return FALSE;
+	}
 
 	Reset();
 
@@ -214,10 +250,12 @@ BOOL CReFileObject::Create(LPCTSTR szFilePath)
 	CLSID clsid = CLSID_NULL;
 
 	SCODE sc = ::CreateILockBytesOnHGlobal(NULL, TRUE, &pLockBytes);
-	ASSERT (pLockBytes);
+	ASSERT(pLockBytes);
 
 	if (sc != S_OK)
+	{
 		return FALSE;
+	}
 
 	sc = ::StgCreateDocfileOnILockBytes(pLockBytes,
 		STGM_SHARE_EXCLUSIVE |
@@ -245,7 +283,7 @@ BOOL CReFileObject::Create(LPCTSTR szFilePath)
 	sc = ::OleCreateFromFile(clsid, ATL::CT2OLE(szFilePath),
 		IID_IUnknown,
 		OLERENDER_DRAW,
-		NULL,//&formatEtc,
+		NULL,
 		m_pClientSite,
 		m_pStorage,
 		(void**)&m_pObject);
@@ -260,9 +298,13 @@ BOOL CReFileObject::Create(LPCTSTR szFilePath)
 	}
 
 	if (!m_pObject)
+	{
 		Reset();
+	}
 	else
+	{
 		OleSetContainedObject(m_pObject, TRUE);
+	}
 
 	return (m_pObject != NULL);
 }
@@ -270,7 +312,9 @@ BOOL CReFileObject::Create(LPCTSTR szFilePath)
 BOOL CReFileObject::GetReObject(REOBJECT& reObj) const
 {
 	if (!m_pObject)
+	{
 		return FALSE;
+	}
 
 	ZeroMemory(&reObj, sizeof(reObj));
 
@@ -280,7 +324,9 @@ BOOL CReFileObject::GetReObject(REOBJECT& reObj) const
 	SCODE sc = m_pObject->GetUserClassID(&clsid);
 
 	if (sc != S_OK)
+	{
 		return FALSE;
+	}
 
 	reObj.clsid = clsid;
 	reObj.cp = REO_CP_SELECTION;
@@ -310,7 +356,9 @@ BOOL CReFileObject::Insert(LPCTSTR szFilePath)
 		REOBJECT reObj;
 
 		if (GetReObject(reObj))
+		{
 			return (S_OK == m_pRichEditOle->InsertObject(&reObj));
+		}
 	}
 
 	return FALSE;
