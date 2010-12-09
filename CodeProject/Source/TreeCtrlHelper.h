@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TreeCtrlHelper.h: interface for the CTreeCtrlHelper class.
@@ -47,14 +60,20 @@ typedef CMap<DWORD, DWORD, HTREEITEM, HTREEITEM&> CHTIMap;
 enum TCH_EDGE { TCHE_TOP, TCHE_BOTTOM };
 enum TCH_CHECK { TCHC_UNCHECKED, TCHC_CHECKED, TCHC_MIXED };
 
-class CTreeCtrlHelper  
+class CTreeCtrlHelper
 {
 public:
 	CTreeCtrlHelper(CTreeCtrl& tree);
 	virtual ~CTreeCtrlHelper();
 
-	const CTreeCtrl& TreeCtrl() const { return m_tree; }
-	CTreeCtrl& TreeCtrl() { return m_tree; }
+	const CTreeCtrl& TreeCtrl() const
+	{
+		return m_tree;
+	}
+	CTreeCtrl& TreeCtrl()
+	{
+		return m_tree;
+	}
 
 	BOOL HasFocus(BOOL bIncEditing = TRUE);
 	int IsItemExpanded(HTREEITEM hti, BOOL bFully = FALSE) const; // TRUE, FALSE, -1 if no children
@@ -63,13 +82,16 @@ public:
 	BOOL IsParentItemExpanded(HTREEITEM hti, BOOL bRecursive = FALSE) const;
 
 	void SetItemIntegral(HTREEITEM hti, int iIntegral);
-	
+
 	void SetItemChecked(HTREEITEM hti, BOOL bChecked); // 2 state
 	void SetItemChecked(HTREEITEM hti, TCH_CHECK nChecked); // 3 state
 	TCH_CHECK GetItemCheckState(HTREEITEM hti) const;
 
 	BOOL SelectItem(HTREEITEM hti); // won't auto edit if item already selected
-	inline void EndLabelEdit(BOOL bCancel) { SendMessage(m_tree, TVM_ENDEDITLABELNOW, bCancel, 0); }
+	inline void EndLabelEdit(BOOL bCancel)
+	{
+		SendMessage(m_tree, TVM_ENDEDITLABELNOW, bCancel, 0);
+	}
 
 	void InvalidateItem(HTREEITEM hti, BOOL bChildren = TRUE);
 	void GetClientRect(LPRECT lpRect, HTREEITEM htiFrom);
@@ -96,8 +118,14 @@ public:
 	HTREEITEM GetFirstVisibleTopLevelItem(int& nPos); // return 0 if no items
 	HTREEITEM GetTopLevelParentItem(HTREEITEM hti);
 
-	int BuildVisibleIndexMap() { return BuildVisibleIndexMap(VIMap()); }
-	BOOL ItemLineIsOdd(HTREEITEM hti) { return ItemLineIsOdd(VIMap(), hti); }
+	int BuildVisibleIndexMap()
+	{
+		return BuildVisibleIndexMap(VIMap());
+	}
+	BOOL ItemLineIsOdd(HTREEITEM hti)
+	{
+		return ItemLineIsOdd(VIMap(), hti);
+	}
 
 	int BuildVisibleIndexMap(CMapIndices& index);
 	BOOL ItemLineIsOdd(CMapIndices& index, HTREEITEM hti);
