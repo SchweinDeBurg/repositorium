@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // HotTracker.cpp: implementation of the CHotTracker class.
@@ -37,7 +50,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -64,7 +77,9 @@ CHotTracker::~CHotTracker()
 BOOL CHotTracker::Initialize(CWnd* pWnd)
 {
 	if (pWnd && pWnd->GetSafeHwnd() && HookWindow(*pWnd))
+	{
 		return TRUE;
+	}
 
 	return FALSE;
 }
@@ -87,7 +102,9 @@ int CHotTracker::AddRect()
 BOOL CHotTracker::UpdateRect(int nRect, const CRect& rect)
 {
 	if (nRect < 0 || nRect >= m_aRects.GetSize())
+	{
 		return FALSE;
+	}
 
 	m_aRects[nRect] = rect;
 	return TRUE;
@@ -104,7 +121,9 @@ int CHotTracker::HitTest(CPoint ptScreen)
 		while (nRect--)
 		{
 			if (m_aRects[nRect].PtInRect(ptScreen))
+			{
 				return nRect;
+			}
 		}
 	}
 
@@ -130,7 +149,9 @@ LRESULT CHotTracker::WindowProc(HWND /*hRealWnd*/, UINT msg, WPARAM /*wp*/, LPAR
 			}
 
 			if (msg == WM_NCMOUSEMOVE || msg == WM_MOUSEMOVE)
+			{
 				InitTracking();
+			}
 		}
 		break;
 	}
