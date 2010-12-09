@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_TIMECOMBOBOX_H__E536C077_C228_4A44_89F5_D44F456A2EE7__INCLUDED_)
@@ -41,16 +54,15 @@
 /////////////////////////////////////////////////////////////////////////////
 // CTimeComboBox window
 
-enum 
+enum
 {
-	TCB_NOTIME		= 0x01,
-	TCB_HALFHOURS	= 0x02,
-//	TCB_24HOURS		= 0x04,
+	TCB_NOTIME      = 0x01,
+	TCB_HALFHOURS   = 0x02
 };
 
 class CTimeComboBox : public CComboBox, public CSubclasser
 {
-// Construction
+	// Construction
 public:
 	CTimeComboBox(DWORD dwStyle = 0);
 
@@ -63,14 +75,14 @@ public:
 protected:
 	DWORD m_dwStyle;
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTimeComboBox)
-	protected:
+protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CTimeComboBox();
 

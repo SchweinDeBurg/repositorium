@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TimeComboBox.cpp : implementation file
@@ -63,32 +76,38 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTimeComboBox message handlers
 
-void CTimeComboBox::PreSubclassWindow() 
+void CTimeComboBox::PreSubclassWindow()
 {
 	BuildCombo();
-	
+
 	// hook the edit ctrl so we can convert '.' and ',' to ':'
 	CWnd* pEdit = GetDlgItem(1001);
 
 	if (pEdit)
+	{
 		ScHookWindow(pEdit->GetSafeHwnd());
-	
+	}
+
 	CComboBox::PreSubclassWindow();
 }
 
-int CTimeComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CTimeComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CComboBox::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
-	
+	}
+
 	BuildCombo();
 
 	// hook the edit ctrl so we can convert '.' and ',' to ':'
 	CWnd* pEdit = GetDlgItem(1001);
 
 	if (pEdit)
+	{
 		ScHookWindow(pEdit->GetSafeHwnd());
-	
+	}
+
 	return 0;
 }
 
@@ -106,12 +125,18 @@ void CTimeComboBox::BuildCombo()
 		for (int nHour = 0; nHour < 24; nHour++)
 		{
 			if ((m_dwStyle & TCB_NOTIME) != 0 && nHour == 0)
-				AddString(szEmpty); // empty item meaning 'no time'
+			{
+				AddString(szEmpty);   // empty item meaning 'no time'
+			}
 			else
+			{
 				AddString(CTimeHelper::Format24HourTime(nHour, 0));
+			}
 
 			if (m_dwStyle & TCB_HALFHOURS)
+			{
 				AddString(CTimeHelper::Format24HourTime(nHour, 30));
+			}
 		}
 	}
 }
@@ -131,7 +156,7 @@ BOOL CTimeComboBox::SetOleTime(double dTime)
 		SetCurSel(0);
 		return TRUE;
 	}
-	
+
 	// else
 	return Set24HourTime(dTime * 24.0);
 }
@@ -152,13 +177,19 @@ double CTimeComboBox::Get24HourTime() const
 		int nSel = GetCurSel();
 
 		if (nSel <= 0) // 'no time'
+		{
 			return 0;
+		}
 
 		// else
 		if (m_dwStyle & TCB_HALFHOURS)
+		{
 			return (nSel * 0.5);
+		}
 		else
+		{
 			return nSel;
+		}
 	}
 
 	// else use window text
@@ -169,9 +200,13 @@ double CTimeComboBox::Get24HourTime() const
 	if (sTime.IsEmpty())
 	{
 		if ((m_dwStyle & TCB_NOTIME) != 0)
-			return 0; // midnight
+		{
+			return 0;   // midnight
+		}
 		else
-			return -1; // error
+		{
+			return -1;   // error
+		}
 	}
 
 	// look for a separator
@@ -179,17 +214,23 @@ double CTimeComboBox::Get24HourTime() const
 	int nColon = sTime.Find(sSep);
 
 	if (nColon != -1) // extract hours and minutes
+	{
 		dTime = _tstof(sTime.Left(nColon)) + _tstof(sTime.Mid(nColon + sSep.GetLength())) / 60;
+	}
 	else
+	{
 		dTime = _tstof(sTime);
+	}
 
 	// look for PM signifier
 	if (!Misc::GetPM().IsEmpty() && dTime < 12)
 	{
 		sTime.MakeUpper();
-		
+
 		if (sTime.Find(Misc::GetPM()) != -1)
+		{
 			dTime += 12;
+		}
 	}
 
 	return (dTime <= 0) ? 0 : dTime;
@@ -202,10 +243,12 @@ BOOL CTimeComboBox::Set24HourTime(double dTime)
 		SetCurSel(0);
 		return TRUE;
 	}
-	
+
 	// else
 	if (dTime >= 24.0)
+	{
 		return FALSE;
+	}
 
 	// add on half a minute to handle floating point inaccuracies
 	dTime += (0.5 / (24 * 60));
@@ -216,7 +259,9 @@ BOOL CTimeComboBox::Set24HourTime(double dTime)
 	CString sTime = CTimeHelper::Format24HourTime(nHour, nMin);
 
 	if (SelectString(-1, sTime) == CB_ERR)
+	{
 		SetWindowText(sTime);
+	}
 
 	return TRUE;
 }
