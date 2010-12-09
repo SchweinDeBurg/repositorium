@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TrayIcon.cpp : implementation of the CTrayIcon class
@@ -41,7 +54,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-const UINT WM_TINOTIFY = (WM_APP+1);
+const UINT WM_TINOTIFY = (WM_APP + 1);
 const UINT WM_TASKBARCREATED = ::RegisterWindowMessage(_T("TaskbarCreated"));
 
 enum
@@ -49,13 +62,13 @@ enum
 	TIMER_ANIMATE = 1,
 	TIMER_SINGLECLK,
 };
- 
+
 #ifndef NIF_STATE
-#	define NIF_STATE 0x0008
-#	define NIF_INFO  0x0010
+#define NIF_STATE 0x0008
+#define NIF_INFO  0x0010
 #endif
 
-struct NOTIFYICONDATA_TI 
+struct NOTIFYICONDATA_TI
 {
 	DWORD cbSize;
 	HWND hWnd;
@@ -106,8 +119,10 @@ CTrayIcon::~CTrayIcon()
 BOOL CTrayIcon::Create(DWORD dwStyle, CWnd* pParentWnd, UINT uID, UINT uIDIcon, UINT uIDTip)
 {
 	if (!CWnd::Create(NULL, _T("TrayIcon notification window"), WS_CHILD,
-		CRect(0,0,0,0), pParentWnd, uID))
+		CRect(0, 0, 0, 0), pParentWnd, uID))
+	{
 		return FALSE;
+	}
 
 	m_hIcon = AfxGetApp()->LoadIcon(uIDIcon);
 	m_sTip.LoadString(uIDTip);
@@ -116,7 +131,9 @@ BOOL CTrayIcon::Create(DWORD dwStyle, CWnd* pParentWnd, UINT uID, UINT uIDIcon, 
 	m_nm.hdr.idFrom = GetDlgCtrlID();
 
 	if (dwStyle & WS_VISIBLE)
+	{
 		ShowTrayIcon();
+	}
 
 	return TRUE;
 }
@@ -125,8 +142,10 @@ BOOL CTrayIcon::Create(DWORD dwStyle, CWnd* pParentWnd, UINT uID, UINT uIDIcon, 
 BOOL CTrayIcon::Create(DWORD dwStyle, CWnd* pParentWnd, UINT uID, UINT uIDIcon, LPCTSTR sTip)
 {
 	if (!CWnd::Create(NULL, _T("TrayIcon notification window"), WS_CHILD,
-		CRect(0,0,0,0), pParentWnd, uID))
+		CRect(0, 0, 0, 0), pParentWnd, uID))
+	{
 		return FALSE;
+	}
 
 	m_hIcon = AfxGetApp()->LoadIcon(uIDIcon);
 	m_sTip = sTip;
@@ -135,7 +154,9 @@ BOOL CTrayIcon::Create(DWORD dwStyle, CWnd* pParentWnd, UINT uID, UINT uIDIcon, 
 	m_nm.hdr.idFrom = GetDlgCtrlID();
 
 	if (dwStyle & WS_VISIBLE)
+	{
 		ShowTrayIcon();
+	}
 
 	return TRUE;
 }
@@ -158,10 +179,10 @@ void CTrayIcon::ShowTrayIcon(BOOL bShow /*=TRUE*/)
 ///
 // CTrayIcon message handlers
 
-void CTrayIcon::OnDestroy() 
+void CTrayIcon::OnDestroy()
 {
 	CWnd::OnDestroy();
-	
+
 	ShowTrayIcon(FALSE);
 }
 
@@ -173,7 +194,9 @@ LRESULT CTrayIcon::OnTrayIconNotify(WPARAM wParam, LPARAM lParam)
 	static BOOL bInNotify = FALSE;
 
 	if (bInNotify || !GetParent()->IsWindowEnabled())
+	{
 		return 0L;
+	}
 
 	CAutoFlag af(bInNotify, TRUE);
 	BOOL bNotify = TRUE;
@@ -212,9 +235,13 @@ LRESULT CTrayIcon::OnTrayIconNotify(WPARAM wParam, LPARAM lParam)
 
 	case WM_RBUTTONUP:
 		if (m_nPrevMsg == WM_RBUTTONDOWN)
+		{
 			m_nm.hdr.code = NM_RCLICK;
+		}
 		else
+		{
 			bNotify = FALSE;
+		}
 		break;
 
 	case WM_RBUTTONDBLCLK:
@@ -233,13 +260,17 @@ LRESULT CTrayIcon::OnTrayIconNotify(WPARAM wParam, LPARAM lParam)
 	}
 
 	if (lParam != WM_MOUSEMOVE)
+	{
 		m_nPrevMsg = lParam;
+	}
 
 	if (!bNotify)
+	{
 		return TRUE;
+	}
 
 	LRESULT lr = GetParent()->SendMessage(WM_NOTIFY, GetDlgCtrlID(),
-									(LPARAM)&m_nm);
+		(LPARAM)&m_nm);
 
 	return lr;
 }
@@ -260,12 +291,12 @@ BOOL CTrayIcon::AddToTray()
 		nid.uFlags |= NIF_TIP;
 		//fabio_2005
 #if _MSC_VER >= 1400
-		_tcsncpy_s(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip)/sizeof(TCHAR));
+		_tcsncpy_s(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip) / sizeof(TCHAR));
 #else
-		_tcsncpy(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip)/sizeof(TCHAR));
+		_tcsncpy(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip) / sizeof(TCHAR));
 #endif
-		
-		nid.szTip[sizeof(nid.szTip)/sizeof(TCHAR)-1] = (TCHAR)0;
+
+		nid.szTip[sizeof(nid.szTip) / sizeof(TCHAR) - 1] = (TCHAR)0;
 	}
 
 	// create top level parent hook first time around
@@ -274,7 +305,9 @@ BOOL CTrayIcon::AddToTray()
 		CWnd* pTLParent = GetTopLevelParent();
 
 		if (pTLParent)
+		{
 			ScHookWindow(pTLParent->GetSafeHwnd());
+		}
 	}
 
 	return Shell_NotifyIcon(NIM_ADD, (PNOTIFYICONDATA)&nid);
@@ -317,13 +350,13 @@ BOOL CTrayIcon::ModifyTip(UINT uIDNewTip)
 	if (!m_sTip.IsEmpty())
 	{
 		nid.uFlags |= NIF_TIP;
-//fabio_2005
+		//fabio_2005
 #if _MSC_VER >= 1300
-		_tcsncpy_s(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip)/sizeof(TCHAR));
+		_tcsncpy_s(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip) / sizeof(TCHAR));
 #else
-		_tcsncpy(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip)/sizeof(TCHAR));
+		_tcsncpy(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip) / sizeof(TCHAR));
 #endif
-		nid.szTip[sizeof(nid.szTip)/sizeof(TCHAR)-1] = (TCHAR)0;
+		nid.szTip[sizeof(nid.szTip) / sizeof(TCHAR) - 1] = (TCHAR)0;
 	}
 
 	return Shell_NotifyIcon(NIM_MODIFY, (PNOTIFYICONDATA)&nid);
@@ -332,7 +365,9 @@ BOOL CTrayIcon::ModifyTip(UINT uIDNewTip)
 BOOL CTrayIcon::ModifyTip(LPCTSTR sNewTip)
 {
 	if (sNewTip == m_sTip)
+	{
 		return TRUE;
+	}
 
 	NOTIFYICONDATA_TI nid;
 
@@ -346,13 +381,13 @@ BOOL CTrayIcon::ModifyTip(LPCTSTR sNewTip)
 	if (!m_sTip.IsEmpty())
 	{
 		nid.uFlags |= NIF_TIP;
-//fabio_2005
+		//fabio_2005
 #if _MSC_VER >= 1300
-		_tcsncpy_s(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip)/sizeof(TCHAR));
+		_tcsncpy_s(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip) / sizeof(TCHAR));
 #else
-		_tcsncpy(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip)/sizeof(TCHAR));
+		_tcsncpy(nid.szTip, (LPTSTR)(LPCTSTR)m_sTip, sizeof(nid.szTip) / sizeof(TCHAR));
 #endif
-		nid.szTip[sizeof(nid.szTip)/sizeof(TCHAR)-1] = (TCHAR)0;
+		nid.szTip[sizeof(nid.szTip) / sizeof(TCHAR) - 1] = (TCHAR)0;
 	}
 
 	return Shell_NotifyIcon(NIM_MODIFY, (PNOTIFYICONDATA)&nid);
@@ -361,7 +396,9 @@ BOOL CTrayIcon::ModifyTip(LPCTSTR sNewTip)
 BOOL CTrayIcon::SetIcon(UINT uIDNewIcon)
 {
 	if (m_bAnimationOn)
+	{
 		StopAnimation();
+	}
 
 	return ModifyIcon(uIDNewIcon);
 }
@@ -378,7 +415,7 @@ BOOL CTrayIcon::SetTip(LPCTSTR sNewTip)
 
 void CTrayIcon::StartAnimation()
 {
-	ASSERT (m_aAnimationIconIDs.GetSize() && m_nAnimationDelay >= 100);
+	ASSERT(m_aAnimationIconIDs.GetSize() && m_nAnimationDelay >= 100);
 
 	m_nCurIcon = 0; // reset animation
 	ModifyIcon(m_aAnimationIconIDs[m_nCurIcon]);
@@ -390,11 +427,13 @@ void CTrayIcon::StartAnimation()
 void CTrayIcon::StopAnimation()
 {
 	if (!m_bAnimationOn)
+	{
 		return;
+	}
 
 	KillTimer(1);
 	m_bAnimationOn = FALSE;
-	
+
 	// reset animation
 	ModifyIcon(m_aAnimationIconIDs[0]);
 }
@@ -415,7 +454,7 @@ void CTrayIcon::OnTimer(UINT nIDEvent)
 		// so we can issue a single click
 		KillTimer(TIMER_SINGLECLK);
 		m_nPrevMsg = 0;
-		
+
 		m_nm.hdr.code = NM_CLICK;
 		GetParent()->SendMessage(WM_NOTIFY, GetDlgCtrlID(),	(LPARAM)&m_nm);
 		break;
@@ -426,17 +465,19 @@ void CTrayIcon::OnTimer(UINT nIDEvent)
 
 void CTrayIcon::SetAnimationIcons(UINT pIconIDs[], int nNumIcons)
 {
-	ASSERT (pIconIDs != NULL && nNumIcons > 1);
+	ASSERT(pIconIDs != NULL && nNumIcons > 1);
 
 	m_aAnimationIconIDs.SetSize(nNumIcons);
 
 	while (nNumIcons--)
+	{
 		m_aAnimationIconIDs.SetAt(nNumIcons, pIconIDs[nNumIcons]);
+	}
 }
 
 void CTrayIcon::SetAnimationDelay(int nDelay)
 {
-	ASSERT (nDelay >= 100);
+	ASSERT(nDelay >= 100);
 
 	m_nAnimationDelay = max(nDelay, 100);
 
@@ -454,14 +495,16 @@ LRESULT CTrayIcon::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 		AddToTray();
 	}
 
-	return CSubclasser::ScWindowProc(hRealWnd, msg, wp, lp); 
+	return CSubclasser::ScWindowProc(hRealWnd, msg, wp, lp);
 }
 
 BOOL CTrayIcon::ShowBalloon(LPCTSTR szText, LPCTSTR szTitle, DWORD dwIcon, UINT uTimeout)
 {
 	// Verify input parameters.
 	if (uTimeout <= 0)
+	{
 		return FALSE;
+	}
 
 	// The balloon tooltip text can be up to 255 chars long.
 	ASSERT(AfxIsValidString(szText));
@@ -470,7 +513,7 @@ BOOL CTrayIcon::ShowBalloon(LPCTSTR szText, LPCTSTR szTitle, DWORD dwIcon, UINT 
 	// The balloon title text can be up to 63 chars long.
 	if (szTitle)
 	{
-		ASSERT(AfxIsValidString( szTitle));
+		ASSERT(AfxIsValidString(szTitle));
 		ASSERT(lstrlen(szTitle) < 64);
 	}
 
@@ -487,19 +530,25 @@ BOOL CTrayIcon::ShowBalloon(LPCTSTR szText, LPCTSTR szTitle, DWORD dwIcon, UINT 
 	nid.hWnd = GetSafeHwnd();
 	nid.uID = GetDlgCtrlID();
 	nid.uFlags = NIF_INFO;
-//fabio_2005
+	//fabio_2005
 #if _MSC_VER >= 1300
 	_tcsncpy_s(nid.szInfo, szText, 256);
 	if (szTitle)
+	{
 		_tcsncpy_s(nid.szInfoTitle, szTitle, 64);
+	}
 #else
 	_tcsncpy(nid.szInfo, szText, 256);
 	if (szTitle)
+	{
 		_tcsncpy(nid.szInfoTitle, szTitle, 64);
+	}
 #endif
 
 	else
+	{
 		nid.szInfoTitle[0] = _T('\0');
+	}
 
 	nid.dwInfoFlags = dwIcon;
 	nid.uTimeout = uTimeout * 1000;   // convert time to ms
