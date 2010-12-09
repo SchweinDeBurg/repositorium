@@ -15,18 +15,18 @@ extern UINT WM_XCOMBOLIST_COMPLETE;
 
 class CXCombo : public CAdvComboBox
 {
-// Construction
+	// Construction
 public:
-	CXCombo(CWnd * pParent);
+	CXCombo(CWnd* pParent);
 	virtual ~CXCombo();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CXCombo)
 protected:
@@ -34,9 +34,9 @@ protected:
 	virtual void OnEscapeKey();
 	virtual void OnComboComplete();
 
-// Implementation
+	// Implementation
 protected:
-	CWnd * m_pParent;
+	CWnd* m_pParent;
 
 	void SendRegisteredMessage(UINT nMsg, WPARAM wParam, LPARAM lParam);
 

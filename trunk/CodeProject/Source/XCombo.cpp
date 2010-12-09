@@ -11,7 +11,6 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 UINT WM_XCOMBOLIST_COMPLETE  = ::RegisterWindowMessage(_T("WM_XCOMBOLIST_COMPLETE"));
-//UINT WM_XCOMBOLIST_VK_ESCAPE = ::RegisterWindowMessage(_T("WM_XCOMBOLIST_VK_ESCAPE"));
 
 /////////////////////////////////////////////////////////////////////////////
 // CXCombo
@@ -22,9 +21,9 @@ BEGIN_MESSAGE_MAP(CXCombo, CAdvComboBox)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-CXCombo::CXCombo(CWnd * pParent) :
-	m_pParent(pParent),
-	CAdvComboBox(FALSE, pParent)
+CXCombo::CXCombo(CWnd* pParent) :
+m_pParent(pParent),
+CAdvComboBox(FALSE, pParent)
 {
 	XLISTCTRL_TRACE(_T("in CXCombo::CXCombo\n"));
 }
@@ -38,15 +37,17 @@ CXCombo::~CXCombo()
 // SendRegisteredMessage
 void CXCombo::SendRegisteredMessage(UINT nMsg, WPARAM wParam, LPARAM lParam)
 {
-	CWnd *pWnd = m_pParent;
+	CWnd* pWnd = m_pParent;
 	if (pWnd)
+	{
 		pWnd->SendMessage(nMsg, wParam, lParam);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // CXCombo message handlers
 
-void CXCombo::OnKillFocus(CWnd* pNewWnd) 
+void CXCombo::OnKillFocus(CWnd* pNewWnd)
 {
 	XLISTCTRL_TRACE(_T("in CXCombo::OnKillFocus\n"));
 
