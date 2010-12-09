@@ -1,7 +1,49 @@
+// Copyright (C) 2003-2005 AbstractSpoon Software.
+//
+// This license applies to everything in the ToDoList package, except where
+// otherwise noted.
+//
+// This software is provided 'as-is', without any express or implied warranty.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+// claim that you wrote the original software. If you use this software in a
+// product, an acknowledgment in the product documentation would be appreciated
+// but is not required.
+//
+// 2. Altered source versions must be plainly marked as such, and must not be
+// misrepresented as being the original software.
+//
+// 3. This notice may not be removed or altered from any source distribution.
+
+//*****************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - added AbstractSpoon Software copyright notice and licenese information
+// - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+//*****************************************************************************
+
 // ImageProcessors.h: C32BitImageProcessor derivations (c) daniel godson 2002.
 //
-// credits: Karl Lager's 'A Fast Algorithm for Rotating Bitmaps' 
-// 
+// credits: Karl Lager's 'A Fast Algorithm for Rotating Bitmaps'
+//
 //////////////////////////////////////////////////////////////////////
 
 #if !defined(AFX_IMAGEPROCESSORS_H__1FDE0A4E_8AB4_11D6_95AD_EFA89432A428__INCLUDED_)
@@ -24,8 +66,8 @@ public:
 	virtual ~CImageRotator();
 
 	virtual CSize CalcDestSize(CSize sizeSrc);
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	double m_dRadians;
@@ -38,8 +80,8 @@ public:
 	virtual ~CImageShearer();
 
 	virtual CSize CalcDestSize(CSize sizeSrc);
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	int m_nHorz, m_nVert;
@@ -52,8 +94,8 @@ public:
 	CImageGrayer(double dRedFactor, double dGreenFactor, double dBlueFactor);
 	virtual ~CImageGrayer();
 
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	double m_dRedFactor, m_dGreenFactor, m_dBlueFactor;
@@ -63,11 +105,11 @@ protected:
 class CImageLightener : public C32BitImageProcessor
 {
 public:
-	CImageLightener(double dAmount); 
+	CImageLightener(double dAmount);
 	virtual ~CImageLightener();
 
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	double m_dAmount;
@@ -79,8 +121,8 @@ public:
 	CImageBlurrer(int nAmount = 50); // 1 - 100 (100 is very blurred)
 	virtual ~CImageBlurrer();
 
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	int m_nAmount;
@@ -92,8 +134,8 @@ public:
 	CImageSharpener(int nAmount = 50); // 1 - 100 (100 is very sharp)
 	virtual ~CImageSharpener();
 
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	int m_nAmount;
@@ -106,8 +148,8 @@ public:
 	virtual ~CImageResizer();
 
 	virtual CSize CalcDestSize(CSize sizeSrc);
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	double m_dFactor;
@@ -123,18 +165,18 @@ public:
 	CImageNegator();
 	virtual ~CImageNegator();
 
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 };
 
 class CImageFlipper : public C32BitImageProcessor
 {
 public:
-	CImageFlipper(BOOL bHorz, BOOL bVert = 0); 
+	CImageFlipper(BOOL bHorz, BOOL bVert = 0);
 	virtual ~CImageFlipper();
 
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	BOOL m_bHorz, m_bVert;
@@ -146,8 +188,8 @@ public:
 	CColorReplacer(COLORREF crFrom, COLORREF crTo);
 	virtual ~CColorReplacer();
 
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	COLORREF m_crFrom, m_crTo;
@@ -159,8 +201,8 @@ public:
 	CImageColorizer(COLORREF color);
 	virtual ~CImageColorizer();
 
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	COLORREF m_color;
@@ -172,8 +214,8 @@ public:
 	CImageTinter(COLORREF color, int nAmount = 40); // amount: -100 -> 100
 	virtual ~CImageTinter();
 
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	COLORREF m_color;
@@ -186,8 +228,8 @@ public:
 	CImageContraster(int nAmount = 40); // -100 -> 200
 	virtual ~CImageContraster();
 
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 
 protected:
 	int m_nAmount;
@@ -199,12 +241,12 @@ public:
 	CImageSysColorMapper() {}
 	virtual ~CImageSysColorMapper() {}
 
-	// 0x000000 (black)			-> COLOR_BTNTEXT
-	// 0x808080 (dark gray)		-> COLOR_BTNSHADOW
-	// 0xC0C0C0 (bright gray)	-> COLOR_BTNFACE
-	// 0xFFFFFF (white)			-> COLOR_BTNHIGHLIGHT
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
-								COLORREF crMask = -1);
+	// 0x000000 (black)         -> COLOR_BTNTEXT
+	// 0x808080 (dark gray)     -> COLOR_BTNSHADOW
+	// 0xC0C0C0 (bright gray)   -> COLOR_BTNFACE
+	// 0xFFFFFF (white)         -> COLOR_BTNHIGHLIGHT
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
+		COLORREF crMask = -1);
 };
 
 class CImageEmbosser : public C32BitImageProcessor
@@ -213,7 +255,7 @@ public:
 	CImageEmbosser() {}
 	virtual ~CImageEmbosser() {}
 
-	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest, 
+	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
 		COLORREF crMask = -1);
 };
 
