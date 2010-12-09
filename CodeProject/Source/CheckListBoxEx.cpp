@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // CheckListBoxEx.cpp : implementation file
@@ -55,7 +68,7 @@ CCheckListBoxEx::~CCheckListBoxEx()
 
 BEGIN_MESSAGE_MAP(CCheckListBoxEx, CCheckListBox)
 	//{{AFX_MSG_MAP(CCheckListBoxEx)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
+	// NOTE - the ClassWizard will add and remove mapping macros here.
 	//}}AFX_MSG_MAP
 	ON_MESSAGE(WM_SETFONT, OnSetFont)
 	ON_WM_DESTROY()
@@ -64,7 +77,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CCheckListBoxEx message handlers
 
-BOOL CCheckListBoxEx::OnChildNotify(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pLResult) 
+BOOL CCheckListBoxEx::OnChildNotify(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pLResult)
 {
 	if (m_ilCheck.GetSafeHandle())
 	{
@@ -79,7 +92,7 @@ BOOL CCheckListBoxEx::OnChildNotify(UINT message, WPARAM wParam, LPARAM lParam, 
 			return TRUE;
 		}
 	}
-	
+
 	// else default
 	return CCheckListBox::OnChildNotify(message, wParam, lParam, pLResult);
 }
@@ -95,9 +108,9 @@ void CCheckListBoxEx::PreSubclassWindow()
 
 	const int nStates[] = { CBS_UNCHECKEDNORMAL, CBS_CHECKEDNORMAL };//, CBS_MIXEDNORMAL };
 	const int nNumStates = sizeof(nStates) / sizeof(int);
-	
+
 	CThemed th;
-	
+
 	if (th.Open(this, _T("BUTTON")) && th.AreControlsThemed())
 	{
 		th.BuildImageList(m_ilCheck, BP_CHECKBOX, nStates, nNumStates);
@@ -128,7 +141,9 @@ void CCheckListBoxEx::PreDrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 		BOOL fDisabled = !IsWindowEnabled() || !IsEnabled(drawItem.itemID);
 		if ((drawItem.itemState & ODS_SELECTED) && !fDisabled)
+		{
 			newBkColor = GetSysColor(COLOR_HIGHLIGHT);
+		}
 
 		COLORREF oldBkColor = pDC->SetBkColor(newBkColor);
 
@@ -148,7 +163,9 @@ void CCheckListBoxEx::PreMeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 	CCheckListBox::PreMeasureItem(lpMeasureItemStruct);
 
 	if (m_ilCheck.GetSafeHandle())
+	{
 		lpMeasureItemStruct->itemHeight = max(lpMeasureItemStruct->itemHeight, m_nImageHeight + 2);
+	}
 }
 
 LRESULT CCheckListBoxEx::OnSetFont(WPARAM , LPARAM)
