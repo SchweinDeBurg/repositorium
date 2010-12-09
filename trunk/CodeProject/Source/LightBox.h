@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -27,6 +27,19 @@
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
 // - merged with ToDoList version 6.1 sources
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // LightBox.h: interface for the CLightBox class.
@@ -49,53 +62,59 @@ class CLightBox;
 class CLightBoxMgr : public CHookMgr<CLightBoxMgr>
 {
 	friend class CHookMgr<CLightBoxMgr>;
-	
+
 public:
 	CLightBoxMgr();
-	static BOOL Initialize(CWnd* pMainWnd, COLORREF crBkgnd = GetSysColor(COLOR_3DLIGHT), 
+	static BOOL Initialize(CWnd* pMainWnd, COLORREF crBkgnd = GetSysColor(COLOR_3DLIGHT),
 		int nOpaquePercent = 50);
-	static void Disable() { Instance().Release(); }
-		~CLightBoxMgr();
-	
+	static void Disable()
+	{
+		Instance().Release();
+	}
+	~CLightBoxMgr();
+
 protected:
 	CMap<HWND, HWND, CLightBox*, CLightBox*&> m_mapCtrls;
 	COLORREF m_crBkgnd;
 	int m_nOpaquePercent;
-	
+
 protected:
-	static CLightBoxMgr& Instance() { return CHookMgr<CLightBoxMgr>::GetInstance(); }
+	static CLightBoxMgr& Instance()
+	{
+		return CHookMgr<CLightBoxMgr>::GetInstance();
+	}
 	BOOL AttachLightBox(CWnd* pWnd);
-	
+
 	virtual BOOL OnCallWndProc(const MSG& msg);
 };
 
-class CLightBox : public CRuntimeDlg, public CSubclassWnd  
+class CLightBox : public CRuntimeDlg, public CSubclassWnd
 {
 	DECLARE_DYNAMIC(CLightBox)
-		
+
 public:
 	CLightBox();
 	virtual ~CLightBox();
-	
+
 	BOOL Initialize(CWnd* pWnd, COLORREF crBkgnd = GetSysColor(COLOR_3DHILIGHT), int nOpaquePercent = 50);
-	
+
 protected:
 	COLORREF m_crBkgnd;
 	int m_nOpaquePercent;
-	
-	typedef DWORD (WINAPI *PSLWA)(HWND, DWORD, BYTE, DWORD);
+
+	typedef DWORD (WINAPI* PSLWA)(HWND, DWORD, BYTE, DWORD);
 	PSLWA m_pSetLayeredWindowAttributes;
-	
+
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CLightBox)
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-		
+
 protected:
 	virtual LRESULT WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp);
-	
+
 	BOOL ShowTransparentWnd(BOOL bShow = TRUE);
 };
 
