@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // NcGutter.h: interface for the CNcGutter class.
@@ -68,23 +81,32 @@ const int NCG_COLPADDING = 3;
 
 enum
 {
-	NCGS_RIGHTCOLUMNS		= 0x01,
+	NCGS_RIGHTCOLUMNS       = 0x01,
 	NCGS_DOUBLEBUFFERCLIENT = 0x02,
-	NCGS_SHOWHEADER			= 0x04,
-	NCGS_GRADIENTSELECTION	= 0x08,
+	NCGS_SHOWHEADER         = 0x04,
+	NCGS_GRADIENTSELECTION  = 0x08,
 };
 
 struct NCGDRAWITEM
 {
-	NCGDRAWITEM() { pDC = NULL; dwItem = dwParentItem = 0; nColID = 0; rItem = NULL; nLevel = 0;
-					nItemPos = 0; rWindow = NULL; /*bSelected = FALSE;*/ nTextAlign = DT_LEFT; }
+	NCGDRAWITEM()
+	{
+		pDC = NULL;
+		dwItem = dwParentItem = 0;
+		nColID = 0;
+		rItem = NULL;
+		nLevel = 0;
+		nItemPos = 0;
+		rWindow = NULL; /*bSelected = FALSE;*/
+		nTextAlign = DT_LEFT;
+	}
 
 	CDC* pDC;
 	DWORD dwItem;
 	DWORD dwParentItem; // always zero unless control responds to WM_NCG_GETFIRSTCHILDITEM
 	int nColID;
 	const CRect* rItem;
-	int nLevel;			// always zero unless control responds to WM_NCG_GETFIRSTCHILDITEM
+	int nLevel; // always zero unless control responds to WM_NCG_GETFIRSTCHILDITEM
 	int nItemPos;
 	const CRect* rWindow;
 	UINT nTextAlign;
@@ -99,7 +121,11 @@ struct NCGRECALCCOLUMN
 
 struct NCGITEMRECT
 {
-	NCGITEMRECT() { dwItem = 0; ::SetRectEmpty(&rItem); }
+	NCGITEMRECT()
+	{
+		dwItem = 0;
+		::SetRectEmpty(&rItem);
+	}
 
 	DWORD dwItem;
 	RECT rItem; // return client coords
@@ -160,7 +186,10 @@ public:
 	virtual ~CNcGutter();
 
 	BOOL Initialize(HWND hwnd);
-	BOOL IsInitialized() const { return IsHooked(); }
+	BOOL IsInitialized() const
+	{
+		return IsHooked();
+	}
 
 	// add WM_ messages that should cause a recalc
 	// use nNotification for
@@ -175,14 +204,20 @@ public:
 	int GetGutterWidth() const;
 
 	void EnableStyle(DWORD dwStyle, BOOL bEnable = TRUE);
-	BOOL HasStyle(DWORD dwStyle) const { return ((m_dwStyles & dwStyle) == dwStyle); }
+	BOOL HasStyle(DWORD dwStyle) const
+	{
+		return ((m_dwStyles & dwStyle) == dwStyle);
+	}
 
 	int AddColumn(UINT nColID, LPCTSTR szTitle = NULL, UINT nWidth = 0, UINT nTextAlign = DT_LEFT); // returns the index of the added column
 	void PressHeader(UINT nColID, BOOL bPress = TRUE);
 	void SetHeaderTitle(UINT nColID, LPCTSTR szTitle, LPCTSTR szFont = NULL, BOOL bSymbolFont = TRUE);
 	void EnableHeaderClicking(UINT nColID, BOOL bEnable = TRUE);
 	void SetColumnSort(UINT nColID, NCGSORT nSortDir, BOOL bExclusive = TRUE);
-	int GetColumnCount() const { return m_aColumns.GetSize() - 1; } // don't count the client column
+	int GetColumnCount() const
+	{
+		return m_aColumns.GetSize() - 1;   // don't count the client column
+	}
 	int GetColumnWidth(UINT nColID) const;
 	void SetColumnTextAlignment(UINT nColID, UINT nTextAlign, BOOL bRedraw = TRUE);
 	UINT GetColumnTextAlignment(UINT nColID) const;
@@ -205,9 +240,12 @@ protected:
 	struct COLUMNDESC
 	{
 		COLUMNDESC(UINT nID = 0) : nColID(nID), nWidth(0), bCalcWidth(TRUE), bPressed(FALSE),
-								nTextAlign(DT_LEFT), bClickable(TRUE), nSortDir(NCGSORT_NONE),
-								hFont(NULL), bSymbolFont(FALSE) {}
-		~COLUMNDESC() { ::DeleteObject(hFont); }
+			nTextAlign(DT_LEFT), bClickable(TRUE), nSortDir(NCGSORT_NONE),
+			hFont(NULL), bSymbolFont(FALSE) {}
+		~COLUMNDESC()
+		{
+			::DeleteObject(hFont);
+		}
 
 		UINT nColID;
 		CString sTitle;
@@ -248,7 +286,7 @@ protected:
 	BOOL ParentWantRedraw();
 
 	void NcDrawItem(CDC* pDC, DWORD dwItem, DWORD dwParentItem, int nLevel, int nPos,
-					const CRect& rGutter, CRect& rItem, BOOL bDrawChildren);
+		const CRect& rGutter, CRect& rItem, BOOL bDrawChildren);
 	void PostNcDraw(CDC* pDC, const CRect& rWindow);
 	void PostNcDrawItem(CDC* pDC, DWORD dwItem, const CRect& rItem, int nLevel, BOOL bParent);
 
@@ -275,7 +313,10 @@ protected:
 	int RecalcGutterWidth();
 	int GetColumnIndex(UINT nColID) const; // can return -1
 
-	inline BOOL IsClientColumn(int nCol) const { return (nCol == m_aColumns.GetSize() - 1); }
+	inline BOOL IsClientColumn(int nCol) const
+	{
+		return (nCol == m_aColumns.GetSize() - 1);
+	}
 
 	BOOL PrepareBitmap(CDC* pDC, CBitmap* pBitmap, const CRect& rect, BOOL bClient);
 	CFont* PrepareFont(CDC* pDC, BOOL bHeader, HFONT hFont = NULL); // returns 'old' font
