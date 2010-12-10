@@ -20,7 +20,7 @@
 
 #include "stdafx.h"
 #include "XHeaderCtrl.h"
-#include "memdc.h"
+#include "MemDC.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
