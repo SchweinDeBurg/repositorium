@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////
-// File:	StatusBarACT.h
-// Version:	3.1
-// Created:	24 Jun 2004
+// File:    StatusBarACT.h
+// Version: 3.1
+// Created: 24 Jun 2004
 //
-// Author:	Paul S. Vickery
-// E-mail:	paul@vickeryhome.freeserve.co.uk
+// Author:  Paul S. Vickery
+// E-mail:  paul@vickeryhome.freeserve.co.uk
 //
 // CStatusBar derived control to add auto-fit, tooltips and command handling
 //
@@ -12,7 +12,7 @@
 // you continue to acknowledge me as the original author in this source code,
 // or any code derived from it.
 //
-// If you use this code, or use it as a base for your own code, it would be 
+// If you use this code, or use it as a base for your own code, it would be
 // nice to hear from you simply so I know it's not been a waste of time!
 //
 // Copyright (c) 2003-2004 Paul S. Vickery
@@ -37,15 +37,15 @@
 //
 // Version 2.0 - 15 Apr 2003
 // =========================
-// - Extended control to allow pane tool-tips to be specified as part of the 
+// - Extended control to allow pane tool-tips to be specified as part of the
 //   pane's text, separated by a new line ('\n') character.
-// - Added ability to show multi-line tool-tips by including carriage returns 
+// - Added ability to show multi-line tool-tips by including carriage returns
 //   ('\r') and/or line breaks ('\n') in the tip text.
-// 
+//
 // Version 1.0 - 18 Feb 2003
 // =========================
 // Initial version
-// 
+//
 ////////////////////////////////////////////////////////////////////////////
 // PLEASE LEAVE THIS HEADER INTACT
 ////////////////////////////////////////////////////////////////////////////
@@ -66,61 +66,61 @@
 
 enum
 {
-  SBACTF_NORMAL			= 0x0000, 
-  SBACTF_AUTOFIT		= 0x0001, // autosize as the text changes
-  SBACTF_COMMAND		= 0x0002, // send a WM_COMMAND message to the parent frame
-  SBACTF_HANDCURSOR		= 0x0004, // show a hand cursor when the mouse is over the pane
-  SBACTF_STRETCHY		= 0x0008, // takes up space left by every other panes
+	SBACTF_NORMAL           = 0x0000,
+	SBACTF_AUTOFIT          = 0x0001, // autosize as the text changes
+	SBACTF_COMMAND          = 0x0002, // send a WM_COMMAND message to the parent frame
+	SBACTF_HANDCURSOR       = 0x0004, // show a hand cursor when the mouse is over the pane
+	SBACTF_STRETCHY         = 0x0008, // takes up space left by every other panes
 
-  SBACTF_RESOURCETIP	= 0x0080, // lpszTip is really a UINT
+	SBACTF_RESOURCETIP      = 0x0080, // lpszTip is really a UINT
 
-  // which clicks will send commands (only valid if SBACTF_COMMAND specified)
-  SBACTF_DOUBLECLICK	= 0x0100, // default if none specified
-  SBACTF_SINGLECLICK	= 0x0200, 
+	// which clicks will send commands (only valid if SBACTF_COMMAND specified)
+	SBACTF_DOUBLECLICK      = 0x0100, // default if none specified
+	SBACTF_SINGLECLICK      = 0x0200,
 
-  // which buttons will send commands (only valid if SBACTF_COMMAND specified)
-  SBACTF_LEFTBUTTON		= 0x1000, // default if none specified
-  SBACTF_RIGHTBUTTON	= 0x2000, 
-  SBACTF_MIDDLEBUTTON	= 0x4000, 
+	// which buttons will send commands (only valid if SBACTF_COMMAND specified)
+	SBACTF_LEFTBUTTON       = 0x1000, // default if none specified
+	SBACTF_RIGHTBUTTON      = 0x2000,
+	SBACTF_MIDDLEBUTTON     = 0x4000,
 
-  SBACTF_STYLEFLAGMASK	= 0x00FF,   // mask for 'style' flags
-  SBACTF_CLICKFLAGMASK	= 0x0F00,   // mask for click flags
-  SBACTF_BUTTONFLAGMASK	= 0xF000,   // mask for button flags
+	SBACTF_STYLEFLAGMASK    = 0x00FF,   // mask for 'style' flags
+	SBACTF_CLICKFLAGMASK    = 0x0F00,   // mask for click flags
+	SBACTF_BUTTONFLAGMASK   = 0xF000,   // mask for button flags
 };
 
 typedef struct SBACTPANEINFO
 {
-  UINT nID;		// pane command ID
-  LPCTSTR lpszTip;	// text for pane tooltip (see SBACTF_RESOURCETIP above)
-  DWORD dwFlags;	// pane flags (see above)
-  LPCTSTR lpszCursor;	// custom cursor, if specified
-}*LPSBACTPANEINFO;
+	UINT nID;           // pane command ID
+	LPCTSTR lpszTip;    // text for pane tooltip (see SBACTF_RESOURCETIP above)
+	DWORD dwFlags;      // pane flags (see above)
+	LPCTSTR lpszCursor; // custom cursor, if specified
+}* LPSBACTPANEINFO;
 
 class CStatusBarACT : public CStatusBar
 {
 	DECLARE_DYNAMIC(CStatusBarACT)
 
-// Construction
+	// Construction
 public:
 	CStatusBarACT();
 
-// Attributes
+	// Attributes
 public:
 	void SetUIColors(COLORREF crBackFrom, COLORREF crBackTo, BOOL bGradient/*, COLORREF crText*/);
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CStatusBarACT)
-	public:
+public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
+protected:
 	virtual LRESULT DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	BOOL SetPanes(LPSBACTPANEINFO lpsbactpi, UINT nPaneInfoCount);
 	BOOL SetPane(LPSBACTPANEINFO lpsbactpi);
@@ -144,7 +144,10 @@ public:
 	BOOL SetHandCursor(LPCTSTR lpszCursorID, BOOL bTryDefault = TRUE);
 	BOOL SetHandCursor(UINT nCursorID, BOOL bTryDefault = TRUE);
 	void AutoFitPane(int nIndex);
-	int GetPaneCount() const { return m_adwFlags.GetSize(); }
+	int GetPaneCount() const
+	{
+		return m_adwFlags.GetSize();
+	}
 
 	virtual ~CStatusBarACT();
 
