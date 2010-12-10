@@ -40,6 +40,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // RichEditBaseCtrl.cpp : implementation file
@@ -459,7 +460,7 @@ void CRichEditBaseCtrl::DoEditFindReplace(BOOL bFindOnly, UINT nIDTitle)
 	}
 
 	CString strReplace = m_findState.strReplace;
-	m_findState.pFindReplaceDlg = new CFindReplaceDialog;
+	m_findState.pFindReplaceDlg = NewFindReplaceDlg();
 	ASSERT(m_findState.pFindReplaceDlg != NULL);
 
 	DWORD dwFlags = NULL;
@@ -749,4 +750,14 @@ void CRichEditBaseCtrl::TextNotFound(LPCTSTR /*lpszFind*/)
 {
 	ASSERT_VALID(this);
 	MessageBeep(MB_ICONHAND);
+}
+
+BOOL CRichEditBaseCtrl::IsFindDialog(HWND hwnd) const
+{
+	if (m_findState.pFindReplaceDlg)
+	{
+		return (m_findState.pFindReplaceDlg->GetSafeHwnd() == hwnd);
+	}
+
+	return FALSE;
 }
