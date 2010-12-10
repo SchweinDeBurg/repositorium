@@ -40,6 +40,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_RICHEDITBASECTRL_H__E7F84BEA_24A6_42D4_BE92_4B8891484048__INCLUDED_)
@@ -211,7 +212,6 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
-
 	void AdjustDialogPosition(CDialog* pDlg);
 	BOOL FindText(LPCTSTR lpszFind, BOOL bCase = TRUE, BOOL bWord = TRUE);
 	BOOL FindTextSimple(LPCTSTR lpszFind, BOOL bCase = TRUE,
@@ -222,6 +222,12 @@ protected:
 	long FindAndSelect(DWORD dwFlags, FINDTEXTEX& ft);
 	void DoEditFindReplace(BOOL bFindOnly, UINT nIDTitle);
 	BOOL SameAsSelected(LPCTSTR lpszCompare, BOOL bCase, BOOL bWord);
+	BOOL IsFindDialog(HWND hwnd) const;
+
+	virtual CFindReplaceDialog* NewFindReplaceDlg()
+	{
+		return new CFindReplaceDialog;
+	}
 };
 
 /////////////////////////////////////////////////////////////////////////////
