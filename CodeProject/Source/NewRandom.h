@@ -6,7 +6,7 @@
   modification, are permitted provided that the following conditions are met:
 
   - Redistributions of source code must retain the above copyright notice,
-    this list of conditions and the following disclaimer. 
+    this list of conditions and the following disclaimer.
   - Redistributions in binary form must reproduce the above copyright notice,
     this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
@@ -45,7 +45,7 @@ public:
 	void Reset();
 	void Initialize();
 
-	void GetRandomBuffer(BYTE *pBuf, DWORD dwSize);
+	void GetRandomBuffer(BYTE* pBuf, DWORD dwSize);
 
 private:
 	BYTE m_pPseudoRandom[INTRAND_SIZE];
@@ -57,15 +57,15 @@ class CNewRandomInterface
 public:
 	virtual ~CNewRandomInterface() { }
 
-	virtual BOOL GenerateRandomSequence(unsigned long uRandomSeqSize, unsigned char *pBuffer) const = 0;
+	virtual BOOL GenerateRandomSequence(unsigned long uRandomSeqSize, unsigned char* pBuffer) const = 0;
 };
 
 // Seed is 128 bits = 4 32-bit DWORDS
-void srandXorShift(unsigned long *pSeed128);
+void srandXorShift(unsigned long* pSeed128);
 
 unsigned long randXorShift();
 
 // Must be able to hold at least 16 bytes
-void randCreateUUID(BYTE *pUUID16, CNewRandom *pRandomSource);
+void randCreateUUID(BYTE* pUUID16, CNewRandom* pRandomSource);
 
 #endif
