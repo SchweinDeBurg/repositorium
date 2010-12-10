@@ -24,9 +24,13 @@ void CLockableHeaderCtrl::LockColumn(int nColumn, BOOL bLock)
 	if (nColumn >= 0 && nColumn < GetItemCount())
 	{
 		if (bLock)
+		{
 			m_mapLocked[nColumn] = 1;
+		}
 		else
+		{
 			m_mapLocked.RemoveKey(nColumn);
+		}
 	}
 }
 
@@ -50,14 +54,16 @@ BOOL CLockableHeaderCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT msg)
 	// find what item we're over
 	CPoint point(GetMessagePos());
 	ScreenToClient(&point);
-	
+
 	HDHITTESTINFO hdht = { { point.x, point.y }, 0, 0 };
 
 	int nItem = SendMessage(HDM_HITTEST, 0, (LPARAM)&hdht);
 
 	if (IsColumnLocked(nItem) && (hdht.flags & (HHT_ONDIVIDER | HHT_ONDIVOPEN)))
+	{
 		return TRUE;
-	
+	}
+
 	// else
 	return CHeaderCtrl::OnSetCursor(pWnd, nHitTest, msg);
 }
@@ -76,17 +82,19 @@ BOOL CLockableHeaderCtrl::OnChildNotify(UINT msg, WPARAM wp, LPARAM lp, LRESULT*
 {
 	LPNMHDR pNMHDR = (LPNMHDR)lp;
 
-	if (pNMHDR->code == HDN_BEGINTRACKA || pNMHDR->code == HDN_BEGINTRACKW) 
+	if (pNMHDR->code == HDN_BEGINTRACKA || pNMHDR->code == HDN_BEGINTRACKW)
 	{
-		HD_NOTIFY *phdn = (HD_NOTIFY *) pNMHDR;
+		HD_NOTIFY* phdn = (HD_NOTIFY*) pNMHDR;
 
-		TRACE (_T("HDN_BEGINTRACK(column = %d)\n"), phdn->iItem);
+		TRACE(_T("HDN_BEGINTRACK(column = %d)\n"), phdn->iItem);
 
 		// the search field column is zero width then prevent it being resized
 		if (IsColumnLocked(phdn->iItem))
-			return (*pRes = TRUE); // eat message to disallow sizing
+		{
+			return (*pRes = TRUE);   // eat message to disallow sizing
+		}
 	}
-	
+
 	// otherwise, pass to header control for default processing
 	return CHeaderCtrl::OnChildNotify(msg, wp, lp, pRes);
 }
