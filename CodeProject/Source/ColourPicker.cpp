@@ -1,6 +1,6 @@
 // ColourPicker.cpp : implementation file
 //
-// ColourPicker is a drop-in colour picker control. Check out the 
+// ColourPicker is a drop-in colour picker control. Check out the
 // header file or the accompanying HTML doc file for details.
 //
 // Written by Chris Maunder (chrismaunder@codeguru.com)
@@ -8,10 +8,10 @@
 // Copyright (c) 1998.
 //
 // This code may be used in compiled form in any way you desire. This
-// file may be redistributed unmodified by any means PROVIDING it is 
-// not sold for profit without the authors written consent, and 
-// providing that this notice and the authors name is included. If 
-// the source code in  this file is used in any commercial application 
+// file may be redistributed unmodified by any means PROVIDING it is
+// not sold for profit without the authors written consent, and
+// providing that this notice and the authors name is included. If
+// the source code in  this file is used in any commercial application
 // then a simple email would be nice.
 //
 // This file is provided "as is" with no expressed or implied warranty.
@@ -20,10 +20,10 @@
 // makes you car start emitting strange noises when you start it up.
 //
 // Expect bugs.
-// 
-// Please use and enjoy. Please let me know of any bugs/mods/improvements 
+//
+// Please use and enjoy. Please let me know of any bugs/mods/improvements
 // that you have found/implemented and I will fix/incorporate them into this
-// file. 
+// file.
 //
 // Updated 16 May 1998
 //         31 May 1998 - added Default text (CJM)
@@ -51,10 +51,10 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-void AFXAPI DDX_ColourPicker(CDataExchange *pDX, int nIDC, COLORREF& crColour)
+void AFXAPI DDX_ColourPicker(CDataExchange* pDX, int nIDC, COLORREF& crColour)
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
-	ASSERT (hWndCtrl != NULL);                
+	ASSERT(hWndCtrl != NULL);
 
 	CColourPicker* pColourPicker = (CColourPicker*) CWnd::FromHandle(hWndCtrl);
 	if (pDX->m_bSaveAndValidate)
@@ -110,18 +110,22 @@ LONG CColourPicker::OnSelEndOK(UINT lParam, LONG /*wParam*/)
 	COLORREF crNewColour = (COLORREF) lParam;
 	SetColour(crNewColour);
 
-	CWnd *pParent = GetParent();
-	if (pParent) {
+	CWnd* pParent = GetParent();
+	if (pParent)
+	{
 		pParent->SendMessage(CPN_CLOSEUP, lParam, (WPARAM) GetDlgCtrlID());
 		pParent->SendMessage(CPN_SELENDOK, lParam, (WPARAM) GetDlgCtrlID());
 	}
 
 	if (crNewColour != GetColour())
-		if (pParent) pParent->SendMessage(CPN_SELCHANGE, lParam, (WPARAM) GetDlgCtrlID());
+		if (pParent)
+		{
+			pParent->SendMessage(CPN_SELCHANGE, lParam, (WPARAM) GetDlgCtrlID());
+		}
 
-	Invalidate();
+		Invalidate();
 
-	return TRUE;
+		return TRUE;
 }
 
 LONG CColourPicker::OnSelEndCancel(UINT lParam, LONG /*wParam*/)
@@ -131,8 +135,9 @@ LONG CColourPicker::OnSelEndCancel(UINT lParam, LONG /*wParam*/)
 
 	SetColour((COLORREF) lParam);
 
-	CWnd *pParent = GetParent();
-	if (pParent) {
+	CWnd* pParent = GetParent();
+	if (pParent)
+	{
 		pParent->SendMessage(CPN_CLOSEUP, lParam, (WPARAM) GetDlgCtrlID());
 		pParent->SendMessage(CPN_SELENDCANCEL, lParam, (WPARAM) GetDlgCtrlID());
 	}
@@ -144,18 +149,26 @@ LONG CColourPicker::OnSelEndCancel(UINT lParam, LONG /*wParam*/)
 
 LONG CColourPicker::OnSelChange(UINT lParam, LONG /*wParam*/)
 {
-	if (m_bTrackSelection) SetColour((COLORREF) lParam);
+	if (m_bTrackSelection)
+	{
+		SetColour((COLORREF) lParam);
+	}
 
-	CWnd *pParent = GetParent();
-	if (pParent) pParent->SendMessage(CPN_SELCHANGE, lParam, (WPARAM) GetDlgCtrlID());
+	CWnd* pParent = GetParent();
+	if (pParent)
+	{
+		pParent->SendMessage(CPN_SELCHANGE, lParam, (WPARAM) GetDlgCtrlID());
+	}
 
 	return TRUE;
 }
 
-int CColourPicker::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CColourPicker::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CButton::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 
 	SetWindowSize();    // resize appropriately
 	return 0;
@@ -172,7 +185,9 @@ BOOL CColourPicker::OnClicked()
 void CColourPicker::DoColourPopup()
 {
 	if (m_bActive)
+	{
 		return;
+	}
 
 	m_bActive = TRUE;
 	CRect rect;
@@ -184,12 +199,14 @@ void CColourPicker::DoColourPopup()
 		m_strDefaultText,                  // "Default" text area
 		m_strCustomText);                  // Custom Text
 
-	CWnd *pParent = GetParent();
+	CWnd* pParent = GetParent();
 	if (pParent)
+	{
 		pParent->SendMessage(CPN_DROPDOWN, (LPARAM)GetColour(), (WPARAM) GetDlgCtrlID());
+	}
 }
 
-void CColourPicker::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) 
+void CColourPicker::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
 	ASSERT(lpDrawItemStruct);
 
@@ -204,15 +221,21 @@ void CColourPicker::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	CThemed th(this, _T("EDIT"));
 
 	if (th.AreControlsThemed())
+	{
 		th.DrawBackground(pDC, EP_EDITTEXT, ETS_NORMAL, rect);
+	}
 	else
+	{
 		pDC->DrawEdge(rect, EDGE_SUNKEN, BF_RECT);
+	}
 
 	// Draw arrow
-	if (m_bActive) 
+	if (m_bActive)
+	{
 		state |= ODS_SELECTED;
+	}
 
-	CThemed::DrawFrameControl(this, pDC, &m_ArrowRect, DFC_SCROLL, DFCS_SCROLLDOWN  | 
+	CThemed::DrawFrameControl(this, pDC, &m_ArrowRect, DFC_SCROLL, DFCS_SCROLLDOWN  |
 		((state & ODS_SELECTED) ? DFCS_PUSHED : 0) |
 		((state & ODS_DISABLED) ? DFCS_INACTIVE : 0));
 
@@ -229,7 +252,9 @@ void CColourPicker::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	COLORREF crText = m_crColourText;
 
 	if (!bEnabled)
-		crText = GetSysColor(COLOR_GRAYTEXT); 
+	{
+		crText = GetSysColor(COLOR_GRAYTEXT);
+	}
 
 	else if (crText == CLR_DEFAULT)
 	{
@@ -240,13 +265,17 @@ void CColourPicker::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			crText = (nLum < 128) ? RGB(255, 255, 255) : 0;
 		}
 		else
+		{
 			crText = GetSysColor(COLOR_WINDOWTEXT);
+		}
 	}
 
 	GetWindowText(m_strText);
 
 	if (m_nSelectionMode == CP_MODE_BK)
-		rect.DeflateRect(1, 1); // provide a border
+	{
+		rect.DeflateRect(1, 1);   // provide a border
+	}
 
 	// draw required color
 	pDC->FillSolidRect(rect, crBack);
@@ -258,21 +287,23 @@ void CColourPicker::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		pDC->SetBkMode(TRANSPARENT);
 
 		COLORREF crOld = pDC->SetTextColor(crText);
-		pDC->DrawText(m_strText, rect, DT_CENTER|DT_SINGLELINE|DT_VCENTER);
+		pDC->DrawText(m_strText, rect, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
 		pDC->SetTextColor(crOld);
 
 		rect.DeflateRect(1, 1); // provide a border
 	}
 
 	// Draw focus rect
-	if ((state & ODS_FOCUS) && !m_bActive) 
+	if ((state & ODS_FOCUS) && !m_bActive)
+	{
 		pDC->DrawFocusRect(rect);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CColourPicker overrides
 
-void CColourPicker::PreSubclassWindow() 
+void CColourPicker::PreSubclassWindow()
 {
 	ModifyStyle(0, BS_OWNERDRAW);        // Make it owner drawn
 	CButton::PreSubclassWindow();
@@ -283,15 +314,15 @@ void CColourPicker::PreSubclassWindow()
 // CColourPicker attributes
 
 COLORREF CColourPicker::GetColour()
-{ 
-	return (m_nSelectionMode == CP_MODE_TEXT)? 
-		GetTextColour(): GetBkColour(); 
+{
+	return (m_nSelectionMode == CP_MODE_TEXT) ?
+		GetTextColour() : GetBkColour();
 }
 
 void CColourPicker::SetColour(COLORREF crColour)
-{ 
-	(m_nSelectionMode == CP_MODE_TEXT)? 
-		SetTextColour(crColour): SetBkColour(crColour); 
+{
+	(m_nSelectionMode == CP_MODE_TEXT) ?
+		SetTextColour(crColour) : SetBkColour(crColour);
 }
 
 void CColourPicker::SetBkColour(COLORREF crColourBk)
@@ -301,7 +332,9 @@ void CColourPicker::SetBkColour(COLORREF crColourBk)
 		m_crColourBk = crColourBk;
 
 		if (IsWindow(m_hWnd))
+		{
 			Invalidate();
+		}
 	}
 }
 
@@ -311,19 +344,21 @@ void CColourPicker::SetTextColour(COLORREF crColourText)
 	{
 		m_crColourText = crColourText;
 
-		if (IsWindow(m_hWnd)) 
+		if (IsWindow(m_hWnd))
+		{
 			Invalidate();
+		}
 	}
 }
 
 void CColourPicker::SetDefaultText(LPCTSTR szDefaultText)
 {
-	m_strDefaultText = (szDefaultText)? szDefaultText : _T("");
+	m_strDefaultText = (szDefaultText) ? szDefaultText : _T("");
 }
 
 void CColourPicker::SetCustomText(LPCTSTR szCustomText)
 {
-	m_strCustomText = (szCustomText)? szCustomText : _T("");
+	m_strCustomText = (szCustomText) ? szCustomText : _T("");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -335,8 +370,8 @@ void CColourPicker::SetWindowSize()
 	CSize MarginSize(::GetSystemMetrics(SM_CXEDGE), ::GetSystemMetrics(SM_CYEDGE));
 
 	// Get size of dropdown arrow
-	int nArrowWidth = max(::GetSystemMetrics(SM_CXHTHUMB), 5*MarginSize.cx);
-	int nArrowHeight = max(::GetSystemMetrics(SM_CYVTHUMB), 5*MarginSize.cy);
+	int nArrowWidth = max(::GetSystemMetrics(SM_CXHTHUMB), 5 * MarginSize.cx);
+	int nArrowHeight = max(::GetSystemMetrics(SM_CYVTHUMB), 5 * MarginSize.cy);
 	CSize ArrowSize(max(nArrowWidth, nArrowHeight), max(nArrowWidth, nArrowHeight));
 
 	// Get window size
@@ -345,11 +380,13 @@ void CColourPicker::SetWindowSize()
 
 	CWnd* pParent = GetParent();
 	if (pParent)
+	{
 		pParent->ScreenToClient(rect);
+	}
 
 	// Set window size at least as wide as 2 arrows, and as high as arrow + margins
-	int nWidth = max(rect.Width(), 2*ArrowSize.cx + 2*MarginSize.cx);
-	int nHeight = max( rect.Height(), ArrowSize.cy+2*MarginSize.cy);
+	int nWidth = max(rect.Width(), 2 * ArrowSize.cx + 2 * MarginSize.cx);
+	int nHeight = max(rect.Height(), ArrowSize.cy + 2 * MarginSize.cy);
 
 	MoveWindow(rect.left, rect.top, nWidth, nHeight, TRUE);
 
@@ -358,12 +395,12 @@ void CColourPicker::SetWindowSize()
 	ScreenToClient(rect);
 
 	// Get the rect where the arrow goes, and convert to client coords.
-	m_ArrowRect.SetRect(rect.right - ArrowSize.cx - MarginSize.cx, 
+	m_ArrowRect.SetRect(rect.right - ArrowSize.cx - MarginSize.cx,
 		rect.top + MarginSize.cy, rect.right - MarginSize.cx,
 		rect.bottom - MarginSize.cy);
 }
 
-void CColourPicker::OnSize(UINT nType, int cx, int cy) 
+void CColourPicker::OnSize(UINT nType, int cx, int cy)
 {
 	CWnd::OnSize(nType, cx, cy);
 
@@ -378,11 +415,13 @@ UINT CColourPicker::OnGetDlgCode()
 	return lCode;
 }
 
-void CColourPicker::OnSysKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) 
+void CColourPicker::OnSysKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	// handle ALT + cursor keys like combo behaviour
 	if (nChar == VK_DOWN && !m_bActive)
+	{
 		DoColourPopup();
+	}
 
 	else if (nChar == VK_UP && m_bActive)
 	{

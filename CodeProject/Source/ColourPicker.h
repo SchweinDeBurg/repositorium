@@ -12,10 +12,10 @@
 // Copyright (c) 1998.
 //
 // This code may be used in compiled form in any way you desire. This
-// file may be redistributed unmodified by any means PROVIDING it is 
-// not sold for profit without the authors written consent, and 
-// providing that this notice and the authors name is included. If 
-// the source code in  this file is used in any commercial application 
+// file may be redistributed unmodified by any means PROVIDING it is
+// not sold for profit without the authors written consent, and
+// providing that this notice and the authors name is included. If
+// the source code in  this file is used in any commercial application
 // then a simple email would be nice.
 //
 // This file is provided "as is" with no expressed or implied warranty.
@@ -32,7 +32,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CColourPicker window
 
-void AFXAPI DDX_ColourPicker(CDataExchange *pDX, int nIDC, COLORREF& crColour);
+void AFXAPI DDX_ColourPicker(CDataExchange* pDX, int nIDC, COLORREF& crColour);
 
 /////////////////////////////////////////////////////////////////////////////
 // CColourPicker window
@@ -50,24 +50,45 @@ public:
 	// Attributes
 public:
 	COLORREF GetColour();
-	void     SetColour(COLORREF crColour); 
+	void     SetColour(COLORREF crColour);
 
 	void     SetDefaultText(LPCTSTR szDefaultText);
 	void     SetCustomText(LPCTSTR szCustomText);
 
-	void     SetTrackSelection(BOOL bTracking = TRUE)  { m_bTrackSelection = bTracking; }
-	BOOL     GetTrackSelection()                       { return m_bTrackSelection; }
+	void     SetTrackSelection(BOOL bTracking = TRUE)
+	{
+		m_bTrackSelection = bTracking;
+	}
+	BOOL     GetTrackSelection()
+	{
+		return m_bTrackSelection;
+	}
 
-	void     SetSelectionMode(UINT nMode)              { m_nSelectionMode = nMode; }
-	UINT     GetSelectionMode()                        { return m_nSelectionMode; };
+	void     SetSelectionMode(UINT nMode)
+	{
+		m_nSelectionMode = nMode;
+	}
+	UINT     GetSelectionMode()
+	{
+		return m_nSelectionMode;
+	};
 
 	void     SetBkColour(COLORREF crColourBk);
-	COLORREF GetBkColour()                             { return m_crColourBk; }
+	COLORREF GetBkColour()
+	{
+		return m_crColourBk;
+	}
 
 	void     SetTextColour(COLORREF crColourText);
-	COLORREF GetTextColour()                           { return m_crColourText;}
+	COLORREF GetTextColour()
+	{
+		return m_crColourText;
+	}
 
-	BOOL GetDroppedState() const { return m_bActive; }
+	BOOL GetDroppedState() const
+	{
+		return m_bActive;
+	}
 
 	// Operations
 public:
@@ -92,7 +113,7 @@ protected:
 	// protected attributes
 protected:
 	BOOL     m_bActive,                // Is the dropdown active?
-		m_bTrackSelection;        // track colour changes?
+	m_bTrackSelection;        // track colour changes?
 	COLORREF m_crColourBk;
 	COLORREF m_crColourText;
 	UINT     m_nSelectionMode;

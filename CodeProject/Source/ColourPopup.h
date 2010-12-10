@@ -14,10 +14,10 @@
 // Copyright (c) 1998.
 //
 // This code may be used in compiled form in any way you desire. This
-// file may be redistributed unmodified by any means PROVIDING it is 
-// not sold for profit without the authors written consent, and 
-// providing that this notice and the authors name is included. If 
-// the source code in  this file is used in any commercial application 
+// file may be redistributed unmodified by any means PROVIDING it is
+// not sold for profit without the authors written consent, and
+// providing that this notice and the authors name is included. If
+// the source code in  this file is used in any commercial application
 // then a simple email would be nice.
 //
 // This file is provided "as is" with no expressed or implied warranty.
@@ -40,9 +40,10 @@
 class CColourPicker;
 
 // To hold the colours and their names
-typedef struct {
+typedef struct
+{
 	COLORREF crColour;
-	TCHAR    *szName;
+	TCHAR*    szName;
 } ColourTableEntry;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -53,7 +54,7 @@ class CColourPopup : public CWnd, public CSubclasser
 	// Construction
 public:
 	CColourPopup();
-	CColourPopup(CPoint p, COLORREF crColour, CWnd* pParentWnd, UINT nID = 0, 
+	CColourPopup(CPoint p, COLORREF crColour, CWnd* pParentWnd, UINT nID = 0,
 		LPCTSTR szDefaultText = NULL, LPCTSTR szCustomText = NULL,
 		BOOL bIgnoreFirstLBtnUp = FALSE);
 	void Initialise();
@@ -63,10 +64,13 @@ public:
 
 	// Operations
 public:
-	BOOL Create(CPoint p, COLORREF crColour, CWnd* pParentWnd, UINT nID = 0, 
+	BOOL Create(CPoint p, COLORREF crColour, CWnd* pParentWnd, UINT nID = 0,
 		LPCTSTR szDefaultText = NULL, LPCTSTR szCustomText = NULL,
 		BOOL bIgnoreFirstLBtnUp = FALSE);
-	void Cancel() { DestroyWindow(); }
+	void Cancel()
+	{
+		DestroyWindow();
+	}
 
 	// Overrides
 	// ClassWizard generated virtual function overrides
@@ -88,8 +92,14 @@ protected:
 	void EndSelection(int nMessage);
 	void DrawCell(CDC* pDC, int nIndex);
 
-	COLORREF GetColour(int nIndex)              { return m_crColours[nIndex].crColour; }
-	LPCTSTR GetColourName(int nIndex)           { return m_crColours[nIndex].szName; }
+	COLORREF GetColour(int nIndex)
+	{
+		return m_crColours[nIndex].crColour;
+	}
+	LPCTSTR GetColourName(int nIndex)
+	{
+		return m_crColours[nIndex].szName;
+	}
 	int  GetIndex(int row, int col) const;
 	int  GetRow(int nIndex) const;
 	int  GetColumn(int nIndex) const;
@@ -126,7 +136,7 @@ protected:
 	afx_msg void OnPaletteChanged(CWnd* pFocusWnd);
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
 	//}}AFX_MSG
-#if _MFC_VER < 0x0700 
+#if _MFC_VER < 0x0700
 	afx_msg void OnActivateApp(BOOL bActive, HTASK hTask);
 #else
 	afx_msg void OnActivateApp(BOOL bActive, DWORD hTask);
