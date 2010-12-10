@@ -4,7 +4,7 @@
 // "CIni" is a simple API wrap class used for ini file access.
 // The purpose of this class is to make ini file access more
 // convenient than direct API calls.
-//	
+//
 // This file is distributed "as is" and without any expressed or implied
 // warranties. The author holds no responsibilities for any possible damages
 // or loss of data that are caused by use of this file. The user must assume
@@ -42,10 +42,10 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define DEF_PROFILE_NUM_LEN		64 // numeric string length, could be quite long for binary format
-#define DEF_PROFILE_THRESHOLD	512 // temporary string length
-#define DEF_PROFILE_DELIMITER	_T(",") // default string delimiter
-#define DEF_PROFILE_TESTSTRING	_T("{63788286-AE30-4D6B-95DF-3B451C1C79F9}") // Uuid for internal use
+#define DEF_PROFILE_NUM_LEN     64 // numeric string length, could be quite long for binary format
+#define DEF_PROFILE_THRESHOLD   512 // temporary string length
+#define DEF_PROFILE_DELIMITER   _T(",") // default string delimiter
+#define DEF_PROFILE_TESTSTRING  _T("{63788286-AE30-4D6B-95DF-3B451C1C79F9}") // Uuid for internal use
 
 // struct used to be passed to __KeyPairProc as a LPVOID parameter
 struct STR_LIMIT
@@ -72,7 +72,9 @@ CIni::CIni(LPCTSTR lpPathName)
 CIni::~CIni()
 {
 	if (m_pszPathName != NULL)
+	{
 		free(m_pszPathName);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -85,12 +87,16 @@ void CIni::SetPathName(LPCTSTR lpPathName)
 	if (lpPathName == NULL)
 	{
 		if (m_pszPathName != NULL)
+		{
 			*m_pszPathName = _T('\0');
+		}
 	}
 	else
 	{
 		if (m_pszPathName != NULL)
+		{
 			free(m_pszPathName);
+		}
 
 		m_pszPathName = _tcsdup(lpPathName);
 	}
@@ -105,7 +111,7 @@ DWORD CIni::GetPathName(LPTSTR lpBuffer, DWORD dwBufSize) const
 	{
 		//fabio_2005
 #if _MSC_VER >= 1400
-		_tcsncpy_s(lpBuffer,dwBufSize, m_pszPathName, dwBufSize);
+		_tcsncpy_s(lpBuffer, dwBufSize, m_pszPathName, dwBufSize);
 #else
 		_tcsncpy(lpBuffer, m_pszPathName, dwBufSize);
 #endif
@@ -135,7 +141,9 @@ CString CIni::GetPathName() const
 DWORD CIni::GetString(LPCTSTR lpSection, LPCTSTR lpKey, LPTSTR lpBuffer, DWORD dwBufSize, LPCTSTR lpDefault) const
 {
 	if (lpBuffer != NULL)
+	{
 		*lpBuffer = _T('\0');
+	}
 
 	LPTSTR psz = __GetStringDynamic(lpSection, lpKey, lpDefault);
 	DWORD dwLen = _tcslen(psz);
@@ -144,7 +152,7 @@ DWORD CIni::GetString(LPCTSTR lpSection, LPCTSTR lpKey, LPTSTR lpBuffer, DWORD d
 	{
 		//fabio_2005
 #if _MSC_VER >= 1400
-		_tcsncpy_s(lpBuffer,dwBufSize, psz, dwBufSize);
+		_tcsncpy_s(lpBuffer, dwBufSize, psz, dwBufSize);
 #else
 		_tcsncpy(lpBuffer, psz, dwBufSize);
 #endif
@@ -169,7 +177,9 @@ CString CIni::GetString(LPCTSTR lpSection, LPCTSTR lpKey, LPCTSTR lpDefault) con
 BOOL CIni::WriteString(LPCTSTR lpSection, LPCTSTR lpKey, LPCTSTR lpValue) const
 {
 	if (lpSection == NULL || lpKey == NULL)
+	{
 		return FALSE;
+	}
 
 	return ::WritePrivateProfileString(lpSection, lpKey, lpValue == NULL ? _T("") : lpValue, m_pszPathName);
 }
@@ -179,18 +189,20 @@ BOOL CIni::WriteString(LPCTSTR lpSection, LPCTSTR lpKey, LPCTSTR lpValue) const
 BOOL CIni::AppendString(LPCTSTR lpSection, LPCTSTR lpKey, LPCTSTR lpString) const
 {
 	if (lpString == NULL)
+	{
 		return FALSE;
+	}
 
 	TCHAR* psz = __GetStringDynamic(lpSection, lpKey);
 	TCHAR* pNewString = new TCHAR[_tcslen(psz) + _tcslen(lpString) + 1];
 	//fabio_2005
 #if _MSC_VER >= 1400
-	_stprintf_s(pNewString,_tcslen(psz) + _tcslen(lpString) + 1, _T("%s%s"), psz, lpString);
+	_stprintf_s(pNewString, _tcslen(psz) + _tcslen(lpString) + 1, _T("%s%s"), psz, lpString);
 #else
 	_stprintf(pNewString, _T("%s%s"), psz, lpString);
 #endif
 
-	
+
 	const BOOL RES = WriteString(lpSection, lpKey, pNewString);
 	delete [] pNewString;
 	delete [] psz;
@@ -205,13 +217,17 @@ BOOL CIni::AppendString(LPCTSTR lpSection, LPCTSTR lpKey, LPCTSTR lpString) cons
 DWORD CIni::GetArray(LPCTSTR lpSection, LPCTSTR lpKey, LPTSTR lpBuffer, DWORD dwBufSize, LPCTSTR lpDelimiter, BOOL bTrimString) const
 {
 	if (lpBuffer != NULL)
+	{
 		*lpBuffer = _T('\0');
+	}
 
 	if (lpSection == NULL || lpKey == NULL)
-		return 0;	
+	{
+		return 0;
+	}
 
 	LPTSTR psz = __GetStringDynamic(lpSection, lpKey);
-	
+
 	DWORD dwCopied = 0;
 
 	if (*psz != _T('\0'))
@@ -228,21 +244,25 @@ DWORD CIni::GetArray(LPCTSTR lpSection, LPCTSTR lpKey, LPTSTR lpBuffer, DWORD dw
 		{
 			dwCopied = __StringSplit(psz, lpBuffer, dwBufSize, lpDelimiter, bTrimString);
 		}
-	}		
+	}
 
 	delete [] psz;
 	return dwCopied;
 }
 
 #ifdef _MFC_VER
-void CIni::GetArray(LPCTSTR lpSection, LPCTSTR lpKey, CStringArray *pArray, LPCTSTR lpDelimiter, BOOL /*bTrimString*/) const
+void CIni::GetArray(LPCTSTR lpSection, LPCTSTR lpKey, CStringArray* pArray, LPCTSTR lpDelimiter, BOOL /*bTrimString*/) const
 {
 	if (pArray != NULL)
+	{
 		pArray->RemoveAll();
+	}
 
 	const DWORD LEN = GetArray(lpSection, lpKey, NULL, 0, lpDelimiter);
 	if (LEN == 0)
+	{
 		return;
+	}
 
 	LPTSTR psz = new TCHAR[LEN + 3];
 	GetArray(lpSection, lpKey, psz, LEN + 2, lpDelimiter);
@@ -252,15 +272,21 @@ void CIni::GetArray(LPCTSTR lpSection, LPCTSTR lpKey, CStringArray *pArray, LPCT
 #endif
 
 #ifdef _MFC_VER
-BOOL CIni::WriteArray(LPCTSTR lpSection, LPCTSTR lpKey, const CStringArray *pArray, int nWriteCount, LPCTSTR lpDelimiter) const
+BOOL CIni::WriteArray(LPCTSTR lpSection, LPCTSTR lpKey, const CStringArray* pArray, int nWriteCount, LPCTSTR lpDelimiter) const
 {
 	if (pArray == NULL)
+	{
 		return FALSE;
+	}
 
 	if (nWriteCount < 0)
+	{
 		nWriteCount = pArray->GetSize();
+	}
 	else
+	{
 		nWriteCount = min(nWriteCount, pArray->GetSize());
+	}
 
 	const CString DELIMITER = (lpDelimiter == NULL || *lpDelimiter == _T('\0')) ? _T(",") : lpDelimiter;
 	CString sLine;
@@ -268,7 +294,9 @@ BOOL CIni::WriteArray(LPCTSTR lpSection, LPCTSTR lpKey, const CStringArray *pArr
 	{
 		sLine += pArray->GetAt(i);
 		if (i != nWriteCount - 1)
+		{
 			sLine += DELIMITER;
+		}
 	}
 	return WriteString(lpSection, lpKey, sLine);
 }
@@ -339,7 +367,7 @@ BOOL CIni::WriteDouble(LPCTSTR lpSection, LPCTSTR lpKey, double fValue, int nPre
 		_stprintf(szFmt, _T("%%.%df"), nPrecision);
 #endif
 
-		
+
 
 	TCHAR szValue[DEF_PROFILE_NUM_LEN + 1] = _T("");
 	//fabio_2005
@@ -349,7 +377,7 @@ BOOL CIni::WriteDouble(LPCTSTR lpSection, LPCTSTR lpKey, double fValue, int nPre
 	_stprintf(szValue, szFmt, fValue);
 #endif
 
-	
+
 	return WriteString(lpSection, lpKey, szValue);
 }
 
@@ -443,17 +471,17 @@ DWORD CIni::GetDataBlock(LPCTSTR lpSection, LPCTSTR lpKey, LPVOID lpBuffer, DWOR
 		dwProcLen = min(dwLen - dwOffset, dwBufSize);
 		LPCTSTR p = &psz[dwOffset * 2];
 		for (DWORD i = 0; i < dwProcLen; i++)
-		{			
+		{
 			TCHAR sz[3] = _T("");
 			//fabio_2005
 #if _MSC_VER >= 1400
-		_tcsncpy_s(sz, p, 2);			
+			_tcsncpy_s(sz, p, 2);
 #else
-		_tcsncpy(sz, p, 2);			
+			_tcsncpy(sz, p, 2);
 #endif
 			lpb[i] = BYTE(_tcstoul(sz, NULL, 16));
 			p = &p[2];
-		}			
+		}
 	}
 	else
 	{
@@ -468,13 +496,15 @@ BOOL CIni::WriteDataBlock(LPCTSTR lpSection, LPCTSTR lpKey, LPCVOID lpData, DWOR
 {
 	const BYTE* lpb = (const BYTE*)lpData;
 	if (lpb == NULL)
+	{
 		return FALSE;
+	}
 
 	LPTSTR psz = new TCHAR[dwDataSize * 2 + 1];
 	for (DWORD i = 0, j = 0; i < dwDataSize; i++, j += 2)
 		//fabio_2005
 #if _MSC_VER >= 1400
-		_stprintf_s(&psz[j],dwDataSize * 2 + 1, _T("%02X"), lpb[i]);
+		_stprintf_s(&psz[j], dwDataSize * 2 + 1, _T("%02X"), lpb[i]);
 #else
 		_stprintf(&psz[j], _T("%02X"), lpb[i]);
 #endif
@@ -489,18 +519,20 @@ BOOL CIni::AppendDataBlock(LPCTSTR lpSection, LPCTSTR lpKey, LPCVOID lpData, DWO
 {
 	const BYTE* lpb = (const BYTE*)lpData;
 	if (lpb == NULL)
+	{
 		return FALSE;
+	}
 
 	LPTSTR psz = new TCHAR[dwDataSize * 2 + 1];
 	for (DWORD i = 0, j = 0; i < dwDataSize; i++, j += 2)
 		//fabio_2005
 #if _MSC_VER >= 1400
-		_stprintf_s(&psz[j],dwDataSize * 2 + 1, _T("%02X"), lpb[i]);
+		_stprintf_s(&psz[j], dwDataSize * 2 + 1, _T("%02X"), lpb[i]);
 #else
 		_stprintf(&psz[j], _T("%02X"), lpb[i]);
 #endif
 
-		
+
 	const BOOL RES = AppendString(lpSection, lpKey, psz);
 	delete [] psz;
 	return RES;
@@ -511,7 +543,9 @@ POINT CIni::GetPoint(LPCTSTR lpSection, LPCTSTR lpKey, POINT ptDefault) const
 {
 	POINT pt;
 	if (GetDataBlock(lpSection, lpKey, &pt, sizeof(POINT)) != sizeof(POINT))
+	{
 		pt = ptDefault;
+	}
 	return pt;
 }
 
@@ -520,7 +554,9 @@ RECT CIni::GetRect(LPCTSTR lpSection, LPCTSTR lpKey, RECT rcDefault) const
 {
 	RECT rc;
 	if (GetDataBlock(lpSection, lpKey, &rc, sizeof(RECT)) != sizeof(RECT))
+	{
 		rc = rcDefault;
+	}
 	return rc;
 }
 
@@ -544,10 +580,14 @@ BOOL CIni::WriteRect(LPCTSTR lpSection, LPCTSTR lpKey, RECT rc) const
 DWORD CIni::GetKeyLines(LPCTSTR lpSection, LPTSTR lpBuffer, DWORD dwBufSize) const
 {
 	if (lpBuffer != NULL)
+	{
 		*lpBuffer = _T('\0');
+	}
 
 	if (lpSection == NULL)
-		return 0;	
+	{
+		return 0;
+	}
 
 	if (lpBuffer == NULL)
 	{
@@ -577,26 +617,34 @@ DWORD CIni::GetKeyLines(LPCTSTR lpSection, LPTSTR lpBuffer, DWORD dwBufSize) con
 DWORD CIni::GetKeyNames(LPCTSTR lpSection, LPTSTR lpBuffer, DWORD dwBufSize) const
 {
 	if (lpBuffer != NULL)
+	{
 		*lpBuffer = _T('\0');
+	}
 
 	if (lpSection == NULL)
-		return 0;	
+	{
+		return 0;
+	}
 
-	STR_LIMIT sl;	
+	STR_LIMIT sl;
 	sl.lpTarget = lpBuffer;
 	sl.dwRemain = dwBufSize;
 	sl.dwTotalCopied = 0;
 
 	const DWORD LEN = GetKeyLines(lpSection, NULL, 0);
 	if (LEN == 0)
+	{
 		return 0;
+	}
 
 	LPTSTR psz = new TCHAR[LEN + 1];
 	GetKeyLines(lpSection, psz, LEN);
 	ParseDNTString(psz, __KeyPairProc, (LPVOID)(&sl));
 	delete [] psz;
 	if (lpBuffer != NULL)
+	{
 		lpBuffer[sl.dwTotalCopied] = _T('\0');
+	}
 	return sl.dwTotalCopied;
 }
 
@@ -616,7 +664,7 @@ DWORD CIni::GetSectionNames(LPTSTR lpBuffer, DWORD dwBufSize) const
 			psz = new TCHAR[dwLen + 1];
 			dwCopied = ::GetPrivateProfileSectionNames(psz, dwLen, m_pszPathName);
 		}
-		
+
 		delete [] psz;
 		return dwCopied + 2;
 	}
@@ -633,7 +681,9 @@ int CIni::GetSectionNames(CStringArray& aSections) const
 
 	const DWORD LEN = GetSectionNames(NULL, 0);
 	if (LEN == 0)
+	{
 		return 0;
+	}
 
 	LPTSTR psz = new TCHAR[LEN + 1];
 	GetSectionNames(psz, LEN);
@@ -646,14 +696,18 @@ int CIni::GetSectionNames(CStringArray& aSections) const
 
 #ifdef _MFC_VER
 // Retrieve a list of key-lines(key-pairs) of the specified section
-void CIni::GetKeyLines(LPCTSTR lpSection, CStringArray *pArray) const
+void CIni::GetKeyLines(LPCTSTR lpSection, CStringArray* pArray) const
 {
 	if (pArray != NULL)
+	{
 		pArray->RemoveAll();
+	}
 
 	const DWORD LEN = GetKeyLines(lpSection, NULL, 0);
 	if (LEN == 0)
+	{
 		return;
+	}
 
 	LPTSTR psz = new TCHAR[LEN + 1];
 	GetKeyLines(lpSection, psz, LEN);
@@ -664,10 +718,12 @@ void CIni::GetKeyLines(LPCTSTR lpSection, CStringArray *pArray) const
 
 #ifdef _MFC_VER
 // Retrieve a list of key names of the specified section
-void CIni::GetKeyNames(LPCTSTR lpSection, CStringArray *pArray) const
+void CIni::GetKeyNames(LPCTSTR lpSection, CStringArray* pArray) const
 {
 	if (pArray == NULL)
+	{
 		return;
+	}
 
 	pArray->RemoveAll();
 
@@ -695,13 +751,17 @@ BOOL CIni::DeleteKey(LPCTSTR lpSection, LPCTSTR lpKey) const
 BOOL CIni::IsSectionExist(LPCTSTR lpSection) const
 {
 	if (lpSection == NULL)
+	{
 		return FALSE;
+	}
 
 	// first get the section name list, then check if lpSection exists
 	// in the list.
 	const DWORD LEN = GetSectionNames(NULL, 0);
 	if (LEN == 0)
+	{
 		return FALSE;
+	}
 
 	LPTSTR psz = new TCHAR[LEN + 1];
 	GetSectionNames(psz, LEN);
@@ -713,7 +773,9 @@ BOOL CIni::IsSectionExist(LPCTSTR lpSection) const
 BOOL CIni::IsKeyExist(LPCTSTR lpSection, LPCTSTR lpKey) const
 {
 	if (lpSection == NULL || lpKey == NULL)
+	{
 		return FALSE;
+	}
 
 	// Test it with the default unique string
 	LPTSTR psz = __GetStringDynamic(lpSection, lpKey, DEF_PROFILE_TESTSTRING);
@@ -725,23 +787,31 @@ BOOL CIni::IsKeyExist(LPCTSTR lpSection, LPCTSTR lpKey) const
 BOOL CIni::CopySection(LPCTSTR lpSrcSection, LPCTSTR lpDestSection, BOOL bFailIfExist) const
 {
 	if (lpSrcSection == NULL || lpDestSection == NULL)
+	{
 		return FALSE;
+	}
 
 	if (_tcsicmp(lpSrcSection, lpDestSection) == 0)
+	{
 		return FALSE;
+	}
 
 	if (!IsSectionExist(lpSrcSection))
+	{
 		return FALSE;
+	}
 
 	if (bFailIfExist && IsSectionExist(lpDestSection))
+	{
 		return FALSE;
+	}
 
 	DeleteSection(lpDestSection);
 
 	const DWORD SRC_LEN = GetKeyLines(lpSrcSection, NULL, 0);
 	LPTSTR psz = new TCHAR[SRC_LEN + 2];
 	//memset(psz, 0, sizeof(TCHAR) * (SRC_LEN + 2));
-	GetKeyLines(lpSrcSection, psz, SRC_LEN);	
+	GetKeyLines(lpSrcSection, psz, SRC_LEN);
 	const BOOL RES = ::WritePrivateProfileSection(lpDestSection, psz, m_pszPathName);
 	delete [] psz;
 
@@ -751,18 +821,26 @@ BOOL CIni::CopySection(LPCTSTR lpSrcSection, LPCTSTR lpDestSection, BOOL bFailIf
 BOOL CIni::CopyKey(LPCTSTR lpSrcSection, LPCTSTR lpSrcKey, LPCTSTR lpDestSection, LPCTSTR lpDestKey, BOOL bFailIfExist) const
 {
 	if (lpSrcSection == NULL || lpSrcKey == NULL || lpDestKey == NULL)
+	{
 		return FALSE;
+	}
 
 	if (_tcsicmp(lpSrcSection, lpDestSection) == 0
 		&& _tcsicmp(lpSrcKey, lpDestKey) == 0)
+	{
 		return FALSE;
+	}
 
 	if (!IsKeyExist(lpSrcSection, lpSrcKey))
+	{
 		return FALSE;
+	}
 
 	if (bFailIfExist && IsKeyExist(lpDestSection, lpDestKey))
+	{
 		return FALSE;
-	
+	}
+
 	LPTSTR psz = __GetStringDynamic(lpSrcSection, lpSrcKey);
 	const BOOL RES = WriteString(lpDestSection, lpDestKey, psz);
 	delete [] psz;
@@ -806,28 +884,28 @@ LPTSTR CIni::__GetStringDynamic(LPCTSTR lpSection, LPCTSTR lpKey, LPCTSTR lpDefa
 			psz = new TCHAR[_tcslen(lpDefault) + 1];
 #if _MSC_VER >= 1400
 			//fabio_2005
-			_tcscpy_s(psz,_tcslen(lpDefault) + 1, lpDefault);
+			_tcscpy_s(psz, _tcslen(lpDefault) + 1, lpDefault);
 #else
 			_tcscpy(psz, lpDefault);
 #endif
 		}
-		
+
 		return psz;
 	}
-	
+
 	// Keep enlarging the buffer size until being certain on that the string we
 	// retrieved was original(not truncated).
 	DWORD dwLen = DEF_PROFILE_THRESHOLD;
 	psz = new TCHAR[dwLen + 1];
 	DWORD dwCopied = ::GetPrivateProfileString(lpSection, lpKey, lpDefault == NULL ? _T("") : lpDefault, psz, dwLen, m_pszPathName);
 	while (dwCopied + 1 >= dwLen)
-	{		
+	{
 		dwLen += DEF_PROFILE_THRESHOLD;
 		delete [] psz;
 		psz = new TCHAR[dwLen + 1];
 		dwCopied = ::GetPrivateProfileString(lpSection, lpKey, lpDefault == NULL ? _T("") : lpDefault, psz, dwLen, m_pszPathName);
 	}
-	
+
 	return psz; // !!! Requires the caller to free this memory !!!
 }
 
@@ -841,12 +919,16 @@ LPTSTR CIni::__GetStringDynamic(LPCTSTR lpSection, LPCTSTR lpKey, LPCTSTR lpDefa
 DWORD CIni::__StringSplit(LPCTSTR lpString, LPTSTR lpBuffer, DWORD dwBufSize, LPCTSTR lpDelimiter, BOOL bTrimString)
 {
 	if (lpString == NULL || lpBuffer == NULL || dwBufSize == 0)
-		return 0;	
+	{
+		return 0;
+	}
 
 	DWORD dwCopied = 0;
 	*lpBuffer = _T('\0');
 	if (*lpString == _T('\0'))
+	{
 		return 0;
+	}
 
 	// If lpDelimiter is NULL, use the default delimiter ",", if delimiter length
 	// is 0, then return whole string
@@ -854,7 +936,7 @@ DWORD CIni::__StringSplit(LPCTSTR lpString, LPTSTR lpBuffer, DWORD dwBufSize, LP
 	{
 		//fabio_2005
 #if _MSC_VER >= 1400
-		_tcsncpy_s(lpBuffer,dwBufSize - 1, lpString, dwBufSize - 1);
+		_tcsncpy_s(lpBuffer, dwBufSize - 1, lpString, dwBufSize - 1);
 #else
 		_tcsncpy(lpBuffer, lpString, dwBufSize - 1);
 #endif
@@ -874,7 +956,9 @@ DWORD CIni::__StringSplit(LPCTSTR lpString, LPTSTR lpBuffer, DWORD dwBufSize, LP
 	{
 		LPTSTR pszSeg = __StrDupEx(lpPos, lpEnd);
 		if (bTrimString)
+		{
 			__TrimString(pszSeg);
+		}
 
 		const DWORD SEG_LEN = _tcslen(pszSeg);
 		const DWORD COPY_LEN = min(SEG_LEN, dwBufSize - dwCopied);
@@ -885,16 +969,16 @@ DWORD CIni::__StringSplit(LPCTSTR lpString, LPTSTR lpBuffer, DWORD dwBufSize, LP
 			dwCopied += COPY_LEN + 1;
 			//fabio_2005
 #if _MSC_VER >= 1400
-			_tcsncpy_s(lpTarget,COPY_LEN, pszSeg, COPY_LEN);
+			_tcsncpy_s(lpTarget, COPY_LEN, pszSeg, COPY_LEN);
 #else
 			_tcsncpy(lpTarget, pszSeg, COPY_LEN);
 #endif
-			
+
 			lpTarget[COPY_LEN] = _T('\0');
 			lpTarget = &lpTarget[SEG_LEN + 1];
 		}
 		delete [] pszSeg;
-		lpPos = &lpEnd[DEL_LEN]; // Advance the pointer for next search		
+		lpPos = &lpEnd[DEL_LEN]; // Advance the pointer for next search
 		lpEnd = _tcsstr(lpPos, pszDel);
 	}
 
@@ -902,7 +986,9 @@ DWORD CIni::__StringSplit(LPCTSTR lpString, LPTSTR lpBuffer, DWORD dwBufSize, LP
 	// need to take care of this part, too
 	LPTSTR pszSeg = _tcsdup(lpPos);
 	if (bTrimString)
+	{
 		__TrimString(pszSeg);
+	}
 
 	const DWORD SEG_LEN = _tcslen(pszSeg);
 	const DWORD COPY_LEN = min(SEG_LEN, dwBufSize - dwCopied);
@@ -931,7 +1017,9 @@ DWORD CIni::__StringSplit(LPCTSTR lpString, LPTSTR lpBuffer, DWORD dwBufSize, LP
 BOOL CIni::ParseDNTString(LPCTSTR lpString, SUBSTRPROC lpFnStrProc, LPVOID lpParam)
 {
 	if (lpString == NULL || lpFnStrProc == NULL)
+	{
 		return FALSE;
+	}
 
 	LPCTSTR p = lpString;
 	DWORD dwLen = _tcslen(p);
@@ -939,7 +1027,9 @@ BOOL CIni::ParseDNTString(LPCTSTR lpString, SUBSTRPROC lpFnStrProc, LPVOID lpPar
 	while (dwLen > 0)
 	{
 		if (!lpFnStrProc(p, lpParam))
+		{
 			return FALSE;
+		}
 
 		p = &p[dwLen + 1];
 		dwLen = _tcslen(p);
@@ -947,7 +1037,7 @@ BOOL CIni::ParseDNTString(LPCTSTR lpString, SUBSTRPROC lpFnStrProc, LPVOID lpPar
 	return TRUE;
 }
 
-// Callback function used to compare elements inside of a 
+// Callback function used to compare elements inside of a
 // "double null terminated string" with a given string. Useful for
 // searching in the section names list.
 BOOL CALLBACK CIni::__SubStrCompare(LPCTSTR lpString1, LPVOID lpParam)
@@ -964,39 +1054,45 @@ BOOL CALLBACK CIni::__SubStrCompare(LPCTSTR lpString1, LPVOID lpParam)
 BOOL CALLBACK CIni:: __KeyPairProc(LPCTSTR lpString, LPVOID lpParam)
 {
 	STR_LIMIT* psl = (STR_LIMIT*)lpParam;
-	if (lpString == NULL || psl== NULL)
+	if (lpString == NULL || psl == NULL)
+	{
 		return FALSE;
-	
+	}
+
 	LPCTSTR p = _tcschr(lpString, _T('='));
 	if (p == NULL || p == lpString)
+	{
 		return TRUE;
-	
+	}
+
 	// extract the sub-string on left side of the '='
 	LPTSTR psz = new TCHAR[_tcslen(lpString) + 1];
 	//fabio_2005
-	int i = 0; 
+	int i = 0;
 	for (i = 0; &lpString[i] < p; i++)
+	{
 		psz[i] = lpString[i];
+	}
 	psz[i] = _T('\0');
 
 	// trim
 	__TrimString(psz);
 	DWORD dwNameLen = _tcslen(psz);
 	DWORD dwCopyLen = 0;
-	
+
 	//copy to the buffer
 	if (psl->lpTarget != NULL)
 	{
 		dwCopyLen = (psl->dwRemain > 1) ? min(dwNameLen, psl->dwRemain - 1) : 0;
-		//fabio_2005		
+		//fabio_2005
 #if _MSC_VER >= 1400
-		_tcsncpy_s(psl->lpTarget,dwCopyLen, psz, dwCopyLen);
+		_tcsncpy_s(psl->lpTarget, dwCopyLen, psz, dwCopyLen);
 #else
 		_tcsncpy(psl->lpTarget, psz, dwCopyLen);
 #endif
 
 		psl->lpTarget[dwCopyLen] = _T('\0');
-		psl->lpTarget = &(psl->lpTarget[dwCopyLen + 1]); 
+		psl->lpTarget = &(psl->lpTarget[dwCopyLen + 1]);
 		psl->dwRemain -= dwCopyLen + 1;
 	}
 	else
@@ -1010,13 +1106,15 @@ BOOL CALLBACK CIni:: __KeyPairProc(LPCTSTR lpString, LPVOID lpParam)
 }
 
 #ifdef _MFC_VER
-// Callback function used to add elements that are extracted from a 
+// Callback function used to add elements that are extracted from a
 // "double null terminated string" to an MFC CStringArray.
 BOOL CALLBACK CIni::__SubStrAdd(LPCTSTR lpString, LPVOID lpParam)
 {
 	CStringArray* pArray = (CStringArray*)lpParam;
 	if (pArray == NULL || lpString == NULL)
+	{
 		return FALSE;
+	}
 
 	pArray->Add(lpString);
 	return TRUE;
@@ -1027,14 +1125,17 @@ BOOL CALLBACK CIni::__SubStrAdd(LPCTSTR lpString, LPVOID lpParam)
 void CIni::__ToBinaryString(UINT nNumber, LPTSTR lpBuffer, DWORD dwBufSize)
 {
 	if (dwBufSize == 0)
+	{
 		return;
-	
-	DWORD dwIndex = 0;	
+	}
+
+	DWORD dwIndex = 0;
 	do
 	{
 		lpBuffer[dwIndex++] = (nNumber % 2) ? _T('1') : _T('0');
 		nNumber /= 2;
-	} while (nNumber > 0 && dwIndex < dwBufSize);
+	}
+	while (nNumber > 0 && dwIndex < dwBufSize);
 
 	lpBuffer[dwIndex] = _T('\0');
 	_tcsrev(lpBuffer);
@@ -1071,13 +1172,13 @@ void CIni::__IntToString(int nNumber, LPTSTR lpBuffer, int nBase)
 	default:
 		//fabio_2005
 #if _MSC_VER >= 1400
-		_stprintf_s(lpBuffer,64, _T("%d"), nNumber);
+		_stprintf_s(lpBuffer, 64, _T("%d"), nNumber);
 #else
 		_stprintf(lpBuffer, _T("%d"), nNumber);
 #endif
 
 		break;
-	}	
+	}
 }
 
 // Convert an unsigned integer into string representation, based on its base
@@ -1092,7 +1193,7 @@ void CIni::__UIntToString(UINT nNumber, LPTSTR lpBuffer, int nBase)
 
 	case BASE_OCTAL:
 #if _MSC_VER >= 1400
-		_stprintf_s(lpBuffer,64, _T("%o"), nNumber);
+		_stprintf_s(lpBuffer, 64, _T("%o"), nNumber);
 #else
 		_stprintf(lpBuffer, _T("%o"), nNumber);
 #endif
@@ -1101,7 +1202,7 @@ void CIni::__UIntToString(UINT nNumber, LPTSTR lpBuffer, int nBase)
 
 	case BASE_HEXADECIMAL:
 #if _MSC_VER >= 1400
-		_stprintf_s(lpBuffer,64, _T("%X"), nNumber);
+		_stprintf_s(lpBuffer, 64, _T("%X"), nNumber);
 #else
 		//_stprintf(lpBuffer, _T("%X"), nNumber);
 #endif
@@ -1109,12 +1210,12 @@ void CIni::__UIntToString(UINT nNumber, LPTSTR lpBuffer, int nBase)
 
 	default:
 #if _MSC_VER >= 1400
-		_stprintf_s(lpBuffer,64, _T("%u"), nNumber);
+		_stprintf_s(lpBuffer, 64, _T("%u"), nNumber);
 #else
 		_stprintf(lpBuffer, _T("%u"), nNumber);
 #endif
 		break;
-	}	
+	}
 }
 
 BOOL CIni::StringToBool(LPCTSTR lpString, BOOL bDefault)
@@ -1123,7 +1224,9 @@ BOOL CIni::StringToBool(LPCTSTR lpString, BOOL bDefault)
 	// TRUE: "true", "yes", non-zero decimal numner
 	// FALSE: all other cases
 	if (lpString == NULL || *lpString == _T('\0'))
+	{
 		return bDefault;
+	}
 
 	return (_tcsicmp(lpString, _T("true")) == 0
 		|| _tcsicmp(lpString, _T("yes")) == 0
@@ -1133,30 +1236,32 @@ BOOL CIni::StringToBool(LPCTSTR lpString, BOOL bDefault)
 BOOL CIni::__TrimString(LPTSTR lpString)
 {
 	if (lpString == NULL)
+	{
 		return FALSE;
+	}
 
 	BOOL bTrimmed = FALSE;
 	int nLen = _tcslen(lpString);
 
 	// '\n' and '\r' are actually not possible in this case, but anyway...
-	
+
 	// Trim right side
 	while (nLen >= 0
 		&& (lpString[nLen - 1] == _T(' ')
-			|| lpString[nLen - 1] == _T('\t')
-			|| lpString[nLen - 1] == _T('\r')
-			|| lpString[nLen - 1] == _T('\n')))
+		|| lpString[nLen - 1] == _T('\t')
+		|| lpString[nLen - 1] == _T('\r')
+		|| lpString[nLen - 1] == _T('\n')))
 	{
 		lpString[--nLen] = _T('\0');
-		bTrimmed = TRUE;		
+		bTrimmed = TRUE;
 	}
 
 	// Trim left side
-	LPCTSTR p = lpString; 
+	LPCTSTR p = lpString;
 	while (*p == _T(' ')
-			|| *p == _T('\t')
-			|| *p == _T('\r')
-			|| *p == _T('\n'))
+		|| *p == _T('\t')
+		|| *p == _T('\r')
+		|| *p == _T('\n'))
 	{
 		p = &p[1];
 		bTrimmed = TRUE;
@@ -1167,7 +1272,7 @@ BOOL CIni::__TrimString(LPTSTR lpString)
 		LPTSTR psz = _tcsdup(p);
 		//fabio_2005
 #if _MSC_VER >= 1400
-		_tcscpy_s(lpString,_tcslen(psz), psz);
+		_tcscpy_s(lpString, _tcslen(psz), psz);
 #else
 		_tcscpy(lpString, psz);
 #endif
@@ -1183,7 +1288,7 @@ LPTSTR CIni::__StrDupEx(LPCTSTR lpStart, LPCTSTR lpEnd)
 	LPTSTR psz = new TCHAR[LEN + 1];
 	//fabio_2005
 #if _MSC_VER >= 1400
-	_tcsncpy_s(psz,LEN+1, lpStart, LEN);
+	_tcsncpy_s(psz, LEN + 1, lpStart, LEN);
 #else
 	_tcsncpy(psz, lpStart, LEN);
 #endif

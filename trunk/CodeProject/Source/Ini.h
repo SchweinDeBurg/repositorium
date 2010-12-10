@@ -4,7 +4,7 @@
 // "CIni" is a simple API wrap class used for ini file access.
 // The purpose of this class is to make ini file access more
 // convenient than direct API calls.
-//	
+//
 // This file is distributed "as is" and without any expressed or implied
 // warranties. The author holds no responsibilities for any possible damages
 // or loss of data that are caused by use of this file. The user must assume
@@ -41,14 +41,14 @@
 
 // If MFC is linked, we will use CStringArray for great convenience
 #ifdef _MFC_VER
-	#include <afxtempl.h>
+#include <afxtempl.h>
 #endif
 
 // Number bases
-#define BASE_BINARY			2
-#define BASE_OCTAL			8
-#define BASE_DECIMAL		10
-#define BASE_HEXADECIMAL	16
+#define BASE_BINARY         2
+#define BASE_OCTAL          8
+#define BASE_DECIMAL        10
+#define BASE_HEXADECIMAL    16
 
 //---------------------------------------------------------------
 //	    Callback Function Type Definition
@@ -58,11 +58,11 @@
 // string, the 2nd parameter is a 32-bit user defined data, this parameter can
 // be NULL. The parsing will terminate if this function returns zero. To use
 // the callback, function pointer needs to be passed to "CIni::ParseDNTString".
-typedef BOOL (CALLBACK *SUBSTRPROC)(LPCTSTR, LPVOID);
+typedef BOOL (CALLBACK* SUBSTRPROC)(LPCTSTR, LPVOID);
 
 class CIni
 {
-public:		
+public:
 
 	//-----------------------------------------------------------
 	//    Constructors & Destructor
@@ -79,10 +79,10 @@ public:
 #ifdef _MFC_VER
 	CString GetPathName() const;
 #endif
-	
+
 	//------------------------------------------------------------
 	//    String Access
-	//------------------------------------------------------------	
+	//------------------------------------------------------------
 	DWORD GetString(LPCTSTR lpSection, LPCTSTR lpKey, LPTSTR lpBuffer, DWORD dwBufSize, LPCTSTR lpDefault = NULL) const;
 #ifdef _MFC_VER
 	CString GetString(LPCTSTR lpSection, LPCTSTR lpKey, LPCTSTR lpDefault = NULL) const;
@@ -92,32 +92,32 @@ public:
 	// Read a string from the ini file, append it with another string then write it
 	// back to the ini file.
 	BOOL AppendString(LPCTSTR Section, LPCTSTR lpKey, LPCTSTR lpString) const;
-	
+
 	//------------------------------------------------------------
 	//    Ini File String Array Access
-	//------------------------------------------------------------	
+	//------------------------------------------------------------
 	// Parse the string retrieved from the ini file and split it into a set of sub strings.
 	DWORD GetArray(LPCTSTR lpSection, LPCTSTR lpKey, LPTSTR lpBuffer, DWORD dwBufSize, LPCTSTR lpDelimiter = NULL, BOOL bTrimString = TRUE) const;
 #ifdef _MFC_VER
 	void GetArray(LPCTSTR lpSection, LPCTSTR lpKey, CStringArray* pArray, LPCTSTR lpDelimiter = NULL, BOOL bTrimString = TRUE) const;
 	BOOL WriteArray(LPCTSTR lpSection, LPCTSTR lpKey, const CStringArray* pArray, int nWriteCount = -1, LPCTSTR lpDelimiter = NULL) const;
-#endif	
-	
+#endif
+
 	//------------------------------------------------------------
 	//    Primitive Data Type Access
 	//------------------------------------------------------------
 	int GetInt(LPCTSTR lpSection, LPCTSTR lpKey, int nDefault, int nBase = BASE_DECIMAL) const;
 	BOOL WriteInt(LPCTSTR lpSection, LPCTSTR lpKey, int nValue, int nBase = BASE_DECIMAL) const;
 	BOOL IncreaseInt(LPCTSTR lpSection, LPCTSTR lpKey, int nIncrease = 1, int nBase = BASE_DECIMAL) const;
-	
+
 	UINT GetUInt(LPCTSTR lpSection, LPCTSTR lpKey, UINT nDefault, int nBase = BASE_DECIMAL) const;
 	BOOL WriteUInt(LPCTSTR lpSection, LPCTSTR lpKey, UINT nValue, int nBase = BASE_DECIMAL) const;
 	BOOL IncreaseUInt(LPCTSTR lpSection, LPCTSTR lpKey, UINT nIncrease = 1, int nBase = BASE_DECIMAL) const;
-	
+
 	BOOL GetBool(LPCTSTR lpSection, LPCTSTR lpKey, BOOL bDefault) const;
 	BOOL WriteBool(LPCTSTR lpSection, LPCTSTR lpKey, BOOL bValue) const;
 	BOOL InvertBool(LPCTSTR lpSection, LPCTSTR lpKey) const;
-	
+
 	double GetDouble(LPCTSTR lpSection, LPCTSTR lpKey, double fDefault) const;
 	BOOL WriteDouble(LPCTSTR lpSection, LPCTSTR lpKey, double fValue, int nPrecision = -1) const;
 	BOOL IncreaseDouble(LPCTSTR lpSection, LPCTSTR lpKey, double fIncrease, int nPrecision = -1) const;
@@ -130,14 +130,14 @@ public:
 	//------------------------------------------------------------
 	POINT GetPoint(LPCTSTR lpSection, LPCTSTR lpKey, POINT ptDefault) const;
 	BOOL WritePoint(LPCTSTR lpSection, LPCTSTR lpKey, POINT pt) const;
-	
+
 	RECT GetRect(LPCTSTR lpSection, LPCTSTR lpKey, RECT rcDefault) const;
 	BOOL WriteRect(LPCTSTR lpSection, LPCTSTR lpKey, RECT rc) const;
 
 	DWORD GetDataBlock(LPCTSTR lpSection, LPCTSTR lpKey, LPVOID lpBuffer, DWORD dwBufSize, DWORD dwOffset = 0) const;
 	BOOL WriteDataBlock(LPCTSTR lpSection, LPCTSTR lpKey, LPCVOID lpData, DWORD dwDataSize) const;
 	BOOL AppendDataBlock(LPCTSTR lpSection, LPCTSTR lpKey, LPCVOID lpData, DWORD dwDataSize) const;
-	
+
 	//------------------------------------------------------------
 	//    Section Operations
 	//------------------------------------------------------------
@@ -149,17 +149,17 @@ public:
 	BOOL CopySection(LPCTSTR lpSrcSection, LPCTSTR lpDestSection, BOOL bFailIfExist) const;
 	BOOL MoveSection(LPCTSTR lpSrcSection, LPCTSTR lpDestSection, BOOL bFailIfExist = TRUE) const;
 	BOOL DeleteSection(LPCTSTR lpSection) const;
-	
+
 	//------------------------------------------------------------
 	//    Key Operations
 	//------------------------------------------------------------
-	BOOL IsKeyExist(LPCTSTR lpSection, LPCTSTR lpKey) const;	
+	BOOL IsKeyExist(LPCTSTR lpSection, LPCTSTR lpKey) const;
 	DWORD GetKeyLines(LPCTSTR lpSection, LPTSTR lpBuffer, DWORD dwBufSize) const;
 #ifdef _MFC_VER
 	void GetKeyLines(LPCTSTR lpSection, CStringArray* pArray) const;
 #endif
 	DWORD GetKeyNames(LPCTSTR lpSection, LPTSTR lpBuffer, DWORD dwBufSize) const;
-#ifdef _MFC_VER	
+#ifdef _MFC_VER
 	void GetKeyNames(LPCTSTR lpSection, CStringArray* pArray) const;
 #endif
 	BOOL CopyKey(LPCTSTR lpSrcSection, LPCTSTR lpSrcKey, LPCTSTR lpDestSection, LPCTSTR lpDestKey, BOOL bFailIfExist) const;
@@ -175,8 +175,8 @@ public:
 	// Check for Whether a String Representing TRUE or FALSE
 	//------------------------------------------------------------
 	static BOOL StringToBool(LPCTSTR lpString, BOOL bDefault = FALSE);
-		
-protected:	
+
+protected:
 
 	//------------------------------------------------------------
 	//    Helper Functions
@@ -190,7 +190,7 @@ protected:
 	static void __IntToString(int nNumber, LPTSTR lpBuffer, int nBase);
 	static void __UIntToString(UINT nNumber, LPTSTR lpBuffer, int nBase);
 	static BOOL CALLBACK __SubStrCompare(LPCTSTR lpString1, LPVOID lpParam);
-	static BOOL CALLBACK __KeyPairProc(LPCTSTR lpString, LPVOID lpParam);	
+	static BOOL CALLBACK __KeyPairProc(LPCTSTR lpString, LPVOID lpParam);
 #ifdef _MFC_VER
 	static BOOL CALLBACK __SubStrAdd(LPCTSTR lpString, LPVOID lpParam);
 #endif
