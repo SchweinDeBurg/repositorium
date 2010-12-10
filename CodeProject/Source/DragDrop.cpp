@@ -29,18 +29,18 @@ CDragDropMgr::CDragDropMgr() : m_hInstOle32(NULL)
 	m_pDragImage = NULL;
 	m_iState = 0;
 
-	memset(&m_ddi,0,sizeof(m_ddi));
+	memset(&m_ddi, 0, sizeof(m_ddi));
 }
 
 CDragDropMgr::~CDragDropMgr()
 {
 }
 
-BOOL CDragDropMgr::Install(CWnd *pMainWnd, DRAGDROPWND* ddwnds)
+BOOL CDragDropMgr::Install(CWnd* pMainWnd, DRAGDROPWND* ddwnds)
 {
 	m_pMainWnd = pMainWnd;
 
-	for (int i=0; ddwnds[i].type; i++) 
+	for (int i = 0; ddwnds[i].type; i++)
 	{
 		HWND hwnd = ::GetDlgItem(pMainWnd->m_hWnd, ddwnds[i].id);
 		ASSERT(hwnd && ::IsWindow(hwnd));
@@ -51,7 +51,7 @@ BOOL CDragDropMgr::Install(CWnd *pMainWnd, DRAGDROPWND* ddwnds)
 	return TRUE;
 }
 
-BOOL CDragDropMgr::Install(CWnd *pMainWnd, HWND hwnd, int type)
+BOOL CDragDropMgr::Install(CWnd* pMainWnd, HWND hwnd, int type)
 {
 	m_pMainWnd = pMainWnd;
 	m_mapHwnd[hwnd] = type;
@@ -68,7 +68,7 @@ void CDragDropMgr::AddWindow(HWND hwnd, int type)
 
 void CDragDropMgr::RemoveWindow(HWND hwnd)
 {
-	m_mapHwnd.RemoveKey(hwnd); 
+	m_mapHwnd.RemoveKey(hwnd);
 }
 
 UINT CDragDropMgr::GetWindowType(HWND hwnd)
@@ -85,24 +85,32 @@ UINT CDragDropMgr::GetWindowType(HWND hwnd)
 UINT CDragDropMgr::ProcessMessage(const MSG* pMsg, BOOL bAllowNcDrag)
 {
 	if (!m_pMainWnd)
+	{
 		return FALSE;
+	}
 
 	const MSG& msg = *pMsg;
 
-	if (IsSourceWnd(msg.hwnd)) 
+	if (IsSourceWnd(msg.hwnd))
 	{
 		if (msg.message == WM_LBUTTONDOWN || (bAllowNcDrag && msg.message == WM_NCLBUTTONDOWN) ||
-			msg.message == WM_RBUTTONDOWN || (bAllowNcDrag && msg.message == WM_NCRBUTTONDOWN)) 
+			msg.message == WM_RBUTTONDOWN || (bAllowNcDrag && msg.message == WM_NCRBUTTONDOWN))
+		{
 			return OnButtonDown(msg);
+		}
 
-		else if (msg.message == WM_MOUSEMOVE) 
+		else if (msg.message == WM_MOUSEMOVE)
+		{
 			return OnMouseMove(msg);
+		}
 
-		else if (msg.message == WM_LBUTTONUP || msg.message == WM_RBUTTONUP) 
+		else if (msg.message == WM_LBUTTONUP || msg.message == WM_RBUTTONUP)
+		{
 			return OnButtonUp(msg);
+		}
 
 		else if (m_iState && ((msg.message == WM_KEYDOWN && msg.wParam == VK_ESCAPE) ||
-			msg.message == WM_CONTEXTMENU || msg.message == WM_KILLFOCUS)) 
+			msg.message == WM_CONTEXTMENU || msg.message == WM_KILLFOCUS))
 		{
 			SendDragMessage(WM_DD_DRAGABORT);
 			SetState(NONE);
@@ -118,7 +126,7 @@ UINT CDragDropMgr::ProcessMessage(const MSG* pMsg, BOOL bAllowNcDrag)
 //
 BOOL CDragDropMgr::OnButtonDown(const MSG& msg)
 {
-	ASSERT (IsSourceWnd(msg.hwnd));
+	ASSERT(IsSourceWnd(msg.hwnd));
 
 	// if we're already dragging then this must be a click with another mouse button
 	// so we just abort
@@ -129,34 +137,40 @@ BOOL CDragDropMgr::OnButtonDown(const MSG& msg)
 
 		return TRUE;
 	}
-	
+
 	// convert m_ptOrg to client coords
 	if (msg.message == WM_NCLBUTTONDOWN || msg.message == WM_NCRBUTTONDOWN)
 	{
 		// check we're not on a scrollbar
 		UINT nHitTest = SendMessage(msg.hwnd, WM_NCHITTEST, 0, msg.lParam);
-		
+
 		if (nHitTest == HTHSCROLL || nHitTest == HTVSCROLL)
+		{
 			return FALSE;
-		
+		}
+
 		CPoint pt = GETPOINT(msg.lParam);
 		::ScreenToClient(msg.hwnd, &pt);
-		
+
 		// or above or below the client area
 		CRect rClient;
 		::GetClientRect(msg.hwnd, rClient);
-		
+
 		if (pt.y < rClient.top || pt.y > rClient.bottom)
+		{
 			return FALSE;
-		
+		}
+
 		m_ptOrg = pt;
 	}
 	else
+	{
 		m_ptOrg = GETPOINT(msg.lParam);
-	
+	}
+
 	m_hwndTracking = msg.hwnd;
 	SetState(CAPTURED);
-	
+
 	return FALSE;
 }
 
@@ -166,7 +180,9 @@ BOOL CDragDropMgr::OnButtonDown(const MSG& msg)
 BOOL CDragDropMgr::OnMouseMove(const MSG& msg)
 {
 	if (!IsCaptured())
+	{
 		return FALSE;
+	}
 
 	BOOL bLButtonDown = (GetKeyState(VK_LBUTTON) & 0x8000);
 	BOOL bRButtonDown = (GetKeyState(VK_RBUTTON) & 0x8000);
@@ -174,14 +190,14 @@ BOOL CDragDropMgr::OnMouseMove(const MSG& msg)
 	// check mouse button is still down
 	if (!bLButtonDown && !bRButtonDown)
 	{
-		SetState(NONE); 
+		SetState(NONE);
 		return FALSE;
 	}
 
 	CWnd* pWnd = CWnd::FromHandle(m_hwndTracking);
 	CPoint pt = GETPOINT(msg.lParam);
 
-	if (IsDragging()) 
+	if (IsDragging())
 	{
 		// already dragging: move drag image
 		pWnd->ClientToScreen(&pt); // convert to screen coords
@@ -198,8 +214,10 @@ BOOL CDragDropMgr::OnMouseMove(const MSG& msg)
 			ScreenToClient(hwndTarget, &m_ddi.pt); // then to target client coords
 		}
 		else
+		{
 			m_ddi.pt.x = m_ddi.pt.y = -10000;
-		
+		}
+
 		m_ddi.hwndTarget = hwndTarget;
 
 		// m_ddi.pt is current pos in client coords of current target window
@@ -213,12 +231,16 @@ BOOL CDragDropMgr::OnMouseMove(const MSG& msg)
 
 		// set the cursor
 		if (!(m_ddi.hwndTarget && IsTargetWnd(m_ddi.hwndTarget)))
+		{
 			nDropEffect = DROPEFFECT_NONE;
+		}
 
 		HCURSOR hCur = NULL;
 
 		if (!m_hInstOle32)
+		{
 			m_hInstOle32 = LoadLibrary(_T("ole32.dll"));
+		}
 
 		switch (nDropEffect)
 		{
@@ -241,28 +263,30 @@ BOOL CDragDropMgr::OnMouseMove(const MSG& msg)
 		}
 
 		if (hCur)
+		{
 			SetCursor(hCur);
-	} 
+		}
+	}
 	else // if (IsCaptured())
 	{
 		// Not dragging yet: enter drag mode if mouse moves beyond threshhold.
 		CPoint delta = pt - m_ptOrg;
 		static CPoint jog(GetSystemMetrics(SM_CXDRAG), GetSystemMetrics(SM_CYDRAG));
 
-		if (abs(delta.x) > jog.x || abs(delta.y) > jog.y) 
+		if (abs(delta.x) > jog.x || abs(delta.y) > jog.y)
 		{
 			m_ddi.hwndSource = m_hwndTracking;
-			m_ddi.pt = m_ptOrg;	// start from ORIGINAL point, not where now
+			m_ddi.pt = m_ptOrg;   // start from ORIGINAL point, not where now
 			m_ddi.hwndTarget = m_hwndTracking;
 			m_ddi.pData = NULL;
 			m_ddi.bLeftDrag = bLButtonDown;
 
-			// Send main window a message: enter drag mode. 
+			// Send main window a message: enter drag mode.
 			BOOL bDrag = SendDragMessage(WM_DD_DRAGENTER);
 
-			if (bDrag && m_ddi.pData) 
+			if (bDrag && m_ddi.pData)
 			{
-				SetState(bLButtonDown ? LDRAGGING : RDRAGGING);	// I am now dragging
+				SetState(bLButtonDown ? LDRAGGING : RDRAGGING);   // I am now dragging
 				OnMouseMove(msg);
 
 				CRect rc;
@@ -271,9 +295,11 @@ BOOL CDragDropMgr::OnMouseMove(const MSG& msg)
 
 				pWnd->ClientToScreen(&pt);
 				m_pDragImage->DragEnter(NULL, pt);
-			} 
+			}
 			else
+			{
 				SetState(NONE);
+			}
 		}
 	}
 	return TRUE;
@@ -282,29 +308,33 @@ BOOL CDragDropMgr::OnMouseMove(const MSG& msg)
 UINT CDragDropMgr::SendDragMessage(UINT nMessage)
 {
 	if (nMessage == WM_DD_DRAGABORT)
+	{
 		return m_pMainWnd->SendMessage(nMessage, 0, 0);
+	}
 
 	else if (nMessage == WM_DD_DRAGOVER)
 	{
 		DragShowNolock(FALSE);
 
-		UINT nRes = m_pMainWnd->SendMessage(nMessage, 
-			::GetDlgCtrlID(m_ddi.hwndTarget), 
+		UINT nRes = m_pMainWnd->SendMessage(nMessage,
+			::GetDlgCtrlID(m_ddi.hwndTarget),
 			(LPARAM)(void*)&m_ddi);
 		DragShowNolock(TRUE);
 		return nRes;
 	}
 
 	// else
-	return m_pMainWnd->SendMessage(nMessage, 
-		::GetDlgCtrlID(m_ddi.hwndTarget), 
+	return m_pMainWnd->SendMessage(nMessage,
+		::GetDlgCtrlID(m_ddi.hwndTarget),
 		(LPARAM)(void*)&m_ddi);
 }
 
 void CDragDropMgr::DragShowNolock(BOOL bShow)
 {
 	if (m_pDragImage)
+	{
 		m_pDragImage->DragShowNolock(bShow);
+	}
 }
 
 //////////////////
@@ -312,13 +342,13 @@ void CDragDropMgr::DragShowNolock(BOOL bShow)
 //
 BOOL CDragDropMgr::OnButtonUp(const MSG& msg)
 {
-	if (!IsDragging()) 
+	if (!IsDragging())
 	{
-		SetState(NONE); 
+		SetState(NONE);
 		return FALSE;
 	}
 
-	if (IsTargetWnd(m_ddi.hwndTarget)) 
+	if (IsTargetWnd(m_ddi.hwndTarget))
 	{
 		CPoint pt = GETPOINT(msg.lParam);
 
@@ -330,8 +360,8 @@ BOOL CDragDropMgr::OnButtonUp(const MSG& msg)
 		m_ddi.pt = pt;
 
 		SendDragMessage(WM_DD_DRAGDROP);
-	} 
-	else 
+	}
+	else
 	{
 		SendDragMessage(WM_DD_DRAGABORT);
 	}
@@ -346,41 +376,47 @@ BOOL CDragDropMgr::OnButtonUp(const MSG& msg)
 //
 void CDragDropMgr::SetState(UINT iState)
 {
-//	TRACE(_T("CDragDropMgr::SetState %d\n"),iState);
-	
-	if (iState != m_iState) 
+	//	TRACE(_T("CDragDropMgr::SetState %d\n"),iState);
+
+	if (iState != m_iState)
 	{
 		switch (iState)
 		{
 		case CAPTURED:
-			::SetCapture(m_hwndTracking);	 // capture mouse input
+			::SetCapture(m_hwndTracking);   // capture mouse input
 			break;
 
 		case LDRAGGING:
 		case RDRAGGING:
-			m_hCursorSave = GetCursor();	 // save current cursor
+			m_hCursorSave = GetCursor();   // save current cursor
 			break;
 
 		default: // NONE
 			if (GetCapture() == m_hwndTracking)
-				::ReleaseCapture();				 // release capture and..
+			{
+				::ReleaseCapture();   // release capture and..
+			}
 
-			SetCursor(m_hCursorSave);		 // ..restore cursor
+			SetCursor(m_hCursorSave);   // ..restore cursor
 
-			if (m_pDragImage) 
+			if (m_pDragImage)
 			{
 				m_pDragImage->DragLeave(CWnd::FromHandle(m_ddi.hwndTarget));
-				m_pDragImage->EndDrag();	 // end drawing and..
+				m_pDragImage->EndDrag();   // end drawing and..
 
-				delete m_pDragImage;			 // ..destroy..
-				m_pDragImage=NULL;			 // ..image list
+				delete m_pDragImage;   // ..destroy..
+				m_pDragImage = NULL;   // ..image list
 			}
 
 			if (m_hwndTracking)
+			{
 				InvalidateRect(m_hwndTracking, NULL, FALSE);
+			}
 
 			if (m_ddi.hwndTarget)
+			{
 				InvalidateRect(m_ddi.hwndTarget, NULL, FALSE);
+			}
 
 			delete m_ddi.pData;
 			m_ddi.pData = NULL;
@@ -400,7 +436,6 @@ void CDragDropMgr::SetState(UINT iState)
 CImageList* CDragDropData::CreateDragImage(CWnd* pWnd, CRect& rc)
 {
 	m_bitmap.DeleteObject();
-//	const COLORREF BGCOLOR = GetSysColor(COLOR_3DLIGHT);
 
 	// create memory dc compatible w/source window
 	CWindowDC dcWin(pWnd);
@@ -413,7 +448,7 @@ CImageList* CDragDropData::CreateDragImage(CWnd* pWnd, CRect& rc)
 
 	// get size of drag image
 	CSize sz = OnGetDragSize(dcMem); // call virtual fn to get size
-	rc = CRect(CPoint(0,0), sz);
+	rc = CRect(CPoint(0, 0), sz);
 
 	// create image list: create bitmap and draw into it
 	m_bitmap.CreateCompatibleBitmap(&dcWin, sz.cx, sz.cy);
@@ -426,14 +461,14 @@ CImageList* CDragDropData::CreateDragImage(CWnd* pWnd, CRect& rc)
 
 	COLORREF crMask;
 	OnDrawData(dcMem, rc, crMask); // call virtual fn to draw
-    
+
 	dcMem.SelectObject(pOldFont);
 	dcMem.SelectObject(pOldBitmap);
 
 	// create image list and add bitmap to it
-	CImageList *pil = new CImageList();
+	CImageList* pil = new CImageList();
 
-	pil->Create(sz.cx, sz.cy, ILC_COLOR24|ILC_MASK, 0, 1);
+	pil->Create(sz.cx, sz.cy, ILC_COLOR24 | ILC_MASK, 0, 1);
 	pil->Add(&m_bitmap, crMask);
 
 	return pil;
@@ -444,11 +479,13 @@ CImageList* CDragDropData::CreateDragImage(CWnd* pWnd, CRect& rc)
 //
 CSize CDragDropText::OnGetDragSize(CDC& dc)
 {
-	CRect rc(0,0,0,0);
+	CRect rc(0, 0, 0, 0);
 	dc.DrawText(m_text, &rc, DT_CALCRECT);
 
-	if (rc.right>MAXWIDTH)
+	if (rc.right > MAXWIDTH)
+	{
 		rc.right = MAXWIDTH;
+	}
 
 	return rc.Size();
 }
@@ -459,7 +496,7 @@ CSize CDragDropText::OnGetDragSize(CDC& dc)
 void CDragDropText::OnDrawData(CDC& dc, CRect& rc, COLORREF& crMask)
 {
 	crMask = 1;
-	dc.DrawText(m_text, &rc, DT_LEFT|DT_END_ELLIPSIS);
+	dc.DrawText(m_text, &rc, DT_LEFT | DT_END_ELLIPSIS);
 }
 
 void CDragDropMgr::CancelDrag()
