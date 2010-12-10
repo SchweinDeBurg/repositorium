@@ -26,7 +26,7 @@
 #include "StdAfx.h"
 #include "BigCalendarCtrl.h"
 #include "BigCalendarTask.h"
-#include "../../CodeProject/Source/memdc.h"
+#include "../../CodeProject/Source/MemDC.h"
 #include "CalendarDefines.h"
 #include "CalendarUtils.h"
 #include "CalendarData.h"

@@ -39,7 +39,7 @@
 #include "CalendarDefines.h"
 #include "CalendarUtils.h"
 #include "MiniCalendarCtrl.h"
-#include "../../CodeProject/Source/memdc.h"
+#include "../../CodeProject/Source/MemDC.h"
 #include "MiniCalendarMonthPicker.h"
 #include <locale.h>
 #include "../CalendarExt/Source/CalendarFrameWnd.h"
