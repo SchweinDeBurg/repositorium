@@ -6,7 +6,7 @@
   modification, are permitted provided that the following conditions are met:
 
   - Redistributions of source code must retain the above copyright notice,
-    this list of conditions and the following disclaimer. 
+    this list of conditions and the following disclaimer.
   - Redistributions in binary form must reproduce the above copyright notice,
     this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
@@ -30,21 +30,33 @@
 #include "stdafx.h"
 #include "MemUtil.h"
 
-void mem_erase(unsigned char *p, unsigned long u)
+void mem_erase(unsigned char* p, unsigned long u)
 {
 	unsigned long i;
 
 	ASSERT(p != NULL);
-	if(p == NULL) return;
+	if (p == NULL)
+	{
+		return;
+	}
 	ASSERT(u != 0);
-	if(u == 0) return;
+	if (u == 0)
+	{
+		return;
+	}
 
-	for(i = 0; i < u; i++)
+	for (i = 0; i < u; i++)
+	{
 		p[i] = (unsigned char)(rand() & 0xFF);
-	for(i = 0; i < u; i++)
+	}
+	for (i = 0; i < u; i++)
+	{
 		p[i] = (unsigned char)(rand() & 0xFF);
-	for(i = 0; i < u; i++)
+	}
+	for (i = 0; i < u; i++)
+	{
 		p[i] = (unsigned char)(rand() & 0xFF);
+	}
 
 	memset(p, 0, u);
 }
@@ -53,9 +65,13 @@ void mem_erase(unsigned char *p, unsigned long u)
 // Byte bits: 11111111 22222222 33333333 44444444 55555555
 // Contents : 00YYYYYY YYYYYYMM MMDDDDDH HHHHMMMM MMSSSSSS
 
-void _PackTimeToStruct(BYTE *pBytes, DWORD dwYear, DWORD dwMonth, DWORD dwDay, DWORD dwHour, DWORD dwMinute, DWORD dwSecond)
+void _PackTimeToStruct(BYTE* pBytes, DWORD dwYear, DWORD dwMonth, DWORD dwDay, DWORD dwHour, DWORD dwMinute, DWORD dwSecond)
 {
-	ASSERT(pBytes != NULL); if(pBytes == NULL) return;
+	ASSERT(pBytes != NULL);
+	if (pBytes == NULL)
+	{
+		return;
+	}
 	// Pack the time to a 5 byte structure
 	pBytes[0] = (BYTE)((dwYear >> 6) & 0x0000003F);
 	pBytes[1] = (BYTE)(((dwYear & 0x0000003F) << 2) | ((dwMonth >> 2) & 0x00000003));
