@@ -40,6 +40,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // Misc.cpp: implementation of the CMisc class.
@@ -961,30 +962,30 @@ int Misc::ParseSearchString(LPCTSTR szLookFor, CStringArray& aWords)
 	{
 		switch (szLookFor[nPos])
 		{
-			case _T(' '): // word break
-				if (bInQuotes)
-				{
-					sWord += szLookFor[nPos];
-				}
-				else
-				{
-					bAddWord = TRUE;
-				}
-				break;
-
-			case _T('\"'):
-				// whether its the start or end we add the current word
-				// and flip bInQuotes
-				bInQuotes = !bInQuotes;
-				bAddWord = TRUE;
-				break;
-
-			default: // everything else
+		case _T(' '): // word break
+			if (bInQuotes)
+			{
 				sWord += szLookFor[nPos];
+			}
+			else
+			{
+				bAddWord = TRUE;
+			}
+			break;
 
-				// also if its the last char then add it
-				bAddWord = (nPos == nLen - 1);
-				break;
+		case _T('\"'):
+			// whether its the start or end we add the current word
+			// and flip bInQuotes
+			bInQuotes = !bInQuotes;
+			bAddWord = TRUE;
+			break;
+
+		default: // everything else
+			sWord += szLookFor[nPos];
+
+			// also if its the last char then add it
+			bAddWord = (nPos == nLen - 1);
+			break;
 		}
 
 		if (bAddWord)
@@ -1058,7 +1059,7 @@ BOOL Misc::IsCursorKeyPressed(DWORD dwKeys)
 	if (dwKeys & MKC_LEFTRIGHT)
 	{
 		if (KeyIsPressed(VK_RIGHT) || KeyIsPressed(VK_LEFT) ||
-				KeyIsPressed(VK_HOME) || KeyIsPressed(VK_END))
+			KeyIsPressed(VK_HOME) || KeyIsPressed(VK_END))
 		{
 			return TRUE;
 		}
@@ -1067,7 +1068,7 @@ BOOL Misc::IsCursorKeyPressed(DWORD dwKeys)
 	if (dwKeys & MKC_UPDOWN)
 	{
 		if (KeyIsPressed(VK_NEXT) || KeyIsPressed(VK_DOWN) ||
-				KeyIsPressed(VK_UP) || KeyIsPressed(VK_PRIOR))
+			KeyIsPressed(VK_UP) || KeyIsPressed(VK_PRIOR))
 		{
 			return TRUE;
 		}
@@ -1083,11 +1084,11 @@ BOOL Misc::IsCursorKey(DWORD dwVirtKey, DWORD dwKeys)
 	{
 		switch (dwVirtKey)
 		{
-			case VK_RIGHT:
-			case VK_LEFT:
-			case VK_HOME:
-			case VK_END:
-				return TRUE;
+		case VK_RIGHT:
+		case VK_LEFT:
+		case VK_HOME:
+		case VK_END:
+			return TRUE;
 		}
 	}
 
@@ -1095,11 +1096,11 @@ BOOL Misc::IsCursorKey(DWORD dwVirtKey, DWORD dwKeys)
 	{
 		switch (dwVirtKey)
 		{
-			case VK_NEXT:
-			case VK_DOWN:
-			case VK_UP:
-			case VK_PRIOR:
-				return TRUE;
+		case VK_NEXT:
+		case VK_DOWN:
+		case VK_UP:
+		case VK_PRIOR:
+			return TRUE;
 		}
 	}
 
