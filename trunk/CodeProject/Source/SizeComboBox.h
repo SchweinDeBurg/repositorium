@@ -1,22 +1,22 @@
 /* ==========================================================================
-	File :			SizeComboBox.h
+    File :          SizeComboBox.h
 
-	Class :			CSizeComboBox
+    Class :         CSizeComboBox
 
-	Author :		Johan Rosengren, Abstrakt Mekanik AB
-					Iain Clarke
+    Author :        Johan Rosengren, Abstrakt Mekanik AB
+                    Iain Clarke
 
-	Date :			2005-05-06
+    Date :          2005-05-06
 
-	Purpose :		"CSizeComboBox" is derived from "CComboBox" and is a simple 
-					combobox for displaying a selection of font sizes.
+    Purpose :       "CSizeComboBox" is derived from "CComboBox" and is a simple
+                    combobox for displaying a selection of font sizes.
 
-	Description :	Simpel derived class with members to fill the box and 
-					select an entry by contents instead of index.
+    Description :   Simpel derived class with members to fill the box and
+                    select an entry by contents instead of index.
 
-	Usage :			Create as any combobox, and call "FillCombo" to fill 
-					the control with a selection of font sizes. Call 
-					"SelectFontSize" to select an entry by content.
+    Usage :         Create as any combobox, and call "FillCombo" to fill
+                    the control with a selection of font sizes. Call
+                    "SelectFontSize" to select an entry by content.
 
    ========================================================================*/
 
@@ -34,31 +34,31 @@
 
 class CSizeComboBox : public CComboBox
 {
-// Construction
+	// Construction
 public:
 	CSizeComboBox();
 
-// Attributes
+	// Attributes
 public:
 
-// Operations
+	// Operations
 public:
 	void FillCombo();
-	BOOL SelectSize( int size );
+	BOOL SelectSize(int size);
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CSizeComboBox)
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CSizeComboBox();
 
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CSizeComboBox)
-		// NOTE - the ClassWizard will add and remove member functions here.
+	// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()
