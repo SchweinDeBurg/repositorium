@@ -4,24 +4,24 @@
 #define DEFAULT_RECT_WIDTH 150
 #define DEFAULT_RECT_HEIGHT 30
 
-BOOL GUI::GetTrayWndRect(RECT& TrayRect) 
+BOOL GUI::GetTrayWndRect(RECT& TrayRect)
 {
 	// try to find task bar window
 	HWND hShellTray = ::FindWindowEx(NULL, NULL, _T("Shell_TrayWnd"), NULL);
 
-	if (hShellTray) 
+	if (hShellTray)
 	{
 		// try to find system tray window
 		HWND hTrayNotify = ::FindWindowEx(hShellTray, NULL, _T("TrayNotifyWnd"), NULL);
 
-		if (hTrayNotify) 
+		if (hTrayNotify)
 		{
 			// try to find the toolbar containing the icons
 			HWND hToolbar = ::FindWindowEx(hTrayNotify, NULL, _T("ToolbarWindow32"), NULL);
 
 			if (hToolbar)
 			{
-				if (::GetWindowRect(hToolbar, &TrayRect)) 
+				if (::GetWindowRect(hToolbar, &TrayRect))
 				{
 					// last step is to make the rectangle the size of a single icon
 					TrayRect.left = TrayRect.right - ::GetSystemMetrics(SM_CXSMICON);
@@ -31,7 +31,7 @@ BOOL GUI::GetTrayWndRect(RECT& TrayRect)
 			}
 		}
 	}
-	
+
 	// failed to get the taskbar or system tray windows
 	// let's try to find out which edge the taskbar is attached to
 	// -> we then know, that the system tray is either to the right or at
@@ -39,9 +39,9 @@ BOOL GUI::GetTrayWndRect(RECT& TrayRect)
 	APPBARDATA appBarData = { 0 };
 	appBarData.cbSize = sizeof(appBarData);
 
-	if (SHAppBarMessage(ABM_GETTASKBARPOS,&appBarData)) 
+	if (SHAppBarMessage(ABM_GETTASKBARPOS, &appBarData))
 	{
-		switch(appBarData.uEdge) 
+		switch (appBarData.uEdge)
 		{
 		case ABE_LEFT:
 		case ABE_RIGHT:
@@ -51,7 +51,7 @@ BOOL GUI::GetTrayWndRect(RECT& TrayRect)
 			TrayRect.left = appBarData.rc.left;
 			TrayRect.right = appBarData.rc.right;
 			break;
-			
+
 		case ABE_TOP:
 		case ABE_BOTTOM:
 			// We want to minimize to the right of the taskbar
@@ -61,45 +61,51 @@ BOOL GUI::GetTrayWndRect(RECT& TrayRect)
 			TrayRect.right = appBarData.rc.right - 16;
 			break;
 		}
-		
+
 		return(TRUE);
 	}
-	
+
 	// failed to retrieve the edge the taskbar is attached to -- let's do a
 	// bit more guessing...
 	hShellTray = ::FindWindowEx(NULL, NULL, _T("Shell_TrayWnd"), NULL);
 
-	if (hShellTray) 
+	if (hShellTray)
 	{
-		if (::GetWindowRect(hShellTray, &TrayRect)) 
+		if (::GetWindowRect(hShellTray, &TrayRect))
 		{
 			if (TrayRect.right - TrayRect.left > DEFAULT_RECT_WIDTH)
+			{
 				TrayRect.left = TrayRect.right - DEFAULT_RECT_WIDTH;
+			}
 
 			if (TrayRect.bottom - TrayRect.top > DEFAULT_RECT_HEIGHT)
+			{
 				TrayRect.top = TrayRect.bottom - DEFAULT_RECT_HEIGHT;
-			
+			}
+
 			return(TRUE);
 		}
 	}
-	
+
 	// OK. Haven't found a thing. Provide a default rect based on the
 	// current work area
 	::SystemParametersInfo(SPI_GETWORKAREA, 0, &TrayRect, 0);
 	TrayRect.left = TrayRect.right - DEFAULT_RECT_WIDTH;
 	TrayRect.top = TrayRect.bottom - DEFAULT_RECT_HEIGHT;
-	
+
 	return(TRUE);
 }
 
-BOOL GUI::DoAnimation() 
+BOOL GUI::DoAnimation()
 {
 	ANIMATIONINFO ai = { 0 };
 	ai.cbSize = sizeof(ai);
-	
+
 	if (::SystemParametersInfo(SPI_GETANIMATION, sizeof(ai), &ai, 0))
+	{
 		return(0 != ai.iMinAnimate);
-	
+	}
+
 	return(FALSE);
 }
 
@@ -107,33 +113,33 @@ BOOL GUI::DoAnimation()
 #define IDANI_CAPTION 3
 #endif  // !IDANI_CAPTION
 
-void GUI::MinToTray(const HWND hWnd) 
+void GUI::MinToTray(const HWND hWnd)
 {
-	if (DoAnimation() && ::IsWindowVisible(hWnd)) 
+	if (DoAnimation() && ::IsWindowVisible(hWnd))
 	{
 		RECT rcFrom = { 0 }, rcTo = { 0 };
-	
+
 		::GetWindowRect(hWnd, &rcFrom);
 		GetTrayWndRect(rcTo);
-		
+
 		::DrawAnimatedRects(hWnd, IDANI_CAPTION, &rcFrom, &rcTo);
 	}
-	
+
 	::ShowWindow(hWnd, SW_HIDE);
 }
 
-void GUI::RestoreFromTray(const HWND hWnd, BOOL bForceMax) 
+void GUI::RestoreFromTray(const HWND hWnd, BOOL bForceMax)
 {
-	if (DoAnimation()) 
+	if (DoAnimation())
 	{
 		RECT rcFrom = { 0 }, rcTo = { 0 };
 
 		GetTrayWndRect(rcFrom);
 		::GetWindowRect(hWnd, &rcTo);
-		
+
 		::DrawAnimatedRects(hWnd, IDANI_CAPTION, &rcFrom, &rcTo);
 	}
-	
+
 	BOOL bZoomed = (IsZoomed(hWnd) || bForceMax);
 
 	::ShowWindow(hWnd, bZoomed ? SW_SHOWMAXIMIZED : SW_RESTORE);
@@ -146,10 +152,10 @@ BOOL GUI::IsObscured(const HWND hWnd)
 	// look up the z-order for any overlapping windows
 	RECT rWnd;
 	GetWindowRect(hWnd, &rWnd);
-	
+
 	BOOL bTopMost = (::GetWindowLong(hWnd, GWL_EXSTYLE) & WS_EX_TOPMOST);
 	HWND hWndPrev = ::GetWindow(hWnd, GW_HWNDPREV);
-	
+
 	while (hWndPrev)
 	{
 		// ignore hidden windows and topmost windows
@@ -157,25 +163,27 @@ BOOL GUI::IsObscured(const HWND hWnd)
 		// ignore child windows such as toolbars, dialogs etc
 		BOOL bPrevTopMost = (::GetWindowLong(hWndPrev, GWL_EXSTYLE) & WS_EX_TOPMOST);
 		BOOL bChild = (::GetParent(hWndPrev) == hWnd);
-		
+
 		if (!bChild && (!bPrevTopMost || bTopMost) && IsWindowVisible(hWndPrev))
 		{
 			RECT rPrev, rInt;
 			GetWindowRect(hWndPrev, &rPrev);
-			
+
 #ifdef _DEBUG
 			TCHAR szWindowText[128];
 			::GetWindowText(hWndPrev, szWindowText, _countof(szWindowText));
-			
+
 			TRACE(_T("IsObscured(hwndNext = '%s')\n"), szWindowText);
 #endif
-			
+
 			if (::IntersectRect(&rInt, &rWnd, &rPrev))
+			{
 				return TRUE;
+			}
 		}
 		hWndPrev = ::GetWindow(hWndPrev, GW_HWNDPREV);
 	}
-	
+
 	// nope
 	return FALSE;
 }
@@ -183,14 +191,18 @@ BOOL GUI::IsObscured(const HWND hWnd)
 BOOL GUI::HasFocus(const HWND hWnd, BOOL bInclChildren)
 {
 	if (GetFocus() == hWnd)
+	{
 		return TRUE;
+	}
 
 	if (bInclChildren)
 	{
 		HWND hFocus = GetFocus();
 
 		if (IsChild(hWnd, hFocus))
+		{
 			return TRUE;
+		}
 	}
 
 	// else
