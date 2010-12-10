@@ -3105,6 +3105,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\HoldRedraw.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\HoldRedraw.h"
 				>
 			</File>

@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // NcGutter.cpp: implementation of the CNcGutter class.
@@ -445,7 +446,7 @@ void CNcGutter::UnpressAllColumnHeaders(int nExcludeCol)
 
 void CNcGutter::Redraw()
 {
-	CNcRedraw hr(GetHwnd(), _T("5"));
+	CNcRedraw hr(GetHwnd());
 }
 
 void CNcGutter::RecalcGutter(BOOL bForceRedraw)
@@ -643,7 +644,7 @@ LRESULT CNcGutter::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 		case VK_ESCAPE:
 			if (m_bSetRedraw)
 			{
-				CNcRedraw hr(hRealWnd, _T("WM_KEYDOWN"));
+				CNcRedraw hr(hRealWnd);
 				return Default();
 			}
 			break;
@@ -965,13 +966,7 @@ BOOL CNcGutter::ProcessRedrawMsg(UINT nMsg, WPARAM wp, LPARAM lp, LRESULT& lr)
 			return TRUE;
 		}
 
-#ifdef _DEBUG
-		CString sTrace;
-		sTrace.Format(_T("WantsRedraw(msg = 0x%x, %d)"), nMsg, nMsg);
-		CNcRedraw hr(GetHwnd(), sTrace);
-#else
 		CNcRedraw hr(GetHwnd());
-#endif
 
 		return TRUE;
 	}
@@ -1057,7 +1052,7 @@ void CNcGutter::OnButtonDown(UINT nMsg, CPoint point)
 		SendMessage(WM_NCG_NOTIFYITEMCLICK, nID, (LPARAM)&ngic);
 	}
 
-	CNcRedraw hr(GetHwnd(), _T("4"));
+	CNcRedraw hr(GetHwnd());
 }
 
 void CNcGutter::OnButtonUp(UINT nMsg, CPoint point)

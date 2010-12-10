@@ -42,51 +42,87 @@
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
-// HoldRedraw.h: interface of the CHoldRedraw class.
+// HoldRedraw.cpp: implementation of the CHoldRedraw class.
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_HOLDREDRAW_H__7E73ADE2_3848_4ED1_9E8B_8881813B4262__INCLUDED_)
-#define AFX_HOLDREDRAW_H__7E73ADE2_3848_4ED1_9E8B_8881813B4262__INCLUDED_
+#include "stdafx.h"
+#include "HoldRedraw.h"
 
-#include <afxtempl.h>
+CList<HWND, HWND&> CHoldRedraw::s_listHwnd;
 
-enum
+// ------------------------------------------------------------------------------
+
+CNcRedraw::CNcRedraw(HWND hWnd) : m_hWnd(hWnd)
 {
-	NCR_UPDATE = 0x01,
-	NCR_PAINT = 0x02,
-	NCR_NCPAINT = 0x04,
-};
+}
 
-class CNcRedraw // note: there is no inheritance intentionally.
+CNcRedraw::~CNcRedraw()
 {
-public:
-	CNcRedraw(HWND hWnd);
-	virtual ~CNcRedraw();
+	if (m_hWnd && ::IsWindowVisible(m_hWnd))
+	{
+		::SendMessage(m_hWnd, WM_NCPAINT, 0, 0);
+	}
+}
 
-protected:
-	HWND m_hWnd;
-};
+// ------------------------------------------------------------------------------
 
-class CRedrawAll
+CRedrawAll::CRedrawAll(HWND hWnd, DWORD dwFlags) : m_hWnd(hWnd), m_dwFlags(dwFlags)
 {
-public:
-	CRedrawAll(HWND hWnd, DWORD dwFlags = NCR_PAINT | NCR_NCPAINT);
-	virtual ~CRedrawAll();
+}
 
-protected:
-	HWND m_hWnd;
-	DWORD m_dwFlags;
-};
-
-class CHoldRedraw : protected CRedrawAll
+CRedrawAll::~CRedrawAll()
 {
-public:
-	CHoldRedraw(HWND hWnd, DWORD dwFlags = NCR_PAINT | NCR_NCPAINT);
-	virtual ~CHoldRedraw();
+	if (m_hWnd && ::IsWindowVisible(m_hWnd))
+	{
+		if (m_dwFlags & NCR_NCPAINT)
+		{
+			::SendMessage(m_hWnd, WM_NCPAINT, 0, 0);
+		}
 
-protected:
-	static CList<HWND, HWND&> s_listHwnd;
-};
+		if (m_dwFlags & NCR_PAINT)
+		{
+			::InvalidateRect(m_hWnd, NULL, FALSE);
 
-#endif
+			if (m_dwFlags & NCR_UPDATE)
+			{
+				::UpdateWindow(m_hWnd);
+			}
+		}
+	}
+}
+
+// ------------------------------------------------------------------------------
+
+CHoldRedraw::CHoldRedraw(HWND hWnd, DWORD dwFlags) : CRedrawAll(hWnd, dwFlags)
+{
+	if (m_hWnd)
+	{
+		// check if there is already a hold on this window
+		POSITION pos = s_listHwnd.Find(m_hWnd);
+
+		if (pos) // found
+		{
+			m_hWnd = NULL; // prevent another hold being taken
+		}
+		else
+		{
+			s_listHwnd.AddTail(m_hWnd);
+			::SendMessage(m_hWnd, WM_SETREDRAW, FALSE, 0);
+		}
+	}
+}
+
+CHoldRedraw::~CHoldRedraw()
+{
+	if (m_hWnd)
+	{
+		::SendMessage(m_hWnd, WM_SETREDRAW, TRUE, 0);
+
+		// remove from list
+		POSITION pos = s_listHwnd.Find(m_hWnd);
+		ASSERT(pos);
+
+		s_listHwnd.RemoveAt(pos);
+	}
+}
