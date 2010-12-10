@@ -1,24 +1,24 @@
 /* ==========================================================================
-	File :			FontComboBox.h
+    File :          FontComboBox.h
 
-	Class :			CFontComboBox
+    Class :         CFontComboBox
 
-	Author :		Johan Rosengren, Abstrakt Mekanik AB
-					Iain Clarke
+    Author :        Johan Rosengren, Abstrakt Mekanik AB
+                    Iain Clarke
 
-	Date :			2005-05-06
+    Date :          2005-05-06
 
-	Purpose :		CFontComboBox is derived from "CComboBox" and is an 
-					autosizing no-frills combobox for display of the fonts 
-					installed in the system.. 
+    Purpose :       CFontComboBox is derived from "CComboBox" and is an
+                    autosizing no-frills combobox for display of the fonts
+                    installed in the system..
 
-	Description :	Simpel derived class with members to fill the box, to 
-					autosize the dropdown and select an entry by name.
+    Description :   Simpel derived class with members to fill the box, to
+                    autosize the dropdown and select an entry by name.
 
-	Usage :			Create as any combobox, and call "FillCombo" to fill 
-					the control with the names of the fonts installed in 
-					the system. Call "SelectFontName" to select a font by 
-					name.
+    Usage :         Create as any combobox, and call "FillCombo" to fill
+                    the control with the names of the fonts installed in
+                    the system. Call "SelectFontName" to select a font by
+                    name.
 
    ========================================================================*/
 
@@ -47,15 +47,18 @@ public:
 // Operations
 public:
 	void FillCombo();
-	void SetMaxWidth( int maxWidth );
+	void SetMaxWidth(int maxWidth);
 	int GetMaxWidth() const;
-	BOOL SelectFontName( const CString& font );
+	BOOL SelectFontName(const CString& font);
 
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CFontComboBox)
-	public:
-		virtual void PreSubclassWindow() { FillCombo(); }
+public:
+	virtual void PreSubclassWindow()
+	{
+		FillCombo();
+	}
 	//}}AFX_VIRTUAL
 
 // Implementation
