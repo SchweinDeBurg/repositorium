@@ -40,6 +40,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // GraphicsMisc.cpp: implementation of the GraphicsMisc class.
@@ -219,7 +220,7 @@ BOOL GraphicsMisc::SameFont(HFONT hFont, LPCTSTR szFaceName, int nPoint)
 	int nFontSize = GetFontNameSize(hFont, sFontName);
 
 	return ((nPoint <= 0 || nPoint == nFontSize) &&
-		(!szFaceName || sFontName.CompareNoCase(szFaceName) == 0));
+			(!szFaceName || sFontName.CompareNoCase(szFaceName) == 0));
 }
 
 BOOL GraphicsMisc::SameFontNameSize(HFONT hFont1, HFONT hFont2)
@@ -348,13 +349,15 @@ COLORREF GraphicsMisc::Darker(COLORREF color, double dAmount)
 	return RGB(red, green, blue);
 }
 
-BOOL GraphicsMisc::EnableAeroPeak(HWND hWnd, BOOL bEnable)
+BOOL GraphicsMisc::EnableAeroPeek(HWND hWnd, BOOL bEnable)
 {
 #ifndef DWMWA_DISALLOW_PEEK
 #define DWMWA_DISALLOW_PEEK 11
 #endif
 
-	return DwmSetWindowAttribute(hWnd, DWMWA_DISALLOW_PEEK, &bEnable);
+	BOOL bDisallow = !bEnable;
+
+	return DwmSetWindowAttribute(hWnd, DWMWA_DISALLOW_PEEK, &bDisallow);
 }
 
 BOOL GraphicsMisc::EnableFlip3D(HWND hWnd, BOOL bEnable)
@@ -368,5 +371,5 @@ BOOL GraphicsMisc::EnableFlip3D(HWND hWnd, BOOL bEnable)
 
 	int nPolicy = bEnable ? DWMFLIP3D_DEFAULT : DWMFLIP3D_EXCLUDEBELOW;
 
-	return DwmSetWindowAttribute(hWnd, DWMWA_DISALLOW_PEEK, &nPolicy);
+	return DwmSetWindowAttribute(hWnd, DWMWA_FLIP3D_POLICY, &nPolicy);
 }
