@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////
-// File:	StatusBarACT.cpp
-// Version:	3.1
-// Created:	24 Jun 2004
+// File:    StatusBarACT.cpp
+// Version: 3.1
+// Created: 24 Jun 2004
 //
-// Author:	Paul S. Vickery
-// E-mail:	paul@vickeryhome.freeserve.co.uk
+// Author:  Paul S. Vickery
+// E-mail:  paul@vickeryhome.freeserve.co.uk
 //
 // CStatusBar derived control to add auto-fit, tooltips and command handling
 //
@@ -12,7 +12,7 @@
 // you continue to acknowledge me as the original author in this source code,
 // or any code derived from it.
 //
-// If you use this code, or use it as a base for your own code, it would be 
+// If you use this code, or use it as a base for your own code, it would be
 // nice to hear from you simply so I know it's not been a waste of time!
 //
 // Copyright (c) 2003-2004 Paul S. Vickery
@@ -37,15 +37,15 @@
 //
 // Version 2.0 - 15 Apr 2003
 // =========================
-// - Extended control to allow pane tool-tips to be specified as part of the 
+// - Extended control to allow pane tool-tips to be specified as part of the
 //   pane's text, separated by a new line ('\n') character.
-// - Added ability to show multi-line tool-tips by including carriage returns 
+// - Added ability to show multi-line tool-tips by including carriage returns
 //   ('\r') and/or line breaks ('\n') in the tip text.
-// 
+//
 // Version 1.0 - 18 Feb 2003
 // =========================
 // Initial version
-// 
+//
 ////////////////////////////////////////////////////////////////////////////
 // PLEASE LEAVE THIS HEADER INTACT
 ////////////////////////////////////////////////////////////////////////////
@@ -70,7 +70,7 @@ CStatusBarACT::CStatusBarACT()
 {
 	m_hCursorHand = NULL;
 	m_bTryDefaultHandCursor = FALSE;
-	m_crFrom = m_crTo = (COLORREF)-1;
+	m_crFrom = m_crTo = (COLORREF) - 1;
 }
 
 CStatusBarACT::~CStatusBarACT()
@@ -78,74 +78,55 @@ CStatusBarACT::~CStatusBarACT()
 }
 
 BEGIN_MESSAGE_MAP(CStatusBarACT, CStatusBar)
-//{{AFX_MSG_MAP(CStatusBarACT)
-ON_WM_SETCURSOR()
-ON_WM_CREATE()
-ON_WM_SIZE()
-//}}AFX_MSG_MAP
-ON_WM_ERASEBKGND()
-ON_WM_CTLCOLOR()
+	//{{AFX_MSG_MAP(CStatusBarACT)
+	ON_WM_SETCURSOR()
+	ON_WM_CREATE()
+	ON_WM_SIZE()
+	//}}AFX_MSG_MAP
+	ON_WM_ERASEBKGND()
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CStatusBarACT message handlers
 
-int CStatusBarACT::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CStatusBarACT::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CStatusBar::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
-	
+	}
+
 	// create tooltip control
 	m_tooltip.Create(this);
-	
+
 	// allow '\n' chars to wrap tips
-	m_tooltip.SendMessage(TTM_SETMAXTIPWIDTH, 0, (UINT)(WORD)-1);
-	
+	m_tooltip.SendMessage(TTM_SETMAXTIPWIDTH, 0, (UINT)(WORD) - 1);
+
 	return 0;
 }
 
-/*
-void CStatusBarACT::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
-{
-	// Attach to a CDC object
-	CDC dc;
-	dc.Attach(lpDrawItemStruct->hDC);
-
-	dc.SetBkMode(TRANSPARENT);
-
-	// Get the pane rectangle and calculate text coordinates
-	CRect rect(&lpDrawItemStruct->rcItem);
-
-	char szPane[255];
-	int nType = 0;
-	int nLen = GetStatusBarCtrl().GetText(szPane, lpDrawItemStruct->itemID, &nType); 
-
-	dc.SetTextColor(m_crText);
-	//dc.TextOut(rect.left+2, rect.top, "BoB");
-
-	// Detach from the CDC object, otherwise the hDC will be
-	// destroyed when the CDC object goes out of scope
-	dc.Detach();
-}
-*/
-
 BOOL CStatusBarACT::OnEraseBkgnd(CDC* pDC)
 {
-	if (m_crFrom != (COLORREF)-1)
+	if (m_crFrom != (COLORREF) - 1)
 	{
 		CRect rClient;
 		GetClientRect(rClient);
 
 		if (m_crTo == m_crFrom)
+		{
 			pDC->FillSolidRect(rClient, m_crFrom);
+		}
 		else
 		{
 			if (m_bGradient)
+			{
 				GraphicsMisc::DrawGradient(pDC->GetSafeHdc(), rClient, m_crFrom, m_crTo, FALSE);
+			}
 			else
 			{
 				CRect rStat(rClient);
-				
+
 				rStat.bottom = rStat.top + (rStat.Height() * 2) / 5; // based on Outlook 2007
 				pDC->FillSolidRect(rStat, m_crFrom);
 
@@ -166,30 +147,21 @@ void CStatusBarACT::SetUIColors(COLORREF crBackFrom, COLORREF crBackTo, BOOL bGr
 {
 	m_crFrom = crBackFrom;
 
-	if (crBackTo == (COLORREF)-1)
+	if (crBackTo == (COLORREF) - 1)
+	{
 		m_crTo = m_crFrom;
+	}
 	else
+	{
 		m_crTo = crBackTo;
+	}
 
 	m_bGradient = bGradient;
 
 	if (GetSafeHwnd())
-		Invalidate();
-/*
-	m_crText = crText;
-
-	// make all the panes ownerdraw if the text color is different
-	if (m_crText != GetSysColor(COLOR_WINDOWTEXT))
 	{
-		int nPane = GetStatusBarCtrl().GetParts(0, NULL);
-
-		while (nPane--)
-		{
-			// Change Status Bar style to make it Owner-drawn
-			GetStatusBarCtrl().SetText("", nPane, SBT_OWNERDRAW); 
-		}
+		Invalidate();
 	}
-*/
 }
 
 
@@ -210,13 +182,15 @@ int CStatusBarACT::HitTest(CPoint point)
 		CRect rc;
 		GetItemRect(nIndex, &rc);
 		if (rc.PtInRect(point))
+		{
 			return nIndex;
+		}
 	}
 	return -1;
 }
 
-// see what pane we're on, and send a WM_COMMAND message to the 
-// parent window, with the pane id as the low word of wParam, 
+// see what pane we're on, and send a WM_COMMAND message to the
+// parent window, with the pane id as the low word of wParam,
 // and the message causing the command as the lParam
 void CStatusBarACT::SendPaneCommand(CPoint point, UINT message)
 {
@@ -235,20 +209,26 @@ void CStatusBarACT::SendPaneCommand(CPoint point, UINT message)
 			if (m_adwFlags.GetSize() > nIndex && m_adwFlags[nIndex] & SBACTF_COMMAND)
 			{
 				dwFlags = m_adwFlags[nIndex];
-				if (((bDblClk && (dwFlags & SBACTF_DOUBLECLICK)) || 
+				if (((bDblClk && (dwFlags & SBACTF_DOUBLECLICK)) ||
 					(! bDblClk && (dwFlags & SBACTF_SINGLECLICK))))
 				{
 					BOOL bDoCommand = FALSE;
-					if (((bLeft && dwFlags & SBACTF_LEFTBUTTON) || 
-						(bRight && dwFlags & SBACTF_RIGHTBUTTON) || 
+					if (((bLeft && dwFlags & SBACTF_LEFTBUTTON) ||
+						(bRight && dwFlags & SBACTF_RIGHTBUTTON) ||
 						(bMiddle && dwFlags & SBACTF_MIDDLEBUTTON)))
+					{
 						bDoCommand = TRUE;
-					if ((bLeft && !(dwFlags & SBACTF_LEFTBUTTON)) || 
-						(bRight && !(dwFlags & SBACTF_RIGHTBUTTON)) || 
+					}
+					if ((bLeft && !(dwFlags & SBACTF_LEFTBUTTON)) ||
+						(bRight && !(dwFlags & SBACTF_RIGHTBUTTON)) ||
 						(bMiddle && !(dwFlags & SBACTF_MIDDLEBUTTON)))
+					{
 						bDoCommand = FALSE;
+					}
 					if (bDoCommand)
+					{
 						pParent->SendMessage(WM_COMMAND, MAKEWPARAM(nID, message), 0L/*(LPARAM)GetSafeHwnd()*/);
+					}
 				}
 			}
 		}
@@ -257,11 +237,11 @@ void CStatusBarACT::SendPaneCommand(CPoint point, UINT message)
 
 #ifndef IDC_HAND
 #define IDC_HAND            MAKEINTRESOURCE(32649)
-#endif	// IDC_HAND
+#endif   // IDC_HAND
 
-// if we're over a pane that has a custom cursor specified, then show it 
+// if we're over a pane that has a custom cursor specified, then show it
 // else if pane has the SBACTF_HANDCURSOR style then change it to a hand
-BOOL CStatusBarACT::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message) 
+BOOL CStatusBarACT::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	if (nHitTest == HTCLIENT)
 	{
@@ -278,9 +258,13 @@ BOOL CStatusBarACT::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 				if (dwFlags & SBACTF_HANDCURSOR)
 				{
 					if (m_bTryDefaultHandCursor)
+					{
 						hCursor = AfxGetApp()->LoadStandardCursor(IDC_HAND);
+					}
 					if (! m_bTryDefaultHandCursor || hCursor == NULL)
+					{
 						hCursor = m_hCursorHand;
+					}
 				}
 			}
 			if (hCursor != NULL)
@@ -298,22 +282,28 @@ BOOL CStatusBarACT::SetPaneFlagsIndex(int nIndex, DWORD dwFlags/*=SBACTF_NORMAL*
 {
 	// make sure array is big enough
 	int nMax = GetStatusBarCtrl().GetParts(0, NULL);
-	
+
 	if (nIndex >= nMax || nIndex < 0)
+	{
 		return FALSE;
-	
+	}
+
 	if ((dwFlags & SBACTF_CLICKFLAGMASK) == 0)
-		dwFlags |= SBACTF_DOUBLECLICK;	// default to just double-click
-	
+	{
+		dwFlags |= SBACTF_DOUBLECLICK;   // default to just double-click
+	}
+
 	if ((dwFlags & SBACTF_BUTTONFLAGMASK) == 0)
-		dwFlags |= SBACTF_LEFTBUTTON;	// default to just left button
-	
+	{
+		dwFlags |= SBACTF_LEFTBUTTON;   // default to just left button
+	}
+
 	if (dwFlags & SBACTF_STRETCHY)
 	{
 		dwFlags &= ~SBACTF_AUTOFIT;
 		SetPaneStyle(nIndex, GetPaneStyle(nIndex) | SBPS_STRETCH);
 	}
-	
+
 	m_adwFlags.SetAtGrow(nIndex, dwFlags);
 
 	return TRUE;
@@ -331,7 +321,9 @@ DWORD CStatusBarACT::GetPaneFlagsIndex(int nIndex)
 	// make sure array is big enough
 	int nMax = GetStatusBarCtrl().GetParts(0, NULL);
 	if (nIndex >= nMax || nIndex < 0 || m_adwFlags.GetSize() <= nIndex)
+	{
 		return 0;
+	}
 	DWORD dwFlags = m_adwFlags[nIndex];
 	return dwFlags;
 }
@@ -353,10 +345,14 @@ BOOL CStatusBarACT::SetPaneTooltipIndex(int nIndex, LPCTSTR lpszText/*=NULL*/)
 {
 	int nMax = GetStatusBarCtrl().GetParts(0, NULL);
 	if (nIndex >= nMax || nIndex < 0)
+	{
 		return FALSE;
+	}
 	CToolInfo ti;
 	if (lpszText == NULL || *lpszText == _T('\0'))
+	{
 		m_tooltip.DelTool(this, nIndex + 1);
+	}
 	else if (! m_tooltip.GetToolInfo(ti, this, nIndex + 1))
 	{
 		// get bounding rect of pane, and add tool
@@ -366,7 +362,9 @@ BOOL CStatusBarACT::SetPaneTooltipIndex(int nIndex, LPCTSTR lpszText/*=NULL*/)
 		m_tooltip.AddTool(this, lpszText, rc, nIndex + 1);
 	}
 	else
+	{
 		m_tooltip.UpdateTipText(lpszText, this, nIndex + 1);
+	}
 	return TRUE;
 }
 
@@ -381,7 +379,9 @@ BOOL CStatusBarACT::SetPaneTooltipIndex(int nIndex, UINT nTipID)
 {
 	CString sTip;
 	if (! sTip.LoadString(nTipID))
+	{
 		return FALSE;
+	}
 	return SetPaneTooltipIndex(nIndex, sTip);
 }
 
@@ -399,33 +399,44 @@ void CStatusBarACT::UpdateTooltipRects()
 }
 
 // need to tell the tooltips that the 'tools' have moved
-void CStatusBarACT::OnSize(UINT nType, int cx, int cy) 
+void CStatusBarACT::OnSize(UINT nType, int cx, int cy)
 {
 	CStatusBar::OnSize(nType, cx, cy);
 
 	if (::IsWindow(m_hWnd))
+	{
 		UpdateTooltipRects();
+	}
 }
 
 // re-size the specified pane to exactly fit its text
 void CStatusBarACT::AutoFitPane(int nIndex)
 {
 	if (nIndex < 0 || nIndex >= GetStatusBarCtrl().GetParts(0, NULL))
+	{
 		return;
+	}
 	// get dc, and get text width on bar, then re-size pane to fit
-	try{
+	try
+	{
 		CClientDC dc(this);
 		CRect rc(0, 0, 0, 0);
 		CFont* pFont = GetFont(); // get the status bar font, so it gets the size correct
 		CFont* pFontOld = NULL;
 		if (pFont == NULL)
+		{
 			pFontOld = (CFont*)dc.SelectStockObject(ANSI_VAR_FONT);
+		}
 		else
+		{
 			pFontOld = dc.SelectObject(pFont);
+		}
 		CString sText = GetPaneText(nIndex);
 		int nPos = sText.Find(_T('\n'));
 		if (nPos != -1)
+		{
 			sText = sText.Left(nPos);
+		}
 		dc.DrawText(sText, &rc, DT_CALCRECT | DT_SINGLELINE | DT_NOPREFIX);
 		dc.SelectObject(pFontOld);
 		int nWidth;
@@ -433,14 +444,18 @@ void CStatusBarACT::AutoFitPane(int nIndex)
 		GetPaneInfo(nIndex, nID, nStyle, nWidth);
 		nWidth = rc.Width();
 		SetPaneInfo(nIndex, nID, nStyle, nWidth);
-		
+
 		// need to tell the tooltips that the 'tools' have moved
 		UpdateTooltipRects();
-		
-  }catch(...){ ; }
+
+	}
+	catch (...)
+	{
+		;
+	}
 }
 
-LRESULT CStatusBarACT::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
+LRESULT CStatusBarACT::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
@@ -453,19 +468,23 @@ LRESULT CStatusBarACT::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 			if (nPos != -1)
 			{
 				bHasTip = TRUE;
-				sTip = sText.Mid(nPos+1);
+				sTip = sText.Mid(nPos + 1);
 				sText = sText.Left(nPos);
 				lParam = (LPARAM)(LPCTSTR)sText;
 			}
 			LRESULT lResult = CStatusBar::DefWindowProc(message, wParam, lParam);
 			int nIndex = wParam & 0xff;
-			
+
 			if (m_adwFlags.GetSize() > nIndex && m_adwFlags[nIndex] & SBACTF_AUTOFIT)
+			{
 				AutoFitPane(nIndex);
+			}
 
 			if (bHasTip)
+			{
 				SetPaneTooltipIndex(nIndex, sTip);
-			
+			}
+
 			return lResult;
 		}
 	case WM_LBUTTONDOWN:
@@ -487,23 +506,31 @@ LRESULT CStatusBarACT::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 BOOL CStatusBarACT::SetPanes(LPSBACTPANEINFO lpsbactpi, UINT nPaneInfoCount)
 {
 	if (lpsbactpi == NULL || nPaneInfoCount <= 0)
+	{
 		return FALSE;
+	}
 	// first set the standard info (IDs)
 	UINT* anIDs = new UINT[nPaneInfoCount];
 	UINT n;
 
 	for (n = 0; n < nPaneInfoCount; n++)
+	{
 		anIDs[n] = lpsbactpi[n].nID;
+	}
 	BOOL bResult = SetIndicators(anIDs, nPaneInfoCount);
 	delete [] anIDs;
 	// now set our info
 	for (n = 0; n < nPaneInfoCount; n++)
 	{
 		if (lpsbactpi[n].dwFlags & SBACTF_RESOURCETIP)
+		{
 			SetPaneTooltip(lpsbactpi[n].nID, (UINT)lpsbactpi[n].lpszTip);
+		}
 		else
+		{
 			SetPaneTooltip(lpsbactpi[n].nID, lpsbactpi[n].lpszTip);
-		
+		}
+
 		SetPaneFlags(lpsbactpi[n].nID, lpsbactpi[n].dwFlags);
 		SetPaneCursor(lpsbactpi[n].nID, lpsbactpi[n].lpszCursor);
 	}
@@ -515,11 +542,15 @@ BOOL CStatusBarACT::SetPanes(LPSBACTPANEINFO lpsbactpi, UINT nPaneInfoCount)
 BOOL CStatusBarACT::SetPane(LPSBACTPANEINFO lpsbactpi)
 {
 	if (lpsbactpi == NULL)
+	{
 		return FALSE;
+	}
 	int nIndex = CommandToIndex(lpsbactpi->nID);
 	int nMax = GetStatusBarCtrl().GetParts(0, NULL);
 	if (nIndex < nMax)
+	{
 		return FALSE;
+	}
 	SetPaneTooltipIndex(nIndex, lpsbactpi->lpszTip);
 	SetPaneFlagsIndex(nIndex, lpsbactpi->dwFlags);
 	SetPaneCursorIndex(nIndex, lpsbactpi->lpszCursor);
@@ -532,7 +563,9 @@ BOOL CStatusBarACT::SetPaneCursorIndex(int nIndex, HCURSOR hCursor)
 	// make sure array is big enough
 	int nMax = GetStatusBarCtrl().GetParts(0, NULL);
 	if (nIndex >= nMax || nIndex < 0)
+	{
 		return FALSE;
+	}
 	m_adwCursors.SetAtGrow(nIndex, hCursor);
 	return TRUE;
 }
@@ -549,7 +582,9 @@ BOOL CStatusBarACT::SetPaneCursorIndex(int nIndex, LPCTSTR lpszCursor)
 	// make sure array is big enough
 	int nMax = GetStatusBarCtrl().GetParts(0, NULL);
 	if (nIndex >= nMax || nIndex < 0)
+	{
 		return FALSE;
+	}
 	// get cursor handle and add to array of handles
 	HCURSOR hCursor = NULL;
 	if (lpszCursor != NULL)
@@ -557,7 +592,9 @@ BOOL CStatusBarACT::SetPaneCursorIndex(int nIndex, LPCTSTR lpszCursor)
 		CWinApp* pApp = AfxGetApp();
 		ASSERT(pApp != NULL);
 		if (pApp == NULL)
+		{
 			return FALSE;
+		}
 		hCursor = pApp->LoadCursor(lpszCursor);
 	}
 	SetPaneCursorIndex(nIndex, hCursor);
@@ -587,7 +624,9 @@ HCURSOR CStatusBarACT::GetPaneCursorIndex(int nIndex)
 	// make sure array is big enough
 	int nMax = GetStatusBarCtrl().GetParts(0, NULL);
 	if (nIndex >= nMax || nIndex < 0 || m_adwCursors.GetSize() <= nIndex)
+	{
 		return 0;
+	}
 	return m_adwCursors[nIndex];
 }
 
@@ -606,7 +645,9 @@ BOOL CStatusBarACT::SetHandCursor(LPCTSTR lpszCursorID, BOOL bTryDefault/*=TRUE*
 	CWinApp* pApp = AfxGetApp();
 	ASSERT(pApp != NULL);
 	if (pApp == NULL)
+	{
 		return FALSE;
+	}
 	SetHandCursor(pApp->LoadCursor(lpszCursorID), bTryDefault);
 	return (m_hCursorHand != NULL);
 }
