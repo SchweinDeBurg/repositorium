@@ -86,7 +86,7 @@ typedef unsigned __int32 RD_UINT32;
 #define RIJNDAEL_CORRUPTED_DATA -7
 
 class Rijndael
-{	
+{
 public:
 	enum Direction { Encrypt , Decrypt };
 	enum Mode { ECB , CBC , CFB1 };
@@ -106,7 +106,7 @@ protected:
 	Direction m_direction;
 	RD_UINT8     m_initVector[MAX_IV_SIZE];
 	RD_UINT32    m_uRounds;
-	RD_UINT8     m_expandedKey[_MAX_ROUNDS+1][4][4];
+	RD_UINT8     m_expandedKey[_MAX_ROUNDS + 1][4][4];
 public:
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// API
@@ -126,7 +126,7 @@ public:
 	//             this CAN be binary data (it is not expected to be null terminated)
 	// keyLen    : Rijndael::Key16Bytes , Rijndael::Key24Bytes or Rijndael::Key32Bytes
 	// initVector: initialization vector, you will usually use 0 here
-	int init(Mode mode,Direction dir,const RD_UINT8 *key,KeyLength keyLen,RD_UINT8 * initVector = 0);
+	int init(Mode mode, Direction dir, const RD_UINT8* key, KeyLength keyLen, RD_UINT8* initVector = 0);
 	// Encrypts the input array (can be binary data)
 	// The input array length must be a multiple of 16 bytes, the remaining part
 	// is DISCARDED.
@@ -134,28 +134,28 @@ public:
 	// Input len is in BITS!
 	// outBuffer must be at least inputLen / 8 bytes long.
 	// Returns the encrypted buffer length in BITS or an error code < 0 in case of error
-	int blockEncrypt(const RD_UINT8 *input, int inputLen, RD_UINT8 *outBuffer);
+	int blockEncrypt(const RD_UINT8* input, int inputLen, RD_UINT8* outBuffer);
 	// Encrypts the input array (can be binary data)
 	// The input array can be any length , it is automatically padded on a 16 byte boundary.
 	// Input len is in BYTES!
 	// outBuffer must be at least (inputLen + 16) bytes long
 	// Returns the encrypted buffer length in BYTES or an error code < 0 in case of error
-	int padEncrypt(const RD_UINT8 *input, int inputOctets, RD_UINT8 *outBuffer);
+	int padEncrypt(const RD_UINT8* input, int inputOctets, RD_UINT8* outBuffer);
 	// Decrypts the input vector
 	// Input len is in BITS!
 	// outBuffer must be at least inputLen / 8 bytes long
 	// Returns the decrypted buffer length in BITS and an error code < 0 in case of error
-	int blockDecrypt(const RD_UINT8 *input, int inputLen, RD_UINT8 *outBuffer);
+	int blockDecrypt(const RD_UINT8* input, int inputLen, RD_UINT8* outBuffer);
 	// Decrypts the input vector
 	// Input len is in BYTES!
 	// outBuffer must be at least inputLen bytes long
 	// Returns the decrypted buffer length in BYTES and an error code < 0 in case of error
-	int padDecrypt(const RD_UINT8 *input, int inputOctets, RD_UINT8 *outBuffer);
+	int padDecrypt(const RD_UINT8* input, int inputOctets, RD_UINT8* outBuffer);
 protected:
 	void keySched(RD_UINT8 key[_MAX_KEY_COLUMNS][4]);
 	void keyEncToDec();
 	void encrypt(const RD_UINT8 a[16], RD_UINT8 b[16]);
 	void decrypt(const RD_UINT8 a[16], RD_UINT8 b[16]);
 };
-	
+
 #endif // _RIJNDAEL_H_
