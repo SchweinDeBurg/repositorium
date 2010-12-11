@@ -33,6 +33,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #ifndef _BIGCALENDARCTRL_H_
@@ -108,7 +109,6 @@ protected:
 	const CBigCalendarCell* GetCell(const COleDateTime& _date) const;
 
 	BOOL    IsDateVisible(const COleDateTime& _date, BOOL* _pbAfter = NULL) const;
-	BOOL    IsFirstVisibleDayOfMonth(const COleDateTime& _date) const;
 
 	static COLORREF GetFadedBlue(unsigned char _percent);
 
@@ -123,7 +123,7 @@ protected:
 	void DrawCells(CDC* _pDC);
 
 	void FireNotifySelectDate();
-	void SendSelectDateMessageToParent();
+	void SendSelectDateMessageToParent(BOOL bAndSendSelectTaskIDMsg);
 
 	void ScrollDown(int _nLines);
 	void ScrollUp(int _nLines);
