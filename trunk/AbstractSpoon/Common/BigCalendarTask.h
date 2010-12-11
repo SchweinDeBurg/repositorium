@@ -21,6 +21,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #ifndef _BIGCALENDARTASK_H_
@@ -66,8 +67,6 @@ protected:
 private:
 	CMap <DWORD, DWORD&, BOOL, BOOL&> m_mapTaskIDToStartTask;
 	CMap <DWORD, DWORD&, BOOL, BOOL&> m_mapTaskIDToCompleteTask;
-
-	TCHAR*   m_pszTooltipText;
 };
 
 #endif//_BIGCALENDARTASK_H_
