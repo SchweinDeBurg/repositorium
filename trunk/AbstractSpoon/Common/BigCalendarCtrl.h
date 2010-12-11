@@ -20,20 +20,7 @@
 // - improved compatibility with the Unicode-based builds
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
-//      --indent=tab=3
-//      --indent=force-tab=3
-//      --indent-switches
-//      --max-instatement-indent=2
-//      --brackets=break
-//      --add-brackets
-//      --pad-oper
-//      --unpad-paren
-//      --pad-header
-//      --align-pointer=type
-//      --lineend=windows
-//      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - slightly reformatted source code
 //*****************************************************************************
 
 #ifndef _BIGCALENDARCTRL_H_
@@ -109,6 +96,7 @@ protected:
 	const CBigCalendarCell* GetCell(const COleDateTime& _date) const;
 
 	BOOL    IsDateVisible(const COleDateTime& _date, BOOL* _pbAfter = NULL) const;
+	BOOL    IsFirstVisibleDayOfMonth(const COleDateTime& _date) const;
 
 	static COLORREF GetFadedBlue(unsigned char _percent);
 
@@ -123,7 +111,7 @@ protected:
 	void DrawCells(CDC* _pDC);
 
 	void FireNotifySelectDate();
-	void SendSelectDateMessageToParent(BOOL bAndSendSelectTaskIDMsg);
+	void SendSelectDateMessageToParent();
 
 	void ScrollDown(int _nLines);
 	void ScrollUp(int _nLines);
