@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // XmlFileEx.cpp: implementation of the CXmlFileEx class.
@@ -57,8 +70,8 @@ CString CXmlFileEx::s_sDecryptFailed(ENCRYPT_DECRYPTFAILED);
 const LPCTSTR ENCODEDDATA = _T("ENCODEDDATA");
 const LPCTSTR ENCODEDDATALEN = _T("DATALEN");
 
-CXmlFileEx::CXmlFileEx(LPCTSTR szRootItemName, LPCTSTR szPassword)
-	: CXmlFile(szRootItemName), m_pEncryptor(NULL), m_sPassword(szPassword)
+CXmlFileEx::CXmlFileEx(LPCTSTR szRootItemName, LPCTSTR szPassword):
+CXmlFile(szRootItemName), m_pEncryptor(NULL), m_sPassword(szPassword)
 {
 }
 
@@ -66,8 +79,7 @@ CXmlFileEx::~CXmlFileEx()
 {
 }
 
-void CXmlFileEx::SetUIStrings(UINT nIDPasswordExplanation,
-                              UINT nIDDecryptFailed)
+void CXmlFileEx::SetUIStrings(UINT nIDPasswordExplanation, UINT nIDDecryptFailed)
 {
 	s_sPasswordExplanation.LoadString(nIDPasswordExplanation);
 	s_sDecryptFailed.LoadString(nIDDecryptFailed);
@@ -121,7 +133,7 @@ BOOL CXmlFileEx::Encrypt(LPCTSTR szPassword)
 
 	ATL::CT2A aInput(sXml);
 	if (!m_pEncryptor->Encrypt((unsigned char*)(LPSTR)aInput, sXml.GetLength() + 1, ATL::CT2A(szPassword), // RB - Added sPassword parameter instead of NULL
-	                           pEncrypted, nLenEncrypted))
+		pEncrypted, nLenEncrypted))
 	{
 		return FALSE;
 	}
@@ -326,7 +338,7 @@ BOOL CXmlFileEx::Decrypt(LPCTSTR szInput, CString& sOutput, LPCTSTR szPassword)
 	int nLenDecrypted = 0;
 
 	if (!m_pEncryptor->Decrypt((unsigned char*)pDecodedDataBuffer, nReqBufLen, ATL::CT2A(szPassword),
-	                           pDecrypted, nLenDecrypted))
+		pDecrypted, nLenDecrypted))
 	{
 		return FALSE;
 	}

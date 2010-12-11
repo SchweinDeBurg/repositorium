@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // XmlFileEx.h: interface for the CXmlFileEx class.
@@ -45,8 +58,8 @@ class IEncryption;
 
 enum
 {
-	XFL_NOENCRYPTIONDLL	   = XFL_LAST - 1,
-	XFL_UNKNOWNENCRYPTION	= XFL_LAST - 2,
+	XFL_NOENCRYPTIONDLL     = XFL_LAST - 1,
+	XFL_UNKNOWNENCRYPTION   = XFL_LAST - 2,
 };
 
 class CXmlFileEx : public CXmlFile
@@ -74,8 +87,7 @@ public:
 	virtual BOOL Decrypt(LPCTSTR szPassword = NULL);
 	static BOOL CanEncrypt(); // false if encryptor dll cannot be loaded
 
-	static void SetUIStrings(UINT nIDPasswordExplanation,
-	                         UINT nIDDecryptFailed);
+	static void SetUIStrings(UINT nIDPasswordExplanation, UINT nIDDecryptFailed);
 
 protected:
 	IEncryption* m_pEncryptor;

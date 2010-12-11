@@ -30,7 +30,20 @@
 // - improved compatibility with the Unicode-based builds
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #include "StdAfx.h"
@@ -79,7 +92,7 @@ m_bTracking(FALSE),
 m_bHeaderTracking(FALSE),
 m_pCalendarData(NULL),
 m_pFrameWnd(NULL),
-m_pMonthPicker(NULL),
+m_pHeaderList(NULL),
 m_pHeaderCell(NULL),
 m_parCells(NULL),
 m_pFont(NULL),
@@ -126,16 +139,6 @@ m_cBackColor(0)
 
 	m_pFontBold = new CFont;
 	GraphicsMisc::CreateFont(*m_pFontBold, MINICAL_FONT_NAME, MINICAL_FONT_SIZE, MFS_BOLD);
-
-	//load left/right arrow bitmaps
-	CBitmap bmpL, bmpR;
-	bmpL.LoadBitmap(IDB_MINICAL_ARROW_L);
-	bmpR.LoadBitmap(IDB_MINICAL_ARROW_R);
-	BITMAP BM;
-	bmpL.GetBitmap(&BM);
-	m_imglistArrows.Create(BM.bmWidth, BM.bmHeight, ILC_COLOR24 | ILC_MASK, 2, 0);
-	m_imglistArrows.Add(&bmpL, RGB(255, 0, 255));
-	m_imglistArrows.Add(&bmpR, RGB(255, 0, 255));
 }
 
 CMiniCalendarCtrl::~CMiniCalendarCtrl()
@@ -147,10 +150,10 @@ CMiniCalendarCtrl::~CMiniCalendarCtrl()
 		delete[] m_parCells;
 	}
 
-	if (m_pMonthPicker)
+	if (m_pHeaderList)
 	{
-		m_pMonthPicker->DestroyWindow();
-		delete m_pMonthPicker;
+		m_pHeaderList->DestroyWindow();
+		delete m_pHeaderList;
 	}
 
 	if (m_iHeaderTimerID != 0)
@@ -197,7 +200,7 @@ CString CMiniCalendarCtrl::GetMonthName(int _iMonth) const
 {
 	if (_iMonth > 0 && _iMonth <= 12)
 	{
-		return m_arrMonthNames[_iMonth-1];
+		return m_arrMonthNames[_iMonth - 1];
 	}
 
 	ASSERT(FALSE);
@@ -254,9 +257,9 @@ void CMiniCalendarCtrl::TasklistUpdated()
 
 BOOL CMiniCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 {
-	if (m_bHeaderTracking && m_pMonthPicker)
+	if (m_bHeaderTracking && m_pHeaderList)
 	{
-		m_pMonthPicker->ForwardMessage(pMsg);
+		m_pHeaderList->ForwardMessage(pMsg);
 	}
 
 	return CWnd::PreTranslateMessage(pMsg);
@@ -377,6 +380,7 @@ CSize CMiniCalendarCtrl::ComputeSize()
 	int iWidthByHeader = 0;
 	int iHeaderHeight = 0;
 	int iDaysHeight = 0;
+	int iX;
 
 	// allocate a DC to use when testing sizes, etc
 	CClientDC* pDC = NULL;
@@ -403,8 +407,7 @@ CSize CMiniCalendarCtrl::ComputeSize()
 	// but this is not mandatory and many "fancy" fonts change this.  To deal
 	// with this, I am calculating the width of all possible dates the control will display
 	pDC->SelectObject(m_pFont);
-	int iX = 1;
-	for (; iX <= 31; iX++)
+	for (iX = 1; iX <= 31; iX++)
 	{
 		CString strTemp = _T("00");
 		strTemp += CCalendarUtils::LongToString(iX);
@@ -647,8 +650,7 @@ void CMiniCalendarCtrl::ScrollRight()
 	RedrawWindow();
 }
 
-void CMiniCalendarCtrl::SetCellHeaderPosition(int _iMonthRow,
-      const CRect& _rect)
+void CMiniCalendarCtrl::SetCellHeaderPosition(int _iMonthRow, const CRect& _rect)
 {
 	int iRow = _iMonthRow - 1;
 
@@ -770,25 +772,37 @@ int CMiniCalendarCtrl::DrawHeader(CDC& _dc, int _iY, int _iLeftX, int _iRow, int
 
 	_dc.SelectObject(pOldFont);
 
-	SetCellHeaderPosition(_iRow, CRect(_iLeftX + 30, _iY + 1, _iLeftX + m_szMonthSize.cx - 30, _iY + m_iHeaderHeight - 2));
+	SetCellHeaderPosition(_iRow, CRect(_iLeftX + 10, _iY + 1, _iLeftX + m_szMonthSize.cx - 20, _iY + m_iHeaderHeight - 2));
 
 	if (_iRow == 1)
 	{
-		//draw Left and Right scroll arrows (only on top row)
-		IMAGEINFO imginfo;
-		m_imglistArrows.GetImageInfo(0, &imginfo);
-		m_rectScrollLeft = imginfo.rcImage;
-		m_rectScrollRight = imginfo.rcImage;
+		// deal with left scroll bar
+		const int iMiddle = _iY + (m_iHeaderHeight / 2);
+		const int iTop = iMiddle - (m_iHeaderHeight / 4);
+		const int iBottom = iMiddle + (m_iHeaderHeight / 4);
+		int iLineY = 0;
 
-		int iTop = 5;
-		int iLeft = 5;
+		int iX1 = _iLeftX + 6;
+		int iX2 = iX1 + ((m_iHeaderHeight / 4));
 
-		m_rectScrollLeft.OffsetRect(iLeft, iTop);
-		m_imglistArrows.Draw(&_dc, 0, CPoint(iLeft, iTop), ILD_NORMAL);
+		for (iLineY = iTop; iLineY <= iBottom; iLineY++)
+		{
+			_dc.MoveTo(iX1, iMiddle);
+			_dc.LineTo(iX2, iLineY);
+		}
+		m_rectScrollLeft.SetRect(iX1 - 1, iTop - 1, iX2 + 1, iBottom + 1);
 
-		iLeft = m_szMonthSize.cx - 1 - 5 - m_rectScrollRight.Width();
-		m_rectScrollRight.OffsetRect(iLeft, iTop);
-		m_imglistArrows.Draw(&_dc, 1, CPoint(iLeft, iTop), ILD_NORMAL);
+
+		// deal with right scroll bar
+		iX1 = _iLeftX + m_szMonthSize.cx - 10;
+		iX2 = iX1 - (m_iHeaderHeight / 4);
+
+		for (iLineY = iTop; iLineY <= iBottom; iLineY++)
+		{
+			_dc.MoveTo(iX1, iMiddle);
+			_dc.LineTo(iX2, iLineY);
+		}
+		m_rectScrollRight.SetRect(iX2 - 1, iTop - 1, iX1 + 1, iBottom + 1);
 	}
 
 	return m_iHeaderHeight;
@@ -877,8 +891,8 @@ int CMiniCalendarCtrl::DrawDays(CDC& _dc, int _iY, int _iLeftX, int _iRow, int _
 
 	// we allow up to 6 rows of days.  This is the actual maximum # of calendar
 	// weeks that can occur in a month.
-	int iRow = 1;
-	for (; iRow <= 6; iRow++)
+	int iRow;
+	for (iRow = 1; iRow <= 6; iRow++)
 	{
 		int iX = iStartX;
 
@@ -1160,16 +1174,22 @@ void CMiniCalendarCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 
 			// make sure list is not already created
-			if (m_pMonthPicker)
+			if (m_pHeaderList)
 			{
 				ASSERT(FALSE);
-				m_pMonthPicker->DestroyWindow();
-				delete m_pMonthPicker;
-				m_pMonthPicker = NULL;
+				m_pHeaderList->DestroyWindow();
+				delete m_pHeaderList;
+				m_pHeaderList = NULL;
 			}
 
 			// create list
-			m_pMonthPicker = new CMiniCalendarMonthPicker;
+			m_pHeaderList = new CMiniCalendarMonthPicker;
+
+			if (!m_pHeaderList)
+			{
+				ASSERT(FALSE);
+				throw(new CMemoryException());
+			}
 
 			// create list control
 			DWORD dwStyle = WS_POPUP | WS_EX_TOPMOST | WS_EX_WINDOWEDGE | WS_BORDER;
@@ -1177,11 +1197,11 @@ void CMiniCalendarCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 
 			m_iHeaderTimerID = SetTimer(MINICAL_HEADER_TIMER_ID, MINICAL_HEADER_TIMER_INTERVAL, NULL);
 
-			m_pMonthPicker->SetMiddleMonthYear(iMonth, iYear);
-			m_pMonthPicker->SetCalendar(this);
-			m_pMonthPicker->CreateEx(0, szWndCls, _T(""), dwStyle, 0, 0, 0, 0, m_hWnd, NULL, NULL);
-			m_pMonthPicker->AutoConfigure();
-			m_pMonthPicker->ShowWindow(TRUE);
+			m_pHeaderList->SetMiddleMonthYear(iMonth, iYear);
+			m_pHeaderList->SetCalendar(this);
+			m_pHeaderList->CreateEx(0, szWndCls, _T(""), dwStyle, 0, 0, 0, 0, m_hWnd, NULL, NULL);
+			m_pHeaderList->AutoConfigure();
+			m_pHeaderList->ShowWindow(TRUE);
 
 			SetCapture();
 			m_bHeaderTracking = TRUE;
@@ -1227,12 +1247,12 @@ void CMiniCalendarCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 	}
 	else if (m_bHeaderTracking)
 	{
-		ASSERT(m_pMonthPicker);
+		ASSERT(m_pHeaderList);
 
-		if (m_pMonthPicker && m_pHeaderCell)
+		if (m_pHeaderList && m_pHeaderCell)
 		{
-			int iSelMonth = m_pMonthPicker->GetSelMonth();
-			int iSelYear = m_pMonthPicker->GetSelYear();
+			int iSelMonth = m_pHeaderList->GetSelMonth();
+			int iSelYear = m_pHeaderList->GetSelYear();
 
 			int iCell = ((m_pHeaderCell->GetRow() - 1) + m_pHeaderCell->GetCol()) - 1;
 
@@ -1252,12 +1272,12 @@ void CMiniCalendarCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 			ASSERT((m_iCurrentMonth >= 1) && (m_iCurrentMonth <= 12));   //dates from 1 January 100 to 31 December 9999.
 		}
 
-		if (m_pMonthPicker)
+		if (m_pHeaderList)
 		{
-			m_pMonthPicker->DestroyWindow();
-			delete m_pMonthPicker;
+			m_pHeaderList->DestroyWindow();
+			delete m_pHeaderList;
 		}
-		m_pMonthPicker = NULL;
+		m_pHeaderList = NULL;
 
 		m_pHeaderCell = NULL;
 
@@ -1270,8 +1290,6 @@ void CMiniCalendarCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 		m_bHeaderTracking = FALSE;
 		ReleaseCapture();
 		RedrawWindow();
-
-		FireNotifyClick();
 	}
 
 	CWnd::OnLButtonUp(nFlags, point);
@@ -1331,9 +1349,9 @@ void CMiniCalendarCtrl::OnSize(UINT nType, int cx, int cy)
 ////////////////////////////////////////////////////////
 // CMiniCalendarCtrlCell functions
 //
-CMiniCalendarCtrlCell::CMiniCalendarCtrlCell()
-	:	m_iRow(0),
-	   m_iCol(0)
+CMiniCalendarCtrlCell::CMiniCalendarCtrlCell():
+m_iRow(0),
+m_iCol(0)
 {
 	m_parHotSpots = new CMiniCalendarCtrlFontHotSpot[MINICAL_NUM_CELLS];
 }

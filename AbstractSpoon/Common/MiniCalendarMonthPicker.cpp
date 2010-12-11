@@ -30,7 +30,20 @@
 // - improved compatibility with the Visual C++ 2008
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #include "stdafx.h"
@@ -63,8 +76,6 @@ CMiniCalendarMonthPicker::CMiniCalendarMonthPicker()
 
 	m_cBackColor = RGB(255, 255, 255);
 	m_cTextColor = RGB(0, 0, 0);
-	m_cHighlightColorBG = GetSysColor(COLOR_HIGHLIGHT);
-	m_cHighlightColorFG = GetSysColor(COLOR_HIGHLIGHTTEXT);
 
 	m_iUpFactor = 0;
 	m_iDownFactor = 0;
@@ -76,12 +87,18 @@ CMiniCalendarMonthPicker::~CMiniCalendarMonthPicker()
 
 BEGIN_MESSAGE_MAP(CMiniCalendarMonthPicker, CWnd)
 	//{{AFX_MSG_MAP(CMiniCalendarMonthPicker)
+	ON_WM_ERASEBKGND()
 	ON_WM_PAINT()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CMiniCalendarMonthPicker message handlers
+
+BOOL CMiniCalendarMonthPicker::OnEraseBkgnd(CDC* /*pDC*/)
+{
+	return FALSE;
+}
 
 void CMiniCalendarMonthPicker::OnPaint()
 {
@@ -105,9 +122,9 @@ void CMiniCalendarMonthPicker::OnPaint()
 
 	int iMonth = m_iMiddleMonth;
 	int iYear = m_iMiddleYear;
+	int iItem;
 
-	int iItem = 0;
-	for (; iItem < iHalfCount; iItem++)
+	for (iItem = 0; iItem < iHalfCount; iItem++)
 	{
 		iMonth--;
 		if (iMonth < 1)
@@ -124,6 +141,7 @@ void CMiniCalendarMonthPicker::OnPaint()
 
 	// fill background
 	memdc.FillSolidRect(0, 0, rectClient.Width(), rectClient.Height(), m_cBackColor);
+	memdc.SetBkMode(TRANSPARENT);
 
 	for (iItem = 0; iItem < m_iItemsPerPage; iItem++)
 	{
@@ -148,8 +166,10 @@ void CMiniCalendarMonthPicker::OnPaint()
 			m_iSelMonth = iMonth;
 			m_iSelYear = iYear;
 
-			memdc.SetTextColor(m_cHighlightColorFG);
-			memdc.FillSolidRect(0, iPosY, rectClient.Width(), szItem.cy, m_cHighlightColorBG);
+			memdc.SetTextColor(m_cBackColor);
+			memdc.SetBkColor(m_cTextColor);
+
+			memdc.FillSolidRect(0, iPosY, rectClient.Width(), szItem.cy, memdc.GetBkColor());
 		}
 		else
 		{
@@ -225,8 +245,7 @@ void CMiniCalendarMonthPicker::ForwardMessage(MSG* pMSG)
 	}
 }
 
-void CMiniCalendarMonthPicker::SetMiddleMonthYear(int iMonth,
-      int iYear)
+void CMiniCalendarMonthPicker::SetMiddleMonthYear(int iMonth, int iYear)
 {
 	ASSERT(iYear >= 100);
 	ASSERT(iYear <= 9999);
@@ -249,13 +268,12 @@ void CMiniCalendarMonthPicker::SetItemsPerPage(int iValue)
 	// we require at least 3 items per page and the count
 	// must be odd (same number of items on either side of middle)
 	ASSERT(iValue >= 3);
+
 #if (_MSC_VER < 1300)
 	ASSERT(fmod(iValue, 2) != 0);
-
 	if (iValue >= 3 && fmod(iValue, 2) != 0)
 #else
 	ASSERT((iValue % 2) != 0);
-
 	if (iValue >= 3 && (iValue % 2) != 0)
 #endif   // _MSC_VER
 	{
@@ -273,8 +291,7 @@ void CMiniCalendarMonthPicker::SetCalendar(CMiniCalendarCtrl* pWnd)
 	}
 }
 
-BOOL CMiniCalendarMonthPicker::IsSelected(int iX,
-      CRect rectItem) const
+BOOL CMiniCalendarMonthPicker::IsSelected(int iX, CRect rectItem)
 {
 	BOOL bReturn = FALSE;
 

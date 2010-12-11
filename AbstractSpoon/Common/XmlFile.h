@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // XmlFile.h: interface for the CXmlFile class.
@@ -193,11 +206,11 @@ enum XF_OPEN
 
 enum // load errors. if >0 then == GetLastFileError
 {
-	XFL_NONE		= 0,
-	XFL_CANCELLED	= -1,
+	XFL_NONE        = 0,
+	XFL_CANCELLED   = -1,
 	XFL_MISSINGROOT = -2,
-	XFL_BADMSXML	= -3,
-	XFL_LAST       = -99
+	XFL_BADMSXML    = -3,
+	XFL_LAST        = -99
 };
 
 struct XMLHEADER
@@ -278,7 +291,6 @@ protected:
 	CString m_sHeader;
 	IXmlParse* m_pCallback;
 	mutable int m_nFileError;
-	//static BOOL s_bFormatOutput;
 
 protected:
 	BOOL ParseItem(CXmlItem& xi, CXmlNodeWrapper* pNode); // returns false if the callback stopped it

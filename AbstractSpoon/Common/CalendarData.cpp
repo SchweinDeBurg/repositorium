@@ -7,7 +7,20 @@
 // - improved compatibility with the Unicode-based builds
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #include "StdAfx.h"
@@ -46,8 +59,8 @@ BOOL CCalendarData::IsImportantDate(const COleDateTime& _dt) const
 void CCalendarData::DumpTasks(HTASKITEM _hParentTask)
 {
 	for (HTASKITEM hTask = m_tasks.GetFirstTask(_hParentTask);
-	      hTask != NULL;
-	      hTask = m_tasks.GetNextTask(hTask))
+		hTask != NULL;
+		hTask = m_tasks.GetNextTask(hTask))
 	{
 		DWORD dwTaskID = m_tasks.GetTaskID(hTask);
 
@@ -203,20 +216,6 @@ BOOL CCalendarData::GetTaskTimeSpent(DWORD _dwItemID, double& _dTimeSpent, TCHAR
 	return bReturn;
 }
 
-BOOL CCalendarData::GetTaskColor(DWORD _dwItemID, DWORD& _dwColor) const
-{
-	BOOL bReturn = FALSE;
-
-	HTASKITEM hTask = m_tasks.FindTask(_dwItemID);
-	if (hTask)
-	{
-		_dwColor = m_tasks.GetTaskColor(hTask);
-		bReturn = TRUE;
-	}
-
-	return bReturn;
-}
-
 CString CCalendarData::GetTaskParentsString(DWORD _dwItemID) const
 {
 	CString strReturn;
@@ -311,7 +310,6 @@ BOOL CCalendarData::UpdateTasks(const ITaskList* _pTasks, HTASKITEM _hCurrentTas
 				(m_tasks.GetTaskDoneDate(hDest) != _pTasks->GetTaskDoneDate(hTask)) ||
 				(m_tasks.GetTaskTimeEstimate(hDest, cUnit, FALSE) != _pTasks->GetTaskTimeEstimate(hTask, cUnit, FALSE)) ||
 				(m_tasks.GetTaskTimeSpent(hDest, cUnit, FALSE) != _pTasks->GetTaskTimeSpent(hTask, cUnit, FALSE)) ||
-				(m_tasks.GetTaskColor(hDest) != _pTasks->GetTaskColor(hTask)) ||
 				(m_tasks.GetTaskPercentDone(hDest, FALSE) != _pTasks->GetTaskPercentDone(hTask, FALSE)))
 			{
 				m_tasks.SetTaskTitle(hDest, ATL::CT2A(_pTasks->GetTaskTitle(hTask)));
@@ -320,7 +318,6 @@ BOOL CCalendarData::UpdateTasks(const ITaskList* _pTasks, HTASKITEM _hCurrentTas
 				m_tasks.SetTaskDoneDate(hDest, _pTasks->GetTaskDoneDate(hTask));
 				m_tasks.SetTaskTimeEstimate(hDest, _pTasks->GetTaskTimeEstimate(hTask, cUnit, FALSE), cUnit);
 				m_tasks.SetTaskTimeSpent(hDest, _pTasks->GetTaskTimeSpent(hTask, cUnit, FALSE), cUnit);
-				m_tasks.SetTaskColor(hDest, _pTasks->GetTaskColor(hTask));
 				m_tasks.SetTaskPercentDone(hDest, _pTasks->GetTaskPercentDone(hTask, FALSE));
 				//...any other attributes??
 
@@ -414,7 +411,7 @@ void CCalendarData::ReadValueFromIni(const CString& _strKey, CString& _strValue,
 	const DWORD dwChunkSize = 512;
 
 	DWORD dwLen = dwChunkSize;
-	TCHAR* pszValue = new TCHAR[dwLen+1];
+	TCHAR* pszValue = new TCHAR[dwLen + 1];
 	DWORD dwCopied = ::GetPrivateProfileString(CALENDAR_INI_SECTION_NAME, _strKey, strDefault, pszValue, dwLen, strIniFilename);
 	while (dwCopied + 1 >= dwLen)
 	{

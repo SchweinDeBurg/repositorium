@@ -30,7 +30,20 @@
 // - improved compatibility with the Visual C++ 2008
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #ifndef _MINICALENDARMONTHPICKER_H_
@@ -78,9 +91,10 @@ public:
 
 	// Generated message map functions
 protected:
-	BOOL IsSelected(int iX, CRect rectItem) const;
+	BOOL IsSelected(int iX, CRect rectItem);
 
 	//{{AFX_MSG(CMiniCalendarMonthPicker)
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnPaint();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
@@ -94,13 +108,11 @@ protected:
 
 	COLORREF    m_cBackColor;
 	COLORREF    m_cTextColor;
-	COLORREF    m_cHighlightColorBG;
-	COLORREF    m_cHighlightColorFG;
 
 	int         m_iUpFactor;
 	int         m_iDownFactor;
 
-	CMiniCalendarCtrl*  m_pwndCalendar;
+	CMiniCalendarCtrl*          m_pwndCalendar;
 };
 
 #endif//_MINICALENDARMONTHPICKER_H_

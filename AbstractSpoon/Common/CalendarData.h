@@ -7,7 +7,20 @@
 // - improved compatibility with the Unicode-based builds
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #ifndef _CALENDARDATA_H_
@@ -37,7 +50,6 @@ public:
 	BOOL    GetTaskDoneDate(DWORD _dwItemID, COleDateTime& _date) const;
 	BOOL    GetTaskTimeEstimate(DWORD _dwItemID, double& _dTimeSpent, TCHAR& _cUnit) const;
 	BOOL    GetTaskTimeSpent(DWORD _dwItemID, double& _dTimeSpent, TCHAR& _cUnit) const;
-	BOOL    GetTaskColor(DWORD _dwItemID, DWORD& _dwColor) const;
 
 	CString GetTaskParentsString(DWORD _dwItemID) const;
 	CString GetTaskParentsString(HTASKITEM _hCurrentTask, int& _nNumParents) const;
