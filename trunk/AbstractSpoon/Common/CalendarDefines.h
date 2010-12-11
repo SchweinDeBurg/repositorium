@@ -8,6 +8,7 @@
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
 // - slightly reformatted source code
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #ifndef _CALENDARDEFINES_H_
@@ -22,6 +23,7 @@
 #define CALENDAR_MSG_SELECTDATE         23356
 #define CALENDAR_MSG_MOUSEWHEEL_UP      23357
 #define CALENDAR_MSG_MOUSEWHEEL_DOWN    23358
+#define CALENDAR_MSG_SELECTTASK         23359
 
 enum //visual style of completed tasks
 {

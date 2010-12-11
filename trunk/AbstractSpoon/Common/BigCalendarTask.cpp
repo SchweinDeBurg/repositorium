@@ -8,7 +8,20 @@
 // - improved compatibility with the MFC version 9.0
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #include "StdAfx.h"
@@ -31,11 +44,8 @@ static char THIS_FILE[] = __FILE__;
 #define MAX_TOOLTIP_LENGTH          1024
 
 CBigCalendarTask::CBigCalendarTask(CBigCalendarCtrl* _pParent, DWORD _dwStyleCompletedTasks):
-m_pParent(_pParent),
-m_pszTooltipText(NULL)
+m_pParent(_pParent)
 {
-	m_pszTooltipText = new TCHAR[MAX_TOOLTIP_LENGTH+1];
-
 	BOOL bGrey = ((_dwStyleCompletedTasks & COMPLETEDTASKS_GREY) != 0);
 	BOOL bStrikethru = ((_dwStyleCompletedTasks & COMPLETEDTASKS_STRIKETHRU) != 0);
 	SetCompletedItemDisplayStyle(bGrey, bStrikethru);
@@ -43,10 +53,6 @@ m_pszTooltipText(NULL)
 
 CBigCalendarTask::~CBigCalendarTask()
 {
-	if (m_pszTooltipText)
-	{
-		delete[] m_pszTooltipText;
-	}
 }
 
 BEGIN_MESSAGE_MAP(CBigCalendarTask, CTransparentListBox)
@@ -201,11 +207,7 @@ BOOL CBigCalendarTask::OnToolTipText(UINT /*id*/, NMHDR* pTTTStruct, LRESULT* pR
 {
 	TOOLTIPTEXT* pTTT = (TOOLTIPTEXT*)pTTTStruct;
 
-#if (_MFC_VER < 0x0700)
-	CToolTipCtrl* pttc = AfxGetThreadState()->m_pToolTip;
-#else
-	CToolTipCtrl* pttc = AfxGetModuleThreadState()->m_pToolTip;
-#endif	// _MFC_VER
+	CToolTipCtrl* pttc = NULL;
 	if (pttc)
 	{
 		pttc->SetMaxTipWidth(0);                    //enable multi-line tooltips
@@ -215,13 +217,7 @@ BOOL CBigCalendarTask::OnToolTipText(UINT /*id*/, NMHDR* pTTTStruct, LRESULT* pR
 	DWORD dwTaskID = ((SItem*)GetItemData(pTTTStruct->idFrom))->dwItemData;
 	CString strParentsString = m_pParent->GetCalendarData()->GetTaskParentsString(dwTaskID);
 
-	if (strParentsString.GetLength() > MAX_TOOLTIP_LENGTH)
-	{
-		strParentsString.SetAt(MAX_TOOLTIP_LENGTH, _T('\0'));
-	}
-	_tcscpy(m_pszTooltipText, strParentsString);
-
-	pTTT->lpszText = m_pszTooltipText;
+	_tcsncpy(pTTT->szText, strParentsString, 255);
 
 	*pResult = 0;
 

@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // XmlFile.cpp: implementation of the CXmlFile class.
@@ -65,8 +78,6 @@ CString& TXT2HTML(CString& txt)
 {
 	return CHtmlCharMap::ConvertToRep(txt);
 }
-
-//BOOL CXmlFile::s_bFormatOutput = FALSE;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -137,20 +148,6 @@ void CXmlItem::Reset()
 	}
 
 	m_lstItems.RemoveAll();
-	/*
-	POSITION pos = m_mapItems.GetStartPosition();
-
-	while (pos)
-	{
-	CXmlItem* pXI = NULL;
-	CString sItem;
-
-	m_mapItems.GetNextAssoc(pos, sItem, pXI);
-	delete pXI;
-	}
-
-	m_mapItems.RemoveAll();
-	*/
 
 	// and siblings
 	// note: because sibling ~tor calls its own Reset() the chain
@@ -196,17 +193,6 @@ const CXmlItem* CXmlItem::GetItemEx(LPCTSTR szItemName, LPCTSTR szSubItem) const
 
 	// not found
 	return NULL;
-
-	/*
-	CXmlItem* pXI = NULL;
-
-	m_mapItems.Lookup(szItemName, pXI);
-
-	if (pXI && szSubItem && *szSubItem)
-	return pXI->GetItem(szSubItem);
-
-	return pXI;
-	*/
 }
 
 const CXmlItem* CXmlItem::FindItem(LPCTSTR szItemName, LPCTSTR szItemValue, BOOL bSearchChildren) const
@@ -355,7 +341,6 @@ CXmlItem* CXmlItem::AddItem(CXmlItem* pXI)
 	{
 		m_lstItems.AddTail(pXI);
 	}
-	//		m_mapItems[pXI->GetName()] = pXI;
 
 	return pXI;
 }
@@ -470,12 +455,10 @@ BOOL CXmlItem::RemoveItem(CXmlItem* pXI)
 		if (!pNextSibling)
 		{
 			m_lstItems.RemoveAt(pos);
-			//m_mapItems.RemoveKey(szName);
 		}
 		else
 		{
 			m_lstItems.SetAt(pos, pNextSibling);
-			//m_mapItems[szName] = pNextSibling;
 		}
 	}
 	else // somewhere else in the chain
@@ -548,7 +531,6 @@ BOOL CXmlItem::AddSibling(CXmlItem* pXI)
 POSITION CXmlItem::GetFirstItemPos() const
 {
 	return m_lstItems.GetHeadPosition();
-	//	return m_mapItems.GetStartPosition();
 }
 
 const CXmlItem* CXmlItem::GetNextItem(POSITION& pos) const
@@ -560,14 +542,6 @@ const CXmlItem* CXmlItem::GetNextItem(POSITION& pos) const
 
 	// else
 	return m_lstItems.GetNext(pos);
-
-	/*
-	CString sTemp;
-	CXmlItem* pItem = NULL;
-
-	m_mapItems.GetNextAssoc(pos, sTemp, pItem);
-	return pItem;
-	*/
 }
 
 CXmlItem* CXmlItem::GetNextItem(POSITION& pos)
@@ -579,14 +553,6 @@ CXmlItem* CXmlItem::GetNextItem(POSITION& pos)
 
 	// else
 	return m_lstItems.GetNext(pos);
-
-	/*
-	CString sTemp;
-	CXmlItem* pItem = NULL;
-
-	m_mapItems.GetNextAssoc(pos, sTemp, pItem);
-	return pItem;
-	*/
 }
 
 BOOL CXmlItem::NameMatches(const CXmlItem* pXITest) const
@@ -749,7 +715,7 @@ void CXmlItem::SortItems(LPCTSTR szItemName, LPCTSTR szKeyName, XI_SORTKEY nKey,
 }
 
 int CXmlItem::CompareItems(const CXmlItem* pXIItem1, const CXmlItem* pXIItem2,
-                           LPCTSTR szKeyName, XI_SORTKEY nKey)
+	LPCTSTR szKeyName, XI_SORTKEY nKey)
 {
 	LPCTSTR szValue1 = pXIItem1->GetItemValue(szKeyName);
 	LPCTSTR szValue2 = pXIItem2->GetItemValue(szKeyName);
@@ -758,17 +724,17 @@ int CXmlItem::CompareItems(const CXmlItem* pXIItem1, const CXmlItem* pXIItem2,
 
 	switch (nKey)
 	{
-		case XISK_STRING:
-			dDiff = (double)CString(szValue1).CompareNoCase(szValue2);
-			break;
+	case XISK_STRING:
+		dDiff = (double)CString(szValue1).CompareNoCase(szValue2);
+		break;
 
-		case XISK_INT:
-			dDiff = (double)(_ttoi(szValue1) - _ttoi(szValue2));
-			break;
+	case XISK_INT:
+		dDiff = (double)(_ttoi(szValue1) - _ttoi(szValue2));
+		break;
 
-		case XISK_FLOAT:
-			dDiff = _tstof(szValue1) - _tstof(szValue2);
-			break;
+	case XISK_FLOAT:
+		dDiff = _tstof(szValue1) - _tstof(szValue2);
+		break;
 	}
 
 	return (dDiff < 0) ? -1 : ((dDiff > 0) ? 1 : 0);
@@ -786,13 +752,13 @@ void CXmlItem::ValidateString(CString& sText, char cReplace)
 		// some specific chars we don't like
 		switch (c)
 		{
-			case 0x2026: // ellipsis
-				sText.SetAt(nChar, cReplace);
-				break;
+		case 0x2026: // ellipsis
+			sText.SetAt(nChar, cReplace);
+			break;
 		}
 
 		if ((c < 0x20 && (c == 0x09 || c == 0x0A || c == 0x0D)) ||
-		      (c >= 0x20 && c < 0x82) || c > 0x9F) // 0x82-0x9F are special windows chars
+			(c >= 0x20 && c < 0x82) || c > 0x9F) // 0x82-0x9F are special windows chars
 		{
 			continue;   // valid
 		}
@@ -830,7 +796,6 @@ int CXmlItem::GetValueLen() const
 int CXmlItem::GetItemCount() const
 {
 	return m_lstItems.GetCount();
-	//	return m_mapItems.GetCount();
 }
 
 int CXmlItem::GetValueI() const
@@ -994,18 +959,18 @@ BOOL CXmlFile::Open(LPCTSTR szFilePath, XF_OPEN nOpenFlag)
 
 	switch (nOpenFlag)
 	{
-		case XF_READ:
-			bRes = CFile::Open(szFilePath, CFile::shareDenyNone | CFile::modeRead);
-			break;
+	case XF_READ:
+		bRes = CFile::Open(szFilePath, CFile::shareDenyNone | CFile::modeRead);
+		break;
 
-		case XF_WRITE:
-			bRes = CFile::Open(szFilePath, CFile::shareExclusive | CFile::modeWrite | CFile::modeCreate);
-			break;
+	case XF_WRITE:
+		bRes = CFile::Open(szFilePath, CFile::shareExclusive | CFile::modeWrite | CFile::modeCreate);
+		break;
 
-		case XF_READWRITE:
-			bRes = CFile::Open(szFilePath, CFile::shareExclusive | CFile::modeReadWrite |
-			                   CFile::modeCreate | CFile::modeNoTruncate);
-			break;
+	case XF_READWRITE:
+		bRes = CFile::Open(szFilePath, CFile::shareExclusive | CFile::modeReadWrite |
+				CFile::modeCreate | CFile::modeNoTruncate);
+		break;
 	}
 
 	if (!bRes)
@@ -1171,23 +1136,6 @@ void CXmlFile::FixInputString(CString& sXml, LPCTSTR szRootItem)
 		if (nHeader > nRoot)
 		{
 			// what should we do?
-
-			/*
-			// if there is another instance of szRootItem after the
-			// header tag then try deleting everything before the header
-			// tag
-			if (sXml.Find(sRoot, nHeader) != -1)
-			{
-			sXml = sXml.Right(nHeader);
-			}
-			else // try moving the header to the start
-			{
-			int nHeaderEnd = sXml.Find('>', nHeader) + 1;
-			CString sHeader = sXml.Mid(nHeader, nHeaderEnd - nHeader);
-
-			sXml = sHeader + sXml.Left(nHeader) + sXml.Right(nHeaderEnd);
-			}
-			*/
 		}
 	}
 }
@@ -1414,7 +1362,7 @@ BOOL CXmlFile::Export(const CXmlItem* pItem, CXmlNodeWrapper* pNode) const
 			// create a named node to wrap the CDATA
 			MSXML2::IXMLDOMNodePtr pChildNode = pNode->InsertNode(nNode++, (LPCTSTR)sItem);
 			MSXML2::IXMLDOMCDATASectionPtr pCData =
-			   pNode->ParentDocument()->createCDATASection(TOBSTRING(ATL::CT2A(pXIChild->GetValue())));
+					pNode->ParentDocument()->createCDATASection(TOBSTRING(ATL::CT2A(pXIChild->GetValue())));
 			pChildNode->appendChild(pCData);
 		}
 		else // node
@@ -1474,13 +1422,6 @@ int CXmlFile::GetLastFileError()
 {
 	return m_nFileError;
 }
-
-/*
-void CXmlFile::EnableFormattedOutput(BOOL bEnable)
-{
-s_bFormatOutput = bEnable;
-}
-*/
 
 const CXmlItem* CXmlFile::Root() const
 {

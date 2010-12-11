@@ -20,7 +20,20 @@
 // - improved compatibility with the Unicode-based builds
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #include "StdAfx.h"
@@ -98,7 +111,8 @@ CBigCalendarCtrl::~CBigCalendarCtrl()
 	delete m_pFontBold;
 }
 
-void CBigCalendarCtrl::Initialize(CCalendarFrameWnd* _pFrameWnd, CCalendarData* _pCalendarData, HWND _hwndMessageRoutingWindow)
+void CBigCalendarCtrl::Initialize(CCalendarFrameWnd* _pFrameWnd, CCalendarData* _pCalendarData,
+	HWND _hwndMessageRoutingWindow)
 {
 	m_pFrameWnd = _pFrameWnd;
 	m_pCalendarData = _pCalendarData;
@@ -187,12 +201,12 @@ void CBigCalendarCtrl::TasklistUpdated()
 	COleDateTime dtFirstCell(m_dayCells[0][0].date);   //current first-cell
 	RepopulateAllCells(dtFirstCell);
 
-	SendSelectDateMessageToParent();
+	SendSelectDateMessageToParent(FALSE);
 }
 
 void CBigCalendarCtrl::ClickedOnTaskInListbox()
 {
-	SendSelectDateMessageToParent();
+	SendSelectDateMessageToParent(TRUE);
 }
 
 void CBigCalendarCtrl::SelectTask(int _nTaskListboxID, int _nTaskID)
@@ -240,7 +254,7 @@ void CBigCalendarCtrl::SelectTask(int _nTaskListboxID, int _nTaskID)
 	if (dwTaskID != 0)
 	{
 		COPYDATASTRUCT cds;
-		cds.dwData = 3;//SELECTTASK;   //can't use SELECTTASK because including ToDoListWnd.h would break the build
+		cds.dwData = 3;   //can't use SELECTTASK because including ToDoListWnd.h would break the build
 		cds.cbData = sizeof(DWORD);
 		cds.lpData = &dwTaskID;
 		::SendMessage(m_hwndMessageRoutingWindow, WM_COPYDATA, NULL, (LPARAM)&cds);
@@ -289,7 +303,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 		COleDateTime dtNew = m_dateSelected;
 		switch (pMsg->wParam)
 		{
-			case VK_ESCAPE:
+		case VK_ESCAPE:
 			{
 				if (m_pFrameWnd != NULL)
 				{
@@ -298,10 +312,10 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 				}
 				break;
 			}
-			case VK_UP:
-			case VK_DOWN:
-			case VK_LEFT:
-			case VK_RIGHT:
+		case VK_UP:
+		case VK_DOWN:
+		case VK_LEFT:
+		case VK_RIGHT:
 			{
 				int nOldScrollPos = m_nVscrollPos;
 
@@ -332,7 +346,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 							}
 							plbTasks->SetCurSel(m_nSelectedTaskID);
 
-							SendSelectDateMessageToParent();
+							SendSelectDateMessageToParent(TRUE);
 						}
 					}
 
@@ -371,7 +385,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 							}
 							plbTasks->SetCurSel(m_nSelectedTaskID);
 
-							SendSelectDateMessageToParent();
+							SendSelectDateMessageToParent(TRUE);
 						}
 					}
 
@@ -478,7 +492,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 
 				return TRUE;
 			}
-			case VK_NEXT:
+		case VK_NEXT:
 			{
 				LeaveCell();
 
@@ -489,7 +503,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 
 				break;
 			}
-			case VK_PRIOR:
+		case VK_PRIOR:
 			{
 				LeaveCell();
 
@@ -500,7 +514,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 
 				break;
 			}
-			case VK_RETURN:
+		case VK_RETURN:
 			{
 				if (m_nSelectedTaskID != -1)
 				{
@@ -512,7 +526,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 				}
 				break;
 			}
-			default:
+		default:
 			{
 				break;
 			}
@@ -566,8 +580,7 @@ BOOL CBigCalendarCtrl::GetRectFromCell(int _nRow, int _nCol, CRect& _rect) const
 	return FALSE;
 }
 
-void CBigCalendarCtrl::GetLastSelectedGridCell(int& _nRow,
-      int& _nCol) const
+void CBigCalendarCtrl::GetLastSelectedGridCell(int& _nRow, int& _nCol) const
 {
 	int nNumColumns = m_pFrameWnd->GetNumDaysToDisplay();
 	int nNumWeeks = m_pFrameWnd->GetNumWeeksToDisplay();
@@ -594,8 +607,7 @@ CBigCalendarTask* CBigCalendarCtrl::GetTaskListboxFromTaskListboxID(int _nListbo
 	return pWndTask;
 }
 
-CBigCalendarTask* CBigCalendarCtrl::GetTaskListboxFromCell(int _nRow,
-      int _nCol) const
+CBigCalendarTask* CBigCalendarCtrl::GetTaskListboxFromCell(int _nRow, int _nCol) const
 {
 	return GetTaskListboxFromTaskListboxID(m_dayCells[_nRow][_nCol].nListboxID);
 }
@@ -651,53 +663,6 @@ BOOL CBigCalendarCtrl::IsDateVisible(const COleDateTime& _date, BOOL* _pbAfter) 
 	}
 }
 
-BOOL CBigCalendarCtrl::IsFirstVisibleDayOfMonth(const COleDateTime& _date) const
-{
-	BOOL bReturn = FALSE;
-
-	int nMonth = _date.GetMonth();
-	int nDay = _date.GetDay();
-	if (nDay == 1)
-	{
-		bReturn = TRUE;
-	}
-	else
-	{
-		if ((nDay > 0) && (nDay < 4))
-		{
-			COleDateTime date = _date;
-			bReturn = TRUE;   //assume TRUE unless found otherwise
-
-			//try date-1
-			CCalendarUtils::SubtractDay(date);
-			if ((date.GetMonth() == nMonth) && IsDateVisible(date))
-			{
-				bReturn = FALSE;   //date-1 is in same month and is visible
-			}
-			else
-			{
-				//try date-2
-				CCalendarUtils::SubtractDay(date);
-				if ((date.GetMonth() == nMonth) && IsDateVisible(date))
-				{
-					bReturn = FALSE;   //date-2 is in same month and is visible
-				}
-				else
-				{
-					//try date-3
-					CCalendarUtils::SubtractDay(date);
-					if ((date.GetMonth() == nMonth) && IsDateVisible(date))
-					{
-						bReturn = FALSE;   //date-3 is in same month and is visible
-					}
-				}
-			}
-		}
-	}
-
-	return bReturn;
-}
-
 COLORREF CBigCalendarCtrl::GetFadedBlue(unsigned char _percent)
 {
 	int r = 180, g = 205, b = 255;
@@ -749,9 +714,9 @@ void CBigCalendarCtrl::GotoMonth(const COleDateTime& _date)
 	int narr[7];
 	for (int d = 0; d < 7; d++)
 	{
-		narr[((m_nFirstWeekDay-1)+d)%7] = d;
+		narr[((m_nFirstWeekDay - 1) + d) % 7] = d;
 	}
-	int nCellStart = narr[dtFirstCell.GetDayOfWeek()-1];
+	int nCellStart = narr[dtFirstCell.GetDayOfWeek() - 1];
 
 	dtFirstCell -= nCellStart;
 
@@ -822,16 +787,16 @@ void CBigCalendarCtrl::Goto(const COleDateTime& _date, BOOL _bSelect)
 		int narr[7];
 		for (int d = 0; d < 7; d++)
 		{
-			narr[((m_nFirstWeekDay-1)+d)%7] = d;
+			narr[((m_nFirstWeekDay - 1) + d) % 7] = d;
 		}
-		int nCellStart = narr[dtFirstCell.GetDayOfWeek()-1];
+		int nCellStart = narr[dtFirstCell.GetDayOfWeek() - 1];
 
 		CCalendarUtils::SubtractDay(dtFirstCell, nCellStart);
 
 		if (bBelow)
 		{
 			//need this date on the bottom line. so scroll to a number of weeks before dtFirstCell
-			CCalendarUtils::SubtractDay(dtFirstCell, 7 *(nNumWeeks - 1));
+			CCalendarUtils::SubtractDay(dtFirstCell, 7 * (nNumWeeks - 1));
 		}
 	}
 
@@ -842,6 +807,7 @@ void CBigCalendarCtrl::Goto(const COleDateTime& _date, BOOL _bSelect)
 void CBigCalendarCtrl::DrawHeader(CDC* _pDC)
 {
 	int nNumColumns = m_pFrameWnd->GetNumDaysToDisplay();
+	int i = 0;
 
 	CRect rc;
 	GetClientRect(&rc);
@@ -849,8 +815,7 @@ void CBigCalendarCtrl::DrawHeader(CDC* _pDC)
 
 	CRect rcLine(rc);
 	rcLine.top = rcLine.bottom - 1;
-	int i = 0;
-	for (; i < CALENDAR_HEADER_HEIGHT; i++)
+	for (i = 0; i < CALENDAR_HEADER_HEIGHT; i++)
 	{
 		_pDC->FillSolidRect(rcLine, GetFadedBlue((BYTE)i * 4));
 		rcLine.bottom--;
@@ -864,10 +829,10 @@ void CBigCalendarCtrl::DrawHeader(CDC* _pDC)
 
 	CFont* pOldFont = _pDC->SelectObject(m_pFont);
 	int nWidth = rc.Width() / nNumColumns;
+	POSITION pos;
 
 	BOOL bShort = FALSE;
-	i = 0;
-	for (POSITION pos = listDays.GetHeadPosition(); pos;)
+	for (pos = listDays.GetHeadPosition(); pos;)
 	{
 		CString strDay = listDays.GetNext(pos);
 		CSize szTitle(_pDC->GetTextExtent(strDay));
@@ -887,7 +852,7 @@ void CBigCalendarCtrl::DrawHeader(CDC* _pDC)
 	}
 
 	i = 0;
-	for (POSITION pos = listDays.GetHeadPosition(); pos;)
+	for (pos = listDays.GetHeadPosition(); pos;)
 	{
 		CString strDay = listDays.GetNext(pos);
 		CRect rcText(i * nWidth, 2, (i + 1)*nWidth, CALENDAR_HEADER_HEIGHT);
@@ -901,6 +866,7 @@ void CBigCalendarCtrl::DrawGrid(CDC* _pDC)
 {
 	int nNumColumns = m_pFrameWnd->GetNumDaysToDisplay();
 	int nNumWeeks = m_pFrameWnd->GetNumWeeksToDisplay();
+	int i;
 
 	CRect rc;
 	GetClientRect(&rc);                                                 //rect of the BigCalendar
@@ -909,8 +875,7 @@ void CBigCalendarCtrl::DrawGrid(CDC* _pDC)
 
 	CPen thinPen(PS_SOLID, 1, COLOUR_GRIDLINES);
 	CPen* pOldPen = _pDC->SelectObject(&thinPen);
-	int i = 1;
-	for (; i < nNumColumns; i++)
+	for (i = 1; i < nNumColumns; i++)
 	{
 		_pDC->MoveTo(i * nWidth, CALENDAR_HEADER_HEIGHT);
 		_pDC->LineTo(i * nWidth, rc.Height());
@@ -1020,9 +985,9 @@ void CBigCalendarCtrl::DrawCells(CDC* _pDC)
 
 				int nDay = m_dayCells[i][u].date.GetDay();
 
-				if ((i == 0 && u == 0) || IsFirstVisibleDayOfMonth(m_dayCells[i][u].date))
+				if (nDay == 1 || (i == 0 && u == 0))
 				{
-					//draw month name (for first cell always, and if this cell is first visible day of month)
+					//draw month name
 					CRect rcMonth(rect);
 					rcMonth.right -= 15;
 
@@ -1066,16 +1031,24 @@ void CBigCalendarCtrl::DrawCells(CDC* _pDC)
 void CBigCalendarCtrl::FireNotifySelectDate()
 {
 	EnterCell();
-	SendSelectDateMessageToParent();
+	SendSelectDateMessageToParent(FALSE);
 }
 
-void CBigCalendarCtrl::SendSelectDateMessageToParent()
+void CBigCalendarCtrl::SendSelectDateMessageToParent(BOOL bAndSendSelectTaskIDMsg)
 {
 	NMHDR NotifyArea;
 	NotifyArea.code = CALENDAR_MSG_SELECTDATE;
 	NotifyArea.hwndFrom = m_hWnd;
 	NotifyArea.idFrom = ::GetDlgCtrlID(m_hWnd);
 	GetParent()->SendMessage(WM_NOTIFY, ::GetDlgCtrlID(m_hWnd), (WPARAM)&NotifyArea);
+
+	if (bAndSendSelectTaskIDMsg)
+	{
+		NotifyArea.code = CALENDAR_MSG_SELECTTASK;
+		NotifyArea.hwndFrom = m_hWnd;
+		NotifyArea.idFrom = ::GetDlgCtrlID(m_hWnd);
+		GetParent()->SendMessage(WM_NOTIFY, ::GetDlgCtrlID(m_hWnd), (WPARAM)&NotifyArea);
+	}
 }
 
 void CBigCalendarCtrl::ScrollDown(int _nLines)

@@ -2,7 +2,19 @@
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // CalendarExtApp.cpp : Defines the initialization routines for the DLL.
@@ -31,10 +43,12 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 	if (dwReason == DLL_PROCESS_ATTACH)
 	{
 		TRACE0("CalendarExt.dll initializing...\n");
-		
+
 		// Extension DLL one-time initialization
 		if (!AfxInitExtensionModule(CalendarExtDLL, hInstance))
+		{
 			return 0;
+		}
 
 		// Insert this DLL into the resource chain
 		// NOTE: If this Extension DLL is being implicitly linked to by
@@ -64,9 +78,9 @@ DLL_DECLSPEC IUIExtension* CreateUIExtensionInterface()
 	return new CCalendarExtApp;
 }
 
-DLL_DECLSPEC int GetInterfaceVersion() 
-{ 
-	return IUIEXTENSION_VERSION; 
+DLL_DECLSPEC int GetInterfaceVersion()
+{
+	return IUIEXTENSION_VERSION;
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // PasswordDialog.cpp : implementation file
@@ -48,8 +61,8 @@ CMap<UINT, UINT, CString, CString&> CPasswordDialog::s_mapText;
 
 #define WM_POSTINITDIALOG (WM_APP+1)
 
-CPasswordDialog::CPasswordDialog(BOOL bConfirm, LPCTSTR szExplanation, CWnd* /*pParent*/)
-: CRuntimeDlg(), m_bConfirm(bConfirm)
+CPasswordDialog::CPasswordDialog(BOOL bConfirm, LPCTSTR szExplanation, CWnd* /*pParent*/):
+CRuntimeDlg(), m_bConfirm(bConfirm)
 {
 	//{{AFX_DATA_INIT(CPasswordDialog)
 	m_sPassword = _T("");
@@ -69,20 +82,22 @@ CPasswordDialog::CPasswordDialog(BOOL bConfirm, LPCTSTR szExplanation, CWnd* /*p
 	const int YEXPOFFSET = (NULL == szExplanation) ? 0 : (nLines * 8 + 8);
 
 	if (szExplanation)
-		AddRCControl(_T("LTEXT"), _T(""), szExplanation, 0, 0,7,7, EDITEND - 7, (nLines * 8), (UINT)IDC_STATIC);
+	{
+		AddRCControl(_T("LTEXT"), _T(""), szExplanation, 0, 0, 7, 7, EDITEND - 7, (nLines * 8), (UINT)IDC_STATIC);
+	}
 
-	AddRCControl(_T("LTEXT"), _T(""), sPassword, 0, 0,7,9 + YEXPOFFSET,PROMPTLEN,8, IDC_PD_PASSWORDLABEL);
-	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART,7 + YEXPOFFSET,110,14, IDC_PD_PASSWORD);
+	AddRCControl(_T("LTEXT"), _T(""), sPassword, 0, 0, 7, 9 + YEXPOFFSET, PROMPTLEN, 8, IDC_PD_PASSWORDLABEL);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART, 7 + YEXPOFFSET, 110, 14, IDC_PD_PASSWORD);
 
 	if (m_bConfirm)
 	{
-		AddRCControl(_T("LTEXT"), _T(""), sConfirm, 0, 0,7, 28 + YEXPOFFSET,PROMPTLEN,8, IDC_PD_CONFIRMLABEL);
-		AddRCControl(_T("EDITTEXT"), _T(""), _T(""), WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART,25 + YEXPOFFSET,110,14, IDC_PD_CONFIRM);
+		AddRCControl(_T("LTEXT"), _T(""), sConfirm, 0, 0, 7, 28 + YEXPOFFSET, PROMPTLEN, 8, IDC_PD_CONFIRMLABEL);
+		AddRCControl(_T("EDITTEXT"), _T(""), _T(""), WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART, 25 + YEXPOFFSET, 110, 14, IDC_PD_CONFIRM);
 	}
 
-	AddRCControl(_T("CONTROL"), _T("Static"), _T(""), SS_ETCHEDHORZ, 0, 7,30 + YOFFSET + YEXPOFFSET, EDITEND - 7,1, (UINT)IDC_STATIC);
-	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_DISABLED | WS_TABSTOP, 0, EDITEND - 50 - 4 - 50,40 + YOFFSET + YEXPOFFSET,50,14,IDOK);
-	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0, EDITEND - 50,40 + YOFFSET + YEXPOFFSET,50,14,IDCANCEL);
+	AddRCControl(_T("CONTROL"), _T("Static"), _T(""), SS_ETCHEDHORZ, 0, 7, 30 + YOFFSET + YEXPOFFSET, EDITEND - 7, 1, (UINT)IDC_STATIC);
+	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_DISABLED | WS_TABSTOP, 0, EDITEND - 50 - 4 - 50, 40 + YOFFSET + YEXPOFFSET, 50, 14, IDOK);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0, EDITEND - 50, 40 + YOFFSET + YEXPOFFSET, 50, 14, IDCANCEL);
 }
 
 
@@ -93,7 +108,9 @@ void CPasswordDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_PD_PASSWORD, m_sPassword);
 
 	if (m_bConfirm)
+	{
 		DDX_Text(pDX, IDC_PD_CONFIRM, m_sConfirmation);
+	}
 	//}}AFX_DATA_MAP
 }
 
@@ -137,9 +154,13 @@ BOOL CPasswordDialog::RetrievePassword(BOOL bConfirm, CString& sPassword, LPCTST
 		CPasswordDialog dialog(bConfirm, szExplanation);
 
 		if (IDOK == dialog.DoModal())
+		{
 			bContinue = dialog.GetPassword().IsEmpty();
+		}
 		else
+		{
 			return FALSE;
+		}
 
 		// check confirmation too
 		if (!bContinue)
@@ -152,10 +173,14 @@ BOOL CPasswordDialog::RetrievePassword(BOOL bConfirm, CString& sPassword, LPCTST
 					bContinue = TRUE;
 				}
 				else
+				{
 					sPassword = dialog.GetPassword();
+				}
 			}
 			else
+			{
 				sPassword = dialog.GetPassword();
+			}
 		}
 	}
 
@@ -172,14 +197,20 @@ BOOL CPasswordDialog::VerifyPassword(LPCTSTR szPassword, LPCTSTR szExplanation, 
 		if (IDOK == dialog.DoModal())
 		{
 			if (dialog.GetPassword() == szPassword)
+			{
 				return TRUE;
+			}
 
 			// else
 			if (szErrorMsg && *szErrorMsg)
+			{
 				szExplanation = szErrorMsg;
+			}
 		}
 		else
-			break; // user cancelled
+		{
+			break;   // user cancelled
+		}
 	}
 
 	return FALSE;
@@ -197,7 +228,9 @@ void CPasswordDialog::OnChangeConfirmation()
 	UpdateData();
 
 	if (m_bConfirm)
+	{
 		GetDlgItem(IDOK)->EnableWindow(!m_sPassword.IsEmpty() && (!m_bConfirm || !m_sConfirmation.IsEmpty()));
+	}
 }
 
 CString CPasswordDialog::GetItemText(UINT nIDItem, LPCTSTR szDefault)
@@ -206,7 +239,9 @@ CString CPasswordDialog::GetItemText(UINT nIDItem, LPCTSTR szDefault)
 	s_mapText.Lookup(nIDItem, sText);
 
 	if (sText.IsEmpty() && szDefault)
+	{
 		return szDefault;
+	}
 
 	return sText;
 }

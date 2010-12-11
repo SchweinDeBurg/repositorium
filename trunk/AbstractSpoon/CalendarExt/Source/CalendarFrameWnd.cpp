@@ -19,6 +19,8 @@
 #include "../../../CodeProject/Source/VersionInfo.h"
 #include "CalendarFrameWnd.h"
 
+#include "../../ToDoList/Source/TDCMsg.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -581,15 +583,8 @@ void CCalendarFrameWnd::OnCheckforUpdates()
 		}
 	}
 
-	/*const LPCTSTR UPDATE_SCRIPT_PATH = "http://www.abstractspoon.com/todolist_update.txt";*/
 	const LPCTSTR UPDATE_SCRIPT_PATH_MANUAL = _T("http://abstractspoon.pbwiki.com/f/TDL_Calendar_update_manual.txt");
 
-	/*
-	if (bManual)
-		ShellExecute(NULL, "open", sWuwPath, UPDATE_SCRIPT_PATH_MANUAL, NULL, SW_HIDE);
-	else
-		ShellExecute(NULL, "open", sWuwPath, UPDATE_SCRIPT_PATH, NULL, SW_HIDE);
-	*/
 	ShellExecute(NULL, _T("open"), sWuwPath, UPDATE_SCRIPT_PATH_MANUAL, NULL, SW_HIDE);
 }
 
@@ -636,6 +631,10 @@ BOOL CCalendarFrameWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 
 		//selection changed (possibly) - update the status bar with the info of the newly selected item
 		UpdateStatusBar();
+	}
+	else if (pNotifyArea->code == CALENDAR_MSG_SELECTTASK)
+	{
+		::SendMessage(m_hParentOfFrame, WM_TDCM_TASKLINK, m_BigCalendar.GetSelectedTask(), 0L);
 	}
 	else if (pNotifyArea->code == CALENDAR_MSG_MOUSEWHEEL_UP)
 	{

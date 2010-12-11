@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_PASSWORDDIALOG_H__4AA33292_30F8_420E_BFA3_46270324B4C9__INCLUDED_)
@@ -63,8 +76,14 @@ public:
 
 	int DoModal();
 
-	CString GetPassword() { return m_sPassword; }
-	CString GetConfirmation() { return m_sConfirmation; }
+	CString GetPassword()
+	{
+		return m_sPassword;
+	}
+	CString GetConfirmation()
+	{
+		return m_sConfirmation;
+	}
 
 	static BOOL RetrievePassword(BOOL bConfirm, CString& sPassword, LPCTSTR szExplanation = NULL);
 	static BOOL VerifyPassword(LPCTSTR szPassword, LPCTSTR szExplanation = NULL, LPCTSTR szErrorMsg = NULL);
@@ -101,7 +120,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 	static CString GetItemText(UINT nIDItem, LPCTSTR szDefault);
-	virtual CString OverrideItemText(UINT nIDItem) { return GetItemText(nIDItem, NULL); }
+	virtual CString OverrideItemText(UINT nIDItem)
+	{
+		return GetItemText(nIDItem, NULL);
+	}
 };
 
 //{{AFX_INSERT_LOCATION}}

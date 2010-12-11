@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // MySpellCheck.cpp : Defines the entry point for the DLL application.
@@ -36,19 +49,18 @@
 #include "../../Common/ISpellCheck.h"
 #include "../../Common/SpellChecker.h"
 
-BOOL APIENTRY DllMain( HANDLE /*hModule*/, 
-                       DWORD  /*ul_reason_for_call*/, 
-                       LPVOID /*lpReserved*/
-					 )
+BOOL APIENTRY DllMain(HANDLE /*hModule*/, DWORD /*ul_reason_for_call*/, LPVOID /*lpReserved*/)
 {
-    return TRUE;
+	return TRUE;
 }
 
 DLL_DECLSPEC ISpellChecker* CreateSpellCheckerInterface(const TCHAR* szAffPath, const TCHAR* szDicPath)
 {
 	// some simple checks first
 	if (GetFileAttributes(szDicPath) == 0xffffffff)
+	{
 		return NULL;
+	}
 
 	CSpellChecker* pSC = new CSpellChecker(szAffPath, szDicPath);
 

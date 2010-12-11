@@ -30,7 +30,20 @@
 // - improved compatibility with the Unicode-based builds
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #ifndef _MINICALENDARCTRL_H_
@@ -199,8 +212,6 @@ protected:
 	CFont*                          m_pFont;
 	CFont*                          m_pFontBold;
 
-	CImageList                      m_imglistArrows;
-
 	int                             m_iCurrentMonth;
 	int                             m_iCurrentYear;
 	COLORREF                        m_cBackColor;
@@ -213,7 +224,7 @@ protected:
 	BOOL                            m_bHeaderTracking;
 	UINT                            m_iHeaderTimerID;
 	CMiniCalendarCtrlCell*          m_pHeaderCell;
-	CMiniCalendarMonthPicker*       m_pMonthPicker;
+	CMiniCalendarMonthPicker*       m_pHeaderList;
 
 	CCalendarData*                  m_pCalendarData;
 	CCalendarFrameWnd*              m_pFrameWnd;

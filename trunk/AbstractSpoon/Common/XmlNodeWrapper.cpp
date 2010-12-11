@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // XmlNodeWrapper.cpp: implementation of the CXmlNodeWrapper class.
@@ -48,8 +62,8 @@ static char THIS_FILE[] = __FILE__;
 
 // fix for bad typedef in <wtypes.h>
 #ifdef VARIANT_TRUE
-#	undef VARIANT_TRUE
-#	define VARIANT_TRUE ((VARIANT_BOOL)(-1))
+#undef VARIANT_TRUE
+#define VARIANT_TRUE ((VARIANT_BOOL)(-1))
 #endif
 
 const LPCTSTR DEFAULT_HEADER = _T("version=\"1.0\" encoding=\"windows-1252\"");
@@ -63,13 +77,16 @@ CXmlNodeWrapper::CXmlNodeWrapper(MSXML2::IXMLDOMNodePtr pNode, BOOL bAutoRelease
 	m_xmlnode = pNode;
 	m_bAutoRelease = bAutoRelease;
 }
-void CXmlNodeWrapper::operator=(MSXML2::IXMLDOMNodePtr pNode)
+
+CXmlNodeWrapper& CXmlNodeWrapper::operator=(MSXML2::IXMLDOMNodePtr pNode)
 {
 	if (IsValid())
 	{
 		m_xmlnode.Release();
 	}
+
 	m_xmlnode = pNode;
+	return *this;
 }
 
 CXmlNodeWrapper::~CXmlNodeWrapper()
@@ -79,7 +96,6 @@ CXmlNodeWrapper::~CXmlNodeWrapper()
 		m_xmlnode.Detach();
 	}
 }
-
 
 CString CXmlNodeWrapper::GetValue(LPCTSTR valueName)
 {
@@ -408,7 +424,7 @@ CString CXmlDocumentWrapper::GetHeader(BOOL bAsXml) const
 				{
 					CString sAttrib;
 					sAttrib.Format(_T("%s=\"%s\" "), nodeHdr.GetAttribName(nAttrib),
-					               nodeHdr.GetAttribVal(nAttrib));
+						nodeHdr.GetAttribVal(nAttrib));
 					sHeader += sAttrib;
 				}
 			}
@@ -512,8 +528,6 @@ BOOL CXmlDocumentWrapper::LoadXML(LPCTSTR xml/*, BOOL bPreserveWhiteSpace*/)
 	{
 		return FALSE;
 	}
-
-	/*m_xmldoc->put_preserveWhiteSpace(bPreserveWhiteSpace ? VARIANT_TRUE : VARIANT_FALSE);*/
 
 	_bstr_t bstr(CXmlNodeWrapper::ConvertStringToBSTR(ATL::CT2A(xml)), FALSE);
 
@@ -1000,7 +1014,6 @@ CString CXmlNodeWrapper::GetAttribVal(int index)
 			attribs.Release();
 		}
 	}
-
 
 	return sVal;
 }

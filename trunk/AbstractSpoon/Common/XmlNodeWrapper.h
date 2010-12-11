@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // XmlNodeWrapper.h: interface for the CXmlNodeWrapper class.
@@ -46,7 +60,7 @@ class CXmlNodeWrapper
 public:
 	CXmlNodeWrapper();
 	CXmlNodeWrapper(MSXML2::IXMLDOMNodePtr pNode, BOOL bAutoRelease = TRUE);
-	void operator=(MSXML2::IXMLDOMNodePtr pNode);
+	CXmlNodeWrapper& operator=(MSXML2::IXMLDOMNodePtr pNode);
 	virtual ~CXmlNodeWrapper();
 
 	CString NodeType();
@@ -123,8 +137,6 @@ protected:
 private:
 	MSXML2::IXMLDOMDocumentPtr m_xmldoc;
 	static BOOL s_bVer3orGreater;
-
-	//////////////////////////////////////////////////////////////////////////////
 };
 
 class CXmlNodeListWrapper
@@ -144,7 +156,6 @@ public:
 
 private:
 	MSXML2::IXMLDOMNodeListPtr m_xmlnodelist;
-
 };
 
 #endif // !defined(AFX_XMLNODEWRAPPER_H__43622334_FDEB_4175_9E6D_19BBAA3992A5__INCLUDED_)

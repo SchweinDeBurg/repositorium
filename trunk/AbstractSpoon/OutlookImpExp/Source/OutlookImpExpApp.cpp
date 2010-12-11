@@ -94,13 +94,6 @@ DLL_DECLSPEC IImportTasklist* CreateImportInterface()
 	return new COutlookImporter;
 }
 
-/*
-DLL_DECLSPEC IExportTasklist* CreateExportInterface()
-{
-	return new COutlookExporter;
-}
-*/
-
 DLL_DECLSPEC int GetInterfaceVersion()
 {
 	return IIMPORTEXPORT_VERSION;
