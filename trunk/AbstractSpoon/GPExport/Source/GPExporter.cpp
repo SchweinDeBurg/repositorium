@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // GPExporter.cpp: implementation of the CGPExporter class.
@@ -113,14 +126,13 @@ void CGPExporter::SetupCalendar(CXmlItem* pDestPrj)
 {
 	/*
 	<calendars>
-	<day-types>
-	<day-type id="0"/>
-	<day-type id="1"/>
-	<calendar id="1" name="default">
-	<default-week sun="1" mon="0" tue="0" wed="0"
-	thu="0" fri="0" sat="1"/>
-	</calendar>
-	</day-types>
+		<day-types>
+			<day-type id="0"/>
+			<day-type id="1"/>
+			<calendar id="1" name="default">
+				<default-week sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+			</calendar>
+		</day-types>
 	</calendars>
 	*/
 
@@ -151,7 +163,7 @@ void CGPExporter::SetupCalendar(CXmlItem* pDestPrj)
 
 
 bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
-                             CXmlItem* pXIDestParent, CXmlItem* pXIAllocations)
+	CXmlItem* pXIDestParent, CXmlItem* pXIAllocations)
 {
 	if (!hTask)
 	{
