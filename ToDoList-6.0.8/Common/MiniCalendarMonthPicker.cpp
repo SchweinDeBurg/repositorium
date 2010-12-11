@@ -36,7 +36,7 @@
 #include "stdafx.h"
 #include "MiniCalendarCtrl.h"
 #include "CalendarUtils.h"
-#include "../../CodeProject/Source/memdc.h"
+#include "../../CodeProject/Source/MemDC.h"
 #include <math.h>
 #include "MiniCalendarMonthPicker.h"
 
