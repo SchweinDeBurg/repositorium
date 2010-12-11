@@ -20,7 +20,19 @@
 // - improved compatibility with the Unicode-based builds
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #include "StdAfx.h"
@@ -240,7 +252,7 @@ void CBigCalendarCtrl::SelectTask(int _nTaskListboxID, int _nTaskID)
 	if (dwTaskID != 0)
 	{
 		COPYDATASTRUCT cds;
-		cds.dwData = 3;//SELECTTASK;   //can't use SELECTTASK because including ToDoListWnd.h would break the build
+		cds.dwData = 3;   //can't use SELECTTASK because including ToDoListWnd.h would break the build
 		cds.cbData = sizeof(DWORD);
 		cds.lpData = &dwTaskID;
 		::SendMessage(m_hwndMessageRoutingWindow, WM_COPYDATA, NULL, (LPARAM)&cds);
@@ -289,7 +301,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 		COleDateTime dtNew = m_dateSelected;
 		switch (pMsg->wParam)
 		{
-			case VK_ESCAPE:
+		case VK_ESCAPE:
 			{
 				if (m_pFrameWnd != NULL)
 				{
@@ -298,10 +310,10 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 				}
 				break;
 			}
-			case VK_UP:
-			case VK_DOWN:
-			case VK_LEFT:
-			case VK_RIGHT:
+		case VK_UP:
+		case VK_DOWN:
+		case VK_LEFT:
+		case VK_RIGHT:
 			{
 				int nOldScrollPos = m_nVscrollPos;
 
@@ -478,7 +490,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 
 				return TRUE;
 			}
-			case VK_NEXT:
+		case VK_NEXT:
 			{
 				LeaveCell();
 
@@ -489,7 +501,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 
 				break;
 			}
-			case VK_PRIOR:
+		case VK_PRIOR:
 			{
 				LeaveCell();
 
@@ -500,7 +512,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 
 				break;
 			}
-			case VK_RETURN:
+		case VK_RETURN:
 			{
 				if (m_nSelectedTaskID != -1)
 				{
@@ -512,7 +524,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 				}
 				break;
 			}
-			default:
+		default:
 			{
 				break;
 			}
@@ -566,8 +578,7 @@ BOOL CBigCalendarCtrl::GetRectFromCell(int _nRow, int _nCol, CRect& _rect) const
 	return FALSE;
 }
 
-void CBigCalendarCtrl::GetLastSelectedGridCell(int& _nRow,
-      int& _nCol) const
+void CBigCalendarCtrl::GetLastSelectedGridCell(int& _nRow, int& _nCol) const
 {
 	int nNumColumns = m_pFrameWnd->GetNumDaysToDisplay();
 	int nNumWeeks = m_pFrameWnd->GetNumWeeksToDisplay();
@@ -594,8 +605,7 @@ CBigCalendarTask* CBigCalendarCtrl::GetTaskListboxFromTaskListboxID(int _nListbo
 	return pWndTask;
 }
 
-CBigCalendarTask* CBigCalendarCtrl::GetTaskListboxFromCell(int _nRow,
-      int _nCol) const
+CBigCalendarTask* CBigCalendarCtrl::GetTaskListboxFromCell(int _nRow, int _nCol) const
 {
 	return GetTaskListboxFromTaskListboxID(m_dayCells[_nRow][_nCol].nListboxID);
 }
@@ -749,9 +759,9 @@ void CBigCalendarCtrl::GotoMonth(const COleDateTime& _date)
 	int narr[7];
 	for (int d = 0; d < 7; d++)
 	{
-		narr[((m_nFirstWeekDay-1)+d)%7] = d;
+		narr[((m_nFirstWeekDay - 1) + d) % 7] = d;
 	}
-	int nCellStart = narr[dtFirstCell.GetDayOfWeek()-1];
+	int nCellStart = narr[dtFirstCell.GetDayOfWeek() - 1];
 
 	dtFirstCell -= nCellStart;
 
@@ -822,16 +832,16 @@ void CBigCalendarCtrl::Goto(const COleDateTime& _date, BOOL _bSelect)
 		int narr[7];
 		for (int d = 0; d < 7; d++)
 		{
-			narr[((m_nFirstWeekDay-1)+d)%7] = d;
+			narr[((m_nFirstWeekDay - 1) + d) % 7] = d;
 		}
-		int nCellStart = narr[dtFirstCell.GetDayOfWeek()-1];
+		int nCellStart = narr[dtFirstCell.GetDayOfWeek() - 1];
 
 		CCalendarUtils::SubtractDay(dtFirstCell, nCellStart);
 
 		if (bBelow)
 		{
 			//need this date on the bottom line. so scroll to a number of weeks before dtFirstCell
-			CCalendarUtils::SubtractDay(dtFirstCell, 7 *(nNumWeeks - 1));
+			CCalendarUtils::SubtractDay(dtFirstCell, 7 * (nNumWeeks - 1));
 		}
 	}
 

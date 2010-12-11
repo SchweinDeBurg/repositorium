@@ -8,7 +8,19 @@
 // - improved compatibility with the MFC version 9.0
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #include "StdAfx.h"
@@ -34,7 +46,7 @@ CBigCalendarTask::CBigCalendarTask(CBigCalendarCtrl* _pParent, DWORD _dwStyleCom
 m_pParent(_pParent),
 m_pszTooltipText(NULL)
 {
-	m_pszTooltipText = new TCHAR[MAX_TOOLTIP_LENGTH+1];
+	m_pszTooltipText = new TCHAR[MAX_TOOLTIP_LENGTH + 1];
 
 	BOOL bGrey = ((_dwStyleCompletedTasks & COMPLETEDTASKS_GREY) != 0);
 	BOOL bStrikethru = ((_dwStyleCompletedTasks & COMPLETEDTASKS_STRIKETHRU) != 0);
