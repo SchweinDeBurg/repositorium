@@ -238,25 +238,6 @@ bool CFMindImporter::ImportTask(const CXmlItem* pFMTask, ITaskList7* pDestTaskFi
 	pDestTaskFile->SetTaskComments(hTask, ATL::CT2A(sComments));
 
 
-	/*
-	//fixme: Check how to use the resources and their index for the following
-	//functions
-	//virtual bool SetTaskAllocatedTo(HTASKITEM hTask, const char* szAllocTo) = 0;
-	pDestTaskFile->SetTaskAllocatedTo(hTask,GetAttribValueS(pFMTask,"AllocatedTo"));
-
-
-	//virtual bool SetTaskAllocatedBy(HTASKITEM hTask, const char* szAllocBy) = 0;
-	pDestTaskFile->SetTaskAllocatedBy(hTask,GetAttribValueS(pFMTask,"TaskAllocatedBy"));
-
-
-	//virtual bool SetTaskCategory(HTASKITEM hTask, const char* szCategory) = 0;
-	pDestTaskFile->SetTaskCategory(hTask,GetAttribValueS(pFMTask,"TaskCategory"));
-
-	//virtual bool SetTaskDependency(HTASKITEM hTask, const char* szDepends) = 0;
-	pDestTaskFile->SetTaskDependency(hTask,GetAttribValueS(pFMTask,"TaskDependency"));
-
-	*/
-
 	//virtual bool SetTaskStatus(HTASKITEM hTask, const char* szStatus) = 0;
 	pDestTaskFile->SetTaskStatus(hTask, ATL::CT2A(GetAttribValueS(pFMTask, "TaskStatus")));
 

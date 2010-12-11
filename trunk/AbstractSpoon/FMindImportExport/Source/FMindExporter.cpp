@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // FMindExporter.cpp: implementation of the CFMindExporter class.
@@ -129,8 +130,17 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	if (!sComments.IsEmpty())
 	{
 		// for version 0.9 we export comments as rich NOTE
-		CXmlItem* pXIComments = pXIDestItem->AddItem(_T("richcontent"), sComments);
+		// now we need to export it as html
+		CXmlItem* pXIComments = pXIDestItem->AddItem(_T("richcontent"));
 		pXIComments->AddItem(_T("TYPE"), _T("NOTE"));
+
+		CXmlItem* pXIHtml = pXIComments->AddItem(_T("html"), _T(""), XIT_ELEMENT);
+		CXmlItem* pXIHead = pXIHtml->AddItem(_T("head"), _T(""), XIT_ELEMENT);
+		CXmlItem* pXIBody = pXIHtml->AddItem(_T("body"), _T(""), XIT_ELEMENT);
+		CXmlItem* pXIPara = pXIBody->AddItem(_T("p"), sComments, XIT_ELEMENT);
+
+		UNUSED_ALWAYS(pXIHead);
+		UNUSED_ALWAYS(pXIPara);
 
 		// for version 0.8 we export comments as private attribute
 		pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
