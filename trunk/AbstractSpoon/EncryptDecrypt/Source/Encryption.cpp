@@ -5,6 +5,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // Encryption.cpp: implementation of the CEncryption class.
@@ -18,8 +31,8 @@
 #include "../../../CodeProject/Source/Rijndael.h"
 #include "../../../CodeProject/Source/SHA2.h"
 
-#pragma warning(disable:4244)
-#pragma warning(disable:4701)
+#pragma warning(disable: 4244)
+#pragma warning(disable: 4701)
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -46,25 +59,37 @@ void CEncryption::Release()
 	delete this;
 }
 
-bool CEncryption::Encrypt(const unsigned char* pInput, int nLenInput, const char* szPassword, 
-						 unsigned char*& pOutput, int& nLenOutput)
+bool CEncryption::Encrypt(const unsigned char* pInput, int nLenInput, const char* szPassword,
+	unsigned char*& pOutput, int& nLenOutput)
 {
-	bool			bResult = false;
-	TD_TLHEADER		hdr;
-	RD_UINT8		uFinalKey[32];
-	unsigned long	uFileSize = 0, uAllocated = 0, pos = 0;
-	int				nEncryptedPartSize = 0;
+	bool            bResult = false;
+	TD_TLHEADER     hdr;
+	RD_UINT8        uFinalKey[32];
+	unsigned long   uFileSize = 0, uAllocated = 0, pos = 0;
+	int             nEncryptedPartSize = 0;
 
-	_ASSERTE(NULL != pInput);		if(NULL == pInput)		return FALSE;
-	_ASSERTE(0	!= nLenInput);	if(0	== nLenInput)	return FALSE;
-	_ASSERTE(NULL != szPassword); if(NULL == szPassword)	return FALSE;
+	_ASSERTE(NULL != pInput);
+	if (NULL == pInput)
+	{
+		return FALSE;
+	}
+	_ASSERTE(0	!= nLenInput);
+	if (0	== nLenInput)
+	{
+		return FALSE;
+	}
+	_ASSERTE(NULL != szPassword);
+	if (NULL == szPassword)
+	{
+		return FALSE;
+	}
 
 	uFileSize = nLenInput + sizeof(TD_TLHEADER);
 
 	// Allocate enough memory
 	uAllocated = uFileSize + 16;
 	pOutput = new unsigned char[uAllocated];
-	if(NULL != pOutput)
+	if (NULL != pOutput)
 	{
 		unsigned long uKeyLen;
 
@@ -75,39 +100,39 @@ bool CEncryption::Encrypt(const unsigned char* pInput, int nLenInput, const char
 
 		// Make up the master key hash seed and the encryption IV
 		m_random.GetRandomBuffer(hdr.aMasterSeed, 16);
-		m_random.GetRandomBuffer((BYTE *)hdr.aEncryptionIV, 16);
+		m_random.GetRandomBuffer((BYTE*)hdr.aEncryptionIV, 16);
 		m_random.GetRandomBuffer(hdr.aMasterSeed2, 32);
 
 		// Create MasterKey by hashing szPassword
 		uKeyLen = strlen(szPassword);
 		_ASSERTE(0 != uKeyLen);
-		if(0 != uKeyLen)
+		if (0 != uKeyLen)
 		{
 			sha256_ctx sha32;
 
 			sha256_begin(&sha32);
-			sha256_hash((unsigned char *)szPassword, uKeyLen, &sha32);
+			sha256_hash((unsigned char*)szPassword, uKeyLen, &sha32);
 			sha256_end(m_pMasterKey, &sha32);
 
 			// Generate m_pTransformedMasterKey from m_pMasterKey
-			if(TRUE == _TransformMasterKey(hdr.aMasterSeed2))
+			if (TRUE == _TransformMasterKey(hdr.aMasterSeed2))
 			{
 				// Hash the master password with the generated hash salt
 				sha256_begin(&sha32);
 				sha256_hash(hdr.aMasterSeed, 16, &sha32);
 				sha256_hash(m_pTransformedMasterKey, 32, &sha32);
-				sha256_end((unsigned char *)uFinalKey, &sha32);
+				sha256_end((unsigned char*)uFinalKey, &sha32);
 
 				// Hash the tasklist contents
 				sha256_begin(&sha32);
-				sha256_hash((unsigned char *)pInput, nLenInput, &sha32);
-				sha256_end((unsigned char *)hdr.aContentsHash, &sha32);
+				sha256_hash((unsigned char*)pInput, nLenInput, &sha32);
+				sha256_end((unsigned char*)hdr.aContentsHash, &sha32);
 
 				// Hash the header
 				sha256_begin(&sha32);
-				sha256_hash((unsigned char *)&hdr + 32, sizeof(TD_TLHEADER) - 32, &sha32);
-				sha256_end((unsigned char *)hdr.aHeaderHash, &sha32);
-				
+				sha256_hash((unsigned char*)&hdr + 32, sizeof(TD_TLHEADER) - 32, &sha32);
+				sha256_end((unsigned char*)hdr.aHeaderHash, &sha32);
+
 				bResult = true;
 			}
 		}
@@ -116,20 +141,20 @@ bool CEncryption::Encrypt(const unsigned char* pInput, int nLenInput, const char
 	if (bResult)
 	{
 		bResult = false;
-		
+
 		// Now we have all to build up the header
 		memcpy(pOutput, &hdr, sizeof(TD_TLHEADER));
-	
+
 		Rijndael aes;
 		// Initialize Rijndael/AES
-		if(RIJNDAEL_SUCCESS == aes.init(Rijndael::CBC, Rijndael::Encrypt, uFinalKey,
-			Rijndael::Key32Bytes, hdr.aEncryptionIV) )
+		if (RIJNDAEL_SUCCESS == aes.init(Rijndael::CBC, Rijndael::Encrypt, uFinalKey,
+				Rijndael::Key32Bytes, hdr.aEncryptionIV))
 		{
-			nEncryptedPartSize = aes.padEncrypt((RD_UINT8 *)pInput, nLenInput, (RD_UINT8 *)pOutput + sizeof(TD_TLHEADER));
+			nEncryptedPartSize = aes.padEncrypt((RD_UINT8*)pInput, nLenInput, (RD_UINT8*)pOutput + sizeof(TD_TLHEADER));
 
 			// Check if all went correct
 			_ASSERTE(0 <= nEncryptedPartSize);
-			if(0 <= nEncryptedPartSize)
+			if (0 <= nEncryptedPartSize)
 			{
 				bResult = true; // data encrypted successfully
 			}
@@ -146,62 +171,75 @@ bool CEncryption::Encrypt(const unsigned char* pInput, int nLenInput, const char
 	return (bResult);
 }
 
-
-
-
 bool CEncryption::Decrypt(const unsigned char* pInput, int nLenInput, const char* szPassword,
-						 unsigned char*& pOutput, int& nLenOutput)
+	unsigned char*& pOutput, int& nLenOutput)
 {
-	bool			bResult = false;
-	TD_TLHEADER		hdr;
-	RD_UINT8		uFinalKey[32];
-	sha256_ctx		sha32;
+	bool            bResult = false;
+	TD_TLHEADER     hdr;
+	RD_UINT8        uFinalKey[32];
+	sha256_ctx      sha32;
 
 
-	_ASSERTE(NULL != pInput);						if(NULL == pInput)					return FALSE;
-	_ASSERTE(0	!= nLenInput);					if(0	== nLenInput)				return FALSE;
-	_ASSERTE(NULL != szPassword);					if(NULL == szPassword)				return FALSE;
-	_ASSERTE(sizeof(TD_TLHEADER) <= nLenInput);	if(sizeof(TD_TLHEADER) > nLenInput) return FALSE; 
+	_ASSERTE(NULL != pInput);
+	if (NULL == pInput)
+	{
+		return FALSE;
+	}
+	_ASSERTE(0	!= nLenInput);
+	if (0	== nLenInput)
+	{
+		return FALSE;
+	}
+	_ASSERTE(NULL != szPassword);
+	if (NULL == szPassword)
+	{
+		return FALSE;
+	}
+	_ASSERTE(sizeof(TD_TLHEADER) <= nLenInput);
+	if (sizeof(TD_TLHEADER) > nLenInput)
+	{
+		return FALSE;
+	}
 
 	// Extract header structure from memory file
 	memcpy(&hdr, pInput, sizeof(TD_TLHEADER));
 
 	// Hash the header
 	sha256_begin(&sha32);
-	sha256_hash((unsigned char *)&hdr + 32, sizeof(TD_TLHEADER) - 32, &sha32);
-	sha256_end((unsigned char *)uFinalKey, &sha32);
+	sha256_hash((unsigned char*)&hdr + 32, sizeof(TD_TLHEADER) - 32, &sha32);
+	sha256_end((unsigned char*)uFinalKey, &sha32);
 
 	// Check if hash of header is the same as stored hash
 	// to verify integrity of header
-	if(0 == memcmp(hdr.aHeaderHash, uFinalKey, 32))
+	if (0 == memcmp(hdr.aHeaderHash, uFinalKey, 32))
 	{
 		// Check if we can open this
-		if((hdr.dwSignature1 == TD_TLSIG_1) && (hdr.dwSignature2 == TD_TLSIG_2))
+		if ((hdr.dwSignature1 == TD_TLSIG_1) && (hdr.dwSignature2 == TD_TLSIG_2))
 		{
 			// Allocate enough memory
 			pOutput = new unsigned char[nLenInput];
-			if(NULL != pOutput)
+			if (NULL != pOutput)
 			{
 				unsigned long uKeyLen = strlen(szPassword);
 
 				// Create MasterKey by hashing szPassword
 				_ASSERTE(0 != uKeyLen);
-				if(0 != uKeyLen)
+				if (0 != uKeyLen)
 				{
 					sha256_begin(&sha32);
-					sha256_hash((unsigned char *)szPassword, uKeyLen, &sha32);
+					sha256_hash((unsigned char*)szPassword, uKeyLen, &sha32);
 					sha256_end(m_pMasterKey, &sha32);
 
 					m_dwKeyEncRounds = hdr.dwKeyEncRounds;
 
 					// Generate m_pTransformedMasterKey from m_pMasterKey
-					if(TRUE == _TransformMasterKey(hdr.aMasterSeed2))
+					if (TRUE == _TransformMasterKey(hdr.aMasterSeed2))
 					{
 						// Hash the master password with the generated hash salt
 						sha256_begin(&sha32);
 						sha256_hash(hdr.aMasterSeed, 16, &sha32);
 						sha256_hash(m_pTransformedMasterKey, 32, &sha32);
-						sha256_end((unsigned char *)uFinalKey, &sha32);
+						sha256_end((unsigned char*)uFinalKey, &sha32);
 
 						bResult = true;
 					}
@@ -216,20 +254,20 @@ bool CEncryption::Decrypt(const unsigned char* pInput, int nLenInput, const char
 
 		Rijndael aes;
 		// Initialize Rijndael/AES
-		if(RIJNDAEL_SUCCESS == aes.init(Rijndael::CBC, Rijndael::Decrypt, uFinalKey,
-			Rijndael::Key32Bytes, hdr.aEncryptionIV) )
+		if (RIJNDAEL_SUCCESS == aes.init(Rijndael::CBC, Rijndael::Decrypt, uFinalKey,
+				Rijndael::Key32Bytes, hdr.aEncryptionIV))
 		{
-			nLenOutput = aes.padDecrypt((RD_UINT8 *)pInput + sizeof(TD_TLHEADER), nLenInput - sizeof(TD_TLHEADER), (RD_UINT8 *)pOutput);
+			nLenOutput = aes.padDecrypt((RD_UINT8*)pInput + sizeof(TD_TLHEADER), nLenInput - sizeof(TD_TLHEADER), (RD_UINT8*)pOutput);
 
 			// Check if all went correct
 			_ASSERTE(0 <= nLenOutput);
-			if(0 <= nLenOutput)
+			if (0 <= nLenOutput)
 			{
 				// Check contents correct (with high probability)
 				sha256_begin(&sha32);
-				sha256_hash((unsigned char *)pOutput, nLenOutput, &sha32);
-				sha256_end((unsigned char *)uFinalKey, &sha32);
-				if(0 == memcmp(hdr.aContentsHash, uFinalKey, 32))
+				sha256_hash((unsigned char*)pOutput, nLenOutput, &sha32);
+				sha256_end((unsigned char*)uFinalKey, &sha32);
+				if (0 == memcmp(hdr.aContentsHash, uFinalKey, 32))
 				{
 					bResult = true; // data decrypted successfully
 				}
@@ -250,8 +288,6 @@ void CEncryption::FreeBuffer(unsigned char*& pBuffer)
 	SAFE_DELETE_ARRAY(pBuffer);
 }
 
-
-
 /*
   Copyright (c) 2003/2004, Dominik Reichl <dominik.reichl@t-online.de>
   All rights reserved.
@@ -260,7 +296,7 @@ void CEncryption::FreeBuffer(unsigned char*& pBuffer)
   modification, are permitted provided that the following conditions are met:
 
   - Redistributions of source code must retain the above copyright notice,
-    this list of conditions and the following disclaimer. 
+    this list of conditions and the following disclaimer.
   - Redistributions in binary form must reproduce the above copyright notice,
     this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
@@ -281,21 +317,26 @@ void CEncryption::FreeBuffer(unsigned char*& pBuffer)
   POSSIBILITY OF SUCH DAMAGE.
 */
 // Encrypt the master key a few times to make brute-force key-search harder
-BOOL CEncryption::_TransformMasterKey(BYTE *pKeySeed)
+BOOL CEncryption::_TransformMasterKey(BYTE* pKeySeed)
 {
 	Rijndael rijndael;
 	RD_UINT8 aKey[32];
 	RD_UINT8 aTest[16];
-	RD_UINT8 aRef[16] = { // The Rijndael class will be tested, that's the expected ciphertext
+	RD_UINT8 aRef[16] =   // The Rijndael class will be tested, that's the expected ciphertext
+	{
 		0x8e, 0xa2, 0xb7, 0xca, 0x51, 0x67, 0x45, 0xbf,
 		0xea, 0xfc, 0x49, 0x90, 0x4b, 0x49, 0x60, 0x89
 	};
 	DWORD i;
 	sha256_ctx sha2;
 
-	_ASSERTE(pKeySeed != NULL); if(pKeySeed == NULL) return FALSE;
+	_ASSERTE(pKeySeed != NULL);
+	if (pKeySeed == NULL)
+	{
+		return FALSE;
+	}
 
-	if(rijndael.init(Rijndael::ECB, Rijndael::Encrypt, (const RD_UINT8 *)pKeySeed,
+	if (rijndael.init(Rijndael::ECB, Rijndael::Encrypt, (const RD_UINT8*)pKeySeed,
 		Rijndael::Key32Bytes, 0) != RIJNDAEL_SUCCESS)
 	{
 		return FALSE;
@@ -303,18 +344,34 @@ BOOL CEncryption::_TransformMasterKey(BYTE *pKeySeed)
 
 	memcpy(m_pTransformedMasterKey, m_pMasterKey, 32);
 
-	for(i = 0; i < m_dwKeyEncRounds; i++)
+	for (i = 0; i < m_dwKeyEncRounds; i++)
 	{
-		rijndael.blockEncrypt((const RD_UINT8 *)m_pTransformedMasterKey, 256, (RD_UINT8 *)m_pTransformedMasterKey);
+		rijndael.blockEncrypt((const RD_UINT8*)m_pTransformedMasterKey, 256, (RD_UINT8*)m_pTransformedMasterKey);
 	}
 
 	// Do a quick test if the Rijndael class worked correctly
-	for(i = 0; i < 32; i++) aKey[i] = (RD_UINT8)i;
-	for(i = 0; i < 16; i++) aTest[i] = ((RD_UINT8)i << 4) | (RD_UINT8)i;
-	if(rijndael.init(Rijndael::ECB, Rijndael::Encrypt, aKey, Rijndael::Key32Bytes, NULL) != RIJNDAEL_SUCCESS)
-		{ _ASSERTE(FALSE); return FALSE; }
-	if(rijndael.blockEncrypt(aTest, 128, aTest) != 128) { _ASSERTE(FALSE); }
-	if(memcmp(aTest, aRef, 16) != 0) { _ASSERTE(FALSE); return FALSE; }
+	for (i = 0; i < 32; i++)
+	{
+		aKey[i] = (RD_UINT8)i;
+	}
+	for (i = 0; i < 16; i++)
+	{
+		aTest[i] = ((RD_UINT8)i << 4) | (RD_UINT8)i;
+	}
+	if (rijndael.init(Rijndael::ECB, Rijndael::Encrypt, aKey, Rijndael::Key32Bytes, NULL) != RIJNDAEL_SUCCESS)
+	{
+		_ASSERTE(FALSE);
+		return FALSE;
+	}
+	if (rijndael.blockEncrypt(aTest, 128, aTest) != 128)
+	{
+		_ASSERTE(FALSE);
+	}
+	if (memcmp(aTest, aRef, 16) != 0)
+	{
+		_ASSERTE(FALSE);
+		return FALSE;
+	}
 
 	// Hash once with SHA-256
 	sha256_begin(&sha2);

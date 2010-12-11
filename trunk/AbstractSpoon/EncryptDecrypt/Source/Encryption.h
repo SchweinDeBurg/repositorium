@@ -5,6 +5,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // Encryption.h: interface for the CEncryption class.
@@ -24,16 +37,16 @@
 #include "../../../CodeProject/Source/NewRandom.h"
 
 // The signature constants were chosen randomly
-#define TD_TLSIG_1				0x139C5AFE
-#define TD_TLSIG_2				0xBF3562DA
+#define TD_TLSIG_1              0x139C5AFE
+#define TD_TLSIG_2              0xBF3562DA
 
-#define TD_STD_KEYENCROUNDS		100000
+#define TD_STD_KEYENCROUNDS     100000
 
 #pragma pack(1)
 
 typedef struct _TD_TLHEADER // The database header
 {
-	BYTE	aHeaderHash[32];	// SHA-256 hash of the rest of the header
+	BYTE aHeaderHash[32]; // SHA-256 hash of the rest of the header
 
 	DWORD dwSignature1; // = TD_TLSIG_1
 	DWORD dwSignature2; // = TD_TLSIG_2
@@ -49,7 +62,6 @@ typedef struct _TD_TLHEADER // The database header
 
 #pragma pack()
 
-
 class CEncryption : public IEncryption
 {
 public:
@@ -58,20 +70,20 @@ public:
 
 	void Release();
 	bool Encrypt(const unsigned char* szInput, int nLenInput, const char* szPassword,
-						 unsigned char*& pOutput, int& nLenOutput);
+		unsigned char*& pOutput, int& nLenOutput);
 	bool Decrypt(const unsigned char* pInput, int nLenInput, const char* szPassword,
-						 unsigned char*& pOutput, int& nLenOutput);
+		unsigned char*& pOutput, int& nLenOutput);
 	void FreeBuffer(unsigned char*& pBuffer);
 
 private:
 	// Encrypt the master key a few times to make brute-force key-search harder
-	BOOL _TransformMasterKey(BYTE *pKeySeed);
+	BOOL _TransformMasterKey(BYTE* pKeySeed);
 
-	BYTE	m_pMasterKey[32]; // Master key used to encrypt the whole database
-	BYTE	m_pTransformedMasterKey[32]; // Master key encrypted several times
-	DWORD	m_dwKeyEncRounds;
+	BYTE    m_pMasterKey[32]; // Master key used to encrypt the whole database
+	BYTE    m_pTransformedMasterKey[32]; // Master key encrypted several times
+	DWORD   m_dwKeyEncRounds;
 
-	CNewRandom	m_random; // Pseudo-random number generator
+	CNewRandom  m_random; // Pseudo-random number generator
 
 };
 
