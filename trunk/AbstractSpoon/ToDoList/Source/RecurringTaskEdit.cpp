@@ -240,8 +240,8 @@ int CTDLRecurringTaskEdit::CalcMaxRegularityWidth(CDC* pDC, BOOL bIncOnce)
 
 #define WM_VALUECHANGE (WM_APP+1)
 
-CTDLRecurringTaskOptionDlg::CTDLRecurringTaskOptionDlg(const TDIRECURRENCE& tr, const COleDateTime& dtDefault, CWnd* pParent /*=NULL*/)
-: CDialog(IDD_RECURRING_TASK_DIALOG, pParent)
+CTDLRecurringTaskOptionDlg::CTDLRecurringTaskOptionDlg(const TDIRECURRENCE& tr, const COleDateTime& dtDefault, CWnd* pParent /*=NULL*/):
+CDialog(IDD_RECURRING_TASK_DIALOG, pParent)
 {
 	//{{AFX_DATA_INIT(CRecurringTaskOptionDlg)
 	m_nRegularity = tr.nRegularity;

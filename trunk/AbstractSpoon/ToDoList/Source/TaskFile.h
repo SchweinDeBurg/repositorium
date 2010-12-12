@@ -58,11 +58,11 @@
 #include <afxtempl.h>
 
 #ifdef NO_TL_ENCRYPTDECRYPT
-#	include "../../Common/XmlFile.h"
-#	define XMLBASE CXmlFile
+#include "../../Common/XmlFile.h"
+#define XMLBASE CXmlFile
 #else
-#	include "../../Common/XmlFileEx.h"
-#	define XMLBASE CXmlFileEx
+#include "../../Common/XmlFileEx.h"
+#define XMLBASE CXmlFileEx
 #endif
 
 struct TDIRECURRENCE; // predeclaration

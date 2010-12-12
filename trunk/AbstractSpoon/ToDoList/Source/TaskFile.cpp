@@ -66,7 +66,6 @@ static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
-
 // private class to load header
 class CTFHeaderParse : public IXmlParse
 {
@@ -387,13 +386,6 @@ int CTaskFile::Merge(LPCTSTR szTaskFilePath, BOOL bByID, BOOL bMoveExist)
 }
 #endif
 
-/*
-void CTaskFile::SortTasksByID()
-{
-SortItemsI(TDL_TASK, TDL_TASKID);
-}
-*/
-
 void CTaskFile::SortTasksByPos()
 {
 	SortItemsI(TDL_TASK, TDL_TASKPOS);
@@ -558,13 +550,6 @@ BOOL CTaskFile::GetEarliestDueDate(COleDateTime& date) const
 	date.m_dt = pXItem->GetValueF();
 	return TRUE;
 }
-
-/*
-BOOL CTaskFile::SetCommentsType(LPCTSTR szID)
-{
-return (SetItemValue(TDL_COMMENTSTYPE, szID) != NULL);
-}
-*/
 
 CString CTaskFile::GetCommentsType() const
 {
@@ -1274,7 +1259,7 @@ BOOL CTaskFile::GetTaskRecurrence(HTASKITEM hTask, TDIRECURRENCE& tr) const
 }
 
 bool CTaskFile::GetTaskRecurrence(HTASKITEM hTask, int& nRegularity, DWORD& dwSpecific1,
-											 DWORD& dwSpecific2, BOOL& bRecalcFromDue, int& nReuse) const
+	DWORD& dwSpecific2, BOOL& bRecalcFromDue, int& nReuse) const
 {
 	CXmlItem* pXI = TaskFromHandle(hTask);
 
@@ -1840,7 +1825,7 @@ BOOL CTaskFile::SetTaskRecurrence(HTASKITEM hTask, const TDIRECURRENCE& tr)
 }
 
 bool CTaskFile::SetTaskRecurrence(HTASKITEM hTask, int nRegularity, DWORD dwSpecific1,
-											 DWORD dwSpecific2, BOOL bRecalcFromDue, int nReuse)
+	DWORD dwSpecific2, BOOL bRecalcFromDue, int nReuse)
 {
 	CXmlItem* pXI = TaskFromHandle(hTask);
 
@@ -2057,7 +2042,7 @@ char CTaskFile::GetTaskTimeUnits(HTASKITEM hTask, LPCTSTR szUnitsItem) const
 ////////////////////////////////////////////////////////////////////
 
 bool CTaskFile::SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, const COleDateTime& tVal,
-									 BOOL bIncTime)
+	BOOL bIncTime)
 {
 	double dDate = bIncTime ? tVal.m_dt : floor(tVal.m_dt);
 
@@ -2216,7 +2201,7 @@ const TCHAR* CTaskFile::GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemT
 }
 
 bool CTaskFile::DeleteTaskArray(HTASKITEM hTask, const char* szNumItemTag,
-										  const char* szItemTag)
+	const char* szItemTag)
 {
 	CXmlItem* pXITask = NULL;
 	GET_TASK(pXITask, hTask, false);
@@ -2239,7 +2224,7 @@ bool CTaskFile::DeleteTaskArray(HTASKITEM hTask, const char* szNumItemTag,
 }
 
 bool CTaskFile::AddTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag,
-											const char* szItemTag, const char* szItem)
+	const char* szItemTag, const char* szItem)
 {
 	CXmlItem* pXITask = NULL;
 	GET_TASK(pXITask, hTask, false);
@@ -2292,7 +2277,7 @@ bool CTaskFile::AddTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag,
 }
 
 int CTaskFile::GetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
-									 const char* szItemTag, CStringArray& aItems) const
+	const char* szItemTag, CStringArray& aItems) const
 {
 	aItems.RemoveAll();
 
@@ -2317,7 +2302,7 @@ int CTaskFile::GetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
 }
 
 BOOL CTaskFile::SetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
-									  const char* szItemTag, const CStringArray& aItems)
+	const char* szItemTag, const CStringArray& aItems)
 {
 	CXmlItem* pXITask = NULL;
 	GET_TASK(pXITask, hTask, FALSE);
