@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // MergeToDoList.h: interface for the CMergeToDoList class.
@@ -55,7 +68,7 @@ enum TDL_MERGEHOW
 
 class CXmlItem;
 
-class CMergeToDoList  
+class CMergeToDoList
 {
 public:
 	CMergeToDoList(TDL_MERGEBY nBy, TDL_MERGEHOW nHow = TDLM_MOVE);
@@ -66,7 +79,10 @@ public:
 	int Merge(const CXmlItem* pXISrc, LPCTSTR szDestPath);
 	int Merge(LPCTSTR szSrcPath, CXmlItem* pXIDest);
 
-	DWORD GetNextID() { return m_dwNextID; }
+	DWORD GetNextID()
+	{
+		return m_dwNextID;
+	}
 
 protected:
 	CXmlItem* m_pXIDestRoot;
@@ -74,11 +90,11 @@ protected:
 	TDL_MERGEHOW m_nMergeHow;
 	DWORD m_dwNextID, m_dwOrgNextID;
 	CMap<DWORD, DWORD, CXmlItem*, CXmlItem*&> m_mapID2Item;
-	
+
 protected:
 	int MergeTasks(const CXmlItem* pXISrc, CXmlItem* pXIDest);
 	BOOL MergeAttributes(const CXmlItem* pXISrc, CXmlItem* pXIDest);
-	
+
 	int MergeTasksByTitle(const CXmlItem* pXISrc, CXmlItem* pXIDest);
 	int MergeTasksByID(const CXmlItem* pXISrc, CXmlItem* pXIDest);
 	int MergeTaskByID(const CXmlItem* pXISrc, CXmlItem* pXIDestParent);

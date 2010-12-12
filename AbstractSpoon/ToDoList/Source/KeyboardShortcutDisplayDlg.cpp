@@ -61,8 +61,8 @@ static char THIS_FILE[] = __FILE__;
 // CKeyboardShortcutDisplayDlg dialog
 
 
-CKeyboardShortcutDisplayDlg::CKeyboardShortcutDisplayDlg(const CStringArray& aMapping, char cDelim, CWnd* pParent /*=NULL*/)
-: CDialog(CKeyboardShortcutDisplayDlg::IDD, pParent), m_aMapping(aMapping), m_cDelim(cDelim)
+CKeyboardShortcutDisplayDlg::CKeyboardShortcutDisplayDlg(const CStringArray& aMapping, char cDelim, CWnd* pParent /*=NULL*/):
+CDialog(CKeyboardShortcutDisplayDlg::IDD, pParent), m_aMapping(aMapping), m_cDelim(cDelim)
 
 {
 	//{{AFX_DATA_INIT(CKeyboardShortcutDisplayDlg)

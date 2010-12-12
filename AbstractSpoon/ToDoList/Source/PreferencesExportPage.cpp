@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // PreferencesExportPage.cpp : implementation file
@@ -52,21 +66,20 @@ const UINT RESETBTN = 0xc4;
 
 IMPLEMENT_DYNCREATE(CPreferencesExportPage, CPreferencesPageBase)
 
-CPreferencesExportPage::CPreferencesExportPage() : 
-		CPreferencesPageBase(CPreferencesExportPage::IDD), 
-		m_eTextIndent(_T("0123456789")), m_eLineSpaces(_T("0123456789"))
+CPreferencesExportPage::CPreferencesExportPage() :
+CPreferencesPageBase(CPreferencesExportPage::IDD),
+m_eTextIndent(_T("0123456789")),
+m_eLineSpaces(_T("0123456789"))
 {
-//	m_psp.dwFlags &= ~PSP_HASHELP;
-
 	//{{AFX_DATA_INIT(CPreferencesExportPage)
 	m_nTextIndent = 2;
 	m_nLineSpaces = 8;
 	//}}AFX_DATA_INIT
 
 	// add a 'reset' button to the charset field
-	m_eCharset.InsertButton(0, ID_RESETCHARSET, RESETBTN, 
-								CEnString(IDS_PEP_RESETCHARSET), 
-								DEF_BTNWIDTH + 4, _T("Wingdings"));
+	m_eCharset.InsertButton(0, ID_RESETCHARSET, RESETBTN,
+		CEnString(IDS_PEP_RESETCHARSET),
+		DEF_BTNWIDTH + 4, _T("Wingdings"));
 }
 
 CPreferencesExportPage::~CPreferencesExportPage()
@@ -117,7 +130,6 @@ void CPreferencesExportPage::DoDataExchange(CDataExchange* pDX)
 	}
 }
 
-
 BEGIN_MESSAGE_MAP(CPreferencesExportPage, CPreferencesPageBase)
 	//{{AFX_MSG_MAP(CPreferencesExportPage)
 	ON_BN_CLICKED(IDC_TABTEXTINDENT, OnChangeTextIndentType)
@@ -130,38 +142,40 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesExportPage message handlers
 
-BOOL CPreferencesExportPage::OnInitDialog() 
+BOOL CPreferencesExportPage::OnInitDialog()
 {
 	CPreferencesPageBase::OnInitDialog();
-	
-//	m_mgrGroupLines.AddGroupLine(IDC_EXPORTGROUP, *this); 
+
 	m_eTextIndent.EnableWindow(m_bUseSpaceIndents);
 	GetDlgItem(IDC_TEXTINDENTTRAIL)->EnableWindow(m_bUseSpaceIndents);
-	
+
 	m_eLineSpaces.EnableWindow(m_bExportSpaceForNotes);
 	GetDlgItem(IDC_NUMLINESPACETRAIL)->EnableWindow(m_bExportSpaceForNotes);
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CPreferencesExportPage::OnChangeTextIndentType() 
+void CPreferencesExportPage::OnChangeTextIndentType()
 {
 	UpdateData();
 
 	m_eTextIndent.EnableWindow(m_bUseSpaceIndents);
 	GetDlgItem(IDC_TEXTINDENTTRAIL)->EnableWindow(m_bUseSpaceIndents);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
 CString CPreferencesExportPage::GetHtmlCharSet() const
 {
 	if (m_sHtmlCharSet.IsEmpty())
+	{
 		return _T("Windows - ") + Misc::GetDefCharset();
+	}
 
 	// else
 	return m_sHtmlCharSet;
 }
-
 
 void CPreferencesExportPage::LoadPreferences(const CPreferences& prefs)
 {
@@ -175,9 +189,7 @@ void CPreferencesExportPage::LoadPreferences(const CPreferences& prefs)
 	m_bExportSpaceForNotes = prefs.GetProfileInt(_T("Preferences"), _T("ExportSpaceForNotes"), FALSE);
 	m_bUseSpaceIndents = prefs.GetProfileInt(_T("Preferences"), _T("UseSpaceIndents"), TRUE);
 
-	// default code page
 	CString sDefCharset = _T("Windows-") + Misc::GetDefCharset();
-
 	m_sHtmlCharSet = prefs.GetProfileString(_T("Preferences"), _T("HtmlCharSet"), sDefCharset);
 }
 
@@ -202,15 +214,19 @@ LRESULT CPreferencesExportPage::OnEEBtnClick(WPARAM wp, LPARAM lp)
 	{
 		m_sHtmlCharSet = _T("Windows-") + Misc::GetDefCharset();
 		UpdateData(FALSE);
+
+		CPreferencesPageBase::OnControlChange();
 	}
 
 	return 0L;
 }
 
-void CPreferencesExportPage::OnExportspacefornotes() 
+void CPreferencesExportPage::OnExportspacefornotes()
 {
 	UpdateData();
 
 	m_eLineSpaces.EnableWindow(m_bExportSpaceForNotes);
 	GetDlgItem(IDC_NUMLINESPACETRAIL)->EnableWindow(m_bExportSpaceForNotes);
+
+	CPreferencesPageBase::OnControlChange();
 }
