@@ -71,7 +71,7 @@ public:
 
 class CInputListCtrl : public CEnListCtrl
 {
-	// Construction
+// Construction
 public:
 	CInputListCtrl();
 
@@ -134,7 +134,7 @@ private:
 	// Operations
 public:
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CInputListCtrl)
 public:
@@ -145,7 +145,7 @@ protected:
 	virtual void OnCancelEdit();
 	virtual void PreSubclassWindow();
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CInputListCtrl();
 

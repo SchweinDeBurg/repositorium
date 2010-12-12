@@ -55,7 +55,7 @@
 
 class CColorButton : public CButton
 {
-	// Construction
+// Construction
 public:
 	CColorButton();
 
@@ -68,12 +68,12 @@ public:
 protected:
 	COLORREF m_color;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CColorButton)
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CColorButton();
 

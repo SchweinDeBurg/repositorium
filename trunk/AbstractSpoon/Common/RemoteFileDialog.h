@@ -100,7 +100,7 @@ typedef CArray<FILERESULT, FILERESULT&> CFRArray;
 
 class CRemoteFileDialog : public CRuntimeDlg
 {
-	// Construction
+// Construction
 public:
 	CRemoteFileDialog(CFtpConnection* pConnection, LPCTSTR szServer, LPCTSTR szFilters = NULL, LPCTSTR szInitialFolder = NULL);   // standard constructor
 	virtual ~CRemoteFileDialog();
@@ -127,7 +127,7 @@ public:
 	}
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CRemoteFileDialog)
 	CComboBox   m_cbFileTypes;
 	CListCtrl   m_lcFiles;
@@ -179,7 +179,7 @@ protected:
 	CSysImageList m_silLarge, m_silSmall;
 	BOOL m_bInitReport;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CRemoteFileDialog)
 protected:
@@ -188,7 +188,7 @@ protected:
 	virtual void OnOK();
 	virtual void PostCreate();
 
-	// Implementation
+// Implementation
 protected:
 
 	// Generated message map functions

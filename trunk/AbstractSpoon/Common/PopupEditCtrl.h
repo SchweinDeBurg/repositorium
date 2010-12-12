@@ -37,7 +37,7 @@ enum PEC_CLEANUP
 
 class CPopupEditCtrl : public CMaskEdit
 {
-	// Construction
+// Construction
 public:
 	CPopupEditCtrl(PEC_CLEANUP nCleanup = PEC_AUTOHIDE);
 	void Reset()
@@ -64,14 +64,14 @@ protected:
 public:
 	virtual BOOL Create(CWnd* pParentWnd, UINT nID, DWORD dwFlags = WS_CHILD);
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CPopupEditCtrl)
 public:
 protected:
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CPopupEditCtrl();
 

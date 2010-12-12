@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // KeyboardShortcutDisplayDlg.cpp : implementation file
@@ -49,11 +62,11 @@ static char THIS_FILE[] = __FILE__;
 
 
 CKeyboardShortcutDisplayDlg::CKeyboardShortcutDisplayDlg(const CStringArray& aMapping, char cDelim, CWnd* pParent /*=NULL*/)
-	: CDialog(CKeyboardShortcutDisplayDlg::IDD, pParent), m_aMapping(aMapping), m_cDelim(cDelim)
+: CDialog(CKeyboardShortcutDisplayDlg::IDD, pParent), m_aMapping(aMapping), m_cDelim(cDelim)
 
 {
 	//{{AFX_DATA_INIT(CKeyboardShortcutDisplayDlg)
-		// NOTE: the ClassWizard will add member initialization here
+	// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 }
 
@@ -76,7 +89,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CKeyboardShortcutDisplayDlg message handlers
 
-BOOL CKeyboardShortcutDisplayDlg::OnInitDialog() 
+BOOL CKeyboardShortcutDisplayDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -103,14 +116,16 @@ BOOL CKeyboardShortcutDisplayDlg::OnInitDialog()
 			m_lcShortcuts.SetItemText(nIndex, 1, sItem.Mid(nDelim + 1));
 		}
 		else
+		{
 			m_lcShortcuts.InsertItem(nItem, _T(""));
+		}
 	}
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CKeyboardShortcutDisplayDlg::OnCopyshortcuts() 
+void CKeyboardShortcutDisplayDlg::OnCopyshortcuts()
 {
 	CString sText, sLine;
 
@@ -125,7 +140,9 @@ void CKeyboardShortcutDisplayDlg::OnCopyshortcuts()
 			sText += sLine;
 		}
 		else
+		{
 			sText += _T("\n");
+		}
 	}
 
 	Misc::CopyTexttoClipboard(sText, *this);

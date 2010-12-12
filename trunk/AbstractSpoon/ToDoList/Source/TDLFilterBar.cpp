@@ -750,7 +750,7 @@ BOOL CTDLFilterBar::OnToolTipNotify(UINT /*id*/, NMHDR* pNMHDR, LRESULT* /*pResu
 	return FALSE;
 }
 
-void CTDLFilterBar::SetUIColors(COLORREF crBack/*, COLORREF crText*/)
+void CTDLFilterBar::SetUIColors(COLORREF crBack)
 {
 	if (crBack != m_crUIBack)
 	{

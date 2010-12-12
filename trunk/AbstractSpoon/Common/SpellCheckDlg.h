@@ -95,7 +95,7 @@ enum // control IDs
 
 class CSpellCheckDlg : public CRuntimeDlg
 {
-	// Construction
+// Construction
 public:
 	CSpellCheckDlg(LPCTSTR szDictionaryPath = NULL, ISpellCheck* pSpellCheck = NULL, LPCTSTR szText = NULL, CWnd* pParent = NULL);   // standard constructor
 	virtual ~CSpellCheckDlg();
@@ -124,7 +124,7 @@ public:
 	static void SetItemText(UINT nIDItem, UINT nIDText);
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CSpellCheckDlg)
 	CRichEditBaseCtrl   m_reText;
 	CListBox    m_lbSuggestions;
@@ -146,14 +146,14 @@ protected:
 
 	static CMap<UINT, UINT, CString, CString&> s_mapText;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CSpellCheckDlg)
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 protected:
 
 	// Generated message map functions

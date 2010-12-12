@@ -59,7 +59,7 @@ class CONTENTFORMAT;
 
 class CContentTypeComboBox : public CComboBox
 {
-	// Construction
+// Construction
 public:
 	CContentTypeComboBox(const CContentMgr* pContentMgr);
 
@@ -82,14 +82,14 @@ protected:
 	// Operations
 public:
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CContentTypeComboBox)
 protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CContentTypeComboBox();
 

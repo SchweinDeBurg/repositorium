@@ -92,7 +92,7 @@ protected:
 	int m_nUnits, m_nMaxDecPlaces;
 
 protected:
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTimeEdit)
 	//}}AFX_VIRTUAL
@@ -101,7 +101,7 @@ protected:
 	virtual void OnSetReadOnly(BOOL bReadOnly);
 	//	virtual void DrawButton(CDC* pDC, const CRect& rWindow, int nBtn, const CPoint& ptCursor) const;
 
-	// Implementation
+// Implementation
 
 	// Generated message map functions
 protected:

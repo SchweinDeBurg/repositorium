@@ -64,7 +64,7 @@ enum AB_STYLE
 
 class CAboutDlg : public CRuntimeDlg
 {
-	// Construction
+// Construction
 public:
 	CAboutDlg(UINT nAppIconID, AB_STYLE nStyle,
 		LPCTSTR szAppName, LPCTSTR szAppDescription, LPCTSTR szCopyright, LPCTSTR szLicense,
@@ -73,7 +73,7 @@ public:
 	int DoModal();
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CAboutDlg)
 	CStatic m_stIcon;
 	CString m_sAppName;
@@ -88,14 +88,14 @@ protected:
 	HICON m_hIcon;
 	AB_STYLE m_nStyle;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAboutDlg)
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 protected:
 
 	// Generated message map functions

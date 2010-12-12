@@ -54,7 +54,7 @@ class CPreferences;
 
 class CToDoCtrlMgr
 {
-	// Construction
+// Construction
 public:
 	CToDoCtrlMgr(CTabCtrl& tabCtrl); 
 	~CToDoCtrlMgr();
@@ -140,7 +140,7 @@ public:
 
 	void PreparePopupMenu(CMenu& menu, UINT nID1, int nMax = 20) const;
 
-	// Implementation
+// Implementation
 protected:
 	struct TDCITEM
 	{

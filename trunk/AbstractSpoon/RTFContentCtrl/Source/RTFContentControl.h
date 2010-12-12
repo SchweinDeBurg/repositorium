@@ -65,7 +65,7 @@ static int LENTAG = strlen(RTFTAG);
 
 class CRTFContentControl : public CRulerRichEditCtrl, public IContentControl
 {
-	// Construction
+// Construction
 public:
 	CRTFContentControl();
 
@@ -104,13 +104,13 @@ protected:
 	// Operations
 public:
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CRTFContentControl)
 public:
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CRTFContentControl();
 

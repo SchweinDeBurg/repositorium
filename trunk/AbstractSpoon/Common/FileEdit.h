@@ -76,7 +76,7 @@ enum { FEBTN_NONE, FEBTN_BROWSE, FEBTN_GO, FE_BTNLAST };
 
 class CFileEdit : public CEnEdit
 {
-	// Construction
+// Construction
 public:
 	CFileEdit(int nStyle = FES_COMBOSTYLEBTN, LPCTSTR szFilter = FILTER_ALLFILES);
 
@@ -108,14 +108,14 @@ protected:
 	// Operations
 public:
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CFileEdit)
 protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CFileEdit();
 

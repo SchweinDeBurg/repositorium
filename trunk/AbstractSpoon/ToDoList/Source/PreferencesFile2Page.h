@@ -65,7 +65,7 @@ class CPreferencesFile2Page : public CPreferencesPageBase
 {
 	DECLARE_DYNCREATE(CPreferencesFile2Page)
 
-	// Construction
+// Construction
 public:
 	CPreferencesFile2Page(const CImportExportMgr* pExportMgr = NULL);
 	~CPreferencesFile2Page();
@@ -117,7 +117,7 @@ public:
 	}
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CPreferencesFile2Page)
 	enum { IDD = IDD_PREFFILE2_PAGE };
 	CComboBox   m_cbKeepBackups;
@@ -147,14 +147,14 @@ protected:
 	const CImportExportMgr* m_pExportMgr;
 	CString m_sSaveExportStylesheet;
 
-	// Overrides
+// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPreferencesFile2Page)
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPreferencesFile2Page)

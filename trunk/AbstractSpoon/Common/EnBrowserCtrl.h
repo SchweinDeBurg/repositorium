@@ -44,7 +44,7 @@
 
 class CEnBrowserCtrl : public CWebBrowserCtrl
 {
-	// Construction
+// Construction
 public:
 	CEnBrowserCtrl();
 	virtual ~CEnBrowserCtrl();
@@ -54,7 +54,7 @@ public:
 	void Print(LPCTSTR szFile = NULL);
 	void PrintPreview(LPCTSTR szFile = NULL);
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CEnBrowserCtrl)
 	//}}AFX_VIRTUAL

@@ -84,7 +84,7 @@ enum AL_TYPE
 
 class CServerDlg : public CRuntimeDlg
 {
-	// Construction
+// Construction
 public:
 	CServerDlg(LPCTSTR szServer = NULL, LPCTSTR szUsername = NULL,
 		LPCTSTR szPassword = NULL, AL_TYPE nAnonymousLogin = ANONLOGIN_AUTO);   // standard constructor
@@ -120,7 +120,7 @@ public:
 	static void SetItemText(UINT nIDItem, UINT nIDText);
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CServerDlg)
 	CString m_sServer;
 	CString m_sUsername;
@@ -134,7 +134,7 @@ protected:
 
 	static CMap<UINT, UINT, CString, CString&> s_mapText;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CServerDlg)
 protected:
@@ -142,7 +142,7 @@ protected:
 	//}}AFX_VIRTUAL
 	virtual void OnOK();
 
-	// Implementation
+// Implementation
 protected:
 
 	// Generated message map functions
