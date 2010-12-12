@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TDLSendTasksDlg.cpp : implementation file
@@ -44,14 +57,12 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTDLSendTasksDlg dialog
 
-
-CTDLSendTasksDlg::CTDLSendTasksDlg(TD_SENDWHAT nWhat, TD_SENDAS nSendAs, CWnd* pParent /*=NULL*/)
-	: CDialog(CTDLSendTasksDlg::IDD, pParent), m_nSendWhat(nWhat), m_nSendTasksAsOption(nSendAs)
+CTDLSendTasksDlg::CTDLSendTasksDlg(TD_SENDWHAT nWhat, TD_SENDAS nSendAs, CWnd* pParent /*=NULL*/):
+CDialog(CTDLSendTasksDlg::IDD, pParent), m_nSendWhat(nWhat), m_nSendTasksAsOption(nSendAs)
 {
 	//{{AFX_DATA_INIT(CTDLSendTasksDlg)
 	//}}AFX_DATA_INIT
 }
-
 
 void CTDLSendTasksDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -61,7 +72,6 @@ void CTDLSendTasksDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_CBIndex(pDX, IDC_SELTASKSSENDAS, m_nSendTasksAsOption);
 	//}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CTDLSendTasksDlg, CDialog)
 	//{{AFX_MSG_MAP(CTDLSendTasksDlg)
@@ -73,17 +83,17 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTDLSendTasksDlg message handlers
 
-BOOL CTDLSendTasksDlg::OnInitDialog() 
+BOOL CTDLSendTasksDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
+
 	GetDlgItem(IDC_SELTASKSSENDAS)->EnableWindow(m_nSendWhat == TDSW_SELECTEDTASKS);
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CTDLSendTasksDlg::OnChangeSendWhat() 
+void CTDLSendTasksDlg::OnChangeSendWhat()
 {
 	UpdateData();
 

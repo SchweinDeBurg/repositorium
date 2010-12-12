@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TDLPrefMigrationDlg.cpp : implementation file
@@ -46,15 +59,13 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTDLPrefMigrationDlg dialog
 
-
-CTDLPrefMigrationDlg::CTDLPrefMigrationDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CTDLPrefMigrationDlg::IDD, pParent)
+CTDLPrefMigrationDlg::CTDLPrefMigrationDlg(CWnd* pParent /*=NULL*/):
+CDialog(CTDLPrefMigrationDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CTDLPrefMigrationDlg)
-		// NOTE: the ClassWizard will add member initialization here
+	// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 }
-
 
 void CTDLPrefMigrationDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -63,7 +74,6 @@ void CTDLPrefMigrationDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ANIMATION, m_animation);
 	//}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CTDLPrefMigrationDlg, CDialog)
 	//{{AFX_MSG_MAP(CTDLPrefMigrationDlg)
@@ -74,29 +84,31 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTDLPrefMigrationDlg message handlers
 
-BOOL CTDLPrefMigrationDlg::OnInitDialog() 
+BOOL CTDLPrefMigrationDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
+
 	m_sAnimationFilePath = FileMisc::GetTempFileName(_T("tdl_migrate"), _T("avi"));
 
 	if (FileMisc::ExtractResource(_T("shell32.dll"), 161, _T("AVI"), m_sAnimationFilePath))
+	{
 		m_animation.Open(m_sAnimationFilePath);
+	}
 
 	CenterWindow();
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-BOOL CTDLPrefMigrationDlg::Create(CWnd* pParentWnd) 
+BOOL CTDLPrefMigrationDlg::Create(CWnd* pParentWnd)
 {
 	return CDialog::Create(IDD, pParentWnd);
 }
 
-void CTDLPrefMigrationDlg::OnDestroy() 
+void CTDLPrefMigrationDlg::OnDestroy()
 {
 	CDialog::OnDestroy();
-	
-	::DeleteFile(m_sAnimationFilePath);	
+
+	::DeleteFile(m_sAnimationFilePath);
 }

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TDLRiskComboBox.cpp : implementation file
@@ -45,18 +58,20 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-const UINT IDS_TDC_SCALE[] = { IDS_TDC_SCALE0,
-								IDS_TDC_SCALE1,
-								IDS_TDC_SCALE2,
-								IDS_TDC_SCALE3,
-								IDS_TDC_SCALE4,
-								IDS_TDC_SCALE5,
-								IDS_TDC_SCALE6,
-								IDS_TDC_SCALE7,
-								IDS_TDC_SCALE8,
-								IDS_TDC_SCALE9,
-								IDS_TDC_SCALE10 };
-
+const UINT IDS_TDC_SCALE[] =
+{
+	IDS_TDC_SCALE0,
+	IDS_TDC_SCALE1,
+	IDS_TDC_SCALE2,
+	IDS_TDC_SCALE3,
+	IDS_TDC_SCALE4,
+	IDS_TDC_SCALE5,
+	IDS_TDC_SCALE6,
+	IDS_TDC_SCALE7,
+	IDS_TDC_SCALE8,
+	IDS_TDC_SCALE9,
+	IDS_TDC_SCALE10
+};
 
 const int TDC_NUMSCALES = sizeof(IDS_TDC_SCALE) / sizeof(UINT);
 
@@ -67,9 +82,13 @@ void AFXAPI DDX_CBRisk(CDataExchange* pDX, int nIDC, int& nRisk)
 		::DDX_CBIndex(pDX, nIDC, nRisk);
 
 		if (nRisk == 0) // NONE
+		{
 			nRisk = FT_NORISK;
+		}
 		else
+		{
 			nRisk--;
+		}
 	}
 	else
 	{
@@ -89,7 +108,6 @@ CTDLRiskComboBox::~CTDLRiskComboBox()
 {
 }
 
-
 BEGIN_MESSAGE_MAP(CTDLRiskComboBox, CComboBox)
 	//{{AFX_MSG_MAP(CTDLRiskComboBox)
 	ON_WM_CREATE()
@@ -99,41 +117,43 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTDLRiskComboBox message handlers
 
-int CTDLRiskComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CTDLRiskComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CComboBox::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
-	
+	}
+
 	BuildCombo();
-	
+
 	return 0;
 }
 
-void CTDLRiskComboBox::PreSubclassWindow() 
+void CTDLRiskComboBox::PreSubclassWindow()
 {
 	CComboBox::PreSubclassWindow();
 
- 	BuildCombo();
+	BuildCombo();
 }
 
 void CTDLRiskComboBox::BuildCombo()
 {
 	ASSERT(GetSafeHwnd());
-	
+
 	int nSel = GetCurSel(); // so we can restore it
-	
+
 	ResetContent();
-	
+
 	// first item is 'None' and never has a colour
 	AddString(CEnString(IDS_TDC_NONE));
-	
+
 	for (int nLevel = 0; nLevel <= 10; nLevel++)
 	{
 		CString sRisk;
 		sRisk.Format(_T("%d (%s)"), nLevel, CEnString(IDS_TDC_SCALE[nLevel]));
-		
+
 		AddString(sRisk);
 	}
-	
+
 	SetCurSel(nSel);
 }

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_TDLIMPORTDIALOG_H__F3B10AEE_B46C_4183_AC05_FB72D7C5AFA4__INCLUDED_)
@@ -68,20 +81,20 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CTDLImportDialog)
 	enum { IDD = IDD_IMPORT_DIALOG };
-	CFileEdit	m_eFilePath;
-	CComboBox	m_cbFormat;
-	int		m_bFromClipboard;
-	CString	m_sFromFilePath;
-	int		m_nImportTo;
-	int		m_nFormatOption;
-	CString	m_sClipboardText;
+	CFileEdit   m_eFilePath;
+	CComboBox   m_cbFormat;
+	int     m_bFromClipboard;
+	CString m_sFromFilePath;
+	int     m_nImportTo;
+	int     m_nFormatOption;
+	CString m_sClipboardText;
 	//}}AFX_DATA
 	const CImportExportMgr& m_mgrImportExport;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTDLImportDialog)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 	virtual void OnOK();

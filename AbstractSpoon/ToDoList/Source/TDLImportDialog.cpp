@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TDLImportDialog.cpp : implementation file
@@ -48,10 +61,9 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTDLImportDialog dialog
 
-
-CTDLImportDialog::CTDLImportDialog(const CImportExportMgr& mgr, CWnd* pParent /*=NULL*/)
-	: CDialog(CTDLImportDialog::IDD, pParent),
-	  m_mgrImportExport(mgr)
+CTDLImportDialog::CTDLImportDialog(const CImportExportMgr& mgr, CWnd* pParent /*=NULL*/):
+CDialog(CTDLImportDialog::IDD, pParent),
+m_mgrImportExport(mgr)
 {
 	//{{AFX_DATA_INIT(CTDLImportDialog)
 	//}}AFX_DATA_INIT
@@ -64,7 +76,6 @@ CTDLImportDialog::CTDLImportDialog(const CImportExportMgr& mgr, CWnd* pParent /*
 
 	m_nFormatOption = min(m_nFormatOption, mgr.GetNumImporters());
 }
-
 
 void CTDLImportDialog::DoDataExchange(CDataExchange* pDX)
 {
@@ -79,7 +90,6 @@ void CTDLImportDialog::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 }
 
-
 BEGIN_MESSAGE_MAP(CTDLImportDialog, CDialog)
 	//{{AFX_MSG_MAP(CTDLImportDialog)
 	ON_BN_CLICKED(IDC_FROMCLIPBOARD, OnChangeImportFrom)
@@ -93,48 +103,52 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTDLImportDialog message handlers
 
-void CTDLImportDialog::OnChangeImportFrom() 
+void CTDLImportDialog::OnChangeImportFrom()
 {
 	UpdateData();
 
 	BOOL bHasFilter = CurImporterHasFilter();
-	
+
 	GetDlgItem(IDC_FROMFILEPATH)->EnableWindow(!m_bFromClipboard && bHasFilter);
 	GetDlgItem(IDC_FROMCLIPBOARDTEXT)->EnableWindow(m_bFromClipboard && bHasFilter);
 
 	EnableOK();
 }
 
-BOOL CTDLImportDialog::OnInitDialog() 
+BOOL CTDLImportDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
+
 	// build the format comboxbox
 	for (int nImp = 0; nImp < m_mgrImportExport.GetNumImporters(); nImp++)
+	{
 		m_cbFormat.AddString(m_mgrImportExport.GetImporterMenuText(nImp));
-	
+	}
+
 	// append standard tasklist to the end
 	m_cbFormat.AddString(CEnString(AFX_IDS_APP_TITLE));
 	m_cbFormat.SetCurSel(m_nFormatOption);
-	
+
 	// init file edit
 	BOOL bHasFilter = CurImporterHasFilter();
 
 	m_eFilePath.SetFilter(GetCurImporterFilter());
 	m_eFilePath.EnableWindow(bHasFilter);
-	
+
 	GetDlgItem(IDC_FROMFILEPATH)->EnableWindow(!m_bFromClipboard && bHasFilter);
 	GetDlgItem(IDC_FROMCLIPBOARDTEXT)->EnableWindow(m_bFromClipboard && bHasFilter);
 	GetDlgItem(IDC_FROMFILE)->EnableWindow(bHasFilter);
 	GetDlgItem(IDC_FROMCLIPBOARD)->EnableWindow(bHasFilter);
-	
+
 	m_sClipboardText = Misc::GetClipboardText(*this);
 
 	if (bHasFilter)
+	{
 		GetDlgItem(IDC_FROMCLIPBOARDTEXT)->SetWindowText(m_sClipboardText);
+	}
 
 	EnableOK();
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -147,8 +161,10 @@ BOOL CTDLImportDialog::CurImporterHasFilter() const
 CString CTDLImportDialog::GetCurImporterFilter() const
 {
 	if (ImportTasklist())
+	{
 		return CEnString(IDS_TDLFILEFILTER);
-	
+	}
+
 	// else
 	return m_mgrImportExport.GetImporterFileFilter(m_nFormatOption);
 }
@@ -156,9 +172,9 @@ CString CTDLImportDialog::GetCurImporterFilter() const
 void CTDLImportDialog::OnOK()
 {
 	CDialog::OnOK();
-	
+
 	CPreferences prefs;
-	
+
 	prefs.WriteProfileInt(_T("Importing"), _T("ImportOption"), m_bFromClipboard);
 	prefs.WriteProfileString(_T("Importing"), _T("ImportFilePath"), m_sFromFilePath);
 	prefs.WriteProfileInt(_T("Importing"), _T("ImportToWhere"), m_nImportTo);
@@ -166,7 +182,9 @@ void CTDLImportDialog::OnOK()
 
 	// retrieve clipboard text
 	if (CurImporterHasFilter())
+	{
 		GetDlgItem(IDC_FROMCLIPBOARDTEXT)->GetWindowText(m_sClipboardText);
+	}
 }
 
 BOOL CTDLImportDialog::ImportTasklist() const
@@ -177,8 +195,10 @@ BOOL CTDLImportDialog::ImportTasklist() const
 int CTDLImportDialog::GetImporterIndex() const
 {
 	if (ImportTasklist())
+	{
 		return -1;
-	
+	}
+
 	// else
 	return m_nFormatOption;
 }
@@ -203,19 +223,19 @@ CString CTDLImportDialog::GetImportClipboardText() const
 	return (m_bFromClipboard && CurImporterHasFilter()) ? m_sClipboardText : _T("");
 }
 
-void CTDLImportDialog::OnSelchangeFormatoptions() 
+void CTDLImportDialog::OnSelchangeFormatoptions()
 {
 	BOOL bHadFilter = m_mgrImportExport.ImporterHasFileExtension(m_nFormatOption);
 
 	UpdateData(TRUE);
-	
+
 	// change the filter on the CFileEdit and clear the filepath
 	// and clear/restore clipboard text depending
 	BOOL bHasFilter = CurImporterHasFilter();
 
 	m_eFilePath.SetFilter(GetCurImporterFilter());
 	m_eFilePath.EnableWindow(bHasFilter);
-	
+
 	GetDlgItem(IDC_FROMFILE)->EnableWindow(bHasFilter);
 	GetDlgItem(IDC_FROMCLIPBOARD)->EnableWindow(bHasFilter);
 	GetDlgItem(IDC_FROMFILEPATH)->EnableWindow(!m_bFromClipboard && bHasFilter);
@@ -230,7 +250,7 @@ void CTDLImportDialog::OnSelchangeFormatoptions()
 	{
 		GetDlgItem(IDC_FROMCLIPBOARDTEXT)->SetWindowText(m_sClipboardText); // restore field
 	}
-	
+
 	m_sFromFilePath.Empty();
 	UpdateData(FALSE);
 
@@ -240,7 +260,9 @@ void CTDLImportDialog::OnSelchangeFormatoptions()
 void CTDLImportDialog::EnableOK()
 {
 	if (!CurImporterHasFilter())
+	{
 		GetDlgItem(IDOK)->EnableWindow(TRUE);
+	}
 
 	else if (GetImportFromClipboard())
 	{
@@ -255,14 +277,13 @@ void CTDLImportDialog::EnableOK()
 	}
 }
 
-
-void CTDLImportDialog::OnChangeClipboardtext() 
+void CTDLImportDialog::OnChangeClipboardtext()
 {
 	GetDlgItem(IDC_FROMCLIPBOARDTEXT)->GetWindowText(m_sClipboardText); // update
 	EnableOK();
 }
 
-void CTDLImportDialog::OnChangeFilepath() 
+void CTDLImportDialog::OnChangeFilepath()
 {
 	UpdateData();
 	EnableOK();

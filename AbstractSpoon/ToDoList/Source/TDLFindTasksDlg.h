@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDLFINDTASKSDLG_H__9118493D_32FD_434D_B549_8947D00277CD__INCLUDED_)
@@ -84,8 +98,11 @@ public:
 	int GetResultIDs(const CFilteredToDoCtrl* pTDC, CDWordArray& aTaskIDs) const;
 	void DeleteResults(const CFilteredToDoCtrl* pTDC);
 
-	void RefreshUserPreferences() { m_lcResults.RefreshUserPreferences(); }
-	
+	void RefreshUserPreferences()
+	{
+		m_lcResults.RefreshUserPreferences();
+	}
+
 	void SetUITheme(const UITHEME& theme);
 
 protected:
@@ -114,23 +131,30 @@ protected:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTDLFindTasksDlg)
-	public:
+public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
-	virtual void OnCancel() { ShowWindow(SW_HIDE); }
+	virtual void OnCancel()
+	{
+		ShowWindow(SW_HIDE);
+	}
 	virtual void OnOK();
 	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	int DoModal() { return -1; } // not for public use
+	int DoModal()
+	{
+		return -1;   // not for public use
+	}
 
 	// Generated message map functions
 	//{{AFX_MSG(CTDLFindTasksDlg)
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnApplyasfilter();
 	//}}AFX_MSG
 	virtual BOOL OnInitDialog();
 	afx_msg void OnAddRule();
@@ -166,7 +190,7 @@ protected:
 	afx_msg void OnMoveRuleDown();
 	afx_msg void OnUpdateMoveRuleDown(CCmdUI* pCmdUI);
 	afx_msg void OnItemActivated(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg BOOL OnToolTipNotify( UINT id, NMHDR* pNMHDR, LRESULT* pResult );	
+	afx_msg BOOL OnToolTipNotify(UINT id, NMHDR* pNMHDR, LRESULT* pResult);
 	DECLARE_MESSAGE_MAP()
 
 protected:
@@ -180,6 +204,7 @@ protected:
 	CString GetCurrentSearch(BOOL bSelected);
 	BOOL InitializeToolbar();
 	void DeleteAllResults();
+	void EnableApplyAsFilterButton();
 
 	BOOL LoadSearch(LPCTSTR szName, CSearchParamArray& params) const;
 	BOOL SaveSearch(LPCTSTR szName, const CSearchParamArray& params);

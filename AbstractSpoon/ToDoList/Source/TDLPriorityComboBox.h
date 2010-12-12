@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_TDLPRIORITYCOMBOBOX_H__94985E3D_C2CA_44C0_B3AD_E55C110AEE45__INCLUDED_)
@@ -51,7 +64,7 @@ class CTDLPriorityComboBox : public CColorComboBox
 // Construction
 public:
 	CTDLPriorityComboBox();
-	
+
 	BOOL SetColors(const CDWordArray& aColors); // must have 11 elements
 	void SetReverseOrder(BOOL bReverse = TRUE);
 
@@ -63,13 +76,13 @@ protected:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTDLPriorityComboBox)
-	protected:
+protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
 protected:
-   BOOL m_bReverse;
-   CDWordArray m_aColors;
+	BOOL m_bReverse;
+	CDWordArray m_aColors;
 
 // Implementation
 public:
@@ -84,8 +97,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-   void BuildCombo();
-
+	void BuildCombo();
 };
 
 /////////////////////////////////////////////////////////////////////////////
