@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TimeEdit.cpp: implementation of the CTimeEdit class.
@@ -90,7 +103,7 @@ static LPCTSTR UNITLABELS[] =
 	TIME_YEARS
 };
 
-const int NUM_UNITS = sizeof(TIMEUNITS) / sizeof (TIMEUNIT);
+const int NUM_UNITS = sizeof(TIMEUNITS) / sizeof(TIMEUNIT);
 
 const TIMEUNIT& GetTimeUnit(int nUnits)
 {
@@ -99,7 +112,9 @@ const TIMEUNIT& GetTimeUnit(int nUnits)
 	while (nItem--)
 	{
 		if (TIMEUNITS[nItem].nUnits == nUnits)
+		{
 			return TIMEUNITS[nItem];
+		}
 	}
 
 	return TIMEUNITS[0]; // hours
@@ -206,7 +221,9 @@ void CTimeEdit::SetMaxDecimalPlaces(int nMaxDecPlaces)
 void CTimeEdit::OnBtnClick(UINT nID)
 {
 	if (nID != TEBTN_UNITS)
+	{
 		return;
+	}
 
 	CMenu menu;
 
@@ -220,7 +237,9 @@ void CTimeEdit::OnBtnClick(UINT nID)
 			menu.AppendMenu(MF_STRING, tu.nMenuID, tu.szLabel);
 
 			if (tu.nUnits == m_nUnits)
+			{
 				menu.CheckMenuItem(nUnit, MF_CHECKED | MF_BYPOSITION);
+			}
 		}
 		CRect rButton = GetButtonRect(nID);
 
@@ -246,7 +265,9 @@ void CTimeEdit::OnBtnClick(UINT nID)
 
 					// inform parent and check for cancel
 					if (GetParent()->SendMessage(WM_TEN_UNITSCHANGE, (WPARAM)GetDlgCtrlID(), nPrevUnits))
+					{
 						SetUnits(nPrevUnits);
+					}
 				}
 				break;
 			}
@@ -295,7 +316,9 @@ void CTimeEdit::SetUnits(int nUnits, LPCTSTR szLongUnits, LPCTSTR szAbbrevUnits)
 			}
 
 			if (szAbbrevUnits && *szAbbrevUnits)
+			{
 				tu.cAbbrLabel = szAbbrevUnits[0];
+			}
 		}
 	}
 
@@ -311,15 +334,19 @@ void CTimeEdit::RemoveTrailingZeros(CString& sTime)
 	{
 		int nLen = sTime.GetLength();
 
-		if (sTime[nLen - 1] == '0')
+		if (sTime[nLen - 1] == _T('0'))
+		{
 			sTime = sTime.Left(nLen - 1);
+		}
 
-		else if (sTime[nLen - 1] == '.')
+		else if (sTime[nLen - 1] == _T('.'))
 		{
 			sTime = sTime.Left(nLen - 1);
 			break;
 		}
 		else
+		{
 			break;
+		}
 	}
 }

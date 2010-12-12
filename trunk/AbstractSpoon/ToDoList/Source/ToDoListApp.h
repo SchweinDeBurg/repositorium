@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToDoListApp.h : main header file for the TODOLIST application
@@ -39,7 +53,7 @@
 #endif // _MSC_VER > 1000
 
 #ifndef __AFXWIN_H__
-	#error include 'StdAfx.h' before including this file for PCH
+#error include 'StdAfx.h' before including this file for PCH
 #endif
 
 #include "Resource.h"		// main symbols
@@ -51,16 +65,17 @@
 
 class CEnCommandLineInfo;
 class CTDLPrefMigrationDlg;
+struct TDCSTARTUP;
 
 class CToDoListApp : public CWinApp
 {
 public:
 	CToDoListApp();
-	
-// Overrides
+
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CToDoListApp)
-	public:
+public:
 	virtual BOOL InitInstance();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual void WinHelp(DWORD dwData, UINT nCmd = HELP_CONTEXT);
@@ -68,7 +83,7 @@ public:
 	virtual int ExitInstance();
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 
 	//{{AFX_MSG(CToDoListApp)
 	afx_msg void OnHelpContactus();
@@ -89,9 +104,6 @@ public:
 protected:
 	void DoHelp(const CString& sHelpRef = _T(""));
 	BOOL InitPreferences(CEnCommandLineInfo* pInfo);
-	BOOL SendDataMessage(HWND hwnd, int nType, int nSize, void* pData);
-	BOOL SendDataMessage(HWND hwnd, int nType, LPCTSTR szData);
-	BOOL SendDataMessage(HWND hwnd, int nType, DWORD dwData);
 	void UpgradePreferences(BOOL bUseIni);
 	BOOL ParseCommandLine(CEnCommandLineInfo* pInfo);
 };

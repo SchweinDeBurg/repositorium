@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TaskTimeLog.h: interface for the CTaskTimeLog class.
@@ -39,20 +53,21 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-class CTaskTimeLog  
+class CTaskTimeLog
 {
 public:
 	CTaskTimeLog(LPCTSTR szRefPath);
 	virtual ~CTaskTimeLog();
 
-	BOOL LogTime(DWORD dwTaskID, double dTime, BOOL bLogSeparately); // time must be in hours
+	BOOL LogTime(DWORD dwTaskID, LPCTSTR szTaskTitle, double dTime, BOOL bLogSeparately); // time must be in hours
+	BOOL LogTime(DWORD dwTaskID, LPCTSTR szTaskTitle, double dTime, COleDateTime dtWhen, BOOL bLogSeparately); // time must be in hours
 	double CalcAccumulatedTime(DWORD dwTaskID, BOOL bLogSeparately); // returns time in hours
 	CString GetLogPath(DWORD dwTaskID, BOOL bLogSeparately);
 
 protected:
 	CString m_sRefPath;
 
-protected: 
+protected:
 };
 
 #endif // !defined(AFX_TASKTIMELOG_H__6C9F21CD_509E_4890_9B28_F8C6E52FF54B__INCLUDED_)

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToDoCtrlFind.h: interface for the CToDoCtrlData class.
@@ -45,12 +59,12 @@ class TODOITEM;
 class TODOSTRUCTURE;
 class CToDoCtrlData;
 
-class CToDoCtrlFind  
+class CToDoCtrlFind
 {
 public:
 	CToDoCtrlFind(CTreeCtrl& tree, const CToDoCtrlData& data);
 	virtual ~CToDoCtrlFind();
-	
+
 	HTREEITEM GetItem(DWORD dwID) const;
 	DWORD GetTaskID(HTREEITEM hti) const;
 	TODOITEM* GetTask(HTREEITEM hti) const;
@@ -61,6 +75,7 @@ public:
 	CString GetLongestVisibleAllocTo() const;
 	CString GetLongestVisibleTimeEstimate(int nDefUnits) const;
 	CString GetLongestVisibleTimeSpent(int nDefUnits) const;
+	CString GetLongestVisibleRecurrence() const;
 
 	BOOL FindVisibleTaskWithDueTime() const;
 	BOOL FindVisibleTaskWithStartTime() const;
@@ -69,9 +84,9 @@ public:
 	int FindTasks(const SEARCHPARAMS& params, CResultArray& aResults) const;
 	DWORD FindFirstTask(const SEARCHPARAMS& params, SEARCHRESULT& result) const;
 	DWORD FindNextTask(DWORD dwStart, const SEARCHPARAMS& params, SEARCHRESULT& result, BOOL bNext = TRUE) const;
-	
+
 protected:
-	CTreeCtrl& m_tree; 
+	CTreeCtrl& m_tree;
 	const CToDoCtrlData& m_data;
 
 protected:
@@ -82,6 +97,7 @@ protected:
 	CString GetLongestVisibleCategory(HTREEITEM hti) const;
 	CString GetLongestVisibleAllocTo(HTREEITEM hti) const;
 	CString GetLongestVisibleTime(HTREEITEM hti, int nDefUnits, BOOL bTimeEst) const;
+	CString GetLongestVisibleRecurrence(HTREEITEM hti) const;
 
 	BOOL FindVisibleTaskWithDueTime(HTREEITEM hti) const;
 	BOOL FindVisibleTaskWithStartTime(HTREEITEM hti) const;
@@ -91,6 +107,7 @@ protected:
 	CString GetLongestVisibleCategory(HTREEITEM hti, const TODOITEM* pTDI) const;
 	CString GetLongestVisibleAllocTo(HTREEITEM hti, const TODOITEM* pTDI) const;
 	CString GetLongestVisibleTime(HTREEITEM hti, const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, int nDefUnits, BOOL bTimeEst) const;
+	CString GetLongestVisibleRecurrence(HTREEITEM hti, const TODOITEM* pTDI) const;
 };
 
 #endif // !defined(AFX_TODOCTRLTREEDATA_H__02C3C360_45AB_45DC_B1BF_BCBEA472F0C7__INCLUDED_)

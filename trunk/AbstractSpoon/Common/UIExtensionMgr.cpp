@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // UIExtensionMgr.cpp: implementation of the CUIExtensionMgr class.
@@ -40,7 +53,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -61,7 +74,9 @@ CUIExtension::~CUIExtension()
 CString CUIExtension::GetMenuText()
 {
 	if (m_pExtension)
+	{
 		return CString(ATL::CA2T(m_pExtension->GetMenuText()));
+	}
 
 	return _T("");
 }
@@ -69,7 +84,9 @@ CString CUIExtension::GetMenuText()
 HICON CUIExtension::GetIcon()
 {
 	if (m_pExtension)
+	{
 		return m_pExtension->GetIcon();
+	}
 
 	return NULL;
 }
@@ -92,7 +109,9 @@ void CUIExtension::Release()
 				if (pUIWnd)
 				{
 					if (pUIWnd->pWindow)
+					{
 						pUIWnd->pWindow->Release();
+					}
 
 					delete pUIWnd;
 				}
@@ -129,7 +148,9 @@ BOOL CUIExtension::HasWindow(DWORD dwItemData, BOOL bVisibleOnly) const
 	UIEXTENSIONWINDOW* pUIWnd = FindWindow(dwItemData);
 
 	if (bVisibleOnly)
+	{
 		return (pUIWnd && pUIWnd->pWindow->IsShowing());
+	}
 
 	// else
 	return (pUIWnd != NULL);
@@ -177,13 +198,17 @@ void CUIExtension::UpdateWindow(DWORD dwItemData, const ITaskList* pTasks, DWORD
 	UIEXTENSIONWINDOW* pUIWnd = FindWindow(dwItemData);
 
 	if (pUIWnd)
+	{
 		pUIWnd->pWindow->Update(pTasks, dwFlags);
+	}
 }
 
 CUIExtensionWndMap* CUIExtension::WindowMap()
 {
 	if (!m_pMapWindows)
+	{
 		m_pMapWindows = new CUIExtensionWndMap;
+	}
 
 	return m_pMapWindows;
 };
@@ -193,9 +218,11 @@ UIEXTENSIONWINDOW* CUIExtension::FindWindow(DWORD dwItemData) const
 	UIEXTENSIONWINDOW* pUIWnd = NULL;
 
 	if (m_pMapWindows)
+	{
 		m_pMapWindows->Lookup(dwItemData, pUIWnd);
+	}
 
-	ASSERT (!pUIWnd || pUIWnd->pWindow);
+	ASSERT(!pUIWnd || pUIWnd->pWindow);
 
 	return (pUIWnd && pUIWnd->pWindow) ? pUIWnd : NULL;
 }
@@ -214,7 +241,9 @@ CUIExtensionMgr::~CUIExtensionMgr()
 	int nInterface = m_aUIExtensions.GetSize();
 
 	while (nInterface--)
+	{
 		delete m_aUIExtensions[nInterface];
+	}
 
 	m_aUIExtensions.RemoveAll();
 }
@@ -222,7 +251,9 @@ CUIExtensionMgr::~CUIExtensionMgr()
 void CUIExtensionMgr::Initialize()
 {
 	if (m_bInitialized)
+	{
 		return;
+	}
 
 	// look at every dll from wherever we are now
 	CFileFind ff;
@@ -246,7 +277,9 @@ void CUIExtensionMgr::Initialize()
 				IUIExtension* m_pExtension = CreateUIExtensionInterface(sDllPath);
 
 				if (m_pExtension)
+				{
 					m_aUIExtensions.Add(new CUIExtension(m_pExtension));
+				}
 
 			}
 		}
@@ -258,7 +291,9 @@ void CUIExtensionMgr::Initialize()
 int CUIExtensionMgr::GetNumUIExtensions() const
 {
 	if (!m_bInitialized)
+	{
 		return 0;
+	}
 
 	return m_aUIExtensions.GetSize();
 }
@@ -270,7 +305,9 @@ CString CUIExtensionMgr::GetUIExtensionMenuText(int nExtension) const
 	if (m_bInitialized)
 	{
 		if (nExtension >= 0 && nExtension < m_aUIExtensions.GetSize())
+		{
 			sText = m_aUIExtensions[nExtension]->GetMenuText();
+		}
 	}
 
 	return Clean(sText);
@@ -281,7 +318,9 @@ HICON CUIExtensionMgr::GetUIExtensionIcon(int nExtension) const
 	if (m_bInitialized)
 	{
 		if (nExtension >= 0 && nExtension < m_aUIExtensions.GetSize())
+		{
 			return m_aUIExtensions[nExtension]->GetIcon();
+		}
 	}
 
 	return NULL;
@@ -296,14 +335,16 @@ CString& CUIExtensionMgr::Clean(CString& sText)
 }
 
 IUIExtensionWindow* CUIExtensionMgr::GetExtensionWindow(int nExtension, DWORD dwItemData,
-																		  HWND hParent, BOOL bAutoCreate)
+	HWND hParent, BOOL bAutoCreate)
 {
 	IUIExtensionWindow* pWindow = NULL;
 
 	if (m_bInitialized)
 	{
 		if (nExtension >= 0 && nExtension < m_aUIExtensions.GetSize())
+		{
 			pWindow = m_aUIExtensions[nExtension]->GetWindow(dwItemData, hParent, bAutoCreate);
+		}
 	}
 
 	return pWindow;
@@ -316,7 +357,9 @@ BOOL CUIExtensionMgr::HasAnyExtensionWindows(DWORD dwItemData, BOOL bVisibleOnly
 	while (nExtension--)
 	{
 		if (m_aUIExtensions[nExtension]->HasWindow(dwItemData, bVisibleOnly))
+		{
 			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -327,7 +370,9 @@ void CUIExtensionMgr::ShowAllExtensionsWindows(DWORD dwItemData, UI_SHOW nShow)
 	int nExtension = GetNumUIExtensions();
 
 	while (nExtension--)
+	{
 		m_aUIExtensions[nExtension]->ShowWindow(dwItemData, nShow);
+	}
 }
 
 void CUIExtensionMgr::RemoveAllExtensionsWindows(DWORD dwItemData)
@@ -335,7 +380,9 @@ void CUIExtensionMgr::RemoveAllExtensionsWindows(DWORD dwItemData)
 	int nExtension = GetNumUIExtensions();
 
 	while (nExtension--)
+	{
 		m_aUIExtensions[nExtension]->RemoveWindow(dwItemData);
+	}
 }
 
 void CUIExtensionMgr::UpdateAllExtensionsWindow(DWORD dwItemData, const ITaskList* pTasks, DWORD dwFlags)
@@ -343,5 +390,7 @@ void CUIExtensionMgr::UpdateAllExtensionsWindow(DWORD dwItemData, const ITaskLis
 	int nExtension = GetNumUIExtensions();
 
 	while (nExtension--)
+	{
 		m_aUIExtensions[nExtension]->UpdateWindow(dwItemData, pTasks, dwFlags);
+	}
 }

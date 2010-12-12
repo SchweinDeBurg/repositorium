@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // EnBrowserCtrl.cpp : implementation file
@@ -68,7 +81,6 @@ END_MESSAGE_MAP()
 BEGIN_EVENTSINK_MAP(CEnBrowserCtrl, CWebBrowserCtrl)
 	//{{AFX_EVENTSINK_MAP(CBrowserDlg)
 	//}}AFX_EVENTSINK_MAP
-	//	ON_EVENT_REFLECT(CWebBrowser, 250 /* BeforeNavigate2 */, OnBeforeNavigate2, VTS_DISPATCH VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PBOOL)
 	ON_EVENT_REFLECT(CEnBrowserCtrl, 252 /* NavigateComplete2 */, OnNavigateComplete2, VTS_DISPATCH VTS_PVARIANT)
 END_EVENTSINK_MAP()
 
@@ -78,8 +90,9 @@ END_EVENTSINK_MAP()
 void CEnBrowserCtrl::Print(LPCTSTR szFile)
 {
 	if (!szFile || !*szFile)
+	{
 		SafeExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
-	//		ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, NULL, NULL);
+	}
 	else
 	{
 		COleVariant vFlags(0L), vFrame(_T("")), vData(_T("")), vHeaders(_T(""));
@@ -93,8 +106,9 @@ void CEnBrowserCtrl::Print(LPCTSTR szFile)
 void CEnBrowserCtrl::PrintPreview(LPCTSTR szFile)
 {
 	if (!szFile || !*szFile)
+	{
 		SafeExecWB(OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
-	//		ExecWB(OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_DONTPROMPTUSER, NULL, NULL);
+	}
 	else
 	{
 		COleVariant vFlags(0L), vFrame(_T("")), vData(_T("")), vHeaders(_T(""));
@@ -117,12 +131,10 @@ void CEnBrowserCtrl::OnNavigateComplete2(LPDISPATCH /*pDisp*/, VARIANT FAR* URL)
 	{
 	case EBC_PRINT:
 		SafeExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
-		//		SafeExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, NULL, NULL);
 		break;
 
 	case EBC_PRINTPREVIEW:
 		SafeExecWB(OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
-		//		SafeExecWB(OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_DONTPROMPTUSER, NULL, NULL);
 		break;
 	}
 

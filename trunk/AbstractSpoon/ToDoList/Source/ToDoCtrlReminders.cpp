@@ -184,8 +184,8 @@ void CToDoCtrlReminders::SaveAndRemoveReminders(const CFilteredToDoCtrl& tdc)
 
 			// note: we don't save the snooze value, this gets reset each time
 			prefs.WriteProfileInt(sKey, _T("TaskID"), rem.dwTaskID);
-			prefs.WriteProfileDouble(sKey, _T("LeadIn"), rem.dDaysLeadIn * 24 * 60); // save as minutes
-			prefs.WriteProfileInt(sKey, _T("FromWhen"), rem.nFromWhen);
+			prefs.WriteProfileDouble(sKey, _T("LeadIn"), rem.dRelativeDaysLeadIn * 24 * 60); // save as minutes
+			prefs.WriteProfileInt(sKey, _T("FromWhen"), rem.nRelativeFromWhen);
 			prefs.WriteProfileInt(sKey, _T("Enabled"), rem.bEnabled);
 			prefs.WriteProfileString(sKey, _T("SoundFile"), rem.sSoundFile);
 
@@ -214,8 +214,8 @@ void CToDoCtrlReminders::LoadReminders(const CFilteredToDoCtrl& tdc)
 
 		TDCREMINDER rem;
 		rem.dwTaskID = prefs.GetProfileInt(sKey, _T("TaskID"));
-		rem.dDaysLeadIn = prefs.GetProfileDouble(sKey, _T("LeadIn")) / (24 * 60);
-		rem.nFromWhen = (TDC_REMINDER)prefs.GetProfileInt(sKey, _T("FromWhen"));
+		rem.dRelativeDaysLeadIn = prefs.GetProfileDouble(sKey, _T("LeadIn")) / (24 * 60);
+		rem.nRelativeFromWhen = (TDC_REMINDER)prefs.GetProfileInt(sKey, _T("FromWhen"));
 		rem.bEnabled = prefs.GetProfileInt(sKey, _T("Enabled"));
 		rem.sSoundFile = prefs.GetProfileString(sKey, _T("SoundFile"));
 		rem.pTDC = &tdc;
@@ -255,12 +255,12 @@ void CToDoCtrlReminders::OnTimer(UINT nIDEvent)
 		// else
 		COleDateTime dateRem, dateNow = COleDateTime::GetCurrentTime();
 
-		if (rem.nFromWhen == TDCR_DUEDATE)
+		if (rem.nRelativeFromWhen == TDCR_DUEDATE)
 			dateRem = rem.pTDC->GetTaskDate(rem.dwTaskID, TDCD_DUE);
 		else // start date
 			dateRem = rem.pTDC->GetTaskDate(rem.dwTaskID, TDCD_START);
 
-		if (dateRem > 0 && (dateNow.m_dt + rem.dDaysLeadIn - rem.dDaysSnooze > dateRem.m_dt))
+		if (dateRem > 0 && (dateNow.m_dt + rem.dRelativeDaysLeadIn - rem.dDaysSnooze > dateRem.m_dt))
 		{
 			ASSERT (m_pWndNotify);
 

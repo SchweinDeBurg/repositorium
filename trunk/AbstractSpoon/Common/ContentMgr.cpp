@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ContentMgr.cpp: implementation of the CContentMgr class.
@@ -39,7 +53,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -57,7 +71,9 @@ CContentMgr::~CContentMgr()
 	int nInterface = m_aContent.GetSize();
 
 	while (nInterface--)
+	{
 		m_aContent[nInterface]->Release();
+	}
 
 	m_aContent.RemoveAll();
 }
@@ -65,7 +81,9 @@ CContentMgr::~CContentMgr()
 BOOL CContentMgr::Initialize()
 {
 	if (m_bInitialized)
+	{
 		return TRUE;
+	}
 
 	// look at every dll from whereever we are now
 	CFileFind ff;
@@ -91,14 +109,6 @@ BOOL CContentMgr::Initialize()
 
 				if (pContent)
 				{
-					// initialize preferences
-					BOOL bRegistry = (AfxGetApp()->m_pszRegistryKey != NULL);
-
-					if (bRegistry)
-						pContent->SetIniLocation(TRUE, AfxGetApp()->m_pszRegistryKey);
-					else // ini
-						pContent->SetIniLocation(FALSE, AfxGetApp()->m_pszProfileName);
-
 					// save
 					m_aContent.Add(pContent);
 				}
@@ -117,7 +127,9 @@ BOOL CContentMgr::Initialize()
 int CContentMgr::GetNumContent() const
 {
 	if (!m_bInitialized)
+	{
 		return 0;
+	}
 
 	return m_aContent.GetSize();
 }
@@ -125,11 +137,13 @@ int CContentMgr::GetNumContent() const
 CString CContentMgr::GetContentTypeID(int nContent) const
 {
 	if (!m_bInitialized)
+	{
 		return _T("");
+	}
 
 	if (nContent >= 0 && nContent < m_aContent.GetSize())
 	{
-		ASSERT (m_aContent[nContent] != NULL);
+		ASSERT(m_aContent[nContent] != NULL);
 		return CString(ATL::CA2T(m_aContent[nContent]->GetTypeID()));
 	}
 
@@ -140,11 +154,13 @@ CString CContentMgr::GetContentTypeID(int nContent) const
 CString CContentMgr::GetContentTypeDescription(int nContent) const
 {
 	if (!m_bInitialized)
+	{
 		return _T("");
+	}
 
 	if (nContent >= 0 && nContent < m_aContent.GetSize())
 	{
-		ASSERT (m_aContent[nContent] != NULL);
+		ASSERT(m_aContent[nContent] != NULL);
 		return CString(ATL::CA2T(m_aContent[nContent]->GetTypeDescription()));
 	}
 
@@ -163,14 +179,16 @@ BOOL CContentMgr::ContentFormatIsText(const CString& sTypeID) const
 }
 
 BOOL CContentMgr::CreateContentControl(int nContent, CContentCtrl& ctrl, UINT nCtrlID, DWORD nStyle,
-													DWORD dwExStyle, const CRect& rect, HWND hwndParent)
+	DWORD dwExStyle, const CRect& rect, HWND hwndParent)
 {
 	if (!m_bInitialized)
+	{
 		return FALSE;
+	}
 
 	if (nContent >= 0 && nContent < m_aContent.GetSize())
 	{
-		ASSERT (m_aContent[nContent] != NULL);
+		ASSERT(m_aContent[nContent] != NULL);
 
 		IContentControl* pControl = m_aContent[nContent]->CreateCtrl((WORD)nCtrlID, nStyle, rect.left,
 			rect.top, rect.Width(), rect.Height(), hwndParent);
@@ -178,13 +196,17 @@ BOOL CContentMgr::CreateContentControl(int nContent, CContentCtrl& ctrl, UINT nC
 		if (pControl && pControl->GetHwnd())
 		{
 			if (dwExStyle)
+			{
 				CWnd::ModifyStyleEx(pControl->GetHwnd(), 0, dwExStyle, 0);
+			}
 
 			return ctrl.Attach(pControl);
 		}
 
 		if (pControl)
+		{
 			pControl->Release();
+		}
 	}
 
 	// else
@@ -192,11 +214,13 @@ BOOL CContentMgr::CreateContentControl(int nContent, CContentCtrl& ctrl, UINT nC
 }
 
 BOOL CContentMgr::CreateContentControl(const CONTENTFORMAT& cf, CContentCtrl& ctrl, UINT nCtrlID, DWORD nStyle,
-													DWORD dwExStyle, const CRect& rect, HWND hwndParent)
+	DWORD dwExStyle, const CRect& rect, HWND hwndParent)
 {
 	// check if the CContentCtrl already has a valid control
 	if (ctrl.GetSafeHwnd() && ctrl.IsFormat(cf))
+	{
 		return TRUE;
+	}
 
 	return CreateContentControl(FindContent(cf), ctrl, nCtrlID, nStyle, dwExStyle, rect, hwndParent);
 }
@@ -207,10 +231,12 @@ int CContentMgr::FindContent(LPCTSTR szID) const
 
 	while (nContent--)
 	{
-		ASSERT (m_aContent[nContent] != NULL);
+		ASSERT(m_aContent[nContent] != NULL);
 
 		if (GetContentTypeID(nContent).Compare(szID) == 0)
+		{
 			return nContent;
+		}
 	}
 
 	// else not found
@@ -222,21 +248,25 @@ CONTENTFORMAT CContentMgr::GetContentFormat(int nContent) const
 	return GetContentTypeID(nContent);
 }
 
-BOOL CContentMgr::ConvertContentToHtml(const CString& sContent, CString& sHtml, LPCTSTR szID)
+BOOL CContentMgr::ConvertContentToHtml(const CString& sContent, CString& sHtml, LPCTSTR szID, LPCTSTR szCharSet)
 {
 	int nContent = FindContent(szID);
 
 	if (nContent == -1)
+	{
 		return FALSE;
+	}
 
 	char* szHtml = NULL;
 
-	ASSERT (m_aContent[nContent] != NULL);
+	ASSERT(m_aContent[nContent] != NULL);
 
-	int nHtmlLen = m_aContent[nContent]->ConvertToHtml((const unsigned char*)(LPCTSTR)sContent, sContent.GetLength(), szHtml);
+	int nHtmlLen = m_aContent[nContent]->ConvertToHtml((const unsigned char*)(LPCTSTR)sContent, sContent.GetLength(), szCharSet, szHtml);
 
 	if (nHtmlLen)
+	{
 		sHtml = szHtml;
+	}
 
 	delete [] szHtml; // cleanup
 

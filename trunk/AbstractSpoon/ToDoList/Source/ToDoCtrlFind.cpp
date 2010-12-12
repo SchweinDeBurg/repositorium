@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToDoCtrlFind.cpp: implementation of the CToDoCtrlFind class.
@@ -48,7 +62,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -56,31 +70,34 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CToDoCtrlFind::CToDoCtrlFind(CTreeCtrl& tree, const CToDoCtrlData& data) : 
-	m_tree(tree), 
-	m_data(data)
+CToDoCtrlFind::CToDoCtrlFind(CTreeCtrl& tree, const CToDoCtrlData& data) :
+m_tree(tree),
+m_data(data)
 {
-	
 }
 
 CToDoCtrlFind::~CToDoCtrlFind()
 {
 }
 
-HTREEITEM CToDoCtrlFind::GetItem(DWORD dwID) const 
-{ 
+HTREEITEM CToDoCtrlFind::GetItem(DWORD dwID) const
+{
 	if (dwID == 0)
+	{
 		return NULL;
+	}
 
-	return CTreeCtrlHelper(m_tree).FindItem(dwID, NULL); 
+	return CTreeCtrlHelper(m_tree).FindItem(dwID, NULL);
 }
 
-DWORD CToDoCtrlFind::GetTaskID(HTREEITEM hti) const 
-{ 
+DWORD CToDoCtrlFind::GetTaskID(HTREEITEM hti) const
+{
 	if (!hti || hti == TVI_ROOT || hti == TVI_FIRST || hti == TVI_LAST)
+	{
 		return 0;
-	
-	return m_tree.GetItemData(hti); 
+	}
+
+	return m_tree.GetItemData(hti);
 }
 
 TODOITEM* CToDoCtrlFind::GetTask(HTREEITEM hti) const
@@ -88,13 +105,27 @@ TODOITEM* CToDoCtrlFind::GetTask(HTREEITEM hti) const
 	return m_data.GetTask(GetTaskID(hti));
 }
 
+CString CToDoCtrlFind::GetLongestVisibleRecurrence(HTREEITEM hti) const
+{
+	TODOITEM* pTDI = GetTask(hti);
+
+	if (!pTDI)
+	{
+		return _T("");
+	}
+
+	return GetLongestVisibleRecurrence(hti, pTDI);
+}
+
 CString CToDoCtrlFind::GetLongestVisibleExternalID(HTREEITEM hti) const
 {
 	TODOITEM* pTDI = GetTask(hti);
-	
+
 	if (!pTDI)
+	{
 		return _T("");
-	
+	}
+
 	return GetLongestVisibleExternalID(hti, pTDI);
 }
 
@@ -106,13 +137,15 @@ CString CToDoCtrlFind::GetLongestVisibleAllocTo() const
 	while (hti)
 	{
 		CString sItemLongest = GetLongestVisibleAllocTo(hti);
-		
+
 		if (sItemLongest.GetLength() > sLongest.GetLength())
+		{
 			sLongest = sItemLongest;
-		
+		}
+
 		hti = m_tree.GetNextItem(hti, TVGN_NEXT);
 	}
-	
+
 	return sLongest;
 }
 
@@ -120,10 +153,12 @@ CString CToDoCtrlFind::GetLongestVisibleAllocTo(HTREEITEM hti) const
 {
 	ASSERT(hti);
 	TODOITEM* pTDI = GetTask(hti);
-	
+
 	if (!pTDI)
+	{
 		return _T("");
-	
+	}
+
 	return GetLongestVisibleAllocTo(hti, pTDI);
 }
 
@@ -143,7 +178,9 @@ CString CToDoCtrlFind::GetLongestVisibleAllocTo(HTREEITEM hti, const TODOITEM* p
 			CString sChildLongest = GetLongestVisibleAllocTo(htiChild);
 
 			if (sChildLongest.GetLength() > sLongest.GetLength())
+			{
 				sLongest = sChildLongest;
+			}
 
 			htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
 		}
@@ -160,13 +197,15 @@ CString CToDoCtrlFind::GetLongestVisibleCategory() const
 	while (hti)
 	{
 		CString sItemLongest = GetLongestVisibleCategory(hti);
-		
+
 		if (sItemLongest.GetLength() > sLongest.GetLength())
+		{
 			sLongest = sItemLongest;
-		
+		}
+
 		hti = m_tree.GetNextItem(hti, TVGN_NEXT);
 	}
-	
+
 	return sLongest;
 }
 
@@ -178,13 +217,15 @@ CString CToDoCtrlFind::GetLongestVisibleTimeEstimate(int nDefUnits) const
 	while (hti)
 	{
 		CString sItemLongest = GetLongestVisibleTime(hti, nDefUnits, TRUE); // TRUE == Estimate
-		
+
 		if (sItemLongest.GetLength() > sLongest.GetLength())
+		{
 			sLongest = sItemLongest;
-		
+		}
+
 		hti = m_tree.GetNextItem(hti, TVGN_NEXT);
 	}
-	
+
 	return sLongest;
 }
 
@@ -196,13 +237,35 @@ CString CToDoCtrlFind::GetLongestVisibleTimeSpent(int nDefUnits) const
 	while (hti)
 	{
 		CString sItemLongest = GetLongestVisibleTime(hti, nDefUnits, FALSE); // TRUE == Spent
-		
+
 		if (sItemLongest.GetLength() > sLongest.GetLength())
+		{
 			sLongest = sItemLongest;
-		
+		}
+
 		hti = m_tree.GetNextItem(hti, TVGN_NEXT);
 	}
-	
+
+	return sLongest;
+}
+
+CString CToDoCtrlFind::GetLongestVisibleRecurrence() const
+{
+	CString sLongest;
+	HTREEITEM hti = m_tree.GetChildItem(NULL);
+
+	while (hti)
+	{
+		CString sItemLongest = GetLongestVisibleRecurrence(hti);
+
+		if (sItemLongest.GetLength() > sLongest.GetLength())
+		{
+			sLongest = sItemLongest;
+		}
+
+		hti = m_tree.GetNextItem(hti, TVGN_NEXT);
+	}
+
 	return sLongest;
 }
 
@@ -214,13 +277,15 @@ CString CToDoCtrlFind::GetLongestVisibleExternalID() const
 	while (hti)
 	{
 		CString sItemLongest = GetLongestVisibleExternalID(hti);
-		
+
 		if (sItemLongest.GetLength() > sLongest.GetLength())
+		{
 			sLongest = sItemLongest;
-		
+		}
+
 		hti = m_tree.GetNextItem(hti, TVGN_NEXT);
 	}
-	
+
 	return sLongest;
 }
 
@@ -228,10 +293,12 @@ CString CToDoCtrlFind::GetLongestVisibleCategory(HTREEITEM hti) const
 {
 	ASSERT(hti);
 	TODOITEM* pTDI = GetTask(hti);
-	
+
 	if (!pTDI)
+	{
 		return _T("");
-	
+	}
+
 	return GetLongestVisibleCategory(hti, pTDI);
 }
 
@@ -240,10 +307,12 @@ CString CToDoCtrlFind::GetLongestVisibleTime(HTREEITEM hti, int nDefUnits, BOOL 
 	ASSERT(hti);
 	TODOITEM* pTDI = GetTask(hti);
 	TODOSTRUCTURE* pTDS = m_data.LocateTask(GetTaskID(hti));
-	
+
 	if (!pTDI || !pTDS)
+	{
 		return _T("");
-	
+	}
+
 	return GetLongestVisibleTime(hti, pTDI, pTDS, nDefUnits, bTimeEst);
 }
 
@@ -263,7 +332,9 @@ CString CToDoCtrlFind::GetLongestVisibleCategory(HTREEITEM hti, const TODOITEM* 
 			CString sChildLongest = GetLongestVisibleCategory(htiChild);
 
 			if (sChildLongest.GetLength() > sLongest.GetLength())
+			{
 				sLongest = sChildLongest;
+			}
 
 			htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
 		}
@@ -289,7 +360,37 @@ CString CToDoCtrlFind::GetLongestVisibleExternalID(HTREEITEM hti, const TODOITEM
 			CString sChildLongest = GetLongestVisibleExternalID(htiChild);
 
 			if (sChildLongest.GetLength() > sLongest.GetLength())
+			{
 				sLongest = sChildLongest;
+			}
+
+			htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
+		}
+	}
+
+	return sLongest;
+}
+
+CString CToDoCtrlFind::GetLongestVisibleRecurrence(HTREEITEM hti, const TODOITEM* pTDI) const
+{
+	CString sLongest = pTDI->trRecurrence.sRegularity;
+
+	// children
+	BOOL bExpanded = (m_tree.GetItemState(hti, TVIS_EXPANDED) & TVIS_EXPANDED);
+
+	if (bExpanded)
+	{
+		// check children
+		HTREEITEM htiChild = m_tree.GetChildItem(hti);
+
+		while (htiChild)
+		{
+			CString sChildLongest = GetLongestVisibleExternalID(htiChild);
+
+			if (sChildLongest.GetLength() > sLongest.GetLength())
+			{
+				sLongest = sChildLongest;
+			}
 
 			htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
 		}
@@ -305,19 +406,25 @@ CString CToDoCtrlFind::GetLongestVisibleTime(HTREEITEM hti, const TODOITEM* pTDI
 
 	// get actual task time units
 	if (!pTDS->HasSubTasks() || m_data.HasStyle(TDCS_ALLOWPARENTTIMETRACKING))
+	{
 		nUnits = bTimeEst ? pTDI->nTimeEstUnits : pTDI->nTimeSpentUnits;
-			
+	}
+
 	// get time
 	double dTime = bTimeEst ? m_data.CalcTimeEstimate(pTDI, pTDS, nUnits) : m_data.CalcTimeSpent(pTDI, pTDS, nUnits);
-			
+
 	if (dTime > 0 || !m_data.HasStyle(TDCS_HIDEZEROTIMECOST))
 	{
 		int nDecPlaces = m_data.HasStyle(TDCS_ROUNDTIMEFRACTIONS) ? 0 : 2;
-		
+
 		if (m_data.HasStyle(TDCS_DISPLAYHMSTIMEFORMAT))
+		{
 			sLongest = CTimeHelper().FormatTimeHMS(dTime, nUnits, (BOOL)nDecPlaces);
+		}
 		else
+		{
 			sLongest = CTimeHelper().FormatTime(dTime, nUnits, nDecPlaces);
+		}
 	}
 
 	// children
@@ -333,7 +440,9 @@ CString CToDoCtrlFind::GetLongestVisibleTime(HTREEITEM hti, const TODOITEM* pTDI
 			CString sChildLongest = GetLongestVisibleTime(htiChild, nDefUnits, bTimeEst);
 
 			if (sChildLongest.GetLength() > sLongest.GetLength())
+			{
 				sLongest = sChildLongest;
+			}
 
 			htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
 		}
@@ -345,18 +454,22 @@ CString CToDoCtrlFind::GetLongestVisibleTime(HTREEITEM hti, const TODOITEM* pTDI
 BOOL CToDoCtrlFind::FindVisibleTaskWithDueTime() const
 {
 	if (m_data.HasStyle(TDCS_HIDEDUETIMEFIELD))
+	{
 		return FALSE;
+	}
 
 	HTREEITEM hti = m_tree.GetChildItem(NULL);
 
 	while (hti)
 	{
 		if (FindVisibleTaskWithDueTime(hti))
+		{
 			return TRUE;
-		
+		}
+
 		hti = m_tree.GetNextItem(hti, TVGN_NEXT);
 	}
-	
+
 	return FALSE;
 }
 
@@ -364,9 +477,11 @@ BOOL CToDoCtrlFind::FindVisibleTaskWithDueTime(HTREEITEM hti) const
 {
 	ASSERT(hti);
 	TODOITEM* pTDI = GetTask(hti);
-	
+
 	if (pTDI && !pTDI->IsDone() && pTDI->HasDueTime())
+	{
 		return TRUE;
+	}
 
 	// check children
 	BOOL bExpanded = (m_tree.GetItemState(hti, TVIS_EXPANDED) & TVIS_EXPANDED);
@@ -378,31 +493,37 @@ BOOL CToDoCtrlFind::FindVisibleTaskWithDueTime(HTREEITEM hti) const
 		while (htiChild)
 		{
 			if (FindVisibleTaskWithDueTime(htiChild))
+			{
 				return TRUE;
+			}
 
 			// next child
 			htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
 		}
 	}
-	
+
 	return FALSE;
 }
 
 BOOL CToDoCtrlFind::FindVisibleTaskWithStartTime() const
 {
 	if (m_data.HasStyle(TDCS_HIDESTARTTIMEFIELD))
+	{
 		return FALSE;
+	}
 
 	HTREEITEM hti = m_tree.GetChildItem(NULL);
 
 	while (hti)
 	{
 		if (FindVisibleTaskWithStartTime(hti))
+		{
 			return TRUE;
-		
+		}
+
 		hti = m_tree.GetNextItem(hti, TVGN_NEXT);
 	}
-	
+
 	return FALSE;
 }
 
@@ -410,9 +531,11 @@ BOOL CToDoCtrlFind::FindVisibleTaskWithStartTime(HTREEITEM hti) const
 {
 	ASSERT(hti);
 	TODOITEM* pTDI = GetTask(hti);
-	
+
 	if (pTDI && !pTDI->IsDone() && pTDI->HasStartTime())
+	{
 		return TRUE;
+	}
 
 	// check children
 	BOOL bExpanded = (m_tree.GetItemState(hti, TVIS_EXPANDED) & TVIS_EXPANDED);
@@ -424,31 +547,37 @@ BOOL CToDoCtrlFind::FindVisibleTaskWithStartTime(HTREEITEM hti) const
 		while (htiChild)
 		{
 			if (FindVisibleTaskWithStartTime(htiChild))
+			{
 				return TRUE;
+			}
 
 			// next child
 			htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
 		}
 	}
-	
+
 	return FALSE;
 }
 
 BOOL CToDoCtrlFind::FindVisibleTaskWithDoneTime() const
 {
 	if (m_data.HasStyle(TDCS_HIDEDONETIMEFIELD))
+	{
 		return FALSE;
+	}
 
 	HTREEITEM hti = m_tree.GetChildItem(NULL);
 
 	while (hti)
 	{
 		if (FindVisibleTaskWithDoneTime(hti))
+		{
 			return TRUE;
-		
+		}
+
 		hti = m_tree.GetNextItem(hti, TVGN_NEXT);
 	}
-	
+
 	return FALSE;
 }
 
@@ -456,9 +585,11 @@ BOOL CToDoCtrlFind::FindVisibleTaskWithDoneTime(HTREEITEM hti) const
 {
 	ASSERT(hti);
 	TODOITEM* pTDI = GetTask(hti);
-	
+
 	if (pTDI && pTDI->IsDone() && pTDI->HasDoneTime())
+	{
 		return TRUE;
+	}
 
 	// check children
 	BOOL bExpanded = (m_tree.GetItemState(hti, TVIS_EXPANDED) & TVIS_EXPANDED);
@@ -470,29 +601,33 @@ BOOL CToDoCtrlFind::FindVisibleTaskWithDoneTime(HTREEITEM hti) const
 		while (htiChild)
 		{
 			if (FindVisibleTaskWithDoneTime(htiChild))
+			{
 				return TRUE;
+			}
 
 			// next child
 			htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
 		}
 	}
-	
+
 	return FALSE;
 }
 
 int CToDoCtrlFind::FindTasks(const SEARCHPARAMS& params, CResultArray& aResults) const
 {
 	if (!m_data.GetTaskCount())
+	{
 		return 0;
-	
+	}
+
 	HTREEITEM hti = m_tree.GetChildItem(NULL);
-	
+
 	while (hti)
 	{
 		FindTasks(hti, params, aResults);
 		hti = m_tree.GetNextItem(hti, TVGN_NEXT);
 	}
-	
+
 	// else
 	return aResults.GetSize();
 }
@@ -502,27 +637,31 @@ void CToDoCtrlFind::FindTasks(HTREEITEM hti, const SEARCHPARAMS& params, CResult
 	SEARCHRESULT result;
 	DWORD dwID = GetTaskID(hti);
 
-	// if the item is done and we're ignoring completed tasks 
+	// if the item is done and we're ignoring completed tasks
 	// (and by corollary their children) then we can stop right-away
 	if (params.bIgnoreDone && m_data.IsTaskDone(dwID, TDCCHECKALL))
+	{
 		return;
+	}
 
-	// also we can ignore parent tasks if required but we still need 
+	// also we can ignore parent tasks if required but we still need
 	// to process it's children
 	if (m_data.TaskMatches(GetTaskID(hti), params, result))
 	{
 		// check for overdue tasks
 		if (!params.bIgnoreOverDue || !m_data.IsTaskOverDue(dwID))
+		{
 			aResults.Add(result);
+		}
 	}
-	
+
 	// process children
 	HTREEITEM htiChild = m_tree.GetChildItem(hti);
-		
+
 	while (htiChild)
 	{
 		FindTasks(htiChild, params, aResults); // RECURSIVE call
-			
+
 		// next
 		htiChild = m_tree.GetNextItem(htiChild, TVGN_NEXT);
 	}
@@ -532,7 +671,9 @@ void CToDoCtrlFind::FindTasks(HTREEITEM hti, const SEARCHPARAMS& params, CResult
 DWORD CToDoCtrlFind::FindFirstTask(const SEARCHPARAMS& params, SEARCHRESULT& result) const
 {
 	if (!m_data.GetTaskCount())
+	{
 		return 0;
+	}
 
 	return FindFirstTask(m_tree.GetChildItem(NULL), params, result);
 }
@@ -545,7 +686,9 @@ DWORD CToDoCtrlFind::FindNextTask(DWORD dwStart, const SEARCHPARAMS& params, SEA
 	while (htiNext)
 	{
 		if (m_data.TaskMatches(GetTaskID(htiNext), params, result))
+		{
 			return result.dwID;
+		}
 
 		// next item
 		htiNext = bNext ? tch.GetNextItem(htiNext) : tch.GetPrevItem(htiNext);
@@ -565,9 +708,13 @@ DWORD CToDoCtrlFind::FindFirstTask(HTREEITEM htiStart, const SEARCHPARAMS& param
 		HTREEITEM htiChild = m_tree.GetChildItem(htiStart);
 
 		if (htiChild)
+		{
 			dwTaskID = FindFirstTask(htiChild, params, result);
+		}
 		else
+		{
 			dwTaskID = 0;
+		}
 
 		// and first sibling
 		if (!dwTaskID)
@@ -575,9 +722,11 @@ DWORD CToDoCtrlFind::FindFirstTask(HTREEITEM htiStart, const SEARCHPARAMS& param
 			HTREEITEM htiNext = m_tree.GetNextItem(htiStart, TVGN_NEXT);
 
 			if (htiNext)
+			{
 				dwTaskID = FindFirstTask(htiNext, params, result);
+			}
 		}
 	}
-	
+
 	return dwTaskID;
 }

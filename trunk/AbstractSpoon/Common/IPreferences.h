@@ -28,42 +28,26 @@
 // - adjusted #include's paths
 //*****************************************************************************
 
-// RichEditSpellCheck.h: interface for the CRichEditSpellCheck class.
+// Preferences.h: interface for the CPreferences class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_RICHEDITSPELLCHECK_H__9A6FC513_71CB_4207_9FED_7B1429010FE5__INCLUDED_)
-#define AFX_RICHEDITSPELLCHECK_H__9A6FC513_71CB_4207_9FED_7B1429010FE5__INCLUDED_
+#if !defined(AFX_IPREFERENCES_H__DF763543_F9D5_4C94_BBD9_DF7E6E41B8C2__INCLUDED_)
+#define AFX_IPREFERENCES_H__DF763543_F9D5_4C94_BBD9_DF7E6E41B8C2__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "ISpellCheck.h"
-
-class CRichEditBaseCtrl;
-
-class CRichEditSpellCheck : public ISpellCheck
+class IPreferences
 {
 public:
-	CRichEditSpellCheck(CRichEditBaseCtrl& re);
-	virtual ~CRichEditSpellCheck();
-
-	const char* GetFirstWord() const;
-	const char* GetNextWord() const;
-	const char* GetCurrentWord() const;
-
-	void SelectCurrentWord();
-	void ReplaceCurrentWord(const char* szWord);
-
-	void ClearSelection();
-
-protected:
-	CRichEditBaseCtrl& m_re;
-	mutable CHARRANGE m_crCurrentWord;
-
-protected:
-	const char* GetWord(const CHARRANGE& cr) const;
+	virtual UINT GetProfileInt(LPCTSTR lpszSection, LPCTSTR lpszEntry, int nDefault) const = 0;
+	virtual BOOL WriteProfileInt(LPCTSTR lpszSection, LPCTSTR lpszEntry, int nValue) = 0;
+	virtual CString GetProfileString(LPCTSTR lpszSection, LPCTSTR lpszEntry, LPCTSTR lpszDefault) const = 0;
+	virtual BOOL WriteProfileString(LPCTSTR lpszSection, LPCTSTR lpszEntry, LPCTSTR lpszValue) = 0;
+	virtual double GetProfileDouble(LPCTSTR lpszSection, LPCTSTR lpszEntry, double dDefault) const = 0;
+	virtual BOOL WriteProfileDouble(LPCTSTR lpszSection, LPCTSTR lpszEntry, double dValue) = 0;
 };
 
-#endif // !defined(AFX_RICHEDITSPELLCHECK_H__9A6FC513_71CB_4207_9FED_7B1429010FE5__INCLUDED_)
+#endif // !defined(AFX_PREFERENCES_H__DF763543_F9D5_4C94_BBD9_DF7E6E41B8C2__INCLUDED_)

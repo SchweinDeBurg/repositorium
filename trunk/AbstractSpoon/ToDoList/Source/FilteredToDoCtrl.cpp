@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // FilteredToDoCtrl.cpp: implementation of the CFilteredToDoCtrl class.
@@ -53,7 +67,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -73,24 +87,27 @@ const UINT SORTWIDTH = 10;
 //////////////////////////////////////////////////////////////////////
 
 CFilteredToDoCtrl::CFilteredToDoCtrl(CContentMgr& mgr, const CONTENTFORMAT& cfDefault) :
-	CToDoCtrl(mgr, cfDefault), 
-		m_nCurView(FTCV_UNSET), 
-		m_bListNeedRefilter(TRUE),
-		m_bListNeedResort(FALSE),
-		m_bTreeNeedResort(FALSE),
-		m_bListModSinceLastSort(FALSE),
-		m_tabCtrl(e_tabBottom)
+CToDoCtrl(mgr, cfDefault),
+m_nCurView(FTCV_UNSET),
+m_bListNeedRefilter(TRUE),
+m_bListNeedResort(FALSE),
+m_bTreeNeedResort(FALSE),
+m_bListModSinceLastSort(FALSE),
+m_tabCtrl(e_tabBottom),
+m_bLastFilterWasCustom(FALSE),
+m_bCustomFilter(FALSE),
+m_bListMultiSort(FALSE)
 {
 	// add extra controls
 	for (int nCtrl = 0; nCtrl < NUM_FTDCCTRLS; nCtrl++)
 	{
 		const TDCCONTROL& ctrl = FTDCCONTROLS[nCtrl];
 
-		AddRCControl(_T("CONTROL"), ctrl.szClass, CEnString(ctrl.nIDCaption), 
-					ctrl.dwStyle, ctrl.dwExStyle,
-					ctrl.nX, ctrl.nY, ctrl.nCx, ctrl.nCy, ctrl.nID);
+		AddRCControl(_T("CONTROL"), ctrl.szClass, CEnString(ctrl.nIDCaption),
+			ctrl.dwStyle, ctrl.dwExStyle,
+			ctrl.nX, ctrl.nY, ctrl.nCx, ctrl.nCy, ctrl.nID);
 	}
-	
+
 	m_sortList.nBy1 = TDC_UNSORTED;
 	m_sortList.nBy2 = TDC_UNSORTED;
 	m_sortList.nBy3 = TDC_UNSORTED;
@@ -104,7 +121,7 @@ CFilteredToDoCtrl::~CFilteredToDoCtrl()
 }
 
 BEGIN_MESSAGE_MAP(CFilteredToDoCtrl, CToDoCtrl)
-//{{AFX_MSG_MAP(CFilteredToDoCtrl)
+	//{{AFX_MSG_MAP(CFilteredToDoCtrl)
 	ON_WM_SETCURSOR()
 	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
@@ -125,8 +142,8 @@ BEGIN_MESSAGE_MAP(CFilteredToDoCtrl, CToDoCtrl)
 	ON_REGISTERED_MESSAGE(WM_PCANCELEDIT, OnEditCancel)
 	ON_REGISTERED_MESSAGE(WM_NCG_WIDTHCHANGE, OnGutterWidthChange)
 	ON_MESSAGE(WM_TDC_REFRESHFILTER, OnRefreshFilter)
-//	ON_NOTIFY_EX_RANGE(TTN_NEEDTEXT, 0, 0xFFFF, OnToolTipNotify)
-//	ON_NOTIFY_EX_RANGE(TTN_SHOW, 0, 0xFFFF, OnToolTipShow)
+	//	ON_NOTIFY_EX_RANGE(TTN_NEEDTEXT, 0, 0xFFFF, OnToolTipNotify)
+	//	ON_NOTIFY_EX_RANGE(TTN_SHOW, 0, 0xFFFF, OnToolTipShow)
 	ON_CBN_EDITCHANGE(IDC_DUETIME, OnEditChangeDueTime)
 END_MESSAGE_MAP()
 
@@ -135,7 +152,7 @@ END_MESSAGE_MAP()
 void CFilteredToDoCtrl::DoDataExchange(CDataExchange* pDX)
 {
 	CToDoCtrl::DoDataExchange(pDX);
-	
+
 	DDX_Control(pDX, IDC_FTC_TASKLIST, m_list);
 	DDX_Control(pDX, IDC_FTC_TABCTRL, m_tabCtrl);
 }
@@ -145,13 +162,10 @@ BOOL CFilteredToDoCtrl::OnInitDialog()
 	CToDoCtrl::OnInitDialog();
 
 	// prepare filtered view
-	ListView_SetExtendedListViewStyleEx(m_list, 
-										LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER, 
-										LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
-//	ListView_SetExtendedListViewStyleEx(m_list, LVS_EX_LABELTIP, LVS_EX_LABELTIP);
+	ListView_SetExtendedListViewStyleEx(m_list,
+		LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER,
+		LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
 	m_dtList.Register(&m_list, this);
-//	m_list.EnableToolTips();
-//	EnableToolTips();
 
 	// prevent the list overwriting the label edit
 	m_list.ModifyStyle(0, WS_CLIPSIBLINGS);
@@ -170,7 +184,7 @@ BOOL CFilteredToDoCtrl::OnInitDialog()
 		m_ilTabs.Add(&bm, RGB(255, 0, 255));
 		m_tabCtrl.SetImageList(&m_ilTabs);
 	}
-		
+
 	m_tabCtrl.InsertItem(TCIF_TEXT | TCIF_PARAM | TCIF_IMAGE, 0, CEnString(IDS_TASKTREE), 0, (LPARAM)&m_tree);
 	m_tabCtrl.InsertItem(TCIF_TEXT | TCIF_PARAM | TCIF_IMAGE, 1, CEnString(IDS_LISTVIEW), 1, (LPARAM)&m_list);
 
@@ -179,7 +193,7 @@ BOOL CFilteredToDoCtrl::OnInitDialog()
 	return FALSE;
 }
 
-BOOL CFilteredToDoCtrl::PreTranslateMessage(MSG* pMsg) 
+BOOL CFilteredToDoCtrl::PreTranslateMessage(MSG* pMsg)
 {
 	return CToDoCtrl::PreTranslateMessage(pMsg);
 }
@@ -200,10 +214,16 @@ BOOL CFilteredToDoCtrl::LoadTasks(const CTaskFile& file)
 	// reload last view
 	if (m_nCurView == FTCV_UNSET)
 	{
-		RestoreFilter(prefs);
+		RestoreFilter(prefs, m_lastFilter, _T("Last"));
+		RestoreFilter(prefs, m_filter);
+
+		if (IsFilterSet(FTCV_TASKTREE))
+		{
+			RefreshTreeFilter();   // always
+		}
 
 		CString sKey = GetPreferencesKey(); // no subkey
-		
+
 		if (!sKey.IsEmpty()) // first time
 		{
 			m_bListNeedRefilter = TRUE;
@@ -213,125 +233,142 @@ BOOL CFilteredToDoCtrl::LoadTasks(const CTaskFile& file)
 		}
 	}
 	else
+	{
 		RefreshFilter();
+	}
 
 	return bSuccess;
 }
 
-void CFilteredToDoCtrl::RestoreFilter(const CPreferences& prefs)
+void CFilteredToDoCtrl::RestoreFilter(const CPreferences& prefs, FTDCFILTER& filter, const CString& sSubKey)
 {
 	CString sKey = GetPreferencesKey(_T("Filter"));
 
 	if (!sKey.IsEmpty())
 	{
-		m_filter.nFilter = (FILTER_TYPE)prefs.GetProfileInt(sKey, _T("Filter"), FT_ALL);
-		m_filter.nPriority = prefs.GetProfileInt(sKey, _T("Priority"), FT_ANYPRIORITY);
-		m_filter.nRisk = prefs.GetProfileInt(sKey, _T("Risk"), FT_ANYRISK);
+		if (!sSubKey.IsEmpty())
+		{
+			sKey += _T("\\") + sSubKey;
+		}
+
+		filter.nFilter = (FILTER_TYPE)prefs.GetProfileInt(sKey, _T("Filter"), FT_ALL);
+		filter.sTitle = prefs.GetProfileString(sKey, _T("Title"));
+		filter.nPriority = prefs.GetProfileInt(sKey, _T("Priority"), FT_ANYPRIORITY);
+		filter.nRisk = prefs.GetProfileInt(sKey, _T("Risk"), FT_ANYRISK);
 
 		// cats
 		CString sCategory = prefs.GetProfileString(sKey, _T("Category"));
-		Misc::ParseIntoArray(sCategory, m_filter.aCategories, TRUE);
+		Misc::ParseIntoArray(sCategory, filter.aCategories, TRUE);
 
 		// alloc to
 		CString sAllocTo = prefs.GetProfileString(sKey, _T("AllocTo"));
-		Misc::ParseIntoArray(sAllocTo, m_filter.aAllocTo, TRUE);
+		Misc::ParseIntoArray(sAllocTo, filter.aAllocTo, TRUE);
 
 		// alloc by
 		CString sAllocBy = prefs.GetProfileString(sKey, _T("AllocBy"));
-		Misc::ParseIntoArray(sAllocBy, m_filter.aAllocBy, TRUE);
+		Misc::ParseIntoArray(sAllocBy, filter.aAllocBy, TRUE);
 
 		// status
 		CString sStatus = prefs.GetProfileString(sKey, _T("Status"));
-		Misc::ParseIntoArray(sStatus, m_filter.aStatus, TRUE);
+		Misc::ParseIntoArray(sStatus, filter.aStatus, TRUE);
 
 		// version
 		CString sVersion = prefs.GetProfileString(sKey, _T("Version"));
-		Misc::ParseIntoArray(sVersion, m_filter.aVersions, TRUE);
+		Misc::ParseIntoArray(sVersion, filter.aVersions, TRUE);
 
 		// options
-		m_filter.SetFlag(FT_ANYCATEGORY, prefs.GetProfileInt(sKey, _T("AnyCategory"), FALSE));
-		m_filter.SetFlag(FT_ANYALLOCTO, prefs.GetProfileInt(sKey, _T("AnyAllocTo"), FALSE));
-// 		m_filter.SetFlag(FT_ANYSTATUS, prefs.GetProfileInt(sKey, _T("AnyStatus"), FALSE));
-// 		m_filter.SetFlag(FT_ANYALLOCBY, prefs.GetProfileInt(sKey, _T("AnyAllocBy"), FALSE));
-// 		m_filter.SetFlag(FT_ANYVERSION, prefs.GetProfileInt(sKey, "AnyVersion", FALSE));
-		m_filter.SetFlag(FT_HIDEPARENTS, prefs.GetProfileInt(sKey, _T("HideParents"), FALSE));
-		m_filter.SetFlag(FT_HIDEOVERDUE, prefs.GetProfileInt(sKey, _T("HideOverDue"), FALSE));
-		m_filter.SetFlag(FT_HIDEDONE, prefs.GetProfileInt(sKey, _T("HideDone"), FALSE));
-		m_filter.SetFlag(FT_HIDECOLLAPSED, prefs.GetProfileInt(sKey, _T("HideCollapsed"), FALSE));
+		filter.SetFlag(FT_ANYCATEGORY, prefs.GetProfileInt(sKey, _T("AnyCategory"), FALSE));
+		filter.SetFlag(FT_ANYALLOCTO, prefs.GetProfileInt(sKey, _T("AnyAllocTo"), FALSE));
+		filter.SetFlag(FT_HIDEPARENTS, prefs.GetProfileInt(sKey, _T("HideParents"), FALSE));
+		filter.SetFlag(FT_HIDEOVERDUE, prefs.GetProfileInt(sKey, _T("HideOverDue"), FALSE));
+		filter.SetFlag(FT_HIDEDONE, prefs.GetProfileInt(sKey, _T("HideDone"), FALSE));
+		filter.SetFlag(FT_HIDECOLLAPSED, prefs.GetProfileInt(sKey, _T("HideCollapsed"), FALSE));
 	}
-
-	if (IsFilterSet(FTCV_TASKTREE))
-		RefreshTreeFilter(); // always
 }
 
-void CFilteredToDoCtrl::SaveFilter(CPreferences& prefs) const
+void CFilteredToDoCtrl::SaveFilter(const FTDCFILTER& filter, CPreferences& prefs, const CString& sSubKey) const
 {
 	CString sKey = GetPreferencesKey(_T("Filter"));
 
 	if (!sKey.IsEmpty())
 	{
-		prefs.WriteProfileInt(sKey, _T("Filter"), m_filter.nFilter);
-		prefs.WriteProfileInt(sKey, _T("Priority"), m_filter.nPriority);
-		prefs.WriteProfileInt(sKey, _T("Risk"), m_filter.nRisk);
-		prefs.WriteProfileString(sKey, _T("AllocBy"), Misc::FormatArray(m_filter.aAllocBy));
-		prefs.WriteProfileString(sKey, _T("Status"), Misc::FormatArray(m_filter.aStatus));
-		prefs.WriteProfileString(sKey, _T("Version"), Misc::FormatArray(m_filter.aVersions));
-		prefs.WriteProfileString(sKey, _T("AllocTo"), Misc::FormatArray(m_filter.aAllocTo));
-		prefs.WriteProfileString(sKey, _T("Category"), Misc::FormatArray(m_filter.aCategories));
+		if (!sSubKey.IsEmpty())
+		{
+			sKey += _T("\\") + sSubKey;
+		}
+
+		prefs.WriteProfileInt(sKey, _T("Filter"), filter.nFilter);
+		prefs.WriteProfileString(sKey, _T("Title"), filter.sTitle);
+		prefs.WriteProfileInt(sKey, _T("Priority"), filter.nPriority);
+		prefs.WriteProfileInt(sKey, _T("Risk"), filter.nRisk);
+		prefs.WriteProfileString(sKey, _T("AllocBy"), Misc::FormatArray(filter.aAllocBy));
+		prefs.WriteProfileString(sKey, _T("Status"), Misc::FormatArray(filter.aStatus));
+		prefs.WriteProfileString(sKey, _T("Version"), Misc::FormatArray(filter.aVersions));
+		prefs.WriteProfileString(sKey, _T("AllocTo"), Misc::FormatArray(filter.aAllocTo));
+		prefs.WriteProfileString(sKey, _T("Category"), Misc::FormatArray(filter.aCategories));
 
 		// options
-		prefs.WriteProfileInt(sKey, _T("AnyAllocTo"), m_filter.HasFlag(FT_ANYALLOCTO));
-		prefs.WriteProfileInt(sKey, _T("AnyCategory"), m_filter.HasFlag(FT_ANYCATEGORY));
-// 		prefs.WriteProfileInt(sKey, _T("AnyAllocBy"), m_filter.HasFlag(FT_ANYALLOCBY));
-// 		prefs.WriteProfileInt(sKey, _T("AnyStatus"), m_filter.HasFlag(FT_ANYSTATUS));
-// 		prefs.WriteProfileInt(sKey, _T("AnyVersion"), m_filter.HasFlag(FT_ANYVERSION));
-		prefs.WriteProfileInt(sKey, _T("HideParents"), m_filter.HasFlag(FT_HIDEPARENTS));
-		prefs.WriteProfileInt(sKey, _T("HideOverDue"), m_filter.HasFlag(FT_HIDEOVERDUE));
-		prefs.WriteProfileInt(sKey, _T("HideDone"), m_filter.HasFlag(FT_HIDEDONE));
-		prefs.WriteProfileInt(sKey, _T("HideCollapsed"), m_filter.HasFlag(FT_HIDECOLLAPSED));
+		prefs.WriteProfileInt(sKey, _T("AnyAllocTo"), filter.HasFlag(FT_ANYALLOCTO));
+		prefs.WriteProfileInt(sKey, _T("AnyCategory"), filter.HasFlag(FT_ANYCATEGORY));
+		prefs.WriteProfileInt(sKey, _T("HideParents"), filter.HasFlag(FT_HIDEPARENTS));
+		prefs.WriteProfileInt(sKey, _T("HideOverDue"), filter.HasFlag(FT_HIDEOVERDUE));
+		prefs.WriteProfileInt(sKey, _T("HideDone"), filter.HasFlag(FT_HIDEDONE));
+		prefs.WriteProfileInt(sKey, _T("HideCollapsed"), filter.HasFlag(FT_HIDECOLLAPSED));
 	}
 }
 
 
-void CFilteredToDoCtrl::OnDestroy() 
+void CFilteredToDoCtrl::OnDestroy()
 {
 	if (m_nCurView != FTCV_UNSET)
 	{
 		CPreferences prefs;
 		CString sKey = GetPreferencesKey(); // no subkey
-		
+
 		// save view
 		if (!sKey.IsEmpty())
+		{
 			prefs.WriteProfileInt(sKey, _T("View"), m_nCurView);
+		}
 
-		SaveFilter(prefs);
+		SaveFilter(m_filter, prefs);
+		SaveFilter(m_lastFilter, prefs, _T("Last"));
 	}
-		
+
 	CToDoCtrl::OnDestroy();
 }
 
 void CFilteredToDoCtrl::BuildListColumns(BOOL bResizeCols)
 {
-	while (m_list.DeleteColumn(0));
-	
+	while (m_list.DeleteColumn(0))
+	{
+		;
+	}
+
 	int nCol = NUM_COLUMNS - 1; // we handle title column separately
-	
+
 	while (nCol--)
 	{
 		const TDCCOLUMN& col = COLUMNS[nCol];
 		UINT nFmt = col.nAlignment == DT_RIGHT ? LVCFMT_RIGHT : LVCFMT_LEFT;
-		
+
 		m_list.InsertColumn(0, _T(""), nFmt, 10);
 	}
 
 	// title column
 	if (HasStyle(TDCS_RIGHTSIDECOLUMNS))
+	{
 		m_list.InsertColumn(0, _T(""), LVCFMT_LEFT, 10);
+	}
 	else
+	{
 		m_list.InsertColumn(NUM_COLUMNS - 1, _T(""), LVCFMT_LEFT, 10);
+	}
 
 	if (bResizeCols)
+	{
 		UpdateColumnWidths();
+	}
 }
 
 void CFilteredToDoCtrl::OnRClickHeader(NMHDR* /*pNMHDR*/, LRESULT* pResult)
@@ -350,21 +387,25 @@ void CFilteredToDoCtrl::OnEditChangeDueTime()
 	// need some special hackery to prevent a re-filter in the middle
 	// of the user manually typing into the time field
 	BOOL bNeedsRefilter = ModNeedsRefilter(TDCA_DUEDATE, FTCV_TASKTREE);
-	
+
 	if (bNeedsRefilter)
+	{
 		SetStyle(TDCS_REFILTERONMODIFY, FALSE, FALSE);
-	
+	}
+
 	CToDoCtrl::OnSelChangeDueTime();
-	
+
 	if (bNeedsRefilter)
+	{
 		SetStyle(TDCS_REFILTERONMODIFY, TRUE, FALSE);
+	}
 }
 
 
 void CFilteredToDoCtrl::OnClickHeader(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NMLISTVIEW* pNMLV = (NMLISTVIEW*)pNMHDR;
-	
+
 	int nCol = pNMLV->iSubItem;
 	TDCCOLUMN* pCol = GetColumn(nCol);
 
@@ -375,7 +416,9 @@ void CFilteredToDoCtrl::OnClickHeader(NMHDR* pNMHDR, LRESULT* pResult)
 
 		// notify parent
 		if (m_sortList.nBy1 != nPrev)
+		{
 			GetParent()->SendMessage(WM_TDCN_SORT, GetDlgCtrlID(), MAKELPARAM((WORD)nPrev, (WORD)m_sortList.nBy1));
+		}
 	}
 
 	*pResult = 0;
@@ -386,9 +429,13 @@ void CFilteredToDoCtrl::OnTreeExpandItem(NMHDR* /*pNMHDR*/, LRESULT* /*pResult*/
 	if (m_filter.HasFlag(FT_HIDECOLLAPSED))
 	{
 		if (InListView())
+		{
 			RefreshListFilter();
+		}
 		else
+		{
 			m_bListNeedRefilter = TRUE;
+		}
 	}
 }
 
@@ -403,10 +450,45 @@ void CFilteredToDoCtrl::OnListGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult)
 	if ((nMask & LVIF_TEXT) &&  m_dwEditingID != dwTaskID)
 	{
 		TODOITEM* pTDI = GetTask(dwTaskID);
-		ASSERT (pTDI);
-		
+
+		// it's possible that the task does not exist if it's just been
+		// deleted from the tree view
+		if (!pTDI)
+		{
+			return;
+		}
+
 		// all else
 		lplvdi->item.pszText = const_cast<LPTSTR>((LPCTSTR)pTDI->sTitle);
+	}
+
+	if (nMask & LVIF_IMAGE)
+	{
+		if (!HasStyle(TDCS_TREETASKICONS))
+		{
+			lplvdi->item.iImage = -1;
+		}
+		else
+		{
+			TODOITEM* pTDI = NULL;
+			TODOSTRUCTURE* pTDS = NULL;
+			m_data.GetTask(dwTaskID, pTDI, pTDS);
+
+			BOOL bHasChildren = pTDS->HasSubTasks();
+			int nImage = -1;
+
+			if (pTDI->nIconIndex >= 0)
+			{
+				nImage = pTDI->nIconIndex;
+			}
+
+			else if (HasStyle(TDCS_SHOWPARENTSASFOLDERS) && bHasChildren)
+			{
+				nImage = 0;
+			}
+
+			lplvdi->item.iImage = nImage;
+		}
 	}
 }
 
@@ -415,10 +497,12 @@ void CFilteredToDoCtrl::SetVisibleColumns(const CTDCColumnArray& aColumns)
 	CToDoCtrl::SetVisibleColumns(aColumns);
 
 	if (InListView())
+	{
 		UpdateColumnWidths();
+	}
 }
 
-void CFilteredToDoCtrl::OnSelchangeTabcontrol(NMHDR* /*pNMHDR*/, LRESULT* pResult) 
+void CFilteredToDoCtrl::OnSelchangeTabcontrol(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
 	SetView((FTC_VIEW)m_tabCtrl.GetCurSel());
 
@@ -432,10 +516,14 @@ BOOL CFilteredToDoCtrl::ArchiveDoneTasks(LPCTSTR szFilePath, TDC_ARCHIVE nFlags,
 		if (InListView())
 		{
 			if (IsFilterSet(FTCV_TASKLIST))
+			{
 				RefreshListFilter();
+			}
 		}
 		else if (IsFilterSet(FTCV_TASKTREE))
+		{
 			RefreshTreeFilter();
+		}
 	}
 
 	// else
@@ -449,10 +537,14 @@ BOOL CFilteredToDoCtrl::ArchiveSelectedTasks(LPCTSTR szFilePath, BOOL bRemove)
 		if (InListView())
 		{
 			if (IsFilterSet(FTCV_TASKLIST))
+			{
 				RefreshListFilter();
+			}
 		}
 		else if (IsFilterSet(FTCV_TASKTREE))
+		{
 			RefreshTreeFilter();
+		}
 	}
 
 	// else
@@ -462,7 +554,9 @@ BOOL CFilteredToDoCtrl::ArchiveSelectedTasks(LPCTSTR szFilePath, BOOL bRemove)
 int CFilteredToDoCtrl::GetArchivableTasks(CTaskFile& tasks, BOOL bSelectedOnly) const
 {
 	if (bSelectedOnly || !IsFilterSet(FTCV_TASKTREE))
+	{
 		return CToDoCtrl::GetArchivableTasks(tasks, bSelectedOnly);
+	}
 
 	// else
 	GetCompletedTasks(m_data.GetStructure(), tasks, NULL, FALSE);
@@ -473,17 +567,21 @@ int CFilteredToDoCtrl::GetArchivableTasks(CTaskFile& tasks, BOOL bSelectedOnly) 
 BOOL CFilteredToDoCtrl::RemoveArchivedTask(DWORD dwTaskID)
 {
 	ASSERT(GetTask(dwTaskID));
-	
+
 	// note: if the tasks does not exist in the tree then this is not a bug
 	// if a filter is set
 	HTREEITEM hti = m_find.GetItem(dwTaskID);
 	ASSERT(hti || IsFilterSet(FTCV_TASKTREE));
-	
+
 	if (!hti && !IsFilterSet(FTCV_TASKTREE))
+	{
 		return FALSE;
-	
+	}
+
 	if (hti)
+	{
 		m_tree.DeleteItem(hti);
+	}
 
 	return m_data.DeleteTask(dwTaskID);
 }
@@ -522,19 +620,21 @@ void CFilteredToDoCtrl::GetCompletedTasks(const TODOSTRUCTURE* pTDS, CTaskFile& 
 			GetCompletedTasks(pTDSChild, tasks, hTaskParent, bSelectedOnly);
 		}
 
-		// if no subtasks were added and the parent is not completed 
+		// if no subtasks were added and the parent is not completed
 		// (and optionally selected) then we remove it
 		if (hTaskParent && tasks.GetFirstTask(hTaskParent) == NULL)
 		{
 			ASSERT(pTDI);
 
 			if (!pTDI->IsDone())
+			{
 				tasks.DeleteTask(hTaskParent);
+			}
 		}
 	}
 }
 
-void CFilteredToDoCtrl::SetView(FTC_VIEW nView) 
+void CFilteredToDoCtrl::SetView(FTC_VIEW nView)
 {
 	if (nView == FTCV_UNSET)
 	{
@@ -543,7 +643,9 @@ void CFilteredToDoCtrl::SetView(FTC_VIEW nView)
 	}
 
 	if (m_nCurView == nView)
+	{
 		return;
+	}
 
 	m_nCurView = nView;
 
@@ -553,7 +655,7 @@ void CFilteredToDoCtrl::SetView(FTC_VIEW nView)
 	// take a note of what task is currently singly selected
 	// so that we can prevent unnecessary calls to UpdateControls
 	DWORD dwSelTaskID = (GetSelectedCount() == 1) ? GetTaskID(GetSelectedItem()) : 0;
-	
+
 	switch (nView)
 	{
 	case FTCV_TASKTREE:
@@ -563,7 +665,9 @@ void CFilteredToDoCtrl::SetView(FTC_VIEW nView)
 			HTREEITEM hti = m_tree.GetSelectedItem();
 
 			if (!hti)
+			{
 				hti = m_tree.GetChildItem(NULL);
+			}
 
 			CToDoCtrl::SelectTask(GetTaskID(hti));
 		}
@@ -584,8 +688,8 @@ void CFilteredToDoCtrl::SetView(FTC_VIEW nView)
 
 	case FTCV_TASKLIST:
 		// processed any unhandled comments
-		HandleUnsavedComments(); 		
-		
+		HandleUnsavedComments();
+
 		if (!m_header.GetSafeHwnd())
 		{
 			m_header.SubclassDlgItem(0, &m_list);
@@ -608,7 +712,9 @@ void CFilteredToDoCtrl::SetView(FTC_VIEW nView)
 		bFiltered = m_bListNeedRefilter;
 
 		if (m_bListNeedRefilter)
+		{
 			RefreshListFilter();
+		}
 
 		// update sort
 		if (m_bListNeedResort)
@@ -628,13 +734,15 @@ void CFilteredToDoCtrl::SetView(FTC_VIEW nView)
 
 		break;
 	}
-	
-	// update controls only if the selection has changed and 
+
+	// update controls only if the selection has changed and
 	// we didn't refilter (RefreshFilter will already have called UpdateControls)
 	BOOL bSelChange = !(GetSelectedCount() == 1 && GetTaskID(GetSelectedItem()) == dwSelTaskID);
-	
+
 	if (bSelChange && !bFiltered)
+	{
 		UpdateControls();
+	}
 
 	m_tabCtrl.SetCurSel((int)nView);
 
@@ -655,19 +763,23 @@ void CFilteredToDoCtrl::RemeasureList()
 void CFilteredToDoCtrl::UpdateColumnWidths()
 {
 	if (!InListView())
+	{
 		return;
+	}
 
 	int nCol = NUM_COLUMNS;
 	int nTotalWidth = 0;
 	BOOL bFirstWidth = TRUE;
-	
+
 	for (nCol = 0; nCol < NUM_COLUMNS; nCol++)
 	{
 		const TDCCOLUMN* pCol = GetColumn(nCol);
 		ASSERT(pCol);
 
 		if (pCol->nColID == TDCC_CLIENT)
-			continue; // we'll deal with this at the end
+		{
+			continue;   // we'll deal with this at the end
+		}
 
 		int nWidth = m_tree.GetColumnWidth(pCol->nColID);
 
@@ -677,17 +789,21 @@ void CFilteredToDoCtrl::UpdateColumnWidths()
 			nWidth += 1;
 		}
 
-		// sort indicator 
+		// sort indicator
 		if (IsColumnShowing(pCol->nColID))
 		{
 			BOOL bTreeColWidened = !(m_bMultiSort || m_sort.nBy1 == TDC_UNSORTED) && m_sort.nBy1 == pCol->nSortBy;
 			BOOL bListColWidened = !(m_bListMultiSort || m_sortList.nBy1 == TDC_UNSORTED) && m_sortList.nBy1 == pCol->nSortBy;
 
 			if (!bTreeColWidened && bListColWidened)
+			{
 				nWidth += SORTWIDTH;
+			}
 
 			else if (bTreeColWidened && !bListColWidened)
+			{
 				nWidth -= SORTWIDTH;
+			}
 		}
 
 		m_list.SetColumnWidth(nCol, nWidth);
@@ -733,9 +849,13 @@ void CFilteredToDoCtrl::UpdateTasklistVisibility()
 	BOOL bTasksVis = (m_nMaxState != TDCMS_MAXCOMMENTS);
 
 	if (InListView())
+	{
 		m_list.ShowWindow(bTasksVis ? SW_SHOW : SW_HIDE);
+	}
 	else
+	{
 		CToDoCtrl::UpdateTasklistVisibility();
+	}
 }
 
 void CFilteredToDoCtrl::Resize(int cx, int cy)
@@ -744,90 +864,6 @@ void CFilteredToDoCtrl::Resize(int cx, int cy)
 
 	UpdateColumnWidths();
 }
-
-/*
-int CFilteredToDoCtrl::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
-{
-	ClientToScreen(&point);
-
-	if (::WindowFromPoint(point) == m_list)
-	{
-		m_list.ScreenToClient(&point);
-
-		LVHITTESTINFO lvhti = { { point.x, point.y }, 0, 0, 0 };
-		CListCtrl* pList = const_cast<CListCtrl*>(&m_list);
-		pList->SubItemHitTest(&lvhti);
-			
-		int nHit = lvhti.iItem;
-
-		// we're only interested in the client column
-		if (nHit != -1 && GetColumnID(lvhti.iSubItem) == TDCC_CLIENT) // valid item
-		{
-			// get item rect in parent coords
-			pTI->hwnd = m_list;
-			pTI->lpszText = LPSTR_TEXTCALLBACK;
-// 			pTI->uId = (UINT)m_list.GetSafeHwnd();
-// 			pTI->uFlags |= TTF_IDISHWND;
-			pTI->uId = nHit + 10;
-
-			CRect rItem;
-			GetItemTitleRect(nHit, TDCTR_LABEL, rItem);
-			pTI->rect = rItem;
-		}
-
-		return 1;
-	}
-
-	return -1;
-}
-
-BOOL CFilteredToDoCtrl::OnToolTipNotify(UINT id, NMHDR* pNMHDR, LRESULT* pResult)
-{
-    // Get the tooltip structure.
-    TOOLTIPTEXT *pTTT = (TOOLTIPTEXT *)pNMHDR;
-
-    // Actually the idFrom holds Control's handle.
-    UINT CtrlHandle = pNMHDR->idFrom;
-
-    // Check once again that the idFrom holds handle itself.
-    if (pTTT->uFlags & TTF_IDISHWND)
-    {
-		static CString sTooltip;
-		sTooltip.Empty();
-
-        // Get the control's ID.
-        UINT nID = ::GetDlgCtrlID( HWND( CtrlHandle ));
-
-        // Now you have the ID. depends on control,
-        // set your tooltip message.
-        switch( nID )
-        {
-        case IDC_FTC_TASKLIST:
-			//
-			sTooltip = "list tooltip";
-            break;
-        }
-
-		if (!sTooltip.IsEmpty())
-		{
-			pTTT->lpszText = (LPSTR)(LPCTSTR)sTooltip;
-	        return TRUE;
-		}
-
-    }
-
-    // Not handled.
-    return FALSE;
-}
-
-BOOL CFilteredToDoCtrl::OnToolTipShow( UINT id, NMHDR* pNMHDR, LRESULT* pResult )
-{
-
-    // Not handled.
-    return FALSE;
-
-}
-*/
 
 void CFilteredToDoCtrl::SelectAll()
 {
@@ -844,17 +880,25 @@ void CFilteredToDoCtrl::SelectAll()
 
 			// save ID only not showing all tasks
 			if (!bAllTasks)
+			{
 				aTaskIDs.Add(m_list.GetItemData(nItem));
+			}
 		}
 
 		// select items in tree
 		if (bAllTasks)
+		{
 			CToDoCtrl::SelectAll();
+		}
 		else
+		{
 			MultiSelectItems(aTaskIDs, TSHS_SELECT, FALSE);
+		}
 	}
 	else
+	{
 		CToDoCtrl::SelectAll();
+	}
 }
 
 void CFilteredToDoCtrl::DeselectAll()
@@ -879,12 +923,16 @@ int CFilteredToDoCtrl::GetTasks(CTaskFile& tasks, const TDCGETTASKS& filter) con
 		}
 
 		if (filter.dwFlags & TDCGTF_FILENAME)
+		{
 			tasks.SetFileName(m_sLastSavePath);
+		}
 
 		return tasks.GetTaskCount();
 	}
 	else
+	{
 		return CToDoCtrl::GetTasks(tasks, filter);
+	}
 }
 
 int CFilteredToDoCtrl::GetSelectedTasks(CTaskFile& tasks, const TDCGETTASKS& filter) const
@@ -895,7 +943,7 @@ int CFilteredToDoCtrl::GetSelectedTasks(CTaskFile& tasks, const TDCGETTASKS& fil
 		// so we make sure the filter includes TDCGT_NOTSUBTASKS
 		TDCGETTASKS tdcf(filter);
 		tdcf.dwFlags |= TDCGTF_NOTSUBTASKS;
-	
+
 		POSITION pos = m_list.GetFirstSelectedItemPosition();
 
 		while (pos)
@@ -909,7 +957,15 @@ int CFilteredToDoCtrl::GetSelectedTasks(CTaskFile& tasks, const TDCGETTASKS& fil
 		return tasks.GetTaskCount();
 	}
 	else
+	{
 		return CToDoCtrl::GetSelectedTasks(tasks, filter);
+	}
+}
+
+int CFilteredToDoCtrl::GetFilteredTasks(CTaskFile& tasks, const TDCGETTASKS& filter) const
+{
+	// synonym for GetTasks which always returns the filtered tasks
+	return GetTasks(tasks, filter);
 }
 
 FILTER_TYPE CFilteredToDoCtrl::GetFilter(FTDCFILTER& filter) const
@@ -924,49 +980,107 @@ void CFilteredToDoCtrl::SetFilter(const FTDCFILTER& filter)
 	m_filter = filter;
 
 	if (m_bDelayLoaded)
+	{
 		m_bListNeedRefilter = TRUE;
+	}
 	else
 	{
-		BOOL bTreeNeedsFilter = !FiltersMatch(fPrev, filter, FTCV_TASKTREE);
-		BOOL bListNeedRefilter = !FiltersMatch(fPrev, filter, FTCV_TASKLIST); 
+		BOOL bTreeNeedsFilter = m_bCustomFilter || !FiltersMatch(fPrev, filter, FTCV_TASKTREE);
+		BOOL bListNeedRefilter = m_bCustomFilter || !FiltersMatch(fPrev, filter, FTCV_TASKLIST);
+
+		m_bCustomFilter = FALSE;
 
 		if (bTreeNeedsFilter)
+		{
 			RefreshFilter();
+		}
 
 		else if (bListNeedRefilter)
 		{
 			if (InListView())
+			{
 				RefreshListFilter();
+			}
 			else
+			{
 				m_bListNeedRefilter = TRUE;
+			}
 		}
 	}
 
 	// modify the tree prompt depending on whether there is a filter set
 	if (IsFilterSet(FTCV_TASKTREE))
+	{
 		m_mgrPrompts.SetPrompt(m_tree, IDS_TDC_FILTEREDTASKLISTPROMPT, TVM_GETCOUNT);
+	}
 	else
+	{
 		m_mgrPrompts.SetPrompt(m_tree, IDS_TDC_TASKLISTPROMPT, TVM_GETCOUNT);
+	}
 }
-	
+
 void CFilteredToDoCtrl::ClearFilter()
 {
-	if (HasFilter())
+	if (HasFilter() || HasCustomFilter())
 	{
 		FTDCFILTER filter; // empty filter
 		SetFilter(filter);
+		m_lastFilter = filter; // clear
+
+		m_customFilter = SEARCHPARAMS(); // empty ruleset
+		m_bCustomFilter = FALSE;
+		m_bLastFilterWasCustom = FALSE;
+	}
+}
+
+void CFilteredToDoCtrl::ToggleFilter()
+{
+	if (HasFilter() || HasCustomFilter()) // turn off
+	{
+		// save last filter
+		if (m_bCustomFilter)
+		{
+			m_bLastFilterWasCustom = TRUE;
+			m_lastCustomFilter = m_customFilter;
+			SEARCHPARAMS filter; // empty filter
+			SetCustomFilter(filter, m_sCustomFilter);
+			m_bCustomFilter = FALSE;
+		}
+		else
+		{
+			m_bLastFilterWasCustom = FALSE;
+			m_lastFilter = m_filter;
+			FTDCFILTER filter; // empty filter
+			SetFilter(filter);
+			m_bCustomFilter = FALSE;
+		}
+	}
+	else // turn on
+	{
+		if (m_bLastFilterWasCustom)
+		{
+			SetCustomFilter(m_lastCustomFilter, m_sCustomFilter);
+		}
+		else
+		{
+			SetFilter(m_lastFilter);
+		}
 	}
 }
 
 BOOL CFilteredToDoCtrl::FiltersMatch(const FTDCFILTER& filter1, const FTDCFILTER& filter2, FTC_VIEW nView) const
 {
 	if (nView == FTCV_UNSET)
+	{
 		return FALSE;
+	}
 
 	DWORD dwIgnore = 0;
 
 	if (nView == FTCV_TASKTREE)
+	{
 		dwIgnore = (FT_HIDECOLLAPSED | FT_HIDEPARENTS);
+	}
 
 	return FTDCFILTER::FiltersMatch(filter1, filter2, dwIgnore);
 }
@@ -979,12 +1093,16 @@ BOOL CFilteredToDoCtrl::IsFilterSet(FTC_VIEW nView) const
 BOOL CFilteredToDoCtrl::IsFilterSet(const FTDCFILTER& filter, FTC_VIEW nView) const
 {
 	if (nView == FTCV_UNSET)
+	{
 		return FALSE;
+	}
 
 	DWORD dwIgnore = 0;
 
 	if (nView == FTCV_TASKTREE)
+	{
 		dwIgnore = (FT_HIDECOLLAPSED | FT_HIDEPARENTS);
+	}
 
 	return filter.IsSet(dwIgnore);
 }
@@ -994,12 +1112,49 @@ UINT CFilteredToDoCtrl::GetTaskCount(UINT* pVisible) const
 	if (pVisible)
 	{
 		if (InListView())
+		{
 			*pVisible = m_list.GetItemCount();
+		}
 		else
+		{
 			*pVisible = m_tree.GetCount();
+		}
 	}
 
 	return CToDoCtrl::GetTaskCount();
+}
+
+BOOL CFilteredToDoCtrl::HasCustomFilter() const
+{
+	return m_bCustomFilter;
+}
+
+BOOL CFilteredToDoCtrl::SetCustomFilter(const SEARCHPARAMS& params, LPCTSTR szName)
+{
+	m_customFilter = params;
+	m_sCustomFilter = szName;
+
+	RestoreCustomFilter();
+
+	return TRUE;
+}
+
+BOOL CFilteredToDoCtrl::RestoreCustomFilter()
+{
+	m_bCustomFilter = TRUE;
+
+	RefreshTreeFilter();
+
+	if (InListView())
+	{
+		RefreshListFilter();
+	}
+	else
+	{
+		m_bListNeedRefilter = TRUE;
+	}
+
+	return TRUE;
 }
 
 void CFilteredToDoCtrl::BuildFilterQuery(SEARCHPARAMS& params)
@@ -1007,7 +1162,7 @@ void CFilteredToDoCtrl::BuildFilterQuery(SEARCHPARAMS& params)
 	// reset the search
 	params.rules.RemoveAll();
 	params.bIgnoreDone = m_filter.HasFlag(FT_HIDEDONE);
-	
+
 	// handle principle filter
 	switch (m_filter.nFilter)
 	{
@@ -1063,7 +1218,7 @@ void CFilteredToDoCtrl::BuildFilterQuery(SEARCHPARAMS& params)
 	case FT_DUETODAY:
 	case FT_DUETOMORROW:
 	case FT_DUEENDTHISWEEK:
-	case FT_DUEENDNEXTWEEK: 
+	case FT_DUEENDNEXTWEEK:
 	case FT_DUEENDTHISMONTH:
 	case FT_DUEENDNEXTMONTH:
 	case FT_DUEENDTHISYEAR:
@@ -1077,27 +1232,11 @@ void CFilteredToDoCtrl::BuildFilterQuery(SEARCHPARAMS& params)
 				//params.rules.Add(SEARCHPARAM(TDCA_DONEDATE, FO_NOT_SET));
 				params.rules.Add(SEARCHPARAM(TDCA_DUEDATE, FO_ON_OR_BEFORE, dateDue.m_dt));
 			}
-			
+
 			// this flag only applies to due filters
 			params.bIgnoreOverDue = m_filter.HasFlag(FT_HIDEOVERDUE);
 		}
 		break;
-
-/*
-	case FT_ACTIVE:
-		{
-			COleDateTime date = CDateHelper::GetDate(DHD_TODAY);
-			params.rules.Add(SEARCHPARAM(TDCA_STARTDATE, FO_ON_OR_BEFORE, date.m_dt));
-			AddNonDateFilterQueryRules(params);
-
-			params.rules.Add(SEARCHPARAM(TDCA_DUEDATE, FO_ON_OR_BEFORE, date.m_dt, FALSE));
-			// AddNonDateFilterQueryRules will be called at the end of the function
-		}
-		break;
-
-	case FT_NOTSTARTED:
-		break;
-*/
 
 	default:
 		ASSERT(0); // to catch unimplemented filters
@@ -1110,19 +1249,31 @@ void CFilteredToDoCtrl::BuildFilterQuery(SEARCHPARAMS& params)
 
 void CFilteredToDoCtrl::AddNonDateFilterQueryRules(SEARCHPARAMS& params)
 {
-	// note: these are all 'AND' 
+	// title text
+	if (!m_filter.sTitle.IsEmpty())
+	{
+		params.rules.Add(SEARCHPARAM(TDCA_TASKNAME, FO_INCLUDES, m_filter.sTitle));
+	}
+
+	// note: these are all 'AND'
 	// category
 	if (m_filter.aCategories.GetSize())
 	{
 		CString sMatchBy = Misc::FormatArray(m_filter.aCategories);
 
 		if (m_filter.aCategories.GetSize() == 1 && sMatchBy.IsEmpty())
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_CATEGORY, FO_NOT_SET));
+		}
 
 		else if (m_filter.dwFlags & FT_ANYCATEGORY)
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_CATEGORY, FO_INCLUDES, sMatchBy));
+		}
 		else
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_CATEGORY, FO_EQUALS, sMatchBy));
+		}
 	}
 
 	// allocated to
@@ -1131,12 +1282,18 @@ void CFilteredToDoCtrl::AddNonDateFilterQueryRules(SEARCHPARAMS& params)
 		CString sMatchBy = Misc::FormatArray(m_filter.aAllocTo);
 
 		if (m_filter.aAllocTo.GetSize() == 1 && sMatchBy.IsEmpty())
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_ALLOCTO, FO_NOT_SET));
+		}
 
 		else if (m_filter.dwFlags & FT_ANYALLOCTO)
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_ALLOCTO, FO_INCLUDES, sMatchBy));
+		}
 		else
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_ALLOCTO, FO_EQUALS, sMatchBy));
+		}
 	}
 
 	// allocated by
@@ -1145,9 +1302,13 @@ void CFilteredToDoCtrl::AddNonDateFilterQueryRules(SEARCHPARAMS& params)
 		CString sMatchBy = Misc::FormatArray(m_filter.aAllocBy);
 
 		if (m_filter.aAllocBy.GetSize() == 1 && sMatchBy.IsEmpty())
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_ALLOCBY, FO_NOT_SET));
+		}
 		else
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_ALLOCBY, FO_INCLUDES, sMatchBy));
+		}
 	}
 
 	// status
@@ -1156,9 +1317,13 @@ void CFilteredToDoCtrl::AddNonDateFilterQueryRules(SEARCHPARAMS& params)
 		CString sMatchBy = Misc::FormatArray(m_filter.aStatus);
 
 		if (m_filter.aStatus.GetSize() == 1 && sMatchBy.IsEmpty())
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_STATUS, FO_NOT_SET));
+		}
 		else
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_STATUS, FO_INCLUDES, sMatchBy));
+		}
 	}
 
 	// version
@@ -1167,34 +1332,48 @@ void CFilteredToDoCtrl::AddNonDateFilterQueryRules(SEARCHPARAMS& params)
 		CString sMatchBy = Misc::FormatArray(m_filter.aVersions);
 
 		if (m_filter.aVersions.GetSize() == 1 && sMatchBy.IsEmpty())
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_VERSION, FO_NOT_SET));
+		}
 		else
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_VERSION, FO_INCLUDES, sMatchBy));
+		}
 	}
 
 	// priority
 	if (m_filter.nPriority != FT_ANYPRIORITY)
 	{
 		if (m_filter.nPriority == FT_NOPRIORITY)
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_PRIORITY, FO_NOT_SET));
+		}
 
 		else if (m_filter.nPriority != FT_ANYPRIORITY)
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_PRIORITY, FO_GREATER_OR_EQUAL, m_filter.nPriority));
+		}
 	}
 
 	// risk
 	if (m_filter.nRisk != FT_ANYRISK)
 	{
 		if (m_filter.nRisk == FT_NORISK)
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_RISK, FO_NOT_SET));
-		
+		}
+
 		else if (m_filter.nRisk != FT_ANYRISK)
+		{
 			params.rules.Add(SEARCHPARAM(TDCA_RISK, FO_GREATER_OR_EQUAL, m_filter.nRisk));
+		}
 	}
 
 	// special case: no rules + ignore completed
 	if ((params.bIgnoreDone) && params.rules.GetSize() == 0)
+	{
 		params.rules.Add(SEARCHPARAM(TDCA_DONEDATE, FO_NOT_SET));
+	}
 }
 
 LRESULT CFilteredToDoCtrl::OnRefreshFilter(WPARAM wParam, LPARAM lParam)
@@ -1203,75 +1382,95 @@ LRESULT CFilteredToDoCtrl::OnRefreshFilter(WPARAM wParam, LPARAM lParam)
 	FTC_VIEW nView = (FTC_VIEW)wParam;
 
 	if (nView == FTCV_TASKTREE)
+	{
 		RefreshFilter();
+	}
 
 	// if undoing then we must also refresh the list filter because
 	// otherwise ResyncListSelection will fail in the case where
 	// we are undoing a delete because the undone item will not yet be in the list.
 	if (nView == FTCV_TASKLIST || bUndo)
+	{
 		RefreshListFilter();
-	
-   // resync selection?
-   if (bUndo)
-      ResyncListSelection();
+	}
+
+	// resync selection?
+	if (bUndo)
+	{
+		ResyncListSelection();
+	}
 
 	return 0L;
 }
 
-void CFilteredToDoCtrl::RefreshFilter() 
+void CFilteredToDoCtrl::RefreshFilter()
 {
 	RefreshTreeFilter(); // always
 
 	if (InListView())
+	{
 		RefreshListFilter();
+	}
 	else // tree view
+	{
 		m_bListNeedRefilter = TRUE;
+	}
 }
 
-void CFilteredToDoCtrl::RefreshTreeFilter() 
+void CFilteredToDoCtrl::RefreshTreeFilter()
 {
 	if (!m_data.GetTaskCount())
+	{
 		return;
+	}
 
 	BOOL bTreeVis = !InListView();
 
 	// save and reset current focus to work around a bug
 	CWnd* pFocus = CWnd::GetFocus();
 	SetFocusToTasks();
-	
+
 	CHoldRedraw hr(GetSafeHwnd());
 	CHoldRedraw hr2(m_tree);
 	CWaitCursor cursor;
-	
+
 	// cache current selection
 	CDWordArray aTaskIDs;
 	DWORD dwFocusedTaskID, dwPrevID = 0;
 
 	GetSelectedTaskIDs(aTaskIDs, dwFocusedTaskID, FALSE);
- 
+
 	// cache previous task to selected item
 	if (aTaskIDs.GetSize() == 1)
 	{
 		HTREEITEM htiPrev = m_tree.TCH().GetPrevVisibleItem(GetSelectedItem());
 		dwPrevID = GetTaskID(htiPrev);
 	}
-	
+
 	Selection().RemoveAll();
-	
+
 	// and scrolled pos
 	DWORD dwFirstVis = bTreeVis ? GetTaskID(m_tree.GetFirstVisibleItem()) : 0;
-	
+
 	// and expanded selection
 	CPreferences prefs;
 	SaveExpandedState(prefs);
-	
+
 	// build a find query that matches the filter
 	SEARCHPARAMS filter;
-	BuildFilterQuery(filter);
-	
+
+	if (m_bCustomFilter)
+	{
+		filter = m_customFilter;
+	}
+	else
+	{
+		BuildFilterQuery(filter);
+	}
+
 	// rebuild the tree
 	RebuildTree(filter);
-	
+
 	// redo last sort
 	if (bTreeVis && IsSortable())
 	{
@@ -1279,11 +1478,13 @@ void CFilteredToDoCtrl::RefreshTreeFilter()
 		m_bTreeNeedResort = FALSE;
 	}
 	else
+	{
 		m_bTreeNeedResort = TRUE;
-	
+	}
+
 	// restore expanded state
 	LoadExpandedState(prefs);
-	
+
 	// restore scrolled pos
 	if (dwFirstVis)
 	{
@@ -1291,13 +1492,15 @@ void CFilteredToDoCtrl::RefreshTreeFilter()
 		m_tree.SelectSetFirstVisible(hti);
 		m_tree.SelectItem(NULL);
 	}
-	
+
 	// restore selection
 	RestoreTreeSelection(aTaskIDs, dwPrevID);
 
 	// restore focused window
 	if (pFocus)
+	{
 		pFocus->SetFocus();
+	}
 }
 
 void CFilteredToDoCtrl::RestoreTreeSelection(const CDWordArray& aTaskIDs, DWORD dwDefaultID)
@@ -1308,26 +1511,32 @@ void CFilteredToDoCtrl::RestoreTreeSelection(const CDWordArray& aTaskIDs, DWORD 
 	{
 		ASSERT(GetSelectedCount() == 0);
 
-      HTREEITEM hti = NULL;
+		HTREEITEM hti = NULL;
 
-      if (dwDefaultID)
-         hti = m_find.GetItem(dwDefaultID);
+		if (dwDefaultID)
+		{
+			hti = m_find.GetItem(dwDefaultID);
+		}
 
-      if (!hti)
-		   hti = m_tree.GetChildItem(NULL); // select first item
+		if (!hti)
+		{
+			hti = m_tree.GetChildItem(NULL);   // select first item
+		}
 
-      SelectItem(hti); // select first item
-		
+		SelectItem(hti); // select first item
+
 		return;
 	}
 
 	// don't update controls is only one item is selected and it did not
 	// change as a result of the filter
 	BOOL bSelChange = !(GetSelectedCount() == 1 && aTaskIDs.GetSize() == 1 &&
-						GetSelectedTaskID() == aTaskIDs[0]);
-	
+		GetSelectedTaskID() == aTaskIDs[0]);
+
 	if (bSelChange)
+	{
 		UpdateControls();
+	}
 }
 
 void CFilteredToDoCtrl::RebuildTree(const SEARCHPARAMS& filter)
@@ -1345,17 +1554,21 @@ BOOL CFilteredToDoCtrl::BuildTreeItem(HTREEITEM hti, const TODOSTRUCTURE* pTDS, 
 	{
 		if (hti == NULL || hti == TVI_ROOT)
 		{
-			ASSERT (pTDS->GetTaskID() == 0);
+			ASSERT(pTDS->GetTaskID() == 0);
 
 			if (pTDS->GetTaskID() != 0)
+			{
 				return FALSE;
+			}
 		}
 		else
 		{
-			ASSERT (m_find.GetTaskID(hti) == pTDS->GetTaskID());
-			
+			ASSERT(m_find.GetTaskID(hti) == pTDS->GetTaskID());
+
 			if (m_find.GetTaskID(hti) != pTDS->GetTaskID())
+			{
 				return FALSE;
+			}
 		}
 	}
 	else
@@ -1391,16 +1604,16 @@ BOOL CFilteredToDoCtrl::BuildTreeItem(HTREEITEM hti, const TODOSTRUCTURE* pTDS, 
 		if (bMatch)
 		{
 			// add this item to tree
-			BOOL bBold = (pTDSChild->ParentIsRoot()); 
+			BOOL bBold = (pTDSChild->ParentIsRoot());
 			HTREEITEM htiChild = m_tree.InsertItem(TVIF_TEXT | TVIF_PARAM | TVIF_STATE | TVIF_IMAGE | TVIF_SELECTEDIMAGE,
-													LPSTR_TEXTCALLBACK,
-													I_IMAGECALLBACK, 
-													I_IMAGECALLBACK, 
-													(bBold ? TVIS_BOLD : 0),
-													TVIS_BOLD, // state mask
-													dwID, // lParam
-													hti, 
-													htiAfter);
+				LPSTR_TEXTCALLBACK,
+				I_IMAGECALLBACK,
+				I_IMAGECALLBACK,
+				(bBold ? TVIS_BOLD : 0),
+				TVIS_BOLD, // state mask
+				dwID, // lParam
+				hti,
+				htiAfter);
 
 			ASSERT(htiChild);
 
@@ -1427,26 +1640,26 @@ BOOL CFilteredToDoCtrl::BuildTreeItem(HTREEITEM hti, const TODOSTRUCTURE* pTDS, 
 			}
 
 			if (htiChild)
+			{
 				htiAfter = htiChild;
+			}
 		}
 	}
 
 	return TRUE;
 }
 
-void CFilteredToDoCtrl::RefreshListFilter() 
+void CFilteredToDoCtrl::RefreshListFilter()
 {
 	m_bListNeedRefilter = FALSE;
 
 	if (!m_data.GetTaskCount())
 	{
-		m_list.DeleteAllItems(); 
+		m_list.DeleteAllItems();
 		return;
 	}
 
-//	ASSERT(InListView());
-
-	// note: the call to CListCtrl::Scroll at the bottom fails if the 
+	// note: the call to CListCtrl::Scroll at the bottom fails if the
 	// list has redraw disabled so it must happen outside the scope of hr2
 	CSize sizePos(0, 0);
 	{
@@ -1470,7 +1683,15 @@ void CFilteredToDoCtrl::RefreshListFilter()
 
 		// build a find query that matches the filter
 		SEARCHPARAMS filter;
-		BuildFilterQuery(filter);
+
+		if (m_bCustomFilter)
+		{
+			filter = m_customFilter;
+		}
+		else
+		{
+			BuildFilterQuery(filter);
+		}
 
 		// rebuild the list
 		RebuildList(filter);
@@ -1488,15 +1709,19 @@ void CFilteredToDoCtrl::RefreshListFilter()
 		// don't update controls is only one item is selected and it did not
 		// change as a result of the filter
 		BOOL bSelChange = !(GetSelectedCount() == 1 && aTaskIDs.GetSize() == 1 &&
-							GetTaskID(GetSelectedItem()) == aTaskIDs[0]);
+			GetTaskID(GetSelectedItem()) == aTaskIDs[0]);
 
 		if (bSelChange)
+		{
 			UpdateControls();
+		}
 	}
-	
+
 	// restore pos
 	if (sizePos.cy != 0)
+	{
 		m_list.Scroll(sizePos);
+	}
 
 	UpdateColumnWidths();
 }
@@ -1506,12 +1731,12 @@ void CFilteredToDoCtrl::RebuildList(const SEARCHPARAMS& filter)
 	// remove all existing items
 	m_list.DeleteAllItems();
 
-	// since the tree will have already go the items we want 
+	// since the tree will have already go the items we want
 	// we can optimize the rebuild under certain circumstances
-	// which are: 
+	// which are:
 	// 1. the list is sorted
 	// 2. or the tree is unsorted
-	// otherwise we need the data in it's unsorted state and the 
+	// otherwise we need the data in it's unsorted state and the
 	// tree doesn't have it
 	if (IsSortable(m_sortList.nBy1) || !IsSortable(m_sort.nBy1))
 	{
@@ -1536,18 +1761,22 @@ void CFilteredToDoCtrl::RebuildList(const SEARCHPARAMS& filter)
 				ASSERT(pTDS);
 
 				if (pTDS->HasSubTasks())
+				{
 					continue;
+				}
 			}
 			else if (m_filter.HasFlag(FT_HIDECOLLAPSED))
 			{
 				HTREEITEM hti = m_find.GetItem(res.dwID);
-				ASSERT(hti);			
+				ASSERT(hti);
 
 				if (m_tree.ItemHasChildren(hti) && !m_tree.TCH().IsItemExpanded(hti))
+				{
 					continue;
+				}
 			}
 
-			int nItem = m_list.InsertItem(nRes, LPSTR_TEXTCALLBACK, 0);
+			int nItem = m_list.InsertItem(nRes, LPSTR_TEXTCALLBACK, I_IMAGECALLBACK);
 			m_list.SetItemData(nItem, res.dwID);
 		}
 	}
@@ -1565,7 +1794,9 @@ void CFilteredToDoCtrl::AddTreeItemToList(HTREEITEM hti, const SEARCHPARAMS& fil
 		{
 			// quick test first
 			if (m_tree.ItemHasChildren(hti))
+			{
 				bAdd = FALSE;
+			}
 			else
 			{
 				const TODOSTRUCTURE* pTDS = m_data.LocateTask(dwTaskID);
@@ -1579,7 +1810,7 @@ void CFilteredToDoCtrl::AddTreeItemToList(HTREEITEM hti, const SEARCHPARAMS& fil
 		else if (m_tree.ItemHasChildren(hti))
 		{
 			const TODOSTRUCTURE* pTDS = m_data.LocateTask(dwTaskID);
-			const TODOITEM* pTDI = GetTask(dwTaskID); 
+			const TODOITEM* pTDI = GetTask(dwTaskID);
 			SEARCHRESULT result;
 
 			// ie. check that parent actually matches
@@ -1588,7 +1819,7 @@ void CFilteredToDoCtrl::AddTreeItemToList(HTREEITEM hti, const SEARCHPARAMS& fil
 
 		if (bAdd)
 		{
-			int nItem = m_list.InsertItem(m_list.GetItemCount(), LPSTR_TEXTCALLBACK, 0);
+			int nItem = m_list.InsertItem(m_list.GetItemCount(), LPSTR_TEXTCALLBACK, I_IMAGECALLBACK);
 			m_list.SetItemData(nItem, GetTaskID(hti));
 		}
 	}
@@ -1610,12 +1841,16 @@ void CFilteredToDoCtrl::AddTreeItemToList(HTREEITEM hti, const SEARCHPARAMS& fil
 void CFilteredToDoCtrl::OnHeaderCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NMCUSTOMDRAW* pNMCD = (NMCUSTOMDRAW*)pNMHDR;
-	
+
 	if (pNMCD->dwDrawStage == CDDS_PREPAINT)
-		*pResult |= CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT;	
-	
+	{
+		*pResult |= CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT;
+	}
+
 	else if (pNMCD->dwDrawStage == CDDS_ITEMPREPAINT)
-		*pResult |= CDRF_NOTIFYPOSTPAINT;	
+	{
+		*pResult |= CDRF_NOTIFYPOSTPAINT;
+	}
 
 	else if (pNMCD->dwDrawStage == CDDS_ITEMPOSTPAINT)
 	{
@@ -1636,9 +1871,13 @@ void CFilteredToDoCtrl::OnHeaderCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 void CFilteredToDoCtrl::OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 {
 	if (nIDCtl == IDC_FTC_TASKLIST)
+	{
 		lpMeasureItemStruct->itemHeight = m_tree.TCH().GetItemHeight();
+	}
 	else
+	{
 		CToDoCtrl::OnMeasureItem(nIDCtl, lpMeasureItemStruct);
+	}
 }
 
 void CFilteredToDoCtrl::RemoveDeletedListItems()
@@ -1650,19 +1889,25 @@ void CFilteredToDoCtrl::RemoveDeletedListItems()
 		DWORD dwTaskID = m_list.GetItemData(nItem);
 
 		if (!GetTask(dwTaskID))
+		{
 			m_list.DeleteItem(nItem);
+		}
 	}
 }
 
 CFilteredToDoCtrl::TDI_STATE CFilteredToDoCtrl::GetItemState(int nItem)
 {
 	if (m_list.GetItemState(nItem, LVIS_DROPHILITED) & LVIS_DROPHILITED)
+	{
 		return TDIS_DROPHILITED;
-	
+	}
+
 	else if (m_list.GetItemState(nItem, LVIS_SELECTED) & LVIS_SELECTED)
-//	else if (IsItemSelected(nItem))
+		//	else if (IsItemSelected(nItem))
+	{
 		return (TasksHaveFocus() ? TDIS_SELECTED : TDIS_SELECTEDNOTFOCUSED);
-	
+	}
+
 	return TDIS_NONE;
 }
 
@@ -1679,7 +1924,9 @@ void CFilteredToDoCtrl::GetItemColors(int nItem, NCGITEMCOLORS& colors)
 		COLORREF crAlt = m_tree.GetAlternateLineColor();
 
 		if (crAlt != NOCOLOR)
+		{
 			colors.crBack = crAlt;
+		}
 	}
 
 	CToDoCtrl::GetItemColors(dwID, &colors, nState);
@@ -1691,8 +1938,10 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 	{
 		// don't bother drawing if we're just switching to the tree view
 		if (!InListView())
+		{
 			return;
-			
+		}
+
 		int nItem = lpDrawItemStruct->itemID;
 		DWORD dwTaskID = lpDrawItemStruct->itemData;
 
@@ -1700,7 +1949,9 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 		TODOSTRUCTURE* pTDS = NULL;
 
 		if (!m_data.GetTask(dwTaskID, pTDI, pTDS))
+		{
 			return;
+		}
 
 		CRect rItem, rTitleBounds;
 
@@ -1714,7 +1965,7 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 
 		COLORREF crGrid = m_tree.GetGridlineColor();
 		NCGITEMCOLORS colors = { 0, 0, 0, FALSE, FALSE };
-		
+
 		GetItemColors(nItem, colors);
 		TDI_STATE nState = GetItemState(nItem);
 
@@ -1722,15 +1973,6 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 		if (HasStyle(TDCS_FULLROWSELECTION) || !colors.bBackSet)
 		{
 			DrawItemBackColor(pDC, rItem, colors.crBack);
-/*
-			if (colors.bBackSet && m_tree.GutterHasStyle(NCGS_GRADIENTSELECTION))
-			{
-				COLORREF crBack2 = GraphicsMisc::Lighter(colors.crBack, 0.5);
-				GraphicsMisc::DrawGradient(pDC->GetSafeHdc(), rItem, crBack2, colors.crBack, FALSE);
-			}
-			else
-				pDC->FillSolidRect(rItem, colors.bBackSet ? colors.crBack : GetSysColor(COLOR_WINDOW));
-*/
 		}
 		else
 		{
@@ -1742,29 +1984,21 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 				rCols.left = rTitleBounds.right;
 			}
 			else
+			{
 				rCols.right = rTitleBounds.left;
+			}
 
 			// fill the background colour of the rest of the columns
 			rCols.right--;
 
 			DrawItemBackColor(pDC, rCols, colors.crBack);
 
-/*
-			if (m_tree.GutterHasStyle(NCGS_GRADIENTSELECTION))
-			{
-				COLORREF crBack2 = GraphicsMisc::Lighter(colors.crBack, 0.5);
-				GraphicsMisc::DrawGradient(pDC->GetSafeHdc(), rCols, crBack2, colors.crBack, FALSE);
-			}
-			else
-				pDC->FillSolidRect(rCols, colors.crBack);
-*/
-
 			// check to see whether we should fill the label cell background
 			// with the alternate line colour
 			if (nItem % 2) // odd row
 			{
 				COLORREF crAltLine = m_tree.GetAlternateLineColor();
-					
+
 				if (crAltLine != NOCOLOR)
 				{
 					rTitleBounds.OffsetRect(-1, 0);
@@ -1776,15 +2010,19 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 
 		// and set the text color
 		if (colors.bTextSet)
+		{
 			pDC->SetTextColor(colors.crText);
+		}
 		else
+		{
 			pDC->SetTextColor(GetSysColor(COLOR_WINDOWTEXT));
-		
+		}
+
 		// render column text
 		// use CToDoCtrl::OnGutterDrawItem to do the hard work
 		NCGDRAWITEM ncgDI;
 		CRect rFocus; // will be set up during TDCC_CLIENT handling
-		
+
 		for (int nCol = 0; nCol < NUM_COLUMNS; nCol++)
 		{
 			// client column/task title is special case
@@ -1793,9 +2031,25 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 			if (pCol->nColID == TDCC_CLIENT)
 			{
 				BOOL bTopLevel = pTDS->ParentIsRoot();
+				BOOL bFolder = pTDS->HasSubTasks() && HasStyle(TDCS_SHOWPARENTSASFOLDERS);
 				BOOL bDoneAndStrikeThru = pTDI->IsDone() && HasStyle(TDCS_STRIKETHOUGHDONETASKS);
+
+				// icon
 				CRect rSubItem;
-				
+
+				if (GetItemTitleRect(nItem, TDCTR_ICON, rSubItem))
+				{
+					if (pTDI->nIconIndex >= 0)
+					{
+						m_ilTaskIcons.Draw(pDC, pTDI->nIconIndex, rSubItem.TopLeft(), ILD_TRANSPARENT);
+					}
+
+					else if (bFolder)
+					{
+						m_ilTaskIcons.Draw(pDC, 0, rSubItem.TopLeft(), ILD_TRANSPARENT);
+					}
+				}
+
 				// checkbox
 				if (GetItemTitleRect(nItem, TDCTR_CHECKBOX, rSubItem))
 				{
@@ -1807,12 +2061,16 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 				HFONT hFontOld = NULL;
 
 				if (bDoneAndStrikeThru)
+				{
 					hFontOld = (HFONT)::SelectObject(lpDrawItemStruct->hDC, m_fontDone);
+				}
 
-				else if (bTopLevel) 
+				else if (bTopLevel)
+				{
 					hFontOld = (HFONT)::SelectObject(lpDrawItemStruct->hDC, m_fontBold);
+				}
 
-				// Task title 
+				// Task title
 				GetItemTitleRect(nItem, TDCTR_LABEL, rSubItem, pDC, pTDI->sTitle);
 				rSubItem.OffsetRect(-1, 0);
 
@@ -1820,15 +2078,6 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 				if (!HasStyle(TDCS_FULLROWSELECTION) && colors.bBackSet)
 				{
 					DrawItemBackColor(pDC, rSubItem, colors.crBack);
-/*
-					if (m_tree.GutterHasStyle(NCGS_GRADIENTSELECTION))
-					{
-						COLORREF crBack2 = GraphicsMisc::Lighter(colors.crBack, 0.5);
-						GraphicsMisc::DrawGradient(pDC->GetSafeHdc(), rSubItem, crBack2, colors.crBack, FALSE);
-					}
-					else
-						pDC->FillSolidRect(rSubItem, colors.crBack);
-*/
 				}
 
 				// text
@@ -1837,7 +2086,9 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 
 				// vertical divider
 				if (crGrid != NOCOLOR)
+				{
 					pDC->FillSolidRect(rTitleBounds.right - 1, rTitleBounds.top, 1, rTitleBounds.Height(), crGrid);
+				}
 
 				// render comment text if not editing this task label
 				if (m_dwEditingID != dwTaskID)
@@ -1847,7 +2098,7 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 					{
 						::SelectObject(lpDrawItemStruct->hDC, hFontOld);
 						hFontOld = NULL;
-					}	
+					}
 
 					rTitleBounds.top++;
 					rTitleBounds.left = rSubItem.right + 4;
@@ -1855,7 +2106,9 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 				}
 
 				if (hFontOld)
+				{
 					::SelectObject(lpDrawItemStruct->hDC, hFontOld);
+				}
 			}
 			else
 			{
@@ -1873,17 +2126,19 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 				ncgDI.rItem = &rSubItem;
 				ncgDI.nColID = pCol->nColID;
 				ncgDI.nTextAlign = pCol->nAlignment;
-				
+
 				DrawItem(pTDI, pTDS, &ncgDI, nState);
 			}
 		}
 
 		// base gridline
 		if (crGrid != NOCOLOR)
+		{
 			pDC->FillSolidRect(rItem.left, rItem.bottom - 1, rItem.Width() - 1, 1, crGrid);
+		}
 
 		pDC->RestoreDC(nSaveDC); // so that DrawFocusRect works
-		
+
 		// focus rect
 		if ((lpDrawItemStruct->itemState & ODS_FOCUS) && (nState == TDIS_SELECTED))
 		{
@@ -1892,7 +2147,9 @@ void CFilteredToDoCtrl::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct
 
 	}
 	else
+	{
 		CToDoCtrl::OnDrawItem(nIDCtl, lpDrawItemStruct);
+	}
 }
 
 COLORREF CFilteredToDoCtrl::GetItemLineColor(HTREEITEM hti)
@@ -1906,9 +2163,11 @@ COLORREF CFilteredToDoCtrl::GetItemLineColor(HTREEITEM hti)
 			int nItem = FindTask(GetTaskID(hti));
 
 			if (nItem != -1 && (nItem % 2))
+			{
 				return crAltLines;
+			}
 		}
-			
+
 		// else
 		return GetSysColor(COLOR_WINDOW);
 	}
@@ -1920,11 +2179,15 @@ COLORREF CFilteredToDoCtrl::GetItemLineColor(HTREEITEM hti)
 void CFilteredToDoCtrl::DrawColumnHeaderText(CDC* pDC, int nCol, const CRect& rCol, UINT nState)
 {
 	if (nCol >= NUM_COLUMNS)
+	{
 		return;
+	}
 
 	// filter out zero width columns
 	if (rCol.Width() == 0)
+	{
 		return;
+	}
 
 	const TDCCOLUMN* pCol = GetColumn(nCol);
 	ASSERT(pCol);
@@ -1934,31 +2197,37 @@ void CFilteredToDoCtrl::DrawColumnHeaderText(CDC* pDC, int nCol, const CRect& rC
 
 	// special cases
 	if (sColumn.IsEmpty())
+	{
 		sColumn = CString(static_cast<TCHAR>(pCol->nIDName));
+	}
 
 	else if (pCol->nColID == TDCC_CLIENT && HasStyle(TDCS_SHOWPATHINHEADER) && m_list.GetSelectedCount() == 1)
 	{
 		int nColWidthInChars = (int)(rCol.Width() / m_fAveHeaderCharWidth);
-		CString sPath = m_data.GetTaskPath(GetSelectedTaskID(), nColWidthInChars);
-			
+		CString sPath = m_data.GetTaskPath(GetSelectedTaskID(), FALSE, nColWidthInChars);
+
 		if (!sPath.IsEmpty())
+		{
 			sColumn.Format(_T("%s [%s]"), CEnString(IDS_TDC_COLUMN_TASK), sPath);
+		}
 	}
 	else if (sColumn == _T("%%"))
+	{
 		sColumn = _T("%");
+	}
 
 	const UINT DEFFLAGS = DT_END_ELLIPSIS | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX;
 	pDC->SetBkMode(TRANSPARENT);
-	
+
 	CRect rText(rCol);
-	rText.bottom -= 2;//(pCol->bSymbolFont ? 1 : 2);// + (pTheme ? 1 : 0);
-	
+	rText.bottom -= 2;
+
 	switch (pCol->nAlignment)
 	{
 	case DT_LEFT:
 		rText.left += NCG_COLPADDING - 1;
 		break;
-		
+
 	case DT_RIGHT:
 		rText.right -= NCG_COLPADDING;
 		break;
@@ -1966,56 +2235,76 @@ void CFilteredToDoCtrl::DrawColumnHeaderText(CDC* pDC, int nCol, const CRect& rC
 	case DT_CENTER:
 		rText.right--;
 	}
-	
+
 	BOOL bDown = (nState & CDIS_SELECTED);
 	BOOL bSorted = (IsSortable() && m_sortList.nBy1 == pCol->nSortBy && !m_bListMultiSort);
-	
+
 	if (bDown)
+	{
 		rText.OffsetRect(1, 1);
-	
+	}
+
 	if (bSorted)
+	{
 		rText.right -= (SORTWIDTH + 2);
+	}
 
 	if (pCol->szFont && *pCol->szFont)
 	{
 		CFont* pOldFont = NULL;
 
 		if (CString(pCol->szFont).CompareNoCase(_T("WingDings")) == 0)
+		{
 			pOldFont = pDC->SelectObject(&GraphicsMisc::WingDings());
-		
+		}
+
 		else if (CString(pCol->szFont).CompareNoCase(_T("Marlett")) == 0)
+		{
 			pOldFont = pDC->SelectObject(&GraphicsMisc::Marlett());
-		
+		}
+
 		pDC->DrawText(sColumn, rText, DEFFLAGS | pCol->nAlignment);
-		
+
 		if (pOldFont)
+		{
 			pDC->SelectObject(pOldFont);
+		}
 	}
 	else
+	{
 		pDC->DrawText(sColumn, rText, DEFFLAGS | pCol->nAlignment);
+	}
 
 	// draw sort direction if required
 	if (bSorted)
 	{
 		// adjust for sort arrow
 		if (pCol->nAlignment & DT_CENTER)
+		{
 			rText.left = ((rText.left + rText.right + pDC->GetTextExtent(sColumn).cx) / 2) + 2;
-			
+		}
+
 		else if (pCol->nAlignment & DT_RIGHT)
+		{
 			rText.left = rText.right + 2;
+		}
 		else
+		{
 			rText.left = rText.left + pDC->GetTextExtent(sColumn).cx + 2;
+		}
 
 		BOOL bAscending = m_sortList.bAscending1 ? 1 : -1;
 		int nMidY = (bDown ? 1 : 0) + (rText.top + rText.bottom) / 2;
-		POINT ptArrow[3] = { 
-							{ 0, 0 }, 
-							{ 3, -bAscending * 3 }, 
-							{ 7, bAscending } };
-		
+		POINT ptArrow[3] =
+		{
+			{ 0, 0 },
+			{ 3, -bAscending * 3 },
+			{ 7, bAscending }
+		};
+
 		// translate the arrow to the appropriate location
 		int nPoint = 3;
-		
+
 		while (nPoint--)
 		{
 			ptArrow[nPoint].x += rText.left + 3 + (bDown ? 1 : 0);
@@ -2029,23 +2318,29 @@ void CFilteredToDoCtrl::DrawColumnHeaderText(CDC* pDC, int nCol, const CRect& rC
 TDC_COLUMN CFilteredToDoCtrl::GetColumnID(int nCol) const
 {
 	TDCCOLUMN* pCol = GetColumn(nCol);
-	return pCol ? pCol->nColID : (TDC_COLUMN)-1;
+	return pCol ? pCol->nColID : (TDC_COLUMN) - 1;
 }
 
 TDCCOLUMN* CFilteredToDoCtrl::GetColumn(int nCol) const
 {
 	if (nCol < 0 || nCol >= NUM_COLUMNS)
+	{
 		return NULL;
+	}
 
 	// else
 	if (HasStyle(TDCS_RIGHTSIDECOLUMNS))
 	{
 		if (nCol == 0)
+		{
 			return &COLUMNS[NUM_COLUMNS - 1];
+		}
 		else
+		{
 			return &COLUMNS[nCol - 1];
+		}
 	}
-	
+
 	// else
 	return &COLUMNS[nCol];
 
@@ -2056,7 +2351,9 @@ int CFilteredToDoCtrl::GetColumnIndex(TDC_COLUMN nColID) const
 	if (HasStyle(TDCS_RIGHTSIDECOLUMNS))
 	{
 		if (nColID == TDCC_CLIENT)
+		{
 			return 0;
+		}
 
 		// else it's 1 more than the COLUMNS index
 		int nCol = NUM_COLUMNS - 1;
@@ -2064,22 +2361,26 @@ int CFilteredToDoCtrl::GetColumnIndex(TDC_COLUMN nColID) const
 		while (nCol--)
 		{
 			if (COLUMNS[nCol].nColID == nColID)
+			{
 				return nCol + 1;
+			}
 		}
-		
+
 		ASSERT(0);
 		return 0;
 	}
-	
+
 	// else as COLUMNS
 	int nCol = NUM_COLUMNS;
-	
+
 	while (nCol--)
 	{
 		if (COLUMNS[nCol].nColID == nColID)
+		{
 			return nCol;
+		}
 	}
-	
+
 	ASSERT(0);
 	return 0;
 }
@@ -2094,7 +2395,9 @@ BOOL CFilteredToDoCtrl::SetStyles(const CTDCStyles& styles)
 			RefreshTreeFilter(); // always
 
 			if (InListView())
+			{
 				RefreshListFilter();
+			}
 		}
 
 		return TRUE;
@@ -2114,12 +2417,13 @@ BOOL CFilteredToDoCtrl::SetStyle(TDC_STYLE nStyle, BOOL bOn, BOOL bWantUpdate)
 		case TDCS_DUEHAVEHIGHESTPRIORITY:
 		case TDCS_DONEHAVELOWESTPRIORITY:
 			m_bListNeedRefilter = TRUE;
-			TRUE;
 			break;
 
 		case TDCS_TREATSUBCOMPLETEDASDONE:
 			if (m_filter.nFilter != FT_ALL)
+			{
 				m_bListNeedRefilter = TRUE;
+			}
 			break;
 
 		case TDCS_RIGHTSIDECOLUMNS:
@@ -2129,6 +2433,18 @@ BOOL CFilteredToDoCtrl::SetStyle(TDC_STYLE nStyle, BOOL bOn, BOOL bWantUpdate)
 		case TDCS_SHOWINFOTIPS:
 			ListView_SetExtendedListViewStyleEx(m_list, LVS_EX_INFOTIP, bOn ? LVS_EX_INFOTIP : 0);
 			break;
+
+		case TDCS_TREETASKICONS:
+			if (bOn && !IsColumnShowing(TDCC_ICON)) // this overrides
+			{
+				ListView_SetImageList(m_list, m_ilTaskIcons, LVSIL_NORMAL);
+			}
+			else
+			{
+				ListView_SetImageList(m_list, NULL, LVSIL_NORMAL);
+			}
+			break;
+
 		}
 
 		return TRUE;
@@ -2162,7 +2478,7 @@ void CFilteredToDoCtrl::InitFilterDueDate(COleDateTime& dateDue) const
 		dateDue = CDateHelper::GetDate(DHD_ENDTHISWEEK);
 		break;
 
-	case FT_DUEENDNEXTWEEK: 
+	case FT_DUEENDNEXTWEEK:
 		dateDue = CDateHelper::GetDate(DHD_ENDNEXTWEEK);
 		break;
 
@@ -2203,10 +2519,14 @@ BOOL CFilteredToDoCtrl::DeleteSelectedTask(BOOL bWarnUser, BOOL bResetSel)
 		int nSel = FindTask(dwSelID);
 
 		if (nSel == -1 && m_list.GetItemCount())
+		{
 			nSel = 0;
+		}
 
 		if (nSel != -1)
+		{
 			SelectTask(m_list.GetItemData(nSel));
+		}
 	}
 
 	return bDel;
@@ -2221,18 +2541,24 @@ TODOITEM* CFilteredToDoCtrl::NewTask(HTREEITEM htiParent)
 {
 	TODOITEM* pTDI = CToDoCtrl::NewTask(htiParent);
 
-	// fiddle with the default attributes so that the task 
+	// fiddle with the default attributes so that the task
 	// will not be filtered out by the current filter
 	if (InListView() && HasFilter())
 	{
 		if (m_filter.nRisk != FT_ANYRISK)
+		{
 			pTDI->nRisk = max(pTDI->nRisk, m_filter.nRisk);
+		}
 
 		if (m_filter.nPriority != FT_ANYPRIORITY)
+		{
 			pTDI->nPriority = max(pTDI->nPriority, m_filter.nPriority);
+		}
 
 		if (m_filter.aAllocBy.GetSize() && pTDI->sAllocBy.IsEmpty())
+		{
 			pTDI->sAllocBy = m_filter.aAllocBy[0];
+		}
 
 		if (!m_filter.MatchAllocTo(pTDI->aAllocTo))
 		{
@@ -2242,14 +2568,20 @@ TODOITEM* CFilteredToDoCtrl::NewTask(HTREEITEM htiParent)
 				pTDI->aAllocTo.RemoveAll();
 
 				if (m_filter.aAllocTo.GetSize())
+				{
 					pTDI->aAllocTo.Add(m_filter.aAllocTo[0]);
+				}
 			}
 			else // set it to all the filter cats
+			{
 				pTDI->aAllocTo.Copy(m_filter.aAllocTo);
+			}
 		}
 
 		if (m_filter.aStatus.GetSize() && pTDI->sStatus.IsEmpty())
+		{
 			pTDI->sStatus = m_filter.aStatus[0];
+		}
 
 		if (!m_filter.MatchCategories(pTDI->aCategories))
 		{
@@ -2259,10 +2591,14 @@ TODOITEM* CFilteredToDoCtrl::NewTask(HTREEITEM htiParent)
 				pTDI->aCategories.RemoveAll();
 
 				if (m_filter.aCategories.GetSize())
+				{
 					pTDI->aCategories.Add(m_filter.aCategories[0]);
+				}
 			}
 			else // set it to all the filter cats
+			{
 				pTDI->aCategories.Copy(m_filter.aCategories);
+			}
 		}
 
 		// if the filter is FT_DONE then complete the task
@@ -2274,27 +2610,27 @@ TODOITEM* CFilteredToDoCtrl::NewTask(HTREEITEM htiParent)
 		case FT_FLAGGED:
 			pTDI->bFlagged = TRUE;
 			break;
-			
+
 		case FT_DONE:
 			pTDI->dateDone = floor(COleDateTime::GetCurrentTime());
 			break;
-			
+
 		case FT_STARTTODAY:
 		case FT_STARTENDTHISWEEK:
 			pTDI->dateStart = floor(COleDateTime::GetCurrentTime());
 			break;
-			
+
 		case FT_DUETODAY:
 		case FT_DUETOMORROW:
 		case FT_DUEENDTHISWEEK:
-		case FT_DUEENDNEXTWEEK: 
+		case FT_DUEENDNEXTWEEK:
 		case FT_DUEENDTHISMONTH:
 		case FT_DUEENDNEXTMONTH:
 		case FT_DUEENDTHISYEAR:
 		case FT_DUEENDNEXTYEAR:
 			pTDI->dateDue = floor(COleDateTime::GetCurrentTime());
 			break;
-			
+
 		default:
 			ASSERT(0);
 			break;
@@ -2304,13 +2640,15 @@ TODOITEM* CFilteredToDoCtrl::NewTask(HTREEITEM htiParent)
 	return pTDI;
 }
 
-HTREEITEM CFilteredToDoCtrl::NewTask(LPCTSTR szText, TDC_INSERTWHERE nWhere, 
-									/*BOOL bSelect, */BOOL bEditText)
+HTREEITEM CFilteredToDoCtrl::NewTask(LPCTSTR szText, TDC_INSERTWHERE nWhere,
+	/*BOOL bSelect, */BOOL bEditText)
 {
 	BOOL bWantEditText = bEditText;
 
 	if (InListView())
+	{
 		bEditText = FALSE;
+	}
 
 	HTREEITEM htiNew = CToDoCtrl::NewTask(szText, nWhere, /*bSelect, */bEditText);
 
@@ -2322,11 +2660,11 @@ HTREEITEM CFilteredToDoCtrl::NewTask(LPCTSTR szText, TDC_INSERTWHERE nWhere,
 			ASSERT(dwTaskID == m_dwNextUniqueID - 1);
 
 			// make the new task appear
-			RefreshListFilter(); 
+			RefreshListFilter();
 
 			// select that task
 			SelectTask(dwTaskID);
-			
+
 			if (bWantEditText)
 			{
 				m_dwLastAddedID = dwTaskID;
@@ -2334,7 +2672,9 @@ HTREEITEM CFilteredToDoCtrl::NewTask(LPCTSTR szText, TDC_INSERTWHERE nWhere,
 			}
 		}
 		else
+		{
 			m_bListNeedRefilter = TRUE;
+		}
 	}
 
 	return htiNew;
@@ -2342,15 +2682,17 @@ HTREEITEM CFilteredToDoCtrl::NewTask(LPCTSTR szText, TDC_INSERTWHERE nWhere,
 
 BOOL CFilteredToDoCtrl::SplitSelectedTask(int nNumSubtasks)
 {
-   if (CToDoCtrl::SplitSelectedTask(nNumSubtasks))
-   {
-      if (InListView())
-         RefreshListFilter();
- 
-      return TRUE;
-   }
- 
-   return FALSE;
+	if (CToDoCtrl::SplitSelectedTask(nNumSubtasks))
+	{
+		if (InListView())
+		{
+			RefreshListFilter();
+		}
+
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 void CFilteredToDoCtrl::SetModified(BOOL bMod, TDC_ATTRIBUTE nAttrib)
@@ -2360,23 +2702,33 @@ void CFilteredToDoCtrl::SetModified(BOOL bMod, TDC_ATTRIBUTE nAttrib)
 		m_data.ResetCachedCalculations();
 
 		if (ModNeedsRefilter(nAttrib, FTCV_TASKTREE))
+		{
 			PostMessage(WM_TDC_REFRESHFILTER, FTCV_TASKTREE, (nAttrib == TDCA_UNDO));
+		}
 
 		else if (ModNeedsRefilter(nAttrib, FTCV_TASKLIST))
 		{
 			if (InListView())
+			{
 				PostMessage(WM_TDC_REFRESHFILTER, FTCV_TASKLIST, (nAttrib == TDCA_UNDO));
+			}
 			else
+			{
 				m_bListNeedRefilter = TRUE;
+			}
 		}
 
 		if (nAttrib == TDCA_DELETE || nAttrib == TDCA_ARCHIVE)
+		{
 			RemoveDeletedListItems();
+		}
 
 		else if (InListView())
+		{
 			m_list.Invalidate(FALSE);
+		}
 	}
-	
+
 	CToDoCtrl::SetModified(bMod, nAttrib);
 }
 
@@ -2388,9 +2740,11 @@ BOOL CFilteredToDoCtrl::ModNeedsResort(TDC_ATTRIBUTE nModType) const
 	if (!bListNeedsResort && m_bListMultiSort)
 	{
 		bListNeedsResort |= CToDoCtrl::ModNeedsResort(nModType, m_sortList.nBy2);
-		
+
 		if (!bListNeedsResort)
+		{
 			bListNeedsResort |= CToDoCtrl::ModNeedsResort(nModType, m_sortList.nBy3);
+		}
 	}
 
 	BOOL bTreeNeedsResort = CToDoCtrl::ModNeedsResort(nModType);
@@ -2407,113 +2761,136 @@ BOOL CFilteredToDoCtrl::ModNeedsResort(TDC_ATTRIBUTE nModType) const
 	}
 }
 
-void CFilteredToDoCtrl::ResortSelectedTaskParents() 
-{ 
+void CFilteredToDoCtrl::ResortSelectedTaskParents()
+{
 	// do a full sort
 	Resort();
 }
 
-TDC_SORTBY CFilteredToDoCtrl::GetSortBy() const 
-{ 
-	return InListView() ? m_sortList.nBy1 : m_sort.nBy1; 
+TDC_SORTBY CFilteredToDoCtrl::GetSortBy() const
+{
+	return InListView() ? m_sortList.nBy1 : m_sort.nBy1;
 }
 
 void CFilteredToDoCtrl::GetSortBy(TDSORTCOLUMNS& sort) const
 {
 	if (InListView())
+	{
 		sort = m_sortList;
+	}
 	else
-		CToDoCtrl::GetSortBy(sort); 
-
+	{
+		CToDoCtrl::GetSortBy(sort);
+	}
 }
 
 BOOL CFilteredToDoCtrl::ModNeedsRefilter(TDC_ATTRIBUTE nModType, FTC_VIEW nView) const
 {
 	if (!HasStyle(TDCS_REFILTERONMODIFY))
+	{
 		return FALSE;
+	}
 
 	BOOL bNeedRefilter = FALSE;
 
-	switch (nModType)
+	if (m_bCustomFilter)
 	{
-	case TDCA_PRIORITY:		
-		bNeedRefilter = (m_filter.nPriority != -1); 
-		break;
+		bNeedRefilter = m_customFilter.HasAttribute(nModType);
+	}
+	else if (HasFilter())
+	{
+		switch (nModType)
+		{
+		case TDCA_TASKNAME:
+			bNeedRefilter = !m_filter.sTitle.IsEmpty();
+			break;
 
-	case TDCA_FLAG:		
-		bNeedRefilter = (m_filter.nFilter == FT_FLAGGED); 
-		break;
+		case TDCA_PRIORITY:
+			bNeedRefilter = (m_filter.nPriority != -1);
+			break;
 
-	case TDCA_RISK:			
-		bNeedRefilter = (m_filter.nRisk != -1);
-		break;
-		
-	case TDCA_ALLOCBY:		
-		bNeedRefilter = (m_filter.aAllocBy.GetSize() != 0);
-		break;
+		case TDCA_FLAG:
+			bNeedRefilter = (m_filter.nFilter == FT_FLAGGED);
+			break;
 
-	case TDCA_STATUS:		
-		bNeedRefilter = (m_filter.aStatus.GetSize() != 0);
-		break;
+		case TDCA_RISK:
+			bNeedRefilter = (m_filter.nRisk != -1);
+			break;
 
-	case TDCA_VERSION:		
-		bNeedRefilter = (m_filter.aVersions.GetSize() != 0);
-		break;
+		case TDCA_ALLOCBY:
+			bNeedRefilter = (m_filter.aAllocBy.GetSize() != 0);
+			break;
 
-	case TDCA_CATEGORY:		
-		bNeedRefilter = (m_filter.aCategories.GetSize() != 0);
-		break;
+		case TDCA_STATUS:
+			bNeedRefilter = (m_filter.aStatus.GetSize() != 0);
+			break;
 
-	case TDCA_ALLOCTO:		
-		bNeedRefilter = (m_filter.aAllocTo.GetSize() != 0);
-		break;
+		case TDCA_VERSION:
+			bNeedRefilter = (m_filter.aVersions.GetSize() != 0);
+			break;
 
-	case TDCA_PERCENT:
-		bNeedRefilter = (m_filter.nFilter == FT_DONE || 
-						m_filter.nFilter == FT_NOTDONE);
-		break;
+		case TDCA_CATEGORY:
+			bNeedRefilter = (m_filter.aCategories.GetSize() != 0);
+			break;
 
-	case TDCA_DONEDATE:		
-		bNeedRefilter = (m_filter.nFilter == FT_DONE || 
-						m_filter.nFilter == FT_NOTDONE ||
-						m_filter.nFilter == FT_STARTTODAY ||
-						m_filter.nFilter == FT_STARTENDTHISWEEK ||
-						m_filter.HasFlag(FT_HIDEDONE) ||
-						m_filter.nPriority > 0);
-		break;
-		
-	case TDCA_DUEDATE:		
-		bNeedRefilter = m_filter.HasFlag(FT_HIDEOVERDUE) ||
-						(m_filter.nPriority > 0) ||
-						(m_filter.nFilter != FT_DONE &&
-						m_filter.nFilter != FT_NOTDONE &&
-						m_filter.nFilter != FT_ALL &&
-						m_filter.nFilter != FT_STARTTODAY &&
-						m_filter.nFilter != FT_STARTENDTHISWEEK);
-		break;
+		case TDCA_ALLOCTO:
+			bNeedRefilter = (m_filter.aAllocTo.GetSize() != 0);
+			break;
 
-	case TDCA_STARTDATE:		
-		bNeedRefilter = (m_filter.nFilter == FT_STARTTODAY ||
-						m_filter.nFilter == FT_STARTENDTHISWEEK);
-		break;
+		case TDCA_PERCENT:
+			bNeedRefilter = (m_filter.nFilter == FT_DONE ||
+				m_filter.nFilter == FT_NOTDONE);
+			break;
 
-	case TDCA_NEWTASK:
-		// if we refilter in the middle of adding a task it messes
-		// up the tree items so we handle it in NewTask
-		break;
+		case TDCA_DONEDATE:
+			bNeedRefilter = (m_filter.nFilter == FT_DONE ||
+				m_filter.nFilter == FT_NOTDONE ||
+				m_filter.nFilter == FT_STARTTODAY ||
+				m_filter.nFilter == FT_STARTENDTHISWEEK ||
+				m_filter.HasFlag(FT_HIDEDONE) ||
+				m_filter.nPriority > 0);
+			break;
 
-	case TDCA_DELETE:
-		// this is handled in SetModified
-		break;
+		case TDCA_DUEDATE:
+			bNeedRefilter = m_filter.HasFlag(FT_HIDEOVERDUE) ||
+				(m_filter.nPriority > 0) ||
+				(m_filter.nFilter != FT_DONE &&
+				m_filter.nFilter != FT_NOTDONE &&
+				m_filter.nFilter != FT_ALL &&
+				m_filter.nFilter != FT_STARTTODAY &&
+				m_filter.nFilter != FT_STARTENDTHISWEEK);
+			break;
 
-	case TDCA_COPY:
-	case TDCA_UNDO:
-		bNeedRefilter = TRUE;
-		break;
+		case TDCA_STARTDATE:
+			bNeedRefilter = (m_filter.nFilter == FT_STARTTODAY ||
+				m_filter.nFilter == FT_STARTENDTHISWEEK);
+			break;
+		}
+	}
 
-	case TDCA_MOVE:
-		bNeedRefilter = (nView == FTCV_TASKLIST && !IsSortable());
-		break;
+	// handle attributes common to both filter types
+	if (!bNeedRefilter)
+	{
+		switch (nModType)
+		{
+		case TDCA_NEWTASK:
+			// if we refilter in the middle of adding a task it messes
+			// up the tree items so we handle it in NewTask
+			break;
+
+		case TDCA_DELETE:
+			// this is handled in SetModified
+			break;
+
+		case TDCA_COPY:
+		case TDCA_UNDO:
+			bNeedRefilter = TRUE;
+			break;
+
+		case TDCA_MOVE:
+			bNeedRefilter = (nView == FTCV_TASKLIST && !IsSortable());
+			break;
+		}
 	}
 
 	return bNeedRefilter;
@@ -2533,12 +2910,14 @@ BOOL CFilteredToDoCtrl::SelectTask(DWORD dwTaskID)
 			ASSERT(0);
 			return FALSE;
 		}
-		
+
 		// remove focused state from existing task
 		int nFocus = m_list.GetNextItem(-1, LVNI_FOCUSED | LVNI_SELECTED);
 
 		if (nFocus != -1)
+		{
 			m_list.SetItemState(nFocus, 0, LVIS_SELECTED | LVIS_FOCUSED);
+		}
 
 		m_list.SetItemState(nItem, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
 		m_list.EnsureVisible(nItem, FALSE);
@@ -2549,12 +2928,10 @@ BOOL CFilteredToDoCtrl::SelectTask(DWORD dwTaskID)
 
 LRESULT CFilteredToDoCtrl::OnEditCancel(WPARAM wParam, LPARAM lParam)
 {
-	int nDelItem = -1;
-
 	// check if we need to delete the just added item
 	if (InListView() && GetSelectedTaskID() == m_dwLastAddedID)
 	{
-		nDelItem = GetFirstSelectedItem();
+		int nDelItem = GetFirstSelectedItem();
 		m_list.DeleteItem(nDelItem);
 	}
 
@@ -2568,9 +2945,9 @@ int CFilteredToDoCtrl::FindTask(DWORD dwTaskID) const
 	LVFINDINFO lvfi;
 	ZeroMemory(&lvfi, sizeof(lvfi));
 
-    lvfi.flags = LVFI_PARAM;
-    lvfi.lParam = dwTaskID;
-    lvfi.vkDirection = VK_DOWN;
+	lvfi.flags = LVFI_PARAM;
+	lvfi.lParam = dwTaskID;
+	lvfi.vkDirection = VK_DOWN;
 
 	return m_list.FindItem(&lvfi);
 }
@@ -2580,7 +2957,9 @@ DWORD CFilteredToDoCtrl::GetFocusedListTaskID() const
 	int nItem = m_list.GetNextItem(-1, LVNI_FOCUSED | LVNI_SELECTED);
 
 	if (nItem != -1)
+	{
 		return m_list.GetItemData(nItem);
+	}
 
 	// else
 	return 0;
@@ -2598,12 +2977,18 @@ void CFilteredToDoCtrl::SetSelectedListTasks(const CDWordArray& aTaskIDs, DWORD 
 		if (nItem != -1)
 		{
 			if (dwTaskID == dwFocusedTaskID)
+			{
 				m_list.SetItemState(nItem, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
+			}
 			else
+			{
 				m_list.SetItemState(nItem, LVIS_SELECTED, LVIS_SELECTED);
+			}
 
 			if (nSel == -1)
+			{
 				nSel = nItem;
+			}
 		}
 		else // deselect in tree
 		{
@@ -2626,7 +3011,9 @@ void CFilteredToDoCtrl::SetSelectedListTasks(const CDWordArray& aTaskIDs, DWORD 
 
 	// make sure selection is visible
 	if (nSel != -1)
+	{
 		m_list.EnsureVisible(nSel, FALSE);
+	}
 }
 
 LRESULT CFilteredToDoCtrl::OnGutterWidthChange(WPARAM wParam, LPARAM lParam)
@@ -2635,68 +3022,20 @@ LRESULT CFilteredToDoCtrl::OnGutterWidthChange(WPARAM wParam, LPARAM lParam)
 
 	// update column widths if in list view
 	if (InListView())
+	{
 		UpdateColumnWidths();
-	
+	}
+
 	return 0;
 }
 
 void CFilteredToDoCtrl::OnListSelChanged(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-/*
-	if (!m_bResyncingSel)
-		TRACE ("CFilteredToDoCtrl::OnListSelChanged\n");
-
-	LPNMLISTVIEW lpLV = (LPNMLISTVIEW)pNMHDR;
-
-	if (!m_bResyncingSel && (lpLV->uChanged & LVIF_STATE))
-	{
-		TRACE ("CFilteredToDoCtrl::OnListSelChanged\n");
-
-		CHoldRedraw hr(GetSafeHwnd());
-		CHoldRedraw hr2(m_list);
-
-		BOOL bSelectedOnly = (lpLV->uNewState & LVIS_SELECTED);
-		BOOL bWasSelected = (lpLV->uOldState & LVIS_SELECTED);
-
-		if (bSelectedOnly != bWasSelected)
-		{
-			HTREEITEM hti = m_data.GetItem(lpLV->lParam);
-			Selection().SetItem(hti, bSelectedOnly ? TSHS_SELECT : TSHS_DESELECT, FALSE);
-
-			if (m_list.GetSelectedCount() == 1)
-				m_tree.SelectItem(hti);
-		}
-
-		// look through the tree selection and deselect any items not 
-		// found in the list
-		CDWordArray aTaskIDs;
-		DWORD dwFocusedTaskID;
-
-		GetSelectedTaskIDs(aTaskIDs, dwFocusedTaskID, FALSE);
-
-		for (int nID = 0; nID < aTaskIDs.GetSize(); nID++)
-		{
-			DWORD dwID = aTaskIDs[nID];
-
-			if (FindTask(dwID) == -1) 
-			{
-				HTREEITEM hti = m_data.GetItem(dwID);
-				Selection().SetItem(hti, TSHS_DESELECT, FALSE);
-			}
-		}
-
-		UpdateControls();
-	}
-
-*/
-
 	*pResult = 0;
 }
 
 void CFilteredToDoCtrl::ClearListSelection()
 {
-	CHoldRedraw hr2(m_list);
-
 	POSITION pos = m_list.GetFirstSelectedItemPosition();
 
 	while (pos)
@@ -2762,7 +3101,6 @@ BOOL CFilteredToDoCtrl::SetTreeFont(HFONT hFont)
 void CFilteredToDoCtrl::OnListClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMITEMACTIVATE pNMIA = (LPNMITEMACTIVATE)pNMHDR;
-//	TRACE ("CFilteredToDoCtrl::OnListClick\n");
 
 	UpdateTreeSelection();
 
@@ -2773,18 +3111,27 @@ void CFilteredToDoCtrl::OnListClick(NMHDR* pNMHDR, LRESULT* pResult)
 		DWORD dwClickID = m_list.GetItemData(nHit);
 		HTREEITEM htiHit = m_find.GetItem(dwClickID);
 
-		BOOL bCtrl = Misc::ModKeysArePressed(MKS_CTRL);
-		
+		BOOL bAlt = Misc::KeyIsPressed(VK_MENU);
+
+		if (bAlt)
+		{
+			return;
+		}
+
 		// column specific handling
+		BOOL bCtrl = Misc::KeyIsPressed(VK_CONTROL);
+
 		switch (nCol)
 		{
 		case TDCC_CLIENT:
 			if (dwClickID == m_dw2ndClickItem)
+			{
 				m_list.PostMessage(LVM_EDITLABEL);
+			}
 			else
 			{
 				CRect rCheck;
-								
+
 				if (GetItemTitleRect(nHit, TDCTR_CHECKBOX, rCheck))
 				{
 					CPoint ptHit(::GetMessagePos());
@@ -2798,32 +3145,36 @@ void CFilteredToDoCtrl::OnListClick(NMHDR* pNMHDR, LRESULT* pResult)
 				}
 			}
 			break;
-			
+
 		case TDCC_FILEREF:
 			if (bCtrl)
 			{
 				CString sFile = m_data.GetTaskFileRef(dwClickID);
-				
+
 				if (!sFile.IsEmpty())
+				{
 					GotoFile(sFile, TRUE);
+				}
 			}
 			break;
-			
+
 		case TDCC_DEPENDENCY:
 			if (bCtrl)
 			{
 				CStringArray aDepends;
 				m_data.GetTaskDependencies(dwClickID, aDepends);
-				
+
 				if (aDepends.GetSize())
+				{
 					ShowTaskLink(0, aDepends[0]);
+				}
 			}
 			break;
-			
+
 		case TDCC_TRACKTIME:
 			if (!IsReadOnly())
 			{
-				if (GetSelectedCount() == 1 && IsItemSelected(nHit) && 
+				if (GetSelectedCount() == 1 && IsItemSelected(nHit) &&
 					m_data.IsTaskTimeTrackable(dwClickID))
 				{
 					TimeTrackTask(htiHit);
@@ -2831,12 +3182,14 @@ void CFilteredToDoCtrl::OnListClick(NMHDR* pNMHDR, LRESULT* pResult)
 				}
 			}
 			break;
-			
+
 		case TDCC_DONE:
 			if (!IsReadOnly())
+			{
 				SetSelectedTaskDone(!m_data.IsTaskDone(dwClickID));
+			}
 			break;
-			
+
 		case TDCC_FLAG:
 			if (!IsReadOnly())
 			{
@@ -2848,7 +3201,7 @@ void CFilteredToDoCtrl::OnListClick(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 
 	m_dw2ndClickItem = 0;
-	
+
 	*pResult = 0;
 }
 
@@ -2860,7 +3213,7 @@ void CFilteredToDoCtrl::OnListDblClick(NMHDR* pNMHDR, LRESULT* pResult)
 	{
 		DWORD dwTaskID = GetTaskID(pNMIA->iItem);
 		TDC_COLUMN nCol = GetColumnID(pNMIA->iSubItem);
-		
+
 		switch (nCol)
 		{
 		case TDCC_CLIENT:
@@ -2868,40 +3221,54 @@ void CFilteredToDoCtrl::OnListDblClick(NMHDR* pNMHDR, LRESULT* pResult)
 				// did they double click the label?
 				CPoint ptHit(::GetMessagePos());
 				m_list.ScreenToClient(&ptHit);
-				
+
 				CRect rLabel;
 				CClientDC dc(&m_list);
 				GetItemTitleRect(pNMIA->iItem, TDCTR_LABEL, rLabel, &dc, GetSelectedTaskTitle());
-				
+
 				if (rLabel.PtInRect(ptHit))
+				{
 					m_list.PostMessage(LVM_EDITLABEL);
+				}
 			}
 
 		case TDCC_FILEREF:
 			{
 				CString sFile = m_data.GetTaskFileRef(dwTaskID);
-				
+
 				if (!sFile.IsEmpty())
+				{
 					GotoFile(sFile, TRUE);
+				}
 			}
 			break;
-			
+
 		case TDCC_DEPENDENCY:
 			{
 				CStringArray aDepends;
 				m_data.GetTaskDependencies(dwTaskID, aDepends);
-				
+
 				if (aDepends.GetSize())
+				{
 					ShowTaskLink(0, aDepends[0]);
+				}
 			}
 			break;
-						
+
 		case TDCC_RECURRENCE:
 			m_eRecurrence.DoEdit();
 			break;
+
+		case TDCC_ICON:
+			EditSelectedTaskIcon();
+			break;
+
+		case TDCC_REMINDER:
+			AfxGetMainWnd()->SendMessage(WM_TDCN_DOUBLECLKREMINDERCOL);
+			break;
 		}
 	}
-	
+
 	*pResult = 0;
 }
 
@@ -2912,8 +3279,6 @@ void CFilteredToDoCtrl::OnListKeyDown(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 	// and have handled the key down message in ScWindowProc
 	//LPNMKEY pNMK = (LPNMKEY)pNMHDR;
 	ASSERT(0);
-//	TRACE ("CFilteredToDoCtrl::OnListKeyDown\n");
-//	UpdateTreeSelection();
 
 	*pResult = 0;
 }
@@ -2924,7 +3289,7 @@ BOOL CFilteredToDoCtrl::PtInHeader(CPoint ptScreen) const
 	{
 		CRect rHeader;
 		m_header.GetWindowRect(rHeader);
-		
+
 		return rHeader.PtInRect(ptScreen);
 	}
 
@@ -2935,7 +3300,9 @@ BOOL CFilteredToDoCtrl::PtInHeader(CPoint ptScreen) const
 BOOL CFilteredToDoCtrl::IsMultiSorting() const
 {
 	if (InListView())
+	{
 		return m_bListMultiSort;
+	}
 
 	// else
 	return CToDoCtrl::IsMultiSorting();
@@ -2948,11 +3315,13 @@ void CFilteredToDoCtrl::MultiSort(const TDSORTCOLUMNS& sort)
 		CToDoCtrl::MultiSort(sort);
 		return;
 	}
-	
-	ASSERT (sort.nBy1 != TDC_UNSORTED);
+
+	ASSERT(sort.nBy1 != TDC_UNSORTED);
 
 	if (sort.nBy1 == TDC_UNSORTED)
+	{
 		return;
+	}
 
 	// do the sort using whatever we can out of CToDoCtrlData
 	TDSORTPARAMS ss;
@@ -2961,11 +3330,11 @@ void CFilteredToDoCtrl::MultiSort(const TDSORTCOLUMNS& sort)
 	ss.bSortChildren = FALSE;
 
 	m_list.SortItems(CToDoCtrlData::CompareFuncMulti, (DWORD)&ss);
-	
+
 	m_bListModSinceLastSort = FALSE;
 	m_bListMultiSort = TRUE;
 	m_sortList = sort;
-	
+
 	// update registry
 	SaveSortState(CPreferences());
 
@@ -2979,7 +3348,7 @@ void CFilteredToDoCtrl::Sort(TDC_SORTBY nBy, BOOL bAllowToggle)
 		CToDoCtrl::Sort(nBy, bAllowToggle);
 		return;
 	}
-	
+
 	// we rebuild the entire listview if 'unsorting'
 	if (nBy == TDC_UNSORTED)
 	{
@@ -2992,26 +3361,32 @@ void CFilteredToDoCtrl::Sort(TDC_SORTBY nBy, BOOL bAllowToggle)
 			RefreshListFilter();
 			UpdateColumnWidths();
 		}
-		
+
 		return;
 	}
-	
+
 	// else all the rest
 	TDCCOLUMN* pTDCC = CToDoCtrl::GetColumn(nBy);
-	ASSERT (pTDCC);
-	
+	ASSERT(pTDCC);
+
 	if (!pTDCC)
+	{
 		return;
-	
+	}
+
 	if (m_sortList.bAscending1 == -1 || nBy != m_sortList.nBy1)
+	{
 		m_sortList.bAscending1 = pTDCC->bSortAscending;
-	
+	}
+
 	// if there's been a mod since last sorting then its reasonable to assume
 	// that the user is not toggling direction but wants to simply resort
 	// in the same direction.
 	else if (bAllowToggle && !m_bListModSinceLastSort)
+	{
 		m_sortList.bAscending1 = !m_sortList.bAscending1;
-	
+	}
+
 	// do the sort using whatever we can out of CToDoCtrlData
 	TDSORTPARAMS ss;
 	ss.sort.nBy1 = nBy;
@@ -3024,27 +3399,27 @@ void CFilteredToDoCtrl::Sort(TDC_SORTBY nBy, BOOL bAllowToggle)
 	ss.bSortChildren = FALSE;
 
 	m_list.SortItems(CToDoCtrlData::CompareFunc, (DWORD)&ss);
-	
+
 	m_sortList.nBy1 = nBy;
 	m_sortList.nBy2 = TDC_UNSORTED;
 	m_sortList.nBy3 = TDC_UNSORTED;
 	m_bListModSinceLastSort = FALSE;
 	m_bListMultiSort = FALSE;
-	
+
 	// update registry
 	SaveSortState(CPreferences());
 
 	UpdateColumnWidths();
 }
 
-BOOL CFilteredToDoCtrl::MoveSelectedTask(TDC_MOVETASK nDirection) 
-{ 
-	return InListView() ? FALSE : CToDoCtrl::MoveSelectedTask(nDirection); 
+BOOL CFilteredToDoCtrl::MoveSelectedTask(TDC_MOVETASK nDirection)
+{
+	return InListView() ? FALSE : CToDoCtrl::MoveSelectedTask(nDirection);
 }
 
-BOOL CFilteredToDoCtrl::CanMoveSelectedTask(TDC_MOVETASK nDirection) const 
-{ 
-	return InListView() ? FALSE : CToDoCtrl::CanMoveSelectedTask(nDirection); 
+BOOL CFilteredToDoCtrl::CanMoveSelectedTask(TDC_MOVETASK nDirection) const
+{
+	return InListView() ? FALSE : CToDoCtrl::CanMoveSelectedTask(nDirection);
 }
 
 BOOL CFilteredToDoCtrl::GotoNextTask(TDC_GOTO nDirection)
@@ -3054,13 +3429,17 @@ BOOL CFilteredToDoCtrl::GotoNextTask(TDC_GOTO nDirection)
 		int nSel = GetFirstSelectedItem();
 
 		if (nDirection == TDCG_NEXT)
+		{
 			nSel++;
+		}
 		else
+		{
 			nSel--;
+		}
 
 		return SelectTask(m_list.GetItemData(nSel));
 	}
-	
+
 	// else
 	return CToDoCtrl::GotoNextTask(nDirection);
 }
@@ -3075,7 +3454,9 @@ CRect CFilteredToDoCtrl::GetSelectedItemsRect() const
 		int nItem = m_list.GetNextSelectedItem(pos);
 
 		if (m_list.GetItemRect(nItem, rItem, LVIR_BOUNDS))
+		{
 			rInvalid |= rItem;
+		}
 	}
 
 	return rInvalid;
@@ -3088,19 +3469,25 @@ BOOL CFilteredToDoCtrl::CanGotoNextTask(TDC_GOTO nDirection) const
 		int nSel = GetFirstSelectedItem();
 
 		if (nDirection == TDCG_NEXT)
+		{
 			return (nSel >= 0 && nSel < m_list.GetItemCount() - 1);
-		
+		}
+
 		// else prev
 		return (nSel > 0 && nSel <= m_list.GetItemCount() - 1);
 	}
 	else
+	{
 		return CToDoCtrl::CanGotoNextTask(nDirection);
+	}
 }
 
 BOOL CFilteredToDoCtrl::GotoNextTopLevelTask(TDC_GOTO nDirection)
 {
 	if (InListView())
-		return FALSE; // not supported
+	{
+		return FALSE;   // not supported
+	}
 
 	// else
 	return CToDoCtrl::GotoNextTopLevelTask(nDirection);
@@ -3111,15 +3498,17 @@ BOOL CFilteredToDoCtrl::CanGotoNextTopLevelTask(TDC_GOTO nDirection) const
 	return InListView() ? FALSE : CToDoCtrl::CanGotoNextTopLevelTask(nDirection);
 }
 
-BOOL CFilteredToDoCtrl::CanExpandSelectedTask(BOOL bExpand) const 
-{ 
+BOOL CFilteredToDoCtrl::CanExpandSelectedTask(BOOL bExpand) const
+{
 	return InListView() ? FALSE : CToDoCtrl::CanExpandSelectedTask(bExpand);
 }
 
 void CFilteredToDoCtrl::ExpandSelectedTask(BOOL bExpand)
 {
 	if (InListView())
-		return; // not supported
+	{
+		return;   // not supported
+	}
 
 	CToDoCtrl::ExpandSelectedTask(bExpand);
 }
@@ -3127,7 +3516,9 @@ void CFilteredToDoCtrl::ExpandSelectedTask(BOOL bExpand)
 void CFilteredToDoCtrl::ExpandAllTasks(BOOL bExpand)
 {
 	if (InListView())
-		return; // not supported
+	{
+		return;   // not supported
+	}
 
 	CToDoCtrl::ExpandAllTasks(bExpand);
 }
@@ -3135,24 +3526,31 @@ void CFilteredToDoCtrl::ExpandAllTasks(BOOL bExpand)
 void CFilteredToDoCtrl::SetFocusToTasks()
 {
 	if (InListView())
+	{
 		m_list.SetFocus();
-
+	}
 	else
+	{
 		CToDoCtrl::SetFocusToTasks();
+	}
 }
 
 BOOL CFilteredToDoCtrl::TasksHaveFocus() const
-{ 
+{
 	if (InListView())
+	{
 		return (::GetFocus() == m_list);
+	}
 
-	return CToDoCtrl::TasksHaveFocus(); 
+	return CToDoCtrl::TasksHaveFocus();
 }
 
 int CFilteredToDoCtrl::FindTasks(const SEARCHPARAMS& params, CResultArray& aResults) const
 {
 	if (!InListView())
+	{
 		return CToDoCtrl::FindTasks(params, aResults);
+	}
 
 	// iterate the tasks
 	for (int nItem = 0; nItem < m_list.GetItemCount(); nItem++)
@@ -3161,17 +3559,20 @@ int CFilteredToDoCtrl::FindTasks(const SEARCHPARAMS& params, CResultArray& aResu
 		SEARCHRESULT result;
 
 		if (m_data.TaskMatches(dwTaskID, params, result))
+		{
 			aResults.Add(result);
+		}
 	}
 
 	return aResults.GetSize();
 }
 
-
 BOOL CFilteredToDoCtrl::SelectTask(CString sPart, TDC_SELECTTASK nSelect)
 {
 	if (!InListView())
+	{
 		return CToDoCtrl::SelectTask(sPart, nSelect);
+	}
 
 	// else
 	int nFind = -1;
@@ -3186,9 +3587,9 @@ BOOL CFilteredToDoCtrl::SelectTask(CString sPart, TDC_SELECTTASK nSelect)
 		nFind = FindTask(sPart, GetFirstSelectedItem() + 1);
 		break;
 
- 	case TDC_SELECTNEXTINCLCURRENT:
- 		nFind = FindTask(sPart, GetFirstSelectedItem());
- 		break;
+	case TDC_SELECTNEXTINCLCURRENT:
+		nFind = FindTask(sPart, GetFirstSelectedItem());
+		break;
 
 	case TDC_SELECTPREV:
 		nFind = FindTask(sPart, GetFirstSelectedItem() - 1, FALSE);
@@ -3200,7 +3601,9 @@ BOOL CFilteredToDoCtrl::SelectTask(CString sPart, TDC_SELECTTASK nSelect)
 	}
 
 	if (nFind != -1)
+	{
 		SelectTask(GetTaskID(nFind));
+	}
 
 	return (nFind != -1);
 }
@@ -3211,7 +3614,7 @@ int CFilteredToDoCtrl::FindTask(LPCTSTR szPart, int nStart, BOOL bNext)
 	SEARCHPARAMS params;
 	params.rules.Add(SEARCHPARAM(TDCA_TASKNAMEORCOMMENTS, FO_INCLUDES, szPart));
 
-	// we need to do this manually because CListCtrl::FindItem 
+	// we need to do this manually because CListCtrl::FindItem
 	// only looks at the start of the string
 	SEARCHRESULT result;
 
@@ -3224,7 +3627,9 @@ int CFilteredToDoCtrl::FindTask(LPCTSTR szPart, int nStart, BOOL bNext)
 		DWORD dwTaskID = GetTaskID(nItem);
 
 		if (m_data.TaskMatches(dwTaskID, params, result))
+		{
 			return nItem;
+		}
 	}
 
 	return -1; // no match
@@ -3241,7 +3646,9 @@ void CFilteredToDoCtrl::SelectNextTasksInHistory()
 		ResyncListSelection();
 	}
 	else
+	{
 		CToDoCtrl::SelectNextTasksInHistory();
+	}
 }
 
 BOOL CFilteredToDoCtrl::MultiSelectItems(const CDWordArray& aTasks, TSH_SELECT nState, BOOL bRedraw)
@@ -3249,29 +3656,33 @@ BOOL CFilteredToDoCtrl::MultiSelectItems(const CDWordArray& aTasks, TSH_SELECT n
 	BOOL bRes = CToDoCtrl::MultiSelectItems(aTasks, nState, bRedraw);
 
 	if (InListView())
+	{
 		ResyncListSelection();
+	}
 
 	return bRes;
 }
 
 void CFilteredToDoCtrl::ResyncListSelection()
 {
-//	CAutoFlag af(m_bResyncingSel, TRUE);
+	//	CAutoFlag af(m_bResyncingSel, TRUE);
 	ClearListSelection();
-		
+
 	// then update our own selection
 	CDWordArray aTreeTaskIDs;
 	DWORD dwFocusedID;
-	
+
 	GetSelectedTaskIDs(aTreeTaskIDs, dwFocusedID, FALSE);
 	SetSelectedListTasks(aTreeTaskIDs, dwFocusedID);
-	
+
 	// now check that the tree is synced with us!
 	CDWordArray aListTaskIDs;
 	GetSelectedListTaskIDs(aListTaskIDs, dwFocusedID);
-	
+
 	if (!Misc::ArraysMatch(aListTaskIDs, aTreeTaskIDs))
+	{
 		CToDoCtrl::MultiSelectItems(aListTaskIDs, TSHS_SELECT, FALSE);
+	}
 }
 
 
@@ -3286,7 +3697,9 @@ void CFilteredToDoCtrl::SelectPrevTasksInHistory()
 		ResyncListSelection();
 	}
 	else
+	{
 		CToDoCtrl::SelectPrevTasksInHistory();
+	}
 }
 
 void CFilteredToDoCtrl::InvalidateItem(HTREEITEM hti)
@@ -3297,10 +3710,14 @@ void CFilteredToDoCtrl::InvalidateItem(HTREEITEM hti)
 		CRect rItem;
 
 		if (GetItemTitleRect(nItem, TDCTR_BOUNDS, rItem))
-			m_list.InvalidateRect(rItem, TRUE);
+		{
+			m_list.InvalidateRect(rItem, FALSE);
+		}
 	}
 	else
+	{
 		CToDoCtrl::InvalidateItem(hti);
+	}
 }
 
 LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
@@ -3316,7 +3733,9 @@ LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPAR
 			int nHit = m_list.HitTest(&lvhti);
 
 			if (!IsItemSelected(nHit))
+			{
 				SelectTask(GetTaskID(nHit));
+			}
 		}
 		break;
 
@@ -3333,7 +3752,6 @@ LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPAR
 			{
 				TDC_COLUMN nCol = GetColumnID(lvhti.iSubItem);
 				DWORD dwTaskID = GetTaskID(nHit);
-				//HTREEITEM htiHit = GetTreeItem(nHit);
 
 				// if the user is clicking on an already multi-selected
 				// item since we may need to carry out an operation on multiple items
@@ -3363,7 +3781,7 @@ LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPAR
 							}
 						}
 						break;
-						
+
 					case TDCC_FLAG:
 						{
 							BOOL bFlagged = m_data.IsTaskFlagged(dwTaskID);
@@ -3381,7 +3799,7 @@ LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPAR
 					if (!Misc::ModKeysArePressed(MKS_CTRL))
 					{
 						m_dw2ndClickItem = 0;
-						
+
 						int nSel = GetFirstSelectedItem();
 						if (nHit != -1 && nHit == nSel && nCol == TDCC_CLIENT)
 						{
@@ -3392,20 +3810,26 @@ LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPAR
 							CFont* pOld = NULL;
 
 							if (m_tree.GetParentItem(GetTreeItem(nHit)) == NULL) // top level items
+							{
 								pOld = (CFont*)dc.SelectObject(CFont::FromHandle(m_fontBold));
+							}
 							else
+							{
 								pOld = (CFont*)dc.SelectObject(m_list.GetFont());
+							}
 
 							GetItemTitleRect(nHit, TDCTR_LABEL, rLabel, &dc, GetSelectedTaskTitle());
-			
+
 							if (rLabel.PtInRect(ptHit))
+							{
 								m_dw2ndClickItem = m_list.GetItemData(nHit);
+							}
 
 							// cleanup
 							dc.SelectObject(pOld);
 						}
 
-						// note: we handle WM_LBUTTONUP in OnListClick() to 
+						// note: we handle WM_LBUTTONUP in OnListClick() to
 						// decide whether to do a label edit
 					}
 				}
@@ -3423,7 +3847,9 @@ LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPAR
 
 	case LVM_EDITLABEL:
 		if (!IsReadOnly())
+		{
 			EditSelectedTask(FALSE);
+		}
 		return 0; // eat it
 
 	case WM_KEYDOWN:
@@ -3432,57 +3858,51 @@ LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPAR
 			// then we select the top/bottom item and ignore the default list ctrl processing
 			LRESULT lr = 0;
 
-/*
-			if (GetSelectedCount() == 0 && Misc::IsCursorKey(wp))
-			{
-				int nNumItems = m_list.GetItemCount();
-
-				if (nNumItems > 0)
-				{
-					int nSelItem = 0; // top item is default
-
-					if (wp == VK_UP || wp == VK_PRIOR)
-						nSelItem = nNumItems - 1; // bottom item
-
-					m_list.SetItemState(nSelItem, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
-				}
-			}
-			else
-*/
-				lr = CSubclasser::ScWindowProc(hRealWnd, msg, wp, lp);
+			lr = CSubclasser::ScWindowProc(hRealWnd, msg, wp, lp);
 
 			m_wKeyPress = (WORD)wp;
-			UpdateTreeSelection();
+
+			if (Misc::IsCursorKey(wp))
+			{
+				UpdateTreeSelection();
+			}
+
 			return lr;
 		}
 		break;
 
 	case WM_KEYUP:
 		if (Misc::IsCursorKey(wp))
+		{
 			UpdateControls();
+		}
 		break;
 
 	case WM_MOUSEWHEEL:
 	case WM_VSCROLL:
 	case WM_HSCROLL:
 		if (InListView() && IsTaskLabelEditing())
+		{
 			EndLabelEdit(FALSE);
+		}
 
 		// extra processing for WM_HSCROLL
 		if (msg == WM_HSCROLL && InListView())
+		{
 			m_header.Invalidate(FALSE);
-		
+		}
+
 		break;
 
-		
+
 	case WM_NOTIFY:
 		{
 			LPNMHDR pNMHDR = (LPNMHDR)lp;
-			
+
 			switch (pNMHDR->code)
 			{
 			case NM_CUSTOMDRAW:
-				// We must forward on 
+				// We must forward on
 				if (pNMHDR->hwndFrom == m_header)
 				{
 					LRESULT lr = 0;
@@ -3490,27 +3910,6 @@ LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPAR
 					return lr;
 				}
 				break;
-/*
-
-			case TTN_NEEDTEXT:
-				{
-					int a = 5;
-					
-				}
-				break;
-
-			case TTN_SHOW:
-				{
-					CToolTipCtrl* pTTC = (CToolTipCtrl*)CWnd::FromHandle(pNMHDR->hwndFrom);
-					CRect rItem;
-					pTTC->GetWindowRect(rItem);
-
-					pTTC->SetWindowPos(&CWnd::wndTopMost, rItem.left, rItem.top, 100, 100, SWP_NOMOVE | SWP_NOACTIVATE);
-					return TRUE;					
-					
-				}
-				break;
-*/
 			}
 		}
 		break;
@@ -3527,10 +3926,13 @@ void CFilteredToDoCtrl::UpdateTreeSelection()
 
 	GetSelectedTaskIDs(aTreeTaskIDs, dwFocusedID, FALSE);
 	GetSelectedListTaskIDs(aListTaskIDs, dwFocusedID);
-	
+
 	if (!Misc::ArraysMatch(aTreeTaskIDs, aListTaskIDs))
 	{
 		MultiSelectItems(aListTaskIDs, TSHS_SELECT, FALSE);
+
+		// also set the focused item
+		m_list.SetItemState(FindTask(dwFocusedID), LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
 		m_list.Invalidate(FALSE);
 	}
 }
@@ -3544,7 +3946,9 @@ BOOL CFilteredToDoCtrl::IsItemSelected(int nItem) const
 HTREEITEM CFilteredToDoCtrl::GetTreeItem(int nItem) const
 {
 	if (nItem < 0 || nItem >= m_list.GetItemCount())
+	{
 		return NULL;
+	}
 
 	DWORD dwID = m_list.GetItemData(nItem);
 	return m_find.GetItem(dwID);
@@ -3556,7 +3960,7 @@ int CFilteredToDoCtrl::GetListItem(HTREEITEM hti) const
 	return (dwID ? FindTask(dwID) : -1);
 }
 
-BOOL CFilteredToDoCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message) 
+BOOL CFilteredToDoCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	if (&m_list == pWnd)
 	{
@@ -3571,7 +3975,6 @@ BOOL CFilteredToDoCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 		if (nHit >= 0)
 		{
 			TDC_COLUMN nCol	= GetColumnID(lvhti.iSubItem);
-			//HTREEITEM htiHit = GetTreeItem(nHit);
 			DWORD dwID = m_list.GetItemData(nHit);
 
 			BOOL bCtrl = Misc::ModKeysArePressed(MKS_CTRL);
@@ -3586,7 +3989,7 @@ BOOL CFilteredToDoCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 					bShowHand = (!sFile.IsEmpty());
 				}
 				break;
-				
+
 			case TDCC_DEPENDENCY:
 				if (bCtrl)
 				{
@@ -3595,18 +3998,20 @@ BOOL CFilteredToDoCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 					bShowHand = aDepends.GetSize();
 				}
 				break;
-				
+
 			case TDCC_TRACKTIME:
 				if (!IsReadOnly())
 				{
-					bShowHand = ((!IsItemSelected(nHit) || GetSelectedCount() == 1) && 
-								 m_data.IsTaskTimeTrackable(dwID));
+					bShowHand = ((!IsItemSelected(nHit) || GetSelectedCount() == 1) &&
+						m_data.IsTaskTimeTrackable(dwID));
 				}
 				break;
-				
+
 			case TDCC_FLAG:
 				if (!IsReadOnly())
+				{
 					bShowHand = TRUE;
+				}
 			}
 
 			if (bShowHand)
@@ -3616,16 +4021,18 @@ BOOL CFilteredToDoCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 			}
 		}
 	}
-		
+
 	return CToDoCtrl::OnSetCursor(pWnd, nHitTest, message);
 }
 
 LRESULT CFilteredToDoCtrl::OnDropFileRef(WPARAM wParam, LPARAM lParam)
 {
 	int nItem = wParam;
-	
+
 	if (!InListView() || nItem == -1)
+	{
 		return CToDoCtrl::OnDropFileRef(wParam, lParam);
+	}
 
 	// else
 	if (!IsReadOnly())
@@ -3633,7 +4040,7 @@ LRESULT CFilteredToDoCtrl::OnDropFileRef(WPARAM wParam, LPARAM lParam)
 		SelectTask(m_list.GetItemData(nItem));
 		SetSelectedTaskFileRef((LPCTSTR)lParam);
 	}
-	
+
 	return 0;
 }
 
@@ -3651,18 +4058,23 @@ BOOL CFilteredToDoCtrl::GetItemTitleRect(HTREEITEM hti, TDC_TITLERECT nArea, CRe
 
 BOOL CFilteredToDoCtrl::GetItemTitleRect(int nItem, TDC_TITLERECT nArea, CRect& rect, CDC* pDC, LPCTSTR szTitle) const
 {
-	ASSERT (InListView());
-	
+	ASSERT(InListView());
+
 	if (nItem == -1)
+	{
 		return FALSE;
+	}
 
 	// basic title rect
 	int nColIndex = GetColumnIndex(TDCC_CLIENT);
 	const_cast<CListCtrl*>(&m_list)->GetSubItemRect(nItem, nColIndex, LVIR_LABEL, rect);
 
 	if (nColIndex == 0 && COSVersion() >= OSV_XP) // right side columns in XP
+	{
 		rect.left -= 4;
+	}
 
+	BOOL bIcon = HasStyle(TDCS_TREETASKICONS) && !IsColumnShowing(TDCC_ICON);
 	BOOL bCheckbox = HasStyle(TDCS_TREECHECKBOXES) && !IsColumnShowing(TDCC_DONE);
 
 	switch (nArea)
@@ -3675,10 +4087,30 @@ BOOL CFilteredToDoCtrl::GetItemTitleRect(int nItem, TDC_TITLERECT nArea, CRect& 
 		}
 		break;
 
+	case TDCTR_ICON:
+		if (bIcon)
+		{
+			if (bCheckbox)
+			{
+				rect.left += 18;
+			}
+
+			rect.right = rect.left + 16;
+			return TRUE;
+		}
+		break;
+
 	case TDCTR_LABEL:
 		{
- 			if (bCheckbox)
- 				rect.left += 18;
+			if (bIcon)
+			{
+				rect.left += 18;
+			}
+
+			if (bCheckbox)
+			{
+				rect.left += 18;
+			}
 
 			if (pDC && szTitle)
 			{
@@ -3696,20 +4128,19 @@ BOOL CFilteredToDoCtrl::GetItemTitleRect(int nItem, TDC_TITLERECT nArea, CRect& 
 	case TDCTR_EDIT:
 		if (GetItemTitleRect(nItem, TDCTR_LABEL, rect)) // recursive call
 		{
-			// make sure it's at least 200 but always clipped to the client rect
-//			rect.right = min(rect.right, rect.left + 200);
-			
 			CRect rClient, rInter;
 			m_list.GetClientRect(rClient);
-			
+
 			if (rInter.IntersectRect(rect, rClient))
+			{
 				rect = rInter;
-			
+			}
+
 			rect.top--;
 
 			m_list.ClientToScreen(rect);
 			ScreenToClient(rect);
-			
+
 			return TRUE;
 		}
 		break;
@@ -3730,29 +4161,35 @@ void CFilteredToDoCtrl::OnListGetInfoTip(NMHDR* pNMHDR, LRESULT* pResult)
 		HTREEITEM hti = GetTreeItem(nHit);
 		TODOITEM* pTDI = GetTask(m_list.GetItemData(nHit));
 
-		ASSERT (pTDI);
+		ASSERT(pTDI);
 
 		if (!pTDI)
+		{
 			return;
+		}
 
 		// we only display info tips when over the task title
 		CRect rTitle;
 		CClientDC dc(&m_list);
 		CFont* pOld = NULL;
-		
+
 		if (m_tree.GetParentItem(hti) == NULL) // top level item
+		{
 			pOld = (CFont*)dc.SelectObject(CFont::FromHandle(m_fontBold));
+		}
 		else
+		{
 			pOld = (CFont*)dc.SelectObject(m_list.GetFont());
-		
+		}
+
 		GetItemTitleRect(nHit, TDCTR_LABEL, rTitle, &dc, pTDI->sTitle);
-		
+
 		// cleanup
 		dc.SelectObject(pOld);
-	
+
 		CPoint pt(::GetMessagePos());
 		m_list.ScreenToClient(&pt);
-		
+
 		if (rTitle.PtInRect(pt))
 		{
 			//fabio_2005
@@ -3763,7 +4200,7 @@ void CFilteredToDoCtrl::OnListGetInfoTip(NMHDR* pNMHDR, LRESULT* pResult)
 #endif
 		}
 	}
-		
+
 }
 
 void CFilteredToDoCtrl::UpdateSelectedTaskPath()
@@ -3776,7 +4213,9 @@ void CFilteredToDoCtrl::UpdateSelectedTaskPath()
 		CRect rClient;
 
 		if (m_header.GetItemRect(GetColumnIndex(TDCC_CLIENT), rClient))
+		{
 			m_header.InvalidateRect(rClient, FALSE);
+		}
 	}
 }
 
@@ -3784,13 +4223,15 @@ void CFilteredToDoCtrl::SaveSortState(CPreferences& prefs)
 {
 	// ignore this if we have no tasks
 	if (GetTaskCount() == 0)
+	{
 		return;
+	}
 
 	// create a new key using the filepath
-	ASSERT (GetSafeHwnd());
-	
+	ASSERT(GetSafeHwnd());
+
 	CString sKey = GetPreferencesKey(_T("SortState"));
-	
+
 	if (!sKey.IsEmpty())
 	{
 		prefs.WriteProfileInt(sKey, _T("ListMulti"), m_bListMultiSort);
@@ -3809,14 +4250,14 @@ void CFilteredToDoCtrl::SaveSortState(CPreferences& prefs)
 void CFilteredToDoCtrl::LoadSortState(const CPreferences& prefs, LPCTSTR szFilePath)
 {
 	CString sKey = GetPreferencesKey(_T("SortState"), szFilePath);
-	
+
 	if (!sKey.IsEmpty())
 	{
 		// is this the first time since we restored tree sorting (disabled in 5.6)
 		int nListSortBy = prefs.GetProfileInt(sKey, _T("ListColumn"), -99);
 
 		if (nListSortBy == -99) // yes
-		{ 
+		{
 			// so we use whatever the tree has set
 			m_sortList.nBy1 = (TDC_SORTBY)prefs.GetProfileInt(sKey, _T("Column"), TDC_UNSORTED);
 			m_sortList.bAscending1 = prefs.GetProfileInt(sKey, _T("Ascending"), TRUE);
@@ -3844,9 +4285,11 @@ void CFilteredToDoCtrl::LoadSortState(const CPreferences& prefs, LPCTSTR szFileP
 
 
 void CFilteredToDoCtrl::RedrawReminders() const
-{ 
+{
 	if (!InListView())
+	{
 		CToDoCtrl::RedrawReminders();
+	}
 
 	else if (IsColumnShowing(TDCC_REMINDER))
 	{

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESFILE2PAGE_H__0A884806_5921_4C13_B368_6D14A441ADAC__INCLUDED_)
@@ -45,51 +59,118 @@
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesFile2Page dialog
 
+class CImportExportMgr;
+
 class CPreferencesFile2Page : public CPreferencesPageBase
 {
 	DECLARE_DYNCREATE(CPreferencesFile2Page)
 
-// Construction
+	// Construction
 public:
-	CPreferencesFile2Page();
+	CPreferencesFile2Page(const CImportExportMgr* pExportMgr = NULL);
 	~CPreferencesFile2Page();
 
-	BOOL GetBackupOnSave() const { return m_bBackupOnSave; }
-	CString GetBackupLocation() const { return m_bBackupOnSave ? m_sBackupLocation : _T(""); }
-	int GetKeepBackupCount() const { return m_bBackupOnSave ? m_nKeepBackups : 0; }
+	// backup
+	BOOL GetBackupOnSave() const
+	{
+		return m_bBackupOnSave;
+	}
+	CString GetBackupLocation() const
+	{
+		return m_bBackupOnSave ? m_sBackupLocation : _T("");
+	}
+	int GetKeepBackupCount() const
+	{
+		return m_bBackupOnSave ? m_nKeepBackups : 0;
+	}
 
-//	BOOL Get() const { return m_b; }
+	// saving
+	int GetAutoSaveFrequency() const
+	{
+		return m_nAutoSaveFrequency;
+	}
+	CString GetSaveExportStylesheet() const;
+	BOOL GetAutoSaveOnSwitchTasklist() const
+	{
+		return m_bAutoSaveOnSwitchTasklist;
+	}
+	BOOL GetAutoSaveOnSwitchApp() const
+	{
+		return m_bAutoSaveOnSwitchApp;
+	}
+	CString GetAutoExportFolderPath() const;
+	BOOL GetAutoExport() const
+	{
+		return m_bAutoExport;
+	}
+	BOOL GetExportToHTML() const
+	{
+		return m_bAutoExport && !m_bOtherExport;
+	}
+	int GetOtherExporter() const
+	{
+		return (m_bAutoExport && m_bOtherExport) ? m_nOtherExporter : -1;
+	}
+	BOOL GetExportFilteredOnly() const
+	{
+		return m_bAutoExport && m_bExportFilteredOnly;
+	}
 
 protected:
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CPreferencesFile2Page)
 	enum { IDD = IDD_PREFFILE2_PAGE };
-	CComboBox	m_cbKeepBackups;
-	CFileEdit	m_eBackupLocation;
-	BOOL	m_bBackupOnSave;
-	CString	m_sBackupLocation;
-	int		m_nKeepBackups;
+	CComboBox   m_cbKeepBackups;
+	CFileEdit   m_eBackupLocation;
+	BOOL    m_bBackupOnSave;
+	CString m_sBackupLocation;
+	int     m_nKeepBackups;
+	BOOL    m_bExportFilteredOnly;
 	//}}AFX_DATA
 	CGroupLineManager m_mgrGroupLines;
 
-// Overrides
+	// saving
+	CComboBox   m_cbOtherExporters;
+	CFileEdit   m_eSaveExportStylesheet;
+	CFileEdit   m_eExportFolderPath;
+	BOOL    m_bExportToFolder;
+	CString m_sExportFolderPath;
+	CComboBox   m_cbAutoSave;
+	int     m_nAutoSaveFrequency;
+	BOOL    m_bAutoSave;
+	BOOL    m_bAutoExport;
+	BOOL    m_bAutoSaveOnSwitchTasklist;
+	BOOL    m_bAutoSaveOnSwitchApp;
+	int     m_bOtherExport;
+	int     m_nOtherExporter;
+	BOOL    m_bUseStylesheetForSaveExport;
+	const CImportExportMgr* m_pExportMgr;
+	CString m_sSaveExportStylesheet;
+
+	// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPreferencesFile2Page)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPreferencesFile2Page)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBackuponsave();
 	//}}AFX_MSG
+	afx_msg void OnHtmlexport();
+	afx_msg void OnOtherexport();
+	afx_msg void OnUsestylesheetforsave();
+	afx_msg void OnExporttofolder();
+	afx_msg void OnAutoexport();
+	afx_msg void OnAutosave();
 	DECLARE_MESSAGE_MAP()
 
-   virtual void LoadPreferences(const CPreferences& prefs);
-   virtual void SavePreferences(CPreferences& prefs);
+	virtual void LoadPreferences(const CPreferences& prefs);
+	virtual void SavePreferences(CPreferences& prefs);
 
 };
 

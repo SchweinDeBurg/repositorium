@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_FILEEDIT_H__7A50F411_3AAE_4BC2_989A_53D44291B643__INCLUDED_)
@@ -50,12 +63,12 @@ const UINT WM_FE_DISPLAYFILE = ::RegisterWindowMessage(_T("WM_FE_DISPLAYFILE"));
 
 enum
 {
-	FES_NOBROWSE		= 0x0001,
-	FES_FOLDERS			= 0x0002,
-	FES_COMBOSTYLEBTN	= 0x0004, // draws the browse button like a combo box rather than a button
-	FES_GOBUTTON		= 0x0008,
-	FES_ALLOWURL		= 0x0010, // supports ? in the filename
-	FES_SAVEAS			= 0x0020, // else open file dialog
+	FES_NOBROWSE        = 0x0001,
+	FES_FOLDERS         = 0x0002,
+	FES_COMBOSTYLEBTN   = 0x0004, // draws the browse button like a combo box rather than a button
+	FES_GOBUTTON        = 0x0008,
+	FES_ALLOWURL        = 0x0010, // supports ? in the filename
+	FES_SAVEAS          = 0x0020, // else open file dialog
 };
 
 // button donw types
@@ -68,9 +81,18 @@ public:
 	CFileEdit(int nStyle = FES_COMBOSTYLEBTN, LPCTSTR szFilter = FILTER_ALLFILES);
 
 	void EnableStyle(int nStyle, BOOL bEnable = TRUE);
-	void SetFilter(LPCTSTR szFilter) { m_sFilter = szFilter; }
-	void SetCurrentFolder(LPCTSTR szFolder) { m_sCurFolder = szFolder; } // for relative paths
-	void SetFolderPrompt(LPCTSTR szPrompt) { m_sFolderPrompt = szPrompt; }
+	void SetFilter(LPCTSTR szFilter)
+	{
+		m_sFilter = szFilter;
+	}
+	void SetCurrentFolder(LPCTSTR szFolder)
+	{
+		m_sCurFolder = szFolder;   // for relative paths
+	}
+	void SetFolderPrompt(LPCTSTR szPrompt)
+	{
+		m_sFolderPrompt = szPrompt;
+	}
 
 	// Attributes
 protected:
@@ -121,7 +143,10 @@ protected:
 
 protected:
 	CRect GetIconRect() const; // screen coords
-	inline BOOL HasStyle(int nStyle) const { return (m_nStyle & nStyle); }
+	inline BOOL HasStyle(int nStyle) const
+	{
+		return (m_nStyle & nStyle);
+	}
 	void DrawFileIcon(CDC* pDC, const CRect& rWindow);
 };
 

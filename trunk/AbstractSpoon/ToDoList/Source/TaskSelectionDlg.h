@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TASKSELECTIONDLG_H__3A5D7E88_CEC3_47DD_8BA6_79EC2C3B7167__INCLUDED_)
@@ -49,33 +63,75 @@ enum TSD_ATTRIB
 	TSDA_CUSTOM,
 };
 
+enum TSD_TASKS
+{
+	TSDT_ALL,
+	TSDT_FILTERED,
+	TSDT_SELECTED,
+};
+
 /////////////////////////////////////////////////////////////////////////////
 // CTaskSelectionDlg dialog
 
 class CTaskSelectionDlg : public CDialog
 {
-// Construction
+	// Construction
 public:
-	CTaskSelectionDlg(LPCTSTR szRegKey = NULL, BOOL bShowSubtaskCheckbox = TRUE); 
+	CTaskSelectionDlg(LPCTSTR szRegKey = NULL, BOOL bShowSubtaskCheckbox = TRUE, BOOL bVisibleColumnsOnly = FALSE);
 
 	BOOL Create(UINT nIDRefFrame, CWnd* pParent, UINT nID = IDC_STATIC);
-	int DoModal() { ASSERT (0); return IDCANCEL; }
+	int DoModal()
+	{
+		ASSERT(0);
+		return IDCANCEL;
+	}
 
-	BOOL GetWantSelectedTasks() const { return m_bSelectedTasks; }
-	BOOL GetWantSelectedSubtasks() const { return m_bSelectedTasks && m_bSelectedSubtasks && m_bShowSubtaskCheckbox; }
-	BOOL GetWantCompletedTasks() const { return m_bCompletedTasks; }
-	BOOL GetWantInCompleteTasks() const { return m_bIncompleteTasks; }
+	TSD_TASKS GetWantWhatTasks() const
+	{
+		return (TSD_TASKS)m_nWhatTasks;
+	}
+	BOOL GetWantAllTasks() const
+	{
+		return m_nWhatTasks == TSDT_ALL;
+	}
+	BOOL GetWantFilteredTasks() const
+	{
+		return m_nWhatTasks == TSDT_FILTERED;
+	}
+	BOOL GetWantSelectedTasks() const
+	{
+		return m_nWhatTasks == TSDT_SELECTED;
+	}
 
-	TSD_ATTRIB GetAttributeOption() const { return (TSD_ATTRIB)m_nAttribOption; }
+	BOOL GetWantSelectedSubtasks() const
+	{
+		return GetWantSelectedTasks() && m_bSelectedSubtasks && m_bShowSubtaskCheckbox;
+	}
+	BOOL GetWantCompletedTasks() const
+	{
+		return m_bCompletedTasks;
+	}
+	BOOL GetWantInCompleteTasks() const
+	{
+		return m_bIncompleteTasks;
+	}
+
+	TSD_ATTRIB GetAttributeOption() const
+	{
+		return (TSD_ATTRIB)m_nAttribOption;
+	}
 	int GetCustomAttributes(CTDCAttributeArray& aCols) const;
-	int GetAllAttributes(CTDCAttributeArray& aCols) const { return m_lbAttribList.GetAllAttributes(aCols); }
+	int GetAllAttributes(CTDCAttributeArray& aCols) const
+	{
+		return m_lbAttribList.GetAllAttributes(aCols);
+	}
 
-	void SetWantSelectedTasks(BOOL bWant = TRUE);
+	void SetWantWhatTasks(TSD_TASKS nWhat);
 	void SetWantCompletedTasks(BOOL bWant = TRUE);
 	void SetWantInCompleteTasks(BOOL bWant = TRUE);
 
 protected:
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CTaskSelectionDlg)
 	enum { IDD = IDD_TASKSELECTION_DIALOG };
 	int     m_nAttribOption;
@@ -84,18 +140,18 @@ protected:
 	BOOL    m_bSelectedSubtasks;
 	BOOL    m_bCompletedTasks;
 	BOOL    m_bIncompleteTasks;
-	int     m_bSelectedTasks;
+	int     m_nWhatTasks;
 	CString m_sRegKey;
 	BOOL    m_bShowSubtaskCheckbox;
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTaskSelectionDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

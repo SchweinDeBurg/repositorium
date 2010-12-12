@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // IContentControl.h: IContentControl interface.
@@ -43,9 +57,9 @@
 
 // function to be exported from dll to create instance of interface
 #ifdef _EXPORTING // declare this in project settings for dll _only_
-#	define DLL_DECLSPEC __declspec(dllexport)
+#define DLL_DECLSPEC __declspec(dllexport)
 #else
-#	define DLL_DECLSPEC __declspec(dllimport)
+#define DLL_DECLSPEC __declspec(dllimport)
 #endif
 
 #define ICONTENTCTRL_VERSION 0x0002
@@ -54,6 +68,7 @@ const UINT WM_ICC_WANTSPELLCHECK = ::RegisterWindowMessage(_T("WM_ICC_WANTSPELLC
 
 class IContent;
 class IContentControl;
+class IPreferences;
 
 typedef IContent* (*PFNCREATECONTENT)(); // function prototype
 
@@ -82,14 +97,20 @@ static IContent* CreateContentInterface(const TCHAR* szDllPath, int* pVer = 0)
 
 			// pass version back to caller
 			if (pVer)
+			{
 				*pVer = pVersion ? pVersion() : 0;
+			}
 
 			if (!nInterfaceVer || (pVersion && pVersion() >= nInterfaceVer))
+			{
 				pInterface = pCreate();
+			}
 		}
 
 		if (hDll && !pInterface)
+		{
 			FreeLibrary(hDll);
+		}
 	}
 
 	return pInterface;
@@ -119,13 +140,11 @@ public:
 	virtual IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
 		long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent) = 0;
 
-	virtual void SetIniLocation(bool bRegistry, const TCHAR* szIniPathName) = 0;
-
 	virtual void Release() = 0;
 
 	// returns the length of the html or zero if not supported
 	virtual int ConvertToHtml(const unsigned char* pContent, int nLength,
-		char*& pHtml) = 0;
+		const TCHAR* szCharSet, char*& pHtml) = 0;
 };
 
 class ISpellCheck;
@@ -136,12 +155,12 @@ class IContentControl
 public:
 	// custom/binary data format
 	virtual int GetContent(unsigned char* pContent) const = 0;
-	virtual bool SetContent(unsigned char* pContent, int nLength) = 0;
+	virtual bool SetContent(unsigned char* pContent, int nLength, BOOL bResetSelection) = 0;
 	virtual const char* GetTypeID() const = 0;
 
 	// text content if supported. return false if not supported
 	virtual int GetTextContent(TCHAR* szContent, int nLength = -1) const = 0;
-	virtual bool SetTextContent(const TCHAR* szContent) = 0;
+	virtual bool SetTextContent(const TCHAR* szContent, BOOL bResetSelection) = 0;
 
 	virtual void SetReadOnly(bool bReadOnly) = 0;
 	virtual HWND GetHwnd() const = 0;
@@ -156,7 +175,8 @@ public:
 
 	virtual void SetUITheme(const UITHEME* pTheme) = 0;
 
-	virtual void SetPreferenceLocation(const char* szKey) = 0;
+	virtual void SavePreferences(IPreferences* pPrefs, LPCTSTR szKey) const = 0;
+	virtual void LoadPreferences(const IPreferences* pPrefs, LPCTSTR szKey) = 0;
 };
 
 #endif // AFX_ICONTENTCONTROL_H__7741547B_BA15_4851_A41B_2B4EC1DC12D5__INCLUDED_

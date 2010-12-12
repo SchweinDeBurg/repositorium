@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_FILTERBAR_H__FAABD9A1_72C4_4731_B7A4_48251860672C__INCLUDED_)
@@ -40,6 +54,7 @@
 
 #include "../../../CodeProject/Source/DialogHelper.h"
 #include "../../../CodeProject/Source/CheckComboBox.h"
+#include "../../../CodeProject/Source/EnEdit.h"
 
 #include "TDCStruct.h"
 #include "TDLPriorityComboBox.h"
@@ -55,20 +70,29 @@ class CDeferWndMove;
 
 class CTDLFilterBar : public CDialog, public CDialogHelper
 {
-// Construction
+	// Construction
 public:
 	CTDLFilterBar(CWnd* pParent = NULL);   // standard constructor
 
 	BOOL Create(CWnd* pParentWnd, UINT nID, BOOL bVisible = TRUE);
-	void GetFilter(FTDCFILTER& filter) const { filter = m_filter; }
+	void GetFilter(FTDCFILTER& filter) const
+	{
+		filter = m_filter;
+	}
 	void SetFilter(const FTDCFILTER& filter, FTC_VIEW nView);
+
+	void SetCustomFilter(BOOL bCustom = TRUE, LPCTSTR szFilter = NULL);
+	void RemoveCustomFilter();
 
 	void RefreshFilterControls(const CFilteredToDoCtrl& tdc);
 	void SetFilterLabelAlignment(BOOL bLeft);
 	void SetPriorityColors(const CDWordArray& aColors);
 	int CalcHeight(int nWidth);
 	void SetVisibleFilters(const CTDCColumnArray& aFilters);
-	BOOL FilterMatches(const FTDCFILTER& filter) { return (filter == m_filter); }
+	BOOL FilterMatches(const FTDCFILTER& filter)
+	{
+		return (filter == m_filter);
+	}
 
 	void EnableMultiSelection(BOOL bEnable);
 	void ShowDivider(BOOL bShow = TRUE);
@@ -76,40 +100,52 @@ public:
 	void SetUIColors(COLORREF crBack/*, COLORREF crText*/);
 
 protected:
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CFilterBar)
 	//}}AFX_DATA
-	CTDLFilterComboBox	m_cbTaskFilter;
-	int		m_nFilterWhat;
-	CEnCheckComboBox	m_cbAllocToFilter;
-	CEnCheckComboBox	m_cbAllocByFilter;
-	CEnCheckComboBox	m_cbCategoryFilter;
-	CEnCheckComboBox	m_cbStatusFilter;
-	CEnCheckComboBox	m_cbVersionFilter;
-	CTDLPriorityComboBox	m_cbPriorityFilter;
-	CTDLRiskComboBox	m_cbRiskFilter;
-	CTDLFilterOptionComboBox	m_cbOptions;
+	CTDLFilterComboBox  m_cbTaskFilter;
+	CEnEdit m_eTitleFilter;
+	CEnCheckComboBox    m_cbAllocToFilter;
+	CEnCheckComboBox    m_cbAllocByFilter;
+	CEnCheckComboBox    m_cbCategoryFilter;
+	CEnCheckComboBox    m_cbStatusFilter;
+	CEnCheckComboBox    m_cbVersionFilter;
+	CTDLPriorityComboBox    m_cbPriorityFilter;
+	CTDLRiskComboBox    m_cbRiskFilter;
+	CTDLFilterOptionComboBox    m_cbOptions;
 	FTDCFILTER m_filter;
 	CDWordArray m_aPriorityColors;
 	CDWordArray m_aVisibility;
 	BOOL m_bShowDivider;
 	FTC_VIEW m_nView;
 	CBrush m_brUIBack;
-	COLORREF m_crUIBack/*, m_crUIText*/;
+	COLORREF m_crUIBack;
+	BOOL m_bCustomFilter;
+	CString m_sCustomFilter;
 
 protected:
-	int DoModal() { return -1; }
+	int DoModal()
+	{
+		return -1;
+	}
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CFilterBar)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
-	virtual void OnOK() { /* do nothing */ }
-	virtual void OnCancel() { /* do nothing */ }
+	virtual void OnOK()
+	{
+		/* do nothing */
+	}
+	virtual void OnCancel()
+	{
+		/* do nothing */
+	}
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions
@@ -120,7 +156,8 @@ protected:
 	//}}AFX_MSG
 	afx_msg void OnSelchangeFilter();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	afx_msg BOOL OnToolTipNotify( UINT id, NMHDR* pNMHDR, LRESULT* pResult );	
+	afx_msg BOOL OnToolTipNotify(UINT id, NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg LRESULT OnEEBtnClick(WPARAM wp, LPARAM lp);
 	DECLARE_MESSAGE_MAP()
 
 protected:

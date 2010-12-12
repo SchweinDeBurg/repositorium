@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // BrowserDlg.cpp : implementation file
@@ -45,13 +58,12 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CBrowserDlg dialog
 
-
 CBrowserDlg::CBrowserDlg(BOOL bBrowser) : CRuntimeDlg(), m_bBrowser(bBrowser)
 {
 	//{{AFX_DATA_INIT(CBrowserDlg)
 	// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
-	AddControl(_T("static"), _T(""), WS_CHILD, 0, 0, 0, 0, 0, (UINT)-1);
+	AddControl(_T("static"), _T(""), WS_CHILD, 0, 0, 0, 0, 0, (UINT)IDC_STATIC);
 }
 
 
@@ -77,7 +89,9 @@ END_MESSAGE_MAP()
 int CBrowserDlg::DoModal(LPCTSTR szCaption, LPCTSTR szUrlPath, CWnd* pParentWnd)
 {
 	if (!szUrlPath || !*szUrlPath)
+	{
 		return IDCANCEL;
+	}
 
 	m_sUrl = szUrlPath;
 
@@ -88,7 +102,9 @@ int CBrowserDlg::DoModal(LPCTSTR szCaption, LPCTSTR szUrlPath, CWnd* pParentWnd)
 BOOL CBrowserDlg::Create(LPCTSTR szCaption, LPCTSTR szUrlPath, CWnd* pParentWnd)
 {
 	if (!szUrlPath || !*szUrlPath)
+	{
 		return IDCANCEL;
+	}
 
 	m_sUrl = szUrlPath;
 
@@ -142,7 +158,9 @@ BOOL CBrowserDlg::OnInitDialog()
 		}
 
 		if (GetParent())
+		{
 			m_edit.SetFont(GetParent()->GetFont());
+		}
 	}
 
 	AutoFit();
@@ -157,14 +175,20 @@ void CBrowserDlg::OnSize(UINT nType, int cx, int cy)
 	CDialog::OnSize(nType, cx, cy);
 
 	if (m_browser.GetSafeHwnd())
+	{
 		m_browser.MoveWindow(0, 0, cx, cy);
+	}
 
 	else if (m_edit.GetSafeHwnd())
+	{
 		m_edit.MoveWindow(0, 0, cx, cy);
+	}
 }
 
 void CBrowserDlg::OnEditSetFocus()
 {
 	if (!m_bBrowser)
+	{
 		m_edit.SetSel(-1, -1);
+	}
 }

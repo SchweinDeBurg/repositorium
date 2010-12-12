@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // ProgressDlg.cpp : implementation file
@@ -59,11 +72,13 @@ CProgressDlg::CProgressDlg(BOOL bCancelButton, CWnd* /*pParent*/ /*=NULL*/) : m_
 	//}}AFX_DATA_INIT
 
 	if (bCancelButton)
-		AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), 0, 0, 67,73,50,14,IDCANCEL);
+	{
+		AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), 0, 0, 67, 73, 50, 14, IDCANCEL);
+	}
 
-	AddRCControl(_T("CONTROL"), _T("msctls_progress32"), _T(""), 0, 0, 7,55, 172,9, IDC_PROGRESSBAR);
-	AddRCControl(_T("LTEXT"), _T(""), _T(""), 0, 0, 7,7,172,30, IDC_DESCRIPTION);
-	AddRCControl(_T("LTEXT"), _T(""), _T(""), 0, 0, 7,42,172,8, IDC_PROGRESS);
+	AddRCControl(_T("CONTROL"), _T("msctls_progress32"), _T(""), 0, 0, 7, 55, 172, 9, IDC_PROGRESSBAR);
+	AddRCControl(_T("LTEXT"), _T(""), _T(""), 0, 0, 7, 7, 172, 30, IDC_DESCRIPTION);
+	AddRCControl(_T("LTEXT"), _T(""), _T(""), 0, 0, 7, 42, 172, 8, IDC_PROGRESS);
 }
 
 
@@ -97,7 +112,7 @@ BOOL CProgressDlg::Create(LPCTSTR szCaption, LPCTSTR szDescription, CWnd* pParen
 
 void CProgressDlg::SetCaption(LPCTSTR szCaption)
 {
-	ASSERT (GetSafeHwnd());
+	ASSERT(GetSafeHwnd());
 
 	SetWindowText(szCaption);
 
@@ -106,32 +121,36 @@ void CProgressDlg::SetCaption(LPCTSTR szCaption)
 
 void CProgressDlg::SetProgress(LPCTSTR szProgress)
 {
-	ASSERT (GetSafeHwnd());
+	ASSERT(GetSafeHwnd());
 
 	m_sProgress = szProgress;
 	UpdateData(FALSE);
 
 	if (GetDlgItem(IDCANCEL)->GetSafeHwnd())
+	{
 		GetDlgItem(IDCANCEL)->EnableWindow(TRUE);
+	}
 
 	Continue();
 }
 
 void CProgressDlg::SetProgress(int nProgress)
 {
-	ASSERT (GetSafeHwnd());
+	ASSERT(GetSafeHwnd());
 
 	m_progress.SetPos(nProgress);
 
 	if (GetDlgItem(IDCANCEL)->GetSafeHwnd())
+	{
 		GetDlgItem(IDCANCEL)->EnableWindow(TRUE);
+	}
 
 	Continue();
 }
 
 void CProgressDlg::SetDescription(LPCTSTR szDescription)
 {
-	ASSERT (GetSafeHwnd());
+	ASSERT(GetSafeHwnd());
 
 	m_sDescription = szDescription;
 	UpdateData(FALSE);
@@ -147,7 +166,9 @@ BOOL CProgressDlg::OnInitDialog()
 	m_progress.SetRange(0, 100);
 
 	if (GetDlgItem(IDCANCEL)->GetSafeHwnd())
-		GetDlgItem(IDCANCEL)->EnableWindow(FALSE); // till SetProgress is called for the first time
+	{
+		GetDlgItem(IDCANCEL)->EnableWindow(FALSE);   // till SetProgress is called for the first time
+	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE

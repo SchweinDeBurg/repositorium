@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // RTFContentControl.cpp : implementation file
@@ -43,6 +57,9 @@
 #include "../../../CodeProject/Source/Misc.h"
 #include "../../Common/UITheme.h"
 #include "../../../CodeProject/Source/EnString.h"
+#include "../../Common/Preferences.h"
+
+#include "../../../CodeProject/Source/Compression.h"
 #include "../../../zlib/Source/zlib.h"
 
 #ifdef _DEBUG
@@ -54,7 +71,7 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CRTFContentControl
 
-CRTFContentControl::CRTFContentControl() : m_bAllowNotify(TRUE), m_reSpellCheck(m_rtf), m_bPrefsDone(FALSE)
+CRTFContentControl::CRTFContentControl() : m_bAllowNotify(TRUE), m_reSpellCheck(m_rtf)
 {
 	// add custom protocol to comments field for linking to task IDs
 	GetRichEditCtrl().AddProtocol(TDL_PROTOCOL, TRUE);
@@ -83,63 +100,6 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CRTFContentControl message handlers
-
-BOOL CRTFContentControl::Compress(const unsigned char* pContentSrc, int nLenSrc,
-                                  unsigned char*& pContentDest, int& nLenDest)
-{
-	ULONG lDest = (int)(nLenSrc * 1.001) + 12; // zlib requirements
-	pContentDest = new unsigned char[lDest + 4]; // extra DWORD for storing the source length
-
-	// leave the first DWORD free
-	int nRet = compress(pContentDest + 4, &lDest, pContentSrc, nLenSrc);
-
-	if (nRet != Z_OK)
-	{
-		// cleanup
-		delete [] pContentDest;
-		nLenDest = 0;
-	}
-	else
-	{
-		nLenDest = lDest + 4;
-
-		// encode the source length into the first 4 bytes
-		((DWORD*)pContentDest)[0] = nLenSrc;
-	}
-
-	return (nRet == Z_OK);
-}
-
-BOOL CRTFContentControl::Decompress(const unsigned char* pContentSrc, int nLenSrc,
-                                    unsigned char*& pContentDest, int& nLenDest)
-{
-	ASSERT(nLenSrc && strncmp((const char*)pContentSrc, RTFTAG, LENTAG) != 0);
-
-	// get the source length from the first 4 bytes
-	ULONG lDest = ((DWORD*)pContentSrc)[0];
-
-	// sanity check
-	if (lDest < (ULONG)nLenSrc || lDest > (ULONG)(1000 * nLenSrc))
-	{
-		return FALSE;
-	}
-
-	pContentDest = new unsigned char[lDest];
-
-	int nRet = uncompress(pContentDest, &lDest, pContentSrc + 4, nLenSrc - 4);
-
-	if (nRet != Z_OK)
-	{
-		delete [] pContentDest;
-		nLenDest = 0;
-	}
-	else
-	{
-		nLenDest = lDest;
-	}
-
-	return (nRet == Z_OK);
-}
 
 void CRTFContentControl::OnChangeText()
 {
@@ -191,7 +151,7 @@ int CRTFContentControl::GetContent(const CRTFContentControl* pCtrl, unsigned cha
 		unsigned char* pCompressed = NULL;
 		int nLenCompressed = 0;
 
-		if (Compress((unsigned char*)(LPSTR)(LPCTSTR)sContent, nLen, pCompressed, nLenCompressed) && nLenCompressed)
+		if (Compression::Compress((unsigned char*)(LPSTR)(LPCTSTR)sContent, nLen, pCompressed, nLenCompressed) && nLenCompressed)
 		{
 			CopyMemory(pContent, pCompressed, nLenCompressed);
 			nLen = nLenCompressed;
@@ -210,7 +170,7 @@ int CRTFContentControl::GetContent(const CRTFContentControl* pCtrl, unsigned cha
 	return nLen;
 }
 
-bool CRTFContentControl::SetContent(unsigned char* pContent, int nLength)
+bool CRTFContentControl::SetContent(unsigned char* pContent, int nLength, BOOL bResetSelection)
 {
 	unsigned char* pDecompressed = NULL;
 
@@ -219,7 +179,7 @@ bool CRTFContentControl::SetContent(unsigned char* pContent, int nLength)
 	{
 		int nLenDecompressed = 0;
 
-		if (Decompress(pContent, nLength, pDecompressed, nLenDecompressed))
+		if (Compression::Decompress(pContent, nLength, pDecompressed, nLenDecompressed))
 		{
 			pContent = pDecompressed;
 			nLength = nLenDecompressed;
@@ -238,12 +198,28 @@ bool CRTFContentControl::SetContent(unsigned char* pContent, int nLength)
 
 	CAutoFlag af(m_bAllowNotify, FALSE);
 	CString sContent((LPCSTR)pContent, nLength);
-	CReSaveCaret re(GetRichEditCtrl());
+	CReSaveCaret* pSave = NULL;
+
+	// save caret position
+	if (!bResetSelection)
+	{
+		pSave = new CReSaveCaret(GetRichEditCtrl());
+	}
 
 	SetRTF(sContent);
 	GetRichEditCtrl().ParseAndFormatText(TRUE);
 
 	delete [] pDecompressed;
+
+	// restore caret
+	if (!bResetSelection)
+	{
+		delete pSave;
+	}
+	else // or reset
+	{
+		GetRichEditCtrl().SetSel(0, 0);
+	}
 
 	return true;
 }
@@ -265,12 +241,29 @@ int CRTFContentControl::GetTextContent(TCHAR* szContent, int nLength) const
 	return nLength;
 }
 
-bool CRTFContentControl::SetTextContent(const TCHAR* szContent)
+bool CRTFContentControl::SetTextContent(const TCHAR* szContent, BOOL bResetSelection)
 {
 	CAutoFlag af(m_bAllowNotify, TRUE);
-	CReSaveCaret re(GetRichEditCtrl());
+	CReSaveCaret* pSave = NULL;
+
+	// save caret position
+	if (!bResetSelection)
+	{
+		pSave = new CReSaveCaret(GetRichEditCtrl());
+	}
 
 	SendMessage(WM_SETTEXT, 0, (LPARAM)szContent);
+
+	// restore caret
+	if (!bResetSelection)
+	{
+		delete pSave;
+	}
+	else // or reset
+	{
+		GetRichEditCtrl().SetSel(0, 0);
+	}
+
 	return true;
 }
 
@@ -278,30 +271,6 @@ void CRTFContentControl::SetUITheme(const UITHEME* pTheme)
 {
 	m_toolbar.SetBackgroundColors(pTheme->crToolbarLight, pTheme->crToolbarDark, pTheme->nStyle == UIS_GRADIENT);
 	m_ruler.SetBackgroundColor(pTheme->crToolbarLight);
-}
-
-void CRTFContentControl::SetPreferenceLocation(const char* szKey)
-{
-	m_sPrefKey = szKey;
-
-	// restore toolbar and ruler state first time only
-	if (!m_bPrefsDone)
-	{
-		BOOL bShowToolbar = TRUE, bShowRuler = TRUE, bWordWrap = TRUE;
-
-		if (!m_sPrefKey.IsEmpty() && !m_bPrefsDone)
-		{
-			bShowToolbar = AfxGetApp()->GetProfileInt(m_sPrefKey, _T("ShowToolbar"), m_showToolbar);
-			bShowRuler = AfxGetApp()->GetProfileInt(m_sPrefKey, _T("ShowRuler"), m_showRuler);
-			bWordWrap = AfxGetApp()->GetProfileInt(m_sPrefKey, _T("WordWrap"), m_bWordWrap);
-
-			m_bPrefsDone = TRUE;
-		}
-
-		ShowToolbar(bShowToolbar);
-		ShowRuler(bShowRuler);
-		SetWordWrap(bWordWrap);
-	}
 }
 
 HWND CRTFContentControl::GetHwnd() const
@@ -438,54 +407,54 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 				}
 
 				UINT nCmdID = ::TrackPopupMenu(*pPopup, TPM_RETURNCMD | TPM_LEFTALIGN | TPM_LEFTBUTTON,
-				                               point.x, point.y, 0, *this, NULL);
+					point.x, point.y, 0, *this, NULL);
 
 				switch (nCmdID)
 				{
-					case BUTTON_BOLD:
-					case BUTTON_ITALIC:
-					case BUTTON_UNDERLINE:
-					case BUTTON_STRIKETHRU:
-						SendMessage(WM_COMMAND, nCmdID);
-						break;
+				case BUTTON_BOLD:
+				case BUTTON_ITALIC:
+				case BUTTON_UNDERLINE:
+				case BUTTON_STRIKETHRU:
+					SendMessage(WM_COMMAND, nCmdID);
+					break;
 
-					case ID_EDIT_SUPERSCRIPT:
-						DoSuperscript();
-						break;
+				case ID_EDIT_SUPERSCRIPT:
+					DoSuperscript();
+					break;
 
-					case ID_EDIT_SUBSCRIPT:
-						DoSubscript();
-						break;
+				case ID_EDIT_SUBSCRIPT:
+					DoSubscript();
+					break;
 
-					case ID_EDIT_COPY:
-						re.Copy();
-						break;
+				case ID_EDIT_COPY:
+					re.Copy();
+					break;
 
-					case ID_EDIT_CUT:
-						re.Cut();
-						break;
+				case ID_EDIT_CUT:
+					re.Cut();
+					break;
 
-					case ID_EDIT_FIND:
-						re.DoEditFind(IDS_FIND_TITLE);
-						break;
+				case ID_EDIT_FIND:
+					re.DoEditFind(IDS_FIND_TITLE);
+					break;
 
-					case ID_EDIT_HORZRULE:
-						//InsertHorizontalRule();
-						break;
+				case ID_EDIT_HORZRULE:
+					//InsertHorizontalRule();
+					break;
 
-					case ID_EDIT_FINDREPLACE:
-						re.DoEditReplace(IDS_REPLACE_TITLE);
-						break;
+				case ID_EDIT_FINDREPLACE:
+					re.DoEditReplace(IDS_REPLACE_TITLE);
+					break;
 
-					case ID_EDIT_PASTE:
-						re.Paste();
-						break;
+				case ID_EDIT_PASTE:
+					re.Paste();
+					break;
 
-					case ID_EDIT_PASTESIMPLE:
-						re.Paste(TRUE); // TRUE ==  simple
-						break;
+				case ID_EDIT_PASTESIMPLE:
+					re.Paste(TRUE); // TRUE ==  simple
+					break;
 
-					case ID_EDIT_PASTEASREF:
+				case ID_EDIT_PASTEASREF:
 					{
 						// try to get the clipboard for any tasklist
 						ITaskList* pClipboard = (ITaskList*)GetParent()->SendMessage(WM_TDCM_GETCLIPBOARD, 0, FALSE);
@@ -532,22 +501,22 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 					}
 					break;
 
-					case ID_EDIT_DELETE:
-						re.ReplaceSel(_T(""));
-						break;
+				case ID_EDIT_DELETE:
+					re.ReplaceSel(_T(""));
+					break;
 
-					case ID_EDIT_SELECT_ALL:
-						re.SetSel(0, -1);
-						break;
+				case ID_EDIT_SELECT_ALL:
+					re.SetSel(0, -1);
+					break;
 
-					case ID_EDIT_OPENURL:
-						if (nUrl != -1)
-						{
-							re.GoToUrl(nUrl);
-						}
-						break;
+				case ID_EDIT_OPENURL:
+					if (nUrl != -1)
+					{
+						re.GoToUrl(nUrl);
+					}
+					break;
 
-					case ID_EDIT_FILEBROWSE:
+				case ID_EDIT_FILEBROWSE:
 					{
 						CString sFile;
 
@@ -571,28 +540,28 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 					}
 					break;
 
-					case ID_EDIT_INSERTDATESTAMP:
+				case ID_EDIT_INSERTDATESTAMP:
 					{
 						COleDateTime date = COleDateTime::GetCurrentTime();
 						re.ReplaceSel(date.Format(), TRUE);
 					}
 					break;
 
-					case ID_EDIT_SPELLCHECK:
-						GetParent()->PostMessage(WM_ICC_WANTSPELLCHECK);
-						break;
+				case ID_EDIT_SPELLCHECK:
+					GetParent()->PostMessage(WM_ICC_WANTSPELLCHECK);
+					break;
 
-					case ID_EDIT_SHOWTOOLBAR:
-						ShowToolbar(!IsToolbarVisible());
-						break;
+				case ID_EDIT_SHOWTOOLBAR:
+					ShowToolbar(!IsToolbarVisible());
+					break;
 
-					case ID_EDIT_SHOWRULER:
-						ShowRuler(!IsRulerVisible());
-						break;
+				case ID_EDIT_SHOWRULER:
+					ShowRuler(!IsRulerVisible());
+					break;
 
-					case ID_EDIT_WORDWRAP:
-						SetWordWrap(!HasWordWrap());
-						break;
+				case ID_EDIT_WORDWRAP:
+					SetWordWrap(!HasWordWrap());
+					break;
 				}
 			}
 		}
@@ -666,8 +635,10 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 	// process editing shortcuts
 	switch (pMsg->message)
 	{
-		case WM_KEYDOWN:
+	case WM_KEYDOWN:
 		{
+			AFX_MANAGE_STATE(AfxGetStaticModuleState());
+
 			BOOL bCtrl = (GetKeyState(VK_CONTROL) & 0x8000);
 			BOOL bAlt = (GetKeyState(VK_MENU) & 0x8000);
 			BOOL bShift = (GetKeyState(VK_SHIFT) & 0x8000);
@@ -678,84 +649,96 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 			{
 				switch (pMsg->wParam)
 				{
-					case _T('c'):
-					case _T('C'):
-						re.Copy();
-						return TRUE;
+				case _T('c'):
+				case _T('C'):
+					re.Copy();
+					return TRUE;
 
-					case _T('v'):
-					case _T('V'):
-						re.Paste(bShift);
-						return TRUE;
+				case _T('v'):
+				case _T('V'):
+					re.Paste(bShift);
+					return TRUE;
 
-					case _T('x'):
-					case _T('X'):
-						re.Cut();
-						return TRUE;
+				case _T('x'):
+				case _T('X'):
+					re.Cut();
+					return TRUE;
 
-					case _T('a'):
-					case _T('A'):
-						re.SetSel(0, -1);
-						return TRUE;
+				case _T('a'):
+				case _T('A'):
+					re.SetSel(0, -1);
+					return TRUE;
 
-					case _T('b'):
-					case _T('B'):
-						DoBold();
-						return TRUE;
+				case _T('b'):
+				case _T('B'):
+					DoBold();
+					return TRUE;
 
-					case _T('i'):
-					case _T('I'):
-						DoItalic();
-						return TRUE;
+				case _T('i'):
+				case _T('I'):
+					DoItalic();
+					return TRUE;
 
-					case _T('u'):
-					case _T('U'):
-						DoUnderline();
-						return TRUE;
+				case _T('u'):
+				case _T('U'):
+					DoUnderline();
+					return TRUE;
 
-					case _T('l'):
-					case _T('L'):
-						DoLeftAlign();
-						return TRUE;
+				case _T('l'):
+				case _T('L'):
+					DoLeftAlign();
+					return TRUE;
 
-					case _T('e'):
-					case _T('E'):
-						DoCenterAlign();
-						return TRUE;
+				case _T('e'):
+				case _T('E'):
+					DoCenterAlign();
+					return TRUE;
 
-					case _T('r'):
-					case _T('R'):
-						DoRightAlign();
-						return TRUE;
+				case _T('r'):
+				case _T('R'):
+					DoRightAlign();
+					return TRUE;
 
-					case 0xBD:
-						DoStrikethrough();
-						return TRUE;
+				case 0xBD:
+					DoStrikethrough();
+					return TRUE;
 
-					case _T('f'):
-					case _T('F'):
-						re.DoEditFind();
-						return TRUE;
+				case _T('f'):
+				case _T('F'):
+					re.DoEditFind();
+					return TRUE;
 
-					case _T('h'):
-					case _T('H'):
-						re.DoEditReplace();
-						return TRUE;
+				case _T('h'):
+				case _T('H'):
+					re.DoEditReplace();
+					return TRUE;
 
-					case _T('z'):
-					case _T('Z'):
-						return TRUE; // to prevent the richedit performing the undo
+				case _T('z'):
+				case _T('Z'):
+					return TRUE; // to prevent the richedit performing the undo
 
-					case _T('y'):
-					case _T('Y'):
-						return TRUE; // to prevent the richedit performing the redo
+				case _T('y'):
+				case _T('Y'):
+					return TRUE; // to prevent the richedit performing the redo
+
+				case _T('j'):
+				case _T('J'):
+					if (bShift)
+					{
+						DoOutdent();
+					}
+					else
+					{
+						DoIndent();
+					}
+					return TRUE;
 				}
 			}
 			else
 			{
 				switch (pMsg->wParam)
 				{
-					case _T('\t'):
+				case _T('\t'):
 					{
 						CHARRANGE cr;
 						re.GetSel(cr);
@@ -776,8 +759,9 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 								DoOutdent();
 							}
 						}
+						return TRUE;
 					}
-					return TRUE;
+					break;
 				}
 			}
 		}
@@ -787,17 +771,22 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 	return false;
 }
 
-void CRTFContentControl::OnDestroy()
+void CRTFContentControl::SavePreferences(IPreferences* pPrefs, LPCTSTR szKey) const
 {
-	CRulerRichEditCtrl::OnDestroy();
+	pPrefs->WriteProfileInt(szKey, _T("ShowToolbar"), IsToolbarVisible());
+	pPrefs->WriteProfileInt(szKey, _T("ShowRuler"), IsRulerVisible());
+	pPrefs->WriteProfileInt(szKey, _T("WordWrap"), HasWordWrap());
+}
 
-	// save toolbar and ruler state
-	if (!m_sPrefKey.IsEmpty())
-	{
-		AfxGetApp()->WriteProfileInt(m_sPrefKey, _T("ShowToolbar"), IsToolbarVisible());
-		AfxGetApp()->WriteProfileInt(m_sPrefKey, _T("ShowRuler"), IsRulerVisible());
-		AfxGetApp()->WriteProfileInt(m_sPrefKey, _T("WordWrap"), HasWordWrap());
-	}
+void CRTFContentControl::LoadPreferences(const IPreferences* pPrefs, LPCTSTR szKey)
+{
+	BOOL bShowToolbar = pPrefs->GetProfileInt(szKey, _T("ShowToolbar"), m_showToolbar);
+	BOOL bShowRuler = pPrefs->GetProfileInt(szKey, _T("ShowRuler"), m_showRuler);
+	BOOL bWordWrap = pPrefs->GetProfileInt(szKey, _T("WordWrap"), m_bWordWrap);
+
+	ShowToolbar(bShowToolbar);
+	ShowRuler(bShowRuler);
+	SetWordWrap(bWordWrap);
 }
 
 void CRTFContentControl::OnStyleChanging(int nStyleType, LPSTYLESTRUCT lpStyleStruct)
@@ -824,9 +813,4 @@ LRESULT CRTFContentControl::OnCustomUrl(WPARAM wp, LPARAM lp)
 	}
 
 	return 0;
-}
-
-BOOL CRTFContentControl::PreTranslateMessage(MSG* pMsg)
-{
-	return CRulerRichEditCtrl::PreTranslateMessage(pMsg);
 }

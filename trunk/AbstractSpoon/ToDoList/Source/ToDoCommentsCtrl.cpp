@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToDoCommentsCtrl.cpp : implementation file
@@ -45,6 +59,8 @@
 #include "../../Common/RichEditSpellCheck.h"
 #include "../../../CodeProject/Source/Misc.h"
 #include "../../../CodeProject/Source/EnString.h"
+#include "../../../CodeProject/Source/FileMisc.h"
+#include "../../Common/IPreferences.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -52,14 +68,14 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-const UINT WM_SETWORDWRAP = (WM_USER+1);
+const UINT WM_SETWORDWRAP = (WM_USER + 1);
 
 /////////////////////////////////////////////////////////////////////////////
 // CToDoCommentsCtrl
 
-CToDoCommentsCtrl::CToDoCommentsCtrl() : m_bAllowNotify(TRUE), m_bWordWrap(TRUE), m_bPrefsDone(FALSE),
+CToDoCommentsCtrl::CToDoCommentsCtrl() : m_bAllowNotify(TRUE), m_bWordWrap(TRUE),
 #pragma warning (disable: 4355)
-	m_reSpellCheck(*this)
+m_reSpellCheck(*this)
 #pragma warning (default: 4355)
 {
 	// add custom protocol to comments field for linking to task IDs
@@ -67,6 +83,8 @@ CToDoCommentsCtrl::CToDoCommentsCtrl() : m_bAllowNotify(TRUE), m_bWordWrap(TRUE)
 
 	SetCtrlClickMsg(CEnString(IDS_COMMENTSCTRLCLICKMSG));
 	SetGotoErrorMsg(CEnString(IDS_COMMENTSGOTOERRMSG));
+
+	EnableSelectOnFocus(FALSE);
 }
 
 CToDoCommentsCtrl::~CToDoCommentsCtrl()
@@ -79,23 +97,44 @@ CToDoCommentsCtrl::~CToDoCommentsCtrl()
 int CToDoCommentsCtrl::GetTextContent(TCHAR* szContent, int nLength) const
 {
 	if (!szContent)
+	{
 		return GetWindowTextLength();
+	}
 
 	// else
 	if (nLength == -1)
-		nLength = _tcslen(szContent) + 1; // inluding null
+	{
+		nLength = _tcslen(szContent) + 1;   // inluding null
+	}
 
 	GetWindowText(szContent, nLength);
-	
+
 	return nLength;
 }
 
-bool CToDoCommentsCtrl::SetTextContent(const TCHAR* szContent) 
-{ 
-	CReSaveCaret re(*this);
+bool CToDoCommentsCtrl::SetTextContent(const TCHAR* szContent, BOOL bResetSelection)
+{
+	CReSaveCaret* pSave = NULL;
+
+	// save caret position
+	if (!bResetSelection)
+	{
+		pSave = new CReSaveCaret(*this);
+	}
+
 	SendMessage(WM_SETTEXT, 0, (LPARAM)szContent);
 
-	return true; 
+	// restore caret
+	if (!bResetSelection)
+	{
+		delete pSave;
+	}
+	else // or reset
+	{
+		SetSel(0, 0);
+	}
+
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -122,7 +161,7 @@ BOOL CToDoCommentsCtrl::Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd
 {
 	dwStyle |= ES_AUTOHSCROLL | WS_HSCROLL | ES_NOHIDESEL;
 
- 	return CUrlRichEditCtrl::Create(dwStyle, rect, pParentWnd, nID);
+	return CUrlRichEditCtrl::Create(dwStyle, rect, pParentWnd, nID);
 }
 
 LRESULT CToDoCommentsCtrl::OnSetFont(WPARAM wp, LPARAM lp)
@@ -136,21 +175,25 @@ LRESULT CToDoCommentsCtrl::OnSetFont(WPARAM wp, LPARAM lp)
 	return CUrlRichEditCtrl::OnSetFont(wp, lp);
 }
 
-BOOL CToDoCommentsCtrl::OnChangeText() 
+BOOL CToDoCommentsCtrl::OnChangeText()
 {
 	CUrlRichEditCtrl::OnChangeText();
 
 	if (m_bAllowNotify && IsWindowEnabled() && !(GetStyle() & ES_READONLY))
+	{
 		GetParent()->SendMessage(WM_TDCN_COMMENTSCHANGE);
-	
+	}
+
 	return FALSE;
 }
 
-BOOL CToDoCommentsCtrl::OnKillFocus() 
+BOOL CToDoCommentsCtrl::OnKillFocus()
 {
 	if (m_bAllowNotify)
+	{
 		GetParent()->SendMessage(WM_TDCN_COMMENTSKILLFOCUS);
-	
+	}
+
 	return FALSE;
 }
 
@@ -161,7 +204,7 @@ void CToDoCommentsCtrl::SetReadOnly(bool bReadOnly)
 	SetBackgroundColor(!bReadOnly, GetSysColor(COLOR_3DFACE));
 }
 
-void CToDoCommentsCtrl::OnContextMenu(CWnd* pWnd, CPoint point) 
+void CToDoCommentsCtrl::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	if (pWnd == this)
 	{
@@ -169,7 +212,7 @@ void CToDoCommentsCtrl::OnContextMenu(CWnd* pWnd, CPoint point)
 		// note: we could use the edit menu from user32.dll but because
 		// we're adding items too, the languages would appear odd
 		CMenu menu;
-		
+
 		if (menu.LoadMenu(IDR_MISC))
 		{
 			CMenu* pPopup = menu.GetSubMenu(4);
@@ -183,7 +226,7 @@ void CToDoCommentsCtrl::OnContextMenu(CWnd* pWnd, CPoint point)
 	}
 }
 
-void CToDoCommentsCtrl::OnCommentsMenuCmd(UINT nCmdID) 
+void CToDoCommentsCtrl::OnCommentsMenuCmd(UINT nCmdID)
 {
 	switch (nCmdID)
 	{
@@ -198,23 +241,23 @@ void CToDoCommentsCtrl::OnCommentsMenuCmd(UINT nCmdID)
 	case ID_COMMENTS_CUT:
 		Cut();
 		break;
-		
+
 	case ID_COMMENTS_FIND:
 		DoEditFind(IDS_FIND_TITLE);
 		break;
-		
+
 	case ID_COMMENTS_FINDREPLACE:
 		DoEditReplace(IDS_REPLACE_TITLE);
 		break;
-		
+
 	case ID_COMMENTS_COPY:
 		Copy();
 		break;
-		
+
 	case ID_COMMENTS_PASTE:
 		Paste();
 		break;
-		
+
 	case ID_COMMENTS_PASTEASREF:
 		{
 			// try to get the clipboard for any tasklist
@@ -230,23 +273,29 @@ void CToDoCommentsCtrl::OnCommentsMenuCmd(UINT nCmdID)
 				sFileName.Replace(_T(" "), _T("%20"));
 			}
 			else // get the clipboard for just this tasklist
+			{
 				pClipboard = (ITaskList*)GetParent()->SendMessage(WM_TDCM_GETCLIPBOARD, 0, TRUE);
+			}
 
 			if (pClipboard && pClipboard->GetFirstTask())
 			{
 				// build single string containing each top level item as a different ref
 				CString sRefs, sRef;
 				HTASKITEM hClip = pClipboard->GetFirstTask();
-				
+
 				while (hClip)
 				{
 					if (sFileName.IsEmpty())
+					{
 						sRef.Format(_T(" %s%d"), TDL_PROTOCOL, pClipboard->GetTaskID(hClip));
+					}
 					else
+					{
 						sRef.Format(_T(" %s%s?%d"), TDL_PROTOCOL, (LPCTSTR)sFileName, pClipboard->GetTaskID(hClip));
+					}
 
 					sRefs += sRef;
-					
+
 					hClip = pClipboard->GetNextTask(hClip);
 				}
 
@@ -255,52 +304,55 @@ void CToDoCommentsCtrl::OnCommentsMenuCmd(UINT nCmdID)
 			}
 		}
 		break;
-		
+
 	case ID_COMMENTS_SELECTALL:
 		SetSel(0, -1);
 		break;
-		
+
 	case ID_COMMENTS_OPENURL:
 		if (m_nContextUrl != -1)
+		{
 			GoToUrl(m_nContextUrl);
-		
+		}
+
 		// reset
 		m_nContextUrl = -1;
 		break;
-		
+
 	case ID_COMMENTS_FILEBROWSE:
 		{
 			CString sFile;
-			
+
 			if (m_nContextUrl != -1)
 			{
 				sFile = GetUrl(m_nContextUrl, TRUE);
 
-				if (GetFileAttributes(sFile) == 0xffffffff)
+				if (FileMisc::FileExists(sFile))
+				{
 					sFile.Empty();
+				}
 			}
-						
+
 			CFileDialog dialog(TRUE, NULL, sFile);
 			dialog.m_ofn.lpstrTitle = _T("Select File");
-			
+
 			if (dialog.DoModal() == IDOK)
+			{
 				PathReplaceSel(dialog.GetPathName(), TRUE);
-			
+			}
+
 			// reset
 			m_nContextUrl = -1;
 		}
 		break;
-		
-//	case ID_COMMENTS_DATESTAMP_UTC:
-//		break;
-		
+
 	case ID_COMMENTS_DATESTAMP_LOCAL:
 		{
 			COleDateTime date = COleDateTime::GetCurrentTime();
 			ReplaceSel(date.Format(), TRUE);
 		}
 		break;
-		
+
 	case ID_COMMENTS_SPELLCHECK:
 		GetParent()->PostMessage(WM_ICC_WANTSPELLCHECK);
 		break;
@@ -320,17 +372,17 @@ void CToDoCommentsCtrl::SetWordWrap(BOOL bWrap)
 void CToDoCommentsCtrl::OnUpdateCommentsMenuCmd(CCmdUI* pCmdUI)
 {
 	BOOL bReadOnly = (GetStyle() & ES_READONLY) || !IsWindowEnabled();
-	
+
 	switch (pCmdUI->m_nID)
 	{
 	case ID_COMMENTS_UNDO:
 		pCmdUI->Enable(CanUndo());
 		break;
-					
+
 	case ID_COMMENTS_REDO:
 		pCmdUI->Enable(SendMessage(EM_CANREDO));
 		break;
-					
+
 	case ID_COMMENTS_CUT:
 		if (!bReadOnly)
 		{
@@ -339,9 +391,11 @@ void CToDoCommentsCtrl::OnUpdateCommentsMenuCmd(CCmdUI* pCmdUI)
 			pCmdUI->Enable(crSel.cpMin != crSel.cpMax);
 		}
 		else
+		{
 			pCmdUI->Enable(FALSE);
+		}
 		break;
-		
+
 	case ID_COMMENTS_COPY:
 		{
 			CHARRANGE crSel;
@@ -349,23 +403,23 @@ void CToDoCommentsCtrl::OnUpdateCommentsMenuCmd(CCmdUI* pCmdUI)
 			pCmdUI->Enable(crSel.cpMin != crSel.cpMax);
 		}
 		break;
-		
+
 	case ID_COMMENTS_PASTE:
 		pCmdUI->Enable(!bReadOnly && CanPaste());
 		break;
-		
+
 	case ID_COMMENTS_PASTEASREF:
 		pCmdUI->Enable(!bReadOnly && !IsClipboardEmpty());
 		break;
-		
+
 	case ID_COMMENTS_SELECTALL:
 		pCmdUI->Enable(GetTextLength());
 		break;
-		
+
 	case ID_COMMENTS_SPELLCHECK:
 		pCmdUI->Enable(GetTextLength() && !bReadOnly);
 		break;
-		
+
 	case ID_COMMENTS_OPENURL:
 		// if pCmdUI->m_pMenu is NOT null then we need to set the menu
 		// text to the url, else it's just MFC checking that the option
@@ -375,19 +429,18 @@ void CToDoCommentsCtrl::OnUpdateCommentsMenuCmd(CCmdUI* pCmdUI)
 		if (m_nContextUrl != -1 && pCmdUI->m_pMenu)
 		{
 			CString sText, sMenu;
-			pCmdUI->m_pMenu->GetMenuString(ID_COMMENTS_OPENURL, sMenu, 
+			pCmdUI->m_pMenu->GetMenuString(ID_COMMENTS_OPENURL, sMenu,
 				MF_BYCOMMAND);
-			
+
 			sText.Format(_T("%s: %s"), sMenu, GetUrl(m_nContextUrl, TRUE));
 			pCmdUI->SetText(sText);
 		}
 		break;
-		
+
 	case ID_COMMENTS_FILEBROWSE:
 		pCmdUI->Enable(!bReadOnly);
 		break;
-		
-//	case ID_COMMENTS_DATESTAMP_UTC:
+
 	case ID_COMMENTS_DATESTAMP_LOCAL:
 		pCmdUI->Enable(!bReadOnly);
 		break;
@@ -399,7 +452,7 @@ void CToDoCommentsCtrl::OnUpdateCommentsMenuCmd(CCmdUI* pCmdUI)
 }
 
 
-BOOL CToDoCommentsCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message) 
+BOOL CToDoCommentsCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	// bit of a hack but this is what we get just before the context
 	// menu appears so we set the cursor back to the arrow
@@ -408,22 +461,23 @@ BOOL CToDoCommentsCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 		SetCursor(AfxGetApp()->LoadStandardCursor(MAKEINTRESOURCE(IDC_ARROW)));
 		return TRUE;
 	}
-	
+
 	return CUrlRichEditCtrl::OnSetCursor(pWnd, nHitTest, message);
 }
 
-BOOL CToDoCommentsCtrl::IsClipboardEmpty() const 
-{ 
+BOOL CToDoCommentsCtrl::IsClipboardEmpty() const
+{
 	// try for any clipboard first
 	ITaskList* pClipboard = (ITaskList*)GetParent()->SendMessage(WM_TDCM_GETCLIPBOARD, 0, FALSE);
 	ITaskList4* pClip4 = GetITLInterface<ITaskList4>(pClipboard, IID_TASKLIST4);
 
-//	if (S_OK == pClipboard->QueryInterface(IID_TASKLIST4, (void**)&pClip4))
 	if (pClip4)
+	{
 		return (pClipboard->GetFirstTask() == NULL);
+	}
 
 	// else try for 'our' clipboard only
-	return (!GetParent()->SendMessage(WM_TDCM_HASCLIPBOARD, 0, TRUE)); 
+	return (!GetParent()->SendMessage(WM_TDCM_HASCLIPBOARD, 0, TRUE));
 }
 
 LRESULT CToDoCommentsCtrl::SendNotifyCustomUrl(LPCTSTR szUrl) const
@@ -433,114 +487,104 @@ LRESULT CToDoCommentsCtrl::SendNotifyCustomUrl(LPCTSTR szUrl) const
 	int nFind = sUrl.Find(TDL_PROTOCOL);
 
 	if (nFind != -1)
+	{
 		return GetParent()->SendMessage(WM_TDCM_TASKLINK, 0, (LPARAM)(LPCTSTR)sUrl);
+	}
 
 	return 0;
 }
 
-void CToDoCommentsCtrl::PreSubclassWindow() 
+void CToDoCommentsCtrl::PreSubclassWindow()
 {
 	EnableToolTips();
-	
+
 	CUrlRichEditCtrl::PreSubclassWindow();
 }
 
-void CToDoCommentsCtrl::OnDestroy() 
+void CToDoCommentsCtrl::SavePreferences(IPreferences* pPrefs, LPCTSTR szKey) const
 {
-	CUrlRichEditCtrl::OnDestroy();
-	
-	if (!m_sPrefKey.IsEmpty())
-		AfxGetApp()->WriteProfileInt(m_sPrefKey, _T("WordWrap"), m_bWordWrap);
+	pPrefs->WriteProfileInt(szKey, _T("WordWrap"), m_bWordWrap);
 }
 
-void CToDoCommentsCtrl::SetPreferenceLocation(const char* szKey)
+void CToDoCommentsCtrl::LoadPreferences(const IPreferences* pPrefs, LPCTSTR szKey)
 {
-	m_sPrefKey = szKey;
+	BOOL bWordWrap = pPrefs->GetProfileInt(szKey, _T("WordWrap"), TRUE);
 
-	// init wordwrap first time only
-	if (!m_bPrefsDone)
-	{
-		BOOL bWordWrap = TRUE;
-
-		if (!m_sPrefKey.IsEmpty() && !m_bPrefsDone)
-		{
-			bWordWrap = AfxGetApp()->GetProfileInt(m_sPrefKey, _T("WordWrap"), m_bWordWrap);
-			m_bPrefsDone = TRUE;
-		}
-
-		// we need to post the wordwrap initialization else the richedit
-		// get very confused about something and doesn't repaint properly
-		// when resizing
-		PostMessage(WM_SETWORDWRAP, bWordWrap, (LPARAM)GetSafeHwnd());
-	}
+	// we need to post the wordwrap initialization else the richedit
+	// get very confused about something and doesn't repaint properly
+	// when resizing
+	PostMessage(WM_SETWORDWRAP, bWordWrap, (LPARAM)GetSafeHwnd());
 }
 
 LRESULT CToDoCommentsCtrl::OnSetWordWrap(WPARAM wp, LPARAM lp)
 {
-	ASSERT (lp == (LPARAM)GetSafeHwnd());
-	(lp);   // avoid C4100: unreferenced formal parameter in the non-debug builds
-	
+	UNREFERENCED_PARAMETER(lp);
+	ASSERT(lp == (LPARAM)GetSafeHwnd());
+
 	SetWordWrap(wp);
 	return 0L;
 }
 
-int CToDoCommentsCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CToDoCommentsCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CUrlRichEditCtrl::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 
 	// set max edit length
 	LimitText(1024 * 1024 * 1024); // one gigabyte
-		
+
 	return 0;
 }
 
-bool CToDoCommentsCtrl::ProcessMessage(MSG* pMsg) 
+bool CToDoCommentsCtrl::ProcessMessage(MSG* pMsg)
 {
 	// process editing shortcuts
 	if (pMsg->message == WM_KEYDOWN)
 	{
 		BOOL bCtrl = Misc::ModKeysArePressed(MKS_CTRL);
+		BOOL bShift = Misc::ModKeysArePressed(MKS_SHIFT);
 
 		if (bCtrl)
 		{
 			switch (pMsg->wParam)
 			{
-			case _T('c'): 
+			case _T('c'):
 			case _T('C'):
 				Copy();
 				return TRUE;
-				
+
 			case _T('v'):
 			case _T('V'):
 				Paste();
 				return TRUE;
-				
+
 			case _T('x'):
 			case _T('X'):
 				Copy();
 				Clear();
 				return TRUE;
-				
+
 			case _T('a'):
 			case _T('A'):
 				SetSel(0, -1);
 				return TRUE;
-				
+
 			case _T('f'):
 			case _T('F'):
 				DoEditFind(IDS_FIND_TITLE);
 				return TRUE;
-				
+
 			case _T('h'):
 			case _T('H'):
 				DoEditReplace(IDS_REPLACE_TITLE);
 				return TRUE;
-				
+
 			case _T('z'):
 			case _T('Z'):
 				return TRUE;
-				
+
 			case _T('y'):
 			case _T('Y'):
 				return TRUE;
@@ -554,4 +598,16 @@ bool CToDoCommentsCtrl::ProcessMessage(MSG* pMsg)
 	}
 
 	return false;
+}
+
+void CToDoCommentsCtrl::Copy()
+{
+	// only copy plain text
+	CUrlRichEditCtrl::Copy();
+
+	// append a newline character to fix a bug running as CF_TEXT
+	CString sText = Misc::GetClipboardText(GetSafeHwnd());
+	sText += '\n';
+
+	Misc::CopyTexttoClipboard(sText, GetSafeHwnd());
 }

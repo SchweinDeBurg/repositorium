@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // ContentTypeComboBox.cpp : implementation file
@@ -67,21 +80,27 @@ END_MESSAGE_MAP()
 int CContentTypeComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CComboBox::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 
 	if (!m_pContentMgr)
+	{
 		return -1;
+	}
 
 	if (!GetCount())
+	{
 		FillCombo();
+	}
 
 	return 0;
 }
 
 void CContentTypeComboBox::FillCombo()
 {
-	ASSERT (CComboBox::GetCount() == 0);
-	ASSERT (m_pContentMgr);
+	ASSERT(CComboBox::GetCount() == 0);
+	ASSERT(m_pContentMgr);
 
 	if (m_pContentMgr && !CComboBox::GetCount())
 	{
@@ -93,13 +112,17 @@ void CContentTypeComboBox::FillCombo()
 	}
 
 	if (m_nInitSel < GetCount())
+	{
 		SetCurSel(m_nInitSel);
+	}
 }
 
 void CContentTypeComboBox::PreSubclassWindow()
 {
 	if (!CComboBox::GetCount() && m_pContentMgr)
+	{
 		FillCombo();
+	}
 
 	CComboBox::PreSubclassWindow();
 }
@@ -109,7 +132,9 @@ int CContentTypeComboBox::GetSelectedFormat(CONTENTFORMAT& cf) const
 	int nSel = GetCurSel();
 
 	if (nSel != CB_ERR)
+	{
 		cf = m_pContentMgr->GetContentFormat(nSel);
+	}
 
 	return nSel;
 }
@@ -126,7 +151,9 @@ int CContentTypeComboBox::SetSelectedFormat(LPCTSTR szTypeID)
 int CContentTypeComboBox::GetCount() const
 {
 	if (m_pContentMgr)
+	{
 		return m_pContentMgr->GetNumContent();
+	}
 
 	// else
 	return CComboBox::GetCount();
@@ -135,15 +162,21 @@ int CContentTypeComboBox::GetCount() const
 void CContentTypeComboBox::SetCurSel(int nSel)
 {
 	if (GetSafeHwnd())
+	{
 		CComboBox::SetCurSel(nSel);
+	}
 	else
+	{
 		m_nInitSel = nSel;
+	}
 }
 
 int CContentTypeComboBox::GetCurSel() const
 {
 	if (GetSafeHwnd())
+	{
 		return CComboBox::GetCurSel();
+	}
 
 	// else
 	return m_nInitSel;

@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // RemoteFileDialog.cpp : implementation file
@@ -86,8 +99,8 @@ const UINT VIEWS[] = { LVS_SMALLICON, LVS_ICON, LVS_LIST, LVS_REPORT };
 /////////////////////////////////////////////////////////////////////////////
 // CRemoteFileDialog dialog
 
-CRemoteFileDialog::CRemoteFileDialog(CFtpConnection* pConnection, LPCTSTR szServer, LPCTSTR szFilters, LPCTSTR szInitialFolder)
-: m_pConnection(pConnection),
+CRemoteFileDialog::CRemoteFileDialog(CFtpConnection* pConnection, LPCTSTR szServer, LPCTSTR szFilters, LPCTSTR szInitialFolder):
+m_pConnection(pConnection),
 m_sServer(szServer),
 m_sCurFolder(szInitialFolder),
 m_eCurFolder(FES_NOBROWSE | FES_FOLDERS),
@@ -104,26 +117,28 @@ m_bFilling(FALSE)
 	//}}AFX_DATA_INIT
 	SetBordersDLU(3);
 
-	AddRCControl(_T("SCROLLBAR"), _T(""), _T(""), SBS_RIGHTALIGN, 0,270,160,8,16, IDC_GRIPPER);
-	AddRCControl(_T("EDITTEXT"), _T(""), _T(""),ES_AUTOHSCROLL | WS_TABSTOP, 0,74,144,154,13, IDC_FILENAME);
-	AddRCControl(_T("LTEXT"), _T(""), _T("Files of &type:"), 0, 0,0,164,40,8,IDC_FILETYPESLABEL);
-	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP, 0,74,163,154,100,IDC_FILETYPES);
-	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_TABSTOP, 0,230,143,50,14, IDOK);
-	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0,230,162,50,14,IDCANCEL);
-	AddRCControl(_T("LTEXT"), _T(""), _T("Current Folder:"), 0, 0,0,7,47,8,IDC_CURFOLDERLABEL);
-	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_AUTOHSCROLL | ES_READONLY, 0,58,4,210,14,IDC_CURRENTFOLDER);
-	AddRCControl(_T("CONTROL"), _T("SysListView32"), _T(""), LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_LIST | LVS_SHAREIMAGELISTS | WS_TABSTOP, WS_EX_CLIENTEDGE,0,22,280,114,IDC_FILELIST);
-	AddRCControl(_T("LTEXT"), _T(""), _T("Remote file &name:"), 0, 0,0,146,66,8,IDC_FILENAMELABEL);
+	AddRCControl(_T("SCROLLBAR"), _T(""), _T(""), SBS_RIGHTALIGN, 0, 270, 160, 8, 16, IDC_GRIPPER);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_AUTOHSCROLL | WS_TABSTOP, 0, 74, 144, 154, 13, IDC_FILENAME);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Files of &type:"), 0, 0, 0, 164, 40, 8, IDC_FILETYPESLABEL);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP, 0, 74, 163, 154, 100, IDC_FILETYPES);
+	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_TABSTOP, 0, 230, 143, 50, 14, IDOK);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0, 230, 162, 50, 14, IDCANCEL);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Current Folder:"), 0, 0, 0, 7, 47, 8, IDC_CURFOLDERLABEL);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_AUTOHSCROLL | ES_READONLY, 0, 58, 4, 210, 14, IDC_CURRENTFOLDER);
+	AddRCControl(_T("CONTROL"), _T("SysListView32"), _T(""), LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_LIST | LVS_SHAREIMAGELISTS | WS_TABSTOP, WS_EX_CLIENTEDGE, 0, 22, 280, 114, IDC_FILELIST);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Remote file &name:"), 0, 0, 0, 146, 66, 8, IDC_FILENAMELABEL);
 
 	InitFilterArray(szFilters);
 
 	if (m_sCurFolder.IsEmpty())
+	{
 		m_sCurFolder = AfxGetApp()->GetProfileString(_T("RemoteSettings\\LastFolder"), m_sServer);
+	}
 
 	if (m_sCurFolder.IsEmpty())
+	{
 		m_pConnection->GetCurrentDirectory(m_sCurFolder);
-	//	else
-	//		m_pConnection->SetCurrentDirectory(m_sCurFolder);
+	}
 }
 
 CRemoteFileDialog::~CRemoteFileDialog()
@@ -147,9 +162,13 @@ void CRemoteFileDialog::DoDataExchange(CDataExchange* pDX)
 		int nSel = m_cbFileTypes.GetCurSel();
 
 		if (nSel != CB_ERR)
+		{
 			m_sFilterExt = m_aFilters[m_cbFileTypes.GetItemData(nSel)].sExt;
+		}
 		else
+		{
 			m_sFilterExt.Empty();
+		}
 	}
 }
 
@@ -180,25 +199,35 @@ BOOL CRemoteFileDialog::OnInitDialog()
 	ModifyStyle(0, WS_CLIPCHILDREN);
 
 	if (!m_pConnection)
+	{
 		EndDialog(IDCANCEL);
+	}
 
 	if (FolderSelect())
+	{
 		GetDlgItem(IDC_FILENAMELABEL)->SetWindowText(_T("Remote folder &name:"));
+	}
 
 	// set up list image lists
 	if (m_silLarge.Initialize())
+	{
 		m_lcFiles.SetImageList(m_silLarge.GetImageList(), LVSIL_NORMAL);
+	}
 
 	if (m_silSmall.Initialize())
+	{
 		m_lcFiles.SetImageList(m_silSmall.GetImageList(), LVSIL_SMALL);
+	}
 
 	// init multi selection
 	if (m_dwOptions & RFD_MULTISELECT)
+	{
 		m_lcFiles.ModifyStyle(LVS_SINGLESEL, 0);
+	}
 
 	// init m_cbFileTypes
 	int nType = m_aFilters.GetSize();
-	ASSERT (nType); // must be atleast one
+	ASSERT(nType);  // must be atleast one
 
 	while (nType--)
 	{
@@ -304,16 +333,22 @@ int CRemoteFileDialog::DoModal(DWORD dwOptions, LPCTSTR szFilename)
 			sCaption.Format(_T("Save To Folder (%s)"), (LPCTSTR)m_sServer);
 		}
 		else
+		{
 			sCaption.Format(_T("Save As (%s)"), (LPCTSTR)m_sServer);
+		}
 	}
 	else // download
 	{
 		dwOptions |= RFD_FILEMUSTEXIST;
 
 		if (dwOptions & RFD_MULTISELECT)
+		{
 			sCaption.Format(_T("Select Files to Download (%s)"), (LPCTSTR)m_sServer);
+		}
 		else
+		{
 			sCaption.Format(_T("Select File to Download (%s)"), (LPCTSTR)m_sServer);
+		}
 	}
 
 	m_sFilenames = szFilename;
@@ -330,7 +365,9 @@ void CRemoteFileDialog::OnSelchangeFiletypes()
 
 	// re-process current directory if the filter has changed
 	if (m_sFilterExt != sCurFilterExt)
+	{
 		FillFileList();
+	}
 }
 
 void CRemoteFileDialog::OnChangeFilename()
@@ -343,7 +380,9 @@ void CRemoteFileDialog::OnChangeFilename()
 void CRemoteFileDialog::UpdateOKButton(BOOL bRefreshResults)
 {
 	if (bRefreshResults)
+	{
 		UpdateFileResults();
+	}
 
 	BOOL bEnable = m_aFiles.GetSize() || ((m_dwOptions & RFD_UPLOAD) &&
 		(m_dwOptions & RFD_FOLDERSELECT) && m_bRoot);
@@ -359,7 +398,9 @@ int CRemoteFileDialog::FindMatch(LPCTSTR szFilename)
 	sFilename.TrimRight();
 
 	if (sFilename.IsEmpty())
+	{
 		return -1;
+	}
 
 	int nMatch = -1;
 	LVFINDINFO lvfi = { LVFI_STRING, szFilename, 0, { 0, 0 }, VK_DOWN };
@@ -385,7 +426,9 @@ void CRemoteFileDialog::OnDblclkFilelist(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 		{
 		case RFDT_FILE:
 			if (!FolderSelect())
+			{
 				OnOK();
+			}
 			break;
 
 		case RFDT_FOLDER:
@@ -401,7 +444,9 @@ void CRemoteFileDialog::OnDblclkFilelist(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 void CRemoteFileDialog::OnUpOneLevel()
 {
 	if (!(m_dwOptions & RFD_NONAVIGATE))
+	{
 		SetCurrentFolder(_T(".."));
+	}
 }
 
 void CRemoteFileDialog::SetCurrentFolder(LPCTSTR szFolder)
@@ -411,7 +456,9 @@ void CRemoteFileDialog::SetCurrentFolder(LPCTSTR szFolder)
 	if (m_pConnection)
 	{
 		if (m_pConnection->SetCurrentDirectory(szFolder))
+		{
 			FillFileList();
+		}
 
 		else if (m_pConnection->SetCurrentDirectory(_T("/")))
 		{
@@ -431,7 +478,9 @@ void CRemoteFileDialog::FillFileList()
 		m_bRoot = (m_sCurFolder == _T("/"));
 
 		if (m_bRoot)
+		{
 			m_sCurFolder = _T("(root)");
+		}
 
 		UpdateData(FALSE);
 
@@ -453,7 +502,9 @@ void CRemoteFileDialog::FillFileList()
 			if (!ff.IsDots())
 			{
 				if (ff.IsDirectory())
+				{
 					AddFileItem(ff.GetFileName(), RFDT_FOLDER, nID++, 0, NULL, m_silLarge.GetFolderImageIndex());
+				}
 
 				else if (!FolderSelect()) // check extension matches filter
 				{
@@ -512,7 +563,9 @@ int CRemoteFileDialog::GetFirstSelectedItem()
 int CRemoteFileDialog::AddFileItem(LPCTSTR szFileName, int nType, UINT nUniqueID, DWORD dwFileSize, const FILETIME* pLastMod, int nImage)
 {
 	if (nImage == -1)
+	{
 		nImage = CSysImageList().GetFileImageIndex(szFileName);
+	}
 
 	int nItem = m_lcFiles.InsertItem(LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM,
 		0, szFileName, 0, 0, nImage, nUniqueID);
@@ -561,13 +614,19 @@ CString CRemoteFileDialog::FormatSize(DWORD dwSize)
 	CString sSize(_T("0 KB"));
 
 	if (dwSize > 0 && dwSize < 1024)
+	{
 		sSize = _T("1 KB");
+	}
 
 	else if (dwSize < (1024 * 1024))
+	{
 		sSize.Format(_T("%d KB"), dwSize / 1024);
+	}
 
 	else
+	{
 		sSize.Format(_T("%.02f MB"), dwSize / (1024.0 * 1024.0));
+	}
 
 	return sSize;
 }
@@ -578,11 +637,13 @@ int CALLBACK CRemoteFileDialog::SortProc(LPARAM lParam1, LPARAM lParam2, LPARAM 
 
 	FILEITEM fi1, fi2;
 
-	VERIFY (pMapItems->Lookup(lParam1, fi1));
-	VERIFY (pMapItems->Lookup(lParam2, fi2));
+	VERIFY(pMapItems->Lookup(lParam1, fi1));
+	VERIFY(pMapItems->Lookup(lParam2, fi2));
 
 	if (fi1.nType != fi2.nType)
+	{
 		return fi1.nType - fi2.nType;
+	}
 
 	return fi1.sFilename.CompareNoCase(fi2.sFilename);
 }
@@ -592,7 +653,7 @@ int CRemoteFileDialog::GetItemType(int nItem)
 	FILEITEM fi;
 	int nUniqueID = (int)m_lcFiles.GetItemData(nItem);
 
-	VERIFY (m_mapItems.Lookup(nUniqueID, fi));
+	VERIFY(m_mapItems.Lookup(nUniqueID, fi));
 
 	return fi.nType;
 }
@@ -600,12 +661,14 @@ int CRemoteFileDialog::GetItemType(int nItem)
 DWORD CRemoteFileDialog::GetItemSize(int nItem)
 {
 	if (nItem < 0 || nItem > m_lcFiles.GetItemCount())
+	{
 		return 0;
+	}
 
 	FILEITEM fi;
 	int nUniqueID = (int)m_lcFiles.GetItemData(nItem);
 
-	VERIFY (m_mapItems.Lookup(nUniqueID, fi));
+	VERIFY(m_mapItems.Lookup(nUniqueID, fi));
 
 	return fi.dwSize;
 }
@@ -615,7 +678,9 @@ void CRemoteFileDialog::OnItemchangedFilelist(NMHDR* /*pNMHDR*/, LRESULT* pResul
 	*pResult = 0;
 
 	if (m_bFilling)
+	{
 		return;
+	}
 
 	// rebuild results at the same time
 	int nSelCount = m_lcFiles.GetSelectedCount();
@@ -631,7 +696,9 @@ void CRemoteFileDialog::OnItemchangedFilelist(NMHDR* /*pNMHDR*/, LRESULT* pResul
 			CString sFilePath(sFileName);
 
 			if (!m_bRoot)
+			{
 				sFilePath.Format(_T("%s/%s"), m_sCurFolder, sFileName);
+			}
 
 			m_aFiles.RemoveAll();
 			m_aFiles.Add(FILERESULT(sFilePath, GetItemSize(nSel)));
@@ -656,7 +723,9 @@ void CRemoteFileDialog::OnItemchangedFilelist(NMHDR* /*pNMHDR*/, LRESULT* pResul
 				CString sFilePath(sFileName);
 
 				if (!m_bRoot)
+				{
 					sFilePath.Format(_T("%s/%s"), m_sCurFolder, sFileName);
+				}
 
 				m_aFiles.Add(FILERESULT(sFilePath, GetItemSize(nItem)));
 
@@ -693,7 +762,9 @@ void CRemoteFileDialog::InitFilterArray(LPCTSTR szFilters)
 				sFilters = sFilters.Mid(nFind + 1);
 
 				if (!sName.IsEmpty() && !sFilter.IsEmpty())
+				{
 					m_aFilters.Add(FILEFILTER(sName, sFilter));
+				}
 
 				nFind = sFilters.Find(_T('|')); // next pair
 			}
@@ -702,7 +773,9 @@ void CRemoteFileDialog::InitFilterArray(LPCTSTR szFilters)
 
 	// add default if no filters found
 	if (!m_aFilters.GetSize())
+	{
 		m_aFilters.Add(FILEFILTER(_T("All Files (*.*)"), _T("")));
+	}
 }
 
 void CRemoteFileDialog::OnOK()
@@ -724,7 +797,9 @@ void CRemoteFileDialog::OnOK()
 		(m_dwOptions & RFD_FOLDERSELECT) && m_bRoot);
 
 	if (bOK)
+	{
 		CRuntimeDlg::OnOK();
+	}
 }
 
 void CRemoteFileDialog::OnSize(UINT nType, int cx, int cy)
@@ -732,7 +807,9 @@ void CRemoteFileDialog::OnSize(UINT nType, int cx, int cy)
 	CRuntimeDlg::OnSize(nType, cx, cy);
 
 	if (!GetDlgItem(IDC_CURRENTFOLDER))
-		return; // not ready
+	{
+		return;   // not ready
+	}
 
 	// we use the cancel button as our placeholder
 	CRect rCancel = OffsetCtrl(IDCANCEL);
@@ -877,7 +954,9 @@ void CRemoteFileDialog::UpdateFileResults()
 	m_aFiles.RemoveAll();
 
 	if (m_sFilenames.IsEmpty())
+	{
 		return;
+	}
 
 	// we just parse m_sFilenames
 	CString sFileNames(m_sFilenames);
@@ -897,7 +976,9 @@ void CRemoteFileDialog::UpdateFileResults()
 			CString sFilePath(sFileNames);
 
 			if (!m_bRoot)
+			{
 				sFilePath.Format(_T("%s/%s"), m_sCurFolder, sFileNames);
+			}
 
 			m_aFiles.Add(FILERESULT(sFilePath, GetItemSize(nFindMatch)));
 		}
@@ -921,7 +1002,9 @@ void CRemoteFileDialog::UpdateFileResults()
 					CString sFilePath(sFileName);
 
 					if (!m_bRoot)
+					{
 						sFilePath.Format(_T("%s/%s"), m_sCurFolder, sFileName);
+					}
 
 					m_aFiles.Add(FILERESULT(sFilePath, GetItemSize(nFindMatch)));
 				}
@@ -930,7 +1013,9 @@ void CRemoteFileDialog::UpdateFileResults()
 				nStartQuote = sFileNames.Find(_T('\"'), nEndQuote + 1);
 			}
 			else
-				nStartQuote = -1; // we're done
+			{
+				nStartQuote = -1;   // we're done
+			}
 		}
 	}
 }
@@ -938,7 +1023,9 @@ void CRemoteFileDialog::UpdateFileResults()
 CString CRemoteFileDialog::GetFirstPath()
 {
 	if (GetPathCount())
+	{
 		return m_aFiles[0].sFilePath;
+	}
 
 	// else
 	return _T("");

@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ShortcutManager.cpp: implementation of the CShortcutManager class.
@@ -44,7 +58,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -89,7 +103,9 @@ BOOL CShortcutManager::Initialize(CWnd* pOwner, WORD wInvalidComb, WORD wFallbac
 BOOL CShortcutManager::Release()
 {
 	if (!IsHooked())
+	{
 		return TRUE;
+	}
 
 	return HookWindow(NULL);
 }
@@ -140,24 +156,32 @@ BOOL CShortcutManager::AddShortcut(UINT nCmdID, WORD wVirtKeyCode, WORD wModifie
 {
 	// test for invalid modifiers
 	if (ValidateModifiers(wModifiers, wVirtKeyCode) != wModifiers)
+	{
 		return FALSE;
+	}
 
 	// check for existing cmds using this shortcut
 	DWORD dwShortcut = MAKELONG(wVirtKeyCode, wModifiers);
 
 	if (!nCmdID || !dwShortcut)
+	{
 		return FALSE;
+	}
 
 	UINT nOtherCmdID = 0;
 
 	if (m_mapShortcut2ID.Lookup(dwShortcut, nOtherCmdID) && nOtherCmdID)
+	{
 		return FALSE;
+	}
 
 	// check for existing shortcut on this cmd that we'll need to clean up
 	DWORD dwOtherShortcut = 0;
 
 	if (m_mapID2Shortcut.Lookup(nCmdID, dwOtherShortcut))
+	{
 		m_mapShortcut2ID.RemoveKey(dwOtherShortcut);
+	}
 
 	m_mapShortcut2ID[dwShortcut] = nCmdID;
 	m_mapID2Shortcut[nCmdID] = dwShortcut;
@@ -168,11 +192,15 @@ BOOL CShortcutManager::AddShortcut(UINT nCmdID, WORD wVirtKeyCode, WORD wModifie
 WORD CShortcutManager::ValidateModifiers(WORD wModifiers, WORD wVirtKeyCode) const
 {
 	if (!m_wInvalidComb) // optimization
+	{
 		return wModifiers;
+	}
 
 	// check for our special modifiers first
 	if ((m_wInvalidComb & HKCOMB_EXFKEYS) && (wVirtKeyCode >= VK_F1 && wVirtKeyCode <= VK_F24))
+	{
 		return wModifiers;
+	}
 
 	// test for invalid combinations
 	BOOL bCtrl = (wModifiers & HOTKEYF_CONTROL);
@@ -191,7 +219,9 @@ WORD CShortcutManager::ValidateModifiers(WORD wModifiers, WORD wVirtKeyCode) con
 	bFail |= ((m_wInvalidComb & HKCOMB_SCA) && bCtrl && bShift && bAlt);
 
 	if (bFail)
+	{
 		return (WORD)(m_wFallbackModifiers | (bExtended ? HOTKEYF_EXT : 0x0));
+	}
 
 	// else ok
 	return wModifiers;
@@ -216,11 +246,15 @@ UINT CShortcutManager::ProcessMessage(const MSG* pMsg, DWORD* pShortcut) const
 {
 	// only process accelerators if we are enabled and visible
 	if (!IsWindowEnabled() || !IsWindowVisible())
+	{
 		return FALSE;
+	}
 
 	// we only process keypresses
 	if (pMsg->message != WM_KEYDOWN && pMsg->message != WM_SYSKEYDOWN)
+	{
 		return FALSE;
+	}
 
 	// also check that it's one of our children with the focus
 	// not another popup window
@@ -230,7 +264,9 @@ UINT CShortcutManager::ProcessMessage(const MSG* pMsg, DWORD* pShortcut) const
 	CWnd* pTopParent = pWnd->GetParentOwner();
 
 	if (pTopParent != pMainWnd)
+	{
 		return FALSE;
+	}
 
 	switch (pMsg->wParam)
 	{
@@ -255,13 +291,17 @@ UINT CShortcutManager::ProcessMessage(const MSG* pMsg, DWORD* pShortcut) const
 		{
 			// don't process messages destined for hotkey controls!
 			if (CWinClasses::IsClass(pMsg->hwnd, WC_HOTKEY))
+			{
 				return FALSE;
+			}
 
 			// don't process AltGr if destined for edit control
 			BOOL bEdit = CWinClasses::IsEditControl(pMsg->hwnd);
 
 			if (bEdit && Misc::KeyIsPressed(VK_RMENU))
+			{
 				return FALSE;
+			}
 
 			// get DWORD shortcut
 			BOOL bExtKey = (pMsg->lParam & 0x01000000);
@@ -271,7 +311,9 @@ UINT CShortcutManager::ProcessMessage(const MSG* pMsg, DWORD* pShortcut) const
 			UINT nCmdID = 0;
 
 			if (!m_mapShortcut2ID.Lookup(dwShortcut, nCmdID) || !nCmdID)
+			{
 				return FALSE;
+			}
 
 			// check if HKCOMB_EDITCTRLS is set and a edit has the focus
 			// and the shortcut clashes
@@ -279,7 +321,9 @@ UINT CShortcutManager::ProcessMessage(const MSG* pMsg, DWORD* pShortcut) const
 			{
 				// 1. check does not clash with edit shortcuts
 				if (IsEditShortcut(dwShortcut))
+				{
 					return FALSE;
+				}
 
 				//WORD wVirtKeyCode = LOWORD(dwShortcut);
 				WORD wModifiers = HIWORD(dwShortcut);
@@ -291,15 +335,21 @@ UINT CShortcutManager::ProcessMessage(const MSG* pMsg, DWORD* pShortcut) const
 				}
 				// 3. else must have <ctrl> or <alt>
 				else if (!(wModifiers & (HOTKEYF_ALT | HOTKEYF_CONTROL)))
+				{
 					return FALSE;
+				}
 			}
 
 			// return command ID
 			if (m_bAutoSendCmds)
+			{
 				SendMessage(WM_COMMAND, nCmdID);
+			}
 
 			if (pShortcut)
+			{
 				*pShortcut = dwShortcut;
+			}
 
 			return nCmdID;
 		}
@@ -315,7 +365,6 @@ BOOL CShortcutManager::IsEditShortcut(DWORD dwShortcut)
 	case MAKELONG('C', HOTKEYF_CONTROL): // copy
 	case MAKELONG('V', HOTKEYF_CONTROL): // paste
 	case MAKELONG('X', HOTKEYF_CONTROL): // cut
-		//	case MAKELONG('Z', HOTKEYF_CONTROL): // undo
 	case MAKELONG(VK_LEFT, HOTKEYF_CONTROL | HOTKEYF_EXT): // left one word
 	case MAKELONG(VK_RIGHT, HOTKEYF_CONTROL | HOTKEYF_EXT): // right one word
 	case MAKELONG(VK_DELETE, 0):
@@ -360,7 +409,9 @@ LRESULT CShortcutManager::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM 
 void CShortcutManager::PrepareMenuItems(CMenu* pMenu) const
 {
 	if (!pMenu || !pMenu->GetSafeHmenu())
+	{
 		return;
+	}
 
 	// we iterate all the menu items
 	// if we find a match we get the menu text and add the shortcut
@@ -372,8 +423,10 @@ void CShortcutManager::PrepareMenuItems(CMenu* pMenu) const
 		UINT nCmdID = pMenu->GetMenuItemID(nItem);
 		DWORD dwShortcut = GetShortcut(nCmdID);
 
-		if (!nCmdID || nCmdID == (UINT)-1)
+		if (!nCmdID || nCmdID == (UINT) - 1)
+		{
 			continue;
+		}
 
 		// note: we must handle items without shortcuts as well
 		// as ones with
@@ -390,7 +443,9 @@ void CShortcutManager::PrepareMenuItems(CMenu* pMenu) const
 		CString sMenuText;
 
 		if (!minfo.cch)
-			continue; // ??
+		{
+			continue;   // ??
+		}
 
 		minfo.cch++;
 		minfo.dwTypeData = sMenuText.GetBuffer(minfo.cch);
@@ -398,14 +453,18 @@ void CShortcutManager::PrepareMenuItems(CMenu* pMenu) const
 		sMenuText.ReleaseBuffer();
 
 		// look for '\t' indicating existing hint
-		int nTab = sMenuText.Find('\t');
+		int nTab = sMenuText.Find(_T('\t'));
 
 		// remove it
 		if (nTab >= 0)
+		{
 			sMenuText = sMenuText.Left(nTab);
+		}
 		// else if it didn't have one and it has no shortcut then continue
 		else if (!dwShortcut)
+		{
 			continue;
+		}
 
 		// add new hint
 		CString sShortcut = GetShortcutText(dwShortcut);
@@ -428,13 +487,15 @@ int CShortcutManager::BuildMapping(UINT nMenuID, CStringArray& aMapping, char cD
 	CMenu menu;
 
 	if (!menu.LoadMenu(nMenuID) || !menu.GetMenuItemCount())
+	{
 		return 0;
+	}
 
 	return BuildMapping(&menu, NULL, aMapping, cDelim);
 }
 
 int CShortcutManager::BuildMapping(CMenu* pMenu, LPCTSTR szParentName,
-											  CStringArray& aMapping, char cDelim)
+	CStringArray& aMapping, char cDelim)
 {
 	int nItems = pMenu->GetMenuItemCount();
 
@@ -445,9 +506,13 @@ int CShortcutManager::BuildMapping(CMenu* pMenu, LPCTSTR szParentName,
 		pMenu->GetMenuString(nItem, sMenuText, MF_BYPOSITION);
 
 		if (szParentName && *szParentName)
+		{
 			sItemText.Format(_T("%s > %s"), szParentName, sMenuText);
+		}
 		else
+		{
 			sItemText = sMenuText;
+		}
 
 		UINT nCmdID = pMenu->GetMenuItemID(nItem);
 
@@ -479,9 +544,20 @@ int CShortcutManager::BuildMapping(CMenu* pMenu, LPCTSTR szParentName,
 
 	// add a space between sections unless already added
 	if (aMapping.GetSize() && !aMapping[aMapping.GetSize() - 1].IsEmpty())
+	{
 		aMapping.Add(_T(""));
+	}
 
 	return aMapping.GetSize();
+}
+
+UINT CShortcutManager::GetCommandID(DWORD dwShortcut)
+{
+	UINT nCmdID = 0;
+
+	m_mapShortcut2ID.Lookup(dwShortcut, nCmdID);
+
+	return nCmdID;
 }
 
 DWORD CShortcutManager::GetShortcut(UINT nCmdID) const
@@ -514,7 +590,9 @@ CString CShortcutManager::GetShortcutTextByCmd(UINT nCmdID)
 CString CShortcutManager::GetShortcutText(DWORD dwShortcut)
 {
 	if (!dwShortcut || dwShortcut == NO_SHORTCUT)
+	{
 		return _T("");
+	}
 
 	CString sText;
 
@@ -542,9 +620,13 @@ CString CShortcutManager::GetShortcutText(DWORD dwShortcut)
 	CString sKey = GetKeyName(wVirtKeyCode, (wModifiers & HOTKEYF_EXT));
 
 	if (!sKey.IsEmpty())
+	{
 		sText += sKey;
+	}
 	else
+	{
 		sText.Empty();
+	}
 
 	return sText;
 }
@@ -560,7 +642,9 @@ CString CShortcutManager::GetKeyName(WORD wVirtKeyCode, BOOL bExtended)
 	LPARAM lParam = (wScanCode * 0x00010000);
 
 	if (bExtended)
+	{
 		lParam += 0x01000000;
+	}
 
 	GetKeyNameText(lParam, szKeyName, KEYNAMELEN);
 
@@ -583,7 +667,9 @@ void CShortcutManager::LoadSettings()
 		DWORD dwShortcut = (DWORD)prefs.GetProfileInt(sKey, _T("Shortcut"), 0);
 
 		if (nCmdID && dwShortcut)
+		{
 			SetShortcut(nCmdID, dwShortcut);
+		}
 	}
 }
 

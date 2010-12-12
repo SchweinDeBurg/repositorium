@@ -54,16 +54,11 @@ struct UITHEME
 	COLORREF crAppBackDark;
 	COLORREF crAppBackLight;
 	COLORREF crAppLines;
-	//COLORREF crAppText;
 	COLORREF crMenuBack;
 	COLORREF crToolbarDark;
 	COLORREF crToolbarLight;
 	COLORREF crStatusBarDark;
 	COLORREF crStatusBarLight;
-	//COLORREF ;
-	//COLORREF ;
-	//COLORREF ;
-	//COLORREF ;
 };
 
 #endif // !defined(AFX_UITHEME_H__7747061B_7841_47E8_BB36_89C11D6DC934__INCLUDED_)

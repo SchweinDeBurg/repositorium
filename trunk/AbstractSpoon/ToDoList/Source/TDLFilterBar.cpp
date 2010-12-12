@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TDLFilterBar.cpp : implementation file
@@ -61,9 +75,10 @@ struct FILTERCTRL
 	TDC_COLUMN nType;
 };
 
-static FILTERCTRL FILTERCTRLS[] = 
+static FILTERCTRL FILTERCTRLS[] =
 {
 	{ IDC_FILTERLABEL, IDC_FILTERCOMBO, 22, 150, (TDC_COLUMN)-1 },
+	{ IDC_TITLEFILTERLABEL, IDC_TITLEFILTERTEXT, 47, 75, (TDC_COLUMN)-1 },
 	{ IDC_PRIORITYFILTERLABEL, IDC_PRIORITYFILTERCOMBO, 47, 75, TDCC_PRIORITY },
 	{ IDC_RISKFILTERLABEL, IDC_RISKFILTERCOMBO, 47, 75, TDCC_RISK },
 	{ IDC_ALLOCTOFILTERLABEL, IDC_ALLOCTOFILTERCOMBO, 47, 75, TDCC_ALLOCTO },
@@ -81,20 +96,26 @@ const int NUMFILTERCTRLS = sizeof(FILTERCTRLS) / sizeof(FILTERCTRL);
 /////////////////////////////////////////////////////////////////////////////
 // CFilterBar dialog
 
-CTDLFilterBar::CTDLFilterBar(CWnd* pParent /*=NULL*/)
-	: CDialog(IDD_FILTER_BAR, pParent), 
-	  m_cbCategoryFilter(TRUE, IDS_NOCATEGORY, IDS_TDC_ANY),
-	  m_cbAllocToFilter(TRUE, IDS_NOALLOCTO, IDS_TDC_ANYONE),
-	  m_cbAllocByFilter(TRUE, IDS_NOONE, IDS_TDC_ANYONE),
-	  m_cbStatusFilter(TRUE, IDS_NOSTATUS, IDS_TDC_ANY),
-	  m_cbVersionFilter(TRUE, IDS_NOVERSION, IDS_TDC_ANY),
-	  m_bShowDivider(TRUE),
-	  m_nView(FTCV_UNSET)
+CTDLFilterBar::CTDLFilterBar(CWnd* pParent /*=NULL*/):
+CDialog(IDD_FILTER_BAR, pParent),
+m_cbCategoryFilter(TRUE, IDS_NOCATEGORY, IDS_TDC_ANY),
+m_cbAllocToFilter(TRUE, IDS_NOALLOCTO, IDS_TDC_ANYONE),
+m_cbAllocByFilter(TRUE, IDS_NOONE, IDS_TDC_ANYONE),
+m_cbStatusFilter(TRUE, IDS_NOSTATUS, IDS_TDC_ANY),
+m_cbVersionFilter(TRUE, IDS_NOVERSION, IDS_TDC_ANY),
+m_bShowDivider(TRUE),
+m_nView(FTCV_UNSET),
+m_bCustomFilter(FALSE)
 {
 	//{{AFX_DATA_INIT(CFilterBar)
 	//}}AFX_DATA_INIT
 
 	m_aVisibility.SetSize(TDCC_LAST);
+
+	// add update button to title text
+	m_eTitleFilter.AddButton(1, 0xC4,
+		CEnString(IDS_TDC_UPDATEFILTER_TIP),
+		CALC_BTNWIDTH, _T("Wingdings"));
 }
 
 
@@ -112,10 +133,9 @@ void CTDLFilterBar::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATUSFILTERCOMBO, m_cbStatusFilter);
 	DDX_Control(pDX, IDC_PRIORITYFILTERCOMBO, m_cbPriorityFilter);
 	DDX_Control(pDX, IDC_RISKFILTERCOMBO, m_cbRiskFilter);
-// 	DDX_CBString(pDX, IDC_ALLOCBYFILTERCOMBO, m_filter.sAllocBy);
-// 	DDX_CBString(pDX, IDC_STATUSFILTERCOMBO, m_filter.sStatus);
-// 	DDX_CBString(pDX, IDC_VERSIONFILTERCOMBO, m_filter.sVersion);
-	
+	DDX_Control(pDX, IDC_TITLEFILTERTEXT, m_eTitleFilter);
+	DDX_Text(pDX, IDC_TITLEFILTERTEXT, m_filter.sTitle);
+
 	// special handling
 	if (pDX->m_bSaveAndValidate)
 	{
@@ -127,23 +147,35 @@ void CTDLFilterBar::DoDataExchange(CDataExchange* pDX)
 		DDX_CBIndex(pDX, IDC_PRIORITYFILTERCOMBO, nIndex);
 
 		if (nIndex == 0) // any
+		{
 			m_filter.nPriority = FT_ANYPRIORITY;
+		}
 
 		else if (nIndex == 1) // none
+		{
 			m_filter.nPriority = FT_NOPRIORITY;
+		}
 		else
+		{
 			m_filter.nPriority = nIndex - 2;
+		}
 
 		// risk
 		DDX_CBIndex(pDX, IDC_RISKFILTERCOMBO, nIndex);
 
 		if (nIndex == 0) // any
+		{
 			m_filter.nRisk = FT_ANYRISK;
+		}
 
 		else if (nIndex == 1) // none
+		{
 			m_filter.nRisk = FT_NORISK;
+		}
 		else
+		{
 			m_filter.nRisk = nIndex - 2;
+		}
 
 		// cats
 		m_cbCategoryFilter.GetChecked(m_filter.aCategories);
@@ -166,29 +198,48 @@ void CTDLFilterBar::DoDataExchange(CDataExchange* pDX)
 	else
 	{
 		// filter
-		m_cbTaskFilter.SetSelectedFilter(m_filter.nFilter);
+		if (m_bCustomFilter)
+		{
+			m_cbTaskFilter.SetCustomFilter(m_sCustomFilter);
+		}
+		else
+		{
+			m_cbTaskFilter.SetSelectedFilter(m_filter.nFilter);
+		}
 
 		// priority
 		int nIndex;
-		
+
 		if (m_filter.nPriority == FT_ANYPRIORITY)
+		{
 			nIndex = 0;
+		}
 
 		else if (m_filter.nPriority == FT_NOPRIORITY)
+		{
 			nIndex = 1;
+		}
 		else
+		{
 			nIndex = m_filter.nPriority + 2;
+		}
 
 		DDX_CBIndex(pDX, IDC_PRIORITYFILTERCOMBO, nIndex);
 
 		// risk
 		if (m_filter.nRisk == FT_ANYRISK)
+		{
 			nIndex = 0;
+		}
 
 		else if (m_filter.nRisk == FT_NORISK)
+		{
 			nIndex = 1;
+		}
 		else
+		{
 			nIndex = m_filter.nRisk + 2;
+		}
 
 		DDX_CBIndex(pDX, IDC_RISKFILTERCOMBO, nIndex);
 
@@ -230,6 +281,7 @@ BEGIN_MESSAGE_MAP(CTDLFilterBar, CDialog)
 	ON_CBN_CLOSEUP(IDC_OPTIONFILTERCOMBO, OnSelchangeFilter)
 	ON_NOTIFY_EX_RANGE(TTN_NEEDTEXT, 0, 0xFFFF, OnToolTipNotify)
 	ON_WM_ERASEBKGND()
+	ON_REGISTERED_MESSAGE(WM_EE_BTNCLICK, OnEEBtnClick)
 	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
@@ -243,13 +295,15 @@ BOOL CTDLFilterBar::Create(CWnd* pParentWnd, UINT nID, BOOL bVisible)
 		SetDlgCtrlID(nID);
 		ShowWindow(bVisible ? SW_SHOW : SW_HIDE);
 
+		GetDlgItem(IDC_TITLEFILTERTEXT)->ModifyStyle(0, ES_WANTRETURN, 0);
+
 		return TRUE;
 	}
 
 	return FALSE;
 }
 
-void CTDLFilterBar::OnSelchangeFilter() 
+void CTDLFilterBar::OnSelchangeFilter()
 {
 	FTDCFILTER fPrev(m_filter);
 	UpdateData(); // updates m_filter
@@ -258,7 +312,48 @@ void CTDLFilterBar::OnSelchangeFilter()
 
 	// if the main 'Show" filter has changed then we need to re-init the options
 	if (m_filter.nFilter != fPrev.nFilter)
+	{
 		m_cbOptions.Initialize(m_filter, m_nView);
+	}
+}
+
+LRESULT CTDLFilterBar::OnEEBtnClick(WPARAM /*wp*/, LPARAM /*lp*/)
+{
+	OnSelchangeFilter();
+	return 0L;
+}
+
+BOOL CTDLFilterBar::PreTranslateMessage(MSG* pMsg)
+{
+	// handle return key in title field
+	if (pMsg->message == WM_KEYDOWN && pMsg->hwnd == m_eTitleFilter &&
+			pMsg->wParam == VK_RETURN)
+	{
+		OnSelchangeFilter();
+		return TRUE;
+	}
+
+	return CDialog::PreTranslateMessage(pMsg);
+}
+
+void CTDLFilterBar::SetCustomFilter(BOOL bCustom, LPCTSTR szFilter)
+{
+	if (bCustom)
+	{
+		m_cbTaskFilter.SetCustomFilter(szFilter);
+	}
+
+	m_bCustomFilter = bCustom;
+	m_sCustomFilter = szFilter;
+
+	// disable controls if a custom filter.
+	// just do a repos because this also handles enabled state
+	ReposControls();
+}
+
+void CTDLFilterBar::RemoveCustomFilter()
+{
+	m_cbTaskFilter.RemoveCustomFilter();
 }
 
 void CTDLFilterBar::RefreshFilterControls(const CFilteredToDoCtrl& tdc)
@@ -272,51 +367,70 @@ void CTDLFilterBar::RefreshFilterControls(const CFilteredToDoCtrl& tdc)
 	// get filter
 	tdc.GetFilter(m_filter);
 	m_nView = tdc.GetView();
-	
+
+	// get custom filter
+	m_bCustomFilter = tdc.HasCustomFilter();
+	m_sCustomFilter = tdc.GetCustomFilterName();
+
+	// if this todoctrl does not have a custom filter
+	// then remove the option from the combo
+	if (!tdc.CustomFilterHasRules())
+	{
+		m_cbTaskFilter.RemoveCustomFilter();
+	}
+	else
+	{
+		m_cbTaskFilter.SetCustomFilter(tdc.GetCustomFilterName());
+	}
+
 	// alloc to filter
 	CStringArray aItems;
 
 	tdc.GetAllocToNames(aItems);
 	aItems.Add(_T("")); // add blank item to top
 	SetComboBoxItems(m_cbAllocToFilter, aItems);
-	
+
 	// alloc by filter
 	tdc.GetAllocByNames(aItems);
 	aItems.Add(_T("")); // add blank item to top
 	SetComboBoxItems(m_cbAllocByFilter, aItems);
-	
+
 	// category filter
 	tdc.GetCategoryNames(aItems);
 	aItems.Add(_T("")); // add blank item to top
 	SetComboBoxItems(m_cbCategoryFilter, aItems);
-	
+
 	// status filter
 	tdc.GetStatusNames(aItems);
 	aItems.Add(_T("")); // add blank item to top
 	SetComboBoxItems(m_cbStatusFilter, aItems);
-	
+
 	// version filter
 	tdc.GetVersionNames(aItems);
 	aItems.Add(_T("")); // add blank item to top
 	SetComboBoxItems(m_cbVersionFilter, aItems);
-	
+
 	// priority
 	m_cbPriorityFilter.SetColors(m_aPriorityColors);
-	m_cbPriorityFilter.InsertColor(0, (COLORREF)-1, CEnString(IDS_TDC_ANY)); // add a blank item
-	
+	m_cbPriorityFilter.InsertColor(0, (COLORREF) - 1, CEnString(IDS_TDC_ANY)); // add a blank item
+
 	// risk never needs changing
-	
+
 	// update UI
 	UpdateData(FALSE);
 	Invalidate();
+
+	// disable controls if a custom filter.
+	// just do a repos because this also handles enabled state
+	ReposControls();
 }
 
 void CTDLFilterBar::SetFilterLabelAlignment(BOOL bLeft)
 {
 	UINT nAlign = bLeft ? SS_LEFT : SS_RIGHT;
-	
+
 	int nLabel = NUMFILTERCTRLS;
-	
+
 	while (nLabel--)
 	{
 		UINT nLabelID = FILTERCTRLS[nLabel].nIDLabel;
@@ -340,19 +454,21 @@ void CTDLFilterBar::SetPriorityColors(const CDWordArray& aColors)
 		int nSel = m_cbPriorityFilter.GetCurSel();
 
 		m_cbPriorityFilter.SetColors(aColors);
-		m_cbPriorityFilter.InsertColor(0, (COLORREF)-1, CEnString(IDS_TDC_ANY)); // add a blank item
+		m_cbPriorityFilter.InsertColor(0, (COLORREF) - 1, CEnString(IDS_TDC_ANY)); // add a blank item
 
 		m_cbPriorityFilter.SetCurSel(nSel);
 	}
 }
 
-void CTDLFilterBar::OnSize(UINT nType, int cx, int cy) 
+void CTDLFilterBar::OnSize(UINT nType, int cx, int cy)
 {
 	CDialog::OnSize(nType, cx, cy);
-	
+
 	// check we're not in the middle of creation
 	if (m_cbStatusFilter.GetSafeHwnd())
+	{
 		ReposControls(cx, FALSE);
+	}
 }
 
 int CTDLFilterBar::CalcHeight(int nWidth)
@@ -366,7 +482,9 @@ void CTDLFilterBar::SetVisibleFilters(const CTDCColumnArray& aFilters)
 	int nFilter = m_aVisibility.GetSize();
 
 	while (nFilter--)
+	{
 		m_aVisibility[nFilter] = FALSE;
+	}
 
 	// then set the visible ones
 	int nItem = aFilters.GetSize();
@@ -383,7 +501,9 @@ void CTDLFilterBar::SetVisibleFilters(const CTDCColumnArray& aFilters)
 BOOL CTDLFilterBar::WantShowFilter(TDC_COLUMN nType)
 {
 	if ((int)nType < 0) // first filter is -1 and is therefore always visible
+	{
 		return TRUE;
+	}
 
 	return (BOOL)m_aVisibility[(DWORD)nType];
 }
@@ -422,7 +542,7 @@ int CTDLFilterBar::ReposControls(int nWidth, BOOL bCalcOnly)
 	// Note: All calculations are performed in DLU until just before the move
 	// is performed. This ensures that we minimize the risk of rounding errors.
 	CDlgUnits dlu(*this);
-	
+
 	int nCtrlHeight = dwm.OffsetCtrl(this, IDC_FILTERCOMBO).Height();
 	int nXPosDLU = 0, nYPosDLU = 2, nVisible = 0;
 
@@ -436,17 +556,17 @@ int CTDLFilterBar::ReposControls(int nWidth, BOOL bCalcOnly)
 	const FILTERCTRL& fc0 = FILTERCTRLS[0];
 	const FILTERCTRL& fc1 = FILTERCTRLS[1];
 	int nLineIndentDLU = fc0.nLenLabelDLU + fc0.nLenCtrlDLU -
-  						 fc1.nLenLabelDLU - fc1.nLenCtrlDLU;
+		fc1.nLenLabelDLU - fc1.nLenCtrlDLU;
 
 	for (int nCtrl = 0; nCtrl < NUMFILTERCTRLS; nCtrl++)
 	{
 		CRect rCtrl, rCtrlDLU;
 		const FILTERCTRL& fc = FILTERCTRLS[nCtrl];
-		
+
 		// display this control only if the corresponding column
 		// is also showing
 		BOOL bWantCtrl = WantShowFilter(fc.nType);
-		
+
 		if (bWantCtrl)
 		{
 			// if we're at the start of the line then just move ctrls
@@ -464,7 +584,7 @@ int CTDLFilterBar::ReposControls(int nWidth, BOOL bCalcOnly)
 					nYPosDLU += FILTERCTRLYSPACING + nCtrlHeightDLU + 2;
 				}
 			}
-			
+
 			// move label
 			rCtrlDLU.left = nXPosDLU;
 			rCtrlDLU.right = nXPosDLU + fc.nLenLabelDLU;
@@ -473,16 +593,18 @@ int CTDLFilterBar::ReposControls(int nWidth, BOOL bCalcOnly)
 
 			rCtrl = rCtrlDLU;
 			dlu.ToPixels(rCtrl);
-			
+
 			if (fc.nIDLabel && !bCalcOnly)
+			{
 				dwm.MoveWindow(GetDlgItem(fc.nIDLabel), rCtrl);
-			
+			}
+
 			// update XPos for the label
 			nXPosDLU = rCtrlDLU.right;
-		
+
 			// add spacing
 			nXPosDLU += FILTERCTRLXSPACING;
-			
+
 			// move ctrl
 			rCtrlDLU.left = nXPosDLU;
 			rCtrlDLU.right = nXPosDLU + fc.nLenCtrlDLU;
@@ -491,7 +613,7 @@ int CTDLFilterBar::ReposControls(int nWidth, BOOL bCalcOnly)
 
 			rCtrl = rCtrlDLU;
 			dlu.ToPixels(rCtrl);
-			
+
 			if (!bCalcOnly)
 			{
 				// make sure we use the original height of the control
@@ -500,24 +622,26 @@ int CTDLFilterBar::ReposControls(int nWidth, BOOL bCalcOnly)
 
 				dwm.MoveWindow(GetDlgItem(fc.nIDCtrl), rCtrl);
 			}
-			
+
 			// update XPos for the control
 			nXPosDLU = rCtrlDLU.right + FILTERCTRLXSPACING;
 
 			nVisible++;
 		}
 
-		//show/hide as appropriate
+		//show/hide and enable as appropriate
 		if (!bCalcOnly)
 		{
 			if (fc.nIDLabel)
 			{
 				GetDlgItem(fc.nIDLabel)->ShowWindow(bWantCtrl ? SW_SHOW : SW_HIDE);
-				GetDlgItem(fc.nIDLabel)->EnableWindow(bWantCtrl);
+
+				// note the first ctrl is always enabled even for custom filter
+				GetDlgItem(fc.nIDLabel)->EnableWindow(bWantCtrl && (nCtrl == 0 || !m_bCustomFilter));
 			}
-			
+
 			GetDlgItem(fc.nIDCtrl)->ShowWindow(bWantCtrl ? SW_SHOW : SW_HIDE);
-			GetDlgItem(fc.nIDCtrl)->EnableWindow(bWantCtrl);
+			GetDlgItem(fc.nIDCtrl)->EnableWindow(bWantCtrl && (nCtrl == 0 || !m_bCustomFilter));
 		}
 	}
 
@@ -549,113 +673,103 @@ void CTDLFilterBar::SetFilter(const FTDCFILTER& filter, FTC_VIEW nView)
 {
 	m_filter = filter;
 	m_nView = nView;
+	m_bCustomFilter = FALSE;
+
+	SetCustomFilter(FALSE);
 
 	UpdateData(FALSE);
-
-	// the droplists don't get set properly if they
-	// are empty but were not previously so we do it manually
-/*
-	if (m_filter.sAllocBy.IsEmpty())
-		m_cbAllocByFilter.SetCurSel(0);
-	
-	if (m_filter.sStatus.IsEmpty())
-		m_cbStatusFilter.SetCurSel(0);
-	
-	if (m_filter.sStatus.IsEmpty())
-		m_cbVersionFilter.SetCurSel(0);
-*/
 }
 
-BOOL CTDLFilterBar::OnInitDialog() 
+BOOL CTDLFilterBar::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
+
 	// one-time init for risk filter combo
 	m_cbRiskFilter.InsertString(0, CEnString(IDS_TDC_ANY)); // add a blank item
 
 	EnableToolTips();
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 BOOL CTDLFilterBar::OnToolTipNotify(UINT /*id*/, NMHDR* pNMHDR, LRESULT* /*pResult*/)
 {
-    // Get the tooltip structure.
-    TOOLTIPTEXT *pTTT = (TOOLTIPTEXT *)pNMHDR;
+	// Get the tooltip structure.
+	TOOLTIPTEXT* pTTT = (TOOLTIPTEXT*)pNMHDR;
 
-    // Actually the idFrom holds Control's handle.
-    UINT CtrlHandle = pNMHDR->idFrom;
+	// Actually the idFrom holds Control's handle.
+	UINT CtrlHandle = pNMHDR->idFrom;
 
-    // Check once again that the idFrom holds handle itself.
-    if (pTTT->uFlags & TTF_IDISHWND)
-    {
+	// Check once again that the idFrom holds handle itself.
+	if (pTTT->uFlags & TTF_IDISHWND)
+	{
 		static CString sTooltip;
 		sTooltip.Empty();
 
-        // Get the control's ID.
-        UINT nID = ::GetDlgCtrlID( HWND( CtrlHandle ));
+		// Get the control's ID.
+		UINT nID = ::GetDlgCtrlID(HWND(CtrlHandle));
 
-        switch( nID )
-        {
-        case IDC_CATEGORYFILTERCOMBO:
+		switch (nID)
+		{
+		case IDC_CATEGORYFILTERCOMBO:
 			sTooltip = m_cbCategoryFilter.GetTooltip();
-            break;
+			break;
 
-        case IDC_ALLOCTOFILTERCOMBO:
+		case IDC_ALLOCTOFILTERCOMBO:
 			sTooltip = m_cbAllocToFilter.GetTooltip();
-            break;
+			break;
 
-        case IDC_STATUSFILTERCOMBO:
+		case IDC_STATUSFILTERCOMBO:
 			sTooltip = m_cbStatusFilter.GetTooltip();
-            break;
+			break;
 
-        case IDC_ALLOCBYFILTERCOMBO:
+		case IDC_ALLOCBYFILTERCOMBO:
 			sTooltip = m_cbAllocByFilter.GetTooltip();
-            break;
+			break;
 
-        case IDC_VERSIONFILTERCOMBO:
+		case IDC_VERSIONFILTERCOMBO:
 			sTooltip = m_cbVersionFilter.GetTooltip();
-            break;
+			break;
 
-        case IDC_OPTIONFILTERCOMBO:
+		case IDC_OPTIONFILTERCOMBO:
 			sTooltip = m_cbOptions.GetTooltip();
-            break;
-        }
+			break;
+		}
 
 		if (!sTooltip.IsEmpty())
 		{
 			// Set the tooltip text.
 			::SendMessage(pNMHDR->hwndFrom, TTM_SETMAXTIPWIDTH, 0, 300);
 			pTTT->lpszText = const_cast<LPTSTR>((LPCTSTR)sTooltip);
-	        return TRUE;
+			return TRUE;
 		}
-    }
+	}
 
-    // Not handled.
-    return FALSE;
+	// Not handled.
+	return FALSE;
 }
 
 void CTDLFilterBar::SetUIColors(COLORREF crBack/*, COLORREF crText*/)
 {
-	//m_crUIText = crText;
-
 	if (crBack != m_crUIBack)
 	{
 		m_crUIBack = crBack;
 		m_brUIBack.DeleteObject();
 
-		if (crBack != (COLORREF)-1)
+		if (crBack != (COLORREF) - 1)
+		{
 			m_brUIBack.CreateSolidBrush(m_crUIBack);
+		}
 	}
 
 	Invalidate();
 }
 
-BOOL CTDLFilterBar::OnEraseBkgnd(CDC* pDC) 
+BOOL CTDLFilterBar::OnEraseBkgnd(CDC* pDC)
 {
 	int nDC = pDC->SaveDC();
-	
+
 	// clip out all the child controls to reduce flicker
 	if (!(GetStyle() & WS_CLIPCHILDREN))
 	{
@@ -669,23 +783,24 @@ BOOL CTDLFilterBar::OnEraseBkgnd(CDC* pDC)
 		pDC->FillSolidRect(rect, m_crUIBack);
 	}
 	else
+	{
 		CDialog::OnEraseBkgnd(pDC);
-	
+	}
+
 	pDC->RestoreDC(nDC);
-	
+
 	return TRUE;
 }
 
-HBRUSH CTDLFilterBar::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
+HBRUSH CTDLFilterBar::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CDialog::OnCtlColor(pDC, pWnd, nCtlColor);
 
 	if (nCtlColor == CTLCOLOR_STATIC && m_brUIBack.GetSafeHandle())
 	{
-		//pDC->SetTextColor(m_crUIText);
 		pDC->SetBkMode(TRANSPARENT);
 		hbr = m_brUIBack;
 	}
-	
+
 	return hbr;
 }

@@ -48,6 +48,7 @@ const UINT WM_TDCN_COMMENTSKILLFOCUS = ::RegisterWindowMessage(_T("WM_TDCN_COMME
 const UINT WM_TDCN_TIMETRACK = ::RegisterWindowMessage(_T("WM_TDCN_TIMETRACK")); // lParam = 0/1 => stop/start
 const UINT WM_TDCN_VIEWCHANGE = ::RegisterWindowMessage(_T("WM_TDCN_VIEWCHANGE"));
 const UINT WM_TDCN_RECREATERECURRINGTASK = ::RegisterWindowMessage(_T("WM_TDCN_RECREATERECURRINGTASK"));
+const UINT WM_TDCN_DOUBLECLKREMINDERCOL = ::RegisterWindowMessage(_T("WM_TDCN_DOUBLECLKREMINDERCOL"));
 
 // from the filterbar
 const UINT WM_FBN_FILTERCHNG = ::RegisterWindowMessage(_T("WM_FBN_FILTERCHNG")); 

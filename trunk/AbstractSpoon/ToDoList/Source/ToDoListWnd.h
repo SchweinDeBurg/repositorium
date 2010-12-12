@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToDoListWnd.h : header file
@@ -79,24 +93,6 @@ const UINT WM_TDL_ISCLOSING = ::RegisterWindowMessage(_T("WM_TDL_ISCLOSING"));
 const UINT WM_TDL_REFRESHPREFS = ::RegisterWindowMessage(_T("WM_TDL_REFRESHPREFS"));
 const UINT WM_TDL_RESTORE = ::RegisterWindowMessage(_T("WM_TDL_RESTORE"));
 
-// WM_COPYDATA 
-enum 
-{
-	OPENTASKLIST,   // data is char*
-	ADDNEWTASK,     // data is char*
-	SETCOMMENTS,    // data is char*
-	SELECTTASK,     // data is DWORD
-	IMPORTFILE,     // data is char*
-};
-
-// creation flags
-enum
-{
-	TLD_FORCEVISIBLE		= 0x01,
-	TLD_PASSWORDPROMPTING	= 0x02,
-	TLD_LOGGING				= 0x04,
-};
-
 enum FIND_WHAT;
 
 class CToDoListWnd : public CFrameWnd, public CDialogHelper
@@ -107,7 +103,7 @@ public:
 	~CToDoListWnd();
 
 	static int GetVersion();
-	BOOL Create(DWORD dwFlags = 0, LPCTSTR szTDListPath = NULL);
+	BOOL Create(const TDCSTARTUP& startup);
 
 protected:
 	// ClassWizard generated virtual function overrides
@@ -151,17 +147,8 @@ protected:
 	CToDoCtrlReminders m_reminders;
 	UITHEME m_theme;
 	CString m_sThemeFile;
-	TDC_MAXSTATE m_nMaxState;
+	TDC_MAXSTATE m_nMaxState, m_nPrevMaxState;
 
-	struct TDCSTARTUP
-	{
-		TDCSTARTUP() : dwIDSel(0) {}
-		void Clear() { sFilePath.Empty(); sNewTask.Empty(); sComments.Empty(); dwIDSel = 0; }
-
-		CString	sFilePath; // tasklist to load
-		DWORD dwIDSel; // task to select
-		CString sNewTask, sComments; // task title/comments
-	};
 	TDCSTARTUP m_startupOptions;
 
 	CDWordArray m_aPriorityColors;
@@ -193,11 +180,11 @@ protected:
 	afx_msg void OnUpdateViewExpandall(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewCollapseall(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateWindow(CCmdUI* pCmdUI);
-#if (_MFC_VER < 0x0700)
-	afx_msg void OnActivateApp(BOOL bActive, HTASK hTask);
-#else
+#if _MSC_VER >= 1400
 	afx_msg void OnActivateApp(BOOL bActive, DWORD dwThreadID);
-#endif   // _MFC_VER
+#else
+	afx_msg void OnActivateApp(BOOL bActive, HTASK hTask);
+#endif
 	afx_msg void OnEnable(BOOL bEnable);
 	afx_msg void OnNewtask();
 	afx_msg void OnNewsubtask();
@@ -223,6 +210,8 @@ protected:
 	afx_msg void OnUpdateViewShowfilterbar(CCmdUI* pCmdUI);
 	afx_msg void OnViewClearfilter();
 	afx_msg void OnUpdateViewClearfilter(CCmdUI* pCmdUI);
+	afx_msg void OnViewTogglefilter();
+	afx_msg void OnUpdateViewTogglefilter(CCmdUI* pCmdUI);
 	afx_msg void OnViewFilter();
 	afx_msg void OnUpdateViewFilter(CCmdUI* pCmdUI);
 	afx_msg void OnTabctrlPreferences();
@@ -294,15 +283,13 @@ protected:
 	afx_msg void OnUpdateSortMulti(CCmdUI* pCmdUI);
 	afx_msg void OnArchiveSelectedTasks();
 	afx_msg void OnUpdateArchiveSelectedCompletedTasks(CCmdUI* pCmdUI);
+	afx_msg void OnAddtimetologfile();
+	afx_msg void OnUpdateAddtimetologfile(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	afx_msg void OnToolsRemovefromsourcecontrol();
 	afx_msg void OnUpdateToolsRemovefromsourcecontrol(CCmdUI* pCmdUI);
 	afx_msg void OnViewRefreshfilter();
 	afx_msg void OnUpdateViewRefreshfilter(CCmdUI* pCmdUI);
-	// 	afx_msg void OnUpdateUserExport1(CCmdUI* pCmdUI);
-	// 	afx_msg void OnUpdateUserImport1(CCmdUI* pCmdUI);
-	// 	afx_msg void OnUserImport(UINT nCmdID);
-	// 	afx_msg void OnUserExport(UINT nCmdID);
 	afx_msg LRESULT OnSelchangeFilter(WPARAM wp, LPARAM lp);
 	afx_msg void OnEditChangeQuickFind();
 	afx_msg void OnSelChangeQuickFind();
@@ -476,12 +463,16 @@ protected:
 	afx_msg LRESULT OnToDoListShowWindow(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnToDoCtrlNotifyListChange(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnToDoListGetVersion(WPARAM wp, LPARAM lp);
-	afx_msg LRESULT OnToDoListIsClosing(WPARAM /*wp*/, LPARAM /*lp*/) { return m_bClosing; }
+	afx_msg LRESULT OnToDoListIsClosing(WPARAM /*wp*/, LPARAM /*lp*/)
+	{
+		return m_bClosing;
+	}
 	afx_msg LRESULT OnToDoListRefreshPrefs(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnToDoListRestore(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnFindDlgFind(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnFindSelectResult(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnFindSelectAll(WPARAM wp, LPARAM lp);
+	afx_msg LRESULT OnFindApplyAsFilter(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnFindDlgClose(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnDropFile(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPreferencesTestTool(WPARAM wp, LPARAM lp);
@@ -497,9 +488,14 @@ protected:
 	afx_msg void OnMove(int x, int y);
 	afx_msg LRESULT OnToDoCtrlReminder(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnAppRestoreFocus(WPARAM wp, LPARAM lp);
+	afx_msg LRESULT OnDoubleClkReminderCol(WPARAM wp, LPARAM lp);
+	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
 
 #ifdef _DEBUG
-	afx_msg void OnDebugQueryEndSession() { SendMessage(WM_QUERYENDSESSION); }
+	afx_msg void OnDebugQueryEndSession()
+	{
+		SendMessage(WM_QUERYENDSESSION);
+	}
 #endif
 	DECLARE_MESSAGE_MAP()
 
@@ -518,7 +514,7 @@ protected:
 	void RestoreVisibility();
 
 	// tdc not const because we need to flush it first
-	BOOL Export2Html(CFilteredToDoCtrl& tdc, LPCTSTR szFilePath, LPCTSTR szStylesheet = NULL) const;
+	BOOL Export2Html(CFilteredToDoCtrl& tdc, LPCTSTR szFilePath, TSD_TASKS nWhatTasks, LPCTSTR szStylesheet = NULL) const;
 	BOOL Export2Html(const CTaskFile& tasks, LPCTSTR szFilePath, LPCTSTR szStylesheet = NULL) const;
 
 	TDC_FILE DelayOpenTaskList(LPCTSTR szFilePath); // 0 = failed, 1 = success, -1 = cancelled
@@ -538,6 +534,7 @@ protected:
 	BOOL InitStatusbar();
 	void SetUITheme(const CString& sThemeFile);
 
+	BOOL ProcessStartupOptions(const TDCSTARTUP& startup/*, BOOL bPreviousInstance*/);
 	BOOL NewTask(LPCTSTR szTitle, TDC_INSERTWHERE nInsertWhere, /*BOOL bSelect = TRUE, */BOOL bEdit = TRUE);
 	TDC_SORTBY GetSortBy(UINT nSortID);
 	UINT GetSortID(TDC_SORTBY nSortBy);
@@ -559,9 +556,13 @@ protected:
 	void HandleLoadTasklistError(TDC_FILE nErr, LPCTSTR szTasklist);
 	void CheckForUpdates(BOOL bManual);
 	void UpdateCwd();
-	BOOL WantTabBarVisible() const { return GetTDCCount() > 1 || !Prefs().GetAutoHideTabbar(); }
+	BOOL WantTabBarVisible() const
+	{
+		return GetTDCCount() > 1 || !Prefs().GetAutoHideTabbar();
+	}
 	void ShowFindDialog(BOOL bShow = TRUE);
 	void RefreshUIExtensions(BOOL bEdit);
+	void UpdateAeroFeatures();
 
 	enum { CT_ASHTML, CT_ASTEXT, CT_ASREF, CT_ASDEPENDS, CT_ASREFFULL, CT_ASDEPENDSFULL, CT_ASPATH };
 	void CopySelectedTasksToClipboard(int nAsFormat);
@@ -590,7 +591,10 @@ protected:
 	CFilteredToDoCtrl* NewToDoCtrl();
 	BOOL CreateToDoCtrl(CFilteredToDoCtrl* pCtrl);
 	int AddToDoCtrl(CFilteredToDoCtrl* pCtrl, BOOL bResizeDlg = TRUE);
-	inline int GetTDCCount() const { return m_mgrToDoCtrls.GetCount(); }
+	inline int GetTDCCount() const
+	{
+		return m_mgrToDoCtrls.GetCount();
+	}
 	BOOL SelectToDoCtrl(LPCTSTR szFilePath, BOOL bCheckPassword, int nNotifyDueTasksBy = -1);
 	BOOL SelectToDoCtrl(int nIndex, BOOL bCheckPassword, int nNotifyDueTasksBy = -1);
 	int GetSelToDoCtrl() const;
@@ -627,11 +631,11 @@ protected:
 	}
 
 	// helpers
-	int GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform, 
+	int GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform,
 		const CTaskSelectionDlg& taskSel, CTaskFile& tasks) const;
-	int GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform, 
-		BOOL bSelected, TDCGETTASKS& filter, CTaskFile& tasks) const;
-	int GetTasks(CFilteredToDoCtrl& tdc, BOOL bSelected, CTaskFile& tasks) const;
+	int GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform,
+		TSD_TASKS nWhatTasks, TDCGETTASKS& filter, CTaskFile& tasks) const;
+	int GetTasks(CFilteredToDoCtrl& tdc, TSD_TASKS nWhatTasks, CTaskFile& tasks) const;
 
 	void DoSendTasks(TD_SENDWHAT nWhat, TD_SENDAS nSendAs);
 	void Log(const CString& sLog, BOOL bWantTime = FALSE);

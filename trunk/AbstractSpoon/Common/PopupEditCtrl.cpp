@@ -61,7 +61,9 @@ void CPopupEditCtrl::OnKillFocus(CWnd* pNewWnd)
 	// tell parent edit has been ended only if it hasn't already been
 	// dealt with
 	if (!m_bEditEnded)
-		EndEdit(FALSE, FALSE); // first FALSE means no cancel, second means not intentional
+	{
+		EndEdit(FALSE, FALSE);   // first FALSE means no cancel, second means not intentional
+	}
 }
 
 BOOL CPopupEditCtrl::Create(CWnd* pParentWnd, UINT nID, DWORD dwFlags)
@@ -69,20 +71,12 @@ BOOL CPopupEditCtrl::Create(CWnd* pParentWnd, UINT nID, DWORD dwFlags)
 	DWORD dwStyle = dwFlags | ES_WANTRETURN | ES_AUTOHSCROLL;
 
 	if (!(dwFlags & WS_POPUP))
+	{
 		dwStyle |= WS_CHILD;
+	}
 
 	m_nID = nID;
 	m_pParent = pParentWnd;
-
-	// if the caller wants a border, then under theming we substitute
-	// the client edge
-	/*
-	BOOL bBorder = (dwFlags & WS_BORDER);
-	BOOL bThemed = CThemed().AreControlsThemed();
-
-	if (bThemed && bBorder)
-	dwStyle &= ~WS_BORDER;
-	*/
 
 	if (dwStyle & WS_CHILD)
 	{
@@ -98,7 +92,7 @@ BOOL CPopupEditCtrl::Create(CWnd* pParentWnd, UINT nID, DWORD dwFlags)
 	}
 	else // popup
 	{
-		DWORD dwExFlags = 0;//(bBorder && bThemed) ? WS_EX_CLIENTEDGE : 0;
+		DWORD dwExFlags = 0;
 		return CWnd::CreateEx(dwExFlags, _T("EDIT"), NULL, dwStyle, 0, 0, 0, 0, pParentWnd->m_hWnd, (HMENU)NULL);
 	}
 
@@ -108,7 +102,9 @@ BOOL CPopupEditCtrl::Create(CWnd* pParentWnd, UINT nID, DWORD dwFlags)
 int CPopupEditCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CMaskEdit::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 
 	SetFont(m_pParent->GetFont());
 
@@ -132,7 +128,9 @@ void CPopupEditCtrl::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	// don't do anything if someone else has already dealt with it
 	if (m_bEditEnded)
+	{
 		return;
+	}
 
 	// if key is return then end edit
 	if (nChar == VK_RETURN)
@@ -153,7 +151,9 @@ void CPopupEditCtrl::Show(CRect rPos)
 {
 	// move the edit box if req
 	if (!rPos.IsRectNull())
+	{
 		MoveWindow(rPos);
+	}
 
 	PostMessage(WM_PEC_SHOW);
 }
@@ -201,7 +201,9 @@ void CPopupEditCtrl::Hide()
 {
 	// make sure the parent is properly reactivated
 	if (GetStyle() & WS_POPUP)
+	{
 		m_pParent->PostMessage(WM_ACTIVATE, MAKEWPARAM(WA_ACTIVE, FALSE), (LPARAM)m_hWnd);
+	}
 
 	ShowWindow(SW_HIDE);
 	EnableWindow(FALSE);
@@ -212,19 +214,27 @@ void CPopupEditCtrl::EndEdit(BOOL bCancel, BOOL bIntentional)
 {
 	// prevent re-entrancy
 	if (m_bEditEnded)
+	{
 		return;
+	}
 
 	m_bEditEnded = TRUE;
 
 	if (GetSafeHwnd() && IsWindowVisible())
 	{
 		if (m_nCleanUp != PEC_NOCLEANUP)
+		{
 			Hide();
+		}
 
 		if (bCancel)
+		{
 			m_pParent->SendMessage(WM_PCANCELEDIT, m_nID, bIntentional);
+		}
 		else
+		{
 			m_pParent->SendMessage(WM_PENDEDIT, m_nID, bIntentional);
+		}
 
 		CleanUp();
 	}

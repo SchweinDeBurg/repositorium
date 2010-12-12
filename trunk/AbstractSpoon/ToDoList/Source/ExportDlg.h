@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_EXPORTDLG_H__2F5B4FD1_E968_464E_9734_AC995DB13B35__INCLUDED_)
@@ -49,20 +63,30 @@ enum { ED_HTMLFMT, ED_TEXTFMT };
 
 class CExportDlg : public CDialog
 {
-// Construction
+	// Construction
 public:
-	CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL bShowSubtaskCheckbox = TRUE, 
-				LPCTSTR szFilePath = NULL, LPCTSTR szFolderPath = NULL, CWnd* pParent = NULL);
+	CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL bShowSubtaskCheckbox = TRUE,
+		BOOL bVisibleColumnsOnly = TRUE, LPCTSTR szFilePath = NULL, LPCTSTR szFolderPath = NULL,
+		CWnd* pParent = NULL);
 
 	BOOL GetExportAllTasklists();
-	int GetExportFormat() { return s_nFormatOption; }
+	int GetExportFormat()
+	{
+		return s_nFormatOption;
+	}
 	CString GetExportPath(); // can be folder or path
-	BOOL GetExportOneFile() { return (m_bSingleTaskList/* || m_bExportOneFile*/); }
+	BOOL GetExportOneFile()
+	{
+		return (m_bSingleTaskList);
+	}
 
-	const CTaskSelectionDlg& GetTaskSelection() const { return m_taskSel; }
+	const CTaskSelectionDlg& GetTaskSelection() const
+	{
+		return m_taskSel;
+	}
 
 protected:
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CExportDlg)
 	CComboBox   m_cbFormat;
 	CFileEdit   m_eExportPath;
@@ -72,20 +96,20 @@ protected:
 	CString m_sPathLabel;
 	//}}AFX_DATA
 	CTaskSelectionDlg m_taskSel;
-	BOOL m_bSingleTaskList; 
+	BOOL m_bSingleTaskList;
 	CString m_sFolderPath, m_sFilePath, m_sOrgFilePath, m_sOrgFolderPath;
 	const CImportExportMgr& m_mgrImportExport;
 	static int s_nFormatOption; // persists just for the current session
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CExportDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 	virtual void OnOK();
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

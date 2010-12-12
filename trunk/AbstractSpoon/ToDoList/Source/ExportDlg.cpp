@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ExportDlg.cpp : implementation file
@@ -55,15 +69,15 @@ enum { ACTIVETASKLIST, ALLTASKLISTS };
 
 int CExportDlg::s_nFormatOption = 0;
 
-CExportDlg::CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL bShowSubtaskCheckbox, 
-					   LPCTSTR szFilePath, LPCTSTR szFolderPath, CWnd* pParent /*=NULL*/)
-	: CDialog(IDD_EXPORT_DIALOG, pParent), 
-	  m_mgrImportExport(mgr),
-	  m_bSingleTaskList(bSingleTaskList), 
-	  m_sFilePath(szFilePath), m_sOrgFilePath(szFilePath),
-	  m_sFolderPath(szFolderPath), m_sOrgFolderPath(szFolderPath),
-	  m_taskSel(_T("Exporting"), bShowSubtaskCheckbox),
-	  m_eExportPath(FES_COMBOSTYLEBTN | FES_SAVEAS)
+CExportDlg::CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL bShowSubtaskCheckbox,
+	BOOL bVisibleColumnsOnly, LPCTSTR szFilePath, LPCTSTR szFolderPath, CWnd* pParent /*=NULL*/):
+CDialog(IDD_EXPORT_DIALOG, pParent),
+m_mgrImportExport(mgr),
+m_bSingleTaskList(bSingleTaskList),
+m_sFilePath(szFilePath), m_sOrgFilePath(szFilePath),
+m_sFolderPath(szFolderPath), m_sOrgFolderPath(szFolderPath),
+m_taskSel(_T("Exporting"), bShowSubtaskCheckbox, bVisibleColumnsOnly),
+m_eExportPath(FES_COMBOSTYLEBTN | FES_SAVEAS)
 {
 	CPreferences prefs;
 
@@ -73,18 +87,24 @@ CExportDlg::CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL b
 	m_bExportOneFile = FALSE;
 
 	if (m_bSingleTaskList)
+	{
 		m_nExportOption = ACTIVETASKLIST;
+	}
 	else
+	{
 		m_nExportOption = prefs.GetProfileInt(_T("Exporting"), _T("ExportOption"), ACTIVETASKLIST);
+	}
 
 	if (m_sFolderPath.IsEmpty())
+	{
 		m_sFolderPath = prefs.GetProfileString(_T("Exporting"), _T("LastFolder"));
+	}
 
 	if (m_bSingleTaskList || m_nExportOption == ACTIVETASKLIST || m_bExportOneFile)
 	{
 		m_sExportPath = m_sFilePath; // default
 
-		if ((m_sFilePath.IsEmpty() || PathIsRelative(m_sFilePath)) && 
+		if ((m_sFilePath.IsEmpty() || PathIsRelative(m_sFilePath)) &&
 			!m_sFolderPath.IsEmpty())
 		{
 			CString sFName;
@@ -92,18 +112,22 @@ CExportDlg::CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL b
 
 			// handle empty filename
 			if (sFName.IsEmpty())
+			{
 				sFName.LoadString(IDS_TDC_UNTITLEDFILE);
+			}
 
 			FileMisc::MakePath(m_sExportPath, NULL, m_sFolderPath, sFName);
 		}
-				
+
 		ReplaceExtension(m_sExportPath, s_nFormatOption);
 		m_sPathLabel.LoadString(IDS_ED_FILEPATH);
 	}
 	else // multiple files
 	{
 		if (!m_sFolderPath.IsEmpty())
+		{
 			m_sExportPath = m_sFolderPath;
+		}
 
 		else if (!m_sFilePath.IsEmpty())
 		{
@@ -116,7 +140,6 @@ CExportDlg::CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL b
 		m_sPathLabel.LoadString(IDS_ED_FOLDER);
 	}
 }
-
 
 void CExportDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -132,7 +155,6 @@ void CExportDlg::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 }
 
-
 BEGIN_MESSAGE_MAP(CExportDlg, CDialog)
 	//{{AFX_MSG_MAP(CExportDlg)
 	ON_CBN_SELCHANGE(IDC_TASKLISTOPTIONS, OnSelchangeTasklistoptions)
@@ -140,18 +162,18 @@ BEGIN_MESSAGE_MAP(CExportDlg, CDialog)
 	ON_BN_CLICKED(IDC_EXPORTONEFILE, OnExportonefile)
 	ON_EN_CHANGE(IDC_EXPORTPATH, OnChangeExportpath)
 	//}}AFX_MSG_MAP
-   ON_REGISTERED_MESSAGE(WM_TASKSELDLG_CHANGE, OnChangeTaskSelOption)
+	ON_REGISTERED_MESSAGE(WM_TASKSELDLG_CHANGE, OnChangeTaskSelOption)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CExportDlg message handlers
 
-BOOL CExportDlg::OnInitDialog() 
+BOOL CExportDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-    VERIFY(m_taskSel.Create(IDC_FRAME, this));
-	
+	VERIFY(m_taskSel.Create(IDC_FRAME, this));
+
 	// set initial control states
 	GetDlgItem(IDC_TASKLISTOPTIONS)->EnableWindow(!m_bSingleTaskList);
 	GetDlgItem(IDC_EXPORTONEFILE)->EnableWindow(!m_bSingleTaskList && m_nExportOption == ALLTASKLISTS);
@@ -161,25 +183,29 @@ BOOL CExportDlg::OnInitDialog()
 
 	// build the format comboxbox
 	for (int nExp = 0; nExp < m_mgrImportExport.GetNumExporters(); nExp++)
+	{
 		m_cbFormat.AddString(m_mgrImportExport.GetExporterMenuText(nExp));
+	}
 
 	m_cbFormat.SetCurSel(s_nFormatOption);
 	m_eExportPath.EnableWindow(m_mgrImportExport.ExporterHasFileExtension(s_nFormatOption));
 
 	EnableOK();
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CExportDlg::OnSelchangeTasklistoptions() 
+void CExportDlg::OnSelchangeTasklistoptions()
 {
 	UpdateData();
 
 	// can't do all tasklists and selected item
 	if (m_taskSel.GetWantSelectedTasks() && m_nExportOption == ALLTASKLISTS)
-      m_taskSel.SetWantSelectedTasks(FALSE);
-	
+	{
+		m_taskSel.SetWantWhatTasks(TSDT_ALL);
+	}
+
 	// only process this notification if something's _really_ changed
 	if (!(m_nExportOption == ALLTASKLISTS && m_bExportOneFile))
 	{
@@ -205,7 +231,7 @@ void CExportDlg::OnSelchangeTasklistoptions()
 	UpdateData(FALSE);
 }
 
-void CExportDlg::OnSelchangeFormatoptions() 
+void CExportDlg::OnSelchangeFormatoptions()
 {
 	UpdateData();
 
@@ -221,13 +247,17 @@ void CExportDlg::OnSelchangeFormatoptions()
 		if (m_nExportOption == ACTIVETASKLIST || m_bExportOneFile)
 		{
 			if (m_sExportPath.IsEmpty())
+			{
 				m_sExportPath = m_sOrgFilePath;
+			}
 
 			ReplaceExtension(m_sExportPath, s_nFormatOption);
 			UpdateData(FALSE);
 		}
 		else if (m_sExportPath.IsEmpty())
+		{
 			m_sExportPath = m_sOrgFolderPath;
+		}
 	}
 	else // disable path edit and remove file path
 	{
@@ -239,8 +269,9 @@ void CExportDlg::OnSelchangeFormatoptions()
 void CExportDlg::ReplaceExtension(CString& sPathName, int nFormat)
 {
 	if (!m_mgrImportExport.ExporterHasFileExtension(nFormat))
+	{
 		return;
-	
+	}
 
 	CString sExt = m_mgrImportExport.GetExporterFileExtension(nFormat);
 
@@ -276,12 +307,16 @@ void CExportDlg::OnOK()
 			FileMisc::MakePath(sPath, sDrive, sFolder, m_sExportPath);
 
 			CString sMessage;
-			
+
 			if (m_nExportOption == ALLTASKLISTS)
+			{
 				sMessage.Format(IDS_ED_CONFIRMEXPORTPATHMULTI, sPath);
+			}
 			else
+			{
 				sMessage.Format(IDS_ED_CONFIRMEXPORTPATH, sPath);
-							
+			}
+
 			UINT nRet = MessageBox(sMessage, CEnString(IDS_ED_CONFIRMEXPORTPATH_TITLE), MB_YESNO);
 
 			if (nRet == IDNO)
@@ -292,18 +327,20 @@ void CExportDlg::OnOK()
 				return;
 			}
 			else
+			{
 				m_sExportPath = sPath;
+			}
 		}
 
 		// make sure the output folder is valid
-		BOOL bBadFolder = (m_nExportOption == ALLTASKLISTS && !m_bExportOneFile) ? 
-							!FileMisc::CreateFolder(m_sExportPath) : 
-							!FileMisc::CreateFolderFromFilePath(m_sExportPath);
+		BOOL bBadFolder = (m_nExportOption == ALLTASKLISTS && !m_bExportOneFile) ?
+			!FileMisc::CreateFolder(m_sExportPath) :
+		!FileMisc::CreateFolderFromFilePath(m_sExportPath);
 
 		if (bBadFolder)
 		{
 			CEnString sMessage(IDS_ED_NOMAKEEXPORTPATH, m_sExportPath);
-			
+
 			UINT nRet = MessageBox(sMessage, CEnString(IDS_ED_NOMAKEEXPORTPATH_TITLE), MB_OKCANCEL);
 
 			// re-display dialog
@@ -327,7 +364,9 @@ void CExportDlg::OnOK()
 	if (bExporterHasFileExt)
 	{
 		if (m_nExportOption == ACTIVETASKLIST || m_bExportOneFile)
+		{
 			ReplaceExtension(m_sExportPath, s_nFormatOption);
+		}
 	}
 
 	if (!m_bSingleTaskList)
@@ -338,9 +377,13 @@ void CExportDlg::OnOK()
 		if (bExporterHasFileExt)
 		{
 			if (m_nExportOption == ALLTASKLISTS)
+			{
 				prefs.WriteProfileString(_T("Exporting"), _T("LastFolder"), m_sExportPath);
+			}
 			else
+			{
 				prefs.WriteProfileString(_T("Exporting"), _T("LastFolder"), m_sFolderPath);
+			}
 		}
 	}
 }
@@ -350,19 +393,25 @@ BOOL CExportDlg::GetExportAllTasklists()
 	return (!m_bSingleTaskList && m_nExportOption == ALLTASKLISTS);
 }
 
-void CExportDlg::OnExportonefile() 
+void CExportDlg::OnExportonefile()
 {
 	UpdateData();
 
 	m_eExportPath.EnableStyle(FES_FOLDERS, (m_nExportOption == ALLTASKLISTS && !m_bExportOneFile));
 
 	if (m_nExportOption == ALLTASKLISTS && !m_bExportOneFile)
+	{
 		m_sExportPath = m_sFolderPath;
+	}
 	else
+	{
 		m_sExportPath = m_sFilePath;
+	}
 
 	if (m_nExportOption == ACTIVETASKLIST || m_bExportOneFile)
+	{
 		ReplaceExtension(m_sExportPath, s_nFormatOption);
+	}
 
 	UpdateData(FALSE);
 }
@@ -371,22 +420,26 @@ void CExportDlg::EnableOK()
 {
 	m_sExportPath.TrimLeft();
 	m_sExportPath.TrimRight();
-	
+
 	GetDlgItem(IDOK)->EnableWindow(!m_sExportPath.IsEmpty());
 }
 
-void CExportDlg::OnChangeExportpath() 
+void CExportDlg::OnChangeExportpath()
 {
 	UpdateData();
 	EnableOK();
 
 	if (m_nExportOption == ACTIVETASKLIST || m_bExportOneFile)
+	{
 		m_sFilePath = m_sExportPath;
+	}
 	else
+	{
 		m_sFolderPath = m_sExportPath;
+	}
 }
 
-LRESULT CExportDlg::OnChangeTaskSelOption(WPARAM /*wp*/, LPARAM /*lp*/) 
+LRESULT CExportDlg::OnChangeTaskSelOption(WPARAM /*wp*/, LPARAM /*lp*/)
 {
 	if (m_taskSel.GetWantSelectedTasks() && m_nExportOption == ALLTASKLISTS)
 	{
@@ -395,14 +448,16 @@ LRESULT CExportDlg::OnChangeTaskSelOption(WPARAM /*wp*/, LPARAM /*lp*/)
 
 		OnSelchangeTasklistoptions();
 	}
-	
-   return 0;
+
+	return 0;
 }
 
 CString CExportDlg::GetExportPath()
 {
 	if (m_mgrImportExport.ExporterHasFileExtension(s_nFormatOption))
+	{
 		return m_sExportPath;
+	}
 
 	// else
 	return _T("");

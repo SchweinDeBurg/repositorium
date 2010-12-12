@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // PreferencesUITasklistPage.cpp : implementation file
@@ -46,8 +60,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesUITasklistPage property page
 
-CPreferencesUITasklistPage::CPreferencesUITasklistPage() : 
-	CPreferencesPageBase(CPreferencesUITasklistPage::IDD)
+CPreferencesUITasklistPage::CPreferencesUITasklistPage() :
+CPreferencesPageBase(CPreferencesUITasklistPage::IDD)
 {
 	//{{AFX_DATA_INIT(CPreferencesUITasklistPage)
 	m_bHideDoneTimeField = FALSE;
@@ -60,7 +74,7 @@ CPreferencesUITasklistPage::~CPreferencesUITasklistPage()
 }
 
 void CPreferencesUITasklistPage::DoDataExchange(CDataExchange* pDX)
-{ 
+{
 	CPreferencesPageBase::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CPreferencesUITasklistPage)
 	DDX_Check(pDX, IDC_USEISODATEFORMAT, m_bUseISOForDates);
@@ -81,6 +95,7 @@ void CPreferencesUITasklistPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_STRIKETHROUGHDONE, m_bStrikethroughDone);
 	DDX_Check(pDX, IDC_FULLROWSELECTION, m_bFullRowSelection);
 	DDX_Check(pDX, IDC_TREECHECKBOXES, m_bTreeCheckboxes);
+	DDX_Check(pDX, IDC_TREETASKICONS, m_bTreeTaskIcons);
 	DDX_Control(pDX, IDC_COLUMNVISIBILITY, m_lbColumnVisibility);
 	DDX_Check(pDX, IDC_SHOWINFOTIPS, m_bShowInfoTips);
 	DDX_Check(pDX, IDC_SHOWCOMMENTS, m_bShowComments);
@@ -104,13 +119,14 @@ BEGIN_MESSAGE_MAP(CPreferencesUITasklistPage, CPreferencesPageBase)
 	ON_BN_CLICKED(IDC_LIMITCOLWIDTHS, OnLimitcolwidths)
 	ON_BN_CLICKED(IDC_TREECHECKBOXES, OnTreecheckboxes)
 	ON_BN_CLICKED(IDC_SHOWPARENTSASFOLDERS, OnShowparentsasfolders)
+	ON_BN_CLICKED(IDC_TREETASKICONS, OnTreetaskicons)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesUITasklistPage message handlers
 
-BOOL CPreferencesUITasklistPage::OnInitDialog() 
+BOOL CPreferencesUITasklistPage::OnInitDialog()
 {
 	CPreferencesPageBase::OnInitDialog();
 
@@ -123,13 +139,15 @@ BOOL CPreferencesUITasklistPage::OnInitDialog()
 	GetDlgItem(IDC_COLWIDTHS)->EnableWindow(m_bLimitColumnWidths);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 int CPreferencesUITasklistPage::GetMaxInfoTipCommentsLength() const
 {
 	if (m_bShowInfoTips)
+	{
 		return m_bLimitInfoTipCommentsLength ? max(0, m_nMaxInfoTipCommentsLength) : -1;
+	}
 
 	return -1;
 }
@@ -139,26 +157,30 @@ int CPreferencesUITasklistPage::GetMaxColumnWidth() const
 	return m_bLimitColumnWidths ? max(0, m_nMaxColumnWidth) : -1;
 }
 
-void CPreferencesUITasklistPage::OnShowcomments() 
+void CPreferencesUITasklistPage::OnShowcomments()
 {
 	UpdateData();
 
 	GetDlgItem(IDC_DISPLAYFIRSTCOMMENTLINE)->EnableWindow(m_bShowComments);
 }
 
-void CPreferencesUITasklistPage::OnShowinfotips() 
+void CPreferencesUITasklistPage::OnShowinfotips()
 {
 	UpdateData();
 
 	GetDlgItem(IDC_LIMITINFOTIPCOMMENTS)->EnableWindow(m_bShowInfoTips);
 	GetDlgItem(IDC_INFOTIPCOMMENTSMAX)->EnableWindow(m_bShowInfoTips && m_bLimitInfoTipCommentsLength);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistPage::OnLimitinfotipcomments() 
+void CPreferencesUITasklistPage::OnLimitinfotipcomments()
 {
 	UpdateData();
 
 	GetDlgItem(IDC_INFOTIPCOMMENTSMAX)->EnableWindow(m_bShowInfoTips && m_bLimitInfoTipCommentsLength);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
 int CPreferencesUITasklistPage::GetVisibleColumns(CTDCColumnArray& aColumns) const
@@ -166,7 +188,7 @@ int CPreferencesUITasklistPage::GetVisibleColumns(CTDCColumnArray& aColumns) con
 	return m_lbColumnVisibility.GetVisibleColumns(aColumns);
 }
 
-void CPreferencesUITasklistPage::SetVisibleColumns(const CTDCColumnArray& aColumns) 
+void CPreferencesUITasklistPage::SetVisibleColumns(const CTDCColumnArray& aColumns)
 {
 	m_lbColumnVisibility.SetVisibleColumns(aColumns);
 	SaveColumns();
@@ -201,12 +223,14 @@ void CPreferencesUITasklistPage::LoadPreferences(const CPreferences& prefs)
 		{
 			CString sKey;
 			sKey.Format(_T("Col%d"), nCol);
-			
+
 			BOOL bVisible = prefs.GetProfileInt(_T("Preferences\\ColumnVisibility"), sKey, -1);
-			
+
 			if (bVisible == -1)
-				break; // all done
-			
+			{
+				break;   // all done
+			}
+
 			if (bVisible)
 			{
 				TDC_COLUMN col = m_lbColumnVisibility.MapOldColumnIndex(nCol);
@@ -223,8 +247,10 @@ void CPreferencesUITasklistPage::LoadPreferences(const CPreferences& prefs)
 
 			TDC_COLUMN col = (TDC_COLUMN)prefs.GetProfileInt(_T("Preferences\\ColumnVisibility"), sKey, -1);
 
-			if (col != (TDC_COLUMN)-1)
+			if (col != (TDC_COLUMN) - 1)
+			{
 				aCols.Add(col);
+			}
 		}
 	}
 
@@ -238,6 +264,7 @@ void CPreferencesUITasklistPage::LoadPreferences(const CPreferences& prefs)
 	m_bShowPathInHeader = prefs.GetProfileInt(_T("Preferences"), _T("ShowPathInHeader"), TRUE);
 	m_bFullRowSelection = prefs.GetProfileInt(_T("Preferences"), _T("FullRowSelection"), FALSE);
 	m_bTreeCheckboxes = prefs.GetProfileInt(_T("Preferences"), _T("TreeCheckboxes"), TRUE);
+	m_bTreeTaskIcons = prefs.GetProfileInt(_T("Preferences"), _T("TreeTaskIcons"), TRUE);
 	m_bUseISOForDates = prefs.GetProfileInt(_T("Preferences"), _T("DisplayDatesInISO"), FALSE);
 	m_bShowWeekdayInDates = prefs.GetProfileInt(_T("Preferences"), _T("ShowWeekdayInDates"), FALSE);
 	m_bShowParentsAsFolders = prefs.GetProfileInt(_T("Preferences"), _T("ShowParentsAsFolders"), TRUE);
@@ -287,6 +314,7 @@ void CPreferencesUITasklistPage::SavePreferences(CPreferences& prefs)
 	prefs.WriteProfileInt(_T("Preferences"), _T("ShowPathInHeader"), m_bShowPathInHeader);
 	prefs.WriteProfileInt(_T("Preferences"), _T("FullRowSelection"), m_bFullRowSelection);
 	prefs.WriteProfileInt(_T("Preferences"), _T("TreeCheckboxes"), m_bTreeCheckboxes);
+	prefs.WriteProfileInt(_T("Preferences"), _T("TreeTaskIcons"), m_bTreeTaskIcons);
 	prefs.WriteProfileInt(_T("Preferences"), _T("DisplayDatesInISO"), m_bUseISOForDates);
 	prefs.WriteProfileInt(_T("Preferences"), _T("ShowWeekdayInDates"), m_bShowWeekdayInDates);
 	prefs.WriteProfileInt(_T("Preferences"), _T("ShowParentsAsFolders"), m_bShowParentsAsFolders);
@@ -307,31 +335,56 @@ void CPreferencesUITasklistPage::SavePreferences(CPreferences& prefs)
 	prefs.WriteProfileInt(_T("Preferences"), _T("HideDoneTimeField"), m_bHideDoneTimeField);
 	prefs.WriteProfileInt(_T("Preferences"), _T("LimitColumnWidths"), m_bLimitColumnWidths);
 	prefs.WriteProfileInt(_T("Preferences"), _T("MaxColumnWidth"), m_nMaxColumnWidth);
+
 }
 
 
 
-void CPreferencesUITasklistPage::OnLimitcolwidths() 
+void CPreferencesUITasklistPage::OnLimitcolwidths()
 {
 	UpdateData();
 
 	GetDlgItem(IDC_COLWIDTHS)->EnableWindow(m_bLimitColumnWidths);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistPage::OnTreecheckboxes() 
+void CPreferencesUITasklistPage::OnTreecheckboxes()
 {
 	// if the user is turning this preference on then make sure that
 	// the completion column is hidden else the checkbox won't turn up
 	UpdateData();
 
 	if (m_bTreeCheckboxes)
+	{
 		m_lbColumnVisibility.SetColumnVisible(TDCC_DONE, FALSE);
+	}
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistPage::OnShowparentsasfolders() 
+void CPreferencesUITasklistPage::OnShowparentsasfolders()
 {
 	UpdateData();
 
 	if (m_bShowParentsAsFolders)
+	{
 		m_lbColumnVisibility.SetColumnVisible(TDCC_ICON);
+	}
+
+	CPreferencesPageBase::OnControlChange();
+}
+
+void CPreferencesUITasklistPage::OnTreetaskicons()
+{
+	// if the user is turning this preference on then make sure that
+	// the completion column is hidden else the checkbox won't turn up
+	UpdateData();
+
+	if (m_bTreeTaskIcons)
+	{
+		m_lbColumnVisibility.SetColumnVisible(TDCC_ICON, FALSE);
+	}
+
+	CPreferencesPageBase::OnControlChange();
 }

@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // FileEdit.cpp : implementation file
@@ -54,7 +67,7 @@ const UINT VIEWBTN = 0x24;
 const UINT BROWSEBTN = 0x31;
 
 CFileEdit::CFileEdit(int nStyle, LPCTSTR szFilter) :
-CEnEdit(nStyle & FES_COMBOSTYLEBTN),
+CEnEdit(nStyle& FES_COMBOSTYLEBTN),
 m_nStyle(nStyle),
 m_bTipNeeded(FALSE),
 m_sFilter(szFilter),
@@ -62,7 +75,9 @@ ICON_WIDTH(20),
 m_sFolderPrompt(FILEEDIT_SELECTFOLDER)
 {
 	if (!(m_nStyle & FES_NOBROWSE))
+	{
 		AddButton(FEBTN_BROWSE, BROWSEBTN, FILEEDIT_BROWSE, DEF_BTNWIDTH, _T("Wingdings"));
+	}
 
 	if (m_nStyle & FES_GOBUTTON)
 	{
@@ -74,9 +89,13 @@ m_sFolderPrompt(FILEEDIT_SELECTFOLDER)
 
 	// mask
 	if (nStyle & FES_ALLOWURL)
+	{
 		SetMask(URLMASK, ME_EXCLUDE);
+	}
 	else
+	{
 		SetMask(FILEMASK, ME_EXCLUDE);
+	}
 }
 
 CFileEdit::~CFileEdit()
@@ -103,12 +122,18 @@ END_MESSAGE_MAP()
 void CFileEdit::EnableStyle(int nStyle, BOOL bEnable)
 {
 	if (bEnable)
+	{
 		m_nStyle |= nStyle;
+	}
 	else
+	{
 		m_nStyle &= ~nStyle;
+	}
 
 	if (GetSafeHwnd())
+	{
 		SendMessage(WM_NCPAINT);
+	}
 }
 
 BOOL CFileEdit::OnChange()
@@ -144,7 +169,9 @@ void CFileEdit::OnPaint()
 		GetWindowText(sText);
 
 		if (sText.IsEmpty())
+		{
 			Default();
+		}
 		else
 		{
 			CPaintDC dc(this); // device context for painting
@@ -168,12 +195,18 @@ void CFileEdit::OnPaint()
 				HBRUSH hBkgnd = NULL;
 
 				if (!IsWindowEnabled() || (GetStyle() & ES_READONLY))
+				{
 					hBkgnd = GetSysColorBrush(COLOR_3DFACE);
+				}
 				else
+				{
 					hBkgnd = (HBRUSH)GetParent()->SendMessage(WM_CTLCOLOREDIT, (WPARAM)(HDC)dc, (LPARAM)(HWND)GetSafeHwnd());
+				}
 
 				if (!hBkgnd || hBkgnd == GetStockObject(NULL_BRUSH))
+				{
 					hBkgnd = ::GetSysColorBrush(COLOR_WINDOW);
+				}
 
 				::FillRect(dc, rClient, hBkgnd);
 
@@ -183,7 +216,9 @@ void CFileEdit::OnPaint()
 				dc.SetBkMode(TRANSPARENT);
 
 				if (!IsWindowEnabled())
+				{
 					dc.SetTextColor(::GetSysColor(COLOR_GRAYTEXT));
+				}
 
 				dc.DrawText(sText, rClient, DT_PATH_ELLIPSIS);
 				m_bTipNeeded = TRUE;
@@ -193,7 +228,9 @@ void CFileEdit::OnPaint()
 		}
 	}
 	else
+	{
 		Default();
+	}
 }
 
 void CFileEdit::NcPaint(CDC* pDC, const CRect& rWindow)
@@ -211,12 +248,18 @@ void CFileEdit::DrawFileIcon(CDC* pDC, const CRect& rWindow)
 	HBRUSH hBkgnd = NULL;
 
 	if (!IsWindowEnabled() || (GetStyle() & ES_READONLY))
+	{
 		hBkgnd = GetSysColorBrush(COLOR_3DFACE);
+	}
 	else
+	{
 		hBkgnd = (HBRUSH)GetParent()->SendMessage(WM_CTLCOLOREDIT, (WPARAM)pDC->GetSafeHdc(), (LPARAM)(HWND)GetSafeHwnd());
+	}
 
 	if (!hBkgnd || hBkgnd == GetStockObject(NULL_BRUSH))
+	{
 		hBkgnd = ::GetSysColorBrush(COLOR_WINDOW);
+	}
 
 	pDC->FillRect(rIcon, CBrush::FromHandle(hBkgnd));
 
@@ -236,7 +279,9 @@ void CFileEdit::DrawFileIcon(CDC* pDC, const CRect& rWindow)
 		int nImage = -1;
 
 		if (HasStyle(FES_FOLDERS))
+		{
 			nImage = m_ilSys.GetFolderImageIndex();
+		}
 		else
 		{
 			// try parent for override
@@ -251,7 +296,9 @@ void CFileEdit::DrawFileIcon(CDC* pDC, const CRect& rWindow)
 		}
 
 		if (nImage != -1)
+		{
 			m_ilSys.GetImageList()->Draw(pDC, nImage, rIcon.TopLeft(), ILD_TRANSPARENT);
+		}
 	}
 }
 
@@ -267,9 +314,13 @@ void CFileEdit::OnBtnClick(UINT nID)
 
 			// filedialog spits if file is actually a url
 			if (::PathIsURL(sFilename) || ::PathIsDirectory(sFilename))
+			{
 				sFilename.Empty();
+			}
 			else
+			{
 				FileMisc::ValidateFilepath(sFilename);
+			}
 
 			if (HasStyle(FES_FOLDERS))
 			{
@@ -294,7 +345,9 @@ void CFileEdit::OnBtnClick(UINT nID)
 				dialog.m_ofn.lpstrTitle = FILEEDIT_BROWSE_TITLE;
 
 				if (sFilename.IsEmpty())
+				{
 					dialog.m_ofn.lpstrInitialDir = m_sCurFolder;
+				}
 
 				if (dialog.DoModal() == IDOK)
 				{
@@ -322,7 +375,9 @@ void CFileEdit::OnBtnClick(UINT nID)
 
 				// set the current directory in case its a relative path
 				if (!m_sCurFolder.IsEmpty())
+				{
 					SetCurrentDirectory(m_sCurFolder);
+				}
 
 				// try our parent first
 				if (!GetParent()->SendMessage(WM_FE_DISPLAYFILE, GetDlgCtrlID(), (LPARAM)(LPCTSTR)sPath))
@@ -362,7 +417,9 @@ void CFileEdit::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR* lpncsp
 	CEnEdit::OnNcCalcSize(bCalcValidRects, lpncsp);
 
 	if (bCalcValidRects)
+	{
 		lpncsp->rgrc[0].left += ICON_WIDTH;
+	}
 }
 
 void CFileEdit::OnKillFocus(CWnd* pNewWnd)
@@ -394,7 +451,9 @@ UINT CFileEdit::OnNcHitTest(CPoint point)
 #endif
 {
 	if (GetIconRect().PtInRect(point))
+	{
 		return HTBORDER;
+	}
 
 	return CEnEdit::OnNcHitTest(point);
 }
@@ -427,7 +486,7 @@ void CFileEdit::RecalcBtnRects()
 		CRect rClient;
 		GetClientRect(rClient);
 
-		m_tooltip.SetToolRect(this, (UINT)-1, rClient);
+		m_tooltip.SetToolRect(this, (UINT) - 1, rClient);
 	}
 }
 
@@ -447,7 +506,7 @@ void CFileEdit::PreSubclassWindow()
 		CRect rClient;
 		GetClientRect(rClient);
 
-		m_tooltip.AddTool(this, LPSTR_TEXTCALLBACK, rClient, (UINT)-1);
+		m_tooltip.AddTool(this, LPSTR_TEXTCALLBACK, rClient, (UINT) - 1);
 	}
 
 	EnableButton(FEBTN_GO, GetWindowTextLength());

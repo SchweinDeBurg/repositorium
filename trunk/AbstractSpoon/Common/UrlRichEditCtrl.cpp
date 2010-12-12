@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // UrlRichEditCtrl.cpp : implementation file
@@ -54,11 +68,11 @@ static LPTSTR URLDELIMS[] =
 	_T("\t"),
 	_T(", "),
 	_T(". "),
-	//	_T(";)",
-	//	_T("["),
-	//	_T("]"),
-	//	_T("("),
-	//	_T(")"),
+	//_T(";)",
+	//_T("["),
+	//_T("]"),
+	//_T("("),
+	//_T(")"),
 	_T("<"),
 	_T("{"),
 	_T("}")
@@ -657,7 +671,7 @@ LRESULT CUrlRichEditCtrl::SendNotifyCustomUrl(LPCTSTR szUrl) const
 // CUrlRichEditCtrl
 
 HRESULT CUrlRichEditCtrl::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT* lpcfFormat,
-      DWORD /*reco*/, BOOL /*fReally*/, HGLOBAL /*hMetaPict*/)
+	DWORD /*reco*/, BOOL /*fReally*/, HGLOBAL /*hMetaPict*/)
 {
 	BOOL bEnable = !(GetStyle() & ES_READONLY) && IsWindowEnabled();
 
@@ -765,7 +779,7 @@ void CUrlRichEditCtrl::TrackDragCursor()
 }
 
 HRESULT CUrlRichEditCtrl::GetContextMenu(WORD /*seltype*/, LPOLEOBJECT /*lpoleobj*/,
-      CHARRANGE* /*lpchrg*/, HMENU* /*lphmenu*/)
+	CHARRANGE* /*lpchrg*/, HMENU* /*lphmenu*/)
 {
 	CPoint point = m_ptContextMenu;
 
@@ -984,45 +998,45 @@ BOOL CUrlRichEditCtrl::OnNotifyLink(NMHDR* pNMHDR, LRESULT* pResult)
 
 	switch (pENL->msg)
 	{
-		case WM_SETCURSOR:
-			if (!bCtrl)
+	case WM_SETCURSOR:
+		if (!bCtrl)
+		{
+			// because we're overriding the default behaviour we need to
+			// handle the cursor being over a selected block
+			CHARRANGE crSel;
+			GetSel(crSel);
+
+			CPoint ptCursor(GetMessagePos());
+			ScreenToClient(&ptCursor);
+
+			LPCTSTR nCursor = IDC_ARROW;
+
+			int nChar = CharFromPoint(ptCursor);
+
+			if (nChar < crSel.cpMin || nChar > crSel.cpMax)
 			{
-				// because we're overriding the default behaviour we need to
-				// handle the cursor being over a selected block
-				CHARRANGE crSel;
-				GetSel(crSel);
+				nCursor = IDC_IBEAM;
+			}
 
-				CPoint ptCursor(GetMessagePos());
-				ScreenToClient(&ptCursor);
+			SetCursor(AfxGetApp()->LoadStandardCursor(nCursor));
 
-				LPCTSTR nCursor = IDC_ARROW;
+			*pResult = TRUE;
+			return TRUE;
+		}
+		break;
 
-				int nChar = CharFromPoint(ptCursor);
-
-				if (nChar < crSel.cpMin || nChar > crSel.cpMax)
-				{
-					nCursor = IDC_IBEAM;
-				}
-
-				SetCursor(AfxGetApp()->LoadStandardCursor(nCursor));
-
-				*pResult = TRUE;
+	case WM_LBUTTONUP:
+		if (bCtrl)
+		{
+			if (GoToUrl(FindUrl(pENL->chrg)))
+			{
 				return TRUE;
 			}
-			break;
+		}
 
-		case WM_LBUTTONUP:
-			if (bCtrl)
-			{
-				if (GoToUrl(FindUrl(pENL->chrg)))
-				{
-					return TRUE;
-				}
-			}
-
-		case WM_RBUTTONUP:
-			m_nContextUrl = FindUrl(pENL->chrg);
-			break;
+	case WM_RBUTTONUP:
+		m_nContextUrl = FindUrl(pENL->chrg);
+		break;
 	}
 
 	return FALSE;
@@ -1090,9 +1104,14 @@ int CUrlRichEditCtrl::FindUrlEx(const CPoint& point)
 
 BOOL CUrlRichEditCtrl::Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID)
 {
-	return CRichEditHelper::CreateRichEdit20(*this, dwStyle, rect, pParentWnd, nID);
-}
+	if (!CRichEditHelper::CreateRichEdit50(*this, dwStyle, rect, pParentWnd, nID))
+	{
+		return CRichEditHelper::CreateRichEdit20(*this, dwStyle, rect, pParentWnd, nID);
+	}
 
+	// else
+	return TRUE; // CreateRichEdit50
+}
 
 void CUrlRichEditCtrl::OnTimer(UINT nIDEvent)
 {

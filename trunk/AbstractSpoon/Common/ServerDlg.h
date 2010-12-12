@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_SERVERDLG_H__104A903D_A221_47B3_B6CC_52755637D9B0__INCLUDED_)
@@ -54,14 +68,18 @@ enum
 	IDC_SD_PASSWORD,
 	IDC_SD_PASSWORDLABEL,
 	IDC_SD_ANONLOGIN,
+	IDC_SD_PROXY,
+	IDC_SD_PROXYLABEL,
+	IDC_SD_PROXYPORT,
+	IDC_SD_PROXYPORTLABEL,
 };
 
 enum AL_TYPE
 {
-	ANONLOGIN_HIDE	= -2,
-	ANONLOGIN_AUTO	= -1,
-	ANONLOGIN_NO	= 0,
-	ANONLOGIN_YES	= 1,
+	ANONLOGIN_HIDE  = -2,
+	ANONLOGIN_AUTO  = -1,
+	ANONLOGIN_NO    = 0,
+	ANONLOGIN_YES   = 1,
 };
 
 class CServerDlg : public CRuntimeDlg
@@ -71,12 +89,32 @@ public:
 	CServerDlg(LPCTSTR szServer = NULL, LPCTSTR szUsername = NULL,
 		LPCTSTR szPassword = NULL, AL_TYPE nAnonymousLogin = ANONLOGIN_AUTO);   // standard constructor
 
-	CString GetServer() { return m_sServer; }
-	CString GetUsername() { return m_sUsername; }
-	CString GetPassword() { return m_sPassword; }
-	BOOL GetAnonynousLogin() { return (m_nAnonLogin == ANONLOGIN_YES); }
+	CString GetServer() const
+	{
+		return m_sServer;
+	}
+	CString GetUsername() const
+	{
+		return m_sUsername;
+	}
+	CString GetPassword() const
+	{
+		return m_sPassword;
+	}
+	BOOL GetAnonynousLogin() const
+	{
+		return (m_nAnonLogin == ANONLOGIN_YES);
+	}
+	CString GetProxy(UINT& nPort) const
+	{
+		nPort = m_sProxy.IsEmpty() ? 0 : m_nProxyPort;
+		return m_sProxy;
+	}
 
-	int DoModal() { return CRuntimeDlg::DoModal(_T("Enter Remote Server Details")); }
+	int DoModal()
+	{
+		return CRuntimeDlg::DoModal(_T("Enter Remote Server Details"));
+	}
 
 	// for overiding the default text for translating
 	static void SetItemText(UINT nIDItem, UINT nIDText);
@@ -84,10 +122,12 @@ public:
 protected:
 	// Dialog Data
 	//{{AFX_DATA(CServerDlg)
-	CString	m_sServer;
-	CString	m_sUsername;
-	CString	m_sPassword;
+	CString m_sServer;
+	CString m_sUsername;
+	CString m_sPassword;
 	//}}AFX_DATA
+	CString m_sProxy;
+	UINT m_nProxyPort;
 	CComboBox m_cbServers;
 	CComboBox m_cbUsernames;
 	AL_TYPE m_nAnonLogin;
@@ -111,10 +151,14 @@ protected:
 	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	afx_msg void OnAnonLogin();
+	afx_msg void OnChangeProxy();
 	DECLARE_MESSAGE_MAP()
 
 	CString GetItemText(UINT nIDItem, LPCTSTR szDefault);
-	virtual CString OverrideItemText(UINT nIDItem) { return GetItemText(nIDItem, NULL); }
+	virtual CString OverrideItemText(UINT nIDItem)
+	{
+		return GetItemText(nIDItem, NULL);
+	}
 };
 
 //{{AFX_INSERT_LOCATION}}

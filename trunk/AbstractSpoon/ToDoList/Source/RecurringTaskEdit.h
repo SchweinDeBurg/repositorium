@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // RecurringTaskEdit.h: interface for the CRecurringTaskEdit class.
@@ -48,22 +62,24 @@
 
 const int REBTN_OPTIONS = 1;
 
-class CTDLRecurringTaskEdit : public CEnEdit  
+class CTDLRecurringTaskEdit : public CEnEdit
 {
 public:
 	CTDLRecurringTaskEdit();
 	virtual ~CTDLRecurringTaskEdit();
 
-	CString GetRegularity() const;
 	void GetRecurrenceOptions(TDIRECURRENCE& tr) const;
 	void SetRecurrenceOptions(const TDIRECURRENCE& tr);
 
-	void SetDefaultDate(const COleDateTime& date) { m_dtDefault = date; }
+	void SetDefaultDate(const COleDateTime& date)
+	{
+		m_dtDefault = date;
+	}
 
 	BOOL ModifyStyle(DWORD dwRemove, DWORD dwAdd, UINT nFlags = 0);
 	void DoEdit();
 
-	static CString GetRegularity(TDI_REGULARITY nRegularity);
+	static CString GetRegularity(const TDIRECURRENCE& tr, BOOL bIncOnce = TRUE);
 	static int CalcMaxRegularityWidth(CDC* pDC, BOOL bIncOnce = TRUE);
 
 protected:
@@ -76,57 +92,58 @@ protected:
 	virtual void OnBtnClick(UINT nID);
 	virtual void PreSubclassWindow();
 
-// Implementation
+	// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CRecurringTaskEdit)
-		// NOTE: the ClassWizard will add member functions here
+	// NOTE: the ClassWizard will add member functions here
 	//}}AFX_MSG
-	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
-	afx_msg HBRUSH CtlColor(CDC* pDC, UINT nCtlColor);
-	afx_msg LRESULT OnSetReadOnly(WPARAM wp, LPARAM lp);
-	afx_msg void OnStyleChanging(int nStyleType, LPSTYLESTRUCT lpStyleStruct);
+	afx_msg BOOL OnReflectChangeDisplayText();
 	DECLARE_MESSAGE_MAP()
+
+protected:
+	static BOOL IsDefaultString(const CString& sRegularity);
+	static CString GetRegularity(TDI_REGULARITY nRegularity, BOOL bIncOnce = TRUE);
 };
 
-#endif 
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CRecurringTaskOptionDlg dialog
 
 class CTDLRecurringTaskOptionDlg : public CDialog
 {
-// Construction
+	// Construction
 public:
 	CTDLRecurringTaskOptionDlg(const TDIRECURRENCE& tr, const COleDateTime& dtDefault, CWnd* pParent = NULL);   // standard constructor
 
 	void GetRecurrenceOptions(TDIRECURRENCE& tr) const;
 
 protected:
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CRecurringTaskOptionDlg)
-	int		m_nRegularity;
-	int		m_bRecalcFromDue;
-	int		m_nReuse;
+	int     m_nRegularity;
+	int     m_bRecalcFromDue;
+	int     m_nReuse;
 	//}}AFX_DATA
-	int		m_nNumDays;
-	CCheckListBoxEx	m_lbWeekdays;
-	int		m_nNumWeeks;
+	int     m_nNumDays;
+	CCheckListBoxEx m_lbWeekdays;
+	int     m_nNumWeeks;
 	DWORD m_dwWeekdays;
-	CMonthComboBox	m_cbMonths;
-	int 	m_nMonth;
-	int		m_nYearMonthDay;
-	int		m_nNumMonths;
-	int		m_nMonthDay;
+	CMonthComboBox  m_cbMonths;
+	int     m_nMonth;
+	int     m_nYearMonthDay;
+	int     m_nNumMonths;
+	int     m_nMonthDay;
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CRecurringTaskOptionDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 
 	// Generated message map functions

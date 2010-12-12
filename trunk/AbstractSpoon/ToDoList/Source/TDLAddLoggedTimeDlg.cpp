@@ -41,63 +41,85 @@
 //      --suffix=none
 //*****************************************************************************
 
-#if !defined(AFX_COLORBUTTON_H__4FA393FA_20E7_4C07_A682_5AA7A8306DF4__INCLUDED_)
-#define AFX_COLORBUTTON_H__4FA393FA_20E7_4C07_A682_5AA7A8306DF4__INCLUDED_
-
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-// ColorButton.h : header file
+// TDLAddLoggedTimeDlg.cpp : implementation file
 //
 
-/////////////////////////////////////////////////////////////////////////////
-// CColorButton window
+#include "StdAfx.h"
+#include "ToDoListApp.h"
+#include "TDLAddLoggedTimeDlg.h"
 
-class CColorButton : public CButton
+#include "../../../CodeProject/Source/DateHelper.h"
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// CTDLAddLoggedTimeDlg dialog
+
+
+CTDLAddLoggedTimeDlg::CTDLAddLoggedTimeDlg(DWORD dwTaskID, LPCTSTR szTaskTitle, CWnd* pParent /*=NULL*/):
+CDialog(CTDLAddLoggedTimeDlg::IDD, pParent),
+m_cbTimeWhen(TCB_HALFHOURS)
 {
-	// Construction
-public:
-	CColorButton();
+	//{{AFX_DATA_INIT(CTDLAddLoggedTimeDlg)
+	m_dLoggedTime = 0.0;
+	m_dwTaskID = dwTaskID;
+	m_sTaskTitle = szTaskTitle;
+	//}}AFX_DATA_INIT
+	m_nUnits = THU_MINS;
+	m_dtWhen = COleDateTime::GetCurrentTime();
+}
 
-	COLORREF GetColor()
+
+void CTDLAddLoggedTimeDlg::DoDataExchange(CDataExchange* pDX)
+{
+	CDialog::DoDataExchange(pDX);
+	//{{AFX_DATA_MAP(CTDLAddLoggedTimeDlg)
+	DDX_Control(pDX, IDC_DATETIMEPICKER1, m_dateWhen);
+	DDX_Control(pDX, IDC_COMBO1, m_cbTimeWhen);
+	DDX_Text(pDX, IDC_LOGGEDTIME, m_dLoggedTime);
+	DDX_Text(pDX, IDC_TASKID, m_dwTaskID);
+	DDX_Text(pDX, IDC_TASKTITLE, m_sTaskTitle);
+	DDX_Control(pDX, IDC_LOGGEDTIME, m_eLoggedTime);
+	//}}AFX_DATA_MAP
+
+	if (pDX->m_bSaveAndValidate)
 	{
-		return m_color;
+		m_nUnits = m_eLoggedTime.GetUnits();
+
+		m_dateWhen.GetTime(m_dtWhen);
+		COleDateTime time = m_cbTimeWhen.GetOleTime();
+
+		m_dtWhen = CDateHelper::GetDateOnly(m_dtWhen) + time;
 	}
-	void SetColor(COLORREF color);
+	else
+	{
+		m_eLoggedTime.SetUnits(m_nUnits);
 
-protected:
-	COLORREF m_color;
+		m_dateWhen.SetTime(m_dtWhen);
+		m_cbTimeWhen.SetOleTime(CDateHelper::GetTimeOnly(m_dtWhen));
+	}
+}
 
-	// Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CColorButton)
-	//}}AFX_VIRTUAL
 
-	// Implementation
-public:
-	virtual ~CColorButton();
-
-	// Generated message map functions
-protected:
-	//{{AFX_MSG(CColorButton)
-	afx_msg void OnPaint();
-	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
-	afx_msg void OnKillFocus(CWnd* pNewWnd);
-	afx_msg void OnSetFocus(CWnd* pOldWnd);
-	afx_msg void OnEnable(BOOL bEnable);
-	afx_msg BOOL OnClicked();
-	//}}AFX_MSG
-	afx_msg LRESULT OnShowAccelerators(WPARAM wp, LPARAM lp);
-
-	DECLARE_MESSAGE_MAP()
-};
+BEGIN_MESSAGE_MAP(CTDLAddLoggedTimeDlg, CDialog)
+	//{{AFX_MSG_MAP(CTDLAddLoggedTimeDlg)
+	// NOTE: the ClassWizard will add message map macros here
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
+// CTDLAddLoggedTimeDlg message handlers
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+double CTDLAddLoggedTimeDlg::GetLoggedTime() const // in hours
+{
+	return CTimeHelper().GetTime(m_dLoggedTime, m_nUnits, THU_HOURS);
+}
 
-#endif // !defined(AFX_COLORBUTTON_H__4FA393FA_20E7_4C07_A682_5AA7A8306DF4__INCLUDED_)
+COleDateTime CTDLAddLoggedTimeDlg::GetWhen() const
+{
+	return m_dtWhen;
+}

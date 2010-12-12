@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_INPUTLISTCTRL_H__2E5810B0_D7DF_11D1_AB19_0000E8425C3E__INCLUDED_)
@@ -70,7 +83,10 @@ public:
 	void SetAutoColPrompt(CString sPrompt);
 	virtual BOOL CanEditSelectedCell() const;
 	void EditSelectedCell();
-	void EndEdit(BOOL bCancel) { m_editBox.EndEdit(bCancel); }
+	void EndEdit(BOOL bCancel)
+	{
+		m_editBox.EndEdit(bCancel);
+	}
 	virtual BOOL CanDeleteSelectedCell() const;
 	virtual BOOL DeleteSelectedCell();
 	BOOL SetCellText(int nRow, int nCol, CString sText);
@@ -159,12 +175,18 @@ protected:
 	BOOL IsPrompt(int nItem, int nCol);
 	virtual COLORREF GetItemTextColor(int nItem, int nCol, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus);
 	virtual COLORREF GetItemBackColor(int nItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus);
-	virtual CColumnData* GetNewColumnData() const { return new CColumnData2; }
+	virtual CColumnData* GetNewColumnData() const
+	{
+		return new CColumnData2;
+	}
 	const CColumnData2* GetColumnData(int nCol) const;
 	virtual int CompareItems(DWORD dwItemData1, DWORD dwItemData2, int nSortColumn);
 	int InsertRow(CString sRowText, int nItem, int nImage = -1);
 	virtual void GetCellEditRect(int nRow, int nCol, CRect& rCell);
-	virtual BOOL IsEditing() const { return m_editBox.GetSafeHwnd() && m_editBox.IsWindowVisible(); }
+	virtual BOOL IsEditing() const
+	{
+		return m_editBox.GetSafeHwnd() && m_editBox.IsWindowVisible();
+	}
 };
 
 /////////////////////////////////////////////////////////////////////////////

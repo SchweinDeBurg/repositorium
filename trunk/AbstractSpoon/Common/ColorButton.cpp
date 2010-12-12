@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // ColorButton.cpp : implementation file
@@ -96,13 +109,19 @@ void CColorButton::OnPaint()
 			DWORD dwStyle = GetStyle();
 
 			if (dwStyle & BS_LEFT)
+			{
 				rColor.left = rColor.right - max(12, rColor.Height());
+			}
 
 			else if (dwStyle & BS_RIGHT)
+			{
 				rColor.right = rColor.left + max(12, rColor.Height());
+			}
 
 			else
+			{
 				rColor.SetRectEmpty();
+			}
 
 			if (!rColor.IsRectEmpty())
 			{
@@ -117,9 +136,13 @@ void CColorButton::OnPaint()
 				if (m_color > 0)
 				{
 					if (IsWindowEnabled())
+					{
 						::FrameRect(dcTemp, rColor, (HBRUSH)::GetStockObject(BLACK_BRUSH));
+					}
 					else
+					{
 						::FrameRect(dcTemp, rColor, (HBRUSH)::GetStockObject(GRAY_BRUSH));
+					}
 				}
 
 				dc.BitBlt(0, 0, rClient.right, rClient.bottom, &dcTemp, 0, 0, SRCCOPY);
@@ -141,7 +164,9 @@ void CColorButton::SetColor(COLORREF color)
 	m_color = color;
 
 	if (GetSafeHwnd())
+	{
 		Invalidate();
+	}
 }
 
 void CColorButton::OnLButtonUp(UINT nFlags, CPoint point)
@@ -205,7 +230,6 @@ BOOL CColorButton::OnClicked()
 	Invalidate();
 	UpdateWindow();
 
-	//	CEnColorDialog dialog(m_color, CC_FULLOPEN | CC_RGBINIT);
 	CColorDialog dialog(m_color, CC_FULLOPEN | CC_RGBINIT);
 
 	if (dialog.DoModal() == IDOK)

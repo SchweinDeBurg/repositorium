@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // RemoteFile.cpp: implementation of the CRemoteFile class.
@@ -49,7 +63,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -60,11 +74,14 @@ static char THIS_FILE[]=__FILE__;
 const UINT BUFSIZE = 5 * 1024;
 const LPCTSTR ALLFILES = _T("All Files (*.*)\0*.*\0");
 
-CRemoteFile::CRemoteFile(LPCTSTR szAgent, LPCTSTR szServer, LPCTSTR szUsername, LPCTSTR szPassword, CWnd* pParent)
-: CInternetSession(szAgent),
+CRemoteFile::CRemoteFile(LPCTSTR szAgent, LPCTSTR szServer, LPCTSTR szUsername,
+	LPCTSTR szPassword, LPCTSTR szProxy, CWnd* pParent):
+m_sAgent(szAgent),
+m_sProxyAndPort(szProxy),
 m_sServer(szServer),
 m_sUsername(szUsername),
 m_sPassword(szPassword),
+m_pSession(NULL),
 m_pConnection(NULL),
 m_pParent(pParent)
 {
@@ -79,7 +96,7 @@ m_pParent(pParent)
 CRemoteFile::~CRemoteFile()
 {
 	CloseConnection();
-	Close();
+	CloseSession();
 }
 
 RMERR CRemoteFile::SaveErrorMsg(RMERR nErr, LPCTSTR szLocalPath, LPCTSTR szRemotePath)
@@ -146,9 +163,13 @@ RMERR CRemoteFile::SaveErrorMsg(RMERR nErr, LPCTSTR szLocalPath, LPCTSTR szRemot
 	default:
 	case RMERR_UNKNOWN:
 		if (m_dwInternetErr)
+		{
 			m_sLastError.Format(_T("An internet error occurred (%d)"), m_dwInternetErr);
+		}
 		else
+		{
 			m_sLastError = _T("An unknown error occurred");
+		}
 	}
 
 	return nErr;
@@ -160,10 +181,11 @@ RMERR CRemoteFile::GetFile(CString& sRemotePath, CString& sLocalPath, DWORD dwOp
 	ValidateOptions(dwOptions, TRUE);
 
 	RMERR nRes = RMERR_SUCCESS;
-	//BOOL bAllowDialog = (dwOptions & RMO_ALLOWDIALOG);
 
 	if (!EstablishConnection(nRes, dwOptions))
+	{
 		return SaveErrorMsg(nRes);
+	}
 
 	// remote path(s)
 	CFRArray aRemoteFiles;
@@ -206,12 +228,16 @@ RMERR CRemoteFile::GetFile(CString& sRemotePath, CString& sLocalPath, DWORD dwOp
 				}
 			}
 			else
+			{
 				sInitialDir = sLocalPath;
+			}
 
 			nRes = GetLocalPaths(aLocalFiles, bTemp, aRemoteFiles, dwOptions, sInitialDir);
 		}
 		else // single file
+		{
 			aLocalFiles.Add(sLocalPath);
+		}
 	}
 
 	if (nRes == RMERR_SUCCESS && aRemoteFiles.GetSize())
@@ -222,10 +248,12 @@ RMERR CRemoteFile::GetFile(CString& sRemotePath, CString& sLocalPath, DWORD dwOp
 		if (bProgress)
 		{
 			progDlg.Create(_T("Download Progress"), NULL, m_pParent);
-			ASSERT (progDlg.GetSafeHwnd());
+			ASSERT(progDlg.GetSafeHwnd());
 
 			if (m_pParent)
+			{
 				m_pParent->EnableWindow(FALSE);
+			}
 		}
 
 		BOOL bConfirmOverwrite = (dwOptions & RMO_CONFIRMOVERWRITE);
@@ -244,17 +272,23 @@ RMERR CRemoteFile::GetFile(CString& sRemotePath, CString& sLocalPath, DWORD dwOp
 
 			// handle single files
 			if (nFileCount == 1)
+			{
 				nRes = nFileRes;
+			}
 
 			// concatenate remote names together delimited by ;
 			if (!sRemotePath.IsEmpty())
+			{
 				sRemotePath += ';';
+			}
 
 			sRemotePath += aRemoteFiles[nFile].sFilePath;
 		}
 
 		if (bProgress && m_pParent)
+		{
 			m_pParent->EnableWindow(TRUE);
+		}
 	}
 
 	// cleanup
@@ -265,12 +299,16 @@ RMERR CRemoteFile::GetFile(CString& sRemotePath, CString& sLocalPath, DWORD dwOp
 			int nFile = aLocalFiles.GetSize();
 
 			while (nFile--)
+			{
 				::DeleteFile(aLocalFiles[nFile]);
+			}
 		}
 	}
 	// join downloaded files delimited by ;
 	else
+	{
 		sLocalPath = Misc::FormatArray(aLocalFiles, _T(";"));
+	}
 
 	CloseConnection();
 
@@ -283,7 +321,6 @@ RMERR CRemoteFile::SetFile(CString& sLocalPath, CString& sRemotePath, DWORD dwOp
 	ValidateOptions(dwOptions, FALSE);
 
 	RMERR nRes = RMERR_SUCCESS;
-	//BOOL bAllowDialog = (dwOptions & RMO_ALLOWDIALOG);
 
 	// if local file not specified then get browse for it
 	CStringArray aLocalFiles;
@@ -293,14 +330,20 @@ RMERR CRemoteFile::SetFile(CString& sLocalPath, CString& sRemotePath, DWORD dwOp
 	// now we support wildcards we must allow for there being no
 	// files matching the upload which is not an error
 	if (nRes != RMERR_SUCCESS)
+	{
 		return SaveErrorMsg(nRes);
+	}
 
 	else if (!aLocalFiles.GetSize())
+	{
 		return RMERR_SUCCESS;
+	}
 
 	// now we start the connection
 	if (!EstablishConnection(nRes, dwOptions))
+	{
 		return SaveErrorMsg(nRes);
+	}
 
 	// if remote path not specified or is a folder then allow browsing unless bAllowDialog == FALSE
 	CFRArray aRemoteFiles;
@@ -332,10 +375,12 @@ RMERR CRemoteFile::SetFile(CString& sLocalPath, CString& sRemotePath, DWORD dwOp
 		if (bProgress)
 		{
 			progDlg.Create(_T("Upload Progress"), NULL, m_pParent);
-			ASSERT (progDlg.GetSafeHwnd());
+			ASSERT(progDlg.GetSafeHwnd());
 
 			if (m_pParent)
+			{
 				m_pParent->EnableWindow(FALSE);
+			}
 		}
 
 		int nFileCount = aRemoteFiles.GetSize();
@@ -361,7 +406,9 @@ RMERR CRemoteFile::SetFile(CString& sLocalPath, CString& sRemotePath, DWORD dwOp
 		}
 
 		if (bProgress && m_pParent)
+		{
 			m_pParent->EnableWindow(TRUE);
+		}
 	}
 
 	CloseConnection();
@@ -373,15 +420,15 @@ BOOL CRemoteFile::RemotePathIsFolder(const CString& sPath)
 {
 	CString sFolder(sPath);
 
-	sFolder.Replace('\\', '/');
+	sFolder.Replace(_T('\\'), _T('/'));
 	sFolder.TrimRight();
 
-	return (sFolder.GetAt(sFolder.GetLength() - 1) == '/');
+	return (sFolder.GetAt(sFolder.GetLength() - 1) == _T('/'));
 }
 
 // for upload
 RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, const CStringArray& aLocalFiles,
-											 DWORD dwOptions, LPCTSTR szRemoteDir, LPCTSTR szLocalRoot)
+	DWORD dwOptions, LPCTSTR szRemoteDir, LPCTSTR szLocalRoot)
 {
 	aRemoteFiles.RemoveAll();
 
@@ -389,20 +436,24 @@ RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, const CStringArray& aL
 	int nNumLocal = aLocalFiles.GetSize();
 
 	if (!nNumLocal)
+	{
 		return RMERR_LOCALPATH;
+	}
 
 	// if the remote path is empty then we display an appropriate dialog
 	CString sRemotePath(szRemoteDir);
 	sRemotePath.TrimLeft();
 	sRemotePath.TrimRight();
-	sRemotePath.Replace('\\', '/');
+	sRemotePath.Replace(_T('\\'), _T('/'));
 
 	if (sRemotePath.IsEmpty())
 	{
 		BOOL bAllowDialog = (dwOptions & RMO_ALLOWDIALOG);
 
 		if (!bAllowDialog)
+		{
 			return RMERR_REMOTEPATH;
+		}
 
 		sRemotePath = AfxGetApp()->GetProfileString(_T("RemoteSettings\\LastUploadFolder"), m_sServer);
 
@@ -416,28 +467,25 @@ RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, const CStringArray& aL
 				if (dialog.GetPathCount())
 				{
 					sRemotePath = dialog.GetFirstPath();
-					ASSERT (!sRemotePath.IsEmpty());
+					ASSERT(!sRemotePath.IsEmpty());
 				}
 				else if (!dialog.IsRootFolder())
+				{
 					return RMERR_USERCANCELLED;
+				}
 
 				for (int nFile = 0; nFile < aLocalFiles.GetSize(); nFile++)
 				{
 					CString sRemoteFile = MakeRemotePath(aLocalFiles[nFile], sRemotePath, szLocalRoot);
-					/*
-					char szFilename[_MAX_FNAME], szExt[_MAX_EXT];
-					_splitpath(aLocalFiles[nFile], NULL, NULL, szFilename, szExt);
-
-					char szRemotePath[MAX_PATH];
-					_makepath(szRemotePath, NULL, sRemotePath, szFilename, szExt);
-					*/
 					aRemoteFiles.Add(FILERESULT(sRemoteFile));
 				}
 
 				AfxGetApp()->WriteProfileString(_T("RemoteSettings\\LastUploadFolder"), m_sServer, sRemotePath);
 			}
 			else
+			{
 				return RMERR_USERCANCELLED;
+			}
 		}
 		else // nNumLocal == 1
 		{
@@ -449,9 +497,13 @@ RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, const CStringArray& aL
 			_tcscat(szFilename, szExt);
 
 			if (dialog.DoModal(RFD_UPLOAD, szFilename) == IDOK)
+			{
 				dialog.GetPaths(aRemoteFiles);
+			}
 			else
+			{
 				return RMERR_USERCANCELLED;
+			}
 		}
 	}
 	else
@@ -463,21 +515,19 @@ RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, const CStringArray& aL
 			for (int nFile = 0; nFile < aLocalFiles.GetSize(); nFile++)
 			{
 				CString sRemoteFile = MakeRemotePath(aLocalFiles[nFile], sRemotePath, szLocalRoot);
-				/*				char szFilename[_MAX_FNAME], szExt[_MAX_EXT];
-				_splitpath(aLocalFiles[nFile], NULL, NULL, szFilename, szExt);
-
-				char szRemotePath[MAX_PATH];
-				_makepath(szRemotePath, NULL, sRemotePath, szFilename, szExt);
-				*/
 				aRemoteFiles.Add(FILERESULT(sRemoteFile));
 			}
 		}
 		// else we assume its a full file path in which case it's only
 		// okay for single local files
 		else if (nNumLocal == 1)
+		{
 			aRemoteFiles.Add(FILERESULT(sRemotePath));
+		}
 		else
+		{
 			return RMERR_REMOTEPATH;
+		}
 	}
 
 	return RMERR_SUCCESS;
@@ -509,7 +559,7 @@ RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, DWORD dwOptions, LPCTS
 	CString sRemotePath(szRemoteDir);
 	sRemotePath.TrimLeft();
 	sRemotePath.TrimRight();
-	sRemotePath.Replace('\\', '/');
+	sRemotePath.Replace(_T('\\'), _T('/'));
 
 	// if the remote path is empty or a folder then we must display a dialog
 	// to get the actual file of interest
@@ -518,7 +568,9 @@ RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, DWORD dwOptions, LPCTS
 		BOOL bAllowDialog = (dwOptions & RMO_ALLOWDIALOG);
 
 		if (!bAllowDialog)
+		{
 			return RMERR_REMOTEPATH;
+		}
 
 		// get last folder browsed for this server
 		sRemotePath = AfxGetApp()->GetProfileString(_T("RemoteSettings\\LastDownloadFolder"), m_sServer);
@@ -529,10 +581,14 @@ RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, DWORD dwOptions, LPCTS
 		DWORD dwRFDOptions = RFD_DOWNLOAD | RFD_FILEMUSTEXIST;
 
 		if (dwOptions & RMO_MULTISELECT)
+		{
 			dwRFDOptions |= RFD_MULTISELECT;
+		}
 
 		if (dwOptions & RMO_NONAVIGATE)
+		{
 			dwRFDOptions &= RFD_NONAVIGATE;
+		}
 
 		if (dialog.DoModal(dwRFDOptions) == IDOK && dialog.GetPathCount())
 		{
@@ -541,11 +597,15 @@ RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, DWORD dwOptions, LPCTS
 			AfxGetApp()->WriteProfileString(_T("RemoteSettings\\LastDownloadFolder"), m_sServer, sRemotePath);
 		}
 		else
+		{
 			return RMERR_USERCANCELLED;
+		}
 	}
 	// else we must assume that the remote path is the full filename
 	else
+	{
 		aRemoteFiles.Add(FILERESULT(sRemotePath));
+	}
 
 	return RMERR_SUCCESS;
 }
@@ -566,7 +626,9 @@ RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, BOOL& bTemp, const C
 			CString sLocalPath = GetTempPath(aRemoteFiles[nFile].sFileName, bKeepExt);
 
 			if (!sLocalPath.IsEmpty())
+			{
 				aLocalFiles.Add(sLocalPath);
+			}
 			else
 			{
 				aLocalFiles.RemoveAll();
@@ -580,7 +642,9 @@ RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, BOOL& bTemp, const C
 		BOOL bCreatePath = (dwOptions & RMO_CREATEDOWNLOADDIR);
 
 		if (!ValidateLocalFolder(sFolder, bCreatePath))
+		{
 			sFolder = AfxGetApp()->GetProfileString(_T("LocalSettings\\LastDownloadFolder"), m_sServer);
+		}
 
 		// if multiple remote files are being downloaded then display folder dialog
 		if (aRemoteFiles.GetSize() > 1)
@@ -603,7 +667,9 @@ RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, BOOL& bTemp, const C
 				AfxGetApp()->WriteProfileString(_T("LocalSettings\\LastDownloadFolder"), m_sServer, sFolder);
 			}
 			else
+			{
 				return RMERR_USERCANCELLED;
+			}
 		}
 		else if (aRemoteFiles.GetSize() == 1)
 		{
@@ -616,16 +682,24 @@ RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, BOOL& bTemp, const C
 			dialog.m_ofn.nMaxFile = MAX_PATH;
 
 			if (!sFolder.IsEmpty())
+			{
 				dialog.m_ofn.lpstrInitialDir = sFolder;
+			}
 
 			if (dialog.DoModal() == IDOK)
+			{
 				aLocalFiles.Add(dialog.GetPathName());
+			}
 			else
+			{
 				return RMERR_USERCANCELLED;
+			}
 		}
 	}
 	else
+	{
 		return RMERR_LOCALPATH;
+	}
 
 	return RMERR_SUCCESS;
 }
@@ -643,7 +717,9 @@ RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, DWORD dwOptions, LPC
 	{
 		// check first for a valid parent folder
 		if (!FileMisc::FolderFromFilePathExists(sLocalPath))
+		{
 			return RMERR_LOCALPATH;
+		}
 
 		// files first
 		CFileFind ff;
@@ -659,7 +735,9 @@ RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, DWORD dwOptions, LPC
 				CString sLocalPath = ff.GetFilePath();
 
 				if (dwOptions & RMO_LOWERCASEPATHS)
+				{
 					sLocalPath.MakeLower();
+				}
 
 				aLocalFiles.Add(sLocalPath);
 			}
@@ -702,7 +780,9 @@ RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, DWORD dwOptions, LPC
 	if (bFile)
 	{
 		if (dwOptions & RMO_LOWERCASEPATHS)
+		{
 			sLocalPath.MakeLower();
+		}
 
 		aLocalFiles.Add(sLocalPath);
 	}
@@ -713,14 +793,20 @@ RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, DWORD dwOptions, LPC
 		BOOL bAllowDialog = (dwOptions & RMO_ALLOWDIALOG);
 
 		if (!bAllowDialog)
+		{
 			return RMERR_LOCALPATH;
+		}
 
 		if (!bFolder)  // bad path
+		{
 			sLocalPath.IsEmpty();
+		}
 
 		// get last folder browsed for this server
 		if (sLocalPath.IsEmpty())
+		{
 			sLocalPath = AfxGetApp()->GetProfileString(_T("LocalSettings\\LastUploadFolder"), m_sServer);
+		}
 
 		// browse for file(s)
 		CFileDialog dialog(TRUE);
@@ -735,7 +821,9 @@ RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, DWORD dwOptions, LPC
 		dialog.m_ofn.Flags |= OFN_ALLOWMULTISELECT;
 
 		if (!sLocalPath.IsEmpty())
+		{
 			dialog.m_ofn.lpstrInitialDir = sLocalPath;
+		}
 
 		if (dialog.DoModal() == IDOK)
 		{
@@ -746,7 +834,9 @@ RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, DWORD dwOptions, LPC
 				CString sLocalPath = dialog.GetNextPathName(pos);
 
 				if (dwOptions & RMO_LOWERCASEPATHS)
+				{
 					sLocalPath.MakeLower();
+				}
 
 				aLocalFiles.Add(sLocalPath);
 			}
@@ -754,7 +844,9 @@ RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, DWORD dwOptions, LPC
 			AfxGetApp()->WriteProfileString(_T("LocalSettings\\LastUploadFolder"), m_sServer, sLocalPath);
 		}
 		else
+		{
 			return RMERR_USERCANCELLED;
+		}
 
 	}
 
@@ -776,7 +868,9 @@ BOOL CRemoteFile::ValidateLocalFolder(CString& sFolder, BOOL bAllowCreation)
 			sFolder.Replace(_T('/'), _T('\\'));
 
 			if (sFolder.GetAt(sFolder.GetLength() - 1) == _T('\\'))
+			{
 				FileMisc::CreateFolder(sFolder);
+			}
 
 			else // split first
 			{
@@ -787,16 +881,22 @@ BOOL CRemoteFile::ValidateLocalFolder(CString& sFolder, BOOL bAllowCreation)
 				sTemp.Format(_T("%s%s"), szDrive, szFolder);
 
 				if (FileMisc::CreateFolder(sTemp))
+				{
 					sFolder = sTemp;
+				}
 			}
 
 			return (GetFileAttributes(sFolder) != 0xffffffff);
 		}
 		else
+		{
 			return FALSE;
+		}
 	}
 	else
+	{
 		return (dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
+	}
 }
 
 CString CRemoteFile::GetTempPath(const CString& sRemotePath, BOOL bKeepExt)
@@ -825,7 +925,11 @@ CString CRemoteFile::GetTempPath(const CString& sRemotePath, BOOL bKeepExt)
 BOOL CRemoteFile::EstablishConnection(RMERR& nRes, DWORD dwOptions)
 {
 	CWaitCursor cursor;
-	CloseConnection();
+
+	if (!RestartSession())
+	{
+		return FALSE;
+	}
 
 	BOOL bAllowDialog = (dwOptions & RMO_ALLOWDIALOG);
 	BOOL bAnonLogin = (dwOptions & RMO_ANONYMOUSLOGIN);
@@ -839,9 +943,13 @@ BOOL CRemoteFile::EstablishConnection(RMERR& nRes, DWORD dwOptions)
 			try
 			{
 				if (bAnonLogin)
-					m_pConnection = GetFtpConnection(m_sServer);
+				{
+					m_pConnection = m_pSession->GetFtpConnection(m_sServer);
+				}
 				else
-					m_pConnection = GetFtpConnection(m_sServer, m_sUsername, m_sPassword);
+				{
+					m_pConnection = m_pSession->GetFtpConnection(m_sServer, m_sUsername, m_sPassword);
+				}
 
 				if (m_pConnection)
 				{
@@ -849,7 +957,7 @@ BOOL CRemoteFile::EstablishConnection(RMERR& nRes, DWORD dwOptions)
 					return TRUE;
 				}
 			}
-			catch(CInternetException* e)
+			catch (CInternetException* e)
 			{
 				nRes = RMERR_CONNECTING;
 				m_dwInternetErr = e->m_dwError;
@@ -880,7 +988,9 @@ BOOL CRemoteFile::EstablishConnection(RMERR& nRes, DWORD dwOptions)
 				}
 			}
 			else
-				return FALSE; // can't try again
+			{
+				return FALSE;   // can't try again
+			}
 		}
 		else if (bAllowDialog)
 		{
@@ -905,29 +1015,86 @@ BOOL CRemoteFile::DoServerDlg(DWORD dwOptions, BOOL& bAnonLogin)
 	AL_TYPE nAnonLogin = (dwOptions & RMO_NOANONYMOUSLOGIN) ? ANONLOGIN_HIDE :
 		(bAnonLogin ? ANONLOGIN_YES : ANONLOGIN_AUTO);
 
-CServerDlg dialog(m_sServer, m_sUsername, m_sPassword, nAnonLogin);
+	CServerDlg dialog(m_sServer, m_sUsername, m_sPassword, nAnonLogin);
 
-if (dialog.DoModal() == IDOK)
-{
-	m_sServer = dialog.GetServer();
-	m_sUsername = dialog.GetUsername();
-	m_sPassword = dialog.GetPassword();
-	bAnonLogin = dialog.GetAnonynousLogin();
+	if (dialog.DoModal() == IDOK)
+	{
+		m_sServer = dialog.GetServer();
+		m_sUsername = dialog.GetUsername();
+		m_sPassword = dialog.GetPassword();
+		bAnonLogin = dialog.GetAnonynousLogin();
 
-	return TRUE;
+		UINT nProxyPort = 0;
+		CString sProxy = dialog.GetProxy(nProxyPort);
+
+		VERIFY(SetProxy(sProxy, nProxyPort));
+
+		return TRUE;
+	}
+
+	// else
+	return FALSE;
 }
 
-// else
-return FALSE;
+BOOL CRemoteFile::SetProxy(const CString& sProxy, UINT nPort)
+{
+	CString sProxyAndPort;
+
+	if (!sProxy.IsEmpty())
+	{
+		sProxyAndPort.Format(_T("%s:%d"), sProxy, nPort);
+	}
+
+	// we only need to restart the session if the proxy has changed
+	// and a session is active
+	if (m_pSession && m_sProxyAndPort != sProxyAndPort)
+	{
+		m_sProxyAndPort = sProxyAndPort;
+		return RestartSession();
+	}
+
+	// else
+	return TRUE;;
+}
+
+BOOL CRemoteFile::RestartSession()
+{
+	CloseConnection();
+	CloseSession();
+
+	// restart internet session
+	if (m_sProxyAndPort.IsEmpty())
+	{
+		m_pSession = new CInternetSession(m_sAgent, 1, INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
+	}
+	else
+	{
+		m_pSession = new CInternetSession(m_sAgent, 1, INTERNET_OPEN_TYPE_PROXY, m_sProxyAndPort, NULL, 0);
+	}
+
+	return m_pSession && (HINTERNET)(*m_pSession);
 }
 
 void CRemoteFile::CloseConnection()
 {
 	if (m_pConnection)
+	{
 		m_pConnection->Close();
+	}
 
 	delete m_pConnection;
 	m_pConnection = NULL;
+}
+
+void CRemoteFile::CloseSession()
+{
+	if (m_pSession)
+	{
+		m_pSession->Close();
+	}
+
+	delete m_pSession;
+	m_pSession = NULL;
 }
 
 DWORD CRemoteFile::GetRemoteFileSize(LPCTSTR szRemotePath)
@@ -942,7 +1109,7 @@ DWORD CRemoteFile::GetRemoteFileSize(LPCTSTR szRemotePath)
 			return (DWORD)ff.GetLength();
 		}
 	}
-	catch(CInternetException* e)
+	catch (CInternetException* e)
 	{
 		m_dwInternetErr = e->m_dwError;
 		e->Delete();
@@ -951,7 +1118,7 @@ DWORD CRemoteFile::GetRemoteFileSize(LPCTSTR szRemotePath)
 	{
 	}
 
-	return (DWORD)-1;
+	return (DWORD) - 1;
 }
 
 BOOL CRemoteFile::RemoteFileExists(LPCTSTR szRemotePath)
@@ -961,9 +1128,11 @@ BOOL CRemoteFile::RemoteFileExists(LPCTSTR szRemotePath)
 		CFtpFileFind ff(m_pConnection);
 
 		if (ff.FindFile(szRemotePath))
+		{
 			return TRUE;
+		}
 	}
-	catch(CInternetException* e)
+	catch (CInternetException* e)
 	{
 		e->Delete();
 	}
@@ -977,7 +1146,9 @@ BOOL CRemoteFile::RemoteFileExists(LPCTSTR szRemotePath)
 RMERR CRemoteFile::DownloadFile(const FILERESULT* pRemoteFile, LPCTSTR szToLocalPath, DWORD dwOptions, CProgressDlg* pDlg)
 {
 	if (!m_pConnection)
+	{
 		return RMERR_NOTCONNECTED;
+	}
 
 	// check for existing local file
 	BOOL bLocalExists = (::GetFileAttributes(szToLocalPath) != 0xffffffff);
@@ -990,7 +1161,9 @@ RMERR CRemoteFile::DownloadFile(const FILERESULT* pRemoteFile, LPCTSTR szToLocal
 		HWND hWnd = m_pParent ? m_pParent->GetSafeHwnd() : NULL;
 
 		if (MessageBox(hWnd, sMessage, _T("Confirm Overwrite"), MB_YESNO) == IDNO)
+		{
 			return RMERR_USERCANCELLED;
+		}
 	}
 
 	// get remote file size if not specified
@@ -1001,7 +1174,9 @@ RMERR CRemoteFile::DownloadFile(const FILERESULT* pRemoteFile, LPCTSTR szToLocal
 		dwFileSize = GetRemoteFileSize(pRemoteFile->sFilePath);
 
 		if (-1 == dwFileSize)
-			return RMERR_REMOTEPATH; // probably doen't exist
+		{
+			return RMERR_REMOTEPATH;   // probably doen't exist
+		}
 	}
 
 	// initialize progress dialog
@@ -1013,7 +1188,9 @@ RMERR CRemoteFile::DownloadFile(const FILERESULT* pRemoteFile, LPCTSTR szToLocal
 		if (!pDlg && progDlg.Create(_T("Download Progress"), NULL, m_pParent))
 		{
 			if (m_pParent)
+			{
 				m_pParent->EnableWindow(FALSE);
+			}
 
 			pDlg = &progDlg;
 		}
@@ -1033,24 +1210,26 @@ RMERR CRemoteFile::DownloadFile(const FILERESULT* pRemoteFile, LPCTSTR szToLocal
 	{
 		pFile = m_pConnection->OpenFile(pRemoteFile->sFilePath);
 	}
-	catch(CInternetException* e)
+	catch (CInternetException* e)
 	{
 		m_dwInternetErr = e->m_dwError;
 		e->Delete();
 	}
-	catch(...)
+	catch (...)
 	{
 	}
 
 	if (!pFile)
+	{
 		return RMERR_OPENINGREMOTEFILETOREAD;
+	}
 
 	// open local file for output
 	RMERR nRes = RMERR_SUCCESS;
 	CFile file;
 
 	// make sure the parent folder is created first
-	VERIFY (FileMisc::CreateFolderFromFilePath(szToLocalPath));
+	VERIFY(FileMisc::CreateFolderFromFilePath(szToLocalPath));
 
 	if (file.Open(szToLocalPath, CFile::modeCreate | CFile::modeWrite))
 	{
@@ -1066,7 +1245,7 @@ RMERR CRemoteFile::DownloadFile(const FILERESULT* pRemoteFile, LPCTSTR szToLocal
 			{
 				nCount = pFile->Read((LPVOID)ucBuffer, BUFSIZE);
 			}
-			catch(CInternetException* e)
+			catch (CInternetException* e)
 			{
 				nRes = RMERR_READINGREMOTEFILE;
 				m_dwInternetErr = e->m_dwError;
@@ -1083,7 +1262,9 @@ RMERR CRemoteFile::DownloadFile(const FILERESULT* pRemoteFile, LPCTSTR szToLocal
 				dwBytesRead += nCount;
 
 				if (bProgress)
+				{
 					DoProgress(pDlg, dwBytesRead, dwFileSize, FALSE);
+				}
 
 				try
 				{
@@ -1099,29 +1280,41 @@ RMERR CRemoteFile::DownloadFile(const FILERESULT* pRemoteFile, LPCTSTR szToLocal
 			}
 
 			if (nCount < BUFSIZE)
+			{
 				break;
+			}
 		}
 
 		// if the download failed and the local file did not exist or
 		// we wrote to the file (so it will be corrupt) and we should delete failures
 		// then cleanup
 		if (nRes != RMERR_SUCCESS && (!bLocalExists || (dwBytesWritten && (dwOptions & RMO_DELETEFAILURES))))
+		{
 			::DeleteFile(szToLocalPath);
+		}
 	}
 	else
+	{
 		nRes = RMERR_OPENINGLOCALFILETOWRITE;
+	}
 
 	// cleanup
 	if (bProgress)
 	{
 		if (m_pParent && pDlg == &progDlg)
+		{
 			m_pParent->EnableWindow(TRUE);
+		}
 
 		if (!pDlg->Continue())
+		{
 			nRes = RMERR_USERCANCELLED;
+		}
 
 		if (pDlg == &progDlg)
+		{
 			progDlg.DestroyWindow();
+		}
 	}
 
 	file.Close();
@@ -1135,7 +1328,9 @@ RMERR CRemoteFile::DownloadFile(const FILERESULT* pRemoteFile, LPCTSTR szToLocal
 void CRemoteFile::DoProgress(CProgressDlg* pDlg, DWORD dwBytesRead, DWORD dwFileSize, BOOL bUpload)
 {
 	if (!pDlg || !pDlg->GetSafeHwnd())
+	{
 		return;
+	}
 
 	CString sProgress, sTitle;
 	int nPercent = 0;
@@ -1151,7 +1346,9 @@ void CRemoteFile::DoProgress(CProgressDlg* pDlg, DWORD dwBytesRead, DWORD dwFile
 		CString sProgress;
 
 		if (!dwFileSize)
+		{
 			sProgress.Format(_T("%0.1f Kb downloaded so far"), dwBytesRead);
+		}
 		else
 		{
 			nPercent = MulDiv(dwBytesRead, 100, dwFileSize);
@@ -1168,19 +1365,25 @@ void CRemoteFile::DoProgress(CProgressDlg* pDlg, DWORD dwBytesRead, DWORD dwFile
 RMERR CRemoteFile::UploadFile(LPCTSTR szFromLocalPath, const FILERESULT* pRemoteFile, DWORD dwOptions, CProgressDlg* pDlg)
 {
 	if (!m_pConnection)
+	{
 		return RMERR_NOTCONNECTED;
+	}
 
 	// open local file for input
 	CFile file;
 
 	if (!file.Open(szFromLocalPath, CFile::modeRead))
+	{
 		return RMERR_OPENINGLOCALFILETOREAD;
+	}
 
 	CString sRemotePath(pRemoteFile->sFilePath);
 
 	// check for existing remote file
 	if (dwOptions & RMO_LOWERCASEPATHS)
+	{
 		sRemotePath.MakeLower();
+	}
 
 	BOOL bRemoteExists = RemoteFileExists(sRemotePath);
 
@@ -1192,7 +1395,9 @@ RMERR CRemoteFile::UploadFile(LPCTSTR szFromLocalPath, const FILERESULT* pRemote
 		HWND hWnd = m_pParent ? m_pParent->GetSafeHwnd() : NULL;
 
 		if (MessageBox(hWnd, sMessage, _T("Confirm Overwrite"), MB_YESNO) == IDNO)
+		{
 			return RMERR_USERCANCELLED;
+		}
 	}
 
 	// create dialog if required
@@ -1204,7 +1409,9 @@ RMERR CRemoteFile::UploadFile(LPCTSTR szFromLocalPath, const FILERESULT* pRemote
 		if (!pDlg && progDlg.Create(_T("Upload Progress"), NULL, m_pParent))
 		{
 			if (m_pParent)
+			{
 				m_pParent->EnableWindow(FALSE);
+			}
 
 			pDlg = &progDlg;
 		}
@@ -1224,17 +1431,19 @@ RMERR CRemoteFile::UploadFile(LPCTSTR szFromLocalPath, const FILERESULT* pRemote
 	{
 		pFile = m_pConnection->OpenFile(pRemoteFile->sFilePath, GENERIC_WRITE);
 	}
-	catch(CInternetException* e)
+	catch (CInternetException* e)
 	{
 		m_dwInternetErr = e->m_dwError;
 		e->Delete();
 	}
-	catch(...)
+	catch (...)
 	{
 	}
 
 	if (!pFile)
+	{
 		return RMERR_OPENINGREMOTEFILETOWRITE;
+	}
 
 	RMERR nRes = RMERR_SUCCESS;
 
@@ -1262,7 +1471,9 @@ RMERR CRemoteFile::UploadFile(LPCTSTR szFromLocalPath, const FILERESULT* pRemote
 			dwBytesRead += nCount;
 
 			if (bProgress)
+			{
 				DoProgress(pDlg, dwBytesRead, dwFileSize, TRUE);
+			}
 
 			try
 			{
@@ -1285,26 +1496,36 @@ RMERR CRemoteFile::UploadFile(LPCTSTR szFromLocalPath, const FILERESULT* pRemote
 		}
 
 		if (nCount < BUFSIZE)
+		{
 			break;
+		}
 	}
 
 	// if the upload failed and the remote file did not exist or
 	// (we wrote to the file (so it will be corrupt) and we should delete failures)
 	// then cleanup
 	if (nRes != RMERR_SUCCESS && (!bRemoteExists || (dwBytesWritten && (dwOptions & RMO_DELETEFAILURES))))
+	{
 		m_pConnection->Remove(pRemoteFile->sFilePath);
+	}
 
 	// cleanup
 	if (bProgress)
 	{
 		if (m_pParent && pDlg == &progDlg)
+		{
 			m_pParent->EnableWindow(TRUE);
+		}
 
 		if (!pDlg->Continue())
+		{
 			nRes = RMERR_USERCANCELLED;
+		}
 
 		if (pDlg == &progDlg)
+		{
 			progDlg.DestroyWindow();
+		}
 	}
 
 	file.Close();
@@ -1328,11 +1549,17 @@ void CRemoteFile::ValidateOptions(DWORD& dwOptions, BOOL bDownload)
 	if (bDownload)
 	{
 		if (!(dwOptions & RMO_USETEMPFILE))
+		{
 			dwOptions &= ~RMO_KEEPEXTENSION;
+		}
 
 		if (dwOptions & RMO_NOANONYMOUSLOGIN)
+		{
 			dwOptions &= ~RMO_ANONYMOUSLOGIN;
+		}
 	}
 	else // upload
+	{
 		dwOptions &= ~(RMO_USETEMPFILE | RMO_KEEPEXTENSION | RMO_CREATEDOWNLOADDIR);
+	}
 }

@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ContentCtrl.h: interface for the CContentCtrl class.
@@ -41,6 +55,7 @@
 
 class IContentControl;
 class ISpellCheck;
+class IPreferences;
 struct UITHEME;
 
 class CONTENTFORMAT : public CString
@@ -63,10 +78,13 @@ public:
 	int GetContent(CString& sContent) const;
 	int GetTextContent(CString& sContent) const;
 
-	BOOL SetContent(unsigned char* pContent, int nLength);
-	BOOL SetContent(const CString& sContent);
-	BOOL SetTextContent(const TCHAR* szContent);
-	BOOL SettingContent() { return m_bSettingContent; }
+	BOOL SetContent(unsigned char* pContent, int nLength, BOOL bResetSelection);
+	BOOL SetContent(const CString& sContent, BOOL bResetSelection);
+	BOOL SetTextContent(const TCHAR* szContent, BOOL bResetSelection);
+	BOOL SettingContent()
+	{
+		return m_bSettingContent;
+	}
 
 	LPCTSTR GetTypeID() const;
 	BOOL IsFormat(const CONTENTFORMAT& cf) const;
@@ -78,15 +96,22 @@ public:
 	BOOL ModifyStyleEx(DWORD dwRemove, DWORD dwAdd, UINT nFlags = 0);
 
 	operator HWND() const;
-	HWND GetSafeHwnd() const { return *this; }
+	HWND GetSafeHwnd() const
+	{
+		return *this;
+	}
 
-	UINT GetDlgCtrlID() { return ::GetDlgCtrlID(*this); }
+	UINT GetDlgCtrlID()
+	{
+		return ::GetDlgCtrlID(*this);
+	}
 
 	LRESULT SendMessage(UINT message, WPARAM wParam = 0, LPARAM lParam = 0);
 	BOOL PostMessage(UINT message, WPARAM wParam = 0, LPARAM lParam = 0);
 
 	BOOL PreTranslateMessage(MSG* pMsg);
 	BOOL HasFocus() const;
+	void SetFocus();
 
 	ISpellCheck* GetSpellCheckInterface();
 
@@ -94,7 +119,9 @@ public:
 	BOOL Redo();
 
 	void SetUITheme(const UITHEME* pTheme);
-	void SetPreferenceLocation(LPCTSTR szKey);
+
+	void SavePreferences(IPreferences* pPrefs, LPCTSTR szKey) const;
+	void LoadPreferences(const IPreferences* pPrefs, LPCTSTR szKey);
 
 protected:
 	IContentControl* m_pContentCtrl;

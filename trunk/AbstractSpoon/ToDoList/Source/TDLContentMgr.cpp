@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TDLContentMgr.cpp: implementation of the CTDLContentMgr class.
@@ -39,7 +53,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -47,11 +61,19 @@ static char THIS_FILE[]=__FILE__;
 
 class CDefaultContent : public IContent
 {
-	const char* GetTypeID() const { static LPCSTR sID = "PLAIN_TEXT"; return sID; }
-	const char* GetTypeDescription() const { static LPCSTR sDesc = "Simple Text"; return sDesc; }
+	const char* GetTypeID() const
+	{
+		static LPCSTR sID = "PLAIN_TEXT";
+		return sID;
+	}
+	const char* GetTypeDescription() const
+	{
+		static LPCSTR sDesc = "Simple Text";
+		return sDesc;
+	}
 
-	IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle, 
-						long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent)
+	IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
+		long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent)
 	{
 		CToDoCommentsCtrl* pComments = new CToDoCommentsCtrl;
 
@@ -59,17 +81,25 @@ class CDefaultContent : public IContent
 		CRect rect(nLeft, nTop, nLeft + nWidth, nTop + nHeight);
 
 		if (pComments->Create(nStyle, rect, CWnd::FromHandle(hwndParent), nCtrlID))
+		{
 			return pComments;
+		}
 
 		// else
 		delete pComments;
 		return NULL;
 	}
 
-	void Release() { delete this; }
+	void Release()
+	{
+		delete this;
+	}
 
-	int ConvertToHtml(const unsigned char* /*pContent*/, int /*nLength*/,
-						char*& /*szHtml*/) { return 0; } // not supported
+	int ConvertToHtml(const unsigned char* /*pContent*/, int /*nLength*/, const TCHAR* /*szCharset*/,
+			char*& /*szHtml*/)
+	{
+		return 0;   // not supported
+	}
 
 	void SetIniLocation(bool /*bRegistry*/, const TCHAR* /*szIniPathName*/) {}
 
@@ -80,7 +110,7 @@ class CDefaultContent : public IContent
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CTDLContentMgr::CTDLContentMgr() 
+CTDLContentMgr::CTDLContentMgr()
 {
 }
 
@@ -95,8 +125,10 @@ BOOL CTDLContentMgr::Initialize()
 	if (CContentMgr::Initialize())
 	{
 		if (!bWasInitialized)
+		{
 			m_aContent.InsertAt(0, new CDefaultContent);
-		
+		}
+
 		return TRUE;
 	}
 

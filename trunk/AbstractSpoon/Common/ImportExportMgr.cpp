@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // ImportExportMgr.cpp: implementation of the CImportExportMgr class.
@@ -40,7 +53,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -58,14 +71,18 @@ CImportExportMgr::~CImportExportMgr()
 	int nInterface = m_aImporters.GetSize();
 
 	while (nInterface--)
+	{
 		m_aImporters[nInterface]->Release();
+	}
 
 	m_aImporters.RemoveAll();
 
 	nInterface = m_aExporters.GetSize();
 
 	while (nInterface--)
+	{
 		m_aExporters[nInterface]->Release();
+	}
 
 	m_aExporters.RemoveAll();
 }
@@ -73,7 +90,9 @@ CImportExportMgr::~CImportExportMgr()
 void CImportExportMgr::Initialize()
 {
 	if (m_bInitialized)
+	{
 		return;
+	}
 
 	// look at every dll from whereever we are now
 	CFileFind ff;
@@ -97,12 +116,16 @@ void CImportExportMgr::Initialize()
 				IImportTasklist* pImporter = CreateImportInterface(sDllPath);
 
 				if (pImporter)
+				{
 					m_aImporters.Add(pImporter);
+				}
 
 				IExportTasklist* pExporter = CreateExportInterface(sDllPath);
 
 				if (pExporter)
+				{
 					m_aExporters.Add(pExporter);
+				}
 			}
 		}
 	}
@@ -113,7 +136,9 @@ void CImportExportMgr::Initialize()
 int CImportExportMgr::GetNumImporters() const
 {
 	if (!m_bInitialized)
+	{
 		return 0;
+	}
 
 	return m_aImporters.GetSize();
 }
@@ -121,7 +146,9 @@ int CImportExportMgr::GetNumImporters() const
 int CImportExportMgr::GetNumExporters() const
 {
 	if (!m_bInitialized)
+	{
 		return 0;
+	}
 
 	return m_aExporters.GetSize();
 }
@@ -134,7 +161,7 @@ CString CImportExportMgr::GetImporterMenuText(int nImporter) const
 	{
 		if (nImporter >= 0 && nImporter < m_aImporters.GetSize())
 		{
-			ASSERT (m_aImporters[nImporter] != NULL);
+			ASSERT(m_aImporters[nImporter] != NULL);
 			sText = m_aImporters[nImporter]->GetMenuText();
 		}
 	}
@@ -150,7 +177,7 @@ CString CImportExportMgr::GetImporterFileExtension(int nImporter) const
 	{
 		if (nImporter >= 0 && nImporter < m_aImporters.GetSize())
 		{
-			ASSERT (m_aImporters[nImporter] != NULL);
+			ASSERT(m_aImporters[nImporter] != NULL);
 			sExt = m_aImporters[nImporter]->GetFileExtension();
 		}
 	}
@@ -171,7 +198,7 @@ CString CImportExportMgr::GetImporterFileFilter(int nImporter) const
 	{
 		if (nImporter >= 0 && nImporter < m_aImporters.GetSize())
 		{
-			ASSERT (m_aImporters[nImporter] != NULL);
+			ASSERT(m_aImporters[nImporter] != NULL);
 			sFilter = m_aImporters[nImporter]->GetFileFilter();
 		}
 	}
@@ -187,7 +214,7 @@ CString CImportExportMgr::GetExporterMenuText(int nExporter) const
 	{
 		if (nExporter >= 0 && nExporter < m_aExporters.GetSize())
 		{
-			ASSERT (m_aExporters[nExporter] != NULL);
+			ASSERT(m_aExporters[nExporter] != NULL);
 			sText = m_aExporters[nExporter]->GetMenuText();
 		}
 	}
@@ -203,7 +230,7 @@ CString CImportExportMgr::GetExporterFileExtension(int nExporter) const
 	{
 		if (nExporter >= 0 && nExporter < m_aExporters.GetSize())
 		{
-			ASSERT (m_aExporters[nExporter] != NULL);
+			ASSERT(m_aExporters[nExporter] != NULL);
 			sExt = m_aExporters[nExporter]->GetFileExtension();
 		}
 	}
@@ -224,7 +251,7 @@ CString CImportExportMgr::GetExporterFileFilter(int nExporter) const
 	{
 		if (nExporter >= 0 && nExporter < m_aExporters.GetSize())
 		{
-			ASSERT (m_aExporters[nExporter] != NULL);
+			ASSERT(m_aExporters[nExporter] != NULL);
 			sFilter = m_aExporters[nExporter]->GetFileFilter();
 		}
 	}
@@ -243,13 +270,15 @@ CString& CImportExportMgr::Clean(CString& sText)
 BOOL CImportExportMgr::ImportTaskList(LPCTSTR szSrcFile, ITaskList* pDestTasks, int nByImporter) const
 {
 	if (!m_bInitialized)
+	{
 		return FALSE;
+	}
 
 	CWaitCursor cursor;
 
 	if (nByImporter >= 0 && nByImporter < m_aImporters.GetSize())
 	{
-		ASSERT (m_aImporters[nByImporter] != NULL);
+		ASSERT(m_aImporters[nByImporter] != NULL);
 		return m_aImporters[nByImporter]->Import(szSrcFile, pDestTasks);
 	}
 
@@ -260,11 +289,13 @@ BOOL CImportExportMgr::ImportTaskList(LPCTSTR szSrcFile, ITaskList* pDestTasks, 
 BOOL CImportExportMgr::ExportTaskList(const ITaskList* pSrcTasks, LPCTSTR szDestFile, int nByExporter, BOOL bSilent) const
 {
 	if (!m_bInitialized)
+	{
 		return FALSE;
+	}
 
 	if (nByExporter >= 0 && nByExporter < m_aExporters.GetSize())
 	{
-		ASSERT (m_aExporters[nByExporter] != NULL);
+		ASSERT(m_aExporters[nByExporter] != NULL);
 		return m_aExporters[nByExporter]->Export(pSrcTasks, szDestFile, bSilent);
 	}
 
@@ -278,14 +309,18 @@ int CImportExportMgr::FindImporter(LPCTSTR szFilePath)
 	FileMisc::SplitPath(szFilePath, NULL, NULL, NULL, &sExt);
 
 	if (sExt.IsEmpty()) // no extension
+	{
 		return -1;
+	}
 
 	int nImporter = m_aImporters.GetSize();
 
 	while (nImporter--)
 	{
 		if (GetImporterFileExtension(nImporter).CompareNoCase(sExt) == 0) // match
+		{
 			break;
+		}
 	}
 
 	return nImporter; // match or -1
