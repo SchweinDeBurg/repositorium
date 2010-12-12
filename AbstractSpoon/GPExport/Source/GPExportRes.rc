@@ -54,8 +54,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,504
- PRODUCTVERSION 6,0,8,504
+ FILEVERSION 1,0,0,673
+ PRODUCTVERSION 6,1,2,673
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -73,14 +73,14 @@ BEGIN
             VALUE "Comments", "Compiler switches: /O1 /Ob1 /Oy /GF /EHsc /MD /Zp4 /Gy /W4 /TP"
             VALUE "CompanyName", "AbstractSpoon Software"
             VALUE "FileDescription", "GPExport Component for ToDoList"
-            VALUE "FileVersion", "1.0.0.504"
+            VALUE "FileVersion", "1.0.0.673"
             VALUE "InternalName", "GPExport"
             VALUE "LegalCopyright", "Copyright © 2005 by AbstractSpoon"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
             VALUE "OriginalFilename", "GPExport.dll"
             VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."
             VALUE "ProductName", "ToDoList"
-            VALUE "ProductVersion", "6.0.8"
+            VALUE "ProductVersion", "6.1.2"
             VALUE "SpecialBuild", "Dependent on the non-shared Microsoft ® Visual C++ CRT redistributable version 9.0 SP1 with the ATL security update."
         END
     END

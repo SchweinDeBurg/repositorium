@@ -48,7 +48,7 @@ BEGIN
             VALUE "FileDescription", "ToDoList executable module"
             VALUE "FileVersion", "6.1.2.673"
             VALUE "InternalName", "ToDoList"
-            VALUE "LegalCopyright", "Copyright © AbstractSpoon 2003-09"
+            VALUE "LegalCopyright", "Copyright © 2003-2010 by AbstractSpoon"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
             VALUE "OriginalFilename", "ToDoList.exe"
             VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."
