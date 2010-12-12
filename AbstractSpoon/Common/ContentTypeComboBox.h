@@ -74,7 +74,7 @@ public:
 		return (m_pContentMgr != NULL);
 	}
 
-	// Attributes
+// Attributes
 protected:
 	const CContentMgr* m_pContentMgr;
 	int m_nInitSel;

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TDLColumnSelectionDlg.cpp : implementation file
@@ -44,9 +57,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTDLColumnSelectionDlg dialog
 
-
-CTDLColumnSelectionDlg::CTDLColumnSelectionDlg(const CTDCColumnArray& aColumns, BOOL bActiveTasklist, CWnd* pParent /*=NULL*/)
-	: CDialog(CTDLColumnSelectionDlg::IDD, pParent)
+CTDLColumnSelectionDlg::CTDLColumnSelectionDlg(const CTDCColumnArray& aColumns, BOOL bActiveTasklist, CWnd* pParent /*=NULL*/):
+CDialog(CTDLColumnSelectionDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CTDLColumnSelectionDlg)
 	m_bActiveTasklist = bActiveTasklist;
@@ -54,7 +66,6 @@ CTDLColumnSelectionDlg::CTDLColumnSelectionDlg(const CTDCColumnArray& aColumns, 
 
 	m_aVisibleColumns.Copy(aColumns);
 }
-
 
 void CTDLColumnSelectionDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -64,7 +75,6 @@ void CTDLColumnSelectionDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Radio(pDX, IDC_ALLTASKLISTS, m_bActiveTasklist);
 	//}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CTDLColumnSelectionDlg, CDialog)
 	//{{AFX_MSG_MAP(CTDLColumnSelectionDlg)
@@ -90,22 +100,22 @@ void CTDLColumnSelectionDlg::OnOK()
 	m_lbColumns.GetVisibleColumns(m_aVisibleColumns);
 }
 
-BOOL CTDLColumnSelectionDlg::OnInitDialog() 
+BOOL CTDLColumnSelectionDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
+
 	m_lbColumns.SetVisibleColumns(m_aVisibleColumns);
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CTDLColumnSelectionDlg::OnSelectallcols() 
+void CTDLColumnSelectionDlg::OnSelectallcols()
 {
 	m_lbColumns.SetAllColumnsVisible(TRUE);
 }
 
-void CTDLColumnSelectionDlg::OnClearallcols() 
+void CTDLColumnSelectionDlg::OnClearallcols()
 {
 	m_lbColumns.SetAllColumnsVisible(FALSE);
 }

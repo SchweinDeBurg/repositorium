@@ -53,7 +53,7 @@ public:
 	}
 	void EndEdit(BOOL bCancel);
 
-	// Attributes
+// Attributes
 protected:
 	BOOL m_bEditEnded;
 	UINT m_nID;

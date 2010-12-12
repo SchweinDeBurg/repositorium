@@ -68,7 +68,6 @@ CTDLFilterComboBox::~CTDLFilterComboBox()
 {
 }
 
-
 BEGIN_MESSAGE_MAP(CTDLFilterComboBox, CTabbedComboBox)
 	//{{AFX_MSG_MAP(CTDLFilterComboBox)
 	ON_WM_CREATE()

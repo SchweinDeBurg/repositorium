@@ -118,7 +118,6 @@ m_bCustomFilter(FALSE)
 		CALC_BTNWIDTH, _T("Wingdings"));
 }
 
-
 void CTDLFilterBar::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
@@ -262,7 +261,6 @@ void CTDLFilterBar::DoDataExchange(CDataExchange* pDX)
 		m_cbOptions.Initialize(m_filter, m_nView);
 	}
 }
-
 
 BEGIN_MESSAGE_MAP(CTDLFilterBar, CDialog)
 	//{{AFX_MSG_MAP(CFilterBar)

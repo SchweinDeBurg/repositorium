@@ -96,14 +96,10 @@ class CDefaultContent : public IContent
 	}
 
 	int ConvertToHtml(const unsigned char* /*pContent*/, int /*nLength*/, const TCHAR* /*szCharset*/,
-			char*& /*szHtml*/)
+		char*& /*szHtml*/)
 	{
 		return 0;   // not supported
 	}
-
-	void SetIniLocation(bool /*bRegistry*/, const TCHAR* /*szIniPathName*/) {}
-
-
 };
 
 //////////////////////////////////////////////////////////////////////

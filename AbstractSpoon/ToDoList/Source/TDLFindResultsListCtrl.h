@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_TDLFINDRESULTSLISTCTRL_H__E3FBC372_D7CC_457E_B7BB_1036256A64E9__INCLUDED_)
@@ -47,14 +60,13 @@
 struct FTDRESULT
 {
 	FTDRESULT(DWORD dwID = 0, const CFilteredToDoCtrl* pTaskList = NULL, BOOL done = FALSE) : dwTaskID(dwID), pTDC(pTaskList), bDone(done) {}
-	
+
 	DWORD dwTaskID;
 	const CFilteredToDoCtrl* pTDC;
 	BOOL bDone;
 };
 
 typedef CArray<FTDRESULT, FTDRESULT&> CFTDResultsArray;
-
 
 class CTDLFindResultsListCtrl : public CEnListCtrl
 {
@@ -75,8 +87,11 @@ public:
 
 	void DeleteResults(const CFilteredToDoCtrl* pTDC);
 	void DeleteAllResults();
-	
-	FTDRESULT* GetResult(int nItem) const { return (FTDRESULT*)GetItemData(nItem); }
+
+	FTDRESULT* GetResult(int nItem) const
+	{
+		return (FTDRESULT*)GetItemData(nItem);
+	}
 
 	void RefreshUserPreferences();
 
@@ -98,16 +113,15 @@ public:
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CTDLFindResultsListCtrl)
-		// NOTE - the ClassWizard will add and remove member functions here.
+	// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()
 
 protected:
-  	virtual COLORREF GetItemTextColor(int nItem, int nSubItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const;
+	virtual COLORREF GetItemTextColor(int nItem, int nSubItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const;
 	virtual CFont* GetItemFont(int nItem, int nSubItem);
 	int GetNextResult(int nItem, BOOL bDown);
-
 };
 
 /////////////////////////////////////////////////////////////////////////////

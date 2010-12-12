@@ -64,7 +64,7 @@ class CTDLFilterComboBox : public CTabbedComboBox
 public:
 	CTDLFilterComboBox();
 
-	// Attributes
+// Attributes
 public:
 	FILTER_TYPE GetSelectedFilter() const;
 	BOOL SetSelectedFilter(FILTER_TYPE nFilter);
@@ -96,7 +96,6 @@ protected:
 
 protected:
 	void FillCombo();
-
 };
 
 /////////////////////////////////////////////////////////////////////////////

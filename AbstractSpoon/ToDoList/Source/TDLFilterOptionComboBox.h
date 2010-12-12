@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_FILTEROPTIONCOMBOBOX_H__9EE08B57_87B6_43D9_8CA7_F47A30CBF66B__INCLUDED_)
@@ -76,13 +89,12 @@ public:
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CFilterOptionComboBox)
-		// NOTE - the ClassWizard will add and remove member functions here.
+	// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()
 
 	void OnCheckChange(int nIndex);
-
 };
 
 /////////////////////////////////////////////////////////////////////////////

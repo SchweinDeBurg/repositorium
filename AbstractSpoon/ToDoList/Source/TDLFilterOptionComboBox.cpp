@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TDLFilterOptionComboBox.cpp : implementation file
@@ -47,7 +60,7 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CFilterOptionComboBox
 
-CTDLFilterOptionComboBox::CTDLFilterOptionComboBox() : CEnCheckComboBox(TRUE, 0, IDS_TDC_NONE), m_dwOptions((DWORD)-1)
+CTDLFilterOptionComboBox::CTDLFilterOptionComboBox() : CEnCheckComboBox(TRUE, 0, IDS_TDC_NONE), m_dwOptions((DWORD) - 1)
 {
 }
 
@@ -55,10 +68,9 @@ CTDLFilterOptionComboBox::~CTDLFilterOptionComboBox()
 {
 }
 
-
 BEGIN_MESSAGE_MAP(CTDLFilterOptionComboBox, CEnCheckComboBox)
 	//{{AFX_MSG_MAP(CFilterOptionComboBox)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
+	// NOTE - the ClassWizard will add and remove mapping macros here.
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -68,7 +80,7 @@ END_MESSAGE_MAP()
 void CTDLFilterOptionComboBox::Initialize(DWORD dwFlags, DWORD dwOptions)
 {
 	ResetContent();
-	m_dwOptions = (DWORD)-1;
+	m_dwOptions = (DWORD) - 1;
 
 	CString sFlag;
 
@@ -79,9 +91,9 @@ void CTDLFilterOptionComboBox::Initialize(DWORD dwFlags, DWORD dwOptions)
 		if (Misc::HasFlag(dwFlags, nFlag))
 		{
 			sFlag.LoadString(FILTER_OPTIONS[nItem][0]);
-			
+
 			int nIndex = AddString(sFlag);
-			
+
 			if (nIndex != CB_ERR)
 			{
 				m_mapItemFlag[sFlag] = nFlag; // map item to enum
@@ -96,7 +108,7 @@ void CTDLFilterOptionComboBox::Initialize(DWORD dwFlags, DWORD dwOptions)
 void CTDLFilterOptionComboBox::Initialize(const FTDCFILTER& filter, FTC_VIEW /*nView*/)
 {
 	ResetContent();
-	m_dwOptions = (DWORD)-1;
+	m_dwOptions = (DWORD) - 1;
 
 	// add flags to droplist depending on the filter being used
 	CString sFlag;
@@ -120,13 +132,13 @@ void CTDLFilterOptionComboBox::Initialize(const FTDCFILTER& filter, FTC_VIEW /*n
 
 		case FT_HIDEOVERDUE:
 			bAddFlag = (filter.nFilter == FT_DUETODAY) ||
-						(filter.nFilter == FT_DUETOMORROW) ||
-						(filter.nFilter == FT_DUEENDTHISWEEK) || 
-						(filter.nFilter == FT_DUEENDNEXTWEEK) || 
-						(filter.nFilter == FT_DUEENDTHISMONTH) ||
-						(filter.nFilter == FT_DUEENDNEXTMONTH) ||
-						(filter.nFilter == FT_DUEENDTHISYEAR) ||
-						(filter.nFilter == FT_DUEENDNEXTYEAR);
+				(filter.nFilter == FT_DUETOMORROW) ||
+				(filter.nFilter == FT_DUEENDTHISWEEK) ||
+				(filter.nFilter == FT_DUEENDNEXTWEEK) ||
+				(filter.nFilter == FT_DUEENDTHISMONTH) ||
+				(filter.nFilter == FT_DUEENDNEXTMONTH) ||
+				(filter.nFilter == FT_DUEENDTHISYEAR) ||
+				(filter.nFilter == FT_DUEENDNEXTYEAR);
 			break;
 
 		case FT_HIDEDONE:
@@ -135,15 +147,17 @@ void CTDLFilterOptionComboBox::Initialize(const FTDCFILTER& filter, FTC_VIEW /*n
 
 		default:
 			ASSERT(0);
-			break;		
-		}	
+			break;
+		}
 
 		if (bAddFlag)
 		{
 			sFlag.LoadString(FILTER_OPTIONS[nItem][0]);
-			
+
 			if (AddString(sFlag) != CB_ERR)
-				m_mapItemFlag[sFlag] = nFlag; // map item to enum
+			{
+				m_mapItemFlag[sFlag] = nFlag;   // map item to enum
+			}
 		}
 	}
 
@@ -178,7 +192,9 @@ void CTDLFilterOptionComboBox::SetOptions(DWORD dwOptions)
 	ASSERT(GetSafeHwnd());
 
 	if (dwOptions == m_dwOptions)
+	{
 		return;
+	}
 
 	for (int nItem = 0; nItem < GetCount(); nItem++)
 	{
@@ -196,7 +212,7 @@ void CTDLFilterOptionComboBox::SetOptions(DWORD dwOptions)
 	m_dwOptions = dwOptions;
 }
 
-DWORD CTDLFilterOptionComboBox::GetOptions() const 
+DWORD CTDLFilterOptionComboBox::GetOptions() const
 {
 	return m_dwOptions;
 }

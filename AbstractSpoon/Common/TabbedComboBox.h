@@ -46,7 +46,7 @@ class CTabbedComboBox : public CComboBox
 public:
 	CTabbedComboBox(int nTabStops = 20);
 
-	// Attributes
+// Attributes
 protected:
 	const int TABSTOPS;
 	BOOL m_bResized;

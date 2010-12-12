@@ -94,7 +94,7 @@ public:
 		m_sFolderPrompt = szPrompt;
 	}
 
-	// Attributes
+// Attributes
 protected:
 	BOOL m_bTipNeeded;
 	CSysImageList m_ilSys;
