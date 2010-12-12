@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TaskListTxtExporter.h: interface for the CTaskListTxtExporter class.
@@ -42,31 +56,43 @@
 #include "../../Common/ITaskList.h"
 #include "../../Common/IImportExport.h"
 
-class CTaskListTxtExporter : public IExportTasklist  
+class CTaskListTxtExporter : public IExportTasklist
 {
 public:
 	CTaskListTxtExporter();
 	virtual ~CTaskListTxtExporter();
 
-	const char* GetMenuText() { return "Plain Text"; }
-	const char* GetFileFilter() { return "Text Files (*.txt)|*.txt||"; }
-	const char* GetFileExtension() { return "txt"; }
+	const char* GetMenuText()
+	{
+		return "Plain Text";
+	}
+	const char* GetFileFilter()
+	{
+		return "Text Files (*.txt)|*.txt||";
+	}
+	const char* GetFileExtension()
+	{
+		return "txt";
+	}
 
 	bool Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
-    void Release() { delete this; }
+	void Release()
+	{
+		delete this;
+	}
 
 protected:
 	CString TEXTNOTES, INDENT;
 	BOOL ROUNDTIMEFRACTIONS;
 
 protected:
-	CString& ExportTask(const ITaskList6* pTasks, HTASKITEM hTask, int nDepth, int nPos, CString& sOutput) const;
+	CString& ExportTask(const ITaskList6* pTasks, HTASKITEM hTask, int nDepth, int nPos, const CString& sParentPos, CString& sOutput) const;
 
-	static BOOL FormatAttributeList(const ITaskList6* pTasks, HTASKITEM hTask, 
-										   LPCTSTR szNumAttribName, LPCTSTR szAttribName, 
-                                          LPCTSTR szFormat, CString& sAttribText);
-	static BOOL FormatAttribute(const ITaskList6* pTasks, HTASKITEM hTask, LPCTSTR szAttribName, 
-								LPCTSTR szFormat, CString& sAttribText);
+	static BOOL FormatAttributeList(const ITaskList6* pTasks, HTASKITEM hTask,
+		LPCTSTR szNumAttribName, LPCTSTR szAttribName,
+		LPCTSTR szFormat, CString& sAttribText);
+	static BOOL FormatAttribute(const ITaskList6* pTasks, HTASKITEM hTask, LPCTSTR szAttribName,
+		LPCTSTR szFormat, CString& sAttribText);
 };
 
 #endif // !defined(AFX_TASKLISTTXTEXPORTER_H__CF68988D_FBBD_431D_BB56_464E8737D993__INCLUDED_)

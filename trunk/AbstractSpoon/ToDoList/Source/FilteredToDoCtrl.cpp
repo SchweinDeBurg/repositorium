@@ -2311,7 +2311,7 @@ void CFilteredToDoCtrl::DrawColumnHeaderText(CDC* pDC, int nCol, const CRect& rC
 TDC_COLUMN CFilteredToDoCtrl::GetColumnID(int nCol) const
 {
 	TDCCOLUMN* pCol = GetColumn(nCol);
-	return pCol ? pCol->nColID : (TDC_COLUMN) - 1;
+	return pCol ? pCol->nColID : (TDC_COLUMN)-1;
 }
 
 TDCCOLUMN* CFilteredToDoCtrl::GetColumn(int nCol) const

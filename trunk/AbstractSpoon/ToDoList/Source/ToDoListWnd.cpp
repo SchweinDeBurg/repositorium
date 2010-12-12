@@ -2857,7 +2857,7 @@ void CToDoListWnd::OnTrayIconRClick(NMHDR* pNMHDR, LRESULT* pResult)
 
 			PostMessage(WM_NULL);
 
-			if (nCmdID != (UINT) - 1)
+			if (nCmdID != (UINT)-1)
 			{
 				SendMessage(WM_COMMAND, nCmdID);
 			}
@@ -3593,7 +3593,7 @@ void CToDoListWnd::OnUpdateRecentFileMenu(CCmdUI* pCmdUI)
 	// check that this is not occurring because our CFrameWnd
 	// base class is routing this to the first item in a submenu
 	if (pCmdUI->m_pMenu &&
-		pCmdUI->m_pMenu->GetMenuItemID(pCmdUI->m_nIndex) == (UINT) - 1)
+		pCmdUI->m_pMenu->GetMenuItemID(pCmdUI->m_nIndex) == (UINT)-1)
 	{
 		return;
 	}
@@ -4417,7 +4417,7 @@ BOOL CToDoListWnd::LoadMenubar()
 
 #ifdef _DEBUG
 	// add menu option to simulate WM_QUERYENDSESSION
-	m_menubar.InsertMenu((UINT) - 1, MFT_STRING, ID_DEBUGQUERYENDSESSION, _T("QueryEndSession"));
+	m_menubar.InsertMenu((UINT)-1, MFT_STRING, ID_DEBUGQUERYENDSESSION, _T("QueryEndSession"));
 #endif
 
 	if (Prefs().GetShowTasklistCloseButton())

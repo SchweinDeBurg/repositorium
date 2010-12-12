@@ -60,9 +60,10 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTaskSelectionDlg dialog
 
-
 CTaskSelectionDlg::CTaskSelectionDlg(LPCTSTR szRegKey, BOOL bShowSubtaskCheckbox, BOOL bVisibleColumnsOnly) :
-CDialog(), m_sRegKey(szRegKey), m_bShowSubtaskCheckbox(bShowSubtaskCheckbox)
+CDialog(),
+m_sRegKey(szRegKey),
+m_bShowSubtaskCheckbox(bShowSubtaskCheckbox)
 {
 	//{{AFX_DATA_INIT(CTaskSelectionDlg)
 	//}}AFX_DATA_INIT
@@ -98,7 +99,6 @@ CDialog(), m_sRegKey(szRegKey), m_bShowSubtaskCheckbox(bShowSubtaskCheckbox)
 	m_lbAttribList.SetVisibleAttributes(aAttrib);
 }
 
-
 void CTaskSelectionDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
@@ -111,7 +111,6 @@ void CTaskSelectionDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_INCLUDENOTDONE, m_bIncompleteTasks);
 	DDX_Radio(pDX, IDC_ALLTASKS, m_nWhatTasks);
 }
-
 
 BEGIN_MESSAGE_MAP(CTaskSelectionDlg, CDialog)
 	//{{AFX_MSG_MAP(CTaskSelectionDlg)

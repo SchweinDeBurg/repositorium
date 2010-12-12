@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TaskListTxtExporter.cpp: implementation of the CTaskListTxtExporter class.
@@ -44,7 +58,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -67,9 +81,13 @@ bool CTaskListTxtExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* sz
 	CPreferences prefs;
 
 	if (prefs.GetProfileInt(_T("Preferences"), _T("UseSpaceIndents"), TRUE))
+	{
 		INDENT = CString(_T(' '), prefs.GetProfileInt(_T("Preferences"), _T("TextIndent"), 2));
+	}
 	else
+	{
 		INDENT = _T('\t');
+	}
 
 	if (prefs.GetProfileInt(_T("Preferences"), _T("ExportSpaceForNotes"), FALSE))
 	{
@@ -79,7 +97,9 @@ bool CTaskListTxtExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* sz
 		if (nLine > 0)
 		{
 			while (nLine--)
+			{
 				TEXTNOTES += "\n";
+			}
 		}
 	}
 
@@ -92,7 +112,7 @@ bool CTaskListTxtExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* sz
 		const ITaskList6* pTasks6 = static_cast<const ITaskList6*>(pSrcTaskFile);
 		CString sOutput;
 
-		if (!ExportTask(pTasks6, NULL, 0, 0, sOutput).IsEmpty())
+		if (!ExportTask(pTasks6, NULL, 0, 0, _T(""), sOutput).IsEmpty())
 		{
 			fileOut.WriteString(sOutput);
 			return true;
@@ -102,24 +122,39 @@ bool CTaskListTxtExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* sz
 	return false;
 }
 
-CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hTask, int nDepth, int nPos, CString& sOutput) const
+CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hTask, int nDepth, int nPos, const CString& sParentPos, CString& sOutput) const
 {
 	// handle locale specific decimal separator
 	_tsetlocale(LC_NUMERIC, _T(""));
 
 	// if depth == 0 then we're at the root so just add sub-tasks
 	// else insert pItem first
+	CString sPos;
+
 	if (nDepth > 0)
 	{
 		// first create string to hold TABs
 		CString sTabs;
 
 		for (int nTab = 0; nTab < nDepth; nTab++)
+		{
 			sTabs += INDENT;
+		}
 
 		// if there is a POS child item then this replaces nPos
 		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPOS)))
+		{
 			nPos = pTasks->GetTaskPosition(hTask);
+		}
+
+		if (!sParentPos.IsEmpty())
+		{
+			sPos.Format(_T("%s.%d"), sParentPos, nPos);
+		}
+		else
+		{
+			sPos.Format(_T("%d"), nPos);
+		}
 
 		CString sID, sItem, sPriority, sStartDate, sDueDate, sDoneDate;
 		CString sAllocTo, sAllocBy, sCategory, sStatus, sCost;
@@ -139,31 +174,41 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		BOOL bDone = pTasks->IsTaskDone(hTask) || (nPercent == 100);
 		int nTimePlaces = ROUNDTIMEFRACTIONS ? 0 : 2;
 
-		if (!bDone || !FormatAttribute(pTasks, hTask, TDL_TASKDONEDATESTRING, _T(" (completed: %s)"), sDoneDate))
+		if (bDone)
 		{
-			if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKHIGHESTPRIORITY)) ||
-				pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPRIORITY)))
-			{
-				int nPriority = pTasks->GetTaskPriority(hTask, TRUE);
-
-				if (nPriority >= 0)
-					sPriority.Format(_T("[%d] "), nPriority);
-				else
-					sPriority = _T("[ ]");
-			}
-
-			FormatAttribute(pTasks, hTask, TDL_TASKSTARTDATESTRING, _T(" (start: %s)"), sStartDate);
-			FormatAttribute(pTasks, hTask, TDL_TASKDUEDATESTRING, _T(" (due: %s)"), sDueDate);
-			FormatAttribute(pTasks, hTask, TDL_TASKPERCENTDONE, _T(" (%s%%) "), sPercent);
-
-			if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKTIMEESTIMATE)) ||
-				pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCALCTIMEESTIMATE)))
-				sTimeEst.Format(_T(" (time est: %.*f hrs)"), nTimePlaces, pTasks->GetTaskTimeEstimate(hTask, cTemp, TRUE));
+			FormatAttribute(pTasks, hTask, TDL_TASKDONEDATESTRING, _T(" (completed: %s)"), sDoneDate);
 		}
-		
+
+		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKHIGHESTPRIORITY)) ||
+				pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPRIORITY)))
+		{
+			int nPriority = pTasks->GetTaskPriority(hTask, TRUE);
+
+			if (nPriority >= 0)
+			{
+				sPriority.Format(_T("[%d] "), nPriority);
+			}
+			else
+			{
+				sPriority = _T("[ ]");
+			}
+		}
+
+		FormatAttribute(pTasks, hTask, TDL_TASKSTARTDATESTRING, _T(" (start: %s)"), sStartDate);
+		FormatAttribute(pTasks, hTask, TDL_TASKDUEDATESTRING, _T(" (due: %s)"), sDueDate);
+		FormatAttribute(pTasks, hTask, TDL_TASKPERCENTDONE, _T(" (%s%%) "), sPercent);
+
+		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKTIMEESTIMATE)) ||
+			pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCALCTIMEESTIMATE)))
+		{
+			sTimeEst.Format(_T(" (time est: %.*f hrs)"), nTimePlaces, pTasks->GetTaskTimeEstimate(hTask, cTemp, TRUE));
+		}
+
 		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKTIMESPENT)) ||
 			pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCALCTIMESPENT)))
+		{
 			sTimeEst.Format(_T(" (time spent: %.*f hrs)"), nTimePlaces, pTasks->GetTaskTimeSpent(hTask, cTemp, TRUE));
+		}
 
 		FormatAttribute(pTasks, hTask, TDL_TASKCREATIONDATESTRING, _T(" (created: %s)"), sCreateDate);
 		FormatAttribute(pTasks, hTask, TDL_TASKCREATEDBY, _T(" (created by: %s)"), sCreateBy);
@@ -181,22 +226,28 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 
 		// fileref
 		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKFILEREFPATH)))
+		{
 			sFileRef.Format(_T("%s%s(link: %s)"), ENDL, (LPCTSTR)sTabs, (LPTSTR)pTasks->GetTaskFileReferencePath(hTask));
-		
+		}
+
 		// comments
 		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCOMMENTS)))
+		{
 			sComments.Format(_T("%s%s[%s]"), ENDL, (LPCTSTR)sTabs, (LPTSTR)pTasks->GetTaskComments(hTask));
+		}
 
-		sItem.Format(_T("%d. %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"), 
-					nPos, (LPCTSTR)sID, (LPCTSTR)sPriority, (LPCTSTR)sPercent, (LPCTSTR)sTitle, (LPCTSTR)sRisk, 
-					(LPCTSTR)sAllocTo, (LPCTSTR)sAllocBy, (LPCTSTR)sDepends, (LPCTSTR)sVersion, (LPCTSTR)sRecurrence,
-					(LPCTSTR)sCategory, (LPCTSTR)sStatus, (LPCTSTR)sDoneDate, (LPCTSTR)sCreateDate, (LPCTSTR)sCreateBy,
-					(LPCTSTR)sStartDate, (LPCTSTR)sDueDate, (LPCTSTR)sTimeEst, (LPCTSTR)sTimeSpent, (LPCTSTR)sCost,
-					(LPCTSTR)sExtID, (LPCTSTR)sLastMod, (LPCTSTR)sFileRef, (LPCTSTR)sComments, ENDL);
+		sItem.Format(_T("%d. %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"),
+			nPos, (LPCTSTR)sID, (LPCTSTR)sPriority, (LPCTSTR)sPercent, (LPCTSTR)sTitle, (LPCTSTR)sRisk,
+			(LPCTSTR)sAllocTo, (LPCTSTR)sAllocBy, (LPCTSTR)sDepends, (LPCTSTR)sVersion, (LPCTSTR)sRecurrence,
+			(LPCTSTR)sCategory, (LPCTSTR)sStatus, (LPCTSTR)sDoneDate, (LPCTSTR)sCreateDate, (LPCTSTR)sCreateBy,
+			(LPCTSTR)sStartDate, (LPCTSTR)sDueDate, (LPCTSTR)sTimeEst, (LPCTSTR)sTimeSpent, (LPCTSTR)sCost,
+			(LPCTSTR)sExtID, (LPCTSTR)sLastMod, (LPCTSTR)sFileRef, (LPCTSTR)sComments, ENDL);
 
 		// notes section
 		if (!bDone)
+		{
 			sItem += TEXTNOTES;
+		}
 
 		// indent to match depth
 		sOutput += sTabs;
@@ -210,12 +261,12 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		CString sTitle = pITL4->GetReportTitle();
 		CString sDate = pITL4->GetReportDate();
 
-		// note: do not append a trailing ENDL as this will be added 
+		// note: do not append a trailing ENDL as this will be added
 		// by the following code
 		if (!sTitle.IsEmpty())
 		{
 			sOutput += sTitle;
-			 
+
 			if (!sDate.IsEmpty())
 			{
 				sOutput += ENDL;
@@ -223,7 +274,9 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 			}
 		}
 		else if (!sDate.IsEmpty())
+		{
 			sOutput += sDate;
+		}
 	}
 
 	// begin new ordered list for sub-tasks
@@ -237,7 +290,7 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		{
 			CString sTask;
 			sOutput += ENDL;
-			sOutput += ExportTask(pTasks, hTask, nDepth + 1, nChildPos++, sTask);
+			sOutput += ExportTask(pTasks, hTask, nDepth + 1, nChildPos++, sPos, sTask);
 
 			hTask = pTasks->GetNextTask(hTask);
 		}
@@ -249,8 +302,8 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 	return sOutput;
 }
 
-BOOL CTaskListTxtExporter::FormatAttribute(const ITaskList6* pTasks, HTASKITEM hTask, 
-										   LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
+BOOL CTaskListTxtExporter::FormatAttribute(const ITaskList6* pTasks, HTASKITEM hTask,
+	LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
 {
 	if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAttribName)))
 	{
@@ -262,27 +315,28 @@ BOOL CTaskListTxtExporter::FormatAttribute(const ITaskList6* pTasks, HTASKITEM h
 }
 
 
-BOOL CTaskListTxtExporter::FormatAttributeList(const ITaskList6* pTasks, HTASKITEM hTask, 
-										   LPCTSTR szNumAttribName, LPCTSTR szAttribName, 
-                                           LPCTSTR szFormat, CString& sAttribText)
+BOOL CTaskListTxtExporter::FormatAttributeList(const ITaskList6* pTasks, HTASKITEM hTask,
+	LPCTSTR szNumAttribName, LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
 {
 	int nItemCount = _ttoi(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szNumAttribName)));
 
 	if (nItemCount <= 1)
+	{
 		return FormatAttribute(pTasks, hTask, szAttribName, szFormat, sAttribText);
+	}
 
 	// else more than one (use plus sign as delimiter)
 	CString sAttribs = pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName));
-	
+
 	for (int nItem = 1; nItem < nItemCount; nItem++)
 	{
 		CString sAttribName;
 		sAttribName.Format(_T("%s%d"), szAttribName, nItem);
-		
+
 		sAttribs += _T('+');
 		sAttribs += pTasks->GetTaskAttribute(hTask, ATL::CT2A(sAttribName));
 	}
-	
+
 	sAttribText.Format(szFormat, sAttribs);
 	return TRUE;
 }

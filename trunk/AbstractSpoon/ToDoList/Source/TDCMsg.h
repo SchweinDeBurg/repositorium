@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_TDCMSG_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_)
@@ -41,8 +54,8 @@ const LPCTSTR TDL_PROTOCOL = _T("tdl://");
 
 // notification messages
 const UINT WM_TDCN_MODIFY = ::RegisterWindowMessage(_T("WM_TDCN_MODIFY")); // lParam == <TDC_ATTRIBUTE>
-const UINT WM_TDCN_SORT = ::RegisterWindowMessage(_T("WM_TDCN_SORT")); 
-const UINT WM_TDCN_MINWIDTHCHANGE = ::RegisterWindowMessage(_T("WM_TDCN_MINWIDTHCHANGE")); 
+const UINT WM_TDCN_SORT = ::RegisterWindowMessage(_T("WM_TDCN_SORT"));
+const UINT WM_TDCN_MINWIDTHCHANGE = ::RegisterWindowMessage(_T("WM_TDCN_MINWIDTHCHANGE"));
 const UINT WM_TDCN_COMMENTSCHANGE = ::RegisterWindowMessage(_T("WM_TDCN_COMMENTSCHANGE"));
 const UINT WM_TDCN_COMMENTSKILLFOCUS = ::RegisterWindowMessage(_T("WM_TDCN_COMMENTSKILLFOCUS"));
 const UINT WM_TDCN_TIMETRACK = ::RegisterWindowMessage(_T("WM_TDCN_TIMETRACK")); // lParam = 0/1 => stop/start
@@ -51,7 +64,7 @@ const UINT WM_TDCN_RECREATERECURRINGTASK = ::RegisterWindowMessage(_T("WM_TDCN_R
 const UINT WM_TDCN_DOUBLECLKREMINDERCOL = ::RegisterWindowMessage(_T("WM_TDCN_DOUBLECLKREMINDERCOL"));
 
 // from the filterbar
-const UINT WM_FBN_FILTERCHNG = ::RegisterWindowMessage(_T("WM_FBN_FILTERCHNG")); 
+const UINT WM_FBN_FILTERCHNG = ::RegisterWindowMessage(_T("WM_FBN_FILTERCHNG"));
 
 // sent when one of the auto dropdown lists is changed
 const UINT WM_TDCN_LISTCHANGE = ::RegisterWindowMessage(_T("WM_TDCN_LISTCHANGE")); // lParam == <TDC_ATTRIBUTE>
@@ -60,16 +73,16 @@ const UINT WM_TDCN_LISTCHANGE = ::RegisterWindowMessage(_T("WM_TDCN_LISTCHANGE")
 const UINT WM_TDCM_GETCLIPBOARD = ::RegisterWindowMessage(_T("WM_TDCM_GETCLIPBOARD")); // lParam == match hwnd
 const UINT WM_TDCM_HASCLIPBOARD = ::RegisterWindowMessage(_T("WM_TDCM_HASCLIPBOARD")); // lParam == match hwnd
 const UINT WM_TDCM_TASKISDONE = ::RegisterWindowMessage(_T("WM_TDCM_TASKISDONE")); // format as WM_TDCM_TASKLINK
-const UINT WM_TDCM_TASKHASREMINDER = ::RegisterWindowMessage(_T("WM_TDCM_TASKHASREMINDER")); // wParam = TaskID, lParam = TDC* 
+const UINT WM_TDCM_TASKHASREMINDER = ::RegisterWindowMessage(_T("WM_TDCM_TASKHASREMINDER")); // wParam = TaskID, lParam = TDC*
 
 // instruction messages
 // sent when a task outside 'this' todoctrl needs displaying
 const UINT WM_TDCM_TASKLINK = ::RegisterWindowMessage(_T("WM_TDCM_TASKLINK")); // wParam = taskID, lParam = taskfile
 
 // internal TDC message
-const UINT WM_TDC_RESTOREFOCUSEDITEM			= (WM_APP + 1);
-const UINT WM_TDC_REFRESHPERCENTSPINVISIBILITY	= (WM_APP + 2);
-const UINT WM_TDC_REFRESHFILTER					= (WM_APP + 3);
-const UINT WM_TDC_RECREATERECURRINGTASK				= (WM_APP + 4);
+const UINT WM_TDC_RESTOREFOCUSEDITEM            = (WM_APP + 1);
+const UINT WM_TDC_REFRESHPERCENTSPINVISIBILITY  = (WM_APP + 2);
+const UINT WM_TDC_REFRESHFILTER                 = (WM_APP + 3);
+const UINT WM_TDC_RECREATERECURRINGTASK         = (WM_APP + 4);
 
 #endif // AFX_TDCMSG_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_

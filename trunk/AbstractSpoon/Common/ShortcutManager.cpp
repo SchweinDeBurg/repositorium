@@ -423,7 +423,7 @@ void CShortcutManager::PrepareMenuItems(CMenu* pMenu) const
 		UINT nCmdID = pMenu->GetMenuItemID(nItem);
 		DWORD dwShortcut = GetShortcut(nCmdID);
 
-		if (!nCmdID || nCmdID == (UINT) - 1)
+		if (!nCmdID || nCmdID == (UINT)-1)
 		{
 			continue;
 		}
