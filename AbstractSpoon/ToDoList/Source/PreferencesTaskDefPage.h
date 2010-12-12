@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESTASKDEFPAGE_H__852964E3_4ABD_4B66_88BA_F553177616F2__INCLUDED_)
@@ -59,6 +73,7 @@
 
 enum PTP_ATTRIB
 {
+	PTPA_NONE = -1,
 	PTPA_PRIORITY,
 	PTPA_COLOR,
 	PTPA_ALLOCTO,
@@ -70,15 +85,16 @@ enum PTP_ATTRIB
 	PTPA_DUEDATE,
 	PTPA_VERSION,
 	PTPA_STARTDATE,
+	PTPA_FLAG,
 	// add to end
 };
 
 enum PTDP_LIST
-{ 
-	PTDP_CATEGORY, 
-	PTDP_STATUS, 
-	PTDP_ALLOCTO, 
-	PTDP_ALLOCBY 
+{
+	PTDP_CATEGORY,
+	PTDP_STATUS,
+	PTDP_ALLOCTO,
+	PTDP_ALLOCBY
 };
 // wParam = MAKEWPARAM(enum, 0 for delete, 1 for add)
 // lParam = LPCTSTR
@@ -95,19 +111,42 @@ public:
 
 	void SetPriorityColors(const CDWordArray& aColors);
 
-	int GetDefaultPriority() const { return m_nDefPriority; }
-	int GetDefaultRisk() const { return m_nDefRisk; }
-//	CString GetDefaultAllocTo() const { return m_sDefAllocTo; }
+	int GetDefaultPriority() const
+	{
+		return m_nDefPriority;
+	}
+	int GetDefaultRisk() const
+	{
+		return m_nDefRisk;
+	}
 	int GetDefaultAllocTo(CStringArray& aAllocTo) const;
-	CString GetDefaultAllocBy() const { return m_sDefAllocBy; }
-	CString GetDefaultStatus() const { return m_sDefStatus; }
+	CString GetDefaultAllocBy() const
+	{
+		return m_sDefAllocBy;
+	}
+	CString GetDefaultStatus() const
+	{
+		return m_sDefStatus;
+	}
 	int GetDefaultCategories(CStringArray& aCats) const;
-	CString GetDefaultCreatedBy() const { return m_sDefCreatedBy; }
+	CString GetDefaultCreatedBy() const
+	{
+		return m_sDefCreatedBy;
+	}
 	double GetDefaultTimeEst(int& nUnits) const;
 	double GetDefaultTimeSpent(int& nUnits) const;
-	double GetDefaultCost() const { return m_dDefCost; }
-	COLORREF GetDefaultColor() const { return m_crDef; }
-	BOOL GetAutoDefaultStartDate() const { return m_bUseCreationForDefStartDate; }
+	double GetDefaultCost() const
+	{
+		return m_dDefCost;
+	}
+	COLORREF GetDefaultColor() const
+	{
+		return m_crDef;
+	}
+	BOOL GetAutoDefaultStartDate() const
+	{
+		return m_bUseCreationForDefStartDate;
+	}
 	int GetParentAttribsUsed(CTDCAttributeArray& aAttribs, BOOL& bUpdateAttrib) const;
 
 	int GetListItems(PTDP_LIST nList, CStringArray& aItems) const;
@@ -118,40 +157,43 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesTaskDefPage)
 	enum { IDD = IDD_PREFTASKDEF_PAGE };
-	CTDLRiskComboBox	m_cbDefRisk;
-	CTDLPriorityComboBox	m_cbDefPriority;
-	CAutoComboBox	m_cbAllocByList;
-	CAutoComboBox	m_cbAllocToList;
-	CAutoComboBox	m_cbStatusList;
-	CAutoComboBox	m_cbCategoryList;
-	CString	m_sDefCreatedBy;
-	double	m_dDefCost;
-	BOOL	m_bUpdateInheritAttributes;
+	CTDLRiskComboBox    m_cbDefRisk;
+	CTDLPriorityComboBox    m_cbDefPriority;
+	CAutoComboBox   m_cbAllocByList;
+	CAutoComboBox   m_cbAllocToList;
+	CAutoComboBox   m_cbStatusList;
+	CAutoComboBox   m_cbCategoryList;
+	CString m_sDefCreatedBy;
+	double  m_dDefCost;
+	BOOL    m_bUpdateInheritAttributes;
 	//}}AFX_DATA
-	CTimeEdit	m_eTimeEst;
-	CTimeEdit	m_eTimeSpent;
+	CTimeEdit   m_eTimeEst;
+	CTimeEdit   m_eTimeSpent;
 	CMaskEdit m_eCost;
-	CCheckListBoxEx	m_lbAttribUse;
-	int		m_nDefPriority;
-	int		m_nDefRisk;
-	double		m_dDefTimeEst, m_dDefTimeSpent;
-	CString	m_sDefAllocTo;
-	CString	m_sDefAllocBy;
-	CString	m_sDefStatus;
-	CString	m_sDefCategory;
-	CColorButton	m_btDefColor;
+	CCheckListBoxEx m_lbAttribUse;
+	int     m_nDefPriority;
+	int     m_nDefRisk;
+	double      m_dDefTimeEst, m_dDefTimeSpent;
+	CString m_sDefAllocTo;
+	CString m_sDefAllocBy;
+	CString m_sDefStatus;
+	CString m_sDefCategory;
+	CColorButton    m_btDefColor;
 	COLORREF m_crDef;
-	BOOL	m_bInheritParentAttributes;
-	int		m_nSelAttribUse;
-	BOOL	m_bUseCreationForDefStartDate;
+	BOOL    m_bInheritParentAttributes;
+	int     m_nSelAttribUse;
+	BOOL    m_bUseCreationForDefStartDate;
 	CWndPromptManager m_mgrPrompts;
 	CGroupLineManager m_mgrGroupLines;
 	CStringArray m_aDefCats, m_aDefStatus, m_aDefAllocTo, m_aDefAllocBy;
 
 	struct ATTRIBPREF
 	{
-		ATTRIBPREF() {}
-		ATTRIBPREF(UINT nIDName, PTP_ATTRIB attrib, BOOL use) { sName.LoadString(nIDName); nAttrib = attrib; bUse = use; }
+		ATTRIBPREF() : nAttrib(PTPA_NONE), bUse(FALSE) {}
+		ATTRIBPREF(UINT nIDName, PTP_ATTRIB attrib, BOOL use) : nAttrib(attrib), bUse(use)
+		{
+			sName.LoadString(nIDName);
+		}
 
 		CString sName;
 		PTP_ATTRIB nAttrib;
@@ -159,13 +201,12 @@ protected:
 	};
 	CArray<ATTRIBPREF, ATTRIBPREF&> m_aAttribPrefs;
 
-
 // Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPreferencesTaskDefPage)
-	public:
+public:
 	virtual void OnOK();
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
@@ -182,14 +223,13 @@ protected:
 	afx_msg LRESULT OnListAddItem(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnListDeleteItem(WPARAM wp, LPARAM lp);
 	DECLARE_MESSAGE_MAP()
-		
+
 	virtual void LoadPreferences(const CPreferences& prefs);
 	virtual void SavePreferences(CPreferences& prefs);
-	
-	BOOL HasCheckedAttributes() const;
-	
-	static PTDP_LIST MapCtrlIDToList(UINT nListID);
 
+	BOOL HasCheckedAttributes() const;
+
+	static PTDP_LIST MapCtrlIDToList(UINT nListID);
 };
 
 //{{AFX_INSERT_LOCATION}}

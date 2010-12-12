@@ -50,8 +50,6 @@
 
 #include "../../../CodeProject/Source/Misc.h"
 
-//#include <locale.h>
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -70,7 +68,6 @@ CPreferencesPageBase(CPreferencesTaskCalcPage::IDD)
 	m_bNoDueDateDueToday = FALSE;
 	m_nCalcRemainingTime = 0;
 	//}}AFX_DATA_INIT
-
 }
 
 CPreferencesTaskCalcPage::~CPreferencesTaskCalcPage()
@@ -98,7 +95,6 @@ void CPreferencesTaskCalcPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_AVERAGEPERCENTSUBCOMPLETION, m_bAveragePercentSubCompletion);
 	DDX_Check(pDX, IDC_INCLUDEDONEINAVERAGECALC, m_bIncludeDoneInAverageCalc);
 }
-
 
 BEGIN_MESSAGE_MAP(CPreferencesTaskCalcPage, CPreferencesPageBase)
 	//{{AFX_MSG_MAP(CPreferencesTaskCalcPage)
@@ -139,7 +135,6 @@ void CPreferencesTaskCalcPage::OnAveragepercentChange()
 
 	CPreferencesPageBase::OnControlChange();
 }
-
 
 void CPreferencesTaskCalcPage::OnUsehighestpriority()
 {
@@ -211,5 +206,3 @@ void CPreferencesTaskCalcPage::SavePreferences(CPreferences& prefs)
 	prefs.WriteProfileInt(_T("Preferences"), _T("NoDueDateIsDueToday"), m_bNoDueDateDueToday);
 	prefs.WriteProfileInt(_T("Preferences"), _T("CalcRemainingTime"), m_nCalcRemainingTime);
 }
-
-

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // PreferencesUITasklistColorsPage.cpp : implementation file
@@ -55,19 +69,19 @@ const COLORREF GRIDLINECOLOR = RGB(192, 192, 192);
 const COLORREF TASKDONECOLOR = RGB(128, 128, 128);
 const COLORREF TASKDUECOLOR = RGB(255, 0, 0);
 const COLORREF FILTEREDCOLOR = RGB(200, 200, 200);
-const COLORREF FLAGGEDCOLOR = (COLORREF)-1;
+const COLORREF FLAGGEDCOLOR = (COLORREF) - 1;
 
 IMPLEMENT_DYNCREATE(CPreferencesUITasklistColorsPage, CPreferencesPageBase)
 
-CPreferencesUITasklistColorsPage::CPreferencesUITasklistColorsPage() : 
-	CPreferencesPageBase(CPreferencesUITasklistColorsPage::IDD),
-	m_nTextColorOption(COLOROPT_DEFAULT), m_cbCategories(TRUE)
-
+CPreferencesUITasklistColorsPage::CPreferencesUITasklistColorsPage() :
+CPreferencesPageBase(CPreferencesUITasklistColorsPage::IDD),
+m_nTextColorOption(COLOROPT_DEFAULT),
+m_cbCategories(TRUE)
 {
 	//{{AFX_DATA_INIT(CPreferencesUITasklistColorsPage)
 	//}}AFX_DATA_INIT
 	// priority colors
-	m_nSelPriorityColor = 0; 
+	m_nSelPriorityColor = 0;
 }
 
 CPreferencesUITasklistColorsPage::~CPreferencesUITasklistColorsPage()
@@ -152,7 +166,6 @@ void CPreferencesUITasklistColorsPage::DoDataExchange(CDataExchange* pDX)
 	}
 }
 
-
 BEGIN_MESSAGE_MAP(CPreferencesUITasklistColorsPage, CPreferencesPageBase)
 	//{{AFX_MSG_MAP(CPreferencesUITasklistColorsPage)
 	ON_BN_CLICKED(IDC_SETALTLINECOLOR, OnAltlinecolor)
@@ -185,14 +198,14 @@ BEGIN_MESSAGE_MAP(CPreferencesUITasklistColorsPage, CPreferencesPageBase)
 	ON_CBN_SELCHANGE(IDC_PRIORITYCOLORS, OnSelchangePrioritycolors)
 	ON_BN_CLICKED(IDC_SPECIFYFLAGGEDCOLOR, OnSpecifyflaggedcolor)
 	ON_BN_CLICKED(IDC_INDIVIDUALPRIORITYCOLORS, OnChangePriorityColorOption)
-   ON_REGISTERED_MESSAGE(WM_ACB_ITEMADDED, OnCategoryAdded)
-   ON_REGISTERED_MESSAGE(WM_ACB_ITEMDELETED, OnCategoryDeleted)
+	ON_REGISTERED_MESSAGE(WM_ACB_ITEMADDED, OnCategoryAdded)
+	ON_REGISTERED_MESSAGE(WM_ACB_ITEMDELETED, OnCategoryDeleted)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesUITasklistColorsPage message handlers
 
-BOOL CPreferencesUITasklistColorsPage::OnInitDialog() 
+BOOL CPreferencesUITasklistColorsPage::OnInitDialog()
 {
 	CPreferencesPageBase::OnInitDialog();
 
@@ -224,7 +237,7 @@ BOOL CPreferencesUITasklistColorsPage::OnInitDialog()
 	m_btDueTodayColor.EnableWindow(m_bSpecifyDueTodayColor);
 	m_btCatColor.EnableWindow(m_nTextColorOption == COLOROPT_CATEGORY && !m_sSelCategory.IsEmpty());
 	m_btFlaggedColor.EnableWindow(m_bSpecifyFlaggedColor);
-	
+
 	m_btGridlineColor.SetColor(m_crGridlines);
 	m_btLowColor.SetColor(m_crLow);
 	m_btHighColor.SetColor(m_crHigh);
@@ -243,39 +256,49 @@ BOOL CPreferencesUITasklistColorsPage::OnInitDialog()
 		while (nColor--)
 		{
 			const CATCOLOR& cc = m_aCategoryColors[nColor];
-			
+
 			if (!cc.sCategory.IsEmpty())
+			{
 				m_cbCategories.AddString(cc.sCategory);
+			}
 		}
 
 		nColor = FindCategoryColor(m_sSelCategory);
 
 		if (nColor != -1)
+		{
 			m_btCatColor.SetColor(m_aCategoryColors[nColor].color);
+		}
 	}
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CPreferencesUITasklistColorsPage::OnLowprioritycolor() 
+void CPreferencesUITasklistColorsPage::OnLowprioritycolor()
 {
 	m_crLow = m_btLowColor.GetColor();
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnHighprioritycolor() 
+void CPreferencesUITasklistColorsPage::OnHighprioritycolor()
 {
 	m_crHigh = m_btHighColor.GetColor();
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnSetprioritycolor() 
+void CPreferencesUITasklistColorsPage::OnSetprioritycolor()
 {
 	VERIFY(m_nSelPriorityColor >= 0);
 
 	m_aPriorityColors.SetAt(m_nSelPriorityColor, m_btSetColor.GetColor());
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnChangePriorityColorOption() 
+void CPreferencesUITasklistColorsPage::OnChangePriorityColorOption()
 {
 	UpdateData();
 
@@ -285,9 +308,11 @@ void CPreferencesUITasklistColorsPage::OnChangePriorityColorOption()
 	m_btSetColor.EnableWindow(m_bColorPriority && !m_bGradientPriorityColors && m_nSelPriorityColor >= 0);
 	m_btLowColor.EnableWindow(m_bColorPriority && m_bGradientPriorityColors);
 	m_btHighColor.EnableWindow(m_bColorPriority && m_bGradientPriorityColors);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnColorPriority() 
+void CPreferencesUITasklistColorsPage::OnColorPriority()
 {
 	UpdateData();
 
@@ -296,23 +321,27 @@ void CPreferencesUITasklistColorsPage::OnColorPriority()
 
 	OnChangePriorityColorOption(); // to handle the other controls
 
-	// if the text color option is COLOROPT_PRIORITY and 
+	// if the text color option is COLOROPT_PRIORITY and
 	// the user has turned off priority coloring then switch to default
 	if (!m_bColorPriority && m_nTextColorOption == COLOROPT_PRIORITY)
 	{
 		m_nTextColorOption = COLOROPT_DEFAULT;
 		UpdateData(FALSE);
 	}
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-int CPreferencesUITasklistColorsPage::GetPriorityColors(CDWordArray& aColors) const 
-{ 
+int CPreferencesUITasklistColorsPage::GetPriorityColors(CDWordArray& aColors) const
+{
 	aColors.RemoveAll();
 
 	if (m_bColorPriority)
 	{
 		if (!m_bGradientPriorityColors)
-			aColors.Copy(m_aPriorityColors); 
+		{
+			aColors.Copy(m_aPriorityColors);
+		}
 		else
 		{
 			aColors.Add(m_crLow);
@@ -338,7 +367,7 @@ int CPreferencesUITasklistColorsPage::GetPriorityColors(CDWordArray& aColors) co
 					hlsColor.fHue += fHueInc;
 					hlsColor.fSaturation += fSatInc;
 					hlsColor.fLuminosity += fLumInc;
-					
+
 					RGBX rgbColor;
 					RGBX::HLS2RGB(hlsColor, rgbColor);
 
@@ -373,26 +402,26 @@ int CPreferencesUITasklistColorsPage::GetPriorityColors(CDWordArray& aColors) co
 	else
 	{
 		// grayscale
-		aColors.Add(RGB(240, 240, 240));	// 0
-		aColors.Add(RGB(216, 216, 216));	// 1
-		aColors.Add(RGB(192, 192, 192));	// 2
-		aColors.Add(RGB(168, 168, 168));	// 3
-		aColors.Add(RGB(144, 144, 144));	// 4
-		aColors.Add(RGB(120, 120, 120));	// 5
-		aColors.Add(RGB(96, 96, 96));		// 6
-		aColors.Add(RGB(72, 72, 72));		// 7
-		aColors.Add(RGB(48, 48, 48));		// 8
-		aColors.Add(RGB(24, 24, 24));		// 9
-		aColors.Add(0);						// 10
+		aColors.Add(RGB(240, 240, 240));    // 0
+		aColors.Add(RGB(216, 216, 216));    // 1
+		aColors.Add(RGB(192, 192, 192));    // 2
+		aColors.Add(RGB(168, 168, 168));    // 3
+		aColors.Add(RGB(144, 144, 144));    // 4
+		aColors.Add(RGB(120, 120, 120));    // 5
+		aColors.Add(RGB(96, 96, 96));       // 6
+		aColors.Add(RGB(72, 72, 72));       // 7
+		aColors.Add(RGB(48, 48, 48));       // 8
+		aColors.Add(RGB(24, 24, 24));       // 9
+		aColors.Add(0);                     // 10
 	}
-	
-	return aColors.GetSize(); 
+
+	return aColors.GetSize();
 }
 
-void CPreferencesUITasklistColorsPage::GetDueTaskColors(COLORREF& crDue, COLORREF& crDueToday) const 
-{ 
-	crDue = m_bSpecifyDueColor ? m_crDue : -1; 
-	crDueToday = m_bSpecifyDueTodayColor ? m_crDueToday : -1; 
+void CPreferencesUITasklistColorsPage::GetDueTaskColors(COLORREF& crDue, COLORREF& crDueToday) const
+{
+	crDue = m_bSpecifyDueColor ? m_crDue : -1;
+	crDueToday = m_bSpecifyDueTodayColor ? m_crDueToday : -1;
 }
 
 int CPreferencesUITasklistColorsPage::GetCategoryColors(CCatColorArray& aColors) const
@@ -402,22 +431,26 @@ int CPreferencesUITasklistColorsPage::GetCategoryColors(CCatColorArray& aColors)
 	return aColors.GetSize();
 }
 
-void CPreferencesUITasklistColorsPage::OnSelchangePrioritycolors() 
+void CPreferencesUITasklistColorsPage::OnSelchangePrioritycolors()
 {
 	UpdateData();
 
-	ASSERT (m_nSelPriorityColor >= 0);
-	
+	ASSERT(m_nSelPriorityColor >= 0);
+
 	if (m_nSelPriorityColor >= 0)
 	{
 		m_btSetColor.SetColor(m_aPriorityColors[m_nSelPriorityColor]);
 		m_btSetColor.EnableWindow(TRUE);
 	}
 	else
+	{
 		m_btSetColor.EnableWindow(FALSE);
+	}
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnSpecifytreefont() 
+void CPreferencesUITasklistColorsPage::OnSpecifytreefont()
 {
 	UpdateData();
 
@@ -431,8 +464,7 @@ void CPreferencesUITasklistColorsPage::OnSpecifytreefont()
 	GetDlgItem(IDC_COMMENTSFONTSIZELABEL)->EnableWindow(m_bSpecifyCommentsFont && !m_bCommentsUseTreeFont);
 	GetDlgItem(IDC_COMMENTSFONTLIST)->EnableWindow(m_bSpecifyCommentsFont && !m_bCommentsUseTreeFont);
 
-//	if (m_bSpecifyTreeFont)
-//		m_cbTreeFonts.SetSelectedFont(m_sTreeFont);
+	CPreferencesPageBase::OnControlChange();
 }
 
 BOOL CPreferencesUITasklistColorsPage::GetTreeFont(CString& sFaceName, int& nPointSize) const
@@ -449,7 +481,9 @@ BOOL CPreferencesUITasklistColorsPage::GetTreeFont(CString& sFaceName, int& nPoi
 BOOL CPreferencesUITasklistColorsPage::GetCommentsFont(CString& sFaceName, int& nPointSize) const
 {
 	if ((m_bSpecifyTreeFont && m_bCommentsUseTreeFont) || !m_bSpecifyCommentsFont)
+	{
 		return FALSE;
+	}
 
 	sFaceName = m_sCommentsFont;
 	nPointSize = m_nCommentsFontSize;
@@ -457,59 +491,75 @@ BOOL CPreferencesUITasklistColorsPage::GetCommentsFont(CString& sFaceName, int& 
 	return m_bSpecifyCommentsFont;
 }
 
-void CPreferencesUITasklistColorsPage::OnSetgridlinecolor() 
+void CPreferencesUITasklistColorsPage::OnSetgridlinecolor()
 {
 	m_crGridlines = m_btGridlineColor.GetColor();
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnSpecifygridlinecolor() 
-{
-	UpdateData();	
-
-	m_btGridlineColor.EnableWindow(m_bSpecifyGridColor);
-}
-
-void CPreferencesUITasklistColorsPage::OnSetdonecolor() 
-{
-	m_crDone = m_btDoneColor.GetColor();
-}
-
-void CPreferencesUITasklistColorsPage::OnSetflaggedcolor() 
-{
-	m_crFlagged = m_btFlaggedColor.GetColor();
-}
-
-void CPreferencesUITasklistColorsPage::OnSpecifydonecolor() 
-{
-	UpdateData();	
-
-	m_btDoneColor.EnableWindow(m_bSpecifyDoneColor);
-}
-
-void CPreferencesUITasklistColorsPage::OnSpecifyflaggedcolor() 
-{
-	UpdateData();	
-
-	m_btFlaggedColor.EnableWindow(m_bSpecifyFlaggedColor);
-}
-
-void CPreferencesUITasklistColorsPage::OnAltlinecolor() 
-{
-	m_crAltLine = m_btAltLineColor.GetColor();
-}
-
-void CPreferencesUITasklistColorsPage::OnSpecifyAlternatelinecolor() 
-{
-	UpdateData();	
-	
-	m_btAltLineColor.EnableWindow(m_bAlternateLineColor);
-}
-
-void CPreferencesUITasklistColorsPage::OnChangeTextColorOption() 
+void CPreferencesUITasklistColorsPage::OnSpecifygridlinecolor()
 {
 	UpdateData();
 
-	// if the text color option is COLOROPT_PRIORITY and 
+	m_btGridlineColor.EnableWindow(m_bSpecifyGridColor);
+
+	CPreferencesPageBase::OnControlChange();
+}
+
+void CPreferencesUITasklistColorsPage::OnSetdonecolor()
+{
+	m_crDone = m_btDoneColor.GetColor();
+
+	CPreferencesPageBase::OnControlChange();
+}
+
+void CPreferencesUITasklistColorsPage::OnSetflaggedcolor()
+{
+	m_crFlagged = m_btFlaggedColor.GetColor();
+
+	CPreferencesPageBase::OnControlChange();
+}
+
+void CPreferencesUITasklistColorsPage::OnSpecifydonecolor()
+{
+	UpdateData();
+
+	m_btDoneColor.EnableWindow(m_bSpecifyDoneColor);
+
+	CPreferencesPageBase::OnControlChange();
+}
+
+void CPreferencesUITasklistColorsPage::OnSpecifyflaggedcolor()
+{
+	UpdateData();
+
+	m_btFlaggedColor.EnableWindow(m_bSpecifyFlaggedColor);
+
+	CPreferencesPageBase::OnControlChange();
+}
+
+void CPreferencesUITasklistColorsPage::OnAltlinecolor()
+{
+	m_crAltLine = m_btAltLineColor.GetColor();
+
+	CPreferencesPageBase::OnControlChange();
+}
+
+void CPreferencesUITasklistColorsPage::OnSpecifyAlternatelinecolor()
+{
+	UpdateData();
+
+	m_btAltLineColor.EnableWindow(m_bAlternateLineColor);
+
+	CPreferencesPageBase::OnControlChange();
+}
+
+void CPreferencesUITasklistColorsPage::OnChangeTextColorOption()
+{
+	UpdateData();
+
+	// if the text color option is COLOROPT_PRIORITY and
 	// the user has got priority coloring turned off then switch it on
 	if (!m_bColorPriority && m_nTextColorOption == COLOROPT_PRIORITY)
 	{
@@ -520,18 +570,22 @@ void CPreferencesUITasklistColorsPage::OnChangeTextColorOption()
 	}
 
 	GetDlgItem(IDC_CATEGORYCOLORS)->EnableWindow(m_nTextColorOption == COLOROPT_CATEGORY);
-	m_btCatColor.EnableWindow(m_nTextColorOption == COLOROPT_CATEGORY && 
-								!m_sSelCategory.IsEmpty());
+	m_btCatColor.EnableWindow(m_nTextColorOption == COLOROPT_CATEGORY &&
+		!m_sSelCategory.IsEmpty());
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnSetcategorycolor() 
+void CPreferencesUITasklistColorsPage::OnSetcategorycolor()
 {
 	UpdateData();
 
 	int nColor = FindCategoryColor(m_sSelCategory);
 
 	if (nColor >= 0)
+	{
 		m_aCategoryColors[nColor].color = m_btCatColor.GetColor();
+	}
 	else
 	{
 		CATCOLOR cc;
@@ -540,6 +594,8 @@ void CPreferencesUITasklistColorsPage::OnSetcategorycolor()
 
 		m_aCategoryColors.Add(cc);
 	}
+
+	CPreferencesPageBase::OnControlChange();
 }
 
 int CPreferencesUITasklistColorsPage::FindCategoryColor(LPCTSTR szCategory)
@@ -551,44 +607,52 @@ int CPreferencesUITasklistColorsPage::FindCategoryColor(LPCTSTR szCategory)
 		CATCOLOR& cc = m_aCategoryColors[nColor];
 
 		if (cc.sCategory.CompareNoCase(szCategory) == 0)
+		{
 			return nColor;
+		}
 	}
 
 	return -1;
 }
 
-void CPreferencesUITasklistColorsPage::OnEditCategorycolors() 
+void CPreferencesUITasklistColorsPage::OnEditCategorycolors()
 {
 	UpdateData();
 
-	m_btCatColor.EnableWindow(m_nTextColorOption == COLOROPT_CATEGORY && 
-								!m_sSelCategory.IsEmpty());
+	m_btCatColor.EnableWindow(m_nTextColorOption == COLOROPT_CATEGORY &&
+		!m_sSelCategory.IsEmpty());
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnSelchangeCategorycolors() 
+void CPreferencesUITasklistColorsPage::OnSelchangeCategorycolors()
 {
 	UpdateData();
 
 	int nSel = m_cbCategories.GetCurSel();
 
 	if (nSel != CB_ERR)
+	{
 		m_cbCategories.GetLBText(nSel, m_sSelCategory);
-	
+	}
+
 	int nColor = FindCategoryColor(m_sSelCategory);
 
 	if (nColor >= 0)
+	{
 		m_btCatColor.SetColor(m_aCategoryColors[nColor].color);
+	}
 
-	m_btCatColor.EnableWindow(m_nTextColorOption == COLOROPT_CATEGORY && 
-								!m_sSelCategory.IsEmpty());
+	m_btCatColor.EnableWindow(m_nTextColorOption == COLOROPT_CATEGORY &&
+		!m_sSelCategory.IsEmpty());
 }
 
 LRESULT CPreferencesUITasklistColorsPage::OnCategoryAdded(WPARAM /*wParam*/, LPARAM lParam)
 {
-   CString sCategory((LPCTSTR)lParam);
+	CString sCategory((LPCTSTR)lParam);
 
-   if (!sCategory.IsEmpty() && FindCategoryColor(sCategory) == -1)
-   {
+	if (!sCategory.IsEmpty() && FindCategoryColor(sCategory) == -1)
+	{
 		CATCOLOR cc;
 		cc.sCategory = sCategory;
 		cc.color = 0;
@@ -597,30 +661,36 @@ LRESULT CPreferencesUITasklistColorsPage::OnCategoryAdded(WPARAM /*wParam*/, LPA
 
 		// notify parent
 		GetParent()->SendMessage(WM_PUITCP_CATEGORYCHANGE, 1, lParam);
-   }
-  
-   return 0L;
+
+		CPreferencesPageBase::OnControlChange();
+	}
+
+	return 0L;
 }
 
 LRESULT CPreferencesUITasklistColorsPage::OnCategoryDeleted(WPARAM /*wParam*/, LPARAM lParam)
 {
-   CString sCategory((LPCTSTR)lParam);
+	CString sCategory((LPCTSTR)lParam);
 
-   if (!sCategory.IsEmpty())
-   {
-      int nDel = FindCategoryColor(sCategory);
+	if (!sCategory.IsEmpty())
+	{
+		int nDel = FindCategoryColor(sCategory);
 
-      if (nDel != -1)
-         m_aCategoryColors.RemoveAt(nDel);
+		if (nDel != -1)
+		{
+			m_aCategoryColors.RemoveAt(nDel);
+		}
 
 		// notify parent
 		GetParent()->SendMessage(WM_PUITCP_CATEGORYCHANGE, 0, lParam);
-   }
-  
-   return 0L;
+
+		CPreferencesPageBase::OnControlChange();
+	}
+
+	return 0L;
 }
 
-void CPreferencesUITasklistColorsPage::OnCommentsusetreefont() 
+void CPreferencesUITasklistColorsPage::OnCommentsusetreefont()
 {
 	UpdateData();
 
@@ -629,56 +699,69 @@ void CPreferencesUITasklistColorsPage::OnCommentsusetreefont()
 	GetDlgItem(IDC_COMMENTSFONTSIZE)->EnableWindow(m_bSpecifyCommentsFont && !bCommentsUseTreeFont);
 	GetDlgItem(IDC_COMMENTSFONTSIZELABEL)->EnableWindow(m_bSpecifyCommentsFont && !bCommentsUseTreeFont);
 	GetDlgItem(IDC_COMMENTSFONTLIST)->EnableWindow(m_bSpecifyCommentsFont && !bCommentsUseTreeFont);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnSpecifycommentsfont() 
+void CPreferencesUITasklistColorsPage::OnSpecifycommentsfont()
 {
 	UpdateData();
-	
+
 	BOOL bCommentsUseTreeFont = (m_bCommentsUseTreeFont && m_bSpecifyTreeFont);
 	GetDlgItem(IDC_COMMENTSFONTSIZE)->EnableWindow(m_bSpecifyCommentsFont && !bCommentsUseTreeFont);
 	GetDlgItem(IDC_COMMENTSFONTSIZELABEL)->EnableWindow(m_bSpecifyCommentsFont && !bCommentsUseTreeFont);
 	GetDlgItem(IDC_COMMENTSFONTLIST)->EnableWindow(m_bSpecifyCommentsFont && !bCommentsUseTreeFont);
 
-//	if (m_bSpecifyCommentsFont && !bCommentsUseTreeFont)
-//		m_cbCommentsFonts.SetSelectedFont(m_sCommentsFont);
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnDuetaskcolor() 
+void CPreferencesUITasklistColorsPage::OnDuetaskcolor()
 {
-	UpdateData();	
-	
+	UpdateData();
+
 	m_btDueColor.EnableWindow(m_bSpecifyDueColor);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnDuetodaytaskcolor() 
+void CPreferencesUITasklistColorsPage::OnDuetodaytaskcolor()
 {
-	UpdateData();	
-	
+	UpdateData();
+
 	m_btDueTodayColor.EnableWindow(m_bSpecifyDueTodayColor);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnSetduetaskcolor() 
+void CPreferencesUITasklistColorsPage::OnSetduetaskcolor()
 {
 	m_crDue = m_btDueColor.GetColor();
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesUITasklistColorsPage::OnSetduetodaytaskcolor() 
+void CPreferencesUITasklistColorsPage::OnSetduetodaytaskcolor()
 {
 	m_crDueToday = m_btDueTodayColor.GetColor();
+
+	CPreferencesPageBase::OnControlChange();
 }
 
 void CPreferencesUITasklistColorsPage::DeleteCategory(LPCTSTR szCategory)
 {
 	int nCat = FindCategoryColor(szCategory);
-	
+
 	if (nCat != -1)
 	{
 		m_aCategoryColors.RemoveAt(nCat);
 
 		// do we need to update the combo
 		if (m_cbCategories.GetSafeHwnd())
+		{
 			m_cbCategories.DeleteString(szCategory);
+		}
+
+		CPreferencesPageBase::OnControlChange();
 	}
 }
 
@@ -689,12 +772,16 @@ void CPreferencesUITasklistColorsPage::AddCategory(LPCTSTR szCategory)
 		CATCOLOR cc;
 		cc.sCategory = szCategory;
 		cc.color = 0;
-		
+
 		m_aCategoryColors.Add(cc);
 
 		// do we need to update the combo
 		if (m_cbCategories.GetSafeHwnd())
+		{
 			m_cbCategories.AddString(szCategory);
+		}
+
+		CPreferencesPageBase::OnControlChange();
 	}
 }
 
@@ -745,11 +832,15 @@ void CPreferencesUITasklistColorsPage::LoadPreferences(const CPreferences& prefs
 		const CString& sDefCat = aDefCats[nDefColor];
 
 		if (sDefCat.IsEmpty())
+		{
 			continue;
+		}
 
 		// make sure this category is not already specified
 		if (FindCategoryColor(sDefCat) != -1)
-			continue; // skip
+		{
+			continue;   // skip
+		}
 
 		CATCOLOR cc;
 		cc.color = 0;
@@ -758,7 +849,7 @@ void CPreferencesUITasklistColorsPage::LoadPreferences(const CPreferences& prefs
 		m_sSelCategory = sDefCat;
 		m_aCategoryColors.Add(cc);
 	}
-	
+
 	// prefs
 	m_bColorPriority = prefs.GetProfileInt(_T("Preferences"), _T("ColorPriority"), TRUE);
 	m_bGradientPriorityColors = !prefs.GetProfileInt(_T("Preferences"), _T("IndividualPriorityColors"), FALSE);
@@ -787,7 +878,9 @@ void CPreferencesUITasklistColorsPage::LoadPreferences(const CPreferences& prefs
 
 	// bkwds compatibility
 	if (prefs.GetProfileInt(_T("Preferences"), _T("ColorByPriority"), FALSE))
+	{
 		m_nTextColorOption = COLOROPT_PRIORITY;
+	}
 
 	m_nTextColorOption = prefs.GetProfileInt(_T("Preferences"), _T("TextColorOption"), m_nTextColorOption);
 }

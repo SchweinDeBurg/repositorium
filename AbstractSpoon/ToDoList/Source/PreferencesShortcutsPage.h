@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESSHORTCUTSPAGE_H__DA5D005D_C6CC_453A_A431_A2B85A920CE5__INCLUDED_)
@@ -55,14 +69,19 @@ public:
 	CPreferencesShortcutsPage(CShortcutManager* pMgr, UINT nMenuID, BOOL bIgnoreGrayedItems = TRUE);
 	~CPreferencesShortcutsPage();
 
+	UINT GetShortcutCmdID(DWORD dwShortcut)
+	{
+		return m_pShortcutMgr->GetCommandID(dwShortcut);
+	}
+
 protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesShortcutsPage)
 	enum { IDD = IDD_PREFSHORTCUTS_PAGE };
-	CHotKeyCtrlEx	m_hkCur;
-	COrderedTreeCtrl	m_tcCommands;
-	CHotKeyCtrlEx	m_hkNew;
-	CString	m_sOtherCmdID;
+	CHotKeyCtrlEx   m_hkCur;
+	COrderedTreeCtrl    m_tcCommands;
+	CHotKeyCtrlEx   m_hkNew;
+	CString m_sOtherCmdID;
 	//}}AFX_DATA
 
 	CShortcutManager* m_pShortcutMgr;
@@ -74,9 +93,9 @@ protected:
 // Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPreferencesShortcutsPage)
-	public:
+public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 	virtual void OnOK();
@@ -94,14 +113,14 @@ protected:
 	afx_msg LRESULT OnGutterRecalcColWidth(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnGutterGetItemColors(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnTreeCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
 	DECLARE_MESSAGE_MAP()
 
 	HTREEITEM AddMenuItem(HTREEITEM htiParent, const CMenu* pMenu, int nPos);
 	int GetLongestShortcutText(HTREEITEM hti, CDC* pDC);
 
-   virtual void LoadPreferences(const CPreferences& prefs);
-   virtual void SavePreferences(CPreferences& prefs);
-
+	virtual void LoadPreferences(const CPreferences& prefs);
+	virtual void SavePreferences(CPreferences& prefs);
 };
 
 //{{AFX_INSERT_LOCATION}}

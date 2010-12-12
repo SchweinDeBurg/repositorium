@@ -66,7 +66,6 @@ CPreferencesPageBase(CPreferencesUITasklistPage::IDD)
 	//{{AFX_DATA_INIT(CPreferencesUITasklistPage)
 	m_bHideDoneTimeField = FALSE;
 	//}}AFX_DATA_INIT
-
 }
 
 CPreferencesUITasklistPage::~CPreferencesUITasklistPage()
@@ -109,7 +108,6 @@ void CPreferencesUITasklistPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_SHOWPERCENTPROGRESSBAR, m_bShowPercentAsProgressbar);
 	DDX_Check(pDX, IDC_HIDEPERCENTFORDONETASKS, m_bHidePercentForDoneTasks);
 }
-
 
 BEGIN_MESSAGE_MAP(CPreferencesUITasklistPage, CPreferencesPageBase)
 	//{{AFX_MSG_MAP(CPreferencesUITasklistPage)
@@ -335,10 +333,7 @@ void CPreferencesUITasklistPage::SavePreferences(CPreferences& prefs)
 	prefs.WriteProfileInt(_T("Preferences"), _T("HideDoneTimeField"), m_bHideDoneTimeField);
 	prefs.WriteProfileInt(_T("Preferences"), _T("LimitColumnWidths"), m_bLimitColumnWidths);
 	prefs.WriteProfileInt(_T("Preferences"), _T("MaxColumnWidth"), m_nMaxColumnWidth);
-
 }
-
-
 
 void CPreferencesUITasklistPage::OnLimitcolwidths()
 {

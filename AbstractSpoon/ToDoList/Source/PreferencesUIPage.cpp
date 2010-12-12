@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // PreferencesUIPage.cpp : implementation file
@@ -53,12 +67,12 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CPreferencesUIPage, CPreferencesPageBase)
 
-CPreferencesUIPage::CPreferencesUIPage(const CContentMgr* pMgr) : 
-	CPreferencesPageBase(CPreferencesUIPage::IDD), 
-		m_pContentMgr(pMgr), 
-		m_cbCommentsFmt(pMgr),
-		m_nDefaultCommentsFormat(-1),
-		m_eUITheme(FES_COMBOSTYLEBTN, CEnString(IDS_UITHEMEFILEFILTER))
+CPreferencesUIPage::CPreferencesUIPage(const CContentMgr* pMgr) :
+CPreferencesPageBase(CPreferencesUIPage::IDD),
+m_pContentMgr(pMgr),
+m_cbCommentsFmt(pMgr),
+m_nDefaultCommentsFormat(-1),
+m_eUITheme(FES_COMBOSTYLEBTN, CEnString(IDS_UITHEMEFILEFILTER))
 {
 	//{{AFX_DATA_INIT(CPreferencesUIPage)
 	m_bAutoRefilter = FALSE;
@@ -66,7 +80,6 @@ CPreferencesUIPage::CPreferencesUIPage(const CContentMgr* pMgr) :
 	m_bUseUITheme = FALSE;
 	m_bEnableLightboxMgr = FALSE;
 	//}}AFX_DATA_INIT
-
 }
 
 CPreferencesUIPage::~CPreferencesUIPage()
@@ -102,7 +115,6 @@ void CPreferencesUIPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMMENTSFORMAT, m_cbCommentsFmt);
 	DDX_CBIndex(pDX, IDC_COMMENTSFORMAT, m_nDefaultCommentsFormat);
 	DDX_Check(pDX, IDC_SORTDONETASKSATBOTTOM, m_bSortDoneTasksAtBottom);
-//	DDX_Check(pDX, IDC_RTLCOMMENTS, m_bRTLComments);
 }
 
 BEGIN_MESSAGE_MAP(CPreferencesUIPage, CPreferencesPageBase)
@@ -115,7 +127,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesUIPage message handlers
 
-BOOL CPreferencesUIPage::OnInitDialog() 
+BOOL CPreferencesUIPage::OnInitDialog()
 {
 	CPreferencesPageBase::OnInitDialog();
 
@@ -134,12 +146,14 @@ BOOL CPreferencesUIPage::OnInitDialog()
 	GetDlgItem(IDC_UITHEMEFILE)->EnableWindow(m_bUseUITheme && bThemeActive);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CPreferencesUIPage::OnSelchangeCommentsformat() 
+void CPreferencesUIPage::OnSelchangeCommentsformat()
 {
 	m_cbCommentsFmt.GetSelectedFormat(m_cfDefault);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
 void CPreferencesUIPage::LoadPreferences(const CPreferences& prefs)
@@ -175,7 +189,9 @@ void CPreferencesUIPage::LoadPreferences(const CPreferences& prefs)
 		m_sUIThemeFile = prefs.GetProfileString(_T("Preferences"), _T("UIThemeFile"), sDefault);
 	}
 	else
+	{
 		m_sUIThemeFile.Empty();
+	}
 
 	// comments format
 	if (m_cbCommentsFmt.IsInitialized())
@@ -185,11 +201,13 @@ void CPreferencesUIPage::LoadPreferences(const CPreferences& prefs)
 
 		// fallback
 		if (m_nDefaultCommentsFormat == CB_ERR)
+		{
 			m_nDefaultCommentsFormat = prefs.GetProfileInt(_T("Preferences"), _T("DefaultCommentsFormat"), -1);
+		}
 
 		if (m_nDefaultCommentsFormat == CB_ERR || m_nDefaultCommentsFormat >= m_cbCommentsFmt.GetCount())
 		{
-			ASSERT (m_cbCommentsFmt.GetCount());
+			ASSERT(m_cbCommentsFmt.GetCount());
 
 			m_nDefaultCommentsFormat = 0;
 		}
@@ -234,8 +252,21 @@ void CPreferencesUIPage::SavePreferences(CPreferences& prefs)
 	}
 }
 
-void CPreferencesUIPage::OnUseuitheme() 
+void CPreferencesUIPage::OnUseuitheme()
 {
 	UpdateData();
 	GetDlgItem(IDC_UITHEMEFILE)->EnableWindow(m_bUseUITheme);
+
+	CPreferencesPageBase::OnControlChange();
+}
+
+CString CPreferencesUIPage::GetUITheme() const
+{
+	if (m_bUseUITheme)
+	{
+		return FileMisc::GetFullPath(m_sUIThemeFile, TRUE);
+	}
+
+	// else
+	return _T("");
 }
