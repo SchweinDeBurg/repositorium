@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TDLAttributeListBox.cpp : implementation file
@@ -49,31 +63,31 @@ static char THIS_FILE[] = __FILE__;
 CTDLAttributeListBox::CTDLAttributeListBox()
 {
 	// same order as enum
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_POS,			TDCA_POSITION,	TRUE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_ID,			TDCA_ID,		FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_PRIORITY,	TDCA_PRIORITY,	TRUE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_PERCENT,		TDCA_PERCENT,	TRUE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_TIMEEST,		TDCA_TIMEEST,	FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_TIMESPENT,	TDCA_TIMESPENT, FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_CREATEDBY,	TDCA_CREATEDBY, FALSE));
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_CREATEDATE,	TDCA_CREATIONDATE, FALSE));
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_STARTDATE,	TDCA_STARTDATE, FALSE));
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_DUEDATE,		TDCA_DUEDATE,	TRUE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_DONEDATE,	TDCA_DONEDATE,	FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_ALLOCTO,		TDCA_ALLOCTO,	TRUE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_ALLOCBY,		TDCA_ALLOCBY,	FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_STATUS,		TDCA_STATUS,	FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_CATEGORY,	TDCA_CATEGORY,	FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_FILEREF,		TDCA_FILEREF,	FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_FLAG,		TDCA_FLAG,		FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_MODIFYDATE,	TDCA_LASTMOD,	FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_RISK,		TDCA_RISK,		FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_EXTERNALID,	TDCA_EXTERNALID, FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_COST,		TDCA_COST,		FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_DEPENDS,		TDCA_DEPENDENCY, FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_RECURRENCE,	TDCA_RECURRENCE, FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_VERSION,		TDCA_VERSION,	FALSE)); 
-	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_COMMENTS,	TDCA_COMMENTS,	FALSE)); 
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_POS,         TDCA_POSITION,  TRUE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_ID,          TDCA_ID,        FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_PRIORITY,    TDCA_PRIORITY,  TRUE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_PERCENT,     TDCA_PERCENT,   TRUE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_TIMEEST,     TDCA_TIMEEST,   FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_TIMESPENT,   TDCA_TIMESPENT, FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_CREATEDBY,   TDCA_CREATEDBY, FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_CREATEDATE,  TDCA_CREATIONDATE, FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_STARTDATE,   TDCA_STARTDATE, FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_DUEDATE,     TDCA_DUEDATE,   TRUE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_DONEDATE,    TDCA_DONEDATE,  FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_ALLOCTO,     TDCA_ALLOCTO,   TRUE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_ALLOCBY,     TDCA_ALLOCBY,   FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_STATUS,      TDCA_STATUS,    FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_CATEGORY,    TDCA_CATEGORY,  FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_FILEREF,     TDCA_FILEREF,   FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_FLAG,        TDCA_FLAG,      FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_MODIFYDATE,  TDCA_LASTMOD,   FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_RISK,        TDCA_RISK,      FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_EXTERNALID,  TDCA_EXTERNALID, FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_COST,        TDCA_COST,      FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_DEPENDS,     TDCA_DEPENDENCY, FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_RECURRENCE,  TDCA_RECURRENCE, FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_VERSION,     TDCA_VERSION,   FALSE));
+	m_aAttribs.Add(ATTRIBVIS(IDS_TDLBC_COMMENTS,    TDCA_COMMENTS,  FALSE));
 }
 
 CTDLAttributeListBox::~CTDLAttributeListBox()
@@ -82,7 +96,7 @@ CTDLAttributeListBox::~CTDLAttributeListBox()
 
 BEGIN_MESSAGE_MAP(CTDLAttributeListBox, CCheckListBoxEx)
 	//{{AFX_MSG_MAP(CTDLAttributeListBox)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
+	// NOTE - the ClassWizard will add and remove mapping macros here.
 	//}}AFX_MSG_MAP
 	ON_CONTROL_REFLECT_EX(CLBN_CHKCHANGE, OnReflectCheckChange)
 	ON_MESSAGE(WM_INITLISTBOX, OnInitListBox)
@@ -91,7 +105,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTDLAttributeListBox message handlers
 
-void CTDLAttributeListBox::PreSubclassWindow() 
+void CTDLAttributeListBox::PreSubclassWindow()
 {
 	CCheckListBoxEx::PreSubclassWindow();
 
@@ -102,11 +116,13 @@ void CTDLAttributeListBox::PreSubclassWindow()
 int CTDLAttributeListBox::FindAttribute(TDC_ATTRIBUTE nAttrib) const
 {
 	int nIndex = m_aAttribs.GetSize();
-	
+
 	while (nIndex--)
 	{
 		if (m_aAttribs[nIndex].nTDCAttrib == nAttrib)
+		{
 			return nIndex;
+		}
 	}
 
 	ASSERT(0);
@@ -116,20 +132,22 @@ int CTDLAttributeListBox::FindAttribute(TDC_ATTRIBUTE nAttrib) const
 void CTDLAttributeListBox::SetAllAttributesVisible(BOOL bVisible)
 {
 	int nIndex = m_aAttribs.GetSize();
-	
+
 	while (nIndex--)
 	{
 		m_aAttribs[nIndex].bVisible = bVisible;
 
 		if (GetSafeHwnd())
+		{
 			SetCheck(nIndex, bVisible ? 1 : 0);
+		}
 	}
 }
 
 int CTDLAttributeListBox::GetAllAttributes(CTDCAttributeArray& aAttributes) const
 {
 	int nIndex = m_aAttribs.GetSize();
-	
+
 	while (nIndex--)
 	{
 		TDC_ATTRIBUTE col = m_aAttribs[nIndex].nTDCAttrib;
@@ -143,14 +161,16 @@ BOOL CTDLAttributeListBox::OnReflectCheckChange()
 {
 	// update all check states because we don't know which one changed
 	int nIndex = m_aAttribs.GetSize();
-	
+
 	while (nIndex--)
 	{
 		TDC_ATTRIBUTE col = (TDC_ATTRIBUTE)GetItemData(nIndex);
 		int nAttrib = FindAttribute(col);
 
 		if (nAttrib != -1)
+		{
 			m_aAttribs[nAttrib].bVisible = GetCheck(nIndex);
+		}
 	}
 
 	// continue routing
@@ -159,7 +179,7 @@ BOOL CTDLAttributeListBox::OnReflectCheckChange()
 
 LRESULT CTDLAttributeListBox::OnInitListBox(WPARAM /*wp*/, LPARAM /*lp*/)
 {
-	ASSERT (GetCount() == 0);
+	ASSERT(GetCount() == 0);
 
 	for (int nIndex = 0; nIndex < (int)m_aAttribs.GetSize(); nIndex++)
 	{
@@ -178,7 +198,7 @@ void CTDLAttributeListBox::SetVisibleAttributes(const CTDCAttributeArray& aAttri
 	SetAllAttributesVisible(FALSE);
 
 	int nAttrib = (int)aAttributes.GetSize();
-	
+
 	while (nAttrib--)
 	{
 		int nIndex = FindAttribute(aAttributes[nAttrib]);
@@ -188,7 +208,9 @@ void CTDLAttributeListBox::SetVisibleAttributes(const CTDCAttributeArray& aAttri
 			m_aAttribs[nIndex].bVisible = TRUE;
 
 			if (GetSafeHwnd())
+			{
 				SetCheck(nIndex, 1);
+			}
 		}
 	}
 }
@@ -198,15 +220,16 @@ int CTDLAttributeListBox::GetVisibleAttributes(CTDCAttributeArray& aAttributes) 
 	aAttributes.RemoveAll();
 
 	int nIndex = m_aAttribs.GetSize();
-	
+
 	while (nIndex--)
 	{
 		ATTRIBVIS cs = m_aAttribs[nIndex];
 
 		if (cs.bVisible)
+		{
 			aAttributes.Add(cs.nTDCAttrib);
+		}
 	}
 
 	return aAttributes.GetSize();
-
 }

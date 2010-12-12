@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TDLFindResultsListCtrl.cpp : implementation file
@@ -58,10 +71,9 @@ CTDLFindResultsListCtrl::~CTDLFindResultsListCtrl()
 	m_fontStrike.DeleteObject();
 }
 
-
 BEGIN_MESSAGE_MAP(CTDLFindResultsListCtrl, CEnListCtrl)
 	//{{AFX_MSG_MAP(CTDLFindResultsListCtrl)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
+	// NOTE - the ClassWizard will add and remove mapping macros here.
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -92,15 +104,17 @@ int CTDLFindResultsListCtrl::GetResultCount(const CFilteredToDoCtrl* pTDC) const
 {
 	int nCount = 0;
 	int nItem = GetItemCount();
-	
+
 	while (nItem--)
 	{
 		FTDRESULT* pRes = GetResult(nItem);
 
 		if (pRes && (pTDC == NULL || pRes->pTDC == pTDC))
+		{
 			nCount++;
+		}
 	}
-	
+
 	return nCount;
 }
 
@@ -137,7 +151,9 @@ int CTDLFindResultsListCtrl::GetResultIDs(const CFilteredToDoCtrl* pTDC, CDWordA
 	int nNumRes = GetResults(pTDC, aResults);
 
 	for (int nRes = 0; nRes < nNumRes; nRes++)
+	{
 		aTaskIDs.Add(aResults[nRes].dwTaskID);
+	}
 
 	return aResults.GetSize();
 }
@@ -167,15 +183,13 @@ void CTDLFindResultsListCtrl::DeleteAllResults()
 	while (nItem--)
 	{
 		FTDRESULT* pRes = GetResult(nItem);
-
-		if (pRes)
-			delete pRes;
+		delete pRes;
 
 		DeleteItem(nItem);
 	}
 }
 
-void CTDLFindResultsListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct) 
+void CTDLFindResultsListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
 	// we only need handle header items
 	int nItem = lpDrawItemStruct->itemID;
@@ -193,41 +207,43 @@ void CTDLFindResultsListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	if (!sText.IsEmpty())
 	{
 		CDC* pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
-		
+
 		CRect rLabel, rItem;
 		GetItemRect(nItem, rLabel, LVIR_LABEL);
 		GetItemRect(nItem, rItem, LVIR_BOUNDS);
-		
+
 		rLabel.left -= 2;
-		
+
 		int nSave = pDC->SaveDC();
-		
+
 		pDC->SelectObject(&m_fontBold);
 		pDC->SetTextColor(0);
 		pDC->SetBkColor(GetSysColor(COLOR_WINDOW));
 		pDC->SetBkMode(OPAQUE);
 		pDC->DrawText(sText, rLabel, DT_TOP | DT_LEFT | DT_END_ELLIPSIS | DT_NOPREFIX);
-		
+
 		// draw a horizontal dividing line
 		pDC->DrawText(sText, rLabel, DT_TOP | DT_LEFT | DT_END_ELLIPSIS | DT_NOPREFIX | DT_CALCRECT);
 		pDC->FillSolidRect(rLabel.right + 6, rLabel.top + rLabel.Height() / 2, rItem.right - rLabel.right, 1, GetSysColor(COLOR_3DSHADOW));
-		
+
 		pDC->RestoreDC(nSave);
 	}
 }
 
 COLORREF CTDLFindResultsListCtrl::GetItemTextColor(int nItem, int nSubItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const
 {
-   if (!bSelected && !bDropHighlighted)
-   {
-      FTDRESULT* pRes = (FTDRESULT*)GetItemData(nItem);
+	if (!bSelected && !bDropHighlighted)
+	{
+		FTDRESULT* pRes = (FTDRESULT*)GetItemData(nItem);
 
-      if (pRes && pRes->bDone && nSubItem == 0 && m_crDone != (COLORREF)-1)
-         return m_crDone;
-   }
+		if (pRes && pRes->bDone && nSubItem == 0 && m_crDone != (COLORREF) - 1)
+		{
+			return m_crDone;
+		}
+	}
 
-   // else
-   return CEnListCtrl::GetItemTextColor(nItem, nSubItem, bSelected, bDropHighlighted, bWndFocus);
+	// else
+	return CEnListCtrl::GetItemTextColor(nItem, nSubItem, bSelected, bDropHighlighted, bWndFocus);
 }
 
 CFont* CTDLFindResultsListCtrl::GetItemFont(int nItem, int nSubItem)
@@ -235,7 +251,9 @@ CFont* CTDLFindResultsListCtrl::GetItemFont(int nItem, int nSubItem)
 	FTDRESULT* pRes = GetResult(nItem);
 
 	if (pRes && pRes->bDone && nSubItem == 0 && m_fontStrike.GetSafeHandle())
+	{
 		return &m_fontStrike;
+	}
 
 	// else
 	return CEnListCtrl::GetItemFont(nItem, nSubItem);
@@ -244,35 +262,45 @@ CFont* CTDLFindResultsListCtrl::GetItemFont(int nItem, int nSubItem)
 void CTDLFindResultsListCtrl::RefreshUserPreferences()
 {
 	CPreferences prefs;
-	
+
 	// update user completed tasks colour
 	if (prefs.GetProfileInt(_T("Preferences"), _T("SpecifyDoneColor"), FALSE))
+	{
 		m_crDone = (COLORREF)prefs.GetProfileInt(_T("Preferences\\Colors"), _T("TaskDone"), -1);
+	}
 	else
-		m_crDone = (COLORREF)-1;
+	{
+		m_crDone = (COLORREF) - 1;
+	}
 
 	// update strike thru font
 	if (prefs.GetProfileInt(_T("Preferences"), _T("StrikethroughDone"), FALSE))
 	{
 		if (!m_fontStrike.GetSafeHandle())
+		{
 			GraphicsMisc::CreateFont(m_fontStrike, (HFONT)SendMessage(WM_GETFONT), MFS_STRIKETHRU);
+		}
 	}
 	else
+	{
 		m_fontStrike.DeleteObject();
+	}
 
 	if (IsWindowVisible())
+	{
 		Invalidate();
+	}
 }
 
 int CTDLFindResultsListCtrl::AddResult(const SEARCHRESULT& result, LPCTSTR szTask, LPCTSTR /*szPath*/, const CFilteredToDoCtrl* pTDC)
 {
 	int nPos = GetItemCount();
-		
+
 	// add result
 	int nIndex = InsertItem(nPos, szTask);
 	SetItemText(nIndex, 1, Misc::FormatArray(result.aMatched));
 	UpdateWindow();
-		
+
 	// map identifying data
 	FTDRESULT* pRes = new FTDRESULT(result.dwID, pTDC, result.HasFlag(RF_DONE));
 	SetItemData(nIndex, (DWORD)pRes);
@@ -291,14 +319,16 @@ BOOL CTDLFindResultsListCtrl::AddHeaderRow(LPCTSTR szText, BOOL bSpaceAbove)
 		SetItemData(nIndex, 0);
 		nPos++;
 	}
-	
+
 	// add result
 	int nIndex = InsertItem(nPos, szText);
 	SetItemData(nIndex, 0);
 
 	// bold font for rendering
 	if (m_fontBold.GetSafeHandle() == NULL)
+	{
 		GraphicsMisc::CreateFont(m_fontBold, (HFONT)SendMessage(WM_GETFONT), MFS_BOLD);
+	}
 
 	return (nIndex != -1);
 }

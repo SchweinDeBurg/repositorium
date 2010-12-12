@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDCOLUMNLISTBOX_H__C5D9EFCE_7B59_498F_88E4_890286A344A5__INCLUDED_)
@@ -44,7 +58,6 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // CTDLColumnListBox window
-
 
 class CTDLColumnListBox : public CCheckListBoxEx
 {
@@ -65,12 +78,12 @@ public:
 protected:
 	struct COLUMNVIS
 	{
-		COLUMNVIS() {}
-		COLUMNVIS(UINT nIDName, TDC_COLUMN tdcCol, BOOL bVis) 
-		{ 
-			sName.LoadString(nIDName); 
+		COLUMNVIS() : nTDCCol(TDCC_NONE), bVisible(FALSE) {}
+		COLUMNVIS(UINT nIDName, TDC_COLUMN tdcCol, BOOL bVis)
+		{
+			sName.LoadString(nIDName);
 			nTDCCol = tdcCol;
-			bVisible = bVis; 
+			bVisible = bVis;
 		}
 
 		CString sName;
@@ -85,7 +98,7 @@ public:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTDLColumnListBox)
-	protected:
+protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
@@ -96,14 +109,13 @@ public:
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CTDLColumnListBox)
-		// NOTE - the ClassWizard will add and remove member functions here.
+	// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_MSG
 	afx_msg BOOL OnReflectCheckChange();
 	afx_msg LRESULT OnInitListBox(WPARAM wp, LPARAM lp);
 	DECLARE_MESSAGE_MAP()
 
 	int FindColumn(TDC_COLUMN nCol) const;
-
 };
 
 /////////////////////////////////////////////////////////////////////////////

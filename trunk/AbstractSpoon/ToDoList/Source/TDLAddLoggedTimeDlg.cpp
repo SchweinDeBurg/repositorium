@@ -59,7 +59,6 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTDLAddLoggedTimeDlg dialog
 
-
 CTDLAddLoggedTimeDlg::CTDLAddLoggedTimeDlg(DWORD dwTaskID, LPCTSTR szTaskTitle, CWnd* pParent /*=NULL*/):
 CDialog(CTDLAddLoggedTimeDlg::IDD, pParent),
 m_cbTimeWhen(TCB_HALFHOURS)
@@ -72,7 +71,6 @@ m_cbTimeWhen(TCB_HALFHOURS)
 	m_nUnits = THU_MINS;
 	m_dtWhen = COleDateTime::GetCurrentTime();
 }
-
 
 void CTDLAddLoggedTimeDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -103,7 +101,6 @@ void CTDLAddLoggedTimeDlg::DoDataExchange(CDataExchange* pDX)
 		m_cbTimeWhen.SetOleTime(CDateHelper::GetTimeOnly(m_dtWhen));
 	}
 }
-
 
 BEGIN_MESSAGE_MAP(CTDLAddLoggedTimeDlg, CDialog)
 	//{{AFX_MSG_MAP(CTDLAddLoggedTimeDlg)

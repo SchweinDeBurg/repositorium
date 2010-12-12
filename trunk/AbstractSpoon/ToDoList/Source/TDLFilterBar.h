@@ -163,7 +163,6 @@ protected:
 protected:
 	int ReposControls(int nWidth = -1, BOOL bCalcOnly = FALSE);
 	BOOL WantShowFilter(TDC_COLUMN nType);
-
 };
 
 //{{AFX_INSERT_LOCATION}}

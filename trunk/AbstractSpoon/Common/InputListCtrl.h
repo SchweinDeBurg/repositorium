@@ -108,7 +108,7 @@ public:
 protected:
 	CPopupEditCtrl* GetEditControl();
 
-	// Attributes
+// Attributes
 public:
 
 protected:

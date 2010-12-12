@@ -114,7 +114,7 @@ public:
 		s_sCtrlClickMsg = szMsg;
 	}
 
-	// Attributes
+// Attributes
 protected:
 	CUrlArray m_aUrls;
 	CProtocolArray m_aProtocols;

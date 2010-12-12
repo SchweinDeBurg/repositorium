@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_FILTERDLG_H__9BFA276C_9BD6_4B23_A714_BB9D059CC2EB__INCLUDED_)
@@ -58,8 +72,7 @@ class CTDLFilterDlg : public CDialog, public CDialogHelper
 public:
 	CTDLFilterDlg(BOOL bMultiSelFilters, CWnd* pParent = NULL);   // standard constructor
 
-	int DoModal(const CFilteredToDoCtrl& tdc, 
-				const CDWordArray& aPriorityColors);
+	int DoModal(const CFilteredToDoCtrl& tdc, const CDWordArray& aPriorityColors);
 	void GetFilter(FTDCFILTER& filter);
 
 protected:
@@ -67,14 +80,14 @@ protected:
 	//{{AFX_DATA(CFilterDlg)
 	enum { IDD = IDD_FILTER_DIALOG };
 	//}}AFX_DATA
-	CEnCheckComboBox	m_cbCategoryFilter;
-	CEnCheckComboBox	m_cbStatusFilter;
-	CEnCheckComboBox	m_cbAllocToFilter;
-	CEnCheckComboBox	m_cbAllocByFilter;
-	CEnCheckComboBox	m_cbVersionFilter;
-	CTDLFilterComboBox	m_cbTaskFilter;
-	CTDLPriorityComboBox	m_cbPriorityFilter;
-	CTDLRiskComboBox	m_cbRiskFilter;
+	CEnCheckComboBox    m_cbCategoryFilter;
+	CEnCheckComboBox    m_cbStatusFilter;
+	CEnCheckComboBox    m_cbAllocToFilter;
+	CEnCheckComboBox    m_cbAllocByFilter;
+	CEnCheckComboBox    m_cbVersionFilter;
+	CTDLFilterComboBox  m_cbTaskFilter;
+	CTDLPriorityComboBox    m_cbPriorityFilter;
+	CTDLRiskComboBox    m_cbRiskFilter;
 	FTDCFILTER m_filter;
 	CStringArray m_aAllocTo;
 	CStringArray m_aAllocBy;
@@ -84,11 +97,12 @@ protected:
 	CDWordArray m_aPriorityColors;
 	CTDLFilterOptionComboBox m_cbOptions;
 	FTC_VIEW m_nView;
+	CString m_sCustomFilter;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CFilterDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
@@ -101,7 +115,7 @@ protected:
 	afx_msg void OnClearfilter();
 	afx_msg void OnSelchangeFiltercombo();
 	//}}AFX_MSG
-	afx_msg BOOL OnToolTipNotify( UINT id, NMHDR* pNMHDR, LRESULT* pResult );	
+	afx_msg BOOL OnToolTipNotify(UINT id, NMHDR* pNMHDR, LRESULT* pResult);
 	DECLARE_MESSAGE_MAP()
 };
 

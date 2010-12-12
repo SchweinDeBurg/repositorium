@@ -95,7 +95,7 @@ public:
 	void SavePreferences(IPreferences* pPrefs, LPCTSTR szKey) const;
 	void LoadPreferences(const IPreferences* pPrefs, LPCTSTR szKey);
 
-	// Attributes
+// Attributes
 protected:
 	BOOL m_bAllowNotify;
 	CToolbarHelper m_tbHelper;
