@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // PreferencesFilePage.cpp : implementation file
@@ -51,15 +64,13 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CPreferencesFilePage, CPreferencesPageBase)
 
-CPreferencesFilePage::CPreferencesFilePage(const CImportExportMgr* pExportMgr) : 
-		CPreferencesPageBase(CPreferencesFilePage::IDD),
-		m_eExportFolderPath(FES_FOLDERS | FES_COMBOSTYLEBTN),
-		m_eSaveExportStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER)),
-		m_eDueTaskStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER)),
-		m_pExportMgr(pExportMgr)
+CPreferencesFilePage::CPreferencesFilePage(const CImportExportMgr* pExportMgr) :
+CPreferencesPageBase(CPreferencesFilePage::IDD),
+m_eExportFolderPath(FES_FOLDERS | FES_COMBOSTYLEBTN),
+m_eSaveExportStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER)),
+m_eDueTaskStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER)),
+m_pExportMgr(pExportMgr)
 {
-//	m_psp.dwFlags &= ~PSP_HASHELP;
-
 	//{{AFX_DATA_INIT(CPreferencesFilePage)
 	m_bOtherExport = FALSE;
 	m_nOtherExporter = 1;
@@ -113,9 +124,13 @@ void CPreferencesFilePage::DoDataExchange(CDataExchange* pDX)
 	if (pDX->m_bSaveAndValidate)
 	{
 		if (m_bAutoSave)
+		{
 			m_nAutoSaveFrequency = CDialogHelper::GetSelectedItemAsValue(m_cbAutoSave);
+		}
 		else
+		{
 			m_nAutoSaveFrequency = 0;
+		}
 	}
 	else
 	{
@@ -128,10 +143,11 @@ void CPreferencesFilePage::DoDataExchange(CDataExchange* pDX)
 			}
 		}
 		else
+		{
 			m_cbAutoSave.SetCurSel(2);
+		}
 	}
 }
-
 
 BEGIN_MESSAGE_MAP(CPreferencesFilePage, CPreferencesPageBase)
 	//{{AFX_MSG_MAP(CPreferencesFilePage)
@@ -153,7 +169,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesFilePage message handlers
 
-BOOL CPreferencesFilePage::OnInitDialog() 
+BOOL CPreferencesFilePage::OnInitDialog()
 {
 	CPreferencesPageBase::OnInitDialog();
 
@@ -165,7 +181,7 @@ BOOL CPreferencesFilePage::OnInitDialog()
 	m_mgrGroupLines.AddGroupLine(IDC_PRINTGROUP, *this);
 
 	m_eExportFolderPath.SetFolderPrompt(CEnString(IDS_PFP_SELECTFOLDER));
-	
+
 	GetDlgItem(IDC_REMOVEONLYONABSCOMPLETION)->EnableWindow(m_bRemoveArchivedTasks);
 	GetDlgItem(IDC_DONTREMOVEFLAGGED)->EnableWindow(m_bRemoveArchivedTasks);
 	GetDlgItem(IDC_AUTOSAVEFREQUENCY)->EnableWindow(m_bAutoSave);
@@ -186,7 +202,9 @@ BOOL CPreferencesFilePage::OnInitDialog()
 	ASSERT(m_pExportMgr);
 
 	for (int nExp = 0; nExp < m_pExportMgr->GetNumExporters(); nExp++)
+	{
 		m_cbOtherExporters.AddString(m_pExportMgr->GetExporterMenuText(nExp));
+	}
 
 	m_cbOtherExporters.SetCurSel(m_nOtherExporter);
 
@@ -194,12 +212,12 @@ BOOL CPreferencesFilePage::OnInitDialog()
 	CString sXslFolder = FileMisc::GetModuleFolder() + _T("Resources");
 	m_eSaveExportStylesheet.SetCurrentFolder(sXslFolder);
 	m_eDueTaskStylesheet.SetCurrentFolder(sXslFolder);
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CPreferencesFilePage::OnRemovearchiveditems() 
+void CPreferencesFilePage::OnRemovearchiveditems()
 {
 	UpdateData();
 
@@ -207,7 +225,7 @@ void CPreferencesFilePage::OnRemovearchiveditems()
 	GetDlgItem(IDC_DONTREMOVEFLAGGED)->EnableWindow(m_bRemoveArchivedTasks);
 }
 
-void CPreferencesFilePage::OnAutosave() 
+void CPreferencesFilePage::OnAutosave()
 {
 	UpdateData();
 
@@ -220,16 +238,16 @@ void CPreferencesFilePage::OnAutosave()
 	}
 }
 
-void CPreferencesFilePage::OnExporttofolder() 
+void CPreferencesFilePage::OnExporttofolder()
 {
 	UpdateData();
 
 	GetDlgItem(IDC_EXPORTFOLDER)->EnableWindow(m_bAutoExport && m_bExportToFolder);
 }
 
-void CPreferencesFilePage::OnAutoexport() 
+void CPreferencesFilePage::OnAutoexport()
 {
-	UpdateData();	
+	UpdateData();
 
 	GetDlgItem(IDC_EXPORTTOFOLDER)->EnableWindow(m_bAutoExport);
 	GetDlgItem(IDC_HTMLEXPORT)->EnableWindow(m_bAutoExport);
@@ -240,55 +258,59 @@ void CPreferencesFilePage::OnAutoexport()
 	GetDlgItem(IDC_OTHEREXPORTERS)->EnableWindow(m_bAutoExport && m_bOtherExport);
 }
 
-CString CPreferencesFilePage::GetAutoExportFolderPath() const 
-{ 
+CString CPreferencesFilePage::GetAutoExportFolderPath() const
+{
 	if (m_bAutoExport && m_bExportToFolder)
+	{
 		return m_sExportFolderPath;
+	}
 	else
+	{
 		return _T("");
+	}
 }
 
-void CPreferencesFilePage::OnNotifyDueOnLoad() 
+void CPreferencesFilePage::OnNotifyDueOnLoad()
 {
 	UpdateData();
-	
+
 	GetDlgItem(IDC_NOTIFYDUEBYONLOAD)->EnableWindow(m_bNotifyDueOnLoad);
 }
 
-void CPreferencesFilePage::OnNotifyDueOnSwitch() 
+void CPreferencesFilePage::OnNotifyDueOnSwitch()
 {
 	UpdateData();
-	
+
 	GetDlgItem(IDC_NOTIFYDUEBYONSWITCH)->EnableWindow(m_bNotifyDueOnSwitch);
 }
 
-void CPreferencesFilePage::OnDisplayduetasksinhtml() 
+void CPreferencesFilePage::OnDisplayduetasksinhtml()
 {
 	UpdateData();
-	
+
 	GetDlgItem(IDC_USESTYLESHEETFORDUEITEMS)->EnableWindow(m_bDisplayDueTasksInHtml);
 	GetDlgItem(IDC_DUETASKSTYLESHEET)->EnableWindow(m_bDisplayDueTasksInHtml && m_bUseStyleSheetForDueTasks);
 }
 
-void CPreferencesFilePage::OnUsestylesheetfordueitems() 
+void CPreferencesFilePage::OnUsestylesheetfordueitems()
 {
 	UpdateData();
-	
+
 	GetDlgItem(IDC_DUETASKSTYLESHEET)->EnableWindow(m_bDisplayDueTasksInHtml && m_bUseStyleSheetForDueTasks);
 }
 
-void CPreferencesFilePage::OnUsestylesheetforsave() 
+void CPreferencesFilePage::OnUsestylesheetforsave()
 {
 	UpdateData();
-	
+
 	GetDlgItem(IDC_USESTYLESHEETFORSAVE)->EnableWindow(m_bAutoExport);
 	GetDlgItem(IDC_SAVEEXPORTSTYLESHEET)->EnableWindow(m_bAutoExport && m_bUseStylesheetForSaveExport);
 }
 
-void CPreferencesFilePage::OnOnlyshowduetaskforperson() 
+void CPreferencesFilePage::OnOnlyshowduetaskforperson()
 {
 	UpdateData();
-	
+
 	GetDlgItem(IDC_DUETASKPERSON)->EnableWindow(m_bOnlyShowDueTasksForPerson);
 }
 
@@ -364,9 +386,9 @@ void CPreferencesFilePage::SavePreferences(CPreferences& prefs)
 	prefs.WriteProfileInt(_T("Preferences"), _T("OtherExporter"), m_nOtherExporter);
 }
 
-void CPreferencesFilePage::OnHtmlexport() 
+void CPreferencesFilePage::OnHtmlexport()
 {
-	UpdateData();	
+	UpdateData();
 
 	GetDlgItem(IDC_USESTYLESHEETFORSAVE)->EnableWindow(m_bAutoExport && !m_bOtherExport);
 	GetDlgItem(IDC_SAVEEXPORTSTYLESHEET)->EnableWindow(m_bAutoExport && !m_bOtherExport && m_bUseStylesheetForSaveExport);
@@ -374,9 +396,9 @@ void CPreferencesFilePage::OnHtmlexport()
 	GetDlgItem(IDC_OTHEREXPORTERS)->EnableWindow(m_bAutoExport && m_bOtherExport);
 }
 
-void CPreferencesFilePage::OnOtherexport() 
+void CPreferencesFilePage::OnOtherexport()
 {
-	UpdateData();	
+	UpdateData();
 
 	GetDlgItem(IDC_USESTYLESHEETFORSAVE)->EnableWindow(m_bAutoExport && !m_bOtherExport);
 	GetDlgItem(IDC_SAVEEXPORTSTYLESHEET)->EnableWindow(m_bAutoExport && !m_bOtherExport && m_bUseStylesheetForSaveExport);

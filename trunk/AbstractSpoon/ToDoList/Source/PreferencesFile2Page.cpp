@@ -166,7 +166,6 @@ void CPreferencesFile2Page::DoDataExchange(CDataExchange* pDX)
 	}
 }
 
-
 BEGIN_MESSAGE_MAP(CPreferencesFile2Page, CPreferencesPageBase)
 	//{{AFX_MSG_MAP(CPreferencesFile2Page)
 	ON_BN_CLICKED(IDC_BACKUPONSAVE, OnBackuponsave)
