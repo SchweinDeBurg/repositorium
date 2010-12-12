@@ -106,7 +106,7 @@ public:
 	int GetFilteredTasks(CTaskFile& tasks, const TDCGETTASKS& filter = TDCGETTASKS(TDCGT_ALL)) const;
 
 	HTREEITEM NewTask(LPCTSTR szText, TDC_INSERTWHERE nWhere = TDC_INSERTATTOPOFSELTASKPARENT,
-		/*BOOL bSelect = TRUE, */BOOL bEditText = TRUE);
+		BOOL bEditText = TRUE);
 	BOOL SplitSelectedTask(int nNumSubtasks);
 
 	void SetModified(BOOL bMod = TRUE)
