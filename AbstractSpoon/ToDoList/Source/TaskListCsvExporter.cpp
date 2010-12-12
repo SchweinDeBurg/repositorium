@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TaskListCsvExporter.cpp: implementation of the CTaskListCsvExporter class.
@@ -47,7 +61,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -71,10 +85,11 @@ CTaskListCsvExporter::~CTaskListCsvExporter()
 bool CTaskListCsvExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
 {
 	const ITaskList6* pTasks6 = GetITLInterface<ITaskList6>(pSrcTaskFile, IID_TASKLIST6);
-	
-//	if ((const_cast<ITaskList*>(pSrcTaskFile))->QueryInterface(IID_TASKLIST6, (void**)&pTasks6))
+
 	if (!pTasks6)
+	{
 		return false;
+	}
 
 	CPreferences prefs;
 
@@ -82,9 +97,13 @@ bool CTaskListCsvExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* sz
 	ROUNDTIMEFRACTIONS = prefs.GetProfileInt(_T("Preferences"), _T("RoundTimeFractions"), FALSE);
 
 	if (prefs.GetProfileInt(_T("Preferences"), _T("UseSpaceIndents"), TRUE))
+	{
 		INDENT = CString(_T(' '), prefs.GetProfileInt(_T("Preferences"), _T("TextIndent"), 2));
+	}
 	else
-		INDENT = _T("  "); // don't use tabs - excel strips them off
+	{
+		INDENT = _T("  ");   // don't use tabs - excel strips them off
+	}
 
 	CStdioFile fileOut;
 
@@ -93,7 +112,7 @@ bool CTaskListCsvExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* sz
 		// clear attrib list before rebuilding
 		m_aAttribs.RemoveAll();
 		BuildAttribList(pTasks6, NULL);
-		
+
 		CString sOutput;
 
 		if (!ExportTask(pTasks6, NULL, 0, 0, _T(""), sOutput).IsEmpty())
@@ -112,13 +131,24 @@ CString CTaskListCsvExporter::CalcIndent(int nDepth) const
 	CString sIndent;
 
 	for (int nLevel = 1; nLevel < nDepth; nLevel++)
+	{
 		sIndent += INDENT;
+	}
 
 	return sIndent;
 }
 
-CString& CTaskListCsvExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hTask, int nDepth, 
-										  int nPos, const CString& sParentPos, CString& sOutput) const
+void CTaskListCsvExporter::RemoveTrailingDelimiter(CString& sOutput) const
+{
+	// strip off trailing delimiter
+	if (sOutput.Right(1) == DELIM)
+	{
+		sOutput = sOutput.Mid(0, sOutput.GetLength() - 1);
+	}
+}
+
+CString& CTaskListCsvExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hTask, int nDepth,
+	int nPos, const CString& sParentPos, CString& sOutput) const
 {
 	CString sPos; // becomes parent pos for sub-tasks
 
@@ -132,34 +162,43 @@ CString& CTaskListCsvExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		{
 			// if there is a POS child item then this replaces nPos
 			if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPOS)))
+			{
 				nPos = pTasks->GetTaskPosition(hTask);
+			}
 
 			if (nDepth == 1) // top level tasks
+			{
 				sPos.Format(_T("%d"), nPos);
+			}
 			else
+			{
 				sPos.Format(_T("%s.%d"), (LPCTSTR)sParentPos, nPos);
+			}
 
 			AppendAttribute(sPos, sOutput);
 		}
 
 		AppendAttribute(pTasks, hTask, TDL_TASKID, NULL, sOutput);
 
-        // title is slightly different because we indent it for subtasks
-//        CString sPrefix(INDENT, (nDepth > 1) ? (nDepth - 1) * 4 : 0);
-        CString sPrefix = CalcIndent(nDepth);
+		// title is slightly different because we indent it for subtasks
+		CString sPrefix = CalcIndent(nDepth);
 		AppendAttribute(pTasks, hTask, TDL_TASKTITLE, NULL, sOutput, sPrefix);
-      
+
 		AppendAttribute(pTasks, hTask, TDL_TASKCALCCOMPLETION, TDL_TASKPERCENTDONE, sOutput);
 
 		// priority needs a little more care because -2 == <none>
 		int nPriority = pTasks->GetTaskPriority(hTask, TRUE);
 
 		if (nPriority >= 0)
-		AppendAttribute(pTasks, hTask, TDL_TASKHIGHESTPRIORITY, TDL_TASKPRIORITY, sOutput);
-		
+		{
+			AppendAttribute(pTasks, hTask, TDL_TASKHIGHESTPRIORITY, TDL_TASKPRIORITY, sOutput);
+		}
+
 		else if (WantAttribute(TDL_TASKPRIORITY) || WantAttribute(TDL_TASKHIGHESTPRIORITY))
+		{
 			sOutput += DELIM;
-		
+		}
+
 		AppendAttribute(pTasks, hTask, TDL_TASKCALCTIMEESTIMATE, TDL_TASKTIMEESTIMATE, sOutput);
 		AppendAttribute(pTasks, hTask, TDL_TASKCALCTIMESPENT, TDL_TASKTIMESPENT, sOutput);
 		AppendAttribute(pTasks, hTask, TDL_TASKCREATIONDATESTRING, NULL, sOutput);
@@ -179,7 +218,11 @@ CString& CTaskListCsvExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		AppendAttribute(pTasks, hTask, TDL_TASKCALCCOST, TDL_TASKCOST, sOutput);
 		AppendAttribute(pTasks, hTask, TDL_TASKFILEREFPATH, NULL, sOutput);
 		AppendAttribute(pTasks, hTask, TDL_TASKDEPENDENCY, NULL, sOutput);
-		AppendAttribute(pTasks, hTask, TDL_TASKCOMMENTS, NULL, sOutput);
+
+		// special case
+		AppendComments(pTasks, hTask, sOutput);
+
+		RemoveTrailingDelimiter(sOutput);
 	}
 
 	// add sub-tasks
@@ -199,10 +242,6 @@ CString& CTaskListCsvExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		}
 	}
 
-	// extra line between top level items
-//	if (nDepth == 1)
-//		sOutput += ENDL;
-
 	// restore decimal separator to '.'
 	_tsetlocale(LC_NUMERIC, _T("English"));
 
@@ -215,18 +254,21 @@ void CTaskListCsvExporter::CheckAddAttribtoList(const ITaskList6* pTasks, HTASKI
 	{
 		// have we already got it ?
 		if (!WantAttribute(szAttribName))
-			m_aAttribs.Add(szAttribName); // add it
+		{
+			m_aAttribs.Add(szAttribName);   // add it
+		}
 	}
 }
 
-void CTaskListCsvExporter::AppendAttributeList(const ITaskList6* pTasks, HTASKITEM hTask, 
-										   LPCTSTR szNumAttribName, LPCTSTR szAttribName, 
-                                          CString& sOutput) const
+void CTaskListCsvExporter::AppendAttributeList(const ITaskList6* pTasks, HTASKITEM hTask,
+	LPCTSTR szNumAttribName, LPCTSTR szAttribName, CString& sOutput) const
 {
 	int nItemCount = _ttoi(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szNumAttribName)));
 
 	if (nItemCount <= 1)
+	{
 		AppendAttribute(pTasks, hTask, szAttribName, NULL, sOutput);
+	}
 
 	else // more than one (use plus sign as delimiter)
 	{
@@ -245,9 +287,8 @@ void CTaskListCsvExporter::AppendAttributeList(const ITaskList6* pTasks, HTASKIT
 	}
 }
 
-void CTaskListCsvExporter::AppendAttribute(const ITaskList6* pTasks, HTASKITEM hTask, 
-										   LPCTSTR szAttribName, LPCTSTR szAltAttribName, 
-										   CString& sOutput, LPCTSTR szPrefix) const
+void CTaskListCsvExporter::AppendAttribute(const ITaskList6* pTasks, HTASKITEM hTask,
+	LPCTSTR szAttribName, LPCTSTR szAltAttribName, CString& sOutput, LPCTSTR szPrefix) const
 {
 	if (WantAttribute(szAttribName) || (szAltAttribName && WantAttribute(szAltAttribName)))
 	{
@@ -255,42 +296,58 @@ void CTaskListCsvExporter::AppendAttribute(const ITaskList6* pTasks, HTASKITEM h
 		{
 			CString sAttrib(szPrefix);
 			sAttrib += pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAttribName));
-			
+
 			AppendAttribute(sAttrib, sOutput);
 		}
 		else if (szAltAttribName && pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAltAttribName)))
 		{
 			CString sAttrib(szPrefix);
 			sAttrib += pTasks->GetTaskAttribute(hTask, ATL::CT2A(szAltAttribName));
-			
+
 			AppendAttribute(sAttrib, sOutput);
 		}
 		else
+		{
 			sOutput += DELIM;
+		}
 	}
 }
 
-void CTaskListCsvExporter::AppendAttribute(LPCTSTR szAttrib, CString& sOutput) const
+void CTaskListCsvExporter::AppendComments(const ITaskList6* pTasks, HTASKITEM hTask, CString& sOutput) const
 {
-	BOOL bNeedQuoting = FALSE;
+	if (WantAttribute(TDL_TASKCOMMENTS) && pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCOMMENTS)))
+	{
+		CString sAttrib = pTasks->GetTaskAttribute(hTask, ATL::CT2A(TDL_TASKCOMMENTS));
+		AppendAttribute(sAttrib, sOutput, TRUE);
+	}
+}
+
+void CTaskListCsvExporter::AppendAttribute(LPCTSTR szAttrib, CString& sOutput, BOOL bForceQuoted) const
+{
+	BOOL bNeedQuoting = bForceQuoted;
 	CString sAttrib(szAttrib);
-	
+
 	// double up quotes
 	if (sAttrib.Find(ONEDBLQUOTE) != -1)
 	{
 		sAttrib.Replace(ONEDBLQUOTE, TWODBLQUOTE);
 		bNeedQuoting = TRUE;
 	}
-	
+
+	// look for commas or whatever is the list delimiter
 	if (sAttrib.Find(DELIM) != -1)
+	{
 		bNeedQuoting = TRUE;
-	
+	}
+
 	if (bNeedQuoting)
+	{
 		sAttrib = ONEDBLQUOTE + sAttrib + ONEDBLQUOTE;
-	
+	}
+
 	// replace carriage returns
 	sAttrib.Replace(ENDL, SPACE);
-	
+
 	sAttrib += DELIM;
 	sOutput += sAttrib;
 }
@@ -314,7 +371,9 @@ void CTaskListCsvExporter::AppendAttribute(int nAttrib, LPCTSTR szFormat, CStrin
 CString CTaskListCsvExporter::CheckGetColumnHeading(LPCTSTR szAttribName, UINT nIDHeading) const
 {
 	if (WantAttribute(szAttribName))
+	{
 		return CEnString(nIDHeading) + DELIM;
+	}
 
 	// else
 	return _T("");
@@ -322,7 +381,7 @@ CString CTaskListCsvExporter::CheckGetColumnHeading(LPCTSTR szAttribName, UINT n
 
 CString CTaskListCsvExporter::ColumnHeadings() const
 {
-	ASSERT (m_aAttribs.GetSize());
+	ASSERT(m_aAttribs.GetSize());
 
 	CString sHeadings;
 
@@ -352,6 +411,8 @@ CString CTaskListCsvExporter::ColumnHeadings() const
 	sHeadings += CheckGetColumnHeading(TDL_TASKDEPENDENCY, IDS_TDLBC_DEPENDS);
 	sHeadings += CheckGetColumnHeading(TDL_TASKCOMMENTS, IDS_TDLBC_COMMENTS);
 
+	RemoveTrailingDelimiter(sHeadings);
+
 	return sHeadings;
 }
 
@@ -359,32 +420,32 @@ int CTaskListCsvExporter::BuildAttribList(const ITaskList6* pTasks, HTASKITEM hT
 {
 	if (hTask)
 	{
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKPOS);					
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKID);					
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKTITLE);				
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKCOMMENTS); 			
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKALLOCTO);				
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKALLOCBY);				
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKCATEGORY); 			
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKSTATUS);				
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKFILEREFPATH);			
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKCREATEDBY);			
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKFLAG);				
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKDONEDATESTRING);		
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKPOS);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKID);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKTITLE);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKCOMMENTS);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKALLOCTO);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKALLOCBY);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKCATEGORY);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKSTATUS);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKFILEREFPATH);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKCREATEDBY);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKFLAG);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKDONEDATESTRING);
 		CheckAddAttribtoList(pTasks, hTask, TDL_TASKDUEDATESTRING);
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKSTARTDATESTRING);		
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKCREATIONDATESTRING);	
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKTIMEESTIMATE);	
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKTIMESPENT);		
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKPERCENTDONE);		
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKPRIORITY);		
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKRISK);			
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKLASTMODSTRING);		
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKEXTERNALID);			
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKCOST);			
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKDEPENDENCY);			
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKVERSION);			
-		CheckAddAttribtoList(pTasks, hTask, TDL_TASKRECURRENCE);			
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKSTARTDATESTRING);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKCREATIONDATESTRING);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKTIMEESTIMATE);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKTIMESPENT);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKPERCENTDONE);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKPRIORITY);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKRISK);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKLASTMODSTRING);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKEXTERNALID);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKCOST);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKDEPENDENCY);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKVERSION);
+		CheckAddAttribtoList(pTasks, hTask, TDL_TASKRECURRENCE);
 	}
 
 	// subtasks
@@ -408,7 +469,9 @@ BOOL CTaskListCsvExporter::WantAttribute(LPCTSTR szAttribName) const
 	while (nAttrib--)
 	{
 		if (m_aAttribs[nAttrib] == szAttribName)
+		{
 			return TRUE;
+		}
 	}
 
 	// nope

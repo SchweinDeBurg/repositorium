@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TaskListDropTarget.cpp: implementation of the CTaskListDropTarget class.
@@ -40,7 +53,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -68,12 +81,16 @@ BOOL CTaskListDropTarget::Register(CWnd* pTarget, CWnd* pParent)
 DROPEFFECT CTaskListDropTarget::OnDragEnter(CWnd* pWnd, COleDataObject* /*pObject*/, DWORD /*dwKeyState*/, CPoint /*point*/)
 {
 	if (IS_WND_TYPE(pWnd, CTreeCtrl, WC_TREEVIEW))
+	{
 		TreeView_SelectDropTarget(pWnd->GetSafeHwnd(), NULL);
-	
+	}
+
 	else if (IS_WND_TYPE(pWnd, CListCtrl, WC_LISTVIEW))
 	{
 		if (m_nLVPrevHilite != -1) // shouldn't happen
-			ListView_SetItemState(pWnd->GetSafeHwnd(), m_nLVPrevHilite, 0, LVIS_DROPHILITED); // all items
+		{
+			ListView_SetItemState(pWnd->GetSafeHwnd(), m_nLVPrevHilite, 0, LVIS_DROPHILITED);   // all items
+		}
 
 		m_nLVPrevHilite = -1;
 	}
@@ -84,12 +101,16 @@ DROPEFFECT CTaskListDropTarget::OnDragEnter(CWnd* pWnd, COleDataObject* /*pObjec
 void CTaskListDropTarget::OnDragLeave(CWnd* pWnd)
 {
 	if (IS_WND_TYPE(pWnd, CTreeCtrl, WC_TREEVIEW))
+	{
 		TreeView_SelectDropTarget(pWnd->GetSafeHwnd(), NULL);
-	
+	}
+
 	else if (IS_WND_TYPE(pWnd, CListCtrl, WC_LISTVIEW))
 	{
 		if (m_nLVPrevHilite != -1) // shouldn't happen
-			ListView_SetItemState(pWnd->GetSafeHwnd(), m_nLVPrevHilite, 0, LVIS_DROPHILITED); // all items
+		{
+			ListView_SetItemState(pWnd->GetSafeHwnd(), m_nLVPrevHilite, 0, LVIS_DROPHILITED);   // all items
+		}
 
 		m_nLVPrevHilite = -1;
 	}
@@ -98,7 +119,9 @@ void CTaskListDropTarget::OnDragLeave(CWnd* pWnd)
 DROPEFFECT CTaskListDropTarget::OnDragOver(CWnd* pWnd, COleDataObject* pObject, DWORD /*dwKeyState*/, CPoint point)
 {
 	if (!pWnd->IsWindowEnabled())
+	{
 		return DROPEFFECT_NONE;
+	}
 
 	BOOL bFilename = pObject->IsDataAvailable((CLIPFORMAT)::RegisterClipboardFormat(_T("FileName")));
 	BOOL bFileDrop = pObject->IsDataAvailable(CF_HDROP);
@@ -113,7 +136,9 @@ DROPEFFECT CTaskListDropTarget::OnDragOver(CWnd* pWnd, COleDataObject* pObject, 
 			TreeView_SelectDropTarget(pWnd->GetSafeHwnd(), tvhti.hItem);
 
 			if (tvhti.hItem)
+			{
 				return bFilename ? DROPEFFECT_LINK : DROPEFFECT_COPY;
+			}
 		}
 		else if (IS_WND_TYPE(pWnd, CListCtrl, WC_LISTVIEW))
 		{
@@ -122,39 +147,49 @@ DROPEFFECT CTaskListDropTarget::OnDragOver(CWnd* pWnd, COleDataObject* pObject, 
 
 			// remove previous highlighting
 			if (m_nLVPrevHilite != -1 && m_nLVPrevHilite != lvhti.iItem)
-				ListView_SetItemState(pWnd->GetSafeHwnd(), m_nLVPrevHilite, 0, LVIS_DROPHILITED); 
+			{
+				ListView_SetItemState(pWnd->GetSafeHwnd(), m_nLVPrevHilite, 0, LVIS_DROPHILITED);
+			}
 
 			if (lvhti.iItem != -1)
 			{
 				ListView_SetItemState(pWnd->GetSafeHwnd(), lvhti.iItem, LVIS_DROPHILITED, LVIS_DROPHILITED);
 				m_nLVPrevHilite = lvhti.iItem;
-				
+
 				return bFilename ? DROPEFFECT_LINK : DROPEFFECT_COPY;
 			}
 		}
 		else if (IS_WND_TYPE(pWnd, CEdit, WC_EDIT))
 		{
 			if (!(pWnd->GetStyle() & ES_READONLY))
+			{
 				return /*bFilename ? DROPEFFECT_LINK : */DROPEFFECT_COPY;
+			}
 		}
 		else if (pWnd->IsKindOf(RUNTIME_CLASS(CDialog)) ||
-				 pWnd->IsKindOf(RUNTIME_CLASS(CFrameWnd)))
+			pWnd->IsKindOf(RUNTIME_CLASS(CFrameWnd)))
 		{
 			// allow dropping only on titlebar
 			if ((pWnd->GetStyle() & WS_CAPTION) && point.y < 0)
+			{
 				return DROPEFFECT_COPY;
+			}
 		}
 	}
 	else
 	{
 		if (IS_WND_TYPE(pWnd, CTreeCtrl, WC_TREEVIEW))
+		{
 			TreeView_SelectDropTarget(pWnd->GetSafeHwnd(), NULL);
-	
+		}
+
 		else if (IS_WND_TYPE(pWnd, CListCtrl, WC_LISTVIEW))
 		{
-			if (m_nLVPrevHilite != -1) 
-				ListView_SetItemState(pWnd->GetSafeHwnd(), m_nLVPrevHilite, 0, LVIS_DROPHILITED); // all items
-	
+			if (m_nLVPrevHilite != -1)
+			{
+				ListView_SetItemState(pWnd->GetSafeHwnd(), m_nLVPrevHilite, 0, LVIS_DROPHILITED);   // all items
+			}
+
 			m_nLVPrevHilite = -1;
 		}
 	}
@@ -170,65 +205,77 @@ BOOL CTaskListDropTarget::OnDrop(CWnd* pWnd, COleDataObject* pObject, DROPEFFECT
 	if (GetDroppedFilePath(pObject, sFilePath))
 	{
 		CString sClass = CWinClasses::GetClass(*pWnd);
-		
+
 		m_pParent->SetForegroundWindow();
-		
+
 		if (IS_WND_TYPE(pWnd, CTreeCtrl, WC_TREEVIEW))
 		{
 			TVHITTESTINFO tvhti = { { point.x, point.y }, 0, 0 };
-			
+
 			TreeView_HitTest(pWnd->GetSafeHwnd(), &tvhti);
 			TreeView_SelectDropTarget(pWnd->GetSafeHwnd(), NULL);
-			
+
 			if (tvhti.hItem)
+			{
 				m_pParent->SendMessage(WM_TLDT_DROPFILE, (WPARAM)tvhti.hItem, (LPARAM)(LPCTSTR)sFilePath);
+			}
 		}
 		else if (IS_WND_TYPE(pWnd, CListCtrl, WC_LISTVIEW))
 		{
 			LVHITTESTINFO lvhti = { { point.x, point.y }, 0 };
-			
+
 			ListView_HitTest(pWnd->GetSafeHwnd(), &lvhti);
-			
-			if (m_nLVPrevHilite != -1) 
+
+			if (m_nLVPrevHilite != -1)
 			{
 				ListView_SetItemState(pWnd->GetSafeHwnd(), m_nLVPrevHilite, 0, LVIS_DROPHILITED); // all items
 				m_nLVPrevHilite = -1;
 			}
-			
+
 			if (lvhti.iItem != -1)
+			{
 				m_pParent->SendMessage(WM_TLDT_DROPFILE, (WPARAM)lvhti.iItem, (LPARAM)(LPCTSTR)sFilePath);
+			}
 		}
 		else if (IS_WND_TYPE(pWnd, CEdit, WC_EDIT))
 		{
 			if (!(pWnd->GetStyle() & ES_READONLY))
+			{
 				m_pParent->SendMessage(WM_TLDT_DROPFILE, (WPARAM)0, (LPARAM)(LPCTSTR)sFilePath);
+			}
 		}
 		else if (pWnd->IsKindOf(RUNTIME_CLASS(CDialog)) ||
 			pWnd->IsKindOf(RUNTIME_CLASS(CFrameWnd)))
 		{
 			// allow dropping only on titlebar
 			if ((pWnd->GetStyle() & WS_CAPTION) && point.y < 0)
+			{
 				m_pParent->SendMessage(WM_TLDT_DROPFILE, (WPARAM)0, (LPARAM)(LPCTSTR)sFilePath);
+			}
 		}
 	}
 	else // cleanup
 	{
 		if (IS_WND_TYPE(pWnd, CTreeCtrl, WC_TREEVIEW))
+		{
 			TreeView_SelectDropTarget(pWnd->GetSafeHwnd(), NULL);
-	
+		}
+
 		else if (IS_WND_TYPE(pWnd, CListCtrl, WC_LISTVIEW))
 		{
-			if (m_nLVPrevHilite != -1) 
-				ListView_SetItemState(pWnd->GetSafeHwnd(), m_nLVPrevHilite, 0, LVIS_DROPHILITED); // all items
-	
+			if (m_nLVPrevHilite != -1)
+			{
+				ListView_SetItemState(pWnd->GetSafeHwnd(), m_nLVPrevHilite, 0, LVIS_DROPHILITED);   // all items
+			}
+
 			m_nLVPrevHilite = -1;
 		}
 	}
-	
+
 	return FALSE; // because we handle it
 }
 
-typedef DWORD (WINAPI *FNGETLONGPATHNAME)(LPCTSTR, LPTSTR, DWORD);
+typedef DWORD (WINAPI* FNGETLONGPATHNAME)(LPCTSTR, LPTSTR, DWORD);
 
 CString CTaskListDropTarget::GetLongPathName(LPCTSTR szShortPath)
 {
@@ -266,11 +313,13 @@ BOOL CTaskListDropTarget::GetDroppedFilePath(COleDataObject* pObject, CString& s
 		hGlobal = pObject->GetGlobalData(cf);
 
 		if (hGlobal)
-			sFilename = (LPCTSTR)GlobalLock(hGlobal); // copy
+		{
+			sFilename = (LPCTSTR)GlobalLock(hGlobal);   // copy
+		}
 	}
 
 	// second try
-	if (!hGlobal && pObject->IsDataAvailable(CF_HDROP)) 
+	if (!hGlobal && pObject->IsDataAvailable(CF_HDROP))
 	{
 		hGlobal = pObject->GetGlobalData(CF_HDROP);
 
@@ -287,11 +336,15 @@ BOOL CTaskListDropTarget::GetDroppedFilePath(COleDataObject* pObject, CString& s
 
 	// cleanup
 	if (hGlobal)
+	{
 		GlobalUnlock(hGlobal);
+	}
 
 	// convert to long pathname
 	if (!sFilename.IsEmpty())
+	{
 		sFilename = GetLongPathName(sFilename);
+	}
 
 	return !sFilename.IsEmpty();
 }

@@ -106,8 +106,6 @@ protected:
 	static CString GetRegularity(TDI_REGULARITY nRegularity, BOOL bIncOnce = TRUE);
 };
 
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 // CRecurringTaskOptionDlg dialog
 
@@ -161,4 +159,4 @@ protected:
 	BOOL HasValidData();
 };
 
-// !defined(AFX_RECURRENCEEDIT_H__4EE655E3_F4B1_44EA_8AAA_39DD459AD8A8__INCLUDED_)
+#endif // !defined(AFX_RECURRENCEEDIT_H__4EE655E3_F4B1_44EA_8AAA_39DD459AD8A8__INCLUDED_)
