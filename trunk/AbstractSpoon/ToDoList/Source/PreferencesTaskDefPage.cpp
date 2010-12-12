@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // PreferencesTaskDefPage.cpp : implementation file
@@ -50,12 +64,12 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CPreferencesTaskDefPage, CPreferencesPageBase)
 
-CPreferencesTaskDefPage::CPreferencesTaskDefPage() : 
-	CPreferencesPageBase(CPreferencesTaskDefPage::IDD),
-	m_cbAllocByList(TRUE),
-	m_cbAllocToList(TRUE),
-	m_cbCategoryList(TRUE),
-	m_cbStatusList(TRUE)
+CPreferencesTaskDefPage::CPreferencesTaskDefPage() :
+CPreferencesPageBase(CPreferencesTaskDefPage::IDD),
+m_cbAllocByList(TRUE),
+m_cbAllocToList(TRUE),
+m_cbCategoryList(TRUE),
+m_cbStatusList(TRUE)
 {
 	//{{AFX_DATA_INIT(CPreferencesTaskDefPage)
 	m_bUpdateInheritAttributes = FALSE;
@@ -63,17 +77,18 @@ CPreferencesTaskDefPage::CPreferencesTaskDefPage() :
 	m_nSelAttribUse = -1;
 
 	// attrib use
-	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_PRIORITY, PTPA_PRIORITY, -1)); 
-	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_RISK, PTPA_RISK, -1)); 
-	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_TIMEEST, PTPA_TIMEEST, -1)); 
-	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_ALLOCTO, PTPA_ALLOCTO, -1)); 
-	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_ALLOCBY, PTPA_ALLOCBY, -1)); 
-	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_STATUS, PTPA_STATUS, -1)); 
-	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_CATEGORY, PTPA_CATEGORY, -1)); 
-	m_aAttribPrefs.Add(ATTRIBPREF(IDS_PTDP_COLOR, PTPA_COLOR, -1)); 
-	m_aAttribPrefs.Add(ATTRIBPREF(IDS_PTDP_DUEDATE, PTPA_DUEDATE, -1)); 
-	m_aAttribPrefs.Add(ATTRIBPREF(IDS_PTDP_VERSION, PTPA_VERSION, -1)); 
-	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_STARTDATE, PTPA_STARTDATE, -1)); 
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_PRIORITY, PTPA_PRIORITY, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_RISK, PTPA_RISK, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_TIMEEST, PTPA_TIMEEST, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_ALLOCTO, PTPA_ALLOCTO, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_ALLOCBY, PTPA_ALLOCBY, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_STATUS, PTPA_STATUS, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_CATEGORY, PTPA_CATEGORY, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_PTDP_COLOR, PTPA_COLOR, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_PTDP_DUEDATE, PTPA_DUEDATE, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_PTDP_VERSION, PTPA_VERSION, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_STARTDATE, PTPA_STARTDATE, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_FLAG, PTPA_FLAG, -1));
 
 	m_eCost.SetMask(_T(".0123456789"), ME_LOCALIZEDECIMAL);
 }
@@ -114,7 +129,6 @@ void CPreferencesTaskDefPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_USECREATIONFORDEFSTARTDATE, m_bUseCreationForDefStartDate);
 }
 
-
 BEGIN_MESSAGE_MAP(CPreferencesTaskDefPage, CPreferencesPageBase)
 	//{{AFX_MSG_MAP(CPreferencesTaskDefPage)
 	ON_WM_CTLCOLOR()
@@ -129,21 +143,21 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesTaskDefPage message handlers
 
-BOOL CPreferencesTaskDefPage::OnInitDialog() 
+BOOL CPreferencesTaskDefPage::OnInitDialog()
 {
 	CPreferencesPageBase::OnInitDialog();
-	
+
 	m_mgrGroupLines.AddGroupLine(IDC_DEFGROUP, *this);
 	m_mgrGroupLines.AddGroupLine(IDC_INHERITGROUP, *this);
 	m_mgrGroupLines.AddGroupLine(IDC_DROPLISTGROUP, *this);
 
 	GetDlgItem(IDC_INHERITATTRIBUTES)->EnableWindow(m_bInheritParentAttributes);
 	GetDlgItem(IDC_UPDATEINHERITATTRIB)->EnableWindow(m_bInheritParentAttributes);
-	
+
 	m_btDefColor.SetColor(m_crDef);
 
 	int nIndex = m_aAttribPrefs.GetSize();
-	
+
 	while (nIndex--)
 	{
 		int nPos = m_lbAttribUse.InsertString(0, m_aAttribPrefs[nIndex].sName);
@@ -168,7 +182,7 @@ BOOL CPreferencesTaskDefPage::OnInitDialog()
 	m_cbAllocByList.AddUniqueItems(m_aDefAllocBy);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CPreferencesTaskDefPage::SetPriorityColors(const CDWordArray& aColors)
@@ -176,7 +190,7 @@ void CPreferencesTaskDefPage::SetPriorityColors(const CDWordArray& aColors)
 	m_cbDefPriority.SetColors(aColors);
 }
 
-void CPreferencesTaskDefPage::OnOK() 
+void CPreferencesTaskDefPage::OnOK()
 {
 	CPreferencesPageBase::OnOK();
 
@@ -187,29 +201,55 @@ void CPreferencesTaskDefPage::OnOK()
 	m_cbAllocByList.GetItems(m_aDefAllocBy);
 }
 
-void CPreferencesTaskDefPage::OnSetdefaultcolor() 
+void CPreferencesTaskDefPage::OnSetdefaultcolor()
 {
 	m_crDef = m_btDefColor.GetColor();
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesTaskDefPage::OnUseparentattrib() 
+void CPreferencesTaskDefPage::OnUseparentattrib()
 {
 	UpdateData();
 
 	GetDlgItem(IDC_INHERITATTRIBUTES)->EnableWindow(m_bInheritParentAttributes);
 	GetDlgItem(IDC_UPDATEINHERITATTRIB)->EnableWindow(m_bInheritParentAttributes);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
 int CPreferencesTaskDefPage::GetListItems(PTDP_LIST nList, CStringArray& aItems) const
 {
+	CStringArray aDefValues;
+
+	// include default task attributes
 	switch (nList)
 	{
-	case PTDP_ALLOCBY:	aItems.Copy(m_aDefAllocBy); break;
-	case PTDP_ALLOCTO:	aItems.Copy(m_aDefAllocTo); break;
-	case PTDP_STATUS:	aItems.Copy(m_aDefStatus);  break; 
-	case PTDP_CATEGORY:	aItems.Copy(m_aDefCats);    break;
+	case PTDP_ALLOCBY:
+		aItems.Copy(m_aDefAllocBy);
+		Misc::AddUniqueItem(m_sDefAllocBy, aItems);
+		break;
 
-	default: ASSERT(0);	break;
+	case PTDP_ALLOCTO:
+		aItems.Copy(m_aDefAllocTo);
+		Misc::ParseIntoArray(m_sDefAllocTo, aDefValues);
+		Misc::AddUniqueItems(aDefValues, aItems);
+		break;
+
+	case PTDP_STATUS:
+		aItems.Copy(m_aDefStatus);
+		Misc::AddUniqueItem(m_sDefStatus, aItems);
+		break;
+
+	case PTDP_CATEGORY:
+		aItems.Copy(m_aDefCats);
+		Misc::ParseIntoArray(m_sDefCategory, aDefValues);
+		Misc::AddUniqueItems(aDefValues, aItems);
+		break;
+
+	default:
+		ASSERT(0);
+		break;
 	}
 
 	return aItems.GetSize();
@@ -222,12 +262,26 @@ BOOL CPreferencesTaskDefPage::AddListItem(PTDP_LIST nList, LPCTSTR szItem)
 
 	switch (nList)
 	{
-	case PTDP_ALLOCBY:	pItems = &m_aDefAllocBy; pCB = &m_cbAllocByList;  break;
-	case PTDP_ALLOCTO:	pItems = &m_aDefAllocTo; pCB = &m_cbAllocToList;  break;
-	case PTDP_STATUS:	pItems = &m_aDefStatus;  pCB = &m_cbStatusList;   break; 
-	case PTDP_CATEGORY:	pItems = &m_aDefCats;	 pCB = &m_cbCategoryList; break;
+	case PTDP_ALLOCBY:
+		pItems = &m_aDefAllocBy;
+		pCB = &m_cbAllocByList;
+		break;
+	case PTDP_ALLOCTO:
+		pItems = &m_aDefAllocTo;
+		pCB = &m_cbAllocToList;
+		break;
+	case PTDP_STATUS:
+		pItems = &m_aDefStatus;
+		pCB = &m_cbStatusList;
+		break;
+	case PTDP_CATEGORY:
+		pItems = &m_aDefCats;
+		pCB = &m_cbCategoryList;
+		break;
 
-	default: ASSERT(0);	return FALSE;
+	default:
+		ASSERT(0);
+		return FALSE;
 	}
 
 	// add to array first
@@ -252,12 +306,26 @@ BOOL CPreferencesTaskDefPage::DeleteListItem(PTDP_LIST nList, LPCTSTR szItem)
 
 	switch (nList)
 	{
-	case PTDP_ALLOCBY:	pItems = &m_aDefAllocBy; pCB = &m_cbAllocByList;  break;
-	case PTDP_ALLOCTO:	pItems = &m_aDefAllocTo; pCB = &m_cbAllocToList;  break;
-	case PTDP_STATUS:	pItems = &m_aDefStatus;  pCB = &m_cbStatusList;   break; 
-	case PTDP_CATEGORY:	pItems = &m_aDefCats;	 pCB = &m_cbCategoryList; break;
+	case PTDP_ALLOCBY:
+		pItems = &m_aDefAllocBy;
+		pCB = &m_cbAllocByList;
+		break;
+	case PTDP_ALLOCTO:
+		pItems = &m_aDefAllocTo;
+		pCB = &m_cbAllocToList;
+		break;
+	case PTDP_STATUS:
+		pItems = &m_aDefStatus;
+		pCB = &m_cbStatusList;
+		break;
+	case PTDP_CATEGORY:
+		pItems = &m_aDefCats;
+		pCB = &m_cbCategoryList;
+		break;
 
-	default: ASSERT(0);	return FALSE;
+	default:
+		ASSERT(0);
+		return FALSE;
 	}
 
 	// delete from array first
@@ -279,14 +347,18 @@ PTDP_LIST CPreferencesTaskDefPage::MapCtrlIDToList(UINT nListID)
 {
 	switch (nListID)
 	{
-	case IDC_ALLOCBYLIST:	return PTDP_ALLOCBY;
-	case IDC_ALLOCTOLIST:	return PTDP_ALLOCTO;
-	case IDC_STATUSLIST:	return PTDP_STATUS;
-	case IDC_CATEGORYLIST:	return PTDP_CATEGORY;
+	case IDC_ALLOCBYLIST:
+		return PTDP_ALLOCBY;
+	case IDC_ALLOCTOLIST:
+		return PTDP_ALLOCTO;
+	case IDC_STATUSLIST:
+		return PTDP_STATUS;
+	case IDC_CATEGORYLIST:
+		return PTDP_CATEGORY;
 	}
 
 	ASSERT(0);
-	return (PTDP_LIST)-1;
+	return (PTDP_LIST) - 1;
 }
 
 LRESULT CPreferencesTaskDefPage::OnListAddItem(WPARAM wp, LPARAM lp)
@@ -295,7 +367,11 @@ LRESULT CPreferencesTaskDefPage::OnListAddItem(WPARAM wp, LPARAM lp)
 	int nList = MapCtrlIDToList(nCtrlID);
 
 	if (nList != -1)
+	{
 		GetParent()->SendMessage(WM_PTDP_LISTCHANGE, MAKEWPARAM(nList, 1), lp);
+	}
+
+	CPreferencesPageBase::OnControlChange();
 
 	return 0L;
 }
@@ -306,7 +382,11 @@ LRESULT CPreferencesTaskDefPage::OnListDeleteItem(WPARAM wp, LPARAM lp)
 	int nList = MapCtrlIDToList(nCtrlID);
 
 	if (nList != -1)
+	{
 		GetParent()->SendMessage(WM_PTDP_LISTCHANGE, MAKEWPARAM(nList, 0), lp);
+	}
+
+	CPreferencesPageBase::OnControlChange();
 
 	return 0L;
 }
@@ -315,12 +395,16 @@ void CPreferencesTaskDefPage::OnAttribUseChange()
 {
 	UpdateData();
 
-	ASSERT (m_nSelAttribUse >= 0);
-	
+	ASSERT(m_nSelAttribUse >= 0);
+
 	if (m_nSelAttribUse >= 0)
+	{
 		m_aAttribPrefs[m_nSelAttribUse].bUse = m_lbAttribUse.GetCheck(m_nSelAttribUse);
+	}
 
 	GetDlgItem(IDC_UPDATEINHERITATTRIB)->EnableWindow(m_bInheritParentAttributes);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
 BOOL CPreferencesTaskDefPage::HasCheckedAttributes() const
@@ -330,7 +414,9 @@ BOOL CPreferencesTaskDefPage::HasCheckedAttributes() const
 	while (nAttrib--)
 	{
 		if (m_aAttribPrefs[nAttrib].bUse)
+		{
 			return TRUE;
+		}
 	}
 
 	// else
@@ -345,30 +431,57 @@ int CPreferencesTaskDefPage::GetParentAttribsUsed(CTDCAttributeArray& aAttribs, 
 	{
 		bUpdateAttrib = m_bUpdateInheritAttributes;
 		int nIndex = (int)m_aAttribPrefs.GetSize();
-		
+
 		while (nIndex--)
 		{
 			if (m_aAttribPrefs[nIndex].bUse)
 			{
 				switch (m_aAttribPrefs[nIndex].nAttrib)
 				{
-					case PTPA_PRIORITY: aAttribs.Add(TDCA_PRIORITY); break;
-					case PTPA_COLOR:    aAttribs.Add(TDCA_COLOR); break;
-					case PTPA_ALLOCTO:  aAttribs.Add(TDCA_ALLOCTO); break;
-					case PTPA_ALLOCBY:  aAttribs.Add(TDCA_ALLOCBY); break;
-					case PTPA_STATUS:   aAttribs.Add(TDCA_STATUS); break;
-					case PTPA_CATEGORY: aAttribs.Add(TDCA_CATEGORY); break;
-					case PTPA_TIMEEST:  aAttribs.Add(TDCA_TIMEEST); break;
-					case PTPA_RISK:     aAttribs.Add(TDCA_RISK); break;
-					case PTPA_DUEDATE:  aAttribs.Add(TDCA_DUEDATE); break;
-					case PTPA_VERSION:  aAttribs.Add(TDCA_VERSION); break;
-					case PTPA_STARTDATE:aAttribs.Add(TDCA_STARTDATE); break;
+				case PTPA_PRIORITY:
+					aAttribs.Add(TDCA_PRIORITY);
+					break;
+				case PTPA_COLOR:
+					aAttribs.Add(TDCA_COLOR);
+					break;
+				case PTPA_ALLOCTO:
+					aAttribs.Add(TDCA_ALLOCTO);
+					break;
+				case PTPA_ALLOCBY:
+					aAttribs.Add(TDCA_ALLOCBY);
+					break;
+				case PTPA_STATUS:
+					aAttribs.Add(TDCA_STATUS);
+					break;
+				case PTPA_CATEGORY:
+					aAttribs.Add(TDCA_CATEGORY);
+					break;
+				case PTPA_TIMEEST:
+					aAttribs.Add(TDCA_TIMEEST);
+					break;
+				case PTPA_RISK:
+					aAttribs.Add(TDCA_RISK);
+					break;
+				case PTPA_DUEDATE:
+					aAttribs.Add(TDCA_DUEDATE);
+					break;
+				case PTPA_VERSION:
+					aAttribs.Add(TDCA_VERSION);
+					break;
+				case PTPA_STARTDATE:
+					aAttribs.Add(TDCA_STARTDATE);
+					break;
+				case PTPA_FLAG:
+					aAttribs.Add(TDCA_FLAG);
+					break;
 				}
 			}
 		}
 	}
 	else
+	{
 		bUpdateAttrib = FALSE;
+	}
 
 	return aAttribs.GetSize();
 }
@@ -383,39 +496,39 @@ int CPreferencesTaskDefPage::GetDefaultAllocTo(CStringArray& aAllocTo) const
 	return Misc::ParseIntoArray(m_sDefAllocTo, aAllocTo);
 }
 
-double CPreferencesTaskDefPage::GetDefaultTimeEst(int& nUnits) const 
-{ 
+double CPreferencesTaskDefPage::GetDefaultTimeEst(int& nUnits) const
+{
 	nUnits = m_eTimeEst.GetUnits();
 
-	return m_dDefTimeEst; 
+	return m_dDefTimeEst;
 }
 
-double CPreferencesTaskDefPage::GetDefaultTimeSpent(int& nUnits) const 
-{ 
+double CPreferencesTaskDefPage::GetDefaultTimeSpent(int& nUnits) const
+{
 	nUnits = m_eTimeSpent.GetUnits();
 
-	return m_dDefTimeSpent; 
+	return m_dDefTimeSpent;
 }
 
-HBRUSH CPreferencesTaskDefPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
+HBRUSH CPreferencesTaskDefPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CPreferencesPageBase::OnCtlColor(pDC, pWnd, nCtlColor);
-	
+
 	switch (pWnd->GetDlgCtrlID())
 	{
 	case IDC_DEFLISTLABEL:
 		pDC->SetTextColor(GetSysColor(COLOR_3DDKSHADOW));
 		break;
 	}
-	
+
 	return hbr;
 }
 
 void CPreferencesTaskDefPage::LoadPreferences(const CPreferences& prefs)
 {
 	// load settings
-	m_nDefPriority = prefs.GetProfileInt(_T("Preferences"), _T("DefaultPriority"), 5); 
-	m_nDefRisk = prefs.GetProfileInt(_T("Preferences"), _T("DefaultRisk"), 0); 
+	m_nDefPriority = prefs.GetProfileInt(_T("Preferences"), _T("DefaultPriority"), 5);
+	m_nDefRisk = prefs.GetProfileInt(_T("Preferences"), _T("DefaultRisk"), 0);
 	m_sDefAllocTo = prefs.GetProfileString(_T("Preferences"), _T("DefaultAllocTo"));
 	m_sDefAllocBy = prefs.GetProfileString(_T("Preferences"), _T("DefaultAllocBy"));
 	m_sDefStatus = prefs.GetProfileString(_T("Preferences"), _T("DefaultStatus"));
@@ -430,15 +543,15 @@ void CPreferencesTaskDefPage::LoadPreferences(const CPreferences& prefs)
 	m_eTimeEst.SetUnits(prefs.GetProfileInt(_T("Preferences"), _T("DefaultTimeEstUnits"), THU_HOURS));
 	m_dDefTimeSpent = prefs.GetProfileDouble(_T("Preferences"), _T("DefaultTimeSpent"), 0);
 	m_eTimeSpent.SetUnits(prefs.GetProfileInt(_T("Preferences"), _T("DefaultTimeSpentUnits"), THU_HOURS));
-	
-   // attribute use
+
+	// attribute use
 	int nIndex = m_aAttribPrefs.GetSize();
-	
+
 	while (nIndex--)
 	{
 		CString sKey;
 		sKey.Format(_T("Attrib%d"), m_aAttribPrefs[nIndex].nAttrib);
-		
+
 		m_aAttribPrefs[nIndex].bUse = prefs.GetProfileInt(_T("Preferences\\AttribUse"), sKey, FALSE);
 	}
 
@@ -468,7 +581,7 @@ void CPreferencesTaskDefPage::SavePreferences(CPreferences& prefs)
 	prefs.WriteProfileInt(_T("Preferences"), _T("DefaultTimeEstUnits"), m_eTimeEst.GetUnits());
 	prefs.WriteProfileDouble(_T("Preferences"), _T("DefaultTimeSpent"), m_dDefTimeSpent);
 	prefs.WriteProfileInt(_T("Preferences"), _T("DefaultTimeSpentUnits"), m_eTimeSpent.GetUnits());
-	
+
 	// attribute usage
 	int nIndex = m_aAttribPrefs.GetSize();
 

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESTOOLPAGE_H__6B9BF0B2_D6DE_4868_B97E_8F6288C77778__INCLUDED_)
@@ -61,21 +75,21 @@ public:
 	~CPreferencesToolPage();
 
 	int GetUserTools(CUserToolArray& aTools) const; // returns the number of tools
-	BOOL GetUserTool(int nTool, USERTOOL& tool) const; 
+	BOOL GetUserTool(int nTool, USERTOOL& tool) const;
 
 protected:
 
 // Dialog Data
 	//{{AFX_DATA(CPreferencesToolPage)
 	enum { IDD = IDD_PREFTOOLS_PAGE };
-	CEnEdit	m_eCmdLine;
-	CFileEdit	m_eToolPath;
-	CListCtrl	m_lcTools;
-	CString	m_sToolPath;
-	CString	m_sCommandLine;
-	BOOL	m_bRunMinimized;
-	CString		m_sIconPath;
-	CFileEdit	m_eIconPath;
+	CEnEdit m_eCmdLine;
+	CFileEdit   m_eToolPath;
+	CListCtrl   m_lcTools;
+	CString m_sToolPath;
+	CString m_sCommandLine;
+	BOOL    m_bRunMinimized;
+	CString     m_sIconPath;
+	CFileEdit   m_eIconPath;
 	//}}AFX_DATA
 	CUserToolArray m_aTools;
 	CSysImageList m_ilSys;
@@ -83,9 +97,9 @@ protected:
 // Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPreferencesToolPage)
-	public:
+public:
 	virtual void OnOK();
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
@@ -112,12 +126,11 @@ protected:
 
 	void EnableControls();
 	int GetCurSel();
-	
+
 	static CString CmdIDToPlaceholder(UINT nCmdID);
 
-   virtual void LoadPreferences(const CPreferences& prefs);
-   virtual void SavePreferences(CPreferences& prefs);
-
+	virtual void LoadPreferences(const CPreferences& prefs);
+	virtual void SavePreferences(CPreferences& prefs);
 };
 
 //{{AFX_INSERT_LOCATION}}

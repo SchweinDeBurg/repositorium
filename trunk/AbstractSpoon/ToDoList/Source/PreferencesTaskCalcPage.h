@@ -142,8 +142,6 @@ public:
 		return m_nCalcRemainingTime;
 	}
 
-//	BOOL Get() const { return m_b; }
-
 protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesTaskCalcPage)
@@ -185,7 +183,6 @@ protected:
 
 	virtual void LoadPreferences(const CPreferences& prefs);
 	virtual void SavePreferences(CPreferences& prefs);
-
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // PreferencesMultiUserPage.cpp : implementation file
@@ -46,8 +60,8 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CPreferencesMultiUserPage, CPreferencesPageBase)
 
-CPreferencesMultiUserPage::CPreferencesMultiUserPage() : 
-   CPreferencesPageBase(CPreferencesMultiUserPage::IDD)
+CPreferencesMultiUserPage::CPreferencesMultiUserPage() :
+CPreferencesPageBase(CPreferencesMultiUserPage::IDD)
 {
 	//{{AFX_DATA_INIT(CPreferencesMultiUserPage)
 	m_bUse3rdPartySourceControl = FALSE;
@@ -108,7 +122,6 @@ void CPreferencesMultiUserPage::DoDataExchange(CDataExchange* pDX)
 	}
 }
 
-
 BEGIN_MESSAGE_MAP(CPreferencesMultiUserPage, CPreferencesPageBase)
 	//{{AFX_MSG_MAP(CPreferencesMultiUserPage)
 	ON_BN_CLICKED(IDC_CHECKINONNOEDIT, OnCheckinonnoedit)
@@ -122,7 +135,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesMultiUserPage message handlers
 
-BOOL CPreferencesMultiUserPage::OnInitDialog() 
+BOOL CPreferencesMultiUserPage::OnInitDialog()
 {
 	CPreferencesPageBase::OnInitDialog();
 
@@ -133,17 +146,17 @@ BOOL CPreferencesMultiUserPage::OnInitDialog()
 	GetDlgItem(IDC_CHECKINONCLOSE)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl);
 	GetDlgItem(IDC_CHECKINONNOEDIT)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl);
 	GetDlgItem(IDC_NOCHANGETIME)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl && m_bCheckinNoChange);
-	
+
 	GetDlgItem(IDC_READONLYRELOADOPTION)->EnableWindow(m_bPromptReloadOnWritable);
 	GetDlgItem(IDC_TIMESTAMPRELOADOPTION)->EnableWindow(m_bPromptReloadOnTimestamp);
 
 	GetDlgItem(IDC_USE3RDPARTYSOURCECTRL)->EnableWindow(!m_bEnableSourceControl);
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CPreferencesMultiUserPage::OnEnablesourcecontrol() 
+void CPreferencesMultiUserPage::OnEnablesourcecontrol()
 {
 	UpdateData();
 
@@ -163,40 +176,56 @@ void CPreferencesMultiUserPage::OnEnablesourcecontrol()
 		m_bUse3rdPartySourceControl = FALSE;
 		UpdateData(FALSE);
 	}
+
+	CPreferencesPageBase::OnControlChange();
 }
 
 int CPreferencesMultiUserPage::GetReadonlyReloadOption() const
-{ 
+{
 	if (!m_bPromptReloadOnWritable)
+	{
 		return RO_NO;
+	}
 	else
-		return m_nReadonlyReloadOption + 1; 
+	{
+		return m_nReadonlyReloadOption + 1;
+	}
 }
 
-int CPreferencesMultiUserPage::GetTimestampReloadOption() const 
-{ 
+int CPreferencesMultiUserPage::GetTimestampReloadOption() const
+{
 	if (!m_bPromptReloadOnTimestamp)
+	{
 		return RO_NO;
+	}
 	else
-		return m_nTimestampReloadOption + 1; 
+	{
+		return m_nTimestampReloadOption + 1;
+	}
 }
 
-void CPreferencesMultiUserPage::OnPromptreloadonwritable() 
+void CPreferencesMultiUserPage::OnPromptreloadonwritable()
 {
 	UpdateData();
 	GetDlgItem(IDC_READONLYRELOADOPTION)->EnableWindow(m_bPromptReloadOnWritable);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesMultiUserPage::OnPromptreloadontimestamp() 
+void CPreferencesMultiUserPage::OnPromptreloadontimestamp()
 {
 	UpdateData();
 	GetDlgItem(IDC_TIMESTAMPRELOADOPTION)->EnableWindow(m_bPromptReloadOnTimestamp);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesMultiUserPage::OnCheckinonnoedit() 
+void CPreferencesMultiUserPage::OnCheckinonnoedit()
 {
 	UpdateData();
 	GetDlgItem(IDC_NOCHANGETIME)->EnableWindow(m_bEnableSourceControl && m_bCheckinNoChange);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
 void CPreferencesMultiUserPage::LoadPreferences(const CPreferences& prefs)
@@ -234,9 +263,11 @@ void CPreferencesMultiUserPage::SavePreferences(CPreferences& prefs)
 	prefs.WriteProfileInt(_T("Preferences"), _T("Use3rdPartySourceControl"), m_bUse3rdPartySourceControl);
 }
 
-void CPreferencesMultiUserPage::OnUse3rdpartysourcectrl() 
+void CPreferencesMultiUserPage::OnUse3rdpartysourcectrl()
 {
 	UpdateData();
 
 	OnEnablesourcecontrol(); // to re-enable controls
+
+	CPreferencesPageBase::OnControlChange();
 }

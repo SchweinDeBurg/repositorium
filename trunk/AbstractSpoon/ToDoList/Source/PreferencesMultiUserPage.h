@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESMULTIUSERPAGE_H__D7484AFF_704B_4FA9_94DA_9AB2F5364816__INCLUDED_)
@@ -69,40 +83,64 @@ public:
 
 	int GetReadonlyReloadOption() const;
 	int GetTimestampReloadOption() const;
-	BOOL GetEnableSourceControl() const { return m_bEnableSourceControl && !m_bUse3rdPartySourceControl; }
-	BOOL GetSourceControlLanOnly() const { return m_bEnableSourceControl && m_bSourceControlLanOnly; }
-	BOOL GetAutoCheckOut() const { return m_bEnableSourceControl && m_bAutoCheckOut; }
-	BOOL GetCheckoutOnCheckin() const { return m_bEnableSourceControl && m_bCheckoutOnCheckin; }
-	BOOL GetCheckinOnClose() const { return m_bEnableSourceControl && m_bCheckinOnClose; }
-	UINT GetRemoteFileCheckFrequency() const { return m_nRemoteFileCheckFreq; }
-	UINT GetCheckinOnNoEditTime() const { return (m_bEnableSourceControl && m_bCheckinNoChange) ? m_nCheckinNoEditTime : 0; }
-	BOOL GetUsing3rdPartySourceControl() const { return m_bUse3rdPartySourceControl && !m_bEnableSourceControl; }
+	BOOL GetEnableSourceControl() const
+	{
+		return m_bEnableSourceControl && !m_bUse3rdPartySourceControl;
+	}
+	BOOL GetSourceControlLanOnly() const
+	{
+		return m_bEnableSourceControl && m_bSourceControlLanOnly;
+	}
+	BOOL GetAutoCheckOut() const
+	{
+		return m_bEnableSourceControl && m_bAutoCheckOut;
+	}
+	BOOL GetCheckoutOnCheckin() const
+	{
+		return m_bEnableSourceControl && m_bCheckoutOnCheckin;
+	}
+	BOOL GetCheckinOnClose() const
+	{
+		return m_bEnableSourceControl && m_bCheckinOnClose;
+	}
+	UINT GetRemoteFileCheckFrequency() const
+	{
+		return m_nRemoteFileCheckFreq;
+	}
+	UINT GetCheckinOnNoEditTime() const
+	{
+		return (m_bEnableSourceControl && m_bCheckinNoChange) ? m_nCheckinNoEditTime : 0;
+	}
+	BOOL GetUsing3rdPartySourceControl() const
+	{
+		return m_bUse3rdPartySourceControl && !m_bEnableSourceControl;
+	}
 
 protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesMultiUserPage)
 	enum { IDD = IDD_PREFMULTIUSER_PAGE };
-	CComboBox	m_cbNoEditTime;
-	BOOL	m_bCheckinNoChange;
-	BOOL	m_bUse3rdPartySourceControl;
+	CComboBox   m_cbNoEditTime;
+	BOOL    m_bCheckinNoChange;
+	BOOL    m_bUse3rdPartySourceControl;
 	//}}AFX_DATA
-	CComboBox	m_cbRemoteFileCheck;
-	BOOL	m_bEnableSourceControl;
-	BOOL	m_bSourceControlLanOnly;
-	BOOL	m_bAutoCheckOut;
-	BOOL	m_bCheckoutOnCheckin;
-	int		m_nReadonlyReloadOption;
-	int		m_nTimestampReloadOption;
-	BOOL	m_bCheckinOnClose;
-	UINT	m_nRemoteFileCheckFreq;
-	BOOL	m_bPromptReloadOnWritable;
-	BOOL	m_bPromptReloadOnTimestamp;
+	CComboBox   m_cbRemoteFileCheck;
+	BOOL    m_bEnableSourceControl;
+	BOOL    m_bSourceControlLanOnly;
+	BOOL    m_bAutoCheckOut;
+	BOOL    m_bCheckoutOnCheckin;
+	int     m_nReadonlyReloadOption;
+	int     m_nTimestampReloadOption;
+	BOOL    m_bCheckinOnClose;
+	UINT    m_nRemoteFileCheckFreq;
+	BOOL    m_bPromptReloadOnWritable;
+	BOOL    m_bPromptReloadOnTimestamp;
 	UINT    m_nCheckinNoEditTime;
 
 // Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPreferencesMultiUserPage)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
@@ -119,9 +157,8 @@ protected:
 	afx_msg void OnPromptreloadontimestamp();
 	DECLARE_MESSAGE_MAP()
 
-   virtual void LoadPreferences(const CPreferences& prefs);
-   virtual void SavePreferences(CPreferences& prefs);
-
+	virtual void LoadPreferences(const CPreferences& prefs);
+	virtual void SavePreferences(CPreferences& prefs);
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESFILEPAGE_H__0A884806_5921_4C13_B368_6D14A441ADAC__INCLUDED_)
@@ -56,87 +70,98 @@ enum
 	PFP_DUENEXTMONTH,
 };
 
-class CImportExportMgr;
-
 class CPreferencesFilePage : public CPreferencesPageBase
 {
 	DECLARE_DYNCREATE(CPreferencesFilePage)
 
 // Construction
 public:
-	CPreferencesFilePage(const CImportExportMgr* pExportMgr = NULL);
+	CPreferencesFilePage();
 	~CPreferencesFilePage();
 
-	BOOL GetAutoArchive() const { return m_bAutoArchive; }
-	BOOL GetNotifyReadOnly() const { return m_bNotifyReadOnly; }
-	BOOL GetAutoExport() const { return m_bAutoExport; }
-	BOOL GetExportToHTML() const { return m_bAutoExport && !m_bOtherExport; }
-	int GetOtherExporter() const { return (m_bAutoExport && m_bOtherExport) ? m_nOtherExporter : -1; }
-	int GetAutoSaveFrequency() const { return m_nAutoSaveFrequency; }
-	BOOL GetRemoveArchivedTasks() const { return m_bRemoveArchivedTasks; }
-	BOOL GetRemoveOnlyOnAbsoluteCompletion() const { return m_bRemoveOnlyOnAbsoluteCompletion; }
-	CString GetAutoExportFolderPath() const;
-	int GetNotifyDueByOnLoad() const { return m_bNotifyDueOnLoad ? m_nNotifyDueByOnLoad : PFP_DONTNOTIFY; }
-	int GetNotifyDueByOnSwitch() const { return m_bNotifyDueOnSwitch ? m_nNotifyDueByOnSwitch : PFP_DONTNOTIFY; }
-	BOOL GetDisplayDueTasksInHtml() const { return m_bDisplayDueTasksInHtml; }
-	BOOL GetRefreshFindOnLoad() const { return m_bRefreshFindOnLoad; }
-	BOOL GetDueTaskTitlesOnly() const { return m_bDueTaskTitlesOnly; }
-	CString GetDueTaskStylesheet() const { return m_sDueTasksStylesheet; }
-	CString GetSaveExportStylesheet() const { return m_sSaveExportStylesheet; }
-	CString GetDueTaskPerson() const { return m_bOnlyShowDueTasksForPerson ? m_sDueTaskPerson : _T(""); }
-	BOOL GetWarnAddDeleteArchive() const { return m_bWarnAddDeleteArchive; }
-	BOOL GetDontRemoveFlagged() const { return m_bDontRemoveFlagged; }
-	BOOL GetExpandTasksOnLoad() const { return m_bExpandTasks; }
-	BOOL GetAutoSaveOnSwitchTasklist() const { return m_bAutoSaveOnSwitchTasklist; }
-	BOOL GetAutoSaveOnSwitchApp() const { return m_bAutoSaveOnSwitchApp; }
-
-//	BOOL Get() const { return m_b; }
+	BOOL GetAutoArchive() const
+	{
+		return m_bAutoArchive;
+	}
+	BOOL GetNotifyReadOnly() const
+	{
+		return m_bNotifyReadOnly;
+	}
+	BOOL GetRemoveArchivedTasks() const
+	{
+		return m_bRemoveArchivedTasks;
+	}
+	BOOL GetRemoveOnlyOnAbsoluteCompletion() const
+	{
+		return m_bRemoveOnlyOnAbsoluteCompletion;
+	}
+	int GetNotifyDueByOnLoad() const
+	{
+		return m_bNotifyDueOnLoad ? m_nNotifyDueByOnLoad : PFP_DONTNOTIFY;
+	}
+	int GetNotifyDueByOnSwitch() const
+	{
+		return m_bNotifyDueOnSwitch ? m_nNotifyDueByOnSwitch : PFP_DONTNOTIFY;
+	}
+	BOOL GetDisplayDueTasksInHtml() const
+	{
+		return m_bDisplayDueTasksInHtml;
+	}
+	BOOL GetRefreshFindOnLoad() const
+	{
+		return m_bRefreshFindOnLoad;
+	}
+	BOOL GetDueTaskTitlesOnly() const
+	{
+		return m_bDueTaskTitlesOnly;
+	}
+	CString GetDueTaskStylesheet() const;
+	CString GetDueTaskPerson() const
+	{
+		return m_bOnlyShowDueTasksForPerson ? m_sDueTaskPerson : _T("");
+	}
+	BOOL GetWarnAddDeleteArchive() const
+	{
+		return m_bWarnAddDeleteArchive;
+	}
+	BOOL GetDontRemoveFlagged() const
+	{
+		return m_bDontRemoveFlagged;
+	}
+	BOOL GetExpandTasksOnLoad() const
+	{
+		return m_bExpandTasks;
+	}
 
 protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesFilePage)
 	enum { IDD = IDD_PREFFILE_PAGE };
-	CComboBox	m_cbOtherExporters;
-	CFileEdit	m_eSaveExportStylesheet;
-	CFileEdit	m_eDueTaskStylesheet;
-	CComboBox	m_cbFontSize;
-	CFileEdit	m_eExportFolderPath;
-	BOOL	m_bExportToFolder;
-	CString	m_sExportFolderPath;
-	BOOL	m_bDisplayDueTasksInHtml;
-	BOOL	m_bRefreshFindOnLoad;
-	BOOL	m_bDueTaskTitlesOnly;
-	CString	m_sSaveExportStylesheet;
-	CString	m_sDueTasksStylesheet;
-	BOOL	m_bUseStylesheetForSaveExport;
-	BOOL	m_bUseStyleSheetForDueTasks;
-	BOOL	m_bOnlyShowDueTasksForPerson;
-	CString	m_sDueTaskPerson;
-	BOOL	m_bWarnAddDeleteArchive;
-	BOOL	m_bDontRemoveFlagged;
-	BOOL	m_bExpandTasks;
-	BOOL	m_bAutoSaveOnSwitchTasklist;
-	BOOL	m_bAutoSaveOnSwitchApp;
-	int		m_bOtherExport;
-	int		m_nOtherExporter;
+	CFileEdit   m_eDueTaskStylesheet;
+	CComboBox   m_cbFontSize;
+	BOOL    m_bDisplayDueTasksInHtml;
+	BOOL    m_bRefreshFindOnLoad;
+	BOOL    m_bDueTaskTitlesOnly;
+	CString m_sDueTasksStylesheet;
+	BOOL    m_bUseStyleSheetForDueTasks;
+	BOOL    m_bOnlyShowDueTasksForPerson;
+	CString m_sDueTaskPerson;
+	BOOL    m_bWarnAddDeleteArchive;
+	BOOL    m_bDontRemoveFlagged;
+	BOOL    m_bExpandTasks;
 	//}}AFX_DATA
-	BOOL	m_bNotifyDueOnLoad, m_bNotifyDueOnSwitch;
-	int		m_nNotifyDueByOnLoad, m_nNotifyDueByOnSwitch;
-	BOOL	m_bAutoArchive;
-	BOOL	m_bNotifyReadOnly;
-	CComboBox	m_cbAutoSave;
-	BOOL	m_bRemoveArchivedTasks;
-	BOOL	m_bRemoveOnlyOnAbsoluteCompletion;
-	int		m_nAutoSaveFrequency;
-	BOOL	m_bAutoSave;
-	BOOL	m_bAutoExport;
+	BOOL    m_bNotifyDueOnLoad, m_bNotifyDueOnSwitch;
+	int     m_nNotifyDueByOnLoad, m_nNotifyDueByOnSwitch;
+	BOOL    m_bAutoArchive;
+	BOOL    m_bNotifyReadOnly;
+	BOOL    m_bRemoveArchivedTasks;
+	BOOL    m_bRemoveOnlyOnAbsoluteCompletion;
 	CGroupLineManager m_mgrGroupLines;
-	const CImportExportMgr* m_pExportMgr;
 
 // Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPreferencesFilePage)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
@@ -145,24 +170,17 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPreferencesFilePage)
 	virtual BOOL OnInitDialog();
-	afx_msg void OnExporttofolder();
-	afx_msg void OnAutoexport();
 	afx_msg void OnNotifyDueOnLoad();
 	afx_msg void OnDisplayduetasksinhtml();
 	afx_msg void OnUsestylesheetfordueitems();
-	afx_msg void OnUsestylesheetforsave();
 	afx_msg void OnOnlyshowduetaskforperson();
-	afx_msg void OnHtmlexport();
-	afx_msg void OnOtherexport();
 	//}}AFX_MSG
 	afx_msg void OnNotifyDueOnSwitch();
 	afx_msg void OnRemovearchiveditems();
-	afx_msg void OnAutosave();
 	DECLARE_MESSAGE_MAP()
 
-   virtual void LoadPreferences(const CPreferences& prefs);
-   virtual void SavePreferences(CPreferences& prefs);
-
+	virtual void LoadPreferences(const CPreferences& prefs);
+	virtual void SavePreferences(CPreferences& prefs);
 };
 
 //{{AFX_INSERT_LOCATION}}

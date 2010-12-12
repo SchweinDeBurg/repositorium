@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // PreferencesGenPage.cpp : implementation file
@@ -51,12 +65,12 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CPreferencesGenPage, CPreferencesPageBase)
 
-CPreferencesGenPage::CPreferencesGenPage() : 
-   CPreferencesPageBase(CPreferencesGenPage::IDD), m_hkGlobal(TRUE)
+CPreferencesGenPage::CPreferencesGenPage() :
+CPreferencesPageBase(CPreferencesGenPage::IDD),
+m_hkGlobal(TRUE)
 {
 	//{{AFX_DATA_INIT(CPreferencesGenPage)
 	//}}AFX_DATA_INIT
-
 }
 
 CPreferencesGenPage::~CPreferencesGenPage()
@@ -94,7 +108,9 @@ void CPreferencesGenPage::DoDataExchange(CDataExchange* pDX)
 		m_dwGlobalHotkey = MAKELONG(wVKeyCode, wModifiers);
 	}
 	else if (m_bSpecifyGlobalHotkey)
+	{
 		m_hkGlobal.SetHotKey(m_dwGlobalHotkey);
+	}
 }
 
 BEGIN_MESSAGE_MAP(CPreferencesGenPage, CPreferencesPageBase)
@@ -109,7 +125,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesGenPage message handlers
 
-BOOL CPreferencesGenPage::OnInitDialog() 
+BOOL CPreferencesGenPage::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -119,41 +135,48 @@ BOOL CPreferencesGenPage::OnInitDialog()
 	GetDlgItem(IDC_SPECIFYGLOBALHOTKEY)->EnableWindow(!m_bMultiInstance);
 	GetDlgItem(IDC_GLOBALHOTKEY)->EnableWindow(!m_bMultiInstance && m_bSpecifyGlobalHotkey);
 
-	//GetDlgItem(IDC_ENABLETDLPROTOCOL)->SendMessage(BCM_SETSHIELD, 0, TRUE );
 	if (COSVersion() <= OSV_XP)
+	{
 		GetDlgItem(IDC_VISTASHIELD)->ShowWindow(SW_HIDE);
-	
+	}
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CPreferencesGenPage::OnUseSystray() 
+void CPreferencesGenPage::OnUseSystray()
 {
 	UpdateData();
 
 	GetDlgItem(IDC_SYSTRAYOPTION)->EnableWindow(m_bUseSysTray);
 	GetDlgItem(IDC_TOGGLETRAYVISIBILITY)->EnableWindow(m_bUseSysTray);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesGenPage::OnSpecifyglobalhotkey() 
+void CPreferencesGenPage::OnSpecifyglobalhotkey()
 {
 	UpdateData();
-	
+
 	GetDlgItem(IDC_GLOBALHOTKEY)->EnableWindow(m_bSpecifyGlobalHotkey);
 	GetDlgItem(IDC_MULTIINSTANCE)->EnableWindow(!m_bSpecifyGlobalHotkey);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesGenPage::OnMultiinstance() 
+void CPreferencesGenPage::OnMultiinstance()
 {
 	UpdateData();
-	
+
 	GetDlgItem(IDC_SPECIFYGLOBALHOTKEY)->EnableWindow(!m_bMultiInstance);
 	GetDlgItem(IDC_GLOBALHOTKEY)->EnableWindow(!m_bMultiInstance && m_bSpecifyGlobalHotkey);
+
+	CPreferencesPageBase::OnControlChange();
 }
 
-void CPreferencesGenPage::OnClearMRU() 
+void CPreferencesGenPage::OnClearMRU()
 {
-   GetParent()->SendMessage(WM_PGP_CLEARMRU);
+	GetParent()->SendMessage(WM_PGP_CLEARMRU);
 }
 
 void CPreferencesGenPage::LoadPreferences(const CPreferences& prefs)

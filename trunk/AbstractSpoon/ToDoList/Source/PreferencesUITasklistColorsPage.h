@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESUITASKLISTCOLORSPAGE_H__9612D6FB_2A00_46DA_99A4_1AC6270F060D__INCLUDED_)
@@ -71,20 +85,47 @@ public:
 	CPreferencesUITasklistColorsPage();
 	~CPreferencesUITasklistColorsPage();
 
-	BOOL GetColorPriority() const { return m_bColorPriority; }
-	int GetTextColorOption() const { return m_nTextColorOption; }
-	BOOL GetHidePriorityNumber() const { return m_bHidePriorityNumber; }
+	BOOL GetColorPriority() const
+	{
+		return m_bColorPriority;
+	}
+	int GetTextColorOption() const
+	{
+		return m_nTextColorOption;
+	}
+	BOOL GetHidePriorityNumber() const
+	{
+		return m_bHidePriorityNumber;
+	}
 	int GetPriorityColors(CDWordArray& aColors) const;
 	int GetCategoryColors(CCatColorArray& aColors) const;
 	BOOL GetTreeFont(CString& sFaceName, int& nPointSize) const;
 	BOOL GetCommentsFont(CString& sFaceName, int& nPointSize) const;
-	COLORREF GetGridlineColor() const { return m_bSpecifyGridColor ? m_crGridlines : -1; }
-	COLORREF GetDoneTaskColor() const { return m_bSpecifyDoneColor ? m_crDone : -1; }
-	COLORREF GetAlternateLineColor() const { return m_bAlternateLineColor ? m_crAltLine : -1; }
+	COLORREF GetGridlineColor() const
+	{
+		return m_bSpecifyGridColor ? m_crGridlines : -1;
+	}
+	COLORREF GetDoneTaskColor() const
+	{
+		return m_bSpecifyDoneColor ? m_crDone : -1;
+	}
+	COLORREF GetAlternateLineColor() const
+	{
+		return m_bAlternateLineColor ? m_crAltLine : -1;
+	}
 	void GetDueTaskColors(COLORREF& crDue, COLORREF& crDueToday) const;
-	BOOL GetColorTaskBackground() const { return m_bColorTaskBackground; }
-	BOOL GetCommentsUseTreeFont() const { return m_bSpecifyTreeFont && m_bCommentsUseTreeFont; }
-	COLORREF GetFlaggedTaskColor() const { return m_bSpecifyFlaggedColor ? m_crFlagged : -1; }
+	BOOL GetColorTaskBackground() const
+	{
+		return m_bColorTaskBackground;
+	}
+	BOOL GetCommentsUseTreeFont() const
+	{
+		return m_bSpecifyTreeFont && m_bCommentsUseTreeFont;
+	}
+	COLORREF GetFlaggedTaskColor() const
+	{
+		return m_bSpecifyFlaggedColor ? m_crFlagged : -1;
+	}
 
 	void DeleteCategory(LPCTSTR szCategory);
 	void AddCategory(LPCTSTR szCategory);
@@ -93,48 +134,48 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesUITasklistColorsPage)
 	enum { IDD = IDD_PREFUITASKLISTCOLORS_PAGE };
-	CAutoComboBox	m_cbCategories;
-	BOOL	m_bColorTaskBackground;
-	BOOL	m_bCommentsUseTreeFont;
-	BOOL	m_bHLSColorGradient;
-	BOOL	m_bHidePriorityNumber;
-	BOOL	m_bAlternateLineColor;
-	int		m_nTextColorOption;
-	CString	m_sSelCategory;
-	BOOL	m_bSpecifyDueColor;
+	CAutoComboBox   m_cbCategories;
+	BOOL    m_bColorTaskBackground;
+	BOOL    m_bCommentsUseTreeFont;
+	BOOL    m_bHLSColorGradient;
+	BOOL    m_bHidePriorityNumber;
+	BOOL    m_bAlternateLineColor;
+	int     m_nTextColorOption;
+	CString m_sSelCategory;
+	BOOL    m_bSpecifyDueColor;
 	//}}AFX_DATA
-	BOOL	m_bSpecifyDueTodayColor;
-	BOOL	m_bSpecifyGridColor;
-	BOOL	m_bSpecifyDoneColor;
-	BOOL	m_bSpecifyFlaggedColor;
-	CColorButton	m_btFilteredColor;
-	CColorButton	m_btCatColor;
-	CColorButton	m_btDoneColor;
-	CColorButton	m_btGridlineColor;
-	CColorButton	m_btDueColor;
-	CColorButton	m_btDueTodayColor;
-	CColorButton	m_btFlaggedColor;
-	CComboBox	m_cbTreeFontSize, m_cbCommentsFontSize;
-	CFontComboBox	m_cbTreeFonts, m_cbCommentsFonts;
-	BOOL	m_bSpecifyTreeFont;
-	BOOL	m_bSpecifyCommentsFont;
-	CFileEdit	m_eCheckboxImagePath;
-	CColorButton	m_btSetColor;
-	CColorButton	m_btLowColor;
-	CColorButton	m_btHighColor;
-	BOOL	m_bColorPriority;
-	int		m_bGradientPriorityColors;
-	int		m_nSelPriorityColor;
-	BOOL	m_bShowTimeColumn;
+	BOOL    m_bSpecifyDueTodayColor;
+	BOOL    m_bSpecifyGridColor;
+	BOOL    m_bSpecifyDoneColor;
+	BOOL    m_bSpecifyFlaggedColor;
+	CColorButton    m_btFilteredColor;
+	CColorButton    m_btCatColor;
+	CColorButton    m_btDoneColor;
+	CColorButton    m_btGridlineColor;
+	CColorButton    m_btDueColor;
+	CColorButton    m_btDueTodayColor;
+	CColorButton    m_btFlaggedColor;
+	CComboBox   m_cbTreeFontSize, m_cbCommentsFontSize;
+	CFontComboBox   m_cbTreeFonts, m_cbCommentsFonts;
+	BOOL    m_bSpecifyTreeFont;
+	BOOL    m_bSpecifyCommentsFont;
+	CFileEdit   m_eCheckboxImagePath;
+	CColorButton    m_btSetColor;
+	CColorButton    m_btLowColor;
+	CColorButton    m_btHighColor;
+	BOOL    m_bColorPriority;
+	int     m_bGradientPriorityColors;
+	int     m_nSelPriorityColor;
+	BOOL    m_bShowTimeColumn;
 	CDWordArray m_aPriorityColors;
 	CCatColorArray m_aCategoryColors;
 	COLORREF m_crLow, m_crHigh;
 	CString m_sTreeFont;
-	int		m_nTreeFontSize;
+	int     m_nTreeFontSize;
 	CString m_sCommentsFont;
-	int		m_nCommentsFontSize;
+	int     m_nCommentsFontSize;
 	COLORREF m_crGridlines, m_crDone;
-	CColorButton	m_btAltLineColor;
+	CColorButton    m_btAltLineColor;
 	COLORREF m_crAltLine;
 	COLORREF m_crDue, m_crDueToday;
 	CGroupLineManager m_mgrGroupLines;
@@ -143,7 +184,7 @@ protected:
 // Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPreferencesUITasklistColorsPage)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
@@ -186,8 +227,8 @@ protected:
 protected:
 	int FindCategoryColor(LPCTSTR szCategory);
 
-   virtual void LoadPreferences(const CPreferences& prefs);
-   virtual void SavePreferences(CPreferences& prefs);
+	virtual void LoadPreferences(const CPreferences& prefs);
+	virtual void SavePreferences(CPreferences& prefs);
 };
 
 //{{AFX_INSERT_LOCATION}}
