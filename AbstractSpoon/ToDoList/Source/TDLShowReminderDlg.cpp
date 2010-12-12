@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TDLShowReminderDlg.cpp : implementation file
@@ -51,9 +65,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTDLShowReminderDlg dialog
 
-
-CTDLShowReminderDlg::CTDLShowReminderDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CTDLShowReminderDlg::IDD, pParent)
+CTDLShowReminderDlg::CTDLShowReminderDlg(CWnd* pParent /*=NULL*/):
+CDialog(CTDLShowReminderDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CTDLShowReminderDlg)
 	m_sWhen = _T("");
@@ -61,7 +74,6 @@ CTDLShowReminderDlg::CTDLShowReminderDlg(CWnd* pParent /*=NULL*/)
 	m_nSnoozeIndex = 0;
 	//}}AFX_DATA_INIT
 }
-
 
 void CTDLShowReminderDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -72,7 +84,6 @@ void CTDLShowReminderDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_CBIndex(pDX, IDC_SNOOZE, m_nSnoozeIndex);
 	//}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CTDLShowReminderDlg, CDialog)
 	//{{AFX_MSG_MAP(CTDLShowReminderDlg)
@@ -87,74 +98,108 @@ END_MESSAGE_MAP()
 int CTDLShowReminderDlg::DoModal(const TDCREMINDER& rem)
 {
 	CString sFormat;
-	double dWhen = 0;
 	COleDateTime date;
 
-	if (rem.nRelativeFromWhen == TDCR_DUEDATE)
+	if (rem.bRelative)
 	{
-		date = rem.pTDC->GetTaskDate(rem.dwTaskID, TDCD_DUE);
-		dWhen = date - COleDateTime::GetCurrentTime();
+		double dWhen = 0;
 
-		if (fabs(dWhen) < 1.0)
+		if (rem.nRelativeFromWhen == TDCR_DUEDATE)
 		{
-			dWhen *= 24 * 60; // convert to minutes
-			sFormat.LoadString(IDS_DUEWHENREMINDERMINS);
+			date = rem.pTDC->GetTaskDate(rem.dwTaskID, TDCD_DUE);
+			dWhen = date - COleDateTime::GetCurrentTime();
+
+			if (dWhen < 1.0)
+			{
+				sFormat.LoadString(IDS_DUEWHENREMINDERNOW);
+			}
+
+			else if (fabs(dWhen) < 1.0)
+			{
+				dWhen *= 24 * 60; // convert to minutes
+				sFormat.LoadString(IDS_DUEWHENREMINDERMINS);
+			}
+			else
+			{
+				sFormat.LoadString(IDS_DUEWHENREMINDERHOURS);
+			}
 		}
 		else
 		{
-			dWhen *= 24; // convert to hours
-			sFormat.LoadString(IDS_DUEWHENREMINDERHOURS);
-		}
-	}
-	else
-	{
-		date = rem.pTDC->GetTaskDate(rem.dwTaskID, TDCD_START);
-		dWhen = date - COleDateTime::GetCurrentTime();
+			date = rem.pTDC->GetTaskDate(rem.dwTaskID, TDCD_START);
+			dWhen = date - COleDateTime::GetCurrentTime();
 
-		if (fabs(dWhen) < 1.0)
+			if (dWhen < 1.0)
+			{
+				sFormat.LoadString(IDS_BEGINWHENREMINDERNOW);
+			}
+
+			else if (fabs(dWhen) < 1.0)
+			{
+				dWhen *= 24 * 60; // convert to minutes
+				sFormat.LoadString(IDS_BEGINWHENREMINDERMINS);
+			}
+			else
+			{
+				sFormat.LoadString(IDS_BEGINWHENREMINDERHOURS);
+			}
+		}
+
+		CString sDateTime = CDateHelper::FormatDate(date, DHFD_DOW | DHFD_NOSEC | DHFD_TIME);
+
+		if (dWhen < 1.0)
 		{
-			dWhen *= 24 * 60; // convert to minutes
-			sFormat.LoadString(IDS_BEGINWHENREMINDERMINS);
+			m_sWhen.Format(sFormat, sDateTime);
 		}
 		else
 		{
-			dWhen *= 24; // convert to hours
-			sFormat.LoadString(IDS_BEGINWHENREMINDERHOURS);
+			m_sWhen.Format(sFormat, dWhen, sDateTime);
 		}
 	}
 
-	CString sDateTime = CDateHelper::FormatDate(date, DHFD_DOW | DHFD_NOSEC | DHFD_TIME);
-
-	m_sWhen.Format(sFormat, dWhen, sDateTime);
 	m_sTaskTitle = rem.pTDC->GetTaskTitle(rem.dwTaskID);
-
-	// do we need to play a sound?
-	if (!rem.sSoundFile.IsEmpty())
-		PlaySound(rem.sSoundFile, NULL, SND_FILENAME);
+	m_sSoundFile = rem.sSoundFile;
 
 	return CDialog::DoModal();
 }
 
-void CTDLShowReminderDlg::OnSnooze() 
+BOOL CTDLShowReminderDlg::OnInitDialog()
+{
+	BOOL bRes = CDialog::OnInitDialog();
+
+	// do we need to play a sound?
+	if (!m_sSoundFile.IsEmpty())
+	{
+		PlaySound(m_sSoundFile, NULL, SND_FILENAME);
+	}
+
+	return bRes;
+}
+
+void CTDLShowReminderDlg::OnSnooze()
 {
 	UpdateData();
-	EndDialog(IDSNOOZE);	
+	EndDialog(IDSNOOZE);
 }
 
 int CTDLShowReminderDlg::GetSnoozeMinutes() const
 {
-	const UINT SNOOZE[] = { 5, 10, 15, 20, 30, 45, 60 };
-	const UINT SIZESNOOZE = sizeof (SNOOZE) / sizeof (UINT);
+	const UINT SNOOZE[] = { 5, 10, 15, 20, 30, 45, 60, 120, 180, 240, 300, 360 };
+	const UINT SIZESNOOZE = sizeof(SNOOZE) / sizeof(UINT);
 
-	ASSERT (m_nSnoozeIndex < SIZESNOOZE);
+	ASSERT(m_nSnoozeIndex < SIZESNOOZE);
 
 	if (m_nSnoozeIndex >= SIZESNOOZE)
+	{
 		return 60;
+	}
 	else
+	{
 		return SNOOZE[m_nSnoozeIndex];
+	}
 }
 
-void CTDLShowReminderDlg::OnGototask() 
+void CTDLShowReminderDlg::OnGototask()
 {
-	EndDialog(IDGOTOTASK);	
+	EndDialog(IDGOTOTASK);
 }

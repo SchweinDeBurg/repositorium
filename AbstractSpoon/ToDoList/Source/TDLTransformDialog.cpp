@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TDLTransformDialog.cpp : implementation file
@@ -37,7 +51,6 @@
 
 #include "../../../CodeProject/Source/EnString.h"
 #include "../../Common/Preferences.h"
-#include "../../../CodeProject/Source/FileMisc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -48,11 +61,12 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTDLTransformDialog dialog
 
-
-CTDLTransformDialog::CTDLTransformDialog(LPCTSTR szTitle, BOOL bShowSubtaskCheckbox, CWnd* pParent /*=NULL*/)
-	: CDialog(IDD_TRANSFORM_DIALOG, pParent), m_taskSel(_T("Transform"), bShowSubtaskCheckbox),
-		m_sTitle(szTitle), m_eStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER))
-
+CTDLTransformDialog::CTDLTransformDialog(LPCTSTR szTitle, BOOL bShowSubtaskCheckbox, CWnd* pParent /*=NULL*/):
+CDialog(IDD_TRANSFORM_DIALOG, pParent),
+m_taskSel(_T("Transform"),
+bShowSubtaskCheckbox),
+m_sTitle(szTitle),
+m_eStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER))
 {
 	//{{AFX_DATA_INIT(CTDLTransformDialog)
 	//}}AFX_DATA_INIT
@@ -62,7 +76,6 @@ CTDLTransformDialog::CTDLTransformDialog(LPCTSTR szTitle, BOOL bShowSubtaskCheck
 	m_sStylesheet = prefs.GetProfileString(_T("Transform"), _T("Stylesheet"));
 	m_bDate = prefs.GetProfileInt(_T("Transform"), _T("WantDate"), TRUE);
 }
-
 
 void CTDLTransformDialog::DoDataExchange(CDataExchange* pDX)
 {
@@ -75,18 +88,16 @@ void CTDLTransformDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_TRANSFORMDATE, m_bDate);
 }
 
-
 BEGIN_MESSAGE_MAP(CTDLTransformDialog, CDialog)
 	//{{AFX_MSG_MAP(CTDLTransformDialog)
 	ON_EN_CHANGE(IDC_STYLESHEET, OnChangeStylesheet)
 	//}}AFX_MSG_MAP
-//	ON_BN_CLICKED(IDC_USESTYLESHEET, OnUsestylesheet)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CTDLTransformDialog message handlers
 
-void CTDLTransformDialog::OnOK() 
+void CTDLTransformDialog::OnOK()
 {
 	CDialog::OnOK();
 
@@ -96,25 +107,27 @@ void CTDLTransformDialog::OnOK()
 	prefs.WriteProfileInt(_T("Transform"), _T("WantDate"), m_bDate);
 }
 
-
-BOOL CTDLTransformDialog::OnInitDialog() 
+BOOL CTDLTransformDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
-    VERIFY(m_taskSel.Create(IDC_FRAME, this));
-	GetDlgItem(IDOK)->EnableWindow(GetFileAttributes(m_sStylesheet) != 0xffffffff);
-	
+
+	VERIFY(m_taskSel.Create(IDC_FRAME, this));
+
+	BOOL bEnable = FileMisc::FileExists(FileMisc::GetFullPath(m_sStylesheet, TRUE));
+	GetDlgItem(IDOK)->EnableWindow(bEnable);
+
 	// init the stylesheet folder to point to the resource folder
 	CString sXslFolder = FileMisc::GetModuleFolder() + _T("Resources");
 	m_eStylesheet.SetCurrentFolder(sXslFolder);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CTDLTransformDialog::OnChangeStylesheet() 
+void CTDLTransformDialog::OnChangeStylesheet()
 {
 	UpdateData();
 
-	GetDlgItem(IDOK)->EnableWindow(GetFileAttributes(m_sStylesheet) != 0xffffffff);
+	BOOL bEnable = FileMisc::FileExists(FileMisc::GetFullPath(m_sStylesheet, TRUE));
+	GetDlgItem(IDOK)->EnableWindow(bEnable);
 }

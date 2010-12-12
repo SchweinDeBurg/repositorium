@@ -667,7 +667,6 @@ void CToDoCtrlFind::FindTasks(HTREEITEM hti, const SEARCHPARAMS& params, CResult
 	}
 }
 
-
 DWORD CToDoCtrlFind::FindFirstTask(const SEARCHPARAMS& params, SEARCHRESULT& result) const
 {
 	if (!m_data.GetTaskCount())

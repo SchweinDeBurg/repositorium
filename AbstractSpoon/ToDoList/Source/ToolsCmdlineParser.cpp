@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // ToolsCmdlineParser.cpp: implementation of the CToolsCmdlineParser class.
@@ -40,7 +53,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -132,7 +145,9 @@ BOOL CToolsCmdlineParser::ReplaceArgument(CLA_TYPE nType, LPCTSTR szValue)
 	while (nArg--)
 	{
 		if (m_aArgs[nArg].nType == nType)
+		{
 			bFound |= ReplaceArgument(nArg, szValue);
+		}
 	}
 
 	// not found
@@ -164,14 +179,15 @@ BOOL CToolsCmdlineParser::ReplaceArgument(LPCTSTR szName, LPCTSTR szValue)
 		case CLAT_USERTEXT:
 		case CLAT_USERDATE:
 			if (sName.CompareNoCase(m_aArgs[nArg].sName) == 0)
+			{
 				return ReplaceArgument(nArg, szValue);
+			}
 			break;
 		}
 	}
 
 	// not found
 	return FALSE;
-
 }
 
 BOOL CToolsCmdlineParser::IsUserInputRequired() const
@@ -205,8 +221,8 @@ BOOL CToolsCmdlineParser::HasTasklistArgument() const
 		switch (m_aArgs[nArg].nType)
 		{
 		case CLAT_PATHNAME:
-		case CLAT_FILETITLE:   
-		case CLAT_FOLDER:        
+		case CLAT_FILETITLE:
+		case CLAT_FOLDER:
 		case CLAT_FILENAME:
 			return TRUE;
 		}
@@ -220,11 +236,11 @@ BOOL CToolsCmdlineParser::IsUserInputType(LPCTSTR szVarType)
 {
 	switch (GetType(szVarType))
 	{
-		case CLAT_USERFILE:
-		case CLAT_USERFOLDER:
-		case CLAT_USERTEXT:
-		case CLAT_USERDATE:
-			return TRUE;
+	case CLAT_USERFILE:
+	case CLAT_USERFOLDER:
+	case CLAT_USERTEXT:
+	case CLAT_USERDATE:
+		return TRUE;
 	}
 
 	return FALSE;
@@ -233,7 +249,9 @@ BOOL CToolsCmdlineParser::IsUserInputType(LPCTSTR szVarType)
 BOOL CToolsCmdlineParser::ReplaceArgument(int nArg, LPCTSTR szValue)
 {
 	if (nArg < 0 || nArg >= m_aArgs.GetSize())
+	{
 		return FALSE;
+	}
 
 	CMDLINEARG& cla = m_aArgs[nArg];
 
@@ -270,7 +288,9 @@ BOOL CToolsCmdlineParser::HasArgument(CLA_TYPE nType) const
 	while (nArg--)
 	{
 		if (m_aArgs[nArg].nType == nType)
+		{
 			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -288,13 +308,17 @@ void CToolsCmdlineParser::ParseCmdLine()
 		int nOpenFind = sCmdLine.Find(_T('('), n$Find);
 
 		if (nOpenFind == -1)
+		{
 			break;
+		}
 
 		// find closing bracket
 		int nCloseFind = sCmdLine.Find(_T(')'), nOpenFind);
 
 		if (nCloseFind == -1)
+		{
 			break;
+		}
 
 		// parse variable in the form of (vartype, varname, varlabel, vardefvalue)
 		CString sVarArgs = sCmdLine.Mid(nOpenFind + 1, nCloseFind - nOpenFind - 1);
@@ -328,11 +352,15 @@ void CToolsCmdlineParser::ParseCmdLine()
 						int nQuoteEndFind = sVarArgs.Find(_T('\"'), nQuoteStartFind + 1);
 
 						if (nQuoteEndFind != -1) // test for nComma3Find again cos it was previously a false find
+						{
 							nComma3Find = sVarArgs.Find(_T(','), nQuoteEndFind + 1);
+						}
 						else
-							nComma3Find = -1; // safest thing to do because no end quotes found
+						{
+							nComma3Find = -1;   // safest thing to do because no end quotes found
+						}
 					}
-						
+
 					if (nComma3Find != -1)
 					{
 						sLabel = sVarArgs.Mid(nComma2Find + 1, nComma3Find - nComma2Find - 1);
@@ -341,18 +369,26 @@ void CToolsCmdlineParser::ParseCmdLine()
 						sDefValue.Replace(_T("\""), _T("")); // remove double quotes
 					}
 					else
+					{
 						sLabel = sVarArgs.Mid(nComma2Find + 1);
+					}
 				}
 				else
+				{
 					sLabel = sVarArgs.Mid(nComma2Find + 1);
+				}
 
 				sLabel.Replace(_T("\""), _T("")); // remove double quotes
 			}
 			else
+			{
 				sName = sVarArgs.Mid(nComma1Find);
+			}
 		}
 		else
+		{
 			sType = sVarArgs;
+		}
 
 		// process
 		sType.TrimLeft();
@@ -372,13 +408,13 @@ void CToolsCmdlineParser::ParseCmdLine()
 
 		switch (cla.nType)
 		{
-		// user input types must have a valid name that is not a 'keyword'
+			// user input types must have a valid name that is not a 'keyword'
 		case CLAT_USERFILE:
 		case CLAT_USERFOLDER:
 		case CLAT_USERTEXT:
 		case CLAT_USERDATE:
 			ASSERT(!sName.IsEmpty() && GetType(sName) == CLAT_NONE);
-			
+
 			if (!sName.IsEmpty() && GetType(sName) == CLAT_NONE)
 			{
 				cla.sName = sName;
@@ -389,11 +425,11 @@ void CToolsCmdlineParser::ParseCmdLine()
 			}
 			break;
 
-		case CLAT_TODOLIST:      
-		case CLAT_PATHNAME:      
-		case CLAT_FILETITLE:    
-		case CLAT_FOLDER:        
-		case CLAT_FILENAME:      
+		case CLAT_TODOLIST:
+		case CLAT_PATHNAME:
+		case CLAT_FILETITLE:
+		case CLAT_FOLDER:
+		case CLAT_FILENAME:
 		case CLAT_TODAYSDATE:
 		case CLAT_SELTASKID:
 		case CLAT_SELTASKTITLE:
@@ -401,12 +437,12 @@ void CToolsCmdlineParser::ParseCmdLine()
 		case CLAT_SELTASKCOMMENTS:
 		case CLAT_SELTASKFILELINK:
 		case CLAT_SELTASKALLOCBY:
-		case CLAT_SELTASKALLOCTO:      
+		case CLAT_SELTASKALLOCTO:
 			m_aArgs.Add(cla);
 			break;
 
 		default: // it might a reference to a user type (or it may be a mistake)
-			ASSERT (cla.nType == CLAT_NONE); // what else?
+			ASSERT(cla.nType == CLAT_NONE);  // what else?
 			cla.sName = sType;
 			m_aUserArgs.Add(cla);
 			break;

@@ -135,7 +135,7 @@ protected:
 	CTDLContentMgr m_mgrContent;
 	CEnBrowserCtrl m_IE;
 	CTDLFilterBar m_filterBar;
-	CStatusBarACT	m_statusBar;
+	CStatusBarACT m_statusBar;
 	HWND m_hwndLastFocus;
 	CMenuIconMgr m_mgrMenuIcons;
 	CUIExtensionMgr m_mgrUIExtensions;
@@ -545,7 +545,6 @@ protected:
 	void DoExit();
 	void RefreshPauseTimeTracking();
 	void SetTimer(UINT nTimerID, BOOL bOn);
-	// 	void EnsureVisible();
 	void RefreshTabOrder();
 	void UpdateGlobalHotkey();
 	LPCTSTR GetFileFilter();

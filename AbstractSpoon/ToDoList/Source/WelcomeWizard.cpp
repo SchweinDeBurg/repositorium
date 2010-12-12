@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // WelcomeWizard.cpp : implementation file
@@ -69,13 +82,12 @@ void CTDLWelcomeWizard::InitSheet()
 	AddPage(&m_page3);
 	SetWizardMode();
 
-	m_psh.dwFlags &= ~(PSH_HASHELP);		
+	m_psh.dwFlags &= ~(PSH_HASHELP);
 }
 
 CTDLWelcomeWizard::~CTDLWelcomeWizard()
 {
 }
-
 
 BEGIN_MESSAGE_MAP(CTDLWelcomeWizard, CPropertySheet)
 	//{{AFX_MSG_MAP(CWelcomeWizard)
@@ -86,7 +98,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CWelcomeWizard message handlers
 
-BOOL CTDLWelcomeWizard::OnInitDialog() 
+BOOL CTDLWelcomeWizard::OnInitDialog()
 {
 	CPropertySheet::OnInitDialog();
 
@@ -96,11 +108,11 @@ BOOL CTDLWelcomeWizard::OnInitDialog()
 	SetIcon(hIcon, FALSE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CTDLWelcomeWizard::OnWizFinish()
-{	
+{
 	m_page1.UpdateData();
 	m_page2.UpdateData();
 	m_page3.UpdateData();
@@ -119,7 +131,7 @@ CTDLWelcomePage1::CTDLWelcomePage1() : CPropertyPage(CTDLWelcomePage1::IDD)
 	m_bShareTasklists = 0;
 	m_bUseIniFile = 1;
 	//}}AFX_DATA_INIT
-	m_psp.dwFlags &= ~(PSP_HASHELP);		
+	m_psp.dwFlags &= ~(PSP_HASHELP);
 }
 
 CTDLWelcomePage1::~CTDLWelcomePage1()
@@ -135,7 +147,6 @@ void CTDLWelcomePage1::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 }
 
-
 BEGIN_MESSAGE_MAP(CTDLWelcomePage1, CPropertyPage)
 	//{{AFX_MSG_MAP(CWelcomePage1)
 	//}}AFX_MSG_MAP
@@ -144,13 +155,13 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CWelcomePage1 message handlers
 
-BOOL CTDLWelcomePage1::OnInitDialog() 
+BOOL CTDLWelcomePage1::OnInitDialog()
 {
 	CDialogHelper::SetFont(this, m_hFont);
 	CPropertyPage::OnInitDialog();
-		
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -162,7 +173,7 @@ CTDLWelcomePage2::CTDLWelcomePage2() : CPropertyPage(CTDLWelcomePage2::IDD)
 {
 	//{{AFX_DATA_INIT(CWelcomePage2)
 	//}}AFX_DATA_INIT
-	m_psp.dwFlags &= ~(PSP_HASHELP);		
+	m_psp.dwFlags &= ~(PSP_HASHELP);
 }
 
 CTDLWelcomePage2::~CTDLWelcomePage2()
@@ -177,7 +188,6 @@ void CTDLWelcomePage2::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 }
 
-
 BEGIN_MESSAGE_MAP(CTDLWelcomePage2, CPropertyPage)
 	//{{AFX_MSG_MAP(CWelcomePage2)
 	//}}AFX_MSG_MAP
@@ -186,7 +196,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CWelcomePage2 message handlers
 
-BOOL CTDLWelcomePage2::OnInitDialog() 
+BOOL CTDLWelcomePage2::OnInitDialog()
 {
 	CDialogHelper::SetFont(this, m_hFont);
 	CPropertyPage::OnInitDialog();
@@ -204,16 +214,15 @@ BOOL CTDLWelcomePage2::OnInitDialog()
 	m_lbColumns.SetColumnVisible(TDCC_DUEDATE);
 	m_lbColumns.SetColumnVisible(TDCC_FILEREF);
 	m_lbColumns.SetColumnVisible(TDCC_DONE);
-//	m_lbColumns.SetColumnVisible();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-BOOL CTDLWelcomePage2::OnSetActive() 
+BOOL CTDLWelcomePage2::OnSetActive()
 {
 	((CPropertySheet*)GetParent())->SetWizardButtons(PSWIZB_BACK | PSWIZB_NEXT);
-	
+
 	return CPropertyPage::OnSetActive();
 }
 
@@ -257,7 +266,6 @@ void CTDLWelcomePage3::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 }
 
-
 BEGIN_MESSAGE_MAP(CTDLWelcomePage3, CPropertyPage)
 	//{{AFX_MSG_MAP(CWelcomePage3)
 	ON_BN_CLICKED(IDC_NOSAMPLE, OnNosample)
@@ -268,34 +276,33 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CWelcomePage3 message handlers
 
-BOOL CTDLWelcomePage3::OnInitDialog() 
+BOOL CTDLWelcomePage3::OnInitDialog()
 {
 	CDialogHelper::SetFont(this, m_hFont);
 	CPropertyPage::OnInitDialog();
-	
+
 	m_eSampleTasklist.SetButtonWidthDLU(1, 14);
 	m_eSampleTasklist.EnableWindow(m_bViewSample);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CTDLWelcomePage3::OnNosample() 
+void CTDLWelcomePage3::OnNosample()
 {
 	UpdateData();
 	m_eSampleTasklist.EnableWindow(m_bViewSample);
 }
 
-void CTDLWelcomePage3::OnSample() 
+void CTDLWelcomePage3::OnSample()
 {
 	UpdateData();
 	m_eSampleTasklist.EnableWindow(m_bViewSample);
 }
 
-
-BOOL CTDLWelcomePage3::OnSetActive() 
+BOOL CTDLWelcomePage3::OnSetActive()
 {
 	((CPropertySheet*)GetParent())->SetWizardButtons(PSWIZB_BACK | PSWIZB_FINISH);
-	
+
 	return CPropertyPage::OnSetActive();
 }

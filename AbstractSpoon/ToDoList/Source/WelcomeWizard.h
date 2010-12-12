@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_WELCOMEWIZARD_H__089919DB_8CBF_4F53_BFDF_6BB1C1C63929__INCLUDED_)
@@ -53,24 +66,32 @@ public:
 	CTDLWelcomePage1();
 	~CTDLWelcomePage1();
 
-	void AttachFont(HFONT hFont) { m_hFont = hFont; }
-	BOOL GetUseIniFile() const { return m_bUseIniFile; }
-	BOOL GetShareTasklists() const { return m_bShareTasklists; }
+	void AttachFont(HFONT hFont)
+	{
+		m_hFont = hFont;
+	}
+	BOOL GetUseIniFile() const
+	{
+		return m_bUseIniFile;
+	}
+	BOOL GetShareTasklists() const
+	{
+		return m_bShareTasklists;
+	}
 
 protected:
 // Dialog Data
 	//{{AFX_DATA(CWelcomePage1)
 	enum { IDD = IDD_WELCOME_PAGE1 };
-	int		m_bShareTasklists;
-	int		m_bUseIniFile;
+	int     m_bShareTasklists;
+	int     m_bUseIniFile;
 	//}}AFX_DATA
 	HFONT m_hFont;
-
 
 // Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CWelcomePage1)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
@@ -81,7 +102,6 @@ protected:
 	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -96,8 +116,14 @@ public:
 	CTDLWelcomePage2();
 	~CTDLWelcomePage2();
 
-	void AttachFont(HFONT hFont) { m_hFont = hFont; }
-	int GetVisibleColumns(CTDCColumnArray& aColumns) const { return m_lbColumns.GetVisibleColumns(aColumns); }
+	void AttachFont(HFONT hFont)
+	{
+		m_hFont = hFont;
+	}
+	int GetVisibleColumns(CTDCColumnArray& aColumns) const
+	{
+		return m_lbColumns.GetVisibleColumns(aColumns);
+	}
 
 protected:
 // Dialog Data
@@ -107,13 +133,12 @@ protected:
 	//}}AFX_DATA
 	HFONT m_hFont;
 
-
 // Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CWelcomePage2)
-	public:
+public:
 	virtual BOOL OnSetActive();
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
@@ -124,7 +149,6 @@ protected:
 	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -139,9 +163,18 @@ public:
 	CTDLWelcomePage3();
 	~CTDLWelcomePage3();
 
-	void AttachFont(HFONT hFont) { m_hFont = hFont; }
-	BOOL GetHideAttributes() const { return m_bHideAttrib; }
-	CString GetSampleFilePath() const { return m_bViewSample ? m_sSampleTaskList : _T(""); }
+	void AttachFont(HFONT hFont)
+	{
+		m_hFont = hFont;
+	}
+	BOOL GetHideAttributes() const
+	{
+		return m_bHideAttrib;
+	}
+	CString GetSampleFilePath() const
+	{
+		return m_bViewSample ? m_sSampleTaskList : _T("");
+	}
 
 protected:
 // Dialog Data
@@ -157,9 +190,9 @@ protected:
 // Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CWelcomePage3)
-	public:
+public:
 	virtual BOOL OnSetActive();
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
@@ -187,11 +220,26 @@ public:
 
 // Operations
 public:
-	BOOL GetUseIniFile() const { return m_page1.GetUseIniFile(); }
-	BOOL GetShareTasklists() const { return m_page1.GetShareTasklists(); }
-	int GetVisibleColumns(CTDCColumnArray& aColumns) const { return m_page2.GetVisibleColumns(aColumns); }
-	BOOL GetHideAttributes() const { return m_page3.GetHideAttributes(); }
-	CString GetSampleFilePath() const { return m_page3.GetSampleFilePath(); }
+	BOOL GetUseIniFile() const
+	{
+		return m_page1.GetUseIniFile();
+	}
+	BOOL GetShareTasklists() const
+	{
+		return m_page1.GetShareTasklists();
+	}
+	int GetVisibleColumns(CTDCColumnArray& aColumns) const
+	{
+		return m_page2.GetVisibleColumns(aColumns);
+	}
+	BOOL GetHideAttributes() const
+	{
+		return m_page3.GetHideAttributes();
+	}
+	CString GetSampleFilePath() const
+	{
+		return m_page3.GetSampleFilePath();
+	}
 
 // Attributes
 protected:
@@ -203,7 +251,7 @@ protected:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CWelcomeWizard)
-	protected:
+protected:
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -220,7 +268,6 @@ protected:
 
 protected:
 	void InitSheet();
-
 };
 
 /////////////////////////////////////////////////////////////////////////////

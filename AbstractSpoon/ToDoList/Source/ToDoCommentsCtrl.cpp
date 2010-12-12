@@ -451,7 +451,6 @@ void CToDoCommentsCtrl::OnUpdateCommentsMenuCmd(CCmdUI* pCmdUI)
 	}
 }
 
-
 BOOL CToDoCommentsCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	// bit of a hack but this is what we get just before the context

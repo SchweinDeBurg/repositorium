@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToDoItem.cpp: implementation of the CToDoItem class.
@@ -40,7 +54,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -52,47 +66,71 @@ IMPLEMENT_FIXED_ALLOC(TODOITEM, 1024);
 #pragma warning(default: 4995)
 
 TODOITEM::TODOITEM(LPCTSTR szTitle, LPCTSTR szComments) :
-	sTitle(szTitle), 
-	sComments(szComments),
-	color(0), 
-	nPriority(5),
-	nRisk(0),
-	nPercentDone(0),
-	dTimeEstimate(0),
-	dTimeSpent(0),
-	nTimeEstUnits(TDITU_HOURS),
-	nTimeSpentUnits(TDITU_HOURS),
-	dCost(0),
-	bFlagged(FALSE),
-	dateCreated(COleDateTime::GetCurrentTime()),
-	nIconIndex(-1),
-	dwCalculated(0)
-{ 
+sTitle(szTitle),
+sComments(szComments),
+color(0),
+nPriority(5),
+nRisk(0),
+nPercentDone(0),
+dTimeEstimate(0),
+dTimeSpent(0),
+nTimeEstUnits(TDITU_HOURS),
+nTimeSpentUnits(TDITU_HOURS),
+dCost(0),
+bFlagged(FALSE),
+dateCreated(COleDateTime::GetCurrentTime()),
+nIconIndex(-1),
+dwCalculated(0),
+nCalcPriority(0),
+nCalcPriorityIncDue(0),
+nCalcPercent(0),
+nCalcRisk(0),
+dCalcTimeEstimate(0),
+dCalcTimeSpent(0),
+dCalcCost(0),
+bGoodAsDone(0),
+bDue(0),
+nSubtasksCount(0),
+nSubtasksDone(0)
+{
 }
 
 TODOITEM::TODOITEM() :
-	color(0), 
-	nPriority(5),
-	nRisk(0),
-	nPercentDone(0),
-	dTimeEstimate(0),
-	dTimeSpent(0),
-	nTimeEstUnits(TDITU_HOURS),
-	nTimeSpentUnits(TDITU_HOURS),
-	dCost(0),
-	bFlagged(FALSE),
-	dateCreated(COleDateTime::GetCurrentTime()),
-	nIconIndex(-1),
-	dwCalculated(0)
-{ 
+color(0),
+nPriority(5),
+nRisk(0),
+nPercentDone(0),
+dTimeEstimate(0),
+dTimeSpent(0),
+nTimeEstUnits(TDITU_HOURS),
+nTimeSpentUnits(TDITU_HOURS),
+dCost(0),
+bFlagged(FALSE),
+dateCreated(COleDateTime::GetCurrentTime()),
+nIconIndex(-1),
+dwCalculated(0),
+nCalcPriority(0),
+nCalcPriorityIncDue(0),
+nCalcPercent(0),
+nCalcRisk(0),
+dCalcTimeEstimate(0),
+dCalcTimeSpent(0),
+dCalcCost(0),
+bGoodAsDone(0),
+bDue(0),
+nSubtasksCount(0),
+nSubtasksDone(0)
+{
 }
 
 TODOITEM::TODOITEM(const TODOITEM& tdi)
-{ 
+{
 	*this = tdi;
-	
-    if (dateCreated.m_dt == 0.0)
+
+	if (dateCreated.m_dt == 0.0)
+	{
 		dateCreated = COleDateTime::GetCurrentTime();
+	}
 }
 
 TODOITEM::TODOITEM(const TODOITEM* pTDI)
@@ -100,19 +138,21 @@ TODOITEM::TODOITEM(const TODOITEM* pTDI)
 	if (pTDI)
 	{
 		*this = *pTDI;
-		
+
 		if (dateCreated.m_dt == 0.0)
+		{
 			dateCreated = COleDateTime::GetCurrentTime();
+		}
 	}
 }
 
-const TODOITEM& TODOITEM::operator=(const TODOITEM& tdi) 
+const TODOITEM& TODOITEM::operator=(const TODOITEM& tdi)
 {
 	sTitle = tdi.sTitle;
 	sComments = tdi.sComments;
 	sCustomComments = tdi.sCustomComments;
 	sCommentsTypeID = tdi.sCommentsTypeID;
-	color = tdi.color; 
+	color = tdi.color;
 	sFileRefPath = tdi.sFileRefPath;
 	sAllocBy = tdi.sAllocBy;
 	sStatus = tdi.sStatus;
@@ -135,13 +175,24 @@ const TODOITEM& TODOITEM::operator=(const TODOITEM& tdi)
 	tLastMod = tdi.tLastMod;
 	sVersion = tdi.sVersion;
 	nIconIndex = tdi.nIconIndex,
-	
+
 	aCategories.Copy(tdi.aCategories);
 	aAllocTo.Copy(tdi.aAllocTo);
 	aDependencies.Copy(tdi.aDependencies);
-	
+
 	dwCalculated = 0; // reset calcs
-	
+	nCalcPriority = 0;
+	nCalcPriorityIncDue = 0;
+	nCalcPercent = 0;
+	nCalcRisk = 0;
+	dCalcTimeEstimate = 0;
+	dCalcTimeSpent = 0;
+	dCalcCost = 0;
+	bGoodAsDone = 0;
+	bDue = 0;
+	nSubtasksCount = 0;
+	nSubtasksDone = 0;
+
 	return *this;
 }
 
@@ -153,92 +204,98 @@ BOOL TODOITEM::AttribNeedsRecalc(DWORD dwAttrib) const
 void TODOITEM::SetAttribNeedsRecalc(DWORD dwAttrib, BOOL bSet) const
 {
 	if (bSet)
+	{
 		dwCalculated &= ~dwAttrib;
+	}
 	else
+	{
 		dwCalculated |= dwAttrib;
+	}
 }
 
-BOOL TODOITEM::HasCreation() const 
-{ 
-	return (dateCreated.m_dt > 0.0) ? TRUE : FALSE; 
+BOOL TODOITEM::HasCreation() const
+{
+	return (dateCreated.m_dt > 0.0) ? TRUE : FALSE;
 }
 
-BOOL TODOITEM::HasLastMod() const 
-{ 
-	return (tLastMod.m_dt > 0.0) ? TRUE : FALSE; 
+BOOL TODOITEM::HasLastMod() const
+{
+	return (tLastMod.m_dt > 0.0) ? TRUE : FALSE;
 }
 
-BOOL TODOITEM::HasStart() const 
-{ 
-	return (dateStart.m_dt > 0.0) ? TRUE : FALSE; 
+BOOL TODOITEM::HasStart() const
+{
+	return (dateStart.m_dt > 0.0) ? TRUE : FALSE;
 }
 
-BOOL TODOITEM::HasStartTime() const 
-{ 
-	return HasTime(dateStart); 
+BOOL TODOITEM::HasStartTime() const
+{
+	return HasTime(dateStart);
 }
 
-BOOL TODOITEM::HasDue() const 
-{ 
-	return (dateDue.m_dt > 0.0) ? TRUE : FALSE; 
+BOOL TODOITEM::HasDue() const
+{
+	return (dateDue.m_dt > 0.0) ? TRUE : FALSE;
 }
 
-BOOL TODOITEM::HasDueTime() const 
-{ 
-	return HasTime(dateDue); 
+BOOL TODOITEM::HasDueTime() const
+{
+	return HasTime(dateDue);
 }
 
-BOOL TODOITEM::HasTime(const COleDateTime& date) 
-{ 
-	return (CDateHelper::GetTimeOnly(date.m_dt) > 0.0) ? TRUE : FALSE; 
+BOOL TODOITEM::HasTime(const COleDateTime& date)
+{
+	return (CDateHelper::GetTimeOnly(date.m_dt) > 0.0) ? TRUE : FALSE;
 }
 
-BOOL TODOITEM::IsDone() const 
-{ 
-	return (dateDone.m_dt > 0) ? TRUE : FALSE; 
+BOOL TODOITEM::IsDone() const
+{
+	return (dateDone.m_dt > 0) ? TRUE : FALSE;
 }
 
-BOOL TODOITEM::HasDoneTime() const 
-{ 
-	return HasTime(dateDone); 
+BOOL TODOITEM::HasDoneTime() const
+{
+	return HasTime(dateDone);
 }
 
-void TODOITEM::ClearStart() 
-{ 
-	dateStart.m_dt = 0; 
+void TODOITEM::ClearStart()
+{
+	dateStart.m_dt = 0;
 }
 
-void TODOITEM::ClearDue() 
-{ 
-	dateDue.m_dt = 0; 
+void TODOITEM::ClearDue()
+{
+	dateDue.m_dt = 0;
 }
 
-void TODOITEM::ClearDone() 
-{ 
-	dateDone.m_dt = 0; 
+void TODOITEM::ClearDone()
+{
+	dateDone.m_dt = 0;
 }
 
 BOOL TODOITEM::IsDue() const
-{ 
+{
 	return IsDue(COleDateTime::GetCurrentTime());
 }
 
 BOOL TODOITEM::IsDue(const COleDateTime& dateDueBy) const
-{ 
-	if (IsDone() || !HasDue())
-		return FALSE;
-	
-	return (floor(dateDue.m_dt) <= floor(dateDueBy.m_dt)); 
-}
-
-void TODOITEM::SetModified() 
-{ 
-	tLastMod = COleDateTime::GetCurrentTime(); 
-}
-
-void TODOITEM::ResetCalcs() const 
 {
-	dwCalculated = 0; 
+	if (IsDone() || !HasDue())
+	{
+		return FALSE;
+	}
+
+	return (floor(dateDue.m_dt) <= floor(dateDueBy.m_dt));
+}
+
+void TODOITEM::SetModified()
+{
+	tLastMod = COleDateTime::GetCurrentTime();
+}
+
+void TODOITEM::ResetCalcs() const
+{
+	dwCalculated = 0;
 }
 
 CString TODOITEM::GetFirstCategory() const
@@ -259,18 +316,20 @@ CString TODOITEM::GetFirstDependency() const
 BOOL TODOITEM::GetNextOccurence(COleDateTime& dtNext) const
 {
 	if (trRecurrence.bRecalcFromDue && HasDue())
+	{
 		return trRecurrence.GetNextOccurence(dateDue, dtNext);
-	
+	}
+
 	// else use completed date but with the current due time
 	if (trRecurrence.GetNextOccurence(COleDateTime::GetCurrentTime(), dtNext))
 	{
 		// restore the due time to be whatever it was
 		double dDueTime = HasDue() ? CDateHelper::GetTimeOnly(dateDue) : 0.0;
 		dtNext = CDateHelper::GetDateOnly(dtNext) + dDueTime;
-		
+
 		return TRUE;
 	}
-	
+
 	// else
 	return FALSE;
 }
@@ -278,8 +337,10 @@ BOOL TODOITEM::GetNextOccurence(COleDateTime& dtNext) const
 BOOL TODOITEM::IsRecentlyEdited(const COleDateTimeSpan& dtSpan) const
 {
 	if (!HasLastMod())
+	{
 		return FALSE;
-	
+	}
+
 	// else
 	return (COleDateTime::GetCurrentTime() - tLastMod < dtSpan);
 }
@@ -292,10 +353,12 @@ COleDateTimeSpan TODOITEM::GetRemainingDueTime() const
 COleDateTimeSpan TODOITEM::GetRemainingDueTime(const COleDateTime& date)
 {
 	COleDateTimeSpan dtsRemaining = date - COleDateTime::GetCurrentTime();
-	
+
 	if (!HasTime(date))
-		dtsRemaining += 1; // midnight on the day
-	
+	{
+		dtsRemaining += 1;   // midnight on the day
+	}
+
 	return dtsRemaining;
 }
 
@@ -303,15 +366,15 @@ void TODOITEM::ParseTaskLink(const CString& sLink, DWORD& dwTaskID, CString& sFi
 {
 	sFile.Empty();
 	dwTaskID = 0;
-	
+
 	int nDiv = sLink.Find('?');
-	
+
 	if (nDiv >= 0)
 	{
 		sFile = sLink.Left(nDiv);
 		sFile.TrimLeft();
 		sFile.TrimRight();
-		
+
 		CString sTaskID = sLink.Mid(nDiv + 1);
 		dwTaskID = _ttoi(sTaskID);
 	}
@@ -333,18 +396,24 @@ void TODOITEM::ParseTaskLink(const CString& sLink, DWORD& dwTaskID, CString& sFi
 CString TODOITEM::MakeTaskLink(DWORD dwTaskID, const CString& sFile)
 {
 	CString sLink;
-	
+
 	if (sFile.IsEmpty() && dwTaskID > 0)
+	{
 		sLink.Format(_T("%d"), dwTaskID);
-	
+	}
+
 	else if (!sFile.IsEmpty())
 	{
 		if (dwTaskID > 0)
+		{
 			sLink.Format(_T("%s?%d"), sFile, dwTaskID);
+		}
 		else
+		{
 			sLink = sFile;
+		}
 	}
-	
+
 	return sLink;
 }
 
@@ -369,34 +438,36 @@ const TODOSTRUCTURE& TODOSTRUCTURE::operator=(const TODOSTRUCTURE& tds)
 {
 	// reset our own contents
 	CleanUp();
-	
+
 	// copy target
 	m_dwID = tds.m_dwID;
 
 	// clear parent
 	m_pTDSParent = NULL; // caller must add to parent explicitly
-	
+
 	// copy children
 	for (int nSubTask = 0; nSubTask < tds.GetSubTaskCount(); nSubTask++)
 	{
 		const TODOSTRUCTURE* pTDSOther = tds.GetSubTask(nSubTask);
 		ASSERT(pTDSOther);
-		
+
 		TODOSTRUCTURE* pTDSChild = new TODOSTRUCTURE(*pTDSOther); // this will copy the children's children
 		m_aSubTasks.Add(pTDSChild);
-		
+
 		// set parent
 		pTDSChild->m_pTDSParent = this;
 	}
-	
+
 	return *this;
 }
 
 TODOSTRUCTURE* TODOSTRUCTURE::GetSubTask(int nPos) const
 {
 	if (nPos >= 0 && nPos < GetSubTaskCount())
+	{
 		return m_aSubTasks[nPos];
-	
+	}
+
 	// else
 	ASSERT(0);
 	return NULL;
@@ -407,9 +478,11 @@ int TODOSTRUCTURE::GetSubTaskPos(TODOSTRUCTURE* pTDS) const
 	for (int nSubTask = 0; nSubTask < GetSubTaskCount(); nSubTask++)
 	{
 		if (GetSubTaskID(nSubTask) == pTDS->GetTaskID())
+		{
 			return nSubTask;
+		}
 	}
-	
+
 	// else
 	ASSERT(0);
 	return -1;
@@ -424,16 +497,20 @@ DWORD TODOSTRUCTURE::GetSubTaskID(int nPos) const
 int TODOSTRUCTURE::GetSubTaskPosition(DWORD dwID) const
 {
 	ASSERT(dwID);
-	
+
 	if (!dwID)
+	{
 		return -1;
-	
+	}
+
 	for (int nSubTask = 0; nSubTask < GetSubTaskCount(); nSubTask++)
 	{
 		if (GetSubTaskID(nSubTask) == dwID)
+		{
 			return nSubTask;
+		}
 	}
-	
+
 	// not found
 	return -1;
 }
@@ -441,8 +518,10 @@ int TODOSTRUCTURE::GetSubTaskPosition(DWORD dwID) const
 int TODOSTRUCTURE::GetPosition() const
 {
 	if (m_pTDSParent == NULL) // root
+	{
 		return -1;
-	
+	}
+
 	// get the position of 'this' task in its parent
 	return m_pTDSParent->GetSubTaskPosition(GetTaskID());
 }
@@ -450,8 +529,10 @@ int TODOSTRUCTURE::GetPosition() const
 DWORD TODOSTRUCTURE::GetParentTaskID() const
 {
 	if (m_pTDSParent == NULL) // root
+	{
 		return NULL;
-	
+	}
+
 	return m_pTDSParent->GetTaskID();
 }
 
@@ -463,8 +544,10 @@ TODOSTRUCTURE* TODOSTRUCTURE::GetParentTask() const
 DWORD TODOSTRUCTURE::GetPreviousSubTaskID(int nPos)
 {
 	if (nPos <= 0 || nPos >= GetSubTaskCount())
+	{
 		return 0;
-	
+	}
+
 	// else
 	return GetSubTaskID(nPos - 1);
 }
@@ -474,43 +557,53 @@ BOOL TODOSTRUCTURE::InsertSubTask(TODOSTRUCTURE* pTDS, int nPos)
 {
 	// sanity checks
 	ASSERT(pTDS && pTDS->GetTaskID());
-	
+
 	if (!pTDS)
+	{
 		return FALSE;
-	
+	}
+
 	ASSERT(nPos >= 0 && nPos <= GetSubTaskCount());
-	
+
 	if (nPos < 0 || nPos > GetSubTaskCount())
+	{
 		return FALSE;
-	
+	}
+
 	// check task with this ID does not already exist
 	if (GetSubTaskPosition(pTDS->GetTaskID()) != -1)
 	{
 		ASSERT(0);
 		return FALSE;
 	}
-	
+
 	if (nPos == GetSubTaskCount())
+	{
 		m_aSubTasks.Add(pTDS);
+	}
 	else
+	{
 		m_aSubTasks.InsertAt(nPos, pTDS);
-	
+	}
+
 	// setup ourselves as parent
 	pTDS->m_pTDSParent = this;
-	
+
 	return TRUE;
 }
 
 BOOL TODOSTRUCTURE::DeleteSubTask(int nPos)
 {
 	ASSERT(nPos >= 0 && nPos < GetSubTaskCount());
-	
+
 	if (nPos < 0 || nPos >= GetSubTaskCount())
+	{
 		return FALSE;
-	
+	}
+
 	delete GetSubTask(nPos);
 	m_aSubTasks.RemoveAt(nPos);
-	
+
 	return TRUE;
 }
 
@@ -521,38 +614,44 @@ void TODOSTRUCTURE::CleanUp()
 	{
 		TODOSTRUCTURE* pTDSChild = GetSubTask(nSubTask);
 		ASSERT(pTDSChild);
-		
+
 		delete pTDSChild;
 	}
-	
+
 	m_aSubTasks.RemoveAll();
 }
 
 int TODOSTRUCTURE::MoveSubTask(int nPos, TODOSTRUCTURE* pTDSDestParent, int nDestPos)
 {
 	// check destination is okay
-	ASSERT (pTDSDestParent && nDestPos >= 0 && nDestPos <= pTDSDestParent->GetSubTaskCount());
-	
+	ASSERT(pTDSDestParent && nDestPos >= 0 && nDestPos <= pTDSDestParent->GetSubTaskCount());
+
 	if (!pTDSDestParent || nDestPos < 0 || nDestPos > pTDSDestParent->GetSubTaskCount())
+	{
 		return -1;
-	
+	}
+
 	TODOSTRUCTURE* pTDS = GetSubTask(nPos);
 	ASSERT(pTDS);
-	
+
 	if (!pTDS)
+	{
 		return -1;
-	
+	}
+
 	m_aSubTasks.RemoveAt(nPos); // remove from 'this' TODOSTRUCTURE
-	
+
 	// special case: the the source and destination are the same and the source
 	// pos precedes the destination then we need to decrement the destination
 	// to allow for having just deleted the source
 	if (this == pTDSDestParent && nPos < nDestPos)
+	{
 		nDestPos--;
-	
+	}
+
 	// add to destination
 	pTDSDestParent->InsertSubTask(pTDS, nDestPos);
-	
+
 	return nDestPos;
 }
 
@@ -560,7 +659,7 @@ int TODOSTRUCTURE::MoveSubTask(int nPos, TODOSTRUCTURE* pTDSDestParent, int nDes
 
 CToDoCtrlStructure::CToDoCtrlStructure(const CToDoCtrlStructure& tds)
 {
-   *this = tds;
+	*this = tds;
 }
 
 CToDoCtrlStructure::~CToDoCtrlStructure()
@@ -570,21 +669,23 @@ CToDoCtrlStructure::~CToDoCtrlStructure()
 
 const CToDoCtrlStructure& CToDoCtrlStructure::operator=(const CToDoCtrlStructure& tds)
 {
-   TODOSTRUCTURE::operator=(tds);
+	TODOSTRUCTURE::operator=(tds);
 
-   BuildMap();
+	BuildMap();
 
-   return *this;
+	return *this;
 }
 
 DWORD CToDoCtrlStructure::GetPreviousTaskID(DWORD dwID) const
 {
 	TODOSTRUCTURE* pTDSParent = NULL;
 	int nPos = -1;
-	
+
 	if (!FindTask(dwID, pTDSParent, nPos))
+	{
 		return 0;
-	
+	}
+
 	// else
 	return pTDSParent->GetPreviousSubTaskID(nPos);
 }
@@ -592,10 +693,12 @@ DWORD CToDoCtrlStructure::GetPreviousTaskID(DWORD dwID) const
 DWORD CToDoCtrlStructure::GetParentTaskID(DWORD dwID) const
 {
 	TODOSTRUCTURE* pTDSParent = GetParentTask(dwID);
-	
+
 	if (!pTDSParent)
+	{
 		return 0;
-	
+	}
+
 	return pTDSParent->GetTaskID();
 }
 
@@ -603,23 +706,25 @@ TODOSTRUCTURE* CToDoCtrlStructure::GetParentTask(DWORD dwID) const
 {
 	TODOSTRUCTURE* pTDSParent = NULL;
 	int nPos = -1;
-	
+
 	if (!FindTask(dwID, pTDSParent, nPos))
+	{
 		return NULL;
-	
+	}
+
 	return pTDSParent;
 }
 
 BOOL CToDoCtrlStructure::AddTask(DWORD dwID, TODOSTRUCTURE* pTDSParent)
 {
 	TODOSTRUCTURE* pTDSChild = new TODOSTRUCTURE(dwID);
-	
+
 	if (pTDSParent->InsertSubTask(pTDSChild, pTDSParent->GetSubTaskCount()))
 	{
 		AddToMap(pTDSChild);
 		return TRUE;
 	}
-	
+
 	// else
 	delete pTDSChild;
 	return FALSE;
@@ -628,65 +733,72 @@ BOOL CToDoCtrlStructure::AddTask(DWORD dwID, TODOSTRUCTURE* pTDSParent)
 BOOL CToDoCtrlStructure::DeleteTask(DWORD dwID)
 {
 	ASSERT(dwID);
-	
+
 	if (!dwID)
+	{
 		return FALSE;
-	
+	}
+
 	TODOSTRUCTURE* pTDS = FindTask(dwID);
 	ASSERT(pTDS);
-	
+
 	if (!pTDS)
+	{
 		return FALSE;
-	
+	}
+
 	TODOSTRUCTURE* pTDSParent = pTDS->GetParentTask();
 	ASSERT(pTDSParent);
-	
+
 	if (!pTDSParent)
+	{
 		return FALSE;
-	
+	}
+
 	int nPos = pTDSParent->GetSubTaskPos(pTDS);
 	ASSERT(nPos != -1);
-	
+
 	if (nPos == -1)
+	{
 		return FALSE;
-	
+	}
+
 	m_mapStructure.RemoveKey(dwID);
-	
+
 	return pTDSParent->DeleteSubTask(nPos);
 }
 
 TODOSTRUCTURE* CToDoCtrlStructure::FindTask(DWORD dwID) const
 {
 	TODOSTRUCTURE* pTDS = NULL;
-	
-	if (m_mapStructure.Lookup(dwID, pTDS))
-		return pTDS;
-	
-	// not found
-	ASSERT(0);
-	return NULL;
+
+	return (dwID && m_mapStructure.Lookup(dwID, pTDS)) ? pTDS : NULL;
 }
 
 BOOL CToDoCtrlStructure::FindTask(DWORD dwID, TODOSTRUCTURE*& pTDSParent, int& nPos) const
 {
 	pTDSParent = NULL;
 	nPos = -1;
-	
+
 	TODOSTRUCTURE* pTDS = FindTask(dwID);
-	
+
 	if (!pTDS)
+	{
 		return FALSE;
-	
+	}
+
 	pTDSParent = pTDS->GetParentTask();
 	ASSERT(pTDSParent);
-	
+
 	if (!pTDSParent)
+	{
 		return FALSE;
-	
+	}
+
 	nPos = pTDSParent->GetSubTaskPos(pTDS);
 	ASSERT(nPos != -1);
-	
-	return (nPos !=-1);
+
+	return (nPos != -1);
 }
 
 BOOL CToDoCtrlStructure::InsertTask(DWORD dwID, TODOSTRUCTURE* pTDSParent, int nPos)
@@ -697,13 +809,13 @@ BOOL CToDoCtrlStructure::InsertTask(DWORD dwID, TODOSTRUCTURE* pTDSParent, int n
 BOOL CToDoCtrlStructure::InsertTask(const TODOSTRUCTURE& tds, TODOSTRUCTURE* pTDSParent, int nPos)
 {
 	TODOSTRUCTURE* pTDSChild = new TODOSTRUCTURE(tds);
-	
+
 	if (!InsertTask(pTDSChild, pTDSParent, nPos))
 	{
 		delete pTDSChild;
 		return FALSE;
 	}
-	
+
 	return TRUE;
 }
 
@@ -714,7 +826,7 @@ BOOL CToDoCtrlStructure::InsertTask(TODOSTRUCTURE* pTDS, TODOSTRUCTURE* pTDSPare
 		AddToMap(pTDS);
 		return TRUE;
 	}
-	
+
 	// else
 	return FALSE;
 }
@@ -726,25 +838,27 @@ void CToDoCtrlStructure::BuildMap()
 		TODOSTRUCTURE* pTDSChild = GetSubTask(nSubTask);
 		ASSERT(pTDSChild);
 
-      AddToMap(pTDSChild);
+		AddToMap(pTDSChild);
 	}
 }
 
 void CToDoCtrlStructure::AddToMap(const TODOSTRUCTURE* pTDS)
 {
 	ASSERT(!pTDS->IsRoot());
-	
+
 	if (pTDS->IsRoot())
+	{
 		return;
-	
+	}
+
 	m_mapStructure[pTDS->GetTaskID()] = const_cast<TODOSTRUCTURE*>(pTDS);
-	
+
 	// children
 	for (int nSubTask = 0; nSubTask < pTDS->GetSubTaskCount(); nSubTask++)
 	{
 		TODOSTRUCTURE* pTDSChild = pTDS->GetSubTask(nSubTask);
 		ASSERT(pTDSChild);
-		
+
 		AddToMap(pTDSChild);
 	}
 }
@@ -752,18 +866,20 @@ void CToDoCtrlStructure::AddToMap(const TODOSTRUCTURE* pTDS)
 void CToDoCtrlStructure::RemoveFromMap(const TODOSTRUCTURE* pTDS)
 {
 	ASSERT(!pTDS->IsRoot());
-	
+
 	if (pTDS->IsRoot())
+	{
 		return;
-	
+	}
+
 	m_mapStructure.RemoveKey(pTDS->GetTaskID());
-	
+
 	// children
 	for (int nSubTask = 0; nSubTask < pTDS->GetSubTaskCount(); nSubTask++)
 	{
 		TODOSTRUCTURE* pTDSChild = pTDS->GetSubTask(nSubTask);
 		ASSERT(pTDSChild);
-		
+
 		RemoveFromMap(pTDSChild);
 	}
 }

@@ -108,7 +108,6 @@ protected:
 	BOOL ParseCommandLine(CEnCommandLineInfo* pInfo);
 };
 
-
 /////////////////////////////////////////////////////////////////////////////
 
 //{{AFX_INSERT_LOCATION}}

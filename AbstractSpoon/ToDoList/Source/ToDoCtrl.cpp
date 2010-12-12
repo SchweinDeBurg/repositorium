@@ -94,7 +94,6 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-
 /////////////////////////////////////////////////////////////////////////////
 // CToDoCtrl dialog
 
@@ -135,8 +134,8 @@ enum
 
 enum // flags for UpdateTask
 {
-	UTF_TIMEUNITSONLY	= 0x01,
-	UTF_RECALCTIME		= 0x02,
+	UTF_TIMEUNITSONLY   = 0x01,
+	UTF_RECALCTIME      = 0x02,
 };
 
 enum { TIMER_TRACK = 1, TIMER_MIDNIGHT };
@@ -149,7 +148,6 @@ const double TICKS2HOURS = 10.0 / (1000 * 3600);
 #else
 const double TICKS2HOURS = 1.0 / (1000 * 3600);
 #endif
-
 
 // private class to help optimize xml parsing
 class CXmlParseController : public IXmlParse
@@ -182,7 +180,6 @@ short CToDoCtrl::s_nExtendedSelection = HOTKEYF_CONTROL | HOTKEYF_SHIFT;
 CTDCAttributeArray CToDoCtrl::s_aParentAttribs;
 BOOL CToDoCtrl::s_bUpdateInheritAttrib = FALSE;
 
-
 CToDoCtrl::CToDoCtrl(CContentMgr& mgr, const CONTENTFORMAT& cfDefault) :
 m_bModified(FALSE),
 m_dwNextUniqueID(1),
@@ -202,7 +199,7 @@ m_data(m_aStyles),
 m_selection(m_tree),
 m_wKeyPress(FALSE),
 m_dwTimeTrackTaskID(0),
-m_treeDragDrop(Selection(), m_tree, DD_USESTEXTCALLBACK/* | DD_USESIMAGECALLBACK*/),
+m_treeDragDrop(Selection(), m_tree, DD_USESTEXTCALLBACK),
 m_dwLastAddedID(0),
 m_cbAllocBy(ACBS_ALLOWDELETE),
 m_cbAllocTo(ACBS_ALLOWDELETE),
@@ -2118,8 +2115,6 @@ void CToDoCtrl::UpdateTask(TDC_ATTRIBUTE nAttrib, DWORD dwFlags/* = 0*/)
 
 	case TDCA_COMMENTS:
 		m_bCommentsChange = TRUE;
-		//		UpdateComments(TRUE); // no longer handled by UpdateData
-		//		SetSelectedTaskComments(m_sTextComments, m_sCustomComments, TRUE); // TRUE == internal call
 		break;
 
 	default:
@@ -2139,8 +2134,6 @@ void CToDoCtrl::RecalcSelectedTimeEstimate()
 
 			if (dateStart > 0 && dateDue >= dateStart) // both exist
 			{
-				//int nWeekdays = CDateHelper::CalcWeekdaysFromTo(dStart, dDue, TRUE);
-				//SetSelectedTaskTimeEstimate((double)nWeekdays, TDITU_DAYS);
 				double dEst = 0;
 
 				double dStartTime = CDateHelper::GetTimeOnly(pTDI->dateStart) * 24;
@@ -5602,7 +5595,6 @@ BOOL CToDoCtrl::SetStyle(TDC_STYLE nStyle, BOOL bOn, BOOL bWantUpdate)
 				m_cpColour.SetSelectionMode(CP_MODE_BK);
 				m_cpColour.SetBkColour(m_cpColour.GetTextColour());
 				m_cpColour.SetTextColour(CLR_DEFAULT);
-
 			}
 			else
 			{
@@ -5791,9 +5783,6 @@ BOOL CToDoCtrl::SetStyle(TDC_STYLE nStyle, BOOL bOn, BOOL bWantUpdate)
 			}
 			// fall thru
 		case TDCS_VERTCOMMENTS:
-			//		case TDCS_RIGHTCOMMENTS:
-			//		case TDCS_BOTTOMRIGHTCOMMENTS:
-			//		case TDCS_BOTTOMCOMMENTS:
 		case TDCS_SHOWCTRLSASCOLUMNS:
 		case TDCS_SHOWCOMMENTSALWAYS:
 		case TDCS_AUTOREPOSCTRLS:
@@ -7332,7 +7321,7 @@ void CToDoCtrl::DrawCommentsText(CDC* pDC, const TODOITEM* pTDI, const TODOSTRUC
 }
 
 void CToDoCtrl::GetTaskTextColors(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS,
-											 COLORREF& crText, COLORREF& crBack)
+	COLORREF& crText, COLORREF& crBack)
 {
 	crText = GetSysColor(COLOR_WINDOWTEXT);
 	BOOL bDone = m_data.IsTaskDone(pTDI, pTDS, TDCCHECKALL);
@@ -7952,8 +7941,6 @@ void CToDoCtrl::InvalidateItem(HTREEITEM hti)
 	{
 		m_tree.InvalidateRect(rItem, FALSE);
 	}
-	// 	else
-	// 		TRACE("CToDoCtrl::InvalidateItem(failed)\n");
 }
 
 LRESULT CToDoCtrl::OnTreeDragDrop(WPARAM /*wParam*/, LPARAM /*lParam*/)
@@ -8182,7 +8169,7 @@ void CToDoCtrl::PrepareTaskIDsForPaste(CTaskFile& tasks, TDC_RESETIDS nResetID) 
 }
 
 void CToDoCtrl::BuildTaskIDMapForPaste(CTaskFile& tasks, HTASKITEM hTask, DWORD& dwNextID,
-													CMapID2ID& mapID, TDC_RESETIDS nResetID) const
+	CMapID2ID& mapID, TDC_RESETIDS nResetID) const
 {
 	if (nResetID == TDCR_NO) // sanity check
 	{
@@ -8306,7 +8293,6 @@ BOOL CToDoCtrl::PrepareTaskIDsForPaste(CString& sLink, const CMapID2ID& mapID) c
 	}
 
 	return FALSE;
-
 }
 
 BOOL CToDoCtrl::IsReservedShortcut(DWORD dwShortcut)
@@ -8351,20 +8337,6 @@ BOOL CToDoCtrl::PreTranslateMessage(MSG* pMsg)
 	BOOL bCtrl = (GetKeyState(VK_CONTROL) & 0x8000);
 	BOOL bShift = (GetKeyState(VK_SHIFT) & 0x8000);
 	BOOL bAlt = (GetKeyState(VK_MENU) & 0x8000);
-
-	/*
-	// handle plain 'TAB' key when the comments field has the focus
-	// because certain types of windows will eat it
-	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_TAB &&
-	IsChildOrSame(m_ctrlComments, pMsg->hwnd))
-	{
-	if (bCtrl)
-	{
-	::SetFocus(::GetNextDlgTabItem(*this, pMsg->hwnd, bShift));
-	return TRUE;
-	}
-	}
-	*/
 
 	if (m_ctrlComments.PreTranslateMessage(pMsg))
 	{
@@ -8825,7 +8797,6 @@ HTREEITEM CToDoCtrl::MoveItem(HTREEITEM hti, HTREEITEM htiDestParent, HTREEITEM 
 	// do the move and return the new tree item
 	return CTreeDragDropHelper::MoveTree(m_tree, htiTarget, hti, nWhere, DD_USESTEXTCALLBACK/* | DD_USESIMAGECALLBACK*/);
 }
-
 
 BOOL CToDoCtrl::GotoNextTopLevelTask(TDC_GOTO nDirection)
 {
@@ -9338,7 +9309,6 @@ BOOL CToDoCtrl::DrawItem(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const 
 		}
 		break;
 
-
 	case TDCC_REMINDER:
 		if (GetParent()->SendMessage(WM_TDCM_TASKHASREMINDER, dwTaskID, (LPARAM)this))
 		{
@@ -9612,8 +9582,6 @@ CString CToDoCtrl::FormatDate(const COleDateTime& date, TDC_DATE nDate)
 
 LRESULT CToDoCtrl::OnGutterPostDrawItem(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
-	//	NCGDRAWITEM* pNCGDI = (NCGDRAWITEM*)lParam;
-
 	return FALSE;
 }
 
@@ -11763,7 +11731,7 @@ BOOL CToDoCtrl::InsertTasks(const CTaskFile& tasks, TDC_INSERTWHERE nWhere)
 }
 
 BOOL CToDoCtrl::SetTaskAttributes(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, CTaskFile& file,
-											 HTASKITEM hTask, const TDCGETTASKS& filter, int nPos, BOOL bTitleCommentsOnly) const
+	HTASKITEM hTask, const TDCGETTASKS& filter, int nPos, BOOL bTitleCommentsOnly) const
 {
 	ASSERT(pTDI);
 
@@ -12106,7 +12074,7 @@ int CToDoCtrl::AddTreeChildrenToTaskFile(HTREEITEM hti, CTaskFile& file, HTASKIT
 }
 
 BOOL CToDoCtrl::AddTreeItemToTaskFile(HTREEITEM hti, CTaskFile& file, HTASKITEM hParentTask,
-												  const TDCGETTASKS& filter, int nPos) const
+	const TDCGETTASKS& filter, int nPos) const
 {
 	// attributes
 	DWORD dwTaskID = GetTaskID(hti);
@@ -12480,7 +12448,6 @@ int CToDoCtrl::SaveTreeExpandedState(CPreferences& prefs, LPCTSTR szRegKey, HTRE
 
 	return (nCount - nStart);
 }
-
 
 LRESULT CToDoCtrl::OnGutterWidthChange(WPARAM /*wParam*/, LPARAM lParam)
 {
@@ -13476,9 +13443,6 @@ BOOL CToDoCtrl::AdjustTaskDates(DWORD dwTaskID, DWORD dwDependencyID)
 			dtNewStart = pTDIDepends->dateDone.m_dt + 1;
 		}
 
-		// 		else if (pTDIDepends->HasDue())
-		// 			dtNewStart = pTDIDepends->dateDue.m_dt + 1;
-
 		if (dtNewStart > pTDI->dateStart)
 		{
 			// bump the due date too if present
@@ -13945,8 +13909,6 @@ BOOL CToDoCtrl::UndoLastActionItems(const CArrayUndoElements& aElms)
 			HTREEITEM htiParent = m_find.GetItem(elm.dwParentID);
 			HTREEITEM htiPrevSibling = m_find.GetItem(elm.dwPrevSiblingID);
 
-			//		ASSERT((elm.dwParentID && htiParent) || (!elm.dwParentID && !htiParent));
-
 			if ((elm.dwParentID && htiParent) || (!elm.dwParentID && !htiParent))
 			{
 				HTREEITEM htiNew = m_tree.InsertItem(
@@ -13974,8 +13936,6 @@ BOOL CToDoCtrl::UndoLastActionItems(const CArrayUndoElements& aElms)
 			HTREEITEM hti = m_find.GetItem(elm.dwTaskID); // current tree item
 			HTREEITEM htiDestParent = m_find.GetItem(elm.dwParentID); // original owner
 			HTREEITEM htiDestPrevSibling = m_find.GetItem(elm.dwPrevSiblingID); // original previous sibling
-
-			//		ASSERT((elm.dwParentID && htiDestParent) || (!elm.dwParentID && !htiDestParent));
 
 			if ((elm.dwParentID && htiDestParent) || (!elm.dwParentID && !htiDestParent))
 			{

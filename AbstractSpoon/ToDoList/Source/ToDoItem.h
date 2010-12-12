@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToDoItem.h: interface for the CToDoItem class.
@@ -45,12 +59,12 @@
 class TODOITEM
 {
 public:
-	TODOITEM(LPCTSTR szTitle, LPCTSTR szComments = NULL); 
-	TODOITEM(); 
-	TODOITEM(const TODOITEM& tdi); 
-	TODOITEM(const TODOITEM* pTDI); 
-	
-	const TODOITEM& operator=(const TODOITEM& tdi); 
+	TODOITEM(LPCTSTR szTitle, LPCTSTR szComments = NULL);
+	TODOITEM();
+	TODOITEM(const TODOITEM& tdi);
+	TODOITEM(const TODOITEM* pTDI);
+
+	const TODOITEM& operator=(const TODOITEM& tdi);
 
 	BOOL HasLastMod() const;
 	BOOL HasCreation() const;
@@ -60,16 +74,16 @@ public:
 	BOOL HasDueTime() const;
 	BOOL IsDone() const;
 	BOOL HasDoneTime() const;
-	
+
 	void ClearStart();
 	void ClearDue();
 	void ClearDone();
-	
+
 	BOOL IsDue() const;
 	BOOL IsDue(const COleDateTime& dateDueBy) const;
-	
+
 	void SetModified();
-	void ResetCalcs() const; 
+	void ResetCalcs() const;
 	BOOL AttribNeedsRecalc(DWORD dwAttrib) const;
 	void SetAttribNeedsRecalc(DWORD dwAttrib, BOOL bSet = TRUE) const;
 
@@ -88,7 +102,7 @@ public:
 	static CString MakeTaskLink(DWORD dwTaskID, const CString& sFile = _T(""));
 
 	//  ------------------------------------------
-	
+
 	CString sTitle;
 	CString sComments, sCustomComments;
 	CString sCommentsTypeID;
@@ -113,7 +127,7 @@ public:
 	TDIRECURRENCE trRecurrence;
 	CString sVersion;
 	int nIconIndex;
-	
+
 	// cached calculations for drawing optimization
 	// mutable so that they can be updated in const methods
 	mutable DWORD dwCalculated;
@@ -127,7 +141,7 @@ public:
 	mutable BOOL bGoodAsDone, bDue;
 	mutable int nSubtasksCount, nSubtasksDone;
 
-// C4995: name was marked as #pragma deprecated
+	// C4995: name was marked as #pragma deprecated
 #pragma warning(disable: 4995)
 	DECLARE_FIXED_ALLOC(TODOITEM);
 #pragma warning(default: 4995)
@@ -135,14 +149,17 @@ public:
 
 class TODOSTRUCTURE
 {
-   friend class CToDoCtrlStructure;
+	friend class CToDoCtrlStructure;
 
 public:
 	TODOSTRUCTURE() : m_dwID(0), m_pTDSParent(NULL) {}
 	TODOSTRUCTURE(DWORD dwID);
 	~TODOSTRUCTURE();
 
-	DWORD GetTaskID() const { return m_dwID; }
+	DWORD GetTaskID() const
+	{
+		return m_dwID;
+	}
 	DWORD GetSubTaskID(int nPos) const;
 
 	int GetSubTaskPosition(DWORD dwID) const;
@@ -151,30 +168,44 @@ public:
 	TODOSTRUCTURE* GetParentTask() const;
 	DWORD GetParentTaskID() const;
 
-	BOOL ParentIsRoot() const { return (GetParentTaskID() == 0); }
-	BOOL IsRoot() const { return (GetTaskID() == 0); }
+	BOOL ParentIsRoot() const
+	{
+		return (GetParentTaskID() == 0);
+	}
+	BOOL IsRoot() const
+	{
+		return (GetTaskID() == 0);
+	}
 
 	DWORD GetPreviousSubTaskID(int nPos);
 
-	int GetSubTaskCount() const { return m_aSubTasks.GetSize(); }
-	BOOL HasSubTasks() const { return GetSubTaskCount() > 0; }
+	int GetSubTaskCount() const
+	{
+		return m_aSubTasks.GetSize();
+	}
+	BOOL HasSubTasks() const
+	{
+		return GetSubTaskCount() > 0;
+	}
 
 	TODOSTRUCTURE* GetSubTask(int nPos) const;
 	int GetSubTaskPos(TODOSTRUCTURE* pTDS) const;
-	
-	void DeleteAll() { CleanUp(); }
-	
-   int MoveSubTask(int nPos, TODOSTRUCTURE* pTDSDestParent, int nDestPos);
-	//virtual BOOL FindSubTask(DWORD dwID, TODOSTRUCTURE*& pTDSParent, int& nPos) const;
+
+	void DeleteAll()
+	{
+		CleanUp();
+	}
+
+	int MoveSubTask(int nPos, TODOSTRUCTURE* pTDSDestParent, int nDestPos);
 
 protected:
 	DWORD m_dwID;
 	TODOSTRUCTURE* m_pTDSParent;
-	CArray<TODOSTRUCTURE*, TODOSTRUCTURE*&> m_aSubTasks; 
+	CArray<TODOSTRUCTURE*, TODOSTRUCTURE*&> m_aSubTasks;
 
 protected:
 	TODOSTRUCTURE(const TODOSTRUCTURE& tds);
-	const TODOSTRUCTURE& operator=(const TODOSTRUCTURE& tds); 
+	const TODOSTRUCTURE& operator=(const TODOSTRUCTURE& tds);
 
 	void CleanUp();
 	BOOL DeleteSubTask(int nPos);
@@ -184,34 +215,33 @@ protected:
 class CToDoCtrlStructure : public TODOSTRUCTURE
 {
 public:
-   CToDoCtrlStructure() : TODOSTRUCTURE() {}
-   CToDoCtrlStructure(const CToDoCtrlStructure& tds); 
-   ~CToDoCtrlStructure();
+	CToDoCtrlStructure() : TODOSTRUCTURE() {}
+	CToDoCtrlStructure(const CToDoCtrlStructure& tds);
+	~CToDoCtrlStructure();
 
 	TODOSTRUCTURE* GetParentTask(DWORD dwID) const;
 	DWORD GetParentTaskID(DWORD dwID) const;
 
 	DWORD GetPreviousTaskID(DWORD dwID) const;
 
-   BOOL DeleteTask(DWORD dwID);
+	BOOL DeleteTask(DWORD dwID);
 
 	BOOL AddTask(DWORD dwID, TODOSTRUCTURE* pTDSParent);
-   BOOL InsertTask(const TODOSTRUCTURE& tds, TODOSTRUCTURE* pTDSParent, int nPos);
+	BOOL InsertTask(const TODOSTRUCTURE& tds, TODOSTRUCTURE* pTDSParent, int nPos);
 	BOOL InsertTask(DWORD dwID, TODOSTRUCTURE* pTDSParent, int nPos);
 	BOOL InsertTask(TODOSTRUCTURE* pTDS, TODOSTRUCTURE* pTDSParent, int nPos);
-	
-   TODOSTRUCTURE* FindTask(DWORD dwID) const;
+
+	TODOSTRUCTURE* FindTask(DWORD dwID) const;
 	BOOL FindTask(DWORD dwID, TODOSTRUCTURE*& pTDSParent, int& nPos) const;
 
 protected:
-   CMap<DWORD, DWORD, TODOSTRUCTURE*, TODOSTRUCTURE*&> m_mapStructure;
+	CMap<DWORD, DWORD, TODOSTRUCTURE*, TODOSTRUCTURE*&> m_mapStructure;
 
 protected:
-   void BuildMap();
-   void AddToMap(const TODOSTRUCTURE* pTDS);
-   void RemoveFromMap(const TODOSTRUCTURE* pTDS);
-  	const CToDoCtrlStructure& operator=(const CToDoCtrlStructure& tds); 
-
+	void BuildMap();
+	void AddToMap(const TODOSTRUCTURE* pTDS);
+	void RemoveFromMap(const TODOSTRUCTURE* pTDS);
+	const CToDoCtrlStructure& operator=(const CToDoCtrlStructure& tds);
 };
 
 
