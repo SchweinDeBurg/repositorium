@@ -6579,7 +6579,7 @@ BOOL CToDoCtrl::LoadTasks(const CTaskFile& file)
 
 	// sorting
 	LoadSortState(prefs, file.GetFilePath());
-	m_tree.PressGutterColumnHeader((UINT) - 1);
+	m_tree.PressGutterColumnHeader((UINT)-1);
 
 	// globals
 	LoadGlobals(file);

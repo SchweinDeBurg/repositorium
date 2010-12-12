@@ -245,7 +245,7 @@ void CPreferencesUITasklistPage::LoadPreferences(const CPreferences& prefs)
 
 			TDC_COLUMN col = (TDC_COLUMN)prefs.GetProfileInt(_T("Preferences\\ColumnVisibility"), sKey, -1);
 
-			if (col != (TDC_COLUMN) - 1)
+			if (col != (TDC_COLUMN)-1)
 			{
 				aCols.Add(col);
 			}

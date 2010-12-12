@@ -185,7 +185,7 @@ void CUIExtensionUIHelper::AppendExtensionsToToolbar(CToolBar& toolbar, UINT nCm
 				CImageList* pIL = toolbar.GetToolBarCtrl().GetImageList();
 				int nImage = pIL->Add(hIcon);
 
-				TBBUTTON tbb = { nImage, nExt + m_nStartID, 0, TBSTYLE_BUTTON, 0, 0, (UINT) - 1 };
+				TBBUTTON tbb = { nImage, nExt + m_nStartID, 0, TBSTYLE_BUTTON, 0, 0, (UINT)-1 };
 
 				if (toolbar.GetToolBarCtrl().InsertButton(nStartPos + nAdded, &tbb))
 				{
@@ -203,7 +203,7 @@ void CUIExtensionUIHelper::AppendExtensionsToToolbar(CToolBar& toolbar, UINT nCm
 		// add a separator if any buttons added
 		if (nAdded)
 		{
-			TBBUTTON tbb = { -1, 0, 0, TBSTYLE_SEP, 0, 0, (UINT) - 1 };
+			TBBUTTON tbb = { -1, 0, 0, TBSTYLE_SEP, 0, 0, (UINT)-1 };
 			toolbar.GetToolBarCtrl().InsertButton(nStartPos, &tbb);
 		}
 	}

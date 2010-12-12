@@ -248,7 +248,7 @@ struct TDIRECURRENCE
 
 		case TDIR_WEEKLY:
 			{
-				if ((int)dwSpecific1 <= 0/* || !dwSpecific2*/)
+				if ((int)dwSpecific1 <= 0)
 				{
 					return FALSE;
 				}
@@ -573,7 +573,7 @@ static TDC_COLUMN MapSortByToColumn(TDC_SORTBY nSortBy)
 	}
 
 	// everything else
-	return (TDC_COLUMN) - 1;
+	return (TDC_COLUMN)-1;
 }
 
 static int MapColumnsToAttributes(const CTDCColumnArray& aCols, CTDCAttributeArray& aAttrib)
@@ -1012,9 +1012,9 @@ struct SEARCHPARAMS
 
 			else if (rules[nRule].attrib == TDCA_ANYTEXTATTRIBUTE &&
 					(attrib == TDCA_TASKNAME || attrib == TDCA_COMMENTS ||
-							attrib == TDCA_STATUS || attrib == TDCA_CATEGORY ||
-							attrib == TDCA_ALLOCBY || attrib == TDCA_ALLOCTO ||
-							attrib == TDCA_VERSION))
+					attrib == TDCA_STATUS || attrib == TDCA_CATEGORY ||
+					attrib == TDCA_ALLOCBY || attrib == TDCA_ALLOCTO ||
+					attrib == TDCA_VERSION))
 			{
 				return TRUE;
 			}

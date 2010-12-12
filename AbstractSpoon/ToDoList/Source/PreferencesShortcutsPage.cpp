@@ -189,7 +189,7 @@ HTREEITEM CPreferencesShortcutsPage::AddMenuItem(HTREEITEM htiParent, const CMen
 		{
 			UINT nCmdID = pMenu->GetMenuItemID(nPos);
 
-			if (nCmdID == (UINT) - 1) // submenu
+			if (nCmdID == (UINT)-1) // submenu
 			{
 				// make top level items bold
 				if (!htiParent)

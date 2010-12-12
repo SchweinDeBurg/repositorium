@@ -486,7 +486,7 @@ void CFileEdit::RecalcBtnRects()
 		CRect rClient;
 		GetClientRect(rClient);
 
-		m_tooltip.SetToolRect(this, (UINT) - 1, rClient);
+		m_tooltip.SetToolRect(this, (UINT)-1, rClient);
 	}
 }
 
@@ -506,7 +506,7 @@ void CFileEdit::PreSubclassWindow()
 		CRect rClient;
 		GetClientRect(rClient);
 
-		m_tooltip.AddTool(this, LPSTR_TEXTCALLBACK, rClient, (UINT) - 1);
+		m_tooltip.AddTool(this, LPSTR_TEXTCALLBACK, rClient, (UINT)-1);
 	}
 
 	EnableButton(FEBTN_GO, GetWindowTextLength());
