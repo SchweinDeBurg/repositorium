@@ -335,7 +335,7 @@ void CExportDlg::OnOK()
 		// make sure the output folder is valid
 		BOOL bBadFolder = (m_nExportOption == ALLTASKLISTS && !m_bExportOneFile) ?
 			!FileMisc::CreateFolder(m_sExportPath) :
-		!FileMisc::CreateFolderFromFilePath(m_sExportPath);
+			!FileMisc::CreateFolderFromFilePath(m_sExportPath);
 
 		if (bBadFolder)
 		{

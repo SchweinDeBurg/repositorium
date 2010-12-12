@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // OffsetDatesDlg.cpp : implementation file
@@ -46,9 +59,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // COffsetDatesDlg dialog
 
-
-COffsetDatesDlg::COffsetDatesDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(COffsetDatesDlg::IDD, pParent)
+COffsetDatesDlg::COffsetDatesDlg(CWnd* pParent /*=NULL*/):
+CDialog(COffsetDatesDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(COffsetDatesDlg)
 	m_bOffsetSubtasks = FALSE;
@@ -66,7 +78,6 @@ COffsetDatesDlg::COffsetDatesDlg(CWnd* pParent /*=NULL*/)
 	m_bOffsetSubtasks = prefs.GetProfileInt(_T("OffsetDates"), _T("Subtasks"), 1);
 }
 
-
 void COffsetDatesDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
@@ -81,10 +92,9 @@ void COffsetDatesDlg::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 }
 
-
 BEGIN_MESSAGE_MAP(COffsetDatesDlg, CDialog)
 	//{{AFX_MSG_MAP(COffsetDatesDlg)
-		// NOTE: the ClassWizard will add message map macros here
+	// NOTE: the ClassWizard will add message map macros here
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -96,13 +106,19 @@ DWORD COffsetDatesDlg::GetOffsetWhat() const
 	DWORD dwWhat = 0;
 
 	if (m_bOffsetStartDate)
+	{
 		dwWhat |= ODD_STARTDATE;
+	}
 
 	if (m_bOffsetDueDate)
+	{
 		dwWhat |= ODD_DUEDATE;
+	}
 
 	if (m_bOffsetDoneDate)
+	{
 		dwWhat |= ODD_DONEDATE;
+	}
 
 	return dwWhat;
 }

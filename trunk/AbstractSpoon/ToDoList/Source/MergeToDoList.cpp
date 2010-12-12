@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // MergeToDoList.cpp: implementation of the CMergeToDoList class.
@@ -39,7 +52,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -47,8 +60,11 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMergeToDoList::CMergeToDoList(TDL_MERGEBY nBy, TDL_MERGEHOW nHow) 
-	: m_pXIDestRoot(NULL), m_nMergeBy(nBy), m_nMergeHow(nHow), m_dwNextID(0)
+CMergeToDoList::CMergeToDoList(TDL_MERGEBY nBy, TDL_MERGEHOW nHow):
+m_pXIDestRoot(NULL),
+m_nMergeBy(nBy),
+m_nMergeHow(nHow),
+m_dwNextID(0)
 {
 }
 
@@ -61,7 +77,9 @@ int CMergeToDoList::Merge(LPCTSTR szSrcPath, LPCTSTR szDestPath)
 	CTaskFile fileSrc(TDL_ROOT);
 
 	if (fileSrc.Load(szSrcPath))
+	{
 		return Merge(fileSrc.Root(), szDestPath);
+	}
 
 	return 0;
 }
@@ -84,7 +102,9 @@ int CMergeToDoList::Merge(const CXmlItem* pXISrc, LPCTSTR szDestPath)
 	CTaskFile fileDest(TDL_ROOT);
 
 	if (fileDest.Load(szDestPath))
+	{
 		return Merge(pXISrc, fileDest.Root());
+	}
 
 	return 0;
 }
@@ -94,7 +114,9 @@ int CMergeToDoList::Merge(LPCTSTR szSrcPath, CXmlItem* pXIDest)
 	CTaskFile fileSrc(TDL_ROOT);
 
 	if (fileSrc.Load(szSrcPath))
+	{
 		return Merge(fileSrc.Root(), pXIDest);
+	}
 
 	return 0;
 }
@@ -103,12 +125,16 @@ int CMergeToDoList::MergeTasks(const CXmlItem* pXISrc, CXmlItem* pXIDest)
 {
 	// simple checks first
 	if (!pXISrc || !pXIDest)
+	{
 		return 0;
+	}
 
-	ASSERT (!(m_nMergeBy == TDLM_BYTITLE && m_dwNextID == 0));
+	ASSERT(!(m_nMergeBy == TDLM_BYTITLE && m_dwNextID == 0));
 
 	if (m_nMergeBy == TDLM_BYTITLE && m_dwNextID == 0)
+	{
 		return 0;
+	}
 
 	BuildLookupMap();
 
@@ -130,27 +156,33 @@ int CMergeToDoList::MergeTasksByID(const CXmlItem* pXISrc, CXmlItem* pXIDest)
 	// task ID must be same for both
 	DWORD dwSrcID = pXISrc->GetItemValueI(TDL_TASKID);
 	DWORD dwDestID = pXIDest->GetItemValueI(TDL_TASKID);
-	
+
 	if (dwSrcID != dwDestID)
+	{
 		return 0;
-	
+	}
+
 	// if the item is a task (could be the root) merge task attributes
 	int nMerged = 0;
-	
+
 	if (dwSrcID)
 	{
 		// keep track of max ID
 		m_dwNextID = max(m_dwNextID, dwSrcID + 1);
 
-		if (MergeAttributes(pXISrc, pXIDest))			
+		if (MergeAttributes(pXISrc, pXIDest))
+		{
 			nMerged++;
+		}
 	}
-	
+
 	// now merge child items individually.
 	const CXmlItem* pXISrcChild = pXISrc->GetItem(TDL_TASK);
-	
+
 	if (pXISrcChild)
+	{
 		nMerged += MergeTaskByID(pXISrcChild, pXIDest);
+	}
 
 	// then merge next sibling similarly (if we are a task)
 	if (dwSrcID)
@@ -158,9 +190,11 @@ int CMergeToDoList::MergeTasksByID(const CXmlItem* pXISrc, CXmlItem* pXIDest)
 		const CXmlItem* pXISrcNext = pXISrc->GetSibling();
 
 		if (pXISrcNext)
+		{
 			nMerged += MergeTaskByID(pXISrcNext, pXIDest->GetParent());
+		}
 	}
-	
+
 	return nMerged;
 }
 
@@ -173,16 +207,16 @@ int CMergeToDoList::MergeTaskByID(const CXmlItem* pXISrc, CXmlItem* pXIDestParen
 	ASSERT(dwID);
 
 	int nMerged = 0;
-	
+
 	// look up this item in the dest by ID
 	CXmlItem* pXIDest = FindDestTask(dwID);
-	
+
 	// if no such item exists then simply add child to dest
 	if (!pXIDest)
 	{
 		// create placeholder
 		pXIDest = pXIDestParent->AddItem(TDL_TASK);
-		
+
 		// set the id
 		pXIDest->AddItem(TDL_TASKID, (int)dwID);
 	}
@@ -195,10 +229,12 @@ int CMergeToDoList::MergeTaskByID(const CXmlItem* pXISrc, CXmlItem* pXIDestParen
 		if (pXICurDestParent != pXIDestParent && m_nMergeHow == TDLM_MOVE)
 		{
 			if (pXICurDestParent->RemoveItem(pXIDest))
+			{
 				pXIDest = pXIDestParent->AddItem(pXIDest);
+			}
 		}
 	}
-	
+
 	// then merge attributes
 	nMerged = MergeTasksByID(pXISrc, pXIDest);
 
@@ -209,27 +245,33 @@ int CMergeToDoList::MergeTasksByTitle(const CXmlItem* pXISrc, CXmlItem* pXIDest)
 {
 	// merge our attributes first
 	int nMerged = 0;
-	
+
 	// if both these items are root items (have no parents) then we just
 	// merge their children else if the task name does not match then we don't merge
 	if (pXISrc->GetParent())
 	{
-		ASSERT (pXISrc->NameMatches(TDL_TASK));
-		ASSERT (pXISrc->NameMatches(pXIDest));
-		ASSERT (pXIDest->GetParent());
-		ASSERT (pXISrc->ItemValueMatches(pXIDest, TDL_TASKTITLE));
+		ASSERT(pXISrc->NameMatches(TDL_TASK));
+		ASSERT(pXISrc->NameMatches(pXIDest));
+		ASSERT(pXIDest->GetParent());
+		ASSERT(pXISrc->ItemValueMatches(pXIDest, TDL_TASKTITLE));
 
 		if (!pXISrc->ItemValueMatches(pXIDest, TDL_TASKTITLE))
+		{
 			return 0;
+		}
 	}
 	else
-		ASSERT (!pXIDest->GetParent());
+	{
+		ASSERT(!pXIDest->GetParent());
+	}
 
 	if (MergeAttributes(pXISrc, pXIDest))
+	{
 		nMerged++;
+	}
 
 	// merge children
-	// essentially we simply add whatever tasks exist in pXISrc 
+	// essentially we simply add whatever tasks exist in pXISrc
 	// which do not exist in pXIDest and merge duplicates
 	const CXmlItem* pXISrcChild = pXISrc->GetItem(TDL_TASK);
 
@@ -241,23 +283,21 @@ int CMergeToDoList::MergeTasksByTitle(const CXmlItem* pXISrc, CXmlItem* pXIDest)
 		while (pXIDestChild)
 		{
 			if (pXIDestChild->ItemValueMatches(pXISrcChild, TDL_TASKTITLE))
+			{
 				break;
+			}
 
 			// next child
 			pXIDestChild = pXIDestChild->GetSibling();
 		}
-			
+
 		// if no match found then create new placeholder
 		if (!pXIDestChild)
 		{
-			//TRACE ("CToDoCtrl::Merge(adding %s to %s)\n", 
-			//		pXISrcChild->GetItemValue(TDL_TASKTITLE), 
-			//		pXIDest->GetItemValue(TDL_TASKTITLE));
-
 			pXIDestChild = pXIDest->AddItem(TDL_TASK);
 			pXIDestChild->AddItem(TDL_TASKTITLE, pXISrcChild->GetItemValue(TDL_TASKTITLE));
 			pXIDestChild->AddItem(TDL_TASKID, (int)m_dwNextID++);
-			
+
 			nMerged++;
 		}
 
@@ -280,10 +320,14 @@ BOOL CMergeToDoList::MergeAttributes(const CXmlItem* pXISrc, CXmlItem* pXIDest)
 	if (pXISrcMod && pXIDestMod)
 	{
 		if (pXISrcMod->GetValueF() <= pXIDestMod->GetValueF())
+		{
 			return FALSE;
+		}
 	}
 	else if (pXIDestMod)
+	{
 		return FALSE;
+	}
 
 	BOOL bChange = FALSE;
 	POSITION pos = pXISrc->GetFirstItemPos();
@@ -294,11 +338,15 @@ BOOL CMergeToDoList::MergeAttributes(const CXmlItem* pXISrc, CXmlItem* pXIDest)
 
 		// don't merge task ID or subtasks
 		if (pXISrcAttrib->NameMatches(TDL_TASK) || pXISrcAttrib->NameMatches(TDL_TASKID))
+		{
 			continue;
-		
+		}
+
 		// don't merge last mod unless last mod does not exist in dest task
 		if (pXISrcAttrib->NameMatches(TDL_TASKLASTMOD) && pXIDestMod)
+		{
 			continue;
+		}
 
 		// does it already exist?
 		LPCTSTR szAttrib = pXISrcAttrib->GetName();
@@ -322,7 +370,9 @@ BOOL CMergeToDoList::MergeAttributes(const CXmlItem* pXISrc, CXmlItem* pXIDest)
 
 			// and any children
 			if (pXISrcAttrib->GetItemCount())
+			{
 				bChange |= MergeAttributes(pXISrcAttrib, pXIDestAttrib);
+			}
 		}
 	}
 
@@ -332,7 +382,9 @@ BOOL CMergeToDoList::MergeAttributes(const CXmlItem* pXISrc, CXmlItem* pXIDest)
 CXmlItem* CMergeToDoList::FindDestTask(DWORD dwID)
 {
 	if (!dwID)
+	{
 		return NULL;
+	}
 
 	CXmlItem* pXITask = NULL;
 	m_mapID2Item.Lookup(dwID, pXITask);
@@ -349,12 +401,16 @@ void CMergeToDoList::BuildLookupMap()
 void CMergeToDoList::AddTaskToLookupMap(CXmlItem* pXIDest)
 {
 	if (!pXIDest)
+	{
 		return;
+	}
 
 	DWORD dwID = pXIDest->GetItemValueI(TDL_TASKID);
 
 	if (dwID)
+	{
 		m_mapID2Item[dwID] = pXIDest;
+	}
 
 	// first child
 	AddTaskToLookupMap(pXIDest->GetItem(TDL_TASK));
