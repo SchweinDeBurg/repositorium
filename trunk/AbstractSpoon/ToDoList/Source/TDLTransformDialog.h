@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDLTRANSFORMDIALOG_H__1A62F94F_687F_421C_97D2_300BAC4A3E7C__INCLUDED_)
@@ -39,6 +53,7 @@
 //
 
 #include "../../Common/FileEdit.h"
+#include "../../../CodeProject/Source/FileMisc.h"
 #include "TaskSelectionDlg.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -50,28 +65,40 @@ class CTDLTransformDialog : public CDialog
 public:
 	CTDLTransformDialog(LPCTSTR szTitle, BOOL bShowSubtaskCheckbox = TRUE, CWnd* pParent = NULL);   // standard constructor
 
-	BOOL GetWantDate() { return m_bDate; }
-	CString GetStylesheet() const { return m_sStylesheet; }
-	CString GetTitle() const { return m_sTitle; }
+	BOOL GetWantDate()
+	{
+		return m_bDate;
+	}
+	CString GetStylesheet() const
+	{
+		return FileMisc::GetFullPath(m_sStylesheet, TRUE);
+	}
+	CString GetTitle() const
+	{
+		return m_sTitle;
+	}
 
-	const CTaskSelectionDlg& GetTaskSelection() const { return m_taskSel; }
+	const CTaskSelectionDlg& GetTaskSelection() const
+	{
+		return m_taskSel;
+	}
 
 protected:
 // Dialog Data
 	//{{AFX_DATA(CTDLTransformDialog)
-	CFileEdit	m_eStylesheet;
-	CString	m_sStylesheet;
-    CTaskSelectionDlg m_taskSel;
+	CFileEdit   m_eStylesheet;
+	CString m_sStylesheet;
+	CTaskSelectionDlg m_taskSel;
 	//}}AFX_DATA
-	CString	m_sTitle;
-	BOOL	m_bDate;
+	CString m_sTitle;
+	BOOL    m_bDate;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTDLTransformDialog)
-	public:
+public:
 	virtual void OnOK();
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 	//}}AFX_VIRTUAL
 

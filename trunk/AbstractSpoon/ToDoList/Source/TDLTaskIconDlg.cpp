@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TDLTaskIconDlg.cpp : implementation file
@@ -46,15 +59,13 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTDLTaskIconDlg dialog
 
-
-CTDLTaskIconDlg::CTDLTaskIconDlg(const CImageList& ilIcons, int nSelIndex, CWnd* pParent /*=NULL*/)
-	: CDialog(CTDLTaskIconDlg::IDD, pParent), m_ilIcons(ilIcons), m_nIconIndex(nSelIndex)
+CTDLTaskIconDlg::CTDLTaskIconDlg(const CImageList& ilIcons, int nSelIndex, CWnd* pParent /*=NULL*/):
+CDialog(CTDLTaskIconDlg::IDD, pParent), m_ilIcons(ilIcons), m_nIconIndex(nSelIndex)
 {
 	//{{AFX_DATA_INIT(CTDLTaskIconDlg)
-		// NOTE: the ClassWizard will add member initialization here
+	// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 }
-
 
 void CTDLTaskIconDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -63,7 +74,6 @@ void CTDLTaskIconDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ICONLIST, m_lcIcons);
 	//}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CTDLTaskIconDlg, CDialog)
 	//{{AFX_MSG_MAP(CTDLTaskIconDlg)
@@ -78,13 +88,13 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTDLTaskIconDlg message handlers
 
-BOOL CTDLTaskIconDlg::OnInitDialog() 
+BOOL CTDLTaskIconDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
+
 	ListView_SetImageList(m_lcIcons, m_ilIcons, LVSIL_SMALL);
 	CPreferences prefs;
-	
+
 	for (int nImage = 0; nImage < m_ilIcons.GetImageCount(); nImage++)
 	{
 		CString sImage, sKey;
@@ -93,38 +103,44 @@ BOOL CTDLTaskIconDlg::OnInitDialog()
 		sImage = prefs.GetProfileString(_T("TaskIcons"), sKey);
 
 		if (sImage.IsEmpty())
+		{
 			sImage.Format(_T("%d"), nImage + 1);
-		
+		}
+
 		m_lcIcons.InsertItem(nImage, sImage, nImage);
 	}
 
 	if (m_nIconIndex >= 0)
+	{
 		m_lcIcons.SetItemState(m_nIconIndex, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
+	}
 
 	// disable OK button if nothing selected
 	GetDlgItem(IDOK)->EnableWindow(m_nIconIndex >= 0);
 	m_lcIcons.SetFocus();
-	
+
 	return FALSE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CTDLTaskIconDlg::OnDblclkIconlist(NMHDR* pNMHDR, LRESULT* pResult) 
+void CTDLTaskIconDlg::OnDblclkIconlist(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	NMITEMACTIVATE* pNMListView = ( NMITEMACTIVATE*)pNMHDR;
-	
+	NMITEMACTIVATE* pNMListView = (NMITEMACTIVATE*)pNMHDR;
+
 	m_nIconIndex = pNMListView->iItem;
 
 	// disable OK button if nothing selected
 	GetDlgItem(IDOK)->EnableWindow(m_nIconIndex >= 0);
-	
+
 	if (m_nIconIndex >= 0)
+	{
 		EndDialog(IDOK);
+	}
 
 	*pResult = 0;
 }
 
-void CTDLTaskIconDlg::OnItemchangedIconlist(NMHDR* pNMHDR, LRESULT* pResult) 
+void CTDLTaskIconDlg::OnItemchangedIconlist(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
 
@@ -132,22 +148,19 @@ void CTDLTaskIconDlg::OnItemchangedIconlist(NMHDR* pNMHDR, LRESULT* pResult)
 
 	// disable OK button if nothing selected
 	GetDlgItem(IDOK)->EnableWindow(m_nIconIndex >= 0);
-		
+
 	*pResult = 0;
 }
 
-void CTDLTaskIconDlg::OnEndlabeleditIconlist(NMHDR* /*pNMHDR*/, LRESULT* pResult) 
+void CTDLTaskIconDlg::OnEndlabeleditIconlist(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-	// LV_DISPINFO* pDispInfo = (LV_DISPINFO*)pNMHDR;
-	// TODO: Add your control notification handler code here
-	
 	*pResult = 1; // save changes
 }
 
-void CTDLTaskIconDlg::OnDestroy() 
+void CTDLTaskIconDlg::OnDestroy()
 {
 	CDialog::OnDestroy();
-	
+
 	// save off any saved names to the preferences
 	CPreferences prefs;
 
@@ -165,15 +178,17 @@ void CTDLTaskIconDlg::OnDestroy()
 			prefs.WriteProfileString(_T("TaskIcons"), sKey, sText);
 		}
 	}
-	
+
 }
 
-HBRUSH CTDLTaskIconDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
+HBRUSH CTDLTaskIconDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CDialog::OnCtlColor(pDC, pWnd, nCtlColor);
-	
+
 	if (pWnd->GetDlgCtrlID() == IDC_EDITTASKTEXT_LABEL)
+	{
 		pDC->SetTextColor(GetSysColor(COLOR_3DDKSHADOW));
-	
+	}
+
 	return hbr;
 }

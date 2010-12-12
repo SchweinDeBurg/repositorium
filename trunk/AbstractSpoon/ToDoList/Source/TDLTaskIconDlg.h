@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_TDLTASKICONDLG_H__73512EBA_90D6_40EA_A2C3_F2089A567486__INCLUDED_)
@@ -46,7 +59,10 @@ class CTDLTaskIconDlg : public CDialog
 // Construction
 public:
 	CTDLTaskIconDlg(const CImageList& ilIcons, int nSelIndex = -1, CWnd* pParent = NULL);   // standard constructor
-	int GetIconIndex() const { return m_nIconIndex; }
+	int GetIconIndex() const
+	{
+		return m_nIconIndex;
+	}
 
 protected:
 // Dialog Data
@@ -57,11 +73,10 @@ protected:
 	const CImageList& m_ilIcons;
 	int m_nIconIndex;
 
-
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTDLTaskIconDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 

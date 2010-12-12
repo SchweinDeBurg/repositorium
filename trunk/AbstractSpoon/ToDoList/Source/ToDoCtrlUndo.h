@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToDoCtrlUndo.h: interface for the CToDoCtrlUndo class.
@@ -45,19 +59,19 @@
 
 struct TDCUNDOELEMENT
 {
-	TDCUNDOELEMENT(TDCUNDOELMOP op = TDCUEO_EDIT, DWORD taskID = 0, DWORD parentID = 0, 
-					DWORD prevSiblingID = 0, WORD flags = 0, const TODOITEM* pTDI = NULL) : 
-					nOp(op), 
-					dwTaskID(taskID), 
-					dwParentID(parentID), 
-					dwPrevSiblingID(prevSiblingID),
-					wFlags(flags),
-					tdi(pTDI) 
+	TDCUNDOELEMENT(TDCUNDOELMOP op = TDCUEO_EDIT, DWORD taskID = 0, DWORD parentID = 0,
+		DWORD prevSiblingID = 0, WORD flags = 0, const TODOITEM* pTDI = NULL) :
+	nOp(op),
+	dwTaskID(taskID),
+	dwParentID(parentID),
+	dwPrevSiblingID(prevSiblingID),
+	wFlags(flags),
+	tdi(pTDI)
 	{
 	}
 
-	const TDCUNDOELEMENT& operator=(const TDCUNDOELEMENT& elm) 
-	{ 
+	const TDCUNDOELEMENT& operator=(const TDCUNDOELEMENT& elm)
+	{
 		nOp = elm.nOp;
 		dwTaskID = elm.dwTaskID;
 		dwParentID = elm.dwParentID;
@@ -65,16 +79,16 @@ struct TDCUNDOELEMENT
 		tdi = elm.tdi;
 		wFlags = elm.wFlags;
 
-		return *this; 
+		return *this;
 	}
 
 	BOOL operator==(const TDCUNDOELEMENT& elm) const
-	{ 
-		return (nOp == elm.nOp && 
-				dwTaskID == elm.dwTaskID &&
-				dwParentID == elm.dwParentID &&
-				dwPrevSiblingID == elm.dwPrevSiblingID &&
-				wFlags == elm.wFlags);
+	{
+		return (nOp == elm.nOp &&
+			dwTaskID == elm.dwTaskID &&
+			dwParentID == elm.dwParentID &&
+			dwPrevSiblingID == elm.dwPrevSiblingID &&
+			wFlags == elm.wFlags);
 	}
 
 	BOOL operator!=(const TDCUNDOELEMENT& elm) const
@@ -95,20 +109,20 @@ typedef CArray<TDCUNDOELEMENT, TDCUNDOELEMENT&> CArrayUndoElements;
 
 struct TDCUNDOACTION
 {
-	TDCUNDOACTION(TDCUNDOACTIONTYPE type = TDCUAT_NONE) : nType(type) 
+	TDCUNDOACTION(TDCUNDOACTIONTYPE type = TDCUAT_NONE) : nType(type)
 	{
 	}
-	
-	const TDCUNDOACTION& operator=(const TDCUNDOACTION& action) 
-	{ 
+
+	const TDCUNDOACTION& operator=(const TDCUNDOACTION& action)
+	{
 		nType = action.nType;
 		aElements.Copy(action.aElements);
 
-		return *this; 
+		return *this;
 	}
 
 	BOOL operator==(const TDCUNDOACTION& action) const
-	{ 
+	{
 		return (nType == action.nType && Misc::ArraysMatch(aElements, action.aElements));
 	}
 
@@ -120,7 +134,10 @@ struct TDCUNDOACTION
 		TDCUNDOACTION* pThis = const_cast<TDCUNDOACTION*>(this);
 
 		for (int nElm = 0; nElm < aElements.GetSize(); nElm++)
-			aIDs.Add(pThis->aElements.ElementAt(nElm).dwTaskID);
+		{
+			const TDCUNDOELEMENT& elm = pThis->aElements.ElementAt(nElm);
+			aIDs.Add(elm.dwTaskID);
+		}
 
 		return aIDs.GetSize();
 	}
@@ -129,7 +146,7 @@ struct TDCUNDOACTION
 	CArrayUndoElements aElements;
 };
 
-class CToDoCtrlUndo  
+class CToDoCtrlUndo
 {
 public:
 	CToDoCtrlUndo();
@@ -138,12 +155,18 @@ public:
 	void ResetAll();
 
 	BOOL BeginNewAction(TDCUNDOACTIONTYPE nType);
-	TDCUNDOACTIONTYPE CurrentAction() const { return m_nActiveAction; }
-	BOOL IsActive() const { return (CurrentAction() != TDCUAT_NONE); }
+	TDCUNDOACTIONTYPE CurrentAction() const
+	{
+		return m_nActiveAction;
+	}
+	BOOL IsActive() const
+	{
+		return (CurrentAction() != TDCUAT_NONE);
+	}
 	BOOL EndCurrentAction();
 
-	BOOL SaveElement(TDCUNDOELMOP nOp, DWORD dwTaskID, DWORD dwParentID, DWORD dwPrevSiblingID, 
-					 WORD wFlags, const TODOITEM* pTDI);
+	BOOL SaveElement(TDCUNDOELMOP nOp, DWORD dwTaskID, DWORD dwParentID, DWORD dwPrevSiblingID,
+		WORD wFlags, const TODOITEM* pTDI);
 	BOOL IsValidElementOperation(TDCUNDOELMOP nOp) const;
 
 	int GetLastUndoActionTaskIDs(CDWordArray& aIDs) const;
@@ -157,8 +180,14 @@ public:
 	TDCUNDOACTION* UndoLastAction();
 	TDCUNDOACTION* RedoLastAction();
 
-	BOOL CanUndo() const { return m_aUndo.GetSize(); }
-	BOOL CanRedo() const { return m_aRedo.GetSize(); }
+	BOOL CanUndo() const
+	{
+		return m_aUndo.GetSize();
+	}
+	BOOL CanRedo() const
+	{
+		return m_aRedo.GetSize();
+	}
 
 protected:
 	CArray<TDCUNDOACTION, TDCUNDOACTION&> m_aUndo;
@@ -171,9 +200,14 @@ protected:
 	TDCUNDOACTION& LastRedoAction();
 	const TDCUNDOACTION& LastUndoAction() const;
 	const TDCUNDOACTION& LastRedoAction() const;
-	int LastUndoIndex() const { return m_aUndo.GetSize() - 1; }
-	int LastRedoIndex() const { return m_aRedo.GetSize() - 1; }
-	
+	int LastUndoIndex() const
+	{
+		return m_aUndo.GetSize() - 1;
+	}
+	int LastRedoIndex() const
+	{
+		return m_aRedo.GetSize() - 1;
+	}
 };
 
 #endif // !defined(AFX_TODOCTRLUNDO_H__5299C326_E181_47B2_A971_1563E5F6CEEC__INCLUDED_)

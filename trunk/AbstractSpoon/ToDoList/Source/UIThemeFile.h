@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // UIThemeFile.h: interface for the CUIThemeFile class.
@@ -42,7 +55,7 @@
 #include "../../Common/UITheme.h"
 #include "../../Common/XmlFile.h"
 
-class CUIThemeFile : public CXmlFile  
+class CUIThemeFile : public CXmlFile
 {
 public:
 	CUIThemeFile();
@@ -54,7 +67,6 @@ public:
 protected:
 	COLORREF GetColor(LPCTSTR szName) const;
 	UI_STYLE GetStyle() const;
-
 };
 
 #endif // !defined(AFX_UITHEMEFILE_H__A652A09A_AB3F_4B65_A3D9_B4B975A36195__INCLUDED_)

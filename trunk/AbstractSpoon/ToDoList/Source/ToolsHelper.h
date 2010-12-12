@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToolsHelper.h: interface for the CToolsHelper class.
@@ -68,30 +82,29 @@ class CPreferencesDlg;
 
 typedef CArray<USERTOOL, USERTOOL&> CUserToolArray;
 
-class CToolsHelper  
+class CToolsHelper
 {
 public:
 	CToolsHelper(BOOL bTDLEnabled, UINT nStart, int nSize = 16);
 	virtual ~CToolsHelper();
-	
+
 	void UpdateMenu(CCmdUI* pCmdUI, const CUserToolArray& tools, CMenuIconMgr& iconMgr);
 	BOOL RunTool(const USERTOOL& tool, const USERTOOLARGS& args, CWnd* pWnd = NULL);
 	void TestTool(const USERTOOL& tool, const USERTOOLARGS& args, CWnd* pWnd = NULL);
 	void AppendToolsToToolbar(const CUserToolArray& aTools, CToolBar& toolbar, UINT nCmdAfter);
 	void RemoveToolsFromToolbar(CToolBar& toolbar, UINT nCmdAfter);
-	
+
 protected:
 	UINT m_nStartID;
 	int m_nSize;
 	BOOL m_bTDLEnabled;
-	
+
 protected:
 	BOOL PrepareCmdline(const USERTOOL& tool, CString& sCmdline, const USERTOOLARGS& args);
-   	LPCTSTR GetFileFilter();
+	LPCTSTR GetFileFilter();
 	LPCTSTR GetDefaultFileExt();
 
 	static HICON GetToolIcon(CSysImageList& sil, const USERTOOL& ut);
-
 };
 
 #endif // !defined(AFX_TOOLSHELPER_H__6BAD432D_0189_46A9_95ED_EF869CFC6CE1__INCLUDED_)

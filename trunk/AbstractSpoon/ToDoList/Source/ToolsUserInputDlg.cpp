@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToolsUserInputDlg.cpp : implementation file
@@ -50,22 +64,21 @@ static char THIS_FILE[] = __FILE__;
 const UINT LABEL_X = 7;
 const UINT ITEM_X = 70;
 const UINT LABEL_Y = 7; // just the start pos
-const UINT SPACING = 6; 
+const UINT SPACING = 6;
 const UINT BTN_CX = 50;
 const UINT BTN_CY = 14;
 
 CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp) : CRuntimeDlg()
 {
 	//{{AFX_DATA_INIT(CToolsUserInputDlg)
-		// NOTE: the ClassWizard will add member initialization here
+	// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 
 	// process the user input items and save them off
 	CCLArgArray aArgs;
 	int nArgCount = tcp.GetArguments(aArgs);
 	UINT nCtrlID = 1;
-	int nMaxWidth = 0;
-	
+
 	CPreferences prefs;
 
 	if (nArgCount)
@@ -79,7 +92,7 @@ CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp) : CRuntim
 			tuii.sName.MakeLower();
 
 			CLA_TYPE nType = aArgs[nArg].nType;
-	
+
 			switch (nType)
 			{
 			case CLAT_USERFILE:
@@ -110,7 +123,7 @@ CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp) : CRuntim
 				tuii.sizeDLU.cy = 13;
 				break;
 			}
-			
+
 			if (tuii.pCtrl)
 			{
 				if (!tuii.sName.IsEmpty())
@@ -121,14 +134,18 @@ CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp) : CRuntim
 
 					tuii.sDefValue = aArgs[nArg].sDefValue;
 
-					// if sDefValue is empty see if we previously saved a value for this control 
+					// if sDefValue is empty see if we previously saved a value for this control
 					if (tuii.sDefValue.IsEmpty())
+					{
 						tuii.sDefValue = prefs.GetProfileString(_T("Tools\\UserInput"), tuii.sLabel);
+					}
 
 					m_aInputItems.Add(tuii);
 				}
 				else
+				{
 					delete tuii.pCtrl;
+				}
 			}
 		}
 	}
@@ -138,12 +155,13 @@ CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp) : CRuntim
 
 	if (nNumCtrls)
 	{
+		int nMaxWidth = 0;
 		int nYPos = LABEL_Y + SPACING;
 
 		for (int nCtrl = 0; nCtrl < nNumCtrls; nCtrl++)
 		{
 			TUINPUTITEM& tuii = m_aInputItems[nCtrl];
-			
+
 			if (AddRCControl(tuii.pCtrl, tuii.sDefValue, tuii.nStyle, WS_EX_CLIENTEDGE, ITEM_X, nYPos, tuii.sizeDLU.cx, tuii.sizeDLU.cy, tuii.nCtrlID))
 			{
 				// add label
@@ -152,7 +170,9 @@ CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp) : CRuntim
 				nYPos += (tuii.sizeDLU.cy + SPACING);
 
 				if (nMaxWidth < (int)(ITEM_X + tuii.sizeDLU.cx))
+				{
 					nMaxWidth = (ITEM_X + tuii.sizeDLU.cx);
+				}
 			}
 		}
 
@@ -172,17 +192,18 @@ CToolsUserInputDlg::~CToolsUserInputDlg()
 	int nCtrl = m_aInputItems.GetSize();
 
 	while (nCtrl--)
+	{
 		delete m_aInputItems[nCtrl].pCtrl;
+	}
 }
 
 void CToolsUserInputDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CRuntimeDlg::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CToolsUserInputDlg)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	// NOTE: the ClassWizard will add DDX and DDV calls here
 	//}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CToolsUserInputDlg, CRuntimeDlg)
 	//{{AFX_MSG_MAP(CToolsUserInputDlg)
@@ -217,7 +238,9 @@ void CToolsUserInputDlg::OnOK()
 			sResult.TrimRight();
 
 			if (sResult.Right(1) != _T("\\"))
+			{
 				sResult += _T('\\');
+			}
 			break;
 
 		case CLAT_USERDATE:
@@ -231,7 +254,9 @@ void CToolsUserInputDlg::OnOK()
 					sResult = date.Format(_T("%Y-%m-%d"));
 				}
 				else
+				{
 					ASSERT(0);
+				}
 			}
 			break;
 		}
@@ -240,7 +265,7 @@ void CToolsUserInputDlg::OnOK()
 	}
 }
 
-BOOL CToolsUserInputDlg::OnInitDialog() 
+BOOL CToolsUserInputDlg::OnInitDialog()
 {
 	CRuntimeDlg::OnInitDialog();
 
@@ -259,7 +284,7 @@ BOOL CToolsUserInputDlg::OnInitDialog()
 				// parse the date to ISO standards ie yyyy-mm-dd
 				SYSTEMTIME sysTime;
 				ZeroMemory(&sysTime, sizeof(sysTime));
-//fabio_2005
+				//fabio_2005
 #if _MSC_VER >= 1400
 				int nRes = _stscanf_s(tuii.sDefValue, _T("%d-%d-%d"), &sysTime.wYear, &sysTime.wMonth, &sysTime.wDay);
 #else
@@ -267,14 +292,16 @@ BOOL CToolsUserInputDlg::OnInitDialog()
 #endif
 
 				if (nRes == 3)
+				{
 					tuii.pCtrl->SendMessage(DTM_SETSYSTEMTIME, GDT_VALID, (LPARAM) &sysTime);
+				}
 			}
 			break;
 		}
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 CString CToolsUserInputDlg::GetResult(LPCTSTR szItemName)

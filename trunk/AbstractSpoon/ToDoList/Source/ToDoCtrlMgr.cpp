@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToDoCtrlMgr.cpp : implementation file
@@ -53,7 +67,9 @@ enum { IM_NONE = -1, IM_READONLY, IM_CHECKEDIN, IM_CHECKEDOUT, IM_NOTLOADED };
 
 #define ASSERTVALIDINDEX(i) { ASSERT (i >= 0 && i < GetCount()); }
 
-CToDoCtrlMgr::CToDoCtrlMgr(CTabCtrl& tabCtrl) : m_tabCtrl(tabCtrl)
+CToDoCtrlMgr::CToDoCtrlMgr(CTabCtrl& tabCtrl) :
+m_tabCtrl(tabCtrl),
+m_pPrefs(NULL)
 {
 }
 
@@ -68,7 +84,7 @@ void CToDoCtrlMgr::SetPrefs(const CPreferencesDlg* pPrefs)
 
 const CPreferencesDlg& CToDoCtrlMgr::Prefs() const
 {
-	ASSERT (m_pPrefs);
+	ASSERT(m_pPrefs);
 	return *m_pPrefs;
 }
 
@@ -97,7 +113,7 @@ const CToDoCtrlMgr::TDCITEM& CToDoCtrlMgr::GetTDCItem(int nIndex) const
 {
 	// hack to get around const problem
 	CToDoCtrlMgr* pThis = const_cast<CToDoCtrlMgr*>(this);
-	
+
 	return pThis->m_aToDoCtrls[nIndex];
 }
 
@@ -128,7 +144,9 @@ CString CToDoCtrlMgr::GetFilePath(int nIndex, BOOL bStrict) const
 CString CToDoCtrlMgr::GetDisplayPath(int nIndex) const
 {
 	if (IsWebTaskList(nIndex))
+	{
 		return GetUrl(nIndex);
+	}
 
 	// else
 	return GetFilePath(nIndex);
@@ -176,7 +194,7 @@ CString CToDoCtrlMgr::GetUrl(int nIndex) const
 	ASSERTVALIDINDEX(nIndex);
 
 	const TDCITEM& tdci = GetTDCItem(nIndex);
-	
+
 	return tdci.sWebServer + tdci.sUrlPath;
 }
 
@@ -185,10 +203,12 @@ BOOL CToDoCtrlMgr::GetWebDetails(int nIndex, CString& sServer, CString& sPath, C
 	ASSERTVALIDINDEX(nIndex);
 
 	if (!IsWebTaskList(nIndex))
+	{
 		return FALSE;
+	}
 
 	const TDCITEM& tdci = GetTDCItem(nIndex);
-	
+
 	sServer = tdci.sWebServer;
 	sPath = tdci.sUrlPath;
 	sUser = tdci.sUser;
@@ -202,7 +222,7 @@ void CToDoCtrlMgr::SetWebDetails(int nIndex, LPCTSTR szServer, LPCTSTR szPath, L
 	ASSERTVALIDINDEX(nIndex);
 
 	TDCITEM& tdci = GetTDCItem(nIndex);
-	
+
 	tdci.sWebServer = szServer;
 	tdci.sUrlPath = szPath;
 	tdci.sUser = szUser;
@@ -213,7 +233,7 @@ void CToDoCtrlMgr::SetWebDetails(int nIndex, LPCTSTR szServer, LPCTSTR szPath, L
 	UpdateTabItemText(nIndex);
 }
 
-TDCM_PATHTYPE CToDoCtrlMgr::RefreshPathType(int nIndex) 
+TDCM_PATHTYPE CToDoCtrlMgr::RefreshPathType(int nIndex)
 {
 	ASSERTVALIDINDEX(nIndex);
 
@@ -255,7 +275,9 @@ BOOL CToDoCtrlMgr::RefreshLastModified(int nIndex)
 	// if the tasklist is checked out then always return FALSE because
 	// noone else should be able to modify it (by any means).
 	if (tdci.pTDC->IsCheckedOut())
+	{
 		return FALSE;
+	}
 
 	// else
 	return (timeNow > 0 && timePrev > 0 && timeNow != timePrev);
@@ -325,18 +347,22 @@ int CToDoCtrlMgr::CanCheckInOut(int nIndex) const
 	ASSERTVALIDINDEX(nIndex);
 
 	if (!Prefs().GetEnableSourceControl())
+	{
 		return FALSE;
+	}
 
 	const CFilteredToDoCtrl& tdc = GetToDoCtrl(nIndex);
-	
+
 	BOOL bCanCheckInOut = (tdc.CompareFileFormat() != TDCFF_NEWER);
-	
+
 	if (bCanCheckInOut)
 	{
 		bCanCheckInOut &= PathSupportsSourceControl(nIndex);
-		
+
 		if (bCanCheckInOut)
+		{
 			bCanCheckInOut &= !GetReadOnlyStatus(nIndex);
+		}
 	}
 
 	return bCanCheckInOut;
@@ -374,17 +400,23 @@ void CToDoCtrlMgr::UpdateToDoCtrlReadOnlyUIState(int nIndex)
 
 void CToDoCtrlMgr::UpdateToDoCtrlReadOnlyUIState(CFilteredToDoCtrl& tdc)
 {
-    LPCTSTR szPath = tdc.GetFilePath();
+	LPCTSTR szPath = tdc.GetFilePath();
 	BOOL bReadOnly = CDriveInfo::IsReadonlyPath(szPath) >  0;
-	
-    if (!bReadOnly)
-        bReadOnly = (tdc.CompareFileFormat() == TDCFF_NEWER);
-	
+
 	if (!bReadOnly)
+	{
+		bReadOnly = (tdc.CompareFileFormat() == TDCFF_NEWER);
+	}
+
+	if (!bReadOnly)
+	{
 		bReadOnly = (PathSupportsSourceControl(szPath) && !tdc.IsCheckedOut());
-	
+	}
+
 	if (!bReadOnly && !Prefs().GetEnableSourceControl())
+	{
 		bReadOnly = tdc.IsSourceControlled();
+	}
 
 	tdc.SetReadonly(bReadOnly);
 }
@@ -407,9 +439,11 @@ int CToDoCtrlMgr::RemoveToDoCtrl(int nIndex, BOOL bDelete)
 	{
 		// checkin as our final task
 		if (tdci.bLoaded && Prefs().GetCheckinOnClose() && PathSupportsSourceControl(nIndex))
+		{
 			tdc.CheckIn();
+		}
 	}
-	
+
 	m_aToDoCtrls.RemoveAt(nIndex);
 	m_tabCtrl.DeleteItem(nIndex);
 
@@ -418,9 +452,13 @@ int CToDoCtrlMgr::RemoveToDoCtrl(int nIndex, BOOL bDelete)
 	if (GetCount())
 	{
 		if (nIndex <= nSel)
+		{
 			nNewSel = max(0, nSel - 1);
+		}
 		else
+		{
 			nNewSel = nSel;
+		}
 
 		m_tabCtrl.SetCurSel(nNewSel);
 	}
@@ -431,7 +469,7 @@ int CToDoCtrlMgr::RemoveToDoCtrl(int nIndex, BOOL bDelete)
 		delete &tdc;
 	}
 
-   return nNewSel;
+	return nNewSel;
 }
 
 int CToDoCtrlMgr::AddToDoCtrl(CFilteredToDoCtrl* pCtrl, BOOL bLoaded)
@@ -468,7 +506,9 @@ void CToDoCtrlMgr::RefreshColumns(int nIndex, CTDCColumnArray& aColumns /*out*/)
 		GetToDoCtrl(nIndex).SetVisibleColumns(aColumns);
 	}
 	else
+	{
 		GetToDoCtrl(nIndex).GetVisibleColumns(aColumns);
+	}
 }
 
 BOOL CToDoCtrlMgr::HasOwnColumns(int nIndex) const
@@ -506,14 +546,18 @@ void CToDoCtrlMgr::RestoreColumns(TDCITEM* pTDCI, const CPreferences& prefs)
 			while (nItem--)
 			{
 				int nCol = prefs.GetProfileInt(sKey, CEnString(_T("Item%d"), nItem), -1);
-				
+
 				if (nCol != -1)
+				{
 					aColumns.Add((TDC_COLUMN)nCol);
+				}
 			}
 		}
 	}
 	else // new tasklist => use defaults
+	{
 		Prefs().GetVisibleColumns(aColumns);
+	}
 
 	pTDCI->pTDC->SetVisibleColumns(aColumns);
 }
@@ -523,19 +567,23 @@ void CToDoCtrlMgr::SaveColumns(const TDCITEM* pTDCI, CPreferences& prefs) const
 	CString sKey = pTDCI->pTDC->GetPreferencesKey(_T("Columns"));
 
 	if (!sKey.IsEmpty())
-	{		
+	{
 		if (pTDCI->bHasOwnColumns)
 		{
 			CTDCColumnArray aColumns;
 			int nItem = pTDCI->pTDC->GetVisibleColumns(aColumns);
-			
+
 			prefs.WriteProfileInt(sKey, _T("Count"), nItem);
-			
+
 			while (nItem--)
+			{
 				prefs.WriteProfileInt(sKey, CEnString(_T("Item%d"), nItem), aColumns[nItem]);
+			}
 		}
 		else
+		{
 			prefs.WriteProfileInt(sKey, _T("Count"), -1);
+		}
 	}
 }
 
@@ -553,20 +601,28 @@ void CToDoCtrlMgr::MoveToDoCtrl(int nIndex, int nNumPlaces)
 	int nOrgCount = m_tabCtrl.GetItemCount();
 
 	if (!CanMoveToDoCtrl(nIndex, nNumPlaces))
+	{
 		return;
+	}
 
 	// cache selection so we can restore it afterwards
 	int nSel = GetSelToDoCtrl(), nNewSel = nSel;
 
 	// work out what the new selection should be
 	if (nIndex == nSel)
+	{
 		nNewSel = (nIndex + nNumPlaces);
+	}
 
 	else if (nIndex > nSel && (nIndex + nNumPlaces) <= nSel)
+	{
 		nNewSel++;
+	}
 
 	else if (nIndex < nSel && (nIndex + nNumPlaces) >= nSel)
+	{
 		nNewSel--;
+	}
 
 	// make copies of existing
 	TCITEM tci;
@@ -574,7 +630,7 @@ void CToDoCtrlMgr::MoveToDoCtrl(int nIndex, int nNumPlaces)
 	tci.mask = TCIF_TEXT | TCIF_IMAGE;
 	tci.pszText = szText;
 	tci.cchTextMax = 127;
-		
+
 	m_tabCtrl.GetItem(nIndex, &tci);
 	TDCITEM tdci = GetTDCItem(nIndex);
 
@@ -589,7 +645,7 @@ void CToDoCtrlMgr::MoveToDoCtrl(int nIndex, int nNumPlaces)
 	// set selection
 	m_tabCtrl.SetCurSel(nNewSel);
 
-	ASSERT (nOrgCount == m_tabCtrl.GetItemCount());
+	ASSERT(nOrgCount == m_tabCtrl.GetItemCount());
 }
 
 BOOL CToDoCtrlMgr::CanMoveToDoCtrl(int nIndex, int nNumPlaces) const
@@ -613,7 +669,7 @@ CString CToDoCtrlMgr::GetArchivePath(LPCTSTR szFilePath) const
 		FileMisc::SplitPath(sFilePath, &sDrive, &sPath, &sFName, &sExt);
 		FileMisc::MakePath(sArchivePath, sDrive, sPath, sFName, _T(".done") + sExt);
 	}
-	
+
 	return sArchivePath;
 }
 
@@ -633,15 +689,19 @@ int CToDoCtrlMgr::ArchiveDoneTasks(int nIndex)
 	CFilteredToDoCtrl& tdc = GetToDoCtrl(nIndex);
 
 	TDC_ARCHIVE nRemove = TDC_REMOVENONE;
-	
+
 	if (Prefs().GetRemoveArchivedTasks())
 	{
 		if (Prefs().GetRemoveOnlyOnAbsoluteCompletion())
+		{
 			nRemove = TDC_REMOVEIFSIBLINGSANDSUBTASKSCOMPLETE;
+		}
 		else
+		{
 			nRemove = TDC_REMOVEALL;
+		}
 	}
-	
+
 	return tdc.ArchiveDoneTasks(GetArchivePath(tdc.GetFilePath()), nRemove, !Prefs().GetDontRemoveFlagged());
 }
 
@@ -650,7 +710,7 @@ int CToDoCtrlMgr::ArchiveSelectedTasks(int nIndex)
 	ASSERTVALIDINDEX(nIndex);
 
 	CFilteredToDoCtrl& tdc = GetToDoCtrl(nIndex);
-	
+
 	return tdc.ArchiveSelectedTasks(GetArchivePath(tdc.GetFilePath()), Prefs().GetRemoveArchivedTasks());
 }
 
@@ -660,7 +720,7 @@ int CToDoCtrlMgr::SortToDoCtrlsByName()
 
 	if (!AreToDoCtrlsSorted())
 	{
-		// save off current selection 
+		// save off current selection
 		CFilteredToDoCtrl* pTDC = &GetToDoCtrl(nSel);
 
 		qsort(m_aToDoCtrls.GetData(), m_aToDoCtrls.GetSize(), sizeof(TDCITEM), SortProc);
@@ -674,11 +734,13 @@ int CToDoCtrlMgr::SortToDoCtrlsByName()
 
 			// check if this was the selected item
 			if (pTDC == &GetToDoCtrl(nTDC))
+			{
 				nSel = nTDC;
+			}
 		}
 
 		// set selection
-		ASSERT (nSel != -1);
+		ASSERT(nSel != -1);
 	}
 
 	return nSel;
@@ -698,7 +760,9 @@ int CToDoCtrlMgr::SortProc(const void* v1, const void* v2)
 BOOL CToDoCtrlMgr::AreToDoCtrlsSorted() const
 {
 	if (GetCount() <= 1)
+	{
 		return TRUE;
+	}
 
 	// check that each item is 'less' than the next
 	CString sPrev = GetTDCItem(0).GetFriendlyProjectName();
@@ -708,7 +772,9 @@ BOOL CToDoCtrlMgr::AreToDoCtrlsSorted() const
 		CString sTDC = GetTDCItem(nTDC).GetFriendlyProjectName();
 
 		if (sPrev.CompareNoCase(sTDC) > 0)
+		{
 			return FALSE;
+		}
 
 		sPrev = sTDC;
 	}
@@ -721,48 +787,57 @@ CString CToDoCtrlMgr::UpdateTabItemText(int nIndex)
 	if (nIndex < 0)
 	{
 		nIndex = GetSelToDoCtrl();
-		
+
 		if (nIndex < 0)
+		{
 			return _T("");
+		}
 	}
-	
+
 	TDCITEM& tdci = GetTDCItem(nIndex);
-	
+
 	// project name
 	CString sProjectName = tdci.GetFriendlyProjectName();
 
-	// double up ampersands to avoid unexpected underlining
-	sProjectName.Replace(_T("&"), _T("&&"));
-
 	if (tdci.pTDC->IsModified() && !tdci.pTDC->IsReadOnly())
+	{
 		sProjectName += _T("*");
-	
+	}
+
 	// appropriate icon
 	int nImage = IM_NONE;
 
 	if (!tdci.bLoaded)
+	{
 		nImage = IM_NOTLOADED;
-	
+	}
+
 	else if (tdci.bLastStatusReadOnly > 0)
+	{
 		nImage = IM_READONLY;
-	
+	}
+
 	else if (PathSupportsSourceControl(nIndex))
-        nImage = tdci.pTDC->IsCheckedOut() ? IM_CHECKEDOUT : IM_CHECKEDIN;
-	
+	{
+		nImage = tdci.pTDC->IsCheckedOut() ? IM_CHECKEDOUT : IM_CHECKEDIN;
+	}
+
 	else if (tdci.pTDC->IsReadOnly())
+	{
 		nImage = IM_READONLY;
-	
-    // update tab array
+	}
+
+	// update tab array
 	TCITEM tci;
 	tci.mask = TCIF_TEXT | TCIF_IMAGE;
 	tci.pszText = (LPTSTR)(LPCTSTR)sProjectName;
 	tci.iImage = nImage;
-	
+
 	m_tabCtrl.SetItem(nIndex, &tci);
 
 	// remove doubled-up ampersands
 	sProjectName.Replace(_T("&&"), _T("&"));
-	
+
 	return sProjectName;
 }
 
@@ -772,11 +847,11 @@ CString CToDoCtrlMgr::GetTabItemText(int nIndex) const
 
 	TCITEM tci;
 	CString sText;
-	
+
 	tci.mask = TCIF_TEXT;
 	tci.pszText = sText.GetBuffer(128);
 	tci.cchTextMax = 127;
-		
+
 	m_tabCtrl.GetItem(nIndex, &tci);
 
 	sText.ReleaseBuffer();
@@ -796,10 +871,14 @@ CString CToDoCtrlMgr::GetTabItemTooltip(int nIndex) const
 
 	switch (tci.iImage)
 	{
-	case IM_READONLY:	return CEnString(IDS_TABTIP_READONLY);
-	case IM_CHECKEDIN:	return CEnString(IDS_TABTIP_CHECKEDIN);
-	case IM_CHECKEDOUT: return CEnString(IDS_TABTIP_CHECKEDOUT);
-	case IM_NOTLOADED:	return CEnString(IDS_TABTIP_NOTLOADED);
+	case IM_READONLY:
+		return CEnString(IDS_TABTIP_READONLY);
+	case IM_CHECKEDIN:
+		return CEnString(IDS_TABTIP_CHECKEDIN);
+	case IM_CHECKEDOUT:
+		return CEnString(IDS_TABTIP_CHECKEDOUT);
+	case IM_NOTLOADED:
+		return CEnString(IDS_TABTIP_NOTLOADED);
 
 	case IM_NONE:
 	default:
@@ -812,24 +891,24 @@ CString CToDoCtrlMgr::GetTabItemTooltip(int nIndex) const
 BOOL CToDoCtrlMgr::PathTypeSupportsSourceControl(TDCM_PATHTYPE nType) const
 {
 	switch (nType)
-    {
-    case TDCM_FIXED:          
-    case TDCM_REMOTE:         
-        break;
-		
-    default: // everything else
-        return FALSE;
-    }
-	
+	{
+	case TDCM_FIXED:
+	case TDCM_REMOTE:
+		break;
+
+	default: // everything else
+		return FALSE;
+	}
+
 	BOOL bEnableSourceControl = Prefs().GetEnableSourceControl();
 	BOOL bLanOnly = Prefs().GetSourceControlLanOnly();
-	
-    return (bEnableSourceControl && (!bLanOnly || nType == TDCM_REMOTE));
+
+	return (bEnableSourceControl && (!bLanOnly || nType == TDCM_REMOTE));
 }
 
 BOOL CToDoCtrlMgr::PathSupportsSourceControl(LPCTSTR szPath) const
 {
-    int nType = CDriveInfo::GetPathType(szPath);
+	int nType = CDriveInfo::GetPathType(szPath);
 
 	return PathTypeSupportsSourceControl(TDCITEM::TranslatePathType(nType));
 }
@@ -837,28 +916,28 @@ BOOL CToDoCtrlMgr::PathSupportsSourceControl(LPCTSTR szPath) const
 BOOL CToDoCtrlMgr::PathSupportsSourceControl(int nIndex) const
 {
 	TDCM_PATHTYPE nType = GetFilePathType(nIndex);
-	
+
 	return PathTypeSupportsSourceControl(nType);
 }
 
 BOOL CToDoCtrlMgr::IsSourceControlled(int nIndex) const
 {
 	ASSERTVALIDINDEX(nIndex);
-	
+
 	return GetToDoCtrl(nIndex).IsSourceControlled();
 }
 
 void CToDoCtrlMgr::SetNeedsPreferenceUpdate(int nIndex, BOOL bNeed)
 {
 	ASSERTVALIDINDEX(nIndex);
-	
+
 	GetTDCItem(nIndex).bNeedPrefUpdate = bNeed;
 }
 
 BOOL CToDoCtrlMgr::GetNeedsPreferenceUpdate(int nIndex) const
 {
 	ASSERTVALIDINDEX(nIndex);
-	
+
 	return GetTDCItem(nIndex).bNeedPrefUpdate;
 }
 
@@ -867,20 +946,24 @@ void CToDoCtrlMgr::SetAllNeedPreferenceUpdate(BOOL bNeed, int nExcept)
 	for (int nIndex = 0; nIndex < m_aToDoCtrls.GetSize(); nIndex++)
 	{
 		if (nIndex != nExcept)
+		{
 			GetTDCItem(nIndex).bNeedPrefUpdate = bNeed;
+		}
 	}
 }
 
 int CToDoCtrlMgr::FindToDoCtrl(LPCTSTR szFilePath) const
 {
-	if (!szFilePath || GetFileAttributes(szFilePath) != 0xffffffff)
+	if (!szFilePath || FileMisc::FileExists(szFilePath))
 	{
 		int nCtrl = GetCount();
-	
+
 		while (nCtrl--)
 		{
 			if (GetFilePath(nCtrl).CompareNoCase(szFilePath) == 0)
+			{
 				return nCtrl;
+			}
 		}
 	}
 
@@ -890,11 +973,13 @@ int CToDoCtrlMgr::FindToDoCtrl(LPCTSTR szFilePath) const
 int CToDoCtrlMgr::FindToDoCtrl(const CFilteredToDoCtrl* pTDC) const
 {
 	int nCtrl = GetCount();
-	
+
 	while (nCtrl--)
 	{
 		if (pTDC == GetTDCItem(nCtrl).pTDC)
+		{
 			return nCtrl;
+		}
 	}
 
 	return -1;
@@ -913,26 +998,30 @@ void CToDoCtrlMgr::PreparePopupMenu(CMenu& menu, UINT nID1, int nMax) const
 
 	// delete any unused items
 	for (; nTDC < nMax; nTDC++)
+	{
 		menu.RemoveMenu(nID1 + nTDC, MF_BYCOMMAND);
+	}
 
 }
 
 BOOL CToDoCtrlMgr::HasTasks(int nIndex) const
 {
 	ASSERTVALIDINDEX(nIndex);
-	
+
 	return GetToDoCtrl(nIndex).GetTaskCount();
 }
 
 BOOL CToDoCtrlMgr::AnyHasTasks() const
 {
 	int nCtrl = GetCount();
-	
+
 	while (nCtrl--)
 	{
 		if (HasTasks(nCtrl))
+		{
 			return TRUE;
+		}
 	}
-	
+
 	return FALSE;
 }

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ToDoCtrlReminders.cpp : implementation file
@@ -46,7 +60,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CToDoCtrlReminders
 
-CToDoCtrlReminders::CToDoCtrlReminders()
+CToDoCtrlReminders::CToDoCtrlReminders() :
+m_pWndNotify(NULL)
 {
 }
 
@@ -54,14 +69,12 @@ CToDoCtrlReminders::~CToDoCtrlReminders()
 {
 }
 
-
 BEGIN_MESSAGE_MAP(CToDoCtrlReminders, CWnd)
 	//{{AFX_MSG_MAP(CToDoCtrlReminders)
 	ON_WM_TIMER()
 	ON_WM_ACTIVATE()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CToDoCtrlReminders message handlers
@@ -71,12 +84,14 @@ BOOL CToDoCtrlReminders::Initialize(CWnd* pNotify)
 	ASSERT_VALID(pNotify);
 
 	if (!pNotify || !pNotify->GetSafeHwnd())
+	{
 		return FALSE;
+	}
 
 	m_pWndNotify = pNotify;
 
 	// create ourselves so that we can receive timer messages
-	if (!Create(_T("STATIC"), _T(""), WS_CHILD, CRect (0, 0, 0, 0), pNotify, 0xffff))
+	if (!Create(_T("STATIC"), _T(""), WS_CHILD, CRect(0, 0, 0, 0), pNotify, 0xffff))
 	{
 		m_pWndNotify = NULL;
 		return FALSE;
@@ -98,23 +113,29 @@ void CToDoCtrlReminders::CloseToDoCtrl(const CFilteredToDoCtrl& tdc)
 
 void CToDoCtrlReminders::SetReminder(const TDCREMINDER& rem)
 {
-	ASSERT (m_pWndNotify);
+	ASSERT(m_pWndNotify);
 
 	int nRem = FindReminder(rem);
 	TDCREMINDER temp = rem; // to get around constness
 
 	if (nRem != -1) // already exists
-		m_aReminders[nRem] = rem; // replace
+	{
+		m_aReminders[nRem] = rem;   // replace
+	}
 	else
+	{
 		m_aReminders.Add(temp);
+	}
 
 	// start time if we have any reminders
 	if (m_aReminders.GetSize())
+	{
 #ifdef _DEBUG
 		SetTimer(1, 10000, NULL);
 #else
 		SetTimer(1, 60000, NULL); // every minute
 #endif
+	}
 }
 
 void CToDoCtrlReminders::RemoveReminder(const TDCREMINDER& rem)
@@ -124,7 +145,7 @@ void CToDoCtrlReminders::RemoveReminder(const TDCREMINDER& rem)
 
 void CToDoCtrlReminders::RemoveReminder(DWORD dwTaskID, const CFilteredToDoCtrl* pTDC)
 {
-	ASSERT (m_pWndNotify);
+	ASSERT(m_pWndNotify);
 
 	int nRem = FindReminder(dwTaskID, pTDC);
 
@@ -134,14 +155,18 @@ void CToDoCtrlReminders::RemoveReminder(DWORD dwTaskID, const CFilteredToDoCtrl*
 
 		// kill time if we have no reminders
 		if (m_aReminders.GetSize() == 0)
+		{
 			KillTimer(1);
+		}
 	}
 }
 
 BOOL CToDoCtrlReminders::GetReminder(int nRem, TDCREMINDER& rem) const
 {
 	if (nRem < 0 || nRem >= m_aReminders.GetSize())
+	{
 		return FALSE;
+	}
 
 	rem = m_aReminders[nRem];
 	return TRUE;
@@ -161,7 +186,9 @@ int CToDoCtrlReminders::FindReminder(DWORD dwTaskID, const CFilteredToDoCtrl* pT
 		TDCREMINDER rem = m_aReminders[nRem];
 
 		if (dwTaskID == rem.dwTaskID && pTDC == rem.pTDC)
+		{
 			return nRem;
+		}
 	}
 
 	return -1;
@@ -170,6 +197,9 @@ int CToDoCtrlReminders::FindReminder(DWORD dwTaskID, const CFilteredToDoCtrl* pT
 void CToDoCtrlReminders::SaveAndRemoveReminders(const CFilteredToDoCtrl& tdc)
 {
 	CPreferences prefs;
+
+	// nRem is the total number of reminders for all tasklists
+	// nRemCount is the number of reminders for 'tdc'
 	int nRemCount = 0, nRem = m_aReminders.GetSize();
 	CString sFileKey = _T("Reminders\\") + CPreferences::KeyFromFile(tdc.GetFilePath(), FALSE);
 
@@ -184,8 +214,18 @@ void CToDoCtrlReminders::SaveAndRemoveReminders(const CFilteredToDoCtrl& tdc)
 
 			// note: we don't save the snooze value, this gets reset each time
 			prefs.WriteProfileInt(sKey, _T("TaskID"), rem.dwTaskID);
-			prefs.WriteProfileDouble(sKey, _T("LeadIn"), rem.dRelativeDaysLeadIn * 24 * 60); // save as minutes
-			prefs.WriteProfileInt(sKey, _T("FromWhen"), rem.nRelativeFromWhen);
+			prefs.WriteProfileInt(sKey, _T("Relative"), rem.bRelative);
+
+			if (rem.bRelative)
+			{
+				prefs.WriteProfileDouble(sKey, _T("LeadIn"), rem.dRelativeDaysLeadIn * 24 * 60); // save as minutes
+				prefs.WriteProfileInt(sKey, _T("FromWhen"), rem.nRelativeFromWhen);
+			}
+			else
+			{
+				prefs.WriteProfileDouble(sKey, _T("AbsoluteDate"), rem.dtAbsolute.m_dt);
+			}
+
 			prefs.WriteProfileInt(sKey, _T("Enabled"), rem.bEnabled);
 			prefs.WriteProfileString(sKey, _T("SoundFile"), rem.sSoundFile);
 
@@ -198,7 +238,9 @@ void CToDoCtrlReminders::SaveAndRemoveReminders(const CFilteredToDoCtrl& tdc)
 
 	// kill timer if no reminders
 	if (m_aReminders.GetSize() == 0)
+	{
 		KillTimer(1);
+	}
 }
 
 void CToDoCtrlReminders::LoadReminders(const CFilteredToDoCtrl& tdc)
@@ -214,8 +256,18 @@ void CToDoCtrlReminders::LoadReminders(const CFilteredToDoCtrl& tdc)
 
 		TDCREMINDER rem;
 		rem.dwTaskID = prefs.GetProfileInt(sKey, _T("TaskID"));
-		rem.dRelativeDaysLeadIn = prefs.GetProfileDouble(sKey, _T("LeadIn")) / (24 * 60);
-		rem.nRelativeFromWhen = (TDC_REMINDER)prefs.GetProfileInt(sKey, _T("FromWhen"));
+		rem.bRelative = prefs.GetProfileInt(sKey, _T("Relative"));
+
+		if (rem.bRelative)
+		{
+			rem.dRelativeDaysLeadIn = prefs.GetProfileDouble(sKey, _T("LeadIn")) / (24 * 60);
+			rem.nRelativeFromWhen = (TDC_REMINDER)prefs.GetProfileInt(sKey, _T("FromWhen"));
+		}
+		else
+		{
+			rem.dtAbsolute = prefs.GetProfileDouble(sKey, _T("AbsoluteDate"));
+		}
+
 		rem.bEnabled = prefs.GetProfileInt(sKey, _T("Enabled"));
 		rem.sSoundFile = prefs.GetProfileString(sKey, _T("SoundFile"));
 		rem.pTDC = &tdc;
@@ -225,14 +277,16 @@ void CToDoCtrlReminders::LoadReminders(const CFilteredToDoCtrl& tdc)
 
 	// start timer if some reminders
 	if (m_aReminders.GetSize())
+	{
 #ifdef _DEBUG
 		SetTimer(1, 10000, NULL);
 #else
 		SetTimer(1, 60000, NULL); // every minute
 #endif
+	}
 }
 
-void CToDoCtrlReminders::OnTimer(UINT nIDEvent) 
+void CToDoCtrlReminders::OnTimer(UINT nIDEvent)
 {
 	// iterate all the reminders looking for matches
 	int nRem = m_aReminders.GetSize();
@@ -243,7 +297,9 @@ void CToDoCtrlReminders::OnTimer(UINT nIDEvent)
 
 		// check for disabled reminders
 		if (!rem.bEnabled)
+		{
 			continue;
+		}
 
 		// check for completed tasks
 		if (rem.pTDC->IsTaskDone(rem.dwTaskID, TDCCHECKALL))
@@ -253,19 +309,37 @@ void CToDoCtrlReminders::OnTimer(UINT nIDEvent)
 		}
 
 		// else
-		COleDateTime dateRem, dateNow = COleDateTime::GetCurrentTime();
+		BOOL bNotify = FALSE;
+		COleDateTime dateNow = COleDateTime::GetCurrentTime();
 
-		if (rem.nRelativeFromWhen == TDCR_DUEDATE)
-			dateRem = rem.pTDC->GetTaskDate(rem.dwTaskID, TDCD_DUE);
-		else // start date
-			dateRem = rem.pTDC->GetTaskDate(rem.dwTaskID, TDCD_START);
-
-		if (dateRem > 0 && (dateNow.m_dt + rem.dRelativeDaysLeadIn - rem.dDaysSnooze > dateRem.m_dt))
+		if (rem.bRelative)
 		{
-			ASSERT (m_pWndNotify);
+			COleDateTime dateRem;
+
+			if (rem.nRelativeFromWhen == TDCR_DUEDATE)
+			{
+				dateRem = rem.pTDC->GetTaskDate(rem.dwTaskID, TDCD_DUE);
+			}
+			else // start date
+			{
+				dateRem = rem.pTDC->GetTaskDate(rem.dwTaskID, TDCD_START);
+			}
+
+			bNotify = (dateRem > 0 && (dateNow.m_dt + rem.dRelativeDaysLeadIn - rem.dDaysSnooze > dateRem.m_dt));
+		}
+		else // absolute
+		{
+			bNotify = (dateNow.m_dt - rem.dDaysSnooze > rem.dtAbsolute);
+		}
+
+		if (bNotify)
+		{
+			ASSERT(m_pWndNotify);
 
 			if (m_pWndNotify->SendMessage(WM_TD_REMINDER, 0, (LPARAM)&rem) == 0L)
+			{
 				m_aReminders[nRem] = rem;
+			}
 			else
 			{
 				m_aReminders.RemoveAt(nRem);
@@ -273,6 +347,6 @@ void CToDoCtrlReminders::OnTimer(UINT nIDEvent)
 			}
 		}
 	}
-	
+
 	CWnd::OnTimer(nIDEvent);
 }

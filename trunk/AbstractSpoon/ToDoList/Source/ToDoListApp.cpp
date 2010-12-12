@@ -258,7 +258,7 @@ BOOL CToDoListApp::ParseCommandLine(CEnCommandLineInfo* pInfo)
 			sFilePath.Replace(_T("%20"), _T(" "));
 
 			// verify the file existence unless the path is relative
-			if (/*PathIsRelative(sFilePath) || */FileMisc::FileExists(sFilePath))
+			if (FileMisc::FileExists(sFilePath))
 			{
 				pInfo->m_strFileName = sFilePath;
 				pInfo->SetOption(_T("tid"), dwID);

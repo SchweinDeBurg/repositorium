@@ -74,7 +74,6 @@ static char THIS_FILE[] = __FILE__;
 #define SAVE_UNDO(op, id, pid, psid) AddUndoElement(op, id, pid, psid)
 #define SAVE_UNDOEDIT(id, tdi, a) if (m_undo.IsActive()) m_undo.SaveElement(TDCUEO_EDIT, id, 0, 0, (WORD)a, tdi)
 
-
 CUndoAction::CUndoAction(CToDoCtrlData& data, TDCUNDOACTIONTYPE nType) : m_data(data)
 {
 	m_bSuccess = m_data.BeginNewUndoAction(nType);
@@ -127,7 +126,6 @@ BOOL CToDoCtrlData::Locate(DWORD dwParentID, DWORD dwPrevSiblingID, TODOSTRUCTUR
 	{
 		m_struct.FindTask(dwPrevSiblingID, pTDSParent, nPos);
 	}
-
 	else if (dwParentID)
 	{
 		pTDSParent = m_struct.FindTask(dwParentID);
@@ -3302,7 +3300,6 @@ int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSo
 			{
 				nPriority1 = -1;
 			}
-
 			else if (IsTaskDue(dwTask1ID) && HasStyle(TDCS_DUEHAVEHIGHESTPRIORITY) &&
 				(bSortDueTodayHigh || !IsTaskDue(dwTask1ID, TRUE)))
 			{
@@ -3318,7 +3315,6 @@ int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSo
 			{
 				nPriority2 = -1;
 			}
-
 			else if (IsTaskDue(dwTask2ID) && HasStyle(TDCS_DUEHAVEHIGHESTPRIORITY) &&
 				(bSortDueTodayHigh || !IsTaskDue(dwTask2ID, TRUE)))
 			{
@@ -3347,7 +3343,6 @@ int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSo
 			{
 				nRisk1 = -1;
 			}
-
 			else if (bUseHighestRisk)
 			{
 				nRisk1 = GetHighestRisk(dwTask1ID);
@@ -3358,7 +3353,6 @@ int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSo
 			{
 				nRisk2 = -1;
 			}
-
 			else if (bUseHighestRisk)
 			{
 				nRisk2 = GetHighestRisk(dwTask2ID);
