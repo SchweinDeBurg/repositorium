@@ -142,8 +142,6 @@ BEGIN_MESSAGE_MAP(CFilteredToDoCtrl, CToDoCtrl)
 	ON_REGISTERED_MESSAGE(WM_PCANCELEDIT, OnEditCancel)
 	ON_REGISTERED_MESSAGE(WM_NCG_WIDTHCHANGE, OnGutterWidthChange)
 	ON_MESSAGE(WM_TDC_REFRESHFILTER, OnRefreshFilter)
-	//	ON_NOTIFY_EX_RANGE(TTN_NEEDTEXT, 0, 0xFFFF, OnToolTipNotify)
-	//	ON_NOTIFY_EX_RANGE(TTN_SHOW, 0, 0xFFFF, OnToolTipShow)
 	ON_CBN_EDITCHANGE(IDC_DUETIME, OnEditChangeDueTime)
 END_MESSAGE_MAP()
 
@@ -317,7 +315,6 @@ void CFilteredToDoCtrl::SaveFilter(const FTDCFILTER& filter, CPreferences& prefs
 	}
 }
 
-
 void CFilteredToDoCtrl::OnDestroy()
 {
 	if (m_nCurView != FTCV_UNSET)
@@ -400,7 +397,6 @@ void CFilteredToDoCtrl::OnEditChangeDueTime()
 		SetStyle(TDCS_REFILTERONMODIFY, TRUE, FALSE);
 	}
 }
-
 
 void CFilteredToDoCtrl::OnClickHeader(NMHDR* pNMHDR, LRESULT* pResult)
 {
@@ -1901,9 +1897,7 @@ CFilteredToDoCtrl::TDI_STATE CFilteredToDoCtrl::GetItemState(int nItem)
 	{
 		return TDIS_DROPHILITED;
 	}
-
 	else if (m_list.GetItemState(nItem, LVIS_SELECTED) & LVIS_SELECTED)
-		//	else if (IsItemSelected(nItem))
 	{
 		return (TasksHaveFocus() ? TDIS_SELECTED : TDIS_SELECTEDNOTFOCUSED);
 	}
@@ -2314,7 +2308,6 @@ void CFilteredToDoCtrl::DrawColumnHeaderText(CDC* pDC, int nCol, const CRect& rC
 	}
 }
 
-
 TDC_COLUMN CFilteredToDoCtrl::GetColumnID(int nCol) const
 {
 	TDCCOLUMN* pCol = GetColumn(nCol);
@@ -2343,7 +2336,6 @@ TDCCOLUMN* CFilteredToDoCtrl::GetColumn(int nCol) const
 
 	// else
 	return &COLUMNS[nCol];
-
 }
 
 int CFilteredToDoCtrl::GetColumnIndex(TDC_COLUMN nColID) const
@@ -2641,7 +2633,7 @@ TODOITEM* CFilteredToDoCtrl::NewTask(HTREEITEM htiParent)
 }
 
 HTREEITEM CFilteredToDoCtrl::NewTask(LPCTSTR szText, TDC_INSERTWHERE nWhere,
-	/*BOOL bSelect, */BOOL bEditText)
+	BOOL bEditText)
 {
 	BOOL bWantEditText = bEditText;
 
@@ -3277,7 +3269,6 @@ void CFilteredToDoCtrl::OnListKeyDown(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 	// for reasons I have not yet divined, we are not receiving this message
 	// as expected. So I've added an ASSERT(0) should it ever come to life
 	// and have handled the key down message in ScWindowProc
-	//LPNMKEY pNMK = (LPNMKEY)pNMHDR;
 	ASSERT(0);
 
 	*pResult = 0;
@@ -3685,7 +3676,6 @@ void CFilteredToDoCtrl::ResyncListSelection()
 	}
 }
 
-
 void CFilteredToDoCtrl::SelectPrevTasksInHistory()
 {
 	if (InListView() && CanSelectPrevTasksInHistory())
@@ -3893,7 +3883,6 @@ LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPAR
 		}
 
 		break;
-
 
 	case WM_NOTIFY:
 		{
@@ -4200,7 +4189,6 @@ void CFilteredToDoCtrl::OnListGetInfoTip(NMHDR* pNMHDR, LRESULT* pResult)
 #endif
 		}
 	}
-
 }
 
 void CFilteredToDoCtrl::UpdateSelectedTaskPath()
@@ -4282,7 +4270,6 @@ void CFilteredToDoCtrl::LoadSortState(const CPreferences& prefs, LPCTSTR szFileP
 		m_sortList.nBy1 = max(m_sortList.nBy1, TDC_UNSORTED); // backwards compatibility
 	}
 }
-
 
 void CFilteredToDoCtrl::RedrawReminders() const
 {
