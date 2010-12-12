@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_SPELLCHECKDLG_H__796FCD48_463A_4291_9261_69EA5122ABA0__INCLUDED_)
@@ -40,6 +54,7 @@
 #include "../../CodeProject/Source/RuntimeDlg.h"
 #include "../../CodeProject/Source/RichEditNcBorder.h"
 #include "RichEditSpellCheck.h"
+#include "../../CodeProject/Source/RichEditBaseCtrl.h"
 
 #include "../../CodeProject/Source/StaticLink.h"
 
@@ -85,16 +100,25 @@ public:
 	CSpellCheckDlg(LPCTSTR szDictionaryPath = NULL, ISpellCheck* pSpellCheck = NULL, LPCTSTR szText = NULL, CWnd* pParent = NULL);   // standard constructor
 	virtual ~CSpellCheckDlg();
 
-	BOOL IsInitialized() { return ((m_pSpellCheck || !m_sText.IsEmpty()) && m_pSpellChecker); }
+	BOOL IsInitialized()
+	{
+		return ((m_pSpellCheck || !m_sText.IsEmpty()) && m_pSpellChecker);
+	}
 	int DoModal(BOOL bEndOnNoErrors = FALSE);
 
 	void SetSpellCheck(ISpellCheck* pSpellCheck);
 	void SetDictionaryDownloadUrl(LPCTSTR szUrl);
 
 	void SetText(LPCTSTR szText);
-	CString GetCorrectedText() { return m_sText; }
+	CString GetCorrectedText()
+	{
+		return m_sText;
+	}
 
-	BOOL MadeChanges() const { return m_bMadeChanges; }
+	BOOL MadeChanges() const
+	{
+		return m_bMadeChanges;
+	}
 
 	// for overiding the default text for translating
 	static void SetItemText(UINT nIDItem, UINT nIDText);
@@ -102,13 +126,12 @@ public:
 protected:
 	// Dialog Data
 	//{{AFX_DATA(CSpellCheckDlg)
-	CRichEditCtrl	m_reText;
-	CListBox	m_lbSuggestions;
-	CString	m_sText;
-	CString	m_sMisspeltWord;
-	CString	m_sSuggestion;
+	CRichEditBaseCtrl   m_reText;
+	CListBox    m_lbSuggestions;
+	CString m_sText;
+	CString m_sMisspeltWord;
+	CString m_sSuggestion;
 	//}}AFX_DATA
-	//	CHARRANGE m_crMisspeltWord;
 	ISpellChecker* m_pSpellChecker;
 	ISpellCheck* m_pSpellCheck;
 	CString m_sEnginePath;
@@ -161,7 +184,10 @@ protected:
 	CString GetItemText(UINT nIDItem, LPCTSTR szDefault);
 
 	virtual CPoint GetInitialPos() const;
-	virtual CString OverrideItemText(UINT nIDItem) { return GetItemText(nIDItem, NULL); }
+	virtual CString OverrideItemText(UINT nIDItem)
+	{
+		return GetItemText(nIDItem, NULL);
+	}
 };
 
 //{{AFX_INSERT_LOCATION}}

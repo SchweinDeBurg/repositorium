@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESBASE_H__19D0237F_28DC_4B45_9762_DF9B4F7D8492__INCLUDED_)
@@ -41,6 +55,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesPageBase dialog
 
+const UINT WM_PPB_CTRLCHANGE = ::RegisterWindowMessage(_T("WM_PPB_CTRLCHANGE"));
+
 class CPreferencesPageBase : public CPropertyPage
 {
 	DECLARE_DYNCREATE(CPreferencesPageBase)
@@ -55,6 +71,10 @@ public:
 
 protected:
 	CWnd* GetDlgItem(UINT nID) const;
+
+	void OnControlChange(UINT nID = -1);
+	DECLARE_MESSAGE_MAP()
+
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -79,6 +99,17 @@ protected:
 	virtual void OnOK();
 	virtual BOOL OnInitDialog();
 
+	void OnApply(); // called from derived class
+
+	BOOL EnsurePageCreated(int nPage)
+	{
+		return m_pphost.EnsurePageCreated(nPage);
+	}
+	BOOL EnsurePageCreated(const CPreferencesPageBase* pPage)
+	{
+		return m_pphost.EnsurePageCreated(pPage);
+	}
+
 	virtual BOOL SetActivePage(int nPage);
 	virtual BOOL SetActivePage(CPreferencesPageBase* pPage);
 	virtual BOOL AddPage(CPreferencesPageBase* pPage);
@@ -89,11 +120,23 @@ protected:
 	BOOL CreatePPHost(UINT nHostID);
 	BOOL CreatePPHost(LPRECT pRect);
 
-	int GetActiveIndex() const { return m_pphost.GetActiveIndex(); }
-	CPreferencesPageBase* GetActivePage() { return (CPreferencesPageBase*)m_pphost.GetActivePage(); }
-	int FindPage(CPreferencesPageBase* pPage) { return m_pphost.FindPage(pPage); }
+	int GetActiveIndex() const
+	{
+		return m_pphost.GetActiveIndex();
+	}
+	CPreferencesPageBase* GetActivePage()
+	{
+		return (CPreferencesPageBase*)m_pphost.GetActivePage();
+	}
+	int FindPage(CPreferencesPageBase* pPage)
+	{
+		return m_pphost.FindPage(pPage);
+	}
 
-	void ForwardMessage(UINT nMsg) { m_pphost.ForwardMessage(nMsg); }
+	void ForwardMessage(UINT nMsg)
+	{
+		m_pphost.ForwardMessage(nMsg);
+	}
 
 private:
 	CPropertyPageHost m_pphost;

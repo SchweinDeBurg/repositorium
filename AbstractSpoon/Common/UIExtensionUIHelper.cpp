@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // UIExtensionUIHelper.cpp: implementation of the CUIExtensionUIHelper class.
@@ -41,7 +54,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -62,7 +75,7 @@ void CUIExtensionUIHelper::UpdateMenu(CCmdUI* pCmdUI, CMenuIconMgr& mgrIcon, BOO
 {
 	if (pCmdUI->m_pMenu)
 	{
-		ASSERT (m_nStartID == pCmdUI->m_nID);
+		ASSERT(m_nStartID == pCmdUI->m_nID);
 
 		// delete existing tool entries and their icons first
 		int nExt;
@@ -85,9 +98,13 @@ void CUIExtensionUIHelper::UpdateMenu(CCmdUI* pCmdUI, CMenuIconMgr& mgrIcon, BOO
 				CString sMenuItem, sText = m_mgrUIExt.GetUIExtensionMenuText(nExt);
 
 				if (nPos < 9)
+				{
 					sMenuItem.Format(_T("&%d %s"), nPos + 1, sText);
+				}
 				else
+				{
 					sMenuItem = sText;
+				}
 
 				pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex++, nFlags,
 					m_nStartID + nExt, sMenuItem);
@@ -168,12 +185,16 @@ void CUIExtensionUIHelper::AppendExtensionsToToolbar(CToolBar& toolbar, UINT nCm
 				CImageList* pIL = toolbar.GetToolBarCtrl().GetImageList();
 				int nImage = pIL->Add(hIcon);
 
-				TBBUTTON tbb = { nImage, nExt + m_nStartID, 0, TBSTYLE_BUTTON, 0, 0, (UINT)-1 };
+				TBBUTTON tbb = { nImage, nExt + m_nStartID, 0, TBSTYLE_BUTTON, 0, 0, (UINT) - 1 };
 
 				if (toolbar.GetToolBarCtrl().InsertButton(nStartPos + nAdded, &tbb))
+				{
 					nAdded++;
+				}
 				else // remove image
+				{
 					pIL->Remove(nImage);
+				}
 
 				// Note: we do not delete the extensions icon
 			}
@@ -182,7 +203,7 @@ void CUIExtensionUIHelper::AppendExtensionsToToolbar(CToolBar& toolbar, UINT nCm
 		// add a separator if any buttons added
 		if (nAdded)
 		{
-			TBBUTTON tbb = { -1, 0, 0, TBSTYLE_SEP, 0, 0, (UINT)-1 };
+			TBBUTTON tbb = { -1, 0, 0, TBSTYLE_SEP, 0, 0, (UINT) - 1 };
 			toolbar.GetToolBarCtrl().InsertButton(nStartPos, &tbb);
 		}
 	}

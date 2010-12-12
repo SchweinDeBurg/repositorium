@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TaskFile.h: interface for the CTaskFile class.
@@ -66,13 +80,17 @@ public:
 	virtual BOOL LoadHeader(LPCTSTR szFilePath);
 
 #ifndef NO_TL_ENCRYPTDECRYPT
-	virtual BOOL Decrypt(LPCTSTR szPassword = NULL); 
+	virtual BOOL Decrypt(LPCTSTR szPassword = NULL);
 #endif
 
 	BOOL Copy(const CTaskFile& tasks);
 	BOOL Copy(const ITaskList* pTasks);
+	void Reset();
 
-	int GetTaskCount() const { return m_mapHandles.GetCount(); }
+	int GetTaskCount() const
+	{
+		return m_mapHandles.GetCount();
+	}
 
 #ifndef NO_TL_MERGE
 	int Merge(const CTaskFile& tasks, BOOL bByID, BOOL bMoveExist);
@@ -81,18 +99,17 @@ public:
 
 	HTASKITEM NewTask(const char* szTitle, HTASKITEM hParent, DWORD dwID);
 
-	DWORD GetNextUniqueID() const; 
-	BOOL SetNextUniqueID(DWORD dwNextID); 
+	DWORD GetNextUniqueID() const;
+	BOOL SetNextUniqueID(DWORD dwNextID);
 
 	BOOL SetArchive(BOOL bArchive = TRUE);
 	BOOL SetCheckedOutTo(const CString& sCheckedOutTo);
 	BOOL SetFileFormat(unsigned long lFormat);
 	BOOL SetLastModified(const CString& sLastMod);
-	/*void SortTasksByID();*/
 	void SortTasksByPos();
 	BOOL SetCharSet(LPCTSTR szCharSet);
 	BOOL SetFileName(LPCTSTR szFilename);
-	
+
 	BOOL SetCategoryNames(const CStringArray& aCategories);
 	BOOL SetStatusNames(const CStringArray& aStatuses);
 	BOOL SetAllocToNames(const CStringArray& aAllocTo);
@@ -107,8 +124,7 @@ public:
 	BOOL SetEarliestDueDate(const COleDateTime& date);
 	BOOL GetEarliestDueDate(COleDateTime& date) const;
 
-	/*BOOL SetCommentsType(LPCTSTR szID);*/
-	CString GetCommentsType() const; 
+	CString GetCommentsType() const;
 
 	COleDateTime GetTaskLastModifiedOle(HTASKITEM hTask) const;
 	COleDateTime GetTaskDoneDateOle(HTASKITEM hTask) const;
@@ -124,7 +140,7 @@ public:
 	BOOL SetTaskStartDate(HTASKITEM hTask, const COleDateTime& date);
 	BOOL SetTaskCreationDate(HTASKITEM hTask, const COleDateTime& date);
 
-	BOOL SetTaskRecurrence(HTASKITEM hTask, const TDIRECURRENCE& tr, LPCTSTR szRegularity);
+	BOOL SetTaskRecurrence(HTASKITEM hTask, const TDIRECURRENCE& tr);
 	BOOL GetTaskRecurrence(HTASKITEM hTask, TDIRECURRENCE& tr) const;
 
 	BOOL SetTaskTextColor(HTASKITEM hTask, COLORREF color);
@@ -152,7 +168,7 @@ public:
 	BOOL SetTaskCustomComments(HTASKITEM hTask, const CString& sContent, const CString& sType);
 	BOOL GetTaskCustomComments(HTASKITEM hTask, CString& sContent, CString& sType) const;
 	BOOL SetTaskHtmlComments(HTASKITEM hTask, const CString& sContent, BOOL bForTransform);
-	
+
 	BOOL DeleteTaskAttributes(HTASKITEM hTask);// deletes all but child tasks
 	BOOL DeleteTask(HTASKITEM hTask);
 	HTASKITEM FindTask(DWORD dwTaskID) const;
@@ -168,7 +184,7 @@ public:
 	bool SetTaskRisk(HTASKITEM hTask, int nRisk);
 
 	//////////////////////////////////////////////////////////////
-	// ITaskList7 implementation 
+	// ITaskList7 implementation
 	unsigned char GetTaskDependencyCount(HTASKITEM hTask) const;
 	bool AddTaskDependency(HTASKITEM hTask, const char* szDepends);
 	const TCHAR* GetTaskDependency(HTASKITEM hTask, int nIndex) const;
@@ -178,21 +194,21 @@ public:
 	const TCHAR* GetTaskAllocatedTo(HTASKITEM hTask, int nIndex) const;
 
 	//////////////////////////////////////////////////////////////
-	// ITaskList6 implementation 
-	bool SetTaskRecurrence(HTASKITEM hTask, int nRegularity, DWORD dwSpecific1, 
-									DWORD dwSpecific2, BOOL bRecalcFromDue, int nReuse);
-	bool GetTaskRecurrence(HTASKITEM hTask, int& nRegularity, DWORD& dwSpecific1, 
-									DWORD& dwSpecific2, BOOL& bRecalcFromDue, int& nReuse) const;
+	// ITaskList6 implementation
+	bool SetTaskRecurrence(HTASKITEM hTask, int nRegularity, DWORD dwSpecific1,
+		DWORD dwSpecific2, BOOL bRecalcFromDue, int nReuse);
+	bool GetTaskRecurrence(HTASKITEM hTask, int& nRegularity, DWORD& dwSpecific1,
+		DWORD& dwSpecific2, BOOL& bRecalcFromDue, int& nReuse) const;
 
 	bool SetTaskVersion(HTASKITEM hTask, const char* szVersion);
 	const TCHAR* GetTaskVersion(HTASKITEM hTask) const;
 
 	//////////////////////////////////////////////////////////////
-	// ITaskList5 implementation 
+	// ITaskList5 implementation
 	bool AddTaskCategory(HTASKITEM hTask, const char* szCategory);
 
 	//////////////////////////////////////////////////////////////
-	// ITaskList4 implementation 
+	// ITaskList4 implementation
 	const TCHAR* GetAttribute(const char* szAttrib) const;
 
 	const TCHAR* GetHtmlCharSet() const;
@@ -207,7 +223,7 @@ public:
 	bool SetTaskDependency(HTASKITEM hTask, const char* szDepends);
 
 	//////////////////////////////////////////////////////////////
-	// ITaskList3 implementation 
+	// ITaskList3 implementation
 	time_t GetTaskDueDate(HTASKITEM hTask, BOOL bEarliest) const;
 	const TCHAR* GetTaskDueDateString(HTASKITEM hTask, BOOL bEarliest) const;
 	unsigned long GetTaskTextColor(HTASKITEM hTask) const;
@@ -218,8 +234,8 @@ public:
 	bool SetTaskExternalID(HTASKITEM hTask, const char* szID);
 
 	//////////////////////////////////////////////////////////////
-	// ITaskList2 implementation 
-	
+	// ITaskList2 implementation
+
 	const TCHAR* GetTaskCreatedBy(HTASKITEM hTask) const;
 	time_t GetTaskCreationDate(HTASKITEM hTask) const;
 	const TCHAR* GetTaskCreationDateString(HTASKITEM hTask) const;
@@ -228,18 +244,18 @@ public:
 	bool SetTaskCreationDate(HTASKITEM hTask, time_t tCreationDate);
 
 	//////////////////////////////////////////////////////////////
-	// ITaskList implementation 
+	// ITaskList implementation
 
 	bool IsArchive() const;
 	bool IsCheckedOut() const;
 	bool IsSourceControlled() const;
-	
+
 	const TCHAR* GetProjectName() const;
 	const TCHAR* GetCheckOutTo() const;
-	
+
 	unsigned long GetFileFormat() const;
 	unsigned long GetFileVersion() const;
-	
+
 	time_t GetLastModified() const;
 
 	bool SetProjectName(const char* szName);
@@ -280,7 +296,7 @@ public:
 	const TCHAR* GetTaskDoneDateString(HTASKITEM hTask) const;
 	const TCHAR* GetTaskDueDateString(HTASKITEM hTask) const;
 	const TCHAR* GetTaskStartDateString(HTASKITEM hTask) const;
-	
+
 	bool IsTaskDone(HTASKITEM hTask) const;
 	bool IsTaskDue(HTASKITEM hTask) const;
 
@@ -322,9 +338,15 @@ public:
 
 	/////////////////////////////////////////////////////
 	// IUnknown implementation
-	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void __RPC_FAR *__RPC_FAR *ppvObject);
-    ULONG STDMETHODCALLTYPE AddRef(void) { return 1; } // do nothing
-    ULONG STDMETHODCALLTYPE Release( void) { return 1; } // do nothing
+	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void __RPC_FAR* __RPC_FAR* ppvObject);
+	ULONG STDMETHODCALLTYPE AddRef(void)
+	{
+		return 1;   // do nothing
+	}
+	ULONG STDMETHODCALLTYPE Release(void)
+	{
+		return 1;   // do nothing
+	}
 
 protected:
 	CMap <HTASKITEM, HTASKITEM, CXmlItem*, CXmlItem*&> m_mapHandles;
@@ -335,7 +357,7 @@ protected:
 	void AddTaskToMap(CXmlItem* pXITask, BOOL bRecurse);
 	void RemoveTaskFromMap(CXmlItem* pXITask);
 	CXmlItem* TaskFromHandle(HTASKITEM hTask) const;
-	
+
 	double GetTaskTime(HTASKITEM hTask, LPCTSTR szTimeItem) const;
 	char GetTaskTimeUnits(HTASKITEM hTask, LPCTSTR szUnitsItem) const;
 	time_t GetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, BOOL bIncTime) const;
@@ -354,19 +376,19 @@ protected:
 	bool SetTaskCChar(HTASKITEM hTask, LPCTSTR szCCharItem, const char* szVal, XI_TYPE nType = XIT_ATTRIB);
 	bool SetTaskDouble(HTASKITEM hTask, LPCTSTR szDoubleItem, double dVal);
 	bool SetTaskTime(HTASKITEM hTask, LPCTSTR szTimeItem, double dTime,
-					 LPCTSTR szUnitsItem, TCHAR cUnits);
+		LPCTSTR szUnitsItem, TCHAR cUnits);
 
 	// for handling arrays at *task* level
-	bool AddTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag, 
-						  const char* szItemTag, const char* szItem);
-	const TCHAR* GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag, 
-				  				 const char* szItemTag, int nIndex) const;
-	BOOL SetTaskArray(HTASKITEM hTask, const char* szNumItemTag, 
-				  	 const char* szItemTag, const CStringArray& aItems);
-	int GetTaskArray(HTASKITEM hTask, const char* szNumItemTag, 
-				  	 const char* szItemTag, CStringArray& aItems) const;
-	bool DeleteTaskArray(HTASKITEM hTask, const char* szNumItemTag, 
-						 const char* szItemTag);
+	bool AddTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag,
+		const char* szItemTag, const char* szItem);
+	const TCHAR* GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag,
+		const char* szItemTag, int nIndex) const;
+	BOOL SetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
+		const char* szItemTag, const CStringArray& aItems);
+	int GetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
+		const char* szItemTag, CStringArray& aItems) const;
+	bool DeleteTaskArray(HTASKITEM hTask, const char* szNumItemTag,
+		const char* szItemTag);
 
 	// for handling arrays at *tasklist* level
 	BOOL SetArray(const char* szItemTag, const CStringArray& aItems);

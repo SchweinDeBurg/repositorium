@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // RTFContentCtrlApp.cpp : Defines the initialization routines for the DLL.
@@ -40,6 +54,11 @@
 
 #include "../../../CodeProject/Source/FileMisc.h"
 #include "../../../CodeProject/Source/Misc.h"
+
+#include "../../../CodeProject/Source/Compression.h"
+#include "../../../zlib/Source/zlib.h"
+
+#include "../../../CodeProject/Source/TextFileDocument.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -93,7 +112,7 @@ const char* CRTFContentCtrlApp::GetTypeDescription() const
 }
 
 IContentControl* CRTFContentCtrlApp::CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
-      long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent)
+	long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -123,24 +142,10 @@ IContentControl* CRTFContentCtrlApp::CreateCtrl(unsigned short nCtrlID, unsigned
 
 void CRTFContentCtrlApp::Release()
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-//	delete this;
 }
 
-void CRTFContentCtrlApp::SetIniLocation(bool bRegistry, const TCHAR* szIniPathName)
-{
-	if (bRegistry)
-	{
-		m_pszRegistryKey = _tcsdup(szIniPathName);
-	}
-	else
-	{
-		m_pszProfileName = _tcsdup(szIniPathName);
-	}
-}
-
-int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
-                                      int nLength, char*& szHtml)
+int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent, int nLength,
+	const TCHAR* szCharSet, char*& szHtml)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -156,7 +161,7 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
 	{
 		int nLenDecompressed = 0;
 
-		if (CRTFContentControl::Decompress(pContent, nLength, pDecompressed, nLenDecompressed))
+		if (Compression::Decompress(pContent, nLength, pDecompressed, nLenDecompressed))
 		{
 			pContent = pDecompressed;
 			nLength = nLenDecompressed;
@@ -167,58 +172,72 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent,
 		}
 	}
 
+	// copy rtf to CString
 	CString sRtf((LPCSTR)pContent, nLength), sHtml;
+	nLength = 0; // reuse for resultant html length
 
-	// scan the string looking for anything that smells like a
-	// multi-byte character, because CRTF_HTMLConverter can't
-	// handle that at the moment
-	if (!CRTF_HTMLConverter::HasMultiByteChars(sRtf))
+	// try loading our new converter
+	CString sRtf2HtmlPath = FileMisc::GetModuleFolder() + _T("rtf2htmlbridge.dll");
+	static HMODULE hMod = LoadLibrary(sRtf2HtmlPath);
+
+	if (hMod)
 	{
-		/*
-			// check the code page to see if it represents a multi-byte
-			// char set because we can't handle that at present
-			int nCodePage = CRTF_HTMLConverter::GetCodePage(sRtf);
+		typedef int (*PFNCONVERTRTF2HTML)(const char*, const char*, const char*,
+				const char*, const char*, const char*,
+				const char*, const char*, const char*,
+				const char*, const char*);
 
-			switch (nCodePage)
-			{
-			case 874:	// Thai
-			case 932:	// Japanese
-			case 936:	// Simplified Chinese
-			case 949:	// Korean
-			case 950:	// Traditional Chinese:
-				return 0;
-			}
-		*/
+		PFNCONVERTRTF2HTML fnRtf2Html = (PFNCONVERTRTF2HTML)GetProcAddress(hMod, "fnRtf2Html");
 
-		// scan the string looking for anything that smells like a
-		// multi-byte character, because CRTF_HTMLConverter can't
-		// handle that at the moment
-		if (!Misc::IsMultibyteString(sRtf))
+		if (fnRtf2Html)
 		{
-			if (CRTF_HTMLConverter::Convert(sRtf, sHtml, FALSE))
-			{
-				nLength = sHtml.GetLength();
-				szHtml = new char[nLength + 1];
+			CString sTempRtf = FileMisc::GetTempFileName(_T("Rtf2Html"), _T("rtf"));
+			FileMisc::SaveFile(sTempRtf, sRtf, sRtf.GetLength());
 
-				memcpy(szHtml, sHtml, nLength);
-				szHtml[nLength] = 0;
-			}
-			else
+			// arguments
+			// create a unique image folder every time this is called for this session
+			static int nImgCount = 1;
+			CString sImgDir, sCharSet;
+
+			sCharSet.Format(_T("/CS:%s"), szCharSet);
+
+			sImgDir.Format(_T("/ID:images%d"), nImgCount);
+			nImgCount++;
+
+			CString sTempHtml = FileMisc::GetTempFileName(_T("Rtf2Html"), _T("html"));
+
+			try
 			{
-				nLength = 0;   // reuse
+				nLength = 0;
+				int nRet = fnRtf2Html((LPSTR)ATL::CT2A(sTempRtf), (LPSTR)ATL::CT2A(FileMisc::GetTempFolder()),
+					(LPSTR)ATL::CT2A(sImgDir), "/IT:png", "/DS:content", (LPSTR)ATL::CT2A(sCharSet), "", "", "",
+					"", "");
+				if (nRet)
+				{
+					CTextFileRead file(sTempHtml);
+					file.Read(sHtml);
+					nLength = sHtml.GetLength();
+				}
 			}
-		}
-		else
-		{
-			nLength = 0;
+			catch (...)
+			{
+			}
+
+			// cleanup
+			DeleteFile(sTempRtf);
+			DeleteFile(sTempHtml);
 		}
 	}
-	else
+
+	if (nLength)
 	{
-		nLength = 0;
+		szHtml = new char[nLength + 1];
+
+		memcpy(szHtml, sHtml, nLength);
+		szHtml[nLength] = 0;
 	}
 
-	delete [] pDecompressed;
+	delete[] pDecompressed;
 
 	return nLength;
 }

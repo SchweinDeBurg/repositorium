@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // Preferences.cpp: implementation of the CPreferences class.
@@ -40,7 +54,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -78,7 +92,9 @@ CPreferences::CPreferences()
 					sLine.TrimRight();
 
 					if (sLine.IsEmpty())
+					{
 						continue;
+					}
 
 					// is it a section ?
 					else if (sLine[0] == '[')
@@ -86,7 +102,7 @@ CPreferences::CPreferences()
 						CString sSection = sLine.Mid(1, sLine.GetLength() - 2);
 
 						pCurSection = GetSection(sSection, TRUE);
-						ASSERT (pCurSection != NULL);
+						ASSERT(pCurSection != NULL);
 					}
 					// else an entry
 					else if (pCurSection)
@@ -105,7 +121,9 @@ CPreferences::CPreferences()
 							sValue.Replace(_T("\""), _T(""));
 
 							if (!sEntry.IsEmpty())
+							{
 								SetEntryValue(*pCurSection, sEntry, sValue);
+							}
 						}
 					}
 				}
@@ -167,7 +185,9 @@ CPreferences::~CPreferences()
 		int nSection = s_aIni.GetSize();
 
 		while (nSection--)
+		{
 			delete s_aIni[nSection];
+		}
 
 		s_aIni.RemoveAll();
 	}
@@ -194,20 +214,30 @@ UINT CPreferences::GetProfileInt(LPCTSTR lpszSection, LPCTSTR lpszEntry, int nDe
 		CString sValue = GetProfileString(lpszSection, lpszEntry);
 
 		if (sValue.IsEmpty())
+		{
 			return nDefault;
+		}
 		else
+		{
 			return _ttol(sValue);
+		}
 	}
 	else
+	{
 		return AfxGetApp()->GetProfileInt(lpszSection, lpszEntry, nDefault);
+	}
 }
 
 BOOL CPreferences::WriteProfileInt(LPCTSTR lpszSection, LPCTSTR lpszEntry, int nValue)
 {
 	if (s_bIni)
+	{
 		return WriteProfileString(lpszSection, lpszEntry, ToString(nValue));
+	}
 	else
+	{
 		return AfxGetApp()->WriteProfileInt(lpszSection, lpszEntry, nValue);
+	}
 }
 
 CString CPreferences::GetProfileString(LPCTSTR lpszSection, LPCTSTR lpszEntry, LPCTSTR lpszDefault) const
@@ -217,12 +247,18 @@ CString CPreferences::GetProfileString(LPCTSTR lpszSection, LPCTSTR lpszEntry, L
 		INISECTION* pSection = GetSection(lpszSection, FALSE);
 
 		if (pSection)
+		{
 			return GetEntryValue(*pSection, lpszEntry, lpszDefault);
+		}
 		else
+		{
 			return lpszDefault;
+		}
 	}
 	else
+	{
 		return AfxGetApp()->GetProfileString(lpszSection, lpszEntry, lpszDefault);
+	}
 }
 
 BOOL CPreferences::WriteProfileString(LPCTSTR lpszSection, LPCTSTR lpszEntry, LPCTSTR lpszValue)
@@ -242,19 +278,23 @@ BOOL CPreferences::WriteProfileString(LPCTSTR lpszSection, LPCTSTR lpszEntry, LP
 		return FALSE;
 	}
 	else
+	{
 		return AfxGetApp()->WriteProfileString(lpszSection, lpszEntry, lpszValue);
+	}
 }
-
-
 
 double CPreferences::GetProfileDouble(LPCTSTR lpszSection, LPCTSTR lpszEntry, double dDefault) const
 {
 	CString sValue = GetProfileString(lpszSection, lpszEntry, ToString(dDefault));
 
 	if (sValue.IsEmpty())
+	{
 		return dDefault;
+	}
 	else
+	{
 		return Misc::Atof(sValue);
+	}
 }
 
 BOOL CPreferences::WriteProfileDouble(LPCTSTR lpszSection, LPCTSTR lpszEntry, double dValue)
@@ -275,7 +315,9 @@ int CPreferences::GetArrayItems(LPCTSTR lpszSection, CStringArray& aItems) const
 		sItem = GetProfileString(lpszSection, sItemKey);
 
 		if (!sItem.IsEmpty())
+		{
 			aItems.Add(sItem);
+		}
 	}
 
 	return aItems.GetSize();
@@ -305,7 +347,9 @@ CString CPreferences::GetEntryValue(INISECTION& section, LPCTSTR lpszEntry, LPCT
 	INIENTRY ie;
 
 	if (section.aEntries.Lookup(sKey, ie) && !ie.sValue.IsEmpty())
+	{
 		return ie.sValue;
+	}
 
 	return lpszDefault;
 }
@@ -330,7 +374,9 @@ INISECTION* CPreferences::GetSection(LPCTSTR lpszSection, BOOL bCreateNotExist)
 	while (nSection--)
 	{
 		if (s_aIni[nSection]->sSection.CompareNoCase(lpszSection) == 0)
+		{
 			return s_aIni[nSection];
+		}
 	}
 
 	// add a new section
@@ -349,7 +395,7 @@ INISECTION* CPreferences::GetSection(LPCTSTR lpszSection, BOOL bCreateNotExist)
 CString CPreferences::KeyFromFile(LPCTSTR szFilePath, BOOL bFileNameOnly)
 {
 	CString sKey = bFileNameOnly ? FileMisc::GetFileNameFromPath(szFilePath) : szFilePath;
-	sKey.Replace('\\', '_');
+	sKey.Replace(_T('\\'), _T('_'));
 
 	// if the filepath is on a removable drive then we strip off the drive letter
 	if (!bFileNameOnly)
@@ -357,7 +403,9 @@ CString CPreferences::KeyFromFile(LPCTSTR szFilePath, BOOL bFileNameOnly)
 		int nType = CDriveInfo::GetPathType(szFilePath);
 
 		if (nType == DRIVE_REMOVABLE)
+		{
 			sKey = sKey.Mid(1);
+		}
 	}
 
 	return sKey;

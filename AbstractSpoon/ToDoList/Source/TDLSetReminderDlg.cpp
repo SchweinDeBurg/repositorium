@@ -97,8 +97,8 @@ END_MESSAGE_MAP()
 int CTDLSetReminderDlg::DoModal(const TDCREMINDER& rem)
 {
 	m_sTaskTitle = rem.pTDC->GetTaskTitle(rem.dwTaskID);
-	m_dLeadIn = rem.dDaysLeadIn * 24;
-	m_bFromDueDate = (rem.nFromWhen == TDCR_DUEDATE);
+	m_dLeadIn = rem.dRelativeDaysLeadIn * 24;
+	m_bFromDueDate = (rem.nRelativeFromWhen == TDCR_DUEDATE);
 	m_sSoundFile = rem.sSoundFile;
 
 	// if the sound file is empty then use last hint

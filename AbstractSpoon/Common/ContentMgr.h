@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ContentMgr.h: interface for the CContentMgr class.
@@ -51,7 +65,10 @@ public:
 	virtual ~CContentMgr();
 
 	virtual BOOL Initialize();
-	BOOL SomePluginsHaveBadversions() const { return m_bSomeBadVersions; }
+	BOOL SomePluginsHaveBadversions() const
+	{
+		return m_bSomeBadVersions;
+	}
 
 	int GetNumContent() const;
 
@@ -69,8 +86,7 @@ public:
 	BOOL CreateContentControl(const CONTENTFORMAT& cf, CContentCtrl& ctrl, UINT nCtrlID, DWORD nStyle,
 		DWORD dwExStyle, const CRect& rect, HWND hwndParent);
 
-	BOOL ConvertContentToHtml(const CString& sContent, CString& sHtml, LPCTSTR szID);
-
+	BOOL ConvertContentToHtml(const CString& sContent, CString& sHtml, LPCTSTR szID, LPCTSTR szCharSet);
 
 protected:
 	BOOL m_bInitialized;

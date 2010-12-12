@@ -90,7 +90,7 @@ int CTDLShowReminderDlg::DoModal(const TDCREMINDER& rem)
 	double dWhen = 0;
 	COleDateTime date;
 
-	if (rem.nFromWhen == TDCR_DUEDATE)
+	if (rem.nRelativeFromWhen == TDCR_DUEDATE)
 	{
 		date = rem.pTDC->GetTaskDate(rem.dwTaskID, TDCD_DUE);
 		dWhen = date - COleDateTime::GetCurrentTime();

@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_RTFCONTENTCONTROL_H__4F1A93A0_7829_4DBB_AA0B_A2F62E4E7F50__INCLUDED_)
@@ -51,15 +65,15 @@ static int LENTAG = strlen(RTFTAG);
 
 class CRTFContentControl : public CRulerRichEditCtrl, public IContentControl
 {
-// Construction
+	// Construction
 public:
 	CRTFContentControl();
 
 	// ICustomControl implementation
 	int GetContent(unsigned char* pContent) const;
-	bool SetContent(unsigned char* pContent, int nLength);
+	bool SetContent(unsigned char* pContent, int nLength, BOOL bResetSelection);
 	int GetTextContent(TCHAR* szContent, int nLength = -1) const;
-	bool SetTextContent(const TCHAR* szContent);
+	bool SetTextContent(const TCHAR* szContent, BOOL bResetSelection);
 	void SetReadOnly(bool bReadOnly);
 	HWND GetHwnd() const;
 	const char* GetTypeID() const;
@@ -78,30 +92,25 @@ public:
 		return GetRichEditCtrl().Redo() != 0;
 	}
 	void SetUITheme(const UITHEME* pTheme);
-	void SetPreferenceLocation(const char* szKey);
+	void SavePreferences(IPreferences* pPrefs, LPCTSTR szKey) const;
+	void LoadPreferences(const IPreferences* pPrefs, LPCTSTR szKey);
 
-	static BOOL Compress(const unsigned char* pContentSrc, int nLenSrc, unsigned char*& pContentDest, int& nLenDest);
-	static BOOL Decompress(const unsigned char* pContentSrc, int nLenSrc, unsigned char*& pContentDest, int& nLenDest);
-
-// Attributes
+	// Attributes
 protected:
 	BOOL m_bAllowNotify;
 	CToolbarHelper m_tbHelper;
 	CRichEditSpellCheck m_reSpellCheck;
-	CString m_sPrefKey;
-	BOOL m_bPrefsDone;
 
-// Operations
+	// Operations
 public:
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CRTFContentControl)
 public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CRTFContentControl();
 
@@ -110,7 +119,6 @@ protected:
 	//{{AFX_MSG(CRTFContentControl)
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnDestroy();
 	//}}AFX_MSG
 	afx_msg void OnChangeText();
 	afx_msg void OnKillFocus();

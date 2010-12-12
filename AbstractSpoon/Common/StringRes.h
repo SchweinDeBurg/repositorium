@@ -97,11 +97,5 @@ const LPCTSTR ENCRYPT_NOTINSTALLED = _T("The file '%s' is encrypted, but you do 
 const LPCTSTR ENCRYPT_ENTERPWD = _T("The file '%s' is encrypted.\n\nPlease enter your password below.");
 const LPCTSTR ENCRYPT_DECRYPTFAILED = _T("The file '%s' could not be decrypted using the supplied password.\n\nWound you like to try again?");
 
-// const LPCTSTR  = _T("");
-// const LPCTSTR  = _T("");
-// const LPCTSTR  = _T("");
-// const LPCTSTR  = _T("");
-// const LPCTSTR  = _T("");
-
 
 #endif // AFX_SHARED_STRING_RESOURCES_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_

@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ContentCtrl.cpp: implementation of the CContentCtrl class.
@@ -43,7 +57,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -76,7 +90,9 @@ CContentCtrl::~CContentCtrl()
 CContentCtrl::operator HWND() const
 {
 	if (m_pContentCtrl)
+	{
 		return m_pContentCtrl->GetHwnd();
+	}
 
 	// else
 	return NULL;
@@ -92,7 +108,9 @@ BOOL CContentCtrl::PreTranslateMessage(MSG* pMsg)
 
 		// only process if we have the focus
 		if (HasFocus())
+		{
 			return m_pContentCtrl->ProcessMessage(pMsg);
+		}
 	}
 
 	return FALSE;
@@ -100,13 +118,15 @@ BOOL CContentCtrl::PreTranslateMessage(MSG* pMsg)
 
 BOOL CContentCtrl::Attach(IContentControl* pContentCtrl)
 {
-	ASSERT (pContentCtrl && pContentCtrl->GetHwnd());
+	ASSERT(pContentCtrl && pContentCtrl->GetHwnd());
 
 	if (pContentCtrl && pContentCtrl->GetHwnd())
 	{
 		// release existing control
 		if (m_pContentCtrl)
+		{
 			m_pContentCtrl->Release();
+		}
 
 		m_pContentCtrl = pContentCtrl;
 		return TRUE;
@@ -119,13 +139,25 @@ BOOL CContentCtrl::Attach(IContentControl* pContentCtrl)
 void CContentCtrl::SetUITheme(const UITHEME* pTheme)
 {
 	if (m_pContentCtrl)
+	{
 		m_pContentCtrl->SetUITheme(pTheme);
+	}
 }
 
-void CContentCtrl::SetPreferenceLocation(LPCTSTR szKey)
+void CContentCtrl::SavePreferences(IPreferences* pPrefs, LPCTSTR szKey) const
 {
-	if (m_pContentCtrl)
-		m_pContentCtrl->SetPreferenceLocation(ATL::CT2A(szKey));
+	if (m_pContentCtrl && szKey && *szKey)
+	{
+		m_pContentCtrl->SavePreferences(pPrefs, szKey);
+	}
+}
+
+void CContentCtrl::LoadPreferences(const IPreferences* pPrefs, LPCTSTR szKey)
+{
+	if (m_pContentCtrl && szKey && *szKey)
+	{
+		m_pContentCtrl->LoadPreferences(pPrefs, szKey);
+	}
 }
 
 BOOL CContentCtrl::HasFocus() const
@@ -142,10 +174,22 @@ BOOL CContentCtrl::HasFocus() const
 	return FALSE;
 }
 
+void CContentCtrl::SetFocus()
+{
+	HWND hwndThis = GetSafeHwnd();
+
+	if (::IsWindowEnabled(hwndThis)/* && !HasFocus()*/)
+	{
+		::SetFocus(hwndThis);
+	}
+}
+
 ISpellCheck* CContentCtrl::GetSpellCheckInterface()
 {
 	if (m_pContentCtrl)
+	{
 		return m_pContentCtrl->GetSpellCheckInterface();
+	}
 
 	// else
 	return NULL;
@@ -154,7 +198,9 @@ ISpellCheck* CContentCtrl::GetSpellCheckInterface()
 BOOL CContentCtrl::Undo()
 {
 	if (m_pContentCtrl)
+	{
 		return m_pContentCtrl->Undo();
+	}
 
 	// else
 	return FALSE;
@@ -163,7 +209,9 @@ BOOL CContentCtrl::Undo()
 BOOL CContentCtrl::Redo()
 {
 	if (m_pContentCtrl)
+	{
 		return m_pContentCtrl->Redo();
+	}
 
 	// else
 	return FALSE;
@@ -172,7 +220,9 @@ BOOL CContentCtrl::Redo()
 BOOL CContentCtrl::ModifyStyle(DWORD dwRemove, DWORD dwAdd, UINT nFlags)
 {
 	if (GetSafeHwnd())
+	{
 		return CWnd::ModifyStyle(*this, dwRemove, dwAdd, nFlags);
+	}
 
 	// else
 	return FALSE;
@@ -181,7 +231,9 @@ BOOL CContentCtrl::ModifyStyle(DWORD dwRemove, DWORD dwAdd, UINT nFlags)
 BOOL CContentCtrl::ModifyStyleEx(DWORD dwRemove, DWORD dwAdd, UINT nFlags)
 {
 	if (GetSafeHwnd())
+	{
 		return CWnd::ModifyStyleEx(*this, dwRemove, dwAdd, nFlags);
+	}
 
 	// else
 	return FALSE;
@@ -190,7 +242,9 @@ BOOL CContentCtrl::ModifyStyleEx(DWORD dwRemove, DWORD dwAdd, UINT nFlags)
 LRESULT CContentCtrl::SendMessage(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (m_pContentCtrl)
+	{
 		return ::SendMessage(*this, message, wParam, lParam);
+	}
 
 	return 0L;
 }
@@ -209,7 +263,9 @@ BOOL CContentCtrl::SetReadOnly(BOOL bReadOnly)
 BOOL CContentCtrl::PostMessage(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (m_pContentCtrl)
+	{
 		return ::PostMessage(*this, message, wParam, lParam);
+	}
 
 	return FALSE;
 }
@@ -217,26 +273,30 @@ BOOL CContentCtrl::PostMessage(UINT message, WPARAM wParam, LPARAM lParam)
 int CContentCtrl::GetContent(unsigned char* pContent) const
 {
 	if (m_pContentCtrl)
+	{
 		return m_pContentCtrl->GetContent(pContent);
+	}
 
 	// else
 	return 0;
 }
 
-BOOL CContentCtrl::SetContent(unsigned char* pContent, int nLength)
+BOOL CContentCtrl::SetContent(unsigned char* pContent, int nLength, BOOL bResetSelection)
 {
 	CAutoFlag af(m_bSettingContent, TRUE);
 
 	if (m_pContentCtrl)
-		return m_pContentCtrl->SetContent(pContent, nLength);
+	{
+		return m_pContentCtrl->SetContent(pContent, nLength, bResetSelection);
+	}
 
 	// else
 	return false;
 }
 
-BOOL CContentCtrl::SetContent(const CString& sContent)
+BOOL CContentCtrl::SetContent(const CString& sContent, BOOL bResetSelection)
 {
-	return SetContent((unsigned char*)(LPCTSTR)sContent, sContent.GetLength());
+	return SetContent((unsigned char*)(LPCTSTR)sContent, sContent.GetLength(), bResetSelection);
 }
 
 int CContentCtrl::GetContent(CString& sContent) const
@@ -268,7 +328,7 @@ int CContentCtrl::GetTextContent(CString& sContent) const
 		if (nLen)
 		{
 			TCHAR* szContent = sContent.GetBufferSetLength(nLen);
-			VERIFY (nLen + 1 == m_pContentCtrl->GetTextContent(szContent, nLen + 1));
+			VERIFY(nLen + 1 == m_pContentCtrl->GetTextContent(szContent, nLen + 1));
 			sContent.ReleaseBuffer(nLen);
 			return nLen;
 		}
@@ -279,12 +339,14 @@ int CContentCtrl::GetTextContent(CString& sContent) const
 	return 0;
 }
 
-BOOL CContentCtrl::SetTextContent(const TCHAR* szContent)
+BOOL CContentCtrl::SetTextContent(const TCHAR* szContent, BOOL bResetSelection)
 {
 	CAutoFlag af(m_bSettingContent, TRUE);
 
 	if (m_pContentCtrl)
-		return m_pContentCtrl->SetTextContent(szContent);
+	{
+		return m_pContentCtrl->SetTextContent(szContent, bResetSelection);
+	}
 
 	// else
 	return false;
@@ -293,7 +355,9 @@ BOOL CContentCtrl::SetTextContent(const TCHAR* szContent)
 LPCTSTR CContentCtrl::GetTypeID() const
 {
 	if (m_pContentCtrl)
+	{
 		return ATL::CA2T(m_pContentCtrl->GetTypeID());
+	}
 
 	// else
 	return _T("");

@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // EnRecentFileList.cpp: implementation of the CEnRecentFileList class.
@@ -37,7 +50,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -46,8 +59,8 @@ static char THIS_FILE[]=__FILE__;
 //////////////////////////////////////////////////////////////////////
 
 CEnRecentFileList::CEnRecentFileList(UINT nStart, LPCTSTR lpszSection,
-												 LPCTSTR lpszEntryFormat, int nSize, int nMaxDispLen, LPCTSTR szOriginal)
-												 : CRecentFileList(nStart, lpszSection, lpszEntryFormat, nSize, nMaxDispLen)
+	LPCTSTR lpszEntryFormat, int nSize, int nMaxDispLen, LPCTSTR szOriginal):
+CRecentFileList(nStart, lpszSection, lpszEntryFormat, nSize, nMaxDispLen)
 {
 	m_strOriginal = szOriginal;
 }
@@ -61,11 +74,15 @@ void CEnRecentFileList::UpdateMenu(CCmdUI* pCmdUI)
 	if (m_arrNames[0].IsEmpty())
 	{
 		if (pCmdUI->m_pMenu == NULL)
+		{
 			return;
+		}
 
 		// delete all but the first item
 		for (int iMRU = 1; iMRU < m_nSize; iMRU++)
+		{
 			pCmdUI->m_pMenu->DeleteMenu(pCmdUI->m_nID + iMRU, MF_BYCOMMAND);
+		}
 	}
 
 	CRecentFileList::UpdateMenu(pCmdUI);
@@ -76,10 +93,14 @@ void CEnRecentFileList::RemoveAll(BOOL bClearProfile)
 	int nItem = GetSize();
 
 	while (nItem--)
+	{
 		Remove(nItem);
+	}
 
 	if (bClearProfile)
+	{
 		CRecentFileList::WriteList();
+	}
 }
 
 void CEnRecentFileList::WriteList(CPreferences& prefs) const
@@ -87,7 +108,9 @@ void CEnRecentFileList::WriteList(CPreferences& prefs) const
 	for (int nFile = 0; nFile < GetSize(); nFile++)
 	{
 		if (m_arrNames[nFile].IsEmpty())
+		{
 			break;
+		}
 
 		CString sItem;
 		sItem.Format(m_strEntryFormat, nFile + 1);

@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TabbedComboBox.cpp : implementation file
@@ -75,7 +88,9 @@ void CTabbedComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	CDC dc;
 
 	if (!dc.Attach(lpDrawItemStruct->hDC))
+	{
 		return;
+	}
 
 	int nDC = dc.SaveDC();
 
@@ -95,7 +110,9 @@ void CTabbedComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	else if (lpDrawItemStruct->itemAction & ODA_DRAWENTIRE)
 	{
 		if (lpDrawItemStruct->itemState & ODS_FOCUS)
+		{
 			dc.DrawFocusRect(rItem);
+		}
 	}
 
 	// draw the item
@@ -106,9 +123,13 @@ void CTabbedComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			CDlgUnits dlu(GetParent());
 
 			if (rItem.Height() <= dlu.ToPixelsY(9))
-				rItem.DeflateRect(1, 1); // selected item
+			{
+				rItem.DeflateRect(1, 1);   // selected item
+			}
 			else
-				rItem.DeflateRect(2, 2); // listbox item
+			{
+				rItem.DeflateRect(2, 2);   // listbox item
+			}
 
 			CRect rColor(rItem);
 
@@ -122,7 +143,9 @@ void CTabbedComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			sText.Replace(_T("\\t"), _T("\t"));
 
 			if (!sText.IsEmpty())
+			{
 				dc.TabbedTextOut(rText.left, rText.top, sText, 1, (int*)&TABSTOPS, rText.left);
+			}
 		}
 	}
 
@@ -139,7 +162,9 @@ void CTabbedComboBox::OnWindowPosChanged(WINDOWPOS FAR* lpwndpos)
 int CTabbedComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CComboBox::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 
 	if (!m_bResized)
 	{

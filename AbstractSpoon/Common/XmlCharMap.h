@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_XMLCHARMAP_H__7E73ADE2_3848_4ED1_9E8B_8881813B4262__INCLUDED_)
@@ -132,7 +145,9 @@ public:
 		int nLen = 0;
 
 		for (int nChar = 0; nChar < sText.GetLength(); nChar++)
+		{
 			nLen += Translate(sText[nChar], NULL);
+		}
 
 		return nLen;
 	}
@@ -148,7 +163,9 @@ protected:
 			int nItem = SIZEOFXMLCHARARRAY;
 
 			while (nItem--)
+			{
 				mapXMLRep.SetAt(XMLCHARARRAY[nItem].szXMLRep, XMLCHARARRAY[nItem].c);
+			}
 		}
 
 		TBYTE c = 0;
@@ -156,14 +173,18 @@ protected:
 		if (mapXMLRep.Lookup(szXMLRep, c))
 		{
 			if (pAppendTo)
+			{
 				(*pAppendTo) += c;
+			}
 
 			return 1;
 		}
 		else
 		{
 			if (pAppendTo)
+			{
 				(*pAppendTo) += szXMLRep;
+			}
 
 			return _tcslen(szXMLRep);
 		}
@@ -179,7 +200,9 @@ protected:
 			int nItem = SIZEOFXMLCHARARRAY;
 
 			while (nItem--)
+			{
 				mapChar.SetAt(XMLCHARARRAY[nItem].c, XMLCHARARRAY[nItem].szXMLRep);
+			}
 		}
 
 		CString sXMLRep;
@@ -187,14 +210,18 @@ protected:
 		if (mapChar.Lookup(c, sXMLRep))
 		{
 			if (pAppendTo)
+			{
 				(*pAppendTo) += sXMLRep;
+			}
 
 			return sXMLRep.GetLength();
 		}
 		else
 		{
 			if (pAppendTo)
+			{
 				(*pAppendTo) += c;
+			}
 
 			return 1;
 		}

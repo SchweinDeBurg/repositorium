@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // GroupLine.cpp: implementation of the CGroupLine class.
@@ -40,7 +53,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -58,9 +71,9 @@ CGroupLine::~CGroupLine()
 
 BOOL CGroupLine::Initialize(HWND hwndStatic)
 {
-	ASSERT (hwndStatic);
-	ASSERT (!IsHooked());
-	ASSERT (CWinClasses::IsClass(hwndStatic, WC_STATIC));
+	ASSERT(hwndStatic);
+	ASSERT(!IsHooked());
+	ASSERT(CWinClasses::IsClass(hwndStatic, WC_STATIC));
 
 	if (!IsHooked() && hwndStatic && HookWindow(hwndStatic))
 	{
@@ -92,17 +105,25 @@ LRESULT CGroupLine::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 			UINT nFlags = DT_TOP;
 
 			if (dwStyle & SS_RIGHT)
+			{
 				nFlags |= DT_RIGHT;
+			}
 
 			else if (dwStyle & SS_CENTER)
+			{
 				nFlags |= DT_CENTER;
+			}
 			else
+			{
 				nFlags |= DT_LEFT;
+			}
 
 			HFONT hFont = (HFONT)SendMessage(WM_GETFONT);
 
 			if (!hFont)
+			{
 				hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+			}
 
 			HFONT hOld = (HFONT)::SelectObject(dc, hFont);
 			dc.SetBkMode(TRANSPARENT);
@@ -178,7 +199,9 @@ CGroupLineManager::~CGroupLineManager()
 		m_mapGroupLines.GetNextAssoc(pos, hwnd, pGroupLine);
 
 		if (pGroupLine->IsValid())
+		{
 			pGroupLine->HookWindow(NULL);
+		}
 
 		delete pGroupLine;
 	}
@@ -189,13 +212,17 @@ BOOL CGroupLineManager::AddGroupLine(UINT nIDStatic, HWND hwndParent)
 	HWND hwndStatic = ::GetDlgItem(hwndParent, nIDStatic);
 
 	if (!hwndStatic)
+	{
 		return FALSE;
+	}
 
 	// have we already got it?
 	CGroupLine* pGroupLine = NULL;
 
 	if (m_mapGroupLines.Lookup(hwndStatic, pGroupLine))
+	{
 		return TRUE;
+	}
 
 	// else create new editprompt
 	pGroupLine = new CGroupLine;

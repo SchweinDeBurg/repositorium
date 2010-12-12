@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_ABOUTDLG_H__31BB99EB_BB66_4016_82F1_8688520BE14A__INCLUDED_)
@@ -62,11 +75,11 @@ public:
 protected:
 	// Dialog Data
 	//{{AFX_DATA(CAboutDlg)
-	CStatic	m_stIcon;
-	CString	m_sAppName;
-	CString	m_sAppDescription;
-	CString	m_sCopyright;
-	CString	m_sLicense;
+	CStatic m_stIcon;
+	CString m_sAppName;
+	CString m_sAppDescription;
+	CString m_sCopyright;
+	CString m_sLicense;
 	//}}AFX_DATA
 	CXHTMLStatic m_stAppName;
 	CXHTMLStatic m_stAppDescription;

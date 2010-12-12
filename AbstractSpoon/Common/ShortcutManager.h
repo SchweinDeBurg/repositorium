@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ShortcutManager.h: interface for the CShortcutManager class.
@@ -74,14 +88,21 @@ public:
 	void DeleteShortcut(UINT nCmdID);
 	void SaveSettings();
 
+	UINT GetCommandID(DWORD dwShortcut);
 	DWORD GetShortcut(UINT nCmdID) const;
 	WORD ValidateModifiers(WORD wModifiers, WORD wVirtKeyCode) const;
 
 	static CString GetShortcutText(DWORD dwShortcut);
 	CString GetShortcutTextByCmd(UINT nCmdID);
 
-	int IsEmpty() { return (m_mapID2Shortcut.GetCount() == 0); }
-	WORD GetInvalidComb() { return m_wInvalidComb; }
+	int IsEmpty()
+	{
+		return (m_mapID2Shortcut.GetCount() == 0);
+	}
+	WORD GetInvalidComb()
+	{
+		return m_wInvalidComb;
+	}
 
 	int BuildMapping(UINT nMenuID, CStringArray& aMapping, char cDelim = '\t');
 

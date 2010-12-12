@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // RichEditSpellCheck.cpp: implementation of the CRichEditSpellCheck class.
@@ -34,10 +47,11 @@
 
 #include "StdAfx.h"
 #include "RichEditSpellCheck.h"
+#include "../../CodeProject/Source/RichEditBaseCtrl.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -45,7 +59,7 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CRichEditSpellCheck::CRichEditSpellCheck(CRichEditCtrl& re) : m_re(re)
+CRichEditSpellCheck::CRichEditSpellCheck(CRichEditBaseCtrl& re) : m_re(re)
 {
 	m_crCurrentWord.cpMin = m_crCurrentWord.cpMax = 0;
 }
@@ -71,7 +85,9 @@ const char* CRichEditSpellCheck::GetNextWord() const
 	const char* szWord = GetWord(cr);
 
 	if (szWord && *szWord)
+	{
 		m_crCurrentWord = cr;
+	}
 
 	return szWord;
 }

@@ -41,76 +41,62 @@
 //      --suffix=none
 //*****************************************************************************
 
-// TimeEdit.h: interface for the CTimeEdit class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_TIMEEDIT_H__2CCFE44D_9578_4E38_B2BF_091C172C85A5__INCLUDED_)
-#define AFX_TIMEEDIT_H__2CCFE44D_9578_4E38_B2BF_091C172C85A5__INCLUDED_
+#if !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)
+#define AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "../../CodeProject/Source/EnEdit.h"
-#include "../../CodeProject/Source/TimeHelper.h"
+// TDLAddLoggedTimeDlg.h : header file
+//
 
-const UINT WM_TEN_UNITSCHANGE = ::RegisterWindowMessage(_T("WM_TEN_UNITSCHANGE")); // wParam == <CtrlID>, lParam = <prev units>
+#include "../../Common/TimeEdit.h"
+#include "../../../CodeProject/Source/TimeComboBox.h"
 
-const int TEBTN_UNITS = 1;
+/////////////////////////////////////////////////////////////////////////////
+// CTDLAddLoggedTimeDlg dialog
 
-class CTimeEdit : public CEnEdit, public CTimeHelper
+class CTDLAddLoggedTimeDlg : public CDialog
 {
+	// Construction
 public:
-	CTimeEdit(int nUnits = THU_HOURS, int nMaxDecPlaces = 9);
-	virtual ~CTimeEdit();
-
-	double GetTime() const;
-	double GetTime(int nUnits) const;
-
-	void SetTime(double dTime);
-	void SetTime(double dTime, int nUnits);
-
-	inline int GetUnits() const
-	{
-		return m_nUnits;
-	}
-	void SetUnits(int nUnits);
-
-	inline int GetMaxDecimalPlaces() const
-	{
-		return m_nMaxDecPlaces;
-	}
-	void SetMaxDecimalPlaces(int nMaxDecPlaces);
-
-	CString FormatTimeHMS() const;
-	CString FormatTime(BOOL bUnits) const;
-
-	static void SetUnits(int nUnits, LPCTSTR szLongUnits, LPCTSTR szAbbrevUnits);
+	CTDLAddLoggedTimeDlg(DWORD dwTaskID, LPCTSTR szTaskTitle, CWnd* pParent = NULL);   // standard constructor
+	double GetLoggedTime() const; // in hours
+	COleDateTime GetWhen() const;
 
 protected:
-	int m_nUnits, m_nMaxDecPlaces;
+	// Dialog Data
+	//{{AFX_DATA(CTDLAddLoggedTimeDlg)
+	enum { IDD = IDD_ADDLOGGEDTIME_DIALOG };
+	CDateTimeCtrl   m_dateWhen;
+	CTimeComboBox   m_cbTimeWhen;
+	double  m_dLoggedTime;
+	DWORD   m_dwTaskID;
+	CString m_sTaskTitle;
+	//}}AFX_DATA
+	CTimeEdit   m_eLoggedTime;
+	int m_nUnits;
+	COleDateTime m_dtWhen;
 
-protected:
 	// Overrides
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CTimeEdit)
+	//{{AFX_VIRTUAL(CTDLAddLoggedTimeDlg)
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
-	virtual void PreSubclassWindow();
-	virtual void OnBtnClick(UINT nID);
-	virtual void OnSetReadOnly(BOOL bReadOnly);
-	//	virtual void DrawButton(CDC* pDC, const CRect& rWindow, int nBtn, const CPoint& ptCursor) const;
 
 	// Implementation
+protected:
 
 	// Generated message map functions
-protected:
-	//{{AFX_MSG(CTimeEdit)
+	//{{AFX_MSG(CTDLAddLoggedTimeDlg)
+	// NOTE: the ClassWizard will add member functions here
 	//}}AFX_MSG
-
 	DECLARE_MESSAGE_MAP()
-
-	static void RemoveTrailingZeros(CString& sTime);
 };
 
-#endif // !defined(AFX_TIMEEDIT_H__2CCFE44D_9578_4E38_B2BF_091C172C85A5__INCLUDED_)
+//{{AFX_INSERT_LOCATION}}
+// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#endif // !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)

@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TODOCOMMENTSCTRL_H__E9A5D982_4D40_43B2_A071_E3BE70D122B7__INCLUDED_)
@@ -47,45 +61,69 @@
 
 class CToDoCommentsCtrl : public CUrlRichEditCtrl, public IContentControl
 {
-// Construction
+	// Construction
 public:
 	CToDoCommentsCtrl();
-	
+
 	BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
 
 	// IContentControl implementation
 	// supports plain text content only
 	int GetTextContent(TCHAR* szContent, int nLength) const;
-	bool SetTextContent(const TCHAR* szContent);
-	int GetContent(unsigned char* /*pContent*/) const { return 0; }
-	bool SetContent(unsigned char* /*pContent*/, int /*nLength*/) { return false; }
+	bool SetTextContent(const TCHAR* szContent, BOOL bResetSelection);
+	int GetContent(unsigned char* /*pContent*/) const
+	{
+		return 0;
+	}
+	bool SetContent(unsigned char* /*pContent*/, int /*nLength*/, BOOL /*bResetSelection*/)
+	{
+		return false;
+	}
 	void SetReadOnly(bool bReadOnly);
-	HWND GetHwnd() const { return GetSafeHwnd(); }
-	const char* GetTypeID() const { return "PLAIN_TEXT"; }
-	void Release() { DestroyWindow(); delete this; }
+	HWND GetHwnd() const
+	{
+		return GetSafeHwnd();
+	}
+	const char* GetTypeID() const
+	{
+		return "PLAIN_TEXT";
+	}
+	void Release()
+	{
+		DestroyWindow();
+		delete this;
+	}
 	bool ProcessMessage(MSG* pMsg);
-	ISpellCheck* GetSpellCheckInterface() { return &m_reSpellCheck; }
-	bool Undo() { return CUrlRichEditCtrl::Undo() != 0; }
-	bool Redo() { return CUrlRichEditCtrl::Redo() != 0; }
+	ISpellCheck* GetSpellCheckInterface()
+	{
+		return &m_reSpellCheck;
+	}
+	bool Undo()
+	{
+		return CUrlRichEditCtrl::Undo() != 0;
+	}
+	bool Redo()
+	{
+		return CUrlRichEditCtrl::Redo() != 0;
+	}
 	void SetUITheme(const UITHEME* /*pTheme*/) {}
-	void SetPreferenceLocation(const char* szKey);
+	void SavePreferences(IPreferences* pPrefs, LPCTSTR szKey) const;
+	void LoadPreferences(const IPreferences* pPrefs, LPCTSTR szKey);
 
-// Attributes
+	// Attributes
 protected:
 	BOOL m_bAllowNotify;
 	BOOL m_bWordWrap;
 	CRichEditSpellCheck m_reSpellCheck;
-	CString m_sPrefKey;
-	BOOL m_bPrefsDone;
 
-// Overrides
+	// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CToDoCommentsCtrl)
-	protected:
+protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 public:
 	virtual ~CToDoCommentsCtrl();
 
@@ -94,7 +132,6 @@ protected:
 	//{{AFX_MSG(CToDoCommentsCtrl)
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
-	afx_msg void OnDestroy();
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	//}}AFX_MSG
 	afx_msg void OnCommentsMenuCmd(UINT nCmdID);
@@ -111,6 +148,8 @@ protected:
 protected:
 	BOOL IsClipboardEmpty() const;
 	void SetWordWrap(BOOL bWrap);
+	void Copy();
+
 };
 
 /////////////////////////////////////////////////////////////////////////////

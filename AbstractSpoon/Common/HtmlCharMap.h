@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_HTMLCHARMAP_H__7E73ADE2_3848_4ED1_9E8B_8881813B4262__INCLUDED_)
@@ -191,7 +204,9 @@ public:
 				nStart = sText.Find(_T('&'), 0);
 			}
 			else
+			{
 				break;
+			}
 		}
 
 		// add whatevers left
@@ -242,15 +257,21 @@ protected:
 			int nItem = SIZEOFHTMLCHARARRAY;
 
 			while (nItem--)
+			{
 				mapHtmlRep.SetAt(HTMLCHARARRAY[nItem].szHtmlRep, HTMLCHARARRAY[nItem].c);
+			}
 		}
 
 		TBYTE c = 0;
 
 		if (mapHtmlRep.Lookup(szHtmlRep, c))
+		{
 			sAppendTo += c;
+		}
 		else
+		{
 			sAppendTo += szHtmlRep;
+		}
 	}
 
 
@@ -264,15 +285,21 @@ protected:
 			int nItem = SIZEOFHTMLCHARARRAY;
 
 			while (nItem--)
+			{
 				mapChar.SetAt(HTMLCHARARRAY[nItem].c, HTMLCHARARRAY[nItem].szHtmlRep);
+			}
 		}
 
 		CString sHtmlRep;
 
 		if (mapChar.Lookup(c, sHtmlRep))
+		{
 			sAppendTo += sHtmlRep;
+		}
 		else
+		{
 			sAppendTo += c;
+		}
 	}
 };
 

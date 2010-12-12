@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TaskTimeLog.cpp: implementation of the CTaskTimeLog class.
@@ -41,7 +55,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -58,28 +72,37 @@ CTaskTimeLog::CTaskTimeLog(LPCTSTR szRefPath) : m_sRefPath(szRefPath)
 
 CTaskTimeLog::~CTaskTimeLog()
 {
+
 }
 
-BOOL CTaskTimeLog::LogTime(DWORD dwTaskID, double dTime, BOOL bLogSeparately)
+BOOL CTaskTimeLog::LogTime(DWORD dwTaskID, LPCTSTR szTaskTitle, double dTime, BOOL bLogSeparately)
+{
+	return LogTime(dwTaskID, szTaskTitle, dTime, COleDateTime::GetCurrentTime(), bLogSeparately);
+}
+
+BOOL CTaskTimeLog::LogTime(DWORD dwTaskID, LPCTSTR szTaskTitle, double dTime, COleDateTime dtWhen, BOOL bLogSeparately)
 {
 	CString sLogPath = GetLogPath(dwTaskID, bLogSeparately);
 
 	// if the file doesn't exist then we insert the column headings as the first line
 	if (!FileMisc::FileExists(sLogPath))
+	{
 		FileMisc::AppendLineToFile(sLogPath, COLUMNHEADINGS);
+	}
 
 	// then log the time spent
 	CString sLog;
 
-	COleDateTime dtEnd = COleDateTime::GetCurrentTime();
+	COleDateTime dtEnd = dtWhen;
 	COleDateTime dtStart = dtEnd - COleDateTime(dTime / 24); // dTime is in hours
 
-	sLog.Format(LOGFORMAT, 
-				dwTaskID, 
-				dTime, 
-				Misc::GetUserName(),
-				CDateHelper::FormatDate(dtEnd, DHFD_ISO | DHFD_TIME), 
-				CDateHelper::FormatDate(dtStart, DHFD_ISO | DHFD_TIME));
+	sLog.Format(LOGFORMAT,
+		dwTaskID,
+		szTaskTitle,
+		dTime,
+		Misc::GetUserName(),
+		CDateHelper::FormatDate(dtEnd, DHFD_ISO | DHFD_TIME),
+		CDateHelper::FormatDate(dtStart, DHFD_ISO | DHFD_TIME));
 
 	return FileMisc::AppendLineToFile(sLogPath, sLog);
 }
@@ -90,11 +113,15 @@ CString CTaskTimeLog::GetLogPath(DWORD dwTaskID, BOOL bLogSeparately)
 
 	// use ref filename as the basis for the log filename
 	FileMisc::SplitPath(m_sRefPath, &sDrive, &sFolder, &sFileName);
-	
+
 	if (bLogSeparately)
+	{
 		sLogPath.Format(_T("%s%s%s\\%ld_Log.csv"), (LPCTSTR)sDrive, (LPCTSTR)sFolder, (LPCTSTR)sFileName, dwTaskID);
+	}
 	else
+	{
 		sLogPath.Format(_T("%s%s%s_Log.csv"), (LPCTSTR)sDrive, (LPCTSTR)sFolder, (LPCTSTR)sFileName);
+	}
 
 	return sLogPath;
 }
@@ -123,7 +150,9 @@ double CTaskTimeLog::CalcAccumulatedTime(DWORD dwTaskID, BOOL bLogSeparately)
 
 			{
 				if (dwLogID == dwTaskID)
+				{
 					dTotalTime += dLogTime;
+				}
 			}
 		}
 	}

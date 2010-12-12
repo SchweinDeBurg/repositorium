@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // AboutDlg.cpp : implementation file
@@ -57,19 +70,19 @@ enum // ctrl IDs
 };
 
 CAboutDlg::CAboutDlg(UINT nAppIconID, AB_STYLE nStyle,
-							LPCTSTR szAppName, LPCTSTR szAppDescription, LPCTSTR szCopyright, LPCTSTR szLicense,
-							int nAppLines, int nDescLines, int nCopyrightLines, int nLicenseLines)
-							: CRuntimeDlg(),
-							m_sAppName(szAppName),
-							m_sAppDescription(szAppDescription),
-							m_sCopyright(szCopyright),
-							m_sLicense(szLicense),
-							m_nStyle(nStyle)
+	LPCTSTR szAppName, LPCTSTR szAppDescription, LPCTSTR szCopyright, LPCTSTR szLicense,
+	int nAppLines, int nDescLines, int nCopyrightLines, int nLicenseLines):
+CRuntimeDlg(),
+m_sAppName(szAppName),
+m_sAppDescription(szAppDescription),
+m_sCopyright(szCopyright),
+m_sLicense(szLicense),
+m_nStyle(nStyle)
 {
 	SetBordersDLU(5);
 
 	// icon
-	AddRCControl(_T("ICON"), _T(""), _T(""), SS_ICON, 0, 5,5,20,20, IDC_APPICON);
+	AddRCControl(_T("ICON"), _T(""), _T(""), SS_ICON, 0, 5, 5, 20, 20, IDC_APPICON);
 
 	// variable height items
 	const UINT ITEMIDS[] = { IDC_APPNAME, IDC_APPDESCRIPTION, IDC_COPYRIGHT, IDC_LICENSE };
@@ -84,14 +97,20 @@ CAboutDlg::CAboutDlg(UINT nAppIconID, AB_STYLE nStyle,
 
 		// special case: copyright
 		if (nItem == 2 && m_nStyle == ABS_EDITCOPYRIGHT)
+		{
 			AddRCControl(_T("CONTROL"), _T("RICHEDIT"), _T(""), ES_READONLY | ES_MULTILINE | WS_VSCROLL, WS_EX_STATICEDGE, 36, nTop, 174, nHeight, ITEMIDS[nItem]);
+		}
 		else
+		{
 			AddRCControl(_T("LTEXT"), _T(""), _T(""), SS_NOPREFIX, 0, 36, nTop, 174, nHeight, ITEMIDS[nItem]);
+		}
 
 		nTop += nHeight;
 
 		if (nHeight && nItem < (NUMITEMS - 1))
+		{
 			nTop += 6;
+		}
 	}
 
 	// divider and ok button
@@ -116,7 +135,9 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LICENSE, m_stLicense);
 
 	if (m_nStyle == ABS_HTMLCOPYRIGHT)
+	{
 		DDX_Control(pDX, IDC_COPYRIGHT, m_stCopyright);
+	}
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CRuntimeDlg)
@@ -137,7 +158,9 @@ BOOL CAboutDlg::OnInitDialog()
 	CRuntimeDlg::OnInitDialog();
 
 	if (m_hIcon)
+	{
 		((CStatic*)GetDlgItem(IDC_APPICON))->SetIcon(m_hIcon);
+	}
 
 	CWnd* pCopyright = GetDlgItem(IDC_COPYRIGHT);
 

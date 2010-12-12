@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // Preferences.h: interface for the CPreferences class.
@@ -39,6 +40,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "IPreferences.h"
 #include <afxtempl.h>
 
 struct INIENTRY
@@ -61,7 +63,7 @@ struct INISECTION
 
 typedef CArray<INISECTION*, INISECTION*> CIniSectionArray;
 
-class CPreferences
+class CPreferences : public IPreferences
 {
 public:
 	CPreferences();

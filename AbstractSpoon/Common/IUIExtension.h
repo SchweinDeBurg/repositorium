@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // IUIExtension.h: interface and implementation of the IUIExtension class.
@@ -43,9 +56,9 @@
 
 // function to be exported from dll to create instance of interface
 #ifdef _EXPORTING // declare this in project settings for dll _only_
-#	define DLL_DECLSPEC __declspec(dllexport)
+#define DLL_DECLSPEC __declspec(dllexport)
 #else
-#	define DLL_DECLSPEC __declspec(dllimport)
+#define DLL_DECLSPEC __declspec(dllimport)
 #endif
 
 #define IUIEXTENSION_VERSION 0x0000
@@ -60,8 +73,8 @@ extern "C" DLL_DECLSPEC IUIExtension* CreateUIExtensionInterface();
 typedef int (*PFNGETVERSION)(); // function prototype
 extern "C" DLL_DECLSPEC int GetInterfaceVersion();
 
-#pragma warning(disable:4505)
-#pragma warning(disable:4189)
+#pragma warning(disable: 4505)
+#pragma warning(disable: 4189)
 
 // helper method
 static IUIExtension* CreateUIExtensionInterface(const TCHAR* szDllPath)
@@ -79,11 +92,15 @@ static IUIExtension* CreateUIExtensionInterface(const TCHAR* szDllPath)
 			PFNGETVERSION pVersion = (PFNGETVERSION)GetProcAddress(hDll, "GetInterfaceVersion");
 
 			if (!IUIEXTENSION_VERSION || (pVersion && pVersion() >= IUIEXTENSION_VERSION))
+			{
 				pInterface = pCreate();
+			}
 		}
 
 		if (hDll && !pInterface)
+		{
 			FreeLibrary(hDll);
+		}
 	}
 
 	return pInterface;
@@ -117,13 +134,12 @@ public:
 
 enum
 {
-	UIU_EDIT	= 0x01,
-	UIU_ADD		= 0x02,
+	UIU_EDIT    = 0x01,
+	UIU_ADD     = 0x02,
 	UIU_DELETE  = 0x04,
-	UIU_MOVE	= 0x08,
-	//  UIU_
+	UIU_MOVE    = 0x08,
 
-	UIU_ALL		= 0xff
+	UIU_ALL     = 0xff
 };
 
 class IUIExtensionWindow

@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // PreferencesBase.cpp : implementation file
@@ -53,18 +67,39 @@ CPreferencesPageBase::~CPreferencesPageBase()
 {
 }
 
+BEGIN_MESSAGE_MAP(CPreferencesPageBase, CPropertyPage)
+	//{{AFX_MSG_MAP(CPreferencesPageBase)
+	//}}AFX_MSG_MAP
+	ON_CONTROL_RANGE(BN_CLICKED, 0, 0xffff, OnControlChange)
+	ON_CONTROL_RANGE(EN_CHANGE, 0, 0xffff, OnControlChange)
+	ON_CONTROL_RANGE(CBN_EDITCHANGE, 0, 0xffff, OnControlChange)
+	ON_CONTROL_RANGE(CBN_SELCHANGE, 0, 0xffff, OnControlChange)
+	ON_CONTROL_RANGE(CLBN_CHKCHANGE, 0, 0xffff, OnControlChange)
+END_MESSAGE_MAP()
+
 CWnd* CPreferencesPageBase::GetDlgItem(UINT nID) const
 {
 	static CWnd wnd;
 	CWnd* pWnd = CDialog::GetDlgItem(nID);
 
 	if (pWnd)
+	{
 		return pWnd;
+	}
 
 	// else
 	wnd.m_hWnd = NULL;
 	return &wnd;
 }
+
+void CPreferencesPageBase::OnControlChange(UINT /*nID*/)
+{
+	if (IsWindowVisible())
+	{
+		GetParent()->SendMessage(WM_PPB_CTRLCHANGE);
+	}
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesDlgBase dialog
@@ -88,10 +123,18 @@ void CPreferencesDlgBase::OnOK()
 	SavePreferences();
 }
 
+void CPreferencesDlgBase::OnApply()
+{
+	m_pphost.OnApply();
+	SavePreferences();
+}
+
 int CPreferencesDlgBase::DoModal(int nInitPage)
 {
 	if (nInitPage != -1)
+	{
 		m_nInitPage = nInitPage;
+	}
 
 	return CDialog::DoModal();
 }
@@ -124,7 +167,9 @@ BOOL CPreferencesDlgBase::CreatePPHost(LPRECT pRect)
 	if (m_pphost.Create(pRect, this))
 	{
 		if (m_nInitPage > 0 && m_nInitPage < m_pphost.GetPageCount())
+		{
 			return SetActivePage(m_nInitPage);
+		}
 
 		// else
 		return TRUE;
@@ -137,7 +182,7 @@ BOOL CPreferencesDlgBase::CreatePPHost(LPRECT pRect)
 BOOL CPreferencesDlgBase::SetActivePage(int nPage)
 {
 	CPropertyPage* pPage = m_pphost.GetPage(nPage);
-	ASSERT (pPage);
+	ASSERT(pPage);
 
 	return m_pphost.SetActivePage(pPage);
 }
@@ -145,7 +190,9 @@ BOOL CPreferencesDlgBase::SetActivePage(int nPage)
 BOOL CPreferencesDlgBase::SetActivePage(CPreferencesPageBase* pPage)
 {
 	if (pPage->IsKindOf(RUNTIME_CLASS(CPreferencesPageBase)))
+	{
 		return m_pphost.SetActivePage(pPage);
+	}
 
 	// else
 	return FALSE;
@@ -154,7 +201,9 @@ BOOL CPreferencesDlgBase::SetActivePage(CPreferencesPageBase* pPage)
 BOOL CPreferencesDlgBase::AddPage(CPreferencesPageBase* pPage)
 {
 	if (pPage->IsKindOf(RUNTIME_CLASS(CPreferencesPageBase)))
+	{
 		return m_pphost.AddPage(pPage);
+	}
 
 	// else
 	return FALSE;
@@ -178,12 +227,16 @@ void CPreferencesDlgBase::LoadPreferences()
 		CPreferencesPageBase* pPage = (CPreferencesPageBase*)m_pphost.GetPage(nPage);
 
 		if (pPage->IsKindOf(RUNTIME_CLASS(CPreferencesPageBase)))
+		{
 			pPage->LoadPreferences(prefs);
+		}
 	}
 
 	// initial page
 	if (m_nInitPage < 0 || m_nInitPage >= m_pphost.GetPageCount())
+	{
 		m_nInitPage = prefs.GetProfileInt(_T("Preferences"), _T("StartPage"), 0);
+	}
 }
 
 void CPreferencesDlgBase::SavePreferences()
@@ -199,11 +252,12 @@ void CPreferencesDlgBase::SavePreferences()
 		CPreferencesPageBase* pPage = (CPreferencesPageBase*)m_pphost.GetPage(nPage);
 
 		if (pPage->IsKindOf(RUNTIME_CLASS(CPreferencesPageBase)))
+		{
 			pPage->SavePreferences(prefs);
+		}
 	}
 
 	prefs.WriteProfileInt(_T("Preferences"), _T("StartPage"), m_pphost.GetActiveIndex());
 }
-
 
 /////////////////////////////////////////////////////////////////////////////

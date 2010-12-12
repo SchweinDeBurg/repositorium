@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TDLFilterComboBox.cpp : implementation file
@@ -64,20 +78,22 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTDLFilterComboBox message handlers
 
-void CTDLFilterComboBox::PreSubclassWindow() 
+void CTDLFilterComboBox::PreSubclassWindow()
 {
 	CTabbedComboBox::PreSubclassWindow();
 
 	FillCombo();
 }
 
-int CTDLFilterComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CTDLFilterComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CTabbedComboBox::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
-	
+	}
+
 	FillCombo();
-	
+
 	return 0;
 }
 
@@ -86,29 +102,105 @@ void CTDLFilterComboBox::FillCombo()
 	ASSERT(GetSafeHwnd());
 
 	if (GetCount())
-		return; // already called
+	{
+		return;   // already called
+	}
 
 	for (int nItem = 0; nItem < NUM_TASKFILTER; nItem++)
 	{
 		CEnString sFilter(TASK_FILTERS[nItem][0]);
 		UINT nFilter = TASK_FILTERS[nItem][1];
 
-		CEnString sText(_T("%c)\t%s"), _T('A') + nItem, sFilter); 
+		CEnString sText(_T("%c)\t%s"), _T('A') + nItem, sFilter);
 		int nIndex = AddString(sText);
-		ASSERT (nIndex != CB_ERR);
+		ASSERT(nIndex != CB_ERR);
 
 		if (nIndex != CB_ERR)
+		{
 			SetItemData(nIndex, nFilter);
+		}
 	}
+}
+
+void CTDLFilterComboBox::RemoveCustomFilter()
+{
+	int nFind = GetCount();
+
+	// find an existing entry
+	while (nFind--)
+	{
+		if (GetItemData(nFind) == (DWORD)FT_CUSTOM)
+		{
+			break;
+		}
+	}
+
+	if (nFind != -1)
+	{
+		// save selection so we can restore it
+		int nSel = GetCurSel();
+
+		DeleteString(nFind);
+
+		if (nFind < nSel)
+		{
+			nSel--;
+		}
+
+		SetCurSel(nSel);
+	}
+}
+
+void CTDLFilterComboBox::SetCustomFilter(LPCTSTR szFilter)
+{
+	int nFind = GetCount();
+
+	// find an existing entry
+	while (nFind--)
+	{
+		if (GetItemData(nFind) == (DWORD)FT_CUSTOM)
+		{
+			break;
+		}
+	}
+
+	CEnString sCustom(IDS_CUSTOMFILTER), sFilter(IDS_CUSTOMFILTER);
+
+	if (szFilter && *szFilter)
+	{
+		sFilter.Format(_T("%s (%s)"), sCustom, szFilter);
+	}
+
+	// delete existing entry if the text has changed
+	if (nFind != -1)
+	{
+		CString sPrevFilter;
+		GetLBText(nFind, sPrevFilter);
+
+		if (sFilter != sPrevFilter)
+		{
+			DeleteString(nFind);
+		}
+		else
+		{
+			return;   // nothing to do
+		}
+	}
+
+	nFind = AddString(sFilter);
+	SetItemData(nFind, (DWORD)FT_CUSTOM);
+	SetCurSel(nFind);
 }
 
 FILTER_TYPE CTDLFilterComboBox::GetSelectedFilter() const
 {
 	int nSel = GetCurSel();
-	ASSERT (nSel != CB_ERR);
+	ASSERT(nSel != CB_ERR);
 
 	if (nSel == CB_ERR)
-		return (FILTER_TYPE)-1;
+	{
+		return (FILTER_TYPE) - 1;
+	}
 
 	// else
 	return (FILTER_TYPE)GetItemData(nSel);

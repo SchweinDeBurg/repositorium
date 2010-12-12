@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // SpellCheckDlg.cpp : implementation file
@@ -66,31 +80,31 @@ void CSpellCheckDlg::InitDialog(ISpellCheck* pSpellCheck, LPCTSTR szText)
 	AfxEnableControlContainer();
 	AfxInitRichEdit();
 
-	AddRCControl(_T("LTEXT"), _T(""), _T("Ac&tive Dictionary:"), 0,0, 7,9,65,8, IDC_SCD_DICTLABEL);
-	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWNLIST | WS_TABSTOP, 0, 66, 8, 182,100, IDC_SCD_DICTIONARIES);
-	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Bro&wse"),WS_TABSTOP, 0,256,7,50,14,IDC_SCD_BROWSE);
-	AddRCControl(_T("LTEXT"), _T(""), _T("Download More Dictionaries"), WS_TABSTOP,0, 66,21,90,8,IDC_SCD_URL);
-	AddRCControl(_T("LTEXT"), _T(""), _T("C&hecking Text:"), 0,0, 7,30,49,8, IDC_SCD_CHECKINGLABEL);
-	AddRCControl(_T("CONTROL"), _T("RICHEDIT"), _T(""),ES_MULTILINE | ES_AUTOVSCROLL | ES_NOHIDESEL |/*WS_BORDER | */ ES_READONLY | WS_VSCROLL | WS_TABSTOP | WS_DISABLED,0, 7,40,242,68,IDC_SCD_TEXT);
-	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("R&estart"),WS_TABSTOP, 0,256,40,50,14,IDC_SCD_RESTART);
-	AddRCControl(_T("LTEXT"), _T(""), _T("Replace:"),0, 0,7,112,30,8, IDC_SCD_REPLACELABEL);
-	AddRCControl(_T("LTEXT"), _T(""), _T("Static"),0, 0,44,112,205,8,IDC_SCD_MISSPELTWORD);
-	AddRCControl(_T("LTEXT"), _T(""), _T("&With:"),0, 0,7,124,18,8, IDC_SCD_WITHLABEL);
-	AddRCControl(_T("LISTBOX"), _T(""), _T(""), LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP | LBS_NOTIFY, 0,41,124,208,51, IDC_SCD_SUGGESTIONS);
-	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("&Replace"),WS_TABSTOP, 0,256,124,50,14,IDC_SCD_REPLACE);
-	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("&Next Word"),WS_TABSTOP, 0,256,144,50,14,IDC_SCD_NEXT);
-	AddRCControl(_T("CONTROL"), _T("static"), _T(""),SS_ETCHEDHORZ,0,7,182,299,1, (UINT)IDC_STATIC);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Ac&tive Dictionary:"), 0, 0, 7, 9, 65, 8, IDC_SCD_DICTLABEL);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWNLIST | WS_TABSTOP, 0, 66, 8, 182, 100, IDC_SCD_DICTIONARIES);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Bro&wse"), WS_TABSTOP, 0, 256, 7, 50, 14, IDC_SCD_BROWSE);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Download More Dictionaries"), WS_TABSTOP, 0, 66, 21, 90, 8, IDC_SCD_URL);
+	AddRCControl(_T("LTEXT"), _T(""), _T("C&hecking Text:"), 0, 0, 7, 30, 49, 8, IDC_SCD_CHECKINGLABEL);
+	AddRCControl(_T("CONTROL"), _T("RICHEDIT"), _T(""), ES_MULTILINE | ES_AUTOVSCROLL | ES_NOHIDESEL |/*WS_BORDER | */ ES_READONLY | WS_VSCROLL | WS_TABSTOP | WS_DISABLED, 0, 7, 40, 242, 68, IDC_SCD_TEXT);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("R&estart"), WS_TABSTOP, 0, 256, 40, 50, 14, IDC_SCD_RESTART);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Replace:"), 0, 0, 7, 112, 30, 8, IDC_SCD_REPLACELABEL);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Static"), 0, 0, 44, 112, 205, 8, IDC_SCD_MISSPELTWORD);
+	AddRCControl(_T("LTEXT"), _T(""), _T("&With:"), 0, 0, 7, 124, 18, 8, IDC_SCD_WITHLABEL);
+	AddRCControl(_T("LISTBOX"), _T(""), _T(""), LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP | LBS_NOTIFY, 0, 41, 124, 208, 51, IDC_SCD_SUGGESTIONS);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("&Replace"), WS_TABSTOP, 0, 256, 124, 50, 14, IDC_SCD_REPLACE);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("&Next Word"), WS_TABSTOP, 0, 256, 144, 50, 14, IDC_SCD_NEXT);
+	AddRCControl(_T("CONTROL"), _T("static"), _T(""), SS_ETCHEDHORZ, 0, 7, 182, 299, 1, (UINT)IDC_STATIC);
 
 	if (!pSpellCheck)
 	{
-		AddRCControl(_T("DEFPUSHBUTTON"), _T(""), BTN_OK, WS_TABSTOP, 0, 199,190,50,14,IDOK);
-		AddRCControl(_T("PUSHBUTTON"), _T(""), BTN_CANCEL, WS_TABSTOP, 0,256,190,50,14,IDCANCEL);
+		AddRCControl(_T("DEFPUSHBUTTON"), _T(""), BTN_OK, WS_TABSTOP, 0, 199, 190, 50, 14, IDOK);
+		AddRCControl(_T("PUSHBUTTON"), _T(""), BTN_CANCEL, WS_TABSTOP, 0, 256, 190, 50, 14, IDCANCEL);
 
 		SetText(szText);
 	}
 	else
 	{
-		AddRCControl(_T("PUSHBUTTON"), _T(""), BTN_CLOSE, WS_TABSTOP, 0,256,190,50,14,IDCANCEL);
+		AddRCControl(_T("PUSHBUTTON"), _T(""), BTN_CLOSE, WS_TABSTOP, 0, 256, 190, 50, 14, IDCANCEL);
 
 		SetSpellCheck(pSpellCheck);
 	}
@@ -120,9 +134,13 @@ void CSpellCheckDlg::DoDataExchange(CDataExchange* pDX)
 		int nCurSel = m_cbDictionaries.GetCurSel();
 
 		if (nCurSel != CB_ERR)
+		{
 			m_cbDictionaries.GetLBText(nCurSel, m_sSelDictionary);
+		}
 		else
+		{
 			m_sSelDictionary.Empty();
+		}
 	}
 	else
 	{
@@ -130,7 +148,9 @@ void CSpellCheckDlg::DoDataExchange(CDataExchange* pDX)
 		int nDic = m_cbDictionaries.FindStringExact(-1, m_sSelDictionary);
 
 		if (nDic != CB_ERR)
+		{
 			m_cbDictionaries.DeleteString(nDic);
+		}
 
 		if (!m_sSelDictionary.IsEmpty())
 		{
@@ -164,7 +184,9 @@ int CSpellCheckDlg::DoModal(BOOL bEndOnNoErrors)
 	DWORD dwFlags = RTD_DEFSTYLE;
 
 	if (m_ptTopLeft.x != -1 || m_ptTopLeft.y != -1)
+	{
 		dwFlags &= ~DS_CENTER;
+	}
 
 	return CRuntimeDlg::DoModal(GetItemText(SCD_TITLE, _T("Spell Checking")), dwFlags);
 }
@@ -239,7 +261,9 @@ void CSpellCheckDlg::OnChangeDictionary()
 	UpdateData();
 
 	if (InitDictionary(m_sSelDictionary))
+	{
 		StartChecking(CH_CURRENT);
+	}
 }
 
 void CSpellCheckDlg::OnBrowse()
@@ -254,17 +278,21 @@ void CSpellCheckDlg::OnBrowse()
 	if (dialog.DoModal() == IDOK)
 	{
 		if (InitDictionary(dialog.GetPathName()))
+		{
 			StartChecking(CH_CURRENT);
+		}
 	}
 }
 
 void CSpellCheckDlg::OnReplace()
 {
 	if (!m_pSpellChecker)
+	{
 		return;
+	}
 
 	UpdateData();
-	ASSERT (!m_sSuggestion.IsEmpty());
+	ASSERT(!m_sSuggestion.IsEmpty());
 
 	m_pSpellCheck->ReplaceCurrentWord(ATL::CT2A(m_sSuggestion));
 	m_pSpellCheck->ClearSelection();
@@ -278,7 +306,9 @@ void CSpellCheckDlg::OnReplace()
 void CSpellCheckDlg::OnContinue()
 {
 	if (!m_pSpellChecker)
+	{
 		return;
+	}
 
 	StartChecking(CH_NEXT);
 }
@@ -308,17 +338,21 @@ BOOL CSpellCheckDlg::FindNextMisspeltWord(CString& sWord, CHECKFROM nFrom)
 	while (TRUE)
 	{
 		if (!FindNextWord(sWord, nFrom))
+		{
 			return FALSE;
+		}
 
 		else if (IsWordMisspelt(sWord))
+		{
 			return TRUE;
+		}
 
 		// else continue
 		nFrom = CH_NEXT;
 	}
 
 	// cant get here
-	ASSERT (0);
+	ASSERT(0);
 	return FALSE;
 }
 
@@ -361,12 +395,16 @@ BOOL CSpellCheckDlg::OnInitDialog()
 		if (GetFileAttributes(sPath) != 0xffffffff)
 		{
 			if (m_cbDictionaries.FindStringExact(-1, sPath) == CB_ERR)
+			{
 				m_cbDictionaries.AddString(sPath);
+			}
 		}
 	}
 
 	if (m_sSelDictionary.IsEmpty())
+	{
 		m_sSelDictionary = prefs.GetProfileString(_T("SpellChecker"), _T("ActiveDictionary"));
+	}
 
 	// check spell check engine is initialized
 	BOOL bCancel = FALSE;
@@ -385,9 +423,13 @@ BOOL CSpellCheckDlg::OnInitDialog()
 			dialog.m_ofn.lpstrTitle = GetItemText(DLG_SCD_ENGINETITLE, _T("Locate Spell Check Engine"));
 
 			if (dialog.DoModal() == IDOK)
+			{
 				m_sEnginePath = dialog.GetPathName();
+			}
 			else
+			{
 				bCancel = TRUE;
+			}
 		}
 	}
 
@@ -399,7 +441,9 @@ BOOL CSpellCheckDlg::OnInitDialog()
 
 	// make the rich edit appear disabled if not using text
 	if (m_pSpellCheck != &m_reSpellCheck)
+	{
 		m_reText.SetBackgroundColor(FALSE, GetSysColor(COLOR_3DFACE));
+	}
 
 	if (IsInitialized() || InitDictionary(m_sSelDictionary))
 	{
@@ -420,7 +464,9 @@ CString CSpellCheckDlg::GetItemText(UINT nIDItem, LPCTSTR szDefault)
 	s_mapText.Lookup(nIDItem, sText);
 
 	if (sText.IsEmpty() && szDefault)
+	{
 		return szDefault;
+	}
 
 	return sText;
 }
@@ -441,7 +487,9 @@ BOOL CSpellCheckDlg::StartChecking(CHECKFROM nFrom)
 	// if starting from the beginning and no misspelt words are found
 	// then e return FALSE to indicate no further checking required
 	if (nFrom == CH_START && !bMisspelt)
+	{
 		return FALSE;
+	}
 
 	else if (bMisspelt)
 	{
@@ -486,15 +534,21 @@ void CSpellCheckDlg::ProcessMisspeltWord(LPCTSTR szWord)
 		m_pSpellChecker->CheckSpelling(ATL::CT2A(szWord), pSuggestions, nNumSuggestions);
 
 		for (int nSugg = 0; nSugg < nNumSuggestions; nSugg++)
+		{
 			m_lbSuggestions.AddString(ATL::CA2T(pSuggestions[nSugg]));
+		}
 
 		m_pSpellChecker->FreeSuggestions(pSuggestions);
 	}
 
 	if (m_lbSuggestions.GetCount())
+	{
 		m_lbSuggestions.GetText(0, m_sSuggestion);
+	}
 	else
+	{
 		m_sSuggestion.Empty();
+	}
 
 	m_lbSuggestions.SelectString(-1, m_sSuggestion);
 	GetDlgItem(IDC_SCD_REPLACE)->EnableWindow(m_lbSuggestions.GetCount());
@@ -503,15 +557,21 @@ void CSpellCheckDlg::ProcessMisspeltWord(LPCTSTR szWord)
 void CSpellCheckDlg::HighlightWord(BOOL bHighlight)
 {
 	if (bHighlight)
+	{
 		m_pSpellCheck->SelectCurrentWord();
+	}
 	else
+	{
 		m_pSpellCheck->ClearSelection();
+	}
 }
 
 BOOL CSpellCheckDlg::IsWordMisspelt(LPCTSTR szWord)
 {
 	if (m_pSpellChecker)
+	{
 		return (m_pSpellChecker->CheckSpelling(ATL::CT2A(szWord)) == 0);
+	}
 
 	return FALSE;
 }
@@ -528,7 +588,9 @@ void CSpellCheckDlg::OnRestart()
 	if (m_pSpellChecker)
 	{
 		if (m_pSpellCheck == &m_reSpellCheck)
+		{
 			m_bMadeChanges = FALSE;
+		}
 
 		StartChecking();
 	}
@@ -575,7 +637,9 @@ void CSpellCheckDlg::OnDblClkSuggestions()
 	UpdateData();
 
 	if (m_lbSuggestions.GetCount() && !m_sSuggestion.IsEmpty())
+	{
 		OnReplace();
+	}
 }
 
 CPoint CSpellCheckDlg::GetInitialPos() const

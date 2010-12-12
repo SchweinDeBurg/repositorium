@@ -486,6 +486,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\PreferencesTaskCalcPage.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\PreferencesTaskDefPage.cpp"
 				>
 			</File>
@@ -575,6 +579,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\TaskTimeLog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TDLAddLoggedTimeDlg.cpp"
 				>
 			</File>
 			<File
@@ -788,6 +796,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\PreferencesTaskCalcPage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\PreferencesTaskDefPage.h"
 				>
 			</File>
@@ -865,6 +877,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\TDCStruct.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TDLAddLoggedTimeDlg.h"
 				>
 			</File>
 			<File
@@ -1243,11 +1259,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Common\IPreferences.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Common\ISpellCheck.h"
 				>
 			</File>
 			<File
 				RelativePath="..\Common\ITaskList.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\ITransText.h"
 				>
 			</File>
 			<File

@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // RTFContentCtrlApp.h : main header file for the RTFCONTENTCTRL DLL
@@ -67,10 +81,10 @@ public:
 	IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
 		long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent);
 	void Release();
-	void SetIniLocation(bool bRegistry, const TCHAR* szIniPathName);
 
 	int ConvertToHtml(const unsigned char* pContent, int nLength,
-		char*& szHtml);
+		const TCHAR* szCharSet, char*& szHtml);
+
 };
 
 

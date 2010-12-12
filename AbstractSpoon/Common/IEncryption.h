@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // IEncryption.h: interface for the IEncryption class.
@@ -39,14 +52,14 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#pragma warning(disable:4189)
-#pragma warning(disable:4127)
+#pragma warning(disable: 4189)
+#pragma warning(disable: 4127)
 
 // function to be exported from dll to create instance of interface
 #ifdef _EXPORTING // declare this in project settings for dll _only_
-#	define DLL_DECLSPEC __declspec(dllexport)
+#define DLL_DECLSPEC __declspec(dllexport)
 #else
-#	define DLL_DECLSPEC __declspec(dllimport)
+#define DLL_DECLSPEC __declspec(dllimport)
 #endif
 
 #define IENCRYPTION_VERSION 0x0000
@@ -77,7 +90,9 @@ static IEncryption* CreateEncryptionInterface(const TCHAR* szDllPath)
 			PFNGETVERSION pVersion = (PFNGETVERSION)GetProcAddress(hDll, "GetInterfaceVersion");
 
 			if (!IENCRYPTION_VERSION || (pVersion && pVersion() >= IENCRYPTION_VERSION))
+			{
 				pInterface = pCreate();
+			}
 		}
 	}
 

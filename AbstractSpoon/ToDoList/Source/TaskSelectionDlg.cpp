@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TaskSelectionDlg.cpp : implementation file
@@ -47,8 +61,8 @@ static char THIS_FILE[] = __FILE__;
 // CTaskSelectionDlg dialog
 
 
-CTaskSelectionDlg::CTaskSelectionDlg(LPCTSTR szRegKey, BOOL bShowSubtaskCheckbox) : 
-	CDialog(), m_sRegKey(szRegKey), m_bShowSubtaskCheckbox(bShowSubtaskCheckbox)
+CTaskSelectionDlg::CTaskSelectionDlg(LPCTSTR szRegKey, BOOL bShowSubtaskCheckbox, BOOL bVisibleColumnsOnly) :
+CDialog(), m_sRegKey(szRegKey), m_bShowSubtaskCheckbox(bShowSubtaskCheckbox)
 {
 	//{{AFX_DATA_INIT(CTaskSelectionDlg)
 	//}}AFX_DATA_INIT
@@ -56,10 +70,17 @@ CTaskSelectionDlg::CTaskSelectionDlg(LPCTSTR szRegKey, BOOL bShowSubtaskCheckbox
 
 	m_bCompletedTasks = prefs.GetProfileInt(m_sRegKey, _T("CompletedTasks"), TRUE);
 	m_bIncompleteTasks = prefs.GetProfileInt(m_sRegKey, _T("IncompleteTasks"), TRUE);
-	m_bSelectedTasks = prefs.GetProfileInt(m_sRegKey, _T("SelectedTasks"), FALSE);
+	m_nWhatTasks = prefs.GetProfileInt(m_sRegKey, _T("WhatTasks"), TSDT_FILTERED);
 	m_bSelectedSubtasks = prefs.GetProfileInt(m_sRegKey, _T("SelectedSubtasks"), TRUE);
 
-	m_nAttribOption = prefs.GetProfileInt(m_sRegKey, _T("AttributeOption"), TSDA_ALL);
+	if (bVisibleColumnsOnly)
+	{
+		m_nAttribOption = TSDA_VISIBLE;
+	}
+	else
+	{
+		m_nAttribOption = prefs.GetProfileInt(m_sRegKey, _T("AttributeOption"), TSDA_ALL);
+	}
 
 	CTDCAttributeArray aAttrib;
 	CString sGroup = m_sRegKey + _T("\\AttribVisibility");
@@ -88,17 +109,18 @@ void CTaskSelectionDlg::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 	DDX_Check(pDX, IDC_INCLUDEDONE, m_bCompletedTasks);
 	DDX_Check(pDX, IDC_INCLUDENOTDONE, m_bIncompleteTasks);
-	DDX_Radio(pDX, IDC_ALLTASKS, m_bSelectedTasks);
+	DDX_Radio(pDX, IDC_ALLTASKS, m_nWhatTasks);
 }
 
 
 BEGIN_MESSAGE_MAP(CTaskSelectionDlg, CDialog)
-//{{AFX_MSG_MAP(CTaskSelectionDlg)
+	//{{AFX_MSG_MAP(CTaskSelectionDlg)
 	ON_BN_CLICKED(IDC_ALLATTRIB, OnChangeAttribOption)
 	ON_BN_CLICKED(IDC_CUSTOMATTRIB, OnChangeAttribOption)
 	ON_BN_CLICKED(IDC_VISIBLEATTRIB, OnChangeAttribOption)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_ALLTASKS, OnChangetasksOption)
+	ON_BN_CLICKED(IDC_FILTERTASKS, OnChangetasksOption)
 	ON_BN_CLICKED(IDC_INCLUDEDONE, OnIncludeDone)
 	ON_BN_CLICKED(IDC_SELTASK, OnChangetasksOption)
 	ON_BN_CLICKED(IDC_INCLUDENOTDONE, OnIncludeNotDone)
@@ -110,21 +132,23 @@ END_MESSAGE_MAP()
 
 BOOL CTaskSelectionDlg::Create(UINT nIDRefFrame, CWnd* pParent, UINT nID)
 {
-	ASSERT (nIDRefFrame && pParent);
-	
+	ASSERT(nIDRefFrame && pParent);
+
 	if (CDialog::Create(IDD_TASKSELECTION_DIALOG, pParent))
 	{
 		if (nID != IDC_STATIC)
+		{
 			SetDlgCtrlID(nID);
-		
+		}
+
 		CWnd* pFrame = pParent->GetDlgItem(nIDRefFrame);
-		
+
 		if (pFrame)
 		{
 			CRect rFrame;
 			pFrame->GetWindowRect(rFrame);
 			pParent->ScreenToClient(rFrame);
-			
+
 			MoveWindow(rFrame);
 
 			// insert ourselves after this item in the Z-order
@@ -136,22 +160,22 @@ BOOL CTaskSelectionDlg::Create(UINT nIDRefFrame, CWnd* pParent, UINT nID)
 
 		return TRUE;
 	}
-	
+
 	return FALSE;
 }
 
-void CTaskSelectionDlg::OnDestroy() 
+void CTaskSelectionDlg::OnDestroy()
 {
 	UpdateData();
-	
+
 	CDialog::OnDestroy();
-	
+
 	// save settings
 	CPreferences prefs;
-	
+
 	prefs.WriteProfileInt(m_sRegKey, _T("CompletedTasks"), m_bCompletedTasks);
 	prefs.WriteProfileInt(m_sRegKey, _T("IncompleteTasks"), m_bIncompleteTasks);
-	prefs.WriteProfileInt(m_sRegKey, _T("SelectedTasks"), m_bSelectedTasks);
+	prefs.WriteProfileInt(m_sRegKey, _T("SelectedTasks"), m_nWhatTasks);
 	prefs.WriteProfileInt(m_sRegKey, _T("SelectedSubtasks"), m_bSelectedSubtasks);
 
 	prefs.WriteProfileInt(m_sRegKey, _T("AttributeOption"), m_nAttribOption);
@@ -171,71 +195,80 @@ void CTaskSelectionDlg::OnDestroy()
 	}
 }
 
-void CTaskSelectionDlg::OnChangetasksOption() 
+void CTaskSelectionDlg::OnChangetasksOption()
 {
 	UpdateData();
-	
-	GetDlgItem(IDC_INCLUDESUBTASKS)->EnableWindow(m_bSelectedTasks);
-	
+
+	GetDlgItem(IDC_INCLUDESUBTASKS)->EnableWindow(GetWantSelectedTasks());
+
 	GetParent()->SendMessage(WM_TASKSELDLG_CHANGE);
 }
 
-void CTaskSelectionDlg::OnIncludeDone() 
+void CTaskSelectionDlg::OnIncludeDone()
 {
 	UpdateData();
-	
+
 	// prevent the user unchecking both tick boxes
 	if (!m_bCompletedTasks && !m_bIncompleteTasks)
 	{
 		m_bIncompleteTasks = TRUE;
 		UpdateData(FALSE);
 	}
-	
+
 	GetParent()->SendMessage(WM_TASKSELDLG_CHANGE);
 }
-void CTaskSelectionDlg::OnIncludeNotDone() 
+void CTaskSelectionDlg::OnIncludeNotDone()
 {
 	UpdateData();
-	
+
 	// prevent the user unchecking both tick boxes
 	if (!m_bCompletedTasks && !m_bIncompleteTasks)
 	{
 		m_bCompletedTasks = TRUE;
 		UpdateData(FALSE);
 	}
-	
+
 	GetParent()->SendMessage(WM_TASKSELDLG_CHANGE);
 }
 
-BOOL CTaskSelectionDlg::OnInitDialog() 
+BOOL CTaskSelectionDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
-	GetDlgItem(IDC_INCLUDESUBTASKS)->EnableWindow(m_bSelectedTasks);
+
+	GetDlgItem(IDC_INCLUDESUBTASKS)->EnableWindow(GetWantSelectedTasks());
 	GetDlgItem(IDC_CUSTOMATTRIBLIST)->EnableWindow(m_nAttribOption == TSDA_CUSTOM);
 
 	if (!m_bShowSubtaskCheckbox)
+	{
 		GetDlgItem(IDC_INCLUDESUBTASKS)->ShowWindow(SW_HIDE);
+	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CTaskSelectionDlg::SetWantSelectedTasks(BOOL bWant)
+void CTaskSelectionDlg::SetWantWhatTasks(TSD_TASKS nWhat)
 {
-	m_bSelectedTasks = bWant;
+	m_nWhatTasks = nWhat;
 	UpdateData(FALSE);
-	
-	GetDlgItem(IDC_INCLUDEDONE)->EnableWindow(!m_bSelectedTasks);
-	GetDlgItem(IDC_INCLUDENOTDONE)->EnableWindow(!m_bSelectedTasks);
+
+	GetDlgItem(IDC_INCLUDEDONE)->EnableWindow(!GetWantSelectedTasks());
+	GetDlgItem(IDC_INCLUDENOTDONE)->EnableWindow(!GetWantSelectedTasks());
+
+	if (m_bShowSubtaskCheckbox)
+	{
+		GetDlgItem(IDC_INCLUDESUBTASKS)->EnableWindow(GetWantSelectedTasks());
+	}
 }
 
 void CTaskSelectionDlg::SetWantCompletedTasks(BOOL bWant)
 {
 	// prevent the user unchecking both tick boxes
 	if (!bWant && !m_bIncompleteTasks)
+	{
 		m_bIncompleteTasks = TRUE;
-	
+	}
+
 	m_bCompletedTasks = bWant;
 	UpdateData(FALSE);
 }
@@ -244,13 +277,15 @@ void CTaskSelectionDlg::SetWantInCompleteTasks(BOOL bWant)
 {
 	// prevent the user unchecking both tick boxes
 	if (!bWant && !m_bCompletedTasks)
+	{
 		m_bCompletedTasks = TRUE;
-	
+	}
+
 	m_bIncompleteTasks = bWant;
 	UpdateData(FALSE);
 }
 
-void CTaskSelectionDlg::OnChangeAttribOption() 
+void CTaskSelectionDlg::OnChangeAttribOption()
 {
 	UpdateData();
 
@@ -262,9 +297,13 @@ int CTaskSelectionDlg::GetCustomAttributes(CTDCAttributeArray& aAttrib) const
 	aAttrib.RemoveAll();
 
 	if (m_nAttribOption == TSDA_CUSTOM)
+	{
 		m_lbAttribList.GetVisibleAttributes(aAttrib);
+	}
 	else
+	{
 		ASSERT(0);
+	}
 
 	return aAttrib.GetSize();
 }

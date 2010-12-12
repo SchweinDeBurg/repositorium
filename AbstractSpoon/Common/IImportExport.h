@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // IImportExport.h: interface and implementation of the IImportExport class.
@@ -43,9 +56,9 @@
 
 // function to be exported from dll to create instance of interface
 #ifdef _EXPORTING // declare this in project settings for dll _only_
-#	define DLL_DECLSPEC __declspec(dllexport)
+#define DLL_DECLSPEC __declspec(dllexport)
 #else
-#	define DLL_DECLSPEC __declspec(dllimport)
+#define DLL_DECLSPEC __declspec(dllimport)
 #endif
 
 #define IIMPORTEXPORT_VERSION 0x0001
@@ -81,11 +94,15 @@ static IImportTasklist* CreateImportInterface(const TCHAR* szDllPath)
 			PFNGETVERSION pVersion = (PFNGETVERSION)GetProcAddress(hDll, "GetInterfaceVersion");
 
 			if (!IIMPORTEXPORT_VERSION || (pVersion && pVersion() >= IIMPORTEXPORT_VERSION))
+			{
 				pInterface = pCreate();
+			}
 		}
 
 		if (hDll && !pInterface)
+		{
 			FreeLibrary(hDll);
+		}
 	}
 
 	return pInterface;
@@ -106,11 +123,15 @@ static IExportTasklist* CreateExportInterface(const TCHAR* szDllPath)
 			PFNGETVERSION pVersion = (PFNGETVERSION)GetProcAddress(hDll, "GetInterfaceVersion");
 
 			if (!IIMPORTEXPORT_VERSION || (pVersion && pVersion() >= IIMPORTEXPORT_VERSION))
+			{
 				pInterface = pCreate();
+			}
 		}
 
 		if (hDll && !pInterface)
+		{
 			FreeLibrary(hDll);
+		}
 	}
 
 	return pInterface;
@@ -126,7 +147,9 @@ static BOOL IsImportExportDll(const TCHAR* szDllPath)
 		PFNCREATEIMPORT pCreateImp = (PFNCREATEIMPORT)GetProcAddress(hDll, "CreateImportInterface");
 
 		if (!pCreateImp)
+		{
 			pCreateExp = (PFNCREATEEXPORT)GetProcAddress(hDll, "CreateExportInterface");
+		}
 
 		FreeLibrary(hDll);
 

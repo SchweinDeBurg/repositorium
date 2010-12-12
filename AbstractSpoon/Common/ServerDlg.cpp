@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // ServerDlg.cpp : implementation file
@@ -33,6 +47,7 @@
 
 #include "StdAfx.h"
 #include "ServerDlg.h"
+#include "../../CodeProject/Source/AfxRegKey.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -45,8 +60,10 @@ static char THIS_FILE[] = __FILE__;
 
 CMap<UINT, UINT, CString, CString&> CServerDlg::s_mapText;
 
-CServerDlg::CServerDlg(LPCTSTR szServer, LPCTSTR szUsername, LPCTSTR szPassword, AL_TYPE nAnonymousLogin)
-: m_sServer(szServer),
+const CString INTERNETSETTINGS(_T("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"));
+
+CServerDlg::CServerDlg(LPCTSTR szServer, LPCTSTR szUsername, LPCTSTR szPassword, AL_TYPE nAnonymousLogin):
+m_sServer(szServer),
 m_sUsername(szUsername),
 m_sPassword(szPassword),
 m_nAnonLogin(nAnonymousLogin)
@@ -54,31 +71,79 @@ m_nAnonLogin(nAnonymousLogin)
 	BOOL bShowAnonLogin = (m_nAnonLogin != ANONLOGIN_HIDE);
 	int LOGINOFFSET = 0;
 
-	AddRCControl(_T("LTEXT"), _T(""), _T("Server:"), 0, 0,7,10,24,8, IDC_SD_SERVERLABEL);
-	AddRCControl(_T("COMBOBOX"), _T(""), _T(""),CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP, 0,49,7,134,100, IDC_SD_SERVER);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Server:"), 0, 0, 7, 10, 24, 8, IDC_SD_SERVERLABEL);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP | CBS_AUTOHSCROLL, 0, 49, 7, 134, 100, IDC_SD_SERVER);
 
 	if (bShowAnonLogin)
 	{
-		AddRCControl(_T("CONTROL"), _T("Button"), _T("Anonymous Login"), BS_AUTOCHECKBOX | WS_TABSTOP, 0, 49,29,134,10, IDC_SD_ANONLOGIN);
+		AddRCControl(_T("CONTROL"), _T("Button"), _T("Anonymous Login"), BS_AUTOCHECKBOX | WS_TABSTOP, 0, 49, 29, 134, 10, IDC_SD_ANONLOGIN);
 		LOGINOFFSET = 20;
 	}
 
-	AddRCControl(_T("LTEXT"), _T(""), _T("Username:"),0, 0, 7,29 + LOGINOFFSET,35,8, IDC_SD_USERNAMELABEL);
-	AddRCControl(_T("COMBOBOX"), _T(""), _T(""),CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP, 0,49,27 + LOGINOFFSET,134,100, IDC_SD_USERNAME);
-	AddRCControl(_T("LTEXT"), _T(""), _T("Password:"),0, 0, 7,48 + LOGINOFFSET,34,8, IDC_SD_PASSWORDLABEL);
-	AddRCControl(_T("EDITTEXT"), _T(""), _T(""),ES_PASSWORD | ES_AUTOHSCROLL | WS_TABSTOP, 0,49,45 + LOGINOFFSET,134,14, IDC_SD_PASSWORD);
-	AddRCControl(_T("CONTROL"), _T("Static"), _T(""),SS_ETCHEDHORZ, 0,7,65 + LOGINOFFSET,176,1, (UINT)IDC_STATIC);
-	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_TABSTOP, 0, 77,74 + LOGINOFFSET,50,14,IDOK);
-	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0,133,74 + LOGINOFFSET,50,14,IDCANCEL);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Username:"), 0, 0, 7, 29 + LOGINOFFSET, 35, 8, IDC_SD_USERNAMELABEL);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP, 0, 49, 27 + LOGINOFFSET, 134, 100, IDC_SD_USERNAME);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Password:"), 0, 0, 7, 48 + LOGINOFFSET, 34, 8, IDC_SD_PASSWORDLABEL);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_PASSWORD | ES_AUTOHSCROLL | WS_TABSTOP, 0, 49, 45 + LOGINOFFSET, 134, 14, IDC_SD_PASSWORD);
+
+	AddRCControl(_T("LTEXT"), _T(""), _T("Proxy:"), 0, 0, 7, 67 + LOGINOFFSET, 34, 8, IDC_SD_PROXYLABEL);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_AUTOHSCROLL | WS_TABSTOP, 0, 49, 65 + LOGINOFFSET, 80, 14, IDC_SD_PROXY);
+	AddRCControl(_T("LTEXT"), _T(""), _T("Port:"), 0, 0, 133, 67 + LOGINOFFSET, 20, 8, IDC_SD_PROXYPORTLABEL);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_NUMBER | ES_AUTOHSCROLL | WS_TABSTOP, 0, 153, 65 + LOGINOFFSET, 30, 14, IDC_SD_PROXYPORT);
+
+	AddRCControl(_T("CONTROL"), _T("Static"), _T(""), SS_ETCHEDHORZ, 0, 7, 85 + LOGINOFFSET, 176, 1, (UINT)IDC_STATIC);
+	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_TABSTOP, 0, 77, 94 + LOGINOFFSET, 50, 14, IDOK);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0, 133, 94 + LOGINOFFSET, 50, 14, IDCANCEL);
 
 	if (m_sServer.IsEmpty())
+	{
 		m_sServer = AfxGetApp()->GetProfileString(_T("RemoteSettings"), _T("LastServer"));
+	}
 
 	if (m_sUsername.IsEmpty())
+	{
 		m_sUsername = AfxGetApp()->GetProfileString(_T("RemoteSettings"), _T("LastUsername"));
+	}
 
 	if (m_nAnonLogin == ANONLOGIN_AUTO)
+	{
 		m_nAnonLogin = AfxGetApp()->GetProfileInt(_T("RemoteSettings"), _T("LastAnonLogin"), ANONLOGIN_NO) ? ANONLOGIN_YES : ANONLOGIN_NO;
+	}
+
+	m_sProxy = AfxGetApp()->GetProfileString(_T("RemoteSettings"), _T("Proxy"));
+	m_nProxyPort = AfxGetApp()->GetProfileInt(_T("RemoteSettings"), _T("ProxyPort"), 80);
+
+	// if the proxy settings are blank, try to get them from the registry
+	if (m_sProxy.IsEmpty())
+	{
+		CAfxRegKey reg;
+
+		if (reg.Open(HKEY_CURRENT_USER, INTERNETSETTINGS) == ERROR_SUCCESS)
+		{
+			// is proxy enabled?
+			DWORD dwProxyEnabled = FALSE;
+
+			if (reg.Read(_T("ProxyEnabled"), dwProxyEnabled) == ERROR_SUCCESS && dwProxyEnabled)
+			{
+				CString sProxy;
+
+				if (reg.Read(_T("ProxyServer"), sProxy) == ERROR_SUCCESS && !sProxy.IsEmpty())
+				{
+					int nColon = sProxy.Find(_T(':'), 0);
+
+					if (nColon != -1)
+					{
+						m_sProxy = sProxy.Left(nColon);
+						m_nProxyPort = _ttoi(sProxy.Mid(nColon + 1));
+					}
+					else
+					{
+						m_sProxy = sProxy;
+						m_nProxyPort = 80;
+					}
+				}
+			}
+		}
+	}
 }
 
 void CServerDlg::DoDataExchange(CDataExchange* pDX)
@@ -89,11 +154,15 @@ void CServerDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_CBString(pDX, IDC_SD_USERNAME, m_sUsername);
 	DDX_Text(pDX, IDC_SD_PASSWORD, m_sPassword);
 	//}}AFX_DATA_MAP
+	DDX_Text(pDX, IDC_SD_PROXY, m_sProxy);
+	DDX_Text(pDX, IDC_SD_PROXYPORT, m_nProxyPort);
 	DDX_Control(pDX, IDC_SD_SERVER, m_cbServers);
 	DDX_Control(pDX, IDC_SD_USERNAME, m_cbUsernames);
 
 	if (m_nAnonLogin >= ANONLOGIN_NO)
+	{
 		DDX_Check(pDX, IDC_SD_ANONLOGIN, (int&)m_nAnonLogin);
+	}
 
 	if (pDX->m_bSaveAndValidate)
 	{
@@ -111,6 +180,7 @@ BEGIN_MESSAGE_MAP(CServerDlg, CRuntimeDlg)
 	ON_CBN_EDITCHANGE(IDC_SD_SERVER, OnChangeServer)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_SD_ANONLOGIN, OnAnonLogin)
+	ON_EN_CHANGE(IDC_SD_PROXY, OnChangeProxy)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -121,6 +191,14 @@ void CServerDlg::OnChangeServer()
 	UpdateData();
 
 	GetDlgItem(IDOK)->EnableWindow(!m_sServer.IsEmpty());
+}
+
+void CServerDlg::OnChangeProxy()
+{
+	UpdateData();
+
+	GetDlgItem(IDC_SD_PROXYPORTLABEL)->EnableWindow(!m_sProxy.IsEmpty());
+	GetDlgItem(IDC_SD_PROXYPORT)->EnableWindow(!m_sProxy.IsEmpty());
 }
 
 BOOL CServerDlg::OnInitDialog()
@@ -138,12 +216,16 @@ BOOL CServerDlg::OnInitDialog()
 		sServer = AfxGetApp()->GetProfileString(_T("RemoteSettings"), sItem);
 
 		if (!sServer.IsEmpty() && m_cbServers.FindString(-1, sServer) == CB_ERR)
+		{
 			m_cbServers.InsertString(0, sServer);
+		}
 	}
 
 	// add m_sServer as appropriate and select
 	if (!m_sServer.IsEmpty() && m_cbServers.FindString(-1, m_sServer) == CB_ERR)
+	{
 		m_cbServers.InsertString(0, m_sServer);
+	}
 
 	m_cbServers.SelectString(-1, m_sServer);
 
@@ -157,15 +239,20 @@ BOOL CServerDlg::OnInitDialog()
 		sName = AfxGetApp()->GetProfileString(_T("RemoteSettings"), sItem);
 
 		if (!sName.IsEmpty() && m_cbUsernames.FindString(-1, sName) == CB_ERR)
+		{
 			m_cbUsernames.InsertString(0, sName);
+		}
 	}
 
 	// add m_sUsername as appropriate and select
 	if (!m_sUsername.IsEmpty() && m_cbUsernames.FindString(-1, m_sUsername) == CB_ERR)
+	{
 		m_cbUsernames.InsertString(0, m_sUsername);
+	}
 
 	m_cbUsernames.SelectString(-1, m_sUsername);
 
+	OnChangeProxy();
 	OnChangeServer();
 	OnAnonLogin();
 
@@ -207,7 +294,9 @@ void CServerDlg::OnOK()
 		m_cbUsernames.GetLBText(nName, sName);
 
 		if (!sName.IsEmpty())
+		{
 			AfxGetApp()->WriteProfileString(_T("RemoteSettings"), sItem, sName);
+		}
 	}
 
 	AfxGetApp()->WriteProfileString(_T("RemoteSettings"), _T("LastUsername"), m_sUsername);
@@ -231,7 +320,9 @@ CString CServerDlg::GetItemText(UINT nIDItem, LPCTSTR szDefault)
 	s_mapText.Lookup(nIDItem, sText);
 
 	if (sText.IsEmpty() && szDefault)
+	{
 		return szDefault;
+	}
 
 	return sText;
 }

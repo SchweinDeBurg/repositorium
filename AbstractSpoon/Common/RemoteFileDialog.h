@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_REMOTEFILEDIALOG_H__1EB7B1E7_62C6_4402_945E_D60A50455E39__INCLUDED_)
@@ -48,12 +61,12 @@
 
 enum // flags
 {
-	RFD_DOWNLOAD		= 0x0000,
-	RFD_UPLOAD			= 0x0001,
-	RFD_FILEMUSTEXIST	= 0x0002, // implies RFD_DOWNLOAD
-	RFD_MULTISELECT		= 0x0004,
-	RFD_FOLDERSELECT	= 0x0008, // upload only, excludes files
-	RFD_NONAVIGATE		= 0x0010, // use is restricted to initial directory
+	RFD_DOWNLOAD        = 0x0000,
+	RFD_UPLOAD          = 0x0001,
+	RFD_FILEMUSTEXIST   = 0x0002, // implies RFD_DOWNLOAD
+	RFD_MULTISELECT     = 0x0004,
+	RFD_FOLDERSELECT    = 0x0008, // upload only, excludes files
+	RFD_NONAVIGATE      = 0x0010, // use is restricted to initial directory
 };
 
 struct FILERESULT
@@ -94,25 +107,37 @@ public:
 
 	int DoModal(DWORD dwOptions = RFD_DOWNLOAD | RFD_FILEMUSTEXIST | RFD_MULTISELECT, LPCTSTR szFilename = NULL);
 
-	BOOL IsRootFolder() { return m_bRoot; }
-	CString GetFolder() { return m_bRoot ? _T("") : m_sCurFolder; }
+	BOOL IsRootFolder()
+	{
+		return m_bRoot;
+	}
+	CString GetFolder()
+	{
+		return m_bRoot ? _T("") : m_sCurFolder;
+	}
 	CString GetFirstPath();
 
-	int GetPathCount() { return m_aFiles.GetSize(); }
-	void GetPaths(CFRArray& aFiles) { aFiles.Copy(m_aFiles); }
+	int GetPathCount()
+	{
+		return m_aFiles.GetSize();
+	}
+	void GetPaths(CFRArray& aFiles)
+	{
+		aFiles.Copy(m_aFiles);
+	}
 
 protected:
 	// Dialog Data
 	//{{AFX_DATA(CRemoteFileDialog)
-	CComboBox	m_cbFileTypes;
-	CListCtrl	m_lcFiles;
-	CString	m_sCurFolder;
-	CString	m_sFilenames;
-	CString	m_sServer;
+	CComboBox   m_cbFileTypes;
+	CListCtrl   m_lcFiles;
+	CString m_sCurFolder;
+	CString m_sFilenames;
+	CString m_sServer;
 	//}}AFX_DATA
 	CString m_sFilterExt;
-	CFileEdit	m_eCurFolder;
-	CFileEdit	m_eFilename;
+	CFileEdit   m_eCurFolder;
+	CFileEdit   m_eFilename;
 	CFtpConnection* m_pConnection;
 	DWORD m_dwFileSize; // selected file
 	CToolBar m_toolbar;
@@ -134,7 +159,12 @@ protected:
 	// sorting
 	struct FILEITEM
 	{
-		FILEITEM() { nType = 0; dwSize = 0; dLastMod = 0.0; }
+		FILEITEM()
+		{
+			nType = 0;
+			dwSize = 0;
+			dLastMod = 0.0;
+		}
 
 		CString sFilename;
 		int nType;
@@ -187,8 +217,14 @@ protected:
 	void InitFilterArray(LPCTSTR szFilters);
 	void FillFileList(); // for whereever its at
 	int FindMatch(LPCTSTR szFilename);
-	BOOL FileMustExist() { return !(m_dwOptions & RFD_UPLOAD) && (m_dwOptions & RFD_FILEMUSTEXIST); }
-	BOOL FolderSelect() { return (m_dwOptions & RFD_UPLOAD) && (m_dwOptions & RFD_FOLDERSELECT); }
+	BOOL FileMustExist()
+	{
+		return !(m_dwOptions & RFD_UPLOAD) && (m_dwOptions & RFD_FILEMUSTEXIST);
+	}
+	BOOL FolderSelect()
+	{
+		return (m_dwOptions & RFD_UPLOAD) && (m_dwOptions & RFD_FOLDERSELECT);
+	}
 	void UpdateOKButton(BOOL bRefreshResults = TRUE);
 	void UpdateFileResults();
 

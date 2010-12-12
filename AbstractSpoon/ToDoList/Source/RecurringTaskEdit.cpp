@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // RecurringTaskEdit.cpp: implementation of the CRecurringTaskEdit class.
@@ -42,7 +56,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -50,7 +64,7 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CTDLRecurringTaskEdit::CTDLRecurringTaskEdit() : m_bInOnSetReadOnly(FALSE)
+CTDLRecurringTaskEdit::CTDLRecurringTaskEdit()
 {
 	AddButton(REBTN_OPTIONS, _T("..."), _T("Options"));
 }
@@ -62,10 +76,7 @@ CTDLRecurringTaskEdit::~CTDLRecurringTaskEdit()
 BEGIN_MESSAGE_MAP(CTDLRecurringTaskEdit, CEnEdit)
 	//{{AFX_MSG_MAP(CRecurringTaskEdit)
 	//}}AFX_MSG_MAP
-	ON_WM_SETCURSOR()
-	ON_WM_CTLCOLOR_REFLECT()
-	ON_MESSAGE(EM_SETREADONLY, OnSetReadOnly)
-	ON_WM_STYLECHANGING()
+	ON_CONTROL_REFLECT_EX(EN_CHANGE, OnReflectChangeDisplayText)
 END_MESSAGE_MAP()
 //////////////////////////////////////////////////////////////////////
 
@@ -73,7 +84,19 @@ void CTDLRecurringTaskEdit::PreSubclassWindow()
 {
 	CEnEdit::PreSubclassWindow();
 
-	SetWindowText(GetRegularity()); // for display purposes
+	SetWindowText(GetRegularity(m_tr)); // for display purposes
+}
+
+BOOL CTDLRecurringTaskEdit::OnReflectChangeDisplayText()
+{
+	GetWindowText(m_tr.sRegularity);
+
+	if (m_tr.nRegularity == TDIR_ONCE && IsDefaultString(m_tr.sRegularity))
+	{
+		m_tr.sRegularity.Empty();
+	}
+
+	return FALSE; // allow parent to process too
 }
 
 void CTDLRecurringTaskEdit::OnBtnClick(UINT nID)
@@ -88,20 +111,31 @@ void CTDLRecurringTaskEdit::OnBtnClick(UINT nID)
 
 void CTDLRecurringTaskEdit::DoEdit()
 {
-	if (!m_bReadOnly)
+	if (!(GetStyle() & ES_READONLY))
 	{
 		CTDLRecurringTaskOptionDlg dialog(m_tr, m_dtDefault);
-		
+
 		if (dialog.DoModal() == IDOK)
 		{
 			TDIRECURRENCE tr;
 			dialog.GetRecurrenceOptions(tr);
-			
+
 			if (m_tr != tr)
 			{
+				// reset display string if the units have changed
+				if (m_tr.nRegularity != tr.nRegularity)
+				{
+					m_tr.sRegularity.Empty();
+				}
+				else
+					// restore current text
+				{
+					tr.sRegularity = m_tr.sRegularity;
+				}
+
 				m_tr = tr;
-				SetWindowText(GetRegularity()); // for display purposes
-				
+				SetWindowText(GetRegularity(m_tr)); // for display purposes
+
 				// notify parent
 				GetParent()->SendMessage(WM_COMMAND, MAKEWPARAM(EN_CHANGE, GetDlgCtrlID()), (LPARAM)GetSafeHwnd());
 			}
@@ -109,29 +143,14 @@ void CTDLRecurringTaskEdit::DoEdit()
 	}
 }
 
-BOOL CTDLRecurringTaskEdit::OnSetCursor(CWnd* /*pWnd*/, UINT /*nHitTest*/, UINT /*message*/) 
-{
-	::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
-	
-	return TRUE;//CEnEdit::OnSetCursor(pWnd, nHitTest, message);
-}
-
-HBRUSH CTDLRecurringTaskEdit::CtlColor(CDC* pDC, UINT /*nCtlColor*/) 
-{
-	HBRUSH hbr = NULL;
-	pDC->SetBkMode(TRANSPARENT);
-
-	if (!IsWindowEnabled() || m_bReadOnly)
-		hbr = GetSysColorBrush(COLOR_3DFACE);
-	else
-		hbr = GetSysColorBrush(COLOR_WINDOW);
-
-	return hbr;
-}
-
 void CTDLRecurringTaskEdit::GetRecurrenceOptions(TDIRECURRENCE& tr) const
 {
 	tr = m_tr;
+
+	if (tr.sRegularity.IsEmpty())
+	{
+		tr.sRegularity = GetRegularity(tr.nRegularity, FALSE);
+	}
 }
 
 void CTDLRecurringTaskEdit::SetRecurrenceOptions(const TDIRECURRENCE& tr)
@@ -139,72 +158,66 @@ void CTDLRecurringTaskEdit::SetRecurrenceOptions(const TDIRECURRENCE& tr)
 	m_tr = tr;
 
 	if (GetSafeHwnd())
-		SetWindowText(GetRegularity()); // for display purposes
-}
-
-BOOL CTDLRecurringTaskEdit::ModifyStyle(DWORD dwRemove, DWORD dwAdd, UINT /*nFlags*/)
-{
-	if ((dwRemove & ES_READONLY) != (dwAdd & ES_READONLY))
 	{
-		m_bReadOnly = (dwAdd & ES_READONLY);
-		
-		EnableButton(1, !m_bReadOnly);
-		Invalidate();
-	}
-
-	// make sure we stay readonly
-	return CEnEdit::ModifyStyle(dwRemove & ~ES_READONLY, dwAdd | ES_READONLY);
-}
-
-LRESULT CTDLRecurringTaskEdit::OnSetReadOnly(WPARAM wp, LPARAM /*lp*/)
-{
-	m_bReadOnly = wp;
-	EnableButton(REBTN_OPTIONS, !m_bReadOnly);
-
-	// always set to readonly
-	// we set this flag so that OnStyleChanging doesn't respond to this trickery
-	CAutoFlag af(m_bInOnSetReadOnly, TRUE);
-
-	return DefWindowProc(EM_SETREADONLY, TRUE, 0);
-}
-
-void CTDLRecurringTaskEdit::OnStyleChanging(int nStyleType, LPSTYLESTRUCT lpStyleStruct)
-{
-	CEnEdit::OnStyleChanging(nStyleType, lpStyleStruct);
-
-	if (nStyleType == GWL_STYLE && !m_bInOnSetReadOnly)
-	{
-		// check for change in readonly style
-		if ((lpStyleStruct->styleOld & ES_READONLY) != (lpStyleStruct->styleNew & ES_READONLY))
-		{
-			m_bReadOnly = (lpStyleStruct->styleNew & ES_READONLY);
-			lpStyleStruct->styleNew |= ES_READONLY; // make sure we stay readonly
-
-			EnableButton(REBTN_OPTIONS, !m_bReadOnly);
-			Invalidate();
-		}
+		SetWindowText(GetRegularity(m_tr));   // for display purposes
 	}
 }
 
-CString CTDLRecurringTaskEdit::GetRegularity() const
+CString CTDLRecurringTaskEdit::GetRegularity(const TDIRECURRENCE& tr, BOOL bIncOnce)
 {
-	return GetRegularity(m_tr.nRegularity);
+	if (tr.sRegularity.IsEmpty())
+	{
+		return GetRegularity(tr.nRegularity, bIncOnce);
+	}
+
+	// else
+	return tr.sRegularity;
 }
 
-CString CTDLRecurringTaskEdit::GetRegularity(TDI_REGULARITY nRegularity)
+CString CTDLRecurringTaskEdit::GetRegularity(TDI_REGULARITY nRegularity, BOOL bIncOnce)
 {
 	CString sRegularity;
 
 	switch (nRegularity)
 	{
-	case TDIR_ONCE:    sRegularity.LoadString(IDS_ONCEONLY); break;
-	case TDIR_DAILY:   sRegularity.LoadString(IDS_DAILY);    break;
-	case TDIR_WEEKLY:  sRegularity.LoadString(IDS_WEEKLY);   break;
-	case TDIR_MONTHLY: sRegularity.LoadString(IDS_MONTHLY);  break;
-	case TDIR_YEARLY:  sRegularity.LoadString(IDS_YEARLY);   break;
+	case TDIR_ONCE:
+		if (bIncOnce)
+		{
+			sRegularity.LoadString(IDS_ONCEONLY);
+		}
+		break;
+
+	case TDIR_DAILY:
+		sRegularity.LoadString(IDS_DAILY);
+		break;
+	case TDIR_WEEKLY:
+		sRegularity.LoadString(IDS_WEEKLY);
+		break;
+	case TDIR_MONTHLY:
+		sRegularity.LoadString(IDS_MONTHLY);
+		break;
+	case TDIR_YEARLY:
+		sRegularity.LoadString(IDS_YEARLY);
+		break;
 	}
 
 	return sRegularity;
+}
+
+BOOL CTDLRecurringTaskEdit::IsDefaultString(const CString& sRegularity)
+{
+	int nReg = (int)TDIR_YEARLY + 1;
+
+	while (nReg--)
+	{
+		if (sRegularity.CompareNoCase(GetRegularity((TDI_REGULARITY)nReg, TRUE)) == 0)
+		{
+			return TRUE;
+		}
+	}
+
+	// else
+	return FALSE;
 }
 
 int CTDLRecurringTaskEdit::CalcMaxRegularityWidth(CDC* pDC, BOOL bIncOnce)
@@ -212,9 +225,10 @@ int CTDLRecurringTaskEdit::CalcMaxRegularityWidth(CDC* pDC, BOOL bIncOnce)
 	int nReg = (int)TDIR_YEARLY + 1;
 	int nMax = 0;
 
-	while (nReg-- && (bIncOnce || nReg > TDIR_ONCE))
+	while (nReg--)
 	{
-		int nItem = pDC->GetTextExtent(GetRegularity((TDI_REGULARITY)nReg)).cx;
+		CString sRegularity = GetRegularity((TDI_REGULARITY)nReg, bIncOnce);
+		int nItem = pDC->GetTextExtent(sRegularity).cx;
 		nMax = max(nItem, nMax);
 	}
 
@@ -227,7 +241,7 @@ int CTDLRecurringTaskEdit::CalcMaxRegularityWidth(CDC* pDC, BOOL bIncOnce)
 #define WM_VALUECHANGE (WM_APP+1)
 
 CTDLRecurringTaskOptionDlg::CTDLRecurringTaskOptionDlg(const TDIRECURRENCE& tr, const COleDateTime& dtDefault, CWnd* pParent /*=NULL*/)
-	: CDialog(IDD_RECURRING_TASK_DIALOG, pParent)
+: CDialog(IDD_RECURRING_TASK_DIALOG, pParent)
 {
 	//{{AFX_DATA_INIT(CRecurringTaskOptionDlg)
 	m_nRegularity = tr.nRegularity;
@@ -253,7 +267,7 @@ CTDLRecurringTaskOptionDlg::CTDLRecurringTaskOptionDlg(const TDIRECURRENCE& tr, 
 		m_nMonth = stDefault.wMonth - 1;
 		m_nYearMonthDay = stDefault.wDay;
 	}
-	
+
 	// then overwrite specific values
 	switch (tr.nRegularity)
 	{
@@ -297,25 +311,39 @@ void CTDLRecurringTaskOptionDlg::DoDataExchange(CDataExchange* pDX)
 		m_dwWeekdays = 0;
 
 		if (m_lbWeekdays.GetCheck(0))
+		{
 			m_dwWeekdays |= TDIW_SUNDAY;
+		}
 
 		if (m_lbWeekdays.GetCheck(1))
+		{
 			m_dwWeekdays |= TDIW_MONDAY;
+		}
 
 		if (m_lbWeekdays.GetCheck(2))
+		{
 			m_dwWeekdays |= TDIW_TUESDAY;
+		}
 
 		if (m_lbWeekdays.GetCheck(3))
+		{
 			m_dwWeekdays |= TDIW_WEDNESDAY;
+		}
 
 		if (m_lbWeekdays.GetCheck(4))
+		{
 			m_dwWeekdays |= TDIW_THURSDAY;
+		}
 
 		if (m_lbWeekdays.GetCheck(5))
+		{
 			m_dwWeekdays |= TDIW_FRIDAY;
+		}
 
 		if (m_lbWeekdays.GetCheck(6))
+		{
 			m_dwWeekdays |= TDIW_SATURDAY;
+		}
 	}
 	else
 	{
@@ -338,7 +366,6 @@ void CTDLRecurringTaskOptionDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CTDLRecurringTaskOptionDlg, CDialog)
 	//{{AFX_MSG_MAP(CRecurringTaskOptionDlg)
 	//}}AFX_MSG_MAP
-//	ON_MESSAGE(WM_VALUECHANGE, OnValueChange)
 	ON_BN_CLICKED(IDC_ONCE, OnSelchangeRegularity)
 	ON_BN_CLICKED(IDC_DAILY, OnSelchangeRegularity)
 	ON_BN_CLICKED(IDC_WEEKLY, OnSelchangeRegularity)
@@ -386,7 +413,7 @@ void CTDLRecurringTaskOptionDlg::GetRecurrenceOptions(TDIRECURRENCE& tr) const
 	}
 }
 
-void CTDLRecurringTaskOptionDlg::OnSelchangeRegularity() 
+void CTDLRecurringTaskOptionDlg::OnSelchangeRegularity()
 {
 	UpdateData();
 
@@ -400,13 +427,15 @@ void CTDLRecurringTaskOptionDlg::OnSelchangeRegularity()
 	GetDlgItem(IDC_YEARMONTHDAY)->EnableWindow(m_nRegularity == TDIR_YEARLY);
 }
 
-BOOL CTDLRecurringTaskOptionDlg::OnInitDialog()  
+BOOL CTDLRecurringTaskOptionDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
+
 	// init weekdays
 	for (int nDay = 1; nDay <= 7; nDay++)
+	{
 		m_lbWeekdays.AddString(CDateHelper::GetWeekday(nDay, FALSE));
+	}
 
 	// restore check states
 	UpdateData(FALSE);
@@ -417,9 +446,9 @@ BOOL CTDLRecurringTaskOptionDlg::OnInitDialog()
 	m_lbWeekdays.SetColumnWidth(rListbox.Width() / 2);
 
 	OnSelchangeRegularity();
-	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CTDLRecurringTaskOptionDlg::OnChangeDailyValues()
@@ -433,7 +462,7 @@ void CTDLRecurringTaskOptionDlg::OnChangeWeeklyValues()
 {
 	UpdateData();
 
-	GetDlgItem(IDOK)->EnableWindow(m_nNumWeeks > 0/* && m_dwWeekdays != 0*/);
+	GetDlgItem(IDOK)->EnableWindow(m_nNumWeeks > 0);
 }
 
 void CTDLRecurringTaskOptionDlg::OnChangeMonthlyValues()
