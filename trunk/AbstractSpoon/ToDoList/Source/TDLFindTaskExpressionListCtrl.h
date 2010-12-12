@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_FINDTASKEXPRESSIONLISTCTRL_H__42272309_6C54_4901_A56D_D6FDA87F1E48__INCLUDED_)
@@ -62,7 +76,14 @@ public:
 
 	BOOL AddRule();
 	BOOL DeleteSelectedRule();
-	BOOL CanDeleteSelectedRule() const { return CanDeleteSelectedCell(); }
+	BOOL CanDeleteSelectedRule() const
+	{
+		return CanDeleteSelectedCell();
+	}
+	BOOL HasRules() const
+	{
+		return m_aSearchParams.GetSize();
+	}
 
 	void MoveSelectedRuleUp();
 	BOOL CanMoveSelectedRuleUp() const;
@@ -73,11 +94,11 @@ public:
 
 // Attributes
 protected:
-	CComboBox	m_cbOperators;
-	CComboBox	m_cbAttributes;
-	CComboBox	m_cbAndOr;
+	CComboBox   m_cbOperators;
+	CComboBox   m_cbAttributes;
+	CComboBox   m_cbAndOr;
 	CDateTimeCtrl m_dtDate;
-	CTimeEdit	m_eTime;
+	CTimeEdit   m_eTime;
 
 	CSearchParamArray m_aSearchParams;
 
@@ -87,7 +108,7 @@ public:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTDLFindTaskExpressionListCtrl)
-	protected:
+protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
@@ -100,8 +121,8 @@ protected:
 	//{{AFX_MSG(CTDLFindTaskExpressionListCtrl)
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	//}}AFX_MSG
+	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg void OnAttribEditCancel();
 	afx_msg void OnAttribEditOK();
 	afx_msg void OnOperatorEditCancel();
@@ -127,7 +148,10 @@ protected:
 	void BuildListCtrl();
 	virtual BOOL DeleteSelectedCell();
 	int InsertRule(int nRow, const SEARCHPARAM& sp);
-	int GetRuleCount() const { return m_aSearchParams.GetSize(); }
+	int GetRuleCount() const
+	{
+		return m_aSearchParams.GetSize();
+	}
 	virtual BOOL CanEditSelectedCell() const;
 	CWnd* GetEditControl(int nRow, int nCol);
 	void ValidateListData() const;

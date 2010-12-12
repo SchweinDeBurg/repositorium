@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDLSETREMINDERDLG_H__DAAE865F_6EBD_4BA3_967C_A4F8675BDB94__INCLUDED_)
@@ -41,6 +55,7 @@
 #include "TDCStruct.h"
 #include "TDCEnum.h"
 
+#include "../../../CodeProject/Source/TimeComboBox.h"
 #include "../../Common/FileEdit.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -52,30 +67,29 @@ class CTDLSetReminderDlg : public CDialog
 public:
 	CTDLSetReminderDlg(CWnd* pParent = NULL);   // standard constructor
 
-	int DoModal(const TDCREMINDER& rem);
-
-	double GetLeadIn() { return m_dLeadIn; }
-	TDC_REMINDER GetFromWhen() { return m_bFromDueDate ? TDCR_DUEDATE : TDCR_STARTDATE; }
-	CString GetSoundFile() { return m_sSoundFile; }
-
+	int DoModal(TDCREMINDER& rem);
 
 // Dialog Data
 	//{{AFX_DATA(CTDLSetReminderDlg)
 	enum { IDD = IDD_SETREMINDER_DIALOG };
-	CFileEdit	m_ePlaySound;
-	int		m_bFromDueDate;
-	CString	m_sTaskTitle;
+	CTimeComboBox   m_cbAbsoluteTime;
+	CFileEdit   m_ePlaySound;
+	int     m_bRelativeFromDueDate;
+	CString m_sTaskTitle;
 	CComboBox m_cbLeadIn;
 	int m_nLeadIn;
-	double m_dLeadIn;
-	CString	m_sSoundFile;
+	double m_dRelativeLeadIn;
+	CString m_sSoundFile;
+	int     m_bRelative;
+	COleDateTime    m_dtAbsoluteDate;
 	//}}AFX_DATA
+	double  m_dAbsoluteTime;
 
 
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTDLSetReminderDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual BOOL OnInitDialog();
 	//}}AFX_VIRTUAL
@@ -86,6 +100,7 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CTDLSetReminderDlg)
 	afx_msg void OnSelchangeLeadin();
+	afx_msg void OnChangeRelative();
 	//}}AFX_MSG
 	LRESULT OnPlaySound(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()

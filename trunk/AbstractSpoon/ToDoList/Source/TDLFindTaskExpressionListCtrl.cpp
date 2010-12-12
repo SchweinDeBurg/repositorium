@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TDLFindTaskExpressionListCtrl.cpp : implementation file
@@ -47,7 +61,7 @@ static char THIS_FILE[] = __FILE__;
 enum { ATTRIB, OPERATOR, VALUE, ANDOR };
 enum { ATTRIB_ID = 5000, OPERATOR_ID, ANDOR_ID, DATE_ID, TIME_ID };
 
-const float COL_PROPORTIONS[] = { 12.0f/47, 16.0f/47, 13.0f/47, 6.0f/47 };
+const float COL_PROPORTIONS[] = { 12.0f / 47, 16.0f / 47, 13.0f / 47, 6.0f / 47 };
 
 struct ATTRIB_PAIR
 {
@@ -61,7 +75,7 @@ struct OP_PAIR
 	UINT nOpResID;
 };
 
-static ATTRIB_PAIR ATTRIBUTES[] = 
+static ATTRIB_PAIR ATTRIBUTES[] =
 {
 	{ TDCA_NONE, 0 },
 	{ TDCA_TASKNAME, IDS_TDLBC_TITLE },
@@ -69,7 +83,6 @@ static ATTRIB_PAIR ATTRIBUTES[] =
 	{ TDCA_DUEDATE, IDS_TDLBC_DUEDATE },
 	{ TDCA_STARTDATE, IDS_TDLBC_STARTDATE },
 	{ TDCA_PRIORITY, IDS_TDLBC_PRIORITY },
-//	{ TDCA_COLOR, IDS_TDLBC_COLOR },
 	{ TDCA_ALLOCTO, IDS_TDLBC_ALLOCTO },
 	{ TDCA_ALLOCBY, IDS_TDLBC_ALLOCBY },
 	{ TDCA_STATUS, IDS_TDLBC_STATUS },
@@ -78,7 +91,6 @@ static ATTRIB_PAIR ATTRIBUTES[] =
 	{ TDCA_TIMEEST, IDS_TDLBC_TIMEEST },
 	{ TDCA_TIMESPENT, IDS_TDLBC_TIMESPENT },
 	{ TDCA_FILEREF, IDS_TDLBC_FILEREF },
-//	{ TDCA_PROJNAME, IDS_PROJNAME },
 	{ TDCA_FLAG, IDS_TDLBC_FLAG },
 	{ TDCA_CREATIONDATE, IDS_TDLBC_CREATEDATE },
 	{ TDCA_CREATEDBY, IDS_TDLBC_CREATEDBY },
@@ -86,9 +98,7 @@ static ATTRIB_PAIR ATTRIBUTES[] =
 	{ TDCA_EXTERNALID, IDS_TDLBC_EXTERNALID },
 	{ TDCA_COST, IDS_TDLBC_COST },
 	{ TDCA_DEPENDENCY, IDS_TDLBC_DEPENDS },
-//	{ TDCA_RECURRENCE, IDS_RECURRENCE },
 	{ TDCA_VERSION,	IDS_TDLBC_VERSION  },
-//	{ TDCA_POSITION, IDS_POSITION },
 	{ TDCA_ID, IDS_TDLBC_ID },
 	{ TDCA_LASTMOD, IDS_TDLBC_MODIFYDATE },
 	{ TDCA_COMMENTS, IDS_TDLBC_COMMENTS },
@@ -138,8 +148,8 @@ BEGIN_MESSAGE_MAP(CTDLFindTaskExpressionListCtrl, CInputListCtrl)
 	//{{AFX_MSG_MAP(CTDLFindTaskExpressionListCtrl)
 	ON_WM_KILLFOCUS()
 	ON_WM_SIZE()
-	ON_WM_KEYDOWN()
 	//}}AFX_MSG_MAP
+	ON_WM_CHAR()
 	ON_WM_MEASUREITEM_REFLECT()
 	ON_CBN_CLOSEUP(ATTRIB_ID, OnAttribEditCancel)
 	ON_CBN_SELENDCANCEL(ATTRIB_ID, OnAttribEditCancel)
@@ -159,7 +169,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTDLFindTaskExpressionListCtrl message handlers
 
-void CTDLFindTaskExpressionListCtrl::PreSubclassWindow() 
+void CTDLFindTaskExpressionListCtrl::PreSubclassWindow()
 {
 	// create child controls
 	CreateControl(m_cbAttributes, ATTRIB_ID);
@@ -177,15 +187,15 @@ void CTDLFindTaskExpressionListCtrl::PreSubclassWindow()
 
 		if (ap.nAttribResID)
 		{
-			int nItem = m_cbAttributes.AddString(CEnString(ap.nAttribResID)); 
-			m_cbAttributes.SetItemData(nItem, (DWORD)ap.attrib); 
+			int nItem = m_cbAttributes.AddString(CEnString(ap.nAttribResID));
+			m_cbAttributes.SetItemData(nItem, (DWORD)ap.attrib);
 		}
 	}
 
 	// build and/or combo too
 	int nItem = m_cbAndOr.AddString(CEnString(IDS_FP_AND));
 	m_cbAndOr.SetItemData(nItem, TRUE);
-				
+
 	nItem = m_cbAndOr.AddString(CEnString(IDS_FP_OR));
 	m_cbAndOr.SetItemData(nItem, FALSE);
 
@@ -198,7 +208,6 @@ void CTDLFindTaskExpressionListCtrl::PreSubclassWindow()
 	InsertColumn(VALUE, CEnString(IDS_FT_VALUE), LVCFMT_LEFT, 130);
 	InsertColumn(ANDOR, CEnString(IDS_FT_ANDOR), LVCFMT_LEFT, 60);
 	SetView(LVS_REPORT);
-//	SetLastColumnStretchy(TRUE);
 
 	AutoAdd(TRUE, FALSE);
 
@@ -215,7 +224,9 @@ void CTDLFindTaskExpressionListCtrl::SetSearchParams(const SEARCHPARAM& param)
 	m_aSearchParams.Add(param);
 
 	if (GetSafeHwnd())
+	{
 		BuildListCtrl();
+	}
 }
 
 void CTDLFindTaskExpressionListCtrl::ClearSearch()
@@ -223,7 +234,9 @@ void CTDLFindTaskExpressionListCtrl::ClearSearch()
 	m_aSearchParams.RemoveAll();
 
 	if (GetSafeHwnd())
+	{
 		BuildListCtrl();
+	}
 }
 
 void CTDLFindTaskExpressionListCtrl::SetSearchParams(const CSearchParamArray& params)
@@ -231,7 +244,9 @@ void CTDLFindTaskExpressionListCtrl::SetSearchParams(const CSearchParamArray& pa
 	m_aSearchParams.Copy(params);
 
 	if (GetSafeHwnd())
+	{
 		BuildListCtrl();
+	}
 }
 
 int CTDLFindTaskExpressionListCtrl::GetSearchParams(CSearchParamArray& params) const
@@ -250,22 +265,24 @@ void CTDLFindTaskExpressionListCtrl::CreateControl(CWnd& ctrl, UINT nID, BOOL bS
 		dwStyle |= CBS_DROPDOWNLIST | WS_VSCROLL | CBS_AUTOHSCROLL;
 
 		if (bSort)
+		{
 			dwStyle |= CBS_SORT;
+		}
 
 		CComboBox* pCombo = (CComboBox*)&ctrl;
-		VERIFY (pCombo->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
+		VERIFY(pCombo->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
 	}
 	else if (ctrl.IsKindOf(RUNTIME_CLASS(CEdit)))
 	{
 		CEdit* pEdit = (CEdit*)&ctrl;
-		VERIFY (pEdit->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
+		VERIFY(pEdit->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
 
 		pEdit->ModifyStyleEx(0, WS_EX_CLIENTEDGE, 0);
 	}
-	else //if (ctrl.IsKindOf(RUNTIME_CLASS(CDateTimeCtrl)))
+	else
 	{
 		CDateTimeCtrl* pDateTime = (CDateTimeCtrl*)&ctrl;
-		VERIFY (pDateTime->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
+		VERIFY(pDateTime->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
 	}
 
 	ctrl.SetFont(GetFont()); // set font to parents
@@ -276,8 +293,8 @@ void CTDLFindTaskExpressionListCtrl::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureIt
 	CRect rCombo;
 	m_cbAttributes.GetWindowRect(rCombo);
 	m_nItemHeight = rCombo.Height();
-    
-    lpMeasureItemStruct->itemHeight = m_nItemHeight - 1;
+
+	lpMeasureItemStruct->itemHeight = m_nItemHeight - 1;
 }
 
 BOOL CTDLFindTaskExpressionListCtrl::DeleteSelectedCell()
@@ -303,7 +320,7 @@ BOOL CTDLFindTaskExpressionListCtrl::DeleteSelectedCell()
 			m_aSearchParams[nRow].sValue = _T("");
 		}
 	}
-	
+
 	// else
 	return FALSE;
 }
@@ -311,7 +328,9 @@ BOOL CTDLFindTaskExpressionListCtrl::DeleteSelectedCell()
 CWnd* CTDLFindTaskExpressionListCtrl::GetEditControl(int nItem, int nCol)
 {
 	if (nItem < 0 || nItem > GetRuleCount() || nCol > ANDOR)
+	{
 		return NULL;
+	}
 
 	const SEARCHPARAM& sp = m_aSearchParams[nItem];
 
@@ -322,7 +341,9 @@ CWnd* CTDLFindTaskExpressionListCtrl::GetEditControl(int nItem, int nCol)
 
 	case OPERATOR:
 		if (sp.attrib != TDCA_NONE)
+		{
 			return &m_cbOperators;
+		}
 		break;
 
 	case VALUE:
@@ -362,18 +383,21 @@ CWnd* CTDLFindTaskExpressionListCtrl::GetEditControl(int nItem, int nCol)
 	return NULL;
 }
 
-
 void CTDLFindTaskExpressionListCtrl::EditCell(int nItem, int nCol)
 {
 	// handle new rules
 	if (nItem == GetRuleCount() && nCol == ATTRIB)
+	{
 		AddRule();
+	}
 
 	CWnd* pEdit = GetEditControl(nItem, nCol);
-	ASSERT (pEdit);
+	ASSERT(pEdit);
 
 	if (!pEdit)
+	{
 		return;
+	}
 
 	const SEARCHPARAM& sp = m_aSearchParams[nItem];
 
@@ -410,22 +434,26 @@ void CTDLFindTaskExpressionListCtrl::EndEdit()
 	GetCurSel(nRow, nCol);
 
 	if (nRow == -1 || nCol == -1)
+	{
 		return;
+	}
 
 	// if any editing control is visible, just shift the
 	// focus back to the list to end the edit
 	if (IsEditing())
+	{
 		SetFocus();
+	}
 }
 
 BOOL CTDLFindTaskExpressionListCtrl::IsEditing() const
 {
 	return CInputListCtrl::IsEditing() ||
-			m_cbOperators.IsWindowVisible() ||
-			m_cbAndOr.IsWindowVisible() ||
-			m_cbAttributes.IsWindowVisible() ||
-			m_dtDate.IsWindowVisible() ||
-			m_eTime.IsWindowVisible();
+		m_cbOperators.IsWindowVisible() ||
+		m_cbAndOr.IsWindowVisible() ||
+		m_cbAttributes.IsWindowVisible() ||
+		m_dtDate.IsWindowVisible() ||
+		m_eTime.IsWindowVisible();
 }
 
 BOOL CTDLFindTaskExpressionListCtrl::CanEditSelectedCell() const
@@ -437,9 +465,11 @@ BOOL CTDLFindTaskExpressionListCtrl::CanEditSelectedCell() const
 	if (nRow < m_aSearchParams.GetSize())
 	{
 		const SEARCHPARAM& rule = m_aSearchParams[nRow];
-		
+
 		if (rule.GetAttribType() == FT_BOOL && nCol == VALUE)
+		{
 			return FALSE;
+		}
 	}
 
 	// else
@@ -455,11 +485,11 @@ void CTDLFindTaskExpressionListCtrl::PrepareEdit(int nRow, int /*nCol*/)
 	case FT_STRING:
 		m_editBox.SetMask(_T(""));
 		break;
-		
+
 	case FT_INTEGER:
 		m_editBox.SetMask(_T("1234567890"));
 		break;
-		
+
 	case FT_DOUBLE:
 		m_editBox.SetMask(_T("1234567890."), ME_LOCALIZEDECIMAL);
 		break;
@@ -554,21 +584,21 @@ int CTDLFindTaskExpressionListCtrl::InsertRule(int nRow, const SEARCHPARAM& sp)
 	case FT_DOUBLE:
 		sValue = sp.ValueAsString();
 		break;
-		
+
 	case FT_DATE:
 		sValue = COleDateTime(sp.dValue).Format(VAR_DATEVALUEONLY);
 		break;
-		
+
 	case FT_TIME:
 		sValue = CTimeHelper().FormatTime(sp.dValue, sp.dwFlags, 2);
 		break;
-		
+
 	case FT_BOOL:
 		// handled by operator
 		break;
 	}
 	SetItemText(nNew, VALUE, sValue);
-	
+
 	// omit and/or for last rule
 	if (nRow < GetRuleCount() - 1)
 	{
@@ -602,7 +632,7 @@ void CTDLFindTaskExpressionListCtrl::MoveSelectedRuleDown()
 
 		// reinsert rule
 		nRow = InsertRule(nRow + 1, sp);
-	
+
 		// sanity check
 		ValidateListData();
 
@@ -625,9 +655,9 @@ void CTDLFindTaskExpressionListCtrl::ShowControl(CWnd& ctrl, int nRow, int nCol)
 	GetCellEditRect(nRow, nCol, rCell);
 
 	if (ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)))
+	{
 		rCell.bottom += 200;
-//	else
-//		rCell.bottom++;
+	}
 
 	ctrl.MoveWindow(rCell);
 	ctrl.EnableWindow(TRUE);
@@ -639,16 +669,14 @@ void CTDLFindTaskExpressionListCtrl::ShowControl(CWnd& ctrl, int nRow, int nCol)
 		CComboBox* pCombo = (CComboBox*)&ctrl;
 		pCombo->ShowDropDown(TRUE);
 	}
-	else //if (ctrl.IsKindOf(RUNTIME_CLASS(CDateTimeCtrl)))
-	{
-		//CDateTimeCtrl* pDateTime = (CDateTimeCtrl*)&ctrl;
-	}
 }
 
 void CTDLFindTaskExpressionListCtrl::PrepareControl(CWnd& ctrl, int nRow, int nCol)
 {
 	if (!GetRuleCount())
+	{
 		return;
+	}
 
 	SEARCHPARAM& sp = m_aSearchParams[nRow];
 
@@ -656,23 +684,27 @@ void CTDLFindTaskExpressionListCtrl::PrepareControl(CWnd& ctrl, int nRow, int nC
 	{
 	case ATTRIB:
 		{
-			ASSERT (ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)));
+			ASSERT(ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)));
 			CComboBox* pCombo = (CComboBox*)&ctrl;
-	
+
 			if (sp.GetAttribType() != FT_NONE)
+			{
 				pCombo->SelectString(-1, GetAttribName(sp.attrib));
+			}
 			else
+			{
 				pCombo->SetCurSel(-1);
+			}
 		}
 		break;
 
 	case OPERATOR:
 		{
-			ASSERT (ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)));
+			ASSERT(ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)));
 			CComboBox* pCombo = (CComboBox*)&ctrl;
 
 			pCombo->ResetContent();
-			
+
 			FIND_ATTRIBTYPE nType = sp.GetAttribType();
 
 			switch (nType)
@@ -715,23 +747,31 @@ void CTDLFindTaskExpressionListCtrl::PrepareControl(CWnd& ctrl, int nRow, int nC
 				ADD_OP_2_COMBO(pCombo, FO_NOT_SET);
 				break;
 			}
-	
+
 			if (sp.op != FO_NONE)
+			{
 				pCombo->SelectString(-1, GetOpName(sp.op));
+			}
 			else
+			{
 				pCombo->SetCurSel(-1);
+			}
 		}
 		break;
 
 	case ANDOR:
 		{
-			ASSERT (ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)));
+			ASSERT(ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)));
 			CComboBox* pCombo = (CComboBox*)&ctrl;
 
 			if (sp.bAnd)
+			{
 				pCombo->SelectString(-1, CEnString(IDS_FP_AND));
+			}
 			else
+			{
 				pCombo->SelectString(-1, CEnString(IDS_FP_OR));
+			}
 		}
 		break;
 
@@ -739,7 +779,7 @@ void CTDLFindTaskExpressionListCtrl::PrepareControl(CWnd& ctrl, int nRow, int nC
 		switch (sp.GetAttribType())
 		{
 		case FT_DATE:
-			ASSERT (&ctrl == &m_dtDate);
+			ASSERT(&ctrl == &m_dtDate);
 
 			// if the rule does not yet have a date then set it now to
 			// the current date because that's whats the date ctrl will default to
@@ -749,11 +789,13 @@ void CTDLFindTaskExpressionListCtrl::PrepareControl(CWnd& ctrl, int nRow, int nC
 				SetItemText(nRow, nCol, COleDateTime(sp.dValue).Format(VAR_DATEVALUEONLY));
 			}
 			else
+			{
 				m_dtDate.SetTime(sp.dValue);
+			}
 			break;
 
 		case FT_TIME:
-			ASSERT (&ctrl == &m_eTime);
+			ASSERT(&ctrl == &m_eTime);
 			m_eTime.SetTime(sp.dValue, sp.dwFlags);
 			break;
 		}
@@ -769,15 +811,15 @@ void CTDLFindTaskExpressionListCtrl::ValidateListData() const
 	{
 		const SEARCHPARAM& rule = m_aSearchParams[nRule];
 
-		// check matching attribute text 
+		// check matching attribute text
 		CString sRuleAttrib = GetAttribName(rule.attrib);
 		CString sListAttrib = GetItemText(nRule, ATTRIB);
-		ASSERT (sRuleAttrib == sListAttrib);
+		ASSERT(sRuleAttrib == sListAttrib);
 
-		// check matching operator text 
+		// check matching operator text
 		CString sRuleOp = GetOpName(rule.op);
 		CString sListOp = GetItemText(nRule, OPERATOR);
-		ASSERT (sListOp.IsEmpty() || sRuleOp == sListOp);
+		ASSERT(sListOp.IsEmpty() || sRuleOp == sListOp);
 
 		// check valid operator
 		ASSERT(rule.HasValidOperator());
@@ -820,57 +862,56 @@ void CTDLFindTaskExpressionListCtrl::OnAttribEditOK()
 
 		// clear the operator cell text if the operator was no longer valid
 		if (m_aSearchParams[nRow].op == FO_NONE)
+		{
 			SetItemText(nRow, OPERATOR, _T(""));
+		}
 
 		ValidateListData();
 	}
 }
 
-BOOL CTDLFindTaskExpressionListCtrl::OnSelItemChanged(NMHDR* /*pNMHDR*/, LRESULT* pResult) 
+BOOL CTDLFindTaskExpressionListCtrl::OnSelItemChanged(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-//	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
-//	int nRow = pNMListView->iItem;
-
 	// always make sure we hide the datetime ctrl and the time edit
 	HideControl(m_dtDate);
 	HideControl(m_eTime);
 
 	*pResult = 0;
-	
+
 	return FALSE; // continue routing
 }
 
-void CTDLFindTaskExpressionListCtrl::OnValueEditOK(NMHDR* pNMHDR, LRESULT* pResult) 
+void CTDLFindTaskExpressionListCtrl::OnValueEditOK(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LV_DISPINFO* pDispInfo = (LV_DISPINFO*)pNMHDR;
-	
+
 	int nRow = pDispInfo->item.iItem;
 	int nCol = pDispInfo->item.iSubItem;
 
-	ASSERT (nCol == VALUE);
+	ASSERT(nCol == VALUE);
 
 	SEARCHPARAM& sp = m_aSearchParams[nRow];
-	
+
 	switch (sp.GetAttribType())
 	{
 	case FT_STRING:
 		sp.sValue = pDispInfo->item.pszText;
 		break;
-		
+
 	case FT_INTEGER:
 		sp.nValue = _ttoi(pDispInfo->item.pszText);
 		break;
-		
+
 	case FT_DOUBLE:
 		sp.dValue = _tstof(pDispInfo->item.pszText);
 		break;
-		
+
 	case FT_DATE:
 	case FT_BOOL:
 		// not handled here
 		break;
 	}
-		
+
 	*pResult = 0;
 }
 
@@ -976,20 +1017,22 @@ void CTDLFindTaskExpressionListCtrl::BuildListCtrl()
 			case FT_DOUBLE:
 				sValue = sp.ValueAsString();
 				break;
-				
+
 			case FT_DATE:
 				if (sp.op == FO_SET || sp.op == FO_NOT_SET)
 				{
 					// handled by operator
 				}
 				else
+				{
 					sValue = COleDateTime(sp.dValue).Format(VAR_DATEVALUEONLY);
+				}
 				break;
-				
+
 			case FT_TIME:
 				sValue = CTimeHelper().FormatTime(sp.dValue, sp.dwFlags, 2);
 				break;
-				
+
 			case FT_BOOL:
 				// handled by operator
 				break;
@@ -1016,13 +1059,17 @@ CString CTDLFindTaskExpressionListCtrl::GetAttribName(TDC_ATTRIBUTE attrib)
 		if (ATTRIBUTES[nAttrib].attrib == attrib)
 		{
 			if (ATTRIBUTES[nAttrib].nAttribResID)
+			{
 				return CEnString(ATTRIBUTES[nAttrib].nAttribResID);
+			}
 			else
+			{
 				return _T("");
+			}
 		}
 	}
 
-	ASSERT (0); // not found
+	ASSERT(0);  // not found
 	return _T("");
 }
 
@@ -1035,13 +1082,17 @@ CString CTDLFindTaskExpressionListCtrl::GetOpName(FIND_OPERATOR op)
 		if (OPERATORS[nOp].op == op)
 		{
 			if (OPERATORS[nOp].nOpResID)
+			{
 				return CEnString(OPERATORS[nOp].nOpResID);
+			}
 			else
+			{
 				return _T("");
+			}
 		}
 	}
 
-	ASSERT (0); // not found
+	ASSERT(0);  // not found
 	return _T("");
 }
 
@@ -1050,39 +1101,41 @@ void CTDLFindTaskExpressionListCtrl::OnDateChange(NMHDR* pNMHDR, LRESULT* pResul
 	LPNMDATETIMECHANGE pDTHDR = (LPNMDATETIMECHANGE)pNMHDR;
 	COleDateTime dt(pDTHDR->st);
 
-	// update the rule 
+	// update the rule
 	int nRow = GetCurSel();
 
 	m_aSearchParams[nRow].dValue = dt.m_dt;
 	SetItemText(nRow, VALUE, dt.Format(VAR_DATEVALUEONLY));
-	
+
 	*pResult = 0;
 }
 
 void CTDLFindTaskExpressionListCtrl::OnDateCloseUp(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-//	LPNMDATETIMECHANGE pDTHDR = (LPNMDATETIMECHANGE)pNMHDR;
-
 	HideControl(m_dtDate);
-	
+
 	*pResult = 0;
 }
 
 
-void CTDLFindTaskExpressionListCtrl::OnKillFocus(CWnd* pNewWnd) 
+void CTDLFindTaskExpressionListCtrl::OnKillFocus(CWnd* pNewWnd)
 {
 	CInputListCtrl::OnKillFocus(pNewWnd);
-	
+
 	if (pNewWnd != &m_dtDate)
+	{
 		HideControl(m_dtDate);
+	}
 
 	if (pNewWnd != &m_eTime)
+	{
 		HideControl(m_eTime);
+	}
 }
 
 void CTDLFindTaskExpressionListCtrl::OnTimeChange()
 {
-	// update the rule 
+	// update the rule
 	int nRow = GetCurSel();
 	SEARCHPARAM& rule = m_aSearchParams[nRow];
 
@@ -1094,7 +1147,7 @@ void CTDLFindTaskExpressionListCtrl::OnTimeChange()
 
 LRESULT CTDLFindTaskExpressionListCtrl::OnTimeUnitsChange(WPARAM /*wp*/, LPARAM /*lp*/)
 {
-	// update the rule 
+	// update the rule
 	int nRow = GetCurSel();
 	SEARCHPARAM& rule = m_aSearchParams[nRow];
 
@@ -1104,23 +1157,23 @@ LRESULT CTDLFindTaskExpressionListCtrl::OnTimeUnitsChange(WPARAM /*wp*/, LPARAM 
 	return 0L;
 }
 
-void CTDLFindTaskExpressionListCtrl::OnSize(UINT nType, int cx, int cy) 
+void CTDLFindTaskExpressionListCtrl::OnSize(UINT nType, int cx, int cy)
 {
 	CInputListCtrl::OnSize(nType, cx, cy);
-	
+
 	// resize columns by proportion
 	SetColumnWidth(ATTRIB, (int)(cx * COL_PROPORTIONS[ATTRIB]));
 	SetColumnWidth(OPERATOR, (int)(cx * COL_PROPORTIONS[OPERATOR]));
 	SetColumnWidth(VALUE, (int)(cx * COL_PROPORTIONS[VALUE]));
 	SetColumnWidth(ANDOR, (int)(cx * COL_PROPORTIONS[ANDOR]));
-	
+
 }
 
-void CTDLFindTaskExpressionListCtrl::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) 
+void CTDLFindTaskExpressionListCtrl::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	int nItem, nCol;
 	GetCurSel(nItem, nCol);
-	
+
 	if (GetRuleCount() > 0 || nCol == ATTRIB)
 	{
 		// if the user typed an alphanumeric char then begin editing automatically
@@ -1134,11 +1187,11 @@ void CTDLFindTaskExpressionListCtrl::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nF
 
 			if (pEdit)
 			{
-				pEdit->PostMessage(WM_KEYDOWN, nChar, MAKELPARAM(nRepCnt, nFlags));
+				pEdit->PostMessage(WM_CHAR, nChar, MAKELPARAM(nRepCnt, nFlags));
 				return; // eat it
 			}
 		}
 	}
-	
+
 	CInputListCtrl::OnKeyDown(nChar, nRepCnt, nFlags);
 }

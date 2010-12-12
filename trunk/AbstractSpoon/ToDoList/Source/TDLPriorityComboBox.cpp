@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 // TDLPriorityComboBox.cpp : implementation file
@@ -44,18 +57,20 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-const UINT IDS_TDC_SCALE[] = { IDS_TDC_SCALE0,
-								IDS_TDC_SCALE1,
-								IDS_TDC_SCALE2,
-								IDS_TDC_SCALE3,
-								IDS_TDC_SCALE4,
-								IDS_TDC_SCALE5,
-								IDS_TDC_SCALE6,
-								IDS_TDC_SCALE7,
-								IDS_TDC_SCALE8,
-								IDS_TDC_SCALE9,
-								IDS_TDC_SCALE10 };
-
+const UINT IDS_TDC_SCALE[] =
+{
+	IDS_TDC_SCALE0,
+	IDS_TDC_SCALE1,
+	IDS_TDC_SCALE2,
+	IDS_TDC_SCALE3,
+	IDS_TDC_SCALE4,
+	IDS_TDC_SCALE5,
+	IDS_TDC_SCALE6,
+	IDS_TDC_SCALE7,
+	IDS_TDC_SCALE8,
+	IDS_TDC_SCALE9,
+	IDS_TDC_SCALE10
+};
 
 const int TDC_NUMSCALES = sizeof(IDS_TDC_SCALE) / sizeof(UINT);
 
@@ -66,9 +81,13 @@ void AFXAPI DDX_CBPriority(CDataExchange* pDX, int nIDC, int& nPriority)
 		::DDX_CBIndex(pDX, nIDC, nPriority);
 
 		if (nPriority == 0) // NONE
+		{
 			nPriority = FT_NOPRIORITY;
+		}
 		else
+		{
 			nPriority--;
+		}
 	}
 	else
 	{
@@ -88,7 +107,6 @@ CTDLPriorityComboBox::~CTDLPriorityComboBox()
 {
 }
 
-
 BEGIN_MESSAGE_MAP(CTDLPriorityComboBox, CColorComboBox)
 	//{{AFX_MSG_MAP(CTDLPriorityComboBox)
 	ON_WM_CREATE()
@@ -98,20 +116,22 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTDLPriorityComboBox message handlers
 
-int CTDLPriorityComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CTDLPriorityComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CColorComboBox::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
-	
+	}
+
 	BuildCombo();
-	
+
 	return 0;
 }
 
-void CTDLPriorityComboBox::PreSubclassWindow() 
+void CTDLPriorityComboBox::PreSubclassWindow()
 {
 	CColorComboBox::PreSubclassWindow();
-	
+
 	BuildCombo();
 }
 
@@ -119,10 +139,12 @@ int CTDLPriorityComboBox::IncrementPriority(int nAmount)
 {
 	int nPrevPriority = GetCurSel();
 	int nPriority = nPrevPriority + nAmount;
-	nPriority = max(0, min(nPriority, 11));	
+	nPriority = max(0, min(nPriority, 11));
 
 	if (nPriority != nPrevPriority)
+	{
 		SetCurSel(nPriority);
+	}
 
 	return GetPriority();
 }
@@ -130,40 +152,54 @@ int CTDLPriorityComboBox::IncrementPriority(int nAmount)
 int CTDLPriorityComboBox::GetPriority() const
 {
 	int nPriority = GetCurSel();
-   
-   if (nPriority == 0)
-      nPriority = FT_NOPRIORITY;
 
-   else if (nPriority > 0)
-      nPriority--; // to take account of <none>
+	if (nPriority == 0)
+	{
+		nPriority = FT_NOPRIORITY;
+	}
 
-   return nPriority;
+	else if (nPriority > 0)
+	{
+		nPriority--;   // to take account of <none>
+	}
+
+	return nPriority;
 }
 
 void CTDLPriorityComboBox::SetPriority(int nPriority) // -2 -> 10
 {
-   if (nPriority == FT_NOPRIORITY)
-      nPriority = 0;
+	if (nPriority == FT_NOPRIORITY)
+	{
+		nPriority = 0;
+	}
 
-   else if (nPriority >= 0 && nPriority <= 10)
-      nPriority++; // to take account of <none>
+	else if (nPriority >= 0 && nPriority <= 10)
+	{
+		nPriority++;   // to take account of <none>
+	}
 
-   else
-      nPriority = CB_ERR;
+	else
+	{
+		nPriority = CB_ERR;
+	}
 
-   SetCurSel(nPriority);
+	SetCurSel(nPriority);
 }
 
 BOOL CTDLPriorityComboBox::SetColors(const CDWordArray& aColors)
 {
 	if (aColors.GetSize() < 11)
+	{
 		return FALSE;
-	
+	}
+
 	m_aColors.Copy(aColors);
-	
+
 	if (GetSafeHwnd())
+	{
 		BuildCombo();
-	
+	}
+
 	return TRUE;
 }
 
@@ -172,34 +208,36 @@ void CTDLPriorityComboBox::SetReverseOrder(BOOL bReverse)
 	if (m_bReverse != bReverse)
 	{
 		m_bReverse = bReverse;
-		
+
 		if (GetSafeHwnd())
+		{
 			BuildCombo();
+		}
 	}
 }
 
 void CTDLPriorityComboBox::BuildCombo()
 {
 	ASSERT(GetSafeHwnd());
-	
+
 	int nSel = GetCurSel(); // so we can restore it
-	
+
 	ResetContent();
 	BOOL bHasColors = m_aColors.GetSize();
 
 	// first item is 'None' and never has a colour
-	AddColor((COLORREF)-1, CEnString(IDS_TDC_NONE));
-	
+	AddColor((COLORREF) - 1, CEnString(IDS_TDC_NONE));
+
 	for (int nLevel = 0; nLevel <= 10; nLevel++)
 	{
 		COLORREF color = bHasColors ? m_aColors[nLevel] : -1;
 		int nPriority = m_bReverse ? 11 - nLevel : nLevel;
-		
+
 		CString sPriority;
 		sPriority.Format(_T("%d (%s)"), nPriority, (LPCTSTR)CEnString(IDS_TDC_SCALE[nLevel]));
-		
+
 		AddColor(color, sPriority);
 	}
-	
+
 	SetCurSel(nSel);
 }

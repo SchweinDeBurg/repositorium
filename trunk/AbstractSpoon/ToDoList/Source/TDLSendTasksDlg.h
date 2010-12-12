@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,19 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
 //*****************************************************************************
 
 #if !defined(AFX_TDLSENDTASKSDLG_H__02DB12DD_A125_4754_AE1C_F8BB9EE45903__INCLUDED_)
@@ -38,16 +51,16 @@
 // TDLSendTasksDlg.h : header file
 //
 
-enum TD_SENDWHAT 
+enum TD_SENDWHAT
 {
 	TDSW_ACTIVETASKLIST,
-	TDSW_SELECTEDTASKS,	
+	TDSW_SELECTEDTASKS,
 };
 
 enum TD_SENDAS
 {
 	TDSA_TASKLIST,
-	TDSA_BODYTEXT,	
+	TDSA_BODYTEXT,
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -59,7 +72,7 @@ class CTDLSendTasksDlg : public CDialog
 public:
 	CTDLSendTasksDlg(TD_SENDWHAT nWhat = TDSW_ACTIVETASKLIST, TD_SENDAS nSendAs = TDSA_TASKLIST, CWnd* pParent = NULL);   // standard constructor
 
-	void GetSendOptions(TD_SENDWHAT& nWhat, TD_SENDAS& nSendAs) const 
+	void GetSendOptions(TD_SENDWHAT& nWhat, TD_SENDAS& nSendAs) const
 	{
 		nWhat = (TD_SENDWHAT)m_nSendWhat;
 		nSendAs = (m_nSendWhat == TDSW_ACTIVETASKLIST) ? TDSA_TASKLIST : (TD_SENDAS)m_nSendTasksAsOption;
@@ -73,11 +86,10 @@ protected:
 	int		m_nSendTasksAsOption;
 	//}}AFX_DATA
 
-
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTDLSendTasksDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 

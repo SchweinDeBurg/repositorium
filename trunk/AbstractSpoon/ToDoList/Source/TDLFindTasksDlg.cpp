@@ -5,7 +5,7 @@
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -26,6 +26,20 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
 // TDLFindTasksDlg.cpp : implementation file
@@ -58,10 +72,10 @@ static SEARCHPARAM DEFAULTSEARCH(TDCA_TASKNAMEORCOMMENTS, FO_INCLUDES);
 const int TABSTOPS = 20;
 const int MATCH_COLWIDTH = 50;
 
-const UINT WM_FTD_SELECTITEM = (WM_APP+1);
+const UINT WM_FTD_SELECTITEM = (WM_APP + 1);
 
 enum FIND_INCLUDE
-{ 
+{
 	FI_COMPLETED,
 	FI_PARENT,
 };
@@ -69,12 +83,11 @@ enum FIND_INCLUDE
 /////////////////////////////////////////////////////////////////////////////
 // CTDLFindTasksDlg dialog
 
-
-CTDLFindTasksDlg::CTDLFindTasksDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CTDLFindTasksDlg::IDD, pParent), m_bDockable(FALSE)
+CTDLFindTasksDlg::CTDLFindTasksDlg(CWnd* pParent /*=NULL*/):
+CDialog(CTDLFindTasksDlg::IDD, pParent), m_bDockable(FALSE)
 {
 	m_sResultsLabel.LoadString(IDS_FTD_RESULTS);
-	
+
 	//{{AFX_DATA_INIT(CTDLFindTasksDlg)
 	m_bAutoSelectSingles = FALSE;
 	//}}AFX_DATA_INIT
@@ -95,9 +108,7 @@ void CTDLFindTasksDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RESULTS, m_lcResults);
 	DDX_CBIndex(pDX, IDC_TASKLISTOPTIONS, m_bAllTasklists);
 	DDX_Text(pDX, IDC_RESULTSLABEL, m_sResultsLabel);
-	//DDX_Check(pDX, IDC_AUTOSELECTSINGLES, m_bAutoSelectSingles);
 }
-
 
 BEGIN_MESSAGE_MAP(CTDLFindTasksDlg, CDialog)
 	//{{AFX_MSG_MAP(CTDLFindTasksDlg)
@@ -113,6 +124,7 @@ BEGIN_MESSAGE_MAP(CTDLFindTasksDlg, CDialog)
 	ON_UPDATE_COMMAND_UI(ID_FIND_MOVERULEUP, OnUpdateMoveRuleUp)
 	ON_COMMAND(ID_FIND_MOVERULEDOWN, OnMoveRuleDown)
 	ON_UPDATE_COMMAND_UI(ID_FIND_MOVERULEDOWN, OnUpdateMoveRuleDown)
+	ON_BN_CLICKED(IDC_APPLYASFILTER, OnApplyasfilter)
 	//}}AFX_MSG_MAP
 	ON_WM_CTLCOLOR()
 	ON_WM_ERASEBKGND()
@@ -143,8 +155,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CTDLFindTasksDlg message handlers
 
-
-BOOL CTDLFindTasksDlg::OnInitDialog() 
+BOOL CTDLFindTasksDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -158,32 +169,31 @@ BOOL CTDLFindTasksDlg::OnInitDialog()
 	m_lcFindSetup.SetFocus();
 
 	// toolbar
-	VERIFY (InitializeToolbar());
+	VERIFY(InitializeToolbar());
 
-	// gripper
-	//GetDlgItem(IDC_GRIPPER)->ModifyStyle(0, SBS_SIZEGRIP | SBS_SIZEBOXTOPLEFTALIGN | WS_CLIPSIBLINGS);
-	
 	GetDlgItem(IDC_SELECTALL)->EnableWindow(FALSE);
 	CenterWindow();
 
 	// hide upper horz divider thwn themed
 	if (CThemed::IsThemeActive())
+	{
 		GetDlgItem(IDC_HDIVIDER2)->ShowWindow(SW_HIDE);
-	
+	}
+
 	LoadSettings();
-	
-    m_toolbar.RefreshButtonStates();
-	
+
+	m_toolbar.RefreshButtonStates();
+
 	ResizeDlg();
 	EnableToolTips();
 
 	return FALSE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	// EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CTDLFindTasksDlg::SetUITheme(const UITHEME& theme)
 {
-	ASSERT (GetSafeHwnd());
+	ASSERT(GetSafeHwnd());
 
 	m_theme = theme;
 	m_brBkgnd.DeleteObject();
@@ -196,20 +206,22 @@ void CTDLFindTasksDlg::SetUITheme(const UITHEME& theme)
 BOOL CTDLFindTasksDlg::InitializeToolbar()
 {
 	// toolbar
-	VERIFY (m_toolbar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP));
+	VERIFY(m_toolbar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP));
 
 	if (m_toolbar.LoadToolBar(IDR_FINDDLG))
+	{
 		m_toolbar.SetImage(IDB_FIND16, RGB(255, 0, 255));
-	
+	}
+
 	m_tbHelper.Initialize(&m_toolbar, this);
-	
+
 	// very important - turn OFF all the auto positioning and sizing
 	// by default have no borders
 	UINT nStyle = m_toolbar.GetBarStyle();
 	nStyle &= ~(CCS_NORESIZE | CCS_NOPARENTALIGN | CBRS_BORDER_ANY);
 	nStyle |= (CBRS_SIZE_FIXED | CBRS_TOOLTIPS | CBRS_FLYBY);
 	m_toolbar.SetBarStyle(nStyle);
-	
+
 	CRect rToolbar;
 	GetDlgItem(IDC_TOOLBAR)->GetWindowRect(rToolbar);
 	ScreenToClient(rToolbar);
@@ -222,13 +234,13 @@ BOOL CTDLFindTasksDlg::InitializeToolbar()
 
 	CRect rCombo;
 	m_cbSearches.GetClientRect(rCombo);
-	m_cbSearches.SetParent(&m_toolbar); 
-	
+	m_cbSearches.SetParent(&m_toolbar);
+
 	TBBUTTONINFO tbi;
-	tbi.cbSize = sizeof( TBBUTTONINFO );
+	tbi.cbSize = sizeof(TBBUTTONINFO);
 	tbi.cx = (WORD)rCombo.Width();
 	tbi.dwMask = TBIF_SIZE;  // By index
-	m_toolbar.GetToolBarCtrl().SetButtonInfo(ID_SEARCHLIST, &tbi );
+	m_toolbar.GetToolBarCtrl().SetButtonInfo(ID_SEARCHLIST, &tbi);
 
 	// reposition combo
 	m_toolbar.GetToolBarCtrl().GetRect(ID_SEARCHLIST, rCombo);
@@ -238,15 +250,17 @@ BOOL CTDLFindTasksDlg::InitializeToolbar()
 	return (m_toolbar.GetSafeHwnd() != NULL);
 }
 
-void CTDLFindTasksDlg::OnAddRule() 
+void CTDLFindTasksDlg::OnAddRule()
 {
 	m_lcFindSetup.AddRule();
 	m_lcFindSetup.SetFocus();
+	EnableApplyAsFilterButton();
 }
 
-void CTDLFindTasksDlg::OnDeleteRule() 
+void CTDLFindTasksDlg::OnDeleteRule()
 {
 	m_lcFindSetup.DeleteSelectedRule();
+	EnableApplyAsFilterButton();
 }
 
 void CTDLFindTasksDlg::OnUpdateDeleteRule(CCmdUI* pCmdUI)
@@ -258,19 +272,25 @@ void CTDLFindTasksDlg::OnUpdateDeleteRule(CCmdUI* pCmdUI)
 
 BOOL CTDLFindTasksDlg::Initialize(CWnd* pParent, BOOL bDockable)
 {
-	ASSERT (pParent || !bDockable);
-	
+	ASSERT(pParent || !bDockable);
+
 	if (!pParent && bDockable)
+	{
 		return FALSE;
-	
+	}
+
 	if (GetSafeHwnd())
+	{
 		return TRUE;
-	
+	}
+
 	m_bDockable = bDockable;
 
 	if (!Create(CTDLFindTasksDlg::IDD, pParent))
+	{
 		return FALSE;
-	
+	}
+
 	return TRUE;
 }
 
@@ -283,7 +303,6 @@ void CTDLFindTasksDlg::LoadSettings()
 
 	// include options
 	m_cbInclude.SetCheck(FI_COMPLETED, prefs.GetProfileInt(_T("FindTasks"), _T("IncludeDoneTasks"), FALSE));
-//	m_cbInclude.SetCheck(FI_COLLAPSED, prefs.GetProfileInt(_T("FindTasks"), _T("IncludeCollapsedTasks"), TRUE));
 	m_cbInclude.SetCheck(FI_PARENT, prefs.GetProfileInt(_T("FindTasks"), _T("IncludeParentTasks"), TRUE));
 
 	if (m_bDockable)
@@ -291,14 +310,14 @@ void CTDLFindTasksDlg::LoadSettings()
 		DM_POS nPos = DMP_UNDOCKED, nLastPos = DMP_RIGHT;
 		DWORD dwTopLeft = (DWORD)prefs.GetProfileInt(_T("FindTasks"), _T("TopLeft"), -1);
 		DWORD dwBottomRight = (DWORD)prefs.GetProfileInt(_T("FindTasks"), _T("BottomRight"), -1);
-		
+
 		if (dwBottomRight != -1 && dwTopLeft != -1)
 		{
 			nPos = (DM_POS)prefs.GetProfileInt(_T("FindTasks"), _T("DockPos"), DMP_UNDOCKED);
 			nLastPos = (DM_POS)prefs.GetProfileInt(_T("FindTasks"), _T("LastDockPos"), DMP_RIGHT);
 
-			CRect rect(GET_X_LPARAM(dwTopLeft), GET_Y_LPARAM(dwTopLeft), 
-					GET_X_LPARAM(dwBottomRight), GET_Y_LPARAM(dwBottomRight));
+			CRect rect(GET_X_LPARAM(dwTopLeft), GET_Y_LPARAM(dwTopLeft),
+				GET_X_LPARAM(dwBottomRight), GET_Y_LPARAM(dwBottomRight));
 
 			// ensure this intersects with the desktop by a decent amount
 			int BORDER = 200;
@@ -310,19 +329,19 @@ void CTDLFindTasksDlg::LoadSettings()
 				MoveWindow(rect);
 			}
 		}
-		
-		// use the default size of the page host to initialize the 
+
+		// use the default size of the page host to initialize the
 		// docked width/height
 		CSize rDef = GetMinDockedSize(nPos);
-		
+
 		int nWidthDocked = prefs.GetProfileInt(_T("FindTasks"), _T("DockedWidth"), rDef.cx);
 		int nWidthDockedMax = prefs.GetProfileInt(_T("FindTasks"), _T("DockedWidthMax"), -1);
-		
+
 		int nHeightDocked = prefs.GetProfileInt(_T("FindTasks"), _T("DockedHeight"), rDef.cy);
 		int nHeightDockedMax = prefs.GetProfileInt(_T("FindTasks"), _T("DockedHeightMax"), -1);
-		
+
 		m_dockMgr.Initialize(GetParent(), this, nPos, nLastPos,
-							nWidthDocked, nWidthDockedMax, nHeightDocked, nHeightDockedMax);
+			nWidthDocked, nWidthDockedMax, nHeightDocked, nHeightDockedMax);
 	}
 
 	LoadSearches();
@@ -346,7 +365,7 @@ CSize CTDLFindTasksDlg::GetMinDockedSize(DM_POS nPos)
 
 		GetDlgItem(IDC_VDIVIDER)->GetWindowRect(rCtrl);
 		ScreenToClient(rCtrl);
-		
+
 		rMin.right = rCtrl.right + CDlgUnits(this).ToPixelsX(60);
 	}
 	else
@@ -361,51 +380,61 @@ CSize CTDLFindTasksDlg::GetMinDockedSize(DM_POS nPos)
 
 		GetDlgItem(IDC_TOOLBAR)->GetWindowRect(rCtrl);
 		ScreenToClient(rCtrl);
-		
+
 		rMin.right = rCtrl.right;
 	}
 
 	// add border
 	int nBorder = CDlgUnits(this).ToPixelsX(7);
 	rMin.InflateRect(nBorder, nBorder);
-	
+
 	// allow for non-client border
 	rMin.left = rMin.top = 0;
 	CalcWindowRect(rMin);
-	
+
 	return rMin.Size();
 }
 
 BOOL CTDLFindTasksDlg::Show(BOOL bShow)
 {
 	if (!GetSafeHwnd())
+	{
 		return FALSE;
-	
+	}
+
 	if (bShow)
 	{
 		// reset focus if dialog was previously hidden
 		if (!IsWindowVisible())
 		{
 			if (m_lcFindSetup.GetItemText(0, 0).IsEmpty())
+			{
 				m_lcFindSetup.SetCurSel(0, 0);
+			}
 
 			else if (m_lcFindSetup.GetItemText(0, 1).IsEmpty())
+			{
 				m_lcFindSetup.SetCurSel(0, 1);
+			}
 
-			else 
+			else
+			{
 				m_lcFindSetup.SetCurSel(0, 2);
+			}
 
 			m_lcFindSetup.SetFocus();
 		}
-		
-	    m_toolbar.RefreshButtonStates();
+
+		m_toolbar.RefreshButtonStates();
 
 		ShowWindow(SW_SHOW);
 		SetForegroundWindow(); // give it the focus
 	}
 	else
+	{
 		ShowWindow(SW_HIDE);
-	
+	}
+
 	return TRUE;
 }
 
@@ -418,7 +447,7 @@ void CTDLFindTasksDlg::AddResult(const SEARCHRESULT& result, LPCTSTR szTask, LPC
 
 		// add result
 		BOOL bAdd = (m_cbInclude.GetCheck(FI_COMPLETED) || !result.HasFlag(RF_DONE)) &&
-					(m_cbInclude.GetCheck(FI_PARENT) || !result.HasFlag(RF_PARENT));
+			(m_cbInclude.GetCheck(FI_PARENT) || !result.HasFlag(RF_PARENT));
 
 		if (bAdd)
 		{
@@ -429,7 +458,7 @@ void CTDLFindTasksDlg::AddResult(const SEARCHRESULT& result, LPCTSTR szTask, LPC
 				// update 'found' count
 				m_sResultsLabel.Format(IDS_FTD_SOMERESULTS, GetResultCount());
 				UpdateData(FALSE);
-				
+
 				// focus first item added
 				if (!GetDlgItem(IDC_SELECTALL)->IsWindowEnabled())
 				{
@@ -438,7 +467,7 @@ void CTDLFindTasksDlg::AddResult(const SEARCHRESULT& result, LPCTSTR szTask, LPC
 
 					// update 'search results' button' state
 					m_toolbar.RefreshButtonStates();
-					
+
 					// enable 'select all' button
 					GetDlgItem(IDC_SELECTALL)->EnableWindow(TRUE);
 				}
@@ -458,24 +487,28 @@ void CTDLFindTasksDlg::AddHeaderRow(LPCTSTR szText, BOOL bSpaceAbove)
 BOOL CTDLFindTasksDlg::GetSearchAllTasklists()
 {
 	if (GetSafeHwnd())
+	{
 		UpdateData();
-	
+	}
+
 	return m_bAllTasklists;
 }
 
-int CTDLFindTasksDlg::GetSearchParams(SEARCHPARAMS& params) 
-{ 
+int CTDLFindTasksDlg::GetSearchParams(SEARCHPARAMS& params)
+{
 	if (GetSafeHwnd())
+	{
 		UpdateData();
-	
-	int nNumParam = m_lcFindSetup.GetSearchParams(params.rules); 
+	}
 
-	// if the the search params include TDCA_DONE date then 
+	int nNumParam = m_lcFindSetup.GetSearchParams(params.rules);
+
+	// if the the search params include TDCA_DONE date then
 	// forcibly remove FT_HIDEDONE flag
-	BOOL bIgnoreDone = !m_cbInclude.GetCheck(FI_COMPLETED);
-	params.bIgnoreDone = bIgnoreDone;
+	params.bIgnoreOverDue = FALSE;
+	params.bIgnoreDone = !m_cbInclude.GetCheck(FI_COMPLETED);
 
-	if (bIgnoreDone)
+	if (params.bIgnoreDone)
 	{
 		for (int nParam = 0; nParam < nNumParam; nParam++)
 		{
@@ -493,8 +526,10 @@ int CTDLFindTasksDlg::GetSearchParams(SEARCHPARAMS& params)
 BOOL CTDLFindTasksDlg::GetAutoSelectSingles()
 {
 	if (GetSafeHwnd())
+	{
 		UpdateData();
-	
+	}
+
 	return m_bAutoSelectSingles;
 }
 
@@ -525,52 +560,56 @@ int CTDLFindTasksDlg::GetResultIDs(const CFilteredToDoCtrl* pTDC, CDWordArray& a
 
 void CTDLFindTasksDlg::RefreshSearch()
 {
-	ASSERT (GetSafeHwnd());
-	
+	ASSERT(GetSafeHwnd());
+
 	OnFind();
 }
 
-void CTDLFindTasksDlg::OnFind() 
+void CTDLFindTasksDlg::OnFind()
 {
 	m_lcFindSetup.EndEdit();
 	UpdateData();
 
 	// notify parent
 	GetParent()->PostMessage(WM_FTD_FIND);
-	
+
 	// clear results
 	DeleteAllResults();
-	
+
 	// disable 'select all' button
 	GetDlgItem(IDC_SELECTALL)->EnableWindow(FALSE);
 }
 
-void CTDLFindTasksDlg::OnClose() 
+void CTDLFindTasksDlg::OnClose()
 {
 	CDialog::OnClose();
 
 	// end any current edit
 	m_lcFindSetup.EndEdit();
-	
+
 	// hide
 	ShowWindow(SW_HIDE);
-	
+
 	// notify parent
 	GetParent()->SendMessage(WM_FTD_CLOSE);
 }
 
-void CTDLFindTasksDlg::OnSize(UINT nType, int cx, int cy) 
+void CTDLFindTasksDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialog::OnSize(nType, cx, cy);
 
 	// end any current edit
 	if (m_lcFindSetup.GetSafeHwnd())
+	{
 		m_lcFindSetup.EndEdit();
-	
+	}
+
 	ResizeDlg(cx, cy);
 
 	if (m_toolbar.GetSafeHwnd())
+	{
 		m_toolbar.RefreshButtonStates();
+	}
 }
 
 void CTDLFindTasksDlg::ResizeDlg(int cx, int cy)
@@ -581,32 +620,34 @@ void CTDLFindTasksDlg::ResizeDlg(int cx, int cy)
 		{
 			CRect rClient;
 			GetClientRect(rClient);
-			
+
 			cx = rClient.right;
 			cy = rClient.bottom;
-			
-			// check again 
+
+			// check again
 			if (!cx && !cy)
+			{
 				return;
+			}
 		}
-		
+
 		// we compare the new size with the lower right hand corner
 		// of the results list
 		CRect rect;
 		m_lcResults.GetWindowRect(rect);
 		ScreenToClient(rect);
-		
+
 		int nXOffset = cx - rect.right;
 		int nYOffset = cy - rect.bottom;
-		
+
 		BOOL bDockedBelow = (m_dockMgr.GetDockPos() == DMP_BELOW);
-		
+
 		{
 			CDeferWndMove dwm(10);
-			
+
 			// dividers
 			CRect rHDiv, rVDiv, rTBDiv;
-			
+
 			rHDiv = dwm.ResizeCtrl(this, IDC_HDIVIDER);
 			dwm.ResizeCtrl(this, IDC_HDIVIDER, cx - rHDiv.right - 8);
 
@@ -616,7 +657,7 @@ void CTDLFindTasksDlg::ResizeDlg(int cx, int cy)
 			rTBDiv = dwm.ResizeCtrl(this, IDC_HDIVIDER2);
 			rTBDiv.right = (bDockedBelow ? rVDiv.left : cx) - 8;
 			dwm.MoveWindow(GetDlgItem(IDC_HDIVIDER2), rTBDiv);
-			
+
 			// gripper
 			//dwm.OffsetCtrl(this, IDC_GRIPPER, nXOffset, nYOffset);
 
@@ -643,64 +684,61 @@ void CTDLFindTasksDlg::ResizeDlg(int cx, int cy)
 			rToolbar.right = rRules.right;
 
 			dwm.MoveWindow(&m_toolbar, rToolbar);
-			
+
 			// move 'select all', results and other assorted items
 			// depending on where we are docked
-			CRect rSelAll = dwm.ResizeCtrl(this, IDC_SELECTALL);
-			
+			CRect rApply = dwm.ResizeCtrl(this, IDC_APPLYASFILTER);
+
 			if (bDockedBelow)
 			{
-				nXOffset = rVDiv.right - rSelAll.left + 8;
-				nYOffset = rVDiv.top - rSelAll.top;
+				nXOffset = rVDiv.right - rApply.left + 8;
+				nYOffset = rVDiv.top - rApply.top;
 			}
 			else
 			{
-				nXOffset = rHDiv.left - rSelAll.left;
-				nYOffset = rHDiv.top - rSelAll.top + 8;
+				nXOffset = rHDiv.left - rApply.left;
+				nYOffset = rHDiv.top - rApply.top + 8;
 			}
-			
+
+			dwm.OffsetCtrl(this, IDC_APPLYASFILTER, nXOffset, nYOffset);
 			dwm.OffsetCtrl(this, IDC_SELECTALL, nXOffset, nYOffset);
 			dwm.OffsetCtrl(this, IDC_RESULTSLABEL, nXOffset, nYOffset);
-			
-			//CRect rAuto = dwm.OffsetCtrl(this, IDC_AUTOSELECTSINGLES);
-			//rAuto = dwm.OffsetCtrl(this, IDC_AUTOSELECTSINGLES, nXOffset, cy - rAuto.bottom - 10);
-			
+
 			CRect rResults = dwm.OffsetCtrl(this, IDC_RESULTS, nXOffset, nYOffset);
-			
+
 			rResults.right = cx - 8;
 			rResults.bottom = cy - 8;
-			
+
 			dwm.MoveWindow(&m_lcResults, rResults);
 
 		}
-		
-		// hide the gripper if we are maximized
-		//GetDlgItem(IDC_GRIPPER)->ShowWindow(m_dockMgr.Maximized() ? SW_HIDE : SW_SHOW);
-		
+
 		// hide appropriate divider
 		GetDlgItem(IDC_HDIVIDER)->ShowWindow(bDockedBelow ? SW_HIDE : SW_SHOW);
 		GetDlgItem(IDC_VDIVIDER)->ShowWindow(bDockedBelow ? SW_SHOW : SW_HIDE);
-	}	
+	}
 }
 
-void CTDLFindTasksDlg::OnItemActivated(NMHDR* pNMHDR, LRESULT* pResult) 
+void CTDLFindTasksDlg::OnItemActivated(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
-	ASSERT (pNMListView->iItem >= 0);
-	
+	ASSERT(pNMListView->iItem >= 0);
+
 	FTDRESULT* pRes = m_lcResults.GetResult(pNMListView->iItem);
-	
+
 	if (pRes)
+	{
 		GetParent()->SendMessage(WM_FTD_SELECTRESULT, 0, (LPARAM)pRes);
-	
+	}
+
 	*pResult = 0;
 }
 
-void CTDLFindTasksDlg::OnDestroy() 
+void CTDLFindTasksDlg::OnDestroy()
 {
 	SaveSettings();
 	DeleteAllResults();
-	
+
 	CDialog::OnDestroy();
 }
 
@@ -709,18 +747,17 @@ void CTDLFindTasksDlg::SaveSettings()
 	UpdateData();
 
 	CPreferences prefs;
-	
+
 	prefs.WriteProfileInt(_T("FindTasks"), _T("SearchAllTaskLists"), m_bAllTasklists);
 	prefs.WriteProfileInt(_T("FindTasks"), _T("AutoSelectSingles"), m_bAutoSelectSingles);
 
 	// include settings
 	prefs.WriteProfileInt(_T("FindTasks"), _T("IncludeDoneTasks"), m_cbInclude.GetCheck(FI_COMPLETED));
-//	prefs.WriteProfileInt(_T("FindTasks"), _T("IncludeCollapsedTasks"), m_cbInclude.GetCheck(FI_COLLAPSED));
 	prefs.WriteProfileInt(_T("FindTasks"), _T("IncludeParentTasks"), m_cbInclude.GetCheck(FI_PARENT));
 
 	// pos
 	CRect rDialog = m_dockMgr.GetUnDockedRect();
-	
+
 	prefs.WriteProfileInt(_T("FindTasks"), _T("TopLeft"), MAKELPARAM(rDialog.left, rDialog.top));
 	prefs.WriteProfileInt(_T("FindTasks"), _T("BottomRight"), MAKELPARAM(rDialog.right, rDialog.bottom));
 	prefs.WriteProfileInt(_T("FindTasks"), _T("DockPos"), m_dockMgr.GetDockPos());
@@ -734,10 +771,10 @@ void CTDLFindTasksDlg::SaveSettings()
 	SaveSearches();
 }
 
-void CTDLFindTasksDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI) 
+void CTDLFindTasksDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI)
 {
 	CDialog::OnGetMinMaxInfo(lpMMI);
-	
+
 	if (m_dockMgr.Initialized())
 	{
 		CSize rDef = GetMinDockedSize(m_dockMgr.GetDockPos());
@@ -747,105 +784,123 @@ void CTDLFindTasksDlg::OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI)
 	}
 }
 
-BOOL CTDLFindTasksDlg::PreTranslateMessage(MSG* pMsg) 
+BOOL CTDLFindTasksDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// handle enter key if results list has the focus
 	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_RETURN && pMsg->hwnd == m_lcResults)
 	{
 		int nSel = m_lcResults.GetCurSel();
-		
+
 		if (nSel != -1)
 		{
 			FTDRESULT* pRes = m_lcResults.GetResult(nSel);
-			
+
 			if (pRes)
+			{
 				GetParent()->SendMessage(WM_FTD_SELECTRESULT, 0, (LPARAM)pRes);
-			
+			}
+
 			return TRUE;
 		}
 	}
-	
+
 	return CDialog::PreTranslateMessage(pMsg);
 }
 
-void CTDLFindTasksDlg::OnSelectall() 
+void CTDLFindTasksDlg::OnSelectall()
 {
 	int nRes = GetResultCount();
 
-	// if there is only one result then act as if the user 
+	// if there is only one result then act as if the user
 	// clicked on it directly
 	if (nRes == 1)
 	{
 		FTDRESULT* pRes = m_lcResults.GetResult(nRes);
 
 		if (pRes && m_lcResults.GetItemCount() == 2)
+		{
 			GetParent()->SendMessage(WM_FTD_SELECTRESULT, 0, (LPARAM)pRes);
+		}
 	}
 	else if (nRes) // > 1
+	{
 		GetParent()->SendMessage(WM_FTD_SELECTALL);
+	}
 }
 
-void CTDLFindTasksDlg::OnDockright() 
+void CTDLFindTasksDlg::OnDockright()
 {
 	// toggle docked state
 	if (m_dockMgr.GetDockPos() == DMP_RIGHT)
+	{
 		m_dockMgr.UnDock();
+	}
 	else
+	{
 		m_dockMgr.Dock(DMP_RIGHT);
+	}
 
 	ResizeDlg();
-    m_toolbar.RefreshButtonStates();
+	m_toolbar.RefreshButtonStates();
 }
 
-void CTDLFindTasksDlg::OnUpdateDockright(CCmdUI* pCmdUI) 
+void CTDLFindTasksDlg::OnUpdateDockright(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetRadio(m_dockMgr.GetDockPos() == DMP_RIGHT);
 }
 
-void CTDLFindTasksDlg::OnDockleft() 
+void CTDLFindTasksDlg::OnDockleft()
 {
 	// toggle docked state
 	if (m_dockMgr.GetDockPos() == DMP_LEFT)
+	{
 		m_dockMgr.UnDock();
+	}
 	else
+	{
 		m_dockMgr.Dock(DMP_LEFT);
+	}
 
 	ResizeDlg();
-	
-    m_toolbar.RefreshButtonStates();
+
+	m_toolbar.RefreshButtonStates();
 }
 
-void CTDLFindTasksDlg::OnUpdateDockleft(CCmdUI* pCmdUI) 
+void CTDLFindTasksDlg::OnUpdateDockleft(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetRadio(m_dockMgr.GetDockPos() == DMP_LEFT);
 }
 
-void CTDLFindTasksDlg::OnUndock() 
+void CTDLFindTasksDlg::OnUndock()
 {
 	m_dockMgr.Dock(DMP_UNDOCKED);
 	ResizeDlg();
-	
-    m_toolbar.RefreshButtonStates();
+
+	m_toolbar.RefreshButtonStates();
 }
 
-void CTDLFindTasksDlg::OnUpdateUndock(CCmdUI* pCmdUI) 
+void CTDLFindTasksDlg::OnUpdateUndock(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetRadio(m_dockMgr.GetDockPos() == DMP_UNDOCKED);
 }
 
-void CTDLFindTasksDlg::OnDockbelow() 
+void CTDLFindTasksDlg::OnDockbelow()
 {
 	// toggle docked state
 	if (m_dockMgr.GetDockPos() == DMP_BELOW)
+	{
 		m_dockMgr.UnDock();
+	}
 	else
+	{
 		m_dockMgr.Dock(DMP_BELOW);
+	}
 	ResizeDlg();
-	
-    m_toolbar.RefreshButtonStates();
+
+	m_toolbar.RefreshButtonStates();
 }
 
-void CTDLFindTasksDlg::OnUpdateDockbelow(CCmdUI* pCmdUI) 
+void CTDLFindTasksDlg::OnUpdateDockbelow(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetRadio(m_dockMgr.GetDockPos() == DMP_BELOW);
 }
@@ -868,12 +923,12 @@ void CTDLFindTasksDlg::DeleteAllResults()
 	UpdateData(FALSE);
 }
 
-void CTDLFindTasksDlg::OnSearchresults() 
+void CTDLFindTasksDlg::OnSearchresults()
 {
 	UpdateData();
 }
 
-BOOL CTDLFindTasksDlg::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message) 
+BOOL CTDLFindTasksDlg::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	// if the cursor is over a non-header row then show the 'hand' pointer
 	// can't use LVS_EX_ONECLICKACTIVATE for this because this *cannot* be
@@ -891,11 +946,11 @@ BOOL CTDLFindTasksDlg::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 			return TRUE;
 		}
 	}
-	
+
 	return CDialog::OnSetCursor(pWnd, nHitTest, message);
 }
 
-void CTDLFindTasksDlg::OnItemchangingResults(NMHDR* pNMHDR, LRESULT* pResult) 
+void CTDLFindTasksDlg::OnItemchangingResults(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
 
@@ -904,7 +959,7 @@ void CTDLFindTasksDlg::OnItemchangingResults(NMHDR* pNMHDR, LRESULT* pResult)
 	{
 		BOOL bWasSel = (pNMListView->uOldState & LVIS_SELECTED);
 		BOOL bIsSel = (pNMListView->uNewState & LVIS_SELECTED);
-		
+
 		// has a header row just become selected?
 		if (bIsSel && !bWasSel && pNMListView->lParam == 0)
 		{
@@ -919,9 +974,11 @@ void CTDLFindTasksDlg::OnItemchangingResults(NMHDR* pNMHDR, LRESULT* pResult)
 				// the user is moving
 				BOOL bDown = (GetSelectedItem() < pNMListView->iItem);
 				int nNextItem = GetNextResult(pNMListView->iItem, bDown);
-				
+
 				if (nNextItem != -1)
+				{
 					SelectItem(nNextItem);
+				}
 				else
 				{
 					SelectItem(m_nCurSel);
@@ -930,14 +987,14 @@ void CTDLFindTasksDlg::OnItemchangingResults(NMHDR* pNMHDR, LRESULT* pResult)
 					m_lcResults.EnsureVisible(pNMListView->iItem, FALSE);
 				}
 			}
-			
+
 			*pResult = TRUE;
 			return;
 		}
 	}
 
 	m_nCurSel = pNMListView->iItem;
-	
+
 	*pResult = 0;
 }
 
@@ -948,7 +1005,9 @@ int CTDLFindTasksDlg::GetNextResult(int nItem, BOOL bDown)
 	while (nNext >= 0 && nNext < m_lcResults.GetItemCount())
 	{
 		if (m_lcResults.GetResult(nNext))
+		{
 			return nNext;
+		}
 
 		nNext += bDown ? 1 : -1; // next item
 	}
@@ -959,8 +1018,8 @@ int CTDLFindTasksDlg::GetNextResult(int nItem, BOOL bDown)
 
 void CTDLFindTasksDlg::SelectItem(int nItem)
 {
-	m_lcResults.SetItemState(nItem, LVIS_FOCUSED | LVIS_SELECTED, 
-							 		 LVIS_FOCUSED | LVIS_SELECTED);
+	m_lcResults.SetItemState(nItem, LVIS_FOCUSED | LVIS_SELECTED,
+		LVIS_FOCUSED | LVIS_SELECTED);
 
 	m_nCurSel = nItem;
 }
@@ -970,20 +1029,31 @@ int CTDLFindTasksDlg::GetSelectedItem()
 	return m_nCurSel;
 }
 
-void CTDLFindTasksDlg::OnItemchangedRulelist(NMHDR* /*pNMHDR*/, LRESULT* pResult) 
+void CTDLFindTasksDlg::OnItemchangedRulelist(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-//	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
+	//	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
 
 	if (m_toolbar.GetSafeHwnd())
+	{
 		m_toolbar.RefreshButtonStates();
+	}
+
+	// enable 'set as filter' provided there is something to set
+	EnableApplyAsFilterButton();
 
 	*pResult = 0;
 }
 
-void CTDLFindTasksDlg::OnSaveSearch() 
+void CTDLFindTasksDlg::EnableApplyAsFilterButton()
+{
+	SEARCHPARAMS params;
+	GetDlgItem(IDC_APPLYASFILTER)->EnableWindow(GetSearchParams(params));
+}
+
+void CTDLFindTasksDlg::OnSaveSearch()
 {
 	m_lcFindSetup.EndEdit();
-	
+
 	CString sSearch;
 	m_cbSearches.GetWindowText(sSearch);
 
@@ -994,7 +1064,9 @@ void CTDLFindTasksDlg::OnSaveSearch()
 
 	// is it a new search?
 	if (m_cbSearches.FindStringExact(-1, sSearch) == CB_ERR)
-		m_cbSearches.AddString(sSearch); // yes
+	{
+		m_cbSearches.AddString(sSearch);   // yes
+	}
 
 	m_sActiveSearch = sSearch;
 }
@@ -1082,7 +1154,9 @@ int CTDLFindTasksDlg::LoadSearches()
 		CSearchParamArray dummy;
 
 		if (LoadSearch(sSearch, dummy))
+		{
 			m_cbSearches.AddString(sSearch);
+		}
 	}
 
 	// restore last search
@@ -1092,13 +1166,15 @@ int CTDLFindTasksDlg::LoadSearches()
 	if (m_cbSearches.FindStringExact(-1, sSearch) == CB_ERR)
 	{
 		if (m_cbSearches.GetCount())
+		{
 			m_cbSearches.GetLBText(0, sSearch);
+		}
 	}
-	
+
 	if (m_cbSearches.SelectString(-1, sSearch) != CB_ERR)
 	{
 		CSearchParamArray params;
-		VERIFY (LoadSearch(sSearch, params));
+		VERIFY(LoadSearch(sSearch, params));
 
 		m_lcFindSetup.SetSearchParams(params);
 		m_sActiveSearch = sSearch;
@@ -1123,37 +1199,14 @@ int CTDLFindTasksDlg::SaveSearches()
 		prefs.WriteProfileString(_T("FindTasks\\Searches"), sKey, sSearch);
 	}
 
-	// save active search
-/*
-	if (m_sActiveSearch == GetCurrentSearch(FALSE))
-	{
-		CSearchParamArray params;
-
-		m_lcFindSetup.GetSearchParams(params);
-		SaveSearch(m_sActiveSearch, params);
-	}
-*/
-
 	prefs.WriteProfileString(_T("FindTasks\\Searches"), _T("Current"), m_sActiveSearch);
 
 	return m_cbSearches.GetCount();
 }
 
-void CTDLFindTasksDlg::OnSelchangeSearchlist() 
+void CTDLFindTasksDlg::OnSelchangeSearchlist()
 {
-	// do we want to save the current search?
-	// we do if the combo text is still the same as the active search
-/*
-	if (m_sActiveSearch == GetCurrentSearch(FALSE))
-	{
-		CSearchParamArray params;
-
-		m_lcFindSetup.GetSearchParams(params);
-		SaveSearch(m_sActiveSearch, params);
-	}
-*/
-
-	int nSel = m_cbSearches.GetCurSel();	
+	int nSel = m_cbSearches.GetCurSel();
 
 	if (nSel != CB_ERR)
 	{
@@ -1178,18 +1231,22 @@ CString CTDLFindTasksDlg::GetCurrentSearch(BOOL bSelected)
 
 	if (bSelected)
 	{
-		int nSel = m_cbSearches.GetCurSel();	
+		int nSel = m_cbSearches.GetCurSel();
 
 		if (nSel != CB_ERR)
+		{
 			m_cbSearches.GetLBText(nSel, sSearch);
+		}
 	}
 	else
+	{
 		m_cbSearches.GetWindowText(sSearch);
+	}
 
 	return sSearch;
 }
 
-void CTDLFindTasksDlg::OnNewSearch() 
+void CTDLFindTasksDlg::OnNewSearch()
 {
 	m_cbSearches.SetCurSel(-1); // clears the combo edit
 	m_lcFindSetup.ClearSearch();
@@ -1198,29 +1255,33 @@ void CTDLFindTasksDlg::OnNewSearch()
 	m_toolbar.RefreshButtonStates();
 }
 
-void CTDLFindTasksDlg::OnDeleteSearch() 
+void CTDLFindTasksDlg::OnDeleteSearch()
 {
 	CString sSearch = GetCurrentSearch(FALSE);
 
 	if (!sSearch.IsEmpty())
 	{
 		int nSearch = m_cbSearches.FindStringExact(-1, sSearch);
-		
+
 		if (nSearch != CB_ERR)
+		{
 			m_cbSearches.DeleteString(nSearch);
-		
+		}
+
 		m_lcFindSetup.ClearSearch();
-		
+
 		// set the selection to the next search
 		if (nSearch >= m_cbSearches.GetCount())
+		{
 			nSearch = m_cbSearches.GetCount() - 1;
-		
+		}
+
 		if (nSearch != CB_ERR)
 		{
 			m_cbSearches.GetLBText(nSearch, sSearch);
-			
+
 			CSearchParamArray params;
-			
+
 			if (LoadSearch(sSearch, params))
 			{
 				m_lcFindSetup.SetSearchParams(params);
@@ -1232,24 +1293,24 @@ void CTDLFindTasksDlg::OnDeleteSearch()
 				m_sActiveSearch.Empty();
 			}
 		}
-		
+
 		m_cbSearches.SetCurSel(nSearch);
 	}
-	
+
 	m_toolbar.RefreshButtonStates();
 }
 
-void CTDLFindTasksDlg::OnEditchangeSearchlist() 
+void CTDLFindTasksDlg::OnEditchangeSearchlist()
 {
 	m_toolbar.RefreshButtonStates();
 }
 
-void CTDLFindTasksDlg::OnUpdateDeleteSearch(CCmdUI* pCmdUI) 
+void CTDLFindTasksDlg::OnUpdateDeleteSearch(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(!GetCurrentSearch(FALSE).IsEmpty());
 }
 
-void CTDLFindTasksDlg::OnUpdateSaveSearch(CCmdUI* pCmdUI) 
+void CTDLFindTasksDlg::OnUpdateSaveSearch(CCmdUI* pCmdUI)
 {
 	// must have a name
 	BOOL bEnable = !GetCurrentSearch(FALSE).IsEmpty();
@@ -1260,93 +1321,90 @@ void CTDLFindTasksDlg::OnUpdateSaveSearch(CCmdUI* pCmdUI)
 	pCmdUI->Enable(bEnable);
 }
 
-void CTDLFindTasksDlg::OnOK() 
-{ 
+void CTDLFindTasksDlg::OnOK()
+{
 	OnFind();
 }
 
-void CTDLFindTasksDlg::OnMoveRuleUp() 
+void CTDLFindTasksDlg::OnMoveRuleUp()
 {
 	m_lcFindSetup.MoveSelectedRuleUp();
 }
 
-void CTDLFindTasksDlg::OnUpdateMoveRuleUp(CCmdUI* pCmdUI) 
+void CTDLFindTasksDlg::OnUpdateMoveRuleUp(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(m_lcFindSetup.CanMoveSelectedRuleUp());
 }
 
-void CTDLFindTasksDlg::OnMoveRuleDown() 
+void CTDLFindTasksDlg::OnMoveRuleDown()
 {
 	m_lcFindSetup.MoveSelectedRuleDown();
 }
 
-void CTDLFindTasksDlg::OnUpdateMoveRuleDown(CCmdUI* pCmdUI) 
+void CTDLFindTasksDlg::OnUpdateMoveRuleDown(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(m_lcFindSetup.CanMoveSelectedRuleDown());
 }
 
 BOOL CTDLFindTasksDlg::OnToolTipNotify(UINT /*id*/, NMHDR* pNMHDR, LRESULT* /*pResult*/)
 {
-    // Get the tooltip structure.
-    TOOLTIPTEXT *pTTT = (TOOLTIPTEXT *)pNMHDR;
+	// Get the tooltip structure.
+	TOOLTIPTEXT* pTTT = (TOOLTIPTEXT*)pNMHDR;
 
-    // Actually the idFrom holds Control's handle.
-    UINT CtrlHandle = pNMHDR->idFrom;
+	// Actually the idFrom holds Control's handle.
+	UINT CtrlHandle = pNMHDR->idFrom;
 
-    // Check once again that the idFrom holds handle itself.
-    if (pTTT->uFlags & TTF_IDISHWND)
-    {
+	// Check once again that the idFrom holds handle itself.
+	if (pTTT->uFlags & TTF_IDISHWND)
+	{
 		static CString sTooltip;
 		sTooltip.Empty();
 
-        // Get the control's ID.
-        UINT nID = ::GetDlgCtrlID( HWND( CtrlHandle ));
+		// Get the control's ID.
+		UINT nID = ::GetDlgCtrlID(HWND(CtrlHandle));
 
-        switch( nID )
-        {
-        case IDC_INCLUDE:
+		switch (nID)
+		{
+		case IDC_INCLUDE:
 			sTooltip = m_cbInclude.GetTooltip();
-            break;
+			break;
 		}
-		
+
 		if (!sTooltip.IsEmpty())
 		{
 			// Set the tooltip text.
 			::SendMessage(pNMHDR->hwndFrom, TTM_SETMAXTIPWIDTH, 0, 300);
 			pTTT->lpszText = const_cast<LPTSTR>((LPCTSTR)sTooltip);
-	        return TRUE;
+			return TRUE;
 		}
-    }
+	}
 
-    // Not handled.
-    return FALSE;
+	// Not handled.
+	return FALSE;
 }
 
-HBRUSH CTDLFindTasksDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
+HBRUSH CTDLFindTasksDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CDialog::OnCtlColor(pDC, pWnd, nCtlColor);
-	
+
 	if (CThemed::IsThemeActive())
 	{
-		ASSERT (m_brBkgnd.GetSafeHandle());
+		ASSERT(m_brBkgnd.GetSafeHandle());
 
 		if (nCtlColor == CTLCOLOR_STATIC)
 		{
-			//pDC->SetTextColor(m_theme.crAppText);
 			pDC->SetBkMode(TRANSPARENT);
 			hbr = m_brBkgnd;
 		}
 	}
-	
+
 	return hbr;
 }
 
-BOOL CTDLFindTasksDlg::OnEraseBkgnd(CDC* pDC) 
+BOOL CTDLFindTasksDlg::OnEraseBkgnd(CDC* pDC)
 {
 	if (CThemed::IsThemeActive())
 	{
-		//CDialogHelper::ExcludeChildren(this, pDC);
-
 		CRect rClient;
 		GetClientRect(rClient);
 
@@ -1359,7 +1417,9 @@ BOOL CTDLFindTasksDlg::OnEraseBkgnd(CDC* pDC)
 		rToolbar.InflateRect(dlu.ToPixelsX(6), dlu.ToPixelsY(2), dlu.ToPixelsX(6), dlu.ToPixelsX(1));
 
 		if (m_theme.nStyle == UIS_GRADIENT)
+		{
 			GraphicsMisc::DrawGradient(*pDC, rToolbar, m_theme.crToolbarLight, m_theme.crToolbarDark, FALSE);
+		}
 		else
 		{
 			CRect rElement(rToolbar);
@@ -1381,7 +1441,12 @@ BOOL CTDLFindTasksDlg::OnEraseBkgnd(CDC* pDC)
 		pDC->FillSolidRect(rClient, m_theme.crAppBackLight);
 		return TRUE;
 	}
-	
+
 	// else
 	return CDialog::OnEraseBkgnd(pDC);
+}
+
+void CTDLFindTasksDlg::OnApplyasfilter()
+{
+	GetParent()->SendMessage(WM_FTD_APPLYASFILTER, 0, (LPARAM)(LPCTSTR)m_sActiveSearch);
 }
