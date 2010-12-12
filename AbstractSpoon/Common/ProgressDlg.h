@@ -44,7 +44,7 @@
 
 class CProgressDlg : public CRuntimeDlg
 {
-	// Construction
+// Construction
 public:
 	CProgressDlg(BOOL bCancelButton = TRUE, CWnd* pParent = NULL);   // standard constructor
 
@@ -58,7 +58,7 @@ public:
 	BOOL Continue();
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CProgressDlg)
 	CProgressCtrl	m_progress;
 	CString	m_sProgress;
@@ -66,7 +66,7 @@ protected:
 	//}}AFX_DATA
 	BOOL m_bContinue;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CProgressDlg)
 protected:
@@ -74,7 +74,7 @@ protected:
 	//}}AFX_VIRTUAL
 	virtual void OnCancel();
 
-	// Implementation
+// Implementation
 protected:
 
 	// Generated message map functions

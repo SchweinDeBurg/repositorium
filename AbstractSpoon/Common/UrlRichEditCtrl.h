@@ -81,7 +81,7 @@ typedef CArray<PROTOCOL, PROTOCOL&> CProtocolArray;
 
 class CUrlRichEditCtrl : public CRichEditBaseCtrl//COleRichEditCtrl
 {
-	// Construction
+// Construction
 public:
 	CUrlRichEditCtrl();
 
@@ -129,7 +129,7 @@ protected:
 	// Operations
 public:
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CUrlRichEditCtrl)
 protected:
@@ -138,7 +138,7 @@ protected:
 	virtual int OnToolHitTest(CPoint pt, TOOLINFO* pTI) const;
 	virtual LRESULT SendNotifyCustomUrl(LPCTSTR szUrl) const;
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CUrlRichEditCtrl();
 

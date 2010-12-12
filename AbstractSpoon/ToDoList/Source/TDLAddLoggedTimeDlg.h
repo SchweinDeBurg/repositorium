@@ -59,14 +59,14 @@
 
 class CTDLAddLoggedTimeDlg : public CDialog
 {
-	// Construction
+// Construction
 public:
 	CTDLAddLoggedTimeDlg(DWORD dwTaskID, LPCTSTR szTaskTitle, CWnd* pParent = NULL);   // standard constructor
 	double GetLoggedTime() const; // in hours
 	COleDateTime GetWhen() const;
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CTDLAddLoggedTimeDlg)
 	enum { IDD = IDD_ADDLOGGEDTIME_DIALOG };
 	CDateTimeCtrl   m_dateWhen;
@@ -79,14 +79,14 @@ protected:
 	int m_nUnits;
 	COleDateTime m_dtWhen;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTDLAddLoggedTimeDlg)
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 protected:
 
 	// Generated message map functions

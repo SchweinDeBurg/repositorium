@@ -62,7 +62,7 @@ protected:
 
 protected:
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CTDLRiskComboBox();
 

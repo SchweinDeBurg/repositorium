@@ -70,7 +70,7 @@ enum
 
 class CPasswordDialog : public CRuntimeDlg
 {
-	// Construction
+// Construction
 public:
 	CPasswordDialog(BOOL bConfirm, LPCTSTR szExplanation = NULL, CWnd* pParent = NULL);   // standard constructor
 
@@ -92,7 +92,7 @@ public:
 	static void SetItemText(UINT nIDItem, UINT nIDText);
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CPasswordDialog)
 	CString	m_sPassword;
 	CString	m_sConfirmation;
@@ -101,7 +101,7 @@ protected:
 
 	static CMap<UINT, UINT, CString, CString&> s_mapText;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CPasswordDialog)
 protected:
@@ -109,7 +109,7 @@ protected:
 	//}}AFX_VIRTUAL
 	virtual BOOL OnInitDialog();
 
-	// Implementation
+// Implementation
 protected:
 
 	// Generated message map functions

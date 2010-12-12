@@ -63,7 +63,7 @@
 
 class CPreferencesUITasklistPage : public CPreferencesPageBase, protected CDialogHelper
 {
-	// Construction
+// Construction
 public:
 	CPreferencesUITasklistPage();
 	~CPreferencesUITasklistPage();
@@ -170,7 +170,7 @@ public:
 	int GetMaxColumnWidth() const;
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CPreferencesUITasklistPage)
 	enum { IDD = IDD_PREFUITASKLIST_PAGE };
 	BOOL    m_bUseISOForDates;
@@ -208,14 +208,14 @@ protected:
 	BOOL    m_bHidePercentForDoneTasks;
 	CGroupLineManager m_mgrGroupLines;
 
-	// Overrides
+// Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPreferencesUITasklistPage)
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPreferencesUITasklistPage)

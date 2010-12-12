@@ -97,7 +97,7 @@ class CPreferences;
 
 class CToDoCtrl : public CRuntimeDlg
 {
-	// Construction
+// Construction
 public:
 	CToDoCtrl(CContentMgr& mgr, const CONTENTFORMAT& cfDefault);
 	virtual ~CToDoCtrl();
@@ -621,7 +621,7 @@ protected:
 	static CTDCAttributeArray s_aParentAttribs; // inheritable attribs for new tasks
 	static BOOL s_bUpdateInheritAttrib; // update as changes are made to parents
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CToDoCtrl)
 public:
@@ -632,7 +632,7 @@ protected:
 	virtual void PreSubclassWindow();
 	virtual BOOL OnInitDialog();
 
-	// Implementation
+// Implementation
 protected:
 	void UpdateComments(BOOL bSaveAndValidate);
 

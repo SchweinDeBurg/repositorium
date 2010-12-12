@@ -97,7 +97,7 @@ enum FIND_WHAT;
 
 class CToDoListWnd : public CFrameWnd, public CDialogHelper
 {
-	// Construction
+// Construction
 public:
 	CToDoListWnd(); // standard constructor
 	~CToDoListWnd();
@@ -105,7 +105,6 @@ public:
 	static int GetVersion();
 	BOOL Create(const TDCSTARTUP& startup);
 
-protected:
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CToDoListWnd)
 protected:
@@ -117,7 +116,7 @@ protected:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	int OnCreate(LPCREATESTRUCT lpCreateStruct);
 
-	// Implementation
+// Implementation
 protected:
 	HICON m_hIcon;
 	CImageList m_ilTabCtrl, m_ilToDoCtrl;

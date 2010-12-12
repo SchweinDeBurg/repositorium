@@ -45,7 +45,7 @@
 
 class CBrowserDlg : public CRuntimeDlg
 {
-	// Construction
+// Construction
 public:
 	CBrowserDlg(BOOL bBrowser = TRUE);
 
@@ -60,14 +60,14 @@ protected:
 	BOOL m_bBrowser;
 
 protected:
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CBrowserDlg)
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CBrowserDlg)

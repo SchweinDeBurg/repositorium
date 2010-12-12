@@ -61,7 +61,7 @@ class CPreferencesPageBase : public CPropertyPage
 {
 	DECLARE_DYNCREATE(CPreferencesPageBase)
 
-	// Construction
+// Construction
 public:
 	CPreferencesPageBase(UINT nID = 0);
 	~CPreferencesPageBase();
@@ -82,7 +82,7 @@ protected:
 
 class CPreferencesDlgBase : public CDialog
 {
-	// Construction
+// Construction
 public:
 	CPreferencesDlgBase(UINT nID = 0, CWnd* pParent = NULL);   // standard constructor
 

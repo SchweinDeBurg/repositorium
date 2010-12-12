@@ -42,7 +42,7 @@
 
 class CTabbedComboBox : public CComboBox
 {
-	// Construction
+// Construction
 public:
 	CTabbedComboBox(int nTabStops = 20);
 
@@ -54,7 +54,7 @@ protected:
 	// Operations
 public:
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTabbedComboBox)
 public:
@@ -64,7 +64,7 @@ protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CTabbedComboBox();
 

@@ -92,7 +92,7 @@ protected:
 	virtual void OnBtnClick(UINT nID);
 	virtual void PreSubclassWindow();
 
-	// Implementation
+// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CRecurringTaskEdit)
@@ -113,14 +113,14 @@ protected:
 
 class CTDLRecurringTaskOptionDlg : public CDialog
 {
-	// Construction
+// Construction
 public:
 	CTDLRecurringTaskOptionDlg(const TDIRECURRENCE& tr, const COleDateTime& dtDefault, CWnd* pParent = NULL);   // standard constructor
 
 	void GetRecurrenceOptions(TDIRECURRENCE& tr) const;
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CRecurringTaskOptionDlg)
 	int     m_nRegularity;
 	int     m_bRecalcFromDue;
@@ -136,14 +136,14 @@ protected:
 	int     m_nNumMonths;
 	int     m_nMonthDay;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CRecurringTaskOptionDlg)
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 protected:
 
 	// Generated message map functions

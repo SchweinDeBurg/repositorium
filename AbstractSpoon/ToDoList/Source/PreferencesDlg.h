@@ -91,7 +91,7 @@ enum
 
 class CPreferencesDlg : public CPreferencesDlgBase
 {
-	// Construction
+// Construction
 public:
 	CPreferencesDlg(CShortcutManager* pShortcutMgr = NULL, UINT nMenuID = 0,
 		const CContentMgr* pContentMgr = NULL, const CImportExportMgr* pExportMgr = NULL,
@@ -779,7 +779,7 @@ public:
 	}
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CPreferencesDlg)
 	enum { IDD = IDD_PREFERENCES };
 	CTreeCtrl m_tcPages;
@@ -799,7 +799,7 @@ protected:
 	CPreferencesMultiUserPage m_pageMultiUser;
 	CMapPtrToPtr m_mapPP2HTI;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CPreferencesDlg)
 public:
@@ -807,7 +807,7 @@ public:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPreferencesDlg)

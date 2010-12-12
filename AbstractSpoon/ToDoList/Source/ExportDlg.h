@@ -63,7 +63,7 @@ enum { ED_HTMLFMT, ED_TEXTFMT };
 
 class CExportDlg : public CDialog
 {
-	// Construction
+// Construction
 public:
 	CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL bShowSubtaskCheckbox = TRUE,
 		BOOL bVisibleColumnsOnly = TRUE, LPCTSTR szFilePath = NULL, LPCTSTR szFolderPath = NULL,
@@ -86,7 +86,7 @@ public:
 	}
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CExportDlg)
 	CComboBox   m_cbFormat;
 	CFileEdit   m_eExportPath;
@@ -101,7 +101,7 @@ protected:
 	const CImportExportMgr& m_mgrImportExport;
 	static int s_nFormatOption; // persists just for the current session
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CExportDlg)
 protected:
@@ -109,7 +109,7 @@ protected:
 	//}}AFX_VIRTUAL
 	virtual void OnOK();
 
-	// Implementation
+// Implementation
 protected:
 
 	// Generated message map functions

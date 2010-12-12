@@ -75,7 +75,7 @@ enum TSD_TASKS
 
 class CTaskSelectionDlg : public CDialog
 {
-	// Construction
+// Construction
 public:
 	CTaskSelectionDlg(LPCTSTR szRegKey = NULL, BOOL bShowSubtaskCheckbox = TRUE, BOOL bVisibleColumnsOnly = FALSE);
 
@@ -131,7 +131,7 @@ public:
 	void SetWantInCompleteTasks(BOOL bWant = TRUE);
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CTaskSelectionDlg)
 	enum { IDD = IDD_TASKSELECTION_DIALOG };
 	int     m_nAttribOption;
@@ -144,14 +144,14 @@ protected:
 	CString m_sRegKey;
 	BOOL    m_bShowSubtaskCheckbox;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTaskSelectionDlg)
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 protected:
 
 	// Generated message map functions

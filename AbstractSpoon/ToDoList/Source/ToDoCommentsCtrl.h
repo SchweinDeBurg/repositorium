@@ -61,7 +61,7 @@
 
 class CToDoCommentsCtrl : public CUrlRichEditCtrl, public IContentControl
 {
-	// Construction
+// Construction
 public:
 	CToDoCommentsCtrl();
 
@@ -116,14 +116,14 @@ protected:
 	BOOL m_bWordWrap;
 	CRichEditSpellCheck m_reSpellCheck;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CToDoCommentsCtrl)
 protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CToDoCommentsCtrl();
 

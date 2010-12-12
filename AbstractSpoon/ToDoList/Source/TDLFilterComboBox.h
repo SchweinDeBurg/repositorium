@@ -60,7 +60,7 @@
 
 class CTDLFilterComboBox : public CTabbedComboBox
 {
-	// Construction
+// Construction
 public:
 	CTDLFilterComboBox();
 
@@ -75,14 +75,14 @@ public:
 // Operations
 public:
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTDLFilterComboBox)
 protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CTDLFilterComboBox();
 

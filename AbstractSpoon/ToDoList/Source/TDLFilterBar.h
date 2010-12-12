@@ -70,7 +70,7 @@ class CDeferWndMove;
 
 class CTDLFilterBar : public CDialog, public CDialogHelper
 {
-	// Construction
+// Construction
 public:
 	CTDLFilterBar(CWnd* pParent = NULL);   // standard constructor
 
@@ -97,10 +97,10 @@ public:
 	void EnableMultiSelection(BOOL bEnable);
 	void ShowDivider(BOOL bShow = TRUE);
 
-	void SetUIColors(COLORREF crBack/*, COLORREF crText*/);
+	void SetUIColors(COLORREF crBack);
 
 protected:
-	// Dialog Data
+// Dialog Data
 	//{{AFX_DATA(CFilterBar)
 	//}}AFX_DATA
 	CTDLFilterComboBox  m_cbTaskFilter;
@@ -129,7 +129,7 @@ protected:
 		return -1;
 	}
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CFilterBar)
 protected:
@@ -145,7 +145,7 @@ protected:
 	}
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
-	// Implementation
+// Implementation
 protected:
 
 	// Generated message map functions

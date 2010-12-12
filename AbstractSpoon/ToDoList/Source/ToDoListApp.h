@@ -72,7 +72,7 @@ class CToDoListApp : public CWinApp
 public:
 	CToDoListApp();
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CToDoListApp)
 public:
@@ -83,7 +83,7 @@ public:
 	virtual int ExitInstance();
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 
 	//{{AFX_MSG(CToDoListApp)
 	afx_msg void OnHelpContactus();

@@ -191,7 +191,7 @@ protected:
 	BOOL m_bListModSinceLastSort;
 	BOOL m_bListMultiSort;
 
-	// Overrides
+// Overrides
 protected:
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CFilteredToDoCtrl)
