@@ -183,9 +183,9 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent, int nLength
 	if (hMod)
 	{
 		typedef int (*PFNCONVERTRTF2HTML)(const char*, const char*, const char*,
-				const char*, const char*, const char*,
-				const char*, const char*, const char*,
-				const char*, const char*);
+			const char*, const char*, const char*,
+			const char*, const char*, const char*,
+			const char*, const char*);
 
 		PFNCONVERTRTF2HTML fnRtf2Html = (PFNCONVERTRTF2HTML)GetProcAddress(hMod, "fnRtf2Html");
 

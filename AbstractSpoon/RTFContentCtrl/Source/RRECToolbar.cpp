@@ -49,8 +49,8 @@ extern UINT urm_SETCURRENTFONTCOLOR;
 // CRRECToolBar
 
 CRRECToolBar::CRRECToolBar() :
-	m_crBack(GetSysColor(COLOR_WINDOW)),
-	m_crText(GetSysColor(COLOR_WINDOWTEXT))
+m_crBack(GetSysColor(COLOR_WINDOW)),
+m_crText(GetSysColor(COLOR_WINDOWTEXT))
 {
 }
 
@@ -71,11 +71,10 @@ BEGIN_MESSAGE_MAP(CRRECToolBar, CEnToolBar)
 	ON_NOTIFY_REFLECT(TBN_DROPDOWN, OnColorDropDown)
 END_MESSAGE_MAP()
 
-
 BOOL CRRECToolBar::Create(CWnd* parent)
 {
-	if (CreateEx(parent, TBSTYLE_FLAT | TBSTYLE_WRAPABLE, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP/* | WS_CLIPCHILDREN*/,
-	             CRect(0, 0, 0, 0), TOOLBAR_CONTROL) && LoadToolBar(TOOLBAR_CONTROL))
+	if (CreateEx(parent, TBSTYLE_FLAT | TBSTYLE_WRAPABLE, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP,
+		CRect(0, 0, 0, 0), TOOLBAR_CONTROL) && LoadToolBar(TOOLBAR_CONTROL))
 	{
 		SetImage(IDB_TOOLBAR, RGB(255, 0, 255));
 
@@ -127,7 +126,7 @@ BOOL CRRECToolBar::Create(CWnd* parent)
 		rect.bottom += COMBO_HEIGHT;
 
 		if (!m_font.Create(WS_CHILD | WS_VSCROLL |	WS_VISIBLE | CBS_AUTOHSCROLL |
-		                   CBS_DROPDOWNLIST | CBS_SORT, rect, this, DROPDOWN_FONT))
+			CBS_DROPDOWNLIST | CBS_SORT, rect, this, DROPDOWN_FONT))
 		{
 			return FALSE;
 		}
@@ -142,7 +141,7 @@ BOOL CRRECToolBar::Create(CWnd* parent)
 		rect.bottom += COMBO_HEIGHT;
 
 		if (!m_size.Create(WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST |
-		                   CBS_HASSTRINGS, rect, this, DROPDOWN_SIZE))
+			CBS_HASSTRINGS, rect, this, DROPDOWN_SIZE))
 		{
 			return FALSE;
 		}
@@ -159,13 +158,11 @@ BOOL CRRECToolBar::Create(CWnd* parent)
 /////////////////////////////////////////////////////////////////////////////
 // CRRECToolBar message handlers
 
-
 LRESULT CRRECToolBar::OnSetFont(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	// eat this
 	return 0L;
 }
-
 
 LRESULT CRRECToolBar::OnIdleUpdateCmdUI(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
@@ -175,8 +172,7 @@ LRESULT CRRECToolBar::OnIdleUpdateCmdUI(WPARAM /*wParam*/, LPARAM /*lParam*/)
 
 BOOL CRRECToolBar::GetDroppedState() const
 {
-	return m_font.GetDroppedState() ||
-	       m_size.GetDroppedState();
+	return m_font.GetDroppedState() || m_size.GetDroppedState();
 }
 
 void CRRECToolBar::OnSelchangeFont()
@@ -347,7 +343,7 @@ void CRRECToolBar::OnSize(UINT nType, int cx, int cy)
 		// calc length after which we want to start shortening ctrls
 		GetItemRect(1, &rDiv); // divider
 		const int DEFCTRLSWIDTH = FONT_COMBO_WIDTH + SIZE_COMBO_WIDTH +
-		                          (5 * rDiv.Width()) / 2; // 2.5 separators
+			(5 * rDiv.Width()) / 2; // 2.5 separators
 
 		// if the toolbar length is less than the default
 		// width of the embedded widgets we reduce the
@@ -401,7 +397,7 @@ void CRRECToolBar::OnColorDropDown(NMHDR* pNMHDR, LRESULT* pResult)
 			customText.LoadString(STRING_CUSTOM);
 
 			new CColourPopup(CPoint(rButton.left, rButton.bottom), color,
-			                 this, nBtnID, defaultText, customText, TRUE);
+				this, nBtnID, defaultText, customText, TRUE);
 		}
 		break;
 	}

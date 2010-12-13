@@ -144,7 +144,7 @@ BEGIN
         MENUITEM "&Bold\tCtrl+B",               BUTTON_BOLD
         MENUITEM "&Italic\tCtrl+I",             BUTTON_ITALIC
         MENUITEM "&Underline\tCtrl+U",          BUTTON_UNDERLINE
-        MENUITEM "Stri&kethrough",              BUTTON_STRIKETHRU
+        MENUITEM "Stri&kethrough\tCtrl+-",      BUTTON_STRIKETHRU
         MENUITEM SEPARATOR
         MENUITEM "Superscript",                 ID_EDIT_SUPERSCRIPT
         MENUITEM "Subscript",                   ID_EDIT_SUBSCRIPT

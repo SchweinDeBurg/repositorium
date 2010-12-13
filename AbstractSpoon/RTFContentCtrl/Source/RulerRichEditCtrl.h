@@ -221,9 +221,6 @@ protected:
 	CRRECToolBar    m_toolbar;
 	CRRECRuler      m_ruler;
 
-	// Handle to the RTF 2.0 dll
-//	HINSTANCE		m_richEditModule;
-
 	// Private helpers
 	void    SetTabStops(LPLONG tabs, int size);
 	void    UpdateTabStops();

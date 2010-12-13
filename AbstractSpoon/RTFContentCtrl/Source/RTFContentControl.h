@@ -101,7 +101,7 @@ protected:
 	CToolbarHelper m_tbHelper;
 	CRichEditSpellCheck m_reSpellCheck;
 
-	// Operations
+// Operations
 public:
 
 // Overrides
