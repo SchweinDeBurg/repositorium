@@ -56,7 +56,7 @@
 #error include 'StdAfx.h' before including this file for PCH
 #endif
 
-#include "Resource.h"		// main symbols
+#include "Resource.h"       // main symbols
 
 #include "../../Common/IContentControl.h"
 
@@ -86,7 +86,6 @@ public:
 		const TCHAR* szCharSet, char*& szHtml);
 
 };
-
 
 /////////////////////////////////////////////////////////////////////////////
 

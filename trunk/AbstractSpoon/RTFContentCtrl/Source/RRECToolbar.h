@@ -51,7 +51,7 @@ public:
 	BOOL SetButtonState(int nID, UINT nState);
 	BOOL IsButtonChecked(int nID) const;
 	BOOL CheckButton(int nID, BOOL bChecked);
-	operator CToolBarCtrl&()
+	operator CToolBarCtrl& ()
 	{
 		return GetToolBarCtrl();
 	}

@@ -30,11 +30,75 @@
 #include "../../../CodeProject/Source/EnBitmap.h"
 #include "../../../CodeProject/Source/Misc.h"
 
+#include "../../../CodeProject/Source/Subclass.h"
+#include "../../../CodeProject/Source/HookMgr.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+
+/////////////////////////////////////////////////////////////////////////////
+// CFindReplaceDialogEx
+
+
+// for some reason (that I cannot divine) dialog keyboard handling
+// is not working so we install a keyboard hook and handle
+
+class CFindReplaceDialogEx : public CFindReplaceDialog, public CHookMgr<CFindReplaceDialogEx>
+{
+	friend class CHookMgr<CFindReplaceDialogEx>;
+
+public:
+	virtual ~CFindReplaceDialogEx() {}
+	static CFindReplaceDialogEx& Instance()
+	{
+		return CHookMgr<CFindReplaceDialogEx>::GetInstance();
+	}
+
+protected:
+	CFindReplaceDialogEx() {}
+
+	virtual void PostNcDestroy()
+	{
+		Release();
+	}
+	virtual BOOL OnInitDialog();
+	virtual BOOL OnKeyboard(UINT uVirtKey, UINT /*uFlags*/);
+};
+
+BOOL CFindReplaceDialogEx::OnInitDialog()
+{
+	CFindReplaceDialog::OnInitDialog();
+
+	InitHooks(HM_KEYBOARD);
+	return TRUE;
+}
+
+BOOL CFindReplaceDialogEx::OnKeyboard(UINT uVirtKey, UINT uFlags)
+{
+	// only handle messages belonging to us
+	HWND hFocus = ::GetFocus();
+
+	if (::IsChild(*this, hFocus) && Misc::KeyIsPressed(uVirtKey))
+	{
+		MSG msg = { hFocus, WM_KEYDOWN, uVirtKey, uFlags, 0, {0, 0} };
+
+		if (::IsDialogMessage(*this, &msg))
+		{
+			return TRUE;
+		}
+	}
+
+	// all else
+	return FALSE;
+}
+
+CFindReplaceDialog* CRulerRichEdit::NewFindReplaceDlg()
+{
+	return &CFindReplaceDialogEx::Instance();/*new CFindReplaceDialogEx*/;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CRulerRichEdit
@@ -53,6 +117,7 @@ CRulerRichEdit::CRulerRichEdit() : m_bPasteSimple(FALSE), m_bIMEComposing(FALSE)
    ============================================================*/
 {
 	EnableToolTips();
+	EnableSelectOnFocus(FALSE);
 }
 
 CRulerRichEdit::~CRulerRichEdit()
@@ -75,6 +140,7 @@ BEGIN_MESSAGE_MAP(CRulerRichEdit, CUrlRichEditCtrl)
 	ON_WM_HSCROLL()
 	ON_WM_GETDLGCODE()
 	ON_WM_LBUTTONDBLCLK()
+	ON_WM_CREATE()
 //}}AFX_MSG_MAP
 	ON_MESSAGE(WM_DROPFILES, OnDropFiles)
 	ON_MESSAGE(WM_IME_STARTCOMPOSITION, OnIMEStartComposition)
@@ -83,6 +149,11 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CRulerRichEdit message handlers
+
+int CRulerRichEdit::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	return CUrlRichEditCtrl::OnCreate(lpCreateStruct);
+}
 
 void CRulerRichEdit::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 /* ============================================================
@@ -243,8 +314,6 @@ CLIPFORMAT CRulerRichEdit::GetAcceptableClipFormat(LPDATAOBJECT lpDataOb, CLIPFO
 
 	static CLIPFORMAT cfRtf = (CLIPFORMAT)::RegisterClipboardFormat(CF_RTF);
 	static CLIPFORMAT cfRtfObj = (CLIPFORMAT)::RegisterClipboardFormat(CF_RETEXTOBJ);
-// 	static CLIPFORMAT cfOutlookObj1 = (CLIPFORMAT)::RegisterClipboardFormat("CFSTR_FILECONTENTS");
-// 	static CLIPFORMAT cfOutlookObj2 = (CLIPFORMAT)::RegisterClipboardFormat("CFSTR_FILEDESCRIPTORA");
 
 	CLIPFORMAT formats[] =
 	{
@@ -264,8 +333,6 @@ CLIPFORMAT CRulerRichEdit::GetAcceptableClipFormat(LPDATAOBJECT lpDataOb, CLIPFO
 		CF_PENDATA,
 		CF_RIFF,
 		CF_WAVE,
-//		cfOutlookObj1,
-//		cfOutlookObj2,
 		CF_ENHMETAFILE
 	};
 
@@ -320,16 +387,6 @@ void CRulerRichEdit::Paste(BOOL bSimple)
 int CRulerRichEdit::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
 {
 	return CUrlRichEditCtrl::OnToolHitTest(point, pTI);
-	/*
-		int nHit = MAKELONG(point.x, point.y);
-		pTI->hwnd = m_hWnd;
-		pTI->uId  = nHit;
-		pTI->rect = CRect(CPoint(point.x-1,point.y-1),CSize(2,2));
-		pTI->uFlags |= TTF_NOTBUTTON | TTF_ALWAYSTIP;
-		pTI->lpszText = LPSTR_TEXTCALLBACK;
-
-		return nHit;
-	*/
 }
 
 LRESULT CRulerRichEdit::OnIMEStartComposition(WPARAM /*wp*/, LPARAM /*lp*/)
