@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.3 sources
 //*****************************************************************************
 
 // ToDoListWnd.cpp : implementation file
@@ -2855,17 +2856,11 @@ void CToDoListWnd::OnClose()
 
 void CToDoListWnd::MinimizeToTray()
 {
-	Log(_T("MinimizeToTray(Enter)"), TRUE);
-
 	// end whatever the user is doing
 	GetToDoCtrl().Flush();
 
-	Log(_T("MinimizeToTray(After flush active tasklist)"), TRUE);
-
 	// save prev state so we can restore properly
 	AfxGetApp()->WriteProfileInt(_T("Pos"), _T("Maximized"), IsZoomed());
-
-	Log(_T("MinimizeToTray(After save maximize state)"), TRUE);
 
 	if (Prefs().GetAutoSaveOnSwitchApp())
 	{
@@ -2873,27 +2868,17 @@ void CToDoListWnd::MinimizeToTray()
 		SaveAll(TDLS_FLUSH | TDLS_AUTOSAVE);
 	}
 
-	Log(_T("MinimizeToTray(After Save All tasklists)"), TRUE);
-
 	// hide extension windows
 	m_mgrUIExtensions.ShowAllExtensionsWindows((DWORD)GetToDoCtrl().GetSafeHwnd(), UIS_HIDE);
-
-	Log(_T("MinimizeToTray(After hide extension windows)"), TRUE);
 
 	// hide main window and release resources
 	GUI::MinToTray(*this); // courtesy of floyd
 
-	Log(_T("MinimizeToTray(After MinToTray)"), TRUE);
-
 	SetProcessWorkingSetSize(GetCurrentProcess(), (DWORD) - 1, (DWORD) - 1);
 	m_bVisible = FALSE;
 
-	Log(_T("MinimizeToTray(After SetProcessWorkingSetSize)"), TRUE);
-
 	// hide find dialog
 	ShowFindDialog(FALSE);
-
-	Log(_T("MinimizeToTray(Exit)"), TRUE);
 }
 
 void CToDoListWnd::ShowFindDialog(BOOL bShow)
@@ -4046,7 +4031,7 @@ BOOL CToDoListWnd::DoDueTaskNotification(const CFilteredToDoCtrl* pCtrl, int nDu
 
 void CToDoListWnd::OnAbout()
 {
-	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.1.2</b> (mod by Elijah Zarezky)"),
+	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.1.3</b> (mod by Elijah Zarezky)"),
 		CEnString(IDS_ABOUTHEADING), CEnString(IDS_ABOUTCOPYRIGHT), CEnString(IDS_LICENSE), 1, 2, 8);
 
 	dialog.DoModal();

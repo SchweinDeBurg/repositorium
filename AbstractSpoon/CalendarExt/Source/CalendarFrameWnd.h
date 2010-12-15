@@ -2,7 +2,20 @@
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.3 sources
 //*****************************************************************************
 
 #if !defined(AFX_CALENDARFRAMEWND_H__47616F96_0B5B_4F86_97A2_93B9DC796EB4__INCLUDED_)
@@ -119,7 +132,6 @@ protected:
 	afx_msg void OnUpdateViewNumWeeks9(CCmdUI* pCmdUI);
 	afx_msg void OnGoToToday();
 	afx_msg void OnUpdateGoToToday(CCmdUI* pCmdUI);
-	afx_msg void OnCheckforUpdates();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

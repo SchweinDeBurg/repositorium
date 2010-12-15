@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.3 sources
 //*****************************************************************************
 
 // TaskFileHtmlExporter.cpp: implementation of the CTaskListHtmlExporter class.
@@ -152,8 +153,10 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 
 	if (nDepth > 0)
 	{
+		BOOL bHidePos = !pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPOS));
+
 		// if there is a POS child item then this replaces nPos
-		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPOS)))
+		if (!bHidePos)
 		{
 			nPos = pTasks->GetTaskPosition(hTask);
 		}
@@ -309,16 +312,16 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 		{
 			if (STRIKETHRUDONE)
 			{
-				sFormat = _T("%s%s%s<font color='%s'><s>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</s></font>%s<s>%s</s>%s");
+				sFormat = _T("%s%s%s%s<font color='%s'><s>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</s></font>%s<s>%s</s>%s");
 			}
 			else
 			{
-				sFormat = _T("%s%s%s<font color='%s'>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</font>%s%s%s");
+				sFormat = _T("%s%s%s%s<font color='%s'>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</font>%s%s%s");
 			}
 		}
 		else
 		{
-			sFormat = _T("%s%s%s<font color='%s'>%s</font>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s");
+			sFormat = _T("%s%s%s%s<font color='%s'>%s</font>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s");
 		}
 
 		sItem.Format(sFormat, (LPCTSTR)sID, (LPCTSTR)sPriority, (LPCTSTR)sPercent, (LPCTSTR)sColor, (LPCTSTR)sTitle,
@@ -333,12 +336,13 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 			sItem += HTMLNOTES;
 		}
 
-		if (nDepth == 1) // toplevel
+		sOutput += _T("<br>");
+
+		if (bHidePos)
 		{
-			sOutput += _T("<br>");
+			sOutput += _T("<li>");
 		}
 
-		sOutput += _T("<li>");
 		sOutput += sItem;
 	}
 	else
@@ -391,7 +395,6 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 	// end of item
 	if (nDepth > 0)
 	{
-		sOutput += _T("</li>");
 		sOutput += ENDL;
 	}
 	else
