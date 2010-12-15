@@ -928,52 +928,52 @@ BEGIN
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDVERT,183,7,1,243
 END
 
-IDD_PREFTASKCALC_PAGE DIALOG  0, 0, 368, 253
+IDD_PREFTASKCALC_PAGE DIALOGEX 0, 0, 368, 253
 STYLE DS_SETFONT | WS_POPUP
-FONT 8, "Tahoma"
+FONT 8, "MS Shell Dlg 2", 0, 0, 0x0
 BEGIN
     CONTROL         "&Treat due tasks as having the highest priority",IDC_DUEHAVEHIGHESTPRIORITY,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,7,161,10
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,7,181,10
     CONTROL         "T&reat completed tasks as having the lowest priority/risk",IDC_DONEHAVELOWESTPRIORITY,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,21,165,17
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,21,181,17
     CONTROL         "&Treat tasks whose subtasks are all completed as also being 'completed'",IDC_TREATSUBCOMPLETEDASDONE,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,42,169,18
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,42,181,18
     CONTROL         "Display a task's '% Completion' as being equal to its 'Time Spent' divided by its 'Time Estimate'",IDC_AUTOCALCPERCENTDONE,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,62,169,17
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,62,181,17
     CONTROL         "&Display a parent task's '% Completion' as being the average of all its subtasks' % completions",IDC_AVERAGEPERCENTSUBCOMPLETION,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,81,169,18
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,81,181,18
     CONTROL         "Include completed subtasks in this calculation",IDC_INCLUDEDONEINAVERAGECALC,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,102,157,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,102,169,10
     CONTROL         "Weight % completion by number of subtasks",IDC_WEIGHTPERCENTCALCBYNUMSUB,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,116,157,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,116,169,10
     CONTROL         "T&ake a task's '% Complete' into account when calculating time estimates",IDC_USEPERCENTDONEINTIMEEST,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,130,169,18
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,130,181,18
     CONTROL         "Di&splay a task's 'Due' date as being the earliest of its due date and all its subtasks' due dates",IDC_USEEARLIESTDUEDATE,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,151,169,18
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,151,181,18
     CONTROL         "Di&splay a task's priority/risk as being the highest of its and all its subtasks' priorities/risks",IDC_USEHIGHESTPRIORITY,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,171,169,18
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,171,181,18
     CONTROL         "Include completed subtasks in this assessment",IDC_INCLUDEDONEINPRIORITYCALC,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,192,169,10
     CONTROL         "Recalculate a task's 'Estimated time' whenever its start or due dates change",IDC_AUTOCALCTIMEEST,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,206,169,17
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,206,180,17
     CONTROL         "Automatically adjust a task's 'Start' and 'Due' dates when its dependency's 'Completion' date changes",IDC_AUTOUPDATEDEPENDEES,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,227,175,19
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDVERT,183,7,1,243
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,227,180,19
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDVERT,195,7,1,243
     CONTROL         "Treat tasks without a due date as being 'Due Today'",IDC_NODUEDATEDUETODAY,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,193,8,172,18
-    LTEXT           "Calculate a task's 'Remaining Time' as:",IDC_STATIC,193,31,167,8
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,202,8,157,18
+    LTEXT           "Calculate a task's 'Remaining Time' as:",IDC_STATIC,202,31,157,8
     CONTROL         "Current date - Due date",IDC_REMAININGTIMEISDUEDATE,
-                    "Button",BS_AUTORADIOBUTTON | BS_TOP | WS_GROUP,203,43,156,10
+                    "Button",BS_AUTORADIOBUTTON | BS_TOP | WS_GROUP,212,43,149,10
     CONTROL         "Time estimate - Time spent",IDC_REMAININGTIMEISSPENT,
-                    "Button",BS_AUTORADIOBUTTON | BS_TOP,203,57,156,10
+                    "Button",BS_AUTORADIOBUTTON | BS_TOP,212,57,149,10
     CONTROL         "Time estimate x ( 1 - % Completion)",IDC_REMAININGTIMEISPERCENT,
-                    "Button",BS_AUTORADIOBUTTON | BS_TOP,203,71,156,10
+                    "Button",BS_AUTORADIOBUTTON | BS_TOP,212,71,149,10
 END
 
 IDD_ADDLOGGEDTIME_DIALOG DIALOG  0, 0, 217, 114
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Add Logged Task Time"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Shell Dlg 2"
 BEGIN
     EDITTEXT        IDC_LOGGEDTIME,51,45,57,14,ES_AUTOHSCROLL | ES_NUMBER
     DEFPUSHBUTTON   "OK",IDOK,102,93,50,14
@@ -2250,7 +2250,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "About...",                    ID_ABOUT
         MENUITEM SEPARATOR
-        MENUITEM "AbstractSpoon © 2003-09",   ID_TRAYICON, GRAYED
+        MENUITEM "AbstractSpoon © 2003-09",     ID_TRAYICON, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit ToDoList",              ID_TRAYICON_CLOSE
     END
