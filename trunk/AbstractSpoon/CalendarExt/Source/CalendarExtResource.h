@@ -36,8 +36,6 @@
 #define ID_VIEW_NUMWEEKS_8              32788
 #define ID_VIEW_NUMWEEKS_9              32789
 #define ID_GOTOTODAY                    32795
-#define ID_CHECKFORUPDATES              32796
-#define IDS_NOWUW                       58014
 
 // Next default values for new objects
 // 

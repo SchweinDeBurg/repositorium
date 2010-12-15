@@ -97,7 +97,11 @@ BOOL CFindReplaceDialogEx::OnKeyboard(UINT uVirtKey, UINT uFlags)
 
 CFindReplaceDialog* CRulerRichEdit::NewFindReplaceDlg()
 {
-	return &CFindReplaceDialogEx::Instance();/*new CFindReplaceDialogEx*/;
+	// because we reuse the same dialog we must clear the terminating flag
+	CFindReplaceDialog& dialog = CFindReplaceDialogEx::Instance();
+	dialog.m_fr.Flags &= ~FR_DIALOGTERM;
+
+	return &dialog;
 }
 
 /////////////////////////////////////////////////////////////////////////////

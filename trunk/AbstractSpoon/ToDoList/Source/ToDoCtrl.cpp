@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.3 sources
 //*****************************************************************************
 
 // ToDoCtrl.cpp : implementation file
@@ -5395,7 +5396,8 @@ BOOL CToDoCtrl::IsTaskLabelEditing() const
 void CToDoCtrl::OnTreeBeginlabeledit(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
 	// can't edit multiple items. return TRUE to stop
-	*pResult = (IsReadOnly() || GetSelectedCount() != 1);
+	// don't edit if the left mouse button is still down
+	*pResult = (IsReadOnly() || GetSelectedCount() != 1 || Misc::KeyIsPressed(VK_LBUTTON));
 
 	if (*pResult == 0) // good to edit
 	{
@@ -6976,14 +6978,15 @@ HTREEITEM CToDoCtrl::AddTaskToTreeItem(const CTaskFile& file, HTASKITEM hTask, H
 
 		// add this item to tree
 		BOOL bBold = (htiParent == TVI_ROOT);
-
-		hti = m_tree.InsertItem(LPSTR_TEXTCALLBACK,
-			htiParent,
+		hti = m_tree.InsertItem(TVIF_TEXT | TVIF_PARAM | TVIF_STATE | TVIF_IMAGE | TVIF_SELECTEDIMAGE,
+			LPSTR_TEXTCALLBACK,
+			I_IMAGECALLBACK, 
+			I_IMAGECALLBACK, 
+			(bBold ? TVIS_BOLD : 0),
+			TVIS_BOLD, // state mask
+			dwUniqueID, // lParam
+			htiParent, 
 			htiAfter);
-
-		m_tree.SetItemImage(hti, I_IMAGECALLBACK, I_IMAGECALLBACK);
-		m_tree.SetItemState(hti, (bBold ? TVIS_BOLD : 0), TVIS_BOLD);
-		m_tree.SetItemData(hti, dwUniqueID);
 
 		// add unique items to comboboxes
 		m_cbAllocTo.AddUniqueItems(pTDI->aAllocTo);

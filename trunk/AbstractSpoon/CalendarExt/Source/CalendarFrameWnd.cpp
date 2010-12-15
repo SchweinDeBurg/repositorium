@@ -2,7 +2,20 @@
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
 // - adjusted #include's paths
-// - slightly reformatted source code
+// - reformatted with using Artistic Style 2.01 and the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-switches
+//      --max-instatement-indent=2
+//      --brackets=break
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - merged with ToDoList version 6.1.3 sources
 //*****************************************************************************
 
 // CalendarFrameWnd.cpp : implementation file
@@ -114,7 +127,6 @@ BEGIN_MESSAGE_MAP(CCalendarFrameWnd, CFrameWnd)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_NUMWEEKS_9, OnUpdateViewNumWeeks9)
 	ON_COMMAND(ID_GOTOTODAY, OnGoToToday)
 	ON_UPDATE_COMMAND_UI(ID_GOTOTODAY, OnUpdateGoToToday)
-	ON_COMMAND(ID_CHECKFORUPDATES, OnCheckforUpdates)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -560,34 +572,6 @@ void CCalendarFrameWnd::OnUpdateGoToToday(CCmdUI* pCmdUI)
 	pCmdUI->Enable(TRUE);
 }
 
-void CCalendarFrameWnd::OnCheckforUpdates()
-{
-	CString sFolder, sDrive;
-	CString sWuwPath = FileMisc::GetModuleFileName();
-
-	FileMisc::SplitPath(sWuwPath, &sDrive, &sFolder);
-	FileMisc::MakePath(sWuwPath, sDrive, sFolder, _T("WebUpdateSvc.exe"));
-
-	// check for existence if manual
-	if (/*bManual && */!FileMisc::FileExists(sWuwPath))
-	{
-		const LPCTSTR DOWNLOAD_WUW_PATH = _T("http://www.abstractspoon.com/todolist_wuw.zip");
-
-		if (AfxMessageBox(IDS_NOWUW, MB_YESNOCANCEL) == IDYES)
-		{
-			ShellExecute(NULL, _T("open"), DOWNLOAD_WUW_PATH, NULL, NULL, SW_HIDE);
-		}
-		else
-		{
-			return;
-		}
-	}
-
-	const LPCTSTR UPDATE_SCRIPT_PATH_MANUAL = _T("http://abstractspoon.pbwiki.com/f/TDL_Calendar_update_manual.txt");
-
-	ShellExecute(NULL, _T("open"), sWuwPath, UPDATE_SCRIPT_PATH_MANUAL, NULL, SW_HIDE);
-}
-
 void CCalendarFrameWnd::ResizeControls(int _nxFrame, int _nyFrame)
 {
 	int nMiniCalWidth = 0;
@@ -719,21 +703,16 @@ BOOL CCalendarFrameWnd::IsDateHidden(const COleDateTime& _dt) const
 
 void CCalendarFrameWnd::UpdateTitleBarText()
 {
-	CString strPrefix;
+	CString strAppName;
+	strAppName.LoadString(IDR_CALENDAR);
+
+	CString strWindowText(strAppName);
+
 	if (!m_strTasklistName.IsEmpty())
 	{
-		strPrefix.Format(_T("%s - "), (LPCTSTR)m_strTasklistName);
+		strWindowText.Format(_T("%s - %s"), m_strTasklistName, strAppName);
 	}
 
-	CString strVersionString = CVersionInfo::GetVersion(CALENDAR_DLL_NAME);
-	CString strSuffix;
-	if (!strVersionString.IsEmpty())
-	{
-		strSuffix.Format(_T(" (v%s)"), (LPCTSTR)strVersionString);
-	}
-
-	CString strWindowText;
-	strWindowText.Format(_T("%sToDoList Calendar%s"), (LPCTSTR)strPrefix, (LPCTSTR)strSuffix);
 	SetWindowText(strWindowText);
 }
 
