@@ -348,37 +348,37 @@ BEGIN
     PUSHBUTTON      "I&mport...",IDC_IMPORT,312,235,50,14
 END
 
-IDD_PREFUI_PAGE DIALOG  0, 0, 367, 249
+IDD_PREFUI_PAGE DIALOGEX 0, 0, 367, 249
 STYLE DS_SETFONT | WS_POPUP
-FONT 8, "MS Shell Dlg 2"
+FONT 8, "MS Shell Dlg 2", 0, 0, 0x0
 BEGIN
     CONTROL         "&Only show editing controls for visible columns",IDC_SHOWCTRLSASCOLUMNS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,7,170,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,7,174,10
     CONTROL         "O&nly show menu commands for visible columns",IDC_SHOWEDITMENUASCOLUMNS,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | WS_TABSTOP,6,21,164,10
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | WS_TABSTOP,6,21,174,10
     CONTROL         "&Reposition editing controls during resizing",IDC_AUTOREPOSCTRLS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,35,170,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,35,174,10
     CONTROL         "Right &align attribute labels",IDC_RIGHTALIGNLABELS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,49,170,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,49,174,10
     CONTROL         "&Move the input focus to the tasklist when [Enter] is pressed",IDC_FOCUSTREEONENTER,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,6,63,170,18
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,6,63,174,18
     CONTROL         "&Show tasklist close button on the menubar",IDC_SHOWTASKLISTCLOSEBTN,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,84,170,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,84,174,10
     CONTROL         "&Use the following theme (XP and later only)",IDC_USEUITHEME,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,98,154,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,98,174,10
     EDITTEXT        IDC_UITHEMEFILE,16,110,157,14,ES_AUTOHSCROLL
     CONTROL         "&Enable window fading when showing dialog boxes",IDC_ENABLELIGHTBOXMGR,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,129,171,10
-    LTEXT           "Filtering",IDC_FILTERGROUP,6,146,172,8
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,129,174,10
+    LTEXT           "Filtering",IDC_FILTERGROUP,6,146,174,8
     CONTROL         "&Allow multi selection in the filter droplists",IDC_MULTISELFILTER,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,160,162,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,160,174,10
     CONTROL         "Rest&ore tasklist filters when restarting ToDoList",IDC_RESTORETASKLISTFILTERS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,174,162,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,174,174,10
     CONTROL         "A&utomatically refilter after editing",IDC_CHECK4,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,188,123,10
-    LTEXT           "Sorting",IDC_SORTGROUP,6,203,168,8
+    LTEXT           "Sorting",IDC_SORTGROUP,6,203,174,8
     CONTROL         "Al&ways sort completed tasks below other tasks",IDC_SORTDONETASKSATBOTTOM,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,217,170,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,217,174,10
     LTEXT           "Toolbar",IDC_TOOLBARGROUP,191,7,168,8
     LTEXT           "'New Task' &button places task:",IDC_STATIC,191,20,98,8
     COMBOBOX        IDC_NEWTASKPOSITION,193,31,141,121,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
@@ -398,64 +398,64 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,191,178,170,10
     CONTROL         "&Stack tab bar items",IDC_STACKTABBARITEMS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,191,192,170,10
     CONTROL         "Keep tabs or&dered by name",IDC_KEEPTABSORDERED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,191,206,170,10
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDVERT,183,7,1,243
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDVERT,184,7,1,243
 END
 
-IDD_PREFUITASKLIST_PAGE DIALOG  0, 0, 369, 253
+IDD_PREFUITASKLIST_PAGE DIALOGEX 0, 0, 369, 253
 STYLE DS_SETFONT | WS_POPUP
-FONT 8, "MS Shell Dlg 2"
+FONT 8, "MS Shell Dlg 2", 0, 0, 0x0
 BEGIN
     LTEXT           "Default &column visibility",IDC_COLUMNGROUP,7,7,167,8
     LISTBOX         IDC_COLUMNVISIBILITY,7,18,167,88,LBS_SORT | LBS_OWNERDRAWFIXED | LBS_HASSTRINGS | LBS_NOINTEGRALHEIGHT | LBS_MULTICOLUMN | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
-    LTEXT           "Dates/Times",IDC_DATETIMEGROUP,8,114,167,8
+    LTEXT           "Dates/Times",IDC_DATETIMEGROUP,8,114,170,8
     CONTROL         "Hid&e 'Start' and 'Due' dates for completed tasks",IDC_HIDESTARTDUEFORDONETASKS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,128,169,10
-    CONTROL         "Hi&de 'Due Time' field",IDC_HIDEDUETIME,"Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,142,169,10
-    CONTROL         "Hi&de 'Start Time' field",IDC_HIDESTARTTIME,"Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,156,169,10
-    CONTROL         "Hi&de 'Completed Time' field",IDC_HIDEDONETIME,"Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,170,169,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,128,170,10
+    CONTROL         "Hi&de 'Due Time' field",IDC_HIDEDUETIME,"Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,142,170,10
+    CONTROL         "Hi&de 'Start Time' field",IDC_HIDESTARTTIME,"Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,156,170,10
+    CONTROL         "Hi&de 'Completed Time' field",IDC_HIDEDONETIME,"Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,170,170,10
     CONTROL         "Hi&de zero 'Times' and 'Costs'",IDC_HIDEUNDEFINEDTIMEST,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,184,169,10
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,8,184,170,10
     CONTROL         "Display dates in I&SO format",IDC_USEISODATEFORMAT,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,198,173,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,198,170,10
     CONTROL         "&Include the weekday when displaying dates",IDC_SHOWWEEKDAYINDATES,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,212,169,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,212,170,10
     CONTROL         "&Round 'Time Estimate/Spent' to whole numbers",IDC_ROUNDTIMEFRACTIONS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,226,169,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,226,170,10
     CONTROL         "&Display 'Estimated/Spent' times in HMS format",IDC_USEHMSTIMEFORMAT,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,240,169,10
-    CONTROL         "&Show task infotips",IDC_SHOWINFOTIPS,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,192,10,167,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,240,170,10
+    CONTROL         "&Show task infotips",IDC_SHOWINFOTIPS,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,190,10,174,10
     CONTROL         "Limit length of comments shown to:",IDC_LIMITINFOTIPCOMMENTS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,205,24,126,10
-    EDITTEXT        IDC_INFOTIPCOMMENTSMAX,331,22,31,12,ES_AUTOHSCROLL | ES_NUMBER
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,203,24,129,10
+    EDITTEXT        IDC_INFOTIPCOMMENTSMAX,334,22,31,12,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "D&isplay comments after a task's title",IDC_SHOWCOMMENTS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,38,169,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,38,174,10
     CONTROL         "Display only the first line of comments",IDC_DISPLAYFIRSTCOMMENTLINE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,205,53,133,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,203,53,161,10
     CONTROL         "&Strike-through completed tasks",IDC_STRIKETHROUGHDONE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,66,168,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,66,174,10
     CONTROL         "&Display completion checkbox next to task's title",IDC_TREECHECKBOXES,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,80,171,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,80,174,10
     CONTROL         "&Display task icon next to task's title",IDC_TREETASKICONS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,94,171,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,94,174,10
     CONTROL         "Display subtask completion in front of task's title",IDC_SHOWSUBTASKCOMPLETION,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,108,168,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,108,174,10
     CONTROL         "Show parent tasks with a folder icon",IDC_SHOWPARENTSASFOLDERS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,122,169,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,122,174,10
     CONTROL         "&Hide '% Complete' for completed tasks",IDC_HIDEPERCENTFORDONETASKS,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,192,136,168,10
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,190,136,174,10
     CONTROL         "&Show '% Complete' as a progress bar",IDC_SHOWPERCENTPROGRESSBAR,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,150,169,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,150,174,10
     CONTROL         "Show columns on the right of the task tree",IDC_RIGHTSIDECOLUMNS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,164,152,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,164,174,10
     CONTROL         "Show non-file links as text",IDC_SHOWNONFILEREFSASTEXT,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,178,169,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,178,174,10
     CONTROL         "Set focus to tasklist whenever ToDoList is activated",IDC_AUTOFOCUSTASKLIST,
-                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,192,192,170,20
-    CONTROL         "&Enable full row selection",IDC_FULLROWSELECTION,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,212,169,10
+                    "Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,190,192,174,18
+    CONTROL         "&Enable full row selection",IDC_FULLROWSELECTION,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,191,212,173,10
     CONTROL         "&Display the selected task's path in the header bar",IDC_DISPLAYPATHINHEADER,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,226,171,10
-    CONTROL         "Limit width of columns to:",IDC_LIMITCOLWIDTHS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,192,240,97,10
-    EDITTEXT        IDC_COLWIDTHS,289,240,31,12,ES_AUTOHSCROLL
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,226,174,10
+    CONTROL         "Limit width of columns to:",IDC_LIMITCOLWIDTHS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,240,97,10
+    EDITTEXT        IDC_COLWIDTHS,289,238,31,12,ES_AUTOHSCROLL
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDVERT,183,7,1,245
 END
 
