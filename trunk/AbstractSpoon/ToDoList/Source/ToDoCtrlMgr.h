@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.4 sources
 //*****************************************************************************
 
 // ToDoCtrlMgr.h : header file
@@ -152,8 +153,8 @@ public:
 	CString GetTabItemText(int nIndex) const;
 	CString GetTabItemTooltip(int nIndex) const;
 
-	int ArchiveDoneTasks(int nIndex);
-	int ArchiveSelectedTasks(int nIndex);
+	BOOL ArchiveDoneTasks(int nIndex);
+	BOOL ArchiveSelectedTasks(int nIndex);
 	CString GetArchivePath(LPCTSTR szFilePath) const;
 	CString GetArchivePath(int nIndex) const;
 

@@ -19,7 +19,7 @@ static char THIS_FILE[] = __FILE__;
 #pragma warning(disable: 4189)
 
 const LPCTSTR MULTIBYTETAG = _T("\\'");
-const CString DELIM = _T(" {}\\\r");
+const CString DELIM = _T("\x20{}\\\r");
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

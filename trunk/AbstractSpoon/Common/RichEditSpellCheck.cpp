@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.4 sources
 //*****************************************************************************
 
 // RichEditSpellCheck.cpp: implementation of the CRichEditSpellCheck class.
@@ -58,6 +59,8 @@ static char THIS_FILE[] = __FILE__;
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
+
+const CStringA DELIMS("\x20\t\r\n.,:;-/?<>|~!@#$%^&*()+=");
 
 CRichEditSpellCheck::CRichEditSpellCheck(CRichEditBaseCtrl& re) : m_re(re)
 {
@@ -79,13 +82,21 @@ const char* CRichEditSpellCheck::GetNextWord() const
 {
 	CHARRANGE cr;
 
-	cr.cpMin = m_re.SendMessage(EM_FINDWORDBREAK, WB_RIGHT, m_crCurrentWord.cpMax + 1);
+	cr.cpMin = m_re.SendMessage(EM_FINDWORDBREAK, WB_RIGHT, m_crCurrentWord.cpMax);
 	cr.cpMax = m_re.SendMessage(EM_FINDWORDBREAK, WB_RIGHTBREAK, cr.cpMin + 1);
 
 	const char* szWord = GetWord(cr);
 
 	if (szWord && *szWord)
 	{
+		// if there's any trailing whitespace then trim it off
+		int nLen = strlen(szWord);
+
+		while (nLen-- && DELIMS.Find(szWord[nLen]) != -1)
+		{
+			const_cast<char*>(szWord)[nLen] = 0;
+			cr.cpMax--;
+		}
 		m_crCurrentWord = cr;
 	}
 
@@ -168,6 +179,6 @@ void CRichEditSpellCheck::ReplaceCurrentWord(const char* szWord)
 
 void CRichEditSpellCheck::ClearSelection()
 {
-	m_crCurrentWord.cpMin = m_crCurrentWord.cpMax = 0;
+	m_crCurrentWord.cpMin = m_crCurrentWord.cpMax;
 	m_re.SetSel(m_crCurrentWord);
 }

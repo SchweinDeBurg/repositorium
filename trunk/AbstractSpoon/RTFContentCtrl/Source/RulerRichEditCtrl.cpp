@@ -159,6 +159,7 @@ BEGIN_MESSAGE_MAP(CRulerRichEditCtrl, CWnd)
 	ON_REGISTERED_MESSAGE(urm_SETCURRENTFONTSIZE, OnSetCurrentFontSize)
 	ON_REGISTERED_MESSAGE(urm_SETCURRENTFONTCOLOR, OnSetCurrentFontColor)
 	//}}AFX_MSG_MAP
+	ON_NOTIFY(NM_KILLFOCUS, TOOLBAR_CONTROL, OnKillFocusToolbar)
 	ON_COMMAND(BUTTON_NUMBER, OnButtonNumberList)
 	ON_COMMAND(BUTTON_WORDWRAP, OnButtonWordwrap)
 	ON_COMMAND(BUTTON_TEXTCOLOR, OnButtonTextColor)
@@ -1660,10 +1661,8 @@ LRESULT CRulerRichEditCtrl::OnSetCurrentFontName(WPARAM font, LPARAM)
 
    ============================================================*/
 {
-	CString fnt((LPCTSTR) font);
-	SetCurrentFontName(fnt);
+	SetCurrentFontName((LPCTSTR)font);
 
-	m_rtf.SetFocus();
 	return 0;
 }
 
@@ -1685,9 +1684,14 @@ LRESULT CRulerRichEditCtrl::OnSetCurrentFontSize(WPARAM, LPARAM size)
    ============================================================*/
 {
 	SetCurrentFontSize(size);
-
-	m_rtf.SetFocus();
 	return 0;
+}
+
+void CRulerRichEditCtrl::OnKillFocusToolbar(NMHDR* /*pNMHDR*/, LRESULT* pResult)
+{
+	// pretend the richedit lost focus to force an update
+	SendMessage(WM_COMMAND, MAKEWPARAM(RTF_CONTROL, EN_KILLFOCUS), (LPARAM)m_rtf.GetSafeHwnd());
+	*pResult = 0;
 }
 
 LRESULT CRulerRichEditCtrl::OnSetCurrentFontColor(WPARAM bForeground, LPARAM color)

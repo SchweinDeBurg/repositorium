@@ -83,6 +83,7 @@ protected:
 	//{{AFX_MSG(CRRECEnToolBar)
 	afx_msg void OnSelchangeFont();
 	afx_msg void OnSelchangeSize();
+	afx_msg void OnKillFocusCombo();
 	afx_msg LRESULT OnColorButton(WPARAM color, LPARAM nCtrlID);
 	afx_msg void OnEnable(BOOL bEnable);
 	afx_msg void OnSize(UINT nType, int cx, int cy);

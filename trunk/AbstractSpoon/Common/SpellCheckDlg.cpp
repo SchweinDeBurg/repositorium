@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.4 sources
 //*****************************************************************************
 
 // SpellCheckDlg.cpp : implementation file
@@ -329,6 +330,9 @@ BOOL CSpellCheckDlg::FindNextWord(CString& sWord, CHECKFROM nFrom)
 		sWord = m_pSpellCheck->GetNextWord();
 		break;
 	}
+
+	sWord.TrimLeft();
+	sWord.TrimRight();
 
 	return (!sWord.IsEmpty());
 }

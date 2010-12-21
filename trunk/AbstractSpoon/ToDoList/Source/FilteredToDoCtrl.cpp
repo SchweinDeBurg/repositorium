@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.4 sources
 //*****************************************************************************
 
 // FilteredToDoCtrl.cpp: implementation of the CFilteredToDoCtrl class.
@@ -520,6 +521,8 @@ BOOL CFilteredToDoCtrl::ArchiveDoneTasks(LPCTSTR szFilePath, TDC_ARCHIVE nFlags,
 		{
 			RefreshTreeFilter();
 		}
+
+		return TRUE;
 	}
 
 	// else
@@ -541,6 +544,8 @@ BOOL CFilteredToDoCtrl::ArchiveSelectedTasks(LPCTSTR szFilePath, BOOL bRemove)
 		{
 			RefreshTreeFilter();
 		}
+
+		return TRUE;
 	}
 
 	// else
@@ -2535,7 +2540,7 @@ TODOITEM* CFilteredToDoCtrl::NewTask(HTREEITEM htiParent)
 
 	// fiddle with the default attributes so that the task
 	// will not be filtered out by the current filter
-	if (InListView() && HasFilter())
+	if (HasFilter())
 	{
 		if (m_filter.nRisk != FT_ANYRISK)
 		{
@@ -2550,6 +2555,16 @@ TODOITEM* CFilteredToDoCtrl::NewTask(HTREEITEM htiParent)
 		if (m_filter.aAllocBy.GetSize() && pTDI->sAllocBy.IsEmpty())
 		{
 			pTDI->sAllocBy = m_filter.aAllocBy[0];
+		}
+
+		if (m_filter.aVersions.GetSize() && pTDI->sVersion.IsEmpty())
+		{
+			pTDI->sVersion = m_filter.aVersions[0];
+		}
+
+		if (m_filter.aStatus.GetSize() && pTDI->sStatus.IsEmpty())
+		{
+			pTDI->sStatus = m_filter.aStatus[0];
 		}
 
 		if (!m_filter.MatchAllocTo(pTDI->aAllocTo))
@@ -2568,11 +2583,6 @@ TODOITEM* CFilteredToDoCtrl::NewTask(HTREEITEM htiParent)
 			{
 				pTDI->aAllocTo.Copy(m_filter.aAllocTo);
 			}
-		}
-
-		if (m_filter.aStatus.GetSize() && pTDI->sStatus.IsEmpty())
-		{
-			pTDI->sStatus = m_filter.aStatus[0];
 		}
 
 		if (!m_filter.MatchCategories(pTDI->aCategories))

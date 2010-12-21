@@ -180,6 +180,7 @@ protected:
 	afx_msg LRESULT OnGetTextLength(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnEnable(BOOL bEnable);
 	//}}AFX_MSG
+	afx_msg void OnKillFocusToolbar(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnButtonNumberList();
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg LRESULT OnSetFont(WPARAM wp, LPARAM lp);
