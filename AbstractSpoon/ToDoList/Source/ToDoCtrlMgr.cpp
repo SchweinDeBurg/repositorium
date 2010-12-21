@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.4 sources
 //*****************************************************************************
 
 // ToDoCtrlMgr.cpp : implementation file
@@ -682,7 +683,7 @@ CString CToDoCtrlMgr::GetArchivePath(int nIndex) const
 	return GetArchivePath(tdc.GetFilePath());
 }
 
-int CToDoCtrlMgr::ArchiveDoneTasks(int nIndex)
+BOOL CToDoCtrlMgr::ArchiveDoneTasks(int nIndex)
 {
 	ASSERTVALIDINDEX(nIndex);
 
@@ -705,7 +706,7 @@ int CToDoCtrlMgr::ArchiveDoneTasks(int nIndex)
 	return tdc.ArchiveDoneTasks(GetArchivePath(tdc.GetFilePath()), nRemove, !Prefs().GetDontRemoveFlagged());
 }
 
-int CToDoCtrlMgr::ArchiveSelectedTasks(int nIndex)
+BOOL CToDoCtrlMgr::ArchiveSelectedTasks(int nIndex)
 {
 	ASSERTVALIDINDEX(nIndex);
 

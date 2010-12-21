@@ -41,6 +41,7 @@
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
 // - merged with ToDoList version 6.1.3 sources
+// - merged with ToDoList version 6.1.4 sources
 //*****************************************************************************
 
 // ToDoListWnd.cpp : implementation file
@@ -136,7 +137,7 @@ enum
 	WM_POSTONCREATE = (WM_APP + 1),
 	WM_WEBUPDATEWIZARD,
 	WM_ADDTOOLBARTOOLS,
-	WM_APPRESTOREFOCUS,
+	WM_APPRESTOREFOCUS
 };
 
 enum
@@ -146,7 +147,7 @@ enum
 	TIMER_AUTOSAVE,
 	TIMER_CHECKOUTSTATUS,
 	TIMER_DUEITEMS,
-	TIMER_TIMETRACKING,
+	TIMER_TIMETRACKING
 };
 
 enum
@@ -155,7 +156,7 @@ enum
 	INTERVAL_TIMESTAMPCHANGE = 10000,
 	INTERVAL_CHECKOUTSTATUS = 5000,
 	INTERVAL_DUEITEMS = 60000,
-	INTERVAL_TIMETRACKING = 5000,
+	INTERVAL_TIMETRACKING = 5000
 };
 
 struct SHORTCUT
@@ -171,7 +172,7 @@ static SHORTCUT MISC_SHORTCUTS[] =
 	{ MAKELONG(VK_UP, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION },
 	{ MAKELONG(VK_DOWN, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION },
 	{ MAKELONG(VK_PRIOR, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION },
-	{ MAKELONG(VK_NEXT, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION },
+	{ MAKELONG(VK_NEXT, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION }
 };
 
 static int NUM_MISCSHORTCUTS = sizeof(MISC_SHORTCUTS) / sizeof(SHORTCUT);
@@ -4031,7 +4032,7 @@ BOOL CToDoListWnd::DoDueTaskNotification(const CFilteredToDoCtrl* pCtrl, int nDu
 
 void CToDoListWnd::OnAbout()
 {
-	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.1.3</b> (mod by Elijah Zarezky)"),
+	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.1.4</b> (mod by Elijah Zarezky)"),
 		CEnString(IDS_ABOUTHEADING), CEnString(IDS_ABOUTCOPYRIGHT), CEnString(IDS_LICENSE), 1, 2, 8);
 
 	dialog.DoModal();
@@ -4225,6 +4226,37 @@ void CToDoListWnd::DoPreferences(int nInitPage)
 					}
 				}
 			}
+		}
+
+		// same again for task icons
+		if (userPrefs.GetTreeTaskIcons() && !curPrefs.GetTreeTaskIcons())
+		{
+			int nCtrl = GetTDCCount();
+
+			while (nCtrl--)
+			{
+				if (m_mgrToDoCtrls.HasOwnColumns(nCtrl))
+				{
+					CFilteredToDoCtrl& tdc = GetToDoCtrl(nCtrl);
+
+					if (tdc.IsColumnShowing(TDCC_ICON))
+					{
+						CTDCColumnArray aColumns;
+						int nCol = tdc.GetVisibleColumns(aColumns);
+
+						while (nCol--)
+						{
+							if (aColumns[nCol] == TDCC_ICON)
+							{
+								aColumns.RemoveAt(nCol);
+								break;
+							}
+						}
+
+						tdc.SetVisibleColumns(aColumns);
+					}
+				}
+			}	
 		}
 
 		// menu icons
@@ -6120,9 +6152,19 @@ void CToDoListWnd::RefreshFilterLabelAlignment()
 void CToDoListWnd::OnArchiveCompletedtasks()
 {
 	CWaitCursor cursor;
+	int nSelTDC = GetSelToDoCtrl();
 
-	if (m_mgrToDoCtrls.ArchiveDoneTasks(GetSelToDoCtrl()) > 0)
+	if (m_mgrToDoCtrls.ArchiveDoneTasks(nSelTDC))
 	{
+		// auto-reload archive if it's loaded
+		CString sArchivePath = m_mgrToDoCtrls.GetArchivePath(nSelTDC);
+		int nArchiveTDC = m_mgrToDoCtrls.FindToDoCtrl(sArchivePath);
+
+		if (nArchiveTDC != -1 && m_mgrToDoCtrls.IsLoaded(nArchiveTDC))
+		{
+			ReloadTaskList(nArchiveTDC, FALSE);
+		}
+
 		UpdateCaption();
 	}
 }
@@ -6137,9 +6179,19 @@ void CToDoListWnd::OnUpdateArchiveCompletedtasks(CCmdUI* pCmdUI)
 void CToDoListWnd::OnArchiveSelectedTasks()
 {
 	CWaitCursor cursor;
+	int nSelTDC = GetSelToDoCtrl();
 
-	if (m_mgrToDoCtrls.ArchiveSelectedTasks(GetSelToDoCtrl()) > 0)
+	if (m_mgrToDoCtrls.ArchiveSelectedTasks(nSelTDC))
 	{
+		// auto-reload archive if it's loaded
+		CString sArchivePath = m_mgrToDoCtrls.GetArchivePath(nSelTDC);
+		int nArchiveTDC = m_mgrToDoCtrls.FindToDoCtrl(sArchivePath);
+
+		if (nArchiveTDC != -1 && m_mgrToDoCtrls.IsLoaded(nArchiveTDC))
+		{
+			ReloadTaskList(nArchiveTDC, FALSE);
+		}
+
 		UpdateCaption();
 	}
 }

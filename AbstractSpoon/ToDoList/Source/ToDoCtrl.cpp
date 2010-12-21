@@ -41,6 +41,7 @@
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
 // - merged with ToDoList version 6.1.3 sources
+// - merged with ToDoList version 6.1.4 sources
 //*****************************************************************************
 
 // ToDoCtrl.cpp : implementation file
@@ -1237,19 +1238,10 @@ void CToDoCtrl::EnableDisableControls(HTREEITEM hti)
 	BOOL bMaximize = (m_nMaxState != TDCMS_NORMAL);
 	BOOL bEnable = (hti && !bMaximize);
 	BOOL bIsParent = Selection().ItemsAreAllParents();
-	BOOL bAveSubTaskCompletion = HasStyle(TDCS_AVERAGEPERCENTSUBCOMPLETION) && bIsParent;
-
-	BOOL bShowCtrlsAsCols = HasStyle(TDCS_SHOWCTRLSASCOLUMNS);
 	BOOL bReadOnly = IsReadOnly();
-
 	BOOL bEditTime = !bIsParent || HasStyle(TDCS_ALLOWPARENTTIMETRACKING);
-	BOOL bEditPercent = !HasStyle(TDCS_AUTOCALCPERCENTDONE) &&
-		(GetSelectedCount() > 1 || !bAveSubTaskCompletion);
-	BOOL bHideColor = HasStyle(TDCS_COLORTEXTBYCATEGORY) || HasStyle(TDCS_COLORTEXTBYPRIORITY) ||
-		HasStyle(TDCS_COLORTEXTBYNONE);
-	BOOL bHasDueDate = FALSE, bHasStartDate = FALSE;
 
-	BOOL bEditComments = FALSE;
+	DWORD dwTaskID = GetTaskID(hti);
 
 	// now enable/disable appropriate controls
 	for (int nCtrl = 0; nCtrl < NUM_CTRLITEMS; nCtrl++)
@@ -1274,12 +1266,17 @@ void CToDoCtrl::EnableDisableControls(HTREEITEM hti)
 		switch (CTRLITEMS[nCtrl].nCtrlID)
 		{
 		case IDC_PERCENT:
-			if (!bEditPercent && bEnable)
 			{
-				nState = RTCS_READONLY;
-			}
+				BOOL bAveSubTaskCompletion = HasStyle(TDCS_AVERAGEPERCENTSUBCOMPLETION) && bIsParent;
+				BOOL bEditPercent = !HasStyle(TDCS_AUTOCALCPERCENTDONE) && (GetSelectedCount() > 1 || !bAveSubTaskCompletion);
 
-			SetControlState(m_spinPercent, nState);
+				if (!bEditPercent && bEnable)
+				{
+					nState = RTCS_READONLY;
+				}
+
+				SetControlState(m_spinPercent, nState);
+			}
 			break;
 
 		case IDC_TIMEEST:
@@ -1291,7 +1288,6 @@ void CToDoCtrl::EnableDisableControls(HTREEITEM hti)
 
 		case IDC_TIMESPENT:
 			{
-				DWORD dwTaskID = GetTaskID(hti);
 				BOOL bIsClocking = m_data.IsTaskTimeTrackable(dwTaskID) && (dwTaskID == m_dwTimeTrackTaskID);
 
 				if ((!bEditTime || bIsClocking) && bEnable)
@@ -1302,14 +1298,14 @@ void CToDoCtrl::EnableDisableControls(HTREEITEM hti)
 			break;
 
 		case IDC_DUETIME:
-			if (nState == RTCS_ENABLED && !bHasDueDate)
+			if (nState == RTCS_ENABLED && !SelectedTaskHasDate(TDCD_DUE))
 			{
 				nState = RTCS_READONLY;
 			}
 			break;
 
 		case IDC_STARTTIME:
-			if (nState == RTCS_ENABLED && !bHasStartDate)
+			if (nState == RTCS_ENABLED && !SelectedTaskHasDate(TDCD_START))
 			{
 				nState = RTCS_READONLY;
 			}
@@ -1323,7 +1319,7 @@ void CToDoCtrl::EnableDisableControls(HTREEITEM hti)
 	// comments
 	CString sCommentsType;
 	GetSelectedTaskCustomComments(sCommentsType);
-	bEditComments = (m_mgrContent.FindContent(sCommentsType) != -1);
+	BOOL bEditComments = (m_mgrContent.FindContent(sCommentsType) != -1);
 
 	BOOL bCommentsVis = (m_nMaxState != TDCMS_MAXTASKLIST || HasStyle(TDCS_SHOWCOMMENTSALWAYS));
 	RT_CTRLSTATE nState = (!bCommentsVis || !hti) ? RTCS_DISABLED :
@@ -7432,21 +7428,6 @@ void CToDoCtrl::OnTreeClick(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 
 void CToDoCtrl::OnTreeDblClk(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-	CPoint point(::GetMessagePos());
-	m_tree.ScreenToClient(&point);
-
-	UINT nHitFlags = 0;
-	HTREEITEM htiHit = m_tree.HitTest(point, &nHitFlags);
-
-	if (!IsReadOnly() && htiHit && (nHitFlags & TVHT_ONITEMLABEL) && !m_tree.ItemHasChildren(htiHit))
-	{
-		// we have to post this for reasons i haven't been able to figure.
-		// if we send it, the edit finishes immediately
-		// (later) i now think that this may be related to the lbuttonup which follows this
-		//m_tree.PostMessage(TVM_EDITLABEL, 0, (LPARAM)htiHit);
-		EditSelectedTask(FALSE);
-	}
-
 	*pResult = 0;
 }
 
@@ -10484,12 +10465,25 @@ LRESULT CToDoCtrl::OnGutterNotifyItemClick(WPARAM /*wParam*/, LPARAM lParam)
 			}
 			break;
 
+		case WM_LBUTTONDBLCLK:
+			if (htiHit && pNGIC->nColID == TDCC_CLIENT)
+			{
+				// if full row selection is turned on user can double click anywhere
+				// in 'client' column else must be on the item label
+				if (!IsReadOnly() && htiHit && !m_tree.ItemHasChildren(htiHit) &&
+					((nHitFlags & TVHT_ONITEMLABEL) || HasStyle(TDCS_FULLROWSELECTION)))
+				{
+					EditSelectedTask(FALSE);
+				}
+			}
+			break;
+
 		case WM_NCLBUTTONDBLCLK:
-			// open file links
 			if (htiHit)
 			{
 				switch (pNGIC->nColID)
 				{
+					// open file links
 				case TDCC_FILEREF:
 					{
 						CString sFile = m_data.GetTaskFileRef(GetTaskID(htiHit));
@@ -10697,21 +10691,21 @@ void CToDoCtrl::ProcessItemLButtonUp(HTREEITEM htiHit, int nHitFlags, TDC_COLUMN
 			SetSelectedTaskDone(!m_data.IsTaskDone(dwHitID));
 			return;
 		}
-		else if (nColID == TDCC_TRACKTIME)
+		else
 		{
-			if (GetSelectedCount() == 1 && IsItemSelected(htiHit) &&
-				m_data.IsTaskTimeTrackable(dwHitID))
+			switch (nColID)
 			{
-				TimeTrackTask(htiHit);
-			}
+			case TDCC_TRACKTIME:
+				if (GetSelectedCount() == 1 && IsItemSelected(htiHit) && m_data.IsTaskTimeTrackable(dwHitID))
+				{
+					TimeTrackTask(htiHit);
+				}
+				return;
 
-			return;
-		}
-		else if (nColID == TDCC_FLAG)
-		{
-			BOOL bFlagged = m_data.IsTaskFlagged(dwHitID);
-			SetSelectedTaskFlag(!bFlagged);
-			return;
+			case TDCC_FLAG:
+				SetSelectedTaskFlag(!m_data.IsTaskFlagged(dwHitID));
+				return;
+			}
 		}
 	}
 
@@ -12985,7 +12979,7 @@ void CToDoCtrl::SpellcheckSelectedTask(BOOL bTitle)
 
 	// one off spell check
 	CSpellCheckDlg dialog;
-	dialog.SetDictionaryDownloadUrl(_T("http://www.abstractspoon.com/dictionaries.html"));
+	dialog.SetDictionaryDownloadUrl(_T("http://abstractspoon.pbworks.com/w/page/1262231/Spellcheck-Dictionaries"));
 
 	SpellcheckItem(GetSelectedItem(), &dialog, bTitle, TRUE);
 }
@@ -13018,7 +13012,7 @@ void CToDoCtrl::Spellcheck()
 
 	// top level items
 	CSpellCheckDlg dialog;
-	dialog.SetDictionaryDownloadUrl(_T("http://www.abstractspoon.com/dictionaries.html"));
+	dialog.SetDictionaryDownloadUrl(_T("http://abstractspoon.pbworks.com/w/page/1262231/Spellcheck-Dictionaries"));
 
 	HTREEITEM hti = m_tree.GetChildItem(NULL);
 

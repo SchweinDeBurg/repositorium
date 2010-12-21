@@ -62,6 +62,8 @@ BEGIN_MESSAGE_MAP(CRRECToolBar, CEnToolBar)
 	//{{AFX_MSG_MAP(CRRECToolBar)
 	ON_CBN_SELCHANGE(DROPDOWN_FONT, OnSelchangeFont)
 	ON_CBN_SELCHANGE(DROPDOWN_SIZE, OnSelchangeSize)
+	ON_CBN_KILLFOCUS(DROPDOWN_FONT, OnKillFocusCombo)
+	ON_CBN_KILLFOCUS(DROPDOWN_SIZE, OnKillFocusCombo)
 	ON_MESSAGE(CPN_SELENDOK, OnColorButton)
 	ON_WM_ENABLE()
 	ON_WM_SIZE()
@@ -198,6 +200,14 @@ void CRRECToolBar::OnSelchangeSize()
 
 		GetParent()->SendMessage(urm_SETCURRENTFONTSIZE, 0, (LPARAM) size);
 	}
+}
+
+void CRRECToolBar::OnKillFocusCombo()
+{
+	// send a kill foxus message to our parent
+	NMHDR nmhdr = { *this, GetDlgCtrlID(), NM_KILLFOCUS };
+
+	GetParent()->SendMessage(WM_NOTIFY, GetDlgCtrlID(), (LPARAM)&nmhdr);
 }
 
 LRESULT CRRECToolBar::OnColorButton(WPARAM color, LPARAM nCtrlID)
