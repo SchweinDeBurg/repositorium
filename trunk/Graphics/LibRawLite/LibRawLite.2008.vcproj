@@ -424,6 +424,14 @@
 			RelativePath=".\license.LGPL.txt"
 			>
 		</File>
+		<File
+			RelativePath=".\readme.demosaic-packs.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\readme.libraw.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
