@@ -3,13 +3,13 @@
 
 [Setup]
 AppName=ToDoList
-AppVerName=ToDoList 6.0.8
+AppVerName=ToDoList 6.1.4
 AppID={{E0FD8591-CBB1-475F-A4EA-EF4E3A58F78F}
 AppPublisher=AbstractSpoon Software
 AppPublisherURL=http://www.abstractspoon.com/
 AppSupportURL=http://www.abstractspoon.com/tdl_resources.html
 AppUpdatesURL=http://www.abstractspoon.com/tdl_resources.html
-AppVersion=6.0.8
+AppVersion=6.1.4
 AppCopyright=Copyright © 2003–2010 by AbstractSpoon Software
 DefaultDirName={pf}\AbstractSpoon\ToDoList
 DefaultGroupName=AbstractSpoon\ToDoList
@@ -17,10 +17,10 @@ AllowNoIcons=true
 Compression=lzma
 SolidCompression=true
 OutputDir=.\SETUP
-OutputBaseFilename=ToDoList-6.0.8-setup
-VersionInfoVersion=6.0.8.504
+OutputBaseFilename=ToDoList-6.1.4-setup
+VersionInfoVersion=6.1.4.701
 VersionInfoProductName=ToDoList
-VersionInfoProductVersion=6.0.8
+VersionInfoProductVersion=6.1.4
 MinVersion=0,5.0.2195
 WizardImageFile=compiler:WizModernImage-IS.bmp
 WizardSmallImageFile=compiler:WizModernSmallImage-IS.bmp
