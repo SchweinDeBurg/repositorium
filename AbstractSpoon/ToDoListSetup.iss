@@ -1,5 +1,5 @@
 ;; Inno Setup script for the ToDoList and its plug-ins.
-;; Written by AbstractSpoon aka SchweinDeBurg (elijah.zarezky@gmail.com).
+;; Written by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com).
 
 [Setup]
 AppName=ToDoList
@@ -10,7 +10,7 @@ AppPublisherURL=http://www.abstractspoon.com/
 AppSupportURL=http://www.abstractspoon.com/tdl_resources.html
 AppUpdatesURL=http://www.abstractspoon.com/tdl_resources.html
 AppVersion=6.0.8
-AppCopyright=Copyright © 2003–2009 by AbstractSpoon Software
+AppCopyright=Copyright © 2003–2010 by AbstractSpoon Software
 DefaultDirName={pf}\AbstractSpoon\ToDoList
 DefaultGroupName=AbstractSpoon\ToDoList
 AllowNoIcons=true
