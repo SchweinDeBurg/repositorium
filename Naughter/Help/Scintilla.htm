@@ -3,14 +3,14 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>CScintillaCtrl, CScintillaView &amp; CScintillaDoc v1.24</title>
+<title>CScintillaCtrl, CScintillaView &amp; CScintillaDoc v1.26</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
 </head>
 
 <body>
 
 <h2><strong>CScintillaCtrl, CScintillaView &amp; 
-CScintillaDoc v1.24</strong></h2>
+CScintillaDoc v1.26</strong></h2>
 
 <h2><i>Freeware MFC wrapper classes for the Scintilla edit 
 control</i></h2>
@@ -57,7 +57,7 @@ it easier to include the control in MFC projects on Windows.</p>
 
 <ul>
   <li>Implements all the 
-  functionality provided by Scintilla v1.77.</li>
+  functionality provided by Scintilla v2.22.</li>
   <li>The CScintillaCtrl wrapper class observes the same 
   semantics as the built in MFC &quot;CEdit&quot; wrapper class.</li>
   <li>Uses the direct access functions provided by scintilla 
@@ -488,6 +488,79 @@ it easier to include the control in MFC projects on Windows.</p>
 <ul>
 	<li>Updated the project file to remove VC 6 upgrade settings.</li>
 </ul>
+
+<p><strong>30 April 2009</strong></p>
+
+<ul>
+	<li>Updated the project file to remove the now defunct manifest file. Thanks 
+	to &quot;marshal&quot; for reporting this issue.</li>
+</ul>
+
+<p><strong>V1.25 (3 October 2009)</strong></p>
+
+<ul>
+	<li>
+	Fixed a bug in CScintillaCtrl::Create where a crash can occur in a 
+	Unicode build if the CreateEx call fails (for example, if the Scintilla DLL 
+	was not loaded). Thanks to Simon Smith for reporting this bug</li>
+	<li>
+	<p>Updated class to work with Scintilla v2.01. New messages wrapped 
+	include: SCI_SETWRAPINDENTMODE, SCI_GETWRAPINDENTMODE, SCI_INDICSETALPHA, 
+	SCI_INDICGETALPHA, SCI_SETEXTRAASCENT, SCI_GETEXTRAASCENT, 
+	SCI_SETEXTRADESCENT, SCI_GETEXTRADESCENT, SCI_MARKERSYMBOLDEFINED, 
+	SCI_MARGINSETTEXT, SCI_MARGINGETTEXT, SCI_MARGINSETSTYLE, 
+	SCI_MARGINGETSTYLE, SCI_MARGINSETSTYLES, SCI_MARGINGETSTYLES, 
+	SCI_MARGINTEXTCLEARALL, SCI_MARGINSETSTYLEOFFSET, SCI_MARGINGETSTYLEOFFSET, 
+	SCI_ANNOTATIONSETTEXT, SCI_ANNOTATIONGETTEXT, SCI_ANNOTATIONSETSTYLE, 
+	SCI_ANNOTATIONGETSTYLE, SCI_ANNOTATIONSETSTYLES, SCI_ANNOTATIONGETSTYLES, 
+	SCI_ANNOTATIONGETLINES, SCI_ANNOTATIONCLEARALL, SCI_ANNOTATIONSETVISIBLE, 
+	SCI_ANNOTATIONGETVISIBLE, SCI_ANNOTATIONSETSTYLEOFFSET, 
+	SCI_ANNOTATIONGETSTYLEOFFSET, SCI_ADDUNDOACTION, SCI_CHARPOSITIONFROMPOINT, 
+	SCI_CHARPOSITIONFROMPOINTCLOSE, SCI_SETMULTIPLESELECTION, 
+	SCI_GETMULTIPLESELECTION, SCI_SETADDITIONALSELECTIONTYPING, 
+	SCI_GETADDITIONALSELECTIONTYPING, SCI_SETADDITIONALCARETSBLINK, 
+	SCI_GETADDITIONALCARETSBLINK, SCI_GETSELECTIONS, SCI_CLEARSELECTIONS, 
+	SCI_SETSELECTION, SCI_ADDSELECTION, SCI_SETMAINSELECTION, 
+	SCI_GETMAINSELECTION, SCI_SETSELECTIONNCARET, SCI_GETSELECTIONNCARET, 
+	SCI_SETSELECTIONNANCHOR, SCI_GETSELECTIONNANCHOR, 
+	SCI_SETSELECTIONNCARETVIRTUALSPACE, SCI_GETSELECTIONNCARETVIRTUALSPACE, 
+	SCI_SETSELECTIONNANCHORVIRTUALSPACE, SCI_GETSELECTIONNANCHORVIRTUALSPACE, 
+	SCI_SETSELECTIONNSTART, SCI_GETSELECTIONNSTART, SCI_SETSELECTIONNEND, 
+	SCI_GETSELECTIONNEND, SCI_SETRECTANGULARSELECTIONCARET, 
+	SCI_GETRECTANGULARSELECTIONCARET, SCI_SETRECTANGULARSELECTIONANCHOR, 
+	SCI_GETRECTANGULARSELECTIONANCHOR, 
+	SCI_SETRECTANGULARSELECTIONCARETVIRTUALSPACE, 
+	SCI_GETRECTANGULARSELECTIONCARETVIRTUALSPACE, 
+	SCI_SETRECTANGULARSELECTIONANCHORVIRTUALSPACE, 
+	SCI_GETRECTANGULARSELECTIONANCHORVIRTUALSPACE, SCI_SETVIRTUALSPACEOPTIONS, 
+	SCI_GETVIRTUALSPACEOPTIONS, SCI_SETRECTANGULARSELECTIONMODIFIER, 
+	SCI_GETRECTANGULARSELECTIONMODIFIER, SCI_SETADDITIONALSELFORE, 
+	SCI_SETADDITIONALSELBACK, SCI_SETADDITIONALSELALPHA, 
+	SCI_GETADDITIONALSELALPHA, SCI_SETADDITIONALCARETFORE, 
+	SCI_GETADDITIONALCARETFORE, SCI_ROTATESELECTION &amp; SCI_SWAPMAINANCHORCARET</p>
+	</li>
+</ul>
+
+<p><strong>V1.26 (22 November 2010)</strong></p>
+
+<ul>
+	<li>
+	Updated copyright details. 
+	</li>
+	<li>
+	Updated sample app to clean compile on VC 2010 
+	</li>
+	<li>
+	Updated class to work with Scintilla v2.22. New messages wrapped 
+	include: SCI_SETWHITESPACESIZE, SCI_GETWHITESPACESIZE, SCI_SETFONTQUALITY, 
+	SCI_GETFONTQUALITY, SCI_SETFIRSTVISIBLELINE, SCI_SETMULTIPASTE, 
+	SCI_GETMULTIPASTE, SCI_GETTAG, SCI_AUTOCGETCURRENTTEXT, 
+	SCI_SETADDITIONALCARETSVISIBLE, SCI_GETADDITIONALCARETSVISIBLE, 
+	SCI_CHANGELEXERSTATE, SCI_CONTRACTEDFOLDNEXT, SCI_VERTICALCENTRECARET, 
+	SCI_GETLEXERLANGUAGE, SCI_PRIVATELEXERCALL, SCI_PROPERTYNAMES, 
+	SCI_PROPERTYTYPE, SCI_DESCRIBEPROPERTY, SCI_DESCRIBEKEYWORDSETS. Also there 
+	were some parameter changes to existing messages.</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -531,6 +604,6 @@ it easier to include the control in MFC projects on Windows.</p>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-11 February 2009</p>
+22 November 2010</p>
 </body>
 </html>

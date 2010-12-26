@@ -87,7 +87,7 @@ History: PJN / 12-08-2004 1. Made all the remaining non virtual functions relate
                           impossible to replace multibyte character sequences in find / replace operations. Thanks to
                           Alexei Letov for reporting this bug.
 
-Copyright (c) 2004 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2004 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -298,14 +298,14 @@ void CScintillaView::OnDestroy()
 				while (pos2 && (nScintillaViews == 0))
 				{
 					CDocument* pDoc = pTemplate->GetNextDoc(pos2);
-					ASSERT(pDoc);
+					AFXASSUME(pDoc);
 
 					//walk all views in the document
 					POSITION pos3 = pDoc->GetFirstViewPosition();
 					while (pos3 && (nScintillaViews == 0))
 					{
 						CView* pView = pDoc->GetNextView(pos3);
-						ASSERT(pView);
+						AFXASSUME(pView);
 						
 						//if we find another CScintillaView, skip code that closes find dialog
 						if (pView->IsKindOf(RUNTIME_CLASS(CScintillaView)) && (pView != this) && ::IsWindow(pView->GetSafeHwnd()))

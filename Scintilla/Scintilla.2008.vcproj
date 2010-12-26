@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="9,00"
+	Name="Scintilla"
+	ProjectGUID="{E638F87E-C6B2-43F3-B4EC-692D0A4B3B73}"
+	Keyword="MakeFileProj"
+	TargetFrameworkVersion="196613"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="MBCS Debug|Win32"
+			OutputDirectory=".\redist"
+			IntermediateDirectory=".\bin\obj"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -f ScintillaVC.mak ALL"
+				ReBuildCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -a -f ScintillaVC.mak ALL"
+				CleanCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -f ScintillaVC.mak clean"
+				Output=""
+				PreprocessorDefinitions="WIN32;_DEBUG"
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="MBCS Release|Win32"
+			OutputDirectory=".\redist"
+			IntermediateDirectory=".\bin\obj"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -f ScintillaVC.mak ALL"
+				ReBuildCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -a -f ScintillaVC.mak ALL"
+				CleanCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -f ScintillaVC.mak clean"
+				Output=""
+				PreprocessorDefinitions="WIN32;NDEBUG"
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Unicode Debug|Win32"
+			OutputDirectory=".\redist"
+			IntermediateDirectory=".\bin\obj"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -f ScintillaVC.mak ALL"
+				ReBuildCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -a -f ScintillaVC.mak ALL"
+				CleanCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -f ScintillaVC.mak clean"
+				Output=""
+				PreprocessorDefinitions="WIN32;_DEBUG"
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Unicode Release|Win32"
+			OutputDirectory=".\redist"
+			IntermediateDirectory=".\bin\obj"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -f ScintillaVC.mak ALL"
+				ReBuildCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -a -f ScintillaVC.mak ALL"
+				CleanCommandLine="cd .\win32 &amp;&amp; nmake QUIET=1 -f ScintillaVC.mak clean"
+				Output=""
+				PreprocessorDefinitions="WIN32;NDEBUG"
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<File
+			RelativePath=".\win32\ScintillaVC.mak"
+			>
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

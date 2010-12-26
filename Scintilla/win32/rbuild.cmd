@@ -1,3 +1,3 @@
 @ECHO OFF
 
-nmake QUIET=1 -f my_scintilla.mak
+nmake QUIET=1 -f ScintillaVC.mak
