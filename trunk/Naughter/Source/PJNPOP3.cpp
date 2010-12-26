@@ -151,8 +151,24 @@ History: PJN / 27-06-1998 1. Fixed a potential buffer overflow problem in Delete
                           reporting this issue.
          PJN / 31-05-2008 1. Code now compiles cleanly using Code Analysis (/analyze)
          PJN / 14-06-2008 1. Updated code to compile correctly using _ATL_CSTRING_EXPLICIT_CONSTRUCTORS define
+         PJN / 04-05-2009 1. Updated copyright details.
+                          2. Updated the sample app's project settings to more modern default values.
+                          3. Removed the parsing methods from the CPJNPOP3Message class. For comprehensive support for 
+                          message parsing please take a look at CDO for Windows 2000.
+                          4. Extensively reworked the parsing code to use CByteArray derived classes to hold parsed 
+                          responses instead of CStringA instances. This handles the unusual but legal situation where a 
+                          message contains embedded nulls. Thanks to Sergey Lysenko for reporting this issue.
+                          5. Fixed a bug in ReadUIDLResponse when parsing the message ID
+                          6. The code in Connect now correctly validates that a timestamp has been provided if doing APOP
+                          authentication
+         PJN / 22-12-2009 1. Optimized the ReadResponse logic to reduce the amount of searching required to find the terminator 
+                          in the received buffer. This helps avoid excessive CPU utilization when we receive large responses.
+                          Thanks to Alexey Rabets for reporting this issue.
+                          2. The size of the read buffer used in the ReadResponse method can now be specified at runtime via 
+                          SetReadBufferSize().
+                          3. Updated the documentation to fix various out of date details in the API reference section.
 
-Copyright (c) 1998 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -268,201 +284,6 @@ void CPJNPOP3Exception::Dump(CDumpContext& dc) const
 #endif
 
 
-CPJNPOP3Message::CPJNPOP3Message()
-{
-}
-
-CPJNPOP3Message::CPJNPOP3Message(const CPJNPOP3Message& message)
-{
-  *this = message;
-}
-
-CPJNPOP3Message& CPJNPOP3Message::operator=(const CPJNPOP3Message& message)
-{
-  //Copy across the message
-  m_sMessage = message.m_sMessage;
-  
-  return *this;
-}
-
-CStringA CPJNPOP3Message::GetHeaderItem(const CStringA& sName, int nItem) const
-{
-  //Value which will be returned by this function
-  CStringA sField;
-
-  //Get the message header (add an extra "\r\n" at the
-  //begining to aid in the parsing)  
-	CStringA sHeader("\r\n");
-  sHeader += GetHeader();
-  CStringA sUpCaseHeader(sHeader);
-  sUpCaseHeader.MakeUpper();
-
-  CStringA sUpCaseName(sName);
-  sUpCaseName.MakeUpper();
-
-  //Find the specified line in the header
-  CStringA sFind(CStringA("\r\n") + sUpCaseName + ":");
-  int nFindLength = sFind.GetLength();
-  int nFindStart = sUpCaseHeader.Find(sFind);
-  int nFind = nFindStart;
-	for (int i=0; i<nItem; i++) 
-  {
-    //Get ready for the next loop around
-    sUpCaseHeader = sUpCaseHeader.Right(sUpCaseHeader.GetLength() - nFind - nFindLength);
-    nFind = sUpCaseHeader.Find(sFind);
-    
-		if (nFind == -1)
-			return ""; //Not found
-    else
-      nFindStart += (nFind + nFindLength);
-	}
-
-  if (nFindStart != -1)
-    nFindStart += (3 + sName.GetLength());
-  if (nFindStart != -1)
-  {
-    BOOL bFoundEnd = FALSE;
-    int i = nFindStart;
-    int nLength = sHeader.GetLength();
-    do
-    {
-      //Examine the current 3 characters
-      char c1 = '\0';
-      if (i < nLength)
-        c1 = sHeader.GetAt(i);
-      char c2 = '\0';
-      if (i < (nLength-1))
-        c2 = sHeader.GetAt(i+1);
-      char c3 = '\0';
-      if (i < (nLength-2))
-        c3 = sHeader.GetAt(i+2);
-
-      //Have we found the terminator
-      if ((c1 == '\0') || ((c1 == '\r') && (c2 == '\n') && (c3 != ' ') && c3 != '\t'))
-        bFoundEnd = TRUE;
-      else
-      {
-        //Move onto the next character  
-        ++i;
-      }
-    }
-    while (!bFoundEnd);
-    sField = sHeader.Mid(nFindStart, i - nFindStart);
-
-    //Remove any embedded "\r\n" sequences from the field
-    sField.Replace("\r\n", "");
-
-    //Replace any embedded "\t" sequences with spaces
-    sField.Replace("\t", " ");
-
-    //Remove any leading or trailing white space from the Field Body
-    sField.Trim();
-  }
-
-	return sField;
-}
-
-CStringA CPJNPOP3Message::GetHeader() const
-{
-  //What will be the return value from this function
-  CStringA sHeader;
-
-  //Find the divider between the header and body
-  int nFind = m_sMessage.Find("\r\n\r\n");
-  if (nFind != -1)
-    sHeader = m_sMessage.Left(nFind);
-  else
-  {
-    //No divider, then assume all the text is the header
-    sHeader = m_sMessage;
-  }
-
-  return sHeader;
-}
-
-CStringA CPJNPOP3Message::GetBody() const
-{
-  //What will be the return value from this function
-  CStringA sBody;
-
-  //Find the divider between the header and body
-	int nFind = m_sMessage.Find("\r\n\r\n");
-	if (nFind != -1) 
-	  sBody = m_sMessage.Right(m_sMessage.GetLength() - nFind - 4);
-
-  return sBody;
-}
-
-CStringA CPJNPOP3Message::GetReplyTo() const
-{
-  //What will be the return value from this function
-	CStringA sRet(GetHeaderItem("Reply-To"));
-	
-  if (sRet.IsEmpty())
-  {
-    sRet = GetFrom();
-    if (sRet.IsEmpty())
-    {
-      sRet = GetHeaderItem("Sender");
-      if (sRet.IsEmpty())
-        sRet = GetHeaderItem("Return-Path");
-    }
-  }
-	return sRet;
-}
-
-CStringA CPJNPOP3Message::GetEmailAddress(const CStringA& sNameAndAddress)
-{
-  //What will be the return value
-  CStringA sEmailAddress;
-
-	//divide the substring into friendly names and e-mail addresses
-	int nMark = sNameAndAddress.Find('<');
-	int nMark2 = sNameAndAddress.Find('>');
-	if ((nMark != -1) && (nMark2 != -1) && (nMark2 > (nMark+1)))
-		sEmailAddress = sNameAndAddress.Mid(nMark+1, nMark2 - nMark - 1);
-	else
-		sEmailAddress = sNameAndAddress;
-
-  return sEmailAddress;
-}
-
-CStringA CPJNPOP3Message::GetEmailFriendlyName(const CStringA& sNameAndAddress)
-{
-  //What will be the return value
-  CStringA sFriendlyName;
-
-	//divide the substring into friendly names and e-mail addresses
-	int nMark = sNameAndAddress.Find('<');
-	int nMark2 = sNameAndAddress.Find('>');
-	if ((nMark != -1) && (nMark2 != -1) && (nMark2 > (nMark+1)))
-	{
-		sFriendlyName = sNameAndAddress.Left(nMark);
-    sFriendlyName.Trim();
-
-    //Remove any quotes which may appear on the friendly name
-    int nLength = sFriendlyName.GetLength();
-    if (nLength)
-    {
-      //Remove the leading quote
-      if (sFriendlyName.GetAt(nLength - 1) == '"')
-      {
-        sFriendlyName = sFriendlyName.Left(nLength - 1);
-        nLength--;
-      }
-      //Remove the trailing quote
-      if (nLength)
-      {
-        if (sFriendlyName.GetAt(0) == '"')
-          sFriendlyName = sFriendlyName.Right(nLength - 1);
-      }
-    }
-  }
-
-  return sFriendlyName;
-}
-
-
 CPJNPOP3Connection::CPJNPOP3Connection() : m_nNumberOfMails(0),
                                            m_bListRetrieved(FALSE),
                                            m_bStatRetrieved(FALSE),
@@ -470,7 +291,8 @@ CPJNPOP3Connection::CPJNPOP3Connection() : m_nNumberOfMails(0),
                                            m_bConnected(FALSE),
                                            m_bSSL(FALSE),
                                            m_ProxyType(ptNone),
-                                           m_nProxyPort(1080)
+                                           m_nProxyPort(1080),
+                                           m_dwReadBufferSize(1024)
 {
 #ifdef _DEBUG
   m_dwTimeout = 90000; //default timeout of 90 seconds when debugging
@@ -762,32 +584,34 @@ void CPJNPOP3Connection::Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTS
   {
     //check the response
     CString sTimeStampBanner;
-    CStringA sResponse;
+    CString sResponse;
     if (!ReadCommandResponse(sResponse))
       ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_POP3_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
     else
     {
       //Hive away the timestamp banner
-      int nFind1 = sResponse.Find("<");
-      int nFind2 = sResponse.Find(">");
-      if (nFind2 != -1 && nFind1 != -1 && nFind2 > nFind1)
+      int nFind1 = sResponse.Find(_T("<"));
+      int nFind2 = sResponse.Find(_T(">"));
+      if ((nFind2 != -1) && (nFind1 != -1) && (nFind2 > nFind1))
         sTimeStampBanner = sResponse.Mid(nFind1, nFind2 - nFind1 + 1);
-      else
-        sTimeStampBanner.Empty();
     }
+    
+    //Form ascii versions of the username and password parameters
+    CPJNPOP3SecureStringA sAsciiUsername(pszUsername);
+    CPJNPOP3SecureStringA sAsciiPassword(pszPassword);
 
     //Issue the correct sequence of commands depending on the authentication scheme 
     if (am == AUTH_PLAIN)
     {
       //Send the POP3 username and check the response
-      CStringA sRequest;
-      sRequest.Format("USER %s\r\n", CT2A(pszUsername).operator LPSTR());
+      CPJNPOP3SecureStringA sRequest;
+      sRequest.Format("USER %s\r\n", sAsciiUsername.operator LPCSTR());
       _Send(sRequest.operator LPCSTR(), sRequest.GetLength());
       if (!ReadCommandResponse())
         ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_POP3_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
 
       //Send the POP3 password and check the response
-      sRequest.Format("PASS %s\r\n", CT2A(pszPassword).operator LPSTR());
+      sRequest.Format("PASS %s\r\n", sAsciiPassword.operator LPCSTR());
       _Send(sRequest.operator LPCSTR(), sRequest.GetLength());
       if (!ReadCommandResponse())
         ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_POP3_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
@@ -795,24 +619,25 @@ void CPJNPOP3Connection::Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTS
     else
     {
       ASSERT(am == AUTH_APOP);
+
+      //Check that the server provided us a timestamp to hash
+      if (sTimeStampBanner.IsEmpty())
+        ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_POP3_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
       
       //Form the string which we need to MD5 hash
-      CStringA sToHash(sTimeStampBanner);
-      sToHash += CT2A(pszPassword);
+      CPJNPOP3SecureStringA sToHash(sTimeStampBanner);
+      sToHash += pszPassword;
       
       //Calculate the MD5 hash
       CPJNMD5Hash hash;
       CPJNMD5 md5;
       if (!md5.Hash(reinterpret_cast<const BYTE*>(sToHash.operator LPCSTR()), sToHash.GetLength(), hash))
-      {
-        SecureEmptyString(sToHash); //Securely destroy the string which contains the password
         ThrowPJNPOP3Exception(GetLastError(), FACILITY_WIN32);
-      }
-      SecureEmptyString(sToHash); //Securely destroy the string which contains the password
       
       //Issue the APOP command and check the response
-      CStringA sRequest;
-      sRequest.Format("APOP %s %s\r\n", CT2A(pszUsername).operator LPSTR(), CT2A(hash.Format(FALSE)).operator LPSTR());
+      CPJNPOP3SecureStringA sAPOP(hash.Format(FALSE));
+      CPJNPOP3SecureStringA sRequest;
+      sRequest.Format("APOP %s %s\r\n", sAsciiUsername.operator LPCSTR(), sAPOP.operator LPCSTR());
       _Send(sRequest, sRequest.GetLength());
       if (!ReadCommandResponse())
         ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_POP3_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
@@ -1107,7 +932,7 @@ void CPJNPOP3Connection::Noop()
     ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_POP3_NOOP_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
 }
 
-void CPJNPOP3Connection::Retrieve(int nMsg, CPJNPOP3Message& message)
+void CPJNPOP3Connection::Retrieve(int nMsg, CPJNPOP3Buffer& message)
 {
   //Must be connected to retrieve a message
   ASSERT(m_bConnected);
@@ -1133,7 +958,7 @@ void CPJNPOP3Connection::Retrieve(int nMsg, CPJNPOP3Message& message)
 	ReadReturnResponse(message, dwSize);
 }
 
-void CPJNPOP3Connection::GetMessageHeader(int nMsg, CPJNPOP3Message& message)
+void CPJNPOP3Connection::GetMessageHeader(int nMsg, CPJNPOP3Buffer& message)
 {
   //Must be connected to retrieve a message
   ASSERT(m_bConnected);
@@ -1162,54 +987,66 @@ void CPJNPOP3Connection::GetMessageHeader(int nMsg, CPJNPOP3Message& message)
 BOOL CPJNPOP3Connection::ReadCommandResponse()
 {
   //Delegate to the real implementation
-  CStringA sResponse;
+  CString sResponse;
   return ReadCommandResponse(sResponse);
 }
 
-BOOL CPJNPOP3Connection::ReadCommandResponse(CStringA& sResponse)
+BOOL CPJNPOP3Connection::ReadCommandResponse(CString& sResponse)
 {
   //Read the response
-  sResponse.Preallocate(1024);
-  BOOL bSuccess = ReadResponse(sResponse, "\r\n", FALSE);
+  CPJNPOP3Buffer response;
+  response.SetSize(0, 1024);
+  BOOL bSuccess = ReadResponse(response, "\r\n", FALSE);
+  sResponse = response.AsString();
   
   //determine if the response is an error
   if (bSuccess)
-	  bSuccess = (sResponse.Find("+OK") == 0);
+	  bSuccess = (response.Find("+OK") == 0);
 
   return bSuccess;
 }
 
-CStringA CPJNPOP3Connection::GetBodyOfResponse(const CStringA& sResponse) const
+CPJNPOP3Buffer CPJNPOP3Connection::GetBodyOfResponse(const CPJNPOP3Buffer& response) const
 {
   //What will be the return value from this function
-  CStringA sBody;
+  CPJNPOP3Buffer body;
 
-  int nFind = sResponse.Find('\n');
+  INT_PTR nFind = response.Find("\n");
   if (nFind != -1)
-    sBody = sResponse.Right(sResponse.GetLength() - nFind - 1);
-
-  return sBody;
+  {
+    INT_PTR nBodySize = response.GetSize() - nFind - 1;
+    if (nBodySize)
+    {
+      body.SetSize(nBodySize);
+      BYTE* pBody = body.GetData();
+      ASSERT(pBody);
+      const BYTE* pResponse = response.GetData();
+      memcpy(pBody, &(pResponse[nFind + 1]), nBodySize);
+    }
+  }
+  
+  return body;
 }
 
-void CPJNPOP3Connection::ReadReturnResponse(CPJNPOP3Message& message, DWORD dwSize)
+void CPJNPOP3Connection::ReadReturnResponse(CPJNPOP3Buffer& message, DWORD dwSize)
 {
   //Must be connected to perform a "RETR"
   ASSERT(m_bConnected);
 
   //Retrieve the message body
-  CStringA sResponse;
-  sResponse.Preallocate(dwSize + 4096);
-  BOOL bReadResponse = ReadResponse(sResponse, "\r\n.\r\n", TRUE);
+  CPJNPOP3Buffer response;
+  response.SetSize(0, dwSize + 4096);
+  BOOL bReadResponse = ReadResponse(response, "\r\n.\r\n", TRUE);
   if (!bReadResponse)
 		ThrowPJNPOP3Exception(IDS_PJNPOP3_FAILED_RECEIVE_RETR_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
 
   //determine if the response is an error
-  if (sResponse.Find("+OK") != 0)
+  if (response.Find("+OK") != 0)
     ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_RETR_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
 
   //remove the first line which contains the +OK from the message and put it into the message
-  message.m_sMessage = GetBodyOfResponse(sResponse);
-  message.m_sMessage = message.m_sMessage.Left(message.m_sMessage.GetLength() - 5); //Throw away the last "\r\n.\r\n" part of the response 
+  message = GetBodyOfResponse(response);
+  message.SetSize(message.GetSize() - 5); //Throw away the last "\r\n.\r\n" part of the response 
 }
 
 void CPJNPOP3Connection::ReadListResponse(int nNumberOfMails)
@@ -1218,13 +1055,13 @@ void CPJNPOP3Connection::ReadListResponse(int nNumberOfMails)
   ASSERT(m_bConnected);
 
   //retrieve the reponse
-  CStringA sResponse;
-  sResponse.Preallocate((14 * nNumberOfMails) + 100);
-  if (!ReadResponse(sResponse, "\r\n.\r\n", FALSE))
+  CPJNPOP3Buffer response;
+  response.SetSize(0, (14 * nNumberOfMails) + 100);
+  if (!ReadResponse(response, "\r\n.\r\n", FALSE))
 		ThrowPJNPOP3Exception(IDS_PJNPOP3_FAILED_RECEIVE_LIST_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
 
   //determine if the response is an error
-  if (sResponse.Find("+OK") != 0)
+  if (response.Find("+OK") != 0)
     ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_LIST_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
 
   //Retrieve the message sizes and put them
@@ -1233,14 +1070,14 @@ void CPJNPOP3Connection::ReadListResponse(int nNumberOfMails)
   m_msgSizes.SetSize(0, nNumberOfMails);
 
   //then parse the LIST response
-  CStringA sBody(GetBodyOfResponse(sResponse));
+  CString sBody(GetBodyOfResponse(response).AsString());
   if (sBody.IsEmpty())
     ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_LIST_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
-	LPCSTR pszSize = sBody.operator LPCSTR();
+	LPCTSTR pszSize = sBody.operator LPCTSTR();
 	for (; (*pszSize != '.' && *pszSize != '\0'); pszSize++)
 	{
-		if (*pszSize == '\t' || *pszSize == ' ')
-			m_msgSizes.Add(atoi(pszSize));
+		if (*pszSize == _T('\t') || *pszSize == _T(' '))
+			m_msgSizes.Add(_ttoi(pszSize));
   }
 }
 
@@ -1250,55 +1087,55 @@ void CPJNPOP3Connection::ReadUIDLResponse(int nNumberOfMails)
   ASSERT(m_bConnected);
 
   //retrieve the reponse
-  CStringA sResponse;
-  sResponse.Preallocate((14 * nNumberOfMails) + 100);
-  if (!ReadResponse(sResponse, "\r\n.\r\n", FALSE))
+  CPJNPOP3Buffer response;
+  response.SetSize(0, (14 * nNumberOfMails) + 100);
+  if (!ReadResponse(response, "\r\n.\r\n", FALSE))
 		ThrowPJNPOP3Exception(IDS_PJNPOP3_FAILED_RECEIVE_UIDL_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
 
   //determine if the response is an error
-  if (sResponse.Find("+OK") != 0)
+  if (response.Find("+OK") != 0)
     ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_UIDL_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
 
   //Reset the message id array 
   m_msgIDs.SetSize(0, nNumberOfMails);
 
 	//then parse the UIDL response
-	CStringA sBody(GetBodyOfResponse(sResponse));
+	CString sBody(GetBodyOfResponse(response).AsString());
 	if (sBody.IsEmpty())
 	  ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_UIDL_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
-	LPSTR pszSize = sBody.GetBuffer(sBody.GetLength());
+	LPTSTR pszSize = sBody.GetBuffer(sBody.GetLength());
 	for (int iCount=0; iCount<nNumberOfMails; iCount++)
 	{
 	  //Find the next line, before we attempt to parse the current one
-	  LPSTR pszBegin = pszSize;
-	  while (*pszSize != '\n' && *pszSize != '\0')
+	  LPTSTR pszBegin = pszSize;
+	  while (*pszSize != _T('\n') && *pszSize != _T('\0'))
 			++pszSize;
 			
     //Convert the EOL to a NULL so that we can do easier parsing of the message ids
-    if (*pszSize == '\n')
-      *pszSize = '\0';
+    if (*pszSize == _T('\n'))
+      *pszSize = _T('\0');
       
     //Find the first whitespace character in the line (which means that we have skipped over the message number)  
-	  char* pszID = pszBegin;
-	  while (*pszID != '\0' && !isspace(static_cast<int>(*pszID)))
+	  TCHAR* pszID = pszBegin;
+	  while (*pszID != _T('\0') && *pszID != _T(' '))
 	    ++pszID;
 	    
 	  //Then find the first non-whitespace character in the line (which is the start of the message id)
-	  while (*pszID != '\0' && isspace(static_cast<int>(*pszID)))
+	  while (*pszID != _T('\0') && *pszID == _T(' '))
 	    ++pszID;
 	    
-	  //Then find the first whitespace character in the line (which is the end of the message id)
-	  char* pszEndID = pszID;
-	  while (*pszEndID != '\0' && !isspace(static_cast<int>(*pszEndID)))
+	  //Then find the first whitespace or EOL character in the line (which is the end of the message id)
+	  TCHAR* pszEndID = pszID;
+	  while (*pszEndID != _T('\0') && *pszEndID != _T(' ') && *pszEndID != _T('\r') && *pszEndID != _T('\n'))
 	    ++pszEndID;
-	  *pszEndID = '\0';
+	  *pszEndID = _T('\0');
 	  
 	  //If we could not find the begining of the ID or the ID is empty, then we were given a bad resposne
-	  if (pszID == '\0' || (strlen(pszID) == 0))
+	  if (pszID == _T('\0') || (_tcslen(pszID) == 0))
 	    ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_UIDL_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
 	    
 	  //Finally form the string from the ID
-	  m_msgIDs.Add(CA2T(pszID));
+	  m_msgIDs.Add(pszID);
 	  pszSize++;
 	}
 	sBody.ReleaseBuffer();
@@ -1314,49 +1151,43 @@ void CPJNPOP3Connection::ReadStatResponse(int& nNumberOfMails, int& nTotalMailSi
   ASSERT(m_bConnected);
 
   //retrieve the reponse
-  CStringA sResponse;
-  sResponse.Preallocate(128);
-  if (!ReadResponse(sResponse, "\r\n", FALSE))
+  CPJNPOP3Buffer response;
+  response.SetSize(0, 128);
+  if (!ReadResponse(response, "\r\n", FALSE))
   	ThrowPJNPOP3Exception(IDS_PJNPOP3_FAILED_RECEIVE_STAT_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
 
   //determine if the response is an error
-  if (sResponse.Find("+OK") != 0)
+  if (response.Find("+OK") != 0)
 		ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_STAT_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
 
   //Parse out the "Number of Mails" and "Total mail size" values
-	BOOL bGotNumber = FALSE;
-  BOOL bGotTotal = FALSE;
-	for (const char* pszNum = sResponse.operator LPCSTR(); (*pszNum != '\0') && (!bGotNumber || !bGotTotal); pszNum++)
-	{
-		if (*pszNum == '\t' || *pszNum== ' ')
-		{						
-			if (!bGotNumber)
-			{
-				nNumberOfMails = atoi(pszNum);
-        m_nNumberOfMails = nNumberOfMails;
-				bGotNumber = TRUE;
-			}
-			else
-			{
-				nTotalMailSize = atoi(pszNum);
-				bGotTotal = TRUE;
-			}
-		}
-	}
-	
-	//If we have not got the two numeric values, then fail this function
-	if (!bGotNumber && !bGotTotal)
-	  ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_STAT_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
+  CString sResponse(response.AsString());
+  int nFindIndex = 3;
+  CString sNumberOfMails(sResponse.Tokenize(_T(" \t"), nFindIndex));
+  if ((nFindIndex == -1) || sNumberOfMails.IsEmpty())
+    ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_STAT_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
+	nNumberOfMails = _ttoi(sNumberOfMails);
+  m_nNumberOfMails = nNumberOfMails;
+
+  CString sTotalMailSize(sResponse.Tokenize(_T(" \t\r\n"), nFindIndex));
+  if (sTotalMailSize.IsEmpty())
+    ThrowPJNPOP3Exception(IDS_PJNPOP3_UNEXPECTED_STAT_RESPONSE, FACILITY_ITF, GetLastCommandResponse()); 
+	nTotalMailSize = _ttoi(sTotalMailSize);
 }
 
-BOOL CPJNPOP3Connection::ReadResponse(CStringA& sResponse, LPSTR pszTerminator, BOOL bCalledForReturnResponse)
+BOOL CPJNPOP3Connection::ReadResponse(CPJNPOP3Buffer& response, LPSTR pszTerminator, BOOL bCalledForReturnResponse)
 {
   //must have been created first
   ASSERT(m_bConnected);
 
-  //retrieve the reponse using until we
-	//get the terminator or a timeout occurs
+  //Allocate a buffer to read into from the socket
+	ATL::CHeapPtr<BYTE> readBuffer;
+	if (!readBuffer.Allocate(m_dwReadBufferSize))
+	  ThrowPJNPOP3Exception(ERROR_OUTOFMEMORY, FACILITY_WIN32);
+
+  //retrieve the response using until we get the terminator or a timeout occurs
 	BOOL bFoundTerminator = FALSE;
+	size_t nTerminatorLen = strlen(pszTerminator);
 	while (!bFoundTerminator)
 	{
 		//check the socket for readability
@@ -1366,9 +1197,9 @@ BOOL CPJNPOP3Connection::ReadResponse(CStringA& sResponse, LPSTR pszTerminator, 
 		  {
 			  //Hive away the last command response
         if (bCalledForReturnResponse)
-	        SetReturnLastCommandResponse(sResponse);
+	        SetReturnLastCommandResponse(response);
         else
-	        m_sLastCommandResponse = CA2T(sResponse);
+	        m_sLastCommandResponse = response.AsString();
 	        
 			  return FALSE;
 		  }
@@ -1380,12 +1211,11 @@ BOOL CPJNPOP3Connection::ReadResponse(CStringA& sResponse, LPSTR pszTerminator, 
       ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
     }
 
-		//receive the data from the socket
-		char sBuf[4096];
-    int nData = 0;
+  	//receive the data from the socket
+	  int nData = 0;
     try
     {
-      nData = _Receive(sBuf, sizeof(sBuf) - 1);
+      nData = _Receive(readBuffer.m_pData, m_dwReadBufferSize);
     }
     catch(CWSocketException* pEx)
     {
@@ -1398,38 +1228,34 @@ BOOL CPJNPOP3Connection::ReadResponse(CStringA& sResponse, LPSTR pszTerminator, 
     if (nData == 0)
       ThrowPJNPOP3Exception(IDS_PJNPOP3_GRACEFUL_DISCONNECT, FACILITY_ITF, GetLastCommandResponse());
 
-    //NULL terminate the data received
-    sBuf[nData] = '\0';
-
-    //Grow the response data
-    sResponse += sBuf;    
+    //Add the data to the complete response
+    response.Append(readBuffer.m_pData, nData);    
+    
+    //Optimize the location where we search for the terminator in the received buffer. This helps 
+    //avoid excessive CPU utilization when we receive large responses
+    int nStartSearch = static_cast<int>(response.GetSize() - nData - nTerminatorLen + 1);
+    if (nStartSearch < 0)
+      nStartSearch = 0;
 
     //Check to see if the terminator character(s) have been found
-    bFoundTerminator = (sResponse.Find(pszTerminator) != -1);
+    bFoundTerminator = (response.Find(pszTerminator, nStartSearch) != -1);
 	}
 
   //Hive away the last command response
   if (bCalledForReturnResponse)
-	  SetReturnLastCommandResponse(sResponse);
+	  SetReturnLastCommandResponse(response);
   else  
-	  m_sLastCommandResponse = CA2T(sResponse);
+	  m_sLastCommandResponse = response.AsString();
 
   return TRUE;
 }
 
-void CPJNPOP3Connection::SetReturnLastCommandResponse(const CStringA& sResponse)
+void CPJNPOP3Connection::SetReturnLastCommandResponse(const CPJNPOP3Buffer& response)
 {
-  int nFind = sResponse.Find("\r");
+  //Only copy up to the first EOL if present
+  INT_PTR nFind = response.Find("\r");
   if (nFind != -1)
-    m_sLastCommandResponse = CA2T(sResponse.Left(nFind));
+    m_sLastCommandResponse = response.Left(nFind).AsString();
 	else 
 	  m_sLastCommandResponse.Empty();
-}
-
-void CPJNPOP3Connection::SecureEmptyString(CStringA& sVal)
-{
-  int nLength = sVal.GetLength();
-  LPSTR pszVal = sVal.GetBuffer(nLength);
-  SecureZeroMemory(pszVal, nLength);
-  sVal.ReleaseBuffer();
 }

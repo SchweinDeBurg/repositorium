@@ -1,14 +1,14 @@
 <html>
 
 <head>
-<title>CPJNPOP3Connection v1.45</title>
+<title>CPJNPOP3Connection v1.47</title>
 <link rel="stylesheet" type="text/css" href="./naughter.css">
 </head>
 
 <body>
 
 <h2 align="left"><img src="PJNPOP3.gif" width="40" height="40">CPJNPOP3Connection 
-v1.45</h2>
+v1.47</h2>
 <p>Welcome to <strong>CPJNPOP3Connection</strong>, a freeware MFC class to support 
 the POP3 (Post Office Protocol v3) protocol. POP3 for those not familiar with all the internet protocols is 
 the protocol used to retrieve internet email. </p>
@@ -435,38 +435,59 @@ read <a href="http://www.ietf.org/rfc/rfc1939.txt">RFC 1939</a>.</li>
 	<li>Updated code to compile correctly using _ATL_CSTRING_EXPLICIT_CONSTRUCTORS 
 	define</li>
 </ul>
+<p><strong>v1.46 (4 May 2009)</strong></p>
+<ul>
+	<li>Updated copyright details.</li>
+	<li>Updated the sample app's project settings to more modern default values.</li>
+	<li>Removed the parsing methods from the CPJNPOP3Message class. For 
+	comprehensive support for message parsing please take a look at CDO for 
+	Windows 2000.</li>
+	<li>Extensively reworked the parsing code to use CByteArray derived classes 
+	to hold parsed responses instead of CStringA instances. This handles the 
+	unusual but legal situation where a message contains embedded nulls. Thanks 
+	to Sergey Lysenko for reporting this issue.</li>
+	<li>Fixed a bug in ReadUIDLResponse when parsing the message ID</li>
+	<li>The code in Connect now correctly validates that a timestamp has been 
+	provided if doing APOP authentication</li>
+</ul>
+<p><strong>v1.47 (22 December 2009)</strong></p>
+<ul>
+	<li>Optimized the ReadResponse logic to reduce the amount of searching 
+	required to find the terminator in the received buffer. This helps avoid 
+	excessive CPU utilization when we receive large responses. Thanks to Alexey 
+	Rabets for reporting this issue. </li>
+	<li>The size of the read buffer used in the ReadResponse method can now be 
+	specified at runtime via SetReadBufferSize().</li>
+	<li>Updated the documentation to fix various out of date details in the API 
+	reference section.</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <h2><a name="APIReference"></a><strong>API Reference</strong></h2>
-<p>The API consists of the public member functions of the class CPJNPOP3Connection 
-&amp; CPJNPOP3Message</p>
-<p><a href="#Connect">CPJNPOP3Connection::Connect<br>
-</a><a href="#Disconnect">CPJNPOP3Connection::Disconnect<br>
-</a><a href="#Statistics">CPJNPOP3Connection::Statistics<br>
-</a><a href="#Delete">CPJNPOP3Connection::Delete<br>
-</a><a href="#GetMessageSize">CPJNPOP3Connection::GetMessageSize</a><br>
-<a href="#GetMessageID">CPJNPOP3Connection::GetMessageID</a><br>
-<a href="#Retrieve">CPJNPOP3Connection::Retrieve<br>
-</a><a href="#Reset">CPJNPOP3Connection::Reset<br>
-</a><a href="#UIDL">CPJNPOP3Connection::UIDL</a><br>
-<a href="#GetMessageHeader">CPJNPOP3Connection::GetMessageHeader<br>
-</a><a href="#Noop">CPJNPOP3Connection::Noop<br>
-</a><a href="#GetLastCommandResponse">CPJNPOP3Connection::GetLastCommandResponse<br>
-</a><a href="#GetTimeout">CPJNPOP3Connection::GetTimeout<br>
-</a><a href="#SetTimeout">CPJNPOP3Connection::SetTimeout<br>
-</a><a href="#GetHeader">CPJNPOP3Message::GetHeader</a><a href="#GetMessageText"><br>
-</a><a href="#GetHeaderItem">CPJNPOP3Message::GetHeaderItem</a><a href="#GetMessageText"><br>
-</a><a href="#GetBody">CPJNPOP3Message::GetBody<br>
-</a><a href="#GetReplyTo">CPJNPOP3Message::GetReplyTo</a><br>
-<a href="#GetSubject">CPJNPOP3Message::GetSubject</a><br>
-<a href="#GetFrom">CPJNPOP3Message::GetFrom</a><br>
-<a href="#GetDate">CPJNPOP3Message::GetDate</a></p>
-<p>&nbsp;</p>
+<p>The API consists of the public member functions of the class 
+CPJNPOP3Connection</p>
+<p><a href="#Connect">Connect<br>
+</a><a href="#Disconnect">Disconnect<br>
+</a><a href="#Statistics">Statistics<br>
+</a><a href="#Delete">Delete<br>
+</a><a href="#GetMessageSize">GetMessageSize</a><br>
+<a href="#GetMessageID">GetMessageID</a><br>
+<a href="#Retrieve">Retrieve<br>
+</a><a href="#Reset">Reset<br>
+</a><a href="#UIDL">UIDL</a><br>
+<a href="#GetMessageHeader">GetMessageHeader<br>
+</a><a href="#Noop">Noop<br>
+</a><a href="#GetLastCommandResponse">GetLastCommandResponse<br>
+</a><a href="#GetTimeout">GetTimeout<br>
+</a><a href="#SetTimeout">SetTimeout</a><br>
+<a href="#GetReadBufferSize">GetReadBufferSize</a><br>
+<a href="#SetReadBufferSize">SetReadBufferSize</a><a href="#SetTimeout"><br>
+</a></p>
 <p>&nbsp;</p>
 <p><a name="Connect"></a><strong>CPJNPOP3Connection::Connect</strong></p>
-<p><strong>void CPJNPOP3Connection::Connect(LPCSTR </strong><em>pszHostName</em><strong>, 
-LPCSTR </strong><em>pszUser</em><strong>,&nbsp;&nbsp; LPCSTR </strong><em>pszPassword</em><strong>, 
+<p><strong>void CPJNPOP3Connection::Connect(LPCTSTR </strong><em>pszHostName</em><strong>, 
+LPCTSTR </strong><em>pszUser</em><strong>,&nbsp;&nbsp; LPCTSTR </strong><em>pszPassword</em><strong>, 
 int </strong><em>nPort</em><strong> = 110, AuthenticationMethod </strong><em>am</em><strong> 
 = AUTH_PLAIN, BOOL </strong><i>bSSL </i><strong>= FALSE);</strong></p>
 <p><strong>Parameters</strong></p>
@@ -550,10 +571,11 @@ handle the return value if it is to correctly work on all POP3 servers.</p>
 <p>&nbsp;</p>
 <p><a name="Retrieve"></a><strong>CPJNPOP3Connection::Retrieve</strong></p>
 <p><strong>void CPJNPOP3Connection::Retrieve(int </strong><em>nMsg</em><strong>, 
-CPJNPOP3Message&amp; </strong><em>message</em><strong>);</strong></p>
+CPJNPOP3Buffer&amp; </strong><em>message</em><strong>);</strong></p>
 <p><strong>Parameters</strong></p>
 <p><em>nMsg</em> The message number of the message to retrieve the size of.</p>
-<p><em>message</em> Upon a successful return this will contain the POP3 messages.</p>
+<p><em>message</em> Upon a successful return this will contain the POP3 messages. 
+This class is a simple derivation of the MFC CByteArray class</p>
 <p><strong>Remarks</strong></p>
 <p>Retrieves the specified message by issuing the &quot;RETR&quot; command.</p>
 <p><strong>See Also </strong></p>
@@ -561,7 +583,7 @@ CPJNPOP3Message&amp; </strong><em>message</em><strong>);</strong></p>
 <p>&nbsp;</p>
 <p><a name="GetMessageHeader"></a><strong>CPJNPOP3Connection::GetMessageHeader</strong></p>
 <p><strong>void CPJNPOP3Connection::GetMessageHeader(int </strong><em>nMsg</em><strong>, 
-CPJNPOP3Message&amp; </strong><em>message</em><strong>);</strong></p>
+CPJNPOP3Buffer&amp; </strong><em>message</em><strong>);</strong></p>
 <p><strong>Parameters</strong></p>
 <p><em>nMsg</em> The message number of the message to retrieve the header of.</p>
 <p><em>message</em> Upon a successful return this will contain the POP3 message 
@@ -633,8 +655,7 @@ debugging it.</p>
 <p><a href="#SetTimeout">CPJNPOP3Connection::SetTimeout</a></p>
 <p>&nbsp;</p>
 <p><a name="SetTimeout"></a><strong>CPJNPOP3Connection::SetTimeout</strong></p>
-<p><strong>void CPJNPOP3Connection::SetTimeout(DWORD </strong><em>dwTimeout</em><strong>) 
-const;</strong></p>
+<p><strong>void CPJNPOP3Connection::SetTimeout(DWORD </strong><em>dwTimeout</em><strong>)</strong></p>
 <p class="rl"><strong>Return Value</strong></p>
 <p class="t">None.</p>
 <p><strong>Parameters</strong></p>
@@ -644,64 +665,29 @@ const;</strong></p>
 <p><strong>See Also </strong></p>
 <p><a href="#GetTimeout">CPJNPOP3Connection::GetTimeout</a></p>
 <p>&nbsp;</p>
-<p>&nbsp;</p>
-<p><a name="GetHeader" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetHeader</strong></p>
-<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetHeader() 
-const;</strong></p>
+<p><a name="GetReadBufferSize"></a><strong>CPJNPOP3Connection::GetReadBufferSize</strong></p>
+<p><strong>DWORD CPJNPOP3Connection::GetReadBufferSize() const;</strong></p>
 <p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CStringA containing the header of this message</p>
-<p>&nbsp;</p>
-<p><a name="GetBody" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetBody</strong></p>
-<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetBody() 
-const;</strong></p>
-<p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CStringA containing the body of this message</p>
-<p>&nbsp;</p>
-<p><a name="GetHeaderItem" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetHeaderItem</strong></p>
-<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetHeaderItem(const 
-CStringA&amp; sName, int nItem = 0) const;</strong></p>
-<p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CStringA containing the header body of the header field</p>
+<p class="t">The buffer size to use for receiving responses from the POP3 
+server.</p>
+<p><strong>Parameters</strong></p>
+<p>None.</p>
 <p><strong>Remarks</strong></p>
-<p>This function allows a specific message header line to be retrieved e.g you could 
-call the function with sName set to &quot;Date&quot; to find the date the mail message was 
-sent at. The return value is a CString which follows the internet convention for 
-that particular header. The nItem parameter allows you to specify that the n&#39;th 
-occurrence of the header field be returned.</p>
+<p>By default this value is 1024 bytes.</p>
+<p><strong>See Also </strong></p>
+<p><a href="#SetReadBufferSize">CPJNPOP3Connection::SetReadBufferSize</a></p>
 <p>&nbsp;</p>
-<p><a name="GetReplyTo" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetReplyTo</strong></p>
-<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetReplyTo() 
+<p><a name="SetReadBufferSize"></a><strong>CPJNPOP3Connection::SetReadBufferSize</strong></p>
+<p><strong>void CPJNPOP3Connection::SetReadBufferSize(DWORD </strong><em>dwReadBufferSize</em><strong>) 
 const;</strong></p>
 <p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CStringA containing the Reply to field</p>
+<p class="t">None.</p>
+<p><strong>Parameters</strong></p>
+<p><em>dwReadBufferSize</em> The buffer size to use in bytes.</p>
 <p><strong>Remarks</strong></p>
-<p>Returns the most appropriate address for replies. Looks first for Reply-To, then 
-From, then Sender, then Return-Path as a last resort, returns the first one of the 
-above that is non-empty.</p>
-<p>&nbsp;</p>
-<p><a name="GetSubject" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetSubject</strong></p>
-<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetSubject() 
-const;</strong></p>
-<p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CStringA containing the subject of the message</p>
-<p><strong>Remarks</strong></p>
-<p>Returns the subject of the message.</p>
-<p>&nbsp;</p>
-<p><a name="GetFrom" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetFrom</strong></p>
-<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetFrom() 
-const;</strong></p>
-<p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CStringA containing the sender of the message</p>
-<p><strong>Remarks</strong></p>
-<p>Returns the sender of the message.</p>
-<p>&nbsp;</p>
-<p><a name="GetDate" href="#GetMessageText"></a><strong>CPJNPOP3Message::GetDate</strong></p>
-<p><strong>CStringA CPJNPOP3Message</strong><strong>::GetDate() 
-const;</strong></p>
-<p class="rl"><strong>Return Value</strong></p>
-<p class="t">A CStringA containing the &quot;Date:&quot; header of the message</p>
-<p><strong>Remarks</strong></p>
-<p>Returns the &quot;Date:&quot; header of the message.</p>
+<p>The corollary function to GetReadBufferSize.</p>
+<p><strong>See Also </strong></p>
+<p><a href="#GetReadBufferSize">CPJNPOP3Connection::GetReadBufferSize</a></p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -717,7 +703,7 @@ const;</strong></p>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-14 June 2008</p>
+22 December 2009</p>
 
 </body>
 

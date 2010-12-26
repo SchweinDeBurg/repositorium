@@ -3,7 +3,7 @@ Module : PJNPOP3.H
 Purpose: Defines the interface for a MFC class encapsulation of the POP3 protocol
 Created: PJN / 04-05-1998
 
-Copyright (c) 1998 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -49,6 +49,7 @@ to maintain a single distribution point for the source code.
 
 /////////////////////////////// Classes ///////////////////////////////////////
 
+//The exception class which CPJNPOP3Connection can throw
 class PJNPOP3_EXT_CLASS CPJNPOP3Exception : public CException
 {
 public:
@@ -71,37 +72,135 @@ protected:
 	DECLARE_DYNAMIC(CPJNPOP3Exception)
 };
 
-////// forward declaration
-class CPJNPOP3Connection;
-
-//Encapsulation of a POP3 message
-class PJNPOP3_EXT_CLASS CPJNPOP3Message
+//A simple wrapper for a POP3 response buffer
+class CPJNPOP3Buffer : public CByteArray
 {
 public:
 //Constructors / Destructors
-  CPJNPOP3Message();
-  CPJNPOP3Message(const CPJNPOP3Message& message);
+  CPJNPOP3Buffer()
+  {
+  }
+  CPJNPOP3Buffer(const CPJNPOP3Buffer& buffer)
+  {
+    Copy(buffer);
+  }
 
 //Methods
-  CPJNPOP3Message& operator=(const CPJNPOP3Message& message);
-  CStringA GetHeader() const;
-  CStringA GetHeaderItem(const CStringA& sName, int nItem = 0) const;
-  CStringA GetBody() const;
-	CStringA GetSubject() const { return GetHeaderItem("Subject"); }
-	CStringA GetFrom() const		{ return GetHeaderItem("From"); }
-	CStringA GetDate() const		{ return GetHeaderItem("Date"); }
-  CStringA GetTo() const	    { return GetHeaderItem("To"); }
-	CStringA GetCC() const	    { return GetHeaderItem("CC"); }
-	CStringA GetReplyTo() const;
+  CPJNPOP3Buffer& operator=(const CPJNPOP3Buffer& buffer)
+  {
+    Copy(buffer);
+    return *this;
+  }
+  
+  CString AsString() const
+  {
+    //What will be the return value from this function
+    CString sResponse;
+    
+    int nSize = static_cast<int>(GetSize());
+    sResponse.Preallocate(nSize + 1);
+    if (nSize)
+    {
+      TCHAR* pszResponse = sResponse.GetBuffer();
+      int nOutputIndex = 0;
+      const BYTE* pResponse = GetData();
+      for (int i=0; i<nSize; i++)
+      {
+        //Lets simple skip over any embedded nulls
+        if (pResponse[i])
+        {
+          pszResponse[nOutputIndex] = pResponse[i];
+          ++nOutputIndex;
+        }
+      }
+      pszResponse[nOutputIndex] = _T('\0');
+      sResponse.ReleaseBuffer();
+    } 
+    
+    return sResponse;
+  }
 
-//Helper Methods
-  static CStringA GetEmailAddress(const CStringA& sNameAndAddress);
-  static CStringA GetEmailFriendlyName(const CStringA& sNameAndAddress);
+  CPJNPOP3Buffer Left(INT_PTR nCount) const
+  {
+    CPJNPOP3Buffer buffer;
+    buffer.SetSize(nCount);
+    if (nCount)
+      memcpy(buffer.GetData(), GetData(), nCount);      
+    
+    return buffer;
+  }
 
-//Member variables
-  CStringA m_sMessage;
+  INT_PTR Find(LPCSTR pszToFind, int nStart = 0) const
+  {
+    //Validate our parameters
+    AFXASSUME(pszToFind);
+  
+    //Some commonly used values we will need
+    INT_PTR nFindSize = strlen(pszToFind);
+    INT_PTR nThisSize = GetSize();
 
-  friend class CPJNPOP3Connection;
+    //Look thro all our data for the specified data
+    for (INT_PTR i=nStart; i<nThisSize; i++)
+    {
+      BOOL bMatch = TRUE;
+      for (INT_PTR j=0; j<nFindSize && bMatch; j++)
+      {
+        INT_PTR nThisIndex = i+j;
+        if (nThisIndex < nThisSize)
+          bMatch = (GetAt(nThisIndex) == pszToFind[j]);
+        else
+          return -1;
+      }
+      if (bMatch)
+        return i;
+    }
+
+    return -1;
+  }
+
+  void Append(const BYTE* pBuffer, DWORD dwSize)
+  {
+    if (dwSize)
+    {
+      INT_PTR nCurrentSize = GetSize();
+      INT_PTR nNewSize = nCurrentSize + dwSize;
+      SetSize(nNewSize);
+      BYTE* pData = GetData();
+      memcpy(&(pData[nCurrentSize]), pBuffer, dwSize);
+    }
+  }
+};
+
+//A version of CStringA which supports secure disposal
+class CPJNPOP3SecureStringA : public CStringA
+{
+public:
+//Constructors / Destructors
+  CPJNPOP3SecureStringA()
+  {
+  }
+  CPJNPOP3SecureStringA(LPCWSTR pszValue) : CStringA(pszValue)
+  {
+  }
+  CPJNPOP3SecureStringA(LPCSTR pszValue) : CStringA(pszValue)
+  {
+  }
+  ~CPJNPOP3SecureStringA()
+  {
+    SecureEmpty();
+  }
+
+//Methods
+  __forceinline void SecureEmpty()
+  {
+    int nLength = GetLength();
+    if (nLength)
+    {
+      LPSTR pszVal = GetBuffer(nLength);
+      SecureZeroMemory(pszVal, nLength);
+      ReleaseBuffer();
+    } 
+  }
 };
   
 //The main class which encapsulates the POP3 connection
@@ -143,12 +242,14 @@ public:
   DWORD   GetMessageSize(int nMsg);
   CString GetMessageID(int nMsg);
   INT_PTR FindMessageID(const CString& sID); 
-  void    Retrieve(int nMsg, CPJNPOP3Message& message);
-  void    GetMessageHeader(int nMsg, CPJNPOP3Message& message);
+  void    Retrieve(int nMsg, CPJNPOP3Buffer& message);
+  void    GetMessageHeader(int nMsg, CPJNPOP3Buffer& message);
   void    Reset();
   void    UIDL();
   void    Noop();
   void    List();
+  void    SetReadBufferSize(DWORD dwReadBufferSize) { m_dwReadBufferSize = dwReadBufferSize; };
+  DWORD   GetReadBufferSize() const { return m_dwReadBufferSize; };
 
 //Proxy methods
   void      SetProxyType(ProxyType proxyType) { m_ProxyType = proxyType; };
@@ -173,12 +274,12 @@ public:
 protected:
   virtual void ReadStatResponse(int& nNumberOfMails, int& nTotalMailSize);
 	virtual BOOL ReadCommandResponse();
-	virtual BOOL ReadCommandResponse(CStringA& sResponse);
+	virtual BOOL ReadCommandResponse(CString& sResponse);
   virtual void ReadListResponse(int nNumberOfMails);
   virtual void ReadUIDLResponse(int nNumberOfMails);
-  virtual void ReadReturnResponse(CPJNPOP3Message& message, DWORD dwSize);
-  virtual BOOL ReadResponse(CStringA& sResponse, LPSTR pszTerminator, BOOL bCalledForReturnResponse);
-  CStringA     GetBodyOfResponse(const CStringA& sResponse) const;
+  virtual void ReadReturnResponse(CPJNPOP3Buffer& message, DWORD dwSize);
+  virtual BOOL ReadResponse(CPJNPOP3Buffer& response, LPSTR pszTerminator, BOOL bCalledForReturnResponse);
+  CPJNPOP3Buffer GetBodyOfResponse(const CPJNPOP3Buffer& response) const;
 #ifndef CPJNPOP3_NOSSL
   virtual CString GetOpenSSLError();
 #endif
@@ -191,10 +292,7 @@ protected:
   int  _Receive(void *pBuffer, int nBuf);
   void _Close();
   BOOL _IsReadible(DWORD dwTimeout);
-  void SetReturnLastCommandResponse(const CStringA& sResponse);
-  
-//Static methods
-  __forceinline static void SecureEmptyString(CStringA& sVal);
+  void SetReturnLastCommandResponse(const CPJNPOP3Buffer& response);
 
 #ifndef CPJNPOP3_NOSSL
   CSSLContext    m_SSLCtx;               //SSL Context
@@ -212,6 +310,7 @@ protected:
   CString        m_sProxyUserName;
   CString        m_sProxyPassword;
   CString        m_sUserAgent;
+  DWORD          m_dwReadBufferSize;
   int            m_nNumberOfMails;
   BOOL           m_bListRetrieved;
   BOOL           m_bStatRetrieved;
