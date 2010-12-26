@@ -566,6 +566,11 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Help\NTray.htm"
+				DeploymentContent="true"
+				>
+			</File>
+			<File
 				RelativePath=".\Help\PJNPOP3.htm"
 				DeploymentContent="true"
 				>
@@ -1118,6 +1123,14 @@
 			>
 			<File
 				RelativePath=".\Source\AppSettings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\NTray.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\NTray.h"
 				>
 			</File>
 		</Filter>
