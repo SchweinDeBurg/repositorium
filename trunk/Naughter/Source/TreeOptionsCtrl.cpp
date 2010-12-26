@@ -193,8 +193,22 @@ History: PJN / 21-04-1999 Added full support for enabling / disabling all the it
                           combo box.
                           8. GetBrowseForFolderCaption, GetBrowseForFileCaption and GetFileExtensionFilter all now by 
                           default use a string resource.
+         PJN / 21-06-2008 1. Updated copyright details
+                          2. Code now compiles cleanly using Code Analysis (/analyze)
+                          3. Updated code to compile correctly using _ATL_CSTRING_EXPLICIT_CONSTRUCTORS define
+                          4. The code now only supports VC 2005 or later. 
+                          5. Replaced all calls to CopyMemory with memcpy
+                          6. Fixed a bug in the CTreeOptionsCtrl constructor when checking the validity of the function
+                          pointers for XP Theming.
+                          7. Fixed a bug in the sample app's COpaqueShoeButton2::BrowseForOpaque function
+         PJN / 20-07-2008 1. Added two missing files to the download zip file specifically the correct sln and vcproj 
+                          files. Thanks to Ingmar Koecher for reporting this issue.
+                          2. Radio buttons and check boxes now by default use a more 3d style of drawing when XP theming
+                          is not active. You can revert back to a more flat style of drawing these items by 
+                          SetFlatStyleRadioButtons(TRUE) and SetFlatStyleCheckBoxes(TRUE) respectively. Thanks to 
+                          Ingmar Koecher for reporting this issue.
 
-Copyright (c) 1999 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -217,11 +231,11 @@ to maintain a single distribution point for the source code.
 #pragma message("To avoid this message, please put shlobj.h in your pre compiled header (normally stdafx.h)")
 #include <shlobj.h>
 #endif
-#ifndef _INC_MALLOC
-#pragma message("To avoid this message, please put malloc.h in your pre compiled header (normally stdafx.h)")
-#include <malloc.h> //for _alloca support
-#endif
 #include "TreeOptionsCtrl.h"
+#ifndef TMSCHEMA_H
+#pragma message("To avoid this message, please put tmschema.h in your pre compiled header (normally stdafx.h)")
+#include <tmschema.h>
+#endif
 
 
 //////////////// Macros / Locals /////////////////////////////////////
@@ -278,7 +292,9 @@ CTreeOptionsCtrl::CTreeOptionsCtrl() : m_pCombo(NULL),
                                        m_bAutoSelect(FALSE),
                                        m_sSeparator(_T(": ")),
                                        m_bDoNotDestroy(FALSE),
-                                       m_bThemed(TRUE)
+                                       m_bThemed(TRUE),
+                                       m_bFlatStyleRadioButtons(FALSE),
+                                       m_bFlatStyleCheckBoxes(FALSE)
 {
   //Dynamically pull in the uxtheme functions
   m_hUXTheme = LoadLibrary(_T("UxTheme.dll"));
@@ -289,8 +305,8 @@ CTreeOptionsCtrl::CTreeOptionsCtrl() : m_pCombo(NULL),
     m_lpfnDrawThemeEdge = reinterpret_cast<LPDRAWTHEMEEDGE>(GetProcAddress(m_hUXTheme, "DrawThemeEdge"));
     m_lpfnCloseThemeData = reinterpret_cast<LPCLOSETHEMEDATA>(GetProcAddress(m_hUXTheme, "CloseThemeData"));
 
-    if ((m_lpfnOpenThemeData == NULL) || (m_lpfnOpenThemeData == NULL) || 
-        (m_lpfnOpenThemeData == NULL) || (m_lpfnCloseThemeData == NULL))
+    if ((m_lpfnOpenThemeData == NULL) || (m_lpfnDrawThemeBackground == NULL) || 
+        (m_lpfnDrawThemeEdge == NULL) || (m_lpfnCloseThemeData == NULL))
     {
       m_lpfnOpenThemeData = NULL;
       m_lpfnDrawThemeBackground = NULL;
@@ -361,14 +377,14 @@ LRESULT CTreeOptionsCtrl::OnRepositionChild(WPARAM /*wParam*/, LPARAM /*lParam*/
 DWORD_PTR CTreeOptionsCtrl::GetUserItemData(HTREEITEM hItem) const
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   return pItemData->m_dwItemData;
 }
 
 BOOL CTreeOptionsCtrl::SetUserItemData(HTREEITEM hItem, DWORD_PTR dwData)
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   pItemData->m_dwItemData = dwData;
   return TRUE;
 }
@@ -936,7 +952,7 @@ BOOL CTreeOptionsCtrl::SetRadioButton(HTREEITEM hItem)
     else
     {
       CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hChild));
-      ASSERT(pItemData);
+      AFXASSUME(pItemData);
       ASSERT(pItemData->m_Type == CTreeOptionsItemData::RadioButton);
       pItemData->m_bChecked = FALSE;
 
@@ -962,7 +978,7 @@ BOOL CTreeOptionsCtrl::GetRadioButton(HTREEITEM hParent, int& nIndex, HTREEITEM&
 
   //Iterate through the child items and turn on the specified one and turn off all the other ones
   HTREEITEM hChild = GetNextItem(hParent, TVGN_CHILD);
-  ASSERT(hChild); //Must have some child items
+  AFXASSUME(hChild); //Must have some child items
 
   //Find the checked item  
   nIndex = 0;
@@ -979,13 +995,13 @@ BOOL CTreeOptionsCtrl::GetRadioButton(HTREEITEM hParent, int& nIndex, HTREEITEM&
     if (!bFound)
     {
       hChild = GetNextItem(hChild, TVGN_NEXT);
-      ASSERT(hChild);
+      AFXASSUME(hChild);
       ++nIndex;
     }
     else
     {
       hCheckItem = hChild;
-      break;                       // This group is done
+      break; //This group is done
     }
   }
 
@@ -1022,7 +1038,7 @@ BOOL CTreeOptionsCtrl::SetGroupEnable(HTREEITEM hItem, BOOL bEnable)
   while (hChild)
   {
     CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hChild));
-    ASSERT(pItemData);
+    AFXASSUME(pItemData);
     ASSERT(pItemData->m_Type == CTreeOptionsItemData::RadioButton || pItemData->m_Type == CTreeOptionsItemData::CheckBox);
     pItemData->m_bEnabled = bEnable ? true : false;
 
@@ -1247,11 +1263,13 @@ void CTreeOptionsCtrl::DestroyOldChildControl()
 
 void CTreeOptionsCtrl::CreateNewChildControl(HTREEITEM hItem)
 {
-  ASSERT(hItem);
+  //Validate our parameters
+  AFXASSUME(hItem);
+  
   m_hControlItem = hItem;
 
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
 
   //Make a copy of the current font being used by the control
   ASSERT(m_Font.m_hObject == NULL);
@@ -1261,7 +1279,7 @@ void CTreeOptionsCtrl::CreateNewChildControl(HTREEITEM hItem)
   VERIFY(m_Font.CreateFontIndirect(&lf));
 
   //Allocate the main control
-  ASSERT(pItemData->m_pRuntimeClass1);
+  AFXASSUME(pItemData->m_pRuntimeClass1 != NULL);
   CString sComboText;
   CString sEditText;
   if (pItemData->m_pRuntimeClass1->IsDerivedFrom(RUNTIME_CLASS(CTreeOptionsCombo)))
@@ -1347,7 +1365,6 @@ void CTreeOptionsCtrl::CreateNewChildControl(HTREEITEM hItem)
     }
     else if (pItemData->m_Type == CTreeOptionsItemData::FontBrowser)
     {
-      LOGFONT lf;
       GetFontItem(hItem, &lf);
       m_pButton->SetFontItem(&lf);
     }
@@ -1447,7 +1464,6 @@ void CTreeOptionsCtrl::CreateNewChildControl(HTREEITEM hItem)
       VERIFY(m_pMultiLineEditFrameWnd->Create(NULL, _T(""), WS_POPUP, r, NULL, NULL, WS_EX_TOOLWINDOW));
       m_pEdit->SetMultiLineFrameWndBuddy(m_pMultiLineEditFrameWnd);
       VERIFY(m_pEdit->CreateEx(0, _T("Edit"), sEditText, dwEditStyle, CRect(0, 0, 0, 0), m_pMultiLineEditFrameWnd, TREE_OPTIONS_EDITBOX_ID));
-      CRect rClient;
       m_pMultiLineEditFrameWnd->GetClientRect(&rClient);
       m_pEdit->SetWindowPos(NULL, r.left, r.top, r.Width(), r.Height(), SWP_NOMOVE | SWP_NOZORDER | SWP_NOREDRAW | SWP_NOACTIVATE);
       m_pMultiLineEditFrameWnd->m_pEdit = m_pEdit;
@@ -1554,11 +1570,11 @@ void CTreeOptionsCtrl::UpdateTreeControlValueFromChildControl(HTREEITEM hItem)
   else if (m_pMultiLineEditFrameWnd)
   {
     CString sText;
-    ASSERT(m_pMultiLineEditFrameWnd->m_pEdit);
+    AFXASSUME(m_pMultiLineEditFrameWnd->m_pEdit != NULL);
     m_pMultiLineEditFrameWnd->m_pEdit->GetWindowText(sText);
 
     CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-    ASSERT(pItemData);
+    AFXASSUME(pItemData != NULL);
     pItemData->m_sMultiLineText = sText;
     sText = m_pMultiLineEditFrameWnd->m_pEdit->FormControlText(sText);
     SetEditText(m_hControlItem, sText);
@@ -1586,7 +1602,7 @@ void CTreeOptionsCtrl::UpdateTreeControlValueFromChildControl(HTREEITEM hItem)
   else if (m_pButton)
   {
     CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-    ASSERT(pItemData);
+    AFXASSUME(pItemData);
     if (pItemData->m_Type == CTreeOptionsItemData::ColorBrowser)
     {
       COLORREF color = m_pButton->GetColor();
@@ -1608,7 +1624,7 @@ BOOL CTreeOptionsCtrl::AddEditBox(HTREEITEM hItem, CRuntimeClass* pRuntimeClassE
 
   //Update the type in the item data
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData != NULL);
   pItemData->m_Type = CTreeOptionsItemData::EditBox;
 
   return bSuccess;
@@ -1621,7 +1637,7 @@ BOOL CTreeOptionsCtrl::AddEditBox(HTREEITEM hItem, CRuntimeClass* pRuntimeClassE
 
   //Add the spin ctrl
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData != NULL);
   ASSERT(pItemData->m_pRuntimeClass1);
   ASSERT(pItemData->m_pRuntimeClass2 == NULL);
   ASSERT(pRuntimeClassSpinCtrl);
@@ -1639,7 +1655,7 @@ BOOL CTreeOptionsCtrl::AddFileEditBox(HTREEITEM hItem, CRuntimeClass* pRuntimeCl
 
   //Add the browse button
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData != NULL);
   ASSERT(pItemData->m_pRuntimeClass1);
   ASSERT(pItemData->m_pRuntimeClass2 == NULL);
   ASSERT(pRuntimeClassButton);
@@ -1656,7 +1672,7 @@ BOOL CTreeOptionsCtrl::AddColorSelector(HTREEITEM hItem, CRuntimeClass* pRuntime
 
   //Setup the browser type
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   pItemData->m_Type = CTreeOptionsItemData::ColorBrowser;
   pItemData->m_bDrawColorForIcon = bDrawColorForIcon ? true : false;
   
@@ -1666,14 +1682,14 @@ BOOL CTreeOptionsCtrl::AddColorSelector(HTREEITEM hItem, CRuntimeClass* pRuntime
 COLORREF CTreeOptionsCtrl::GetColor(HTREEITEM hItem) const
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   return pItemData->m_Color;
 }
 
 void CTreeOptionsCtrl::SetColor(HTREEITEM hItem, COLORREF color)
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   pItemData->m_Color = color;
 
   //Also update the text while we are at it
@@ -1686,13 +1702,13 @@ void CTreeOptionsCtrl::SetColor(HTREEITEM hItem, COLORREF color)
 void CTreeOptionsCtrl::SetMultiLineEditText(HTREEITEM hItem, const CString& sEditText)
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   ASSERT(pItemData->m_Type == CTreeOptionsItemData::EditBox);
   pItemData->m_sMultiLineText = sEditText;
 
   //Also update the text while we are at it (for that we need to create a copy of the edit control)
   CTreeOptionsEdit* pEdit = reinterpret_cast<CTreeOptionsEdit*>(pItemData->m_pRuntimeClass1->CreateObject());
-  ASSERT(pEdit);
+  AFXASSUME(pEdit);
   ASSERT(pEdit->IsKindOf(RUNTIME_CLASS(CTreeOptionsEdit)));  //Your class must be derived from CTreeOptionsEdit
   CString sControlText(pEdit->FormControlText(sEditText));
   SetEditText(hItem, sControlText);
@@ -1702,7 +1718,7 @@ void CTreeOptionsCtrl::SetMultiLineEditText(HTREEITEM hItem, const CString& sEdi
 CString CTreeOptionsCtrl::GetMultiLineEditText(HTREEITEM hItem) const
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   return pItemData->m_sMultiLineText;
 }
 
@@ -1713,7 +1729,7 @@ BOOL CTreeOptionsCtrl::AddFontSelector(HTREEITEM hItem, CRuntimeClass* pRuntimeC
 
   //Setup the browser type
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   pItemData->m_Type = CTreeOptionsItemData::FontBrowser;
   
   return bSuccess;
@@ -1723,15 +1739,15 @@ void CTreeOptionsCtrl::GetFontItem(HTREEITEM hItem, LOGFONT* pLogFont) const
 {
   ASSERT(pLogFont);
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   memcpy(pLogFont, &pItemData->m_Font, sizeof(LOGFONT));
 }
 
 void CTreeOptionsCtrl::SetFontItem(HTREEITEM hItem, const LOGFONT* pLogFont)
 {
-  ASSERT(pLogFont);
+  AFXASSUME(pLogFont);
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   memcpy(&pItemData->m_Font, pLogFont, sizeof(LOGFONT));
 
   //Also update the text while we are at it
@@ -1776,7 +1792,9 @@ void CTreeOptionsCtrl::SetFolderEditText(HTREEITEM hItem, const CString& sEditTe
 
 void CTreeOptionsCtrl::CreateSpinCtrl(CRuntimeClass* pRuntimeClassSpinCtrl, CRect rItem, CRect /*rText*/, CRect rPrimaryControl)
 {
-  ASSERT(pRuntimeClassSpinCtrl);
+  //Validate our parameters
+  AFXASSUME(pRuntimeClassSpinCtrl);
+  
   if (pRuntimeClassSpinCtrl->IsDerivedFrom(RUNTIME_CLASS(CTreeOptionsSpinCtrl)))
   {
     //work out the rect this secondary control
@@ -1787,7 +1805,7 @@ void CTreeOptionsCtrl::CreateSpinCtrl(CRuntimeClass* pRuntimeClassSpinCtrl, CRec
     r.right = rItem.right;
 
     //Create the new spin control
-    ASSERT(m_pSpin);
+    AFXASSUME(m_pSpin);
     m_pSpin->SetEditBuddy(m_pEdit);
     
     //Create the spin control
@@ -1813,7 +1831,9 @@ void CTreeOptionsCtrl::CreateSpinCtrl(CRuntimeClass* pRuntimeClassSpinCtrl, CRec
 
 void CTreeOptionsCtrl::CreateBrowseButton(CRuntimeClass* pRuntimeClassBrowseButton, CRect rItem, CRect rText)
 {
-  ASSERT(pRuntimeClassBrowseButton);
+  //Validate our parameters
+  AFXASSUME(pRuntimeClassBrowseButton);
+  
   if (pRuntimeClassBrowseButton->IsDerivedFrom(RUNTIME_CLASS(CTreeOptionsBrowseButton)))
   {
     if (m_pMultiLineEditFrameWnd)
@@ -2253,7 +2273,7 @@ BOOL CTreeOptionsCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 						      m_lpfnDrawThemeEdge(hTheme, dc, BP_CHECKBOX, CBS_CHECKEDNORMAL, &r, 0, 0, NULL);
                 }
                 else
-                  dc.DrawFrameControl(&r, DFC_BUTTON, DFCS_BUTTONCHECK | DFCS_CHECKED | DFCS_FLAT);
+                  dc.DrawFrameControl(&r, DFC_BUTTON, m_bFlatStyleCheckBoxes ? DFCS_BUTTONCHECK | DFCS_CHECKED | DFCS_FLAT : DFCS_BUTTONCHECK | DFCS_CHECKED);
               }
               else
               {
@@ -2263,7 +2283,7 @@ BOOL CTreeOptionsCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
  						      m_lpfnDrawThemeEdge(hTheme, dc, BP_CHECKBOX, CBS_UNCHECKEDNORMAL, &r, 0, 0, NULL);
                 }
                 else
-                  dc.DrawFrameControl(&r, DFC_BUTTON, DFCS_BUTTONCHECK | DFCS_FLAT);
+                  dc.DrawFrameControl(&r, DFC_BUTTON, m_bFlatStyleCheckBoxes ? DFCS_BUTTONCHECK | DFCS_FLAT : DFCS_BUTTONCHECK);
               }
             }
             else
@@ -2276,7 +2296,7 @@ BOOL CTreeOptionsCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 						      m_lpfnDrawThemeEdge(hTheme, dc, BP_CHECKBOX, CBS_CHECKEDDISABLED, &r, 0, 0, NULL);
                 }
                 else
-                  dc.DrawFrameControl(&r, DFC_BUTTON, DFCS_BUTTONCHECK | DFCS_CHECKED | DFCS_INACTIVE | DFCS_FLAT);
+                  dc.DrawFrameControl(&r, DFC_BUTTON, m_bFlatStyleCheckBoxes ? DFCS_BUTTONCHECK | DFCS_CHECKED | DFCS_INACTIVE | DFCS_FLAT : DFCS_BUTTONCHECK | DFCS_CHECKED | DFCS_INACTIVE);
               }
               else
               {
@@ -2286,7 +2306,7 @@ BOOL CTreeOptionsCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 						      m_lpfnDrawThemeEdge(hTheme, dc, BP_CHECKBOX, CBS_UNCHECKEDDISABLED, &r, 0, 0, NULL);
                 }
                 else
-                  dc.DrawFrameControl(&r, DFC_BUTTON, DFCS_BUTTONCHECK | DFCS_INACTIVE | DFCS_FLAT);
+                  dc.DrawFrameControl(&r, DFC_BUTTON, m_bFlatStyleCheckBoxes ? DFCS_BUTTONCHECK | DFCS_INACTIVE | DFCS_FLAT : DFCS_BUTTONCHECK | DFCS_INACTIVE);
               }
             }
 
@@ -2329,7 +2349,7 @@ BOOL CTreeOptionsCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 						      m_lpfnDrawThemeEdge(hTheme, dc, BP_RADIOBUTTON, CBS_CHECKEDNORMAL, &r, 0, 0, NULL);
                 }
                 else
-                  dc.DrawFrameControl(&r, DFC_BUTTON, DFCS_BUTTONRADIO | DFCS_CHECKED | DFCS_FLAT);
+                  dc.DrawFrameControl(&r, DFC_BUTTON, m_bFlatStyleRadioButtons ? DFCS_BUTTONRADIO | DFCS_CHECKED | DFCS_FLAT : DFCS_BUTTONRADIO | DFCS_CHECKED);
               }
               else
               {
@@ -2339,7 +2359,7 @@ BOOL CTreeOptionsCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
  						      m_lpfnDrawThemeEdge(hTheme, dc, BP_RADIOBUTTON, CBS_UNCHECKEDNORMAL, &r, 0, 0, NULL);
                 }
                 else
-                  dc.DrawFrameControl(&r, DFC_BUTTON, DFCS_BUTTONRADIO | DFCS_FLAT);
+                  dc.DrawFrameControl(&r, DFC_BUTTON, m_bFlatStyleRadioButtons ? DFCS_BUTTONRADIO | DFCS_FLAT : DFCS_BUTTONRADIO);
               }
             }
             else
@@ -2352,7 +2372,7 @@ BOOL CTreeOptionsCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 						      m_lpfnDrawThemeEdge(hTheme, dc, BP_RADIOBUTTON, CBS_CHECKEDDISABLED, &r, 0, 0, NULL);
                 }
                 else
-                  dc.DrawFrameControl(&r, DFC_BUTTON, DFCS_BUTTONRADIO | DFCS_CHECKED | DFCS_INACTIVE | DFCS_FLAT);
+                  dc.DrawFrameControl(&r, DFC_BUTTON, m_bFlatStyleRadioButtons ? DFCS_BUTTONRADIO | DFCS_CHECKED | DFCS_INACTIVE | DFCS_FLAT : DFCS_BUTTONRADIO | DFCS_CHECKED | DFCS_INACTIVE);
               }
               else
               {
@@ -2362,7 +2382,7 @@ BOOL CTreeOptionsCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 						      m_lpfnDrawThemeEdge(hTheme, dc, BP_RADIOBUTTON, CBS_UNCHECKEDDISABLED, &r, 0, 0, NULL);
                 }
                 else
-                  dc.DrawFrameControl(&r, DFC_BUTTON, DFCS_BUTTONRADIO | DFCS_INACTIVE | DFCS_FLAT);
+                  dc.DrawFrameControl(&r, DFC_BUTTON, m_bFlatStyleRadioButtons ? DFCS_BUTTONRADIO | DFCS_INACTIVE | DFCS_FLAT : DFCS_BUTTONRADIO | DFCS_INACTIVE);
               }
             }
 
@@ -2396,7 +2416,7 @@ BOOL CTreeOptionsCtrl::AddDateTime(HTREEITEM hItem, CRuntimeClass* pRuntimeClass
 
   //Setup the item type
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   pItemData->m_Type = CTreeOptionsItemData::DateTimeCtrl;
   
   return bSuccess;
@@ -2405,19 +2425,19 @@ BOOL CTreeOptionsCtrl::AddDateTime(HTREEITEM hItem, CRuntimeClass* pRuntimeClass
 void CTreeOptionsCtrl::GetDateTime(HTREEITEM hItem, SYSTEMTIME& st) const
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   memcpy(&st, &pItemData->m_DateTime, sizeof(SYSTEMTIME));
 }
 
 void CTreeOptionsCtrl::SetDateTime(HTREEITEM hItem, const SYSTEMTIME& st)
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   memcpy(&pItemData->m_DateTime, &st, sizeof(SYSTEMTIME));
 
   //Also update the text while we are at it
   CTreeOptionsDateCtrl* pTempDateTime = static_cast<CTreeOptionsDateCtrl*>(pItemData->m_pRuntimeClass1->CreateObject());
-  ASSERT(pTempDateTime);
+  AFXASSUME(pTempDateTime);
   ASSERT(pTempDateTime->IsKindOf(RUNTIME_CLASS(CTreeOptionsDateCtrl)));  //Your class must be derived from CTreeOptionsDateCtrl
   CString sDateTime(pTempDateTime->GetDisplayText(st));
   SetEditText(hItem, sDateTime);
@@ -2431,7 +2451,7 @@ BOOL CTreeOptionsCtrl::AddIPAddress(HTREEITEM hItem, CRuntimeClass* pRuntimeClas
 
   //Setup the item type
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   pItemData->m_Type = CTreeOptionsItemData::IPAddressCtrl;
   
   return bSuccess;
@@ -2440,19 +2460,19 @@ BOOL CTreeOptionsCtrl::AddIPAddress(HTREEITEM hItem, CRuntimeClass* pRuntimeClas
 DWORD CTreeOptionsCtrl::GetIPAddress(HTREEITEM hItem) const
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   return pItemData->m_dwIPAddress;
 }
 
 void CTreeOptionsCtrl::SetIPAddress(HTREEITEM hItem, DWORD dwAddress)
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   pItemData->m_dwIPAddress = dwAddress;
 
   //Also update the text while we are at it
   CTreeOptionsIPAddressCtrl* pTempIPAddress = static_cast<CTreeOptionsIPAddressCtrl*>(pItemData->m_pRuntimeClass1->CreateObject());
-  ASSERT(pTempIPAddress);
+  AFXASSUME(pTempIPAddress);
   ASSERT(pTempIPAddress->IsKindOf(RUNTIME_CLASS(CTreeOptionsIPAddressCtrl)));  //Your class must be derived from CTreeOptionsIPAddressCtrl
   CString sIPAddress(pTempIPAddress->GetDisplayText(dwAddress));
   SetEditText(hItem, sIPAddress);
@@ -2466,7 +2486,7 @@ BOOL CTreeOptionsCtrl::AddOpaque(HTREEITEM hItem, CRuntimeClass* pRuntimeClass1,
 
   //Add the second class
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   ASSERT(pItemData->m_pRuntimeClass1);
   ASSERT(pItemData->m_pRuntimeClass2 == NULL);
   pItemData->m_pRuntimeClass2 = pRuntimeClass2;
@@ -2480,14 +2500,14 @@ BOOL CTreeOptionsCtrl::AddOpaque(HTREEITEM hItem, CRuntimeClass* pRuntimeClass1,
 DWORD_PTR CTreeOptionsCtrl::GetOpaque(HTREEITEM hItem) const
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   return pItemData->m_dwItemData;
 }
 
 void CTreeOptionsCtrl::SetOpaque(HTREEITEM hItem, DWORD_PTR dwItemData)
 {
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   pItemData->m_dwItemData = dwItemData;
 }
 
@@ -2532,7 +2552,33 @@ HTREEITEM CTreeOptionsCtrl::CopyBranch(HTREEITEM htiBranch, HTREEITEM htiNewPare
 void CTreeOptionsCtrl::SetUseThemes(BOOL bTheme)
 {
   //Hive away the setting into a member variable
-  this->m_bThemed = bTheme;
+  m_bThemed = bTheme;
+
+  //Force an update if the control has been created
+  if (m_hWnd)
+  {
+    Invalidate();
+    UpdateWindow();
+  }
+}
+
+void CTreeOptionsCtrl::SetFlatStyleRadioButtons(BOOL bFlat)
+{
+  //Hive away the setting into a member variable
+  m_bFlatStyleRadioButtons = bFlat;
+
+  //Force an update if the control has been created
+  if (m_hWnd)
+  {
+    Invalidate();
+    UpdateWindow();
+  }
+}
+
+void CTreeOptionsCtrl::SetFlatStyleCheckBoxes(BOOL bFlat)
+{
+  //Hive away the setting into a member variable
+  m_bFlatStyleCheckBoxes = bFlat;
 
   //Force an update if the control has been created
   if (m_hWnd)
@@ -2558,7 +2604,7 @@ void CTreeOptionsComboEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_TAB)
   {
-    ASSERT(m_pTreeCtrl);
+    AFXASSUME(m_pTreeCtrl);
     if (m_pTreeCtrl->m_pButton)
       m_pTreeCtrl->m_pButton->SetFocus();  
     else
@@ -2603,7 +2649,7 @@ void CTreeOptionsCombo::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_TAB)
   {
-    ASSERT(m_pTreeCtrl);
+    AFXASSUME(m_pTreeCtrl);
     if (m_pTreeCtrl->m_pButton)
       m_pTreeCtrl->m_pButton->SetFocus();  
     else
@@ -2641,7 +2687,7 @@ BOOL CTreeOptionsCombo::IsRelatedWnd(CWnd* pChild)
 
   if (!bRelated)
   {
-    ASSERT(m_pTreeCtrl);
+    AFXASSUME(m_pTreeCtrl);
     bRelated = (pChild == m_pTreeCtrl->m_pButton); 
     if (!bRelated)
       bRelated = (pChild == m_pTreeCtrl->m_pSpin); 
@@ -2704,9 +2750,11 @@ int CTreeOptionsFontNameCombo::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
   //Enumerate all the fonts
   CDC* pDC = GetDC();
-  ASSERT(pDC);
-  EnumFonts(pDC->m_hDC, NULL, _EnumFontProc, reinterpret_cast<LPARAM>(this));
-  ReleaseDC(pDC);
+  if (pDC)
+  {
+    EnumFonts(pDC->m_hDC, NULL, _EnumFontProc, reinterpret_cast<LPARAM>(this));
+    ReleaseDC(pDC);
+  }
 	
 	return 0;
 }
@@ -2723,7 +2771,7 @@ int CALLBACK CTreeOptionsFontNameCombo::_EnumFontProc(CONST LOGFONT* lplf, CONST
 { 
   //Convert from the SDK world to the C++ world
   CTreeOptionsFontNameCombo* pThis = reinterpret_cast<CTreeOptionsFontNameCombo*>(lpData);
-  ASSERT(pThis);
+  AFXASSUME(pThis);
   return pThis->EnumFontProc(lplf, lptm, dwType);
 } 
 
@@ -2765,7 +2813,7 @@ void CTreeOptionsDateCtrl::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_TAB)
   {
-    ASSERT(m_pTreeCtrl);
+    AFXASSUME(m_pTreeCtrl);
 		m_pTreeCtrl->SetFocus();
   }
 	else
@@ -2796,16 +2844,16 @@ void CTreeOptionsDateCtrl::OnKillFocus(CWnd* pNewWnd)
 CString CTreeOptionsDateCtrl::GetDisplayText(const SYSTEMTIME& st)
 {
   //What will be the return value from this function
-  CString sInfo;
+  CString sDisplayText;
 
   //First ask the API to give us the buffer size
   int nChars = ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &st, NULL, NULL, 0);
   BOOL bWantStop = FALSE;
   while (nChars && !bWantStop)
   {
-    //alloc the buffer to the required size
-    LPTSTR pszBuffer = static_cast<LPTSTR>(_alloca(nChars * sizeof(TCHAR)));
+    LPTSTR pszBuffer = sDisplayText.GetBuffer(nChars);
     nChars = ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &st, NULL, pszBuffer, nChars);
+    sDisplayText.ReleaseBuffer();
     if (nChars == 0)
     {
       if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
@@ -2817,13 +2865,10 @@ CString CTreeOptionsDateCtrl::GetDisplayText(const SYSTEMTIME& st)
         bWantStop = TRUE;
     }
     else
-    {
-      sInfo = pszBuffer;
       bWantStop = TRUE;
-    }
   }
 
-  return sInfo;
+  return sDisplayText;
 }
 
 BOOL CTreeOptionsDateCtrl::IsRelatedWnd(CWnd* pChild)
@@ -2845,7 +2890,7 @@ END_MESSAGE_MAP()
 CString CTreeOptionsTimeCtrl::GetDisplayText(const SYSTEMTIME& st)
 {
   //What will be the return value from this function
-  CString sInfo;
+  CString sDisplayText;
 
   //First ask the API to give us the buffer size
   int nChars = ::GetTimeFormat(LOCALE_USER_DEFAULT, 0, &st, NULL, NULL, 0);
@@ -2853,8 +2898,9 @@ CString CTreeOptionsTimeCtrl::GetDisplayText(const SYSTEMTIME& st)
   while (nChars && !bWantStop)
   {
     //alloc the buffer to the required size
-    LPTSTR pszBuffer = static_cast<LPTSTR>(_alloca(nChars * sizeof(TCHAR)));
+    LPTSTR pszBuffer = sDisplayText.GetBuffer(nChars);
     nChars = ::GetTimeFormat(LOCALE_USER_DEFAULT, 0, &st, NULL, pszBuffer, nChars);
+    sDisplayText.ReleaseBuffer();
     if (nChars == 0)
     {
       if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
@@ -2866,13 +2912,10 @@ CString CTreeOptionsTimeCtrl::GetDisplayText(const SYSTEMTIME& st)
         bWantStop = TRUE;
     }
     else
-    {
-      sInfo = pszBuffer;
       bWantStop = TRUE;
-    }
   }
 
-  return sInfo;
+  return sDisplayText;
 }
 
 DWORD CTreeOptionsTimeCtrl::GetWindowStyle()
@@ -2904,7 +2947,7 @@ void CTreeOptionsIPAddressCtrl::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_TAB)
   {
-    ASSERT(m_pTreeCtrl);
+    AFXASSUME(m_pTreeCtrl);
 		m_pTreeCtrl->SetFocus();
   }
 	else
@@ -3010,7 +3053,7 @@ void CTreeOptionsEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_TAB)
   {
-    ASSERT(m_pTreeCtrl);
+    AFXASSUME(m_pTreeCtrl);
     if (m_pTreeCtrl->m_pButton)
       m_pTreeCtrl->m_pButton->SetFocus();  
     else
@@ -3053,7 +3096,7 @@ void CTreeOptionsEdit::OnKillFocus(CWnd* pNewWnd)
   ASSERT(m_pTreeCtrl);
 	if (pNewWnd != m_pButtonCtrl)
   {
-    ASSERT(m_pTreeCtrl);
+    AFXASSUME(m_pTreeCtrl);
     m_pTreeCtrl->HandleChildControlLosingFocus();
   }
   else
@@ -3066,21 +3109,21 @@ void CTreeOptionsEdit::OnKillFocus(CWnd* pNewWnd)
 CString CTreeOptionsEdit::GetBrowseForFolderCaption()
 {
   CString sCaption;
-  sCaption.LoadString(IDS_TREEOPTIONS_DEFAULT_FOLDER_CAPTION);
+  VERIFY(sCaption.LoadString(IDS_TREEOPTIONS_DEFAULT_FOLDER_CAPTION));
   return sCaption;
 }
 
 CString CTreeOptionsEdit::GetBrowseForFileCaption()
 {
   CString sCaption;
-  sCaption.LoadString(IDS_TREEOPTIONS_DEFAULT_FILE_CAPTION);
+  VERIFY(sCaption.LoadString(IDS_TREEOPTIONS_DEFAULT_FILE_CAPTION));
   return sCaption;
 }
 
 CString CTreeOptionsEdit::GetFileExtensionFilter()
 {
   CString sCaption;
-  sCaption.LoadString(IDS_TREEOPTIONS_DEFAULT_FILE_EXTENSION_FILTER);
+  VERIFY(sCaption.LoadString(IDS_TREEOPTIONS_DEFAULT_FILE_EXTENSION_FILTER));
   return sCaption;
 }
 
@@ -3095,7 +3138,7 @@ int CALLBACK CTreeOptionsEdit::SHBrowseSetSelProc(HWND hWnd, UINT uMsg, LPARAM /
 void CTreeOptionsEdit::BrowseForFolder(const CString& sInitialFolder)
 {
   //Validate our parameters
-  ASSERT(m_pTreeCtrl);
+  AFXASSUME(m_pTreeCtrl);
 
   //Bring up a standard directory chooser dialog
   TCHAR sDisplayName[_MAX_PATH];
@@ -3189,7 +3232,7 @@ void CTreeOptionsSpinCtrl::GetDefaultRange(int &nLower, int& nUpper)
 void CTreeOptionsSpinCtrl::OnKillFocus(CWnd* pNewWnd) 
 {
   //update the list control and close this window
-  ASSERT(m_pTreeCtrl);
+  AFXASSUME(m_pTreeCtrl);
 	if (pNewWnd != m_pEdit)
     m_pTreeCtrl->HandleChildControlLosingFocus();
   else
@@ -3260,8 +3303,9 @@ CString CTreeOptionsBrowseButton::GetCaption()
 }
 
 int CTreeOptionsBrowseButton::GetWidth()
-{
-  ASSERT(m_pTreeCtrl);
+{ 
+  //Validate our parameters
+  AFXASSUME(m_pTreeCtrl);
 
   CDC* pDC = m_pTreeCtrl->GetDC();
   int nButtonWidth = 0;
@@ -3286,8 +3330,10 @@ int CTreeOptionsBrowseButton::GetWidth()
 
 void CTreeOptionsBrowseButton::OnKillFocus(CWnd* pNewWnd) 
 {
+  //Validate our parameters
+  AFXASSUME(m_pTreeCtrl);
+
   //update the tree control and close this window
-  ASSERT(m_pTreeCtrl);
   if (m_pEdit)
   {
 	  if ((pNewWnd != m_pTreeCtrl->m_pEdit) && !m_pEdit->m_bDoNotDestroyUponLoseFocus)
@@ -3324,22 +3370,22 @@ void CTreeOptionsBrowseButton::OnKillFocus(CWnd* pNewWnd)
 void CTreeOptionsBrowseButton::OnClicked() 
 {
   //Validate our parameters
-  ASSERT(m_pTreeCtrl);
+  AFXASSUME(m_pTreeCtrl);
 
 	//Get the text currently in the control
   HTREEITEM hSelItem = m_pTreeCtrl->GetSelectedItem();
-  ASSERT(hSelItem);
+  AFXASSUME(hSelItem);
 
   //Pull out the item data associated with the selected item
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(m_pTreeCtrl->GetItemData(hSelItem));
-  ASSERT(pItemData);
+  AFXASSUME(pItemData);
   if (pItemData->m_pRuntimeClass1->IsDerivedFrom(RUNTIME_CLASS(CTreeOptionsEdit)))
   {
     if (m_pFrame)
       m_pFrame->SetFocus();
     else
     {
-      ASSERT(m_pEdit);
+      AFXASSUME(m_pEdit);
 
       //Decide on what dialog to bring up, and call the appropiate virtual function
       if (pItemData->m_Type == CTreeOptionsItemData::FileBrowser)
@@ -3407,7 +3453,7 @@ void CTreeOptionsBrowseButton::BrowseForColor()
 void CTreeOptionsBrowseButton::BrowseForFont()
 {
   //Validate our parameters
-  ASSERT(m_pTreeCtrl);
+  AFXASSUME(m_pTreeCtrl);
 
   //Bring up a standard color selector dialog
   CFontDialog dialog(&m_Font);
@@ -3529,7 +3575,7 @@ void DDX_TreeCheck(CDataExchange* pDX, int nIDC, HTREEITEM hItem, BOOL& bCheck)
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
   CTreeOptionsCtrl* pCtrlTreeOptions = static_cast<CTreeOptionsCtrl*>(CWnd::FromHandlePermanent(hWndCtrl));
-  ASSERT(pCtrlTreeOptions);
+  AFXASSUME(pCtrlTreeOptions);
   ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 
   if (pDX->m_bSaveAndValidate)
@@ -3548,7 +3594,7 @@ void DDX_TreeRadio(CDataExchange* pDX, int nIDC, HTREEITEM hParent, int& nIndex)
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
   CTreeOptionsCtrl* pCtrlTreeOptions = static_cast<CTreeOptionsCtrl*>(CWnd::FromHandlePermanent(hWndCtrl));
-  ASSERT(pCtrlTreeOptions);
+  AFXASSUME(pCtrlTreeOptions);
   ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 
   if (pDX->m_bSaveAndValidate)
@@ -3568,7 +3614,7 @@ void DDX_TreeEdit(CDataExchange* pDX, int nIDC, HTREEITEM hItem, CString& sText)
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
   CTreeOptionsCtrl* pCtrlTreeOptions = static_cast<CTreeOptionsCtrl*>(CWnd::FromHandlePermanent(hWndCtrl));
-  ASSERT(pCtrlTreeOptions);
+  AFXASSUME(pCtrlTreeOptions);
   ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 
   if (pDX->m_bSaveAndValidate)
@@ -3581,7 +3627,7 @@ void DDX_TreeEdit(CDataExchange* pDX, int nIDC, HTREEITEM hItem, int& nValue)
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
 	CTreeOptionsCtrl* pCtrlTreeOptions = static_cast<CTreeOptionsCtrl*>(CWnd::FromHandlePermanent(hWndCtrl));
-	ASSERT(pCtrlTreeOptions);
+	AFXASSUME(pCtrlTreeOptions);
 	ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 	
 	CString sText;
@@ -3601,7 +3647,7 @@ void DDX_TreeCombo(CDataExchange* pDX, int nIDC, HTREEITEM hItem, CString& sText
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
   CTreeOptionsCtrl* pCtrlTreeOptions = static_cast<CTreeOptionsCtrl*>(CWnd::FromHandlePermanent(hWndCtrl));
-  ASSERT(pCtrlTreeOptions);
+  AFXASSUME(pCtrlTreeOptions);
   ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 
   if (pDX->m_bSaveAndValidate)
@@ -3614,7 +3660,7 @@ void DDX_TreeFileEdit(CDataExchange* pDX, int nIDC, HTREEITEM hItem, CString& sT
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
   CTreeOptionsCtrl* pCtrlTreeOptions = static_cast<CTreeOptionsCtrl*>(CWnd::FromHandlePermanent(hWndCtrl));
-  ASSERT(pCtrlTreeOptions);
+  AFXASSUME(pCtrlTreeOptions);
   ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 
   if (pDX->m_bSaveAndValidate)
@@ -3627,7 +3673,7 @@ void DDX_TreeFolderEdit(CDataExchange* pDX, int nIDC, HTREEITEM hItem, CString& 
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
   CTreeOptionsCtrl* pCtrlTreeOptions = static_cast<CTreeOptionsCtrl*>(CWnd::FromHandlePermanent(hWndCtrl));
-  ASSERT(pCtrlTreeOptions);
+  AFXASSUME(pCtrlTreeOptions);
   ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 
   if (pDX->m_bSaveAndValidate)
@@ -3640,7 +3686,7 @@ void DDX_TreeColor(CDataExchange* pDX, int nIDC, HTREEITEM hItem, COLORREF& colo
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
   CTreeOptionsCtrl* pCtrlTreeOptions = static_cast<CTreeOptionsCtrl*>(CWnd::FromHandlePermanent(hWndCtrl));
-  ASSERT(pCtrlTreeOptions);
+  AFXASSUME(pCtrlTreeOptions);
   ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 
   if (pDX->m_bSaveAndValidate)
@@ -3653,7 +3699,7 @@ void DDX_TreeFont(CDataExchange* pDX, int nIDC, HTREEITEM hItem, LOGFONT* pLogFo
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
   CTreeOptionsCtrl* pCtrlTreeOptions = static_cast<CTreeOptionsCtrl*>(CWnd::FromHandlePermanent(hWndCtrl));
-  ASSERT(pCtrlTreeOptions);
+  AFXASSUME(pCtrlTreeOptions);
   ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 
   if (pDX->m_bSaveAndValidate)
@@ -3666,7 +3712,7 @@ void DDX_TreeDateTime(CDataExchange* pDX, int nIDC, HTREEITEM hItem, SYSTEMTIME&
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
   CTreeOptionsCtrl* pCtrlTreeOptions = static_cast<CTreeOptionsCtrl*>(CWnd::FromHandlePermanent(hWndCtrl));
-  ASSERT(pCtrlTreeOptions);
+  AFXASSUME(pCtrlTreeOptions);
   ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 
   if (pDX->m_bSaveAndValidate)
@@ -3679,7 +3725,7 @@ void DDX_TreeIPAddress(CDataExchange* pDX, int nIDC, HTREEITEM hItem, DWORD& dwA
 {
 	HWND hWndCtrl = pDX->PrepareCtrl(nIDC);
   CTreeOptionsCtrl* pCtrlTreeOptions = static_cast<CTreeOptionsCtrl*>(CWnd::FromHandlePermanent(hWndCtrl));
-  ASSERT(pCtrlTreeOptions);
+  AFXASSUME(pCtrlTreeOptions);
   ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 
   if (pDX->m_bSaveAndValidate)
