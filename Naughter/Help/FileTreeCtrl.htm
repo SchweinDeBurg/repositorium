@@ -1,14 +1,14 @@
 <html>
 
 <head>
-<title>CFileTreeCtrl v1.53</title>
+<title>CFileTreeCtrl v1.54</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
 </head>
 
 <body>
 
 <h2 align="left"><strong>
-CFileTreeCtrl v1.53</strong></h2>
+CFileTreeCtrl v1.54</strong></h2>
 
 <p>CFileTreeCtrl provides an MFC class
 which provides a tree control similar to the left hand side of Windows Explorer 
@@ -842,6 +842,17 @@ with the major addition that you can also show files in it.   </p>
 	m_nodeType value has been made a BYTE value. This helps to save an 
 	additional 4 bytes per node. Thanks to Michael Mötje for prompting this 
 	update.</li>
+</ul>
+<p><strong>v1.54 of CFileTreeCtrl (8 January 2009)</strong></p>
+<ul>
+	<li>Updated copyright details.</li>
+	<li>Fixed a bug in DisplayPath when it calls InsertFileItem to show the root 
+	folder. The CFileTreeCtrlItemInfo pointer passed to InsertFileItem was not 
+	being initialized with a valid m_NodeType value. Thanks to Colin Bouckaert 
+	for reporting this bug.</li>
+	<li>Fixed a bug in SetSelectedPath if you are trying to select a path when 
+	SetRootFolder and SetShowRootedFolder have previously been called. Thanks to 
+	Colin Bouckaert for reporting this bug. </li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -2469,6 +2480,6 @@ THE AUTHOR</strong></h2>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-13 December 2008</p>
+8 January 2009</p>
 </body>
 </html>

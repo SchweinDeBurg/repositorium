@@ -3,7 +3,7 @@ Module : FileTreeCtrl.h
 Purpose: Interface for an MFC class which provides a tree control similiar 
          to the left hand side of explorer
 
-Copyright (c) 1999 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 

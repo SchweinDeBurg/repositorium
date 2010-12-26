@@ -317,8 +317,15 @@ History: PJN / 11-01-2000 1. Added some asserts to HasGotSubEntries
                           now whether an item is a File (as opposed to a folder) is encoded into the m_NodeType value. In addition the
                           m_nodeType value has been made a BYTE value. This helps to save an additional 4 bytes per node. Thanks to 
                           Michael Mötje for prompting this update.
+         PJN / 08-01-2009 1. Updated copyright details.
+                          2. Fixed a bug in DisplayPath when it calls InsertFileItem to show the root folder. The 
+                          CFileTreeCtrlItemInfo pointer passed to InsertFileItem was not being initialized with a valid
+                          m_NodeType value. Thanks to Colin Bouckaert for reporting this bug.
+                          3. Fixed a bug in SetSelectedPath if you are trying to select a path when SetRootFolder and 
+                          SetShowRootedFolder have previously been called. Thanks to Colin Bouckaert for reporting this 
+                          bug.
 
-Copyright (c) 1999 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -946,6 +953,11 @@ HTREEITEM CFileTreeCtrl::SetSelectedPath(const CString& sPath, BOOL bExpanded)
       return NULL;
     }
     sSearch = sSearch.Right(sSearch.GetLength() - nRootLength);
+    
+    //Remove leading "\" from the path
+    nSearchLength = sSearch.GetLength();
+    if (nSearchLength > 1 && sSearch.GetAt(0) == _T('\\'))
+      sSearch = sSearch.Right(nSearchLength-1);
   }
 
   //Remove trailing "\" from the path
@@ -2993,6 +3005,7 @@ void CFileTreeCtrl::DisplayPath(const CString& sPath, HTREEITEM hParent, BOOL bU
   if (m_bShowRootedFolder && (hParent == m_hRoot))
   {
     CFileTreeCtrlItemInfo* pItem = new CFileTreeCtrlItemInfo;
+    pItem->m_NodeType = CFileTreeCtrlItemInfo::FolderNode;
     pItem->m_sFQPath = m_sRootFolder;
     pItem->m_sRelativePath = m_sRootFolder;
     m_hRootedFolder = InsertFileItem(m_hRoot, pItem, FALSE, GetIconIndex(m_sRootFolder), GetSelIconIndex(m_sRootFolder), TRUE);
