@@ -2,20 +2,20 @@
 
 <head>
 <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
-<title>CTreeOptionsCtrl v1.69</title>
+<title>CTreeOptionsCtrl v1.71</title>
 <link rel="stylesheet" type="text/css" href="./naughter.css">
 </head>
 
 <body>
 
-<h2 align="left">CTreeOptionsCtrl v1.69</h2>
+<h2 align="left">CTreeOptionsCtrl v1.71</h2>
 <p>Welcome to <strong>CTreeOptionsCtrl</strong>, a control which implements a tree 
 options control similar to the advanced tab as seen on the &quot;Internet Options&quot; dialog 
 in Internet Explorer 4 and later. In addition to Boolean values, it also allows 
 edit boxes, combo boxes, file browser, folder browsers, color browsers, font browsers, 
 font name combo boxes, general opaque objects, date controls, time controls and 
 IP address controls to be included in the tree control, similar to the new printer 
-property dialogs which are in Windows 2000. Included below is a snapshot showing 
+property dialogs which were introduced in Windows 2000. Included below is a snapshot showing 
 the demo application and what the control looks like. </p>
 <p>&nbsp;</p>
 <p><img border="0" src="treeoptionsctrl.gif" width="545" height="417"></p>
@@ -84,15 +84,10 @@ the demo application and what the control looks like. </p>
 	<li>You also need to copy over the strings from the sample apps string table 
 	(IDS_TREEOPTIONS_...)</li>
 	<li>Your code will need to include MFC either statically or dynamically.</li>
+	<li>As of v1.70, the classes are now designed for VC 2005 or later. 
+	They will not compile on earlier releases of VC.</li>
 	<li>To see the class in action, have a look at the usage of the code in the 
 	module &quot;appDlg.cpp&quot;.</li>
-	<li>As of v1.4 you will need an up to date Platform SDK installed to compile 
-	the code. This is due to the use of the CustomDraw facilities of the Tree View 
-	which the class now uses to support the color selector. Also you will need to 
-	define the pre-processor constant &quot;_WIN32_IE&quot; to be 0x0400 or greater in your 
-	code. See the sample apps stdafx.h for how to do this in your app. This also 
-	means that you will need to make sure clients have the latest common control 
-	dll installed.</li>
 	<li>Please note that the functions SetItemData and GetItemData which the class 
 	inherits from CTreeCtrl can no longer be used safely since CTreeOptionsCtrl 
 	use the item data for internally allocated data. All usage of GetItemData should 
@@ -450,6 +445,30 @@ the demo application and what the control looks like. </p>
 	tab on a tree options combo box.</li>
 	<li>GetBrowseForFolderCaption, GetBrowseForFileCaption and 
 	GetFileExtensionFilter all now by default use a string resource.</li>
+</ul>
+<p><strong>V1.70 (21 June 2008)</strong> </p>
+<ul>
+	<li>Updated copyright details</li>
+	<li>Code now compiles cleanly using Code Analysis (/analyze)</li>
+	<li>Updated code to compile correctly using _ATL_CSTRING_EXPLICIT_CONSTRUCTORS 
+	define</li>
+	<li>The code now only supports VC 2005 or later. </li>
+	<li>Replaced all calls to CopyMemory with memcpy</li>
+	<li>Fixed a bug in the CTreeOptionsCtrl constructor when checking the 
+	validity of the function pointers for XP Theming.</li>
+	<li>Fixed a bug in the sample app's COpaqueShoeButton2::BrowseForOpaque 
+	function</li>
+</ul>
+<p><strong>V1.71 (20 July 2008)</strong> </p>
+<ul>
+	<li>Added two missing files to the download zip file specifically the 
+	correct sln and vcproj files. Thanks to Ingmar Koecher for reporting this 
+	issue.</li>
+	<li>Radio buttons and check boxes now by default use a more 3d style of 
+	drawing when XP theming is not active. You can revert back to a more flat 
+	style of drawing these items by SetFlatStyleRadioButtons(TRUE) and 
+	SetFlatStyleCheckBoxes(TRUE) respectively. Thanks to Ingmar Koecher for 
+	reporting this issue.</li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1531,7 +1550,7 @@ object and a BOOL value.</p>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-23 December 2007</p>
+20 July 2008</p>
 
 </body>
 

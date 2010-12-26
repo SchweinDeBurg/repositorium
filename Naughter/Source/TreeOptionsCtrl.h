@@ -5,7 +5,7 @@ Purpose: Defines the interface for an MFC class to implement a tree options cont
          Internet Explorer 4 and later
 Created: PJN / 31-03-1999
 
-Copyright (c) 1999 - 2007 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -31,10 +31,6 @@ to maintain a single distribution point for the source code.
 #define CTREEOPTIONSCTRL_EXT_CLASS
 #endif
 
-#ifndef CTREEOPTIONSCTRL_EXT_API
-#define CTREEOPTIONSCTRL_EXT_API
-#endif
-
 
 /////////////////////////////// Includes //////////////////////////////////////
 
@@ -42,23 +38,13 @@ to maintain a single distribution point for the source code.
 #pragma message("To avoid this message please put afxdtctl.h in your pre compiled header (normally stdafx.h)")
 #include <afxdtctl.h>
 #endif
-#ifndef _UXTHEME_H_
-#pragma message("To avoid this message, please put uxtheme.h (XP Themes header file in a recent Platform SDK) in your pre compiled header (normally stdafx.h)")
-#include <uxtheme.h>
-#endif
-#ifndef TMSCHEMA_H
-#pragma message("To avoid this message, please put tmschema.h (XP Themes Schema header file in a recent Platform SDK) in your pre compiled header (normally stdafx.h)")
-#include <tmschema.h>
-#endif
 
 
 /////////////////////////////// Classes ///////////////////////////////////////
 
-
 //forward declaration
 class CTreeOptionsCtrl;
 class CTreeOptionsBrowseButton;
-
 
 //Class which represents an edit box inside a combo box as used by the tree options class
 class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsComboEdit : public CEdit
@@ -87,7 +73,6 @@ protected:
   CTreeOptionsCtrl* m_pTreeCtrl;
 };
 
-
 //Class which represents a combo box used by the tree options class
 class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsCombo : public CComboBox
 {
@@ -98,7 +83,10 @@ public:
 
 protected:
 //Misc methods
-  void SetButtonBuddy(CTreeOptionsBrowseButton* pButton) { m_pButtonCtrl = pButton; };
+  void SetButtonBuddy(CTreeOptionsBrowseButton* pButton) 
+  { 
+    m_pButtonCtrl = pButton; 
+  };
   void SetTreeBuddy(CTreeOptionsCtrl* pTreeCtrl)   
   { 
     //validate our parameters
@@ -106,7 +94,10 @@ protected:
     
     m_pTreeCtrl = pTreeCtrl; 
   };
-  void SetTreeItem(HTREEITEM hItem) { m_hTreeCtrlItem = hItem; };
+  void SetTreeItem(HTREEITEM hItem) 
+  { 
+    m_hTreeCtrlItem = hItem; 
+  };
   virtual DWORD GetWindowStyle();
   virtual int GetDropDownHeight();
   BOOL IsRelatedWnd(CWnd* pChild);
@@ -130,7 +121,6 @@ protected:
   friend class CTreeOptionsCtrl;
 };
 
-
 //Class which represents a combo box which allows a Font Name to be specified
 class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsFontNameCombo : public CTreeOptionsCombo
 {
@@ -151,7 +141,6 @@ protected:
   static int CALLBACK _EnumFontProc(CONST LOGFONT* lplf, CONST TEXTMETRIC* lptm, DWORD dwType, LPARAM lpData);
 };
 
-
 //Class which represents a combo box which allows a True / False value to be specified
 class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsBooleanCombo : public CTreeOptionsCombo
 {
@@ -166,7 +155,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
   DECLARE_DYNCREATE(CTreeOptionsBooleanCombo)
 };
-
 
 //forward declaration
 class CTreeOptionsBrowseButton;
@@ -189,9 +177,18 @@ protected:
     
     m_pTreeCtrl = pTreeCtrl; 
   };
-  void SetButtonBuddy(CTreeOptionsBrowseButton* pButtonCtrl) { m_pButtonCtrl = pButtonCtrl; };
-  void SetTreeItem(HTREEITEM hItem) { m_hTreeCtrlItem = hItem; };
-  void SetMultiLineFrameWndBuddy(CMultiLineEditFrameWnd* pFrameWnd) { m_pFrameWnd = pFrameWnd; };
+  void SetButtonBuddy(CTreeOptionsBrowseButton* pButtonCtrl) 
+  { 
+    m_pButtonCtrl = pButtonCtrl; 
+  };
+  void SetTreeItem(HTREEITEM hItem) 
+  { 
+    m_hTreeCtrlItem = hItem; 
+  };
+  void SetMultiLineFrameWndBuddy(CMultiLineEditFrameWnd* pFrameWnd) 
+  { 
+    m_pFrameWnd = pFrameWnd; 
+  };
   virtual DWORD GetWindowStyle();
   virtual int GetHeight(int nItemHeight);
   virtual void BrowseForFolder(const CString& sInitialFolder);
@@ -221,7 +218,6 @@ protected:
   friend class CTreeOptionsBrowseButton;
 };
 
-
 //Class which represents the spin control which can be used in association with an edit box by the tree options class
 class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsSpinCtrl : public CSpinButtonCtrl
 {
@@ -234,7 +230,10 @@ protected:
 //Misc methods
   void SetTreeBuddy(CTreeOptionsCtrl* pTreeCtrl);
   void SetEditBuddy(CTreeOptionsEdit* pEdit);
-  void SetTreeItem(HTREEITEM hItem) { m_hTreeCtrlItem = hItem; };
+  void SetTreeItem(HTREEITEM hItem) 
+  { 
+    m_hTreeCtrlItem = hItem; 
+  };
   virtual DWORD GetWindowStyle();
   virtual void GetDefaultRange(int &nLower, int& nUpper);
 
@@ -250,7 +249,6 @@ protected:
   friend class CTreeOptionsCtrl;
 };
 
-
 //Class which represents the browse button which can be used in association with an edit box by the tree options class
 class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsBrowseButton : public CButton
 {
@@ -262,14 +260,20 @@ public:
 protected:
 //Misc methods
   void            SetTreeBuddy(CTreeOptionsCtrl* pTreeCtrl);
-  void            SetTreeItem(HTREEITEM hItem) { m_hTreeCtrlItem = hItem; };
+  void            SetTreeItem(HTREEITEM hItem) 
+  { 
+    m_hTreeCtrlItem = hItem; 
+  };
   void            SetEditBuddy(CTreeOptionsEdit* pEdit);
   void            SetFrameBuddy(CMultiLineEditFrameWnd* pFrameWnd);
   void            SetComboBuddy(CTreeOptionsCombo* pCombo);
   virtual DWORD   GetWindowStyle();
   virtual int     GetWidth();
   virtual CString GetCaption();
-  COLORREF        GetColor() const { return m_Color; };
+  COLORREF        GetColor() const 
+  { 
+    return m_Color; 
+  };
   void            SetColor(COLORREF color);
   void            GetFontItem(LOGFONT* pLogFont);
   void            SetFontItem(const LOGFONT* pLogFont);
@@ -295,7 +299,6 @@ protected:
   friend class CTreeOptionsCtrl;
 };
 
-
 //Class which is used for browsing for filenames
 class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsFileDialog : public CFileDialog
 {
@@ -311,7 +314,6 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 };
-
 
 //Class which represents a date / time control used by the list options class
 class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsDateCtrl : public CDateTimeCtrl
@@ -333,12 +335,20 @@ protected:
     
     m_pTreeCtrl = pTreeCtrl; 
   };
-  void SetTreeItem(HTREEITEM hItem) { m_hTreeCtrlItem = hItem; };
+  void SetTreeItem(HTREEITEM hItem) 
+  { 
+    m_hTreeCtrlItem = hItem; 
+  };
   virtual DWORD GetWindowStyle();
   virtual BOOL IsRelatedWnd(CWnd* pChild);
-  void GetDateTime(SYSTEMTIME& st) const { CopyMemory(&st, &m_SystemTime, sizeof(SYSTEMTIME)); };
-  void SetDateTime(const SYSTEMTIME& st) { CopyMemory(&m_SystemTime, &st, sizeof(SYSTEMTIME)); };
-
+  void GetDateTime(SYSTEMTIME& st) const 
+  { 
+    memcpy(&st, &m_SystemTime, sizeof(SYSTEMTIME)); 
+  };
+  void SetDateTime(const SYSTEMTIME& st) 
+  { 
+    memcpy(&m_SystemTime, &st, sizeof(SYSTEMTIME)); 
+  };
 	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg UINT OnGetDlgCode ();
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
@@ -354,7 +364,6 @@ protected:
   
   friend class CTreeOptionsCtrl;
 };
-
 
 //Class which represents a time control used by the list options class
 class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsTimeCtrl : public CTreeOptionsDateCtrl
@@ -374,7 +383,6 @@ protected:
 
   DECLARE_DYNCREATE(CTreeOptionsTimeCtrl)
 };
-
 
 //Class which represents IP Address control used by the list options class
 class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsIPAddressCtrl : public CIPAddressCtrl
@@ -396,10 +404,19 @@ protected:
     
     m_pTreeCtrl = pTreeCtrl; 
   };
-  void SetTreeItem(HTREEITEM hItem) { m_hTreeCtrlItem = hItem; };
+  void SetTreeItem(HTREEITEM hItem) 
+  { 
+    m_hTreeCtrlItem = hItem; 
+  };
   virtual DWORD GetWindowStyle();
-  DWORD GetIPAddress() const { return m_dwAddress; };
-  void SetIPAddress(DWORD dwAddress) { m_dwAddress = dwAddress; };
+  DWORD GetIPAddress() const 
+  { 
+    return m_dwAddress; 
+  };
+  void SetIPAddress(DWORD dwAddress) 
+  { 
+    m_dwAddress = dwAddress; 
+  };
   virtual BOOL IsRelatedWnd(CWnd* pChild);
 
 	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
@@ -417,7 +434,6 @@ protected:
 
   friend class CTreeOptionsCtrl;
 };
-
 
 //Class which is stored in the tree options item data
 class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsItemData
@@ -514,6 +530,10 @@ public:
   virtual BOOL DeleteAllItems();
   void         SetUseThemes(BOOL bTheme);
   BOOL         GetUseThemes() const { return m_bThemed; };
+  void         SetFlatStyleRadioButtons(BOOL bFlat);
+  BOOL         GetFlatStyleRadioButtons() const { return m_bFlatStyleRadioButtons; };
+  void         SetFlatStyleCheckBoxes(BOOL bFlat);
+  BOOL         GetFlatStyleCheckBoxes() const { return m_bFlatStyleCheckBoxes; };
 
 //Inserting items into the control
   HTREEITEM InsertGroup(LPCTSTR lpszItem, int nImage, HTREEITEM hParent = TVI_ROOT, HTREEITEM hAfter = TVI_LAST, DWORD_PTR dwItemData = 0);
@@ -616,6 +636,8 @@ protected:
   CFont                      m_Font;
   CString                    m_sSeparator;
   BOOL                       m_bDoNotDestroy;
+  BOOL                       m_bFlatStyleRadioButtons;
+  BOOL                       m_bFlatStyleCheckBoxes;
 
 //Windows XP Themes suport
   HINSTANCE                  m_hUXTheme;
