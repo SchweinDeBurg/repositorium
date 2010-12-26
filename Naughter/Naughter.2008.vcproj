@@ -388,11 +388,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						AdditionalDependencies="Pop3.rh"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -400,11 +396,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						AdditionalDependencies="Pop3.rh"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -412,11 +404,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						AdditionalDependencies="Pop3.rh"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -424,11 +412,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						AdditionalDependencies="Pop3.rh"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 			</File>
@@ -497,11 +481,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						AdditionalDependencies="Smtp.rh"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -509,11 +489,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						AdditionalDependencies="Smtp.rh"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -521,11 +497,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						AdditionalDependencies="Smtp.rh"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -533,11 +505,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						AdditionalDependencies="Smtp.rh"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 			</File>
@@ -562,6 +530,11 @@
 			</File>
 			<File
 				RelativePath=".\Help\ListOptionsCtrl.htm"
+				DeploymentContent="true"
+				>
+			</File>
+			<File
+				RelativePath=".\Help\MessageBoxX.htm"
 				DeploymentContent="true"
 				>
 			</File>
@@ -621,10 +594,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -632,10 +602,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -643,10 +610,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -654,10 +618,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling resources ($(InputFileName))..."
-						CommandLine="&quot;$(VCInstallDir)bin\rc.exe&quot; /d _AFXDLL /fo $(IntDir)\$(InputName).output Source\$(InputFileName)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).output"
+						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1136,6 +1097,54 @@
 			>
 			<File
 				RelativePath=".\Source\AppSettings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MessageBoxResX.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MessageBoxResX.rc"
+				>
+				<FileConfiguration
+					Name="MBCS Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MBCS Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\MessageBoxX.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MessageBoxX.h"
 				>
 			</File>
 			<File

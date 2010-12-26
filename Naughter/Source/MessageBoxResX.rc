@@ -1,0 +1,25 @@
+#include "winres.h"
+#include "MessageBoxResX.h"
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_MESSAGEBOXX_TIMEOUT_CAPTION "%1 (Closing in %2 seconds)"
+    IDS_MESSAGEBOXX_DISABLED_TIMEOUT_CAPTION "%1 (%2 seconds remaining)"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
