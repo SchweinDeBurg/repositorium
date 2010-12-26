@@ -1,0 +1,594 @@
+<html>
+
+<head>
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<title>CSortedArray / CSortedArrayEx v1.42</title>
+<link href="./naughter.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<h2>CSortedArray / CSortedArrayEx v1.43</h2>
+<p>CSortedArray is a class derived from the MFC template class &quot;CArray&quot; or ATL template 
+class &quot;CAtlArray&quot;. It provides for ordered insertion of items into an array as well 
+as searching and sorting of its items. The compare function used to determine ordering 
+in the array can be easily customised at run-time. </p>
+<p>CSortedArrayEx is a specialized version of CSortedArray which uses functors rather 
+than a standard comparison function. Using this version provides up to a 300% speed 
+improvement because functors allow function inlining in optimizing compilers while 
+a raw function pointer can never be inlined.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<table>
+	<tr>
+		<td><a href="#Features">Features</a></td>
+	</tr>
+	<tr>
+		<td><a href="#Usage">Usage</a></td>
+	</tr>
+	<tr>
+		<td><a href="#Copyright">Copyright</a></td>
+	</tr>
+	<tr>
+		<td><a href="#History">History</a></td>
+	</tr>
+	<tr>
+		<td><a href="#APIReference">API Reference</a></td>
+	</tr>
+	<tr>
+		<td><a href="#Contact">Contacting the Author</a></td>
+	</tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Features"></a>Features </h2>
+<ul>
+	<li>In MFC mode, CSortedArray(Ex) is publicly derived from CArray meaning than 
+	all the functionality of CArray is available in addition to its own functionality.</li>
+	<li>Instances which currently use CArray can be very easily changed to use CSortedArray(Ex) 
+	by simply replacing the text <em>&quot;CArray&quot;,</em> <i>&quot;CSimpleArray&quot;</i> or &quot;CAtlArray&quot; 
+	with <em>&quot;CSortedArray(Ex)</em>&quot; and modifying their template parameters as 
+	necessary<em>.</em></li>
+	<li>How items are sorted in CSortedArray can be easily changed at runtime via 
+	its SetCompareFunction method or via a functor in CSortedArrayEx.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Usage"></a>Usage</h2>
+<ul>
+	<li>To use CSortedArray in your code simply include &quot;SortedArray.h&quot; in your 
+	project and #include it in which ever modules you want to instantiate it in.
+	</li>
+	<li>You can include the class in ATL or MFC projects.</li>
+	<li>If you want to force the classes to exclude the MFC functionality, you can 
+	define the preprocessor value &quot;SORTEDARRAY_ATL_ONLY&quot;.</li>
+	<li>As of v1.38, the classes are now designed for VC 2005 or later. They will 
+	not compile on earlier releases of VC.</li>
+	<li>Please note that like any standard C++ collection class, your class 
+	which is being stored in the array should include copy constructor and 
+	operator= methods. This general rule applies to anytime when anything more 
+	complicated than plain old data types are being stored. </li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Copyright"></a>C<b>opyright</b></h2>
+<ul>
+	<li>You are allowed to include the source code in any product (commercial, shareware, 
+	freeware or otherwise) when your product is released in binary form.</li>
+	<li>You are allowed to modify the source code in any way you want except you 
+	cannot modify the copyright details at the top of each module.</li>
+	<li>If you want to distribute source code with your application, then you are 
+	only allowed to distribute versions released by the author. This is to maintain 
+	a single distribution point for the source code.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="History"></a>History</h2>
+<p><strong>v1.01 (12 January 2000)</strong> </p>
+<ul>
+	<li>Fixed a stack overflow in CSortedArray::Sort.</li>
+</ul>
+<p><strong>v1.02 (25 January 2000)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.03 (31 January 2000)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.04 (21 February 2000)</strong> </p>
+<ul>
+	<li>Fixed a number of problems in CSortedArray::Find</li>
+</ul>
+<p><strong>v1.05 (22 February 2000)</strong> </p>
+<ul>
+	<li>Fixed a problem in CSortedArray::Find when there are no items in the array</li>
+</ul>
+<p><strong>v1.06 (29 February 2000)</strong> </p>
+<ul>
+	<li>Fixed a problem in CSortedArray::Sort when there are no items in the array</li>
+</ul>
+<p><strong>v1.07 (2 April 2000)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.08 (13 May 2000)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.09 (18 July 2000)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.10 (24 July 2000)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.11 (27 August 2000)</strong> </p>
+<ul>
+	<li>Fixed another stack overflow problem in CSortedArray::Sort.</li>
+	<li>Fixed a problem in CSortedArray::Sort where the comparison function was 
+	returning negative values, 0 and positive values instead of -1, 0 &amp; 1. Thanks 
+	to Ted Crow for finding both of these problems.</li>
+	<li>Updated the documentation for SetCompareFunction on what values are expected 
+	to be returned from it.</li>
+</ul>
+<p><strong>v1.12 (5 September 2000)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.13 (20 September 2000)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.14 (2 October 2000)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.15 (5 May 2001)</strong> </p>
+<ul>
+	<li>Updated copyright message.</li>
+</ul>
+<p><strong>v1.2 (5 August 2001)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.21 (11 August 2001)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.22 (11 August 2001)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.23 (1 October 2001)</strong> </p>
+<ul>
+	<li>Fixed another bug in CSortedArray::Sort!. Thanks to Jim Johnson for spotting 
+	this.</li>
+</ul>
+<p><strong>v1.24 (26 October 2001)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.25 (24 December 2001)</strong> </p>
+<ul>
+	<li>Updates to CTreeFileCtrl companion class. </li>
+</ul>
+<p><strong>v1.26 (16 February 2002)</strong> </p>
+<ul>
+	<li>Updated copyright message</li>
+	<li>Updates to CTreeFileCtrl companion class.</li>
+</ul>
+<p><strong>v1.27 (29 May 2002)</strong> </p>
+<ul>
+	<li>Fixed a problem in CSortedArray::OrderedInsert. Thanks to John Young for 
+	spotting and fixing this problem.</li>
+	<li>Updated copyright and usage instructions</li>
+</ul>
+<p><strong>v1.28 (6 December 2002)</strong> </p>
+<ul>
+	<li>Rewrote the Sort method following reports of further problems by Serhiy 
+	Pavlov and Brian Rhodes.</li>
+</ul>
+<p><strong>v1.29 (11 December 2002)</strong> </p>
+<ul>
+	<li>Optimized code by replacing all calls to CArray&lt;&gt;::ElementAt with CArray&lt;&gt;::GetData</li>
+</ul>
+<p><strong>v1.30 (24 January 2003)</strong> </p>
+<ul>
+	<li>Made CSortedArray::Find method const. Thanks to Serhiy Pavlov for reporting 
+	this.</li>
+</ul>
+<p><strong>v1.31 (18 August 2003)</strong></p>
+<ul>
+	<li>Made the class optionally independent of MFC. If the class detects than 
+	MFC is not being included, then the code will use CSimpleArray instead of CArray. 
+	This is a class provided in ATL as a substitute for CArray. Please note that 
+	the method &quot;OrderedInsert&quot; is not available when using CSimpleArray as the parent 
+	class, as CSimpleArray does not implement an &quot;InsertAt&quot; method.</li>
+</ul>
+<p><strong>v1.32 (13 November 2003)</strong></p>
+<ul>
+	<li>Now includes a new class &quot;CSimpleArrayEx&quot; which provides InsertAt support 
+	for ATL&#39;s CSimpleArray class. This is now used by CSortedArray, rather than 
+	directly using CSimpleArray</li>
+</ul>
+<p><strong>v1.33 (16 October 2004)</strong> </p>
+<ul>
+	<li>Class now compiles cleanly on VC 7 if &quot;Detect 64 bit portability issues&quot; 
+	is enabled as well as &quot;Force conformance in for loops&quot; is enabled.</li>
+</ul>
+<p><strong>v1.34 (22 December 2004)</strong> </p>
+<ul>
+	<li>ASSERT / ATLASSERT and INT_PTR / int typedefs are now all done in one place. 
+	Thanks to Serhiy Pavlov for suggesting this.</li>
+	<li>All functions are now declared in the class declaration</li>
+	<li>Reworked the classes to break the actual comparison code into a new traits 
+	class. You now have the choice of using a traits class which specifies the comparison 
+	function via a function (CSortedArrayCompareFunction) or via a functor (CSortedArrayCompareFunctor). 
+	Backward compatibility is kept by defined a class called CSortedArray which 
+	uses a traits class which uses a function. If you want to use the new faster 
+	functor version of the class then simply replace all instances of CSortedArray 
+	with CSortedArrayEx. Thanks to Serhiy Pavlov for this really nice addition.</li>
+	<li>Made CSortedArray::Find method non const again to allow use of GetData function.</li>
+	<li>Updated the sample app to perform some speed tests on ATL Vs MFC and function 
+	pointer Vs Functor implementations. </li>
+</ul>
+<p><strong>v1.35 (12 October 2005)</strong> </p>
+<ul>
+	<li>Updated the Find function to allow &lt;0, 0 and &gt;0 values to be allowed for 
+	the return value from the comparison function / functor. This allows CString::Compare 
+	to be easily used for comparison. Thanks to Serhiy Pavlov for reporting this.
+	</li>
+	<li>Removed unused constructor from CSimpleArrayEx class. </li>
+	<li>Updated copyright details. </li>
+</ul>
+<p><strong>v1.36 (7 July 2006)</strong> </p>
+<ul>
+	<li>Updated copyright details.</li>
+	<li>Minor update to the sample app to allow it to clean compile on VC 2005.</li>
+	<li>Updated the documentation to use the same style as the web site.</li>
+</ul>
+<p><strong>v1.37 (29 July 2006)</strong> </p>
+<ul>
+	<li>Provided a new UniqueSort method which in addition to performing the standard 
+	sorting of the array also removes any duplicates found. Thanks to John Cullen 
+	for suggesting this new feature.</li>
+</ul>
+<p><strong>v1.38 (29 June 2008)</strong> </p>
+<ul>
+	<li>Updated copyright details</li>
+	<li>Code now compiles cleanly using Code Analysis (/analyze)</li>
+	<li>Updated the sample app to clean compile on VC 2008</li>
+	<li>The code now only supports VC 2005 or later.</li>
+</ul>
+<p><strong>v1.39 (26 July 2009)</strong> </p>
+<ul>
+	<li>The code now natively uses INT_PTR for the index values</li>
+	<li>Updated the sample app&#39;s project settings to more modern default values.</li>
+	<li>If the code is compiled in ATL mode only, CSortedArrayBase (and ultimately 
+	CSortedArray/Ex) are now derived from the ATL class CAtlArray instead of the 
+	author&#39;s CSimpleArrayEx class. The CSimpleArrayEx class is now not included 
+	in the download and should be considered defunct. Thanks to Anatoly Ivasyuk 
+	for prompting this update.</li>
+	<li>Reordered the template parameters for CSortedArrayEx to use a default parameter 
+	for ARG_TYPE = const TYPE&amp;. You will need to change the ordering of the template 
+	parameters in any client code which uses CSortedArrayEx.</li>
+</ul>
+<p><strong>v1.40 (11 August 2009)</strong></p>
+<ul>
+	<li>Following testing of the Sort method to ensure correctness, this method 
+	has been completely reimplemented. When using the functor version of this method, 
+	it is now nearly 20% faster compared to the previous version as well as addressing 
+	some sorting errors for specific arrays.<br></li>
+	<li>Fixed a bug in UniqueSort where it incorrectly used the pointer returned 
+	by GetData when calling the comparison function. If you called UniqueSort with 
+	a nHighIndex &lt; GetUpperBound() for the array then the value returned by GetData 
+	could become corrupt if the array was realloc&#39;ed.</li>
+	<li>Addition of an IsSorted simple helper method</li>
+	<li>Updated the code in the test app to better exercise the functionality of 
+	the class</li>
+	<li>Please note that since the implementation of the Sort method is implemented 
+	recursively, you can run out of Win32 stack space if you use the code to sort 
+	extra large sized arrays. Some informal testing indicates that with a standard 
+	Win32 1 MB stack, you will hit a stack overflow with an array containing random 
+	values from 0 to 1000 at roughly 2.9 million elements. Bear in mind that the 
+	amount of stack space used will depend on the actual values and their positions 
+	in your arrays. You will need to be aware of this issue if you will be using 
+	the code for array sizes upwards of a few <br>hundred thousand. I may consider 
+	reimplementing the code to avoid using the Win32 stack to implement the recursion 
+	if anyone things this would be a useful addition.</li>
+	<li>Addition of a StableSort method. Unlike the &quot;Sort&quot; method which internally 
+	uses the quicksort algorithm which is not stable, StableSort internally uses 
+	an insertion sort algorithm which is. Thanks to &quot;yv&quot; for prompting this update.</li>
+</ul>
+<p><strong>v1.41 (7 September 2009)</strong></p>
+<ul>
+	<li>OrderedInsert and Find methods are now Non-const methods. This allows the 
+	code to call the non const versions of CArray::GetData which helps avoids compiler 
+	errors in some client scenarios. </li>
+</ul>
+<p><strong>v1.42 (11 July 2010)</strong></p>
+<ul>
+	<li>Updated copyright details </li>
+	<li>Updated sample app to compile cleanly on VC 2010 </li>
+	<li>Optimized code in the Sort method which remembers the &quot;key&quot; element while 
+	the quicksort is being performed. Thanks to Michael Stephenson for reporting 
+	this optimization. </li>
+</ul>
+<p><strong>v1.43 (6 November 2010)</strong></p>
+<ul>
+	<li>Sort method now internally uses std::sort for sorting. This leads 
+	to dramatic improvements as the size of the array increases. It also means 
+	that issues with stack sizes due to recursion are now gone. Here is some 
+	before and after figures in ms for sorting an array of integers as obtained 
+	from the sample app (Note please do not compare the absolute values from 
+	one row to another as I shrunk down the number of array loops to keep the 
+	measured times reasonable as the array element size increased): <br><br>
+	<table style="width: 800">
+		<tr>
+			<td style="width: 195px">Elements&nbsp;&nbsp; </td>
+			<td style="width: 672px">Before (Function pointer array) </td>
+			<td style="width: 291px">Before (Functor)</td>
+			<td style="width: 886px">After (Function Pointer array)</td>
+			<td style="width: 514px">After (Functor)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">100 </td>
+			<td style="width: 672px">34</td>
+			<td style="width: 291px">7</td>
+			<td style="width: 886px">x2.125</td>
+			<td style="width: 514px">6 (x1.16)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">1000</td>
+			<td style="width: 672px">517</td>
+			<td style="width: 291px">176</td>
+			<td style="width: 886px">295 (x1.75)</td>
+			<td style="width: 514px">84 (x2.09)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">10000</td>
+			<td style="width: 672px">7896</td>
+			<td style="width: 291px">2398</td>
+			<td style="width: 886px">3525 (x2.23)</td>
+			<td style="width: 514px">1098 (x2.18)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">100000</td>
+			<td style="width: 672px">2696</td>
+			<td style="width: 291px">529</td>
+			<td style="width: 886px">336 (x8.03)</td>
+			<td style="width: 514px">97 (x5.45)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">1000000</td>
+			<td style="width: 672px">21017</td>
+			<td style="width: 291px">3284</td>
+			<td style="width: 886px">378 (x55)</td>
+			<td style="width: 514px">125 (x26)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">10000000</td>
+			<td style="width: 672px">208768</td>
+			<td style="width: 291px">30605</td>
+			<td style="width: 886px">899 (x232)</td>
+			<td style="width: 514px">458 (x66)</td>
+		</tr>
+	</table>
+	<br>I believe the reason we see a dramatic improvement in performance as the 
+	array size increases is the fact that br&gt;std::sort uses an introsort algorithm 
+	(which is a quicksort which switches to a heapsort when the recursion reaches
+	a certain depth). The more expert C++ developers out there may ask why not just 
+	use the standard STL collection classes instead of the old style MFC CArray 
+	classes. In my case, many of my classes are pure MFC classes and at the
+	time of their initial development the MFC classes were the number one choice. 
+	Now if you are writing new code it really does make sense to use the STL 
+	classes but it is still nice to have the familiarity of the MFC collection
+	classes with the performance of their STL brethren. </li>
+	<li>StableSort method now internally uses std::stable_sort. Again this has lead 
+	to pretty substantial performance improvements as the size of the array increases 
+	(Again note please do not compare the absolute values from one row to another 
+	as I shrunk down the number of array loops to keep the measured times reasonable 
+	as the array element size increased):<br><br>
+	<table style="width: 800">
+		<tr>
+			<td style="width: 195px">Elements&nbsp;&nbsp; </td>
+			<td style="width: 672px">Before (Function pointer array) </td>
+			<td style="width: 291px">Before (Functor)</td>
+			<td style="width: 886px">After (Function Pointer array)</td>
+			<td style="width: 514px">After (Functor)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">100</td>
+			<td style="width: 672px">249</td>
+			<td style="width: 291px">80</td>
+			<td style="width: 886px">246 (x1.01)</td>
+			<td style="width: 514px">109 (x0.773)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">1000</td>
+			<td style="width: 672px">1005</td>
+			<td style="width: 291px">274</td>
+			<td style="width: 886px">275 (x3.65)</td>
+			<td style="width: 514px">120 (x2.28)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">10000</td>
+			<td style="width: 672px">913</td>
+			<td style="width: 291px">229</td>
+			<td style="width: 886px">45 (x20.29)</td>
+			<td style="width: 514px">13 (x17.61)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">50000</td>
+			<td style="width: 672px">22587</td>
+			<td style="width: 291px">5655</td>
+			<td style="width: 886px">172 (x131)</td>
+			<td style="width: 514px">74 (x76)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">100000</td>
+			<td style="width: 672px">90484</td>
+			<td style="width: 291px">22683</td>
+			<td style="width: 886px">379 (x238)</td>
+			<td style="width: 514px">154 (x147)</td>
+		</tr>
+		<tr>
+			<td style="width: 195px">300000</td>
+			<td style="width: 672px">81606</td>
+			<td style="width: 291px">20420</td>
+			<td style="width: 886px">111 (x735)</td>
+			<td style="width: 514px">48 (x425)</td>
+		</tr>
+	</table>
+&nbsp;</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="APIReference"></a>API Reference</h2>
+<p></p>
+<p>The following functions are provided by CSortedArray and the functor version 
+CSortedArrayEx:</p>
+<p><strong><a href="#OrderedInsert">CSortedArray::OrderedInsert</a><br>
+<a href="#Sort">CSortedArray::Sort</a><br><a href="#StableSort">CSortedArray::StableSort</a><br>
+<a href="#UniqueSort">CSortedArray::UniqueSort</a><br><a href="#Find">CSortedArray::Find</a><br>
+<a href="#SetCompareFunction">CSortedArray::SetCompareFunction</a><br>
+<a href="#GetCompareFunction">CSortedArray::GetCompareFunction<br></a>
+<a href="#SetCompareFunctionEx">CSortedArrayEx::SetCompareFunction</a><br>
+<a href="#GetCompareFunction">CSortedArrayEx::GetCompareFunction</a></strong></p>
+<p>&nbsp;</p>
+<p><a name="OrderedInsert"></a><strong>CSortedArray::OrderedInsert</strong></p>
+<p><strong>INT_PTR</strong><strong> OrderedInsert(ARG_TYPE </strong><em>newElement</em><strong>, 
+INT_PTR </strong><em>nCount </em><strong>= 1);</strong></p>
+<p><strong>Return Value</strong></p>
+<p>The index where the item has been inserted.</p>
+<p><strong>Parameters</strong></p>
+<p><em>newElement</em> The item to add to the array. Its type is determined when 
+the class is instantiated as with the parent class CArray.</p>
+<p><em>nCount</em> The number of times this element should be inserted (defaults 
+to 1).</p>
+<p><strong>Remarks</strong></p>
+<p>Inserts the element into the array. The code internally uses a binary search 
+to determine where the item should be inserted. This assumes that the elements in 
+the array are already ordered. If they are not then you should call the Sort method 
+first. Because the class is publicly derived from CArray / CAtlArray, you can call 
+all of parents methods in addition to the methods implemented in CSortedArray.</p>
+<p>&nbsp;</p>
+<p><a name="Sort"></a><strong>CSortedArray::Sort</strong></p>
+<p><strong>void Sort(INT_PTR </strong><em>nLowIndex </em><strong>= 0, INT_PTR
+</strong><em>nHighIndex </em><strong>= -1);</strong></p>
+<p><strong>Parameters</strong></p>
+<p><em>nLowIndex</em>The index of the first element in the array to sort.</p>
+<p><em>nHighIndex</em> The index of the last element in the array to sort. The default 
+value of -1 represents the last element in the array.</p>
+<p><strong>Remarks</strong></p>
+<p>Performs a sort of the specified elements in the array. Internally the code will 
+use the &quot;Quicksort&quot; algorithm to do the sort.</p>
+<p>&nbsp;</p>
+<p><a name="StableSort"></a><strong>CSortedArray::StableSort</strong></p>
+<p><strong>void StableSort(INT_PTR </strong><em>nLowIndex </em><strong>= 0, INT_PTR
+</strong><em>nHighIndex </em><strong>= -1);</strong></p>
+<p><strong>Parameters</strong></p>
+<p><em>nLowIndex</em>The index of the first element in the array to sort.</p>
+<p><em>nHighIndex</em> The index of the last element in the array to sort. The default 
+value of -1 represents the last element in the array.</p>
+<p><strong>Remarks</strong></p>
+<p>Performs a sort of the specified elements in the array. Internally the code will 
+use the &quot;Insertion Sort&quot; algorithm to do the sort. This method performs a &quot;stable&quot; 
+sort of the table unlike &quot;Sort&quot; which is an unstable algorithm.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><a name="UniqueSort"></a>CSortedArray::UniqueSort</strong></p>
+<p><strong>void UniqueSort(INT_PTR </strong><em>nLowIndex </em><strong>= 0, INT_PTR
+</strong><em>nHighIndex </em><strong>= -1);</strong></p>
+<p><strong>Parameters</strong></p>
+<p><em>nLowIndex</em>The index of the first element in the array to sort.</p>
+<p><em>nHighIndex</em> The index of the last element in the array to sort. The default 
+value of -1 represents the last element in the array.</p>
+<p><strong>Remarks</strong></p>
+<p>Performs a sort of the specified elements in the array and removes any duplicates 
+found. Internally this method calls the standard &quot;Sort&quot; method and then removes 
+any duplicates found.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a name="Find"></a><strong>CSortedArray::Find</strong></p>
+<p><strong>INT_PTR</strong><strong> Find(ARG_TYPE </strong><em>element</em><strong>, 
+INT_PTR </strong><em>nLowIndex </em><strong>= 0, INT_PTR </strong><em>nHighLowIndex
+</em><strong>= -1);</strong></p>
+<p><strong>Return Value</strong></p>
+<p>The index of the item if found otherwise -1 if not.</p>
+<p><strong>Parameters</strong></p>
+<p><em>element</em> The item to search for in the array.</p>
+<p><em>nLowIndex</em> The index of the first element in the array to search.</p>
+<p><em>nHighIndex</em> The index of the last element in the array to search. The 
+default value of -1 represents the last element in the array. </p>
+<p><strong>Remarks</strong></p>
+<p>Searches for an item in the array. The code internally uses a binary search to 
+determine if the element is present or not. </p>
+<p>&nbsp;</p>
+<p><a name="SetCompareFunction"></a><strong>CSortedArray::SetCompareFunction</strong></p>
+<p><strong>void SetCompareFunction(LPCOMPARE_FUNCTION </strong><em>lpfnCompareFunction</em><strong>);</strong></p>
+<p><strong>Parameters</strong></p>
+<p><em>lpfnCompareFunction</em> The new function to use for comparisons to determine 
+the ordering of elements in the array.</p>
+<p><strong>Remarks</strong></p>
+<p>This sets the function which is used internally for item comparisons. LPCOMPARE_FUNCTION 
+is a pointer to a function as defined: </p>
+<dl>
+	<dd>typedef int COMPARE_FUNCTION(ARG_TYPE element1, ARG_TYPE element2); <br>
+	typedef COMPARE_FUNCTION* LPCOMPARE_FUNCTION;</dd>
+</dl>
+<p>The comparison function should operate the same way as the qsort &quot;C&quot; runtime 
+function, i.e. it should return a negative value when element1 is logically less 
+than element2, 0 for equality and a positive value when element1 is logically greater 
+than element2. Note that prior to v1.35 of the code, the code incorrectly handled 
+return values from the Compare function and in fact only handled -1, 0 and 1!.</p>
+<p>&nbsp;</p>
+<p><a name="GetCompareFunction"></a><strong>CSortedArray::GetCompareFunction</strong></p>
+<p><strong>LPCOMPAREFUNCTION GetCompareFunction() const;</strong></p>
+<p><strong>Return Value</strong></p>
+<p>A pointer to the function which is currently used to determine the ordering of 
+elements in the array.</p>
+<p><strong>Remarks</strong></p>
+<p>This is the corollary function to the SetCompareFunction function.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a name="SetCompareFunctionEx"></a><strong>CSortedArrayEx::SetCompareFunction</strong></p>
+<p><strong>void SetCompareFunction(const COMPARE_TYPE&amp; </strong><em>pCompareFunctor</em><strong>);</strong></p>
+<p><strong>Parameters</strong></p>
+<p><em>pCompareFunctor</em> The new comparison functor to use for comparisons to 
+determine the ordering of elements in the array.</p>
+<p><strong>Remarks</strong></p>
+<p>This sets the functor which is used internally for item comparisons.&nbsp;
+</p>
+<p>The comparison functor should operate the same way as the qsort &quot;C&quot; runtime function, 
+i.e. it should return a negative value when element1 is logically less than element2, 
+0 for equality and a positive value when element1 is logically greater than element2. 
+Note that prior to v1.35 of the code, the code incorrectly handled return values 
+from the Compare function and in fact only handled -1, 0 and 1!.</p>
+<p>&nbsp;</p>
+<p><a name="GetCompareFunctionEx"></a><strong>CSortedArrayEx::GetCompareFunction</strong></p>
+<p><strong>COMPARE_TYPE</strong><strong> GetCompareFunction() const;</strong></p>
+<p><strong>Return Value</strong></p>
+<p>the functor which is currently used to determine the ordering of elements in 
+the array.</p>
+<p><strong>Remarks</strong></p>
+<p>This is the corollary function to the SetCompareFunction function.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Contact"></a>Contacting the Author</h2>
+<p>PJ Naughter<br>Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
+Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>6 November 
+2010</p>
+
+</body>
+
+</html>
