@@ -581,6 +581,11 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Help\ToasterWnd.htm"
+				DeploymentContent="true"
+				>
+			</File>
+			<File
 				RelativePath=".\Help\TreeOptionsCtrl.htm"
 				DeploymentContent="true"
 				>
@@ -763,6 +768,14 @@
 						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\ToasterWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ToasterWnd.h"
+				>
 			</File>
 			<File
 				RelativePath=".\Source\TreeOptionsCtrl.cpp"

@@ -77,6 +77,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #include <atlstr.h>
 #include <atltypes.h>
 #include <atlfile.h>
+#include <atlimage.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // PSDK headers
