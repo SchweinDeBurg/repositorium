@@ -51,17 +51,27 @@ History: PJN / 20-03-2007 1. Fixed a bug where the code unnecessarily set the pr
                           with how the native TaskDialog API behaves on Vista. Thanks to Jacob Liebeck for reporting this bug.
          PJN / 28-06-2009 1. Updated the sample apps project settings to more modern default values.
                           2. The supplied zip file now inclues a x64 Unicode DLL version of XTaskDialog.
-                          3. Fixed a bug in calling SystemParametersInfo(SPI_GETNONCLIENTMETRICS,... ). The issue is that the NONCLIENTMETRICS structure can be bigger depending on the
-                          value of the WINVER preprocessor value. The code now ensures that the original base size of NONCLIENTMETRICS is used to ensure it works on down level 
-                          operating systems. For more information on this issue, please see the MSDN documentation on the NONCLIENTMETRICS stucture. Also the second parameter to 
-                          SystemParametersInfo in the code was incorrectly being set to 0, it is now set to the sizeof the structure. Thanks to Dick Smith for reporting 
-                          this issue.
-                          4. Updated the code to be as independent as possible from the standard Windows preprocessor variables (WINVER, _WIN32_WINNT, _WIN32_WINDOWS & _WIN32_IE). Note
-                          the code still requires WINVER >= 0x500
-         PJN / 14-10-2009 1. Fix for returning the correct ID of the button which closes the task dialog if it is closed via the default button via the RETURN key. Thanks to 
-                          Mathias Svensson for reporting this bug.
+                          3. Fixed a bug in calling SystemParametersInfo(SPI_GETNONCLIENTMETRICS,... ). The issue is that the NONCLIENTMETRICS 
+                          structure can be bigger depending on the value of the WINVER preprocessor value. The code now ensures that the 
+                          original base size of NONCLIENTMETRICS is used to ensure it works on down level operating systems. For more information 
+                          on this issue, please see the MSDN documentation on the NONCLIENTMETRICS stucture. Also the second parameter to 
+                          SystemParametersInfo in the code was incorrectly being set to 0, it is now set to the sizeof the structure. Thanks to 
+                          Dick Smith for reporting this issue.
+                          4. Updated the code to be as independent as possible from the standard Windows preprocessor variables (WINVER, 
+                          _WIN32_WINNT, _WIN32_WINDOWS & _WIN32_IE). Note the code still requires WINVER >= 0x500
+         PJN / 14-10-2009 1. Fix for returning the correct ID of the button which closes the task dialog if it is closed via the default button 
+                          via the RETURN key. Thanks to Mathias Svensson for reporting this bug.
+         PJN / 17-12-2009 1. Fixed an issue where if the XTaskDialog code was included in a project which uses parts of the MFC Feature Pack 
+                          classes which were integrated in the MFC version shipped with Visual Studio 2008 SP1, you would get a number of compile 
+                          errors. This is because MFC now has its own class named CDialogImpl in addition to the standard ATL class of the same 
+                          name. The XTaskDialog code now explicitly uses the ATL namespace to address this issue. Thanks to Nordlund Jonas for 
+                          reporting this issue.
+         PJN / 19-12-2010 1. Updated copyright details.
+                          2. Updated the code to compile cleanly on VC 2010
+                          3. Fixed an issue in CXTaskDialog::Layout where a default OK button would not get created in some scenarios. The code 
+                          has been updated to behave more like the Windows API does. Thanks to "Jan-Hendrik" for reporting this issue.
 
-Copyright (c) 2007 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2007 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -473,7 +483,7 @@ HRESULT CXTaskDialog::Layout()
 	
 	//If no command link buttons and no command buttons are specified then just display an OK button
 	BOOL bAddSingleOkButton = FALSE;
-	if ((nStandardButtons == 0) && ((m_pTaskConfig->dwFlags & TDF_USE_COMMAND_LINKS) && (m_pTaskConfig->cButtons == 0)))
+	if ((nStandardButtons == 0) && (m_pTaskConfig->cButtons == 0))
 	{
 	  nStandardButtons = 1;
 	  bAddSingleOkButton = TRUE;
@@ -1331,7 +1341,7 @@ HRESULT CXTaskDialog::LoadMainIcon()
 
   if (m_pTaskConfig->dwFlags & TDF_USE_HICON_MAIN)
   {
-    ATLASSERT(m_pTaskConfig->hMainIcon);
+    ATLASSUME(m_pTaskConfig->hMainIcon);
     m_hMainIcon = DuplicateIcon(NULL, m_pTaskConfig->hMainIcon);
     if (m_hMainIcon == NULL)
     {
@@ -1414,7 +1424,7 @@ HRESULT CXTaskDialog::LoadFooterIcon()
   //Load up the footer icon
   if (m_pTaskConfig->dwFlags & TDF_USE_HICON_FOOTER)
   {
-    ATLASSERT(m_pTaskConfig->hFooterIcon);
+    ATLASSUME(m_pTaskConfig->hFooterIcon);
     m_hFooterIcon = DuplicateIcon(NULL, m_pTaskConfig->hFooterIcon);
     if (m_hFooterIcon == NULL)
     {
@@ -2257,8 +2267,11 @@ LRESULT CXTaskDialog::OnCommand(UINT /*nMsg*/, WPARAM wParam, LPARAM /*lParam*/,
     {
       //Save the state of the verification checkbox
 		  HWND hWndChild = ::GetDlgItem(m_hWnd, m_nVerificationCheckBoxID);
-		  if (hWndChild && ::IsWindow(hWndChild))
-			  m_bVerificationFlagChecked = (::SendMessage(hWndChild, BM_GETCHECK, 0, 0) == BST_CHECKED);
+		  if (hWndChild)
+      {
+        if (::IsWindow(hWndChild))
+			    m_bVerificationFlagChecked = (::SendMessage(hWndChild, BM_GETCHECK, 0, 0) == BST_CHECKED);
+      }
 			  
       //Save which radio button is set
       m_nRadioButtonChecked = -1;
@@ -2361,7 +2374,7 @@ LRESULT CXTaskDialog::OnTimer(UINT /*nMsg*/, WPARAM wParam, LPARAM /*lParam*/, B
 	  if (m_pTaskConfig->pfCallback)
 	  {
 	    DWORD dwCurrentTickCount = GetTickCount();
-	    if (m_pTaskConfig->pfCallback(m_hWnd, TDN_TIMER, dwCurrentTickCount - m_dwLastTickCount, 0, m_pTaskConfig->lpCallbackData) == TRUE)
+	    if (m_pTaskConfig->pfCallback(m_hWnd, TDN_TIMER, dwCurrentTickCount - m_dwLastTickCount, 0, m_pTaskConfig->lpCallbackData) == S_FALSE)
 	      m_dwLastTickCount = dwCurrentTickCount;
 	  }
 	}
@@ -2538,7 +2551,11 @@ LRESULT CXTaskDialog::OnUpdateIcon(UINT /*nMsg*/, WPARAM wParam, LPARAM lParam, 
    	  if (hOurUsedIcon)
    	    SetIcon(hOurUsedIcon, FALSE);
    	  else
+      {
+        #pragma warning (disable:6387)
    	    SetIcon(m_hMainIcon, FALSE);
+        #pragma warning(default:6387)
+      }
  	    SetIcon(m_hMainIcon, TRUE);
  	    
  	    if (m_hMainIcon == NULL)

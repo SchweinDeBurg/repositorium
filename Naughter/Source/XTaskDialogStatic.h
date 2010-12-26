@@ -3,7 +3,7 @@ Module : XTaskDialogStatic.h
 Purpose: Defines the CXTaskDialogStatic class as used by CXTaskDialog.
 Created: PJN / 14-03-2007
 
-Copyright (c) 2007 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2007 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -33,7 +33,7 @@ to maintain a single distribution point for the source code.
 ////////////////////////////// Classes ////////////////////////////////////////
 
 //Class which draws the static controls in a specified background color and specified text color
-class CXTASKDIALOG_EXT_CLASS CXTaskDialogStatic : public CWindowImpl<CXTaskDialogStatic>
+class CXTASKDIALOG_EXT_CLASS CXTaskDialogStatic : public ATL::CWindowImpl<CXTaskDialogStatic>
 {
 public:
 //Constructors / Destructors

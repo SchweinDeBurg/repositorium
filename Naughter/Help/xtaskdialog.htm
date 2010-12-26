@@ -2,14 +2,14 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>XTaskDialog v1.10</title>
+<title>XTaskDialog v1.12</title>
 <link rel="stylesheet" type="text/css" href="./naughter.css">
 </head>
 
 <body>
 
-<h2 align="left"><strong>XTaskDialog v1.10</strong></h2>
-<p>Welcome to <strong>XTaskDialog</strong>, an emulation of the new Vista Task Dialog APIs 
+<h2 align="left"><strong>XTaskDialog v1.12</strong></h2>
+<p>Welcome to <strong>XTaskDialog</strong>, an emulation of the Vista Task Dialog APIs 
 for down level operating systems including Windows 98, Windows ME, Windows 2000, 
 Windows XP and Windows 2003. Task Dialogs 
 are designed as the replacement for the venerable MessageBox API call. Some of you 
@@ -287,6 +287,24 @@ every single dialog which your application puts up!</p>
 	dialog if it is closed via the default button via the RETURN key. Thanks to 
 	Mathias Svensson for reporting this bug.</li>
 </ul>
+<p><strong>V1.11 (17 December 2009)</strong></p>
+<ul>
+	<li>
+	Fixed an issue where if the XTaskDialog code was included in a project 
+	which uses parts of the MFC Feature Pack classes which were integrated in 
+	the MFC version shipped with Visual Studio 2008 SP1, you would get a number 
+	of compile errors. This is because MFC now has its own class named CDialogImpl in addition to the standard ATL class of the same name. The 
+	XTaskDialog code now explicitly uses the ATL namespace to address this 
+	issue. Thanks to Nordlund Jonas for reporting this issue. </li>
+</ul>
+<p><strong>V1.12 (19 December 2010)</strong></p>
+<ul>
+	<li>Updated copyright details.</li>
+	<li>Updated the code to compile cleanly on VC 2010 </li>
+	<li>Fixed an issue in CXTaskDialog::Layout where a default OK button would 
+	not get created in some scenarios. The code has been updated to behave more 
+	like the Windows API does. Thanks to &quot;Jan-Hendrik&quot; for reporting this issue.</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -324,7 +342,9 @@ every single dialog which your application puts up!</p>
 	which provides 2 buttons to exercise the DLL API of XTaskDialog as well as the 
 	static linking approach and both the MFC and Non MFC client classes. It also 
 	includes a button to run the native Vista API with some parameters also. Note 
-	that this will only work correctly if you are running on Vista. The XTaskDialog 
+	that this will only work correctly if you are running on Vista or latter and 
+	are running a Unicode build as TaskDialogs are implemented in the Common 
+	Control v6 DLL which is only officially support under Unicode. The XTaskDialog 
 	DLL is created using a sub project of the main solution file and creates a &quot;XTaskDlg.dll&quot; 
 	which you will need to distribute with your application if you take the DLL 
 	approach. The XTaskDialog DLL project is set up to statically link to the VC 
@@ -356,7 +376,7 @@ every single dialog which your application puts up!</p>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-14 October 2009</p>
+19 December 2010</p>
 
 </body>
 

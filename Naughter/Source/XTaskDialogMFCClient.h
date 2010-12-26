@@ -3,7 +3,7 @@ Module : XTaskDialogMFCClient.H
 Purpose: MFC Client wrapper class for the CXTaskDialog class.
 Created: PJN / 14-03-2007
 
-Copyright (c) 2007 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2007 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
