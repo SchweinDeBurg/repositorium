@@ -4,7 +4,7 @@ Purpose: Client wrapper class for the CXTaskDialog class. This client class is b
          class as provided with WTL8
 Created: PJN / 14-03-2007
 
-Copyright (c) 2007 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2007 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 

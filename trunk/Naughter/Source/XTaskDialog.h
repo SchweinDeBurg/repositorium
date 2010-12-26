@@ -5,7 +5,7 @@ Purpose: Defines the interface for a set of classes which implements an emulatio
          Windows 2003 or later.
 Created: PJN / 14-03-2007
 
-Copyright (c) 2007 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2007 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ public:
 };
 
 //Class which emulates the Vista TaskDialogIndirect API
-class CXTASKDIALOG_EXT_CLASS CXTaskDialog : CDialogImpl<CXTaskDialog>
+class CXTASKDIALOG_EXT_CLASS CXTaskDialog : ATL::CDialogImpl<CXTaskDialog>
 {
 public:
 //Constructors / Destructors

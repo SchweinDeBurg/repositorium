@@ -3,7 +3,7 @@ Module : XTaskDialogButton.h
 Purpose: Defines the CXTaskDialogButton class as used by CXTaskDialog
 Created: PJN / 14-03-2007
 
-Copyright (c) 2007 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2007 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -33,7 +33,7 @@ to maintain a single distribution point for the source code.
 ////////////////////////////// Classes ////////////////////////////////////////
 
 //Class which draws a button / check box in a transparent fashion as required for our custom Task Dialog
-class CXTASKDIALOG_EXT_CLASS CXTaskDialogButton : public CWindowImpl<CXTaskDialogButton>
+class CXTASKDIALOG_EXT_CLASS CXTaskDialogButton : public ATL::CWindowImpl<CXTaskDialogButton>
 {
 public:
 //Constructors / Destructors

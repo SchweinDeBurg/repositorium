@@ -4,7 +4,7 @@ Purpose: Various defines as required by the CXTaskDialog class. This allows us t
          APIs without requiring the Windows Vista SDK to be installed.
 Created: PJN / 20-02-2007
 
-Copyright (c) 2007 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2007 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
