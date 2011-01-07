@@ -123,7 +123,7 @@ FreeImage_ConvertToFloat(FIBITMAP *dib) {
 
 				for(unsigned x = 0; x < width; x++) {
 					// convert and scale to the range [0..1]
-					dst_pixel[x] = LUMA_REC709(src_pixel[x].red, src_pixel[x].green, src_pixel[x].blue) / 65535;
+					dst_pixel[x] = LUMA_REC709(src_pixel[x].red, src_pixel[x].green, src_pixel[x].blue) / 65535.0F;
 				}
 				src_bits += src_pitch;
 				dst_bits += dst_pitch;
@@ -139,7 +139,7 @@ FreeImage_ConvertToFloat(FIBITMAP *dib) {
 
 				for(unsigned x = 0; x < width; x++) {
 					// convert and scale to the range [0..1]
-					dst_pixel[x] = LUMA_REC709(src_pixel[x].red, src_pixel[x].green, src_pixel[x].blue) / 65535;
+					dst_pixel[x] = LUMA_REC709(src_pixel[x].red, src_pixel[x].green, src_pixel[x].blue) / 65535.0F;
 				}
 				src_bits += src_pitch;
 				dst_bits += dst_pitch;
