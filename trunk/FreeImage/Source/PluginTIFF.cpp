@@ -1788,7 +1788,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 															
 						} // channels
 							
-						// done with a block, incr to the next
+						// done with a strip block, incr to the next
 						dib_strip -= strips * dib_pitch;
 						al_strip -= strips * alpha_pitch;
 							
@@ -1810,6 +1810,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						
 						FreeImage_SetChannel(dib, alpha, FICC_ALPHA);
 						FreeImage_Unload(alpha);
+						alpha = NULL;
 					}
 					else {
 						FIBITMAP *t = RemoveAlphaChannel(dib);
@@ -1942,12 +1943,13 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 						} // channels
 							
-						// done with a block, incr to the next
+						// done with a strip block, incr to the next
 						dib_strip -= strips * dst_pitch;
 							
 					} // height
 
 				}
+				free(buf);
 				
 				if(bThrowMessage) {
 					FreeImage_OutputMessageProc(s_format_id, "Warning: parsing error. Image may be incomplete or contain invalid data !");
@@ -1956,7 +1958,6 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
 				SwapRedBlue32(dib);
 #endif
-				free(buf);
 
 			} // !header only
 			
@@ -2006,7 +2007,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				int imageRowSize = TIFFScanlineSize(tif);
 
 
-				// In the tiff file the lines are save from up to down 
+				// In the tiff file the lines are saved from up to down 
 				// In a DIB the lines must be saved from down to up
 
 				BYTE *bits = FreeImage_GetScanLine(dib, height - 1);
@@ -2053,7 +2054,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 		} else if(loadMethod == LoadAsLogLuv) {
 			// ---------------------------------------------------------------------------------
-			// RGBF loading
+			// RGBF LogLuv compressed loading
 			// ---------------------------------------------------------------------------------
 
 			double	stonits;	// input conversion to nits
@@ -2230,23 +2231,19 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 		fi_TIFFIO *fio = (fi_TIFFIO*)data;
 		TIFF *out = fio->tif;
 
-		int32 height;
-		int32 width;
-		uint32 rowsperstrip = (uint32) -1;
-		uint16 bitsperpixel;
+		const FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(dib);
+
+		const int32 width = FreeImage_GetWidth(dib);
+		const int32 height = FreeImage_GetHeight(dib);
+		const uint16 bitsperpixel = (uint16)FreeImage_GetBPP(dib);
+
+		const FIICCPROFILE* iccProfile = FreeImage_GetICCProfile(dib);
+		
+		// setup out-variables based on dib and flag options
+		
 		uint16 bitspersample;
 		uint16 samplesperpixel;
 		uint16 photometric;
-		uint32 pitch;
-		int32 x, y;
-
-		FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(dib);
-
-		width = FreeImage_GetWidth(dib);
-		height = FreeImage_GetHeight(dib);
-		bitsperpixel = (uint16)FreeImage_GetBPP(dib);
-
-		FIICCPROFILE *iccProfile = FreeImage_GetICCProfile(dib);
 
 		if(image_type == FIT_BITMAP) {
 			// standard image: 1-, 4-, 8-, 16-, 24-, 32-bit
@@ -2351,7 +2348,7 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 		TIFFSetField(out, TIFFTAG_PHOTOMETRIC, photometric);
 		TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);	// single image plane 
 		TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
-		TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out, rowsperstrip));
+		TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out, (uint32) -1)); 
 
 		// handle metrics
 
@@ -2397,7 +2394,7 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 			_TIFFfree(r);
 		}
 
-		// compression
+		// compression tag
 
 		WriteCompression(out, bitspersample, samplesperpixel, photometric, flags);
 
@@ -2405,7 +2402,7 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 
 		WriteMetadata(out, dib);
 
-		// thumbnail
+		// thumbnail tag
 
 		if((ifd == 0) && (ifdCount > 1)) {
 			uint32 diroff[1];
@@ -2417,7 +2414,7 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 		// and save them in the TIF
 		// -------------------------------------
 		
-		pitch = FreeImage_GetPitch(dib);
+		const uint32 pitch = FreeImage_GetPitch(dib);
 
 		if(image_type == FIT_BITMAP) {
 			// standard bitmap type
@@ -2438,12 +2435,12 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 							throw FI_MSG_ERROR_MEMORY;
 						}
 
-						for (y = height - 1; y >= 0; y--) {
+						for (int y = height - 1; y >= 0; y--) {
 							BYTE *bits = FreeImage_GetScanLine(dib, y);
 
 							BYTE *p = bits, *b = buffer;
 
-							for(x = 0; x < width; x++) {
+							for(int x = 0; x < width; x++) {
 								// copy the 8-bit layer
 								b[0] = *p;
 								// convert the trns table to a 8-bit alpha layer
@@ -2467,7 +2464,7 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 							throw FI_MSG_ERROR_MEMORY;
 						}
 
-						for (y = 0; y < height; y++) {
+						for (int y = 0; y < height; y++) {
 							// get a copy of the scanline
 							memcpy(buffer, FreeImage_GetScanLine(dib, height - y - 1), pitch);
 							// write the scanline to disc
@@ -2487,7 +2484,7 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 						throw FI_MSG_ERROR_MEMORY;
 					}
 
-					for (y = 0; y < height; y++) {
+					for (int y = 0; y < height; y++) {
 						// get a copy of the scanline
 
 						memcpy(buffer, FreeImage_GetScanLine(dib, height - y - 1), pitch);
@@ -2498,7 +2495,7 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 		
 							BYTE *pBuf = buffer;
 		
-							for (x = 0; x < width; x++) {
+							for (int x = 0; x < width; x++) {
 								INPLACESWAP(pBuf[0], pBuf[2]);
 								pBuf += samplesperpixel;
 							}
@@ -2513,7 +2510,7 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 
 					break;
 				}
-			}
+			}//< switch (bitsperpixel)
 
 		} else if(image_type == FIT_RGBF && (flags & TIFF_LOGLUV) == TIFF_LOGLUV) {
 			// RGBF image => store as XYZ using a LogLuv encoding
@@ -2523,7 +2520,7 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 				throw FI_MSG_ERROR_MEMORY;
 			}
 
-			for (y = 0; y < height; y++) {
+			for (int y = 0; y < height; y++) {
 				// get a copy of the scanline and convert from RGB to XYZ
 				tiff_ConvertLineRGBToXYZ(buffer, FreeImage_GetScanLine(dib, height - y - 1), width);
 				// write the scanline to disc
@@ -2538,7 +2535,7 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 				throw FI_MSG_ERROR_MEMORY;
 			}
 			
-			for (y = 0; y < height; y++) {
+			for (int y = 0; y < height; y++) {
 				// get a copy of the scanline
 				memcpy(buffer, FreeImage_GetScanLine(dib, height - y - 1), pitch);
 				// write the scanline to disc
