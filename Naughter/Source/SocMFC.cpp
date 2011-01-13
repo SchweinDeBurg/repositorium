@@ -80,8 +80,21 @@ History: 03-03-2003 1. Addition of a number of preprocessor defines, namely W3MF
          31-05-2008 1. Code now compiles cleanly using Code Analysis (/analyze)
                     2. Tidied up the CWSocket::ReadHTTPProxyResponse implementation
          23-05-2009 1. Removed use of CT2A throughout the code
+         09-01-2011 1. Updated copyright details.
+                    2. Updated Create method which takes a BOOL to include another default parameter to 
+                    indicate IPv6
+                    3. Updated CWSocket::GetPeerName to operate for IPv6 as well as IPv4
+                    4. All Connect methods now try to connect all addresses returned from address lookups
+                    5. Addition of a CreateAndBind method which support IPv6 binding
+                    6. ReceiveFrom(void* pBuf, int nBufLen, CString& sSocketAddress, UINT& nSocketPort, int nFlags)
+                    method has been updated to support IPv6.
+                    7. SendTo(const void* pBuf, int nBufLen, UINT nHostPort, LPCTSTR pszHostAddress, int nFlags) 
+                    method has been updated to support IPv6 as well as connecting to all addresses returned from
+                    address lookups.
+                    8. Removed all _alloca calls
+                    9. Addition of a number of CreateConnect methods which support IPv6
 
-Copyright (c) 2002 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2002 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -106,6 +119,11 @@ to maintain a single distribution point for the source code.
 #include <atlenc.h>
 #endif
 
+#ifndef __ATL_SOCKET__
+#pragma message("To avoid this message, please put atlsocket.h in your pre compiled header (usually stdafx.h)")
+#include <atlsocket.h>
+#endif
+
 #if defined(__INTEL_COMPILER)
 // remark #279: controlling expression is constant
 #pragma warning(disable: 279)
@@ -127,10 +145,40 @@ to maintain a single distribution point for the source code.
 static char THIS_FILE[] = __FILE__;
 #endif
 
-#pragma comment(lib, "wsock32.lib")
+#pragma comment(lib, "Ws2_32.lib")
 
 
 ///////////////// Implementation //////////////////////////////////////////////
+
+class _SOCMFC_DATA
+{
+public:
+//Constructors /Destructors
+  _SOCMFC_DATA();
+
+//Typedefs
+  typedef LPTSTR (__stdcall RTLIPV6ADDRESSTOSTRING)(const in6_addr*, PTSTR);
+
+//Member variables
+  RTLIPV6ADDRESSTOSTRING* m_pfnRtlIpv6AddressToString;
+};
+
+_SOCMFC_DATA::_SOCMFC_DATA() : m_pfnRtlIpv6AddressToString(NULL)
+{
+  //Get the function pointers
+  HMODULE hNTDLL = GetModuleHandle(_T("NTDLL.DLL"));
+  if (hNTDLL)
+  {
+  #ifdef _UNICODE
+    m_pfnRtlIpv6AddressToString = reinterpret_cast<RTLIPV6ADDRESSTOSTRING*>(GetProcAddress(hNTDLL, "RtlIpv6AddressToStringW"));
+  #else
+    m_pfnRtlIpv6AddressToString = reinterpret_cast<RTLIPV6ADDRESSTOSTRING*>(GetProcAddress(hNTDLL, "RtlIpv6AddressToStringA"));
+  #endif
+  }
+}
+
+//the one and only _SOCMFC_DATA
+_SOCMFC_DATA _SocMFCData;
 
 #pragma pack(push, 1)
 struct WSOCKET_SOCK4_CONNECT_REQUEST
@@ -197,9 +245,6 @@ struct WSOCKET_SOCKS5_USERNAME_AUTHENTICATION_REPLY
   BYTE STATUS;
 };
 #pragma pack(pop)
-
-
-//////////////////////////////// Implementation ///////////////////////////////
 
 BOOL CWSocketException::GetErrorMessage(LPTSTR pstrError, UINT nMaxError, PUINT pnHelpContext)
 {
@@ -297,13 +342,18 @@ void CWSocket::GetPeerName(CString& sPeerAddress, UINT& nPeerPort)
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
 
-	SOCKADDR_IN sockAddr;
+	SOCKADDR_STORAGE sockAddr;
 	memset(&sockAddr, 0, sizeof(sockAddr));
-
 	int nSockAddrLen = sizeof(sockAddr);
 	GetPeerName(reinterpret_cast<SOCKADDR*>(&sockAddr), &nSockAddrLen);
-	nPeerPort = ntohs(sockAddr.sin_port);
-	sPeerAddress = inet_ntoa(sockAddr.sin_addr);
+
+  char szName[NI_MAXHOST];
+  szName[0] = '\0';
+	int nResult = getnameinfo(reinterpret_cast<SOCKADDR*>(&sockAddr), nSockAddrLen, szName, NI_MAXHOST, NULL, 0, 0);
+  if (nResult != 0)
+    ThrowWSocketException();
+	sPeerAddress = szName;
+	nPeerPort = ntohs(SS_PORT(&sockAddr));
 }
 
 void CWSocket::GetSockName(CString& sSocketAddress, UINT& nSocketPort)
@@ -311,42 +361,46 @@ void CWSocket::GetSockName(CString& sSocketAddress, UINT& nSocketPort)
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
 
-	SOCKADDR_IN sockAddr;
+	SOCKADDR_STORAGE sockAddr;
 	memset(&sockAddr, 0, sizeof(sockAddr));
-
 	int nSockAddrLen = sizeof(sockAddr);
 	GetSockName(reinterpret_cast<SOCKADDR*>(&sockAddr), &nSockAddrLen);
-	nSocketPort = ntohs(sockAddr.sin_port);
-	sSocketAddress = inet_ntoa(sockAddr.sin_addr);
+
+  char szName[NI_MAXHOST];
+	int nResult = getnameinfo(reinterpret_cast<SOCKADDR*>(&sockAddr), nSockAddrLen, szName, NI_MAXHOST, NULL, 0, 0);
+  if (nResult != 0)
+    ThrowWSocketException();
+	sSocketAddress = szName;
+	nSocketPort = ntohs(SS_PORT(&sockAddr));
 }
 
-void CWSocket::GetPeerName(SOCKADDR* lpSockAddr, int* lpSockAddrLen)
+void CWSocket::GetPeerName(SOCKADDR* pSockAddr, int* pSockAddrLen)
 { 
   //Validate our parameters
   ASSERT(IsCreated()); //Must have been created first
 
-  if (getpeername(m_hSocket, lpSockAddr, lpSockAddrLen) == SOCKET_ERROR)
+  if (getpeername(m_hSocket, pSockAddr, pSockAddrLen) == SOCKET_ERROR)
     ThrowWSocketException();
 }
 
-void CWSocket::GetSockName(SOCKADDR* lpSockAddr, int* lpSockAddrLen)
+void CWSocket::GetSockName(SOCKADDR* pSockAddr, int* pSockAddrLen)
 { 
   //Validate our parameters
   ASSERT(IsCreated()); //Must have been created first
 
-  if (getsockname(m_hSocket, lpSockAddr, lpSockAddrLen) == SOCKET_ERROR)
+  if (getsockname(m_hSocket, pSockAddr, pSockAddrLen) == SOCKET_ERROR)
     ThrowWSocketException();
 }
 
-void CWSocket::Accept(CWSocket& connectedSocket, sockaddr_in& clientAddress)
+void CWSocket::Accept(CWSocket& connectedSocket, SOCKADDR_IN& clientAddress)
 {
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
   ASSERT(!connectedSocket.IsCreated()); //Must be an unitialized socket
 
   //Call the SDK accept function  
-  int nSize = sizeof(sockaddr_in);
-  SOCKET socket = accept(m_hSocket, reinterpret_cast<sockaddr*>(&clientAddress), &nSize);
+  int nSize = sizeof(SOCKADDR_IN);
+  SOCKET socket = accept(m_hSocket, reinterpret_cast<SOCKADDR*>(&clientAddress), &nSize);
   if (socket == INVALID_SOCKET)
     ThrowWSocketException(); 
 
@@ -354,68 +408,139 @@ void CWSocket::Accept(CWSocket& connectedSocket, sockaddr_in& clientAddress)
   connectedSocket.Attach(socket);
 }
 
-void CWSocket::SetSockOpt(int nOptionName, const void* lpOptionValue, int nOptionLen, int nLevel)
+void CWSocket::Accept(CWSocket& connectedSocket, SOCKADDR* pSockAddr, int* pSockAddrLen)
+{
+  //Validate our parameters
+  ASSERT(IsCreated()); //must have been created first
+  ASSERT(!connectedSocket.IsCreated()); //Must be an unitialized socket
+
+  //Call the SDK accept function  
+  SOCKET socket = accept(m_hSocket, pSockAddr, pSockAddrLen);
+  if (socket == INVALID_SOCKET)
+    ThrowWSocketException(); 
+
+  //Wrap the return value up into a C++ instance
+  connectedSocket.Attach(socket);
+}
+
+void CWSocket::SetSockOpt(int nOptionName, const void* pOptionValue, int nOptionLen, int nLevel)
 { 
   //Validate our parameters
   ASSERT(IsCreated()); //Must have been created first
 
-  if (setsockopt(m_hSocket, nLevel, nOptionName, static_cast<LPCSTR>(lpOptionValue), nOptionLen) == SOCKET_ERROR)
+  if (setsockopt(m_hSocket, nLevel, nOptionName, static_cast<LPCSTR>(pOptionValue), nOptionLen) == SOCKET_ERROR)
     ThrowWSocketException();
 }
 
-void CWSocket::GetSockOpt(int nOptionName, void* lpOptionValue, int* lpOptionLen, int nLevel)
+void CWSocket::GetSockOpt(int nOptionName, void* pOptionValue, int* pOptionLen, int nLevel)
 { 
   //Validate our parameters
   ASSERT(IsCreated()); //Must have been created first
 
-  if (getsockopt(m_hSocket, nLevel, nOptionName, static_cast<LPSTR>(lpOptionValue), lpOptionLen) == SOCKET_ERROR)
+  if (getsockopt(m_hSocket, nLevel, nOptionName, static_cast<LPSTR>(pOptionValue), pOptionLen) == SOCKET_ERROR)
     ThrowWSocketException();
 }
 
-void CWSocket::Bind(const SOCKADDR* lpSockAddr, int nSockAddrLen)
+void CWSocket::Bind(const SOCKADDR* pSockAddr, int nSockAddrLen)
 { 
   //Validate our parameters
   ASSERT(IsCreated()); //Must have been created first
 
-  if (bind(m_hSocket, lpSockAddr, nSockAddrLen) == SOCKET_ERROR)
+  if (bind(m_hSocket, pSockAddr, nSockAddrLen) == SOCKET_ERROR)
     ThrowWSocketException();
 }
 
-void CWSocket::Bind(UINT nSocketPort, LPCTSTR lpszSocketAddress)
+void CWSocket::Bind(UINT nSocketPort, LPCTSTR pszSocketAddress)
+{
+  _Bind(nSocketPort, pszSocketAddress);
+}
+
+void CWSocket::_Bind(UINT nSocketPort, LPCTSTR pszSocketAddress)
 {
   //Setup the structure used in sdk "bind" calls
   SOCKADDR_IN sockAddr;
   memset(&sockAddr, 0, sizeof(sockAddr));
-
   sockAddr.sin_family = AF_INET;
   sockAddr.sin_port = htons(static_cast<u_short>(nSocketPort));
 
   //Do we need to bind to a specific IP address?
-  if (lpszSocketAddress)
+  if (pszSocketAddress)
   {
-    //Convert to an ASCII string
-    CStringA sAsciiSocketAddress(lpszSocketAddress);
+    CStringA sAsciiSocketAddress(pszSocketAddress);
     sockAddr.sin_addr.s_addr = inet_addr(sAsciiSocketAddress);
 
-	  //If the address is not dotted notation, then do a DNS 
-	  //lookup of it.
+	  //The address must be in IPv4 dotted notation
 	  if (sockAddr.sin_addr.s_addr == INADDR_NONE)
-	  {
-		  LPHOSTENT lphost;
-		  lphost = gethostbyname(sAsciiSocketAddress);
-		  if (lphost != NULL)
-			  sockAddr.sin_addr.s_addr = (reinterpret_cast<LPIN_ADDR>(lphost->h_addr))->s_addr;
-		  else
-		  {
-        ThrowWSocketException(WSAEINVAL); 
-			  return;
-		  }
-    }
+      ThrowWSocketException(WSAEINVAL);
   }
   else
     sockAddr.sin_addr.s_addr = htonl(INADDR_ANY); //Bind to any IP address;
 
   Bind(reinterpret_cast<SOCKADDR*>(&sockAddr), sizeof(sockAddr));
+}
+
+void CWSocket::CreateAndBind(UINT nSocketPort, LPCTSTR pszSocketAddress, int nSocketType, int nDefaultAddressFormat)
+{
+  //Validate our parameters
+  ASSERT(!IsCreated()); //must not be created for a v6 style connect
+
+  //Do we need to bind to a specific IP address?
+  if (pszSocketAddress)
+  {
+    CString sPort;
+    sPort.Format(_T("%d"), nSocketPort);
+
+    //Do the address lookup
+    ATL::CSocketAddr lookup;
+    int nError = lookup.FindAddr(pszSocketAddress, sPort, AI_PASSIVE, 0, 0, 0);
+    if (nError != 0)
+      ThrowWSocketException();
+
+    addrinfo* pAddress = lookup.GetAddrInfoList();
+    AFXASSUME(pAddress);
+
+    //Create the socket
+    Create(nSocketType, 0, pAddress->ai_family);
+
+    //Finally bind the socket
+    Bind(pAddress->ai_addr, static_cast<int>(pAddress->ai_addrlen));
+  }
+  else
+  {
+    switch (nDefaultAddressFormat)
+    {
+      case AF_INET6:
+      {
+        //Setup the structure used in sdk "bind" calls
+        SOCKADDR_IN6 sockAddr;
+        memset(&sockAddr, 0, sizeof(sockAddr));
+        sockAddr.sin6_family = AF_INET6;
+        sockAddr.sin6_port = htons(static_cast<USHORT>(nSocketPort));
+        sockAddr.sin6_addr = in6addr_any; //Bind to any IP address;
+
+        //Create the socket
+        Create(nSocketType, 0, nDefaultAddressFormat);
+
+        //Finally bind the socket
+        Bind(reinterpret_cast<SOCKADDR*>(&sockAddr), sizeof(sockAddr));
+        break;
+      }
+      case AF_INET:
+      {
+        //Create the socket
+        Create(nSocketType, 0, nDefaultAddressFormat);
+
+        //Finally bind the socket
+        _Bind(nSocketPort, pszSocketAddress);
+        break;
+      }
+      default:
+      {
+        ASSERT(FALSE);
+        break;
+      }
+    }
+  }
 }
 
 void CWSocket::Close()
@@ -427,48 +552,106 @@ void CWSocket::Close()
 	}
 }
 
-void CWSocket::Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen)
+void CWSocket::Connect(const SOCKADDR* pSockAddr, int nSockAddrLen)
 {
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
 
-	if (connect(m_hSocket, lpSockAddr, nSockAddrLen) == SOCKET_ERROR)
+	if (connect(m_hSocket, pSockAddr, nSockAddrLen) == SOCKET_ERROR)
     ThrowWSocketException();
 }
 
-void CWSocket::Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
+void CWSocket::Connect(LPCTSTR pszHostAddress, UINT nHostPort)
+{
+  CString sHostPort;
+  sHostPort.Format(_T("%d"), nHostPort);
+  _Connect(pszHostAddress, sHostPort);
+}
+
+void CWSocket::_Connect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName)
 {
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
-  ASSERT(lpszHostAddress); //must have a valid host
+  AFXASSUME(pszHostAddress); //must have a valid host
 
-  //Work out the IP address of the machine we want to connect to
-	CStringA sAsciiHostAddress(lpszHostAddress);
+  //Do the address lookup
+  ATL::CSocketAddr lookup;
+  int nError = lookup.FindAddr(pszHostAddress, pszPortOrServiceName, 0, 0, 0, 0);
+  if (nError != 0)
+    ThrowWSocketException();
 
-	//Determine if the address is in dotted notation
-	SOCKADDR_IN sockAddr;
-	memset(&sockAddr, 0, sizeof(sockAddr));
-	sockAddr.sin_family = AF_INET;
-	sockAddr.sin_port = htons(static_cast<u_short>(nHostPort));
-	sockAddr.sin_addr.s_addr = inet_addr(sAsciiHostAddress);
-
-	//If the address is not dotted notation, then do a DNS 
-	//lookup of it.
-	if (sockAddr.sin_addr.s_addr == INADDR_NONE)
-	{
-		LPHOSTENT lphost = gethostbyname(sAsciiHostAddress);
-		if (lphost != NULL)
-			sockAddr.sin_addr.s_addr = (reinterpret_cast<LPIN_ADDR>(lphost->h_addr))->s_addr;
-		else
-      ThrowWSocketException(); 
-	}
-
-  //Call the other version of Connect which does the actual work
-	Connect(reinterpret_cast<SOCKADDR*>(&sockAddr), sizeof(sockAddr));
+  //Iterate through the list of addresses trying to connect
+  BOOL bSuccess = FALSE;
+  int nLastError = 0;
+  addrinfo* pAddress = lookup.GetAddrInfoList();
+  while ((pAddress != NULL) && !bSuccess) 
+  {
+    try
+    {
+      //Call the other version of Connect which does the actual work
+      Connect(pAddress->ai_addr, static_cast<int>(pAddress->ai_addrlen));
+      bSuccess = TRUE;
+    }
+    catch(CWSocketException* pEx)
+    {
+      //Prepare for the next time around
+      nLastError = pEx->m_nError;
+      pEx->Delete();
+      pAddress = pAddress->ai_next;
+    }
+  }
+  if (!bSuccess)
+    ThrowWSocketException(nLastError);
 }
 
-#ifdef _WINSOCK2API_
-void CWSocket::Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen, DWORD dwTimeout, BOOL bResetToBlockingMode)
+void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, UINT nHostPort, int nSocketType)
+{
+  CString sHostPort;
+  sHostPort.Format(_T("%d"), nHostPort);
+  CreateAndConnect(pszHostAddress, sHostPort, nSocketType);
+}
+
+void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName, int nSocketType)
+{
+  //Validate our parameters
+  ASSERT(!IsCreated()); //must not be created for a v6 style connect
+  AFXASSUME(pszHostAddress); //must have a valid host
+
+  //Do the address lookup
+  ATL::CSocketAddr lookup;
+  int nError = lookup.FindAddr(pszHostAddress, pszPortOrServiceName, 0, 0, 0, 0);
+  if (nError != 0)
+    ThrowWSocketException();
+
+  //Iterate through the list of addresses trying to connect
+  BOOL bSuccess = FALSE;
+  int nLastError = 0;
+  addrinfo* pAddress = lookup.GetAddrInfoList();
+  while ((pAddress != NULL) && !bSuccess) 
+  {
+    try
+    {
+      //Create the socket now that we now the family type
+      Close();
+      Create(nSocketType, 0, pAddress->ai_family);
+
+      //Call the other version of Connect which does the actual work
+      Connect(pAddress->ai_addr, static_cast<int>(pAddress->ai_addrlen));
+      bSuccess = TRUE;
+    }
+    catch(CWSocketException* pEx)
+    {
+      //Prepare for the next time around
+      nLastError = pEx->m_nError;
+      pEx->Delete();
+      pAddress = pAddress->ai_next;
+    }
+  }
+  if (!bSuccess)
+    ThrowWSocketException(nLastError);
+}
+
+void CWSocket::Connect(const SOCKADDR* pSockAddr, int nSockAddrLen, DWORD dwTimeout, BOOL bResetToBlockingMode)
 {
   //Create an event to wait on
   WSAEVENT hConnectedEvent = WSACreateEvent();
@@ -489,7 +672,7 @@ void CWSocket::Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen, DWORD dwTim
   }
 
   //Call the SDK "connect" function
-  int nConnected = connect(m_hSocket, lpSockAddr, nSockAddrLen);
+  int nConnected = connect(m_hSocket, pSockAddr, nSockAddrLen);
   if (nConnected == SOCKET_ERROR)
   {
     //Check to see if the call should be completed by waiting for the event to be signalled
@@ -565,73 +748,127 @@ void CWSocket::Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen, DWORD dwTim
   }    
 }
 
-void CWSocket::Connect(LPCTSTR lpszHostAddress, UINT nHostPort, DWORD dwTimeout, BOOL bResetToBlockingMode)
+void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName, DWORD dwTimeout, BOOL bResetToBlockingMode, int nSocketType)
 {
   //Validate our parameters
-  ASSERT(IsCreated()); //must have been created first
-  ASSERT(lpszHostAddress); //must have a valid host
+  ASSERT(!IsCreated()); ////must not be created for a v6 style connect
+  AFXASSUME(pszHostAddress); //must have a valid host
 
-  //Work out the IP address of the machine we want to connect to
-	CStringA sAsciiHostAddress(lpszHostAddress);
+  //Do the address lookup
+  ATL::CSocketAddr lookup;
+  int nError = lookup.FindAddr(pszHostAddress, pszPortOrServiceName, 0, 0, 0, 0);
+  if (nError != 0)
+    ThrowWSocketException();
 
-	//Determine if the address is in dotted notation
-	SOCKADDR_IN sockAddr;
-	memset(&sockAddr, 0, sizeof(sockAddr));
-	sockAddr.sin_family = AF_INET;
-	sockAddr.sin_port = htons(static_cast<u_short>(nHostPort));
-	sockAddr.sin_addr.s_addr = inet_addr(sAsciiHostAddress);
+  BOOL bSuccess = FALSE;
+  int nLastError = 0;
+  addrinfo* pAddress = lookup.GetAddrInfoList();
+  while ((pAddress != NULL) && !bSuccess) 
+  {
+    try
+    {
+      //Create the socket now that we now the family type
+      Close();
+      Create(nSocketType, 0, pAddress->ai_family);
 
-	//If the address is not dotted notation, then do a DNS lookup of it.
-	if (sockAddr.sin_addr.s_addr == INADDR_NONE)
-	{
-		LPHOSTENT lphost = gethostbyname(sAsciiHostAddress);
-		if (lphost != NULL)
-			sockAddr.sin_addr.s_addr = (reinterpret_cast<LPIN_ADDR>(lphost->h_addr))->s_addr;
-		else
-      ThrowWSocketException(); 
-	}
-
-  //Call the other version of Connect which does the actual work
-  Connect(reinterpret_cast<SOCKADDR*>(&sockAddr), sizeof(sockAddr), dwTimeout, bResetToBlockingMode);
+      //Call the other version of Connect which does the actual work
+      Connect(pAddress->ai_addr, static_cast<int>(pAddress->ai_addrlen), dwTimeout, bResetToBlockingMode);
+      bSuccess = TRUE;
+    }
+    catch(CWSocketException* pEx)
+    {
+      //Prepare for the next time around
+      nLastError = pEx->m_nError;
+      pEx->Delete();
+      pAddress = pAddress->ai_next;
+    }
+  }
+  if (!bSuccess)
+    ThrowWSocketException(nLastError);
 }
-#endif //_WINSOCK2API_
 
-int CWSocket::Receive(void* lpBuf, int nBufLen, int nFlags)
+void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, UINT nHostPort, DWORD dwTimeout, BOOL bResetToBlockingMode, int nSocketType)
+{
+  CString sHostPort;
+  sHostPort.Format(_T("%d"), nHostPort);
+  CreateAndConnect(pszHostAddress, sHostPort, dwTimeout, bResetToBlockingMode, nSocketType);
+}
+
+int CWSocket::Receive(void* pBuf, int nBufLen, int nFlags)
 {
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
 
-  int nReceived = recv(m_hSocket, static_cast<LPSTR>(lpBuf), nBufLen, nFlags); 
+  int nReceived = recv(m_hSocket, static_cast<LPSTR>(pBuf), nBufLen, nFlags); 
   if (nReceived == SOCKET_ERROR)
     ThrowWSocketException();
 
   return nReceived;
 }
 
-int CWSocket::ReceiveFrom(void* lpBuf, int nBufLen, SOCKADDR* lpSockAddr, int* lpSockAddrLen, int nFlags)
+int CWSocket::ReceiveFrom(void* pBuf, int nBufLen, SOCKADDR* pSockAddr, int* pSockAddrLen, int nFlags)
 { 
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
 
-  int nReceived = recvfrom(m_hSocket, static_cast<LPSTR>(lpBuf), nBufLen, nFlags, lpSockAddr, lpSockAddrLen);
+  int nReceived = recvfrom(m_hSocket, static_cast<LPSTR>(pBuf), nBufLen, nFlags, pSockAddr, pSockAddrLen);
   if (nReceived == SOCKET_ERROR)
     ThrowWSocketException();
 
   return nReceived;
 }
 
-int CWSocket::ReceiveFrom(void* lpBuf, int nBufLen, CString& sSocketAddress, UINT& nSocketPort, int nFlags)
+CString CWSocket::AddressToString(const SOCKADDR_INET& sockAddr)
+{
+  //What will be the return value from this function
+  CString sSocketAddress;
+
+  if (sockAddr.si_family == AF_INET)
+  {
+    const SOCKADDR_IN* pIPv4SockAddr = reinterpret_cast<const SOCKADDR_IN*>(&sockAddr);
+	  sSocketAddress = inet_ntoa(pIPv4SockAddr->sin_addr);
+  }
+  else if (sockAddr.si_family == AF_INET6)
+  {
+    if (_SocMFCData.m_pfnRtlIpv6AddressToString == NULL)
+      ThrowWSocketException(ERROR_CALL_NOT_IMPLEMENTED);
+    const SOCKADDR_IN6* pIPv6SockAddr = reinterpret_cast<const SOCKADDR_IN6*>(&sockAddr);
+	  _SocMFCData.m_pfnRtlIpv6AddressToString(&pIPv6SockAddr->sin6_addr, sSocketAddress.GetBufferSetLength(47));
+    sSocketAddress.ReleaseBuffer();
+  }
+  else
+    ThrowWSocketException(WSAEFAULT);
+
+  return sSocketAddress;
+}
+
+int CWSocket::ReceiveFrom(void* pBuf, int nBufLen, CString& sSocketAddress, UINT& nSocketPort, int nFlags)
 {
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
 
-	SOCKADDR_IN sockAddr;
-	memset(&sockAddr, 0, sizeof(sockAddr));
-
+	SOCKADDR_INET sockAddr;
+  memset(&sockAddr, 0, sizeof(sockAddr));
 	int nSockAddrLen = sizeof(sockAddr);
-	int nResult = ReceiveFrom(lpBuf, nBufLen, reinterpret_cast<SOCKADDR*>(&sockAddr), &nSockAddrLen, nFlags);
-	nSocketPort = ntohs(sockAddr.sin_port);
-	sSocketAddress = inet_ntoa(sockAddr.sin_addr);
+	int nResult = ReceiveFrom(pBuf, nBufLen, reinterpret_cast<SOCKADDR*>(&sockAddr), &nSockAddrLen, nFlags);
+  if (sockAddr.si_family == AF_INET)
+  {
+    SOCKADDR_IN* pIPv4SockAddr = reinterpret_cast<SOCKADDR_IN*>(&sockAddr);
+	  nSocketPort = ntohs(pIPv4SockAddr->sin_port);
+	  sSocketAddress = inet_ntoa(pIPv4SockAddr->sin_addr);
+  }
+  else if (sockAddr.si_family == AF_INET6)
+  {
+    if (_SocMFCData.m_pfnRtlIpv6AddressToString == NULL)
+      ThrowWSocketException(ERROR_CALL_NOT_IMPLEMENTED);
+    SOCKADDR_IN6* pIPv6SockAddr = reinterpret_cast<SOCKADDR_IN6*>(&sockAddr);
+	  nSocketPort = ntohs(pIPv6SockAddr->sin6_port);
+	  _SocMFCData.m_pfnRtlIpv6AddressToString(&pIPv6SockAddr->sin6_addr, sSocketAddress.GetBufferSetLength(47));
+    sSocketAddress.ReleaseBuffer();
+  }
+  else
+    ThrowWSocketException(WSAEFAULT);
+
 	return nResult;
 }
 
@@ -647,55 +884,64 @@ int CWSocket::Send(const void* pBuffer, int nBufLen, int nFlags)
   return nSent;
 }
 
-int CWSocket::SendTo(const void* lpBuf, int nBufLen, const SOCKADDR* lpSockAddr, int nSockAddrLen, int nFlags)
+int CWSocket::SendTo(const void* pBuf, int nBufLen, const SOCKADDR* pSockAddr, int nSockAddrLen, int nFlags)
 { 
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
 
-  int nSent = sendto(m_hSocket, static_cast<const char*>(lpBuf), nBufLen, nFlags, lpSockAddr, nSockAddrLen);
+  int nSent = sendto(m_hSocket, static_cast<const char*>(pBuf), nBufLen, nFlags, pSockAddr, nSockAddrLen);
   if (nSent == SOCKET_ERROR)
     ThrowWSocketException();
 
   return nSent; 
 }
 
-int CWSocket::SendTo(const void* lpBuf, int nBufLen, UINT nHostPort, LPCTSTR lpszHostAddress, int nFlags)
+int CWSocket::SendTo(const void* pBuf, int nBufLen, UINT nHostPort, LPCTSTR pszHostAddress, int nFlags)
 {
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
 
-  //Determine if the address is in dotted notation
-	SOCKADDR_IN sockAddr;
-	memset(&sockAddr, 0, sizeof(sockAddr));
-	sockAddr.sin_family = AF_INET;
-	sockAddr.sin_port = htons(static_cast<u_short>(nHostPort));
+  //Do the address lookup
+  ATL::CSocketAddr lookup;
+  CString sPort;
+  sPort.Format(_T("%d"), nHostPort);
+  int nError = lookup.FindAddr(pszHostAddress, sPort, 0, 0, 0, 0);
+  if (nError != 0)
+    ThrowWSocketException();
 
-	if (lpszHostAddress == NULL)
-		sockAddr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
-	else
-	{
-	  //If the address is not dotted notation, then do a DNS lookup of it.
-	  CStringA sAsciiHostAddress(lpszHostAddress);
-		sockAddr.sin_addr.s_addr = inet_addr(sAsciiHostAddress);
-		if (sockAddr.sin_addr.s_addr == INADDR_NONE)
-		{
-			LPHOSTENT lphost = gethostbyname(sAsciiHostAddress);
-			if (lphost != NULL)
-				sockAddr.sin_addr.s_addr = (reinterpret_cast<LPIN_ADDR>(lphost->h_addr))->s_addr;
-			else
-				ThrowWSocketException();
-		}
-	}
+  //Iterate through the list of addresses trying to connect
+  BOOL bSuccess = FALSE;
+  int nLastError = 0;
+  addrinfo* pAddress = lookup.GetAddrInfoList();
+  int nSent = 0;
+  while ((pAddress != NULL) && !bSuccess) 
+  {
+    try
+    {
+      //Call the other version of Connect which does the actual work
+      nSent = SendTo(pBuf, nBufLen, pAddress->ai_addr, static_cast<int>(pAddress->ai_addrlen), nFlags);
+      bSuccess = TRUE;
+    }
+    catch(CWSocketException* pEx)
+    {
+      //Prepare for the next time around
+      nLastError = pEx->m_nError;
+      pEx->Delete();
+      pAddress = pAddress->ai_next;
+    }
+  }
+  if (!bSuccess)
+    ThrowWSocketException(nLastError);
 
-	return SendTo(lpBuf, nBufLen, reinterpret_cast<SOCKADDR*>(&sockAddr), sizeof(sockAddr), nFlags);
+	return nSent;
 }
 
-void CWSocket::IOCtl(long lCommand, DWORD* lpArgument)
+void CWSocket::IOCtl(long lCommand, DWORD* pArgument)
 { 
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
 
-  if (ioctlsocket(m_hSocket, lCommand, lpArgument) == SOCKET_ERROR)
+  if (ioctlsocket(m_hSocket, lCommand, pArgument) == SOCKET_ERROR)
     ThrowWSocketException();
 }
 
@@ -717,15 +963,12 @@ void CWSocket::ShutDown(int nHow)
     ThrowWSocketException();
 }
 
-void CWSocket::Create(BOOL bUDP)
+void CWSocket::Create(BOOL bUDP, BOOL bIPv6)
 {
   //Validate our parameters
   ASSERT(!IsCreated()); //must not have been already created
 
-  if (bUDP)
-    Create(SOCK_DGRAM, 0, PF_INET);
-  else
-    Create(SOCK_STREAM, 0, PF_INET);
+  Create(bUDP ? SOCK_DGRAM : SOCK_STREAM, 0, bIPv6 ? AF_INET6 : PF_INET);
 }
 
 void CWSocket::Create(int nSocketType, int nProtocolType, int nAddressFormat)
@@ -738,13 +981,15 @@ void CWSocket::Create(int nSocketType, int nProtocolType, int nAddressFormat)
     ThrowWSocketException();
 }
 
-void CWSocket::ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwTimeout)
+void CWSocket::ConnectViaSocks4(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszSocksServer, UINT nSocksPort, DWORD dwTimeout)
 {
   //Validate our parameters
   ASSERT(IsCreated()); //must have been created first
 
   //connect to the proxy
-  Connect(lpszSocksServer, nSocksPort);
+  CString sSocksPort;
+  sSocksPort.Format(_T("%d"), nSocksPort);
+  _Connect(pszSocksServer, sSocksPort);
 
   try
   {
@@ -755,7 +1000,7 @@ void CWSocket::ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR
     request.DSTPORT = htons(static_cast<u_short>(nHostPort));
 
 	  //Determine if the address is in dotted notation
-	  CStringA sAsciiHostAddress(lpszHostAddress);
+	  CStringA sAsciiHostAddress(pszHostAddress);
 	  request.DSTIP.S_un.S_addr = inet_addr(sAsciiHostAddress);
 
 	  //If the address is not dotted notation, then do a DNS 
@@ -800,17 +1045,14 @@ void CWSocket::ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR
   }
 }
 
-void CWSocket::ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwTimeout, BOOL bUDP)
+void CWSocket::ConnectViaSocks5(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszSocksServer, UINT nSocksPort, LPCTSTR pszUserName, LPCTSTR pszPassword, DWORD dwTimeout, BOOL bUDP)
 {
-  //Validate our parameters
-  ASSERT(IsCreated()); //must have been created first
-
   //connect to the proxy
-  Connect(lpszSocksServer, nSocksPort);
+  CreateAndConnect(pszSocksServer, nSocksPort);
 
   try
   {  
-    BOOL bAuthenticate = (lpszUserName != NULL);
+    BOOL bAuthenticate = (pszUserName != NULL);
 
     //Fill in a connection request packet
     WSOCKET_SOCKS5_IDENTIFIER_PACKET request;
@@ -856,8 +1098,8 @@ void CWSocket::ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR
 
     if (bAuthenticate && reply.METHOD == 2)
     {
-      CStringA sAsciiUserName(lpszUserName);
-      CStringA sAsciiPassword(lpszPassword);
+      CStringA sAsciiUserName(pszUserName);
+      CStringA sAsciiPassword(pszPassword);
       int nUserNameLength = sAsciiUserName.GetLength();
       int nPasswordLength = sAsciiPassword.GetLength();
 
@@ -870,16 +1112,18 @@ void CWSocket::ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR
       }
 
       int nUserRequestLength = 3 + nUserNameLength + nPasswordLength;
-      BYTE* pUserRequest = reinterpret_cast<BYTE*>(_alloca(nUserRequestLength));
-      pUserRequest[0] = 1;
-      pUserRequest[1] = static_cast<BYTE>(nUserNameLength);
-      memcpy(&(pUserRequest[2]), sAsciiUserName.operator LPCSTR(), nUserNameLength);
+      ATL::CHeapPtr<BYTE> userRequest;
+      if (!userRequest.Allocate(nUserRequestLength))
+        ThrowWSocketException(ERROR_OUTOFMEMORY);
+      userRequest.m_pData[0] = 1;
+      userRequest.m_pData[1] = static_cast<BYTE>(nUserNameLength);
+      memcpy(&(userRequest.m_pData[2]), sAsciiUserName.operator LPCSTR(), nUserNameLength);
       SecureEmptyString(sAsciiUserName);
-      pUserRequest[2 + nUserNameLength] = static_cast<BYTE>(nPasswordLength);
-      memcpy(pUserRequest + 3 + nUserNameLength, sAsciiPassword.operator LPCSTR(), nPasswordLength);
+      userRequest.m_pData[2 + nUserNameLength] = static_cast<BYTE>(nPasswordLength);
+      memcpy(userRequest.m_pData + 3 + nUserNameLength, sAsciiPassword.operator LPCSTR(), nPasswordLength);
       SecureEmptyString(sAsciiPassword);
-      Send(pUserRequest, static_cast<int>(nUserRequestLength));
-      SecureZeroMemory(pUserRequest, nUserRequestLength);
+      Send(userRequest.m_pData, static_cast<int>(nUserRequestLength));
+      SecureZeroMemory(userRequest.m_pData, nUserRequestLength);
 
       //Wait for the login reply
       WSOCKET_SOCKS5_USERNAME_AUTHENTICATION_REPLY reply2;
@@ -909,44 +1153,28 @@ void CWSocket::ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR
         ThrowWSocketException(ERROR_ACCESS_DENIED);
     }
 
-	  //Determine if the address is in dotted notation
-	  CStringA sAsciiHostAddress(lpszHostAddress);
-	  unsigned long nAddr = inet_addr(sAsciiHostAddress);
-	  if (nAddr == INADDR_NONE)
-	  {
-      //verify that the host name is less than 256 bytes which is the limit of the hostname which Socks5 can accomadate
-      int nHostLength = sAsciiHostAddress.GetLength();
-      if (nHostLength > 255)
-        ThrowWSocketException(ERROR_INVALID_PARAMETER);
+    //verify that the host name is less than 256 bytes which is the limit of the hostname which Socks5 can accomadate
+	  CStringA sAsciiHostAddress(pszHostAddress);
+    int nHostLength = sAsciiHostAddress.GetLength();
+    if (nHostLength > 255)
+      ThrowWSocketException(ERROR_INVALID_PARAMETER);
 
-      WSOCKET_SOCKS5_HOSTNAME_REQUEST_DETAILS requestDetails;
-      memset(&requestDetails, 0, sizeof(requestDetails));
-      requestDetails.Base.VER = 5;
-      if (bUDP)
-        requestDetails.Base.CMD = 3;
-      else
-        requestDetails.Base.CMD = 1;
-      requestDetails.Base.ATYP = 3;
-      requestDetails.DST_HOST.LENGTH = static_cast<BYTE>(nHostLength);
-      memcpy(requestDetails.DST_HOST.HOST, sAsciiHostAddress.operator LPCSTR(), nHostLength);
-      WORD* pPort = reinterpret_cast<WORD*>(requestDetails.DST_HOST.HOST + nHostLength);
-      *pPort = htons(static_cast<u_short>(nHostPort));
-      size_t nRequestDetailsSize = sizeof(requestDetails) - 256 + nHostLength + 1;
-
-      //Send the request down the socket
-      Send(&requestDetails, static_cast<int>(nRequestDetailsSize));
-	  }
+    WSOCKET_SOCKS5_HOSTNAME_REQUEST_DETAILS requestDetails;
+    memset(&requestDetails, 0, sizeof(requestDetails));
+    requestDetails.Base.VER = 5;
+    if (bUDP)
+      requestDetails.Base.CMD = 3;
     else
-    {
-      WSOCKET_SOCKS5_IP4_REQUEST_DETAILS requestDetails;
-      memset(&requestDetails, 0, sizeof(requestDetails));
-      requestDetails.Base.VER = 5;
       requestDetails.Base.CMD = 1;
-      requestDetails.Base.ATYP = 1;
-      requestDetails.DST_IP.S_un.S_addr = nAddr;
-      requestDetails.DSTPORT = htons(static_cast<u_short>(nHostPort));
-      Send(&requestDetails, sizeof(requestDetails));
-    }
+    requestDetails.Base.ATYP = 3;
+    requestDetails.DST_HOST.LENGTH = static_cast<BYTE>(nHostLength);
+    memcpy(requestDetails.DST_HOST.HOST, sAsciiHostAddress.operator LPCSTR(), nHostLength);
+    WORD* pPort = reinterpret_cast<WORD*>(requestDetails.DST_HOST.HOST + nHostLength);
+    *pPort = htons(static_cast<u_short>(nHostPort));
+    size_t nRequestDetailsSize = sizeof(requestDetails) - 256 + nHostLength + 1;
+
+    //Send the request down the socket
+    Send(&requestDetails, static_cast<int>(nRequestDetailsSize));
 
     //Read the reply
     ReadSocks5ConnectReply(dwTimeout);
@@ -995,17 +1223,7 @@ void CWSocket::ReadSocks5ConnectReply(DWORD dwTimeout)
     if (dwCurrentReadOffset >= sizeof(WSOCKET_SOCKS5_BASE_REQUEST_DETAILS)) 
     {
       WSOCKET_SOCKS5_BASE_REQUEST_DETAILS* pBaseRequest = reinterpret_cast<WSOCKET_SOCKS5_BASE_REQUEST_DETAILS*>(response.m_pData);
-      if (pBaseRequest->ATYP == 1)
-      {
-        //An IP 4 address type destination
-        bMoreDataToRead = (dwCurrentReadOffset < sizeof(WSOCKET_SOCKS5_IP4_REQUEST_DETAILS));
-        if (!bMoreDataToRead)
-        {
-          if (pBaseRequest->CMD != 0)
-            ThrowWSocketException(ERROR_BAD_NET_RESP);
-        }
-      }
-      else if (pBaseRequest->ATYP == 3)
+      if (pBaseRequest->ATYP == 3)
       {
         //A domain name type destination
         if (dwCurrentReadOffset > sizeof(WSOCKET_SOCKS5_BASE_REQUEST_DETAILS))
@@ -1071,47 +1289,46 @@ CWSocket::operator SOCKET()
   return m_hSocket;
 }
 
-void CWSocket::ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPProxy, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent)
+void CWSocket::ConnectViaHTTPProxy(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszHTTPProxy, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR pszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR pszUserAgent)
 {
-  //Validate our parameters
-  ASSERT(IsCreated()); //must have been created first
-
   //connect to the proxy
-  Connect(lpszHTTPProxy, nHTTPProxyPort);
+  CreateAndConnect(pszHTTPProxy, nHTTPProxyPort);
 
   try
   {  
     //Form the HTTP CONNECT request header
     CString sLine;
-    sLine.Format(_T("CONNECT %s:%d HTTP/1.0\r\n"), lpszHostAddress, nHostPort);
+    sLine.Format(_T("CONNECT %s:%d HTTP/1.0\r\n"), pszHostAddress, nHostPort);
     CString sRequest(sLine);
     
     //Form the authorization line if required  
-    if (lpszUserName != NULL)
+    if (pszUserName != NULL)
     {
       //Base64 encode the username password combination
       CString sUserNamePassword;
-      sUserNamePassword.Format(_T("%s:%s"), lpszUserName, lpszPassword);
+      sUserNamePassword.Format(_T("%s:%s"), pszUserName, pszPassword);
       CStringA sAsciiUserNamePassword(sUserNamePassword);
       int nUserNamePasswordLength = sAsciiUserNamePassword.GetLength();
       int nEncodedLength = ATL::Base64EncodeGetRequiredLength(nUserNamePasswordLength, ATL_BASE64_FLAG_NOCRLF);
-      LPSTR pszEncoded = static_cast<LPSTR>(_alloca(nEncodedLength + 1));
-      ATL::Base64Encode(reinterpret_cast<const BYTE*>(sAsciiUserNamePassword.operator LPCSTR()), nUserNamePasswordLength, pszEncoded, &nEncodedLength);
-      pszEncoded[nEncodedLength] = '\0';
+      ATL::CHeapPtr<char> encoded;
+      if (!encoded.Allocate(nEncodedLength + 1))
+        ThrowWSocketException(ERROR_OUTOFMEMORY);
+      ATL::Base64Encode(reinterpret_cast<const BYTE*>(sAsciiUserNamePassword.operator LPCSTR()), nUserNamePasswordLength, encoded, &nEncodedLength, ATL_BASE64_FLAG_NOCRLF);
+      encoded.m_pData[nEncodedLength] = '\0';
       SecureEmptyString(sAsciiUserNamePassword);
       SecureEmptyString(sUserNamePassword);
 
       //Form the Authorization header line and add it to the request
-      sLine.Format(_T("Proxy-authorization: Basic %s\r\n"), CString(pszEncoded).operator LPCTSTR());
-      SecureZeroMemory(pszEncoded, nEncodedLength + 1);
+      sLine.Format(_T("Proxy-authorization: Basic %s\r\n"), CString(encoded.m_pData).operator LPCTSTR());
+      SecureZeroMemory(encoded.m_pData, nEncodedLength + 1);
       sRequest += sLine;
     }
 
     //Form the user agent line if required
-    if (lpszUserAgent != NULL)
+    if (pszUserAgent != NULL)
     {
       //Add the User Agent line to the request
-      sLine.Format(_T("User-Agent: %s\r\n"), lpszUserAgent);
+      sLine.Format(_T("User-Agent: %s\r\n"), pszUserAgent);
       sRequest += sLine;
     }
 

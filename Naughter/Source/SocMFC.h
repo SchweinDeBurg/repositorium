@@ -3,7 +3,7 @@ Module : SocMFC.H
 Purpose: Interface for an MFC wrapper class for sockets
 Created: PJN / 05-08-1998
 
-Copyright (c) 2002 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2002 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -18,7 +18,7 @@ to maintain a single distribution point for the source code.
 */
 
 
-/////////////////////////////// Defines ///////////////////////////////////////
+/////////////////////////////// Macros / Defines //////////////////////////////
 
 #pragma once
 
@@ -29,11 +29,26 @@ to maintain a single distribution point for the source code.
 #define SOCKMFC_EXT_CLASS
 #endif
 
+__if_not_exists(ADDRESS_FAMILY)
+{
+  typedef USHORT ADDRESS_FAMILY;
+}
+
+__if_not_exists(SOCKADDR_INET)
+{
+  typedef union _SOCKADDR_INET {
+      SOCKADDR_IN Ipv4;
+      SOCKADDR_IN6 Ipv6;
+      ADDRESS_FAMILY si_family;    
+  } SOCKADDR_INET, *PSOCKADDR_INET;
+}
+
 
 ////////////////////////////// Includes ///////////////////////////////////////
 
-#ifndef _WINSOCKAPI_
-#pragma message("You need to add Winsock support to your pre compiled header (normally stdafx.h), Use either afxsock.h, winsock.h or Winsock2.h")
+#ifndef _WINSOCK2API_
+#pragma message("To avoid this message, please put winsock2.h in your pre compiled header (usually stdafx.h)")
+#include <winsock2.h>
 #endif
 
 #include <sal.h>
@@ -72,40 +87,42 @@ public:
   void    Attach(SOCKET hSocket);
   SOCKET  Detach(); 
   void    GetPeerName(CString& sPeerAddress, UINT& nPeerPort);
-  void    GetPeerName(SOCKADDR* lpSockAddr, int* lpSockAddrLen);
+  void    GetPeerName(SOCKADDR* pSockaddr, int* pSockAddrLen);
   void    GetSockName(CString& sSocketAddress, UINT& nSocketPort);
-  void    GetSockName(SOCKADDR* lpSockAddr, int* lpSockAddrLen);
-  void    SetSockOpt(int nOptionName, const void* lpOptionValue, int nOptionLen, int nLevel = SOL_SOCKET);
-  void    GetSockOpt(int nOptionName, void* lpOptionValue, int* lpOptionLen, int nLevel = SOL_SOCKET);
+  void    GetSockName(SOCKADDR* pSockAddr, int* pSockAddrLen);
+  void    SetSockOpt(int nOptionName, const void* pOptionValue, int nOptionLen, int nLevel = SOL_SOCKET);
+  void    GetSockOpt(int nOptionName, void* pOptionValue, int* pOptionLen, int nLevel = SOL_SOCKET);
   BOOL    IsCreated() const; 
   BOOL    IsReadible(DWORD dwTimeout);
   BOOL    IsWritable(DWORD dwTimeout);
 
 //Methods
-  void    Create(BOOL bUDP = FALSE);
+  void    Create(BOOL bUDP = FALSE, BOOL bIPv6 = FALSE);
   void    Create(int nSocketType, int nProtocolType, int nAddressFormat);
-  void    Accept(CWSocket& connectedSocket, sockaddr_in& clientAddress);
-  void    Bind(UINT nSocketPort, LPCTSTR lpszSocketAddress = NULL);
-  void    Bind(const SOCKADDR* lpSockAddr, int nSockAddrLen);
+  __declspec(deprecated) void Accept(CWSocket& connectedSocket, SOCKADDR_IN& clientAddress);
+  void    Accept(CWSocket& connectedSocket, SOCKADDR* pSockAddr = NULL, int* pSockAddrLen = NULL);
+  __declspec(deprecated) void Bind(UINT nSocketPort, LPCTSTR pszSocketAddress = NULL);
+  void    CreateAndBind(UINT nSocketPort, LPCTSTR pszSocketAddress = NULL, int nSocketType = SOCK_STREAM, int nDefaultAddressFormat = AF_INET);
+  void    Bind(const SOCKADDR* pSockAddr, int nSockAddrLen);
   void    Close();
-  void    Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen);
-  void    Connect(LPCTSTR lpszHostAddress, UINT nHostPort);
-#ifdef _WINSOCK2API_ //Connect methods which have a timeout parameter are only provided if we are using WinSock2
-                     //because we are making use of Winsock2 functionality such as WSAEventSelect
-  void    Connect(const SOCKADDR* lpSockAddr, int nSockAddrLen, DWORD dwTimeout, BOOL bResetToBlockingMode = TRUE);
-  void    Connect(LPCTSTR lpszHostAddress, UINT nHostPort, DWORD dwTimeout, BOOL bResetToBlockingMode = TRUE);
-#endif
-  void    ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwTimeout = 5000);
-  void    ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName = NULL, LPCTSTR lpszPassword = NULL, DWORD dwTimeout = 5000, BOOL bUDP = FALSE);
-  void    ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName = NULL, LPCTSTR pszPassword = NULL, DWORD dwTimeout = 5000, LPCTSTR lpszUserAgent = NULL);
-  void    IOCtl(long lCommand, DWORD* lpArgument);
+  void    Connect(const SOCKADDR* pSockAddr, int nSockAddrLen);
+  __declspec(deprecated) void Connect(LPCTSTR pszHostAddress, UINT nHostPort);
+  void    CreateAndConnect(LPCTSTR pszHostAddress, UINT nHostPort, int nSocketType = SOCK_STREAM);
+  void    CreateAndConnect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName, int nSocketType = SOCK_STREAM);
+  void    Connect(const SOCKADDR* pSockAddr, int nSockAddrLen, DWORD dwTimeout, BOOL bResetToBlockingMode = TRUE);
+  void    CreateAndConnect(LPCTSTR pszHostAddress, UINT nHostPort, DWORD dwTimeout, BOOL bResetToBlockingMode, int nSocketType = SOCK_STREAM);
+  void    CreateAndConnect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName, DWORD dwTimeout, BOOL bResetToBlockingMode, int nSocketType = SOCK_STREAM);
+  void    ConnectViaSocks4(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszSocksServer, UINT nSocksPort = 1080, DWORD dwTimeout = 5000);
+  void    ConnectViaSocks5(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszSocksServer, UINT nSocksPort = 1080, LPCTSTR pszUserName = NULL, LPCTSTR pszPassword = NULL, DWORD dwTimeout = 5000, BOOL bUDP = FALSE);
+  void    ConnectViaHTTPProxy(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR pszUserName = NULL, LPCTSTR pszPassword = NULL, DWORD dwTimeout = 5000, LPCTSTR pszUserAgent = NULL);
+  void    IOCtl(long lCommand, DWORD* pArgument);
   void    Listen(int nConnectionBacklog = SOMAXCONN);
-  int     Receive(void* lpBuf, int nBufLen, int nFlags = 0);
-  int     ReceiveFrom(void* lpBuf, int nBufLen, SOCKADDR* lpSockAddr, int* lpSockAddrLen, int nFlags = 0);
-  int     ReceiveFrom(void* lpBuf, int nBufLen, CString& sSocketAddress, UINT& nSocketPort, int nFlags = 0);
+  int     Receive(void* pBuf, int nBufLen, int nFlags = 0);
+  int     ReceiveFrom(void* pBuf, int nBufLen, SOCKADDR* pSockAddr, int* pSockAddrLen, int nFlags = 0);
+  int     ReceiveFrom(void* pBuf, int nBufLen, CString& sSocketAddress, UINT& nSocketPort, int nFlags = 0);
   int     Send(const void* pBuffer, int nBufLen, int nFlags = 0);
-  int     SendTo(const void* lpBuf, int nBufLen, const SOCKADDR* lpSockAddr, int nSockAddrLen, int nFlags = 0);
-  int     SendTo(const void* lpBuf, int nBufLen, UINT nHostPort, LPCTSTR lpszHostAddress = NULL, int nFlags = 0);
+  int     SendTo(const void* pBuf, int nBufLen, const SOCKADDR* pSockAddr, int nSockAddrLen, int nFlags = 0);
+  int     SendTo(const void* pBuf, int nBufLen, UINT nHostPort, LPCTSTR pszHostAddress = NULL, int nFlags = 0);
   enum { receives = 0, sends = 1, both = 2 };
   void    ShutDown(int nHow = sends);
 
@@ -114,6 +131,7 @@ public:
 
 //Static methods
   static void ThrowWSocketException(int nError = 0);
+  static CString AddressToString(const SOCKADDR_INET& sockAddr);
   __forceinline static void SecureEmptyString(CStringA& sVal)
   {
     int nLength = sVal.GetLength();
@@ -145,6 +163,8 @@ public:
 
 protected:
 //Methods
+  void _Connect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName);
+  void _Bind(UINT nSocketPort, LPCTSTR pszSocketAddress);
   void ReadHTTPProxyResponse(DWORD dwTimeout, CStringA& sResponse);
   void ReadSocks5ConnectReply(DWORD dwTimeout);
 

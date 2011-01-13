@@ -2194,8 +2194,9 @@ void CPJNSMTPConnection::_ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPo
 {
 #ifndef CPJNSMTP_NOSSL
 	if (m_ConnectionType == SSL_TLS)
-  {
-		if(!m_SSL.ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout)) 
+	{
+		static_cast<CWSocket&>(m_SSL).ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout);
+		if(SSL_connect(m_SSL) != 1) 
 			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_SOCKS4_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
@@ -2207,8 +2208,9 @@ void CPJNSMTPConnection::_ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPo
 {
 #ifndef CPJNSMTP_NOSSL
 	if (m_ConnectionType == SSL_TLS)
-  {
-		if (!m_SSL.ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP)) 
+	{
+		static_cast<CWSocket&>(m_SSL).ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP);
+		if (SSL_connect(m_SSL) != 1)
 			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_SOCKS5_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
@@ -2221,8 +2223,9 @@ void CPJNSMTPConnection::_ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHos
 {
 #ifndef CPJNSMTP_NOSSL
 	if (m_ConnectionType == SSL_TLS)
-  {
-		if (!m_SSL.ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent))
+	{
+		static_cast<CWSocket&>(m_SSL).ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent);
+		if (SSL_connect(m_SSL) != 1)
 			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_HTTPPROXY_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
@@ -2240,7 +2243,7 @@ void CPJNSMTPConnection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
 	}
 	else 
 #endif
-		m_Socket.Connect(lpszHostAddress, nHostPort);
+		m_Socket.CreateAndConnect(lpszHostAddress, nHostPort);
 }
 
 int CPJNSMTPConnection::_Send(const void* pBuffer, int nBuf)
@@ -2332,7 +2335,7 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
 
     //Bind if required
     if (m_sLocalBoundAddress.GetLength())
-      m_Socket.Bind(0, m_sLocalBoundAddress);
+      m_Socket.CreateAndBind(0, m_sLocalBoundAddress);
 
     switch (m_ProxyType)
     {

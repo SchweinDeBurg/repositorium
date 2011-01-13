@@ -11,9 +11,9 @@ History: PJN / 22-02-2004 1. Fixed a memory leak in CW3MFCISAPI::CachedLoad. Tha
                           2. CHttpISAPI class has been renamed to CW3MFCISAPI
                           3. CW3MFCISAPIExtension class has been renamed to CW3MFCISAPIExtension
          PJN / 31-05-2008 1. Code now compiles cleanly using Code Analysis (/analyze)
-         PJN / 23--5-2009 1. Removed use of CT2A throughout the code.
+         PJN / 23-05-2009 1. Removed use of CT2A throughout the code.
 
-Copyright (c) 2003 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2003 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -383,14 +383,11 @@ BOOL CW3MFCISAPI::GetServerVariable(HCONN hConn, LPSTR lpszVariableName, void* l
   }
   else if (_strcmpi(lpszVariableName, "REMOTE_ADDR") == 0)
   {
-    char szRemote[20];
-    sprintf_s(szRemote, sizeof(szRemote), "%d.%d.%d.%d", pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b1,
-               pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b2, pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b3,
-               pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b4);
-    DWORD dwSize = static_cast<DWORD>(strlen(szRemote) + 1);
+    CStringA sRemoteAddress(CWSocket::AddressToString(pClient->m_Request.m_ClientAddress));
+    DWORD dwSize = static_cast<DWORD>(sRemoteAddress.GetLength() + 1);
     if (*lpdwBufferSize >= dwSize)
     {
-      strcpy_s(static_cast<char*>(lpBuffer), dwSize, szRemote);
+      strcpy_s(static_cast<char*>(lpBuffer), dwSize, sRemoteAddress);
       *lpdwBufferSize = dwSize;
     }
     else

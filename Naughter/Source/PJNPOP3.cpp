@@ -377,8 +377,9 @@ void CPJNPOP3Connection::_ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPo
 {
 #ifndef CPJNPOP3_NOSSL
 	if (m_bSSL) 
-  {
-		if(!m_SSL.ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout)) 
+	{
+		static_cast<CWSocket&>(m_SSL).ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout);
+		if(SSL_connect(m_SSL) != 1) 
 			ThrowPJNPOP3Exception(IDS_PJNPOP3_FAIL_CONNECT_SOCKS4_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
@@ -390,8 +391,9 @@ void CPJNPOP3Connection::_ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPo
 {
 #ifndef CPJNPOP3_NOSSL
 	if (m_bSSL) 
-  {
-		if (!m_SSL.ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP)) 
+	{
+		static_cast<CWSocket&>(m_SSL).ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP);
+		if (SSL_connect(m_SSL) != 1)
 			ThrowPJNPOP3Exception(IDS_PJNPOP3_FAIL_CONNECT_SOCKS5_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
@@ -404,8 +406,9 @@ void CPJNPOP3Connection::_ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHos
 {
 #ifndef CPJNPOP3_NOSSL
 	if (m_bSSL) 
-  {
-		if (!m_SSL.ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent))
+	{
+		static_cast<CWSocket&>(m_SSL).ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent);
+		if (SSL_connect(m_SSL) != 1)
 			ThrowPJNPOP3Exception(IDS_PJNPOP3_FAIL_CONNECT_HTTPPROXY_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
@@ -423,7 +426,7 @@ void CPJNPOP3Connection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
 	}
 	else 
 #endif
-		m_Socket.Connect(lpszHostAddress, nHostPort);
+		m_Socket.CreateAndConnect(lpszHostAddress, nHostPort);
 }
 
 int CPJNPOP3Connection::_Send(const void* pBuffer, int nBuf)
@@ -510,7 +513,7 @@ void CPJNPOP3Connection::Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTS
 
     //Bind if required
     if (m_sLocalBoundAddress.GetLength())
-      m_Socket.Bind(0, m_sLocalBoundAddress);
+      m_Socket.CreateAndBind(0, m_sLocalBoundAddress);
 
     switch (m_ProxyType)
     {

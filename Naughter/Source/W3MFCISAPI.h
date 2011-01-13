@@ -3,7 +3,7 @@ Module : W3MFCISAPI.h
 Purpose: Defines the interface for the CW3MFCISAPI class
 Created: PJN / 21-02-2003
 
-Copyright (c) 2003 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2003 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 

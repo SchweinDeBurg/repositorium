@@ -17,7 +17,7 @@ History: PJN / 03-01-2006 1. Fixed an issue in the CGI implementation so that HT
          PJN / 31-05-2008 1. Code now compiles cleanly using Code Analysis (/analyze)
                           2. Replaced use of CW32Handle class with ATL::CHandle
 
-Copyright (c) 2003 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2003 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -394,15 +394,11 @@ CString CW3MFCCGI::FormCGIEnvironment(CW3MFCClient* pClient)
   }
   else
   {
-    sLine.Format(_T("REMOTE_HOST=%d.%d.%d.%d\n"), pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b1,
-                 pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b2, pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b3,
-                 pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b4);
+    sLine.Format(_T("REMOTE_HOST=%s\n"), CWSocket::AddressToString(pClient->m_Request.m_ClientAddress).operator LPCTSTR());
     sEnvironment += sLine;
   }
 
-  sLine.Format(_T("REMOTE_ADDR=%d.%d.%d.%d\n"), pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b1,
-               pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b2, pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b3,
-               pClient->m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b4);
+  sLine.Format(_T("REMOTE_ADDR=%s\n"), CWSocket::AddressToString(pClient->m_Request.m_ClientAddress).operator LPCTSTR());
   sEnvironment += sLine;
 
   sLine.Format(_T("PATH_INFO=%s\n"), pClient->m_Request.m_sPathInfo.operator LPCTSTR());

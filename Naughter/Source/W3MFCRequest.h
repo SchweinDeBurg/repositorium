@@ -3,7 +3,7 @@ Module : W3MFCRequest.h
 Purpose: Defines the interface for the CW3MFCRequest classes
 Created: PJN / 30-09-2001
 
-Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -86,7 +86,7 @@ public:
   DWORD              m_dwRawEntitySize;             //The raw entity-body size if any
   int                m_nContentLength;              //The content length of the entity body
   CString            m_sRequest;                    //The Full request line e.g. "GET / HTTP/1.0"
-  sockaddr_in        m_ClientAddress;               //The IP address where the request originated from
+  SOCKADDR_INET      m_ClientAddress;               //The IP address where the request originated from
   HttpVerb           m_Verb;                        //enum of the HTTP verb used e.g. GET, PUT etc
   CString            m_sVerb;                       //String version of the HTTP verb used
   CString            m_sURL;                        //The URL of the request (URL Decoded)

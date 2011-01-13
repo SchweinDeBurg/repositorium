@@ -7,7 +7,7 @@ History: PJN / 10-11-2002 1. Fixed an unreferrenced variable in the function CIO
          PJN / 27-06-2006 1. Optimized CIOCPThreadPoolQueue constructor code
          PJN / 16-10-2007 1. Updated code to compile cleanly for x64
 
-Copyright (c) 2002 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2002 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -87,7 +87,7 @@ BOOL CIOCPThreadPoolQueue::PostRequest(const CThreadPoolRequest& request, DWORD 
   return TRUE;
 }
 
-BOOL CIOCPThreadPoolQueue::GetRequest(CThreadPoolRequest& request, int /*nThreadIndexForDirectedRequest*/, DWORD dwMilliseconds, BOOL /*bLock*/)
+BOOL CIOCPThreadPoolQueue::GetRequest(CThreadPoolRequest& request, int /*nThreadIndexForDirectedRequest*/, DWORD dwMilliseconds, BOOL /*bLock*/, BOOL /*bPumpMessage*/)
 {
   ASSERT(IsCreated()); //Must have been created
 

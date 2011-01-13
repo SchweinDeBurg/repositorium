@@ -2,7 +2,7 @@
 Module : W3MFC.h
 Purpose: Defines the interface for a simple MFC class encapsulation of a HTTP server
 
-Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -74,6 +74,7 @@ public:
   unsigned short                              m_nPort;                              //The port on which to run the web server
   CArray<CW3MFCDirectory*, CW3MFCDirectory*&> m_Directories;                        //Directories served up by this server
   BOOL                                        m_bBind;                              //Should the server be bound to an address
+  BOOL                                        m_bIPv6;
   CString                                     m_sBindAddress;                       //The IP address to bind to (if m_bBind is set)
   DWORD                                       m_dwIdleClientTimeout;                //Timeout in ms to wait for client requests
   CString                                     m_sServerName;                        //The Web server name to return in HTTP headers

@@ -3,7 +3,7 @@ Module : ThrdPool.h
 Purpose: Interface for an MFC wrapper class for thread pools
 Created: PJN / 15-04-2001
 
-Copyright (c) 2002 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2002 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -170,12 +170,12 @@ public:
   virtual BOOL Create(DWORD /*dwMaxQSize*/) { return FALSE; };
   virtual BOOL PostRequest(const CThreadPoolRequest& /*request*/, DWORD /*dwMilliseconds*/ = INFINITE, BOOL /*bLock*/ = TRUE) { return FALSE; };
   virtual BOOL PostRequestWithoutLimitCheck(const CThreadPoolRequest& /*request*/, BOOL /*bLock*/ = TRUE) { return FALSE; };
-  virtual BOOL GetRequest(CThreadPoolRequest& /*request*/, int /*nThreadIndexForDirectedRequest*/, DWORD /*dwMilliseconds*/ = INFINITE, BOOL /*bLock*/ = TRUE) { return FALSE; };
+  virtual BOOL GetRequest(CThreadPoolRequest& /*request*/, int /*nThreadIndexForDirectedRequest*/, DWORD /*dwMilliseconds*/, BOOL /*bLock*/, BOOL /*bPumpMessage*/) { return FALSE; };
   virtual BOOL IsCreated() const { return FALSE; };
   virtual BOOL SupportsDirectedRequests() const { return FALSE; };
 
 protected:
-  DECLARE_DYNCREATE(CThreadPoolQueue);
+  DECLARE_DYNCREATE(CThreadPoolQueue)
 };
 
 //The class which manages the thread pool

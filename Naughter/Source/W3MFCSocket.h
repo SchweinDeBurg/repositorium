@@ -3,7 +3,7 @@ Module : W3MFCSocket.h
 Purpose: Defines the interface for a simple MFC socket wrapper class
 Created: PJN / 22-04-1999
 
-Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 

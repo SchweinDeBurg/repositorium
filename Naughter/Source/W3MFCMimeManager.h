@@ -2,7 +2,7 @@
 Module : W3MFCMimeManager.h
 Purpose: Defines the interface for the Mime Manager classes
 
-Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 

@@ -26,8 +26,13 @@ History: PJN / 11-11-2004 1. Provided a GetRequestArray() method which allows ac
                           on the queue
          PJN / 19-11-2007 1. Updated copyright details
          PJN / 01-05-2008 1. Addition of a GetCurrentQueueSize method.
+         PJN / 09-01-2010 1. Reworked the low level internals of the thread pool to implement message pumping in 
+                          CDirectedThreadPoolQueue::GetRequest instead of CThreadPoolClient::Main. This avoids a thread 
+                          deadlock problem in CThreadPoolClient::Main if you want to pump messages.
+                          2. Fixed a runtime ASSERT issue when removing directed requests in 
+                          CDirectedThreadPoolQueue::GetRequest.
 
-Copyright (c) 2002 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2002 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -224,7 +229,7 @@ INT_PTR CDirectedThreadPoolQueue::GetDirectedRequestIndexToRemove(int nThreadInd
   return nIndexToRemoveAt;
 }
 
-BOOL CDirectedThreadPoolQueue::GetRequest(CThreadPoolRequest& request, int nThreadIndexForDirectedRequest, DWORD dwMilliseconds, BOOL bLock)
+BOOL CDirectedThreadPoolQueue::GetRequest(CThreadPoolRequest& request, int nThreadIndexForDirectedRequest, DWORD dwMilliseconds, BOOL bLock, BOOL bPumpMessage)
 {
   ASSERT(IsCreated()); //Must have been created
 
@@ -232,7 +237,22 @@ BOOL CDirectedThreadPoolQueue::GetRequest(CThreadPoolRequest& request, int nThre
   HANDLE hWaitHandles[2];
   hWaitHandles[0] = m_GetRequestSemaphores.GetAt(nThreadIndexForDirectedRequest);
   hWaitHandles[1] = m_hGetRequestSemaphore;
-  DWORD dwWait = WaitForMultipleObjects(2, hWaitHandles, FALSE, dwMilliseconds);
+  DWORD dwWait = 0;
+  if (bPumpMessage)
+  {
+    dwWait = MsgWaitForMultipleObjects(2, hWaitHandles, FALSE, dwMilliseconds, QS_ALLINPUT);
+    if (dwWait == (WAIT_OBJECT_0 + 2)) //Is a message waiting?
+    {
+      //Pump the message queue if necessary
+      MSG msg;
+      while (PeekMessage(&msg, NULL,0,0,PM_NOREMOVE))
+        AfxGetApp()->PumpMessage(); 
+
+      return FALSE;
+    }
+  }
+  else
+    dwWait = WaitForMultipleObjects(2, hWaitHandles, FALSE, dwMilliseconds);
   int nSignaledHandle = dwWait - WAIT_OBJECT_0;
 
   //Work out what the return value from WFMO means!
@@ -257,13 +277,17 @@ BOOL CDirectedThreadPoolQueue::GetRequest(CThreadPoolRequest& request, int nThre
   {
     //Work out the item to remove from the Q
     INT_PTR nIndexToRemoveAt = GetDirectedRequestIndexToRemove(nThreadIndexForDirectedRequest);
-    ASSERT(nIndexToRemoveAt != -1); //something has gone badly wrong if we could not find a request to remove
-    request = m_Requests.GetAt(nIndexToRemoveAt);
-    ASSERT(request.m_bDirectedRequest); //the GetDirectedRequestIndexToRemove call above has returned an incorrect index
-    m_Requests.RemoveAt(nIndexToRemoveAt);
+    if (nIndexToRemoveAt != -1)
+    {
+      request = m_Requests.GetAt(nIndexToRemoveAt);
+      ASSERT(request.m_bDirectedRequest); //the GetDirectedRequestIndexToRemove call above has returned an incorrect index
+      m_Requests.RemoveAt(nIndexToRemoveAt);
 
-    //Release the PostRequest semaphore
-    ReleaseSemaphore(m_PostRequestSemaphores.GetAt(nThreadIndexForDirectedRequest), 1, NULL);
+      //Release the PostRequest semaphore
+      ReleaseSemaphore(m_PostRequestSemaphores.GetAt(nThreadIndexForDirectedRequest), 1, NULL);
+    }
+    else
+      bSuccess = FALSE;
   }
   else
   {

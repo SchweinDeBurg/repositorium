@@ -3,7 +3,7 @@ Module : IOCPThreadPoolQueue.h
 Purpose: Interface for an MFC class which implements a queue class for CThreadPoolServer using an SDK IO Completion port
 Created: PJN / 18-08-2002
 
-Copyright (c) 2002 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2002 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -50,7 +50,7 @@ public:
   virtual BOOL Close();
   virtual BOOL PostRequest(const CThreadPoolRequest& request, DWORD dwMilliseconds = INFINITE, BOOL bLock = TRUE);
   virtual BOOL PostRequestWithoutLimitCheck(const CThreadPoolRequest& request, BOOL bLock = TRUE) { return PostRequest(request, 0, bLock); };
-  virtual BOOL GetRequest(CThreadPoolRequest& request, int nThreadIndexForDirectedRequest, DWORD dwMilliseconds = INFINITE, BOOL bLock = TRUE);
+  virtual BOOL GetRequest(CThreadPoolRequest& request, int nThreadIndexForDirectedRequest, DWORD dwMilliseconds, BOOL bLock, BOOL bPumpMessage);
   virtual BOOL IsCreated() const;
   virtual BOOL SupportsDirectedRequests() const { return FALSE; };
 
