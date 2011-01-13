@@ -9,7 +9,7 @@ History: PJN / 12-01-2007 1. Fixed a bug in CW3MFCRegistryMimeManager::GetMimeTy
                           2. CRegistryHttpMimeManager class has been renamed CW3MFCRegistryMimeManager
                           3. CIniHttpMimeManager class has been renamed CW3MFCIniMimeManager
 
-Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)  
+Copyright (c) 1999 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)  
 
 All rights reserved.
 

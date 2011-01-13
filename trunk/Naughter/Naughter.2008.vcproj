@@ -44,7 +44,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\OpenSSL\include;..\Scintilla\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;W3MFC_SSL_SUPPORT;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -120,7 +120,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\OpenSSL\include;..\Scintilla\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;W3MFC_SSL_SUPPORT;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -192,7 +192,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\OpenSSL\include;..\Scintilla\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;W3MFC_SSL_SUPPORT;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -268,7 +268,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\OpenSSL\include;..\Scintilla\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;W3MFC_SSL_SUPPORT;SECURITY_WIN32;XTASKDIALOGCLIENT_STATIC;XTASKDIALOGMFCCLIENT_STATIC;SCI_NAMESPACE"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -565,6 +565,11 @@
 			</File>
 			<File
 				RelativePath=".\Help\TreeOptionsCtrl.htm"
+				DeploymentContent="true"
+				>
+			</File>
+			<File
+				RelativePath=".\Help\w3mfc.htm"
 				DeploymentContent="true"
 				>
 			</File>

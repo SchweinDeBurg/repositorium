@@ -3,7 +3,7 @@ Module : OpenSSLMfc.H
 Purpose: Defines the interface for wrapper classes for the OpenSSL C variable types
 Created: PJN / 24-05-2002
 
-Copyright (c) 2002 - 2009 by PJ Naughter.  
+Copyright (c) 2002 - 2011 by PJ Naughter.  
 
 All rights reserved.
 
@@ -101,10 +101,8 @@ public:
 
 //General Methods
   BOOL    Create(CSSLContext& sslContext, CWSocket& socket);
-  BOOL    Connect(LPCTSTR lpszHostAddress, UINT nHostPort);
-  BOOL    ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout = 5000);
-  BOOL    ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName = NULL, LPCTSTR lpszPassword = NULL, DWORD dwConnectionTimeout = 5000, BOOL bUDP = FALSE);
-  BOOL    ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName = NULL, LPCTSTR pszPassword = NULL, DWORD dwConnectionTimeout = 5000, LPCTSTR lpszUserAgent = NULL);
+  BOOL    Connect(LPCTSTR pszHostAddress, UINT nHostPort, int nSocketType = SOCK_STREAM);
+  BOOL    Connect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName, int nSocketType = SOCK_STREAM);
   BOOL    Accept(DWORD dwSSLNegotiationTimeout);
   void    Close();
   int     Send(const void* pBuffer, int nBuf);

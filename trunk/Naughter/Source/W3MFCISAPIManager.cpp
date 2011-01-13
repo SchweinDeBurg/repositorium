@@ -5,7 +5,7 @@ Created: PJN / 23-02-2003
 History: PJN / 19-11-2007 1. Updated copyright details.
                           2. CIniISAPIManager class has been renamed to CW3MFCIniISAPIManager
 
-Copyright (c) 2003 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com) 
+Copyright (c) 2003 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com) 
 
 All rights reserved.
 

@@ -334,8 +334,11 @@ History: PJN / 24-06-1999 1.  Implemented support for "HEAD" command
                           2. Updated the sample app's project settings to more modern default values.
                           3. Removed some outstanding VC 6 style code from the codebase
                           4. Removed use of CT2A throughout the code.
+         PJN / 09-01-2011 1. Updated copyright details.
+                          2. Updated code to compile with latest version of OpenSSL
+                          3. Updated TestISAPI project to warn if it is compiled in VC 2008 or later (MFC ISAPI support was dropped from VC 2008!)
 
-Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -382,6 +385,7 @@ to maintain a single distribution point for the source code.
 
 CW3MFCServerSettings::CW3MFCServerSettings() : m_nPort(80),                  //Default to the standard HTTP port
                                                m_bBind(FALSE),               //Default to not binding to a specific IP address
+                                               m_bIPv6(FALSE),
                                              #ifdef _DEBUG
                                                m_dwIdleClientTimeout(90000), //Default to client idle timeout of 90 seconds (when in debug mode)
                                              #else
@@ -692,31 +696,11 @@ void CW3MFCServer::ListenSocketFunction()
     return;
   }
 
-  //Create the server socket
+  //Bind the server socket
   CW3MFCSocket serverSocket;
   try
   {
-    serverSocket.Create();
-  }
-  catch(CWSocketException* pEx)
-  {
-    //Report the error
-    CString sError;
-    sError.Format(_T("CW3MFCServer::ListenSocketFunction, Failed to create server socket, GetLastError:%d"), pEx->m_nError);
-    OnError(sError);
-
-    m_ListenStartEvent.SetEvent();
-    pEx->Delete();  
-    return;
-  }
-
-  //Bind the server socket
-  try
-  {
-    if (m_pSettings->m_bBind)
-      serverSocket.Bind(m_pSettings->m_nPort, m_pSettings->m_sBindAddress);
-    else
-      serverSocket.Bind(m_pSettings->m_nPort);
+    serverSocket.CreateAndBind(m_pSettings->m_nPort, m_pSettings->m_bBind ? m_pSettings->m_sBindAddress.operator LPCTSTR() : NULL, SOCK_STREAM, m_pSettings->m_bIPv6 ? AF_INET6 : AF_INET);
   }
   catch(CWSocketException* pEx)
   {
@@ -823,7 +807,7 @@ void CW3MFCServer::ListenSocketFunction()
   if (m_pSettings->m_SSLProtocol != CW3MFCServerSettings::SSL_NONE)
   {
     //Pick the SSL protocol to use
-    SSL_METHOD* pSSLMethod = NULL;
+    const SSL_METHOD* pSSLMethod = NULL;
     switch (m_pSettings->m_SSLProtocol)
     {
       case CW3MFCServerSettings::SSL_V2:
@@ -967,8 +951,9 @@ void CW3MFCServer::ListenSocketFunction()
         pRequest->m_pSSLContext = &sslContext;
       #endif
 
-        //Accept the client connection  
-        serverSocket.Accept(pRequest->m_ClientSocket, pRequest->m_ClientAddress);
+        //Accept the client connection
+        int nClientAddressLength = sizeof(pRequest->m_ClientAddress);
+        serverSocket.Accept(pRequest->m_ClientSocket, reinterpret_cast<SOCKADDR*>(&pRequest->m_ClientAddress), &nClientAddressLength);
 
         //Send the request down to the thread pool
         CThreadPoolRequest poolRequest;

@@ -10,7 +10,7 @@ History  PJN / 19-02-2006 1. Replaced all calls to ZeroMemory and CopyMemory wit
          PJN / 23-05-2009 1. Reworked all token parsing code to use CString::Tokenize
          PJN / 07-09-2009 1. Fixed a debug mode ASSERT when calling TRACE in CW3MFCClient::PostLog
 
-Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -283,7 +283,7 @@ BOOL CW3MFCClient::Run(const CThreadPoolRequest& request)
   //Hive away the parameters in member variables
   SOCKET clientSocket = pW3MFCRequest->m_ClientSocket.Detach();
   m_Socket.Attach(clientSocket);
-  memcpy(&m_Request.m_ClientAddress, &pW3MFCRequest->m_ClientAddress, sizeof(sockaddr_in));
+  memcpy_s(&m_Request.m_ClientAddress, sizeof(m_Request.m_ClientAddress), &pW3MFCRequest->m_ClientAddress, sizeof(pW3MFCRequest->m_ClientAddress));
 #ifdef W3MFC_SSL_SUPPORT
   m_pSSLContext = pW3MFCRequest->m_pSSLContext;
 #endif
@@ -330,9 +330,10 @@ void CW3MFCClient::HandleClient()
   m_Request.m_sRemoteHost.Empty();
   if (pSettings->m_bDNSLookup)
   {
-    HOSTENT* pHostEnt = gethostbyaddr(reinterpret_cast<const char*>(&m_Request.m_ClientAddress.sin_addr), sizeof(IN_ADDR), AF_INET);
-    if (pHostEnt)
-      m_Request.m_sRemoteHost = pHostEnt->h_name;
+    char szName[NI_MAXHOST];
+    szName[0] = '\0';
+		if (getnameinfo(reinterpret_cast<const SOCKADDR*>(&m_Request.m_ClientAddress), sizeof(m_Request.m_ClientAddress), szName, NI_MAXHOST, NULL, 0, 0) == 0)
+      m_Request.m_sRemoteHost = szName;
   }
 
   //Should we allow this client to connect
@@ -1801,11 +1802,7 @@ void CW3MFCClient::PostLog(int /*nHTTPStatusCode*/, DWORD /*dwBodyLength*/)
   if (sUser.IsEmpty())
     sUser = _T("-");
     
-  TRACE(_T("%d.%d.%d.%d - %s [%s %+.2d%.2d] \"%s\" %d %d\n"), 
-        static_cast<int>(m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b1),
-        static_cast<int>(m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b2), 
-        static_cast<int>(m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b3), 
-        static_cast<int>(m_Request.m_ClientAddress.sin_addr.S_un.S_un_b.s_b4), 
+  TRACE(_T("%s - %s [%s %+.2d%.2d] \"%s\" %d %d\n"), CWSocket::AddressToString(m_Request.m_ClientAddress).operator LPCTSTR(), 
         sUser.operator LPCTSTR(), sDateTime, -nTZBias/60, abs(nTZBias)%60, m_Request.m_sRequest.operator LPCTSTR(), nHTTPStatusCode, dwBodyLength);
 #endif        
 }

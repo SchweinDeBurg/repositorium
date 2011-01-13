@@ -3,7 +3,7 @@ Module : W3MFCISAPIManager.h
 Purpose: Defines the interface for the ISAPI Manager classes
 Created: PJN / 23-02-2003
 
-Copyright (c) 2003 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2003 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 

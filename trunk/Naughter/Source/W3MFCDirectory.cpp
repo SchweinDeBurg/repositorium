@@ -10,7 +10,7 @@ History: PJN / 19-02-2006 1. Replaced all calls to ZeroMemory and CopyMemory wit
                           64 bit size returned from CFileFind::GetLength
          PJN / 31-05-2008 1. Code now compiles cleanly using Code Analysis (/analyze)
 
-Copyright (c) 2003 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2003 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 

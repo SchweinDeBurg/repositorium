@@ -9,7 +9,7 @@ History: PJN / 27-06-2006 1. Optimized CHttpResponseHeader constructor code
          PJN / 20-11-2007 1. CHttpResponseHeader class has been renamed CW3MFCResponseHeader
          PJN / 31-05-2008 1. Code now compiles cleanly using Code Analysis (/analyze)
 
-Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)  
+Copyright (c) 1999 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)  
 
 All rights reserved.
 

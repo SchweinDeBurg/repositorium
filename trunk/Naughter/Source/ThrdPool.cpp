@@ -96,7 +96,7 @@ History: PJN / 21-07-2001 1. Made destructors of the two classes virtual as both
          PJN / 31-05-2008 1. Updated copyright details
                           2. Code now compiles cleanly using Code Analysis (/analyze)
 
-Copyright (c) 2002 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2002 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -229,59 +229,31 @@ void CThreadPoolClient::Main()
   AFXASSUME(m_pPoolServer);
   CThreadPoolQueue* pQueue = m_pPoolServer->GetQueue();
   AFXASSUME(pQueue);
-  
-  //Setup the wait handles if necessary
-  HANDLE hWait[1];
   if (m_bPumpMessageQueue)
   {
     CDirectedThreadPoolQueue* pDirectedQueue = static_cast<CDirectedThreadPoolQueue*>(pQueue);
     AFXASSUME(pDirectedQueue);
     ASSERT(pDirectedQueue->IsKindOf(RUNTIME_CLASS(CDirectedThreadPoolQueue))); //We only supporting pumping messages for a "DirectedThreadPool" Queue
-    hWait[0] = pDirectedQueue->m_evtDataAvailable;
+    DBG_UNREFERENCED_LOCAL_VARIABLE(pDirectedQueue);
   }
 
-  //Get the queued packet posted to us from the manager class
+  //Get the queued request posted to us from the queue class
   CThreadPoolRequest request;
   BOOL bContinue = TRUE;
-
-	while (bContinue)
+	while (bContinue && !m_lRequestToStop)
 	{
-    //Local variable used to determine if we should call CThreadPoolQueue::GetRequest
-    BOOL bTryGetRequest = FALSE;
-
-    if (m_bPumpMessageQueue)
+    if (pQueue->GetRequest(request, m_nThreadIndex, INFINITE, TRUE, m_bPumpMessageQueue))
     {
-      DWORD dwWait = MsgWaitForMultipleObjects(1, hWait, FALSE, INFINITE, QS_ALLINPUT);
-      if (dwWait == (WAIT_OBJECT_0 + 1)) //Is a message waiting?
-      {
-        //Pump the message queue if necessary
-        MSG msg;
-        while (PeekMessage(&msg, NULL,0,0,PM_NOREMOVE))
-          AfxGetApp()->PumpMessage(); 
-      }
-      else if (dwWait == WAIT_OBJECT_0)
-        bTryGetRequest = TRUE;
-      else
-        TRACE(_T("CThreadPoolClient::Main, An error occured calling MsgWaitForMultipleObjects, Error:%d\n"), ::GetLastError());
-    }
-    else
-      bTryGetRequest = TRUE;
-    
-    if (bTryGetRequest)
-    {
-      if (pQueue->GetRequest(request, m_nThreadIndex))
-      {
-		    if (request.m_dwID == CThreadPoolRequest::THREADPOOL_SHUTDOWN_REQUEST)
-			    bContinue = FALSE; //break out of the loop, since a shutdown request was sent to us
-		    else
-          bContinue = Run(request); //Allow the virtual function to handle the client request
-      }
+	    if (request.m_dwID == CThreadPoolRequest::THREADPOOL_SHUTDOWN_REQUEST)
+		    bContinue = FALSE; //break out of the loop, since a shutdown request was sent to us
+	    else
+        bContinue = Run(request); //Allow the virtual function to handle the client request
     }
 	}
 }
 
 
-IMPLEMENT_DYNCREATE(CThreadPoolQueue, CObject);
+IMPLEMENT_DYNCREATE(CThreadPoolQueue, CObject)
 
 CThreadPoolQueue::CThreadPoolQueue()
 {
@@ -315,7 +287,7 @@ BOOL CThreadPoolServer::Start(CRuntimeClass* pRuntimeClient, CRuntimeClass* pRun
 
   //Try to create the queue
   ASSERT(m_pQueue == NULL);
-  m_pQueue = reinterpret_cast<CThreadPoolQueue*>(pRuntimeQueue->CreateObject());
+  m_pQueue = static_cast<CThreadPoolQueue*>(pRuntimeQueue->CreateObject());
   if (m_pQueue == NULL)
   {
     TRACE(_T("CThreadPoolServer::Start, Failed to create the queue\n"));
@@ -342,7 +314,7 @@ BOOL CThreadPoolServer::Start(CRuntimeClass* pRuntimeClient, CRuntimeClass* pRun
   for (int i=0; i<nPoolSize && bSuccess; i++)
   {
     //Create the thread pool client object
-    CThreadPoolClient* pClient = reinterpret_cast<CThreadPoolClient*>(pRuntimeClient->CreateObject());
+    CThreadPoolClient* pClient = static_cast<CThreadPoolClient*>(pRuntimeClient->CreateObject());
     if (pClient == NULL)
     {
       TRACE(_T("CThreadPoolServer::Start, Failed to create client thread pool object for thread pool at index %d\n"), i);

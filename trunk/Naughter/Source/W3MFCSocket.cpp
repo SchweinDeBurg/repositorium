@@ -12,7 +12,7 @@ History: PJN / 19-02-2006 1. Replaced all calls to ZeroMemory and CopyMemory wit
          PJN / 19-11-2007 1. Updated copyright details.
                           2. CHttpSocket class has been renamed CW3MFCSocket
 
-Copyright (c) 1999 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 

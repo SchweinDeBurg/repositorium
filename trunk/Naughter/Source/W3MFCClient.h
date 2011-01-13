@@ -2,7 +2,7 @@
 Module : W3MFCClient.h
 Purpose: Defines the interface for the CW3MFCClient classes
 
-Copyright (c) 1999 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -47,7 +47,17 @@ to maintain a single distribution point for the source code.
 class W3MFC_EXT_CLASS CW3MFCThreadPoolRequest
 {
 public:
-  sockaddr_in m_ClientAddress;
+//Constructors / Destructors
+  CW3MFCThreadPoolRequest() 
+#ifdef W3MFC_SSL_SUPPORT
+                            : m_pSSLContext(NULL)
+#endif
+  {
+    memset(&m_ClientAddress, 0, sizeof(m_ClientAddress));
+  }
+
+//Member variables
+  SOCKADDR_INET m_ClientAddress;
   CW3MFCSocket m_ClientSocket;
 #ifdef W3MFC_SSL_SUPPORT
   CSSLContext* m_pSSLContext;

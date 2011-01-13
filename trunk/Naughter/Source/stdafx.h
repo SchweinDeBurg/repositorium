@@ -62,22 +62,10 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #include <afxwin.h>        // MFC core and standard components
 #include <afxtempl.h>      // MFC collection template classes
 #include <afxext.h>        // MFC advanced extensions
-#include <afxsock.h>       // MFC support for Windows Sockets
 #include <afxpriv.h>       // MFC private classes
 #include <afxmt.h>         // MFC multithreaded extensions
 #include <afxcmn.h>        // MFC common control classes
 #include <afxdtctl.h>      // MFC date/time control classes
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-// ATL headers
-
-#include <atlbase.h>
-#include <atlenc.h>
-#include <atlwin.h>
-#include <atlstr.h>
-#include <atltypes.h>
-#include <atlfile.h>
-#include <atlimage.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // PSDK headers
@@ -99,6 +87,18 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #if !defined(W3MFC_NO_SSPI_SUPPORT)
 #include <sspi.h>
 #endif   // W3MFC_NO_SSPI_SUPPORT
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// ATL headers
+
+#include <atlbase.h>
+#include <atlenc.h>
+#include <atlsocket.h>
+#include <atlwin.h>
+#include <atlstr.h>
+#include <atltypes.h>
+#include <atlfile.h>
+#include <atlimage.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // OpenSSL headers
