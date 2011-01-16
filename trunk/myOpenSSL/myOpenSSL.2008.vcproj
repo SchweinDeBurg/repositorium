@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="9,00"
+	Name="myOpenSSL"
+	ProjectGUID="{E06EA1B8-32FE-429A-AD40-EA0B5A700CC3}"
+	Keyword="MakeFileProj"
+	TargetFrameworkVersion="196613"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="MBCS Debug|Win32"
+			OutputDirectory=".\out32dll\x86"
+			IntermediateDirectory=".\tmp32dll\x86"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake -S -f ms\ntdll-x86.mak"
+				ReBuildCommandLine="nmake -S -a -f ms\ntdll-x86.mak"
+				CleanCommandLine="nmake -S -f ms\ntdll-x86.mak vclean"
+				Output=""
+				PreprocessorDefinitions="WIN32;_DEBUG"
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="MBCS Release|Win32"
+			OutputDirectory=".\out32dll\x86"
+			IntermediateDirectory=".\tmp32dll\x86"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake -S -f ms\ntdll-x86.mak"
+				ReBuildCommandLine="nmake -S -a -f ms\ntdll-x86.mak"
+				CleanCommandLine="nmake -S -f ms\ntdll-x86.mak vclean"
+				Output=""
+				PreprocessorDefinitions="WIN32;NDEBUG"
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Unicode Debug|Win32"
+			OutputDirectory=".\out32dll\x86"
+			IntermediateDirectory=".\tmp32dll\x86"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake -S -f ms\ntdll-x86.mak"
+				ReBuildCommandLine="nmake -S -a -f ms\ntdll-x86.mak"
+				CleanCommandLine="nmake -S -f ms\ntdll-x86.mak vclean"
+				Output=""
+				PreprocessorDefinitions="WIN32;_DEBUG"
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Unicode Release|Win32"
+			OutputDirectory=".\out32dll\x86"
+			IntermediateDirectory=".\tmp32dll\x86"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake -S -f ms\ntdll-x86.mak"
+				ReBuildCommandLine="nmake -S -a -f ms\ntdll-x86.mak"
+				CleanCommandLine="nmake -S -f ms\ntdll-x86.mak vclean"
+				Output=""
+				PreprocessorDefinitions="WIN32;NDEBUG"
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<File
+			RelativePath=".\ms\ntdll-x86.mak"
+			>
+		</File>
+	</Files>
+</VisualStudioProject>

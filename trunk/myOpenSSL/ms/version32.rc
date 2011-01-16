@@ -1,0 +1,83 @@
+#include <winver.h>
+
+LANGUAGE 0x09,0x01
+
+1 VERSIONINFO
+  FILEVERSION 1,0,0,3
+  PRODUCTVERSION 1,0,0,3
+  FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+  FILEFLAGS 0x01L
+#else
+  FILEFLAGS 0x00L
+#endif
+  FILEOS VOS__WINDOWS32
+  FILETYPE VFT_DLL
+  FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+    BLOCK "040904b0"
+    BEGIN
+        // Required:
+        VALUE "CompanyName", "The OpenSSL Project, http://www.openssl.org/\0"
+        VALUE "FileDescription", "OpenSSL Shared Library\0"
+        VALUE "FileVersion", "1.0.0c\0"
+#if defined(CRYPTO)
+        VALUE "InternalName", "libeay32\0"
+        VALUE "OriginalFilename", "libeay32.dll\0"
+#elif defined(SSL)
+        VALUE "InternalName", "ssleay32\0"
+        VALUE "OriginalFilename", "ssleay32.dll\0"
+#elif defined(ENGINE_4758CCA)
+        VALUE "InternalName", "4758cca\0"
+        VALUE "OriginalFilename", "4758cca.dll\0"
+#elif defined(ENGINE_AEP)
+        VALUE "InternalName", "aep\0"
+        VALUE "OriginalFilename", "aep.dll\0"
+#elif defined(ENGINE_ATALLA)
+        VALUE "InternalName", "atalla\0"
+        VALUE "OriginalFilename", "atalla.dll\0"
+#elif defined(ENGINE_CSWIFT)
+        VALUE "InternalName", "cswift\0"
+        VALUE "OriginalFilename", "cswift.dll\0"
+#elif defined(ENGINE_GMP)
+        VALUE "InternalName", "gmp\0"
+        VALUE "OriginalFilename", "gmp.dll\0"
+#elif defined(ENGINE_CHIL)
+        VALUE "InternalName", "chil\0"
+        VALUE "OriginalFilename", "chil.dll\0"
+#elif defined(ENGINE_NURON)
+        VALUE "InternalName", "nuron\0"
+        VALUE "OriginalFilename", "nuron.dll\0"
+#elif defined(ENGINE_SUREWARE)
+        VALUE "InternalName", "sureware\0"
+        VALUE "OriginalFilename", "sureware.dll\0"
+#elif defined(ENGINE_UBSEC)
+        VALUE "InternalName", "ubsec\0"
+        VALUE "OriginalFilename", "ubsec.dll\0"
+#elif defined(ENGINE_PADLOCK)
+        VALUE "InternalName", "padlock\0"
+        VALUE "OriginalFilename", "padlock.dll\0"
+#elif defined(ENGINE_CAPI)
+        VALUE "InternalName", "capi\0"
+        VALUE "OriginalFilename", "capi.dll\0"
+#elif defined(ENGINE_GOST)
+        VALUE "InternalName", "gost\0"
+        VALUE "OriginalFilename", "gost.dll\0"
+#endif
+        VALUE "ProductName", "The OpenSSL Toolkit\0"
+        VALUE "ProductVersion", "1.0.0c\0"
+        // Optional:
+        VALUE "Comments", "Compiler switches: /MD /O1 /Ob1 /W3 /WX /Gs0 /GF /Gy /nologo.\0"
+        VALUE "LegalCopyright", "Copyright © 1998-2010 The OpenSSL Project. Copyright © 1995-1998 Eric A. Young, Tim J. Hudson. All rights reserved.\0"
+        VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation.\0"
+        VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG.\0"
+        VALUE "SpecialBuild", "Dependent on the non-shared Microsoft ® Visual C++ CRT redistributable version 9.0 SP1 with the ATL security update.\0"
+    END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 0x4b0
+    END
+END
