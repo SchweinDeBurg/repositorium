@@ -17,14 +17,12 @@ it under the terms of the one of three licenses as you choose:
 
 3. LibRaw Software License 27032010
    (See file LICENSE.LibRaw.pdf provided in LibRaw distribution archive for details).
-
-
-
  */
 
 #include "libraw/libraw_types.h"
 
 #include <errno.h>
+#include <math.h>
 #include "libraw/libraw.h"
 
 #ifdef __cplusplus
