@@ -27,6 +27,7 @@ it under the terms of the one of three licenses as you choose:
 #include "../libraw/libraw.h"
 #include "defines.h"
 #include "var_defines.h"
+#include <math.h>
 
 /*
    Seach from the current directory up to the root looking for

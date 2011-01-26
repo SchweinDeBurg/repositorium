@@ -70,8 +70,18 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #include <stdio.h>
 
 #if defined (_OPENMP) 
-# if (_MSC_VER < 1600) // OpenMP works on VS2010
+
+#if defined(WIN32) 
+# if defined (_MSC_VER) && (_MSC_VER >= 1600) 
+/* VS2010+ : OpenMP works OK */
+#   define LIBRAW_USE_OPENMP
+#elif defined (__INTEL_COMPILER) && (__INTEL_COMPILER >=910)
+/*  Have not tested on 9.x and 10.x, but Intel documentation claims OpenMP 2.5 support in 9.1 */
+#   define LIBRAW_USE_OPENMP
+#else
 #  undef LIBRAW_USE_OPENMP
+#endif
+// Not Win32
 # elif (defined(__APPLE__) || defined(__MACOSX__)) && defined(_REENTRANT)
 #   undef LIBRAW_USE_OPENMP
 # else 
@@ -318,7 +328,9 @@ typedef struct
     float cclean;
     int cfa_green;
     float green_thresh;
-
+    int exp_correc;
+    float exp_shift;
+    float exp_preser;
 }libraw_output_params_t;
 
 typedef struct

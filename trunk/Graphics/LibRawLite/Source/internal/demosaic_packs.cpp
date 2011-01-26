@@ -34,6 +34,8 @@ it under the terms of the one of three licenses as you choose:
 
 #include "var_defines.h"
 
+#include <math.h>
+
 
 #ifdef LIBRAW_DEMOSAIC_PACK_GPL2
 /*AHD-Mod*/
