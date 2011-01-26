@@ -459,6 +459,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\opj_config.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\opj_includes.h"
 				>
 			</File>
