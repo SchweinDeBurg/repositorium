@@ -25,6 +25,7 @@
  */
 
 #include "opj_includes.h"
+#include "opj_config.h"
 
 /* ---------------------------------------------------------------------- */
 #ifdef WIN32
@@ -50,7 +51,7 @@ DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
 
 
 const char* OPJ_CALLCONV opj_version(void) {
-    return OPENJPEG_VERSION;
+    return PACKAGE_VERSION;
 }
 
 opj_dinfo_t* OPJ_CALLCONV opj_create_decompress(OPJ_CODEC_FORMAT format) {
