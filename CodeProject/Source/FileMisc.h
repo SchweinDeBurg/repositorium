@@ -40,6 +40,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.6 sources
 //*****************************************************************************
 
 #ifndef _MISCFILE_FUNCTIONS_H_
@@ -185,6 +186,7 @@ namespace FileMisc
 		BOOL bProcessMsgLoop = TRUE);
 
 	// append a line of text to a text file
+	bool LogText(LPCTSTR szLine, bool bWantDateTime = true);
 	bool AppendLineToFile(LPCTSTR szPathname, LPCTSTR szLine);
 
 	DWORD Run(HWND hwnd, LPCTSTR lpFile, LPCTSTR lpDirectory = NULL, int nShowCmd = SW_SHOW);

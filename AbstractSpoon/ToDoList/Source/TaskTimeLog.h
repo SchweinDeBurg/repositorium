@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.6 sources
 //*****************************************************************************
 
 // TaskTimeLog.h: interface for the CTaskTimeLog class.
@@ -68,6 +69,8 @@ protected:
 	CString m_sRefPath;
 
 protected:
+	static CString BuildColumnHeader();
+	static CString BuildRowFormat();
 };
 
 #endif // !defined(AFX_TASKTIMELOG_H__6C9F21CD_509E_4890_9B28_F8C6E52FF54B__INCLUDED_)

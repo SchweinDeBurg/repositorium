@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.6 sources
 //*****************************************************************************
 
 // TaskListCsvExporter.cpp: implementation of the CTaskListCsvExporter class.
@@ -153,7 +154,8 @@ CString& CTaskListCsvExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 	CString sPos; // becomes parent pos for sub-tasks
 
 	// handle locale specific decimal separator
-	_tsetlocale(LC_NUMERIC, _T(""));
+	TCHAR* szLocale = _tcsdup(_tsetlocale(LC_NUMERIC, NULL)); // current locale
+	_tsetlocale(LC_NUMERIC, _T("")); // local default
 
 	if (hTask)
 	{
@@ -242,8 +244,9 @@ CString& CTaskListCsvExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		}
 	}
 
-	// restore decimal separator to '.'
-	_tsetlocale(LC_NUMERIC, _T("English"));
+	// restore locale
+	_tsetlocale(LC_NUMERIC, szLocale);
+	free(szLocale);
 
 	return sOutput;
 }

@@ -40,6 +40,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.6 sources
 //*****************************************************************************
 
 #include "stdafx.h"
@@ -785,6 +786,23 @@ double FileMisc::GetFileSize(const TCHAR* szPath)
 	return 0;
 }
 
+bool FileMisc::LogText(LPCTSTR szLine, bool bWantDateTime)
+{
+	CString sLogFile = GetModuleFileName();
+	ReplaceExtension(sLogFile, _T(".log"));
+
+	CString sLogLine(szLine);
+
+	if (bWantDateTime)
+	{
+		sLogLine += _T(" (");
+		sLogLine += COleDateTime::GetCurrentTime().Format();
+		sLogLine += _T(")");
+	}
+
+	return AppendLineToFile(sLogFile, sLogLine);
+}
+
 bool FileMisc::AppendLineToFile(LPCTSTR szPathname, LPCTSTR szLine)
 {
 	// make sure parent folder exists
@@ -1022,10 +1040,13 @@ bool FileMisc::ExtractResource(UINT nID, LPCTSTR szType, const CString& sTempFil
 
 CString FileMisc::GetModuleFileName(HMODULE hMod)
 {
-	CString sModulePath;
+	static CString sModulePath;
 
-	::GetModuleFileName(hMod, sModulePath.GetBuffer(MAX_PATH + 1), MAX_PATH);
-	sModulePath.ReleaseBuffer();
+	if (sModulePath.IsEmpty())
+	{
+		::GetModuleFileName(hMod, sModulePath.GetBuffer(MAX_PATH + 1), MAX_PATH);
+		sModulePath.ReleaseBuffer();
+	}
 
 	return sModulePath;
 }
