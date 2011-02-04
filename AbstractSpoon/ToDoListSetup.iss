@@ -18,7 +18,7 @@ Compression=lzma
 SolidCompression=true
 OutputDir=.\SETUP
 OutputBaseFilename=ToDoList-6.1.6-setup
-VersionInfoVersion=6.1.6.732
+VersionInfoVersion=6.1.6.734
 VersionInfoProductName=ToDoList
 VersionInfoProductVersion=6.1.6
 MinVersion=0,5.0.2195
@@ -124,6 +124,7 @@ end;
 
 [InstallDelete]
 ;; from pre-6.1.6 releases
+Type: files; Name: "{group}\ToDoList on the Web.lnk"
 Type: files; Name: "{app}\ToDoList.url"
 
 [Files]
@@ -169,7 +170,7 @@ Name: "{userdesktop}\ToDoList"; Filename: "{app}\ToDoList.exe"; Tasks: desktopic
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\ToDoList"; Filename: "{app}\ToDoList.exe"; Tasks: quicklaunchicon
 
 [INI]
-Filename: "{group}\ToDoList on the Web.url"; Section: "InternetShortcut"; Key: "URL"; String: ""
+Filename: "{group}\ToDoList on the Web.url"; Section: "InternetShortcut"; Key: "URL"; String: "http://www.abstractspoon.com/"
 Filename: "{group}\ToDoList on the Web.url"; Section: "InternetShortcut"; Key: "IconFile"; String: ""
 Filename: "{group}\ToDoList on the Web.url"; Section: "InternetShortcut"; Key: "IconIndex"; String: "0"
 Filename: "{group}\ToDoList on the Web.url"; Section: "InternetShortcut"; Key: "Hotkey"; String: "0"
@@ -189,6 +190,6 @@ Name: quicklaunchicon; Description: "Create a &Quick Launch icon"; GroupDescript
 Filename: "{app}\ToDoList.exe"; Description: "Launch ToDoList"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
-Type: files; Name: "{app}\ToDoList.url"
+Type: files; Name: "{group}\ToDoList on the Web.url"
 
 ;; end of file
