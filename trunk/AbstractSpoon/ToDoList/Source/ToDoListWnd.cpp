@@ -42,6 +42,7 @@
 // - merged with ToDoList version 6.1.2 sources
 // - merged with ToDoList version 6.1.3 sources
 // - merged with ToDoList version 6.1.4 sources
+// - merged with ToDoList version 6.1.6 sources
 //*****************************************************************************
 
 // ToDoListWnd.cpp : implementation file
@@ -4032,7 +4033,7 @@ BOOL CToDoListWnd::DoDueTaskNotification(const CFilteredToDoCtrl* pCtrl, int nDu
 
 void CToDoListWnd::OnAbout()
 {
-	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.1.4</b> (mod by Elijah Zarezky)"),
+	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.1.6</b> (mod by Elijah Zarezky)"),
 		CEnString(IDS_ABOUTHEADING), CEnString(IDS_ABOUTCOPYRIGHT), CEnString(IDS_LICENSE), 1, 2, 8);
 
 	dialog.DoModal();
@@ -4256,7 +4257,7 @@ void CToDoListWnd::DoPreferences(int nInitPage)
 						tdc.SetVisibleColumns(aColumns);
 					}
 				}
-			}	
+			}
 		}
 
 		// menu icons
@@ -4895,26 +4896,6 @@ void CToDoListWnd::OnUpdateReload(CCmdUI* pCmdUI)
 	pCmdUI->Enable(!m_mgrToDoCtrls.GetFilePath(nSel).IsEmpty());
 }
 
-void CToDoListWnd::Log(const CString& sLog, BOOL bWantTime)
-{
-	if (!m_bLogging)
-	{
-		return;
-	}
-
-	CString sLogFile = FileMisc::GetModuleFolder() + _T("ToDoList.log");
-	CString sLogLine(sLog);
-
-	if (bWantTime)
-	{
-		sLogLine += _T(" (");
-		sLogLine += CDateHelper::FormatCurrentDate(DHFD_TIME);
-		sLogLine += _T(")");
-	}
-
-	FileMisc::AppendLineToFile(sLogFile, sLogLine);
-}
-
 void CToDoListWnd::OnSize(UINT nType, int cx, int cy)
 {
 	CFrameWnd::OnSize(nType, cx, cy);
@@ -5513,15 +5494,11 @@ void CToDoListWnd::OnTimerDueItems(int nCtrl)
 	{
 		m_tabCtrl.Invalidate(FALSE);
 	}
-
-	Log(_T("CToDoListWnd::OnTimerDueItems(end)"), TRUE);
 }
 
 void CToDoListWnd::OnTimerReadOnlyStatus(int nCtrl)
 {
 	AF_NOREENTRANT // macro helper
-
-	Log(_T("CToDoListWnd::OnTimerReadOnlyStatus(start)"), TRUE);
 
 	CPreferencesDlg& userPrefs = Prefs();
 
@@ -5621,8 +5598,6 @@ void CToDoListWnd::OnTimerReadOnlyStatus(int nCtrl)
 		CEnString sMessage(IDS_TASKLISTSRELOADED, sFileList);
 		m_ti.ShowBalloon(sMessage, _T("Readonly Status Change"), NIIF_INFO);
 	}
-
-	Log(_T("CToDoListWnd::OnTimerReadOnlyStatus(end)"), TRUE);
 }
 
 void CToDoListWnd::OnTimerTimestampChange(int nCtrl)
@@ -5713,30 +5688,22 @@ void CToDoListWnd::OnTimerTimestampChange(int nCtrl)
 		CEnString sMessage(IDS_TASKLISTSRELOADED, sFileList);
 		m_ti.ShowBalloon(sMessage, _T("File Timestamp Change"), NIIF_INFO);
 	}
-
-	Log(_T("CToDoListWnd::OnTimerTimestampChange(end)"), TRUE);
 }
 
 void CToDoListWnd::OnTimerAutoSave()
 {
 	AF_NOREENTRANT // macro helper
 
-	Log(_T("CToDoListWnd::OnTimerAutoSave(start)"), TRUE);
-
 	// don't save if the user is editing a task label
 	if (!GetToDoCtrl().IsTaskLabelEditing())
 	{
 		SaveAll(TDLS_AUTOSAVE);
 	}
-
-	Log(_T("CToDoListWnd::OnTimerAutoSave(end)"), TRUE);
 }
 
 void CToDoListWnd::OnTimerCheckoutStatus(int nCtrl)
 {
 	AF_NOREENTRANT // macro helper
-
-	Log(_T("CToDoListWnd::OnTimerCheckoutStatus(start)"), TRUE);
 
 	CPreferencesDlg& userPrefs = Prefs();
 
@@ -5831,8 +5798,6 @@ void CToDoListWnd::OnTimerCheckoutStatus(int nCtrl)
 		CEnString sMessage(IDS_TASKLISTSCHECKEDOUT, sFileList);
 		m_ti.ShowBalloon(sMessage, _T("Source Control Change(s)"), NIIF_INFO);
 	}
-
-	Log(_T("CToDoListWnd::OnTimerCheckoutStatus(end)"), TRUE);
 }
 
 void CToDoListWnd::OnNeedTooltipText(NMHDR* pNMHDR, LRESULT* pResult)
@@ -6706,6 +6671,12 @@ BOOL CToDoListWnd::VerifyTaskListOpen(int nIndex, BOOL bWantNotifyDueTasks)
 
 		if (TDCO_SUCCESS == OpenTaskList(&tdc, tdc.GetFilePath()))
 		{
+			// make sure hidden windows stay hidden
+			if (nIndex != GetSelToDoCtrl())
+			{
+				tdc.ShowWindow(SW_HIDE);
+			}
+
 			m_mgrToDoCtrls.SetLoaded(nIndex);
 			m_mgrToDoCtrls.UpdateTabItemText(nIndex);
 

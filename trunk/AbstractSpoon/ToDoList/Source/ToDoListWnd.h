@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.6 sources
 //*****************************************************************************
 
 // ToDoListWnd.h : header file
@@ -636,8 +637,7 @@ protected:
 	int GetTasks(CFilteredToDoCtrl& tdc, TSD_TASKS nWhatTasks, CTaskFile& tasks) const;
 
 	void DoSendTasks(TD_SENDWHAT nWhat, TD_SENDAS nSendAs);
-	void Log(const CString& sLog, BOOL bWantTime = FALSE);
-
+	
 	TDC_ARCHIVE GetAutoArchiveOptions(LPCTSTR szFilePath, CString& sArchivePath, BOOL& bRemoveFlagged) const;
 
 	static void PrepareOpenFilePath(CString& sFilePath);

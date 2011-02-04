@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.6 sources
 //*****************************************************************************
 
 // ContentMgr.cpp: implementation of the CContentMgr class.
@@ -100,10 +101,17 @@ BOOL CContentMgr::Initialize()
 
 		if (!ff.IsDots() && !ff.IsDirectory())
 		{
-			CString sDllPath = ff.GetFilePath();
+			CString sDllPath = ff.GetFilePath(), sLog;
+
+			// logging
+			sLog.Format(_T("CContentMgr::Initialize(%s)"), static_cast<LPCTSTR>(sDllPath));
+			FileMisc::LogText(sLog);
 
 			if (IsContentDll(sDllPath))
 			{
+				sLog.Format(_T("\'%s\' is a content plugin"), static_cast<LPCTSTR>(sDllPath));
+				FileMisc::LogText(sLog);
+
 				int nDllVer = 0;
 				IContent* pContent = CreateContentInterface(sDllPath, &nDllVer);
 
@@ -112,10 +120,21 @@ BOOL CContentMgr::Initialize()
 					// save
 					m_aContent.Add(pContent);
 				}
-				else if (nDllVer < ICONTENTCTRL_VERSION)
+				else
 				{
-					m_bSomeBadVersions = TRUE;
+					if (nDllVer < ICONTENTCTRL_VERSION)
+					{
+						m_bSomeBadVersions = TRUE;
+					}
+
+					sLog.Format(_T("*** \'%s\' could NOT be created"), static_cast<LPCTSTR>(sDllPath));
+					FileMisc::LogText(sLog);
 				}
+			}
+			else
+			{
+				sLog.Format(_T("\'%s\' is NOT a content plugin"), static_cast<LPCTSTR>(sDllPath));
+				FileMisc::LogText(sLog);
 			}
 		}
 	}

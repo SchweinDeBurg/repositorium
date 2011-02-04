@@ -3,24 +3,24 @@
 
 [Setup]
 AppName=ToDoList
-AppVerName=ToDoList 6.1.4
+AppVerName=ToDoList 6.1.6
 AppID={{E0FD8591-CBB1-475F-A4EA-EF4E3A58F78F}
 AppPublisher=AbstractSpoon Software
 AppPublisherURL=http://www.abstractspoon.com/
 AppSupportURL=http://www.abstractspoon.com/tdl_resources.html
 AppUpdatesURL=http://www.abstractspoon.com/tdl_resources.html
-AppVersion=6.1.4
-AppCopyright=Copyright © 2003–2010 by AbstractSpoon Software
+AppVersion=6.1.6
+AppCopyright=Copyright © 2003–2011 by AbstractSpoon Software
 DefaultDirName={pf}\AbstractSpoon\ToDoList
 DefaultGroupName=AbstractSpoon\ToDoList
 AllowNoIcons=true
 Compression=lzma
 SolidCompression=true
 OutputDir=.\SETUP
-OutputBaseFilename=ToDoList-6.1.4-setup
-VersionInfoVersion=6.1.4.701
+OutputBaseFilename=ToDoList-6.1.6-setup
+VersionInfoVersion=6.1.6.732
 VersionInfoProductName=ToDoList
-VersionInfoProductVersion=6.1.4
+VersionInfoProductVersion=6.1.6
 MinVersion=0,5.0.2195
 WizardImageFile=compiler:WizModernImage-IS.bmp
 WizardSmallImageFile=compiler:WizModernSmallImage-IS.bmp
@@ -122,6 +122,10 @@ begin
 	end;
 end;
 
+[InstallDelete]
+;; from pre-6.1.6 releases
+Type: files; Name: "{app}\ToDoList.url"
+
 [Files]
 ;; core application files
 Source: ".\ToDoList\Output.2008\x86\Release\Unicode\ToDoList.exe"; DestDir: "{app}"
@@ -160,13 +164,17 @@ Source: ".\REDIST\Microsoft.VC90.MFCLOC\Microsoft.VC90.MFCLOC.manifest"; DestDir
 [Icons]
 Name: "{group}\ToDoList"; Filename: "{app}\ToDoList.exe"
 Name: "{group}\License Agreement"; Filename: "{app}\EclipsePublicLicense.rtf"
-Name: "{group}\ToDoList on the Web"; Filename: "{app}\ToDoList.url"
 Name: "{group}\Uninstall ToDoList"; Filename: "{uninstallexe}"
 Name: "{userdesktop}\ToDoList"; Filename: "{app}\ToDoList.exe"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\ToDoList"; Filename: "{app}\ToDoList.exe"; Tasks: quicklaunchicon
 
 [INI]
-Filename: "{app}\ToDoList.url"; Section: "InternetShortcut"; Key: "URL"; String: "http://zarezky.spb.ru/projects/afx_scratch.html"
+Filename: "{group}\ToDoList on the Web.url"; Section: "InternetShortcut"; Key: "URL"; String: ""
+Filename: "{group}\ToDoList on the Web.url"; Section: "InternetShortcut"; Key: "IconFile"; String: ""
+Filename: "{group}\ToDoList on the Web.url"; Section: "InternetShortcut"; Key: "IconIndex"; String: "0"
+Filename: "{group}\ToDoList on the Web.url"; Section: "InternetShortcut"; Key: "Hotkey"; String: "0"
+Filename: "{group}\ToDoList on the Web.url"; Section: "InternetShortcut"; Key: "WorkingDirectory"; String: ""
+Filename: "{group}\ToDoList on the Web.url"; Section: "InternetShortcut"; Key: "ShowCommand"; String: "1"
 
 [Registry]
 Root: HKCU; Subkey: "Software\AbstractSpoon"; Flags: dontcreatekey uninsdeletekeyifempty

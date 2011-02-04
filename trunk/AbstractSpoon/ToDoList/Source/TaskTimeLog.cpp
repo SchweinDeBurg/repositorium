@@ -40,6 +40,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.6 sources
 //*****************************************************************************
 
 // TaskTimeLog.cpp: implementation of the CTaskTimeLog class.
@@ -48,6 +49,8 @@
 
 #include "StdAfx.h"
 #include "TaskTimeLog.h"
+
+#include <locale.h>
 
 #include "../../../CodeProject/Source/FileMisc.h"
 #include "../../../CodeProject/Source/Misc.h"
@@ -63,8 +66,11 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-LPCTSTR COLUMNHEADINGS = _T("Task ID, Time Spent (Hrs), User ID, End Date/Time, Start Date/Time");
-LPCTSTR LOGFORMAT = _T("%ld, %.3f, %s, %s, %s");
+const LPCTSTR COLUMNHEADINGS[] = { _T("Task ID"), _T("Title"), _T("Time Spent (Hrs)"), _T("User ID"), _T("End Date/Time"), _T("Start Date/Time") };
+const UINT NUM_COLUMNHEADINGS = sizeof(COLUMNHEADINGS) / sizeof(LPCTSTR);
+
+const LPCTSTR LOGFORMAT[] = { _T("%ld"), _T("%s"), _T("%.2f"), _T("%s"), _T("%s"), _T("%s") };
+const UINT NUM_LOGFORMATS = sizeof(LOGFORMAT) / sizeof(LPCTSTR);
 
 CTaskTimeLog::CTaskTimeLog(LPCTSTR szRefPath) : m_sRefPath(szRefPath)
 {
@@ -86,22 +92,29 @@ BOOL CTaskTimeLog::LogTime(DWORD dwTaskID, LPCTSTR szTaskTitle, double dTime, CO
 	// if the file doesn't exist then we insert the column headings as the first line
 	if (!FileMisc::FileExists(sLogPath))
 	{
-		FileMisc::AppendLineToFile(sLogPath, COLUMNHEADINGS);
+		FileMisc::AppendLineToFile(sLogPath, BuildColumnHeader());
 	}
 
 	// then log the time spent
-	CString sLog;
+	CString sLog, sLogFormat(BuildRowFormat());
 
 	COleDateTime dtEnd = dtWhen;
 	COleDateTime dtStart = dtEnd - COleDateTime(dTime / 24); // dTime is in hours
 
-	sLog.Format(LOGFORMAT,
+	TCHAR* szLocale = _tcsdup(_tsetlocale(LC_NUMERIC, NULL)); // current locale
+	_tsetlocale(LC_NUMERIC, _T("")); // local default
+
+	sLog.Format(sLogFormat,
 		dwTaskID,
 		szTaskTitle,
 		dTime,
-		Misc::GetUserName(),
-		CDateHelper::FormatDate(dtEnd, DHFD_ISO | DHFD_TIME),
-		CDateHelper::FormatDate(dtStart, DHFD_ISO | DHFD_TIME));
+		static_cast<LPCTSTR>(Misc::GetUserName()),
+		static_cast<LPCTSTR>(CDateHelper::FormatDate(dtEnd, DHFD_ISO | DHFD_TIME)),
+		static_cast<LPCTSTR>(CDateHelper::FormatDate(dtStart, DHFD_ISO | DHFD_TIME)));
+
+	// restore locale
+	_tsetlocale(LC_NUMERIC, szLocale);
+	free(szLocale);
 
 	return FileMisc::AppendLineToFile(sLogPath, sLog);
 }
@@ -157,4 +170,42 @@ double CTaskTimeLog::CalcAccumulatedTime(DWORD dwTaskID, BOOL bLogSeparately)
 	}
 
 	return dTotalTime;
+}
+
+CString CTaskTimeLog::BuildColumnHeader()
+{
+	ASSERT(NUM_COLUMNHEADINGS == NUM_LOGFORMATS);
+
+	CString sColumnHeader, sDelim = Misc::GetListSeparator();
+
+	for (int nCol = 0; nCol < NUM_COLUMNHEADINGS; nCol++)
+	{
+		sColumnHeader += COLUMNHEADINGS[nCol];
+
+		if (nCol < NUM_COLUMNHEADINGS - 1)
+		{
+			sColumnHeader += sDelim + _T('\x20');
+		}
+	}
+
+	return sColumnHeader;
+}
+
+CString CTaskTimeLog::BuildRowFormat()
+{
+	ASSERT(NUM_COLUMNHEADINGS == NUM_LOGFORMATS);
+
+	CString sRowFormat, sDelim = Misc::GetListSeparator();
+
+	for (int nRow = 0; nRow < NUM_LOGFORMATS; nRow++)
+	{
+		sRowFormat += LOGFORMAT[nRow];
+
+		if (nRow < NUM_LOGFORMATS - 1)
+		{
+			sRowFormat += sDelim + _T('\x20');
+		}
+	}
+
+	return sRowFormat;
 }

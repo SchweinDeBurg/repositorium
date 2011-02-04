@@ -41,6 +41,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.6 sources
 //*****************************************************************************
 
 // Misc.cpp: implementation of the CMisc class.
@@ -1028,25 +1029,45 @@ CString Misc::Format(int nVal)
 	return sValue;
 }
 
-CString Misc::FormatCost(double dCost)
+CString Misc::FormatCost(double dCost, BOOL bIncludeUnits)
 {
-	TCHAR* szLocale = _tcsdup(_tsetlocale(LC_NUMERIC, NULL)); // current locale
-	_tsetlocale(LC_NUMERIC, _T("")); // local default
-
+	// format as simple decimal
 	CString sValue;
-	sValue.Format(_T("%.6f"), dCost);
+	sValue.Format(_T("%.2f"), dCost);
 
-	// restore locale
-	_tsetlocale(LC_NUMERIC, szLocale);
-	free(szLocale);
-
+	// convert to cost
 	const UINT BUFSIZE = 100;
 	TCHAR szCost[BUFSIZE + 1];
 
 	GetCurrencyFormat(NULL, 0, sValue, NULL, szCost, BUFSIZE);
 	sValue = szCost;
 
+	// remove cost units?
+	if (!bIncludeUnits)
+	{
+		sValue.TrimLeft(GetCostUnits());
+		sValue.TrimLeft();
+	}
+
 	return sValue;
+}
+
+CString Misc::GetCostUnits()
+{
+	static CString sUnits;
+	const int BUFLEN = 10;
+
+	if (sUnits.IsEmpty()) // init first time only
+	{
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SCURRENCY, sUnits.GetBuffer(BUFLEN), BUFLEN - 1);
+		sUnits.ReleaseBuffer();
+
+		// Trim extra spaces
+		sUnits.TrimLeft();
+		sUnits.TrimRight();
+	}
+
+	return sUnits;
 }
 
 BOOL Misc::KeyIsPressed(DWORD dwVirtKey)

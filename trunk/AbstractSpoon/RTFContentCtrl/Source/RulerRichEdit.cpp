@@ -65,13 +65,14 @@ protected:
 		Release();
 	}
 	virtual BOOL OnInitDialog();
-	virtual BOOL OnKeyboard(UINT uVirtKey, UINT uFlags);
+	virtual BOOL OnKeyboard(UINT uVirtKey, UINT /*uFlags*/);
 };
 
 BOOL CFindReplaceDialogEx::OnInitDialog()
 {
 	CFindReplaceDialog::OnInitDialog();
 
+	InitHooks(HM_KEYBOARD);
 	return TRUE;
 }
 

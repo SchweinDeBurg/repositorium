@@ -27,8 +27,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 6,1,4,701
- PRODUCTVERSION 6,1,4,701
+ FILEVERSION 6,1,6,732
+ PRODUCTVERSION 6,1,6,732
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -46,14 +46,14 @@ BEGIN
             VALUE "Comments", "Compiler switches: /O1 /Ob1 /Oy /GF /EHsc /MD /Zp4 /Gy /W4 /TP"
             VALUE "CompanyName", "AbstractSpoon Software"
             VALUE "FileDescription", "ToDoList executable module"
-            VALUE "FileVersion", "6.1.4.701"
+            VALUE "FileVersion", "6.1.6.732"
             VALUE "InternalName", "ToDoList"
-            VALUE "LegalCopyright", "Copyright © 2003-2010 by AbstractSpoon"
+            VALUE "LegalCopyright", "Copyright © 2003-2011 by AbstractSpoon"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
             VALUE "OriginalFilename", "ToDoList.exe"
             VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."
             VALUE "ProductName", "ToDoList"
-            VALUE "ProductVersion", "6.1.4"
+            VALUE "ProductVersion", "6.1.6"
             VALUE "SpecialBuild", "Dependent on the non-shared Microsoft ® Visual C++ CRT/MFC redistributables version 9.0 SP1 with the ATL security update."
         END
     END
@@ -975,7 +975,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Add Logged Task Time"
 FONT 8, "MS Shell Dlg 2"
 BEGIN
-    EDITTEXT        IDC_LOGGEDTIME,51,45,57,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_LOGGEDTIME,51,45,57,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,102,93,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,160,93,50,14
     LTEXT           "Task",IDC_STATIC,7,7,17,8
@@ -3242,7 +3242,7 @@ BEGIN
     IDS_UITHEMEFILEFILTER   "Theme Files (*.xml)|*.xml||"
     IDS_NEEDRESTARTTODOLISTLIGHTBOXCHANGE 
                             "You will need to restart ToDoList to see the change to the window fading"
-    IDS_NOONE               "<no one>"
+    IDS_NOONE               "<noone>"
     IDS_NOSTATUS            "<no status>"
     IDS_NOVERSION           "<no version>"
     IDS_FILTER_ACTIVE       "Active Tasks"
