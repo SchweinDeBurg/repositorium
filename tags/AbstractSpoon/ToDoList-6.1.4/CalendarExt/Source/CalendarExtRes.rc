@@ -1,0 +1,260 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "CalendarExtResource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "CalendarExtResource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,701
+ PRODUCTVERSION 6,1,4,701
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "Compiler switches: /O1 /Ob1 /Oy /GF /EHsc /MD /Zp4 /Gy /W4 /TP"
+            VALUE "CompanyName", "http://www.codeproject.com/KB/applications/TDL_Calendar.aspx\r\nhttp://www.codeproject.com/KB/applications/todolist2.aspx"
+            VALUE "FileDescription", "Calendar Plugin for the ToDoList"
+            VALUE "FileVersion", "1.0.0.701"
+            VALUE "InternalName", "CalendarExt"
+            VALUE "LegalCopyright", "Copyright © 2008 by [d3m0n]"
+            VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
+            VALUE "OriginalFilename", "CalendarExt.dll"
+            VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."
+            VALUE "ProductName", "ToDoList"
+            VALUE "ProductVersion", "6.1.4"
+            VALUE "SpecialBuild", "Dependent on the non-shared Microsoft ® Visual C++ CRT redistributable version 9.0 SP1 with the ATL security update."
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_COMPLETED_TASKS DIALOG DISCARDABLE  0, 0, 192, 82
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Completed Tasks"
+FONT 8, "MS Shell Dlg 2"
+BEGIN
+    LTEXT           "Display completed tasks as:",IDC_STATIC,7,7,88,8
+    CONTROL         "&Hidden",IDC_CHK_COMPLETED_TASKS_HIDDEN,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,18,39,10
+    CONTROL         "&Grey",IDC_CHK_COMPLETED_TASKS_GREY,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,30,31,10
+    CONTROL         "&Strikethru",IDC_CHK_COMPLETED_TASKS_STRIKETHRU,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,42,46,10
+    CONTROL         "",IDC_STATIC_SAMPLE_TEXT,"Static",SS_BLACKFRAME | 
+                    WS_DISABLED | WS_GROUP,102,7,83,47
+    DEFPUSHBUTTON   "OK",IDOK,43,61,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,98,61,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_COMPLETED_TASKS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 185
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 75
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_CALENDAR MENU DISCARDABLE 
+BEGIN
+    POPUP "&View"
+    BEGIN
+        MENUITEM "Go To &Today",                ID_GOTOTODAY
+        MENUITEM SEPARATOR
+        MENUITEM "&Mini-Calendar",              ID_VIEW_MINICALENDAR
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUSBAR
+        MENUITEM "&Weekends",                   ID_VIEW_WEEKENDS
+        MENUITEM SEPARATOR
+        POPUP "&Number Of Weeks"
+        BEGIN
+            MENUITEM "&1 Week",                     ID_VIEW_NUMWEEKS_1
+            MENUITEM "&2 Weeks",                    ID_VIEW_NUMWEEKS_2
+            MENUITEM "&3 Weeks",                    ID_VIEW_NUMWEEKS_3
+            MENUITEM "&4 Weeks",                    ID_VIEW_NUMWEEKS_4
+            MENUITEM "&5 Weeks",                    ID_VIEW_NUMWEEKS_5
+            MENUITEM "&6 Weeks",                    ID_VIEW_NUMWEEKS_6
+            MENUITEM "&7 Weeks",                    ID_VIEW_NUMWEEKS_7
+            MENUITEM "&8 Weeks",                    ID_VIEW_NUMWEEKS_8
+            MENUITEM "&9 Weeks",                    ID_VIEW_NUMWEEKS_9
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Completed Tasks...",         ID_VIEW_COMPLETEDTASKS
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_CALENDAR TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_BUTTON32771
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_CALENDAR            BITMAP  DISCARDABLE     "BinRes\\ToolBar.bmp"
+IDB_MINICAL_ARROW_L     BITMAP  DISCARDABLE     "BinRes\\minical_arrow_L.bmp"
+IDB_MINICAL_ARROW_R     BITMAP  DISCARDABLE     "BinRes\\minical_arrow_R.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_CALENDAR            ICON    DISCARDABLE     "BinRes\\CalendarIcon.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_MINICALENDAR    "Show or hide the Mini-Calendar"
+    ID_VIEW_STATUSBAR       "Show or hide the Status Bar"
+    ID_VIEW_WEEKENDS        "Show or hide weekends"
+    ID_VIEW_COMPLETEDTASKS  "Decide the format of completed tasks"
+    ID_VIEW_NUMWEEKS_1      "Display 1 week in the Big-Calendar"
+    ID_VIEW_NUMWEEKS_2      "Display 2 weeks in the Big-Calendar"
+    ID_VIEW_NUMWEEKS_3      "Display 3 weeks in the Big-Calendar"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_NUMWEEKS_4      "Display 4 weeks in the Big-Calendar"
+    ID_VIEW_NUMWEEKS_5      "Display 5 weeks in the Big-Calendar"
+    ID_VIEW_NUMWEEKS_6      "Display 6 weeks in the Big-Calendar"
+    ID_VIEW_NUMWEEKS_7      "Display 7 weeks in the Big-Calendar"
+    ID_VIEW_NUMWEEKS_8      "Display 8 weeks in the Big-Calendar"
+    ID_VIEW_NUMWEEKS_9      "Display 9 weeks in the Big-Calendar"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_SB_STARTDATE         "Start: %s              "
+    ID_SB_STARTDATE_TIP     "Date the task started"
+    ID_SB_DUEDATE           "Due: %s              "
+    ID_SB_DUEDATE_TIP       "Date the task is due"
+    ID_SB_DONEDATE          "Completed: %s              "
+    ID_SB_DONEDATE_TIP      "Date the task was completed"
+    ID_SB_TIMEESTIMATE      "Time Est: %s%c "
+    ID_SB_TIMEESTIMATE_TIP  "Time estimated for this task"
+    ID_SB_TIMESPENT         "Time Spent: %s%c "
+    ID_SB_TIMESPENT_TIP     "Time spent on this task"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDR_CALENDAR            "ToDoList Calendar"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
