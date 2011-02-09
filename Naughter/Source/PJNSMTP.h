@@ -3,7 +3,7 @@ Module : PJNSMTP.H
 Purpose: Defines the interface for a MFC class encapsulation of the SMTP protocol
 Created: PJN / 22-05-1998
 
-Copyright (c) 1998 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -182,6 +182,14 @@ protected:
 class PJNSMTP_EXT_CLASS CPJNSMTPBodyPart
 {
 public:
+//Enums
+	enum CONTENT_TRANSFER_ENCODING 
+	{ 
+	  NO_ENCODING  = 0, 
+	  BASE64_ENCODING  = 1, 
+	  QP_ENCODING = 2 
+	};
+
 //Constructors / Destructors
   CPJNSMTPBodyPart();
   CPJNSMTPBodyPart(const CPJNSMTPBodyPart& bodyPart);
@@ -191,6 +199,9 @@ public:
 //Accessors / Mutators
   BOOL    SetFilename(const CString& sFilename);
   CString GetFilename() const { return m_sFilename; }; 
+
+  void    SetRawBody(LPCSTR pszRawBody);
+  LPCSTR  GetRawBody();
 
   void    SetText(const CString& sText);
   CString GetText() const { return m_sText; };
@@ -212,7 +223,14 @@ public:
 
   void    SetContentLocation(const CString& sContentLocation);
   CString GetContentLocation() const;
+  
+  void    SetAttachment(BOOL bAttachment);
+  BOOL    GetAttachment() const { return m_bAttachment; };
 
+  void    SetContentTransferEncoding(CONTENT_TRANSFER_ENCODING encoding) { m_ContentTransferEncoding = encoding; };
+  CONTENT_TRANSFER_ENCODING GetContentTransferEncoding() const { return m_ContentTransferEncoding; };
+
+  void    SetBoundary(const CString& sBoundary) { m_sBoundary = sBoundary; };
   CString GetBoundary() const { return m_sBoundary; };
 
 //Misc methods
@@ -220,10 +238,6 @@ public:
   CStringA          GetBody(BOOL bDoSingleDotFix);
   CStringA          GetFooter();
   CPJNSMTPBodyPart* FindFirstBodyPart(const CString sContentType);
-  void              SetQuotedPrintable(BOOL bValue) { m_bQuotedPrintable = bValue; };
-  BOOL              GetQuotedPrintable() const { return m_bQuotedPrintable; };
-  void              SetBase64(BOOL bValue) { m_bBase64 = bValue; };
-  BOOL              GetBase64() const { return m_bBase64; };
 
 //Child Body part methods
 	INT_PTR           GetNumberOfChildBodyParts() const;
@@ -253,8 +267,9 @@ protected:
   CArray<CPJNSMTPBodyPart*, CPJNSMTPBodyPart*&> m_ChildBodyParts;      //Child body parts for this body part
   CPJNSMTPBodyPart*                             m_pParentBodyPart;     //The parent body part for this body part
   CString                                       m_sBoundary;           //String which is used as the body separator for all child mime parts
-  BOOL                                          m_bQuotedPrintable;    //Should the body text by quoted printable encoded
-  BOOL                                          m_bBase64;             //Should the body be base64 encoded. Overrides "m_bQuotedPrintable"
+  BOOL                                          m_bAttachment;         //Is this body part to be considered an attachment
+  LPCSTR                                        m_pszRawBody;          //The raw representation of the body part body. This takes precendence over the other forms of a body part body
+  CONTENT_TRANSFER_ENCODING                     m_ContentTransferEncoding; //How should this body part be encoded
 
 //Methods
   static void FixSingleDotA(CStringA& sBody);
@@ -327,9 +342,9 @@ public:
 
 //Misc methods
   virtual CStringA     GetHeader();
-  void                 AddTextBody(const CString& sBody);
+  void                 AddTextBody(const CString& sBody, LPCTSTR pszRootMIMEType = _T("multipart/mixed"));
   CString              GetTextBody();
-  void                 AddHTMLBody(const CString& sBody, const CString& sContentBase);
+  void                 AddHTMLBody(const CString& sBody, const CString& sContentBase, LPCTSTR pszRootMIMEType = _T("multipart/mixed"));
   CString              GetHTMLBody();
   void                 AddCustomHeader(const CString& sHeader);
   CString              GetCustomHeader(int nIndex);
@@ -409,9 +424,11 @@ public:
 
   enum ConnectionType
   {
-    PlainText,
-    SSL_TLS,
-    STARTTLS
+    PlainText = 0,
+  #ifndef CPJNSMTP_NOSSL  
+    SSL_TLS = 1,
+    STARTTLS = 2
+  #endif  
   };
 
 //Constructors / Destructors
@@ -420,9 +437,9 @@ public:
 
 //Methods
 #ifndef CPJNSMTP_NOSSL
-  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25, ConnectionType connectionType = PlainText);
+  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25, ConnectionType connectionType = PlainText, LPCTSTR pszBindAddress = NULL);
 #else
-  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25);
+  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25, LPCTSTR pszBindAddress = NULL);
 #endif
   void    Disconnect(BOOL bGracefully = TRUE);
   BOOL    IsConnected() const	{ return m_bConnected; };
@@ -487,6 +504,7 @@ protected:
 
 //Methods
 #ifndef CPJNSMTP_NOSSL
+  virtual CString GetOpenSSLError();
   virtual void DoSTARTTLS(LPCTSTR pszLocalName);
 #endif
 	virtual void AuthCramMD5(LPCTSTR pszUsername, LPCTSTR pszPassword);
@@ -506,18 +524,14 @@ protected:
   virtual SECURITY_STATUS NTLMAuthPhase2(PBYTE pBuf, DWORD cbBuf, DWORD* pcbRead);
   virtual SECURITY_STATUS NTLMAuthPhase3(PBYTE pBuf, DWORD cbBuf);
 #endif
-#ifndef CPJNSMTP_NOSSL
-  virtual CString GetOpenSSLError();
-#endif
-  void _CreateSocket();
-  void _ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout);
-  void _ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP);
-  void _ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent);
-  void _Connect(LPCTSTR lpszHostAddress, UINT nHostPort);
-  int  _Send(const void *pBuffer, int nBuf);
-  int  _Receive(void *pBuffer, int nBuf);
-  void _Close();
-  BOOL _IsReadible(DWORD dwTimeout);
+  virtual void _ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout, LPCTSTR pszBindAddress);
+  virtual void _ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP, LPCTSTR pszBindAddress);
+  virtual void _ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent, LPCTSTR pszBindAddress);
+  virtual void _Connect(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR pszBindAddress);
+  virtual int  _Send(const void *pBuffer, int nBuf);
+  virtual int  _Receive(void *pBuffer, int nBuf);
+  virtual void _Close();
+  virtual BOOL _IsReadible(DWORD dwTimeout);
   
 //Static methods
   __forceinline static void SecureEmptyString(CStringA& sVal);

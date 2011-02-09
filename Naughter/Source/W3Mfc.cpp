@@ -700,7 +700,8 @@ void CW3MFCServer::ListenSocketFunction()
   CW3MFCSocket serverSocket;
   try
   {
-    serverSocket.CreateAndBind(m_pSettings->m_nPort, m_pSettings->m_bBind ? m_pSettings->m_sBindAddress.operator LPCTSTR() : NULL, SOCK_STREAM, m_pSettings->m_bIPv6 ? AF_INET6 : AF_INET);
+    serverSocket.SetBindAddress(m_pSettings->m_sBindAddress);
+    serverSocket.CreateAndBind(m_pSettings->m_nPort, SOCK_STREAM, m_pSettings->m_bIPv6 ? AF_INET6 : AF_INET);
   }
   catch(CWSocketException* pEx)
   {

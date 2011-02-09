@@ -466,8 +466,47 @@ History: PJN / 15-06-1998 1. Fixed the case where a single dot occurs on its own
                           7. If the call to DnsQuery fails, the error value is now preserved using SetLastError
                           8. AddTextBody now sets the mime type of the root body part multipart/alternative. This is a more appropriate value to use which is better
                           supported by more email clients. Thanks to Thane Hubbell for reporting this issue.
+         PJN / 04-06-2010 1. Updated the code and sample app to compile cleanly when CPJNSMTP_NOSSL is defined. Thanks to "loggerlogger" for reporting this issue.
+         PJN / 10-07-2010 1. Following feedback from multiple users of PJNSMTP, including Chris Bamford and "loggerlogger", the change from "multipart/mixed" to
+                          "multipart/alternative" has now been reverted. Using "multipart/mixed" is a more appropriate value to use. Testing by various clients
+                          have shown that this setting works correctly when sending HTML based email in GMail, Thunderbird and Outlook. Unfortunately this is the 
+                          price I must pay when accepting end user contributions to my code base which I cannot easily test. Going forward I plan to be much more
+                          discerning on what modifications I will accept to avoid these issues.
+                          2. The CPJNSMTPBodyPart now has the concept of whether or not the body is considered an attachment. Previously the code assumed that if 
+                          you set the m_sFilename parameter that the body part was an attachment. Instead now the code uses the "m_bAttachment" member variable. 
+                          This allows an in memory representation of an attachment to be added to a message without the need to write it to an intermediate file
+                          first. For example, here would be the series of steps you would need to go through to add an in memory jpeg image to an email and have it
+                          appear as an attachment:
                           
-Copyright (c) 1998 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+                          const BYTE* pInMemoryImage = pointer to your image;
+                          DWORD dwMemoryImageSize = size in bytes of pInMemoryImage;
+                          CPJNSMPTBase64Encode encode;
+                          encode.Encode(pInMemoryImage, dwMemoryImageSize, ATL_BASE64_FLAG_NONE);
+                          CPJNSMTPBodyPart imageBodyPart;
+                          imageBodyPart.SetRawBody(encode.Result());
+                          imageBodyPart.SetAttachment(TRUE);
+                          imageBodyPart.SetContentType(_T("image/jpg"));
+                          imageBodyPart.SetTitle(_T("the name of the image"));
+                          CPJNSMTPMessage message;
+                          message.AddBodyPart(imageBodyPart);
+                          
+                          Thanks to Stephan Eizinga for suggesting this nice addition.
+         PJN / 28-11-2010 1. AddTextBody and AddHTMLBody now allow the root body part's MIME type to be changed. Thanks to Thane Hubbell for prompting this update.
+                          2. Added a CPJNSMTPBodyPart::GetBoundary method.
+                          3. Added some sample code to the sample app's CPJNSMTPAppDlg constructor to show how to create a message used SMTP body parts. Thanks to
+                          Thane Hubbell for prompting this update.
+                          4. CPJNSMTPBodyPart::GetHeader now allows quoted-printable and raw attachments to be used
+                          5. The sample app is now linked against the latest OpenSSL v1.0.0b dlls
+         PJN / 18-12-2010 1. Remove the methods Set/GetQuotedPrintable and Set/GetBase64 from CPJNSMTPBodyPart and replaced them with new 
+                          Set/GetContentTransferEncoding methods which works with a simple enum. 
+                          2. CPJNSMTPBodyPart::SetAttachment and CPJNSMTPBodyPart::SetFilename now automatically sets the Content-Transfer-Encoding to base64 for 
+                          attachments. Thanks to Christian Egging for reporting this issue.
+                          3. The sample app is now linked against the latest OpenSSL v1.0.0c dlls
+         PJN / 08-02-2011 1. Updated copyright details
+                          2. Updated code to support latest SSL and Sockets class from the author. This means that the code now supports IPv6 SMTP servers
+                          3. Connect method now allows binding to a specific IP address
+                          
+Copyright (c) 1998 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -845,8 +884,9 @@ CString CPJNSMTPAddress::RemoveQuotes(const CString& sValue)
 CPJNSMTPBodyPart::CPJNSMTPBodyPart() : m_sCharset(_T("iso-8859-1")), 
                                        m_sContentType(_T("text/plain")), 
                                        m_pParentBodyPart(NULL), 
-                                       m_bQuotedPrintable(TRUE), 
-                                       m_bBase64(FALSE)
+                                       m_bAttachment(FALSE),
+                                       m_pszRawBody(NULL),
+                                       m_ContentTransferEncoding(NO_ENCODING)
 {
   //Automatically generate a unique boundary separator for this body part by creating a guid
   m_sBoundary = CreateGUID();
@@ -867,18 +907,19 @@ CPJNSMTPBodyPart::~CPJNSMTPBodyPart()
 
 CPJNSMTPBodyPart& CPJNSMTPBodyPart::operator=(const CPJNSMTPBodyPart& bodyPart)
 {
-  m_sFilename           = bodyPart.m_sFilename;
-  m_sText               = bodyPart.m_sText;       
-  m_sTitle              = bodyPart.m_sTitle;      
-  m_sContentType        = bodyPart.m_sContentType;
-  m_sCharset            = bodyPart.m_sCharset;
-  m_sContentBase        = bodyPart.m_sContentBase;
-  m_sContentID          = bodyPart.m_sContentID;
-  m_sContentLocation    = bodyPart.m_sContentLocation;
-  m_pParentBodyPart     = bodyPart.m_pParentBodyPart;
-  m_sBoundary           = bodyPart.m_sBoundary;
-  m_bQuotedPrintable    = bodyPart.m_bQuotedPrintable;
-  m_bBase64             = bodyPart.m_bBase64;
+  m_sFilename               = bodyPart.m_sFilename;
+  m_sText                   = bodyPart.m_sText;       
+  m_sTitle                  = bodyPart.m_sTitle;      
+  m_sContentType            = bodyPart.m_sContentType;
+  m_sCharset                = bodyPart.m_sCharset;
+  m_sContentBase            = bodyPart.m_sContentBase;
+  m_sContentID              = bodyPart.m_sContentID;
+  m_sContentLocation        = bodyPart.m_sContentLocation;
+  m_pParentBodyPart         = bodyPart.m_pParentBodyPart;
+  m_sBoundary               = bodyPart.m_sBoundary;
+  m_bAttachment             = bodyPart.m_bAttachment;
+  m_pszRawBody              = bodyPart.m_pszRawBody;
+  m_ContentTransferEncoding = bodyPart.m_ContentTransferEncoding;
 
   //Free up the array memory
   for (INT_PTR i=0; i<m_ChildBodyParts.GetSize(); i++)
@@ -940,7 +981,23 @@ BOOL CPJNSMTPBodyPart::SetFilename(const CString& sFilename)
   //Also sent the content type to be appropiate for an attachment
   m_sContentType = _T("application/octet-stream");
 
+  //Also set the Content-Transfer-Encoding to base64
+  SetContentTransferEncoding(BASE64_ENCODING);
+  
+  //Also set the attachment setting
+  m_bAttachment = TRUE;
+
   return TRUE;
+}
+
+void CPJNSMTPBodyPart::SetRawBody(LPCSTR pszRawBody)
+{
+  m_pszRawBody = pszRawBody;
+}
+
+LPCSTR CPJNSMTPBodyPart::GetRawBody()
+{
+  return m_pszRawBody;
 }
 
 void CPJNSMTPBodyPart::SetText(const CString& sText)
@@ -976,6 +1033,13 @@ void CPJNSMTPBodyPart::SetContentLocation(const CString& sContentLocation)
 CString CPJNSMTPBodyPart::GetContentLocation() const 
 { 
   return m_sContentLocation; 
+}
+
+void CPJNSMTPBodyPart::SetAttachment(BOOL bAttachment) 
+{ 
+  m_bAttachment = bAttachment; 
+  if (m_bAttachment)
+    SetContentTransferEncoding(BASE64_ENCODING);
 }
 
 char CPJNSMTPBodyPart::HexDigit(int nDigit)
@@ -1016,48 +1080,113 @@ CStringA CPJNSMTPBodyPart::ConvertToUTF8(const CString& sText)
 CStringA CPJNSMTPBodyPart::GetHeader()
 {
   CString sHeaderT;
-  if (m_sFilename.GetLength())
+  if (m_bAttachment)
   {
-    //Ok, it's a file  
+    //Ok, it's an attachment
 
     //Form the header to go along with this body part
     if (GetNumberOfChildBodyParts())
-		  sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
-                     m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sBoundary.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+    {
+      switch (m_ContentTransferEncoding)
+      {
+        case BASE64_ENCODING:
+        {
+		      sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sBoundary.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+          break;
+        }
+        case QP_ENCODING:
+        {
+		      sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sBoundary.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+          break;
+        }
+        default:
+        {
+		      sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"; Boundary=\"%s\"\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sBoundary.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+          break;
+        }
+      }
+    }
     else
-		  sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
-                     m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
-
+    {
+      switch (m_ContentTransferEncoding)
+      {
+        case BASE64_ENCODING:
+        {
+  		    sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+          break;
+        }
+        case QP_ENCODING:
+        {
+		      sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+          break;
+        }
+        default:
+        {
+		      sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+          break;
+        }
+      }
+    }
   }
   else
   {
-    //ok, it's some text
+    //ok, it's not an attachment
 
     //Form the header to go along with this body part
     AFXASSUME(m_pParentBodyPart != NULL);
     if (GetNumberOfChildBodyParts())
     {
-      if (m_bBase64)
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\n"),
-                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
-      else if (m_bQuotedPrintable)
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\n"),
-                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
-      else
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"; Boundary=\"%s\"\r\n"),
-                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
+      switch (m_ContentTransferEncoding)
+      {
+        case BASE64_ENCODING:
+        {
+          sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\n"),
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
+          break;
+        }
+        case QP_ENCODING:
+        {
+          sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\n"),
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
+          break;
+        }
+        default:
+        {  
+          sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"; Boundary=\"%s\"\r\n"),
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR(), m_sBoundary.operator LPCTSTR());
+          break;
+        }
+      }
     }
     else
     {
-      if (m_bBase64)
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"\r\nContent-Transfer-Encoding: base64\r\n"),
-                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
-      else if (m_bQuotedPrintable)
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\n"),
-                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
-      else
-        sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"\r\n"),
-                       m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
+      switch (m_ContentTransferEncoding)
+      {
+        case BASE64_ENCODING:
+        {
+          sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"\r\nContent-Transfer-Encoding: base64\r\n"),
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
+          break;
+        }
+        case QP_ENCODING:
+        {
+          sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\n"),
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
+          break;
+        }
+        default:
+        {
+          sHeaderT.Format(_T("\r\n--%s\r\nContent-Type: %s; charset=\"%s\"\r\n"),
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sCharset.operator LPCTSTR());
+          break;
+        }
+      }
     }
   }
 
@@ -1096,7 +1225,9 @@ CStringA CPJNSMTPBodyPart::GetBody(BOOL bDoSingleDotFix)
   //What will be the return value from this function
   CStringA sBodyA;
 	
-  if (m_sFilename.GetLength())
+	if (m_pszRawBody)
+	  sBodyA = m_pszRawBody;
+	else if (m_sFilename.GetLength())
   {
     //Ok, it's a file  
     HANDLE hFile = CreateFile(m_sFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
@@ -1117,18 +1248,43 @@ CStringA CPJNSMTPBodyPart::GetBody(BOOL bDoSingleDotFix)
         if (dwFileSizeLow)
         {
           //read in the contents of the input file
-          BYTE* pszIn = new BYTE[dwFileSizeLow];
+          BYTE* pszIn = new BYTE[dwFileSizeLow + 1];
 
           //Read in the contents of the file
           DWORD dwBytesWritten = 0;
           if (ReadFile(hFile, pszIn, dwFileSizeLow, &dwBytesWritten, NULL))
           {
-            //Do the encoding
-            CPJNSMPTBase64Encode encode;
-            encode.Encode(pszIn, dwBytesWritten, ATL_BASE64_FLAG_NONE);
+            switch (m_ContentTransferEncoding)
+            {
+              case BASE64_ENCODING:
+              {
+                //Do the encoding
+                CPJNSMPTBase64Encode encode;
+                encode.Encode(pszIn, dwBytesWritten, ATL_BASE64_FLAG_NONE);
 
-            //Form the body for this body part
-            sBodyA = encode.Result();
+                //Form the body for this body part
+                sBodyA = encode.Result();
+                break;
+              }
+              case QP_ENCODING:
+              {
+                //Do the encoding
+                CPJNSMPTQPEncode encode;
+                encode.Encode(pszIn, dwBytesWritten, 0);
+
+                //Form the body for this body part
+	              sBodyA = encode.Result();
+                break;
+              }
+              default:
+              {
+                pszIn[dwBytesWritten] = '\0';
+
+                //The body of this body part is just the raw file contents
+                sBodyA = pszIn;
+                break;
+              }
+            }
           }
 
           //delete the input buffer
@@ -1151,50 +1307,55 @@ CStringA CPJNSMTPBodyPart::GetBody(BOOL bDoSingleDotFix)
   }
   else
   {
-    //ok, it's some text
-    if (m_bBase64)
+    switch (m_ContentTransferEncoding)
     {
-      //Do the UTF8 conversion if necessary
-  	  CStringA sBuff;
-      if (m_sCharset.CompareNoCase(_T("UTF-8")) == 0)
-	      sBuff = ConvertToUTF8(m_sText);
-      else
-        sBuff = m_sText;
+      case BASE64_ENCODING:
+      {
+        //Do the UTF8 conversion if necessary
+  	    CStringA sBuff;
+        if (m_sCharset.CompareNoCase(_T("UTF-8")) == 0)
+	        sBuff = ConvertToUTF8(m_sText);
+        else
+          sBuff = m_sText;
 
-      //Do the encoding
-      CPJNSMPTBase64Encode encode;
-      encode.Encode(sBuff, ATL_BASE64_FLAG_NONE);
+        //Do the encoding
+        CPJNSMPTBase64Encode encode;
+        encode.Encode(sBuff, ATL_BASE64_FLAG_NONE);
 
-      //Form the body for this body part
-      sBodyA = encode.Result();
-    }
-    else if (m_bQuotedPrintable)
-    {
-      //Do the UTF8 conversion if necessary
-  	  CStringA sBuff;
-      if (m_sCharset.CompareNoCase(_T("UTF-8")) == 0)
-	      sBuff = ConvertToUTF8(m_sText);
-      else
-        sBuff = m_sText;
+        //Form the body for this body part
+        sBodyA = encode.Result();
+        break;
+      }
+      case QP_ENCODING:
+      {
+        //Do the UTF8 conversion if necessary
+  	    CStringA sBuff;
+        if (m_sCharset.CompareNoCase(_T("UTF-8")) == 0)
+	        sBuff = ConvertToUTF8(m_sText);
+        else
+          sBuff = m_sText;
 
-      //Do the encoding
-      CPJNSMPTQPEncode encode;
-      encode.Encode(sBuff, 0);
-	    sBodyA = encode.Result();
-      if (bDoSingleDotFix)
-        FixSingleDotA(sBodyA);
-    }
-    else
-    {
-      //Do the UTF8 conversion if necessary
-      if (m_sCharset.CompareNoCase(_T("UTF-8")) == 0)
-	      sBodyA = ConvertToUTF8(m_sText);
-      else
-        sBodyA = m_sText;
+        //Do the encoding
+        CPJNSMPTQPEncode encode;
+        encode.Encode(sBuff, 0);
+	      sBodyA = encode.Result();
+        if (bDoSingleDotFix)
+          FixSingleDotA(sBodyA);
+        break;
+      }
+      default:
+      {
+        //Do the UTF8 conversion if necessary
+        if (m_sCharset.CompareNoCase(_T("UTF-8")) == 0)
+	        sBodyA = ConvertToUTF8(m_sText);
+        else
+          sBodyA = m_sText;
 
-      //No encoding to do
-      if (bDoSingleDotFix)
-        FixSingleDotA(sBodyA);
+        //No encoding to do
+        if (bDoSingleDotFix)
+          FixSingleDotA(sBodyA);
+        break;
+      }
     }
   }
 
@@ -1422,7 +1583,7 @@ CStringA CPJNSMTPBodyPart::FoldSubjectHeader(const CString& sSubject, const CStr
 }
 
 
-CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.86")), 
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.91")), 
                                      m_bMime(FALSE), 
                                      m_Priority(NoPriority),
                                      m_DSNReturnType(HeadersOnly),
@@ -1852,7 +2013,7 @@ CString CPJNSMTPMessage::ConvertHTMLToPlainText(const CString& sHtml)
   return sRet;
 }
 
-void CPJNSMTPMessage::AddTextBody(const CString& sBody)
+void CPJNSMTPMessage::AddTextBody(const CString& sBody, LPCTSTR pszRootMIMEType)
 {
   if (m_bMime)
   {
@@ -1864,10 +2025,10 @@ void CPJNSMTPMessage::AddTextBody(const CString& sBody)
       //Create a text body part
       CPJNSMTPBodyPart oldRoot(m_RootPart);
 
-      //Reset the root body part to be multipart/alternative
+      //Reset the root body part to be multipart/mixed
       m_RootPart.SetCharset(oldRoot.GetCharset());
       m_RootPart.SetText(_T("This is a multi-part message in MIME format"));
-      m_RootPart.SetContentType(_T("multipart/alternative"));
+      m_RootPart.SetContentType(pszRootMIMEType);
 
       //Just add the text/plain body part (directly to the root)
       CPJNSMTPBodyPart text;
@@ -1885,7 +2046,7 @@ void CPJNSMTPMessage::AddTextBody(const CString& sBody)
   }
 }
 
-void CPJNSMTPMessage::AddHTMLBody(const CString& sBody, const CString& sContentBase)
+void CPJNSMTPMessage::AddHTMLBody(const CString& sBody, const CString& sContentBase, LPCTSTR pszRootMIMEType)
 {
   ASSERT(m_bMime); //You forgot to make this a MIME message using SetMime(TRUE)
 
@@ -1897,10 +2058,10 @@ void CPJNSMTPMessage::AddHTMLBody(const CString& sBody, const CString& sContentB
     //Remember some of the old root settings before we write over it
     CPJNSMTPBodyPart oldRoot = m_RootPart;
 
-    //Reset the root body part to be multipart/alternative
+    //Reset the root body part to be multipart/mixed
     m_RootPart.SetCharset(oldRoot.GetCharset());
     m_RootPart.SetText(_T("This is a multi-part message in MIME format"));
-    m_RootPart.SetContentType(_T("multipart/alternative"));
+    m_RootPart.SetContentType(pszRootMIMEType);
 
     //Just add the text/html body part (directly to the root)
     CPJNSMTPBodyPart html;
@@ -2153,19 +2314,6 @@ void CPJNSMTPConnection::SetHeloHostname(const CString& sHostname)
     m_sHeloHostname = sHostname;
 }
 
-void CPJNSMTPConnection::_CreateSocket()
-{
-	m_Socket.Create();
-#ifndef CPJNSMTP_NOSSL
-	if (m_ConnectionType == SSL_TLS) 
-  {
-		m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
-		if (!m_SSL.Create(m_SSLCtx, m_Socket))
-      ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CREATE_SSL_SOCKET, FACILITY_ITF, GetOpenSSLError());
-	}
-#endif
-}
-
 #ifndef CPJNSMTP_NOSSL
 CString CPJNSMTPConnection::GetOpenSSLError()
 {
@@ -2190,60 +2338,88 @@ CString CPJNSMTPConnection::GetOpenSSLError()
 }
 #endif
 
-void CPJNSMTPConnection::_ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout)
+void CPJNSMTPConnection::_ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout, LPCTSTR pszBindAddress)
 {
+	m_Socket.Create();
+	m_Socket.SetBindAddress(pszBindAddress);
+
 #ifndef CPJNSMTP_NOSSL
 	if (m_ConnectionType == SSL_TLS)
-	{
-		static_cast<CWSocket&>(m_SSL).ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout);
-		if(SSL_connect(m_SSL) != 1) 
+  {
+		m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
+		if (!m_SSL.Create(m_SSLCtx, m_Socket))
+      ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CREATE_SSL_SOCKET, FACILITY_ITF, GetOpenSSLError());
+  
+		if (!m_SSL.ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout)) 
 			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_SOCKS4_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
 #endif
+  {
+    m_Socket.SetBindAddress(pszBindAddress);
 		m_Socket.ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout);
+  }
 }
 
-void CPJNSMTPConnection::_ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort , LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP)
+void CPJNSMTPConnection::_ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP, LPCTSTR pszBindAddress)
 {
 #ifndef CPJNSMTP_NOSSL
 	if (m_ConnectionType == SSL_TLS)
-	{
-		static_cast<CWSocket&>(m_SSL).ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP);
-		if (SSL_connect(m_SSL) != 1)
+  {
+		m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
+		if (!m_SSL.Create(m_SSLCtx, m_Socket))
+      ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CREATE_SSL_SOCKET, FACILITY_ITF, GetOpenSSLError());
+  
+		if (!m_SSL.ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP)) 
 			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_SOCKS5_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
 #endif
+  { 
+    m_Socket.SetBindAddress(pszBindAddress);
 		m_Socket.ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP);
+  }
 }
 
 void CPJNSMTPConnection::_ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, 
-                                              LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent)
+                                              LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent, LPCTSTR pszBindAddress)
 {
 #ifndef CPJNSMTP_NOSSL
 	if (m_ConnectionType == SSL_TLS)
-	{
-		static_cast<CWSocket&>(m_SSL).ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent);
-		if (SSL_connect(m_SSL) != 1)
+  {
+		m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
+		if (!m_SSL.Create(m_SSLCtx, m_Socket))
+      ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CREATE_SSL_SOCKET, FACILITY_ITF, GetOpenSSLError());
+
+		if (!m_SSL.ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent))
 			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_HTTPPROXY_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
 #endif
+  {
+    m_Socket.SetBindAddress(pszBindAddress);
 		m_Socket.ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent);
+	}
 }
 
-void CPJNSMTPConnection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
+void CPJNSMTPConnection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR pszBindAddress)
 {
 #ifndef CPJNSMTP_NOSSL
-	if (m_SSL.operator SSL*())
+  if (m_ConnectionType == SSL_TLS)
   {
+		m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
+		if (!m_SSL.Create(m_SSLCtx, m_Socket))
+      ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CREATE_SSL_SOCKET, FACILITY_ITF, GetOpenSSLError());
+
 		if (!m_SSL.Connect(lpszHostAddress, nHostPort)) 
 			ThrowPJNSMTPException(IDS_PJNSMTP_FAIL_CONNECT_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
 #endif
+  {
+    m_Socket.SetBindAddress(pszBindAddress);
 		m_Socket.CreateAndConnect(lpszHostAddress, nHostPort);
+	}
 }
 
 int CPJNSMTPConnection::_Send(const void* pBuffer, int nBuf)
@@ -2301,9 +2477,9 @@ BOOL CPJNSMTPConnection::_IsReadible(DWORD dwTimeout)
 }
 
 #ifndef CPJNSMTP_NOSSL
-void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort, ConnectionType connectionType)
+void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort, ConnectionType connectionType, LPCTSTR pszBindAddress)
 #else
-void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort)
+void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort, LPCTSTR pszBindAddress)
 #endif
 {
 	//Validate our parameters
@@ -2316,40 +2492,22 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
   m_ConnectionType = PlainText;
 #endif
 
-  //Create the socket
-  try
-  {
-    _CreateSocket();
-  }
-  catch(CWSocketException* pEx)
-  {
-    DWORD dwError = pEx->m_nError;
-    pEx->Delete();
-
-    ThrowPJNSMTPException(dwError, FACILITY_WIN32);
-  }
-
   try
   {
     //Connect to the SMTP server
-
-    //Bind if required
-    if (m_sLocalBoundAddress.GetLength())
-      m_Socket.CreateAndBind(0, m_sLocalBoundAddress);
-
     switch (m_ProxyType)
     {
       case ptSocks4:
       {
-        _ConnectViaSocks4(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_dwTimeout);
+        _ConnectViaSocks4(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_dwTimeout, pszBindAddress);
         break;
       }
       case ptSocks5:
       {
         if (m_sProxyUserName.GetLength())
-          _ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, FALSE);
+          _ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, FALSE, pszBindAddress);
         else
-          _ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, NULL, NULL, m_dwTimeout, FALSE);
+          _ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, NULL, NULL, m_dwTimeout, FALSE, pszBindAddress);
         break;
       }
       case ptHTTP:
@@ -2358,22 +2516,22 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
         if (m_sProxyUserName.GetLength())
         {
           if (m_sUserAgent.GetLength())
-            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, m_sUserAgent);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, m_sUserAgent, pszBindAddress);
           else
-            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, NULL);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, NULL, pszBindAddress);
         }
         else
         {
           if (m_sUserAgent.GetLength())
-            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, m_sUserAgent);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, m_sUserAgent, pszBindAddress);
           else
-            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, NULL);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, NULL, pszBindAddress);
         }
         break;
       }
       case ptNone:
       {
-        _Connect(pszHostName, nPort);
+        _Connect(pszHostName, nPort, pszBindAddress);
         break;
       }
       default:
@@ -2412,8 +2570,10 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
       ThrowPJNSMTPException(IDS_PJNSMTP_UNEXPECTED_SMTP_LOGIN_RESPONSE, FACILITY_ITF, GetLastCommandResponse());
 
 	  //Negotiate STARTTLS if necessary
+	#ifndef CPJNSMTP_NOSSL  
 	  if (m_ConnectionType == STARTTLS)
 		  DoSTARTTLS(m_sHeloHostname);
+  #endif
 
 	  //Negotiate Extended SMTP connection
 	  if (am != AUTH_NONE)

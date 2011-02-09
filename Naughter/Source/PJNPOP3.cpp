@@ -513,7 +513,7 @@ void CPJNPOP3Connection::Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTS
 
     //Bind if required
     if (m_sLocalBoundAddress.GetLength())
-      m_Socket.CreateAndBind(0, m_sLocalBoundAddress);
+      m_Socket.CreateAndBind(0);
 
     switch (m_ProxyType)
     {

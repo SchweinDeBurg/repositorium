@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>CPJNSMTPConnection v2.86</title>
+<title>CPJNSMTPConnection v2.91</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
 
 <style type="text/css">
@@ -17,7 +17,7 @@
 
 <h2 align="left">
 <img src="PJNSMTP.gif" width="39" height="38" alt="PJNSMTP.gif (295 bytes)" /><strong>CPJNSMTPConnection 
-v2.86</strong></h2>
+v2.91</strong></h2>
 
 <p>Welcome to <strong>CPJNSMTPConnection</strong>, a collection of MFC classes to
 support the SMTP protocol. SMTP for those not familiar with all the internet protocols is
@@ -1300,6 +1300,70 @@ multipart/alternative. This is a more appropriate value to use which is better
 supported by more email clients. Thanks to Thane Hubbell for reporting this 
 issue.</li>
 </ul>
+<p><strong>V2.87 (4 June 2010</strong><b>)</b></p>
+<ul>
+	<li>Updated the code and sample app to compile cleanly when CPJNSMTP_NOSSL 
+	is defined. Thanks to &quot;loggerlogger&quot; for reporting this issue.</li>
+</ul>
+<p><strong>V2.88 (10 July 2010</strong><b>)</b></p>
+<ul>
+	<li>Following feedback from multiple users of PJNSMTP, including Chris 
+	Bamford and &quot;loggerlogger&quot;, the change from &quot;multipart/mixed&quot; to 
+	&quot;multipart/alternative&quot; has now been reverted. Using &quot;multipart/mixed&quot; is a 
+	more appropriate value to use. Testing by various clients have shown that 
+	this setting works correctly when sending HTML based email in GMail, 
+	Thunderbird and Outlook. Unfortunately this is the price I must pay when 
+	accepting end user contributions to my code base which I cannot easily test. 
+	Going forward I plan to be much more discerning on what modifications I will 
+	accept to avoid these issues. </li>
+	<li>The CPJNSMTPBodyPart now has the concept of whether or not the body is 
+	considered an attachment. Previously the code assumed that if you set the 
+	m_sFilename parameter that the body part was an attachment. Instead now the 
+	code uses the &quot;m_bAttachment&quot; member variable. This allows an in memory 
+	representation of an attachment to be added to a message without the need to 
+	write it to an intermediate file first. For example, here would be the 
+	series of steps you would need to go through to add an in memory jpeg image 
+	to an email and have it appear as an attachment: <br><br>const BYTE* 
+	pInMemoryImage = pointer to your image; <br>DWORD dwMemoryImageSize = size 
+	in bytes of pInMemoryImage; <br>CPJNSMPTBase64Encode encode; <br>
+	encode.Encode(pInMemoryImage, dwMemoryImageSize, ATL_BASE64_FLAG_NONE); <br>
+	CPJNSMTPBodyPart imageBodyPart; <br>imageBodyPart.SetRawBody(encode.Result());
+	<br>imageBodyPart.SetBase64(TRUE); <br>imageBodyPart.SetAttachment(TRUE);
+	<br>imageBodyPart.SetContentType(_T(&quot;image/jpg&quot;)); <br>
+	imageBodyPart.SetTitle(_T(&quot;the name of the image&quot;)); <br>CPJNSMTPMessage 
+	message; <br>message.AddBodyPart(imageBodyPart); <br><br>Thanks to Stephan 
+	Eizinga for suggesting this nice addition.&nbsp; </li>
+</ul>
+<p><strong>V2.89 (28 November 2010</strong><b>)</b></p>
+<ul>
+	<li>AddTextBody and AddHTMLBody now allow the root body part's MIME 
+	type to be changed. Thanks to Thane Hubbell for prompting this update. </li>
+	<li>Added a CPJNSMTPBodyPart::GetBoundary method. </li>
+	<li>Added some sample code to the sample app's CPJNSMTPAppDlg 
+	constructor to show how to create a message used SMTP body parts. Thanks to 
+	Thane Hubbell for prompting this update. </li>
+	<li>CPJNSMTPBodyPart::GetHeader now allows quoted-printable and raw 
+	attachments to be used </li>
+	<li>The sample app is now linked against the latest OpenSSL v1.0.0b dlls</li>
+</ul>
+<p><strong>V2.90 (18 December 2010</strong><b>)</b></p>
+<ul>
+	<li>Removed the methods Set/GetQuotedPrintable and Set/GetBase64 from 
+	CPJNSMTPBodyPart and replaced them with new Set/GetContentTransferEncoding 
+	methods which works with a simple enum. </li>
+	<li>CPJNSMTPBodyPart::SetAttachment and CPJNSMTPBodyPart::SetFilename now 
+	automatically sets the Content-Transfer-Encoding to base64 for attachments. 
+	Thanks to Christian Egging for reporting this issue. </li>
+	<li>The sample app is now linked against the latest OpenSSL v1.0.0c 
+	dlls </li>
+</ul>
+<p><strong>V2.91 (8 February 2011</strong><b>)</b></p>
+<ul>
+	<li>Updated copyright details </li>
+	<li>Updated code to support latest SSL and Sockets class from the 
+	author. This means that the code now supports IPv6 SMTP servers </li>
+	<li>Connect method now allows binding to a specific IP address </li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1315,7 +1379,7 @@ issue.</li>
 <p>PJ Naughter<br />
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br />
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br />
-23 May 2010</p>
+8 February 2011</p>
 
 </body>
 
