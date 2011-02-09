@@ -22,6 +22,7 @@ History: PJN / 29-12-2004 1. Updated to suit new layout of CWSocket methods
                           to Dmitriy Maksimov for following up on this issue.
          PJN / 09-01-2011 1. Updated copyright details.
                           2. Updated a number of methods to support the new IPv6 functionality of CWSocket
+         PJN / 08-02-2011 1. Reinstated Sockv4, Socksv5 and HTTP proxy methods
 
 Copyright (c) 2002 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -200,6 +201,66 @@ BOOL CSSLSocket::Connect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName, i
 
   //Call the low level socket connect
   m_pSocket->CreateAndConnect(pszHostAddress, pszPortOrServiceName, nSocketType);
+
+  //Associate the socket with the SSL connection object
+  if (SSL_set_fd(m_SSL, *m_pSocket) != 1)
+  {
+    Close();
+    return FALSE;
+  }
+
+  //Just call the SSL_accept function
+  int nSSLConnect = SSL_connect(m_SSL);
+  return (nSSLConnect == 1);
+}
+
+BOOL CSSLSocket::ConnectViaSocks4(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszSocksServer, UINT nSocksPort, DWORD dwTimeout)
+{
+  //Validate our parameters
+  AFXASSUME(m_pSocket);
+
+  //Call the low level socket connect
+  m_pSocket->ConnectViaSocks4(pszHostAddress, nHostPort, pszSocksServer, nSocksPort, dwTimeout);
+
+  //Associate the socket with the SSL connection object
+  if (SSL_set_fd(m_SSL, *m_pSocket) != 1)
+  {
+    Close();
+    return FALSE;
+  }
+
+  //Just call the SSL_accept function
+  int nSSLConnect = SSL_connect(m_SSL);
+  return (nSSLConnect == 1);
+}
+
+BOOL CSSLSocket::ConnectViaSocks5(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszSocksServer, UINT nSocksPort, LPCTSTR pszUserName, LPCTSTR pszPassword, DWORD dwTimeout, BOOL bUDP)
+{
+  //Validate our parameters
+  AFXASSUME(m_pSocket);
+
+  //Call the low level socket connect
+  m_pSocket->ConnectViaSocks5(pszHostAddress, nHostPort, pszSocksServer, nSocksPort, pszUserName, pszPassword, dwTimeout, bUDP);
+
+  //Associate the socket with the SSL connection object
+  if (SSL_set_fd(m_SSL, *m_pSocket) != 1)
+  {
+    Close();
+    return FALSE;
+  }
+
+  //Just call the SSL_accept function
+  int nSSLConnect = SSL_connect(m_SSL);
+  return (nSSLConnect == 1);
+}
+
+BOOL CSSLSocket::ConnectViaHTTPProxy(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR pszUserName, LPCTSTR pszPassword, DWORD dwTimeout, LPCTSTR pszUserAgent)
+{
+  //Validate our parameters
+  AFXASSUME(m_pSocket);
+
+  //Call the low level socket connect
+  m_pSocket->ConnectViaHTTPProxy(pszHostAddress, nHostPort, pszHTTPServer, nHTTPProxyPort, sProxyResponse, pszUserName, pszPassword, dwTimeout, pszUserAgent);
 
   //Associate the socket with the SSL connection object
   if (SSL_set_fd(m_SSL, *m_pSocket) != 1)

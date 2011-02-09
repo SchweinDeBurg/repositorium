@@ -103,6 +103,9 @@ public:
   BOOL    Create(CSSLContext& sslContext, CWSocket& socket);
   BOOL    Connect(LPCTSTR pszHostAddress, UINT nHostPort, int nSocketType = SOCK_STREAM);
   BOOL    Connect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName, int nSocketType = SOCK_STREAM);
+  BOOL    ConnectViaSocks4(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszSocksServer, UINT nSocksPort = 1080, DWORD dwTimeout = 5000);
+  BOOL    ConnectViaSocks5(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszSocksServer, UINT nSocksPort = 1080, LPCTSTR pszUserName = NULL, LPCTSTR pszPassword = NULL, DWORD dwTimeout = 5000, BOOL bUDP = FALSE);
+  BOOL    ConnectViaHTTPProxy(LPCTSTR pszHostAddress, UINT nHostPort, LPCTSTR pszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR pszUserName = NULL, LPCTSTR pszPassword = NULL, DWORD dwTimeout = 5000, LPCTSTR pszUserAgent = NULL);
   BOOL    Accept(DWORD dwSSLNegotiationTimeout);
   void    Close();
   int     Send(const void* pBuffer, int nBuf);

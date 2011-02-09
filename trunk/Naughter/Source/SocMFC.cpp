@@ -93,6 +93,10 @@ History: 03-03-2003 1. Addition of a number of preprocessor defines, namely W3MF
                     address lookups.
                     8. Removed all _alloca calls
                     9. Addition of a number of CreateConnect methods which support IPv6
+         08-02-2011 1. The state of whether a socket should be bound or not is now decided by a new m_sBindAddress 
+                    member variable. This variable can be modified through new Get/SetBindAddress methods.
+                    2. Fixed a number of compile problems in VC 2005 related to ATL::CSocketAddr::GetAddrInfoList()
+                    return value.
 
 Copyright (c) 2002 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -464,7 +468,7 @@ void CWSocket::_Bind(UINT nSocketPort, LPCTSTR pszSocketAddress)
   sockAddr.sin_port = htons(static_cast<u_short>(nSocketPort));
 
   //Do we need to bind to a specific IP address?
-  if (pszSocketAddress)
+  if (pszSocketAddress && _tcslen(pszSocketAddress))
   {
     CStringA sAsciiSocketAddress(pszSocketAddress);
     sockAddr.sin_addr.s_addr = inet_addr(sAsciiSocketAddress);
@@ -479,24 +483,24 @@ void CWSocket::_Bind(UINT nSocketPort, LPCTSTR pszSocketAddress)
   Bind(reinterpret_cast<SOCKADDR*>(&sockAddr), sizeof(sockAddr));
 }
 
-void CWSocket::CreateAndBind(UINT nSocketPort, LPCTSTR pszSocketAddress, int nSocketType, int nDefaultAddressFormat)
+void CWSocket::CreateAndBind(UINT nSocketPort, int nSocketType, int nDefaultAddressFormat)
 {
   //Validate our parameters
   ASSERT(!IsCreated()); //must not be created for a v6 style connect
 
   //Do we need to bind to a specific IP address?
-  if (pszSocketAddress)
+  if (m_sBindAddress.GetLength())
   {
     CString sPort;
     sPort.Format(_T("%d"), nSocketPort);
 
     //Do the address lookup
     ATL::CSocketAddr lookup;
-    int nError = lookup.FindAddr(pszSocketAddress, sPort, AI_PASSIVE, 0, 0, 0);
+    int nError = lookup.FindAddr(m_sBindAddress, sPort, AI_PASSIVE, 0, 0, 0);
     if (nError != 0)
       ThrowWSocketException();
 
-    addrinfo* pAddress = lookup.GetAddrInfoList();
+    ADDRINFOT* const pAddress = lookup.GetAddrInfoList();
     AFXASSUME(pAddress);
 
     //Create the socket
@@ -531,7 +535,7 @@ void CWSocket::CreateAndBind(UINT nSocketPort, LPCTSTR pszSocketAddress, int nSo
         Create(nSocketType, 0, nDefaultAddressFormat);
 
         //Finally bind the socket
-        _Bind(nSocketPort, pszSocketAddress);
+        _Bind(nSocketPort, m_sBindAddress);
         break;
       }
       default:
@@ -583,13 +587,14 @@ void CWSocket::_Connect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName)
   //Iterate through the list of addresses trying to connect
   BOOL bSuccess = FALSE;
   int nLastError = 0;
-  addrinfo* pAddress = lookup.GetAddrInfoList();
-  while ((pAddress != NULL) && !bSuccess) 
+  ADDRINFOT* const pAddress = lookup.GetAddrInfoList();
+  ADDRINFOT* pCurrentAddress = pAddress;
+  while ((pCurrentAddress != NULL) && !bSuccess) 
   {
     try
     {
       //Call the other version of Connect which does the actual work
-      Connect(pAddress->ai_addr, static_cast<int>(pAddress->ai_addrlen));
+      Connect(pCurrentAddress->ai_addr, static_cast<int>(pCurrentAddress->ai_addrlen));
       bSuccess = TRUE;
     }
     catch(CWSocketException* pEx)
@@ -597,7 +602,7 @@ void CWSocket::_Connect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName)
       //Prepare for the next time around
       nLastError = pEx->m_nError;
       pEx->Delete();
-      pAddress = pAddress->ai_next;
+      pCurrentAddress = pCurrentAddress->ai_next;
     }
   }
   if (!bSuccess)
@@ -609,6 +614,25 @@ void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, UINT nHostPort, int nSoc
   CString sHostPort;
   sHostPort.Format(_T("%d"), nHostPort);
   CreateAndConnect(pszHostAddress, sHostPort, nSocketType);
+}
+
+void CWSocket::_Bind(LPCTSTR pszPortOrServiceName)
+{
+  //Do we need to bind to a specific IP address?
+  if (m_sBindAddress.GetLength())
+  {
+    //Do the address lookup
+    ATL::CSocketAddr lookup;
+    int nError = lookup.FindAddr(m_sBindAddress, pszPortOrServiceName, AI_PASSIVE, 0, 0, 0);
+    if (nError != 0)
+      ThrowWSocketException();
+
+    ADDRINFOT* const pBindAddress = lookup.GetAddrInfoList();
+    AFXASSUME(pBindAddress);
+
+    //Finally bind the socket
+    Bind(pBindAddress->ai_addr, static_cast<int>(pBindAddress->ai_addrlen));
+  }
 }
 
 void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName, int nSocketType)
@@ -626,17 +650,19 @@ void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrService
   //Iterate through the list of addresses trying to connect
   BOOL bSuccess = FALSE;
   int nLastError = 0;
-  addrinfo* pAddress = lookup.GetAddrInfoList();
-  while ((pAddress != NULL) && !bSuccess) 
+  ADDRINFOT* const pAddress = lookup.GetAddrInfoList();
+  ADDRINFOT* pCurrentAddress = pAddress;
+  while ((pCurrentAddress != NULL) && !bSuccess) 
   {
     try
     {
-      //Create the socket now that we now the family type
+      //Create the socket now that we know the family type via the lookup
       Close();
       Create(nSocketType, 0, pAddress->ai_family);
+      _Bind(pszPortOrServiceName);      
 
       //Call the other version of Connect which does the actual work
-      Connect(pAddress->ai_addr, static_cast<int>(pAddress->ai_addrlen));
+      Connect(pCurrentAddress->ai_addr, static_cast<int>(pCurrentAddress->ai_addrlen));
       bSuccess = TRUE;
     }
     catch(CWSocketException* pEx)
@@ -644,7 +670,7 @@ void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrService
       //Prepare for the next time around
       nLastError = pEx->m_nError;
       pEx->Delete();
-      pAddress = pAddress->ai_next;
+      pCurrentAddress = pCurrentAddress->ai_next;
     }
   }
   if (!bSuccess)
@@ -762,17 +788,19 @@ void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrService
 
   BOOL bSuccess = FALSE;
   int nLastError = 0;
-  addrinfo* pAddress = lookup.GetAddrInfoList();
-  while ((pAddress != NULL) && !bSuccess) 
+  ADDRINFOT* const pAddress = lookup.GetAddrInfoList();
+  ADDRINFOT* pCurrentAddress = pAddress;
+  while ((pCurrentAddress != NULL) && !bSuccess) 
   {
     try
     {
       //Create the socket now that we now the family type
       Close();
       Create(nSocketType, 0, pAddress->ai_family);
+      _Bind(pszPortOrServiceName);
 
       //Call the other version of Connect which does the actual work
-      Connect(pAddress->ai_addr, static_cast<int>(pAddress->ai_addrlen), dwTimeout, bResetToBlockingMode);
+      Connect(pCurrentAddress->ai_addr, static_cast<int>(pCurrentAddress->ai_addrlen), dwTimeout, bResetToBlockingMode);
       bSuccess = TRUE;
     }
     catch(CWSocketException* pEx)
@@ -780,7 +808,7 @@ void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrService
       //Prepare for the next time around
       nLastError = pEx->m_nError;
       pEx->Delete();
-      pAddress = pAddress->ai_next;
+      pCurrentAddress = pCurrentAddress->ai_next;
     }
   }
   if (!bSuccess)
@@ -912,14 +940,15 @@ int CWSocket::SendTo(const void* pBuf, int nBufLen, UINT nHostPort, LPCTSTR pszH
   //Iterate through the list of addresses trying to connect
   BOOL bSuccess = FALSE;
   int nLastError = 0;
-  addrinfo* pAddress = lookup.GetAddrInfoList();
+  ADDRINFOT* const pAddress = lookup.GetAddrInfoList();
+  ADDRINFOT* pCurrentAddress = pAddress;
   int nSent = 0;
-  while ((pAddress != NULL) && !bSuccess) 
+  while ((pCurrentAddress != NULL) && !bSuccess) 
   {
     try
     {
       //Call the other version of Connect which does the actual work
-      nSent = SendTo(pBuf, nBufLen, pAddress->ai_addr, static_cast<int>(pAddress->ai_addrlen), nFlags);
+      nSent = SendTo(pBuf, nBufLen, pCurrentAddress->ai_addr, static_cast<int>(pCurrentAddress->ai_addrlen), nFlags);
       bSuccess = TRUE;
     }
     catch(CWSocketException* pEx)
@@ -927,7 +956,7 @@ int CWSocket::SendTo(const void* pBuf, int nBufLen, UINT nHostPort, LPCTSTR pszH
       //Prepare for the next time around
       nLastError = pEx->m_nError;
       pEx->Delete();
-      pAddress = pAddress->ai_next;
+      pCurrentAddress = pCurrentAddress->ai_next;
     }
   }
   if (!bSuccess)

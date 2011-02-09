@@ -95,6 +95,8 @@ public:
   BOOL    IsCreated() const; 
   BOOL    IsReadible(DWORD dwTimeout);
   BOOL    IsWritable(DWORD dwTimeout);
+  void    SetBindAddress(const CString& sBindAddress) { m_sBindAddress = sBindAddress; };
+  CString GetBindAddress() const { return m_sBindAddress; };
 
 //Methods
   void    Create(BOOL bUDP = FALSE, BOOL bIPv6 = FALSE);
@@ -102,7 +104,7 @@ public:
   __declspec(deprecated) void Accept(CWSocket& connectedSocket, SOCKADDR_IN& clientAddress);
   void    Accept(CWSocket& connectedSocket, SOCKADDR* pSockAddr = NULL, int* pSockAddrLen = NULL);
   __declspec(deprecated) void Bind(UINT nSocketPort, LPCTSTR pszSocketAddress = NULL);
-  void    CreateAndBind(UINT nSocketPort, LPCTSTR pszSocketAddress = NULL, int nSocketType = SOCK_STREAM, int nDefaultAddressFormat = AF_INET);
+  void    CreateAndBind(UINT nSocketPort, int nSocketType = SOCK_STREAM, int nDefaultAddressFormat = AF_INET);
   void    Bind(const SOCKADDR* pSockAddr, int nSockAddrLen);
   void    Close();
   void    Connect(const SOCKADDR* pSockAddr, int nSockAddrLen);
@@ -165,11 +167,13 @@ protected:
 //Methods
   void _Connect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrServiceName);
   void _Bind(UINT nSocketPort, LPCTSTR pszSocketAddress);
+  void _Bind(LPCTSTR pszPortOrServiceName);
   void ReadHTTPProxyResponse(DWORD dwTimeout, CStringA& sResponse);
   void ReadSocks5ConnectReply(DWORD dwTimeout);
 
 //Member variables
-  SOCKET m_hSocket;
+  SOCKET  m_hSocket;
+  CString m_sBindAddress;
 };
 
 #endif //__SOCMFC_H__
