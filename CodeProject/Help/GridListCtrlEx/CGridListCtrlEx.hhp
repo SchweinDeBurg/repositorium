@@ -20,16 +20,6 @@ MainWindow="CGridListCtrlEx Documentation","Table of Contents.hhc","Index.hhk","
 
 [FILES]
 annotated.html
-class_c_grid_column_config.html
-class_c_grid_column_config_default.html
-class_c_grid_column_config_default_1_1_c_grid_column_config_local.html
-class_c_grid_column_config_default_1_1_c_grid_column_config_local-members.html
-class_c_grid_column_config_default-members.html
-class_c_grid_column_config_profiles.html
-class_c_grid_column_config_profiles-members.html
-class_c_grid_column_config_win_app.html
-class_c_grid_column_config_win_app-members.html
-class_c_grid_column_config-members.html
 class_c_grid_column_manager.html
 class_c_grid_column_manager_profile.html
 class_c_grid_column_manager_profile-members.html
@@ -68,6 +58,16 @@ class_c_grid_row_trait_visitor-members.html
 class_c_grid_row_trait_x_p.html
 class_c_grid_row_trait_x_p-members.html
 class_c_grid_row_trait-members.html
+class_c_view_config_section.html
+class_c_view_config_section-members.html
+class_c_view_config_section_default.html
+class_c_view_config_section_default-members.html
+class_c_view_config_section_default_1_1_c_view_config_section_local.html
+class_c_view_config_section_default_1_1_c_view_config_section_local-members.html
+class_c_view_config_section_profiles.html
+class_c_view_config_section_profiles-members.html
+class_c_view_config_section_win_app.html
+class_c_view_config_section_win_app-members.html
 classes.html
 functions.html
 functions_0x6a.html

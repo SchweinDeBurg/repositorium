@@ -7,20 +7,20 @@
            Font = "Verdana"
            FontSize = "8"
            Charset = "0">
-   <Keyword Term = "CGridColumnConfig">
-      <Jump Url = "class_c_grid_column_config.html"/>
+   <Keyword Term = "CViewConfigSection">
+      <Jump Url = "class_c_view_config_section.html"/>
    </Keyword>
-   <Keyword Term = "CGridColumnConfigDefault">
-      <Jump Url = "class_c_grid_column_config_default.html"/>
+   <Keyword Term = "CViewConfigSectionDefault">
+      <Jump Url = "class_c_view_config_section_default.html"/>
    </Keyword>
-   <Keyword Term = "CGridColumnConfigLocal">
-      <Jump Url = "class_c_grid_column_config_default_1_1_c_grid_column_config_local.html"/>
+   <Keyword Term = "CViewConfigSectionLocal">
+      <Jump Url = "class_c_view_config_section_default_1_1_c_view_config_section_local.html"/>
    </Keyword>
-   <Keyword Term = "CGridColumnConfigProfiles">
-      <Jump Url = "class_c_grid_column_config_profiles.html"/>
+   <Keyword Term = "CViewConfigSectionProfiles">
+      <Jump Url = "class_c_view_config_section_profiles.html"/>
    </Keyword>
-   <Keyword Term = "CGridColumnConfigWinApp">
-      <Jump Url = "class_c_grid_column_config_win_app.html"/>
+   <Keyword Term = "CViewConfigSectionWinApp">
+      <Jump Url = "class_c_view_config_section_win_app.html"/>
    </Keyword>
    <Keyword Term = "CGridColumnManager">
       <Jump Url = "class_c_grid_column_manager.html"/>
