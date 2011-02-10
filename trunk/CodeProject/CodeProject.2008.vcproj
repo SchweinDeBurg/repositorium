@@ -1828,6 +1828,14 @@
 					RelativePath=".\Source\CGridRowTraitXP.h"
 					>
 				</File>
+				<File
+					RelativePath=".\Source\ViewConfigSection.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\ViewConfigSection.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="XHtmlTree"

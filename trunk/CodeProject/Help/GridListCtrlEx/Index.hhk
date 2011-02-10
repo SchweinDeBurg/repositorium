@@ -9,29 +9,29 @@
 </OBJECT>
 <UL>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="CGridColumnConfig">
-		<param name="Name" value="CGridColumnConfig Class Reference">
-		<param name="Local" value="class_c_grid_column_config.html">
+		<param name="Name" value="CViewConfigSection">
+		<param name="Name" value="CViewConfigSection Class Reference">
+		<param name="Local" value="class_c_view_config_section.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="CGridColumnConfigDefault">
-		<param name="Name" value="CGridColumnConfigDefault Class Reference">
-		<param name="Local" value="class_c_grid_column_config_default.html">
+		<param name="Name" value="CViewConfigSectionDefault">
+		<param name="Name" value="CViewConfigSectionDefault Class Reference">
+		<param name="Local" value="class_c_view_config_section_default.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="CGridColumnConfigLocal">
-		<param name="Name" value="CGridColumnConfigDefault::CGridColumnConfigLocal Class Reference">
-		<param name="Local" value="class_c_grid_column_config_default_1_1_c_grid_column_config_local.html">
+		<param name="Name" value="CViewConfigSectionLocal">
+		<param name="Name" value="CViewConfigSectionDefault::CViewConfigSectionLocal Class Reference">
+		<param name="Local" value="class_c_view_config_section_default_1_1_c_view_config_section_local.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="CGridColumnConfigProfiles">
-		<param name="Name" value="CGridColumnConfigProfiles Class Reference">
-		<param name="Local" value="class_c_grid_column_config_profiles.html">
+		<param name="Name" value="CViewConfigSectionProfiles">
+		<param name="Name" value="CViewConfigSectionProfiles Class Reference">
+		<param name="Local" value="class_c_view_config_section_profiles.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="CGridColumnConfigWinApp">
-		<param name="Name" value="CGridColumnConfigWinApp Class Reference">
-		<param name="Local" value="class_c_grid_column_config_win_app.html">
+		<param name="Name" value="CViewConfigSectionWinApp">
+		<param name="Name" value="CViewConfigSectionWinApp Class Reference">
+		<param name="Local" value="class_c_view_config_section_win_app.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="CGridColumnManager">
