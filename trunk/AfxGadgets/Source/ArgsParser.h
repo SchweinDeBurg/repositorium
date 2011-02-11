@@ -21,7 +21,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__ArgsParser_h)
 #define __ArgsParser_h
@@ -32,7 +32,7 @@
 #if !defined(__AFXTEMPL_H__)
 #pragma message(__FILE__ " : put <afxtempl.h> in your PCH to speed up compilation")
 #include <afxtempl.h>
-#endif	// __AFXTEMPL_H__
+#endif   // __AFXTEMPL_H__
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // required ATL headers
@@ -42,7 +42,7 @@
 #include <atlbase.h>
 #pragma message(__FILE__ " : put <ATLComTime.h> in your PCH to speed up compilation")
 #include <ATLComTime.h>
-#endif	// ARGS_PARSER_NO_TIME && __ATLCOMTIME_H__
+#endif   // ARGS_PARSER_NO_TIME && __ATLCOMTIME_H__
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // interface
@@ -72,7 +72,7 @@ public:
 #if !defined(ARGS_PARSER_NO_FLOATS)
 	bool GetDoubleValue(LPCTSTR pszKeyName, double& dblDest);
 	double GetDoubleValue(LPCTSTR pszKeyName);
-#endif	// ARGS_PARSER_NO_FLOATS
+#endif   // ARGS_PARSER_NO_FLOATS
 
 #if !defined(ARGS_PARSER_NO_TIME)
 	bool GetTimeValue(LPCTSTR pszKeyName, CTime& timeDest, DWORD fdwFlags = 0,
@@ -81,7 +81,7 @@ public:
 	bool GetOleTimeValue(LPCTSTR pszKeyName, COleDateTime& odtDest, DWORD fdwFlags = 0,
 		LCID Locale = LANG_USER_DEFAULT);
 	COleDateTime GetOleTimeValue(LPCTSTR pszKeyName, DWORD fdwFlags = 0, LCID Locale = LANG_USER_DEFAULT);
-#endif	// ARGS_PARSER_NO_TIME
+#endif   // ARGS_PARSER_NO_TIME
 
 	bool HasKey(LPCTSTR pszKeyName);
 	bool HasValue(LPCTSTR pszKeyName);
@@ -129,6 +129,6 @@ inline bool CArgsParser::HasValue(LPCTSTR pszKeyName)
 	return (m_mapKeys.Lookup(pszKeyName, strValue) != 0 && !strValue.IsEmpty());
 }
 
-#endif	// __ArgsParser_h
+#endif   // __ArgsParser_h
 
 // end of file

@@ -18,7 +18,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__RemoteInvoke_hxx)
 #define __RemoteInvoke_hxx
@@ -95,6 +95,6 @@ inline BOOL CRemoteInvoke<_Data_t, _Proc>::operator()(DWORD dwProcessID, DWORD d
 	return (fSuccess);
 }
 
-#endif	// __RemoteInvoke_hxx
+#endif   // __RemoteInvoke_hxx
 
 // end of file

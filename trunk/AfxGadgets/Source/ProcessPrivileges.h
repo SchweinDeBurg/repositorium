@@ -18,7 +18,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__ProcessPrivileges_h)
 #define __ProcessPrivileges_h
@@ -60,8 +60,8 @@ BOOL SetProcessPrivilege(LPCTSTR pszName, DWORD fdwAttributes);
 #if defined(_AFX_ENABLE_INLINES)
 #define _ProcessPrivileges_INLINE AFX_INLINE
 #include "ProcessPrivileges.inl"
-#endif	// _AFX_ENABLE_INLINES
+#endif   // _AFX_ENABLE_INLINES
 
-#endif	// __ProcessPrivileges_h
+#endif   // __ProcessPrivileges_h
 
 // end of file

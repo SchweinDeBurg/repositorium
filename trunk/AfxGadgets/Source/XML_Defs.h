@@ -21,7 +21,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__XML_Defs_h_)
 #define __XML_Defs_h_
@@ -145,7 +145,7 @@ typedef MSXML::DOMDocument60 CoDomDocument;
 #if !defined(_MEMORY_) && !defined(__SGI_STL_MEMORY) && !defined(_STLP_MEMORY)
 #pragma message(__FILE__ " : put <memory> in your PCH to speed up compilation")
 #include <memory>
-#endif	// !_MEMORY_ && !__SGI_STL_MEMORY && !_STLP_MEMORY
+#endif   // !_MEMORY_ && !__SGI_STL_MEMORY && !_STLP_MEMORY
 
 // assertions and traces
 

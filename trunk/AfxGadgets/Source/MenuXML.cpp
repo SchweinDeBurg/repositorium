@@ -31,13 +31,13 @@
 #if !defined(_INC_SHLWAPI)
 #pragma message(__FILE__ " : put <shlwapi.h> in your PCH to speed up compilation")
 #include <shlwapi.h>
-#endif	// _INC_SHLWAPI
+#endif   // _INC_SHLWAPI
 
 // PSDK header for Win95/98/NT4 builds
 #if (_WIN32_WINDOWS < 0x0490) && !defined(_DBGHELP_)
 #pragma message(__FILE__ " : put <dbghelp.h> in your PCH to speed up compilation")
 #include <dbghelp.h>
-#endif	// _WIN32_WINDOWS && _DBGHELP_
+#endif   // _WIN32_WINDOWS && _DBGHELP_
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // avoid unwanted ICL warnings
@@ -49,7 +49,7 @@
 #pragma warning(disable: 797)
 // remark #981: operands are evaluated in unspecified order
 #pragma warning(disable: 981)
-#endif	// __INTEL_COMPILER
+#endif   // __INTEL_COMPILER
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // debugging support
@@ -58,7 +58,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // extended menu templates (new in Win95)
@@ -156,7 +156,7 @@ BOOL CMenuXML::CreateMenuXML(LPCTSTR pszMenuName)
 		if (!::MakeSureDirectoryPathExists(_T2A(strFileXML)))
 #else
 		if (::SHCreateDirectoryEx(NULL, strFileXML, NULL) != ERROR_SUCCESS)
-#endif	// _WIN32_WINDOWS
+#endif   // _WIN32_WINDOWS
 		{
 			TRACE(_T("Error: unable to create folder %s\n"), strFileXML);
 			return (FALSE);
@@ -388,7 +388,7 @@ void CMenuXML::Dump(CDumpContext& dumpCtx) const
 	}
 }
 
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 // import libraries
 #pragma comment(lib, "shlwapi.lib")
@@ -396,6 +396,6 @@ void CMenuXML::Dump(CDumpContext& dumpCtx) const
 // import library for Win95/98/NT4 builds
 #if (_WIN32_WINDOWS < 0x0490)
 #pragma comment(lib, "dbghelp.lib")
-#endif	// _WIN32_WINDOWS
+#endif   // _WIN32_WINDOWS
 
 // end of file

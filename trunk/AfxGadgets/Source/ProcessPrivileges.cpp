@@ -32,7 +32,7 @@
 #if defined(__INTEL_COMPILER)
 // remark #279: controlling expression is constant
 #pragma warning(disable: 279)
-#endif	// __INTEL_COMPILER
+#endif   // __INTEL_COMPILER
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // debugging support
@@ -41,7 +41,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 DWORD GetProcessPrivilege(LPCTSTR pszName)
 {
@@ -123,7 +123,7 @@ static char _szProcessPrivileges_inl[] = "ProcessPrivileges.inl";
 
 #include "ProcessPrivileges.inl"
 
-#endif	// _AFX_ENABLE_INLINES
+#endif   // _AFX_ENABLE_INLINES
 
 // import library
 #pragma comment(lib, "advapi32.lib")

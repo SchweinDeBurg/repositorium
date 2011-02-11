@@ -21,7 +21,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__XML_Document_h_)
 #define __XML_Document_h_
@@ -78,6 +78,6 @@ protected:
 
 }	// namespace XML
 
-#endif	// __XML_Document_h_
+#endif   // __XML_Document_h_
 
 // end of file

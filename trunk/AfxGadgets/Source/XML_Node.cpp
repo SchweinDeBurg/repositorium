@@ -34,7 +34,7 @@
 
 #if !defined(_DEBUG)
 #pragma warning(disable: 4101)
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 namespace XML
 {

@@ -34,7 +34,7 @@
 #if !defined(_INC_SHLWAPI)
 #pragma message(__FILE__ " : put <shlwapi.h> in your PCH to speed up compilation")
 #include <shlwapi.h>
-#endif	// _INC_SHLWAPI
+#endif   // _INC_SHLWAPI
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // PSDK header for Win95/98/NT4 builds
@@ -42,7 +42,7 @@
 #if (_WIN32_WINDOWS < 0x0490) && !defined(_DBGHELP_)
 #pragma message(__FILE__ " : put <dbghelp.h> in your PCH to speed up compilation")
 #include <dbghelp.h>
-#endif	// _WIN32_WINDOWS && _DBGHELP_
+#endif   // _WIN32_WINDOWS && _DBGHELP_
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // required MFC headers
@@ -52,7 +52,7 @@ class CFindReplaceDialog;
 #include <../src/afximpl.h>
 #else
 #include <../src/mfc/afximpl.h>
-#endif	// _MFC_VER
+#endif   // _MFC_VER
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // avoid unwanted ICL warnings
@@ -66,7 +66,7 @@ class CFindReplaceDialog;
 #pragma warning(disable: 981)
 // remark #1418: external definition with no prior declaration
 #pragma warning(disable: 1418)
-#endif	// __INTEL_COMPILER
+#endif   // __INTEL_COMPILER
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // debugging support
@@ -75,7 +75,7 @@ class CFindReplaceDialog;
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // object model
@@ -174,7 +174,7 @@ int CDialogXML::DoModal(void)
 		{
 #else
 		if (::SHCreateDirectoryEx(NULL, strFileXML, NULL) != ERROR_SUCCESS) {
-#endif	// _WIN32_WINDOWS
+#endif   // _WIN32_WINDOWS
 			TRACE(_T("Error: unable to create folder %s\n"), strFileXML);
 			return (-1);
 		}
@@ -815,7 +815,7 @@ DWORD CDialogXML::Parse_Pager(LPCTSTR pszStylesStr)
 	return (Parse_Window(pszStylesStr) | ParseStyles(awsDict, pszStylesStr));
 }
 
-#endif	// _INC_COMMCTRL
+#endif   // _INC_COMMCTRL
 
 #if defined(_RICHEDIT_)
 
@@ -836,7 +836,7 @@ DWORD CDialogXML::Parse_RichEdit(LPCTSTR pszStylesStr)
 	return (Parse_Edit(pszStylesStr) | ParseStyles(awsDict, pszStylesStr));
 }
 
-#endif	// _RICHEDIT_
+#endif   // _RICHEDIT_
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // attributes
@@ -883,12 +883,12 @@ void CDialogXML::InitParsersMap(void)
 	SetStylesParser(_T("SysMonthCal32"), &Parse_MonthCal);
 	SetStylesParser(_T("SysDateTimePick32"), &Parse_DateTimePick);
 	SetStylesParser(_T("SysPager"), &Parse_Pager);
-#endif	// _INC_COMMCTRL
+#endif   // _INC_COMMCTRL
 #if defined(_RICHEDIT_)
 	SetStylesParser(_T("RichEdit"), &Parse_RichEdit);
 	SetStylesParser(_T("RichEdit20A"), &Parse_RichEdit);
 	SetStylesParser(_T("RichEdit20W"), &Parse_RichEdit);
-#endif	// _RICHEDIT_
+#endif   // _RICHEDIT_
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -1225,7 +1225,7 @@ void CDialogXML::Dump(CDumpContext& dumpCtx) const
 	}
 }
 
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // global initialization
@@ -1248,6 +1248,6 @@ struct INIT_PARSERS_MAP
 
 #if (_WIN32_WINDOWS < 0x0490)
 #pragma comment(lib, "dbghelp.lib")
-#endif	// _WIN32_WINDOWS
+#endif   // _WIN32_WINDOWS
 
 // end of file

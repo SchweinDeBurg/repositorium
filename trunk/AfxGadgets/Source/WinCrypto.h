@@ -18,24 +18,24 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__WinCrypto_h)
 #define __WinCrypto_h
 
 #if !defined(_WIN32_WINNT) || (_WIN32_WINNT < 0x0400)
 #error this code uses features only available under Windows 98/NT4 or later
-#endif	// _WIN32_WINNT
+#endif   // _WIN32_WINNT
 
 #if !defined(__AFXTEMPL_H__)
 #pragma message(__FILE__ " : put <afxtempl.h> in your PCH to speed up compilation")
 #include <afxtempl.h>
-#endif	// __AFXTEMPL_H__
+#endif   // __AFXTEMPL_H__
 
 #if !defined(__WINCRYPT_H__)
 #pragma message(__FILE__ " : put <wincrypt.h> in your PCH to speed up compilation")
 #include <wincrypt.h>
-#endif	// __WINCRYPT_H__
+#endif   // __WINCRYPT_H__
 
 class CWinCrypto: public CObject
 {
@@ -74,6 +74,6 @@ public:
 #endif
 };
 
-#endif	// __WinCrypto_h
+#endif   // __WinCrypto_h
 
 // end of file

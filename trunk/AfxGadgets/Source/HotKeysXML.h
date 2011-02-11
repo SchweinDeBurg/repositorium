@@ -18,7 +18,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__HotKeysXML_h)
 #define __HotKeysXML_h
@@ -26,7 +26,7 @@
 #if !defined(__AFXTEMPL_H__)
 #pragma message(__FILE__ " : put <afxtempl.h> in your PCH to speed up compilation")
 #include <afxtempl.h>
-#endif	// __AFXTEMPL_H__
+#endif   // __AFXTEMPL_H__
 
 class CHotKeysXML: public CObject
 {
@@ -69,6 +69,6 @@ public:
 #endif
 };
 
-#endif	// __HotKeysXML_h
+#endif   // __HotKeysXML_h
 
 // end of file

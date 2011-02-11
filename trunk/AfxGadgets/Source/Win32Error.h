@@ -19,7 +19,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__Win32Error_h)
 #define __Win32Error_h
@@ -56,6 +56,6 @@ public:
 #endif
 };
 
-#endif	// __Win32Error_h
+#endif   // __Win32Error_h
 
 // end of file

@@ -18,7 +18,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__CustomResource_h)
 #define __CustomResource_h
@@ -94,6 +94,6 @@ CCustomResourceBase(hInstRes, pszType, pszName)
 {
 }
 
-#endif	// __CustomResource_h
+#endif   // __CustomResource_h
 
 // end of file

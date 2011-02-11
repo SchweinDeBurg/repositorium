@@ -35,7 +35,7 @@
 #pragma warning(disable: 68)
 // remark #279: controlling expression is constant
 #pragma warning(disable: 279)
-#endif	// __INTEL_COMPILER
+#endif   // __INTEL_COMPILER
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // debugging support
@@ -44,7 +44,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // object model
@@ -247,7 +247,7 @@ void CWinCrypto::Dump(CDumpContext& dumpCtx) const
 	}
 }
 
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 // import libraries
 #pragma comment(lib, "advapi32.lib")

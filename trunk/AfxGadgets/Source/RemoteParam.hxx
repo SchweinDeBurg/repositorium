@@ -18,7 +18,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__RemoteParam_hxx)
 #define __RemoteParam_hxx
@@ -83,7 +83,7 @@ m_thisPtr(NULL)
 // MBCS build
 	GetProcAddress_t(hKernel32, "GetModuleHandleA", m_pfnGetModuleHandle);
 	GetProcAddress_t(hKernel32, "LoadLibraryA", m_pfnLoadLibrary);
-#endif	// _UNICODE
+#endif   // _UNICODE
 	GetProcAddress_t(hKernel32, "GetProcAddress", m_pfnGetProcAddress);
 	GetProcAddress_t(hKernel32, "FreeLibrary", m_pfnFreeLibrary);
 
@@ -115,6 +115,6 @@ inline BOOL CRemoteParam<_Data_t>::GetRemoteData(_Data_t& dataDest)
 	return (::ReadProcessMemory(m_hProcess, pRemoteData, &dataDest, sizeof(_Data_t), NULL));
 }
 
-#endif	// __RemoteParam_hxx
+#endif   // __RemoteParam_hxx
 
 // end of file
