@@ -22,12 +22,6 @@
    <Keyword Term = "CViewConfigSectionWinApp">
       <Jump Url = "class_c_view_config_section_win_app.html"/>
    </Keyword>
-   <Keyword Term = "CGridColumnManager">
-      <Jump Url = "class_c_grid_column_manager.html"/>
-   </Keyword>
-   <Keyword Term = "CGridColumnManagerProfile">
-      <Jump Url = "class_c_grid_column_manager_profile.html"/>
-   </Keyword>
    <Keyword Term = "CGridColumnTrait">
       <Jump Url = "class_c_grid_column_trait.html"/>
    </Keyword>

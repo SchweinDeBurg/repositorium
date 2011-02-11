@@ -20,10 +20,6 @@ MainWindow="CGridListCtrlEx Documentation","Table of Contents.hhc","Index.hhk","
 
 [FILES]
 annotated.html
-class_c_grid_column_manager.html
-class_c_grid_column_manager_profile.html
-class_c_grid_column_manager_profile-members.html
-class_c_grid_column_manager-members.html
 class_c_grid_column_trait.html
 class_c_grid_column_trait_combo.html
 class_c_grid_column_trait_combo-members.html

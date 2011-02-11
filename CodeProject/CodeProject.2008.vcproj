@@ -1729,18 +1729,6 @@
 				Filter="h;cpp"
 				>
 				<File
-					RelativePath=".\Source\CGridColumnManager.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Source\CGridColumnManagerProfile.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Source\CGridColumnManagerProfile.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Source\CGridColumnTrait.h"
 					>
 				</File>
