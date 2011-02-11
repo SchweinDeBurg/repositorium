@@ -57,6 +57,6 @@ CProcessPrivileges::ITEM CProcessPrivileges::operator [](LPCTSTR pszName) const
 	return (ITEM(pszName));
 }
 
-#endif	// _ProcessPrivileges_INLINE
+#endif   // _ProcessPrivileges_INLINE
 
 // end of file

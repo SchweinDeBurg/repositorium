@@ -18,7 +18,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__GetXMLpath_h)
 #define __GetXMLpath_h
@@ -58,7 +58,7 @@ void CDialogXML_t<pfnGetXMLpath>::GetXMLpath(CString& strDest)
 	(*pfnGetXMLpath)(strDest);
 }
 
-#endif	// __DialogXML_h
+#endif   // __DialogXML_h
 
 #if defined(__MenuXML_h)
 
@@ -92,7 +92,7 @@ void CMenuXML_t<pfnGetXMLpath>::GetXMLpath(CString& strDest)
 	(*pfnGetXMLpath)(strDest);
 }
 
-#endif	// __MenuXML_h
+#endif   // __MenuXML_h
 
 #if defined(__HotKeysXML_h)
 
@@ -126,7 +126,7 @@ void CHotKeysXML_t<pfnGetXMLpath>::GetXMLpath(CString& strDest)
 	(*pfnGetXMLpath)(strDest);
 }
 
-#endif	// __HotKeysXML_h
+#endif   // __HotKeysXML_h
 
 #if defined(__StringsXML_h)
 
@@ -161,8 +161,8 @@ void CStringsXML_t<pfnGetXMLpath>::GetXMLpath(CString& strDest)
 	(*pfnGetXMLpath)(strDest);
 }
 
-#endif	// __StringsXML_h
+#endif   // __StringsXML_h
 
-#endif	// __GetXMLpath_h
+#endif   // __GetXMLpath_h
 
 // end of file

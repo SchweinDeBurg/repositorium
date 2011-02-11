@@ -33,7 +33,7 @@
 #if defined(__INTEL_COMPILER)
 // remark #279: controlling expression is constant
 #pragma warning(disable: 279)
-#endif	// __INTEL_COMPILER
+#endif   // __INTEL_COMPILER
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // debugging support
@@ -42,7 +42,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // object model
@@ -67,7 +67,7 @@ void CWin32Error::Delete(void)
 {
 #if defined(_DEBUG)
 	m_bReadyForDelete = TRUE;
-#endif	// _DEBUG
+#endif   // _DEBUG
 	delete this;
 }
 
@@ -153,6 +153,6 @@ void CWin32Error::Dump(CDumpContext& dumpCtx) const
 	}
 }
 
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 // end of file

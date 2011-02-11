@@ -18,7 +18,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__DialogXML_h)
 #define __DialogXML_h
@@ -29,7 +29,7 @@
 #if !defined(__AFXTEMPL_H__)
 #pragma message(__FILE__ " : put <afxtempl.h> in your PCH to speed up compilation")
 #include <afxtempl.h>
-#endif	// __AFXTEMPL_H__
+#endif   // __AFXTEMPL_H__
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // interface
@@ -88,10 +88,10 @@ public:
 	static DWORD Parse_MonthCal(LPCTSTR pszStylesStr);
 	static DWORD Parse_DateTimePick(LPCTSTR pszStylesStr);
 	static DWORD Parse_Pager(LPCTSTR pszStylesStr);
-#endif	// _INC_COMMCTRL
+#endif   // _INC_COMMCTRL
 #if defined(_RICHEDIT_)
 	static DWORD Parse_RichEdit(LPCTSTR pszStylesStr);
-#endif	// _RICHEDIT_
+#endif   // _RICHEDIT_
 
 // attributes
 public:
@@ -112,6 +112,6 @@ public:
 #endif
 };
 
-#endif	// __DialogXML_h
+#endif   // __DialogXML_h
 
 // end of file

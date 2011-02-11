@@ -18,14 +18,14 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__PugXMLplus_h)
 #define __PugXMLplus_h
 
 #if !defined(_PugXML_)
 #error PugXML.h must be included before this file
-#endif	// _PugXML_
+#endif   // _PugXML_
 
 #if !defined(_AFX_ENABLE_INLINES)
 inline
@@ -141,6 +141,6 @@ bool GetAttribute_bool(CPugXmlBranch& branch, LPCTSTR pszName, bool fDefault = f
 	return (GetAttribute_BOOL(branch, pszName, fDefault) != 0);
 }
 
-#endif	// __PugXMLplus_h
+#endif   // __PugXMLplus_h
 
 // end of file

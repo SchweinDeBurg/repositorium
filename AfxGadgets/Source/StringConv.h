@@ -18,7 +18,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__StringConv_h)
 #define __StringConv_h
@@ -195,8 +195,8 @@ typedef _A2A _A2T;
 typedef _A2W _T2W;
 typedef _W2A _W2T;
 
-#endif	// _UNICODE
+#endif   // _UNICODE
 
-#endif	// __StringConv_h
+#endif   // __StringConv_h
 
 // end of file

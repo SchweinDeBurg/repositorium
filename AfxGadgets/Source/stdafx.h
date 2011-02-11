@@ -18,7 +18,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__stdafx_h)
 #define __stdafx_h
@@ -81,7 +81,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 
 #if (_MSC_VER >= 1300)
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #include <afxwin.h>        // MFC core and standard components
 #include <afxtempl.h>      // MFC collection template classes
@@ -117,7 +117,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 
 #if !defined(_IOSTREAM_)
 #define _IOSTREAM_
-#endif	// _IOSTREAM_
+#endif   // _IOSTREAM_
 #define _FSTREAM_
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,8 +133,8 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #define for if (false); else for
 #else
 #pragma conform(forScope, on)
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
-#endif	// __stdafx_h
+#endif   // __stdafx_h
 
 // end of file

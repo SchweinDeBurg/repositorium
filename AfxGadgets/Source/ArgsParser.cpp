@@ -36,7 +36,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // object model
@@ -337,7 +337,7 @@ double CArgsParser::GetDoubleValue(LPCTSTR pszKeyName)
 	return (dblTemp);
 }
 
-#endif	// ARGS_PARSER_NO_FLOATS
+#endif   // ARGS_PARSER_NO_FLOATS
 
 #if !defined(ARGS_PARSER_NO_TIME)
 
@@ -396,7 +396,7 @@ COleDateTime CArgsParser::GetOleTimeValue(LPCTSTR pszKeyName, DWORD fdwFlags, LC
 	return (odtValue);
 }
 
-#endif	// ARGS_PARSER_NO_TIME
+#endif   // ARGS_PARSER_NO_TIME
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // attributes
@@ -442,6 +442,6 @@ void CArgsParser::Dump(CDumpContext& dumpCtx) const
 	}
 }
 
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 // end of file

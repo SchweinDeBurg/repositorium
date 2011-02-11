@@ -19,7 +19,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__MemoryDC_h)
 #define __MemoryDC_h
@@ -53,6 +53,6 @@ public:
 #endif
 };
 
-#endif	// __MemoryDC_h
+#endif   // __MemoryDC_h
 
 // end of file

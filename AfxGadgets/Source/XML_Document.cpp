@@ -32,7 +32,7 @@
 #if !defined(_INC_SHLWAPI)
 #pragma message(__FILE__ " : put <shlwapi.h> in your PCH to speed up compilation")
 #include <shlwapi.h>
-#endif	// _INC_SHLWAPI
+#endif   // _INC_SHLWAPI
 #pragma comment(lib, "shlwapi.lib")
 
 #if defined(_ATL_VER) && !defined(_MFC_VER) && !defined(__ATLFILE_H__)
@@ -45,7 +45,7 @@
 
 #if !defined(_DEBUG)
 #pragma warning(disable: 4101)
-#endif	// _DEBUG
+#endif   // _DEBUG
 
 namespace XML
 {

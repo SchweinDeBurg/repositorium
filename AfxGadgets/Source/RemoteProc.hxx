@@ -18,7 +18,7 @@
 
 #if defined(_MSC_VER) && (_MSC_VER > 1000)
 #pragma once
-#endif	// _MSC_VER
+#endif   // _MSC_VER
 
 #if !defined(__RemoteProc_hxx)
 #define __RemoteProc_hxx
@@ -74,6 +74,6 @@ inline CRemoteProc<_Data_t, _Proc>::operator LPTHREAD_START_ROUTINE(void) const
 	return (reinterpret_cast<LPTHREAD_START_ROUTINE>(m_codePtr));
 }
 
-#endif	// __RemoteProc_hxx
+#endif   // __RemoteProc_hxx
 
 // end of file
