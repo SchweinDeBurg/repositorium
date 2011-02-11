@@ -12,10 +12,6 @@
    <File Url = "class_c_view_config_section_win_app.html"/>
    <File Url = "class_c_view_config_section_win_app-members.html"/>
    <File Url = "class_c_view_config_section-members.html"/>
-   <File Url = "class_c_grid_column_manager.html"/>
-   <File Url = "class_c_grid_column_manager_profile.html"/>
-   <File Url = "class_c_grid_column_manager_profile-members.html"/>
-   <File Url = "class_c_grid_column_manager-members.html"/>
    <File Url = "class_c_grid_column_trait.html"/>
    <File Url = "class_c_grid_column_trait_combo.html"/>
    <File Url = "class_c_grid_column_trait_combo-members.html"/>
@@ -148,8 +144,6 @@
    <File Url = "class_c_view_config_section_default_1_1_c_view_config_section_local.png"/>
    <File Url = "class_c_view_config_section_profiles.png"/>
    <File Url = "class_c_view_config_section_win_app.png"/>
-   <File Url = "class_c_grid_column_manager.png"/>
-   <File Url = "class_c_grid_column_manager_profile.png"/>
    <File Url = "class_c_grid_column_trait.png"/>
    <File Url = "class_c_grid_column_trait_combo.png"/>
    <File Url = "class_c_grid_column_trait_date_time.png"/>

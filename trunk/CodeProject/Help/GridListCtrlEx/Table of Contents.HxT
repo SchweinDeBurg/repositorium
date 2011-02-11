@@ -88,34 +88,6 @@
                 Url = "class_c_view_config_section_win_app-members.html"/>
    <HelpTOCNode Title = "CViewConfigSection Member List"
                 Url = "class_c_view_config_section-members.html"/>
-   <HelpTOCNode Title = "CGridColumnManager Class Reference"
-                Url = "class_c_grid_column_manager.html">
-      <HelpTOCNode Title = "Public Member Functions"
-                   Url = "class_c_grid_column_manager.html"/>
-      <HelpTOCNode Title = "Detailed Description"
-                   Url = "class_c_grid_column_manager.html"/>
-      <HelpTOCNode Title = "Member Function Documentation"
-                   Url = "class_c_grid_column_manager.html"/>
-   </HelpTOCNode>
-   <HelpTOCNode Title = "CGridColumnManagerProfile Class Reference"
-                Url = "class_c_grid_column_manager_profile.html">
-      <HelpTOCNode Title = "Public Member Functions"
-                   Url = "class_c_grid_column_manager_profile.html"/>
-      <HelpTOCNode Title = "Protected Member Functions"
-                   Url = "class_c_grid_column_manager_profile.html"/>
-      <HelpTOCNode Title = "Protected Attributes"
-                   Url = "class_c_grid_column_manager_profile.html"/>
-      <HelpTOCNode Title = "Detailed Description"
-                   Url = "class_c_grid_column_manager_profile.html"/>
-      <HelpTOCNode Title = "Constructor &#38;&#38; Destructor Documentation"
-                   Url = "class_c_grid_column_manager_profile.html"/>
-      <HelpTOCNode Title = "Member Function Documentation"
-                   Url = "class_c_grid_column_manager_profile.html"/>
-   </HelpTOCNode>
-   <HelpTOCNode Title = "CGridColumnManagerProfile Member List"
-                Url = "class_c_grid_column_manager_profile-members.html"/>
-   <HelpTOCNode Title = "CGridColumnManager Member List"
-                Url = "class_c_grid_column_manager-members.html"/>
    <HelpTOCNode Title = "CGridColumnTrait Class Reference"
                 Url = "class_c_grid_column_trait.html">
       <HelpTOCNode Title = "Classes"

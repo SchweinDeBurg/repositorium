@@ -4,10 +4,6 @@
 	<IncludeFile Name="CGridListCtrlEx.HxF"/>
 	<Files>
 		<File Url="annotated.html"/>
-    <File Url="class_c_grid_column_manager.html"/>
-    <File Url="class_c_grid_column_manager_profile.html"/>
-    <File Url="class_c_grid_column_manager_profile-members.html"/>
-    <File Url="class_c_grid_column_manager-members.html"/>
     <File Url="class_c_grid_column_trait.html"/>
     <File Url="class_c_grid_column_trait_combo.html"/>
     <File Url="class_c_grid_column_trait_combo-members.html"/>
@@ -145,8 +141,6 @@
     <File Url="search\search.png"/>
     <File Url="search\close.png"/>
     <File Url="doxygen.png"/>
-    <File Url="class_c_grid_column_manager.png"/>
-    <File Url="class_c_grid_column_manager_profile.png"/>
     <File Url="class_c_grid_column_trait.png"/>
     <File Url="class_c_grid_column_trait_combo.png"/>
     <File Url="class_c_grid_column_trait_date_time.png"/>

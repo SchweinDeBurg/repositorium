@@ -34,16 +34,6 @@
 		<param name="Local" value="class_c_view_config_section_win_app.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="CGridColumnManager">
-		<param name="Name" value="CGridColumnManager Class Reference">
-		<param name="Local" value="class_c_grid_column_manager.html">
-		</OBJECT>
-	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="CGridColumnManagerProfile">
-		<param name="Name" value="CGridColumnManagerProfile Class Reference">
-		<param name="Local" value="class_c_grid_column_manager_profile.html">
-		</OBJECT>
-	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="CGridColumnTrait">
 		<param name="Name" value="CGridColumnTrait Class Reference">
 		<param name="Local" value="class_c_grid_column_trait.html">
