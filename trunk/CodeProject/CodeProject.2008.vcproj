@@ -427,6 +427,30 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ColumnTreeCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ColumnTreeCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ColumnTreeView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ColumnTreeView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ColumnTreeWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ColumnTreeWnd.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\EnCheckComboBox.cpp"
 				>
 			</File>
