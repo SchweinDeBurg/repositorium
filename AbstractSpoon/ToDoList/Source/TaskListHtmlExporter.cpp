@@ -39,8 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
-// - merged with ToDoList version 6.1.3 sources
+// - merged with ToDoList versions 6.1.2-6.1.7 sources
 //*****************************************************************************
 
 // TaskFileHtmlExporter.cpp: implementation of the CTaskListHtmlExporter class.
@@ -69,6 +68,7 @@ static char THIS_FILE[] = __FILE__;
 //////////////////////////////////////////////////////////////////////
 
 const LPCTSTR ENDL = _T("\n");
+const LPCTSTR DONECOLOR = _T("#808080");
 
 CTaskListHtmlExporter::CTaskListHtmlExporter()
 {
@@ -98,7 +98,7 @@ bool CTaskListHtmlExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* s
 
 			while (nLine--)
 			{
-				HTMLNOTES += _T("\n");
+				HTMLNOTES += ENDL;
 			}
 
 			HTMLNOTES += _T("</pre>");
@@ -198,7 +198,7 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 		// format color string
 		if (bDone)
 		{
-			sColor = _T("#c4c4c4");
+			sColor = DONECOLOR;
 		}
 		else
 		{
@@ -277,10 +277,15 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 			{
 				// note: we reset the font after the comments because the font
 				// face and size may well have been changed
-				sComments.Format(bDone ?
-					_T("<br><blockquote><font color='#c4c4c4'>[</font>%s%s<font color='#c4c4c4'>]</font></blockquote>") :
-					_T("<br><blockquote>[%s%s]</blockquote>"),
-					(LPCTSTR)sItemComments, (LPCTSTR)DEFAULTFONT);
+				if (bDone)
+				{
+					sComments.Format(_T("<br><blockquote><font color='%s'>[</font>%s%s<font color='%s'>]</font></blockquote>"),
+						DONECOLOR, (LPCTSTR)sItemComments, (LPCTSTR)DEFAULTFONT, DONECOLOR);
+				}
+				else
+				{
+					sComments.Format(_T("<br><blockquote>[%s%s]</blockquote>"), (LPCTSTR)sItemComments, (LPCTSTR)DEFAULTFONT);
+				}
 			}
 		}
 		else if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCOMMENTS)))
@@ -292,14 +297,18 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 			{
 				TXT2XML(sItemComments); // TODO
 
-				sComments.Format(bDone ?
-					_T("<br><blockquote><font color='#c4c4c4'>[%s] </font></blockquote>") :
-					_T("<br><blockquote><font color='#606060'>[%s] </font></blockquote>"),
-					(LPCTSTR)sItemComments);
+				if (bDone)
+				{
+					sComments.Format(_T("<br><blockquote><font color='%s'>[%s] </font></blockquote>"), DONECOLOR, (LPCTSTR)sItemComments);
+				}
+				else
+				{
+					sComments.Format(_T("<br><blockquote><font color='#606060'>[%s] </font></blockquote>"), (LPCTSTR)sItemComments);
+				}
 
 				// replace carriage returns with <br>
 				sComments.Replace(ENDL, _T("<br>"));
-				sComments.Replace(_T("\n"), _T("<br>"));
+				sComments.Replace(ENDL, _T("<br>"));
 
 				// replace tab characters with multiple &nbsp;
 				sComments.Replace(_T("\t"), _T("&nbsp;&nbsp;&nbsp;&nbsp;"));

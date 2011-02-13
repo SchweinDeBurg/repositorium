@@ -39,10 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
-// - merged with ToDoList version 6.1.3 sources
-// - merged with ToDoList version 6.1.4 sources
-// - merged with ToDoList version 6.1.6 sources
+// - merged with ToDoList versions 6.1.2-6.1.7 sources
 //*****************************************************************************
 
 // ToDoListWnd.cpp : implementation file
@@ -4033,7 +4030,7 @@ BOOL CToDoListWnd::DoDueTaskNotification(const CFilteredToDoCtrl* pCtrl, int nDu
 
 void CToDoListWnd::OnAbout()
 {
-	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.1.6</b> (mod by Elijah Zarezky)"),
+	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.1.7</b> (mod by Elijah Zarezky)"),
 		CEnString(IDS_ABOUTHEADING), CEnString(IDS_ABOUTCOPYRIGHT), CEnString(IDS_LICENSE), 1, 2, 8);
 
 	dialog.DoModal();
@@ -9008,20 +9005,14 @@ void CToDoListWnd::OnUpdateWindow(CCmdUI* pCmdUI)
 		int nPos = 0, nTDCCount = GetTDCCount();
 		ASSERT(nTDCCount);
 
+		nTDCCount = min(nTDCCount, MAXWINDOWS);
+
 		for (nWnd = 0; nWnd < nTDCCount; nWnd++)
 		{
 			CFilteredToDoCtrl& tdc = GetToDoCtrl(nWnd);
 
 			CString sMenuItem;
-
-			if (nPos < 9)
-			{
-				sMenuItem.Format(_T("&%d %s"), nPos + 1, (LPCTSTR)tdc.GetFriendlyProjectName());
-			}
-			else
-			{
-				sMenuItem = tdc.GetFriendlyProjectName();
-			}
+			sMenuItem.Format(_T("&%d %s"), (nPos + 1) % 10, tdc.GetFriendlyProjectName());
 
 			UINT nFlags = MF_BYPOSITION | MF_STRING | (nSel == nWnd ? MF_CHECKED : MF_UNCHECKED);
 			pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex++, nFlags, ID_WINDOW1 + nWnd, sMenuItem);

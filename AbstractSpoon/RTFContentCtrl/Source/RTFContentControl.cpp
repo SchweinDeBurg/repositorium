@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList versions 6.1.2-6.1.7 sources
 //*****************************************************************************
 
 // RTFContentControl.cpp : implementation file
@@ -781,7 +781,7 @@ void CRTFContentControl::LoadPreferences(const IPreferences* pPrefs, LPCTSTR szK
 {
 	BOOL bShowToolbar = pPrefs->GetProfileInt(szKey, _T("ShowToolbar"), m_showToolbar);
 	BOOL bShowRuler = pPrefs->GetProfileInt(szKey, _T("ShowRuler"), m_showRuler);
-	BOOL bWordWrap = pPrefs->GetProfileInt(szKey, _T("WordWrap"), m_bWordWrap);
+	BOOL bWordWrap = pPrefs->GetProfileInt(szKey, _T("WordWrap"), TRUE);
 
 	ShowToolbar(bShowToolbar);
 	ShowRuler(bShowRuler);

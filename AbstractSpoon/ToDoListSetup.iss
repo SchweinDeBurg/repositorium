@@ -3,13 +3,13 @@
 
 [Setup]
 AppName=ToDoList
-AppVerName=ToDoList 6.1.6
+AppVerName=ToDoList 6.1.7
 AppID={{E0FD8591-CBB1-475F-A4EA-EF4E3A58F78F}
 AppPublisher=AbstractSpoon Software
 AppPublisherURL=http://www.abstractspoon.com/
 AppSupportURL=http://www.abstractspoon.com/tdl_resources.html
 AppUpdatesURL=http://www.abstractspoon.com/tdl_resources.html
-AppVersion=6.1.6
+AppVersion=6.1.7
 AppCopyright=Copyright © 2003–2011 by AbstractSpoon Software
 DefaultDirName={pf}\AbstractSpoon\ToDoList
 DefaultGroupName=AbstractSpoon\ToDoList
@@ -17,10 +17,10 @@ AllowNoIcons=true
 Compression=lzma
 SolidCompression=true
 OutputDir=.\SETUP
-OutputBaseFilename=ToDoList-6.1.6-setup
-VersionInfoVersion=6.1.6.734
+OutputBaseFilename=ToDoList-6.1.7-setup
+VersionInfoVersion=6.1.7.746
 VersionInfoProductName=ToDoList
-VersionInfoProductVersion=6.1.6
+VersionInfoProductVersion=6.1.7
 MinVersion=0,5.0.2195
 WizardImageFile=compiler:WizModernImage-IS.bmp
 WizardSmallImageFile=compiler:WizModernSmallImage-IS.bmp
@@ -148,19 +148,19 @@ Source: ".\EclipsePublicLicense.rtf"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\REDIST\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"
 Source: ".\REDIST\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"
 Source: ".\REDIST\Microsoft.VC90.CRT\msvcm90.dll"; DestDir: "{app}"
-Source: ".\REDIST\Microsoft.VC90.CRT\Microsoft.VC90.PrivateCRT.manifest"; DestDir: "{app}"; MinVersion: 0,5.01.2600
-Source: ".\REDIST\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; MinVersion: 0,5.01.2600
+Source: ".\REDIST\Microsoft.VC90.CRT\Microsoft.VC90.PrivateCRT.manifest"; DestDir: "{app}"; MinVersion: 0,5.01.2600; Flags: ignoreversion
+Source: ".\REDIST\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; MinVersion: 0,5.01.2600; Flags: ignoreversion
 
 ;; MFC library redistributables
 Source: ".\REDIST\Microsoft.VC90.MFC\mfc90u.dll"; DestDir: "{app}"
-Source: ".\REDIST\Microsoft.VC90.MFC\mfc90u.dll.1000.config"; DestDir: "{app}"; MinVersion: 0,5.01.2600; AfterInstall: AdjustAfxConfig
+Source: ".\REDIST\Microsoft.VC90.MFC\mfc90u.dll.1000.config"; DestDir: "{app}"; MinVersion: 0,5.01.2600; AfterInstall: AdjustAfxConfig; Flags: ignoreversion
 Source: ".\REDIST\Microsoft.VC90.MFC\mfcm90u.dll"; DestDir: "{app}"
-Source: ".\REDIST\Microsoft.VC90.MFC\Microsoft.VC90.PrivateMFC.manifest"; DestDir: "{app}"; MinVersion: 0,5.01.2600
+Source: ".\REDIST\Microsoft.VC90.MFC\Microsoft.VC90.PrivateMFC.manifest"; DestDir: "{app}"; MinVersion: 0,5.01.2600; Flags: ignoreversion
 
 ;; MFC library localizations
 Source: ".\REDIST\Microsoft.VC90.MFCLOC\mfc90enu.dll"; DestDir: "{app}"
 Source: ".\REDIST\Microsoft.VC90.MFCLOC\mfc90rus.dll"; DestDir: "{app}"
-Source: ".\REDIST\Microsoft.VC90.MFCLOC\Microsoft.VC90.MFCLOC.manifest"; DestDir: "{app}"; MinVersion: 0,5.01.2600
+Source: ".\REDIST\Microsoft.VC90.MFCLOC\Microsoft.VC90.MFCLOC.manifest"; DestDir: "{app}"; MinVersion: 0,5.01.2600; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\ToDoList"; Filename: "{app}\ToDoList.exe"

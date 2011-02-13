@@ -192,7 +192,7 @@ CRulerRichEditCtrl::CRulerRichEditCtrl() : m_pen(PS_DOT, 0, RGB(0, 0, 0))
 	m_movingtab = -1;
 	m_offset = 0;
 	m_readOnly = FALSE;
-	m_bWordWrap = FALSE;
+	m_bWordWrap = -1;
 	ShowToolbar();
 	ShowRuler();
 

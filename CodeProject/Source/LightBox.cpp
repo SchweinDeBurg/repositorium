@@ -40,6 +40,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1.7 sources
 //*****************************************************************************
 
 // LightBox.cpp: implementation of the CLightBox class.
@@ -137,7 +138,7 @@ BOOL CLightBoxMgr::OnCallWndProc(const MSG& msg)
 		break;
 	}
 
-	return TRUE;
+	return FALSE; // to continue routing
 }
 
 BOOL CLightBoxMgr::AttachLightBox(CWnd* pWnd)

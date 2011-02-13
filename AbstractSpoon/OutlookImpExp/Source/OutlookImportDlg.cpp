@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.1.7 sources
 //*****************************************************************************
 
 // OutlookImportDlg.cpp : implementation file
@@ -292,8 +293,16 @@ void COutlookImportDlg::SetTaskAttributes(HTASKITEM hTask, _TaskItem* pTask)
 {
 	// set it's attributes
 	m_pDestTaskFile->SetTaskComments(hTask, ATL::CT2A(pTask->GetBody()));
-	m_pDestTaskFile->SetTaskCategory(hTask, ATL::CT2A(pTask->GetCategories()));
 
+	// can have multiple categories
+	CStringArray aCats;
+	Misc::ParseIntoArray(pTask->GetCategories(), aCats);
+
+	for (int nCat = 0; nCat < aCats.GetSize(); nCat++)
+	{
+		m_pDestTaskFile->AddTaskCategory(hTask, ATL::CT2A(aCats[nCat]));
+	}
+	
 	if (pTask->GetComplete())
 	{
 		m_pDestTaskFile->SetTaskDoneDate(hTask, ConvertDate(pTask->GetDateCompleted()));
