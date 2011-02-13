@@ -41,6 +41,7 @@
 //      --lineend=windows
 //      --suffix=none
 // - merged with ToDoList version 6.1.6 sources
+// - merged with ToDoList version 6.1.7 sources
 //*****************************************************************************
 
 // Misc.h: interface for the CMisc class.
@@ -140,7 +141,6 @@ namespace Misc
 	CString GetUserName();
 	CString GetListSeparator();
 	CString GetDecimalSeparator();
-	CString GetCostUnits();
 	CString GetDefCharset();
 	CString GetAM();
 	CString GetPM();
@@ -157,7 +157,7 @@ namespace Misc
 	double Atof(const CString& sValue);
 	CString Format(double dVal, int nDecPlaces = 2);
 	CString Format(int nVal);
-	CString FormatCost(double dCost, BOOL bIncludeUnits = TRUE);
+	CString FormatCost(double dCost);
 
 	BOOL IsWorkStationLocked();
 	BOOL IsScreenSaverActive();

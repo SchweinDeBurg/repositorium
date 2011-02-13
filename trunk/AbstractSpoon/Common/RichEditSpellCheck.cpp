@@ -39,8 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.4 sources
-// - merged with ToDoList version 6.1.6 sources
+// - merged with ToDoList versions 6.1.4-6.1.7 sources
 //*****************************************************************************
 
 // RichEditSpellCheck.cpp: implementation of the CRichEditSpellCheck class.
@@ -84,52 +83,38 @@ const char* CRichEditSpellCheck::GetNextWord() const
 	CHARRANGE cr;
 
 	cr.cpMin = m_re.SendMessage(EM_FINDWORDBREAK, WB_RIGHT, m_crCurrentWord.cpMax);
-	cr.cpMax = m_re.SendMessage(EM_FINDWORDBREAK, WB_RIGHT, cr.cpMin + 1);
+	cr.cpMax = m_re.SendMessage(EM_FINDWORDBREAK, WB_RIGHTBREAK, cr.cpMin + 1);
 
-	// if nothing has changed then quit
-	if (cr.cpMin == m_crCurrentWord.cpMin && cr.cpMax == m_crCurrentWord.cpMax)
+	const char* szWord = GetWord(cr);
+
+	if (szWord && *szWord)
 	{
-		return NULL;
+		// if there's any trailing whitespace then trim it off
+		int nLen = strlen(szWord);
+
+		while (nLen-- && DELIMS.Find(szWord[nLen]) != -1)
+		{
+			const_cast<char*>(szWord)[nLen] = 0;
+			cr.cpMax--;
+		}
+
+		m_crCurrentWord = cr;
 	}
 
-	static CStringA sWord;
-	GetWord(cr, sWord);
-
-	// trim at start
-	int nLenOrg = sWord.GetLength();
-	sWord.TrimLeft(DELIMS);
-	cr.cpMin += (nLenOrg - sWord.GetLength());
-
-	// trim at end
-	nLenOrg = sWord.GetLength();
-	sWord.TrimRight(DELIMS);
-	cr.cpMax -= (nLenOrg - sWord.GetLength());
-
-	m_crCurrentWord = cr;
-
-	// if sWord is empty add a space else the iteration will end
-	if (sWord.IsEmpty())
-	{
-		sWord = "\x20";
-	}
-
-	return sWord;
+	return szWord;
 }
 
 const char* CRichEditSpellCheck::GetCurrentWord() const
 {
-	static CStringA sWord;
-	GetWord(m_crCurrentWord, sWord);
-
-	return sWord;
+	return GetWord(m_crCurrentWord);
 }
 
-void CRichEditSpellCheck::GetWord(const CHARRANGE& cr, CStringA& sWord) const
+const char* CRichEditSpellCheck::GetWord(const CHARRANGE& cr) const
 {
-	sWord.Empty();
-
 	if (cr.cpMax > cr.cpMin)
 	{
+		static CStringA sWord;
+
 		TEXTRANGE tr;
 		tr.chrg = cr;
 
@@ -144,7 +129,12 @@ void CRichEditSpellCheck::GetWord(const CHARRANGE& cr, CStringA& sWord) const
 		m_re.SendMessage(EM_GETTEXTRANGE, 0, (LPARAM)&tr);
 		sWord.ReleaseBuffer();
 #endif   // UNICODE || _UNICODE
+		
+		return sWord;
 	}
+
+	// else
+	return NULL;
 }
 
 void CRichEditSpellCheck::SelectCurrentWord()

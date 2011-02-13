@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.6 sources
+// - merged with ToDoList versions 6.1.6-6.1.7 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)
@@ -54,12 +54,11 @@
 
 #include "../../Common/TimeEdit.h"
 #include "../../../CodeProject/Source/TimeComboBox.h"
-#include "../../../CodeProject/Source/DialogHelper.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CTDLAddLoggedTimeDlg dialog
 
-class CTDLAddLoggedTimeDlg : public CDialog, public CDialogHelper
+class CTDLAddLoggedTimeDlg : public CDialog
 {
 // Construction
 public:

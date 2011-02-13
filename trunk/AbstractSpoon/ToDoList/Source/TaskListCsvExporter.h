@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList versions 6.1.2-6.1.7 sources
 //*****************************************************************************
 
 // TaskListCsvExporter.h: interface for the CTaskListCsvExporter class.
@@ -92,13 +92,13 @@ protected:
 		int nPos, const CString& sParentPos, CString& sOutput) const;
 	CString ColumnHeadings() const;
 
+	enum ATTRIBTYPE { AT_TEXT, AT_COST, AT_TIME };
+
 	void AppendAttribute(const ITaskList6* pTasks, HTASKITEM hTask,
 		LPCTSTR szAttribName, LPCTSTR szAltAttribName,
-		CString& sOutput, LPCTSTR szPrefix = NULL) const;
-	void AppendAttribute(LPCTSTR szAttrib, CString& sOutput, BOOL bForceQuoted = FALSE) const;
-	void AppendAttribute(double dAttrib, LPCTSTR szFormat,
-		CString& sOutput) const;
-	void AppendAttribute(int nAttrib, LPCTSTR szFormat, CString& sOutput) const;
+		CString& sOutput, ATTRIBTYPE at = AT_TEXT, LPCTSTR szPrefix = NULL) const;
+
+	void AppendAttribute(LPCTSTR szAttrib, CString& sOutput, ATTRIBTYPE at = AT_TEXT, BOOL bForceQuoted = FALSE) const;
 	void AppendComments(const ITaskList6* pTasks, HTASKITEM hTask, CString& sOutput) const;
 
 	int BuildAttribList(const ITaskList6* pTasks, HTASKITEM hTask);

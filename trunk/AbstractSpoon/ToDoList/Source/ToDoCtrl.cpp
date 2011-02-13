@@ -39,10 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
-// - merged with ToDoList version 6.1.3 sources
-// - merged with ToDoList version 6.1.4 sources
-// - merged with ToDoList version 6.1.6 sources
+// - merged with ToDoList versions 6.1.2-6.1.7 sources
 //*****************************************************************************
 
 // ToDoCtrl.cpp : implementation file
@@ -9087,7 +9084,7 @@ BOOL CToDoCtrl::DrawItem(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const 
 
 			if (dCost != 0.0 || !HasStyle(TDCS_HIDEZEROTIMECOST))
 			{
-				DrawGutterItemText(pNCGDI->pDC, Misc::FormatCost(dCost, FALSE), rItem, DT_RIGHT);
+				DrawGutterItemText(pNCGDI->pDC, Misc::Format(dCost), rItem, DT_RIGHT);
 			}
 		}
 		break;
@@ -11378,8 +11375,8 @@ LRESULT CToDoCtrl::OnGutterRecalcColWidth(WPARAM /*wParam*/, LPARAM lParam)
 
 			if (dMaxCost > 0 || dMinCost < 0 || !HasStyle(TDCS_HIDEZEROTIMECOST))
 			{
-				nWidthMaxCost = pNCRC->pDC->GetTextExtent(Misc::FormatCost(dMaxCost, FALSE)).cx;
-				nWidthMinCost = pNCRC->pDC->GetTextExtent(Misc::FormatCost(dMinCost, FALSE)).cx;
+				nWidthMaxCost = GraphicsMisc::GetTextWidth(pNCRC->pDC, _T("%.2f"), dMaxCost);
+				nWidthMinCost = GraphicsMisc::GetTextWidth(pNCRC->pDC, _T("%.2f"), dMinCost);
 			}
 
 			pNCRC->nWidth = max(nWidthMinCost, nWidthMaxCost);

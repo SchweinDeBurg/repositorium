@@ -39,8 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
-// - merged with ToDoList version 6.1.6 sources
+// - merged with ToDoList versions 6.1.2-6.1.7 sources
 //*****************************************************************************
 
 // TaskTimeLog.cpp: implementation of the CTaskTimeLog class.
@@ -69,7 +68,7 @@ static char THIS_FILE[] = __FILE__;
 const LPCTSTR COLUMNHEADINGS[] = { _T("Task ID"), _T("Title"), _T("Time Spent (Hrs)"), _T("User ID"), _T("End Date/Time"), _T("Start Date/Time") };
 const UINT NUM_COLUMNHEADINGS = sizeof(COLUMNHEADINGS) / sizeof(LPCTSTR);
 
-const LPCTSTR LOGFORMAT[] = { _T("%ld"), _T("%s"), _T("%.2f"), _T("%s"), _T("%s"), _T("%s") };
+const LPCTSTR LOGFORMAT[] = { _T("%ld"), _T("%s"), _T("%.3f"), _T("%s"), _T("%s"), _T("%s") };
 const UINT NUM_LOGFORMATS = sizeof(LOGFORMAT) / sizeof(LPCTSTR);
 
 CTaskTimeLog::CTaskTimeLog(LPCTSTR szRefPath) : m_sRefPath(szRefPath)
@@ -101,9 +100,6 @@ BOOL CTaskTimeLog::LogTime(DWORD dwTaskID, LPCTSTR szTaskTitle, double dTime, CO
 	COleDateTime dtEnd = dtWhen;
 	COleDateTime dtStart = dtEnd - COleDateTime(dTime / 24); // dTime is in hours
 
-	TCHAR* szLocale = _tcsdup(_tsetlocale(LC_NUMERIC, NULL)); // current locale
-	_tsetlocale(LC_NUMERIC, _T("")); // local default
-
 	sLog.Format(sLogFormat,
 		dwTaskID,
 		szTaskTitle,
@@ -111,10 +107,6 @@ BOOL CTaskTimeLog::LogTime(DWORD dwTaskID, LPCTSTR szTaskTitle, double dTime, CO
 		static_cast<LPCTSTR>(Misc::GetUserName()),
 		static_cast<LPCTSTR>(CDateHelper::FormatDate(dtEnd, DHFD_ISO | DHFD_TIME)),
 		static_cast<LPCTSTR>(CDateHelper::FormatDate(dtStart, DHFD_ISO | DHFD_TIME)));
-
-	// restore locale
-	_tsetlocale(LC_NUMERIC, szLocale);
-	free(szLocale);
 
 	return FileMisc::AppendLineToFile(sLogPath, sLog);
 }

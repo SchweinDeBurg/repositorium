@@ -42,6 +42,7 @@
 //      --suffix=none
 // - merged with ToDoList version 6.1.2 sources
 // - merged with ToDoList version 6.1.6 sources
+// - merged with ToDoList version 6.1.7 sources
 //*****************************************************************************
 
 // GraphicsMisc.cpp: implementation of the GraphicsMisc class.
@@ -100,7 +101,7 @@ HFONT GraphicsMisc::CreateFont(HFONT hFont, DWORD dwFlags)
 	{
 		AfxMessageBox(_T("failed to create font"));
 		DeleteObject(hFontOut);
-		hFont = hFontOut = NULL;
+		hFont = NULL;
 	}
 
 	return hFontOut;
