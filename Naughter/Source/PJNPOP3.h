@@ -3,7 +3,7 @@ Module : PJNPOP3.H
 Purpose: Defines the interface for a MFC class encapsulation of the POP3 protocol
 Created: PJN / 04-05-1998
 
-Copyright (c) 1998 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -170,38 +170,6 @@ public:
     }
   }
 };
-
-//A version of CStringA which supports secure disposal
-class CPJNPOP3SecureStringA : public CStringA
-{
-public:
-//Constructors / Destructors
-  CPJNPOP3SecureStringA()
-  {
-  }
-  CPJNPOP3SecureStringA(LPCWSTR pszValue) : CStringA(pszValue)
-  {
-  }
-  CPJNPOP3SecureStringA(LPCSTR pszValue) : CStringA(pszValue)
-  {
-  }
-  ~CPJNPOP3SecureStringA()
-  {
-    SecureEmpty();
-  }
-
-//Methods
-  __forceinline void SecureEmpty()
-  {
-    int nLength = GetLength();
-    if (nLength)
-    {
-      LPSTR pszVal = GetBuffer(nLength);
-      SecureZeroMemory(pszVal, nLength);
-      ReleaseBuffer();
-    } 
-  }
-};
   
 //The main class which encapsulates the POP3 connection
 class PJNPOP3_EXT_CLASS CPJNPOP3Connection
@@ -258,8 +226,8 @@ public:
   CString   GetProxyServer() const { return m_sProxyServer; };
   void      SetProxyPort(int nPort) { m_nProxyPort = nPort; };
   int       GetProxyPort() { return m_nProxyPort; };
-  void      SetBoundAddress(const CString& sLocalBoundAddress) { m_sLocalBoundAddress = sLocalBoundAddress; };
-  CString   SetBoundAddress() const { return m_sLocalBoundAddress; };
+  void      SetBindAddress(const CString& sBindAddress) { m_sBindAddress = sBindAddress; };
+  CString   SetBindAddress() const { return m_sBindAddress; };
   void      SetProxyUserName(const CString& sUserName) { m_sProxyUserName = sUserName; };
   CString   GetProxyUserName() const { return m_sProxyUserName; };
   void      SetProxyPassword(const CString& sPassword) { m_sProxyPassword = sPassword; };
@@ -283,11 +251,10 @@ protected:
 #ifndef CPJNPOP3_NOSSL
   virtual CString GetOpenSSLError();
 #endif
-  void _CreateSocket();
-  void _ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout);
-  void _ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP);
-  void _ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent);
-  void _Connect(LPCTSTR lpszHostAddress, UINT nHostPort);
+  virtual void _ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout);
+  virtual void _ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP);
+  virtual void _ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent);
+  virtual void _Connect(LPCTSTR lpszHostAddress, UINT nHostPort);
   int  _Send(const void *pBuffer, int nBuf);
   int  _Receive(void *pBuffer, int nBuf);
   void _Close();
@@ -306,7 +273,7 @@ protected:
   ProxyType      m_ProxyType;
   CString        m_sProxyServer;
   int            m_nProxyPort;
-  CString        m_sLocalBoundAddress;
+  CString        m_sBindAddress;
   CString        m_sProxyUserName;
   CString        m_sProxyPassword;
   CString        m_sUserAgent;

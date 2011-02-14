@@ -167,8 +167,13 @@ History: PJN / 27-06-1998 1. Fixed a potential buffer overflow problem in Delete
                           2. The size of the read buffer used in the ReadResponse method can now be specified at runtime via 
                           SetReadBufferSize().
                           3. Updated the documentation to fix various out of date details in the API reference section.
+         PJN / 13-02-2011 1. Updated copyright details
+                          2. Updated sample app to clean compile on VC 2010
+                          3. Updated code to support latest SSL and Sockets class from the author. This means that the code now supports IPv6 POP3 servers
+                          4. The sample app is now linked against the latest OpenSSL v1.0.0c dlls
+                          5. Set/GetBoundAddress have been renamed Set/GetBindAddress for consistency with the sockets class
 
-Copyright (c) 1998 - 2009 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1998 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -211,6 +216,39 @@ to maintain a single distribution point for the source code.
 
 
 //////////////// Implementation ///////////////////////////////////////////////
+
+//A version of CStringA which supports secure disposal
+class CPJNPOP3SecureStringA : public CStringA
+{
+public:
+//Constructors / Destructors
+  CPJNPOP3SecureStringA()
+  {
+  }
+  CPJNPOP3SecureStringA(LPCWSTR pszValue) : CStringA(pszValue)
+  {
+  }
+  CPJNPOP3SecureStringA(LPCSTR pszValue) : CStringA(pszValue)
+  {
+  }
+  ~CPJNPOP3SecureStringA()
+  {
+    SecureEmpty();
+  }
+
+//Methods
+  __forceinline void SecureEmpty()
+  {
+    int nLength = GetLength();
+    if (nLength)
+    {
+      LPSTR pszVal = GetBuffer(nLength);
+      SecureZeroMemory(pszVal, nLength);
+      ReleaseBuffer();
+    } 
+  }
+};
+
 
 CPJNPOP3Exception::CPJNPOP3Exception(HRESULT hr, const CString& sLastResponse) : m_hr(hr), 
                                                                                  m_sLastResponse(sLastResponse)
@@ -336,19 +374,6 @@ void CPJNPOP3Connection::ThrowPJNPOP3Exception(HRESULT hr, const CString& sLastR
 	THROW(pException);
 }
 
-void CPJNPOP3Connection::_CreateSocket()
-{
-	m_Socket.Create();
-#ifndef CPJNPOP3_NOSSL
-	if (m_bSSL) 
-  {
-		m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
-		if (!m_SSL.Create(m_SSLCtx, m_Socket))
-      ThrowPJNPOP3Exception(IDS_PJNPOP3_FAIL_CREATE_SSL_SOCKET, FACILITY_ITF, GetOpenSSLError());
-	}
-#endif
-}
-
 #ifndef CPJNPOP3_NOSSL
 CString CPJNPOP3Connection::GetOpenSSLError()
 {
@@ -375,30 +400,41 @@ CString CPJNPOP3Connection::GetOpenSSLError()
 
 void CPJNPOP3Connection::_ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout)
 {
+	m_Socket.Create();
+	m_Socket.SetBindAddress(m_sBindAddress);
+
 #ifndef CPJNPOP3_NOSSL
 	if (m_bSSL) 
-	{
-		static_cast<CWSocket&>(m_SSL).ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout);
-		if(SSL_connect(m_SSL) != 1) 
+  {
+		if(!m_SSL.ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout)) 
 			ThrowPJNPOP3Exception(IDS_PJNPOP3_FAIL_CONNECT_SOCKS4_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
 #endif
+  {
+    m_Socket.SetBindAddress(m_sBindAddress);
 		m_Socket.ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout);
+  }
 }
 
 void CPJNPOP3Connection::_ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort , LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP)
 {
 #ifndef CPJNPOP3_NOSSL
 	if (m_bSSL) 
-	{
-		static_cast<CWSocket&>(m_SSL).ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP);
-		if (SSL_connect(m_SSL) != 1)
+  {
+		m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
+		if (!m_SSL.Create(m_SSLCtx, m_Socket))
+      ThrowPJNPOP3Exception(IDS_PJNPOP3_FAIL_CREATE_SSL_SOCKET, FACILITY_ITF, GetOpenSSLError());
+
+		if (!m_SSL.ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP)) 
 			ThrowPJNPOP3Exception(IDS_PJNPOP3_FAIL_CONNECT_SOCKS5_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
 #endif
+  {
+    m_Socket.SetBindAddress(m_sBindAddress);
 		m_Socket.ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP);
+  }
 }
 
 void CPJNPOP3Connection::_ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, 
@@ -406,14 +442,20 @@ void CPJNPOP3Connection::_ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHos
 {
 #ifndef CPJNPOP3_NOSSL
 	if (m_bSSL) 
-	{
-		static_cast<CWSocket&>(m_SSL).ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent);
-		if (SSL_connect(m_SSL) != 1)
+  {
+		m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
+		if (!m_SSL.Create(m_SSLCtx, m_Socket))
+      ThrowPJNPOP3Exception(IDS_PJNPOP3_FAIL_CREATE_SSL_SOCKET, FACILITY_ITF, GetOpenSSLError());
+
+		if (!m_SSL.ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent))
 			ThrowPJNPOP3Exception(IDS_PJNPOP3_FAIL_CONNECT_HTTPPROXY_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
 #endif
+  {
+    m_Socket.SetBindAddress(m_sBindAddress);
 		m_Socket.ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent);
+  }
 }
 
 void CPJNPOP3Connection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
@@ -421,12 +463,19 @@ void CPJNPOP3Connection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
 #ifndef CPJNPOP3_NOSSL
 	if (m_bSSL) 
   {
+		m_SSLCtx.Attach(SSL_CTX_new(SSLv23_client_method()));
+		if (!m_SSL.Create(m_SSLCtx, m_Socket))
+      ThrowPJNPOP3Exception(IDS_PJNPOP3_FAIL_CREATE_SSL_SOCKET, FACILITY_ITF, GetOpenSSLError());
+
 		if (!m_SSL.Connect(lpszHostAddress, nHostPort)) 
 			ThrowPJNPOP3Exception(IDS_PJNPOP3_FAIL_CONNECT_VIASSL, FACILITY_ITF, GetOpenSSLError());
 	}
 	else 
 #endif
+  {
+    m_Socket.SetBindAddress(m_sBindAddress);
 		m_Socket.CreateAndConnect(lpszHostAddress, nHostPort);
+  }
 }
 
 int CPJNPOP3Connection::_Send(const void* pBuffer, int nBuf)
@@ -495,26 +544,9 @@ void CPJNPOP3Connection::Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTS
   m_bSSL = FALSE;
 #endif
 
-  //Create the socket
-  try
-  {
-    _CreateSocket();
-  }
-  catch(CWSocketException* pEx)
-  {
-    DWORD dwError = pEx->m_nError;
-    pEx->Delete();
-    ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
-  }
-
   try
   {
     //Connect to the POP3 server
-
-    //Bind if required
-    if (m_sLocalBoundAddress.GetLength())
-      m_Socket.CreateAndBind(0);
-
     switch (m_ProxyType)
     {
       case ptSocks4:
@@ -580,7 +612,7 @@ void CPJNPOP3Connection::Connect(LPCTSTR pszHostName, LPCTSTR pszUsername, LPCTS
     ThrowPJNPOP3Exception(dwError, FACILITY_WIN32);
   }
 
-  //We're now connected !!
+  //At this point, we're now connected
   m_bConnected = TRUE;
 
   try
