@@ -505,6 +505,9 @@ History: PJN / 15-06-1998 1. Fixed the case where a single dot occurs on its own
          PJN / 08-02-2011 1. Updated copyright details
                           2. Updated code to support latest SSL and Sockets class from the author. This means that the code now supports IPv6 SMTP servers
                           3. Connect method now allows binding to a specific IP address
+         PJN / 13-02-2011 1. Remove the IP binding address parameter from the Connect method as there was already support for binding via the Set/GetBoundAddress
+                          methods.
+                          2. Set/GetBoundAddress have been renamed Set/GetBindAddress for consistency with the sockets class
                           
 Copyright (c) 1998 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -1583,7 +1586,7 @@ CStringA CPJNSMTPBodyPart::FoldSubjectHeader(const CString& sSubject, const CStr
 }
 
 
-CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.91")), 
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.92")), 
                                      m_bMime(FALSE), 
                                      m_Priority(NoPriority),
                                      m_DSNReturnType(HeadersOnly),
@@ -2338,10 +2341,10 @@ CString CPJNSMTPConnection::GetOpenSSLError()
 }
 #endif
 
-void CPJNSMTPConnection::_ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout, LPCTSTR pszBindAddress)
+void CPJNSMTPConnection::_ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout)
 {
 	m_Socket.Create();
-	m_Socket.SetBindAddress(pszBindAddress);
+	m_Socket.SetBindAddress(m_sBindAddress);
 
 #ifndef CPJNSMTP_NOSSL
 	if (m_ConnectionType == SSL_TLS)
@@ -2356,12 +2359,12 @@ void CPJNSMTPConnection::_ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPo
 	else 
 #endif
   {
-    m_Socket.SetBindAddress(pszBindAddress);
+    m_Socket.SetBindAddress(m_sBindAddress);
 		m_Socket.ConnectViaSocks4(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, dwConnectionTimeout);
   }
 }
 
-void CPJNSMTPConnection::_ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP, LPCTSTR pszBindAddress)
+void CPJNSMTPConnection::_ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP)
 {
 #ifndef CPJNSMTP_NOSSL
 	if (m_ConnectionType == SSL_TLS)
@@ -2376,13 +2379,13 @@ void CPJNSMTPConnection::_ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPo
 	else 
 #endif
   { 
-    m_Socket.SetBindAddress(pszBindAddress);
+    m_Socket.SetBindAddress(m_sBindAddress);
 		m_Socket.ConnectViaSocks5(lpszHostAddress, nHostPort, lpszSocksServer, nSocksPort, lpszUserName, lpszPassword, dwConnectionTimeout, bUDP);
   }
 }
 
 void CPJNSMTPConnection::_ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, 
-                                              LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent, LPCTSTR pszBindAddress)
+                                              LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent)
 {
 #ifndef CPJNSMTP_NOSSL
 	if (m_ConnectionType == SSL_TLS)
@@ -2397,12 +2400,12 @@ void CPJNSMTPConnection::_ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHos
 	else 
 #endif
   {
-    m_Socket.SetBindAddress(pszBindAddress);
+    m_Socket.SetBindAddress(m_sBindAddress);
 		m_Socket.ConnectViaHTTPProxy(lpszHostAddress, nHostPort, lpszHTTPServer, nHTTPProxyPort, sProxyResponse, lpszUserName, pszPassword, dwConnectionTimeout, lpszUserAgent);
 	}
 }
 
-void CPJNSMTPConnection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR pszBindAddress)
+void CPJNSMTPConnection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort)
 {
 #ifndef CPJNSMTP_NOSSL
   if (m_ConnectionType == SSL_TLS)
@@ -2417,7 +2420,7 @@ void CPJNSMTPConnection::_Connect(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTS
 	else 
 #endif
   {
-    m_Socket.SetBindAddress(pszBindAddress);
+    m_Socket.SetBindAddress(m_sBindAddress);
 		m_Socket.CreateAndConnect(lpszHostAddress, nHostPort);
 	}
 }
@@ -2477,9 +2480,9 @@ BOOL CPJNSMTPConnection::_IsReadible(DWORD dwTimeout)
 }
 
 #ifndef CPJNSMTP_NOSSL
-void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort, ConnectionType connectionType, LPCTSTR pszBindAddress)
+void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort, ConnectionType connectionType)
 #else
-void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort, LPCTSTR pszBindAddress)
+void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, LPCTSTR pszUsername, LPCTSTR pszPassword, int nPort)
 #endif
 {
 	//Validate our parameters
@@ -2499,15 +2502,15 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
     {
       case ptSocks4:
       {
-        _ConnectViaSocks4(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_dwTimeout, pszBindAddress);
+        _ConnectViaSocks4(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_dwTimeout);
         break;
       }
       case ptSocks5:
       {
         if (m_sProxyUserName.GetLength())
-          _ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, FALSE, pszBindAddress);
+          _ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, FALSE);
         else
-          _ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, NULL, NULL, m_dwTimeout, FALSE, pszBindAddress);
+          _ConnectViaSocks5(pszHostName, nPort, m_sProxyServer, m_nProxyPort, NULL, NULL, m_dwTimeout, FALSE);
         break;
       }
       case ptHTTP:
@@ -2516,22 +2519,22 @@ void CPJNSMTPConnection::Connect(LPCTSTR pszHostName, AuthenticationMethod am, L
         if (m_sProxyUserName.GetLength())
         {
           if (m_sUserAgent.GetLength())
-            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, m_sUserAgent, pszBindAddress);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, m_sUserAgent);
           else
-            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, NULL, pszBindAddress);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, m_sProxyUserName, m_sProxyPassword, m_dwTimeout, NULL);
         }
         else
         {
           if (m_sUserAgent.GetLength())
-            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, m_sUserAgent, pszBindAddress);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, m_sUserAgent);
           else
-            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, NULL, pszBindAddress);
+            _ConnectViaHTTPProxy(pszHostName, nPort, m_sProxyServer, m_nProxyPort, sProxyResponse, NULL, NULL, m_dwTimeout, NULL);
         }
         break;
       }
       case ptNone:
       {
-        _Connect(pszHostName, nPort, pszBindAddress);
+        _Connect(pszHostName, nPort);
         break;
       }
       default:

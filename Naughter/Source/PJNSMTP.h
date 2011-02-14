@@ -437,9 +437,9 @@ public:
 
 //Methods
 #ifndef CPJNSMTP_NOSSL
-  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25, ConnectionType connectionType = PlainText, LPCTSTR pszBindAddress = NULL);
+  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25, ConnectionType connectionType = PlainText);
 #else
-  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25, LPCTSTR pszBindAddress = NULL);
+  void    Connect(LPCTSTR pszHostName, AuthenticationMethod am = AUTH_NONE, LPCTSTR pszUsername = NULL, LPCTSTR pszPassword = NULL, int nPort = 25);
 #endif
   void    Disconnect(BOOL bGracefully = TRUE);
   BOOL    IsConnected() const	{ return m_bConnected; };
@@ -460,8 +460,8 @@ public:
   CString   GetProxyServer() const { return m_sProxyServer; };
   void      SetProxyPort(int nPort) { m_nProxyPort = nPort; };
   int       GetProxyPort() { return m_nProxyPort; };
-  void      SetBoundAddress(const CString& sLocalBoundAddress) { m_sLocalBoundAddress = sLocalBoundAddress; };
-  CString   GetBoundAddress() const { return m_sLocalBoundAddress; };
+  void      SetBindAddress(const CString& sBindAddress) { m_sBindAddress = sBindAddress; };
+  CString   GetBindAddress() const { return m_sBindAddress; };
   void      SetProxyUserName(const CString& sUserName) { m_sProxyUserName = sUserName; };
   CString   GetProxyUserName() const { return m_sProxyUserName; };
   void      SetProxyPassword(const CString& sPassword) { m_sProxyPassword = sPassword; };
@@ -524,10 +524,10 @@ protected:
   virtual SECURITY_STATUS NTLMAuthPhase2(PBYTE pBuf, DWORD cbBuf, DWORD* pcbRead);
   virtual SECURITY_STATUS NTLMAuthPhase3(PBYTE pBuf, DWORD cbBuf);
 #endif
-  virtual void _ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout, LPCTSTR pszBindAddress);
-  virtual void _ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP, LPCTSTR pszBindAddress);
-  virtual void _ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent, LPCTSTR pszBindAddress);
-  virtual void _Connect(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR pszBindAddress);
+  virtual void _ConnectViaSocks4(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, DWORD dwConnectionTimeout);
+  virtual void _ConnectViaSocks5(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszSocksServer, UINT nSocksPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, DWORD dwConnectionTimeout, BOOL bUDP);
+  virtual void _ConnectViaHTTPProxy(LPCTSTR lpszHostAddress, UINT nHostPort, LPCTSTR lpszHTTPServer, UINT nHTTPProxyPort, CStringA& sProxyResponse, LPCTSTR lpszUserName, LPCTSTR pszPassword, DWORD dwConnectionTimeout, LPCTSTR lpszUserAgent);
+  virtual void _Connect(LPCTSTR lpszHostAddress, UINT nHostPort);
   virtual int  _Send(const void *pBuffer, int nBuf);
   virtual int  _Receive(void *pBuffer, int nBuf);
   virtual void _Close();
@@ -553,7 +553,7 @@ protected:
   ProxyType                   m_ProxyType;
   CString                     m_sProxyServer;
   int                         m_nProxyPort;
-  CString                     m_sLocalBoundAddress;
+  CString                     m_sBindAddress;
   CString                     m_sProxyUserName;
   CString                     m_sProxyPassword;
   CString                     m_sUserAgent;
