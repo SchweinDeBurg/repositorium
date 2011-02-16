@@ -366,10 +366,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\pngtest.c"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\pngtrans.c"
 				>
 			</File>
@@ -404,7 +400,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\pngdebug.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\pnginfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\pnglibconf.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\pngpriv.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\pngstruct.h"
 				>
 			</File>
 		</Filter>
@@ -425,7 +437,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\libpng.txt"
+			RelativePath=".\libpng-manual.txt"
 			>
 		</File>
 		<File
