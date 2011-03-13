@@ -1277,12 +1277,14 @@ TagLib::instance() {
 
 const TagInfo* 
 TagLib::getTagInfo(MDMODEL md_model, WORD tagID) {
-	TAGINFO *info_map = (TAGINFO*)_table_map[md_model];
 
-	if(info_map != NULL) {
-		return (*info_map)[tagID];
+	if(_table_map.find(md_model) != _table_map.end()) {
+
+		TAGINFO *info_map = (TAGINFO*)_table_map[md_model];
+		if(info_map->find(tagID) != info_map->end()) {
+			return (*info_map)[tagID];
+		}
 	}
-
 	return NULL;
 }
 
@@ -1314,8 +1316,10 @@ TagLib::getTagDescription(MDMODEL md_model, WORD tagID) {
 }
 
 int TagLib::getTagID(MDMODEL md_model, const char *key) {
-	TAGINFO *info_map = (TAGINFO*)_table_map[md_model];
-	if(info_map != NULL) {
+
+	if(_table_map.find(md_model) != _table_map.end()) {
+
+		TAGINFO *info_map = (TAGINFO*)_table_map[md_model];
 		for(TAGINFO::iterator i = info_map->begin(); i != info_map->end(); i++) {
 			const TagInfo *info = (*i).second;
 			if(info && (strcmp(info->fieldname, key) == 0)) {
@@ -1323,7 +1327,6 @@ int TagLib::getTagID(MDMODEL md_model, const char *key) {
 			}
 		}
 	}
-
 	return -1;
 }
 
