@@ -2235,6 +2235,7 @@ static const char  *static_camera_list[] =
 "Sony DSLR-A330",
 "Sony DSLR-A350",
 "Sony DSLR-A380",
+"Sony DSLR-A390",
 "Sony DSLR-A450",
 "Sony DSLR-A500",
 "Sony DSLR-A550",
