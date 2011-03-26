@@ -130,6 +130,7 @@ LEXOBJS=\
 	$(DIR_O)\LexMatlab.obj \
 	$(DIR_O)\LexMetapost.obj \
 	$(DIR_O)\LexMMIXAL.obj \
+	$(DIR_O)\LexModula.obj \
 	$(DIR_O)\LexMPT.obj \
 	$(DIR_O)\LexMSSQL.obj \
 	$(DIR_O)\LexMySQL.obj \
@@ -216,7 +217,7 @@ $(LEXCOMPONENT): $(LOBJS) $(DIR_O)\ScintRes.res
 	$(LD) $(LDFLAGS) -DEF:Scintilla.def -DLL -OUT:$@ -IMPLIB:$(DIR_LIB)\$(@B).lib $** $(LIBS)
 
 $(LEXLIB): $(LEXOBJS)
-	LIB /OUT:$@ $(LEXOBJS)
+	@LIB /OUT:$@ $(LEXOBJS)
 
 # Define how to build all the objects and what they depend on
 
@@ -368,6 +369,8 @@ $(DIR_O)\LexMatlab.obj: ..\lexers\LexMatlab.cxx $(LEX_HEADERS)
 $(DIR_O)\LexMetapost.obj: ..\lexers\LexMetapost.cxx $(LEX_HEADERS)
 
 $(DIR_O)\LexMMIXAL.obj: ..\lexers\LexMMIXAL.cxx $(LEX_HEADERS)
+
+$(DIR_O)\LexModula.obj: ..\lexers\LexModula.cxx $(LEX_HEADERS)
 
 $(DIR_O)\LexMPT.obj: ..\lexers\LexMPT.cxx $(LEX_HEADERS)
 
