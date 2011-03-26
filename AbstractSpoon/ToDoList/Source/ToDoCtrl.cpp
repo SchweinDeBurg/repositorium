@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.2-6.1.7 sources
+// - merged with ToDoList versions 6.1.2-6.1.10 sources
 //*****************************************************************************
 
 // ToDoCtrl.cpp : implementation file
@@ -11486,6 +11486,10 @@ int CToDoCtrl::CalcMaxDateColWidth(TDC_DATE nDate, CDC* pDC)
 
 int CToDoCtrl::GetTasks(CTaskFile& tasks, const TDCGETTASKS& filter) const
 {
+	// ISO date strings
+	// must be done first before any tasks are added
+	tasks.EnableISODates(HasStyle(TDCS_SHOWDATESINISO));
+
 	AddTreeChildrenToTaskFile(NULL, tasks, NULL, filter);
 
 	// filename
@@ -11639,6 +11643,10 @@ int CToDoCtrl::GetSelectedTasks(CTaskFile& tasks, const TDCGETTASKS& filter, BOO
 	CTreeSelectionHelper::OrderSelection(selection, m_tree);
 	POSITION pos = selection.GetHeadPosition();
 	int nPos = 1;
+
+	// ISO date strings
+	// must be done first before any tasks are added
+	tasks.EnableISODates(HasStyle(TDCS_SHOWDATESINISO));
 
 	while (pos)
 	{
@@ -12256,18 +12264,22 @@ CString CToDoCtrl::GetPreferencesKey(LPCTSTR szSubKey, LPCTSTR szFilePath) const
 		sFilePath = m_sLastSavePath;
 	}
 
-	if (!sFilePath.IsEmpty())
+	if (sFilePath.IsEmpty())
+	{
+		sFilePath = _T("Default");
+	}
+	else
 	{
 		sFilePath = CPreferences::KeyFromFile(sFilePath);
+	}
 
-		if (szSubKey && *szSubKey)
-		{
-			sKey.Format(_T("FileStates\\%s\\%s"), sFilePath, szSubKey);
-		}
-		else
-		{
-			sKey.Format(_T("FileStates\\%s"), sFilePath);
-		}
+	if (szSubKey && *szSubKey)
+	{
+		sKey.Format(_T("FileStates\\%s\\%s"), sFilePath, szSubKey);
+	}
+	else
+	{
+		sKey.Format(_T("FileStates\\%s"), sFilePath);
 	}
 
 	return sKey;

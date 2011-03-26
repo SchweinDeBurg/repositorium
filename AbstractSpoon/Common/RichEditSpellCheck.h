@@ -26,7 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
-// - merged with ToDoList versions 6.1.6-6.1.7 sources
+// - merged with ToDoList versions 6.1.6-6.1.10 sources
 //*****************************************************************************
 
 // RichEditSpellCheck.h: interface for the CRichEditSpellCheck class.
@@ -62,9 +62,10 @@ public:
 protected:
 	CRichEditBaseCtrl& m_re;
 	mutable CHARRANGE m_crCurrentWord;
+	mutable CStringA m_sCurrentWord;
 
 protected:
-	const char* GetWord(const CHARRANGE& cr) const;
+	BOOL GetWord(const CHARRANGE& cr, CStringA& sWord) const;
 };
 
 #endif // !defined(AFX_RICHEDITSPELLCHECK_H__9A6FC513_71CB_4207_9FED_7B1429010FE5__INCLUDED_)

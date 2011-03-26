@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.1.10 sources
 //*****************************************************************************
 
 // PreferencesFilePage.cpp : implementation file
@@ -82,8 +82,8 @@ m_eBackupLocation(FES_FOLDERS | FES_COMBOSTYLEBTN)
 	m_nKeepBackups = 0;
 	m_bExportFilteredOnly = FALSE;
 	m_bExportToFolder = FALSE;
-	m_nAutoSaveFrequency = 0;
-	m_bAutoSave = FALSE;
+	m_nAutoSaveFrequency = 5;
+	m_bAutoSave = TRUE;
 	m_bAutoExport = FALSE;
 	m_bAutoSaveOnSwitchTasklist = FALSE;
 	m_bAutoSaveOnSwitchApp = FALSE;

@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.2-6.1.7 sources
+// - merged with ToDoList versions 6.1.2-6.1.10 sources
 //*****************************************************************************
 
 // TaskFileHtmlExporter.cpp: implementation of the CTaskListHtmlExporter class.
@@ -308,7 +308,6 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 
 				// replace carriage returns with <br>
 				sComments.Replace(ENDL, _T("<br>"));
-				sComments.Replace(ENDL, _T("<br>"));
 
 				// replace tab characters with multiple &nbsp;
 				sComments.Replace(_T("\t"), _T("&nbsp;&nbsp;&nbsp;&nbsp;"));
@@ -321,16 +320,16 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM h
 		{
 			if (STRIKETHRUDONE)
 			{
-				sFormat = _T("%s%s%s%s<font color='%s'><s>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</s></font>%s<s>%s</s>%s");
+				sFormat = _T("%s %s%s%s<font color='%s'><s>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</s></font>%s<s>%s</s>%s");
 			}
 			else
 			{
-				sFormat = _T("%s%s%s%s<font color='%s'>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</font>%s%s%s");
+				sFormat = _T("%s %s%s%s<font color='%s'>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s</font>%s%s%s");
 			}
 		}
 		else
 		{
-			sFormat = _T("%s%s%s%s<font color='%s'>%s</font>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s");
+			sFormat = _T("%s %s%s%s<font color='%s'>%s</font>%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s");
 		}
 
 		sItem.Format(sFormat, (LPCTSTR)sID, (LPCTSTR)sPriority, (LPCTSTR)sPercent, (LPCTSTR)sColor, (LPCTSTR)sTitle,

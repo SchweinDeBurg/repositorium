@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.1.10 sources
 //*****************************************************************************
 
 // TaskFile.cpp: implementation of the CTaskFile class.
@@ -87,7 +87,7 @@ protected:
 
 #define GET_TASK(t, h, r) { t = TaskFromHandle(h); if (!t) return r; }
 
-CTaskFile::CTaskFile(LPCTSTR szPassword) : m_dwNextUniqueID(0),
+CTaskFile::CTaskFile(LPCTSTR szPassword) : m_dwNextUniqueID(0), m_bISODates(TRUE),
 #ifdef NO_TL_ENCRYPTDECRYPT
 CXmlFile(TDL_ROOT)
 #else
@@ -1735,82 +1735,27 @@ bool CTaskFile::SetTaskCreationDate(HTASKITEM hTask, time_t tCreationDate)
 
 BOOL CTaskFile::SetTaskLastModified(HTASKITEM hTask, const COleDateTime& tLastMod)
 {
-	if (SetTaskDate(hTask, TDL_TASKLASTMOD, tLastMod, TRUE))
-	{
-		DWORD dwFmt = DHFD_TIME | DHFD_NOSEC | DHFD_ISO;
-
-		SetTaskCChar(hTask, TDL_TASKLASTMODSTRING, ATL::CT2A(CDateHelper::FormatDate(tLastMod, dwFmt)));
-		return true;
-	}
-
-	return FALSE;
+	return (BOOL)SetTaskDate(hTask, TDL_TASKLASTMOD, tLastMod, TRUE, TDL_TASKLASTMODSTRING);
 }
 
 BOOL CTaskFile::SetTaskCreationDate(HTASKITEM hTask, const COleDateTime& date)
 {
-	if (SetTaskDate(hTask, TDL_TASKCREATIONDATE, date, TRUE))
-	{
-		DWORD dwFmt = DHFD_TIME | DHFD_NOSEC | DHFD_ISO;
-
-		SetTaskCChar(hTask, TDL_TASKCREATIONDATESTRING, ATL::CT2A(CDateHelper::FormatDate(date, dwFmt)));
-		return true;
-	}
-
-	return FALSE;
+	return (BOOL)SetTaskDate(hTask, TDL_TASKCREATIONDATE, date, TRUE, TDL_TASKCREATIONDATESTRING);
 }
 
 BOOL CTaskFile::SetTaskDoneDate(HTASKITEM hTask, const COleDateTime& date)
 {
-	if (SetTaskDate(hTask, TDL_TASKDONEDATE, date, TRUE))
-	{
-		DWORD dwFmt = DHFD_ISO;
-
-		if (CDateHelper::GetTimeOnly(date) > 0.0)
-		{
-			dwFmt |= DHFD_TIME | DHFD_NOSEC;
-		}
-
-		SetTaskCChar(hTask, TDL_TASKDONEDATESTRING, ATL::CT2A(CDateHelper::FormatDate(date, dwFmt)));
-		return true;
-	}
-
-	return FALSE;
+	return (BOOL)SetTaskDate(hTask, TDL_TASKDONEDATE, date, TRUE, TDL_TASKDONEDATESTRING);
 }
 
 BOOL CTaskFile::SetTaskDueDate(HTASKITEM hTask, const COleDateTime& date)
 {
-	if (SetTaskDate(hTask, TDL_TASKDUEDATE, date, TRUE))
-	{
-		DWORD dwFmt = DHFD_ISO;
-
-		if (CDateHelper::GetTimeOnly(date) > 0.0)
-		{
-			dwFmt |= DHFD_TIME | DHFD_NOSEC;
-		}
-
-		SetTaskCChar(hTask, TDL_TASKDUEDATESTRING, ATL::CT2A(CDateHelper::FormatDate(date, dwFmt)));
-		return true;
-	}
-
-	return FALSE;
+	return (BOOL)SetTaskDate(hTask, TDL_TASKDUEDATE, date, TRUE, TDL_TASKDUEDATESTRING);
 }
 
 BOOL CTaskFile::SetTaskStartDate(HTASKITEM hTask, const COleDateTime& date)
 {
-	if (SetTaskDate(hTask, TDL_TASKSTARTDATE, date, TRUE))
-	{
-		DWORD dwFmt = DHFD_ISO;
-
-		if (CDateHelper::GetTimeOnly(date) > 0.0)
-		{
-			dwFmt |= DHFD_TIME | DHFD_NOSEC;
-		}
-
-		SetTaskCChar(hTask, TDL_TASKSTARTDATESTRING, ATL::CT2A(CDateHelper::FormatDate(date, dwFmt)));
-		return true;
-	}
-
-	return FALSE;
+	return (BOOL)SetTaskDate(hTask, TDL_TASKSTARTDATE, date, TRUE, TDL_TASKSTARTDATESTRING);
 }
 
 BOOL CTaskFile::SetTaskRecurrence(HTASKITEM hTask, const TDIRECURRENCE& tr)
@@ -2041,12 +1986,30 @@ char CTaskFile::GetTaskTimeUnits(HTASKITEM hTask, LPCTSTR szUnitsItem) const
 
 ////////////////////////////////////////////////////////////////////
 
-bool CTaskFile::SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, const COleDateTime& tVal,
-	BOOL bIncTime)
+bool CTaskFile::SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, const COleDateTime& date,
+	BOOL bIncTime, LPCTSTR szDateStringItem)
 {
-	double dDate = bIncTime ? tVal.m_dt : floor(tVal.m_dt);
+	double dDate = bIncTime ? date.m_dt : floor(date.m_dt);
 
-	return SetTaskDouble(hTask, szDateItem, dDate);
+	if (SetTaskDouble(hTask, szDateItem, dDate))
+	{
+		if (szDateStringItem)
+		{
+			DWORD dwFmt = m_bISODates ? DHFD_ISO : 0;
+
+			if (bIncTime && CDateHelper::GetTimeOnly(date) > 0.0)
+			{
+				dwFmt |= DHFD_TIME | DHFD_NOSEC;
+			}
+
+			return SetTaskCChar(hTask, szDateStringItem, ATL::CT2A(CDateHelper::FormatDate(date, dwFmt)));
+		}
+
+		return true;
+	}
+
+	// else
+	return false;
 }
 
 bool CTaskFile::SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, time_t tVal, BOOL bIncTime)

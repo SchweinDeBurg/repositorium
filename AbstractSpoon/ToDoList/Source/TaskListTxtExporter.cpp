@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.1.10 sources
 //*****************************************************************************
 
 // TaskListTxtExporter.cpp: implementation of the CTaskListTxtExporter class.
@@ -141,19 +141,21 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 			sTabs += INDENT;
 		}
 
+		BOOL bHidePos = !pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPOS));
+
 		// if there is a POS child item then this replaces nPos
-		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPOS)))
+		if (!bHidePos)
 		{
 			nPos = pTasks->GetTaskPosition(hTask);
-		}
 
-		if (!sParentPos.IsEmpty())
-		{
-			sPos.Format(_T("%s.%d"), sParentPos, nPos);
-		}
-		else
-		{
-			sPos.Format(_T("%d"), nPos);
+			if (!sParentPos.IsEmpty())
+			{
+				sPos.Format(_T("%s%d."), sParentPos, nPos);
+			}
+			else
+			{
+				sPos.Format(_T("%d."), nPos);
+			}
 		}
 
 		CString sID, sItem, sPriority, sStartDate, sDueDate, sDoneDate;
@@ -236,8 +238,8 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 			sComments.Format(_T("%s%s[%s]"), ENDL, (LPCTSTR)sTabs, (LPTSTR)pTasks->GetTaskComments(hTask));
 		}
 
-		sItem.Format(_T("%d. %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"),
-			nPos, (LPCTSTR)sID, (LPCTSTR)sPriority, (LPCTSTR)sPercent, (LPCTSTR)sTitle, (LPCTSTR)sRisk,
+		sItem.Format(_T("%s %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"),
+			sPos, (LPCTSTR)sID, (LPCTSTR)sPriority, (LPCTSTR)sPercent, (LPCTSTR)sTitle, (LPCTSTR)sRisk,
 			(LPCTSTR)sAllocTo, (LPCTSTR)sAllocBy, (LPCTSTR)sDepends, (LPCTSTR)sVersion, (LPCTSTR)sRecurrence,
 			(LPCTSTR)sCategory, (LPCTSTR)sStatus, (LPCTSTR)sDoneDate, (LPCTSTR)sCreateDate, (LPCTSTR)sCreateBy,
 			(LPCTSTR)sStartDate, (LPCTSTR)sDueDate, (LPCTSTR)sTimeEst, (LPCTSTR)sTimeSpent, (LPCTSTR)sCost,

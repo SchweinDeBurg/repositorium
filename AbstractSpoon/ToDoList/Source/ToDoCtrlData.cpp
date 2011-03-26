@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList versions 6.1.2-6.1.10 sources
 //*****************************************************************************
 
 // ToDoCtrlData.cpp: implementation of the CToDoCtrlData class.
@@ -2793,8 +2793,9 @@ double CToDoCtrlData::GetEarliestDueDate(const TODOITEM* pTDI, const TODOSTRUCTU
 	}
 
 	double dEarliest = pTDI->dateDue;
+	BOOL bDone = IsTaskDone(pTDI, pTDS, TDCCHECKCHILDREN);
 
-	if (IsTaskDone(pTDI, pTDS, TDCCHECKCHILDREN))
+	if (bDone)
 	{
 		dEarliest = 0;
 	}
@@ -2818,16 +2819,21 @@ double CToDoCtrlData::GetEarliestDueDate(const TODOITEM* pTDI, const TODOSTRUCTU
 				dEarliest = dChildDue;
 			}
 		}
+
+		if (dEarliest == DBL_MAX)
+		{
+			dEarliest = 0;
+		}
 	}
 
 	// finally if no date set then use today
-	if (dEarliest == 0 && HasStyle(TDCS_NODUEDATEISDUETODAY))
+	if (dEarliest == 0 && !bDone && HasStyle(TDCS_NODUEDATEISDUETODAY))
 	{
 		dEarliest = CDateHelper::GetDateOnly(COleDateTime::GetCurrentTime());
 	}
 
 	// update calc'ed value
-	pTDI->dateEarliestDue = (dEarliest == DBL_MAX) ? 0 : dEarliest;
+	pTDI->dateEarliestDue = dEarliest;
 	pTDI->SetAttribNeedsRecalc(TDIR_EARLIESTDUE, FALSE);
 
 	return pTDI->dateEarliestDue;
