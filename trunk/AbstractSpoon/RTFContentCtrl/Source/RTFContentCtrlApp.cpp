@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.1.10 sources
 //*****************************************************************************
 
 // RTFContentCtrlApp.cpp : Defines the initialization routines for the DLL.
@@ -201,7 +201,8 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent, int nLength
 
 			sCharSet.Format(_T("/CS:%s"), szCharSet);
 
-			sImgDir.Format(_T("/ID:images%d"), nImgCount);
+			// fully qualify image folder path
+			sImgDir.Format(_T("/ID:%simages%d"), FileMisc::GetTempFolder(), nImgCount);
 			nImgCount++;
 
 			CString sTempHtml = FileMisc::GetTempFileName(_T("Rtf2Html"), _T("html"));

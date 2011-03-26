@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.4-6.1.7 sources
+// - merged with ToDoList versions 6.1.4-6.1.10 sources
 //*****************************************************************************
 
 // RichEditSpellCheck.cpp: implementation of the CRichEditSpellCheck class.
@@ -85,31 +85,44 @@ const char* CRichEditSpellCheck::GetNextWord() const
 	cr.cpMin = m_re.SendMessage(EM_FINDWORDBREAK, WB_RIGHT, m_crCurrentWord.cpMax);
 	cr.cpMax = m_re.SendMessage(EM_FINDWORDBREAK, WB_RIGHTBREAK, cr.cpMin + 1);
 
-	const char* szWord = GetWord(cr);
+	GetWord(cr, m_sCurrentWord);
+	int nLength = m_sCurrentWord.GetLength();
 
-	if (szWord && *szWord)
+	if (nLength)
 	{
 		// if there's any trailing whitespace then trim it off
-		int nLen = strlen(szWord);
+		m_sCurrentWord.TrimRight(DELIMS);
 
-		while (nLen-- && DELIMS.Find(szWord[nLen]) != -1)
-		{
-			const_cast<char*>(szWord)[nLen] = 0;
-			cr.cpMax--;
-		}
+		// and update char range
+		cr.cpMax -= nLength - m_sCurrentWord.GetLength();
+		nLength = m_sCurrentWord.GetLength();
+
+		// if there's any leading whitespace then trim it off
+		m_sCurrentWord.TrimLeft(DELIMS);
+
+		// and update char range
+		cr.cpMin += nLength - m_sCurrentWord.GetLength();
+		nLength = m_sCurrentWord.GetLength();
 
 		m_crCurrentWord = cr;
+
+		// if there was some text but it was all whitespace, return
+		// a non-empty string so that searching is not terminated
+		if (m_sCurrentWord.IsEmpty())
+		{
+			m_sCurrentWord = " ";
+		}
 	}
 
-	return szWord;
+	return m_sCurrentWord;
 }
 
 const char* CRichEditSpellCheck::GetCurrentWord() const
 {
-	return GetWord(m_crCurrentWord);
+	return m_sCurrentWord;
 }
 
-const char* CRichEditSpellCheck::GetWord(const CHARRANGE& cr) const
+BOOL CRichEditSpellCheck::GetWord(const CHARRANGE& cr, CStringA& sWord) const
 {
 	if (cr.cpMax > cr.cpMin)
 	{
@@ -129,12 +142,14 @@ const char* CRichEditSpellCheck::GetWord(const CHARRANGE& cr) const
 		m_re.SendMessage(EM_GETTEXTRANGE, 0, (LPARAM)&tr);
 		sWord.ReleaseBuffer();
 #endif   // UNICODE || _UNICODE
-		
-		return sWord;
+	}
+	else
+	{
+		sWord.Empty();
 	}
 
 	// else
-	return NULL;
+	return !sWord.IsEmpty();
 }
 
 void CRichEditSpellCheck::SelectCurrentWord()

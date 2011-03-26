@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.1.10 sources
 //*****************************************************************************
 
 // TaskFile.h: interface for the CTaskFile class.
@@ -134,6 +134,10 @@ public:
 
 	BOOL SetTaskID(HTASKITEM hTask, unsigned long nID, BOOL bVisible = TRUE);
 
+	void EnableISODates(BOOL bEnable = TRUE)
+	{
+		m_bISODates = bEnable;
+	}
 	BOOL SetTaskLastModified(HTASKITEM hTask, const COleDateTime& tLastMod);
 	BOOL SetTaskDoneDate(HTASKITEM hTask, const COleDateTime& date);
 	BOOL SetTaskDueDate(HTASKITEM hTask, const COleDateTime& date);
@@ -351,6 +355,7 @@ public:
 protected:
 	CMap <HTASKITEM, HTASKITEM, CXmlItem*, CXmlItem*&> m_mapHandles;
 	DWORD m_dwNextUniqueID;
+	BOOL m_bISODates;
 
 protected:
 	void BuildHandleMap();
@@ -369,7 +374,7 @@ protected:
 	double GetTaskDouble(HTASKITEM hTask, LPCTSTR szDoubleItem) const;
 
 	bool SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, time_t tVal, BOOL bIncTime);
-	bool SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, const COleDateTime& tVal, BOOL bIncTime);
+	bool SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, const COleDateTime& tVal, BOOL bIncTime, LPCTSTR szDateStringItem = NULL);
 	bool SetTaskUChar(HTASKITEM hTask, LPCTSTR szUCharItem, unsigned char cVal);
 	bool SetTaskULong(HTASKITEM hTask, LPCTSTR szULongItem, unsigned long lVal);
 	bool SetTaskInt(HTASKITEM hTask, LPCTSTR szIntItem, int iVal);
