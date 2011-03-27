@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<TODOLIST FILENAME="D:\_Code\ToDoList\Release\Resources\Introduction.tdl" PROJECTNAME="Sample Tasklist" FILEFORMAT="9" NEXTUNIQUEID="26" LASTMODIFIED="2009-09-20" FILEVERSION="93" EARLIESTDUEDATE="0.00000000">
+<TASK TITLE="This is a Task" ID="1" ICONINDEX="-1" COMMENTS="New tasks can be created using:
+
+1. The 'New Task' menu. This gives the greatest control over where the task will be created
+2. The green 'plus' toolbar buttons
+3. The context (right-click) menu for the task tree
+4. The appropriate keyboard shortcuts (default: Ctrl+N, Ctrl+Shift+N)
+
+Note: If during the creation of a new task you decide that it's not what you want (or where you want it) just hit Escape and the task creation will be cancelled." POS="1" LASTMOD="40075.77873843" LASTMODSTRING="19/09/2009 6:41 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" TIMEESTIMATE="0.00000000" TIMEESTUNITS="I" TIMESPENT="0.00000000" TIMESPENTUNITS="M" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="849cf988-79fe-418a-a40d-01fe3afcab2c" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="A Task can contain..." ID="2" ICONINDEX="-1" POS="2" LASTMOD="39739.91288194" LASTMODSTRING="18/10/2008 9:54 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" TIMEESTIMATE="0.00000000" TIMEESTUNITS="I" TIMESPENT="0.00000000" TIMESPENTUNITS="M" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0">
+<TASK TITLE="Subtasks" ID="3" ICONINDEX="-1" COMMENTS="Any task can become a subtask by dragging it onto another task or by using the 'Move' menu to move it right one level.
+
+Of course you can also directly create it as a subtask via the 'New Task' menu or the appropriate toolbar button.
+
+Note: The behaviour of the default 'New Task/Subtask' toolbar buttons can be modified via the Preferences." POS="1" LASTMOD="39741.73358796" LASTMODSTRING="20/10/2008 5:36 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" TIMEESTIMATE="0.00000000" TIMEESTUNITS="I" TIMESPENT="0.00000000" TIMESPENTUNITS="M" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="Which in turn can contain other ..." ID="4" ICONINDEX="-1" POS="2" LASTMOD="39739.81900463" LASTMODSTRING="18/10/2008 7:39 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" TIMEESTIMATE="0.00000000" TIMEESTUNITS="I" TIMESPENT="0.00000000" TIMESPENTUNITS="M" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0">
+<TASK TITLE="Subtasks" ID="5" ICONINDEX="-1" COMMENTS="And this is the means by which complex projects can become a series of smaller more manageable tasks.
+
+Note: If you want to split a task into subtasks at a later date you can do so via the 'New Task &gt; Split Selected Task' menu items.
+
+Note: A task which already has subtasks cannot be split." POS="1" LASTMOD="39739.92373843" LASTMODSTRING="18/10/2008 10:10 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" TIMEESTIMATE="0.00000000" TIMEESTUNITS="I" TIMESPENT="0.00000000" TIMESPENTUNITS="M" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+</TASK>
+</TASK>
+<TASK TITLE="This is a completed task" ID="9" ICONINDEX="-1" COMMENTS="A task can be marked as complete in a number of ways:
+
+1. By clicking the adjacant checkbox with the mouse
+2. By selecting the task and using the appropriate keyboard shortcut (default: Ctrl+Shift+Space)
+3. By setting the percentage completion to 100%
+4. By setting the completed date.
+
+The way that completed tasks are displayed can be controlled via the Preferences." POS="3" LASTMOD="39739.81888889" LASTMODSTRING="18/10/2008 7:39 PM" PRIORITY="5" RISK="0" PERCENTDONE="100" CALCPERCENTDONE="100" COST="0.00000000" CALCCOST="0.00000000" DONEDATE="39739.00000000" DONEDATESTRING="18/10/2008" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" TEXTCOLOR="8421504" TEXTWEBCOLOR="#808080" PRIORITYCOLOR="57630" PRIORITYWEBCOLOR="#1EE100">
+<TASK TITLE="Subtasks" ID="10" ICONINDEX="-1" COMMENTS="whose parent tasks are complete are displayed in the same colour as completed tasks." POS="1" LASTMOD="39739.82126157" LASTMODSTRING="18/10/2008 7:42 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+</TASK>
+<TASK TITLE="Adding Comments to Tasks" ID="15" ICONINDEX="-1" COMMENTS="Comments are entered in the adjacent comments control and are displayed after the task in the task tree.
+
+You can choose from either Simple Text comments (which contain no formatting) and Rich Text which allows you much more control over the appearance of the comments.
+
+You can also embed images eg.   but this needs to be carefully managed to avoid the tasklist growing excessively in size.
+
+Note: to help prevent this Rich Text comments are compressed within the tasklist." POS="4" LASTMOD="39739.91204861" LASTMODSTRING="18/10/2008 9:53 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" CUSTOMCOMMENTS="OQsAAHicpZZNb+M2EIZ7DpD/wGN7WVCUqI/Ncc/toemlAC8UxbHZSKIhyXbSIP+9ww/HtGUvsFsFnpGY4fvMjCiJ72JaIBNynI03arfJGGei0wDU2V6Om5zW2bsAOy5L2+MJFTCaXoDaymnWCyW/P5NnnE2e9WTg6ePj8eFdKNvbCePJk5h0xzgXm0nrkYq232vqBzkNY4xyP8rpE04VB6OPL2bsCrFXmdjJqRPLa1lQtBmrvWuYc4yXzuWMelf7kKLwITzzIbzyITjbuYr6kKr0IXXuQ+rGh6D10pQFEq0DKuMskLPylIH3eRHiChriiirE8TzEoVzwMfMqpl6F3LM6JO9KCT6kz6jL37V4zmryzQ6DHpeZyEkTPNHYNWJGsmw1kd0/UuEYUacghXdosj2RY+cndGbe9fINp0jAqX7WIueXk4I/X/AOfHFdxs57+7fdEyVHorbWzprAZAeiDcZP5NkMu16Tv/RrQv31uDVq6+EShUdLwE6DXBYzbn7zufzp/u8nhVDREtn39jiLlhLyhjxhyLBXW2HwerCYutj3p3LwdLSjJsQeMAUxL5N50S7/eIpT5G6n5SRHhRMVZMQCOhx3RYqt2Wx7/C3sM+fzGCU3a5f9bIkeWtftQW70TPTmC3kXO6MWcRz0IsH0unbXx4Llzm+jP26s7N0acmPxnDw+0AzXQ0Pdkbe1v/KHZOdzyqNvKVuNKcpkRTP/Y1GPFjkFF6pUCMri71M9zjhdu8VLk5iTD3pZTdMj99iC6tRfHzWtP23Gyxa4s48PwaPNyxLytaVdmaNtuMYCguW8hSzYVNVZzI9mbQlQnhn/h4D5XZCyrsqhioR7HG9LkAXIpm4VyEhAi3p3awnWE+rISWkrbfxTqAe6gwI0g6oBfibd5ySEFQf1yrM6QGqbTuWgLnq2pnkCY1UFjVNFvQtSxWR5SzvYUEmeVwrKG4SL/jFetSADKdiqlC2097RTK5kqoHWVOL17FUWCt1EbmwzQdboBHTSKuu6gkY1qUDfej3UtN1ZbQuBV0+BK8d0t2iZDZlNpzC/tX4U1cqjOpKtaVis8ErxStEhDPbnuXHqH1pyLSq44rn/XjE/CD3JcJajXrp9Z1tXYm2jvcRLamYN6F6RYC37Xcb0nnAvCdzjX/UufpZQT70ry5N4goEW9H6zoxAlvlrSS0/vvNunnOL5//s1y/ab9OY7v34qUqoavyelr80Ha/YKfZzOTUetuJoslrcZP76Rh3/dvZJAjfnY7Ny4P1nSf+5XezAvZTPaIuwuiX5WeZ3PQOAO3HrP593Ir84dd9FensdX9juwmfXD7JY8970lUusfCCwybZ0Qfcc+TbJQcOIrjJvWX/wA9tE8A" COMMENTSTYPE="849cf988-79fe-418a-a40d-01fe3afcab2c" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="Colouring Tasks" ID="13" ICONINDEX="-1" COMMENTS="Tasks can be colour coded by selecting a colour from the 'Colour' field (or via the 'Edit' menu or the context menu for the task tree).
+
+Alternatively tasks can be coloured by Priority or Category via the Preferences.
+
+Note: if colouring by Category or Priority, the Colour field will be hidden." POS="5" LASTMOD="39739.92440972" LASTMODSTRING="18/10/2008 10:11 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" COLOR="2124031" WEBCOLOR="#FF6820" TEXTCOLOR="2124031" TEXTWEBCOLOR="#FF6820" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="Categorizing Tasks" ID="14" ICONINDEX="-1" COMMENTS="To add an category to the selected task simply type an appropriate category into the Category droplist. If the category is new it will be automatically added to the droplist.
+
+Note: If you accidently misspell the category, simply drop down the list, highlight the misspelt item and hit Ctrl+Delete to remove it.
+
+Default categories (that you want to appear in all tasklists) can be set up in the Preferences.
+
+Note: You can assign multiple categories to a task by ticking more than one checkbox in the droplist.
+
+Note: This sample tasklist contains a number of example categories for you to experiment with.
+
+Note: The droplists with checkboxes are closed by clicking the arrow button or by hitting Return." POS="6" LASTMOD="39741.79986111" LASTMODSTRING="20/10/2008 7:11 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="Likewise for the task's Status, Allocated to/by and Version fields" ID="16" ICONINDEX="-1" COMMENTS="Note: as with the Category field, you can assign more than one person to a task via the 'Allocate To' field.
+
+Status, Allocated By and Version, however, can only have a single assignment.
+
+Note: This sample tasklist contains a number of example statuses and names for you to experiment with." POS="7" LASTMOD="39739.92072917" LASTMODSTRING="18/10/2008 10:05 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="Associated Files with Tasks" ID="17" ICONINDEX="-1" COMMENTS="The File Link field can be used for linking to:
+
+1. Local files or folders
+2. Network files or folders
+3. Internet addresses (www.)
+4. Email addresses (mailto://)
+5. Microsoft Outlook folders.
+6. Other tasks (tdl://)
+
+If you find you need to associate more than one file with a task then this comments field can be used to reference an unlimited number of links using standard web page style links.
+
+eg. http://www.abstractspoon.com
+eg. www.abstractspoon.com
+eg. file://C:/somefolder/somefile.txt
+eg. mailto://abstractspoon2@optusnet.com.au
+eg. tdl://15 (where 15 is the ID of the task)
+
+Note: If the filename has spaces in it then simple surround the full file name in &lt;&gt;
+
+eg. &lt;file://C:/some folder/some file.txt&gt;
+
+To insert file links in the comments field you can:
+
+1. Type them
+2. Browse to them via the context (right-click) menu
+3. Drag'n'drop them from Windows Explorer
+
+To visit any link in the comments field just hold down the Ctrl key and click the link." POS="8" LASTMOD="39739.91299769" LASTMODSTRING="18/10/2008 9:54 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="Navigating the Tasklist" ID="24" ICONINDEX="-1" COMMENTS="ToDoList can be navigated equally easily using the keyboard or the mouse and uses standard Windows keyboard and mouse actions for navigating.
+
+In addition to this, ToDoList keeps track of your navigation history so that you can easily track backwards and forwards in a similar way to browsing the web.
+
+ToDoList also supports multiple selection of tasks for editing, moving, deleting, exporting and printing.
+
+If you select multiple items (using the Shift and/or Ctrl keys) and then modify a task attribute, tht modification is applied to all the selected tasks as if you had edited them individually.
+
+There ia unlimited undo and redo of changes until you close the tasklist." POS="9" LASTMOD="39739.91916667" LASTMODSTRING="18/10/2008 10:03 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="Filtering Tasks" ID="18" ICONINDEX="-1" COMMENTS="Once you have been working for a while and have marked a number of tasks as completed you may wish to filter out these tasks so that you can concentrate on your remaining tasks.
+
+If so, simply select 'B) Incomplete Tasks' from the 'Show' droplist on the filter bar above the task tree and the completed tasks will be removed from view.
+
+Note: the tasks are simply hidden and will re-appear once you reset the filter to 'A) All Tasks'.
+
+You will also a number of other filters in the list which you can experiment with.
+
+These filters can also be combined with other options that you will see on the filter bar.
+
+Note: The filter bar can be hidden and shown via the View menu. Hiding the filter bar does not reset the filter." POS="10" LASTMOD="39739.91314815" LASTMODSTRING="18/10/2008 9:54 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="Importing Tasks" ID="19" ICONINDEX="-1" COMMENTS="ToDoList is able to import tasks from a number of other free and paid-for task managment applications including:
+
+1. Microsoft Outlook - http://www.microsoft.com/outlook/
+2. GanttProject - http://ganttproject.biz/
+3. Freemind - http://freemind.sourceforge.net/
+4. My Life Organized - http://www.mylifeorganized.net/
+
+You can also import tasks from a simple list of tasks where each task is on a separate line (Outline).
+
+Importing is accessible via the Tools menu." POS="11" LASTMOD="39739.91320602" LASTMODSTRING="18/10/2008 9:55 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="Exporting Tasks" ID="20" ICONINDEX="-1" COMMENTS="ToDoList can export tasklists to the same applications from which it can import tasks (tdl://19) as well as a few others, including:
+
+1. Web page (html)
+1. Spreadsheet (csv)
+2. iCalendar (used by Google calendars).
+
+Exporting is accessible via the Tools menu." POS="12" LASTMOD="39739.91331019" LASTMODSTRING="18/10/2008 9:55 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="Sharing Tasklists" ID="21" ICONINDEX="-1" COMMENTS="If you want to collaborate on a tasklist with someone else (eg. a co-worker) then this can can be easily and safely achieved by using the built-in 'Source Control' functionality.
+
+This 'Controls' access to the 'Source' (the tasklist) by only allowing one person to edit it at any given time. Whilst this might seem restrictive, ToDoList contains a variety of simple options to make it an efficient way to share a tasklist between up to 10 people (this is the largest team currently working in this way).
+
+Note: if you answered 'yes' to wanting to share your tasklists during the Setup phase then these options will already be configured but read on if you would like more insight into how it works.
+
+The key to working efficiently with team members to to ensure that no team member keeps the tasklist locked (called 'Checked-Out' in ToDoList) for longer than is absolutely necessary. To prevent this happening ToDoList has the following preferences:
+
+1. Unlock (called 'Check-In' in ToDoList) tasklists when the application and/or the tasklist is closed
+2. Check-in tasklists if there has been no editing activity for some specified period of time." POS="13" LASTMOD="39759.67053241" LASTMODSTRING="7/11/2008 4:05 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<TASK TITLE="Getting Help" ID="23" ICONINDEX="-1" COMMENTS="There are a number of resources that are available to help you get the most out of ToDoList:
+
+1. Tools &gt; Preferences.
+
+ToDoList provides a wealth of user options for configuring and controlling its behaviour. In my experience a vast number of requests are satisfied by directing people to the Preferences.
+
+2. Some functional documentation -  http://abstractspoon.pbworks.com/OnlineDocumentation. 
+
+This is is in the process of being updated so please be patient.
+
+3. The AbstractSpoon Wiki - http://abstractspoon.pbwiki.com. 
+
+This provides hints and tips, access to 3rd party accessories and translations of ToDoList.
+
+4. CodeProject Forum - http://www.codeproject.com/KB/applications/todolist2.aspx.
+
+This is where ToDoList was originally released and still provides the most useful place to ask questions and get answers. You are required to join to be able to post questions but it is well worth it.
+
+5. Me (Dan) - mailto://abstractspoon2@optusnet.com.au.
+
+Please treat this as a last resort because 9 times out of 10 the answer can be found out using the resources in 1-4." POS="14" LASTMOD="40076.71482639" LASTMODSTRING="20/09/2009 5:09 PM" PRIORITY="5" RISK="0" PERCENTDONE="0" COST="0.00000000" CALCCOST="0.00000000" STARTDATE="39739.00000000" STARTDATESTRING="18/10/2008" CREATIONDATE="39739.00000000" CREATIONDATESTRING="18/10/2008" COMMENTSTYPE="PLAIN_TEXT" PRIORITYCOLOR="15732480" PRIORITYWEBCOLOR="#000FF0"/>
+<CATEGORY CATEGORY0="Home" CATEGORY1="Work" CATEGORY2="Travel" CATEGORY3="Groceries"/>
+<STATUS STATUS0="Cancelled" STATUS1="Awaiting Confirmation" STATUS2="Delayed" STATUS3="Approved"/>
+<PERSON PERSON0="Bob" PERSON1="Jane" PERSON2="Pete" PERSON3="Mary"/>
+<ALLOCATEDBY ALLOCATEDBY0="Frank" ALLOCATEDBY1="Margaret"/>
+</TODOLIST>
