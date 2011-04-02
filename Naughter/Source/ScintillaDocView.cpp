@@ -86,8 +86,10 @@ History: PJN / 12-08-2004 1. Made all the remaining non virtual functions relate
                           which would result in failures in the logic for multibyte encoded characters. This made it
                           impossible to replace multibyte character sequences in find / replace operations. Thanks to
                           Alexei Letov for reporting this bug.
+         PJN / 01-04-2011 1. Updated CScintillaFindReplaceDlg::Create to use AfxFindResourceHandle instead of 
+                          AfxGetResourceHandle. Thanks to Niﬂl Markus for reporting this nice addition.
 
-Copyright (c) 2004 - 2010 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 2004 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -162,12 +164,12 @@ CScintillaFindReplaceDlg::CScintillaFindReplaceDlg(): m_bRegularExpression(FALSE
 BOOL CScintillaFindReplaceDlg::Create(BOOL bFindDialogOnly,	LPCTSTR lpszFindWhat, LPCTSTR lpszReplaceWith, DWORD dwFlags, CWnd* pParentWnd)
 {
   //Tell Windows to use our dialog instead of the standard one
-  m_fr.hInstance = AfxGetResourceHandle();
   m_fr.Flags |= FR_ENABLETEMPLATE;
   if (bFindDialogOnly)
     m_fr.lpTemplateName = MAKEINTRESOURCE(IDD_SCINTILLA_FINDDLGORD);
   else
     m_fr.lpTemplateName = MAKEINTRESOURCE(IDD_SCINTILLA_REPLACEDLGORD);
+  m_fr.hInstance = AfxFindResourceHandle(m_fr.lpTemplateName, RT_DIALOG);
 
   //Let the base class do its thing
   return CFindReplaceDialog::Create(bFindDialogOnly,	lpszFindWhat, lpszReplaceWith, dwFlags, pParentWnd);
