@@ -442,6 +442,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\CMapi.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CMapi.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\glob-md5.h"
 				>
 			</File>
@@ -520,6 +528,11 @@
 			>
 			<File
 				RelativePath=".\Help\appsettings.htm"
+				DeploymentContent="true"
+				>
+			</File>
+			<File
+				RelativePath=".\Help\CMapi.htm"
 				DeploymentContent="true"
 				>
 			</File>

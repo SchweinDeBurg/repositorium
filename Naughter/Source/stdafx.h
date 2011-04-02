@@ -70,16 +70,16 @@ __declspec(selectany) int _forceMFCManifestCUR;
 //////////////////////////////////////////////////////////////////////////////////////////////
 // PSDK headers
 
-#include <wininet.h>
+#include <wininet.h>       // Microsoft Windows Internet Extensions
 #include <windns.h>        // DNS definitions and DNS API
 #include <wincrypt.h>      // cryptographic API prototypes and definitions
-#include <lm.h>
-#include <shlobj.h>
-#include <winsock2.h>
-#include <mswsock.h>
-#include <shlobj.h>
-#include <uxtheme.h>
-#include <tmschema.h>
+#include <lm.h>            // LAN Manager
+#include <shlobj.h>        // Windows shell COM interfaces
+#include <winsock2.h>      // Windows Sockets version 2
+#include <mswsock.h>       // Microsoft-specific extensions to the Windows Sockets API
+#include <uxtheme.h>       // theming API header file
+#include <tmschema.h>      // Theme Manager schema (properties, parts, etc)
+#include <MAPI.h>          // Messaging Applications Programming Interface
 
 #if !defined(W3MFC_NO_ISAPI_SUPPORT)
 #include <HttpExt.h>
