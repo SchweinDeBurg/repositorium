@@ -165,7 +165,7 @@ public:
 	CPJNSMTPAddress& operator=(const CPJNSMTPAddress& r);
 
 //Methods
-  CString GetRegularFormat() const;
+  CString GetRegularFormat(BOOL bEncode, const CString& sCharset) const;
 
 //Data members
 	CString m_sFriendlyName; //Would set it to contain something like "PJ Naughter"
@@ -370,7 +370,7 @@ public:
                                   //message was sent
   CStringArray         m_MessageDispositionEmailAddresses; //Set this value to an email address if you want to request Message Disposition
                                                            //notifications aka read receipts
-                                  
+  BOOL                 m_bAddressHeaderEncoding;           //Should Address headers be encoded
                                   
 
 protected:

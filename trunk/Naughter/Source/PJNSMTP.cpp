@@ -508,6 +508,8 @@ History: PJN / 15-06-1998 1. Fixed the case where a single dot occurs on its own
          PJN / 13-02-2011 1. Remove the IP binding address parameter from the Connect method as there was already support for binding via the Set/GetBoundAddress
                           methods.
                           2. Set/GetBoundAddress have been renamed Set/GetBindAddress for consistency with the sockets class
+         PJN / 01-04-2011 1. Reintroduced the concept of Address Header encoding. By default this setting is off, but can be enabled via a new
+                          CPJNSMPTMessage::m_bAddressHeaderEncoding boolean value. Thanks to Bostjan Erzen for reporting this issue.
                           
 Copyright (c) 1998 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -849,7 +851,7 @@ CPJNSMTPAddress& CPJNSMTPAddress::operator=(const CPJNSMTPAddress& r)
 	return *this;
 }
 
-CString CPJNSMTPAddress::GetRegularFormat() const
+CString CPJNSMTPAddress::GetRegularFormat(BOOL bEncode, const CString& sCharset) const
 {
   ASSERT(m_sEmailAddress.GetLength()); //Email Address must be valid
 
@@ -859,7 +861,16 @@ CString CPJNSMTPAddress::GetRegularFormat() const
   if (m_sFriendlyName.IsEmpty())
     sAddress = m_sEmailAddress; //Just transfer the address across directly
   else
-    sAddress.Format(_T("\"%s\" <%s>"), m_sFriendlyName.operator LPCTSTR(), m_sEmailAddress.operator LPCTSTR());
+  {
+    if (bEncode)
+    {
+      CStringA sAsciiEncodedFriendly(CPJNSMTPBodyPart::HeaderEncode(m_sFriendlyName, sCharset));
+      CString sEncodedFriendly(sAsciiEncodedFriendly);
+      sAddress.Format(_T("\"%s\" <%s>"), sEncodedFriendly.operator LPCTSTR(), m_sEmailAddress.operator LPCTSTR());
+    }
+    else
+      sAddress.Format(_T("\"%s\" <%s>"), m_sFriendlyName.operator LPCTSTR(), m_sEmailAddress.operator LPCTSTR());
+  }
 
   return sAddress;
 }
@@ -1586,11 +1597,12 @@ CStringA CPJNSMTPBodyPart::FoldSubjectHeader(const CString& sSubject, const CStr
 }
 
 
-CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.92")), 
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.93")), 
                                      m_bMime(FALSE), 
                                      m_Priority(NoPriority),
                                      m_DSNReturnType(HeadersOnly),
-                                     m_DSN(static_cast<DWORD>(DSN_NOT_SPECIFIED))
+                                     m_DSN(static_cast<DWORD>(DSN_NOT_SPECIFIED)),
+                                     m_bAddressHeaderEncoding(FALSE)
 {
 }
 
@@ -1601,16 +1613,17 @@ CPJNSMTPMessage::CPJNSMTPMessage(const CPJNSMTPMessage& message)
 
 CPJNSMTPMessage& CPJNSMTPMessage::operator=(const CPJNSMTPMessage& message) 
 { 
-  m_From           = message.m_From;
-  m_sSubject       = message.m_sSubject;
-  m_sXMailer       = message.m_sXMailer;
-  m_ReplyTo        = message.m_ReplyTo;
-  m_RootPart       = message.m_RootPart;
-  m_Priority       = message.m_Priority;
-  m_DSNReturnType  = message.m_DSNReturnType;
-  m_DSN            = message.m_DSN;
-  m_sENVID         = message.m_sENVID;
-  m_bMime          = message.m_bMime;
+  m_From                   = message.m_From;
+  m_sSubject               = message.m_sSubject;
+  m_sXMailer               = message.m_sXMailer;
+  m_ReplyTo                = message.m_ReplyTo;
+  m_RootPart               = message.m_RootPart;
+  m_Priority               = message.m_Priority;
+  m_DSNReturnType          = message.m_DSNReturnType;
+  m_DSN                    = message.m_DSN;
+  m_sENVID                 = message.m_sENVID;
+  m_bMime                  = message.m_bMime;
+  m_bAddressHeaderEncoding = message.m_bAddressHeaderEncoding;
 
   m_To.Copy(message.m_To);
   m_CC.Copy(message.m_CC);
@@ -1736,7 +1749,7 @@ CStringA CPJNSMTPMessage::GetHeader()
 
   //Add the From field. Note we do not support encoding mail address headers for compatibility purposes
   CStringA sFrom("From: ");
-  sFrom += m_From.GetRegularFormat();
+  sFrom += m_From.GetRegularFormat(m_bAddressHeaderEncoding, sCharset);
   CStringA sHeader(sFrom);
   sHeader += _T("\r\n");
   
@@ -1745,7 +1758,7 @@ CStringA CPJNSMTPMessage::GetHeader()
   INT_PTR nTo = m_To.GetSize();
   for (INT_PTR i=0; i<nTo; i++)
   {
-    CString sLine(m_To.ElementAt(i).GetRegularFormat());
+    CString sLine(m_To.ElementAt(i).GetRegularFormat(m_bAddressHeaderEncoding, sCharset));
     if (i < (nTo - 1))
  		  sLine += _T(",");
     sTo += sLine;
@@ -1760,7 +1773,7 @@ CStringA CPJNSMTPMessage::GetHeader()
   INT_PTR nCC = m_CC.GetSize();
   for (INT_PTR i=0; i<nCC; i++)
   {
-    CString sLine(m_CC.ElementAt(i).GetRegularFormat());
+    CString sLine(m_CC.ElementAt(i).GetRegularFormat(m_bAddressHeaderEncoding, sCharset));
     if (i < (nCC - 1))
  		  sLine += _T(",");
     sCc += sLine;
@@ -1835,7 +1848,7 @@ CStringA CPJNSMTPMessage::GetHeader()
 	if (m_ReplyTo.m_sEmailAddress.GetLength())
 	{
     CStringA sReplyTo("Reply-To: ");
-    sReplyTo += m_ReplyTo.GetRegularFormat();
+    sReplyTo += m_ReplyTo.GetRegularFormat(m_bAddressHeaderEncoding, sCharset);
     sHeader += sReplyTo;
     sHeader += "\r\n";
 	}

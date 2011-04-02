@@ -17,7 +17,7 @@
 
 <h2 align="left">
 <img src="PJNSMTP.gif" width="39" height="38" alt="PJNSMTP.gif (295 bytes)" /><strong>CPJNSMTPConnection 
-v2.92</strong></h2>
+v2.93</strong></h2>
 
 <p>Welcome to <strong>CPJNSMTPConnection</strong>, a collection of MFC classes to
 support the SMTP protocol. SMTP for those not familiar with all the internet protocols is
@@ -158,6 +158,7 @@ Protocol) which obsoletes the original SMTP RFC, you should read
 	supports STARTTLS, the connection can be upgraded to a encrypted connection 
 	mid stream. Often SMTP servers only offer STARTTLS via port 25 instead of 
 	SSL / TLS on a different port.</li>
+	<li>Optionally supports Address header encoding.</li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1371,6 +1372,13 @@ issue.</li>
 	<li>Set/GetBoundAddress have been renamed Set/GetBindAddress for consistency 
 	with the sockets class </li>
 </ul>
+<p><strong>V2.93 (1 April 2011</strong><b>)</b></p>
+<ul>
+	<li>Reintroduced the concept of Address Header encoding. By default 
+	this setting is off, but can be enabled via a new CPJNSMPTMessage::m_bAddressHeaderEncoding 
+	boolean value. Thanks to Bostjan Erzen for reporting this issue.&nbsp; </li>
+	<li>The sample app is now linked against the latest OpenSSL v1.0.0d dlls.</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1386,7 +1394,7 @@ issue.</li>
 <p>PJ Naughter<br />
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br />
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br />
-13 February 2011</p>
+1 April 2011</p>
 
 </body>
 
