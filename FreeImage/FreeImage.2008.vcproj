@@ -437,6 +437,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\ConversionRGB16.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\ConversionRGBF.cpp"
 					>
 				</File>
