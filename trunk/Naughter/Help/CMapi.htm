@@ -1,0 +1,610 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>CMapi v1.23</title>
+<link rel="stylesheet" type="text/css" href="./naughter.css">
+</head>
+
+<body>
+
+<h2 align="left"><strong><img border="0" src="cmapi.gif" width="39" height="40"> 
+CMapi v1.23</strong></h2>
+<p>Welcome to <strong>CMapi</strong>, 3 simple classes to encapsulate sending and 
+receiving mail using Simple MAPI.</p>
+<p>Simple MAPI is a set of functions exported by MAPI32.dll which allows you to 
+send and receive mail in a transport independent way. It is an optional part of 
+all Win32 operating systems since Windows 95 (excluding WinCE). MAPI is intended 
+more for the corporate environment when compared with the Internet mail standard 
+SMTP e.g. products such as MS Exchange Server use MAPI extensively. Transport providers 
+are available for a number of messaging transports including Exchange Server, SMTP, 
+Fax etc. To be able to specify different transports, MAPI provides 
+the concept of profiles which are setup using the Mail control panel applet.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<table>
+	<tr>
+		<td><a href="#Features">Features</a></td>
+	</tr>
+	<tr>
+		<td><a href="#Copyright">Copyright</a></td>
+	</tr>
+	<tr>
+		<td><a href="#Usage">Usage</a></td>
+	</tr>
+	<tr>
+		<td><a href="#History">History</a></td>
+	</tr>
+	<tr>
+		<td><a href="#APIReference">API Reference</a></td>
+	</tr>
+	<tr>
+		<td><a href="#Enhancements">Planned Enhancements</a></td>
+	</tr>
+	<tr>
+		<td><a href="#Contact">Contacting the Author</a></td>
+	</tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Features"></a>Features </h2>
+<ul>
+	<li>Simple and clean C++ interface.</li>
+	<li>All the code is UNICODE compliant and build configurations are provided 
+	for this. Even though Simple MAPI only exports an ASCII versions of it&#39;s functions, 
+	the class internally performs the necessary conversions. Please note that 
+	since the API is ASCII based, you will still have problems if you use 
+	UNICODE characters which cannot be represented in the ASCII code page.</li>
+	<li>The code can be used in a console application or without bringing up any 
+	interactive dialogs if so desired.</li>
+	<li>The code gracefully handles the case where MAPI is not installed on client 
+	machines. Internally the class loads the MAPI DLL itself and uses GetProcAddress 
+	API calls.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><b><a name="Copyright"></a>Copyright</b></h2>
+<ul>
+	<li>You are allowed to include the source code in any product (commercial, 
+	shareware, freeware or otherwise) when your product is released in binary 
+	form. </li>
+	<li>You are allowed to modify the source code in any way you want except you 
+	cannot modify the copyright details at the top of each module. </li>
+	<li>If you want to distribute source code with your application, then you 
+	are only allowed to distribute versions released by the author. This is to 
+	maintain a single distribution point for the source code. </li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Usage"></a>Usage </h2>
+<ul>
+	<li>The classes are designed for VC 2005 or later. They will not compile on 
+	earlier releases of VC.</li>
+	<li>To use the class in your code simply include CMapi.cpp in your project and 
+	#include CMapi.h in which ever of your modules needs to make calls to the classes.</li>
+	<li>Your code will need to include MFC either statically or dynamically.</li>
+	<li>You may want to add MAPI.h to your pre compiled header to improve compilation 
+	speed. A build message will inform you of this.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="History"></a>History</h2>
+<p><strong>V1.0 (14 May 1999)</strong> </p>
+<ul>
+	<li>Initial public release.</li>
+</ul>
+<p><strong>V1.01 (5 December 1999)</strong> </p>
+<ul>
+	<li>Fixed potential problem where CMapi is used in a console app which was giving 
+	an ASSERT</li>
+	<li>Fixed an assert which can occur if you dismiss the login dialog when doing 
+	an interactive MAPI logon</li>
+</ul>
+<p><strong>V1.02 (28 March 2000)</strong> </p>
+<ul>
+	<li>Provision of a sample app which implements a mini mail sender.</li>
+	<li>Added a CMapiMessage::AddMultipleRecipients method similar to my SMTP class.</li>
+</ul>
+<p><strong>V1.03 (2 April 2000)</strong> </p>
+<ul>
+	<li>Password field in the configuration dialog now uses ES_PASSWORD edit control 
+	style.</li>
+	<li>Password value used for MAPI logon is now stored in the registry encrypted 
+	instead of as plain text.</li>
+</ul>
+<p><strong>V1.04 (21 May 2000)</strong> </p>
+<ul>
+	<li>Added an optional parameter to CMapi::SendMessage to allow you to decide 
+	whether or not addresses should be resolved.</li>
+</ul>
+<p><strong>V1.05 (22 June 2000)</strong> </p>
+<ul>
+	<li>Fixed a bug in CMapiMessage::AddMultipleRecipients where BCC recipients 
+	were not being added correctly.</li>
+</ul>
+<p><strong>V1.06 (18 July 2000)</strong> </p>
+<ul>
+	<li>Fixed check for MAPI being installed when client apps create an incorrect 
+	&quot;MAPI&quot; entry in win.ini or the registry, Thanks to Chris Raethke for spotting 
+	this.</li>
+	<li>A &quot;SharedLogon&quot; method has been provided which tries to acquire a shared 
+	MAPI session</li>
+	<li>SendMessage method has been extended to allow the message to be interactively 
+	edited.</li>
+</ul>
+<p><strong>2 October 2002</strong> </p>
+<ul>
+	<li>Updated the caption in the configuration dialog in the sample app when asking 
+	for configuration settings</li>
+	<li>Updated the sample app to not ask for configuration if you are trying to 
+	send using a shared MAPI session.</li>
+</ul>
+<p><strong>V1.07 (25 January 2003)</strong></p>
+<ul>
+	<li>Updated copyright messages.</li>
+	<li>Made CMapiSession destructor virtual.</li>
+	<li>Made a new CMapiRecipient class. This allows finer control over setting 
+	the display name and the address individually. Thanks to the people on the discussion 
+	board on codeproject.com for reporting this problem. The problem arose when 
+	Outlook Express displays its security dialog about an unattended mapi mail being 
+	sent. In this dialog the &quot;To&quot; fields were all empty. It seems that OE only displays 
+	the addresses in this dialog. Perhaps because so many viruses abound the address 
+	is more relevant that the actual friendly name.</li>
+</ul>
+<p><strong>V1.08 (5 July 2003)</strong></p>
+<ul>
+	<li>Fixed a bug in the ordering of the string parameters to the CMapiRecipient 
+	constructor. Thanks to &quot;Louchkov&quot; for spotting this problem.</li>
+</ul>
+<p><strong>V1.09 (22 December 2003)</strong></p>
+<ul>
+	<li>Added support for reading mail thro MAPI. Thanks to Marcel Scherpenisse 
+	for this addition.</li>
+</ul>
+<p><strong>V1.10 (5 February 2004)</strong></p>
+<ul>
+	<li>Added a pragma message to inform uses about including afxtempl.h in the 
+	precompiled header to avoid compiler errors.</li>
+</ul>
+<p><strong>22 February 2004</strong></p>
+<ul>
+	<li>Updated the sample app to ensure the password was passed as a parameter 
+	when calling CMapi::Logon. Thanks to &quot;Alan&quot; for pointing this out.</li>
+</ul>
+<p><strong>V1.11 (5 May 2004)</strong></p>
+<ul>
+	<li>Added support for deleting emails via MAPI. Thanks to Marcel Scherpenisse 
+	for this addition.</li>
+	<li>Also added the helper function CMapiMessage::AddMultipleAttachments. Again 
+	thanks to Marcel Scherpenisse for this addition.</li>
+</ul>
+<p><strong>V1.12 (5 June 2004)</strong></p>
+<ul>
+	<li>Added a parameter to the Logon methods to allow emails to be download (i.e. 
+	MAPI_FORCE_DOWNLOAD). Thanks to &quot;caowen&quot; for this update.</li>
+</ul>
+<p><strong>V1.13 (30 April 2005)</strong> </p>
+<ul>
+	<li>Fix for a bug where the MapiMessage::flFlags value was not being set when 
+	a message was being sent. Failure to set the flags value meant that CMapi did 
+	not support the &quot;MAPI_RECEIPT_REQEUSTED&quot; flag. Thanks to Marcel Scherpenisse 
+	for reporting this bug.</li>
+</ul>
+<p><strong>V1.14 (13 August 2005)</strong> </p>
+<ul>
+	<li>Fixed a number of bugs related to the use of MAPI_FORCE_DOWNLOAD setting. 
+	Thanks to Albert van Peppen for this.</li>
+	<li>Optimized AddMultipleReceipients and AddMulipleAttachments function somewhat 
+	by using new CString::Trim method when available as well as avoiding addresses 
+	which are empty. Again thanks to Albert van Peppen for this.</li>
+	<li>MAPI_FORCE_DOWNLOAD is now set if Logon method has to attempt a shared logon. 
+	Again thanks to Albert van Peppen for this. </li>
+	<li>Fixed a bug in SharedLogon where the MAPI_FORCE_DOWNLOAD flag was not being 
+	passed. Again thanks to Albert van Peppen for this. </li>
+	<li>Replaced calls to ZeroMemory with memset.</li>
+	<li>Class now supports sending HTML emails (well kindof!). To achieve this a 
+	new parameter &quot;bSendAsHTML&quot; is included in the Send method. Please note that 
+	the HTML is sent as an additional attachment before all the other attachments 
+	and its disposition type is still marked as an attachment (at least using the 
+	latest version of Outlook on Windows XP). In addition some mail clients (such 
+	as Outlook Express) will still interpret this as an attachment as opposed to 
+	inline. If you are not happy with this then you will need to look into using 
+	Extended MAPI which this class does not provide for (and will never) or better 
+	yet, you should use SMTP directly, since HTML email is really part of the SMTP 
+	suite of protocols. For example you could use the author&#39;s own CPJNSMTPConnection 
+	class. Again thanks to to Albert van Peppen for this.</li>
+	<li>Sample app now allows multiple attachments to be specified as edit box is 
+	now not read only.</li>
+	<li>Fixed a duplicate mneumonics issue in the main dialog in the sample app</li>
+	<li>File dialog which appears in the sample app when you add an attachment not 
+	includes a standard file name filter.</li>
+	<li>Fixed a number of compiler warnings when the code is compiled using the 
+	new Force conformance in for loop setting in Visual Studio 2003.</li>
+	<li>Fixed a number of compiler warnings when the code is compiled using the 
+	Detect 64-bit portability issues in Visual Studio 2003. Please note that this 
+	means the codes requires a recentish copy of the Platform SDK to be installed 
+	if you are compiling the code on Visual C++ 6.0</li>
+</ul>
+<p><strong>V1.15 (14 August 2005)</strong> </p>
+<ul>
+	<li>Fixed problems when the code is compiled for UNICODE. The issue was that 
+	the Send method was using the various T2A macros which uses a stack based string. 
+	This was causing issues because the recipients and attachments array for the 
+	MAPI message was being allocated in loops which was using scoping. This scoping 
+	was causing the stack based strings to be deallocated before the &quot;MAPISendMail&quot; 
+	method was called. This issue has now been fixed by the introduction of new 
+	generic heap based macros in PJNConv.h which allocates the converted string 
+	using the C++ new operator. To ensure orderly cleanup of this heap memory, the 
+	MapiMessage structure is now allocated using a hidden C++ class &quot;CMapiMessageCleanup&quot; 
+	which cleans up this memory automatically in its destructor. These macros are 
+	quite generic and can be used independent of the CMapi class in places where 
+	your code has the handle this exact same issue. </li>
+</ul>
+<p><strong>V1.16 (19 August 2005)</strong> </p>
+<ul>
+	<li>Fixed a bug in the calculation of the flags parameter in the call to acquire 
+	a shared logon in the Logon method. Thanks to Albert van Peppen for reporting 
+	this problem.</li>
+</ul>
+<p><strong>V1.17 (23 July 2006)</strong> </p>
+<ul>
+	<li>Updated copyright details.</li>
+	<li>Optimized CMapiMessage constructor code.</li>
+	<li>Optimized CMapiSession constructor code.</li>
+	<li>Code now uses newer C++ style casts instead of C style casts.</li>
+	<li>Updated documentation to use the same style as the web site.</li>
+	<li>Fixed a bug freeing up strings in the sample app's 
+	CEnumMessagesDlg::OnDestroy method</li>
+	<li>Updated the code to clean compile on VC 2005</li>
+	<li>Sample app now allows you to specify no To address if the interactive 
+	setting is specified</li>
+	<li>Removed an unnecessary assert from CMapiMessage::AddMultipleRecipients 
+	and CMapiMessage::AddMultipleAttachements.</li>
+	<li>Updated some assert logic in CMapiSession::Send to not assert on the 
+	recipient count if we are sending a message &quot;Interactive&quot;. Thanks to Sergiu 
+	Scobici for reporting this issue.</li>
+	<li>Refactored some code in CMapiSession::Send into 
+	CMapiSession::SetupRecipients. Again thanks to Sergiu Scobici for reporting 
+	this </li>
+</ul>
+<p><strong>V1.18 (26 July 2006)</strong> </p>
+<ul>
+	<li>Minor update to Logoff to avoid 2 asserts which occur when MAPI is not 
+	installed on client machines. Thanks to Sergiu Scobici for reporting this</li>
+</ul>
+<p><strong>V1.19 (22 December 2006)</strong> </p>
+<ul>
+	<li>Further updates to fix compile issues for the sample app on VC 2005</li>
+	<li>Subject and body and email messages are now allocated using the H_T2A 
+	macro. This will avoid problems with large CString values for these fields</li>
+	<li>Fixed a bug in CMapiSession::Logoff where the return value would always 
+	be TRUE</li>
+	<li>A empty profile name is now allowed in the sample app.</li>
+	<li>Configuration dialog is now not shown unnecessarily when you send an 
+	email in the sample app.</li>
+	<li>Logon is now only attempted in the sample app if the Interactive flag is 
+	not set</li>
+	<li>Addition of a CMAPI_EXT_CLASS preprocessor macro to allow the classes to 
+	be more easily added to an extension dll</li>
+</ul>
+<p><strong>V1.20 (1 January 2007)</strong> </p>
+<ul>
+	<li>Updated copyright details.</li>
+	<li>Fixed incorrect usage of preprocessor macro in 
+	CMapiMessage::AddMultipleRecipients method</li>
+</ul>
+<p><strong>V1.21 (16 September 2008)</strong> </p>
+<ul>
+	<li>Updated copyright details.</li>
+	<li>Code now compiles cleanly using Code Analysis (/analyze)</li>
+	<li>Updated code to compile correctly using _ATL_CSTRING_EXPLICIT_CONSTRUCTORS 
+	define</li>
+	<li>Updated sample app to clean compile on VC 2008</li>
+	<li>The code has now been updated to support VC 2005 or later only. </li>
+	<li>Removed VC 6 style AppWizard comments from the code.</li>
+	<li>Renamed CMapiMessage::AddMultipleAttachements to 
+	CMapiMessage::ParseMultipleRecipients and reworked its parameters to be in 
+	line with the author's SMTP class.</li>
+	<li>Reworked the way the code handles allocations for the ASCII strings 
+	required by simple MAPI. Now these are allocated in the message itself 
+	rather than using raw heap allocations via the old H_T2A macro</li>
+	<li>AddMultipleRecipients has been renamed to ParseMultipleRecipients in 
+	line with the author's SMTP class</li>
+	<li>The CMapiRecipient constructor which takes one string parameter now 
+	supports breaking the address into email address and friendly name parts</li>
+	<li>AddMultipleAttachments now returns the number of attachments added</li>
+</ul>
+<p><strong>V1.22 (6 November 2008)</strong> </p>
+<ul>
+	<li>Updated the zip file to remove the now defunct PJNConv.h header file</li>
+	<li>The sample app now uses DPAPI to encrypt the profile &amp; password 
+	configuration settings</li>
+</ul>
+<p><strong>V1.23 (1 April 2011)</strong> </p>
+<ul>
+	<li>Updated copyright details. </li>
+	<li>Replaced use of CT2A with CStringA </li>
+	<li>Updated sample app to clean compile on VC 2010 </li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="APIReference"></a>API Reference</h2>
+<p>The API consists of the following 2 classes and their methods and variables</p>
+<p>&nbsp;</p>
+<p><strong>CMapiMessage</strong></p>
+<p align="left"><strong><a href="#m_To">CMapiMessage</a></strong><strong><a href="#m_To">::m_To</a><br>
+<a href="#m_CC">CMapiMessage::m_CC</a><br>
+<a href="#m_BCC">CMapiMessage::m_BCC</a><br>
+<a href="#m_sSubject">CMapiMessage::m_sSubject</a><br>
+<a href="#m_sBody">CMapiMessage::m_sBody</a><br>
+<a href="#m_Attachments">CMapiMessage::m_Attachments</a><br>
+<a href="#m_AttachmentTitles">CMapiMessage::m_AttachmentTitles</a></strong><br>
+<b><a href="#m_From">CMapiMessage::m_From</a><br>
+<a href="#m_sDateReceived">CMapiMessage::m_sDateReceived</a><br>
+<a href="#m_sMessageType">CMapiMessage::m_sMessageType</a><br>
+<a href="#m_Flags">CMapiMessage::m_Flags</a></b></p>
+<p>&nbsp;</p>
+<p><strong>CMapiSession</strong></p>
+<p><strong><a href="#CMapiSession">CMapiSession</a></strong><strong><a href="#CMapiSession">::CMapiSession</a><br>
+<a href="#~CMapiSession">CMapiSession::~CMapiSession</a><br>
+<a href="#SharedLogon">CMapiSession::Logon</a><br>
+<a href="#SharedLogon">CMapiSession::SharedLogon</a><br>
+<a href="#LoggedOn">CMapiSession::LoggedOn</a><br>
+<a href="#Logoff">CMapiSession::Logoff</a><br>
+<a href="#Send">CMapiSession::Send</a><br>
+<a href="#Find">CMapiSession::Find</a><br>
+<a href="#Read">CMapiSession::Read</a><br>
+<a href="#Delete">CMapiSession::Delete</a><br>
+<a href="#MapiInstalled">CMapiSession::MapiInstalled</a><br>
+<a href="#GetLastError">CMapiSession::GetLastError</a></strong></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a name="m_To"></a><strong>CMapiMessage</strong><strong>::m_To</strong></p>
+<p><strong>Remarks</strong></p>
+<p>m_To is of type CArray&lt;CMapiRecipient, CMapiRecipient&amp;&gt; and contains the array 
+of recipients which the email is to be mailed to. The name of each recipient can 
+be a friendly name (the friendly name is the name which a recipient with an address 
+book entry is known as e.g. <i>&quot;Joe at Work&quot;</i> could map to using an SMTP MAPI 
+transport to send to <i>joe@somecompany.com</i>) or it can be a specific transport 
+address e.g. SMTP:joe@somecompany.com, FAX:34567 etc.</p>
+<p>&nbsp;</p>
+<p><a name="m_CC"></a><strong>CMapiMessage</strong><strong>::m_CC</strong></p>
+<p><strong>Remarks</strong></p>
+<p>m_CC is of type CArray&lt;CMapiRecipient, CMapiRecipient&amp;&gt; and contains the array 
+of recipients which the email will be Carbon Copied to.&nbsp;The way addresses 
+are specified is the same as for m_To.</p>
+<p>&nbsp;</p>
+<p><a name="m_BCC"></a><strong>CMapiMessage</strong><strong>::m_BCC</strong></p>
+<p><strong>Remarks</strong></p>
+<p>m_BCC is of type CArray&lt;CMapiRecipient, CMapiRecipient&amp;&gt; and contains the array 
+of recipients which the email will be Blind Carbon Copied to.&nbsp;The way 
+addresses are specified is the same as for m_To.</p>
+<p>&nbsp;</p>
+<p><a name="m_sSubject"></a><strong>CMapiMessage</strong><strong>::m_sSubject</strong></p>
+<p><strong>Remarks</strong></p>
+<p>m_sSubject is of type CString and is the subject line of the email.</p>
+<p>&nbsp;</p>
+<p><a name="m_sBody"></a><strong>CMapiMessage</strong><strong>::m_sBody</strong></p>
+<p><strong>Remarks</strong></p>
+<p>m_sBody is of type CString and is the body of the email.</p>
+<p>&nbsp;</p>
+<p><a name="m_Attachments"></a><strong>CMapiMessage</strong><strong>::m_Attachments</strong></p>
+<p><strong>Remarks</strong></p>
+<p>m_Attachments is of type CStringArray and is a list of filenames to be included 
+as attachments in the email.</p>
+<p>&nbsp;</p>
+<p><a name="m_AttachmentTitles"></a><strong>CMapiMessage</strong><strong>::m_AttachmentTitles</strong></p>
+<p><strong>Remarks</strong></p>
+<p>m_AttachmentTitles is of type CStringArray and contains the titles of what 
+each file attachment will be known as to recipients of this message. If you 
+leave this array empty then the title will be the same as the filename.</p>
+<p>&nbsp;</p>
+<p><a name="m_From"></a><strong>CMapiMessage</strong><strong>::m_From</strong></p>
+<p><strong>Remarks</strong></p>
+<p>The originator of this email. This is only filled in when the message is returned 
+from the Read function<i>.</i></p>
+<p>&nbsp;</p>
+<p><a name="m_sDateReceived"></a><strong>CMapiMessage</strong><strong>::m_sDateReceived</strong></p>
+<p><strong>Remarks</strong></p>
+<p>A string version of when the emailed was received. This is only filled in when 
+the message is returned from the Read function<i>.</i></p>
+<p>&nbsp;</p>
+<p><a name="m_sMessageType"></a><strong>CMapiMessage</strong><strong>::m_sMessageType</strong></p>
+<p><strong>Remarks</strong></p>
+<p>The MAPI message type. This is only filled in when the message is returned from 
+the Read function. Corresponds to the MapiMessage::lpszMessageType variable</p>
+<p>&nbsp;</p>
+<p><a name="m_Flags"></a><strong>CMapiMessage</strong><strong>::m_Flags</strong></p>
+<p><strong>Remarks</strong></p>
+<p>The MAPI flags for this message. This is only filled in when the message is returned 
+from the Read function. Corresponds to the MapiMessage::flFlags variable</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a name="CMapiSession"></a><strong>CMapiSession</strong><strong>::CMapiSession</strong></p>
+<p><strong>CMapiSession</strong><strong>();</strong></p>
+<p><strong>Remarks</strong></p>
+<p>Standard constructor for the class. This class is the main MAPI support class 
+and contains the functions to actually send the mail message.</p>
+<p>&nbsp;</p>
+<p><a name="~CMapiSession"></a><strong>CMapiSession</strong><strong>::~CMapiSession</strong></p>
+<p><strong>virtual ~CMapiSession</strong><strong>();</strong></p>
+<p><strong>Remarks</strong></p>
+<p>Standard destructor for the class. Internally this logs you out of MAPI if you&#39;re 
+logged in and unloads the MAPI dll.</p>
+<p>&nbsp;</p>
+<p><a name="Logon"></a><strong>CMapiSession</strong><strong>::Logon</strong></p>
+<p><strong>BOOL Logon(const CString&amp;</strong>
+sProfileName, <strong>const CString&amp;</strong>
+sPassword = <strong>_T(&quot;&quot;), CWnd*</strong>
+pParentWnd = <strong>NULL, BOOL</strong> 
+bForceDownload <strong>= FALSE);</strong></p>
+<p><strong>Return Value</strong></p>
+<p>TRUE if you were successfully logged in to MAPI otherwise FALSE</p>
+<p><strong>Parameters</strong></p>
+<p><em>sProfileName</em> MAPI profile name to use to logon.</p>
+<p><em>sPassword</em> Password associated with the profile (if any).</p>
+<p><em>pParentWnd</em> The parent window indicating that if a dialog box is displayed, 
+it is modal with respect to.</p>
+<p><i>bForceDownload</i> TRUE if you want messages to be downloaded before the function 
+returns.</p>
+<p><strong>Remarks</strong></p>
+<p>Logons to the MAPI messaging system creating a session with it. If you pass an 
+empty profile name then Logon will try to interactively logon by presenting the 
+normal MAPI logon dialog. Specifying NULL as the parent window as is the default 
+will use the window as returned by AfxGetMainWnd(). Please note that you must be 
+logged on to MAPI prior to sending a message. Internally the code will <i>&quot;ASSERT&quot;</i> 
+to ensure you do not forget to do this.</p>
+<p>&nbsp;</p>
+<p><a name="SharedLogon"></a><strong>CMapiSession</strong><strong>::SharedLogon</strong></p>
+<p><strong>BOOL Logon(BOOL</strong> bForceDownload
+<strong>= FALSE);</strong></p>
+<p><strong>Return Value</strong></p>
+<p>TRUE if you were successfully logged in to MAPI otherwise FALSE</p>
+<p><strong>Parameters</strong></p>
+<p><i>bForceDownload</i> TRUE if you want messages to downloaded before the function 
+returns.</p>
+<p><strong>Remarks</strong></p>
+<p>Logons to the MAPI messaging system by using a &quot;shared&quot; MAPI session. i.e. it 
+will try to use an existing mapi session and if there is none, then this function 
+will fail. For further info on &quot;shared&quot; MAPI sessions, please check the MSDN.</p>
+<p>&nbsp;</p>
+<p><a name="LoggedOn"></a><strong>CMapiSession</strong><strong>::LoggedOn</strong></p>
+<p><strong>BOOL LoggedOn() const;</strong></p>
+<p><strong>Remarks</strong></p>
+<p>Simply accessor which returns TRUE if this instance is logged on to MAPI otherwise 
+FALSE.</p>
+<p>&nbsp;</p>
+<p><a name="Logoff"></a><strong>CMapiSession</strong><strong>::Logoff</strong></p>
+<p><strong>BOOL Logon();</strong></p>
+<p><strong>Return Value</strong></p>
+<p>TRUE if you were successfully logged off from MAPI otherwise FALSE</p>
+<p><strong>Remarks</strong></p>
+<p>The corollary function to Logon. Internally this function is called in the CMapiSession 
+destructor.</p>
+<p>&nbsp;</p>
+<p><a name="Send"></a><strong>CMapiSession</strong><strong>::Send</strong></p>
+<p><strong>BOOL Send(CMapiMessage&amp; </strong>message, <b>BOOL </b><i>bResolve</i><b> 
+= FALSE</b><strong>, BOOL </strong><i>bInteractive </i><strong>= FALSE, CWnd*
+</strong><i>pParentWnd</i><strong> = NULL, BOOL </strong><i>bSendAsHTML </i>
+<strong>= FALSE);</strong></p>
+<p><strong>Return Value</strong></p>
+<p>TRUE if the message was successfully sent otherwise FALSE.</p>
+<p><strong>Parameters</strong></p>
+<p><em>message</em> Message to be sent</p>
+<p>bResolve TRUE if the recipient addresses should be resolved otherwise FALSE.</p>
+<p><i>bInteractive</i> TRUE if you want the message to be editable by the end user 
+prior to the message actually being sent.</p>
+<p><i>pParentWnd</i> If bInteractive is TRUE, then this is the parent window to 
+use. If it is left as NULL, then the window as returned by AfxGetMainWnd() will 
+be used.</p>
+<p><i>bSendAsHTML</i> Should the body of the email be sent as HTML as opposed to 
+plain text. For more information on this option, please read the release notes for 
+v1.14</p>
+<p><strong>Remarks</strong></p>
+<p>Sends the message as specified in the &quot;message&quot; parameter, using the MAPI profile 
+currently logged into. If you set bResolve to TRUE, then the recipient&#39;s address 
+will be looked up in the profiles address books, prior to sending. This can lead 
+to the following problem: if two people have identical &quot;resolved&quot; names but different 
+e-mail addresses, the CMapi class is unable to send mail to either address because 
+after the address is resolved, the recipient becomes &quot;ambiguous,&quot; and MAPISendMail 
+returns the MAPI_E_AMBIGUOUS_RECIPIENT (21) error code. Normally you should accept 
+the default of not to resolve addresses.</p>
+<p>&nbsp;</p>
+<p><a name="Find"></a><strong>CMapiSession</strong><strong>::Find</strong></p>
+<p><strong>BOOL Find(CString&amp; </strong>sMessageID, <b>const CString&amp; </b><i>sSeedMessageID</i><b> 
+= _T(&quot;&quot;)</b><strong>, </strong><b>FLAGS </b><i>flFlags</i><b> = MAPI_LONG_MSGID</b><i>,
+</i><b>const CString&amp; </b><i>sMessageType</i><b> = _T(&quot;&quot;)</b><i>, </i><strong>BOOL
+</strong><i>bInteractive </i><strong>= FALSE, CWnd* </strong><i>pParentWnd</i><strong> 
+= NULL);</strong></p>
+<p><strong>Return Value</strong></p>
+<p>TRUE if the message was successfully found otherwise FALSE.</p>
+<p><strong>Parameters</strong></p>
+<p><em>sMessageID</em> Upon return, this contains the message ID of the found email.</p>
+<p><i>sSeedMessageID</i> The ID of the message to &quot;seed&quot; the search with.</p>
+<p><i>flFlags</i> The flags to use in the call to MAPIFindNext.</p>
+<p><i>sMessageType</i> The type of message to search for.</p>
+<p><i>bInteractive</i> TRUE if you want any UI to be displayed as part of the search.</p>
+<p><i>pParentWnd</i> If bInteractive is TRUE, then this is the parent window to 
+use. If it is left as NULL, then the window as returned by AfxGetMainWnd() will 
+be used.</p>
+<p><strong>Remarks</strong></p>
+<p>Searches for the specified message. For details on how you search for messages, 
+check out the code in &quot;EnumMessagesDlg.cpp&quot; in the sample app.</p>
+<p>&nbsp;</p>
+<p><a name="Read"></a><strong>CMapiSession</strong><strong>::Read</strong></p>
+<p><strong>BOOL Read(const CString&amp; </strong>sMessageID, <b>CMapiMessage&amp; </b>
+<i>message</i><strong>, </strong><b>FLAGS </b><i>flFlags</i><b> = MAPI_SUPPRESS_ATTACH</b><i>,
+</i><strong>BOOL </strong><i>bInteractive </i><strong>= FALSE, CWnd* </strong>
+<i>pParentWnd</i><strong> = NULL);</strong></p>
+<p><strong>Return Value</strong></p>
+<p>TRUE if the message was successfully found otherwise FALSE.</p>
+<p><strong>Parameters</strong></p>
+<p><em>sMessageID</em> The message ID of the email to read.</p>
+<p><i>message</i> Upon successful return this contains the read message.</p>
+<p><i>flFlags</i> The flags to use in the call to MAPIReadMail.</p>
+<p><i>bInteractive</i> TRUE if you want any UI to be displayed as part of the read.</p>
+<p><i>pParentWnd</i> If bInteractive is TRUE, then this is the parent window to 
+use. If it is left as NULL, then the window as returned by AfxGetMainWnd() will 
+be used.</p>
+<p><strong>Remarks</strong></p>
+<p>Reads the specified message. For details on how you read messages, check out 
+the code in &quot;EnumMessagesDlg.cpp&quot; in the sample app.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><a name="Delete"></a>CMapiSession</strong><strong>::Delete</strong></p>
+<p><strong>BOOL Delete(CString&amp; </strong>sMessageID, <strong>BOOL </strong><i>bInteractive
+</i><strong>= FALSE, CWnd* </strong><i>pParentWnd</i><strong> = NULL);</strong></p>
+<p><strong>Return Value</strong></p>
+<p>TRUE if the message was successfully deleted otherwise FALSE.</p>
+<p><strong>Parameters</strong></p>
+<p><em>sMessageID</em> Upon return, this contains the message ID of the found email.</p>
+<p><i>bInteractive</i> TRUE if you want any UI to be displayed as part of the deletion.</p>
+<p><i>pParentWnd</i> If bInteractive is TRUE, then this is the parent window to 
+use. If it is left as NULL, then the window as returned by AfxGetMainWnd() will 
+be used.</p>
+<p><strong>Remarks</strong></p>
+<p>Deletes the specified message.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a name="MapiInstalled"></a><strong>CMapiSession</strong><strong>::MapiInstalled</strong></p>
+<p><strong>BOOL MapiInstalled() const;</strong></p>
+<p><strong>Remarks</strong></p>
+<p>Simply accessor which returns TRUE if MAPI is installed and has been correctly 
+initialized ready for this instance to use. The actual loading of the MAPI dll is 
+handled internally by the CMapiSession constructor, meaning it is valid this function 
+anytime after you have constructed a CMapiSession instance.</p>
+<p>&nbsp;</p>
+<p><a name="GetLastError"></a><strong>CMapiSession</strong><strong>::GetLastError</strong></p>
+<p><strong>DWORD GetLastError() const;</strong></p>
+<p><strong>Return Value</strong></p>
+<p>The last MAPI error generated by this CMapiSession instance.</p>
+<p><strong>Remarks</strong></p>
+<p>Since the class uses MAPI which has its own way of reporting errors different 
+to the standard Win32 way (GetLastError), this method allows this value to be retrieved. 
+MAPI errors are documented in the MAPI.h file in your VC include directory.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Enhancements"></a>Planned Enhancements </h2>
+<ul>
+	<li>If you have any other suggested improvements, please let me know so that 
+	I can incorporate them into the next release.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><a name="Contact"></a>Contacting the Author</h2>
+<p>PJ Naughter<br>
+Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
+Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
+1 April 2010</p>
+
+</body>
+
+</html>
