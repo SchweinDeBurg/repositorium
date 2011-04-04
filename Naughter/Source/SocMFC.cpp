@@ -97,6 +97,8 @@ History: 03-03-2003 1. Addition of a number of preprocessor defines, namely W3MF
                     member variable. This variable can be modified through new Get/SetBindAddress methods.
                     2. Fixed a number of compile problems in VC 2005 related to ATL::CSocketAddr::GetAddrInfoList()
                     return value.
+         03-04-2011 1. Fix for a bug in CreateAndConnect where the wrong family socket type was being passed to
+                    Create.
 
 Copyright (c) 2002 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -658,7 +660,7 @@ void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrService
     {
       //Create the socket now that we know the family type via the lookup
       Close();
-      Create(nSocketType, 0, pAddress->ai_family);
+      Create(nSocketType, 0, pCurrentAddress->ai_family);
       _Bind(pszPortOrServiceName);      
 
       //Call the other version of Connect which does the actual work
@@ -796,7 +798,7 @@ void CWSocket::CreateAndConnect(LPCTSTR pszHostAddress, LPCTSTR pszPortOrService
     {
       //Create the socket now that we now the family type
       Close();
-      Create(nSocketType, 0, pAddress->ai_family);
+      Create(nSocketType, 0, pCurrentAddress->ai_family);
       _Bind(pszPortOrServiceName);
 
       //Call the other version of Connect which does the actual work
