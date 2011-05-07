@@ -54,8 +54,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,759
- PRODUCTVERSION 6,1,10,759
+ FILEVERSION 1,0,0,775
+ PRODUCTVERSION 6,1,10,775
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -73,7 +73,7 @@ BEGIN
             VALUE "Comments", "Compiler switches: /O1 /Ob1 /Oy /GF /EHsc /MD /Zp4 /Gy /W4 /TP"
             VALUE "CompanyName", "AbstractSpoon Software"
             VALUE "FileDescription", "iCalImportExport Component for ToDoList"
-            VALUE "FileVersion", "1.0.0.759"
+            VALUE "FileVersion", "1.0.0.775"
             VALUE "InternalName", "iCalImportExport"
             VALUE "LegalCopyright", "Copyright © 2005-2011 by AbstractSpoon"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
