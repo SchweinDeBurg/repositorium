@@ -76,9 +76,9 @@ __declspec(selectany) int _forceCRTManifestRTM;
 #endif
 
 #if defined(_DEBUG)
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.DebugCRT' version='9.0.30729.4148' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
+#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.DebugCRT' version='9.0.30729.5570' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
 #else
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.PrivateCRT' version='9.0.30729.4148' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
+#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.PrivateCRT' version='9.0.30729.5570' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
 #endif   /* _DEBUG */
 
 #include <stdio.h>
@@ -126,6 +126,8 @@ static ENGINE *ENGINE_padlock (void);
 # endif
 #endif
 
+#ifdef OPENSSL_NO_DYNAMIC_ENGINE
+
 void ENGINE_load_padlock (void)
 {
 /* On non-x86 CPUs it just returns. */
@@ -137,6 +139,8 @@ void ENGINE_load_padlock (void)
 	ERR_clear_error ();
 #endif
 }
+
+#endif
 
 #ifdef COMPILE_HW_PADLOCK
 /* We do these includes here to avoid header problems on platforms that
@@ -1235,6 +1239,8 @@ static RAND_METHOD padlock_rand = {
 
 #else  /* !COMPILE_HW_PADLOCK */
 #ifndef OPENSSL_NO_DYNAMIC_ENGINE
+OPENSSL_EXPORT
+int bind_engine(ENGINE *e, const char *id, const dynamic_fns *fns);
 OPENSSL_EXPORT
 int bind_engine(ENGINE *e, const char *id, const dynamic_fns *fns) { return 0; }
 IMPLEMENT_DYNAMIC_CHECK_FN()

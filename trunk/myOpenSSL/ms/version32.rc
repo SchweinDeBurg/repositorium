@@ -3,8 +3,8 @@
 LANGUAGE 0x09,0x01
 
 1 VERSIONINFO
-  FILEVERSION 1,0,0,3
-  PRODUCTVERSION 1,0,0,3
+  FILEVERSION 1,0,0,4
+  PRODUCTVERSION 1,0,0,4
   FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
   FILEFLAGS 0x01L
@@ -22,7 +22,7 @@ BEGIN
         // Required:
         VALUE "CompanyName", "The OpenSSL Project, http://www.openssl.org/\0"
         VALUE "FileDescription", "OpenSSL Shared Library\0"
-        VALUE "FileVersion", "1.0.0c\0"
+        VALUE "FileVersion", "1.0.0d\0"
 #if defined(CRYPTO)
         VALUE "InternalName", "libeay32\0"
         VALUE "OriginalFilename", "libeay32.dll\0"
@@ -67,13 +67,13 @@ BEGIN
         VALUE "OriginalFilename", "gost.dll\0"
 #endif
         VALUE "ProductName", "The OpenSSL Toolkit\0"
-        VALUE "ProductVersion", "1.0.0c\0"
+        VALUE "ProductVersion", "1.0.0d\0"
         // Optional:
         VALUE "Comments", "Compiler switches: /MD /O1 /Ob1 /W3 /WX /Gs0 /GF /Gy /nologo.\0"
-        VALUE "LegalCopyright", "Copyright © 1998-2010 The OpenSSL Project. Copyright © 1995-1998 Eric A. Young, Tim J. Hudson. All rights reserved.\0"
+        VALUE "LegalCopyright", "Copyright © 1998-2011 The OpenSSL Project. Copyright © 1995-1998 Eric A. Young, Tim J. Hudson. All rights reserved.\0"
         VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation.\0"
         VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG.\0"
-        VALUE "SpecialBuild", "Dependent on the non-shared Microsoft ® Visual C++ CRT redistributable version 9.0 SP1 with the ATL security update.\0"
+        VALUE "SpecialBuild", "Dependent on the non-shared Microsoft ® Visual C++ CRT redistributable version 9.0 SP1 with the ATL/MFC security updates.\0"
     END
     END
     BLOCK "VarFileInfo"
