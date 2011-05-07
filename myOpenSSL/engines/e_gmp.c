@@ -93,9 +93,9 @@ __declspec(selectany) int _forceCRTManifestRTM;
 #endif
 
 #if defined(_DEBUG)
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.DebugCRT' version='9.0.30729.4148' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
+#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.DebugCRT' version='9.0.30729.5570' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
 #else
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.PrivateCRT' version='9.0.30729.4148' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
+#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.PrivateCRT' version='9.0.30729.5570' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
 #endif   /* _DEBUG */
 
 #include <stdio.h>
@@ -488,6 +488,8 @@ static int bind_fn(ENGINE *e, const char *id)
 	}       
 IMPLEMENT_DYNAMIC_BIND_FN(bind_fn)
 #else
+OPENSSL_EXPORT
+int bind_engine(ENGINE *e, const char *id, const dynamic_fns *fns);
 OPENSSL_EXPORT
 int bind_engine(ENGINE *e, const char *id, const dynamic_fns *fns) { return 0; }
 #endif

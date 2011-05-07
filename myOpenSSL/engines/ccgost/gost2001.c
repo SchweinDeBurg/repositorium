@@ -20,9 +20,9 @@ __declspec(selectany) int _forceCRTManifestRTM;
 #endif
 
 #if defined(_DEBUG)
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.DebugCRT' version='9.0.30729.4148' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
+#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.DebugCRT' version='9.0.30729.5570' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
 #else
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.PrivateCRT' version='9.0.30729.4148' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
+#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.VC90.PrivateCRT' version='9.0.30729.5570' processorArchitecture='x86' publicKeyToken='1fc8b3b9a1e18e3b'\"")
 #endif   /* _DEBUG */
 
 #include "gost_lcl.h"
