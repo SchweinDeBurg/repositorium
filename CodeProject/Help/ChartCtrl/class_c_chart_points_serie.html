@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -22,7 +23,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>CChartPointsSerie Class Reference</h1><!-- doxytag: class="CChartPointsSerie" --><!-- doxytag: inherits="CChartSerie" -->Specialization of a <a class="el" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a> to display a points series.
+<h1>CChartPointsSerie Class Reference</h1><!-- doxytag: class="CChartPointsSerie" --><!-- doxytag: inherits="CChartXYSerie" -->Specialization of a <a class="el" href="class_c_chart_serie.html" title="Abstract class that provides a common &quot;interface&quot; for all series in the...">CChartSerie</a> to display a points series.
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;<a class="el" href="_chart_points_serie_8h-source.html">ChartPointsSerie.h</a>&gt;</code>
@@ -33,7 +34,9 @@ Inheritance diagram for CChartPointsSerie:</div>
 
 <p><center><img src="class_c_chart_points_serie.png" usemap="#CChartPointsSerie_map" border="0" alt=""></center>
 <map name="CChartPointsSerie_map">
-<area href="class_c_chart_serie.html" alt="CChartSerie" shape="rect" coords="0,0,116,24">
+<area href="class_c_chart_x_y_serie.html" alt="CChartXYSerie" shape="rect" coords="0,112,219,136">
+<area href="class_c_chart_serie_base.html" alt="CChartSerieBase< SChartXYPoint >" shape="rect" coords="0,56,219,80">
+<area href="class_c_chart_serie.html" alt="CChartSerie" shape="rect" coords="0,0,219,24">
 </map>
 </div>
 
@@ -64,6 +67,14 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <a class="el" href="class_c_chart_points_serie.html#1c3c8b85498adc24771ff501645b1be8">PointType</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_serie.html#3522a357f3af5a82ad5f5950a9b8eb68">GetPointType</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the points shape. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="4c114ea9ddbf680f2ade770755bbb4e1"></a><!-- doxytag: member="CChartPointsSerie::SetBorderColor" ref="4c114ea9ddbf680f2ade770755bbb4e1" args="(COLORREF Color)" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_serie.html#4c114ea9ddbf680f2ade770755bbb4e1">SetBorderColor</a> (COLORREF Color)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the border color of the points. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="a2a8c39d30f8556e595cf1184ef10eb0"></a><!-- doxytag: member="CChartPointsSerie::GetBorderColor" ref="a2a8c39d30f8556e595cf1184ef10eb0" args="()" -->
+COLORREF&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_serie.html#a2a8c39d30f8556e595cf1184ef10eb0">GetBorderColor</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the border color of the points. <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="f26f71f622ad00186992c17cdc7c8164"></a><!-- doxytag: member="CChartPointsSerie::CChartPointsSerie" ref="f26f71f622ad00186992c17cdc7c8164" args="(CChartCtrl *pParent)" -->
 &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_serie.html#f26f71f622ad00186992c17cdc7c8164">CChartPointsSerie</a> (<a class="el" href="class_c_chart_ctrl.html">CChartCtrl</a> *pParent)</td></tr>
 
@@ -77,7 +88,7 @@ virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether a screen point is on the series.  <a href="#da57c96010550fa96a65a803644e3521"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Specialization of a <a class="el" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a> to display a points series.
+Specialization of a <a class="el" href="class_c_chart_serie.html" title="Abstract class that provides a common &quot;interface&quot; for all series in the...">CChartSerie</a> to display a points series.
 <p>
 The data points are simply displayed as independant points. <hr><h2>Member Function Documentation</h2>
 <a class="anchor" name="da57c96010550fa96a65a803644e3521"></a><!-- doxytag: member="CChartPointsSerie::IsPointOnSerie" ref="da57c96010550fa96a65a803644e3521" args="(const CPoint &amp;screenPoint, unsigned &amp;uIndex) const " -->
@@ -123,7 +134,7 @@ Check whether a screen point is on the series.
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>E:/Sources Misc/ChartDemo/ChartCtrl/<a class="el" href="_chart_points_serie_8h-source.html">ChartPointsSerie.h</a><li>E:/Sources Misc/ChartDemo/ChartCtrl/ChartPointsSerie.cpp</ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:19 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:11 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

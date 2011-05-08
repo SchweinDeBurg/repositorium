@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html xmlns:MSHelp="http://msdn.microsoft.com/mshelp"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>ChartDemo: CChartPointsArray Class Reference</title>
+<title>ChartDemo: CChartPointsArray&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLink.css"><LINK REL="stylesheet" TYPE="text/css" HREF="ms-help://Hx/HxRuntime/HxLinkDefault.css"></head><body>
@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -22,7 +23,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>CChartPointsArray Class Reference</h1><!-- doxytag: class="CChartPointsArray" -->Manages an array of points which supports fast resizing.
+<h1>CChartPointsArray&lt; T &gt; Class Template Reference</h1><!-- doxytag: class="CChartPointsArray" -->Manages an array of points which supports fast resizing.
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;<a class="el" href="_chart_points_array_8h-source.html">ChartPointsArray.h</a>&gt;</code>
@@ -31,107 +32,113 @@
 <p>
 <a href="class_c_chart_points_array-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
-<tr><td colspan="2"><br><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_c_chart_points_array_1_1_s_chart_point.html">SChartPoint</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Structure containing a point data.  <a href="struct_c_chart_points_array_1_1_s_chart_point.html#_details">More...</a><br></td></tr>
-<tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#f17dd8d4ef7b63760ac39f0775760415">PointsOrdering</a> { <b>poNoOrdering</b>,
-<b>poXOrdering</b>,
-<b>poYOrdering</b>
- }</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enumeration listing the types of ordering. <br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#f5045dd65ae0ed07db02d5fee966dbc8">CChartPointsArray</a> (unsigned iResize=1000)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#306219833d94da1fc1c916337ac7aa64">CChartPointsArray</a> (unsigned iResize=1000)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#f5045dd65ae0ed07db02d5fee966dbc8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="6049578239ee9f7487ee5546fb117c52"></a><!-- doxytag: member="CChartPointsArray::~CChartPointsArray" ref="6049578239ee9f7487ee5546fb117c52" args="()" -->
-&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#6049578239ee9f7487ee5546fb117c52">~CChartPointsArray</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#306219833d94da1fc1c916337ac7aa64"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="76a2073ae326557e19dc20c32f03b2b3"></a><!-- doxytag: member="CChartPointsArray::~CChartPointsArray" ref="76a2073ae326557e19dc20c32f03b2b3" args="()" -->
+&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#76a2073ae326557e19dc20c32f03b2b3">~CChartPointsArray</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="e0e7096217f1580658c53a77a1b36159"></a><!-- doxytag: member="CChartPointsArray::GetPointsCount" ref="e0e7096217f1580658c53a77a1b36159" args="() const " -->
-unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#e0e7096217f1580658c53a77a1b36159">GetPointsCount</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="14e51004533e2a11a5439ddacf45c4df"></a><!-- doxytag: member="CChartPointsArray::GetPointsCount" ref="14e51004533e2a11a5439ddacf45c4df" args="() const " -->
+unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#14e51004533e2a11a5439ddacf45c4df">GetPointsCount</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the number of points currently stored. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="686b66c03ef375cec891cb38aed191ce"></a><!-- doxytag: member="CChartPointsArray::SetResize" ref="686b66c03ef375cec891cb38aed191ce" args="(int iResize)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#686b66c03ef375cec891cb38aed191ce">SetResize</a> (int iResize)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="99b172d588b8f52a9d92a5e172c3b3ea"></a><!-- doxytag: member="CChartPointsArray::SetResize" ref="99b172d588b8f52a9d92a5e172c3b3ea" args="(int iResize)" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#99b172d588b8f52a9d92a5e172c3b3ea">SetResize</a> (int iResize)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the size by which the internal buffer is increased when reallocation occurs. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#3baee1f908a1a0f571782518325142b5">AddPoint</a> (double X, double Y)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#2436ef788bdddea716368bf9fd53b137">AddPoint</a> (const T &amp;newPoint)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adds a new point in the array.  <a href="#3baee1f908a1a0f571782518325142b5"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#8b5695aeadeac7cd1ffe204cdcae484f">AddPoints</a> (double *pX, double *pY, unsigned uCount)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adds a new point in the array.  <a href="#2436ef788bdddea716368bf9fd53b137"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#31bf9b006fc415dc24825f4ac3e37fdb">AddPoints</a> (T *pPoints, unsigned uCount)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adds multiple points in the array.  <a href="#8b5695aeadeac7cd1ffe204cdcae484f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#8c7655de23be66d86f94ac35b54e11de">SetPoints</a> (double *X, double *Y, unsigned uCount)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adds multiple points in the array.  <a href="#31bf9b006fc415dc24825f4ac3e37fdb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#618bd5da7808d72f2be49426c7d4a1cf">SetPoints</a> (T *pPoints, unsigned uCount)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets multiple points in the array.  <a href="#8c7655de23be66d86f94ac35b54e11de"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="8dd978ba105c46f52571762207a9b36b"></a><!-- doxytag: member="CChartPointsArray::Clear" ref="8dd978ba105c46f52571762207a9b36b" args="()" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#8dd978ba105c46f52571762207a9b36b">Clear</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets multiple points in the array.  <a href="#618bd5da7808d72f2be49426c7d4a1cf"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="dd96443d7ca79ec5814bb407989b192e"></a><!-- doxytag: member="CChartPointsArray::Clear" ref="dd96443d7ca79ec5814bb407989b192e" args="()" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#dd96443d7ca79ec5814bb407989b192e">Clear</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes all the points from the array. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="c465f4ed059a2c320316e840e5f40573"></a><!-- doxytag: member="CChartPointsArray::RemovePointsFromBegin" ref="c465f4ed059a2c320316e840e5f40573" args="(unsigned Count)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#c465f4ed059a2c320316e840e5f40573">RemovePointsFromBegin</a> (unsigned Count)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="3e079eead0d0591cb9b45f8b8fae81bc"></a><!-- doxytag: member="CChartPointsArray::RemovePointsFromBegin" ref="3e079eead0d0591cb9b45f8b8fae81bc" args="(unsigned Count)" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#3e079eead0d0591cb9b45f8b8fae81bc">RemovePointsFromBegin</a> (unsigned Count)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes a certain amount of points from the begining of the series. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="10c4fd426d0058f0ebf1e858e11a68b2"></a><!-- doxytag: member="CChartPointsArray::RemovePointsFromEnd" ref="10c4fd426d0058f0ebf1e858e11a68b2" args="(unsigned Count)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#10c4fd426d0058f0ebf1e858e11a68b2">RemovePointsFromEnd</a> (unsigned Count)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="89b388ad9dd6c2ae6dde667d28922487"></a><!-- doxytag: member="CChartPointsArray::RemovePointsFromEnd" ref="89b388ad9dd6c2ae6dde667d28922487" args="(unsigned Count)" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#89b388ad9dd6c2ae6dde667d28922487">RemovePointsFromEnd</a> (unsigned Count)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes a certain amount of points from the end of the series. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ee6b6864a7f78479e98b63248b6505bf"></a><!-- doxytag: member="CChartPointsArray::GetXPointValue" ref="ee6b6864a7f78479e98b63248b6505bf" args="(unsigned PointIndex) const " -->
-double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#ee6b6864a7f78479e98b63248b6505bf">GetXPointValue</a> (unsigned PointIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="10599fee74f8498a04937904e01268dc"></a><!-- doxytag: member="CChartPointsArray::operator[]" ref="10599fee74f8498a04937904e01268dc" args="(unsigned Index)" -->
+T &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#10599fee74f8498a04937904e01268dc">operator[]</a> (unsigned Index)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the X value of the point specified by its index in the array. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="406b26cbe960028f229e7ce3a6832ac0"></a><!-- doxytag: member="CChartPointsArray::GetYPointValue" ref="406b26cbe960028f229e7ce3a6832ac0" args="(unsigned PointIndex) const " -->
-double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#406b26cbe960028f229e7ce3a6832ac0">GetYPointValue</a> (unsigned PointIndex) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the points at the specified index. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="1dd9964e32c1c45178e43cb40e64d009"></a><!-- doxytag: member="CChartPointsArray::operator[]" ref="1dd9964e32c1c45178e43cb40e64d009" args="(unsigned Index) const " -->
+const T &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#1dd9964e32c1c45178e43cb40e64d009">operator[]</a> (unsigned Index) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Y value of the point specified by its index in the array. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="285328410cdd365f15415b840e80f18a"></a><!-- doxytag: member="CChartPointsArray::SetXPointValue" ref="285328410cdd365f15415b840e80f18a" args="(unsigned PointIndex, double NewVal)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#285328410cdd365f15415b840e80f18a">SetXPointValue</a> (unsigned PointIndex, double NewVal)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the X value of the point specified by its index in the array. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b858d831b8a7bb9956144f95307ac49e"></a><!-- doxytag: member="CChartPointsArray::SetYPointValue" ref="b858d831b8a7bb9956144f95307ac49e" args="(unsigned PointIndex, double NewVal)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#b858d831b8a7bb9956144f95307ac49e">SetYPointValue</a> (unsigned PointIndex, double NewVal)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Y value of the point specified by its index in the array. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="77205601a8e78b60c8a4301875856012"></a><!-- doxytag: member="CChartPointsArray::GetSerieXMinMax" ref="77205601a8e78b60c8a4301875856012" args="(double &amp;Min, double &amp;Max) const " -->
-bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#77205601a8e78b60c8a4301875856012">GetSerieXMinMax</a> (double &amp;Min, double &amp;Max) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the points at the specified index. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="1138bafdd91a2c6ef305207a1a6b598d"></a><!-- doxytag: member="CChartPointsArray::GetSerieXMinMax" ref="1138bafdd91a2c6ef305207a1a6b598d" args="(double &amp;Min, double &amp;Max) const " -->
+bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#1138bafdd91a2c6ef305207a1a6b598d">GetSerieXMinMax</a> (double &amp;Min, double &amp;Max) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the minimum and maximum X values of the points stored in the array. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="bcb68f1a2f4269dede80326ceadfca28"></a><!-- doxytag: member="CChartPointsArray::GetSerieYMinMax" ref="bcb68f1a2f4269dede80326ceadfca28" args="(double &amp;Min, double &amp;Max) const " -->
-bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#bcb68f1a2f4269dede80326ceadfca28">GetSerieYMinMax</a> (double &amp;Min, double &amp;Max) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="6ed3dbce7b7751bd39a82edd661a0f39"></a><!-- doxytag: member="CChartPointsArray::GetSerieYMinMax" ref="6ed3dbce7b7751bd39a82edd661a0f39" args="(double &amp;Min, double &amp;Max) const " -->
+bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#6ed3dbce7b7751bd39a82edd661a0f39">GetSerieYMinMax</a> (double &amp;Min, double &amp;Max) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the minimum and maximum Y values of the points stored in the array. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#d52de72c20f4a388b3eff12f0f648532">SetOrdering</a> (<a class="el" href="class_c_chart_points_array.html#f17dd8d4ef7b63760ac39f0775760415">PointsOrdering</a> newOrdering)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#ccfcfe146bb30456165bf541d0ade059">SetOrdering</a> (PointsOrdering newOrdering)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specifies how the points should be ordered in the array.  <a href="#d52de72c20f4a388b3eff12f0f648532"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="043586a191cd7d957ee4af4e250f2cfa"></a><!-- doxytag: member="CChartPointsArray::GetOrdering" ref="043586a191cd7d957ee4af4e250f2cfa" args="() const " -->
-<a class="el" href="class_c_chart_points_array.html#f17dd8d4ef7b63760ac39f0775760415">PointsOrdering</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#043586a191cd7d957ee4af4e250f2cfa">GetOrdering</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specifies how the points should be ordered in the array.  <a href="#ccfcfe146bb30456165bf541d0ade059"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="e59a67f001aa8d514f8c689b717930de"></a><!-- doxytag: member="CChartPointsArray::GetOrdering" ref="e59a67f001aa8d514f8c689b717930de" args="() const " -->
+PointsOrdering&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#e59a67f001aa8d514f8c689b717930de">GetOrdering</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the ordering of the points in the array. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#dd4a6afe571d5d809953668cd305c620">GetVisiblePoints</a> (double dAxisMin, double dAxisMax, unsigned &amp;uFirstPt, unsigned &amp;uLastPt) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="e1cb8f6fddef4ad34dec4b6e4cd73069"></a><!-- doxytag: member="CChartPointsArray::ReorderPoints" ref="e1cb8f6fddef4ad34dec4b6e4cd73069" args="()" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#e1cb8f6fddef4ad34dec4b6e4cd73069">ReorderPoints</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the index of the points which are between two given values.  <a href="#dd4a6afe571d5d809953668cd305c620"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#9f87932f7975c09b6dccf0d8caa37bb8">GetBezierControlPoints</a> (unsigned uFirst, unsigned uLast, <a class="el" href="struct_c_chart_points_array_1_1_s_chart_point.html">SChartPoint</a> *&amp;pKnots, <a class="el" href="struct_c_chart_points_array_1_1_s_chart_point.html">SChartPoint</a> *&amp;pFirstControlPoints, <a class="el" href="struct_c_chart_points_array_1_1_s_chart_point.html">SChartPoint</a> *&amp;pSecondControlPoints) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Refreshes the point ordering. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#2b4e7aa01948425b27cd91775dfba900">GetVisiblePoints</a> (double dAxisMin, double dAxisMax, unsigned &amp;uFirstPt, unsigned &amp;uLastPt) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the control points of a bezier curve fitting the points stored in the array.  <a href="#9f87932f7975c09b6dccf0d8caa37bb8"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the index of the points which are between two given values.  <a href="#2b4e7aa01948425b27cd91775dfba900"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="c73536ce52d2d4b8eddd4604aa5bde30"></a><!-- doxytag: member="CChartPointsArray::GetInternalBuffer" ref="c73536ce52d2d4b8eddd4604aa5bde30" args="() const " -->
+T *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_points_array.html#c73536ce52d2d4b8eddd4604aa5bde30">GetInternalBuffer</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the internal buffer of the array. <br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
+<h3>template&lt;class T&gt;<br>
+ class CChartPointsArray&lt; T &gt;</h3>
+
 Manages an array of points which supports fast resizing.
 <p>
-This class is used internally to store the data for all the points. The data is stored in a C-style array. The internal buffer can grow dynamically depending on the needs. <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="f5045dd65ae0ed07db02d5fee966dbc8"></a><!-- doxytag: member="CChartPointsArray::CChartPointsArray" ref="f5045dd65ae0ed07db02d5fee966dbc8" args="(unsigned iResize=1000)" -->
+This class is used internally to store the data for all the points. The data is stored in a C-style array. The internal buffer can grow dynamically depending on the needs.<p>
+The class is a template class with the template parameter being the type of the points to be stored. The points have to provide the following methods: <ul>
+<li>
+double GetXMin() </li>
+<li>
+double GetX() </li>
+<li>
+double GetXMax() </li>
+<li>
+double GetYMin() </li>
+<li>
+double GetY() </li>
+<li>
+double GetYMax()</li>
+</ul>
+<hr><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" name="306219833d94da1fc1c916337ac7aa64"></a><!-- doxytag: member="CChartPointsArray::CChartPointsArray" ref="306219833d94da1fc1c916337ac7aa64" args="(unsigned iResize=1000)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">CChartPointsArray::CChartPointsArray           </td>
+          <td class="memname"><a class="el" href="class_c_chart_points_array.html">CChartPointsArray</a>&lt; T &gt;::<a class="el" href="class_c_chart_points_array.html">CChartPointsArray</a>           </td>
           <td>(</td>
           <td class="paramtype">unsigned&nbsp;</td>
           <td class="paramname"> <em>iResize</em> = <code>1000</code>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td></td>
+          <td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -149,26 +156,19 @@ Constructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="3baee1f908a1a0f571782518325142b5"></a><!-- doxytag: member="CChartPointsArray::AddPoint" ref="3baee1f908a1a0f571782518325142b5" args="(double X, double Y)" -->
+<a class="anchor" name="2436ef788bdddea716368bf9fd53b137"></a><!-- doxytag: member="CChartPointsArray::AddPoint" ref="2436ef788bdddea716368bf9fd53b137" args="(const T &amp;newPoint)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void CChartPointsArray::AddPoint           </td>
+          <td class="memname">void <a class="el" href="class_c_chart_points_array.html">CChartPointsArray</a>&lt; T &gt;::AddPoint           </td>
           <td>(</td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>X</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>Y</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
+          <td class="paramtype">const T &amp;&nbsp;</td>
+          <td class="paramname"> <em>newPoint</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -179,28 +179,23 @@ Adds a new point in the array.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>X</em>&nbsp;</td><td>The X value of the point </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>Y</em>&nbsp;</td><td>The Y value of the point </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>newPoint</em>&nbsp;</td><td>The new point to add </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="8b5695aeadeac7cd1ffe204cdcae484f"></a><!-- doxytag: member="CChartPointsArray::AddPoints" ref="8b5695aeadeac7cd1ffe204cdcae484f" args="(double *pX, double *pY, unsigned uCount)" -->
+<a class="anchor" name="31bf9b006fc415dc24825f4ac3e37fdb"></a><!-- doxytag: member="CChartPointsArray::AddPoints" ref="31bf9b006fc415dc24825f4ac3e37fdb" args="(T *pPoints, unsigned uCount)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void CChartPointsArray::AddPoints           </td>
+          <td class="memname">void <a class="el" href="class_c_chart_points_array.html">CChartPointsArray</a>&lt; T &gt;::AddPoints           </td>
           <td>(</td>
-          <td class="paramtype">double *&nbsp;</td>
-          <td class="paramname"> <em>pX</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double *&nbsp;</td>
-          <td class="paramname"> <em>pY</em>, </td>
+          <td class="paramtype">T *&nbsp;</td>
+          <td class="paramname"> <em>pPoints</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -211,7 +206,7 @@ Adds a new point in the array.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td></td>
+          <td></td><td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -222,78 +217,21 @@ Adds multiple points in the array.
 <p>
 The points are added to the ones currently stored in the array. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>pX</em>&nbsp;</td><td>Array containing the X value of the points </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>pY</em>&nbsp;</td><td>Array containing the Y value of the points </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>pPoints</em>&nbsp;</td><td>Array containing the points </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>uCount</em>&nbsp;</td><td>The number of points to add </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="9f87932f7975c09b6dccf0d8caa37bb8"></a><!-- doxytag: member="CChartPointsArray::GetBezierControlPoints" ref="9f87932f7975c09b6dccf0d8caa37bb8" args="(unsigned uFirst, unsigned uLast, SChartPoint *&amp;pKnots, SChartPoint *&amp;pFirstControlPoints, SChartPoint *&amp;pSecondControlPoints) const " -->
+<a class="anchor" name="2b4e7aa01948425b27cd91775dfba900"></a><!-- doxytag: member="CChartPointsArray::GetVisiblePoints" ref="2b4e7aa01948425b27cd91775dfba900" args="(double dAxisMin, double dAxisMax, unsigned &amp;uFirstPt, unsigned &amp;uLastPt) const " -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void CChartPointsArray::GetBezierControlPoints           </td>
-          <td>(</td>
-          <td class="paramtype">unsigned&nbsp;</td>
-          <td class="paramname"> <em>uFirst</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned&nbsp;</td>
-          <td class="paramname"> <em>uLast</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="struct_c_chart_points_array_1_1_s_chart_point.html">SChartPoint</a> *&amp;&nbsp;</td>
-          <td class="paramname"> <em>pKnots</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="struct_c_chart_points_array_1_1_s_chart_point.html">SChartPoint</a> *&amp;&nbsp;</td>
-          <td class="paramname"> <em>pFirstControlPoints</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="struct_c_chart_points_array_1_1_s_chart_point.html">SChartPoint</a> *&amp;&nbsp;</td>
-          <td class="paramname"> <em>pSecondControlPoints</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Retrieves the control points of a bezier curve fitting the points stored in the array.
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>uFirst</em>&nbsp;</td><td>The index of the first point of the bezier curve </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>uLast</em>&nbsp;</td><td>The index of the last point of the bezier curve </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>pKnots</em>&nbsp;</td><td>This parameter will store the points data </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>pFirstControlPoints</em>&nbsp;</td><td>This parameter will store the primary control points of the bezier curve </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>pSecondControlPoints</em>&nbsp;</td><td>This parameter will store the secondary control points of the bezier curve </td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="dd4a6afe571d5d809953668cd305c620"></a><!-- doxytag: member="CChartPointsArray::GetVisiblePoints" ref="dd4a6afe571d5d809953668cd305c620" args="(double dAxisMin, double dAxisMax, unsigned &amp;uFirstPt, unsigned &amp;uLastPt) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool CChartPointsArray::GetVisiblePoints           </td>
+          <td class="memname">bool <a class="el" href="class_c_chart_points_array.html">CChartPointsArray</a>&lt; T &gt;::GetVisiblePoints           </td>
           <td>(</td>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>dAxisMin</em>, </td>
@@ -319,7 +257,7 @@ Retrieves the control points of a bezier curve fitting the points stored in the 
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td> const</td>
+          <td></td><td></td><td> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -340,17 +278,19 @@ If the points are not ordered, uFirstPt will contain 0 and uLastPt will contain 
 
 </div>
 </div><p>
-<a class="anchor" name="d52de72c20f4a388b3eff12f0f648532"></a><!-- doxytag: member="CChartPointsArray::SetOrdering" ref="d52de72c20f4a388b3eff12f0f648532" args="(PointsOrdering newOrdering)" -->
+<a class="anchor" name="ccfcfe146bb30456165bf541d0ade059"></a><!-- doxytag: member="CChartPointsArray::SetOrdering" ref="ccfcfe146bb30456165bf541d0ade059" args="(PointsOrdering newOrdering)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void CChartPointsArray::SetOrdering           </td>
+          <td class="memname">void <a class="el" href="class_c_chart_points_array.html">CChartPointsArray</a>&lt; T &gt;::SetOrdering           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_c_chart_points_array.html#f17dd8d4ef7b63760ac39f0775760415">PointsOrdering</a>&nbsp;</td>
+          <td class="paramtype">PointsOrdering&nbsp;</td>
           <td class="paramname"> <em>newOrdering</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td></td>
+          <td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -362,21 +302,17 @@ Specifies how the points should be ordered in the array.
 This specifies if the points should be ordered on their X values, on their Y values or not ordered (kept in order they are added to the control). Ordering can improve performances a lot but makes it impossible to draw some specific curves (for instance, drawing an ellipse is only possible if no ordering is set).
 </div>
 </div><p>
-<a class="anchor" name="8c7655de23be66d86f94ac35b54e11de"></a><!-- doxytag: member="CChartPointsArray::SetPoints" ref="8c7655de23be66d86f94ac35b54e11de" args="(double *X, double *Y, unsigned uCount)" -->
+<a class="anchor" name="618bd5da7808d72f2be49426c7d4a1cf"></a><!-- doxytag: member="CChartPointsArray::SetPoints" ref="618bd5da7808d72f2be49426c7d4a1cf" args="(T *pPoints, unsigned uCount)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void CChartPointsArray::SetPoints           </td>
+          <td class="memname">void <a class="el" href="class_c_chart_points_array.html">CChartPointsArray</a>&lt; T &gt;::SetPoints           </td>
           <td>(</td>
-          <td class="paramtype">double *&nbsp;</td>
-          <td class="paramname"> <em>X</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double *&nbsp;</td>
-          <td class="paramname"> <em>Y</em>, </td>
+          <td class="paramtype">T *&nbsp;</td>
+          <td class="paramname"> <em>pPoints</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -387,7 +323,7 @@ This specifies if the points should be ordered on their X values, on their Y val
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td></td>
+          <td></td><td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -398,8 +334,7 @@ Sets multiple points in the array.
 <p>
 The points currently stored in the array are first removed before adding the new points. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>X</em>&nbsp;</td><td>Array containing the X value of the points </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>X</em>&nbsp;</td><td>Array containing the Y value of the points </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>pPoints</em>&nbsp;</td><td>Array containing the new points </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>uCount</em>&nbsp;</td><td>The number of points to add </td></tr>
   </table>
 </dl>
@@ -407,9 +342,9 @@ The points currently stored in the array are first removed before adding the new
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>E:/Sources Misc/ChartDemo/ChartCtrl/<a class="el" href="_chart_points_array_8h-source.html">ChartPointsArray.h</a><li>E:/Sources Misc/ChartDemo/ChartCtrl/ChartPointsArray.cpp</ul>
+<li>E:/Sources Misc/ChartDemo/ChartCtrl/<a class="el" href="_chart_points_array_8h-source.html">ChartPointsArray.h</a><li>E:/Sources Misc/ChartDemo/ChartCtrl/ChartPointsArray.inl</ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:19 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:11 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -42,55 +43,61 @@
 <a name="l00022"></a>00022 <span class="preprocessor">#ifndef _CHARTLABEL_H_ </span>
 <a name="l00023"></a>00023 <span class="preprocessor"></span><span class="preprocessor">#define _CHARTLABEL_H_</span>
 <a name="l00024"></a>00024 <span class="preprocessor"></span>
-<a name="l00025"></a>00025 <span class="keyword">class </span><a class="code" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a>;
-<a name="l00026"></a>00026
-<a name="l00028"></a>00028
-<a name="l00037"></a><a class="code" href="class_c_chart_label_provider.html">00037</a> <span class="keyword">class </span><a class="code" href="class_c_chart_label_provider.html" title="Interface which should be implemented in order to provide text to a label.">CChartLabelProvider</a>
-<a name="l00038"></a>00038 {
-<a name="l00039"></a>00039 <span class="keyword">public</span>:
-<a name="l00041"></a><a class="code" href="class_c_chart_label_provider.html#3935c3635b5ee3745d0a816619e66876">00041</a>         <a class="code" href="class_c_chart_label_provider.html#3935c3635b5ee3745d0a816619e66876" title="Constructor.">CChartLabelProvider</a>()  { }
-<a name="l00043"></a><a class="code" href="class_c_chart_label_provider.html#4d0fbeff736f4a490bdff3de9de6691e">00043</a>         <span class="keyword">virtual</span> <a class="code" href="class_c_chart_label_provider.html#4d0fbeff736f4a490bdff3de9de6691e" title="Destructor.">~CChartLabelProvider</a>()  { }
-<a name="l00044"></a>00044
-<a name="l00046"></a>00046
-<a name="l00053"></a>00053         <span class="keyword">virtual</span> TChartString <a class="code" href="class_c_chart_label_provider.html#4eb08f9c614f5f11aa95a58dc2c44c70" title="Method to override in order to provide the text of the label.">GetText</a>(<a class="code" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a>* pSerie, <span class="keywordtype">unsigned</span> uPtIndex) = 0;
-<a name="l00054"></a>00054 };
-<a name="l00055"></a>00055
-<a name="l00057"></a>00057
-<a name="l00060"></a><a class="code" href="class_c_chart_label.html">00060</a> <span class="keyword">class </span><a class="code" href="class_c_chart_label.html" title="Draws a label containing some text which is attached to a point of a series.">CChartLabel</a>
-<a name="l00061"></a>00061 {
-<a name="l00062"></a>00062         <span class="keyword">friend</span> <a class="code" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a>;
+<a name="l00025"></a>00025 <span class="keyword">template</span> &lt;<span class="keyword">class</span> Po<span class="keywordtype">int</span>Type&gt;
+<a name="l00026"></a>00026 <span class="keyword">class </span><a class="code" href="class_c_chart_serie_base.html" title="Base class for all series of the control.">CChartSerieBase</a>;
+<a name="l00027"></a>00027
+<a name="l00029"></a>00029
+<a name="l00041"></a>00041 <span class="keyword">template</span> &lt;<span class="keyword">class</span> Po<span class="keywordtype">int</span>Type&gt;
+<a name="l00042"></a><a class="code" href="class_c_chart_label_provider.html">00042</a> <span class="keyword">class </span><a class="code" href="class_c_chart_label_provider.html" title="Interface which should be implemented in order to provide text to a label.">CChartLabelProvider</a>
+<a name="l00043"></a>00043 {
+<a name="l00044"></a>00044 <span class="keyword">public</span>:
+<a name="l00046"></a><a class="code" href="class_c_chart_label_provider.html#fc5d2e9d973ee6f4fc6e62d4b48edca2">00046</a>         <a class="code" href="class_c_chart_label_provider.html#fc5d2e9d973ee6f4fc6e62d4b48edca2" title="Constructor.">CChartLabelProvider</a>()  { }
+<a name="l00048"></a><a class="code" href="class_c_chart_label_provider.html#a55954f86930b3f6e0488259cd9742e7">00048</a>         <span class="keyword">virtual</span> <a class="code" href="class_c_chart_label_provider.html#a55954f86930b3f6e0488259cd9742e7" title="Destructor.">~CChartLabelProvider</a>()  { }
+<a name="l00049"></a>00049
+<a name="l00051"></a>00051
+<a name="l00058"></a>00058         <span class="keyword">virtual</span> TChartString <a class="code" href="class_c_chart_label_provider.html#46f5e0217500131d8341c3c0994c0e22" title="Method to override in order to provide the text of the label.">GetText</a>(<a class="code" href="class_c_chart_serie_base.html">CChartSerieBase&lt;PointType&gt;</a>* pSerie,
+<a name="l00059"></a>00059                         <span class="keywordtype">unsigned</span> PointIndex) = 0;
+<a name="l00060"></a>00060 };
+<a name="l00061"></a>00061
 <a name="l00063"></a>00063
-<a name="l00064"></a>00064 <span class="keyword">public</span>:
-<a name="l00066"></a>00066         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_label.html#38eb446e369425f7e74a223b77ae4697" title="Sets a static text to be displayed in the label.">SetLabelText</a>(<span class="keyword">const</span> TChartString&amp; strText);
-<a name="l00068"></a>00068
-<a name="l00074"></a>00074         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_label.html#4498f9b50ee77f34b398376a02b75c2f" title="Sets the font of the text label.">SetFont</a>(<span class="keywordtype">int</span> nPointSize, <span class="keyword">const</span> TChartString&amp; strFaceName);
-<a name="l00076"></a>00076         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_label.html#eea84bd2d004509d9b0beccbbdda01e4" title="Shows/hides the label.">SetVisisble</a>(<span class="keywordtype">bool</span> bVisible);
-<a name="l00078"></a><a class="code" href="class_c_chart_label.html#14c08d4077d1b19da2a2af124aa1a78a">00078</a>         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_label.html#14c08d4077d1b19da2a2af124aa1a78a" title="Sets a label provider for more flexibility in how the text is supplied.">SetLabelProvider</a>(<a class="code" href="class_c_chart_label_provider.html" title="Interface which should be implemented in order to provide text to a label.">CChartLabelProvider</a>* pProvider)
-<a name="l00079"></a>00079         {
-<a name="l00080"></a>00080                 <a class="code" href="class_c_chart_label.html#064ffa7fdb21ac3595969903ee346622" title="The text provider.">m_pLabelProvider</a> = pProvider;
-<a name="l00081"></a>00081         }
-<a name="l00082"></a>00082
-<a name="l00083"></a>00083 <span class="keyword">protected</span>:
-<a name="l00085"></a>00085         <a class="code" href="class_c_chart_label.html#096db0e7ba95548c6e1658a583c1e952" title="Constructor.">CChartLabel</a>(<a class="code" href="class_c_chart_ctrl.html" title="The main chart control class.">CChartCtrl</a>* pParentCtrl, <a class="code" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a>* pParentSeries);
-<a name="l00087"></a>00087         <span class="keyword">virtual</span> <a class="code" href="class_c_chart_label.html#828e740e245048e767ad2d1e3234efbf" title="Destructor.">~CChartLabel</a>();
-<a name="l00088"></a>00088
-<a name="l00090"></a>00090
-<a name="l00093"></a>00093         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_chart_label.html#f3046989b0e9fd09697d470bdaac5739" title="Draws the label.">Draw</a>(CDC* pDC, <span class="keywordtype">unsigned</span> uPointIndex) = 0;
-<a name="l00094"></a>00094
-<a name="l00096"></a><a class="code" href="class_c_chart_label.html#2740f329ead0fb9a9ab8df0dfd43fba9">00096</a>         <span class="keywordtype">bool</span> <a class="code" href="class_c_chart_label.html#2740f329ead0fb9a9ab8df0dfd43fba9" title="Specifies if the label is visible or not.">m_bIsVisible</a>;
-<a name="l00098"></a><a class="code" href="class_c_chart_label.html#c0808d3cabf8e26655d3dfa945fff0b2">00098</a>         <span class="keywordtype">int</span> <a class="code" href="class_c_chart_label.html#c0808d3cabf8e26655d3dfa945fff0b2" title="The text font size.">m_iFontSize</a>;
-<a name="l00100"></a><a class="code" href="class_c_chart_label.html#532aa8ae70cf640a1a73f1ab51e8b970">00100</a>         TChartString <a class="code" href="class_c_chart_label.html#532aa8ae70cf640a1a73f1ab51e8b970" title="The text font face name.">m_strFontName</a>;
+<a name="l00066"></a>00066 <span class="keyword">template</span> &lt;<span class="keyword">class</span> Po<span class="keywordtype">int</span>Type&gt;
+<a name="l00067"></a><a class="code" href="class_c_chart_label.html">00067</a> <span class="keyword">class </span><a class="code" href="class_c_chart_label.html" title="Draws a label containing some text which is attached to a point of a series.">CChartLabel</a>
+<a name="l00068"></a>00068 {
+<a name="l00069"></a>00069         <span class="keyword">friend</span> <a class="code" href="class_c_chart_serie_base.html">CChartSerieBase&lt;PointType&gt;</a>;
+<a name="l00070"></a>00070
+<a name="l00071"></a>00071 <span class="keyword">public</span>:
+<a name="l00073"></a>00073         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_label.html#042cb1c703d7f20a0a278ddbc99272e3" title="Sets a static text to be displayed in the label.">SetLabelText</a>(<span class="keyword">const</span> TChartString&amp; strText);
+<a name="l00075"></a>00075
+<a name="l00081"></a>00081         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_label.html#b8bd7d088fcdf5c882d7cd6eb2c734e3" title="Sets the font of the text label.">SetFont</a>(<span class="keywordtype">int</span> nPointSize, <span class="keyword">const</span> TChartString&amp; strFaceName);
+<a name="l00083"></a>00083         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_label.html#f07a65750da5af94309c910d126abdb9" title="Shows/hides the label.">SetVisisble</a>(<span class="keywordtype">bool</span> bVisible);
+<a name="l00085"></a><a class="code" href="class_c_chart_label.html#d36b64fd481be8576af80a57c27bd28f">00085</a>         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_label.html#d36b64fd481be8576af80a57c27bd28f" title="Sets a label provider for more flexibility in how the text is supplied.">SetLabelProvider</a>(<a class="code" href="class_c_chart_label_provider.html" title="Interface which should be implemented in order to provide text to a label.">CChartLabelProvider&lt;PointType&gt;</a>* pProvider)
+<a name="l00086"></a>00086         {
+<a name="l00087"></a>00087                 <a class="code" href="class_c_chart_label.html#028d77d38b739975fcdb9d95eac6615e" title="The text provider.">m_pLabelProvider</a> = pProvider;
+<a name="l00088"></a>00088         }
+<a name="l00089"></a>00089
+<a name="l00090"></a>00090 <span class="keyword">protected</span>:
+<a name="l00092"></a>00092         <a class="code" href="class_c_chart_label.html#7381104af9f14ae6e8ee105cd8682bc2" title="Constructor.">CChartLabel</a>(<a class="code" href="class_c_chart_ctrl.html" title="The main chart control class.">CChartCtrl</a>* pParentCtrl, <a class="code" href="class_c_chart_serie_base.html">CChartSerieBase&lt;PointType&gt;</a>* pParentSeries);
+<a name="l00094"></a>00094         <span class="keyword">virtual</span> <a class="code" href="class_c_chart_label.html#af10230b8475ece188afdff4326eaed8" title="Destructor.">~CChartLabel</a>();
+<a name="l00095"></a>00095
+<a name="l00097"></a>00097
+<a name="l00100"></a>00100         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_c_chart_label.html#cdfdfc71ab1cbf546414acbbc9559aa3" title="Draws the label.">Draw</a>(CDC* pDC, <span class="keywordtype">unsigned</span> uPointIndex) = 0;
 <a name="l00101"></a>00101
-<a name="l00103"></a><a class="code" href="class_c_chart_label.html#e11381ce16fe478bf7abbaf85363fe36">00103</a>         TChartString <a class="code" href="class_c_chart_label.html#e11381ce16fe478bf7abbaf85363fe36" title="The static text of the label.">m_strLabelText</a>;
-<a name="l00105"></a><a class="code" href="class_c_chart_label.html#064ffa7fdb21ac3595969903ee346622">00105</a>         <a class="code" href="class_c_chart_label_provider.html" title="Interface which should be implemented in order to provide text to a label.">CChartLabelProvider</a>* <a class="code" href="class_c_chart_label.html#064ffa7fdb21ac3595969903ee346622" title="The text provider.">m_pLabelProvider</a>;
-<a name="l00106"></a>00106
-<a name="l00108"></a><a class="code" href="class_c_chart_label.html#ce0d9c814d3661cbdc2ae0e5e5c2ef6d">00108</a>         <a class="code" href="class_c_chart_ctrl.html" title="The main chart control class.">CChartCtrl</a>*  <a class="code" href="class_c_chart_label.html#ce0d9c814d3661cbdc2ae0e5e5c2ef6d" title="The parent charting control.">m_pParentCtrl</a>;
-<a name="l00110"></a><a class="code" href="class_c_chart_label.html#d944aa65cbc4a0277d91fcdf363590b2">00110</a>         <a class="code" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a>* <a class="code" href="class_c_chart_label.html#d944aa65cbc4a0277d91fcdf363590b2" title="The parent series.">m_pParentSeries</a>;
-<a name="l00111"></a>00111 };
-<a name="l00112"></a>00112
-<a name="l00113"></a>00113 <span class="preprocessor">#endif  // _CHARTLABEL_H_</span>
+<a name="l00103"></a><a class="code" href="class_c_chart_label.html#811aae254fd0e587bc3d0aba7c001dea">00103</a>         <span class="keywordtype">bool</span> <a class="code" href="class_c_chart_label.html#811aae254fd0e587bc3d0aba7c001dea" title="Specifies if the label is visible or not.">m_bIsVisible</a>;
+<a name="l00105"></a><a class="code" href="class_c_chart_label.html#3e95dc93bc0026b13a8ffe7cbd4fba9d">00105</a>         <span class="keywordtype">int</span> <a class="code" href="class_c_chart_label.html#3e95dc93bc0026b13a8ffe7cbd4fba9d" title="The text font size.">m_iFontSize</a>;
+<a name="l00107"></a><a class="code" href="class_c_chart_label.html#548beb2be24174b79074ef804bb1eca4">00107</a>         TChartString <a class="code" href="class_c_chart_label.html#548beb2be24174b79074ef804bb1eca4" title="The text font face name.">m_strFontName</a>;
+<a name="l00108"></a>00108
+<a name="l00110"></a><a class="code" href="class_c_chart_label.html#26c5d0bedcb6f09460b4d91a5a6e862e">00110</a>         TChartString <a class="code" href="class_c_chart_label.html#26c5d0bedcb6f09460b4d91a5a6e862e" title="The static text of the label.">m_strLabelText</a>;
+<a name="l00112"></a><a class="code" href="class_c_chart_label.html#028d77d38b739975fcdb9d95eac6615e">00112</a>         <a class="code" href="class_c_chart_label_provider.html" title="Interface which should be implemented in order to provide text to a label.">CChartLabelProvider&lt;PointType&gt;</a>* <a class="code" href="class_c_chart_label.html#028d77d38b739975fcdb9d95eac6615e" title="The text provider.">m_pLabelProvider</a>;
+<a name="l00113"></a>00113
+<a name="l00115"></a><a class="code" href="class_c_chart_label.html#eb9daf5c020076f4a15d9265b9a1d945">00115</a>         <a class="code" href="class_c_chart_ctrl.html" title="The main chart control class.">CChartCtrl</a>*  <a class="code" href="class_c_chart_label.html#eb9daf5c020076f4a15d9265b9a1d945" title="The parent charting control.">m_pParentCtrl</a>;
+<a name="l00117"></a><a class="code" href="class_c_chart_label.html#d594073c8d445b9ea9ec015c300b0423">00117</a>         <a class="code" href="class_c_chart_serie_base.html" title="Base class for all series of the control.">CChartSerieBase&lt;PointType&gt;</a>* <a class="code" href="class_c_chart_label.html#d594073c8d445b9ea9ec015c300b0423" title="The parent series.">m_pParentSeries</a>;
+<a name="l00118"></a>00118 };
+<a name="l00119"></a>00119
+<a name="l00120"></a>00120 <span class="preprocessor">#include "ChartLabel.inl"</span>
+<a name="l00121"></a>00121
+<a name="l00122"></a>00122 <span class="preprocessor">#endif  // _CHARTLABEL_H_</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:18 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:09 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

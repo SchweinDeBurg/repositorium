@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -43,38 +44,40 @@
 <a name="l00023"></a>00023 <span class="preprocessor"></span>
 <a name="l00024"></a>00024 <span class="keyword">class </span><a class="code" href="class_c_chart_axis.html" title="Base class that takes care of the management of a chart axis.">CChartAxis</a>;
 <a name="l00025"></a>00025
-<a name="l00026"></a>00026 <span class="keyword">class </span>CChartScrollBar : <span class="keyword">public</span> CScrollBar
-<a name="l00027"></a>00027 {
-<a name="l00028"></a>00028         <span class="keyword">friend</span> <a class="code" href="class_c_chart_axis.html" title="Base class that takes care of the management of a chart axis.">CChartAxis</a>;
-<a name="l00029"></a>00029
-<a name="l00030"></a>00030 <span class="keyword">public</span>:
-<a name="l00031"></a>00031         <span class="keywordtype">void</span> CreateScrollBar(<span class="keyword">const</span> CRect&amp; PlottingRect);
-<a name="l00032"></a>00032
-<a name="l00033"></a>00033         <span class="keywordtype">void</span> OnHScroll(UINT nSBCode, UINT nPos);
-<a name="l00034"></a>00034         <span class="keywordtype">void</span> OnVScroll(UINT nSBCode, UINT nPos);
-<a name="l00035"></a>00035         <span class="keywordtype">void</span> Refresh();
-<a name="l00036"></a>00036
-<a name="l00037"></a>00037         <span class="keywordtype">void</span> SetEnabled(<span class="keywordtype">bool</span> bEnabled)  { m_bEnabled = bEnabled; }
-<a name="l00038"></a>00038         <span class="keywordtype">bool</span> GetEnabled()<span class="keyword"> const                 </span>{ <span class="keywordflow">return</span> m_bEnabled; }
-<a name="l00039"></a>00039         <span class="keywordtype">void</span> SetAutoHide(<span class="keywordtype">bool</span> bAutoHide)  { m_bAutoHide = bAutoHide; }
-<a name="l00040"></a>00040         <span class="keywordtype">bool</span> GetAutoHide()<span class="keyword"> const                  </span>{ <span class="keywordflow">return</span> m_bAutoHide; }
-<a name="l00041"></a>00041
-<a name="l00042"></a>00042         <span class="keywordtype">void</span> OnMouseEnter();
-<a name="l00043"></a>00043         <span class="keywordtype">void</span> OnMouseLeave();
+<a name="l00027"></a>00027
+<a name="l00030"></a><a class="code" href="class_c_chart_scroll_bar.html">00030</a> <span class="keyword">class </span><a class="code" href="class_c_chart_scroll_bar.html" title="Class which manages the interaction with the axis scroll bar.">CChartScrollBar</a> : <span class="keyword">public</span> CScrollBar
+<a name="l00031"></a>00031 {
+<a name="l00032"></a>00032 <span class="keyword">friend</span> <a class="code" href="class_c_chart_axis.html" title="Base class that takes care of the management of a chart axis.">CChartAxis</a>;
+<a name="l00033"></a>00033
+<a name="l00034"></a>00034 <span class="keyword">public</span>:
+<a name="l00036"></a>00036         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_scroll_bar.html#fd81755f9221643097d71b0ad919d203" title="Creates the scroll bar within a specified rectangle.">CreateScrollBar</a>(<span class="keyword">const</span> CRect&amp; PlottingRect);
+<a name="l00037"></a>00037
+<a name="l00039"></a>00039         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_scroll_bar.html#9192b0e2c5bafdef560cdd28690299c6" title="Called on horizontal scrolling.">OnHScroll</a>(UINT nSBCode, UINT nPos);
+<a name="l00041"></a>00041         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_scroll_bar.html#80a7bccff25ffa0c7b928c4419b052d0" title="Called on vertical scrolling.">OnVScroll</a>(UINT nSBCode, UINT nPos);
+<a name="l00043"></a>00043         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_scroll_bar.html#a390273b9f3f4243e3667be5d09b5fcb" title="Refreshes the scroll bar position.">Refresh</a>();
 <a name="l00044"></a>00044
-<a name="l00045"></a>00045 <span class="keyword">private</span>:
-<a name="l00046"></a>00046         CChartScrollBar(<a class="code" href="class_c_chart_axis.html" title="Base class that takes care of the management of a chart axis.">CChartAxis</a>* pParentAxis);
-<a name="l00047"></a>00047         ~CChartScrollBar();
-<a name="l00048"></a>00048
-<a name="l00049"></a>00049         <span class="keywordtype">bool</span> IsScrollInverted() <span class="keyword">const</span>;
-<a name="l00050"></a>00050         <span class="keywordtype">void</span> MoveAxisToPos(<span class="keywordtype">int</span> PreviousPos, <span class="keywordtype">int</span> CurPos);
-<a name="l00051"></a>00051
-<a name="l00052"></a>00052         <a class="code" href="class_c_chart_axis.html" title="Base class that takes care of the management of a chart axis.">CChartAxis</a>* m_pParentAxis;
-<a name="l00053"></a>00053         <span class="keywordtype">bool</span> m_bEnabled;
-<a name="l00054"></a>00054         <span class="keywordtype">bool</span> m_bAutoHide;
-<a name="l00055"></a>00055 };
+<a name="l00046"></a><a class="code" href="class_c_chart_scroll_bar.html#8d49e8bb3d1d8e7f0606855137ae5114">00046</a>         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_scroll_bar.html#8d49e8bb3d1d8e7f0606855137ae5114" title="Enables/disables the scroll bar.">SetEnabled</a>(<span class="keywordtype">bool</span> bEnabled)  { m_bEnabled = bEnabled; }
+<a name="l00048"></a><a class="code" href="class_c_chart_scroll_bar.html#f71fa8b4d24a4b5d8ae6577b0a4691f5">00048</a>         <span class="keywordtype">bool</span> <a class="code" href="class_c_chart_scroll_bar.html#f71fa8b4d24a4b5d8ae6577b0a4691f5" title="Returns true if the scroll bar is enabled.">GetEnabled</a>()<span class="keyword"> const                 </span>{ <span class="keywordflow">return</span> m_bEnabled; }
+<a name="l00050"></a>00050
+<a name="l00054"></a><a class="code" href="class_c_chart_scroll_bar.html#7a39f2691c50f60f85b5f6abffff10d5">00054</a>         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_scroll_bar.html#7a39f2691c50f60f85b5f6abffff10d5" title="Enables/disables the auto-hide mode.">SetAutoHide</a>(<span class="keywordtype">bool</span> bAutoHide)  { m_bAutoHide = bAutoHide; }
+<a name="l00056"></a><a class="code" href="class_c_chart_scroll_bar.html#f2ec9b07c5f1e800aee44fb844b8e5ad">00056</a>         <span class="keywordtype">bool</span> <a class="code" href="class_c_chart_scroll_bar.html#f2ec9b07c5f1e800aee44fb844b8e5ad" title="Returns true if the auto-hide mode is activated.">GetAutoHide</a>()<span class="keyword"> const                  </span>{ <span class="keywordflow">return</span> m_bAutoHide; }
+<a name="l00057"></a>00057
+<a name="l00059"></a>00059         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_scroll_bar.html#f7714e4b05c62bd3a4ad10e3e62fbd87" title="Called when the mouse enters the scroll bar area.">OnMouseEnter</a>();
+<a name="l00061"></a>00061         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_scroll_bar.html#cec567d8be6853724afd047a5a74a6c9" title="Called when the mouse leaves the scroll bar area.">OnMouseLeave</a>();
+<a name="l00062"></a>00062
+<a name="l00063"></a>00063 <span class="keyword">private</span>:
+<a name="l00065"></a>00065         <a class="code" href="class_c_chart_scroll_bar.html" title="Class which manages the interaction with the axis scroll bar.">CChartScrollBar</a>(<a class="code" href="class_c_chart_axis.html" title="Base class that takes care of the management of a chart axis.">CChartAxis</a>* pParentAxis);
+<a name="l00067"></a>00067         ~<a class="code" href="class_c_chart_scroll_bar.html" title="Class which manages the interaction with the axis scroll bar.">CChartScrollBar</a>();
+<a name="l00068"></a>00068
+<a name="l00069"></a>00069         <span class="keywordtype">bool</span> IsScrollInverted() <span class="keyword">const</span>;
+<a name="l00070"></a>00070         <span class="keywordtype">void</span> MoveAxisToPos(<span class="keywordtype">int</span> PreviousPos, <span class="keywordtype">int</span> CurPos);
+<a name="l00071"></a>00071
+<a name="l00072"></a>00072         <a class="code" href="class_c_chart_axis.html" title="Base class that takes care of the management of a chart axis.">CChartAxis</a>* m_pParentAxis;
+<a name="l00073"></a>00073         <span class="keywordtype">bool</span> m_bEnabled;
+<a name="l00074"></a>00074         <span class="keywordtype">bool</span> m_bAutoHide;
+<a name="l00075"></a>00075 };
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:19 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:10 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -22,7 +23,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>CChartBarSerie Class Reference</h1><!-- doxytag: class="CChartBarSerie" --><!-- doxytag: inherits="CChartSerie" -->Specialization of a <a class="el" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a> to display a bars series.
+<h1>CChartBarSerie Class Reference</h1><!-- doxytag: class="CChartBarSerie" --><!-- doxytag: inherits="CChartXYSerie" -->Specialization of a <a class="el" href="class_c_chart_serie.html" title="Abstract class that provides a common &quot;interface&quot; for all series in the...">CChartSerie</a> to display a bars series.
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;<a class="el" href="_chart_bar_serie_8h-source.html">ChartBarSerie.h</a>&gt;</code>
@@ -33,7 +34,9 @@ Inheritance diagram for CChartBarSerie:</div>
 
 <p><center><img src="class_c_chart_bar_serie.png" usemap="#CChartBarSerie_map" border="0" alt=""></center>
 <map name="CChartBarSerie_map">
-<area href="class_c_chart_serie.html" alt="CChartSerie" shape="rect" coords="0,0,102,24">
+<area href="class_c_chart_x_y_serie.html" alt="CChartXYSerie" shape="rect" coords="0,112,219,136">
+<area href="class_c_chart_serie_base.html" alt="CChartSerieBase< SChartXYPoint >" shape="rect" coords="0,56,219,80">
+<area href="class_c_chart_serie.html" alt="CChartSerie" shape="rect" coords="0,0,219,24">
 </map>
 </div>
 
@@ -88,6 +91,13 @@ int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_bar_serie.html#49f2d1b1359904abbdc526e2f0ef1f79">GetGroupId</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the group Id of the series. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_bar_serie.html#e71413d96c465b3817f1a3e38f172991">SetStacked</a> (bool bStacked)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specifies if the series is stacked with other bar series.  <a href="#e71413d96c465b3817f1a3e38f172991"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="4471f2073992b01919342a128b9ffbbe"></a><!-- doxytag: member="CChartBarSerie::IsStacked" ref="4471f2073992b01919342a128b9ffbbe" args="()" -->
+bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_bar_serie.html#4471f2073992b01919342a128b9ffbbe">IsStacked</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if the series is stacked. <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="97475ad09ac06af0d9b0a719eaa4cc9a"></a><!-- doxytag: member="CChartBarSerie::ShowGradient" ref="97475ad09ac06af0d9b0a719eaa4cc9a" args="(bool bShow)" -->
 void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_bar_serie.html#97475ad09ac06af0d9b0a719eaa4cc9a">ShowGradient</a> (bool bShow)</td></tr>
 
@@ -112,7 +122,7 @@ static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Static function returning the space between series of the same group. <br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Specialization of a <a class="el" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a> to display a bars series.
+Specialization of a <a class="el" href="class_c_chart_serie.html" title="Abstract class that provides a common &quot;interface&quot; for all series in the...">CChartSerie</a> to display a bars series.
 <p>
 This class is a specialized series class used to display vertical (default) or horizontal bars. Each bar in the series is centered around its X value (for vertical bars) or Y value (for horizontal bars). Bars can be grouped together, so that they do not overlap but are stacked next to each other (or on top of each other). This is done by specifying a group Id: bar series with the same group Id will be grouped together (stacked). Series with different group Id will be independant (they will be drawn as if they were the only one, meaning that the different series will probably overlap). <hr><h2>Member Function Documentation</h2>
 <a class="anchor" name="49c4128340700712f2be11449d59cfee"></a><!-- doxytag: member="CChartBarSerie::IsPointOnSerie" ref="49c4128340700712f2be11449d59cfee" args="(const CPoint &amp;screenPoint, unsigned &amp;uIndex) const " -->
@@ -251,10 +261,32 @@ Set the group Id of the series.
 The group Id allows to stack series next to each other (or on top of each other).
 </div>
 </div><p>
+<a class="anchor" name="e71413d96c465b3817f1a3e38f172991"></a><!-- doxytag: member="CChartBarSerie::SetStacked" ref="e71413d96c465b3817f1a3e38f172991" args="(bool bStacked)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CChartBarSerie::SetStacked           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>bStacked</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Specifies if the series is stacked with other bar series.
+<p>
+All bar series with the same group Id and with the stacked flag to true will be drawn on top of each other (for vertical bars).
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>E:/Sources Misc/ChartDemo/ChartCtrl/<a class="el" href="_chart_bar_serie_8h-source.html">ChartBarSerie.h</a><li>E:/Sources Misc/ChartDemo/ChartCtrl/ChartBarSerie.cpp</ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:19 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:10 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

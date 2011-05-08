@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -46,10 +47,10 @@
 <a name="l00026"></a>00026 <span class="preprocessor"></span><span class="preprocessor">#pragma once</span>
 <a name="l00027"></a>00027 <span class="preprocessor"></span><span class="preprocessor">#endif // _MSC_VER &gt; 1000</span>
 <a name="l00028"></a>00028 <span class="preprocessor"></span>
-<a name="l00029"></a>00029 <span class="preprocessor">#include "ChartSerie.h"</span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include "ChartXYSerie.h"</span>
 <a name="l00030"></a>00030
 <a name="l00032"></a>00032
-<a name="l00036"></a><a class="code" href="class_c_chart_line_serie.html">00036</a> <span class="keyword">class </span><a class="code" href="class_c_chart_line_serie.html" title="Specialization of a CChartSerie to display a line series.">CChartLineSerie</a> : <span class="keyword">public</span> <a class="code" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a>
+<a name="l00036"></a><a class="code" href="class_c_chart_line_serie.html">00036</a> <span class="keyword">class </span><a class="code" href="class_c_chart_line_serie.html" title="Specialization of a CChartSerie to display a line series.">CChartLineSerie</a> : <span class="keyword">public</span> <a class="code" href="class_c_chart_x_y_serie.html" title="Specialization of a CChartSerieBase for series having data with an X and an Y value...">CChartXYSerie</a>
 <a name="l00037"></a>00037 {
 <a name="l00038"></a>00038 <span class="keyword">public</span>:
 <a name="l00040"></a>00040
@@ -69,25 +70,25 @@
 <a name="l00075"></a>00075
 <a name="l00076"></a>00076 <span class="keyword">private</span>:
 <a name="l00078"></a>00078
-<a name="l00085"></a>00085     <span class="keywordtype">void</span> DrawLegend(CDC* pDC, <span class="keyword">const</span> CRect&amp; rectBitmap) <span class="keyword">const</span>;
-<a name="l00086"></a>00086
-<a name="l00088"></a>00088
-<a name="l00095"></a>00095         <span class="keywordtype">void</span> Draw(CDC* pDC);
-<a name="l00097"></a>00097
-<a name="l00102"></a>00102         <span class="keywordtype">void</span> DrawAll(CDC *pDC);
-<a name="l00103"></a>00103
-<a name="l00105"></a>00105         <span class="keywordtype">bool</span> IsNearLine(<span class="keywordtype">long</span> Axl, <span class="keywordtype">long</span> Ayl,<span class="keywordtype">long</span> Bxl,
-<a name="l00106"></a>00106                                         <span class="keywordtype">long</span> Byl, <span class="keywordtype">long</span> Cxl, <span class="keywordtype">long</span> Cyl) <span class="keyword">const</span>;
-<a name="l00107"></a>00107
-<a name="l00108"></a>00108
-<a name="l00110"></a>00110         <span class="keywordtype">int</span> m_iLineWidth;
-<a name="l00112"></a>00112         <span class="keywordtype">int</span> m_iPenStyle;
-<a name="l00114"></a>00114         <span class="keywordtype">bool</span> m_bSmooth;
-<a name="l00115"></a>00115 };
-<a name="l00116"></a>00116
-<a name="l00117"></a>00117 <span class="preprocessor">#endif // !defined(AFX_CHARTLINESERIE_H__792C2F20_9650_42FA_B13D_E63911C98CE5__INCLUDED_)</span>
+<a name="l00084"></a>00084     <span class="keywordtype">void</span> DrawLegend(CDC* pDC, <span class="keyword">const</span> CRect&amp; rectBitmap) <span class="keyword">const</span>;
+<a name="l00085"></a>00085
+<a name="l00087"></a>00087
+<a name="l00093"></a>00093         <span class="keywordtype">void</span> Draw(CDC* pDC);
+<a name="l00095"></a>00095
+<a name="l00099"></a>00099         <span class="keywordtype">void</span> DrawAll(CDC *pDC);
+<a name="l00100"></a>00100
+<a name="l00102"></a>00102         <span class="keywordtype">bool</span> IsNearLine(<span class="keywordtype">long</span> Axl, <span class="keywordtype">long</span> Ayl,<span class="keywordtype">long</span> Bxl,
+<a name="l00103"></a>00103                                         <span class="keywordtype">long</span> Byl, <span class="keywordtype">long</span> Cxl, <span class="keywordtype">long</span> Cyl) <span class="keyword">const</span>;
+<a name="l00104"></a>00104
+<a name="l00105"></a>00105
+<a name="l00107"></a>00107         <span class="keywordtype">int</span> m_iLineWidth;
+<a name="l00109"></a>00109         <span class="keywordtype">int</span> m_iPenStyle;
+<a name="l00111"></a>00111         <span class="keywordtype">bool</span> m_bSmooth;
+<a name="l00112"></a>00112 };
+<a name="l00113"></a>00113
+<a name="l00114"></a>00114 <span class="preprocessor">#endif // !defined(AFX_CHARTLINESERIE_H__792C2F20_9650_42FA_B13D_E63911C98CE5__INCLUDED_)</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:19 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:09 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>
