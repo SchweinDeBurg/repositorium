@@ -23,7 +23,7 @@
 //      --suffix=none
 //*****************************************************************************
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "TransparentListBox.h"
 #include "GraphicsMisc.h"
 

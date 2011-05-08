@@ -2109,6 +2109,14 @@
 				RelativePath=".\Source\RuntimeDlg.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Source\WndResizer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\WndResizer.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Graphics"
