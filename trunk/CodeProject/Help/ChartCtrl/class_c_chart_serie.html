@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -22,7 +23,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>CChartSerie Class Reference</h1><!-- doxytag: class="CChartSerie" -->Base class for all series of the control.
+<h1>CChartSerie Class Reference</h1><!-- doxytag: class="CChartSerie" -->Abstract class that provides a common "interface" for all series in the control.
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;<a class="el" href="_chart_serie_8h-source.html">ChartSerie.h</a>&gt;</code>
@@ -33,10 +34,18 @@ Inheritance diagram for CChartSerie:</div>
 
 <p><center><img src="class_c_chart_serie.png" usemap="#CChartSerie_map" border="0" alt=""></center>
 <map name="CChartSerie_map">
-<area href="class_c_chart_bar_serie.html" alt="CChartBarSerie" shape="rect" coords="0,56,127,80">
-<area href="class_c_chart_line_serie.html" alt="CChartLineSerie" shape="rect" coords="137,56,264,80">
-<area href="class_c_chart_points_serie.html" alt="CChartPointsSerie" shape="rect" coords="274,56,401,80">
-<area href="class_c_chart_surface_serie.html" alt="CChartSurfaceSerie" shape="rect" coords="411,56,538,80">
+<area href="class_c_chart_serie_base.html" alt="CChartSerieBase< T >" shape="rect" coords="0,56,266,80">
+<area href="class_c_chart_serie_base.html" alt="CChartSerieBase< PointType >" shape="rect" coords="276,56,542,80">
+<area href="class_c_chart_serie_base.html" alt="CChartSerieBase< SChartCandlestickPoint >" shape="rect" coords="552,56,818,80">
+<area href="class_c_chart_serie_base.html" alt="CChartSerieBase< SChartGanttPoint >" shape="rect" coords="828,56,1094,80">
+<area href="class_c_chart_serie_base.html" alt="CChartSerieBase< SChartXYPoint >" shape="rect" coords="1104,56,1370,80">
+<area href="class_c_chart_candlestick_serie.html" alt="CChartCandlestickSerie" shape="rect" coords="552,112,818,136">
+<area href="class_c_chart_gantt_serie.html" alt="CChartGanttSerie" shape="rect" coords="828,112,1094,136">
+<area href="class_c_chart_x_y_serie.html" alt="CChartXYSerie" shape="rect" coords="1104,112,1370,136">
+<area href="class_c_chart_bar_serie.html" alt="CChartBarSerie" shape="rect" coords="690,168,956,192">
+<area href="class_c_chart_line_serie.html" alt="CChartLineSerie" shape="rect" coords="966,168,1232,192">
+<area href="class_c_chart_points_serie.html" alt="CChartPointsSerie" shape="rect" coords="1242,168,1508,192">
+<area href="class_c_chart_surface_serie.html" alt="CChartSurfaceSerie" shape="rect" coords="1518,168,1784,192">
 </map>
 </div>
 
@@ -44,52 +53,26 @@ Inheritance diagram for CChartSerie:</div>
 <a href="class_c_chart_serie-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="a78614f5cd814d5d03019096e01518c7"></a><!-- doxytag: member="CChartSerie::AddPoint" ref="a78614f5cd814d5d03019096e01518c7" args="(double X, double Y)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#a78614f5cd814d5d03019096e01518c7">AddPoint</a> (double X, double Y)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adds a single data point to the series. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#5ac3df9bdf26425d80b60c86dae1e673">AddPoints</a> (double *pX, double *pY, unsigned Count)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adds an array of points to the series.  <a href="#5ac3df9bdf26425d80b60c86dae1e673"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#1136b9ccff618cb242434ef7f455a7d1">SetPoints</a> (double *pX, double *pY, unsigned Count)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets an array of points to the series.  <a href="#1136b9ccff618cb242434ef7f455a7d1"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="17fd2e61c7c5cf9a5db48c12933cefae"></a><!-- doxytag: member="CChartSerie::RemovePointsFromBegin" ref="17fd2e61c7c5cf9a5db48c12933cefae" args="(unsigned Count)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#17fd2e61c7c5cf9a5db48c12933cefae">RemovePointsFromBegin</a> (unsigned Count)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes a certain amount of points from the begining of the series. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="7da8fdd72ed52c4d38b185193c95777f"></a><!-- doxytag: member="CChartSerie::RemovePointsFromEnd" ref="7da8fdd72ed52c4d38b185193c95777f" args="(unsigned Count)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#7da8fdd72ed52c4d38b185193c95777f">RemovePointsFromEnd</a> (unsigned Count)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes a certain amount of points from the end of the series. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b9391f8bb3424c34843e1617f10e28ee"></a><!-- doxytag: member="CChartSerie::ClearSerie" ref="b9391f8bb3424c34843e1617f10e28ee" args="()" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#b9391f8bb3424c34843e1617f10e28ee">ClearSerie</a> ()</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes all points from the series. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="fc012340b86a45daabffaac70fde3b84"></a><!-- doxytag: member="CChartSerie::GetPointsCount" ref="fc012340b86a45daabffaac70fde3b84" args="() const " -->
-unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#fc012340b86a45daabffaac70fde3b84">GetPointsCount</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="42410362f42280c706462288365e5dff"></a><!-- doxytag: member="CChartSerie::GetPointsCount" ref="42410362f42280c706462288365e5dff" args="() const =0" -->
+virtual unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#42410362f42280c706462288365e5dff">GetPointsCount</a> () const =0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the number of points in the series. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="4e4111b8a03d9eadc07dc49a8f8a6535"></a><!-- doxytag: member="CChartSerie::GetYPointValue" ref="4e4111b8a03d9eadc07dc49a8f8a6535" args="(unsigned PointIndex) const " -->
-double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#4e4111b8a03d9eadc07dc49a8f8a6535">GetYPointValue</a> (unsigned PointIndex) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="8252f472c3e02323dd03ce683257d57e"></a><!-- doxytag: member="CChartSerie::GetPointScreenCoord" ref="8252f472c3e02323dd03ce683257d57e" args="(unsigned uPointIndex)=0" -->
+virtual CPoint&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#8252f472c3e02323dd03ce683257d57e">GetPointScreenCoord</a> (unsigned uPointIndex)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Y value of a specific point in the series. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="69b68925a4bd6c3bcdeb02e7a46eb0c2"></a><!-- doxytag: member="CChartSerie::GetXPointValue" ref="69b68925a4bd6c3bcdeb02e7a46eb0c2" args="(unsigned PointIndex) const " -->
-double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#69b68925a4bd6c3bcdeb02e7a46eb0c2">GetXPointValue</a> (unsigned PointIndex) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the screen coordinate of a specific point. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#ec4f2c519c45fe594a013c739206f5f7">GetSerieYMinMax</a> (double &amp;Min, double &amp;Max) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the X value of a specific point in the series. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#b17299a9e03cdb977052954fbf62cf52">SetYPointValue</a> (unsigned PointIndex, double NewVal)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the minimum and maxium Y values of the series.  <a href="#ec4f2c519c45fe594a013c739206f5f7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#eac6b9eb8032f52619014ddc328792e2">GetSerieXMinMax</a> (double &amp;Min, double &amp;Max) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the Y value of a specific point in the series.  <a href="#b17299a9e03cdb977052954fbf62cf52"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#1ce0afa14bdcad5866abe958f7056f1b">SetXPointValue</a> (unsigned PointIndex, double NewVal)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the minimum and maxium X values of the series.  <a href="#eac6b9eb8032f52619014ddc328792e2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#b7a8079da53d6a6b44af1ed3555ab87d">GetSerieXScreenMinMax</a> (double &amp;Min, double &amp;Max) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the X value of a specific point in the series.  <a href="#1ce0afa14bdcad5866abe958f7056f1b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#39055ffd58ad32295aba43fe10091cf5">GetSerieYMinMax</a> (double &amp;Min, double &amp;Max) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the minimum and maxium screen X values of the series.  <a href="#b7a8079da53d6a6b44af1ed3555ab87d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#ec1d6b86dbe79e38c65c7e4c391a7db6">GetSerieYScreenMinMax</a> (double &amp;Min, double &amp;Max) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the minimum and maxium Y values of the series.  <a href="#39055ffd58ad32295aba43fe10091cf5"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#8d7991667c09689a6506ddb0dc621d3d">GetSerieXMinMax</a> (double &amp;Min, double &amp;Max) const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the minimum and maxium X values of the series.  <a href="#8d7991667c09689a6506ddb0dc621d3d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the minimum and maxium screen Y values of the series.  <a href="#ec1d6b86dbe79e38c65c7e4c391a7db6"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b0bb5dd670279222411d4aafd3ac2dea"></a><!-- doxytag: member="CChartSerie::SetName" ref="b0bb5dd670279222411d4aafd3ac2dea" args="(const TChartString &amp;NewName)" -->
 void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#b0bb5dd670279222411d4aafd3ac2dea">SetName</a> (const TChartString &amp;NewName)</td></tr>
 
@@ -117,9 +100,6 @@ double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#5505e0bc029eb29fd927fb5c43b02ad5">~CChartSerie</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#a3ad5fbccddb412b3412a3ed8344f4f1">SetSeriesOrdering</a> (<a class="el" href="class_c_chart_points_array.html#f17dd8d4ef7b63760ac39f0775760415">CChartPointsArray::PointsOrdering</a> newOrdering)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specifies how the points should be ordered in the series.  <a href="#a3ad5fbccddb412b3412a3ed8344f4f1"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#e2e0c95a765d80ff74a0936784f5d84d">SetVisible</a> (bool bVisible)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specifies if the series is visible or not.  <a href="#e2e0c95a765d80ff74a0936784f5d84d"></a><br></td></tr>
@@ -151,19 +131,6 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#01ec05a299e5420d5ff770918e4b8223">SetShadowDepth</a> (int Depth)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sepcifies the depth (in pixels) of the shadow. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="72e0a034ac7202926e481bb66aff5efb"></a><!-- doxytag: member="CChartSerie::GetPointScreenCoord" ref="72e0a034ac7202926e481bb66aff5efb" args="(unsigned uPointIndex)" -->
-CPoint&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#72e0a034ac7202926e481bb66aff5efb">GetPointScreenCoord</a> (unsigned uPointIndex)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Retrieves the screen point of a specific data point. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="class_c_chart_balloon_label.html">CChartBalloonLabel</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#ac1ea89e37aed368687a260da02861d9">CreateBalloonLabel</a> (unsigned uPointIndex, const TChartString &amp;strLabelText)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates and attaches a balloon label on a point of the series.  <a href="#ac1ea89e37aed368687a260da02861d9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="class_c_chart_balloon_label.html">CChartBalloonLabel</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#23b58b5803d83d8d8f9c4c07bc073084">CreateBalloonLabel</a> (unsigned uPointIndex, <a class="el" href="class_c_chart_label_provider.html">CChartLabelProvider</a> *pLabelProvider)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates and attaches a balloon label on a point of the series.  <a href="#23b58b5803d83d8d8f9c4c07bc073084"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#a20d12328d360e26c5495b390d73dbae">AttachCustomLabel</a> (unsigned uPointIndex, <a class="el" href="class_c_chart_label.html">CChartLabel</a> *pLabel)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attaches a custom label on a point of the series.  <a href="#a20d12328d360e26c5495b390d73dbae"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#941aec6162f5b449fc570bc5063fb076">IsPointOnSerie</a> (const CPoint &amp;screenPoint, unsigned &amp;uIndex) const =0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tests if a certain screen point is on the series.  <a href="#941aec6162f5b449fc570bc5063fb076"></a><br></td></tr>
@@ -175,9 +142,13 @@ unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enables or disables certain mouse notifications on the series.  <a href="#c1a19e68c61999394c483d11c3622b0c"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#47910a67d3e376f4f291340cc617d97e">GetVisiblePoints</a> (unsigned &amp;uFirst, unsigned &amp;uLast) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="1c759c116f098a0223563fd2537348ba"></a><!-- doxytag: member="CChartSerie::RefreshAutoAxes" ref="1c759c116f098a0223563fd2537348ba" args="()" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#1c759c116f098a0223563fd2537348ba">RefreshAutoAxes</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the first and last visible points of the series.  <a href="#47910a67d3e376f4f291340cc617d97e"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Refreshes the automatic axes associated with this series. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#5e9c07d45e8594080e1a09bcb78cfdd4">GetVisiblePoints</a> (unsigned &amp;uFirst, unsigned &amp;uLast) const =0</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the first and last visible points of the series.  <a href="#5e9c07d45e8594080e1a09bcb78cfdd4"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#fc56f75dd2c598b4868da42f4dcc11b3">DrawLegend</a> (CDC *pDC, const CRect &amp;rectBitmap) const =0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Draws the legend icon for the series.  <a href="#fc56f75dd2c598b4868da42f4dcc11b3"></a><br></td></tr>
@@ -187,15 +158,21 @@ unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#3244636a57dde469a2d0c57fe3e7f8e3">DrawAll</a> (CDC *pDC)=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Redraws the full series.  <a href="#3244636a57dde469a2d0c57fe3e7f8e3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#64af061c40e97301c3f7816056706a39">DrawLabels</a> (CDC *pDC)=0</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Draws the labels of the series.  <a href="#64af061c40e97301c3f7816056706a39"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#e0383f414bfe61f1f2c018e459d2f70c">OnMouseEvent</a> (<a class="el" href="class_c_chart_mouse_listener.html#cffa1073dca632eca72f7339ecb350d7">CChartMouseListener::MouseEvent</a> mouseEvent, const CPoint &amp;screenPoint)=0</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Called when a mouse event is detected on the chart.  <a href="#e0383f414bfe61f1f2c018e459d2f70c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="1b505459c44c98950fd0c084dd0d316f"></a><!-- doxytag: member="CChartSerie::NotifyMouseMoveEnabled" ref="1b505459c44c98950fd0c084dd0d316f" args="()" -->
+bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#1b505459c44c98950fd0c084dd0d316f">NotifyMouseMoveEnabled</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if the series reacts on mouse moves. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="de30402fc61235eae3ece939bc4d2c0f"></a><!-- doxytag: member="CChartSerie::NotifyMouseClickEnabled" ref="de30402fc61235eae3ece939bc4d2c0f" args="()" -->
+bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#de30402fc61235eae3ece939bc4d2c0f">NotifyMouseClickEnabled</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if the series reacts on mouse clicks. <br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="2c8274ea2efa3883ee95a5e468346377"></a><!-- doxytag: member="CChartSerie::m_vPoints" ref="2c8274ea2efa3883ee95a5e468346377" args="" -->
-<a class="el" href="class_c_chart_points_array.html">CChartPointsArray</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#2c8274ea2efa3883ee95a5e468346377">m_vPoints</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The helper class containing all the data points. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="cae7222f663037ea1ca9b1e246023296"></a><!-- doxytag: member="CChartSerie::m_uLastDrawnPoint" ref="cae7222f663037ea1ca9b1e246023296" args="" -->
-unsigned&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#cae7222f663037ea1ca9b1e246023296">m_uLastDrawnPoint</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Index of the last point drawn. <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="e58934056f70a5dc032294893d926f11"></a><!-- doxytag: member="CChartSerie::m_pParentCtrl" ref="e58934056f70a5dc032294893d926f11" args="" -->
 <a class="el" href="class_c_chart_ctrl.html">CChartCtrl</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_serie.html#e58934056f70a5dc032294893d926f11">m_pParentCtrl</a></td></tr>
 
@@ -238,166 +215,11 @@ CRect&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The rectangle in which the series should be drawn. <br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Base class for all series of the control.
+Abstract class that provides a common "interface" for all series in the control.
 <p>
-This class is much more than a simple base class. It already store all the data points and provide utility functions to manipulate them. The drawing of the series is made through pure virtual functions which should be implemented by derived classes. Each series is identified by an Id. <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="5ac3df9bdf26425d80b60c86dae1e673"></a><!-- doxytag: member="CChartSerie::AddPoints" ref="5ac3df9bdf26425d80b60c86dae1e673" args="(double *pX, double *pY, unsigned Count)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CChartSerie::AddPoints           </td>
-          <td>(</td>
-          <td class="paramtype">double *&nbsp;</td>
-          <td class="paramname"> <em>pX</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double *&nbsp;</td>
-          <td class="paramname"> <em>pY</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned&nbsp;</td>
-          <td class="paramname"> <em>Count</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Adds an array of points to the series.
-<p>
-Points which were already present in the series are kept. <dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>pX</em>&nbsp;</td><td>Array of X values for the points </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>pY</em>&nbsp;</td><td>Array of Y values for the points </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>Count</em>&nbsp;</td><td>Size of each of both arrays (number of points to add) </td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="a20d12328d360e26c5495b390d73dbae"></a><!-- doxytag: member="CChartSerie::AttachCustomLabel" ref="a20d12328d360e26c5495b390d73dbae" args="(unsigned uPointIndex, CChartLabel *pLabel)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CChartSerie::AttachCustomLabel           </td>
-          <td>(</td>
-          <td class="paramtype">unsigned&nbsp;</td>
-          <td class="paramname"> <em>uPointIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_c_chart_label.html">CChartLabel</a> *&nbsp;</td>
-          <td class="paramname"> <em>pLabel</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Attaches a custom label on a point of the series.
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>uPointIndex</em>&nbsp;</td><td>The index of the point on which the label should be attached </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>pLabel</em>&nbsp;</td><td>The label to attach to the point </td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="23b58b5803d83d8d8f9c4c07bc073084"></a><!-- doxytag: member="CChartSerie::CreateBalloonLabel" ref="23b58b5803d83d8d8f9c4c07bc073084" args="(unsigned uPointIndex, CChartLabelProvider *pLabelProvider)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_chart_balloon_label.html">CChartBalloonLabel</a> * CChartSerie::CreateBalloonLabel           </td>
-          <td>(</td>
-          <td class="paramtype">unsigned&nbsp;</td>
-          <td class="paramname"> <em>uPointIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_c_chart_label_provider.html">CChartLabelProvider</a> *&nbsp;</td>
-          <td class="paramname"> <em>pLabelProvider</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Creates and attaches a balloon label on a point of the series.
-<p>
-This functions specifies a <a class="el" href="class_c_chart_label_provider.html" title="Interface which should be implemented in order to provide text to a label.">CChartLabelProvider</a> object which is used to supply the text of the label. This is useful if you want more flexibility for the text of the label (display information about the point value for instance). <dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>uPointIndex</em>&nbsp;</td><td>The index of the point on which the label should be attached </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>pLabelProvider</em>&nbsp;</td><td>Object providing the text displayed on the label </td></tr>
-  </table>
-</dl>
-<dl class="return" compact><dt><b>Returns:</b></dt><dd>the created <a class="el" href="class_c_chart_balloon_label.html" title="Specialization of the CChartLabel to display a balloon label.">CChartBalloonLabel</a> </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="ac1ea89e37aed368687a260da02861d9"></a><!-- doxytag: member="CChartSerie::CreateBalloonLabel" ref="ac1ea89e37aed368687a260da02861d9" args="(unsigned uPointIndex, const TChartString &amp;strLabelText)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_c_chart_balloon_label.html">CChartBalloonLabel</a> * CChartSerie::CreateBalloonLabel           </td>
-          <td>(</td>
-          <td class="paramtype">unsigned&nbsp;</td>
-          <td class="paramname"> <em>uPointIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const TChartString &amp;&nbsp;</td>
-          <td class="paramname"> <em>strLabelText</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Creates and attaches a balloon label on a point of the series.
-<p>
-This functions specifies a static text to display in the label. <dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>uPointIndex</em>&nbsp;</td><td>The index of the point on which the label should be attached </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>strLabelText</em>&nbsp;</td><td>The text of the label </td></tr>
-  </table>
-</dl>
-<dl class="return" compact><dt><b>Returns:</b></dt><dd>the created <a class="el" href="class_c_chart_balloon_label.html" title="Specialization of the CChartLabel to display a balloon label.">CChartBalloonLabel</a> </dd></dl>
-
-</div>
-</div><p>
+The class doesn't manipulate points (the type of point is unknown at this level in the class hierarchy) but it provides all other functionalities which are independant of the point type.<p>
+The drawing of the series is made through pure virtual functions which should be implemented by derived classes.<p>
+Each series is identified by an Id. <hr><h2>Member Function Documentation</h2>
 <a class="anchor" name="580f8d02448c452d61f2bc68b1dea066"></a><!-- doxytag: member="CChartSerie::Draw" ref="580f8d02448c452d61f2bc68b1dea066" args="(CDC *pDC)=0" -->
 <div class="memitem">
 <div class="memproto">
@@ -423,6 +245,8 @@ This pure virtual function should be overriden by child classes. This function s
   </table>
 </dl>
 
+<p>Implemented in <a class="el" href="class_c_chart_candlestick_serie.html#73544370476b42322e1c17edf580eb5a">CChartCandlestickSerie</a>, and <a class="el" href="class_c_chart_gantt_serie.html#f82a8643c50f10c7893c1e83f1d9c43f">CChartGanttSerie</a>.</p>
+
 </div>
 </div><p>
 <a class="anchor" name="3244636a57dde469a2d0c57fe3e7f8e3"></a><!-- doxytag: member="CChartSerie::DrawAll" ref="3244636a57dde469a2d0c57fe3e7f8e3" args="(CDC *pDC)=0" -->
@@ -443,6 +267,35 @@ This pure virtual function should be overriden by child classes. This function s
 
 <p>
 Redraws the full series.
+<p>
+This pure virtual function should be overriden by child classes. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>pDC</em>&nbsp;</td><td>The device context used to draw </td></tr>
+  </table>
+</dl>
+
+<p>Implemented in <a class="el" href="class_c_chart_candlestick_serie.html#588ed1d8d6dd07f33d3cfce10289543f">CChartCandlestickSerie</a>, and <a class="el" href="class_c_chart_gantt_serie.html#888aa7dab2231e3af81bed326ead772f">CChartGanttSerie</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="64af061c40e97301c3f7816056706a39"></a><!-- doxytag: member="CChartSerie::DrawLabels" ref="64af061c40e97301c3f7816056706a39" args="(CDC *pDC)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CChartSerie::DrawLabels           </td>
+          <td>(</td>
+          <td class="paramtype">CDC *&nbsp;</td>
+          <td class="paramname"> <em>pDC</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Draws the labels of the series.
 <p>
 This pure virtual function should be overriden by child classes. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -487,6 +340,8 @@ This pure virtual function should be overriden by child classes. <dl compact><dt
   </table>
 </dl>
 
+<p>Implemented in <a class="el" href="class_c_chart_candlestick_serie.html#18a147258e21691b989cff0ad90269ee">CChartCandlestickSerie</a>, and <a class="el" href="class_c_chart_gantt_serie.html#9dd98507133d52742ac012399b6335a7">CChartGanttSerie</a>.</p>
+
 </div>
 </div><p>
 <a class="anchor" name="c1a19e68c61999394c483d11c3622b0c"></a><!-- doxytag: member="CChartSerie::EnableMouseNotifications" ref="c1a19e68c61999394c483d11c3622b0c" args="(bool bClickEnabled, bool bMoveEnabled)" -->
@@ -526,12 +381,12 @@ Checking if a point is on the series could degrade performances if it has to be 
 
 </div>
 </div><p>
-<a class="anchor" name="8d7991667c09689a6506ddb0dc621d3d"></a><!-- doxytag: member="CChartSerie::GetSerieXMinMax" ref="8d7991667c09689a6506ddb0dc621d3d" args="(double &amp;Min, double &amp;Max) const " -->
+<a class="anchor" name="eac6b9eb8032f52619014ddc328792e2"></a><!-- doxytag: member="CChartSerie::GetSerieXMinMax" ref="eac6b9eb8032f52619014ddc328792e2" args="(double &amp;Min, double &amp;Max) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool CChartSerie::GetSerieXMinMax           </td>
+          <td class="memname">virtual bool CChartSerie::GetSerieXMinMax           </td>
           <td>(</td>
           <td class="paramtype">double &amp;&nbsp;</td>
           <td class="paramname"> <em>Min</em>, </td>
@@ -545,7 +400,7 @@ Checking if a point is on the series could degrade performances if it has to be 
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td> const</td>
+          <td></td><td></td><td> const<code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -562,14 +417,16 @@ Retrieves the minimum and maxium X values of the series.
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>false if the series doesn't contain data or is invisible </dd></dl>
 
+<p>Implemented in <a class="el" href="class_c_chart_serie_base.html#6e82d73342e06886109ef21c8e857d70">CChartSerieBase&lt; T &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#6e82d73342e06886109ef21c8e857d70">CChartSerieBase&lt; SChartCandlestickPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#6e82d73342e06886109ef21c8e857d70">CChartSerieBase&lt; SChartXYPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#6e82d73342e06886109ef21c8e857d70">CChartSerieBase&lt; SChartGanttPoint &gt;</a>, and <a class="el" href="class_c_chart_serie_base.html#6e82d73342e06886109ef21c8e857d70">CChartSerieBase&lt; PointType &gt;</a>.</p>
+
 </div>
 </div><p>
-<a class="anchor" name="39055ffd58ad32295aba43fe10091cf5"></a><!-- doxytag: member="CChartSerie::GetSerieYMinMax" ref="39055ffd58ad32295aba43fe10091cf5" args="(double &amp;Min, double &amp;Max) const " -->
+<a class="anchor" name="b7a8079da53d6a6b44af1ed3555ab87d"></a><!-- doxytag: member="CChartSerie::GetSerieXScreenMinMax" ref="b7a8079da53d6a6b44af1ed3555ab87d" args="(double &amp;Min, double &amp;Max) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool CChartSerie::GetSerieYMinMax           </td>
+          <td class="memname">virtual bool CChartSerie::GetSerieXScreenMinMax           </td>
           <td>(</td>
           <td class="paramtype">double &amp;&nbsp;</td>
           <td class="paramname"> <em>Min</em>, </td>
@@ -583,7 +440,47 @@ Retrieves the minimum and maxium X values of the series.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td> const</td>
+          <td></td><td></td><td> const<code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Retrieves the minimum and maxium screen X values of the series.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>Min</em>&nbsp;</td><td>Minimum value will be stored in this parameter </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Max</em>&nbsp;</td><td>Maximum value will be stored in this parameter </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>false if the series doesn't contain data or is invisible </dd></dl>
+
+<p>Implemented in <a class="el" href="class_c_chart_serie_base.html#91098c0d9e2d419783fad0a6c9da34c9">CChartSerieBase&lt; T &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#91098c0d9e2d419783fad0a6c9da34c9">CChartSerieBase&lt; SChartCandlestickPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#91098c0d9e2d419783fad0a6c9da34c9">CChartSerieBase&lt; SChartXYPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#91098c0d9e2d419783fad0a6c9da34c9">CChartSerieBase&lt; SChartGanttPoint &gt;</a>, and <a class="el" href="class_c_chart_serie_base.html#91098c0d9e2d419783fad0a6c9da34c9">CChartSerieBase&lt; PointType &gt;</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="ec4f2c519c45fe594a013c739206f5f7"></a><!-- doxytag: member="CChartSerie::GetSerieYMinMax" ref="ec4f2c519c45fe594a013c739206f5f7" args="(double &amp;Min, double &amp;Max) const =0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool CChartSerie::GetSerieYMinMax           </td>
+          <td>(</td>
+          <td class="paramtype">double &amp;&nbsp;</td>
+          <td class="paramname"> <em>Min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&nbsp;</td>
+          <td class="paramname"> <em>Max</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td> const<code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -600,14 +497,56 @@ Retrieves the minimum and maxium Y values of the series.
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>false if the series doesn't contain data or is invisible </dd></dl>
 
+<p>Implemented in <a class="el" href="class_c_chart_serie_base.html#8ecff476195375224e976b9641e1b5de">CChartSerieBase&lt; T &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#8ecff476195375224e976b9641e1b5de">CChartSerieBase&lt; SChartCandlestickPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#8ecff476195375224e976b9641e1b5de">CChartSerieBase&lt; SChartXYPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#8ecff476195375224e976b9641e1b5de">CChartSerieBase&lt; SChartGanttPoint &gt;</a>, and <a class="el" href="class_c_chart_serie_base.html#8ecff476195375224e976b9641e1b5de">CChartSerieBase&lt; PointType &gt;</a>.</p>
+
 </div>
 </div><p>
-<a class="anchor" name="47910a67d3e376f4f291340cc617d97e"></a><!-- doxytag: member="CChartSerie::GetVisiblePoints" ref="47910a67d3e376f4f291340cc617d97e" args="(unsigned &amp;uFirst, unsigned &amp;uLast) const " -->
+<a class="anchor" name="ec1d6b86dbe79e38c65c7e4c391a7db6"></a><!-- doxytag: member="CChartSerie::GetSerieYScreenMinMax" ref="ec1d6b86dbe79e38c65c7e4c391a7db6" args="(double &amp;Min, double &amp;Max) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool CChartSerie::GetVisiblePoints           </td>
+          <td class="memname">virtual bool CChartSerie::GetSerieYScreenMinMax           </td>
+          <td>(</td>
+          <td class="paramtype">double &amp;&nbsp;</td>
+          <td class="paramname"> <em>Min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&nbsp;</td>
+          <td class="paramname"> <em>Max</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td> const<code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Retrieves the minimum and maxium screen Y values of the series.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>Min</em>&nbsp;</td><td>Minimum value will be stored in this parameter </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Max</em>&nbsp;</td><td>Maximum value will be stored in this parameter </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>false if the series doesn't contain data or is invisible </dd></dl>
+
+<p>Implemented in <a class="el" href="class_c_chart_serie_base.html#e8058b76f76ecd047aeae2e50adef491">CChartSerieBase&lt; T &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#e8058b76f76ecd047aeae2e50adef491">CChartSerieBase&lt; SChartCandlestickPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#e8058b76f76ecd047aeae2e50adef491">CChartSerieBase&lt; SChartXYPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#e8058b76f76ecd047aeae2e50adef491">CChartSerieBase&lt; SChartGanttPoint &gt;</a>, and <a class="el" href="class_c_chart_serie_base.html#e8058b76f76ecd047aeae2e50adef491">CChartSerieBase&lt; PointType &gt;</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="5e9c07d45e8594080e1a09bcb78cfdd4"></a><!-- doxytag: member="CChartSerie::GetVisiblePoints" ref="5e9c07d45e8594080e1a09bcb78cfdd4" args="(unsigned &amp;uFirst, unsigned &amp;uLast) const =0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool CChartSerie::GetVisiblePoints           </td>
           <td>(</td>
           <td class="paramtype">unsigned &amp;&nbsp;</td>
           <td class="paramname"> <em>uFirst</em>, </td>
@@ -621,7 +560,7 @@ Retrieves the minimum and maxium Y values of the series.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td> const<code> [protected]</code></td>
+          <td></td><td></td><td> const<code> [protected, pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -637,6 +576,8 @@ This function only works if ordering is enabled. <dl compact><dt><b>Parameters:<
   </table>
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>false if the series has no ordering or no data points. </dd></dl>
+
+<p>Implemented in <a class="el" href="class_c_chart_serie_base.html#a5674d16c56302654665d7839ae23665">CChartSerieBase&lt; T &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#a5674d16c56302654665d7839ae23665">CChartSerieBase&lt; SChartCandlestickPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#a5674d16c56302654665d7839ae23665">CChartSerieBase&lt; SChartXYPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#a5674d16c56302654665d7839ae23665">CChartSerieBase&lt; SChartGanttPoint &gt;</a>, and <a class="el" href="class_c_chart_serie_base.html#a5674d16c56302654665d7839ae23665">CChartSerieBase&lt; PointType &gt;</a>.</p>
 
 </div>
 </div><p>
@@ -676,74 +617,48 @@ This function should be overidden by all child classes. <dl compact><dt><b>Param
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>true if the point is on the series </dd></dl>
 
-<p>Implemented in <a class="el" href="class_c_chart_bar_serie.html#49c4128340700712f2be11449d59cfee">CChartBarSerie</a>, <a class="el" href="class_c_chart_line_serie.html#d30c44e96b7551d1d4576da40ac683f6">CChartLineSerie</a>, <a class="el" href="class_c_chart_points_serie.html#da57c96010550fa96a65a803644e3521">CChartPointsSerie</a>, and <a class="el" href="class_c_chart_surface_serie.html#3ce7b3fef28a13bb6e5748bb1e5334f8">CChartSurfaceSerie</a>.</p>
+<p>Implemented in <a class="el" href="class_c_chart_bar_serie.html#49c4128340700712f2be11449d59cfee">CChartBarSerie</a>, <a class="el" href="class_c_chart_candlestick_serie.html#3f7b68f44e5ec0305992f4ff30d60b67">CChartCandlestickSerie</a>, <a class="el" href="class_c_chart_gantt_serie.html#233df9834c1c65a6e551101a665addfd">CChartGanttSerie</a>, <a class="el" href="class_c_chart_line_serie.html#d30c44e96b7551d1d4576da40ac683f6">CChartLineSerie</a>, <a class="el" href="class_c_chart_points_serie.html#da57c96010550fa96a65a803644e3521">CChartPointsSerie</a>, and <a class="el" href="class_c_chart_surface_serie.html#3ce7b3fef28a13bb6e5748bb1e5334f8">CChartSurfaceSerie</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="1136b9ccff618cb242434ef7f455a7d1"></a><!-- doxytag: member="CChartSerie::SetPoints" ref="1136b9ccff618cb242434ef7f455a7d1" args="(double *pX, double *pY, unsigned Count)" -->
+<a class="anchor" name="e0383f414bfe61f1f2c018e459d2f70c"></a><!-- doxytag: member="CChartSerie::OnMouseEvent" ref="e0383f414bfe61f1f2c018e459d2f70c" args="(CChartMouseListener::MouseEvent mouseEvent, const CPoint &amp;screenPoint)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void CChartSerie::SetPoints           </td>
+          <td class="memname">virtual bool CChartSerie::OnMouseEvent           </td>
           <td>(</td>
-          <td class="paramtype">double *&nbsp;</td>
-          <td class="paramname"> <em>pX</em>, </td>
+          <td class="paramtype"><a class="el" href="class_c_chart_mouse_listener.html#cffa1073dca632eca72f7339ecb350d7">CChartMouseListener::MouseEvent</a>&nbsp;</td>
+          <td class="paramname"> <em>mouseEvent</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&nbsp;</td>
-          <td class="paramname"> <em>pY</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned&nbsp;</td>
-          <td class="paramname"> <em>Count</em></td><td>&nbsp;</td>
+          <td class="paramtype">const CPoint &amp;&nbsp;</td>
+          <td class="paramname"> <em>screenPoint</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td></td>
+          <td></td><td></td><td><code> [protected, pure virtual]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Sets an array of points to the series.
+Called when a mouse event is detected on the chart.
 <p>
-Points which were already present in the series are discarded. <dl compact><dt><b>Parameters:</b></dt><dd>
+This pure virtual function should be overriden by child classes. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>pX</em>&nbsp;</td><td>Array of X values for the points </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>pY</em>&nbsp;</td><td>Array of Y values for the points </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>Count</em>&nbsp;</td><td>Size of each of both arrays (number of points to add) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>mouseEvent</em>&nbsp;</td><td>The event that occured on the control </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>screenPoint</em>&nbsp;</td><td>The screen point on which the event occured </td></tr>
   </table>
 </dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if the event occured on the series. </dd></dl>
 
-</div>
-</div><p>
-<a class="anchor" name="a3ad5fbccddb412b3412a3ed8344f4f1"></a><!-- doxytag: member="CChartSerie::SetSeriesOrdering" ref="a3ad5fbccddb412b3412a3ed8344f4f1" args="(CChartPointsArray::PointsOrdering newOrdering)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CChartSerie::SetSeriesOrdering           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_c_chart_points_array.html#f17dd8d4ef7b63760ac39f0775760415">CChartPointsArray::PointsOrdering</a>&nbsp;</td>
-          <td class="paramname"> <em>newOrdering</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>Implemented in <a class="el" href="class_c_chart_serie_base.html#cbb5e34bc22e6c9730987db79aba0cae">CChartSerieBase&lt; T &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#cbb5e34bc22e6c9730987db79aba0cae">CChartSerieBase&lt; SChartCandlestickPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#cbb5e34bc22e6c9730987db79aba0cae">CChartSerieBase&lt; SChartXYPoint &gt;</a>, <a class="el" href="class_c_chart_serie_base.html#cbb5e34bc22e6c9730987db79aba0cae">CChartSerieBase&lt; SChartGanttPoint &gt;</a>, and <a class="el" href="class_c_chart_serie_base.html#cbb5e34bc22e6c9730987db79aba0cae">CChartSerieBase&lt; PointType &gt;</a>.</p>
 
-<p>
-Specifies how the points should be ordered in the series.
-<p>
-This specifies if the points should be ordered on their X values, on their Y values or not ordered (kept in order they are added to the control). Ordering can improve performances a lot but makes it impossible to draw some specific curves (for instance, drawing an ellipse is only possible if no ordering is set).
 </div>
 </div><p>
 <a class="anchor" name="e2e0c95a765d80ff74a0936784f5d84d"></a><!-- doxytag: member="CChartSerie::SetVisible" ref="e2e0c95a765d80ff74a0936784f5d84d" args="(bool bVisible)" -->
@@ -766,80 +681,6 @@ This specifies if the points should be ordered on their X values, on their Y val
 Specifies if the series is visible or not.
 <p>
 An invisible series won't affect automatic axis: it is considered as if it was not in the control.
-</div>
-</div><p>
-<a class="anchor" name="1ce0afa14bdcad5866abe958f7056f1b"></a><!-- doxytag: member="CChartSerie::SetXPointValue" ref="1ce0afa14bdcad5866abe958f7056f1b" args="(unsigned PointIndex, double NewVal)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CChartSerie::SetXPointValue           </td>
-          <td>(</td>
-          <td class="paramtype">unsigned&nbsp;</td>
-          <td class="paramname"> <em>PointIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>NewVal</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Sets the X value of a specific point in the series.
-<p>
-The control is refreshed to display the change. <dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>PointIndex</em>&nbsp;</td><td>The index of the points to change the Y value </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>NewVal</em>&nbsp;</td><td>The new X value of the point </td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="b17299a9e03cdb977052954fbf62cf52"></a><!-- doxytag: member="CChartSerie::SetYPointValue" ref="b17299a9e03cdb977052954fbf62cf52" args="(unsigned PointIndex, double NewVal)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CChartSerie::SetYPointValue           </td>
-          <td>(</td>
-          <td class="paramtype">unsigned&nbsp;</td>
-          <td class="paramname"> <em>PointIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>NewVal</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Sets the Y value of a specific point in the series.
-<p>
-The control is refreshed to display the change. <dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>PointIndex</em>&nbsp;</td><td>The index of the points to change the Y value </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>NewVal</em>&nbsp;</td><td>The new Y value of the point </td></tr>
-  </table>
-</dl>
-
 </div>
 </div><p>
 <a class="anchor" name="f60f21abce8f270d943a2870377af5a4"></a><!-- doxytag: member="CChartSerie::ValueToScreen" ref="f60f21abce8f270d943a2870377af5a4" args="(double XValue, double YValue, CPoint &amp;ScreenPoint) const " -->
@@ -889,7 +730,7 @@ Converts any data point into its relative screen point.
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>E:/Sources Misc/ChartDemo/ChartCtrl/<a class="el" href="_chart_serie_8h-source.html">ChartSerie.h</a><li>E:/Sources Misc/ChartDemo/ChartCtrl/ChartSerie.cpp</ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:20 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:11 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

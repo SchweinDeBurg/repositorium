@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -22,7 +23,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>CChartSurfaceSerie Class Reference</h1><!-- doxytag: class="CChartSurfaceSerie" --><!-- doxytag: inherits="CChartSerie" -->Specialization of a <a class="el" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a> to display a surface series.
+<h1>CChartSurfaceSerie Class Reference</h1><!-- doxytag: class="CChartSurfaceSerie" --><!-- doxytag: inherits="CChartXYSerie" -->Specialization of a <a class="el" href="class_c_chart_serie.html" title="Abstract class that provides a common &quot;interface&quot; for all series in the...">CChartSerie</a> to display a surface series.
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;<a class="el" href="_chart_surface_serie_8h-source.html">ChartSurfaceSerie.h</a>&gt;</code>
@@ -33,7 +34,9 @@ Inheritance diagram for CChartSurfaceSerie:</div>
 
 <p><center><img src="class_c_chart_surface_serie.png" usemap="#CChartSurfaceSerie_map" border="0" alt=""></center>
 <map name="CChartSurfaceSerie_map">
-<area href="class_c_chart_serie.html" alt="CChartSerie" shape="rect" coords="0,0,127,24">
+<area href="class_c_chart_x_y_serie.html" alt="CChartXYSerie" shape="rect" coords="0,112,219,136">
+<area href="class_c_chart_serie_base.html" alt="CChartSerieBase< SChartXYPoint >" shape="rect" coords="0,56,219,80">
+<area href="class_c_chart_serie.html" alt="CChartSerie" shape="rect" coords="0,0,219,24">
 </map>
 </div>
 
@@ -81,9 +84,12 @@ bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_surface_serie.html#3ce7b3fef28a13bb6e5748bb1e5334f8">IsPointOnSerie</a> (const CPoint &amp;screenPoint, unsigned &amp;uIndex) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether a screen point is on the series.  <a href="#3ce7b3fef28a13bb6e5748bb1e5334f8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_surface_serie.html#098835a8b3455b385a28bd4d3ffaf39f">SetSeriesOrdering</a> (PointsOrdering)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specifies how the points should be ordered in the series.  <a href="#098835a8b3455b385a28bd4d3ffaf39f"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Specialization of a <a class="el" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a> to display a surface series.
+Specialization of a <a class="el" href="class_c_chart_serie.html" title="Abstract class that provides a common &quot;interface&quot; for all series in the...">CChartSerie</a> to display a surface series.
 <p>
 A surface can be horizontal (default) or vertical: this defines how the filling of the surface is done. For a horizontal surface, the filling is done between the points and the associated horizontal axis and for a vertical surface, the filling is done between the points and the associated vertical axis. The series can be associated with a secondary axis. For example, if the surface series is horizontal and is associated with the top axis (secondary axis), the filling is done between the top axis and the points. <hr><h2>Member Function Documentation</h2>
 <a class="anchor" name="3ce7b3fef28a13bb6e5748bb1e5334f8"></a><!-- doxytag: member="CChartSurfaceSerie::IsPointOnSerie" ref="3ce7b3fef28a13bb6e5748bb1e5334f8" args="(const CPoint &amp;screenPoint, unsigned &amp;uIndex) const " -->
@@ -148,10 +154,34 @@ Sets the series in horizontal or vertical mode.
 If the series is in horizontal mode, the filling will be done between the data points and the horizontal axis.
 </div>
 </div><p>
+<a class="anchor" name="098835a8b3455b385a28bd4d3ffaf39f"></a><!-- doxytag: member="CChartSurfaceSerie::SetSeriesOrdering" ref="098835a8b3455b385a28bd4d3ffaf39f" args="(PointsOrdering)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CChartSurfaceSerie::SetSeriesOrdering           </td>
+          <td>(</td>
+          <td class="paramtype">PointsOrdering&nbsp;</td>
+          <td class="paramname"> <em>newOrdering</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Specifies how the points should be ordered in the series.
+<p>
+This specifies if the points should be ordered on their X values, on their Y values or not ordered (kept in order they are added to the control). Ordering can improve performances a lot but makes it impossible to draw some specific curves (for instance, drawing an ellipse is only possible if no ordering is set).
+<p>Reimplemented from <a class="el" href="class_c_chart_serie_base.html#764966e36ffadada4c8d09281c6933e3">CChartSerieBase&lt; SChartXYPoint &gt;</a>.</p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>E:/Sources Misc/ChartDemo/ChartCtrl/<a class="el" href="_chart_surface_serie_8h-source.html">ChartSurfaceSerie.h</a><li>E:/Sources Misc/ChartDemo/ChartCtrl/ChartSurfaceSerie.cpp</ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:20 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:11 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

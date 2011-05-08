@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -79,6 +80,12 @@ CRect&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="class_c_chart_bar_serie.html">CChartBarSerie</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#c166a75bb6f77ee1855debe7d6cd3338">CreateBarSerie</a> (bool bSecondaryHorizAxis=false, bool bSecondaryVertAxis=false)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create and attach a bar series to the control.  <a href="#c166a75bb6f77ee1855debe7d6cd3338"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="class_c_chart_candlestick_serie.html">CChartCandlestickSerie</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#d77ceffac6ea6ee9b5c682c833018221">CreateCandlestickSerie</a> (bool bSecondaryHorizAxis=false, bool bSecondaryVertAxis=false)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create and attach a candlestick series to the control.  <a href="#d77ceffac6ea6ee9b5c682c833018221"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="class_c_chart_gantt_serie.html">CChartGanttSerie</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#570fba5a86bbbacb0c03f408ef767327">CreateGanttSerie</a> (bool bSecondaryHorizAxis=false, bool bSecondaryVertAxis=false)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create and attach a gantt series to the control.  <a href="#570fba5a86bbbacb0c03f408ef767327"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#5ab5b2ae76f9ad0130a164d28efb1f5b">AttachCustomSerie</a> (<a class="el" href="class_c_chart_serie.html">CChartSerie</a> *pNewSeries, bool bSecondaryHorizAxis=false, bool bSecondaryVertAxis=false)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attaches a custom series to the chart.  <a href="#5ab5b2ae76f9ad0130a164d28efb1f5b"></a><br></td></tr>
@@ -108,6 +115,10 @@ size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#dfbc638ec9af58004c98cba37b9d8b4c">RemoveCursor</a> (unsigned cursorId)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes a cursor with a specific Id from the control.  <a href="#dfbc638ec9af58004c98cba37b9d8b4c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="c291e28722ae86db4c721fa0dd6fb060"></a><!-- doxytag: member="CChartCtrl::ShowMouseCursor" ref="c291e28722ae86db4c721fa0dd6fb060" args="(bool bShow)" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#c291e28722ae86db4c721fa0dd6fb060">ShowMouseCursor</a> (bool bShow)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Shows/hides the mouse cursor when it is over the plotting area. <br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="f8f60621589f2dfc4674f0b7d0e00649"></a><!-- doxytag: member="CChartCtrl::GetBottomAxis" ref="f8f60621589f2dfc4674f0b7d0e00649" args="() const " -->
 <a class="el" href="class_c_chart_axis.html">CChartAxis</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><b>GetBottomAxis</b> () const </td></tr>
 
@@ -186,7 +197,7 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#1508a990e3ee11b4eb295f1df6449c37">Create</a> (CWnd *pParentWnd, const RECT &amp;rect, UINT nID, DWORD dwStyle=WS_VISIBLE)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates the control dynamically.  <a href="#1508a990e3ee11b4eb295f1df6449c37"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#1a1c8856c1153cf65dbf639256bf1f03">Print</a> (const TChartString &amp;strTitle, CPrintDialog *pPrntDialog=NULL)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#1a1c8856c1153cf65dbf639256bf1f03">Print</a> (const TChartString &amp;strTitle, CPrintDialog *pPrntDialog=NULL)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print the chart.  <a href="#1a1c8856c1153cf65dbf639256bf1f03"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ac67bd59aadf956ea8fcf2b933ba13a9"></a><!-- doxytag: member="CChartCtrl::CChartCtrl" ref="ac67bd59aadf956ea8fcf2b933ba13a9" args="()" -->
@@ -200,6 +211,16 @@ virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#58213a4a92ca79f58bc1f4615a9a6b16">RegisterMouseListener</a> (<a class="el" href="class_c_chart_mouse_listener.html">CChartMouseListener</a> *pMouseListener)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register a mouse listener with the control.  <a href="#58213a4a92ca79f58bc1f4615a9a6b16"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#df7e0680c430c94b490abca3601fe500">GoToFirstSerie</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tell the control to set the current series to the first series.  <a href="#df7e0680c430c94b490abca3601fe500"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="class_c_chart_serie.html">CChartSerie</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#79833e51527801b30cb26197b34c15d8">GetNextSerie</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the next series in the control.  <a href="#79833e51527801b30cb26197b34c15d8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="feb25bdbea159c7e89d3293ba80347d3"></a><!-- doxytag: member="CChartCtrl::RefreshScreenAutoAxes" ref="feb25bdbea159c7e89d3293ba80347d3" args="()" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#feb25bdbea159c7e89d3293ba80347d3">RefreshScreenAutoAxes</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Refreshes all the axes which are automatic for the screen. <br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="5f04f51f5d74a29ba0e5d8100313c2f9"></a><!-- doxytag: member="CChartCtrl::DateToValue" ref="5f04f51f5d74a29ba0e5d8100313c2f9" args="(const COleDateTime &amp;Date)" -->
 static double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_chart_ctrl.html#5f04f51f5d74a29ba0e5d8100313c2f9">DateToValue</a> (const COleDateTime &amp;Date)</td></tr>
@@ -245,6 +266,21 @@ afx_msg void&nbsp;</td><td class="memItemRight" valign="bottom"><b>OnHScroll</b>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="62fbc5a18a61a0167dcea5380175418e"></a><!-- doxytag: member="CChartCtrl::OnVScroll" ref="62fbc5a18a61a0167dcea5380175418e" args="(UINT nSBCode, UINT nPos, CScrollBar *pScrollBar)" -->
 afx_msg void&nbsp;</td><td class="memItemRight" valign="bottom"><b>OnVScroll</b> (UINT nSBCode, UINT nPos, CScrollBar *pScrollBar)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b58d9de44728ba2e56cd922a3271eaec"></a><!-- doxytag: member="CChartCtrl::OnBeginPrinting" ref="b58d9de44728ba2e56cd922a3271eaec" args="(CDC *pDC, CPrintInfo *pInfo)" -->
+virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><b>OnBeginPrinting</b> (CDC *pDC, CPrintInfo *pInfo)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="8beddee9881d32752833360a28dab24b"></a><!-- doxytag: member="CChartCtrl::OnPrint" ref="8beddee9881d32752833360a28dab24b" args="(CDC *pDC, CPrintInfo *pInfo)" -->
+virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><b>OnPrint</b> (CDC *pDC, CPrintInfo *pInfo)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="d359564b199d725c351db8713e0812da"></a><!-- doxytag: member="CChartCtrl::OnEndPrinting" ref="d359564b199d725c351db8713e0812da" args="(CDC *pDC, CPrintInfo *pInfo)" -->
+virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><b>OnEndPrinting</b> (CDC *pDC, CPrintInfo *pInfo)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="19a5621f1886e31bd00ff5f006e796f0"></a><!-- doxytag: member="CChartCtrl::DrawChart" ref="19a5621f1886e31bd00ff5f006e796f0" args="(CDC *pDC, CRect ChartRect)" -->
+virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><b>DrawChart</b> (CDC *pDC, CRect ChartRect)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="8bbd0673aaf6d5de08dd957feb024624"></a><!-- doxytag: member="CChartCtrl::DrawBackground" ref="8bbd0673aaf6d5de08dd957feb024624" args="(CDC *pDC, CRect ChartRect)" -->
+virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><b>DrawBackground</b> (CDC *pDC, CRect ChartRect)</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -450,6 +486,46 @@ Create and attach a bar series to the control.
 
 </div>
 </div><p>
+<a class="anchor" name="d77ceffac6ea6ee9b5c682c833018221"></a><!-- doxytag: member="CChartCtrl::CreateCandlestickSerie" ref="d77ceffac6ea6ee9b5c682c833018221" args="(bool bSecondaryHorizAxis=false, bool bSecondaryVertAxis=false)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_c_chart_candlestick_serie.html">CChartCandlestickSerie</a> * CChartCtrl::CreateCandlestickSerie           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>bSecondaryHorizAxis</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>bSecondaryVertAxis</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Create and attach a candlestick series to the control.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>bSecondaryHorizAxis</em>&nbsp;</td><td>Specifies if the horizontal axis is the secondary axis or not. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bSecondaryVertAxis</em>&nbsp;</td><td>Specifies if the vertical axis is the secondary axis or not. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The created chart candlestick series. </dd></dl>
+<dl class="remark" compact><dt><b>Remarks:</b></dt><dd>The function will assert if the associated axes are not attached to the control. </dd></dl>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="class_c_chart_ctrl.html#5ab5b2ae76f9ad0130a164d28efb1f5b" title="Attaches a custom series to the chart.">AttachCustomSerie</a> for more info about the parameters of the function. </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="06f647456e4a0716355b6c79cacce71f"></a><!-- doxytag: member="CChartCtrl::CreateCrossHairCursor" ref="06f647456e4a0716355b6c79cacce71f" args="(bool bSecondaryHorizAxis=false, bool bSecondaryVertAxis=false)" -->
 <div class="memitem">
 <div class="memproto">
@@ -543,6 +619,46 @@ A drag-line cursor is a simple line (horizontal or vertical) that can be dragged
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>The created drag-line cursor. </dd></dl>
 <dl class="remark" compact><dt><b>Remarks:</b></dt><dd>The function will assert if the associated axis is not attached to the control. </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="570fba5a86bbbacb0c03f408ef767327"></a><!-- doxytag: member="CChartCtrl::CreateGanttSerie" ref="570fba5a86bbbacb0c03f408ef767327" args="(bool bSecondaryHorizAxis=false, bool bSecondaryVertAxis=false)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_c_chart_gantt_serie.html">CChartGanttSerie</a> * CChartCtrl::CreateGanttSerie           </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>bSecondaryHorizAxis</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>bSecondaryVertAxis</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Create and attach a gantt series to the control.
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>bSecondaryHorizAxis</em>&nbsp;</td><td>Specifies if the horizontal axis is the secondary axis or not. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bSecondaryVertAxis</em>&nbsp;</td><td>Specifies if the vertical axis is the secondary axis or not. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The created chart gantt series. </dd></dl>
+<dl class="remark" compact><dt><b>Remarks:</b></dt><dd>The function will assert if the associated axes are not attached to the control. </dd></dl>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="class_c_chart_ctrl.html#5ab5b2ae76f9ad0130a164d28efb1f5b" title="Attaches a custom series to the chart.">AttachCustomSerie</a> for more info about the parameters of the function. </dd></dl>
 
 </div>
 </div><p>
@@ -797,6 +913,28 @@ Retrieves de device context.
 This function is used for internal purposes only.
 </div>
 </div><p>
+<a class="anchor" name="79833e51527801b30cb26197b34c15d8"></a><!-- doxytag: member="CChartCtrl::GetNextSerie" ref="79833e51527801b30cb26197b34c15d8" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_c_chart_serie.html">CChartSerie</a> * CChartCtrl::GetNextSerie           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns the next series in the control.
+<p>
+This function is used with the GoToFirstSerie to iterate over all series in the control. First call GoToFirstSerie and then call this function until it returns NULL to iterate over all series. Warning: calling this function without calling GoToFirstSerie before might lead to unpredicted results. The same if you add or remove series between the call to GetFirstSerie and the call to GetNextSerie. <dl class="return" compact><dt><b>Returns:</b></dt><dd>the next series or NULL if we already are at the last series. </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="3c1119756906792a51ab691191e488af"></a><!-- doxytag: member="CChartCtrl::GetSerie" ref="3c1119756906792a51ab691191e488af" args="(unsigned uSerieId) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -825,6 +963,27 @@ Retrieves a specific series from the chart.
 
 </div>
 </div><p>
+<a class="anchor" name="df7e0680c430c94b490abca3601fe500"></a><!-- doxytag: member="CChartCtrl::GoToFirstSerie" ref="df7e0680c430c94b490abca3601fe500" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CChartCtrl::GoToFirstSerie           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Tell the control to set the current series to the first series.
+<p>
+This function is used with the GetNextSerie to iterate over all series in the control.
+</div>
+</div><p>
 <a class="anchor" name="1a1c8856c1153cf65dbf639256bf1f03"></a><!-- doxytag: member="CChartCtrl::Print" ref="1a1c8856c1153cf65dbf639256bf1f03" args="(const TChartString &amp;strTitle, CPrintDialog *pPrntDialog=NULL)" -->
 <div class="memitem">
 <div class="memproto">
@@ -844,7 +1003,7 @@ Retrieves a specific series from the chart.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td></td>
+          <td></td><td></td><td><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -1040,7 +1199,7 @@ Sets the edge type.
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>E:/Sources Misc/ChartDemo/ChartCtrl/<a class="el" href="_chart_ctrl_8h-source.html">ChartCtrl.h</a><li>E:/Sources Misc/ChartDemo/ChartCtrl/ChartCtrl.cpp</ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:19 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:10 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -73,7 +74,7 @@
 <a name="l00083"></a>00083
 <a name="l00091"></a>00091         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_title.html#603ef8fb5d8d2dc44d5aef2a368233a0" title="Sets the font for a specific line.">SetLineFont</a>(<span class="keywordtype">int</span> iLineIndex, <span class="keyword">const</span> <a class="code" href="class_c_chart_font.html" title="Wrapper class for fonts with advanced properties (italic, bold or underlined).">CChartFont</a>&amp; newFont);
 <a name="l00092"></a>00092
-<a name="l00094"></a>00094         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_title.html#98119120f9f52e81db199e7432f85fae" title="Shows/hides the title.">SetVisible</a>(<span class="keywordtype">bool</span> bVisible);
+<a name="l00094"></a><a class="code" href="class_c_chart_title.html#98119120f9f52e81db199e7432f85fae">00094</a>         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_title.html#98119120f9f52e81db199e7432f85fae" title="Shows/hides the title.">SetVisible</a>(<span class="keywordtype">bool</span> bVisible) { m_bIsVisible = bVisible; }
 <a name="l00096"></a><a class="code" href="class_c_chart_title.html#c8132d6630b993c49de48a60d8516ad0">00096</a>         <span class="keywordtype">bool</span> <a class="code" href="class_c_chart_title.html#c8132d6630b993c49de48a60d8516ad0" title="Returns true if the title is visible.">IsVisible</a>()<span class="keyword">  const         </span>{ <span class="keywordflow">return</span> m_bIsVisible; }
 <a name="l00097"></a>00097
 <a name="l00099"></a><a class="code" href="class_c_chart_title.html#60470c6081653f8299d637ee71da7fcd">00099</a>         COLORREF <a class="code" href="class_c_chart_title.html#60470c6081653f8299d637ee71da7fcd" title="Returns the text color.">GetColor</a>()<span class="keyword"> const                          </span>{ <span class="keywordflow">return</span> m_TextColor; }
@@ -101,7 +102,7 @@
 <a name="l00135"></a>00135
 <a name="l00136"></a>00136 <span class="preprocessor">#endif // !defined(AFX_CHARTTITLE_H__49972787_6D28_4F81_A12F_420947456913__INCLUDED_)</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:19 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:10 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

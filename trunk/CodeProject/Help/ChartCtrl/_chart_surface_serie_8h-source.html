@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -46,10 +47,10 @@
 <a name="l00026"></a>00026 <span class="preprocessor"></span><span class="preprocessor">#pragma once</span>
 <a name="l00027"></a>00027 <span class="preprocessor"></span><span class="preprocessor">#endif // _MSC_VER &gt; 1000</span>
 <a name="l00028"></a>00028 <span class="preprocessor"></span>
-<a name="l00029"></a>00029 <span class="preprocessor">#include "ChartSerie.h"</span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include "ChartXYSerie.h"</span>
 <a name="l00030"></a>00030
 <a name="l00032"></a>00032
-<a name="l00042"></a><a class="code" href="class_c_chart_surface_serie.html">00042</a> <span class="keyword">class </span><a class="code" href="class_c_chart_surface_serie.html" title="Specialization of a CChartSerie to display a surface series.">CChartSurfaceSerie</a> : <span class="keyword">public</span> <a class="code" href="class_c_chart_serie.html" title="Base class for all series of the control.">CChartSerie</a>
+<a name="l00042"></a><a class="code" href="class_c_chart_surface_serie.html">00042</a> <span class="keyword">class </span><a class="code" href="class_c_chart_surface_serie.html" title="Specialization of a CChartSerie to display a surface series.">CChartSurfaceSerie</a> : <span class="keyword">public</span> <a class="code" href="class_c_chart_x_y_serie.html" title="Specialization of a CChartSerieBase for series having data with an X and an Y value...">CChartXYSerie</a>
 <a name="l00043"></a>00043 {
 <a name="l00044"></a>00044 <span class="keyword">public</span>:
 <a name="l00046"></a>00046         <a class="code" href="class_c_chart_surface_serie.html#0951f19623eea7ff423dcc2267460fc4" title="Constructor.">CChartSurfaceSerie</a>(<a class="code" href="class_c_chart_ctrl.html" title="The main chart control class.">CChartCtrl</a>* pParent);
@@ -76,24 +77,25 @@
 <a name="l00077"></a>00077
 <a name="l00088"></a>00088         <span class="keywordtype">bool</span> <a class="code" href="class_c_chart_surface_serie.html#3ce7b3fef28a13bb6e5748bb1e5334f8" title="Check whether a screen point is on the series.">IsPointOnSerie</a>(<span class="keyword">const</span> CPoint&amp; screenPoint, <span class="keywordtype">unsigned</span>&amp; uIndex) <span class="keyword">const</span>;
 <a name="l00089"></a>00089
-<a name="l00090"></a>00090 <span class="keyword">private</span>:
-<a name="l00092"></a>00092         <span class="keywordtype">void</span> SetSeriesOrdering(<a class="code" href="class_c_chart_points_array.html#f17dd8d4ef7b63760ac39f0775760415" title="Enumeration listing the types of ordering.">CChartPointsArray::PointsOrdering</a>);
-<a name="l00093"></a>00093
-<a name="l00095"></a>00095
-<a name="l00102"></a>00102     <span class="keywordtype">void</span> DrawLegend(CDC* pDC, <span class="keyword">const</span> CRect&amp; rectBitmap) <span class="keyword">const</span>;
-<a name="l00103"></a>00103
-<a name="l00105"></a>00105
-<a name="l00112"></a>00112         <span class="keywordtype">void</span> Draw(CDC* pDC);
-<a name="l00114"></a>00114
-<a name="l00119"></a>00119         <span class="keywordtype">void</span> DrawAll(CDC *pDC);
-<a name="l00120"></a>00120
-<a name="l00122"></a>00122         <a class="code" href="class_c_chart_surface_serie.html#bdb08942927e938a640575594a1a181d" title="The different fill styles.">FillStyle</a> m_FillStyle;
-<a name="l00124"></a>00124         <span class="keywordtype">bool</span> m_bHorizontal;
-<a name="l00125"></a>00125 };
-<a name="l00126"></a>00126
-<a name="l00127"></a>00127 <span class="preprocessor">#endif // !defined(AFX_CHARTSURFACESERIE_H__28A77823_43BD_4502_9AA7_A2B227454035__INCLUDED_)</span>
+<a name="l00090"></a>00090         <span class="keywordtype">void</span> <a class="code" href="class_c_chart_surface_serie.html#098835a8b3455b385a28bd4d3ffaf39f" title="Specifies how the points should be ordered in the series.">CChartSurfaceSerie::SetSeriesOrdering</a>(PointsOrdering );
+<a name="l00091"></a>00091 <span class="keyword">private</span>:
+<a name="l00093"></a>00093 <span class="comment">//      void SetSeriesOrdering(CChartPointsArray::PointsOrdering);</span>
+<a name="l00094"></a>00094
+<a name="l00096"></a>00096
+<a name="l00103"></a>00103     <span class="keywordtype">void</span> DrawLegend(CDC* pDC, <span class="keyword">const</span> CRect&amp; rectBitmap) <span class="keyword">const</span>;
+<a name="l00104"></a>00104
+<a name="l00106"></a>00106
+<a name="l00113"></a>00113         <span class="keywordtype">void</span> Draw(CDC* pDC);
+<a name="l00115"></a>00115
+<a name="l00120"></a>00120         <span class="keywordtype">void</span> DrawAll(CDC *pDC);
+<a name="l00121"></a>00121
+<a name="l00123"></a>00123         <a class="code" href="class_c_chart_surface_serie.html#bdb08942927e938a640575594a1a181d" title="The different fill styles.">FillStyle</a> m_FillStyle;
+<a name="l00125"></a>00125         <span class="keywordtype">bool</span> m_bHorizontal;
+<a name="l00126"></a>00126 };
+<a name="l00127"></a>00127
+<a name="l00128"></a>00128 <span class="preprocessor">#endif // !defined(AFX_CHARTSURFACESERIE_H__28A77823_43BD_4502_9AA7_A2B227454035__INCLUDED_)</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:19 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:10 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -76,26 +77,27 @@
 <a name="l00079"></a>00079         <a class="code" href="class_c_chart_axis_label.html" title="Draws the label of an axis.">CChartAxisLabel</a>();
 <a name="l00081"></a>00081         <span class="keyword">virtual</span> ~<a class="code" href="class_c_chart_axis_label.html" title="Draws the label of an axis.">CChartAxisLabel</a>();
 <a name="l00082"></a>00082
-<a name="l00084"></a>00084         <span class="keywordtype">void</span> SetPosition(<span class="keywordtype">int</span> LeftBorder, <span class="keywordtype">int</span> TopBorder, CDC *pDC);
-<a name="l00086"></a>00086         <span class="keywordtype">void</span> Draw(CDC* pDC);
-<a name="l00088"></a>00088         CSize GetSize(CDC* pDC) <span class="keyword">const</span>;
-<a name="l00089"></a>00089
-<a name="l00090"></a>00090
-<a name="l00092"></a>00092         <a class="code" href="class_c_chart_ctrl.html" title="The main chart control class.">CChartCtrl</a>*     m_pParentCtrl;
-<a name="l00094"></a>00094         <span class="keywordtype">bool</span>        m_bIsVisible;
-<a name="l00095"></a>00095
-<a name="l00097"></a>00097         CRect           m_TextRect;
-<a name="l00099"></a>00099         COLORREF        m_TextColor;
-<a name="l00100"></a>00100
-<a name="l00102"></a>00102         <span class="keywordtype">bool</span> m_bIsHorizontal;
-<a name="l00104"></a>00104         <a class="code" href="class_c_chart_font.html" title="Wrapper class for fonts with advanced properties (italic, bold or underlined).">CChartFont</a> m_Font;
-<a name="l00105"></a>00105
-<a name="l00107"></a>00107         TChartString m_strLabelText;
-<a name="l00108"></a>00108 };
-<a name="l00109"></a>00109
-<a name="l00110"></a>00110 <span class="preprocessor">#endif // !defined(AFX_CHARTAXISLABEL_H__0E5519C8_A2F4_4CED_9681_32A56B25D0C5__INCLUDED_)</span>
+<a name="l00084"></a>00084         <span class="keywordtype">void</span> SetHorizontal(<span class="keywordtype">bool</span> bHorizontal);
+<a name="l00086"></a>00086         <span class="keywordtype">void</span> SetPosition(<span class="keywordtype">int</span> LeftBorder, <span class="keywordtype">int</span> TopBorder, CDC *pDC);
+<a name="l00088"></a>00088         <span class="keywordtype">void</span> Draw(CDC* pDC);
+<a name="l00090"></a>00090         CSize GetSize(CDC* pDC) <span class="keyword">const</span>;
+<a name="l00091"></a>00091
+<a name="l00092"></a>00092
+<a name="l00094"></a>00094         <a class="code" href="class_c_chart_ctrl.html" title="The main chart control class.">CChartCtrl</a>*     m_pParentCtrl;
+<a name="l00096"></a>00096         <span class="keywordtype">bool</span>        m_bIsVisible;
+<a name="l00097"></a>00097
+<a name="l00099"></a>00099         CRect           m_TextRect;
+<a name="l00101"></a>00101         COLORREF        m_TextColor;
+<a name="l00102"></a>00102
+<a name="l00104"></a>00104         <span class="keywordtype">bool</span> m_bIsHorizontal;
+<a name="l00106"></a>00106         <a class="code" href="class_c_chart_font.html" title="Wrapper class for fonts with advanced properties (italic, bold or underlined).">CChartFont</a> m_Font;
+<a name="l00107"></a>00107
+<a name="l00109"></a>00109         TChartString m_strLabelText;
+<a name="l00110"></a>00110 };
+<a name="l00111"></a>00111
+<a name="l00112"></a>00112 <span class="preprocessor">#endif // !defined(AFX_CHARTAXISLABEL_H__0E5519C8_A2F4_4CED_9681_32A56B25D0C5__INCLUDED_)</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sun Mar 8 17:21:18 2009 for ChartDemo by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sun Jan 17 13:33:09 2010 for ChartDemo by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>
