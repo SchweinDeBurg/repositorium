@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -29,13 +29,13 @@
 
 using namespace std;
 
-CChartAxis::CChartAxis() 
- : m_pParentCtrl(NULL), m_bIsHorizontal(true), m_bIsInverted(false), 
-   m_bIsAutomatic(false), m_bIsVisible(true), m_bIsSecondary(false), 
-   m_MaxValue(0), m_MinValue(0), m_UnzoomMax(0), m_UnzoomMin(0), 
-   m_bAutoTicks(true), m_bDiscrete(false),m_StartPos(0), m_EndPos(0), 
-   m_nFontSize(80), m_strFontName(_T("Microsoft Sans Serif")), m_TextColor(0), 
-   m_bAutoMargin(true), m_iMarginSize(0), m_bZoomEnabled(true), 
+CChartAxis::CChartAxis()
+ : m_pParentCtrl(NULL), m_bIsHorizontal(true), m_bIsInverted(false),
+   m_AutoMode(NotAutomatic), m_bIsVisible(true), m_bIsSecondary(false),
+   m_MaxValue(0), m_MinValue(0), m_UnzoomMax(0), m_UnzoomMin(0),
+   m_bAutoTicks(true), m_bDiscrete(false),m_StartPos(0), m_EndPos(0),
+   m_nFontSize(80), m_strFontName(_T("Microsoft Sans Serif")), m_TextColor(0),
+   m_bAutoMargin(true), m_iMarginSize(0), m_bZoomEnabled(true),
    m_dZoomLimit(0.001), m_pScrollBar(NULL), m_AxisColor(RGB(0,0,0))
 {
 	m_pAxisGrid = new CChartGrid();
@@ -88,9 +88,9 @@ void CChartAxis::SetParent(CChartCtrl* pParent)
 	m_pAxisLabel->m_pParentCtrl = pParent;
 }
 
-void CChartAxis::SetHorizontal(bool bHorizontal)  
-{ 
-	m_bIsHorizontal = bHorizontal; 
+void CChartAxis::SetHorizontal(bool bHorizontal)
+{
+	m_bIsHorizontal = bHorizontal;
 	m_pAxisGrid->m_bIsHorizontal = bHorizontal;
 	m_pAxisLabel->SetHorizontal(bHorizontal);
 }
@@ -111,7 +111,7 @@ void CChartAxis::Draw(CDC *pDC)
 	COLORREF OldTextColor = pDC->SetTextColor(m_TextColor);
 	int iPrevMode = pDC->SetBkMode(TRANSPARENT);
 
-	// Draw the axis line 
+	// Draw the axis line
 	int Pos = 0;
 	if (m_bIsHorizontal)
 	{
@@ -143,7 +143,7 @@ void CChartAxis::Draw(CDC *pDC)
 	else
 	{
 		double TickValue = GetFirstTickValue();
-		do 
+		do
 		{
 			DrawTick(pDC,TickValue);
 		} while (GetNextTickValue(TickValue, TickValue));
@@ -161,7 +161,7 @@ void CChartAxis::Draw(CDC *pDC)
 	pDC->SetBkMode(iPrevMode);
 }
 
-void CChartAxis::DrawTick(CDC* pDC, 
+void CChartAxis::DrawTick(CDC* pDC,
 						  double dTickVal)
 {
 	long TickPos = GetTickPos(dTickVal);
@@ -307,7 +307,7 @@ CSize CChartAxis::GetLargestTick(CDC* pDC)
 	else
 	{
 		double TickValue = GetFirstTickValue();
-		do 
+		do
 		{
 			if (IsLabelOnAxis(TickValue))
 			{
@@ -332,11 +332,26 @@ void CChartAxis::SetInverted(bool bInverted)
 	RefreshScrollBar();
 	m_pParentCtrl->RefreshCtrl();
 }
-	
+
 void CChartAxis::SetAutomatic(bool bAutomatic)
 {
-	m_bIsAutomatic = bAutomatic; 
-	if (m_bIsAutomatic)
+//	m_bIsAutomatic = bAutomatic;
+	if (bAutomatic)
+	{
+		m_AutoMode = FullAutomatic;
+		m_MinValue = m_MaxValue = 0;
+	}
+	else
+		m_AutoMode = NotAutomatic;
+
+	if (RefreshAutoAxis())
+		m_pParentCtrl->RefreshCtrl();
+}
+
+void CChartAxis::SetAutomaticMode(EAxisAutoModes AutoMode)
+{
+	m_AutoMode = AutoMode;
+	if (m_AutoMode != NotAutomatic)
 		m_MinValue = m_MaxValue = 0;
 
 	if (RefreshAutoAxis())
@@ -389,17 +404,29 @@ bool CChartAxis::RefreshAutoAxis()
 {
 	RefreshScrollBar();
 	bool bNeedRefresh = false;
-	if (!m_bIsAutomatic)
+	if (m_AutoMode == NotAutomatic)
 		return bNeedRefresh;
 
 	double SeriesMin = 0;
 	double SeriesMax = 0;
-	GetSeriesMinMax(SeriesMin, SeriesMax);
+	if (m_AutoMode == FullAutomatic)
+		GetSeriesMinMax(SeriesMin, SeriesMax);
+	if (m_AutoMode == ScreenAutomatic)
+		GetSeriesScreenMinMax(SeriesMin, SeriesMax);
 
 	if ( (SeriesMax!=m_MaxValue) || (SeriesMin!=m_MinValue) )
 		SetMinMax(SeriesMin,SeriesMax);
 
 	return bNeedRefresh;
+}
+
+bool CChartAxis::RefreshScreenAutoAxis()
+{
+	RefreshScrollBar();
+	bool bNeedRefresh = false;
+	if (m_AutoMode != ScreenAutomatic)
+		return bNeedRefresh;
+	return RefreshAutoAxis();
 }
 
 void CChartAxis::GetSeriesMinMax(double& Minimum, double& Maximum)
@@ -408,7 +435,7 @@ void CChartAxis::GetSeriesMinMax(double& Minimum, double& Maximum)
 	Maximum = 0;
 	double TempMin = 0;
 	double TempMax = 0;
-	
+
 	SeriesList::iterator iter = m_pRelatedSeries.begin();
 	if (iter != m_pRelatedSeries.end())
 	{
@@ -424,6 +451,36 @@ void CChartAxis::GetSeriesMinMax(double& Minimum, double& Maximum)
 			(*iter)->GetSerieXMinMax(TempMin,TempMax);
 		else
 			(*iter)->GetSerieYMinMax(TempMin,TempMax);
+
+		if (TempMin < Minimum)
+			Minimum = TempMin;
+		if (TempMax > Maximum)
+			Maximum = TempMax;
+	}
+}
+
+void CChartAxis::GetSeriesScreenMinMax(double& Minimum, double& Maximum)
+{
+	Minimum = 0;
+	Maximum = 0;
+	double TempMin = 0;
+	double TempMax = 0;
+
+	SeriesList::iterator iter = m_pRelatedSeries.begin();
+	if (iter != m_pRelatedSeries.end())
+	{
+		if (m_bIsHorizontal)
+			(*iter)->GetSerieXScreenMinMax(Minimum,Maximum);
+		else
+			(*iter)->GetSerieYScreenMinMax(Minimum,Maximum);
+	}
+
+	for (iter; iter!=m_pRelatedSeries.end(); iter++)
+	{
+		if (m_bIsHorizontal)
+			(*iter)->GetSerieXScreenMinMax(TempMin,TempMax);
+		else
+			(*iter)->GetSerieYScreenMinMax(TempMin,TempMax);
 
 		if (TempMin < Minimum)
 			Minimum = TempMin;
@@ -484,9 +541,9 @@ double CChartAxis::ScreenToValue(long ScreenVal) const
     if (!m_bIsHorizontal)
     {
         if (m_bIsInverted)
-			AxisOffset = ScreenVal - m_EndPos;      
+			AxisOffset = ScreenVal - m_EndPos;
         else
-			AxisOffset = m_StartPos - ScreenVal;     
+			AxisOffset = m_StartPos - ScreenVal;
     }
     else
     {
@@ -572,17 +629,17 @@ void CChartAxis::RefreshScrollBar()
 
 void CChartAxis::SetTextColor(COLORREF NewColor)
 {
-	m_TextColor = NewColor; 
+	m_TextColor = NewColor;
 	m_pParentCtrl->RefreshCtrl();
 }
 
 void CChartAxis::SetAxisColor(COLORREF NewColor)
 {
-	m_AxisColor = NewColor; 
+	m_AxisColor = NewColor;
 	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartAxis::SetFont(int nPointSize, 
+void CChartAxis::SetFont(int nPointSize,
 						 const TChartString& strFaceName)
 {
 	m_nFontSize = nPointSize;
@@ -618,7 +675,7 @@ void CChartAxis::SetAutoHideScrollBar(bool bAutoHide)
 bool CChartAxis::GetAutoHideScrollBar() const
 {
 	if (m_pScrollBar)
-		return (m_pScrollBar->GetAutoHide()); 
+		return (m_pScrollBar->GetAutoHide());
 	else
 		return false;
 }
@@ -628,12 +685,12 @@ void CChartAxis::UndoZoom()
 	SetMinMax(m_UnzoomMin,m_UnzoomMax);
 }
 
-void CChartAxis::SetAxisSize(const CRect& ControlRect, 
+void CChartAxis::SetAxisSize(const CRect& ControlRect,
 							 const CRect& MarginRect)
 {
 	if (m_bIsHorizontal)
 	{
-		m_StartPos = MarginRect.left;	
+		m_StartPos = MarginRect.left;
 		m_EndPos = MarginRect.right;
 
 		if (!m_bIsSecondary)
@@ -670,7 +727,7 @@ int CChartAxis::ClipMargin(CRect ControlRect, CRect& MarginRect,CDC* pDC)
 	if (!m_bIsVisible)
 		return 0;
 
-	int Size = 0;	
+	int Size = 0;
 	CSize TickSize = GetLargestTick(pDC);
 	CSize LabelSize = m_pAxisLabel->GetSize(pDC);
 
@@ -755,7 +812,7 @@ void CChartAxis::Recalculate()
 	RefreshFirstTick();
 }
 
-void CChartAxis::GetScrollbarSteps(int& iTotalSteps, 
+void CChartAxis::GetScrollbarSteps(int& iTotalSteps,
 								   int& iCurrentStep)
 {
 	double SeriesMin=0, SeriesMax=0;
@@ -774,8 +831,8 @@ void CChartAxis::GetScrollbarSteps(int& iTotalSteps,
 	}
 }
 
-void CChartAxis::SetAxisToScrollStep(int iPreviousStep, 
-									 int iCurrentStep, 
+void CChartAxis::SetAxisToScrollStep(int iPreviousStep,
+									 int iCurrentStep,
 									 bool bScrollInverted)
 {
 	double dStep = (m_MaxValue - m_MinValue) / 10.0;
@@ -784,6 +841,7 @@ void CChartAxis::SetAxisToScrollStep(int iPreviousStep,
 		SetZoomMinMax(m_MinValue-dOffset,m_MaxValue-dOffset);
 	else
 		SetZoomMinMax(m_MinValue+dOffset,m_MaxValue+dOffset);
+	m_pParentCtrl->RefreshScreenAutoAxes();
 }
 
 BOOL CChartAxis::IsPointInside(const CPoint& screenPoint) const

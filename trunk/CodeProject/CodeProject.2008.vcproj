@@ -58,6 +58,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4121"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -130,6 +131,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
+				DisableSpecificWarnings="4121"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -204,6 +206,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4121"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -276,6 +279,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
+				DisableSpecificWarnings="4121"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -784,7 +788,7 @@
 			</File>
 			<Filter
 				Name="2D Chart"
-				Filter="h;cpp"
+				Filter="h;cpp;inl"
 				>
 				<File
 					RelativePath=".\Source\ChartAxis.cpp"
@@ -867,43 +871,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Source\ChartBalloonLabel.cpp"
+					RelativePath=".\Source\ChartBalloonLabel.h"
 					>
-					<FileConfiguration
-						Name="MBCS Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="MBCS Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\Source\ChartBalloonLabel.h"
+					RelativePath=".\Source\ChartBalloonLabel.inl"
 					>
 				</File>
 				<File
@@ -944,6 +916,14 @@
 				</File>
 				<File
 					RelativePath=".\Source\ChartBarSerie.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\ChartCandlestickSerie.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\ChartCandlestickSerie.h"
 					>
 				</File>
 				<File
@@ -1187,6 +1167,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\ChartGanttSerie.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\ChartGanttSerie.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\ChartGradient.cpp"
 					>
 					<FileConfiguration
@@ -1267,43 +1255,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Source\ChartLabel.cpp"
+					RelativePath=".\Source\ChartLabel.h"
 					>
-					<FileConfiguration
-						Name="MBCS Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="MBCS Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\Source\ChartLabel.h"
+					RelativePath=".\Source\ChartLabel.inl"
 					>
 				</File>
 				<File
@@ -1431,47 +1387,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Source\ChartObject.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Source\ChartPointsArray.cpp"
-					>
-					<FileConfiguration
-						Name="MBCS Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="MBCS Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4121"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath=".\Source\ChartPointsArray.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\ChartPointsArray.inl"
 					>
 				</File>
 				<File
@@ -1592,6 +1512,18 @@
 				</File>
 				<File
 					RelativePath=".\Source\ChartSerie.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\ChartSerieBase.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\ChartSerieBase.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\ChartSeriesMouseListener.h"
 					>
 				</File>
 				<File
@@ -1716,6 +1648,18 @@
 				</File>
 				<File
 					RelativePath=".\Source\ChartTitle.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\ChartXYSerie.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\ChartXYSerie.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\PointsOrdering.h"
 					>
 				</File>
 			</Filter>

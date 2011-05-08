@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -29,8 +29,8 @@
 using namespace std;
 
 CChartStandardAxis::CChartStandardAxis()
- : CChartAxis(), m_dFirstTickValue(0), 
-   m_dTickIncrement(1.0), m_uDecCount(0)	
+ : CChartAxis(), m_dFirstTickValue(0),
+   m_dTickIncrement(1.0), m_uDecCount(0)
 {
 }
 
@@ -39,21 +39,33 @@ CChartStandardAxis::~CChartStandardAxis()
 }
 
 
-void CChartStandardAxis::SetTickIncrement(bool bAuto, double newIncrement)		
-{ 
+void CChartStandardAxis::SetTickIncrement(bool bAuto, double newIncrement)
+{
 	m_bAutoTicks = bAuto;
 	if (!m_bAutoTicks)
-		m_dTickIncrement = newIncrement; 
+	{
+		m_dTickIncrement = newIncrement;
+
+		int Zeros = (int)floor(log10(m_dTickIncrement));
+
+		int Digits = 0;
+		if (Zeros<0)
+		{
+			//We must set decimal places. In the other cases, Digits will be 0.
+			Digits = (int)fabs(Zeros*1.0);
+		}
+		SetDecimals(Digits);
+	}
 }
 
 double CChartStandardAxis::GetFirstTickValue() const
-{ 
+{
 	double dRetVal = m_dFirstTickValue;
 	if (m_bDiscrete)
 	{
 		dRetVal = m_dFirstTickValue - m_dTickIncrement;
 	}
-	return dRetVal; 
+	return dRetVal;
 }
 
 bool CChartStandardAxis::GetNextTickValue(double dCurrentTick, double& dNextTick) const
@@ -77,7 +89,7 @@ long CChartStandardAxis::ValueToScreenDiscrete(double dValue) const
 		precision = -0.0000000001;
 	int tickNr = (int)((dValue+precision)/m_dTickIncrement);
 	dValue = tickNr * m_dTickIncrement;
-	
+
 	dValue += m_dTickIncrement/2.0;
 	return ValueToScreenStandard(dValue);
 }
@@ -119,14 +131,14 @@ void CChartStandardAxis::RefreshTickIncrement()
 	//Temporary tick increment
 	double TempTickIncrement = (m_MaxValue-m_MinValue)/MaxTickNumber;
 
-	// Calculate appropriate tickSpace (not rounded on 'strange values' but 
+	// Calculate appropriate tickSpace (not rounded on 'strange values' but
 	// on something like 1, 2 or 5*10^X  where X is optimalized for showing the most
 	// significant digits)
 	int Zeros = (int)floor(log10(TempTickIncrement));
 	double MinTickIncrement = pow(10.0,Zeros);
 
 	int Digits = 0;
-	if (Zeros<0)		
+	if (Zeros<0)
 	{
 		//We must set decimal places. In the other cases, Digits will be 0.
 		Digits = (int)fabs(Zeros*1.0);

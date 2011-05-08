@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -34,13 +34,15 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CChartSurfaceSerie::CChartSurfaceSerie(CChartCtrl* pParent) 
- : CChartSerie(pParent), m_FillStyle(fsHatchDownDiag), m_bHorizontal(true)
+CChartSurfaceSerie::CChartSurfaceSerie(CChartCtrl* pParent)
+ : CChartXYSerie(pParent), m_FillStyle(fsHatchDownDiag), m_bHorizontal(true)
 {
+
 }
 
 CChartSurfaceSerie::~CChartSurfaceSerie()
 {
+
 }
 
 void CChartSurfaceSerie::Draw(CDC* pDC)
@@ -56,9 +58,9 @@ void CChartSurfaceSerie::DrawAll(CDC* pDC)
 
 	if (uFirst>0)
 		uFirst--;
-	if (uLast<GetPointsCount())
+	if (uLast<GetPointsCount()-1)
 		uLast++;
-	unsigned uCount = uLast - uFirst;
+	unsigned uCount = uLast - uFirst + 1;
 	CPoint* pPoints = new CPoint[uCount+2];
 
 	CBrush NewBrush;
@@ -93,9 +95,10 @@ void CChartSurfaceSerie::DrawAll(CDC* pDC)
 
 	CBrush* pOldBrush = pDC->SelectObject(&NewBrush);
 
-	for (unsigned index=uFirst; index<uLast; index++)
+	for (unsigned index=uFirst; index<=uLast; index++)
 	{
-		ValueToScreen(m_vPoints.GetXPointValue(index),m_vPoints.GetYPointValue(index),pPoints[index-uFirst+1]);
+		SChartXYPoint Point = GetPoint(index);
+		ValueToScreen(Point.X, Point.Y, pPoints[index-uFirst+1]);
 	}
 
 	if (m_bHorizontal)
@@ -180,30 +183,30 @@ void CChartSurfaceSerie::DrawLegend(CDC* pDC, const CRect& rectBitmap) const
 	DeleteObject(NewBrush);
 }
 
-void CChartSurfaceSerie::SetFillStyle(FillStyle NewStyle)  
-{ 
-	m_FillStyle = NewStyle; 
+void CChartSurfaceSerie::SetFillStyle(FillStyle NewStyle)
+{
+	m_FillStyle = NewStyle;
 	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartSurfaceSerie::SetHorizontal(bool bHoriz) 
-{ 
-	m_bHorizontal = bHoriz; 
+void CChartSurfaceSerie::SetHorizontal(bool bHoriz)
+{
+	m_bHorizontal = bHoriz;
 	if (m_bHorizontal)
-		m_vPoints.SetOrdering(CChartPointsArray::poXOrdering);
+		m_vPoints.SetOrdering(poXOrdering);
 	else
-		m_vPoints.SetOrdering(CChartPointsArray::poYOrdering);
+		m_vPoints.SetOrdering(poYOrdering);
 	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartSurfaceSerie::SetSeriesOrdering(CChartPointsArray::PointsOrdering )
+void CChartSurfaceSerie::SetSeriesOrdering(PointsOrdering )
 {
 	TRACE(_T("Can't change the series ordering of a surface series."));
 }
 
-bool CChartSurfaceSerie::IsPointOnSerie(const CPoint& screenPoint, 
-										unsigned& uIndex) const 
-{ 
+bool CChartSurfaceSerie::IsPointOnSerie(const CPoint& screenPoint,
+										unsigned& uIndex) const
+{
 	uIndex = INVALID_POINT;
 	if (!m_bIsVisible)
         return false;
@@ -220,10 +223,12 @@ bool CChartSurfaceSerie::IsPointOnSerie(const CPoint& screenPoint,
 	bool bResult = false;
 	for (unsigned ptIndex=uFirst; ptIndex<uLast-1; ptIndex++)
 	{
+		SChartXYPoint SeriePoint1 = GetPoint(ptIndex);
+		SChartXYPoint SeriePoint2 = GetPoint(ptIndex+1);
 		CPoint point1;
 		CPoint point2;
-		ValueToScreen( m_vPoints.GetXPointValue(ptIndex),m_vPoints.GetYPointValue(ptIndex),point1);
-		ValueToScreen( m_vPoints.GetXPointValue(ptIndex+1),m_vPoints.GetYPointValue(ptIndex+1),point2);
+		ValueToScreen(SeriePoint1.X, SeriePoint1.Y, point1);
+		ValueToScreen(SeriePoint2.X, SeriePoint2.Y, point2);
 
 		double lineSlope = (1.0*(point2.y-point1.y))/(point2.x-point1.x);
 		double lineOffset = (1.0*(point2.x*point1.y-point1.x*point2.y))/(point2.x-point1.x);
@@ -259,7 +264,7 @@ bool CChartSurfaceSerie::IsPointOnSerie(const CPoint& screenPoint,
 				continue;
 
 			int Position = m_pVerticalAxis->GetPosition();
-			if ( (Position==0) && (screenPoint.x < (screenPoint.y-lineOffset)/lineSlope) ) 
+			if ( (Position==0) && (screenPoint.x < (screenPoint.y-lineOffset)/lineSlope) )
 				bResult = true;
 			if ( (Position==100) && (screenPoint.x > (screenPoint.y-lineOffset)/lineSlope) )
 				bResult = true;
@@ -280,5 +285,5 @@ bool CChartSurfaceSerie::IsPointOnSerie(const CPoint& screenPoint,
 		}
 	}
 
-	return bResult; 
+	return bResult;
 }

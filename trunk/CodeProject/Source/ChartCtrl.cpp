@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -24,7 +24,7 @@
  *		- 12/06/2006: Added support for manual zoom
  *		- 10/08/2006: Added SetZoomMinMax and UndoZoom
  *		- 24/03/2007: GDI leak corrected
- *		- 24/03/2007: Invisible series are not taken in account for auto axis 
+ *		- 24/03/2007: Invisible series are not taken in account for auto axis
  *					  and legend (thanks to jerminator-jp).
  *		- 24/03/2007: possibility to specify a margin for the axis. Needs to be improved
  *		- 05/04/2007: ability to change the text color of the axis.
@@ -33,7 +33,7 @@
  *		- 26/08/2007: The clipping area of the series is a bit larger (they will be
  *					  drawn over the bottom and right axes).
  *		- 12/01/2007: Ability to change the color of the zoom rectangle.
- *		- 08/02/2008: Added convenience functions to convert from date to value and 
+ *		- 08/02/2008: Added convenience functions to convert from date to value and
  *					  opposite.
  *		- 21/02/2008: The zoom doesn't do anything if the user only clicks on the control
  *					  (thanks to Eugene Pustovoyt).
@@ -60,6 +60,17 @@
 #include "ChartCrossHairCursor.h"
 #include "ChartDragLineCursor.h"
 
+#include "ChartPointsSerie.h"
+#include "ChartLineSerie.h"
+#include "ChartSurfaceSerie.h"
+#include "ChartBarSerie.h"
+#include "ChartCandlestickSerie.h"
+#include "ChartGanttSerie.h"
+
+#if _MFC_VER > 0x0600
+#include "atlImage.h"
+#endif
+
 using namespace std;
 
 #ifdef _DEBUG
@@ -71,7 +82,7 @@ static char THIS_FILE[] = __FILE__;
 #define CHARTCTRL_CLASSNAME    _T("ChartCtrl")  // Window class name
 
 
-COLORREF pSeriesColorTable[] = { RGB(255,0,0), RGB(0,150,0), RGB(0,0,255), RGB(255,255,0), RGB(0,255,255), 
+COLORREF pSeriesColorTable[] = { RGB(255,0,0), RGB(0,150,0), RGB(0,0,255), RGB(255,255,0), RGB(0,255,255),
 								 RGB(255,128,0), RGB(128,0,128), RGB(128,128,0), RGB(255,0,255), RGB(64,128,128)};
 
 /////////////////////////////////////////////////////////////////////////////
@@ -95,7 +106,7 @@ CChartCtrl::CChartCtrl()
 
 	m_pLegend = new CChartLegend(this);
 	m_pTitles = new CChartTitle(this);
-	
+
 	m_bMemDCCreated = false;
 	m_bPanEnabled = true;
 	m_bRMouseDown = false;
@@ -162,7 +173,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CChartCtrl message handlers
 
-void CChartCtrl::OnPaint() 
+void CChartCtrl::OnPaint()
 {
 	CPaintDC dc(this); // device context for painting
 
@@ -175,7 +186,7 @@ void CChartCtrl::OnPaint()
     // Get Size of Display area
     CRect rect;
     GetClientRect(&rect);
-	dc.BitBlt(0, 0, rect.Width(), rect.Height(), 
+	dc.BitBlt(0, 0, rect.Width(), rect.Height(),
 			  &m_BackgroundDC, 0, 0, SRCCOPY) ;
 
 	// Draw the zoom rectangle
@@ -194,20 +205,20 @@ void CChartCtrl::OnPaint()
 		DeleteObject(NewPen);
 	}
 
-	// Draw the cursors. 
+	// Draw the cursors.
 	TCursorMap::iterator iter = m_mapCursors.begin();
 	for (iter; iter!=m_mapCursors.end(); iter++)
 		iter->second->Draw(&dc);
 }
 
-BOOL CChartCtrl::OnEraseBkgnd(CDC* ) 
+BOOL CChartCtrl::OnEraseBkgnd(CDC* )
 {
 	// To avoid flickering
 //	return CWnd::OnEraseBkgnd(pDC);
 	return FALSE;
 }
 
-CChartCrossHairCursor* CChartCtrl::CreateCrossHairCursor(bool bSecondaryHorizAxis, 
+CChartCrossHairCursor* CChartCtrl::CreateCrossHairCursor(bool bSecondaryHorizAxis,
 														 bool bSecondaryVertAxis)
 {
 	CChartAxis* pHorizAxis = NULL;
@@ -308,7 +319,7 @@ bool CChartCtrl::RegisterWindowClass()
 
     if (!(::GetClassInfo(hInst, CHARTCTRL_CLASSNAME, &wndcls)))
     {
-		memset(&wndcls, 0, sizeof(WNDCLASS));   
+		memset(&wndcls, 0, sizeof(WNDCLASS));
 
 		wndcls.hInstance		= hInst;
 		wndcls.lpfnWndProc		= ::DefWindowProc;
@@ -316,7 +327,7 @@ bool CChartCtrl::RegisterWindowClass()
 		wndcls.hIcon			= 0;
 		wndcls.lpszMenuName		= NULL;
 		wndcls.hbrBackground	= (HBRUSH) ::GetStockObject(WHITE_BRUSH);
-		wndcls.style			= CS_DBLCLKS; 
+		wndcls.style			= CS_DBLCLKS;
 		wndcls.cbClsExtra		= 0;
 		wndcls.cbWndExtra		= 0;
 		wndcls.lpszClassName    = CHARTCTRL_CLASSNAME;
@@ -392,10 +403,10 @@ void CChartCtrl::RefreshCtrl()
 
 	// Retrieve the client rect and initialize the
 	// plotting rect
-	CClientDC dc(this) ;  
+	CClientDC dc(this) ;
 	CRect ClientRect;
 	GetClientRect(&ClientRect);
-	m_PlottingRect = ClientRect;		
+	m_PlottingRect = ClientRect;
 
 	// If the backgroundDC was not created yet, create it (it
 	// is used to avoid flickering).
@@ -410,23 +421,8 @@ void CChartCtrl::RefreshCtrl()
 	// Draw the chart background, which is not part of
 	// the DrawChart function (to avoid a background when
 	// printing).
-	CBrush m_BrushBack;
-	m_BrushBack.CreateSolidBrush(m_BackColor) ;
-	if (!m_bBackGradient)
-	{
-		m_BackgroundDC.SetBkColor(m_BackColor);
-		m_BackgroundDC.FillRect(ClientRect,&m_BrushBack);
-	}
-	else
-	{
-		CChartGradient::DrawGradient(&m_BackgroundDC,ClientRect,m_BackGradientCol1,
-									 m_BackGradientCol2,m_BackGradientType);
-	}
-
-	// Draw the edge.
-	m_BackgroundDC.DrawEdge(ClientRect,EdgeType,BF_RECT);
+	DrawBackground(&m_BackgroundDC, ClientRect);
 	ClientRect.DeflateRect(3,3);
-
 	DrawChart(&m_BackgroundDC,ClientRect);
 	for (int i=0; i<4 ;i++)
 	{
@@ -505,7 +501,35 @@ void CChartCtrl::DrawChart(CDC* pDC, CRect ChartRect)
 	m_pLegend->Draw(pDC);
 }
 
-CChartPointsSerie* CChartCtrl::CreatePointsSerie(bool bSecondaryHorizAxis, 
+void CChartCtrl::DrawBackground(CDC* pDC, CRect ChartRect)
+{
+	CBrush BrushBack;
+	BrushBack.CreateSolidBrush(m_BackColor) ;
+	if (!m_bBackGradient)
+	{
+		pDC->SetBkColor(m_BackColor);
+		pDC->FillRect(ChartRect,&BrushBack);
+	}
+	else
+	{
+		CChartGradient::DrawGradient(pDC,ChartRect,m_BackGradientCol1,
+									 m_BackGradientCol2,m_BackGradientType);
+	}
+
+	// Draw the edge.
+	pDC->DrawEdge(ChartRect,EdgeType,BF_RECT);
+}
+
+void CChartCtrl::RefreshScreenAutoAxes()
+{
+	for (int n=0;n<4;n++)
+	{
+		if (m_pAxes[n])
+			m_pAxes[n]->RefreshScreenAutoAxis();
+	}
+}
+
+CChartPointsSerie* CChartCtrl::CreatePointsSerie(bool bSecondaryHorizAxis,
 											   bool bSecondaryVertAxis)
 {
 	CChartPointsSerie* pNewSerie = new CChartPointsSerie(this);
@@ -513,7 +537,7 @@ CChartPointsSerie* CChartCtrl::CreatePointsSerie(bool bSecondaryHorizAxis,
 	return pNewSerie;
 }
 
-CChartLineSerie* CChartCtrl::CreateLineSerie(bool bSecondaryHorizAxis, 
+CChartLineSerie* CChartCtrl::CreateLineSerie(bool bSecondaryHorizAxis,
 											 bool bSecondaryVertAxis)
 {
 	CChartLineSerie* pNewSerie = new CChartLineSerie(this);
@@ -521,18 +545,34 @@ CChartLineSerie* CChartCtrl::CreateLineSerie(bool bSecondaryHorizAxis,
 	return pNewSerie;
 }
 
-CChartSurfaceSerie* CChartCtrl::CreateSurfaceSerie(bool bSecondaryHorizAxis, 
-											   bool bSecondaryVertAxis)
+CChartSurfaceSerie* CChartCtrl::CreateSurfaceSerie(bool bSecondaryHorizAxis,
+												   bool bSecondaryVertAxis)
 {
 	CChartSurfaceSerie* pNewSerie = new CChartSurfaceSerie(this);
 	AttachCustomSerie(pNewSerie, bSecondaryHorizAxis, bSecondaryVertAxis);
 	return pNewSerie;
 }
 
-CChartBarSerie* CChartCtrl::CreateBarSerie(bool bSecondaryHorizAxis, 
-											   bool bSecondaryVertAxis)
+CChartBarSerie* CChartCtrl::CreateBarSerie(bool bSecondaryHorizAxis,
+										   bool bSecondaryVertAxis)
 {
 	CChartBarSerie* pNewSerie = new CChartBarSerie(this);
+	AttachCustomSerie(pNewSerie, bSecondaryHorizAxis, bSecondaryVertAxis);
+	return pNewSerie;
+}
+
+CChartCandlestickSerie* CChartCtrl::CreateCandlestickSerie(bool bSecondaryHorizAxis,
+														   bool bSecondaryVertAxis)
+{
+	CChartCandlestickSerie* pNewSerie = new CChartCandlestickSerie(this);
+	AttachCustomSerie(pNewSerie, bSecondaryHorizAxis, bSecondaryVertAxis);
+	return pNewSerie;
+}
+
+CChartGanttSerie* CChartCtrl::CreateGanttSerie(bool bSecondaryHorizAxis,
+													 bool bSecondaryVertAxis)
+{
+	CChartGanttSerie* pNewSerie = new CChartGanttSerie(this);
 	AttachCustomSerie(pNewSerie, bSecondaryHorizAxis, bSecondaryVertAxis);
 	return pNewSerie;
 }
@@ -656,7 +696,7 @@ size_t CChartCtrl::GetSeriesCount() const
 /////////////////////////////////////////////////////////////////////////////
 // Mouse events
 
-void CChartCtrl::OnMouseMove(UINT nFlags, CPoint point) 
+void CChartCtrl::OnMouseMove(UINT nFlags, CPoint point)
 {
 	if (m_bRMouseDown && m_bPanEnabled)
 	{
@@ -673,6 +713,9 @@ void CChartCtrl::OnMouseMove(UINT nFlags, CPoint point)
 				m_pAxes[TopAxis]->PanAxis(m_PanAnchor.x,point.x);
 			RefreshCtrl();
 			EnableRefresh(true);
+			// Force an immediate repaint of the window, so that the mouse messages
+			// are by passed (this allows for a smooth pan)
+			UpdateWindow();
 
 			m_PanAnchor = point;
 		}
@@ -702,7 +745,7 @@ void CChartCtrl::OnMouseMove(UINT nFlags, CPoint point)
 		TCursorMap::iterator iter = m_mapCursors.begin();
 		for (iter; iter!=m_mapCursors.end(); iter++)
 			iter->second->OnMouseMove(point);
-		
+
 		Invalidate();
 	}
 
@@ -715,7 +758,7 @@ void CChartCtrl::OnMouseMove(UINT nFlags, CPoint point)
 	CWnd::OnMouseMove(nFlags, point);
 }
 
-void CChartCtrl::OnLButtonDown(UINT nFlags, CPoint point) 
+void CChartCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	SetCapture();
 	if (m_bZoomEnabled)
@@ -730,7 +773,7 @@ void CChartCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 		TCursorMap::iterator iter = m_mapCursors.begin();
 		for (iter; iter!=m_mapCursors.end(); iter++)
 			iter->second->OnMouseButtonDown(point);
-		
+
 		Invalidate();
 	}
 
@@ -738,7 +781,7 @@ void CChartCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	CWnd::OnLButtonDown(nFlags, point);
 }
 
-void CChartCtrl::OnLButtonUp(UINT nFlags, CPoint point) 
+void CChartCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	ReleaseCapture();
 	m_bLMouseDown = false;
@@ -752,9 +795,9 @@ void CChartCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 		else if ( (m_rectZoomArea.left!=m_rectZoomArea.right) &&
 				  (m_rectZoomArea.top!=m_rectZoomArea.bottom))
 		{
-			double MinVal = 0;			
+			double MinVal = 0;
 			double MaxVal = 0;
-			
+
 			if (m_pAxes[BottomAxis])
 			{
 				if (m_pAxes[BottomAxis]->IsInverted())
@@ -824,7 +867,7 @@ void CChartCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 		TCursorMap::iterator iter = m_mapCursors.begin();
 		for (iter; iter!=m_mapCursors.end(); iter++)
 			iter->second->OnMouseButtonUp(point);
-		
+
 		Invalidate();
 	}
 
@@ -832,13 +875,13 @@ void CChartCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 	CWnd::OnLButtonUp(nFlags, point);
 }
 
-void CChartCtrl::OnLButtonDblClk(UINT nFlags, CPoint point) 
+void CChartCtrl::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	SendMouseEvent(CChartMouseListener::LButtonDoubleClick, point);
 	CWnd::OnLButtonDblClk(nFlags, point);
 }
 
-void CChartCtrl::OnRButtonDown(UINT nFlags, CPoint point) 
+void CChartCtrl::OnRButtonDown(UINT nFlags, CPoint point)
 {
 	SetCapture();
 	m_bRMouseDown = true;
@@ -849,7 +892,7 @@ void CChartCtrl::OnRButtonDown(UINT nFlags, CPoint point)
 	CWnd::OnRButtonDown(nFlags, point);
 }
 
-void CChartCtrl::OnRButtonUp(UINT nFlags, CPoint point) 
+void CChartCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 {
 	ReleaseCapture();
 	m_bRMouseDown = false;
@@ -858,63 +901,48 @@ void CChartCtrl::OnRButtonUp(UINT nFlags, CPoint point)
 	CWnd::OnRButtonUp(nFlags, point);
 }
 
-void CChartCtrl::OnRButtonDblClk(UINT nFlags, CPoint point) 
+void CChartCtrl::OnRButtonDblClk(UINT nFlags, CPoint point)
 {
 	SendMouseEvent(CChartMouseListener::RButtonDoubleClick, point);
 	CWnd::OnRButtonDblClk(nFlags, point);
 }
 
-void CChartCtrl::SendMouseEvent(CChartMouseListener::MouseEvent mouseEvent, 
+void CChartCtrl::SendMouseEvent(CChartMouseListener::MouseEvent mouseEvent,
 								const CPoint& screenPoint) const
 {
-	if (!m_pMouseListener)
-		return;
-
-	// Check where the click occured.
-	if (m_pTitles->IsPointInside(screenPoint))
-		m_pMouseListener->OnMouseEventTitle(mouseEvent,screenPoint);
-	if (m_pLegend->IsPointInside(screenPoint))
-		m_pMouseListener->OnMouseEventLegend(mouseEvent,screenPoint);
-	for (int i=0; i<4; i++)
+	if (m_pMouseListener)
 	{
-		if ( m_pAxes[i] && m_pAxes[i]->IsPointInside(screenPoint) )
-			m_pMouseListener->OnMouseEventAxis(mouseEvent,screenPoint,m_pAxes[i]);
+		// Check where the click occured.
+		if (m_pTitles->IsPointInside(screenPoint))
+			m_pMouseListener->OnMouseEventTitle(mouseEvent,screenPoint);
+		if (m_pLegend->IsPointInside(screenPoint))
+			m_pMouseListener->OnMouseEventLegend(mouseEvent,screenPoint);
+		for (int i=0; i<4; i++)
+		{
+			if ( m_pAxes[i] && m_pAxes[i]->IsPointInside(screenPoint) )
+				m_pMouseListener->OnMouseEventAxis(mouseEvent,screenPoint,m_pAxes[i]);
+		}
+		if (m_PlottingRect.PtInRect(screenPoint))
+			m_pMouseListener->OnMouseEventPlotArea(mouseEvent,screenPoint);
 	}
-	if (m_PlottingRect.PtInRect(screenPoint))
-		m_pMouseListener->OnMouseEventPlotArea(mouseEvent,screenPoint);
-	
+
 	// Check all the series in reverse order (check the series on top first).
 	TSeriesMap::const_reverse_iterator rIter = m_mapSeries.rbegin();
 	for(rIter; rIter!=m_mapSeries.rend(); rIter++)
 	{
-		unsigned uPtIndex = 0;
-		if ( (mouseEvent==CChartMouseListener::MouseMove) && 
-			 !rIter->second->NotifyMouseMoveEnabled())
-		{
-			continue;
-		}
-		if ( (mouseEvent!=CChartMouseListener::MouseMove) && 
-			 !rIter->second->NotifyMouseClickEnabled())
-		{
-			continue;
-		}
-
-		if (rIter->second->IsPointOnSerie(screenPoint,uPtIndex))
-		{
-			m_pMouseListener->OnMouseEventSeries(mouseEvent,screenPoint,rIter->second,uPtIndex);
+		if (rIter->second->OnMouseEvent(mouseEvent, screenPoint))
 			break;
-		}
 	}
 }
 
-void CChartCtrl::OnSize(UINT nType, int cx, int cy) 
+void CChartCtrl::OnSize(UINT nType, int cx, int cy)
 {
 	CWnd::OnSize(nType, cx, cy);
-	
+
 	// Force recreation of background DC
 	if (m_BackgroundDC.GetSafeHdc() )
 		m_BackgroundDC.DeleteDC();
-	
+
 	RefreshCtrl();
 }
 
@@ -963,7 +991,7 @@ void CChartCtrl::Print(const TChartString& strTitle, CPrintDialog* pPrntDialog)
     else
 		dc.Attach(pPrntDialog->GetPrinterDC()); // attach a printer DC
     dc.m_bPrinting = TRUE;
-	
+
     DOCINFO di;                                 // Initialise print doc details
     memset(&di, 0, sizeof (DOCINFO));
     di.cbSize = sizeof (DOCINFO);
@@ -1006,7 +1034,7 @@ void CChartCtrl::OnBeginPrinting(CDC *pDC, CPrintInfo *pInfo)
 
     // Get a DC for the current window (will be a screen DC for print previewing)
     CDC *pCurrentDC = GetDC();        // will have dimensions of the client area
-    if (!pCurrentDC) 
+    if (!pCurrentDC)
 		return;
 
     CSize PaperPixelsPerInch(pDC->GetDeviceCaps(LOGPIXELSX), pDC->GetDeviceCaps(LOGPIXELSY));
@@ -1060,12 +1088,56 @@ void CChartCtrl::OnPrint(CDC *pDC, CPrintInfo *pInfo)
     pDC->SetWindowOrg(0,0);
 
     pDC->SelectObject(pOldFont);
-} 
+}
 
 void CChartCtrl::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
     m_PrinterFont.DeleteObject();
-	// RefreshCtrl is needed because the print job 
+	// RefreshCtrl is needed because the print job
 	// modifies the chart components (axis, ...)
 	RefreshCtrl();
 }
+
+void CChartCtrl::GoToFirstSerie()
+{
+	m_currentSeries = m_mapSeries.begin();
+}
+
+CChartSerie* CChartCtrl::GetNextSerie()
+{
+	CChartSerie* pSeries = NULL;
+	if (m_currentSeries != m_mapSeries.end())
+	{
+		pSeries = m_currentSeries->second;
+		m_currentSeries++;
+	}
+
+	return pSeries;
+}
+
+#if _MFC_VER > 0x0600
+void CChartCtrl::SaveAsImage(const TChartString& strFilename,
+							 const CRect& rect,
+							 int nBPP,
+							 REFGUID guidFileType)
+{
+	CImage chartImage;
+	CRect chartRect = rect;
+	if (chartRect.IsRectEmpty())
+	{
+		GetClientRect(&chartRect);
+	}
+
+	chartImage.Create(chartRect.Width(), chartRect.Height(), nBPP);
+	CDC newDC;
+	newDC.Attach(chartImage.GetDC());
+
+	DrawBackground(&newDC, chartRect);
+	chartRect.DeflateRect(3,3);
+	DrawChart(&newDC, chartRect);
+
+	newDC.Detach();
+	chartImage.Save(strFilename.c_str(), guidFileType);
+	chartImage.ReleaseDC();
+}
+#endif

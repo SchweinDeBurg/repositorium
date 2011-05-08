@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -19,12 +19,13 @@
  *
  */
 
-#include "stdafx.h"
 #include "ChartCtrl.h"
 #include "ChartSerie.h"
 #include "ChartBalloonLabel.h"
 
-CChartBalloonLabel::CChartBalloonLabel(CChartCtrl* pParentCtrl, CChartSerie* pParentSeries)
+template<class PointType>
+CChartBalloonLabel<PointType>::CChartBalloonLabel(CChartCtrl* pParentCtrl,
+												  CChartSerieBase<PointType>* pParentSeries)
   : CChartLabel(pParentCtrl, pParentSeries), m_bRoundedRect(true)
 {
 	m_colBackground = RGB(255,255,225);
@@ -32,52 +33,63 @@ CChartBalloonLabel::CChartBalloonLabel(CChartCtrl* pParentCtrl, CChartSerie* pPa
 	m_colBorder = RGB(0,0,0);
 }
 
-CChartBalloonLabel::~CChartBalloonLabel()
+template<class PointType>
+CChartBalloonLabel<PointType>::~CChartBalloonLabel()
 {
 }
 
-void CChartBalloonLabel::SetBackgroundColor(COLORREF colBackground)  
-{ 
-	m_colBackground = colBackground; 
+template<class PointType>
+void CChartBalloonLabel<PointType>::SetBackgroundColor(COLORREF colBackground)
+{
+	m_colBackground = colBackground;
 	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartBalloonLabel::SetLineColor(COLORREF colArrow)			 
-{ 
-	m_colLine = colArrow; 
+template<class PointType>
+void CChartBalloonLabel<PointType>::SetLineColor(COLORREF colArrow)
+{
+	m_colLine = colArrow;
 	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartBalloonLabel::SetBorderColor(COLORREF colBorder)			 
-{ 
-	m_colBorder = colBorder; 
+template<class PointType>
+void CChartBalloonLabel<PointType>::SetBorderColor(COLORREF colBorder)
+{
+	m_colBorder = colBorder;
 	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartBalloonLabel::SetRoundedRect(bool bRounded)  
-{ 
-	m_bRoundedRect = bRounded; 
+template<class PointType>
+void CChartBalloonLabel<PointType>::SetRoundedRect(bool bRounded)
+{
+	m_bRoundedRect = bRounded;
 	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartBalloonLabel::SetFont(int nPointSize, const TChartString& strFaceName)
+template<class PointType>
+void CChartBalloonLabel<PointType>::SetFont(int nPointSize, const TChartString& strFaceName)
 {
 	m_Font.SetFont(strFaceName, nPointSize);
 	if (m_pParentCtrl)
 		m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartBalloonLabel::SetFont(const CChartFont& newFont)
+template<class PointType>
+void CChartBalloonLabel<PointType>::SetFont(const CChartFont& newFont)
 {
 	m_Font = newFont;
 	if (m_pParentCtrl)
 		m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartBalloonLabel::Draw(CDC* pDC, unsigned uPointIndex)
+template<class PointType>
+void CChartBalloonLabel<PointType>::Draw(CDC* pDC, unsigned uPointIndex)
 {
 	if (m_pLabelProvider)
-		m_strLabelText = m_pLabelProvider->GetText(m_pParentSeries,uPointIndex);
+	{
+		PointType Point = m_pParentSeries->GetPoint(uPointIndex);
+		m_strLabelText = m_pLabelProvider->GetText(m_pParentSeries, uPointIndex);
+	}
 	if (m_strLabelText == _T(""))
 		return;
 
@@ -85,7 +97,7 @@ void CChartBalloonLabel::Draw(CDC* pDC, unsigned uPointIndex)
 
 	// Create the pen for the arrow
 	CPen newPen(PS_SOLID, 1, m_colLine);
-	pDC->SelectObject(&newPen);
+	CPen* pOldPen = pDC->SelectObject(&newPen);
 
 	// Draw first the arrow
 	pDC->MoveTo(screenPt);
@@ -94,14 +106,14 @@ void CChartBalloonLabel::Draw(CDC* pDC, unsigned uPointIndex)
 	// Create and select a new pen for the border
 	newPen.DeleteObject();
 	newPen.CreatePen(PS_SOLID, 1, m_colBorder);
-	CPen* pOldPen = pDC->SelectObject(&newPen);
+	pDC->SelectObject(&newPen);
 	m_Font.SelectFont(pDC);
 
 	// Create the brush to fill the rectangle
 	CBrush newBrush(m_colBackground);
 	CBrush* pOldBrush = pDC->SelectObject(&newBrush);
 
-	// Calculate the size of the 
+	// Calculate the size of the
 	CSize labelSize = pDC->GetTextExtent(m_strLabelText.c_str());
 	labelSize += CSize(10,10);
 	int x = screenPt.x;

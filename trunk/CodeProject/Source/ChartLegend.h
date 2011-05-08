@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -35,10 +35,10 @@ class CChartSerie;
 //! This class is responsible for the legend displayed on the control.
 /**
 	Series which are named will be displayed in the legend. The legend
-	object is retrieved	by calling the GetLegend() function on the 
-	CChartCtrl class. 
+	object is retrieved	by calling the GetLegend() function on the
+	CChartCtrl class.
 **/
-class CChartLegend  
+class CChartLegend
 {
 	friend CChartCtrl;
 
@@ -70,7 +70,7 @@ public:
 	void UndockLegend(int iLeftPos, int iTopPos);
 
 	//! Sets the background of the legend transparent.
-	void SetTransparent(bool bTransparent);  
+	void SetTransparent(bool bTransparent);
 	//! Sets the legend in horizontal/vertical mode.
 	/**
 		In horizontal mode, the names are drawn next to each other
@@ -123,7 +123,7 @@ private:
 	int          m_iFontSize;
 
 	//! True if the legend is docked
-	bool m_bDocked;	
+	bool m_bDocked;
 	//! The side of the control on which the legend is docked.
 	DockSide m_DockSide;
 

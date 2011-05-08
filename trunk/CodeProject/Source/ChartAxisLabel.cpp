@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -56,14 +56,14 @@ void CChartAxisLabel::SetVisible(bool bVisible)
 
 void CChartAxisLabel::SetColor(COLORREF NewColor)
 {
-	m_TextColor = NewColor; 
+	m_TextColor = NewColor;
 	if (m_pParentCtrl)
 		m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartAxisLabel::SetText(const TChartString& NewText)  
-{ 
-	m_strLabelText = NewText; 
+void CChartAxisLabel::SetText(const TChartString& NewText)
+{
+	m_strLabelText = NewText;
 	if (m_pParentCtrl)
 		m_pParentCtrl->RefreshCtrl();
 }
@@ -137,7 +137,7 @@ void CChartAxisLabel::Draw(CDC *pDC)
 					ETO_CLIPPED,NULL,m_strLabelText.c_str(),NULL);
 	}
 	else
-	{		
+	{
 		pDC->ExtTextOut(m_TextRect.left,m_TextRect.top + 2,
 					ETO_CLIPPED,NULL,m_strLabelText.c_str(),NULL);
 	}

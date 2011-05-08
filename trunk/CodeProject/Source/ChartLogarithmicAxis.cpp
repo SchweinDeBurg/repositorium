@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -42,10 +42,10 @@ double CChartLogarithmicAxis::GetFirstTickValue() const
 	double dRetVal = m_dFirstTickValue;
 	if (m_bDiscrete)
 		dRetVal = m_dFirstTickValue/10;
-	return dRetVal; 
+	return dRetVal;
 }
 
-bool CChartLogarithmicAxis::GetNextTickValue(double dCurrentTick, 
+bool CChartLogarithmicAxis::GetNextTickValue(double dCurrentTick,
 											 double& dNextTick) const
 {
 	dNextTick = dCurrentTick * 10;
@@ -57,15 +57,15 @@ bool CChartLogarithmicAxis::GetNextTickValue(double dCurrentTick,
 
 TChartString CChartLogarithmicAxis::GetTickLabel(double TickValue) const
 {
-	double fLogDecCount; 
-	int    nLogDecCount; 
+	double fLogDecCount;
+	int    nLogDecCount;
 
-	fLogDecCount = log10(TickValue); 
+	fLogDecCount = log10(TickValue);
 
-	if (fLogDecCount < 0.0) 
-		nLogDecCount = (int)(fabs(fLogDecCount) + 0.1); 
-	else 
-		nLogDecCount = 0; 
+	if (fLogDecCount < 0.0)
+		nLogDecCount = (int)(fabs(fLogDecCount) + 0.1);
+	else
+		nLogDecCount = 0;
 
 	TChartStringStream ssLabel;
 	ssLabel << fixed << setprecision(nLogDecCount) << TickValue;
@@ -116,9 +116,9 @@ double CChartLogarithmicAxis::ScreenToValue(long ScreenVal) const
     if (!m_bIsHorizontal)
     {
         if (m_bIsInverted)
-			AxisOffset = ScreenVal - m_EndPos;      
+			AxisOffset = ScreenVal - m_EndPos;
         else
-			AxisOffset = m_StartPos - ScreenVal;     
+			AxisOffset = m_StartPos - ScreenVal;
     }
     else
     {
@@ -173,12 +173,12 @@ void CChartLogarithmicAxis::GetScrollbarSteps(int& iTotalSteps, int& iCurrentSte
 	{
 		double dStep = pow(m_MaxValue/m_MinValue,0.1);
 		iTotalSteps = (int)ceil(log(SeriesMax/SeriesMin)/log10(dStep));
-		iCurrentStep = (int)(log(m_MinValue/SeriesMin)/log10(dStep)); 
+		iCurrentStep = (int)(log(m_MinValue/SeriesMin)/log10(dStep));
 	}
 }
 
-void CChartLogarithmicAxis::SetAxisToScrollStep(int iPreviousStep, 
-												int iCurrentStep, 
+void CChartLogarithmicAxis::SetAxisToScrollStep(int iPreviousStep,
+												int iCurrentStep,
 												bool bScrollInverted)
 {
 	double dStep = pow(m_MaxValue/m_MinValue,0.1);

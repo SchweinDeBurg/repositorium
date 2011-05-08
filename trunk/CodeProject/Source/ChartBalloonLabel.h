@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -19,7 +19,7 @@
  *
  */
 
-#ifndef _CHARTBALLOONLABEL_H_ 
+#ifndef _CHARTBALLOONLABEL_H_
 #define _CHARTBALLOONLABEL_H_
 
 #include "ChartLabel.h"
@@ -27,13 +27,14 @@
 
 //! Specialization of the CChartLabel to display a balloon label.
 /**
-	A balloon label is a label with a rounded rectangle area in which the 
+	A balloon label is a label with a rounded rectangle area in which the
 	text is displayed and which is connected with a line to the point to
 	which it is attached.
 **/
-class CChartBalloonLabel : public CChartLabel
+template <class PointType>
+class CChartBalloonLabel : public CChartLabel<PointType>
 {
-	friend CChartSerie;
+	friend CChartSerieBase<PointType>;
 
 public:
 	//! Sets the background color of the text area.
@@ -41,7 +42,7 @@ public:
 	//! Retrieves the background color of the text area.
 	COLORREF GetBackgroundColor() const		{ return m_colBackground; }
 	//! Sets the color of the line connecting the point to the text area.
-	void SetLineColor(COLORREF colArrow);	
+	void SetLineColor(COLORREF colArrow);
 	//! Retrieves the color of the line connecting the point to the text area.
 	COLORREF GetLineColor() const			{ return m_colLine; }
 	//! Sets the color of border's text area.
@@ -56,7 +57,7 @@ public:
 
 	//! Sets the font of the text.
 	/**
-		@param iPointSize
+		@param nPointSize
 			The font point size.
 		@param strFaceName
 			The font face name ("Times New Roman", "Arial", ...)
@@ -71,13 +72,13 @@ public:
 	**/
 	void SetFont(const CChartFont& newFont);
 
-protected:
 	//! Constructor
-	CChartBalloonLabel(CChartCtrl* pParentCtrl, CChartSerie* pParentSeries);
+	CChartBalloonLabel(CChartCtrl* pParentCtrl, CChartSerieBase<PointType>* pParentSeries);
 	//! Destructor
 	~CChartBalloonLabel();
 
-	//! Drawd the label.
+protected:
+	//! Draw the label.
 	void Draw(CDC* pDC, unsigned uPointIndex);
 
 private:
@@ -94,5 +95,7 @@ private:
 	//! Specifies if the rectangle is rounded or not.
 	bool m_bRoundedRect;
 };
+
+#include "ChartBalloonLabel.inl"
 
 #endif  // _CHARTBALLOONLABEL_H_

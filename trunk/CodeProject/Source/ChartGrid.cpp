@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -36,14 +36,15 @@ using namespace std;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CChartGrid::CChartGrid() 
-  : m_GridColor(RGB(128,128,128)), m_pParentCtrl(NULL), m_bIsVisible(true), 
+CChartGrid::CChartGrid()
+  : m_GridColor(RGB(128,128,128)), m_pParentCtrl(NULL), m_bIsVisible(true),
     m_bIsHorizontal(true), m_lstTickPos()
 {
 }
 
 CChartGrid::~CChartGrid()
 {
+
 }
 
 void CChartGrid::AddTick(int Position)
@@ -62,7 +63,7 @@ void CChartGrid::Draw(CDC *pDC)
 		return;
 	if (!pDC->GetSafeHdc() )
 		return;
-	
+
 	CRect plottingRect = m_pParentCtrl->GetPlottingRect();
 	pDC->IntersectClipRect(plottingRect);
 
@@ -116,7 +117,7 @@ void CChartGrid::SetVisible(bool bVisible)
 
 void CChartGrid::SetColor(COLORREF NewColor)
 {
-	m_GridColor = NewColor; 
+	m_GridColor = NewColor;
 	if (m_pParentCtrl)
 		m_pParentCtrl->RefreshCtrl();
 }

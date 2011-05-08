@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -26,20 +26,20 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "ChartSerie.h"
+#include "ChartXYSerie.h"
 
 //! Specialization of a CChartSerie to display a surface series.
 /**
-	A surface can be horizontal (default) or vertical: this defines how 
-	the filling of the surface is done. For a horizontal surface, the 
-	filling is done between the points and the associated horizontal axis 
-	and for a vertical surface, the filling is done between the points 
-	and the associated vertical axis. 
-	The series can be associated with a secondary axis. For example, if 
-	the surface series is horizontal and is associated with the top axis 
+	A surface can be horizontal (default) or vertical: this defines how
+	the filling of the surface is done. For a horizontal surface, the
+	filling is done between the points and the associated horizontal axis
+	and for a vertical surface, the filling is done between the points
+	and the associated vertical axis.
+	The series can be associated with a secondary axis. For example, if
+	the surface series is horizontal and is associated with the top axis
 	(secondary axis), the filling is done between the top axis and the points.
 **/
-class CChartSurfaceSerie : public CChartSerie  
+class CChartSurfaceSerie : public CChartXYSerie
 {
 public:
 	//! Constructor
@@ -77,7 +77,7 @@ public:
 	/**
 		This function returns true if the screen point is on the surface.
 		If the screen point is also close to a specific point of the series, the
-		index of the point is stored in the uIndex parameter. Otherwise, this 
+		index of the point is stored in the uIndex parameter. Otherwise, this
 		parameter contains INVALID_POINT.
 		@param screenPoint
 			The screen point to test
@@ -85,11 +85,12 @@ public:
 			If the point is close to a specific point of the series, its index is stored here.
 		@return true if the point is on the series
 	**/
-	bool IsPointOnSerie(const CPoint& screenPoint, unsigned& uIndex) const; 
+	bool IsPointOnSerie(const CPoint& screenPoint, unsigned& uIndex) const;
 
+	void CChartSurfaceSerie::SetSeriesOrdering(PointsOrdering );
 private:
 	//! Override in order to avoid changing series ordering.
-	void SetSeriesOrdering(CChartPointsArray::PointsOrdering);
+//	void SetSeriesOrdering(CChartPointsArray::PointsOrdering);
 
 	//! Draws the legend icon for the series.
 	/**
@@ -104,7 +105,7 @@ private:
 	//! Draws the most recent points of the series.
 	/**
 		This pure virtual function should be overriden by child classes.
-		This function should only draw the points that were not previously 
+		This function should only draw the points that were not previously
 		drawn.
 		@param pDC
 			The device context used to draw

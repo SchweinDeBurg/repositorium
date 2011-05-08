@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -30,7 +30,7 @@ CChartGradient::~CChartGradient()
 {
 }
 
-void CChartGradient::DrawGradient(CDC* pDC, const CRect& GradientRect, COLORREF Color1, 
+void CChartGradient::DrawGradient(CDC* pDC, const CRect& GradientRect, COLORREF Color1,
 								  COLORREF Color2, EGradientType GradientType)
 {
 #if _MFC_VER > 0x0600
@@ -44,7 +44,7 @@ void CChartGradient::DrawGradient(CDC* pDC, const CRect& GradientRect, COLORREF 
 		vertex[0].Blue  = ((COLOR16)GetBValue(Color1))<<8;
 		vertex[0].Alpha = 0x0000;
 		vertex[1].x     = GradientRect.right;
-		vertex[1].y     = GradientRect.bottom; 
+		vertex[1].y     = GradientRect.bottom;
 		vertex[1].Red   = ((COLOR16)GetRValue(Color2))<<8;
 		vertex[1].Green = ((COLOR16)GetGValue(Color2))<<8;
 		vertex[1].Blue  = ((COLOR16)GetBValue(Color2))<<8;
@@ -70,7 +70,7 @@ void CChartGradient::DrawGradient(CDC* pDC, const CRect& GradientRect, COLORREF 
 			else
 			{
 				vertex[0].x     = GradientRect.left;
-				vertex[0].y     = GradientRect.top + (GradientRect.Height()/2) * i; 
+				vertex[0].y     = GradientRect.top + (GradientRect.Height()/2) * i;
 			}
 			if (i==0)
 			{
@@ -88,12 +88,12 @@ void CChartGradient::DrawGradient(CDC* pDC, const CRect& GradientRect, COLORREF 
 			if (GradientType == gtHorizontalDouble)
 			{
 				vertex[1].x     = GradientRect.left + (GradientRect.Width()/2) * (i+1);
-				vertex[1].y     = GradientRect.bottom; 
+				vertex[1].y     = GradientRect.bottom;
 			}
 			else
 			{
 				vertex[1].x     = GradientRect.right;
-				vertex[1].y     = GradientRect.top + (GradientRect.Height()/2) * (i+1); 
+				vertex[1].y     = GradientRect.top + (GradientRect.Height()/2) * (i+1);
 			}
 			if (i==0)
 			{
@@ -106,7 +106,7 @@ void CChartGradient::DrawGradient(CDC* pDC, const CRect& GradientRect, COLORREF 
 				vertex[1].Red   = ((COLOR16)GetRValue(Color1))<<8;
 				vertex[1].Green = ((COLOR16)GetGValue(Color1))<<8;
 				vertex[1].Blue  = ((COLOR16)GetBValue(Color1))<<8;
-			}			
+			}
 			vertex[1].Alpha = 0x0000;
 
 			GRADIENT_RECT gRect;

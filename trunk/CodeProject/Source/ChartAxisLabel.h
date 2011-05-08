@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -37,7 +37,7 @@ class CChartAxis;
 	The label axis is displayed under or next to the tick values.
 	The label is retrieved by calling CChartAxis::GetAxisLabel.
 **/
-class CChartAxisLabel 
+class CChartAxisLabel
 {
 	friend CChartAxis;
 
@@ -49,7 +49,7 @@ public:
 
 	//! Sets the font of the text.
 	/**
-		@param iPointSize
+		@param nPointSize
 			The font point size.
 		@param strFaceName
 			The font face name ("Times New Roman", "Arial", ...)
@@ -91,17 +91,17 @@ private:
 
 
 	//! The parent charting control.
-	CChartCtrl*	m_pParentCtrl;		
+	CChartCtrl*	m_pParentCtrl;
 	//! Specifies if the label is visible or not.
 	bool        m_bIsVisible;
 
 	//! The rectangle in which the label is displayed.
-	CRect		m_TextRect;		
+	CRect		m_TextRect;
 	//! The text color.
-	COLORREF	m_TextColor;		
+	COLORREF	m_TextColor;
 
 	//! Specifies if the axis is horizontal or not.
-	bool m_bIsHorizontal;     
+	bool m_bIsHorizontal;
 	//! The font used for the text label.
 	CChartFont m_Font;
 

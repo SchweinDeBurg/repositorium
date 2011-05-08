@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -29,8 +29,8 @@
 using namespace std;
 
 CChartDateTimeAxis::CChartDateTimeAxis()
- : CChartAxis(), m_strDTTickFormat(), 
-   m_bAutoTickFormat(true), m_BaseInterval(tiDay), 
+ : CChartAxis(), m_strDTTickFormat(),
+   m_bAutoTickFormat(true), m_BaseInterval(tiDay),
    m_iDTTickIntervalMult(1), m_dFirstTickValue(0)
 {
 	m_ReferenceTick.SetDate(2000,1,1);
@@ -41,8 +41,8 @@ CChartDateTimeAxis::~CChartDateTimeAxis()
 }
 
 
-void CChartDateTimeAxis::SetTickIncrement(bool bAuto, 
-										  TimeInterval Interval, 
+void CChartDateTimeAxis::SetTickIncrement(bool bAuto,
+										  TimeInterval Interval,
 										  int Multiplier)
 {
 	m_bAutoTicks = bAuto;
@@ -53,7 +53,7 @@ void CChartDateTimeAxis::SetTickIncrement(bool bAuto,
 	}
 }
 
-void CChartDateTimeAxis::SetTickLabelFormat(bool bAutomatic, 
+void CChartDateTimeAxis::SetTickLabelFormat(bool bAutomatic,
 											const TChartString& strFormat)
 {
 	m_bAutoTickFormat = bAutomatic;
@@ -94,7 +94,7 @@ double CChartDateTimeAxis::GetFirstTickValue() const
 			break;
 		}
 	}
-	return dRetVal; 
+	return dRetVal;
 
 }
 
@@ -166,7 +166,7 @@ long CChartDateTimeAxis::GetTickPos(double TickVal) const
 	return ValueToScreenStandard(TickVal);
 }
 
-COleDateTime CChartDateTimeAxis::AddMonthToDate(const COleDateTime& Date, 
+COleDateTime CChartDateTimeAxis::AddMonthToDate(const COleDateTime& Date,
 												int iMonthsToAdd) const
 {
 	COleDateTime newDate;
@@ -191,7 +191,7 @@ void CChartDateTimeAxis::RefreshTickIncrement()
 
 	if (m_MaxValue == m_MinValue)
 	{
-		m_iDTTickIntervalMult = 0;
+		m_iDTTickIntervalMult = 1;
 		return;
 	}
 
@@ -202,6 +202,8 @@ void CChartDateTimeAxis::RefreshTickIncrement()
 		PixelSpace = 20;
 
 	int MaxTickNumber = (int)fabs((m_EndPos-m_StartPos)/PixelSpace * 1.0);
+	if (MaxTickNumber == 0)
+		MaxTickNumber = 1;
 
 	COleDateTime StartDate(m_MinValue);
 	COleDateTime EndDate(m_MaxValue);
@@ -225,7 +227,7 @@ void CChartDateTimeAxis::RefreshTickIncrement()
 			m_iDTTickIntervalMult = 10;
 		else if (Seconds > 2)
 			m_iDTTickIntervalMult = 5;
-		else 
+		else
 			m_iDTTickIntervalMult = 1;
 	}
 	else if (Minutes < 60)
@@ -242,7 +244,7 @@ void CChartDateTimeAxis::RefreshTickIncrement()
 			m_iDTTickIntervalMult = 10;
 		else if (Minutes > 2)
 			m_iDTTickIntervalMult = 5;
-		else 
+		else
 			m_iDTTickIntervalMult = 2;
 	}
 	else if (Hours < 24)
@@ -257,7 +259,7 @@ void CChartDateTimeAxis::RefreshTickIncrement()
 			m_iDTTickIntervalMult = 12;
 		else if (Hours > 2)
 			m_iDTTickIntervalMult = 6;
-		else 
+		else
 			m_iDTTickIntervalMult = 2;
 	}
 	else if (Days < 31)
@@ -273,7 +275,7 @@ void CChartDateTimeAxis::RefreshTickIncrement()
 			m_BaseInterval = tiDay;
 			m_iDTTickIntervalMult = 7;
 		}
-		else 
+		else
 			m_iDTTickIntervalMult = 2;
 	}
 	else if (Days < 365)
@@ -341,7 +343,7 @@ double CChartDateTimeAxis::GetTickBeforeVal(double dValue) const
 	double precision = 0.0000000001;
 	if (dValue < 0)
 		precision = -0.0000000001;
-	
+
 	COleDateTime tickBefore;
 	COleDateTime valueTime = COleDateTime(DATE(dValue+precision));
 	COleDateTimeSpan dtSpan = valueTime - m_ReferenceTick;
@@ -365,7 +367,7 @@ double CChartDateTimeAxis::GetTickBeforeVal(double dValue) const
 			totalMinutes = (totalMinutes/m_iDTTickIntervalMult) * m_iDTTickIntervalMult;
 			int Days = totalMinutes/1440;			// 1440 minutes in one day
 			int Hours = (totalMinutes%1440)/60;		// 60 minutes in one hour
-			int Minutes = (totalMinutes%1440)%60;	
+			int Minutes = (totalMinutes%1440)%60;
 			dtSpan.SetDateTimeSpan(Days, Hours, Minutes, 0);
 			tickBefore = m_ReferenceTick + dtSpan;
 		}
@@ -375,7 +377,7 @@ double CChartDateTimeAxis::GetTickBeforeVal(double dValue) const
 			int totalHours = (int)dtSpan.GetTotalHours();
 			totalHours = (totalHours/m_iDTTickIntervalMult) * m_iDTTickIntervalMult;
 			int Days = totalHours/24;			// 24 hours in one day
-			int Hours = totalHours%24;		
+			int Hours = totalHours%24;
 			dtSpan.SetDateTimeSpan(Days, Hours, 0, 0);
 			tickBefore = m_ReferenceTick + dtSpan;
 		}
@@ -393,14 +395,14 @@ double CChartDateTimeAxis::GetTickBeforeVal(double dValue) const
 			int yearDiff = valueTime.GetYear() - m_ReferenceTick.GetYear();
 			int monthDiff = valueTime.GetMonth() - m_ReferenceTick.GetMonth();
 			int totalMonths = ((yearDiff*12+monthDiff)/m_iDTTickIntervalMult) * m_iDTTickIntervalMult;
-			tickBefore = AddMonthToDate(m_ReferenceTick,totalMonths);			
+			tickBefore = AddMonthToDate(m_ReferenceTick,totalMonths);
 		}
 		break;
 	case tiYear:
 		{
 			int yearDiff = valueTime.GetYear() - m_ReferenceTick.GetYear();
 			int year = ((yearDiff)/m_iDTTickIntervalMult) * m_iDTTickIntervalMult;
-			tickBefore = AddMonthToDate(m_ReferenceTick,year*12);		
+			tickBefore = AddMonthToDate(m_ReferenceTick,year*12);
 		}
 		break;
 	}

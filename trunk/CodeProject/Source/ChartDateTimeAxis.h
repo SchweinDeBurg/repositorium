@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -47,8 +47,8 @@ public:
 		The tick increment is the value between two adjacents
 		ticks on the axis. In case of a date time axis, the interval
 		is specified by a time period because this interval might not
-		be constant (for instance, if a tick interval of one month is 
-		specified, the distance between two adjacents ticks is not 
+		be constant (for instance, if a tick interval of one month is
+		specified, the distance between two adjacents ticks is not
 		constant: it depends on the number of days in the month).
 		The full tick interval is made of a base interval (day, month,
 		hour, ...) and a multiplier, that is applied to this base interval.
@@ -68,17 +68,17 @@ public:
 			Specifies if the format is calculated automatically.
 		@param strFormat
 			The format to apply to the tick label if bAutomatic is false.
-		<br>Check the documentation of the COleDateTime::Format function on 
-		MSDN for more information about the format string. 
+		<br>Check the documentation of the COleDateTime::Format function on
+		MSDN for more information about the format string.
 	**/
 	void SetTickLabelFormat(bool bAutomatic, const TChartString& strFormat);
 	//! Sets the reference tick.
 	/**
 		The reference tick is a date/time which specifies a tick which should
 		always be displayed on the axis. This is needed when the tick
-		interval multiplier is not 1 (e.g. the interval between two ticks is 3 
-		months). In that specific case, there is no way for the control to know 
-		which ticks should be displayed (in our example, the chart doesn't know 
+		interval multiplier is not 1 (e.g. the interval between two ticks is 3
+		months). In that specific case, there is no way for the control to know
+		which ticks should be displayed (in our example, the chart doesn't know
 		if the first tick will be january, february or march). This is particularly
 		annoying when the axis is panned (in that case, if we always take the first
 		month on the axis as first tick, the ticks will always switch from one month
@@ -115,20 +115,20 @@ private:
 			The number of months to add to the date.
 		@return the resulting date.
 	**/
-	COleDateTime AddMonthToDate(const COleDateTime& Date, 
+	COleDateTime AddMonthToDate(const COleDateTime& Date,
 								int iMonthsToAdd) const;
 
 	double GetTickBeforeVal(double dValue) const;
 
 	//! Format of the date/time tick labels
-	TChartString m_strDTTickFormat;		
+	TChartString m_strDTTickFormat;
 	//! Specifies if the tick labels format is automatic
 	bool m_bAutoTickFormat;
 	//! Specifies the base time interval for ticks
 	/**
 		This specifies an base interval in sec, min, hour,
-		day, month or year. The total tick increment is 
-		a mutliple of this base interval (specified by 
+		day, month or year. The total tick increment is
+		a mutliple of this base interval (specified by
 		m_iDTTickIntervalMult). E.g: 2 days
 	**/
 	TimeInterval m_BaseInterval;

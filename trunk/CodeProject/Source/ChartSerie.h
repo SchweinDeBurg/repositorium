@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -26,26 +26,29 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+
+#define INVALID_POINT	UINT_MAX
+
 #include "ChartAxis.h"
-#include "ChartPointsArray.h"
-#include "ChartLabel.h"
-#include "ChartBalloonLabel.h"
+#include "ChartSeriesMouseListener.h"
 
 #include <map>
 #include "ChartString.h"
 
-class CChartLineSerie;
-class CChartPointsSerie;
 class CChartLegend;
+class CChartCtrl;
 
 #define INVALID_POINT	UINT_MAX
 
-//! Base class for all series of the control
+//! Abstract class that provides a common "interface" for all series in the control
 /**
-	This class is much more than a simple base class. It already store
-	all the data points and provide utility functions to manipulate them.
+	The class doesn't manipulate points (the type of point is unknown at this
+	level in the class hierarchy) but it provides all other functionalities
+	which are independant of the point type.
+
 	The drawing of the series is made through pure virtual functions which
 	should be implemented by derived classes.
+
 	Each series is identified by an Id.
 **/
 class CChartSerie
@@ -54,78 +57,11 @@ class CChartSerie
 	friend CChartLegend;
 
 public:
-	//! Adds a single data point to the series.
-	void AddPoint(double X, double Y);
-	//! Adds an array of points to the series.
-	/**
-		Points which were already present in the series are kept.
-		@param pX
-			Array of X values for the points
-		@param pY
-			Array of Y values for the points
-		@param Count
-			Size of each of both arrays (number of points to add)
-	**/
-	void AddPoints(double* pX, double* pY, unsigned Count);
-	//! Sets an array of points to the series.
-	/**
-		Points which were already present in the series are discarded.
-		@param pX
-			Array of X values for the points
-		@param pY
-			Array of Y values for the points
-		@param Count
-			Size of each of both arrays (number of points to add)
-	**/
-	void SetPoints(double* pX, double* pY, unsigned Count);
-	//! Removes a certain amount of points from the begining of the series.
-	void RemovePointsFromBegin(unsigned Count);
-	//! Removes a certain amount of points from the end of the series.
-	void RemovePointsFromEnd(unsigned Count);
-	//! Removes all points from the series.
-	void ClearSerie();
-
 	//! Returns the number of points in the series.
-	unsigned GetPointsCount() const  { return m_vPoints.GetPointsCount(); }
-	//! Returns the Y value of a specific point in the series.
-	double GetYPointValue(unsigned PointIndex) const;
-	//! Returns the X value of a specific point in the series.
-	double GetXPointValue(unsigned PointIndex) const;
-	//! Sets the Y value of a specific point in the series.
-	/**
-		The control is refreshed to display the change.
-		@param PointIndex
-			The index of the points to change the Y value
-		@param NewVal 
-			The new Y value of the point
-	**/
-	void   SetYPointValue(unsigned PointIndex, double NewVal);
-	//! Sets the X value of a specific point in the series.
-	/**
-		The control is refreshed to display the change.
-		@param PointIndex
-			The index of the points to change the Y value
-		@param NewVal 
-			The new X value of the point
-	**/
-	void   SetXPointValue(unsigned PointIndex, double NewVal);	
-	
-#ifndef NO_USER_DATA
-	//! Sets user data for a specific point. 
-	/**
-		User data can be disabled by adding the flag NO_USER_DATA in the preprocessor
-		definitions. This is usefull when you don't want to have an additional pointer
-		stored for each points in your series.
-	**/
-	void  SetUserData(unsigned uPointIndex, void* pData);
-	//! Retrieves user data for a specific point. 
-	/**
-		User data can be disabled by adding the flag NO_USER_DATA in the preprocessor
-		definitions. This is usefull when you don't want to have an additional pointer
-		stored for each points in your series.
-	**/
-	void* GetUserData(unsigned uPointIndex);
-#endif
+	virtual unsigned GetPointsCount() const = 0;
+
+	//! Returns the screen coordinate of a specific point
+	virtual CPoint GetPointScreenCoord(unsigned uPointIndex) = 0;
 
 	//! Retrieves the minimum and maxium Y values of the series.
 	/**
@@ -136,7 +72,7 @@ public:
 		@return
 			false if the series doesn't contain data or is invisible
 	**/
-	bool GetSerieYMinMax(double& Min, double& Max)  const;
+	virtual bool GetSerieYMinMax(double& Min, double& Max)  const = 0;
 	//! Retrieves the minimum and maxium X values of the series.
 	/**
 		@param Min
@@ -146,7 +82,27 @@ public:
 		@return
 			false if the series doesn't contain data or is invisible
 	**/
-	bool GetSerieXMinMax(double& Min, double& Max)  const;
+	virtual bool GetSerieXMinMax(double& Min, double& Max)  const = 0;
+	//! Retrieves the minimum and maxium screen X values of the series.
+	/**
+		@param Min
+			Minimum value will be stored in this parameter
+		@param Max
+			Maximum value will be stored in this parameter
+		@return
+			false if the series doesn't contain data or is invisible
+	**/
+	virtual bool GetSerieXScreenMinMax(double& Min, double& Max)  const = 0;
+	//! Retrieves the minimum and maxium screen Y values of the series.
+	/**
+		@param Min
+			Minimum value will be stored in this parameter
+		@param Max
+			Maximum value will be stored in this parameter
+		@return
+			false if the series doesn't contain data or is invisible
+	**/
+	virtual bool GetSerieYScreenMinMax(double& Min, double& Max)  const = 0;
 
 	//! Sets the name of the series, which is displayed in the legend.
 	void		 SetName(const TChartString& NewName);
@@ -173,16 +129,6 @@ public:
 	//! Destructor
 	virtual ~CChartSerie();
 
-	//! Specifies how the points should be ordered in the series.
-	/**
-		This specifies if the points should be ordered on their X values,
-		on their Y values or not ordered (kept in order they are added to 
-		the control). Ordering can improve performances a lot but makes it
-		impossible to draw some specific curves (for instance, drawing an 
-		ellipse is only possible if no ordering is set).
-	**/
-	virtual void SetSeriesOrdering(CChartPointsArray::PointsOrdering newOrdering);
-
 	//! Specifies if the series is visible or not.
 	/**
 		An invisible series won't affect automatic axis: it is considered
@@ -205,40 +151,6 @@ public:
 	//! Sepcifies the depth (in pixels) of the shadow.
 	void SetShadowDepth(int Depth);
 
-	//! Retrieves the screen point of a specific data point.
-	CPoint GetPointScreenCoord(unsigned uPointIndex);
-	//! Creates and attaches a balloon label on a point of the series.
-	/**
-		This functions specifies a static text to display in the label.
-		@param uPointIndex
-			The index of the point on which the label should be attached
-		@param strLabelText
-			The text of the label
-		@return the created CChartBalloonLabel
-	**/
-	CChartBalloonLabel* CreateBalloonLabel(unsigned uPointIndex, const TChartString& strLabelText);
-	//! Creates and attaches a balloon label on a point of the series.
-	/**
-		This functions specifies a CChartLabelProvider object which is used to
-		supply the text of the label. This is useful if you want more flexibility
-		for the text of the label (display information about the point value for
-		instance).
-		@param uPointIndex
-			The index of the point on which the label should be attached
-		@param pLabelProvider
-			Object providing the text displayed on the label
-		@return the created CChartBalloonLabel
-	**/
-	CChartBalloonLabel* CreateBalloonLabel(unsigned uPointIndex, CChartLabelProvider* pLabelProvider);
-	//! Attaches a custom label on a point of the series.
-	/**
-		@param uPointIndex
-			The index of the point on which the label should be attached
-		@param pLabel
-			The label to attach to the point
-	**/
-	void AttachCustomLabel(unsigned uPointIndex, CChartLabel* pLabel);
-
 	//! Tests if a certain screen point is on the series.
 	/**
 		This function should be overidden by all child classes.
@@ -254,7 +166,7 @@ public:
 	unsigned GetSerieId() const  { return m_uSerieId; }
 	//! Enables or disables certain mouse notifications on the series.
 	/**
-		Checking if a point is on the series could degrade performances if 
+		Checking if a point is on the series could degrade performances if
 		it has to be done for each mouse event. This function allows to disable
 		certain notifications, in which case the test won't be done. By default
 		the series reacts on mouse clicks but not on mouse moves.
@@ -266,6 +178,8 @@ public:
 	void EnableMouseNotifications(bool bClickEnabled, bool bMoveEnabled);
 
 protected:
+	//! Refreshes the automatic axes associated with this series
+	void RefreshAutoAxes(bool bForceRefresh);
 	//! Returns the first and last visible points of the series.
 	/**
 		This function only works if ordering is enabled.
@@ -275,7 +189,7 @@ protected:
 			The index of the last visible point is stored in this argument
 		@return false if the series has no ordering or no data points.
 	**/
-	bool GetVisiblePoints(unsigned& uFirst, unsigned& uLast) const;
+	virtual bool GetVisiblePoints(unsigned& uFirst, unsigned& uLast) const = 0;
 
 	//! Draws the legend icon for the series.
 	/**
@@ -290,7 +204,7 @@ protected:
 	//! Draws the most recent points of the series.
 	/**
 		This pure virtual function should be overriden by child classes.
-		This function should only draw the points that were not previously 
+		This function should only draw the points that were not previously
 		drawn.
 		@param pDC
 			The device context used to draw
@@ -303,26 +217,45 @@ protected:
 			The device context used to draw
 	**/
 	virtual void DrawAll(CDC *pDC) =0;
+	//! Draws the labels of the series.
+	/**
+		This pure virtual function should be overriden by child classes.
+		@param pDC
+			The device context used to draw
+	**/
+	virtual void DrawLabels(CDC* pDC) =0;
 
-	//! The helper class containing all the data points.
-	CChartPointsArray m_vPoints;
-	//! Index of the last point drawn
-	unsigned m_uLastDrawnPoint;		
+	//! Called when a mouse event is detected on the chart
+	/**
+		This pure virtual function should be overriden by child classes.
+		@param mouseEvent
+			The event that occured on the control
+		@param screenPoint
+			The screen point on which the event occured
+		@return true if the event occured on the series.
+	**/
+	virtual bool OnMouseEvent(CChartMouseListener::MouseEvent mouseEvent,
+								const CPoint& screenPoint) = 0;
+
+	//! Returns true if the series reacts on mouse moves.
+	bool NotifyMouseMoveEnabled()  { return m_bMouseMoveNotifications;  }
+	//! Returns true if the series reacts on mouse clicks.
+	bool NotifyMouseClickEnabled() { return m_bMouseClickNotifications; }
 
 	//! The parent charting control.
 	CChartCtrl* m_pParentCtrl;
 	//! The related vertical axis.
-	CChartAxis* m_pVerticalAxis;    
+	CChartAxis* m_pVerticalAxis;
 	//! The related horizontal axis.
-	CChartAxis* m_pHorizontalAxis;  
+	CChartAxis* m_pHorizontalAxis;
 
 	//! The series name displayed in the legend.
-	TChartString m_strSerieName;	
+	TChartString m_strSerieName;
 
 	//! Specifies if the series is visible.
 	bool        m_bIsVisible;
 	//! Specifies if the series has shadow enabled.
-	bool		m_bShadow;	
+	bool		m_bShadow;
 	//! Color of the series
 	COLORREF	m_SerieColor;
 	//! Color of the shadow
@@ -335,22 +268,11 @@ protected:
 private:
 	//! Sets the plotting rectangle.
 	void SetPlottingRect(const CRect& plottingRect)  { m_PlottingRect = plottingRect; }
-	//! Draws the labels of the series.
-	void DrawLabels(CDC* pDC);
-
-	//! Returns true if the series reacts on mouse moves.
-	bool NotifyMouseMoveEnabled()  { return m_bMouseMoveNotifications;  }
-	//! Returns true if the series reacts on mouse clicks.
-	bool NotifyMouseClickEnabled() { return m_bMouseClickNotifications; }
 
 	//! The next available series Id
 	static unsigned m_uNextFreeId;
 	//! The series Id
 	unsigned m_uSerieId;
-
-	typedef std::map<unsigned, CChartLabel*> TLabelMap;
-	//! Map containing the labels of the series.
-	TLabelMap m_mapLabels;
 
 	//! Specifies if the series reacts on mouse clicks.
 	bool m_bMouseClickNotifications;

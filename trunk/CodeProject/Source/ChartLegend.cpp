@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -66,20 +66,20 @@ CChartLegend::~CChartLegend()
 }
 
 void CChartLegend::SetVisible(bool bVisible)
-{ 
-	m_bIsVisible = bVisible; 
+{
+	m_bIsVisible = bVisible;
 	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartLegend::SetBackColor(COLORREF NewColor)	   
-{ 
-	m_BackColor = NewColor; 
+void CChartLegend::SetBackColor(COLORREF NewColor)
+{
+	m_BackColor = NewColor;
 	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartLegend::SetShadowColor(COLORREF NewColor) 
-{ 
-	m_ShadowColor = NewColor; 
+void CChartLegend::SetShadowColor(COLORREF NewColor)
+{
+	m_ShadowColor = NewColor;
 	m_pParentCtrl->RefreshCtrl();
 }
 
@@ -90,8 +90,8 @@ void CChartLegend::EnableShadow(bool bEnable)
 }
 
 void CChartLegend::SetShadowDepth(int Depth)
-{ 
-	m_iShadowDepth = Depth; 
+{
+	m_iShadowDepth = Depth;
 	m_pParentCtrl->RefreshCtrl();
 }
 
@@ -108,8 +108,8 @@ void CChartLegend::SetFont(int iPointSize, const TChartString& strFaceName)
 }
 
 void CChartLegend::SetTransparent(bool bTransparent)
-{ 
-	m_bIsTransparent = bTransparent; 
+{
+	m_bIsTransparent = bTransparent;
 	m_pParentCtrl->RefreshCtrl();
 }
 
@@ -175,16 +175,15 @@ void CChartLegend::UpdatePosition(CDC* pDC, const CRect& rcControl)
 	NewFont.CreatePointFont(m_iFontSize,m_strFontName.c_str(),pDC);
 	pOldFont = pDC->SelectObject(&NewFont);
 
-	int Height = 0;		
-	int Width = 0;		
+	int Height = 0;
+	int Width = 0;
 	int MaxText = 0;
 	CSize TextSize;
 
-	size_t SeriesCount = m_pParentCtrl->GetSeriesCount();
+	m_pParentCtrl->GoToFirstSerie();
 	int Drawn = 0;
-	for (size_t i=0;i<SeriesCount;i++)
+	while (CChartSerie* pSerie=m_pParentCtrl->GetNextSerie())
 	{
-		CChartSerie* pSerie = m_pParentCtrl->GetSerie(i);
 		if ( (pSerie->GetName() == _T("")) || !pSerie->IsVisible() )
 			continue;
 
@@ -227,7 +226,7 @@ void CChartLegend::UpdatePosition(CDC* pDC, const CRect& rcControl)
 		Width += 2 + 2 - 10;
 		Height = 4 + max(m_BitmapSize.cy,MaxText) + 4;
 	}
-	
+
 	if (!m_bDocked)
 	{
 		NewPosition.top = m_iTopPos;
@@ -247,19 +246,19 @@ void CChartLegend::UpdatePosition(CDC* pDC, const CRect& rcControl)
 			break;
 		case dsDockLeft:
 			NewPosition.top = ((rcControl.bottom-rcControl.top)/2) - ((Height + 2)/2);
-			NewPosition.left = rcControl.left + 3; 
+			NewPosition.left = rcControl.left + 3;
 			NewPosition.bottom = NewPosition.top + Height;
 			NewPosition.right = NewPosition.left + Width;
 			break;
 		case dsDockTop:
 			NewPosition.top = rcControl.top + 3;  //((rcControl.bottom-rcControl.top)/2) - ((Height + 2)/2);
-			NewPosition.left = ((rcControl.right-rcControl.left)/2) - (Width/2);  // rcControl.left + 3; 
+			NewPosition.left = ((rcControl.right-rcControl.left)/2) - (Width/2);  // rcControl.left + 3;
 			NewPosition.bottom = NewPosition.top + Height;
 			NewPosition.right = NewPosition.left + Width;
 			break;
 		case dsDockBottom:
 			NewPosition.top = rcControl.bottom - (Height + 2);  //((rcControl.bottom-rcControl.top)/2) - ((Height + 2)/2);
-			NewPosition.left = ((rcControl.right-rcControl.left)/2) - (Width/2);  // rcControl.left + 3; 
+			NewPosition.left = ((rcControl.right-rcControl.left)/2) - (Width/2);  // rcControl.left + 3;
 			NewPosition.bottom = NewPosition.top + Height;
 			NewPosition.right = NewPosition.left + Width;
 			break;
@@ -315,10 +314,9 @@ void CChartLegend::Draw(CDC *pDC)
 	CRect rectBitmap(m_LegendRect.left+2,m_LegendRect.top+5,
 					 m_LegendRect.left+2+m_BitmapSize.cx,
 					 m_LegendRect.top+6+m_BitmapSize.cy);
-	int SeriesCount = m_pParentCtrl->GetSeriesCount();
-	for (int i=0;i<SeriesCount;i++)
+	m_pParentCtrl->GoToFirstSerie();
+	while (CChartSerie* pSerie=m_pParentCtrl->GetNextSerie())
 	{
-		CChartSerie* pSerie = m_pParentCtrl->GetSerie(i);
 		if ( (pSerie->GetName() == _T("")) || !pSerie->IsVisible() )
 			continue;
 
@@ -340,7 +338,7 @@ void CChartLegend::Draw(CDC *pDC)
 			MaxHeight = m_BitmapSize.cy;
 			pSerie->DrawLegend(pDC,rectBitmap);
 		}
-		
+
 
 		if (!m_bIsHorizontal)
 			rectBitmap.OffsetRect(0,MaxHeight+2);

@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -36,7 +36,7 @@ class CChartAxis;
 /**
 	This object is retrieved through the CChartAxis::GetGrid function.
 **/
-class CChartGrid  
+class CChartGrid
 {
 	friend CChartAxis;
 
@@ -67,10 +67,10 @@ private:
 
 
 	//! The grid color.
-	COLORREF	m_GridColor;		
+	COLORREF	m_GridColor;
 
 	//! The parent charting control.
-	CChartCtrl*	m_pParentCtrl;		
+	CChartCtrl*	m_pParentCtrl;
 	//! Specifies if the grid is visible or not.
 	bool        m_bIsVisible;
 

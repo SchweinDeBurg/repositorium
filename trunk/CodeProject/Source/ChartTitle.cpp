@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -36,7 +36,7 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CChartTitle::CChartTitle(CChartCtrl* pParent) 
+CChartTitle::CChartTitle(CChartCtrl* pParent)
 {
 	m_pParentCtrl = pParent;
 	m_bIsVisible = true;
@@ -45,6 +45,7 @@ CChartTitle::CChartTitle(CChartCtrl* pParent)
 
 CChartTitle::~CChartTitle()
 {
+
 }
 
 void CChartTitle::SetFont(int iPointSize, const TChartString& strFaceName)
@@ -65,8 +66,8 @@ void CChartTitle::SetColor(COLORREF NewColor)
 	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartTitle::SetLineFont(int iLineIndex, 
-							  int iPointSize, 
+void CChartTitle::SetLineFont(int iLineIndex,
+							  int iPointSize,
 							  const TChartString& strFaceName)
 {
 	CChartFont newFont(strFaceName,iPointSize);
