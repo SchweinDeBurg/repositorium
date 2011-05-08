@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -20,22 +20,22 @@
  */
 
 #pragma once
-#include "ChartSerie.h"
+#include "ChartXYSerie.h"
 #include "ChartGradient.h"
 #include <list>
 
 //! Specialization of a CChartSerie to display a bars series.
 /**
-	This class is a specialized series class used to display vertical (default) 
-	or horizontal bars. Each bar in the series is centered around its X value 
-	(for vertical bars) or Y value (for horizontal bars). Bars can be grouped 
-	together, so that they do not overlap but are stacked next to each other 
-	(or on top of each other). This is done by specifying a group Id: bar series 
-	with the same group Id will be grouped together (stacked). Series with different 
-	group Id will be independant (they will be drawn as if they were the only one, 
+	This class is a specialized series class used to display vertical (default)
+	or horizontal bars. Each bar in the series is centered around its X value
+	(for vertical bars) or Y value (for horizontal bars). Bars can be grouped
+	together, so that they do not overlap but are stacked next to each other
+	(or on top of each other). This is done by specifying a group Id: bar series
+	with the same group Id will be grouped together (stacked). Series with different
+	group Id will be independant (they will be drawn as if they were the only one,
 	meaning that the different series will probably overlap).
 **/
-class CChartBarSerie : public CChartSerie
+class CChartBarSerie : public CChartXYSerie
 {
 public:
 	//! Constructor
@@ -70,6 +70,16 @@ public:
 	//! Returns the group Id of the series
 	unsigned GetGroupId() const			{ return m_uGroupId;    }
 
+	//! Specifies if the series is stacked with other bar series
+	/**
+		All bar series with the same group Id and with the stacked
+		flag to true will be drawn on top of each other (for vertical
+		bars).
+	**/
+	void SetStacked(bool bStacked);
+	//! Returns true if the series is stacked
+	bool IsStacked();
+
 	//! Specifies if a gradient is applied to the bars
 	void ShowGradient(bool bShow);
 	//! Sets the gradient style
@@ -90,7 +100,7 @@ public:
 	//! Specifies a base line for the bars.
 	/**
 		If a baseline is specified, the bars will be drawn between that value
-		and the point value, instead of being drawn between the axis ans the 
+		and the point value, instead of being drawn between the axis ans the
 		point value.
 		@param bAutomatic
 			If true, the bars are drawn between the axis and the point value.
@@ -106,7 +116,7 @@ public:
 	//! Check whether a screen point is on the series.
 	/**
 		This function returns true if the screen point is on one of the bars of
-		the series. In that case, the index of the point is stored in the uIndex 
+		the series. In that case, the index of the point is stored in the uIndex
 		parameter.
 		@param screenPoint
 			The screen point to test
@@ -117,6 +127,8 @@ public:
 	bool IsPointOnSerie(const CPoint& screenPoint, unsigned& uIndex) const;
 
 private:
+	typedef std::list<CChartBarSerie*> TBarSeriesList;
+
 	//! Draws the legend icon for the series.
 	/**
 		This pure virtual function should be overriden by child classes.
@@ -130,7 +142,7 @@ private:
 	//! Draws the most recent points of the series.
 	/**
 		This pure virtual function should be overriden by child classes.
-		This function should only draw the points that were not previously 
+		This function should only draw the points that were not previously
 		drawn.
 		@param pDC
 			The device context used to draw
@@ -144,18 +156,23 @@ private:
 	**/
 	void DrawAll(CDC *pDC);
 
-	void DrawBar(CDC* pDC, CBrush* pFillBrush, CBrush* pBorderBrush, 
-				 int XPos, int YPos);
+	void DrawBar(CDC* pDC, CBrush* pFillBrush, CBrush* pBorderBrush,
+				 CRect BarRect);
 
-	int GetSerieStartPos() const;
-	CRect GetBarRectangle(int XPos, int YPos) const;
+	// Retrieves the offset of the serie along the minor axis (horizontal
+	// axis for vertical bars). This offset is based on series with the
+	// same group Id.
+	int GetMinorOffset() const;
+	CRect GetBarRectangle(unsigned uPointIndex, int minorOffset) const;
 
-	typedef std::list<CChartBarSerie*> TBarSeriesList;
+	void RefreshStackedCache() const;
+
+
 	//! Space between two series of the same group.
-	static int m_iInterSpace;	
+	static int m_iInterSpace;
 	//! List of all bar series added to the control
 	static TBarSeriesList m_lstBarSeries;
-	
+
 	//! Specifies if the bars are horizontal or vertical.
 	bool m_bHorizontal;
 
@@ -167,7 +184,7 @@ private:
 
 	// Specifies to which group this series belongs to. Series in the same group are
 	// 'stacked' next to each other.
-	unsigned m_uGroupId;		
+	unsigned m_uGroupId;
 
 	int m_iBarWidth;
 	int m_iBorderWidth;
@@ -176,4 +193,11 @@ private:
 	bool m_bGradient;
 	COLORREF m_GradientColor;
 	EGradientType m_GradientType;
+
+	// Specifies if the bar series has to be stacked with other bar
+	// series with the same group Id
+	bool m_bStacked;
+
+	// Cache of the stacked series with the same group Id as this series.
+	mutable TBarSeriesList m_lstStackedSeries;
 };

@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -25,7 +25,7 @@
 #include "ChartCtrl.h"
 #include "math.h"
 
-CChartScrollBar::CChartScrollBar(CChartAxis* pParentAxis) 
+CChartScrollBar::CChartScrollBar(CChartAxis* pParentAxis)
  : CScrollBar(), m_pParentAxis(pParentAxis), m_bEnabled(false),
    m_bAutoHide(true)
 {
@@ -57,12 +57,12 @@ void CChartScrollBar::CreateScrollBar(const CRect& PlottingRect)
 	}
 	CScrollBar::Create(dwStyle, Temp, m_pParentAxis->m_pParentCtrl,100);
 	SCROLLINFO info;
-	info.cbSize = sizeof(SCROLLINFO);	
-	info.fMask = SIF_ALL;     
-	info.nMin = 1;     
-	info.nMax = 1; 
-	info.nPage = 1; 
-	info.nPos = 1;   
+	info.cbSize = sizeof(SCROLLINFO);
+	info.fMask = SIF_ALL;
+	info.nMin = 1;
+	info.nMax = 1;
+	info.nPage = 1;
+	info.nPos = 1;
 	CScrollBar::SetScrollInfo(&info);
 
 }
@@ -85,18 +85,18 @@ void CChartScrollBar::Refresh()
 	m_pParentAxis->GetScrollbarSteps(iTotalSteps,iCurrentStep);
 
 	SCROLLINFO info;
-	info.cbSize = sizeof(SCROLLINFO);	
-	info.fMask = SIF_ALL;     
+	info.cbSize = sizeof(SCROLLINFO);
+	info.fMask = SIF_ALL;
 
-	info.nMin = 0;     
-	info.nMax = iTotalSteps-1; 
-	info.nPage = 10; 
-	info.nPos = iCurrentStep;   
+	info.nMin = 0;
+	info.nMax = iTotalSteps-1;
+	info.nPage = 10;
+	info.nPos = iCurrentStep;
 
 	if (IsScrollInverted())
-		info.nPos = iTotalSteps - 9 - iCurrentStep; 
+		info.nPos = iTotalSteps - 9 - iCurrentStep;
 	else
-		info.nPos = iCurrentStep;   
+		info.nPos = iCurrentStep;
 	CScrollBar::SetScrollInfo(&info);
 }
 
@@ -105,41 +105,41 @@ void CChartScrollBar::OnHScroll(UINT nSBCode, UINT nPos)
 	int MinPos;
 	int MaxPos;
 	int PreviousPos = CScrollBar::GetScrollPos();
-	CScrollBar::GetScrollRange(&MinPos, &MaxPos); 
+	CScrollBar::GetScrollRange(&MinPos, &MaxPos);
 	int CurPos = PreviousPos;
 
 	bool bUpdate = true;
 	switch (nSBCode)
 	{
-	case SB_LEFT:      
+	case SB_LEFT:
 		CurPos = 0;
 		break;
-	case SB_RIGHT:      
+	case SB_RIGHT:
 		CurPos = MaxPos;
 		break;
-	case SB_ENDSCROLL:  
+	case SB_ENDSCROLL:
 		bUpdate = false;
 		break;
-	case SB_LINELEFT:  
+	case SB_LINELEFT:
 		if (CurPos > MinPos)
 			CurPos--;
 		break;
-	case SB_LINERIGHT:   
+	case SB_LINERIGHT:
 		if (CurPos < MaxPos-9)
 			CurPos++;
 		break;
-	case SB_PAGELEFT:    
+	case SB_PAGELEFT:
 		if (CurPos > MinPos)
 			CurPos = max(MinPos, CurPos - 10);
 		break;
-	case SB_PAGERIGHT:     
+	case SB_PAGERIGHT:
 		if (CurPos < MaxPos-9)
 			CurPos = min(MaxPos, CurPos + 10);
 		break;
-	case SB_THUMBPOSITION: 
+	case SB_THUMBPOSITION:
 			CurPos = nPos;
 		break;
-	case SB_THUMBTRACK:   
+	case SB_THUMBTRACK:
 			CurPos = nPos;
 		break;
 	}
@@ -157,41 +157,41 @@ void CChartScrollBar::OnVScroll(UINT nSBCode, UINT nPos)
 	int MinPos;
 	int MaxPos;
 	int PreviousPos = CScrollBar::GetScrollPos();
-	CScrollBar::GetScrollRange(&MinPos, &MaxPos); 
+	CScrollBar::GetScrollRange(&MinPos, &MaxPos);
 	int CurPos = PreviousPos;
 	bool bUpdate = true;
 
 	switch (nSBCode)
 	{
-	case SB_BOTTOM:      
+	case SB_BOTTOM:
 		CurPos = MaxPos;
 		break;
-	case SB_TOP:      
+	case SB_TOP:
 		CurPos = 0;
 		break;
-	case SB_ENDSCROLL:   
+	case SB_ENDSCROLL:
 		bUpdate = false;
 		break;
-	case SB_LINEDOWN:  
+	case SB_LINEDOWN:
 		if (CurPos < MaxPos-9)
 			CurPos++;
 		break;
-	case SB_LINEUP:   
+	case SB_LINEUP:
 		if (CurPos > MinPos)
 			CurPos--;
 		break;
-	case SB_PAGEUP:    
+	case SB_PAGEUP:
 		if (CurPos > MinPos)
 			CurPos = max(MinPos, CurPos - 10);
 		break;
-	case SB_PAGEDOWN:     
+	case SB_PAGEDOWN:
 		if (CurPos < MaxPos-9)
 			CurPos = min(MaxPos, CurPos + 10);
 		break;
-	case SB_THUMBPOSITION: 
+	case SB_THUMBPOSITION:
 		CurPos = nPos;
 		break;
-	case SB_THUMBTRACK:   
+	case SB_THUMBTRACK:
 		CurPos = nPos;
 		break;
 	}

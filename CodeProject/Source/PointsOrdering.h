@@ -1,6 +1,6 @@
 /*
  *
- *	ChartString.h
+ *	PointOrdering.h
  *
  *	Written by Cédric Moonen (cedric_moonen@hotmail.com)
  *
@@ -21,13 +21,13 @@
 
 #pragma once
 
-#include <string>
-#include <sstream>
-
-#if defined _UNICODE || defined UNICODE
-	typedef std::wstring TChartString;
-	typedef std::wstringstream TChartStringStream;
-#else
-	typedef std::string TChartString;
-	typedef std::stringstream TChartStringStream;
-#endif
+//! Enumeration listing the types of ordering.
+enum PointsOrdering
+{
+	//! The points are not ordered
+	poNoOrdering,
+	//! The points are ordered by their X values
+	poXOrdering,
+	//! The points are ordered by their Y values
+	poYOrdering
+};

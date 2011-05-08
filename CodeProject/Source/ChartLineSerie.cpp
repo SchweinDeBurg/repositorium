@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -41,7 +41,7 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CChartLineSerie::CChartLineSerie(CChartCtrl* pParent) : CChartSerie(pParent)
+CChartLineSerie::CChartLineSerie(CChartCtrl* pParent) : CChartXYSerie(pParent)
 {
 	m_iLineWidth = 1;
 	m_iPenStyle = PS_SOLID;
@@ -51,23 +51,24 @@ CChartLineSerie::CChartLineSerie(CChartCtrl* pParent) : CChartSerie(pParent)
 
 CChartLineSerie::~CChartLineSerie()
 {
+
 }
 
-void CChartLineSerie::SetPenStyle(int NewStyle)  
-{ 
-	m_iPenStyle = NewStyle; 
+void CChartLineSerie::SetPenStyle(int NewStyle)
+{
+	m_iPenStyle = NewStyle;
 	m_pParentCtrl->RefreshCtrl();
 }
 
-void CChartLineSerie::SetWidth(int PenWidth)  
-{ 
-	m_iLineWidth = PenWidth; 
+void CChartLineSerie::SetWidth(int PenWidth)
+{
+	m_iLineWidth = PenWidth;
 	m_pParentCtrl->RefreshCtrl();
 }
 
 void CChartLineSerie::SetSmooth(bool bSmooth)
 {
-	m_bSmooth = bSmooth; 
+	m_bSmooth = bSmooth;
 	m_pParentCtrl->RefreshCtrl();
 }
 
@@ -86,7 +87,7 @@ void CChartLineSerie::DrawAll(CDC *pDC)
 		uFirst--;
 	if (uLast<GetPointsCount()-1)
 		uLast++;
-	if (uLast-uFirst <= 2)
+	if (uLast-uFirst < 1)
 		return;
 
 	CPen NewPen;
@@ -117,24 +118,24 @@ void CChartLineSerie::DrawAll(CDC *pDC)
 		// For a Bezier curve, all points must be drawn.
 		uFirst = 0;
 		uLast = GetPointsCount() - 1;
-		CChartPointsArray::SChartPoint* pKnots = NULL;
-		CChartPointsArray::SChartPoint* pFirstControlPts = NULL;
-		CChartPointsArray::SChartPoint* pSecondControlPts = NULL;
-		m_vPoints.GetBezierControlPoints(uFirst,uLast,pKnots,pFirstControlPts,pSecondControlPts);
+		SChartXYPoint* pKnots = NULL;
+		SChartXYPoint* pFirstControlPts = NULL;
+		SChartXYPoint* pSecondControlPts = NULL;
+		GetBezierControlPoints(uFirst,uLast,pKnots,pFirstControlPts,pSecondControlPts);
 
 		unsigned Count = uLast - uFirst;
 		CPoint* pBezierPts = new CPoint[3*(Count-1)+1];
 		CPoint* pShadowPts = NULL;
 		if (m_bShadow)
 			pShadowPts = new CPoint[3*(Count-1)+1];
-		
+
 		unsigned index = 0;
 		for (unsigned n=0; n<Count-1; n++)
 		{
 			ValueToScreen(pKnots[n].X, pKnots[n].Y, pBezierPts[index]);
 			ValueToScreen(pFirstControlPts[n].X, pFirstControlPts[n].Y, pBezierPts[index+1]);
 			ValueToScreen(pSecondControlPts[n].X, pSecondControlPts[n].Y, pBezierPts[index+2]);
-			
+
 			if (m_bShadow)
 			{
 				pShadowPts[index] = pBezierPts[index];
@@ -164,38 +165,48 @@ void CChartLineSerie::DrawAll(CDC *pDC)
 		delete[] pBezierPts;
 	}
 	else	// Non-smoothed curve
-	{	
-		if (uLast-uFirst >= 2)
+	{
+		if (uLast-uFirst >= 1)
 		{
-			CPoint* pPoints = new CPoint[uLast-uFirst];
+			CPoint* pPoints = new CPoint[uLast-uFirst+1];
 			CPoint* pShadow = NULL;
 			if (m_bShadow)
-				pShadow = new CPoint[uLast-uFirst];
-			for (m_uLastDrawnPoint=uFirst;m_uLastDrawnPoint<uLast;m_uLastDrawnPoint++)
+				pShadow = new CPoint[uLast-uFirst+1];
+
+			unsigned long pointsCount = 0;
+			CPoint LastScreenPoint;
+			for (m_uLastDrawnPoint=uFirst;m_uLastDrawnPoint<=uLast;m_uLastDrawnPoint++)
 			{
 				//We don't draw a line between the origin and the first point -> we must have
 				// a least 2 points before begining drawing
+				SChartXYPoint Point = GetPoint(m_uLastDrawnPoint);
 				CPoint ScreenPoint;
-				if (m_bShadow)
-				{
-					ValueToScreen(m_vPoints.GetXPointValue(m_uLastDrawnPoint),
-								  m_vPoints.GetYPointValue(m_uLastDrawnPoint),ScreenPoint);
-					ScreenPoint.Offset(m_iShadowDepth,m_iShadowDepth);
-					pShadow[m_uLastDrawnPoint-uFirst] = ScreenPoint;
-				}
+				ValueToScreen(Point.X, Point.Y, ScreenPoint);
 
-				ValueToScreen(m_vPoints.GetXPointValue(m_uLastDrawnPoint),
-					m_vPoints.GetYPointValue(m_uLastDrawnPoint),ScreenPoint);
-				pPoints[m_uLastDrawnPoint-uFirst] = ScreenPoint;
+				if(LastScreenPoint != ScreenPoint)
+				{
+					//Only collate the unique points
+					pPoints[pointsCount] = ScreenPoint;
+					LastScreenPoint = ScreenPoint;
+
+					if (m_bShadow)
+					{
+						ScreenPoint.Offset(m_iShadowDepth,m_iShadowDepth);
+						pShadow[pointsCount] = ScreenPoint;
+					}
+					pointsCount++;
+				}
 			}
 
+			// We have to do that in order for the Draw function to work properly.
+			m_uLastDrawnPoint--;
 			if (m_bShadow)
 			{
 				pDC->SelectObject(&ShadowPen);
-				pDC->Polyline(pShadow, uLast-uFirst);
+				pDC->Polyline(pShadow, pointsCount);
 			}
 			pDC->SelectObject(&NewPen);
-			pDC->Polyline(pPoints, uLast-uFirst);
+			pDC->Polyline(pPoints, pointsCount);
 
 			delete[] pPoints;
 			delete[] pShadow;
@@ -213,7 +224,7 @@ void CChartLineSerie::Draw(CDC* pDC)
 	if (!m_bIsVisible)
 		return;
 
-	// If shadow or smooth is enabled, then the complete series 
+	// If shadow or smooth is enabled, then the complete series
 	// must be redrawn.
 	if (m_bShadow || m_bSmooth)
 	{
@@ -245,16 +256,13 @@ void CChartLineSerie::Draw(CDC* pDC)
 		//Draw all points that haven't been drawn yet
 		for (m_uLastDrawnPoint;m_uLastDrawnPoint<GetPointsCount()-1;m_uLastDrawnPoint++)
 		{
-			//We don't draw a line between the origin and the first point -> we must have
-			// a least 2 points before begining drawing
-		//	if (m_pPoints<1)
-		//		break;
-
+			SChartXYPoint Point = GetPoint(m_uLastDrawnPoint);
 			CPoint ScreenPoint;
-			ValueToScreen(m_vPoints.GetXPointValue(m_uLastDrawnPoint),m_vPoints.GetYPointValue(m_uLastDrawnPoint),ScreenPoint);
+			ValueToScreen(Point.X, Point.Y, ScreenPoint);
 			pDC->MoveTo(ScreenPoint.x,ScreenPoint.y);
 
-			ValueToScreen(m_vPoints.GetXPointValue(m_uLastDrawnPoint+1),m_vPoints.GetYPointValue(m_uLastDrawnPoint+1),ScreenPoint);
+			Point = GetPoint(m_uLastDrawnPoint+1);
+			ValueToScreen(Point.X, Point.Y, ScreenPoint);
 			pDC->LineTo(ScreenPoint.x,ScreenPoint.y);
 		}
 
@@ -298,9 +306,11 @@ bool CChartLineSerie::IsPointOnSerie(const CPoint& screenPoint, unsigned& uIndex
 	bool bResult = false;
 	for (unsigned i=uFirst ; i < uLast ; i++)
 	{
+		SChartXYPoint PointOrig = GetPoint(i);
+		SChartXYPoint PointDest = GetPoint(i+1);
 		CPoint ScreenPointOrig, ScreenPointDest;
-		ValueToScreen(m_vPoints.GetXPointValue(i),m_vPoints.GetYPointValue(i),ScreenPointOrig);
-		ValueToScreen(m_vPoints.GetXPointValue(i+1), m_vPoints.GetYPointValue(i+1), ScreenPointDest);
+		ValueToScreen(PointOrig.X, PointOrig.Y, ScreenPointOrig);
+		ValueToScreen(PointDest.X, PointDest.Y, ScreenPointDest);
 
 		if (IsNearLine(ScreenPointOrig.x, ScreenPointOrig.y, ScreenPointDest.x, ScreenPointDest.y, screenPoint.x, screenPoint.y))
 		{
@@ -321,7 +331,7 @@ bool CChartLineSerie::IsPointOnSerie(const CPoint& screenPoint, unsigned& uIndex
     return bResult;
 }
 
-bool CChartLineSerie::IsNearLine(long Axl, long Ayl, long Bxl, 
+bool CChartLineSerie::IsNearLine(long Axl, long Ayl, long Bxl,
 								 long Byl, long Cxl, long Cyl) const
 {
     double Ax = Axl;

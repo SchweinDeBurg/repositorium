@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -67,7 +67,7 @@ public:
 		@param pAxisClicked
 			The axis on which the event occured
 	**/
-	virtual void OnMouseEventAxis(MouseEvent mouseEvent, CPoint point, 
+	virtual void OnMouseEventAxis(MouseEvent mouseEvent, CPoint point,
 									CChartAxis* pAxisClicked) { }
 	//! Virtual function to implement in order to be notified when the legend is clicked.
 	/**
@@ -85,19 +85,6 @@ public:
 			The screen point on which the event occured
 	**/
 	virtual void OnMouseEventPlotArea(MouseEvent mouseEvent, CPoint point) { }
-	//! Virtual function to implement in order to be notified when a series is clicked.
-	/**
-		@param mouseEvent
-			The mouse event which occured
-		@param point
-			The screen point on which the event occured
-		@param pSerie
-			The series on which the event occured
-		@param uPointIndex
-			The index of the point on which the event occured
-	**/
-	virtual void OnMouseEventSeries(MouseEvent mouseEvent, CPoint point,
-					CChartSerie* pSerie, unsigned uPointIndex) { }
 };
 
 #endif  // _CHARTMOUSELISTENER_H_

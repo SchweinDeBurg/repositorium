@@ -7,10 +7,10 @@
  *
  *
  *	This code may be used for any non-commercial and commercial purposes in a compiled form.
- *	The code may be redistributed as long as it remains unmodified and providing that the 
- *	author name and this disclaimer remain intact. The sources can be modified WITH the author 
+ *	The code may be redistributed as long as it remains unmodified and providing that the
+ *	author name and this disclaimer remain intact. The sources can be modified WITH the author
  *	consent only.
- *	
+ *
  *	This code is provided without any garanties. I cannot be held responsible for the damage or
  *	the loss of time it causes. Use it at your own risks
  *
@@ -61,12 +61,12 @@ public:
 		@param bUnderline
 			Specifies if the text is underlined
 	**/
-	void SetFont(const TChartString& strFaceName, int iPointSize, 
+	void SetFont(const TChartString& strFaceName, int iPointSize,
 				 bool bItalic=false, bool bBold=false, bool bUnderline=false);
 
 	//! Select this font in the device context passed in argument.
 	/**
-		This function stores the current font selected in the DC to 
+		This function stores the current font selected in the DC to
 		set it back when calling UnselectFont. This function is mainly
 		used internally.
 	**/
@@ -81,7 +81,7 @@ public:
 	void SetVertical(bool bVertical);
 
 	//! Assignement operator.
-	void operator=(const CChartFont& objectSrc);       
+	void operator=(const CChartFont& objectSrc);
 
 private:
 	//! The font face name
