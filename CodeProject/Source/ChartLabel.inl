@@ -56,4 +56,3 @@ void CChartLabel<PointType>::SetVisisble(bool bVisible)
 	m_bIsVisible = bVisible;
 	m_pParentCtrl->RefreshCtrl();
 }
-

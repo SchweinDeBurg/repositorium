@@ -332,4 +332,3 @@ bool CChartPointsSerie::IsPointOnSerie(const CPoint& screenPoint, unsigned& uInd
     }
     return bResult;
 }
-

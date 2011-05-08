@@ -228,4 +228,3 @@ private:
 };
 
 #include "ChartSerieBase.inl"
-

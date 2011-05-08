@@ -352,6 +352,3 @@ void CChartLegend::Draw(CDC *pDC)
 	pDC->SelectObject(pOldPen);
 	DeleteObject(SolidPen);
 }
-
-
-

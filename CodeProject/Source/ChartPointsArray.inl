@@ -347,5 +347,3 @@ int CChartPointsArray<T>::BinarySearch(unsigned uLeft,
 	else
 		return uRight;
 }
-
-
