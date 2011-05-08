@@ -20,9 +20,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 //DWM 1.1: Version 1.1 changes labelled thus.
-
-/*#define UNICODE
-#define _UNICODE*/
+//DWM 1.2: Version 1.2 changes labelled thus.
+//DWM 1.3: Version 1.3 changes labelled thus.
 
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_NON_CONFORMING_SWPRINTFS
@@ -76,6 +75,15 @@
 #define HEIGHT_DESC 80         ///< Constant
 #define MINIMUM_ITEM_HEIGHT 20 ///< Constant
 
+//DWM 1.2: Converted the following 4 items to constants
+#define SELECT _T("T")         ///< PIT_CHECK select
+#define UNSELECT _T("F")       ///< PIT_CHECK unselect
+#define CHECKED SELECT         ///< PIT_CHECK checked 
+#define UNCHECKED UNSELECT     ///< PIT_CHECK unchecked
+
+//DWM 1.3: Added
+#define WPRC _T("Wprc")
+
 /// @name Macroes
 /// @{
 
@@ -119,9 +127,14 @@
 /// @param hwndCtl The handle of a listbox.
 /// @param xPos The x coordinate of a point. 
 /// @param yPos The y coordinate of a point.
+///
+/// @returns The return value contains the index of the nearest item
+///           in the low-order word.  The high-order word is zero if
+///           the specified point is in the client area of the list box,
+///           or one if it is outside the client area.
 #define ListBox_ItemFromPoint(hwndCtl, xPos, yPos) \
-	((INT)(DWORD)SendMessage((hwndCtl),LB_ITEMFROMPOINT, \
-	(WPARAM)0,MAKELPARAM((UINT)(xPos),(UINT)(yPos))))
+	(DWORD)SendMessage((hwndCtl),LB_ITEMFROMPOINT, \
+	(WPARAM)0,MAKELPARAM((UINT)(xPos),(UINT)(yPos)))
 
 /// @def Refresh(hwnd)
 ///
@@ -143,10 +156,6 @@
 /// @}
 
 LPCTSTR g_szClassName = _T("PropGridCtl"); ///< The classname.
-static LPTSTR SELECT; ///< PIT_CHECK select
-static LPTSTR UNSELECT; ///< PIT_CHECK unselect
-static LPTSTR CHECKED; ///< PIT_CHECK checked 
-static LPTSTR UNCHECKED; ///< PIT_CHECK unchecked 
 
 /// @brief A nice assortment of custom colors.
 static COLORREF g_CustomColors[] = {
@@ -161,6 +170,20 @@ static COLORREF g_CustomColors[] = {
 static LRESULT CALLBACK Grid_Proc(HWND, UINT, WPARAM, LPARAM);
 static LRESULT CALLBACK ListBox_Proc(HWND, UINT, WPARAM, LPARAM);
 static VOID Grid_NotifyParent(VOID);
+
+/// @brief Default window procedure for the grid and child windows.
+///
+/// @param hwnd Handle of grid or child.
+/// @param msg Which message?
+/// @param wParam Message parameter.
+/// @param lParam Message parameter.
+///
+/// @returns LRESULT depends on message.
+static LRESULT DefProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	//DWM 1.3: Added
+	return CallWindowProc((WNDPROC)GetProp(hwnd, WPRC), hwnd, msg, wParam, lParam);
+}
 
 #pragma region Instance Data
 
@@ -204,6 +227,7 @@ typedef struct tagINSTANCEDATA {
 	INT iVDivider;          ///< Position of verticle divider
 	INT iDescHeight;        ///< Height of description pane
 	INT iPrevSel;           ///< Index of previously selected item
+	BOOL fGotFocus;         ///< TRUE while focus resides within property grid
 	BOOL fScrolling;        ///< TRUE while scrolling
 	BOOL fTracking;         ///< TRUE while moving dividers
 	LONG nOldDivX;          ///< Previous divider x position
@@ -266,7 +290,7 @@ static BOOL Control_FreeInstanceData(HWND hControl)
 /// @param idx The item index.
 ///
 /// @returns a listbox item pointer if successful, otherwise NULL
-LPLISTBOXITEM ListBox_GetItemDataSafe(HWND hwnd, INT idx)
+static LPLISTBOXITEM ListBox_GetItemDataSafe(HWND hwnd, INT idx)
 {
 	LRESULT lres = ListBox_GetItemData(hwnd, idx);
 	// Don't return LB_ERR cast to an item!
@@ -284,7 +308,7 @@ LPLISTBOXITEM ListBox_GetItemDataSafe(HWND hwnd, INT idx)
 /// @param str The string to store.
 ///
 /// @returns a Pointer to the allocated string.
-LPTSTR NewString(LPTSTR str)
+static LPTSTR NewString(LPTSTR str)
 {
 	if(NULL == str || _T('\0') == *str) str = _T("");
 	LPTSTR tmp = (LPTSTR)calloc(_tcslen(str) + 1, sizeof(TCHAR));
@@ -301,7 +325,7 @@ LPTSTR NewString(LPTSTR str)
 /// @param szzStr The double-null-terminated string to store.
 ///
 /// @returns a Pointer to the allocated string array.
-LPTSTR NewStringArray(LPTSTR szzStr)
+static LPTSTR NewStringArray(LPTSTR szzStr)
 {
 	if(NULL == szzStr || _T('\0') == *szzStr) szzStr = _T("");
 
@@ -330,7 +354,7 @@ LPTSTR NewStringArray(LPTSTR szzStr)
 /// @param iItemType The item type designation.
 ///
 /// @returns a Pointer to the allocated list box item.
-LPLISTBOXITEM NewItem(LPTSTR szCatalog, LPTSTR szPropName, LPTSTR szCurValue, LPTSTR szMisc, LPTSTR szPropDesc, INT iItemType)
+static LPLISTBOXITEM NewItem(LPTSTR szCatalog, LPTSTR szPropName, LPTSTR szCurValue, LPTSTR szMisc, LPTSTR szPropDesc, INT iItemType)
 {
 	LPLISTBOXITEM lpItem = (LPLISTBOXITEM)calloc(1, sizeof(LISTBOXITEM));
 
@@ -354,12 +378,15 @@ LPLISTBOXITEM NewItem(LPTSTR szCatalog, LPTSTR szPropName, LPTSTR szCurValue, LP
 /// @param lpItem A pointer to a LISTBOXITEM object.
 ///
 /// @returns VOID.
-VOID DeleteItem(LPLISTBOXITEM lpItem)
+static VOID DeleteItem(LPLISTBOXITEM lpItem)
 {
 	free(lpItem->lpszCatalog);
 	free(lpItem->lpszPropName);
-	free(lpItem->lpszCurValue);
-	free(lpItem->lpszMisc);
+	if(PIT_CHECK != lpItem->iItemType)  //DWM 1.2: Don't attempt to free a constant
+	{
+		free(lpItem->lpszCurValue);
+		free(lpItem->lpszMisc);
+	}
 	free(lpItem->lpszPropDesc);
 	free(lpItem);
 }
@@ -370,7 +397,7 @@ VOID DeleteItem(LPLISTBOXITEM lpItem)
 /// @param lpDeleteItem A pointer to the delete item struct.
 ///
 /// @returns VOID.
-VOID Grid_OnDeleteItem(HWND /*hwnd*/, const DELETEITEMSTRUCT * lpDeleteItem)
+static VOID Grid_OnDeleteItem(HWND /*hwnd*/, const DELETEITEMSTRUCT * lpDeleteItem)
 {
 	if (g_lpInst->hwndListMap == lpDeleteItem->hwndItem)
 		DeleteItem((LPLISTBOXITEM)lpDeleteItem->itemData);
@@ -387,13 +414,59 @@ VOID Grid_OnDeleteItem(HWND /*hwnd*/, const DELETEITEMSTRUCT * lpDeleteItem)
 
 #pragma region Drawing
 
+/// @brief Pass keyboard focus to parent and refresh grid.
+///
+/// @returns VOID.
+static VOID SetFocusToParent(VOID)
+{
+	SetFocus(g_lpInst->hwndParent);
+}
+
+/// @brief Handle WM_KILLFOCUS in editors.
+///
+/// @param hwnd Handle of the editor.
+/// @param hwndNewFocus Handle of the window that recieved focus.
+///
+/// @returns VOID.
+static VOID Editor_OnKillFocus(HWND /*hwnd*/, HWND hwndNewFocus)
+{
+	//DWM 1.3: Added so that grid selection is drawn inactive
+	// when grid doesn't have focus.
+	g_lpInst->fGotFocus =
+		(NULL != hwndNewFocus &&
+		(g_lpInst->hwndListBox  == hwndNewFocus ||
+		g_lpInst->hwndCtl1     == hwndNewFocus || 
+		g_lpInst->hwndCtl2     == hwndNewFocus ||
+		g_lpInst->hwndPropDesc == hwndNewFocus ||
+		g_lpInst->hwndToolTip  == hwndNewFocus));
+
+	if(!g_lpInst->fGotFocus)
+		Refresh(g_lpInst->hwndListBox);
+}
+
+/// @brief Handle WM_KILLFOCUS in listbox.
+///
+/// @param hwnd Handle of the editor.
+/// @param hwndNewFocus Handle of the window that recieved focus.
+///
+/// @returns VOID.
+static VOID ListBox_OnKillFocus(HWND hwnd, HWND hwndNewFocus)
+{
+	if (NULL != g_lpInst->lpCurrent)
+	{
+		if(PIT_CHECK == g_lpInst->lpCurrent->iItemType)//DWM 1.3: Added
+			g_lpInst->lpCurrent->lpszMisc = UNSELECT;
+	}
+	Editor_OnKillFocus(hwnd, hwndNewFocus);
+}
+
 /// @brief Set a control's font to bold or back to normal.
 ///
 /// @param hwndCtl The handle of a control.
 /// @param fBold TRUE if bold desired.
 ///
 /// @returns HFONT A new font with the desired font weight.
-HFONT Font_SetBold(HWND hwndCtl, BOOL fBold)
+static HFONT Font_SetBold(HWND hwndCtl, BOOL fBold)
 {
 	HFONT hFont;
 	LOGFONT lf;
@@ -421,7 +494,7 @@ HFONT Font_SetBold(HWND hwndCtl, BOOL fBold)
 /// @param clr The desired fill color value.
 ///
 /// @returns VOID.
-VOID FillSolidRect(HDC hdc, LPRECT lprc, COLORREF clr)
+static VOID FillSolidRect(HDC hdc, LPRECT lprc, COLORREF clr)
 {
 	HBRUSH hbrush = CreateSolidBrush(clr);
 	FillRect(hdc, lprc, hbrush);
@@ -437,7 +510,7 @@ VOID FillSolidRect(HDC hdc, LPRECT lprc, COLORREF clr)
 /// @param y2 To point y-coordinate.
 ///
 /// @returns VOID.
-VOID DrawLine(HDC hdc, LONG x1, LONG y1, LONG x2, LONG y2)
+static VOID DrawLine(HDC hdc, LONG x1, LONG y1, LONG x2, LONG y2)
 {
 	MoveToEx(hdc, x1, y1, NULL);
 	LineTo(hdc, x2, y2);
@@ -452,7 +525,7 @@ VOID DrawLine(HDC hdc, LONG x1, LONG y1, LONG x2, LONG y2)
 /// @param y2 To point y-coordinate.
 ///
 /// @returns VOID.
-VOID InvertLine(HDC hdc, LONG x1, LONG y1, LONG x2, LONG y2)
+static VOID InvertLine(HDC hdc, LONG x1, LONG y1, LONG x2, LONG y2)
 {
 	INT nOldMode = SetROP2(hdc, R2_NOT);
 	DrawLine(hdc, x1, y1, x2, y2);
@@ -467,7 +540,7 @@ VOID InvertLine(HDC hdc, LONG x1, LONG y1, LONG x2, LONG y2)
 /// @param clr The desired line color value.
 ///
 /// @returns VOID.
-VOID DrawBorder(HDC hdc, LPRECT lprc, DWORD dwBorder, COLORREF clr)
+static VOID DrawBorder(HDC hdc, LPRECT lprc, DWORD dwBorder, COLORREF clr)
 {
 	LOGPEN oLogPen;
 
@@ -513,13 +586,13 @@ static COLORREF GetColor(LPTSTR src)
 /// @param lParam The message LPARAM.
 ///
 /// @returns BOOL Always TRUE.
-BOOL Editor_OnPaint(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+static BOOL Editor_OnPaint(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc = GetWindowDC(hwnd);
 	RECT rect;
 
 	// First let the system do its thing
-	CallWindowProc((WNDPROC)GetProp(hwnd, TEXT("Wprc")), hwnd, msg, wParam, lParam);
+	DefProc(hwnd, msg, wParam, lParam);
 
 	// Next obliterate the border
 	GetWindowRect(hwnd, &rect);
@@ -546,7 +619,7 @@ BOOL Editor_OnPaint(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 /// @param BkColr Desired back color.
 ///
 /// @returns HBRUSH A reusable brush object.
-HBRUSH SetColor(HDC hdc, COLORREF TxtColr, COLORREF BkColr)
+static HBRUSH SetColor(HDC hdc, COLORREF TxtColr, COLORREF BkColr)
 {
 	static HBRUSH ReUsableBrush;
 	DeleteObject(ReUsableBrush);
@@ -677,11 +750,11 @@ static HWND CreateListBox(HINSTANCE hInstance, HWND hwndParent, INT id)
 	HWND hwnd;
 
 	dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_VSCROLL | WS_HSCROLL |
-				LBS_NOTIFY | LBS_OWNERDRAWFIXED |
-				LBS_NOINTEGRALHEIGHT | LBS_WANTKEYBOARDINPUT;
+		LBS_NOTIFY | LBS_OWNERDRAWFIXED |
+		LBS_NOINTEGRALHEIGHT | LBS_WANTKEYBOARDINPUT;
 
 	dwExStyle = WS_EX_LEFT | WS_EX_RTLREADING | WS_EX_RIGHTSCROLLBAR |
-				WS_EX_CLIENTEDGE;
+		WS_EX_CLIENTEDGE;
 	hwnd = CreateWindowEx(dwExStyle,
 		WC_LISTBOX,
 		NULL,
@@ -701,7 +774,7 @@ static HWND CreateListBox(HINSTANCE hInstance, HWND hwndParent, INT id)
 	SendMessage(hwnd, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), 0);
 
 	// Subclass listbox and save the old proc
-	SetProp(hwnd, TEXT("Wprc"), (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
+	SetProp(hwnd, WPRC, (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
 	SubclassWindow(hwnd, ListBox_Proc);
 
 	return hwnd;
@@ -763,9 +836,14 @@ static LRESULT CALLBACK Edit_Proc(HWND hEdit, UINT msg, WPARAM wParam, LPARAM lP
 
 	if (WM_DESTROY == msg)  // Unsubclass the Edit Control
 	{
-		SetWindowLongPtr(hEdit, GWLP_WNDPROC, (DWORD)GetProp(hEdit, TEXT("Wprc")));
-		RemoveProp(hEdit, TEXT("Wprc"));
+		SetWindowLongPtr(hEdit, GWLP_WNDPROC, (DWORD)GetProp(hEdit, WPRC));
+		RemoveProp(hEdit, WPRC);
 		return 0;
+	}
+	else if (WM_KILLFOCUS == msg)
+	{
+		ShowWindow(hEdit, SW_HIDE);
+		Editor_OnKillFocus(hEdit, (HWND)wParam);
 	}
 	else if (WM_PAINT == msg)   // Obliterate border
 	{
@@ -792,17 +870,23 @@ static LRESULT CALLBACK Edit_Proc(HWND hEdit, UINT msg, WPARAM wParam, LPARAM lP
 	{
 		switch (wParam)
 		{
-			case VK_TAB:
-				if (GetKeyState(VK_SHIFT) & 0x8000)
-					FORWARD_WM_CHAR(hEdit, VK_RETURN, 0, SNDMSG);
-				return TRUE;
-			case VK_ESCAPE:
-				ShowWindow(hEdit, SW_HIDE);
-				SetFocus(g_lpInst->hwndListBox);
-				return FALSE;
+		case VK_TAB:
+			if (GetKeyState(VK_SHIFT) & 0x8000)
+			{
+				FORWARD_WM_CHAR(hEdit, VK_RETURN, 0, SNDMSG);
+			}
+			else //DWM 1.3: Added Focus to grid parent
+			{
+				SetFocusToParent();
+			}
+			return TRUE;
+		case VK_ESCAPE:
+			ShowWindow(hEdit, SW_HIDE);
+			SetFocus(g_lpInst->hwndListBox);
+			return FALSE;
 		}
 	}
-	return CallWindowProc((WNDPROC)GetProp(hEdit, TEXT("Wprc")), hEdit, msg, wParam, lParam);
+	return DefProc(hEdit, msg, wParam, lParam);
 }
 
 /// @brief Create an Edit control to edit PIT_EDIT fields.
@@ -829,7 +913,7 @@ static HWND CreateEdit(HINSTANCE hInstance, HWND hwndParent, INT id)
 	SendMessage(hwnd, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), 0L);
 
 	// Subclass Editor and save the OldProc
-	SetProp(hwnd, TEXT("Wprc"), (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
+	SetProp(hwnd, WPRC, (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
 	SubclassWindow(hwnd, Edit_Proc);
 
 	return hwnd;
@@ -877,9 +961,21 @@ static LRESULT CALLBACK IpEdit_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 
 	if (WM_DESTROY == msg)  //Unsubclass the ipedit or child edit control
 	{
-		SetWindowLongPtr(hwnd, GWLP_WNDPROC, (DWORD)GetProp(hwnd, TEXT("Wprc")));
-		RemoveProp(hwnd, TEXT("Wprc"));
+		SetWindowLongPtr(hwnd, GWLP_WNDPROC, (DWORD)GetProp(hwnd, WPRC));
+		RemoveProp(hwnd, WPRC);
 		return 0;
+	}
+	else if (WM_KILLFOCUS == msg)//DWM 1.3: Added
+	{
+		if(fEdit)
+		{
+			// Determine if hwndNewfocus is a child of the IpEdit
+			if(hIpEdit != GetParent((HWND) wParam)) //No, result of mouse click
+			{
+				ShowWindow(hIpEdit, SW_HIDE);
+				Editor_OnKillFocus(hIpEdit, (HWND)wParam);
+			}
+		}
 	}
 	else if (WM_CHAR == msg && VK_RETURN == wParam)
 	{
@@ -889,7 +985,7 @@ static LRESULT CALLBACK IpEdit_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 			TCHAR buf[MAX_PATH];
 			if (4 == SNDMSG(hIpEdit, IPM_GETADDRESS, 0, (LPARAM) & *((LPDWORD)ip)))
 			{
-				_stprintf(buf, _T("%d.%d.%d.%d"), ip[3], ip[2], ip[1], ip[0]);
+				_stprintf_s(buf, MAX_PATH, _T("%d.%d.%d.%d"), ip[3], ip[2], ip[1], ip[0]);
 				AllocatedString_Replace(g_lpInst->lpCurrent->lpszCurValue, buf);
 			}
 		}
@@ -914,14 +1010,21 @@ static LRESULT CALLBACK IpEdit_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 			if (GetKeyState(VK_SHIFT) & 0x8000) //Shift tab
 			{
 				hNext = GetWindow(hwnd, GW_HWNDNEXT);
-				if (NULL == hNext)
-					hNext = GetWindow(hwnd, GW_HWNDFIRST);
+				if (NULL == hNext) //DWM 1.3: Added Focus to Listbox
+				{
+					SetFocus(g_lpInst->hwndListBox);
+					return TRUE;
+				}
 			}
 			else
 			{
 				hNext = GetWindow(hwnd, GW_HWNDPREV);
-				if (NULL == hNext)
-					hNext = GetWindow(hwnd, GW_HWNDLAST);
+				if (NULL == hNext) //DWM 1.3: Added Focus to grid parent
+				{
+					SetFocusToParent();
+					Editor_OnKillFocus(hIpEdit, NULL);
+					return TRUE;
+				}
 			}
 			Edit_SetSel(hNext, 0, -1);
 			SetFocus(hNext);
@@ -948,17 +1051,17 @@ static LRESULT CALLBACK IpEdit_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 			//  the first time they do so we'll grab and subclass them.
 			HWND hwndCtl = GET_WM_COMMAND_HWND(wParam, lParam);
 			{
-				WNDPROC lpfn = (WNDPROC)GetProp(hwndCtl, TEXT("Wprc"));
+				WNDPROC lpfn = (WNDPROC)GetProp(hwndCtl, WPRC);
 				if (NULL == lpfn)
 				{
 					//Subclass child and save the OldProc
-					SetProp(hwndCtl, TEXT("Wprc"), (HANDLE)GetWindowLongPtr(hwndCtl, GWLP_WNDPROC));
+					SetProp(hwndCtl, WPRC, (HANDLE)GetWindowLongPtr(hwndCtl, GWLP_WNDPROC));
 					SubclassWindow(hwndCtl, IpEdit_Proc);
 				}
 			}
 		}
 	}
-	return CallWindowProc((WNDPROC)GetProp(hwnd, TEXT("Wprc")), hwnd, msg, wParam, lParam);
+	return DefProc(hwnd, msg, wParam, lParam);
 }
 
 /// @brief Create an ipedit control to edit PIT_IP fields.
@@ -1004,7 +1107,7 @@ static HWND CreateIpEdit(HINSTANCE hInstance, HWND hwndParent, INT id, LPRECT lp
 
 	SendMessage(hwnd, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), 0L);
 
-	SetProp(hwnd, TEXT("Wprc"), (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
+	SetProp(hwnd, WPRC, (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
 	SubclassWindow(hwnd, IpEdit_Proc);
 
 	return hwnd;
@@ -1031,9 +1134,14 @@ static LRESULT CALLBACK Button_Proc(HWND hButton, UINT msg, WPARAM wParam, LPARA
 
 	if (WM_DESTROY == msg)  // Unsubclass the button control
 	{
-		SetWindowLongPtr(hButton, GWLP_WNDPROC, (DWORD)GetProp(hButton, TEXT("Wprc")));
-		RemoveProp(hButton, TEXT("Wprc"));
+		SetWindowLongPtr(hButton, GWLP_WNDPROC, (DWORD)GetProp(hButton, WPRC));
+		RemoveProp(hButton, WPRC);
 		return 0;
+	}
+	else if (WM_KILLFOCUS == msg)
+	{
+		ShowWindow(hButton, SW_HIDE);
+		Editor_OnKillFocus(hButton, (HWND) wParam);
 	}
 	else if (WM_MOUSEWHEEL == msg)
 	{
@@ -1052,14 +1160,21 @@ static LRESULT CALLBACK Button_Proc(HWND hButton, UINT msg, WPARAM wParam, LPARA
 	{
 		switch (wParam)
 		{
-			case VK_RETURN:
-				FORWARD_WM_KEYDOWN(hButton, VK_SPACE, 0, 0, SNDMSG);
-				return TRUE;
-			case VK_TAB:
-				if (GetKeyState(VK_SHIFT) & 0x8000)
-					FORWARD_WM_KEYDOWN(hButton, VK_ESCAPE, 0, 0, SNDMSG);
-				return TRUE;
-			case VK_ESCAPE:
+		case VK_RETURN:
+			FORWARD_WM_KEYDOWN(hButton, VK_SPACE, 0, 0, SNDMSG);
+			return TRUE;
+		case VK_TAB:
+			if (GetKeyState(VK_SHIFT) & 0x8000)
+			{
+				FORWARD_WM_KEYDOWN(hButton, VK_ESCAPE, 0, 0, SNDMSG);
+			}
+			else //DWM 1.3: Added Focus to grid parent
+			{
+				ShowWindow(hButton, SW_HIDE);
+				SetFocusToParent();
+			}
+			return FALSE;
+		case VK_ESCAPE:
 			{
 				ShowWindow(hButton, SW_HIDE);
 				SetFocus(g_lpInst->hwndListBox);
@@ -1067,7 +1182,7 @@ static LRESULT CALLBACK Button_Proc(HWND hButton, UINT msg, WPARAM wParam, LPARA
 			}
 		}
 	}
-	return CallWindowProc((WNDPROC)GetProp(hButton, TEXT("Wprc")), hButton, msg, wParam, lParam);
+	return DefProc(hButton, msg, wParam, lParam);
 }
 
 /// @brief Create button control to launch dialogs.
@@ -1102,7 +1217,7 @@ static HWND CreateButton(HINSTANCE hInstance, HWND hwndParent, INT id)
 
 	SendMessage(hwnd, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), 0L);
 
-	SetProp(hwnd, TEXT("Wprc"), (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
+	SetProp(hwnd, WPRC, (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
 	SubclassWindow(hwnd, Button_Proc);
 
 	return hwnd;
@@ -1134,11 +1249,28 @@ static LRESULT CALLBACK DatePicker_Proc(HWND hDate, UINT msg, WPARAM wParam, LPA
 
 	if (WM_DESTROY == msg)  // Unsubclass the control
 	{
-		SetWindowLongPtr(hDate, GWLP_WNDPROC, (DWORD)GetProp(hDate, TEXT("Wprc")));
-		RemoveProp(hDate, TEXT("Wprc"));
+		SetWindowLongPtr(hDate, GWLP_WNDPROC, (DWORD)GetProp(hDate, WPRC));
+		RemoveProp(hDate, WPRC);
 		return 0;
 	}
-	else if (WM_PAINT == msg)   // Obliterate border
+	else if (WM_KILLFOCUS == msg) //DWM 1.3: Added this
+	{
+		if (NULL != g_lpInst->lpCurrent)
+		{
+			if(PIT_DATETIME == g_lpInst->lpCurrent->iItemType)
+			{
+				HWND hFocus = (HWND)wParam;
+				if(g_lpInst->hwndCtl1 == hFocus ||
+					g_lpInst->hwndCtl2 == hFocus) // ignore thise two windows
+					return 0;
+
+				ShowWindow(g_lpInst->hwndCtl2, SW_HIDE);
+			}
+		}
+		ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
+		Editor_OnKillFocus(hDate, (HWND)wParam);
+	}
+	else if (WM_PAINT == msg) // Obliterate border
 	{
 		return Editor_OnPaint(hDate, msg, wParam, lParam);
 	}
@@ -1156,7 +1288,7 @@ static LRESULT CALLBACK DatePicker_Proc(HWND hDate, UINT msg, WPARAM wParam, LPA
 		{
 			switch (g_lpInst->lpCurrent->iItemType)
 			{
-				case PIT_DATE:
+			case PIT_DATE:
 				{
 					SYSTEMTIME st;
 					TCHAR buf[MAX_PATH];
@@ -1165,8 +1297,8 @@ static LRESULT CALLBACK DatePicker_Proc(HWND hDate, UINT msg, WPARAM wParam, LPA
 					AllocatedString_Replace(g_lpInst->lpCurrent->lpszCurValue, buf);
 					ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
 				}
-					break;
-				case PIT_TIME:
+				break;
+			case PIT_TIME:
 				{
 					SYSTEMTIME st;
 					TCHAR buf[MAX_PATH];
@@ -1175,8 +1307,8 @@ static LRESULT CALLBACK DatePicker_Proc(HWND hDate, UINT msg, WPARAM wParam, LPA
 					AllocatedString_Replace(g_lpInst->lpCurrent->lpszCurValue, buf);
 					ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
 				}
-					break;
-				case PIT_DATETIME:
+				break;
+			case PIT_DATETIME:
 				{
 					SYSTEMTIME st;
 					TCHAR buf[MAX_PATH];
@@ -1189,7 +1321,7 @@ static LRESULT CALLBACK DatePicker_Proc(HWND hDate, UINT msg, WPARAM wParam, LPA
 					ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
 					ShowWindow(g_lpInst->hwndCtl2, SW_HIDE);
 				}
-					break;
+				break;
 			}
 		}
 		SetFocus(g_lpInst->hwndListBox);
@@ -1198,23 +1330,49 @@ static LRESULT CALLBACK DatePicker_Proc(HWND hDate, UINT msg, WPARAM wParam, LPA
 	}
 	else if (WM_CHAR == msg && VK_TAB == wParam)
 	{
-		if (GetKeyState(VK_SHIFT) & 0x8000)
+		if (NULL != g_lpInst->lpCurrent)
 		{
-			FORWARD_WM_CHAR(hDate, VK_RETURN, 0, SNDMSG);
-		}
-		else
-		{
-			if (NULL != g_lpInst->lpCurrent)
+			if (PIT_DATETIME == g_lpInst->lpCurrent->iItemType)
 			{
-				if (PIT_DATETIME == g_lpInst->lpCurrent->iItemType)
+				//DWM 1.3: Fixed focus selection
+				HWND hFocus = GetFocus();
+				if(g_lpInst->hwndCtl1 == hFocus)
 				{
-					HWND hNext = GetWindow(hDate, GW_HWNDPREV);
-					if (NULL == hNext)
-						hNext = GetWindow(hDate, GW_HWNDLAST);
-					SetFocus(hNext);
+					if (GetKeyState(VK_SHIFT) & 0x8000)
+					{
+						FORWARD_WM_CHAR(hDate, VK_RETURN, 0, SNDMSG);
+					}
+					else
+					{
+						SetFocus(g_lpInst->hwndCtl2);
+					}
 				}
-				return TRUE;
+				else if (g_lpInst->hwndCtl2 == hFocus)
+				{
+					if (GetKeyState(VK_SHIFT) & 0x8000)
+					{
+						SetFocus(g_lpInst->hwndCtl1);
+					}
+					else
+					{
+						FORWARD_WM_CHAR(hDate, VK_RETURN, 0, SNDMSG);
+						SetFocusToParent();
+					}
+				}
 			}
+			else
+			{
+				if (GetKeyState(VK_SHIFT) & 0x8000)
+				{
+					FORWARD_WM_CHAR(hDate, VK_RETURN, 0, SNDMSG);
+				}
+				else
+				{
+					FORWARD_WM_CHAR(hDate, VK_RETURN, 0, SNDMSG);
+					SetFocusToParent();
+				}
+			}
+			return TRUE;
 		}
 	}
 	else if (WM_KEYDOWN == msg && VK_ESCAPE == wParam)
@@ -1223,20 +1381,20 @@ static LRESULT CALLBACK DatePicker_Proc(HWND hDate, UINT msg, WPARAM wParam, LPA
 		{
 			switch (g_lpInst->lpCurrent->iItemType)
 			{
-				case PIT_DATE:
-				case PIT_TIME:
-					ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
-					break;
-				case PIT_DATETIME:
+			case PIT_DATE:
+			case PIT_TIME:
+				ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
+				break;
+			case PIT_DATETIME:
 				{
 					ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
 					ShowWindow(g_lpInst->hwndCtl2, SW_HIDE);
 				}
-					break;
+				break;
 			}
 		}
 	}
-	return CallWindowProc((WNDPROC)GetProp(hDate, TEXT("Wprc")), hDate, msg, wParam, lParam);
+	return DefProc(hDate, msg, wParam, lParam);
 }
 
 /// @brief Create datepicker control configured either as a date or time picker.
@@ -1264,7 +1422,7 @@ static HWND CreateDatePicker(HINSTANCE hInstance, HWND hwndParent, INT id, BOOL 
 	SendMessage(hwnd, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), 0L);
 
 	// Subclass date or timepicker and save the old proc
-	SetProp(hwnd, TEXT("Wprc"), (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
+	SetProp(hwnd, WPRC, (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
 	SubclassWindow(hwnd, DatePicker_Proc);
 
 	return hwnd;
@@ -1301,13 +1459,13 @@ static HWND CreateDatePicker(HINSTANCE hInstance, HWND hwndParent, INT id, BOOL 
 /// @returns LRESULT depends on message.
 static LRESULT CALLBACK ComboBox_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	static TCHAR buf[MAX_PATH];
+	static TCHAR classname[MAX_PATH];
 	HWND hGParent = GetParent(GetParent(hwnd));
 
 	// Note: Instance data is attached to combo's grandparent
 	//  or the edit field's greatgrandparent
-	GetClassName(hwnd, buf, NELEMS(buf));
-	BOOL fEdit = (0 == _tcsicmp(buf, WC_EDIT));
+	GetClassName(hwnd, classname, NELEMS(classname));
+	BOOL fEdit = (0 == _tcsicmp(classname, WC_EDIT));
 
 	if (fEdit)
 		Control_GetInstanceData(GetParent(hGParent), &g_lpInst);
@@ -1316,14 +1474,23 @@ static LRESULT CALLBACK ComboBox_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
 
 	if (WM_DESTROY == msg)  //Unsubclass the combobox or child edit control
 	{
-		SetWindowLongPtr(hwnd, GWLP_WNDPROC, (DWORD)GetProp(hwnd, TEXT("Wprc")));
-		RemoveProp(hwnd, TEXT("Wprc"));
+		SetWindowLongPtr(hwnd, GWLP_WNDPROC, (DWORD)GetProp(hwnd, WPRC));
+		RemoveProp(hwnd, WPRC);
 		return 0;
+	}
+	else if (WM_KILLFOCUS == msg)//DWM 1.3: Added
+	{
+		HWND hFocus = (HWND) wParam;
+		if(hwnd != GetParent(hFocus))// not a combobox editor or a combobox
+		{
+			ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
+			Editor_OnKillFocus(hwnd, (HWND) wParam);
+		}
 	}
 	else if (WM_PAINT == msg && !fEdit) // Obliterate border (differs from standard method)
 	{
 		// First let the system do its thing
-		CallWindowProc((WNDPROC)GetProp(hwnd, TEXT("Wprc")), hwnd, msg, wParam, lParam);
+		DefProc(hwnd, msg, wParam, lParam);
 
 		// Next obliterate the border
 		HDC hdc = GetWindowDC(hwnd);
@@ -1351,15 +1518,15 @@ static LRESULT CALLBACK ComboBox_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
 		//  the first time it does so we'll grab and subclass it.
 		HWND hwndCtl = GET_WM_COMMAND_HWND(wParam, lParam);
 		{
-			WNDPROC lpfn = (WNDPROC)GetProp(hwndCtl, TEXT("Wprc"));
+			WNDPROC lpfn = (WNDPROC)GetProp(hwndCtl, WPRC);
 			if (NULL == lpfn)
 			{
 				// Do not subclass the drop down list
-				GetClassName(hwndCtl, buf, NELEMS(buf));
-				if (0 == _tcsicmp(buf, WC_EDIT))
+				GetClassName(hwndCtl, classname, NELEMS(classname));
+				if (0 == _tcsicmp(classname, WC_EDIT))
 				{
 					//Subclass edit and save the old proc
-					SetProp(hwndCtl, TEXT("Wprc"), (HANDLE)GetWindowLongPtr(hwndCtl, GWLP_WNDPROC));
+					SetProp(hwndCtl, WPRC, (HANDLE)GetWindowLongPtr(hwndCtl, GWLP_WNDPROC));
 					SubclassWindow(hwndCtl, ComboBox_Proc);
 				}
 			}
@@ -1369,8 +1536,8 @@ static LRESULT CALLBACK ComboBox_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
 	{
 		if (NULL != g_lpInst->lpCurrent)
 		{
-			GetWindowText(hwnd, buf, sizeof buf);   //Combo or child edit text is the same
-			AllocatedString_Replace(g_lpInst->lpCurrent->lpszCurValue, buf);
+			GetWindowText(hwnd, classname, sizeof classname);   //Combo or child edit text is the same
+			AllocatedString_Replace(g_lpInst->lpCurrent->lpszCurValue, classname);
 		}
 		if (fEdit)
 			ShowWindow(GetParent(hwnd), SW_HIDE);
@@ -1387,6 +1554,12 @@ static LRESULT CALLBACK ComboBox_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
 		{
 			FORWARD_WM_CHAR(hwnd, VK_RETURN, 0, SNDMSG);
 		}
+		else //DWM 1.3: Added Focus to grid parent
+		{
+			ShowWindow(fEdit ? GetParent(hwnd) : hwnd, SW_HIDE);
+			SetFocusToParent();
+			Editor_OnKillFocus(hwnd, NULL);
+		}
 		return TRUE;
 	}
 	else if (WM_KEYDOWN == msg && VK_ESCAPE == wParam)
@@ -1399,7 +1572,7 @@ static LRESULT CALLBACK ComboBox_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
 		SetFocus(g_lpInst->hwndListBox);
 		return FALSE;
 	}
-	return CallWindowProc((WNDPROC)GetProp(hwnd, TEXT("Wprc")), hwnd, msg, wParam, lParam);
+	return DefProc(hwnd, msg, wParam, lParam);
 }
 
 /// @brief Create combobox control configured either as editable or static.
@@ -1437,7 +1610,7 @@ static HWND CreateCombo(HINSTANCE hInstance, HWND hwndParent, INT id, BOOL fEdit
 
 	SendMessage(hwnd, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), 0L);
 
-	SetProp(hwnd, TEXT("Wprc"), (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
+	SetProp(hwnd, WPRC, (HANDLE)GetWindowLongPtr(hwnd, GWLP_WNDPROC));
 	SubclassWindow(hwnd, ComboBox_Proc);
 
 	return hwnd;
@@ -1447,7 +1620,13 @@ static HWND CreateCombo(HINSTANCE hInstance, HWND hwndParent, INT id, BOOL fEdit
 
 #pragma region choose font
 
-VOID LogFontItem_FromString(LPPROPGRIDFONTITEM lpLogFontItem, LPTSTR lpszFont)
+/// @brief Create a string from a property grid font dialog item.
+///
+/// @param lpLogFontItem The address of a PROPGRIDFONTITEM struct.
+/// @param lpszFont The string representation of PROPGRIDFONTITEM elements.
+///
+/// @returns VOID.
+static VOID LogFontItem_FromString(LPPROPGRIDFONTITEM lpLogFontItem, LPTSTR lpszFont)
 {
 	LPLOGFONT lpLf = (LPLOGFONT)lpLogFontItem;
 	_stscanf(lpszFont,
@@ -1487,13 +1666,18 @@ VOID LogFontItem_FromString(LPPROPGRIDFONTITEM lpLogFontItem, LPTSTR lpszFont)
 		&lpLogFontItem->crFont);
 }
 
-LPTSTR LogFontItem_ToString(LPPROPGRIDFONTITEM lpLogFontItem)
+/// @brief Create a string from a property grid font dialog item.
+///
+/// @param lpLogFontItem A pointer to a PROPGRIDFONTITEM.
+///
+/// @returns LPTSTR The string representation of PROPGRIDFONTITEM elements.
+static LPTSTR LogFontItem_ToString(LPPROPGRIDFONTITEM lpLogFontItem)
 {
 	static TCHAR buf[MAX_PATH];
 	_tmemset(buf, (TCHAR)0, MAX_PATH);
 
 	LPLOGFONT lpLf = (LPLOGFONT)lpLogFontItem;
-	_stprintf(buf,
+	_stprintf_s(buf, MAX_PATH,
 		_T("Height: %d\r\n") \
 		_T("Width: %d\r\n") \
 		_T("Escapement: %d\r\n") \
@@ -1535,12 +1719,58 @@ LPTSTR LogFontItem_ToString(LPPROPGRIDFONTITEM lpLogFontItem)
 
 #pragma region browse folder
 
-/// @brief Create a string from a property grid filedialog item.
+/// @brief Create a string from a property grid file dialog item.
+///
+/// @param lpPgFdItem The address of a PROPGRIDFDITEM struct.
+/// @param lpszFdItem The string representation of PROPGRIDFDITEM elements.
+///
+/// @returns VOID.
+static VOID FileDialogItem_FromString(LPPROPGRIDFDITEM lpPgFdItem, LPTSTR lpszFdItem)
+{
+	//DWM 1.2: Added method
+	static TCHAR PgFdItem[4][MAX_PATH];
+	memset(PgFdItem, (TCHAR)0, sizeof(PgFdItem));
+
+	_stscanf(lpszFdItem,
+#ifdef _UNICODE
+		_T("Title: %256l[^\r\n] ") \
+		_T("Path: %256l[^\r\n] ") \
+		_T("Filter: %256l[^\r\n] ") \
+		_T("Default Extension: %3ls"),
+#else
+		_T("Title: %256[^\r\n] ") \
+		_T("Path: %256[^\r\n] ") \
+		_T("Filter: %256[^\r\n] ") \
+		_T("Default Extension: %3s"),
+#endif
+		&PgFdItem[0], &PgFdItem[1], &PgFdItem[2], &PgFdItem[3]);
+
+	for(int i = 0; i < NELEMS(PgFdItem); i++)
+	{
+		if (0 == _tcscmp(_T("?"), PgFdItem[i]))
+		{
+			//Convert back to empty string
+			PgFdItem[i][0] = (TCHAR)0;
+		}
+		else if(2 == i)
+		{
+			//Convert back to double null-terminated string
+			for (LPTSTR ptr = PgFdItem[2]; *ptr; ptr++)
+				if (_T('\t') == *ptr) *ptr = _T('\0');
+		}
+	}
+	lpPgFdItem->lpszDlgTitle = PgFdItem[0];
+	lpPgFdItem->lpszFilePath = PgFdItem[1];
+	lpPgFdItem->lpszFilter = PgFdItem[2];
+	lpPgFdItem->lpszDefExt = PgFdItem[3];
+}
+
+/// @brief Create a string from a property grid file dialog item.
 ///
 /// @param lpPgFdItem A pointer to a PROPGRIDFDITEM.
 ///
 /// @returns LPTSTR The string representation of PROPGRIDFDITEM elements.
-LPTSTR FileDialogItem_ToString(LPPROPGRIDFDITEM lpPgFdItem)
+static LPTSTR FileDialogItem_ToString(LPPROPGRIDFDITEM lpPgFdItem)
 {
 	static TCHAR szBuf[3 * MAX_PATH];
 	_tmemset(szBuf, (TCHAR)0, NELEMS(szBuf));
@@ -1550,15 +1780,15 @@ LPTSTR FileDialogItem_ToString(LPPROPGRIDFDITEM lpPgFdItem)
 	//Copy filter string replacing \0 with \t"
 	INT iLen = 0;
 	for (LPTSTR psz = (LPTSTR)lpPgFdItem->lpszFilter,
-		  ps = filter, pe = filter + NELEMS(filter) - 1;
-		   *psz && ps < pe; psz += iLen + 1)
+		ps = filter, pe = filter + NELEMS(filter) - 1;
+		*psz && ps < pe; psz += iLen + 1)
 	{
 		_tmemmove(ps, psz, (iLen = _tcslen(psz)));
 		ps += iLen;
 		*ps++ = _T('\t');
 	}
 
-	_stprintf(szBuf,
+	_stprintf_s(szBuf, NELEMS(szBuf),
 #ifdef _UNICODE
 		_T("Title: %ls\r\n") \
 		_T("Path: %ls\r\n") \
@@ -1570,10 +1800,10 @@ LPTSTR FileDialogItem_ToString(LPPROPGRIDFDITEM lpPgFdItem)
 		_T("Filter: %s\r\n") \
 		_T("Default Extension: %3s"),
 #endif
-		lpPgFdItem->lpszDlgTitle,
-		lpPgFdItem->lpszFilePath,
-		filter,
-		lpPgFdItem->lpszDefExt);
+		0 < _tcslen(lpPgFdItem->lpszDlgTitle) ? lpPgFdItem->lpszDlgTitle : _T("?"), //DWM 1.2: Added default "?"
+		0 < _tcslen(lpPgFdItem->lpszFilePath) ? lpPgFdItem->lpszFilePath : _T("?"), //DWM 1.2: Added default "?"
+		0 < _tcslen(filter) ? filter : _T("?"), //DWM 1.2: Added default "?"
+		0 < _tcslen(lpPgFdItem->lpszDefExt) ? lpPgFdItem->lpszDefExt : _T("?")); //DWM 1.2: Added default "?"
 	return szBuf;
 }
 
@@ -1582,7 +1812,7 @@ LPTSTR FileDialogItem_ToString(LPPROPGRIDFDITEM lpPgFdItem)
 /// @param pszPath The file path string.
 ///
 /// @returns LPITEMIDLIST A pointer to an item id list object.
-LPITEMIDLIST ConvertPathToLpItemIdList(LPTSTR pszPath)
+static LPITEMIDLIST ConvertPathToLpItemIdList(LPTSTR pszPath)
 {
 	LPITEMIDLIST pidl = NULL;
 	LPSHELLFOLDER pDesktopFolder;
@@ -1591,7 +1821,7 @@ LPITEMIDLIST ConvertPathToLpItemIdList(LPTSTR pszPath)
 
 	if (SUCCEEDED(SHGetDesktopFolder(&pDesktopFolder)))
 	{
-		 pDesktopFolder->ParseDisplayName(NULL, NULL, ATL::CT2W(pszPath), &chEaten, &pidl, &dwAttributes);
+		pDesktopFolder->ParseDisplayName(NULL, NULL, ATL::CT2W(pszPath), &chEaten, &pidl, &dwAttributes);
 		pDesktopFolder->Release();
 	}
 	return pidl;
@@ -1606,28 +1836,28 @@ LPITEMIDLIST ConvertPathToLpItemIdList(LPTSTR pszPath)
 /// @param lpData Pointer to message data.
 ///
 /// @returns BOOL FALSE.
-BOOL CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
+static BOOL CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
 {
 	//Buffer for the folder dialog
 	static TCHAR SelectedDir[MAX_PATH];
 
 	switch (uMsg)
 	{
-		case BFFM_INITIALIZED:
+	case BFFM_INITIALIZED:
 		{
 			// change the selected folder.
 			SNDMSG(hwnd, BFFM_SETSELECTION, TRUE, lpData);
 			break;
 		}
-		case BFFM_SELCHANGED:
+	case BFFM_SELCHANGED:
 		{
 			// Set the status window to the currently selected path.
 			if (SHGetPathFromIDList((LPITEMIDLIST)lParam, SelectedDir))
 				SNDMSG(hwnd, BFFM_SETSTATUSTEXT, 0, (LPARAM)SelectedDir);
 			break;
 		}
-		default:
-			break;
+	default:
+		break;
 	}
 	return FALSE;
 }
@@ -1640,7 +1870,7 @@ BOOL CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpD
 /// @param rootPath Path location to begin browsing.
 ///
 /// @returns BOOL Depends on message.
-LPTSTR BrowseFolder(HWND hwnd, LPTSTR curPath, LPTSTR title, LPTSTR rootPath)
+static LPTSTR BrowseFolder(HWND hwnd, LPTSTR curPath, LPTSTR title, LPTSTR rootPath)
 {
 	BROWSEINFO bi;
 	static TCHAR szDir[MAX_PATH];
@@ -1703,7 +1933,7 @@ static INT ListBox_FindCatalog(HWND hwnd, INT indexStart, LPCTSTR szCatalog)
 /// @param pItem Pointer to an LISTBOXITEM object.
 ///
 /// @returns VOID.
-VOID ToggleCatalog(LPLISTBOXITEM pItem)
+static VOID ToggleCatalog(LPLISTBOXITEM pItem)
 {
 	if (NULL != pItem && PIT_CATALOG != pItem->iItemType)
 		return;
@@ -1759,24 +1989,26 @@ VOID ToggleCatalog(LPLISTBOXITEM pItem)
 /// @see ListBox_Proc() WM_NCLBUTTONDOWN for details.
 ///
 /// @returns VOID.
-VOID ListBox_OnBeginScroll(HWND /*hwnd*/)
+static VOID ListBox_OnBeginScroll(HWND /*hwnd*/)
 {
+	g_lpInst->fGotFocus = TRUE;//DWM 1:3: Added
+
 	if (NULL == g_lpInst->lpCurrent)
 		return;
 
 	switch (g_lpInst->lpCurrent->iItemType)
 	{
-		case PIT_CHECK:
-			g_lpInst->lpCurrent->lpszMisc = UNSELECT;
-			break;
-		case PIT_STATIC:
-			break;
-		case PIT_DATETIME:
-			ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
-			ShowWindow(g_lpInst->hwndCtl2, SW_HIDE);
-			break;
-		default:
-			ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
+	case PIT_CHECK:
+		g_lpInst->lpCurrent->lpszMisc = UNSELECT;
+		break;
+	case PIT_STATIC:
+		break;
+	case PIT_DATETIME:
+		ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
+		ShowWindow(g_lpInst->hwndCtl2, SW_HIDE);
+		break;
+	default:
+		ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
 	}
 }
 
@@ -1791,7 +2023,7 @@ VOID ListBox_OnBeginScroll(HWND /*hwnd*/)
 /// @see ListBox_Proc() WM_SETCURSOR for details.
 ///
 /// @returns VOID.
-VOID ListBox_OnEndScroll(HWND hwnd)
+static VOID ListBox_OnEndScroll(HWND hwnd)
 {
 	if (NULL == g_lpInst->lpCurrent)
 		return;
@@ -1807,77 +2039,77 @@ VOID ListBox_OnEndScroll(HWND hwnd)
 
 	switch (g_lpInst->lpCurrent->iItemType)
 	{
-		case PIT_CATALOG:
-		case PIT_STATIC:
-			break; //Don't display anything
-		case PIT_CHECK:
-			g_lpInst->lpCurrent->lpszMisc = SELECT;
-			RedrawWindow(hwnd, &rect, NULL, RDW_ERASE | RDW_INVALIDATE | RDW_UPDATENOW);
-			break;
-		case PIT_EDIT:
-			if (NULL == g_lpInst->hwndCtl1)
+	case PIT_CATALOG:
+	case PIT_STATIC:
+		break; //Don't display anything
+	case PIT_CHECK:
+		g_lpInst->lpCurrent->lpszMisc = SELECT;
+		RedrawWindow(hwnd, &rect, NULL, RDW_ERASE | RDW_INVALIDATE | RDW_UPDATENOW);
+		break;
+	case PIT_EDIT:
+		if (NULL == g_lpInst->hwndCtl1)
+		{
+			SetFocus(g_lpInst->hwndListBox);
+		}
+		else //Display edit box
+		{
+			MoveWindow(g_lpInst->hwndCtl1, rect.left, rect.top, WIDTH(rect), HEIGHT(rect), TRUE);
+			ShowWindow(g_lpInst->hwndCtl1, SW_SHOW);
+			SetFocus(g_lpInst->hwndCtl1);
+		}
+		break;
+	case PIT_COMBO:
+	case PIT_EDITCOMBO:
+	case PIT_IP:
+	case PIT_DATE:
+	case PIT_TIME:
+		if (NULL == g_lpInst->hwndCtl1)
+			SetFocus(g_lpInst->hwndListBox);
+		else //Display editable combobox
+		{
+			MoveWindow(g_lpInst->hwndCtl1, rect.left, rect.top, WIDTH(rect), HEIGHT(rect), TRUE);
+			ShowWindow(g_lpInst->hwndCtl1, SW_SHOW);
+			SetFocus(g_lpInst->hwndCtl1);
+		}
+		break;
+	case PIT_DATETIME:
+		if (NULL == g_lpInst->hwndCtl1 || NULL == g_lpInst->hwndCtl2)
+			SetFocus(g_lpInst->hwndListBox);
+		else //Display date and time
+		{
+			RECT rect0, rect1;
+			rect0 = rect1 = rect;
+			rect0.right = rect0.left + (rect0.right - rect0.left) / 2;
+			rect1.left = rect1.left + (rect1.right - rect1.left) / 2;
+			MoveWindow(g_lpInst->hwndCtl1, rect0.left, rect0.top, WIDTH(rect0), HEIGHT(rect0), TRUE);
+			MoveWindow(g_lpInst->hwndCtl2, rect1.left, rect1.top, WIDTH(rect1), HEIGHT(rect1), TRUE);
+			ShowWindow(g_lpInst->hwndCtl2, SW_SHOW);
+			ShowWindow(g_lpInst->hwndCtl1, SW_SHOW);
+			SetFocus(g_lpInst->hwndCtl1);
+		}
+		break;
+	default: //Button control
+		if (NULL == g_lpInst->hwndCtl1)
+		{
+			SetFocus(g_lpInst->hwndListBox);
+		}
+		else //Display Button
+		{
+			if (WIDTH(rect) > 19)
 			{
-				SetFocus(g_lpInst->hwndListBox);
+				rect.left = rect.right - 19;
+				rect.right -= 2;
 			}
-			else //Display edit box
-			{
-				MoveWindow(g_lpInst->hwndCtl1, rect.left, rect.top, WIDTH(rect), HEIGHT(rect), TRUE);
-				ShowWindow(g_lpInst->hwndCtl1, SW_SHOW);
-				SetFocus(g_lpInst->hwndCtl1);
-			}
-			break;
-		case PIT_COMBO:
-		case PIT_EDITCOMBO:
-		case PIT_IP:
-		case PIT_DATE:
-		case PIT_TIME:
-			if (NULL == g_lpInst->hwndCtl1)
-				SetFocus(g_lpInst->hwndListBox);
-			else //Display editable combobox
-			{
-				MoveWindow(g_lpInst->hwndCtl1, rect.left, rect.top, WIDTH(rect), HEIGHT(rect), TRUE);
-				ShowWindow(g_lpInst->hwndCtl1, SW_SHOW);
-				SetFocus(g_lpInst->hwndCtl1);
-			}
-			break;
-		case PIT_DATETIME:
-			if (NULL == g_lpInst->hwndCtl1 || NULL == g_lpInst->hwndCtl2)
-				SetFocus(g_lpInst->hwndListBox);
-			else //Display date and time
-			{
-				RECT rect0, rect1;
-				rect0 = rect1 = rect;
-				rect0.right = rect0.left + (rect0.right - rect0.left) / 2;
-				rect1.left = rect1.left + (rect1.right - rect1.left) / 2;
-				MoveWindow(g_lpInst->hwndCtl1, rect0.left, rect0.top, WIDTH(rect0), HEIGHT(rect0), TRUE);
-				MoveWindow(g_lpInst->hwndCtl2, rect1.left, rect1.top, WIDTH(rect1), HEIGHT(rect1), TRUE);
-				ShowWindow(g_lpInst->hwndCtl2, SW_SHOW);
-				ShowWindow(g_lpInst->hwndCtl1, SW_SHOW);
-				SetFocus(g_lpInst->hwndCtl1);
-			}
-			break;
-		default: //Button control
-			if (NULL == g_lpInst->hwndCtl1)
-			{
-				SetFocus(g_lpInst->hwndListBox);
-			}
-			else //Display Button
-			{
-				if (WIDTH(rect) > 19)
-				{
-					rect.left = rect.right - 19;
-					rect.right -= 2;
-				}
 
-				rect.top += 2;
-				rect.bottom -= 2;
+			rect.top += 2;
+			rect.bottom -= 2;
 
-				MoveWindow(g_lpInst->hwndCtl1, rect.left, rect.top, WIDTH(rect), HEIGHT(rect), TRUE);
+			MoveWindow(g_lpInst->hwndCtl1, rect.left, rect.top, WIDTH(rect), HEIGHT(rect), TRUE);
 
-				ShowWindow(g_lpInst->hwndCtl1, SW_SHOW);
-				SetFocus(g_lpInst->hwndCtl1);
-			}
-			break;
+			ShowWindow(g_lpInst->hwndCtl1, SW_SHOW);
+			SetFocus(g_lpInst->hwndCtl1);
+		}
+		break;
 	}
 }
 
@@ -1890,7 +2122,7 @@ VOID ListBox_OnEndScroll(HWND hwnd)
 /// @param keyFlags Set if certain keys down at time of click.
 ///
 /// @returns VOID.
-VOID ListBox_OnLButtonDown(HWND hwnd, BOOL fDoubleClick, INT x, INT y, UINT /*keyFlags*/)
+static VOID ListBox_OnLButtonDown(HWND hwnd, BOOL fDoubleClick, INT x, INT y, UINT /*keyFlags*/)
 {
 	if ((x >= g_lpInst->iHDivider - 5) && (x <= g_lpInst->iHDivider + 5))
 	{
@@ -1920,18 +2152,18 @@ VOID ListBox_OnLButtonDown(HWND hwnd, BOOL fDoubleClick, INT x, INT y, UINT /*ke
 		{
 			switch (g_lpInst->lpCurrent->iItemType)
 			{
-				case PIT_CATALOG:
-				case PIT_STATIC:
-					break; //Ignore
-				case PIT_CHECK:
-					g_lpInst->lpCurrent->lpszMisc = UNSELECT; //Prevent toggle
-					break;
-				case PIT_DATETIME:
-					ShowWindow(g_lpInst->hwndCtl2, SW_HIDE);
+			case PIT_CATALOG:
+			case PIT_STATIC:
+				break; //Ignore
+			case PIT_CHECK:
+				g_lpInst->lpCurrent->lpszMisc = UNSELECT; //Prevent toggle
+				break;
+			case PIT_DATETIME:
+				ShowWindow(g_lpInst->hwndCtl2, SW_HIDE);
 				// Fall through
-				default:
-					ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
-					break;
+			default:
+				ShowWindow(g_lpInst->hwndCtl1, SW_HIDE);
+				break;
 			}
 		}
 
@@ -1989,16 +2221,16 @@ VOID ListBox_OnLButtonUp(HWND hwnd, INT x, INT y, UINT /*keyFlags*/)
 		{
 			switch (g_lpInst->lpCurrent->iItemType)
 			{
-				case PIT_CATALOG:
-				case PIT_STATIC:
-				case PIT_CHECK:
-					break; //Ignore
-				case PIT_DATETIME:
-					ShowWindow(g_lpInst->hwndCtl2, SW_SHOW);
+			case PIT_CATALOG:
+			case PIT_STATIC:
+			case PIT_CHECK:
+				break; //Ignore
+			case PIT_DATETIME:
+				ShowWindow(g_lpInst->hwndCtl2, SW_SHOW);
 				//Fall through
-				default:
-					ShowWindow(g_lpInst->hwndCtl1, SW_SHOW);
-					break;
+			default:
+				ShowWindow(g_lpInst->hwndCtl1, SW_SHOW);
+				break;
 			}
 		}
 	}
@@ -2016,7 +2248,24 @@ VOID ListBox_OnLButtonUp(HWND hwnd, INT x, INT y, UINT /*keyFlags*/)
 	FORWARD_WM_CHAR(g_lpInst->hwndCtl2, VK_RETURN, 0, SNDMSG);
 
 	FORWARD_WM_COMMAND(GetParent(hwnd), GetDlgCtrlID(hwnd), hwnd, LBN_SELCHANGE, SNDMSG);
-	FORWARD_WM_KEYDOWN(hwnd, VK_TAB, 0, 0, SNDMSG); //Focus to editor
+
+	if (NULL != g_lpInst->lpCurrent)
+	{
+		switch(g_lpInst->lpCurrent->iItemType)//DWM 1.3: Added switch
+		{
+		case PIT_CATALOG:
+		case PIT_STATIC:
+			return;
+		case PIT_CHECK:
+			if(0 == _tcsicmp(g_lpInst->lpCurrent->lpszMisc, SELECT))
+			{
+				FORWARD_WM_KEYDOWN(hwnd, VK_SPACE, 0, 0, SNDMSG);
+				break;
+			} // else fallthrough
+		default:
+			FORWARD_WM_KEYDOWN(hwnd, VK_TAB, 0, 0, SNDMSG); //Focus to editor
+		}
+	}
 }
 
 /// @brief Handles WM_MOUSEMOVE message in the listbox.
@@ -2027,7 +2276,7 @@ VOID ListBox_OnLButtonUp(HWND hwnd, INT x, INT y, UINT /*keyFlags*/)
 /// @param keyFlags Set if certain keys down at time of move.
 ///
 /// @returns VOID.
-VOID ListBox_OnMouseMove(HWND hwnd, INT x, INT y, UINT /*keyFlags*/)
+static VOID ListBox_OnMouseMove(HWND hwnd, INT x, INT y, UINT /*keyFlags*/)
 {
 	if (g_lpInst->fTracking)
 	{
@@ -2071,7 +2320,7 @@ VOID ListBox_OnMouseMove(HWND hwnd, INT x, INT y, UINT /*keyFlags*/)
 			{
 				switch (pItem->iItemType)
 				{
-					case PIT_FONT:
+				case PIT_FONT:
 					{
 						LPTSTR szFmt;
 						PROPGRIDFONTITEM pgfi;
@@ -2086,15 +2335,15 @@ VOID ListBox_OnMouseMove(HWND hwnd, INT x, INT y, UINT /*keyFlags*/)
 						szFmt = _T("%s %d");
 #endif
 						//Replace the text in the buf and update the tool
-						_stprintf(buf, szFmt, pgfi.logFont.lfFaceName, PointSize);
+						_stprintf_s(buf, NELEMS(buf), szFmt, pgfi.logFont.lfFaceName, PointSize);
 					}
-						break;
-					case PIT_CHECK: //Skip this item
-						break;
-					default:
-						//Replace the text in the buf and update the tool
-						_tcsncpy(buf, pItem->lpszCurValue, NELEMS(buf) - 1);
-						break;
+					break;
+				case PIT_CHECK: //Skip this item
+					break;
+				default:
+					//Replace the text in the buf and update the tool
+					_tcsncpy(buf, pItem->lpszCurValue, NELEMS(buf) - 1);
+					break;
 				}
 			}
 		}
@@ -2109,7 +2358,7 @@ VOID ListBox_OnMouseMove(HWND hwnd, INT x, INT y, UINT /*keyFlags*/)
 /// @param pItem Pointer to a LISTBOXITEM object.
 ///
 /// @returns VOID.
-VOID ListBox_OnSelectEdit(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
+static VOID ListBox_OnSelectEdit(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
 {
 	rc.top += 1;
 
@@ -2133,7 +2382,7 @@ VOID ListBox_OnSelectEdit(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
 /// @param pItem Pointer to a LISTBOXITEM object.
 ///
 /// @returns VOID.
-VOID ListBox_OnSelectIP(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
+static VOID ListBox_OnSelectIP(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
 {
 	rc.top += 1;
 
@@ -2159,7 +2408,7 @@ VOID ListBox_OnSelectIP(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
 /// @param rc RECT containing desired coordinates for the button control.
 ///
 /// @returns VOID.
-VOID ListBox_OnDisplayButton(HWND hwnd, RECT rc)
+static VOID ListBox_OnDisplayButton(HWND hwnd, RECT rc)
 {
 	if (WIDTH(rc) > 19)
 	{
@@ -2187,7 +2436,7 @@ VOID ListBox_OnDisplayButton(HWND hwnd, RECT rc)
 /// @param pItem Pointer to a LISTBOXITEM object.
 ///
 /// @returns VOID.
-VOID ListBox_OnSelectDateTime(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
+static VOID ListBox_OnSelectDateTime(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
 {
 	rc.top += 1;
 
@@ -2283,7 +2532,7 @@ VOID ListBox_OnSelectDateTime(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
 /// @param pItem Pointer to a LISTBOXITEM object.
 ///
 /// @returns VOID.
-VOID ListBox_OnSelectComboBox(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
+static VOID ListBox_OnSelectComboBox(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
 {
 	HWND hCombo;
 
@@ -2329,7 +2578,7 @@ VOID ListBox_OnSelectComboBox(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
 	}
 }
 
-/// @brief Handles WM_KEYDOWN message sent to the listbox.
+/// @brief Handles WM_KEYDOWN messages sent to the listbox.
 ///
 /// @param hwnd  Handle of the listbox.
 /// @param vk The virtual key code.
@@ -2339,7 +2588,7 @@ VOID ListBox_OnSelectComboBox(HWND hwnd, RECT rc, LPLISTBOXITEM pItem)
 /// @param flags Indicate OEM scan codes etc.
 ///
 /// @returns VOID.
-VOID ListBox_OnKeyDown(HWND hwnd, UINT vk, BOOL /*fDown*/, INT cRepeat, UINT flags)
+static VOID ListBox_OnKeyDown(HWND hwnd, UINT vk, BOOL /*fDown*/, INT cRepeat, UINT flags)
 {
 	BOOL fHandled = FALSE;
 
@@ -2363,6 +2612,7 @@ VOID ListBox_OnKeyDown(HWND hwnd, UINT vk, BOOL /*fDown*/, INT cRepeat, UINT fla
 			{
 				g_lpInst->lpCurrent->lpszCurValue = (0 == _tcsicmp(g_lpInst->lpCurrent->lpszCurValue, CHECKED) ? UNCHECKED : CHECKED);
 				RedrawWindow(hwnd, &rc, NULL, RDW_ERASE | RDW_INVALIDATE | RDW_UPDATENOW);
+				Grid_NotifyParent(); //DWM 1.2: Notify of check change
 			}
 		}
 		else if (PIT_CHECK == g_lpInst->lpCurrent->iItemType && VK_ESCAPE == vk)
@@ -2370,7 +2620,9 @@ VOID ListBox_OnKeyDown(HWND hwnd, UINT vk, BOOL /*fDown*/, INT cRepeat, UINT fla
 			g_lpInst->lpCurrent->lpszMisc = UNSELECT;
 			RedrawWindow(hwnd, &rc, NULL, RDW_ERASE | RDW_INVALIDATE | RDW_UPDATENOW);
 		}
-		else if (PIT_CHECK == g_lpInst->lpCurrent->iItemType && VK_LEFT <= vk && vk <= VK_DOWN && 0 == _tcsicmp(g_lpInst->lpCurrent->lpszMisc, SELECT))
+		else if (PIT_CHECK == g_lpInst->lpCurrent->iItemType &&
+			VK_LEFT <= vk && vk <= VK_DOWN &&
+			0 == _tcsicmp(g_lpInst->lpCurrent->lpszMisc, SELECT))
 		{
 			fHandled = TRUE;
 		}
@@ -2386,38 +2638,46 @@ VOID ListBox_OnKeyDown(HWND hwnd, UINT vk, BOOL /*fDown*/, INT cRepeat, UINT fla
 				{
 					rc.left = g_lpInst->iHDivider + 1;
 				}
-				if (PIT_CHECK == g_lpInst->lpCurrent->iItemType && 0 == _tcsicmp(g_lpInst->lpCurrent->lpszMisc, SELECT))
-				{
-					g_lpInst->lpCurrent->lpszMisc = UNSELECT;
-				}
 				switch (g_lpInst->lpCurrent->iItemType)
 				{
-					case PIT_CATALOG: //Ignore this
-						break;
-					case PIT_EDIT:
-						ListBox_OnSelectEdit(hwnd, rc, g_lpInst->lpCurrent);
-						break;
-					case PIT_STATIC:
-						break;
-					case PIT_COMBO:
-					case PIT_EDITCOMBO:
-						ListBox_OnSelectComboBox(hwnd, rc, g_lpInst->lpCurrent);
-						break;
-					case PIT_IP:
-						ListBox_OnSelectIP(hwnd, rc, g_lpInst->lpCurrent);
-						break;
-					case PIT_CHECK:
-						g_lpInst->lpCurrent->lpszMisc = GetKeyState(VK_SHIFT) & 0x8000 ? UNSELECT : SELECT; //Select or Deselect the checkbox
-						RedrawWindow(hwnd, &rc, NULL, RDW_ERASE | RDW_INVALIDATE | RDW_UPDATENOW);
-						break;
-					case PIT_DATE:
-					case PIT_TIME:
-					case PIT_DATETIME:
-						ListBox_OnSelectDateTime(hwnd, rc, g_lpInst->lpCurrent);
-						break;
-					default:
-						ListBox_OnDisplayButton(hwnd, rc);
-						break;
+				case PIT_CATALOG: //Ignore this
+				case PIT_STATIC:
+					SetFocusToParent(); //DWM 1.3: Added
+					break;
+				case PIT_EDIT:
+					ListBox_OnSelectEdit(hwnd, rc, g_lpInst->lpCurrent);
+					break;
+				case PIT_COMBO:
+				case PIT_EDITCOMBO:
+					ListBox_OnSelectComboBox(hwnd, rc, g_lpInst->lpCurrent);
+					break;
+				case PIT_IP:
+					ListBox_OnSelectIP(hwnd, rc, g_lpInst->lpCurrent);
+					break;
+				case PIT_CHECK:
+					if(GetKeyState(VK_SHIFT) & 0x8000)
+					{
+						FORWARD_WM_KEYDOWN(hwnd, VK_ESCAPE, cRepeat, flags, SNDMSG);
+					}
+					else if(0 == _tcsicmp(g_lpInst->lpCurrent->lpszMisc, SELECT))
+					{
+						g_lpInst->lpCurrent->lpszMisc = UNSELECT;
+						SetFocusToParent();
+					}
+					else
+					{
+						g_lpInst->lpCurrent->lpszMisc = SELECT;
+					}
+					RedrawWindow(hwnd, &rc, NULL, RDW_ERASE | RDW_INVALIDATE | RDW_UPDATENOW);
+					break;
+				case PIT_DATE:
+				case PIT_TIME:
+				case PIT_DATETIME:
+					ListBox_OnSelectDateTime(hwnd, rc, g_lpInst->lpCurrent);
+					break;
+				default:
+					ListBox_OnDisplayButton(hwnd, rc);
+					break;
 				}
 			}
 			else if (VK_PRIOR == vk) //Mimic behavior of VS propGrid
@@ -2433,8 +2693,7 @@ VOID ListBox_OnKeyDown(HWND hwnd, UINT vk, BOOL /*fDown*/, INT cRepeat, UINT fla
 		}
 	}
 	if (!fHandled) //Not fully handled so follow up with default handler
-		CallWindowProc((WNDPROC)GetProp(hwnd, TEXT("Wprc")), hwnd,
-			WM_KEYDOWN, (WPARAM) (UINT)vk, MAKELPARAM(cRepeat, flags));
+		FORWARD_WM_KEYDOWN(hwnd, vk, cRepeat, flags, DefProc);
 }
 
 /// @brief Handles WM_COMMAND messages sent to the listbox.
@@ -2461,7 +2720,7 @@ VOID ListBox_OnCommand(HWND hwnd, INT id, HWND hwndCtl, UINT /*codeNotify*/)
 		// of chooser is associated with the property
 		switch (g_lpInst->lpCurrent->iItemType)
 		{
-			case PIT_COLOR:
+		case PIT_COLOR:
 			{
 				CHOOSECOLOR cc;
 				memset(&cc, 0, sizeof(cc));
@@ -2474,14 +2733,14 @@ VOID ListBox_OnCommand(HWND hwnd, INT id, HWND hwndCtl, UINT /*codeNotify*/)
 				if (ChooseColor(&cc))
 				{
 					TCHAR buf[MAX_PATH];
-					_stprintf(buf, _T("%d,%d,%d"), GetRValue(cc.rgbResult), GetGValue(cc.rgbResult), GetBValue(cc.rgbResult));
+					_stprintf_s(buf, MAX_PATH, _T("%d,%d,%d"), GetRValue(cc.rgbResult), GetGValue(cc.rgbResult), GetBValue(cc.rgbResult));
 
 					AllocatedString_Replace(g_lpInst->lpCurrent->lpszCurValue, buf);
 				}
 			}
-				break;
+			break;
 
-			case PIT_FILE:
+		case PIT_FILE:
 			{
 				TCHAR title[MAX_PATH] = { 0 };
 				TCHAR filename[MAX_PATH] = { 0 };
@@ -2510,12 +2769,12 @@ VOID ListBox_OnCommand(HWND hwnd, INT id, HWND hwndCtl, UINT /*codeNotify*/)
 #endif
 					&title, &path, &filter, &ext);
 
-				if (0 < _tcslen(title))
+				if (0 != _tcscmp(_T("?"), title)) //DWM 1.2: Added test
 					ofn.lpstrTitle = title;
 				else
 					ofn.lpstrTitle = _T("Select file");
 
-				if (0 < _tcslen(path))
+				if (0 != _tcscmp(_T("?"), path)) //DWM 1.2: Added test
 				{
 					//Exclude the filename
 					for (LPTSTR ptr = path + _tcslen(path) - 1; *ptr; ptr--)
@@ -2524,10 +2783,10 @@ VOID ListBox_OnCommand(HWND hwnd, INT id, HWND hwndCtl, UINT /*codeNotify*/)
 							*ptr = _T('\0');
 							break;
 						}
-					ofn.lpstrInitialDir = path;
+						ofn.lpstrInitialDir = path;
 				}
 
-				if (0 < _tcslen(filter))
+				if (0 != _tcscmp(_T("?"), filter)) //DWM 1.2: Added test
 				{
 					//Convert back to double null-terminated string
 					for (LPTSTR ptr = filter; *ptr; ptr++)
@@ -2539,7 +2798,14 @@ VOID ListBox_OnCommand(HWND hwnd, INT id, HWND hwndCtl, UINT /*codeNotify*/)
 				else
 					ofn.lpstrFilter = _T("All Files (*.*)\0*.*\0");
 
-				ofn.lpstrDefExt = ext;
+				if (0 != _tcscmp(_T("?"), ext)) //DWM 1.2: Added test
+				{
+					ofn.lpstrDefExt = ext;
+				}
+				else
+				{
+					ofn.lpstrDefExt = _T("txt");
+				}
 				ofn.lpstrFile = filename;
 				ofn.nMaxFile = MAX_PATH;
 				ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
@@ -2554,10 +2820,21 @@ VOID ListBox_OnCommand(HWND hwnd, INT id, HWND hwndCtl, UINT /*codeNotify*/)
 					AllocatedString_Replace(g_lpInst->lpCurrent->lpszCurValue, pgi.lpszFilePath);
 					AllocatedString_Replace(g_lpInst->lpCurrent->lpszMisc, FileDialogItem_ToString(&pgi));
 				}
-			}
-				break;
+				else //DWM 1.2: Reset to unselected file
+				{
+					PROPGRIDFDITEM pgi;
+					pgi.lpszDlgTitle = (LPTSTR)ofn.lpstrTitle;
+					pgi.lpszFilePath = _T("");
+					pgi.lpszFilter = (LPTSTR)ofn.lpstrFilter;
+					pgi.lpszDefExt = (LPTSTR)ofn.lpstrDefExt;
+					AllocatedString_Replace(g_lpInst->lpCurrent->lpszCurValue, pgi.lpszFilePath);
+					AllocatedString_Replace(g_lpInst->lpCurrent->lpszMisc, FileDialogItem_ToString(&pgi));
+				}
 
-			case PIT_FONT:
+			}
+			break;
+
+		case PIT_FONT:
 			{
 				CHOOSEFONT ocf;
 				memset(&ocf, 0, sizeof(ocf));
@@ -2578,15 +2855,15 @@ VOID ListBox_OnCommand(HWND hwnd, INT id, HWND hwndCtl, UINT /*codeNotify*/)
 					AllocatedString_Replace(g_lpInst->lpCurrent->lpszCurValue, LogFontItem_ToString(&pgfi));
 				}
 			}
-				break;
+			break;
 
-			case PIT_FOLDER:
+		case PIT_FOLDER:
 			{
 				LPTSTR temp = BrowseFolder(hwnd, g_lpInst->lpCurrent->lpszCurValue, _T(""), _T(""));
-				if (0 < _tcslen(temp))
-					AllocatedString_Replace(g_lpInst->lpCurrent->lpszCurValue, temp);
+				//DWM 1.2: Reset to unselected folder //if (0 < _tcslen(temp))
+				AllocatedString_Replace(g_lpInst->lpCurrent->lpszCurValue, temp);
 			}
-				break;
+			break;
 		}
 		ShowWindow(hwndCtl, SW_HIDE);
 		SetFocus(hwnd);
@@ -2609,19 +2886,16 @@ VOID ListBox_OnCommand(HWND hwnd, INT id, HWND hwndCtl, UINT /*codeNotify*/)
 /// @returns VOID.
 static VOID Grid_OnSize(HWND hwnd, UINT /*state*/, INT cx, INT cy)
 {
-	g_lpInst->iVDivider = cy - g_lpInst->iDescHeight - 1;
+	g_lpInst->iVDivider = cy - g_lpInst->iDescHeight;
 
 	if (NULL != g_lpInst->hwndPropDesc)
 	{
 		//Size listbox component
 		SetWindowPos(g_lpInst->hwndListBox, NULL, 0, 0, cx,
-			g_lpInst->iVDivider - 1, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
-		SetWindowPos(g_lpInst->hwndPropDesc, NULL, 0, g_lpInst->iVDivider + 1,
-			cx, g_lpInst->iDescHeight, SWP_NOZORDER | SWP_NOACTIVATE);
+			g_lpInst->iVDivider - 2, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
 
-		//Keep the area between the description and the list refreshed
-		RECT rcRefresh = { 0, cy - g_lpInst->iDescHeight - 2, cx, cy - g_lpInst->iDescHeight };
-		RedrawWindow(g_lpInst->hwndParent, &rcRefresh, NULL, RDW_ERASE | RDW_INVALIDATE);
+		SetWindowPos(g_lpInst->hwndPropDesc, NULL, 0, g_lpInst->iVDivider,
+			cx, g_lpInst->iDescHeight, SWP_NOZORDER | SWP_NOACTIVATE);
 	}
 	else
 	{
@@ -2642,7 +2916,6 @@ static VOID Grid_OnSize(HWND hwnd, UINT /*state*/, INT cx, INT cy)
 		if(PIT_CHECK == g_lpInst->lpCurrent->iItemType)
 			g_lpInst->lpCurrent->lpszMisc = UNSELECT; //Prevent toggle
 	}
-	g_lpInst->fTracking = TRUE; //Indicate sizing operation in progress
 
 	FORWARD_WM_COMMAND(hwnd, GetDlgCtrlID(g_lpInst->hwndListBox),
 		g_lpInst->hwndListBox, LBN_SELCHANGE, SNDMSG);
@@ -2685,7 +2958,7 @@ BOOL Grid_OnSetCursor(HWND /*hwnd*/, HWND /*hwndCursor*/, UINT /*codeHitTest*/, 
 /// @param keyFlags Set if certain keys down at time of click.
 ///
 /// @returns VOID.
-VOID Grid_OnLButtonDown(HWND hwnd, BOOL /*fDoubleClick*/, INT /*x*/, INT y, UINT /*keyFlags*/)
+static VOID Grid_OnLButtonDown(HWND hwnd, BOOL /*fDoubleClick*/, INT /*x*/, INT y, UINT /*keyFlags*/)
 {
 	if ((y >= g_lpInst->iVDivider - 5) && (y <= g_lpInst->iVDivider + 5))
 	{
@@ -2726,7 +2999,7 @@ VOID Grid_OnLButtonDown(HWND hwnd, BOOL /*fDoubleClick*/, INT /*x*/, INT y, UINT
 /// @param keyFlags Set if certain keys down at time of click.
 ///
 /// @returns VOID.
-VOID Grid_OnLButtonUp(HWND hwnd, INT /*x*/, INT y, UINT /*keyFlags*/)
+static VOID Grid_OnLButtonUp(HWND hwnd, INT /*x*/, INT y, UINT /*keyFlags*/)
 {
 	if (g_lpInst->fTracking)
 	{
@@ -2765,7 +3038,7 @@ VOID Grid_OnLButtonUp(HWND hwnd, INT /*x*/, INT y, UINT /*keyFlags*/)
 /// @param keyFlags Set if certain keys down at time of move.
 ///
 /// @returns VOID.
-VOID Grid_OnMouseMove(HWND hwnd, INT /*x*/, INT y, UINT /*keyFlags*/)
+static VOID Grid_OnMouseMove(HWND hwnd, INT /*x*/, INT y, UINT /*keyFlags*/)
 {
 	if ((y >= g_lpInst->iVDivider - 5) && (y <= g_lpInst->iVDivider + 5))
 	{
@@ -2805,9 +3078,34 @@ VOID Grid_OnMouseMove(HWND hwnd, INT /*x*/, INT y, UINT /*keyFlags*/)
 ///
 /// @returns HBRUSH The handle of the brush used to paint the
 ///                  listbox's background.
-HBRUSH Grid_OnCtlColorListbox(HWND /*hwnd*/, HDC hdc, HWND /*hwndChild*/, INT /*type*/)
+static HBRUSH Grid_OnCtlColorListbox(HWND /*hwnd*/, HDC hdc, HWND /*hwndChild*/, INT /*type*/)
 {
 	return SetColor(hdc, GetSysColor(COLOR_MENUTEXT), GetSysColor(COLOR_3DFACE));
+}
+
+/// @brief Handles WM_CTLCOLORSTATIC message sent to the grid.
+///
+/// @param hwnd  Handle of grid.
+/// @param hdc The handle of the device context.
+/// @param hwndChild The handle of the static.
+/// @param type CTLCOLOR_STATIC.
+///
+/// @returns HBRUSH The handle of the brush used to paint the
+///                  static's background.
+static HBRUSH Grid_OnCtlColorStatic(HWND hwnd, HDC hdc, HWND hwndChild, INT /*type*/)
+{
+	//DWM 1.3: Keep the area between the description and the list refreshed
+	if (NULL != g_lpInst->hwndPropDesc)
+	{
+		RECT rc;
+		GetClientRect(hwnd, &rc);
+
+		HDC hdc = GetDC(hwnd);
+		RECT rcFill = { 0, g_lpInst->iVDivider - 2, WIDTH(rc), g_lpInst->iVDivider };
+		FillSolidRect(hdc,&rcFill,GetSysColor(COLOR_BTNFACE));
+		ReleaseDC(hwnd,hdc);
+	} 
+	return FORWARD_WM_CTLCOLORSTATIC(hwnd, hdc, hwndChild, DefWindowProc);
 }
 
 /// @brief Handles WM_MEASUREITEM message sent to the grid when the owner-drawn
@@ -2818,7 +3116,7 @@ HBRUSH Grid_OnCtlColorListbox(HWND /*hwnd*/, HDC hdc, HWND /*hwndChild*/, INT /*
 ///                       owner-drawn listbox.
 ///
 /// @returns VOID.
-VOID Grid_OnMeasureItem(HWND /*hwnd*/, LPMEASUREITEMSTRUCT lpMeasureItem)
+static VOID Grid_OnMeasureItem(HWND /*hwnd*/, LPMEASUREITEMSTRUCT lpMeasureItem)
 {
 	lpMeasureItem->itemHeight = MINIMUM_ITEM_HEIGHT; //pixels
 }
@@ -2828,7 +3126,7 @@ VOID Grid_OnMeasureItem(HWND /*hwnd*/, LPMEASUREITEMSTRUCT lpMeasureItem)
 /// @param szCatalog The catalog name.
 ///
 /// @returns VOID.
-VOID Grid_ExpandCatalog(LPCTSTR szCatalog)
+static VOID Grid_ExpandCatalog(LPCTSTR szCatalog)
 {
 	if (NULL != szCatalog)
 	{
@@ -2854,7 +3152,7 @@ VOID Grid_ExpandCatalog(LPCTSTR szCatalog)
 /// @param szCatalog The catalog name.
 ///
 /// @returns VOID.
-VOID Grid_CollapseCatalog(LPCTSTR szCatalog)
+static VOID Grid_CollapseCatalog(LPCTSTR szCatalog)
 {
 	if (NULL != szCatalog)
 	{
@@ -2882,13 +3180,13 @@ VOID Grid_CollapseCatalog(LPCTSTR szCatalog)
 /// @param codeNotify The notification code sent.
 ///
 /// @returns VOID.
-VOID Grid_OnCommand(HWND /*hwnd*/, INT /*id*/, HWND hwndCtl, UINT codeNotify)
+static VOID Grid_OnCommand(HWND /*hwnd*/, INT /*id*/, HWND hwndCtl, UINT codeNotify)
 {
 	if (g_lpInst->hwndListBox == hwndCtl)
 	{
 		switch (codeNotify)
 		{
-			case LBN_SELCHANGE:
+		case LBN_SELCHANGE:
 			{
 				SetFocus(hwndCtl);
 				INT iCurSel = ListBox_GetCurSel(hwndCtl);
@@ -2900,15 +3198,8 @@ VOID Grid_OnCommand(HWND /*hwnd*/, INT /*id*/, HWND hwndCtl, UINT codeNotify)
 				{
 					if (PIT_CHECK == pItem->iItemType)
 					{
-						if (iCurSel == g_lpInst->iPrevSel &&
+						if (iCurSel != g_lpInst->iPrevSel &&
 							0 == _tcsicmp(pItem->lpszMisc, SELECT))
-						{
-							pItem->lpszCurValue =
-								(0 == _tcsicmp(pItem->lpszCurValue, CHECKED) ?
-								UNCHECKED : CHECKED);
-							Grid_NotifyParent();
-						}
-						else
 							pItem->lpszMisc = UNSELECT;
 					}
 				}
@@ -2920,7 +3211,7 @@ VOID Grid_OnCommand(HWND /*hwnd*/, INT /*id*/, HWND hwndCtl, UINT codeNotify)
 				//Display the property description if desired
 				if (NULL != g_lpInst->hwndPropDesc)
 					Static_SetText(g_lpInst->hwndPropDesc,
-						g_lpInst->lpCurrent->lpszPropDesc);
+					g_lpInst->lpCurrent->lpszPropDesc);
 
 				//Destroy previous editor
 				if (NULL != g_lpInst->hwndCtl1)
@@ -2942,7 +3233,7 @@ VOID Grid_OnCommand(HWND /*hwnd*/, INT /*id*/, HWND hwndCtl, UINT codeNotify)
 
 					ListBox_GetItemRect(hwndCtl, g_lpInst->iPrevSel, &rc);
 					RedrawWindow(hwndCtl, &rc,
-					 NULL, RDW_ERASE | RDW_INVALIDATE | RDW_UPDATENOW);
+						NULL, RDW_ERASE | RDW_INVALIDATE | RDW_UPDATENOW);
 
 					ListBox_GetItemRect(hwndCtl, iCurSel, &rc);
 					RedrawWindow(hwndCtl, &rc,
@@ -2963,7 +3254,7 @@ VOID Grid_OnCommand(HWND /*hwnd*/, INT /*id*/, HWND hwndCtl, UINT codeNotify)
 ///               to be drawn and the type of drawing required.
 ///
 /// @returns VOID.
-VOID Grid_OnDrawItem(HWND /*hwnd*/, const DRAWITEMSTRUCT *lpDIS)
+static VOID Grid_OnDrawItem(HWND /*hwnd*/, const DRAWITEMSTRUCT *lpDIS)
 {
 	UINT nIndex = lpDIS->itemID;
 
@@ -3042,7 +3333,7 @@ VOID Grid_OnDrawItem(HWND /*hwnd*/, const DRAWITEMSTRUCT *lpDIS)
 	{
 		FillRect(lpDIS->hDC, &rectCatPart1, (HBRUSH)GetStockObject(HOLLOW_BRUSH));
 
-		if (nIndex == (UINT)ListBox_GetCurSel(lpDIS->hwndItem))
+		if (nIndex == (UINT)ListBox_GetCurSel(lpDIS->hwndItem) && g_lpInst->fGotFocus)
 		{
 			InflateRect(&rectCatPart1, -2, -2);
 			FrameRect(lpDIS->hDC, &rectCatPart1, GetSysColorBrush(COLOR_BTNSHADOW));
@@ -3062,13 +3353,13 @@ VOID Grid_OnDrawItem(HWND /*hwnd*/, const DRAWITEMSTRUCT *lpDIS)
 
 		FillRect(lpDIS->hDC, &rectPart1,
 			GetSysColorBrush(nIndex == (UINT)ListBox_GetCurSel(lpDIS->hwndItem) ?
-			COLOR_HIGHLIGHT : COLOR_WINDOW));
+			(g_lpInst->fGotFocus ? COLOR_HIGHLIGHT : COLOR_BTNFACE) : COLOR_WINDOW));
 
 		//Write the property name
 		oldFont = (HFONT)SelectObject(lpDIS->hDC, Font_SetBold(lpDIS->hwndItem, FALSE));
 		SetTextColor(lpDIS->hDC,
 			GetSysColor(nIndex == (UINT)ListBox_GetCurSel(lpDIS->hwndItem) ?
-			COLOR_HIGHLIGHTTEXT : COLOR_WINDOWTEXT));
+			(g_lpInst->fGotFocus ? COLOR_HIGHLIGHTTEXT : COLOR_BTNTEXT) : COLOR_WINDOWTEXT));
 		RECT rcText = { rectPart1.left + 3, rectPart1.top + 3, rectPart1.right - 3, rectPart1.bottom + 3 };
 		DrawText(lpDIS->hDC, pItem->lpszPropName, _tcslen(pItem->lpszPropName),
 			&rcText, DT_NOCLIP | DT_LEFT | DT_SINGLELINE);
@@ -3170,6 +3461,24 @@ VOID Grid_OnDrawItem(HWND /*hwnd*/, const DRAWITEMSTRUCT *lpDIS)
 	DrawBorder(lpDIS->hDC, &rectPart3, BF_TOP, GetSysColor(COLOR_BTNFACE));
 }
 
+/// @brief Handles WM_SHOWWINDOW message.
+///
+/// @param hwnd Handle of grid.
+/// @param fShow Show/hide flag TRUE for show FALSE for hide.
+/// @param status Status flag.
+///
+/// @returns VOID.
+static VOID Grid_OnShowWindow(HWND hwnd, BOOL fShow, UINT status)
+{
+	//DWM 1.3: Added this handler
+	if(!fShow) //Hiding so make sure we update the fields
+	{
+		FORWARD_WM_CHAR(g_lpInst->hwndCtl1, VK_RETURN, 0, SNDMSG);
+		FORWARD_WM_CHAR(g_lpInst->hwndCtl2, VK_RETURN, 0, SNDMSG);
+	}
+	FORWARD_WM_SHOWWINDOW(hwnd, fShow, status, DefWindowProc);
+}
+
 #pragma endregion grid message handlers
 
 #pragma region public interface handlers
@@ -3179,7 +3488,7 @@ VOID Grid_OnDrawItem(HWND /*hwnd*/, const DRAWITEMSTRUCT *lpDIS)
 /// @param pgi A pointer to a PROPGRIDITEM object.
 ///
 /// @returns INT The index of the item added to the grid.
-INT Grid_OnAddString(LPPROPGRIDITEM pgi)
+static INT Grid_OnAddString(LPPROPGRIDITEM pgi)
 {
 	LPLISTBOXITEM lpi;
 	TCHAR buf[MAX_PATH];
@@ -3199,62 +3508,63 @@ INT Grid_OnAddString(LPPROPGRIDITEM pgi)
 	}
 	switch (pgi->iItemType)
 	{
-		case PIT_CATALOG: //We explicitly added a catalog item to the listbox
-			return -2;    // catalogs are not added to the list map so skip the rest
-		case PIT_EDIT:
-		case PIT_STATIC:
-		case PIT_COMBO:
-		case PIT_EDITCOMBO:
-		case PIT_FOLDER:
-			lpszCurValue = (LPTSTR)pgi->lpCurValue;
-			break;
-		case PIT_COLOR:
-			_stprintf(buf, _T("%d,%d,%d"),
-				GetRValue((COLORREF)pgi->lpCurValue),
-				GetGValue((COLORREF)pgi->lpCurValue),
-				GetBValue((COLORREF)pgi->lpCurValue));
-			lpszCurValue = buf;
-			break;
-		case PIT_FONT:
-			lpszCurValue = LogFontItem_ToString((LPPROPGRIDFONTITEM)pgi->lpCurValue);
-			break;
-		case PIT_CHECK:
-			lpszCurValue = (BOOL)pgi->lpCurValue ? CHECKED : UNCHECKED;
-			break;
-		case PIT_FILE:
-			pgi->lpszzCmbItems = FileDialogItem_ToString((LPPROPGRIDFDITEM)pgi->lpCurValue);
-			lpszCurValue = ((LPPROPGRIDFDITEM)pgi->lpCurValue)->lpszFilePath;
-			break;
-		case PIT_IP:
-			_stprintf(buf, _T("%d.%d.%d.%d"),
-				FIRST_IPADDRESS((DWORD)pgi->lpCurValue),
-				SECOND_IPADDRESS((DWORD)pgi->lpCurValue),
-				THIRD_IPADDRESS((DWORD)pgi->lpCurValue),
-				FOURTH_IPADDRESS((DWORD)pgi->lpCurValue));
-			lpszCurValue = buf;
-			break;
-		case PIT_DATE:
-			GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE,
-				(LPSYSTEMTIME)pgi->lpCurValue, NULL, buf, MAX_PATH);
-			lpszCurValue = buf;
-			break;
-		case PIT_TIME:
-			GetTimeFormat(LOCALE_USER_DEFAULT, 0, (LPSYSTEMTIME)pgi->lpCurValue,
-				_T("hh':'mm':'ss tt"), buf, MAX_PATH);
-			lpszCurValue = buf;
-			break;
-		case PIT_DATETIME:
-			GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE,
-				(LPSYSTEMTIME)pgi->lpCurValue, NULL, buf, MAX_PATH);
-			_tcscat(buf, _T(" "));
-			GetTimeFormat(LOCALE_USER_DEFAULT, 0, (LPSYSTEMTIME)pgi->lpCurValue,
-				_T("hh':'mm':'ss tt"), (LPTSTR) (buf + _tcslen(buf)),
-				MAX_PATH - _tcslen(buf));
-			lpszCurValue = buf;
-			break;
+	case PIT_CATALOG: //We explicitly added a catalog item to the listbox
+		return -2;    // catalogs are not added to the list map so skip the rest
+	case PIT_EDIT:
+	case PIT_STATIC:
+	case PIT_COMBO:
+	case PIT_EDITCOMBO:
+	case PIT_FOLDER:
+		lpszCurValue = (LPTSTR)pgi->lpCurValue;
+		break;
+	case PIT_COLOR:
+		_stprintf_s(buf, MAX_PATH, _T("%d,%d,%d"),
+			GetRValue((COLORREF)pgi->lpCurValue),
+			GetGValue((COLORREF)pgi->lpCurValue),
+			GetBValue((COLORREF)pgi->lpCurValue));
+		lpszCurValue = buf;
+		break;
+	case PIT_FONT:
+		lpszCurValue = LogFontItem_ToString((LPPROPGRIDFONTITEM)pgi->lpCurValue);
+		break;
+	case PIT_CHECK:
+		lpszCurValue = (BOOL)pgi->lpCurValue ? CHECKED : UNCHECKED;
+		break;
+	case PIT_FILE:
+		pgi->lpszzCmbItems = FileDialogItem_ToString((LPPROPGRIDFDITEM)pgi->lpCurValue);
+		lpszCurValue = ((LPPROPGRIDFDITEM)pgi->lpCurValue)->lpszFilePath;
+		break;
+	case PIT_IP:
+		_stprintf_s(buf, MAX_PATH,
+			_T("%d.%d.%d.%d"),
+			FIRST_IPADDRESS((DWORD)pgi->lpCurValue),
+			SECOND_IPADDRESS((DWORD)pgi->lpCurValue),
+			THIRD_IPADDRESS((DWORD)pgi->lpCurValue),
+			FOURTH_IPADDRESS((DWORD)pgi->lpCurValue));
+		lpszCurValue = buf;
+		break;
+	case PIT_DATE:
+		GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE,
+			(LPSYSTEMTIME)pgi->lpCurValue, NULL, buf, MAX_PATH);
+		lpszCurValue = buf;
+		break;
+	case PIT_TIME:
+		GetTimeFormat(LOCALE_USER_DEFAULT, 0, (LPSYSTEMTIME)pgi->lpCurValue,
+			_T("hh':'mm':'ss tt"), buf, MAX_PATH);
+		lpszCurValue = buf;
+		break;
+	case PIT_DATETIME:
+		GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE,
+			(LPSYSTEMTIME)pgi->lpCurValue, NULL, buf, MAX_PATH);
+		_tcscat(buf, _T(" "));
+		GetTimeFormat(LOCALE_USER_DEFAULT, 0, (LPSYSTEMTIME)pgi->lpCurValue,
+			_T("hh':'mm':'ss tt"), (LPTSTR) (buf + _tcslen(buf)),
+			MAX_PATH - _tcslen(buf));
+		lpszCurValue = buf;
+		break;
 	}
 	lpi = NewItem(pgi->lpszCatalog, pgi->lpszPropName,
-			lpszCurValue, pgi->lpszzCmbItems, pgi->lpszPropDesc, pgi->iItemType);
+		lpszCurValue, pgi->lpszzCmbItems, pgi->lpszPropDesc, pgi->iItemType);
 
 	return ListBox_AddItemData(g_lpInst->hwndListMap, lpi);
 }
@@ -3266,7 +3576,7 @@ INT Grid_OnAddString(LPPROPGRIDITEM pgi)
 /// @returns INT A count of the items remaining in the grid. The return value is
 ///               LB_ERR if the index parameter specifies an index greater than
 ///               the number of items in the grid.
-INT Grid_OnDeleteString(INT nIndex)
+static INT Grid_OnDeleteString(INT nIndex)
 {
 	LPLISTBOXITEM pItem = ListBox_GetItemDataSafe(g_lpInst->hwndListMap, nIndex);
 	if (NULL == pItem)
@@ -3283,7 +3593,7 @@ INT Grid_OnDeleteString(INT nIndex)
 ///
 /// @returns INT The zero-based index of the selected item. If there is no
 ///               selection, the return value is LB_ERR.
-INT Grid_OnGetCurSel(VOID)
+static INT Grid_OnGetCurSel(VOID)
 {
 	INT iItem = ListBox_GetCurSel(g_lpInst->hwndListBox);
 	if (LB_ERR != iItem)
@@ -3308,6 +3618,7 @@ static LRESULT Grid_OnGetItemData(INT iItem)
 {
 	static PROPGRIDITEM pgi;
 	static PROPGRIDFONTITEM pgfi;
+	static PROPGRIDFDITEM pgfdi;
 	static SYSTEMTIME st;
 	static TCHAR outbuf[MAX_PATH];
 
@@ -3324,80 +3635,73 @@ static LRESULT Grid_OnGetItemData(INT iItem)
 
 			switch (pgi.iItemType)
 			{
-				case PIT_EDIT:
-				case PIT_COMBO:
-				case PIT_EDITCOMBO:
-				case PIT_STATIC:
-				case PIT_FOLDER:
-					pgi.lpCurValue = (LPARAM)pItem->lpszCurValue;
-					break;
-				case PIT_COLOR:
-					pgi.lpCurValue = (LPARAM)GetColor(pItem->lpszCurValue);
-					break;
-				case PIT_FONT:
-					LogFontItem_FromString(&pgfi, pItem->lpszCurValue);
-					pgi.lpCurValue = (LPARAM) & pgfi;
-					break;
-				case PIT_CHECK:
-					pgi.lpCurValue = (LPARAM) (0 == _tcsicmp(CHECKED,
-						pItem->lpszCurValue) ? TRUE : FALSE);
-					break;
-				case PIT_FILE:
-					_tmemset(outbuf, (TCHAR)0, MAX_PATH);
-					_stscanf(pItem->lpszMisc,
-#ifdef _UNICODE
-						_T("%*[^\r\n] Path: %256l[^\r\n] "), //DWM 1.1: Fixed format string
-#else
-						_T("%*[^\r\n] Path: %256[^\r\n] "),  //DWM 1.1: Fixed format string
-#endif
-						&outbuf);
-					pgi.lpCurValue = (LPARAM)outbuf;
-					break;
-				case PIT_IP:
+			case PIT_EDIT:
+			case PIT_COMBO:
+			case PIT_EDITCOMBO:
+			case PIT_STATIC:
+			case PIT_FOLDER:
+				pgi.lpCurValue = (LPARAM)pItem->lpszCurValue;
+				break;
+			case PIT_COLOR:
+				pgi.lpCurValue = (LPARAM)GetColor(pItem->lpszCurValue);
+				break;
+			case PIT_FONT:
+				LogFontItem_FromString(&pgfi, pItem->lpszCurValue);
+				pgi.lpCurValue = (LPARAM) & pgfi;
+				break;
+			case PIT_CHECK:
+				pgi.lpCurValue = (LPARAM) (0 == _tcsicmp(CHECKED,
+					pItem->lpszCurValue));
+				break;
+			case PIT_FILE:
+				FileDialogItem_FromString(&pgfdi, pgi.lpszzCmbItems);
+				pgi.lpCurValue = (LPARAM) & pgfdi;
+				break;
+			case PIT_IP:
 				{
 					BYTE ip[4] = { 0, 0, 0, 0 };
 					_stscanf(pItem->lpszCurValue, _T("%hhd.%hhd.%hhd.%hhd"),
 						&ip[3], &ip[2], &ip[1], &ip[0]);
 					pgi.lpCurValue = (LPARAM) * (LPDWORD)ip;
 				}
-					break;
-				case PIT_DATE:
-					memset(&st, 0, sizeof(SYSTEMTIME));
-					_stscanf(pItem->lpszCurValue, _T("%hd/%hd/%hd"),
-						&st.wMonth, &st.wDay, &st.wYear);
-					pgi.lpCurValue = (LPARAM) & st;
-					break;
-				case PIT_TIME:
-					memset(&st, 0, sizeof(SYSTEMTIME));
-					_tmemset(outbuf, (TCHAR)0, MAX_PATH);
-					_stscanf(pItem->lpszCurValue,
+				break;
+			case PIT_DATE:
+				memset(&st, 0, sizeof(SYSTEMTIME));
+				_stscanf(pItem->lpszCurValue, _T("%hd/%hd/%hd"),
+					&st.wMonth, &st.wDay, &st.wYear);
+				pgi.lpCurValue = (LPARAM) & st;
+				break;
+			case PIT_TIME:
+				memset(&st, 0, sizeof(SYSTEMTIME));
+				_tmemset(outbuf, (TCHAR)0, MAX_PATH);
+				_stscanf(pItem->lpszCurValue,
 #ifdef _UNICODE
-						_T("%hd:%hd:%hd %2ls"),
+					_T("%hd:%hd:%hd %2ls"),
 #else
-						_T("%hd:%hd:%hd %2s"),
+					_T("%hd:%hd:%hd %2s"),
 #endif
-						&st.wHour, &st.wMinute, &st.wSecond, &outbuf);
-					if (0 == _tcsicmp(_T("PM"), outbuf))
-						st.wHour += 12;
+					&st.wHour, &st.wMinute, &st.wSecond, &outbuf);
+				if (0 == _tcsicmp(_T("PM"), outbuf))
+					st.wHour += 12;
 
-					pgi.lpCurValue = (LPARAM) & st;
-					break;
-				case PIT_DATETIME:
-					memset(&st, 0, sizeof(SYSTEMTIME));
-					_tmemset(outbuf, (TCHAR)0, MAX_PATH);
-					_stscanf(pItem->lpszCurValue,
+				pgi.lpCurValue = (LPARAM) & st;
+				break;
+			case PIT_DATETIME:
+				memset(&st, 0, sizeof(SYSTEMTIME));
+				_tmemset(outbuf, (TCHAR)0, MAX_PATH);
+				_stscanf(pItem->lpszCurValue,
 #ifdef _UNICODE
-						_T("%hd/%hd/%hd %hd:%hd:%hd %2ls"),
+					_T("%hd/%hd/%hd %hd:%hd:%hd %2ls"),
 #else
-						_T("%hd/%hd/%hd %hd:%hd:%hd %2s"),
+					_T("%hd/%hd/%hd %hd:%hd:%hd %2s"),
 #endif
-						&st.wMonth, &st.wDay, &st.wYear,
-						&st.wHour, &st.wMinute, &st.wSecond, &outbuf);
-					if (0 == _tcsicmp(_T("PM"), outbuf))
-						st.wHour += 12;
+					&st.wMonth, &st.wDay, &st.wYear,
+					&st.wHour, &st.wMinute, &st.wSecond, &outbuf);
+				if (0 == _tcsicmp(_T("PM"), outbuf))
+					st.wHour += 12;
 
-					pgi.lpCurValue = (LPARAM) & st;
-					break;
+				pgi.lpCurValue = (LPARAM) & st;
+				break;
 			}
 		}
 		return (LRESULT) & pgi;
@@ -3412,7 +3716,7 @@ static LRESULT Grid_OnGetItemData(INT iItem)
 ///
 /// @returns BOOL TRUE if the item is selected, FALSE if not, or LB_ERR
 ///           if an error occurs.
-BOOL Grid_OnGetSel(INT iItem)
+static BOOL Grid_OnGetSel(INT iItem)
 {
 	LPLISTBOXITEM pItem = ListBox_GetItemDataSafe(g_lpInst->hwndListMap, iItem);
 	if (NULL != pItem)
@@ -3432,7 +3736,7 @@ BOOL Grid_OnGetSel(INT iItem)
 /// @brief Handles LB_RESETCONTENT message sent to the grid.
 ///
 /// @returns VOID.
-VOID Grid_OnResetContent(VOID)
+static VOID Grid_OnResetContent(VOID)
 {
 	ListBox_ResetContent(g_lpInst->hwndListMap);
 
@@ -3447,6 +3751,7 @@ VOID Grid_OnResetContent(VOID)
 		g_lpInst->hwndCtl2 = NULL;
 	}
 	ListBox_ResetContent(g_lpInst->hwndListBox);
+	Static_SetText(g_lpInst->hwndPropDesc,_T("")); //DWM 1.2: Clear the property pane
 }
 
 /// @brief Handles LB_SETCURSEL message sent to the grid.
@@ -3456,7 +3761,7 @@ VOID Grid_OnResetContent(VOID)
 /// @returns LRESULT If an error occurs, the return value is LB_ERR.
 ///                   If the index parameter is –1, the return value is LB_ERR
 ///                   even though no error occurred.
-LRESULT Grid_OnSetCurSel(INT iItem)
+static LRESULT Grid_OnSetCurSel(INT iItem)
 {
 	LPLISTBOXITEM pItem = ListBox_GetItemDataSafe(g_lpInst->hwndListMap, iItem);
 	if (NULL != pItem)
@@ -3470,6 +3775,10 @@ LRESULT Grid_OnSetCurSel(INT iItem)
 				FORWARD_WM_COMMAND(GetParent(g_lpInst->hwndListBox),
 					GetDlgCtrlID(g_lpInst->hwndListBox), g_lpInst->hwndListBox,
 					LBN_SELCHANGE, SNDMSG);
+
+				if(PIT_CHECK == pItem->iItemType)
+					pItem->lpszMisc = SELECT; //DWM 1.2: Ensure Checkbox selected
+
 				Refresh(g_lpInst->hwndListBox);
 				return ret;
 			}
@@ -3487,7 +3796,7 @@ LRESULT Grid_OnSetCurSel(INT iItem)
 ///                   the list. If an error occurs, the return value is LB_ERR.
 ///                   If there is insufficient space to store the data,
 ///                   the return value is LB_ERRSPACE.
-LRESULT Grid_OnSetItemData(INT iItem, LPPROPGRIDITEM pgi)
+static LRESULT Grid_OnSetItemData(INT iItem, LPPROPGRIDITEM pgi)
 {
 	if (PIT_CATALOG == pgi->iItemType)
 		return LB_ERR;  //Can't change an item to a catalog
@@ -3505,58 +3814,58 @@ LRESULT Grid_OnSetItemData(INT iItem, LPPROPGRIDITEM pgi)
 	{
 		switch (pgi->iItemType)
 		{
-			case PIT_EDIT:
-			case PIT_STATIC:
-			case PIT_COMBO:
-			case PIT_EDITCOMBO:
-			case PIT_FOLDER:
-				lpszCurValue = (LPTSTR)pgi->lpCurValue;
-				break;
-			case PIT_COLOR:
-				_stprintf(buf, _T("%d,%d,%d"),
-					GetRValue((COLORREF)pgi->lpCurValue),
-					GetGValue((COLORREF)pgi->lpCurValue),
-					GetBValue((COLORREF)pgi->lpCurValue));
-				lpszCurValue = buf;
-				break;
-			case PIT_FONT:
-				lpszCurValue = LogFontItem_ToString((LPPROPGRIDFONTITEM)pgi->lpCurValue);
-				break;
-			case PIT_CHECK:
-				lpszCurValue = (BOOL)pgi->lpCurValue ? CHECKED : UNCHECKED;
-				break;
-			case PIT_FILE:
-				pgi->lpszzCmbItems = FileDialogItem_ToString((LPPROPGRIDFDITEM)pgi->lpCurValue);
-				lpszCurValue = ((LPPROPGRIDFDITEM)pgi->lpCurValue)->lpszFilePath;
-				break;
-			case PIT_IP:
-				_stprintf(buf, _T("%d.%d.%d.%d"),
-					FIRST_IPADDRESS((DWORD)pgi->lpCurValue),
-					SECOND_IPADDRESS((DWORD)pgi->lpCurValue),
-					THIRD_IPADDRESS((DWORD)pgi->lpCurValue),
-					FOURTH_IPADDRESS((DWORD)pgi->lpCurValue));
-				lpszCurValue = buf;
-				break;
-			case PIT_DATE:
-				GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE,
-					(LPSYSTEMTIME)pgi->lpCurValue, NULL, buf, MAX_PATH);
-				lpszCurValue = buf;
-				break;
-			case PIT_TIME:
-				GetTimeFormat(LOCALE_USER_DEFAULT, 0,
-					(LPSYSTEMTIME)pgi->lpCurValue, _T("hh':'mm':'ss tt"),
-					buf, MAX_PATH);
-				lpszCurValue = buf;
-				break;
-			case PIT_DATETIME:
-				GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE,
-					(LPSYSTEMTIME)pgi->lpCurValue, NULL, buf, MAX_PATH);
-				_tcscat(buf, _T(" "));
-				GetTimeFormat(LOCALE_USER_DEFAULT, 0, (LPSYSTEMTIME)pgi->lpCurValue,
-					_T("hh':'mm':'ss tt"), (LPTSTR) (buf + _tcslen(buf)),
-					MAX_PATH - _tcslen(buf));
-				lpszCurValue = buf;
-				break;
+		case PIT_EDIT:
+		case PIT_STATIC:
+		case PIT_COMBO:
+		case PIT_EDITCOMBO:
+		case PIT_FOLDER:
+			lpszCurValue = (LPTSTR)pgi->lpCurValue;
+			break;
+		case PIT_COLOR:
+			_stprintf_s(buf, MAX_PATH, _T("%d,%d,%d"),
+				GetRValue((COLORREF)pgi->lpCurValue),
+				GetGValue((COLORREF)pgi->lpCurValue),
+				GetBValue((COLORREF)pgi->lpCurValue));
+			lpszCurValue = buf;
+			break;
+		case PIT_FONT:
+			lpszCurValue = LogFontItem_ToString((LPPROPGRIDFONTITEM)pgi->lpCurValue);
+			break;
+		case PIT_CHECK:
+			lpszCurValue = (BOOL)pgi->lpCurValue ? CHECKED : UNCHECKED;
+			break;
+		case PIT_FILE:
+			pgi->lpszzCmbItems = FileDialogItem_ToString((LPPROPGRIDFDITEM)pgi->lpCurValue);
+			lpszCurValue = ((LPPROPGRIDFDITEM)pgi->lpCurValue)->lpszFilePath;
+			break;
+		case PIT_IP:
+			_stprintf_s(buf, MAX_PATH, _T("%d.%d.%d.%d"),
+				FIRST_IPADDRESS((DWORD)pgi->lpCurValue),
+				SECOND_IPADDRESS((DWORD)pgi->lpCurValue),
+				THIRD_IPADDRESS((DWORD)pgi->lpCurValue),
+				FOURTH_IPADDRESS((DWORD)pgi->lpCurValue));
+			lpszCurValue = buf;
+			break;
+		case PIT_DATE:
+			GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE,
+				(LPSYSTEMTIME)pgi->lpCurValue, NULL, buf, MAX_PATH);
+			lpszCurValue = buf;
+			break;
+		case PIT_TIME:
+			GetTimeFormat(LOCALE_USER_DEFAULT, 0,
+				(LPSYSTEMTIME)pgi->lpCurValue, _T("hh':'mm':'ss tt"),
+				buf, MAX_PATH);
+			lpszCurValue = buf;
+			break;
+		case PIT_DATETIME:
+			GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE,
+				(LPSYSTEMTIME)pgi->lpCurValue, NULL, buf, MAX_PATH);
+			_tcscat(buf, _T(" "));
+			GetTimeFormat(LOCALE_USER_DEFAULT, 0, (LPSYSTEMTIME)pgi->lpCurValue,
+				_T("hh':'mm':'ss tt"), (LPTSTR) (buf + _tcslen(buf)),
+				MAX_PATH - _tcslen(buf));
+			lpszCurValue = buf;
+			break;
 		}
 		//Do not allow the catalog to change; to do so would necessitate moving
 		// the item to a different index throwing off the indexing for items.
@@ -3569,7 +3878,12 @@ LRESULT Grid_OnSetItemData(INT iItem, LPPROPGRIDITEM pgi)
 		{
 			lrtn = ListBox_FindItemData(g_lpInst->hwndListBox,0,lpiCurrent);
 			if(LB_ERR != lrtn)
+			{
 				lrtn = ListBox_SetItemData(g_lpInst->hwndListBox, lrtn, lpiNew);
+
+				//DWM 1.3: Refresh Display of item
+				Refresh(g_lpInst->hwndListBox);
+			}
 		}
 		if(LB_ERR == lrtn)
 			return LB_ERR;
@@ -3595,13 +3909,14 @@ LRESULT Grid_OnSetItemData(INT iItem, LPPROPGRIDITEM pgi)
 ///
 /// @returns BOOL If an application processes this message,
 ///                it should return TRUE to continue creation of the window.
-BOOL Grid_OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct)
+static BOOL Grid_OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct)
 {
 	INSTANCEDATA inst;
 	memset(&inst, 0, sizeof(INSTANCEDATA));
 
 	inst.hInstance = lpCreateStruct->hInstance;
 	inst.hwndParent = lpCreateStruct->hwndParent;
+	inst.fGotFocus = FALSE;
 	inst.fScrolling = FALSE;
 	inst.fTracking = FALSE;
 	inst.iDescHeight = HEIGHT_DESC;
@@ -3616,10 +3931,6 @@ BOOL Grid_OnCreate(HWND hwnd, LPCREATESTRUCT lpCreateStruct)
 	inst.hwndListMap = CreateListMap(lpCreateStruct->hInstance, hwnd, ID_LISTMAP);
 	if (NULL == inst.hwndListMap)
 		return FALSE;
-
-	//These symbols must point to allocated strings
-	CHECKED = SELECT = NewString(_T("T")); //PIT_CHECK select
-	UNCHECKED = UNSELECT = NewString(_T("")); //PIT_CHECK unselect
 
 	return Control_CreateInstanceData(hwnd, &inst);
 }
@@ -3646,12 +3957,10 @@ static VOID Grid_OnDestroy(HWND hwnd)
 		if (NULL != g_lpInst->hwndCtl2)
 			DestroyWindow(g_lpInst->hwndCtl2);
 
-		free(CHECKED);
-		free(UNCHECKED);
-
 		Control_FreeInstanceData(hwnd);
+
+		//DWM 1.3: Removed PostQuitMessage() call.
 	}
-	PostQuitMessage(0);
 }
 
 /// @brief Initialize and register the property grid class.
@@ -3664,20 +3973,17 @@ ATOM InitPropertyGrid(HINSTANCE hInstance)
 {
 	WNDCLASSEX wcex;
 
-	//Register this class
-	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.style = CS_BYTEALIGNCLIENT;
-	wcex.lpfnWndProc = (WNDPROC)Grid_Proc;
-	wcex.cbClsExtra = 0;
-	wcex.cbWndExtra = 0;
-	wcex.hInstance = hInstance;
-	wcex.hCursor = NULL;
-	wcex.hbrBackground = NULL;
-	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = g_szClassName;
-	wcex.hIcon = NULL;
-	wcex.hIconSm = NULL;
+	// Get standard listbox information
+	wcex.cbSize = sizeof(wcex);
+	if (!GetClassInfoEx(NULL, WC_LISTBOX, &wcex))
+		return 0;
 
+	// Add our own stuff
+	wcex.lpfnWndProc = (WNDPROC)Grid_Proc;;
+	wcex.hInstance = hInstance;
+	wcex.lpszClassName = g_szClassName;
+
+	// Register our new class
 	return RegisterClassEx(&wcex);
 }
 
@@ -3699,7 +4005,7 @@ HWND New_PropertyGrid(HWND hParent, DWORD dwID)
 		aPropertyGrid = InitPropertyGrid(hinst);
 
 	hPropertyGrid = CreateWindowEx(0, g_szClassName, _T(""),
-		WS_CHILD, 0, 0, 0, 0, hParent, (HMENU)dwID, hinst, NULL);
+		WS_CHILD | WS_TABSTOP, 0, 0, 0, 0, hParent, (HMENU)dwID, hinst, NULL);
 
 	return hPropertyGrid;
 }
@@ -3714,7 +4020,9 @@ static VOID Grid_NotifyParent(VOID)
 	static NMPROPGRID nmPropGrid;
 
 	// Notify of the change
-	if (NULL != g_lpInst->lpCurrent && PIT_CATALOG != g_lpInst->lpCurrent->iItemType && PIT_STATIC != g_lpInst->lpCurrent->iItemType)
+	if (NULL != g_lpInst->lpCurrent &&
+		PIT_CATALOG != g_lpInst->lpCurrent->iItemType &&
+		PIT_STATIC != g_lpInst->lpCurrent->iItemType)
 	{
 		nmPropGrid.hdr.hwndFrom = GetParent(g_lpInst->hwndListBox);
 		nmPropGrid.hdr.idFrom = GetDlgCtrlID(nmPropGrid.hdr.hwndFrom);
@@ -3735,7 +4043,8 @@ static VOID Grid_NotifyParent(VOID)
 /// @param lParam Message parameter.
 ///
 /// @returns LRESULT depends on message.
-static LRESULT CALLBACK ListBox_Proc(HWND hList, UINT msg, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK ListBox_Proc(HWND hList, UINT msg,
+												 WPARAM wParam, LPARAM lParam)
 {
 	HWND hParent = GetParent(hList);
 
@@ -3750,42 +4059,48 @@ static LRESULT CALLBACK ListBox_Proc(HWND hList, UINT msg, WPARAM wParam, LPARAM
 		HANDLE_MSG(hList, WM_LBUTTONUP, ListBox_OnLButtonUp);
 		HANDLE_MSG(hList, WM_MOUSEMOVE, ListBox_OnMouseMove);
 		HANDLE_MSG(hList, WM_KEYDOWN, ListBox_OnKeyDown);
+		HANDLE_MSG(hList, WM_KILLFOCUS, ListBox_OnKillFocus);
 
-		case WM_MBUTTONDOWN:
-		case WM_NCLBUTTONDOWN:
-			//The listbox doesn't have a scrollbar component, it draws a scroll
-			// bar in the non-client area of the control.  A mouse click in the
-			// non-client area then, equals clicking on a scroll bar.  A click
-			// on the middle mouse button equals pan, we'll handle that as if
-			// it were a scroll event.
-			ListBox_OnBeginScroll(hList);
-			g_lpInst->fScrolling = TRUE;
-			break;
+	case WM_SETFOCUS: //DWM 1.3: Focus to ListBox
+		g_lpInst->fGotFocus = TRUE;
+		Refresh(g_lpInst->hwndListBox);
+		return 0;
 
-		case WM_SETCURSOR:
-			//Whenever the mouse leaves the non-client area of a listbox, it
-			// fires a WM_SETCURSOR message.  The same happens when the middle
-			// mouse button is released.  We can use this behavior to detect the
-			// completion of a scrolling operation.
-			if (g_lpInst->fScrolling)
-			{
-				ListBox_OnEndScroll(hList);
-				g_lpInst->fScrolling = FALSE;
-			}
-			break;
+	case WM_MBUTTONDOWN:
+	case WM_NCLBUTTONDOWN:
+		//The listbox doesn't have a scrollbar component, it draws a scroll
+		// bar in the non-client area of the control.  A mouse click in the
+		// non-client area then, equals clicking on a scroll bar.  A click
+		// on the middle mouse button equals pan, we'll handle that as if
+		// it were a scroll event.
+		ListBox_OnBeginScroll(hList);
+		g_lpInst->fScrolling = TRUE;
+		break;
 
-		case WM_GETDLGCODE:
-			return DLGC_WANTALLKEYS;
+	case WM_SETCURSOR:
+		//Whenever the mouse leaves the non-client area of a listbox, it
+		// fires a WM_SETCURSOR message.  The same happens when the middle
+		// mouse button is released.  We can use this behavior to detect the
+		// completion of a scrolling operation.
+		if (g_lpInst->fScrolling)
+		{
+			ListBox_OnEndScroll(hList);
+			g_lpInst->fScrolling = FALSE;
+		}
+		break;
 
-		case WM_DESTROY: //Unsubclass the listbox Control
+	case WM_GETDLGCODE:
+		return DLGC_WANTALLKEYS;
+
+	case WM_DESTROY: //Unsubclass the listbox Control
 		{
 			SetWindowLongPtr(hList, GWLP_WNDPROC,
-				(DWORD)GetProp(hList, TEXT("Wprc")));
-			RemoveProp(hList, TEXT("Wprc"));
+				(DWORD)GetProp(hList, WPRC));
+			RemoveProp(hList, WPRC);
 			return 0;
 		}
 	}
-	return CallWindowProc((WNDPROC)GetProp(hList, TEXT("Wprc")), hList, msg, wParam, lParam);
+	return DefProc(hList, msg, wParam, lParam);
 }
 
 /// @brief Window procedure and public interface for the property grid.
@@ -3807,6 +4122,7 @@ static LRESULT CALLBACK Grid_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 		HANDLE_MSG(hwnd, WM_DESTROY, Grid_OnDestroy);
 		HANDLE_MSG(hwnd, WM_SIZE, Grid_OnSize);
 		HANDLE_MSG(hwnd, WM_CTLCOLORLISTBOX, Grid_OnCtlColorListbox);
+		HANDLE_MSG(hwnd, WM_CTLCOLORSTATIC, Grid_OnCtlColorStatic);
 		HANDLE_MSG(hwnd, WM_DRAWITEM, Grid_OnDrawItem);
 		HANDLE_MSG(hwnd, WM_MEASUREITEM, Grid_OnMeasureItem);
 		HANDLE_MSG(hwnd, WM_DELETEITEM, Grid_OnDeleteItem);
@@ -3814,36 +4130,40 @@ static LRESULT CALLBACK Grid_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 		HANDLE_MSG(hwnd, WM_LBUTTONUP, Grid_OnLButtonUp);
 		HANDLE_MSG(hwnd, WM_MOUSEMOVE, Grid_OnMouseMove);
 		HANDLE_MSG(hwnd, WM_SETCURSOR, Grid_OnSetCursor);
+		HANDLE_MSG(hwnd, WM_SHOWWINDOW, Grid_OnShowWindow);
 
-		case LB_ADDSTRING: //PropGrid_AddItem
-			return Grid_OnAddString((LPPROPGRIDITEM)lParam);
-		case LB_DELETESTRING: //PropGrid_DeleteItem
-			return Grid_OnDeleteString((INT)wParam);
-		case LB_GETCOUNT: //PropGrid_GetCount
-			return ListBox_GetCount(g_lpInst->hwndListMap);
-		case LB_GETCURSEL: //PropGrid_GetCurSel
-			return Grid_OnGetCurSel();
-		case LB_GETHORIZONTALEXTENT: //PropGrid_GetHorizontalExtent
-			return ListBox_GetHorizontalExtent(g_lpInst->hwndListBox);
-		case LB_GETITEMDATA: //PropGrid_GetItemData
-			return Grid_OnGetItemData((INT)wParam);
-		case LB_GETITEMHEIGHT: //PropGrid_GetItemHeight
-			return ListBox_GetItemHeight(g_lpInst->hwndListBox, wParam);
-		case LB_GETITEMRECT: //PropGrid_GetItemRect
-			return ListBox_GetItemRect(g_lpInst->hwndListBox, wParam, lParam);
-		case LB_GETSEL: //PropGrid_GetSel
-			return Grid_OnGetSel((INT)wParam);
-		case LB_RESETCONTENT: //PropGrid_ResetContent
-			Grid_OnResetContent();
-			break;
-		case LB_SETCURSEL: //PropGrid_SetCurSel
-			return Grid_OnSetCurSel((INT)wParam);
-		case LB_SETHORIZONTALEXTENT: //PropGrid_SetHorizontalExtent
-			ListBox_SetHorizontalExtent(g_lpInst->hwndListBox, wParam);
-			break;
-		case LB_SETITEMDATA: //PropGrid_SetItemData
-			return Grid_OnSetItemData((INT)wParam, (LPPROPGRIDITEM)lParam);
-		case LB_SETITEMHEIGHT: //PropGrid_SetItemHeight
+	case WM_SETFOCUS: //DWM 1.3: Focus to ListBox
+		SetFocus(g_lpInst->hwndListBox);
+		return 0;
+	case LB_ADDSTRING: //PropGrid_AddItem
+		return Grid_OnAddString((LPPROPGRIDITEM)lParam);
+	case LB_DELETESTRING: //PropGrid_DeleteItem
+		return Grid_OnDeleteString((INT)wParam);
+	case LB_GETCOUNT: //PropGrid_GetCount
+		return ListBox_GetCount(g_lpInst->hwndListMap);
+	case LB_GETCURSEL: //PropGrid_GetCurSel
+		return Grid_OnGetCurSel();
+	case LB_GETHORIZONTALEXTENT: //PropGrid_GetHorizontalExtent
+		return ListBox_GetHorizontalExtent(g_lpInst->hwndListBox);
+	case LB_GETITEMDATA: //PropGrid_GetItemData
+		return Grid_OnGetItemData((INT)wParam);
+	case LB_GETITEMHEIGHT: //PropGrid_GetItemHeight
+		return ListBox_GetItemHeight(g_lpInst->hwndListBox, wParam);
+	case LB_GETITEMRECT: //PropGrid_GetItemRect
+		return ListBox_GetItemRect(g_lpInst->hwndListBox, wParam, lParam);
+	case LB_GETSEL: //PropGrid_GetSel
+		return Grid_OnGetSel((INT)wParam);
+	case LB_RESETCONTENT: //PropGrid_ResetContent
+		Grid_OnResetContent();
+		break;
+	case LB_SETCURSEL: //PropGrid_SetCurSel
+		return Grid_OnSetCurSel((INT)wParam);
+	case LB_SETHORIZONTALEXTENT: //PropGrid_SetHorizontalExtent
+		ListBox_SetHorizontalExtent(g_lpInst->hwndListBox, wParam);
+		break;
+	case LB_SETITEMDATA: //PropGrid_SetItemData
+		return Grid_OnSetItemData((INT)wParam, (LPPROPGRIDITEM)lParam);
+	case LB_SETITEMHEIGHT: //PropGrid_SetItemHeight
 		{
 			if (MINIMUM_ITEM_HEIGHT > LOWORD(lParam))
 				return LB_ERR;
@@ -3851,7 +4171,7 @@ static LRESULT CALLBACK Grid_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 			Refresh(g_lpInst->hwndListBox);
 			return lres;
 		}
-		case PG_EXPANDCATALOGS:
+	case PG_EXPANDCATALOGS:
 		{
 			if (NULL == (LPTSTR)lParam) //Expand all
 			{
@@ -3864,8 +4184,8 @@ static LRESULT CALLBACK Grid_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 					Grid_ExpandCatalog((LPCTSTR)p);
 			}
 		}
-			break;
-		case PG_COLLAPSECATALOGS:
+		break;
+	case PG_COLLAPSECATALOGS:
 		{
 			if (NULL == (LPTSTR)lParam) //Collapse all
 			{
@@ -3877,8 +4197,8 @@ static LRESULT CALLBACK Grid_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 					Grid_CollapseCatalog((LPCTSTR)p);
 			}
 		}
-			break;
-		case PG_SHOWTOOLTIPS:
+		break;
+	case PG_SHOWTOOLTIPS:
 		{
 			if ((BOOL)wParam)
 			{
@@ -3904,8 +4224,8 @@ static LRESULT CALLBACK Grid_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 				g_lpInst->hwndToolTip = NULL;
 			}
 		}
-			break;
-		case PG_SHOWPROPERTYDESC:
+		break;
+	case PG_SHOWPROPERTYDESC:
 		{
 			if ((BOOL)wParam)
 			{
@@ -3924,7 +4244,7 @@ static LRESULT CALLBACK Grid_Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 			GetClientRect(hwnd, &rc);
 			Grid_OnSize(hwnd, 0, WIDTH(rc), HEIGHT(rc));
 		}
-			break;
+		break;
 	}
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
