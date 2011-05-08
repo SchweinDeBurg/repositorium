@@ -26,7 +26,7 @@
 // Public Messages
 
 // List box message subset handled by the property grid.
- 
+
 // LB_ADDSTRING - PropGrid_AddItem()
 // LB_DELETESTRING - PropGrid_DeleteItem()
 // LB_GETCOUNT - PropGrid_GetCount()
