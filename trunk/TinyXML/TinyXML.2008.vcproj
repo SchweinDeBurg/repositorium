@@ -166,7 +166,7 @@
 			OutputDirectory="Output.2008\x86\Debug\Unicode"
 			IntermediateDirectory="Output.2008\x86\Debug\Unicode\OBJ"
 			ConfigurationType="4"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -240,7 +240,7 @@
 			OutputDirectory="Output.2008\x86\Release\Unicode"
 			IntermediateDirectory="Output.2008\x86\Release\Unicode\OBJ"
 			ConfigurationType="4"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
