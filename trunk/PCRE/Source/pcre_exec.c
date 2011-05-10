@@ -134,7 +134,7 @@ while (length-- > 0)
 
 /* Normally, if a back reference hasn't been set, the length that is passed is
 negative, so the match always fails. However, in JavaScript compatibility mode,
-the length passed is zero. Note that in caseless UTF-8 mode, the number of 
+the length passed is zero. Note that in caseless UTF-8 mode, the number of
 subject bytes matched may be different to the number of reference bytes.
 
 Arguments:
@@ -181,14 +181,14 @@ if ((ims & PCRE_CASELESS) != 0)
 #ifdef SUPPORT_UCP
   if (md->utf8)
     {
-    /* Match characters up to the end of the reference. NOTE: the number of 
+    /* Match characters up to the end of the reference. NOTE: the number of
     bytes matched may differ, because there are some characters whose upper and
     lower case versions code as different numbers of bytes. For example, U+023A
     (2 bytes in UTF-8) is the upper case version of U+2C65 (3 bytes in UTF-8);
     a sequence of 3 of the former uses 6 bytes, as does a sequence of two of
-    the latter. It is important, therefore, to check the length along the 
+    the latter. It is important, therefore, to check the length along the
     reference, not along the subject (earlier code did this wrong). */
- 
+
     USPTR endptr = p + length;
     while (p < endptr)
       {
@@ -206,19 +206,19 @@ if ((ims & PCRE_CASELESS) != 0)
   /* The same code works when not in UTF-8 mode and in UTF-8 mode when there
   is no UCP support. */
     {
-    if (eptr + length > md->end_subject) return -1; 
+    if (eptr + length > md->end_subject) return -1;
     while (length-- > 0)
       { if (md->lcc[*p++] != md->lcc[*eptr++]) return -1; }
-    }   
+    }
   }
 
 /* In the caseful case, we can just compare the bytes, whether or not we
 are in UTF-8 mode. */
 
 else
-  { 
-  if (eptr + length > md->end_subject) return -1; 
-  while (length-- > 0) if (*p++ != *eptr++) return -1; 
+  {
+  if (eptr + length > md->end_subject) return -1;
+  while (length-- > 0) if (*p++ != *eptr++) return -1;
   }
 
 return eptr - eptr_start;
@@ -2020,6 +2020,7 @@ for (;;)
     switch(c)
       {
       default: MRRETURN(MATCH_NOMATCH);
+
       case 0x000d:
       if (eptr < md->end_subject && *eptr == 0x0a) eptr++;
       break;
@@ -2339,7 +2340,7 @@ for (;;)
 
     for (i = 1; i <= min; i++)
       {
-      int slength; 
+      int slength;
       if ((slength = match_ref(offset, eptr, length, md, ims)) < 0)
         {
         CHECK_PARTIAL();
@@ -2359,7 +2360,7 @@ for (;;)
       {
       for (fi = min;; fi++)
         {
-        int slength; 
+        int slength;
         RMATCH(eptr, ecode, offset_top, md, ims, eptrb, 0, RM14);
         if (rrc != MATCH_NOMATCH) RRETURN(rrc);
         if (fi >= max) MRRETURN(MATCH_NOMATCH);
@@ -2380,7 +2381,7 @@ for (;;)
       pp = eptr;
       for (i = min; i < max; i++)
         {
-        int slength; 
+        int slength;
         if ((slength = match_ref(offset, eptr, length, md, ims)) < 0)
           {
           CHECK_PARTIAL();
@@ -3794,6 +3795,7 @@ for (;;)
           switch(c)
             {
             default: MRRETURN(MATCH_NOMATCH);
+
             case 0x000d:
             if (eptr < md->end_subject && *eptr == 0x0a) eptr++;
             break;
@@ -4070,9 +4072,11 @@ for (;;)
           switch(*eptr++)
             {
             default: MRRETURN(MATCH_NOMATCH);
+
             case 0x000d:
             if (eptr < md->end_subject && *eptr == 0x0a) eptr++;
             break;
+
             case 0x000a:
             break;
 
@@ -5261,7 +5265,11 @@ for (;;)
           RRETURN(PCRE_ERROR_INTERNAL);
           }
 
-        /* eptr is now past the end of the maximum run */
+        /* eptr is now past the end of the maximum run. If possessive, we are
+        done (no backing up). Otherwise, match at this position; anything other
+        than no match is immediately returned. For nomatch, back up one
+        character, unless we are matching \R and the last thing matched was
+        \r\n, in which case, back up two bytes. */
 
         if (possessive) continue;
         for(;;)
@@ -5270,6 +5278,8 @@ for (;;)
           if (rrc != MATCH_NOMATCH) RRETURN(rrc);
           if (eptr-- == pp) break;        /* Stop if tried at original pos */
           BACKCHAR(eptr);
+          if (ctype == OP_ANYNL && eptr > pp  && *eptr == '\n' &&
+              eptr[-1] == '\r') eptr--;
           }
         }
       else
@@ -5468,14 +5478,20 @@ for (;;)
           RRETURN(PCRE_ERROR_INTERNAL);
           }
 
-        /* eptr is now past the end of the maximum run */
+        /* eptr is now past the end of the maximum run. If possessive, we are
+        done (no backing up). Otherwise, match at this position; anything other
+        than no match is immediately returned. For nomatch, back up one
+        character (byte), unless we are matching \R and the last thing matched
+        was \r\n, in which case, back up two bytes. */
 
         if (possessive) continue;
         while (eptr >= pp)
           {
           RMATCH(eptr, ecode, offset_top, md, ims, eptrb, 0, RM47);
-          eptr--;
           if (rrc != MATCH_NOMATCH) RRETURN(rrc);
+          eptr--;
+          if (ctype == OP_ANYNL && eptr > pp  && *eptr == '\n' &&
+              eptr[-1] == '\r') eptr--;
           }
         }
 
@@ -5818,13 +5834,13 @@ defined (though never set). So there's no harm in leaving this code. */
 if (md->partial && (re->flags & PCRE_NOPARTIAL) != 0)
   return PCRE_ERROR_BADPARTIAL;
 
-/* Check a UTF-8 string if required. Pass back the character offset and error 
+/* Check a UTF-8 string if required. Pass back the character offset and error
 code if a results vector is available. */
 
 #ifdef SUPPORT_UTF8
 if (utf8 && (options & PCRE_NO_UTF8_CHECK) == 0)
   {
-  int errorcode; 
+  int errorcode;
   int tb = _pcre_valid_utf8((USPTR)subject, length, &errorcode);
   if (tb >= 0)
     {
@@ -5832,10 +5848,10 @@ if (utf8 && (options & PCRE_NO_UTF8_CHECK) == 0)
       {
       offsets[0] = tb;
       offsets[1] = errorcode;
-      }    
+      }
     return (errorcode <= PCRE_UTF8_ERR5 && md->partial > 1)?
       PCRE_ERROR_SHORTUTF8 : PCRE_ERROR_BADUTF8;
-    }   
+    }
   if (start_offset > 0 && start_offset < length)
     {
     tb = ((USPTR)subject)[start_offset] & 0xc0;
