@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="LibExpat"
-	ProjectGUID="{556E86CA-B91F-4E5A-9A91-40C220474D89}"
+	Name="LibSCEW"
+	ProjectGUID="{E5A0B295-607E-48D5-9A9E-2FC112775D09}"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -42,7 +42,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;EXPAT_LIB_BUILD;COMPILED_FROM_DSP"
+				AdditionalIncludeDirectories="..\Expat\Source"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;XML_STATIC;SCEW_LIB_BUILD"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -56,7 +57,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4100;4127"
+				DisableSpecificWarnings="4100;4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -71,7 +72,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\LibExpat.lib"
+				OutputFile="$(OutDir)\libscewd.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -117,7 +118,8 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;EXPAT_LIB_BUILD;COMPILED_FROM_DSP"
+				AdditionalIncludeDirectories="..\Expat\Source"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;XML_STATIC;SCEW_LIB_BUILD"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -128,7 +130,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4100;4127"
+				DisableSpecificWarnings="4100;4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -143,7 +145,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\LibExpat.lib"
+				OutputFile="$(OutDir)\libscew.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -188,7 +190,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;EXPAT_LIB_BUILD;XML_UNICODE_WCHAR_T;COMPILED_FROM_DSP"
+				AdditionalIncludeDirectories="..\Expat\Source"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;XML_STATIC;XML_UNICODE_WCHAR_T;SCEW_LIB_BUILD"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -202,7 +205,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4100;4127"
+				DisableSpecificWarnings="4100;4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -217,7 +220,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\LibExpat.lib"
+				OutputFile="$(OutDir)\libscewud.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -263,7 +266,8 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;EXPAT_LIB_BUILD;XML_UNICODE_WCHAR_T;COMPILED_FROM_DSP"
+				AdditionalIncludeDirectories="..\Expat\Source"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;XML_STATIC;XML_UNICODE_WCHAR_T;SCEW_LIB_BUILD"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -274,7 +278,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4100;4127"
+				DisableSpecificWarnings="4100;4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -289,7 +293,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\LibExpat.lib"
+				OutputFile="$(OutDir)\libscewu.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -317,15 +321,87 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Source\xmlparse.c"
+				RelativePath=".\Source\attribute.c"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\xmlrole.c"
+				RelativePath=".\Source\element.c"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\xmltok.c"
+				RelativePath=".\Source\element_attribute.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\element_compare.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\element_copy.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\element_search.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\error.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\list.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\parser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\printer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\reader.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\reader_buffer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\reader_file.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\str.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\tree.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\writer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\writer_buffer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\writer_file.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\xattribute.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\xerror.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\xparser.c"
 				>
 			</File>
 		</Filter>
@@ -335,60 +411,120 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Source\ascii.h"
+				RelativePath=".\Source\attribute.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\asciitab.h"
+				RelativePath=".\Source\bool.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\expat.h"
+				RelativePath=".\Source\element.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\expat_external.h"
+				RelativePath=".\Source\error.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\iasciitab.h"
+				RelativePath=".\Source\export.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\internal.h"
+				RelativePath=".\Source\list.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\latin1tab.h"
+				RelativePath=".\Source\parser.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\nametab.h"
+				RelativePath=".\Source\printer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\utf8tab.h"
+				RelativePath=".\Source\reader.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\xmlrole.h"
+				RelativePath=".\Source\reader_buffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\xmltok.h"
+				RelativePath=".\Source\reader_file.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\xmltok_impl.h"
+				RelativePath=".\Source\scew.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\str.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\tree.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\writer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\writer_buffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\writer_file.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\xattribute.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\xelement.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\xerror.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\xparser.h"
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\Authors.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\Install.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\Install.Win32.txt"
+			>
+		</File>
 		<File
 			RelativePath=".\License.txt"
 			>
 		</File>
 		<File
+			RelativePath=".\News.txt"
+			>
+		</File>
+		<File
 			RelativePath=".\Readme.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\Readme.Win32.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\Thanks.txt"
 			>
 		</File>
 	</Files>
