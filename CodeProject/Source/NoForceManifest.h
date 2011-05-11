@@ -17,8 +17,8 @@
 #if !defined(RC_INVOKED)
 
 // these defines block the creation in the header files
-#define _STL_NOFORCE_MANIFEST
 #define _CRT_NOFORCE_MANIFEST
+#define _STL_NOFORCE_MANIFEST
 #define _AFX_NOFORCE_MANIFEST
 #define _ATL_NOFORCE_MANIFEST
 

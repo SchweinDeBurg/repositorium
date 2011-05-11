@@ -49,7 +49,7 @@ typedef unsigned char boolean;
 #if defined(LIBJPEG_LIB_BUILD)
 
 /*
- * remove automatic CRT/MFC dependencies generation
+ * prevent automatic CRT/STL/MFC/ATL manifest dependencies generation
  *
  * see http://www.codeproject.com/KB/cpp/PrivateAssemblyProjects.aspx and
  * http://blog.m-ri.de/index.php/2008/05/06/hotfix-fuer-usemsprivateassembliesh-und-vc-2008/
@@ -59,8 +59,8 @@ typedef unsigned char boolean;
 #if defined(_MSC_VER) && (_MSC_VER >= 1400) && !defined(UNDER_CE)
 /* VC++ 8.0 or greater */
 
-#define _STL_NOFORCE_MANIFEST
 #define _CRT_NOFORCE_MANIFEST
+#define _STL_NOFORCE_MANIFEST
 #define _AFX_NOFORCE_MANIFEST
 #define _ATL_NOFORCE_MANIFEST
 

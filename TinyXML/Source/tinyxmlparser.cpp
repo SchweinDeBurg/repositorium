@@ -22,6 +22,29 @@ must not be misrepresented as being the original software.
 distribution.
 */
 
+#define _CRT_NOFORCE_MANIFEST
+#define _STL_NOFORCE_MANIFEST
+#define _AFX_NOFORCE_MANIFEST
+#define _ATL_NOFORCE_MANIFEST
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+__declspec(selectany) int _forceCRTManifest;
+__declspec(selectany) int _forceMFCManifest;
+__declspec(selectany) int _forceAtlDllManifest;
+
+// the next symbols are used by the several versions of VC++ 9.0
+__declspec(selectany) int _forceCRTManifestRTM;
+__declspec(selectany) int _forceMFCManifestRTM;
+__declspec(selectany) int _forceMFCManifestCUR;
+
+#ifdef __cplusplus
+}   // extern "C"
+#endif
+
 #include <ctype.h>
 #include <stddef.h>
 
