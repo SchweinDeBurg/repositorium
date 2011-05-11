@@ -1,6 +1,6 @@
 /*
 www.sourceforge.net/projects/tinyxml
-Original code (2.0 and earlier )copyright (c) 2000-2006 Lee Thomason (www.grinninglizard.com)
+Original code by Lee Thomason (www.grinninglizard.com)
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any
@@ -21,6 +21,29 @@ must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source
 distribution.
 */
+
+#define _CRT_NOFORCE_MANIFEST
+#define _STL_NOFORCE_MANIFEST
+#define _AFX_NOFORCE_MANIFEST
+#define _ATL_NOFORCE_MANIFEST
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+__declspec(selectany) int _forceCRTManifest;
+__declspec(selectany) int _forceMFCManifest;
+__declspec(selectany) int _forceAtlDllManifest;
+
+// the next symbols are used by the several versions of VC++ 9.0
+__declspec(selectany) int _forceCRTManifestRTM;
+__declspec(selectany) int _forceMFCManifestRTM;
+__declspec(selectany) int _forceMFCManifestCUR;
+
+#ifdef __cplusplus
+}   // extern "C"
+#endif
 
 #include "tinyxml.h"
 
