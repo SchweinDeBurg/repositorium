@@ -92,7 +92,7 @@
  */
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400) && !defined(UNDER_CE)
-/* VC++ 8.0 or greater */
+/* VC++ 2005 (8.0) or greater */
 
 #define _CRT_NOFORCE_MANIFEST
 #define _STL_NOFORCE_MANIFEST
@@ -108,7 +108,7 @@ __declspec(selectany) int _forceCRTManifest;
 __declspec(selectany) int _forceMFCManifest;
 __declspec(selectany) int _forceAtlDllManifest;
 
-/* the next symbols are used by the several versions of VC++ 9.0 */
+/* the next symbols are used by the several versions of VC++ 2008 (9.0) */
 __declspec(selectany) int _forceCRTManifestRTM;
 __declspec(selectany) int _forceMFCManifestRTM;
 __declspec(selectany) int _forceMFCManifestCUR;
