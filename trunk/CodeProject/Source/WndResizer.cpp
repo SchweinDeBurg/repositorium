@@ -15,7 +15,7 @@ This disclaimer should not be removed and should exist in any reproduction of th
 
 
 
-static CMap<HWND, HWND, CWndResizer *, CWndResizer *> WndResizerData;
+static CMap<HWND, HWND, CWndResizer*, CWndResizer*> WndResizerData;
 
 
 /////////////////////////////  CWndResizer
@@ -38,6 +38,22 @@ CWndResizer::~CWndResizer(void)
 
 void CWndResizer::OnSize(UINT /*nType*/, int cx, int cy)
 {
+	if (cx < root.MinSize.cx)
+	{
+		cx = root.MinSize.cx;
+	}
+	else if (cx > root.MaxSize.cx)
+	{
+		cx = root.MaxSize.cx;
+	}
+	if (cy < root.MinSize.cy)
+	{
+		cy = root.MinSize.cy;
+	}
+	else if (cx > root.MaxSize.cy)
+	{
+		cy = root.MaxSize.cy;
+	}
 	root.right = cx;
 	root.bottom = cy;
 	root.OnResized();
@@ -45,7 +61,7 @@ void CWndResizer::OnSize(UINT /*nType*/, int cx, int cy)
 
 }
 
-void CWndResizer::ResizeUI(CWndResizer::CPanel * pRoot)
+void CWndResizer::ResizeUI(CWndResizer::CPanel* pRoot)
 {
 	CPanelList panels;
 	GetUIPanels(pRoot, &panels, FALSE);
@@ -55,19 +71,19 @@ void CWndResizer::ResizeUI(CWndResizer::CPanel * pRoot)
 	if (panels.GetCount() > 0)
 	{
 		HDWP hDWP = ::BeginDeferWindowPos(panels.GetCount());
-		ASSERT( hDWP != NULL);
+		ASSERT(hDWP != NULL);
 		pos = panels.GetHeadPosition();
 		while (pos != NULL)
 		{
-			CUIPanel * pPanel = (CUIPanel *) panels.GetNext(pos);
+			CUIPanel* pPanel = (CUIPanel*) panels.GetNext(pos);
 
 			::DeferWindowPos(hDWP, m_pHookedWnd->GetDlgItem(pPanel->m_uID)->m_hWnd, NULL,
-				pPanel->left , pPanel->top , pPanel->Width(), pPanel->Height(),
-				SWP_NOACTIVATE | SWP_NOZORDER );
+					pPanel->left , pPanel->top , pPanel->Width(), pPanel->Height(),
+					SWP_NOACTIVATE | SWP_NOZORDER);
 
 		}
 		BOOL bOk = ::EndDeferWindowPos(hDWP);
-		ASSERT( bOk == TRUE);
+		ASSERT(bOk == TRUE);
 		m_pHookedWnd->InvalidateRect(pRoot, FALSE);
 	}
 
@@ -76,7 +92,7 @@ void CWndResizer::ResizeUI(CWndResizer::CPanel * pRoot)
 	pos = panels.GetHeadPosition();
 	while (pos != NULL)
 	{
-		CUIPanel * pPanel = (CUIPanel *) panels.GetNext(pos);
+		CUIPanel* pPanel = (CUIPanel*) panels.GetNext(pos);
 		m_pHookedWnd->GetDlgItem(pPanel->m_uID)->MoveWindow(pPanel);
 	}
 }
@@ -88,32 +104,32 @@ void CWndResizer::OnLButtonDown(UINT /*nFlags*/, CPoint point)
 }
 void CWndResizer::OnMouseMove(UINT nFlags, CPoint point)
 {
-	if (m_pCaptured != NULL )
+	if (m_pCaptured != NULL)
 	{
 		if ((nFlags & MK_LBUTTON) <= 0)
 		{
 			CPoint ptScreen = point;
 			m_pHookedWnd->ClientToScreen(&ptScreen);
 			HWND hWndFromPoint = ::WindowFromPoint(ptScreen);
-			if (m_pCaptured->PtInRect( point ) == FALSE || hWndFromPoint != m_pHookedWnd->m_hWnd)
+			if (m_pCaptured->PtInRect(point) == FALSE || hWndFromPoint != m_pHookedWnd->m_hWnd)
 			{
-				::ReleaseCapture();      
+				::ReleaseCapture();
 				m_pCaptured = NULL;
 				HCURSOR hCur = ::SetCursor(m_hOldCursor);
-				::DestroyCursor( hCur );
+				::DestroyCursor(hCur);
 				m_hOldCursor = NULL;
 			}
 		}
 	}
 
-	if (m_pCaptured == NULL )
+	if (m_pCaptured == NULL)
 	{
 		m_pCaptured = FindSplitterFromPoint(&root, point);
 		if (m_pCaptured != NULL)
 		{
 			m_pHookedWnd->SetCapture();
 			LPCTSTR cursor = NULL;
-			CSplitContainer * pSplitContainer = (CSplitContainer *)m_pCaptured->Parent;
+			CSplitContainer* pSplitContainer = (CSplitContainer*)m_pCaptured->Parent;
 			if (pSplitContainer->m_Orientation == CWndResizer::SPLIT_CONTAINER_H)
 			{
 				cursor = IDC_SIZEWE;
@@ -129,15 +145,15 @@ void CWndResizer::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (m_pCaptured != NULL && (nFlags & MK_LBUTTON) > 0)
 	{
-		CSplitContainer * pSplitterContainer = (CSplitContainer *) m_pCaptured->Parent;
+		CSplitContainer* pSplitterContainer = (CSplitContainer*) m_pCaptured->Parent;
 
 		if (pSplitterContainer->m_Orientation == CWndResizer::SPLIT_CONTAINER_H)
 		{
-			pSplitterContainer->SetSplitterPosition( point.x - m_splitterOffset);
+			pSplitterContainer->SetSplitterPosition(point.x - m_splitterOffset);
 		}
 		else
 		{
-			pSplitterContainer->SetSplitterPosition( point.y - m_splitterOffset);
+			pSplitterContainer->SetSplitterPosition(point.y - m_splitterOffset);
 		}
 		UpdateSplitterOffset(point);
 
@@ -151,17 +167,17 @@ void CWndResizer::OnLButtonUp(UINT nFlags, CPoint point)
 }
 void CWndResizer::UpdateSplitterOffset(CPoint ptCurr)
 {
-	if (m_pCaptured == NULL )
+	if (m_pCaptured == NULL)
 	{
 		return;
 	}
-	if (((CSplitContainer *)m_pCaptured->Parent)->m_Orientation == CWndResizer::SPLIT_CONTAINER_H)
+	if (((CSplitContainer*)m_pCaptured->Parent)->m_Orientation == CWndResizer::SPLIT_CONTAINER_H)
 	{
-		if ( ptCurr.x  < m_pCaptured->left)
+		if (ptCurr.x  < m_pCaptured->left)
 		{
 			m_splitterOffset = 0;
 		}
-		else if ( ptCurr.x > m_pCaptured->right)
+		else if (ptCurr.x > m_pCaptured->right)
 		{
 			m_splitterOffset = m_pCaptured->Width();
 		}
@@ -172,24 +188,24 @@ void CWndResizer::UpdateSplitterOffset(CPoint ptCurr)
 	}
 	else
 	{
-		if ( ptCurr.y  < m_pCaptured->top)
+		if (ptCurr.y  < m_pCaptured->top)
 		{
 			m_splitterOffset = 0;
 		}
-		else if ( ptCurr.y > m_pCaptured->bottom)
+		else if (ptCurr.y > m_pCaptured->bottom)
 		{
 			m_splitterOffset = m_pCaptured->Height();
 		}
 		else
 		{
 			m_splitterOffset = ptCurr.y - m_pCaptured->top;
-		}    
+		}
 	}
 }
 void CWndResizer::OnSizing(UINT fwSide, LPRECT pRect)
 {
 
-	CRect * prc = (CRect *) pRect;
+	CRect* prc = (CRect*) pRect;
 
 	CRect rcMin(0, 0, root.MinSize.cx, root.MinSize.cy);
 	CRect rcMax(0, 0, root.MaxSize.cx, root.MaxSize.cy);
@@ -202,127 +218,127 @@ void CWndResizer::OnSizing(UINT fwSide, LPRECT pRect)
 
 	switch (fwSide)
 	{
-	case WMSZ_BOTTOM:
-		if (prc->Height() < rcMin.Height() )
-		{
-			prc->bottom = prc->top + rcMin.Height();
-		}
-		if (prc->Height() > rcMax.Height() )
-		{
-			prc->bottom = prc->top + rcMax.Height();
-		}    
-		break;
-	case WMSZ_BOTTOMLEFT:
-		if (prc->Height() < rcMin.Height() )
-		{
-			prc->bottom = prc->top + rcMin.Height();
-		}
-		if (prc->Width() < rcMin.Width() )
-		{
-			prc->left = prc->right - rcMin.Width();
-		}
+		case WMSZ_BOTTOM:
+			if (prc->Height() < rcMin.Height())
+			{
+				prc->bottom = prc->top + rcMin.Height();
+			}
+			if (prc->Height() > rcMax.Height())
+			{
+				prc->bottom = prc->top + rcMax.Height();
+			}
+			break;
+		case WMSZ_BOTTOMLEFT:
+			if (prc->Height() < rcMin.Height())
+			{
+				prc->bottom = prc->top + rcMin.Height();
+			}
+			if (prc->Width() < rcMin.Width())
+			{
+				prc->left = prc->right - rcMin.Width();
+			}
 
-		if (prc->Height() > rcMax.Height() )
-		{
-			prc->bottom = prc->top + rcMax.Height();
-		}
-		if (prc->Width() > rcMax.Width() )
-		{
-			prc->left = prc->right - rcMax.Width();
-		}
-		break;
-	case WMSZ_BOTTOMRIGHT:
-		if (prc->Height() < rcMin.Height() )
-		{
-			prc->bottom = prc->top + rcMin.Height();
-		}
-		if (prc->Width() < rcMin.Width() )
-		{
-			prc->right = prc->left + rcMin.Width();
-		}
+			if (prc->Height() > rcMax.Height())
+			{
+				prc->bottom = prc->top + rcMax.Height();
+			}
+			if (prc->Width() > rcMax.Width())
+			{
+				prc->left = prc->right - rcMax.Width();
+			}
+			break;
+		case WMSZ_BOTTOMRIGHT:
+			if (prc->Height() < rcMin.Height())
+			{
+				prc->bottom = prc->top + rcMin.Height();
+			}
+			if (prc->Width() < rcMin.Width())
+			{
+				prc->right = prc->left + rcMin.Width();
+			}
 
-		if (prc->Height() > rcMax.Height() )
-		{
-			prc->bottom = prc->top + rcMax.Height();
-		}
-		if (prc->Width() > rcMax.Width() )
-		{
-			prc->right = prc->left + rcMax.Width();
-		}
+			if (prc->Height() > rcMax.Height())
+			{
+				prc->bottom = prc->top + rcMax.Height();
+			}
+			if (prc->Width() > rcMax.Width())
+			{
+				prc->right = prc->left + rcMax.Width();
+			}
 
-		break;
-	case WMSZ_LEFT:
-		if (prc->Width() < rcMin.Width() )
-		{
-			prc->left = prc->right - rcMin.Width();
-		}
+			break;
+		case WMSZ_LEFT:
+			if (prc->Width() < rcMin.Width())
+			{
+				prc->left = prc->right - rcMin.Width();
+			}
 
-		if (prc->Width() > rcMax.Width() )
-		{
-			prc->left = prc->right - rcMax.Width();
-		}
-		break;
-	case WMSZ_RIGHT:
-		if (prc->Width() < rcMin.Width() )
-		{
-			prc->right = prc->left + rcMin.Width();
-		}
+			if (prc->Width() > rcMax.Width())
+			{
+				prc->left = prc->right - rcMax.Width();
+			}
+			break;
+		case WMSZ_RIGHT:
+			if (prc->Width() < rcMin.Width())
+			{
+				prc->right = prc->left + rcMin.Width();
+			}
 
-		if (prc->Width() > rcMax.Width() )
-		{
-			prc->right = prc->left + rcMax.Width();
-		}
-		break;
-	case WMSZ_TOP:
-		if (prc->Height() < rcMin.Height() )
-		{
-			prc->top = prc->bottom - rcMin.Height();
-		}
+			if (prc->Width() > rcMax.Width())
+			{
+				prc->right = prc->left + rcMax.Width();
+			}
+			break;
+		case WMSZ_TOP:
+			if (prc->Height() < rcMin.Height())
+			{
+				prc->top = prc->bottom - rcMin.Height();
+			}
 
-		if (prc->Height() > rcMax.Height() )
-		{
-			prc->top = prc->bottom - rcMax.Height();
-		}
-		break;
-	case WMSZ_TOPLEFT:
-		if (prc->Height() < rcMin.Height() )
-		{
-			prc->top = prc->bottom - rcMin.Height();
-		}
-		if (prc->Width() < rcMin.Width() )
-		{
-			prc->left = prc->right - rcMin.Width();
-		}
+			if (prc->Height() > rcMax.Height())
+			{
+				prc->top = prc->bottom - rcMax.Height();
+			}
+			break;
+		case WMSZ_TOPLEFT:
+			if (prc->Height() < rcMin.Height())
+			{
+				prc->top = prc->bottom - rcMin.Height();
+			}
+			if (prc->Width() < rcMin.Width())
+			{
+				prc->left = prc->right - rcMin.Width();
+			}
 
 
-		if (prc->Height() > rcMax.Height() )
-		{
-			prc->top = prc->bottom - rcMax.Height();
-		}
-		if (prc->Width() > rcMax.Width() )
-		{
-			prc->left = prc->right - rcMax.Width();
-		}
-		break;
-	case WMSZ_TOPRIGHT:
-		if (prc->Height() < rcMin.Height() )
-		{
-			prc->top = prc->bottom - rcMin.Height();
-		}
-		if (prc->Width() < rcMin.Width() )
-		{
-			prc->right = prc->left + rcMin.Width();
-		}
+			if (prc->Height() > rcMax.Height())
+			{
+				prc->top = prc->bottom - rcMax.Height();
+			}
+			if (prc->Width() > rcMax.Width())
+			{
+				prc->left = prc->right - rcMax.Width();
+			}
+			break;
+		case WMSZ_TOPRIGHT:
+			if (prc->Height() < rcMin.Height())
+			{
+				prc->top = prc->bottom - rcMin.Height();
+			}
+			if (prc->Width() < rcMin.Width())
+			{
+				prc->right = prc->left + rcMin.Width();
+			}
 
-		if (prc->Height() > rcMax.Height() )
-		{
-			prc->top = prc->bottom - rcMax.Height();
-		}
-		if (prc->Width() > rcMax.Width() )
-		{
-			prc->right = prc->left + rcMax.Width();
-		}
-		break;
+			if (prc->Height() > rcMax.Height())
+			{
+				prc->top = prc->bottom - rcMax.Height();
+			}
+			if (prc->Width() > rcMax.Width())
+			{
+				prc->right = prc->left + rcMax.Width();
+			}
+			break;
 	}
 
 }
@@ -340,7 +356,7 @@ void CWndResizer::OnPaint()
 	POSITION pos = panelList.GetHeadPosition();
 	while (pos != NULL)
 	{
-		CVisualPanel * pPanel = (CVisualPanel *) panelList.GetNext(pos);
+		CVisualPanel* pPanel = (CVisualPanel*) panelList.GetNext(pos);
 		if (pPanel->m_bVisible)
 		{
 			pPanel->Draw(&dc);
@@ -353,8 +369,8 @@ void CWndResizer::OnPaint()
 BOOL CWndResizer::SetAnchor(LPCTSTR panelName, UINT uAnchor)
 {
 	// container must already exist
-	CPanel * pPanel = NULL;
-	if ( (pPanel = FindPanelByName(&root, panelName)) == NULL)  
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, panelName)) == NULL)
 	{
 		return FALSE;
 	}
@@ -366,20 +382,20 @@ BOOL CWndResizer::SetAnchor(UINT uID, UINT uAnchor)
 {
 	ASSERT(m_pHookedWnd != NULL);
 
-	CUIPanel * pPanel = GetUIPanel(uID);
+	CUIPanel* pPanel = GetUIPanel(uID);
 
 	if (pPanel == NULL)
 	{
 		return FALSE;
 	}
-	pPanel->SetAnchor(uAnchor);  
+	pPanel->SetAnchor(uAnchor);
 
 	return TRUE;
 }
-BOOL CWndResizer::GetAnchor(LPCTSTR panelName, UINT & anchor)
+BOOL CWndResizer::GetAnchor(LPCTSTR panelName, UINT& anchor)
 {
-	CPanel * pPanel = NULL;
-	if ( (pPanel = FindPanelByName(&root, panelName)) == NULL)  // name of parent must already exist
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, panelName)) == NULL)   // name of parent must already exist
 	{
 		return FALSE;
 	}
@@ -387,10 +403,10 @@ BOOL CWndResizer::GetAnchor(LPCTSTR panelName, UINT & anchor)
 	anchor = pPanel->Anchor;
 	return TRUE;
 }
-BOOL CWndResizer::GetAnchor(UINT uID, UINT & anchor)
+BOOL CWndResizer::GetAnchor(UINT uID, UINT& anchor)
 {
-	CPanel * pPanel = NULL;
-	if ( (pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)  // name of parent must already exist
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)   // name of parent must already exist
 	{
 		return FALSE;
 	}
@@ -403,8 +419,8 @@ BOOL CWndResizer::GetAnchor(UINT uID, UINT & anchor)
 BOOL CWndResizer::SetDock(LPCTSTR panelName, UINT uDock)
 {
 	// container must already exist
-	CPanel * pPanel = NULL;
-	if ( (pPanel = FindPanelByName(&root, panelName)) == NULL)  
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, panelName)) == NULL)
 	{
 		return FALSE;
 	}
@@ -417,20 +433,20 @@ BOOL CWndResizer::SetDock(UINT uID, UINT uDock)
 {
 	ASSERT(m_pHookedWnd != NULL);
 
-	CUIPanel * pPanel = GetUIPanel(uID);
+	CUIPanel* pPanel = GetUIPanel(uID);
 
 	if (pPanel == NULL)
 	{
 		return FALSE;
 	}
-	pPanel->Dock = uDock;  
+	pPanel->Dock = uDock;
 
 	return TRUE;
 }
-BOOL CWndResizer::GetDock(LPCTSTR panelName, UINT & uDock)
+BOOL CWndResizer::GetDock(LPCTSTR panelName, UINT& uDock)
 {
-	CPanel * pPanel = NULL;
-	if ( (pPanel = FindPanelByName(&root, panelName)) == NULL)  // name of parent must already exist
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, panelName)) == NULL)   // name of parent must already exist
 	{
 		return FALSE;
 	}
@@ -438,10 +454,10 @@ BOOL CWndResizer::GetDock(LPCTSTR panelName, UINT & uDock)
 	uDock = pPanel->Dock;
 	return TRUE;
 }
-BOOL CWndResizer::GetDock(UINT uID, UINT & uDock)
+BOOL CWndResizer::GetDock(UINT uID, UINT& uDock)
 {
-	CPanel * pPanel = NULL;
-	if ( (pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)  // name of parent must already exist
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)   // name of parent must already exist
 	{
 		return FALSE;
 	}
@@ -458,14 +474,14 @@ BOOL CWndResizer::SetParent(LPCTSTR panelName, LPCTSTR parentName)
 
 
 	// now make sure parentName is OK
-	CPanel * pParent = NULL;
-	if ( (pParent = FindPanelByName(&root, parentName)) == NULL)  // name of parent must already exist
+	CPanel* pParent = NULL;
+	if ((pParent = FindPanelByName(&root, parentName)) == NULL)   // name of parent must already exist
 	{
 		return FALSE;
 	}
 
 	// make sure panelName exist
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 	if ((pPanel = FindPanelByName(&root, panelName)) == NULL)
 	{
 		return FALSE;
@@ -478,12 +494,12 @@ BOOL CWndResizer::SetParent(UINT uID, LPCTSTR parentName)
 	ASSERT(m_pHookedWnd != NULL);
 
 	// now make sure parentName is OK
-	CPanel * pParent = NULL;
-	if ( (pParent = FindPanelByName(&root, parentName)) == NULL)  // name of parent must already exist
+	CPanel* pParent = NULL;
+	if ((pParent = FindPanelByName(&root, parentName)) == NULL)   // name of parent must already exist
 	{
 		return FALSE;
 	}
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 
 	// first see if it is already defined
 	if ((pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)
@@ -503,14 +519,14 @@ BOOL CWndResizer::SetParent(LPCTSTR panelName, UINT uParentID)
 	ASSERT(m_pHookedWnd != NULL);
 
 	// now make sure parentName is OK
-	CPanel * pParent = GetUIPanel(uParentID);
-	if ( pParent == NULL)  // name of parent must already exist
+	CPanel* pParent = GetUIPanel(uParentID);
+	if (pParent == NULL)   // name of parent must already exist
 	{
 		return FALSE;
 	}
 
 	// make sure panelName exist
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 	if ((pPanel = FindPanelByName(&root, panelName)) == NULL)
 	{
 		return FALSE;
@@ -521,26 +537,26 @@ BOOL CWndResizer::SetParent(LPCTSTR panelName, UINT uParentID)
 }
 BOOL CWndResizer::SetParent(UINT uID, UINT uParentID)
 {
-	CPanel * pParent = GetUIPanel(uParentID);
+	CPanel* pParent = GetUIPanel(uParentID);
 	if (pParent == NULL)
 	{
 		return FALSE;
 	}
-	CPanel * pPanel = GetUIPanel(uID);;
+	CPanel* pPanel = GetUIPanel(uID);;
 	if (pParent == NULL)
 	{
 		return FALSE;
 	}
 
-	return pParent->AddChild( pPanel );
+	return pParent->AddChild(pPanel);
 
 }
 
 
-BOOL CWndResizer::GetParent(LPCTSTR panelName, CString & parentName)
+BOOL CWndResizer::GetParent(LPCTSTR panelName, CString& parentName)
 {
-	CPanel * pPanel = NULL;
-	if ( (pPanel = FindPanelByName(&root, panelName)) == NULL) 
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, panelName)) == NULL)
 	{
 		return FALSE;
 	}
@@ -548,10 +564,10 @@ BOOL CWndResizer::GetParent(LPCTSTR panelName, CString & parentName)
 	parentName = pPanel->Parent->Name;
 	return TRUE;
 }
-BOOL CWndResizer::GetParent(UINT uID, CString & parentName)
+BOOL CWndResizer::GetParent(UINT uID, CString& parentName)
 {
-	CPanel * pPanel = NULL;
-	if ( (pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)  // name of parent must already exist
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)   // name of parent must already exist
 	{
 		return FALSE;
 	}
@@ -562,12 +578,12 @@ BOOL CWndResizer::GetParent(UINT uID, CString & parentName)
 
 BOOL CWndResizer::SetFixedPanel(LPCTSTR splitContainerName, short panel)
 {
-	CPanel * pContainer = FindPanelByName(&root, splitContainerName);
+	CPanel* pContainer = FindPanelByName(&root, splitContainerName);
 	if (pContainer == NULL)
 	{
 		return FALSE;
 	}
-	CSplitContainer * pSplitContainer =  dynamic_cast<CSplitContainer *>( pContainer );
+	CSplitContainer* pSplitContainer =  dynamic_cast<CSplitContainer*>(pContainer);
 	if (pSplitContainer == NULL)
 	{
 		return FALSE;
@@ -576,14 +592,14 @@ BOOL CWndResizer::SetFixedPanel(LPCTSTR splitContainerName, short panel)
 	pSplitContainer->SetFixedPanel(panel);
 	return TRUE;
 }
-BOOL CWndResizer::GetFixedPanel(LPCTSTR splitContainerName, short & panel)
+BOOL CWndResizer::GetFixedPanel(LPCTSTR splitContainerName, short& panel)
 {
-	CPanel * pContainer = FindPanelByName(&root, splitContainerName);
+	CPanel* pContainer = FindPanelByName(&root, splitContainerName);
 	if (pContainer == NULL)
 	{
 		return FALSE;
 	}
-	CSplitContainer * pSplitContainer =  dynamic_cast<CSplitContainer *> (pContainer);
+	CSplitContainer* pSplitContainer =  dynamic_cast<CSplitContainer*>(pContainer);
 	if (pSplitContainer == NULL)
 	{
 		return FALSE;
@@ -595,27 +611,27 @@ BOOL CWndResizer::GetFixedPanel(LPCTSTR splitContainerName, short & panel)
 
 BOOL CWndResizer::SetIsSplitterFixed(LPCTSTR splitContainerName, BOOL fixed)
 {
-	CPanel * pContainer = FindPanelByName(&root, splitContainerName);
+	CPanel* pContainer = FindPanelByName(&root, splitContainerName);
 	if (pContainer == NULL)
 	{
 		return FALSE;
 	}
-	CSplitContainer * pSplitContainer =  dynamic_cast<CSplitContainer *> (pContainer);
+	CSplitContainer* pSplitContainer =  dynamic_cast<CSplitContainer*>(pContainer);
 	if (pSplitContainer == NULL)
 	{
 		return FALSE;
 	}
-	pSplitContainer->SetIsSplitterFixed( fixed );
+	pSplitContainer->SetIsSplitterFixed(fixed);
 	return TRUE;
 }
-BOOL CWndResizer::GetIsSplitterFixed(LPCTSTR splitContainerName, BOOL &fixed)
+BOOL CWndResizer::GetIsSplitterFixed(LPCTSTR splitContainerName, BOOL& fixed)
 {
-	CPanel * pContainer = FindPanelByName(&root, splitContainerName);
+	CPanel* pContainer = FindPanelByName(&root, splitContainerName);
 	if (pContainer == NULL)
 	{
 		return FALSE;
 	}
-	CSplitContainer * pSplitContainer =  dynamic_cast<CSplitContainer *> (pContainer);
+	CSplitContainer* pSplitContainer =  dynamic_cast<CSplitContainer*>(pContainer);
 	if (pSplitContainer == NULL)
 	{
 		return FALSE;
@@ -628,27 +644,27 @@ BOOL CWndResizer::GetIsSplitterFixed(LPCTSTR splitContainerName, BOOL &fixed)
 
 BOOL CWndResizer::SetShowSplitterGrip(LPCTSTR splitContainerName, BOOL bShow)
 {
-	CPanel * pContainer = FindPanelByName(&root, splitContainerName);
+	CPanel* pContainer = FindPanelByName(&root, splitContainerName);
 	if (pContainer == NULL)
 	{
 		return FALSE;
 	}
-	CSplitContainer * pSplitContainer =  dynamic_cast<CSplitContainer *> (pContainer);
+	CSplitContainer* pSplitContainer =  dynamic_cast<CSplitContainer*>(pContainer);
 	if (pSplitContainer == NULL)
 	{
 		return FALSE;
 	}
-	pSplitContainer->SetShowSplitterGrip( bShow );
+	pSplitContainer->SetShowSplitterGrip(bShow);
 	return TRUE;
 }
-BOOL CWndResizer::GetShowSplitterGrip(LPCTSTR splitContainerName, BOOL &bShow)
+BOOL CWndResizer::GetShowSplitterGrip(LPCTSTR splitContainerName, BOOL& bShow)
 {
-	CPanel * pContainer = FindPanelByName(&root, splitContainerName);
+	CPanel* pContainer = FindPanelByName(&root, splitContainerName);
 	if (pContainer == NULL)
 	{
 		return FALSE;
 	}
-	CSplitContainer * pSplitContainer =  dynamic_cast<CSplitContainer *> (pContainer);
+	CSplitContainer* pSplitContainer =  dynamic_cast<CSplitContainer*>(pContainer);
 	if (pSplitContainer == NULL)
 	{
 		return FALSE;
@@ -661,21 +677,21 @@ BOOL CWndResizer::GetShowSplitterGrip(LPCTSTR splitContainerName, BOOL &bShow)
 
 
 /////////////////////////
-BOOL CWndResizer::SetMinimumSize( LPCTSTR panelName, CSize & size)
+BOOL CWndResizer::SetMinimumSize(LPCTSTR panelName, CSize& size)
 {
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 
-	if ( (pPanel = FindPanelByName(&root, panelName)) == NULL)  
+	if ((pPanel = FindPanelByName(&root, panelName)) == NULL)
 	{
 		return FALSE;
 	}
-	return pPanel->SetMinSize( size );
+	return pPanel->SetMinSize(size);
 }
-BOOL CWndResizer::SetMinimumSize(UINT uID, CSize & size)
+BOOL CWndResizer::SetMinimumSize(UINT uID, CSize& size)
 {
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 
-	if ( (pPanel = FindPanelByName(&root, IdToName(uID))) == NULL) 
+	if ((pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)
 	{
 		if ((pPanel = CreateUIPanel(uID)) == NULL)
 		{
@@ -683,14 +699,14 @@ BOOL CWndResizer::SetMinimumSize(UINT uID, CSize & size)
 		}
 	}
 
-	return pPanel->SetMinSize( size );
+	return pPanel->SetMinSize(size);
 }
 
-BOOL CWndResizer::GetMinimumSize(LPCTSTR panelName, CSize & size) 
+BOOL CWndResizer::GetMinimumSize(LPCTSTR panelName, CSize& size)
 {
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 
-	if ( (pPanel = FindPanelByName(&root, panelName)) == NULL) 
+	if ((pPanel = FindPanelByName(&root, panelName)) == NULL)
 	{
 		return FALSE;
 	}
@@ -698,11 +714,11 @@ BOOL CWndResizer::GetMinimumSize(LPCTSTR panelName, CSize & size)
 	size = pPanel->MinSize;
 	return TRUE;
 }
-BOOL CWndResizer::GetMinimumSize(UINT uID, CSize & size) 
+BOOL CWndResizer::GetMinimumSize(UINT uID, CSize& size)
 {
-	const CPanel * pPanel = NULL;
+	const CPanel* pPanel = NULL;
 
-	if ( (pPanel = FindPanelByName(&root, IdToName(uID))) == NULL) 
+	if ((pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)
 	{
 		return FALSE;
 	}
@@ -710,11 +726,11 @@ BOOL CWndResizer::GetMinimumSize(UINT uID, CSize & size)
 	size = pPanel->MinSize;
 	return TRUE;
 }
-BOOL CWndResizer::SetMaximumSize(UINT uID, CSize & size)
+BOOL CWndResizer::SetMaximumSize(UINT uID, CSize& size)
 {
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 
-	if ( (pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)  
+	if ((pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)
 	{
 		return FALSE;
 	}
@@ -722,11 +738,11 @@ BOOL CWndResizer::SetMaximumSize(UINT uID, CSize & size)
 	return pPanel->SetMaxSize(size);
 }
 
-BOOL CWndResizer::SetMaximumSize( LPCTSTR panelName, CSize & size)
+BOOL CWndResizer::SetMaximumSize(LPCTSTR panelName, CSize& size)
 {
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 
-	if ( (pPanel = FindPanelByName(&root, panelName)) == NULL) 
+	if ((pPanel = FindPanelByName(&root, panelName)) == NULL)
 	{
 		return FALSE;
 	}
@@ -734,10 +750,10 @@ BOOL CWndResizer::SetMaximumSize( LPCTSTR panelName, CSize & size)
 	return pPanel->SetMaxSize(size);
 
 }
-BOOL CWndResizer::GetMaximumSize(  LPCTSTR panelName, CSize & size) 
+BOOL CWndResizer::GetMaximumSize(LPCTSTR panelName, CSize& size)
 {
-	CPanel * pPanel = NULL;
-	if ( (pPanel = FindPanelByName(&root, panelName)) == NULL)  
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, panelName)) == NULL)
 	{
 		return FALSE;
 	}
@@ -745,10 +761,10 @@ BOOL CWndResizer::GetMaximumSize(  LPCTSTR panelName, CSize & size)
 	size = pPanel->MaxSize;
 	return TRUE;
 }
-BOOL CWndResizer::GetMaximumSize(  UINT uID, CSize & size) 
+BOOL CWndResizer::GetMaximumSize(UINT uID, CSize& size)
 {
-	CPanel * pPanel = NULL;
-	if ( (pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)  
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, IdToName(uID))) == NULL)
 	{
 		return FALSE;
 	}
@@ -757,10 +773,10 @@ BOOL CWndResizer::GetMaximumSize(  UINT uID, CSize & size)
 	return TRUE;
 }
 void CWndResizer::SetShowResizeGrip(BOOL show)
-{  
-	CGripperPanel * pPanel = (CGripperPanel *)FindPanelByName(&root, _T("_resizeGrip"));
+{
+	CGripperPanel* pPanel = (CGripperPanel*)FindPanelByName(&root, _T("_resizeGrip"));
 	ASSERT(pPanel != NULL);
-	if ( pPanel->m_bVisible != show )
+	if (pPanel->m_bVisible != show)
 	{
 		pPanel->m_bVisible = show;
 		m_pHookedWnd->Invalidate(TRUE);
@@ -768,11 +784,11 @@ void CWndResizer::SetShowResizeGrip(BOOL show)
 }
 BOOL CWndResizer::GetShowResizeGrip()
 {
-	CGripperPanel * pPanel = (CGripperPanel *)FindPanelByName(&root, _T("_resizeGrip"));
+	CGripperPanel* pPanel = (CGripperPanel*)FindPanelByName(&root, _T("_resizeGrip"));
 	ASSERT(pPanel != NULL);
 	return pPanel->m_bVisible ;
 
-} 
+}
 void CWndResizer::OnDestroy()
 {
 	if (m_pHookedWnd != NULL)
@@ -780,31 +796,31 @@ void CWndResizer::OnDestroy()
 		Unhook();
 	}
 }
-BOOL CWndResizer::Hook(CWnd * pParent)
+BOOL CWndResizer::Hook(CWnd* pParent)
 {
-	ASSERT( m_pHookedWnd == NULL );
+	ASSERT(m_pHookedWnd == NULL);
 
-	if (m_pHookedWnd != NULL )
+	if (m_pHookedWnd != NULL)
 	{
 		return FALSE; //already hooked
 	}
 
 	CRect rc;
-	pParent->GetClientRect( &rc );
-	return Hook(pParent, rc.Size() );
+	pParent->GetClientRect(&rc);
+	return Hook(pParent, rc.Size());
 
 
 }
-BOOL CWndResizer::Hook(CWnd * pParent, const CSize &  size)
+BOOL CWndResizer::Hook(CWnd* pParent, const CSize& size)
 {
-	ASSERT( m_pHookedWnd == NULL );
+	ASSERT(m_pHookedWnd == NULL);
 
-	if (m_pHookedWnd != NULL )
+	if (m_pHookedWnd != NULL)
 	{
 		return FALSE; //already hooked
 	}
 	m_pHookedWnd = pParent;
-	m_pHookedWnd->GetClientRect( &root );
+	m_pHookedWnd->GetClientRect(&root);
 	root.right = size.cx;
 	root.bottom = size.cy;
 	root.m_pHookWnd = m_pHookedWnd;
@@ -814,10 +830,10 @@ BOOL CWndResizer::Hook(CWnd * pParent, const CSize &  size)
 	int cx = ::GetSystemMetrics(SM_CXHSCROLL);
 	int cy = ::GetSystemMetrics(SM_CYVSCROLL);
 	rcResziGrip.DeflateRect(root.Width() - cx, root.Height() - cy, 0, 0);
-	CGripperPanel * pResizeGripper = new CGripperPanel(&rcResziGrip);
-	pResizeGripper->SetAnchor( ANCHOR_RIGHT | ANCHOR_BOTTOM );
+	CGripperPanel* pResizeGripper = new CGripperPanel(&rcResziGrip);
+	pResizeGripper->SetAnchor(ANCHOR_RIGHT | ANCHOR_BOTTOM);
 	pResizeGripper->Name = _T("_resizeGrip");
-	root.AddChild( pResizeGripper );
+	root.AddChild(pResizeGripper);
 
 	WndResizerData.SetAt(m_pHookedWnd->m_hWnd, this);
 
@@ -827,21 +843,21 @@ BOOL CWndResizer::Hook(CWnd * pParent, const CSize &  size)
 
 BOOL CWndResizer::Unhook()
 {
-	ASSERT( m_pHookedWnd != NULL );
-	if (m_pHookedWnd == NULL )
+	ASSERT(m_pHookedWnd != NULL);
+	if (m_pHookedWnd == NULL)
 	{
 		return FALSE; //hasent been hooked
 	}
 
 	/*WNDPROC pWndProc =*/ (WNDPROC)::SetWindowLongPtr(m_pHookedWnd->m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_pfnWndProc);
-	WndResizerData.RemoveKey(m_pHookedWnd->m_hWnd); 
+	WndResizerData.RemoveKey(m_pHookedWnd->m_hWnd);
 	root.m_pHookWnd = NULL;
 	m_pHookedWnd = NULL;
 
 	// destroy all chilldren
-	while(root.Children.GetCount() > 0 )
+	while (root.Children.GetCount() > 0)
 	{
-		CPanel * pChild = root.Children.RemoveHead();
+		CPanel* pChild = root.Children.RemoveHead();
 		delete pChild;
 	}
 	return TRUE;
@@ -850,43 +866,43 @@ BOOL CWndResizer::Unhook()
 
 LRESULT CALLBACK CWndResizer::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	CWndResizer * pResizer = NULL;
+	CWndResizer* pResizer = NULL;
 	WndResizerData.Lookup(hWnd, pResizer);
-	ASSERT( pResizer != NULL);
+	ASSERT(pResizer != NULL);
 
 	int cx = 0;
 	int cy = 0;
 
 	switch (uMsg)
 	{
-	case WM_SIZE:
-		cx = LOWORD(lParam);    
-		cy = HIWORD(lParam);    
-		pResizer->OnSize((UINT) wParam, cx, cy);
-		break;
-	case WM_SIZING:
-		pResizer->OnSizing((UINT) wParam, (LPRECT)lParam);      
-		break;
-	case WM_DESTROY:
-		pResizer->OnDestroy();
-		break;
-	case WM_MOUSEMOVE:
-		pResizer->OnMouseMove((UINT) wParam, CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
-		break;
-	case WM_LBUTTONDOWN:
-		pResizer->OnLButtonDown((UINT) wParam, CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
-		break;
-	case WM_LBUTTONUP:
-		pResizer->OnLButtonUp((UINT) wParam, CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
-		break;
-	case WM_PAINT:
-		pResizer->OnPaint();     
-		break;
-		//case WM_ERASEBKGND:
-		//  return FALSE;
-		//  break;
-	default:
-		break;
+		case WM_SIZE:
+			cx = LOWORD(lParam);
+			cy = HIWORD(lParam);
+			pResizer->OnSize((UINT) wParam, cx, cy);
+			break;
+		case WM_SIZING:
+			pResizer->OnSizing((UINT) wParam, (LPRECT)lParam);
+			break;
+		case WM_DESTROY:
+			pResizer->OnDestroy();
+			break;
+		case WM_MOUSEMOVE:
+			pResizer->OnMouseMove((UINT) wParam, CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+			break;
+		case WM_LBUTTONDOWN:
+			pResizer->OnLButtonDown((UINT) wParam, CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+			break;
+		case WM_LBUTTONUP:
+			pResizer->OnLButtonUp((UINT) wParam, CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+			break;
+		case WM_PAINT:
+			pResizer->OnPaint();
+			break;
+			//case WM_ERASEBKGND:
+			//  return FALSE;
+			//  break;
+		default:
+			break;
 	}
 
 	return ::CallWindowProc(pResizer->m_pfnWndProc, hWnd, uMsg, wParam, lParam);
@@ -898,21 +914,21 @@ LRESULT CALLBACK CWndResizer::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, LPCTSTR panelNameA, LPCTSTR panelNameB)
 {
-	CPanel * pPanel = NULL;
-	if ((pPanel = FindPanelByName(&root, panelName)) != NULL)  
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, panelName)) != NULL)
 	{
 		return FALSE;
 	}
 
-	CPanel * pPanelA = NULL;
-	if ((pPanelA = FindPanelByName(&root, panelNameA)) == NULL)  
+	CPanel* pPanelA = NULL;
+	if ((pPanelA = FindPanelByName(&root, panelNameA)) == NULL)
 	{
 		return FALSE;
 	}
 
 
-	CPanel * pPanelB = NULL;
-	if ((pPanelB = FindPanelByName(&root, panelNameB)) == NULL)  
+	CPanel* pPanelB = NULL;
+	if ((pPanelB = FindPanelByName(&root, panelNameB)) == NULL)
 	{
 		return FALSE;
 	}
@@ -924,7 +940,7 @@ BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, LPCTSTR panelNameA, LP
 	}
 
 
-	CPanel * pSplitterContainer = CSplitContainer::Create(pPanelA, pPanelB);
+	CPanel* pSplitterContainer = CSplitContainer::Create(pPanelA, pPanelB);
 	if (pSplitterContainer == NULL)
 	{
 		return FALSE;
@@ -938,20 +954,20 @@ BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, LPCTSTR panelNameA, LP
 
 BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, LPCTSTR panelNameA, UINT panelIDB)
 {
-	CPanel * pPanel = NULL;
-	if ((pPanel = FindPanelByName(&root, panelName)) != NULL)  
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, panelName)) != NULL)
 	{
 		return FALSE;
 	}
 
-	CPanel * pPanelA = NULL;
-	if ((pPanelA = FindPanelByName(&root, panelNameA)) == NULL)  
+	CPanel* pPanelA = NULL;
+	if ((pPanelA = FindPanelByName(&root, panelNameA)) == NULL)
 	{
 		return FALSE;
 	}
 
-	CPanel * pPanelB = GetUIPanel(panelIDB);
-	if (pPanelB == NULL )
+	CPanel* pPanelB = GetUIPanel(panelIDB);
+	if (pPanelB == NULL)
 	{
 		return FALSE;
 	}
@@ -964,7 +980,7 @@ BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, LPCTSTR panelNameA, UI
 
 	// first lets make sure the two CRect are properly set
 
-	CPanel * pSplitterContainer = CSplitContainer::Create(pPanelA, pPanelB);
+	CPanel* pSplitterContainer = CSplitContainer::Create(pPanelA, pPanelB);
 	if (pSplitterContainer == NULL)
 	{
 		return FALSE;
@@ -978,21 +994,21 @@ BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, LPCTSTR panelNameA, UI
 
 BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, UINT panelIDA, LPCTSTR panelNameB)
 {
-	CPanel * pPanel = NULL;
-	if ((pPanel = FindPanelByName(&root, panelName)) != NULL)  
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, panelName)) != NULL)
 	{
 		return FALSE;
 	}
 
-	CPanel * pPanelA = GetUIPanel(panelIDA);
-	if (pPanelA == NULL )
+	CPanel* pPanelA = GetUIPanel(panelIDA);
+	if (pPanelA == NULL)
 	{
 		return FALSE;
 	}
 
 
-	CPanel * pPanelB = NULL;
-	if ((pPanelB = FindPanelByName(&root, panelNameB)) == NULL)  
+	CPanel* pPanelB = NULL;
+	if ((pPanelB = FindPanelByName(&root, panelNameB)) == NULL)
 	{
 		return FALSE;
 	}
@@ -1002,7 +1018,7 @@ BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, UINT panelIDA, LPCTSTR
 		return FALSE;
 	}
 
-	CPanel * pSplitterContainer = CSplitContainer::Create(pPanelA, pPanelB);
+	CPanel* pSplitterContainer = CSplitContainer::Create(pPanelA, pPanelB);
 	if (pSplitterContainer == NULL)
 	{
 		return FALSE;
@@ -1017,21 +1033,21 @@ BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, UINT panelIDA, LPCTSTR
 
 BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, UINT panelIDA, UINT panelIDB)
 {
-	CPanel * pPanel = NULL;
-	if ((pPanel = FindPanelByName(&root, panelName)) != NULL)  
+	CPanel* pPanel = NULL;
+	if ((pPanel = FindPanelByName(&root, panelName)) != NULL)
 	{
 		return FALSE;
 	}
 
-	CPanel * pPanelA = GetUIPanel(panelIDA);
-	if (pPanelA == NULL )
+	CPanel* pPanelA = GetUIPanel(panelIDA);
+	if (pPanelA == NULL)
 	{
 		return FALSE;
 	}
 
 
-	CPanel * pPanelB = GetUIPanel(panelIDB);
-	if (pPanelB == NULL )
+	CPanel* pPanelB = GetUIPanel(panelIDB);
+	if (pPanelB == NULL)
 	{
 		return FALSE;
 	}
@@ -1041,7 +1057,7 @@ BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, UINT panelIDA, UINT pa
 		return FALSE;
 	}
 
-	CPanel * pSplitterContainer = CSplitContainer::Create(pPanelA, pPanelB);
+	CPanel* pSplitterContainer = CSplitContainer::Create(pPanelA, pPanelB);
 	if (pSplitterContainer == NULL)
 	{
 		return FALSE;
@@ -1055,29 +1071,29 @@ BOOL CWndResizer::CreateSplitContainer(LPCTSTR panelName, UINT panelIDA, UINT pa
 BOOL CWndResizer::SetSplitterPosition(LPCTSTR splitContainerName, UINT position)
 {
 	ASSERT(m_pHookedWnd != NULL);
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 	if ((pPanel = FindPanelByName(&root, splitContainerName)) == NULL)
 	{
 		return FALSE;
 	}
-	CSplitContainer * pContainer = dynamic_cast<CSplitContainer *> ( pPanel);
+	CSplitContainer* pContainer = dynamic_cast<CSplitContainer*>(pPanel);
 	if (pContainer == NULL)
 	{
 		return FALSE;
 	}
-	pContainer->SetSplitterPosition( (int) position);
-	ResizeUI( pContainer );
+	pContainer->SetSplitterPosition((int) position);
+	ResizeUI(pContainer);
 	return TRUE;
 }
-BOOL CWndResizer::GetSplitterPosition(LPCTSTR splitContainerName, UINT & position)
+BOOL CWndResizer::GetSplitterPosition(LPCTSTR splitContainerName, UINT& position)
 {
 	ASSERT(m_pHookedWnd != NULL);
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 	if ((pPanel = FindPanelByName(&root, splitContainerName)) == NULL)
 	{
 		return FALSE;
 	}
-	CSplitContainer * pContainer = dynamic_cast<CSplitContainer *> ( pPanel);
+	CSplitContainer* pContainer = dynamic_cast<CSplitContainer*>(pPanel);
 	if (pContainer == NULL)
 	{
 		return FALSE;
@@ -1093,7 +1109,7 @@ BOOL CWndResizer::CreatePanel(UINT uID)
 	{
 		return FALSE;
 	}
-	CUIPanel * pPanel = GetUIPanel(uID);
+	CUIPanel* pPanel = GetUIPanel(uID);
 	ASSERT(pPanel != NULL);
 
 	pPanel->m_bOle = TRUE;
@@ -1104,28 +1120,28 @@ BOOL CWndResizer::CreatePanel(UINT uID)
 BOOL CWndResizer::SetFlowDirection(LPCTSTR flowPanelName, short direction)
 {
 	ASSERT(m_pHookedWnd != NULL);
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 	if ((pPanel = FindPanelByName(&root, flowPanelName)) == NULL)
 	{
 		return FALSE;
 	}
-	CFlowLayoutPanel * pFlowLayout = dynamic_cast<CFlowLayoutPanel *> ( pPanel);
+	CFlowLayoutPanel* pFlowLayout = dynamic_cast<CFlowLayoutPanel*>(pPanel);
 	if (pFlowLayout == NULL)
 	{
 		return FALSE;
 	}
-	pFlowLayout->SetFlowDirection( direction == 1 ? CWndResizer::LEFT_TO_RIGHT : CWndResizer::TOP_TO_BOTTOM);
+	pFlowLayout->SetFlowDirection(direction == 1 ? CWndResizer::LEFT_TO_RIGHT : CWndResizer::TOP_TO_BOTTOM);
 	return TRUE;
 }
-BOOL CWndResizer::GetFlowDirection(LPCTSTR flowPanelName, short &direction)
+BOOL CWndResizer::GetFlowDirection(LPCTSTR flowPanelName, short& direction)
 {
 	ASSERT(m_pHookedWnd != NULL);
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 	if ((pPanel = FindPanelByName(&root, flowPanelName)) == NULL)
 	{
 		return FALSE;
 	}
-	CFlowLayoutPanel * pFlowLayout = dynamic_cast<CFlowLayoutPanel *> ( pPanel);
+	CFlowLayoutPanel* pFlowLayout = dynamic_cast<CFlowLayoutPanel*>(pPanel);
 	if (pFlowLayout == NULL)
 	{
 		return FALSE;
@@ -1137,12 +1153,12 @@ BOOL CWndResizer::GetFlowDirection(LPCTSTR flowPanelName, short &direction)
 BOOL CWndResizer::SetFlowItemSpacingX(LPCTSTR flowPanelName, int nSpacing)
 {
 	ASSERT(m_pHookedWnd != NULL);
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 	if ((pPanel = FindPanelByName(&root, flowPanelName)) == NULL)
 	{
 		return FALSE;
 	}
-	CFlowLayoutPanel * pFlowLayout = dynamic_cast<CFlowLayoutPanel *> ( pPanel);
+	CFlowLayoutPanel* pFlowLayout = dynamic_cast<CFlowLayoutPanel*>(pPanel);
 	if (pFlowLayout == NULL)
 	{
 		return FALSE;
@@ -1150,15 +1166,15 @@ BOOL CWndResizer::SetFlowItemSpacingX(LPCTSTR flowPanelName, int nSpacing)
 	pFlowLayout->SetItemSpacingX(nSpacing);
 	return TRUE;
 }
-BOOL CWndResizer::GetFlowItemSpacingX(LPCTSTR flowPanelName, int &nSpacing)
+BOOL CWndResizer::GetFlowItemSpacingX(LPCTSTR flowPanelName, int& nSpacing)
 {
 	ASSERT(m_pHookedWnd != NULL);
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 	if ((pPanel = FindPanelByName(&root, flowPanelName)) == NULL)
 	{
 		return FALSE;
 	}
-	CFlowLayoutPanel * pFlowLayout = dynamic_cast<CFlowLayoutPanel *> ( pPanel);
+	CFlowLayoutPanel* pFlowLayout = dynamic_cast<CFlowLayoutPanel*>(pPanel);
 	if (pFlowLayout == NULL)
 	{
 		return FALSE;
@@ -1170,12 +1186,12 @@ BOOL CWndResizer::GetFlowItemSpacingX(LPCTSTR flowPanelName, int &nSpacing)
 BOOL CWndResizer::SetFlowItemSpacingY(LPCTSTR flowPanelName, int nSpacing)
 {
 	ASSERT(m_pHookedWnd != NULL);
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 	if ((pPanel = FindPanelByName(&root, flowPanelName)) == NULL)
 	{
 		return FALSE;
 	}
-	CFlowLayoutPanel * pFlowLayout = dynamic_cast<CFlowLayoutPanel *> ( pPanel);
+	CFlowLayoutPanel* pFlowLayout = dynamic_cast<CFlowLayoutPanel*>(pPanel);
 	if (pFlowLayout == NULL)
 	{
 		return FALSE;
@@ -1185,15 +1201,15 @@ BOOL CWndResizer::SetFlowItemSpacingY(LPCTSTR flowPanelName, int nSpacing)
 
 }
 
-BOOL CWndResizer::GetFlowItemSpacingY(LPCTSTR flowPanelName, int &nSpacing)
+BOOL CWndResizer::GetFlowItemSpacingY(LPCTSTR flowPanelName, int& nSpacing)
 {
 	ASSERT(m_pHookedWnd != NULL);
-	CPanel * pPanel = NULL;
+	CPanel* pPanel = NULL;
 	if ((pPanel = FindPanelByName(&root, flowPanelName)) == NULL)
 	{
 		return FALSE;
 	}
-	CFlowLayoutPanel * pFlowLayout = dynamic_cast<CFlowLayoutPanel *> ( pPanel);
+	CFlowLayoutPanel* pFlowLayout = dynamic_cast<CFlowLayoutPanel*>(pPanel);
 	if (pFlowLayout == NULL)
 	{
 		return FALSE;
@@ -1204,24 +1220,24 @@ BOOL CWndResizer::GetFlowItemSpacingY(LPCTSTR flowPanelName, int &nSpacing)
 }
 
 
-BOOL CWndResizer::CreateFlowLayoutPanel(LPCTSTR panelName, const CRect * prcPanel)
+BOOL CWndResizer::CreateFlowLayoutPanel(LPCTSTR panelName, const CRect* prcPanel)
 {
-	if (FindPanelByName(&root, panelName) != NULL)  
+	if (FindPanelByName(&root, panelName) != NULL)
 	{
 		return FALSE;
 	}
 
-	CPanel * pPanel = new CFlowLayoutPanel(prcPanel);
+	CPanel* pPanel = new CFlowLayoutPanel(prcPanel);
 	pPanel->Name = panelName;
 	return root.AddChild(pPanel);
 
 }
-BOOL CWndResizer::CreateFlowLayoutPanel(LPCTSTR panelName, const CUIntArray * parrID, BOOL setAsChildren)
+BOOL CWndResizer::CreateFlowLayoutPanel(LPCTSTR panelName, const CUIntArray* parrID, BOOL setAsChildren)
 {
 	ASSERT(m_pHookedWnd != NULL);
 
 	CRect rcFinal;
-	for(int i = 0; i < parrID->GetCount(); i++)
+	for (int i = 0; i < parrID->GetCount(); i++)
 	{
 		CRect rc;
 		m_pHookedWnd->GetDlgItem(parrID->GetAt(i))->GetWindowRect(&rc);
@@ -1235,45 +1251,45 @@ BOOL CWndResizer::CreateFlowLayoutPanel(LPCTSTR panelName, const CUIntArray * pa
 		return FALSE;
 	}
 
-	if ( setAsChildren )
+	if (setAsChildren)
 	{
-		CPanel * pPanel = FindPanelByName(&root, panelName);
-		for(int i = 0; i < parrID->GetCount(); i++)
+		CPanel* pPanel = FindPanelByName(&root, panelName);
+		for (int i = 0; i < parrID->GetCount(); i++)
 		{
-			if (FindPanelByName(&root, IdToName(parrID->GetAt(i))) != NULL)  
+			if (FindPanelByName(&root, IdToName(parrID->GetAt(i))) != NULL)
 			{
 				bOk = root.RemoveChild(pPanel);
-				ASSERT( bOk == TRUE);
+				ASSERT(bOk == TRUE);
 				delete pPanel;
 				return FALSE;
 			}
-			CUIPanel * pUIPanel = GetUIPanel(parrID->GetAt(i));
-			ASSERT( pUIPanel != NULL);
-			bOk = pPanel->AddChild( pUIPanel );
-			ASSERT( bOk == TRUE);
+			CUIPanel* pUIPanel = GetUIPanel(parrID->GetAt(i));
+			ASSERT(pUIPanel != NULL);
+			bOk = pPanel->AddChild(pUIPanel);
+			ASSERT(bOk == TRUE);
 		}
 	}
 	return TRUE;
 }
 
-BOOL CWndResizer::CreatePanel(LPCTSTR panelName, const CRect * prcPanel)
+BOOL CWndResizer::CreatePanel(LPCTSTR panelName, const CRect* prcPanel)
 {
-	if (FindPanelByName(&root, panelName) != NULL)  
+	if (FindPanelByName(&root, panelName) != NULL)
 	{
 		return FALSE;
 	}
 
-	CPanel * pPanel = new CPanel(prcPanel);
+	CPanel* pPanel = new CPanel(prcPanel);
 	pPanel->Name = panelName;
 	return root.AddChild(pPanel);
 
 }
-BOOL CWndResizer::CreatePanel(LPCTSTR panelName, const CUIntArray * parrID, BOOL setAsChildren)
+BOOL CWndResizer::CreatePanel(LPCTSTR panelName, const CUIntArray* parrID, BOOL setAsChildren)
 {
 	ASSERT(m_pHookedWnd != NULL);
 
 	CRect rcFinal;
-	for(int i = 0; i < parrID->GetCount(); i++)
+	for (int i = 0; i < parrID->GetCount(); i++)
 	{
 		CRect rc;
 		m_pHookedWnd->GetDlgItem(parrID->GetAt(i))->GetWindowRect(&rc);
@@ -1287,51 +1303,51 @@ BOOL CWndResizer::CreatePanel(LPCTSTR panelName, const CUIntArray * parrID, BOOL
 		return FALSE;
 	}
 
-	if ( setAsChildren )
+	if (setAsChildren)
 	{
-		CPanel * pPanel = FindPanelByName(&root, panelName);
-		for(int i = 0; i < parrID->GetCount(); i++)
+		CPanel* pPanel = FindPanelByName(&root, panelName);
+		for (int i = 0; i < parrID->GetCount(); i++)
 		{
-			if (FindPanelByName(&root, IdToName(parrID->GetAt(i))) != NULL)  
+			if (FindPanelByName(&root, IdToName(parrID->GetAt(i))) != NULL)
 			{
 				bOk = root.RemoveChild(pPanel);
-				ASSERT( bOk == TRUE);
+				ASSERT(bOk == TRUE);
 				delete pPanel;
 				return FALSE;
 			}
-			CUIPanel * pUIPanel = GetUIPanel(parrID->GetAt(i));
-			ASSERT( pUIPanel != NULL);
-			bOk = pPanel->AddChild( pUIPanel );
-			ASSERT( bOk == TRUE);
+			CUIPanel* pUIPanel = GetUIPanel(parrID->GetAt(i));
+			ASSERT(pUIPanel != NULL);
+			bOk = pPanel->AddChild(pUIPanel);
+			ASSERT(bOk == TRUE);
 		}
 	}
 	return TRUE;
 }
 
-CWndResizer::CPanel * CWndResizer::FindPanelByName(CWndResizer::CPanel * pRoot, LPCTSTR name)
+CWndResizer::CPanel* CWndResizer::FindPanelByName(CWndResizer::CPanel* pRoot, LPCTSTR name)
 {
 	if (CString(name).GetLength() == 0)
 	{
 		return NULL;
 	}
 
-	if (pRoot == NULL )
+	if (pRoot == NULL)
 	{
 		return NULL;
 	}
 
-	if (pRoot->Name.CompareNoCase(name) == 0 )
+	if (pRoot->Name.CompareNoCase(name) == 0)
 	{
 		return pRoot;
 	}
 	else
 	{
 		POSITION pos = pRoot->Children.GetHeadPosition();
-		while(pos != NULL)
+		while (pos != NULL)
 		{
-			CPanel * pChild = pRoot->Children.GetNext(pos);
-			CPanel * pFound = FindPanelByName(pChild, name);
-			if (pFound != NULL )
+			CPanel* pChild = pRoot->Children.GetNext(pos);
+			CPanel* pFound = FindPanelByName(pChild, name);
+			if (pFound != NULL)
 			{
 				return pFound;
 			}
@@ -1340,67 +1356,67 @@ CWndResizer::CPanel * CWndResizer::FindPanelByName(CWndResizer::CPanel * pRoot, 
 
 	return NULL;
 }
-void CWndResizer::GetUIPanels(CWndResizer::CPanel * pRoot, CPanelList * pList, BOOL bOle)
+void CWndResizer::GetUIPanels(CWndResizer::CPanel* pRoot, CPanelList* pList, BOOL bOle)
 {
-	if (pRoot == NULL )
+	if (pRoot == NULL)
 	{
 		return ;
 	}
 
-	CUIPanel * pUIPanel = dynamic_cast<CUIPanel *> ( pRoot);
+	CUIPanel* pUIPanel = dynamic_cast<CUIPanel*>(pRoot);
 
 	if (pUIPanel != NULL && pUIPanel->m_bOle == bOle)
 	{
-		pList->AddTail( pRoot );
+		pList->AddTail(pRoot);
 	}
 
 	// try the childreen
 	POSITION pos = pRoot->Children.GetHeadPosition();
-	while(pos != NULL)
+	while (pos != NULL)
 	{
-		CPanel * pChild = pRoot->Children.GetNext(pos);
+		CPanel* pChild = pRoot->Children.GetNext(pos);
 		GetUIPanels(pChild, pList, bOle);
 
 	}
 
 }
 
-void CWndResizer::GetVisualPanels(CWndResizer::CPanel * pRoot, CPanelList * pList)
+void CWndResizer::GetVisualPanels(CWndResizer::CPanel* pRoot, CPanelList* pList)
 {
-	if (pRoot == NULL )
+	if (pRoot == NULL)
 	{
 		return ;
 	}
 
-	CVisualPanel * pUIPanel = dynamic_cast<CVisualPanel *> ( pRoot);
+	CVisualPanel* pUIPanel = dynamic_cast<CVisualPanel*>(pRoot);
 
 	if (pUIPanel != NULL)
 	{
-		pList->AddTail( pRoot );
+		pList->AddTail(pRoot);
 	}
 
 	// try the childreen
 	POSITION pos = pRoot->Children.GetHeadPosition();
-	while(pos != NULL)
+	while (pos != NULL)
 	{
-		CPanel * pChild = pRoot->Children.GetNext(pos);
+		CPanel* pChild = pRoot->Children.GetNext(pos);
 		GetVisualPanels(pChild, pList);
-	}  
+	}
 }
 
 
-CWndResizer::CPanel * CWndResizer::FindSplitterFromPoint(CWndResizer::CPanel * pRoot, CPoint point)
-{  
-	if (pRoot == NULL )
+CWndResizer::CPanel* CWndResizer::FindSplitterFromPoint(CWndResizer::CPanel* pRoot, CPoint point)
+{
+	if (pRoot == NULL)
 	{
 		return NULL;
 	}
 
-	CSpitterPanel * pSpitterPanel = dynamic_cast<CSpitterPanel *>(pRoot);
+	CSpitterPanel* pSpitterPanel = dynamic_cast<CSpitterPanel*>(pRoot);
 
-	if (pSpitterPanel != NULL && pRoot->PtInRect(point) == TRUE )
+	if (pSpitterPanel != NULL && pRoot->PtInRect(point) == TRUE)
 	{
-		CSplitContainer * pContainer = (CSplitContainer *)pRoot->Parent;
+		CSplitContainer* pContainer = (CSplitContainer*)pRoot->Parent;
 		if (!pContainer->GetIsSplitterFixed())
 		{
 			CPoint ptScreen = point;
@@ -1415,11 +1431,11 @@ CWndResizer::CPanel * CWndResizer::FindSplitterFromPoint(CWndResizer::CPanel * p
 
 	// try the childreen
 	POSITION pos = pRoot->Children.GetHeadPosition();
-	while(pos != NULL)
+	while (pos != NULL)
 	{
-		CPanel * pChild = pRoot->Children.GetNext(pos);
-		CPanel * pFound = FindSplitterFromPoint(pChild, point);
-		if (pFound != NULL )
+		CPanel* pChild = pRoot->Children.GetNext(pos);
+		CPanel* pFound = FindSplitterFromPoint(pChild, point);
+		if (pFound != NULL)
 		{
 			return pFound;
 		}
@@ -1436,33 +1452,33 @@ CString CWndResizer::IdToName(UINT uID)
 	return sName;
 }
 
-CWndResizer::CUIPanel * CWndResizer::CreateUIPanel(UINT uID)
+CWndResizer::CUIPanel* CWndResizer::CreateUIPanel(UINT uID)
 {
 	ASSERT(m_pHookedWnd != NULL);
-	CWnd * pWnd = m_pHookedWnd->GetDlgItem(uID);
+	CWnd* pWnd = m_pHookedWnd->GetDlgItem(uID);
 
-	if ( pWnd == NULL )
+	if (pWnd == NULL)
 	{
 		return NULL;
 	}
 	CRect rc;
-	pWnd->GetWindowRect( &rc );  
-	m_pHookedWnd->ScreenToClient( &rc );
+	pWnd->GetWindowRect(&rc);
+	m_pHookedWnd->ScreenToClient(&rc);
 
-	CUIPanel * pPanel = new CUIPanel(&rc, uID);
+	CUIPanel* pPanel = new CUIPanel(&rc, uID);
 	pPanel->Name = IdToName(uID);
 	return pPanel ;
 }
 
-CWndResizer::CUIPanel * CWndResizer::GetUIPanel(UINT uID)
+CWndResizer::CUIPanel* CWndResizer::GetUIPanel(UINT uID)
 {
-	CUIPanel * pPanel = NULL;
-	if ((pPanel = (CUIPanel *)FindPanelByName(&root, IdToName(uID))) == NULL)  
+	CUIPanel* pPanel = NULL;
+	if ((pPanel = (CUIPanel*)FindPanelByName(&root, IdToName(uID))) == NULL)
 	{
 		pPanel = CreateUIPanel(uID);
 		if (pPanel != NULL)
 		{
-			root.AddChild( pPanel );
+			root.AddChild(pPanel);
 		}
 	}
 	return pPanel;
@@ -1490,21 +1506,21 @@ CString CWndResizer::GetDebugInfo()
 
 	return sInfo;
 }
-void CWndResizer::GetDebugInfo(CPanel * pRoot, CString & info, CString indent)
+void CWndResizer::GetDebugInfo(CPanel* pRoot, CString& info, CString indent)
 {
-	if (pRoot == NULL )
+	if (pRoot == NULL)
 	{
 		return ;
 	}
 
 	info.Append(_T("\n"));
 	info.Append(indent);
-	info.Append(pRoot->ToString() );
+	info.Append(pRoot->ToString());
 
 	indent.Append(_T("  "));
-	for(int i = 0; i < pRoot->Children.GetCount(); i++)
+	for (int i = 0; i < pRoot->Children.GetCount(); i++)
 	{
-		CPanel * pChild = pRoot->Children.GetAt(pRoot->Children.FindIndex(i));
+		CPanel* pChild = pRoot->Children.GetAt(pRoot->Children.FindIndex(i));
 		GetDebugInfo(pChild, info, indent);
 	}
 
@@ -1517,7 +1533,7 @@ CWndResizer::CPanel::CPanel()
 {
 	Init();
 }
-CWndResizer::CPanel::CPanel(const CRect * prc) : CRect(prc)
+CWndResizer::CPanel::CPanel(const CRect* prc) : CRect(prc)
 {
 	Init();
 }
@@ -1527,16 +1543,16 @@ void CWndResizer::CPanel::Init()
 	LeftOffset = 0;
 	TopOffset = 0;
 	RightOffset = 0;
-	BottomOffset = 0; 
+	BottomOffset = 0;
 	MinSize.SetSize(10, 10);
 	MaxSize.SetSize(100000, 100000);
-	Anchor =(ANCHOR_LEFT | ANCHOR_TOP);  
+	Anchor = (ANCHOR_LEFT | ANCHOR_TOP);
 	Dock = DOCK_NONE;
 }
 
 CWndResizer::CPanel::~CPanel()
 {
-	while(Children.GetCount() > 0 )
+	while (Children.GetCount() > 0)
 	{
 		delete Children.RemoveHead();
 	}
@@ -1547,37 +1563,37 @@ void CWndResizer::CPanel::OnResized()
 	CRect rcEmpty(this);  // available area for docking.  ininitally it is the entire area
 
 	POSITION pos = Children.GetHeadPosition();
-	while(pos != NULL)
+	while (pos != NULL)
 	{
-		CPanel * pChild = Children.GetNext(pos);    
+		CPanel* pChild = Children.GetNext(pos);
 
 		if (pChild->Dock != DOCK_NONE)
 		{
-			switch(pChild->Dock)
+			switch (pChild->Dock)
 			{
-			case DOCK_LEFT:
-				pChild->SetRect(rcEmpty.left, rcEmpty.top, rcEmpty.left + pChild->Width(), rcEmpty.bottom);
-				bOk = rcEmpty.SubtractRect(&rcEmpty, pChild);
-				//ASSERT( bOk == TRUE);
-				break;
-			case DOCK_TOP:
-				pChild->SetRect(rcEmpty.left, rcEmpty.top, rcEmpty.right, rcEmpty.top + pChild->Height());
-				bOk = rcEmpty.SubtractRect(&rcEmpty, pChild);
-				//ASSERT( bOk == TRUE);
-				break;
-			case DOCK_RIGHT:
-				pChild->SetRect(rcEmpty.right - pChild->Width(), rcEmpty.top, rcEmpty.right, rcEmpty.bottom);
-				bOk = rcEmpty.SubtractRect(&rcEmpty, pChild);
-				//ASSERT( bOk == TRUE);
-				break;
-			case DOCK_BOTTOM:
-				pChild->SetRect(rcEmpty.left, rcEmpty.bottom - pChild->Height(), rcEmpty.right, rcEmpty.bottom);
-				bOk = rcEmpty.SubtractRect(&rcEmpty, pChild);
-				//ASSERT( bOk == TRUE);
-				break;
-			case DOCK_FILL:
-				pChild->SetRect(rcEmpty.left, rcEmpty.top, rcEmpty.right, rcEmpty.bottom);
-				break;
+				case DOCK_LEFT:
+					pChild->SetRect(rcEmpty.left, rcEmpty.top, rcEmpty.left + pChild->Width(), rcEmpty.bottom);
+					bOk = rcEmpty.SubtractRect(&rcEmpty, pChild);
+					//ASSERT( bOk == TRUE);
+					break;
+				case DOCK_TOP:
+					pChild->SetRect(rcEmpty.left, rcEmpty.top, rcEmpty.right, rcEmpty.top + pChild->Height());
+					bOk = rcEmpty.SubtractRect(&rcEmpty, pChild);
+					//ASSERT( bOk == TRUE);
+					break;
+				case DOCK_RIGHT:
+					pChild->SetRect(rcEmpty.right - pChild->Width(), rcEmpty.top, rcEmpty.right, rcEmpty.bottom);
+					bOk = rcEmpty.SubtractRect(&rcEmpty, pChild);
+					//ASSERT( bOk == TRUE);
+					break;
+				case DOCK_BOTTOM:
+					pChild->SetRect(rcEmpty.left, rcEmpty.bottom - pChild->Height(), rcEmpty.right, rcEmpty.bottom);
+					bOk = rcEmpty.SubtractRect(&rcEmpty, pChild);
+					//ASSERT( bOk == TRUE);
+					break;
+				case DOCK_FILL:
+					pChild->SetRect(rcEmpty.left, rcEmpty.top, rcEmpty.right, rcEmpty.bottom);
+					break;
 			}
 			pChild->OnResized();
 
@@ -1586,18 +1602,18 @@ void CWndResizer::CPanel::OnResized()
 		}
 
 		CRect rc;
-		if ((pChild->Anchor & ANCHOR_HORIZONTALLY_CENTERED) ==  ANCHOR_HORIZONTALLY_CENTERED )
+		if ((pChild->Anchor & ANCHOR_HORIZONTALLY_CENTERED) ==  ANCHOR_HORIZONTALLY_CENTERED)
 		{
-			rc.left = this->left + ((int)( (this->Width() - pChild->Width()) /  2));
+			rc.left = this->left + ((int)((this->Width() - pChild->Width()) /  2));
 			rc.right = rc.left + pChild->Width();
 
 			BOOL bReposition = FALSE;
-			if (pChild->MinSize.cx > rc.Width() )
+			if (pChild->MinSize.cx > rc.Width())
 			{
 				bReposition = TRUE;
 				rc.right = rc.left + pChild->MinSize.cx;
 			}
-			if (pChild->MaxSize.cx < rc.Width() )
+			if (pChild->MaxSize.cx < rc.Width())
 			{
 				bReposition = TRUE;
 				rc.right = rc.left + pChild->MaxSize.cx;
@@ -1606,11 +1622,11 @@ void CWndResizer::CPanel::OnResized()
 			if (bReposition)
 			{
 				int nWidth = rc.Width();
-				rc.left = (int)( (this->Width() - nWidth) /  2) ;
+				rc.left = (int)((this->Width() - nWidth) /  2) ;
 				rc.right = rc.left + nWidth;
 			}
 		}
-		else if ((pChild->Anchor & ANCHOR_HORIZONTALLY) ==  ANCHOR_HORIZONTALLY )
+		else if ((pChild->Anchor & ANCHOR_HORIZONTALLY) ==  ANCHOR_HORIZONTALLY)
 		{
 			rc.left = this->left + pChild->LeftOffset;
 			rc.right = this->right - pChild->RightOffset;
@@ -1619,11 +1635,11 @@ void CWndResizer::CPanel::OnResized()
 			// (giving ANCHOR_LEFT priority over ANCHOR_RIGHT)
 			if ((pChild->Anchor & ANCHOR_PRIORITY_RIGHT) == ANCHOR_PRIORITY_RIGHT)
 			{
-				if (pChild->MinSize.cx > rc.Width() )
+				if (pChild->MinSize.cx > rc.Width())
 				{
 					rc.left = rc.right - pChild->MinSize.cx;
 				}
-				if (pChild->MaxSize.cx < rc.Width() )
+				if (pChild->MaxSize.cx < rc.Width())
 				{
 					rc.left = rc.right - pChild->MaxSize.cx;
 				}
@@ -1631,40 +1647,40 @@ void CWndResizer::CPanel::OnResized()
 			}
 			else
 			{
-				if (pChild->MinSize.cx > rc.Width() )
+				if (pChild->MinSize.cx > rc.Width())
 				{
 					rc.right = rc.left + pChild->MinSize.cx;
 				}
-				if (pChild->MaxSize.cx < rc.Width() )
+				if (pChild->MaxSize.cx < rc.Width())
 				{
 					rc.right = rc.left + pChild->MaxSize.cx;
 				}
 			}
 		}
-		else if ((pChild->Anchor & ANCHOR_RIGHT) ==  ANCHOR_RIGHT )
+		else if ((pChild->Anchor & ANCHOR_RIGHT) ==  ANCHOR_RIGHT)
 		{
-			rc.right = this->right - pChild->RightOffset;     
+			rc.right = this->right - pChild->RightOffset;
 			rc.left = rc.right - pChild->Width();
 
-			if (pChild->MinSize.cx > rc.Width() )
+			if (pChild->MinSize.cx > rc.Width())
 			{
 				rc.left = rc.right - pChild->MinSize.cx;
 			}
-			if (pChild->MaxSize.cx < rc.Width() )
+			if (pChild->MaxSize.cx < rc.Width())
 			{
 				rc.left = rc.right - pChild->MaxSize.cx;
 			}
 		}
-		else if ((pChild->Anchor & ANCHOR_LEFT) == ANCHOR_LEFT )
+		else if ((pChild->Anchor & ANCHOR_LEFT) == ANCHOR_LEFT)
 		{
 			rc.left = this->left + pChild->LeftOffset;
-			rc.right = rc.left + pChild->Width();   
+			rc.right = rc.left + pChild->Width();
 
-			if (pChild->MinSize.cx > rc.Width() )
+			if (pChild->MinSize.cx > rc.Width())
 			{
 				rc.right = rc.left + pChild->MinSize.cx;
 			}
-			if (pChild->MaxSize.cx < rc.Width() )
+			if (pChild->MaxSize.cx < rc.Width())
 			{
 				rc.right = rc.left + pChild->MaxSize.cx;
 			}
@@ -1672,22 +1688,22 @@ void CWndResizer::CPanel::OnResized()
 		else
 		{
 			// it should never be here
-			ASSERT( FALSE );
+			ASSERT(FALSE);
 		}
 
 
-		if ((pChild->Anchor & ANCHOR_VERTICALLY_CENTERED) ==  ANCHOR_VERTICALLY_CENTERED )
+		if ((pChild->Anchor & ANCHOR_VERTICALLY_CENTERED) ==  ANCHOR_VERTICALLY_CENTERED)
 		{
-			rc.top = this->top + ((int)( (this->Height() - pChild->Height()) /  2));
+			rc.top = this->top + ((int)((this->Height() - pChild->Height()) /  2));
 			rc.bottom = rc.top + pChild->Height();
 
 			BOOL bReposition = FALSE;
-			if (pChild->MinSize.cy > rc.Height() )
+			if (pChild->MinSize.cy > rc.Height())
 			{
 				bReposition = TRUE;
 				rc.bottom = rc.top + pChild->MinSize.cy;
 			}
-			if (pChild->MaxSize.cy < rc.Height() )
+			if (pChild->MaxSize.cy < rc.Height())
 			{
 				bReposition = TRUE;
 				rc.bottom = rc.top + pChild->MaxSize.cy;
@@ -1696,62 +1712,62 @@ void CWndResizer::CPanel::OnResized()
 			if (bReposition)
 			{
 				int nHeight = rc.Height();
-				rc.top = (int)( (this->Height() - nHeight) /  2);
+				rc.top = (int)((this->Height() - nHeight) /  2);
 				rc.bottom = rc.top + nHeight;
 			}
 		}
-		else if ((pChild->Anchor & ANCHOR_VERTICALLY ) == ANCHOR_VERTICALLY )
+		else if ((pChild->Anchor & ANCHOR_VERTICALLY) == ANCHOR_VERTICALLY)
 		{
 			rc.top = this->top + pChild->TopOffset;
 			rc.bottom = this->bottom - pChild->BottomOffset;
 
 			if ((pChild->Anchor & ANCHOR_PRIORITY_BOTTOM) == ANCHOR_PRIORITY_BOTTOM)
 			{
-				if (pChild->MinSize.cy > rc.Height() )
+				if (pChild->MinSize.cy > rc.Height())
 				{
 					rc.top = rc.bottom - pChild->MinSize.cy;
 				}
-				if (pChild->MaxSize.cy < rc.Height() )
+				if (pChild->MaxSize.cy < rc.Height())
 				{
 					rc.top = rc.bottom - pChild->MaxSize.cy;
 				}
 			}
 			else
 			{
-				if (pChild->MinSize.cy > rc.Height() )
+				if (pChild->MinSize.cy > rc.Height())
 				{
 					rc.bottom = rc.top + pChild->MinSize.cy;
 				}
-				if (pChild->MaxSize.cy < rc.Height() )
+				if (pChild->MaxSize.cy < rc.Height())
 				{
 					rc.bottom = rc.top + pChild->MaxSize.cy;
 				}
 			}
 		}
-		else if ((pChild->Anchor & ANCHOR_BOTTOM) == ANCHOR_BOTTOM )
+		else if ((pChild->Anchor & ANCHOR_BOTTOM) == ANCHOR_BOTTOM)
 		{
-			rc.bottom = this->bottom - pChild->BottomOffset;     
+			rc.bottom = this->bottom - pChild->BottomOffset;
 			rc.top = rc.bottom - pChild->Height();
 
-			if (pChild->MinSize.cy > rc.Height() )
+			if (pChild->MinSize.cy > rc.Height())
 			{
 				rc.top = rc.bottom - pChild->MinSize.cy;
 			}
-			if (pChild->MaxSize.cy < rc.Height() )
+			if (pChild->MaxSize.cy < rc.Height())
 			{
 				rc.top = rc.bottom - pChild->MaxSize.cy;
 			}
 		}
-		else if ((pChild->Anchor & ANCHOR_TOP) == ANCHOR_TOP )
+		else if ((pChild->Anchor & ANCHOR_TOP) == ANCHOR_TOP)
 		{
 			rc.top = this->top + pChild->TopOffset;
-			rc.bottom = rc.top + pChild->Height();   
+			rc.bottom = rc.top + pChild->Height();
 
-			if (pChild->MinSize.cy > rc.Height() )
+			if (pChild->MinSize.cy > rc.Height())
 			{
 				rc.bottom = rc.top + pChild->MinSize.cy;
 			}
-			if (pChild->MaxSize.cy < rc.Height() )
+			if (pChild->MaxSize.cy < rc.Height())
 			{
 				rc.bottom = rc.top + pChild->MaxSize.cy;
 			}
@@ -1759,7 +1775,7 @@ void CWndResizer::CPanel::OnResized()
 		else
 		{
 			// it should never be here
-			ASSERT( FALSE );
+			ASSERT(FALSE);
 		}
 		pChild->SetRect(rc.TopLeft(), rc.BottomRight());
 
@@ -1767,7 +1783,7 @@ void CWndResizer::CPanel::OnResized()
 
 	}
 }
-BOOL CWndResizer::CPanel::AddChild(CPanel * pChild)
+BOOL CWndResizer::CPanel::AddChild(CPanel* pChild)
 {
 	if (pChild->Parent != NULL)
 	{
@@ -1784,11 +1800,11 @@ BOOL CWndResizer::CPanel::AddChild(CPanel * pChild)
 
 	pChild->Parent = this;
 
-	Children.AddTail( pChild );
+	Children.AddTail(pChild);
 	return TRUE;
 }
 
-BOOL CWndResizer::CPanel::RemoveChild(CPanel * pChild)
+BOOL CWndResizer::CPanel::RemoveChild(CPanel* pChild)
 {
 	POSITION pos = Children.Find(pChild);
 	if (pos == NULL)
@@ -1800,9 +1816,9 @@ BOOL CWndResizer::CPanel::RemoveChild(CPanel * pChild)
 
 }
 
-BOOL CWndResizer::CPanel::SetMinSize(const CSize & size)
-{  
-	if (MaxSize.cx < size.cx)  
+BOOL CWndResizer::CPanel::SetMinSize(const CSize& size)
+{
+	if (MaxSize.cx < size.cx)
 	{
 		return FALSE;
 	}
@@ -1814,9 +1830,9 @@ BOOL CWndResizer::CPanel::SetMinSize(const CSize & size)
 	MinSize = size;
 	return TRUE;
 }
-BOOL CWndResizer::CPanel::SetMaxSize(const CSize & size)
+BOOL CWndResizer::CPanel::SetMaxSize(const CSize& size)
 {
-	if (MinSize.cx > size.cx)  
+	if (MinSize.cx > size.cx)
 	{
 		return FALSE;
 	}
@@ -1831,22 +1847,22 @@ BOOL CWndResizer::CPanel::SetMaxSize(const CSize & size)
 
 BOOL CWndResizer::CPanel::SetAnchor(UINT anchor)
 {
-	if ((anchor & ANCHOR_VERTICALLY_CENTERED) <= 0 )
+	if ((anchor & ANCHOR_VERTICALLY_CENTERED) <= 0)
 	{
-		if ((anchor & ANCHOR_TOP) <= 0 )
+		if ((anchor & ANCHOR_TOP) <= 0)
 		{
-			if ((anchor & ANCHOR_BOTTOM) <= 0 )
+			if ((anchor & ANCHOR_BOTTOM) <= 0)
 			{
 				anchor |= ANCHOR_TOP;  // default
 			}
 		}
 	}
 
-	if ((anchor & ANCHOR_HORIZONTALLY_CENTERED) <= 0 )
+	if ((anchor & ANCHOR_HORIZONTALLY_CENTERED) <= 0)
 	{
-		if ((anchor & ANCHOR_LEFT) <= 0 )
+		if ((anchor & ANCHOR_LEFT) <= 0)
 		{
-			if ((anchor & ANCHOR_RIGHT) <= 0 )
+			if ((anchor & ANCHOR_RIGHT) <= 0)
 			{
 				anchor |= ANCHOR_LEFT; // default
 			}
@@ -1861,7 +1877,7 @@ CString CWndResizer::CPanel::ToString()
 	CString sFormat(_T("Name(%s), Type(%s), Anchor(%d), Size(w:%d, h:%d), Area(l:%d, t:%d, r:%d, b:%d), MinSize(w:%d, h:%d), MaxSize(w:%d, h:%d), Parent(%s), ChildrenCount(%d)"));
 
 	CString sTo;
-	sTo.Format(sFormat, Name, GetTypeName(), Anchor, Width(), Height(), left, top, right, bottom, MinSize.cx, MinSize.cy, MaxSize.cx, MaxSize.cy, (Parent == NULL? _T("NULL") : Parent->Name), Children.GetCount());
+	sTo.Format(sFormat, Name, GetTypeName(), Anchor, Width(), Height(), left, top, right, bottom, MinSize.cx, MinSize.cy, MaxSize.cx, MaxSize.cy, (Parent == NULL ? _T("NULL") : Parent->Name), Children.GetCount());
 	return sTo;
 }
 CString CWndResizer::CPanel::GetTypeName()
@@ -1869,7 +1885,7 @@ CString CWndResizer::CPanel::GetTypeName()
 	return _T("CPanel");
 }
 
-CWnd * CWndResizer::CPanel::GetHookedWnd()
+CWnd* CWndResizer::CPanel::GetHookedWnd()
 {
 	if (Parent != NULL)
 	{
@@ -1880,7 +1896,7 @@ CWnd * CWndResizer::CPanel::GetHookedWnd()
 
 /////////////////////////////  CSplitContainer
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CWndResizer::CSplitContainer::CSplitContainer(CSplitPanel * pPanelA, CSplitPanel * pPanelB, CWndResizer::SplitterOrientation type) : CPanel()
+CWndResizer::CSplitContainer::CSplitContainer(CSplitPanel* pPanelA, CSplitPanel* pPanelB, CWndResizer::SplitterOrientation type) : CPanel()
 {
 	m_IsSplitterFixed = FALSE;
 	m_FixedPanel = 0;
@@ -1892,9 +1908,9 @@ CWndResizer::CSplitContainer::CSplitContainer(CSplitPanel * pPanelA, CSplitPanel
 	m_Orientation = type;
 	m_pPanelA = pPanelA;
 	m_pPanelB = pPanelB;
-	UnionRect(m_pPanelA, m_pPanelB);  
+	UnionRect(m_pPanelA, m_pPanelB);
 
-	CRect rc;  
+	CRect rc;
 	GetSplitArea(&rc);
 	m_pSplitter = new CSpitterPanel(&rc, type);
 	m_pSplitter->m_pGrippePanel->m_bVisible = FALSE;
@@ -1941,21 +1957,21 @@ void CWndResizer::CSplitContainer::OnResized()
 			return;
 		}
 
-		if (m_FixedPanel == 1 ) // left panel is fixed
+		if (m_FixedPanel == 1)  // left panel is fixed
 		{
 			m_pPanelB->left = m_pPanelA->right + m_nSplitterSize;
 
-			if (m_pPanelB->MinSize.cx > m_pPanelB->Width() )
+			if (m_pPanelB->MinSize.cx > m_pPanelB->Width())
 			{
 				m_pPanelB->left = m_pPanelB->right - m_pPanelB->MinSize.cx;
 				m_pPanelA->right = m_pPanelB->left - m_nSplitterSize;
 			}
 		}
-		else if (m_FixedPanel == 2 )  // right panel is fixed
+		else if (m_FixedPanel == 2)   // right panel is fixed
 		{
 			m_pPanelA->right = m_pPanelB->left - m_nSplitterSize;
 
-			if (m_pPanelA->MinSize.cx > m_pPanelA->Width() )
+			if (m_pPanelA->MinSize.cx > m_pPanelA->Width())
 			{
 				m_pPanelA->right = m_pPanelA->left + m_pPanelA->MinSize.cx;
 				m_pPanelB->left = m_pPanelA->right + m_nSplitterSize;
@@ -1963,16 +1979,16 @@ void CWndResizer::CSplitContainer::OnResized()
 		}
 		else
 		{
-			m_pPanelA->right = (LONG) ((double)m_pPanelA->left + ((double)this->Width() * m_nRatio));
+			m_pPanelA->right = (LONG)((double)m_pPanelA->left + ((double)this->Width() * m_nRatio));
 
-			if (m_pPanelA->MinSize.cx > m_pPanelA->Width() )
+			if (m_pPanelA->MinSize.cx > m_pPanelA->Width())
 			{
 				m_pPanelA->right = m_pPanelA->left + m_pPanelA->MinSize.cx;
 			}
 
 			m_pPanelB->left = m_pPanelA->right + m_nSplitterSize;
 
-			if (m_pPanelB->MinSize.cx > m_pPanelB->Width() )
+			if (m_pPanelB->MinSize.cx > m_pPanelB->Width())
 			{
 				m_pPanelB->left = m_pPanelB->right - m_pPanelB->MinSize.cx;
 				m_pPanelA->right = m_pPanelB->left - m_nSplitterSize;
@@ -1987,21 +2003,21 @@ void CWndResizer::CSplitContainer::OnResized()
 			return;
 		}
 
-		if (m_FixedPanel == 1 ) // top panel is fixed
+		if (m_FixedPanel == 1)  // top panel is fixed
 		{
 			m_pPanelB->top = m_pPanelA->bottom + m_nSplitterSize;
 
-			if (m_pPanelB->MinSize.cy > m_pPanelB->Height() )
+			if (m_pPanelB->MinSize.cy > m_pPanelB->Height())
 			{
 				m_pPanelB->top = m_pPanelB->bottom - m_pPanelB->MinSize.cy;
 				m_pPanelA->bottom = m_pPanelB->top - m_nSplitterSize;
 			}
 		}
-		else if (m_FixedPanel == 2 )  // bottom panel is fixed
+		else if (m_FixedPanel == 2)   // bottom panel is fixed
 		{
 			m_pPanelA->bottom = m_pPanelB->top - m_nSplitterSize;
 
-			if (m_pPanelA->MinSize.cy > m_pPanelA->Height() )
+			if (m_pPanelA->MinSize.cy > m_pPanelA->Height())
 			{
 				m_pPanelA->bottom = m_pPanelA->top + m_pPanelA->MinSize.cy;
 				m_pPanelB->top = m_pPanelA->bottom + m_nSplitterSize;
@@ -2009,16 +2025,16 @@ void CWndResizer::CSplitContainer::OnResized()
 		}
 		else
 		{
-			m_pPanelA->bottom = (LONG) ((double)m_pPanelA->top + ((double)this->Height() * m_nRatio));
+			m_pPanelA->bottom = (LONG)((double)m_pPanelA->top + ((double)this->Height() * m_nRatio));
 
-			if (m_pPanelA->MinSize.cy > m_pPanelA->Height() )
+			if (m_pPanelA->MinSize.cy > m_pPanelA->Height())
 			{
 				m_pPanelA->bottom = m_pPanelA->top + m_pPanelA->MinSize.cy;
 			}
 
 			m_pPanelB->top = m_pPanelA->bottom + m_nSplitterSize;
 
-			if (m_pPanelB->MinSize.cy > m_pPanelB->Height() )
+			if (m_pPanelB->MinSize.cy > m_pPanelB->Height())
 			{
 				m_pPanelB->top = m_pPanelB->bottom - m_pPanelB->MinSize.cy;
 				m_pPanelA->bottom = m_pPanelB->top - m_nSplitterSize;
@@ -2035,12 +2051,12 @@ void CWndResizer::CSplitContainer::OnResized()
 
 }
 void CWndResizer::CSplitContainer::SetSplitterPosition(int leftOfSplitter)
-{ 
+{
 
 	short nFixedPanel = m_FixedPanel;
 	m_FixedPanel = 0;
-	if (m_Orientation == CWndResizer::SPLIT_CONTAINER_H )
-	{    
+	if (m_Orientation == CWndResizer::SPLIT_CONTAINER_H)
+	{
 		m_pPanelA->right = leftOfSplitter;
 		m_pPanelB->left = m_pPanelA->right + m_nSplitterSize;
 	}
@@ -2058,9 +2074,9 @@ void CWndResizer::CSplitContainer::SetSplitterPosition(int leftOfSplitter)
 
 }
 int CWndResizer::CSplitContainer::GetSplitterPosition()
-{ 
-	if (m_Orientation == CWndResizer::SPLIT_CONTAINER_H )
-	{    
+{
+	if (m_Orientation == CWndResizer::SPLIT_CONTAINER_H)
+	{
 		return m_pPanelA->right;
 	}
 	else
@@ -2068,7 +2084,7 @@ int CWndResizer::CSplitContainer::GetSplitterPosition()
 		return m_pPanelA->bottom;
 	}
 }
-BOOL CWndResizer::CSplitContainer::AddChild(CPanel * prc)
+BOOL CWndResizer::CSplitContainer::AddChild(CPanel* prc)
 {
 	if (Children.GetCount() == 3)
 	{
@@ -2077,12 +2093,12 @@ BOOL CWndResizer::CSplitContainer::AddChild(CPanel * prc)
 	return CPanel::AddChild(prc);
 
 }
-BOOL CWndResizer::CSplitContainer::RemoveChild(CPanel * /*prc*/)
+BOOL CWndResizer::CSplitContainer::RemoveChild(CPanel* /*prc*/)
 {
 	return FALSE; // cannot remove child from split container
 }
 
-void CWndResizer::CSplitContainer::GetSplitArea(CRect * pSplitterPanel)
+void CWndResizer::CSplitContainer::GetSplitArea(CRect* pSplitterPanel)
 {
 
 	if (m_Orientation == CWndResizer::SPLIT_CONTAINER_H)
@@ -2098,9 +2114,9 @@ void CWndResizer::CSplitContainer::GetSplitArea(CRect * pSplitterPanel)
 		pSplitterPanel->top = m_pPanelA->bottom;
 		pSplitterPanel->right = this->right;
 		pSplitterPanel->bottom = m_pPanelB->top;
-	}  
+	}
 }
-int CWndResizer::CSplitContainer::GetSplitterSize(CPanel * m_pPanelA, CPanel * m_pPanelB)
+int CWndResizer::CSplitContainer::GetSplitterSize(CPanel* m_pPanelA, CPanel* m_pPanelB)
 {
 	if (m_Orientation == CWndResizer::SPLIT_CONTAINER_H)
 	{
@@ -2111,7 +2127,7 @@ int CWndResizer::CSplitContainer::GetSplitterSize(CPanel * m_pPanelA, CPanel * m
 	{
 		int nHeight = m_pPanelB->top - m_pPanelA->bottom;
 		return nHeight;
-	}  
+	}
 }
 
 
@@ -2120,8 +2136,8 @@ int CWndResizer::CSplitContainer::GetSplitterSize(CPanel * m_pPanelA, CPanel * m
 void CWndResizer::CSplitContainer::UpdateRatio()
 {
 
-	if (m_Orientation == CWndResizer::SPLIT_CONTAINER_H )
-	{    
+	if (m_Orientation == CWndResizer::SPLIT_CONTAINER_H)
+	{
 		m_nRatio = (double)m_pPanelA->Width() / (double)this->Width();
 	}
 	else
@@ -2131,15 +2147,15 @@ void CWndResizer::CSplitContainer::UpdateRatio()
 
 }
 
-CWndResizer::CSplitContainer *  CWndResizer::CSplitContainer::Create(CPanel * pPanelA, CPanel * pPanelB)
+CWndResizer::CSplitContainer*   CWndResizer::CSplitContainer::Create(CPanel* pPanelA, CPanel* pPanelB)
 {
-	CSplitPanel * pSplitPanelA =  dynamic_cast<CSplitPanel *>( pPanelA );
+	CSplitPanel* pSplitPanelA =  dynamic_cast<CSplitPanel*>(pPanelA);
 	if (pSplitPanelA != NULL)
 	{
 		return NULL;  // already a part of a CSplitContainer
 	}
 
-	CSplitPanel * pSplitPanelB =  dynamic_cast<CSplitPanel *>( pPanelB );
+	CSplitPanel* pSplitPanelB =  dynamic_cast<CSplitPanel*>(pPanelB);
 	if (pSplitPanelB != NULL)
 	{
 		return NULL; // already a part of a CSplitContainer
@@ -2151,16 +2167,16 @@ CWndResizer::CSplitContainer *  CWndResizer::CSplitContainer::Create(CPanel * pP
 	if (::IntersectRect(&rcDest, pPanelA, pPanelB) == TRUE) // invalid spliter container, a spliter continer's two panel cannot intersect each other
 	{
 		return NULL;
-	} 
+	}
 
 
 	if (pPanelA->right < pPanelB->left)
 	{
-		orien = CWndResizer::SPLIT_CONTAINER_H;    
+		orien = CWndResizer::SPLIT_CONTAINER_H;
 	}
 	else if (pPanelA->bottom < pPanelB->top)
 	{
-		orien =  CWndResizer::SPLIT_CONTAINER_V;    
+		orien =  CWndResizer::SPLIT_CONTAINER_V;
 	}
 	else
 	{
@@ -2168,24 +2184,24 @@ CWndResizer::CSplitContainer *  CWndResizer::CSplitContainer::Create(CPanel * pP
 	}
 	if (pPanelA->Parent != NULL)
 	{
-		if (pPanelA->Parent->RemoveChild( pPanelA ) == FALSE)
+		if (pPanelA->Parent->RemoveChild(pPanelA) == FALSE)
 		{
 			return NULL;
 		}
 	}
 	if (pPanelB->Parent != NULL)
 	{
-		if (pPanelB->Parent->RemoveChild( pPanelB ) == FALSE)
+		if (pPanelB->Parent->RemoveChild(pPanelB) == FALSE)
 		{
 			return NULL;
 		}
 	}
 
-	pSplitPanelA = new CSplitPanel( pPanelA );  
-	pSplitPanelB = new CSplitPanel( pPanelB );  
+	pSplitPanelA = new CSplitPanel(pPanelA);
+	pSplitPanelB = new CSplitPanel(pPanelB);
 
 
-	CSplitContainer * pSpliter = new CSplitContainer(pSplitPanelA, pSplitPanelB, orien);
+	CSplitContainer* pSpliter = new CSplitContainer(pSplitPanelA, pSplitPanelB, orien);
 	return pSpliter;
 
 }
@@ -2231,7 +2247,7 @@ CWndResizer::CRootPanel::~CRootPanel()
 {
 
 }
-CWnd * CWndResizer::CRootPanel::GetHookedWnd()
+CWnd* CWndResizer::CRootPanel::GetHookedWnd()
 {
 	return m_pHookWnd;
 }
@@ -2241,7 +2257,7 @@ CString CWndResizer::CRootPanel::GetTypeName()
 }
 /////////////////////////////  CUIPanel
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CWndResizer::CUIPanel::CUIPanel(const CRect * prc, UINT uID) : CPanel(prc)
+CWndResizer::CUIPanel::CUIPanel(const CRect* prc, UINT uID) : CPanel(prc)
 {
 	m_uID = uID;
 	m_bOle = FALSE;
@@ -2261,7 +2277,7 @@ CWndResizer::CVisualPanel::CVisualPanel() : CPanel()
 {
 	m_bVisible = FALSE;
 }
-CWndResizer::CVisualPanel::CVisualPanel(const CRect * prc) : CPanel(prc)
+CWndResizer::CVisualPanel::CVisualPanel(const CRect* prc) : CPanel(prc)
 {
 	m_bVisible = FALSE;
 	m_rcPrev.SetRect(this->left, this->top, this->right, this->bottom);
@@ -2271,7 +2287,7 @@ CWndResizer::CVisualPanel::~CVisualPanel()
 
 
 }
-void CWndResizer::CVisualPanel::Draw(CDC * /*pDC*/)
+void CWndResizer::CVisualPanel::Draw(CDC* /*pDC*/)
 {
 
 }
@@ -2281,11 +2297,11 @@ CString CWndResizer::CVisualPanel::GetTypeName()
 }
 void CWndResizer::CVisualPanel::OnResized()
 {
-	CWnd * pWnd = NULL;
+	CWnd* pWnd = NULL;
 	if ((pWnd = GetHookedWnd()) != NULL)
 	{
-		pWnd->InvalidateRect( &m_rcPrev, FALSE );
-		pWnd->InvalidateRect( this, FALSE );
+		pWnd->InvalidateRect(&m_rcPrev, FALSE);
+		pWnd->InvalidateRect(this, FALSE);
 	}
 	m_rcPrev.SetRect(this->left, this->top, this->right, this->bottom);
 }
@@ -2299,7 +2315,7 @@ CWndResizer::CGripperPanel::CGripperPanel() : CVisualPanel()
 	m_iStateId = 5; //SZB_HALFBOTTOMRIGHTALIGN;
 	m_sClassName = _T("SCROLLBAR");
 }
-CWndResizer::CGripperPanel::CGripperPanel(const CRect * prc) : CVisualPanel(prc)
+CWndResizer::CGripperPanel::CGripperPanel(const CRect* prc) : CVisualPanel(prc)
 {
 	m_hTheme = NULL;
 	m_iPartId = SBP_SIZEBOX;
@@ -2311,15 +2327,15 @@ CWndResizer::CGripperPanel::~CGripperPanel()
 	if (m_hTheme != NULL)
 	{
 		HRESULT lres = ::CloseThemeData(m_hTheme);
-		ASSERT(SUCCEEDED(lres) == TRUE);  
+		ASSERT(SUCCEEDED(lres) == TRUE);
 		m_hTheme = NULL;
 	}
 }
-void CWndResizer::CGripperPanel::Draw(CDC * pDC)
+void CWndResizer::CGripperPanel::Draw(CDC* pDC)
 {
 	if (m_hTheme == NULL)
 	{
-		CWnd * pHookedWnd = GetHookedWnd();
+		CWnd* pHookedWnd = GetHookedWnd();
 		if (pHookedWnd == NULL)
 		{
 			return;
@@ -2329,8 +2345,8 @@ void CWndResizer::CGripperPanel::Draw(CDC * pDC)
 
 	if (m_hTheme == NULL)
 	{
-		BOOL bOk = pDC->DrawFrameControl(this, DFC_SCROLL, DFCS_SCROLLSIZEGRIP );
-		ASSERT( bOk == TRUE);
+		BOOL bOk = pDC->DrawFrameControl(this, DFC_SCROLL, DFCS_SCROLLSIZEGRIP);
+		ASSERT(bOk == TRUE);
 	}
 	else
 	{
@@ -2355,18 +2371,18 @@ CWndResizer::CSplitterGripperPanel::~CSplitterGripperPanel()
 {
 
 }
-void CWndResizer::CSplitterGripperPanel::Draw(CDC * pDC)
+void CWndResizer::CSplitterGripperPanel::Draw(CDC* pDC)
 {
 	CPen penDark(PS_SOLID, 1, ::GetSysColor(COLOR_3DSHADOW));
 	CPen penWhite(PS_SOLID, 1, RGB(255, 255, 255));
 
-	if (m_OrienType == CWndResizer::SPLIT_CONTAINER_H )
+	if (m_OrienType == CWndResizer::SPLIT_CONTAINER_H)
 	{
-		CPen * pOrigPen = pDC->SelectObject(&penWhite);    
+		CPen* pOrigPen = pDC->SelectObject(&penWhite);
 
 		CRect rc;
-		rc.SetRect(left + 1, top + 1, left + 3, top + 3); 
-		while(rc.bottom <= bottom)
+		rc.SetRect(left + 1, top + 1, left + 3, top + 3);
+		while (rc.bottom <= bottom)
 		{
 			pDC->Rectangle(&rc);
 			rc.OffsetRect(0, 4);
@@ -2374,7 +2390,7 @@ void CWndResizer::CSplitterGripperPanel::Draw(CDC * pDC)
 
 		pDC->SelectObject(&penDark);
 		rc.SetRect(left, top, left + 2, top + 2);
-		while(rc.bottom <= bottom)
+		while (rc.bottom <= bottom)
 		{
 			pDC->Rectangle(&rc);
 			rc.OffsetRect(0, 4);
@@ -2385,11 +2401,11 @@ void CWndResizer::CSplitterGripperPanel::Draw(CDC * pDC)
 	}
 	else
 	{
-		CPen * pOrigPen = pDC->SelectObject(&penWhite);    
+		CPen* pOrigPen = pDC->SelectObject(&penWhite);
 
 		CRect rc;
-		rc.SetRect(left + 1, top + 1, left + 3, top + 3); 
-		while(rc.right <= right)
+		rc.SetRect(left + 1, top + 1, left + 3, top + 3);
+		while (rc.right <= right)
 		{
 			pDC->Rectangle(&rc);
 			rc.OffsetRect(4, 0);
@@ -2397,14 +2413,14 @@ void CWndResizer::CSplitterGripperPanel::Draw(CDC * pDC)
 
 		pDC->SelectObject(&penDark);
 		rc.SetRect(left, top, left + 2, top + 2);
-		while(rc.right <= right)
+		while (rc.right <= right)
 		{
 			pDC->Rectangle(&rc);
 			rc.OffsetRect(4, 0);
 		}
 
 		pDC->SelectObject(pOrigPen);
-	} 
+	}
 }
 
 CString CWndResizer::CSplitterGripperPanel::GetTypeName()
@@ -2415,7 +2431,7 @@ CString CWndResizer::CSplitterGripperPanel::GetTypeName()
 
 /////////////////////////////  CSpitterPanel
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CWndResizer::CSpitterPanel::CSpitterPanel(const CRect * prc, CWndResizer::SplitterOrientation type) : CPanel(prc)
+CWndResizer::CSpitterPanel::CSpitterPanel(const CRect* prc, CWndResizer::SplitterOrientation type) : CPanel(prc)
 {
 	m_OrienType = type;
 	m_pGrippePanel = NULL;
@@ -2423,7 +2439,7 @@ CWndResizer::CSpitterPanel::CSpitterPanel(const CRect * prc, CWndResizer::Splitt
 	if (m_pGrippePanel == NULL)
 	{
 		m_pGrippePanel = new CSplitterGripperPanel(type);
-		if (m_OrienType == CWndResizer::SPLIT_CONTAINER_H )
+		if (m_OrienType == CWndResizer::SPLIT_CONTAINER_H)
 		{
 			m_pGrippePanel->SetRect(0, 0, 3, 12);
 		}
@@ -2431,8 +2447,8 @@ CWndResizer::CSpitterPanel::CSpitterPanel(const CRect * prc, CWndResizer::Splitt
 		{
 			m_pGrippePanel->SetRect(0, 0, 12, 3);
 		}
-		m_pGrippePanel->SetAnchor ( ANCHOR_HORIZONTALLY_CENTERED | ANCHOR_VERTICALLY_CENTERED );
-		m_pGrippePanel->SetMinSize(CSize(2,2));
+		m_pGrippePanel->SetAnchor(ANCHOR_HORIZONTALLY_CENTERED | ANCHOR_VERTICALLY_CENTERED);
+		m_pGrippePanel->SetMinSize(CSize(2, 2));
 		BOOL bOk = AddChild(m_pGrippePanel);
 		ASSERT(bOk == TRUE);
 	}
@@ -2456,7 +2472,7 @@ CString CWndResizer::CSpitterPanel::GetTypeName()
 }
 /////////////////////////////  CSpitPanel
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CWndResizer::CSplitPanel::CSplitPanel(CPanel * pPanel) : CPanel(pPanel)
+CWndResizer::CSplitPanel::CSplitPanel(CPanel* pPanel) : CPanel(pPanel)
 {
 	pPanel->LeftOffset = 0;
 	pPanel->TopOffset = 0;
@@ -2468,7 +2484,7 @@ CWndResizer::CSplitPanel::CSplitPanel(CPanel * pPanel) : CPanel(pPanel)
 	m_pOriginalPanel = pPanel;
 	MaxSize = pPanel->MaxSize;
 	MinSize = pPanel->MinSize;
-	Children.AddTail( pPanel );
+	Children.AddTail(pPanel);
 }
 
 CWndResizer::CSplitPanel::~CSplitPanel()
@@ -2481,11 +2497,11 @@ BOOL CWndResizer::CSplitPanel::SetAnchor(UINT /*anchor*/)
 	return FALSE;
 }
 
-BOOL CWndResizer::CSplitPanel::AddChild(CPanel * prc)
+BOOL CWndResizer::CSplitPanel::AddChild(CPanel* prc)
 {
 	return m_pOriginalPanel->AddChild(prc);
 }
-BOOL CWndResizer::CSplitPanel::RemoveChild(CPanel * prc)
+BOOL CWndResizer::CSplitPanel::RemoveChild(CPanel* prc)
 {
 	return m_pOriginalPanel->RemoveChild(prc);
 }
@@ -2504,7 +2520,7 @@ CWndResizer::CFlowLayoutPanel::CFlowLayoutPanel() : CPanel()
 	m_nItemSpacingY = 0;
 	m_nFlowDirection = CWndResizer::LEFT_TO_RIGHT;
 }
-CWndResizer::CFlowLayoutPanel::CFlowLayoutPanel(const CRect * prc) : CPanel(prc)
+CWndResizer::CFlowLayoutPanel::CFlowLayoutPanel(const CRect* prc) : CPanel(prc)
 {
 	m_nItemSpacingX = 0;
 	m_nItemSpacingY = 0;
@@ -2524,7 +2540,7 @@ void CWndResizer::CFlowLayoutPanel::OnResized()
 	// first one will be at the top-left corner, no matter what
 	if (pos != NULL)
 	{
-		CPanel * pPanel = Children.GetNext(pos);
+		CPanel* pPanel = Children.GetNext(pos);
 		pPanel->MoveToXY(x, y);
 		pPanel->OnResized();
 
@@ -2543,9 +2559,9 @@ void CWndResizer::CFlowLayoutPanel::OnResized()
 
 	if (m_nFlowDirection == CWndResizer::LEFT_TO_RIGHT)
 	{
-		while(pos != NULL)
+		while (pos != NULL)
 		{
-			CPanel * pPanel = Children.GetNext(pos);
+			CPanel* pPanel = Children.GetNext(pos);
 			// check to see if it is to wrap
 			if (x + pPanel->Width() > right)
 			{
@@ -2563,9 +2579,9 @@ void CWndResizer::CFlowLayoutPanel::OnResized()
 	}
 	else
 	{
-		while(pos != NULL)
+		while (pos != NULL)
 		{
-			CPanel * pPanel = Children.GetNext(pos);
+			CPanel* pPanel = Children.GetNext(pos);
 			// check to see if it is to wrap
 			if (y + pPanel->Height() > bottom)
 			{
