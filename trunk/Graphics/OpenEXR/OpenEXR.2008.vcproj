@@ -42,6 +42,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="./Source;./Source/Half;./Source/Iex;./Source/IlmImf;./Source/IlmThread;./Source/Imath;../../zlib/Source"
@@ -120,6 +121,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
@@ -196,6 +198,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="./Source;./Source/Half;./Source/Iex;./Source/IlmImf;./Source/IlmThread;./Source/Imath;../../zlib/Source"
@@ -274,6 +277,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"

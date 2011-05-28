@@ -42,6 +42,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL"
@@ -138,6 +139,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL"
@@ -232,6 +234,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL"
@@ -328,6 +331,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL"
