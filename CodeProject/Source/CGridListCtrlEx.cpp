@@ -2136,14 +2136,6 @@ CWnd* CGridListCtrlEx::EditCell(int nRow, int nCol, CPoint pt)
 	if (nCol==-1 || nRow==-1)
 		return NULL;
 
-	if (pt==CPoint(-1,-1))
-	{
-		CRect labelRect;
-		if (!GetCellRect(nRow, nCol, LVIR_LABEL, labelRect))
-			return NULL;
-		pt = labelRect.TopLeft();
-	}
-
 	m_pEditor = OnEditBegin(nRow, nCol, pt);
 	if (m_pEditor==NULL)
 		return NULL;
@@ -3466,46 +3458,6 @@ LRESULT CGridListCtrlEx::OnCopy(WPARAM wParam, LPARAM lParam)
 {
 	OnCopyToClipboard();
 	return DefWindowProc(WM_COPY, wParam, lParam); 
-}
-
-namespace {
-	class CMyOleDropSource : public COleDropSource
-	{
-		CImageList* m_pDragImage;
-
-	public:
-		explicit CMyOleDropSource(CImageList* pDragImage)
-			:m_pDragImage(pDragImage)
-		{}
-
-		~CMyOleDropSource()
-		{
-			if (m_pDragImage!=NULL)
-			{
-				::ReleaseCapture();
-				m_pDragImage->DragLeave(CWnd::FromHandle(GetDesktopWindow()));
-				m_pDragImage->EndDrag();
-				m_pDragImage->DeleteImageList();
-				delete m_pDragImage;
-			}
-		}
-
-		virtual SCODE GiveFeedback(DROPEFFECT dropEffect)
-		{
-			return COleDropSource::GiveFeedback(dropEffect);
-		}
-
-		virtual SCODE QueryContinueDrag(BOOL bEscapePressed, DWORD dwKeyState)
-		{
-			if (m_pDragImage!=NULL)
-			{
-				CPoint ptDropPoint;
-				::GetCursorPos(&ptDropPoint);
-				m_pDragImage->DragMove(ptDropPoint);
-			}
-			return COleDropSource::QueryContinueDrag(bEscapePressed, dwKeyState);
-		}
-	};
 }
 
 //------------------------------------------------------------------------
