@@ -4,12 +4,13 @@
 // Author:  Rolf Kristensen	
 // Source:  http://www.codeproject.com/KB/list/CGridListCtrlEx.aspx
 // License: Free to use for all (New BSD License)
-// Version: 1.8.1
+// Version: 1.9
 //
 // Change History:
-// 	1.8.1 - Changed CGridColumnTrait::OnSortRows() to take LVITEM as parameter (2010-11-15)
-//		  Renamed CGridColumnConfig to CViewConfigSection
-//		  Removed CGridColumnManager and moved LoadState/SaveState into CGridListCtrlEx
+// 	1.9 - Added new CGridColumnTrait::OnSortRows() to take LVITEM as parameter (2011-05-30)
+//		  Renamed CGridColumnConfig to CViewConfigSection (Now general purpose settings manager)
+//		  Removed CGridColumnManager and moved LoadState/SaveState into CGridListCtrlEx (Breaking change)
+//		  Fixed breaking change in 1.8 where OnEditBegin overrides stopped working
 //	1.8 - Added checkbox support for all column editor types (2010-10-01)
 //		  Added checkbox toggle for all selected rows
 //		  Added min and max width for columns
@@ -120,7 +121,8 @@ public:
 	BOOL GetCellRect(int nRow, int nCol, UINT nCode, CRect& rect);
 	inline int GetFocusCell() const { return m_FocusCell; }
 	virtual void SetFocusCell(int nCol, bool bRedraw = false);
-	virtual CWnd* EditCell(int nRow, int nCol, CPoint pt = CPoint(-1,-1));
+	virtual CWnd* EditCell(int nRow, int nCol) { return EditCell(nRow, nCol, CPoint(-1,-1)); }
+	virtual CWnd* EditCell(int nRow, int nCol, CPoint pt);
 	bool IsCellEditorOpen() const;
 	bool IsCellCallback(int nRow, int nCol) const;
 	int GetCellImage(int nRow, int nCol) const;
@@ -223,6 +225,7 @@ protected:
 
 	// Cell editing handlers
 	virtual int OnClickEditStart(int nRow, int nCol, CPoint pt, bool bDblClick);
+	virtual CWnd* OnEditBegin(int nRow, int nCol) { return OnEditBegin(nRow, nCol, CPoint(-1,-1)); }
 	virtual CWnd* OnEditBegin(int nRow, int nCol, CPoint pt);
 	virtual bool OnEditComplete(int nRow, int nCol, CWnd* pEditor, LV_DISPINFO* pLVDI);
 
