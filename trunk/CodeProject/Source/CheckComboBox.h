@@ -26,7 +26,6 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - taken out from the original ToDoList package for better sharing
-// - merged with ToDoList version 6.1 sources
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
@@ -40,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
 #if !defined(AFX_CHECKCOMBOBOX_H__4DDD3C3D_BDB7_4F07_9C50_75495F6E7F66__INCLUDED_)

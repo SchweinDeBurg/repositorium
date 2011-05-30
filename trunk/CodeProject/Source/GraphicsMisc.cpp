@@ -40,8 +40,6 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
-// - merged with ToDoList version 6.1.6 sources
 // - merged with ToDoList version 6.1.7 sources
 //*****************************************************************************
 
