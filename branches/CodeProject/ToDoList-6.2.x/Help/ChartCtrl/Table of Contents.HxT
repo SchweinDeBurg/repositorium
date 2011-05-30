@@ -1,0 +1,319 @@
+<?xml version="1.0"?>
+<!DOCTYPE HelpTOC SYSTEM "MS-Help://Hx/Resources/HelpTOC.DTD">
+<HelpTOC DTDVersion = "1.0"
+         LangId = "1033"
+         ParentNodeIcon = "Folder">
+   <HelpTOCNode Title = "Main Page"
+                Url = "index.html"/>
+   <HelpTOCNode Title = "Class Hierarchy"
+                Url = "hierarchy.html"/>
+   <HelpTOCNode Title = "Class List"
+                Url = "annotated.html">
+      <HelpTOCNode Title = "CChartAxis"
+                   Url = "class_c_chart_axis.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_axis.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_axis-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartAxisLabel"
+                   Url = "class_c_chart_axis_label.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_axis_label.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_axis_label-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartBalloonLabel"
+                   Url = "class_c_chart_balloon_label.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_balloon_label.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_balloon_label-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartBarSerie"
+                   Url = "class_c_chart_bar_serie.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_bar_serie.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_bar_serie-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartCrossHairCursor"
+                   Url = "class_c_chart_cross_hair_cursor.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_cross_hair_cursor.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_cross_hair_cursor-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartCtrl"
+                   Url = "class_c_chart_ctrl.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_ctrl.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_ctrl-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartCursor"
+                   Url = "class_c_chart_cursor.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_cursor.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_cursor-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartCursorListener"
+                   Url = "class_c_chart_cursor_listener.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_cursor_listener.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_cursor_listener-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartDateTimeAxis"
+                   Url = "class_c_chart_date_time_axis.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_date_time_axis.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_date_time_axis-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartDragLineCursor"
+                   Url = "class_c_chart_drag_line_cursor.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_drag_line_cursor.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_drag_line_cursor-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartFont"
+                   Url = "class_c_chart_font.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_font.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_font-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartGradient"
+                   Url = "class_c_chart_gradient.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_gradient.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_gradient-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartGrid"
+                   Url = "class_c_chart_grid.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_grid.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_grid-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartLabel"
+                   Url = "class_c_chart_label.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_label.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_label-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartLabelProvider"
+                   Url = "class_c_chart_label_provider.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_label_provider.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_label_provider-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartLegend"
+                   Url = "class_c_chart_legend.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_legend.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_legend-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartLineSerie"
+                   Url = "class_c_chart_line_serie.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_line_serie.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_line_serie-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartLogarithmicAxis"
+                   Url = "class_c_chart_logarithmic_axis.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_logarithmic_axis.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_logarithmic_axis-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartMouseListener"
+                   Url = "class_c_chart_mouse_listener.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_mouse_listener.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_mouse_listener-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartPointsArray"
+                   Url = "class_c_chart_points_array.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_points_array.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_points_array-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartPointsArray::SChartPoint"
+                   Url = "struct_c_chart_points_array_1_1_s_chart_point.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "struct_c_chart_points_array_1_1_s_chart_point.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "struct_c_chart_points_array_1_1_s_chart_point-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartPointsSerie"
+                   Url = "class_c_chart_points_serie.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_points_serie.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_points_serie-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartSerie"
+                   Url = "class_c_chart_serie.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_serie.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_serie-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartStandardAxis"
+                   Url = "class_c_chart_standard_axis.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_standard_axis.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_standard_axis-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartSurfaceSerie"
+                   Url = "class_c_chart_surface_serie.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_surface_serie.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_surface_serie-members.html"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "CChartTitle"
+                   Url = "class_c_chart_title.html">
+         <HelpTOCNode Title = "Detailed Description"
+                      Url = "class_c_chart_title.html#_details"/>
+         <HelpTOCNode Title = "Member List"
+                      Url = "class_c_chart_title-members.html"/>
+      </HelpTOCNode>
+   </HelpTOCNode>
+   <HelpTOCNode Title = "Class Members"
+                Url = "functions.html">
+      <HelpTOCNode Title = "Functions"
+                   Url = "functions_func.html">
+         <HelpTOCNode Title = "a"
+                      Url = "functions_func.html#index_a"/>
+         <HelpTOCNode Title = "c"
+                      Url = "functions_func_0x63.html#index_c"/>
+         <HelpTOCNode Title = "d"
+                      Url = "functions_func_0x64.html#index_d"/>
+         <HelpTOCNode Title = "e"
+                      Url = "functions_func_0x65.html#index_e"/>
+         <HelpTOCNode Title = "g"
+                      Url = "functions_func_0x67.html#index_g"/>
+         <HelpTOCNode Title = "i"
+                      Url = "functions_func_0x69.html#index_i"/>
+         <HelpTOCNode Title = "o"
+                      Url = "functions_func_0x6f.html#index_o"/>
+         <HelpTOCNode Title = "p"
+                      Url = "functions_func_0x70.html#index_p"/>
+         <HelpTOCNode Title = "r"
+                      Url = "functions_func_0x72.html#index_r"/>
+         <HelpTOCNode Title = "s"
+                      Url = "functions_func_0x73.html#index_s"/>
+         <HelpTOCNode Title = "u"
+                      Url = "functions_func_0x75.html#index_u"/>
+         <HelpTOCNode Title = "v"
+                      Url = "functions_func_0x76.html#index_v"/>
+         <HelpTOCNode Title = "x"
+                      Url = "functions_func_0x78.html#index_x"/>
+         <HelpTOCNode Title = "y"
+                      Url = "functions_func_0x79.html#index_y"/>
+         <HelpTOCNode Title = "~"
+                      Url = "functions_func_0x7e.html#index_~"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "Variables"
+                   Url = "functions_vars.html">
+         <HelpTOCNode Title = "m"
+                      Url = "functions_vars.html#index_m"/>
+         <HelpTOCNode Title = "x"
+                      Url = "functions_vars.html#index_x"/>
+         <HelpTOCNode Title = "y"
+                      Url = "functions_vars.html#index_y"/>
+      </HelpTOCNode>
+      <HelpTOCNode Title = "Enumerations"
+                   Url = "functions_enum.html"/>
+   </HelpTOCNode>
+   <HelpTOCNode Title = "File List"
+                Url = "files.html">
+      <HelpTOCNode Title = "ChartAxis.h"
+                   Url = "_chart_axis_8h-source.html"/>
+      <HelpTOCNode Title = "ChartAxisLabel.h"
+                   Url = "_chart_axis_label_8h-source.html"/>
+      <HelpTOCNode Title = "ChartAxisOld.h"
+                   Url = "_chart_axis_old_8h-source.html"/>
+      <HelpTOCNode Title = "ChartBalloonLabel.h"
+                   Url = "_chart_balloon_label_8h-source.html"/>
+      <HelpTOCNode Title = "ChartBarSerie.h"
+                   Url = "_chart_bar_serie_8h-source.html"/>
+      <HelpTOCNode Title = "ChartCrossHairCursor.h"
+                   Url = "_chart_cross_hair_cursor_8h-source.html"/>
+      <HelpTOCNode Title = "ChartCtrl.h"
+                   Url = "_chart_ctrl_8h-source.html"/>
+      <HelpTOCNode Title = "ChartCursor.h"
+                   Url = "_chart_cursor_8h-source.html"/>
+      <HelpTOCNode Title = "ChartDateTimeAxis.h"
+                   Url = "_chart_date_time_axis_8h-source.html"/>
+      <HelpTOCNode Title = "ChartDemo.h"
+                   Url = "_chart_demo_8h-source.html"/>
+      <HelpTOCNode Title = "ChartDemoDlg.h"
+                   Url = "_chart_demo_dlg_8h-source.html"/>
+      <HelpTOCNode Title = "ChartDragLineCursor.h"
+                   Url = "_chart_drag_line_cursor_8h-source.html"/>
+      <HelpTOCNode Title = "ChartFont.h"
+                   Url = "_chart_font_8h-source.html"/>
+      <HelpTOCNode Title = "ChartGradient.h"
+                   Url = "_chart_gradient_8h-source.html"/>
+      <HelpTOCNode Title = "ChartGrid.h"
+                   Url = "_chart_grid_8h-source.html"/>
+      <HelpTOCNode Title = "ChartLabel.h"
+                   Url = "_chart_label_8h-source.html"/>
+      <HelpTOCNode Title = "ChartLegend.h"
+                   Url = "_chart_legend_8h-source.html"/>
+      <HelpTOCNode Title = "ChartLineSerie.h"
+                   Url = "_chart_line_serie_8h-source.html"/>
+      <HelpTOCNode Title = "ChartLogarithmicAxis.h"
+                   Url = "_chart_logarithmic_axis_8h-source.html"/>
+      <HelpTOCNode Title = "ChartMouseListener.h"
+                   Url = "_chart_mouse_listener_8h-source.html"/>
+      <HelpTOCNode Title = "ChartObject.h"
+                   Url = "_chart_object_8h-source.html"/>
+      <HelpTOCNode Title = "ChartPointLabel.h"
+                   Url = "_chart_point_label_8h-source.html"/>
+      <HelpTOCNode Title = "ChartPointsArray.h"
+                   Url = "_chart_points_array_8h-source.html"/>
+      <HelpTOCNode Title = "ChartPointsSerie.h"
+                   Url = "_chart_points_serie_8h-source.html"/>
+      <HelpTOCNode Title = "ChartScrollBar.h"
+                   Url = "_chart_scroll_bar_8h-source.html"/>
+      <HelpTOCNode Title = "ChartSerie.h"
+                   Url = "_chart_serie_8h-source.html"/>
+      <HelpTOCNode Title = "ChartStandardAxis.h"
+                   Url = "_chart_standard_axis_8h-source.html"/>
+      <HelpTOCNode Title = "ChartString.h"
+                   Url = "_chart_string_8h-source.html"/>
+      <HelpTOCNode Title = "ChartSurfaceSerie.h"
+                   Url = "_chart_surface_serie_8h-source.html"/>
+      <HelpTOCNode Title = "ChartTitle.h"
+                   Url = "_chart_title_8h-source.html"/>
+      <HelpTOCNode Title = "ColourPicker.h"
+                   Url = "_colour_picker_8h-source.html"/>
+      <HelpTOCNode Title = "ColourPopup.h"
+                   Url = "_colour_popup_8h-source.html"/>
+      <HelpTOCNode Title = "LinePropDialog.h"
+                   Url = "_line_prop_dialog_8h-source.html"/>
+      <HelpTOCNode Title = "PointsPropDialog.h"
+                   Url = "_points_prop_dialog_8h-source.html"/>
+      <HelpTOCNode Title = "SeriesPropDlg.h"
+                   Url = "_series_prop_dlg_8h-source.html"/>
+      <HelpTOCNode Title = "StdAfx.h"
+                   Url = "_std_afx_8h-source.html"/>
+      <HelpTOCNode Title = "SurfacePropDialog.h"
+                   Url = "_surface_prop_dialog_8h-source.html"/>
+   </HelpTOCNode>
+</HelpTOC>
