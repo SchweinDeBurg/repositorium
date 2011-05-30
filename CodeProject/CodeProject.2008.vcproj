@@ -2993,6 +2993,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ClipboardBackup.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClipboardBackup.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\DeferWndMove.cpp"
 				>
 			</File>
@@ -3054,6 +3062,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\FileRegister.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\FocusWatcher.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\FocusWatcher.h"
 				>
 			</File>
 			<File
