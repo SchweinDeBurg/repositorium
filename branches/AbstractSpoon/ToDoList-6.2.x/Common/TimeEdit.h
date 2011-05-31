@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TimeEdit.h: interface for the CTimeEdit class.
@@ -86,6 +87,8 @@ public:
 	CString FormatTimeHMS() const;
 	CString FormatTime(BOOL bUnits) const;
 
+	void EnableNegativeTimes(BOOL bEnable);
+
 	static void SetUnits(int nUnits, LPCTSTR szLongUnits, LPCTSTR szAbbrevUnits);
 
 protected:
@@ -99,7 +102,6 @@ protected:
 	virtual void PreSubclassWindow();
 	virtual void OnBtnClick(UINT nID);
 	virtual void OnSetReadOnly(BOOL bReadOnly);
-	//	virtual void DrawButton(CDC* pDC, const CRect& rWindow, int nBtn, const CPoint& ptCursor) const;
 
 // Implementation
 
