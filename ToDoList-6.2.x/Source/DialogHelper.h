@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // DialogHelper.h: interface for the CDialogHelper class.
@@ -78,6 +79,7 @@ public:
 
 	static BOOL IsChildOrSame(HWND hWnd, HWND hwndChild);
 	static BOOL ControlWantsEnter(HWND hwnd);
+	static CString GetControlLabel(const CWnd* pWnd);
 
 	// font helper
 	static void SetFont(CWnd* pWnd, HFONT hFont, BOOL bRedraw = TRUE);
@@ -90,6 +92,7 @@ public:
 	static int CalcMaxTextWidth(CComboBox& combo, int nMinWidth = 0, BOOL bDropped = FALSE, CDC* pDCRef = NULL);
 	static BOOL SelectItemByValue(CComboBox& combo, int nValue);
 	static int GetSelectedItemAsValue(const CComboBox& combo);
+	static BOOL IsDroppedComboBox(HWND hCtrl);
 
 	// better dialog control shortcut handling
 	static BOOL ProcessDialogControlShortcut(const MSG* pMsg);
@@ -119,6 +122,9 @@ public:
 
 	static BOOL IsEdit(CWnd* pParent, UINT nCtrlID);
 	static BOOL IsEdit(HWND hCtrl);
+
+	static BOOL IsComboBox(CWnd* pParent, UINT nCtrlID);
+	static BOOL IsComboBox(HWND hCtrl);
 
 	static CString GetClassName(CWnd* pWnd); // returns whatever ::GetClassName() returns
 

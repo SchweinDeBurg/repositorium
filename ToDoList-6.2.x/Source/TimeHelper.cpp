@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TimeHelper.cpp: implementation of the CTimeHelper class.
@@ -158,6 +159,24 @@ double CTimeHelper::GetTime(double dTime, int nFromUnits, int nToUnits)
 	}
 
 	return dTime;
+}
+
+CString CTimeHelper::FormatISOTime(int nHour, int nMin, int nSec, BOOL bIncSeconds)
+{
+	CString sFormat = _T("HH:mm");
+
+	if (bIncSeconds)
+	{
+		sFormat += _T(":ss");
+	}
+
+	CString sTime;
+	SYSTEMTIME st = { 0, 0, 0, 0, (WORD)nHour, (WORD)nMin, (WORD)nSec, 0 };
+
+	::GetTimeFormat(0, bIncSeconds ? 0 : TIME_NOSECONDS, &st, sFormat, sTime.GetBuffer(50), 49);
+	sTime.ReleaseBuffer();
+
+	return sTime;
 }
 
 CString CTimeHelper::Format24HourTime(int nHour, int nMin, int nSec, BOOL bIncSeconds)
@@ -300,8 +319,7 @@ CString CTimeHelper::FormatTimeHMS(double dTime, int nUnits, int nLeftOverUnits,
 			sTime.Format(_T("%d%c"), (int)dTime, GetUnits(nUnits));
 		}
 		else
-			sTime.Format(_T("%d%c%d%c"), (int)dTime, GetUnits(nUnits),
-			(int)dLeftOver, GetUnits(nLeftOverUnits));
+			sTime.Format(_T("%d%c%d%c"), (int)dTime, GetUnits(nUnits), (int)dLeftOver, GetUnits(nLeftOverUnits));
 	}
 	else
 	{

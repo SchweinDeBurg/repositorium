@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_WCDEFINES_H__E2EFA8F0_B9CD_41AB_98FD_812C963B7ACC__INCLUDED_)
@@ -90,6 +91,15 @@
 #define WC_COMBOBOX               WC_COMBOBOXW
 #else
 #define WC_COMBOBOX               WC_COMBOBOXA
+#endif
+
+#define WC_COMBOBOXEXA         "ComboBoxEx32"    // ansi
+#define WC_COMBOBOXEXW         L"ComboBoxEx32"   // wide
+
+#ifdef UNICODE
+#define WC_COMBOBOXEX          WC_COMBOBOXEXW
+#else
+#define WC_COMBOBOXEX          WC_COMBOBOXEXA
 #endif
 
 //////////////////////////

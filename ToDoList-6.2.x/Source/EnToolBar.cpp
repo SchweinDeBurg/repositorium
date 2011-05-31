@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // EnToolBar.cpp : implementation file
@@ -51,6 +51,8 @@
 #include "ImageProcessors.h"
 #include "OSVersion.h"
 #include "GraphicsMisc.h"
+
+#include <afxpriv.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -81,6 +83,7 @@ BEGIN_MESSAGE_MAP(CEnToolBar, CToolBar)
 	ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, OnCustomDraw)
 	ON_WM_SETTINGCHANGE()
 	ON_MESSAGE(WM_REFRESHBUTTONSTATES, OnRefreshButtonStates)
+	ON_MESSAGE(WM_SIZEPARENT, OnSizeParent)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -472,7 +475,6 @@ int CEnToolBar::CalcRowsRequired(int cx) const
 int CEnToolBar::Resize(int cx, CPoint ptTopLeft)
 {
 	int nHeight = CalcHeightRequired(cx);
-
 	CRect rToolbar(ptTopLeft, CSize(cx, nHeight));
 
 	MoveWindow(rToolbar);

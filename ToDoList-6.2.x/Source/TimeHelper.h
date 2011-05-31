@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TimeHelper.h: interface for the CTimeHelper class.
@@ -89,6 +90,8 @@ public:
 	static void SetUnits(int nUnits, LPCTSTR szUnits);
 	static void SetUnits(int nUnits, TCHAR cUnits);
 	static TCHAR GetUnits(int nUnits);
+
+	static CString FormatISOTime(int nHour, int nMin, int nSec = 0, BOOL bIncSeconds = FALSE);
 	static CString Format24HourTime(int nHour, int nMin, int nSec = 0, BOOL bIncSeconds = FALSE);
 
 protected:

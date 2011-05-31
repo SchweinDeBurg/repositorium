@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // LightBox.h: interface for the CLightBox class.
@@ -65,13 +65,13 @@ class CLightBoxMgr : public CHookMgr<CLightBoxMgr>
 
 public:
 	CLightBoxMgr();
-	static BOOL Initialize(CWnd* pMainWnd, COLORREF crBkgnd = GetSysColor(COLOR_3DLIGHT),
-		int nOpaquePercent = 50);
+	~CLightBoxMgr();
+
+	static BOOL Initialize(CWnd* pMainWnd, COLORREF crBkgnd = GetSysColor(COLOR_3DLIGHT), int nOpaquePercent = 50);
 	static void Disable()
 	{
 		Instance().Release();
 	}
-	~CLightBoxMgr();
 
 protected:
 	CMap<HWND, HWND, CLightBox*, CLightBox*&> m_mapCtrls;

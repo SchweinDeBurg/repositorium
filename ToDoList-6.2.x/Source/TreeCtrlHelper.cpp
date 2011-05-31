@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TreeCtrlHelper.cpp: implementation of the CTreeCtrlHelper class.
@@ -205,6 +206,14 @@ HTREEITEM CTreeCtrlHelper::GetFirstVisibleTopLevelItem(int& nPos)
 
 	// iterate the top level items to find out what pos this is
 	nPos = GetItemPos(htiTopVis, NULL);
+
+	return htiTopVis;
+}
+
+HTREEITEM CTreeCtrlHelper::GetFirstVisibleTopLevelItem()
+{
+	HTREEITEM hti = m_tree.GetFirstVisibleItem();
+	HTREEITEM htiTopVis = GetTopLevelParentItem(hti);
 
 	return htiTopVis;
 }
@@ -619,28 +628,28 @@ void CTreeCtrlHelper::SetMinDistanceToEdge(HTREEITEM htiFrom, TCH_EDGE nToEdge, 
 	switch (nToEdge)
 	{
 	case TCHE_BOTTOM:
-		{
-			int nBorder = GetDistanceToEdge(htiFrom, TCHE_BOTTOM);
+	{
+		int nBorder = GetDistanceToEdge(htiFrom, TCHE_BOTTOM);
 
-			while (nBorder < nItems)
-			{
-				m_tree.SendMessage(WM_VSCROLL, SB_LINEDOWN);
-				nBorder++;
-			}
+		while (nBorder < nItems)
+		{
+			m_tree.SendMessage(WM_VSCROLL, SB_LINEDOWN);
+			nBorder++;
 		}
-		break;
+	}
+	break;
 
 	case TCHE_TOP:
-		{
-			int nBorder = GetDistanceToEdge(htiFrom, TCHE_TOP);
+	{
+		int nBorder = GetDistanceToEdge(htiFrom, TCHE_TOP);
 
-			while (nBorder < nItems)
-			{
-				m_tree.SendMessage(WM_VSCROLL, SB_LINEUP);
-				nBorder++;
-			}
+		while (nBorder < nItems)
+		{
+			m_tree.SendMessage(WM_VSCROLL, SB_LINEUP);
+			nBorder++;
 		}
-		break;
+	}
+	break;
 	}
 }
 
