@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // Themed.h: interface for the CThemed class.
@@ -95,7 +96,7 @@ protected:
 	HWND m_hWnd;
 
 protected:
-	BOOL InitUxTheme();
+	static BOOL InitUxTheme();
 
 	// uxtheme functions
 	static DWORD GetAppThemeProperties();
