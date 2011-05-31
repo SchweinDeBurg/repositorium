@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TimeComboBox.cpp : implementation file
@@ -111,32 +112,48 @@ int CTimeComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-void CTimeComboBox::BuildCombo()
+void CTimeComboBox::BuildCombo(BOOL bReset)
 {
-	// IMPORTANT!
-	// Comclt32.dll version 5.0 or later: If CBS_LOWERCASE or CBS_UPPERCASE is set,
-	// the Unicode version of CB_ADDSTRING alters the string. If using read-only
-	// global memory, this causes the application to fail.
+	ASSERT(bReset || GetCount() == 0);
 
-	TCHAR szEmpty[1] = { 0 };
-
-	if (GetCount() == 0)
+	if (!bReset && GetCount())
 	{
-		for (int nHour = 0; nHour < 24; nHour++)
+		return;
+	}
+
+	ResetContent();
+
+	for (int nHour = 0; nHour < 24; nHour++)
+	{
+		CString sTime;
+
+		if ((m_dwStyle & TCB_NOTIME) && nHour == 0)
 		{
-			if ((m_dwStyle & TCB_NOTIME) != 0 && nHour == 0)
+			// add empty string representing 'no time'
+		}
+		else if (m_dwStyle & TCB_ISO)
+		{
+			sTime = CTimeHelper::FormatISOTime(nHour, 0);
+		}
+		else // regional settings
+		{
+			sTime = CTimeHelper::Format24HourTime(nHour, 0);
+		}
+
+		AddString(sTime);
+
+		if (m_dwStyle & TCB_HALFHOURS)
+		{
+			if (m_dwStyle & TCB_ISO)
 			{
-				AddString(szEmpty);   // empty item meaning 'no time'
+				sTime = CTimeHelper::FormatISOTime(nHour, 30);
 			}
-			else
+			else // regional settings
 			{
-				AddString(CTimeHelper::Format24HourTime(nHour, 0));
+				sTime = CTimeHelper::Format24HourTime(nHour, 30);
 			}
 
-			if (m_dwStyle & TCB_HALFHOURS)
-			{
-				AddString(CTimeHelper::Format24HourTime(nHour, 30));
-			}
+			AddString(sTime);
 		}
 	}
 }
@@ -159,6 +176,21 @@ BOOL CTimeComboBox::SetOleTime(double dTime)
 
 	// else
 	return Set24HourTime(dTime * 24.0);
+}
+
+void CTimeComboBox::SetStyle(DWORD dwStyle)
+{
+	BOOL bWasISO = (m_dwStyle & TCB_ISO);
+	BOOL bIsISO = (dwStyle & TCB_ISO);
+
+	m_dwStyle = dwStyle;
+
+	if (bWasISO != bIsISO)
+	{
+		double date = GetOleTime();
+		BuildCombo(TRUE);
+		SetOleTime(date);
+	}
 }
 
 double CTimeComboBox::Get24HourTime() const
@@ -256,7 +288,16 @@ BOOL CTimeComboBox::Set24HourTime(double dTime)
 	int nHour = (int)dTime;
 	int nMin = (int)((dTime - nHour) * 60); // nearest 1 minute
 
-	CString sTime = CTimeHelper::Format24HourTime(nHour, nMin);
+	CString sTime;
+
+	if (m_dwStyle & TCB_ISO)
+	{
+		sTime = CTimeHelper::FormatISOTime(nHour, nMin);
+	}
+	else
+	{
+		sTime = CTimeHelper::Format24HourTime(nHour, nMin);
+	}
 
 	if (SelectString(-1, sTime) == CB_ERR)
 	{

@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // RuntimeDlg.cpp : implementation file
@@ -52,6 +53,7 @@
 #include "WClassDefines.h"
 #include "RichEditHelper.h"
 #include "DialogHelper.h"
+#include "FileMisc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -103,7 +105,12 @@ private:
 const CRect CRuntimeDlg::rectAuto = CRect(0, 0, 0, 0);
 CMapStringToString CRuntimeDlg::s_mapClasses;
 
-CRuntimeDlg::CRuntimeDlg() : m_hILarge(NULL), m_hISmall(NULL), m_rBordersDLU(0), m_rBorders(0)
+CRuntimeDlg::CRuntimeDlg(LPCTSTR szSettingsKey):
+m_sSettingsKey(szSettingsKey),
+m_hILarge(NULL),
+m_hISmall(NULL),
+m_rBordersDLU(0),
+m_rBorders(0)
 {
 	if (!s_mapClasses.GetCount())
 	{
@@ -122,6 +129,7 @@ CRuntimeDlg::~CRuntimeDlg()
 BEGIN_MESSAGE_MAP(CRuntimeDlg, CDialog)
 	//{{AFX_MSG_MAP(CRuntimeDlg)
 	ON_WM_SETFOCUS()
+	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -218,6 +226,9 @@ int CRuntimeDlg::DoModal(LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, cons
 		::SetActiveWindow(hWndParent);
 	}
 
+	// save pos
+	SaveCurrentPos();
+
 	// destroy modal window
 	DestroyWindow();
 	PostModal();
@@ -243,10 +254,9 @@ BOOL CRuntimeDlg::OnInitDialog()
 
 	if (!pParent)
 	{
-		TCHAR szAppPath[MAX_PATH + 1];
-		::GetModuleFileName(NULL, szAppPath, MAX_PATH);
+		CString sAppPath = FileMisc::GetAppFileName();
 
-		if (::ExtractIconEx(szAppPath, 0, &m_hILarge, &m_hISmall, 1))
+		if (::ExtractIconEx(sAppPath, 0, &m_hILarge, &m_hISmall, 1))
 		{
 			SetIcon(m_hILarge ? m_hILarge : m_hISmall, TRUE);
 			SetIcon(m_hISmall ? m_hISmall : m_hILarge, FALSE);
@@ -300,21 +310,7 @@ BOOL CRuntimeDlg::Create(LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, cons
 
 	if (CreateDlgIndirect(RTDLGTEMPLATE(dwStyle, dwExStyle, rect), pParentWnd, NULL) != NULL)
 	{
-		// size to fit?
-		if (rect == rectAuto)
-		{
-			AutoFit();
-		}
-		else
-		{
-			MoveWindow(rect);
-		}
-
-		// center
-		if (dwStyle & DS_CENTER)
-		{
-			CenterWindow();
-		}
+		SetInitialPos(rect, dwStyle);
 
 		// set window text
 		SetWindowText(szCaption);
@@ -334,6 +330,73 @@ BOOL CRuntimeDlg::Create(LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, cons
 	}
 
 	return FALSE;
+}
+
+void CRuntimeDlg::SetInitialPos(LPCRECT pRect, DWORD dwStyle)
+{
+	// size to fit?
+	if (!pRect || rectAuto.EqualRect(pRect))
+	{
+		if (!m_sSettingsKey.IsEmpty())
+		{
+			CRect rect;
+			rect.left = AfxGetApp()->GetProfileInt(m_sSettingsKey, _T("left"), rectAuto.left);
+			rect.right = AfxGetApp()->GetProfileInt(m_sSettingsKey, _T("right"), rectAuto.right);
+			rect.top = AfxGetApp()->GetProfileInt(m_sSettingsKey, _T("top"), rectAuto.top);
+			rect.bottom = AfxGetApp()->GetProfileInt(m_sSettingsKey, _T("bottom"), rectAuto.bottom);
+
+			if (rect == rectAuto) // first time
+			{
+				AutoFit();
+
+				// center
+				if (dwStyle & DS_CENTER)
+				{
+					CenterWindow();
+				}
+			}
+			else
+			{
+				MoveWindow(rect);
+			}
+		}
+		else
+		{
+			AutoFit();
+
+			// center
+			if (dwStyle & DS_CENTER)
+			{
+				CenterWindow();
+			}
+		}
+	}
+	else
+	{
+		MoveWindow(pRect);
+	}
+}
+
+void CRuntimeDlg::SaveCurrentPos()
+{
+	if (!m_sSettingsKey.IsEmpty())
+	{
+		CRect rect;
+		GetWindowRect(rect);
+
+		AfxGetApp()->WriteProfileInt(m_sSettingsKey, _T("left"), rect.left);
+		AfxGetApp()->WriteProfileInt(m_sSettingsKey, _T("right"), rect.right);
+		AfxGetApp()->WriteProfileInt(m_sSettingsKey, _T("top"), rect.top);
+		AfxGetApp()->WriteProfileInt(m_sSettingsKey, _T("bottom"), rect.bottom);
+	}
+}
+
+void CRuntimeDlg::OnDestroy()
+{
+	// save pos
+	SaveCurrentPos();
+
+	CDialog::OnDestroy();
 }
 
 void CRuntimeDlg::AutoFit()
@@ -636,13 +699,13 @@ BOOL CRuntimeDlg::CreateControl(const RTCONTROL& rtc)
 {
 	if (rtc.m_pWnd)
 		return CreateControl(rtc.m_pWnd, rtc.m_sCaption, rtc.m_dwStyle, rtc.m_dwExStyle,
-		rtc.m_rect.left, rtc.m_rect.top, rtc.m_rect.Width(), rtc.m_rect.Height(),
-		rtc.m_nID, rtc.m_bDLU, rtc.m_nIconID);
+			rtc.m_rect.left, rtc.m_rect.top, rtc.m_rect.Width(), rtc.m_rect.Height(),
+			rtc.m_nID, rtc.m_bDLU, rtc.m_nIconID);
 
 	else if (!rtc.m_sClass.IsEmpty())
 		return (NULL != CreateControl(rtc.m_sClass, rtc.m_sCaption, rtc.m_dwStyle, rtc.m_dwExStyle,
-		rtc.m_rect.left, rtc.m_rect.top, rtc.m_rect.Width(), rtc.m_rect.Height(),
-		rtc.m_nID, rtc.m_bDLU, rtc.m_nIconID));
+			rtc.m_rect.left, rtc.m_rect.top, rtc.m_rect.Width(), rtc.m_rect.Height(),
+			rtc.m_nID, rtc.m_bDLU, rtc.m_nIconID));
 
 	else
 	{
