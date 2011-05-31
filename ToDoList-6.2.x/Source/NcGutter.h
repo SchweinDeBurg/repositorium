@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // NcGutter.h: interface for the CNcGutter class.
@@ -222,6 +222,7 @@ public:
 	int GetColumnWidth(UINT nColID) const;
 	void SetColumnTextAlignment(UINT nColID, UINT nTextAlign, BOOL bRedraw = TRUE);
 	UINT GetColumnTextAlignment(UINT nColID) const;
+	void SetHeaderHeight(int nHeight);
 
 	BOOL PtInHeader(CPoint ptScreen) const;
 	void GetWindowClientRect(CRect& rClient, BOOL bScreen) const;
@@ -237,6 +238,7 @@ protected:
 	DWORD m_dwButtonDownItem;
 	DWORD m_dwStyles;
 	float m_fAveCharWidth;
+	UINT m_nHeaderHeight;
 
 	struct COLUMNDESC
 	{

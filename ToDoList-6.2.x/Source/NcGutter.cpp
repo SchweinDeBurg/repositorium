@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // NcGutter.cpp: implementation of the CNcGutter class.
@@ -64,7 +64,6 @@ static char THIS_FILE[] = __FILE__;
 //////////////////////////////////////////////////////////////////////
 
 const UINT WM_NCG_FORCERESIZE = ::RegisterWindowMessage(_T("WM_NCG_FORCERESIZE"));
-UINT HEADERHEIGHT = 0; // set in WM_NCCALCSIZE so not const
 UINT BORDER = 0; // set in WM_NCCALCSIZE so not const
 const UINT SORTWIDTH = 10;
 const UINT MINCLIENTWIDTH = GetSystemMetrics(SM_CXVSCROLL) * 4;
@@ -75,7 +74,8 @@ m_bFirstRecalc(TRUE),
 m_nHeaderColDown(-1),
 m_dwButtonDownItem(0),
 m_dwStyles(dwStyles),
-m_fAveCharWidth(0)
+m_fAveCharWidth(0),
+m_nHeaderHeight(0)
 {
 	// add client header hot rect placeholder
 	if (HasStyle(NCGS_SHOWHEADER) && CThemed().AreControlsThemed())
@@ -423,10 +423,7 @@ int CNcGutter::GetColumnIndex(UINT nColID) const
 {
 	int nCol = m_aColumns.GetSize();
 
-	while (nCol-- && (nColID != m_aColumns[nCol]->nColID))
-	{
-		;
-	}
+	while (nCol-- && (nColID != m_aColumns[nCol]->nColID));
 
 	return nCol; // can be -1
 }
@@ -816,6 +813,12 @@ LRESULT CNcGutter::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 	return CSubclassWnd::WindowProc(hRealWnd, msg, wp, lp);
 }
 
+void CNcGutter::SetHeaderHeight(int nHeight)
+{
+	m_nHeaderHeight = nHeight;
+	PostMessage(WM_NCG_FORCERESIZE);
+}
+
 LRESULT CNcGutter::OnNcCalcSize(LPNCCALCSIZE_PARAMS lpncsp)
 {
 	LRESULT lr = Default();
@@ -841,20 +844,15 @@ LRESULT CNcGutter::OnNcCalcSize(LPNCCALCSIZE_PARAMS lpncsp)
 		lpncsp->rgrc[0].left += nGutterWidth;
 	}
 
-
 	if (HasStyle(NCGS_SHOWHEADER))
 	{
-		if (HEADERHEIGHT == 0)
+		if (m_nHeaderHeight == 0)
 		{
 			BOOL bThemed = CThemed().AreControlsThemed();
-			HEADERHEIGHT = CDlgUnits(GetParent()).ToPixelsY(bThemed ? 12 : 10); // handles font sizes
+			m_nHeaderHeight = CDlgUnits(GetParent()).ToPixelsY(bThemed ? 12 : 10); // handles font sizes
 		}
 
-		lpncsp->rgrc[0].top += HEADERHEIGHT;
-	}
-	else
-	{
-		HEADERHEIGHT = 0;
+		lpncsp->rgrc[0].top += m_nHeaderHeight;
 	}
 
 	return lr;
@@ -1398,7 +1396,15 @@ void CNcGutter::GetHeaderRect(CRect& rHeader, GHR_WHAT nWhat, BOOL bScreen) cons
 	rWindow.DeflateRect(BORDER, BORDER);
 
 	rHeader.bottom = rClient.top;
-	rHeader.top = rClient.top - HEADERHEIGHT; // HEADERHEIGHT will be zero if the header is hidden
+
+	if (HasStyle(NCGS_SHOWHEADER))
+	{
+		rHeader.top = rClient.top - m_nHeaderHeight;   // HEADERHEIGHT will be zero if the header is hidden
+	}
+	else
+	{
+		rHeader.top = rClient.top;
+	}
 
 	switch (nWhat)
 	{
@@ -1939,7 +1945,7 @@ DWORD CNcGutter::GetFirstVisibleTopLevelItem(int& nItem) const
 }
 
 void CNcGutter::NcDrawItem(CDC* pDC, DWORD dwItem, DWORD dwParentItem, int nLevel, int nPos,
-									const CRect& rGutter, CRect& rItem /* out */, BOOL bDrawChildren)
+	const CRect& rGutter, CRect& rItem /* out */, BOOL bDrawChildren)
 {
 	rItem = GetWindowItemRect(dwItem);
 

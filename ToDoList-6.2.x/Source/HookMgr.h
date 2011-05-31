@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // HookMgr.h: interface for the CHookMgr class.
@@ -318,7 +319,7 @@ protected:
 		AFX_MANAGE_STATE(AfxGetStaticModuleState());
 #endif
 
-		if (nCode == HC_ACTION)
+		/*if (nCode == HC_ACTION)*/
 		{
 			if (GetInstance().OnCbt(nCode, wParam, lParam))
 			{
