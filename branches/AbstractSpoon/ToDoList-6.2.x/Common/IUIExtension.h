@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // IUIExtension.h: interface and implementation of the IUIExtension class.
@@ -66,6 +67,7 @@
 class IUIExtensionWindow;
 class IUIExtension;
 class ITaskList;
+struct UITHEME;
 
 typedef IUIExtension* (*PFNCREATEUIEXT)(); // function prototype
 extern "C" DLL_DECLSPEC IUIExtension* CreateUIExtensionInterface();
@@ -148,6 +150,7 @@ public:
 	virtual BOOL Create(HWND hParent, BOOL bShow = TRUE, LPSIZE pSize = NULL) = 0;
 	virtual BOOL Show(BOOL bShow = TRUE) = 0;
 	virtual BOOL IsShowing() const = 0;
+	virtual void SetUITheme(const UITHEME& theme) = 0;
 
 	virtual void Update(const ITaskList* pTasks, DWORD dwFlags = UIU_ALL) = 0;
 	virtual void Release() = 0;
