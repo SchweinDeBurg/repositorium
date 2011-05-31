@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // UIExtensionMgr.cpp: implementation of the CUIExtensionMgr class.
@@ -89,6 +90,27 @@ HICON CUIExtension::GetIcon()
 	}
 
 	return NULL;
+}
+
+void CUIExtension::SetUITheme(const UITHEME& theme)
+{
+	if (m_pExtension && m_pMapWindows)
+	{
+		POSITION pos = m_pMapWindows->GetStartPosition();
+
+		while (pos)
+		{
+			UIEXTENSIONWINDOW* pUIWnd = NULL;
+			DWORD dwDummy;
+
+			m_pMapWindows->GetNextAssoc(pos, dwDummy, pUIWnd);
+
+			if (pUIWnd && pUIWnd->pWindow)
+			{
+				pUIWnd->pWindow->SetUITheme(theme);
+			}
+		}
+	}
 }
 
 void CUIExtension::Release()
@@ -257,7 +279,7 @@ void CUIExtensionMgr::Initialize()
 
 	// look at every dll from wherever we are now
 	CFileFind ff;
-	CString sSearchPath = FileMisc::GetModuleFileName(), sFolder, sDrive;
+	CString sSearchPath = FileMisc::GetAppFileName(), sFolder, sDrive;
 
 	FileMisc::SplitPath(sSearchPath, &sDrive, &sFolder);
 	FileMisc::MakePath(sSearchPath, sDrive, sFolder, _T("*"), _T(".dll"));
@@ -392,5 +414,15 @@ void CUIExtensionMgr::UpdateAllExtensionsWindow(DWORD dwItemData, const ITaskLis
 	while (nExtension--)
 	{
 		m_aUIExtensions[nExtension]->UpdateWindow(dwItemData, pTasks, dwFlags);
+	}
+}
+
+void CUIExtensionMgr::SetUITheme(const UITHEME& theme)
+{
+	int nExtension = GetNumUIExtensions();
+
+	while (nExtension--)
+	{
+		m_aUIExtensions[nExtension]->SetUITheme(theme);
 	}
 }
