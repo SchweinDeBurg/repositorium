@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // ImportExportMgr.cpp: implementation of the CImportExportMgr class.
@@ -96,7 +97,7 @@ void CImportExportMgr::Initialize()
 
 	// look at every dll from whereever we are now
 	CFileFind ff;
-	CString sSearchPath = FileMisc::GetModuleFileName(), sFolder, sDrive;
+	CString sSearchPath = FileMisc::GetAppFileName(), sFolder, sDrive;
 
 	FileMisc::SplitPath(sSearchPath, &sDrive, &sFolder);
 	FileMisc::MakePath(sSearchPath, sDrive, sFolder, _T("*"), _T(".dll"));
@@ -287,6 +288,23 @@ BOOL CImportExportMgr::ImportTaskList(LPCTSTR szSrcFile, ITaskList* pDestTasks, 
 }
 
 BOOL CImportExportMgr::ExportTaskList(const ITaskList* pSrcTasks, LPCTSTR szDestFile, int nByExporter, BOOL bSilent) const
+{
+	if (!m_bInitialized)
+	{
+		return FALSE;
+	}
+
+	if (nByExporter >= 0 && nByExporter < m_aExporters.GetSize())
+	{
+		ASSERT(m_aExporters[nByExporter] != NULL);
+		return m_aExporters[nByExporter]->Export(pSrcTasks, szDestFile, bSilent);
+	}
+
+	// else
+	return FALSE;
+}
+
+BOOL CImportExportMgr::ExportTaskLists(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile, int nByExporter, BOOL bSilent) const
 {
 	if (!m_bInitialized)
 	{

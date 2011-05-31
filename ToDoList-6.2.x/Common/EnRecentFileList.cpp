@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // EnRecentFileList.cpp: implementation of the CEnRecentFileList class.
@@ -47,6 +48,9 @@
 
 #include "StdAfx.h"
 #include "EnRecentFileList.h"
+#include "../../CodeProject/Source/FileMisc.h"
+
+#include <shlwapi.h>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -103,18 +107,26 @@ void CEnRecentFileList::RemoveAll(BOOL bClearProfile)
 	}
 }
 
-void CEnRecentFileList::WriteList(CPreferences& prefs) const
+void CEnRecentFileList::WriteList(CPreferences& prefs, BOOL bRelativeToExe) const
 {
 	for (int nFile = 0; nFile < GetSize(); nFile++)
 	{
-		if (m_arrNames[nFile].IsEmpty())
+		CString sFile(m_arrNames[nFile]);
+
+		if (sFile.IsEmpty())
 		{
 			break;
 		}
 
 		CString sItem;
 		sItem.Format(m_strEntryFormat, nFile + 1);
-		prefs.WriteProfileString(_T("MRU"), sItem, m_arrNames[nFile]);
+
+		if (bRelativeToExe)
+		{
+			FileMisc::MakeRelativePath(sFile, FileMisc::GetAppFolder(), FALSE);
+		}
+
+		prefs.WriteProfileString(_T("MRU"), sItem, sFile);
 	}
 }
 
@@ -122,8 +134,13 @@ void CEnRecentFileList::ReadList(const CPreferences& prefs)
 {
 	for (int nFile = 0; nFile < GetSize(); nFile++)
 	{
-		CString sItem;
+		CString sItem, sFile;
 		sItem.Format(m_strEntryFormat, nFile + 1);
-		m_arrNames[nFile] = prefs.GetProfileString(_T("MRU"), sItem);
+		sFile = prefs.GetProfileString(_T("MRU"), sItem);
+
+		if (!sFile.IsEmpty())
+		{
+			m_arrNames[nFile] = FileMisc::GetFullPath(sFile, FileMisc::GetAppFolder());
+		}
 	}
 }

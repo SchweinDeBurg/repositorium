@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // IImportExport.h: interface and implementation of the IImportExport class.
@@ -61,11 +62,12 @@
 #define DLL_DECLSPEC __declspec(dllimport)
 #endif
 
-#define IIMPORTEXPORT_VERSION 0x0001
+#define IIMPORTEXPORT_VERSION 0x0002
 
 class IImportTasklist;
 class IExportTasklist;
 class ITaskList;
+class IMultiTaskList;
 
 typedef IImportTasklist* (*PFNCREATEIMPORT)(); // function prototype
 typedef IExportTasklist* (*PFNCREATEEXPORT)(); // function prototype
@@ -183,6 +185,7 @@ public:
 	virtual const char* GetFileExtension() = 0;
 
 	virtual bool Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent) = 0;
+	virtual bool Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent) = 0;
 };
 
 static void ReleaseImportInterface(IImportTasklist*& pInterface)

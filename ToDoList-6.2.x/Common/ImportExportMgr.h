@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // ImportExportMgr.h: interface for the CImportExportMgr class.
@@ -68,6 +69,7 @@ public:
 
 	BOOL ImportTaskList(LPCTSTR szSrcFile, ITaskList* pDestTasks, int nByImporter) const;
 	BOOL ExportTaskList(const ITaskList* pSrcTasks, LPCTSTR szDestFile, int nByExporter, BOOL bSilent) const;
+	BOOL ExportTaskLists(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile, int nByExporter, BOOL bSilent) const;
 
 	int FindImporter(LPCTSTR szFilePath);
 

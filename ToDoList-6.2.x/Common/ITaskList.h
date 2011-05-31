@@ -26,7 +26,6 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
-// - merged with ToDoList version 6.1 sources
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
@@ -40,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.1-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(_ITASKLIST_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_)
@@ -51,15 +51,16 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#define ITASKLISTBASE ITaskList7 // latest interface
+#define ITASKLISTBASE ITaskList8 // latest interface
 
 // extended interface IDs
 static const GUID IID_TASKLIST2 = { 0x41d9fd9e, 0xaa1f, 0x4ee0, { 0x86, 0x05, 0xeb, 0x3f, 0x64, 0x7e, 0x70, 0xf6 } };
-static const GUID IID_TASKLIST3 = { 0xb75b2120, 0x267d, 0x4a82, { 0xab, 0x58, 0x1a, 0x45, 0x40, 0x50, 0xa, 0x1a } };
-static const GUID IID_TASKLIST4 = { 0xd063e3de, 0x83d1, 0x40d7, { 0xbc, 0x2d, 0xfa, 0x24, 0x4, 0x85, 0x57, 0xed } };
+static const GUID IID_TASKLIST3 = { 0xb75b2120, 0x267d, 0x4a82, { 0xab, 0x58, 0x1a, 0x45, 0x40, 0x50, 0x0a, 0x1a } };
+static const GUID IID_TASKLIST4 = { 0xd063e3de, 0x83d1, 0x40d7, { 0xbc, 0x2d, 0xfa, 0x24, 0x04, 0x85, 0x57, 0xed } };
 static const GUID IID_TASKLIST5 = { 0x5a1ac54b, 0x084f, 0x4299, { 0xb5, 0xaa, 0x2b, 0x93, 0x22, 0xf1, 0x3d, 0xc0 } };
-static const GUID IID_TASKLIST6 = { 0xb782136e, 0x546f, 0x4184, { 0xab, 0xaf, 0xe9, 0x7, 0xdd, 0xf6, 0x91, 0x81 } };
+static const GUID IID_TASKLIST6 = { 0xb782136e, 0x546f, 0x4184, { 0xab, 0xaf, 0xe9, 0x07, 0xdd, 0xf6, 0x91, 0x81 } };
 static const GUID IID_TASKLIST7 = { 0x65781a9b, 0xced2, 0x490a, { 0xa9, 0x39, 0x71, 0x6d, 0xd9, 0x18, 0x53, 0x33 } };
+static const GUID IID_TASKLIST8 = { 0xdd98646c, 0xe608, 0x4109, { 0x9a, 0xf5, 0x9e, 0xbd, 0x93, 0x6d, 0x74, 0x0b } };
 
 typedef void* HTASKITEM;
 class ITaskList;
@@ -85,12 +86,19 @@ TLInterface* GetITLInterface(ITaskList* pTasks, const GUID& IID)
 	return reinterpret_cast<TLInterface*>(pInterface);
 }
 
+class IMultiTaskList : public IUnknown
+{
+public:
+	virtual int GetTaskListCount() const = 0;
+	virtual const ITaskList* GetTaskList(int nTaskList = 0) const = 0;
+};
+
 class ITaskList : public IUnknown
 {
 public:
 	// file level methods
 	virtual bool IsArchive() const = 0;
-	virtual bool IsCheckedOut() const = 0;
+	virtual bool IsCheckedOut() const = 0; // deprecated. Will always return false
 	virtual bool IsSourceControlled() const = 0;
 
 	virtual const TCHAR* GetProjectName() const = 0;
@@ -246,11 +254,21 @@ class ITaskList7 : public ITaskList6
 public:
 	virtual unsigned char GetTaskDependencyCount(HTASKITEM hTask) const = 0;
 	virtual bool AddTaskDependency(HTASKITEM hTask, const char* szDepends) = 0;
+	virtual bool AddTaskDependency(HTASKITEM hTask, unsigned long dwID) = 0;
 	virtual const TCHAR* GetTaskDependency(HTASKITEM hTask, int nIndex) const = 0;
 
 	virtual unsigned char GetTaskAllocatedToCount(HTASKITEM hTask) const = 0;
 	virtual bool AddTaskAllocatedTo(HTASKITEM hTask, const char* szAllocTo) = 0;
 	virtual const TCHAR* GetTaskAllocatedTo(HTASKITEM hTask, int nIndex) const = 0;
+};
+
+class ITaskList8 : public ITaskList7
+{
+	// new methods
+public:
+	virtual HTASKITEM NewTask(const char* szTitle, HTASKITEM hParent, unsigned long dwID) = 0;
+	virtual unsigned long GetTaskParentID(HTASKITEM hTask) const = 0;
+	virtual HTASKITEM FindTask(unsigned long dwTaskID) const = 0;
 };
 
 #endif // _ITASKLIST_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_

@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // EnRecentFileList.h: interface for the CEnRecentFileList class.
@@ -69,7 +70,8 @@ public:
 	virtual void UpdateMenu(CCmdUI* pCmdUI);
 
 	void ReadList(const CPreferences& prefs);
-	void WriteList(CPreferences& prefs) const;
+	void WriteList(CPreferences& prefs, BOOL bRelativeToExe = FALSE) const;
+
 };
 
 #endif // !defined(AFX_ENRECENTFILELIST_H__AA4B1746_135C_4E81_96E1_DE6CE758EFDC__INCLUDED_)
