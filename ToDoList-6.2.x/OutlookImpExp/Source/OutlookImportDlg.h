@@ -65,6 +65,7 @@ public:
 	CCheckListBoxEx	m_lbTasks;
 	ITaskList7* m_pDestTaskFile;
 	_Application* m_pOutlook;
+	MAPIFolder* m_pFolder;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -85,6 +86,7 @@ protected:
 	//{{AFX_MSG(COutlookImportDlg)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnDestroy();
+	afx_msg void OnChoosefolder();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
