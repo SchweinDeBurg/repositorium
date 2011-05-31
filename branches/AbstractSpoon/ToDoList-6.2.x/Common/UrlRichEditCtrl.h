@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_URLRICHEDITCTRL_H__B5421D69_41F2_4FCF_AC58_13D2B3D3D3C8__INCLUDED_)
@@ -79,9 +80,9 @@ struct PROTOCOL
 typedef CArray<URLITEM, URLITEM&> CUrlArray;
 typedef CArray<PROTOCOL, PROTOCOL&> CProtocolArray;
 
-class CUrlRichEditCtrl : public CRichEditBaseCtrl//COleRichEditCtrl
+class CUrlRichEditCtrl : public CRichEditBaseCtrl
 {
-// Construction
+	// Construction
 public:
 	CUrlRichEditCtrl();
 
@@ -109,12 +110,8 @@ public:
 	{
 		s_sGotoErrMsg = szErrMsg;
 	}
-	static void SetCtrlClickMsg(LPCTSTR szMsg)
-	{
-		s_sCtrlClickMsg = szMsg;
-	}
 
-// Attributes
+	// Attributes
 protected:
 	CUrlArray m_aUrls;
 	CProtocolArray m_aProtocols;
@@ -122,7 +119,7 @@ protected:
 
 	CPoint m_ptContextMenu;
 	int m_nContextUrl;
-	static CString s_sGotoErrMsg, s_sCtrlClickMsg;
+	static CString s_sGotoErrMsg;
 	CHARRANGE m_crDropSel;
 	int m_nFileProtocol;
 
@@ -160,7 +157,6 @@ protected:
 	afx_msg LRESULT OnSetText(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnDropFiles(WPARAM wp, LPARAM lp);
 	afx_msg BOOL OnNotifyLink(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnNeedTooltip(UINT id, NMHDR* pNMHDR, LRESULT* pResult);
 	DECLARE_MESSAGE_MAP()
 
 protected:

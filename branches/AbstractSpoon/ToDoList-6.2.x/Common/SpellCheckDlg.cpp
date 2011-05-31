@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.2-6.1.10 sources
+// - merged with ToDoList versions 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // SpellCheckDlg.cpp : implementation file
@@ -371,7 +371,7 @@ BOOL CSpellCheckDlg::OnInitDialog()
 
 	if (!IsSpellCheckDll(m_sEnginePath))
 	{
-		CString sDllPath = FileMisc::GetModuleFileName(), sDrive, sFolder;
+		CString sDllPath = FileMisc::GetAppFileName(), sDrive, sFolder;
 
 		FileMisc::SplitPath(sDllPath, &sDrive, &sFolder);
 		FileMisc::MakePath(sDllPath, sDrive, sFolder, _T("*"), _T(".dll"));
