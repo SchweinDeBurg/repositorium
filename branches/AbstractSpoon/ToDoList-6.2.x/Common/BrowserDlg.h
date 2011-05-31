@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_BROWSERDLG_H__3AD7A73A_4A17_4625_92E9_F74C6D930C34__INCLUDED_)
@@ -47,7 +48,7 @@ class CBrowserDlg : public CRuntimeDlg
 {
 // Construction
 public:
-	CBrowserDlg(BOOL bBrowser = TRUE);
+	CBrowserDlg(BOOL bBrowser = TRUE, LPCTSTR szSettingsKey = NULL);
 
 	virtual int DoModal(LPCTSTR szCaption, LPCTSTR szUrlPath, CWnd* pParentWnd = NULL);
 	virtual BOOL Create(LPCTSTR szCaption, LPCTSTR szUrlPath, CWnd* pParentWnd);

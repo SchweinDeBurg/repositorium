@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // FileEdit.cpp : implementation file
@@ -72,7 +73,8 @@ m_nStyle(nStyle),
 m_bTipNeeded(FALSE),
 m_sFilter(szFilter),
 ICON_WIDTH(20),
-m_sFolderPrompt(FILEEDIT_SELECTFOLDER)
+m_sFolderPrompt(FILEEDIT_SELECTFOLDER),
+m_sCurFolder(FileMisc::GetCwd())
 {
 	if (!(m_nStyle & FES_NOBROWSE))
 	{
@@ -306,30 +308,45 @@ void CFileEdit::OnBtnClick(UINT nID)
 {
 	switch (nID)
 	{
-	case FEBTN_BROWSE:
+		case FEBTN_BROWSE:
 		{
 			// show browse dialog
 			CString sFilename;
 			GetWindowText(sFilename);
 
 			// filedialog spits if file is actually a url
-			if (::PathIsURL(sFilename) || ::PathIsDirectory(sFilename))
+			if (::PathIsURL(sFilename))
 			{
-				sFilename.Empty();
+				sFilename = m_sCurFolder;
 			}
-			else
+
+			else if (!sFilename.IsEmpty()) // make fullpath
 			{
-				FileMisc::ValidateFilepath(sFilename);
+				FileMisc::MakeFullPath(sFilename, m_sCurFolder);
 			}
 
 			if (HasStyle(FES_FOLDERS))
 			{
+				// if folder not exists revert to current folder
+				if (!FileMisc::FolderExists(sFilename))
+				{
+					sFilename = m_sCurFolder;
+				}
+
 				CFolderDialog dialog(m_sFolderPrompt, sFilename);
 
 				if (dialog.DoModal() == IDOK)
 				{
 					SetFocus();
-					SetWindowText(dialog.GetFolderPath());
+
+					CString sPath(dialog.GetFolderPath());
+
+					if (HasStyle(FES_RELATIVEPATHS))
+					{
+						sPath = FileMisc::GetRelativePath(sPath, m_sCurFolder, TRUE);
+					}
+
+					SetWindowText(sPath);
 
 					// send parent a change notification
 					GetParent()->SendMessage(WM_COMMAND, MAKELPARAM(EN_CHANGE, GetDlgCtrlID()), (LPARAM)GetSafeHwnd());
@@ -339,6 +356,12 @@ void CFileEdit::OnBtnClick(UINT nID)
 			{
 				BOOL bOpenFileDlg = !HasStyle(FES_SAVEAS);
 				DWORD dwFlags = bOpenFileDlg ? OFN_FILEMUSTEXIST : OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
+
+				// if file not exists revert to current folder
+				if (!FileMisc::FileExists(sFilename))
+				{
+					sFilename.Empty();
+				}
 
 				CFileDialog dialog(bOpenFileDlg, NULL, sFilename, dwFlags, m_sFilter);
 
@@ -352,7 +375,15 @@ void CFileEdit::OnBtnClick(UINT nID)
 				if (dialog.DoModal() == IDOK)
 				{
 					SetFocus();
-					SetWindowText(dialog.GetPathName());
+
+					CString sPath(dialog.GetPathName());
+
+					if (HasStyle(FES_RELATIVEPATHS))
+					{
+						sPath = FileMisc::GetRelativePath(sPath, m_sCurFolder, FALSE);
+					}
+
+					SetWindowText(sPath);
 
 					// send parent a change notification
 					GetParent()->SendMessage(WM_COMMAND, MAKELPARAM(EN_CHANGE, GetDlgCtrlID()), (LPARAM)GetSafeHwnd());
@@ -361,7 +392,7 @@ void CFileEdit::OnBtnClick(UINT nID)
 		}
 		break;
 
-	case FEBTN_GO:
+		case FEBTN_GO:
 		{
 			CString sPath;
 			GetWindowText(sPath);
@@ -410,6 +441,12 @@ void CFileEdit::OnBtnClick(UINT nID)
 		}
 		break;
 	}
+}
+
+void CFileEdit::SetCurrentFolder(LPCTSTR szFolder)
+{
+	m_sCurFolder = szFolder;
+	FileMisc::UnterminatePath(m_sCurFolder);
 }
 
 void CFileEdit::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR* lpncsp)

@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // BrowserDlg.cpp : implementation file
@@ -58,7 +59,9 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CBrowserDlg dialog
 
-CBrowserDlg::CBrowserDlg(BOOL bBrowser) : CRuntimeDlg(), m_bBrowser(bBrowser)
+CBrowserDlg::CBrowserDlg(BOOL bBrowser, LPCTSTR szSettingsKey):
+CRuntimeDlg(szSettingsKey),
+m_bBrowser(bBrowser)
 {
 	//{{AFX_DATA_INIT(CBrowserDlg)
 	// NOTE: the ClassWizard will add member initialization here
@@ -163,8 +166,11 @@ BOOL CBrowserDlg::OnInitDialog()
 		}
 	}
 
-	AutoFit();
-	CenterWindow();
+	if (m_sSettingsKey.IsEmpty())
+	{
+		AutoFit();
+		CenterWindow();
+	}
 
 	return FALSE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE

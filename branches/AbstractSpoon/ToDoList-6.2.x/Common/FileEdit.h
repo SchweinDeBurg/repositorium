@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_FILEEDIT_H__7A50F411_3AAE_4BC2_989A_53D44291B643__INCLUDED_)
@@ -69,6 +70,7 @@ enum
 	FES_GOBUTTON        = 0x0008,
 	FES_ALLOWURL        = 0x0010, // supports ? in the filename
 	FES_SAVEAS          = 0x0020, // else open file dialog
+	FES_RELATIVEPATHS   = 0x0040,
 };
 
 // button donw types
@@ -85,10 +87,7 @@ public:
 	{
 		m_sFilter = szFilter;
 	}
-	void SetCurrentFolder(LPCTSTR szFolder)
-	{
-		m_sCurFolder = szFolder;   // for relative paths
-	}
+	void SetCurrentFolder(LPCTSTR szFolder);
 	void SetFolderPrompt(LPCTSTR szPrompt)
 	{
 		m_sFolderPrompt = szPrompt;
@@ -105,7 +104,7 @@ protected:
 
 	const UINT ICON_WIDTH;
 
-	// Operations
+// Operations
 public:
 
 // Overrides
