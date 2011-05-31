@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // MLOExporter.cpp: implementation of the CMLOExporter class.
@@ -90,9 +91,35 @@ bool CMLOExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFile
 	ExportPlaces(pITL7, fileDest.Root());
 
 	// save result
-	VERIFY(fileDest.Save(szDestFilePath));
+	return (fileDest.Save(szDestFilePath) != FALSE);
+}
 
-	return true;
+bool CMLOExporter::Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
+{
+	CXmlFile fileDest(_T("MyLifeOrganized-xml"));
+
+	// export tasks
+	CXmlItem* pXITasks = fileDest.AddItem(_T("TaskTree"));
+
+	for (int nTaskList = 0; nTaskList < pSrcTaskFile->GetTaskListCount(); nTaskList++)
+	{
+		const ITaskList7* pITL7 = GetITLInterface<ITaskList7>(pSrcTaskFile->GetTaskList(nTaskList), IID_TASKLIST7);
+
+		if (pITL7)
+		{
+			// export tasks
+			if (!ExportTask(pITL7, pITL7->GetFirstTask(), pXITasks))
+			{
+				return false;
+			}
+
+			// export resource allocations
+			ExportPlaces(pITL7, fileDest.Root());
+		}
+	}
+
+	// save result
+	return (fileDest.Save(szDestFilePath) != FALSE);
 }
 
 bool CMLOExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
