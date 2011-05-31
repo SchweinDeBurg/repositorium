@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.4-6.1.10 sources
+// - merged with ToDoList versions 6.1.4-6.2.2 sources
 //*****************************************************************************
 
 // RichEditSpellCheck.cpp: implementation of the CRichEditSpellCheck class.
@@ -90,26 +90,28 @@ const char* CRichEditSpellCheck::GetNextWord() const
 
 	if (nLength)
 	{
+		m_crCurrentWord = cr;
+
 		// if there's any trailing whitespace then trim it off
 		m_sCurrentWord.TrimRight(DELIMS);
 
 		// and update char range
-		cr.cpMax -= nLength - m_sCurrentWord.GetLength();
+		m_crCurrentWord.cpMax -= nLength - m_sCurrentWord.GetLength();
 		nLength = m_sCurrentWord.GetLength();
 
 		// if there's any leading whitespace then trim it off
 		m_sCurrentWord.TrimLeft(DELIMS);
 
 		// and update char range
-		cr.cpMin += nLength - m_sCurrentWord.GetLength();
+		m_crCurrentWord.cpMin += nLength - m_sCurrentWord.GetLength();
 		nLength = m_sCurrentWord.GetLength();
-
-		m_crCurrentWord = cr;
 
 		// if there was some text but it was all whitespace, return
 		// a non-empty string so that searching is not terminated
+		// and move the selection to the end of the whitespace
 		if (m_sCurrentWord.IsEmpty())
 		{
+			m_crCurrentWord.cpMin = m_crCurrentWord.cpMax = cr.cpMax;
 			m_sCurrentWord = " ";
 		}
 	}
