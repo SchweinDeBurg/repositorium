@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TimeEdit.cpp: implementation of the CTimeEdit class.
@@ -159,6 +160,18 @@ BEGIN_MESSAGE_MAP(CTimeEdit, CEnEdit)
 	//{{AFX_MSG_MAP(CTimeEdit)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
+
+void CTimeEdit::EnableNegativeTimes(BOOL bEnable)
+{
+	if (bEnable)
+	{
+		SetMask(_T("-.0123456789"), ME_LOCALIZEDECIMAL);
+	}
+	else
+	{
+		SetMask(_T(".0123456789"), ME_LOCALIZEDECIMAL);
+	}
+}
 
 void CTimeEdit::PreSubclassWindow()
 {
