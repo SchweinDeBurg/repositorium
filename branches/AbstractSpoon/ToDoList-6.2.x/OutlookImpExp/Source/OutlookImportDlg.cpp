@@ -26,7 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
-// - merged with ToDoList version 6.1.7 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // OutlookImportDlg.cpp : implementation file
