@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TIMECOMBOBOX_H__E536C077_C228_4A44_89F5_D44F456A2EE7__INCLUDED_)
@@ -57,12 +58,13 @@
 enum
 {
 	TCB_NOTIME      = 0x01,
-	TCB_HALFHOURS   = 0x02
+	TCB_HALFHOURS   = 0x02,
+	TCB_ISO         = 0x04,
 };
 
 class CTimeComboBox : public CComboBox, public CSubclasser
 {
-	// Construction
+// Construction
 public:
 	CTimeComboBox(DWORD dwStyle = 0);
 
@@ -72,17 +74,23 @@ public:
 	double Get24HourTime() const; // -1 for 'no time'
 	BOOL Set24HourTime(double dTime); // -1 for 'no time'
 
+	DWORD GetStyle()
+	{
+		return m_dwStyle;
+	}
+	void SetStyle(DWORD dwStyle);
+
 protected:
 	DWORD m_dwStyle;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTimeComboBox)
 protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CTimeComboBox();
 
@@ -97,7 +105,7 @@ protected:
 	virtual LRESULT ScWindowProc(HWND hRealWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
-	void BuildCombo();
+	void BuildCombo(BOOL bReset = FALSE);
 };
 
 /////////////////////////////////////////////////////////////////////////////

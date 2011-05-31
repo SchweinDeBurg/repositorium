@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // FileRegister.cpp: implementation of the CFileRegister class.
@@ -70,8 +71,7 @@ CFileRegister::CFileRegister(LPCTSTR szExt, LPCTSTR szFileType)
 	}
 
 	// get the app path
-	GetModuleFileName(NULL, m_sAppPath.GetBuffer(_MAX_PATH), _MAX_PATH);
-	m_sAppPath.ReleaseBuffer();
+	m_sAppPath = FileMisc::GetAppFileName();
 
 	ASSERT(!m_sAppPath.IsEmpty());
 }
