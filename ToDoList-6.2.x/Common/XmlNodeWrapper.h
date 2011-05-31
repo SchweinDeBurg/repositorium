@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // XmlNodeWrapper.h: interface for the CXmlNodeWrapper class.
@@ -100,6 +100,7 @@ public:
 	void SetValue(LPCTSTR valueName, bool value);
 	BOOL IsValid();
 	CString GetValue(LPCTSTR valueName);
+	BOOL IsPreservingWhiteSpace() const;
 
 	// fixed version
 	static BSTR ConvertStringToBSTR(const char* pSrc);
@@ -121,7 +122,7 @@ public:
 	BOOL IsValid() const;
 	BOOL Load(LPCTSTR path, BOOL bPreserveWhiteSpace = TRUE);
 	CString Transform(LPCTSTR pathXSL) const;
-	BOOL LoadXML(LPCTSTR xml/*, BOOL bPreserveWhiteSpace = TRUE*/);
+	BOOL LoadXML(LPCTSTR xml, BOOL bPreserveWhiteSpace = TRUE);
 	BOOL Save(LPCTSTR path = _T(""), BOOL bPreserveWhiteSpace = TRUE);
 	CString GetHeader(BOOL bAsXml = FALSE) const;
 

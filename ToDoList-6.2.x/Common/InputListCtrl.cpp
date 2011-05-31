@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // InputListCtrl.cpp : implementation file
@@ -986,10 +987,7 @@ BOOL CInputListCtrl::DeleteAllItems(BOOL bIncludeCols)
 	// delete columns if necessary
 	if (bIncludeCols)
 	{
-		while (DeleteColumn(0))
-		{
-			;
-		}
+		while (DeleteColumn(0));
 	}
 
 	if (!bRes || (!m_bAutoAddRows && !m_bAutoAddCols))
@@ -1041,8 +1039,7 @@ BOOL CInputListCtrl::DeleteAllItems(BOOL bIncludeCols)
 void CInputListCtrl::SetCurSel(int nRow, int nCol, BOOL bNotifyParent)
 {
 	ASSERT(m_hWnd);
-	ASSERT(nRow >= -1 && nRow < GetItemCount() &&
-		nCol >= -1 && nCol < GetColumnCount());
+	ASSERT(nRow >= -1 && nRow < GetItemCount() && nCol >= -1 && nCol < GetColumnCount());
 
 	// only allow selection setting if within valid range
 	if (nRow < 0 || nRow >= GetItemCount() || nCol < 0 || nCol >= GetColumnCount())
@@ -1293,6 +1290,93 @@ int CInputListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 	return 0;
+}
+
+void CInputListCtrl::HideControl(CWnd& ctrl)
+{
+	if (ctrl.IsWindowVisible())
+	{
+		ctrl.ShowWindow(SW_HIDE);
+		ctrl.EnableWindow(FALSE);
+	}
+}
+
+void CInputListCtrl::ShowControl(CWnd& ctrl, int nRow, int nCol)
+{
+	PrepareControl(ctrl, nRow, nCol);
+
+	CRect rCell;
+	GetCellEditRect(nRow, nCol, rCell);
+
+	if (ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)))
+	{
+		rCell.bottom += 200;
+	}
+
+	ctrl.MoveWindow(rCell);
+	ctrl.EnableWindow(TRUE);
+	ctrl.ShowWindow(SW_SHOW);
+	ctrl.SetFocus();
+
+	if (ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)))
+	{
+		CComboBox* pCombo = (CComboBox*)&ctrl;
+		pCombo->ShowDropDown(TRUE);
+	}
+	else //if (ctrl.IsKindOf(RUNTIME_CLASS(CDateTimeCtrl)))
+	{
+		//CDateTimeCtrl* pDateTime = (CDateTimeCtrl*)&ctrl;
+	}
+}
+
+void CInputListCtrl::EndEdit()
+{
+	int nRow, nCol;
+	GetCurSel(nRow, nCol);
+
+	if (nRow == -1 || nCol == -1)
+	{
+		return;
+	}
+
+	// if any editing control is visible, just shift the
+	// focus back to the list to end the edit
+	if (IsEditing())
+	{
+		SetFocus();
+	}
+}
+
+void CInputListCtrl::CreateControl(CWnd& ctrl, UINT nID, BOOL bSort)
+{
+	DWORD dwStyle = WS_CHILD;
+
+	if (ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)))
+	{
+		dwStyle |= CBS_DROPDOWNLIST | WS_VSCROLL | CBS_AUTOHSCROLL;
+
+		if (bSort)
+		{
+			dwStyle |= CBS_SORT;
+		}
+
+		CComboBox* pCombo = (CComboBox*)&ctrl;
+		VERIFY(pCombo->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
+	}
+	else if (ctrl.IsKindOf(RUNTIME_CLASS(CEdit)))
+	{
+		CEdit* pEdit = (CEdit*)&ctrl;
+		VERIFY(pEdit->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
+
+		pEdit->ModifyStyleEx(0, WS_EX_CLIENTEDGE, 0);
+	}
+	else //if (ctrl.IsKindOf(RUNTIME_CLASS(CDateTimeCtrl)))
+	{
+		CDateTimeCtrl* pDateTime = (CDateTimeCtrl*)&ctrl;
+		VERIFY(pDateTime->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
+	}
+
+	ctrl.SetFont(GetFont()); // set font to parents
 }
 
 CPopupEditCtrl* CInputListCtrl::GetEditControl()

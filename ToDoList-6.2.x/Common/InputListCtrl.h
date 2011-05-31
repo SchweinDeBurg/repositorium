@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_INPUTLISTCTRL_H__2E5810B0_D7DF_11D1_AB19_0000E8425C3E__INCLUDED_)
@@ -83,10 +84,7 @@ public:
 	void SetAutoColPrompt(CString sPrompt);
 	virtual BOOL CanEditSelectedCell() const;
 	void EditSelectedCell();
-	void EndEdit(BOOL bCancel)
-	{
-		m_editBox.EndEdit(bCancel);
-	}
+	void EndEdit(BOOL bCancel);
 	virtual BOOL CanDeleteSelectedCell() const;
 	virtual BOOL DeleteSelectedCell();
 	BOOL SetCellText(int nRow, int nCol, CString sText);
@@ -104,6 +102,7 @@ public:
 	int GetColumnType(int nCol) const;
 	void SetEditMask(LPCTSTR szMask, DWORD dwFlags = 0);
 	void SetReadOnly(BOOL bReadOnly);
+	void EndEdit();
 
 protected:
 	CPopupEditCtrl* GetEditControl();
@@ -131,7 +130,7 @@ protected:
 private:
 	BOOL m_bBaseClassEdit; // for our use ONLY
 
-	// Operations
+// Operations
 public:
 
 // Overrides
@@ -169,24 +168,29 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 	virtual void EditCell(int nItem, int nCol);
-	BOOL IsDuplicateRow(CString sRow, int nRowToIgnore);
-	BOOL IsDuplicateCol(CString sCol, int nColToIgnore);
-	CRect ScrollCellIntoView(int nRow, int nCol); // returns the final position of the cell
-	BOOL IsPrompt(int nItem, int nCol);
+	virtual BOOL IsEditing() const
+	{
+		return m_editBox.GetSafeHwnd() && m_editBox.IsWindowVisible();
+	}
 	virtual COLORREF GetItemTextColor(int nItem, int nCol, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus);
 	virtual COLORREF GetItemBackColor(int nItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus);
 	virtual CColumnData* GetNewColumnData() const
 	{
 		return new CColumnData2;
 	}
-	const CColumnData2* GetColumnData(int nCol) const;
 	virtual int CompareItems(DWORD dwItemData1, DWORD dwItemData2, int nSortColumn);
-	int InsertRow(CString sRowText, int nItem, int nImage = -1);
 	virtual void GetCellEditRect(int nRow, int nCol, CRect& rCell);
-	virtual BOOL IsEditing() const
-	{
-		return m_editBox.GetSafeHwnd() && m_editBox.IsWindowVisible();
-	}
+	virtual void PrepareControl(CWnd& /*ctrl*/, int /*nRow*/, int /*nCol*/) {}
+
+	void HideControl(CWnd& ctrl);
+	void ShowControl(CWnd& ctrl, int nRow, int nCol);
+	void CreateControl(CWnd& ctrl, UINT nID, BOOL bSort = TRUE);
+	BOOL IsDuplicateRow(CString sRow, int nRowToIgnore);
+	BOOL IsDuplicateCol(CString sCol, int nColToIgnore);
+	CRect ScrollCellIntoView(int nRow, int nCol); // returns the final position of the cell
+	BOOL IsPrompt(int nItem, int nCol);
+	const CColumnData2* GetColumnData(int nCol) const;
+	int InsertRow(CString sRowText, int nItem, int nImage = -1);
 };
 
 /////////////////////////////////////////////////////////////////////////////

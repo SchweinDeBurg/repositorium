@@ -26,7 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // Preferences.h: interface for the CPreferences class.
@@ -83,7 +83,7 @@ public:
 	int GetArrayItems(LPCTSTR lpszSection, CStringArray& aItems) const;
 	void WriteArrayItems(const CStringArray& aItems, LPCTSTR lpszSection);
 
-	static CString KeyFromFile(LPCTSTR szFilePath, BOOL bFilenameOnly = FALSE);
+	static CString KeyFromFile(LPCTSTR szFilePath, BOOL bFilenameOnly = TRUE);
 
 protected:
 	static CIniSectionArray s_aIni;
