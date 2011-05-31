@@ -26,7 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // FMindExporter.cpp: implementation of the CFMindExporter class.
@@ -40,6 +40,7 @@
 #include "../../Common/XmlFileEx.h"
 #include "../../../CodeProject/Source/DateHelper.h"
 #include "../../../CodeProject/Source/Misc.h"
+#include "../../../CodeProject/Source/FileMisc.h"
 #include "../../ToDoList/Source/TDLSchemaDef.h"
 
 #ifdef _DEBUG
@@ -66,9 +67,8 @@ bool CFMindExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFi
 	//fileDest.EnableFormattedOutput(TRUE);
 
 	CXmlItem* firstItem = fileDest.Root()->AddItem(_T("node"), _T(""));
-
-
 	firstItem->AddItem(_T("TEXT"), pSrcTaskFile->GetProjectName());
+
 	CXmlItem* hookItem = firstItem->AddItem(_T("hook"), _T(""));
 	hookItem->AddItem(_T("NAME"), _T("accessories/plugins/AutomaticLayout.properties"));
 
@@ -78,14 +78,82 @@ bool CFMindExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFi
 	attribManItem->AddItem(_T("SHOW_ATTRIBUTES"), _T("hide"));
 
 	// export first task
-	ExportTask((ITaskList7*)pSrcTaskFile, pSrcTaskFile->GetFirstTask(), firstItem , 0);
+	const ITaskList7* pITL7 = GetITLInterface<ITaskList7>(pSrcTaskFile, IID_TASKLIST7);
+	ASSERT(pITL7);
+
+	ExportTask(pITL7, pITL7->GetFirstTask(), firstItem , 0);
+
+	// save output manually to restore non-escaping of &
+	CString sOutput;
+	fileDest.Export(sOutput);
+	sOutput.Replace(_T("&amp;#"), _T("&#"));
+
+	// and non-escaping of <br>
+	sOutput.Replace(_T("&lt;br&gt;"), _T("<br>"));
 
 	// save result
-	VERIFY(fileDest.Save(szDestFilePath));
+	return (FileMisc::SaveFile(szDestFilePath, sOutput) == TRUE);
+}
 
+bool CFMindExporter::Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
+{
+	CXmlFile fileDest(_T("map"));
 
+	for (int nTaskList = 0; nTaskList < pSrcTaskFile->GetTaskListCount(); nTaskList++)
+	{
+		const ITaskList7* pITL7 = GetITLInterface<ITaskList7>(pSrcTaskFile->GetTaskList(nTaskList), IID_TASKLIST7);
 
-	return true;
+		if (pITL7)
+		{
+			CXmlItem* firstItem = fileDest.Root()->AddItem(_T("node"), _T(""));
+			firstItem->AddItem(_T("TEXT"), pITL7->GetProjectName());
+
+			CXmlItem* hookItem = firstItem->AddItem(_T("hook"), _T(""));
+			hookItem->AddItem(_T("NAME"), _T("accessories/plugins/AutomaticLayout.properties"));
+
+			//Attrib Manager settings
+			//This will make the attribs not to be shown as a list view at every node;
+			CXmlItem* attribManItem = firstItem->AddItem(_T("attribute_registry"), _T(""));
+			attribManItem->AddItem(_T("SHOW_ATTRIBUTES"), _T("hide"));
+
+			// export first task
+			ExportTask(pITL7, pITL7->GetFirstTask(), firstItem , 0);
+		}
+	}
+
+	// save output manually to restore non-escaping of &
+	CString sOutput;
+	fileDest.Export(sOutput);
+	sOutput.Replace(_T("&amp;#"), _T("&#"));
+
+	// save result
+	return (FileMisc::SaveFile(szDestFilePath, sOutput) == TRUE);
+}
+
+CString CFMindExporter::Translate(LPCTSTR szText)
+{
+	CString sTranslated;
+
+#if defined(UNICODE) || defined(_UNICODE)
+	const WCHAR* wszText = szText;
+#else
+	WCHAR* wszText = Misc::MultiByteToWide(szText);
+#endif   // UNICODE || _UNICODE
+	int nLen = _tcslen(szText);
+
+	for (int i = 0; i < nLen; i++)
+	{
+		CString str;
+		str.Format(_T("&#%d;"), wszText[i]);
+		sTranslated += str;
+	}
+
+#if defined(UNICODE) || defined(_UNICODE)
+	// no-op
+#else
+	delete[] wszText;
+#endif   // UNICODE || _UNICODE
+	return sTranslated;
 }
 
 void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CXmlItem* pXIDestParent , int LEVEL)
@@ -95,13 +163,12 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 		return;
 	}
 
-	TCHAR cTemp;
-
 	// create a new item corresponding to pXITask at the dest
 	CXmlItem* pXIDestItem = pXIDestParent->AddItem(_T("node"));
+	TCHAR cTemp = 0;
 
 	// copy across the appropriate attributes
-	pXIDestItem->AddItem(_T("TEXT"), pSrcTaskFile->GetTaskTitle(hTask));
+	pXIDestItem->AddItem(_T("TEXT"), Translate(pSrcTaskFile->GetTaskTitle(hTask)));
 
 	CString sModified;
 	sModified.Format(_T("%i"), pSrcTaskFile->GetTaskLastModified(hTask) * 1000);
@@ -131,21 +198,28 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	{
 		// for version 0.9 we export comments as rich NOTE
 		// now we need to export it as html
-		CXmlItem* pXIComments = pXIDestItem->AddItem(_T("richcontent"));
-		pXIComments->AddItem(_T("TYPE"), _T("NOTE"));
+		{
+			CXmlItem* pXIComments = pXIDestItem->AddItem(_T("richcontent"));
+			pXIComments->AddItem(_T("TYPE"), _T("NOTE"));
 
-		CXmlItem* pXIHtml = pXIComments->AddItem(_T("html"), _T(""), XIT_ELEMENT);
-		CXmlItem* pXIHead = pXIHtml->AddItem(_T("head"), _T(""), XIT_ELEMENT);
-		CXmlItem* pXIBody = pXIHtml->AddItem(_T("body"), _T(""), XIT_ELEMENT);
-		CXmlItem* pXIPara = pXIBody->AddItem(_T("p"), sComments, XIT_ELEMENT);
+			// replace newlines with breaks
+			sComments.Replace(_T("\n"), _T("<br>"));
 
-		UNUSED_ALWAYS(pXIHead);
-		UNUSED_ALWAYS(pXIPara);
+			CXmlItem* pXIHtml = pXIComments->AddItem(_T("html"), _T(""), XIT_ELEMENT);
+			CXmlItem* pXIHead = pXIHtml->AddItem(_T("head"), _T(""), XIT_ELEMENT);
+			CXmlItem* pXIBody = pXIHtml->AddItem(_T("body"), _T(""), XIT_ELEMENT);
+			CXmlItem* pXIPara = pXIBody->AddItem(_T("p"), sComments, XIT_ELEMENT);
+
+			UNUSED_ALWAYS(pXIHead);
+			UNUSED_ALWAYS(pXIPara);
+		}
 
 		// for version 0.8 we export comments as private attribute
-		pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
-		pXIAttribs->AddItem(_T("NAME"), _T("Comments"));
-		pXIAttribs->AddItem(_T("VALUE"), sComments);
+		{
+			pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
+			pXIAttribs->AddItem(_T("NAME"), _T("Comments"));
+			pXIAttribs->AddItem(_T("VALUE"), sComments);
+		}
 	}
 
 	//Start of Attrib List not Supported by FreeMind
@@ -257,7 +331,6 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	pXIAttribs->AddItem(_T("NAME"), _T("TaskCreationDate"));
 	sDate = FormatDate(pSrcTaskFile->GetTaskCreationDate(hTask));
 	pXIAttribs->AddItem(_T("VALUE"), sDate);
-
 
 	//virtual bool SetTaskExternalID(HTASKITEM hTask, const char* szID) = 0;
 	pXIAttribs = pXIDestItem->AddItem(_T("attribute"));
