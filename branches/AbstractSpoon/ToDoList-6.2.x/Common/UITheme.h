@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // UITheme.h: interface for the UITHEME class.
@@ -53,12 +54,15 @@ struct UITHEME
 
 	COLORREF crAppBackDark;
 	COLORREF crAppBackLight;
-	COLORREF crAppLines;
+	COLORREF crAppLinesDark;
+	COLORREF crAppLinesLight;
+	COLORREF crAppText;
 	COLORREF crMenuBack;
 	COLORREF crToolbarDark;
 	COLORREF crToolbarLight;
 	COLORREF crStatusBarDark;
 	COLORREF crStatusBarLight;
+	COLORREF crStatusBarText;
 };
 
 #endif // !defined(AFX_UITHEME_H__7747061B_7841_47E8_BB36_89C11D6DC934__INCLUDED_)

@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // XmlFile.h: interface for the CXmlFile class.
@@ -82,6 +83,7 @@ public:
 
 	const CXmlItem* GetItem(LPCTSTR szItemName, LPCTSTR szSubItemName = NULL) const;
 	CXmlItem* GetItem(LPCTSTR szItemName, LPCTSTR szSubItemName = NULL);
+	BOOL HasItem(LPCTSTR szItemName, LPCTSTR szSubItemName = NULL) const;
 
 	const CXmlItem* FindItem(LPCTSTR szItemName, LPCTSTR szItemValue, BOOL bSearchChildren = TRUE) const;
 	const CXmlItem* FindItem(LPCTSTR szItemName, int nItemValue, BOOL bSearchChildren = TRUE) const;
@@ -240,7 +242,6 @@ public:
 	BOOL Export(CString& sOutput) const;
 	BOOL Transform(LPCTSTR szTransformPath, CString& sOutput, const CString& sEncoding = _T("")) const;
 	BOOL TransformToFile(LPCTSTR szTransformPath, LPCTSTR szOutputPath, const CString& sEncoding = _T("")) const;
-	//static void EnableFormattedOutput(BOOL bEnable = TRUE);
 
 	const CXmlItem* Root() const;
 	CXmlItem* Root();

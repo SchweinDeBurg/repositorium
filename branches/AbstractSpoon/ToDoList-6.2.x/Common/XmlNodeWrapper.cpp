@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // XmlNodeWrapper.cpp: implementation of the CXmlNodeWrapper class.
@@ -522,13 +522,14 @@ BOOL CXmlDocumentWrapper::Load(LPCTSTR path, BOOL bPreserveWhiteSpace)
 	return (VARIANT_TRUE == m_xmldoc->load(bstr));
 }
 
-BOOL CXmlDocumentWrapper::LoadXML(LPCTSTR xml/*, BOOL bPreserveWhiteSpace*/)
+BOOL CXmlDocumentWrapper::LoadXML(LPCTSTR xml, BOOL bPreserveWhiteSpace)
 {
 	if (!IsValid())
 	{
 		return FALSE;
 	}
 
+	m_xmldoc->put_preserveWhiteSpace(bPreserveWhiteSpace ? VARIANT_TRUE : VARIANT_FALSE);
 	_bstr_t bstr(CXmlNodeWrapper::ConvertStringToBSTR(ATL::CT2A(xml)), FALSE);
 
 	return (VARIANT_TRUE == m_xmldoc->loadXML(bstr));
@@ -695,6 +696,14 @@ BSTR CXmlNodeWrapper::ConvertStringToBSTR(const char* pSrc)
 MSXML2::IXMLDOMDocument* CXmlNodeWrapper::ParentDocument()
 {
 	return m_xmlnode->GetownerDocument().Detach();
+}
+
+BOOL CXmlNodeWrapper::IsPreservingWhiteSpace() const
+{
+	VARIANT_BOOL bPreserving = VARIANT_FALSE;
+	m_xmlnode->GetownerDocument()->get_preserveWhiteSpace(&bPreserving);
+	
+	return (bPreserving == VARIANT_TRUE);
 }
 
 MSXML2::IXMLDOMNode* CXmlNodeWrapper::Interface()
