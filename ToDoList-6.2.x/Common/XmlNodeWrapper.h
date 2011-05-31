@@ -55,6 +55,8 @@
 
 #import <msxml3.dll> named_guids
 
+class CXmlDocumentWrapper;
+
 class CXmlNodeWrapper
 {
 public:

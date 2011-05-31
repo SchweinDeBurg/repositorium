@@ -163,6 +163,18 @@ BOOL CCalendarFrameWnd::Create(HWND hParent, BOOL bShow, LPSIZE pSize)
 	return FALSE;
 }
 
+void CCalendarFrameWnd::SetUITheme(const UITHEME& theme)
+{
+	if (CThemed::IsThemeActive())
+	{
+		m_menubar.SetBackgroundColor(theme.crMenuBack);
+		DrawMenuBar();
+
+		m_StatusBar.SetUIColors(theme.crStatusBarLight, theme.crStatusBarDark, 
+			theme.nStyle == UIS_GRADIENT, theme.crStatusBarText);
+	}
+}
+
 BOOL CCalendarFrameWnd::Show(BOOL bShow)
 {
 	if (!GetSafeHwnd())
@@ -304,6 +316,16 @@ int CCalendarFrameWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
+	ModifyStyleEx(WS_EX_CLIENTEDGE, 0);
+
+	if (!m_menubar.LoadMenu(IDR_CALENDAR))
+	{
+		return FALSE;
+	}
+
+	SetMenu(&m_menubar);
+	m_hMenuDefault = m_menubar;
+	
 	//set the title of the window
 	UpdateTitleBarText();
 
