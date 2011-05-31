@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // MLOImporter.h: interface for the CMLOImporter class.
@@ -56,7 +57,7 @@ public:
 	}
 	const char* GetMenuText()
 	{
-		return "My Life Organized (MLO)";
+		return "My Life Organized";
 	}
 	const char* GetFileFilter()
 	{
