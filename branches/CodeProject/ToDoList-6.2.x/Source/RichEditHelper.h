@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // RichEditHelper.h: interface for the CRichEditHelper class.
@@ -64,6 +64,13 @@
 #endif
 
 struct ITextDocument;
+
+enum RE_PASTE
+{
+	REP_ASIMAGE,
+	REP_ASICON,
+	REP_ASFILEURL,
+};
 
 class CReBase
 {
@@ -145,7 +152,11 @@ public:
 	static BOOL InitRichEdit();
 	static void ClearUndo(HWND hWnd);
 
+	static BOOL PasteFile(CWnd& wnd, LPCTSTR szFilePath, RE_PASTE nPasteHow);
+	static BOOL PasteFiles(CWnd& wnd, const CStringArray& aFiles, RE_PASTE nPasteHow);
+
 protected:
+	static BOOL PasteFileInternal(CWnd& wnd, LPCTSTR szFilePath, RE_PASTE nPasteHow);
 };
 
 #endif // !defined(AFX_RICHEDITHELPER_H__C498C86D_613F_42AD_9C93_6C773E6368E8__INCLUDED_)

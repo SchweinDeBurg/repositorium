@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // RichEditHelper.cpp: implementation of the CRichEditHelper class.
@@ -51,6 +51,12 @@
 #include "WClassDefines.h"
 
 #include <tom.h>
+
+#include "ClipboardBackup.h"
+
+#include "Misc.h"
+#include "FileMisc.h"
+#include "EnBitmap.h"
 
 #include <atlconv.h>
 
@@ -216,10 +222,95 @@ void CRichEditHelper::ClearUndo(HWND hWnd)
 	}
 }
 
+BOOL CRichEditHelper::PasteFiles(CWnd& wnd, const CStringArray& aFiles, RE_PASTE nPasteHow)
+{
+	// save backup because we may be overwriting it
+	CClipboardBackup clipBackup;
+	clipBackup.Backup();
+
+	UINT nFileCount = aFiles.GetSize(), nFilesPasted = 0;
+	ASSERT(nFileCount != 0);
+
+	for (UINT i = 0; i < nFileCount; i++)
+	{
+		if (PasteFileInternal(wnd, aFiles[i], nPasteHow))
+		{
+			nFilesPasted++;
+		}
+	}
+
+	clipBackup.Restore();
+	return (nFileCount == nFilesPasted);
+}
+
+BOOL CRichEditHelper::PasteFile(CWnd& wnd, LPCTSTR szFilePath, RE_PASTE nPasteHow)
+{
+	// save backup because we may be overwriting it
+	CClipboardBackup clipBackup;
+	clipBackup.Backup();
+
+	BOOL bSuccess = PasteFileInternal(wnd, szFilePath, nPasteHow);
+
+	clipBackup.Restore();
+	return bSuccess;
+}
+
+BOOL CRichEditHelper::PasteFileInternal(CWnd& wnd, LPCTSTR szFilePath, RE_PASTE nPasteHow)
+{
+	if (FileMisc::FileExists(szFilePath))
+	{
+		switch (nPasteHow)
+		{
+		case REP_ASIMAGE:
+			if (CEnBitmap::CopyImageFileToClipboard(szFilePath))
+			{
+				return wnd.SendMessage(EM_PASTESPECIAL, CF_BITMAP, NULL);
+			}
+			// else fall thru
+
+		case REP_ASICON:
+			if (CReFileObject(wnd).Insert(szFilePath))
+			{
+				return TRUE;
+			}
+			// else fall thru
+
+		case REP_ASFILEURL:
+		{
+			CString sLink(szFilePath);
+			sLink = _T("file://") + sLink;
+			sLink.Replace(_T('\\'), _T('/'));
+
+			// if the path contains spaces then brace it
+			if (sLink.Find(_T(' ')) != -1)
+			{
+				sLink = _T("<") + sLink + _T(">");
+			}
+
+			// newline
+			sLink += _T("\r\n");
+
+			wnd.SendMessage(EM_REPLACESEL, TRUE, (LPARAM)(LPCTSTR)sLink);
+		}
+		// else fall thru
+
+		default:
+			break;
+		}
+	}
+
+	// all else
+	return FALSE;
+}
+
 //////////////////////////////////////////////////////////////////////
 
 CReFileObject::CReFileObject(HWND hwndRichEdit) :
-CReBase(hwndRichEdit), m_pObject(NULL), m_pClientSite(NULL), m_pRichEditOle(NULL), m_pStorage(NULL)
+CReBase(hwndRichEdit),
+m_pObject(NULL),
+m_pClientSite(NULL),
+m_pRichEditOle(NULL),
+m_pStorage(NULL)
 {
 	SendMessage(m_hwndRichedit, EM_GETOLEINTERFACE, 0, (LPARAM)&m_pRichEditOle);
 }
@@ -237,9 +328,7 @@ BOOL CReFileObject::Create(LPCTSTR szFilePath)
 		return FALSE;
 	}
 
-	DWORD dwFileAttrib = GetFileAttributes(szFilePath);
-
-	if (dwFileAttrib == 0xffffffff || (dwFileAttrib & FILE_ATTRIBUTE_DIRECTORY))
+	if (!FileMisc::FileExists(szFilePath))
 	{
 		return FALSE;
 	}

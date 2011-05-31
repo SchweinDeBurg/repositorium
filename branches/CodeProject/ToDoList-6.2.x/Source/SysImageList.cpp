@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // SysImageList.cpp: implementation of the CSysImageList class.
@@ -210,10 +211,7 @@ int CSysImageList::GetFolderImageIndex()
 
 HICON CSysImageList::ExtractAppIcon()
 {
-	TCHAR szAppPath[MAX_PATH + 1];
-	GetModuleFileName(NULL, szAppPath, MAX_PATH);
-
-	return ExtractFileIcon(szAppPath);
+	return ExtractFileIcon(FileMisc::GetAppFileName());
 }
 
 HICON CSysImageList::ExtractFileIcon(LPCTSTR szFilePath)
