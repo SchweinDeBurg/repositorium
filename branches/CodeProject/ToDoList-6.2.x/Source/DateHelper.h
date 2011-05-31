@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // DateHelper.h: interface for the CDateHelper class.
@@ -97,6 +98,9 @@ public:
 
 	static BOOL DecodeISODate(const CString& sDate, COleDateTime& date);
 	static BOOL DecodeISODate(const CString& sDate, time_t& date);
+
+	static BOOL DecodeLocalShortDate(const CString& sDate, COleDateTime& date);
+	static BOOL DecodeLocalShortDate(const CString& sDate, time_t& date);
 
 	static int FirstDayOfWeek();
 	static int LastDayOfWeek();

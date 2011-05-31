@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.7 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // Misc.cpp: implementation of the CMisc class.
@@ -61,11 +61,36 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-void Misc::CopyTexttoClipboard(const CString& sText, HWND hwnd)
+CString Misc::FormatGetLastError(DWORD dwLastErr)
+{
+	if (dwLastErr == -1)
+	{
+		dwLastErr = GetLastError();
+	}
+
+	LPTSTR lpMessage;
+	DWORD dwErrCode = GetLastError();
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL,               // no source buffer needed
+		dwErrCode,          // error code for this message
+		NULL,               // default language ID
+		(LPTSTR)&lpMessage, // allocated by fcn
+		NULL,               // minimum size of buffer
+		NULL);              // no inserts
+
+
+	CString sError(lpMessage);
+	LocalFree(lpMessage);
+
+	return sError;
+}
+
+BOOL Misc::CopyTexttoClipboard(const CString& sText, HWND hwnd)
 {
 	if (!::OpenClipboard(hwnd))
 	{
-		return;
+		return FALSE;
 	}
 
 	::EmptyClipboard();
@@ -76,7 +101,7 @@ void Misc::CopyTexttoClipboard(const CString& sText, HWND hwnd)
 	if (!hglbCopy)
 	{
 		CloseClipboard();
-		return;
+		return FALSE;
 	}
 
 	// Lock the handle and copy the text to the buffer.
@@ -89,8 +114,9 @@ void Misc::CopyTexttoClipboard(const CString& sText, HWND hwnd)
 
 	// Place the handle on the clipboard.
 	::SetClipboardData(CF_TEXT, hglbCopy);
-
 	::CloseClipboard();
+
+	return TRUE;
 }
 
 CString Misc::GetClipboardText(HWND hwnd)
@@ -109,6 +135,48 @@ CString Misc::GetClipboardText(HWND hwnd)
 	::CloseClipboard();
 
 	return sText;
+}
+
+BOOL Misc::ClipboardHasFormat(UINT nFormat, HWND hwnd)
+{
+	if (::OpenClipboard(hwnd))
+	{
+		UINT nFmt = ::EnumClipboardFormats(0);
+
+		while (nFmt)
+		{
+			if (nFmt == nFormat)
+			{
+				return TRUE;
+			}
+
+			nFmt = ::EnumClipboardFormats(nFmt);
+		}
+
+		::CloseClipboard();
+	}
+
+	return FALSE;
+}
+
+int Misc::GetDropFilePaths(HDROP hDrop, CStringArray& aFiles)
+{
+	aFiles.RemoveAll();
+
+	TCHAR szFileName[_MAX_PATH];
+	UINT nFileCount = ::DragQueryFile(hDrop, 0xffffffff, NULL, 0);
+
+	for (UINT i = 0; i < nFileCount; i++)
+	{
+		::DragQueryFile(hDrop, i, szFileName, _MAX_PATH);
+		::GetLongPathName(szFileName, szFileName, _MAX_PATH);
+
+		aFiles.Add(szFileName);
+	}
+
+	::DragFinish(hDrop);
+
+	return aFiles.GetSize();
 }
 
 BOOL Misc::IsGuid(LPCTSTR szGuid)
@@ -192,35 +260,16 @@ void Misc::ProcessMsgLoop()
 	}
 }
 
-int Misc::Split(const CString& sText, const CString& sDelim, CStringArray& aValues)
+CString Misc::FormatComputerNameAndUser(TCHAR cSeparator)
 {
-	aValues.RemoveAll();
+	static CString sMachineAndUser;
 
-	CString sTextCopy(sText);
-	int nFind = sTextCopy.Find(sDelim, 0);
-
-	while (nFind != -1)
+	if (sMachineAndUser.IsEmpty())
 	{
-		CString sValue = sTextCopy.Left(nFind);
-		aValues.Add(sValue);
-
-		// next try
-		sTextCopy = sTextCopy.Mid(nFind + sDelim.GetLength());
-		nFind = sTextCopy.Find(sDelim, 0);
+		sMachineAndUser.Format(_T("%s%c%s"), (LPCTSTR)GetComputerName(), cSeparator, (LPCTSTR)GetUserName());
 	}
 
-	// add whatever's left
-	if (!sTextCopy.IsEmpty())
-	{
-		aValues.Add(sTextCopy);
-	}
-
-	return aValues.GetSize();
-}
-
-int Misc::Split(const CString& sText, TCHAR cDelim, CStringArray& aValues)
-{
-	return Split(sText, CString(cDelim), aValues);
+	return sMachineAndUser;
 }
 
 CString Misc::GetComputerName()
@@ -354,48 +403,75 @@ void Misc::Trace(const CStringArray& array)
 	TRACE(_T("\n"));
 }
 
-int Misc::ParseIntoArray(const CString& sText, CStringArray& array, BOOL bAllowEmpty, CString sSep)
+int Misc::Split(const CString& sText, TCHAR cDelim, CStringArray& aValues)
 {
-	array.RemoveAll();
+	return Split(sText, aValues, TRUE, CString(cDelim));
+}
 
-	if (sSep.IsEmpty())
+int Misc::Split(const CString& sText, CStringArray& aValues, BOOL bAllowEmpty, const CString& sSep)
+{
+	ASSERT(!sSep.IsEmpty());
+
+	aValues.RemoveAll();
+
+	// parse on separator unless enclosed in double-quotes
+	int nLen = sText.GetLength(), nSepLen = sSep.GetLength();
+	BOOL bInQuotes = FALSE, bAddWord = FALSE;
+	CString sWord;
+
+	for (int nPos = 0; nPos < nLen; nPos++)
 	{
-		sSep = GetListSeparator();
-	}
+		TCHAR chr = sText[nPos];
 
-	int nSepPrev = -1;
-	int nSep = sText.Find(sSep);
-
-	while (nSep != -1)
-	{
-		CString sItem = sText.Mid(nSepPrev + 1, nSep - (nSepPrev + 1));
-		sItem.TrimLeft();
-		sItem.TrimRight();
-
-		if (bAllowEmpty || !sItem.IsEmpty())
+		// check if we're at the beginning of a separator string
+		if (chr == sSep[0] && (nSepLen == 1 || sText.Find(sSep, nPos) == nPos))
 		{
-			array.Add(sItem);
+			if (bInQuotes)
+			{
+				sWord += sSep;
+			}
+			else
+			{
+				bAddWord = TRUE;
+			}
+
+			nPos += nSepLen - 1; // minus 1 because the loop also increments
+		}
+		else if (chr == '\"') // double quote
+		{
+			// flip bInQuotes
+			bInQuotes = !bInQuotes;
+		}
+		else // everything else
+		{
+			sWord += chr;
+
+			// also if its the last char then add it
+			bAddWord = (nPos == nLen - 1);
 		}
 
-		nSepPrev = nSep;
-		nSep = sText.Find(sSep, nSepPrev + 1);
-	}
-
-	// handle whatever's left so long as a separator was found
-	// or there is something left
-	if (nSepPrev != -1 || !sText.IsEmpty())
-	{
-		CString sItem = sText.Mid(nSepPrev + 1);
-		sItem.TrimLeft();
-		sItem.TrimRight();
-
-		if (bAllowEmpty || !sItem.IsEmpty())
+		if (bAddWord)
 		{
-			array.Add(sItem);
+			sWord.TrimLeft();
+			sWord.TrimRight();
+
+			if (bAllowEmpty || !sWord.IsEmpty())
+			{
+				aValues.Add(sWord);
+			}
+
+			sWord.Empty(); // next word
+			bAddWord = FALSE;
 		}
 	}
 
-	return array.GetSize();
+	// if the string ends with a separator and allow empty then add an empty string
+	if (!sWord.IsEmpty() || (bAllowEmpty && nLen && sText.Find(sSep, nLen - nSepLen) == nLen - nSepLen))
+	{
+		aValues.Add(sWord);
+	}
+
+	return aValues.GetSize();
 }
 
 BOOL Misc::ArraysMatch(const CStringArray& array1, const CStringArray& array2, BOOL bOrderSensitive, BOOL bCaseSensitive)
@@ -656,6 +732,30 @@ CString Misc::GetTimeSeparator()
 	return sSep;
 }
 
+CString Misc::GetDateSeparator()
+{
+	static CString sSep;
+	const int BUFLEN = 10;
+
+	if (sSep.IsEmpty()) // init first time only
+	{
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDATE , sSep.GetBuffer(BUFLEN), BUFLEN - 1);
+		sSep.ReleaseBuffer();
+
+		// Trim extra spaces
+		sSep.TrimLeft();
+		sSep.TrimRight();
+
+		// If none found, use a slash
+		if (!sSep.GetLength())
+		{
+			sSep = _T("/");
+		}
+	}
+
+	return sSep;
+}
+
 CString Misc::GetShortDateFormat(BOOL bIncDOW)
 {
 	static CString sFormat;
@@ -700,6 +800,17 @@ CString Misc::GetDecimalSeparator()
 	return sSep;
 }
 
+BOOL Misc::IsMetricMeasurementSystem()
+{
+	const int BUFLEN = 2;
+	CString sSystem;
+
+	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_IMEASURE, sSystem.GetBuffer(BUFLEN), BUFLEN - 1);
+	sSystem.ReleaseBuffer(BUFLEN - 1);
+
+	return (_ttoi(sSystem) == 0);
+}
+
 BOOL Misc::IsMultibyteString(const CString& sText)
 {
 	int nChar = sText.GetLength();
@@ -722,6 +833,26 @@ CStringA Misc::WideToMultiByte(wchar_t nChar, UINT nCodePage)
 	WideCharToMultiByte(nCodePage, 0, &nChar, 1, ach, sizeof(ach), 0, 0);
 
 	return CStringA(ach);
+}
+
+WCHAR* Misc::MultiByteToWide(const CStringA& sFrom, UINT nCodepage)
+{
+	// Use api convert routine
+	int wlen = MultiByteToWideChar(nCodepage, 0, sFrom, -1, NULL, 0);
+
+	// if wlen == 0, some unknown codepage was probably used.
+	ASSERT(wlen);
+
+	if (wlen == 0)
+	{
+		return NULL;
+	}
+
+	WCHAR* wTo = new WCHAR[wlen + 2];
+
+	MultiByteToWideChar(nCodepage, 0, sFrom, -1, wTo, wlen);
+
+	return wTo;
 }
 
 double Misc::Round(double dValue)

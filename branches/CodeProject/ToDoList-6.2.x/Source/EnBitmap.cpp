@@ -38,6 +38,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // EnBitmap.cpp: implementation of the CEnBitmap class (c) daniel godson 2002.
@@ -67,6 +68,7 @@ enum
 	FT_ICO,
 	FT_JPG,
 	FT_GIF,
+	FT_PNG,
 
 	FT_UNKNOWN
 };
@@ -369,6 +371,11 @@ int CEnBitmap::GetFileType(LPCTSTR szImagePath)
 	else if (sPath.Find(_T(".GIF")) > 0)
 	{
 		return FT_GIF;
+	}
+
+	else if (sPath.Find(_T(".PNG")) > 0)
+	{
+		return FT_PNG;
 	}
 
 	// else

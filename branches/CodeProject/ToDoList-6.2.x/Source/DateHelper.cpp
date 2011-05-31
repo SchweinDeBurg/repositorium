@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // DateHelper.cpp: implementation of the CDateHelper class.
@@ -47,6 +48,7 @@
 
 #include "stdafx.h"
 #include "DateHelper.h"
+#include "TimeHelper.h"
 #include "Misc.h"
 
 #include <math.h>
@@ -131,6 +133,77 @@ BOOL CDateHelper::DecodeISODate(const CString& sDate, time_t& date)
 	return FALSE;
 }
 
+BOOL CDateHelper::DecodeLocalShortDate(const CString& sDate, COleDateTime& date)
+{
+	if (!sDate.IsEmpty())
+	{
+		// split the string and format by the delimiter
+		CString sFormat = Misc::GetShortDateFormat();
+		CStringArray aDateParts, aFmtParts;
+
+		Misc::Split(sDate, aDateParts, TRUE, Misc::GetDateSeparator());
+		Misc::Split(sFormat, aFmtParts, TRUE, Misc::GetDateSeparator());
+
+		ASSERT(aDateParts.GetSize() == aFmtParts.GetSize());
+
+		// process the parts, deciphering the format
+		int nYear = -1, nMonth = -1, nDay = -1;
+
+		for (int nPart = 0; nPart < aFmtParts.GetSize(); nPart++)
+		{
+			if (aFmtParts[nPart].FindOneOf(_T("Yy")) != -1)
+			{
+				nYear = _ttoi(aDateParts[nPart]);
+			}
+
+			if (aFmtParts[nPart].FindOneOf(_T("Mm")) != -1)
+			{
+				nMonth = _ttoi(aDateParts[nPart]);
+			}
+
+			if (aFmtParts[nPart].FindOneOf(_T("Dd")) != -1)
+			{
+				nDay = _ttoi(aDateParts[nPart]);
+			}
+		}
+
+		if (nYear != -1 && nMonth != -1 && nDay != -1)
+		{
+			return (date.SetDate(nYear, nMonth, nDay) == 0);
+		}
+	}
+
+	// else
+	date.m_dt = 0.0;
+	return FALSE;
+}
+
+BOOL CDateHelper::DecodeLocalShortDate(const CString& sDate, time_t& date)
+{
+	COleDateTime dt;
+
+	if (DecodeLocalShortDate(sDate, dt))
+	{
+		tm time = { 0,
+			0,
+			0,
+			dt.GetDay(),
+			dt.GetMonth() - 1,
+			dt.GetYear() - 1900,
+			dt.GetDayOfWeek() - 1,
+			dt.GetDayOfYear(),
+			-1
+		};
+
+		date = mktime(&time);
+		return (date != -1);
+	}
+
+	// else
+	date = 0;
+	return FALSE;
+}
+
 double CDateHelper::GetDate(DH_DATE nDate)
 {
 	COleDateTime date;
@@ -146,55 +219,55 @@ double CDateHelper::GetDate(DH_DATE nDate)
 		break;
 
 	case DHD_ENDTHISWEEK:
+	{
+		// we must get the locale info to find out when this
+		// user's week starts
+		date = COleDateTime::GetCurrentTime();
+
+		// increment the date until we hit the last day of the week
+		// note: we could have kept checking date.GetDayOfWeek but
+		// it's a lot of calculation that's just not necessary
+		int nLastDOW = LastDayOfWeek();
+		int nDOW = date.GetDayOfWeek();
+
+		while (nDOW != nLastDOW)
 		{
-			// we must get the locale info to find out when this
-			// user's week starts
-			date = COleDateTime::GetCurrentTime();
-
-			// increment the date until we hit the last day of the week
-			// note: we could have kept checking date.GetDayOfWeek but
-			// it's a lot of calculation that's just not necessary
-			int nLastDOW = LastDayOfWeek();
-			int nDOW = date.GetDayOfWeek();
-
-			while (nDOW != nLastDOW)
-			{
-				date += 1;
-				nDOW = NextDayOfWeek(nDOW);
-			}
+			date += 1;
+			nDOW = NextDayOfWeek(nDOW);
 		}
-		break;
+	}
+	break;
 
 	case DHD_ENDNEXTWEEK:
 		return GetDate(DHD_ENDTHISWEEK) + 7;
 
 	case DHD_ENDTHISMONTH:
+	{
+		date = COleDateTime::GetCurrentTime();
+		int nThisMonth = date.GetMonth();
+
+		while (date.GetMonth() == nThisMonth)
 		{
-			date = COleDateTime::GetCurrentTime();
-			int nThisMonth = date.GetMonth();
-
-			while (date.GetMonth() == nThisMonth)
-			{
-				date += 20;   // much quicker than doing it one day at a time
-			}
-
-			date -= date.GetDay(); // because we went into next month
+			date += 20;   // much quicker than doing it one day at a time
 		}
-		break;
+
+		date -= date.GetDay(); // because we went into next month
+	}
+	break;
 
 	case DHD_ENDNEXTMONTH:
+	{
+		date = GetDate(DHD_ENDTHISMONTH) + 1; // first day of next month
+		int nNextMonth = date.GetMonth();
+
+		while (date.GetMonth() == nNextMonth)
 		{
-			date = GetDate(DHD_ENDTHISMONTH) + 1; // first day of next month
-			int nNextMonth = date.GetMonth();
-
-			while (date.GetMonth() == nNextMonth)
-			{
-				date += 20;   // much quicker than doing it one day at a time
-			}
-
-			date -= date.GetDay(); // because we went into next month + 1
+			date += 20;   // much quicker than doing it one day at a time
 		}
-		break;
+
+		date -= date.GetDay(); // because we went into next month + 1
+	}
+	break;
 
 	case DHD_ENDTHISYEAR:
 		date = COleDateTime::GetCurrentTime(); // for current year
@@ -357,15 +430,18 @@ CString CDateHelper::FormatDate(const COleDateTime& date, DWORD dwFlags)
 	sDate.ReleaseBuffer();
 
 	// want time?
-	if (dwFlags & DHFD_TIME)
+	if ((dwFlags & DHFD_TIME) != 0)
 	{
-		CString sTime;
-		DWORD dwTimeFlags = (dwFlags & DHFD_NOSEC) ? TIME_NOSECONDS : 0;
-
-		::GetTimeFormat(0, dwTimeFlags, &st, NULL, sTime.GetBuffer(50), 49);
-		sTime.ReleaseBuffer();
-
-		sDate += _T(" ") + sTime;
+		if ((dwFlags & DHFD_ISO) != 0)
+		{
+			sDate += _T('T'); // ISO delimiter
+			sDate += CTimeHelper::FormatISOTime(st.wHour, st.wMinute, st.wSecond, !(dwFlags & DHFD_NOSEC));
+		}
+		else
+		{
+			sDate += _T(' ');
+			sDate += CTimeHelper::Format24HourTime(st.wHour, st.wMinute, st.wSecond, !(dwFlags & DHFD_NOSEC));
+		}
 	}
 
 	return sDate;
@@ -447,46 +523,46 @@ void CDateHelper::OffsetDate(COleDateTime& date, int nAmount, DH_UNITS nUnits)
 			break;
 
 		case DHU_MONTHS:
+		{
+			SYSTEMTIME st;
+			date.GetAsSystemTime(st);
+
+			// convert amount to years and months
+			st.wYear = (WORD)((int)st.wYear + (nAmount / 12));
+			st.wMonth = (WORD)((int)st.wMonth + (nAmount % 12));
+
+			// handle overflow
+			if (st.wMonth > 12)
 			{
-				SYSTEMTIME st;
-				date.GetAsSystemTime(st);
-
-				// convert amount to years and months
-				st.wYear = (WORD)((int)st.wYear + (nAmount / 12));
-				st.wMonth = (WORD)((int)st.wMonth + (nAmount % 12));
-
-				// handle overflow
-				if (st.wMonth > 12)
-				{
-					st.wYear++;
-					st.wMonth -= 12;
-				}
-				else if (st.wMonth < 1)
-				{
-					st.wYear--;
-					st.wMonth += 12;
-				}
-
-				// clip dates to the end of the month
-				st.wDay = min(st.wDay, (WORD)GetDaysInMonth(st.wMonth, st.wYear));
-
-				// update time
-				date = COleDateTime(st);
+				st.wYear++;
+				st.wMonth -= 12;
 			}
-			break;
+			else if (st.wMonth < 1)
+			{
+				st.wYear--;
+				st.wMonth += 12;
+			}
+
+			// clip dates to the end of the month
+			st.wDay = min(st.wDay, (WORD)GetDaysInMonth(st.wMonth, st.wYear));
+
+			// update time
+			date = COleDateTime(st);
+		}
+		break;
 
 		case DHU_YEARS:
-			{
-				SYSTEMTIME st;
-				date.GetAsSystemTime(st);
+		{
+			SYSTEMTIME st;
+			date.GetAsSystemTime(st);
 
-				// update year
-				st.wYear = (WORD)((int)st.wYear + nAmount);
+			// update year
+			st.wYear = (WORD)((int)st.wYear + nAmount);
 
-				// update time
-				date = COleDateTime(st);
-			}
-			break;
+			// update time
+			date = COleDateTime(st);
+		}
+		break;
 		}
 	}
 }

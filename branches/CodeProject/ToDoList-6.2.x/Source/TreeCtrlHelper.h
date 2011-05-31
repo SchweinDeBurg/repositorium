@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TreeCtrlHelper.h: interface for the CTreeCtrlHelper class.
@@ -115,6 +116,7 @@ public:
 	HTREEITEM GetNextTopLevelItem(HTREEITEM hti, BOOL bNext = TRUE) const;
 
 	// returns the top level item whose child is the first visible item (or itself)
+	HTREEITEM GetFirstVisibleTopLevelItem(); // return 0 if no items
 	HTREEITEM GetFirstVisibleTopLevelItem(int& nPos); // return 0 if no items
 	HTREEITEM GetTopLevelParentItem(HTREEITEM hti);
 

@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.6 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #ifndef _MISCFILE_FUNCTIONS_H_
@@ -88,10 +88,10 @@ public:
 
 namespace FileMisc
 {
-	CString FormatGetLastError(DWORD dwLastErr = -1);
-
-	void TerminatePath(CString& sPath);
-	void UnterminatePath(CString& sPath);
+	CString& TerminatePath(CString& sPath);
+	CString& UnterminatePath(CString& sPath);
+	CString TerminatePath(LPCTSTR szPath);
+	CString UnterminatePath(LPCTSTR szPath);
 
 	time_t GetLastModified(const TCHAR* szPath);
 	bool GetLastModified(const TCHAR* szPath, SYSTEMTIME& sysTime, bool bLocalTime = true); // files only
@@ -135,8 +135,10 @@ namespace FileMisc
 	CString GetTempFileName(LPCTSTR szFilename, LPCTSTR szExt);
 	BOOL IsTempFile(LPCTSTR szFilename);
 
+	bool CanOpenFile(const TCHAR* szPathname, BOOL bDenyWrite = FALSE);
 	bool SaveFile(const TCHAR* szPathname, const TCHAR* szText, int nLen = -1);
 	bool LoadFile(const TCHAR* szPathname, CString& sText);
+	int LoadFileLines(LPCTSTR szPathname, CStringArray& aLines, int nLineCount = -1);
 
 	bool ExtractResource(UINT nID, LPCTSTR szType, const CString& sTempFilePath, HINSTANCE hInst = NULL);
 	bool ExtractResource(LPCTSTR szModulePath, UINT nID, LPCTSTR szType, const CString& sTempFilePath);
@@ -144,21 +146,28 @@ namespace FileMisc
 	CString GetModuleFileName(HMODULE hMod = NULL);
 	CString GetModuleFolder(HMODULE hMod = NULL);
 
+	CString GetAppFileName();
+	CString GetAppFolder(LPCTSTR szSubFolder = NULL);
+	CString GetAppResourceFolder(LPCTSTR szResFolder = _T("Resources"));
+	CString GetAppFilePath();
+
 	CString GetWindowsFolder();
 	CString GetWindowsSystemFolder();
 
-	void SplitPath(const TCHAR* szPath, CString* pDrive, CString* pDir = NULL, CString* pFName = NULL,
-		CString* pExt = NULL);
-	CString& MakePath(CString& sPath, const TCHAR* szDrive, const TCHAR* szDir = NULL, const TCHAR* szFName = NULL,
-		const TCHAR* szExt = NULL);
+	void SplitPath(const TCHAR* szPath, CString* pDrive, CString* pDir = NULL, CString* pFName = NULL, CString* pExt = NULL);
+	CString& MakePath(CString& sPath, const TCHAR* szDrive, const TCHAR* szDir = NULL, const TCHAR* szFName = NULL, const TCHAR* szExt = NULL);
 
-	CString GetFullPath(const CString& sFilePath, BOOL bFromApp = FALSE);
+	CString GetRelativePath(const CString& sFilePath, const CString& sRelativeToFolder, BOOL bFolder);
+	CString& MakeRelativePath(CString& sFilePath, const CString& sRelativeToFolder, BOOL bFolder);
+	CString GetFullPath(const CString& sFilePath, const CString& sRelativeToFolder = GetCwd());
+	CString& MakeFullPath(CString& sFilePath, const CString& sRelativeToFolder = GetCwd());
+
 	BOOL IsSameFile(const CString& sFilePath1, const CString& sFilePath2);
 
 	CString GetFolderFromFilePath(const TCHAR* szFilePath);
 	CString GetFileNameFromPath(const TCHAR* szFilepath, BOOL bIncExtension = TRUE);
 
-	// will delete the source folder on success
+// will delete the source folder on success
 	bool MoveFolder(const TCHAR* szSrcFolder,
 		const TCHAR* szDestFolder,
 		HANDLE hTerminate = NULL,
@@ -169,7 +178,7 @@ namespace FileMisc
 		HANDLE hTerminate = NULL,
 		BOOL bProcessMsgLoop = TRUE);
 
-	// will delete the source folder only if file mask was "*.*"
+// will delete the source folder only if file mask was "*.*"
 	bool MoveFolder(const TCHAR* szSrcFolder,
 		const TCHAR* szDestFolder,
 		BOOL bIncludeSubFolders,
@@ -184,7 +193,7 @@ namespace FileMisc
 		HANDLE hTerminate = NULL,
 		BOOL bProcessMsgLoop = TRUE);
 
-	// append a line of text to a text file
+// append a line of text to a text file
 	bool LogText(LPCTSTR szLine, bool bWantDateTime = true);
 	bool AppendLineToFile(LPCTSTR szPathname, LPCTSTR szLine);
 

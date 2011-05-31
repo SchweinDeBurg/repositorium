@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.7 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // LightBox.cpp: implementation of the CLightBox class.
@@ -111,30 +111,30 @@ BOOL CLightBoxMgr::OnCallWndProc(const MSG& msg)
 	switch (msg.message)
 	{
 	case WM_CREATE:
-		{
-			CWnd* pWnd = CWnd::FromHandle(msg.hwnd);
-			AttachLightBox(pWnd);
-		}
-		break;
+	{
+		CWnd* pWnd = CWnd::FromHandle(msg.hwnd);
+		AttachLightBox(pWnd);
+	}
+	break;
 
 
 	case WM_NCDESTROY:
+	{
+		CWnd* pWnd = CWnd::FromHandle(msg.hwnd);
+
+		if ((pWnd->GetStyle() & WS_CAPTION) == WS_CAPTION)
 		{
-			CWnd* pWnd = CWnd::FromHandle(msg.hwnd);
 
-			if ((pWnd->GetStyle() & WS_CAPTION) == WS_CAPTION)
+			CLightBox* pCtrl = NULL;
+
+			if (m_mapCtrls.Lookup(msg.hwnd, pCtrl))
 			{
-
-				CLightBox* pCtrl = NULL;
-
-				if (m_mapCtrls.Lookup(msg.hwnd, pCtrl))
-				{
-					delete pCtrl;
-					m_mapCtrls.RemoveKey(msg.hwnd);
-				}
+				delete pCtrl;
+				m_mapCtrls.RemoveKey(msg.hwnd);
 			}
 		}
-		break;
+	}
+	break;
 	}
 
 	return FALSE; // to continue routing
@@ -185,7 +185,9 @@ BOOL CLightBoxMgr::AttachLightBox(CWnd* pWnd)
 
 IMPLEMENT_DYNAMIC(CLightBox, CRuntimeDlg)
 
-CLightBox::CLightBox() : m_crBkgnd(GetSysColor(COLOR_3DHILIGHT)), m_nOpaquePercent(50),
+CLightBox::CLightBox():
+m_crBkgnd(GetSysColor(COLOR_3DHILIGHT)),
+m_nOpaquePercent(50),
 m_pSetLayeredWindowAttributes(NULL)
 {
 
@@ -199,7 +201,6 @@ CLightBox::~CLightBox()
 BEGIN_MESSAGE_MAP(CLightBox, CRuntimeDlg)
 	//{{AFX_MSG_MAP(CLightBox)
 	ON_WM_ERASEBKGND()
-	//ON_WM_TIMER()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -271,10 +272,16 @@ BOOL CLightBox::ShowTransparentWnd(BOOL bShow)
 		}
 	}
 
+	CWnd* pWndUnder = GetCWnd();
+
+	// make sure to redraw underlying window first to avoid artifacts
+	pWndUnder->Invalidate(TRUE);
+	pWndUnder->UpdateWindow();
+
 	if (bShow)
 	{
 		CRect rect;
-		GetCWnd()->GetWindowRect(rect);
+		pWndUnder->GetWindowRect(rect);
 		MoveWindow(rect);
 
 		m_pSetLayeredWindowAttributes(*this, 0, (unsigned char)((255 * m_nOpaquePercent) / 100), LWA_ALPHA);

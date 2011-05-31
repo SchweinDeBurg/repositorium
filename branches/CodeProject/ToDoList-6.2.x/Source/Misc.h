@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.7 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // Misc.h: interface for the CMisc class.
@@ -60,11 +60,17 @@ enum { MKC_LEFTRIGHT = 0x01, MKC_UPDOWN = 0x02, MKC_ANY = (MKC_LEFTRIGHT | MKC_U
 
 namespace Misc
 {
-	void CopyTexttoClipboard(const CString& sText, HWND hwnd);
+	CString FormatGetLastError(DWORD dwLastErr = -1);
+
+	BOOL CopyTexttoClipboard(const CString& sText, HWND hwnd);
 	CString GetClipboardText(HWND hwnd);
+	BOOL ClipboardHasFormat(UINT nFormat, HWND hwnd);
+
+	int GetDropFilePaths(HDROP hDrop, CStringArray& aFiles);
 
 	BOOL IsMultibyteString(const CString& sText);
 	CStringA WideToMultiByte(wchar_t nChar, UINT nCodePage = CP_ACP);
+	WCHAR* MultiByteToWide(const CStringA& sFrom, UINT nCodepage = CP_ACP);
 
 	BOOL GuidFromString(LPCTSTR szGuid, GUID& guid);
 	BOOL IsGuid(LPCTSTR szGuid);
@@ -121,20 +127,7 @@ namespace Misc
 		return TRUE;
 	}
 
-	BOOL ArraysMatch(const CStringArray& array1, const CStringArray& array2,
-		BOOL bOrderSensitive = FALSE, BOOL bCaseSensitive = FALSE);
-	BOOL MatchAny(const CStringArray& array1, const CStringArray& array2, BOOL bCaseSensitive = FALSE);
-	CString FormatArray(const CStringArray& array, LPCTSTR szSep = NULL);
-	CString FormatArray(const CDWordArray& array, LPCTSTR szSep = NULL);
-	int ParseIntoArray(const CString& sText, CStringArray& array, BOOL bAllowEmpty = FALSE, CString sSep = _T(""));
-	int Find(const CStringArray& array, LPCTSTR szItem, BOOL bCaseSensitive = FALSE);
-	void Trace(const CStringArray& array);
-	int RemoveItems(const CStringArray& aItems, CStringArray& aFrom, BOOL bCaseSensitive = FALSE);
-	int AddUniqueItems(const CStringArray& aItems, CStringArray& aTo, BOOL bCaseSensitive = FALSE);
-	int AddUniqueItem(const CString& sItem, CStringArray& aTo, BOOL bCaseSensitive = FALSE);
-
-	void SortArray(CStringArray& array, BOOL bAscending = TRUE);
-
+	CString FormatComputerNameAndUser(TCHAR cSeparator = _T(':'));
 	CString GetComputerName();
 	CString GetUserName();
 	CString GetListSeparator();
@@ -145,10 +138,25 @@ namespace Misc
 	CString GetTimeSeparator();
 	CString GetTimeFormat(BOOL bIncSeconds = TRUE);
 	CString GetShortDateFormat(BOOL bIncDOW = FALSE);
+	CString GetDateSeparator();
+	BOOL IsMetricMeasurementSystem();
+
+	BOOL ArraysMatch(const CStringArray& array1, const CStringArray& array2,
+		BOOL bOrderSensitive = FALSE, BOOL bCaseSensitive = FALSE);
+	BOOL MatchAny(const CStringArray& array1, const CStringArray& array2, BOOL bCaseSensitive = FALSE);
+	CString FormatArray(const CStringArray& array, LPCTSTR szSep = NULL);
+	CString FormatArray(const CDWordArray& array, LPCTSTR szSep = NULL);
+	int Find(const CStringArray& array, LPCTSTR szItem, BOOL bCaseSensitive = FALSE);
+	void Trace(const CStringArray& array);
+	int RemoveItems(const CStringArray& aItems, CStringArray& aFrom, BOOL bCaseSensitive = FALSE);
+	int AddUniqueItems(const CStringArray& aItems, CStringArray& aTo, BOOL bCaseSensitive = FALSE);
+	int AddUniqueItem(const CString& sItem, CStringArray& aTo, BOOL bCaseSensitive = FALSE);
+	int Split(const CString& sText, CStringArray& aValues, BOOL bAllowEmpty = FALSE, const CString& sSep = GetListSeparator());
+	int Split(const CString& sText, TCHAR cDelim, CStringArray& aValues);
+
+	void SortArray(CStringArray& array, BOOL bAscending = TRUE);
 
 	int CompareVersions(LPCTSTR szVersion1, LPCTSTR szVersion2);
-	int Split(const CString& sText, TCHAR cDelim, CStringArray& aValues);
-	int Split(const CString& sText, const CString& sDelim, CStringArray& aValues);
 
 	double Round(double dValue);
 	float Round(float fValue);

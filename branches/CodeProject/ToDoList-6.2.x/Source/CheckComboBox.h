@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_CHECKCOMBOBOX_H__4DDD3C3D_BDB7_4F07_9C50_75495F6E7F66__INCLUDED_)
@@ -60,7 +60,7 @@
 
 class CCheckComboBox : public CAutoComboBox, public CSubclasser
 {
-	// Construction
+// Construction
 public:
 	CCheckComboBox(DWORD dwFlags = 0);
 
@@ -70,6 +70,9 @@ public:
 	int SetCheck(int nIndex, BOOL bCheck = TRUE);
 	void CheckAll(BOOL bCheck = TRUE);
 	int GetCheckedCount() const;
+
+	BOOL IsAnyChecked() const;
+	BOOL IsAnyUnchecked() const;
 
 	CString FormatCheckedItems(LPCTSTR szSep = NULL) const;
 	CString GetTooltip() const;
@@ -84,7 +87,7 @@ protected:
 	mutable BOOL m_bDrawing;
 	BOOL m_bTextFits;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CCheckComboBox)
 public:
@@ -99,7 +102,7 @@ protected:
 	// for editbox
 	virtual LRESULT WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp);
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CCheckComboBox();
 
@@ -113,6 +116,7 @@ protected:
 	afx_msg BOOL OnEditchange();
 	afx_msg BOOL OnDropdown();
 	afx_msg void OnLBSelChange();
+	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 
 	DECLARE_MESSAGE_MAP()
 
