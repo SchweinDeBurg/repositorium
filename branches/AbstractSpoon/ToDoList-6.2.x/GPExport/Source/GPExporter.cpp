@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // GPExporter.cpp: implementation of the CGPExporter class.
@@ -50,6 +51,7 @@
 #include "GPExporter.h"
 
 #include "../../Common/XmlFileEx.h"
+#include "../../../CodeProject/Source/Misc.h"
 #include "../../../CodeProject/Source/DateHelper.h"
 #include "../../ToDoList/Source/TDLSchemaDef.h"
 
@@ -83,6 +85,9 @@ bool CGPExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFileP
 	// export resource allocations
 	ExportResources(pITL7, fileDest.Root());
 
+	// clear the task map that will be populated in ExportTask
+	m_mapTasks.RemoveAll();
+
 	// export tasks
 	CXmlItem* pXITasks = fileDest.AddItem(_T("tasks"));
 	CXmlItem* pXIAllocations = fileDest.AddItem(_T("allocations"));
@@ -92,14 +97,52 @@ bool CGPExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFileP
 		return false;
 	}
 
+	ExportDependencies(pITL7, pITL7->GetFirstTask(), pXITasks);
+
 	// important display stuff for GP
 	SetupDisplay(fileDest.Root());
 	SetupCalendar(fileDest.Root());
 
 	// save result
-	VERIFY(fileDest.Save(szDestFilePath));
+	return (fileDest.Save(szDestFilePath) != FALSE);
+}
 
-	return true;
+bool CGPExporter::Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
+{
+	CXmlFile fileDest(_T("project"));
+
+	// placeholders for tasks
+	CXmlItem* pXITasks = fileDest.AddItem(_T("tasks"));
+	CXmlItem* pXIAllocations = fileDest.AddItem(_T("allocations"));
+
+	for (int nTaskList = 0; nTaskList < pSrcTaskFile->GetTaskListCount(); nTaskList++)
+	{
+		const ITaskList7* pITL7 = GetITLInterface<ITaskList7>(pSrcTaskFile->GetTaskList(nTaskList), IID_TASKLIST7);
+
+		if (pITL7)
+		{
+			// export resource allocations
+			ExportResources(pITL7, fileDest.Root());
+
+			// clear the task map that will be populated in ExportTask
+			m_mapTasks.RemoveAll();
+
+			// export tasks
+			if (!ExportTask(pITL7, pITL7->GetFirstTask(), pXITasks, pXIAllocations))
+			{
+				return false;
+			}
+
+			ExportDependencies(pITL7, pITL7->GetFirstTask(), pXITasks);
+		}
+	}
+
+	// important display stuff for GP
+	SetupDisplay(fileDest.Root());
+	SetupCalendar(fileDest.Root());
+
+	// save result
+	return (fileDest.Save(szDestFilePath) != FALSE);
 }
 
 void CGPExporter::SetupDisplay(CXmlItem* pDestPrj)
@@ -183,6 +226,9 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 	pXIDestItem->AddItem(_T("id"), nTaskID);
 	pXIDestItem->AddItem(_T("name"), pSrcTaskFile->GetTaskTitle(hTask));
 
+	// map the id to item for dependency
+	m_mapTasks[nTaskID] = pXIDestItem;
+
 	// colour
 	pXIDestItem->AddItem(_T("color"), pSrcTaskFile->GetTaskAttribute(hTask, ATL::CT2A(TDL_TASKTEXTWEBCOLOR)));
 
@@ -258,6 +304,8 @@ bool CGPExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 			pXIDestItem->AddItem(_T("priority"), 2);   // high
 		}
 	}
+
+	// dependencies done afterwards
 
 	// file/weblink
 	CString sFileRef = pSrcTaskFile->GetTaskFileReferencePath(hTask);
@@ -371,4 +419,50 @@ void CGPExporter::ExportResources(const ITaskList7* pSrcTaskFile, CXmlItem* pDes
 			}
 		}
 	}
+}
+
+void CGPExporter::ExportDependencies(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CXmlItem* pDestPrj)
+{
+	if (!hTask)
+	{
+		return;
+	}
+
+	// Dependency of 'B' on 'A' is stored in 'A's definition
+	// GP does dependencies the opposite to TDL, specifically GP records the link
+	// of 'B's dependence on 'A', in 'A's definition.
+	int nNumDepends = pSrcTaskFile->GetTaskDependencyCount(hTask);
+
+	for (int nDepend = 0; nDepend < nNumDepends; nDepend++)
+	{
+		CString sDepends(pSrcTaskFile->GetTaskDependency(hTask, nDepend));
+
+		if (!sDepends.IsEmpty())
+		{
+			int nDelim = sDepends.Find('?');
+
+			if (nDelim == -1) // must be a dependency in the same tasklist
+			{
+				// find the GP task having this ID
+				// note: this task may not exist if pSrcTaskFile points to a partial list
+				CXmlItem* pXIDependTask = NULL;
+				m_mapTasks.Lookup(_ttoi(sDepends), pXIDependTask);
+
+				if (pXIDependTask)
+				{
+					CXmlItem* pXIDepends = pXIDependTask->AddItem(_T("depend"));
+					ASSERT(pXIDepends);
+
+					pXIDepends->AddItem(_T("id"), (int)pSrcTaskFile->GetTaskID(hTask));
+					pXIDepends->AddItem(_T("type"), _T("2"));
+				}
+			}
+		}
+	}
+
+	// children
+	ExportDependencies(pSrcTaskFile, pSrcTaskFile->GetFirstTask(hTask), pDestPrj);
+
+	// siblings
+	ExportDependencies(pSrcTaskFile, pSrcTaskFile->GetNextTask(hTask), pDestPrj);
 }
