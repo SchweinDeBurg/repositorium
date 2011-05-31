@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // Themed.cpp: implementation of the CThemed class.
@@ -395,7 +396,7 @@ BOOL CThemed::GetThemeBackgroundContentRect(CDC* pDC, int nPart, int nState, con
 
 BOOL CThemed::IsThemeActive()
 {
-	if (s_hUxTheme)
+	if (InitUxTheme())
 	{
 		PFNISTHEMEACTIVE fnIsThemeActive = (PFNISTHEMEACTIVE)GetProcAddress(s_hUxTheme, "IsThemeActive");
 
@@ -410,7 +411,7 @@ BOOL CThemed::IsThemeActive()
 
 DWORD CThemed::GetAppThemeProperties()
 {
-	if (s_hUxTheme)
+	if (InitUxTheme())
 	{
 		PFNGETTHEMEAPPPROPERTIES fnGetThemeAppProperties = (PFNGETTHEMEAPPPROPERTIES)GetProcAddress(s_hUxTheme, "GetThemeAppProperties");
 
@@ -425,7 +426,7 @@ DWORD CThemed::GetAppThemeProperties()
 
 HTHEME CThemed::OpenThemeData(HWND hwnd, LPCWSTR pszClassList)
 {
-	if (s_hUxTheme)
+	if (InitUxTheme())
 	{
 		PFNOPENTHEMEDATA fnOpenThemeData = (PFNOPENTHEMEDATA)GetProcAddress(s_hUxTheme, "OpenThemeData");
 
@@ -440,7 +441,7 @@ HTHEME CThemed::OpenThemeData(HWND hwnd, LPCWSTR pszClassList)
 
 BOOL CThemed::CloseThemeData(HTHEME hTheme)
 {
-	if (s_hUxTheme && hTheme)
+	if (InitUxTheme() && hTheme)
 	{
 		PFNCLOSETHEMEDATA fnCloseThemeData = (PFNCLOSETHEMEDATA)GetProcAddress(s_hUxTheme, "CloseThemeData");
 
@@ -456,7 +457,7 @@ BOOL CThemed::CloseThemeData(HTHEME hTheme)
 BOOL CThemed::DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT* pRect,
 	const RECT* pClipRect)
 {
-	if (s_hUxTheme && m_hTheme)
+	if (InitUxTheme() && m_hTheme)
 	{
 		PFNDRAWTHEMEBACKGROUND fnDrawThemeBackground = (PFNDRAWTHEMEBACKGROUND)GetProcAddress(s_hUxTheme, "DrawThemeBackground");
 
@@ -471,7 +472,7 @@ BOOL CThemed::DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT
 
 BOOL CThemed::DrawThemeParentBackground(HWND hWnd, HDC hdc, RECT* pRect)
 {
-	if (s_hUxTheme && m_hTheme)
+	if (InitUxTheme() && m_hTheme)
 	{
 		PFNDRAWTHEMEPARENTBACKGROUND fnDrawThemeParentBackground = (PFNDRAWTHEMEPARENTBACKGROUND)GetProcAddress(s_hUxTheme, "DrawThemeParentBackground");
 
@@ -487,7 +488,7 @@ BOOL CThemed::DrawThemeParentBackground(HWND hWnd, HDC hdc, RECT* pRect)
 BOOL CThemed::DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount,
 	DWORD dwTextFlags, DWORD dwTextFlags2, const RECT* pRect)
 {
-	if (s_hUxTheme && m_hTheme)
+	if (InitUxTheme() && m_hTheme)
 	{
 		PFNDRAWTHEMETEXT fnDrawThemeText = (PFNDRAWTHEMETEXT)GetProcAddress(s_hUxTheme, "DrawThemeText");
 
@@ -503,7 +504,7 @@ BOOL CThemed::DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText,
 BOOL CThemed::DrawThemeEdge(HDC hdc, int iPartId, int iStateId, const RECT* pDestRect, UINT uEdge,
 	UINT uFlags, RECT* pContentRect)
 {
-	if (s_hUxTheme && m_hTheme)
+	if (InitUxTheme() && m_hTheme)
 	{
 		PFNDRAWTHEMEEDGE fnDrawThemeEdge = (PFNDRAWTHEMEEDGE)GetProcAddress(s_hUxTheme, "DrawThemeEdge");
 
@@ -519,7 +520,7 @@ BOOL CThemed::DrawThemeEdge(HDC hdc, int iPartId, int iStateId, const RECT* pDes
 BOOL CThemed::DrawThemeIcon(HDC hdc, int iPartId, int iStateId, const RECT* pRect, HIMAGELIST himl,
 	int iImageIndex)
 {
-	if (s_hUxTheme && m_hTheme)
+	if (InitUxTheme() && m_hTheme)
 	{
 		PFNDRAWTHEMEICON fnDrawThemeIcon = (PFNDRAWTHEMEICON)GetProcAddress(s_hUxTheme, "DrawThemeIcon");
 
@@ -534,7 +535,7 @@ BOOL CThemed::DrawThemeIcon(HDC hdc, int iPartId, int iStateId, const RECT* pRec
 
 BOOL CThemed::DrawThemeBorder(HDC hdc, int iStateId, const RECT* pRect)
 {
-	if (s_hUxTheme && m_hTheme)
+	if (InitUxTheme() && m_hTheme)
 	{
 		PFNDRAWTHEMEBORDER fnDrawThemeBorder = (PFNDRAWTHEMEBORDER)GetProcAddress(s_hUxTheme, "DrawThemeBorder");
 
@@ -549,7 +550,7 @@ BOOL CThemed::DrawThemeBorder(HDC hdc, int iStateId, const RECT* pRect)
 
 BOOL CThemed::GetThemePartSize(int iPartId, int iStateId, THEMESIZE eSize, SIZE* psz)
 {
-	if (s_hUxTheme && m_hTheme)
+	if (InitUxTheme() && m_hTheme)
 	{
 		PFNGETTHEMEPARTSIZE fnGetThemePartSize = (PFNGETTHEMEPARTSIZE)GetProcAddress(s_hUxTheme, "GetThemePartSize");
 
@@ -565,7 +566,7 @@ BOOL CThemed::GetThemePartSize(int iPartId, int iStateId, THEMESIZE eSize, SIZE*
 BOOL CThemed::GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount,
 	DWORD dwTextFlags, const RECT* pBoundingRect, RECT* pExtentRect)
 {
-	if (s_hUxTheme && m_hTheme)
+	if (InitUxTheme() && m_hTheme)
 	{
 		PFNGETTHEMETEXTEXTENT fnGetThemeTextExtent = (PFNGETTHEMETEXTEXTENT)GetProcAddress(s_hUxTheme, "GetThemeTextExtent");
 
@@ -580,7 +581,7 @@ BOOL CThemed::GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR psz
 
 BOOL CThemed::GetThemeColor(int iPartId, int iStateId, int iPropId, COLORREF* pColor)
 {
-	if (s_hUxTheme && m_hTheme)
+	if (InitUxTheme() && m_hTheme)
 	{
 		PFNGETTHEMECOLOR fnGetThemeColor = (PFNGETTHEMECOLOR)GetProcAddress(s_hUxTheme, "GetThemeColor");
 
@@ -595,7 +596,7 @@ BOOL CThemed::GetThemeColor(int iPartId, int iStateId, int iPropId, COLORREF* pC
 
 BOOL CThemed::GetThemeBackgroundContentRect(HDC hdc, int iPartId, int iStateId, LPCRECT pBoundingRect, LPRECT pContentRect)
 {
-	if (s_hUxTheme && m_hTheme)
+	if (InitUxTheme() && m_hTheme)
 	{
 		PFNGETTHEMEBACKGROUNDCONTENTRECT fnGetContentRect = (PFNGETTHEMEBACKGROUNDCONTENTRECT)
 			GetProcAddress(s_hUxTheme, "GetThemeBackgroundContentRect");
@@ -620,72 +621,72 @@ BOOL CThemed::GetThemeClassPartState(int nType, int nState, CString& sThClass, i
 	switch (nType)
 	{
 	case DFC_BUTTON:
+	{
+		sThClass = _T("BUTTON");
+		nThState = PBS_NORMAL;
+
+		if (nState & DFCS_BUTTONPUSH)
 		{
-			sThClass = "BUTTON";
-			nThState = PBS_NORMAL;
+			nThPart = BP_PUSHBUTTON;
 
-			if (nState & DFCS_BUTTONPUSH)
+			if (nState & (DFCS_CHECKED | DFCS_PUSHED))
 			{
-				nThPart = BP_PUSHBUTTON;
+				nThState = PBS_PRESSED;
+			}
 
-				if (nState & (DFCS_CHECKED | DFCS_PUSHED))
-				{
-					nThState = PBS_PRESSED;
-				}
+			else if (nState & DFCS_INACTIVE)
+			{
+				nThState = PBS_DISABLED;
+			}
 
-				else if (nState & DFCS_INACTIVE)
+			else if (nState & DFCS_HOT)
+			{
+				nThState = PBS_HOT;
+			}
+		}
+		else if ((nState & DFCS_BUTTONCHECK) == DFCS_BUTTONCHECK)
+		{
+			nThPart = BP_CHECKBOX;
+
+			if (nState & (DFCS_CHECKED | DFCS_PUSHED))
+			{
+				if (nState & DFCS_INACTIVE)
 				{
-					nThState = PBS_DISABLED;
+					nThState = CBS_CHECKEDDISABLED;
 				}
 
 				else if (nState & DFCS_HOT)
 				{
-					nThState = PBS_HOT;
-				}
-			}
-			else if ((nState & DFCS_BUTTONCHECK) == DFCS_BUTTONCHECK)
-			{
-				nThPart = BP_CHECKBOX;
-
-				if (nState & (DFCS_CHECKED | DFCS_PUSHED))
-				{
-					if (nState & DFCS_INACTIVE)
-					{
-						nThState = CBS_CHECKEDDISABLED;
-					}
-
-					else if (nState & DFCS_HOT)
-					{
-						nThState = CBS_CHECKEDHOT;
-					}
-					else
-					{
-						nThState = CBS_CHECKEDNORMAL;
-					}
+					nThState = CBS_CHECKEDHOT;
 				}
 				else
 				{
-					if (nState & DFCS_INACTIVE)
-					{
-						nThState = CBS_UNCHECKEDDISABLED;
-					}
-
-					else if (nState & DFCS_HOT)
-					{
-						nThState = CBS_UNCHECKEDHOT;
-					}
-					else
-					{
-						nThState = CBS_UNCHECKEDNORMAL;
-					}
+					nThState = CBS_CHECKEDNORMAL;
 				}
 			}
 			else
 			{
-				return FALSE;
+				if (nState & DFCS_INACTIVE)
+				{
+					nThState = CBS_UNCHECKEDDISABLED;
+				}
+
+				else if (nState & DFCS_HOT)
+				{
+					nThState = CBS_UNCHECKEDHOT;
+				}
+				else
+				{
+					nThState = CBS_UNCHECKEDNORMAL;
+				}
 			}
 		}
-		break;
+		else
+		{
+			return FALSE;
+		}
+	}
+	break;
 
 	case DFC_CAPTION:
 		break;
@@ -697,37 +698,37 @@ BOOL CThemed::GetThemeClassPartState(int nType, int nState, CString& sThClass, i
 		break;
 
 	case DFC_SCROLL:
+	{
+		if (nState & DFCS_SCROLLCOMBOBOX)
 		{
-			if (nState & DFCS_SCROLLCOMBOBOX)
+			sThClass = _T("COMBOBOX");
+			nThPart = CP_DROPDOWNBUTTON;
+			nThState = CBXS_NORMAL;
+
+			if (nState & (DFCS_CHECKED | DFCS_PUSHED))
 			{
-				sThClass = "COMBOBOX";
-				nThPart = CP_DROPDOWNBUTTON;
-				nThState = CBXS_NORMAL;
-
-				if (nState & (DFCS_CHECKED | DFCS_PUSHED))
-				{
-					nThState = CBXS_PRESSED;
-				}
-
-				else if (nState & DFCS_INACTIVE)
-				{
-					nThState = CBXS_DISABLED;
-				}
-
-				else if (nState & DFCS_HOT)
-				{
-					nThState = CBXS_HOT;
-				}
+				nThState = CBXS_PRESSED;
 			}
-			else if (nState & DFCS_SCROLLSIZEGRIP)
+
+			else if (nState & DFCS_INACTIVE)
 			{
-				sThClass = "SCROLLBAR";
-				nThPart = SBP_SIZEBOX;
-				nThState = (nState & DFCS_SCROLLLEFT) ? SZB_LEFTALIGN : SZB_RIGHTALIGN;
+				nThState = CBXS_DISABLED;
 			}
-			// else
+
+			else if (nState & DFCS_HOT)
+			{
+				nThState = CBXS_HOT;
+			}
 		}
-		break;
+		else if (nState & DFCS_SCROLLSIZEGRIP)
+		{
+			sThClass = _T("SCROLLBAR");
+			nThPart = SBP_SIZEBOX;
+			nThState = (nState & DFCS_SCROLLLEFT) ? SZB_LEFTALIGN : SZB_RIGHTALIGN;
+		}
+		// else
+	}
+	break;
 	}
 
 	return (!sThClass.IsEmpty() && (nThPart && nThState));
