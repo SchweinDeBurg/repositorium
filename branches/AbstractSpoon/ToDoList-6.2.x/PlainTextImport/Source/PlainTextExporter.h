@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // PlainTextExporter.h: interface for the CPlainTextExporter class.
@@ -66,13 +67,15 @@ public:
 	}
 
 	virtual bool Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
+	virtual bool Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
 
 protected:
 	CString INDENT;
+	BOOL WANTPROJECT;
 
 protected:
-	void ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask,
-	                CStdioFile& fileOut, int nDepth);
+	bool InitConsts(BOOL bSilent);
+	void ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, CStdioFile& fileOut, int nDepth);
 };
 
 #endif // !defined(AFX_PLAINTEXTEXPORTER_H__69016DB3_5424_49DF_A877_962E83BC6E6B__INCLUDED_)

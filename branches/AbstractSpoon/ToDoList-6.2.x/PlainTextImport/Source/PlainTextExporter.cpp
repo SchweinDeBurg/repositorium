@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and licenese information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // PlainTextExporter.cpp: implementation of the CPlainTextExporter class.
@@ -49,18 +50,20 @@ static char THIS_FILE[] = __FILE__;
 
 const LPCTSTR ENDL = _T("\n");
 
-CPlainTextExporter::CPlainTextExporter()
+CPlainTextExporter::CPlainTextExporter():
+INDENT(CString(_T(' '), 2)),
+WANTPROJECT(FALSE)
 {
-	INDENT = CString(_T(' '), 2);
 }
 
 CPlainTextExporter::~CPlainTextExporter()
 {
 }
 
-bool CPlainTextExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent)
+bool CPlainTextExporter::InitConsts(BOOL bSilent)
 {
-	BOOL bWantProject = FALSE;
+	WANTPROJECT = FALSE;
+	INDENT = CString(_T(' '), 2);
 
 	if (!bSilent)
 	{
@@ -72,7 +75,17 @@ bool CPlainTextExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDe
 		}
 
 		INDENT = dialog.GetIndent();
-		bWantProject = dialog.GetWantProject();
+		WANTPROJECT = dialog.GetWantProject();
+	}
+
+	return true;
+}
+
+bool CPlainTextExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent)
+{
+	if (!InitConsts(bSilent))
+	{
+		return false;
 	}
 
 	CStdioFile fileOut;
@@ -83,11 +96,10 @@ bool CPlainTextExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDe
 	}
 
 	// else
-	int nDepth = 0;
-	const ITaskList4* pITL4 = static_cast<const ITaskList4*>(pSrcTaskFile);
+	const ITaskList4* pITL4 = GetITLInterface<ITaskList4>(pSrcTaskFile, IID_TASKLIST4);
 
 	// export report title as dummy task
-	if (bWantProject)
+	if (WANTPROJECT)
 	{
 		CString sTitle = pITL4->GetReportTitle();
 
@@ -104,13 +116,59 @@ bool CPlainTextExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDe
 	}
 
 	// export first task
-	ExportTask(pSrcTaskFile, pSrcTaskFile->GetFirstTask(), fileOut, nDepth);
+	ExportTask(pSrcTaskFile, pSrcTaskFile->GetFirstTask(), fileOut, 0);
 
 	return true;
 }
 
+bool CPlainTextExporter::Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent)
+{
+	if (!InitConsts(bSilent))
+	{
+		return false;
+	}
+
+	CStdioFile fileOut;
+
+	if (fileOut.Open(szDestFilePath, CFile::modeCreate | CFile::modeWrite))
+	{
+		for (int nTaskList = 0; nTaskList < pSrcTaskFile->GetTaskListCount(); nTaskList++)
+		{
+			const ITaskList4* pITL4 = GetITLInterface<ITaskList4>(pSrcTaskFile->GetTaskList(nTaskList), IID_TASKLIST4);
+
+			if (pITL4)
+			{
+				// export report title as dummy task
+				if (WANTPROJECT)
+				{
+					CString sTitle = pITL4->GetReportTitle();
+
+					if (sTitle.IsEmpty())
+					{
+						sTitle = pITL4->GetProjectName();
+					}
+
+					// note: we export the title even if it's empty
+					// to maintain consistency with the importer that the first line
+					// is always the outline name
+					sTitle += ENDL;
+					fileOut.WriteString(sTitle);
+				}
+
+				// export first task
+				ExportTask(pITL4, pITL4->GetFirstTask(), fileOut, 0);
+			}
+		}
+
+		return true;
+	}
+
+	// else
+	return false;
+}
+
 void CPlainTextExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask,
-                                    CStdioFile& fileOut, int nDepth)
+	CStdioFile& fileOut, int nDepth)
 {
 	if (!hTask)
 	{
