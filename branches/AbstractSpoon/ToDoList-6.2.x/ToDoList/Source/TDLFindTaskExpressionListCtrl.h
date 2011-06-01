@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_FINDTASKEXPRESSIONLISTCTRL_H__42272309_6C54_4901_A56D_D6FDA87F1E48__INCLUDED_)
@@ -90,8 +90,6 @@ public:
 	void MoveSelectedRuleDown();
 	BOOL CanMoveSelectedRuleDown() const;
 
-	void EndEdit();
-
 // Attributes
 protected:
 	CComboBox   m_cbOperators;
@@ -139,23 +137,21 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 	virtual void EditCell(int nItem, int nCol);
-	void ShowControl(CWnd& ctrl, int nRow, int nCol);
+	virtual BOOL IsEditing() const;
+	virtual BOOL DeleteSelectedCell();
+	virtual BOOL CanEditSelectedCell() const;
+
 	void PrepareEdit(int nRow, int nCol);
 	void PrepareControl(CWnd& ctrl, int nRow, int nCol);
-	void HideControl(CWnd& ctrl);
-	void CreateControl(CWnd& ctrl, UINT nID, BOOL bSort = TRUE);
 	int GetValueType(int nRow) const;
 	void BuildListCtrl();
-	virtual BOOL DeleteSelectedCell();
 	int InsertRule(int nRow, const SEARCHPARAM& sp);
 	int GetRuleCount() const
 	{
 		return m_aSearchParams.GetSize();
 	}
-	virtual BOOL CanEditSelectedCell() const;
 	CWnd* GetEditControl(int nRow, int nCol);
 	void ValidateListData() const;
-	BOOL IsEditing() const;
 
 	static CString GetAttribName(TDC_ATTRIBUTE attrib);
 	static CString GetOpName(FIND_OPERATOR op);

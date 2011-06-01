@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // ToDoItem.h: interface for the CToDoItem class.
@@ -106,27 +106,34 @@ public:
 	CString sTitle;
 	CString sComments, sCustomComments;
 	CString sCommentsTypeID;
-	COLORREF color;
-	COleDateTime dateStart, dateDue, dateDone, dateCreated;
-	int nPriority;
-	double dCost;
-	CStringArray aAllocTo;
 	CString sAllocBy;
 	CString sStatus;
-	CStringArray aCategories;
 	CString sCreatedBy;
-	int nPercentDone;
-	CString sFileRefPath;
-	double dTimeEstimate, dTimeSpent;
-	int nTimeEstUnits, nTimeSpentUnits;
-	COleDateTime tLastMod;
-	BOOL bFlagged;
-	int nRisk;
 	CString sExternalID;
-	CStringArray aDependencies;
-	TDIRECURRENCE trRecurrence;
 	CString sVersion;
+	CString sFileRefPath;
+
+	CStringArray aAllocTo;
+	CStringArray aCategories;
+	CStringArray aDependencies;
+
+	COLORREF color;
+
+	COleDateTime dateStart, dateDue, dateDone, dateCreated;
+	COleDateTime tLastMod;
+
+	int nPriority;
+	int nPercentDone;
+	int nTimeEstUnits, nTimeSpentUnits;
+	int nRisk;
 	int nIconIndex;
+
+	double dCost;
+	double dTimeEstimate, dTimeSpent;
+
+	BOOL bFlagged;
+
+	TDIRECURRENCE trRecurrence;
 
 	// cached calculations for drawing optimization
 	// mutable so that they can be updated in const methods
@@ -138,7 +145,7 @@ public:
 	mutable double dCalcTimeEstimate, dCalcTimeSpent;
 	mutable double dCalcCost;
 	mutable COleDateTime dateEarliestDue;
-	mutable BOOL bGoodAsDone, bDue;
+	mutable BOOL bGoodAsDone;
 	mutable int nSubtasksCount, nSubtasksDone;
 
 	// C4995: name was marked as #pragma deprecated

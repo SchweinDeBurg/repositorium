@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // ToDoItem.cpp: implementation of the CToDoItem class.
@@ -89,7 +89,6 @@ dCalcTimeEstimate(0),
 dCalcTimeSpent(0),
 dCalcCost(0),
 bGoodAsDone(0),
-bDue(0),
 nSubtasksCount(0),
 nSubtasksDone(0)
 {
@@ -117,7 +116,6 @@ dCalcTimeEstimate(0),
 dCalcTimeSpent(0),
 dCalcCost(0),
 bGoodAsDone(0),
-bDue(0),
 nSubtasksCount(0),
 nSubtasksDone(0)
 {
@@ -189,7 +187,6 @@ const TODOITEM& TODOITEM::operator=(const TODOITEM& tdi)
 	dCalcTimeSpent = 0;
 	dCalcCost = 0;
 	bGoodAsDone = 0;
-	bDue = 0;
 	nSubtasksCount = 0;
 	nSubtasksDone = 0;
 
