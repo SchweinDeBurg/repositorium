@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2-6.1.10 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // RTFContentCtrlApp.cpp : Defines the initialization routines for the DLL.
@@ -177,7 +177,7 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent, int nLength
 	nLength = 0; // reuse for resultant html length
 
 	// try loading our new converter
-	CString sRtf2HtmlPath = FileMisc::GetModuleFolder() + _T("rtf2htmlbridge.dll");
+	CString sRtf2HtmlPath = FileMisc::GetAppFolder() + _T("\\rtf2htmlbridge.dll");
 	static HMODULE hMod = LoadLibrary(sRtf2HtmlPath);
 
 	if (hMod)

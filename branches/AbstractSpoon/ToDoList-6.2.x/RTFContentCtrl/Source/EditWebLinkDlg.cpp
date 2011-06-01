@@ -41,23 +41,46 @@
 //      --suffix=none
 //*****************************************************************************
 
-// Util.h
+// EditWebLinkDlg.cpp : implementation file
 //
-//////////////////////////////////////////////////////////////////////
 
-#if !defined(UTIL__INCLUDED_)
-#define UTIL__INCLUDED_
+#include "StdAfx.h"
+#include "RTFContentCtrlApp.h"
+#include "EditWebLinkDlg.h"
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
 
-//! Long->CString Conversion
-CString LongToString(long newValue);
-//! CString->Long Conversion.
-/*! returns zero even if string is no valid number*/
-long StringToLong(CString newValue);
-//! Converts a ;-delimited string into its single elements
-void StringToArray(const CString& strSrc, CStringArray& trgt);
+/////////////////////////////////////////////////////////////////////////////
+// CEditWebLinkDlg dialog
 
-#endif // !defined(UTIL__INCLUDED_)
+
+CEditWebLinkDlg::CEditWebLinkDlg(CWnd* pParent /*=NULL*/)
+	: CDialog(CEditWebLinkDlg::IDD, pParent)
+{
+	//{{AFX_DATA_INIT(CEditWebLinkDlg)
+	m_sWebLink = _T("http://www.");
+	//}}AFX_DATA_INIT
+}
+
+
+void CEditWebLinkDlg::DoDataExchange(CDataExchange* pDX)
+{
+	CDialog::DoDataExchange(pDX);
+	//{{AFX_DATA_MAP(CEditWebLinkDlg)
+	DDX_Text(pDX, IDC_WEBLINK, m_sWebLink);
+	//}}AFX_DATA_MAP
+}
+
+
+BEGIN_MESSAGE_MAP(CEditWebLinkDlg, CDialog)
+	//{{AFX_MSG_MAP(CEditWebLinkDlg)
+		// NOTE: the ClassWizard will add message map macros here
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+/////////////////////////////////////////////////////////////////////////////
+// CEditWebLinkDlg message handlers

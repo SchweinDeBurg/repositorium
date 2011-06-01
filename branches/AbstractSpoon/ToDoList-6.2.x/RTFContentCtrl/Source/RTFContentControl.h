@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_RTFCONTENTCONTROL_H__4F1A93A0_7829_4DBB_AA0B_A2F62E4E7F50__INCLUDED_)
@@ -129,7 +129,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 	BOOL CanPaste();
-	BOOL IsClipboardEmpty() const;
+	BOOL Paste(BOOL bSimple = FALSE);
+	BOOL IsTDLClipboardEmpty() const;
 	static int GetContent(const CRTFContentControl* pCtrl, unsigned char* pContent);
 	static void EnableMenuItem(CMenu* pMenu, UINT nCmdID, BOOL bEnable);
 	static void CheckMenuItem(CMenu* pMenu, UINT nCmdID, BOOL bCheck);

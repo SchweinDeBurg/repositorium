@@ -30,6 +30,7 @@
 #include "IDs.h"
 
 #include "../../../CodeProject/Source/Themed.h"
+#include "../../../CodeProject/Source/Misc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -51,7 +52,7 @@ CRRECRuler::CRRECRuler()
    ============================================================*/
 {
 	m_physicalInch = 0;
-	m_mode = MODE_METRIC;
+	m_mode = Misc::IsMetricMeasurementSystem() ? MODE_METRIC : MODE_INCH;
 	m_margin = 0;
 	m_crBack = GetSysColor(COLOR_3DFACE);
 }

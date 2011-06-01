@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList versions 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDCMSG_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_)
@@ -51,6 +52,7 @@
 // TDCMsg.h : header file
 //
 const LPCTSTR TDL_PROTOCOL = _T("tdl://");
+const LPCTSTR TDL_EXTENSION = _T(".tdl");
 
 // notification messages
 const UINT WM_TDCN_MODIFY = ::RegisterWindowMessage(_T("WM_TDCN_MODIFY")); // lParam == <TDC_ATTRIBUTE>
