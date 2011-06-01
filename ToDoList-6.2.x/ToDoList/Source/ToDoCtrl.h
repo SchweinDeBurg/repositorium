@@ -185,7 +185,7 @@ public:
 		return HasStyle(TDCS_READONLY);
 	}
 
-	BOOL SetStyles(const CTDCStyles& styles);
+	BOOL SetStyles(const CTDCStylesMap& styles);
 	BOOL SetStyle(TDC_STYLE nStyle, BOOL bOn = TRUE); // one style at a time only
 	BOOL HasStyle(TDC_STYLE nStyle) const; // one style at a time only
 

@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // RecurringTaskEdit.h: interface for the CRecurringTaskEdit class.
@@ -98,6 +98,10 @@ protected:
 	//{{AFX_MSG(CRecurringTaskEdit)
 	// NOTE: the ClassWizard will add member functions here
 	//}}AFX_MSG
+	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+	afx_msg HBRUSH CtlColor(CDC* pDC, UINT nCtlColor);
+	afx_msg LRESULT OnSetReadOnly(WPARAM wp, LPARAM lp);
+	afx_msg void OnStyleChanging(int nStyleType, LPSTYLESTRUCT lpStyleStruct);
 	afx_msg BOOL OnReflectChangeDisplayText();
 	DECLARE_MESSAGE_MAP()
 

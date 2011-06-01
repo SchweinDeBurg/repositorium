@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDLMULTISORTDLG_H__95734250_E60B_48CF_B356_1394C11317DA__INCLUDED_)
@@ -61,7 +62,7 @@ class CTDLMultiSortDlg : public CDialog
 {
 // Construction
 public:
-	CTDLMultiSortDlg(const TDSORTCOLUMNS& sort, CWnd* pParent = NULL);   // standard constructor
+	CTDLMultiSortDlg(const TDSORTCOLUMNS& sort, const CTDCColumnArray& aVisibleColumns, CWnd* pParent = NULL);   // standard constructor
 
 	void GetSortBy(TDSORTCOLUMNS& sort) const;
 
@@ -75,6 +76,7 @@ protected:
 	//}}AFX_DATA
 	TDC_SORTBY m_nSortBy1, m_nSortBy2, m_nSortBy3;
 	BOOL m_bAscending1, m_bAscending2, m_bAscending3;
+	const CTDCColumnArray& m_aVisibleColumns;
 
 
 // Overrides
@@ -98,6 +100,7 @@ protected:
 
 protected:
 	void BuildCombos();
+	BOOL IsColumnVisible(TDC_COLUMN col) const;
 };
 
 //{{AFX_INSERT_LOCATION}}

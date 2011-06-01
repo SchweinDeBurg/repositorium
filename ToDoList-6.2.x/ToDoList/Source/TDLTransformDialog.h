@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDLTRANSFORMDIALOG_H__1A62F94F_687F_421C_97D2_300BAC4A3E7C__INCLUDED_)
@@ -69,10 +69,7 @@ public:
 	{
 		return m_bDate;
 	}
-	CString GetStylesheet() const
-	{
-		return FileMisc::GetFullPath(m_sStylesheet, TRUE);
-	}
+	CString GetStylesheet() const;
 	CString GetTitle() const
 	{
 		return m_sTitle;

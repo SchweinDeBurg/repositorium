@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // ToolsHelper.cpp: implementation of the CToolsHelper class.
@@ -245,7 +245,7 @@ BOOL CToolsHelper::PrepareCmdline(const USERTOOL& tool, CString& sCmdline, const
 
 	if (tcp.HasArgument(CLAT_TODOLIST))
 	{
-		CString sToDoList = FileMisc::GetModuleFileName();
+		CString sToDoList = FileMisc::GetAppFileName();
 		tcp.ReplaceArgument(CLAT_TODOLIST, sToDoList);
 	}
 

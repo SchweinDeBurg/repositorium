@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TDLAddLoggedTimeDlg.cpp : implementation file
@@ -67,9 +68,12 @@ m_cbTimeWhen(TCB_HALFHOURS)
 	m_dLoggedTime = 0.0;
 	m_dwTaskID = dwTaskID;
 	m_sTaskTitle = szTaskTitle;
+	m_bAddTimeToTimeSpent = FALSE;
 	//}}AFX_DATA_INIT
 	m_nUnits = THU_MINS;
 	m_dtWhen = COleDateTime::GetCurrentTime();
+
+	m_eLoggedTime.EnableNegativeTimes(TRUE);
 }
 
 void CTDLAddLoggedTimeDlg::DoDataExchange(CDataExchange* pDX)
@@ -82,6 +86,7 @@ void CTDLAddLoggedTimeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_TASKID, m_dwTaskID);
 	DDX_Text(pDX, IDC_TASKTITLE, m_sTaskTitle);
 	DDX_Control(pDX, IDC_LOGGEDTIME, m_eLoggedTime);
+	DDX_Check(pDX, IDC_ADDTIMETOTIMESPENT, m_bAddTimeToTimeSpent);
 	//}}AFX_DATA_MAP
 
 	if (pDX->m_bSaveAndValidate)

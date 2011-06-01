@@ -39,70 +39,51 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.6-6.2.2 sources
 //*****************************************************************************
 
-#if !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)
-#define AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_
+// MultiTaskFile.h: interface for the CMultiTaskFile class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_MULTITASKFILE_H__3896047E_FE76_4EDC_9F97_191CABB982C0__INCLUDED_)
+#define AFX_MULTITASKFILE_H__3896047E_FE76_4EDC_9F97_191CABB982C0__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
 
-// TDLAddLoggedTimeDlg.h : header file
-//
+#include <afxtempl.h>
+#include "..\SHARED\ITaskList.h"
 
-#include "../../Common/TimeEdit.h"
-#include "../../../CodeProject/Source/TimeComboBox.h"
+class CTaskFile;
 
-/////////////////////////////////////////////////////////////////////////////
-// CTDLAddLoggedTimeDlg dialog
-
-class CTDLAddLoggedTimeDlg : public CDialog
+class CMultiTaskFile : public IMultiTaskList
 {
-// Construction
 public:
-	CTDLAddLoggedTimeDlg(DWORD dwTaskID, LPCTSTR szTaskTitle, CWnd* pParent = NULL);   // standard constructor
-	double GetLoggedTime() const; // in hours
-	COleDateTime GetWhen() const;
-	BOOL GetAddToTimeSpent() const
+	CMultiTaskFile();
+	virtual ~CMultiTaskFile();
+
+	CTaskFile& GetTaskFile(int nTaskFile = 0);
+
+	/////////////////////////////////////////////////////
+	// IMultiTaskList implementation
+	virtual int GetTaskListCount() const;
+	virtual const ITaskList* GetTaskList(int nTaskList = 0) const;
+
+	/////////////////////////////////////////////////////
+	// IUnknown implementation
+	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void __RPC_FAR* __RPC_FAR* ppvObject);
+	ULONG STDMETHODCALLTYPE AddRef(void)
 	{
-		return m_bAddTimeToTimeSpent;
+		return 1;   // do nothing
+	}
+	ULONG STDMETHODCALLTYPE Release(void)
+	{
+		return 1;   // do nothing
 	}
 
 protected:
-// Dialog Data
-	//{{AFX_DATA(CTDLAddLoggedTimeDlg)
-	enum { IDD = IDD_ADDLOGGEDTIME_DIALOG };
-	CDateTimeCtrl   m_dateWhen;
-	CTimeComboBox   m_cbTimeWhen;
-	double  m_dLoggedTime;
-	DWORD   m_dwTaskID;
-	CString m_sTaskTitle;
-	BOOL    m_bAddTimeToTimeSpent;
-	//}}AFX_DATA
-	CTimeEdit   m_eLoggedTime;
-	int m_nUnits;
-	COleDateTime m_dtWhen;
-
-// Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CTDLAddLoggedTimeDlg)
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
-
-// Implementation
-protected:
-
-	// Generated message map functions
-	//{{AFX_MSG(CTDLAddLoggedTimeDlg)
-	// NOTE: the ClassWizard will add member functions here
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	CArray<CTaskFile*, CTaskFile*&> m_aTaskFiles;
 };
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)
+#endif // !defined(AFX_MULTITASKFILE_H__3896047E_FE76_4EDC_9F97_191CABB982C0__INCLUDED_)

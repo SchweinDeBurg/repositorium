@@ -39,70 +39,94 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.6-6.2.2 sources
 //*****************************************************************************
 
-#if !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)
-#define AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_
+#if !defined(AFX_EXPORTDLG_H__2F5B4FD1_E968_464E_9734_AC995DB13B35__INCLUDED_)
+#define AFX_EXPORTDLG_H__2F5B4FD1_E968_464E_9734_AC995DB13B35__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-
-// TDLAddLoggedTimeDlg.h : header file
+// ExportDlg.h : header file
 //
 
-#include "../../Common/TimeEdit.h"
-#include "../../../CodeProject/Source/TimeComboBox.h"
+#include "TaskSelectionDlg.h"
+#include "..\shared\fileedit.h"
+#include "..\shared\importexportmgr.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CTDLAddLoggedTimeDlg dialog
+// CExportDlg dialog
 
-class CTDLAddLoggedTimeDlg : public CDialog
+enum { ED_HTMLFMT, ED_TEXTFMT };
+
+class CTDLExportDlg : public CDialog
 {
 // Construction
 public:
-	CTDLAddLoggedTimeDlg(DWORD dwTaskID, LPCTSTR szTaskTitle, CWnd* pParent = NULL);   // standard constructor
-	double GetLoggedTime() const; // in hours
-	COleDateTime GetWhen() const;
-	BOOL GetAddToTimeSpent() const
+	CTDLExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL bShowSubtaskCheckbox = TRUE,
+			BOOL bVisibleColumnsOnly = TRUE, LPCTSTR szFilePath = NULL, LPCTSTR szFolderPath = NULL,
+			CWnd* pParent = NULL);
+
+	BOOL GetExportAllTasklists();
+	int GetExportFormat()
 	{
-		return m_bAddTimeToTimeSpent;
+		return m_nFormatOption;
+	}
+	CString GetExportPath(); // can be folder or path
+	BOOL GetExportOneFile()
+	{
+		return (m_bSingleTaskList || m_bExportOneFile);
+	}
+
+	const CTaskSelectionDlg& GetTaskSelection() const
+	{
+		return m_taskSel;
 	}
 
 protected:
 // Dialog Data
-	//{{AFX_DATA(CTDLAddLoggedTimeDlg)
-	enum { IDD = IDD_ADDLOGGEDTIME_DIALOG };
-	CDateTimeCtrl   m_dateWhen;
-	CTimeComboBox   m_cbTimeWhen;
-	double  m_dLoggedTime;
-	DWORD   m_dwTaskID;
-	CString m_sTaskTitle;
-	BOOL    m_bAddTimeToTimeSpent;
+	//{{AFX_DATA(CExportDlg)
+	CComboBox	m_cbFormat;
+	CFileEdit	m_eExportPath;
+	int		m_nExportOption;
+	CString	m_sExportPath;
+	BOOL	m_bExportOneFile;
+	CString	m_sPathLabel;
 	//}}AFX_DATA
-	CTimeEdit   m_eLoggedTime;
-	int m_nUnits;
-	COleDateTime m_dtWhen;
+	CTaskSelectionDlg m_taskSel;
+	BOOL m_bSingleTaskList;
+	CString m_sFolderPath, m_sFilePath, m_sOrgFilePath, m_sOrgFolderPath;
+	const CImportExportMgr& m_mgrImportExport;
+	int m_nFormatOption;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CTDLAddLoggedTimeDlg)
+	//{{AFX_VIRTUAL(CExportDlg)
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
+	virtual void OnOK();
 
 // Implementation
 protected:
 
 	// Generated message map functions
-	//{{AFX_MSG(CTDLAddLoggedTimeDlg)
-	// NOTE: the ClassWizard will add member functions here
+	//{{AFX_MSG(CExportDlg)
+	virtual BOOL OnInitDialog();
+	afx_msg void OnSelchangeTasklistoptions();
+	afx_msg void OnSelchangeFormatoptions();
+	afx_msg void OnExportonefile();
+	afx_msg void OnChangeExportpath();
+	afx_msg LRESULT OnChangeTaskSelOption(WPARAM wp, LPARAM lp);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+	void EnableOK();
+
+	void ReplaceExtension(CString& sPathName, int nFormat);
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)
+#endif // !defined(AFX_EXPORTDLG_H__2F5B4FD1_E968_464E_9734_AC995DB13B35__INCLUDED_)

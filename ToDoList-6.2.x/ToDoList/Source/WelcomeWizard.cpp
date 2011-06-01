@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // WelcomeWizard.cpp : implementation file
@@ -231,22 +232,19 @@ BOOL CTDLWelcomePage2::OnSetActive()
 
 IMPLEMENT_DYNCREATE(CTDLWelcomePage3, CPropertyPage)
 
-CTDLWelcomePage3::CTDLWelcomePage3() : CPropertyPage(CTDLWelcomePage3::IDD)
+CTDLWelcomePage3::CTDLWelcomePage3() : CPropertyPage(CTDLWelcomePage3::IDD),
+	m_eSampleTasklist(FES_COMBOSTYLEBTN | FES_RELATIVEPATHS)
 {
 	//{{AFX_DATA_INIT(CWelcomePage3)
 	m_bHideAttrib = 1;
 	m_bViewSample = 1;
 	//}}AFX_DATA_INIT
-	CString sResFolder;
-	::SHGetSpecialFolderPath(NULL, sResFolder.GetBuffer(_MAX_PATH), CSIDL_COMMON_APPDATA, TRUE);
-	sResFolder.ReleaseBuffer();
-	sResFolder.TrimRight(_T('\\'));
-	sResFolder += _T("\\AbstractSpoon\\ToDoList");
-	FileMisc::MakePath(m_sSampleTaskList, NULL, sResFolder, _T("Introduction.tdl"));
 
 	CString sFilter;
 	sFilter.LoadString(IDS_TDLFILEFILTER);
 	m_eSampleTasklist.SetFilter(sFilter);
+	m_eSampleTasklist.SetCurrentFolder(FileMisc::GetAppResourceFolder());
+	m_sSampleTaskList = _T("Introduction.tdl");
 
 	m_psp.dwFlags &= ~(PSP_HASHELP);
 }
@@ -292,6 +290,18 @@ void CTDLWelcomePage3::OnNosample()
 {
 	UpdateData();
 	m_eSampleTasklist.EnableWindow(m_bViewSample);
+}
+
+CString CTDLWelcomePage3::GetSampleFilePath() const
+{
+	if (m_bViewSample)
+	{
+		return FileMisc::GetFullPath(m_sSampleTaskList, FileMisc::GetAppResourceFolder());
+	}
+	else
+	{
+		return _T("");
+	}
 }
 
 void CTDLWelcomePage3::OnSample()

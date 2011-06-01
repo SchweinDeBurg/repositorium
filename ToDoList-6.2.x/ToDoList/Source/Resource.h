@@ -103,6 +103,7 @@
 #define IDD_PREFFILE2_PAGE              223
 #define IDD_PREFTASKCALC_PAGE           224
 #define IDD_ADDLOGGEDTIME_DIALOG        225
+#define IDD_CSVIMPORTEXPORT_DIALOG      226
 #define IDC_TB_FRAME                    1001
 #define IDC_REGULARITY                  1001
 #define IDC_REC_OPTIONS_FRAME           1002
@@ -127,6 +128,7 @@
 #define IDC_PLAYSOUND                   1007
 #define IDC_TITLEFILTERTEXT             1007
 #define IDC_LOGGEDTIME                  1007
+#define IDC_CSVDELIMITER                1007
 #define IDC_DONE                        1008
 #define IDC_SAVEEXPORTSTYLESHEET        1008
 #define IDC_MONTHLIST                   1008
@@ -168,6 +170,9 @@
 #define IDC_ASCENDING                   1025
 #define IDC_ASCENDING1                  1025
 #define IDC_AUTOEXPORT                  1025
+#define IDC_EXPORTTASKIDS               1025
+#define IDC_ADDTIMETOTIMESPENT          1025
+#define IDC_SHOWCMDIDS                  1025
 #define IDC_PREVIEWSAVEAS               1026
 #define IDC_DEFAULTTIMEEST              1026
 #define IDC_SEARCHCOMMENTS              1026
@@ -183,6 +188,7 @@
 #define IDC_ALLALLOCTO                  1026
 #define IDC_ASCENDING2                  1026
 #define IDC_EXPORTFILTERED              1026
+#define IDC_INCLUDEUSERINCHECKOUT       1026
 #define IDC_ALWAYSONTOP                 1027
 #define IDC_USEEARLIESTDUEDATE          1027
 #define IDC_SEARCHPERSON                1027
@@ -334,6 +340,7 @@
 #define IDC_MATCHWHOLEWORD              1062
 #define IDC_AUTOCALCPERCENTDONE         1062
 #define IDC_DUETASKPERSON               1062
+#define IDC_CSVFILEPATH                 1062
 #define IDC_CHECKBOXMASKCOLOR           1063
 #define IDC_SETCATEGORYCOLOR            1063
 #define IDC_MATCHALLWORDS               1063
@@ -635,6 +642,8 @@
 #define IDC_ABSOLUTETIME                1321
 #define IDC_TASKID                      1323
 #define IDC_FILTERTASKS                 1324
+#define IDC_COLUMNSETUP                 1326
+#define IDC_TOUPDATETASKLIST            1328
 #define IDB_TOOLBAR24GRAY               30997
 #define ID_NEWITEM                      32771
 #define ID_DELETETASK                   32772
@@ -913,8 +922,10 @@
 #define ID_SORT_BYREMAINING             33146
 #define ID_SORT_BYRECENTEDIT            33147
 #define ID_SORT_BYICON                  33148
-#define ID_SORT_NONE                    33149
-#define ID_SORT_MULTI                   33150
+#define ID_SORT_BYTIMETRACKING          33149
+#define ID_SORT_BYFILEREF               33150
+#define ID_SORT_NONE                    33151
+#define ID_SORT_MULTI                   33152
 #define ID_HELP_COMMANDLINE             33180
 #define ID_HELP_DONATE                  33181
 #define ID_EDIT_CLEARTASKCOLOR          33182
@@ -985,7 +996,23 @@
 #define ID_TOOLS_SELTASKALLOCBY         33260
 #define ID_TOOLS_SELTASKALLOCTO         33261
 #define ID_ADDTIMETOLOGFILE             33263
-#define ID_TOOLS_SELTASKFILELINK        33925
+#define ID_VIEW_TOGGLETASKEXPANDED      33264
+#define ID_VIEW_SHOWTASKLISTTABBAR      33265
+#define ID_VIEW_SHOWTREELISTTABBAR      33266
+#define ID_TOOLS_SELTASKFILELINK        33267
+#define ID_SB_SELCOUNT                  33268
+#define ID_SB_SELTIMEEST                33269
+#define ID_SB_SELTIMESPENT              33270
+#define ID_SB_SELCOST                   33271
+#define ID_SB_FILEVERSION               33276
+#define ID_SB_TASKCOUNT                 33278
+#define ID_SB_FILEPATH                  33280
+#define ID_SB_SPACER                    33282
+#define ID_SB_FOCUS                     33283
+#define IDS_COMMENTSTYPE                33284
+#define ID_EDIT_INSERTTIME              33284
+#define IDS_FOCUS_FILTERBAR             33285
+#define IDS_FOCUS_TASKS                 33286
 #define IDS_PTP_NEWTOOL                 57671
 #define IDS_PTP_TOOLNAME                57672
 #define IDS_PTP_TOOLPATH                57673
@@ -1362,22 +1389,7 @@
 #define IDS_TDC_RECALCTITLE             58029
 #define IDS_INIHASNOTOOLS               58030
 #define IDS_COMMANDLINEOPTIONSTITLE     58031
-#define ID_SB_SELCOUNT                  58032
-#define ID_SB_SELTIMEEST                58033
-#define ID_SB_SELTIMESPENT              58034
-#define ID_SB_SELCOST                   58035
-#define ID_SB_SELCOUNT_TIP              58036
-#define ID_SB_SELTIMEEST_TIP            58037
-#define ID_SB_SELTIMESPENT_TIP          58038
-#define ID_SB_SELCOST_TIP               58039
-#define ID_SB_FILEVERSION               58040
-#define ID_SB_FILEVERSION_TIP           58041
-#define ID_SB_TASKCOUNT                 58042
-#define ID_SB_TASKCOUNT_TIP             58043
 #define IDS_SB_TREETASKCOUNT_TIP        58043
-#define ID_SB_FILEPATH                  58044
-#define ID_SB_FILEPATH_TIP              58045
-#define ID_SB_SPACER                    58046
 #define IDS_TDC_NONE                    58047
 #define IDS_TDC_ANY                     58048
 #define IDS_FTD_VERSION                 58049
@@ -1449,7 +1461,6 @@
 #define IDS_SB_TREETASKCOUNT            58112
 #define IDS_SOUNDFILEFILTER             58112
 #define IDS_SB_LISTTASKCOUNT_TIP        58113
-#define IDS_SB_TASKCOUNT_TIP            58113
 #define IDS_TE_MINS                     58114
 #define IDS_TE_HOURS                    58115
 #define IDS_TE_DAYS                     58116
@@ -1536,6 +1547,27 @@
 #define IDS_DUEWHENREMINDERNOW          58197
 #define IDS_BEGINWHENREMINDERNOW        58198
 #define IDS_ONLINEHELPTITLE             58199
+#define IDS_MISCSHORTCUTS               58200
+#define IDS_TDLBC_PARENTID              58201
+#define IDS_TDC_COLUMN_PARENTID         58202
+#define IDS_CSV_COLUMNNAME              58203
+#define IDS_CSV_MAPSTOATTRIBUTE         58204
+#define IDS_CSV_ATTRIBUTE               58205
+#define IDS_CSV_MAPSTOCOLUMNNAME        58206
+#define IDS_TDLBC_COLOR                 58207
+#define IDS_TDLBC_PROJECTNAME           58208
+#define IDS_CSV_EXPORTDLG               58210
+#define IDS_CSV_IMPORTDLG               58211
+#define IDS_SB_FOCUS_TIP                58212
+#define IDS_SB_SELCOUNT_TIP             58213
+#define IDS_SB_SELTIMEEST_TIP           58214
+#define IDS_SB_SELTIMESPENT_TIP         58215
+#define IDS_SB_SELCOST_TIP              58216
+#define IDS_SB_FILEVERSION_TIP          58217
+#define IDS_SB_TASKCOUNT_TIP            58218
+#define IDS_SB_FILEPATH_TIP             58219
+#define IDS_IMPORTFILE_CANTOPEN         58220
+#define IDS_TDLBC_TASKPARENTIDS         58221
 
 // Next default values for new objects
 //

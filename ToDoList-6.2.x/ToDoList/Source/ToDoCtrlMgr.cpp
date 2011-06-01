@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.2-6.1.4 sources
+// - merged with ToDoList versions 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // ToDoCtrlMgr.cpp : implementation file
@@ -52,6 +52,7 @@
 
 #include "../../../CodeProject/Source/HoldRedraw.h"
 #include "../../../CodeProject/Source/EnString.h"
+#include "../../../CodeProject/Source/FileMisc.h"
 #include "../../Common/Preferences.h"
 
 #ifdef _DEBUG

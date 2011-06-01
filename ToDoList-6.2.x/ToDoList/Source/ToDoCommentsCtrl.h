@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TODOCOMMENTSCTRL_H__E9A5D982_4D40_43B2_A071_E3BE70D122B7__INCLUDED_)
@@ -146,10 +146,11 @@ protected:
 	virtual LRESULT SendNotifyCustomUrl(LPCTSTR szUrl) const;
 
 protected:
-	BOOL IsClipboardEmpty() const;
+	BOOL IsTDLClipboardEmpty() const;
 	void SetWordWrap(BOOL bWrap);
 	void Copy();
-
+	BOOL Paste();
+	BOOL CanPaste();
 };
 
 /////////////////////////////////////////////////////////////////////////////
