@@ -193,6 +193,8 @@ CRulerRichEditCtrl::CRulerRichEditCtrl() : m_pen(PS_DOT, 0, RGB(0, 0, 0))
 	m_offset = 0;
 	m_readOnly = FALSE;
 	m_bWordWrap = -1;
+	m_crSel.cpMax = m_crSel.cpMin = -1;
+
 	ShowToolbar();
 	ShowRuler();
 
@@ -349,6 +351,29 @@ BOOL CRulerRichEditCtrl::CreateRTFControl(BOOL autohscroll)
 	return result;
 }
 
+void CRulerRichEditCtrl::SetSelectedWebLink(const CString& sWebLink)
+{
+	CHARRANGE cr;
+	m_rtf.GetSel(cr);
+
+	CString sText = m_rtf.GetTextRange(cr);
+
+	if (!sText.IsEmpty())
+	{
+		CEnString sUrl(_T("HYPERLINK\"%s\"%s"), (LPCTSTR)sWebLink, (LPCTSTR)sText);
+		m_rtf.ReplaceSel(sUrl, TRUE);
+
+		cr.cpMax = cr.cpMin + sUrl.GetLength();
+		m_rtf.SetSel(cr);
+		SetEffect(CFM_PROTECTED | CFM_LINK | CFM_HIDDEN, CFE_PROTECTED | CFE_LINK);
+
+		// hide all but the text
+		cr.cpMax -= sText.GetLength();
+		m_rtf.SetSel(cr);
+		SetEffect(CFM_PROTECTED | CFM_LINK | CFM_HIDDEN, CFE_PROTECTED | CFE_LINK | CFE_HIDDEN);
+	}
+}
+
 void CRulerRichEditCtrl::UpdateEditRect()
 {
 	// Set up edit rect margins
@@ -438,13 +463,21 @@ void CRulerRichEditCtrl::OnEnHScroll()
 
 void CRulerRichEditCtrl::OnEnSelChange(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-	// Update the toolbar
-	UpdateToolbarButtons();
+	CHARRANGE crSel;
+	m_rtf.GetSel(crSel);
 
-	// Update ruler
-	UpdateTabStops();
-	m_ruler.Invalidate(FALSE);
-	m_ruler.UpdateWindow();
+	if (m_crSel.cpMin != crSel.cpMin || m_crSel.cpMax != crSel.cpMax)
+	{
+		// Update the toolbar
+		UpdateToolbarButtons();
+		
+		// Update ruler
+		UpdateTabStops();
+		m_ruler.Invalidate(FALSE);
+		m_ruler.UpdateWindow();
+
+		m_crSel = crSel;
+	}
 
 	*pResult = 0;
 }
@@ -723,7 +756,7 @@ LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 			if (m_movingtab != -1)
 			{
 				// Erase previous line
-				CRect rect;
+				CRect rect, ruler;
 				GetClientRect(rect);
 
 				CClientDC dc(this);
@@ -732,6 +765,10 @@ LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 
 				dc.MoveTo(m_rulerPosition, toolbarHeight + 3);
 				dc.LineTo(m_rulerPosition, rect.Height());
+
+				// if the drop is ouside the ruler then delete the tab
+				m_ruler.GetClientRect(ruler);
+				ruler.InflateRect(0, 10);
 
 				// Set new value for tab position
 				int pos = m_rtf.GetScrollPos(SB_HORZ);

@@ -28,7 +28,9 @@
 #define IDS_FIND_TITLE                  56
 #define IDS_REPLACE_TITLE               57
 #define IDR_POPUP                       16000
+#define IDC_WEBLINK                     16000
 #define IDB_TOOLBAR                     16003
+#define IDD_EDITWEBLINK_DIALOG          16004
 #define ID_EDIT_DELETE                  32774
 #define ID_EDIT_SHOWTOOLBAR             32776
 #define ID_EDIT_SHOWRULER               32777
@@ -52,9 +54,9 @@
 //
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        16004
-#define _APS_NEXT_COMMAND_VALUE         32796
-#define _APS_NEXT_CONTROL_VALUE         16000
+#define _APS_NEXT_RESOURCE_VALUE        16005
+#define _APS_NEXT_COMMAND_VALUE         32798
+#define _APS_NEXT_CONTROL_VALUE         16001
 #define _APS_NEXT_SYMED_VALUE           16000
 #endif
 #endif
