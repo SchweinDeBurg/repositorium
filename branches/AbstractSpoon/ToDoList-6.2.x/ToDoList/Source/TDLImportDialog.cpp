@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TDLImportDialog.cpp : implementation file
@@ -50,6 +51,7 @@
 
 #include "../../../CodeProject/Source/EnString.h"
 #include "../../../CodeProject/Source/Misc.h"
+#include "../../../CodeProject/Source/FileMisc.h"
 #include "../../Common/Preferences.h"
 
 #ifdef _DEBUG
@@ -120,13 +122,29 @@ BOOL CTDLImportDialog::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// build the format comboxbox
+	CString sFormat;
+
 	for (int nImp = 0; nImp < m_mgrImportExport.GetNumImporters(); nImp++)
 	{
-		m_cbFormat.AddString(m_mgrImportExport.GetImporterMenuText(nImp));
+		CString sImporter = m_mgrImportExport.GetImporterMenuText(nImp);
+		CString sFileExt = m_mgrImportExport.GetImporterFileExtension(nImp);
+
+		if (sFileExt.IsEmpty())
+		{
+			sFormat = sImporter;
+		}
+		else
+		{
+			sFormat.Format(_T("%s (*.%s)"), sImporter, sFileExt);
+		}
+
+		m_cbFormat.AddString(sFormat);
 	}
 
 	// append standard tasklist to the end
-	m_cbFormat.AddString(CEnString(AFX_IDS_APP_TITLE));
+	sFormat.Format(_T("%s (*.tdl)"), CEnString(AFX_IDS_APP_TITLE));
+
+	m_cbFormat.AddString(sFormat);
 	m_cbFormat.SetCurSel(m_nFormatOption);
 
 	// init file edit
@@ -155,12 +173,12 @@ BOOL CTDLImportDialog::OnInitDialog()
 
 BOOL CTDLImportDialog::CurImporterHasFilter() const
 {
-	return (ImportTasklist() || m_mgrImportExport.ImporterHasFileExtension(m_nFormatOption));
+	return (WantImportTasklist() || m_mgrImportExport.ImporterHasFileExtension(m_nFormatOption));
 }
 
 CString CTDLImportDialog::GetCurImporterFilter() const
 {
-	if (ImportTasklist())
+	if (WantImportTasklist())
 	{
 		return CEnString(IDS_TDLFILEFILTER);
 	}
@@ -187,14 +205,14 @@ void CTDLImportDialog::OnOK()
 	}
 }
 
-BOOL CTDLImportDialog::ImportTasklist() const
+BOOL CTDLImportDialog::WantImportTasklist() const
 {
 	return (m_nFormatOption == m_mgrImportExport.GetNumImporters());
 }
 
 int CTDLImportDialog::GetImporterIndex() const
 {
-	if (ImportTasklist())
+	if (WantImportTasklist())
 	{
 		return -1;
 	}
@@ -273,7 +291,7 @@ void CTDLImportDialog::EnableOK()
 		m_sFromFilePath.TrimLeft();
 		m_sFromFilePath.TrimRight();
 
-		GetDlgItem(IDOK)->EnableWindow(!m_sFromFilePath.IsEmpty());
+		GetDlgItem(IDOK)->EnableWindow(FileMisc::FileExists(m_sFromFilePath));
 	}
 }
 

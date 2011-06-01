@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // TDLColumnListBox.cpp : implementation file
@@ -93,6 +93,7 @@ CTDLColumnListBox::CTDLColumnListBox()
 	m_aColumns.Add(COLUMNVIS(IDS_TDLBC_REMAINING,   TDCC_REMAINING, FALSE));
 	m_aColumns.Add(COLUMNVIS(IDS_TDLBC_ICON,        TDCC_ICON,      TRUE));
 	m_aColumns.Add(COLUMNVIS(IDS_TDLBC_REMINDER,    TDCC_REMINDER,  FALSE));
+	m_aColumns.Add(COLUMNVIS(IDS_TDLBC_PARENTID,    TDCC_PARENTID,  FALSE));
 }
 
 CTDLColumnListBox::~CTDLColumnListBox()
@@ -109,98 +110,6 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CTDLColumnListBox message handlers
-
-TDC_COLUMN CTDLColumnListBox::MapOldColumnIndex(int nOld)
-{
-	enum TDLB_COLUMN
-	{
-		TDLBC_PRIORITY,
-		TDLBC_PERCENT,
-		TDLBC_TIMEEST,
-		TDLBC_STARTDATE,
-		TDLBC_DUEDATE,
-		TDLBC_DONEDATE,
-		TDLBC_ALLOCTO,
-		TDLBC_FILEREF,
-		TDLBC_POSITION,
-		TDLBC_ID,
-		TDLBC_DONE,
-		TDLBC_ALLOCBY,
-		TDLBC_STATUS,
-		TDLBC_CATEGORY,
-		TDLBC_TIMESPENT,
-		TDLBC_TRACKTIME,
-		TDLBC_FLAG,
-		TDLBC_CREATIONDATE,
-		TDLBC_CREATEDBY,
-		TDLBC_MODIFYDATE,
-		TDLBC_RISK,
-		TDLBC_EXTERNALID,
-		TDLBC_COST,
-		TDLBC_DEPENDS,
-		TDLBC_RECURRENCE,
-		TDLBC_VERSION,
-	};
-
-	switch (nOld)
-	{
-	case TDLBC_PRIORITY:
-		return TDCC_PRIORITY;
-	case TDLBC_PERCENT:
-		return TDCC_PERCENT;
-	case TDLBC_TIMEEST:
-		return TDCC_TIMEEST;
-	case TDLBC_STARTDATE:
-		return TDCC_STARTDATE;
-	case TDLBC_DUEDATE:
-		return TDCC_DUEDATE;
-	case TDLBC_DONEDATE:
-		return TDCC_DONEDATE;
-	case TDLBC_ALLOCTO:
-		return TDCC_ALLOCTO;
-	case TDLBC_FILEREF:
-		return TDCC_FILEREF;
-	case TDLBC_POSITION:
-		return TDCC_POSITION;
-	case TDLBC_ID:
-		return TDCC_ID;
-	case TDLBC_DONE:
-		return TDCC_DONE;
-	case TDLBC_ALLOCBY:
-		return TDCC_ALLOCBY;
-	case TDLBC_STATUS:
-		return TDCC_STATUS;
-	case TDLBC_CATEGORY:
-		return TDCC_CATEGORY;
-	case TDLBC_TIMESPENT:
-		return TDCC_TIMESPENT;
-	case TDLBC_TRACKTIME:
-		return TDCC_TRACKTIME;
-	case TDLBC_FLAG:
-		return TDCC_FLAG;
-	case TDLBC_CREATIONDATE:
-		return TDCC_CREATIONDATE;
-	case TDLBC_CREATEDBY:
-		return TDCC_CREATEDBY;
-	case TDLBC_MODIFYDATE:
-		return TDCC_LASTMOD;
-	case TDLBC_RISK:
-		return TDCC_RISK;
-	case TDLBC_EXTERNALID:
-		return TDCC_EXTERNALID;
-	case TDLBC_COST:
-		return TDCC_COST;
-	case TDLBC_DEPENDS:
-		return TDCC_DEPENDENCY;
-	case TDLBC_RECURRENCE:
-		return TDCC_RECURRENCE;
-	case TDLBC_VERSION:
-		return TDCC_VERSION;
-	}
-
-	ASSERT(0);
-	return (TDC_COLUMN) - 1;
-}
 
 void CTDLColumnListBox::PreSubclassWindow()
 {

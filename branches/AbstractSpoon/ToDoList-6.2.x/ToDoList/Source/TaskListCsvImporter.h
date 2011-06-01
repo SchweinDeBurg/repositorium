@@ -39,70 +39,79 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.6-6.2.2 sources
 //*****************************************************************************
 
-#if !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)
-#define AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_
+// TaskListCsvImporter.h: interface for the CTaskListCsvImporter class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_TASKLISTCSVIMPORTER_H__ADF211CB_FBD2_42A2_AD51_DFF58E566753__INCLUDED_)
+#define AFX_TASKLISTCSVIMPORTER_H__ADF211CB_FBD2_42A2_AD51_DFF58E566753__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
 
-// TDLAddLoggedTimeDlg.h : header file
-//
+#include "tdcenum.h"
+#include "TDLCsvImportExportDlg.h"
 
-#include "../../Common/TimeEdit.h"
-#include "../../../CodeProject/Source/TimeComboBox.h"
+#include "..\shared\Itasklist.h"
+#include "..\shared\IImportExport.h"
 
-/////////////////////////////////////////////////////////////////////////////
-// CTDLAddLoggedTimeDlg dialog
-
-class CTDLAddLoggedTimeDlg : public CDialog
+class CTaskListCsvImporter : public IImportTasklist
 {
-// Construction
 public:
-	CTDLAddLoggedTimeDlg(DWORD dwTaskID, LPCTSTR szTaskTitle, CWnd* pParent = NULL);   // standard constructor
-	double GetLoggedTime() const; // in hours
-	COleDateTime GetWhen() const;
-	BOOL GetAddToTimeSpent() const
+	CTaskListCsvImporter();
+	virtual ~CTaskListCsvImporter();
+
+	const char* GetMenuText()
 	{
-		return m_bAddTimeToTimeSpent;
+		return "Spreadsheet";
+	}
+	const char* GetFileFilter()
+	{
+		return "Spreadsheet Files (*.csv)|*.csv||";
+	}
+	const char* GetFileExtension()
+	{
+		return "csv";
+	}
+
+	bool Import(const char* szSrcFilePath, ITaskList* pDestTaskFile);
+	void Release()
+	{
+		delete this;
 	}
 
 protected:
-// Dialog Data
-	//{{AFX_DATA(CTDLAddLoggedTimeDlg)
-	enum { IDD = IDD_ADDLOGGEDTIME_DIALOG };
-	CDateTimeCtrl   m_dateWhen;
-	CTimeComboBox   m_cbTimeWhen;
-	double  m_dLoggedTime;
-	DWORD   m_dwTaskID;
-	CString m_sTaskTitle;
-	BOOL    m_bAddTimeToTimeSpent;
-	//}}AFX_DATA
-	CTimeEdit   m_eLoggedTime;
-	int m_nUnits;
-	COleDateTime m_dtWhen;
+	LPCTSTR DELIM;
+	CString INDENT;
+	int ROOTDEPTH;
 
-// Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CTDLAddLoggedTimeDlg)
+	CTDCCsvColumnMapping m_aColumnMapping;
+
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+	void ImportTask(ITaskList8* pTasks, const CString& sLine) const;
 
-// Implementation
-protected:
+	void InitConsts();
+	int GetDepth(const CString& sLine);
 
-	// Generated message map functions
-	//{{AFX_MSG(CTDLAddLoggedTimeDlg)
-	// NOTE: the ClassWizard will add member functions here
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	int AttributeIndex(TDC_ATTRIBUTE attrib) const;
+	BOOL WantAttribute(TDC_ATTRIBUTE attrib) const
+	{
+		return (AttributeIndex(attrib) != -1);
+	}
+
+	void PreProcessFileLines(CStringArray& aLines) const;
+
+	void GetTaskAndParentIDs(const CStringArray& sValues, DWORD& dwTaskID, DWORD& dwParentID) const;
+	CString GetTaskTitle(const CStringArray& sValues) const;
+
+	static int SortProc(const void* item1, const void* item2);
+	static time_t String2Date(const CString& sDate);
+
+	void AddAttributeToTask(ITaskList8* pTasks, HTASKITEM hTask, TDC_ATTRIBUTE nAttrib, const CStringArray& aValues) const;
+
 };
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)
+#endif // !defined(AFX_TASKLISTCSVImPORTER_H__ADF211CB_FBD2_42A2_AD51_DFF58E566753__INCLUDED_)

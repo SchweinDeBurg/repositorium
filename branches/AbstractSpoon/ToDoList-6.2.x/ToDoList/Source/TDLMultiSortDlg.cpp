@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TDLMultiSortDlg.cpp : implementation file
@@ -60,14 +61,15 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTDLMultiSortDlg dialog
 
-CTDLMultiSortDlg::CTDLMultiSortDlg(const TDSORTCOLUMNS& sort, CWnd* pParent /*=NULL*/):
+CTDLMultiSortDlg::CTDLMultiSortDlg(const TDSORTCOLUMNS& sort, const CTDCColumnArray& aVisibleColumns, CWnd* pParent /*=NULL*/):
 CDialog(CTDLMultiSortDlg::IDD, pParent),
 m_nSortBy1(sort.nBy1),
 m_nSortBy2(sort.nBy2),
 m_nSortBy3(sort.nBy3),
 m_bAscending1(sort.bAscending1),
 m_bAscending2(sort.bAscending2),
-m_bAscending3(sort.bAscending3)
+m_bAscending3(sort.bAscending3),
+m_aVisibleColumns(aVisibleColumns)
 {
 	//{{AFX_DATA_INIT(CTDLMultiSortDlg)
 	//}}AFX_DATA_INIT
@@ -121,28 +123,32 @@ void CTDLMultiSortDlg::BuildCombos()
 
 		if (col.nSortBy != TDC_UNSORTED)
 		{
-			int nIndex = m_cbSortBy1.AddString(CEnString(col.nIDLongName));
-			m_cbSortBy1.SetItemData(nIndex, col.nSortBy);
-
-			if (m_nSortBy1 == col.nSortBy)
+			// is this column visible
+			if (IsColumnVisible(col.nColID))
 			{
-				m_cbSortBy1.SetCurSel(nIndex);
-			}
+				int nIndex = m_cbSortBy1.AddString(CEnString(col.nIDLongName));
+				m_cbSortBy1.SetItemData(nIndex, col.nSortBy);
 
-			nIndex = m_cbSortBy2.AddString(CEnString(col.nIDLongName));
-			m_cbSortBy2.SetItemData(nIndex, col.nSortBy);
+				if (m_nSortBy1 == col.nSortBy)
+				{
+					m_cbSortBy1.SetCurSel(nIndex);
+				}
 
-			if (m_nSortBy2 == col.nSortBy)
-			{
-				m_cbSortBy2.SetCurSel(nIndex);
-			}
+				nIndex = m_cbSortBy2.AddString(CEnString(col.nIDLongName));
+				m_cbSortBy2.SetItemData(nIndex, col.nSortBy);
 
-			nIndex = m_cbSortBy3.AddString(CEnString(col.nIDLongName));
-			m_cbSortBy3.SetItemData(nIndex, col.nSortBy);
+				if (m_nSortBy2 == col.nSortBy)
+				{
+					m_cbSortBy2.SetCurSel(nIndex);
+				}
 
-			if (m_nSortBy3 == col.nSortBy)
-			{
-				m_cbSortBy3.SetCurSel(nIndex);
+				nIndex = m_cbSortBy3.AddString(CEnString(col.nIDLongName));
+				m_cbSortBy3.SetItemData(nIndex, col.nSortBy);
+
+				if (m_nSortBy3 == col.nSortBy)
+				{
+					m_cbSortBy3.SetCurSel(nIndex);
+				}
 			}
 		}
 	}
@@ -170,6 +176,28 @@ void CTDLMultiSortDlg::BuildCombos()
 		m_cbSortBy1.SetCurSel(0);
 		m_nSortBy1 = (TDC_SORTBY)m_cbSortBy1.GetItemData(0);
 	}
+}
+
+BOOL CTDLMultiSortDlg::IsColumnVisible(TDC_COLUMN col) const
+{
+	// special case:
+	if (col == TDCC_CLIENT)
+	{
+		return TRUE;
+	}
+
+	int nCol = m_aVisibleColumns.GetSize();
+
+	while (nCol--)
+	{
+		if (col == m_aVisibleColumns[nCol])
+		{
+			return TRUE;
+		}
+	}
+
+	// not found
+	return FALSE;
 }
 
 void CTDLMultiSortDlg::OnSelchangeSortby1()

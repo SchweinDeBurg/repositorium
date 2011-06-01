@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // RecurringTaskEdit.cpp: implementation of the CRecurringTaskEdit class.
@@ -76,6 +76,10 @@ CTDLRecurringTaskEdit::~CTDLRecurringTaskEdit()
 BEGIN_MESSAGE_MAP(CTDLRecurringTaskEdit, CEnEdit)
 	//{{AFX_MSG_MAP(CRecurringTaskEdit)
 	//}}AFX_MSG_MAP
+	ON_WM_SETCURSOR()
+	ON_WM_CTLCOLOR_REFLECT()
+	ON_MESSAGE(EM_SETREADONLY, OnSetReadOnly)
+	ON_WM_STYLECHANGING()
 	ON_CONTROL_REFLECT_EX(EN_CHANGE, OnReflectChangeDisplayText)
 END_MESSAGE_MAP()
 //////////////////////////////////////////////////////////////////////
@@ -111,7 +115,7 @@ void CTDLRecurringTaskEdit::OnBtnClick(UINT nID)
 
 void CTDLRecurringTaskEdit::DoEdit()
 {
-	if (!(GetStyle() & ES_READONLY))
+	if (!m_bReadOnly)
 	{
 		CTDLRecurringTaskOptionDlg dialog(m_tr, m_dtDefault);
 
@@ -143,6 +147,30 @@ void CTDLRecurringTaskEdit::DoEdit()
 	}
 }
 
+BOOL CTDLRecurringTaskEdit::OnSetCursor(CWnd* /*pWnd*/, UINT /*nHitTest*/, UINT /*message*/)
+{
+	::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
+
+	return TRUE;//CEnEdit::OnSetCursor(pWnd, nHitTest, message);
+}
+
+HBRUSH CTDLRecurringTaskEdit::CtlColor(CDC* pDC, UINT /*nCtlColor*/)
+{
+	HBRUSH hbr = NULL;
+	pDC->SetBkMode(TRANSPARENT);
+
+	if (!IsWindowEnabled() || m_bReadOnly)
+	{
+		hbr = GetSysColorBrush(COLOR_3DFACE);
+	}
+	else
+	{
+		hbr = GetSysColorBrush(COLOR_WINDOW);
+	}
+
+	return hbr;
+}
+
 void CTDLRecurringTaskEdit::GetRecurrenceOptions(TDIRECURRENCE& tr) const
 {
 	tr = m_tr;
@@ -160,6 +188,50 @@ void CTDLRecurringTaskEdit::SetRecurrenceOptions(const TDIRECURRENCE& tr)
 	if (GetSafeHwnd())
 	{
 		SetWindowText(GetRegularity(m_tr));   // for display purposes
+	}
+}
+
+BOOL CTDLRecurringTaskEdit::ModifyStyle(DWORD dwRemove, DWORD dwAdd, UINT /*nFlags*/)
+{
+	if ((dwRemove & ES_READONLY) != (dwAdd & ES_READONLY))
+	{
+		m_bReadOnly = (dwAdd & ES_READONLY);
+
+		EnableButton(1, !m_bReadOnly);
+		Invalidate();
+	}
+
+	// make sure we stay readonly
+	return CEnEdit::ModifyStyle(dwRemove & ~ES_READONLY, dwAdd | ES_READONLY);
+}
+
+LRESULT CTDLRecurringTaskEdit::OnSetReadOnly(WPARAM wp, LPARAM /*lp*/)
+{
+	m_bReadOnly = wp;
+	EnableButton(REBTN_OPTIONS, !m_bReadOnly);
+
+	// always set to readonly
+	// we set this flag so that OnStyleChanging doesn't respond to this trickery
+	CAutoFlag af(m_bInOnSetReadOnly, TRUE);
+
+	return DefWindowProc(EM_SETREADONLY, TRUE, 0);
+}
+
+void CTDLRecurringTaskEdit::OnStyleChanging(int nStyleType, LPSTYLESTRUCT lpStyleStruct)
+{
+	CEnEdit::OnStyleChanging(nStyleType, lpStyleStruct);
+
+	if (nStyleType == GWL_STYLE && !m_bInOnSetReadOnly)
+	{
+		// check for change in readonly style
+		if ((lpStyleStruct->styleOld & ES_READONLY) != (lpStyleStruct->styleNew & ES_READONLY))
+		{
+			m_bReadOnly = (lpStyleStruct->styleNew & ES_READONLY);
+			lpStyleStruct->styleNew |= ES_READONLY; // make sure we stay readonly
+
+			EnableButton(REBTN_OPTIONS, !m_bReadOnly);
+			Invalidate();
+		}
 	}
 }
 
@@ -417,6 +489,7 @@ void CTDLRecurringTaskOptionDlg::OnSelchangeRegularity()
 {
 	UpdateData();
 
+	GetDlgItem(IDC_REUSEOPTIONS)->EnableWindow(m_nRegularity != TDIR_ONCE);
 	GetDlgItem(IDC_RECALCFROM)->EnableWindow(m_nRegularity != TDIR_ONCE);
 	GetDlgItem(IDC_DAYS)->EnableWindow(m_nRegularity == TDIR_DAILY);
 	GetDlgItem(IDC_WEEKDAYS)->EnableWindow(m_nRegularity == TDIR_WEEKLY);

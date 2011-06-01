@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDCOLUMNLISTBOX_H__C5D9EFCE_7B59_498F_88E4_890286A344A5__INCLUDED_)
@@ -71,8 +71,6 @@ public:
 	void SetColumnVisible(TDC_COLUMN nCol, BOOL bVisible = TRUE);
 	void SetVisibleColumns(const CTDCColumnArray& aColumns);
 	int GetVisibleColumns(CTDCColumnArray& aColumns) const;
-
-	static TDC_COLUMN MapOldColumnIndex(int nOld);
 
 // Attributes
 protected:

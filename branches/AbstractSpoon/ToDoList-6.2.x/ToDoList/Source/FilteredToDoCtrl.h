@@ -118,7 +118,7 @@ public:
 	int FindTasks(const SEARCHPARAMS& params, CResultArray& aResults) const;
 	BOOL SelectTask(CString sPart, TDC_SELECTTASK nSelect);
 
-	BOOL SetStyles(const CTDCStyles& styles);
+	BOOL SetStyles(const CTDCStylesMap& styles);
 	BOOL SetStyle(TDC_STYLE nStyle, BOOL bOn = TRUE)
 	{
 		return CToDoCtrl::SetStyle(nStyle, bOn);

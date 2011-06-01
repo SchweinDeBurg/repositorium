@@ -39,55 +39,53 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.6-6.2.2 sources
 //*****************************************************************************
 
-#if !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)
-#define AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_
+#if !defined(AFX_TDLCSVIMPORTEXPORTDLG_H__3230FA12_9619_426A_9D8A_FC4D76A56596__INCLUDED_)
+#define AFX_TDLCSVIMPORTEXPORTDLG_H__3230FA12_9619_426A_9D8A_FC4D76A56596__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-
-// TDLAddLoggedTimeDlg.h : header file
+// TDLCsvImportExportDlg.h : header file
 //
 
-#include "../../Common/TimeEdit.h"
-#include "../../../CodeProject/Source/TimeComboBox.h"
+#include "TDLCsvAttributeSetupListCtrl.h"
+
+#include "..\shared\fileedit.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CTDLAddLoggedTimeDlg dialog
+// CTDLCsvImportExportDlg dialog
 
-class CTDLAddLoggedTimeDlg : public CDialog
+class CTDLCsvImportExportDlg : public CDialog
 {
 // Construction
 public:
-	CTDLAddLoggedTimeDlg(DWORD dwTaskID, LPCTSTR szTaskTitle, CWnd* pParent = NULL);   // standard constructor
-	double GetLoggedTime() const; // in hours
-	COleDateTime GetWhen() const;
-	BOOL GetAddToTimeSpent() const
+	CTDLCsvImportExportDlg(const CString& sFilePath, CWnd* pParent = NULL);   // import constructor
+	CTDLCsvImportExportDlg(const CString& sFilePath, const CTDCAttributeArray& aExportAttributes, CWnd* pParent = NULL);   // export constructor
+
+	int GetColumnMapping(CTDCCsvColumnMapping& aMapping) const;
+	CString GetDelimiter() const
 	{
-		return m_bAddTimeToTimeSpent;
+		return m_sDelim;
 	}
 
 protected:
 // Dialog Data
-	//{{AFX_DATA(CTDLAddLoggedTimeDlg)
-	enum { IDD = IDD_ADDLOGGEDTIME_DIALOG };
-	CDateTimeCtrl   m_dateWhen;
-	CTimeComboBox   m_cbTimeWhen;
-	double  m_dLoggedTime;
-	DWORD   m_dwTaskID;
-	CString m_sTaskTitle;
-	BOOL    m_bAddTimeToTimeSpent;
+	//{{AFX_DATA(CTDLCsvImportExportDlg)
+	CString	m_sDelim;
+	CString	m_sFilePath;
+	BOOL	m_bAlwaysExportTaskIDs;
 	//}}AFX_DATA
-	CTimeEdit   m_eLoggedTime;
-	int m_nUnits;
-	COleDateTime m_dtWhen;
+	CFileEdit	m_eFilePath;
+	CTDLCsvAttributeSetupListCtrl m_lcColumnSetup;
+	BOOL m_bImporting;
+	CTDCCsvColumnMapping m_aMasterColumnMapping;
+	CTDCAttributeArray m_aExportAttributes;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CTDLAddLoggedTimeDlg)
+	//{{AFX_VIRTUAL(CTDLCsvImportExportDlg)
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
@@ -96,13 +94,35 @@ protected:
 protected:
 
 	// Generated message map functions
-	//{{AFX_MSG(CTDLAddLoggedTimeDlg)
-	// NOTE: the ClassWizard will add member functions here
+	//{{AFX_MSG(CTDLCsvImportExportDlg)
+	virtual BOOL OnInitDialog();
+	afx_msg void OnChangeCsvdelimiter();
+	afx_msg void OnExportTaskids();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+	virtual void OnOK();
+
+protected:
+	int BuildImportColumnMapping(CTDCCsvColumnMapping& aImportMapping) const;
+	int BuildExportColumnMapping(CTDCCsvColumnMapping& aExportMapping) const;
+
+	void BuildDefaultMasterColumnMapping();
+	void UpdateMasterColumnMappingFromList();
+
+	int FindMasterColumn(TDC_ATTRIBUTE attrib) const;
+	CString GetMasterColumnName(TDC_ATTRIBUTE attrib) const;
+	void SetMasterColumnName(TDC_ATTRIBUTE attrib, LPCTSTR szColumn);
+
+	int FindMasterColumn(LPCTSTR szColumn) const;
+	TDC_ATTRIBUTE GetMasterColumnAttribute(LPCTSTR szColumn) const;
+	void SetMasterColumnAttribute(LPCTSTR szColumn, TDC_ATTRIBUTE attrib);
+
+	int LoadMasterColumnMapping();
+	void SaveMasterColumnMapping() const;
+
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)
+#endif // !defined(AFX_TDLCSVIMPORTEXPORTDLG_H__3230FA12_9619_426A_9D8A_FC4D76A56596__INCLUDED_)

@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_WELCOMEWIZARD_H__089919DB_8CBF_4F53_BFDF_6BB1C1C63929__INCLUDED_)
@@ -171,19 +172,16 @@ public:
 	{
 		return m_bHideAttrib;
 	}
-	CString GetSampleFilePath() const
-	{
-		return m_bViewSample ? m_sSampleTaskList : _T("");
-	}
+	CString GetSampleFilePath() const;
 
 protected:
 // Dialog Data
 	//{{AFX_DATA(CWelcomePage3)
 	enum { IDD = IDD_WELCOME_PAGE3 };
-	CFileEdit	m_eSampleTasklist;
-	CString	m_sSampleTaskList;
-	int		m_bHideAttrib;
-	int		m_bViewSample;
+    CFileEdit   m_eSampleTasklist;
+    CString m_sSampleTaskList;
+    int     m_bHideAttrib;
+    int     m_bViewSample;
 	//}}AFX_DATA
 	HFONT m_hFont;
 
