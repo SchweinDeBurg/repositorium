@@ -15,7 +15,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.3 sources
+// - merged with ToDoList version 6.1.3-6.2.2 sources
 //*****************************************************************************
 
 // CalendarFrameWnd.cpp : implementation file
@@ -30,6 +30,8 @@
 #include "../../../CodeProject/Source/TimeHelper.h"
 #include "../../../CodeProject/Source/FileMisc.h"
 #include "../../../CodeProject/Source/VersionInfo.h"
+#include "../../Common/UITheme.h"
+#include "../../../CodeProject/Source/Themed.h"
 #include "CalendarFrameWnd.h"
 
 #include "../../ToDoList/Source/TDCMsg.h"
