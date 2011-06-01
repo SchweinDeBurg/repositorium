@@ -23,7 +23,7 @@
 
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 //*****************************************************************************
 
 // ITransText.h: interface for the ITransText class.
