@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESUITASKLISTCOLORSPAGE_H__9612D6FB_2A00_46DA_99A4_1AC6270F060D__INCLUDED_)
@@ -159,7 +159,6 @@ protected:
 	CFontComboBox   m_cbTreeFonts, m_cbCommentsFonts;
 	BOOL    m_bSpecifyTreeFont;
 	BOOL    m_bSpecifyCommentsFont;
-	CFileEdit   m_eCheckboxImagePath;
 	CColorButton    m_btSetColor;
 	CColorButton    m_btLowColor;
 	CColorButton    m_btHighColor;

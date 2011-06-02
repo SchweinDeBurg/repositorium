@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // ToDoListApp.cpp : Defines the class behaviors for the application.
@@ -91,8 +91,8 @@ const LPCTSTR ONLINE = _T("http://www.abstractspoon.com/tdl_resources.html");
 const LPCTSTR WIKI = _T("http://abstractspoon.pbwiki.com/");
 const LPCTSTR DONATE = _T("https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=abstractspoon2%40optusnet%2ecom%2eau&item_name=Software");
 
-const TCHAR FILESTATEKEY[] = _T("FileStates");
-const UINT LENFILESTATEKEY = sizeof(FILESTATEKEY);
+const LPCTSTR FILESTATEKEY = _T("FileStates");
+const LPCTSTR REMINDERKEY = _T("Reminders");
 
 /////////////////////////////////////////////////////////////////////////////
 // CToDoListApp
@@ -163,8 +163,7 @@ BOOL CToDoListApp::InitInstance()
 	}
 
 	// see if the user just wants to see the commandline options
-	if (cmdInfo.HasOption(_T("h")) || cmdInfo.HasOption(_T("help")) ||
-		cmdInfo.HasOption(_T("?")))
+	if (cmdInfo.HasOption(_T("h")) || cmdInfo.HasOption(_T("help")) || cmdInfo.HasOption(_T("?")))
 	{
 		AfxMessageBox(IDS_COMMANDLINEOPTIONS, MB_OK | MB_ICONINFORMATION);
 		return FALSE;
@@ -308,7 +307,35 @@ BOOL CToDoListApp::PreTranslateMessage(MSG* pMsg)
 		return TRUE;
 	}
 
-	return CWinApp::PreTranslateMessage(pMsg);
+	// -------------------------------------------------------------------
+	// Implement CWinApp::PreTranslateMessage(pMsg)	ourselves
+	// so as to not call CMainFrame::PreTranslateMessage(pMsg) twice
+
+	// if this is a thread-message, short-circuit this function
+	if (pMsg->hwnd == NULL && DispatchThreadMessageEx(pMsg))
+	{
+		return TRUE;
+	}
+
+	// walk from target to main window but excluding main window
+	for (HWND hWnd = pMsg->hwnd;
+		hWnd != NULL && hWnd != m_pMainWnd->GetSafeHwnd();
+		hWnd = ::GetParent(hWnd))
+	{
+		CWnd* pWnd = CWnd::FromHandlePermanent(hWnd);
+
+		if (pWnd != NULL)
+		{
+			// target window is a C++ window
+			if (pWnd->PreTranslateMessage(pMsg))
+			{
+				return TRUE;   // trapped by target window (eg: accelerators)
+			}
+		}
+	}
+	// -------------------------------------------------------------------
+
+	return FALSE;       // no special processing
 }
 
 void CToDoListApp::OnHelp()
@@ -345,7 +372,7 @@ BOOL CToDoListApp::InitPreferences(CEnCommandLineInfo* pInfo)
 	BOOL bUseIni = FALSE;
 
 	// get the app file path
-	CString sTemp = FileMisc::GetModuleFileName(), sDrive, sFolder, sAppName;
+	CString sTemp = FileMisc::GetAppFileName(), sDrive, sFolder, sAppName;
 	FileMisc::SplitPath(sTemp, &sDrive, &sFolder, &sAppName);
 
 	// try command line first
@@ -487,28 +514,6 @@ BOOL CToDoListApp::InitPreferences(CEnCommandLineInfo* pInfo)
 void CToDoListApp::UpgradePreferences(BOOL /*bUseIni*/)
 {
 	CPreferences prefs;
-	BOOL bIconColumn = prefs.GetProfileInt(_T("Preferences"), _T("IconColumn"));
-
-	if (bIconColumn)
-	{
-		return;   // already fixed
-	}
-
-	prefs.WriteProfileInt(_T("Preferences"), _T("IconColumn"), TRUE);
-
-	// add icon column to default columns
-	int nCol = prefs.GetProfileInt(_T("Preferences\\ColumnVisibility"), _T("Count"), -1);
-
-	if (nCol >= 0)
-	{
-		CString sKey;
-		sKey.Format(_T("Col%d"), nCol);
-
-		prefs.WriteProfileInt(_T("Preferences\\ColumnVisibility"), sKey, TDCC_ICON);
-
-		nCol++;
-		prefs.WriteProfileInt(_T("Preferences\\ColumnVisibility"), _T("Count"), nCol);
-	}
 
 	// we don't handle the registry because it's too hard (for now)
 	if (m_pszRegistryKey)
@@ -517,6 +522,15 @@ void CToDoListApp::UpgradePreferences(BOOL /*bUseIni*/)
 	}
 
 	CIni ini(m_pszProfileName);
+
+	// check for 'already done'
+	const LPCTSTR CONVERSIONDONE = _T("6.2_Converted");
+
+	if (ini.GetBool(_T("Ini"), CONVERSIONDONE, FALSE))
+	{
+		return;
+	}
+
 	CStringArray aSections;
 
 	int nNumSection = ini.GetSectionNames(aSections);
@@ -528,32 +542,37 @@ void CToDoListApp::UpgradePreferences(BOOL /*bUseIni*/)
 		CString sSection = aSections[nSection];
 
 		// does it start with "FileStates\\"
-		if (sSection.Find(FILESTATEKEY) == 0)
+		if (sSection.Find(FILESTATEKEY) == 0 || sSection.Find(REMINDERKEY) == 0)
 		{
 			// split the path
 			CStringArray aSubSections;
+			int nSubSections = Misc::Split(sSection, aSubSections, FALSE, _T("\\"));
 
-			if (Misc::ParseIntoArray(sSection, aSubSections, FALSE, _T("\\")) == 3)
+			if (nSubSections > 1)
 			{
-				if (aSubSections[2] == _T("Columns"))
+				CStringArray aFileParts;
+				int nParts = Misc::Split(aSubSections[1], aFileParts, FALSE, _T("_"));
+
+				if (nParts > 1)
 				{
-					// add icon column
-					int nCol = prefs.GetProfileInt(sSection, _T("Count"), -1);
+					// rebuild new key name
+					CString sNewSection = aSubSections[0] + _T('\\') + aFileParts[nParts - 1];
 
-					if (nCol >= 0)
+					for (int i = 2; i < nSubSections; i++)
 					{
-						CString sKey;
-						sKey.Format(_T("Item%d"), nCol);
-
-						prefs.WriteProfileInt(sSection, sKey, TDCC_ICON);
-
-						nCol++;
-						prefs.WriteProfileInt(sSection, _T("Count"), nCol);
+						sNewSection += _T('\\');
+						sNewSection += aSubSections[i];
 					}
+
+					// copy old section to new and delete old
+					ini.MoveSection(sSection, sNewSection, FALSE);
 				}
 			}
 		}
 	}
+
+	// mark as updated
+	ini.WriteBool(_T("Ini"), CONVERSIONDONE, TRUE);
 }
 
 int CToDoListApp::DoMessageBox(LPCTSTR lpszPrompt, UINT nType, UINT nIDPrompt)
@@ -570,7 +589,7 @@ int CToDoListApp::DoMessageBox(LPCTSTR lpszPrompt, UINT nType, UINT nIDPrompt)
 void CToDoListApp::OnImportPrefs()
 {
 	// default location is always app folder
-	CString sIniPath = FileMisc::GetModuleFileName();
+	CString sIniPath = FileMisc::GetAppFileName();
 	sIniPath.MakeLower();
 	sIniPath.Replace(_T("exe"), _T("ini"));
 
@@ -599,11 +618,7 @@ void CToDoListApp::OnImportPrefs()
 						// renames existing prefs file
 						CString sNewName(sIniPath);
 						sNewName += _T(".bak");
-
-						if (FileMisc::FileExists(sNewName))
-						{
-							DeleteFile(sNewName);
-						}
+						DeleteFile(sNewName);
 
 						if (MoveFile(sIniPath, sNewName))
 						{
@@ -643,7 +658,7 @@ void CToDoListApp::OnExportPrefs()
 	if (reg.Open(HKEY_CURRENT_USER, APPREGKEY) == ERROR_SUCCESS)
 	{
 		// default location is always app folder
-		CString sAppPath = FileMisc::GetModuleFileName();
+		CString sAppPath = FileMisc::GetAppFileName();
 
 		CString sIniPath(sAppPath);
 		sIniPath.MakeLower();
