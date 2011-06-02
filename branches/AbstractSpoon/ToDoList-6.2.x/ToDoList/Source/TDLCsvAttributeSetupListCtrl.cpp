@@ -45,9 +45,9 @@
 //
 
 #include "StdAfx.h"
-#include "todolist.h"
+#include "ToDoListApp.h"
 #include "TDLCsvAttributeSetupListCtrl.h"
-#include "tdcstatic.h"
+#include "TDCStatic.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -198,7 +198,7 @@ CString CTDLCsvAttributeSetupListCtrl::GetAttributeName(TDC_ATTRIBUTE nAtt)
 		}
 	}
 
-	return "";
+	return _T("");
 }
 
 int CTDLCsvAttributeSetupListCtrl::FindMappedAttribute(TDC_ATTRIBUTE nAtt, int nIgnoreRow) const
@@ -361,7 +361,7 @@ void CTDLCsvAttributeSetupListCtrl::OnAttribEditOK()
 		if (nExist != -1)
 		{
 			// clear it
-			SetItemText(nExist, IMPORT_COLUMNID, "");
+			SetItemText(nExist, IMPORT_COLUMNID, _T(""));
 			m_aMapping[nExist].nTDCAttrib = TDCA_NONE;
 			SetItemData(nExist, (DWORD)TDCA_NONE);
 		}
@@ -386,7 +386,7 @@ void CTDLCsvAttributeSetupListCtrl::OnNameEditOK(NMHDR* /*pNMHDR*/, LRESULT* pRe
 	if (nExist != -1)
 	{
 		// clear it
-		SetItemText(nExist, EXPORT_COLUMNNAME, "");
+		SetItemText(nExist, EXPORT_COLUMNNAME, _T(""));
 		m_aMapping[nExist].sColumnName.Empty();
 	}
 

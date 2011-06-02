@@ -60,7 +60,7 @@
 #include "../../../CodeProject/Source/AfxRegKey.h"
 #include "../../../CodeProject/Source/FileMisc.h"
 #include "../../../CodeProject/Source/AutoFlag.h"
-#include "../../Common/preferences.h"
+#include "../../Common/Preferences.h"
 
 #include "../../Common/xmlnodewrapper.h"
 #include "../../../CodeProject/Source/Ini.h"
