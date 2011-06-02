@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TODOCTRL_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_)
@@ -381,7 +381,7 @@ public:
 	{
 		m_dwTickLast = GetTickCount();
 	}
-	void AddTimeToTaskLogFile(DWORD dwTaskID, double dHours, const COleDateTime& dtWhen);
+	void AddTimeToTaskLogFile(DWORD dwTaskID, double dHours, const COleDateTime& dtWhen, BOOL bAddToTimeSpent = FALSE);
 
 	static void SetInheritedParentAttributes(const CTDCAttributeArray& aAttribs, BOOL bUpdateAttrib);
 	void SetDefaultTaskAttributes(const TODOITEM& tdi);
@@ -397,6 +397,10 @@ public:
 	void Resort(BOOL bAllowToggle = FALSE);
 	BOOL IsSortable() const;
 	virtual BOOL IsMultiSorting() const;
+	static int CALLBACK SortFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
+	static int CALLBACK SortFuncMulti(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
+	static int SortTasks(LPARAM lParam1, LPARAM lParam2, TDC_SORTBY nSortBy, BOOL bAscending,
+		BOOL bSortDueTodayHigh, DWORD dwTimeTrackedID, const CToDoCtrlData* pData);
 
 	// move functions
 	virtual BOOL MoveSelectedTask(TDC_MOVETASK nDirection);
@@ -466,6 +470,7 @@ public:
 	}
 	virtual void SetFocusToTasks();
 	virtual void SetFocusToComments();
+	virtual CString GetControlDescription(const CWnd* pCtrl) const;
 
 	void SelectItem(HTREEITEM hti);
 	void SelectAll();
@@ -556,7 +561,7 @@ protected:
 	CString m_sXmlHeader;
 	CTaskListDropTarget m_dtTree, m_dtFileRef;
 	CString m_sLastSavePath;
-	CString m_sMachineName; // for source control
+	CString m_sSourceControlID; // for source control
 	int m_nCommentsSize;
 	CString m_sPassword;
 	WORD m_wKeyPress;
@@ -795,6 +800,7 @@ protected:
 
 	int GetSelectedTaskIDs(CDWordArray& aTaskIDs, DWORD& dwFocusedTaskID, BOOL bRemoveChildDupes) const;
 	int GetSelectedTasks(CTaskFile& tasks, const TDCGETTASKS& filter, BOOL bRemoveChildDupes) const;
+	void RestoreTreeSelection(const CDWordArray& aTaskIDs, DWORD dwDefaultID = 0);
 
 	virtual void Resize(int cx = 0, int cy = 0);
 	int CalcVisibleCtrlCount();
@@ -865,8 +871,8 @@ protected:
 	void ShowTaskHasCircularDependenciesError(const CDWordArray& aTaskIDs) const;
 
 	void FixupParentCompletion(HTREEITEM htiParent);
-	void FixupTaskDependentsDates(DWORD dwTaskID);
-	BOOL AdjustTaskDates(DWORD dwTaskID, DWORD dwDependencyID);
+	void FixupTaskDependencyDates(DWORD dwTaskID, TDC_DATE nDate);
+	UINT AdjustTaskDates(DWORD dwTaskID, DWORD dwDependencyID, TDC_DATE nDate);
 
 	BOOL UndoLastActionItems(const CArrayUndoElements& aElms);
 
@@ -880,7 +886,7 @@ protected:
 	BOOL MoveSelectionRight(); // down a level
 	HTREEITEM MoveItem(HTREEITEM hti, HTREEITEM htiDestParent, HTREEITEM htiDestPrevSibling);
 
-	typedef CMap<DWORD, DWORD, DWORD, DWORD> CMapID2ID;
+	typedef CMap<DWORD, DWORD, DWORD, DWORD&> CMapID2ID;
 	void PrepareTaskIDsForPaste(CTaskFile& tasks, TDC_RESETIDS nResetID) const;
 	void BuildTaskIDMapForPaste(CTaskFile& tasks, HTASKITEM hTask,
 		DWORD& dwNextID, CMapID2ID& mapID, TDC_RESETIDS nResetID) const;
@@ -915,6 +921,8 @@ protected:
 	void MultiSortTree(const TDSORTCOLUMNS& sort, HTREEITEM htiRoot = NULL, BOOL bSortChildren = TRUE);
 	void SortTree(TDC_SORTBY nBy, BOOL bAscending, HTREEITEM htiRoot = NULL, BOOL bSortChildren = TRUE);
 	void SortTreeItem(HTREEITEM hti, const TDSORTPARAMS& ss, BOOL bMulti = FALSE);
+	static int CALLBACK CompareFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
+	static int CALLBACK CompareFuncMulti(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
 
 	static BOOL WantUpdateInheritedAttibute(TDC_ATTRIBUTE nAttrib);
 	void ApplyLastInheritedChangeToSubtasks(DWORD dwID, TDC_ATTRIBUTE nAttrib);
