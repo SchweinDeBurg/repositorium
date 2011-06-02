@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // TDLFilterBar.cpp : implementation file
@@ -103,7 +103,6 @@ m_cbAllocToFilter(TRUE, IDS_NOALLOCTO, IDS_TDC_ANYONE),
 m_cbAllocByFilter(TRUE, IDS_NOONE, IDS_TDC_ANYONE),
 m_cbStatusFilter(TRUE, IDS_NOSTATUS, IDS_TDC_ANY),
 m_cbVersionFilter(TRUE, IDS_NOVERSION, IDS_TDC_ANY),
-m_bShowDivider(TRUE),
 m_nView(FTCV_UNSET),
 m_bCustomFilter(FALSE)
 {
@@ -506,16 +505,6 @@ BOOL CTDLFilterBar::WantShowFilter(TDC_COLUMN nType)
 	return (BOOL)m_aVisibility[(DWORD)nType];
 }
 
-void CTDLFilterBar::ShowDivider(BOOL bShow)
-{
-	if (bShow && !m_bShowDivider || !bShow && m_bShowDivider)
-	{
-		m_bShowDivider = bShow;
-
-		GetDlgItem(IDC_DIVIDER)->ShowWindow(bShow ? SW_SHOW : SW_HIDE);
-	}
-}
-
 void CTDLFilterBar::EnableMultiSelection(BOOL bEnable)
 {
 	m_cbCategoryFilter.EnableMultiSelection(bEnable);
@@ -646,24 +635,6 @@ int CTDLFilterBar::ReposControls(int nWidth, BOOL bCalcOnly)
 	// update bottom of filter bar
 	nYPosDLU += nCtrlHeightDLU;
 
-	// divider
-	if (m_bShowDivider)
-	{
-		nYPosDLU += 4; // space above
-
-		if (!bCalcOnly)
-		{
-			CRect rDivider(0, nYPosDLU, nWidthDLU, nYPosDLU);
-			dlu.ToPixels(rDivider);
-
-			rDivider.bottom += 2;
-
-			dwm.MoveWindow(GetDlgItem(IDC_DIVIDER), rDivider);
-		}
-
-		nYPosDLU += 2; // space below
-	}
-
 	return dlu.ToPixelsY(nYPosDLU) + 2;
 }
 
@@ -748,8 +719,10 @@ BOOL CTDLFilterBar::OnToolTipNotify(UINT /*id*/, NMHDR* pNMHDR, LRESULT* /*pResu
 	return FALSE;
 }
 
-void CTDLFilterBar::SetUIColors(COLORREF crBack)
+void CTDLFilterBar::SetUIColors(COLORREF crBack, COLORREF crText)
 {
+	m_crUIText = crText;
+
 	if (crBack != m_crUIBack)
 	{
 		m_crUIBack = crBack;
@@ -796,6 +769,7 @@ HBRUSH CTDLFilterBar::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 	if (nCtlColor == CTLCOLOR_STATIC && m_brUIBack.GetSafeHandle())
 	{
+		pDC->SetTextColor(m_crUIText);
 		pDC->SetBkMode(TRANSPARENT);
 		hbr = m_brUIBack;
 	}

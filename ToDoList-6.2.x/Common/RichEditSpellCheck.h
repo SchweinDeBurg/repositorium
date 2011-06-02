@@ -26,7 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - merged with ToDoList versions 6.1.6-6.1.10 sources
+// - merged with ToDoList version 6.1.6-6.1.10 sources
 //*****************************************************************************
 
 // RichEditSpellCheck.h: interface for the CRichEditSpellCheck class.

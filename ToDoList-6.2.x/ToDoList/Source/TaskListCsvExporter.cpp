@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.2-6.1.7 sources
+// - merged with ToDoList version 6.1.2-6.1.7 sources
 //*****************************************************************************
 
 // TaskListCsvExporter.cpp: implementation of the CTaskListCsvExporter class.
