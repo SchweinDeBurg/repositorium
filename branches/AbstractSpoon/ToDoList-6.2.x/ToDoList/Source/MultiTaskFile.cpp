@@ -46,7 +46,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
-#include "todolist.h"
+#include "ToDoListApp.h"
 #include "MultiTaskFile.h"
 #include "TaskFile.h"
 
@@ -62,7 +62,6 @@ static char THIS_FILE[] = __FILE__;
 
 CMultiTaskFile::CMultiTaskFile()
 {
-
 }
 
 CMultiTaskFile::~CMultiTaskFile()

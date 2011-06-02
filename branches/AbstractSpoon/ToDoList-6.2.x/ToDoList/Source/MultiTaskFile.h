@@ -53,7 +53,7 @@
 #endif // _MSC_VER > 1000
 
 #include <afxtempl.h>
-#include "..\SHARED\ITaskList.h"
+#include "../../Common/ITaskList.h"
 
 class CTaskFile;
 

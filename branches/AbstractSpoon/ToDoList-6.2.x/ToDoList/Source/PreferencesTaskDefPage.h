@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESTASKDEFPAGE_H__852964E3_4ABD_4B66_88BA_F553177616F2__INCLUDED_)
@@ -86,6 +86,7 @@ enum PTP_ATTRIB
 	PTPA_VERSION,
 	PTPA_STARTDATE,
 	PTPA_FLAG,
+	PTPA_EXTERNALID,
 	// add to end
 };
 
@@ -96,6 +97,7 @@ enum PTDP_LIST
 	PTDP_ALLOCTO,
 	PTDP_ALLOCBY
 };
+
 // wParam = MAKEWPARAM(enum, 0 for delete, 1 for add)
 // lParam = LPCTSTR
 const UINT WM_PTDP_LISTCHANGE = ::RegisterWindowMessage(_T("WM_PTDP_LISTCHANGE"));
