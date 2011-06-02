@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_FILTERBAR_H__FAABD9A1_72C4_4731_B7A4_48251860672C__INCLUDED_)
@@ -95,9 +95,7 @@ public:
 	}
 
 	void EnableMultiSelection(BOOL bEnable);
-	void ShowDivider(BOOL bShow = TRUE);
-
-	void SetUIColors(COLORREF crBack);
+	void SetUIColors(COLORREF crBack, COLORREF crText);
 
 protected:
 // Dialog Data
@@ -116,10 +114,9 @@ protected:
 	FTDCFILTER m_filter;
 	CDWordArray m_aPriorityColors;
 	CDWordArray m_aVisibility;
-	BOOL m_bShowDivider;
 	FTC_VIEW m_nView;
 	CBrush m_brUIBack;
-	COLORREF m_crUIBack;
+	COLORREF m_crUIBack, m_crUIText;
 	BOOL m_bCustomFilter;
 	CString m_sCustomFilter;
 

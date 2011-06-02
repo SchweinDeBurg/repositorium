@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.2-6.1.10 sources
+// - merged with ToDoList version 6.1.2-6.1.10 sources
 //*****************************************************************************
 
 // TaskFileHtmlExporter.cpp: implementation of the CTaskListHtmlExporter class.

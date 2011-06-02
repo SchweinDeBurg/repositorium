@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.2-6.1.4 sources
+// - merged with ToDoList version 6.1.2-6.1.4 sources
 //*****************************************************************************
 
 // FilteredToDoCtrl.cpp: implementation of the CFilteredToDoCtrl class.
