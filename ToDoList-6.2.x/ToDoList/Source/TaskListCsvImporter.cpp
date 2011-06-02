@@ -47,18 +47,18 @@
 
 #include "StdAfx.h"
 #include "TaskListCsvImporter.h"
-#include "tdlschemadef.h"
-#include "resource.h"
-#include "recurringtaskedit.h"
+#include "TDLSchemaDef.h"
+#include "Resource.h"
+#include "RecurringTaskEdit.h"
 #include "TDLCsvImportExportDlg.h"
 
 #include <locale.h>
 
-#include "..\shared\timehelper.h"
-#include "..\shared\enstring.h"
-#include "..\shared\misc.h"
-#include "..\shared\filemisc.h"
-#include "..\shared\Preferences.h"
+#include "../../../CodeProject/Source/TimeHelper.h"
+#include "../../../CodeProject/Source/EnString.h"
+#include "../../../CodeProject/Source/Misc.h"
+#include "../../../CodeProject/Source/FileMisc.h"
+#include "../../Common/Preferences.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -70,10 +70,10 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-const LPCTSTR SPACE = " ";
-const LPCTSTR ENDL = "\n";
-const LPCTSTR ONEDBLQUOTE = "\"";
-const LPCTSTR TWODBLQUOTE = "\"\"";
+const LPCTSTR SPACE = _T(" ");
+const LPCTSTR ENDL = _T("\n");
+const LPCTSTR ONEDBLQUOTE = _T("\"");
+const LPCTSTR TWODBLQUOTE = _T("\"\"");
 
 // private structure for sorting
 struct CSVSORT
@@ -108,13 +108,13 @@ void CTaskListCsvImporter::InitConsts()
 
 	DELIM = Misc::GetListSeparator();
 
-	if (prefs.GetProfileInt("Preferences", "UseSpaceIndents", TRUE))
+	if (prefs.GetProfileInt(_T("Preferences"), _T("UseSpaceIndents"), TRUE))
 	{
-		INDENT = CString(' ', prefs.GetProfileInt("Preferences", "TextIndent", 2));
+		INDENT = CString(_T(' '), prefs.GetProfileInt(_T("Preferences"), _T("TextIndent"), 2));
 	}
 	else
 	{
-		INDENT = "  ";   // don't use tabs - excel strips them off
+		INDENT = _T("  ");   // don't use tabs - excel strips them off
 	}
 }
 
@@ -142,7 +142,7 @@ void CTaskListCsvImporter::PreProcessFileLines(CStringArray& aLines) const
 		CStringArray aColumns;
 		Misc::Split(aLines[nLine], aColumns, TRUE, DELIM);
 
-		aSortArray[nLine].Set(atoi(aColumns[nIDIndex]), atoi(aColumns[nParentIDIndex]), nLine);
+		aSortArray[nLine].Set(_ttoi(aColumns[nIDIndex]), _ttoi(aColumns[nParentIDIndex]), nLine);
 	}
 
 	qsort(aSortArray.GetData(), aSortArray.GetSize(), sizeof(CSVSORT), SortProc);
@@ -177,7 +177,7 @@ int CTaskListCsvImporter::SortProc(const void* item1, const void* item2)
 	return 0;
 }
 
-bool CTaskListCsvImporter::Import(const char* szSrcFilePath, ITaskList* pDestTaskFile)
+bool CTaskListCsvImporter::Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile)
 {
 	InitConsts();
 
@@ -219,14 +219,14 @@ void CTaskListCsvImporter::GetTaskAndParentIDs(const CStringArray& sValues, DWOR
 
 	if (nCol != -1)
 	{
-		dwTaskID = atoi(sValues[nCol]);
+		dwTaskID = _ttoi(sValues[nCol]);
 	}
 
 	nCol = AttributeIndex(TDCA_PARENTID);
 
 	if (nCol != -1)
 	{
-		dwParentID = atoi(sValues[nCol]);
+		dwParentID = _ttoi(sValues[nCol]);
 	}
 }
 
@@ -259,7 +259,7 @@ void CTaskListCsvImporter::ImportTask(ITaskList8* pTasks, const CString& sLine) 
 	HTASKITEM hParent = pTasks->FindTask(dwParentID);
 
 	// create task
-	HTASKITEM hTask = pTasks->NewTask(GetTaskTitle(aValues), hParent, dwTaskID);
+	HTASKITEM hTask = pTasks->NewTask(ATL::CT2A(GetTaskTitle(aValues)), hParent, dwTaskID);
 
 	AddAttributeToTask(pTasks, hTask, TDCA_CREATEDBY, aValues);
 	AddAttributeToTask(pTasks, hTask, TDCA_CATEGORY, aValues);
@@ -290,7 +290,7 @@ int CTaskListCsvImporter::AttributeIndex(TDC_ATTRIBUTE attrib) const
 
 	while (nAttrib--)
 	{
-		CSVCOLUMNMAPPING& col = m_aColumnMapping[nAttrib];
+		const CSVCOLUMNMAPPING& col = m_aColumnMapping[nAttrib];
 
 		if (col.nTDCAttrib == attrib && !col.sColumnName.IsEmpty())
 		{
@@ -384,73 +384,73 @@ void CTaskListCsvImporter::AddAttributeToTask(ITaskList8* pTasks, HTASKITEM hTas
 	switch (nAttrib)
 	{
 	case TDCA_CREATEDBY:
-		pTasks->SetTaskCreatedBy(hTask, sValue);
+		pTasks->SetTaskCreatedBy(hTask, ATL::CT2A(sValue));
 		break;
 
 	case TDCA_CATEGORY:
 		{
 			CStringArray aValues;
 
-			if (Misc::Split(sValue, '+', aValues))
+			if (Misc::Split(sValue, _T('+'), aValues))
 			{
 				for (int nVal = 0; nVal < aValues.GetSize(); nVal++)
 				{
-					pTasks->AddTaskCategory(hTask, aValues[nVal]);
+					pTasks->AddTaskCategory(hTask, ATL::CT2A(aValues[nVal]));
 				}
 			}
 		}
 		break;
 
 	case TDCA_STATUS:
-		pTasks->SetTaskStatus(hTask, sValue);
+		pTasks->SetTaskStatus(hTask, ATL::CT2A(sValue));
 		break;
 
 	case TDCA_EXTERNALID:
-		pTasks->SetTaskExternalID(hTask, sValue);
+		pTasks->SetTaskExternalID(hTask, ATL::CT2A(sValue));
 		break;
 
 	case TDCA_ALLOCBY:
-		pTasks->SetTaskAllocatedBy(hTask, sValue);
+		pTasks->SetTaskAllocatedBy(hTask, ATL::CT2A(sValue));
 		break;
 
 	case TDCA_ALLOCTO:
 		{
 			CStringArray aValues;
 
-			if (Misc::Split(sValue, '+', aValues))
+			if (Misc::Split(sValue, _T('+'), aValues))
 			{
 				for (int nVal = 0; nVal < aValues.GetSize(); nVal++)
 				{
-					pTasks->AddTaskAllocatedTo(hTask, aValues[nVal]);
+					pTasks->AddTaskAllocatedTo(hTask, ATL::CT2A(aValues[nVal]));
 				}
 			}
 		}
 		break;
 
 	case TDCA_VERSION:
-		pTasks->SetTaskVersion(hTask, sValue);
+		pTasks->SetTaskVersion(hTask, ATL::CT2A(sValue));
 		break;
 
 	case TDCA_FILEREF:
-		pTasks->SetTaskFileReferencePath(hTask, sValue);
+		pTasks->SetTaskFileReferencePath(hTask, ATL::CT2A(sValue));
 		break;
 
 	case TDCA_DEPENDENCY:
 		{
 			CStringArray aValues;
 
-			if (Misc::Split(sValue, '+', aValues))
+			if (Misc::Split(sValue, _T('+'), aValues))
 			{
 				for (int nVal = 0; nVal < aValues.GetSize(); nVal++)
 				{
-					pTasks->AddTaskDependency(hTask, aValues[nVal]);
+					pTasks->AddTaskDependency(hTask, ATL::CT2A(aValues[nVal]));
 				}
 			}
 		}
 		break;
 
 	case TDCA_COMMENTS:
-		pTasks->SetTaskComments(hTask, sValue);
+		pTasks->SetTaskComments(hTask, ATL::CT2A(sValue));
 		break;
 
 	case TDCA_STARTDATE:
@@ -474,27 +474,27 @@ void CTaskListCsvImporter::AddAttributeToTask(ITaskList8* pTasks, HTASKITEM hTas
 		break;
 
 	case TDCA_PRIORITY:
-		pTasks->SetTaskRisk(hTask, (unsigned char)atoi(sValue));
+		pTasks->SetTaskRisk(hTask, (unsigned char)_ttoi(sValue));
 		break;
 
 	case TDCA_RISK:
-		pTasks->SetTaskRisk(hTask, (unsigned char)atoi(sValue));
+		pTasks->SetTaskRisk(hTask, (unsigned char)_ttoi(sValue));
 		break;
 
 	case TDCA_FLAG:
-		pTasks->SetTaskFlag(hTask, (atoi(sValue) != 0));
+		pTasks->SetTaskFlag(hTask, (_ttoi(sValue) != 0));
 		break;
 
 	case TDCA_COST:
-		pTasks->SetTaskCost(hTask, atof(sValue));
+		pTasks->SetTaskCost(hTask, _tstof(sValue));
 		break;
 
 	case TDCA_TIMEEST:
-		pTasks->SetTaskTimeEstimate(hTask, atof(sValue), 'H');
+		pTasks->SetTaskTimeEstimate(hTask, _tstof(sValue), _T('H'));
 		break;
 
 	case TDCA_TIMESPENT:
-		pTasks->SetTaskTimeSpent(hTask, atof(sValue), 'H');
+		pTasks->SetTaskTimeSpent(hTask, _tstof(sValue), _T('H'));
 		break;
 	}
 }

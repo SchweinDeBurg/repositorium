@@ -45,13 +45,13 @@
 //
 
 #include "StdAfx.h"
-#include "todolist.h"
+#include "ToDoListApp.h"
 #include "TDLCsvImportExportDlg.h"
-#include "tdcstatic.h"
+#include "TDCStatic.h"
 
-#include "..\shared\misc.h"
-#include "..\shared\filemisc.h"
-#include "..\shared\preferences.h"
+#include "../../../CodeProject/Source/Misc.h"
+#include "../../../CodeProject/Source/FileMisc.h"
+#include "../../Common/Preferences.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -233,19 +233,19 @@ int CTDLCsvImportExportDlg::LoadMasterColumnMapping()
 
 	CPreferences prefs;
 
-	m_bAlwaysExportTaskIDs = prefs.GetProfileInt("CsvColumnMapping", "AlwaysExportTaskIDs", TRUE);
-	int nColumns = prefs.GetProfileInt("CsvColumnMapping", "ColumnCount", 0);
+	m_bAlwaysExportTaskIDs = prefs.GetProfileInt(_T("CsvColumnMapping"), _T("AlwaysExportTaskIDs"), TRUE);
+	int nColumns = prefs.GetProfileInt(_T("CsvColumnMapping"), _T("ColumnCount"), 0);
 
 	// overwrite with translations unless they are empty names
 	for (int nCol = 0; nCol < nColumns; nCol++)
 	{
 		CString sKey;
 
-		sKey.Format("ColumnAttrib%d", nCol);
-		TDC_ATTRIBUTE attrib = (TDC_ATTRIBUTE)prefs.GetProfileInt("CsvColumnMapping", sKey, TDCA_NONE);
+		sKey.Format(_T("ColumnAttrib%d"), nCol);
+		TDC_ATTRIBUTE attrib = (TDC_ATTRIBUTE)prefs.GetProfileInt(_T("CsvColumnMapping"), sKey, TDCA_NONE);
 
-		sKey.Format("ColumnName%d", nCol);
-		CString sName = prefs.GetProfileString("CsvColumnMapping", sKey);
+		sKey.Format(_T("ColumnName%d"), nCol);
+		CString sName = prefs.GetProfileString(_T("CsvColumnMapping"), sKey);
 
 		if (!sName.IsEmpty())
 		{
@@ -254,7 +254,7 @@ int CTDLCsvImportExportDlg::LoadMasterColumnMapping()
 	}
 
 	// load delimiter if different to default
-	CString sDelim = prefs.GetProfileString("CsvColumnMapping", "Delimiter");
+	CString sDelim = prefs.GetProfileString(_T("CsvColumnMapping"), _T("Delimiter"));
 
 	if (!sDelim.IsEmpty())
 	{
@@ -281,37 +281,37 @@ void CTDLCsvImportExportDlg::SaveMasterColumnMapping() const
 {
 	CPreferences prefs;
 
-	prefs.WriteProfileInt("CsvColumnMapping", "AlwaysExportTaskIDs", m_bAlwaysExportTaskIDs);
+	prefs.WriteProfileInt(_T("CsvColumnMapping"), _T("AlwaysExportTaskIDs"), m_bAlwaysExportTaskIDs);
 
 	int nColumns = m_aMasterColumnMapping.GetSize();
-	prefs.WriteProfileInt("CsvColumnMapping", "ColumnCount", nColumns);
+	prefs.WriteProfileInt(_T("CsvColumnMapping"), _T("ColumnCount"), nColumns);
 
 	for (int nCol = 0; nCol < nColumns; nCol++)
 	{
 		CString sKey;
 
-		sKey.Format("ColumnName%d", nCol);
-		prefs.WriteProfileString("CsvColumnMapping", sKey, m_aMasterColumnMapping[nCol].sColumnName);
+		sKey.Format(_T("ColumnName%d"), nCol);
+		prefs.WriteProfileString(_T("CsvColumnMapping"), sKey, m_aMasterColumnMapping[nCol].sColumnName);
 
-		sKey.Format("ColumnAttrib%d", nCol);
-		prefs.WriteProfileInt("CsvColumnMapping", sKey, m_aMasterColumnMapping[nCol].nTDCAttrib);
+		sKey.Format(_T("ColumnAttrib%d"), nCol);
+		prefs.WriteProfileInt(_T("CsvColumnMapping"), sKey, m_aMasterColumnMapping[nCol].nTDCAttrib);
 	}
 
 	// save delimiter if different to default
 	if (m_sDelim == Misc::GetListSeparator())
 	{
-		prefs.WriteProfileString("CsvColumnMapping", "Delimiter", "");
+		prefs.WriteProfileString(_T("CsvColumnMapping"), _T("Delimiter"), _T(""));
 	}
 	else
 	{
-		prefs.WriteProfileString("CsvColumnMapping", "Delimiter", m_sDelim);
+		prefs.WriteProfileString(_T("CsvColumnMapping"), _T("Delimiter"), m_sDelim);
 	}
 }
 
 CString CTDLCsvImportExportDlg::GetMasterColumnName(TDC_ATTRIBUTE attrib) const
 {
 	int nCol = FindMasterColumn(attrib);
-	return (nCol == -1) ? "" : m_aMasterColumnMapping[nCol].sColumnName;
+	return (nCol == -1) ? _T("") : m_aMasterColumnMapping[nCol].sColumnName;
 }
 
 TDC_ATTRIBUTE CTDLCsvImportExportDlg::GetMasterColumnAttribute(LPCTSTR szColumn) const
