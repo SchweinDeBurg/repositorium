@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // PreferencesUITasklistPage.cpp : implementation file
@@ -215,28 +215,7 @@ void CPreferencesUITasklistPage::LoadPreferences(const CPreferences& prefs)
 	CTDCColumnArray aCols;
 	int nCol = prefs.GetProfileInt(_T("Preferences\\ColumnVisibility"), _T("Count"), -1);
 
-	if (nCol == -1) // backward compat required
-	{
-		for (int nCol = 0; ; nCol++)
-		{
-			CString sKey;
-			sKey.Format(_T("Col%d"), nCol);
-
-			BOOL bVisible = prefs.GetProfileInt(_T("Preferences\\ColumnVisibility"), sKey, -1);
-
-			if (bVisible == -1)
-			{
-				break;   // all done
-			}
-
-			if (bVisible)
-			{
-				TDC_COLUMN col = m_lbColumnVisibility.MapOldColumnIndex(nCol);
-				aCols.Add(col);
-			}
-		}
-	}
-	else
+	if (nCol > 0)
 	{
 		while (nCol--)
 		{
