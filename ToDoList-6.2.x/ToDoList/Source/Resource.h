@@ -55,6 +55,7 @@
 #define IDD_PREFUITASKLISTCOLORS_PAGE   157
 #define IDD_PREFEXPORT_PAGE             158
 #define IDR_FINDDLG                     159
+#define IDR_TOOLBAR_NEW                 160
 #define IDB_TOOLBAR16                   164
 #define IDB_TOOLBAR24                   165
 #define IDB_FIND16                      166
@@ -94,6 +95,7 @@
 #define IDI_FIND                        211
 #define IDB_TREELIST                    212
 #define IDB_TASKICONS                   214
+#define IDB_TOOLBAR16_NEW               215
 #define IDD_TASKICON_DIALOG             216
 #define IDD_SETREMINDER_DIALOG          217
 #define IDD_SHOWREMINDER_DIALOG         218
