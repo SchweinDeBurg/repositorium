@@ -1122,8 +1122,8 @@ BOOL CToDoListWnd::InitToolbar()
 		if (m_toolbar.CreateEx(this, TBSTYLE_FLAT | TBSTYLE_WRAPABLE, WS_CHILD | WS_VISIBLE |
 				CBRS_ALIGN_TOP | WS_CLIPCHILDREN | CBRS_TOOLTIPS))
 		{
-			m_toolbar.LoadToolBar(IDR_TOOLBAR);
-			m_toolbar.SetImage(IDB_TOOLBAR16, RGB(255, 0, 255));
+			m_toolbar.LoadToolBar(IDR_TOOLBAR_NEW);
+			m_toolbar.SetImage(IDB_TOOLBAR16_NEW, RGB(255, 0, 255));
 			m_toolbar.GetToolBarCtrl().HideButton(ID_TOOLS_TOGGLECHECKIN, !Prefs().GetEnableSourceControl());
 
 			// colors
