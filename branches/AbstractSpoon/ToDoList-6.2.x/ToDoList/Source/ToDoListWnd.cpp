@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2-6.1.7 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // ToDoListWnd.cpp : implementation file
@@ -65,9 +65,10 @@
 #include "TDLImportDialog.h"
 #include "TDLSetReminderDlg.h"
 #include "TDLShowReminderDlg.h"
-#include "UIThemeFile.h"
 #include "TDLMultiSortDlg.h"
 #include "TDLAddLoggedTimeDlg.h"
+#include "MultiTaskFile.h"
+#include "TDCStatic.h"
 
 #include "../../Common/AboutDlg.h"
 #include "../../../CodeProject/Source/HoldRedraw.h"
@@ -95,6 +96,7 @@
 #include "../../../CodeProject/Source/LightBox.h"
 #include "../../Common/RemoteFile.h"
 #include "../../Common/ServerDlg.h"
+#include "../../../CodeProject/Source/FocusWatcher.h"
 
 #include "../../../CodeProject/Source/GUI.h"
 #include "../../../CodeProject/Source/SendFileTo.h"
@@ -126,9 +128,9 @@ enum { TB_TOOLBARHIDDEN, TB_DUMMY, TB_TOOLBARANDMENU };
 enum { FILEALL, NEWTASK, EDITTASK, VIEW, MOVE, SORTTASK, DELETETASK, TOOLS, HELP };
 
 const int TD_VERSION = 31000;
-const int SB_HEIGHT = 10; // dlu
 const int BEVEL = 2; // pixels
 const int BORDER = 3; // pixels
+const int TB_VOFFSET = 4;
 
 enum
 {
@@ -157,24 +159,6 @@ enum
 	INTERVAL_TIMETRACKING = 5000
 };
 
-struct SHORTCUT
-{
-	DWORD dwShortcut;
-	UINT nIDShortcut;
-};
-
-static SHORTCUT MISC_SHORTCUTS[] =
-{
-	{ MAKELONG('B', HOTKEYF_ALT | HOTKEYF_EXT), IDS_SETFOCUS2TASLIST },
-	{ 0, 0 },
-	{ MAKELONG(VK_UP, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION },
-	{ MAKELONG(VK_DOWN, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION },
-	{ MAKELONG(VK_PRIOR, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION },
-	{ MAKELONG(VK_NEXT, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION }
-};
-
-static int NUM_MISCSHORTCUTS = sizeof(MISC_SHORTCUTS) / sizeof(SHORTCUT);
-
 /////////////////////////////////////////////////////////////////////////////
 
 CToDoListWnd::CToDoListWnd() : CFrameWnd(),
@@ -200,7 +184,10 @@ m_bReloading(FALSE),
 m_hIcon(NULL),
 m_hwndLastFocus(NULL),
 m_bStartHidden(FALSE),
-m_cbQuickFind(ACBS_ALLOWDELETE | ACBS_ADDTOSTART)
+m_cbQuickFind(ACBS_ALLOWDELETE | ACBS_ADDTOSTART),
+m_bShowTasklistBar(TRUE),
+m_bShowTreeListBar(TRUE),
+m_dlgNotifyDue(TRUE, _T("DueTasksDialog"))
 {
 	// init content manager BEFORE userPrefs
 	VERIFY(m_mgrContent.Initialize());
@@ -243,8 +230,9 @@ BEGIN_MESSAGE_MAP(CToDoListWnd, CFrameWnd)
 	ON_COMMAND(ID_VIEW_EXPANDALL, OnViewExpandall)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_EXPANDALL, OnUpdateViewExpandall)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_COLLAPSEALL, OnUpdateViewCollapseall)
+	ON_COMMAND(ID_VIEW_TOGGLETASKEXPANDED, OnViewToggletaskexpanded)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_TOGGLETASKEXPANDED, OnUpdateViewToggletaskexpanded)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW1, OnUpdateWindow)
-	ON_WM_ACTIVATEAPP()
 	ON_WM_ENABLE()
 	ON_COMMAND(ID_NEWTASK, OnNewtask)
 	ON_COMMAND(ID_NEWSUBTASK, OnNewsubtask)
@@ -311,6 +299,8 @@ BEGIN_MESSAGE_MAP(CToDoListWnd, CFrameWnd)
 	ON_COMMAND(ID_SENDTASKS, OnSendtasks)
 	ON_COMMAND(ID_EDIT_INSERTDATE, OnEditInsertdate)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_INSERTDATE, OnUpdateEditInsertdate)
+	ON_COMMAND(ID_EDIT_INSERTTIME, OnEditInserttime)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_INSERTTIME, OnUpdateEditInserttime)
 	ON_COMMAND(ID_NEXTTASK, OnGotoNexttask)
 	ON_COMMAND(ID_PREVTASK, OnGotoPrevtask)
 	ON_UPDATE_COMMAND_UI(ID_PREVTASK, OnUpdateGotoPrevtask)
@@ -328,9 +318,6 @@ BEGIN_MESSAGE_MAP(CToDoListWnd, CFrameWnd)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_QUICKFINDNEXT, OnUpdateQuickFindNext)
 	ON_COMMAND(ID_EDIT_QUICKFINDPREV, OnQuickFindPrev)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_QUICKFINDPREV, OnUpdateQuickFindPrev)
-	ON_COMMAND(ID_LOAD_FROMWEB, OnLoadFromWeb)
-	ON_COMMAND(ID_SAVE_TOWEB, OnSaveToWeb)
-	ON_UPDATE_COMMAND_UI(ID_SAVE_TOWEB, OnUpdateSaveToWeb)
 	ON_COMMAND(ID_EDIT_SETTASKICON, OnEditSettaskicon)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_SETTASKICON, OnUpdateEditSettaskicon)
 	ON_COMMAND(ID_EDIT_SETREMINDER, OnEditSetReminder)
@@ -343,15 +330,25 @@ BEGIN_MESSAGE_MAP(CToDoListWnd, CFrameWnd)
 	ON_UPDATE_COMMAND_UI(ID_SORT_MULTI, OnUpdateSortMulti)
 	ON_COMMAND(ID_ARCHIVE_SELECTEDTASKS, OnArchiveSelectedTasks)
 	ON_UPDATE_COMMAND_UI(ID_ARCHIVE_SELECTEDTASKS, OnUpdateArchiveSelectedCompletedTasks)
+	ON_COMMAND(ID_ADDTIMETOLOGFILE, OnAddtimetologfile)
+	ON_UPDATE_COMMAND_UI(ID_ADDTIMETOLOGFILE, OnUpdateAddtimetologfile)
+	ON_WM_ACTIVATEAPP()
 	ON_WM_SYSCOMMAND()
 	ON_WM_INITMENUPOPUP()
 	ON_WM_MOVE()
 	ON_WM_ERASEBKGND()
 	ON_COMMAND(ID_ADDTIMETOLOGFILE, OnAddtimetologfile)
 	ON_UPDATE_COMMAND_UI(ID_ADDTIMETOLOGFILE, OnUpdateAddtimetologfile)
+	ON_COMMAND(ID_VIEW_SHOWTASKLISTTABBAR, OnViewShowTasklistTabbar)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_SHOWTASKLISTTABBAR, OnUpdateViewShowTasklistTabbar)
+	ON_COMMAND(ID_VIEW_SHOWTREELISTTABBAR, OnViewShowTreeListTabbar)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_SHOWTREELISTTABBAR, OnUpdateViewShowTreeListTabbar)
 	//}}AFX_MSG_MAP
 	ON_COMMAND(ID_TOOLS_REMOVEFROMSOURCECONTROL, OnToolsRemovefromsourcecontrol)
 	ON_UPDATE_COMMAND_UI(ID_TOOLS_REMOVEFROMSOURCECONTROL, OnUpdateToolsRemovefromsourcecontrol)
+	ON_COMMAND(ID_LOAD_FROMWEB, OnLoadFromWeb)
+	ON_COMMAND(ID_SAVE_TOWEB, OnSaveToWeb)
+	ON_UPDATE_COMMAND_UI(ID_SAVE_TOWEB, OnUpdateSaveToWeb)
 	ON_COMMAND(ID_VIEW_REFRESHFILTER, OnViewRefreshfilter)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_REFRESHFILTER, OnUpdateViewRefreshfilter)
 	ON_WM_CREATE()
@@ -515,9 +512,9 @@ BEGIN_MESSAGE_MAP(CToDoListWnd, CFrameWnd)
 	ON_NOTIFY(TTN_NEEDTEXT, 0, OnNeedTooltipText)
 	ON_UPDATE_COMMAND_UI(ID_SB_SELCOUNT, OnUpdateSBSelectionCount)
 	ON_UPDATE_COMMAND_UI(ID_SB_TASKCOUNT, OnUpdateSBTaskCount)
+	ON_REGISTERED_MESSAGE(WM_FW_FOCUSCHANGE, OnFocusChange)
 	ON_REGISTERED_MESSAGE(WM_FBN_FILTERCHNG, OnSelchangeFilter)
 	ON_REGISTERED_MESSAGE(WM_TDCN_LISTCHANGE, OnToDoCtrlNotifyListChange)
-	ON_REGISTERED_MESSAGE(WM_TDCN_SORT, OnToDoCtrlNotifySort)
 	ON_REGISTERED_MESSAGE(WM_TDCN_MODIFY, OnToDoCtrlNotifyMod)
 	ON_REGISTERED_MESSAGE(WM_TDCN_MINWIDTHCHANGE, OnToDoCtrlNotifyMinWidthChange)
 	ON_REGISTERED_MESSAGE(WM_TDCN_TIMETRACK, OnToDoCtrlNotifyTimeTrack)
@@ -625,14 +622,14 @@ void CToDoListWnd::SetUITheme(const CString& sThemeFile)
 
 	if (sThemeFile.IsEmpty() || !CThemed::IsThemeActive() || !themeFile.LoadThemeFile(sThemeFile))
 	{
-		m_theme.nStyle			= UIS_GRADIENT;
-		m_theme.crAppBackDark	= GetSysColor(COLOR_3DFACE);
-		m_theme.crAppBackLight	= GetSysColor(COLOR_3DFACE);
-		m_theme.crAppLines		= GetSysColor(COLOR_3DSHADOW);
-		m_theme.crMenuBack		= GetSysColor(COLOR_3DFACE);
-		m_theme.crToolbarDark	= GetSysColor(COLOR_3DFACE);
-		m_theme.crToolbarLight	= GetSysColor(COLOR_3DFACE);
-		m_theme.crStatusBarDark	= GetSysColor(COLOR_3DFACE);
+		m_theme.nStyle          = UIS_GRADIENT;
+		m_theme.crAppBackDark   = GetSysColor(COLOR_3DFACE);
+		m_theme.crAppBackLight  = GetSysColor(COLOR_3DFACE);
+		m_theme.crAppLines      = GetSysColor(COLOR_3DSHADOW);
+		m_theme.crMenuBack      = GetSysColor(COLOR_3DFACE);
+		m_theme.crToolbarDark   = GetSysColor(COLOR_3DFACE);
+		m_theme.crToolbarLight  = GetSysColor(COLOR_3DFACE);
+		m_theme.crStatusBarDark = GetSysColor(COLOR_3DFACE);
 		m_theme.crStatusBarLight = GetSysColor(COLOR_3DFACE);
 	}
 	else
