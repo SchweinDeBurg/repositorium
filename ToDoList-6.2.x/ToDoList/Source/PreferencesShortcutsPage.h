@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESSHORTCUTSPAGE_H__DA5D005D_C6CC_453A_A431_A2B85A920CE5__INCLUDED_)
@@ -82,6 +82,7 @@ protected:
 	COrderedTreeCtrl    m_tcCommands;
 	CHotKeyCtrlEx   m_hkNew;
 	CString m_sOtherCmdID;
+	BOOL m_bShowCommandIDs;
 	//}}AFX_DATA
 
 	CShortcutManager* m_pShortcutMgr;
@@ -107,6 +108,7 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSelchangedShortcuts(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnAssignshortcut();
+	afx_msg void OnShowCmdIDs();
 	//}}AFX_MSG
 	afx_msg void OnChangeShortcut();
 	afx_msg LRESULT OnGutterDrawItem(WPARAM wParam, LPARAM lParam); // for drawing priority
@@ -118,9 +120,13 @@ protected:
 
 	HTREEITEM AddMenuItem(HTREEITEM htiParent, const CMenu* pMenu, int nPos);
 	int GetLongestShortcutText(HTREEITEM hti, CDC* pDC);
+	void AddMiscShortcuts();
+
+	static BOOL IsMiscCommandID(UINT nCmdID);
 
 	virtual void LoadPreferences(const CPreferences& prefs);
 	virtual void SavePreferences(CPreferences& prefs);
+	void AddCommandIDsToTree(HTREEITEM hti, BOOL bAdd);
 };
 
 //{{AFX_INSERT_LOCATION}}

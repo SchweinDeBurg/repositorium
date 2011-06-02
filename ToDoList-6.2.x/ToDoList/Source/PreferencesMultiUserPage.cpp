@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // PreferencesMultiUserPage.cpp : implementation file
@@ -65,6 +65,7 @@ CPreferencesPageBase(CPreferencesMultiUserPage::IDD)
 {
 	//{{AFX_DATA_INIT(CPreferencesMultiUserPage)
 	m_bUse3rdPartySourceControl = FALSE;
+	m_bIncludeUserNameInCheckout = FALSE;
 	//}}AFX_DATA_INIT
 }
 
@@ -79,6 +80,7 @@ void CPreferencesMultiUserPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_NOCHANGETIME, m_cbNoEditTime);
 	DDX_Check(pDX, IDC_CHECKINONNOEDIT, m_bCheckinNoChange);
 	DDX_Check(pDX, IDC_USE3RDPARTYSOURCECTRL, m_bUse3rdPartySourceControl);
+	DDX_Check(pDX, IDC_INCLUDEUSERINCHECKOUT, m_bIncludeUserNameInCheckout);
 	//}}AFX_DATA_MAP
 	DDX_Control(pDX, IDC_REMOTEFILECHECK, m_cbRemoteFileCheck);
 	DDX_Check(pDX, IDC_PROMPTRELOADONWRITABLE, m_bPromptReloadOnWritable);
@@ -145,6 +147,7 @@ BOOL CPreferencesMultiUserPage::OnInitDialog()
 	GetDlgItem(IDC_CHECKOUTONCHECKIN)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl);
 	GetDlgItem(IDC_CHECKINONCLOSE)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl);
 	GetDlgItem(IDC_CHECKINONNOEDIT)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl);
+	GetDlgItem(IDC_INCLUDEUSERINCHECKOUT)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl);
 	GetDlgItem(IDC_NOCHANGETIME)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl && m_bCheckinNoChange);
 
 	GetDlgItem(IDC_READONLYRELOADOPTION)->EnableWindow(m_bPromptReloadOnWritable);
@@ -166,6 +169,7 @@ void CPreferencesMultiUserPage::OnEnablesourcecontrol()
 	GetDlgItem(IDC_CHECKOUTONCHECKIN)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl);
 	GetDlgItem(IDC_CHECKINONCLOSE)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl);
 	GetDlgItem(IDC_CHECKINONNOEDIT)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl);
+	GetDlgItem(IDC_INCLUDEUSERINCHECKOUT)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl);
 	GetDlgItem(IDC_NOCHANGETIME)->EnableWindow(m_bEnableSourceControl && !m_bUse3rdPartySourceControl && m_bCheckinNoChange);
 
 	// can't have simple source control and 3rd party source control
@@ -242,6 +246,7 @@ void CPreferencesMultiUserPage::LoadPreferences(const CPreferences& prefs)
 	m_nRemoteFileCheckFreq = prefs.GetProfileInt(_T("Preferences"), _T("RemoteFileCheckFrequency"), 30);
 	m_nCheckinNoEditTime = prefs.GetProfileInt(_T("Preferences"), _T("CheckinNoEditTime"), 1);
 	m_bCheckinNoChange = prefs.GetProfileInt(_T("Preferences"), _T("CheckinNoEdit"), TRUE);
+	m_bIncludeUserNameInCheckout = prefs.GetProfileInt(_T("Preferences"), _T("IncludeUserNameInCheckout"), FALSE);
 	m_bUse3rdPartySourceControl = !m_bEnableSourceControl && prefs.GetProfileInt(_T("Preferences"), _T("Use3rdPartySourceControl"), FALSE);
 }
 
@@ -260,6 +265,7 @@ void CPreferencesMultiUserPage::SavePreferences(CPreferences& prefs)
 	prefs.WriteProfileInt(_T("Preferences"), _T("RemoteFileCheckFrequency"), m_nRemoteFileCheckFreq);
 	prefs.WriteProfileInt(_T("Preferences"), _T("CheckinNoEditTime"), m_nCheckinNoEditTime);
 	prefs.WriteProfileInt(_T("Preferences"), _T("CheckinNoEdit"), m_bCheckinNoChange);
+	prefs.WriteProfileInt(_T("Preferences"), _T("IncludeUserNameInCheckout"), m_bIncludeUserNameInCheckout);
 	prefs.WriteProfileInt(_T("Preferences"), _T("Use3rdPartySourceControl"), m_bUse3rdPartySourceControl);
 }
 

@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2-6.1.10 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // PreferencesFilePage.cpp : implementation file
@@ -67,10 +67,10 @@ IMPLEMENT_DYNCREATE(CPreferencesFile2Page, CPreferencesPageBase)
 
 CPreferencesFile2Page::CPreferencesFile2Page(const CImportExportMgr* pExportMgr) :
 CPreferencesPageBase(CPreferencesFile2Page::IDD),
-m_eExportFolderPath(FES_FOLDERS | FES_COMBOSTYLEBTN),
-m_eSaveExportStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER)),
+m_eExportFolderPath(FES_FOLDERS | FES_COMBOSTYLEBTN | FES_RELATIVEPATHS),
+m_eSaveExportStylesheet(FES_COMBOSTYLEBTN | FES_RELATIVEPATHS, CEnString(IDS_XSLFILEFILTER)),
 m_pExportMgr(pExportMgr),
-m_eBackupLocation(FES_FOLDERS | FES_COMBOSTYLEBTN)
+m_eBackupLocation(FES_FOLDERS | FES_COMBOSTYLEBTN | FES_RELATIVEPATHS)
 {
 	//{{AFX_DATA_INIT(CPreferencesFile2Page)
 	m_nKeepBackups = 50;
@@ -200,9 +200,9 @@ BOOL CPreferencesFile2Page::OnInitDialog()
 	GetDlgItem(IDC_AUTOSAVEFREQUENCY)->EnableWindow(m_bAutoSave);
 	GetDlgItem(IDC_EXPORTTOFOLDER)->EnableWindow(m_bAutoExport);
 	GetDlgItem(IDC_EXPORTFOLDER)->EnableWindow(m_bAutoExport && m_bExportToFolder);
-	GetDlgItem(IDC_USESTYLESHEETFORSAVE)->EnableWindow(m_bAutoExport && !m_bOtherExport);
-	GetDlgItem(IDC_SAVEEXPORTSTYLESHEET)->EnableWindow(m_bAutoExport && m_bUseStylesheetForSaveExport);
 	GetDlgItem(IDC_HTMLEXPORT)->EnableWindow(m_bAutoExport);
+	GetDlgItem(IDC_USESTYLESHEETFORSAVE)->EnableWindow(m_bAutoExport && !m_bOtherExport);
+	GetDlgItem(IDC_SAVEEXPORTSTYLESHEET)->EnableWindow(m_bAutoExport && !m_bOtherExport && m_bUseStylesheetForSaveExport);
 	GetDlgItem(IDC_OTHEREXPORT)->EnableWindow(m_bAutoExport);
 	GetDlgItem(IDC_OTHEREXPORTERS)->EnableWindow(m_bAutoExport && m_bOtherExport);
 	GetDlgItem(IDC_EXPORTFILTERED)->EnableWindow(m_bAutoExport);
@@ -216,10 +216,6 @@ BOOL CPreferencesFile2Page::OnInitDialog()
 	}
 
 	m_cbOtherExporters.SetCurSel(m_nOtherExporter);
-
-	// init the stylesheet folder to point to the resource folder
-	CString sXslFolder = FileMisc::GetModuleFolder() + _T("Resources");
-	m_eSaveExportStylesheet.SetCurrentFolder(sXslFolder);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
@@ -250,6 +246,20 @@ void CPreferencesFile2Page::LoadPreferences(const CPreferences& prefs)
 	m_sExportFolderPath.TrimRight();
 
 	m_bAutoSave = (m_nAutoSaveFrequency > 0);
+
+	// set file edit directories and make paths relative
+	CString sFolder = FileMisc::GetAppFolder();
+
+	m_eExportFolderPath.SetCurrentFolder(sFolder);
+	m_sExportFolderPath = FileMisc::GetRelativePath(m_sExportFolderPath, sFolder, TRUE);
+
+	m_eBackupLocation.SetCurrentFolder(sFolder);
+	m_sBackupLocation = FileMisc::GetRelativePath(m_sBackupLocation, sFolder, TRUE);
+
+	sFolder = FileMisc::GetAppResourceFolder();
+
+	m_eSaveExportStylesheet.SetCurrentFolder(sFolder);
+	m_sSaveExportStylesheet = FileMisc::GetRelativePath(m_sSaveExportStylesheet, sFolder, FALSE);
 }
 
 void CPreferencesFile2Page::SavePreferences(CPreferences& prefs)
@@ -331,12 +341,11 @@ CString CPreferencesFile2Page::GetAutoExportFolderPath() const
 {
 	if (m_bAutoExport && m_bExportToFolder && !m_sExportFolderPath.IsEmpty())
 	{
-		return FileMisc::GetFullPath(m_sExportFolderPath, TRUE);
+		return FileMisc::GetFullPath(m_sExportFolderPath, FileMisc::GetAppFolder());
 	}
-	else
-	{
-		return _T("");
-	}
+
+	// else
+	return _T("");
 }
 
 void CPreferencesFile2Page::OnUsestylesheetforsave()
@@ -355,7 +364,6 @@ void CPreferencesFile2Page::OnHtmlexport()
 
 	GetDlgItem(IDC_USESTYLESHEETFORSAVE)->EnableWindow(m_bAutoExport && !m_bOtherExport);
 	GetDlgItem(IDC_SAVEEXPORTSTYLESHEET)->EnableWindow(m_bAutoExport && !m_bOtherExport && m_bUseStylesheetForSaveExport);
-	GetDlgItem(IDC_OTHEREXPORTERS)->EnableWindow(m_bAutoExport && !m_bOtherExport && m_bUseStylesheetForSaveExport);
 	GetDlgItem(IDC_OTHEREXPORTERS)->EnableWindow(m_bAutoExport && m_bOtherExport);
 
 	CPreferencesPageBase::OnControlChange();
@@ -367,7 +375,6 @@ void CPreferencesFile2Page::OnOtherexport()
 
 	GetDlgItem(IDC_USESTYLESHEETFORSAVE)->EnableWindow(m_bAutoExport && !m_bOtherExport);
 	GetDlgItem(IDC_SAVEEXPORTSTYLESHEET)->EnableWindow(m_bAutoExport && !m_bOtherExport && m_bUseStylesheetForSaveExport);
-	GetDlgItem(IDC_OTHEREXPORTERS)->EnableWindow(m_bAutoExport && !m_bOtherExport && m_bUseStylesheetForSaveExport);
 	GetDlgItem(IDC_OTHEREXPORTERS)->EnableWindow(m_bAutoExport && m_bOtherExport);
 
 	CPreferencesPageBase::OnControlChange();
@@ -377,9 +384,20 @@ CString CPreferencesFile2Page::GetSaveExportStylesheet() const
 {
 	if (m_bUseStylesheetForSaveExport && !m_sSaveExportStylesheet.IsEmpty())
 	{
-		return FileMisc::GetFullPath(m_sSaveExportStylesheet, TRUE);
+		return FileMisc::GetFullPath(m_sSaveExportStylesheet, FileMisc::GetAppResourceFolder());
 	}
 
-	//else
+	// else
+	return _T("");
+}
+
+CString CPreferencesFile2Page::GetBackupLocation() const
+{
+	if (m_bBackupOnSave)
+	{
+		return FileMisc::GetFullPath(m_sBackupLocation, FileMisc::GetAppFolder());
+	}
+
+	// else
 	return _T("");
 }

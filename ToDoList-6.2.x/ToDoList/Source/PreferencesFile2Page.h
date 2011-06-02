@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESFILE2PAGE_H__0A884806_5921_4C13_B368_6D14A441ADAC__INCLUDED_)
@@ -75,10 +75,7 @@ public:
 	{
 		return m_bBackupOnSave;
 	}
-	CString GetBackupLocation() const
-	{
-		return m_bBackupOnSave ? m_sBackupLocation : _T("");
-	}
+	CString GetBackupLocation() const;
 	int GetKeepBackupCount() const
 	{
 		return m_bBackupOnSave ? m_nKeepBackups : 0;
