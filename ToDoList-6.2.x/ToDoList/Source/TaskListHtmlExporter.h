@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // TaskFileHtmlExporter.h: interface for the CTaskListHtmlExporter class.
@@ -76,6 +76,7 @@ public:
 	}
 
 	bool Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
+	bool Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
 	void Release()
 	{
 		delete this;
@@ -86,12 +87,14 @@ protected:
 	BOOL STRIKETHRUDONE, ROUNDTIMEFRACTIONS;
 
 protected:
-	CString& ExportTask(const ITaskList6* pTasks, HTASKITEM hTask, int nDepth, int nPos, const CString& sParentPos, CString& sOutput) const;
-	CString FormatCharSet(const ITaskList6* pTasks) const;
+	CString& ExportTask(const ITaskList8* pTasks, HTASKITEM hTask, int nDepth, int nPos, const CString& sParentPos, CString& sOutput) const;
+	void InitConsts();
 
-	static BOOL FormatAttribute(const ITaskList6* pTasks, HTASKITEM hTask, LPCTSTR szAttribName,
+	CString FormatCharSet(const ITaskList8* pTasks) const;
+
+	static BOOL FormatAttribute(const ITaskList8* pTasks, HTASKITEM hTask, LPCTSTR szAttribName,
 		LPCTSTR szFormat, CString& sAttribText);
-	static BOOL FormatAttributeList(const ITaskList6* pTasks, HTASKITEM hTask,
+	static BOOL FormatAttributeList(const ITaskList8* pTasks, HTASKITEM hTask,
 		LPCTSTR szNumAttribName, LPCTSTR szAttribName,
 		LPCTSTR szFormat, CString& sAttribText);
 };

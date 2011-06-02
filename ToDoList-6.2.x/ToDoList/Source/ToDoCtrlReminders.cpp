@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // ToDoCtrlReminders.cpp : implementation file
@@ -201,7 +201,7 @@ void CToDoCtrlReminders::SaveAndRemoveReminders(const CFilteredToDoCtrl& tdc)
 	// nRem is the total number of reminders for all tasklists
 	// nRemCount is the number of reminders for 'tdc'
 	int nRemCount = 0, nRem = m_aReminders.GetSize();
-	CString sFileKey = _T("Reminders\\") + CPreferences::KeyFromFile(tdc.GetFilePath(), FALSE);
+	CString sFileKey = tdc.GetPreferencesKey(_T("Reminders"));
 
 	while (nRem--)
 	{
@@ -246,7 +246,7 @@ void CToDoCtrlReminders::SaveAndRemoveReminders(const CFilteredToDoCtrl& tdc)
 void CToDoCtrlReminders::LoadReminders(const CFilteredToDoCtrl& tdc)
 {
 	CPreferences prefs;
-	CString sFileKey = _T("Reminders\\") + CPreferences::KeyFromFile(tdc.GetFilePath(), FALSE);
+	CString sFileKey = tdc.GetPreferencesKey(_T("Reminders"));
 	int nRemCount = prefs.GetProfileInt(sFileKey, _T("NumReminders"));
 
 	for (int nRem = 0; nRem < nRemCount; nRem++)
