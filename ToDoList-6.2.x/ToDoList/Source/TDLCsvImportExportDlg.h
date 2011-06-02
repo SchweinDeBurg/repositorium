@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDLCSVIMPORTEXPORTDLG_H__3230FA12_9619_426A_9D8A_FC4D76A56596__INCLUDED_)
@@ -52,7 +53,7 @@
 
 #include "TDLCsvAttributeSetupListCtrl.h"
 
-#include "..\shared\fileedit.h"
+#include "../../Common/FileEdit.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CTDLCsvImportExportDlg dialog

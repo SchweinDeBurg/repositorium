@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_EXPORTDLG_H__2F5B4FD1_E968_464E_9734_AC995DB13B35__INCLUDED_)
@@ -51,8 +52,8 @@
 //
 
 #include "TaskSelectionDlg.h"
-#include "..\shared\fileedit.h"
-#include "..\shared\importexportmgr.h"
+#include "../../Common/FileEdit.h"
+#include "../../Common/ImportExportMgr.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CExportDlg dialog

@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2-6.1.7 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // TaskListCsvExporter.h: interface for the CTaskListCsvExporter class.
@@ -52,6 +52,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "TDCEnum.h"
+#include "TDLCsvImportExportDlg.h"
 
 #include "../../Common/ITaskList.h"
 #include "../../Common/IImportExport.h"
@@ -76,6 +79,7 @@ public:
 	}
 
 	bool Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
+	bool Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
 	void Release()
 	{
 		delete this;
@@ -85,33 +89,44 @@ protected:
 	BOOL ROUNDTIMEFRACTIONS;
 	LPCTSTR DELIM;
 	CString INDENT;
-	CStringArray m_aAttribs;
+
+	CTDCCsvColumnMapping m_aColumnMapping;
 
 protected:
-	CString& ExportTask(const ITaskList6* pTasks, HTASKITEM hTask, int nDepth,
-		int nPos, const CString& sParentPos, CString& sOutput) const;
+	CString& ExportTask(const ITaskList8* pTasks, HTASKITEM hTask, int nDepth,
+			int nPos, const CString& sParentPos, CString& sOutput) const;
+	void InitConsts();
+
+	bool ExportOutput(const char* szDestFilePath, const CString& sOutput);
+
 	CString ColumnHeadings() const;
+	CString CheckGetColumnHeading(TDC_ATTRIBUTE attrib) const;
 
-	enum ATTRIBTYPE { AT_TEXT, AT_COST, AT_TIME };
+	void AppendAttribute(const ITaskList8* pTasks, HTASKITEM hTask,
+			TDC_ATTRIBUTE attrib,
+			LPCTSTR szAttribName, LPCTSTR szAltAttribName,
+			CString& sOutput, LPCTSTR szPrefix = NULL) const;
+	void AppendAttribute(LPCTSTR szAttrib, CString& sOutput, BOOL bForceQuoted = FALSE) const;
+	void AppendAttribute(double dAttrib, LPCTSTR szFormat, CString& sOutput) const;
+	void AppendAttribute(int nAttrib, LPCTSTR szFormat, CString& sOutput) const;
+	void AppendComments(const ITaskList8* pTasks, HTASKITEM hTask, CString& sOutput) const;
+	void AppendAttributeList(const ITaskList8* pTasks, HTASKITEM hTask,
+			TDC_ATTRIBUTE attrib,
+			LPCTSTR szNumAttribName, LPCTSTR szAttribName,
+			CString& sOutput) const;
 
-	void AppendAttribute(const ITaskList6* pTasks, HTASKITEM hTask,
-		LPCTSTR szAttribName, LPCTSTR szAltAttribName,
-		CString& sOutput, ATTRIBTYPE at = AT_TEXT, LPCTSTR szPrefix = NULL) const;
+	int AttributeIndex(TDC_ATTRIBUTE attrib) const;
+	BOOL WantAttribute(TDC_ATTRIBUTE attrib) const
+	{
+		return (AttributeIndex(attrib) != -1);
+	}
 
-	void AppendAttribute(LPCTSTR szAttrib, CString& sOutput, ATTRIBTYPE at = AT_TEXT, BOOL bForceQuoted = FALSE) const;
-	void AppendComments(const ITaskList6* pTasks, HTASKITEM hTask, CString& sOutput) const;
+	static int BuildAttribList(const ITaskList8* pTasks, HTASKITEM hTask, CTDCAttributeArray& aAttributes);
+	static void CheckAddAttribtoList(const ITaskList8* pTasks, HTASKITEM hTask, TDC_ATTRIBUTE attrib,
+			LPCTSTR szAttribName, CTDCAttributeArray& aAttrib);
 
-	int BuildAttribList(const ITaskList6* pTasks, HTASKITEM hTask);
-	BOOL WantAttribute(LPCTSTR szAttribName) const;
-	void CheckAddAttribtoList(const ITaskList6* pTasks, HTASKITEM hTask, LPCTSTR szAttribName);
-
-	CString CheckGetColumnHeading(LPCTSTR szAttribName, UINT nIDHeading) const;
-
-	void AppendAttributeList(const ITaskList6* pTasks, HTASKITEM hTask,
-		LPCTSTR szNumAttribName, LPCTSTR szAttribName,
-		CString& sOutput) const;
 	CString CalcIndent(int nDepth) const;
-	void RemoveTrailingDelimiter(CString& sOutput) const;
+
 };
 
 #endif // !defined(AFX_TASKLISTCSVEXPORTER_H__ADF211CB_FBD2_42A2_AD51_DFF58E566753__INCLUDED_)

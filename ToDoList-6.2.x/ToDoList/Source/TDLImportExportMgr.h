@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TDLImportExportMgr.h: interface for the CTDLImportExportMgr class.
@@ -54,7 +55,8 @@
 
 #include "../../Common/ImportExportMgr.h"
 
-enum { EXP2HTML, EXP2TXT, EXP2CSV };
+enum { EXPTOHTML, EXPTOTXT, EXPTOCSV };
+enum { IMPFROMCSV };
 
 class CTDLImportExportMgr : public CImportExportMgr
 {
@@ -63,13 +65,21 @@ public:
 	virtual ~CTDLImportExportMgr();
 
 	BOOL ExportTaskListToHtml(const ITaskList* pSrcTasks, LPCTSTR szDestFile) const;
+	BOOL ExportTaskListsToHtml(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile) const;
 	CString ExportTaskListToHtml(const ITaskList* pSrcTasks) const;
+	CString ExportTaskListsToHtml(const IMultiTaskList* pSrcTasks) const;
 
 	BOOL ExportTaskListToText(const ITaskList* pSrcTasks, LPCTSTR szDestFile) const;
+	BOOL ExportTaskListsToText(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile) const;
 	CString ExportTaskListToText(const ITaskList* pSrcTasks) const;
+	CString ExportTaskListsToText(const IMultiTaskList* pSrcTasks) const;
 
 	BOOL ExportTaskListToCsv(const ITaskList* pSrcTasks, LPCTSTR szDestFile) const;
+	BOOL ExportTaskListsToCsv(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile) const;
 	CString ExportTaskListToCsv(const ITaskList* pSrcTasks) const;
+	CString ExportTaskListsToCsv(const IMultiTaskList* pSrcTasks) const;
+
+	BOOL ImportTaskListFromCsv(LPCTSTR szSrcFile, ITaskList* pDestTasks) const;
 
 	void Initialize();
 };

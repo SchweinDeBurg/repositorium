@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TDLImportExportMgr.cpp: implementation of the CTDLImportExportMgr class.
@@ -51,12 +52,32 @@
 #include "TasklistHtmlExporter.h"
 #include "TaskListTxtExporter.h"
 #include "TaskListCsvExporter.h"
+#include "TaskListCsvImporter.h"
+
+#include "../../../CodeProject/Source/FileMisc.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
+
+///////////////////////////////////////////////////////////////////////
+
+#define ExportTaskListTo(FUNCTION)                                  \
+                                                                    \
+    TCHAR szTempFile[MAX_PATH], szTempPath[MAX_PATH];               \
+                                                                    \
+    if (!::GetTempPath(MAX_PATH, szTempPath) ||                     \
+        !::GetTempFileName(szTempPath, _T("tdl"), 0, szTempFile))   \
+        return _T("");                                              \
+                                                                    \
+    CString sFile;                                                  \
+                                                                    \
+    if (FUNCTION(pSrcTasks, szTempFile))                            \
+        FileMisc::LoadFile(szTempFile, sFile);                      \
+                                                                    \
+    ::DeleteFile(szTempFile);
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -75,9 +96,11 @@ void CTDLImportExportMgr::Initialize()
 	// add html and text exporters first
 	if (!m_bInitialized)
 	{
-		m_aExporters.InsertAt(EXP2HTML, new CTaskListHtmlExporter);
-		m_aExporters.InsertAt(EXP2TXT, new CTaskListTxtExporter);
-		m_aExporters.InsertAt(EXP2CSV, new CTaskListCsvExporter);
+		m_aExporters.InsertAt(EXPTOHTML, new CTaskListHtmlExporter);
+		m_aExporters.InsertAt(EXPTOTXT, new CTaskListTxtExporter);
+		m_aExporters.InsertAt(EXPTOCSV, new CTaskListCsvExporter);
+
+		m_aImporters.InsertAt(IMPFROMCSV, new CTaskListCsvImporter);
 	}
 
 	CImportExportMgr::Initialize();
@@ -85,108 +108,71 @@ void CTDLImportExportMgr::Initialize()
 
 BOOL CTDLImportExportMgr::ExportTaskListToHtml(const ITaskList* pSrcTasks, LPCTSTR szDestFile) const
 {
-	return ExportTaskList(pSrcTasks, szDestFile, EXP2HTML, FALSE);
+	return ExportTaskList(pSrcTasks, szDestFile, EXPTOHTML, FALSE);
 }
 
 CString CTDLImportExportMgr::ExportTaskListToHtml(const ITaskList* pSrcTasks) const
 {
-	TCHAR szTempFile[MAX_PATH], szTempPath[MAX_PATH];
+	ExportTaskListTo(ExportTaskListToHtml)
+	return sFile;
+}
 
-	if (!::GetTempPath(MAX_PATH, szTempPath) ||
-		!::GetTempFileName(szTempPath, _T("tdl"), 0, szTempFile))
-	{
-		return _T("");
-	}
+BOOL CTDLImportExportMgr::ExportTaskListsToHtml(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile) const
+{
+	return ExportTaskLists(pSrcTasks, szDestFile, EXPTOHTML, FALSE);
+}
 
-	CString sFile;
-
-	if (ExportTaskListToHtml(pSrcTasks, szTempFile))
-	{
-		CStdioFile file;
-
-		if (file.Open(szTempFile, CFile::modeRead))
-		{
-			CString sLine;
-
-			while (file.ReadString(sLine))
-			{
-				sFile += sLine;
-			}
-		}
-	}
-
-	::DeleteFile(szTempFile);
+CString CTDLImportExportMgr::ExportTaskListsToHtml(const IMultiTaskList* pSrcTasks) const
+{
+	ExportTaskListTo(ExportTaskListsToHtml)
 	return sFile;
 }
 
 BOOL CTDLImportExportMgr::ExportTaskListToText(const ITaskList* pSrcTasks, LPCTSTR szDestFile) const
 {
-	return ExportTaskList(pSrcTasks, szDestFile, EXP2TXT, FALSE);
+	return ExportTaskList(pSrcTasks, szDestFile, EXPTOTXT, FALSE);
 }
 
 CString CTDLImportExportMgr::ExportTaskListToText(const ITaskList* pSrcTasks) const
 {
-	TCHAR szTempFile[MAX_PATH], szTempPath[MAX_PATH];
+	ExportTaskListTo(ExportTaskListToText)
+	return sFile;
+}
 
-	if (!::GetTempPath(MAX_PATH, szTempPath) ||
-		!::GetTempFileName(szTempPath, _T("tdl"), 0, szTempFile))
-	{
-		return _T("");
-	}
+BOOL CTDLImportExportMgr::ExportTaskListsToText(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile) const
+{
+	return ExportTaskLists(pSrcTasks, szDestFile, EXPTOTXT, FALSE);
+}
 
-	CString sFile;
-
-	if (ExportTaskListToText(pSrcTasks, szTempFile))
-	{
-		CStdioFile file;
-
-		if (file.Open(szTempFile, CFile::modeRead))
-		{
-			CString sLine;
-
-			while (file.ReadString(sLine))
-			{
-				sFile += sLine + _T("\n");
-			}
-		}
-	}
-
-	::DeleteFile(szTempFile);
+CString CTDLImportExportMgr::ExportTaskListsToText(const IMultiTaskList* pSrcTasks) const
+{
+	ExportTaskListTo(ExportTaskListsToText)
 	return sFile;
 }
 
 BOOL CTDLImportExportMgr::ExportTaskListToCsv(const ITaskList* pSrcTasks, LPCTSTR szDestFile) const
 {
-	return ExportTaskList(pSrcTasks, szDestFile, EXP2CSV, FALSE);
+	return ExportTaskList(pSrcTasks, szDestFile, EXPTOCSV, FALSE);
 }
 
 CString CTDLImportExportMgr::ExportTaskListToCsv(const ITaskList* pSrcTasks) const
 {
-	TCHAR szTempFile[MAX_PATH], szTempPath[MAX_PATH];
-
-	if (!::GetTempPath(MAX_PATH, szTempPath) ||
-		!::GetTempFileName(szTempPath, _T("tdl"), 0, szTempFile))
-	{
-		return _T("");
-	}
-
-	CString sFile;
-
-	if (ExportTaskListToCsv(pSrcTasks, szTempFile))
-	{
-		CStdioFile file;
-
-		if (file.Open(szTempFile, CFile::modeRead))
-		{
-			CString sLine;
-
-			while (file.ReadString(sLine))
-			{
-				sFile += sLine + _T("\n");
-			}
-		}
-	}
-
-	::DeleteFile(szTempFile);
+	ExportTaskListTo(ExportTaskListToCsv)
 	return sFile;
+}
+
+BOOL CTDLImportExportMgr::ExportTaskListsToCsv(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile) const
+{
+	return ExportTaskLists(pSrcTasks, szDestFile, EXPTOCSV, FALSE);
+}
+
+CString CTDLImportExportMgr::ExportTaskListsToCsv(const IMultiTaskList* pSrcTasks) const
+{
+	ExportTaskListTo(ExportTaskListsToCsv)
+	return sFile;
+}
+
+BOOL CTDLImportExportMgr::ImportTaskListFromCsv(LPCTSTR szSrcFile, ITaskList* pDestTasks) const
+{
+	return ImportTaskList(szSrcFile, pDestTasks, IMPFROMCSV);
 }
