@@ -39,19 +39,20 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // ExportDlg.cpp : implementation file
 //
 
 #include "StdAfx.h"
-#include "todolist.h"
+#include "ToDoListApp.h"
 #include "TDLExportDlg.h"
 
-#include "..\shared\filemisc.h"
-#include "..\shared\enstring.h"
-#include "..\shared\dialoghelper.h"
-#include "..\shared\preferences.h"
+#include "../../../CodeProject/Source/FileMisc.h"
+#include "../../../CodeProject/Source/EnString.h"
+#include "../../../CodeProject/Source/DialogHelper.h"
+#include "../../Common/Preferences.h"
 
 #include <shlwapi.h>
 
@@ -73,7 +74,7 @@ CTDLExportDlg::CTDLExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, 
 	  m_bSingleTaskList(bSingleTaskList),
 	  m_sFilePath(szFilePath), m_sOrgFilePath(szFilePath),
 	  m_sFolderPath(szFolderPath), m_sOrgFolderPath(szFolderPath),
-	  m_taskSel("Exporting", bShowSubtaskCheckbox, bVisibleColumnsOnly),
+	  m_taskSel(_T("Exporting"), bShowSubtaskCheckbox, bVisibleColumnsOnly),
 	  m_eExportPath(FES_COMBOSTYLEBTN | FES_SAVEAS),
 	  m_nFormatOption(0)
 {
@@ -90,10 +91,10 @@ CTDLExportDlg::CTDLExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, 
 	}
 	else
 	{
-		m_nExportOption = prefs.GetProfileInt("Exporting", "ExportOption", ACTIVETASKLIST);
+		m_nExportOption = prefs.GetProfileInt(_T("Exporting"), _T("ExportOption"), ACTIVETASKLIST);
 	}
 
-	m_nFormatOption = prefs.GetProfileInt("Exporting", "FormatOption", 0);
+	m_nFormatOption = prefs.GetProfileInt(_T("Exporting"), _T("FormatOption"), 0);
 
 	if (m_nFormatOption >= mgr.GetNumExporters())
 	{
@@ -102,7 +103,7 @@ CTDLExportDlg::CTDLExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, 
 
 	if (m_sFolderPath.IsEmpty())
 	{
-		m_sFolderPath = prefs.GetProfileString("Exporting", "LastFolder");
+		m_sFolderPath = prefs.GetProfileString(_T("Exporting"), _T("LastFolder"));
 	}
 
 	if (m_bSingleTaskList || m_nExportOption == ACTIVETASKLIST || m_bExportOneFile)
@@ -202,7 +203,7 @@ BOOL CTDLExportDlg::OnInitDialog()
 		}
 		else
 		{
-			sFormat.Format("%s (*.%s)", sExporter, sFileExt);
+			sFormat.Format(_T("%s (*.%s)"), sExporter, sFileExt);
 		}
 
 		m_cbFormat.AddString(sFormat);
@@ -282,7 +283,7 @@ void CTDLExportDlg::OnSelchangeFormatoptions()
 	}
 	else // disable path edit and remove file path
 	{
-		m_eExportPath.SetWindowText("");
+		m_eExportPath.SetWindowText(_T(""));
 		m_eExportPath.EnableWindow(FALSE);
 	}
 }
@@ -392,21 +393,21 @@ void CTDLExportDlg::OnOK()
 	}
 
 	CPreferences prefs;
-	prefs.WriteProfileInt("Exporting", "FormatOption", m_nFormatOption);
+	prefs.WriteProfileInt(_T("Exporting"), _T("FormatOption"), m_nFormatOption);
 
 	if (!m_bSingleTaskList)
 	{
-		prefs.WriteProfileInt("Exporting", "ExportOption", m_nExportOption);
+		prefs.WriteProfileInt(_T("Exporting"), _T("ExportOption"), m_nExportOption);
 
 		if (bExporterHasFileExt)
 		{
 			if (m_nExportOption == ALLTASKLISTS)
 			{
-				prefs.WriteProfileString("Exporting", "LastFolder", m_sExportPath);
+				prefs.WriteProfileString(_T("Exporting"), _T("LastFolder"), m_sExportPath);
 			}
 			else
 			{
-				prefs.WriteProfileString("Exporting", "LastFolder", m_sFolderPath);
+				prefs.WriteProfileString(_T("Exporting"), _T("LastFolder"), m_sFolderPath);
 			}
 		}
 	}
@@ -487,5 +488,5 @@ CString CTDLExportDlg::GetExportPath()
 	}
 
 	// else
-	return "";
+	return _T("");
 }
