@@ -29,7 +29,7 @@
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
 //      --brackets=break
 //      --add-brackets
@@ -111,30 +111,30 @@ BOOL CLightBoxMgr::OnCallWndProc(const MSG& msg)
 	switch (msg.message)
 	{
 	case WM_CREATE:
-	{
-		CWnd* pWnd = CWnd::FromHandle(msg.hwnd);
-		AttachLightBox(pWnd);
-	}
-	break;
+		{
+			CWnd* pWnd = CWnd::FromHandle(msg.hwnd);
+			AttachLightBox(pWnd);
+		}
+		break;
 
 
 	case WM_NCDESTROY:
-	{
-		CWnd* pWnd = CWnd::FromHandle(msg.hwnd);
-
-		if ((pWnd->GetStyle() & WS_CAPTION) == WS_CAPTION)
 		{
+			CWnd* pWnd = CWnd::FromHandle(msg.hwnd);
 
-			CLightBox* pCtrl = NULL;
-
-			if (m_mapCtrls.Lookup(msg.hwnd, pCtrl))
+			if ((pWnd->GetStyle() & WS_CAPTION) == WS_CAPTION)
 			{
-				delete pCtrl;
-				m_mapCtrls.RemoveKey(msg.hwnd);
+
+				CLightBox* pCtrl = NULL;
+
+				if (m_mapCtrls.Lookup(msg.hwnd, pCtrl))
+				{
+					delete pCtrl;
+					m_mapCtrls.RemoveKey(msg.hwnd);
+				}
 			}
 		}
-	}
-	break;
+		break;
 	}
 
 	return FALSE; // to continue routing

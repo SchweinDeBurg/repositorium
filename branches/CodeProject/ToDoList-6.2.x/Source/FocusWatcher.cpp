@@ -37,7 +37,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -67,15 +67,15 @@ BOOL CFocusWatcher::Initialize(CWnd* pMainWnd)
 }
 
 BOOL CFocusWatcher::OnCbt(int nCode, WPARAM wParam, LPARAM lParam)
-{   
-	ASSERT (m_hCbtHook);
+{
+	ASSERT(m_hCbtHook);
 
 	if (nCode == HCBT_SETFOCUS)
 	{
 		//ASSERT_VALID(m_pMainWnd);
 		m_pMainWnd->SendMessage(WM_FW_FOCUSCHANGE, wParam, lParam);
 	}
-	
+
 	return FALSE; // to continue routing
 }
 
