@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // UIThemeFile.h: interface for the CUIThemeFile class.
@@ -53,20 +54,22 @@
 #endif // _MSC_VER > 1000
 
 #include "../../Common/UITheme.h"
-#include "../../Common/XmlFile.h"
 
-class CUIThemeFile : public CXmlFile
+class CXmlFile;
+
+class CUIThemeFile : public UITHEME
 {
 public:
 	CUIThemeFile();
 	virtual ~CUIThemeFile();
 
 	BOOL LoadThemeFile(LPCTSTR szThemeFile);
-	void GetTheme(UITHEME& theme) const;
+	void Reset();
 
 protected:
-	COLORREF GetColor(LPCTSTR szName) const;
-	UI_STYLE GetStyle() const;
+	static COLORREF GetColor(const CXmlFile& xiFile, LPCTSTR szName, int nColorID = -1);
+	static UI_STYLE GetStyle(const CXmlFile& xiFile);
+
 };
 
 #endif // !defined(AFX_UITHEMEFILE_H__A652A09A_AB3F_4B65_A3D9_B4B975A36195__INCLUDED_)
