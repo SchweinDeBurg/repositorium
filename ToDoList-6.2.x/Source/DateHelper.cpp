@@ -29,7 +29,7 @@
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
 //      --brackets=break
 //      --add-brackets
@@ -219,55 +219,55 @@ double CDateHelper::GetDate(DH_DATE nDate)
 		break;
 
 	case DHD_ENDTHISWEEK:
-	{
-		// we must get the locale info to find out when this
-		// user's week starts
-		date = COleDateTime::GetCurrentTime();
-
-		// increment the date until we hit the last day of the week
-		// note: we could have kept checking date.GetDayOfWeek but
-		// it's a lot of calculation that's just not necessary
-		int nLastDOW = LastDayOfWeek();
-		int nDOW = date.GetDayOfWeek();
-
-		while (nDOW != nLastDOW)
 		{
-			date += 1;
-			nDOW = NextDayOfWeek(nDOW);
+			// we must get the locale info to find out when this
+			// user's week starts
+			date = COleDateTime::GetCurrentTime();
+
+			// increment the date until we hit the last day of the week
+			// note: we could have kept checking date.GetDayOfWeek but
+			// it's a lot of calculation that's just not necessary
+			int nLastDOW = LastDayOfWeek();
+			int nDOW = date.GetDayOfWeek();
+
+			while (nDOW != nLastDOW)
+			{
+				date += 1;
+				nDOW = NextDayOfWeek(nDOW);
+			}
 		}
-	}
-	break;
+		break;
 
 	case DHD_ENDNEXTWEEK:
 		return GetDate(DHD_ENDTHISWEEK) + 7;
 
 	case DHD_ENDTHISMONTH:
-	{
-		date = COleDateTime::GetCurrentTime();
-		int nThisMonth = date.GetMonth();
-
-		while (date.GetMonth() == nThisMonth)
 		{
-			date += 20;   // much quicker than doing it one day at a time
-		}
+			date = COleDateTime::GetCurrentTime();
+			int nThisMonth = date.GetMonth();
 
-		date -= date.GetDay(); // because we went into next month
-	}
-	break;
+			while (date.GetMonth() == nThisMonth)
+			{
+				date += 20;   // much quicker than doing it one day at a time
+			}
+
+			date -= date.GetDay(); // because we went into next month
+		}
+		break;
 
 	case DHD_ENDNEXTMONTH:
-	{
-		date = GetDate(DHD_ENDTHISMONTH) + 1; // first day of next month
-		int nNextMonth = date.GetMonth();
-
-		while (date.GetMonth() == nNextMonth)
 		{
-			date += 20;   // much quicker than doing it one day at a time
-		}
+			date = GetDate(DHD_ENDTHISMONTH) + 1; // first day of next month
+			int nNextMonth = date.GetMonth();
 
-		date -= date.GetDay(); // because we went into next month + 1
-	}
-	break;
+			while (date.GetMonth() == nNextMonth)
+			{
+				date += 20;   // much quicker than doing it one day at a time
+			}
+
+			date -= date.GetDay(); // because we went into next month + 1
+		}
+		break;
 
 	case DHD_ENDTHISYEAR:
 		date = COleDateTime::GetCurrentTime(); // for current year
@@ -523,46 +523,46 @@ void CDateHelper::OffsetDate(COleDateTime& date, int nAmount, DH_UNITS nUnits)
 			break;
 
 		case DHU_MONTHS:
-		{
-			SYSTEMTIME st;
-			date.GetAsSystemTime(st);
-
-			// convert amount to years and months
-			st.wYear = (WORD)((int)st.wYear + (nAmount / 12));
-			st.wMonth = (WORD)((int)st.wMonth + (nAmount % 12));
-
-			// handle overflow
-			if (st.wMonth > 12)
 			{
-				st.wYear++;
-				st.wMonth -= 12;
-			}
-			else if (st.wMonth < 1)
-			{
-				st.wYear--;
-				st.wMonth += 12;
-			}
+				SYSTEMTIME st;
+				date.GetAsSystemTime(st);
 
-			// clip dates to the end of the month
-			st.wDay = min(st.wDay, (WORD)GetDaysInMonth(st.wMonth, st.wYear));
+				// convert amount to years and months
+				st.wYear = (WORD)((int)st.wYear + (nAmount / 12));
+				st.wMonth = (WORD)((int)st.wMonth + (nAmount % 12));
 
-			// update time
-			date = COleDateTime(st);
-		}
-		break;
+				// handle overflow
+				if (st.wMonth > 12)
+				{
+					st.wYear++;
+					st.wMonth -= 12;
+				}
+				else if (st.wMonth < 1)
+				{
+					st.wYear--;
+					st.wMonth += 12;
+				}
+
+				// clip dates to the end of the month
+				st.wDay = min(st.wDay, (WORD)GetDaysInMonth(st.wMonth, st.wYear));
+
+				// update time
+				date = COleDateTime(st);
+			}
+			break;
 
 		case DHU_YEARS:
-		{
-			SYSTEMTIME st;
-			date.GetAsSystemTime(st);
+			{
+				SYSTEMTIME st;
+				date.GetAsSystemTime(st);
 
-			// update year
-			st.wYear = (WORD)((int)st.wYear + nAmount);
+				// update year
+				st.wYear = (WORD)((int)st.wYear + nAmount);
 
-			// update time
-			date = COleDateTime(st);
-		}
-		break;
+				// update time
+				date = COleDateTime(st);
+			}
+			break;
 		}
 	}
 }

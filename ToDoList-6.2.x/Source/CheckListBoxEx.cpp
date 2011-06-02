@@ -29,7 +29,7 @@
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
 //      --brackets=break
 //      --add-brackets
@@ -173,8 +173,7 @@ LRESULT CCheckListBoxEx::OnSetFont(WPARAM , LPARAM)
 	Default();
 
 	// copied from CCheckListBox::OnSetFont
-	if ((GetStyle() & (LBS_OWNERDRAWFIXED | LBS_HASSTRINGS))
-		== (LBS_OWNERDRAWFIXED | LBS_HASSTRINGS))
+	if ((GetStyle() & (LBS_OWNERDRAWFIXED | LBS_HASSTRINGS)) == (LBS_OWNERDRAWFIXED | LBS_HASSTRINGS))
 	{
 		int nMinHeight = CalcMinimumItemHeight();
 		SetItemHeight(0, max(nMinHeight, (int)m_nImageHeight));

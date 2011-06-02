@@ -29,7 +29,7 @@
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
 //      --brackets=break
 //      --add-brackets
@@ -534,9 +534,9 @@ void CAutoComboBox::HandleReturnKey()
 		int nAdd = AddUniqueItem(sEdit);
 
 		if (nAdd != CB_ERR)
-			CComboBox::GetParent()->SendMessage(WM_ACB_ITEMADDED,
-			MAKEWPARAM(CWnd::GetDlgCtrlID(), nAdd),
-			(LPARAM)(LPCTSTR)sEdit);
+		{
+			CComboBox::GetParent()->SendMessage(WM_ACB_ITEMADDED, MAKEWPARAM(CWnd::GetDlgCtrlID(), nAdd), (LPARAM)(LPCTSTR)sEdit);
+		}
 		else // send a possible selection change
 		{
 			if (!sEdit.IsEmpty())

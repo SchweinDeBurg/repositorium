@@ -29,7 +29,7 @@
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
 //      --brackets=break
 //      --add-brackets
@@ -628,28 +628,28 @@ void CTreeCtrlHelper::SetMinDistanceToEdge(HTREEITEM htiFrom, TCH_EDGE nToEdge, 
 	switch (nToEdge)
 	{
 	case TCHE_BOTTOM:
-	{
-		int nBorder = GetDistanceToEdge(htiFrom, TCHE_BOTTOM);
-
-		while (nBorder < nItems)
 		{
-			m_tree.SendMessage(WM_VSCROLL, SB_LINEDOWN);
-			nBorder++;
+			int nBorder = GetDistanceToEdge(htiFrom, TCHE_BOTTOM);
+
+			while (nBorder < nItems)
+			{
+				m_tree.SendMessage(WM_VSCROLL, SB_LINEDOWN);
+				nBorder++;
+			}
 		}
-	}
-	break;
+		break;
 
 	case TCHE_TOP:
-	{
-		int nBorder = GetDistanceToEdge(htiFrom, TCHE_TOP);
-
-		while (nBorder < nItems)
 		{
-			m_tree.SendMessage(WM_VSCROLL, SB_LINEUP);
-			nBorder++;
+			int nBorder = GetDistanceToEdge(htiFrom, TCHE_TOP);
+
+			while (nBorder < nItems)
+			{
+				m_tree.SendMessage(WM_VSCROLL, SB_LINEUP);
+				nBorder++;
+			}
 		}
-	}
-	break;
+		break;
 	}
 }
 

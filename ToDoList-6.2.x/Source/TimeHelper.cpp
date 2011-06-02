@@ -29,7 +29,7 @@
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
 //      --brackets=break
 //      --add-brackets
@@ -319,7 +319,9 @@ CString CTimeHelper::FormatTimeHMS(double dTime, int nUnits, int nLeftOverUnits,
 			sTime.Format(_T("%d%c"), (int)dTime, GetUnits(nUnits));
 		}
 		else
+		{
 			sTime.Format(_T("%d%c%d%c"), (int)dTime, GetUnits(nUnits), (int)dLeftOver, GetUnits(nLeftOverUnits));
+		}
 	}
 	else
 	{

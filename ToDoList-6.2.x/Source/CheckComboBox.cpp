@@ -29,7 +29,7 @@
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
 //      --brackets=break
 //      --add-brackets
@@ -417,52 +417,52 @@ LRESULT CCheckComboBox::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM 
 		break;
 
 	case WM_LBUTTONDOWN:
-	{
-		CPoint pt(lp);
-		int nItem = GetCount();
-
-		while (nItem--)
 		{
-			CRect rItem;
-			::SendMessage(hRealWnd, LB_GETITEMRECT, nItem, (LPARAM)(LPRECT)rItem);
+			CPoint pt(lp);
+			int nItem = GetCount();
 
-			if (rItem.PtInRect(pt))
+			while (nItem--)
 			{
-				// toggle check state
-				::InvalidateRect(hRealWnd, rItem, FALSE);
-				SetCheck(nItem, !GetCheck(nItem));
-				m_bEditChange = TRUE;
+				CRect rItem;
+				::SendMessage(hRealWnd, LB_GETITEMRECT, nItem, (LPARAM)(LPRECT)rItem);
 
-				// Notify that selection has changed
-				if (IsType(CBS_DROPDOWNLIST))
+				if (rItem.PtInRect(pt))
 				{
-					NotifyParent(CBN_SELCHANGE);
-				}
+					// toggle check state
+					::InvalidateRect(hRealWnd, rItem, FALSE);
+					SetCheck(nItem, !GetCheck(nItem));
+					m_bEditChange = TRUE;
 
-				return 0;
+					// Notify that selection has changed
+					if (IsType(CBS_DROPDOWNLIST))
+					{
+						NotifyParent(CBN_SELCHANGE);
+					}
+
+					return 0;
+				}
 			}
 		}
-	}
-	// Do the default handling now (such as close the popup
-	// window when clicked outside)
-	break;
+		// Do the default handling now (such as close the popup
+		// window when clicked outside)
+		break;
 
 	case WM_LBUTTONUP:
-	{
-		// Don't do anything here. This causes the combobox popup
-		// windows to remain open after a selection has been made
-		if (IsType(CBS_SIMPLE))
 		{
-			return 0;
+			// Don't do anything here. This causes the combobox popup
+			// windows to remain open after a selection has been made
+			if (IsType(CBS_SIMPLE))
+			{
+				return 0;
+			}
+			else
+			{
+				LRESULT lr = CSubclasser::ScWindowProc(hRealWnd, msg, wp, lp);
+				SetCheck(0, GetCheck(0));
+				return lr;
+			}
 		}
-		else
-		{
-			LRESULT lr = CSubclasser::ScWindowProc(hRealWnd, msg, wp, lp);
-			SetCheck(0, GetCheck(0));
-			return lr;
-		}
-	}
-	break;
+		break;
 	}
 
 	return CSubclasser::ScWindowProc(hRealWnd, msg, wp, lp);

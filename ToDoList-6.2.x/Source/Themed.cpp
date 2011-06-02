@@ -29,7 +29,7 @@
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
 //      --brackets=break
 //      --add-brackets
@@ -621,72 +621,72 @@ BOOL CThemed::GetThemeClassPartState(int nType, int nState, CString& sThClass, i
 	switch (nType)
 	{
 	case DFC_BUTTON:
-	{
-		sThClass = _T("BUTTON");
-		nThState = PBS_NORMAL;
-
-		if (nState & DFCS_BUTTONPUSH)
 		{
-			nThPart = BP_PUSHBUTTON;
+			sThClass = _T("BUTTON");
+			nThState = PBS_NORMAL;
 
-			if (nState & (DFCS_CHECKED | DFCS_PUSHED))
+			if (nState & DFCS_BUTTONPUSH)
 			{
-				nThState = PBS_PRESSED;
-			}
+				nThPart = BP_PUSHBUTTON;
 
-			else if (nState & DFCS_INACTIVE)
-			{
-				nThState = PBS_DISABLED;
-			}
-
-			else if (nState & DFCS_HOT)
-			{
-				nThState = PBS_HOT;
-			}
-		}
-		else if ((nState & DFCS_BUTTONCHECK) == DFCS_BUTTONCHECK)
-		{
-			nThPart = BP_CHECKBOX;
-
-			if (nState & (DFCS_CHECKED | DFCS_PUSHED))
-			{
-				if (nState & DFCS_INACTIVE)
+				if (nState & (DFCS_CHECKED | DFCS_PUSHED))
 				{
-					nThState = CBS_CHECKEDDISABLED;
+					nThState = PBS_PRESSED;
+				}
+
+				else if (nState & DFCS_INACTIVE)
+				{
+					nThState = PBS_DISABLED;
 				}
 
 				else if (nState & DFCS_HOT)
 				{
-					nThState = CBS_CHECKEDHOT;
+					nThState = PBS_HOT;
+				}
+			}
+			else if ((nState & DFCS_BUTTONCHECK) == DFCS_BUTTONCHECK)
+			{
+				nThPart = BP_CHECKBOX;
+
+				if (nState & (DFCS_CHECKED | DFCS_PUSHED))
+				{
+					if (nState & DFCS_INACTIVE)
+					{
+						nThState = CBS_CHECKEDDISABLED;
+					}
+
+					else if (nState & DFCS_HOT)
+					{
+						nThState = CBS_CHECKEDHOT;
+					}
+					else
+					{
+						nThState = CBS_CHECKEDNORMAL;
+					}
 				}
 				else
 				{
-					nThState = CBS_CHECKEDNORMAL;
+					if (nState & DFCS_INACTIVE)
+					{
+						nThState = CBS_UNCHECKEDDISABLED;
+					}
+
+					else if (nState & DFCS_HOT)
+					{
+						nThState = CBS_UNCHECKEDHOT;
+					}
+					else
+					{
+						nThState = CBS_UNCHECKEDNORMAL;
+					}
 				}
 			}
 			else
 			{
-				if (nState & DFCS_INACTIVE)
-				{
-					nThState = CBS_UNCHECKEDDISABLED;
-				}
-
-				else if (nState & DFCS_HOT)
-				{
-					nThState = CBS_UNCHECKEDHOT;
-				}
-				else
-				{
-					nThState = CBS_UNCHECKEDNORMAL;
-				}
+				return FALSE;
 			}
 		}
-		else
-		{
-			return FALSE;
-		}
-	}
-	break;
+		break;
 
 	case DFC_CAPTION:
 		break;
@@ -698,37 +698,37 @@ BOOL CThemed::GetThemeClassPartState(int nType, int nState, CString& sThClass, i
 		break;
 
 	case DFC_SCROLL:
-	{
-		if (nState & DFCS_SCROLLCOMBOBOX)
 		{
-			sThClass = _T("COMBOBOX");
-			nThPart = CP_DROPDOWNBUTTON;
-			nThState = CBXS_NORMAL;
-
-			if (nState & (DFCS_CHECKED | DFCS_PUSHED))
+			if (nState & DFCS_SCROLLCOMBOBOX)
 			{
-				nThState = CBXS_PRESSED;
-			}
+				sThClass = _T("COMBOBOX");
+				nThPart = CP_DROPDOWNBUTTON;
+				nThState = CBXS_NORMAL;
 
-			else if (nState & DFCS_INACTIVE)
-			{
-				nThState = CBXS_DISABLED;
-			}
+				if (nState & (DFCS_CHECKED | DFCS_PUSHED))
+				{
+					nThState = CBXS_PRESSED;
+				}
 
-			else if (nState & DFCS_HOT)
-			{
-				nThState = CBXS_HOT;
+				else if (nState & DFCS_INACTIVE)
+				{
+					nThState = CBXS_DISABLED;
+				}
+
+				else if (nState & DFCS_HOT)
+				{
+					nThState = CBXS_HOT;
+				}
 			}
+			else if (nState & DFCS_SCROLLSIZEGRIP)
+			{
+				sThClass = _T("SCROLLBAR");
+				nThPart = SBP_SIZEBOX;
+				nThState = (nState & DFCS_SCROLLLEFT) ? SZB_LEFTALIGN : SZB_RIGHTALIGN;
+			}
+			// else
 		}
-		else if (nState & DFCS_SCROLLSIZEGRIP)
-		{
-			sThClass = _T("SCROLLBAR");
-			nThPart = SBP_SIZEBOX;
-			nThState = (nState & DFCS_SCROLLLEFT) ? SZB_LEFTALIGN : SZB_RIGHTALIGN;
-		}
-		// else
-	}
-	break;
+		break;
 	}
 
 	return (!sThClass.IsEmpty() && (nThPart && nThState));

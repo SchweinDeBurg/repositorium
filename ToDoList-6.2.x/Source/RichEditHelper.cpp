@@ -29,7 +29,7 @@
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
 //      --brackets=break
 //      --add-brackets
@@ -276,23 +276,23 @@ BOOL CRichEditHelper::PasteFileInternal(CWnd& wnd, LPCTSTR szFilePath, RE_PASTE 
 			// else fall thru
 
 		case REP_ASFILEURL:
-		{
-			CString sLink(szFilePath);
-			sLink = _T("file://") + sLink;
-			sLink.Replace(_T('\\'), _T('/'));
-
-			// if the path contains spaces then brace it
-			if (sLink.Find(_T(' ')) != -1)
 			{
-				sLink = _T("<") + sLink + _T(">");
+				CString sLink(szFilePath);
+				sLink = _T("file://") + sLink;
+				sLink.Replace(_T('\\'), _T('/'));
+
+				// if the path contains spaces then brace it
+				if (sLink.Find(_T(' ')) != -1)
+				{
+					sLink = _T("<") + sLink + _T(">");
+				}
+
+				// newline
+				sLink += _T("\r\n");
+
+				wnd.SendMessage(EM_REPLACESEL, TRUE, (LPARAM)(LPCTSTR)sLink);
 			}
-
-			// newline
-			sLink += _T("\r\n");
-
-			wnd.SendMessage(EM_REPLACESEL, TRUE, (LPARAM)(LPCTSTR)sLink);
-		}
-		// else fall thru
+			// else fall thru
 
 		default:
 			break;

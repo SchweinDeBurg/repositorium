@@ -29,7 +29,7 @@
 // - reformatted with using Artistic Style 2.01 and the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
 //      --brackets=break
 //      --add-brackets
@@ -934,8 +934,9 @@ void CDockManager::MoveWindow(CWnd* pWnd, CRect rect)
 
 	// don't move if nuthin's changed
 	if (rect != rOrg)
-		pWnd->SetWindowPos(NULL, rect.left, rect.top, rect.Width(), rect.Height(),
-		SWP_NOACTIVATE | SWP_NOZORDER);
+	{
+		pWnd->SetWindowPos(NULL, rect.left, rect.top, rect.Width(), rect.Height(), SWP_NOACTIVATE | SWP_NOZORDER);
+	}
 }
 
 CRect CDockManager::GetUnDockedRect()
