@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESMULTIUSERPAGE_H__D7484AFF_704B_4FA9_94DA_9AB2F5364816__INCLUDED_)
@@ -103,6 +103,10 @@ public:
 	{
 		return m_bEnableSourceControl && m_bCheckinOnClose;
 	}
+	BOOL GetIncludeUserNameInCheckout() const
+	{
+		return m_bEnableSourceControl && m_bIncludeUserNameInCheckout;
+	}
 	UINT GetRemoteFileCheckFrequency() const
 	{
 		return m_nRemoteFileCheckFreq;
@@ -123,6 +127,7 @@ protected:
 	CComboBox   m_cbNoEditTime;
 	BOOL    m_bCheckinNoChange;
 	BOOL    m_bUse3rdPartySourceControl;
+	BOOL    m_bIncludeUserNameInCheckout;
 	//}}AFX_DATA
 	CComboBox   m_cbRemoteFileCheck;
 	BOOL    m_bEnableSourceControl;

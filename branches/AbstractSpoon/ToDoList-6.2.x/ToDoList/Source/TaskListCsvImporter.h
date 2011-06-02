@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TaskListCsvImporter.h: interface for the CTaskListCsvImporter class.
@@ -52,11 +53,11 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "tdcenum.h"
+#include "TDCEnum.h"
 #include "TDLCsvImportExportDlg.h"
 
-#include "..\shared\Itasklist.h"
-#include "..\shared\IImportExport.h"
+#include "../../Common/ITaskList.h"
+#include "../../Common/IImportExport.h"
 
 class CTaskListCsvImporter : public IImportTasklist
 {
@@ -77,7 +78,7 @@ public:
 		return "csv";
 	}
 
-	bool Import(const char* szSrcFilePath, ITaskList* pDestTaskFile);
+	bool Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile);
 	void Release()
 	{
 		delete this;

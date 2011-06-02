@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDLCSVCOLUMNSETUPLISTCTRL_H__E379E120_FF91_417F_ADBB_0DD6A98089AA__INCLUDED_)
@@ -50,9 +51,9 @@
 // TDLCsvColumnSetupListCtrl.h : header file
 //
 
-#include "tdcenum.h"
+#include "TDCEnum.h"
 
-#include "..\shared\InputListCtrl.h"
+#include "../../Common/InputListCtrl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CTDLCsvAttributeSetupListCtrl window

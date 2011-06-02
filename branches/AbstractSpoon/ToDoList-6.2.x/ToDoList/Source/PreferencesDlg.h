@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESDLG_H__C3FCC72A_6C69_49A6_930D_D5C94EC31298__INCLUDED_)
@@ -198,6 +198,10 @@ public:
 	BOOL GetUsing3rdPartySourceControl() const
 	{
 		return m_pageMultiUser.GetUsing3rdPartySourceControl();
+	}
+	UINT GetIncludeUserNameInCheckout() const
+	{
+		return m_pageMultiUser.GetIncludeUserNameInCheckout();
 	}
 
 	int GetNotifyDueByOnLoad() const
@@ -497,9 +501,9 @@ public:
 	{
 		return m_pageTaskCalc.GetAutoCalcPercentDone();
 	}
-	BOOL GetAutoAdjustDependents() const
+	BOOL GetAutoAdjustDependentsDates() const
 	{
-		return m_pageTaskCalc.GetAutoAdjustDependents();
+		return m_pageTaskCalc.GetAutoAdjustDependentsDates();
 	}
 	BOOL GetNoDueDateIsDueToday() const
 	{

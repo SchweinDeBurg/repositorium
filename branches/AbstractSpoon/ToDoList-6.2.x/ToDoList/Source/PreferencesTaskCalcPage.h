@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESTASKCALCPAGE_H__84CBF881_D8CA_4D00_ADD6_1DCB7DE71C5B__INCLUDED_)
@@ -117,7 +118,7 @@ public:
 	{
 		return m_bAutoCalcPercentDone;
 	}
-	BOOL GetAutoAdjustDependents() const
+	BOOL GetAutoAdjustDependentsDates() const
 	{
 		return m_bAutoAdjustDependents;
 	}
