@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // PreferencesTaskCalcPage.cpp : implementation file
@@ -173,7 +174,7 @@ void CPreferencesTaskCalcPage::LoadPreferences(const CPreferences& prefs)
 	m_bAutoCalcTimeEst = prefs.GetProfileInt(_T("Preferences"), _T("AutoCalcTimeEst"), FALSE);
 	m_bIncludeDoneInPriorityRiskCalc = prefs.GetProfileInt(_T("Preferences"), _T("IncludeDoneInPriorityCalc"), FALSE);
 	m_bAutoCalcPercentDone = prefs.GetProfileInt(_T("Preferences"), _T("AutoCalcPercentDone"), FALSE);
-	m_bAutoAdjustDependents = prefs.GetProfileInt(_T("Preferences"), _T("AutoAdjustDependents"), FALSE);
+	m_bAutoAdjustDependents = prefs.GetProfileInt(_T("Preferences"), _T("AutoAdjustDependents"), TRUE);
 	m_bDueTasksHaveHighestPriority = prefs.GetProfileInt(_T("Preferences"), _T("DueTasksHaveHighestPriority"), FALSE);
 	m_bDoneTasksHaveLowestPriority = prefs.GetProfileInt(_T("Preferences"), _T("DoneTasksHaveLowestPriority"), TRUE);
 	m_bNoDueDateDueToday = prefs.GetProfileInt(_T("Preferences"), _T("NoDueDateIsDueToday"), FALSE);
