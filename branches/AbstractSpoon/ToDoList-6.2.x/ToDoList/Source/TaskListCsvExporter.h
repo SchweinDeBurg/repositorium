@@ -93,27 +93,23 @@ protected:
 	CTDCCsvColumnMapping m_aColumnMapping;
 
 protected:
-	CString& ExportTask(const ITaskList8* pTasks, HTASKITEM hTask, int nDepth,
-			int nPos, const CString& sParentPos, CString& sOutput) const;
+	CString& ExportTask(const ITaskList8* pTasks, HTASKITEM hTask, int nDepth, int nPos, const CString& sParentPos,
+		CString& sOutput) const;
 	void InitConsts();
 
-	bool ExportOutput(const char* szDestFilePath, const CString& sOutput);
+	bool ExportOutput(const TCHAR* szDestFilePath, const CString& sOutput);
 
 	CString ColumnHeadings() const;
 	CString CheckGetColumnHeading(TDC_ATTRIBUTE attrib) const;
 
-	void AppendAttribute(const ITaskList8* pTasks, HTASKITEM hTask,
-			TDC_ATTRIBUTE attrib,
-			LPCTSTR szAttribName, LPCTSTR szAltAttribName,
-			CString& sOutput, LPCTSTR szPrefix = NULL) const;
+	void AppendAttribute(const ITaskList8* pTasks, HTASKITEM hTask, TDC_ATTRIBUTE attrib, LPCTSTR szAttribName,
+		LPCTSTR szAltAttribName, CString& sOutput, LPCTSTR szPrefix = NULL) const;
 	void AppendAttribute(LPCTSTR szAttrib, CString& sOutput, BOOL bForceQuoted = FALSE) const;
 	void AppendAttribute(double dAttrib, LPCTSTR szFormat, CString& sOutput) const;
 	void AppendAttribute(int nAttrib, LPCTSTR szFormat, CString& sOutput) const;
 	void AppendComments(const ITaskList8* pTasks, HTASKITEM hTask, CString& sOutput) const;
-	void AppendAttributeList(const ITaskList8* pTasks, HTASKITEM hTask,
-			TDC_ATTRIBUTE attrib,
-			LPCTSTR szNumAttribName, LPCTSTR szAttribName,
-			CString& sOutput) const;
+	void AppendAttributeList(const ITaskList8* pTasks, HTASKITEM hTask, TDC_ATTRIBUTE attrib, LPCTSTR szNumAttribName,
+		LPCTSTR szAttribName, CString& sOutput) const;
 
 	int AttributeIndex(TDC_ATTRIBUTE attrib) const;
 	BOOL WantAttribute(TDC_ATTRIBUTE attrib) const
