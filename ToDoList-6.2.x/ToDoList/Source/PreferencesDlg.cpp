@@ -69,9 +69,8 @@ const COLORREF PRIORITYHIGHCOLOR = RGB(255, 0, 0);
 
 const char PATHDELIM = '>';
 
-CPreferencesDlg::CPreferencesDlg(CShortcutManager* pShortcutMgr, UINT nMenuID,
-	const CContentMgr* pContentMgr, const CImportExportMgr* pExportMgr,
-	CWnd* pParent /*=NULL*/):
+CPreferencesDlg::CPreferencesDlg(CShortcutManager* pShortcutMgr, UINT nMenuID, const CContentMgr* pContentMgr,
+	const CImportExportMgr* pExportMgr, CWnd* pParent /*=NULL*/):
 CPreferencesDlgBase(IDD_PREFERENCES, pParent),
 m_pageShortcuts(pShortcutMgr, nMenuID, FALSE),
 m_pageUI(pContentMgr),

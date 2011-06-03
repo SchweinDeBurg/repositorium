@@ -980,74 +980,74 @@ BOOL CUrlRichEditCtrl::OnNotifyLink(NMHDR* pNMHDR, LRESULT* pResult)
 
 	switch (pENL->msg)
 	{
-		case WM_SETCURSOR:
-			if (bShift)
+	case WM_SETCURSOR:
+		if (bShift)
+		{
+			// because we're overriding the default behaviour we need to
+			// handle the cursor being over a selected block
+			CHARRANGE crSel;
+			GetSel(crSel);
+
+			CPoint ptCursor(GetMessagePos());
+			ScreenToClient(&ptCursor);
+
+			LPCTSTR nCursor = IDC_ARROW;
+
+			int nChar = CharFromPoint(ptCursor);
+
+			if (nChar < crSel.cpMin || nChar > crSel.cpMax)
 			{
-				// because we're overriding the default behaviour we need to
-				// handle the cursor being over a selected block
-				CHARRANGE crSel;
-				GetSel(crSel);
-
-				CPoint ptCursor(GetMessagePos());
-				ScreenToClient(&ptCursor);
-
-				LPCTSTR nCursor = IDC_ARROW;
-
-				int nChar = CharFromPoint(ptCursor);
-
-				if (nChar < crSel.cpMin || nChar > crSel.cpMax)
-				{
-					nCursor = IDC_IBEAM;
-				}
-
-				SetCursor(AfxGetApp()->LoadStandardCursor(nCursor));
-
-				*pResult = TRUE;
-				return TRUE;
-			}
-			break;
-
-		case WM_LBUTTONDOWN:
-			if (!bShift)
-			{
-				m_nContextUrl = FindUrl(pENL->chrg);
-
-				// might be a hidden link
-				if (m_nContextUrl == -1)
-				{
-					//CString sUrl = GetTextRange(pENL->chrg);
-				}
-			}
-			break;
-
-		case WM_LBUTTONUP:
-			if (bShift || FindUrl(pENL->chrg) != m_nContextUrl)
-			{
-				m_nContextUrl = -1;
+				nCursor = IDC_IBEAM;
 			}
 
-			if (GoToUrl(m_nContextUrl))
-			{
-				m_nContextUrl = -1;
-				return TRUE;
-			}
-			else if (m_nContextUrl == -1)
-			{
-				CString sUrl = GetTextRange(pENL->chrg);
+			SetCursor(AfxGetApp()->LoadStandardCursor(nCursor));
 
-				if (sUrl.IsEmpty())
-				{
-					if (FileMisc::Run(*this, sUrl) > 32)
-					{
-						return TRUE;
-					}
-				}
-			}
-			break;
+			*pResult = TRUE;
+			return TRUE;
+		}
+		break;
 
-		case WM_RBUTTONUP:
+	case WM_LBUTTONDOWN:
+		if (!bShift)
+		{
 			m_nContextUrl = FindUrl(pENL->chrg);
-			break;
+
+			// might be a hidden link
+			if (m_nContextUrl == -1)
+			{
+				//CString sUrl = GetTextRange(pENL->chrg);
+			}
+		}
+		break;
+
+	case WM_LBUTTONUP:
+		if (bShift || FindUrl(pENL->chrg) != m_nContextUrl)
+		{
+			m_nContextUrl = -1;
+		}
+
+		if (GoToUrl(m_nContextUrl))
+		{
+			m_nContextUrl = -1;
+			return TRUE;
+		}
+		else if (m_nContextUrl == -1)
+		{
+			CString sUrl = GetTextRange(pENL->chrg);
+
+			if (sUrl.IsEmpty())
+			{
+				if (FileMisc::Run(*this, sUrl) > 32)
+				{
+					return TRUE;
+				}
+			}
+		}
+		break;
+
+	case WM_RBUTTONUP:
+		m_nContextUrl = FindUrl(pENL->chrg);
+		break;
 	}
 
 	return FALSE;

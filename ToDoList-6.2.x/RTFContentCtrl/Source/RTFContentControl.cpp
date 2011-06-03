@@ -590,7 +590,7 @@ BOOL CRTFContentControl::IsTDLClipboardEmpty() const
 BOOL CRTFContentControl::Paste(BOOL bSimple)
 {
 	CRulerRichEdit& re = GetRichEditCtrl();
-		
+
 	if (Misc::ClipboardHasFormat(CF_HDROP, *this))
 	{
 		RE_PASTE nPasteHow = bSimple ? REP_ASFILEURL : REP_ASIMAGE;
@@ -632,7 +632,7 @@ BOOL CRTFContentControl::CanPaste()
 		CF_HDROP
 	};
 
-	// for reasons that I'm not entirely clear on even if we 
+	// for reasons that I'm not entirely clear on even if we
 	// return that CF_HDROP is okay, the richedit itself will
 	// veto the drop. So I'm experimenting with handling this ourselves
 	if (Misc::ClipboardHasFormat(CF_HDROP, *this))

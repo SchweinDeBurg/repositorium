@@ -403,8 +403,8 @@ void CRRECToolBar::OnColorDropDown(NMHDR* pNMHDR, LRESULT* pResult)
 
 	switch (nBtnID)
 	{
-		case BUTTON_BACKCOLOR:
-		case BUTTON_TEXTCOLOR:
+	case BUTTON_BACKCOLOR:
+	case BUTTON_TEXTCOLOR:
 		{
 			CRect rButton;
 			GetItemRect(CommandToIndex(pNMTB->iItem), rButton);
@@ -431,8 +431,8 @@ LRESULT CRRECToolBar::OnItemPostPaint(LPNMTBCUSTOMDRAW lpNMCustomDraw)
 
 	switch (nBtnID)
 	{
-		case BUTTON_BACKCOLOR:
-		case BUTTON_TEXTCOLOR:
+	case BUTTON_BACKCOLOR:
+	case BUTTON_TEXTCOLOR:
 		{
 			// paint the lowest 3 lines with the appropriate colour
 			// but only as far as the beginning of the drop button

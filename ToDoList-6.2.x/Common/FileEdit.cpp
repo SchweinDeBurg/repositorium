@@ -308,7 +308,7 @@ void CFileEdit::OnBtnClick(UINT nID)
 {
 	switch (nID)
 	{
-		case FEBTN_BROWSE:
+	case FEBTN_BROWSE:
 		{
 			// show browse dialog
 			CString sFilename;
@@ -392,7 +392,7 @@ void CFileEdit::OnBtnClick(UINT nID)
 		}
 		break;
 
-		case FEBTN_GO:
+	case FEBTN_GO:
 		{
 			CString sPath;
 			GetWindowText(sPath);
