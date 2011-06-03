@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // FilteredToDoCtrl.h: interface for the CFilteredToDoCtrl class.
@@ -118,7 +118,7 @@ public:
 	int FindTasks(const SEARCHPARAMS& params, CResultArray& aResults) const;
 	BOOL SelectTask(CString sPart, TDC_SELECTTASK nSelect);
 
-	BOOL SetStyles(const CTDCStyles& styles);
+	BOOL SetStyles(const CTDCStylesMap& styles);
 	BOOL SetStyle(TDC_STYLE nStyle, BOOL bOn = TRUE)
 	{
 		return CToDoCtrl::SetStyle(nStyle, bOn);
@@ -165,6 +165,7 @@ public:
 	void SetUITheme(const UITHEME& theme);
 	virtual int GetArchivableTasks(CTaskFile& tasks, BOOL bSelectedOnly) const;
 	void RedrawReminders() const;
+	virtual CString GetControlDescription(CWnd* pCtrl) const;
 
 protected:
 	CXPTabCtrl m_tabCtrl;
@@ -198,7 +199,6 @@ protected:
 	//}}AFX_VIRTUAL
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual BOOL OnInitDialog();
-	//	virtual int OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
 
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -223,12 +223,11 @@ protected:
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
 	afx_msg LRESULT OnDropFileRef(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnListGetInfoTip(NMHDR* pNMHDR, LRESULT* pResult);
-	//	afx_msg BOOL OnToolTipNotify( UINT id, NMHDR* pNMHDR, LRESULT* pResult );
-	//	afx_msg BOOL OnToolTipShow( UINT id, NMHDR* pNMHDR, LRESULT* pResult );
 	afx_msg LRESULT OnEditCancel(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnGutterWidthChange(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnRefreshFilter(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnEditChangeDueTime();
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 
 	DECLARE_MESSAGE_MAP()
 
@@ -241,7 +240,6 @@ protected:
 	virtual BOOL DeleteSelectedTask(BOOL bWarnUser, BOOL bResetSel = FALSE);
 	virtual BOOL SelectedTasksHaveChildren() const;
 	virtual void SetModified(BOOL bMod, TDC_ATTRIBUTE nAttrib);
-	virtual TODOITEM* NewTask(HTREEITEM htiParent);
 	virtual void ReposTaskTree(CDeferWndMove* pDWM, const CRect& rPos);
 	virtual COLORREF GetItemLineColor(HTREEITEM hti);
 	CRect GetSelectedItemsRect() const;
@@ -271,7 +269,6 @@ protected:
 	void InvalidateItem(HTREEITEM hti);
 	virtual void Resize(int cx = 0, int cy = 0);
 	int FindTask(LPCTSTR szPart, int nStart = 0, BOOL bNext = TRUE);
-	void RestoreTreeSelection(const CDWordArray& aTaskIDs, DWORD dwDefaultID = 0);
 	virtual void UpdateTasklistVisibility();
 
 	int GetFirstSelectedItem() const;

@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // XmlFile.h: interface for the CXmlFile class.
@@ -82,6 +83,7 @@ public:
 
 	const CXmlItem* GetItem(LPCTSTR szItemName, LPCTSTR szSubItemName = NULL) const;
 	CXmlItem* GetItem(LPCTSTR szItemName, LPCTSTR szSubItemName = NULL);
+	BOOL HasItem(LPCTSTR szItemName, LPCTSTR szSubItemName = NULL) const;
 
 	const CXmlItem* FindItem(LPCTSTR szItemName, LPCTSTR szItemValue, BOOL bSearchChildren = TRUE) const;
 	const CXmlItem* FindItem(LPCTSTR szItemName, int nItemValue, BOOL bSearchChildren = TRUE) const;
@@ -240,7 +242,6 @@ public:
 	BOOL Export(CString& sOutput) const;
 	BOOL Transform(LPCTSTR szTransformPath, CString& sOutput, const CString& sEncoding = _T("")) const;
 	BOOL TransformToFile(LPCTSTR szTransformPath, LPCTSTR szOutputPath, const CString& sEncoding = _T("")) const;
-	//static void EnableFormattedOutput(BOOL bEnable = TRUE);
 
 	const CXmlItem* Root() const;
 	CXmlItem* Root();

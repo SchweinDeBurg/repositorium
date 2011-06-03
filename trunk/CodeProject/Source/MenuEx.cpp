@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // MenuEx.cpp: implementation of the CMenuEx class.
@@ -48,6 +49,7 @@
 #include "stdafx.h"
 #include "MenuEx.h"
 #include "Themed.h"
+#include "OSVersion.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -56,11 +58,17 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifndef HBMMENU_MBAR_CLOSE
+#define HBMMENU_CALLBACK            ((HBITMAP) -1)
+#define HBMMENU_SYSTEM              ((HBITMAP)  1)
 #define HBMMENU_MBAR_RESTORE        ((HBITMAP)  2)
 #define HBMMENU_MBAR_MINIMIZE       ((HBITMAP)  3)
 #define HBMMENU_MBAR_CLOSE          ((HBITMAP)  5)
 #define HBMMENU_MBAR_CLOSE_D        ((HBITMAP)  6)
 #define HBMMENU_MBAR_MINIMIZE_D     ((HBITMAP)  7)
+#define HBMMENU_POPUP_CLOSE         ((HBITMAP)  8)
+#define HBMMENU_POPUP_RESTORE       ((HBITMAP)  9)
+#define HBMMENU_POPUP_MAXIMIZE      ((HBITMAP) 10)
+#define HBMMENU_POPUP_MINIMIZE      ((HBITMAP) 11)
 #endif
 
 #ifndef ODS_HOTLIGHT
@@ -94,7 +102,7 @@ BOOL CMenuEx::AddMDIButton(MENUEX_BTN nBtn, UINT nCmdID, BOOL bRightJustify)
 
 	HBITMAP hbm = NULL;
 
-	if (!IsThemed())
+	if (!IsThemed() || COSVersion() > OSV_XP)
 	{
 		switch (nBtn)
 		{
@@ -115,8 +123,16 @@ BOOL CMenuEx::AddMDIButton(MENUEX_BTN nBtn, UINT nCmdID, BOOL bRightJustify)
 		}
 	}
 
-	UINT nFlags = (IsThemed() ? MFT_OWNERDRAW : MFT_BITMAP) |
-		(bRightJustify ? MFT_RIGHTJUSTIFY : 0);
+	UINT nFlags = (bRightJustify ? MFT_RIGHTJUSTIFY : 0);
+
+	if (!IsThemed() || COSVersion() > OSV_XP)
+	{
+		nFlags |= MFT_BITMAP;
+	}
+	else
+	{
+		nFlags |= MFT_OWNERDRAW;
+	}
 
 	if (InsertMenu((UINT) - 1, nFlags, nCmdID, CBitmap::FromHandle(hbm)))
 	{
@@ -218,7 +234,6 @@ void CMenuEx::SetBackgroundColor(COLORREF color)
 	MenuInfo.cbSize = sizeof(MenuInfo);
 	MenuInfo.hbrBack = m_brBkgnd;
 	MenuInfo.fMask = MIM_BACKGROUND;
-	MenuInfo.dwStyle = MNS_AUTODISMISS;
 
 	::SetMenuInfo(GetSafeHmenu(), &MenuInfo);
 }

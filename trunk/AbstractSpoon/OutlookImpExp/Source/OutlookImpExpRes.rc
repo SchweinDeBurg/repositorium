@@ -105,14 +105,15 @@ FONT 8, "MS Shell Dlg 2"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,137,166,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,193,166,50,14
-    LTEXT           "&Select tasks to import",IDC_STATIC,7,7,236,8
-    LISTBOX         IDC_TASKLIST,7,18,236,122,LBS_OWNERDRAWFIXED | 
+    LTEXT           "&Select tasks to import",IDC_STATIC,7,10,74,8
+    LISTBOX         IDC_TASKLIST,7,25,236,115,LBS_OWNERDRAWFIXED | 
                     LBS_HASSTRINGS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | 
                     WS_TABSTOP
     CONTROL         "&Remove tasks from Outlook after importing",
                     IDC_REMOVEOUTLOOKTASKS,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,7,144,149,10
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,7,159,236,1
+    PUSHBUTTON      "Folder...",IDC_CHOOSEFOLDER,193,7,50,14
 END
 
 

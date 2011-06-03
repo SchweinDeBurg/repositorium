@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.2-6.1.7 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // RTFContentControl.cpp : implementation file
@@ -48,6 +48,7 @@
 #include "StdAfx.h"
 #include "RTFContentCtrlApp.h"
 #include "RTFContentControl.h"
+#include "EditWebLinkDlg.h"
 
 #include "../../Common/ITaskList.h"
 #include "../../../CodeProject/Source/AutoFlag.h"
@@ -76,7 +77,6 @@ CRTFContentControl::CRTFContentControl() : m_bAllowNotify(TRUE), m_reSpellCheck(
 	// add custom protocol to comments field for linking to task IDs
 	GetRichEditCtrl().AddProtocol(TDL_PROTOCOL, TRUE);
 
-	GetRichEditCtrl().SetCtrlClickMsg(CEnString(IDS_COMMENTSCTRLCLICKMSG));
 	GetRichEditCtrl().SetGotoErrorMsg(CEnString(IDS_COMMENTSGOTOERRMSG));
 }
 
@@ -369,7 +369,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 				EnableMenuItem(pPopup, ID_EDIT_DELETE, bCanEdit && bHasSel);
 				EnableMenuItem(pPopup, ID_EDIT_SELECT_ALL, bHasText);
 
-				EnableMenuItem(pPopup, ID_EDIT_PASTEASREF, bCanEdit && !IsClipboardEmpty());
+				EnableMenuItem(pPopup, ID_EDIT_PASTEASREF, bCanEdit && !IsTDLClipboardEmpty());
 
 #ifndef _DEBUG
 				EnableMenuItem(pPopup, ID_EDIT_HORZRULE, FALSE);
@@ -383,7 +383,12 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 					CString sText, sMenu;
 					pPopup->GetMenuString(ID_EDIT_OPENURL, sMenu, MF_BYCOMMAND);
 
-					sText.Format(_T("%s: %s"), sMenu, re.GetUrl(nUrl, TRUE));
+					// restrict url length to 250 pixels
+					CEnString sUrl(re.GetUrl(nUrl, TRUE));
+					CClientDC dc(this);
+					sUrl.FormatDC(&dc, 250, ES_PATH);
+
+					sText.Format(_T("%s: %s"), (LPCTSTR)sMenu, (LPCTSTR)sUrl);
 					pPopup->ModifyMenu(ID_EDIT_OPENURL, MF_BYCOMMAND, ID_EDIT_OPENURL, sText);
 				}
 
@@ -446,11 +451,11 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 					break;
 
 				case ID_EDIT_PASTE:
-					re.Paste();
+					Paste();
 					break;
 
 				case ID_EDIT_PASTESIMPLE:
-					re.Paste(TRUE); // TRUE ==  simple
+					Paste(TRUE); // TRUE ==  simple
 					break;
 
 				case ID_EDIT_PASTEASREF:
@@ -501,7 +506,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 					break;
 
 				case ID_EDIT_DELETE:
-					re.ReplaceSel(_T(""));
+					re.ReplaceSel(_T(""), TRUE);
 					break;
 
 				case ID_EDIT_SELECT_ALL:
@@ -567,7 +572,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 	}
 }
 
-BOOL CRTFContentControl::IsClipboardEmpty() const
+BOOL CRTFContentControl::IsTDLClipboardEmpty() const
 {
 	// try for any clipboard first
 	ITaskList* pClipboard = (ITaskList*)GetParent()->SendMessage(WM_TDCM_GETCLIPBOARD, 0, FALSE);
@@ -580,6 +585,36 @@ BOOL CRTFContentControl::IsClipboardEmpty() const
 
 	// else try for 'our' clipboard only
 	return (!GetParent()->SendMessage(WM_TDCM_HASCLIPBOARD, 0, TRUE));
+}
+
+BOOL CRTFContentControl::Paste(BOOL bSimple)
+{
+	CRulerRichEdit& re = GetRichEditCtrl();
+
+	if (Misc::ClipboardHasFormat(CF_HDROP, *this))
+	{
+		RE_PASTE nPasteHow = bSimple ? REP_ASFILEURL : REP_ASIMAGE;
+
+		if (::OpenClipboard(*this))
+		{
+			HANDLE hData = ::GetClipboardData(CF_HDROP);
+			ASSERT(hData);
+
+			CStringArray aFiles;
+			Misc::GetDropFilePaths((HDROP)hData, aFiles);
+
+			::CloseClipboard();
+
+			if (aFiles.GetSize())
+			{
+				return CRichEditHelper::PasteFiles(re, aFiles, nPasteHow);
+			}
+		}
+	}
+
+	// else
+	re.Paste(bSimple);
+	return TRUE;
 }
 
 BOOL CRTFContentControl::CanPaste()
@@ -596,6 +631,16 @@ BOOL CRTFContentControl::CanPaste()
 		CF_UNICODETEXT,
 		CF_HDROP
 	};
+
+	// for reasons that I'm not entirely clear on even if we
+	// return that CF_HDROP is okay, the richedit itself will
+	// veto the drop. So I'm experimenting with handling this ourselves
+	if (Misc::ClipboardHasFormat(CF_HDROP, *this))
+	{
+		return TRUE;
+	}
+
+	// else try richedit itself
 	const long formats_count = sizeof(formats) / sizeof(CLIPFORMAT);
 
 	CUrlRichEditCtrl& re = GetRichEditCtrl();
@@ -605,6 +650,11 @@ BOOL CRTFContentControl::CanPaste()
 	for (long i = 0;  i < formats_count;  ++i)
 	{
 		bCanPaste |= re.CanPaste(formats[i]);
+	}
+
+	if (!bCanPaste)
+	{
+		bCanPaste = re.CanPaste(0);
 	}
 
 	return bCanPaste;
@@ -745,7 +795,7 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 						// if nothing is selected then just insert tabs
 						if (cr.cpMin == cr.cpMax)
 						{
-							re.ReplaceSel(_T("\t"));
+							re.ReplaceSel(_T("\t"), TRUE);
 						}
 						else
 						{
@@ -758,9 +808,8 @@ bool CRTFContentControl::ProcessMessage(MSG* pMsg)
 								DoOutdent();
 							}
 						}
-						return TRUE;
 					}
-					break;
+					return TRUE;
 				}
 			}
 		}
@@ -804,9 +853,9 @@ LRESULT CRTFContentControl::OnCustomUrl(WPARAM wp, LPARAM lp)
 	ASSERT(wp == RTF_CONTROL);
 
 	CString sUrl((LPCTSTR)lp);
-	int nFind = sUrl.Find(TDL_PROTOCOL);
+	sUrl.MakeLower();
 
-	if (nFind != -1)
+	if (sUrl.Find(TDL_PROTOCOL) != -1 || sUrl.Find(TDL_EXTENSION) != -1)
 	{
 		return GetParent()->SendMessage(WM_TDCM_TASKLINK, 0, lp);
 	}

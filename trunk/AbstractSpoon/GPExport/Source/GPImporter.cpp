@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,8 +24,9 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // GPImporter.cpp: implementation of the CGPImporter class.
@@ -38,6 +39,7 @@
 
 #include "../../Common/XmlFileEx.h"
 #include "../../../CodeProject/Source/DateHelper.h"
+#include "../../../CodeProject/Source/EnString.h"
 #include "../../ToDoList/Source/TDLSchemaDef.h"
 
 #ifdef _DEBUG
@@ -52,7 +54,7 @@ const UINT ONEDAY = 24 * 60 * 60;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CGPImporter::CGPImporter()
+CGPImporter::CGPImporter() : m_bBumpTaskIDs(FALSE)
 {
 }
 
@@ -83,23 +85,52 @@ bool CGPImporter::Import(const TCHAR* szSrcFilePath, ITaskList* pDestTaskFile)
 		return false;
 	}
 
-	ITaskList7* pITL7 = GetITLInterface<ITaskList7>(pDestTaskFile, IID_TASKLIST7);
+	ITaskList8* pITL8 = GetITLInterface<ITaskList8>(pDestTaskFile, IID_TASKLIST8);
 
-	if (!ImportTask(pXISrcTask, pITL7, NULL))
+	// GP supports tasks having an id of ZERO which is a big
+	// no-no in TDL. so we need to detect this ahead of time
+	// so we can bump all the ids by 1
+	m_bBumpTaskIDs = HasZeroIDTask(pXISrcTask);
+
+	if (!ImportTask(pXISrcTask, pITL8, NULL))
 	{
 		return false;
 	}
 
 	// fix up resource allocations
-	FixupResourceAllocations(fileSrc.Root(), pITL7);
+	FixupResourceAllocations(fileSrc.Root(), pITL8);
 
 	// and dependencies
-	//FixupDependencies(pITL7, pITL7->GetFirstTask());
+	FixupDependencies(pXISrcTask, pITL8);
 
 	return true; // no tasks to import
 }
 
-void CGPImporter::FixupResourceAllocations(const CXmlItem* pXISrcPrj, ITaskList7* pDestTaskFile)
+BOOL CGPImporter::HasZeroIDTask(const CXmlItem* pXISrcTask) const
+{
+	ASSERT(!pXISrcTask || pXISrcTask->NameIs(_T("task")));
+
+	if (!pXISrcTask)
+	{
+		return FALSE;
+	}
+
+	if (pXISrcTask->GetItemValueI(_T("id")) == 0)
+	{
+		return TRUE;
+	}
+
+	// children
+	if (HasZeroIDTask(pXISrcTask->GetItem(_T("task"))))
+	{
+		return TRUE;
+	}
+
+	// siblings
+	return HasZeroIDTask(pXISrcTask->GetSibling());
+}
+
+void CGPImporter::FixupResourceAllocations(const CXmlItem* pXISrcPrj, ITaskList8* pDestTaskFile)
 {
 	BuildResourceMap(pXISrcPrj);
 
@@ -115,9 +146,9 @@ void CGPImporter::FixupResourceAllocations(const CXmlItem* pXISrcPrj, ITaskList7
 			int nResID = pXIAlloc->GetItemValueI(_T("resource-id"));
 
 			// look up task
-			HTASKITEM hTask = NULL;
+			HTASKITEM hTask = pDestTaskFile->FindTask(nTaskID);
 
-			if (m_mapTasks.Lookup(nTaskID, hTask) && hTask)
+			if (hTask)
 			{
 				CString sRes;
 
@@ -132,7 +163,7 @@ void CGPImporter::FixupResourceAllocations(const CXmlItem* pXISrcPrj, ITaskList7
 	}
 }
 
-bool CGPImporter::ImportTask(const CXmlItem* pXISrcTask, ITaskList7* pDestTaskFile, HTASKITEM htDestParent)
+bool CGPImporter::ImportTask(const CXmlItem* pXISrcTask, ITaskList8* pDestTaskFile, HTASKITEM htDestParent)
 {
 	if (!pXISrcTask)
 	{
@@ -140,20 +171,21 @@ bool CGPImporter::ImportTask(const CXmlItem* pXISrcTask, ITaskList7* pDestTaskFi
 	}
 
 	CString sName = pXISrcTask->GetItemValue(_T("name"));
-	HTASKITEM hTask = pDestTaskFile->NewTask(ATL::CT2A(sName), htDestParent);
+	DWORD dwID = pXISrcTask->GetItemValueI(_T("id"));
+
+	// do we need to bump it?
+	if (m_bBumpTaskIDs)
+	{
+		dwID++;
+	}
+
+	HTASKITEM hTask = pDestTaskFile->NewTask(ATL::CT2A(sName), htDestParent, dwID);
 	ASSERT(hTask);
 
 	if (!hTask)
 	{
 		return false;
 	}
-
-	// attributes
-
-	// store GP id in external ID field and add to map to that we can
-	// set up the alloc to and dependencies afterwards
-	pDestTaskFile->SetTaskExternalID(hTask, ATL::CT2A(pXISrcTask->GetItemValue(_T("id"))));
-	m_mapTasks[pXISrcTask->GetItemValueI(_T("id"))] = hTask;
 
 	// completion
 	int nPercentDone = pXISrcTask->GetItemValueI(_T("complete"));
@@ -168,15 +200,18 @@ bool CGPImporter::ImportTask(const CXmlItem* pXISrcTask, ITaskList7* pDestTaskFi
 
 		int nDuration = pXISrcTask->GetItemValueI(_T("duration"));
 
-		if (nDuration)
+		// only add duration to leaf tasks else it'll double up
+		if (nDuration && !pXISrcTask->HasItem(_T("task")))
 		{
 			if (nPercentDone == 100)
 			{
-				pDestTaskFile->SetTaskDoneDate(hTask, tStart + (nDuration - 1) * ONEDAY);   // gp dates are inclusive
+				pDestTaskFile->SetTaskDoneDate(hTask, tStart + (nDuration - 1) * ONEDAY); // gp dates are inclusive
+				pDestTaskFile->SetTaskTimeSpent(hTask, nDuration, _T('D'));
 			}
 			else
 			{
-				pDestTaskFile->SetTaskDueDate(hTask, tStart + (nDuration - 1) * ONEDAY);   // gp dates are inclusive
+				pDestTaskFile->SetTaskDueDate(hTask, tStart + (nDuration - 1) * ONEDAY); // gp dates are inclusive
+				pDestTaskFile->SetTaskTimeEstimate(hTask, nDuration, _T('D'));
 			}
 		}
 	}
@@ -205,16 +240,10 @@ bool CGPImporter::ImportTask(const CXmlItem* pXISrcTask, ITaskList7* pDestTaskFi
 	pDestTaskFile->SetTaskComments(hTask, ATL::CT2A(pXISrcTask->GetItemValue(_T("notes"))));
 
 	// dependency
-	// we just set this to the GP id and fix it up later on once we
-	// have finished mapping all the tasks
-	const CXmlItem* pXIDepends = pXISrcTask->GetItem(_T("depend"));
+	// do this after we've imported all the tasks because GP does it
+	// the opposite way round to TDL
 
-	if (pXIDepends && pXIDepends->GetItemValueI(_T("type")) == 3)
-	{
-		pDestTaskFile->SetTaskDependency(hTask, ATL::CT2A(pXIDepends->GetItemValue(_T("id"))));
-	}
-
-	// children (?)
+	// children
 	if (!ImportTask(pXISrcTask->GetItem(_T("task")), pDestTaskFile, hTask))
 	{
 		return false;
@@ -224,38 +253,55 @@ bool CGPImporter::ImportTask(const CXmlItem* pXISrcTask, ITaskList7* pDestTaskFi
 	return ImportTask(pXISrcTask->GetSibling(), pDestTaskFile, htDestParent);
 }
 
-/*
-void CGPImporter::FixupDependencies(ITaskList7* pDestTaskFile, HTASKITEM hTask)
+void CGPImporter::FixupDependencies(const CXmlItem* pXISrcTask, ITaskList8* pDestTaskFile)
 {
-	if (!hTask)
-		return;
-
-	CString sDepends = pDestTaskFile->GetTaskDependency(hTask, 0);
-
-	if (!sDepends.IsEmpty())
+	if (!pXISrcTask)
 	{
-		int nDepends = atoi(sDepends);
+		return;
+	}
 
-		// look up task
-		HTASKITEM hDepends = NULL;
+	const CXmlItem* pXIDepends = pXISrcTask->GetItem(_T("depend"));
 
-		if (m_mapTasks.Lookup(nDepends, hDepends) && hDepends)
+	while (pXIDepends)
+	{
+		if (pXIDepends->GetItemValueI(_T("type")) == 2)
 		{
-			// extract correct depends task ID
-			nDepends = pDestTaskFile->GetTaskID(hDepends);
-			sDepends.Format("%d", nDepends);
+			// GP records dependencies in reverse to TDL
+			// so what appears to be the dependency target is actually the source
+			DWORD dwSrcDependID = pXIDepends->GetItemValueI(_T("id"));
 
-			pDestTaskFile->SetTaskDependency(hTask, sDepends);
+			// do we need to bump it?
+			if (m_bBumpTaskIDs)
+			{
+				dwSrcDependID++;
+			}
+
+			HTASKITEM hTask = pDestTaskFile->FindTask(dwSrcDependID);
+
+			if (hTask)
+			{
+				DWORD dwDestDependID = pXISrcTask->GetItemValueI(_T("id"));
+
+				// do we need to bump it?
+				if (m_bBumpTaskIDs)
+				{
+					dwDestDependID++;
+				}
+
+				pDestTaskFile->AddTaskDependency(hTask, dwDestDependID);
+			}
 		}
+
+		// next dependency
+		pXIDepends = pXIDepends->GetSibling();
 	}
 
 	// children
-	FixupDependencies(pDestTaskFile, pDestTaskFile->GetFirstTask(hTask));
+	FixupDependencies(pXISrcTask->GetItem(_T("task")), pDestTaskFile);
 
 	// siblings
-	FixupDependencies(pDestTaskFile, pDestTaskFile->GetNextTask(hTask));
+	FixupDependencies(pXISrcTask->GetSibling(), pDestTaskFile);
 }
-*/
 
 void CGPImporter::BuildResourceMap(const CXmlItem* pXISrcPrj)
 {

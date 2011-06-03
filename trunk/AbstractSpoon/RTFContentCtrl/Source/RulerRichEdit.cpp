@@ -191,34 +191,35 @@ void CRulerRichEdit::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	}
 }
 
-LRESULT CRulerRichEdit::OnDropFiles(WPARAM wp, LPARAM lp)
+LRESULT CRulerRichEdit::OnDropFiles(WPARAM wp, LPARAM /*lp*/) 
 {
 	CWaitCursor cursor;
+	
+	RE_PASTE nPasteHow = REP_ASIMAGE; // as an image if an image
 
-	if (Misc::KeyIsPressed(VK_SHIFT)) // insert
+	if (Misc::KeyIsPressed(VK_SHIFT))
 	{
+		nPasteHow = REP_ASICON; // as a binary blob 
+
+		if (Misc::KeyIsPressed(VK_CONTROL)) // as file links
+		{
+			nPasteHow = REP_ASFILEURL;
+		}
+
 		// restore selection
 		SetSel(m_crDropSel);
-
-		TCHAR szFileName[_MAX_PATH];
-		::DragQueryFile((HDROP)wp, 0, szFileName, _MAX_PATH);
-
-		// if CTRL is also down AND it's an image file then insert as bits
-		if (Misc::KeyIsPressed(VK_CONTROL) && CEnBitmap::CopyImageFileToClipboard(szFileName))
-		{
-			Paste(FALSE);
-			return TRUE;
-		}
-		else // insert as OLE object
-		{
-			CReFileObject fo(*this);
-			return fo.Insert(szFileName);
-		}
 	}
-	else
+
+	CStringArray aFiles;
+	
+	if (Misc::GetDropFilePaths((HDROP)wp, aFiles))
 	{
-		return CUrlRichEditCtrl::OnDropFiles(wp, lp);   // link
+		::CloseClipboard();
+		return CRichEditHelper::PasteFiles(*this, aFiles, nPasteHow);
 	}
+
+	// else
+	return 0L;
 }
 
 HRESULT CRulerRichEdit::GetDragDropEffect(BOOL fDrag, DWORD grfKeyState, LPDWORD pdwEffect)

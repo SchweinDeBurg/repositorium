@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,9 +24,9 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - merged with ToDoList version 6.1.7 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // OutlookImportDlg.cpp : implementation file
@@ -49,15 +49,15 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-const int olFolderDeletedItems	= 3;
-const int olFolderOutbox		= 4;
-const int olFolderSentMail		= 5;
-const int olFolderInbox			= 6;
-const int olFolderCalendar		= 9;
-const int olFolderContacts		= 10;
-const int olFolderJournal		= 11;
-const int olFolderNotes			= 12;
-const int olFolderTasks			= 13;
+const int olFolderDeletedItems  = 3;
+const int olFolderOutbox        = 4;
+const int olFolderSentMail      = 5;
+const int olFolderInbox         = 6;
+const int olFolderCalendar      = 9;
+const int olFolderContacts      = 10;
+const int olFolderJournal       = 11;
+const int olFolderNotes         = 12;
+const int olFolderTasks         = 13;
 
 LPCTSTR PATHDELIM = _T(" \\ ");
 
@@ -87,6 +87,7 @@ void COutlookImportDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(COutlookImportDlg, CDialog)
 	//{{AFX_MSG_MAP(COutlookImportDlg)
 	ON_WM_DESTROY()
+	ON_BN_CLICKED(IDC_CHOOSEFOLDER, OnChoosefolder)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -117,10 +118,11 @@ BOOL COutlookImportDlg::OnInitDialog()
 	{
 		_NameSpace nmspc(m_pOutlook->GetNamespace(_T("MAPI")));
 		nmspc.m_lpDispatch->AddRef(); // to keep it alive
-		MAPIFolder mapi(nmspc.GetDefaultFolder(olFolderTasks));
-		mapi.m_lpDispatch->AddRef(); // to keep it alive
 
-		AddFolderItemsToList(&mapi);
+		m_pFolder = new MAPIFolder(nmspc.GetDefaultFolder(olFolderTasks));
+		m_pFolder->m_lpDispatch->AddRef(); // to keep it alive
+
+		AddFolderItemsToList(m_pFolder);
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -296,7 +298,7 @@ void COutlookImportDlg::SetTaskAttributes(HTASKITEM hTask, _TaskItem* pTask)
 
 	// can have multiple categories
 	CStringArray aCats;
-	Misc::ParseIntoArray(pTask->GetCategories(), aCats);
+	Misc::Split(pTask->GetCategories(), aCats);
 
 	for (int nCat = 0; nCat < aCats.GetSize(); nCat++)
 	{
@@ -323,8 +325,11 @@ void COutlookImportDlg::OnDestroy()
 	CDialog::OnDestroy();
 
 	delete m_pOutlook;
+	delete m_pFolder;
+
 	m_pOutlook = NULL;
 	m_pDestTaskFile = NULL;
+	m_pFolder = NULL;
 }
 
 time_t COutlookImportDlg::ConvertDate(DATE date)
@@ -341,4 +346,16 @@ time_t COutlookImportDlg::ConvertDate(DATE date)
 
 	tm t = { st.wSecond, st.wMinute, st.wHour, st.wDay, st.wMonth - 1, st.wYear - 1900, 0 };
 	return mktime(&t);
+}
+
+void COutlookImportDlg::OnChoosefolder()
+{
+	_NameSpace nmspc(m_pOutlook->GetNamespace(_T("MAPI")));
+	nmspc.m_lpDispatch->AddRef(); // to keep it alive
+
+	delete m_pFolder;
+	m_pFolder = new MAPIFolder(nmspc.PickFolder());
+
+	m_lbTasks.ResetContent();
+	AddFolderItemsToList(m_pFolder);
 }

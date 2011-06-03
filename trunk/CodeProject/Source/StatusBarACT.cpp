@@ -54,6 +54,9 @@
 #include "StatusBarACT.h"
 
 #include "GraphicsMisc.h"
+#include "ColorDef.h"
+
+#include <afxpriv.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -85,6 +88,7 @@ BEGIN_MESSAGE_MAP(CStatusBarACT, CStatusBar)
 	//}}AFX_MSG_MAP
 	ON_WM_ERASEBKGND()
 	ON_WM_CTLCOLOR()
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -106,44 +110,85 @@ int CStatusBarACT::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-BOOL CStatusBarACT::OnEraseBkgnd(CDC* pDC)
+void CStatusBarACT::OnPaint()
 {
-	if (m_crFrom != (COLORREF) - 1)
+	if (m_crText == -1 && m_crFrom == -1 && m_crTo == -1)
 	{
+		Default();
+	}
+	else
+	{
+		CPaintDC dc(this);
 		CRect rClient;
-		GetClientRect(rClient);
+		CFont* pOldFont = dc.SelectObject(GetFont());
 
-		if (m_crTo == m_crFrom)
+		GetClientRect(rClient);
+		DrawRectBkgnd(&dc, rClient);
+
+		int nPane = GetStatusBarCtrl().GetParts(0, NULL);
+		dc.SetTextColor(m_crText);
+		dc.SetBkMode(TRANSPARENT);
+
+		while (nPane--)
 		{
-			pDC->FillSolidRect(rClient, m_crFrom);
+			CRect rect;
+			GetItemRect(nPane, &rect);
+
+			dc.TextOut(rect.left + 2, rect.top, GetPaneText(nPane));
+			dc.ExcludeClipRect(rect); // so adjacent item cannot overwrite
+
+			// draw divider
+			if (nPane) // ignore first
+			{
+				rect.left -= 2;
+				rect.right = rect.left + 1;
+				rect.bottom -= 2;
+
+				// pick color
+				COLORREF color = m_crFrom;
+
+				int nLum = RGBX(color).Luminance();
+				color = (nLum < 128) ? GraphicsMisc::Lighter(m_crTo, 0.25) : GraphicsMisc::Darker(m_crTo, 0.75);
+				dc.FillSolidRect(rect, color);
+			}
+		}
+
+		dc.SelectObject(pOldFont);
+	}
+}
+
+BOOL CStatusBarACT::OnEraseBkgnd(CDC* /*pDC*/)
+{
+	return TRUE;
+}
+
+void CStatusBarACT::DrawRectBkgnd(CDC* pDC, const CRect& rect)
+{
+	if (m_crTo == m_crFrom)
+	{
+		pDC->FillSolidRect(rect, m_crFrom);
+	}
+	else
+	{
+		if (m_bGradient)
+		{
+			GraphicsMisc::DrawGradient(pDC->GetSafeHdc(), (LPRECT)&rect, m_crFrom, m_crTo, FALSE);
 		}
 		else
 		{
-			if (m_bGradient)
-			{
-				GraphicsMisc::DrawGradient(pDC->GetSafeHdc(), rClient, m_crFrom, m_crTo, FALSE);
-			}
-			else
-			{
-				CRect rStat(rClient);
+			CRect rStat(rect);
 
-				rStat.bottom = rStat.top + (rStat.Height() * 2) / 5; // based on Outlook 2007
-				pDC->FillSolidRect(rStat, m_crFrom);
+			rStat.bottom = rStat.top + (rStat.Height() * 2) / 5; // based on Outlook 2007
+			pDC->FillSolidRect(rStat, m_crFrom);
 
-				rStat.top = rStat.bottom;
-				rStat.bottom = rClient.bottom;
-				pDC->FillSolidRect(rStat, m_crTo);
-			}
+			rStat.top = rStat.bottom;
+			rStat.bottom = rect.bottom;
+			pDC->FillSolidRect(rStat, m_crTo);
 		}
-
-		return TRUE;
 	}
-
-	// else
-	return CStatusBar::OnEraseBkgnd(pDC);
 }
 
-void CStatusBarACT::SetUIColors(COLORREF crBackFrom, COLORREF crBackTo, BOOL bGradient/*, COLORREF crText*/)
+void CStatusBarACT::SetUIColors(COLORREF crBackFrom, COLORREF crBackTo, BOOL bGradient, COLORREF crText)
 {
 	m_crFrom = crBackFrom;
 
@@ -157,10 +202,11 @@ void CStatusBarACT::SetUIColors(COLORREF crBackFrom, COLORREF crBackTo, BOOL bGr
 	}
 
 	m_bGradient = bGradient;
+	m_crText = crText;
 
 	if (GetSafeHwnd())
 	{
-		Invalidate();
+		Invalidate(TRUE);
 	}
 }
 
@@ -460,44 +506,44 @@ LRESULT CStatusBarACT::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case SB_SETTEXT:
+	{
+		CString sText = (LPCTSTR)lParam;
+		CString sTip;
+		BOOL bHasTip = FALSE;
+		int nPos = sText.Find(_T('\n'));
+		if (nPos != -1)
 		{
-			CString sText = (LPCTSTR)lParam;
-			CString sTip;
-			BOOL bHasTip = FALSE;
-			int nPos = sText.Find(_T('\n'));
-			if (nPos != -1)
-			{
-				bHasTip = TRUE;
-				sTip = sText.Mid(nPos + 1);
-				sText = sText.Left(nPos);
-				lParam = (LPARAM)(LPCTSTR)sText;
-			}
-			LRESULT lResult = CStatusBar::DefWindowProc(message, wParam, lParam);
-			int nIndex = wParam & 0xff;
-
-			if (m_adwFlags.GetSize() > nIndex && m_adwFlags[nIndex] & SBACTF_AUTOFIT)
-			{
-				AutoFitPane(nIndex);
-			}
-
-			if (bHasTip)
-			{
-				SetPaneTooltipIndex(nIndex, sTip);
-			}
-
-			return lResult;
+			bHasTip = TRUE;
+			sTip = sText.Mid(nPos + 1);
+			sText = sText.Left(nPos);
+			lParam = (LPARAM)(LPCTSTR)sText;
 		}
+		LRESULT lResult = CStatusBar::DefWindowProc(message, wParam, lParam);
+		int nIndex = wParam & 0xff;
+
+		if (m_adwFlags.GetSize() > nIndex && m_adwFlags[nIndex] & SBACTF_AUTOFIT)
+		{
+			AutoFitPane(nIndex);
+		}
+
+		if (bHasTip)
+		{
+			SetPaneTooltipIndex(nIndex, sTip);
+		}
+
+		return lResult;
+	}
 	case WM_LBUTTONDOWN:
 	case WM_MBUTTONDOWN:
 	case WM_RBUTTONDOWN:
 	case WM_LBUTTONDBLCLK:
 	case WM_MBUTTONDBLCLK:
 	case WM_RBUTTONDBLCLK:
-		{
-			CPoint pt(lParam);
-			SendPaneCommand(pt, message);
-		}
-		break;
+	{
+		CPoint pt(lParam);
+		SendPaneCommand(pt, message);
+	}
+	break;
 	};
 	return CStatusBar::DefWindowProc(message, wParam, lParam);
 }

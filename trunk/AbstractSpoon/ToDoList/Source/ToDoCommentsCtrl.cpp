@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // ToDoCommentsCtrl.cpp : implementation file
@@ -81,7 +81,6 @@ m_reSpellCheck(*this)
 	// add custom protocol to comments field for linking to task IDs
 	AddProtocol(TDL_PROTOCOL, TRUE);
 
-	SetCtrlClickMsg(CEnString(IDS_COMMENTSCTRLCLICKMSG));
 	SetGotoErrorMsg(CEnString(IDS_COMMENTSGOTOERRMSG));
 
 	EnableSelectOnFocus(FALSE);
@@ -409,7 +408,7 @@ void CToDoCommentsCtrl::OnUpdateCommentsMenuCmd(CCmdUI* pCmdUI)
 		break;
 
 	case ID_COMMENTS_PASTEASREF:
-		pCmdUI->Enable(!bReadOnly && !IsClipboardEmpty());
+		pCmdUI->Enable(!bReadOnly && !IsTDLClipboardEmpty());
 		break;
 
 	case ID_COMMENTS_SELECTALL:
@@ -429,10 +428,14 @@ void CToDoCommentsCtrl::OnUpdateCommentsMenuCmd(CCmdUI* pCmdUI)
 		if (m_nContextUrl != -1 && pCmdUI->m_pMenu)
 		{
 			CString sText, sMenu;
-			pCmdUI->m_pMenu->GetMenuString(ID_COMMENTS_OPENURL, sMenu,
-				MF_BYCOMMAND);
+			pCmdUI->m_pMenu->GetMenuString(ID_COMMENTS_OPENURL, sMenu, MF_BYCOMMAND);
 
-			sText.Format(_T("%s: %s"), sMenu, GetUrl(m_nContextUrl, TRUE));
+			// restrict url length to 250 pixels
+			CEnString sUrl(GetUrl(m_nContextUrl, TRUE));
+			CClientDC dc(this);
+			sUrl.FormatDC(&dc, 250, ES_PATH);
+
+			sText.Format(_T("%s: %s"), sMenu, sUrl);
 			pCmdUI->SetText(sText);
 		}
 		break;
@@ -451,6 +454,46 @@ void CToDoCommentsCtrl::OnUpdateCommentsMenuCmd(CCmdUI* pCmdUI)
 	}
 }
 
+BOOL CToDoCommentsCtrl::Paste()
+{
+	if (Misc::ClipboardHasFormat(CF_HDROP, *this))
+	{
+		if (::OpenClipboard(*this))
+		{
+			HANDLE hData = ::GetClipboardData(CF_HDROP);
+			ASSERT(hData);
+
+			CStringArray aFiles;
+			Misc::GetDropFilePaths((HDROP)hData, aFiles);
+
+			::CloseClipboard();
+
+			if (aFiles.GetSize())
+			{
+				return CRichEditHelper::PasteFiles(*this, aFiles, REP_ASFILEURL);
+			}
+		}
+	}
+
+	// else
+	CUrlRichEditCtrl::Paste();
+	return TRUE;
+}
+
+BOOL CToDoCommentsCtrl::CanPaste()
+{
+	// for reasons that I'm not entirely clear on even if we
+	// return that CF_HDROP is okay, the richedit itself will
+	// veto the drop. So I'm experimenting with handling this ourselves
+	if (Misc::ClipboardHasFormat(CF_HDROP, *this))
+	{
+		return TRUE;
+	}
+
+	return CUrlRichEditCtrl::CanPaste(CF_TEXT);
+}
+
+
 BOOL CToDoCommentsCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	// bit of a hack but this is what we get just before the context
@@ -464,7 +507,7 @@ BOOL CToDoCommentsCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 	return CUrlRichEditCtrl::OnSetCursor(pWnd, nHitTest, message);
 }
 
-BOOL CToDoCommentsCtrl::IsClipboardEmpty() const
+BOOL CToDoCommentsCtrl::IsTDLClipboardEmpty() const
 {
 	// try for any clipboard first
 	ITaskList* pClipboard = (ITaskList*)GetParent()->SendMessage(WM_TDCM_GETCLIPBOARD, 0, FALSE);
@@ -482,10 +525,9 @@ BOOL CToDoCommentsCtrl::IsClipboardEmpty() const
 LRESULT CToDoCommentsCtrl::SendNotifyCustomUrl(LPCTSTR szUrl) const
 {
 	CString sUrl(szUrl);
+	sUrl.MakeLower();
 
-	int nFind = sUrl.Find(TDL_PROTOCOL);
-
-	if (nFind != -1)
+	if (sUrl.Find(TDL_PROTOCOL) != -1 || sUrl.Find(TDL_EXTENSION) != -1)
 	{
 		return GetParent()->SendMessage(WM_TDCM_TASKLINK, 0, (LPARAM)(LPCTSTR)sUrl);
 	}
@@ -591,7 +633,24 @@ bool CToDoCommentsCtrl::ProcessMessage(MSG* pMsg)
 		}
 		else if (pMsg->wParam == _T('\t'))
 		{
-			ReplaceSel(_T("\t"), TRUE);
+			CHARRANGE cr;
+			GetSel(cr);
+
+			// if nothing is selected then just insert tabs
+			CString sSel = _T("\t");
+
+			if (cr.cpMax > cr.cpMin)
+			{
+				sSel += GetTextRange(cr);
+			}
+
+			// bump selection by 1 to account for the tab
+			cr.cpMin++;
+			cr.cpMax++;
+
+			ReplaceSel(sSel, TRUE);
+			SetSel(cr);
+
 			return TRUE;
 		}
 	}

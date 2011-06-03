@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.7 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // LightBox.cpp: implementation of the CLightBox class.
@@ -185,7 +185,9 @@ BOOL CLightBoxMgr::AttachLightBox(CWnd* pWnd)
 
 IMPLEMENT_DYNAMIC(CLightBox, CRuntimeDlg)
 
-CLightBox::CLightBox() : m_crBkgnd(GetSysColor(COLOR_3DHILIGHT)), m_nOpaquePercent(50),
+CLightBox::CLightBox():
+m_crBkgnd(GetSysColor(COLOR_3DHILIGHT)),
+m_nOpaquePercent(50),
 m_pSetLayeredWindowAttributes(NULL)
 {
 
@@ -199,7 +201,6 @@ CLightBox::~CLightBox()
 BEGIN_MESSAGE_MAP(CLightBox, CRuntimeDlg)
 	//{{AFX_MSG_MAP(CLightBox)
 	ON_WM_ERASEBKGND()
-	//ON_WM_TIMER()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -271,10 +272,16 @@ BOOL CLightBox::ShowTransparentWnd(BOOL bShow)
 		}
 	}
 
+	CWnd* pWndUnder = GetCWnd();
+
+	// make sure to redraw underlying window first to avoid artifacts
+	pWndUnder->Invalidate(TRUE);
+	pWndUnder->UpdateWindow();
+
 	if (bShow)
 	{
 		CRect rect;
-		GetCWnd()->GetWindowRect(rect);
+		pWndUnder->GetWindowRect(rect);
 		MoveWindow(rect);
 
 		m_pSetLayeredWindowAttributes(*this, 0, (unsigned char)((255 * m_nOpaquePercent) / 100), LWA_ALPHA);

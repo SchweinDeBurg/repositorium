@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2-6.1.10 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // TaskFile.h: interface for the CTaskFile class.
@@ -69,8 +69,12 @@ struct TDIRECURRENCE; // predeclaration
 
 class CTaskFile : public ITASKLISTBASE, public XMLBASE
 {
+	friend class CMultiTaskFile;
+
 public:
 	CTaskFile(LPCTSTR szPassword = NULL);
+	CTaskFile(const CTaskFile& tasks, LPCTSTR szPassword = NULL);
+	CTaskFile(const ITaskList* pTasks, LPCTSTR szPassword = NULL);
 	virtual ~CTaskFile();
 
 	BOOL Load(LPCTSTR szFilePath, IXmlParse* pCallback = NULL, BOOL bDecrypt = TRUE);
@@ -102,8 +106,10 @@ public:
 	DWORD GetNextUniqueID() const;
 	BOOL SetNextUniqueID(DWORD dwNextID);
 
-	BOOL SetArchive(BOOL bArchive = TRUE);
 	BOOL SetCheckedOutTo(const CString& sCheckedOutTo);
+	BOOL IsCheckedOutTo(const CString& sCheckedOutTo) const;
+
+	BOOL SetArchive(BOOL bArchive = TRUE);
 	BOOL SetFileFormat(unsigned long lFormat);
 	BOOL SetLastModified(const CString& sLastMod);
 	void SortTasksByPos();
@@ -175,11 +181,9 @@ public:
 
 	BOOL DeleteTaskAttributes(HTASKITEM hTask);// deletes all but child tasks
 	BOOL DeleteTask(HTASKITEM hTask);
-	HTASKITEM FindTask(DWORD dwTaskID) const;
 
-	BOOL CheckIn();
-	BOOL CheckOut();
-	BOOL CheckOut(CString& sCheckedOutTo);
+	BOOL CheckOut(LPCTSTR szCheckOutTo, CString& sCheckedOutTo);
+	BOOL CheckOut(LPCTSTR szCheckOutTo);
 
 	BOOL SetReportAttributes(LPCTSTR szTitle, const COleDateTime& date = 0.0);
 	BOOL HideAttribute(HTASKITEM hTask, const char* szAttrib, BOOL bHide = TRUE);
@@ -188,9 +192,15 @@ public:
 	bool SetTaskRisk(HTASKITEM hTask, int nRisk);
 
 	//////////////////////////////////////////////////////////////
+	// ITaskList8 implementation
+	unsigned long GetTaskParentID(HTASKITEM hTask) const;
+	HTASKITEM FindTask(unsigned long dwTaskID) const;
+
+	//////////////////////////////////////////////////////////////
 	// ITaskList7 implementation
 	unsigned char GetTaskDependencyCount(HTASKITEM hTask) const;
 	bool AddTaskDependency(HTASKITEM hTask, const char* szDepends);
+	bool AddTaskDependency(HTASKITEM hTask, unsigned long dwID);
 	const TCHAR* GetTaskDependency(HTASKITEM hTask, int nIndex) const;
 
 	unsigned char GetTaskAllocatedToCount(HTASKITEM hTask) const;
@@ -251,11 +261,16 @@ public:
 	// ITaskList implementation
 
 	bool IsArchive() const;
-	bool IsCheckedOut() const;
-	bool IsSourceControlled() const;
 
 	const TCHAR* GetProjectName() const;
+
+	bool IsSourceControlled() const;
 	const TCHAR* GetCheckOutTo() const;
+	bool IsCheckedOut() const
+	{
+		ASSERT(0);   // Deprecated
+		return false;
+	}
 
 	unsigned long GetFileFormat() const;
 	unsigned long GetFileVersion() const;

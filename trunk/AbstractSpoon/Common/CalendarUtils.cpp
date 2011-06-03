@@ -138,26 +138,26 @@ int CCalendarUtils::GetDaysInMonth(int _iMonth, int _iYear)
 	int nDays = -1;
 	switch (_iMonth)
 	{
-		case 1:     //jan
-		case 3:     //mar
-		case 5:     //may
-		case 7:     //jul
-		case 8:     //aug
-		case 10:    //oct
-		case 12:    //dec
+	case 1:     //jan
+	case 3:     //mar
+	case 5:     //may
+	case 7:     //jul
+	case 8:     //aug
+	case 10:    //oct
+	case 12:    //dec
 		{
 			nDays = 31;
 			break;
 		}
-		case 4:     //apr
-		case 9:     //sep
-		case 6:     //jun
-		case 11:    //nov
+	case 4:     //apr
+	case 9:     //sep
+	case 6:     //jun
+	case 11:    //nov
 		{
 			nDays = 30;
 			break;
 		}
-		case 2:     //feb
+	case 2:     //feb
 		{
 			if (_iYear % 4 == 0)
 			{
@@ -169,7 +169,7 @@ int CCalendarUtils::GetDaysInMonth(int _iMonth, int _iYear)
 			}
 			break;
 		}
-		default:
+	default:
 		{
 			ASSERT(FALSE);
 			break;

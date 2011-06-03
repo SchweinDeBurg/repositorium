@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,8 +24,9 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // GPImporter.h: interface for the CGPImporter class.
@@ -76,13 +77,14 @@ public:
 
 protected:
 	CMap<int, int, CString, CString&> m_mapResources;
-	CMap<int, int, HTASKITEM, HTASKITEM&> m_mapTasks;
+	BOOL m_bBumpTaskIDs;
 
 protected:
-	bool ImportTask(const CXmlItem* pXISrcTask, ITaskList7* pDestTaskFile, HTASKITEM htDestParent);
+	bool ImportTask(const CXmlItem* pXISrcTask, ITaskList8* pDestTaskFile, HTASKITEM htDestParent);
 	void BuildResourceMap(const CXmlItem* pXISrcPrj);
-//	void FixupDependencies(ITaskList7* pDestTaskFile, HTASKITEM htTask);
-	void FixupResourceAllocations(const CXmlItem* pXISrcPrj, ITaskList7* pDestTaskFile);
+	void FixupDependencies(const CXmlItem* pXISrcTask, ITaskList8* pDestTaskFile);
+	void FixupResourceAllocations(const CXmlItem* pXISrcPrj, ITaskList8* pDestTaskFile);
+	BOOL HasZeroIDTask(const CXmlItem* pXISrcTask) const;
 };
 
 #endif // !defined(AFX_GPIMPORTER_H__7B3A9934_69F0_46D5_88B4_C84D715772FC__INCLUDED_)

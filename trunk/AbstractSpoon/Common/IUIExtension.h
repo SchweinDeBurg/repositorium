@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // IUIExtension.h: interface and implementation of the IUIExtension class.
@@ -66,6 +67,7 @@
 class IUIExtensionWindow;
 class IUIExtension;
 class ITaskList;
+struct UITHEME;
 
 typedef IUIExtension* (*PFNCREATEUIEXT)(); // function prototype
 extern "C" DLL_DECLSPEC IUIExtension* CreateUIExtensionInterface();
@@ -148,6 +150,7 @@ public:
 	virtual BOOL Create(HWND hParent, BOOL bShow = TRUE, LPSIZE pSize = NULL) = 0;
 	virtual BOOL Show(BOOL bShow = TRUE) = 0;
 	virtual BOOL IsShowing() const = 0;
+	virtual void SetUITheme(const UITHEME& theme) = 0;
 
 	virtual void Update(const ITaskList* pTasks, DWORD dwFlags = UIU_ALL) = 0;
 	virtual void Release() = 0;

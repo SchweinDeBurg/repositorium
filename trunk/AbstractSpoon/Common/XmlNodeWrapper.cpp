@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // XmlNodeWrapper.cpp: implementation of the CXmlNodeWrapper class.
@@ -522,13 +522,14 @@ BOOL CXmlDocumentWrapper::Load(LPCTSTR path, BOOL bPreserveWhiteSpace)
 	return (VARIANT_TRUE == m_xmldoc->load(bstr));
 }
 
-BOOL CXmlDocumentWrapper::LoadXML(LPCTSTR xml/*, BOOL bPreserveWhiteSpace*/)
+BOOL CXmlDocumentWrapper::LoadXML(LPCTSTR xml, BOOL bPreserveWhiteSpace)
 {
 	if (!IsValid())
 	{
 		return FALSE;
 	}
 
+	m_xmldoc->put_preserveWhiteSpace(bPreserveWhiteSpace ? VARIANT_TRUE : VARIANT_FALSE);
 	_bstr_t bstr(CXmlNodeWrapper::ConvertStringToBSTR(ATL::CT2A(xml)), FALSE);
 
 	return (VARIANT_TRUE == m_xmldoc->loadXML(bstr));
@@ -695,6 +696,14 @@ BSTR CXmlNodeWrapper::ConvertStringToBSTR(const char* pSrc)
 MSXML2::IXMLDOMDocument* CXmlNodeWrapper::ParentDocument()
 {
 	return m_xmlnode->GetownerDocument().Detach();
+}
+
+BOOL CXmlNodeWrapper::IsPreservingWhiteSpace() const
+{
+	VARIANT_BOOL bPreserving = VARIANT_FALSE;
+	m_xmlnode->GetownerDocument()->get_preserveWhiteSpace(&bPreserving);
+	
+	return (bPreserving == VARIANT_TRUE);
 }
 
 MSXML2::IXMLDOMNode* CXmlNodeWrapper::Interface()

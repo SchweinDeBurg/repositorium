@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // RichEditBaseCtrl.cpp : implementation file
@@ -61,11 +61,15 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 const UINT WM_FINDREPLACE = ::RegisterWindowMessage(FINDMSGSTRING);
+const CRect DEFMARGINS = CRect(8, 4, 8, 0);
 
 /////////////////////////////////////////////////////////////////////////////
 // CRichEditBaseCtrl
 
-CRichEditBaseCtrl::CRichEditBaseCtrl() : m_bEnableSelectOnFocus(FALSE), m_bInOnFocus(FALSE)
+CRichEditBaseCtrl::CRichEditBaseCtrl():
+m_bEnableSelectOnFocus(FALSE),
+m_bInOnFocus(FALSE),
+m_rMargins(DEFMARGINS)
 {
 	m_callback.SetOwner(this);
 }
@@ -150,6 +154,14 @@ BOOL CRichEditBaseCtrl::Redo()
 	return CTextDocument(GetSafeHwnd()).Redo();
 }
 
+CString CRichEditBaseCtrl::GetSelText()
+{
+	CHARRANGE cr;
+	GetSel(cr);
+
+	return GetTextRange(cr);
+}
+
 CString CRichEditBaseCtrl::GetTextRange(const CHARRANGE& cr)
 {
 	int nLength = int(cr.cpMax - cr.cpMin + 1);
@@ -189,6 +201,20 @@ CString CRichEditBaseCtrl::GetTextRange(const CHARRANGE& cr)
 	return sText;
 }
 
+void CRichEditBaseCtrl::SelectCurrentWord()
+{
+	CHARRANGE cr;
+	GetSel(cr);
+
+	if (cr.cpMin == cr.cpMax) // nothing already selected
+	{
+		cr.cpMin = SendMessage(EM_FINDWORDBREAK, WB_LEFT, cr.cpMin);
+		cr.cpMax = SendMessage(EM_FINDWORDBREAK, WB_RIGHTBREAK, cr.cpMax + 1);
+
+		SetSel(cr);
+	}
+}
+
 CRichEditBaseCtrl::CRichEditOleCallback::CRichEditOleCallback() : m_pOwner(NULL)
 {
 	m_pStorage = NULL;
@@ -200,8 +226,7 @@ CRichEditBaseCtrl::CRichEditOleCallback::CRichEditOleCallback() : m_pOwner(NULL)
 		STGM_READWRITE | STGM_SHARE_EXCLUSIVE | STGM_CREATE | STGM_DELETEONRELEASE,
 		0, &m_pStorage);
 
-	if (m_pStorage == NULL ||
-		hResult != S_OK)
+	if (m_pStorage == NULL || hResult != S_OK)
 	{
 		AfxThrowOleException(hResult);
 	}
@@ -247,8 +272,7 @@ CRichEditBaseCtrl::CRichEditOleCallback::QueryInterface(REFIID iid, void** ppvOb
 	HRESULT hr = S_OK;
 	*ppvObject = NULL;
 
-	if (iid == IID_IUnknown ||
-		iid == IID_IRichEditOleCallback)
+	if (iid == IID_IUnknown || iid == IID_IRichEditOleCallback)
 	{
 		*ppvObject = this;
 		AddRef();
@@ -539,15 +563,15 @@ void CRichEditBaseCtrl::OnReplaceSel(LPCTSTR lpszFind, BOOL bNext, BOOL bCase,
 		if (!FindText())
 		{
 			TextNotFound(m_findState.strFind);
+			return;
 		}
 		else
 		{
 			AdjustDialogPosition(m_findState.pFindReplaceDlg);
 		}
-		return;
 	}
 
-	ReplaceSel(m_findState.strReplace);
+	ReplaceSel(m_findState.strReplace, TRUE);
 
 	if (!FindText())
 	{
@@ -565,6 +589,9 @@ void CRichEditBaseCtrl::OnReplaceAll(LPCTSTR lpszFind, LPCTSTR lpszReplace, BOOL
 {
 	ASSERT_VALID(this);
 
+	// start searching at the beginning of the text so that we know to stop at the end
+	SetSel(0, 0);
+
 	m_findState.strFind = lpszFind;
 	m_findState.strReplace = lpszReplace;
 	m_findState.bCase = bCase;
@@ -572,23 +599,11 @@ void CRichEditBaseCtrl::OnReplaceAll(LPCTSTR lpszFind, LPCTSTR lpszReplace, BOOL
 	m_findState.bNext = TRUE;
 
 	CWaitCursor wait;
-	// no selection or different than what looking for
-	if (!SameAsSelected(m_findState.strFind, m_findState.bCase, m_findState.bWord))
-	{
-		if (!FindText())
-		{
-			TextNotFound(m_findState.strFind);
-			return;
-		}
-	}
 
-	HideSelection(TRUE, FALSE);
-
-	do
+	while (FindText(FALSE))
 	{
-		ReplaceSel(m_findState.strReplace);
+		ReplaceSel(m_findState.strReplace, TRUE);
 	}
-	while (FindTextSimple());
 
 	TextNotFound(m_findState.strFind);
 	HideSelection(FALSE, FALSE);
@@ -646,25 +661,15 @@ BOOL CRichEditBaseCtrl::SameAsSelected(LPCTSTR lpszCompare, BOOL bCase, BOOL /*b
 		(!bCase && lstrcmpi(lpszCompare, strSelect) == 0);
 }
 
-BOOL CRichEditBaseCtrl::FindText()
+BOOL CRichEditBaseCtrl::FindText(BOOL bWrap)
 {
-	return FindText(m_findState.strFind, m_findState.bCase, m_findState.bWord);
+	return FindText(m_findState.strFind, m_findState.bCase, m_findState.bWord, bWrap);
 }
 
-BOOL CRichEditBaseCtrl::FindText(LPCTSTR lpszFind, BOOL bCase, BOOL bWord)
+BOOL CRichEditBaseCtrl::FindText(LPCTSTR lpszFind, BOOL bCase, BOOL bWord, BOOL bWrap)
 {
-	ASSERT_VALID(this);
 	CWaitCursor wait;
-	return FindTextSimple(lpszFind, bCase, bWord);
-}
 
-BOOL CRichEditBaseCtrl::FindTextSimple()
-{
-	return FindTextSimple(m_findState.strFind, m_findState.bCase, m_findState.bWord);
-}
-
-BOOL CRichEditBaseCtrl::FindTextSimple(LPCTSTR lpszFind, BOOL bCase, BOOL bWord)
-{
 	ASSERT(lpszFind != NULL);
 
 	if (!lpszFind || !*lpszFind)
@@ -696,7 +701,7 @@ BOOL CRichEditBaseCtrl::FindTextSimple(LPCTSTR lpszFind, BOOL bCase, BOOL bWord)
 
 		SendMessage(EM_GETTEXTRANGE, 0, (LPARAM)&textRange);
 
-		if (_istlead(ch[0]))
+		if (!CString(ch).IsEmpty() && _istlead(ch[0]))
 		{
 			ASSERT(ft.chrg.cpMax - ft.chrg.cpMin >= 2);
 			ft.chrg.cpMin++;
@@ -722,10 +727,16 @@ BOOL CRichEditBaseCtrl::FindTextSimple(LPCTSTR lpszFind, BOOL bCase, BOOL bWord)
 	}
 
 	// else we need to restart the search from the beginning
-	ft.chrg.cpMin = 0;
-	ft.chrg.cpMax = GetTextLength();
+	if (bWrap)
+	{
+		ft.chrg.cpMin = 0;
+		ft.chrg.cpMax = GetTextLength();
 
-	return (FindAndSelect(dwFlags, ft) != -1);
+		return (FindAndSelect(dwFlags, ft) != -1);
+	}
+
+	// else
+	return FALSE;
 }
 
 long CRichEditBaseCtrl::FindAndSelect(DWORD dwFlags, FINDTEXTEX& ft)
@@ -759,4 +770,33 @@ BOOL CRichEditBaseCtrl::IsFindDialog(HWND hwnd) const
 	}
 
 	return FALSE;
+}
+
+void CRichEditBaseCtrl::SetMargins(LPCRECT pMargins)
+{
+	if (pMargins == NULL)
+	{
+		m_rMargins.SetRectEmpty();
+	}
+	else
+	{
+		m_rMargins = *pMargins;
+	}
+
+	CRect rClient;
+	GetClientRect(rClient);
+
+	rClient -= m_rMargins;
+
+	SetRect(rClient);
+}
+
+void CRichEditBaseCtrl::OnSize(UINT nType, int cx, int cy)
+{
+	CRichEditCtrl::OnSize(nType, cx, cy);
+
+	CRect rClient(0, 0, cx, cy);
+	rClient -= m_rMargins;
+
+	SetRect(rClient);
 }

@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,7 +24,7 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
 //*****************************************************************************
 
@@ -41,9 +41,9 @@
 
 #include "HookMgr.h"
 
-const UINT WM_FW_FOCUSCHANGE = ::RegisterWindowMessage(_T("WM_FW_FOCUSCHANGE")); 
+const UINT WM_FW_FOCUSCHANGE = ::RegisterWindowMessage(_T("WM_FW_FOCUSCHANGE"));
 
-class CFocusWatcher : public CHookMgr<CFocusWatcher>  
+class CFocusWatcher : public CHookMgr<CFocusWatcher>
 {
 	friend class CHookMgr<CFocusWatcher>;
 
@@ -57,9 +57,12 @@ public:
 protected:
 	CWnd* m_pMainWnd;
 
-protected:		
-	static CFocusWatcher& Instance() { return CHookMgr<CFocusWatcher>::GetInstance(); }
-	virtual BOOL OnCbt(int nCode, WPARAM wParam, LPARAM lParam); 
+protected:
+	static CFocusWatcher& Instance()
+	{
+		return CHookMgr<CFocusWatcher>::GetInstance();
+	}
+	virtual BOOL OnCbt(int nCode, WPARAM wParam, LPARAM lParam);
 };
 
 #endif // !defined(AFX_FOCUSWATCHER_H__8AE280AF_E103_447C_AF22_8AA12C03E9BD__INCLUDED_)

@@ -193,6 +193,8 @@ CRulerRichEditCtrl::CRulerRichEditCtrl() : m_pen(PS_DOT, 0, RGB(0, 0, 0))
 	m_offset = 0;
 	m_readOnly = FALSE;
 	m_bWordWrap = -1;
+	m_crSel.cpMax = m_crSel.cpMin = -1;
+
 	ShowToolbar();
 	ShowRuler();
 
@@ -349,6 +351,29 @@ BOOL CRulerRichEditCtrl::CreateRTFControl(BOOL autohscroll)
 	return result;
 }
 
+void CRulerRichEditCtrl::SetSelectedWebLink(const CString& sWebLink)
+{
+	CHARRANGE cr;
+	m_rtf.GetSel(cr);
+
+	CString sText = m_rtf.GetTextRange(cr);
+
+	if (!sText.IsEmpty())
+	{
+		CEnString sUrl(_T("HYPERLINK\"%s\"%s"), (LPCTSTR)sWebLink, (LPCTSTR)sText);
+		m_rtf.ReplaceSel(sUrl, TRUE);
+
+		cr.cpMax = cr.cpMin + sUrl.GetLength();
+		m_rtf.SetSel(cr);
+		SetEffect(CFM_PROTECTED | CFM_LINK | CFM_HIDDEN, CFE_PROTECTED | CFE_LINK);
+
+		// hide all but the text
+		cr.cpMax -= sText.GetLength();
+		m_rtf.SetSel(cr);
+		SetEffect(CFM_PROTECTED | CFM_LINK | CFM_HIDDEN, CFE_PROTECTED | CFE_LINK | CFE_HIDDEN);
+	}
+}
+
 void CRulerRichEditCtrl::UpdateEditRect()
 {
 	// Set up edit rect margins
@@ -438,13 +463,21 @@ void CRulerRichEditCtrl::OnEnHScroll()
 
 void CRulerRichEditCtrl::OnEnSelChange(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-	// Update the toolbar
-	UpdateToolbarButtons();
+	CHARRANGE crSel;
+	m_rtf.GetSel(crSel);
 
-	// Update ruler
-	UpdateTabStops();
-	m_ruler.Invalidate(FALSE);
-	m_ruler.UpdateWindow();
+	if (m_crSel.cpMin != crSel.cpMin || m_crSel.cpMax != crSel.cpMax)
+	{
+		// Update the toolbar
+		UpdateToolbarButtons();
+
+		// Update ruler
+		UpdateTabStops();
+		m_ruler.Invalidate(FALSE);
+		m_ruler.UpdateWindow();
+
+		m_crSel = crSel;
+	}
 
 	*pResult = 0;
 }
@@ -625,7 +658,7 @@ LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 
 	switch (mode)
 	{
-		case DOWN:
+	case DOWN:
 		// The left mouse button is clicked
 		{
 			// Check if we clicked on a tab-marker.
@@ -672,93 +705,97 @@ LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 		}
 		break;
 
-		case MOVE:
+	case MOVE:
 		// The mouse is moved
-			if (m_movingtab != -1)
+		if (m_movingtab != -1)
+		{
+			CRect rect;
+			GetClientRect(rect);
+			CClientDC dc(this);
+
+			// Erase previous line
+			dc.SelectObject(&m_pen);
+			dc.SetROP2(R2_XORPEN);
+
+			dc.MoveTo(m_rulerPosition, toolbarHeight + 3);
+			dc.LineTo(m_rulerPosition, rect.Height());
+
+			// Set up new line
+			// Calc min and max. We can not place this marker
+			// before the previous or after the next. Neither
+			// can we move the marker outside the ruler.
+			int pos = m_rtf.GetScrollPos(SB_HORZ);
+			int min = m_margin + m_offset;
+			if (m_movingtab > 0)
 			{
-				CRect rect;
-				GetClientRect(rect);
-				CClientDC dc(this);
-
-				// Erase previous line
-				dc.SelectObject(&m_pen);
-				dc.SetROP2(R2_XORPEN);
-
-				dc.MoveTo(m_rulerPosition, toolbarHeight + 3);
-				dc.LineTo(m_rulerPosition, rect.Height());
-
-				// Set up new line
-				// Calc min and max. We can not place this marker
-				// before the previous or after the next. Neither
-				// can we move the marker outside the ruler.
-				int pos = m_rtf.GetScrollPos(SB_HORZ);
-				int min = m_margin + m_offset;
-				if (m_movingtab > 0)
-				{
-					min = (m_tabs[ m_movingtab - 1 ] + m_margin - pos) + 3 + m_offset;
-				}
-
-				int max = rect.Width() - 5 + m_offset;
-				if (m_movingtab < m_tabs.GetUpperBound())
-				{
-					max = (m_tabs[ m_movingtab + 1 ] + m_margin - pos) - 3 + m_offset;
-				}
-				max = min(max, rect.Width() - 5 + m_offset);
-
-				// Set new positions
-				m_rulerPosition = max(min, point->x - m_offset);
-				m_rulerPosition = min(m_rulerPosition, max);
-
-				// Draw the new line
-				dc.MoveTo(m_rulerPosition, toolbarHeight + 3);
-				dc.LineTo(m_rulerPosition, rect.Height());
-
-				dc.SelectStockObject(BLACK_PEN);
-
+				min = (m_tabs[ m_movingtab - 1 ] + m_margin - pos) + 3 + m_offset;
 			}
-			break;
 
-		case UP:
+			int max = rect.Width() - 5 + m_offset;
+			if (m_movingtab < m_tabs.GetUpperBound())
+			{
+				max = (m_tabs[ m_movingtab + 1 ] + m_margin - pos) - 3 + m_offset;
+			}
+			max = min(max, rect.Width() - 5 + m_offset);
+
+			// Set new positions
+			m_rulerPosition = max(min, point->x - m_offset);
+			m_rulerPosition = min(m_rulerPosition, max);
+
+			// Draw the new line
+			dc.MoveTo(m_rulerPosition, toolbarHeight + 3);
+			dc.LineTo(m_rulerPosition, rect.Height());
+
+			dc.SelectStockObject(BLACK_PEN);
+
+		}
+		break;
+
+	case UP:
 		// The mouse button is released
-			if (m_movingtab != -1)
-			{
-				// Erase previous line
-				CRect rect;
-				GetClientRect(rect);
+		if (m_movingtab != -1)
+		{
+			// Erase previous line
+			CRect rect, ruler;
+			GetClientRect(rect);
 
-				CClientDC dc(this);
-				dc.SelectObject(&m_pen);
-				dc.SetROP2(R2_XORPEN);
+			CClientDC dc(this);
+			dc.SelectObject(&m_pen);
+			dc.SetROP2(R2_XORPEN);
 
-				dc.MoveTo(m_rulerPosition, toolbarHeight + 3);
-				dc.LineTo(m_rulerPosition, rect.Height());
+			dc.MoveTo(m_rulerPosition, toolbarHeight + 3);
+			dc.LineTo(m_rulerPosition, rect.Height());
 
-				// Set new value for tab position
-				int pos = m_rtf.GetScrollPos(SB_HORZ);
-				m_tabs[ m_movingtab ] = m_rulerPosition - m_margin + pos - m_offset;
+			// if the drop is ouside the ruler then delete the tab
+			m_ruler.GetClientRect(ruler);
+			ruler.InflateRect(0, 10);
 
-				// Get the current tabstops, as we
-				// must set all tabs in one operation
-				ParaFormat para(PFM_TABSTOPS);
-				para.cTabCount = MAX_TAB_STOPS;
-				m_rtf.GetParaFormat(para);
+			// Set new value for tab position
+			int pos = m_rtf.GetScrollPos(SB_HORZ);
+			m_tabs[ m_movingtab ] = m_rulerPosition - m_margin + pos - m_offset;
 
-				// Convert current position to twips
-				double twip = (double)m_physicalInch / 1440;
-				int tabpos = m_tabs[ m_movingtab ];
-				tabpos = (int)((double) tabpos / twip + .5);
-				para.rgxTabs[ m_movingtab ] = tabpos;
+			// Get the current tabstops, as we
+			// must set all tabs in one operation
+			ParaFormat para(PFM_TABSTOPS);
+			para.cTabCount = MAX_TAB_STOPS;
+			m_rtf.GetParaFormat(para);
 
-				// Set tabs to control
-				m_rtf.SetParaFormat(para);
+			// Convert current position to twips
+			double twip = (double)m_physicalInch / 1440;
+			int tabpos = m_tabs[ m_movingtab ];
+			tabpos = (int)((double) tabpos / twip + .5);
+			para.rgxTabs[ m_movingtab ] = tabpos;
 
-				// Update the ruler
-				m_ruler.SetTabStops(m_tabs);
+			// Set tabs to control
+			m_rtf.SetParaFormat(para);
 
-				m_movingtab = -1;
-				m_rtf.SetFocus();
-			}
-			break;
+			// Update the ruler
+			m_ruler.SetTabStops(m_tabs);
+
+			m_movingtab = -1;
+			m_rtf.SetFocus();
+		}
+		break;
 	}
 
 	return 0;

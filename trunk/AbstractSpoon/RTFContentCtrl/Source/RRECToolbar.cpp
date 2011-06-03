@@ -125,6 +125,9 @@ BOOL CRRECToolBar::Create(CWnd* parent)
 		// The font name combo
 		GetToolBarCtrl().SetButtonInfo(FONT_NAME_POS, &tbi);
 		GetItemRect(FONT_NAME_POS, &rect);
+
+		rect.left++;
+		rect.top++;
 		rect.bottom += COMBO_HEIGHT;
 
 		if (!m_font.Create(WS_CHILD | WS_VSCROLL |	WS_VISIBLE | CBS_AUTOHSCROLL |
@@ -140,6 +143,8 @@ BOOL CRRECToolBar::Create(CWnd* parent)
 		tbi.cx = COMBO_WIDTH;
 		GetToolBarCtrl().SetButtonInfo(FONT_SIZE_POS, &tbi);
 		GetItemRect(FONT_SIZE_POS, &rect);
+
+		rect.top++;
 		rect.bottom += COMBO_HEIGHT;
 
 		if (!m_size.Create(WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | CBS_DROPDOWNLIST |
@@ -365,6 +370,10 @@ void CRRECToolBar::OnSize(UINT nType, int cx, int cy)
 		CRect rect;
 		GetItemRect(FONT_NAME_POS, &rect);
 
+		rect.left++;
+		rect.top++;
+		rect.bottom += COMBO_HEIGHT;
+
 		int nNewWidth = FONT_COMBO_WIDTH - max(0, DEFCTRLSWIDTH - cx);
 		nNewWidth = max(nNewWidth, MIN_FONT_COMBO_WIDTH);
 
@@ -372,7 +381,7 @@ void CRRECToolBar::OnSize(UINT nType, int cx, int cy)
 		{
 			rect.right = rect.left + nNewWidth;
 			rect.bottom += COMBO_HEIGHT;
-			GetDlgItem(DROPDOWN_FONT)->MoveWindow(rect);
+			m_font.MoveWindow(rect);
 
 			// update toolbar item size also
 			tbi.cx = (WORD)rect.Width();
@@ -380,8 +389,9 @@ void CRRECToolBar::OnSize(UINT nType, int cx, int cy)
 
 			// move the other two items to suit their toolbar rects
 			GetItemRect(FONT_SIZE_POS, &rect);
+			rect.top++;
 			rect.bottom += COMBO_HEIGHT;
-			GetDlgItem(DROPDOWN_SIZE)->MoveWindow(rect);
+			m_size.MoveWindow(rect);
 		}
 	}
 }
@@ -393,8 +403,8 @@ void CRRECToolBar::OnColorDropDown(NMHDR* pNMHDR, LRESULT* pResult)
 
 	switch (nBtnID)
 	{
-		case BUTTON_BACKCOLOR:
-		case BUTTON_TEXTCOLOR:
+	case BUTTON_BACKCOLOR:
+	case BUTTON_TEXTCOLOR:
 		{
 			CRect rButton;
 			GetItemRect(CommandToIndex(pNMTB->iItem), rButton);
@@ -421,8 +431,8 @@ LRESULT CRRECToolBar::OnItemPostPaint(LPNMTBCUSTOMDRAW lpNMCustomDraw)
 
 	switch (nBtnID)
 	{
-		case BUTTON_BACKCOLOR:
-		case BUTTON_TEXTCOLOR:
+	case BUTTON_BACKCOLOR:
+	case BUTTON_TEXTCOLOR:
 		{
 			// paint the lowest 3 lines with the appropriate colour
 			// but only as far as the beginning of the drop button

@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_WELCOMEWIZARD_H__089919DB_8CBF_4F53_BFDF_6BB1C1C63929__INCLUDED_)
@@ -171,19 +172,16 @@ public:
 	{
 		return m_bHideAttrib;
 	}
-	CString GetSampleFilePath() const
-	{
-		return m_bViewSample ? m_sSampleTaskList : _T("");
-	}
+	CString GetSampleFilePath() const;
 
 protected:
 // Dialog Data
 	//{{AFX_DATA(CWelcomePage3)
 	enum { IDD = IDD_WELCOME_PAGE3 };
-	CFileEdit	m_eSampleTasklist;
-	CString	m_sSampleTaskList;
-	int		m_bHideAttrib;
-	int		m_bViewSample;
+    CFileEdit   m_eSampleTasklist;
+    CString m_sSampleTaskList;
+    int     m_bHideAttrib;
+    int     m_bViewSample;
 	//}}AFX_DATA
 	HFONT m_hFont;
 

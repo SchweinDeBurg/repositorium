@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.6 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #include "stdafx.h"
@@ -50,6 +50,7 @@
 #include <sys/utime.h>
 #include <sys/stat.h>
 #include <shlwapi.h>
+#include <io.h>
 
 #pragma comment(lib, "shlwapi.lib")
 
@@ -101,7 +102,7 @@ BOOL CFileBackup::MakeBackup(const CString& sFile, const CString& sFolder, BOOL 
 
 	if (!bRes)
 	{
-		TRACE(FileMisc::FormatGetLastError() + '\n');
+		TRACE(Misc::FormatGetLastError() + _T('\n'));
 	}
 	else
 	{
@@ -186,51 +187,42 @@ CString CFileBackup::BuildBackupPath(const CString& sFile, const CString& sFolde
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-CString FileMisc::FormatGetLastError(DWORD dwLastErr)
-{
-	if (dwLastErr == -1)
-	{
-		dwLastErr = GetLastError();
-	}
-
-	LPTSTR lpMessage;
-	DWORD dwErrCode = GetLastError();
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-		FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL,               // no source buffer needed
-		dwErrCode,          // error code for this message
-		NULL,               // default language ID
-		(LPTSTR)&lpMessage, // allocated by fcn
-		NULL,               // minimum size of buffer
-		NULL);              // no inserts
-
-
-	CString sError(lpMessage);
-	LocalFree(lpMessage);
-
-	return sError;
-}
-
-void FileMisc::TerminatePath(CString& sPath)
+CString& FileMisc::TerminatePath(CString& sPath)
 {
 	sPath.TrimRight();
 
-	if (sPath.ReverseFind('\\') != (sPath.GetLength() - 1))
+	if (sPath.ReverseFind(_T('\\')) != (sPath.GetLength() - 1))
 	{
-		sPath += '\\';
+		sPath += _T('\\');
 	}
+
+	return sPath;
 }
 
-void FileMisc::UnterminatePath(CString& sPath)
+CString FileMisc::TerminatePath(LPCTSTR szPath)
+{
+	CString sPath(szPath);
+	return TerminatePath(sPath);
+}
+
+CString& FileMisc::UnterminatePath(CString& sPath)
 {
 	sPath.TrimRight();
 
 	int len = sPath.GetLength();
 
-	if (sPath.ReverseFind('\\') == (len - 1))
+	if (sPath.ReverseFind(_T('\\')) == (len - 1))
 	{
 		sPath = sPath.Left(len - 1);
 	}
+
+	return sPath;
+}
+
+CString FileMisc::UnterminatePath(LPCTSTR szPath)
+{
+	CString sPath(szPath);
+	return UnterminatePath(sPath);
 }
 
 void FileMisc::ReplaceExtension(CString& sFilePath, const TCHAR* szExt)
@@ -558,20 +550,17 @@ bool FileMisc::FolderFromFilePathExists(const TCHAR* szFilePath)
 
 CString FileMisc::GetCwd()
 {
-	TCHAR szCwd[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, szCwd);
+	CString sFolder;
 
-	return szCwd;
+	::GetCurrentDirectory(MAX_PATH, sFolder.GetBuffer(MAX_PATH + 1));
+	sFolder.ReleaseBuffer();
+
+	return sFolder;
 }
 
 void FileMisc::SetCwd(const CString& sCwd)
 {
 	SetCurrentDirectory(sCwd);
-}
-
-CString FileMisc::GetModuleFolder(HMODULE hMod)
-{
-	return GetFolderFromFilePath(GetModuleFileName(hMod));
 }
 
 CString FileMisc::GetFolderFromFilePath(const TCHAR* szFilePath)
@@ -787,7 +776,7 @@ double FileMisc::GetFileSize(const TCHAR* szPath)
 
 bool FileMisc::LogText(LPCTSTR szLine, bool bWantDateTime)
 {
-	CString sLogFile = GetModuleFileName();
+	CString sLogFile = GetAppFileName();
 	ReplaceExtension(sLogFile, _T(".log"));
 
 	CString sLogLine(szLine);
@@ -828,6 +817,43 @@ bool FileMisc::AppendLineToFile(LPCTSTR szPathname, LPCTSTR szLine)
 	return false;
 }
 
+int FileMisc::LoadFileLines(LPCTSTR szPathname, CStringArray& aLines, int nLineCount)
+{
+	int nLinesRead = 0;
+	aLines.RemoveAll();
+
+	CStdioFile file;
+
+	if (file.Open(szPathname, CFile::modeRead | CFile::shareDenyWrite))
+	{
+		if (file.GetLength())
+		{
+			if (nLineCount == -1)
+			{
+				nLineCount = INT_MAX;
+			}
+
+			// read lines
+			CString sLine;
+			while (file.ReadString(sLine) && nLinesRead < nLineCount)
+			{
+				aLines.Add(sLine);
+				nLinesRead++;
+			}
+		}
+	}
+
+	return nLinesRead;
+}
+
+bool FileMisc::CanOpenFile(const TCHAR* szPathname, BOOL bDenyWrite)
+{
+	CFile file;
+	UINT nFlags = CFile::modeRead | (bDenyWrite ? CFile::shareDenyWrite : 0);
+
+	return (file.Open(szPathname, nFlags) != FALSE);
+}
+
 bool FileMisc::SaveFile(const TCHAR* szPathname, const TCHAR* szText, int nLen)
 {
 	if (nLen == -1)
@@ -850,7 +876,7 @@ bool FileMisc::LoadFile(const TCHAR* szPathname, CString& sText)
 {
 	CStdioFile file;
 
-	if (file.Open(szPathname, CFile::modeRead))
+	if (file.Open(szPathname, CFile::modeRead | CFile::shareDenyWrite))
 	{
 		if (file.GetLength())
 		{
@@ -1050,6 +1076,34 @@ CString FileMisc::GetModuleFileName(HMODULE hMod)
 	return sModulePath;
 }
 
+
+CString FileMisc::GetModuleFolder(HMODULE hMod)
+{
+	return GetFolderFromFilePath(GetModuleFileName(hMod));
+}
+
+CString FileMisc::GetAppFileName()
+{
+	return GetModuleFileName();
+}
+
+CString FileMisc::GetAppFolder(LPCTSTR szSubFolder)
+{
+	CString sFolder = GetModuleFolder();
+
+	if (szSubFolder && *szSubFolder)
+	{
+		MakePath(sFolder, NULL, sFolder, szSubFolder, NULL);
+	}
+
+	return UnterminatePath(sFolder);
+}
+
+CString FileMisc::GetAppResourceFolder(LPCTSTR szResFolder)
+{
+	return GetAppFolder(szResFolder);
+}
+
 CString FileMisc::GetWindowsFolder()
 {
 	CString sFolder;
@@ -1057,7 +1111,7 @@ CString FileMisc::GetWindowsFolder()
 	::GetWindowsDirectory(sFolder.GetBuffer(MAX_PATH + 1), MAX_PATH);
 	sFolder.ReleaseBuffer();
 
-	return sFolder;
+	return UnterminatePath(sFolder);
 }
 
 CString FileMisc::GetWindowsSystemFolder()
@@ -1067,7 +1121,7 @@ CString FileMisc::GetWindowsSystemFolder()
 	::GetSystemDirectory(sFolder.GetBuffer(MAX_PATH + 1), MAX_PATH);
 	sFolder.ReleaseBuffer();
 
-	return sFolder;
+	return UnterminatePath(sFolder);
 }
 
 bool FileMisc::ExtractResource(LPCTSTR szModulePath, UINT nID, LPCTSTR szType, const CString& sTempFilePath)
@@ -1130,26 +1184,59 @@ CString& FileMisc::MakePath(CString& sPath, const TCHAR* szDrive, const TCHAR* s
 	return sPath;
 }
 
-CString FileMisc::GetFullPath(const CString& sFilePath, BOOL bFromApp)
+CString FileMisc::GetFullPath(const CString& sFilePath, const CString& sRelativeToFolder)
 {
-	CString sCwd;
-
-	if (bFromApp)
+	if (!::PathIsRelative(sFilePath))
 	{
-		sCwd = GetCwd();
-		SetCurrentDirectory(GetModuleFolder());
+		// special case: filename has no drive letter and is not UNC
+		if (sFilePath.Find(_T(":\\")) == -1 && sFilePath.Find(_T("\\\\")) == -1)
+		{
+			CString sFullPath, sDrive;
+
+			SplitPath(sRelativeToFolder, &sDrive);
+			return MakePath(sFullPath, sDrive, NULL, sFilePath);
+		}
+
+		// else
+		return sFilePath;
 	}
+
+	CString sSrcPath(sRelativeToFolder);
+	FileMisc::TerminatePath(sSrcPath);
+	sSrcPath += sFilePath;
 
 	TCHAR szFullPath[MAX_PATH + 1];
+	BOOL bRes = ::PathCanonicalize(szFullPath, sSrcPath);
 
-	_tfullpath(szFullPath, sFilePath, MAX_PATH);
+	return bRes ? CString(szFullPath) : sSrcPath;
+}
 
-	if (!sCwd.IsEmpty())
+CString& FileMisc::MakeFullPath(CString& sFilePath, const CString& sRelativeToFolder)
+{
+	sFilePath = GetFullPath(sFilePath, sRelativeToFolder);
+	return sFilePath;
+}
+
+CString FileMisc::GetRelativePath(const CString& sFilePath, const CString& sRelativeToFolder, BOOL bFolder)
+{
+	if (::PathIsRelative(sFilePath))
 	{
-		SetCurrentDirectory(sCwd);
+		return sFilePath;
 	}
 
-	return szFullPath;
+	TCHAR szRelPath[MAX_PATH + 1];
+
+	BOOL bRes = ::PathRelativePathTo(szRelPath,
+		UnterminatePath(sRelativeToFolder), FILE_ATTRIBUTE_DIRECTORY,
+		sFilePath, bFolder ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL);
+
+	return bRes ? CString(szRelPath) : sFilePath;
+}
+
+CString& FileMisc::MakeRelativePath(CString& sFilePath, const CString& sRelativeToFolder, BOOL bFolder)
+{
+	sFilePath = GetRelativePath(sFilePath, sRelativeToFolder, bFolder);
+	return sFilePath;
 }
 
 BOOL FileMisc::IsSameFile(const CString& sFilePath1, const CString& sFilePath2)

@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // FileEdit.cpp : implementation file
@@ -72,7 +73,8 @@ m_nStyle(nStyle),
 m_bTipNeeded(FALSE),
 m_sFilter(szFilter),
 ICON_WIDTH(20),
-m_sFolderPrompt(FILEEDIT_SELECTFOLDER)
+m_sFolderPrompt(FILEEDIT_SELECTFOLDER),
+m_sCurFolder(FileMisc::GetCwd())
 {
 	if (!(m_nStyle & FES_NOBROWSE))
 	{
@@ -313,23 +315,38 @@ void CFileEdit::OnBtnClick(UINT nID)
 			GetWindowText(sFilename);
 
 			// filedialog spits if file is actually a url
-			if (::PathIsURL(sFilename) || ::PathIsDirectory(sFilename))
+			if (::PathIsURL(sFilename))
 			{
-				sFilename.Empty();
+				sFilename = m_sCurFolder;
 			}
-			else
+
+			else if (!sFilename.IsEmpty()) // make fullpath
 			{
-				FileMisc::ValidateFilepath(sFilename);
+				FileMisc::MakeFullPath(sFilename, m_sCurFolder);
 			}
 
 			if (HasStyle(FES_FOLDERS))
 			{
+				// if folder not exists revert to current folder
+				if (!FileMisc::FolderExists(sFilename))
+				{
+					sFilename = m_sCurFolder;
+				}
+
 				CFolderDialog dialog(m_sFolderPrompt, sFilename);
 
 				if (dialog.DoModal() == IDOK)
 				{
 					SetFocus();
-					SetWindowText(dialog.GetFolderPath());
+
+					CString sPath(dialog.GetFolderPath());
+
+					if (HasStyle(FES_RELATIVEPATHS))
+					{
+						sPath = FileMisc::GetRelativePath(sPath, m_sCurFolder, TRUE);
+					}
+
+					SetWindowText(sPath);
 
 					// send parent a change notification
 					GetParent()->SendMessage(WM_COMMAND, MAKELPARAM(EN_CHANGE, GetDlgCtrlID()), (LPARAM)GetSafeHwnd());
@@ -339,6 +356,12 @@ void CFileEdit::OnBtnClick(UINT nID)
 			{
 				BOOL bOpenFileDlg = !HasStyle(FES_SAVEAS);
 				DWORD dwFlags = bOpenFileDlg ? OFN_FILEMUSTEXIST : OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
+
+				// if file not exists revert to current folder
+				if (!FileMisc::FileExists(sFilename))
+				{
+					sFilename.Empty();
+				}
 
 				CFileDialog dialog(bOpenFileDlg, NULL, sFilename, dwFlags, m_sFilter);
 
@@ -352,7 +375,15 @@ void CFileEdit::OnBtnClick(UINT nID)
 				if (dialog.DoModal() == IDOK)
 				{
 					SetFocus();
-					SetWindowText(dialog.GetPathName());
+
+					CString sPath(dialog.GetPathName());
+
+					if (HasStyle(FES_RELATIVEPATHS))
+					{
+						sPath = FileMisc::GetRelativePath(sPath, m_sCurFolder, FALSE);
+					}
+
+					SetWindowText(sPath);
 
 					// send parent a change notification
 					GetParent()->SendMessage(WM_COMMAND, MAKELPARAM(EN_CHANGE, GetDlgCtrlID()), (LPARAM)GetSafeHwnd());
@@ -410,6 +441,12 @@ void CFileEdit::OnBtnClick(UINT nID)
 		}
 		break;
 	}
+}
+
+void CFileEdit::SetCurrentFolder(LPCTSTR szFolder)
+{
+	m_sCurFolder = szFolder;
+	FileMisc::UnterminatePath(m_sCurFolder);
 }
 
 void CFileEdit::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR* lpncsp)

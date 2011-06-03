@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // PreferencesTaskDefPage.cpp : implementation file
@@ -89,6 +89,7 @@ m_cbStatusList(TRUE)
 	m_aAttribPrefs.Add(ATTRIBPREF(IDS_PTDP_VERSION, PTPA_VERSION, -1));
 	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_STARTDATE, PTPA_STARTDATE, -1));
 	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_FLAG, PTPA_FLAG, -1));
+	m_aAttribPrefs.Add(ATTRIBPREF(IDS_TDLBC_EXTERNALID, PTPA_EXTERNALID, -1));
 
 	m_eCost.SetMask(_T(".0123456789"), ME_LOCALIZEDECIMAL);
 }
@@ -232,7 +233,7 @@ int CPreferencesTaskDefPage::GetListItems(PTDP_LIST nList, CStringArray& aItems)
 
 	case PTDP_ALLOCTO:
 		aItems.Copy(m_aDefAllocTo);
-		Misc::ParseIntoArray(m_sDefAllocTo, aDefValues);
+		Misc::Split(m_sDefAllocTo, aDefValues);
 		Misc::AddUniqueItems(aDefValues, aItems);
 		break;
 
@@ -243,7 +244,7 @@ int CPreferencesTaskDefPage::GetListItems(PTDP_LIST nList, CStringArray& aItems)
 
 	case PTDP_CATEGORY:
 		aItems.Copy(m_aDefCats);
-		Misc::ParseIntoArray(m_sDefCategory, aDefValues);
+		Misc::Split(m_sDefCategory, aDefValues);
 		Misc::AddUniqueItems(aDefValues, aItems);
 		break;
 
@@ -474,6 +475,9 @@ int CPreferencesTaskDefPage::GetParentAttribsUsed(CTDCAttributeArray& aAttribs, 
 				case PTPA_FLAG:
 					aAttribs.Add(TDCA_FLAG);
 					break;
+				case PTPA_EXTERNALID:
+					aAttribs.Add(TDCA_EXTERNALID);
+					break;
 				}
 			}
 		}
@@ -488,12 +492,12 @@ int CPreferencesTaskDefPage::GetParentAttribsUsed(CTDCAttributeArray& aAttribs, 
 
 int CPreferencesTaskDefPage::GetDefaultCategories(CStringArray& aCats) const
 {
-	return Misc::ParseIntoArray(m_sDefCategory, aCats);
+	return Misc::Split(m_sDefCategory, aCats);
 }
 
 int CPreferencesTaskDefPage::GetDefaultAllocTo(CStringArray& aAllocTo) const
 {
-	return Misc::ParseIntoArray(m_sDefAllocTo, aAllocTo);
+	return Misc::Split(m_sDefAllocTo, aAllocTo);
 }
 
 double CPreferencesTaskDefPage::GetDefaultTimeEst(int& nUnits) const

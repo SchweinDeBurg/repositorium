@@ -2,12 +2,12 @@
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -15,7 +15,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.3 sources
+// - merged with ToDoList version 6.1.3-6.2.2 sources
 //*****************************************************************************
 
 // CalendarFrameWnd.cpp : implementation file
@@ -30,6 +30,8 @@
 #include "../../../CodeProject/Source/TimeHelper.h"
 #include "../../../CodeProject/Source/FileMisc.h"
 #include "../../../CodeProject/Source/VersionInfo.h"
+#include "../../Common/UITheme.h"
+#include "../../../CodeProject/Source/Themed.h"
 #include "CalendarFrameWnd.h"
 
 #include "../../ToDoList/Source/TDCMsg.h"
@@ -161,6 +163,18 @@ BOOL CCalendarFrameWnd::Create(HWND hParent, BOOL bShow, LPSIZE pSize)
 	}
 
 	return FALSE;
+}
+
+void CCalendarFrameWnd::SetUITheme(const UITHEME& theme)
+{
+	if (CThemed::IsThemeActive())
+	{
+		m_menubar.SetBackgroundColor(theme.crMenuBack);
+		DrawMenuBar();
+
+		m_StatusBar.SetUIColors(theme.crStatusBarLight, theme.crStatusBarDark, 
+			theme.nStyle == UIS_GRADIENT, theme.crStatusBarText);
+	}
 }
 
 BOOL CCalendarFrameWnd::Show(BOOL bShow)
@@ -304,6 +318,16 @@ int CCalendarFrameWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
+	ModifyStyleEx(WS_EX_CLIENTEDGE, 0);
+
+	if (!m_menubar.LoadMenu(IDR_CALENDAR))
+	{
+		return FALSE;
+	}
+
+	SetMenu(&m_menubar);
+	m_hMenuDefault = m_menubar;
+	
 	//set the title of the window
 	UpdateTitleBarText();
 

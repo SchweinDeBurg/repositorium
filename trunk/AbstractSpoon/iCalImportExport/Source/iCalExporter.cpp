@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,8 +24,9 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // iCalExporter.cpp: implementation of the CiCalExporter class.
@@ -69,6 +70,37 @@ bool CiCalExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFil
 
 		// export first task
 		ExportTask(pSrcTaskFile, pSrcTaskFile->GetFirstTask(), _T(""), fileOut);
+
+		// footer
+		WriteString(fileOut, _T("END:VCALENDAR"));
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CiCalExporter::Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
+{
+	CStdioFile fileOut;
+
+	if (fileOut.Open(szDestFilePath, CFile::modeCreate | CFile::modeWrite))
+	{
+		// header
+		WriteString(fileOut, _T("BEGIN:VCALENDAR"));
+		WriteString(fileOut, _T("PRODID:iCalExporter (c) AbstractSpoon 2009"));
+		WriteString(fileOut, _T("VERSION:2.0.0"));
+
+		for (int nTaskList = 0; nTaskList < pSrcTaskFile->GetTaskListCount(); nTaskList++)
+		{
+			const ITaskList* pTasks = pSrcTaskFile->GetTaskList(nTaskList);
+
+			if (pTasks)
+			{
+				// export first task
+				ExportTask(pTasks, pTasks->GetFirstTask(), _T(""), fileOut);
+			}
+		}
 
 		// footer
 		WriteString(fileOut, _T("END:VCALENDAR"));

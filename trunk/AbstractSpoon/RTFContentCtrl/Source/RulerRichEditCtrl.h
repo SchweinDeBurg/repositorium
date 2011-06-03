@@ -60,10 +60,11 @@ struct CharFormat : public CHARFORMAT2W
 struct CharFormat : public CHARFORMAT2
 #endif
 {
-	CharFormat()
+	CharFormat(DWORD mask = 0)
 	{
 		memset(this, 0, sizeof(CharFormat));
 		cbSize = sizeof(CharFormat);
+		dwMask = mask;
 	};
 };
 
@@ -115,6 +116,8 @@ public:
 	}
 
 	CRulerRichEdit& GetRichEditCtrl();
+
+	void SetSelectedWebLink(const CString& sWebLink);
 
 // Implementation
 	CString GetRTF();
@@ -211,6 +214,7 @@ protected:
 	int             m_movingtab;        // The tab-position being moved, or -1 if none
 	int             m_offset;           // Internal offset of the tab-marker being moved.
 	CharFormat      m_cfDefault;
+    CHARRANGE       m_crSel;
 
 	BOOL            m_showToolbar;
 	BOOL            m_showRuler;
