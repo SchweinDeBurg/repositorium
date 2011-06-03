@@ -75,7 +75,7 @@ const UINT BUFSIZE = 5 * 1024;
 const LPCTSTR ALLFILES = _T("All Files (*.*)\0*.*\0");
 
 CRemoteFile::CRemoteFile(LPCTSTR szAgent, LPCTSTR szServer, LPCTSTR szUsername,
-	LPCTSTR szPassword, LPCTSTR szProxy, CWnd* pParent):
+LPCTSTR szPassword, LPCTSTR szProxy, CWnd* pParent):
 m_sAgent(szAgent),
 m_sProxyAndPort(szProxy),
 m_sServer(szServer),
