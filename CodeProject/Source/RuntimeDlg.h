@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_RUNTIMEDLG_H__AC34D7F7_D4E4_45E3_A746_0CC018F717F1__INCLUDED_)
@@ -62,9 +63,9 @@ class CRuntimeDlg : public CDialog, public CDialogHelper
 {
 	DECLARE_DYNAMIC(CRuntimeDlg)
 
-	// Construction
+// Construction
 public:
-	CRuntimeDlg();
+	CRuntimeDlg(LPCTSTR szSettingsKey = NULL);
 
 	// do not use
 	int DoModal()
@@ -86,7 +87,7 @@ public:
 	void SetFont(CFont* pFont, BOOL bRedraw = TRUE);
 	void SetFont(HFONT hFont, BOOL bRedraw = TRUE);
 
-	// Operations
+// Operations
 protected: // intended to be used only from a derived class
 
 #define RTD_DEFSTYLE (WS_VISIBLE | WS_POPUPWINDOW  | WS_CAPTION | DS_CENTER)
@@ -146,7 +147,7 @@ protected: // intended to be used only from a derived class
 	// will be called automatically during the create process if 'rectAuto' specified
 	void AutoFit();
 
-	// Attributes
+// Attributes
 public:
 	static const CRect rectAuto;
 
@@ -154,10 +155,11 @@ protected:
 	CRTCtrlList m_lstControls;
 	CRect m_rBorders, m_rBordersDLU;
 	HICON m_hILarge, m_hISmall;
+	CString m_sSettingsKey;
 
 	static CMapStringToString s_mapClasses;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CRuntimeDlg)
 	//}}AFX_VIRTUAL
@@ -165,7 +167,7 @@ protected:
 	virtual void OnOK();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CRuntimeDlg();
 
@@ -174,6 +176,7 @@ protected:
 	//{{AFX_MSG(CRuntimeDlg)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
+	afx_msg void OnDestroy();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -203,6 +206,9 @@ protected:
 	void ShowControls(UINT nCtrlIDFrom, UINT nCtrlIDTo, BOOL bShow = TRUE);
 	void ShowControl(UINT nCtrlID, BOOL bShow = TRUE);
 	void ExcludeControls(CDC* pDC, UINT nCtrlIDFrom, UINT nCtrlIDTo);
+
+	void SetInitialPos(LPCRECT pRect, DWORD dwStyle);
+	void SaveCurrentPos();
 
 	virtual CPoint GetInitialPos() const
 	{

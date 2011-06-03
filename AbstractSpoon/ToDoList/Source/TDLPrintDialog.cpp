@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // TDLPrintDialog.cpp : implementation file
@@ -65,10 +65,9 @@ static char THIS_FILE[] = __FILE__;
 CTDLPrintDialog::CTDLPrintDialog(LPCTSTR szTitle, BOOL bPreview, BOOL bShowSubtaskCheckbox, CWnd* pParent /*=NULL*/):
 CDialog(IDD_PRINT_DIALOG, pParent),
 m_bPreview(bPreview),
-m_taskSel(_T("Print"),
-bShowSubtaskCheckbox),
+m_taskSel(_T("Print"), bShowSubtaskCheckbox),
 m_sTitle(szTitle),
-m_eStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER))
+m_eStylesheet(FES_COMBOSTYLEBTN | FES_RELATIVEPATHS, CEnString(IDS_XSLFILEFILTER))
 {
 	//{{AFX_DATA_INIT(CTDLPrintDialog)
 	//}}AFX_DATA_INIT
@@ -86,6 +85,8 @@ m_eStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER))
 		{
 			m_sStylesheet = sDefStylesheet;
 		}
+
+		m_sStylesheet = FileMisc::GetRelativePath(m_sStylesheet, FileMisc::GetAppResourceFolder(), FALSE);
 	}
 
 	m_bUseStylesheet = (!m_sStylesheet.IsEmpty());
@@ -134,7 +135,7 @@ BOOL CTDLPrintDialog::OnInitDialog()
 
 	VERIFY(m_taskSel.Create(IDC_FRAME, this));
 
-	BOOL bEnable = !m_bUseStylesheet || FileMisc::FileExists(FileMisc::GetFullPath(m_sStylesheet, TRUE));
+	BOOL bEnable = !m_bUseStylesheet || FileMisc::FileExists(GetStylesheet());
 	GetDlgItem(IDOK)->EnableWindow(bEnable);
 
 	if (m_bPreview)
@@ -149,8 +150,7 @@ BOOL CTDLPrintDialog::OnInitDialog()
 	GetDlgItem(IDC_STYLESHEET)->EnableWindow(m_bUseStylesheet);
 
 	// init the stylesheet folder to point to the resource folder
-	CString sXslFolder = FileMisc::GetModuleFolder() + _T("Resources");
-	m_eStylesheet.SetCurrentFolder(sXslFolder);
+	m_eStylesheet.SetCurrentFolder(FileMisc::GetAppResourceFolder());
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
@@ -162,7 +162,7 @@ void CTDLPrintDialog::OnUsestylesheet()
 
 	GetDlgItem(IDC_STYLESHEET)->EnableWindow(m_bUseStylesheet);
 
-	BOOL bEnable = !m_bUseStylesheet || FileMisc::FileExists(FileMisc::GetFullPath(m_sStylesheet, TRUE));
+	BOOL bEnable = !m_bUseStylesheet || FileMisc::FileExists(GetStylesheet());
 	GetDlgItem(IDOK)->EnableWindow(bEnable);
 }
 
@@ -170,7 +170,7 @@ void CTDLPrintDialog::OnChangeStylesheet()
 {
 	UpdateData();
 
-	BOOL bEnable = !m_bUseStylesheet || FileMisc::FileExists(FileMisc::GetFullPath(m_sStylesheet, TRUE));
+	BOOL bEnable = !m_bUseStylesheet || FileMisc::FileExists(GetStylesheet());
 	GetDlgItem(IDOK)->EnableWindow(bEnable);
 }
 
@@ -178,7 +178,7 @@ CString CTDLPrintDialog::GetStylesheet() const
 {
 	if (m_bUseStylesheet)
 	{
-		return FileMisc::GetFullPath(m_sStylesheet, TRUE);
+		return FileMisc::GetFullPath(m_sStylesheet, FileMisc::GetAppResourceFolder());
 	}
 
 	// else

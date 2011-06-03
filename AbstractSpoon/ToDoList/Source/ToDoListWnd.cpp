@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.2-6.1.7 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // ToDoListWnd.cpp : implementation file
@@ -50,8 +50,8 @@
 #include "ToDoListWnd.h"
 #include "ToolsCmdlineParser.h"
 #include "ToolsUserInputDlg.h"
-#include "Toolshelper.h"
-#include "ExportDlg.h"
+#include "ToolsHelper.h"
+#include "TDLExportDlg.h"
 #include "TasklistHtmlExporter.h"
 #include "TaskListTxtExporter.h"
 #include "TDCMsg.h"
@@ -65,9 +65,10 @@
 #include "TDLImportDialog.h"
 #include "TDLSetReminderDlg.h"
 #include "TDLShowReminderDlg.h"
-#include "UIThemeFile.h"
 #include "TDLMultiSortDlg.h"
 #include "TDLAddLoggedTimeDlg.h"
+#include "MultiTaskFile.h"
+#include "TDCStatic.h"
 
 #include "../../Common/AboutDlg.h"
 #include "../../../CodeProject/Source/HoldRedraw.h"
@@ -95,6 +96,7 @@
 #include "../../../CodeProject/Source/LightBox.h"
 #include "../../Common/RemoteFile.h"
 #include "../../Common/ServerDlg.h"
+#include "../../../CodeProject/Source/FocusWatcher.h"
 
 #include "../../../CodeProject/Source/GUI.h"
 #include "../../../CodeProject/Source/SendFileTo.h"
@@ -126,9 +128,9 @@ enum { TB_TOOLBARHIDDEN, TB_DUMMY, TB_TOOLBARANDMENU };
 enum { FILEALL, NEWTASK, EDITTASK, VIEW, MOVE, SORTTASK, DELETETASK, TOOLS, HELP };
 
 const int TD_VERSION = 31000;
-const int SB_HEIGHT = 10; // dlu
 const int BEVEL = 2; // pixels
 const int BORDER = 3; // pixels
+const int TB_VOFFSET = 4;
 
 enum
 {
@@ -157,24 +159,6 @@ enum
 	INTERVAL_TIMETRACKING = 5000
 };
 
-struct SHORTCUT
-{
-	DWORD dwShortcut;
-	UINT nIDShortcut;
-};
-
-static SHORTCUT MISC_SHORTCUTS[] =
-{
-	{ MAKELONG('B', HOTKEYF_ALT | HOTKEYF_EXT), IDS_SETFOCUS2TASLIST },
-	{ 0, 0 },
-	{ MAKELONG(VK_UP, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION },
-	{ MAKELONG(VK_DOWN, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION },
-	{ MAKELONG(VK_PRIOR, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION },
-	{ MAKELONG(VK_NEXT, HOTKEYF_SHIFT | HOTKEYF_EXT), IDS_TASKLISTEXTENDEDSELECTION }
-};
-
-static int NUM_MISCSHORTCUTS = sizeof(MISC_SHORTCUTS) / sizeof(SHORTCUT);
-
 /////////////////////////////////////////////////////////////////////////////
 
 CToDoListWnd::CToDoListWnd() : CFrameWnd(),
@@ -200,7 +184,10 @@ m_bReloading(FALSE),
 m_hIcon(NULL),
 m_hwndLastFocus(NULL),
 m_bStartHidden(FALSE),
-m_cbQuickFind(ACBS_ALLOWDELETE | ACBS_ADDTOSTART)
+m_cbQuickFind(ACBS_ALLOWDELETE | ACBS_ADDTOSTART),
+m_bShowTasklistBar(TRUE),
+m_bShowTreeListBar(TRUE),
+m_dlgNotifyDue(TRUE, _T("DueTasksDialog"))
 {
 	// init content manager BEFORE userPrefs
 	VERIFY(m_mgrContent.Initialize());
@@ -243,8 +230,9 @@ BEGIN_MESSAGE_MAP(CToDoListWnd, CFrameWnd)
 	ON_COMMAND(ID_VIEW_EXPANDALL, OnViewExpandall)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_EXPANDALL, OnUpdateViewExpandall)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_COLLAPSEALL, OnUpdateViewCollapseall)
+	ON_COMMAND(ID_VIEW_TOGGLETASKEXPANDED, OnViewToggletaskexpanded)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_TOGGLETASKEXPANDED, OnUpdateViewToggletaskexpanded)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW1, OnUpdateWindow)
-	ON_WM_ACTIVATEAPP()
 	ON_WM_ENABLE()
 	ON_COMMAND(ID_NEWTASK, OnNewtask)
 	ON_COMMAND(ID_NEWSUBTASK, OnNewsubtask)
@@ -311,6 +299,8 @@ BEGIN_MESSAGE_MAP(CToDoListWnd, CFrameWnd)
 	ON_COMMAND(ID_SENDTASKS, OnSendtasks)
 	ON_COMMAND(ID_EDIT_INSERTDATE, OnEditInsertdate)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_INSERTDATE, OnUpdateEditInsertdate)
+	ON_COMMAND(ID_EDIT_INSERTTIME, OnEditInserttime)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_INSERTTIME, OnUpdateEditInserttime)
 	ON_COMMAND(ID_NEXTTASK, OnGotoNexttask)
 	ON_COMMAND(ID_PREVTASK, OnGotoPrevtask)
 	ON_UPDATE_COMMAND_UI(ID_PREVTASK, OnUpdateGotoPrevtask)
@@ -328,9 +318,6 @@ BEGIN_MESSAGE_MAP(CToDoListWnd, CFrameWnd)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_QUICKFINDNEXT, OnUpdateQuickFindNext)
 	ON_COMMAND(ID_EDIT_QUICKFINDPREV, OnQuickFindPrev)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_QUICKFINDPREV, OnUpdateQuickFindPrev)
-	ON_COMMAND(ID_LOAD_FROMWEB, OnLoadFromWeb)
-	ON_COMMAND(ID_SAVE_TOWEB, OnSaveToWeb)
-	ON_UPDATE_COMMAND_UI(ID_SAVE_TOWEB, OnUpdateSaveToWeb)
 	ON_COMMAND(ID_EDIT_SETTASKICON, OnEditSettaskicon)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_SETTASKICON, OnUpdateEditSettaskicon)
 	ON_COMMAND(ID_EDIT_SETREMINDER, OnEditSetReminder)
@@ -343,15 +330,25 @@ BEGIN_MESSAGE_MAP(CToDoListWnd, CFrameWnd)
 	ON_UPDATE_COMMAND_UI(ID_SORT_MULTI, OnUpdateSortMulti)
 	ON_COMMAND(ID_ARCHIVE_SELECTEDTASKS, OnArchiveSelectedTasks)
 	ON_UPDATE_COMMAND_UI(ID_ARCHIVE_SELECTEDTASKS, OnUpdateArchiveSelectedCompletedTasks)
+	ON_COMMAND(ID_ADDTIMETOLOGFILE, OnAddtimetologfile)
+	ON_UPDATE_COMMAND_UI(ID_ADDTIMETOLOGFILE, OnUpdateAddtimetologfile)
+	ON_WM_ACTIVATEAPP()
 	ON_WM_SYSCOMMAND()
 	ON_WM_INITMENUPOPUP()
 	ON_WM_MOVE()
 	ON_WM_ERASEBKGND()
 	ON_COMMAND(ID_ADDTIMETOLOGFILE, OnAddtimetologfile)
 	ON_UPDATE_COMMAND_UI(ID_ADDTIMETOLOGFILE, OnUpdateAddtimetologfile)
+	ON_COMMAND(ID_VIEW_SHOWTASKLISTTABBAR, OnViewShowTasklistTabbar)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_SHOWTASKLISTTABBAR, OnUpdateViewShowTasklistTabbar)
+	ON_COMMAND(ID_VIEW_SHOWTREELISTTABBAR, OnViewShowTreeListTabbar)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_SHOWTREELISTTABBAR, OnUpdateViewShowTreeListTabbar)
 	//}}AFX_MSG_MAP
 	ON_COMMAND(ID_TOOLS_REMOVEFROMSOURCECONTROL, OnToolsRemovefromsourcecontrol)
 	ON_UPDATE_COMMAND_UI(ID_TOOLS_REMOVEFROMSOURCECONTROL, OnUpdateToolsRemovefromsourcecontrol)
+	ON_COMMAND(ID_LOAD_FROMWEB, OnLoadFromWeb)
+	ON_COMMAND(ID_SAVE_TOWEB, OnSaveToWeb)
+	ON_UPDATE_COMMAND_UI(ID_SAVE_TOWEB, OnUpdateSaveToWeb)
 	ON_COMMAND(ID_VIEW_REFRESHFILTER, OnViewRefreshfilter)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_REFRESHFILTER, OnUpdateViewRefreshfilter)
 	ON_WM_CREATE()
@@ -515,9 +512,9 @@ BEGIN_MESSAGE_MAP(CToDoListWnd, CFrameWnd)
 	ON_NOTIFY(TTN_NEEDTEXT, 0, OnNeedTooltipText)
 	ON_UPDATE_COMMAND_UI(ID_SB_SELCOUNT, OnUpdateSBSelectionCount)
 	ON_UPDATE_COMMAND_UI(ID_SB_TASKCOUNT, OnUpdateSBTaskCount)
+	ON_REGISTERED_MESSAGE(WM_FW_FOCUSCHANGE, OnFocusChange)
 	ON_REGISTERED_MESSAGE(WM_FBN_FILTERCHNG, OnSelchangeFilter)
 	ON_REGISTERED_MESSAGE(WM_TDCN_LISTCHANGE, OnToDoCtrlNotifyListChange)
-	ON_REGISTERED_MESSAGE(WM_TDCN_SORT, OnToDoCtrlNotifySort)
 	ON_REGISTERED_MESSAGE(WM_TDCN_MODIFY, OnToDoCtrlNotifyMod)
 	ON_REGISTERED_MESSAGE(WM_TDCN_MINWIDTHCHANGE, OnToDoCtrlNotifyMinWidthChange)
 	ON_REGISTERED_MESSAGE(WM_TDCN_TIMETRACK, OnToDoCtrlNotifyTimeTrack)
@@ -621,32 +618,23 @@ void CToDoListWnd::SetUITheme(const CString& sThemeFile)
 		return;
 	}
 
-	CUIThemeFile themeFile;
-
-	if (sThemeFile.IsEmpty() || !CThemed::IsThemeActive() || !themeFile.LoadThemeFile(sThemeFile))
+	if (CThemed::IsThemeActive() && m_theme.LoadThemeFile(sThemeFile))
 	{
-		m_theme.nStyle			= UIS_GRADIENT;
-		m_theme.crAppBackDark	= GetSysColor(COLOR_3DFACE);
-		m_theme.crAppBackLight	= GetSysColor(COLOR_3DFACE);
-		m_theme.crAppLines		= GetSysColor(COLOR_3DSHADOW);
-		m_theme.crMenuBack		= GetSysColor(COLOR_3DFACE);
-		m_theme.crToolbarDark	= GetSysColor(COLOR_3DFACE);
-		m_theme.crToolbarLight	= GetSysColor(COLOR_3DFACE);
-		m_theme.crStatusBarDark	= GetSysColor(COLOR_3DFACE);
-		m_theme.crStatusBarLight = GetSysColor(COLOR_3DFACE);
+		m_sThemeFile = sThemeFile;
 	}
 	else
 	{
-		m_sThemeFile = sThemeFile;
-		themeFile.GetTheme(m_theme);
+		m_sThemeFile.Empty();
+		m_theme.Reset();
 	}
 
 	// update the UI
 	m_toolbar.SetBackgroundColors(m_theme.crToolbarLight, m_theme.crToolbarDark, m_theme.nStyle	== UIS_GRADIENT);
-	m_statusBar.SetUIColors(m_theme.crStatusBarLight, m_theme.crStatusBarDark, m_theme.nStyle	== UIS_GRADIENT);
+	m_statusBar.SetUIColors(m_theme.crStatusBarLight, m_theme.crStatusBarDark, m_theme.nStyle == UIS_GRADIENT, m_theme.crStatusBarText);
 	m_menubar.SetBackgroundColor(m_theme.crMenuBack);
-	m_filterBar.SetUIColors(m_theme.crAppBackLight);
+	m_filterBar.SetUIColors(m_theme.crAppBackLight, m_theme.crAppText);
 	m_tabCtrl.SetBackgroundColor(m_theme.crAppBackDark);
+	m_mgrUIExtensions.SetUITheme(m_theme);
 
 	for (int nCtl = 0; nCtl < GetTDCCount(); nCtl++)
 	{
@@ -672,7 +660,7 @@ BOOL CToDoListWnd::Create(const TDCSTARTUP& startup)
 
 	if (m_bLogging)
 	{
-		::DeleteFile(FileMisc::GetModuleFolder() + _T("ToDoList.log"));
+		::DeleteFile(FileMisc::GetAppFolder() + _T("\\ToDoList.log"));
 	}
 
 	if (LoadFrame(IDR_MAINFRAME, WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, NULL, NULL))
@@ -754,6 +742,12 @@ int CToDoListWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
+	// statusbar
+	if (!InitStatusbar())
+	{
+		return -1;
+	}
+
 	// menu icons
 	InitMenuIconManager();
 
@@ -787,12 +781,6 @@ int CToDoListWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_tabCtrl.SetImageList(&m_ilTabCtrl);
 	}
 	else
-	{
-		return -1;
-	}
-
-	// statusbar
-	if (!InitStatusbar())
 	{
 		return -1;
 	}
@@ -909,6 +897,7 @@ void CToDoListWnd::InitShortcutManager()
 	m_mgrShortcuts.AddShortcut(ID_EDIT_REDO, 'Y', HOTKEYF_CONTROL);
 	m_mgrShortcuts.AddShortcut(ID_VIEW_TOGGLETREEANDLIST, VK_F10, 0);
 	m_mgrShortcuts.AddShortcut(ID_VIEW_TOGGLETASKSANDCOMMENTS, VK_F11, 0);
+	m_mgrShortcuts.AddShortcut(ID_VIEW_TOGGLETASKEXPANDED, VK_SPACE, HOTKEYF_CONTROL | HOTKEYF_ALT);
 	m_mgrShortcuts.AddShortcut(ID_EDIT_INCTASKPERCENTDONE, VK_ADD, HOTKEYF_CONTROL);
 	m_mgrShortcuts.AddShortcut(ID_EDIT_DECTASKPERCENTDONE, VK_SUBTRACT, HOTKEYF_CONTROL);
 	m_mgrShortcuts.AddShortcut(ID_VIEW_PREV_SEL, VK_LEFT, HOTKEYF_ALT | HOTKEYF_EXT);
@@ -994,6 +983,7 @@ void CToDoListWnd::InitMenuIconManager()
 
 	aCmdIDs.Add(ID_PREFERENCES);
 	aCmdIDs.Add(ID_HELP_WIKI);
+	aCmdIDs.Add(ID_HELP_DONATE);
 	aCmdIDs.Add(ID_HELP);
 
 	m_mgrMenuIcons.AddImages(aCmdIDs, IDB_TOOLBAR16, 16, RGB(255, 0, 255));
@@ -1012,7 +1002,7 @@ void CToDoListWnd::OnShowKeyboardshortcuts()
 		{
 			if (MISC_SHORTCUTS[nItem].dwShortcut)
 				sMisc.Format(_T("%s|%s"), m_mgrShortcuts.GetShortcutText(MISC_SHORTCUTS[nItem].dwShortcut),
-				CEnString(MISC_SHORTCUTS[nItem].nIDShortcut));
+					CEnString(MISC_SHORTCUTS[nItem].nIDShortcut));
 			else
 			{
 				sMisc.Empty();
@@ -1025,6 +1015,51 @@ void CToDoListWnd::OnShowKeyboardshortcuts()
 
 		dialog.DoModal();
 	}
+}
+
+LRESULT CToDoListWnd::OnFocusChange(WPARAM wp, LPARAM /*lp*/)
+{
+	if (m_statusBar.GetSafeHwnd() && IsWindowEnabled() && GetTDCCount() && wp)
+	{
+		// grab the previous window in the z-order and if its
+		// static text then use that as the focus hint
+		CWnd* pFocus = CWnd::FromHandle((HWND)wp);
+		const CFilteredToDoCtrl& tdc = GetToDoCtrl();
+		m_sCurrentFocus.Empty();
+
+		if (CDialogHelper::IsChildOrSame(tdc.GetSafeHwnd(), (HWND)wp))
+		{
+			m_sCurrentFocus.LoadString(IDS_FOCUS_TASKS);
+			m_sCurrentFocus += _T(": ");
+			m_sCurrentFocus += tdc.GetControlDescription(pFocus);
+		}
+		else
+		{
+			if (pFocus == m_cbQuickFind.GetWindow(GW_CHILD))
+			{
+				m_sCurrentFocus.LoadString(IDS_QUICKFIND);
+			}
+			else
+			{
+				if (m_filterBar.IsChild(pFocus))
+				{
+					m_sCurrentFocus.LoadString(IDS_FOCUS_FILTERBAR);
+					m_sCurrentFocus += _T(": ");
+				}
+				m_sCurrentFocus += GetControlLabel(pFocus);
+			}
+		}
+
+		m_statusBar.SetPaneText(m_statusBar.CommandToIndex(ID_SB_FOCUS), m_sCurrentFocus);
+
+		// if the status bar is hidden then add text to title bar
+		if (!m_bShowStatusBar)
+		{
+			UpdateCaption();
+		}
+	}
+
+	return 0L;
 }
 
 LRESULT CToDoListWnd::OnGetIcon(WPARAM bLargeIcon, LPARAM /*not used*/)
@@ -1049,31 +1084,32 @@ BOOL CToDoListWnd::InitStatusbar()
 {
 	static SBACTPANEINFO SB_PANES[] =
 	{
-		{ ID_SB_FILEPATH,       MAKEINTRESOURCE(ID_SB_FILEPATH_TIP), SBACTF_STRETCHY | SBACTF_RESOURCETIP },
-		{ ID_SB_FILEVERSION,    MAKEINTRESOURCE(ID_SB_FILEVERSION_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
-		{ ID_SB_TASKCOUNT,      MAKEINTRESOURCE(ID_SB_TASKCOUNT_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
-		{ ID_SB_SPACER },
-		{ ID_SB_SELCOUNT,       MAKEINTRESOURCE(0), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
-		{ ID_SB_SELTIMEEST,     MAKEINTRESOURCE(ID_SB_SELTIMEEST_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
-		{ ID_SB_SELTIMESPENT,   MAKEINTRESOURCE(ID_SB_SELTIMESPENT_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
-		{ ID_SB_SELCOST,        MAKEINTRESOURCE(ID_SB_SELCOST_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_FILEPATH,		MAKEINTRESOURCE(IDS_SB_FILEPATH_TIP), SBACTF_STRETCHY | SBACTF_RESOURCETIP },
+		{ ID_SB_FILEVERSION,	MAKEINTRESOURCE(IDS_SB_FILEVERSION_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_TASKCOUNT,	MAKEINTRESOURCE(IDS_SB_TASKCOUNT_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_SELCOUNT,		MAKEINTRESOURCE(0), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_SELTIMEEST,	MAKEINTRESOURCE(IDS_SB_SELTIMEEST_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_SELTIMESPENT,	MAKEINTRESOURCE(IDS_SB_SELTIMESPENT_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_SELCOST,		MAKEINTRESOURCE(IDS_SB_SELCOST_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_FOCUS,		MAKEINTRESOURCE(IDS_SB_FOCUS_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
 	};
 
 	static int SB_PANECOUNT = sizeof(SB_PANES) / sizeof(SBACTPANEINFO);
 
 	if (!m_statusBar.Create(this, WS_CHILD | WS_VISIBLE | CBRS_BOTTOM, IDC_FILENAME))
 	{
-		return -1;
+		return FALSE;
 	}
 
 	if (!m_statusBar.SetPanes(SB_PANES, SB_PANECOUNT))
 	{
-		return -1;
+		return FALSE;
 	}
 
-	if (CThemed::IsThemeActive())
+	// for hooking focus messages
+	if (!CFocusWatcher::Initialize(this))
 	{
-		m_statusBar.SetUIColors(m_theme.crStatusBarLight, m_theme.crStatusBarDark, m_theme.nStyle == UIS_GRADIENT/*, m_theme.crAppText*/);
+		return FALSE;
 	}
 
 	return TRUE;
@@ -1084,10 +1120,10 @@ BOOL CToDoListWnd::InitToolbar()
 	if (!m_toolbar.GetSafeHwnd())
 	{
 		if (m_toolbar.CreateEx(this, TBSTYLE_FLAT | TBSTYLE_WRAPABLE, WS_CHILD | WS_VISIBLE |
-			CBRS_TOP | CBRS_ALIGN_TOP | WS_CLIPCHILDREN | CBRS_TOOLTIPS))
+				CBRS_ALIGN_TOP | WS_CLIPCHILDREN | CBRS_TOOLTIPS))
 		{
-			m_toolbar.LoadToolBar(IDR_TOOLBAR);
-			m_toolbar.SetImage(IDB_TOOLBAR16, RGB(255, 0, 255));
+			m_toolbar.LoadToolBar(IDR_TOOLBAR_NEW);
+			m_toolbar.SetImage(IDB_TOOLBAR16_NEW, RGB(255, 0, 255));
 			m_toolbar.GetToolBarCtrl().HideButton(ID_TOOLS_TOGGLECHECKIN, !Prefs().GetEnableSourceControl());
 
 			// colors
@@ -1175,6 +1211,11 @@ BOOL CToDoListWnd::PreTranslateMessage(MSG* pMsg)
 	if (ProcessDialogControlShortcut(pMsg))
 	{
 		return TRUE;
+	}
+
+	if (IsDroppedComboBox(pMsg->hwnd))
+	{
+		return FALSE;
 	}
 
 	// process for app level shortcuts first so we can handle
@@ -1495,61 +1536,64 @@ TDC_FILE CToDoListWnd::SaveTaskList(int nIndex, LPCTSTR szFilePath, BOOL bAuto)
 				UpdateCaption();
 				UpdateStatusbar();
 
-				// export to html?
-				if (userPrefs.GetAutoExport())
+				// auto-export after saving
+				CString sExt;
+
+				if (userPrefs.GetAutoExport() && GetAutoExportExtension(sExt))
 				{
+					// construct output path
 					CString sExportPath = userPrefs.GetAutoExportFolderPath();
 					CString sDrive, sFolder, sFName;
 
 					FileMisc::SplitPath(sFilePath, &sDrive, &sFolder, &sFName);
 
-					BOOL bFiltered = (userPrefs.GetExportFilteredOnly() && (tdc.HasCustomFilter() || tdc.HasFilter()));
-
-					// filtered tasks only? except if only exporting visible column attributes
-					// because we handle that a different way
-					if (bFiltered && userPrefs.GetExportAllAttributes())
+					if (!sExportPath.IsEmpty() && FileMisc::CreateFolder(sExportPath))
 					{
-						tasks.Reset();
-						tdc.GetFilteredTasks(tasks);
+						FileMisc::MakePath(sFilePath, NULL, sExportPath, sFName, sExt);
+					}
+					else
+					{
+						FileMisc::MakePath(sFilePath, sDrive, sFolder, sFName, sExt);
 					}
 
-					if (userPrefs.GetExportToHTML())
+					// The current contents of 'tasks' is 'All Tasks' and
+					// 'All Columns' but NOT 'Html Comments'.
+					// So if user either wants 'Filtered Tasks' or 'Html Comments' or
+					// only 'Visible Columns' we need to grab the tasks again.
+					BOOL bFiltered = (userPrefs.GetExportFilteredOnly() && (tdc.HasCustomFilter() || tdc.HasFilter()));
+
+					if (bFiltered || userPrefs.GetExportToHTML() || !userPrefs.GetExportAllAttributes())
 					{
-						if (!sExportPath.IsEmpty() && FileMisc::CreateFolder(sExportPath))
+						TSD_TASKS nWhatTasks = bFiltered ? TSDT_FILTERED : TSDT_ALL;
+						TDCGETTASKS filter;
+
+						if (!userPrefs.GetExportAllAttributes())
 						{
-							FileMisc::MakePath(sFilePath, NULL, sExportPath, sFName, _T(".html"));
-						}
-						else
-						{
-							FileMisc::MakePath(sFilePath, sDrive, sFolder, sFName, _T(".html"));
+							CTDCColumnArray aCols;
+							tdc.GetVisibleColumns(aCols);
+
+							MapColumnsToAttributes(aCols, filter.aAttribs);
+							filter.dwFlags |= TDCGTF_CUSTOMATTRIB;
+
+							// add comments always
+							filter.aAttribs.Add(TDCA_COMMENTS);
 						}
 
-						// if the users wants all attributes exported then
-						// we can simply export the tasks retrieved from CToDoCtrl::Save
-						if (userPrefs.GetExportAllAttributes())
-						{
-							tasks.SetFileName(szFilePath);
-							Export2Html(tasks, sFilePath, userPrefs.GetSaveExportStylesheet());
-						}
-						else // get only visible attributes
-						{
-							Export2Html(tdc, sFilePath, bFiltered ? TSDT_FILTERED : TSDT_ALL, userPrefs.GetSaveExportStylesheet());
-						}
+						BOOL bHtmlComments = userPrefs.GetExportToHTML();
+						BOOL bTransform = FileMisc::FileExists(userPrefs.GetSaveExportStylesheet());
+
+						tasks.Reset();
+						GetTasks(tdc, bHtmlComments, bTransform, nWhatTasks, filter, tasks);
+					}
+
+					// want HTML
+					if (userPrefs.GetExportToHTML())
+					{
+						Export2Html(tasks, sFilePath, userPrefs.GetSaveExportStylesheet());
 					}
 					else if (userPrefs.GetOtherExporter() != -1)
 					{
 						int nExporter = userPrefs.GetOtherExporter();
-						CString sExt = m_mgrImportExport.GetExporterFileExtension(nExporter);
-
-						if (!sExportPath.IsEmpty() && FileMisc::CreateFolder(sExportPath))
-						{
-							FileMisc::MakePath(sFilePath, NULL, sExportPath, sFName, sExt);
-						}
-						else
-						{
-							FileMisc::MakePath(sFilePath, sDrive, sFolder, sFName, sExt);
-						}
-
 						m_mgrImportExport.ExportTaskList(&tasks, sFilePath, nExporter, TRUE);
 					}
 				}
@@ -1566,7 +1610,7 @@ TDC_FILE CToDoListWnd::SaveTaskList(int nIndex, LPCTSTR szFilePath, BOOL bAuto)
 					DWORD dwOptions = RMO_NOCANCELPROGRESS;
 					rf.SetFile(sLocalPath, sRemotePath, dwOptions);
 
-					// delete temp download file
+					// delete temp upload file
 					if (FileMisc::IsTempFile(sLocalPath))
 					{
 						::DeleteFile(sLocalPath);
@@ -1592,6 +1636,7 @@ TDC_FILE CToDoListWnd::SaveTaskList(int nIndex, LPCTSTR szFilePath, BOOL bAuto)
 					{
 						tdc.SetModified(FALSE);
 						m_mgrToDoCtrls.SetModifiedStatus(nIndex, FALSE);
+						break;
 					}
 				}
 				else
@@ -1632,6 +1677,27 @@ TDC_FILE CToDoListWnd::SaveTaskList(int nIndex, LPCTSTR szFilePath, BOOL bAuto)
 	}
 
 	return TDCO_SUCCESS;
+}
+
+BOOL CToDoListWnd::GetAutoExportExtension(CString& sExt) const
+{
+	sExt.Empty();
+
+	if (Prefs().GetExportToHTML())
+	{
+		sExt = _T(".html");
+	}
+	else
+	{
+		int nExporter = Prefs().GetOtherExporter();
+
+		if (nExporter != -1)
+		{
+			sExt = m_mgrImportExport.GetExporterFileExtension(nExporter);
+		}
+	}
+
+	return !sExt.IsEmpty();
 }
 
 LPCTSTR CToDoListWnd::GetFileFilter()
@@ -1703,9 +1769,7 @@ void CToDoListWnd::OnLoad()
 
 	if (dialog.DoModal() == IDOK)
 	{
-		UpdateWindow();
 		CWaitCursor cursor;
-
 		POSITION pos = dialog.GetStartPosition();
 
 		while (pos)
@@ -1810,15 +1874,14 @@ void CToDoListWnd::SaveSettings()
 			TDCM_PATHTYPE nType = m_mgrToDoCtrls.GetFilePathType(nTDC);
 
 			// if the tasklist is on a removable drive then remove the drive letter
-			if (nType == TDCM_REMOVABLE)
-			{
-				sFilePath = sFilePath.Mid(1);
-			}
-
-			else if (nType == TDCM_WEB) // don't save for now
+			if (nType == TDCM_WEB) // don't save for now
 			{
 				nCount--;
 				continue;
+			}
+			else // make relative
+			{
+				FileMisc::MakeRelativePath(sFilePath, FileMisc::GetAppFolder(), FALSE);
 			}
 
 			CEnString sKey(_T("LastFile%d"), nItem);
@@ -1841,6 +1904,8 @@ void CToDoListWnd::SaveSettings()
 	prefs.WriteProfileInt(_T("Settings"), _T("ToolbarOption"), m_bShowToolbar ? TB_TOOLBARANDMENU : TB_TOOLBARHIDDEN);
 	prefs.WriteProfileInt(_T("Settings"), _T("ShowProjectName"), m_bShowProjectName);
 	prefs.WriteProfileInt(_T("Settings"), _T("ShowStatusBar"), m_bShowStatusBar);
+	prefs.WriteProfileInt(_T("Settings"), _T("ShowTasklistBar"), m_bShowTasklistBar);
+	prefs.WriteProfileInt(_T("Settings"), _T("ShowTreeListBar"), m_bShowTreeListBar);
 
 	if (m_findDlg.GetSafeHwnd())
 	{
@@ -1849,7 +1914,7 @@ void CToDoListWnd::SaveSettings()
 
 	if (Prefs().GetAddFilesToMRU())
 	{
-		m_mruList.WriteList(prefs);
+		m_mruList.WriteList(prefs, TRUE);
 	}
 
 	// quick find items
@@ -1885,20 +1950,27 @@ void CToDoListWnd::PrepareOpenFilePath(CString& sFilePath)
 {
 	// if it starts with a colon then we need to find the
 	// removable drive it's stored on
-	if (!sFilePath.IsEmpty() && sFilePath[0] == ':')
+	if (!sFilePath.IsEmpty())
 	{
-		for (int nDrive = 4; nDrive <= 26; nDrive++) // from D: upwards
+		if (sFilePath[0] == _T(':'))
 		{
-			if (CDriveInfo::GetType(nDrive) == DRIVE_REMOVABLE)
+			for (int nDrive = 4; nDrive <= 26; nDrive++) // from D: upwards
 			{
-				CString sTryPath = CDriveInfo::GetLetter(nDrive) + sFilePath;
-
-				if (FileMisc::FileExists(sTryPath))
+				if (CDriveInfo::GetType(nDrive) == DRIVE_REMOVABLE)
 				{
-					sFilePath = sTryPath;
-					break; // finished
+					CString sTryPath = CDriveInfo::GetLetter(nDrive) + sFilePath;
+
+					if (FileMisc::FileExists(sTryPath))
+					{
+						sFilePath = sTryPath;
+						break; // finished
+					}
 				}
 			}
+		}
+		else
+		{
+			FileMisc::MakeFullPath(sFilePath, FileMisc::GetAppFolder());   // handle relative paths
 		}
 	}
 }
@@ -1917,7 +1989,7 @@ LRESULT CToDoListWnd::OnPostOnCreate(WPARAM /*wp*/, LPARAM /*lp*/)
 
 	// if we have a file on the commandline or any previous tasklists
 	// set the prompt of the initial tasklist to something appropriate
-	if (!m_startupOptions.GetFilePath().IsEmpty() || nTDCCount)
+	if (m_startupOptions.GetFilePath().IsEmpty() || nTDCCount)
 	{
 		//	TODO
 	}
@@ -1938,26 +2010,46 @@ LRESULT CToDoListWnd::OnPostOnCreate(WPARAM /*wp*/, LPARAM /*lp*/)
 	// load last files
 	if (!bOpen)
 	{
-		CString sLastActiveFile = prefs.GetProfileString(_T("Settings"), _T("LastActiveFile"));
+		CString sLastActiveFile = prefs.GetProfileString(_T("Settings"), _T("LastActiveFile")), sOrgLastActiveFile;
 		PrepareOpenFilePath(sLastActiveFile);
+
+		BOOL bCanDelayLoad = userPrefs.GetEnableDelayedLoading();
 
 		for (int nTDC = 0; nTDC < nTDCCount; nTDC++)
 		{
 			CEnString sKey(_T("LastFile%d"), nTDC);
 			CString sLastFile = prefs.GetProfileString(_T("Settings"), sKey);
 
-			// delay open all but the non-active tasklist
+			PrepareOpenFilePath(sLastFile);
+
 			if (!sLastFile.IsEmpty())
 			{
-				PrepareOpenFilePath(sLastFile);
+				// delay open all but the non-active tasklist
+				BOOL bActiveTDC = (sLastFile == sLastActiveFile);
 
-				if (sLastFile != sLastActiveFile && userPrefs.GetEnableDelayedLoading())
+				if (!bActiveTDC && bCanDelayLoad)
 				{
 					DelayOpenTaskList(sLastFile);
 				}
 				else
 				{
-					OpenTaskList(sLastFile, NULL, FALSE);
+					TDC_FILE nResult = OpenTaskList(sLastFile, NULL, FALSE);
+
+					if (bActiveTDC)
+					{
+						// if the last active tasklist was cancelled then
+						// delay load it and mark the last active todoctrl as not found
+						if (nResult != TDCO_SUCCESS)
+						{
+							sOrgLastActiveFile = sLastActiveFile;
+							sLastActiveFile.Empty();
+
+							if (nResult == TDCO_CANCELLED && bCanDelayLoad)
+							{
+								DelayOpenTaskList(sLastFile);
+							}
+						}
+					}
 				}
 			}
 
@@ -1965,10 +2057,33 @@ LRESULT CToDoListWnd::OnPostOnCreate(WPARAM /*wp*/, LPARAM /*lp*/)
 			Misc::ProcessMsgLoop();
 		}
 
-		// select
+		// if the last active tasklist could not be loaded then we need to find another
 		if (GetTDCCount())
 		{
-			if (!SelectToDoCtrl(sLastActiveFile, FALSE))
+			if (sLastActiveFile.IsEmpty())
+			{
+				for (int nTDC = 0; nTDC < GetTDCCount() && sLastActiveFile.IsEmpty(); nTDC++)
+				{
+					CFilteredToDoCtrl& tdc = GetToDoCtrl(nTDC);
+
+					// ignore original active tasklist
+					if (tdc.GetFilePath() != sOrgLastActiveFile)
+					{
+						if (VerifyTaskListOpen(nTDC, FALSE))
+						{
+							sLastActiveFile = tdc.GetFilePath();
+						}
+					}
+				}
+			}
+
+			// if nothing suitable found then create an empty tasklist
+			if (sLastActiveFile.IsEmpty())
+			{
+				CreateNewTaskList(FALSE);
+			}
+
+			else if (!SelectToDoCtrl(sLastActiveFile, FALSE))
 			{
 				SelectToDoCtrl(0, FALSE);   // the first one
 			}
@@ -2042,6 +2157,11 @@ LRESULT CToDoListWnd::OnPostOnCreate(WPARAM /*wp*/, LPARAM /*lp*/)
 		PostMessage(WM_WEBUPDATEWIZARD);
 	}
 
+	// current focus
+	PostMessage(WM_FW_FOCUSCHANGE, (WPARAM)::GetFocus(), 0L);
+
+	RefreshTabOrder();
+
 	return 0L;
 }
 
@@ -2061,10 +2181,7 @@ void CToDoListWnd::CheckForUpdates(BOOL bManual)
 
 	// get the app wuw path
 	CString sFolder, sDrive;
-	CString sWuwPath = FileMisc::GetModuleFileName();
-
-	FileMisc::SplitPath(sWuwPath, &sDrive, &sFolder);
-	FileMisc::MakePath(sWuwPath, sDrive, sFolder, _T("WebUpdateSvc.exe"));
+	CString sWuwPath = FileMisc::GetAppFolder() + _T("\\WebUpdateSvc.exe");
 
 	// check for existence if manual
 	if (bManual && !FileMisc::FileExists(sWuwPath))
@@ -2096,7 +2213,6 @@ void CToDoListWnd::CheckForUpdates(BOOL bManual)
 
 void CToDoListWnd::LoadSettings()
 {
-	// MRU
 	// settings
 	CPreferences prefs;
 
@@ -2114,12 +2230,17 @@ void CToDoListWnd::LoadSettings()
 	m_toolbar.ShowWindow(m_bShowToolbar ? SW_SHOW : SW_HIDE);
 	m_toolbar.EnableWindow(m_bShowToolbar);
 
+	// tabbars
+	m_bShowTasklistBar = prefs.GetProfileInt(_T("Settings"), _T("ShowTasklistBar"), TRUE);
+	m_bShowTreeListBar = prefs.GetProfileInt(_T("Settings"), _T("ShowTreeListBar"), TRUE);
+
 	// pos
 	RestorePosition();
 
 	// user preferences
 	CPreferencesDlg& userPrefs = Prefs();
 
+	// MRU
 	if (userPrefs.GetAddFilesToMRU())
 	{
 		m_mruList.ReadList(prefs);
@@ -2174,7 +2295,7 @@ void CToDoListWnd::EnableTDLProtocol(BOOL bEnable)
 			reg.Write(_T("URL Protocol"), _T(""));
 
 			// write exe name out
-			CString sAppPath = FileMisc::GetModuleFileName() + _T(" -l \"%1\"");
+			CString sAppPath = FileMisc::GetAppFileName() + _T(" -l \"%1\"");
 
 			reg.Close();
 
@@ -2238,8 +2359,7 @@ void CToDoListWnd::RestoreVisibility()
 
 	if (m_bVisible)
 	{
-		int nShowCmd = (bMaximized ? SW_SHOWMAXIMIZED :
-			(bMinimized ? SW_SHOWMINIMIZED : SW_SHOW));
+		int nShowCmd = (bMaximized ? SW_SHOWMAXIMIZED : (bMinimized ? SW_SHOWMINIMIZED : SW_SHOW));
 
 		ShowWindow(nShowCmd);
 
@@ -2329,9 +2449,16 @@ BOOL CToDoListWnd::CreateNewTaskList(BOOL bAddDefTask)
 		int nNew = AddToDoCtrl(pNew);
 
 		// insert a default task
-		if (bAddDefTask && pNew->GetTaskCount() == 0)
+		if (bAddDefTask)
 		{
-			VERIFY(NewTask(CEnString(IDS_TASK), TDC_INSERTATTOP, FALSE));
+			if (pNew->GetTaskCount() == 0)
+			{
+				VERIFY(NewTask(CEnString(IDS_TASK), TDC_INSERTATTOP, FALSE));
+			}
+		}
+		else // ensure it is empty
+		{
+			pNew->DeleteAllTasks();
 		}
 
 		// clear modified flag
@@ -2407,27 +2534,33 @@ BOOL CToDoListWnd::OnEraseBkgnd(CDC* pDC)
 {
 	CDialogHelper::ExcludeChild(this, pDC, &m_toolbar);
 	CDialogHelper::ExcludeChild(this, pDC, &m_statusBar);
+	CDialogHelper::ExcludeChild(this, pDC, &m_tabCtrl);
 
 	CRect rClient;
 	GetClientRect(rClient);
 
 	if (CThemed::IsThemeActive())
 	{
-		// we need to paint a smidgen between the base of the toolbar
-		// and the top of the tab bar in crAppBackDark
+		// paint between the window top and the top of the toolbar
+		// in toolbar color
 		if (m_bShowToolbar)
 		{
-			rClient.top = CDialogHelper::OffsetCtrl(this, &m_toolbar).bottom;
+			CRect rToolbar = CDialogHelper::OffsetCtrl(this, &m_toolbar);
+
+			pDC->FillSolidRect(rClient.left, rClient.top, rClient.Width(), rToolbar.top, m_theme.crToolbarLight);
+			rClient.top += rToolbar.bottom + 2;
 		}
 
-		if (WantTabBarVisible())
+		// we need to paint a smidgen between the base of the toolbar
+		// and the top of the tab bar in crAppBackDark
+		if (WantTasklistTabbarVisible())
 		{
-			pDC->FillSolidRect(rClient.left, rClient.top, rClient.Width(), 4, m_theme.crAppBackDark);
-			rClient.top += 4;
+			pDC->FillSolidRect(rClient.left, rClient.top, rClient.Width(), 5, m_theme.crAppBackDark);
+			rClient.top += 5;
 		}
 
 		// and then the rest in crAppBackLight
-		pDC->FillSolidRect(rClient.left, rClient.top, rClient.Width(), rClient.Height(), m_theme.crAppBackLight);
+		pDC->FillSolidRect(rClient, m_theme.crAppBackLight);
 	}
 	else
 	{
@@ -2435,39 +2568,40 @@ BOOL CToDoListWnd::OnEraseBkgnd(CDC* pDC)
 	}
 
 	// we must draw out own bevel below the toolbar (or menu if the toolbar is not visible)
+	int nVPos = 0;
+
+	if (m_bShowToolbar)
 	{
-		int nVPos = 0;
-
-		if (m_bShowToolbar)
-		{
-			nVPos = m_toolbar.CalcHeightRequired(rClient.Width());
-		}
-
-		pDC->FillSolidRect(rClient.left, nVPos, rClient.Width(), 1, GetSysColor(COLOR_3DSHADOW));
-		pDC->FillSolidRect(rClient.left, nVPos + 1, rClient.Width(), 1, GetSysColor(COLOR_3DHIGHLIGHT));
-
+		pDC->FillSolidRect(rClient.left, nVPos, rClient.Width(), 1, m_theme.crAppLinesDark);
+		nVPos = m_toolbar.CalcHeightRequired(rClient.Width()) + TB_VOFFSET;
 	}
 
-	// and a highlight below the tab bar when themed
-	if (WantTabBarVisible() && CThemed::IsThemeActive())
+	pDC->FillSolidRect(rClient.left, nVPos, rClient.Width(), 1, m_theme.crAppLinesDark);
+	pDC->FillSolidRect(rClient.left, nVPos + 1, rClient.Width(), 1, m_theme.crAppLinesLight);
+
+	// bevel below filter bar
+	if (m_bShowFilterBar)
 	{
-		CRect rTab;
+		CRect rFilter;
+		m_filterBar.GetWindowRect(rFilter);
+		ScreenToClient(rFilter);
 
-		m_tabCtrl.GetWindowRect(rTab);
-		ScreenToClient(rTab);
+		int nVPos = rFilter.bottom;
 
-		pDC->FillSolidRect(rTab.left, rTab.bottom, rTab.Width(), 1,	GetSysColor(COLOR_3DHIGHLIGHT));
+		pDC->FillSolidRect(rClient.left, nVPos, rClient.Width(), 1, m_theme.crAppLinesDark);
+		pDC->FillSolidRect(rClient.left, nVPos + 1, rClient.Width(), 1, m_theme.crAppLinesLight);
 	}
 
-	// bevel above the statusbar if themed
-	if (m_bShowStatusBar && CThemed::IsThemeActive())
+	// bevel above the statusbar if themed and not maximized
+	if (m_bShowStatusBar && CThemed::IsThemeActive() &&
+		(m_nMaxState == TDCMS_NORMAL || (m_nMaxState == TDCMS_MAXTASKLIST && m_bShowTreeListBar)))
 	{
 		CRect rStatBar;
 		m_statusBar.GetWindowRect(rStatBar);
 		ScreenToClient(rStatBar);
 
-		pDC->FillSolidRect(0, rStatBar.top - 2, rClient.Width(), 1, GetSysColor(COLOR_3DSHADOW));
-		pDC->FillSolidRect(0, rStatBar.top - 1, rClient.Width(), 1, GetSysColor(COLOR_3DHIGHLIGHT));
+		pDC->FillSolidRect(0, rStatBar.top - 2, rClient.Width(), 1, m_theme.crAppLinesDark);
+		pDC->FillSolidRect(0, rStatBar.top - 1, rClient.Width(), 1, m_theme.crAppLinesLight);
 	}
 
 	// this is definitely amongst the worst hacks I've ever had to implement.
@@ -2502,9 +2636,9 @@ void CToDoListWnd::OnUpdateSortBy(CCmdUI* pCmdUI)
 
 	pCmdUI->Enable(tdc.IsColumnShowing(nColID));
 
-	// only set the radio nutton if we're not multisorting
-	BOOL bEnable = !GetToDoCtrl().IsMultiSorting() && tdc.GetSortBy() == nSortBy;
-	pCmdUI->SetRadio(bEnable);
+	// only set the radio button if we're not multisorting
+	BOOL bChecked = !GetToDoCtrl().IsMultiSorting() && tdc.GetSortBy() == nSortBy;
+	pCmdUI->SetRadio(bChecked);
 
 	// let menu icon manager handle setting selected state
 	switch (pCmdUI->m_nID)
@@ -2579,6 +2713,10 @@ TDC_SORTBY CToDoListWnd::GetSortBy(UINT nSortID)
 		return TDC_SORTBYRECENTEDIT;
 	case ID_SORT_BYICON:
 		return TDC_SORTBYICON;
+	case ID_SORT_BYFILEREF:
+		return TDC_SORTBYFILEREF;
+	case ID_SORT_BYTIMETRACKING:
+		return TDC_SORTBYTIMETRACKING;
 	}
 
 	ASSERT(0);
@@ -2645,6 +2783,10 @@ UINT CToDoListWnd::GetSortID(TDC_SORTBY nSortBy)
 		return ID_SORT_NONE;
 	case TDC_SORTBYICON:
 		return ID_SORT_BYICON;
+	case TDC_SORTBYFILEREF:
+		return ID_SORT_BYFILEREF;
+	case TDC_SORTBYTIMETRACKING:
+		return ID_SORT_BYTIMETRACKING;
 	}
 
 	ASSERT(0);
@@ -2908,11 +3050,6 @@ void CToDoListWnd::OnTrayiconClose()
 	DoExit();
 }
 
-LRESULT CToDoListWnd::OnToDoCtrlNotifySort(WPARAM /*wp*/, LPARAM /*lp*/)
-{
-	return 0;
-}
-
 LRESULT CToDoListWnd::OnToDoCtrlNotifyMinWidthChange(WPARAM /*wp*/, LPARAM /*lp*/)
 {
 	CheckMinWidth();
@@ -3150,13 +3287,28 @@ void CToDoListWnd::UpdateCaption()
 	CString sCaption;
 	CEnString sCopyright(IDS_COPYRIGHT), sStatus(nIDStatus);
 
+	// add current focus text as required
 	if (nIDStatus)
 	{
-		sCaption.Format(_T("%s [%s] - %s"), sProjectName, (LPCTSTR)sStatus, (LPCTSTR)sCopyright);
+		if (m_bShowStatusBar || m_sCurrentFocus.IsEmpty())
+		{
+			sCaption.Format(_T("%s [%s] - %s"), (LPCTSTR)sProjectName, (LPCTSTR)sStatus, (LPCTSTR)sCopyright);
+		}
+		else
+		{
+			sCaption.Format(_T("%s [%s][%s] - %s"), (LPCTSTR)sProjectName, (LPCTSTR)m_sCurrentFocus, (LPCTSTR)sStatus, (LPCTSTR)sCopyright);
+		}
 	}
 	else
 	{
-		sCaption.Format(_T("%s - %s"), sProjectName, (LPCTSTR)sCopyright);
+		if (m_bShowStatusBar || m_sCurrentFocus.IsEmpty())
+		{
+			sCaption.Format(_T("%s - %s"), (LPCTSTR)sProjectName, (LPCTSTR)sCopyright);
+		}
+		else
+		{
+			sCaption.Format(_T("%s [%s] - %s"), (LPCTSTR)sProjectName, (LPCTSTR)m_sCurrentFocus, (LPCTSTR)sCopyright);
+		}
 	}
 
 	SetWindowText(sCaption);
@@ -3217,7 +3369,10 @@ BOOL CToDoListWnd::Export2Html(CFilteredToDoCtrl& tdc, LPCTSTR szFilePath, TSD_T
 	CTaskFile tasks;
 	TDCGETTASKS filter;
 
-	GetTasks(tdc, TRUE, bTransform, nWhatTasks, filter, tasks);
+	if (Prefs().GetExportAllAttributes())
+	{
+		GetTasks(tdc, TRUE, bTransform, nWhatTasks, filter, tasks);
+	}
 
 	return Export2Html(tasks, szFilePath, szStylesheet);
 }
@@ -3228,9 +3383,6 @@ BOOL CToDoListWnd::Export2Html(const CTaskFile& tasks, LPCTSTR szFilePath, LPCTS
 
 	if (FileMisc::FileExists(szStylesheet))
 	{
-		CTaskFile* pTasks = const_cast<CTaskFile*>(&tasks);
-		pTasks->Save(_T("printPreview.xml"));
-
 		return tasks.TransformToFile(szStylesheet, szFilePath, Prefs().GetHtmlCharSet());
 	}
 
@@ -3257,6 +3409,8 @@ void CToDoListWnd::OnSaveas()
 
 	if (nRes == IDOK)
 	{
+		VERIFY(SaveTaskList(nSel, dialog.GetPathName()) == TDCO_SUCCESS);
+
 		if (SaveTaskList(nSel, dialog.GetPathName()) == TDCO_SUCCESS)
 		{
 			m_mgrToDoCtrls.ClearWebDetails(nSel);
@@ -3575,6 +3729,8 @@ BOOL CToDoListWnd::OnOpenRecentFile(UINT nID)
 		}
 	}
 
+	RefreshTabOrder();
+
 	// always return TRUE to say we handled it
 	return TRUE;
 }
@@ -3621,7 +3777,7 @@ TDC_FILE CToDoListWnd::DelayOpenTaskList(LPCTSTR szFilePath)
 
 			switch (nNotifyDueBy)
 			{
-			case PFP_DUETODAY:
+			case PFP_DUETODAY:		/*nDate = DHD_TODAY;*/
 				break;
 			case PFP_DUETOMORROW:
 				nDate = DHD_TOMORROW;
@@ -4016,7 +4172,6 @@ BOOL CToDoListWnd::DoDueTaskNotification(const CFilteredToDoCtrl* pCtrl, int nDu
 
 		CEnString sTitle(IDS_DUETASKS_TITLE, pCtrl->GetFriendlyProjectName());
 		m_dlgNotifyDue.DoModal(sTitle, sTempFile, this);
-		UpdateWindow();
 	}
 
 	// undo hack
@@ -4030,7 +4185,7 @@ BOOL CToDoListWnd::DoDueTaskNotification(const CFilteredToDoCtrl* pCtrl, int nDu
 
 void CToDoListWnd::OnAbout()
 {
-	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.1.10</b> (mod by Elijah Zarezky)"),
+	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.2.2</b> (mod by Elijah Zarezky)"),
 		CEnString(IDS_ABOUTHEADING), CEnString(IDS_ABOUTCOPYRIGHT), CEnString(IDS_LICENSE), 1, 2, 8);
 
 	dialog.DoModal();
@@ -4605,6 +4760,7 @@ void CToDoListWnd::OnUpdateEditCut(CCmdUI* pCmdUI)
 
 void CToDoListWnd::OnEditPasteSub()
 {
+	CWaitCursor wait;
 	GetToDoCtrl().PasteTasks(TDCP_ONSELTASK);
 }
 
@@ -4618,6 +4774,7 @@ void CToDoListWnd::OnUpdateEditPasteSub(CCmdUI* pCmdUI)
 
 void CToDoListWnd::OnEditPasteAfter()
 {
+	CWaitCursor wait;
 	CFilteredToDoCtrl& tdc = GetToDoCtrl();
 	int nSelCount = tdc.GetSelectedCount();
 
@@ -4686,16 +4843,12 @@ void CToDoListWnd::CopySelectedTasksToClipboard(int nAsFormat)
 		break;
 
 	case CT_ASREFFULL:
-		sTasks.Format(_T("tdl://%s?%ld"),
-			tdc.GetFilePath(),
-			tdc.GetSelectedTaskID());
+		sTasks.Format(_T("tdl://%s?%ld"), (LPCTSTR)tdc.GetFilePath(), tdc.GetSelectedTaskID());
 		sTasks.Replace(_T(" "), _T("%20"));
 		break;
 
 	case CT_ASDEPENDSFULL:
-		sTasks.Format(_T("%s?%ld"),
-			tdc.GetFilePath(),
-			tdc.GetSelectedTaskID());
+		sTasks.Format(_T("%s?%ld"), (LPCTSTR)tdc.GetFilePath(), tdc.GetSelectedTaskID());
 		break;
 
 	case CT_ASPATH:
@@ -4785,6 +4938,7 @@ void CToDoListWnd::OnMaximizeTasklist()
 
 	// update active tasklist
 	GetToDoCtrl().SetMaximizeState(m_nMaxState);
+	Invalidate();
 }
 
 void CToDoListWnd::OnUpdateMaximizeTasklist(CCmdUI* pCmdUI)
@@ -4818,6 +4972,7 @@ void CToDoListWnd::OnMaximizeComments()
 
 	// update active tasklist
 	GetToDoCtrl().SetMaximizeState(m_nMaxState);
+	Invalidate();
 }
 
 void CToDoListWnd::OnUpdateMaximizeComments(CCmdUI* pCmdUI)
@@ -4956,7 +5111,7 @@ BOOL CToDoListWnd::CalcToDoCtrlRect(CRect& rect, int cx, int cy, BOOL bMaximized
 	// toolbar
 	if (m_bShowToolbar)
 	{
-		rTaskList.top += m_toolbar.CalcHeightRequired(cx);
+		rTaskList.top += m_toolbar.CalcHeightRequired(cx) + TB_VOFFSET;
 	}
 
 	// resize tabctrl
@@ -4981,16 +5136,12 @@ BOOL CToDoListWnd::CalcToDoCtrlRect(CRect& rect, int cx, int cy, BOOL bMaximized
 	}
 
 	// statusbar
-	CRect rStatus = OffsetCtrl(IDC_FILENAME);
-	rStatus.OffsetRect(0, cy - rStatus.bottom);
-	rStatus.right = cx;
-
-	// finally the active todoctrl
-	CDlgUnits dlu(this);
-
 	if (m_bShowStatusBar)
 	{
-		rTaskList.bottom = cy - dlu.ToPixelsY(SB_HEIGHT) - 2;
+		CRect rStatus;
+		m_statusBar.GetWindowRect(rStatus);
+		ScreenToClient(rStatus);
+		rTaskList.bottom = rStatus.top - 2;
 	}
 	else
 	{
@@ -5041,7 +5192,7 @@ void CToDoListWnd::ResizeDlg(int cx, int cy, BOOL bMaximized)
 	// toolbar
 	if (m_bShowToolbar) // showing toolbar
 	{
-		rTaskList.top += m_toolbar.Resize(cx, CPoint(0, 0));
+		rTaskList.top += m_toolbar.Resize(cx, CPoint(0, TB_VOFFSET)) + TB_VOFFSET;
 	}
 
 	// resize tabctrl
@@ -5058,18 +5209,25 @@ void CToDoListWnd::ResizeDlg(int cx, int cy, BOOL bMaximized)
 	int nFilterWidth = cx - 2 * nInset;
 	int nFilterHeight = m_bShowFilterBar ? m_filterBar.CalcHeight(nFilterWidth) : 0;
 
-	dwm.MoveWindow(&m_filterBar, nInset, rTaskList.top/* + 4*/, nFilterWidth, nFilterHeight);
+	dwm.MoveWindow(&m_filterBar, nInset, rTaskList.top, nFilterWidth, nFilterHeight);
 
 	if (nFilterHeight)
 	{
 		rTaskList.top += nFilterHeight + 4;
 	}
 
-	// resize filepath static
-	int nSBHeight = dlu.ToPixelsY(SB_HEIGHT);
-	CRect rStatus(1, cy - nSBHeight, cx - 1, cy);
+	// statusbar has already been automatically resized unless it's invisible
+	CRect rStatus(0, cy, cx, cy);
 
-	dwm.MoveWindow(&m_statusBar, rStatus);
+	if (m_bShowStatusBar)
+	{
+		m_statusBar.GetWindowRect(rStatus);
+		ScreenToClient(rStatus);
+	}
+	else
+	{
+		dwm.MoveWindow(&m_statusBar, rStatus, FALSE);
+	}
 
 	// finally the active todoctrl
 	if (GetTDCCount())
@@ -5087,21 +5245,36 @@ void CToDoListWnd::ResizeDlg(int cx, int cy, BOOL bMaximized)
 		rTaskList.left = nInset;
 
 		dwm.MoveWindow(&GetToDoCtrl(), rTaskList);
+
+#ifdef _DEBUG
+		CRect rect;
+		CalcToDoCtrlRect(rect, cx, cy, IsZoomed());
+		ASSERT(rect == rTaskList);
+#endif
+
 	}
+}
+
+BOOL CToDoListWnd::WantTasklistTabbarVisible() const
+{
+	BOOL bWantTabbar = (GetTDCCount() > 1 || !Prefs().GetAutoHideTabbar());
+	bWantTabbar &= m_bShowTasklistBar;
+
+	return bWantTabbar;
 }
 
 int CToDoListWnd::ReposTabBar(CDeferWndMove& dwm, const CPoint& ptOrg, int nWidth, BOOL bCalcOnly)
 {
 	CRect rTabs(0, 0, nWidth, 0);
 	m_tabCtrl.AdjustRect(TRUE, rTabs);
-	int nTabHeight = rTabs.Height() - 5;
+	int nTabHeight = rTabs.Height() - 4;
 
 	rTabs = dwm.OffsetCtrl(this, IDC_TABCONTROL); // not actually a move
 	rTabs.right = nWidth + 1;
 	rTabs.bottom = rTabs.top + nTabHeight;
 	rTabs.OffsetRect(0, ptOrg.y - rTabs.top + 1); // add a pixel between tabbar and toolbar
 
-	BOOL bNeedTabCtrl = WantTabBarVisible();
+	BOOL bNeedTabCtrl = WantTasklistTabbarVisible();
 
 	if (!bCalcOnly)
 	{
@@ -5280,8 +5453,7 @@ int CToDoListWnd::AddToDoCtrl(CFilteredToDoCtrl* pCtrl, BOOL bResizeDlg)
 		SetTimer(TIMER_READONLYSTATUS, userPrefs.GetReadonlyReloadOption() != RO_NO);
 		SetTimer(TIMER_TIMESTAMPCHANGE, userPrefs.GetTimestampReloadOption() != RO_NO);
 		SetTimer(TIMER_AUTOSAVE, userPrefs.GetAutoSaveFrequency());
-		SetTimer(TIMER_CHECKOUTSTATUS, userPrefs.GetCheckoutOnCheckin() ||
-			userPrefs.GetCheckinOnNoEditTime());
+		SetTimer(TIMER_CHECKOUTSTATUS, userPrefs.GetCheckoutOnCheckin() || userPrefs.GetCheckinOnNoEditTime());
 	}
 
 	// update filter controls
@@ -5986,13 +6158,10 @@ void CToDoListWnd::OnUserUIExtension(UINT nCmdID)
 
 		if (pWindow)
 		{
+			pWindow->SetUITheme(m_theme);
+
 			// update if a new window or it's currently hidden
 			BOOL bNeedUpdate = (!bHadWindow || !pWindow->IsShowing());
-
-			if (!pWindow->Show())
-			{
-				pWindow->Create(*this, TRUE);
-			}
 
 			// update with tasks
 			if (bNeedUpdate)
@@ -6004,6 +6173,11 @@ void CToDoListWnd::OnUserUIExtension(UINT nCmdID)
 				tasks.SetProjectName(ATL::CT2A(m_mgrToDoCtrls.GetFriendlyProjectName(GetSelToDoCtrl())));
 
 				pWindow->Update(&tasks);
+			}
+
+			if (!pWindow->IsShowing())
+			{
+				pWindow->Show();
 			}
 		}
 	}
@@ -6699,10 +6873,23 @@ BOOL CToDoListWnd::SelectToDoCtrl(int nIndex, BOOL bCheckPassword, int nNotifyDu
 	// load and show the chosen item
 	// we don't need to do a 'open' due task notification if the caller
 	// has asked for a notification anyway
-	if (!m_bClosing && !VerifyTaskListOpen(nIndex, nNotifyDueTasksBy == -1))
+	if (!m_bClosing)
 	{
-		// TODO
-		return FALSE;
+		// if the tasklist is not loaded and we verify its loading
+		// then we know that the password (if there is one) has been
+		// verified and doesn't need checking again
+		if (!m_mgrToDoCtrls.IsLoaded(nIndex))
+		{
+			if (!VerifyTaskListOpen(nIndex, nNotifyDueTasksBy == -1))
+			{
+				// TODO
+				return FALSE;
+			}
+			else
+			{
+				bCheckPassword = FALSE;
+			}
+		}
 	}
 
 	// validate password first if necessary
@@ -6828,7 +7015,7 @@ void CToDoListWnd::UpdateToDoCtrlPreferences(CFilteredToDoCtrl* pCtrl)
 	CPreferencesDlg& userPrefs = Prefs();
 	CFilteredToDoCtrl& tdc = *pCtrl;
 
-	CTDCStyles styles;
+	CTDCStylesMap styles;
 
 	styles[TDCS_COLORTEXTBYPRIORITY] = (userPrefs.GetTextColorOption() == COLOROPT_PRIORITY);
 	styles[TDCS_COLORTEXTBYCATEGORY] = (userPrefs.GetTextColorOption() == COLOROPT_CATEGORY);
@@ -6886,7 +7073,7 @@ void CToDoListWnd::UpdateToDoCtrlPreferences(CFilteredToDoCtrl* pCtrl)
 	styles[TDCS_WARNADDDELETEARCHIVE] = userPrefs.GetWarnAddDeleteArchive();
 	styles[TDCS_SHOWSUBTASKCOMPLETION] = userPrefs.GetShowSubtaskCompletion();
 	styles[TDCS_ALLOWPARENTTIMETRACKING] = userPrefs.GetAllowParentTimeTracking();
-	styles[TDCS_AUTOADJUSTDEPENDENTS] = userPrefs.GetAutoAdjustDependents();
+	styles[TDCS_AUTOADJUSTDEPENDENCYDATES] = userPrefs.GetAutoAdjustDependentsDates();
 	styles[TDCS_RIGHTSIDECOLUMNS] = userPrefs.GetShowColumnsOnRight();
 	styles[TDCS_HIDEDUETIMEFIELD] = userPrefs.GetHideDueTimeField();
 	styles[TDCS_HIDESTARTTIMEFIELD] = userPrefs.GetHideStartTimeField();
@@ -6898,6 +7085,8 @@ void CToDoListWnd::UpdateToDoCtrlPreferences(CFilteredToDoCtrl* pCtrl)
 	styles[TDCS_CALCREMAININGTIMEBYDUEDATE] = (userPrefs.GetTimeRemainingCalculation() == PTCP_REMAININGTTIMEISDUEDATE);
 	styles[TDCS_CALCREMAININGTIMEBYSPENT] = (userPrefs.GetTimeRemainingCalculation() == PTCP_REMAININGTTIMEISSPENT);
 	styles[TDCS_CALCREMAININGTIMEBYPERCENT] = (userPrefs.GetTimeRemainingCalculation() == PTCP_REMAININGTTIMEISPERCENTAGE);
+	styles[TDCS_SHOWTREELISTBAR] = m_bShowTreeListBar;
+	styles[TDCS_INCLUDEUSERINCHECKOUT] = userPrefs.GetIncludeUserNameInCheckout();
 
 	// source control
 	BOOL bSrcControl = m_mgrToDoCtrls.PathSupportsSourceControl(tdc.GetFilePath());
@@ -7158,70 +7347,92 @@ void CToDoListWnd::OnUpdateMovetask(CCmdUI* pCmdUI)
 
 void CToDoListWnd::OnImportTasklist()
 {
-	CTDLImportDialog dialog(m_mgrImportExport);
+	CString sImportPath;
+	BOOL bImportTaskList = FALSE;
+	TDLID_IMPORTTO nImportTo = TDIT_NEWTASKLIST;
+	int nImporter = -1;
 
-	if (dialog.DoModal() == IDOK)
+	do
 	{
-		Invalidate();
-		UpdateWindow();
+		CTDLImportDialog dialog(m_mgrImportExport);
 
-		// import the tasks
-		CString sImportPath;
-
-		if (dialog.GetImportFromClipboard())
+		if (dialog.DoModal() == IDOK)
 		{
-			sImportPath = FileMisc::GetTempFileName(_T("ToDoList.import"), _T("txt"));
-			FileMisc::SaveFile(sImportPath, dialog.GetImportClipboardText());
-		}
-		else
-		{
-			sImportPath = dialog.GetImportFilePath();
-		}
+			// check file can be opened
+			bImportTaskList = dialog.WantImportTasklist();
+			nImportTo = dialog.GetImportTo();
+			nImporter = dialog.GetImporterIndex();
 
-		// load/import tasks
-		CTaskFile tasks;
-		BOOL bCancel = FALSE;
-
-		if (dialog.ImportTasklist())
-		{
-			if (!tasks.Load(sImportPath))
+			if (dialog.GetImportFromClipboard())
 			{
-				CEnString sMessage(IDS_INVALIDTASKLIST, sImportPath);
-				AfxMessageBox(sMessage, MB_OK);
-				return;
+				sImportPath = FileMisc::GetTempFileName(_T("ToDoList.import"), _T("txt"));
+				FileMisc::SaveFile(sImportPath, dialog.GetImportClipboardText());
 			}
-		}
-		else
-		{
-			bCancel = !m_mgrImportExport.ImportTaskList(sImportPath, &tasks, dialog.GetImporterIndex());
-		}
-
-		if (bCancel)
-		{
-			// do nothing
-		}
-		else if (!tasks.GetTaskCount())
-		{
-			// notify user
-			AfxMessageBox(IDS_NOTASKSIMPORTED);
-		}
-		else
-		{
-			// new or active tasklist
-			TDLID_IMPORTTO nImportTo = dialog.GetImportTo();
-
-			if (nImportTo == TDIT_NEWTASKLIST)
+			else
 			{
-				VERIFY(CreateNewTaskList(FALSE));
+				sImportPath = dialog.GetImportFilePath();
 			}
 
-			CFilteredToDoCtrl& tdc = GetToDoCtrl();
-			TDC_INSERTWHERE nWhere = (nImportTo == TDIT_SELECTEDTASK) ? TDC_INSERTATTOPOFSELTASK : TDC_INSERTATTOP;
+			// check file accessibility
+			if (FileMisc::CanOpenFile(sImportPath, TRUE))
+			{
+				break;
+			}
 
-			VERIFY(tdc.InsertTasks(tasks, nWhere));
-			m_mgrToDoCtrls.RefreshModifiedStatus(GetSelToDoCtrl());
-			UpdateCaption();
+			// else
+			MessageBox(CEnString(IDS_IMPORTFILE_CANTOPEN, sImportPath), IDS_IMPORTTASKLIST_TITLE);
+			sImportPath.Empty();
 		}
+		else // cancel
+		{
+			return;
+		}
+	}
+	while (sImportPath.IsEmpty());
+
+	// load/import tasks
+	CTaskFile tasks;
+	BOOL bCancel = FALSE;
+	CWaitCursor wait;
+
+	// do the import
+	if (bImportTaskList)
+	{
+		if (!tasks.Load(sImportPath))
+		{
+			CEnString sMessage(IDS_INVALIDTASKLIST, sImportPath);
+			AfxMessageBox(sMessage, MB_OK);
+			return;
+		}
+	}
+	else
+	{
+		bCancel = !m_mgrImportExport.ImportTaskList(sImportPath, &tasks, nImporter);
+	}
+
+	if (bCancel)
+	{
+		return;
+	}
+
+	if (!tasks.GetTaskCount())
+	{
+		// notify user
+		AfxMessageBox(IDS_NOTASKSIMPORTED);
+	}
+	else
+	{
+		if (nImportTo == TDIT_NEWTASKLIST)
+		{
+			VERIFY(CreateNewTaskList(FALSE));
+		}
+
+		CFilteredToDoCtrl& tdc = GetToDoCtrl();
+		TDC_INSERTWHERE nWhere = (nImportTo == TDIT_SELECTEDTASK) ? TDC_INSERTATTOPOFSELTASK : TDC_INSERTATTOP;
+
+		VERIFY(tdc.InsertTasks(tasks, nWhere));
+		m_mgrToDoCtrls.RefreshModifiedStatus(GetSelToDoCtrl());
+		UpdateCaption();
 	}
 }
 
@@ -7293,7 +7504,7 @@ void CToDoListWnd::OnEditOpenfileref()
 
 void CToDoListWnd::OnUpdateEditOpenfileref(CCmdUI* pCmdUI)
 {
-	CString sFileRef = GetToDoCtrl().GetSelectedTaskFileRef();
+	CEnString sFileRef = GetToDoCtrl().GetSelectedTaskFileRef();
 
 	if (sFileRef.IsEmpty())
 	{
@@ -7302,6 +7513,10 @@ void CToDoListWnd::OnUpdateEditOpenfileref(CCmdUI* pCmdUI)
 	else
 	{
 		pCmdUI->Enable(TRUE);
+
+		// restrict file length to 250 pixels
+		CClientDC dc(this);
+		sFileRef.FormatDC(&dc, 250, ES_PATH);
 		pCmdUI->SetText(sFileRef);
 	}
 }
@@ -7463,6 +7678,12 @@ void CToDoListWnd::PrepareSortMenu(CMenu* pMenu)
 			break;
 		case ID_SORT_BYICON:
 			bDelete = !tdc.IsColumnShowing(TDCC_ICON);
+			break;
+		case ID_SORT_BYFILEREF:
+			bDelete = !tdc.IsColumnShowing(TDCC_FILEREF);
+			break;
+		case ID_SORT_BYTIMETRACKING:
+			bDelete = !tdc.IsColumnShowing(TDCC_TRACKTIME);
 			break;
 
 		case ID_SEPARATOR:
@@ -8002,7 +8223,7 @@ void CToDoListWnd::OnExport()
 
 	BOOL bShowSubtaskCheckbox = (nTDCCount > 1) || (GetToDoCtrl().GetView() == FTCV_TASKTREE);
 
-	CExportDlg dialog(m_mgrImportExport, nTDCCount == 1, bShowSubtaskCheckbox,
+	CTDLExportDlg dialog(m_mgrImportExport, nTDCCount == 1, bShowSubtaskCheckbox,
 		userPrefs.GetExportVisibleColsOnly(),
 		m_mgrToDoCtrls.GetFilePath(nSelTDC, FALSE),
 		userPrefs.GetAutoExportFolderPath());
@@ -8012,19 +8233,17 @@ void CToDoListWnd::OnExport()
 		return;
 	}
 
-	Invalidate();
-	UpdateWindow();
-
 	int nFormat = dialog.GetExportFormat();
-	BOOL bHtmlComments = (nFormat == EXP2HTML);
+	BOOL bHtmlComments = (nFormat == EXPTOHTML);
 	CString sExportPath = dialog.GetExportPath();
 
 	// export
 	CWaitCursor cursor;
-	CTaskFile tasks;
 
 	if (nTDCCount == 1 || !dialog.GetExportAllTasklists())
 	{
+		CTaskFile tasks;
+
 		// Note: don't need to verify password if encrypted tasklist is active
 		GetTasks(GetToDoCtrl(), bHtmlComments, FALSE, dialog.GetTaskSelection(), tasks);
 
@@ -8043,59 +8262,108 @@ void CToDoListWnd::OnExport()
 	}
 	else // multiple tasklists
 	{
-		CString sExt = m_mgrImportExport.GetExporterFileExtension(nFormat);
-
-		for (int nCtrl = 0; nCtrl < nTDCCount; nCtrl++)
+		if (dialog.GetExportOneFile())
 		{
-			// verify password
-			if (nCtrl != nSelTDC && !VerifyToDoCtrlPassword(nCtrl))
+			CMultiTaskFile taskFiles;
+
+			for (int nCtrl = 0; nCtrl < nTDCCount; nCtrl++)
 			{
-				continue;
+				// verify password
+				if (nCtrl != nSelTDC && !VerifyToDoCtrlPassword(nCtrl))
+				{
+					continue;
+				}
+
+				GetToDoCtrl(nCtrl).LockWindowUpdate();
+
+				// make sure it's loaded
+				if (VerifyTaskListOpen(nCtrl, FALSE))
+				{
+					CTaskFile& tasks = taskFiles.GetTaskFile(nCtrl);
+					tasks.Reset();
+
+					GetTasks(GetToDoCtrl(nCtrl), bHtmlComments, FALSE, dialog.GetTaskSelection(), tasks);
+
+					// add project name as report title
+					CString sTitle = m_mgrToDoCtrls.GetFriendlyProjectName(nCtrl);
+					tasks.SetReportAttributes(sTitle);
+				}
+				GetToDoCtrl(nCtrl).UnlockWindowUpdate();
 			}
 
-			tasks.Reset();
+			ResizeDlg();
 
-			GetTasks(GetToDoCtrl(nCtrl), bHtmlComments, FALSE, dialog.GetTaskSelection(), tasks);
-
-			// add project name as report title
-			CString sTitle = m_mgrToDoCtrls.GetFriendlyProjectName(nCtrl);
-			tasks.SetReportAttributes(sTitle);
-
-			// build filepath if required (if exporter has an extension)
-			CString sFilePath;
-
-			if (!sExt.IsEmpty())
+			if (m_mgrImportExport.ExportTaskLists(&taskFiles, sExportPath, nFormat, FALSE))
 			{
-				CString sPath = m_mgrToDoCtrls.GetFilePath(nCtrl);
-				CString sFName;
-
-				// if the file has not been saved before we use the tab text
-				// and prompt the user to confirm
-				if (sPath.IsEmpty())
+				// and preview
+				if (userPrefs.GetPreviewExport())
 				{
-					sPath = m_mgrToDoCtrls.GetFilePath(nCtrl, FALSE);
-					FileMisc::MakePath(sFilePath, NULL, sExportPath, sPath, sExt);
-
-					CFileDialog dlgFile(FALSE, sExt, sFilePath, OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY,
-						m_mgrImportExport.GetExporterFileFilter(nFormat));
-
-					if (dlgFile.DoModal() == IDOK)
-					{
-						sFilePath = dlgFile.GetPathName();
-					}
-					else
-					{
-						continue;   // next tasklist
-					}
-				}
-				else
-				{
-					FileMisc::SplitPath(sPath, NULL, NULL, &sFName);
-					FileMisc::MakePath(sFilePath, NULL, sExportPath, sFName, sExt);
+					ShellExecute(*this, NULL, sExportPath, NULL, NULL, SW_SHOWNORMAL);
 				}
 			}
+		}
+		else // separate files
+		{
+			CString sExt = m_mgrImportExport.GetExporterFileExtension(nFormat);
 
-			m_mgrImportExport.ExportTaskList(&tasks, sFilePath, nFormat, FALSE);
+			for (int nCtrl = 0; nCtrl < nTDCCount; nCtrl++)
+			{
+				// verify password
+				if (nCtrl != nSelTDC && !VerifyToDoCtrlPassword(nCtrl))
+				{
+					continue;
+				}
+
+				GetToDoCtrl(nCtrl).LockWindowUpdate();
+
+				// make sure it's loaded
+				if (VerifyTaskListOpen(nCtrl, FALSE))
+				{
+					CTaskFile tasks;
+					GetTasks(GetToDoCtrl(nCtrl), bHtmlComments, FALSE, dialog.GetTaskSelection(), tasks);
+
+					// add project name as report title
+					CString sTitle = m_mgrToDoCtrls.GetFriendlyProjectName(nCtrl);
+					tasks.SetReportAttributes(sTitle);
+
+					// build filepath if required (if exporter has an extension)
+					CString sFilePath;
+
+					if (!sExt.IsEmpty())
+					{
+						CString sPath = m_mgrToDoCtrls.GetFilePath(nCtrl);
+						CString sFName;
+
+						// if the file has not been saved before we use the tab text
+						// and prompt the user to confirm
+						if (sPath.IsEmpty())
+						{
+							sPath = m_mgrToDoCtrls.GetFilePath(nCtrl, FALSE);
+							FileMisc::MakePath(sFilePath, NULL, sExportPath, sPath, sExt);
+
+							CFileDialog dlgFile(FALSE, sExt, sFilePath, OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY,
+								m_mgrImportExport.GetExporterFileFilter(nFormat));
+
+							if (dlgFile.DoModal() == IDOK)
+							{
+								sFilePath = dlgFile.GetPathName();
+							}
+							else
+							{
+								continue;   // next tasklist
+							}
+						}
+						else
+						{
+							FileMisc::SplitPath(sPath, NULL, NULL, &sFName);
+							FileMisc::MakePath(sFilePath, NULL, sExportPath, sFName, sExt);
+						}
+					}
+
+					m_mgrImportExport.ExportTaskList(&tasks, sFilePath, nFormat, FALSE);
+				}
+				GetToDoCtrl(nCtrl).UnlockWindowUpdate();
+			}
 		}
 	}
 }
@@ -8118,7 +8386,12 @@ int CToDoListWnd::GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTra
 	tasks.SetCharSet(userPrefs.GetHtmlCharSet());
 
 	// export flags
-	filter.dwFlags |= TDCGTF_ISODATES | TDCGTF_FILENAME;
+	filter.dwFlags |= TDCGTF_FILENAME;
+
+	if (userPrefs.GetDisplayDatesInISO())
+	{
+		filter.dwFlags |= TDCGTF_ISODATES;
+	}
 
 	if (userPrefs.GetExportParentTitleCommentsOnly())
 	{
@@ -8977,6 +9250,28 @@ void CToDoListWnd::OnUpdateViewCollapseall(CCmdUI* pCmdUI)
 	pCmdUI->Enable(GetToDoCtrl().GetTaskCount());
 }
 
+
+void CToDoListWnd::OnViewToggletaskexpanded()
+{
+	CFilteredToDoCtrl& tdc = GetToDoCtrl();
+
+	if (tdc.CanExpandSelectedTask(TRUE))
+	{
+		tdc.ExpandSelectedTask(TRUE);
+	}
+	else
+	{
+		tdc.ExpandSelectedTask(FALSE);
+	}
+}
+
+void CToDoListWnd::OnUpdateViewToggletaskexpanded(CCmdUI* pCmdUI)
+{
+	const CFilteredToDoCtrl& tdc = GetToDoCtrl();
+
+	pCmdUI->Enable(tdc.CanExpandSelectedTask(TRUE) || tdc.CanExpandSelectedTask(FALSE));
+}
+
 void CToDoListWnd::OnWindow(UINT nCmdID)
 {
 	int nTDC = (int)(nCmdID - ID_WINDOW1);
@@ -9568,7 +9863,7 @@ void CToDoListWnd::OnAddtimetologfile()
 
 	if (dialog.DoModal() == IDOK)
 	{
-		tdc.AddTimeToTaskLogFile(dwTaskID, dialog.GetLoggedTime(), dialog.GetWhen());
+		tdc.AddTimeToTaskLogFile(dwTaskID, dialog.GetLoggedTime(), dialog.GetWhen(), dialog.GetAddToTimeSpent());
 	}
 }
 
@@ -9595,17 +9890,9 @@ LRESULT CToDoListWnd::OnToDoCtrlDoTaskLink(WPARAM wParam, LPARAM lParam)
 	if (!sFile.IsEmpty())
 	{
 		// build the full path to the file
-		if (::PathIsRelative(sFile))
-		{
-			// append it to the folder containing the active tasklist
-			CString sPathName = m_mgrToDoCtrls.GetFilePath(GetSelToDoCtrl());
-			CString sDrive, sFolder;
+		CString sFolder = FileMisc::GetFolderFromFilePath(m_mgrToDoCtrls.GetFilePath(GetSelToDoCtrl()));
+		FileMisc::MakeFullPath(sFile, sFolder);
 
-			FileMisc::SplitPath(sPathName, &sDrive, &sFolder);
-			FileMisc::MakePath(sFile, sDrive, sFolder, sFile);
-		}
-
-		// else its a full path already
 		TDC_FILE nRet = OpenTaskList(sFile);
 
 		if (nRet == TDCO_SUCCESS)
@@ -9614,6 +9901,8 @@ LRESULT CToDoListWnd::OnToDoCtrlDoTaskLink(WPARAM wParam, LPARAM lParam)
 			{
 				GetToDoCtrl().SelectTask(wParam);
 			}
+
+			return TRUE;
 		}
 		else
 		{
@@ -9733,11 +10022,15 @@ void CToDoListWnd::OnViewStatusBar()
 	m_bShowStatusBar = !m_bShowStatusBar;
 	m_statusBar.ShowWindow(m_bShowStatusBar ? SW_SHOW : SW_HIDE);
 
-	ResizeDlg();
+	SendMessage(WM_SIZE, SIZE_RESTORED, 0L);
 
 	if (m_bShowStatusBar)
 	{
 		UpdateStatusbar();
+	}
+	else
+	{
+		UpdateCaption();
 	}
 }
 
@@ -9895,7 +10188,31 @@ void CToDoListWnd::OnEditInsertdate()
 	GetToDoCtrl().PasteText(sDate);
 }
 
+void CToDoListWnd::OnEditInserttime()
+{
+	COleDateTime date = COleDateTime::GetCurrentTime();
+	const CPreferencesDlg& userPrefs = Prefs();
+
+	CString sTime;
+
+	if (userPrefs.GetDisplayDatesInISO())
+	{
+		sTime = CTimeHelper::FormatISOTime(date.GetHour(), date.GetMinute(), date.GetSecond(), TRUE);
+	}
+	else
+	{
+		sTime = CTimeHelper::Format24HourTime(date.GetHour(), date.GetMinute(), date.GetSecond(), TRUE);
+	}
+
+	GetToDoCtrl().PasteText(sTime);
+}
+
 void CToDoListWnd::OnUpdateEditInsertdatetime(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(GetToDoCtrl().CanPasteText());
+}
+
+void CToDoListWnd::OnUpdateEditInserttime(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(GetToDoCtrl().CanPasteText());
 }
@@ -10240,8 +10557,8 @@ void CToDoListWnd::OnLoadFromWeb()
 	{
 		CStringArray aRemoteFiles, aLocalFiles;
 
-		int nFiles = Misc::ParseIntoArray(sLocalPath, aLocalFiles, FALSE, _T(";"));
-		VERIFY(nFiles == Misc::ParseIntoArray(sRemotePath, aRemoteFiles, FALSE, _T(";")));
+		int nFiles = Misc::Split(sLocalPath, _T(';'), aLocalFiles);
+		VERIFY(nFiles == Misc::Split(sRemotePath, _T(';'), aRemoteFiles));
 
 		for (int nFile = 0; nFile < nFiles; nFile++)
 		{
@@ -10334,86 +10651,86 @@ LRESULT CToDoListWnd::OnToDoCtrlReminder(WPARAM /*wp*/, LPARAM lp)
 {
 	AF_NOREENTRANT_RET(0L) // macro helper
 
-		// ignore if we are showing a dialog
-		if (!IsWindowEnabled())
+	// ignore if we are showing a dialog
+	if (!IsWindowEnabled())
+	{
+		return 0L;
+	}
+
+	Show(FALSE);
+
+	TDCREMINDER* pReminder = (TDCREMINDER*)lp;
+	CTDLShowReminderDlg dialog;
+
+	int nRet = dialog.DoModal(*pReminder);
+
+	switch (nRet)
+	{
+	case IDSNOOZE:
 		{
-			return 0L;
-		}
+			double dSnooze = dialog.GetSnoozeMinutes();
+			double dNow = COleDateTime::GetCurrentTime().m_dt;
 
-		Show(FALSE);
-
-		TDCREMINDER* pReminder = (TDCREMINDER*)lp;
-		CTDLShowReminderDlg dialog;
-
-		int nRet = dialog.DoModal(*pReminder);
-
-		switch (nRet)
-		{
-		case IDSNOOZE:
+			if (pReminder->bRelative)
 			{
-				double dSnooze = dialog.GetSnoozeMinutes();
-				double dNow = COleDateTime::GetCurrentTime().m_dt;
-
-				if (pReminder->bRelative)
-				{
-					if (pReminder->nRelativeFromWhen == TDCR_DUEDATE)
-					{
-						// in case the user didn't handle the notification immediately we need
-						// to soak up any additional elapsed time in the snooze
-						COleDateTime dDue = pReminder->pTDC->GetTaskDate(pReminder->dwTaskID, TDCD_DUE);
-
-						pReminder->dDaysSnooze = dNow - dDue.m_dt + pReminder->dRelativeDaysLeadIn;
-
-						// then we add the user's snooze
-						pReminder->dDaysSnooze += (dSnooze / (24.0 * 60.0));
-					}
-					else // from start
-					{
-						// in case the user didn't handle the notification immediately we need
-						// to soak up any additional elapsed time in the snooze
-						COleDateTime dStart = pReminder->pTDC->GetTaskDate(pReminder->dwTaskID, TDCD_START);
-
-						pReminder->dDaysSnooze = dNow - dStart.m_dt + pReminder->dRelativeDaysLeadIn;
-
-						// then we add the user's snooze
-						pReminder->dDaysSnooze += (dSnooze / (24.0 * 60.0));
-					}
-				}
-				else // absolute
+				if (pReminder->nRelativeFromWhen == TDCR_DUEDATE)
 				{
 					// in case the user didn't handle the notification immediately we need
 					// to soak up any additional elapsed time in the snooze
-					pReminder->dDaysSnooze = dNow - pReminder->dtAbsolute;
+					COleDateTime dDue = pReminder->pTDC->GetTaskDate(pReminder->dwTaskID, TDCD_DUE);
+
+					pReminder->dDaysSnooze = dNow - dDue.m_dt + pReminder->dRelativeDaysLeadIn;
+
+					// then we add the user's snooze
+					pReminder->dDaysSnooze += (dSnooze / (24.0 * 60.0));
+				}
+				else // from start
+				{
+					// in case the user didn't handle the notification immediately we need
+					// to soak up any additional elapsed time in the snooze
+					COleDateTime dStart = pReminder->pTDC->GetTaskDate(pReminder->dwTaskID, TDCD_START);
+
+					pReminder->dDaysSnooze = dNow - dStart.m_dt + pReminder->dRelativeDaysLeadIn;
 
 					// then we add the user's snooze
 					pReminder->dDaysSnooze += (dSnooze / (24.0 * 60.0));
 				}
 			}
-			return 0L; // don't delete (default)
-
-		case IDGOTOTASK:
+			else // absolute
 			{
-				int nTDC = m_mgrToDoCtrls.FindToDoCtrl(pReminder->pTDC);
-				ASSERT(nTDC != -1);
+				// in case the user didn't handle the notification immediately we need
+				// to soak up any additional elapsed time in the snooze
+				pReminder->dDaysSnooze = dNow - pReminder->dtAbsolute;
 
-				SelectToDoCtrl(nTDC, TRUE);
-				GetToDoCtrl().SelectTask(pReminder->dwTaskID);
+				// then we add the user's snooze
+				pReminder->dDaysSnooze += (dSnooze / (24.0 * 60.0));
 			}
-			// fall thru
-
-		case IDCANCEL:
-		default:
-			// delete unless it's a recurring task in which case we
-			// disable it so that it can later be copied when the
-			// recurring task is completed
-			if (GetToDoCtrl().IsTaskRecurring(pReminder->dwTaskID))
-			{
-				pReminder->bEnabled = FALSE;
-				return 0L; // don't delete
-			}
-			// else
-			return 1L; // delete
 		}
+		return 0L; // don't delete (default)
+
+	case IDGOTOTASK:
+		{
+			int nTDC = m_mgrToDoCtrls.FindToDoCtrl(pReminder->pTDC);
+			ASSERT(nTDC != -1);
+
+			SelectToDoCtrl(nTDC, TRUE);
+			GetToDoCtrl().SelectTask(pReminder->dwTaskID);
+		}
+		// fall thru
+
+	case IDCANCEL:
+	default:
+		// delete unless it's a recurring task in which case we
+		// disable it so that it can later be copied when the
+		// recurring task is completed
+		if (GetToDoCtrl().IsTaskRecurring(pReminder->dwTaskID))
+		{
+			pReminder->bEnabled = FALSE;
+			return 0L; // don't delete
+		}
+		// else
+		return 1L; // delete
+	}
 }
 
 LRESULT CToDoListWnd::OnToDoCtrlTaskHasReminder(WPARAM wParam, LPARAM lParam)
@@ -10525,16 +10842,19 @@ void CToDoListWnd::OnUpdateEditCleartaskicon(CCmdUI* pCmdUI)
 void CToDoListWnd::OnSortMulti()
 {
 	TDSORTCOLUMNS sort;
+	CTDCColumnArray aColumns;
 
-	GetToDoCtrl().GetSortBy(sort);
+	CFilteredToDoCtrl& tdc = GetToDoCtrl();
 
-	CTDLMultiSortDlg dialog(sort);
+	tdc.GetSortBy(sort);
+	tdc.GetVisibleColumns(aColumns);
+
+	CTDLMultiSortDlg dialog(sort, aColumns);
 
 	if (dialog.DoModal() == IDOK)
 	{
 		dialog.GetSortBy(sort);
-
-		GetToDoCtrl().MultiSort(sort);
+		tdc.MultiSort(sort);
 	}
 }
 
@@ -10575,4 +10895,31 @@ void CToDoListWnd::OnUpdateToolsRemovefromsourcecontrol(CCmdUI* pCmdUI)
 	}
 
 	pCmdUI->Enable(bEnable);
+}
+
+
+void CToDoListWnd::OnViewShowTasklistTabbar()
+{
+	m_bShowTasklistBar = !m_bShowTasklistBar;
+	ResizeDlg();
+}
+
+void CToDoListWnd::OnUpdateViewShowTasklistTabbar(CCmdUI* pCmdUI)
+{
+	pCmdUI->SetCheck(m_bShowTasklistBar ? 1 : 0);
+}
+
+void CToDoListWnd::OnViewShowTreeListTabbar()
+{
+	m_bShowTreeListBar = !m_bShowTreeListBar;
+
+	GetToDoCtrl().SetStyle(TDCS_SHOWTREELISTBAR, m_bShowTreeListBar);
+
+	// refresh all the other tasklists
+	m_mgrToDoCtrls.SetAllNeedPreferenceUpdate(TRUE, GetSelToDoCtrl());
+}
+
+void CToDoListWnd::OnUpdateViewShowTreeListTabbar(CCmdUI* pCmdUI)
+{
+	pCmdUI->SetCheck(m_bShowTreeListBar ? 1 : 0);
 }

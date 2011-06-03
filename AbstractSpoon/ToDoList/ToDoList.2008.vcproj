@@ -454,6 +454,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\MultiTaskFile.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\OffsetDatesDlg.cpp"
 				>
 			</File>
@@ -562,6 +566,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\TaskListCsvImporter.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\TaskListDropTarget.cpp"
 				>
 			</File>
@@ -599,6 +607,18 @@
 			</File>
 			<File
 				RelativePath=".\Source\TDLContentMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TDLCsvAttributeSetupListCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TDLCsvImportExportDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TDLExportDlg.cpp"
 				>
 			</File>
 			<File
@@ -764,6 +784,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\MultiTaskFile.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\OffsetDatesDlg.h"
 				>
 			</File>
@@ -844,6 +868,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\TaskListCsvImporter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\TaskListDropTarget.h"
 				>
 			</File>
@@ -897,6 +925,18 @@
 			</File>
 			<File
 				RelativePath=".\Source\TDLContentMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TDLCsvAttributeSetupListCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TDLCsvImportExportDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TDLExportDlg.h"
 				>
 			</File>
 			<File

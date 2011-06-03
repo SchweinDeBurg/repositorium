@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,8 +24,9 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // UIExtensionMgr.h: interface for the CUIExtensionMgr class.
@@ -81,6 +82,7 @@ public:
 	void RemoveWindow(DWORD dwItemData);
 	BOOL ShowWindow(DWORD dwItemData, UI_SHOW nShow = UIS_RESTORE);
 	void UpdateWindow(DWORD dwItemData, const ITaskList* pTasks, DWORD dwFlags = UIU_ALL);
+	void SetUITheme(const UITHEME& theme);
 
 protected:
 	IUIExtension* m_pExtension;
@@ -110,6 +112,7 @@ public:
 	void ShowAllExtensionsWindows(DWORD dwItemData, UI_SHOW nShow = UIS_RESTORE);
 	void RemoveAllExtensionsWindows(DWORD dwItemData);
 	void UpdateAllExtensionsWindow(DWORD dwItemData, const ITaskList* pTasks, DWORD dwFlags = UIU_ALL);
+	void SetUITheme(const UITHEME& theme);
 
 protected:
 	BOOL m_bInitialized;

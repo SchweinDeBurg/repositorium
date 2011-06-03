@@ -100,18 +100,18 @@ class CStatusBarACT : public CStatusBar
 {
 	DECLARE_DYNAMIC(CStatusBarACT)
 
-	// Construction
+// Construction
 public:
 	CStatusBarACT();
 
-	// Attributes
+// Attributes
 public:
-	void SetUIColors(COLORREF crBackFrom, COLORREF crBackTo, BOOL bGradient/*, COLORREF crText*/);
+	void SetUIColors(COLORREF crBackFrom, COLORREF crBackTo, BOOL bGradient, COLORREF crText);
 
-	// Operations
+// Operations
 public:
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CStatusBarACT)
 public:
@@ -120,7 +120,7 @@ protected:
 	virtual LRESULT DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 public:
 	BOOL SetPanes(LPSBACTPANEINFO lpsbactpi, UINT nPaneInfoCount);
 	BOOL SetPane(LPSBACTPANEINFO lpsbactpi);
@@ -162,7 +162,7 @@ protected:
 	CArray<HCURSOR, HCURSOR> m_adwCursors;
 	HCURSOR m_hCursorHand;
 	BOOL m_bTryDefaultHandCursor;
-	COLORREF m_crFrom, m_crTo/*, m_crText*/;
+	COLORREF m_crFrom, m_crTo, m_crText;
 	BOOL m_bGradient;
 
 	//{{AFX_MSG(CStatusBarACT)
@@ -171,7 +171,9 @@ protected:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	//}}AFX_MSG
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	//virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
+	afx_msg void OnPaint();
+
+	virtual void DrawRectBkgnd(CDC* pDC, const CRect& rect);
 
 	DECLARE_MESSAGE_MAP()
 };

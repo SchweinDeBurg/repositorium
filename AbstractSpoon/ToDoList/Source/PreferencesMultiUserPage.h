@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_PREFERENCESMULTIUSERPAGE_H__D7484AFF_704B_4FA9_94DA_9AB2F5364816__INCLUDED_)
@@ -103,6 +103,10 @@ public:
 	{
 		return m_bEnableSourceControl && m_bCheckinOnClose;
 	}
+	BOOL GetIncludeUserNameInCheckout() const
+	{
+		return m_bEnableSourceControl && m_bIncludeUserNameInCheckout;
+	}
 	UINT GetRemoteFileCheckFrequency() const
 	{
 		return m_nRemoteFileCheckFreq;
@@ -123,6 +127,7 @@ protected:
 	CComboBox   m_cbNoEditTime;
 	BOOL    m_bCheckinNoChange;
 	BOOL    m_bUse3rdPartySourceControl;
+	BOOL    m_bIncludeUserNameInCheckout;
 	//}}AFX_DATA
 	CComboBox   m_cbRemoteFileCheck;
 	BOOL    m_bEnableSourceControl;

@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // DialogHelper.h: interface for the CDialogHelper class.
@@ -78,6 +79,7 @@ public:
 
 	static BOOL IsChildOrSame(HWND hWnd, HWND hwndChild);
 	static BOOL ControlWantsEnter(HWND hwnd);
+	static CString GetControlLabel(const CWnd* pWnd);
 
 	// font helper
 	static void SetFont(CWnd* pWnd, HFONT hFont, BOOL bRedraw = TRUE);
@@ -90,6 +92,7 @@ public:
 	static int CalcMaxTextWidth(CComboBox& combo, int nMinWidth = 0, BOOL bDropped = FALSE, CDC* pDCRef = NULL);
 	static BOOL SelectItemByValue(CComboBox& combo, int nValue);
 	static int GetSelectedItemAsValue(const CComboBox& combo);
+	static BOOL IsDroppedComboBox(HWND hCtrl);
 
 	// better dialog control shortcut handling
 	static BOOL ProcessDialogControlShortcut(const MSG* pMsg);
@@ -119,6 +122,9 @@ public:
 
 	static BOOL IsEdit(CWnd* pParent, UINT nCtrlID);
 	static BOOL IsEdit(HWND hCtrl);
+
+	static BOOL IsComboBox(CWnd* pParent, UINT nCtrlID);
+	static BOOL IsComboBox(HWND hCtrl);
 
 	static CString GetClassName(CWnd* pWnd); // returns whatever ::GetClassName() returns
 

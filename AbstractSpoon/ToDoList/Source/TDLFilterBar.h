@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_FILTERBAR_H__FAABD9A1_72C4_4731_B7A4_48251860672C__INCLUDED_)
@@ -95,9 +95,7 @@ public:
 	}
 
 	void EnableMultiSelection(BOOL bEnable);
-	void ShowDivider(BOOL bShow = TRUE);
-
-	void SetUIColors(COLORREF crBack);
+	void SetUIColors(COLORREF crBack, COLORREF crText);
 
 protected:
 // Dialog Data
@@ -116,10 +114,9 @@ protected:
 	FTDCFILTER m_filter;
 	CDWordArray m_aPriorityColors;
 	CDWordArray m_aVisibility;
-	BOOL m_bShowDivider;
 	FTC_VIEW m_nView;
 	CBrush m_brUIBack;
-	COLORREF m_crUIBack;
+	COLORREF m_crUIBack, m_crUIText;
 	BOOL m_bCustomFilter;
 	CString m_sCustomFilter;
 

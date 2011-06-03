@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // TDLFindTaskExpressionListCtrl.cpp : implementation file
@@ -48,6 +48,7 @@
 #include "StdAfx.h"
 #include "Resource.h"
 #include "TDLFindTaskExpressionListCtrl.h"
+#include "TDCStatic.h"
 
 #include "../../../CodeProject/Source/HoldRedraw.h"
 #include "../../../CodeProject/Source/EnString.h"
@@ -63,70 +64,6 @@ enum { ATTRIB_ID = 5000, OPERATOR_ID, ANDOR_ID, DATE_ID, TIME_ID };
 
 const float COL_PROPORTIONS[] = { 12.0f / 47, 16.0f / 47, 13.0f / 47, 6.0f / 47 };
 
-struct ATTRIB_PAIR
-{
-	TDC_ATTRIBUTE attrib;
-	UINT nAttribResID;
-};
-
-struct OP_PAIR
-{
-	FIND_OPERATOR op;
-	UINT nOpResID;
-};
-
-static ATTRIB_PAIR ATTRIBUTES[] =
-{
-	{ TDCA_NONE, 0 },
-	{ TDCA_TASKNAME, IDS_TDLBC_TITLE },
-	{ TDCA_DONEDATE, IDS_TDLBC_DONEDATE },
-	{ TDCA_DUEDATE, IDS_TDLBC_DUEDATE },
-	{ TDCA_STARTDATE, IDS_TDLBC_STARTDATE },
-	{ TDCA_PRIORITY, IDS_TDLBC_PRIORITY },
-	{ TDCA_ALLOCTO, IDS_TDLBC_ALLOCTO },
-	{ TDCA_ALLOCBY, IDS_TDLBC_ALLOCBY },
-	{ TDCA_STATUS, IDS_TDLBC_STATUS },
-	{ TDCA_CATEGORY, IDS_TDLBC_CATEGORY },
-	{ TDCA_PERCENT, IDS_TDLBC_PERCENT },
-	{ TDCA_TIMEEST, IDS_TDLBC_TIMEEST },
-	{ TDCA_TIMESPENT, IDS_TDLBC_TIMESPENT },
-	{ TDCA_FILEREF, IDS_TDLBC_FILEREF },
-	{ TDCA_FLAG, IDS_TDLBC_FLAG },
-	{ TDCA_CREATIONDATE, IDS_TDLBC_CREATEDATE },
-	{ TDCA_CREATEDBY, IDS_TDLBC_CREATEDBY },
-	{ TDCA_RISK, IDS_TDLBC_RISK },
-	{ TDCA_EXTERNALID, IDS_TDLBC_EXTERNALID },
-	{ TDCA_COST, IDS_TDLBC_COST },
-	{ TDCA_DEPENDENCY, IDS_TDLBC_DEPENDS },
-	{ TDCA_VERSION,	IDS_TDLBC_VERSION  },
-	{ TDCA_ID, IDS_TDLBC_ID },
-	{ TDCA_LASTMOD, IDS_TDLBC_MODIFYDATE },
-	{ TDCA_COMMENTS, IDS_TDLBC_COMMENTS },
-	{ TDCA_TASKNAMEORCOMMENTS, IDS_TDLBC_TITLEORCOMMENTS },
-	{ TDCA_ANYTEXTATTRIBUTE, IDS_TDLBC_ANYTEXTATTRIB },
-};
-const int ATTRIB_COUNT = sizeof(ATTRIBUTES) / sizeof(ATTRIB_PAIR);
-
-static OP_PAIR OPERATORS[] =
-{
-	{ FO_NONE, 0 },
-	{ FO_EQUALS, IDS_FP_EQUALS },
-	{ FO_NOT_EQUALS, IDS_FP_NOT_EQUALS },
-	{ FO_INCLUDES, IDS_FP_INCLUDES },
-	{ FO_NOT_INCLUDES, IDS_FP_NOT_INCLUDES },
-	{ FO_ON_OR_BEFORE, IDS_FP_ON_OR_BEFORE },
-	{ FO_BEFORE, IDS_FP_BEFORE },
-	{ FO_ON_OR_AFTER, IDS_FP_ON_OR_AFTER },
-	{ FO_AFTER, IDS_FP_AFTER },
-	{ FO_GREATER_OR_EQUAL, IDS_FP_GREATER_OR_EQUAL },
-	{ FO_GREATER, IDS_FP_GREATER },
-	{ FO_LESS_OR_EQUAL, IDS_FP_LESS_OR_EQUAL },
-	{ FO_LESS, IDS_FP_LESS },
-	{ FO_SET, IDS_FP_SET },
-	{ FO_NOT_SET, IDS_FP_NOT_SET }
-};
-const int OP_COUNT = sizeof(OPERATORS) / sizeof(OP_PAIR);
-
 #define ADD_OP_2_COMBO(cb, op) { int i = cb->AddString(GetOpName(op)); cb->SetItemData(i, (DWORD)op); }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -134,10 +71,7 @@ const int OP_COUNT = sizeof(OPERATORS) / sizeof(OP_PAIR);
 
 CTDLFindTaskExpressionListCtrl::CTDLFindTaskExpressionListCtrl()
 {
-	CString sPrompt;
-	sPrompt.LoadString(IDS_FP_NEW_RULE);
-
-	SetAutoRowPrompt(sPrompt);
+	SetAutoRowPrompt(CEnString(IDS_FP_NEW_RULE));
 }
 
 CTDLFindTaskExpressionListCtrl::~CTDLFindTaskExpressionListCtrl()
@@ -183,7 +117,7 @@ void CTDLFindTaskExpressionListCtrl::PreSubclassWindow()
 	// build attrib combo because that is static
 	for (int nAttrib = 0; nAttrib < ATTRIB_COUNT; nAttrib++)
 	{
-		const ATTRIB_PAIR& ap = ATTRIBUTES[nAttrib];
+		const TDCATTRIBUTE& ap = ATTRIBUTES[nAttrib];
 
 		if (ap.nAttribResID)
 		{
@@ -254,38 +188,6 @@ int CTDLFindTaskExpressionListCtrl::GetSearchParams(CSearchParamArray& params) c
 	params.Copy(m_aSearchParams);
 
 	return params.GetSize();
-}
-
-void CTDLFindTaskExpressionListCtrl::CreateControl(CWnd& ctrl, UINT nID, BOOL bSort)
-{
-	DWORD dwStyle = WS_CHILD;
-
-	if (ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)))
-	{
-		dwStyle |= CBS_DROPDOWNLIST | WS_VSCROLL | CBS_AUTOHSCROLL;
-
-		if (bSort)
-		{
-			dwStyle |= CBS_SORT;
-		}
-
-		CComboBox* pCombo = (CComboBox*)&ctrl;
-		VERIFY(pCombo->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
-	}
-	else if (ctrl.IsKindOf(RUNTIME_CLASS(CEdit)))
-	{
-		CEdit* pEdit = (CEdit*)&ctrl;
-		VERIFY(pEdit->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
-
-		pEdit->ModifyStyleEx(0, WS_EX_CLIENTEDGE, 0);
-	}
-	else
-	{
-		CDateTimeCtrl* pDateTime = (CDateTimeCtrl*)&ctrl;
-		VERIFY(pDateTime->Create(dwStyle, CRect(0, 0, 0, 0), this, nID));
-	}
-
-	ctrl.SetFont(GetFont()); // set font to parents
 }
 
 void CTDLFindTaskExpressionListCtrl::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
@@ -425,24 +327,6 @@ void CTDLFindTaskExpressionListCtrl::EditCell(int nItem, int nCol)
 			}
 		}
 		break;
-	}
-}
-
-void CTDLFindTaskExpressionListCtrl::EndEdit()
-{
-	int nRow, nCol;
-	GetCurSel(nRow, nCol);
-
-	if (nRow == -1 || nCol == -1)
-	{
-		return;
-	}
-
-	// if any editing control is visible, just shift the
-	// focus back to the list to end the edit
-	if (IsEditing())
-	{
-		SetFocus();
 	}
 }
 
@@ -647,30 +531,6 @@ BOOL CTDLFindTaskExpressionListCtrl::CanMoveSelectedRuleDown() const
 	return (GetCurSel() < GetRuleCount() - 1);
 }
 
-void CTDLFindTaskExpressionListCtrl::ShowControl(CWnd& ctrl, int nRow, int nCol)
-{
-	PrepareControl(ctrl, nRow, nCol);
-
-	CRect rCell;
-	GetCellEditRect(nRow, nCol, rCell);
-
-	if (ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)))
-	{
-		rCell.bottom += 200;
-	}
-
-	ctrl.MoveWindow(rCell);
-	ctrl.EnableWindow(TRUE);
-	ctrl.ShowWindow(SW_SHOW);
-	ctrl.SetFocus();
-
-	if (ctrl.IsKindOf(RUNTIME_CLASS(CComboBox)))
-	{
-		CComboBox* pCombo = (CComboBox*)&ctrl;
-		pCombo->ShowDropDown(TRUE);
-	}
-}
-
 void CTDLFindTaskExpressionListCtrl::PrepareControl(CWnd& ctrl, int nRow, int nCol)
 {
 	if (!GetRuleCount())
@@ -825,15 +685,6 @@ void CTDLFindTaskExpressionListCtrl::ValidateListData() const
 		ASSERT(rule.HasValidOperator());
 	}
 #endif
-}
-
-void CTDLFindTaskExpressionListCtrl::HideControl(CWnd& ctrl)
-{
-	if (ctrl.IsWindowVisible())
-	{
-		ctrl.ShowWindow(SW_HIDE);
-		ctrl.EnableWindow(FALSE);
-	}
 }
 
 void CTDLFindTaskExpressionListCtrl::OnAttribEditCancel()

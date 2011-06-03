@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // XmlNodeWrapper.h: interface for the CXmlNodeWrapper class.
@@ -54,6 +54,8 @@
 #endif // _MSC_VER > 1000
 
 #import <msxml3.dll> named_guids
+
+class CXmlDocumentWrapper;
 
 class CXmlNodeWrapper
 {
@@ -100,6 +102,7 @@ public:
 	void SetValue(LPCTSTR valueName, bool value);
 	BOOL IsValid();
 	CString GetValue(LPCTSTR valueName);
+	BOOL IsPreservingWhiteSpace() const;
 
 	// fixed version
 	static BSTR ConvertStringToBSTR(const char* pSrc);
@@ -121,7 +124,7 @@ public:
 	BOOL IsValid() const;
 	BOOL Load(LPCTSTR path, BOOL bPreserveWhiteSpace = TRUE);
 	CString Transform(LPCTSTR pathXSL) const;
-	BOOL LoadXML(LPCTSTR xml/*, BOOL bPreserveWhiteSpace = TRUE*/);
+	BOOL LoadXML(LPCTSTR xml, BOOL bPreserveWhiteSpace = TRUE);
 	BOOL Save(LPCTSTR path = _T(""), BOOL bPreserveWhiteSpace = TRUE);
 	CString GetHeader(BOOL bAsXml = FALSE) const;
 

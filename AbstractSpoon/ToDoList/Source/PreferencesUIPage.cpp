@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // PreferencesUIPage.cpp : implementation file
@@ -72,7 +72,7 @@ CPreferencesPageBase(CPreferencesUIPage::IDD),
 m_pContentMgr(pMgr),
 m_cbCommentsFmt(pMgr),
 m_nDefaultCommentsFormat(-1),
-m_eUITheme(FES_COMBOSTYLEBTN, CEnString(IDS_UITHEMEFILEFILTER))
+m_eUITheme(FES_COMBOSTYLEBTN | FES_RELATIVEPATHS, CEnString(IDS_UITHEMEFILEFILTER))
 {
 	//{{AFX_DATA_INIT(CPreferencesUIPage)
 	m_bAutoRefilter = FALSE;
@@ -106,7 +106,7 @@ void CPreferencesUIPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_SHOWEDITMENUASCOLUMNS, m_bShowEditMenuAsColumns);
 	DDX_Check(pDX, IDC_MULTISELFILTER, m_bMultiSelFilters);
 	DDX_Check(pDX, IDC_RESTORETASKLISTFILTERS, m_bRestoreTasklistFilters);
-	DDX_Check(pDX, IDC_CHECK4, m_bAutoRefilter);
+	DDX_Check(pDX, IDC_AUTOREFILTER, m_bAutoRefilter);
 	DDX_Text(pDX, IDC_UITHEMEFILE, m_sUIThemeFile);
 	DDX_Check(pDX, IDC_USEUITHEME, m_bUseUITheme);
 	DDX_CBIndex(pDX, IDC_COMMENTPOS, m_nCommentsPos);
@@ -181,12 +181,15 @@ void CPreferencesUIPage::LoadPreferences(const CPreferences& prefs)
 	m_bAutoRefilter = prefs.GetProfileInt(_T("Preferences"), _T("AutoRefilter"), TRUE);
 	m_bEnableLightboxMgr = prefs.GetProfileInt(_T("Preferences"), _T("EnableLightboxMgr"), COSVersion() <= OSV_XP);
 	m_bUseUITheme = CThemed::IsThemeActive() && prefs.GetProfileInt(_T("Preferences"), _T("UseUITheme"), TRUE);
+	m_sUIThemeFile = prefs.GetProfileString(_T("Preferences"), _T("UIThemeFile"), _T(".\\ThemeBlue.xml"));
 
 	// set default theme to blue
 	if (CThemed::IsThemeActive())
 	{
-		CString sDefault = FileMisc::GetModuleFolder() + _T("Resources\\ThemeBlue.xml");
-		m_sUIThemeFile = prefs.GetProfileString(_T("Preferences"), _T("UIThemeFile"), sDefault);
+		CString sResFolder = FileMisc::GetAppResourceFolder();
+
+		m_eUITheme.SetCurrentFolder(sResFolder);
+		m_sUIThemeFile = FileMisc::GetRelativePath(m_sUIThemeFile, sResFolder, FALSE);
 	}
 	else
 	{
@@ -264,7 +267,7 @@ CString CPreferencesUIPage::GetUITheme() const
 {
 	if (m_bUseUITheme)
 	{
-		return FileMisc::GetFullPath(m_sUIThemeFile, TRUE);
+		return FileMisc::GetFullPath(m_sUIThemeFile, FileMisc::GetAppResourceFolder());
 	}
 
 	// else

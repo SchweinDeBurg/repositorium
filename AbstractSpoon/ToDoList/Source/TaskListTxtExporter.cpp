@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2-6.1.10 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // TaskListTxtExporter.cpp: implementation of the CTaskListTxtExporter class.
@@ -76,7 +76,21 @@ CTaskListTxtExporter::~CTaskListTxtExporter()
 {
 }
 
-bool CTaskListTxtExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
+bool CTaskListTxtExporter::ExportOutput(const TCHAR* szDestFilePath, const CString& sOutput)
+{
+	CStdioFile fileOut;
+
+	if (fileOut.Open(szDestFilePath, CFile::modeCreate | CFile::modeWrite))
+	{
+		fileOut.WriteString(sOutput);
+		return true;
+	}
+
+	// else
+	return false;
+}
+
+void CTaskListTxtExporter::InitConsts()
 {
 	CPreferences prefs;
 
@@ -98,31 +112,42 @@ bool CTaskListTxtExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* sz
 		{
 			while (nLine--)
 			{
-				TEXTNOTES += "\n";
+				TEXTNOTES += _T("\n");
 			}
 		}
 	}
 
 	ROUNDTIMEFRACTIONS = prefs.GetProfileInt(_T("Preferences"), _T("RoundTimeFractions"), FALSE);
-
-	CStdioFile fileOut;
-
-	if (fileOut.Open(szDestFilePath, CFile::modeCreate | CFile::modeWrite))
-	{
-		const ITaskList6* pTasks6 = static_cast<const ITaskList6*>(pSrcTaskFile);
-		CString sOutput;
-
-		if (!ExportTask(pTasks6, NULL, 0, 0, _T(""), sOutput).IsEmpty())
-		{
-			fileOut.WriteString(sOutput);
-			return true;
-		}
-	}
-
-	return false;
 }
 
-CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hTask, int nDepth, int nPos, const CString& sParentPos, CString& sOutput) const
+bool CTaskListTxtExporter::Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
+{
+	InitConsts();
+
+	CString sOutput;
+
+	for (int nTaskList = 0; nTaskList < pSrcTaskFile->GetTaskListCount(); nTaskList++)
+	{
+		const ITaskList8* pTasks8 = GetITLInterface<ITaskList8>(pSrcTaskFile->GetTaskList(nTaskList), IID_TASKLIST8);
+		ExportTask(pTasks8, NULL, 0, 0, _T(""), sOutput);
+	}
+
+	return ExportOutput(szDestFilePath, sOutput);
+}
+
+bool CTaskListTxtExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL /*bSilent*/)
+{
+	InitConsts();
+
+	const ITaskList8* pTasks8 = GetITLInterface<ITaskList8>(pSrcTaskFile, IID_TASKLIST8);
+
+	CString sOutput;
+	ExportTask(pTasks8, NULL, 0, 0, _T(""), sOutput);
+
+	return ExportOutput(szDestFilePath, sOutput);
+}
+
+CString& CTaskListTxtExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM hTask, int nDepth, int nPos, const CString& sParentPos, CString& sOutput) const
 {
 	// handle locale specific decimal separator
 	_tsetlocale(LC_NUMERIC, _T(""));
@@ -165,8 +190,23 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		CString sRecurrence, sDepends;
 		TCHAR cTemp;
 
-		// ID
-		FormatAttribute(pTasks, hTask, TDL_TASKID, _T("(ID: %s) "), sID);
+		// IDs
+		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKID)))
+		{
+			DWORD dwID = pTasks->GetTaskID(hTask);
+
+			if (dwID)
+			{
+				if (nDepth > 1)
+				{
+					sID.Format(_T("(ID: %d, PID: %d) "), dwID, pTasks->GetTaskParentID(hTask));
+				}
+				else
+				{
+					sID.Format(_T("(ID: %d) "), dwID);
+				}
+			}
+		}
 
 		// title
 		CString sTitle(pTasks->GetTaskTitle(hTask));
@@ -182,7 +222,7 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 		}
 
 		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKHIGHESTPRIORITY)) ||
-				pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPRIORITY)))
+			pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKPRIORITY)))
 		{
 			int nPriority = pTasks->GetTaskPriority(hTask, TRUE);
 
@@ -304,7 +344,7 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList6* pTasks, HTASKITEM hT
 	return sOutput;
 }
 
-BOOL CTaskListTxtExporter::FormatAttribute(const ITaskList6* pTasks, HTASKITEM hTask,
+BOOL CTaskListTxtExporter::FormatAttribute(const ITaskList8* pTasks, HTASKITEM hTask,
 	LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
 {
 	if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAttribName)))
@@ -317,7 +357,7 @@ BOOL CTaskListTxtExporter::FormatAttribute(const ITaskList6* pTasks, HTASKITEM h
 }
 
 
-BOOL CTaskListTxtExporter::FormatAttributeList(const ITaskList6* pTasks, HTASKITEM hTask,
+BOOL CTaskListTxtExporter::FormatAttributeList(const ITaskList8* pTasks, HTASKITEM hTask,
 	LPCTSTR szNumAttribName, LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
 {
 	int nItemCount = _ttoi(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szNumAttribName)));

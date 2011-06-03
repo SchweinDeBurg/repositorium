@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,8 +24,9 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_OUTLOOKIMPORTDLG_H__E9D6C9F1_A424_4CB8_9AEF_0CE8641F1C53__INCLUDED_)
@@ -65,6 +66,7 @@ public:
 	CCheckListBoxEx	m_lbTasks;
 	ITaskList7* m_pDestTaskFile;
 	_Application* m_pOutlook;
+	MAPIFolder* m_pFolder;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -85,6 +87,7 @@ protected:
 	//{{AFX_MSG(COutlookImportDlg)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnDestroy();
+	afx_msg void OnChoosefolder();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

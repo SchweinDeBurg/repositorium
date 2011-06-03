@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TIMECOMBOBOX_H__E536C077_C228_4A44_89F5_D44F456A2EE7__INCLUDED_)
@@ -57,12 +58,13 @@
 enum
 {
 	TCB_NOTIME      = 0x01,
-	TCB_HALFHOURS   = 0x02
+	TCB_HALFHOURS   = 0x02,
+	TCB_ISO         = 0x04,
 };
 
 class CTimeComboBox : public CComboBox, public CSubclasser
 {
-	// Construction
+// Construction
 public:
 	CTimeComboBox(DWORD dwStyle = 0);
 
@@ -72,17 +74,23 @@ public:
 	double Get24HourTime() const; // -1 for 'no time'
 	BOOL Set24HourTime(double dTime); // -1 for 'no time'
 
+	DWORD GetStyle()
+	{
+		return m_dwStyle;
+	}
+	void SetStyle(DWORD dwStyle);
+
 protected:
 	DWORD m_dwStyle;
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CTimeComboBox)
 protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
 
-	// Implementation
+// Implementation
 public:
 	virtual ~CTimeComboBox();
 
@@ -97,7 +105,7 @@ protected:
 	virtual LRESULT ScWindowProc(HWND hRealWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
-	void BuildCombo();
+	void BuildCombo(BOOL bReset = FALSE);
 };
 
 /////////////////////////////////////////////////////////////////////////////

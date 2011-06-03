@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,7 +24,7 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
 //*****************************************************************************
 
@@ -37,7 +37,7 @@
 
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
@@ -67,15 +67,15 @@ BOOL CFocusWatcher::Initialize(CWnd* pMainWnd)
 }
 
 BOOL CFocusWatcher::OnCbt(int nCode, WPARAM wParam, LPARAM lParam)
-{   
-	ASSERT (m_hCbtHook);
+{
+	ASSERT(m_hCbtHook);
 
 	if (nCode == HCBT_SETFOCUS)
 	{
 		//ASSERT_VALID(m_pMainWnd);
 		m_pMainWnd->SendMessage(WM_FW_FOCUSCHANGE, wParam, lParam);
 	}
-	
+
 	return FALSE; // to continue routing
 }
 

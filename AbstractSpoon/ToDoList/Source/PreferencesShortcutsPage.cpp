@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // PrefererencesShortcutsPage.cpp : implementation file
@@ -48,7 +48,8 @@
 #include "StdAfx.h"
 #include "ToDoListApp.h"
 #include "PreferencesShortcutsPage.h"
-#include "todoctrl.h"
+#include "ToDoCtrl.h"
+#include "TDCStatic.h"
 
 #include "../../../CodeProject/Source/WinClasses.h"
 #include "../../../CodeProject/Source/WClassDefines.h"
@@ -73,6 +74,7 @@ m_bIgnoreGrayedItems(bIgnoreGrayedItems)
 {
 	//{{AFX_DATA_INIT(CPreferencesShortcutsPage)
 	m_sOtherCmdID = _T("");
+	m_bShowCommandIDs = FALSE;
 	//}}AFX_DATA_INIT
 }
 
@@ -88,12 +90,14 @@ void CPreferencesShortcutsPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMMANDS, m_tcCommands);
 	DDX_Control(pDX, IDC_NEWHOTKEY, m_hkNew);
 	DDX_Text(pDX, IDC_INUSE, m_sOtherCmdID);
+	DDX_Check(pDX, IDC_SHOWCMDIDS, m_bShowCommandIDs);
 	//}}AFX_DATA_MAP
 }
 
 BEGIN_MESSAGE_MAP(CPreferencesShortcutsPage, CPreferencesPageBase)
 	//{{AFX_MSG_MAP(CPreferencesShortcutsPage)
 	ON_BN_CLICKED(IDC_ASSIGNSHORTCUT, OnAssignshortcut)
+	ON_BN_CLICKED(IDC_SHOWCMDIDS, OnShowCmdIDs)
 	//}}AFX_MSG_MAP
 	ON_NOTIFY(TVN_SELCHANGED, IDC_COMMANDS, OnSelchangedShortcuts)
 	ON_EN_CHANGE(IDC_NEWHOTKEY, OnChangeShortcut)
@@ -141,6 +145,14 @@ BOOL CPreferencesShortcutsPage::OnInitDialog()
 				m_tcCommands.Expand(hti, TVE_EXPAND);
 			}
 		}
+
+		if (m_bShowCommandIDs)
+		{
+			AddCommandIDsToTree(TVI_ROOT, TRUE);
+		}
+
+		// add miscellaneous un-editable shortcuts
+		AddMiscShortcuts();
 
 		if (htiFirst)
 		{
@@ -207,7 +219,7 @@ HTREEITEM CPreferencesShortcutsPage::AddMenuItem(HTREEITEM htiParent, const CMen
 					}
 				}
 			}
-			else
+			else if (!IsMiscCommandID(nCmdID)) // fixes a bug where misc ids were being saved
 			{
 				DWORD dwShortcut = m_pShortcutMgr->GetShortcut(nCmdID);
 
@@ -227,6 +239,44 @@ HTREEITEM CPreferencesShortcutsPage::AddMenuItem(HTREEITEM htiParent, const CMen
 	return NULL;
 }
 
+void CPreferencesShortcutsPage::AddMiscShortcuts()
+{
+	if (!NUM_MISCSHORTCUTS)
+	{
+		return;
+	}
+
+	// Add parent placeholder
+	HTREEITEM htiParent = m_tcCommands.InsertItem(CEnString(IDS_MISCSHORTCUTS), TVI_ROOT);
+	m_tcCommands.SetItemState(htiParent, TVIS_BOLD, TVIS_BOLD);
+
+	// add children
+	for (int nItem = 0; nItem < NUM_MISCSHORTCUTS; nItem++)
+	{
+		DWORD dwShortcut = MISC_SHORTCUTS[nItem].dwShortcut;
+
+		if (dwShortcut)
+		{
+			CEnString sMisc(MISC_SHORTCUTS[nItem].nIDShortcut);
+			HTREEITEM hti = m_tcCommands.InsertItem(sMisc, htiParent);
+
+			// make fake command IDs so it does not intersect with normal IDs
+			UINT nCmdID = MAKELONG(0, nItem + 1);
+
+			if (dwShortcut)
+			{
+				m_mapID2Shortcut[nCmdID] = dwShortcut;
+				m_mapShortcut2HTI[dwShortcut] = hti;
+			}
+
+			m_tcCommands.SetItemData(hti, nCmdID);
+		}
+	}
+
+	// expand parent
+	m_tcCommands.Expand(htiParent, TVE_EXPAND);
+}
+
 void CPreferencesShortcutsPage::OnSelchangedShortcuts(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
@@ -242,7 +292,9 @@ void CPreferencesShortcutsPage::OnSelchangedShortcuts(NMHDR* pNMHDR, LRESULT* pR
 	m_hkCur.SetHotKey(wVKeyCode, wModifiers);
 	m_hkNew.SetHotKey(wVKeyCode, wModifiers);
 
-	BOOL bCanHaveShortcut = !m_tcCommands.ItemHasChildren(pNMTreeView->itemNew.hItem);
+	// if it's a misc item then disable keys
+	BOOL bMisc = IsMiscCommandID(nCmdID);
+	BOOL bCanHaveShortcut = !bMisc && !m_tcCommands.ItemHasChildren(pNMTreeView->itemNew.hItem);
 
 	m_hkNew.EnableWindow(bCanHaveShortcut);
 	GetDlgItem(IDC_CURLABEL)->EnableWindow(bCanHaveShortcut);
@@ -266,9 +318,15 @@ void CPreferencesShortcutsPage::OnSelchangedShortcuts(NMHDR* pNMHDR, LRESULT* pR
 	*pResult = 0;
 }
 
+BOOL CPreferencesShortcutsPage::IsMiscCommandID(UINT nCmdID)
+{
+	return (LOWORD(nCmdID) == 0) && (HIWORD(nCmdID) != 0);
+}
+
 void CPreferencesShortcutsPage::OnOK()
 {
 	// copy all the changes to m_pShortcutMgr
+	// except for reserved shortcuts
 	POSITION pos = m_mapID2Shortcut.GetStartPosition();
 
 	while (pos)
@@ -279,7 +337,10 @@ void CPreferencesShortcutsPage::OnOK()
 		m_mapID2Shortcut.GetNextAssoc(pos, nCmdID, dwShortcut);
 		ASSERT(nCmdID);
 
-		m_pShortcutMgr->SetShortcut(nCmdID, dwShortcut);
+		if (!IsMiscCommandID(nCmdID))
+		{
+			m_pShortcutMgr->SetShortcut(nCmdID, dwShortcut);
+		}
 	}
 
 	m_pShortcutMgr->SaveSettings();
@@ -401,15 +462,14 @@ void CPreferencesShortcutsPage::OnChangeShortcut()
 
 	m_mapShortcut2HTI.Lookup(dwShortcut, htiOther);
 
-	if (htiOther && m_tcCommands.GetItemData(htiOther) != nCmdID)
-	{
-		m_sOtherCmdID.Format(IDS_PSP_CURRENTLYASSIGNED, m_tcCommands.GetItemText(htiOther));
-	}
-
-	else if (CToDoCtrl::IsReservedShortcut(dwShortcut))
+	if (CToDoCtrl::IsReservedShortcut(dwShortcut))
 	{
 		m_sOtherCmdID.LoadString(IDS_PSP_RESERVED);
 		bReserved = TRUE;
+	}
+	else if (htiOther && m_tcCommands.GetItemData(htiOther) != nCmdID)
+	{
+		m_sOtherCmdID.Format(IDS_PSP_CURRENTLYASSIGNED, m_tcCommands.GetItemText(htiOther));
 	}
 	else
 	{
@@ -448,7 +508,7 @@ LRESULT CPreferencesShortcutsPage::OnGutterDrawItem(WPARAM /*wParam*/, LPARAM lP
 				rItem.left += 3;
 
 				// test for reserved shortcut and mark in red
-				if (CToDoCtrl::IsReservedShortcut(dwShortcut))
+				if (CToDoCtrl::IsReservedShortcut(dwShortcut) && !IsMiscCommandID(nCmdID))
 				{
 					pNCGDI->pDC->SetTextColor(255);
 				}
@@ -592,9 +652,10 @@ void CPreferencesShortcutsPage::OnTreeCustomDraw(NMHDR* pNMHDR, LRESULT* pResult
 		else // test for reserved shortcut
 		{
 			DWORD dwShortcut = 0;
-			m_mapID2Shortcut.Lookup(pTVCD->nmcd.lItemlParam, dwShortcut);
+			UINT nCmdID = pTVCD->nmcd.lItemlParam;
+			m_mapID2Shortcut.Lookup(nCmdID, dwShortcut);
 
-			if (CToDoCtrl::IsReservedShortcut(dwShortcut))
+			if (CToDoCtrl::IsReservedShortcut(dwShortcut) && !IsMiscCommandID(nCmdID))
 			{
 				pTVCD->clrText = 255;
 				*pResult |= CDRF_DODEFAULT;
@@ -690,10 +751,57 @@ BOOL CPreferencesShortcutsPage::PreTranslateMessage(MSG* pMsg)
 	return CPreferencesPageBase::PreTranslateMessage(pMsg);
 }
 
-void CPreferencesShortcutsPage::LoadPreferences(const CPreferences& /*prefs*/)
+void CPreferencesShortcutsPage::LoadPreferences(const CPreferences& prefs)
 {
+	m_bShowCommandIDs = prefs.GetProfileInt(_T("KeyboardShortcuts"), _T("ShowCommandIDs"), FALSE);
 }
 
-void CPreferencesShortcutsPage::SavePreferences(CPreferences& /*prefs*/)
+void CPreferencesShortcutsPage::SavePreferences(CPreferences& prefs)
 {
+	prefs.WriteProfileInt(_T("KeyboardShortcuts"), _T("ShowCommandIDs"), m_bShowCommandIDs);
+}
+
+void CPreferencesShortcutsPage::OnShowCmdIDs()
+{
+	UpdateData();
+
+	AddCommandIDsToTree(TVI_ROOT, m_bShowCommandIDs);
+}
+
+void CPreferencesShortcutsPage::AddCommandIDsToTree(HTREEITEM hti, BOOL bAdd)
+{
+	if (!hti)
+	{
+		return;
+	}
+
+	if (hti != TVI_ROOT)
+	{
+		CString sItem = m_tcCommands.GetItemText(hti);
+		UINT nCmdID = m_tcCommands.GetItemData(hti);
+
+		if (nCmdID && !IsMiscCommandID(nCmdID))
+		{
+			CEnString sCmdID(_T(" (%d)"), nCmdID);
+
+			if (bAdd)
+			{
+				m_tcCommands.SetItemText(hti, sItem + sCmdID);
+			}
+			else
+			{
+				// strip off command ID
+				int nFind = sItem.Find(sCmdID);
+				ASSERT(nFind != -1);
+
+				m_tcCommands.SetItemText(hti, sItem.Left(nFind));
+			}
+		}
+
+		// siblings
+		AddCommandIDsToTree(m_tcCommands.GetNextItem(hti, TVGN_NEXT), bAdd);
+	}
+
+	// children
+	AddCommandIDsToTree(m_tcCommands.GetChildItem(hti), bAdd);
 }

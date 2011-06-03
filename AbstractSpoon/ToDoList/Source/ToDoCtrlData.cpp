@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.2-6.1.10 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // ToDoCtrlData.cpp: implementation of the CToDoCtrlData class.
@@ -460,60 +460,6 @@ int CToDoCtrlData::GetTaskDependents(DWORD dwTaskID, CDWordArray& aDependents) c
 	}
 
 	return aDependents.GetSize();
-}
-
-int CToDoCtrlData::GetTaskDependencies(DWORD dwTaskID, CDWordArray& aDepends) const
-{
-	static int nDepth = 0;
-
-	// note: only clear aDepends if first call
-	if (nDepth == 0)
-	{
-		aDepends.RemoveAll();
-	}
-
-	nDepth++;
-
-	TODOITEM* pTDI = GetTask(dwTaskID);
-	BOOL bContinue = TRUE;
-
-	if (pTDI)
-	{
-		for (int nDepends = 0; nDepends < pTDI->aDependencies.GetSize(); nDepends++)
-		{
-			// we only handle 'same file' links
-			DWORD dwIDLink = _ttoi(pTDI->aDependencies[nDepends]);
-
-			if (dwIDLink && dwIDLink != dwTaskID)
-			{
-				// stop if we already have this ID because it means there's a
-				// circular dependency
-				int nLink = aDepends.GetSize();
-
-				while (nLink--)
-				{
-					if (aDepends[nLink] == dwIDLink)
-					{
-						bContinue = FALSE;
-						break;
-					}
-				}
-
-				if (bContinue)
-				{
-					// insert dependency at head of list
-					aDepends.InsertAt(0, dwIDLink);
-
-					// add this links dependencies too
-					GetTaskDependencies(dwIDLink, aDepends);
-				}
-			}
-		}
-	}
-
-	nDepth--;
-
-	return aDepends.GetSize();
 }
 
 BOOL CToDoCtrlData::TaskHasCircularDependencies(DWORD dwTaskID) const
@@ -938,8 +884,6 @@ BOOL CToDoCtrlData::ApplyLastChangeToSubtasks(const TODOITEM* pTDI, const TODOST
 		SAVE_UNDOEDIT(dwChildID, pTDIChild, nAttrib);
 
 		// apply the change based on nAttrib
-		TRACE(_T("ApplyLastChangeToSubtask(%d)\n"), dwChildID);
-
 		switch (nAttrib)
 		{
 		case TDCA_DONEDATE:
@@ -996,6 +940,10 @@ BOOL CToDoCtrlData::ApplyLastChangeToSubtasks(const TODOITEM* pTDI, const TODOST
 
 		case TDCA_FLAG:
 			pTDIChild->bFlagged = pTDI->bFlagged;
+			break;
+
+		case TDCA_EXTERNALID:
+			pTDIChild->sExternalID = pTDI->sExternalID;
 			break;
 
 		default:
@@ -1505,11 +1453,6 @@ int CToDoCtrlData::SetTaskCost(DWORD dwTaskID, double dCost)
 
 int CToDoCtrlData::SetTaskTimeEstimate(DWORD dwTaskID, double dTime, int nUnits)
 {
-	if (dTime < 0)
-	{
-		return FALSE;
-	}
-
 	if (dwTaskID)
 	{
 		TODOITEM* pTDI = GetTask(dwTaskID);
@@ -1535,11 +1478,6 @@ int CToDoCtrlData::SetTaskTimeEstimate(DWORD dwTaskID, double dTime, int nUnits)
 
 int CToDoCtrlData::SetTaskTimeSpent(DWORD dwTaskID, double dTime, int nUnits)
 {
-	if (dTime < 0)
-	{
-		return FALSE;
-	}
-
 	if (dwTaskID)
 	{
 		TODOITEM* pTDI = GetTask(dwTaskID);
@@ -2534,7 +2472,8 @@ BOOL CToDoCtrlData::IsTaskOverDue(DWORD dwTaskID) const
 
 BOOL CToDoCtrlData::IsTaskOverDue(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS) const
 {
-	return IsTaskDue(pTDI, pTDS, FALSE);
+	// we need to check that it's due BUT not due today
+	return IsTaskDue(pTDI, pTDS, FALSE) && !IsTaskDue(pTDI, pTDS, TRUE);
 }
 
 double CToDoCtrlData::GetEarliestDueDate() const
@@ -2748,33 +2687,16 @@ BOOL CToDoCtrlData::IsTaskDue(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, B
 		return FALSE;
 	}
 
-	// some optimizations
-	if (!pTDI->AttribNeedsRecalc(TDIR_DUE) && !bToday)
-	{
-		return pTDI->bDue;
-	}
-
 	double dDue = floor(GetEarliestDueDate(pTDI, pTDS, HasStyle(TDCS_USEEARLIESTDUEDATE)));
-	BOOL bDue = FALSE;
 
 	if (bToday)
 	{
 		double dToday = floor(COleDateTime::GetCurrentTime()); // 12 midnight
-		bDue = (dDue >= dToday && dDue < dToday + 1);
-	}
-	else
-	{
-		bDue = (dDue > 0 && dDue < COleDateTime::GetCurrentTime());
+		return (dDue >= dToday && dDue < dToday + 1);
 	}
 
-	// update calc'ed value
-	if (!bToday)
-	{
-		pTDI->bDue = bDue;
-		pTDI->SetAttribNeedsRecalc(TDIR_DUE, FALSE);
-	}
-
-	return bDue;
+	// else
+	return (dDue > 0 && dDue < COleDateTime::GetCurrentTime());
 }
 
 double CToDoCtrlData::GetEarliestDueDate(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, BOOL bCheckChildren) const
@@ -3068,407 +2990,398 @@ BOOL CToDoCtrlData::IsTaskTimeTrackable(DWORD dwTaskID) const
 	return (!pTDI->IsDone());
 }
 
-int CALLBACK CToDoCtrlData::CompareFuncMulti(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSortBy, BOOL bAscending, BOOL bSortDueTodayHigh) const
 {
-	TDSORTPARAMS* pSS = (TDSORTPARAMS*)lParamSort;
-	ASSERT(pSS->sort.nBy1 != TDC_UNSORTED);
+	int nCompare = 0;
 
-	int nCompare = pSS->pData->CompareTasks(lParam1, lParam2, pSS->sort.nBy1, pSS->sort.bAscending1, pSS->bSortDueTodayHigh);
-
-	if (nCompare == 0 && pSS->sort.nBy2 != TDC_UNSORTED)
+	// special case: sort by ID can be optimized
+	if (nSortBy == TDC_SORTBYID)
 	{
-		nCompare = pSS->pData->CompareTasks(lParam1, lParam2, pSS->sort.nBy2, pSS->sort.bAscending2, pSS->bSortDueTodayHigh);
-
-		if (nCompare == 0 && pSS->sort.nBy3 != TDC_UNSORTED)
-		{
-			nCompare = pSS->pData->CompareTasks(lParam1, lParam2, pSS->sort.nBy3, pSS->sort.bAscending3, pSS->bSortDueTodayHigh);
-		}
+		nCompare = (dwTask1ID - dwTask2ID);
 	}
 
-	return nCompare;
-}
-
-int CALLBACK CToDoCtrlData::CompareFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
-{
-	TDSORTPARAMS* pSS = (TDSORTPARAMS*)lParamSort;
-
-	// 'unsorted' is a special case
-	if (pSS->sort.nBy1 == TDC_UNSORTED)
+	// likewise 'unsorted' is a special case
+	else if (nSortBy == TDC_UNSORTED)
 	{
 		TODOSTRUCTURE* pTDSParent = NULL;
 		int nPos1, nPos2;
 
-		VERIFY(pSS->pData->m_struct.FindTask(lParam1, pTDSParent, nPos1));
-		nPos2 = pTDSParent->GetSubTaskPosition(lParam2);
+		VERIFY(LocateTask(dwTask1ID, pTDSParent, nPos1));
+		nPos2 = pTDSParent->GetSubTaskPosition(dwTask2ID);
 		ASSERT(nPos2 != -1); // must be a sibling
 
-		return pSS->pData->Compare(nPos1, nPos2);
-	}
-
-	return pSS->pData->CompareTasks(lParam1, lParam2, pSS->sort.nBy1, pSS->sort.bAscending1, pSS->bSortDueTodayHigh);
-}
-
-int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSortBy, BOOL bAscending, BOOL bSortDueTodayHigh)
-{
-	// special case: sort by ID can be optimized
-	if (nSortBy == TDC_SORTBYID)
-	{
-		return (bAscending ? (dwTask1ID - dwTask2ID) : (dwTask2ID - dwTask1ID));
-	}
-
-	int nCompare = 0;
-
-	// figure out if either or both tasks are completed
-	// but only if the user has specified to sort these differently
-	BOOL bHideDone = HasStyle(TDCS_HIDESTARTDUEFORDONETASKS);
-	BOOL bSortDoneBelow = HasStyle(TDCS_SORTDONETASKSATBOTTOM);
-	BOOL bDone1 = FALSE, bDone2 = FALSE;
-
-	if (bSortDoneBelow ||
-		nSortBy == TDC_SORTBYDONE || nSortBy == TDC_SORTBYDONEDATE ||
-		(bHideDone && (nSortBy == TDC_SORTBYSTARTDATE || nSortBy == TDC_SORTBYDUEDATE)))
-	{
-		bDone1 = IsTaskDone(dwTask1ID, TDCCHECKALL);
-		bDone2 = IsTaskDone(dwTask2ID, TDCCHECKALL);
-
-		// can also do a partial optimization
-		if (bSortDoneBelow && (nSortBy != TDC_SORTBYDONE && nSortBy != TDC_SORTBYDONEDATE))
-		{
-			if (bDone1 != bDone2)
-			{
-				return bDone1 ? 1 : -1;
-			}
-		}
-	}
-
-	TODOITEM* pTDI1 = NULL, *pTDI2 = NULL;
-	TODOSTRUCTURE* pTDS1 = NULL, *pTDS2 = NULL;
-
-	// if sorting by icon then we need to be able to pick parent tasks
-	if (nSortBy == TDC_SORTBYICON)
-	{
-		GetTask(dwTask1ID, pTDI1, pTDS1);
-		GetTask(dwTask2ID, pTDI2, pTDS2);
+		nCompare = (nPos1 - nPos2);
 	}
 	else
 	{
-		pTDI1 = GetTask(dwTask1ID);
-		pTDI2 = GetTask(dwTask2ID);
-	}
+		// figure out if either or both tasks are completed
+		// but only if the user has specified to sort these differently
+		BOOL bHideDone = HasStyle(TDCS_HIDESTARTDUEFORDONETASKS);
+		BOOL bSortDoneBelow = HasStyle(TDCS_SORTDONETASKSATBOTTOM);
+		BOOL bDone1 = FALSE, bDone2 = FALSE;
 
-	switch (nSortBy)
-	{
-
-	case TDC_SORTBYNAME:
-		nCompare = Compare(pTDI1->sTitle, pTDI2->sTitle);
-		break;
-
-	case TDC_SORTBYDONE:
-		nCompare = Compare(bDone1, bDone2);
-		break;
-
-	case TDC_SORTBYFLAG:
-		nCompare = Compare(pTDI1->bFlagged, pTDI2->bFlagged);
-		break;
-
-	case TDC_SORTBYRECURRENCE:
-		nCompare = Compare(pTDI1->trRecurrence.nRegularity, pTDI2->trRecurrence.nRegularity);
-		break;
-
-	case TDC_SORTBYVERSION:
-		nCompare = Misc::CompareVersions(pTDI1->sVersion, pTDI2->sVersion);
-		break;
-
-	case TDC_SORTBYCREATIONDATE:
-		nCompare = Compare(pTDI1->dateCreated, pTDI2->dateCreated);
-		break;
-
-	case TDC_SORTBYLASTMOD:
+		if (bSortDoneBelow ||
+				nSortBy == TDC_SORTBYDONE || nSortBy == TDC_SORTBYDONEDATE ||
+				(bHideDone && (nSortBy == TDC_SORTBYSTARTDATE || nSortBy == TDC_SORTBYDUEDATE)))
 		{
-			BOOL bHasModify1 = pTDI1->HasLastMod() && !(bHideDone && bDone1);
-			BOOL bHasModify2 = pTDI2->HasLastMod() && !(bHideDone && bDone2);
+			bDone1 = IsTaskDone(dwTask1ID, TDCCHECKALL);
+			bDone2 = IsTaskDone(dwTask2ID, TDCCHECKALL);
 
-			if (bHasModify1 != bHasModify2)
+			// can also do a partial optimization
+			if (bSortDoneBelow && (nSortBy != TDC_SORTBYDONE && nSortBy != TDC_SORTBYDONEDATE))
 			{
-				return bHasModify1 ? -1 : 1;
+				if (bDone1 != bDone2)
+				{
+					return bDone1 ? 1 : -1;
+				}
 			}
-
-			else if (!bHasModify1) //  and !bHasStart2
-			{
-				return 0;
-			}
-
-			nCompare = Compare(pTDI1->tLastMod, pTDI2->tLastMod);
 		}
-		break;
 
+		const TODOITEM* pTDI1 = NULL, *pTDI2 = NULL;
+		const TODOSTRUCTURE* pTDS1 = NULL, *pTDS2 = NULL;
 
-	case TDC_SORTBYDONEDATE:
+		// if sorting by icon or parent ID then we need to be able to pick parent tasks
+		if (nSortBy == TDC_SORTBYICON || nSortBy == TDC_SORTBYPARENTID)
 		{
-			COleDateTime date1 = pTDI1->dateDone; // default
-			COleDateTime date2 = pTDI2->dateDone; // default
-
-			// sort tasks 'good as done' between done and not-done
-			if (date1 <= 0 && bDone1)
-			{
-				date1 = 0.1;
-			}
-
-			if (date2 <= 0 && bDone2)
-			{
-				date2 = 0.1;
-			}
-
-			nCompare = Compare(date1, date2);
+			GetTask(dwTask1ID, pTDI1, pTDS1);
+			GetTask(dwTask2ID, pTDI2, pTDS2);
 		}
-		break;
-
-	case TDC_SORTBYDUEDATE:
-	case TDC_SORTBYREMAINING: // mostly the same
+		else
 		{
-			COleDateTime date1, date2;
+			pTDI1 = GetTask(dwTask1ID);
+			pTDI2 = GetTask(dwTask2ID);
+		}
 
-			BOOL bUseEarliestDueDate = HasStyle(TDCS_USEEARLIESTDUEDATE);
+		switch (nSortBy)
+		{
 
-			if (!bHideDone || !bDone1)
+		case TDC_SORTBYNAME:
+			nCompare = Compare(pTDI1->sTitle, pTDI2->sTitle);
+			break;
+
+		case TDC_SORTBYDONE:
+			nCompare = Compare(bDone1, bDone2);
+			break;
+
+		case TDC_SORTBYFLAG:
+			nCompare = Compare(pTDI1->bFlagged, pTDI2->bFlagged);
+			break;
+
+		case TDC_SORTBYRECURRENCE:
+			nCompare = Compare(pTDI1->trRecurrence.nRegularity, pTDI2->trRecurrence.nRegularity);
+			break;
+
+		case TDC_SORTBYVERSION:
+			nCompare = Misc::CompareVersions(pTDI1->sVersion, pTDI2->sVersion);
+			break;
+
+		case TDC_SORTBYCREATIONDATE:
+			nCompare = Compare(pTDI1->dateCreated, pTDI2->dateCreated);
+			break;
+
+		case TDC_SORTBYLASTMOD:
 			{
-				date1 = GetEarliestDueDate(dwTask1ID, bUseEarliestDueDate);
+				BOOL bHasModify1 = pTDI1->HasLastMod() && !(bHideDone && bDone1);
+				BOOL bHasModify2 = pTDI2->HasLastMod() && !(bHideDone && bDone2);
+
+				if (bHasModify1 != bHasModify2)
+				{
+					return bHasModify1 ? -1 : 1;
+				}
+
+				else if (!bHasModify1) //  and !bHasStart2
+				{
+					return 0;
+				}
+
+				nCompare = Compare(pTDI1->tLastMod, pTDI2->tLastMod);
 			}
+			break;
 
-			if (!bHideDone || !bDone2)
+		case TDC_SORTBYDONEDATE:
 			{
-				date2 = GetEarliestDueDate(dwTask2ID, bUseEarliestDueDate);
-			}
+				COleDateTime date1 = pTDI1->dateDone; // default
+				COleDateTime date2 = pTDI2->dateDone; // default
 
-			// Sort undated options below others
-			BOOL bHasDue1 = (date1.m_dt > 0) ? 1 : 0;
-			BOOL bHasDue2 = (date2.m_dt > 0) ? 1 : 0;
+				// sort tasks 'good as done' between done and not-done
+				if (date1 <= 0 && bDone1)
+				{
+					date1 = 0.1;
+				}
 
-			if (bHasDue1 != bHasDue2)
-			{
-				return bHasDue1 ? -1 : 1;
-			}
+				if (date2 <= 0 && bDone2)
+				{
+					date2 = 0.1;
+				}
 
-			else if (!bHasDue1 && !bHasDue2)
-			{
-				return 0;
-			}
-
-			// compare
-			if (nSortBy == TDC_SORTBYREMAINING)
-			{
-				// calc remaining time
-				COleDateTime dtCur = COleDateTime::GetCurrentTime();
-
-				double dRemain1 = date1 - dtCur;
-				double dRemain2 = date2 - dtCur;
-
-				// compare
-				nCompare = Compare(dRemain1, dRemain2);
-			}
-			else
-			{
 				nCompare = Compare(date1, date2);
 			}
+			break;
+
+		case TDC_SORTBYDUEDATE:
+		case TDC_SORTBYREMAINING: // mostly the same
+			{
+				COleDateTime date1, date2;
+
+				BOOL bUseEarliestDueDate = HasStyle(TDCS_USEEARLIESTDUEDATE);
+
+				if (!bHideDone || !bDone1)
+				{
+					date1 = GetEarliestDueDate(dwTask1ID, bUseEarliestDueDate);
+				}
+
+				if (!bHideDone || !bDone2)
+				{
+					date2 = GetEarliestDueDate(dwTask2ID, bUseEarliestDueDate);
+				}
+
+				// Sort undated options below others
+				BOOL bHasDue1 = (date1.m_dt > 0) ? 1 : 0;
+				BOOL bHasDue2 = (date2.m_dt > 0) ? 1 : 0;
+
+				if (bHasDue1 != bHasDue2)
+				{
+					return bHasDue1 ? -1 : 1;
+				}
+
+				else if (!bHasDue1 && !bHasDue2)
+				{
+					return 0;
+				}
+
+				// compare
+				if (nSortBy == TDC_SORTBYREMAINING)
+				{
+					// calc remaining time
+					COleDateTime dtCur = COleDateTime::GetCurrentTime();
+
+					double dRemain1 = date1 - dtCur;
+					double dRemain2 = date2 - dtCur;
+
+					// compare
+					nCompare = Compare(dRemain1, dRemain2);
+				}
+				else
+				{
+					nCompare = Compare(date1, date2);
+				}
+			}
+			break;
+
+		case TDC_SORTBYSTARTDATE:
+			{
+				BOOL bHasStart1 = pTDI1->HasStart() && !(bHideDone && bDone1);
+				BOOL bHasStart2 = pTDI2->HasStart() && !(bHideDone && bDone2);
+
+				if (bHasStart1 != bHasStart2)
+				{
+					return bHasStart1 ? -1 : 1;
+				}
+
+				else if (!bHasStart1 && !bHasStart2)
+				{
+					return 0;
+				}
+
+				nCompare = Compare(pTDI1->dateStart, pTDI2->dateStart);
+			}
+			break;
+
+		case TDC_SORTBYPRIORITY:
+			{
+				// done items have even less than zero priority!
+				// and due items have greater than the highest priority
+				int nPriority1 = pTDI1->nPriority; // default
+				int nPriority2 = pTDI2->nPriority; // default
+
+				BOOL bUseHighestPriority = HasStyle(TDCS_USEHIGHESTPRIORITY);
+
+				// item1
+				if (bDone1)
+				{
+					nPriority1 = -1;
+				}
+
+				else if (IsTaskDue(dwTask1ID) && HasStyle(TDCS_DUEHAVEHIGHESTPRIORITY) &&
+						(bSortDueTodayHigh || !IsTaskDue(dwTask1ID, TRUE)))
+				{
+					nPriority1 = pTDI1->nPriority + 11;
+				}
+				else if (bUseHighestPriority)
+				{
+					nPriority1 = GetHighestPriority(dwTask1ID);
+				}
+
+				// item2
+				if (bDone2)
+				{
+					nPriority2 = -1;
+				}
+
+				else if (IsTaskDue(dwTask2ID) && HasStyle(TDCS_DUEHAVEHIGHESTPRIORITY) &&
+						(bSortDueTodayHigh || !IsTaskDue(dwTask2ID, TRUE)))
+				{
+					nPriority2 = pTDI2->nPriority + 11;
+				}
+				else if (bUseHighestPriority)
+				{
+					nPriority2 = GetHighestPriority(dwTask2ID);
+				}
+
+				nCompare = Compare(nPriority1, nPriority2);
+			}
+			break;
+
+		case TDC_SORTBYRISK:
+			{
+				// done items have even less than zero priority!
+				// and due items have greater than the highest priority
+				int nRisk1 = pTDI1->nRisk; // default
+				int nRisk2 = pTDI2->nRisk; // default
+
+				BOOL bUseHighestRisk = HasStyle(TDCS_USEHIGHESTRISK);
+
+				// item1
+				if (bDone1)
+				{
+					nRisk1 = -1;
+				}
+
+				else if (bUseHighestRisk)
+				{
+					nRisk1 = GetHighestRisk(dwTask1ID);
+				}
+
+				// item2
+				if (bDone2)
+				{
+					nRisk2 = -1;
+				}
+
+				else if (bUseHighestRisk)
+				{
+					nRisk2 = GetHighestRisk(dwTask2ID);
+				}
+
+				nCompare = Compare(nRisk1, nRisk2);
+			}
+			break;
+
+		case TDC_SORTBYCOLOR:
+			nCompare = Compare((int)pTDI1->color, (int)pTDI2->color);
+			break;
+
+		case TDC_SORTBYALLOCTO:
+			nCompare = Compare(Misc::FormatArray(pTDI1->aAllocTo),
+					Misc::FormatArray(pTDI2->aAllocTo), TRUE);
+			break;
+
+		case TDC_SORTBYALLOCBY:
+			nCompare = Compare(pTDI1->sAllocBy, pTDI2->sAllocBy, TRUE);
+			break;
+
+		case TDC_SORTBYCREATEDBY:
+			nCompare = Compare(pTDI1->sCreatedBy, pTDI2->sCreatedBy, TRUE);
+			break;
+
+		case TDC_SORTBYSTATUS:
+			nCompare = Compare(pTDI1->sStatus, pTDI2->sStatus, TRUE);
+			break;
+
+		case TDC_SORTBYEXTERNALID:
+			nCompare = Compare(pTDI1->sExternalID, pTDI2->sExternalID, TRUE);
+			break;
+
+		case TDC_SORTBYCATEGORY:
+			nCompare = Compare(Misc::FormatArray(pTDI1->aCategories),
+					Misc::FormatArray(pTDI2->aCategories), TRUE);
+			break;
+
+		case TDC_SORTBYPERCENT:
+			{
+				int nPercent1 = CalcPercentDone(dwTask1ID);
+				int nPercent2 = CalcPercentDone(dwTask2ID);
+
+				nCompare = Compare(nPercent1, nPercent2);
+			}
+			break;
+
+		case TDC_SORTBYICON:
+			{
+				int nIcon1 = pTDI1->nIconIndex;
+
+				ASSERT(pTDS1);
+				ASSERT(pTDS2);
+
+				if (nIcon1 == -1 && pTDS1->HasSubTasks())
+				{
+					nIcon1 = 0;   // parent icon
+				}
+
+				int nIcon2 = pTDI2->nIconIndex;
+
+				if (nIcon2 == -1 && pTDS2->HasSubTasks())
+				{
+					nIcon2 = 0;   // parent icon
+				}
+
+				nCompare = Compare(nIcon1, nIcon2);
+			}
+			break;
+
+		case TDC_SORTBYPARENTID:
+			{
+				DWORD dwPID1 = pTDS1 ? pTDS1->GetParentTaskID() : 0;
+				DWORD dwPID2 = pTDS2 ? pTDS2->GetParentTaskID() : 0;
+
+				nCompare = (dwPID1 - dwPID2);
+			}
+			break;
+
+		case TDC_SORTBYCOST:
+			{
+				double dCost1 = CalcCost(dwTask1ID);
+				double dCost2 = CalcCost(dwTask2ID);
+
+				nCompare = Compare(dCost1, dCost2);
+			}
+			break;
+
+		case TDC_SORTBYTIMEEST:
+			{
+				double dTime1 = CalcTimeEstimate(dwTask1ID, TDITU_HOURS);
+				double dTime2 = CalcTimeEstimate(dwTask2ID, TDITU_HOURS);
+
+				nCompare = Compare(dTime1, dTime2);
+			}
+			break;
+
+		case TDC_SORTBYTIMESPENT:
+			{
+				double dTime1 = CalcTimeSpent(dwTask1ID, TDITU_HOURS);
+				double dTime2 = CalcTimeSpent(dwTask2ID, TDITU_HOURS);
+
+				nCompare = Compare(dTime1, dTime2);
+			}
+			break;
+
+		case TDC_SORTBYRECENTEDIT:
+			{
+				BOOL bRecent1 = pTDI1->IsRecentlyEdited();
+				BOOL bRecent2 = pTDI2->IsRecentlyEdited();
+
+				nCompare = Compare(bRecent1, bRecent2);
+			}
+			break;
+
+		case TDC_SORTBYFILEREF:
+			nCompare = Compare(pTDI1->sFileRefPath, pTDI2->sFileRefPath, TRUE);
+			break;
+
+		default:
+			ASSERT(0);
+			break;
 		}
-		break;
-
-	case TDC_SORTBYSTARTDATE:
-		{
-			BOOL bHasStart1 = pTDI1->HasStart() && !(bHideDone && bDone1);
-			BOOL bHasStart2 = pTDI2->HasStart() && !(bHideDone && bDone2);
-
-			if (bHasStart1 != bHasStart2)
-			{
-				return bHasStart1 ? -1 : 1;
-			}
-
-			else if (!bHasStart1 && !bHasStart2)
-			{
-				return 0;
-			}
-
-			nCompare = Compare(pTDI1->dateStart, pTDI2->dateStart);
-		}
-		break;
-
-	case TDC_SORTBYPRIORITY:
-		{
-			// done items have even less than zero priority!
-			// and due items have greater than the highest priority
-			int nPriority1 = pTDI1->nPriority; // default
-			int nPriority2 = pTDI2->nPriority; // default
-
-			BOOL bUseHighestPriority = HasStyle(TDCS_USEHIGHESTPRIORITY);
-
-			// item1
-			if (bDone1)
-			{
-				nPriority1 = -1;
-			}
-			else if (IsTaskDue(dwTask1ID) && HasStyle(TDCS_DUEHAVEHIGHESTPRIORITY) &&
-				(bSortDueTodayHigh || !IsTaskDue(dwTask1ID, TRUE)))
-			{
-				nPriority1 = pTDI1->nPriority + 11;
-			}
-			else if (bUseHighestPriority)
-			{
-				nPriority1 = GetHighestPriority(dwTask1ID);
-			}
-
-			// item2
-			if (bDone2)
-			{
-				nPriority2 = -1;
-			}
-			else if (IsTaskDue(dwTask2ID) && HasStyle(TDCS_DUEHAVEHIGHESTPRIORITY) &&
-				(bSortDueTodayHigh || !IsTaskDue(dwTask2ID, TRUE)))
-			{
-				nPriority2 = pTDI2->nPriority + 11;
-			}
-			else if (bUseHighestPriority)
-			{
-				nPriority2 = GetHighestPriority(dwTask2ID);
-			}
-
-			nCompare = Compare(nPriority1, nPriority2);
-		}
-		break;
-
-	case TDC_SORTBYRISK:
-		{
-			// done items have even less than zero priority!
-			// and due items have greater than the highest priority
-			int nRisk1 = pTDI1->nRisk; // default
-			int nRisk2 = pTDI2->nRisk; // default
-
-			BOOL bUseHighestRisk = HasStyle(TDCS_USEHIGHESTRISK);
-
-			// item1
-			if (bDone1)
-			{
-				nRisk1 = -1;
-			}
-			else if (bUseHighestRisk)
-			{
-				nRisk1 = GetHighestRisk(dwTask1ID);
-			}
-
-			// item2
-			if (bDone2)
-			{
-				nRisk2 = -1;
-			}
-			else if (bUseHighestRisk)
-			{
-				nRisk2 = GetHighestRisk(dwTask2ID);
-			}
-
-			nCompare = Compare(nRisk1, nRisk2);
-		}
-		break;
-
-	case TDC_SORTBYCOLOR:
-		nCompare = Compare((int)pTDI1->color, (int)pTDI2->color);
-		break;
-
-	case TDC_SORTBYALLOCTO:
-		nCompare = Compare(Misc::FormatArray(pTDI1->aAllocTo),
-			Misc::FormatArray(pTDI2->aAllocTo), TRUE);
-		break;
-
-	case TDC_SORTBYALLOCBY:
-		nCompare = Compare(pTDI1->sAllocBy, pTDI2->sAllocBy, TRUE);
-		break;
-
-	case TDC_SORTBYCREATEDBY:
-		nCompare = Compare(pTDI1->sCreatedBy, pTDI2->sCreatedBy, TRUE);
-		break;
-
-	case TDC_SORTBYSTATUS:
-		nCompare = Compare(pTDI1->sStatus, pTDI2->sStatus, TRUE);
-		break;
-
-	case TDC_SORTBYEXTERNALID:
-		nCompare = Compare(pTDI1->sExternalID, pTDI2->sExternalID, TRUE);
-		break;
-
-	case TDC_SORTBYCATEGORY:
-		nCompare = Compare(Misc::FormatArray(pTDI1->aCategories),
-			Misc::FormatArray(pTDI2->aCategories), TRUE);
-		break;
-
-	case TDC_SORTBYPERCENT:
-		{
-			int nPercent1 = CalcPercentDone(dwTask1ID);
-			int nPercent2 = CalcPercentDone(dwTask2ID);
-
-			nCompare = Compare(nPercent1, nPercent2);
-		}
-		break;
-
-	case TDC_SORTBYICON:
-		{
-			int nIcon1 = pTDI1->nIconIndex;
-
-			ASSERT(pTDS1);
-			ASSERT(pTDS2);
-
-			if (nIcon1 == -1 && pTDS1->HasSubTasks())
-			{
-				nIcon1 = 0;   // parent icon
-			}
-
-			int nIcon2 = pTDI2->nIconIndex;
-
-			if (nIcon2 == -1 && pTDS2->HasSubTasks())
-			{
-				nIcon2 = 0;   // parent icon
-			}
-
-			nCompare = Compare(nIcon1, nIcon2);
-		}
-		break;
-
-	case TDC_SORTBYCOST:
-		{
-			double dCost1 = CalcCost(dwTask1ID);
-			double dCost2 = CalcCost(dwTask2ID);
-
-			nCompare = Compare(dCost1, dCost2);
-		}
-		break;
-
-	case TDC_SORTBYTIMEEST:
-		{
-			double dTime1 = CalcTimeEstimate(dwTask1ID, TDITU_HOURS);
-			double dTime2 = CalcTimeEstimate(dwTask2ID, TDITU_HOURS);
-
-			nCompare = Compare(dTime1, dTime2);
-		}
-		break;
-
-	case TDC_SORTBYTIMESPENT:
-		{
-			double dTime1 = CalcTimeSpent(dwTask1ID, TDITU_HOURS);
-			double dTime2 = CalcTimeSpent(dwTask2ID, TDITU_HOURS);
-
-			nCompare = Compare(dTime1, dTime2);
-		}
-		break;
-
-	case TDC_SORTBYRECENTEDIT:
-		{
-			BOOL bRecent1 = pTDI1->IsRecentlyEdited();
-			BOOL bRecent2 = pTDI2->IsRecentlyEdited();
-
-			nCompare = Compare(bRecent1, bRecent2);
-		}
-		break;
-
-	default:
-		ASSERT(0);
-		break;
 	}
 
 	return bAscending ? nCompare : -nCompare;
@@ -3723,6 +3636,10 @@ BOOL CToDoCtrlData::TaskMatches(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS,
 
 		case TDCA_ID:
 			bMatch = TaskMatches((int)pTDS->GetTaskID(), sp, resTask);
+			break;
+
+		case TDCA_PARENTID:
+			bMatch = TaskMatches((int)pTDS->GetParentTaskID(), sp, resTask);
 			break;
 
 		case TDCA_PERCENT:
@@ -3982,7 +3899,7 @@ BOOL CToDoCtrlData::TaskMatches(const CStringArray& aItems, const SEARCHPARAM& s
 	BOOL bMatchAll = (sp.op == FO_EQUALS || sp.op == FO_NOT_EQUALS);
 
 	CStringArray aSearchItems;
-	Misc::ParseIntoArray(sp.sValue, aSearchItems, TRUE);
+	Misc::Split(sp.sValue, aSearchItems, TRUE);
 
 	if (bMatchAll)
 	{

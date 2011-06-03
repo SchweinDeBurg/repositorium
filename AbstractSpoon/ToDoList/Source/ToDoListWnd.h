@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.2-6.1.6 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // ToDoListWnd.h : header file
@@ -80,7 +80,7 @@
 #include "../../../CodeProject/Source/MenuIconMgr.h"
 #include "../../../CodeProject/Source/AutoComboBox.h"
 #include "../../Common/BrowserDlg.h"
-#include "../../Common/UITheme.h"
+#include "UIThemeFile.h"
 
 #include "../../../CodeProject/Source/StatusbarACT.h"
 
@@ -97,14 +97,15 @@ enum FIND_WHAT;
 
 class CToDoListWnd : public CFrameWnd, public CDialogHelper
 {
-// Construction
 public:
-	CToDoListWnd(); // standard constructor
+	// Construction
+	CToDoListWnd();
 	~CToDoListWnd();
 
 	static int GetVersion();
 	BOOL Create(const TDCSTARTUP& startup);
 
+protected:
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CToDoListWnd)
 protected:
@@ -140,23 +141,24 @@ protected:
 	CMenuIconMgr m_mgrMenuIcons;
 	CUIExtensionMgr m_mgrUIExtensions;
 	CAutoComboBox m_cbQuickFind;
-	CString m_sQuickFind;
 	CWndPromptManager m_mgrPrompts;
 	CBrowserDlg m_dlgNotifyDue;
 	CToDoCtrlReminders m_reminders;
-	UITHEME m_theme;
-	CString m_sThemeFile;
+	CUIThemeFile m_theme;
 	TDC_MAXSTATE m_nMaxState, m_nPrevMaxState;
-
 	TDCSTARTUP m_startupOptions;
-
 	CDWordArray m_aPriorityColors;
 	CFont m_fontMain;
 	int m_nLastSelItem; // just for flicker-free todoctrl switching
 
+	CString m_sQuickFind;
+	CString m_sThemeFile;
+	CString m_sCurrentFocus;
+
 	BOOL m_bVisible;
 	BOOL m_bShowFilterBar, m_bShowProjectName;
 	BOOL m_bShowStatusBar, m_bShowToolbar;
+	BOOL m_bShowTasklistBar, m_bShowTreeListBar;
 	BOOL m_bInNewTask;
 	BOOL m_bSaving;
 	BOOL m_bInTimer;
@@ -178,12 +180,9 @@ protected:
 	afx_msg void OnViewExpandall();
 	afx_msg void OnUpdateViewExpandall(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewCollapseall(CCmdUI* pCmdUI);
+	afx_msg void OnViewToggletaskexpanded();
+	afx_msg void OnUpdateViewToggletaskexpanded(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateWindow(CCmdUI* pCmdUI);
-#if _MSC_VER >= 1400
-	afx_msg void OnActivateApp(BOOL bActive, DWORD dwThreadID);
-#else
-	afx_msg void OnActivateApp(BOOL bActive, HTASK hTask);
-#endif
 	afx_msg void OnEnable(BOOL bEnable);
 	afx_msg void OnNewtask();
 	afx_msg void OnNewsubtask();
@@ -250,6 +249,8 @@ protected:
 	afx_msg void OnSendtasks();
 	afx_msg void OnEditInsertdate();
 	afx_msg void OnUpdateEditInsertdate(CCmdUI* pCmdUI);
+	afx_msg void OnEditInserttime();
+	afx_msg void OnUpdateEditInserttime(CCmdUI* pCmdUI);
 	afx_msg void OnGotoNexttask();
 	afx_msg void OnGotoPrevtask();
 	afx_msg void OnUpdateGotoPrevtask(CCmdUI* pCmdUI);
@@ -267,9 +268,6 @@ protected:
 	afx_msg void OnUpdateQuickFindNext(CCmdUI* pCmdUI);
 	afx_msg void OnQuickFindPrev();
 	afx_msg void OnUpdateQuickFindPrev(CCmdUI* pCmdUI);
-	afx_msg void OnLoadFromWeb();
-	afx_msg void OnSaveToWeb();
-	afx_msg void OnUpdateSaveToWeb(CCmdUI* pCmdUI);
 	afx_msg void OnEditSettaskicon();
 	afx_msg void OnUpdateEditSettaskicon(CCmdUI* pCmdUI);
 	afx_msg void OnEditSetReminder();
@@ -284,11 +282,23 @@ protected:
 	afx_msg void OnUpdateArchiveSelectedCompletedTasks(CCmdUI* pCmdUI);
 	afx_msg void OnAddtimetologfile();
 	afx_msg void OnUpdateAddtimetologfile(CCmdUI* pCmdUI);
+	afx_msg void OnViewShowTasklistTabbar();
+	afx_msg void OnUpdateViewShowTasklistTabbar(CCmdUI* pCmdUI);
+	afx_msg void OnViewShowTreeListTabbar();
+	afx_msg void OnUpdateViewShowTreeListTabbar(CCmdUI* pCmdUI);
 	//}}AFX_MSG
+#if _MSC_VER >= 1400
+	afx_msg void OnActivateApp(BOOL bActive, DWORD dwThreadID);
+#else
+	afx_msg void OnActivateApp(BOOL bActive, HTASK hTask);
+#endif
 	afx_msg void OnToolsRemovefromsourcecontrol();
 	afx_msg void OnUpdateToolsRemovefromsourcecontrol(CCmdUI* pCmdUI);
 	afx_msg void OnViewRefreshfilter();
 	afx_msg void OnUpdateViewRefreshfilter(CCmdUI* pCmdUI);
+	afx_msg void OnLoadFromWeb();
+	afx_msg void OnSaveToWeb();
+	afx_msg void OnUpdateSaveToWeb(CCmdUI* pCmdUI);
 	afx_msg LRESULT OnSelchangeFilter(WPARAM wp, LPARAM lp);
 	afx_msg void OnEditChangeQuickFind();
 	afx_msg void OnSelChangeQuickFind();
@@ -450,7 +460,7 @@ protected:
 	afx_msg void OnUpdateSBSelectionCount(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateSBTaskCount(CCmdUI* pCmdUI);
 	afx_msg LRESULT OnGetIcon(WPARAM bLargeIcon, LPARAM /*not used*/);
-	afx_msg LRESULT OnToDoCtrlNotifySort(WPARAM wp, LPARAM lp);
+	afx_msg LRESULT OnFocusChange(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnToDoCtrlNotifyMod(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnToDoCtrlNotifyMinWidthChange(WPARAM wp, LPARAM lp);
 	afx_msg LRESULT OnToDoCtrlNotifyTimeTrack(WPARAM wp, LPARAM lp);
@@ -515,6 +525,7 @@ protected:
 	// tdc not const because we need to flush it first
 	BOOL Export2Html(CFilteredToDoCtrl& tdc, LPCTSTR szFilePath, TSD_TASKS nWhatTasks, LPCTSTR szStylesheet = NULL) const;
 	BOOL Export2Html(const CTaskFile& tasks, LPCTSTR szFilePath, LPCTSTR szStylesheet = NULL) const;
+	BOOL GetAutoExportExtension(CString& sExt) const;
 
 	TDC_FILE DelayOpenTaskList(LPCTSTR szFilePath); // 0 = failed, 1 = success, -1 = cancelled
 	TDC_FILE OpenTaskList(LPCTSTR szFilePath, LPCTSTR szDisplayPath = NULL, BOOL bNotifyDueTasks = TRUE); // 0 = failed, 1 = success, -1 = cancelled
@@ -554,10 +565,7 @@ protected:
 	void HandleLoadTasklistError(TDC_FILE nErr, LPCTSTR szTasklist);
 	void CheckForUpdates(BOOL bManual);
 	void UpdateCwd();
-	BOOL WantTabBarVisible() const
-	{
-		return GetTDCCount() > 1 || !Prefs().GetAutoHideTabbar();
-	}
+	BOOL WantTasklistTabbarVisible() const;
 	void ShowFindDialog(BOOL bShow = TRUE);
 	void RefreshUIExtensions(BOOL bEdit);
 	void UpdateAeroFeatures();
@@ -636,7 +644,7 @@ protected:
 	int GetTasks(CFilteredToDoCtrl& tdc, TSD_TASKS nWhatTasks, CTaskFile& tasks) const;
 
 	void DoSendTasks(TD_SENDWHAT nWhat, TD_SENDAS nSendAs);
-	
+
 	TDC_ARCHIVE GetAutoArchiveOptions(LPCTSTR szFilePath, CString& sArchivePath, BOOL& bRemoveFlagged) const;
 
 	static void PrepareOpenFilePath(CString& sFilePath);

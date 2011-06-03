@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.4-6.1.10 sources
+// - merged with ToDoList version 6.1.4-6.2.2 sources
 //*****************************************************************************
 
 // RichEditSpellCheck.cpp: implementation of the CRichEditSpellCheck class.
@@ -90,26 +90,28 @@ const char* CRichEditSpellCheck::GetNextWord() const
 
 	if (nLength)
 	{
+		m_crCurrentWord = cr;
+
 		// if there's any trailing whitespace then trim it off
 		m_sCurrentWord.TrimRight(DELIMS);
 
 		// and update char range
-		cr.cpMax -= nLength - m_sCurrentWord.GetLength();
+		m_crCurrentWord.cpMax -= nLength - m_sCurrentWord.GetLength();
 		nLength = m_sCurrentWord.GetLength();
 
 		// if there's any leading whitespace then trim it off
 		m_sCurrentWord.TrimLeft(DELIMS);
 
 		// and update char range
-		cr.cpMin += nLength - m_sCurrentWord.GetLength();
+		m_crCurrentWord.cpMin += nLength - m_sCurrentWord.GetLength();
 		nLength = m_sCurrentWord.GetLength();
-
-		m_crCurrentWord = cr;
 
 		// if there was some text but it was all whitespace, return
 		// a non-empty string so that searching is not terminated
+		// and move the selection to the end of the whitespace
 		if (m_sCurrentWord.IsEmpty())
 		{
+			m_crCurrentWord.cpMin = m_crCurrentWord.cpMax = cr.cpMax;
 			m_sCurrentWord = " ";
 		}
 	}

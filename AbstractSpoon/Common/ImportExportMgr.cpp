@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // ImportExportMgr.cpp: implementation of the CImportExportMgr class.
@@ -96,7 +97,7 @@ void CImportExportMgr::Initialize()
 
 	// look at every dll from whereever we are now
 	CFileFind ff;
-	CString sSearchPath = FileMisc::GetModuleFileName(), sFolder, sDrive;
+	CString sSearchPath = FileMisc::GetAppFileName(), sFolder, sDrive;
 
 	FileMisc::SplitPath(sSearchPath, &sDrive, &sFolder);
 	FileMisc::MakePath(sSearchPath, sDrive, sFolder, _T("*"), _T(".dll"));
@@ -287,6 +288,23 @@ BOOL CImportExportMgr::ImportTaskList(LPCTSTR szSrcFile, ITaskList* pDestTasks, 
 }
 
 BOOL CImportExportMgr::ExportTaskList(const ITaskList* pSrcTasks, LPCTSTR szDestFile, int nByExporter, BOOL bSilent) const
+{
+	if (!m_bInitialized)
+	{
+		return FALSE;
+	}
+
+	if (nByExporter >= 0 && nByExporter < m_aExporters.GetSize())
+	{
+		ASSERT(m_aExporters[nByExporter] != NULL);
+		return m_aExporters[nByExporter]->Export(pSrcTasks, szDestFile, bSilent);
+	}
+
+	// else
+	return FALSE;
+}
+
+BOOL CImportExportMgr::ExportTaskLists(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile, int nByExporter, BOOL bSilent) const
 {
 	if (!m_bInitialized)
 	{

@@ -185,6 +185,42 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Dialog
+//
+
+IDD_EDITWEBLINK_DIALOG DIALOG DISCARDABLE  0, 0, 239, 49
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Edit Web Link"
+FONT 8, "MS Shell Dlg 2"
+BEGIN
+    LTEXT           "URL",IDC_STATIC,7,9,16,8
+    EDITTEXT        IDC_WEBLINK,27,7,205,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,126,28,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,182,28,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_EDITWEBLINK_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 232
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 42
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 

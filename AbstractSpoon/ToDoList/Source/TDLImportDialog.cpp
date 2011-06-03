@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TDLImportDialog.cpp : implementation file
@@ -50,6 +51,7 @@
 
 #include "../../../CodeProject/Source/EnString.h"
 #include "../../../CodeProject/Source/Misc.h"
+#include "../../../CodeProject/Source/FileMisc.h"
 #include "../../Common/Preferences.h"
 
 #ifdef _DEBUG
@@ -120,13 +122,29 @@ BOOL CTDLImportDialog::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// build the format comboxbox
+	CString sFormat;
+
 	for (int nImp = 0; nImp < m_mgrImportExport.GetNumImporters(); nImp++)
 	{
-		m_cbFormat.AddString(m_mgrImportExport.GetImporterMenuText(nImp));
+		CString sImporter = m_mgrImportExport.GetImporterMenuText(nImp);
+		CString sFileExt = m_mgrImportExport.GetImporterFileExtension(nImp);
+
+		if (sFileExt.IsEmpty())
+		{
+			sFormat = sImporter;
+		}
+		else
+		{
+			sFormat.Format(_T("%s (*.%s)"), sImporter, sFileExt);
+		}
+
+		m_cbFormat.AddString(sFormat);
 	}
 
 	// append standard tasklist to the end
-	m_cbFormat.AddString(CEnString(AFX_IDS_APP_TITLE));
+	sFormat.Format(_T("%s (*.tdl)"), CEnString(AFX_IDS_APP_TITLE));
+
+	m_cbFormat.AddString(sFormat);
 	m_cbFormat.SetCurSel(m_nFormatOption);
 
 	// init file edit
@@ -155,12 +173,12 @@ BOOL CTDLImportDialog::OnInitDialog()
 
 BOOL CTDLImportDialog::CurImporterHasFilter() const
 {
-	return (ImportTasklist() || m_mgrImportExport.ImporterHasFileExtension(m_nFormatOption));
+	return (WantImportTasklist() || m_mgrImportExport.ImporterHasFileExtension(m_nFormatOption));
 }
 
 CString CTDLImportDialog::GetCurImporterFilter() const
 {
-	if (ImportTasklist())
+	if (WantImportTasklist())
 	{
 		return CEnString(IDS_TDLFILEFILTER);
 	}
@@ -187,14 +205,14 @@ void CTDLImportDialog::OnOK()
 	}
 }
 
-BOOL CTDLImportDialog::ImportTasklist() const
+BOOL CTDLImportDialog::WantImportTasklist() const
 {
 	return (m_nFormatOption == m_mgrImportExport.GetNumImporters());
 }
 
 int CTDLImportDialog::GetImporterIndex() const
 {
-	if (ImportTasklist())
+	if (WantImportTasklist())
 	{
 		return -1;
 	}
@@ -273,7 +291,7 @@ void CTDLImportDialog::EnableOK()
 		m_sFromFilePath.TrimLeft();
 		m_sFromFilePath.TrimRight();
 
-		GetDlgItem(IDOK)->EnableWindow(!m_sFromFilePath.IsEmpty());
+		GetDlgItem(IDOK)->EnableWindow(FileMisc::FileExists(m_sFromFilePath));
 	}
 }
 

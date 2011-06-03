@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // CDialogHelper.cpp: implementation of the CDialogHelper class.
@@ -185,8 +186,7 @@ void DH_DDX_TextWithFormat(CDataExchange* pDX, int nIDC, LPCTSTR lpszFormat, UIN
 		// the following works for %d, %u, %ld, %lu
 		::GetWindowText(hWndCtrl, szT, sizeof(szT) / sizeof(TCHAR));
 
-		// *******************************************************************
-		if (_tcslen(szT) == 0)
+		if (*szT == 0)
 		{
 			//fabio_2005
 #if _MSC_VER >= 1400
@@ -195,8 +195,6 @@ void DH_DDX_TextWithFormat(CDataExchange* pDX, int nIDC, LPCTSTR lpszFormat, UIN
 			_tcscpy(szT, _T("0"));
 #endif
 		}
-
-		// *******************************************************************
 
 		if (!DH_SimpleScanf(szT, lpszFormat, pData))
 		{
@@ -226,8 +224,7 @@ void DH_TextFloatFormat(CDataExchange* pDX, int nIDC, void* pData, double value,
 	{
 		::GetWindowText(hWndCtrl, szBuffer, sizeof(szBuffer) / sizeof(TCHAR));
 
-		// *******************************************************************
-		if (_tcslen(szBuffer) == 0)
+		if (*szBuffer == 0)
 		{
 			//fabio_2005
 #if _MSC_VER >= 1400
@@ -236,8 +233,6 @@ void DH_TextFloatFormat(CDataExchange* pDX, int nIDC, void* pData, double value,
 			_tcscpy(szBuffer, _T("0"));
 #endif
 		}
-
-		// *******************************************************************
 
 		double d;
 
@@ -640,6 +635,16 @@ int CDialogHelper::SetComboBoxItems(CComboBox& combo, const CStringArray& aItems
 	return combo.GetCount();
 }
 
+BOOL CDialogHelper::IsDroppedComboBox(HWND hCtrl)
+{
+	if (IsComboBox(hCtrl))
+	{
+		return ::SendMessage(hCtrl, CB_GETDROPPEDSTATE, 0, 0);
+	}
+
+	return FALSE;
+}
+
 BOOL CDialogHelper::ProcessDialogControlShortcut(const MSG* pMsg)
 {
 	// message id must be WM_KEYDOWN and alt key must be pressed
@@ -913,6 +918,38 @@ int CDialogHelper::GetSelectedItemAsValue(const CComboBox& combo)
 	return _ttoi(sNum);
 }
 
+CString CDialogHelper::GetControlLabel(const CWnd* pWnd)
+{
+	if (!pWnd)
+	{
+		return _T("");
+	}
+
+	CString sText;
+
+	// check for combo edit
+	if (IsEdit(*pWnd) && IsComboBox(*(pWnd->GetParent())))
+	{
+		pWnd = pWnd->GetParent();
+	}
+
+	CWnd* pPrev = pWnd->GetNextWindow(GW_HWNDPREV);
+
+	while (pPrev)
+	{
+		if (CWinClasses::IsClass(*pPrev, WC_STATIC))
+		{
+			pPrev->GetWindowText(sText);
+			sText.Replace(_T("&"), _T(""));
+			break;
+		}
+
+		pPrev = pPrev->GetNextWindow(GW_HWNDPREV);
+	}
+
+	return sText;
+}
+
 BOOL CDialogHelper::ControlWantsEnter(HWND hwnd)
 {
 	CString sClass = CWinClasses::GetClass(hwnd);
@@ -1125,6 +1162,21 @@ BOOL CDialogHelper::IsEdit(CWnd* pParent, UINT nCtrlID)
 	ASSERT(pParent);
 
 	return IsEdit(::GetDlgItem(*pParent, nCtrlID));
+}
+
+BOOL CDialogHelper::IsComboBox(HWND hCtrl)
+{
+	CString sClass = CWinClasses::GetClass(hCtrl);
+
+	return (CWinClasses::IsClass(sClass, WC_COMBOBOX) ||
+			CWinClasses::IsClass(sClass, WC_COMBOBOXEX));
+}
+
+BOOL CDialogHelper::IsComboBox(CWnd* pParent, UINT nCtrlID)
+{
+	ASSERT(pParent);
+
+	return IsComboBox(::GetDlgItem(*pParent, nCtrlID));
 }
 
 void CDialogHelper::ShowControls(CWnd* pParent, UINT nCtrlIDFrom, UINT nCtrlIDTo, BOOL bShow)

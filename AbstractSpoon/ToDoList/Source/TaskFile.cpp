@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2-6.1.10 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // TaskFile.cpp: implementation of the CTaskFile class.
@@ -87,13 +87,33 @@ protected:
 
 #define GET_TASK(t, h, r) { t = TaskFromHandle(h); if (!t) return r; }
 
-CTaskFile::CTaskFile(LPCTSTR szPassword) : m_dwNextUniqueID(0), m_bISODates(TRUE),
+CTaskFile::CTaskFile(LPCTSTR szPassword) : m_dwNextUniqueID(1), m_bISODates(TRUE),
 #ifdef NO_TL_ENCRYPTDECRYPT
 CXmlFile(TDL_ROOT)
 #else
 CXmlFileEx(TDL_ROOT, szPassword)
 #endif
 {
+}
+
+CTaskFile::CTaskFile(const CTaskFile& tasks, LPCTSTR szPassword) : m_dwNextUniqueID(1), m_bISODates(TRUE),
+#ifdef NO_TL_ENCRYPTDECRYPT
+CXmlFile(TDL_ROOT)
+#else
+CXmlFileEx(TDL_ROOT, szPassword)
+#endif
+{
+	Copy(tasks);
+}
+
+CTaskFile::CTaskFile(const ITaskList* pTasks, LPCTSTR szPassword) : m_dwNextUniqueID(1), m_bISODates(TRUE),
+#ifdef NO_TL_ENCRYPTDECRYPT
+CXmlFile(TDL_ROOT)
+#else
+CXmlFileEx(TDL_ROOT, szPassword)
+#endif
+{
+	Copy(pTasks);
 }
 
 CTaskFile::~CTaskFile()
@@ -133,6 +153,11 @@ HRESULT CTaskFile::QueryInterface(REFIID riid, void __RPC_FAR* __RPC_FAR* ppvObj
 	else if (IsEqualIID(riid, IID_TASKLIST7))
 	{
 		*ppvObject = reinterpret_cast<ITaskList7*>(this);
+		AddRef();
+	}
+	else if (IsEqualIID(riid, IID_TASKLIST8))
+	{
+		*ppvObject = reinterpret_cast<ITaskList8*>(this);
 		AddRef();
 	}
 
@@ -243,6 +268,8 @@ BOOL CTaskFile::SaveEx()
 BOOL CTaskFile::Copy(const CTaskFile& tasks)
 {
 	XMLBASE::Copy(tasks);
+	m_dwNextUniqueID = tasks.GetNextUniqueID();
+
 	BuildHandleMap();
 
 	return TRUE;
@@ -254,9 +281,11 @@ BOOL CTaskFile::Copy(const ITaskList* pTasks)
 	m_dwNextUniqueID = 1;
 
 	// copy top level tasks
+	// m_dwNextUniqueID is kept up to date in CopyTask
 	if (CopyTask(NULL, pTasks, NULL))
 	{
 		BuildHandleMap();
+
 		return TRUE;
 	}
 
@@ -284,8 +313,12 @@ BOOL CTaskFile::CopyTask(HTASKITEM hSrcTask, const ITaskList* pSrcTasks, HTASKIT
 			return FALSE;
 		}
 
+		// Task ID. Keep track of highest taskID
+		DWORD dwTask = pSrcTasks->GetTaskID(hSrcTask);
+		SetTaskID(hDestTask, dwTask);
+		m_dwNextUniqueID = dwTask + 1;
+
 		// the rest of the attributes
-		SetTaskID(hDestTask, pSrcTasks->GetTaskID(hSrcTask));
 		SetTaskComments(hDestTask, ATL::CT2A(pSrcTasks->GetTaskComments(hSrcTask)));
 		SetTaskAllocatedTo(hDestTask, ATL::CT2A(pSrcTasks->GetTaskAllocatedTo(hSrcTask)));
 		SetTaskAllocatedBy(hDestTask, ATL::CT2A(pSrcTasks->GetTaskAllocatedBy(hSrcTask)));
@@ -337,6 +370,41 @@ BOOL CTaskFile::CopyTask(HTASKITEM hSrcTask, const ITaskList* pSrcTasks, HTASKIT
 		if (pTL6)
 		{
 			SetTaskVersion(hDestTask, ATL::CT2A(pTL6->GetTaskVersion(hSrcTask)));
+
+			int nRegularity, nReuse;
+			DWORD dwSpecific1, dwSpecific2;
+			BOOL bRecalcFromDue;
+
+			if (GetTaskRecurrence(hSrcTask, nRegularity, dwSpecific1, dwSpecific2, bRecalcFromDue, nReuse))
+			{
+				SetTaskRecurrence(hDestTask, nRegularity, dwSpecific1, dwSpecific2, bRecalcFromDue, nReuse);
+			}
+		}
+
+		const ITaskList7* pTL7 = GetITLInterface<ITaskList7>(pSrcTasks, IID_TASKLIST7);
+
+		if (pTL7)
+		{
+			int nNumDepends = GetTaskDependencyCount(hSrcTask);
+
+			for (int nDepend = 0; nDepend < nNumDepends; nDepend++)
+			{
+				AddTaskDependency(hDestTask, ATL::CT2A(GetTaskDependency(hSrcTask, nDepend)));
+			}
+
+			int nNumAllocTo = GetTaskAllocatedToCount(hSrcTask);
+
+			for (int nAlloc = 0; nAlloc < nNumAllocTo; nAlloc++)
+			{
+				AddTaskAllocatedTo(hDestTask, ATL::CT2A(GetTaskAllocatedTo(hSrcTask, nAlloc)));
+			}
+		}
+
+		const ITaskList8* pTL8 = GetITLInterface<ITaskList8>(pSrcTasks, IID_TASKLIST8);
+
+		if (pTL8)
+		{
+			// nothing to do
 		}
 	}
 
@@ -465,9 +533,9 @@ bool CTaskFile::IsArchive() const
 	return (NULL != GetItem(TDL_ARCHIVE));
 }
 
-bool CTaskFile::IsCheckedOut() const
+BOOL CTaskFile::IsCheckedOutTo(const CString& sCheckedOutTo) const
 {
-	return (Misc::GetComputerName() == GetCheckOutTo());
+	return (sCheckedOutTo.CompareNoCase(GetCheckOutTo()) == 0);
 }
 
 bool CTaskFile::IsSourceControlled() const
@@ -734,13 +802,13 @@ BOOL CTaskFile::SetLastModified(const CString& sLastMod)
 	return (NULL != SetItemValue(TDL_LASTMODIFIED, sLastMod));
 }
 
-BOOL CTaskFile::CheckOut()
+BOOL CTaskFile::CheckOut(LPCTSTR szCheckOutTo)
 {
 	CString sTemp;
-	return CheckOut(sTemp);
+	return CheckOut(szCheckOutTo, sTemp);
 }
 
-BOOL CTaskFile::CheckOut(CString& sCheckedOutTo)
+BOOL CTaskFile::CheckOut(LPCTSTR szCheckOutTo, CString& sCheckedOutTo)
 {
 	// make sure its got a filepath attached
 	if (GetFilePath().IsEmpty())
@@ -752,7 +820,7 @@ BOOL CTaskFile::CheckOut(CString& sCheckedOutTo)
 
 	if (!sCheckedOutTo.IsEmpty())
 	{
-		if (sCheckedOutTo == Misc::GetComputerName()) // its us
+		if (sCheckedOutTo.CompareNoCase(szCheckOutTo) == 0) // its us
 		{
 			return TRUE;
 		}
@@ -763,25 +831,24 @@ BOOL CTaskFile::CheckOut(CString& sCheckedOutTo)
 		}
 
 		// else check it out
-		SetCheckedOutTo(Misc::GetComputerName());
+		SetCheckedOutTo(szCheckOutTo);
 	}
 	else // check it out
 	{
-		SetCheckedOutTo(Misc::GetComputerName());
+		SetCheckedOutTo(szCheckOutTo);
 	}
 
 	// and rewrite the file but keeping the same timestamp
 	FILETIME ftMod;
 	::GetFileTime((HANDLE)GetFileHandle(), NULL, NULL, &ftMod);
 
-	//	SortTasksByID();
 	BOOL bCheckedOut = SaveEx();
 
 	::SetFileTime((HANDLE)GetFileHandle(), NULL, NULL, &ftMod);
 
 	if (bCheckedOut)
 	{
-		sCheckedOutTo = Misc::GetComputerName();
+		sCheckedOutTo = szCheckOutTo;
 	}
 
 	return bCheckedOut;
@@ -853,10 +920,22 @@ BOOL CTaskFile::DeleteTaskAttributes(HTASKITEM hTask)
 	return TRUE;
 }
 
-HTASKITEM CTaskFile::FindTask(DWORD dwTaskID) const
+unsigned long CTaskFile::GetTaskParentID(HTASKITEM hTask) const
 {
+	return GetTaskID(GetTaskParent(hTask));
+}
+
+HTASKITEM CTaskFile::FindTask(unsigned long dwTaskID) const
+{
+	if (dwTaskID <= 0)
+	{
+		return NULL;
+	}
+
+	// find taskID attribute
 	const CXmlItem* pXI = FindItem(TDL_TASKID, (int)dwTaskID);
 
+	// then take it's parent as the task itself
 	return pXI ? (HTASKITEM)(pXI->GetParent()) : NULL;
 }
 
@@ -961,6 +1040,14 @@ bool CTaskFile::AddTaskDependency(HTASKITEM hTask, const char* szDepends)
 	return AddTaskArrayItem(hTask, ATL::CT2A(TDL_TASKNUMDEPENDENCY), ATL::CT2A(TDL_TASKDEPENDENCY), szDepends);
 }
 
+bool CTaskFile::AddTaskDependency(HTASKITEM hTask, unsigned long dwID)
+{
+	CString sID;
+	sID.Format(_T("%ld"), dwID);
+
+	return AddTaskDependency(hTask, ATL::CT2A(sID));
+}
+
 bool CTaskFile::AddTaskAllocatedTo(HTASKITEM hTask, const char* szAllocTo)
 {
 	return AddTaskArrayItem(hTask, ATL::CT2A(TDL_TASKNUMALLOCTO), ATL::CT2A(TDL_TASKALLOCTO), szAllocTo);
@@ -995,6 +1082,9 @@ CXmlItem* CTaskFile::NewItem(LPCTSTR szName)
 
 HTASKITEM CTaskFile::NewTask(const char* szTitle, HTASKITEM hParent, DWORD dwID)
 {
+	// check no task exists having dwID
+	ASSERT(FindTask(dwID) == 0);
+
 	CXmlItem* pXIParent = hParent ? TaskFromHandle(hParent) : Root();
 
 	if (!pXIParent)
@@ -1442,7 +1532,7 @@ COleDateTime CTaskFile::GetTaskStartDateOle(HTASKITEM hTask) const
 
 COleDateTime CTaskFile::GetTaskCreationDateOle(HTASKITEM hTask) const
 {
-	return GetTaskDateOle(hTask, TDL_TASKCREATIONDATE, FALSE);
+	return GetTaskDateOle(hTask, TDL_TASKCREATIONDATE, TRUE);
 }
 
 const TCHAR* CTaskFile::GetTaskDoneDateString(HTASKITEM hTask) const
@@ -1509,6 +1599,11 @@ bool CTaskFile::TaskHasAttribute(HTASKITEM hTask, const char* szAttrib) const
 			return TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKTEXTWEBCOLOR));
 		}
 
+		else if (strcmp(szAttrib, ATL::CT2A(TDL_TASKPARENTID)) == 0)
+		{
+			return TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKID));
+		}
+
 		// else
 		return FALSE;
 	}
@@ -1522,7 +1617,17 @@ const TCHAR* CTaskFile::GetTaskAttribute(HTASKITEM hTask, const char* szAttrib) 
 	CXmlItem* pXITask = NULL;
 	GET_TASK(pXITask, hTask, _T(""));
 
-	return (pXITask->GetItemValue(ATL::CA2T(szAttrib)));
+	CString sValue = pXITask->GetItemValue(ATL::CA2T(szAttrib));
+
+	// special case: Parent ID
+	if (sValue.IsEmpty() && strcmp(szAttrib, ATL::CT2A(TDL_TASKPARENTID)) == 0 && TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKID)))
+	{
+		static CString sPID;
+		sPID.Format(_T("%d"), GetTaskParentID(hTask));
+		sValue = sPID;
+	}
+
+	return sValue;
 }
 
 HTASKITEM CTaskFile::GetTaskParent(HTASKITEM hTask) const

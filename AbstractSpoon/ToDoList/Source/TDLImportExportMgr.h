@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // TDLImportExportMgr.h: interface for the CTDLImportExportMgr class.
@@ -54,7 +55,8 @@
 
 #include "../../Common/ImportExportMgr.h"
 
-enum { EXP2HTML, EXP2TXT, EXP2CSV };
+enum { EXPTOHTML, EXPTOTXT, EXPTOCSV };
+enum { IMPFROMCSV };
 
 class CTDLImportExportMgr : public CImportExportMgr
 {
@@ -63,13 +65,21 @@ public:
 	virtual ~CTDLImportExportMgr();
 
 	BOOL ExportTaskListToHtml(const ITaskList* pSrcTasks, LPCTSTR szDestFile) const;
+	BOOL ExportTaskListsToHtml(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile) const;
 	CString ExportTaskListToHtml(const ITaskList* pSrcTasks) const;
+	CString ExportTaskListsToHtml(const IMultiTaskList* pSrcTasks) const;
 
 	BOOL ExportTaskListToText(const ITaskList* pSrcTasks, LPCTSTR szDestFile) const;
+	BOOL ExportTaskListsToText(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile) const;
 	CString ExportTaskListToText(const ITaskList* pSrcTasks) const;
+	CString ExportTaskListsToText(const IMultiTaskList* pSrcTasks) const;
 
 	BOOL ExportTaskListToCsv(const ITaskList* pSrcTasks, LPCTSTR szDestFile) const;
+	BOOL ExportTaskListsToCsv(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile) const;
 	CString ExportTaskListToCsv(const ITaskList* pSrcTasks) const;
+	CString ExportTaskListsToCsv(const IMultiTaskList* pSrcTasks) const;
+
+	BOOL ImportTaskListFromCsv(LPCTSTR szSrcFile, ITaskList* pDestTasks) const;
 
 	void Initialize();
 };

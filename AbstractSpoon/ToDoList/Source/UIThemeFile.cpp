@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // UIThemeFile.cpp: implementation of the CUIThemeFile class.
@@ -46,8 +47,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
-#include "ToDoListApp.h"
 #include "UIThemeFile.h"
+#include "../../Common/XmlFile.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -59,8 +60,9 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CUIThemeFile::CUIThemeFile() : CXmlFile(_T("TODOLIST"))
+CUIThemeFile::CUIThemeFile()
 {
+	Reset();
 }
 
 CUIThemeFile::~CUIThemeFile()
@@ -69,41 +71,67 @@ CUIThemeFile::~CUIThemeFile()
 
 BOOL CUIThemeFile::LoadThemeFile(LPCTSTR szThemeFile)
 {
-	if (!CXmlFile::Load(szThemeFile))
+	CXmlFile xiFile;
+
+	if (!xiFile.Load(szThemeFile, _T("TODOLIST")))
 	{
 		return FALSE;
 	}
 
-	if (!GetItem(_T("UITHEME")))
+	if (!xiFile.GetItem(_T("UITHEME")))
 	{
 		return FALSE;
 	}
 
 	// else
+	nStyle = GetStyle(xiFile);
+
+	crAppBackDark = GetColor(xiFile, _T("APPBACKDARK"));
+	crAppBackLight = GetColor(xiFile, _T("APPBACKLIGHT"));
+	crAppLinesDark = GetColor(xiFile, _T("APPLINESDARK"), COLOR_3DSHADOW);
+	crAppLinesLight = GetColor(xiFile, _T("APPLINESLIGHT"), COLOR_3DHIGHLIGHT);
+	crAppText = GetColor(xiFile, _T("APPTEXT"), COLOR_WINDOWTEXT);
+	crMenuBack = GetColor(xiFile, _T("MENUBACK"), COLOR_3DFACE);
+	crToolbarDark = GetColor(xiFile, _T("TOOLBARDARK"));
+	crToolbarLight = GetColor(xiFile, _T("TOOLBARLIGHT"));
+	crStatusBarDark = GetColor(xiFile, _T("STATUSBARDARK"));
+	crStatusBarLight = GetColor(xiFile, _T("STATUSBARLIGHT"));
+	crStatusBarText = GetColor(xiFile, _T("STATUSBARTEXT"), COLOR_WINDOWTEXT);
+
 	return TRUE;
 }
 
-void CUIThemeFile::GetTheme(UITHEME& theme) const
+void CUIThemeFile::Reset()
 {
-	theme.nStyle = GetStyle();
+	nStyle = UIS_GRADIENT;
 
-	theme.crAppBackDark = GetColor(_T("APPBACKDARK"));
-	theme.crAppBackLight = GetColor(_T("APPBACKLIGHT"));
-	theme.crAppLines = GetColor(_T("APPLINES"));
-	theme.crMenuBack = GetColor(_T("MENUBACK"));
-	theme.crToolbarDark = GetColor(_T("TOOLBARDARK"));
-	theme.crToolbarLight = GetColor(_T("TOOLBARLIGHT"));
-	theme.crStatusBarDark = GetColor(_T("STATUSBARDARK"));
-	theme.crStatusBarLight = GetColor(_T("STATUSBARLIGHT"));
+	crAppBackDark = GetSysColor(COLOR_3DFACE);
+	crAppBackLight = GetSysColor(COLOR_3DFACE);
+	crAppLinesDark = GetSysColor(COLOR_3DSHADOW);
+	crAppLinesLight = GetSysColor(COLOR_3DHIGHLIGHT);
+	crAppText = GetSysColor(COLOR_WINDOWTEXT);
+	crMenuBack = GetSysColor(COLOR_3DFACE);
+	crToolbarDark = GetSysColor(COLOR_3DFACE);
+	crToolbarLight = GetSysColor(COLOR_3DFACE);
+	crStatusBarDark = GetSysColor(COLOR_3DFACE);
+	crStatusBarLight = GetSysColor(COLOR_3DFACE);
+	crStatusBarText = GetSysColor(COLOR_WINDOWTEXT);
 }
 
-COLORREF CUIThemeFile::GetColor(LPCTSTR szName) const
+COLORREF CUIThemeFile::GetColor(const CXmlFile& xiFile, LPCTSTR szName, int nColorID)
 {
-	const CXmlItem* pXIName = FindItem(_T("NAME"), szName);
+	const CXmlItem* pXIName = xiFile.FindItem(_T("NAME"), szName);
 
 	if (!pXIName)
 	{
-		return UIT_NOCOLOR;
+		if (nColorID != -1)
+		{
+			return GetSysColor(nColorID);
+		}
+		else
+		{
+			return UIT_NOCOLOR;
+		}
 	}
 
 	const CXmlItem* pXIColor = pXIName->GetParent();
@@ -116,9 +144,9 @@ COLORREF CUIThemeFile::GetColor(LPCTSTR szName) const
 	return RGB(bRed, bGreen, bBlue);
 }
 
-UI_STYLE CUIThemeFile::GetStyle() const
+UI_STYLE CUIThemeFile::GetStyle(const CXmlFile& xiFile)
 {
-	const CXmlItem* pXITheme = GetItem(_T("UITHEME"));
+	const CXmlItem* pXITheme = xiFile.GetItem(_T("UITHEME"));
 	ASSERT(pXITheme);
 
 	if (!pXITheme)

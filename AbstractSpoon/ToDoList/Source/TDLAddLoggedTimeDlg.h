@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList versions 6.1.6-6.1.7 sources
+// - merged with ToDoList version 6.1.6-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDLADDLOGGEDTIMEDLG_H__1E431AC9_0AA0_44E5_9CAE_723D199D910E__INCLUDED_)
@@ -65,6 +65,10 @@ public:
 	CTDLAddLoggedTimeDlg(DWORD dwTaskID, LPCTSTR szTaskTitle, CWnd* pParent = NULL);   // standard constructor
 	double GetLoggedTime() const; // in hours
 	COleDateTime GetWhen() const;
+	BOOL GetAddToTimeSpent() const
+	{
+		return m_bAddTimeToTimeSpent;
+	}
 
 protected:
 // Dialog Data
@@ -75,6 +79,7 @@ protected:
 	double  m_dLoggedTime;
 	DWORD   m_dwTaskID;
 	CString m_sTaskTitle;
+	BOOL    m_bAddTimeToTimeSpent;
 	//}}AFX_DATA
 	CTimeEdit   m_eLoggedTime;
 	int m_nUnits;

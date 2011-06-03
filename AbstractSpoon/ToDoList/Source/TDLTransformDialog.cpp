@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // TDLTransformDialog.cpp : implementation file
@@ -63,10 +63,9 @@ static char THIS_FILE[] = __FILE__;
 
 CTDLTransformDialog::CTDLTransformDialog(LPCTSTR szTitle, BOOL bShowSubtaskCheckbox, CWnd* pParent /*=NULL*/):
 CDialog(IDD_TRANSFORM_DIALOG, pParent),
-m_taskSel(_T("Transform"),
-bShowSubtaskCheckbox),
+m_taskSel(_T("Transform"), bShowSubtaskCheckbox),
 m_sTitle(szTitle),
-m_eStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER))
+m_eStylesheet(FES_COMBOSTYLEBTN | FES_RELATIVEPATHS, CEnString(IDS_XSLFILEFILTER))
 {
 	//{{AFX_DATA_INIT(CTDLTransformDialog)
 	//}}AFX_DATA_INIT
@@ -74,6 +73,8 @@ m_eStylesheet(FES_COMBOSTYLEBTN, CEnString(IDS_XSLFILEFILTER))
 	CPreferences prefs;
 
 	m_sStylesheet = prefs.GetProfileString(_T("Transform"), _T("Stylesheet"));
+	m_sStylesheet = FileMisc::GetRelativePath(m_sStylesheet, FileMisc::GetAppResourceFolder(), FALSE);
+
 	m_bDate = prefs.GetProfileInt(_T("Transform"), _T("WantDate"), TRUE);
 }
 
@@ -113,12 +114,11 @@ BOOL CTDLTransformDialog::OnInitDialog()
 
 	VERIFY(m_taskSel.Create(IDC_FRAME, this));
 
-	BOOL bEnable = FileMisc::FileExists(FileMisc::GetFullPath(m_sStylesheet, TRUE));
+	BOOL bEnable = FileMisc::FileExists(GetStylesheet());
 	GetDlgItem(IDOK)->EnableWindow(bEnable);
 
 	// init the stylesheet folder to point to the resource folder
-	CString sXslFolder = FileMisc::GetModuleFolder() + _T("Resources");
-	m_eStylesheet.SetCurrentFolder(sXslFolder);
+	m_eStylesheet.SetCurrentFolder(FileMisc::GetAppResourceFolder());
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
@@ -128,6 +128,11 @@ void CTDLTransformDialog::OnChangeStylesheet()
 {
 	UpdateData();
 
-	BOOL bEnable = FileMisc::FileExists(FileMisc::GetFullPath(m_sStylesheet, TRUE));
+	BOOL bEnable = FileMisc::FileExists(GetStylesheet());
 	GetDlgItem(IDOK)->EnableWindow(bEnable);
+}
+
+CString CTDLTransformDialog::GetStylesheet() const
+{
+	return FileMisc::GetFullPath(m_sStylesheet, FileMisc::GetAppResourceFolder());
 }

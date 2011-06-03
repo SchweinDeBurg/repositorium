@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_RICHEDITBASECTRL_H__E7F84BEA_24A6_42D4_BE92_4B8891484048__INCLUDED_)
@@ -56,11 +56,9 @@
 /////////////////////////////////////////////////////////////////////////////
 // CRichEditBaseCtrl window
 
-class FIND_STATE;  // private to implementation
-
 class CRichEditBaseCtrl : public CRichEditCtrl
 {
-	// Construction
+// Construction
 public:
 	CRichEditBaseCtrl();
 	virtual ~CRichEditBaseCtrl();
@@ -72,15 +70,25 @@ public:
 	BOOL Redo();
 
 	CString GetTextRange(const CHARRANGE& cr);
+	CString GetSelText();
+
 	void EnableSelectOnFocus(BOOL bEnable)
 	{
 		m_bEnableSelectOnFocus = bEnable;
 	}
+	void SelectCurrentWord();
+
+	void GetMargins(CRect& rMargins)
+	{
+		rMargins = m_rMargins;
+	}
+	void SetMargins(LPCRECT pMargins);
 
 	// Attributes
 protected:
 	BOOL m_bEnableSelectOnFocus;
 	BOOL m_bInOnFocus;
+	CRect m_rMargins;
 
 	struct FIND_STATE
 	{
@@ -208,16 +216,14 @@ protected:
 	afx_msg void OnDestroy();
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	afx_msg LRESULT OnEditSetSelection(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 
 	DECLARE_MESSAGE_MAP()
 
 	void AdjustDialogPosition(CDialog* pDlg);
-	BOOL FindText(LPCTSTR lpszFind, BOOL bCase = TRUE, BOOL bWord = TRUE);
-	BOOL FindTextSimple(LPCTSTR lpszFind, BOOL bCase = TRUE,
-		BOOL bWord = TRUE);
+	BOOL FindText(LPCTSTR lpszFind, BOOL bCase = TRUE, BOOL bWord = TRUE, BOOL bWrap = TRUE);
 	void TextNotFound(LPCTSTR lpszFind);
-	BOOL FindText();
-	BOOL FindTextSimple();
+	BOOL FindText(BOOL bWrap = TRUE);
 	long FindAndSelect(DWORD dwFlags, FINDTEXTEX& ft);
 	void DoEditFindReplace(BOOL bFindOnly, UINT nIDTitle);
 	BOOL SameAsSelected(LPCTSTR lpszCompare, BOOL bCase, BOOL bWord);

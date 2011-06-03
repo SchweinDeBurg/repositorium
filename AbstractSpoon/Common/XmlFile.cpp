@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // XmlFile.cpp: implementation of the CXmlFile class.
@@ -166,6 +167,11 @@ CXmlItem* CXmlItem::GetItem(LPCTSTR szItemName, LPCTSTR szSubItem)
 {
 	// cast away constness
 	return (CXmlItem*)GetItemEx(szItemName, szSubItem);
+}
+
+BOOL CXmlItem::HasItem(LPCTSTR szItemName, LPCTSTR szSubItemName) const
+{
+	return (GetItem(szItemName, szSubItemName) != NULL);
 }
 
 // special internal version
@@ -1224,10 +1230,23 @@ BOOL CXmlFile::ParseItem(CXmlItem& xi, CXmlNodeWrapper* pNode)
 
 			ParseItem(*pXI, &nodeChild);
 		}
+		// need to take care here not to overwrite a node's value by carriage returns
+		// which can result if we load the XML preserving whitespace
 		else
 		{
-			xi.SetValue(sVal);
-			xi.SetType(nType);
+			BOOL bHasValue = (xi.GetValueLen() != 0);
+			BOOL bValueIsCR = (sVal == _T("\n"));
+
+			if (nodeChild.IsPreservingWhiteSpace() && bHasValue && bValueIsCR)
+			{
+				// ignore
+				ASSERT(1); // for debugging
+			}
+			else
+			{
+				xi.SetValue(sVal);
+				xi.SetType(nType);
+			}
 		}
 	}
 
@@ -1259,6 +1278,7 @@ BOOL CXmlFile::Export(CString& sOutput) const
 			}
 			else
 			{
+				// carriage return after each attribute
 				sOutput.Replace(_T("><"), _T(">\r\n<"));
 
 				bRes = TRUE;
@@ -1362,7 +1382,7 @@ BOOL CXmlFile::Export(const CXmlItem* pItem, CXmlNodeWrapper* pNode) const
 			// create a named node to wrap the CDATA
 			MSXML2::IXMLDOMNodePtr pChildNode = pNode->InsertNode(nNode++, (LPCTSTR)sItem);
 			MSXML2::IXMLDOMCDATASectionPtr pCData =
-					pNode->ParentDocument()->createCDATASection(TOBSTRING(ATL::CT2A(pXIChild->GetValue())));
+				pNode->ParentDocument()->createCDATASection(TOBSTRING(ATL::CT2A(pXIChild->GetValue())));
 			pChildNode->appendChild(pCData);
 		}
 		else // node

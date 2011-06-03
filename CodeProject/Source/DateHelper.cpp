@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // DateHelper.cpp: implementation of the CDateHelper class.
@@ -47,6 +48,7 @@
 
 #include "stdafx.h"
 #include "DateHelper.h"
+#include "TimeHelper.h"
 #include "Misc.h"
 
 #include <math.h>
@@ -128,6 +130,77 @@ BOOL CDateHelper::DecodeISODate(const CString& sDate, time_t& date)
 		return (date != -1);
 	}
 
+	return FALSE;
+}
+
+BOOL CDateHelper::DecodeLocalShortDate(const CString& sDate, COleDateTime& date)
+{
+	if (!sDate.IsEmpty())
+	{
+		// split the string and format by the delimiter
+		CString sFormat = Misc::GetShortDateFormat();
+		CStringArray aDateParts, aFmtParts;
+
+		Misc::Split(sDate, aDateParts, TRUE, Misc::GetDateSeparator());
+		Misc::Split(sFormat, aFmtParts, TRUE, Misc::GetDateSeparator());
+
+		ASSERT(aDateParts.GetSize() == aFmtParts.GetSize());
+
+		// process the parts, deciphering the format
+		int nYear = -1, nMonth = -1, nDay = -1;
+
+		for (int nPart = 0; nPart < aFmtParts.GetSize(); nPart++)
+		{
+			if (aFmtParts[nPart].FindOneOf(_T("Yy")) != -1)
+			{
+				nYear = _ttoi(aDateParts[nPart]);
+			}
+
+			if (aFmtParts[nPart].FindOneOf(_T("Mm")) != -1)
+			{
+				nMonth = _ttoi(aDateParts[nPart]);
+			}
+
+			if (aFmtParts[nPart].FindOneOf(_T("Dd")) != -1)
+			{
+				nDay = _ttoi(aDateParts[nPart]);
+			}
+		}
+
+		if (nYear != -1 && nMonth != -1 && nDay != -1)
+		{
+			return (date.SetDate(nYear, nMonth, nDay) == 0);
+		}
+	}
+
+	// else
+	date.m_dt = 0.0;
+	return FALSE;
+}
+
+BOOL CDateHelper::DecodeLocalShortDate(const CString& sDate, time_t& date)
+{
+	COleDateTime dt;
+
+	if (DecodeLocalShortDate(sDate, dt))
+	{
+		tm time = { 0,
+			0,
+			0,
+			dt.GetDay(),
+			dt.GetMonth() - 1,
+			dt.GetYear() - 1900,
+			dt.GetDayOfWeek() - 1,
+			dt.GetDayOfYear(),
+			-1
+		};
+
+		date = mktime(&time);
+		return (date != -1);
+	}
+
+	// else
+	date = 0;
 	return FALSE;
 }
 
@@ -357,15 +430,18 @@ CString CDateHelper::FormatDate(const COleDateTime& date, DWORD dwFlags)
 	sDate.ReleaseBuffer();
 
 	// want time?
-	if (dwFlags & DHFD_TIME)
+	if ((dwFlags & DHFD_TIME) != 0)
 	{
-		CString sTime;
-		DWORD dwTimeFlags = (dwFlags & DHFD_NOSEC) ? TIME_NOSECONDS : 0;
-
-		::GetTimeFormat(0, dwTimeFlags, &st, NULL, sTime.GetBuffer(50), 49);
-		sTime.ReleaseBuffer();
-
-		sDate += _T(" ") + sTime;
+		if ((dwFlags & DHFD_ISO) != 0)
+		{
+			sDate += _T('T'); // ISO delimiter
+			sDate += CTimeHelper::FormatISOTime(st.wHour, st.wMinute, st.wSecond, !(dwFlags & DHFD_NOSEC));
+		}
+		else
+		{
+			sDate += _T(' ');
+			sDate += CTimeHelper::Format24HourTime(st.wHour, st.wMinute, st.wSecond, !(dwFlags & DHFD_NOSEC));
+		}
 	}
 
 	return sDate;

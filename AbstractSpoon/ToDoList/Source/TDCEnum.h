@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDCENUM_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_)
@@ -160,7 +160,7 @@ enum TDC_STYLE
 	TDCS_SHOWSUBTASKCOMPLETION,
 	TDCS_ALLOWPARENTTIMETRACKING,
 	TDCS_REFILTERONMODIFY,
-	TDCS_AUTOADJUSTDEPENDENTS,
+	TDCS_AUTOADJUSTDEPENDENCYDATES,
 	TDCS_RIGHTSIDECOLUMNS,
 	TDCS_HIDEDUETIMEFIELD,
 	TDCS_USES3RDPARTYSOURCECONTROL,
@@ -173,6 +173,8 @@ enum TDC_STYLE
 	TDCS_CALCREMAININGTIMEBYDUEDATE,
 	TDCS_CALCREMAININGTIMEBYSPENT,
 	TDCS_CALCREMAININGTIMEBYPERCENT,
+	TDCS_SHOWTREELISTBAR,
+	TDCS_INCLUDEUSERINCHECKOUT,
 
 	TDCS_LAST
 };
@@ -212,6 +214,7 @@ enum TDC_COLUMN
 	TDCC_REMAINING,
 	TDCC_ICON,
 	TDCC_REMINDER,
+	TDCC_PARENTID,
 
 	TDCC_LAST,
 	TDCC_NONE = TDCC_LAST,
@@ -421,6 +424,12 @@ enum TDC_ATTRIBUTE
 	TDCA_STARTTIME,
 	TDCA_DONETIME,
 
+	// number of 'real' attributes
+	TDCA_ATTRIBUTECOUNT,
+
+	// pseudo attribute
+	TDCA_PARENTID,
+
 	// pseudo attributes for SetModified
 	TDCA_NEWTASK,
 	TDCA_MOVE,
@@ -462,6 +471,7 @@ enum // find attribute
 	FIND_COST,
 	FIND_DEPENDENCY,
 	FIND_VERSION,
+	FIND_PARENTID,
 };
 
 enum FIND_OPERATOR
@@ -554,6 +564,9 @@ enum TDC_SORTBY
 	TDC_SORTBYRECENTEDIT,
 	TDC_SORTBYREMAINING,
 	TDC_SORTBYICON,
+	TDC_SORTBYPARENTID,
+	TDC_SORTBYTIMETRACKING,
+	TDC_SORTBYFILEREF,
 };
 
 enum
@@ -679,9 +692,8 @@ enum TDI_RECALCATTRIB
 	TDIR_COST           = 0x0040,
 	TDIR_EARLIESTDUE    = 0x0080,
 	TDIR_GOODASDONE     = 0x0100,
-	TDIR_DUE            = 0x0200,
-	TDIR_SUBTASKSCOUNT  = 0x0400,
-	TDIR_SUBTASKSDONE   = 0x0800,
+	TDIR_SUBTASKSCOUNT  = 0x0200,
+	TDIR_SUBTASKSDONE   = 0x0400,
 };
 
 enum TDC_REMINDER

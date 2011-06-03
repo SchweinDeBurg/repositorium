@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDLMULTISORTDLG_H__95734250_E60B_48CF_B356_1394C11317DA__INCLUDED_)
@@ -61,7 +62,7 @@ class CTDLMultiSortDlg : public CDialog
 {
 // Construction
 public:
-	CTDLMultiSortDlg(const TDSORTCOLUMNS& sort, CWnd* pParent = NULL);   // standard constructor
+	CTDLMultiSortDlg(const TDSORTCOLUMNS& sort, const CTDCColumnArray& aVisibleColumns, CWnd* pParent = NULL);   // standard constructor
 
 	void GetSortBy(TDSORTCOLUMNS& sort) const;
 
@@ -75,6 +76,7 @@ protected:
 	//}}AFX_DATA
 	TDC_SORTBY m_nSortBy1, m_nSortBy2, m_nSortBy3;
 	BOOL m_bAscending1, m_bAscending2, m_bAscending3;
+	const CTDCColumnArray& m_aVisibleColumns;
 
 
 // Overrides
@@ -98,6 +100,7 @@ protected:
 
 protected:
 	void BuildCombos();
+	BOOL IsColumnVisible(TDC_COLUMN col) const;
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDCSTRUCT_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_)
@@ -61,7 +61,7 @@
 #include "../../../CodeProject/Source/DateHelper.h"
 #include "../../../CodeProject/Source/EnCommandLineInfo.h"
 
-typedef CMap<TDC_STYLE, TDC_STYLE, BOOL, BOOL&> CTDCStyles;
+typedef CMap<TDC_STYLE, TDC_STYLE, BOOL, BOOL&> CTDCStylesMap;
 typedef CMap<CString, LPCTSTR, COLORREF, COLORREF&> CTDCColorMap;
 
 struct TDCSTARTUP
@@ -415,6 +415,11 @@ struct TDCGETTASKS
 		return FALSE;
 	}
 
+	BOOL HasFlag(DWORD dwFlag) const
+	{
+		return Misc::HasFlag(dwFlags, dwFlag);
+	}
+
 	TDC_GETTASKS nFilter;
 	COleDateTime dateDueBy;
 	DWORD dwFlags;
@@ -486,6 +491,8 @@ static TDC_ATTRIBUTE MapColumnToAttribute(TDC_COLUMN col)
 		return TDCA_POSITION;
 	case TDCC_ID:
 		return TDCA_ID;
+	case TDCC_PARENTID:
+		return TDCA_PARENTID;
 	case TDCC_FLAG:
 		return TDCA_FLAG;
 	case TDCC_CREATIONDATE:
@@ -570,6 +577,12 @@ static TDC_COLUMN MapSortByToColumn(TDC_SORTBY nSortBy)
 		return TDCC_DONE;
 	case TDC_SORTBYICON:
 		return TDCC_ICON;
+	case TDC_SORTBYFILEREF:
+		return TDCC_FILEREF;
+	case TDC_SORTBYTIMETRACKING:
+		return TDCC_TRACKTIME;
+	case TDC_SORTBYPARENTID:
+		return TDCC_PARENTID;
 	}
 
 	// everything else
@@ -870,6 +883,7 @@ struct SEARCHPARAM
 		case TDCA_PERCENT:
 		case TDCA_RISK:
 		case TDCA_ID:
+		case TDCA_PARENTID:
 			return FT_INTEGER;
 
 		case TDCA_TIMEEST:
@@ -1105,7 +1119,7 @@ struct FTDCFILTER
 
 	BOOL HasFlag(DWORD dwFlag) const
 	{
-		BOOL bHasFlag = ((dwFlags & dwFlag) == dwFlag) ? 1 : 0;
+		BOOL bHasFlag = Misc::HasFlag(dwFlags, dwFlag);
 
 		// some flags depend also on the main filter
 		if (bHasFlag)
@@ -1345,6 +1359,7 @@ struct TDSORTPARAMS
 	CToDoCtrlData* pData;
 	BOOL bSortChildren;
 	BOOL bSortDueTodayHigh;
+	DWORD dwTimeTrackID;
 };
 
 class CFilteredToDoCtrl;
@@ -1363,6 +1378,18 @@ struct TDCREMINDER
 	TDC_REMINDER nRelativeFromWhen;
 	BOOL bEnabled;
 	CString sSoundFile;
+};
+
+struct TDCATTRIBUTE
+{
+	TDC_ATTRIBUTE attrib;
+	UINT nAttribResID;
+};
+
+struct TDCOPERATOR
+{
+	FIND_OPERATOR op;
+	UINT nOpResID;
 };
 
 #endif // AFX_TDCSTRUCT_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_

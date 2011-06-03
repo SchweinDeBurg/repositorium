@@ -42,6 +42,7 @@ static char THIS_FILE[] = __FILE__;
 #define SZ_UTIL_THEMEACT       "IsThemeActive"
 #define SZ_UTIL_THEMEOPN       "OpenThemeData"
 #define SZ_UTIL_THEMEBCKG      "DrawThemeBackground"
+#define SZ_UTIL_THEMEAPPPROPS  "GetThemeAppProperties"
 /***********************************************************************************************************/
 // CXPTabCtrl
 /***********************************************************************************************************/
@@ -525,6 +526,18 @@ BOOL IsThemeActiveEx()
 	{
 		uiThemeActive = pfnIsThemeActive();
 	}
+	
+	if (uiThemeActive)
+	{
+		DWORD (PASCAL *pfnGetThemeAppProperties)();
+		(FARPROC&)pfnGetThemeAppProperties=GetProcAddress(hDll, SZ_UTIL_THEMEAPPPROPS);   // 'GetAppThemeProperties'
+
+		if (pfnGetThemeAppProperties)
+		{
+			uiThemeActive=(pfnGetThemeAppProperties() & STAP_ALLOW_CONTROLS);
+		}
+	}
+
 	FreeLibrary(hDll);
 	return uiThemeActive ? TRUE : FALSE;
 }

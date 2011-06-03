@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // PreferencesFilePage.cpp : implementation file
@@ -67,8 +67,7 @@ IMPLEMENT_DYNCREATE(CPreferencesFilePage, CPreferencesPageBase)
 
 CPreferencesFilePage::CPreferencesFilePage():
 CPreferencesPageBase(CPreferencesFilePage::IDD),
-m_eDueTaskStylesheet(FES_COMBOSTYLEBTN,
-CEnString(IDS_XSLFILEFILTER))
+m_eDueTaskStylesheet(FES_COMBOSTYLEBTN | FES_RELATIVEPATHS, CEnString(IDS_XSLFILEFILTER))
 {
 	//{{AFX_DATA_INIT(CPreferencesFilePage)
 	//}}AFX_DATA_INIT
@@ -135,10 +134,6 @@ BOOL CPreferencesFilePage::OnInitDialog()
 	GetDlgItem(IDC_USESTYLESHEETFORDUEITEMS)->EnableWindow(m_bDisplayDueTasksInHtml);
 	GetDlgItem(IDC_DUETASKSTYLESHEET)->EnableWindow(m_bDisplayDueTasksInHtml && m_bUseStyleSheetForDueTasks);
 	GetDlgItem(IDC_DUETASKPERSON)->EnableWindow(m_bOnlyShowDueTasksForPerson);
-
-	// init the stylesheet folder to point to the resource folder
-	CString sXslFolder = FileMisc::GetModuleFolder() + _T("Resources");
-	m_eDueTaskStylesheet.SetCurrentFolder(sXslFolder);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
@@ -219,6 +214,12 @@ void CPreferencesFilePage::LoadPreferences(const CPreferences& prefs)
 	m_bDontRemoveFlagged = prefs.GetProfileInt(_T("Preferences"), _T("DontRemoveFlagged"), FALSE);
 	m_bExpandTasks = prefs.GetProfileInt(_T("Preferences"), _T("ExpandTasks"), FALSE);
 
+	// init the stylesheet folder to point to the resource folder and make path relative
+	CString sFolder = FileMisc::GetAppResourceFolder();
+
+	m_eDueTaskStylesheet.SetCurrentFolder(sFolder);
+	m_sDueTasksStylesheet = FileMisc::GetRelativePath(m_sDueTasksStylesheet, sFolder, FALSE);
+
 	// these are dependent on the values they control for backward compat
 	m_bOnlyShowDueTasksForPerson = prefs.GetProfileInt(_T("Preferences"), _T("OnlyShowDueTasksForPerson"), !m_sDueTaskPerson.IsEmpty());
 	m_bUseStyleSheetForDueTasks = prefs.GetProfileInt(_T("Preferences"), _T("UseStylesheetForDueTasks"), !m_sDueTasksStylesheet.IsEmpty());
@@ -251,7 +252,7 @@ CString CPreferencesFilePage::GetDueTaskStylesheet() const
 {
 	if (m_bUseStyleSheetForDueTasks && !m_sDueTasksStylesheet.IsEmpty())
 	{
-		return FileMisc::GetFullPath(m_sDueTasksStylesheet, TRUE);
+		return FileMisc::GetFullPath(m_sDueTasksStylesheet, FileMisc::GetAppResourceFolder());
 	}
 
 	// else

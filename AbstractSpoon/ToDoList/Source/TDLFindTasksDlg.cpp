@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // TDLFindTasksDlg.cpp : implementation file
@@ -1018,8 +1018,7 @@ int CTDLFindTasksDlg::GetNextResult(int nItem, BOOL bDown)
 
 void CTDLFindTasksDlg::SelectItem(int nItem)
 {
-	m_lcResults.SetItemState(nItem, LVIS_FOCUSED | LVIS_SELECTED,
-		LVIS_FOCUSED | LVIS_SELECTED);
+	m_lcResults.SetItemState(nItem, LVIS_FOCUSED | LVIS_SELECTED, LVIS_FOCUSED | LVIS_SELECTED);
 
 	m_nCurSel = nItem;
 }
@@ -1031,8 +1030,6 @@ int CTDLFindTasksDlg::GetSelectedItem()
 
 void CTDLFindTasksDlg::OnItemchangedRulelist(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-	//	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
-
 	if (m_toolbar.GetSafeHwnd())
 	{
 		m_toolbar.RefreshButtonStates();
@@ -1199,6 +1196,7 @@ int CTDLFindTasksDlg::SaveSearches()
 		prefs.WriteProfileString(_T("FindTasks\\Searches"), sKey, sSearch);
 	}
 
+	// save active search
 	prefs.WriteProfileString(_T("FindTasks\\Searches"), _T("Current"), m_sActiveSearch);
 
 	return m_cbSearches.GetCount();
@@ -1393,6 +1391,7 @@ HBRUSH CTDLFindTasksDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 		if (nCtlColor == CTLCOLOR_STATIC)
 		{
+			pDC->SetTextColor(m_theme.crAppText);
 			pDC->SetBkMode(TRANSPARENT);
 			hbr = m_brBkgnd;
 		}

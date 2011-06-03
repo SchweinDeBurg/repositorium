@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,8 +24,9 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_TDLSCHEMADEF_5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_)
@@ -52,6 +53,7 @@ static LPCTSTR TDL_FILENAME                  = _T("FILENAME");
 static LPCTSTR TDL_TASK                      = _T("TASK");
 
 static LPCTSTR TDL_TASKID                    = _T("ID");
+static LPCTSTR TDL_TASKPARENTID              = _T("PARENTID");
 static LPCTSTR TDL_TASKLASTMOD               = _T("LASTMOD");
 static LPCTSTR TDL_TASKLASTMODSTRING         = _T("LASTMODSTRING");
 static LPCTSTR TDL_TASKTITLE                 = _T("TITLE");

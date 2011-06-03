@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
 // UrlRichEditCtrl.cpp : implementation file
@@ -52,6 +52,7 @@
 #include "../../CodeProject/Source/WinClasses.h"
 #include "../../CodeProject/Source/WClassDefines.h"
 #include "../../CodeProject/Source/FileMisc.h"
+#include "../../CodeProject/Source/Misc.h"
 
 #include <afxole.h>
 
@@ -80,15 +81,14 @@ static LPTSTR URLDELIMS[] =
 
 const LPCTSTR FILEPREFIX = _T("file://");
 const CString ENDPUNCTUATION(_T(".,;:(){}[]<>&*~?\\\"\'"));
+const UINT PAUSE = 1000; // 1 second
 
 enum
 {
 	TIMER_REPARSE = 1,
 };
 
-const UINT PAUSE = 1000; // 1 second
 CString CUrlRichEditCtrl::s_sGotoErrMsg;
-CString CUrlRichEditCtrl::s_sCtrlClickMsg;
 
 /////////////////////////////////////////////////////////////////////////////
 // CUrlRichEditCtrl
@@ -106,13 +106,10 @@ CUrlRichEditCtrl::CUrlRichEditCtrl() : m_nContextUrl(-1), m_nFileProtocol(-1)
 	AddProtocol(_T("Notes://"), FALSE);
 	AddProtocol(_T("evernote://"), FALSE);
 	AddProtocol(_T("onenote:///"), FALSE);
+	AddProtocol(_T("excel:"), FALSE);
+	AddProtocol(_T("winword:"), FALSE);
 
 	m_nFileProtocol = AddProtocol(FILEPREFIX, FALSE);
-
-	if (s_sCtrlClickMsg.IsEmpty())
-	{
-		s_sCtrlClickMsg = _T("Ctrl+Click to follow link");
-	}
 }
 
 CUrlRichEditCtrl::~CUrlRichEditCtrl()
@@ -132,11 +129,11 @@ BEGIN_MESSAGE_MAP(CUrlRichEditCtrl, CRichEditBaseCtrl)
 	ON_WM_SYSKEYDOWN()
 	ON_WM_TIMER()
 	//}}AFX_MSG_MAP
+	ON_WM_SIZE()
 	ON_MESSAGE(WM_SETTEXT, OnSetText)
 	ON_MESSAGE(WM_SETFONT, OnSetFont)
 	ON_MESSAGE(WM_DROPFILES, OnDropFiles)
 	ON_NOTIFY_REFLECT_EX(EN_LINK, OnNotifyLink)
-	ON_NOTIFY_RANGE(TTN_NEEDTEXT, 0, 0xffff, OnNeedTooltip)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -194,31 +191,15 @@ LRESULT CUrlRichEditCtrl::OnDropFiles(WPARAM wp, LPARAM /*lp*/)
 		return 0;
 	}
 
-	long nChar = -1;
-	GetSel(nChar, nChar);
+	CStringArray aFiles;
+	CString sText;
 
-	CString sText, sFile;
-	TCHAR szFileName[_MAX_PATH];
-	UINT nFileCount = ::DragQueryFile((HDROP)wp, 0xFFFFFFFF, NULL, 0);
-
-	ASSERT(nFileCount != 0);
-
-	for (UINT i = 0; i < nFileCount; i++)
-	{
-		::DragQueryFile((HDROP)wp, i, szFileName, _MAX_PATH);
-		::GetLongPathName(szFileName, szFileName, _MAX_PATH);
-
-		sFile = CreateFileLink(szFileName) + _T(" ");
-		sText += sFile;
-	}
-	::DragFinish((HDROP)wp);
-
-	// set selection to that which we saved during the drag
 	SetSel(m_crDropSel);
 
-	if (!sText.IsEmpty())
+	if (Misc::GetDropFilePaths((HDROP)wp, aFiles))
 	{
-		PathReplaceSel(sText, FALSE);
+		::CloseClipboard();
+		return CRichEditHelper::PasteFiles(*this, aFiles, REP_ASFILEURL);
 	}
 
 	return FALSE;
@@ -611,13 +592,14 @@ BOOL CUrlRichEditCtrl::GoToUrl(int nUrl) const
 	{
 		CString sUrl = GetUrl(nUrl, TRUE);
 
+		// if it fails to run then forward on to parent
 		if (FileMisc::Run(*this, sUrl) > 32)
 		{
 			return TRUE;
 		}
 
 		// else
-		if (!s_sGotoErrMsg.IsEmpty())
+		if (!SendNotifyCustomUrl(sUrl) && !s_sGotoErrMsg.IsEmpty())
 		{
 			AfxMessageBox(s_sGotoErrMsg, MB_OK | MB_ICONEXCLAMATION);
 		}
@@ -645,7 +627,7 @@ BOOL CUrlRichEditCtrl::GoToUrl(const CString& sUrl) const
 	}
 
 	// didn't match then it might be a file
-	if (GetFileAttributes(sUrl) != 0xffffffff)
+	if (FileMisc::FileExists(sUrl))
 	{
 		if (FileMisc::Run(*this, sUrl) > 32)
 		{
@@ -993,13 +975,13 @@ void CUrlRichEditCtrl::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
 
 BOOL CUrlRichEditCtrl::OnNotifyLink(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	BOOL bCtrl = (GetKeyState(VK_CONTROL) & 0x8000);
+	BOOL bShift = (GetKeyState(VK_SHIFT) & 0x8000);
 	ENLINK* pENL = (ENLINK*)pNMHDR;
 
 	switch (pENL->msg)
 	{
 	case WM_SETCURSOR:
-		if (!bCtrl)
+		if (bShift)
 		{
 			// because we're overriding the default behaviour we need to
 			// handle the cursor being over a selected block
@@ -1025,14 +1007,43 @@ BOOL CUrlRichEditCtrl::OnNotifyLink(NMHDR* pNMHDR, LRESULT* pResult)
 		}
 		break;
 
-	case WM_LBUTTONUP:
-		if (bCtrl)
+	case WM_LBUTTONDOWN:
+		if (!bShift)
 		{
-			if (GoToUrl(FindUrl(pENL->chrg)))
+			m_nContextUrl = FindUrl(pENL->chrg);
+
+			// might be a hidden link
+			if (m_nContextUrl == -1)
 			{
-				return TRUE;
+				//CString sUrl = GetTextRange(pENL->chrg);
 			}
 		}
+		break;
+
+	case WM_LBUTTONUP:
+		if (bShift || FindUrl(pENL->chrg) != m_nContextUrl)
+		{
+			m_nContextUrl = -1;
+		}
+
+		if (GoToUrl(m_nContextUrl))
+		{
+			m_nContextUrl = -1;
+			return TRUE;
+		}
+		else if (m_nContextUrl == -1)
+		{
+			CString sUrl = GetTextRange(pENL->chrg);
+
+			if (sUrl.IsEmpty())
+			{
+				if (FileMisc::Run(*this, sUrl) > 32)
+				{
+					return TRUE;
+				}
+			}
+		}
+		break;
 
 	case WM_RBUTTONUP:
 		m_nContextUrl = FindUrl(pENL->chrg);
@@ -1138,20 +1149,3 @@ int CUrlRichEditCtrl::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
 	return nHit;
 }
 
-void CUrlRichEditCtrl::OnNeedTooltip(UINT /*id*/, NMHDR* pNMHDR, LRESULT* pResult)
-{
-	*pResult = 0;
-	TOOLTIPTEXT* pTTT = (TOOLTIPTEXT*)pNMHDR;
-
-	CPoint point(GetMessagePos());
-	ScreenToClient(&point);
-
-	if (FindUrlEx(point) != -1)
-	{
-#if _MSC_VER >= 1400
-		_tcscpy_s(pTTT->szText, _countof(pTTT->szText), s_sCtrlClickMsg);
-#else
-		_tcscpy(pTTT->szText, s_sCtrlClickMsg);
-#endif
-	}
-}

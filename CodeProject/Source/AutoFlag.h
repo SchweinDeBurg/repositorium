@@ -1,11 +1,11 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the
-// use of this software. 
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it
@@ -24,7 +24,7 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
 //*****************************************************************************
 
@@ -52,7 +52,7 @@ CAutoFlag af(bAFInHere, TRUE);
 	return ret; \
 CAutoFlag af(bAFInHere, TRUE);
 
-class CAutoFlag  
+class CAutoFlag
 {
 public:
 	CAutoFlag(BOOL& bFlag, BOOL bState);

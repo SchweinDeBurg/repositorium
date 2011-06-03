@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,8 +24,9 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // UITheme.h: interface for the UITHEME class.
@@ -53,12 +54,15 @@ struct UITHEME
 
 	COLORREF crAppBackDark;
 	COLORREF crAppBackLight;
-	COLORREF crAppLines;
+	COLORREF crAppLinesDark;
+	COLORREF crAppLinesLight;
+	COLORREF crAppText;
 	COLORREF crMenuBack;
 	COLORREF crToolbarDark;
 	COLORREF crToolbarLight;
 	COLORREF crStatusBarDark;
 	COLORREF crStatusBarLight;
+	COLORREF crStatusBarText;
 };
 
 #endif // !defined(AFX_UITHEME_H__7747061B_7841_47E8_BB36_89C11D6DC934__INCLUDED_)

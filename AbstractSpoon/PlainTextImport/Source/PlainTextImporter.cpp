@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,8 +24,9 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 // PlainTextImporter.cpp: implementation of the CPlainTextImporter class.
@@ -72,7 +73,7 @@ bool CPlainTextImporter::Import(const TCHAR* szSrcFilePath, ITaskList* pDestTask
 	}
 
 	// else
-	ITaskList4* pITL4 = static_cast<ITaskList4*>(pDestTaskFile);
+	ITaskList4* pITL4 = GetITLInterface<ITaskList4>(pDestTaskFile, IID_TASKLIST4);
 
 	// the first line can be the project name
 	if (dialog.GetWantProject())
@@ -198,8 +199,7 @@ int CPlainTextImporter::GetDepth(const CString& sLine)
 	return nDepth;
 }
 
-BOOL CPlainTextImporter::GetTitleComments(const CString& sLine,
-      CString& sTitle, CString& sComments)
+BOOL CPlainTextImporter::GetTitleComments(const CString& sLine, CString& sTitle, CString& sComments)
 {
 	int nDelim = sLine.Find(_T("|"));
 

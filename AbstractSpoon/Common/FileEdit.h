@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2005 AbstractSpoon Software.
+// Copyright (C) 2003-2011 AbstractSpoon Software.
 //
 // This license applies to everything in the ToDoList package, except where
 // otherwise noted.
@@ -24,14 +24,14 @@
 //*****************************************************************************
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
-// - added AbstractSpoon Software copyright notice and licenese information
+// - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
 #if !defined(AFX_FILEEDIT_H__7A50F411_3AAE_4BC2_989A_53D44291B643__INCLUDED_)
@@ -69,6 +70,7 @@ enum
 	FES_GOBUTTON        = 0x0008,
 	FES_ALLOWURL        = 0x0010, // supports ? in the filename
 	FES_SAVEAS          = 0x0020, // else open file dialog
+	FES_RELATIVEPATHS   = 0x0040,
 };
 
 // button donw types
@@ -85,10 +87,7 @@ public:
 	{
 		m_sFilter = szFilter;
 	}
-	void SetCurrentFolder(LPCTSTR szFolder)
-	{
-		m_sCurFolder = szFolder;   // for relative paths
-	}
+	void SetCurrentFolder(LPCTSTR szFolder);
 	void SetFolderPrompt(LPCTSTR szPrompt)
 	{
 		m_sFolderPrompt = szPrompt;
@@ -105,7 +104,7 @@ protected:
 
 	const UINT ICON_WIDTH;
 
-	// Operations
+// Operations
 public:
 
 // Overrides
