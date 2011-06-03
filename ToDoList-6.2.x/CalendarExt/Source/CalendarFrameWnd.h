@@ -2,12 +2,12 @@
 // Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
 // - improved compatibility with the Unicode-based builds
 // - adjusted #include's paths
-// - reformatted with using Artistic Style 2.01 and the following options:
+// - reformatted using Artistic Style 2.02 with the following options:
 //      --indent=tab=3
 //      --indent=force-tab=3
-//      --indent-switches
+//      --indent-cases
 //      --max-instatement-indent=2
-//      --brackets=break
+//      --style=allman
 //      --add-brackets
 //      --pad-oper
 //      --unpad-paren
