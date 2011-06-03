@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2-6.2.2 sources
+// - merged with ToDoList version 6.1.2-6.2.3 sources
 //*****************************************************************************
 
 // ToDoListApp.cpp : Defines the class behaviors for the application.
@@ -137,7 +137,7 @@ BOOL CToDoListApp::InitInstance()
 	AfxEnableControlContainer(); // embedding IE
 
 	// load localized resources
-	CEnString sResVersion(IDS_RES_VERSION);
+	CEnString sResVersion(IDS_RES_VERSION), sMismatchedRes(IDS_MISMATCHEDRESOURCES);
 	HINSTANCE hResDll = LoadLibrary(_T("ToDoListLOC.dll"));
 
 	if (hResDll)
@@ -151,7 +151,28 @@ BOOL CToDoListApp::InitInstance()
 		// allow user to proceed but warn them
 		if (_ttoi(sResVersion) != _ttoi(szResVer))
 		{
-			AfxMessageBox(IDS_MISMATCHEDRESOURCES);
+			TCHAR szResMismatch[512];
+			::LoadString(hResDll, IDS_MISMATCHEDRESOURCES, szResMismatch, _countof(szResMismatch) - 1);
+
+			// special case: Untranslated rogue resource dll that got released erroneously
+			// if the string contents are the same then it's our baby
+			if (_ttoi(szResVer) == 6 && sMismatchedRes == szResMismatch)
+			{
+				// disable the dll
+				if (FreeLibrary(hResDll))
+				{
+					AfxSetResourceHandle(AfxGetInstanceHandle());
+					hResDll = NULL;
+
+					CString sResDll = FileMisc::GetModuleFolder() + _T("\\ToDoListLOC.dll");
+					CString sDisDll = FileMisc::GetModuleFolder() + _T("\\ToDoListLOC.old.dll");
+					MoveFile(sResDll, sDisDll);
+				}
+			}
+			else
+			{
+				AfxMessageBox(szResMismatch);
+			}
 		}
 	}
 

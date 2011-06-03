@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.1.2-6.2.2 sources
+// - merged with ToDoList version 6.1.2-6.2.3 sources
 //*****************************************************************************
 
 // UrlRichEditCtrl.cpp : implementation file
@@ -129,7 +129,6 @@ BEGIN_MESSAGE_MAP(CUrlRichEditCtrl, CRichEditBaseCtrl)
 	ON_WM_SYSKEYDOWN()
 	ON_WM_TIMER()
 	//}}AFX_MSG_MAP
-	ON_WM_SIZE()
 	ON_MESSAGE(WM_SETTEXT, OnSetText)
 	ON_MESSAGE(WM_SETFONT, OnSetFont)
 	ON_MESSAGE(WM_DROPFILES, OnDropFiles)
