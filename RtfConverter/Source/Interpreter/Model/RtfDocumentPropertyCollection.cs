@@ -16,21 +16,21 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public IRtfDocumentProperty this[ int index ]
+		public IRtfDocumentProperty this[int index]
 		{
-			get { return InnerList[ index ] as IRtfDocumentProperty; }
+			get { return InnerList[index] as IRtfDocumentProperty; }
 		} // this[ int ]
 
 		// ----------------------------------------------------------------------
-		public IRtfDocumentProperty this[ string name ]
+		public IRtfDocumentProperty this[string name]
 		{
 			get
 			{
-				if ( name != null )
+				if (name != null)
 				{
-					foreach ( IRtfDocumentProperty property in InnerList )
+					foreach (IRtfDocumentProperty property in InnerList)
 					{
-						if ( property.Name.Equals( name ) )
+						if (property.Name.Equals(name))
 						{
 							return property;
 						}
@@ -41,19 +41,19 @@ namespace Itenso.Rtf.Model
 		} // this[ string ]
 
 		// ----------------------------------------------------------------------
-		public void CopyTo( IRtfDocumentProperty[] array, int index )
+		public void CopyTo(IRtfDocumentProperty[] array, int index)
 		{
-			InnerList.CopyTo( array, index );
+			InnerList.CopyTo(array, index);
 		} // CopyTo
 
 		// ----------------------------------------------------------------------
-		public void Add( IRtfDocumentProperty item )
+		public void Add(IRtfDocumentProperty item)
 		{
-			if ( item == null )
+			if (item == null)
 			{
-				throw new ArgumentNullException( "item" );
+				throw new ArgumentNullException("item");
 			}
-			InnerList.Add( item );
+			InnerList.Add(item);
 		} // Add
 
 		// ----------------------------------------------------------------------

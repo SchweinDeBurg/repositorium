@@ -15,86 +15,86 @@ namespace Itenso.Rtf.Interpreter
 	{
 
 		// ----------------------------------------------------------------------
-		public void BeginDocument( IRtfInterpreterContext context )
+		public void BeginDocument(IRtfInterpreterContext context)
 		{
-			if ( context != null )
+			if (context != null)
 			{
-				DoBeginDocument( context );
+				DoBeginDocument(context);
 			}
 		} // BeginDocument
 
 		// ----------------------------------------------------------------------
-		public void InsertText( IRtfInterpreterContext context, string text )
+		public void InsertText(IRtfInterpreterContext context, string text)
 		{
-			if ( context != null )
+			if (context != null)
 			{
-				DoInsertText( context, text );
+				DoInsertText(context, text);
 			}
 		} // InsertText
 
 		// ----------------------------------------------------------------------
-		public void InsertSpecialChar( IRtfInterpreterContext context, RtfVisualSpecialCharKind kind )
+		public void InsertSpecialChar(IRtfInterpreterContext context, RtfVisualSpecialCharKind kind)
 		{
-			if ( context != null )
+			if (context != null)
 			{
-				DoInsertSpecialChar( context, kind );
+				DoInsertSpecialChar(context, kind);
 			}
 		} // InsertSpecialChar
 
 		// ----------------------------------------------------------------------
-		public void InsertBreak( IRtfInterpreterContext context, RtfVisualBreakKind kind )
+		public void InsertBreak(IRtfInterpreterContext context, RtfVisualBreakKind kind)
 		{
-			if ( context != null )
+			if (context != null)
 			{
-				DoInsertBreak( context, kind );
+				DoInsertBreak(context, kind);
 			}
 		} // InsertBreak
 
 		// ----------------------------------------------------------------------
-		public void InsertImage( IRtfInterpreterContext context, RtfVisualImageFormat format,
+		public void InsertImage(IRtfInterpreterContext context, RtfVisualImageFormat format,
 			int width, int height, int desiredWidth, int desiredHeight,
 			int scaleWidthPercent, int scaleHeightPercent, string imageDataHex
 		)
 		{
-			if ( context != null )
+			if (context != null)
 			{
-				DoInsertImage( context, format,
+				DoInsertImage(context, format,
 					width, height, desiredWidth, desiredHeight,
-					scaleWidthPercent, scaleHeightPercent, imageDataHex );
+					scaleWidthPercent, scaleHeightPercent, imageDataHex);
 			}
 		} // InsertImage
 
 		// ----------------------------------------------------------------------
-		public void EndDocument( IRtfInterpreterContext context )
+		public void EndDocument(IRtfInterpreterContext context)
 		{
-			if ( context != null )
+			if (context != null)
 			{
-				DoEndDocument( context );
+				DoEndDocument(context);
 			}
 		} // EndDocument
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoBeginDocument( IRtfInterpreterContext context )
+		protected virtual void DoBeginDocument(IRtfInterpreterContext context)
 		{
 		} // DoBeginDocument
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoInsertText( IRtfInterpreterContext context, string text )
+		protected virtual void DoInsertText(IRtfInterpreterContext context, string text)
 		{
 		} // DoInsertText
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoInsertSpecialChar( IRtfInterpreterContext context, RtfVisualSpecialCharKind kind )
+		protected virtual void DoInsertSpecialChar(IRtfInterpreterContext context, RtfVisualSpecialCharKind kind)
 		{
 		} // DoInsertSpecialChar
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoInsertBreak( IRtfInterpreterContext context, RtfVisualBreakKind kind )
+		protected virtual void DoInsertBreak(IRtfInterpreterContext context, RtfVisualBreakKind kind)
 		{
 		} // DoInsertBreak
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoInsertImage( IRtfInterpreterContext context,
+		protected virtual void DoInsertImage(IRtfInterpreterContext context,
 			RtfVisualImageFormat format,
 			int width, int height, int desiredWidth, int desiredHeight,
 			int scaleWidthPercent, int scaleHeightPercent,
@@ -104,7 +104,7 @@ namespace Itenso.Rtf.Interpreter
 		} // DoInsertImage
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoEndDocument( IRtfInterpreterContext context )
+		protected virtual void DoEndDocument(IRtfInterpreterContext context)
 		{
 		} // DoEndDocument
 

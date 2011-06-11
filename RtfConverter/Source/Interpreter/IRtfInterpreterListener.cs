@@ -15,25 +15,25 @@ namespace Itenso.Rtf
 	{
 
 		// ----------------------------------------------------------------------
-		void BeginDocument( IRtfInterpreterContext context );
+		void BeginDocument(IRtfInterpreterContext context);
 
 		// ----------------------------------------------------------------------
-		void InsertText( IRtfInterpreterContext context, string text );
+		void InsertText(IRtfInterpreterContext context, string text);
 
 		// ----------------------------------------------------------------------
-		void InsertSpecialChar( IRtfInterpreterContext context, RtfVisualSpecialCharKind kind );
+		void InsertSpecialChar(IRtfInterpreterContext context, RtfVisualSpecialCharKind kind);
 
 		// ----------------------------------------------------------------------
-		void InsertBreak( IRtfInterpreterContext context, RtfVisualBreakKind kind );
+		void InsertBreak(IRtfInterpreterContext context, RtfVisualBreakKind kind);
 
 		// ----------------------------------------------------------------------
-		void InsertImage( IRtfInterpreterContext context, RtfVisualImageFormat format,
+		void InsertImage(IRtfInterpreterContext context, RtfVisualImageFormat format,
 			int width, int height, int desiredWidth, int desiredHeight,
 			int scaleWidthPercent, int scaleHeightPercent, string imageDataHex
 		);
 
 		// ----------------------------------------------------------------------
-		void EndDocument( IRtfInterpreterContext context );
+		void EndDocument(IRtfInterpreterContext context);
 
 	} // interface IRtfInterpreterListener
 

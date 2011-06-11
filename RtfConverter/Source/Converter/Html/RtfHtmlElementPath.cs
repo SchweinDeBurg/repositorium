@@ -30,21 +30,21 @@ namespace Itenso.Rtf.Converter.Html
 		} // Current
 
 		// ----------------------------------------------------------------------
-		public bool IsCurrent( HtmlTextWriterTag tag )
+		public bool IsCurrent(HtmlTextWriterTag tag)
 		{
 			return Current == tag;
 		} // IsCurrent
 
 		// ----------------------------------------------------------------------
-		public bool Contains( HtmlTextWriterTag tag )
+		public bool Contains(HtmlTextWriterTag tag)
 		{
-			return elements.Contains( tag );
+			return elements.Contains(tag);
 		} // Contains
 
 		// ----------------------------------------------------------------------
-		public void Push( HtmlTextWriterTag tag )
+		public void Push(HtmlTextWriterTag tag)
 		{
-			elements.Push( tag );
+			elements.Push(tag);
 		} // Push
 
 		// ----------------------------------------------------------------------
@@ -56,20 +56,20 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		public override string ToString()
 		{
-			if ( elements.Count == 0 )
+			if (elements.Count == 0)
 			{
 				return base.ToString();
 			}
 
 			StringBuilder sb = new StringBuilder();
 			bool first = true;
-			foreach ( object element in elements )
+			foreach (object element in elements)
 			{
-				if ( !first )
+				if (!first)
 				{
-					sb.Insert( 0, " > " );
+					sb.Insert(0, " > ");
 				}
-				sb.Insert( 0, element.ToString() );
+				sb.Insert(0, element.ToString());
 				first = false;
 			}
 

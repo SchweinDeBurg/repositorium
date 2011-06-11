@@ -15,67 +15,67 @@ namespace Itenso.Rtf.Support
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfElementVisitorBase( RtfElementVisitorOrder order )
+		public RtfElementVisitorBase(RtfElementVisitorOrder order)
 		{
 			this.order = order;
 		} // RtfElementVisitorBase
 
 		// ----------------------------------------------------------------------
-		public void VisitTag( IRtfTag tag )
+		public void VisitTag(IRtfTag tag)
 		{
-			if ( tag != null )
+			if (tag != null)
 			{
-				DoVisitTag( tag );
+				DoVisitTag(tag);
 			}
 		} // VisitTag
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoVisitTag( IRtfTag tag )
+		protected virtual void DoVisitTag(IRtfTag tag)
 		{
 		} // DoVisitTag
 
 		// ----------------------------------------------------------------------
-		public void VisitGroup( IRtfGroup group )
+		public void VisitGroup(IRtfGroup group)
 		{
-			if ( group != null )
+			if (group != null)
 			{
-				if ( order == RtfElementVisitorOrder.DepthFirst )
+				if (order == RtfElementVisitorOrder.DepthFirst)
 				{
-					VisitGroupChildren( group );
+					VisitGroupChildren(group);
 				}
-				DoVisitGroup( group );
-				if ( order == RtfElementVisitorOrder.BreadthFirst )
+				DoVisitGroup(group);
+				if (order == RtfElementVisitorOrder.BreadthFirst)
 				{
-					VisitGroupChildren( group );
+					VisitGroupChildren(group);
 				}
 			}
 		} // VisitGroup
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoVisitGroup( IRtfGroup group )
+		protected virtual void DoVisitGroup(IRtfGroup group)
 		{
 		} // DoVisitGroup
 
 		// ----------------------------------------------------------------------
-		protected void VisitGroupChildren( IRtfGroup group )
+		protected void VisitGroupChildren(IRtfGroup group)
 		{
-			foreach ( IRtfElement child in group.Contents )
+			foreach (IRtfElement child in group.Contents)
 			{
-				child.Visit( this );
+				child.Visit(this);
 			}
 		} // VisitGroupChildren
 
 		// ----------------------------------------------------------------------
-		public void VisitText( IRtfText text )
+		public void VisitText(IRtfText text)
 		{
-			if ( text != null )
+			if (text != null)
 			{
-				DoVisitText( text );
+				DoVisitText(text);
 			}
 		} // VisitText
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoVisitText( IRtfText text )
+		protected virtual void DoVisitText(IRtfText text)
 		{
 		} // DoVisitText
 

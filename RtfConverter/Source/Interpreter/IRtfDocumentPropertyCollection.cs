@@ -19,13 +19,13 @@ namespace Itenso.Rtf
 		int Count { get; }
 
 		// ----------------------------------------------------------------------
-		IRtfDocumentProperty this[ int index ] { get; }
+		IRtfDocumentProperty this[int index] { get; }
 
 		// ----------------------------------------------------------------------
-		IRtfDocumentProperty this[ string name ] { get; }
+		IRtfDocumentProperty this[string name] { get; }
 
 		// ----------------------------------------------------------------------
-		void CopyTo( IRtfDocumentProperty[] array, int index );
+		void CopyTo(IRtfDocumentProperty[] array, int index);
 
 	} // interface IRtfDocumentPropertyCollection
 

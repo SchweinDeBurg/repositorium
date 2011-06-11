@@ -18,7 +18,7 @@ namespace Itenso.Sys.Application
 
 		// ----------------------------------------------------------------------
 		public HelpModeArgument()
-			: base( HelpModeArgumentName, false )
+			: base(HelpModeArgumentName, false)
 		{
 		} // HelpModeArgument
 

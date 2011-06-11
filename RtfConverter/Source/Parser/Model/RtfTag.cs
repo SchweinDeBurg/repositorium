@@ -18,12 +18,12 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfTag( string name )
-			: base( RtfElementKind.Tag )
+		public RtfTag(string name)
+			: base(RtfElementKind.Tag)
 		{
-			if ( name == null )
+			if (name == null)
 			{
-				throw new ArgumentNullException( "name" );
+				throw new ArgumentNullException("name");
 			}
 			fullName = name;
 			this.name = name;
@@ -32,22 +32,22 @@ namespace Itenso.Rtf.Model
 		} // RtfTag
 
 		// ----------------------------------------------------------------------
-		public RtfTag( string name, string value )
-			: base( RtfElementKind.Tag )
+		public RtfTag(string name, string value)
+			: base(RtfElementKind.Tag)
 		{
-			if ( name == null )
+			if (name == null)
 			{
-				throw new ArgumentNullException( "name" );
+				throw new ArgumentNullException("name");
 			}
-			if ( value == null )
+			if (value == null)
 			{
-				throw new ArgumentNullException( "value" );
+				throw new ArgumentNullException("value");
 			}
 			fullName = name + value;
 			this.name = name;
 			valueAsText = value;
 			int numericalValue;
-			if ( Int32.TryParse( value, NumberStyles.Integer, CultureInfo.InvariantCulture, out numericalValue ) )
+			if (Int32.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out numericalValue))
 			{
 				valueAsNumber = numericalValue;
 			}
@@ -94,24 +94,24 @@ namespace Itenso.Rtf.Model
 		} // ToString
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisit( IRtfElementVisitor visitor )
+		protected override void DoVisit(IRtfElementVisitor visitor)
 		{
-			visitor.VisitTag( this );
+			visitor.VisitTag(this);
 		} // DoVisit
 
 		// ----------------------------------------------------------------------
-		protected override bool IsEqual( object obj )
+		protected override bool IsEqual(object obj)
 		{
 			RtfTag compare = obj as RtfTag; // guaranteed to be non-null
-			return compare != null && base.IsEqual( obj ) &&
-				fullName.Equals( compare.fullName );
+			return compare != null && base.IsEqual(obj) &&
+				fullName.Equals(compare.fullName);
 		} // IsEqual
 
 		// ----------------------------------------------------------------------
 		protected override int ComputeHashCode()
 		{
 			int hash = base.ComputeHashCode();
-			hash = HashTool.AddHashCode( hash, fullName );
+			hash = HashTool.AddHashCode(hash, fullName);
 			return hash;
 		} // ComputeHashCode
 

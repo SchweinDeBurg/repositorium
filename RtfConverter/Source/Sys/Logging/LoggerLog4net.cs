@@ -16,15 +16,13 @@ namespace Itenso.Sys.Logging
 {
 
 	// ------------------------------------------------------------------------
-// ReSharper disable InconsistentNaming
 	internal sealed class LoggerLog4net : LoggerBase, ILogger
-// ReSharper restore InconsistentNaming
 	{
 
 		// ----------------------------------------------------------------------
-		public LoggerLog4net( string name )
+		public LoggerLog4net(string name)
 		{
-			logger = LogManager.GetLogger( name );
+			logger = LogManager.GetLogger(name);
 		} // LoggerLog4net
 
 		// ----------------------------------------------------------------------
@@ -33,19 +31,19 @@ namespace Itenso.Sys.Logging
 			get
 			{
 				LoggerLevel level = LoggerLevel.Fatal;
-				if ( IsDebugEnabled )
+				if (IsDebugEnabled)
 				{
 					level = LoggerLevel.Debug;
 				}
-				else if ( IsInfoEnabled )
+				else if (IsInfoEnabled)
 				{
 					level = LoggerLevel.Info;
 				}
-				else if ( IsWarnEnabled )
+				else if (IsWarnEnabled)
 				{
 					level = LoggerLevel.Warn;
 				}
-				else if ( IsErrorEnabled )
+				else if (IsErrorEnabled)
 				{
 					level = LoggerLevel.Error;
 				}
@@ -55,7 +53,7 @@ namespace Itenso.Sys.Logging
 			{
 				// log4net needs to re-load the config file ... so we build one :-)
 				IXmlRepositoryConfigurator configurableRepository = logger.Logger.Repository as IXmlRepositoryConfigurator;
-				if ( configurableRepository != null )
+				if (configurableRepository != null)
 				{
 					// the most minimal configuration document for defining the behavior of just our logger:
 					/*
@@ -68,26 +66,26 @@ namespace Itenso.Sys.Logging
 					try
 					{
 						XmlDocument configDoc = new XmlDocument();
-						XmlElement configTag = configDoc.CreateElement( "log4net" );
+						XmlElement configTag = configDoc.CreateElement("log4net");
 						// the following is the default behavior, just here for documentation ...
 						//configTag.SetAttribute( "update", "Merge" ); // merge with existing configuration
-						XmlElement loggerTag = configDoc.CreateElement( "logger" );
-						loggerTag.SetAttribute( "name", logger.Logger.Name );
-						XmlElement levelTag = configDoc.CreateElement( "level" );
-						levelTag.SetAttribute( "value", value.ToString() );
-						loggerTag.AppendChild( levelTag );
-						configTag.AppendChild( loggerTag );
-						configDoc.AppendChild( configTag );
-						configurableRepository.Configure( configTag );
+						XmlElement loggerTag = configDoc.CreateElement("logger");
+						loggerTag.SetAttribute("name", logger.Logger.Name);
+						XmlElement levelTag = configDoc.CreateElement("level");
+						levelTag.SetAttribute("value", value.ToString());
+						loggerTag.AppendChild(levelTag);
+						configTag.AppendChild(loggerTag);
+						configDoc.AppendChild(configTag);
+						configurableRepository.Configure(configTag);
 					}
-					catch ( XmlException e )
+					catch (XmlException e)
 					{
-						logger.Warn( "cannot set new logging-level due to an XmlException", e );
+						logger.Warn("cannot set new logging-level due to an XmlException", e);
 					}
 				}
 				else
 				{
-					logger.Warn( "cannot set new logging-level as the repository is not configurable" );
+					logger.Warn("cannot set new logging-level as the repository is not configurable");
 				}
 			}
 		} // Level
@@ -123,10 +121,10 @@ namespace Itenso.Sys.Logging
 		} // IsFatalEnabled
 
 		// ----------------------------------------------------------------------
-		public bool IsEnabledFor( LoggerLevel level )
+		public bool IsEnabledFor(LoggerLevel level)
 		{
 			bool enabled = false;
-			switch ( level )
+			switch (level)
 			{
 				case LoggerLevel.Debug:
 					enabled = IsDebugEnabled;
@@ -148,249 +146,249 @@ namespace Itenso.Sys.Logging
 		} // IsEnabledFor
 
 		// ----------------------------------------------------------------------
-		public void Debug( object message )
+		public void Debug(object message)
 		{
-			logger.Debug( message );
+			logger.Debug(message);
 		} // Debug
 
 		// ----------------------------------------------------------------------
-		public void Debug( object message, Exception exception )
+		public void Debug(object message, Exception exception)
 		{
-			if ( IsSupportedException( exception ) )
+			if (IsSupportedException(exception))
 			{
-				logger.Debug( message, exception );
+				logger.Debug(message, exception);
 			}
 		} // Debug
 
 		// ----------------------------------------------------------------------
-		public void DebugFormat( string format, params object[] args )
+		public void DebugFormat(string format, params object[] args)
 		{
-			logger.DebugFormat( format, args );
+			logger.DebugFormat(format, args);
 		} // DebugFormat
 
 		// ----------------------------------------------------------------------
-		public void DebugFormat( IFormatProvider provider, string format, params object[] args )
+		public void DebugFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			logger.DebugFormat( provider, format, args );
+			logger.DebugFormat(provider, format, args);
 		} // DebugFormat
 
 		// ----------------------------------------------------------------------
-		public void Info( object message )
+		public void Info(object message)
 		{
-			logger.Info( message );
+			logger.Info(message);
 		} // Info
 
 		// ----------------------------------------------------------------------
-		public void Info( object message, Exception exception )
+		public void Info(object message, Exception exception)
 		{
-			if ( IsSupportedException( exception ) )
+			if (IsSupportedException(exception))
 			{
-				logger.Info( message, exception );
+				logger.Info(message, exception);
 			}
 		} // Info
 
 		// ----------------------------------------------------------------------
-		public void InfoFormat( string format, params object[] args )
+		public void InfoFormat(string format, params object[] args)
 		{
-			logger.InfoFormat( format, args );
+			logger.InfoFormat(format, args);
 		} // InfoFormat
 
 		// ----------------------------------------------------------------------
-		public void InfoFormat( IFormatProvider provider, string format, params object[] args )
+		public void InfoFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			logger.InfoFormat( provider, format, args );
+			logger.InfoFormat(provider, format, args);
 		} // InfoFormat
 
 		// ----------------------------------------------------------------------
-		public void Warn( object message )
+		public void Warn(object message)
 		{
-			logger.Warn( message );
+			logger.Warn(message);
 		} // Warn
 
 		// ----------------------------------------------------------------------
-		public void Warn( object message, Exception exception )
+		public void Warn(object message, Exception exception)
 		{
-			if ( IsSupportedException( exception ) )
+			if (IsSupportedException(exception))
 			{
-				logger.Warn( message, exception );
+				logger.Warn(message, exception);
 			}
 		} // Warn
 
 		// ----------------------------------------------------------------------
-		public void WarnFormat( string format, params object[] args )
+		public void WarnFormat(string format, params object[] args)
 		{
-			logger.WarnFormat( format, args );
+			logger.WarnFormat(format, args);
 		} // WarnFormat
 
 		// ----------------------------------------------------------------------
-		public void WarnFormat( IFormatProvider provider, string format, params object[] args )
+		public void WarnFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			logger.WarnFormat( provider, format, args );
+			logger.WarnFormat(provider, format, args);
 		} // WarnFormat
 
 		// ----------------------------------------------------------------------
-		public void Error( object message )
+		public void Error(object message)
 		{
-			logger.Error( message );
+			logger.Error(message);
 		} // Error
 
 		// ----------------------------------------------------------------------
-		public void Error( object message, Exception exception )
+		public void Error(object message, Exception exception)
 		{
-			if ( IsSupportedException( exception ) )
+			if (IsSupportedException(exception))
 			{
-				logger.Error( message, exception );
+				logger.Error(message, exception);
 			}
 		} // Error
 
 		// ----------------------------------------------------------------------
-		public void ErrorFormat( string format, params object[] args )
+		public void ErrorFormat(string format, params object[] args)
 		{
-			logger.ErrorFormat( format, args );
+			logger.ErrorFormat(format, args);
 		} // ErrorFormat
 
 		// ----------------------------------------------------------------------
-		public void ErrorFormat( IFormatProvider provider, string format, params object[] args )
+		public void ErrorFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			logger.ErrorFormat( provider, format, args );
+			logger.ErrorFormat(provider, format, args);
 		} // ErrorFormat
 
 		// ----------------------------------------------------------------------
-		public void Fatal( object message )
+		public void Fatal(object message)
 		{
-			logger.Fatal( message );
+			logger.Fatal(message);
 		} // Fatal
 
 		// ----------------------------------------------------------------------
-		public void Fatal( object message, Exception exception )
+		public void Fatal(object message, Exception exception)
 		{
-			if ( IsSupportedException( exception ) )
+			if (IsSupportedException(exception))
 			{
-				logger.Fatal( message, exception );
+				logger.Fatal(message, exception);
 			}
 		} // Fatal
 
 		// ----------------------------------------------------------------------
-		public void FatalFormat( string format, params object[] args )
+		public void FatalFormat(string format, params object[] args)
 		{
-			logger.FatalFormat( format, args );
+			logger.FatalFormat(format, args);
 		} // FatalFormat
 
 		// ----------------------------------------------------------------------
-		public void FatalFormat( IFormatProvider provider, string format, params object[] args )
+		public void FatalFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			logger.FatalFormat( provider, format, args );
+			logger.FatalFormat(provider, format, args);
 		} // FatalFormat
 
 		// ----------------------------------------------------------------------
-		public void Log( LoggerLevel level, object message )
+		public void Log(LoggerLevel level, object message)
 		{
-			switch ( level )
+			switch (level)
 			{
 				case LoggerLevel.Debug:
-					logger.Debug( message );
+					logger.Debug(message);
 					break;
 				case LoggerLevel.Info:
-					logger.Info( message );
+					logger.Info(message);
 					break;
 				case LoggerLevel.Warn:
-					logger.Warn( message );
+					logger.Warn(message);
 					break;
 				case LoggerLevel.Error:
-					logger.Error( message );
+					logger.Error(message);
 					break;
 				case LoggerLevel.Fatal:
-					logger.Fatal( message );
+					logger.Fatal(message);
 					break;
 			}
 		} // Log
 
 		// ----------------------------------------------------------------------
-		public void Log( LoggerLevel level, object message, Exception exception )
+		public void Log(LoggerLevel level, object message, Exception exception)
 		{
-			if ( !IsSupportedException( exception ) )
+			if (!IsSupportedException(exception))
 			{
 				return;
 			}
 
-			switch ( level )
+			switch (level)
 			{
 				case LoggerLevel.Debug:
-					logger.Debug( message, exception );
+					logger.Debug(message, exception);
 					break;
 				case LoggerLevel.Info:
-					logger.Info( message, exception );
+					logger.Info(message, exception);
 					break;
 				case LoggerLevel.Warn:
-					logger.Warn( message, exception );
+					logger.Warn(message, exception);
 					break;
 				case LoggerLevel.Error:
-					logger.Error( message, exception );
+					logger.Error(message, exception);
 					break;
 				case LoggerLevel.Fatal:
-					logger.Fatal( message, exception );
+					logger.Fatal(message, exception);
 					break;
 			}
 		} // Log
 
 		// ----------------------------------------------------------------------
-		public void LogFormat( LoggerLevel level, string format, params object[] args )
+		public void LogFormat(LoggerLevel level, string format, params object[] args)
 		{
-			switch ( level )
+			switch (level)
 			{
 				case LoggerLevel.Debug:
-					logger.DebugFormat( format, args );
+					logger.DebugFormat(format, args);
 					break;
 				case LoggerLevel.Info:
-					logger.InfoFormat( format, args );
+					logger.InfoFormat(format, args);
 					break;
 				case LoggerLevel.Warn:
-					logger.WarnFormat( format, args );
+					logger.WarnFormat(format, args);
 					break;
 				case LoggerLevel.Error:
-					logger.ErrorFormat( format, args );
+					logger.ErrorFormat(format, args);
 					break;
 				case LoggerLevel.Fatal:
-					logger.FatalFormat( format, args );
+					logger.FatalFormat(format, args);
 					break;
 			}
 		} // LogFormat
 
 		// ----------------------------------------------------------------------
-		public void LogFormat( LoggerLevel level, IFormatProvider provider, string format, params object[] args )
+		public void LogFormat(LoggerLevel level, IFormatProvider provider, string format, params object[] args)
 		{
-			switch ( level )
+			switch (level)
 			{
 				case LoggerLevel.Debug:
-					logger.DebugFormat( provider, format, args );
+					logger.DebugFormat(provider, format, args);
 					break;
 				case LoggerLevel.Info:
-					logger.InfoFormat( provider, format, args );
+					logger.InfoFormat(provider, format, args);
 					break;
 				case LoggerLevel.Warn:
-					logger.WarnFormat( provider, format, args );
+					logger.WarnFormat(provider, format, args);
 					break;
 				case LoggerLevel.Error:
-					logger.ErrorFormat( provider, format, args );
+					logger.ErrorFormat(provider, format, args);
 					break;
 				case LoggerLevel.Fatal:
-					logger.FatalFormat( provider, format, args );
+					logger.FatalFormat(provider, format, args);
 					break;
 			}
 		} // LogFormat
 
 		// ----------------------------------------------------------------------
-		public override IDisposable PushContext( string context )
+		public override IDisposable PushContext(string context)
 		{
-			IDisposable stackCleaner = base.PushContext( context );
-			ThreadContext.Stacks[ "NDC" ].Push( context );
+			IDisposable stackCleaner = base.PushContext(context);
+			ThreadContext.Stacks["NDC"].Push(context);
 			return stackCleaner;
 		} // PushContext
 
 		// ----------------------------------------------------------------------
 		public override int ContextDepth
 		{
-			get { return ThreadContext.Stacks[ "NDC" ].Count; }
+			get { return ThreadContext.Stacks["NDC"].Count; }
 		} // ContextDepth
 
 		// ----------------------------------------------------------------------
@@ -398,7 +396,7 @@ namespace Itenso.Sys.Logging
 		{
 			get
 			{
-				ThreadContextStack nestedDiagnosticContext = ThreadContext.Stacks[ "NDC" ];
+				ThreadContextStack nestedDiagnosticContext = ThreadContext.Stacks["NDC"];
 				string context = nestedDiagnosticContext != null ? nestedDiagnosticContext.ToString() : null;
 				context = context != null ? context.Trim() : null;
 				context = context ?? "(null)";
@@ -410,7 +408,7 @@ namespace Itenso.Sys.Logging
 		public override void PopContext()
 		{
 			base.PopContext();
-			ThreadContext.Stacks[ "NDC" ].Pop();
+			ThreadContext.Stacks["NDC"].Pop();
 		} // PopContext
 
 		// ----------------------------------------------------------------------

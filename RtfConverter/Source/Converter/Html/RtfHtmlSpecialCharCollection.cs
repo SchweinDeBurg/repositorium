@@ -23,52 +23,52 @@ namespace Itenso.Rtf.Converter.Html
 		} // RtfHtmlSpecialCharCollection
 
 		// ----------------------------------------------------------------------
-		public RtfHtmlSpecialCharCollection( string settings )
+		public RtfHtmlSpecialCharCollection(string settings)
 		{
-			LoadSettings( settings );
+			LoadSettings(settings);
 		} // RtfHtmlSpecialCharCollection
 
 		// ----------------------------------------------------------------------
-		public void LoadSettings( string settings )
+		public void LoadSettings(string settings)
 		{
 			Clear();
-			if ( string.IsNullOrEmpty( settings ) )
+			if (string.IsNullOrEmpty(settings))
 			{
 				return;
 			}
 
-			string[] settingItems = settings.Split( ',' );
-			foreach ( string settingItem in settingItems )
+			string[] settingItems = settings.Split(',');
+			foreach (string settingItem in settingItems)
 			{
-				string[] tokens = settingItem.Split( '=' );
-				if ( tokens.Length != 2 )
+				string[] tokens = settingItem.Split('=');
+				if (tokens.Length != 2)
 				{
 					continue;
 				}
 
-				RtfVisualSpecialCharKind charKind = (RtfVisualSpecialCharKind)Enum.Parse( typeof( RtfVisualSpecialCharKind ), tokens[ 0 ] );
-				Add( charKind, tokens[ 1 ] );
+				RtfVisualSpecialCharKind charKind = (RtfVisualSpecialCharKind)Enum.Parse(typeof(RtfVisualSpecialCharKind), tokens[0]);
+				Add(charKind, tokens[1]);
 			}
 		} // LoadSettings
 
 		// ----------------------------------------------------------------------
 		public string GetSettings()
 		{
-			if ( Count == 0 )
+			if (Count == 0)
 			{
 				return string.Empty;
 			}
 
 			StringBuilder sb = new StringBuilder();
-			foreach ( RtfVisualSpecialCharKind charKind in Keys )
+			foreach (RtfVisualSpecialCharKind charKind in Keys)
 			{
-				if ( sb.Length > 0 )
+				if (sb.Length > 0)
 				{
-					sb.Append( ',' );
+					sb.Append(',');
 				}
-				sb.Append( Enum.GetName( typeof( RtfVisualSpecialCharKind ), charKind ) );
-				sb.Append( '=' );
-				sb.Append( this[ charKind ] );
+				sb.Append(Enum.GetName(typeof(RtfVisualSpecialCharKind), charKind));
+				sb.Append('=');
+				sb.Append(this[charKind]);
 			}
 
 			return sb.ToString();

@@ -19,32 +19,32 @@ namespace Itenso.Rtf.Interpreter
 
 		// ----------------------------------------------------------------------
 		public RtfInterpreterListenerLogger()
-			: this( new RtfInterpreterLoggerSettings(), systemLogger )
+			: this(new RtfInterpreterLoggerSettings(), systemLogger)
 		{
 		} // RtfInterpreterListenerLogger
 
 		// ----------------------------------------------------------------------
-		public RtfInterpreterListenerLogger( RtfInterpreterLoggerSettings settings )
-			: this( settings, systemLogger )
+		public RtfInterpreterListenerLogger(RtfInterpreterLoggerSettings settings)
+			: this(settings, systemLogger)
 		{
 		} // RtfInterpreterListenerLogger
 
 		// ----------------------------------------------------------------------
-		public RtfInterpreterListenerLogger( ILogger logger )
-			: this( new RtfInterpreterLoggerSettings(), logger )
+		public RtfInterpreterListenerLogger(ILogger logger)
+			: this(new RtfInterpreterLoggerSettings(), logger)
 		{
 		} // RtfInterpreterListenerLogger
 
 		// ----------------------------------------------------------------------
-		public RtfInterpreterListenerLogger( RtfInterpreterLoggerSettings settings, ILogger logger )
+		public RtfInterpreterListenerLogger(RtfInterpreterLoggerSettings settings, ILogger logger)
 		{
-			if ( settings == null )
+			if (settings == null)
 			{
-				throw new ArgumentNullException( "settings" );
+				throw new ArgumentNullException("settings");
 			}
-			if ( logger == null )
+			if (logger == null)
 			{
-				throw new ArgumentNullException( "logger" );
+				throw new ArgumentNullException("logger");
 			}
 
 			this.settings = settings;
@@ -64,67 +64,67 @@ namespace Itenso.Rtf.Interpreter
 		} // Logger
 
 		// ----------------------------------------------------------------------
-		protected override void DoBeginDocument( IRtfInterpreterContext context )
+		protected override void DoBeginDocument(IRtfInterpreterContext context)
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.BeginDocumentText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.BeginDocumentText))
 			{
-				Log( settings.BeginDocumentText );
+				Log(settings.BeginDocumentText);
 			}
 		} // DoBeginDocument
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertText( IRtfInterpreterContext context, string text )
+		protected override void DoInsertText(IRtfInterpreterContext context, string text)
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.TextFormatText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.TextFormatText))
 			{
 				string msg = text;
-				if ( msg.Length > settings.TextMaxLength && !string.IsNullOrEmpty( settings.TextOverflowText ) )
+				if (msg.Length > settings.TextMaxLength && !string.IsNullOrEmpty(settings.TextOverflowText))
 				{
-					msg = msg.Substring( 0, msg.Length - settings.TextOverflowText.Length ) + settings.TextOverflowText;
+					msg = msg.Substring(0, msg.Length - settings.TextOverflowText.Length) + settings.TextOverflowText;
 				}
-				Log( string.Format(
+				Log(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.TextFormatText,
 					msg,
-					context.GetSafeCurrentTextFormat() ) );
+					context.GetSafeCurrentTextFormat()));
 			}
 		} // DoInsertText
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertSpecialChar( IRtfInterpreterContext context, RtfVisualSpecialCharKind kind )
+		protected override void DoInsertSpecialChar(IRtfInterpreterContext context, RtfVisualSpecialCharKind kind)
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.SpecialCharFormatText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.SpecialCharFormatText))
 			{
-				Log( string.Format(
+				Log(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.SpecialCharFormatText,
-					kind ) );
+					kind));
 			}
 		} // DoInsertSpecialChar
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertBreak( IRtfInterpreterContext context, RtfVisualBreakKind kind )
+		protected override void DoInsertBreak(IRtfInterpreterContext context, RtfVisualBreakKind kind)
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.BreakFormatText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.BreakFormatText))
 			{
-				Log( string.Format(
+				Log(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.BreakFormatText,
-					kind ) );
+					kind));
 			}
 		} // DoInsertBreak
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertImage( IRtfInterpreterContext context,
+		protected override void DoInsertImage(IRtfInterpreterContext context,
 			RtfVisualImageFormat format,
 			int width, int height, int desiredWidth, int desiredHeight,
 			int scaleWidthPercent, int scaleHeightPercent,
 			string imageDataHex
 		)
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.ImageFormatText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.ImageFormatText))
 			{
-				Log( string.Format(
+				Log(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.ImageFormatText,
 					format,
@@ -135,26 +135,26 @@ namespace Itenso.Rtf.Interpreter
 					scaleWidthPercent,
 					scaleHeightPercent,
 					imageDataHex,
-					(imageDataHex.Length / 2) ) );
+					(imageDataHex.Length / 2)));
 			}
 		} // DoInsertImage
 
 		// ----------------------------------------------------------------------
-		protected override void DoEndDocument( IRtfInterpreterContext context )
+		protected override void DoEndDocument(IRtfInterpreterContext context)
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.EndDocumentText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.EndDocumentText))
 			{
-				Log( settings.EndDocumentText );
+				Log(settings.EndDocumentText);
 			}
 		} // DoEndDocument
 
 		// ----------------------------------------------------------------------
-		private void Log( string message )
+		private void Log(string message)
 		{
-			systemLogger.Info( message );
-			if ( logger != null )
+			systemLogger.Info(message);
+			if (logger != null)
 			{
-				logger.Info( message );
+				logger.Info(message);
 			}
 		} // Log
 
@@ -163,7 +163,7 @@ namespace Itenso.Rtf.Interpreter
 		private readonly RtfInterpreterLoggerSettings settings;
 		private readonly ILogger logger;
 
-		private static readonly ILogger systemLogger = Sys.Logging.Logger.GetLogger( typeof( RtfInterpreterListenerLogger ) );
+		private static readonly ILogger systemLogger = Sys.Logging.Logger.GetLogger(typeof(RtfInterpreterListenerLogger));
 
 	} // class RtfInterpreterListenerLogger
 

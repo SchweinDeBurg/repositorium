@@ -13,82 +13,80 @@ namespace Itenso.Sys.Logging
 {
 
 	// ------------------------------------------------------------------------
-// ReSharper disable InconsistentNaming
 	public sealed class LoggerMonitorLog4net : ILoggerMonitor
-// ReSharper restore InconsistentNaming
 	{
 
 		// ----------------------------------------------------------------------
-		public void Register( ILoggerListener loggerListener, string context )
+		public void Register(ILoggerListener loggerListener, string context)
 		{
-			if ( loggerListener == null )
+			if (loggerListener == null)
 			{
-				throw new ArgumentNullException( "loggerListener" );
+				throw new ArgumentNullException("loggerListener");
 			}
-			string checkedContext = ArgumentCheck.NonemptyTrimmedString( context, "context" );
-			lock ( listenerListsByContext )
+			string checkedContext = ArgumentCheck.NonemptyTrimmedString(context, "context");
+			lock (listenerListsByContext)
 			{
-				ArrayList contextListeners = listenerListsByContext[ checkedContext ] as ArrayList;
-				if ( contextListeners == null )
+				ArrayList contextListeners = listenerListsByContext[checkedContext] as ArrayList;
+				if (contextListeners == null)
 				{
-					contextListeners = new ArrayList( 5 );
-					listenerListsByContext.Add( checkedContext, contextListeners );
+					contextListeners = new ArrayList(5);
+					listenerListsByContext.Add(checkedContext, contextListeners);
 				}
-				lock ( contextListeners )
+				lock (contextListeners)
 				{
-					contextListeners.Add( loggerListener );
+					contextListeners.Add(loggerListener);
 				}
 			}
 		} // Register
 
 		// ----------------------------------------------------------------------
-		public void Unregister( ILoggerListener loggerListener, string context )
+		public void Unregister(ILoggerListener loggerListener, string context)
 		{
-			if ( loggerListener == null )
+			if (loggerListener == null)
 			{
-				throw new ArgumentNullException( "loggerListener" );
+				throw new ArgumentNullException("loggerListener");
 			}
-			string checkedContext = ArgumentCheck.NonemptyTrimmedString( context, "context" );
-			lock ( listenerListsByContext )
+			string checkedContext = ArgumentCheck.NonemptyTrimmedString(context, "context");
+			lock (listenerListsByContext)
 			{
-				ArrayList contextListeners = listenerListsByContext[ checkedContext ] as ArrayList;
-				if ( contextListeners != null )
+				ArrayList contextListeners = listenerListsByContext[checkedContext] as ArrayList;
+				if (contextListeners != null)
 				{
-					lock ( contextListeners )
+					lock (contextListeners)
 					{
-						contextListeners.Remove( loggerListener );
+						contextListeners.Remove(loggerListener);
 					}
-					if ( contextListeners.Count == 0 )
+					if (contextListeners.Count == 0)
 					{
-						listenerListsByContext.Remove( checkedContext );
+						listenerListsByContext.Remove(checkedContext);
 					}
 				}
 			}
 		} // Unregister
 
 		// ----------------------------------------------------------------------
-		internal void Handle( ILoggerEvent loggerEvent )
+		internal void Handle(ILoggerEvent loggerEvent)
 		{
-			if ( loggerEvent == null )
+			if (loggerEvent == null)
 			{
-				throw new ArgumentNullException( "loggerEvent" );
+				throw new ArgumentNullException("loggerEvent");
 			}
 
 			string eventContext = loggerEvent.Context;
 
 			ArrayList contextListeners = null;
-			if ( listenerListsByContext.Count > 0 )
+			if (listenerListsByContext.Count > 0)
 			{
-				lock ( listenerListsByContext )
+				lock (listenerListsByContext)
 				{
-					contextListeners = listenerListsByContext[ eventContext ] as ArrayList;
-					if ( contextListeners == null )
+					contextListeners = listenerListsByContext[eventContext] as ArrayList;
+					if (contextListeners == null)
 					{
-						foreach ( string rootContext in listenerListsByContext.Keys )
+						foreach (string rootContext in listenerListsByContext.Keys)
 						{
-							if ( eventContext.StartsWith( rootContext ) )
+							if (eventContext.StartsWith(rootContext))
 							{
-								contextListeners = listenerListsByContext[ rootContext ] as ArrayList;
+								contextListeners = listenerListsByContext[rootContext] as ArrayList;
 								break;
 							}
 						}
@@ -96,13 +94,13 @@ namespace Itenso.Sys.Logging
 				}
 			}
 
-			if ( contextListeners != null && contextListeners.Count > 0 )
+			if (contextListeners != null && contextListeners.Count > 0)
 			{
-				lock ( contextListeners )
+				lock (contextListeners)
 				{
-					foreach ( ILoggerListener loggerListener in contextListeners )
+					foreach (ILoggerListener loggerListener in contextListeners)
 					{
-						loggerListener.Handle( loggerEvent );
+						loggerListener.Handle(loggerEvent);
 					}
 				}
 			}

@@ -30,54 +30,54 @@ namespace Itenso.Rtf.Interpreter
 		} // Document
 
 		// ----------------------------------------------------------------------
-		protected override void DoBeginDocument( IRtfInterpreterContext context )
+		protected override void DoBeginDocument(IRtfInterpreterContext context)
 		{
 			document = null;
 			visualDocumentContent = new RtfVisualCollection();
 		} // DoBeginDocument
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertText( IRtfInterpreterContext context, string text )
+		protected override void DoInsertText(IRtfInterpreterContext context, string text)
 		{
-			if ( combineTextWithSameFormat )
+			if (combineTextWithSameFormat)
 			{
 				IRtfTextFormat newFormat = context.GetSafeCurrentTextFormat();
-				if ( !newFormat.Equals( pendingTextFormat ) )
+				if (!newFormat.Equals(pendingTextFormat))
 				{
 					FlushPendingText();
 				}
 				pendingTextFormat = newFormat;
-				pendingText.Append( text );
+				pendingText.Append(text);
 			}
 			else
 			{
-				AppendAlignedVisual( new RtfVisualText( text, context.GetSafeCurrentTextFormat() ) );
+				AppendAlignedVisual(new RtfVisualText(text, context.GetSafeCurrentTextFormat()));
 			}
 		} // DoInsertText
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertSpecialChar( IRtfInterpreterContext context, RtfVisualSpecialCharKind kind )
+		protected override void DoInsertSpecialChar(IRtfInterpreterContext context, RtfVisualSpecialCharKind kind)
 		{
 			FlushPendingText();
-			visualDocumentContent.Add( new RtfVisualSpecialChar( kind ) );
+			visualDocumentContent.Add(new RtfVisualSpecialChar(kind));
 		} // DoInsertSpecialChar
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertBreak( IRtfInterpreterContext context, RtfVisualBreakKind kind )
+		protected override void DoInsertBreak(IRtfInterpreterContext context, RtfVisualBreakKind kind)
 		{
 			FlushPendingText();
-			visualDocumentContent.Add( new RtfVisualBreak( kind ) );
-			switch ( kind )
+			visualDocumentContent.Add(new RtfVisualBreak(kind));
+			switch (kind)
 			{
 				case RtfVisualBreakKind.Paragraph:
 				case RtfVisualBreakKind.Section:
-					EndParagraph( context );
+					EndParagraph(context);
 					break;
 			}
 		} // DoInsertBreak
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertImage( IRtfInterpreterContext context,
+		protected override void DoInsertImage(IRtfInterpreterContext context,
 			RtfVisualImageFormat format,
 			int width, int height, int desiredWidth, int desiredHeight,
 			int scaleWidthPercent, int scaleHeightPercent,
@@ -85,45 +85,43 @@ namespace Itenso.Rtf.Interpreter
 		)
 		{
 			FlushPendingText();
-			AppendAlignedVisual( new RtfVisualImage( format,
+			AppendAlignedVisual(new RtfVisualImage(format,
 				context.GetSafeCurrentTextFormat().Alignment,
 				width, height, desiredWidth, desiredHeight,
-				scaleWidthPercent, scaleHeightPercent, imageDataHex ) );
+				scaleWidthPercent, scaleHeightPercent, imageDataHex));
 		} // DoInsertImage
 
 		// ----------------------------------------------------------------------
-		protected override void DoEndDocument( IRtfInterpreterContext context )
+		protected override void DoEndDocument(IRtfInterpreterContext context)
 		{
 			FlushPendingText();
-			EndParagraph( context );
-			document = new RtfDocument( context, visualDocumentContent );
+			EndParagraph(context);
+			document = new RtfDocument(context, visualDocumentContent);
 			visualDocumentContent = null;
 			visualDocumentContent = null;
 		} // DoEndDocument
 
 		// ----------------------------------------------------------------------
-		private void EndParagraph( IRtfInterpreterContext context )
+		private void EndParagraph(IRtfInterpreterContext context)
 		{
 			RtfTextAlignment finalParagraphAlignment = context.GetSafeCurrentTextFormat().Alignment;
-			foreach ( IRtfVisual alignedVisual in pendingParagraphContent )
+			foreach (IRtfVisual alignedVisual in pendingParagraphContent)
 			{
-				switch ( alignedVisual.Kind )
+				switch (alignedVisual.Kind)
 				{
 					case RtfVisualKind.Image:
 						RtfVisualImage image = (RtfVisualImage)alignedVisual;
-						// ReSharper disable RedundantCheckBeforeAssignment
-						if ( image.Alignment != finalParagraphAlignment )
-						// ReSharper restore RedundantCheckBeforeAssignment
+						if (image.Alignment != finalParagraphAlignment)
 						{
 							image.Alignment = finalParagraphAlignment;
 						}
 						break;
 					case RtfVisualKind.Text:
 						RtfVisualText text = (RtfVisualText)alignedVisual;
-						if ( text.Format.Alignment != finalParagraphAlignment )
+						if (text.Format.Alignment != finalParagraphAlignment)
 						{
-							IRtfTextFormat correctedFormat = ( (RtfTextFormat)text.Format ).DeriveWithAlignment( finalParagraphAlignment );
-							IRtfTextFormat correctedUniqueFormat = context.GetUniqueTextFormatInstance( correctedFormat );
+							IRtfTextFormat correctedFormat = ((RtfTextFormat)text.Format).DeriveWithAlignment(finalParagraphAlignment);
+							IRtfTextFormat correctedUniqueFormat = context.GetUniqueTextFormatInstance(correctedFormat);
 							text.Format = correctedUniqueFormat;
 						}
 						break;
@@ -135,19 +133,19 @@ namespace Itenso.Rtf.Interpreter
 		// ----------------------------------------------------------------------
 		private void FlushPendingText()
 		{
-			if ( pendingTextFormat != null )
+			if (pendingTextFormat != null)
 			{
-				AppendAlignedVisual( new RtfVisualText( pendingText.ToString(), pendingTextFormat ) );
+				AppendAlignedVisual(new RtfVisualText(pendingText.ToString(), pendingTextFormat));
 				pendingTextFormat = null;
-				pendingText.Remove( 0, pendingText.Length );
+				pendingText.Remove(0, pendingText.Length);
 			}
 		} // FlushPendingText
 
 		// ----------------------------------------------------------------------
-		private void AppendAlignedVisual( RtfVisual visual )
+		private void AppendAlignedVisual(RtfVisual visual)
 		{
-			visualDocumentContent.Add( visual );
-			pendingParagraphContent.Add( visual );
+			visualDocumentContent.Add(visual);
+			pendingParagraphContent.Add(visual);
 		} // AppendAlignedVisual
 
 		// ----------------------------------------------------------------------

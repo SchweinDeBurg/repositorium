@@ -21,7 +21,7 @@ namespace Itenso.Rtf
 		/// </summary>
 		/// <param name="listener">the listener to add</param>
 		/// <exception cref="ArgumentNullException">in case of a null argument</exception>
-		void AddInterpreterListener( IRtfInterpreterListener listener );
+		void AddInterpreterListener(IRtfInterpreterListener listener);
 
 		// ----------------------------------------------------------------------
 		/// <summary>
@@ -29,7 +29,7 @@ namespace Itenso.Rtf
 		/// </summary>
 		/// <param name="listener">the listener to remove</param>
 		/// <exception cref="ArgumentNullException">in case of a null argument</exception>
-		void RemoveInterpreterListener( IRtfInterpreterListener listener );
+		void RemoveInterpreterListener(IRtfInterpreterListener listener);
 
 		// ----------------------------------------------------------------------
 		/// <summary>
@@ -39,7 +39,7 @@ namespace Itenso.Rtf
 		/// <param name="rtfDocument">the RTF documet to interpret</param>
 		/// <exception cref="RtfException">in case of an unsupported RTF structure</exception>
 		/// <exception cref="ArgumentNullException">in case of a null argument</exception>
-		void Interpret( IRtfGroup rtfDocument );
+		void Interpret(IRtfGroup rtfDocument);
 
 	} // interface IRtfInterpreter
 

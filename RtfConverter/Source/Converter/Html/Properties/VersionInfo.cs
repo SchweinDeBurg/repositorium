@@ -15,7 +15,7 @@ using System.Reflection;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion( "1.3.0.0" )]
+[assembly: AssemblyVersion("1.3.0.0")]
 
 namespace Itenso.Rtf.Converter.Html
 {
@@ -25,7 +25,7 @@ namespace Itenso.Rtf.Converter.Html
 	{
 
 		/// <value>Provides easy access to the assemblies version as a string.</value>
-		public static readonly string AssemblyVersion = typeof( VersionInfo ).Assembly.GetName().Version.ToString();
+		public static readonly string AssemblyVersion = typeof(VersionInfo).Assembly.GetName().Version.ToString();
 
 	} // class VersionInfo
 

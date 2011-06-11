@@ -15,7 +15,7 @@ namespace Itenso.Rtf.Converter.Html
 	{
 
 		// ----------------------------------------------------------------------
-		IRtfHtmlStyle TextToHtml( IRtfVisualText visualText );
+		IRtfHtmlStyle TextToHtml(IRtfVisualText visualText);
 
 	} // interface IRtfHtmlStyleConverter
 

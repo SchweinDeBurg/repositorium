@@ -36,7 +36,7 @@ namespace Itenso.Sys.Application
 		bool IsLoaded { get; }
 
 		// ----------------------------------------------------------------------
-		void Load( string commandLineArg );
+		void Load(string commandLineArg);
 
 	} // interface IArgument
 

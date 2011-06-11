@@ -21,46 +21,46 @@ namespace Itenso.Rtf.Interpreter
 			params IRtfInterpreterListener[] listeners
 		)
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfInterpreterListener listener in listeners )
+				foreach (IRtfInterpreterListener listener in listeners)
 				{
-					AddInterpreterListener( listener );
+					AddInterpreterListener(listener);
 				}
 			}
 		} // RtfInterpreterBase
 
 		// ----------------------------------------------------------------------
-		public void AddInterpreterListener( IRtfInterpreterListener listener )
+		public void AddInterpreterListener(IRtfInterpreterListener listener)
 		{
-			if ( listener == null )
+			if (listener == null)
 			{
-				throw new ArgumentNullException( "listener" );
+				throw new ArgumentNullException("listener");
 			}
-			if ( listeners == null )
+			if (listeners == null)
 			{
 				listeners = new ArrayList();
 			}
-			if ( !listeners.Contains( listener ) )
+			if (!listeners.Contains(listener))
 			{
-				listeners.Add( listener );
+				listeners.Add(listener);
 			}
 		} // AddInterpreterListener
 
 		// ----------------------------------------------------------------------
-		public void RemoveInterpreterListener( IRtfInterpreterListener listener )
+		public void RemoveInterpreterListener(IRtfInterpreterListener listener)
 		{
-			if ( listener == null )
+			if (listener == null)
 			{
-				throw new ArgumentNullException( "listener" );
+				throw new ArgumentNullException("listener");
 			}
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				if ( listeners.Contains( listener ) )
+				if (listeners.Contains(listener))
 				{
-					listeners.Remove( listener );
+					listeners.Remove(listener);
 				}
-				if ( listeners.Count == 0 )
+				if (listeners.Count == 0)
 				{
 					listeners = null;
 				}
@@ -68,75 +68,75 @@ namespace Itenso.Rtf.Interpreter
 		} // RemoveInterpreterListener
 
 		// ----------------------------------------------------------------------
-		public void Interpret( IRtfGroup rtfDocument )
+		public void Interpret(IRtfGroup rtfDocument)
 		{
-			if ( rtfDocument == null )
+			if (rtfDocument == null)
 			{
-				throw new ArgumentNullException( "rtfDocument" );
+				throw new ArgumentNullException("rtfDocument");
 			}
-			DoInterpret( rtfDocument );
+			DoInterpret(rtfDocument);
 		} // Interpret
 
 		// ----------------------------------------------------------------------
-		protected abstract void DoInterpret( IRtfGroup rtfDocument );
+		protected abstract void DoInterpret(IRtfGroup rtfDocument);
 
 		// ----------------------------------------------------------------------
 		protected void NotifyBeginDocument()
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfInterpreterListener listener in listeners )
+				foreach (IRtfInterpreterListener listener in listeners)
 				{
-					listener.BeginDocument( context );
+					listener.BeginDocument(context);
 				}
 			}
 		} // NotifyBeginDocument
 
 		// ----------------------------------------------------------------------
-		protected void NotifyInsertText( string text )
+		protected void NotifyInsertText(string text)
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfInterpreterListener listener in listeners )
+				foreach (IRtfInterpreterListener listener in listeners)
 				{
-					listener.InsertText( context, text );
+					listener.InsertText(context, text);
 				}
 			}
 		} // NotifyInsertText
 
 		// ----------------------------------------------------------------------
-		protected void NotifyInsertSpecialChar( RtfVisualSpecialCharKind kind )
+		protected void NotifyInsertSpecialChar(RtfVisualSpecialCharKind kind)
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfInterpreterListener listener in listeners )
+				foreach (IRtfInterpreterListener listener in listeners)
 				{
-					listener.InsertSpecialChar( context, kind );
+					listener.InsertSpecialChar(context, kind);
 				}
 			}
 		} // NotifyInsertSpecialChar
 
 		// ----------------------------------------------------------------------
-		protected void NotifyInsertBreak( RtfVisualBreakKind kind )
+		protected void NotifyInsertBreak(RtfVisualBreakKind kind)
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfInterpreterListener listener in listeners )
+				foreach (IRtfInterpreterListener listener in listeners)
 				{
-					listener.InsertBreak( context, kind );
+					listener.InsertBreak(context, kind);
 				}
 			}
 		} // NotifyInsertBreak
 
 		// ----------------------------------------------------------------------
-		protected void NotifyInsertImage( RtfVisualImageFormat format,
+		protected void NotifyInsertImage(RtfVisualImageFormat format,
 			int width, int height, int desiredWidth, int desiredHeight,
 			int scaleWidthPercent, int scaleHeightPercent, string imageDataHex
 		)
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfInterpreterListener listener in listeners )
+				foreach (IRtfInterpreterListener listener in listeners)
 				{
 					listener.InsertImage(
 						context,
@@ -147,7 +147,7 @@ namespace Itenso.Rtf.Interpreter
 						desiredHeight,
 						scaleWidthPercent,
 						scaleHeightPercent,
-						imageDataHex );
+						imageDataHex);
 				}
 			}
 		} // NotifyInsertImage
@@ -155,11 +155,11 @@ namespace Itenso.Rtf.Interpreter
 		// ----------------------------------------------------------------------
 		protected void NotifyEndDocument()
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfInterpreterListener listener in listeners )
+				foreach (IRtfInterpreterListener listener in listeners)
 				{
-					listener.EndDocument( context );
+					listener.EndDocument(context);
 				}
 			}
 		} // NotifyEndDocument

@@ -22,21 +22,21 @@ namespace Itenso.Rtf.Parser
 		public const string DefaultLogFileExtension = ".parser.log";
 
 		// ----------------------------------------------------------------------
-		public RtfParserListenerFileLogger( string fileName )
-			: this( fileName, new RtfParserLoggerSettings() )
+		public RtfParserListenerFileLogger(string fileName)
+			: this(fileName, new RtfParserLoggerSettings())
 		{
 		} // RtfParserListenerFileLogger
 
 		// ----------------------------------------------------------------------
-		public RtfParserListenerFileLogger( string fileName, RtfParserLoggerSettings settings )
+		public RtfParserListenerFileLogger(string fileName, RtfParserLoggerSettings settings)
 		{
-			if ( fileName == null )
+			if (fileName == null)
 			{
-				throw new ArgumentNullException( "fileName" );
+				throw new ArgumentNullException("fileName");
 			}
-			if ( settings == null )
+			if (settings == null)
 			{
-				throw new ArgumentNullException( "settings" );
+				throw new ArgumentNullException("settings");
 			}
 
 			this.fileName = fileName;
@@ -67,88 +67,88 @@ namespace Itenso.Rtf.Parser
 			EnsureDirectory();
 			OpenStream();
 
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.ParseBeginText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.ParseBeginText))
 			{
-				WriteLine( settings.ParseBeginText );
+				WriteLine(settings.ParseBeginText);
 			}
 		} // DoParseBegin
 
 		// ----------------------------------------------------------------------
 		protected override void DoGroupBegin()
 		{
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.ParseGroupBeginText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.ParseGroupBeginText))
 			{
-				WriteLine( settings.ParseGroupBeginText );
+				WriteLine(settings.ParseGroupBeginText);
 			}
 		} // DoGroupBegin
 
 		// ----------------------------------------------------------------------
-		protected override void DoTagFound( IRtfTag tag )
+		protected override void DoTagFound(IRtfTag tag)
 		{
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.ParseTagText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.ParseTagText))
 			{
-				WriteLine( string.Format(
+				WriteLine(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.ParseTagText,
-					tag ) );
+					tag));
 			}
 		} // DoTagFound
 
 		// ----------------------------------------------------------------------
-		protected override void DoTextFound( IRtfText text )
+		protected override void DoTextFound(IRtfText text)
 		{
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.ParseTextText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.ParseTextText))
 			{
 				string msg = text.Text;
-				if ( msg.Length > settings.TextMaxLength && !string.IsNullOrEmpty( settings.TextOverflowText ) )
+				if (msg.Length > settings.TextMaxLength && !string.IsNullOrEmpty(settings.TextOverflowText))
 				{
-					msg = msg.Substring( 0, msg.Length - settings.TextOverflowText.Length ) + settings.TextOverflowText;
+					msg = msg.Substring(0, msg.Length - settings.TextOverflowText.Length) + settings.TextOverflowText;
 				}
-				WriteLine( string.Format(
+				WriteLine(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.ParseTextText,
-					msg ) );
+					msg));
 			}
 		} // DoTextFound
 
 		// ----------------------------------------------------------------------
 		protected override void DoGroupEnd()
 		{
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.ParseGroupEndText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.ParseGroupEndText))
 			{
-				WriteLine( settings.ParseGroupEndText );
+				WriteLine(settings.ParseGroupEndText);
 			}
 		} // DoGroupEnd
 
 		// ----------------------------------------------------------------------
 		protected override void DoParseSuccess()
 		{
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.ParseSuccessText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.ParseSuccessText))
 			{
-				WriteLine( settings.ParseSuccessText );
+				WriteLine(settings.ParseSuccessText);
 			}
 		} // DoParseSuccess
 
 		// ----------------------------------------------------------------------
-		protected override void DoParseFail( RtfException reason )
+		protected override void DoParseFail(RtfException reason)
 		{
-			if ( settings.Enabled )
+			if (settings.Enabled)
 			{
-				if ( reason != null )
+				if (reason != null)
 				{
-					if ( !string.IsNullOrEmpty( settings.ParseFailKnownReasonText ) )
+					if (!string.IsNullOrEmpty(settings.ParseFailKnownReasonText))
 					{
-						WriteLine( string.Format(
+						WriteLine(string.Format(
 							CultureInfo.InvariantCulture,
 							settings.ParseFailKnownReasonText,
-							reason.Message ) );
+							reason.Message));
 					}
 				}
 				else
 				{
-					if ( !string.IsNullOrEmpty( settings.ParseFailUnknownReasonText ) )
+					if (!string.IsNullOrEmpty(settings.ParseFailUnknownReasonText))
 					{
-						WriteLine( settings.ParseFailUnknownReasonText );
+						WriteLine(settings.ParseFailUnknownReasonText);
 					}
 				}
 			}
@@ -157,39 +157,39 @@ namespace Itenso.Rtf.Parser
 		// ----------------------------------------------------------------------
 		protected override void DoParseEnd()
 		{
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.ParseEndText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.ParseEndText))
 			{
-				WriteLine( settings.ParseEndText );
+				WriteLine(settings.ParseEndText);
 			}
 
 			CloseStream();
 		} // DoParseEnd
 
 		// ----------------------------------------------------------------------
-		private void WriteLine( params string[] msg )
+		private void WriteLine(params string[] msg)
 		{
-			if ( streamWriter == null )
+			if (streamWriter == null)
 			{
 				return;
 			}
-			string logText = Indent( msg );
-			streamWriter.WriteLine( logText );
+			string logText = Indent(msg);
+			streamWriter.WriteLine(logText);
 			streamWriter.Flush();
 		} // WriteLine
 
 		// ----------------------------------------------------------------------
-		private string Indent( params string[] msg )
+		private string Indent(params string[] msg)
 		{
 			StringBuilder buf = new StringBuilder();
-			if ( msg != null )
+			if (msg != null)
 			{
-				for ( int i = 0; i < Level; i++ )
+				for (int i = 0; i < Level; i++)
 				{
-					buf.Append( " " );
+					buf.Append(" ");
 				}
-				foreach ( string m in msg )
+				foreach (string m in msg)
 				{
-					buf.Append( m );
+					buf.Append(m);
 				}
 			}
 			return buf.ToString();
@@ -198,27 +198,27 @@ namespace Itenso.Rtf.Parser
 		// ----------------------------------------------------------------------
 		private void EnsureDirectory()
 		{
-			FileInfo fi = new FileInfo( fileName );
-			if ( !string.IsNullOrEmpty( fi.DirectoryName ) && !Directory.Exists( fi.DirectoryName ) )
+			FileInfo fi = new FileInfo(fileName);
+			if (!string.IsNullOrEmpty(fi.DirectoryName) && !Directory.Exists(fi.DirectoryName))
 			{
-				Directory.CreateDirectory( fi.DirectoryName );
+				Directory.CreateDirectory(fi.DirectoryName);
 			}
 		} // EnsureDirectory
 
 		// ----------------------------------------------------------------------
 		private void OpenStream()
 		{
-			if ( streamWriter != null )
+			if (streamWriter != null)
 			{
 				return;
 			}
-			streamWriter = new StreamWriter( fileName );
+			streamWriter = new StreamWriter(fileName);
 		} // OpenStream
 
 		// ----------------------------------------------------------------------
 		private void CloseStream()
 		{
-			if ( streamWriter == null )
+			if (streamWriter == null)
 			{
 				return;
 			}

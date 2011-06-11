@@ -20,10 +20,10 @@ namespace Itenso.Sys
 	{
 
 		// ----------------------------------------------------------------------
-		public static int AddHashCode( int hash, object obj )
+		public static int AddHashCode(int hash, object obj)
 		{
 			int combinedHash = obj != null ? obj.GetHashCode() : 0;
-			if ( hash != 0 ) // perform this check to prevent FxCop warning 'op could overflow'
+			if (hash != 0) // perform this check to prevent FxCop warning 'op could overflow'
 			{
 				combinedHash += hash * 31;
 			}
@@ -31,10 +31,10 @@ namespace Itenso.Sys
 		} // AddHashCode
 
 		// ----------------------------------------------------------------------
-		public static int AddHashCode( int hash, int objHash )
+		public static int AddHashCode(int hash, int objHash)
 		{
 			int combinedHash = objHash;
-			if ( hash != 0 ) // perform this check to prevent FxCop warning 'op could overflow'
+			if (hash != 0) // perform this check to prevent FxCop warning 'op could overflow'
 			{
 				combinedHash += hash * 31;
 			}
@@ -42,16 +42,16 @@ namespace Itenso.Sys
 		} // AddHashCode
 
 		// ----------------------------------------------------------------------
-		public static int ComputeHashCode( IEnumerable enumerable )
+		public static int ComputeHashCode(IEnumerable enumerable)
 		{
 			int hash = 1;
-			if ( enumerable == null )
+			if (enumerable == null)
 			{
-				throw new ArgumentNullException( "enumerable" );
+				throw new ArgumentNullException("enumerable");
 			}
-			foreach ( object item in enumerable )
+			foreach (object item in enumerable)
 			{
-				hash = hash * 31 + ( item != null ? item.GetHashCode() : 0 );
+				hash = hash * 31 + (item != null ? item.GetHashCode() : 0);
 			}
 			return hash;
 		} // ComputeHashCode

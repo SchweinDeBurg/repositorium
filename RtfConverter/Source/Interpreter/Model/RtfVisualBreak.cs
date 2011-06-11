@@ -16,8 +16,8 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfVisualBreak( RtfVisualBreakKind breakKind ) :
-			base( RtfVisualKind.Break )
+		public RtfVisualBreak(RtfVisualBreakKind breakKind) :
+			base(RtfVisualKind.Break)
 		{
 			this.breakKind = breakKind;
 		} // RtfVisualBreak
@@ -35,25 +35,25 @@ namespace Itenso.Rtf.Model
 		} // ToString
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisit( IRtfVisualVisitor visitor )
+		protected override void DoVisit(IRtfVisualVisitor visitor)
 		{
-			visitor.VisitBreak( this );
+			visitor.VisitBreak(this);
 		} // DoVisit
 
 		// ----------------------------------------------------------------------
-		protected override bool IsEqual( object obj )
+		protected override bool IsEqual(object obj)
 		{
 			RtfVisualBreak compare = obj as RtfVisualBreak; // guaranteed to be non-null
-			return 
+			return
 				compare != null &&
-				base.IsEqual( compare ) &&
+				base.IsEqual(compare) &&
 				breakKind == compare.breakKind;
 		} // IsEqual
 
 		// ----------------------------------------------------------------------
 		protected override int ComputeHashCode()
 		{
-			return HashTool.AddHashCode( base.ComputeHashCode(), breakKind );
+			return HashTool.AddHashCode(base.ComputeHashCode(), breakKind);
 		} // ComputeHashCode
 
 		// ----------------------------------------------------------------------

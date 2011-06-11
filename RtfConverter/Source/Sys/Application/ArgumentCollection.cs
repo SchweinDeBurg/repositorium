@@ -17,9 +17,9 @@ namespace Itenso.Sys.Application
 	{
 
 		// ----------------------------------------------------------------------
-		public IArgument this[ int index ]
+		public IArgument this[int index]
 		{
-			get { return InnerList[ index ] as IArgument; }
+			get { return InnerList[index] as IArgument; }
 		} // this[ int ]
 
 		// ----------------------------------------------------------------------
@@ -27,9 +27,9 @@ namespace Itenso.Sys.Application
 		{
 			get
 			{
-				foreach ( IArgument argument in InnerList )
+				foreach (IArgument argument in InnerList)
 				{
-					if ( !argument.IsValid )
+					if (!argument.IsValid)
 					{
 						return false;
 					}
@@ -40,19 +40,19 @@ namespace Itenso.Sys.Application
 		} // IsValid
 
 		// ----------------------------------------------------------------------
-		public void CopyTo( IArgument[] array, int index )
+		public void CopyTo(IArgument[] array, int index)
 		{
-			InnerList.CopyTo( array, index );
+			InnerList.CopyTo(array, index);
 		} // CopyTo
 
 		// ----------------------------------------------------------------------
-		public void Add( IArgument item )
+		public void Add(IArgument item)
 		{
-			if ( item == null )
+			if (item == null)
 			{
-				throw new ArgumentNullException( "item" );
+				throw new ArgumentNullException("item");
 			}
-			InnerList.Add( item );
+			InnerList.Add(item);
 		} // Add
 
 		// ----------------------------------------------------------------------

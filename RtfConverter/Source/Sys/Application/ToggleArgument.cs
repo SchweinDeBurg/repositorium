@@ -16,18 +16,18 @@ namespace Itenso.Sys.Application
 	{
 
 		// ----------------------------------------------------------------------
-		public ToggleArgument( string name, bool defaultValue )
-			: this( ArgumentType.None, name, defaultValue )
+		public ToggleArgument(string name, bool defaultValue)
+			: this(ArgumentType.None, name, defaultValue)
 		{
 		} // ToggleArgument
 
 		// ----------------------------------------------------------------------
-		public ToggleArgument( ArgumentType argumentType, string name, bool defaultValue )
-			: base( argumentType | ArgumentType.HasName | ArgumentType.ContainsValue, name, defaultValue )
+		public ToggleArgument(ArgumentType argumentType, string name, bool defaultValue)
+			: base(argumentType | ArgumentType.HasName | ArgumentType.ContainsValue, name, defaultValue)
 		{
-			if ( name == null )
+			if (name == null)
 			{
-				throw new ArgumentNullException( "name" );
+				throw new ArgumentNullException("name");
 			}
 		} // ToggleArgument
 
@@ -40,19 +40,19 @@ namespace Itenso.Sys.Application
 		// ----------------------------------------------------------------------
 		public override string ToString()
 		{
-			return Name + "=" + ( Value ? "on" : "off" );
+			return Name + "=" + (Value ? "on" : "off");
 		} // ToString
 
 		// ----------------------------------------------------------------------
-		protected override bool OnLoad( string commandLineArg )
+		protected override bool OnLoad(string commandLineArg)
 		{
-			if ( !commandLineArg.StartsWith( Name, StringComparison.InvariantCultureIgnoreCase ) )
+			if (!commandLineArg.StartsWith(Name, StringComparison.InvariantCultureIgnoreCase))
 			{
 				return false;
 			}
 
 			// format: /name
-			if ( commandLineArg.Equals( Name, StringComparison.InvariantCultureIgnoreCase ) )
+			if (commandLineArg.Equals(Name, StringComparison.InvariantCultureIgnoreCase))
 			{
 				base.Value = true;
 				return true;
@@ -60,7 +60,7 @@ namespace Itenso.Sys.Application
 
 			// format: /name+
 			string onName = Name + "+";
-			if ( commandLineArg.Equals( onName, StringComparison.InvariantCultureIgnoreCase ) )
+			if (commandLineArg.Equals(onName, StringComparison.InvariantCultureIgnoreCase))
 			{
 				base.Value = true;
 				return true;
@@ -68,7 +68,7 @@ namespace Itenso.Sys.Application
 
 			// format: /name-
 			string offName = Name + "+";
-			if ( commandLineArg.Equals( offName, StringComparison.InvariantCultureIgnoreCase ) )
+			if (commandLineArg.Equals(offName, StringComparison.InvariantCultureIgnoreCase))
 			{
 				base.Value = false;
 				return true;

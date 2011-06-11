@@ -18,13 +18,13 @@ namespace Itenso.Rtf.Interpreter
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfColorTableBuilder( RtfColorCollection colorTable ) :
-			base( RtfElementVisitorOrder.NonRecursive )
+		public RtfColorTableBuilder(RtfColorCollection colorTable) :
+			base(RtfElementVisitorOrder.NonRecursive)
 		{
 			// we iterate over our children ourselves -> hence non-recursive
-			if ( colorTable == null )
+			if (colorTable == null)
 			{
-				throw new ArgumentNullException( "colorTable" );
+				throw new ArgumentNullException("colorTable");
 			}
 			this.colorTable = colorTable;
 		} // RtfColorTableBuilder
@@ -39,18 +39,18 @@ namespace Itenso.Rtf.Interpreter
 		} // Reset
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitGroup( IRtfGroup group )
+		protected override void DoVisitGroup(IRtfGroup group)
 		{
-			if ( RtfSpec.TagColorTable.Equals( group.Destination ) )
+			if (RtfSpec.TagColorTable.Equals(group.Destination))
 			{
-				VisitGroupChildren( group );
+				VisitGroupChildren(group);
 			}
 		} // DoVisitGroup
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitTag( IRtfTag tag )
+		protected override void DoVisitTag(IRtfTag tag)
 		{
-			switch ( tag.Name )
+			switch (tag.Name)
 			{
 				case RtfSpec.TagColorRed:
 					curRed = tag.ValueAsNumber;
@@ -65,18 +65,18 @@ namespace Itenso.Rtf.Interpreter
 		} // DoVisitTag
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitText( IRtfText text )
+		protected override void DoVisitText(IRtfText text)
 		{
-			if ( RtfSpec.TagDelimiter.Equals( text.Text ) )
+			if (RtfSpec.TagDelimiter.Equals(text.Text))
 			{
-				colorTable.Add( new RtfColor( curRed, curGreen, curBlue ) );
+				colorTable.Add(new RtfColor(curRed, curGreen, curBlue));
 				curRed = 0;
 				curGreen = 0;
 				curBlue = 0;
 			}
 			else
 			{
-				throw new RtfColorTableFormatException( Strings.ColorTableUnsupportedText( text.Text ) );
+				throw new RtfColorTableFormatException(Strings.ColorTableUnsupportedText(text.Text));
 			}
 		} // DoVisitText
 

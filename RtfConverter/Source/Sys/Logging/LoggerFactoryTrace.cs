@@ -16,18 +16,18 @@ namespace Itenso.Sys.Logging
 	{
 
 		// ----------------------------------------------------------------------
-		public override ILogger GetLogger( string name )
+		public override ILogger GetLogger(string name)
 		{
-			ILogger logger = (ILogger)loggers[ name ];
-			if ( logger == null )
+			ILogger logger = (ILogger)loggers[name];
+			if (logger == null)
 			{
-				lock ( this )
+				lock (this)
 				{
-					logger = (ILogger)loggers[ name ];
-					if ( logger == null )
+					logger = (ILogger)loggers[name];
+					if (logger == null)
 					{
-						ILogger newLogger = new LoggerTrace( name );
-						loggers.Add( name, newLogger );
+						ILogger newLogger = new LoggerTrace(name);
+						loggers.Add(name, newLogger);
 						logger = newLogger;
 					}
 				}

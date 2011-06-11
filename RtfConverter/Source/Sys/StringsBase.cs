@@ -34,9 +34,9 @@ namespace Itenso.Sys
 		/// <param name="format">the string to format</param>
 		/// <param name="args">the arguments to fill in</param>
 		/// <returns>the formatted string</returns>
-		protected static string Format( string format, params object[] args )
+		protected static string Format(string format, params object[] args)
 		{
-			return StringTool.FormatSafeInvariant( format, args );
+			return StringTool.FormatSafeInvariant(format, args);
 		} // Format
 
 		// ----------------------------------------------------------------------
@@ -46,13 +46,13 @@ namespace Itenso.Sys
 		/// </summary>
 		/// <param name="singletonType">the type of the singleton</param>
 		/// <returns>a <c>ResourceManager</c> for loading the given type's resources</returns>
-		protected static ResourceManager NewInst( Type singletonType )
+		protected static ResourceManager NewInst(Type singletonType)
 		{
-			if ( singletonType == null )
+			if (singletonType == null)
 			{
-				throw new ArgumentNullException( "singletonType" );
+				throw new ArgumentNullException("singletonType");
 			}
-			return new ResourceManager( singletonType.FullName, singletonType.Assembly );
+			return new ResourceManager(singletonType.FullName, singletonType.Assembly);
 		} // NewInst
 
 	} // class StringsBase

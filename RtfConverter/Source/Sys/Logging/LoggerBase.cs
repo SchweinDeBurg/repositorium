@@ -22,11 +22,11 @@ namespace Itenso.Sys.Logging
 		} // Context
 
 		// ----------------------------------------------------------------------
-		public virtual bool IsSupportedException( Exception exception )
+		public virtual bool IsSupportedException(Exception exception)
 		{
 			bool supported = true;
 
-			if ( exception is System.Threading.ThreadAbortException )
+			if (exception is System.Threading.ThreadAbortException)
 			{
 				supported = false;
 			}
@@ -35,13 +35,13 @@ namespace Itenso.Sys.Logging
 		} // IsSupportedException
 
 		// ----------------------------------------------------------------------
-		public virtual IDisposable PushContext( string context )
+		public virtual IDisposable PushContext(string context)
 		{
-			if ( context == null )
+			if (context == null)
 			{
-				throw new ArgumentNullException( "context" );
+				throw new ArgumentNullException("context");
 			}
-			return new LoggerContextDisposable( Logger );
+			return new LoggerContextDisposable(Logger);
 		} // PushContext
 
 		// ----------------------------------------------------------------------

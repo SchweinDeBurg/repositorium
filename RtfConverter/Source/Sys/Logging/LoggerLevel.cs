@@ -26,13 +26,13 @@ namespace Itenso.Sys.Logging
 	{
 
 		// ----------------------------------------------------------------------
-		public static LoggerLevel Parse( string value )
+		public static LoggerLevel Parse(string value)
 		{
-			return (LoggerLevel)CollectionTool.ParseEnumValue( typeof( LoggerLevel ), value, true );
+			return (LoggerLevel)CollectionTool.ParseEnumValue(typeof(LoggerLevel), value, true);
 		} // Parse
 
 		// ----------------------------------------------------------------------
-		public static string Format( LoggerLevel value )
+		public static string Format(LoggerLevel value)
 		{
 			return value.ToString();
 		} // Format
@@ -40,7 +40,7 @@ namespace Itenso.Sys.Logging
 		// ----------------------------------------------------------------------
 		public static string PossibleValues()
 		{
-			return CollectionTool.EnumValuesToString( typeof( LoggerLevel ) );
+			return CollectionTool.EnumValuesToString(typeof(LoggerLevel));
 		} // PossibleValues
 
 	} // class LoggerLevelEnumHelper

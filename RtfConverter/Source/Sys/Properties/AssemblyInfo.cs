@@ -14,15 +14,15 @@ using System.Security.Permissions;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle( "Itenso Framework Core" )]
-[assembly: AssemblyDescription( "Part of the Itenso framework" )]
-[assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "Itenso GmbH" )]
-[assembly: AssemblyProduct( "Core" )]
-[assembly: AssemblyCopyright( "Copyright © Itenso GmbH 2010" )]
-[assembly: AssemblyTrademark( "" )]
-[assembly: AssemblyCulture( "" )]
-[assembly: ComVisible( false )]
-[assembly: SecurityPermission( SecurityAction.RequestMinimum, Assertion = true )]
-[assembly: CLSCompliant( true )]
+[assembly: AssemblyTitle("Itenso Framework Core")]
+[assembly: AssemblyDescription("Part of the Itenso framework")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Itenso GmbH")]
+[assembly: AssemblyProduct("Core")]
+[assembly: AssemblyCopyright("Copyright © Itenso GmbH 2010")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+[assembly: ComVisible(false)]
+[assembly: SecurityPermission(SecurityAction.RequestMinimum, Assertion = true)]
+[assembly: CLSCompliant(true)]
 // -- EOF -------------------------------------------------------------------

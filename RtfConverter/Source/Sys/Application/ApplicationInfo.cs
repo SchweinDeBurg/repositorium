@@ -19,14 +19,14 @@ namespace Itenso.Sys.Application
 		// ----------------------------------------------------------------------
 		public static Version Version
 		{
-			get 
+			get
 			{
 				Assembly assembly = Assembly.GetEntryAssembly();
-				if ( assembly == null )
+				if (assembly == null)
 				{
 					return null;
 				}
-				return assembly.GetName().Version; 
+				return assembly.GetName().Version;
 			}
 		} // Version
 
@@ -36,7 +36,7 @@ namespace Itenso.Sys.Application
 			get
 			{
 				Version version = Version;
-				if ( version == null )
+				if (version == null)
 				{
 					return null;
 				}
@@ -47,14 +47,14 @@ namespace Itenso.Sys.Application
 		// ----------------------------------------------------------------------
 		public static string ShortVersionName
 		{
-			get 
+			get
 			{
 				Version version = Version;
-				if ( version == null )
+				if (version == null)
 				{
 					return null;
 				}
-				return string.Concat( version.Major.ToString(), ".", version.Minor.ToString() );
+				return string.Concat(version.Major.ToString(), ".", version.Minor.ToString());
 			}
 		} // ShortVersionName
 
@@ -67,12 +67,12 @@ namespace Itenso.Sys.Application
 
 				Assembly assembly = Assembly.GetEntryAssembly();
 				AssemblyTitleAttribute[] attributes =
-						assembly.GetCustomAttributes( typeof( AssemblyTitleAttribute ), false )
+						assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false)
 								as AssemblyTitleAttribute[];
 
-				if ( attributes != null && attributes.Length == 1 )
+				if (attributes != null && attributes.Length == 1)
 				{
-					title = attributes[ 0 ].Title;
+					title = attributes[0].Title;
 				}
 				return title;
 			}
@@ -87,12 +87,12 @@ namespace Itenso.Sys.Application
 
 				Assembly assembly = Assembly.GetEntryAssembly();
 				AssemblyCopyrightAttribute[] attributes =
-						assembly.GetCustomAttributes( typeof( AssemblyCopyrightAttribute ), false )
+						assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)
 								as AssemblyCopyrightAttribute[];
 
-				if ( attributes != null && attributes.Length == 1 )
+				if (attributes != null && attributes.Length == 1)
 				{
-					copyright = attributes[ 0 ].Copyright;
+					copyright = attributes[0].Copyright;
 				}
 				return copyright;
 			}
@@ -101,13 +101,13 @@ namespace Itenso.Sys.Application
 		// ----------------------------------------------------------------------
 		public static string Caption
 		{
-			get { return string.Concat( Title, " ", VersionName ); }
+			get { return string.Concat(Title, " ", VersionName); }
 		} // Caption
 
 		// ----------------------------------------------------------------------
 		public static string ShortCaption
 		{
-			get { return string.Concat( Title, " ", ShortVersionName ); }
+			get { return string.Concat(Title, " ", ShortVersionName); }
 		} // ShortCaption
 
 	} // class ApplicationInfo

@@ -19,16 +19,16 @@ namespace Itenso.Rtf
 		int Count { get; }
 
 		// ----------------------------------------------------------------------
-		IRtfTextFormat this[ int index ] { get; }
+		IRtfTextFormat this[int index] { get; }
 
 		// ----------------------------------------------------------------------
-		bool Contains( IRtfTextFormat format );
+		bool Contains(IRtfTextFormat format);
 
 		// ----------------------------------------------------------------------
-		int IndexOf( IRtfTextFormat format );
+		int IndexOf(IRtfTextFormat format);
 
 		// ----------------------------------------------------------------------
-		void CopyTo( IRtfTextFormat[] array, int index );
+		void CopyTo(IRtfTextFormat[] array, int index);
 
 	} // interface IRtfTextFormatCollection
 

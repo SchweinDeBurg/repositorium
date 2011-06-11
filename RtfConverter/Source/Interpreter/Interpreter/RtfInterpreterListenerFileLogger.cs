@@ -21,21 +21,21 @@ namespace Itenso.Rtf.Interpreter
 		public const string DefaultLogFileExtension = ".interpreter.log";
 
 		// ----------------------------------------------------------------------
-		public RtfInterpreterListenerFileLogger( string fileName )
-			: this( fileName, new RtfInterpreterLoggerSettings() )
+		public RtfInterpreterListenerFileLogger(string fileName)
+			: this(fileName, new RtfInterpreterLoggerSettings())
 		{
 		} // RtfInterpreterListenerFileLogger
 
 		// ----------------------------------------------------------------------
-		public RtfInterpreterListenerFileLogger( string fileName, RtfInterpreterLoggerSettings settings )
+		public RtfInterpreterListenerFileLogger(string fileName, RtfInterpreterLoggerSettings settings)
 		{
-			if ( fileName == null )
+			if (fileName == null)
 			{
-				throw new ArgumentNullException( "fileName" );
+				throw new ArgumentNullException("fileName");
 			}
-			if ( settings == null )
+			if (settings == null)
 			{
-				throw new ArgumentNullException( "settings" );
+				throw new ArgumentNullException("settings");
 			}
 
 			this.fileName = fileName;
@@ -61,70 +61,70 @@ namespace Itenso.Rtf.Interpreter
 		} // Dispose
 
 		// ----------------------------------------------------------------------
-		protected override void DoBeginDocument( IRtfInterpreterContext context )
+		protected override void DoBeginDocument(IRtfInterpreterContext context)
 		{
 			EnsureDirectory();
 			OpenStream();
 
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.BeginDocumentText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.BeginDocumentText))
 			{
-				WriteLine( settings.BeginDocumentText );
+				WriteLine(settings.BeginDocumentText);
 			}
 		} // DoBeginDocument
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertText( IRtfInterpreterContext context, string text )
+		protected override void DoInsertText(IRtfInterpreterContext context, string text)
 		{
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.TextFormatText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.TextFormatText))
 			{
 				string msg = text;
-				if ( msg.Length > settings.TextMaxLength && !string.IsNullOrEmpty( settings.TextOverflowText ) )
+				if (msg.Length > settings.TextMaxLength && !string.IsNullOrEmpty(settings.TextOverflowText))
 				{
-					msg = msg.Substring( 0, msg.Length - settings.TextOverflowText.Length ) + settings.TextOverflowText;
+					msg = msg.Substring(0, msg.Length - settings.TextOverflowText.Length) + settings.TextOverflowText;
 				}
-				WriteLine( string.Format(
+				WriteLine(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.TextFormatText,
 					msg,
-					context.CurrentTextFormat ) );
+					context.CurrentTextFormat));
 			}
 		} // DoInsertText
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertSpecialChar( IRtfInterpreterContext context, RtfVisualSpecialCharKind kind )
+		protected override void DoInsertSpecialChar(IRtfInterpreterContext context, RtfVisualSpecialCharKind kind)
 		{
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.SpecialCharFormatText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.SpecialCharFormatText))
 			{
-				WriteLine( string.Format(
+				WriteLine(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.SpecialCharFormatText,
-					kind ) );
+					kind));
 			}
 		} // DoInsertSpecialChar
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertBreak( IRtfInterpreterContext context, RtfVisualBreakKind kind )
+		protected override void DoInsertBreak(IRtfInterpreterContext context, RtfVisualBreakKind kind)
 		{
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.BreakFormatText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.BreakFormatText))
 			{
-				WriteLine( string.Format(
+				WriteLine(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.BreakFormatText,
-					kind ) );
+					kind));
 			}
 		} // DoInsertBreak
 
 		// ----------------------------------------------------------------------
-		protected override void DoInsertImage( IRtfInterpreterContext context,
+		protected override void DoInsertImage(IRtfInterpreterContext context,
 			RtfVisualImageFormat format,
 			int width, int height, int desiredWidth, int desiredHeight,
 			int scaleWidthPercent, int scaleHeightPercent,
 			string imageDataHex
 		)
 		{
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.ImageFormatText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.ImageFormatText))
 			{
-				WriteLine( string.Format(
+				WriteLine(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.ImageFormatText,
 					format,
@@ -135,57 +135,57 @@ namespace Itenso.Rtf.Interpreter
 					scaleWidthPercent,
 					scaleHeightPercent,
 					imageDataHex,
-					(imageDataHex.Length / 2) ) );
+					(imageDataHex.Length / 2)));
 			}
 		} // DoInsertImage
 
 		// ----------------------------------------------------------------------
-		protected override void DoEndDocument( IRtfInterpreterContext context )
+		protected override void DoEndDocument(IRtfInterpreterContext context)
 		{
-			if ( settings.Enabled && !string.IsNullOrEmpty( settings.EndDocumentText ) )
+			if (settings.Enabled && !string.IsNullOrEmpty(settings.EndDocumentText))
 			{
-				WriteLine( settings.EndDocumentText );
+				WriteLine(settings.EndDocumentText);
 			}
 
 			CloseStream();
 		} // DoEndDocument
 
 		// ----------------------------------------------------------------------
-		private void WriteLine( string message )
+		private void WriteLine(string message)
 		{
-			if ( streamWriter == null )
+			if (streamWriter == null)
 			{
 				return;
 			}
 
-			streamWriter.WriteLine( message );
+			streamWriter.WriteLine(message);
 			streamWriter.Flush();
 		} // WriteLine
 
 		// ----------------------------------------------------------------------
 		private void EnsureDirectory()
 		{
-			FileInfo fi = new FileInfo( fileName );
-			if ( !string.IsNullOrEmpty( fi.DirectoryName ) && !Directory.Exists( fi.DirectoryName ) )
+			FileInfo fi = new FileInfo(fileName);
+			if (!string.IsNullOrEmpty(fi.DirectoryName) && !Directory.Exists(fi.DirectoryName))
 			{
-				Directory.CreateDirectory( fi.DirectoryName );
+				Directory.CreateDirectory(fi.DirectoryName);
 			}
 		} // EnsureDirectory
 
 		// ----------------------------------------------------------------------
 		private void OpenStream()
 		{
-			if ( streamWriter != null )
+			if (streamWriter != null)
 			{
 				return;
 			}
-			streamWriter = new StreamWriter( fileName );
+			streamWriter = new StreamWriter(fileName);
 		} // OpenStream
 
 		// ----------------------------------------------------------------------
 		private void CloseStream()
 		{
-			if ( streamWriter == null )
+			if (streamWriter == null)
 			{
 				return;
 			}
@@ -204,4 +204,3 @@ namespace Itenso.Rtf.Interpreter
 
 } // namespace Itenso.Rtf.Interpreter
 // -- EOF -------------------------------------------------------------------
-	

@@ -38,7 +38,7 @@ namespace Itenso.Rtf
 		/// <param name="destination">the name of the start tag of the group to search</param>
 		/// <returns>the first matching group or null if nothing found</returns>
 		/// <exception cref="ArgumentNullException">in case of a null argument</exception>
-		IRtfGroup SelectChildGroupWithDestination( string destination );
+		IRtfGroup SelectChildGroupWithDestination(string destination);
 
 	} // interface IRtfGroup
 

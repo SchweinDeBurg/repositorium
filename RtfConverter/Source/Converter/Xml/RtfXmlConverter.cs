@@ -21,25 +21,25 @@ namespace Itenso.Rtf.Converter.Xml
 		public const string DefaultXmlFileExtension = ".xml";
 
 		// ----------------------------------------------------------------------
-		public RtfXmlConverter( IRtfDocument rtfDocument, XmlWriter writer )
-			: this( rtfDocument, writer, new RtfXmlConvertSettings() )
+		public RtfXmlConverter(IRtfDocument rtfDocument, XmlWriter writer)
+			: this(rtfDocument, writer, new RtfXmlConvertSettings())
 		{
 		} // RtfXmlConverter
 
 		// ----------------------------------------------------------------------
-		public RtfXmlConverter( IRtfDocument rtfDocument, XmlWriter writer, RtfXmlConvertSettings settings )
+		public RtfXmlConverter(IRtfDocument rtfDocument, XmlWriter writer, RtfXmlConvertSettings settings)
 		{
-			if ( rtfDocument == null )
+			if (rtfDocument == null)
 			{
-				throw new ArgumentNullException( "rtfDocument" );
+				throw new ArgumentNullException("rtfDocument");
 			}
-			if ( writer == null )
+			if (writer == null)
 			{
-				throw new ArgumentNullException( "writer" );
+				throw new ArgumentNullException("writer");
 			}
-			if ( settings == null )
+			if (settings == null)
 			{
-				throw new ArgumentNullException( "settings" );
+				throw new ArgumentNullException("settings");
 			}
 
 			this.rtfDocument = rtfDocument;
@@ -68,135 +68,135 @@ namespace Itenso.Rtf.Converter.Xml
 		// ----------------------------------------------------------------------
 		public void Convert()
 		{
-			WriteStartElement( "rtfVisuals" );
+			WriteStartElement("rtfVisuals");
 
-			foreach ( IRtfVisual visual in rtfDocument.VisualContent )
+			foreach (IRtfVisual visual in rtfDocument.VisualContent)
 			{
-				visual.Visit( this );
+				visual.Visit(this);
 			}
 
 			WriteEndElement();
 		} // Convert
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitText( IRtfVisualText visualText )
+		protected override void DoVisitText(IRtfVisualText visualText)
 		{
 			// suppress hidden text
-			if ( visualText.Format.IsHidden && settings.IsShowHiddenText == false )
+			if (visualText.Format.IsHidden && settings.IsShowHiddenText == false)
 			{
 				return;
 			}
 
-			WriteStartElement( "rtfVisualText" );
+			WriteStartElement("rtfVisualText");
 
-			WriteStartElement( "format" );
-			WriteElementString( "fontSize", visualText.Format.FontSize.ToString() );
-			WriteColor( "backgroundColor", visualText.Format.BackgroundColor );
-			WriteColor( "foregroundColor", visualText.Format.ForegroundColor );
-			WriteElementString( "alignment", visualText.Format.Alignment.ToString() );
-			WriteElementString( "superScript", visualText.Format.SuperScript.ToString() );
-			WriteElementString( "isBold", visualText.Format.IsBold.ToString() );
-			WriteElementString( "isItalic", visualText.Format.IsItalic.ToString() );
-			WriteElementString( "isStrikeThrough", visualText.Format.IsStrikeThrough.ToString() );
-			WriteElementString( "isUnderline", visualText.Format.IsUnderline.ToString() );
+			WriteStartElement("format");
+			WriteElementString("fontSize", visualText.Format.FontSize.ToString());
+			WriteColor("backgroundColor", visualText.Format.BackgroundColor);
+			WriteColor("foregroundColor", visualText.Format.ForegroundColor);
+			WriteElementString("alignment", visualText.Format.Alignment.ToString());
+			WriteElementString("superScript", visualText.Format.SuperScript.ToString());
+			WriteElementString("isBold", visualText.Format.IsBold.ToString());
+			WriteElementString("isItalic", visualText.Format.IsItalic.ToString());
+			WriteElementString("isStrikeThrough", visualText.Format.IsStrikeThrough.ToString());
+			WriteElementString("isUnderline", visualText.Format.IsUnderline.ToString());
 			WriteEndElement();
 
-			WriteStartElement( "font" );
-			WriteElementString( "id", visualText.Format.Font.Id );
-			WriteElementString( "kind", visualText.Format.Font.Kind.ToString() );
-			WriteElementString( "name", visualText.Format.Font.Name );
-			WriteElementString( "charSet", visualText.Format.Font.CharSet.ToString() );
-			WriteElementString( "codePage", visualText.Format.Font.CodePage.ToString() );
-			WriteElementString( "pitch", visualText.Format.Font.Pitch.ToString() );
+			WriteStartElement("font");
+			WriteElementString("id", visualText.Format.Font.Id);
+			WriteElementString("kind", visualText.Format.Font.Kind.ToString());
+			WriteElementString("name", visualText.Format.Font.Name);
+			WriteElementString("charSet", visualText.Format.Font.CharSet.ToString());
+			WriteElementString("codePage", visualText.Format.Font.CodePage.ToString());
+			WriteElementString("pitch", visualText.Format.Font.Pitch.ToString());
 			WriteEndElement();
 
-			WriteElementString( "text", visualText.Text );
+			WriteElementString("text", visualText.Text);
 			WriteEndElement();
 		} // DoVisitText
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitImage( IRtfVisualImage visualImage )
+		protected override void DoVisitImage(IRtfVisualImage visualImage)
 		{
-			WriteStartElement( "rtfVisualImage" );
+			WriteStartElement("rtfVisualImage");
 
-			WriteElementString( "format", visualImage.Format.ToString() );
-			WriteElementString( "width", visualImage.Width.ToString() );
-			WriteElementString( "height", visualImage.Height.ToString() );
-			WriteElementString( "desiredWidth", visualImage.DesiredWidth.ToString() );
-			WriteElementString( "desiredHeight", visualImage.DesiredHeight.ToString() );
-			WriteElementString( "scaleWidthPercent", visualImage.ScaleWidthPercent.ToString() );
-			WriteElementString( "scaleHeightPercent", visualImage.ScaleHeightPercent.ToString() );
-			WriteElementString( "alignment", visualImage.Alignment.ToString() );
+			WriteElementString("format", visualImage.Format.ToString());
+			WriteElementString("width", visualImage.Width.ToString());
+			WriteElementString("height", visualImage.Height.ToString());
+			WriteElementString("desiredWidth", visualImage.DesiredWidth.ToString());
+			WriteElementString("desiredHeight", visualImage.DesiredHeight.ToString());
+			WriteElementString("scaleWidthPercent", visualImage.ScaleWidthPercent.ToString());
+			WriteElementString("scaleHeightPercent", visualImage.ScaleHeightPercent.ToString());
+			WriteElementString("alignment", visualImage.Alignment.ToString());
 
-			WriteElementString( "image", visualImage.ImageDataHex );
+			WriteElementString("image", visualImage.ImageDataHex);
 
 			WriteEndElement();
 		} // DoVisitImage
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitSpecial( IRtfVisualSpecialChar visualSpecialChar )
+		protected override void DoVisitSpecial(IRtfVisualSpecialChar visualSpecialChar)
 		{
-			WriteStartElement( "rtfVisualSpecialChar" );
+			WriteStartElement("rtfVisualSpecialChar");
 
-			WriteElementString( "charKind", visualSpecialChar.CharKind.ToString() );
+			WriteElementString("charKind", visualSpecialChar.CharKind.ToString());
 
 			WriteEndElement();
 		} // DoVisitSpecial
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitBreak( IRtfVisualBreak visualBreak )
+		protected override void DoVisitBreak(IRtfVisualBreak visualBreak)
 		{
-			WriteStartElement( "rtfVisualBreak" );
+			WriteStartElement("rtfVisualBreak");
 
-			WriteElementString( "breakKind", visualBreak.BreakKind.ToString() );
+			WriteElementString("breakKind", visualBreak.BreakKind.ToString());
 
 			WriteEndElement();
 		} // DoVisitBreak
 
 		// ----------------------------------------------------------------------
-		private void WriteColor( string name, IRtfColor color )
+		private void WriteColor(string name, IRtfColor color)
 		{
-			WriteStartElement( name );
-			WriteElementString( "red", color.Red.ToString() );
-			WriteElementString( "green", color.Green.ToString() );
-			WriteElementString( "blue", color.Blue.ToString() );
+			WriteStartElement(name);
+			WriteElementString("red", color.Red.ToString());
+			WriteElementString("green", color.Green.ToString());
+			WriteElementString("blue", color.Blue.ToString());
 			WriteEndElement();
 		} // WriteColor
 
 		// ----------------------------------------------------------------------
-		private void WriteStartElement( string localName )
+		private void WriteStartElement(string localName)
 		{
-			if ( string.IsNullOrEmpty( settings.Prefix ) && string.IsNullOrEmpty( settings.Ns ) )
+			if (string.IsNullOrEmpty(settings.Prefix) && string.IsNullOrEmpty(settings.Ns))
 			{
-				writer.WriteStartElement( localName );
+				writer.WriteStartElement(localName);
 				return;
 			}
 
-			if ( string.IsNullOrEmpty( settings.Prefix ) )
+			if (string.IsNullOrEmpty(settings.Prefix))
 			{
-				writer.WriteStartElement( localName, settings.Ns );
+				writer.WriteStartElement(localName, settings.Ns);
 				return;
 			}
 
-			writer.WriteStartElement( settings.Prefix, localName, settings.Ns );
+			writer.WriteStartElement(settings.Prefix, localName, settings.Ns);
 		} // WriteStartElement
 
 		// ----------------------------------------------------------------------
-		private void WriteElementString( string localName, string value )
+		private void WriteElementString(string localName, string value)
 		{
-			if ( string.IsNullOrEmpty( settings.Prefix ) && string.IsNullOrEmpty( settings.Ns ) )
+			if (string.IsNullOrEmpty(settings.Prefix) && string.IsNullOrEmpty(settings.Ns))
 			{
-				writer.WriteElementString( localName, value );
+				writer.WriteElementString(localName, value);
 				return;
 			}
 
-			if ( string.IsNullOrEmpty( settings.Prefix ) )
+			if (string.IsNullOrEmpty(settings.Prefix))
 			{
-				writer.WriteElementString( localName, settings.Ns, value );
+				writer.WriteElementString(localName, settings.Ns, value);
 				return;
 			}
 
-			writer.WriteElementString( settings.Prefix, localName, settings.Ns, value );
+			writer.WriteElementString(settings.Prefix, localName, settings.Ns, value);
 		} // WriteStartElement
 
 		// ----------------------------------------------------------------------

@@ -43,13 +43,13 @@ namespace Itenso.Rtf.Interpreter
 		{
 			get
 			{
-				IRtfFont defaultFont = fontTable[ defaultFontId ];
-				if ( defaultFont != null )
+				IRtfFont defaultFont = fontTable[defaultFontId];
+				if (defaultFont != null)
 				{
 					return defaultFont;
 				}
-				throw new RtfUndefinedFontException( Strings.InvalidDefaultFont( 
-					defaultFontId, fontTable.ToString() ) );
+				throw new RtfUndefinedFontException(Strings.InvalidDefaultFont(
+					defaultFontId, fontTable.ToString()));
 			}
 		} // DefaultFont
 
@@ -103,23 +103,23 @@ namespace Itenso.Rtf.Interpreter
 		} // GetSafeCurrentTextFormat
 
 		// ----------------------------------------------------------------------
-		public IRtfTextFormat GetUniqueTextFormatInstance( IRtfTextFormat templateFormat )
+		public IRtfTextFormat GetUniqueTextFormatInstance(IRtfTextFormat templateFormat)
 		{
-			if ( templateFormat == null )
+			if (templateFormat == null)
 			{
-				throw new ArgumentNullException( "templateFormat" );
+				throw new ArgumentNullException("templateFormat");
 			}
 			IRtfTextFormat uniqueInstance;
-			int existingEquivalentPos = uniqueTextFormats.IndexOf( templateFormat );
-			if ( existingEquivalentPos >= 0 )
+			int existingEquivalentPos = uniqueTextFormats.IndexOf(templateFormat);
+			if (existingEquivalentPos >= 0)
 			{
 				// we already know an equivalent format -> reference that one for future use
-				uniqueInstance = uniqueTextFormats[ existingEquivalentPos ];
+				uniqueInstance = uniqueTextFormats[existingEquivalentPos];
 			}
 			else
 			{
 				// this is a yet unknown format -> add it to the known formats and use it
-				uniqueTextFormats.Add( templateFormat );
+				uniqueTextFormats.Add(templateFormat);
 				uniqueInstance = templateFormat;
 			}
 			return uniqueInstance;
@@ -130,16 +130,16 @@ namespace Itenso.Rtf.Interpreter
 		{
 			get
 			{
-				if ( currentTextFormat == null )
+				if (currentTextFormat == null)
 				{
 					// set via property to ensure it will get added to the unique map
-					WritableCurrentTextFormat = new RtfTextFormat( DefaultFont, RtfSpec.DefaultFontSize );
+					WritableCurrentTextFormat = new RtfTextFormat(DefaultFont, RtfSpec.DefaultFontSize);
 				}
 				return currentTextFormat;
 			}
 			set
 			{
-				currentTextFormat = (RtfTextFormat)GetUniqueTextFormatInstance( value );
+				currentTextFormat = (RtfTextFormat)GetUniqueTextFormatInstance(value);
 			}
 		} // WritableCurrentTextFormat
 
@@ -170,15 +170,15 @@ namespace Itenso.Rtf.Interpreter
 		// ----------------------------------------------------------------------
 		public void PushCurrentTextFormat()
 		{
-			textFormatStack.Push( WritableCurrentTextFormat );
+			textFormatStack.Push(WritableCurrentTextFormat);
 		} // PushCurrentTextFormat
 
 		// ----------------------------------------------------------------------
 		public void PopCurrentTextFormat()
 		{
-			if ( textFormatStack.Count == 0 )
+			if (textFormatStack.Count == 0)
 			{
-				throw new RtfStructureException( Strings.InvalidTextContextState );
+				throw new RtfStructureException(Strings.InvalidTextContextState);
 			}
 			currentTextFormat = (RtfTextFormat)textFormatStack.Pop();
 		} // PopCurrentTextFormat

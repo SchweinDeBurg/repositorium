@@ -22,7 +22,8 @@ namespace Itenso.Sys.Logging
 		} // StringBuilderLogger
 
 		// ----------------------------------------------------------------------
-		public StringBuilderLogger( LoggerLevel level ) : base( level )
+		public StringBuilderLogger(LoggerLevel level)
+			: base(level)
 		{
 		} // StringBuilderLogger
 
@@ -35,31 +36,31 @@ namespace Itenso.Sys.Logging
 		// ----------------------------------------------------------------------
 		public void Clear()
 		{
-			buffer.Remove( 0, buffer.Length );
+			buffer.Remove(0, buffer.Length);
 		} // Clear
 
 		// ----------------------------------------------------------------------
-		protected override void Output( LoggerLevel level, object message, Exception exception )
+		protected override void Output(LoggerLevel level, object message, Exception exception)
 		{
-			buffer.Append( level.ToString() );
-			buffer.Append( ": " );
-			buffer.AppendLine( message == null ? "null" : message.ToString() );
-			Output( exception );
+			buffer.Append(level.ToString());
+			buffer.Append(": ");
+			buffer.AppendLine(message == null ? "null" : message.ToString());
+			Output(exception);
 		} // Output
 
 		// ----------------------------------------------------------------------
-		private void Output( Exception exception )
+		private void Output(Exception exception)
 		{
-			if ( exception != null )
+			if (exception != null)
 			{
-				buffer.Append( exception.GetType().FullName );
-				buffer.Append( ": " );
-				buffer.AppendLine( exception.Message );
-				buffer.AppendLine( exception.StackTrace );
-				if ( exception.InnerException != null )
+				buffer.Append(exception.GetType().FullName);
+				buffer.Append(": ");
+				buffer.AppendLine(exception.Message);
+				buffer.AppendLine(exception.StackTrace);
+				if (exception.InnerException != null)
 				{
-					buffer.AppendLine( "Caused by:" );
-					Output( exception.InnerException );
+					buffer.AppendLine("Caused by:");
+					Output(exception.InnerException);
 				}
 			}
 		} // Output

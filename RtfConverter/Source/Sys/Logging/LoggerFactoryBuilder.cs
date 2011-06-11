@@ -68,9 +68,7 @@ namespace Itenso.Sys.Logging
 					// we may safely accept it for usage outside.
 					factory = newFactory;
 				}
-// ReSharper disable EmptyGeneralCatchClause
 				catch
-// ReSharper restore EmptyGeneralCatchClause
 				{
 					// yes, ignore for the moment
 				}

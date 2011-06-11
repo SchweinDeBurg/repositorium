@@ -27,9 +27,9 @@ namespace Itenso.Sys
 		/// <returns>the trimmed value</returns>
 		/// <exception cref="ArgumentNullException">in case the given value is null</exception>
 		/// <exception cref="ArgumentException">in case the trimmed given value is empty</exception>
-		public static string NonemptyTrimmedString( string value, string name )
+		public static string NonemptyTrimmedString(string value, string name)
 		{
-			return NonemptyTrimmedString( value, Strings.ArgumentMayNotBeEmpty, name );
+			return NonemptyTrimmedString(value, Strings.ArgumentMayNotBeEmpty, name);
 		} // NonemptyTrimmedString
 
 		// ----------------------------------------------------------------------
@@ -43,16 +43,16 @@ namespace Itenso.Sys
 		/// <returns>the trimmed value</returns>
 		/// <exception cref="ArgumentNullException">in case the given value is null</exception>
 		/// <exception cref="ArgumentException">in case the trimmed given value is empty</exception>
-		public static string NonemptyTrimmedString( string value, string exceptionMessage, string name )
+		public static string NonemptyTrimmedString(string value, string exceptionMessage, string name)
 		{
-			if ( value == null )
+			if (value == null)
 			{
-				throw new ArgumentNullException( name );
+				throw new ArgumentNullException(name);
 			}
 			string trimmed = value.Trim();
-			if ( trimmed.Length == 0 )
+			if (trimmed.Length == 0)
 			{
-				throw new ArgumentException( exceptionMessage, name );
+				throw new ArgumentException(exceptionMessage, name);
 			}
 			return trimmed;
 		} // NonemptyTrimmedString

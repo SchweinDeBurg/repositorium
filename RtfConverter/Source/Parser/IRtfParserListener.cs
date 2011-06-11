@@ -31,14 +31,14 @@ namespace Itenso.Rtf
 		/// Called when a new tag was found.
 		/// </summary>
 		/// <param name="tag">the newly found tag</param>
-		void TagFound( IRtfTag tag );
+		void TagFound(IRtfTag tag);
 
 		// ----------------------------------------------------------------------
 		/// <summary>
 		/// Called when a new text was found.
 		/// </summary>
 		/// <param name="text">the newly found text</param>
-		void TextFound( IRtfText text );
+		void TextFound(IRtfText text);
 
 		// ----------------------------------------------------------------------
 		/// <summary>
@@ -57,7 +57,7 @@ namespace Itenso.Rtf
 		/// Called if parsing failed.
 		/// </summary>
 		/// <param name="reason">the reason for the failure</param>
-		void ParseFail( RtfException reason );
+		void ParseFail(RtfException reason);
 
 		// ----------------------------------------------------------------------
 		/// <summary>

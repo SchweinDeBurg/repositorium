@@ -16,16 +16,16 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfVisualSpecialChar( RtfVisualSpecialCharKind charKind ) :
-			base( RtfVisualKind.Special )
+		public RtfVisualSpecialChar(RtfVisualSpecialCharKind charKind) :
+			base(RtfVisualKind.Special)
 		{
 			this.charKind = charKind;
 		} // RtfVisualSpecialChar
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisit( IRtfVisualVisitor visitor )
+		protected override void DoVisit(IRtfVisualVisitor visitor)
 		{
-			visitor.VisitSpecial( this );
+			visitor.VisitSpecial(this);
 		} // DoVisit
 
 		// ----------------------------------------------------------------------
@@ -35,19 +35,19 @@ namespace Itenso.Rtf.Model
 		} // CharKind
 
 		// ----------------------------------------------------------------------
-		protected override bool IsEqual( object obj )
+		protected override bool IsEqual(object obj)
 		{
 			RtfVisualSpecialChar compare = obj as RtfVisualSpecialChar; // guaranteed to be non-null
-			return 
+			return
 				compare != null &&
-				base.IsEqual( compare ) &&
+				base.IsEqual(compare) &&
 				charKind == compare.charKind;
 		} // IsEqual
 
 		// ----------------------------------------------------------------------
 		protected override int ComputeHashCode()
 		{
-			return HashTool.AddHashCode( base.ComputeHashCode(), charKind );
+			return HashTool.AddHashCode(base.ComputeHashCode(), charKind);
 		} // ComputeHashCode
 
 		// ----------------------------------------------------------------------

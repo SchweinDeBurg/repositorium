@@ -15,16 +15,16 @@ namespace Itenso.Rtf
 	{
 
 		// ----------------------------------------------------------------------
-		void VisitText( IRtfVisualText visualText );
+		void VisitText(IRtfVisualText visualText);
 
 		// ----------------------------------------------------------------------
-		void VisitBreak( IRtfVisualBreak visualBreak );
+		void VisitBreak(IRtfVisualBreak visualBreak);
 
 		// ----------------------------------------------------------------------
-		void VisitSpecial( IRtfVisualSpecialChar visualSpecialChar );
+		void VisitSpecial(IRtfVisualSpecialChar visualSpecialChar);
 
 		// ----------------------------------------------------------------------
-		void VisitImage( IRtfVisualImage visualImage );
+		void VisitImage(IRtfVisualImage visualImage);
 
 	} // interface IRtfVisualVisitor
 

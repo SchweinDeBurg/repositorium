@@ -19,16 +19,16 @@ namespace Itenso.Rtf
 		int Count { get; }
 
 		// ----------------------------------------------------------------------
-		bool ContainsFontWithId( string fontId );
+		bool ContainsFontWithId(string fontId);
 
 		// ----------------------------------------------------------------------
-		IRtfFont this[ int index ] { get; }
+		IRtfFont this[int index] { get; }
 
 		// ----------------------------------------------------------------------
-		IRtfFont this[ string id ] { get; }
+		IRtfFont this[string id] { get; }
 
 		// ----------------------------------------------------------------------
-		void CopyTo( IRtfFont[] array, int index );
+		void CopyTo(IRtfFont[] array, int index);
 
 	} // interface IRtfFontCollection
 

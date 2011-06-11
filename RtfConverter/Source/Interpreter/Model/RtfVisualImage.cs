@@ -31,35 +31,35 @@ namespace Itenso.Rtf.Model
 			int scaleHeightPercent,
 			string imageDataHex
 		) :
-			base( RtfVisualKind.Image )
+			base(RtfVisualKind.Image)
 		{
-			if ( width <= 0 )
+			if (width <= 0)
 			{
-				throw new ArgumentException( Strings.InvalidImageWidth( width ) );
+				throw new ArgumentException(Strings.InvalidImageWidth(width));
 			}
-			if ( height <= 0 )
+			if (height <= 0)
 			{
-				throw new ArgumentException( Strings.InvalidImageHeight( height ) );
+				throw new ArgumentException(Strings.InvalidImageHeight(height));
 			}
-			if ( desiredWidth <= 0 )
+			if (desiredWidth <= 0)
 			{
-				throw new ArgumentException( Strings.InvalidImageDesiredWidth( desiredWidth ) );
+				throw new ArgumentException(Strings.InvalidImageDesiredWidth(desiredWidth));
 			}
-			if ( desiredHeight <= 0 )
+			if (desiredHeight <= 0)
 			{
-				throw new ArgumentException( Strings.InvalidImageDesiredHeight( desiredHeight ) );
+				throw new ArgumentException(Strings.InvalidImageDesiredHeight(desiredHeight));
 			}
-			if ( scaleWidthPercent <= 0 )
+			if (scaleWidthPercent <= 0)
 			{
-				throw new ArgumentException( Strings.InvalidImageScaleWidth( scaleWidthPercent ) );
+				throw new ArgumentException(Strings.InvalidImageScaleWidth(scaleWidthPercent));
 			}
-			if ( scaleHeightPercent <= 0 )
+			if (scaleHeightPercent <= 0)
 			{
-				throw new ArgumentException( Strings.InvalidImageScaleHeight( scaleHeightPercent ) );
+				throw new ArgumentException(Strings.InvalidImageScaleHeight(scaleHeightPercent));
 			}
-			if ( imageDataHex == null )
+			if (imageDataHex == null)
 			{
-				throw new ArgumentNullException( "imageDataHex" );
+				throw new ArgumentNullException("imageDataHex");
 			}
 			this.format = format;
 			this.alignment = alignment;
@@ -73,9 +73,9 @@ namespace Itenso.Rtf.Model
 		} // RtfVisualImage
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisit( IRtfVisualVisitor visitor )
+		protected override void DoVisit(IRtfVisualVisitor visitor)
 		{
-			visitor.VisitImage( this );
+			visitor.VisitImage(this);
 		} // DoVisit
 
 		// ----------------------------------------------------------------------
@@ -136,7 +136,7 @@ namespace Itenso.Rtf.Model
 		// ----------------------------------------------------------------------
 		public byte[] ImageDataBinary
 		{
-			get { return imageDataBinary ?? ( imageDataBinary = ToBinary( imageDataHex ) ); }
+			get { return imageDataBinary ?? (imageDataBinary = ToBinary(imageDataHex)); }
 		} // ImageDataBinary
 
 		// ----------------------------------------------------------------------
@@ -144,7 +144,7 @@ namespace Itenso.Rtf.Model
 		{
 			get
 			{
-				switch ( format )
+				switch (format)
 				{
 					case RtfVisualImageFormat.Bmp:
 					case RtfVisualImageFormat.Jpg:
@@ -152,40 +152,40 @@ namespace Itenso.Rtf.Model
 					case RtfVisualImageFormat.Emf:
 					case RtfVisualImageFormat.Wmf:
 						byte[] data = ImageDataBinary;
-						return System.Drawing.Image.FromStream( new MemoryStream( data, 0, data.Length ) );
+						return System.Drawing.Image.FromStream(new MemoryStream(data, 0, data.Length));
 				}
 				return null;
 			}
 		} // ImageForDrawing
 
 		// ----------------------------------------------------------------------
-		public static byte[] ToBinary( string imageDataHex )
+		public static byte[] ToBinary(string imageDataHex)
 		{
-			if ( imageDataHex == null )
+			if (imageDataHex == null)
 			{
-				throw new ArgumentNullException( "imageDataHex" );
+				throw new ArgumentNullException("imageDataHex");
 			}
 
 			int hexDigits = imageDataHex.Length;
 			int dataSize = hexDigits / 2;
-			byte[] imageDataBinary = new byte[ dataSize ];
+			byte[] imageDataBinary = new byte[dataSize];
 
-			StringBuilder hex = new StringBuilder( 2 );
+			StringBuilder hex = new StringBuilder(2);
 
 			int dataPos = 0;
-			for ( int i = 0; i < hexDigits; i++ )
+			for (int i = 0; i < hexDigits; i++)
 			{
-				char c = imageDataHex[ i ];
-				if ( char.IsWhiteSpace( c ) )
+				char c = imageDataHex[i];
+				if (char.IsWhiteSpace(c))
 				{
 					continue;
 				}
-				hex.Append( imageDataHex[ i ] );
-				if ( hex.Length == 2 )
+				hex.Append(imageDataHex[i]);
+				if (hex.Length == 2)
 				{
-					imageDataBinary[ dataPos ] = byte.Parse( hex.ToString(), NumberStyles.HexNumber );
+					imageDataBinary[dataPos] = byte.Parse(hex.ToString(), NumberStyles.HexNumber);
 					dataPos++;
-					hex.Remove( 0, 2 );
+					hex.Remove(0, 2);
 				}
 			}
 
@@ -193,12 +193,12 @@ namespace Itenso.Rtf.Model
 		} // ToBinary
 
 		// ----------------------------------------------------------------------
-		protected override bool IsEqual( object obj )
+		protected override bool IsEqual(object obj)
 		{
 			RtfVisualImage compare = obj as RtfVisualImage; // guaranteed to be non-null
 			return
 				compare != null &&
-				base.IsEqual( compare ) &&
+				base.IsEqual(compare) &&
 				format == compare.format &&
 				alignment == compare.alignment &&
 				width == compare.width &&
@@ -207,7 +207,7 @@ namespace Itenso.Rtf.Model
 				desiredHeight == compare.desiredHeight &&
 				scaleWidthPercent == compare.scaleWidthPercent &&
 				scaleHeightPercent == compare.scaleHeightPercent &&
-				imageDataHex.Equals( compare.imageDataHex );
+				imageDataHex.Equals(compare.imageDataHex);
 			//imageDataBinary.Equals( compare.imageDataBinary ); // cached info only
 		} // IsEqual
 
@@ -215,15 +215,15 @@ namespace Itenso.Rtf.Model
 		protected override int ComputeHashCode()
 		{
 			int hash = base.ComputeHashCode();
-			hash = HashTool.AddHashCode( hash, format );
-			hash = HashTool.AddHashCode( hash, alignment );
-			hash = HashTool.AddHashCode( hash, width );
-			hash = HashTool.AddHashCode( hash, height );
-			hash = HashTool.AddHashCode( hash, desiredWidth );
-			hash = HashTool.AddHashCode( hash, desiredHeight );
-			hash = HashTool.AddHashCode( hash, scaleWidthPercent );
-			hash = HashTool.AddHashCode( hash, scaleHeightPercent );
-			hash = HashTool.AddHashCode( hash, imageDataHex );
+			hash = HashTool.AddHashCode(hash, format);
+			hash = HashTool.AddHashCode(hash, alignment);
+			hash = HashTool.AddHashCode(hash, width);
+			hash = HashTool.AddHashCode(hash, height);
+			hash = HashTool.AddHashCode(hash, desiredWidth);
+			hash = HashTool.AddHashCode(hash, desiredHeight);
+			hash = HashTool.AddHashCode(hash, scaleWidthPercent);
+			hash = HashTool.AddHashCode(hash, scaleHeightPercent);
+			hash = HashTool.AddHashCode(hash, imageDataHex);
 			//hash = HashTool.AddHashCode( hash, imageDataBinary ); // cached info only
 			return hash;
 		} // ComputeHashCode
@@ -235,7 +235,7 @@ namespace Itenso.Rtf.Model
 				width + " x " + height + " " +
 				"(" + desiredWidth + " x " + desiredHeight + ") " +
 				"{" + scaleWidthPercent + "% x " + scaleHeightPercent + "%} " +
-				":" + ( imageDataHex.Length / 2 ) + " bytes]";
+				":" + (imageDataHex.Length / 2) + " bytes]";
 		} // ToString
 
 		// ----------------------------------------------------------------------

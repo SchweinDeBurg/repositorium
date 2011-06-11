@@ -18,26 +18,26 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat( IRtfFont font, int fontSize )
+		public RtfTextFormat(IRtfFont font, int fontSize)
 		{
-			if ( font == null )
+			if (font == null)
 			{
-				throw new ArgumentNullException( "font" );
+				throw new ArgumentNullException("font");
 			}
-			if ( fontSize <= 0 || fontSize > 0xFFFF )
+			if (fontSize <= 0 || fontSize > 0xFFFF)
 			{
-				throw new ArgumentException( Strings.FontSizeOutOfRange( fontSize ) );
+				throw new ArgumentException(Strings.FontSizeOutOfRange(fontSize));
 			}
 			this.font = font;
 			this.fontSize = fontSize;
 		} // RtfTextFormat
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat( IRtfTextFormat copy )
+		public RtfTextFormat(IRtfTextFormat copy)
 		{
-			if ( copy == null )
+			if (copy == null)
 			{
-				throw new ArgumentNullException( "copy" );
+				throw new ArgumentNullException("copy");
 			}
 			font = copy.Font; // enough because immutable
 			fontSize = copy.FontSize;
@@ -53,11 +53,11 @@ namespace Itenso.Rtf.Model
 		} // RtfTextFormat
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat( RtfTextFormat copy )
+		public RtfTextFormat(RtfTextFormat copy)
 		{
-			if ( copy == null )
+			if (copy == null)
 			{
-				throw new ArgumentNullException( "copy" );
+				throw new ArgumentNullException("copy");
 			}
 			font = copy.font; // enough because immutable
 			fontSize = copy.fontSize;
@@ -77,42 +77,42 @@ namespace Itenso.Rtf.Model
 		{
 			get
 			{
-				StringBuilder buf = new StringBuilder( font.Name );
-				buf.Append( ", " );
-				buf.Append( fontSize );
-				buf.Append( superScript >= 0 ? "+" : "" );
-				buf.Append( superScript );
-				buf.Append( ", " );
-				if ( bold || italic || underline || strikeThrough )
+				StringBuilder buf = new StringBuilder(font.Name);
+				buf.Append(", ");
+				buf.Append(fontSize);
+				buf.Append(superScript >= 0 ? "+" : "");
+				buf.Append(superScript);
+				buf.Append(", ");
+				if (bold || italic || underline || strikeThrough)
 				{
 					bool combined = false;
-					if ( bold )
+					if (bold)
 					{
-						buf.Append( "bold" );
+						buf.Append("bold");
 						combined = true;
 					}
-					if ( italic )
+					if (italic)
 					{
-						buf.Append( combined ? "+italic" : "italic" );
+						buf.Append(combined ? "+italic" : "italic");
 						combined = true;
 					}
-					if ( underline )
+					if (underline)
 					{
-						buf.Append( combined ? "+underline" : "underline" );
+						buf.Append(combined ? "+underline" : "underline");
 						combined = true;
 					}
-					if ( strikeThrough )
+					if (strikeThrough)
 					{
-						buf.Append( combined ? "+strikethrough" : "strikethrough" );
+						buf.Append(combined ? "+strikethrough" : "strikethrough");
 					}
 				}
 				else
 				{
-					buf.Append( "plain" );
+					buf.Append("plain");
 				}
-				if ( hidden )
+				if (hidden)
 				{
-					buf.Append( ", hidden" );
+					buf.Append(", hidden");
 				}
 				return buf.ToString();
 			}
@@ -125,18 +125,18 @@ namespace Itenso.Rtf.Model
 		} // Font
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithFont( IRtfFont rtfFont )
+		public RtfTextFormat DeriveWithFont(IRtfFont rtfFont)
 		{
-			if ( rtfFont == null )
+			if (rtfFont == null)
 			{
-				throw new ArgumentNullException( "rtfFont" );
+				throw new ArgumentNullException("rtfFont");
 			}
-			if ( font.Equals( rtfFont ) )
+			if (font.Equals(rtfFont))
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( this );
+			RtfTextFormat copy = new RtfTextFormat(this);
 			copy.font = rtfFont;
 			return copy;
 		} // DeriveWithFont
@@ -148,18 +148,18 @@ namespace Itenso.Rtf.Model
 		} // FontSize
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithFontSize( int derivedFontSize )
+		public RtfTextFormat DeriveWithFontSize(int derivedFontSize)
 		{
-			if ( derivedFontSize <= 0 || derivedFontSize > 0xFFFF )
+			if (derivedFontSize <= 0 || derivedFontSize > 0xFFFF)
 			{
-				throw new ArgumentException( Strings.FontSizeOutOfRange( derivedFontSize ) );
+				throw new ArgumentException(Strings.FontSizeOutOfRange(derivedFontSize));
 			}
-			if ( fontSize == derivedFontSize )
+			if (fontSize == derivedFontSize)
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( this );
+			RtfTextFormat copy = new RtfTextFormat(this);
 			copy.fontSize = derivedFontSize;
 			return copy;
 		} // DeriveWithFontSize
@@ -171,24 +171,24 @@ namespace Itenso.Rtf.Model
 		} // SuperScript
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithSuperScript( int deviation )
+		public RtfTextFormat DeriveWithSuperScript(int deviation)
 		{
-			if ( superScript == deviation )
+			if (superScript == deviation)
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( this );
+			RtfTextFormat copy = new RtfTextFormat(this);
 			copy.superScript = deviation;
 			return copy;
 		} // DeriveWithSuperScript
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithSuperScript( bool super )
+		public RtfTextFormat DeriveWithSuperScript(bool super)
 		{
-			RtfTextFormat copy = new RtfTextFormat( this );
-			copy.fontSize = Math.Max( 1, ( fontSize * 2 ) / 3 );
-			copy.superScript = ( super ? 1 : -1 ) * Math.Max( 1, fontSize / 2 );
+			RtfTextFormat copy = new RtfTextFormat(this);
+			copy.fontSize = Math.Max(1, (fontSize * 2) / 3);
+			copy.superScript = (super ? 1 : -1) * Math.Max(1, fontSize / 2);
 			return copy;
 		} // DeriveWithSuperScript
 
@@ -202,20 +202,20 @@ namespace Itenso.Rtf.Model
 					!hidden &&
 					fontSize == RtfSpec.DefaultFontSize &&
 					superScript == 0 &&
-					RtfColor.Black.Equals( foregroundColor ) &&
-					RtfColor.White.Equals( backgroundColor );
+					RtfColor.Black.Equals(foregroundColor) &&
+					RtfColor.White.Equals(backgroundColor);
 			}
 		} // IsNormal
 
 		// ----------------------------------------------------------------------
 		public RtfTextFormat DeriveNormal()
 		{
-			if ( IsNormal )
+			if (IsNormal)
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( font, RtfSpec.DefaultFontSize );
+			RtfTextFormat copy = new RtfTextFormat(font, RtfSpec.DefaultFontSize);
 			copy.alignment = alignment; // this is a paragraph property, keep it
 			return copy;
 		} // DeriveNormal
@@ -227,14 +227,14 @@ namespace Itenso.Rtf.Model
 		} // IsBold
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithBold( bool derivedBold )
+		public RtfTextFormat DeriveWithBold(bool derivedBold)
 		{
-			if ( bold == derivedBold )
+			if (bold == derivedBold)
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( this );
+			RtfTextFormat copy = new RtfTextFormat(this);
 			copy.bold = derivedBold;
 			return copy;
 		} // DeriveWithBold
@@ -246,14 +246,14 @@ namespace Itenso.Rtf.Model
 		} // IsItalic
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithItalic( bool derivedItalic )
+		public RtfTextFormat DeriveWithItalic(bool derivedItalic)
 		{
-			if ( italic == derivedItalic )
+			if (italic == derivedItalic)
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( this );
+			RtfTextFormat copy = new RtfTextFormat(this);
 			copy.italic = derivedItalic;
 			return copy;
 		} // DeriveWithItalic
@@ -265,14 +265,14 @@ namespace Itenso.Rtf.Model
 		} // IsUnderline
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithUnderline( bool derivedUnderline )
+		public RtfTextFormat DeriveWithUnderline(bool derivedUnderline)
 		{
-			if ( underline == derivedUnderline )
+			if (underline == derivedUnderline)
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( this );
+			RtfTextFormat copy = new RtfTextFormat(this);
 			copy.underline = derivedUnderline;
 			return copy;
 		} // DeriveWithUnderline
@@ -284,14 +284,14 @@ namespace Itenso.Rtf.Model
 		} // IsStrikeThrough
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithStrikeThrough( bool derivedStrikeThrough )
+		public RtfTextFormat DeriveWithStrikeThrough(bool derivedStrikeThrough)
 		{
-			if ( strikeThrough == derivedStrikeThrough )
+			if (strikeThrough == derivedStrikeThrough)
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( this );
+			RtfTextFormat copy = new RtfTextFormat(this);
 			copy.strikeThrough = derivedStrikeThrough;
 			return copy;
 		} // DeriveWithStrikeThrough
@@ -303,14 +303,14 @@ namespace Itenso.Rtf.Model
 		} // IsHidden
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithHidden( bool derivedHidden )
+		public RtfTextFormat DeriveWithHidden(bool derivedHidden)
 		{
-			if ( hidden == derivedHidden )
+			if (hidden == derivedHidden)
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( this );
+			RtfTextFormat copy = new RtfTextFormat(this);
 			copy.hidden = derivedHidden;
 			return copy;
 		} // DeriveWithHidden
@@ -322,18 +322,18 @@ namespace Itenso.Rtf.Model
 		} // BackgroundColor
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithBackgroundColor( IRtfColor derivedBackgroundColor )
+		public RtfTextFormat DeriveWithBackgroundColor(IRtfColor derivedBackgroundColor)
 		{
-			if ( derivedBackgroundColor == null )
+			if (derivedBackgroundColor == null)
 			{
-				throw new ArgumentNullException( "derivedBackgroundColor" );
+				throw new ArgumentNullException("derivedBackgroundColor");
 			}
-			if ( backgroundColor.Equals( derivedBackgroundColor ) )
+			if (backgroundColor.Equals(derivedBackgroundColor))
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( this );
+			RtfTextFormat copy = new RtfTextFormat(this);
 			copy.backgroundColor = derivedBackgroundColor;
 			return copy;
 		} // DeriveWithBackgroundColor
@@ -345,18 +345,18 @@ namespace Itenso.Rtf.Model
 		} // ForegroundColor
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithForegroundColor( IRtfColor derivedForegroundColor )
+		public RtfTextFormat DeriveWithForegroundColor(IRtfColor derivedForegroundColor)
 		{
-			if ( derivedForegroundColor == null )
+			if (derivedForegroundColor == null)
 			{
-				throw new ArgumentNullException( "derivedForegroundColor" );
+				throw new ArgumentNullException("derivedForegroundColor");
 			}
-			if ( foregroundColor.Equals( derivedForegroundColor ) )
+			if (foregroundColor.Equals(derivedForegroundColor))
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( this );
+			RtfTextFormat copy = new RtfTextFormat(this);
 			copy.foregroundColor = derivedForegroundColor;
 			return copy;
 		} // DeriveWithForegroundColor
@@ -368,14 +368,14 @@ namespace Itenso.Rtf.Model
 		} // Alignment
 
 		// ----------------------------------------------------------------------
-		public RtfTextFormat DeriveWithAlignment( RtfTextAlignment derivedAlignment )
+		public RtfTextFormat DeriveWithAlignment(RtfTextAlignment derivedAlignment)
 		{
-			if ( alignment == derivedAlignment )
+			if (alignment == derivedAlignment)
 			{
 				return this;
 			}
 
-			RtfTextFormat copy = new RtfTextFormat( this );
+			RtfTextFormat copy = new RtfTextFormat(this);
 			copy.alignment = derivedAlignment;
 			return copy;
 		} // DeriveWithForegroundColor
@@ -383,44 +383,44 @@ namespace Itenso.Rtf.Model
 		// ----------------------------------------------------------------------
 		IRtfTextFormat IRtfTextFormat.Duplicate()
 		{
-			return new RtfTextFormat( this );
+			return new RtfTextFormat(this);
 		} // IRtfTextFormat.Duplicate
 
 		// ----------------------------------------------------------------------
 		public RtfTextFormat Duplicate()
 		{
-			return new RtfTextFormat( this );
+			return new RtfTextFormat(this);
 		} // Duplicate
 
 		// ----------------------------------------------------------------------
-		public override bool Equals( object obj )
+		public override bool Equals(object obj)
 		{
-			if ( obj == this )
+			if (obj == this)
 			{
 				return true;
 			}
-			
-			if ( obj == null || GetType() != obj.GetType() )
+
+			if (obj == null || GetType() != obj.GetType())
 			{
 				return false;
 			}
 
-			return IsEqual( obj );
+			return IsEqual(obj);
 		} // Equals
 
 		// ----------------------------------------------------------------------
 		public override int GetHashCode()
 		{
-			return HashTool.AddHashCode( GetType().GetHashCode(), ComputeHashCode() );
+			return HashTool.AddHashCode(GetType().GetHashCode(), ComputeHashCode());
 		} // GetHashCode
 
 		// ----------------------------------------------------------------------
-		private bool IsEqual( object obj )
+		private bool IsEqual(object obj)
 		{
 			RtfTextFormat compare = obj as RtfTextFormat; // guaranteed to be non-null
 			return
 				compare != null &&
-				font.Equals( compare.font ) &&
+				font.Equals(compare.font) &&
 				fontSize == compare.fontSize &&
 				superScript == compare.superScript &&
 				bold == compare.bold &&
@@ -428,8 +428,8 @@ namespace Itenso.Rtf.Model
 				underline == compare.underline &&
 				strikeThrough == compare.strikeThrough &&
 				hidden == compare.hidden &&
-				backgroundColor.Equals( compare.backgroundColor ) &&
-				foregroundColor.Equals( compare.foregroundColor ) &&
+				backgroundColor.Equals(compare.backgroundColor) &&
+				foregroundColor.Equals(compare.foregroundColor) &&
 				alignment == compare.alignment;
 		} // IsEqual
 
@@ -437,30 +437,30 @@ namespace Itenso.Rtf.Model
 		private int ComputeHashCode()
 		{
 			int hash = font.GetHashCode();
-			hash = HashTool.AddHashCode( hash, fontSize );
-			hash = HashTool.AddHashCode( hash, superScript );
-			hash = HashTool.AddHashCode( hash, bold );
-			hash = HashTool.AddHashCode( hash, italic );
-			hash = HashTool.AddHashCode( hash, underline );
-			hash = HashTool.AddHashCode( hash, strikeThrough );
-			hash = HashTool.AddHashCode( hash, hidden );
-			hash = HashTool.AddHashCode( hash, backgroundColor );
-			hash = HashTool.AddHashCode( hash, foregroundColor );
-			hash = HashTool.AddHashCode( hash, alignment );
+			hash = HashTool.AddHashCode(hash, fontSize);
+			hash = HashTool.AddHashCode(hash, superScript);
+			hash = HashTool.AddHashCode(hash, bold);
+			hash = HashTool.AddHashCode(hash, italic);
+			hash = HashTool.AddHashCode(hash, underline);
+			hash = HashTool.AddHashCode(hash, strikeThrough);
+			hash = HashTool.AddHashCode(hash, hidden);
+			hash = HashTool.AddHashCode(hash, backgroundColor);
+			hash = HashTool.AddHashCode(hash, foregroundColor);
+			hash = HashTool.AddHashCode(hash, alignment);
 			return hash;
 		} // ComputeHashCode
 
 		// ----------------------------------------------------------------------
 		public override string ToString()
 		{
-			StringBuilder buf = new StringBuilder( "Font " );
-			buf.Append( FontDescriptionDebug );
-			buf.Append( ", " );
-			buf.Append( alignment );
-			buf.Append( ", " );
-			buf.Append( foregroundColor.ToString() );
-			buf.Append( " on " );
-			buf.Append( backgroundColor.ToString() );
+			StringBuilder buf = new StringBuilder("Font ");
+			buf.Append(FontDescriptionDebug);
+			buf.Append(", ");
+			buf.Append(alignment);
+			buf.Append(", ");
+			buf.Append(foregroundColor.ToString());
+			buf.Append(" on ");
+			buf.Append(backgroundColor.ToString());
 			return buf.ToString();
 		} // ToString
 

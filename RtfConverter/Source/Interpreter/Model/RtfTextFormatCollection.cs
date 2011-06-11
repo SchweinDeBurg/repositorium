@@ -16,27 +16,27 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public IRtfTextFormat this[ int index ]
+		public IRtfTextFormat this[int index]
 		{
-			get { return InnerList[ index ] as IRtfTextFormat; }
+			get { return InnerList[index] as IRtfTextFormat; }
 		} // this[ int ]
 
 		// ----------------------------------------------------------------------
-		public bool Contains( IRtfTextFormat format )
+		public bool Contains(IRtfTextFormat format)
 		{
-			return IndexOf( format ) >= 0;
+			return IndexOf(format) >= 0;
 		} // Contains
 
 		// ----------------------------------------------------------------------
-		public int IndexOf( IRtfTextFormat format )
+		public int IndexOf(IRtfTextFormat format)
 		{
-			if ( format != null )
+			if (format != null)
 			{
 				// PERFORMANCE: most probably we should maintain a hashmap for fast searching ...
 				int count = Count;
-				for ( int i = 0; i < count; i++ )
+				for (int i = 0; i < count; i++)
 				{
-					if ( format.Equals( InnerList[ i ] ) )
+					if (format.Equals(InnerList[i]))
 					{
 						return i;
 					}
@@ -46,19 +46,19 @@ namespace Itenso.Rtf.Model
 		} // IndexOf
 
 		// ----------------------------------------------------------------------
-		public void CopyTo( IRtfTextFormat[] array, int index )
+		public void CopyTo(IRtfTextFormat[] array, int index)
 		{
-			InnerList.CopyTo( array, index );
+			InnerList.CopyTo(array, index);
 		} // CopyTo
 
 		// ----------------------------------------------------------------------
-		public void Add( IRtfTextFormat item )
+		public void Add(IRtfTextFormat item)
 		{
-			if ( item == null )
+			if (item == null)
 			{
-				throw new ArgumentNullException( "item" );
+				throw new ArgumentNullException("item");
 			}
-			InnerList.Add( item );
+			InnerList.Add(item);
 		} // Add
 
 		// ----------------------------------------------------------------------

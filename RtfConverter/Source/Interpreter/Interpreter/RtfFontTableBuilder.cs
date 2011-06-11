@@ -18,13 +18,13 @@ namespace Itenso.Rtf.Interpreter
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfFontTableBuilder( RtfFontCollection fontTable ) :
-			base( RtfElementVisitorOrder.NonRecursive )
+		public RtfFontTableBuilder(RtfFontCollection fontTable) :
+			base(RtfElementVisitorOrder.NonRecursive)
 		{
 			// we iterate over our children ourselves -> hence non-recursive
-			if ( fontTable == null )
+			if (fontTable == null)
 			{
-				throw new ArgumentNullException( "fontTable" );
+				throw new ArgumentNullException("fontTable");
 			}
 			this.fontTable = fontTable;
 		} // RtfFontTableBuilder
@@ -36,9 +36,9 @@ namespace Itenso.Rtf.Interpreter
 		} // Reset
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitGroup( IRtfGroup group )
+		protected override void DoVisitGroup(IRtfGroup group)
 		{
-			switch ( group.Destination )
+			switch (group.Destination)
 			{
 				case RtfSpec.TagFont:
 				case RtfSpec.TagThemeFontLoMajor:
@@ -49,15 +49,15 @@ namespace Itenso.Rtf.Interpreter
 				case RtfSpec.TagThemeFontHiMinor:
 				case RtfSpec.TagThemeFontDbMinor:
 				case RtfSpec.TagThemeFontBiMinor:
-					BuildFontFromGroup( group );
+					BuildFontFromGroup(group);
 					break;
 				case RtfSpec.TagFontTable:
-					if ( group.Contents.Count > 1 )
+					if (group.Contents.Count > 1)
 					{
-						if ( group.Contents[ 1 ].Kind == RtfElementKind.Group )
+						if (group.Contents[1].Kind == RtfElementKind.Group)
 						{
 							// the 'new' style where each font resides in a group of its own
-							VisitGroupChildren( group );
+							VisitGroupChildren(group);
 						}
 						else
 						{
@@ -66,10 +66,10 @@ namespace Itenso.Rtf.Interpreter
 							// -> need to manually iterate from here
 							int childCount = group.Contents.Count;
 							fontBuilder.Reset();
-							for ( int i = 1; i < childCount; i++ ) // skip over the initial \fonttbl tag
+							for (int i = 1; i < childCount; i++) // skip over the initial \fonttbl tag
 							{
-								group.Contents[ i ].Visit( fontBuilder );
-								if ( fontBuilder.FontName != null )
+								group.Contents[i].Visit(fontBuilder);
+								if (fontBuilder.FontName != null)
 								{
 									// fonts are 'terminated' by their name (as content text)
 									AddCurrentFont();
@@ -84,23 +84,23 @@ namespace Itenso.Rtf.Interpreter
 		} // DoVisitGroup
 
 		// ----------------------------------------------------------------------
-		private void BuildFontFromGroup( IRtfGroup group )
+		private void BuildFontFromGroup(IRtfGroup group)
 		{
 			fontBuilder.Reset();
-			fontBuilder.VisitGroup( group );
+			fontBuilder.VisitGroup(group);
 			AddCurrentFont();
 		} // BuildFontFromGroup
 
 		// ----------------------------------------------------------------------
 		private void AddCurrentFont()
 		{
-			if ( !fontTable.ContainsFontWithId( fontBuilder.FontId ) )
+			if (!fontTable.ContainsFontWithId(fontBuilder.FontId))
 			{
-				fontTable.Add( fontBuilder.CreateFont() );
+				fontTable.Add(fontBuilder.CreateFont());
 			}
 			else
 			{
-				throw new RtfFontTableFormatException( Strings.DuplicateFont( fontBuilder.FontId ) );
+				throw new RtfFontTableFormatException(Strings.DuplicateFont(fontBuilder.FontId));
 			}
 		} // AddCurrentFont
 

@@ -19,16 +19,16 @@ namespace Itenso.Rtf.Converter.Image
 
 		// ----------------------------------------------------------------------
 		public RtfImageConvertSettings()
-			: this( new RtfVisualImageAdapter() )
+			: this(new RtfVisualImageAdapter())
 		{
 		} // RtfImageConvertSettings
 
 		// ----------------------------------------------------------------------
-		public RtfImageConvertSettings( IRtfVisualImageAdapter imageAdapter )
+		public RtfImageConvertSettings(IRtfVisualImageAdapter imageAdapter)
 		{
-			if ( imageAdapter == null )
+			if (imageAdapter == null)
 			{
-				throw new ArgumentNullException( "imageAdapter" );
+				throw new ArgumentNullException("imageAdapter");
 			}
 
 			this.imageAdapter = imageAdapter;
@@ -76,12 +76,12 @@ namespace Itenso.Rtf.Converter.Image
 		} // ScaleExtension
 
 		// ----------------------------------------------------------------------
-		public string GetImageFileName( int index, RtfVisualImageFormat rtfVisualImageFormat )
+		public string GetImageFileName(int index, RtfVisualImageFormat rtfVisualImageFormat)
 		{
-			string imageFileName = imageAdapter.ResolveFileName( index, rtfVisualImageFormat );
-			if ( !string.IsNullOrEmpty( imagesPath ) )
+			string imageFileName = imageAdapter.ResolveFileName(index, rtfVisualImageFormat);
+			if (!string.IsNullOrEmpty(imagesPath))
 			{
-				imageFileName = Path.Combine( imagesPath, imageFileName );
+				imageFileName = Path.Combine(imagesPath, imageFileName);
 			}
 			return imageFileName;
 		} // GetImageFileName

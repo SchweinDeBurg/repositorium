@@ -19,10 +19,10 @@ namespace Itenso.Rtf
 		int Count { get; }
 
 		// ----------------------------------------------------------------------
-		IRtfColor this[ int index ] { get; }
+		IRtfColor this[int index] { get; }
 
 		// ----------------------------------------------------------------------
-		void CopyTo( IRtfColor[] array, int index );
+		void CopyTo(IRtfColor[] array, int index);
 
 	} // interface IRtfColorCollection
 

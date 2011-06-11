@@ -16,20 +16,20 @@ namespace Itenso.Sys.Application
 	{
 
 		// ----------------------------------------------------------------------
-		public NamedValueArgument( string name )
-			: this( ArgumentType.None, name, null )
+		public NamedValueArgument(string name)
+			: this(ArgumentType.None, name, null)
 		{
 		} // NamedValueArgument
 
 		// ----------------------------------------------------------------------
-		public NamedValueArgument( string name, object defaultValue )
-			: this( ArgumentType.None, name, defaultValue )
+		public NamedValueArgument(string name, object defaultValue)
+			: this(ArgumentType.None, name, defaultValue)
 		{
 		} // NamedValueArgument
 
 		// ----------------------------------------------------------------------
-		public NamedValueArgument( ArgumentType argumentType, string name, object defaultValue )
-			: base( argumentType | ArgumentType.ContainsValue | ArgumentType.HasName, name, defaultValue )
+		public NamedValueArgument(ArgumentType argumentType, string name, object defaultValue)
+			: base(argumentType | ArgumentType.ContainsValue | ArgumentType.HasName, name, defaultValue)
 		{
 		} // NamedValueArgument
 
@@ -46,16 +46,16 @@ namespace Itenso.Sys.Application
 		} // ToString
 
 		// ----------------------------------------------------------------------
-		protected override bool OnLoad( string commandLineArg )
+		protected override bool OnLoad(string commandLineArg)
 		{
 			// format: /name:value
 			string valueName = Name + ":";
-			if ( !commandLineArg.StartsWith( valueName, StringComparison.InvariantCultureIgnoreCase ) )
+			if (!commandLineArg.StartsWith(valueName, StringComparison.InvariantCultureIgnoreCase))
 			{
 				return false;
 			}
 
-			base.Value = commandLineArg.Substring( valueName.Length );
+			base.Value = commandLineArg.Substring(valueName.Length);
 			return true;
 		} // OnLoad
 

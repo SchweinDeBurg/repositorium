@@ -17,11 +17,11 @@ namespace Itenso.Rtf.Converter.Html
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfHtmlCssStyle( string selectorName )
+		public RtfHtmlCssStyle(string selectorName)
 		{
-			if ( selectorName == null )
+			if (selectorName == null)
 			{
-				throw new ArgumentNullException( "selectorName" );
+				throw new ArgumentNullException("selectorName");
 			}
 			this.selectorName = selectorName;
 		} // RtfHtmlCssStyle

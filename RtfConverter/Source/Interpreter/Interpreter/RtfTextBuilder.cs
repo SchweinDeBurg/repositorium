@@ -18,7 +18,7 @@ namespace Itenso.Rtf.Interpreter
 
 		// ----------------------------------------------------------------------
 		public RtfTextBuilder()
-			: base( RtfElementVisitorOrder.DepthFirst )
+			: base(RtfElementVisitorOrder.DepthFirst)
 		{
 			Reset();
 		} // RtfTextBuilder
@@ -32,13 +32,13 @@ namespace Itenso.Rtf.Interpreter
 		// ----------------------------------------------------------------------
 		public void Reset()
 		{
-			buffer.Remove( 0, buffer.Length );
+			buffer.Remove(0, buffer.Length);
 		} // Reset
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitText( IRtfText text )
+		protected override void DoVisitText(IRtfText text)
 		{
-			buffer.Append( text.Text );
+			buffer.Append(text.Text);
 		} // DoVisitText
 
 		// ----------------------------------------------------------------------
