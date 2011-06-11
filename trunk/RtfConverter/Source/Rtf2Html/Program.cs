@@ -40,11 +40,11 @@ namespace Itenso.Solutions.Community.Rtf2Html
 		static extern int MessageBox(IntPtr hWnd, String text, String caption, int options);
 
 		// ----------------------------------------------------------------------
-		public Program(string rtf, string html, string arg1, string arg2, string arg3,
+		public Program(string rtfFile, string htmlFile, string arg1, string arg2, string arg3,
 			string arg4, string arg5, string arg6, string arg7, string arg8, string arg9)
 		{
 			ExitCode = ProgramExitCode.Successfully;
-			string[] args = { rtf, html, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9 };
+			string[] args = { rtfFile, htmlFile, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9 };
 			settings = new ProgramSettings(args);
 		} // Program
 
