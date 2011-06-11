@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
 	<assemblyIdentity
-		version="6.0.7.0"
+		version="6.2.3.854"
 		processorArchitecture="x86"
-		name="AbstractSpoon.ToDoList.SpellCheck"
+		name="AbstractSpoon.ToDoList.MySpellCheck"
 		type="win32">
 	</assemblyIdentity>
 	<description>ToDoList spellcheck module</description>
