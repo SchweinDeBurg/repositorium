@@ -177,15 +177,14 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent, int nLength
 	nLength = 0; // reuse for resultant html length
 
 	// try loading our new converter
-	CString sRtf2HtmlPath = FileMisc::GetAppFolder() + _T("\\rtf2htmlbridge.dll");
+	CString sRtf2HtmlPath = FileMisc::GetAppFolder() + _T("\\Rtf2HtmlBridge.dll");
 	static HMODULE hMod = LoadLibrary(sRtf2HtmlPath);
 
 	if (hMod)
 	{
-		typedef int (*PFNCONVERTRTF2HTML)(const char*, const char*, const char*,
-			const char*, const char*, const char*,
-			const char*, const char*, const char*,
-			const char*, const char*);
+		typedef int (*PFNCONVERTRTF2HTML)(LPCTSTR /*rtfFile*/, LPCTSTR /*htmlFile*/, LPCTSTR /*arg1*/,
+			LPCTSTR /*arg2*/, LPCTSTR /*arg3*/, LPCTSTR /*arg4*/, LPCTSTR /*arg5*/, LPCTSTR /*arg6*/,
+			LPCTSTR /*arg7*/, LPCTSTR /*arg8*/, LPCTSTR /*arg9*/);
 
 		PFNCONVERTRTF2HTML fnRtf2Html = (PFNCONVERTRTF2HTML)GetProcAddress(hMod, "fnRtf2Html");
 
@@ -210,9 +209,8 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent, int nLength
 			try
 			{
 				nLength = 0;
-				int nRet = fnRtf2Html((LPSTR)ATL::CT2A(sTempRtf), (LPSTR)ATL::CT2A(FileMisc::GetTempFolder()),
-					(LPSTR)ATL::CT2A(sImgDir), "/IT:png", "/DS:content", (LPSTR)ATL::CT2A(sCharSet), "", "", "",
-					"", "");
+				int nRet = fnRtf2Html(sTempRtf, FileMisc::GetTempFolder(), sImgDir, _T("/IT:png"),
+					_T("/DS:content"), sCharSet, _T(""), _T(""), _T(""), _T(""), _T(""));
 				if (nRet)
 				{
 					CTextFileRead file(sTempHtml);
