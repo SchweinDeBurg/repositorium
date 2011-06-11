@@ -18,7 +18,7 @@ namespace Itenso.Rtf
 		RtfElementKind Kind { get; }
 
 		// ----------------------------------------------------------------------
-		void Visit( IRtfElementVisitor visitor );
+		void Visit(IRtfElementVisitor visitor);
 
 	} // interface IRtfElement
 

@@ -17,17 +17,17 @@ namespace Itenso.Rtf.Converter.Html
 	{
 
 		// ----------------------------------------------------------------------
-		public IRtfHtmlCssStyle this[ int index ]
+		public IRtfHtmlCssStyle this[int index]
 		{
-			get { return InnerList[ index ] as RtfHtmlCssStyle; }
+			get { return InnerList[index] as RtfHtmlCssStyle; }
 		} // this[ int ]
 
 		// ----------------------------------------------------------------------
-		public bool Contains( string selectorName )
+		public bool Contains(string selectorName)
 		{
-			foreach ( IRtfHtmlCssStyle cssStyle in InnerList )
+			foreach (IRtfHtmlCssStyle cssStyle in InnerList)
 			{
-				if ( cssStyle.SelectorName.Equals( selectorName ) )
+				if (cssStyle.SelectorName.Equals(selectorName))
 				{
 					return true;
 				}
@@ -36,19 +36,19 @@ namespace Itenso.Rtf.Converter.Html
 		} // Contains
 
 		// ----------------------------------------------------------------------
-		public void CopyTo( IRtfHtmlCssStyle[] array, int index )
+		public void CopyTo(IRtfHtmlCssStyle[] array, int index)
 		{
-			InnerList.CopyTo( array, index );
+			InnerList.CopyTo(array, index);
 		} // CopyTo
 
 		// ----------------------------------------------------------------------
-		public void Add( IRtfHtmlCssStyle item )
+		public void Add(IRtfHtmlCssStyle item)
 		{
-			if ( item == null )
+			if (item == null)
 			{
-				throw new ArgumentNullException( "item" );
+				throw new ArgumentNullException("item");
 			}
-			InnerList.Add( item );
+			InnerList.Add(item);
 		} // Add
 
 		// ----------------------------------------------------------------------

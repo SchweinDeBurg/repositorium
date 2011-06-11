@@ -19,7 +19,7 @@ namespace Itenso.Rtf.Model
 
 		// ----------------------------------------------------------------------
 		public RtfGroup()
-			: base( RtfElementKind.Group )
+			: base(RtfElementKind.Group)
 		{
 		} // RtfGroup
 
@@ -40,18 +40,18 @@ namespace Itenso.Rtf.Model
 		{
 			get
 			{
-				if ( contents.Count > 0 )
+				if (contents.Count > 0)
 				{
-					IRtfElement firstChild = contents[ 0 ];
-					if ( firstChild.Kind == RtfElementKind.Tag )
+					IRtfElement firstChild = contents[0];
+					if (firstChild.Kind == RtfElementKind.Tag)
 					{
 						IRtfTag firstTag = (IRtfTag)firstChild;
-						if ( RtfSpec.TagExtensionDestination.Equals( firstTag.Name ) )
+						if (RtfSpec.TagExtensionDestination.Equals(firstTag.Name))
 						{
-							if ( contents.Count > 1 )
+							if (contents.Count > 1)
 							{
-								IRtfElement secondChild = contents[ 1 ];
-								if ( secondChild.Kind == RtfElementKind.Tag )
+								IRtfElement secondChild = contents[1];
+								if (secondChild.Kind == RtfElementKind.Tag)
 								{
 									IRtfTag secondTag = (IRtfTag)secondChild;
 									return secondTag.Name;
@@ -70,13 +70,13 @@ namespace Itenso.Rtf.Model
 		{
 			get
 			{
-				if ( contents.Count > 0 )
+				if (contents.Count > 0)
 				{
-					IRtfElement firstChild = contents[ 0 ];
-					if ( firstChild.Kind == RtfElementKind.Tag )
+					IRtfElement firstChild = contents[0];
+					if (firstChild.Kind == RtfElementKind.Tag)
 					{
 						IRtfTag firstTag = (IRtfTag)firstChild;
-						if ( RtfSpec.TagExtensionDestination.Equals( firstTag.Name ) )
+						if (RtfSpec.TagExtensionDestination.Equals(firstTag.Name))
 						{
 							return true;
 						}
@@ -87,18 +87,18 @@ namespace Itenso.Rtf.Model
 		} // IsExtensionDestination
 
 		// ----------------------------------------------------------------------
-		public IRtfGroup SelectChildGroupWithDestination( string destination )
+		public IRtfGroup SelectChildGroupWithDestination(string destination)
 		{
-			if ( destination == null )
+			if (destination == null)
 			{
-				throw new ArgumentNullException( "destination" );
+				throw new ArgumentNullException("destination");
 			}
-			foreach ( IRtfElement child in contents )
+			foreach (IRtfElement child in contents)
 			{
-				if ( child.Kind == RtfElementKind.Group )
+				if (child.Kind == RtfElementKind.Group)
 				{
 					IRtfGroup group = (IRtfGroup)child;
-					if ( destination.Equals( group.Destination ) )
+					if (destination.Equals(group.Destination))
 					{
 						return group;
 					}
@@ -110,53 +110,53 @@ namespace Itenso.Rtf.Model
 		// ----------------------------------------------------------------------
 		public override string ToString()
 		{
-			StringBuilder buf = new StringBuilder( "{" );
+			StringBuilder buf = new StringBuilder("{");
 			int count = contents.Count;
-			buf.Append( count );
-			buf.Append( " items" );
-			if ( count > 0 )
+			buf.Append(count);
+			buf.Append(" items");
+			if (count > 0)
 			{
 				// visualize the first two child elements for convenience during debugging
-				buf.Append( ": [" );
-				buf.Append( contents[ 0 ] );
-				if ( count > 1 )
+				buf.Append(": [");
+				buf.Append(contents[0]);
+				if (count > 1)
 				{
-					buf.Append( ", " );
-					buf.Append( contents[ 1 ] );
-					if ( count > 2 )
+					buf.Append(", ");
+					buf.Append(contents[1]);
+					if (count > 2)
 					{
-						buf.Append( ", " );
-						if ( count > 3 )
+						buf.Append(", ");
+						if (count > 3)
 						{
-							buf.Append( "..., " );
+							buf.Append("..., ");
 						}
-						buf.Append( contents[ count - 1 ] );
+						buf.Append(contents[count - 1]);
 					}
 				}
-				buf.Append( "]" );
+				buf.Append("]");
 			}
-			buf.Append( "}" );
+			buf.Append("}");
 			return buf.ToString();
 		} // ToString
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisit( IRtfElementVisitor visitor )
+		protected override void DoVisit(IRtfElementVisitor visitor)
 		{
-			visitor.VisitGroup( this );
+			visitor.VisitGroup(this);
 		} // DoVisit
 
 		// ----------------------------------------------------------------------
-		protected override bool IsEqual( object obj )
+		protected override bool IsEqual(object obj)
 		{
 			RtfGroup compare = obj as RtfGroup; // guaranteed to be non-null
-			return compare != null && base.IsEqual( obj ) &&
-				contents.Equals( compare.contents );
+			return compare != null && base.IsEqual(obj) &&
+				contents.Equals(compare.contents);
 		} // IsEqual
 
 		// ----------------------------------------------------------------------
 		protected override int ComputeHashCode()
 		{
-			return HashTool.AddHashCode( base.ComputeHashCode(), contents );
+			return HashTool.AddHashCode(base.ComputeHashCode(), contents);
 		} // ComputeHashCode
 
 		// ----------------------------------------------------------------------

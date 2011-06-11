@@ -16,24 +16,24 @@ namespace Itenso.Rtf.Interpreter
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfInterpreter( params IRtfInterpreterListener[] listeners )
-			: base( listeners )
+		public RtfInterpreter(params IRtfInterpreterListener[] listeners)
+			: base(listeners)
 		{
-			fontTableBuilder = new RtfFontTableBuilder( Context.WritableFontTable );
-			colorTableBuilder = new RtfColorTableBuilder( Context.WritableColorTable );
-			documentInfoBuilder = new RtfDocumentInfoBuilder( Context.WritableDocumentInfo );
-			userPropertyBuilder = new RtfUserPropertyBuilder( Context.WritableUserProperties );
+			fontTableBuilder = new RtfFontTableBuilder(Context.WritableFontTable);
+			colorTableBuilder = new RtfColorTableBuilder(Context.WritableColorTable);
+			documentInfoBuilder = new RtfDocumentInfoBuilder(Context.WritableDocumentInfo);
+			userPropertyBuilder = new RtfUserPropertyBuilder(Context.WritableUserProperties);
 			imageBuilder = new RtfImageBuilder();
 		} // RtfInterpreter
 
 		// ----------------------------------------------------------------------
-		public static bool IsSupportedDocument( IRtfGroup rtfDocument )
+		public static bool IsSupportedDocument(IRtfGroup rtfDocument)
 		{
 			try
 			{
-				GetSupportedDocument( rtfDocument );
+				GetSupportedDocument(rtfDocument);
 			}
-			catch ( RtfException )
+			catch (RtfException)
 			{
 				return false;
 			}
@@ -41,75 +41,75 @@ namespace Itenso.Rtf.Interpreter
 		} // IsSupportedDocument
 
 		// ----------------------------------------------------------------------
-		public static IRtfGroup GetSupportedDocument( IRtfGroup rtfDocument )
+		public static IRtfGroup GetSupportedDocument(IRtfGroup rtfDocument)
 		{
-			if ( rtfDocument == null )
+			if (rtfDocument == null)
 			{
-				throw new ArgumentNullException( "rtfDocument" );
+				throw new ArgumentNullException("rtfDocument");
 			}
-			if ( rtfDocument.Contents.Count == 0 )
+			if (rtfDocument.Contents.Count == 0)
 			{
-				throw new RtfEmptyDocumentException( Strings.EmptyDocument );
+				throw new RtfEmptyDocumentException(Strings.EmptyDocument);
 			}
-			IRtfElement firstElement = rtfDocument.Contents[ 0 ];
-			if ( firstElement.Kind != RtfElementKind.Tag )
+			IRtfElement firstElement = rtfDocument.Contents[0];
+			if (firstElement.Kind != RtfElementKind.Tag)
 			{
-				throw new RtfStructureException( Strings.MissingDocumentStartTag );
+				throw new RtfStructureException(Strings.MissingDocumentStartTag);
 			}
 			IRtfTag firstTag = (IRtfTag)firstElement;
-			if ( !RtfSpec.TagRtf.Equals( firstTag.Name ) )
+			if (!RtfSpec.TagRtf.Equals(firstTag.Name))
 			{
-				throw new RtfStructureException( Strings.InvalidDocumentStartTag( RtfSpec.TagRtf ) );
+				throw new RtfStructureException(Strings.InvalidDocumentStartTag(RtfSpec.TagRtf));
 			}
-			if ( !firstTag.HasValue )
+			if (!firstTag.HasValue)
 			{
-				throw new RtfUnsupportedStructureException( Strings.MissingRtfVersion );
+				throw new RtfUnsupportedStructureException(Strings.MissingRtfVersion);
 			}
-			if ( firstTag.ValueAsNumber != RtfSpec.RtfVersion1 )
+			if (firstTag.ValueAsNumber != RtfSpec.RtfVersion1)
 			{
-				throw new RtfUnsupportedStructureException( Strings.UnsupportedRtfVersion( firstTag.ValueAsNumber ) );
+				throw new RtfUnsupportedStructureException(Strings.UnsupportedRtfVersion(firstTag.ValueAsNumber));
 			}
 			return rtfDocument;
 		} // GetSupportedDocument
 
 		// ----------------------------------------------------------------------
-		protected override void DoInterpret( IRtfGroup rtfDocument )
+		protected override void DoInterpret(IRtfGroup rtfDocument)
 		{
-			InterpretContents( GetSupportedDocument( rtfDocument ) );
+			InterpretContents(GetSupportedDocument(rtfDocument));
 		} // DoInterpret
 
 		// ----------------------------------------------------------------------
-		private void InterpretContents( IRtfGroup rtfDocument )
+		private void InterpretContents(IRtfGroup rtfDocument)
 		{
 			// by getting here we already know that the given document is supported, and hence
 			// we know it has version 1
 			Context.Reset(); // clears all previous content and sets the version to 1
 			lastGroupWasPictureWrapper = false;
 			NotifyBeginDocument();
-			VisitChildrenOf( rtfDocument );
+			VisitChildrenOf(rtfDocument);
 			Context.State = RtfInterpreterState.Ended;
 			NotifyEndDocument();
 		} // InterpretContents
 
 		// ----------------------------------------------------------------------
-		private void VisitChildrenOf( IRtfGroup group )
+		private void VisitChildrenOf(IRtfGroup group)
 		{
 			bool pushedTextFormat = false;
-			if ( Context.State == RtfInterpreterState.InDocument )
+			if (Context.State == RtfInterpreterState.InDocument)
 			{
 				Context.PushCurrentTextFormat();
 				pushedTextFormat = true;
 			}
 			try
 			{
-				foreach ( IRtfElement child in group.Contents )
+				foreach (IRtfElement child in group.Contents)
 				{
-					child.Visit( this );
+					child.Visit(this);
 				}
 			}
 			finally
 			{
-				if ( pushedTextFormat )
+				if (pushedTextFormat)
 				{
 					Context.PopCurrentTextFormat();
 				}
@@ -117,37 +117,37 @@ namespace Itenso.Rtf.Interpreter
 		} // VisitChildrenOf
 
 		// ----------------------------------------------------------------------
-		void IRtfElementVisitor.VisitTag( IRtfTag tag )
+		void IRtfElementVisitor.VisitTag(IRtfTag tag)
 		{
-			if ( Context.State != RtfInterpreterState.InDocument )
+			if (Context.State != RtfInterpreterState.InDocument)
 			{
-				if ( Context.FontTable.Count > 0 )
+				if (Context.FontTable.Count > 0)
 				{
 					// somewhat of a hack to detect state change from header to in-document for
 					// rtf-docs which do neither have a generator group nor encapsulate the
 					// actual document content in a group.
-					if ( Context.ColorTable.Count > 0 || RtfSpec.TagViewKind.Equals( tag.Name ) )
+					if (Context.ColorTable.Count > 0 || RtfSpec.TagViewKind.Equals(tag.Name))
 					{
 						Context.State = RtfInterpreterState.InDocument;
 					}
 				}
 			}
 
-			switch ( Context.State )
+			switch (Context.State)
 			{
 				case RtfInterpreterState.Init:
-					if ( RtfSpec.TagRtf.Equals( tag.Name ) )
+					if (RtfSpec.TagRtf.Equals(tag.Name))
 					{
 						Context.State = RtfInterpreterState.InHeader;
 						Context.RtfVersion = tag.ValueAsNumber;
 					}
 					else
 					{
-						throw new RtfStructureException( Strings.InvalidInitTagState( tag.ToString() ) );
+						throw new RtfStructureException(Strings.InvalidInitTagState(tag.ToString()));
 					}
 					break;
 				case RtfInterpreterState.InHeader:
-					switch ( tag.Name )
+					switch (tag.Name)
 					{
 						case RtfSpec.TagDefaultFont:
 							Context.DefaultFontId = RtfSpec.TagFont + tag.ValueAsNumber;
@@ -155,7 +155,7 @@ namespace Itenso.Rtf.Interpreter
 					}
 					break;
 				case RtfInterpreterState.InDocument:
-					switch ( tag.Name )
+					switch (tag.Name)
 					{
 						case RtfSpec.TagPlain:
 							Context.WritableCurrentTextFormat =
@@ -164,179 +164,179 @@ namespace Itenso.Rtf.Interpreter
 						case RtfSpec.TagParagraphDefaults:
 						case RtfSpec.TagSectionDefaults:
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithAlignment( RtfTextAlignment.Left );
+								Context.WritableCurrentTextFormat.DeriveWithAlignment(RtfTextAlignment.Left);
 							break;
 						case RtfSpec.TagBold:
 							bool bold = !tag.HasValue || tag.ValueAsNumber != 0;
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithBold( bold );
+								Context.WritableCurrentTextFormat.DeriveWithBold(bold);
 							break;
 						case RtfSpec.TagItalic:
 							bool italic = !tag.HasValue || tag.ValueAsNumber != 0;
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithItalic( italic );
+								Context.WritableCurrentTextFormat.DeriveWithItalic(italic);
 							break;
 						case RtfSpec.TagUnderLine:
 							bool underline = !tag.HasValue || tag.ValueAsNumber != 0;
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithUnderline( underline );
+								Context.WritableCurrentTextFormat.DeriveWithUnderline(underline);
 							break;
 						case RtfSpec.TagUnderLineNone:
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithUnderline( false );
+								Context.WritableCurrentTextFormat.DeriveWithUnderline(false);
 							break;
 						case RtfSpec.TagStrikeThrough:
 							bool strikeThrough = !tag.HasValue || tag.ValueAsNumber != 0;
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithStrikeThrough( strikeThrough );
+								Context.WritableCurrentTextFormat.DeriveWithStrikeThrough(strikeThrough);
 							break;
 						case RtfSpec.TagHidden:
 							bool hidden = !tag.HasValue || tag.ValueAsNumber != 0;
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithHidden( hidden );
+								Context.WritableCurrentTextFormat.DeriveWithHidden(hidden);
 							break;
 						case RtfSpec.TagFont:
 							string fontId = tag.FullName;
-							if ( Context.FontTable.ContainsFontWithId( fontId ) )
+							if (Context.FontTable.ContainsFontWithId(fontId))
 							{
 								Context.WritableCurrentTextFormat =
 									Context.WritableCurrentTextFormat.DeriveWithFont(
-										Context.FontTable[ fontId ] );
+										Context.FontTable[fontId]);
 							}
 							else
 							{
-								throw new RtfUndefinedFontException( Strings.UndefinedFont( fontId ) );
+								throw new RtfUndefinedFontException(Strings.UndefinedFont(fontId));
 							}
 							break;
 						case RtfSpec.TagFontSize:
 							int fontSize = tag.ValueAsNumber;
-							if ( fontSize > 0 )
+							if (fontSize > 0)
 							{
 								Context.WritableCurrentTextFormat =
-									Context.WritableCurrentTextFormat.DeriveWithFontSize( fontSize );
+									Context.WritableCurrentTextFormat.DeriveWithFontSize(fontSize);
 							}
 							else
 							{
-								throw new RtfInvalidDataException( Strings.InvalidFontSize( fontSize ) );
+								throw new RtfInvalidDataException(Strings.InvalidFontSize(fontSize));
 							}
 							break;
 						case RtfSpec.TagFontSubscript:
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithSuperScript( false );
+								Context.WritableCurrentTextFormat.DeriveWithSuperScript(false);
 							break;
 						case RtfSpec.TagFontSuperscript:
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithSuperScript( true );
+								Context.WritableCurrentTextFormat.DeriveWithSuperScript(true);
 							break;
 						case RtfSpec.TagFontNoSuperSub:
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithSuperScript( 0 );
+								Context.WritableCurrentTextFormat.DeriveWithSuperScript(0);
 							break;
 						case RtfSpec.TagFontDown:
 							int moveDown = tag.ValueAsNumber;
-							if ( moveDown == 0 )
+							if (moveDown == 0)
 							{
 								moveDown = 6; // the default value according to rtf spec
 							}
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithSuperScript( -moveDown );
+								Context.WritableCurrentTextFormat.DeriveWithSuperScript(-moveDown);
 							break;
 						case RtfSpec.TagFontUp:
 							int moveUp = tag.ValueAsNumber;
-							if ( moveUp == 0 )
+							if (moveUp == 0)
 							{
 								moveUp = 6; // the default value according to rtf spec
 							}
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithSuperScript( moveUp );
+								Context.WritableCurrentTextFormat.DeriveWithSuperScript(moveUp);
 							break;
 						case RtfSpec.TagAlignLeft:
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithAlignment( RtfTextAlignment.Left );
+								Context.WritableCurrentTextFormat.DeriveWithAlignment(RtfTextAlignment.Left);
 							break;
 						case RtfSpec.TagAlignCenter:
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithAlignment( RtfTextAlignment.Center );
+								Context.WritableCurrentTextFormat.DeriveWithAlignment(RtfTextAlignment.Center);
 							break;
 						case RtfSpec.TagAlignRight:
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithAlignment( RtfTextAlignment.Right );
+								Context.WritableCurrentTextFormat.DeriveWithAlignment(RtfTextAlignment.Right);
 							break;
 						case RtfSpec.TagAlignJustify:
 							Context.WritableCurrentTextFormat =
-								Context.WritableCurrentTextFormat.DeriveWithAlignment( RtfTextAlignment.Justify );
+								Context.WritableCurrentTextFormat.DeriveWithAlignment(RtfTextAlignment.Justify);
 							break;
 						case RtfSpec.TagColorBackground:
 						case RtfSpec.TagColorBackgroundWord:
 						case RtfSpec.TagColorHighlight:
 						case RtfSpec.TagColorForeground:
 							int colorIndex = tag.ValueAsNumber;
-							if ( colorIndex >= 0 && colorIndex < Context.ColorTable.Count )
+							if (colorIndex >= 0 && colorIndex < Context.ColorTable.Count)
 							{
-								IRtfColor newColor = Context.ColorTable[ colorIndex ];
-								bool isForeground = RtfSpec.TagColorForeground.Equals( tag.Name );
+								IRtfColor newColor = Context.ColorTable[colorIndex];
+								bool isForeground = RtfSpec.TagColorForeground.Equals(tag.Name);
 								Context.WritableCurrentTextFormat = isForeground ?
-									Context.WritableCurrentTextFormat.DeriveWithForegroundColor( newColor ) :
-									Context.WritableCurrentTextFormat.DeriveWithBackgroundColor( newColor );
+									Context.WritableCurrentTextFormat.DeriveWithForegroundColor(newColor) :
+									Context.WritableCurrentTextFormat.DeriveWithBackgroundColor(newColor);
 							}
 							else
 							{
-								throw new RtfUndefinedColorException( Strings.UndefinedColor( colorIndex ) );
+								throw new RtfUndefinedColorException(Strings.UndefinedColor(colorIndex));
 							}
 							break;
 						case RtfSpec.TagSection:
-							NotifyInsertBreak( RtfVisualBreakKind.Section );
+							NotifyInsertBreak(RtfVisualBreakKind.Section);
 							break;
 						case RtfSpec.TagParagraph:
-							NotifyInsertBreak( RtfVisualBreakKind.Paragraph );
+							NotifyInsertBreak(RtfVisualBreakKind.Paragraph);
 							break;
 						case RtfSpec.TagLine:
-							NotifyInsertBreak( RtfVisualBreakKind.Line );
+							NotifyInsertBreak(RtfVisualBreakKind.Line);
 							break;
 						case RtfSpec.TagPage:
-							NotifyInsertBreak( RtfVisualBreakKind.Page );
+							NotifyInsertBreak(RtfVisualBreakKind.Page);
 							break;
 						case RtfSpec.TagTabulator:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.Tabulator );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.Tabulator);
 							break;
 						case RtfSpec.TagTilde:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.NonBreakingSpace );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.NonBreakingSpace);
 							break;
 						case RtfSpec.TagEmDash:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.EmDash );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.EmDash);
 							break;
 						case RtfSpec.TagEnDash:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.EnDash );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.EnDash);
 							break;
 						case RtfSpec.TagEmSpace:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.EmSpace );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.EmSpace);
 							break;
 						case RtfSpec.TagEnSpace:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.EnSpace );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.EnSpace);
 							break;
 						case RtfSpec.TagQmSpace:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.QmSpace );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.QmSpace);
 							break;
 						case RtfSpec.TagBulltet:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.Bullet );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.Bullet);
 							break;
 						case RtfSpec.TagLeftSingleQuote:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.LeftSingleQuote );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.LeftSingleQuote);
 							break;
 						case RtfSpec.TagRightSingleQuote:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.RightSingleQuote );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.RightSingleQuote);
 							break;
 						case RtfSpec.TagLeftDoubleQuote:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.LeftDoubleQuote );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.LeftDoubleQuote);
 							break;
 						case RtfSpec.TagRightDoubleQuote:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.RightDoubleQuote );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.RightDoubleQuote);
 							break;
 						case RtfSpec.TagHyphen:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.OptionalHyphen );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.OptionalHyphen);
 							break;
 						case RtfSpec.TagUnderscore:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.NonBreakingHyphen );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.NonBreakingHyphen);
 							break;
 					}
 					break;
@@ -344,43 +344,43 @@ namespace Itenso.Rtf.Interpreter
 		} // IRtfElementVisitor.VisitTag
 
 		// ----------------------------------------------------------------------
-		void IRtfElementVisitor.VisitGroup( IRtfGroup group )
+		void IRtfElementVisitor.VisitGroup(IRtfGroup group)
 		{
 			string groupDestination = group.Destination;
-			switch ( Context.State )
+			switch (Context.State)
 			{
 				case RtfInterpreterState.Init:
-					if ( RtfSpec.TagRtf.Equals( groupDestination ) )
+					if (RtfSpec.TagRtf.Equals(groupDestination))
 					{
-						VisitChildrenOf( group );
+						VisitChildrenOf(group);
 					}
 					else
 					{
-						throw new RtfStructureException( Strings.InvalidInitGroupState( groupDestination ) );
+						throw new RtfStructureException(Strings.InvalidInitGroupState(groupDestination));
 					}
 					break;
 				case RtfInterpreterState.InHeader:
-					switch ( groupDestination )
+					switch (groupDestination)
 					{
 						case RtfSpec.TagFontTable:
-							fontTableBuilder.VisitGroup( group );
+							fontTableBuilder.VisitGroup(group);
 							break;
 						case RtfSpec.TagColorTable:
-							colorTableBuilder.VisitGroup( group );
+							colorTableBuilder.VisitGroup(group);
 							break;
 						case RtfSpec.TagGenerator:
 							// last group with a destination in header, but no need to process its contents
 							Context.State = RtfInterpreterState.InDocument;
-							IRtfText generator = group.Contents.Count == 3 ? group.Contents[ 2 ] as IRtfText : null;
-							if ( generator != null )
+							IRtfText generator = group.Contents.Count == 3 ? group.Contents[2] as IRtfText : null;
+							if (generator != null)
 							{
 								string generatorName = generator.Text;
-								Context.Generator = generatorName.EndsWith( ";" ) ?
-									generatorName.Substring( 0, generatorName.Length - 1 ) : generatorName;
+								Context.Generator = generatorName.EndsWith(";") ?
+									generatorName.Substring(0, generatorName.Length - 1) : generatorName;
 							}
 							else
 							{
-								throw new RtfInvalidDataException( Strings.InvalidGeneratorGroup( group.ToString() ) );
+								throw new RtfInvalidDataException(Strings.InvalidGeneratorGroup(group.ToString()));
 							}
 							break;
 						case RtfSpec.TagPlain:
@@ -393,38 +393,38 @@ namespace Itenso.Rtf.Interpreter
 							//         content starts with a group with such a 'destination' ...
 							// 'null': group without destination cannot be part of header, but need to process its contents
 							Context.State = RtfInterpreterState.InDocument;
-							if ( !group.IsExtensionDestination )
+							if (!group.IsExtensionDestination)
 							{
-								VisitChildrenOf( group );
+								VisitChildrenOf(group);
 							}
 							break;
 					}
 					break;
 				case RtfInterpreterState.InDocument:
-					switch ( groupDestination )
+					switch (groupDestination)
 					{
 						case RtfSpec.TagUserProperties:
-							userPropertyBuilder.VisitGroup( group );
+							userPropertyBuilder.VisitGroup(group);
 							break;
 						case RtfSpec.TagInfo:
-							documentInfoBuilder.VisitGroup( group );
+							documentInfoBuilder.VisitGroup(group);
 							break;
 						case RtfSpec.TagUnicodeAlternativeChoices:
 							IRtfGroup alternativeWithUnicodeSupport =
-								group.SelectChildGroupWithDestination( RtfSpec.TagUnicodeAlternativeUnicode );
-							if ( alternativeWithUnicodeSupport != null )
+								group.SelectChildGroupWithDestination(RtfSpec.TagUnicodeAlternativeUnicode);
+							if (alternativeWithUnicodeSupport != null)
 							{
 								// there is an alternative with unicode formatted content -> use this
-								VisitChildrenOf( alternativeWithUnicodeSupport );
+								VisitChildrenOf(alternativeWithUnicodeSupport);
 							}
 							else
 							{
 								// try to locate the alternative without unicode -> only ANSI fallbacks
 								IRtfGroup alternativeWithoutUnicode = // must be the third element if present
-									group.Contents.Count > 2 ? group.Contents[ 2 ] as IRtfGroup : null;
-								if ( alternativeWithoutUnicode != null )
+									group.Contents.Count > 2 ? group.Contents[2] as IRtfGroup : null;
+								if (alternativeWithoutUnicode != null)
 								{
-									VisitChildrenOf( alternativeWithoutUnicode );
+									VisitChildrenOf(alternativeWithoutUnicode);
 								}
 							}
 							break;
@@ -442,18 +442,18 @@ namespace Itenso.Rtf.Interpreter
 							// the actual document content
 							break;
 						case RtfSpec.TagPictureWrapper:
-							VisitChildrenOf( group );
+							VisitChildrenOf(group);
 							lastGroupWasPictureWrapper = true;
 							break;
 						case RtfSpec.TagPictureWrapperAlternative:
-							if ( !lastGroupWasPictureWrapper )
+							if (!lastGroupWasPictureWrapper)
 							{
-								VisitChildrenOf( group );
+								VisitChildrenOf(group);
 							}
 							lastGroupWasPictureWrapper = false;
 							break;
 						case RtfSpec.TagPicture:
-							imageBuilder.VisitGroup( group );
+							imageBuilder.VisitGroup(group);
 							NotifyInsertImage(
 								imageBuilder.Format,
 								imageBuilder.Width,
@@ -462,19 +462,19 @@ namespace Itenso.Rtf.Interpreter
 								imageBuilder.DesiredHeight,
 								imageBuilder.ScaleWidthPercent,
 								imageBuilder.ScaleHeightPercent,
-								imageBuilder.ImageDataHex );
+								imageBuilder.ImageDataHex);
 							break;
 						case RtfSpec.TagParagraphNumberText:
 						case RtfSpec.TagListNumberText:
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.ParagraphNumberBegin );
-							VisitChildrenOf( group );
-							NotifyInsertSpecialChar( RtfVisualSpecialCharKind.ParagraphNumberEnd );
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.ParagraphNumberBegin);
+							VisitChildrenOf(group);
+							NotifyInsertSpecialChar(RtfVisualSpecialCharKind.ParagraphNumberEnd);
 							break;
 						default:
-							if ( !group.IsExtensionDestination )
+							if (!group.IsExtensionDestination)
 							{
 								// nested text group
-								VisitChildrenOf( group );
+								VisitChildrenOf(group);
 							}
 							break;
 					}
@@ -483,19 +483,19 @@ namespace Itenso.Rtf.Interpreter
 		} // IRtfElementVisitor.VisitGroup
 
 		// ----------------------------------------------------------------------
-		void IRtfElementVisitor.VisitText( IRtfText text )
+		void IRtfElementVisitor.VisitText(IRtfText text)
 		{
-			switch ( Context.State )
+			switch (Context.State)
 			{
 				case RtfInterpreterState.Init:
-					throw new RtfStructureException( Strings.InvalidInitTextState( text.Text ) );
+					throw new RtfStructureException(Strings.InvalidInitTextState(text.Text));
 				case RtfInterpreterState.InHeader:
 					Context.State = RtfInterpreterState.InDocument;
 					break;
 				case RtfInterpreterState.InDocument:
 					break;
 			}
-			NotifyInsertText( text.Text );
+			NotifyInsertText(text.Text);
 		} // IRtfElementVisitor.VisitText
 
 		// ----------------------------------------------------------------------

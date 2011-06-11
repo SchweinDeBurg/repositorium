@@ -18,43 +18,43 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public sealed override bool Equals( object obj )
+		public sealed override bool Equals(object obj)
 		{
-			if ( obj == this )
+			if (obj == this)
 			{
 				return true;
 			}
-			
-			if ( obj == null || GetType() != obj.GetType() )
+
+			if (obj == null || GetType() != obj.GetType())
 			{
 				return false;
 			}
 
-			return IsEqual( obj );
+			return IsEqual(obj);
 		} // Equals
 
 		// ----------------------------------------------------------------------
 		public override string ToString()
 		{
-			return CollectionTool.ToString( this );
+			return CollectionTool.ToString(this);
 		} // ToString
 
 		// ----------------------------------------------------------------------
-		protected virtual bool IsEqual( object obj )
+		protected virtual bool IsEqual(object obj)
 		{
-			return CollectionTool.AreEqual( this, obj );
+			return CollectionTool.AreEqual(this, obj);
 		} // IsEqual
 
 		// ----------------------------------------------------------------------
 		public sealed override int GetHashCode()
 		{
-			return HashTool.AddHashCode( GetType().GetHashCode(), ComputeHashCode() );
+			return HashTool.AddHashCode(GetType().GetHashCode(), ComputeHashCode());
 		} // GetHashCode
 
 		// ----------------------------------------------------------------------
 		protected virtual int ComputeHashCode()
 		{
-			return HashTool.ComputeHashCode( this );
+			return HashTool.ComputeHashCode(this);
 		} // ComputeHashCode
 
 	} // class ReadOnlyBaseCollection

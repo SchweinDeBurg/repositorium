@@ -27,8 +27,8 @@ namespace Itenso.Rtf
 		// ----------------------------------------------------------------------
 		/// <summary>Creates a new instance with the given message.</summary>
 		/// <param name="message">the message to display</param>
-		public RtfException( string message )
-			: base( message )
+		public RtfException(string message)
+			: base(message)
 		{
 		} // RtfException
 
@@ -36,8 +36,8 @@ namespace Itenso.Rtf
 		/// <summary>Creates a new instance with the given message, based on the given cause.</summary>
 		/// <param name="message">the message to display</param>
 		/// <param name="cause">the original cause for this exception</param>
-		public RtfException( string message, Exception cause )
-			: base( message, cause )
+		public RtfException(string message, Exception cause)
+			: base(message, cause)
 		{
 		} // RtfException
 
@@ -45,8 +45,8 @@ namespace Itenso.Rtf
 		/// <summary>Serialization support.</summary>
 		/// <param name="info">the info to use for serialization</param>
 		/// <param name="context">the context to use for serialization</param>
-		protected RtfException( SerializationInfo info, StreamingContext context ) :
-			base( info, context )
+		protected RtfException(SerializationInfo info, StreamingContext context) :
+			base(info, context)
 		{
 		} // RtfException
 

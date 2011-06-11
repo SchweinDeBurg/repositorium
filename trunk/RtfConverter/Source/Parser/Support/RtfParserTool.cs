@@ -17,39 +17,39 @@ namespace Itenso.Rtf.Support
 	{
 
 		// ----------------------------------------------------------------------
-		public static IRtfGroup Parse( string rtfText, params IRtfParserListener[] listeners )
+		public static IRtfGroup Parse(string rtfText, params IRtfParserListener[] listeners)
 		{
-			return Parse( new RtfSource( rtfText ), listeners );
+			return Parse(new RtfSource(rtfText), listeners);
 		} // Parse
 
 		// ----------------------------------------------------------------------
-		public static IRtfGroup Parse( TextReader rtfTextSource, params IRtfParserListener[] listeners )
+		public static IRtfGroup Parse(TextReader rtfTextSource, params IRtfParserListener[] listeners)
 		{
-			return Parse( new RtfSource( rtfTextSource ), listeners );
+			return Parse(new RtfSource(rtfTextSource), listeners);
 		} // Parse
 
 		// ----------------------------------------------------------------------
-		public static IRtfGroup Parse( Stream rtfTextSource, params IRtfParserListener[] listeners )
+		public static IRtfGroup Parse(Stream rtfTextSource, params IRtfParserListener[] listeners)
 		{
-			return Parse( new RtfSource( rtfTextSource ), listeners );
+			return Parse(new RtfSource(rtfTextSource), listeners);
 		} // Parse
 
 		// ----------------------------------------------------------------------
-		public static IRtfGroup Parse( IRtfSource rtfTextSource, params IRtfParserListener[] listeners )
+		public static IRtfGroup Parse(IRtfSource rtfTextSource, params IRtfParserListener[] listeners)
 		{
 			RtfParserListenerStructureBuilder structureBuilder = new RtfParserListenerStructureBuilder();
-			RtfParser parser = new RtfParser( structureBuilder );
-			if ( listeners != null )
+			RtfParser parser = new RtfParser(structureBuilder);
+			if (listeners != null)
 			{
-				foreach ( IRtfParserListener listener in listeners )
+				foreach (IRtfParserListener listener in listeners)
 				{
-					if ( listener != null )
+					if (listener != null)
 					{
-						parser.AddParserListener( listener );
+						parser.AddParserListener(listener);
 					}
 				}
 			}
-			parser.Parse( rtfTextSource );
+			parser.Parse(rtfTextSource);
 			return structureBuilder.StructureRoot;
 		} // Parse
 

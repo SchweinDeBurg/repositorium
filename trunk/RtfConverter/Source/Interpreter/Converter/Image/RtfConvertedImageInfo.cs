@@ -18,11 +18,11 @@ namespace Itenso.Rtf.Converter.Image
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfConvertedImageInfo( string fileName, ImageFormat format, Size size )
+		public RtfConvertedImageInfo(string fileName, ImageFormat format, Size size)
 		{
-			if ( fileName == null )
+			if (fileName == null)
 			{
-				throw new ArgumentNullException( "fileName" );
+				throw new ArgumentNullException("fileName");
 			}
 
 			this.fileName = fileName;

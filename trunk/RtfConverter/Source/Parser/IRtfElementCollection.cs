@@ -19,10 +19,10 @@ namespace Itenso.Rtf
 		int Count { get; }
 
 		// ----------------------------------------------------------------------
-		IRtfElement this[ int index ] { get; }
+		IRtfElement this[int index] { get; }
 
 		// ----------------------------------------------------------------------
-		void CopyTo( IRtfElement[] array, int index );
+		void CopyTo(IRtfElement[] array, int index);
 
 	} // interface IRtfElementCollection
 

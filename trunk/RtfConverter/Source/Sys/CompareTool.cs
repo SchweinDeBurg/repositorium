@@ -15,9 +15,9 @@ namespace Itenso.Sys
 	{
 
 		// ----------------------------------------------------------------------
-		public static bool AreEqual( object left, object right )
+		public static bool AreEqual(object left, object right)
 		{
-			return left == right || ( left != null && left.Equals( right ) );
+			return left == right || (left != null && left.Equals(right));
 		} // AreEqual
 
 	} // class CompareTool

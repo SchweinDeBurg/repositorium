@@ -45,7 +45,7 @@ namespace Itenso.Rtf
 		IRtfTextFormat GetSafeCurrentTextFormat();
 
 		// ----------------------------------------------------------------------
-		IRtfTextFormat GetUniqueTextFormatInstance( IRtfTextFormat templateFormat );
+		IRtfTextFormat GetUniqueTextFormatInstance(IRtfTextFormat templateFormat);
 
 		// ----------------------------------------------------------------------
 		IRtfDocumentInfo DocumentInfo { get; }

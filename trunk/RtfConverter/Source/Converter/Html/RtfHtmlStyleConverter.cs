@@ -17,11 +17,11 @@ namespace Itenso.Rtf.Converter.Html
 	{
 
 		// ----------------------------------------------------------------------
-		public virtual IRtfHtmlStyle TextToHtml( IRtfVisualText visualText )
+		public virtual IRtfHtmlStyle TextToHtml(IRtfVisualText visualText)
 		{
-			if ( visualText == null )
+			if (visualText == null)
 			{
-				throw new ArgumentNullException( "visualText" );
+				throw new ArgumentNullException("visualText");
 			}
 
 			RtfHtmlStyle htmlStyle = new RtfHtmlStyle();
@@ -30,23 +30,23 @@ namespace Itenso.Rtf.Converter.Html
 
 			// background color
 			Color backgroundColor = textFormat.BackgroundColor.AsDrawingColor;
-			if ( backgroundColor.R != 0 || backgroundColor.G != 0 || backgroundColor.B != 0 )
+			if (backgroundColor.R != 0 || backgroundColor.G != 0 || backgroundColor.B != 0)
 			{
-				htmlStyle.BackgroundColor = ColorTranslator.ToHtml( backgroundColor );
+				htmlStyle.BackgroundColor = ColorTranslator.ToHtml(backgroundColor);
 			}
 
 			// foreground color
 			Color foregroundColor = textFormat.ForegroundColor.AsDrawingColor;
-			if ( foregroundColor.R != 0 || foregroundColor.G != 0 || foregroundColor.B != 0 )
+			if (foregroundColor.R != 0 || foregroundColor.G != 0 || foregroundColor.B != 0)
 			{
-				htmlStyle.ForegroundColor = ColorTranslator.ToHtml( foregroundColor );
+				htmlStyle.ForegroundColor = ColorTranslator.ToHtml(foregroundColor);
 			}
 
 			// font
 			htmlStyle.FontFamily = textFormat.Font.Name;
-			if ( textFormat.FontSize > 0 )
+			if (textFormat.FontSize > 0)
 			{
-				htmlStyle.FontSize = (textFormat.FontSize /2) + "pt";
+				htmlStyle.FontSize = (textFormat.FontSize / 2) + "pt";
 			}
 
 			return htmlStyle;

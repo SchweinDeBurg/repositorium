@@ -20,167 +20,167 @@ namespace Itenso.Rtf
 	{
 
 		// ----------------------------------------------------------------------
-		public static string InvalidFirstHexDigit( char hexDigit )
+		public static string InvalidFirstHexDigit(char hexDigit)
 		{
-			return Format( inst.GetString( "InvalidFirstHexDigit" ), hexDigit );
+			return Format(inst.GetString("InvalidFirstHexDigit"), hexDigit);
 		} // InvalidFirstHexDigit
 
 		// ----------------------------------------------------------------------
-		public static string InvalidSecondHexDigit( char hexDigit )
+		public static string InvalidSecondHexDigit(char hexDigit)
 		{
-			return Format( inst.GetString( "InvalidSecondHexDigit" ), hexDigit );
+			return Format(inst.GetString("InvalidSecondHexDigit"), hexDigit);
 		} // InvalidSecondHexDigit
 
 		// ----------------------------------------------------------------------
 		public static string ToManyBraces
 		{
-			get { return inst.GetString( "ToManyBraces" ); }
+			get { return inst.GetString("ToManyBraces"); }
 		} // ToManyBraces
 
 		// ----------------------------------------------------------------------
 		public static string ToFewBraces
 		{
-			get { return inst.GetString( "ToFewBraces" ); }
+			get { return inst.GetString("ToFewBraces"); }
 		} // ToFewBraces
 
 		// ----------------------------------------------------------------------
 		public static string NoRtfContent
 		{
-			get { return inst.GetString( "NoRtfContent" ); }
+			get { return inst.GetString("NoRtfContent"); }
 		} // NoRtfContent
 
 		// ----------------------------------------------------------------------
-		public static string TagOnRootLevel( string tagName )
+		public static string TagOnRootLevel(string tagName)
 		{
-			return Format( inst.GetString( "TagOnRootLevel" ), tagName );
+			return Format(inst.GetString("TagOnRootLevel"), tagName);
 		} // TagOnRootLevel
 
 		// ----------------------------------------------------------------------
-		public static string InvalidUnicodeSkipCount( string tagName )
+		public static string InvalidUnicodeSkipCount(string tagName)
 		{
-			return Format( inst.GetString( "InvalidUnicodeSkipCount" ), tagName );
+			return Format(inst.GetString("InvalidUnicodeSkipCount"), tagName);
 		} // InvalidUnicodeSkipCount
 
 		// ----------------------------------------------------------------------
 		public static string UnexpectedEndOfFile
 		{
-			get { return inst.GetString( "UnexpectedEndOfFile" ); }
+			get { return inst.GetString("UnexpectedEndOfFile"); }
 		} // UnexpectedEndOfFile
 
 		// ----------------------------------------------------------------------
-		public static string InvalidMultiByteEncoding( byte[] buffer, int index, Encoding encoding )
+		public static string InvalidMultiByteEncoding(byte[] buffer, int index, Encoding encoding)
 		{
 			StringBuilder buf = new StringBuilder();
-			for ( int i = 0; i < index; i++ )
+			for (int i = 0; i < index; i++)
 			{
-				buf.Append( string.Format( 
-					CultureInfo.InvariantCulture, 
+				buf.Append(string.Format(
+					CultureInfo.InvariantCulture,
 					"{0:X}",
-					buffer[ i ] ) );
+					buffer[i]));
 			}
-			return Format( inst.GetString( "InvalidMultiByteEncoding" ), 
-				buf.ToString(), encoding.EncodingName, encoding.CodePage );
+			return Format(inst.GetString("InvalidMultiByteEncoding"),
+				buf.ToString(), encoding.EncodingName, encoding.CodePage);
 		} // InvalidMultiByteEncoding
 
 		// ----------------------------------------------------------------------
 		public static string EndOfFileInvalidCharacter
 		{
-			get { return inst.GetString( "EndOfFileInvalidCharacter" ); }
+			get { return inst.GetString("EndOfFileInvalidCharacter"); }
 		} // EndOfFileInvalidCharacter
 
 		// ----------------------------------------------------------------------
-		public static string TextOnRootLevel( string text )
+		public static string TextOnRootLevel(string text)
 		{
-			return Format( inst.GetString( "TextOnRootLevel" ), text );
+			return Format(inst.GetString("TextOnRootLevel"), text);
 		} // TextOnRootLevel
 
 		// ----------------------------------------------------------------------
 		public static string MissingGroupForNewTag
 		{
-			get { return inst.GetString( "MissingGroupForNewTag" ); }
+			get { return inst.GetString("MissingGroupForNewTag"); }
 		} // MissingGroupForNewTag
 
 		// ----------------------------------------------------------------------
 		public static string MissingGroupForNewText
 		{
-			get { return inst.GetString( "MissingGroupForNewText" ); }
+			get { return inst.GetString("MissingGroupForNewText"); }
 		} // MissingGroupForNewText
 
 		// ----------------------------------------------------------------------
 		public static string MultipleRootLevelGroups
 		{
-			get { return inst.GetString( "MultipleRootLevelGroups" ); }
+			get { return inst.GetString("MultipleRootLevelGroups"); }
 		} // MultipleRootLevelGroups
 
 		// ----------------------------------------------------------------------
 		public static string UnclosedGroups
 		{
-			get { return inst.GetString( "UnclosedGroups" ); }
+			get { return inst.GetString("UnclosedGroups"); }
 		} // UnclosedGroups
 
 		// ----------------------------------------------------------------------
 		public static string LogGroupBegin
 		{
-			get { return inst.GetString( "LogGroupBegin" ); }
+			get { return inst.GetString("LogGroupBegin"); }
 		} // LogGroupBegin
 
 		// ----------------------------------------------------------------------
 		public static string LogGroupEnd
 		{
-			get { return inst.GetString( "LogGroupEnd" ); }
+			get { return inst.GetString("LogGroupEnd"); }
 		} // LogGroupEnd
 
 		// ----------------------------------------------------------------------
 		public static string LogOverflowText
 		{
-			get { return inst.GetString( "LogOverflowText" ); }
+			get { return inst.GetString("LogOverflowText"); }
 		} // LogOverflowText
 
 		// ----------------------------------------------------------------------
 		public static string LogParseBegin
 		{
-			get { return inst.GetString( "LogParseBegin" ); }
+			get { return inst.GetString("LogParseBegin"); }
 		} // LogParseBegin
 
 		// ----------------------------------------------------------------------
 		public static string LogParseEnd
 		{
-			get { return inst.GetString( "LogParseEnd" ); }
+			get { return inst.GetString("LogParseEnd"); }
 		} // LogParseEnd
 
 		// ----------------------------------------------------------------------
 		public static string LogParseFail
 		{
-			get { return inst.GetString( "LogParseFail" ); }
+			get { return inst.GetString("LogParseFail"); }
 		} // LogParseFail
 
 		// ----------------------------------------------------------------------
 		public static string LogParseFailUnknown
 		{
-			get { return inst.GetString( "LogParseFailUnknown" ); }
+			get { return inst.GetString("LogParseFailUnknown"); }
 		} // LogParseFailUnknown
 
 		// ----------------------------------------------------------------------
 		public static string LogParseSuccess
 		{
-			get { return inst.GetString( "LogParseSuccess" ); }
+			get { return inst.GetString("LogParseSuccess"); }
 		} // LogParseSuccess
 
 		// ----------------------------------------------------------------------
 		public static string LogTag
 		{
-			get { return inst.GetString( "LogTag" ); }
+			get { return inst.GetString("LogTag"); }
 		} // LogTag
 
 		// ----------------------------------------------------------------------
 		public static string LogText
 		{
-			get { return inst.GetString( "LogText" ); }
+			get { return inst.GetString("LogText"); }
 		} // LogText
 
 		// ----------------------------------------------------------------------
 		// members
-		private static readonly ResourceManager inst = NewInst( typeof( Strings ) );
+		private static readonly ResourceManager inst = NewInst(typeof(Strings));
 
 	} // class Strings
 

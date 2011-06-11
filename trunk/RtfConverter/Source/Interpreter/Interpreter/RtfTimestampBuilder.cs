@@ -18,7 +18,7 @@ namespace Itenso.Rtf.Interpreter
 
 		// ----------------------------------------------------------------------
 		public RtfTimestampBuilder()
-			: base( RtfElementVisitorOrder.BreadthFirst )
+			: base(RtfElementVisitorOrder.BreadthFirst)
 		{
 			Reset();
 		} // RtfTimestampBuilder
@@ -37,13 +37,13 @@ namespace Itenso.Rtf.Interpreter
 		// ----------------------------------------------------------------------
 		public DateTime CreateTimestamp()
 		{
-			return new DateTime( year, month, day, hour, minutes, seconds );
+			return new DateTime(year, month, day, hour, minutes, seconds);
 		} // CreateTimestamp
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitTag( IRtfTag tag )
+		protected override void DoVisitTag(IRtfTag tag)
 		{
-			switch ( tag.Name )
+			switch (tag.Name)
 			{
 				case RtfSpec.TagInfoYear:
 					year = tag.ValueAsNumber;

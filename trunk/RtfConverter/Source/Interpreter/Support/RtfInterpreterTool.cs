@@ -17,87 +17,87 @@ namespace Itenso.Rtf.Support
 	{
 
 		// ----------------------------------------------------------------------
-		public static IRtfDocument BuildDoc( string rtfText, params IRtfInterpreterListener[] listeners )
+		public static IRtfDocument BuildDoc(string rtfText, params IRtfInterpreterListener[] listeners)
 		{
-			return BuildDoc( RtfParserTool.Parse( rtfText ), listeners );
+			return BuildDoc(RtfParserTool.Parse(rtfText), listeners);
 		} // BuildDoc
 
 		// ----------------------------------------------------------------------
-		public static IRtfDocument BuildDoc( TextReader rtfTextSource, params IRtfInterpreterListener[] listeners )
+		public static IRtfDocument BuildDoc(TextReader rtfTextSource, params IRtfInterpreterListener[] listeners)
 		{
-			return BuildDoc( RtfParserTool.Parse( rtfTextSource ), listeners );
+			return BuildDoc(RtfParserTool.Parse(rtfTextSource), listeners);
 		} // BuildDoc
 
 		// ----------------------------------------------------------------------
-		public static IRtfDocument BuildDoc( Stream rtfTextSource, params IRtfInterpreterListener[] listeners )
+		public static IRtfDocument BuildDoc(Stream rtfTextSource, params IRtfInterpreterListener[] listeners)
 		{
-			return BuildDoc( RtfParserTool.Parse( rtfTextSource ), listeners );
+			return BuildDoc(RtfParserTool.Parse(rtfTextSource), listeners);
 		} // BuildDoc
 
 		// ----------------------------------------------------------------------
-		public static IRtfDocument BuildDoc( IRtfSource rtfTextSource, params IRtfInterpreterListener[] listeners )
+		public static IRtfDocument BuildDoc(IRtfSource rtfTextSource, params IRtfInterpreterListener[] listeners)
 		{
-			return BuildDoc( RtfParserTool.Parse( rtfTextSource ), listeners );
+			return BuildDoc(RtfParserTool.Parse(rtfTextSource), listeners);
 		} // BuildDoc
 
 		// ----------------------------------------------------------------------
-		public static IRtfDocument BuildDoc( IRtfGroup rtfDocument, params IRtfInterpreterListener[] listeners )
+		public static IRtfDocument BuildDoc(IRtfGroup rtfDocument, params IRtfInterpreterListener[] listeners)
 		{
 			RtfInterpreterListenerDocumentBuilder docBuilder = new RtfInterpreterListenerDocumentBuilder();
 			IRtfInterpreterListener[] allListeners;
-			if ( listeners == null )
+			if (listeners == null)
 			{
 				allListeners = new IRtfInterpreterListener[] { docBuilder };
 			}
 			else
 			{
-				allListeners = new IRtfInterpreterListener[ listeners.Length + 1 ];
-				allListeners[ 0 ] = docBuilder;
-				listeners.CopyTo( allListeners, 1 );
+				allListeners = new IRtfInterpreterListener[listeners.Length + 1];
+				allListeners[0] = docBuilder;
+				listeners.CopyTo(allListeners, 1);
 			}
-			Interpret( rtfDocument, allListeners );
+			Interpret(rtfDocument, allListeners);
 			return docBuilder.Document;
 		} // BuildDoc
 
 		// ----------------------------------------------------------------------
-		public static void Interpret( string rtfText, params IRtfInterpreterListener[] listeners )
+		public static void Interpret(string rtfText, params IRtfInterpreterListener[] listeners)
 		{
-			Interpret( RtfParserTool.Parse( rtfText ), listeners );
+			Interpret(RtfParserTool.Parse(rtfText), listeners);
 		} // Interpret
 
 		// ----------------------------------------------------------------------
-		public static void Interpret( TextReader rtfTextSource, params IRtfInterpreterListener[] listeners )
+		public static void Interpret(TextReader rtfTextSource, params IRtfInterpreterListener[] listeners)
 		{
-			Interpret( RtfParserTool.Parse( rtfTextSource ), listeners );
+			Interpret(RtfParserTool.Parse(rtfTextSource), listeners);
 		} // Interpret
 
 		// ----------------------------------------------------------------------
-		public static void Interpret( Stream rtfTextSource, params IRtfInterpreterListener[] listeners )
+		public static void Interpret(Stream rtfTextSource, params IRtfInterpreterListener[] listeners)
 		{
-			Interpret( RtfParserTool.Parse( rtfTextSource ), listeners );
+			Interpret(RtfParserTool.Parse(rtfTextSource), listeners);
 		} // Interpret
 
 		// ----------------------------------------------------------------------
-		public static void Interpret( IRtfSource rtfTextSource, params IRtfInterpreterListener[] listeners )
+		public static void Interpret(IRtfSource rtfTextSource, params IRtfInterpreterListener[] listeners)
 		{
-			Interpret( RtfParserTool.Parse( rtfTextSource ), listeners );
+			Interpret(RtfParserTool.Parse(rtfTextSource), listeners);
 		} // Interpret
 
 		// ----------------------------------------------------------------------
-		public static void Interpret( IRtfGroup rtfDocument, params IRtfInterpreterListener[] listeners )
+		public static void Interpret(IRtfGroup rtfDocument, params IRtfInterpreterListener[] listeners)
 		{
 			RtfInterpreter parser = new RtfInterpreter();
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfInterpreterListener listener in listeners )
+				foreach (IRtfInterpreterListener listener in listeners)
 				{
-					if ( listener != null )
+					if (listener != null)
 					{
-						parser.AddInterpreterListener( listener );
+						parser.AddInterpreterListener(listener);
 					}
 				}
 			}
-			parser.Interpret( rtfDocument );
+			parser.Interpret(rtfDocument);
 		} // Interpret
 
 	} // class RtfInterpreterTool

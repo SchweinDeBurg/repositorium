@@ -16,17 +16,17 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfDocument( IRtfInterpreterContext context, IRtfVisualCollection visualContent ) :
-			this( context.RtfVersion,
-				context.DefaultFont,
-				context.FontTable,
-				context.ColorTable,
-				context.Generator,
-				context.UniqueTextFormats,
-				context.DocumentInfo,
-				context.UserProperties,
-				visualContent
-			)
+		public RtfDocument(IRtfInterpreterContext context, IRtfVisualCollection visualContent) :
+			this(context.RtfVersion,
+			 context.DefaultFont,
+			 context.FontTable,
+			 context.ColorTable,
+			 context.Generator,
+			 context.UniqueTextFormats,
+			 context.DocumentInfo,
+			 context.UserProperties,
+			 visualContent
+		 )
 		{
 		} // RtfDocument
 
@@ -43,41 +43,41 @@ namespace Itenso.Rtf.Model
 			IRtfVisualCollection visualContent
 		)
 		{
-			if ( rtfVersion != RtfSpec.RtfVersion1 )
+			if (rtfVersion != RtfSpec.RtfVersion1)
 			{
-				throw new RtfUnsupportedStructureException( Strings.UnsupportedRtfVersion( rtfVersion ) );
+				throw new RtfUnsupportedStructureException(Strings.UnsupportedRtfVersion(rtfVersion));
 			}
-			if ( defaultFont == null )
+			if (defaultFont == null)
 			{
-				throw new ArgumentNullException( "defaultFont" );
+				throw new ArgumentNullException("defaultFont");
 			}
-			if ( fontTable == null )
+			if (fontTable == null)
 			{
-				throw new ArgumentNullException( "fontTable" );
+				throw new ArgumentNullException("fontTable");
 			}
-			if ( colorTable == null )
+			if (colorTable == null)
 			{
-				throw new ArgumentNullException( "colorTable" );
+				throw new ArgumentNullException("colorTable");
 			}
-			if ( uniqueTextFormats == null )
+			if (uniqueTextFormats == null)
 			{
-				throw new ArgumentNullException( "uniqueTextFormats" );
+				throw new ArgumentNullException("uniqueTextFormats");
 			}
-			if ( documentInfo == null )
+			if (documentInfo == null)
 			{
-				throw new ArgumentNullException( "documentInfo" );
+				throw new ArgumentNullException("documentInfo");
 			}
-			if ( userProperties == null )
+			if (userProperties == null)
 			{
-				throw new ArgumentNullException( "userProperties" );
+				throw new ArgumentNullException("userProperties");
 			}
-			if ( visualContent == null )
+			if (visualContent == null)
 			{
-				throw new ArgumentNullException( "visualContent" );
+				throw new ArgumentNullException("visualContent");
 			}
 			this.rtfVersion = rtfVersion;
 			this.defaultFont = defaultFont;
-			defaultTextFormat = new RtfTextFormat( defaultFont, RtfSpec.DefaultFontSize );
+			defaultTextFormat = new RtfTextFormat(defaultFont, RtfSpec.DefaultFontSize);
 			this.fontTable = fontTable;
 			this.colorTable = colorTable;
 			this.generator = generator;

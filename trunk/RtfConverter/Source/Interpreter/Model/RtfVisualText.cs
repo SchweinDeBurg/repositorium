@@ -17,25 +17,25 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfVisualText( string text, IRtfTextFormat format ) :
-			base( RtfVisualKind.Text )
+		public RtfVisualText(string text, IRtfTextFormat format) :
+			base(RtfVisualKind.Text)
 		{
-			if ( text == null )
+			if (text == null)
 			{
-				throw new ArgumentNullException( "text" );
+				throw new ArgumentNullException("text");
 			}
-			if ( format == null )
+			if (format == null)
 			{
-				throw new ArgumentNullException( "format" );
+				throw new ArgumentNullException("format");
 			}
 			this.text = text;
 			this.format = format;
 		} // RtfVisualText
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisit( IRtfVisualVisitor visitor )
+		protected override void DoVisit(IRtfVisualVisitor visitor)
 		{
-			visitor.VisitText( this );
+			visitor.VisitText(this);
 		} // DoVisit
 
 		// ----------------------------------------------------------------------
@@ -50,31 +50,31 @@ namespace Itenso.Rtf.Model
 			get { return format; }
 			set
 			{
-				if ( format == null )
+				if (format == null)
 				{
-					throw new ArgumentNullException( "value" );
+					throw new ArgumentNullException("value");
 				}
 				format = value;
 			}
 		} // Format
 
 		// ----------------------------------------------------------------------
-		protected override bool IsEqual( object obj )
+		protected override bool IsEqual(object obj)
 		{
 			RtfVisualText compare = obj as RtfVisualText; // guaranteed to be non-null
-			return 
+			return
 				compare != null &&
-				base.IsEqual( compare ) &&
-				text.Equals( compare.text ) &&
-				format.Equals( compare.format );
+				base.IsEqual(compare) &&
+				text.Equals(compare.text) &&
+				format.Equals(compare.format);
 		} // IsEqual
 
 		// ----------------------------------------------------------------------
 		protected override int ComputeHashCode()
 		{
 			int hash = base.ComputeHashCode();
-			hash = HashTool.AddHashCode( hash, text );
-			hash = HashTool.AddHashCode( hash, format );
+			hash = HashTool.AddHashCode(hash, text);
+			hash = HashTool.AddHashCode(hash, format);
 			return hash;
 		} // ComputeHashCode
 

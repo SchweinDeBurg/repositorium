@@ -23,14 +23,14 @@ namespace Itenso.Rtf.Converter.Text
 
 		// ----------------------------------------------------------------------
 		public RtfTextConvertSettings()
-			: this( SeparatorCrLf )
+			: this(SeparatorCrLf)
 		{
 		} // RtfTextConvertSettings
 
 		// ----------------------------------------------------------------------
-		public RtfTextConvertSettings( string breakText )
+		public RtfTextConvertSettings(string breakText)
 		{
-			SetBreakText( breakText );
+			SetBreakText(breakText);
 		} // RtfTextConvertSettings
 
 		// ----------------------------------------------------------------------
@@ -188,11 +188,11 @@ namespace Itenso.Rtf.Converter.Text
 		} // ImageFormatText
 
 		// ----------------------------------------------------------------------
-		public void SetBreakText( string breakText )
+		public void SetBreakText(string breakText)
 		{
-			if ( breakText == null )
+			if (breakText == null)
 			{
-				throw new ArgumentNullException( "breakText" );
+				throw new ArgumentNullException("breakText");
 			}
 
 			lineBreakText = breakText;

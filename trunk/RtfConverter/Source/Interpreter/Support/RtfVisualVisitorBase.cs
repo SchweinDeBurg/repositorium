@@ -15,58 +15,58 @@ namespace Itenso.Rtf.Support
 	{
 
 		// ----------------------------------------------------------------------
-		public void VisitText( IRtfVisualText visualText )
+		public void VisitText(IRtfVisualText visualText)
 		{
-			if ( visualText != null )
+			if (visualText != null)
 			{
-				DoVisitText( visualText );
+				DoVisitText(visualText);
 			}
 		} // VisitText
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoVisitText( IRtfVisualText visualText )
+		protected virtual void DoVisitText(IRtfVisualText visualText)
 		{
 		} // DoVisitText
 
 		// ----------------------------------------------------------------------
-		public void VisitBreak( IRtfVisualBreak visualBreak )
+		public void VisitBreak(IRtfVisualBreak visualBreak)
 		{
-			if ( visualBreak != null )
+			if (visualBreak != null)
 			{
-				DoVisitBreak( visualBreak );
+				DoVisitBreak(visualBreak);
 			}
 		} // VisitBreak
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoVisitBreak( IRtfVisualBreak visualBreak )
+		protected virtual void DoVisitBreak(IRtfVisualBreak visualBreak)
 		{
 		} // DoVisitBreak
 
 		// ----------------------------------------------------------------------
-		public void VisitSpecial( IRtfVisualSpecialChar visualSpecialChar )
+		public void VisitSpecial(IRtfVisualSpecialChar visualSpecialChar)
 		{
-			if ( visualSpecialChar != null )
+			if (visualSpecialChar != null)
 			{
-				DoVisitSpecial( visualSpecialChar );
+				DoVisitSpecial(visualSpecialChar);
 			}
 		} // VisitSpecial
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoVisitSpecial( IRtfVisualSpecialChar visualSpecialChar )
+		protected virtual void DoVisitSpecial(IRtfVisualSpecialChar visualSpecialChar)
 		{
 		} // DoVisitSpecial
 
 		// ----------------------------------------------------------------------
-		public void VisitImage( IRtfVisualImage visualImage )
+		public void VisitImage(IRtfVisualImage visualImage)
 		{
-			if ( visualImage != null )
+			if (visualImage != null)
 			{
-				DoVisitImage( visualImage );
+				DoVisitImage(visualImage);
 			}
 		} // VisitImage
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoVisitImage( IRtfVisualImage visualImage )
+		protected virtual void DoVisitImage(IRtfVisualImage visualImage)
 		{
 		} // DoVisitImage
 

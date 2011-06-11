@@ -16,18 +16,18 @@ namespace Itenso.Rtf.Converter.Xml
 
 		// ----------------------------------------------------------------------
 		public RtfXmlConvertSettings()
-			: this( null, null )
+			: this(null, null)
 		{
 		} // RtfXmlConvertSettings
 
 		// ----------------------------------------------------------------------
-		public RtfXmlConvertSettings( string ns )
-			: this( null, ns )
+		public RtfXmlConvertSettings(string ns)
+			: this(null, ns)
 		{
 		} // RtfXmlConvertSettings
 
 		// ----------------------------------------------------------------------
-		public RtfXmlConvertSettings( string prefix, string ns )
+		public RtfXmlConvertSettings(string prefix, string ns)
 		{
 			this.prefix = prefix;
 			this.ns = ns;

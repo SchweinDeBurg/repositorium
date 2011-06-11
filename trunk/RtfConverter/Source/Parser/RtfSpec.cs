@@ -30,7 +30,7 @@ namespace Itenso.Rtf
 		public const string TagEncodingAnsiCodePage = "ansicpg";
 		public const int AnsiCodePage = 1252;
 		public const int SymbolFakeCodePage = 42; // a windows legacy hack ...
-		public static readonly Encoding AnsiEncoding = Encoding.GetEncoding( AnsiCodePage );
+		public static readonly Encoding AnsiEncoding = Encoding.GetEncoding(AnsiCodePage);
 
 		public const string TagUnicodeSkipCount = "uc";
 		public const string TagUnicodeCode = "u";
@@ -203,9 +203,9 @@ namespace Itenso.Rtf
 		public const string TagListNumberText = "listtext";
 
 		// ----------------------------------------------------------------------
-		public static int GetCodePage( int charSet )
+		public static int GetCodePage(int charSet)
 		{
-			switch ( charSet )
+			switch (charSet)
 			{
 				case 0:
 					return 1252; // ANSI

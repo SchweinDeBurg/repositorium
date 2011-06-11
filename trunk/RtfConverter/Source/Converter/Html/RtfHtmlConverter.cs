@@ -28,26 +28,26 @@ namespace Itenso.Rtf.Converter.Html
 		public const string DefaultHtmlFileExtension = ".html";
 
 		// ----------------------------------------------------------------------
-		public RtfHtmlConverter( IRtfDocument rtfDocument )
-			: this( rtfDocument, new RtfHtmlConvertSettings() )
+		public RtfHtmlConverter(IRtfDocument rtfDocument)
+			: this(rtfDocument, new RtfHtmlConvertSettings())
 		{
 		} // RtfHtmlConverter
 
 		// ----------------------------------------------------------------------
-		public RtfHtmlConverter( IRtfDocument rtfDocument, RtfHtmlConvertSettings settings )
+		public RtfHtmlConverter(IRtfDocument rtfDocument, RtfHtmlConvertSettings settings)
 		{
-			if ( rtfDocument == null )
+			if (rtfDocument == null)
 			{
-				throw new ArgumentNullException( "rtfDocument" );
+				throw new ArgumentNullException("rtfDocument");
 			}
-			if ( settings == null )
+			if (settings == null)
 			{
-				throw new ArgumentNullException( "settings" );
+				throw new ArgumentNullException("settings");
 			}
 
 			this.rtfDocument = rtfDocument;
 			this.settings = settings;
-			specialCharacters = new RtfHtmlSpecialCharCollection( settings.SpecialCharsRepresentation );
+			specialCharacters = new RtfHtmlSpecialCharCollection(settings.SpecialCharsRepresentation);
 		} // RtfHtmlConverter
 
 		// ----------------------------------------------------------------------
@@ -68,9 +68,9 @@ namespace Itenso.Rtf.Converter.Html
 			get { return styleConverter; }
 			set
 			{
-				if ( value == null )
+				if (value == null)
 				{
-					throw new ArgumentNullException( "value" );
+					throw new ArgumentNullException("value");
 				}
 				styleConverter = value;
 			}
@@ -81,7 +81,7 @@ namespace Itenso.Rtf.Converter.Html
 		{
 			get { return specialCharacters; }
 		} // SpecialCharacters
-		
+
 		// ----------------------------------------------------------------------
 		public RtfConvertedImageInfoCollection DocumentImages
 		{
@@ -103,19 +103,19 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		protected bool IsInParagraph
 		{
-			get { return IsInElement( HtmlTextWriterTag.P ); }
+			get { return IsInElement(HtmlTextWriterTag.P); }
 		} // IsInParagraph
 
 		// ----------------------------------------------------------------------
 		protected bool IsInList
 		{
-			get { return IsInElement( HtmlTextWriterTag.Ul ) || IsInElement( HtmlTextWriterTag.Ol ); }
+			get { return IsInElement(HtmlTextWriterTag.Ul) || IsInElement(HtmlTextWriterTag.Ol); }
 		} // IsInList
 
 		// ----------------------------------------------------------------------
 		protected bool IsInListItem
 		{
-			get { return IsInElement( HtmlTextWriterTag.Li ); }
+			get { return IsInElement(HtmlTextWriterTag.Li); }
 		} // IsInListItem
 
 		// ----------------------------------------------------------------------
@@ -130,9 +130,9 @@ namespace Itenso.Rtf.Converter.Html
 			string html;
 			documentImages.Clear();
 
-			using ( StringWriter stringWriter = new StringWriter() )
+			using (StringWriter stringWriter = new StringWriter())
 			{
-				using ( writer = new HtmlTextWriter( stringWriter ) )
+				using (writer = new HtmlTextWriter(stringWriter))
 				{
 					RenderDocumentSection();
 					RenderHtmlSection();
@@ -141,46 +141,46 @@ namespace Itenso.Rtf.Converter.Html
 				html = stringWriter.ToString();
 			}
 
-			if ( elementPath.Count != 0 )
+			if (elementPath.Count != 0)
 			{
-				logger.Error( "unbalanced element structure" );
+				logger.Error("unbalanced element structure");
 			}
 
 			return html;
 		} // Convert
 
 		// ----------------------------------------------------------------------
-		protected bool IsCurrentElement( HtmlTextWriterTag tag )
+		protected bool IsCurrentElement(HtmlTextWriterTag tag)
 		{
-			return elementPath.IsCurrent( tag );
+			return elementPath.IsCurrent(tag);
 		} // IsCurrentElement
 
 		// ----------------------------------------------------------------------
-		protected bool IsInElement( HtmlTextWriterTag tag )
+		protected bool IsInElement(HtmlTextWriterTag tag)
 		{
-			return elementPath.Contains( tag );
+			return elementPath.Contains(tag);
 		} // IsInElement
 
 		#region TagRendering
 
 		// ----------------------------------------------------------------------
-		protected void RenderBeginTag( HtmlTextWriterTag tag )
+		protected void RenderBeginTag(HtmlTextWriterTag tag)
 		{
-			Writer.RenderBeginTag( tag );
-			elementPath.Push( tag );
+			Writer.RenderBeginTag(tag);
+			elementPath.Push(tag);
 		} // RenderBeginTag
 
 		// ----------------------------------------------------------------------
 		protected void RenderEndTag()
 		{
-			RenderEndTag( false );
+			RenderEndTag(false);
 		} // RenderEndTag
 
 		// ----------------------------------------------------------------------
-		protected virtual void RenderEndTag( bool lineBreak )
+		protected virtual void RenderEndTag(bool lineBreak)
 		{
 			Writer.RenderEndTag();
-			if ( lineBreak )
+			if (lineBreak)
 			{
 				Writer.WriteLine();
 			}
@@ -190,115 +190,115 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		protected virtual void RenderTitleTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Title );
+			RenderBeginTag(HtmlTextWriterTag.Title);
 		} // RenderTitleTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderMetaTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Meta );
+			RenderBeginTag(HtmlTextWriterTag.Meta);
 		} // RenderMetaTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderHtmlTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Html );
+			RenderBeginTag(HtmlTextWriterTag.Html);
 		} // RenderHtmlTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderLinkTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Link );
+			RenderBeginTag(HtmlTextWriterTag.Link);
 		} // RenderLinkTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderHeadTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Head );
+			RenderBeginTag(HtmlTextWriterTag.Head);
 		} // RenderHeadTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderBodyTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Body );
+			RenderBeginTag(HtmlTextWriterTag.Body);
 		} // RenderBodyTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderBrTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Br );
+			RenderBeginTag(HtmlTextWriterTag.Br);
 		} // RenderBrTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderATag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.A );
+			RenderBeginTag(HtmlTextWriterTag.A);
 		} // RenderATag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderPTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.P );
+			RenderBeginTag(HtmlTextWriterTag.P);
 		} // RenderPTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderBTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.B );
+			RenderBeginTag(HtmlTextWriterTag.B);
 		} // RenderBTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderITag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.I );
+			RenderBeginTag(HtmlTextWriterTag.I);
 		} // RenderITag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderUTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.U );
+			RenderBeginTag(HtmlTextWriterTag.U);
 		} // RenderUTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderSTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.S );
+			RenderBeginTag(HtmlTextWriterTag.S);
 		} // RenderSTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderSpanTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Span );
+			RenderBeginTag(HtmlTextWriterTag.Span);
 		} // RenderSpanTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderUlTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Ul );
+			RenderBeginTag(HtmlTextWriterTag.Ul);
 		} // RenderUlTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderOlTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Ol );
+			RenderBeginTag(HtmlTextWriterTag.Ol);
 		} // RenderOlTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderLiTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Li );
+			RenderBeginTag(HtmlTextWriterTag.Li);
 		} // RenderLiTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderImgTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Img );
+			RenderBeginTag(HtmlTextWriterTag.Img);
 		} // RenderImgTag
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderStyleTag()
 		{
-			RenderBeginTag( HtmlTextWriterTag.Style );
+			RenderBeginTag(HtmlTextWriterTag.Style);
 		} // RenderStyleTag
 
 		#endregion // TagRendering
@@ -308,25 +308,25 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		protected virtual void RenderDocumentHeader()
 		{
-			if ( string.IsNullOrEmpty( settings.DocumentHeader ) )
+			if (string.IsNullOrEmpty(settings.DocumentHeader))
 			{
 				return;
 			}
 
-			Writer.WriteLine( settings.DocumentHeader );
+			Writer.WriteLine(settings.DocumentHeader);
 		} // RenderDocumentHeader
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderMetaContentType()
 		{
-			Writer.AddAttribute( "http-equiv", "content-type" );
+			Writer.AddAttribute("http-equiv", "content-type");
 
 			string content = "text/html";
-			if ( !string.IsNullOrEmpty( settings.CharacterSet ) )
+			if (!string.IsNullOrEmpty(settings.CharacterSet))
 			{
-				content = string.Concat( content, "; charset=", settings.CharacterSet );
+				content = string.Concat(content, "; charset=", settings.CharacterSet);
 			}
-			Writer.AddAttribute( HtmlTextWriterAttribute.Content, content );
+			Writer.AddAttribute(HtmlTextWriterAttribute.Content, content);
 			RenderMetaTag();
 			RenderEndTag();
 		} // RenderMetaContentType
@@ -335,14 +335,14 @@ namespace Itenso.Rtf.Converter.Html
 		protected virtual void RenderMetaGenerator()
 		{
 			string generator = Generator;
-			if ( string.IsNullOrEmpty( generator ) )
+			if (string.IsNullOrEmpty(generator))
 			{
 				return;
 			}
 
 			Writer.WriteLine();
-			Writer.AddAttribute( HtmlTextWriterAttribute.Name, "generator" );
-			Writer.AddAttribute( HtmlTextWriterAttribute.Content, generator );
+			Writer.AddAttribute(HtmlTextWriterAttribute.Name, "generator");
+			Writer.AddAttribute(HtmlTextWriterAttribute.Content, generator);
 			RenderMetaTag();
 			RenderEndTag();
 		} // RenderMetaGenerator
@@ -350,22 +350,22 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		protected virtual void RenderLinkStyleSheets()
 		{
-			if ( !settings.HasStyleSheetLinks )
+			if (!settings.HasStyleSheetLinks)
 			{
 				return;
 			}
 
-			foreach ( string styleSheetLink in settings.StyleSheetLinks )
+			foreach (string styleSheetLink in settings.StyleSheetLinks)
 			{
-				if ( string.IsNullOrEmpty( styleSheetLink ) )
+				if (string.IsNullOrEmpty(styleSheetLink))
 				{
 					continue;
 				}
 
 				Writer.WriteLine();
-				Writer.AddAttribute( HtmlTextWriterAttribute.Href, styleSheetLink );
-				Writer.AddAttribute( HtmlTextWriterAttribute.Type, "text/css" );
-				Writer.AddAttribute( HtmlTextWriterAttribute.Rel, "stylesheet" );
+				Writer.AddAttribute(HtmlTextWriterAttribute.Href, styleSheetLink);
+				Writer.AddAttribute(HtmlTextWriterAttribute.Type, "text/css");
+				Writer.AddAttribute(HtmlTextWriterAttribute.Rel, "stylesheet");
 				RenderLinkTag();
 				RenderEndTag();
 			}
@@ -382,21 +382,21 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		protected virtual void RenderTitle()
 		{
-			if ( string.IsNullOrEmpty( settings.Title ) )
+			if (string.IsNullOrEmpty(settings.Title))
 			{
 				return;
 			}
 
 			Writer.WriteLine();
 			RenderTitleTag();
-			Writer.Write( settings.Title );
+			Writer.Write(settings.Title);
 			RenderEndTag();
 		} // RenderTitle
 
 		// ----------------------------------------------------------------------
 		protected virtual void RenderStyles()
 		{
-			if ( !settings.HasStyles )
+			if (!settings.HasStyles)
 			{
 				return;
 			}
@@ -405,28 +405,28 @@ namespace Itenso.Rtf.Converter.Html
 			RenderStyleTag();
 
 			bool firstStyle = true;
-			foreach ( IRtfHtmlCssStyle cssStyle in settings.Styles )
+			foreach (IRtfHtmlCssStyle cssStyle in settings.Styles)
 			{
-				if ( cssStyle.Properties.Count == 0 )
+				if (cssStyle.Properties.Count == 0)
 				{
 					continue;
 				}
 
-				if ( !firstStyle )
+				if (!firstStyle)
 				{
 					Writer.WriteLine();
 				}
-				Writer.WriteLine( cssStyle.SelectorName );
-				Writer.WriteLine( "{" );
-				for ( int i = 0; i < cssStyle.Properties.Count; i++ )
+				Writer.WriteLine(cssStyle.SelectorName);
+				Writer.WriteLine("{");
+				for (int i = 0; i < cssStyle.Properties.Count; i++)
 				{
-					Writer.WriteLine( string.Format(
+					Writer.WriteLine(string.Format(
 						CultureInfo.InvariantCulture,
 						"  {0}: {1};",
-						cssStyle.Properties.Keys[ i ],
-						cssStyle.Properties[ i ] ) );
+						cssStyle.Properties.Keys[i],
+						cssStyle.Properties[i]));
 				}
-				Writer.Write( "}" );
+				Writer.Write("}");
 				firstStyle = false;
 			}
 
@@ -436,9 +436,9 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		protected virtual void RenderRtfContent()
 		{
-			foreach ( IRtfVisual visual in rtfDocument.VisualContent )
+			foreach (IRtfVisual visual in rtfDocument.VisualContent)
 			{
-				visual.Visit( this );
+				visual.Visit(this);
 			}
 			EnsureClosedList();
 		} // RenderRtfContent
@@ -446,7 +446,7 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		protected virtual void BeginParagraph()
 		{
-			if ( IsInParagraph )
+			if (IsInParagraph)
 			{
 				return;
 			}
@@ -456,21 +456,21 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		protected virtual void EndParagraph()
 		{
-			if ( !IsInParagraph )
+			if (!IsInParagraph)
 			{
 				return;
 			}
-			RenderEndTag( true );
+			RenderEndTag(true);
 		} // EndParagraph
 
 		// ----------------------------------------------------------------------
-		protected virtual bool OnEnterVisual( IRtfVisual rtfVisual )
+		protected virtual bool OnEnterVisual(IRtfVisual rtfVisual)
 		{
 			return true;
 		} // OnEnterVisual
 
 		// ----------------------------------------------------------------------
-		protected virtual void OnLeaveVisual( IRtfVisual rtfVisual )
+		protected virtual void OnLeaveVisual(IRtfVisual rtfVisual)
 		{
 		} // OnLeaveVisual
 		#endregion // HtmlStructure
@@ -478,14 +478,14 @@ namespace Itenso.Rtf.Converter.Html
 		#region HtmlFormat
 
 		// ----------------------------------------------------------------------
-		protected virtual IRtfHtmlStyle GetHtmlStyle( IRtfVisual rtfVisual )
+		protected virtual IRtfHtmlStyle GetHtmlStyle(IRtfVisual rtfVisual)
 		{
 			IRtfHtmlStyle htmlStyle = RtfHtmlStyle.Empty;
 
-			switch ( rtfVisual.Kind )
+			switch (rtfVisual.Kind)
 			{
 				case RtfVisualKind.Text:
-					htmlStyle = styleConverter.TextToHtml( rtfVisual as IRtfVisualText );
+					htmlStyle = styleConverter.TextToHtml(rtfVisual as IRtfVisualText);
 					break;
 			}
 
@@ -493,14 +493,14 @@ namespace Itenso.Rtf.Converter.Html
 		} // GetHtmlStyle
 
 		// ----------------------------------------------------------------------
-		protected virtual string FormatHtmlText( string rtfText )
+		protected virtual string FormatHtmlText(string rtfText)
 		{
-			string htmlText = HttpUtility.HtmlEncode( rtfText );
+			string htmlText = HttpUtility.HtmlEncode(rtfText);
 
 			// replace all spaces to non-breaking spaces
-			if ( settings.UseNonBreakingSpaces )
+			if (settings.UseNonBreakingSpaces)
 			{
-				htmlText = htmlText.Replace( " ", nonBreakingSpace );
+				htmlText = htmlText.Replace(" ", nonBreakingSpace);
 			}
 
 			return htmlText;
@@ -511,189 +511,189 @@ namespace Itenso.Rtf.Converter.Html
 		#region RtfVisuals
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitText( IRtfVisualText visualText )
+		protected override void DoVisitText(IRtfVisualText visualText)
 		{
-			if ( !EnterVisual( visualText ) )
+			if (!EnterVisual(visualText))
 			{
 				return;
 			}
 
 			// suppress hidden text
-			if ( visualText.Format.IsHidden && settings.IsShowHiddenText == false )
+			if (visualText.Format.IsHidden && settings.IsShowHiddenText == false)
 			{
 				return;
 			}
 
 			IRtfTextFormat textFormat = visualText.Format;
-			switch ( textFormat.Alignment )
+			switch (textFormat.Alignment)
 			{
 				case RtfTextAlignment.Left:
 					//Writer.AddAttribute( HtmlTextWriterAttribute.Align, "left", false );
 					break;
 				case RtfTextAlignment.Center:
-					Writer.AddAttribute( HtmlTextWriterAttribute.Align, "center", false );
+					Writer.AddAttribute(HtmlTextWriterAttribute.Align, "center", false);
 					break;
 				case RtfTextAlignment.Right:
-					Writer.AddAttribute( HtmlTextWriterAttribute.Align, "right", false );
+					Writer.AddAttribute(HtmlTextWriterAttribute.Align, "right", false);
 					break;
 				case RtfTextAlignment.Justify:
-					Writer.AddAttribute( HtmlTextWriterAttribute.Align, "justify", false );
+					Writer.AddAttribute(HtmlTextWriterAttribute.Align, "justify", false);
 					break;
 			}
 
-			if ( !IsInListItem )
+			if (!IsInListItem)
 			{
 				BeginParagraph();
 			}
 
 			// format tags
-			if ( textFormat.IsBold )
+			if (textFormat.IsBold)
 			{
 				RenderBTag();
 			}
-			if ( textFormat.IsItalic )
+			if (textFormat.IsItalic)
 			{
 				RenderITag();
 			}
-			if ( textFormat.IsUnderline )
+			if (textFormat.IsUnderline)
 			{
 				RenderUTag();
 			}
-			if ( textFormat.IsStrikeThrough )
+			if (textFormat.IsStrikeThrough)
 			{
 				RenderSTag();
 			}
 
 			// span with style
-			IRtfHtmlStyle htmlStyle = GetHtmlStyle( visualText );
-			if ( !htmlStyle.IsEmpty )
+			IRtfHtmlStyle htmlStyle = GetHtmlStyle(visualText);
+			if (!htmlStyle.IsEmpty)
 			{
-				if ( !string.IsNullOrEmpty( htmlStyle.ForegroundColor ) )
+				if (!string.IsNullOrEmpty(htmlStyle.ForegroundColor))
 				{
-					Writer.AddStyleAttribute( HtmlTextWriterStyle.Color, htmlStyle.ForegroundColor );
+					Writer.AddStyleAttribute(HtmlTextWriterStyle.Color, htmlStyle.ForegroundColor);
 				}
-				if ( !string.IsNullOrEmpty( htmlStyle.BackgroundColor ) )
+				if (!string.IsNullOrEmpty(htmlStyle.BackgroundColor))
 				{
-					Writer.AddStyleAttribute( HtmlTextWriterStyle.BackgroundColor, htmlStyle.BackgroundColor );
+					Writer.AddStyleAttribute(HtmlTextWriterStyle.BackgroundColor, htmlStyle.BackgroundColor);
 				}
-				if ( !string.IsNullOrEmpty( htmlStyle.FontFamily ) )
+				if (!string.IsNullOrEmpty(htmlStyle.FontFamily))
 				{
-					Writer.AddStyleAttribute( HtmlTextWriterStyle.FontFamily, htmlStyle.FontFamily );
+					Writer.AddStyleAttribute(HtmlTextWriterStyle.FontFamily, htmlStyle.FontFamily);
 				}
-				if ( !string.IsNullOrEmpty( htmlStyle.FontSize ) )
+				if (!string.IsNullOrEmpty(htmlStyle.FontSize))
 				{
-					Writer.AddStyleAttribute( HtmlTextWriterStyle.FontSize, htmlStyle.FontSize );
+					Writer.AddStyleAttribute(HtmlTextWriterStyle.FontSize, htmlStyle.FontSize);
 				}
 				RenderSpanTag();
 			}
 
 			// visual hyperlink
 			bool isHyperlink = false;
-			if ( settings.ConvertVisualHyperlinks )
+			if (settings.ConvertVisualHyperlinks)
 			{
-				string href = ConvertVisualHyperlink( visualText.Text );
-				if ( !string.IsNullOrEmpty( href ) )
+				string href = ConvertVisualHyperlink(visualText.Text);
+				if (!string.IsNullOrEmpty(href))
 				{
 					isHyperlink = true;
-					Writer.AddAttribute( HtmlTextWriterAttribute.Href, href );
+					Writer.AddAttribute(HtmlTextWriterAttribute.Href, href);
 					RenderATag();
 				}
 			}
 
-			string htmlText = FormatHtmlText( visualText.Text );
-			Writer.Write( htmlText );
+			string htmlText = FormatHtmlText(visualText.Text);
+			Writer.Write(htmlText);
 
 
 			// visual hyperlink
-			if ( isHyperlink )
+			if (isHyperlink)
 			{
 				RenderEndTag(); // a
 			}
 
 			// span with style
-			if ( !htmlStyle.IsEmpty )
+			if (!htmlStyle.IsEmpty)
 			{
 				RenderEndTag();
 			}
 
 			// format tags
-			if ( textFormat.IsStrikeThrough )
+			if (textFormat.IsStrikeThrough)
 			{
 				RenderEndTag(); // s
 			}
-			if ( textFormat.IsUnderline )
+			if (textFormat.IsUnderline)
 			{
 				RenderEndTag(); // u
 			}
-			if ( textFormat.IsItalic )
+			if (textFormat.IsItalic)
 			{
 				RenderEndTag(); // i
 			}
-			if ( textFormat.IsBold )
+			if (textFormat.IsBold)
 			{
 				RenderEndTag(); // b
 			}
 
-			LeaveVisual( visualText );
+			LeaveVisual(visualText);
 		} // DoVisitText
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitImage( IRtfVisualImage visualImage )
+		protected override void DoVisitImage(IRtfVisualImage visualImage)
 		{
-			if ( !EnterVisual( visualImage ) )
+			if (!EnterVisual(visualImage))
 			{
 				return;
 			}
 
-			switch ( visualImage.Alignment )
+			switch (visualImage.Alignment)
 			{
 				case RtfTextAlignment.Left:
 					//Writer.AddAttribute( HtmlTextWriterAttribute.Align, "left", false );
 					break;
 				case RtfTextAlignment.Center:
-					Writer.AddAttribute( HtmlTextWriterAttribute.Align, "center", false );
+					Writer.AddAttribute(HtmlTextWriterAttribute.Align, "center", false);
 					break;
 				case RtfTextAlignment.Right:
-					Writer.AddAttribute( HtmlTextWriterAttribute.Align, "right", false );
+					Writer.AddAttribute(HtmlTextWriterAttribute.Align, "right", false);
 					break;
 				case RtfTextAlignment.Justify:
-					Writer.AddAttribute( HtmlTextWriterAttribute.Align, "justify", false );
+					Writer.AddAttribute(HtmlTextWriterAttribute.Align, "justify", false);
 					break;
 			}
 
 			BeginParagraph();
 
 			int imageIndex = documentImages.Count + 1;
-			string fileName = settings.GetImageUrl( imageIndex, visualImage.Format );
-			int width = settings.ImageAdapter.CalcImageWidth( visualImage.Format, visualImage.Width,
-				visualImage.DesiredWidth, visualImage.ScaleWidthPercent );
-			int height = settings.ImageAdapter.CalcImageHeight( visualImage.Format, visualImage.Height,
-				visualImage.DesiredHeight, visualImage.ScaleHeightPercent );
+			string fileName = settings.GetImageUrl(imageIndex, visualImage.Format);
+			int width = settings.ImageAdapter.CalcImageWidth(visualImage.Format, visualImage.Width,
+				visualImage.DesiredWidth, visualImage.ScaleWidthPercent);
+			int height = settings.ImageAdapter.CalcImageHeight(visualImage.Format, visualImage.Height,
+				visualImage.DesiredHeight, visualImage.ScaleHeightPercent);
 
-			Writer.AddAttribute( HtmlTextWriterAttribute.Width, width.ToString() );
-			Writer.AddAttribute( HtmlTextWriterAttribute.Height, height.ToString() );
-			string htmlFileName = HttpUtility.HtmlEncode( fileName );
-			Writer.AddAttribute( HtmlTextWriterAttribute.Src, htmlFileName, false );
+			Writer.AddAttribute(HtmlTextWriterAttribute.Width, width.ToString());
+			Writer.AddAttribute(HtmlTextWriterAttribute.Height, height.ToString());
+			string htmlFileName = HttpUtility.HtmlEncode(fileName);
+			Writer.AddAttribute(HtmlTextWriterAttribute.Src, htmlFileName, false);
 			RenderImgTag();
 			RenderEndTag();
 
-			documentImages.Add( new RtfConvertedImageInfo(
+			documentImages.Add(new RtfConvertedImageInfo(
 				htmlFileName,
 				settings.ImageAdapter.TargetFormat,
-				new Size( width, height ) ) );
+				new Size(width, height)));
 
-			LeaveVisual( visualImage );
+			LeaveVisual(visualImage);
 		} // DoVisitImage
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitSpecial( IRtfVisualSpecialChar visualSpecialChar )
+		protected override void DoVisitSpecial(IRtfVisualSpecialChar visualSpecialChar)
 		{
-			if ( !EnterVisual( visualSpecialChar ) )
+			if (!EnterVisual(visualSpecialChar))
 			{
 				return;
 			}
 
-			switch ( visualSpecialChar.CharKind )
+			switch (visualSpecialChar.CharKind)
 			{
 				case RtfVisualSpecialCharKind.ParagraphNumberBegin:
 					isInParagraphNumber = true;
@@ -702,25 +702,25 @@ namespace Itenso.Rtf.Converter.Html
 					isInParagraphNumber = false;
 					break;
 				default:
-					if ( SpecialCharacters.ContainsKey( visualSpecialChar.CharKind ) )
+					if (SpecialCharacters.ContainsKey(visualSpecialChar.CharKind))
 					{
-						Writer.Write( SpecialCharacters[ visualSpecialChar.CharKind ] );
+						Writer.Write(SpecialCharacters[visualSpecialChar.CharKind]);
 					}
 					break;
 			}
 
-			LeaveVisual( visualSpecialChar );
+			LeaveVisual(visualSpecialChar);
 		} // DoVisitSpecial
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitBreak( IRtfVisualBreak visualBreak )
+		protected override void DoVisitBreak(IRtfVisualBreak visualBreak)
 		{
-			if ( !EnterVisual( visualBreak ) )
+			if (!EnterVisual(visualBreak))
 			{
 				return;
 			}
 
-			switch ( visualBreak.BreakKind )
+			switch (visualBreak.BreakKind)
 			{
 				case RtfVisualBreakKind.Line:
 					RenderBrTag();
@@ -728,19 +728,19 @@ namespace Itenso.Rtf.Converter.Html
 				case RtfVisualBreakKind.Page:
 					break;
 				case RtfVisualBreakKind.Paragraph:
-					if ( IsInParagraph )
+					if (IsInParagraph)
 					{
 						EndParagraph(); // close paragraph
 					}
-					else if ( IsInListItem )
+					else if (IsInListItem)
 					{
 						EndParagraph();
-						RenderEndTag( true ); // close list item
+						RenderEndTag(true); // close list item
 					}
 					else
 					{
 						BeginParagraph();
-						Writer.Write( nonBreakingSpace );
+						Writer.Write(nonBreakingSpace);
 						EndParagraph();
 					}
 					break;
@@ -748,35 +748,35 @@ namespace Itenso.Rtf.Converter.Html
 					break;
 			}
 
-			LeaveVisual( visualBreak );
+			LeaveVisual(visualBreak);
 		} // DoVisitBreak
 
 		#endregion // RtfVisuals
 
 		// ----------------------------------------------------------------------
-		private string ConvertVisualHyperlink( string text )
+		private string ConvertVisualHyperlink(string text)
 		{
-			if ( string.IsNullOrEmpty( text ) )
+			if (string.IsNullOrEmpty(text))
 			{
 				return null;
 			}
 
-			if ( hyperlinkRegEx == null )
+			if (hyperlinkRegEx == null)
 			{
-				if ( string.IsNullOrEmpty( settings.VisualHyperlinkPattern ) )
+				if (string.IsNullOrEmpty(settings.VisualHyperlinkPattern))
 				{
 					return null;
 				}
-				hyperlinkRegEx = new Regex( settings.VisualHyperlinkPattern );
+				hyperlinkRegEx = new Regex(settings.VisualHyperlinkPattern);
 			}
 
-			return hyperlinkRegEx.IsMatch( text ) ? text : null;
+			return hyperlinkRegEx.IsMatch(text) ? text : null;
 		} // ConvertVisualHyperlink
 
 		// ----------------------------------------------------------------------
 		private void RenderDocumentSection()
 		{
-			if ( ( settings.ConvertScope & RtfHtmlConvertScope.Document ) != RtfHtmlConvertScope.Document )
+			if ((settings.ConvertScope & RtfHtmlConvertScope.Document) != RtfHtmlConvertScope.Document)
 			{
 				return;
 			}
@@ -787,7 +787,7 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		private void RenderHtmlSection()
 		{
-			if ( ( settings.ConvertScope & RtfHtmlConvertScope.Html ) == RtfHtmlConvertScope.Html )
+			if ((settings.ConvertScope & RtfHtmlConvertScope.Html) == RtfHtmlConvertScope.Html)
 			{
 				RenderHtmlTag();
 			}
@@ -795,16 +795,16 @@ namespace Itenso.Rtf.Converter.Html
 			RenderHeadSection();
 			RenderBodySection();
 
-			if ( ( settings.ConvertScope & RtfHtmlConvertScope.Html ) == RtfHtmlConvertScope.Html )
+			if ((settings.ConvertScope & RtfHtmlConvertScope.Html) == RtfHtmlConvertScope.Html)
 			{
-				RenderEndTag( true );
+				RenderEndTag(true);
 			}
 		} // RenderHtmlSection
 
 		// ----------------------------------------------------------------------
 		private void RenderHeadSection()
 		{
-			if ( ( settings.ConvertScope & RtfHtmlConvertScope.Head ) != RtfHtmlConvertScope.Head )
+			if ((settings.ConvertScope & RtfHtmlConvertScope.Head) != RtfHtmlConvertScope.Head)
 			{
 				return;
 			}
@@ -813,62 +813,62 @@ namespace Itenso.Rtf.Converter.Html
 			RenderHeadAttributes();
 			RenderTitle();
 			RenderStyles();
-			RenderEndTag( true );
+			RenderEndTag(true);
 		} // RenderHeadSection
 
 		// ----------------------------------------------------------------------
 		private void RenderBodySection()
 		{
-			if ( ( settings.ConvertScope & RtfHtmlConvertScope.Body ) == RtfHtmlConvertScope.Body )
+			if ((settings.ConvertScope & RtfHtmlConvertScope.Body) == RtfHtmlConvertScope.Body)
 			{
 				RenderBodyTag();
 			}
 
-			if ( ( settings.ConvertScope & RtfHtmlConvertScope.Content ) == RtfHtmlConvertScope.Content )
+			if ((settings.ConvertScope & RtfHtmlConvertScope.Content) == RtfHtmlConvertScope.Content)
 			{
 				RenderRtfContent();
 			}
 
-			if ( ( settings.ConvertScope & RtfHtmlConvertScope.Body ) == RtfHtmlConvertScope.Body )
+			if ((settings.ConvertScope & RtfHtmlConvertScope.Body) == RtfHtmlConvertScope.Body)
 			{
 				RenderEndTag();
 			}
 		} // RenderBodySection
 
 		// ----------------------------------------------------------------------
-		private bool EnterVisual( IRtfVisual rtfVisual )
+		private bool EnterVisual(IRtfVisual rtfVisual)
 		{
-			bool openList = EnsureOpenList( rtfVisual );
-			if ( openList )
+			bool openList = EnsureOpenList(rtfVisual);
+			if (openList)
 			{
 				return false;
 			}
 
-			EnsureClosedList( rtfVisual );
-			return OnEnterVisual( rtfVisual );
+			EnsureClosedList(rtfVisual);
+			return OnEnterVisual(rtfVisual);
 		} // EnterVisual
 
 		// ----------------------------------------------------------------------
-		private void LeaveVisual( IRtfVisual rtfVisual )
+		private void LeaveVisual(IRtfVisual rtfVisual)
 		{
-			OnLeaveVisual( rtfVisual );
+			OnLeaveVisual(rtfVisual);
 			lastVisual = rtfVisual;
 		} // LeaveVisual
 
 		// ----------------------------------------------------------------------
 		// returns true if visual is in list
-		private bool EnsureOpenList( IRtfVisual rtfVisual )
+		private bool EnsureOpenList(IRtfVisual rtfVisual)
 		{
 			IRtfVisualText visualText = rtfVisual as IRtfVisualText;
-			if ( visualText == null || !isInParagraphNumber )
+			if (visualText == null || !isInParagraphNumber)
 			{
 				return false;
 			}
 
-			if ( !IsInList )
+			if (!IsInList)
 			{
-				bool unsortedList = unsortedListValue.Equals( visualText.Text );
-				if ( unsortedList )
+				bool unsortedList = unsortedListValue.Equals(visualText.Text);
+				if (unsortedList)
 				{
 					RenderUlTag(); // unsorted list
 				}
@@ -886,32 +886,32 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		private void EnsureClosedList()
 		{
-			if ( lastVisual == null )
+			if (lastVisual == null)
 			{
 				return;
 			}
-			EnsureClosedList( lastVisual );
+			EnsureClosedList(lastVisual);
 		} // EnsureClosedList
 
 		// ----------------------------------------------------------------------
-		private void EnsureClosedList( IRtfVisual rtfVisual )
+		private void EnsureClosedList(IRtfVisual rtfVisual)
 		{
-			if ( !IsInList )
+			if (!IsInList)
 			{
 				return; // not in list
 			}
 
 			IRtfVisualBreak previousParagraph = lastVisual as IRtfVisualBreak;
-			if ( previousParagraph == null || previousParagraph.BreakKind != RtfVisualBreakKind.Paragraph )
+			if (previousParagraph == null || previousParagraph.BreakKind != RtfVisualBreakKind.Paragraph)
 			{
 				return; // is not following to a pragraph
 			}
 
 			IRtfVisualSpecialChar specialChar = rtfVisual as IRtfVisualSpecialChar;
-			if ( specialChar == null ||
-				specialChar.CharKind != RtfVisualSpecialCharKind.ParagraphNumberBegin )
+			if (specialChar == null ||
+				specialChar.CharKind != RtfVisualSpecialCharKind.ParagraphNumberBegin)
 			{
-				RenderEndTag( true ); // close ul/ol list
+				RenderEndTag(true); // close ul/ol list
 			}
 		} // EnsureClosedList
 
@@ -933,7 +933,7 @@ namespace Itenso.Rtf.Converter.Html
 
 		private Regex hyperlinkRegEx;
 
-		private static readonly ILogger logger = Logger.GetLogger( typeof( RtfHtmlConverter ) );
+		private static readonly ILogger logger = Logger.GetLogger(typeof(RtfHtmlConverter));
 
 	} // class RtfHtmlConverter
 

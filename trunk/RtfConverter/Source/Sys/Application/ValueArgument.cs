@@ -16,13 +16,13 @@ namespace Itenso.Sys.Application
 
 		// ----------------------------------------------------------------------
 		public ValueArgument()
-			: this( ArgumentType.None )
+			: this(ArgumentType.None)
 		{
 		} // ValueArgument
 
 		// ----------------------------------------------------------------------
-		public ValueArgument( ArgumentType argumentType )
-			: base( argumentType | ArgumentType.ContainsValue, null, null )
+		public ValueArgument(ArgumentType argumentType)
+			: base(argumentType | ArgumentType.ContainsValue, null, null)
 		{
 		} // ValueArgument
 
@@ -39,7 +39,7 @@ namespace Itenso.Sys.Application
 		} // ToString
 
 		// ----------------------------------------------------------------------
-		protected override bool OnLoad( string commandLineArg )
+		protected override bool OnLoad(string commandLineArg)
 		{
 			base.Value = commandLineArg;
 			return true;

@@ -16,12 +16,12 @@ namespace Itenso.Rtf.Parser
 
 		// ----------------------------------------------------------------------
 		public RtfParserLoggerSettings()
-			: this( true )
+			: this(true)
 		{
 		} // RtfParserLoggerSettings
 
 		// ----------------------------------------------------------------------
-		public RtfParserLoggerSettings( bool enabled )
+		public RtfParserLoggerSettings(bool enabled)
 		{
 			this.enabled = enabled;
 		} // RtfParserLoggerSettings

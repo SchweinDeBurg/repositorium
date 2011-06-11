@@ -45,30 +45,30 @@ namespace Itenso.Rtf.Parser
 		} // DoGroupBegin
 
 		// ----------------------------------------------------------------------
-		public void TagFound( IRtfTag tag )
+		public void TagFound(IRtfTag tag)
 		{
-			if ( tag != null )
+			if (tag != null)
 			{
-				DoTagFound( tag );
+				DoTagFound(tag);
 			}
 		} // TagFound
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoTagFound( IRtfTag tag )
+		protected virtual void DoTagFound(IRtfTag tag)
 		{
 		} // DoTagFound
 
 		// ----------------------------------------------------------------------
-		public void TextFound( IRtfText text )
+		public void TextFound(IRtfText text)
 		{
-			if ( text != null )
+			if (text != null)
 			{
-				DoTextFound( text );
+				DoTextFound(text);
 			}
 		} // TextFound
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoTextFound( IRtfText text )
+		protected virtual void DoTextFound(IRtfText text)
 		{
 		} // DoTextFound
 
@@ -96,13 +96,13 @@ namespace Itenso.Rtf.Parser
 		} // DoParseSuccess
 
 		// ----------------------------------------------------------------------
-		public void ParseFail( RtfException reason )
+		public void ParseFail(RtfException reason)
 		{
-			DoParseFail( reason );
+			DoParseFail(reason);
 		} // ParseFail
 
 		// ----------------------------------------------------------------------
-		protected virtual void DoParseFail( RtfException reason )
+		protected virtual void DoParseFail(RtfException reason)
 		{
 		} // DoParseFail
 

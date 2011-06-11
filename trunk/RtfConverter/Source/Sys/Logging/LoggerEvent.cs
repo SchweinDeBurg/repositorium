@@ -16,11 +16,11 @@ namespace Itenso.Sys.Logging
 	{
 
 		// ----------------------------------------------------------------------
-		public LoggerEvent( LoggerLevel level, string source, string context, string message, Exception caughtException )
+		public LoggerEvent(LoggerLevel level, string source, string context, string message, Exception caughtException)
 		{
 			int levelValue = (int)level;
-			this.level = levelValue < 0 ? LoggerLevel.Fatal : ( levelValue > 4 ? LoggerLevel.Fatal : level );
-			this.source = ArgumentCheck.NonemptyTrimmedString( source, "source" );
+			this.level = levelValue < 0 ? LoggerLevel.Fatal : (levelValue > 4 ? LoggerLevel.Fatal : level);
+			this.source = ArgumentCheck.NonemptyTrimmedString(source, "source");
 			this.context = context ?? string.Empty;
 			this.message = message ?? string.Empty;
 			this.caughtException = caughtException;

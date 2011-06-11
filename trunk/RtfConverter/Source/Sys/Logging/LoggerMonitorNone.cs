@@ -15,20 +15,20 @@ namespace Itenso.Sys.Logging
 	{
 
 		// ----------------------------------------------------------------------
-		public void Register( ILoggerListener loggerListener, string context )
+		public void Register(ILoggerListener loggerListener, string context)
 		{
-			logger.Warn( "ignoring registration of " + loggerListener + " for context " + context );
+			logger.Warn("ignoring registration of " + loggerListener + " for context " + context);
 		} // Register
 
 		// ----------------------------------------------------------------------
-		public void Unregister( ILoggerListener loggerListener, string context )
+		public void Unregister(ILoggerListener loggerListener, string context)
 		{
-			logger.Warn( "ignoring unregistration of " + loggerListener + " for context " + context );
+			logger.Warn("ignoring unregistration of " + loggerListener + " for context " + context);
 		} // Unregister
 
 		// ----------------------------------------------------------------------
 		// members
-		private static readonly ILogger logger = Logger.GetLogger( typeof( LoggerMonitorNone ) );
+		private static readonly ILogger logger = Logger.GetLogger(typeof(LoggerMonitorNone));
 
 	} // class LoggerMonitorNone
 

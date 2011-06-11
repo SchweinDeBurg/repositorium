@@ -34,46 +34,46 @@ namespace Itenso.Rtf.Parser
 		protected override void DoGroupBegin()
 		{
 			RtfGroup newGroup = new RtfGroup();
-			if ( curGroup != null )
+			if (curGroup != null)
 			{
-				openGroupStack.Push( curGroup );
-				curGroup.WritableContents.Add( newGroup );
+				openGroupStack.Push(curGroup);
+				curGroup.WritableContents.Add(newGroup);
 			}
 			curGroup = newGroup;
 		} // DoGroupBegin
 
 		// ----------------------------------------------------------------------
-		protected override void DoTagFound( IRtfTag tag )
+		protected override void DoTagFound(IRtfTag tag)
 		{
-			if ( curGroup == null )
+			if (curGroup == null)
 			{
-				throw new RtfStructureException( Strings.MissingGroupForNewTag );
+				throw new RtfStructureException(Strings.MissingGroupForNewTag);
 			}
-			curGroup.WritableContents.Add( tag );
+			curGroup.WritableContents.Add(tag);
 		} // DoTagFound
 
 		// ----------------------------------------------------------------------
-		protected override void DoTextFound( IRtfText text )
+		protected override void DoTextFound(IRtfText text)
 		{
-			if ( curGroup == null )
+			if (curGroup == null)
 			{
-				throw new RtfStructureException( Strings.MissingGroupForNewText );
+				throw new RtfStructureException(Strings.MissingGroupForNewText);
 			}
-			curGroup.WritableContents.Add( text );
+			curGroup.WritableContents.Add(text);
 		} // DoTextFound
 
 		// ----------------------------------------------------------------------
 		protected override void DoGroupEnd()
 		{
-			if ( openGroupStack.Count > 0 )
+			if (openGroupStack.Count > 0)
 			{
 				curGroup = (RtfGroup)openGroupStack.Pop();
 			}
 			else
 			{
-				if ( structureRoot != null )
+				if (structureRoot != null)
 				{
-					throw new RtfStructureException( Strings.MultipleRootLevelGroups );
+					throw new RtfStructureException(Strings.MultipleRootLevelGroups);
 				}
 				structureRoot = curGroup;
 				curGroup = null;
@@ -83,9 +83,9 @@ namespace Itenso.Rtf.Parser
 		// ----------------------------------------------------------------------
 		protected override void DoParseEnd()
 		{
-			if ( openGroupStack.Count > 0 )
+			if (openGroupStack.Count > 0)
 			{
-				throw new RtfBraceNestingException( Strings.UnclosedGroups );
+				throw new RtfBraceNestingException(Strings.UnclosedGroups);
 			}
 		} // DoParseEnd
 

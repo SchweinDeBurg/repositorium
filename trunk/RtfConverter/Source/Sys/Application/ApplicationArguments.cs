@@ -30,11 +30,11 @@ namespace Itenso.Sys.Application
 		// ----------------------------------------------------------------------
 		public bool IsHelpMode
 		{
-			get 
+			get
 			{
-				foreach ( IArgument argument in arguments )
+				foreach (IArgument argument in arguments)
 				{
-					if ( argument is HelpModeArgument )
+					if (argument is HelpModeArgument)
 					{
 						return (bool)argument.Value;
 					}
@@ -48,24 +48,45 @@ namespace Itenso.Sys.Application
 		{
 			string[] commandLineArgs = Environment.GetCommandLineArgs();
 
-			// skip zeron index which contians the program name
-			for ( int i = 1; i < commandLineArgs.Length; i++ )
+			// skip zero index which contains the program name
+			for (int i = 1; i < commandLineArgs.Length; i++)
 			{
-				string commandLineArg = commandLineArgs[ i ];
-				foreach ( IArgument argument in arguments )
+				string commandLineArg = commandLineArgs[i];
+				foreach (IArgument argument in arguments)
 				{
-					if ( argument.IsLoaded )
+					if (argument.IsLoaded)
 					{
 						continue;
 					}
-					argument.Load( commandLineArg );
-					if ( argument.IsLoaded )
+					argument.Load(commandLineArg);
+					if (argument.IsLoaded)
 					{
 						break;
 					}
 				}
 			}
 		} // Load
+
+		// ----------------------------------------------------------------------
+		public void Load(string[] args)
+		{
+			for (int i = 0; i < args.Length; i++)
+			{
+				string commandLineArg = args[i];
+				foreach (IArgument argument in arguments)
+				{
+					if (argument.IsLoaded)
+					{
+						continue;
+					}
+					argument.Load(commandLineArg);
+					if (argument.IsLoaded)
+					{
+						break;
+					}
+				}
+			}
+		} // Load( args )
 
 		// ----------------------------------------------------------------------
 		// members

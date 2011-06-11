@@ -28,18 +28,18 @@ namespace Itenso.Rtf.Converter.Image
 		double DpiY { get; }
 
 		// ----------------------------------------------------------------------
-		ImageFormat GetImageFormat( RtfVisualImageFormat rtfVisualImageFormat );
+		ImageFormat GetImageFormat(RtfVisualImageFormat rtfVisualImageFormat);
 
 		// ----------------------------------------------------------------------
-		string ResolveFileName( int index, RtfVisualImageFormat rtfVisualImageFormat );
+		string ResolveFileName(int index, RtfVisualImageFormat rtfVisualImageFormat);
 
 		// ----------------------------------------------------------------------
-		int CalcImageWidth( RtfVisualImageFormat format, int width,
-			int desiredWidth, int scaleWidthPercent );
+		int CalcImageWidth(RtfVisualImageFormat format, int width,
+			int desiredWidth, int scaleWidthPercent);
 
 		// ----------------------------------------------------------------------
-		int CalcImageHeight( RtfVisualImageFormat format, int height,
-			int desiredHeight, int scaleHeightPercent );
+		int CalcImageHeight(RtfVisualImageFormat format, int height,
+			int desiredHeight, int scaleHeightPercent);
 
 	} // interface IRtfVisualImageAdapter
 

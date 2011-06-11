@@ -17,7 +17,7 @@ namespace Itenso.Rtf.Interpreter
 
 		// ----------------------------------------------------------------------
 		public RtfImageBuilder()
-			: base( RtfElementVisitorOrder.DepthFirst )
+			: base(RtfElementVisitorOrder.DepthFirst)
 		{
 			Reset();
 		} // RtfImageBuilder
@@ -84,21 +84,21 @@ namespace Itenso.Rtf.Interpreter
 		} // ImageDataHex
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitGroup( IRtfGroup group )
+		protected override void DoVisitGroup(IRtfGroup group)
 		{
-			switch ( group.Destination )
+			switch (group.Destination)
 			{
 				case RtfSpec.TagPicture:
 					Reset();
-					VisitGroupChildren( group );
+					VisitGroupChildren(group);
 					break;
 			}
 		} // DoVisitGroup
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitTag( IRtfTag tag )
+		protected override void DoVisitTag(IRtfTag tag)
 		{
-			switch ( tag.Name )
+			switch (tag.Name)
 			{
 				case RtfSpec.TagPictureFormatWinDib:
 				case RtfSpec.TagPictureFormatWinBmp:
@@ -126,7 +126,7 @@ namespace Itenso.Rtf.Interpreter
 					break;
 				case RtfSpec.TagPictureWidthGoal:
 					desiredWidth = tag.ValueAsNumber;
-					if ( width == 0 )
+					if (width == 0)
 					{
 						// hack to prevent WordPad documents which lack the \picw and \pich tags
 						// from resulting in an exception due to undefined width/height
@@ -135,7 +135,7 @@ namespace Itenso.Rtf.Interpreter
 					break;
 				case RtfSpec.TagPictureHeightGoal:
 					desiredHeight = tag.ValueAsNumber;
-					if ( height == 0 )
+					if (height == 0)
 					{
 						// hack to prevent WordPad documents which lack the \picw and \pich tags
 						// from resulting in an exception due to undefined width/height
@@ -152,7 +152,7 @@ namespace Itenso.Rtf.Interpreter
 		} // DoVisitTag
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitText( IRtfText text )
+		protected override void DoVisitText(IRtfText text)
 		{
 			imageDataHex = text.Text;
 		} // DoVisitText

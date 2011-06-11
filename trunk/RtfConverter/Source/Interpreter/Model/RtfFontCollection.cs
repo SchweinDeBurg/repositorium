@@ -17,38 +17,38 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public bool ContainsFontWithId( string fontId )
+		public bool ContainsFontWithId(string fontId)
 		{
-			return fontByIdMap.ContainsKey( fontId );
+			return fontByIdMap.ContainsKey(fontId);
 		} // ContainsFontWithId
 
 		// ----------------------------------------------------------------------
-		public IRtfFont this[ int index ]
+		public IRtfFont this[int index]
 		{
-			get { return InnerList[ index ] as IRtfFont; }
+			get { return InnerList[index] as IRtfFont; }
 		} // this[ int ]
 
 		// ----------------------------------------------------------------------
-		public IRtfFont this[ string id ]
+		public IRtfFont this[string id]
 		{
-			get { return fontByIdMap[ id ] as IRtfFont; }
+			get { return fontByIdMap[id] as IRtfFont; }
 		} // this[ string ]
 
 		// ----------------------------------------------------------------------
-		public void CopyTo( IRtfFont[] array, int index )
+		public void CopyTo(IRtfFont[] array, int index)
 		{
-			InnerList.CopyTo( array, index );
+			InnerList.CopyTo(array, index);
 		} // CopyTo
 
 		// ----------------------------------------------------------------------
-		public void Add( IRtfFont item )
+		public void Add(IRtfFont item)
 		{
-			if ( item == null )
+			if (item == null)
 			{
-				throw new ArgumentNullException( "item" );
+				throw new ArgumentNullException("item");
 			}
-			InnerList.Add( item );
-			fontByIdMap.Add( item.Id, item );
+			InnerList.Add(item);
+			fontByIdMap.Add(item.Id, item);
 		} // Add
 
 		// ----------------------------------------------------------------------

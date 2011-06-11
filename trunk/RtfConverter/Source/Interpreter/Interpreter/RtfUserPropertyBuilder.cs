@@ -18,13 +18,13 @@ namespace Itenso.Rtf.Interpreter
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfUserPropertyBuilder( RtfDocumentPropertyCollection collectedProperties ) :
-			base( RtfElementVisitorOrder.NonRecursive )
+		public RtfUserPropertyBuilder(RtfDocumentPropertyCollection collectedProperties) :
+			base(RtfElementVisitorOrder.NonRecursive)
 		{
 			// we iterate over our children ourselves -> hence non-recursive
-			if ( collectedProperties == null )
+			if (collectedProperties == null)
 			{
-				throw new ArgumentNullException( "collectedProperties" );
+				throw new ArgumentNullException("collectedProperties");
 			}
 			this.collectedProperties = collectedProperties;
 		} // RtfUserPropertyBuilder
@@ -32,7 +32,7 @@ namespace Itenso.Rtf.Interpreter
 		// ----------------------------------------------------------------------
 		public IRtfDocumentProperty CreateProperty()
 		{
-			return new RtfDocumentProperty( propertyTypeCode, propertyName, staticValue, linkValue );
+			return new RtfDocumentProperty(propertyTypeCode, propertyName, staticValue, linkValue);
 		} // CreateProperty
 
 		// ----------------------------------------------------------------------
@@ -45,40 +45,40 @@ namespace Itenso.Rtf.Interpreter
 		} // Reset
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitGroup( IRtfGroup group )
+		protected override void DoVisitGroup(IRtfGroup group)
 		{
-			switch ( group.Destination )
+			switch (group.Destination)
 			{
 				case RtfSpec.TagUserProperties:
-					VisitGroupChildren( group );
+					VisitGroupChildren(group);
 					break;
 				case null:
 					Reset();
-					VisitGroupChildren( group );
-					collectedProperties.Add( CreateProperty() );
+					VisitGroupChildren(group);
+					collectedProperties.Add(CreateProperty());
 					break;
 				case RtfSpec.TagUserPropertyName:
 					textBuilder.Reset();
-					textBuilder.VisitGroup( group );
+					textBuilder.VisitGroup(group);
 					propertyName = textBuilder.CombinedText;
 					break;
 				case RtfSpec.TagUserPropertyValue:
 					textBuilder.Reset();
-					textBuilder.VisitGroup( group );
+					textBuilder.VisitGroup(group);
 					staticValue = textBuilder.CombinedText;
 					break;
 				case RtfSpec.TagUserPropertyLink:
 					textBuilder.Reset();
-					textBuilder.VisitGroup( group );
+					textBuilder.VisitGroup(group);
 					linkValue = textBuilder.CombinedText;
 					break;
 			}
 		} // DoVisitGroup
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitTag( IRtfTag tag )
+		protected override void DoVisitTag(IRtfTag tag)
 		{
-			switch ( tag.Name )
+			switch (tag.Name)
 			{
 				case RtfSpec.TagUserPropertyType:
 					propertyTypeCode = tag.ValueAsNumber;

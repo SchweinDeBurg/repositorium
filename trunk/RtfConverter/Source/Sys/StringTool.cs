@@ -20,15 +20,15 @@ namespace Itenso.Sys
 	{
 
 		// ----------------------------------------------------------------------
-		public static string FormatSafeInvariant( string format, params object[] args )
+		public static string FormatSafeInvariant(string format, params object[] args)
 		{
 			try
 			{
-				return string.Format( CultureInfo.InvariantCulture, format, args );
+				return string.Format(CultureInfo.InvariantCulture, format, args);
 			}
-			catch ( FormatException e )
+			catch (FormatException e)
 			{
-				logger.Warn( "invalid format string '" + format + "'", e );
+				logger.Warn("invalid format string '" + format + "'", e);
 				return format;
 			}
 		} // FormatSafeInvariant
@@ -62,21 +62,21 @@ namespace Itenso.Sys
 		/// split the string outside of quoted sections</param>
 		/// <returns>the array of sections into which the string has been split up.
 		/// never null but possibly empty.</returns>
-		public static string[] SplitQuoted( string toSplit, char quote, char escape,
-			bool includeEmptyUnquotedSections, params char[] separator )
+		public static string[] SplitQuoted(string toSplit, char quote, char escape,
+			bool includeEmptyUnquotedSections, params char[] separator)
 		{
-			if ( toSplit == null )
+			if (toSplit == null)
 			{
-				throw new ArgumentNullException( "toSplit" );
+				throw new ArgumentNullException("toSplit");
 			}
-			if ( separator == null || separator.Length == 0 )
+			if (separator == null || separator.Length == 0)
 			{
-				throw new ArgumentNullException( "separator" );
+				throw new ArgumentNullException("separator");
 			}
-			string separators = new string( separator );
-			if ( separators.IndexOf( quote ) >= 0 || separators.IndexOf( escape ) >= 0 )
+			string separators = new string(separator);
+			if (separators.IndexOf(quote) >= 0 || separators.IndexOf(escape) >= 0)
 			{
-				throw new ArgumentException( Strings.StringToolSeparatorIncludesQuoteOrEscapeChar, "separator" );
+				throw new ArgumentException(Strings.StringToolSeparatorIncludesQuoteOrEscapeChar, "separator");
 			}
 
 			StringCollection sections = new StringCollection();
@@ -84,139 +84,139 @@ namespace Itenso.Sys
 			StringBuilder section = null;
 			int length = toSplit.Length;
 			bool inQuotedSection = false;
-			for ( int i = 0; i < length; i++ )
+			for (int i = 0; i < length; i++)
 			{
-				char c = toSplit[ i ];
-				if ( c == escape )
+				char c = toSplit[i];
+				if (c == escape)
 				{
-					if ( i < length - 1 )
+					if (i < length - 1)
 					{
-						if ( section == null )
+						if (section == null)
 						{
 							section = new StringBuilder();
 						}
 						i++;
-						c = toSplit[ i ];
-						switch ( c )
+						c = toSplit[i];
+						switch (c)
 						{
 							case 'n':
-								section.Append( '\n' );
+								section.Append('\n');
 								break;
 							case 'r':
-								section.Append( '\r' );
+								section.Append('\r');
 								break;
 							case 't':
-								section.Append( '\t' );
+								section.Append('\t');
 								break;
 							case 'x':
-								if ( i < length - 2 )
+								if (i < length - 2)
 								{
-									int upperHexNibble = GetHexValue( toSplit[ i + 1 ] ) * 16;
-									int lowerHexNibble = GetHexValue( toSplit[ i + 2 ] );
-									char hexChar = (char)( upperHexNibble + lowerHexNibble );
-									section.Append( hexChar );
+									int upperHexNibble = GetHexValue(toSplit[i + 1]) * 16;
+									int lowerHexNibble = GetHexValue(toSplit[i + 2]);
+									char hexChar = (char)(upperHexNibble + lowerHexNibble);
+									section.Append(hexChar);
 									i += 2;
 								}
 								else
 								{
-									throw new ArgumentException( Strings.StringToolMissingEscapedHexCode, "toSplit" );
+									throw new ArgumentException(Strings.StringToolMissingEscapedHexCode, "toSplit");
 								}
 								break;
 							default:
-								section.Append( c );
+								section.Append(c);
 								break;
 						}
 					}
 					else
 					{
-						throw new ArgumentException( Strings.StringToolMissingEscapedChar, "toSplit" );
+						throw new ArgumentException(Strings.StringToolMissingEscapedChar, "toSplit");
 					}
 				}
-				else if ( c == quote )
+				else if (c == quote)
 				{
-					if ( section != null )
+					if (section != null)
 					{
-						sections.Add( section.ToString() );
+						sections.Add(section.ToString());
 						section = null;
 					}
-					else if ( inQuotedSection )
+					else if (inQuotedSection)
 					{
-						sections.Add( string.Empty );
+						sections.Add(string.Empty);
 					}
 					inQuotedSection = !inQuotedSection;
 				}
-				else if ( separators.IndexOf( c ) >= 0 )
+				else if (separators.IndexOf(c) >= 0)
 				{
-					if ( inQuotedSection )
+					if (inQuotedSection)
 					{
-						if ( section == null )
+						if (section == null)
 						{
 							section = new StringBuilder();
 						}
-						section.Append( c );
+						section.Append(c);
 					}
 					else
 					{
-						if ( section != null )
+						if (section != null)
 						{
-							sections.Add( section.ToString() );
+							sections.Add(section.ToString());
 							section = null;
 						}
-						else if ( includeEmptyUnquotedSections )
+						else if (includeEmptyUnquotedSections)
 						{
-							if ( i == 0 || separators.IndexOf( toSplit[ i - 1 ] ) >= 0 )
+							if (i == 0 || separators.IndexOf(toSplit[i - 1]) >= 0)
 							{
-								sections.Add( string.Empty );
+								sections.Add(string.Empty);
 							}
 						}
 					}
 				}
 				else
 				{
-					if ( section == null )
+					if (section == null)
 					{
 						section = new StringBuilder();
 					}
-					section.Append( c );
+					section.Append(c);
 				}
 			}
-			if ( inQuotedSection )
+			if (inQuotedSection)
 			{
-				throw new ArgumentException( Strings.StringToolUnbalancedQuotes, "toSplit" );
+				throw new ArgumentException(Strings.StringToolUnbalancedQuotes, "toSplit");
 			}
-			if ( section != null )
+			if (section != null)
 			{
-				sections.Add( section.ToString() );
+				sections.Add(section.ToString());
 			}
 
-			string[] sectionArray = new string[ sections.Count ];
-			sections.CopyTo( sectionArray, 0 );
+			string[] sectionArray = new string[sections.Count];
+			sections.CopyTo(sectionArray, 0);
 			return sectionArray;
 		} // SplitQuoted
 
 		// ----------------------------------------------------------------------
-		private static int GetHexValue( char c )
+		private static int GetHexValue(char c)
 		{
-			if ( c >= 'a' && c <= 'f' )
+			if (c >= 'a' && c <= 'f')
 			{
 				return c - 'a' + 10;
 			}
 
-			if ( c >= 'A' && c <= 'F' )
+			if (c >= 'A' && c <= 'F')
 			{
 				return c - 'A' + 10;
 			}
 
-			if ( c >= '0' && c <= '9' )
+			if (c >= '0' && c <= '9')
 			{
 				return c - '0';
 			}
-			throw new ArgumentException( Strings.StringToolContainsInvalidHexChar, "c" );
+			throw new ArgumentException(Strings.StringToolContainsInvalidHexChar, "c");
 		} // GetHexValue
 
 		// ----------------------------------------------------------------------
 		// members
-		private static readonly ILogger logger = Logger.GetLogger( typeof( StringTool ) );
+		private static readonly ILogger logger = Logger.GetLogger(typeof(StringTool));
 
 	} // class StringTool
 

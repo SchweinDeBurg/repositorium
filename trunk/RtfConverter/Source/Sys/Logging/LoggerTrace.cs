@@ -19,21 +19,21 @@ namespace Itenso.Sys.Logging
 	{
 
 		// ----------------------------------------------------------------------
-		public LoggerTrace( string name )
+		public LoggerTrace(string name)
 		{
-			this.name = ArgumentCheck.NonemptyTrimmedString( name, Strings.LoggerNameMayNotBeEmpty, "name" );
-			level = new TraceSwitch( name, "trace switch for " + name + " from the application config file" );
+			this.name = ArgumentCheck.NonemptyTrimmedString(name, Strings.LoggerNameMayNotBeEmpty, "name");
+			level = new TraceSwitch(name, "trace switch for " + name + " from the application config file");
 		} // LoggerTrace
 
 		// ----------------------------------------------------------------------
 		public LoggerLevel Level
 		{
-			get { return TraceLevelToLoggerLevel( level.Level ); }
+			get { return TraceLevelToLoggerLevel(level.Level); }
 			set
 			{
-				lock ( level )
+				lock (level)
 				{
-					level.Level = LoggerLevelToTraceLevel( value );
+					level.Level = LoggerLevelToTraceLevel(value);
 				}
 			}
 		} // Level
@@ -69,10 +69,10 @@ namespace Itenso.Sys.Logging
 		} // IsFatalEnabled
 
 		// ----------------------------------------------------------------------
-		public bool IsEnabledFor( LoggerLevel loggerLevel )
+		public bool IsEnabledFor(LoggerLevel loggerLevel)
 		{
 			bool enabled = false;
-			switch ( loggerLevel )
+			switch (loggerLevel)
 			{
 				case LoggerLevel.Debug:
 					enabled = IsDebugEnabled;
@@ -94,147 +94,147 @@ namespace Itenso.Sys.Logging
 		} // IsEnabledFor
 
 		// ----------------------------------------------------------------------
-		public void Debug( object message )
+		public void Debug(object message)
 		{
-			Log( logLevelDebug, message, null );
+			Log(logLevelDebug, message, null);
 		} // Debug
 
 		// ----------------------------------------------------------------------
-		public void Debug( object message, Exception exception )
+		public void Debug(object message, Exception exception)
 		{
-			Log( logLevelDebug, message, exception );
+			Log(logLevelDebug, message, exception);
 		} // Debug
 
 		// ----------------------------------------------------------------------
-		public void DebugFormat( string format, params object[] args )
+		public void DebugFormat(string format, params object[] args)
 		{
-			LogFormat( logLevelDebug, null, format, args );
+			LogFormat(logLevelDebug, null, format, args);
 		} // DebugFormat
 
 		// ----------------------------------------------------------------------
-		public void DebugFormat( IFormatProvider provider, string format, params object[] args )
+		public void DebugFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			LogFormat( logLevelDebug, provider, format, args );
+			LogFormat(logLevelDebug, provider, format, args);
 		} // DebugFormat
 
 		// ----------------------------------------------------------------------
-		public void Info( object message )
+		public void Info(object message)
 		{
-			Log( logLevelInfo, message, null );
+			Log(logLevelInfo, message, null);
 		} // Info
 
 		// ----------------------------------------------------------------------
-		public void Info( object message, Exception exception )
+		public void Info(object message, Exception exception)
 		{
-			Log( logLevelInfo, message, exception );
+			Log(logLevelInfo, message, exception);
 		} // Info
 
 		// ----------------------------------------------------------------------
-		public void InfoFormat( string format, params object[] args )
+		public void InfoFormat(string format, params object[] args)
 		{
-			LogFormat( logLevelInfo, null, format, args );
+			LogFormat(logLevelInfo, null, format, args);
 		} // InfoFormat
 
 		// ----------------------------------------------------------------------
-		public void InfoFormat( IFormatProvider provider, string format, params object[] args )
+		public void InfoFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			LogFormat( logLevelInfo, provider, format, args );
+			LogFormat(logLevelInfo, provider, format, args);
 		} // InfoFormat
 
 		// ----------------------------------------------------------------------
-		public void Warn( object message )
+		public void Warn(object message)
 		{
-			Log( logLevelWarn, message, null );
+			Log(logLevelWarn, message, null);
 		} // Warn
 
 		// ----------------------------------------------------------------------
-		public void Warn( object message, Exception exception )
+		public void Warn(object message, Exception exception)
 		{
-			Log( logLevelWarn, message, exception );
+			Log(logLevelWarn, message, exception);
 		} // Warn
 
 		// ----------------------------------------------------------------------
-		public void WarnFormat( string format, params object[] args )
+		public void WarnFormat(string format, params object[] args)
 		{
-			LogFormat( logLevelWarn, null, format, args );
+			LogFormat(logLevelWarn, null, format, args);
 		} // WarnFormat
 
 		// ----------------------------------------------------------------------
-		public void WarnFormat( IFormatProvider provider, string format, params object[] args )
+		public void WarnFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			LogFormat( logLevelWarn, provider, format, args );
+			LogFormat(logLevelWarn, provider, format, args);
 		} // WarnFormat
 
 		// ----------------------------------------------------------------------
-		public void Error( object message )
+		public void Error(object message)
 		{
-			Log( logLevelError, message, null );
+			Log(logLevelError, message, null);
 		} // Error
 
 		// ----------------------------------------------------------------------
-		public void Error( object message, Exception exception )
+		public void Error(object message, Exception exception)
 		{
-			Log( logLevelError, message, exception );
+			Log(logLevelError, message, exception);
 		} // Error
 
 		// ----------------------------------------------------------------------
-		public void ErrorFormat( string format, params object[] args )
+		public void ErrorFormat(string format, params object[] args)
 		{
-			LogFormat( logLevelError, null, format, args );
+			LogFormat(logLevelError, null, format, args);
 		} // ErrorFormat
 
 		// ----------------------------------------------------------------------
-		public void ErrorFormat( IFormatProvider provider, string format, params object[] args )
+		public void ErrorFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			LogFormat( logLevelError, provider, format, args );
+			LogFormat(logLevelError, provider, format, args);
 		} // ErrorFormat
 
 		// ----------------------------------------------------------------------
-		public void Fatal( object message )
+		public void Fatal(object message)
 		{
-			Log( logLevelFatal, message, null );
+			Log(logLevelFatal, message, null);
 		} // Fatal
 
 		// ----------------------------------------------------------------------
-		public void Fatal( object message, Exception exception )
+		public void Fatal(object message, Exception exception)
 		{
-			Log( logLevelFatal, message, exception );
+			Log(logLevelFatal, message, exception);
 		} // Fatal
 
 		// ----------------------------------------------------------------------
-		public void FatalFormat( string format, params object[] args )
+		public void FatalFormat(string format, params object[] args)
 		{
-			LogFormat( logLevelFatal, null, format, args );
+			LogFormat(logLevelFatal, null, format, args);
 		} // FatalFormat
 
 		// ----------------------------------------------------------------------
-		public void FatalFormat( IFormatProvider provider, string format, params object[] args )
+		public void FatalFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			LogFormat( logLevelFatal, provider, format, args );
+			LogFormat(logLevelFatal, provider, format, args);
 		} // FatalFormat
 
 		// ----------------------------------------------------------------------
-		public void Log( LoggerLevel loggerLevel, object message )
+		public void Log(LoggerLevel loggerLevel, object message)
 		{
-			Log( LoggerLevelToTraceLevel( loggerLevel ), message, null );
+			Log(LoggerLevelToTraceLevel(loggerLevel), message, null);
 		} // Log
 
 		// ----------------------------------------------------------------------
-		public void Log( LoggerLevel loggerLevel, object message, Exception exception )
+		public void Log(LoggerLevel loggerLevel, object message, Exception exception)
 		{
-			Log( LoggerLevelToTraceLevel( loggerLevel ), message, exception );
+			Log(LoggerLevelToTraceLevel(loggerLevel), message, exception);
 		} // Log
 
 		// ----------------------------------------------------------------------
-		public void LogFormat( LoggerLevel loggerLevel, string format, params object[] args )
+		public void LogFormat(LoggerLevel loggerLevel, string format, params object[] args)
 		{
-			LogFormat( LoggerLevelToTraceLevel( loggerLevel ), null, format, args );
+			LogFormat(LoggerLevelToTraceLevel(loggerLevel), null, format, args);
 		} // LogFormat
 
 		// ----------------------------------------------------------------------
-		public void LogFormat( LoggerLevel loggerLevel, IFormatProvider provider, string format, params object[] args )
+		public void LogFormat(LoggerLevel loggerLevel, IFormatProvider provider, string format, params object[] args)
 		{
-			LogFormat( LoggerLevelToTraceLevel( loggerLevel ), provider, format, args );
+			LogFormat(LoggerLevelToTraceLevel(loggerLevel), provider, format, args);
 		} // LogFormat
 
 		// ----------------------------------------------------------------------
@@ -244,84 +244,84 @@ namespace Itenso.Sys.Logging
 		} // Logger
 
 		// ----------------------------------------------------------------------
-		private void Log( TraceLevel logLevel, object message, Exception exception )
+		private void Log(TraceLevel logLevel, object message, Exception exception)
 		{
-			if ( !IsSupportedException( exception ) )
+			if (!IsSupportedException(exception))
 			{
 				return;
 			}
 
-			if ( level.Level >= logLevel )
+			if (level.Level >= logLevel)
 			{
-				StringBuilder buf = new StringBuilder( name );
-				buf.Append( ": " );
-				switch ( logLevel )
+				StringBuilder buf = new StringBuilder(name);
+				buf.Append(": ");
+				switch (logLevel)
 				{
 					case TraceLevel.Off:
-						buf.Append( "Fatal" );
+						buf.Append("Fatal");
 						break;
 					case TraceLevel.Verbose:
-						buf.Append( "Debug" );
+						buf.Append("Debug");
 						break;
 					default:
-						buf.Append( logLevel.ToString() );
+						buf.Append(logLevel.ToString());
 						break;
 				}
-				buf.Append( ": " );
-				if ( message != null )
+				buf.Append(": ");
+				if (message != null)
 				{
-					buf.Append( message );
+					buf.Append(message);
 				}
-				if ( exception != null )
+				if (exception != null)
 				{
-					buf.Append( ": " );
-					buf.Append( exception.ToString() );
+					buf.Append(": ");
+					buf.Append(exception.ToString());
 				}
-				switch ( logLevel )
+				switch (logLevel)
 				{
 					case TraceLevel.Off: // used by 'fatal'
 					case TraceLevel.Error:
-						Trace.TraceError( buf.ToString() );
+						Trace.TraceError(buf.ToString());
 						break;
 					case TraceLevel.Warning:
-						Trace.TraceWarning( buf.ToString() );
+						Trace.TraceWarning(buf.ToString());
 						break;
 					case TraceLevel.Info:
 						goto default;
 					case TraceLevel.Verbose:
 						goto default;
 					default:
-						Trace.TraceInformation( buf.ToString() );
+						Trace.TraceInformation(buf.ToString());
 						break;
 				}
 			}
 		} // Log
 
 		// ----------------------------------------------------------------------
-		private void LogFormat( TraceLevel logLevel, IFormatProvider provider, string format, params object[] args )
+		private void LogFormat(TraceLevel logLevel, IFormatProvider provider, string format, params object[] args)
 		{
-			if ( level.Level >= logLevel )
+			if (level.Level >= logLevel)
 			{
 				IFormatProvider formatter = provider ?? CultureInfo.InvariantCulture;
 				try
 				{
-					string message = string.Format( formatter, format, args );
-					Log( logLevel, message, null );
+					string message = string.Format(formatter, format, args);
+					Log(logLevel, message, null);
 				}
-				catch ( FormatException e )
+				catch (FormatException e)
 				{
-					Log( LoggerLevel.Fatal, "invalid log-message-format: " + e.Message, e );
-					Log( LoggerLevel.Fatal, "original log-message was:" );
-					Log( logLevel, format, null );
+					Log(LoggerLevel.Fatal, "invalid log-message-format: " + e.Message, e);
+					Log(LoggerLevel.Fatal, "original log-message was:");
+					Log(logLevel, format, null);
 				}
 			}
 		} // LogFormat
 
 		// ----------------------------------------------------------------------
-		private static TraceLevel LoggerLevelToTraceLevel( LoggerLevel loggerLevel )
+		private static TraceLevel LoggerLevelToTraceLevel(LoggerLevel loggerLevel)
 		{
 			TraceLevel traceLevel = TraceLevel.Off;
-			switch ( loggerLevel )
+			switch (loggerLevel)
 			{
 				case LoggerLevel.Debug:
 					traceLevel = TraceLevel.Verbose;
@@ -343,10 +343,10 @@ namespace Itenso.Sys.Logging
 		} // LoggerLevelToTraceLevel
 
 		// ----------------------------------------------------------------------
-		private static LoggerLevel TraceLevelToLoggerLevel( TraceLevel traceLevel )
+		private static LoggerLevel TraceLevelToLoggerLevel(TraceLevel traceLevel)
 		{
 			LoggerLevel loggerLevel = LoggerLevel.Fatal;
-			switch ( traceLevel )
+			switch (traceLevel)
 			{
 				case TraceLevel.Verbose:
 					loggerLevel = LoggerLevel.Debug;

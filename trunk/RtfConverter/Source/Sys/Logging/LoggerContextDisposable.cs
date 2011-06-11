@@ -16,7 +16,7 @@ namespace Itenso.Sys.Logging
 	{
 
 		// ----------------------------------------------------------------------
-		public LoggerContextDisposable( ILogger logger )
+		public LoggerContextDisposable(ILogger logger)
 		{
 			this.logger = logger;
 		} // LoggerContextDisposable
@@ -24,7 +24,7 @@ namespace Itenso.Sys.Logging
 		// ----------------------------------------------------------------------
 		void IDisposable.Dispose()
 		{
-			if ( logger != null )
+			if (logger != null)
 			{
 				logger.PopContext();
 			}

@@ -37,9 +37,9 @@ namespace Itenso.Sys.Collection
 		/// </summary>
 		/// <param name="collection">the items to add. may not be null. any non-string items
 		/// in this collection will be returned as null when trying to access them later.</param>
-		public StringCollection( ICollection collection )
+		public StringCollection(ICollection collection)
 		{
-			InnerList.AddRange( collection );
+			InnerList.AddRange(collection);
 		} // StringCollection
 
 		// ----------------------------------------------------------------------
@@ -48,16 +48,16 @@ namespace Itenso.Sys.Collection
 		/// </summary>
 		/// <param name="collection">the items to add. may not be null. any non-string items
 		/// in this collection will be returned as null when trying to access them later.</param>
-		public StringCollection( IStringCollection collection )
+		public StringCollection(IStringCollection collection)
 		{
-			if ( collection == null )
+			if (collection == null)
 			{
-				throw new ArgumentNullException( "collection" );
+				throw new ArgumentNullException("collection");
 			}
 			InnerList.Capacity = collection.Count;
-			foreach ( string item in collection )
+			foreach (string item in collection)
 			{
-				InnerList.Add( item );
+				InnerList.Add(item);
 			}
 		} // StringCollection
 
@@ -67,13 +67,13 @@ namespace Itenso.Sys.Collection
 		/// </summary>
 		/// <param name="items">the items to add. may be null or empty. any null items in
 		/// this array will be added too.</param>
-		public StringCollection( params string[] items )
+		public StringCollection(params string[] items)
 		{
-			if ( items != null )
+			if (items != null)
 			{
-				foreach ( string item in items )
+				foreach (string item in items)
 				{
-					InnerList.Add( item );
+					InnerList.Add(item);
 				}
 			}
 		} // StringCollection
@@ -84,9 +84,9 @@ namespace Itenso.Sys.Collection
 		/// </summary>
 		/// <param name="index">the index of the item to retrieve</param>
 		/// <returns>the item at the given position</returns>
-		public string this[ int index ]
+		public string this[int index]
 		{
-			get { return InnerList[ index ] as string; }
+			get { return InnerList[index] as string; }
 		} // this[]
 
 		// ----------------------------------------------------------------------
@@ -95,9 +95,9 @@ namespace Itenso.Sys.Collection
 		/// </summary>
 		/// <param name="item">the item to add</param>
 		/// <returns>the insertion position</returns>
-		public int Add( string item )
+		public int Add(string item)
 		{
-			return InnerList.Add( item );
+			return InnerList.Add(item);
 		} // Add
 
 		// ----------------------------------------------------------------------
@@ -105,9 +105,9 @@ namespace Itenso.Sys.Collection
 		/// Removes the given item.
 		/// </summary>
 		/// <param name="item">the item to remove</param>
-		public void Remove( string item )
+		public void Remove(string item)
 		{
-			InnerList.Remove( item );
+			InnerList.Remove(item);
 		} // Remove
 
 		// ----------------------------------------------------------------------
@@ -115,9 +115,9 @@ namespace Itenso.Sys.Collection
 		/// Removes the given item.
 		/// </summary>
 		/// <param name="index">the index of the item to remove</param>
-		public void RemoveAt( int index )
+		public void RemoveAt(int index)
 		{
-			InnerList.RemoveAt( index );
+			InnerList.RemoveAt(index);
 		} // RemoveAt
 
 		// ----------------------------------------------------------------------
@@ -126,9 +126,9 @@ namespace Itenso.Sys.Collection
 		/// </summary>
 		/// <param name="item">the item to add</param>
 		/// <param name="pos">the position to insert the new item into</param>
-		public void Add( string item, int pos )
+		public void Add(string item, int pos)
 		{
-			InnerList.Insert( pos, item );
+			InnerList.Insert(pos, item);
 		} // Add
 
 		// ----------------------------------------------------------------------
@@ -136,15 +136,15 @@ namespace Itenso.Sys.Collection
 		/// Adds all items in the given list to this instance.
 		/// </summary>
 		/// <param name="items">the items to add</param>
-		public void AddAll( IStringCollection items )
+		public void AddAll(IStringCollection items)
 		{
-			if ( items == null )
+			if (items == null)
 			{
-				throw new ArgumentNullException( "items" );
+				throw new ArgumentNullException("items");
 			}
-			foreach ( string item in items )
+			foreach (string item in items)
 			{
-				InnerList.Add( item );
+				InnerList.Add(item);
 			}
 		} // AddAll
 
@@ -153,23 +153,23 @@ namespace Itenso.Sys.Collection
 		/// Adds all items in the given comma separated list to this instance.
 		/// </summary>
 		/// <param name="commaSeparatedList">the items to add</param>
-		public void AddCommaSeparated( string commaSeparatedList )
+		public void AddCommaSeparated(string commaSeparatedList)
 		{
-			if ( !string.IsNullOrEmpty( commaSeparatedList ) )
+			if (!string.IsNullOrEmpty(commaSeparatedList))
 			{
-				string[] items = commaSeparatedList.Split( ',' );
-				for ( int i = 0; i < items.Length; i++ )
+				string[] items = commaSeparatedList.Split(',');
+				for (int i = 0; i < items.Length; i++)
 				{
-					InnerList.Add( items[ i ].Trim() );
+					InnerList.Add(items[i].Trim());
 				}
 			}
 		} // AddCommaSeparated
 
 		// ----------------------------------------------------------------------
-		public static StringCollection FromCommaSeparated( string commaSeparatedList )
+		public static StringCollection FromCommaSeparated(string commaSeparatedList)
 		{
 			StringCollection fromCommaSeparated = new StringCollection();
-			fromCommaSeparated.AddCommaSeparated( commaSeparatedList );
+			fromCommaSeparated.AddCommaSeparated(commaSeparatedList);
 			return fromCommaSeparated;
 		} // FromCommaSeparated
 
@@ -178,17 +178,17 @@ namespace Itenso.Sys.Collection
 		{
 			StringBuilder buf = new StringBuilder();
 			bool first = true;
-			foreach ( string item in InnerList )
+			foreach (string item in InnerList)
 			{
-				if ( first )
+				if (first)
 				{
 					first = false;
 				}
 				else
 				{
-					buf.Append( ", " );
+					buf.Append(", ");
 				}
-				buf.Append( item );
+				buf.Append(item);
 			}
 			return buf.ToString();
 		} // FormatCommaSeparated
@@ -198,15 +198,15 @@ namespace Itenso.Sys.Collection
 		/// Removes all items in the given list from this instance.
 		/// </summary>
 		/// <param name="items">the items to remove</param>
-		public void RemoveAll( IStringCollection items )
+		public void RemoveAll(IStringCollection items)
 		{
-			if ( items == null )
+			if (items == null)
 			{
-				throw new ArgumentNullException( "items" );
+				throw new ArgumentNullException("items");
 			}
-			foreach ( string item in items )
+			foreach (string item in items)
 			{
-				Remove( item );
+				Remove(item);
 			}
 		} // RemoveAll
 
@@ -220,12 +220,12 @@ namespace Itenso.Sys.Collection
 		public void Sort()
 		{
 			int count = InnerList.Count;
-			string[] items = new string[ count ];
-			InnerList.CopyTo( items );
-			Array.Sort( items );
-			for ( int i = 0; i < count; i++ )
+			string[] items = new string[count];
+			InnerList.CopyTo(items);
+			Array.Sort(items);
+			for (int i = 0; i < count; i++)
 			{
-				InnerList[ i ] = items[ i ];
+				InnerList[i] = items[i];
 			}
 		} // Sort
 
@@ -235,18 +235,18 @@ namespace Itenso.Sys.Collection
 		/// </summary>
 		/// <param name="array">the target array</param>
 		/// <param name="index">the target index</param>
-		public void CopyTo( string[] array, int index )
+		public void CopyTo(string[] array, int index)
 		{
-			InnerList.CopyTo( array, index );
+			InnerList.CopyTo(array, index);
 		} // CopyTo
 
 		// ----------------------------------------------------------------------
-		public int IndexOf( string test )
+		public int IndexOf(string test)
 		{
 			int count = InnerList.Count;
-			for ( int i = 0; i < count; i++ )
+			for (int i = 0; i < count; i++)
 			{
-				if ( CompareTool.AreEqual( test, InnerList[ i ] ) )
+				if (CompareTool.AreEqual(test, InnerList[i]))
 				{
 					return i;
 				}
@@ -255,21 +255,21 @@ namespace Itenso.Sys.Collection
 		} // IndexOf
 
 		// ----------------------------------------------------------------------
-		public bool Contains( string test )
+		public bool Contains(string test)
 		{
-			return IndexOf( test ) >= 0;
+			return IndexOf(test) >= 0;
 		} // Contains
 
 		// ----------------------------------------------------------------------
-		public override bool Equals( object obj )
+		public override bool Equals(object obj)
 		{
-			return CollectionTool.AreEqual( this, obj );
+			return CollectionTool.AreEqual(this, obj);
 		} // Equals
 
 		// ----------------------------------------------------------------------
 		public override int GetHashCode()
 		{
-			return CollectionTool.ComputeHashCode( this );
+			return CollectionTool.ComputeHashCode(this);
 		} // GetHashCode
 
 		// ----------------------------------------------------------------------
@@ -279,7 +279,7 @@ namespace Itenso.Sys.Collection
 		/// <returns>a string with the items of this collection</returns>
 		public override string ToString()
 		{
-			return CollectionTool.ToString( this );
+			return CollectionTool.ToString(this);
 		} // ToString
 
 	} // class StringCollection

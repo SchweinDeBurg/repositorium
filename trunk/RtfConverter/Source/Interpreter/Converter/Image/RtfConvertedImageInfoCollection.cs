@@ -18,25 +18,25 @@ namespace Itenso.Rtf.Converter.Image
 	{
 
 		// ----------------------------------------------------------------------
-		public IRtfConvertedImageInfo this[ int index ]
+		public IRtfConvertedImageInfo this[int index]
 		{
-			get { return InnerList[ index ] as RtfConvertedImageInfo; }
+			get { return InnerList[index] as RtfConvertedImageInfo; }
 		} // this[ int ]
 
 		// ----------------------------------------------------------------------
-		public void CopyTo( IRtfConvertedImageInfo[] array, int index )
+		public void CopyTo(IRtfConvertedImageInfo[] array, int index)
 		{
-			InnerList.CopyTo( array, index );
+			InnerList.CopyTo(array, index);
 		} // CopyTo
 
 		// ----------------------------------------------------------------------
-		public void Add( IRtfConvertedImageInfo item )
+		public void Add(IRtfConvertedImageInfo item)
 		{
-			if ( item == null )
+			if (item == null)
 			{
-				throw new ArgumentNullException( "item" );
+				throw new ArgumentNullException("item");
 			}
-			InnerList.Add( item );
+			InnerList.Add(item);
 		} // Add
 
 		// ----------------------------------------------------------------------
@@ -48,7 +48,7 @@ namespace Itenso.Rtf.Converter.Image
 		// ----------------------------------------------------------------------
 		public override string ToString()
 		{
-			return CollectionTool.ToString( this );
+			return CollectionTool.ToString(this);
 		} // ToString
 
 	} // class RtfConvertedImageInfoCollection

@@ -17,12 +17,12 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfText( string text )
-			: base( RtfElementKind.Text )
+		public RtfText(string text)
+			: base(RtfElementKind.Text)
 		{
-			if ( text == null )
+			if (text == null)
 			{
-				throw new ArgumentNullException( "text" );
+				throw new ArgumentNullException("text");
 			}
 			this.text = text;
 		} // RtfText
@@ -40,23 +40,23 @@ namespace Itenso.Rtf.Model
 		} // ToString
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisit( IRtfElementVisitor visitor )
+		protected override void DoVisit(IRtfElementVisitor visitor)
 		{
-			visitor.VisitText( this );
+			visitor.VisitText(this);
 		} // DoVisit
 
 		// ----------------------------------------------------------------------
-		protected override bool IsEqual( object obj )
+		protected override bool IsEqual(object obj)
 		{
 			RtfText compare = obj as RtfText; // guaranteed to be non-null
-			return compare != null && base.IsEqual( obj ) &&
-				text.Equals( compare.text );
+			return compare != null && base.IsEqual(obj) &&
+				text.Equals(compare.text);
 		} // IsEqual
 
 		// ----------------------------------------------------------------------
 		protected override int ComputeHashCode()
 		{
-			return HashTool.AddHashCode( base.ComputeHashCode(), text );
+			return HashTool.AddHashCode(base.ComputeHashCode(), text);
 		} // ComputeHashCode
 
 		// ----------------------------------------------------------------------

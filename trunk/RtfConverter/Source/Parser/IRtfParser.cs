@@ -32,7 +32,7 @@ namespace Itenso.Rtf
 		/// </summary>
 		/// <param name="listener">the listener to add</param>
 		/// <exception cref="ArgumentNullException">in case of a null argument</exception>
-		void AddParserListener( IRtfParserListener listener );
+		void AddParserListener(IRtfParserListener listener);
 
 		// ----------------------------------------------------------------------
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Itenso.Rtf
 		/// </summary>
 		/// <param name="listener">the listener to remove</param>
 		/// <exception cref="ArgumentNullException">in case of a null argument</exception>
-		void RemoveParserListener( IRtfParserListener listener );
+		void RemoveParserListener(IRtfParserListener listener);
 
 		// ----------------------------------------------------------------------
 		/// <summary>
@@ -50,7 +50,7 @@ namespace Itenso.Rtf
 		/// <exception cref="RtfException">in case of invalid RTF syntax</exception>
 		/// <exception cref="IOException">in case of an IO error</exception>
 		/// <exception cref="ArgumentNullException">in case of a null argument</exception>
-		void Parse( IRtfSource rtfTextSource );
+		void Parse(IRtfSource rtfTextSource);
 
 	} // interface IRtfParser
 

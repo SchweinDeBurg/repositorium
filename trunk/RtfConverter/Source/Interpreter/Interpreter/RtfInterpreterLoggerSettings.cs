@@ -16,12 +16,12 @@ namespace Itenso.Rtf.Interpreter
 
 		// ----------------------------------------------------------------------
 		public RtfInterpreterLoggerSettings()
-			: this( true )
+			: this(true)
 		{
 		} // RtfInterpreterLoggerSettings
 
 		// ----------------------------------------------------------------------
-		public RtfInterpreterLoggerSettings( bool enabled )
+		public RtfInterpreterLoggerSettings(bool enabled)
 		{
 			this.enabled = enabled;
 		} // RtfInterpreterLoggerSettings

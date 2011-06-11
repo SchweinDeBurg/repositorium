@@ -18,47 +18,45 @@ namespace Itenso.Sys.Test
 	{
 
 		// ----------------------------------------------------------------------
-		static public void Execute( Assembly assembly, string[] args )
+		static public void Execute(Assembly assembly, string[] args)
 		{
-			if ( assembly == null )
+			if (assembly == null)
 			{
-				throw new ArgumentNullException( "assembly" );
+				throw new ArgumentNullException("assembly");
 			}
 
 			bool waitAtEnd = false;
 			bool waitBecauseOfError = false;
-			Console.WriteLine( "===== Test::begin =====" );
+			Console.WriteLine("===== Test::begin =====");
 			try
 			{
-				if ( args != null && args.Length > 0 )
+				if (args != null && args.Length > 0)
 				{
-					foreach ( string arg in args )
+					foreach (string arg in args)
 					{
-						if ( "-wait".Equals( arg ) )
+						if ("-wait".Equals(arg))
 						{
 							waitAtEnd = true;
 						}
 					}
 				}
-// ReSharper disable RedundantExplicitArrayCreation
-				string[] nunitArgs = new string[]{ assembly.GetName().Name + ".exe" };
-// ReSharper restore RedundantExplicitArrayCreation
-				Runner.Main( nunitArgs );
+				string[] nunitArgs = new string[] { assembly.GetName().Name + ".exe" };
+				Runner.Main(nunitArgs);
 			}
-			catch ( Exception e )
+			catch (Exception e)
 			{
-				Console.WriteLine( e.Message );
-				Console.WriteLine( e.StackTrace );
+				Console.WriteLine(e.Message);
+				Console.WriteLine(e.StackTrace);
 				waitBecauseOfError = true;
 			}
 			finally
 			{
-				Console.WriteLine( "===== Test::end =====" );
+				Console.WriteLine("===== Test::end =====");
 			}
-			if ( waitAtEnd || waitBecauseOfError )
+			if (waitAtEnd || waitBecauseOfError)
 			{
-				Console.WriteLine( Strings.ProgramPressAnyKeyToQuit );
-				Console.ReadKey( true );
+				Console.WriteLine(Strings.ProgramPressAnyKeyToQuit);
+				Console.ReadKey(true);
 			}
 		} // Execute
 

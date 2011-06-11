@@ -16,25 +16,25 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public IRtfElement this[ int index ]
+		public IRtfElement this[int index]
 		{
-			get { return InnerList[ index ] as IRtfElement; }
+			get { return InnerList[index] as IRtfElement; }
 		} // this[ int ]
 
 		// ----------------------------------------------------------------------
-		public void CopyTo( IRtfElement[] array, int index )
+		public void CopyTo(IRtfElement[] array, int index)
 		{
-			InnerList.CopyTo( array, index );
+			InnerList.CopyTo(array, index);
 		} // CopyTo
 
 		// ----------------------------------------------------------------------
-		public void Add( IRtfElement item )
+		public void Add(IRtfElement item)
 		{
-			if ( item == null )
+			if (item == null)
 			{
-				throw new ArgumentNullException( "item" );
+				throw new ArgumentNullException("item");
 			}
-			InnerList.Add( item );
+			InnerList.Add(item);
 		} // Add
 
 		// ----------------------------------------------------------------------

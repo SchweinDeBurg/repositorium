@@ -31,7 +31,7 @@ namespace Itenso.Sys.Collection
 		/// </summary>
 		/// <param name="index">the index of the item to retrieve</param>
 		/// <returns>the item at the given position</returns>
-		string this[ int index ] { get; }
+		string this[int index] { get; }
 
 		// ----------------------------------------------------------------------
 		/// <summary>
@@ -39,7 +39,7 @@ namespace Itenso.Sys.Collection
 		/// </summary>
 		/// <param name="array">the target array</param>
 		/// <param name="index">the target index</param>
-		void CopyTo( string[] array, int index );
+		void CopyTo(string[] array, int index);
 
 		// ----------------------------------------------------------------------
 		/// <summary>
@@ -47,7 +47,7 @@ namespace Itenso.Sys.Collection
 		/// </summary>
 		/// <param name="test">the string to search</param>
 		/// <returns>the position of the given string in this collection or -1 if not found</returns>
-		int IndexOf( string test );
+		int IndexOf(string test);
 
 		// ----------------------------------------------------------------------
 		/// <summary>
@@ -55,7 +55,7 @@ namespace Itenso.Sys.Collection
 		/// </summary>
 		/// <param name="test">the string to search</param>
 		/// <returns>true if this collection contains such a string, false otherwise</returns>
-		bool Contains( string test );
+		bool Contains(string test);
 
 		// ----------------------------------------------------------------------
 		/// <summary>

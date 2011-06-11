@@ -17,28 +17,28 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public static readonly IRtfColor Black = new RtfColor( 0, 0, 0 );
-		public static readonly IRtfColor White = new RtfColor( 255, 255, 255 );
+		public static readonly IRtfColor Black = new RtfColor(0, 0, 0);
+		public static readonly IRtfColor White = new RtfColor(255, 255, 255);
 
 		// ----------------------------------------------------------------------
-		public RtfColor( int red, int green, int blue )
+		public RtfColor(int red, int green, int blue)
 		{
-			if ( red < 0 || red > 255 )
+			if (red < 0 || red > 255)
 			{
-				throw new RtfColorException( Strings.InvalidColor( red ) );
+				throw new RtfColorException(Strings.InvalidColor(red));
 			}
-			if ( green < 0 || green > 255 )
+			if (green < 0 || green > 255)
 			{
-				throw new RtfColorException( Strings.InvalidColor( green ) );
+				throw new RtfColorException(Strings.InvalidColor(green));
 			}
-			if ( blue < 0 || blue > 255 )
+			if (blue < 0 || blue > 255)
 			{
-				throw new RtfColorException( Strings.InvalidColor( blue ) );
+				throw new RtfColorException(Strings.InvalidColor(blue));
 			}
 			this.red = red;
 			this.green = green;
 			this.blue = blue;
-			drawingColor = Color.FromArgb( red, green, blue );
+			drawingColor = Color.FromArgb(red, green, blue);
 		} // RtfColor
 
 		// ----------------------------------------------------------------------
@@ -66,25 +66,25 @@ namespace Itenso.Rtf.Model
 		} // AsDrawingColor
 
 		// ----------------------------------------------------------------------
-		public override bool Equals( object obj )
+		public override bool Equals(object obj)
 		{
-			if ( obj == this )
+			if (obj == this)
 			{
 				return true;
 			}
-			
-			if ( obj == null || GetType() != obj.GetType() )
+
+			if (obj == null || GetType() != obj.GetType())
 			{
 				return false;
 			}
 
-			return IsEqual( obj );
+			return IsEqual(obj);
 		} // Equals
 
 		// ----------------------------------------------------------------------
 		public override int GetHashCode()
 		{
-			return HashTool.AddHashCode( GetType().GetHashCode(), ComputeHashCode() );
+			return HashTool.AddHashCode(GetType().GetHashCode(), ComputeHashCode());
 		} // GetHashCode
 
 		// ----------------------------------------------------------------------
@@ -94,7 +94,7 @@ namespace Itenso.Rtf.Model
 		} // ToString
 
 		// ----------------------------------------------------------------------
-		private bool IsEqual( object obj )
+		private bool IsEqual(object obj)
 		{
 			RtfColor compare = obj as RtfColor; // guaranteed to be non-null
 			return compare != null && red == compare.red &&
@@ -106,8 +106,8 @@ namespace Itenso.Rtf.Model
 		private int ComputeHashCode()
 		{
 			int hash = red;
-			hash = HashTool.AddHashCode( hash, green );
-			hash = HashTool.AddHashCode( hash, blue );
+			hash = HashTool.AddHashCode(hash, green);
+			hash = HashTool.AddHashCode(hash, blue);
 			return hash;
 		} // ComputeHashCode
 

@@ -30,7 +30,7 @@ namespace Itenso.Sys.Logging
 		/// <param name="context">the context for which to register the listener</param>
 		/// <exception cref="System.ArgumentNullException">when given a null argument</exception>
 		/// <exception cref="System.ArgumentException">when given an empty context</exception>
-		void Register( ILoggerListener loggerListener, string context );
+		void Register(ILoggerListener loggerListener, string context);
 
 		// ----------------------------------------------------------------------
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Itenso.Sys.Logging
 		/// <param name="context">the context for which to unregister the listener</param>
 		/// <exception cref="System.ArgumentNullException">when given a null argument</exception>
 		/// <exception cref="System.ArgumentException">when given an empty context</exception>
-		void Unregister( ILoggerListener loggerListener, string context );
+		void Unregister(ILoggerListener loggerListener, string context);
 
 	} // interface ILoggerMonitor
 

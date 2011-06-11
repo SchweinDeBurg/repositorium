@@ -14,16 +14,16 @@ using System.Security.Permissions;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle( "Itenso RTF Interpreter" )]
-[assembly: AssemblyDescription( "Itenso RTF Interpreter" )]
-[assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "Itenso GmbH" )]
-[assembly: AssemblyProduct( "Itenso RTF Interpreter" )]
-[assembly: AssemblyCopyright( "Copyright © Itenso GmbH 2010" )]
-[assembly: AssemblyTrademark( "" )]
-[assembly: AssemblyCulture( "" )]
-[assembly: ComVisible( false )]
-[assembly: SecurityPermission( SecurityAction.RequestMinimum, Assertion = true )]
-[assembly: CLSCompliant( true )]
+[assembly: AssemblyTitle("Itenso RTF Interpreter")]
+[assembly: AssemblyDescription("Itenso RTF Interpreter")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Itenso GmbH")]
+[assembly: AssemblyProduct("Itenso RTF Interpreter")]
+[assembly: AssemblyCopyright("Copyright © Itenso GmbH 2010")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+[assembly: ComVisible(false)]
+[assembly: SecurityPermission(SecurityAction.RequestMinimum, Assertion = true)]
+[assembly: CLSCompliant(true)]
 
 // -- EOF -------------------------------------------------------------------

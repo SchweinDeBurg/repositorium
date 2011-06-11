@@ -22,13 +22,13 @@ namespace Itenso.Rtf.Parser
 		} // RtfParserBase
 
 		// ----------------------------------------------------------------------
-		protected RtfParserBase( params IRtfParserListener[] listeners )
+		protected RtfParserBase(params IRtfParserListener[] listeners)
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfParserListener listener in listeners )
+				foreach (IRtfParserListener listener in listeners)
 				{
-					AddParserListener( listener );
+					AddParserListener(listener);
 				}
 			}
 		} // RtfParserBase
@@ -41,36 +41,36 @@ namespace Itenso.Rtf.Parser
 		} // IgnoreContentAfterRootGroup
 
 		// ----------------------------------------------------------------------
-		public void AddParserListener( IRtfParserListener listener )
+		public void AddParserListener(IRtfParserListener listener)
 		{
-			if ( listener == null )
+			if (listener == null)
 			{
-				throw new ArgumentNullException( "listener" );
+				throw new ArgumentNullException("listener");
 			}
-			if ( listeners == null )
+			if (listeners == null)
 			{
 				listeners = new ArrayList();
 			}
-			if ( !listeners.Contains( listener ) )
+			if (!listeners.Contains(listener))
 			{
-				listeners.Add( listener );
+				listeners.Add(listener);
 			}
 		} // AddParserListener
 
 		// ----------------------------------------------------------------------
-		public void RemoveParserListener( IRtfParserListener listener )
+		public void RemoveParserListener(IRtfParserListener listener)
 		{
-			if ( listener == null )
+			if (listener == null)
 			{
-				throw new ArgumentNullException( "listener" );
+				throw new ArgumentNullException("listener");
 			}
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				if ( listeners.Contains( listener ) )
+				if (listeners.Contains(listener))
 				{
-					listeners.Remove( listener );
+					listeners.Remove(listener);
 				}
-				if ( listeners.Count == 0 )
+				if (listeners.Count == 0)
 				{
 					listeners = null;
 				}
@@ -78,24 +78,24 @@ namespace Itenso.Rtf.Parser
 		} // RemoveParserListener
 
 		// ----------------------------------------------------------------------
-		public void Parse( IRtfSource rtfTextSource )
+		public void Parse(IRtfSource rtfTextSource)
 		{
-			if ( rtfTextSource == null )
+			if (rtfTextSource == null)
 			{
-				throw new ArgumentNullException( "rtfTextSource" );
+				throw new ArgumentNullException("rtfTextSource");
 			}
-			DoParse( rtfTextSource );
+			DoParse(rtfTextSource);
 		} // Parse
 
 		// ----------------------------------------------------------------------
-		protected abstract void DoParse( IRtfSource rtfTextSource );
+		protected abstract void DoParse(IRtfSource rtfTextSource);
 
 		// ----------------------------------------------------------------------
 		protected void NotifyParseBegin()
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfParserListener listener in listeners )
+				foreach (IRtfParserListener listener in listeners)
 				{
 					listener.ParseBegin();
 				}
@@ -105,9 +105,9 @@ namespace Itenso.Rtf.Parser
 		// ----------------------------------------------------------------------
 		protected void NotifyGroupBegin()
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfParserListener listener in listeners )
+				foreach (IRtfParserListener listener in listeners)
 				{
 					listener.GroupBegin();
 				}
@@ -115,25 +115,25 @@ namespace Itenso.Rtf.Parser
 		} // NotifyGroupBegin
 
 		// ----------------------------------------------------------------------
-		protected void NotifyTagFound( IRtfTag tag )
+		protected void NotifyTagFound(IRtfTag tag)
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfParserListener listener in listeners )
+				foreach (IRtfParserListener listener in listeners)
 				{
-					listener.TagFound( tag );
+					listener.TagFound(tag);
 				}
 			}
 		} // NotifyTagFound
 
 		// ----------------------------------------------------------------------
-		protected void NotifyTextFound( IRtfText text )
+		protected void NotifyTextFound(IRtfText text)
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfParserListener listener in listeners )
+				foreach (IRtfParserListener listener in listeners)
 				{
-					listener.TextFound( text );
+					listener.TextFound(text);
 				}
 			}
 		} // NotifyTextFound
@@ -141,9 +141,9 @@ namespace Itenso.Rtf.Parser
 		// ----------------------------------------------------------------------
 		protected void NotifyGroupEnd()
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfParserListener listener in listeners )
+				foreach (IRtfParserListener listener in listeners)
 				{
 					listener.GroupEnd();
 				}
@@ -153,9 +153,9 @@ namespace Itenso.Rtf.Parser
 		// ----------------------------------------------------------------------
 		protected void NotifyParseSuccess()
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfParserListener listener in listeners )
+				foreach (IRtfParserListener listener in listeners)
 				{
 					listener.ParseSuccess();
 				}
@@ -163,13 +163,13 @@ namespace Itenso.Rtf.Parser
 		} // NotifyParseSuccess
 
 		// ----------------------------------------------------------------------
-		protected void NotifyParseFail( RtfException reason )
+		protected void NotifyParseFail(RtfException reason)
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfParserListener listener in listeners )
+				foreach (IRtfParserListener listener in listeners)
 				{
-					listener.ParseFail( reason );
+					listener.ParseFail(reason);
 				}
 			}
 		} // NotifyParseFail
@@ -177,9 +177,9 @@ namespace Itenso.Rtf.Parser
 		// ----------------------------------------------------------------------
 		protected void NotifyParseEnd()
 		{
-			if ( listeners != null )
+			if (listeners != null)
 			{
-				foreach ( IRtfParserListener listener in listeners )
+				foreach (IRtfParserListener listener in listeners)
 				{
 					listener.ParseEnd();
 				}

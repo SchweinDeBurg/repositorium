@@ -18,37 +18,37 @@ namespace Itenso.Sys.Logging
 	{
 
 		// ----------------------------------------------------------------------
-		protected override void Append( LoggingEvent loggingEvent )
+		protected override void Append(LoggingEvent loggingEvent)
 		{
 			LoggerMonitorLog4net monitor = Logger.Monitor as LoggerMonitorLog4net;
-			if ( monitor != null )
+			if (monitor != null)
 			{
 				LoggerLevel level = LoggerLevel.Fatal;
 				int loggingEventLevelValue = loggingEvent.Level.Value;
-				if ( loggingEventLevelValue <= Level.Debug.Value )
+				if (loggingEventLevelValue <= Level.Debug.Value)
 				{
 					level = LoggerLevel.Debug;
 				}
-				else if ( loggingEventLevelValue <= Level.Info.Value )
+				else if (loggingEventLevelValue <= Level.Info.Value)
 				{
 					level = LoggerLevel.Info;
 				}
-				else if ( loggingEventLevelValue <= Level.Warn.Value )
+				else if (loggingEventLevelValue <= Level.Warn.Value)
 				{
 					level = LoggerLevel.Warn;
 				}
-				else if ( loggingEventLevelValue <= Level.Error.Value )
+				else if (loggingEventLevelValue <= Level.Error.Value)
 				{
 					level = LoggerLevel.Error;
 				}
 
 				string message = "" + loggingEvent.MessageObject;
 				string source = loggingEvent.LoggerName;
-				string context = Logger.GetLogger( source ).Context;
+				string context = Logger.GetLogger(source).Context;
 				Exception caughtException = loggingEvent.ExceptionObject;
 
-				LoggerEvent loggerEvent = new LoggerEvent( level, source, context, message, caughtException );
-				monitor.Handle( loggerEvent );
+				LoggerEvent loggerEvent = new LoggerEvent(level, source, context, message, caughtException);
+				monitor.Handle(loggerEvent);
 			}
 		} // Append
 

@@ -15,13 +15,13 @@ namespace Itenso.Sys.Logging
 	{
 
 		// ----------------------------------------------------------------------
-		public override ILogger GetLogger( string name )
+		public override ILogger GetLogger(string name)
 		{
-			if ( logger == null )
+			if (logger == null)
 			{
-				lock ( mutex )
+				lock (mutex)
 				{
-					if ( logger == null )
+					if (logger == null)
 					{
 						logger = new LoggerNone();
 					}

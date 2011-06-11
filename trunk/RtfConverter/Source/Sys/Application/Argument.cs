@@ -14,7 +14,7 @@ namespace Itenso.Sys.Application
 	{
 
 		// ----------------------------------------------------------------------
-		protected Argument( ArgumentType argumentType, string name, object defaultValue )
+		protected Argument(ArgumentType argumentType, string name, object defaultValue)
 		{
 			this.name = name;
 			this.argumentType = argumentType;
@@ -30,13 +30,13 @@ namespace Itenso.Sys.Application
 		// ----------------------------------------------------------------------
 		public object Value
 		{
-			get 
+			get
 			{
-				if ( value == null )
+				if (value == null)
 				{
 					return defaultValue;
 				}
-				return value; 
+				return value;
 			}
 			set { this.value = value; }
 		} // Value
@@ -56,37 +56,37 @@ namespace Itenso.Sys.Application
 		// ----------------------------------------------------------------------
 		public bool IsMandatory
 		{
-			get { return ( argumentType & ArgumentType.Mandatory ) == ArgumentType.Mandatory; }
+			get { return (argumentType & ArgumentType.Mandatory) == ArgumentType.Mandatory; }
 		} // IsMandatory
 
 		// ----------------------------------------------------------------------
 		public bool HasName
 		{
-			get { return ( argumentType & ArgumentType.HasName ) == ArgumentType.HasName; }
+			get { return (argumentType & ArgumentType.HasName) == ArgumentType.HasName; }
 		} // HasName
 
 		// ----------------------------------------------------------------------
 		public bool ContainsValue
 		{
-			get { return ( argumentType & ArgumentType.ContainsValue ) == ArgumentType.ContainsValue; }
+			get { return (argumentType & ArgumentType.ContainsValue) == ArgumentType.ContainsValue; }
 		} // ContainsValue
 
 		// ----------------------------------------------------------------------
 		public virtual bool IsValid
 		{
-			get 
+			get
 			{
-				if ( IsMandatory && !isLoaded )
+				if (IsMandatory && !isLoaded)
 				{
 					return false;
 				}
 
-				if ( IsMandatory && ContainsValue && ( Value == null && DefaultValue == null ) )
+				if (IsMandatory && ContainsValue && (Value == null && DefaultValue == null))
 				{
 					return false;
 				}
 
-				return true; 
+				return true;
 			}
 		} // IsValid
 
@@ -97,34 +97,34 @@ namespace Itenso.Sys.Application
 		} // IsLoaded
 
 		// ----------------------------------------------------------------------
-		public void Load( string commandLineArg )
+		public void Load(string commandLineArg)
 		{
-			bool isNamedArg = commandLineArg.StartsWith( "/" ) || commandLineArg.StartsWith( "-" );
+			bool isNamedArg = commandLineArg.StartsWith("/") || commandLineArg.StartsWith("-");
 
 			// argument with name
-			if ( HasName )
+			if (HasName)
 			{
-				if ( !isNamedArg )
+				if (!isNamedArg)
 				{
 					return; // missing argument name
 				}
 
-				commandLineArg = commandLineArg.Substring( 1 );
-				if ( string.IsNullOrEmpty( commandLineArg ) )
+				commandLineArg = commandLineArg.Substring(1);
+				if (string.IsNullOrEmpty(commandLineArg))
 				{
 					return;
 				}
 			}
-			else if ( isNamedArg )
+			else if (isNamedArg)
 			{
 				return; // name provided on argument without name
 			}
 
-			isLoaded = OnLoad( commandLineArg );
+			isLoaded = OnLoad(commandLineArg);
 		} // Load
 
 		// ----------------------------------------------------------------------
-		protected abstract bool OnLoad( string commandLineArg );
+		protected abstract bool OnLoad(string commandLineArg);
 
 		// ----------------------------------------------------------------------
 		// members

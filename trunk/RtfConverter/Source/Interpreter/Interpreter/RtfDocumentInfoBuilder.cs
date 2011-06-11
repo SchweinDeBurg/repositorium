@@ -18,13 +18,13 @@ namespace Itenso.Rtf.Interpreter
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfDocumentInfoBuilder( RtfDocumentInfo info ) :
-			base( RtfElementVisitorOrder.NonRecursive )
+		public RtfDocumentInfoBuilder(RtfDocumentInfo info) :
+			base(RtfElementVisitorOrder.NonRecursive)
 		{
 			// we iterate over our children ourselves -> hence non-recursive
-			if ( info == null )
+			if (info == null)
 			{
-				throw new ArgumentNullException( "info" );
+				throw new ArgumentNullException("info");
 			}
 			this.info = info;
 		} // RtfDocumentInfoBuilder
@@ -36,65 +36,65 @@ namespace Itenso.Rtf.Interpreter
 		} // Reset
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitGroup( IRtfGroup group )
+		protected override void DoVisitGroup(IRtfGroup group)
 		{
-			switch ( group.Destination )
+			switch (group.Destination)
 			{
 				case RtfSpec.TagInfo:
-					VisitGroupChildren( group );
+					VisitGroupChildren(group);
 					break;
 				case RtfSpec.TagInfoTitle:
-					info.Title = ExtractGroupText( group );
+					info.Title = ExtractGroupText(group);
 					break;
 				case RtfSpec.TagInfoSubject:
-					info.Subject = ExtractGroupText( group );
+					info.Subject = ExtractGroupText(group);
 					break;
 				case RtfSpec.TagInfoAuthor:
-					info.Author = ExtractGroupText( group );
+					info.Author = ExtractGroupText(group);
 					break;
 				case RtfSpec.TagInfoManager:
-					info.Manager = ExtractGroupText( group );
+					info.Manager = ExtractGroupText(group);
 					break;
 				case RtfSpec.TagInfoCompany:
-					info.Company = ExtractGroupText( group );
+					info.Company = ExtractGroupText(group);
 					break;
 				case RtfSpec.TagInfoOperator:
-					info.Operator = ExtractGroupText( group );
+					info.Operator = ExtractGroupText(group);
 					break;
 				case RtfSpec.TagInfoCategory:
-					info.Category = ExtractGroupText( group );
+					info.Category = ExtractGroupText(group);
 					break;
 				case RtfSpec.TagInfoKeywords:
-					info.Keywords = ExtractGroupText( group );
+					info.Keywords = ExtractGroupText(group);
 					break;
 				case RtfSpec.TagInfoComment:
-					info.Comment = ExtractGroupText( group );
+					info.Comment = ExtractGroupText(group);
 					break;
 				case RtfSpec.TagInfoDocumentComment:
-					info.DocumentComment = ExtractGroupText( group );
+					info.DocumentComment = ExtractGroupText(group);
 					break;
 				case RtfSpec.TagInfoHyperLinkBase:
-					info.HyperLinkbase = ExtractGroupText( group );
+					info.HyperLinkbase = ExtractGroupText(group);
 					break;
 				case RtfSpec.TagInfoCreationTime:
-					info.CreationTime = ExtractTimestamp( group );
+					info.CreationTime = ExtractTimestamp(group);
 					break;
 				case RtfSpec.TagInfoRevisionTime:
-					info.RevisionTime = ExtractTimestamp( group );
+					info.RevisionTime = ExtractTimestamp(group);
 					break;
 				case RtfSpec.TagInfoPrintTime:
-					info.PrintTime = ExtractTimestamp( group );
+					info.PrintTime = ExtractTimestamp(group);
 					break;
 				case RtfSpec.TagInfoBackupTime:
-					info.BackupTime = ExtractTimestamp( group );
+					info.BackupTime = ExtractTimestamp(group);
 					break;
 			}
 		} // DoVisitGroup
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitTag( IRtfTag tag )
+		protected override void DoVisitTag(IRtfTag tag)
 		{
-			switch ( tag.Name )
+			switch (tag.Name)
 			{
 				case RtfSpec.TagInfoVersion:
 					info.Version = tag.ValueAsNumber;
@@ -121,18 +121,18 @@ namespace Itenso.Rtf.Interpreter
 		} // DoVisitTag
 
 		// ----------------------------------------------------------------------
-		private string ExtractGroupText( IRtfGroup group )
+		private string ExtractGroupText(IRtfGroup group)
 		{
 			textBuilder.Reset();
-			textBuilder.VisitGroup( group );
+			textBuilder.VisitGroup(group);
 			return textBuilder.CombinedText;
 		} // ExtractGroupText
 
 		// ----------------------------------------------------------------------
-		private DateTime ExtractTimestamp( IRtfGroup group )
+		private DateTime ExtractTimestamp(IRtfGroup group)
 		{
 			timestampBuilder.Reset();
-			timestampBuilder.VisitGroup( group );
+			timestampBuilder.VisitGroup(group);
 			return timestampBuilder.CreateTimestamp();
 		} // ExtractTimestamp
 

@@ -20,32 +20,32 @@ namespace Itenso.Rtf.Parser
 
 		// ----------------------------------------------------------------------
 		public RtfParserListenerLogger()
-			: this( new RtfParserLoggerSettings(), systemLogger )
+			: this(new RtfParserLoggerSettings(), systemLogger)
 		{
 		} // RtfParserListenerLogger
 
 		// ----------------------------------------------------------------------
-		public RtfParserListenerLogger( RtfParserLoggerSettings settings )
-			: this( settings, systemLogger )
+		public RtfParserListenerLogger(RtfParserLoggerSettings settings)
+			: this(settings, systemLogger)
 		{
 		} // RtfParserListenerLogger
 
 		// ----------------------------------------------------------------------
-		public RtfParserListenerLogger( ILogger logger )
-			: this( new RtfParserLoggerSettings(), logger )
+		public RtfParserListenerLogger(ILogger logger)
+			: this(new RtfParserLoggerSettings(), logger)
 		{
 		} // RtfParserListenerLogger
 
 		// ----------------------------------------------------------------------
-		public RtfParserListenerLogger( RtfParserLoggerSettings settings, ILogger logger )
+		public RtfParserListenerLogger(RtfParserLoggerSettings settings, ILogger logger)
 		{
-			if ( settings == null )
+			if (settings == null)
 			{
-				throw new ArgumentNullException( "settings" );
+				throw new ArgumentNullException("settings");
 			}
-			if ( logger == null )
+			if (logger == null)
 			{
-				throw new ArgumentNullException( "logger" );
+				throw new ArgumentNullException("logger");
 			}
 
 			this.settings = settings;
@@ -67,88 +67,88 @@ namespace Itenso.Rtf.Parser
 		// ----------------------------------------------------------------------
 		protected override void DoParseBegin()
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.ParseBeginText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.ParseBeginText))
 			{
-				Log( settings.ParseBeginText );
+				Log(settings.ParseBeginText);
 			}
 		} // DoParseBegin
 
 		// ----------------------------------------------------------------------
 		protected override void DoGroupBegin()
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.ParseGroupBeginText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.ParseGroupBeginText))
 			{
-				Log( settings.ParseGroupBeginText );
+				Log(settings.ParseGroupBeginText);
 			}
 		} // DoGroupBegin
 
 		// ----------------------------------------------------------------------
-		protected override void DoTagFound( IRtfTag tag )
+		protected override void DoTagFound(IRtfTag tag)
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.ParseTagText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.ParseTagText))
 			{
-				Log( string.Format(
+				Log(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.ParseTagText,
-					tag ) );
+					tag));
 			}
 		} // DoTagFound
 
 		// ----------------------------------------------------------------------
-		protected override void DoTextFound( IRtfText text )
+		protected override void DoTextFound(IRtfText text)
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.ParseTextText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.ParseTextText))
 			{
 				string msg = text.Text;
-				if ( msg.Length > settings.TextMaxLength && !string.IsNullOrEmpty( settings.TextOverflowText ) )
+				if (msg.Length > settings.TextMaxLength && !string.IsNullOrEmpty(settings.TextOverflowText))
 				{
-					msg = msg.Substring( 0, msg.Length - settings.TextOverflowText.Length ) + settings.TextOverflowText;
+					msg = msg.Substring(0, msg.Length - settings.TextOverflowText.Length) + settings.TextOverflowText;
 				}
-				Log( string.Format(
+				Log(string.Format(
 					CultureInfo.InvariantCulture,
 					settings.ParseTextText,
-					msg ) );
+					msg));
 			}
 		} // DoTextFound
 
 		// ----------------------------------------------------------------------
 		protected override void DoGroupEnd()
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.ParseGroupEndText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.ParseGroupEndText))
 			{
-				Log( settings.ParseGroupEndText );
+				Log(settings.ParseGroupEndText);
 			}
 		} // DoGroupEnd
 
 		// ----------------------------------------------------------------------
 		protected override void DoParseSuccess()
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.ParseSuccessText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.ParseSuccessText))
 			{
-				Log( settings.ParseSuccessText );
+				Log(settings.ParseSuccessText);
 			}
 		} // DoParseSuccess
 
 		// ----------------------------------------------------------------------
-		protected override void DoParseFail( RtfException reason )
+		protected override void DoParseFail(RtfException reason)
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled )
+			if (settings.Enabled && logger.IsInfoEnabled)
 			{
-				if ( reason != null )
+				if (reason != null)
 				{
-					if ( !string.IsNullOrEmpty( settings.ParseFailKnownReasonText ) )
+					if (!string.IsNullOrEmpty(settings.ParseFailKnownReasonText))
 					{
-						Log( string.Format(
+						Log(string.Format(
 							CultureInfo.InvariantCulture,
 							settings.ParseFailKnownReasonText,
-							reason.Message ) );
+							reason.Message));
 					}
 				}
 				else
 				{
-					if ( !string.IsNullOrEmpty( settings.ParseFailUnknownReasonText ) )
+					if (!string.IsNullOrEmpty(settings.ParseFailUnknownReasonText))
 					{
-						Log( settings.ParseFailUnknownReasonText );
+						Log(settings.ParseFailUnknownReasonText);
 					}
 				}
 			}
@@ -157,38 +157,38 @@ namespace Itenso.Rtf.Parser
 		// ----------------------------------------------------------------------
 		protected override void DoParseEnd()
 		{
-			if ( settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty( settings.ParseEndText ) )
+			if (settings.Enabled && logger.IsInfoEnabled && !string.IsNullOrEmpty(settings.ParseEndText))
 			{
-				Log( settings.ParseEndText );
+				Log(settings.ParseEndText);
 			}
 		} // DoParseEnd
 
 		// ----------------------------------------------------------------------
-		private void Log( params string[] msg )
+		private void Log(params string[] msg)
 		{
-			string logText = Indent( msg );
+			string logText = Indent(msg);
 
-			systemLogger.Info( logText );
+			systemLogger.Info(logText);
 
-			if ( logger != null )
+			if (logger != null)
 			{
-				logger.Info( logText );
+				logger.Info(logText);
 			}
 		} // Log
 
 		// ----------------------------------------------------------------------
-		private string Indent( params string[] msg )
+		private string Indent(params string[] msg)
 		{
 			StringBuilder buf = new StringBuilder();
-			if ( msg != null )
+			if (msg != null)
 			{
-				for ( int i = 0; i < Level; i++ )
+				for (int i = 0; i < Level; i++)
 				{
-					buf.Append( " " );
+					buf.Append(" ");
 				}
-				foreach ( string m in msg )
+				foreach (string m in msg)
 				{
-					buf.Append( m );
+					buf.Append(m);
 				}
 			}
 			return buf.ToString();
@@ -199,7 +199,7 @@ namespace Itenso.Rtf.Parser
 		private readonly RtfParserLoggerSettings settings;
 		private readonly ILogger logger;
 
-		private static readonly ILogger systemLogger = Sys.Logging.Logger.GetLogger( typeof( RtfParserListenerLogger ) );
+		private static readonly ILogger systemLogger = Sys.Logging.Logger.GetLogger(typeof(RtfParserListenerLogger));
 
 	} // class RtfParserListenerLogger
 

@@ -17,33 +17,33 @@ namespace Itenso.Rtf.Support
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfSource( string rtf )
+		public RtfSource(string rtf)
 		{
-			if ( rtf == null )
+			if (rtf == null)
 			{
-				throw new ArgumentNullException( "rtf" );
+				throw new ArgumentNullException("rtf");
 			}
-			reader = new StringReader( rtf );
+			reader = new StringReader(rtf);
 		} // RtfSource
 
 		// ----------------------------------------------------------------------
-		public RtfSource( TextReader rtf )
+		public RtfSource(TextReader rtf)
 		{
-			if ( rtf == null )
+			if (rtf == null)
 			{
-				throw new ArgumentNullException( "rtf" );
+				throw new ArgumentNullException("rtf");
 			}
 			reader = rtf;
 		} // RtfSource
 
 		// ----------------------------------------------------------------------
-		public RtfSource( Stream rtf )
+		public RtfSource(Stream rtf)
 		{
-			if ( rtf == null )
+			if (rtf == null)
 			{
-				throw new ArgumentNullException( "rtf" );
+				throw new ArgumentNullException("rtf");
 			}
-			reader = new StreamReader( rtf, RtfSpec.AnsiEncoding );
+			reader = new StreamReader(rtf, RtfSpec.AnsiEncoding);
 		} // RtfSource
 
 		// ----------------------------------------------------------------------

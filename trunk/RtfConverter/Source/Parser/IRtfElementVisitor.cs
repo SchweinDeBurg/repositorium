@@ -15,13 +15,13 @@ namespace Itenso.Rtf
 	{
 
 		// ----------------------------------------------------------------------
-		void VisitTag( IRtfTag tag );
+		void VisitTag(IRtfTag tag);
 
 		// ----------------------------------------------------------------------
-		void VisitGroup( IRtfGroup group );
+		void VisitGroup(IRtfGroup group);
 
 		// ----------------------------------------------------------------------
-		void VisitText( IRtfText text );
+		void VisitText(IRtfText text);
 
 	} // interface IRtfElementVisitor
 

@@ -18,23 +18,23 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfFont( string id, RtfFontKind kind, RtfFontPitch pitch, int charSet, int codePage, string name )
+		public RtfFont(string id, RtfFontKind kind, RtfFontPitch pitch, int charSet, int codePage, string name)
 		{
-			if ( id == null )
+			if (id == null)
 			{
-				throw new ArgumentNullException( "id" );
+				throw new ArgumentNullException("id");
 			}
-			if ( charSet < 0 )
+			if (charSet < 0)
 			{
-				throw new ArgumentException( Strings.InvalidCharacterSet( charSet ) );
+				throw new ArgumentException(Strings.InvalidCharacterSet(charSet));
 			}
-			if ( codePage < 0 )
+			if (codePage < 0)
 			{
-				throw new ArgumentException( Strings.InvalidCodePage( codePage ) );
+				throw new ArgumentException(Strings.InvalidCodePage(codePage));
 			}
-			if ( name == null )
+			if (name == null)
 			{
-				throw new ArgumentNullException( "name" );
+				throw new ArgumentNullException("name");
 			}
 			this.id = id;
 			this.kind = kind;
@@ -74,10 +74,10 @@ namespace Itenso.Rtf.Model
 			get
 			{
 				// if a codepage is specified, it overrides the charset setting
-				if ( codePage == 0 )
+				if (codePage == 0)
 				{
 					// unspecified codepage: use the one derived from the charset:
-					return RtfSpec.GetCodePage( charSet );
+					return RtfSpec.GetCodePage(charSet);
 				}
 				return codePage;
 			}
@@ -86,7 +86,7 @@ namespace Itenso.Rtf.Model
 		// ----------------------------------------------------------------------
 		public Encoding GetEncoding()
 		{
-			return Encoding.GetEncoding( CodePage );
+			return Encoding.GetEncoding(CodePage);
 		} // GetEncoding
 
 		// ----------------------------------------------------------------------
@@ -96,25 +96,25 @@ namespace Itenso.Rtf.Model
 		} // Name
 
 		// ----------------------------------------------------------------------
-		public override bool Equals( object obj )
+		public override bool Equals(object obj)
 		{
-			if ( obj == this )
+			if (obj == this)
 			{
 				return true;
 			}
 
-			if ( obj == null || GetType() != obj.GetType() )
+			if (obj == null || GetType() != obj.GetType())
 			{
 				return false;
 			}
 
-			return IsEqual( obj );
+			return IsEqual(obj);
 		} // Equals
 
 		// ----------------------------------------------------------------------
 		public override int GetHashCode()
 		{
-			return HashTool.AddHashCode( GetType().GetHashCode(), ComputeHashCode() );
+			return HashTool.AddHashCode(GetType().GetHashCode(), ComputeHashCode());
 		} // GetHashCode
 
 		// ----------------------------------------------------------------------
@@ -124,28 +124,28 @@ namespace Itenso.Rtf.Model
 		} // ToString
 
 		// ----------------------------------------------------------------------
-		private bool IsEqual( object obj )
+		private bool IsEqual(object obj)
 		{
 			RtfFont compare = obj as RtfFont; // guaranteed to be non-null
 			return
 				compare != null &&
-				id.Equals( compare.id ) &&
+				id.Equals(compare.id) &&
 				kind == compare.kind &&
 				pitch == compare.pitch &&
 				charSet == compare.charSet &&
 				codePage == compare.codePage &&
-				name.Equals( compare.name );
+				name.Equals(compare.name);
 		} // IsEqual
 
 		// ----------------------------------------------------------------------
 		private int ComputeHashCode()
 		{
 			int hash = id.GetHashCode();
-			hash = HashTool.AddHashCode( hash, kind );
-			hash = HashTool.AddHashCode( hash, pitch );
-			hash = HashTool.AddHashCode( hash, charSet );
-			hash = HashTool.AddHashCode( hash, codePage );
-			hash = HashTool.AddHashCode( hash, name );
+			hash = HashTool.AddHashCode(hash, kind);
+			hash = HashTool.AddHashCode(hash, pitch);
+			hash = HashTool.AddHashCode(hash, charSet);
+			hash = HashTool.AddHashCode(hash, codePage);
+			hash = HashTool.AddHashCode(hash, name);
 			return hash;
 		} // ComputeHashCode
 

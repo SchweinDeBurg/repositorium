@@ -19,7 +19,7 @@ namespace Itenso.Rtf.Interpreter
 
 		// ----------------------------------------------------------------------
 		public RtfFontBuilder()
-			: base( RtfElementVisitorOrder.NonRecursive )
+			: base(RtfElementVisitorOrder.NonRecursive)
 		{
 			// we iterate over our children ourselves -> hence non-recursive
 			Reset();
@@ -68,10 +68,10 @@ namespace Itenso.Rtf.Interpreter
 			{
 				string fontName = null;
 				int len = fontNameBuffer.Length;
-				if ( len > 0 && fontNameBuffer[ len - 1 ] == ';' )
+				if (len > 0 && fontNameBuffer[len - 1] == ';')
 				{
-					fontName = fontNameBuffer.ToString().Substring( 0, len - 1 ).Trim();
-					if ( fontName.Length == 0 )
+					fontName = fontNameBuffer.ToString().Substring(0, len - 1).Trim();
+					if (fontName.Length == 0)
 					{
 						fontName = null;
 					}
@@ -84,12 +84,12 @@ namespace Itenso.Rtf.Interpreter
 		public IRtfFont CreateFont()
 		{
 			string fontName = FontName;
-			if ( string.IsNullOrEmpty( fontName ) )
+			if (string.IsNullOrEmpty(fontName))
 			{
 				fontName = "UnnamedFont_" + fontId;
 			}
-			return new RtfFont( fontId, fontKind, fontPitch,
-				fontCharset, fontCodePage, fontName );
+			return new RtfFont(fontId, fontKind, fontPitch,
+				fontCharset, fontCodePage, fontName);
 		} // CreateFont
 
 		// ----------------------------------------------------------------------
@@ -100,13 +100,13 @@ namespace Itenso.Rtf.Interpreter
 			fontCodePage = 0;
 			fontKind = RtfFontKind.Nil;
 			fontPitch = RtfFontPitch.Default;
-			fontNameBuffer.Remove( 0, fontNameBuffer.Length );
+			fontNameBuffer.Remove(0, fontNameBuffer.Length);
 		} // Reset
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitGroup( IRtfGroup group )
+		protected override void DoVisitGroup(IRtfGroup group)
 		{
-			switch ( group.Destination )
+			switch (group.Destination)
 			{
 				case RtfSpec.TagFont:
 				case RtfSpec.TagThemeFontLoMajor:
@@ -117,15 +117,15 @@ namespace Itenso.Rtf.Interpreter
 				case RtfSpec.TagThemeFontHiMinor:
 				case RtfSpec.TagThemeFontDbMinor:
 				case RtfSpec.TagThemeFontBiMinor:
-					VisitGroupChildren( group );
+					VisitGroupChildren(group);
 					break;
 			}
 		} // DoVisitGroup
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitTag( IRtfTag tag )
+		protected override void DoVisitTag(IRtfTag tag)
 		{
-			switch ( tag.Name )
+			switch (tag.Name)
 			{
 				case RtfSpec.TagThemeFontLoMajor:
 				case RtfSpec.TagThemeFontHiMajor:
@@ -172,7 +172,7 @@ namespace Itenso.Rtf.Interpreter
 					fontCodePage = tag.ValueAsNumber;
 					break;
 				case RtfSpec.TagFontPitch:
-					switch ( tag.ValueAsNumber )
+					switch (tag.ValueAsNumber)
 					{
 						case 0:
 							fontPitch = RtfFontPitch.Default;
@@ -189,9 +189,9 @@ namespace Itenso.Rtf.Interpreter
 		} // DoVisitTag
 
 		// ----------------------------------------------------------------------
-		protected override void DoVisitText( IRtfText text )
+		protected override void DoVisitText(IRtfText text)
 		{
-			fontNameBuffer.Append( text.Text );
+			fontNameBuffer.Append(text.Text);
 		} // DoVisitText
 
 		// ----------------------------------------------------------------------

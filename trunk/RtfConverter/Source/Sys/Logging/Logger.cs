@@ -37,7 +37,7 @@ namespace Itenso.Sys.Logging
 		/// <returns>a logger that ignores all output</returns>
 		public static ILogger GetIgnoreAllLogger()
 		{
-			return LoggerFactory.Instance.GetLogger( "dummy" );
+			return LoggerFactory.Instance.GetLogger("dummy");
 		} // GetIgnoreAllLogger
 
 		// ----------------------------------------------------------------------
@@ -46,13 +46,13 @@ namespace Itenso.Sys.Logging
 		/// </summary>
 		/// <param name="type">the type for which a logger should be retrieved</param>
 		/// <returns>a logger for the given type</returns>
-		public static ILogger GetLogger( Type type )
+		public static ILogger GetLogger(Type type)
 		{
-			if ( type == null )
+			if (type == null)
 			{
-				throw new ArgumentNullException( "type" );
+				throw new ArgumentNullException("type");
 			}
-			return GetLogger( type.FullName );
+			return GetLogger(type.FullName);
 		} // GetLogger
 
 		// ----------------------------------------------------------------------
@@ -62,9 +62,9 @@ namespace Itenso.Sys.Logging
 		/// </summary>
 		/// <param name="name">the name of the logger to retrieve</param>
 		/// <returns>the logger for the given name</returns>
-		public static ILogger GetLogger( string name )
+		public static ILogger GetLogger(string name)
 		{
-			return LoggerFactory.Instance.GetLogger( name );
+			return LoggerFactory.Instance.GetLogger(name);
 		} // GetLogger
 
 		// ----------------------------------------------------------------------
@@ -72,13 +72,13 @@ namespace Itenso.Sys.Logging
 		{
 			get
 			{
-				if ( logger == null )
+				if (logger == null)
 				{
-					lock ( mutex )
+					lock (mutex)
 					{
-						if ( logger == null )
+						if (logger == null)
 						{
-							logger = GetLogger( typeof( Logger ) );
+							logger = GetLogger(typeof(Logger));
 						}
 					}
 				}
@@ -102,9 +102,9 @@ namespace Itenso.Sys.Logging
 		/// </summary>
 		/// <param name="factoryName">the fully qualified class name of the logger factory</param>
 		/// <returns>true if this factory is being used, false if another factory has already been defined</returns>
-		public static bool InitializeLoggerFactory( string factoryName )
+		public static bool InitializeLoggerFactory(string factoryName)
 		{
-			return LoggerFactory.InitializeLoggerFactory( factoryName );
+			return LoggerFactory.InitializeLoggerFactory(factoryName);
 		} // InitializeLoggerFactory
 
 		// ----------------------------------------------------------------------
@@ -125,9 +125,9 @@ namespace Itenso.Sys.Logging
 		/// <exception cref="System.InvalidOperationException">in case the active logger factory
 		/// doesn't support this</exception>
 		/// <exception cref="System.ArgumentNullException">when given an empty or null log file name</exception>
-		public static void SetLogFile( string absoluteLogFileName, bool append, string messagePattern )
+		public static void SetLogFile(string absoluteLogFileName, bool append, string messagePattern)
 		{
-			LoggerFactory.Instance.SetLogFile( absoluteLogFileName, append, messagePattern );
+			LoggerFactory.Instance.SetLogFile(absoluteLogFileName, append, messagePattern);
 		} // SetLogFile
 
 		// ----------------------------------------------------------------------

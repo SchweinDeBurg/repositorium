@@ -19,7 +19,7 @@ namespace Itenso.Sys.Logging
 		public LoggerLevel Level
 		{
 			get { return LoggerLevel.Fatal; }
-			set {}
+			set { }
 		} // Level
 
 		// ----------------------------------------------------------------------
@@ -53,128 +53,128 @@ namespace Itenso.Sys.Logging
 		} // IsFatalEnabled
 
 		// ----------------------------------------------------------------------
-		public bool IsEnabledFor( LoggerLevel level )
+		public bool IsEnabledFor(LoggerLevel level)
 		{
 			return false;
 		} // IsEnabledFor
 
 		// ----------------------------------------------------------------------
-		public void Debug( object message )
+		public void Debug(object message)
 		{
 		} // Debug
 
 		// ----------------------------------------------------------------------
-		public void Debug( object message, Exception exception )
+		public void Debug(object message, Exception exception)
 		{
 		} // Debug
 
 		// ----------------------------------------------------------------------
-		public void DebugFormat( string format, params object[] args )
+		public void DebugFormat(string format, params object[] args)
 		{
 		} // DebugFormat
 
 		// ----------------------------------------------------------------------
-		public void DebugFormat( IFormatProvider provider, string format, params object[] args )
+		public void DebugFormat(IFormatProvider provider, string format, params object[] args)
 		{
 		} // DebugFormat
 
 		// ----------------------------------------------------------------------
-		public void Info( object message )
+		public void Info(object message)
 		{
 		} // Info
 
 		// ----------------------------------------------------------------------
-		public void Info( object message, Exception exception )
+		public void Info(object message, Exception exception)
 		{
 		} // Info
 
 		// ----------------------------------------------------------------------
-		public void InfoFormat( string format, params object[] args )
+		public void InfoFormat(string format, params object[] args)
 		{
 		} // InfoFormat
 
 		// ----------------------------------------------------------------------
-		public void InfoFormat( IFormatProvider provider, string format, params object[] args )
+		public void InfoFormat(IFormatProvider provider, string format, params object[] args)
 		{
 		} // InfoFormat
 
 		// ----------------------------------------------------------------------
-		public void Warn( object message )
+		public void Warn(object message)
 		{
 		} // Warn
 
 		// ----------------------------------------------------------------------
-		public void Warn( object message, Exception exception )
+		public void Warn(object message, Exception exception)
 		{
 		} // Warn
 
 		// ----------------------------------------------------------------------
-		public void WarnFormat( string format, params object[] args )
+		public void WarnFormat(string format, params object[] args)
 		{
 		} // WarnFormat
 
 		// ----------------------------------------------------------------------
-		public void WarnFormat( IFormatProvider provider, string format, params object[] args )
+		public void WarnFormat(IFormatProvider provider, string format, params object[] args)
 		{
 		} // WarnFormat
 
 		// ----------------------------------------------------------------------
-		public void Error( object message )
+		public void Error(object message)
 		{
 		} // Error
 
 		// ----------------------------------------------------------------------
-		public void Error( object message, Exception exception )
+		public void Error(object message, Exception exception)
 		{
 		} // Error
 
 		// ----------------------------------------------------------------------
-		public void ErrorFormat( string format, params object[] args )
+		public void ErrorFormat(string format, params object[] args)
 		{
 		} // ErrorFormat
 
 		// ----------------------------------------------------------------------
-		public void ErrorFormat( IFormatProvider provider, string format, params object[] args )
+		public void ErrorFormat(IFormatProvider provider, string format, params object[] args)
 		{
 		} // ErrorFormat
 
 		// ----------------------------------------------------------------------
-		public void Fatal( object message )
+		public void Fatal(object message)
 		{
 		} // Fatal
 
 		// ----------------------------------------------------------------------
-		public void Fatal( object message, Exception exception )
+		public void Fatal(object message, Exception exception)
 		{
 		} // Fatal
 
 		// ----------------------------------------------------------------------
-		public void FatalFormat( string format, params object[] args )
+		public void FatalFormat(string format, params object[] args)
 		{
 		} // FatalFormat
 
 		// ----------------------------------------------------------------------
-		public void FatalFormat( IFormatProvider provider, string format, params object[] args )
+		public void FatalFormat(IFormatProvider provider, string format, params object[] args)
 		{
 		} // FatalFormat
 
 		// ----------------------------------------------------------------------
-		public void Log( LoggerLevel level, object message )
+		public void Log(LoggerLevel level, object message)
 		{
 		} // Log
 
 		// ----------------------------------------------------------------------
-		public void Log( LoggerLevel level, object message, Exception exception )
+		public void Log(LoggerLevel level, object message, Exception exception)
 		{
 		} // Log
 
 		// ----------------------------------------------------------------------
-		public void LogFormat( LoggerLevel level, string format, params object[] args )
+		public void LogFormat(LoggerLevel level, string format, params object[] args)
 		{
 		} // LogFormat
 
 		// ----------------------------------------------------------------------
-		public void LogFormat( LoggerLevel level, IFormatProvider provider, string format, params object[] args )
+		public void LogFormat(LoggerLevel level, IFormatProvider provider, string format, params object[] args)
 		{
 		} // LogFormat
 

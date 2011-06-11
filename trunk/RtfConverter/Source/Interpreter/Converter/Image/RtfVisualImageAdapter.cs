@@ -22,29 +22,29 @@ namespace Itenso.Rtf.Converter.Image
 
 		// ----------------------------------------------------------------------
 		public RtfVisualImageAdapter()
-			: this( defaultFileNamePattern, null )
+			: this(defaultFileNamePattern, null)
 		{
 		} // RtfVisualImageAdapter
 
 		// ----------------------------------------------------------------------
-		public RtfVisualImageAdapter( string fileNamePattern )
-			: this( fileNamePattern, null )
+		public RtfVisualImageAdapter(string fileNamePattern)
+			: this(fileNamePattern, null)
 		{
 		} // RtfVisualImageAdapter
 
 		// ----------------------------------------------------------------------
-		public RtfVisualImageAdapter( ImageFormat targetFormat )
-			: this( defaultFileNamePattern, targetFormat )
+		public RtfVisualImageAdapter(ImageFormat targetFormat)
+			: this(defaultFileNamePattern, targetFormat)
 		{
 		} // RtfVisualImageAdapter
 
 		// ----------------------------------------------------------------------
-		public RtfVisualImageAdapter( string fileNamePattern, ImageFormat targetFormat )
-			: this( fileNamePattern, targetFormat, DefaultDpi, DefaultDpi )
+		public RtfVisualImageAdapter(string fileNamePattern, ImageFormat targetFormat)
+			: this(fileNamePattern, targetFormat, DefaultDpi, DefaultDpi)
 		{
-			if ( fileNamePattern == null )
+			if (fileNamePattern == null)
 			{
-				throw new ArgumentNullException( "fileNamePattern" );
+				throw new ArgumentNullException("fileNamePattern");
 			}
 
 			this.fileNamePattern = fileNamePattern;
@@ -52,11 +52,11 @@ namespace Itenso.Rtf.Converter.Image
 		} // RtfVisualImageAdapter
 
 		// ----------------------------------------------------------------------
-		public RtfVisualImageAdapter( string fileNamePattern, ImageFormat targetFormat, double dpiX, double dpiY )
+		public RtfVisualImageAdapter(string fileNamePattern, ImageFormat targetFormat, double dpiX, double dpiY)
 		{
-			if ( fileNamePattern == null )
+			if (fileNamePattern == null)
 			{
-				throw new ArgumentNullException( "fileNamePattern" );
+				throw new ArgumentNullException("fileNamePattern");
 			}
 
 			this.fileNamePattern = fileNamePattern;
@@ -90,11 +90,11 @@ namespace Itenso.Rtf.Converter.Image
 		} // DpiY
 
 		// ----------------------------------------------------------------------
-		public ImageFormat GetImageFormat( RtfVisualImageFormat rtfVisualImageFormat )
+		public ImageFormat GetImageFormat(RtfVisualImageFormat rtfVisualImageFormat)
 		{
 			ImageFormat imageFormat = null;
 
-			switch ( rtfVisualImageFormat )
+			switch (rtfVisualImageFormat)
 			{
 				case RtfVisualImageFormat.Emf:
 					imageFormat = ImageFormat.Emf;
@@ -117,71 +117,71 @@ namespace Itenso.Rtf.Converter.Image
 		} // GetImageFormat
 
 		// ----------------------------------------------------------------------
-		public string ResolveFileName( int index, RtfVisualImageFormat rtfVisualImageFormat )
+		public string ResolveFileName(int index, RtfVisualImageFormat rtfVisualImageFormat)
 		{
-			ImageFormat imageFormat = targetFormat ?? GetImageFormat( rtfVisualImageFormat );
+			ImageFormat imageFormat = targetFormat ?? GetImageFormat(rtfVisualImageFormat);
 
 			return string.Format(
 				CultureInfo.InvariantCulture,
 				fileNamePattern,
 				index,
-				GetFileImageExtension( imageFormat ) );
+				GetFileImageExtension(imageFormat));
 		} // ResolveFileName
 
 		// ----------------------------------------------------------------------
-		public int CalcImageWidth( RtfVisualImageFormat format, int width,
-			int desiredWidth, int scaleWidthPercent )
+		public int CalcImageWidth(RtfVisualImageFormat format, int width,
+			int desiredWidth, int scaleWidthPercent)
 		{
 			float imgScaleX = scaleWidthPercent / 100.0f;
-			return (int)Math.Round( (double)desiredWidth * imgScaleX / twipsPerInch * dpiX );
+			return (int)Math.Round((double)desiredWidth * imgScaleX / twipsPerInch * dpiX);
 		} // CalcImageWidth
 
 		// ----------------------------------------------------------------------
-		public int CalcImageHeight( RtfVisualImageFormat format, int height,
-			int desiredHeight, int scaleHeightPercent )
+		public int CalcImageHeight(RtfVisualImageFormat format, int height,
+			int desiredHeight, int scaleHeightPercent)
 		{
 			float imgScaleY = scaleHeightPercent / 100.0f;
-			return (int)Math.Round( (double)desiredHeight * imgScaleY / twipsPerInch * dpiY );
+			return (int)Math.Round((double)desiredHeight * imgScaleY / twipsPerInch * dpiY);
 		} // CalcImageHeight
 
 		// ----------------------------------------------------------------------
-		private static string GetFileImageExtension( ImageFormat imageFormat )
+		private static string GetFileImageExtension(ImageFormat imageFormat)
 		{
 			string imageExtension = null;
 
-			if ( imageFormat == ImageFormat.Bmp )
+			if (imageFormat == ImageFormat.Bmp)
 			{
 				imageExtension = ".bmp";
 			}
-			else if ( imageFormat == ImageFormat.Emf )
+			else if (imageFormat == ImageFormat.Emf)
 			{
 				imageExtension = ".emf";
 			}
-			else if ( imageFormat == ImageFormat.Exif )
+			else if (imageFormat == ImageFormat.Exif)
 			{
 				imageExtension = ".exif";
 			}
-			else if ( imageFormat == ImageFormat.Gif )
+			else if (imageFormat == ImageFormat.Gif)
 			{
 				imageExtension = ".gif";
 			}
-			else if ( imageFormat == ImageFormat.Icon )
+			else if (imageFormat == ImageFormat.Icon)
 			{
 				imageExtension = ".ico";
 			}
-			else if ( imageFormat == ImageFormat.Jpeg )
+			else if (imageFormat == ImageFormat.Jpeg)
 			{
 				imageExtension = ".jpg";
 			}
-			else if ( imageFormat == ImageFormat.Png )
+			else if (imageFormat == ImageFormat.Png)
 			{
 				imageExtension = ".png";
 			}
-			else if ( imageFormat == ImageFormat.Tiff )
+			else if (imageFormat == ImageFormat.Tiff)
 			{
 				imageExtension = ".tiff";
 			}
-			else if ( imageFormat == ImageFormat.Wmf )
+			else if (imageFormat == ImageFormat.Wmf)
 			{
 				imageExtension = ".wmf";
 			}

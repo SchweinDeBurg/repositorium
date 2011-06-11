@@ -28,28 +28,28 @@ namespace Itenso.Rtf.Converter.Html
 
 		// ----------------------------------------------------------------------
 		public RtfHtmlConvertSettings()
-			: this( new RtfVisualImageAdapter(), RtfHtmlConvertScope.All )
+			: this(new RtfVisualImageAdapter(), RtfHtmlConvertScope.All)
 		{
 		} // RtfHtmlConvertSettings
 
 		// ----------------------------------------------------------------------
-		public RtfHtmlConvertSettings( RtfHtmlConvertScope convertScope )
-			: this( new RtfVisualImageAdapter(), convertScope )
+		public RtfHtmlConvertSettings(RtfHtmlConvertScope convertScope)
+			: this(new RtfVisualImageAdapter(), convertScope)
 		{
 		} // RtfHtmlConvertSettings
 
 		// ----------------------------------------------------------------------
-		public RtfHtmlConvertSettings( IRtfVisualImageAdapter imageAdapter )
-			: this( imageAdapter, RtfHtmlConvertScope.All )
+		public RtfHtmlConvertSettings(IRtfVisualImageAdapter imageAdapter)
+			: this(imageAdapter, RtfHtmlConvertScope.All)
 		{
 		} // RtfHtmlConvertSettings
 
 		// ----------------------------------------------------------------------
-		public RtfHtmlConvertSettings( IRtfVisualImageAdapter imageAdapter, RtfHtmlConvertScope convertScope )
+		public RtfHtmlConvertSettings(IRtfVisualImageAdapter imageAdapter, RtfHtmlConvertScope convertScope)
 		{
-			if ( imageAdapter == null )
+			if (imageAdapter == null)
 			{
-				throw new ArgumentNullException( "imageAdapter" );
+				throw new ArgumentNullException("imageAdapter");
 			}
 
 			this.imageAdapter = imageAdapter;
@@ -79,7 +79,7 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		public RtfHtmlCssStyleCollection Styles
 		{
-			get { return styles ?? ( styles = new RtfHtmlCssStyleCollection() ); }
+			get { return styles ?? (styles = new RtfHtmlCssStyleCollection()); }
 		} // Styles
 
 		// ----------------------------------------------------------------------
@@ -91,7 +91,7 @@ namespace Itenso.Rtf.Converter.Html
 		// ----------------------------------------------------------------------
 		public StringCollection StyleSheetLinks
 		{
-			get { return styleSheetLinks ?? ( styleSheetLinks = new StringCollection() ); }
+			get { return styleSheetLinks ?? (styleSheetLinks = new StringCollection()); }
 		} // StyleSheetLinks
 
 		// ----------------------------------------------------------------------
@@ -158,10 +158,10 @@ namespace Itenso.Rtf.Converter.Html
 		} // ImagesPath
 
 		// ----------------------------------------------------------------------
-		public string GetImageUrl( int index, RtfVisualImageFormat rtfVisualImageFormat )
+		public string GetImageUrl(int index, RtfVisualImageFormat rtfVisualImageFormat)
 		{
-			string imageFileName = imageAdapter.ResolveFileName( index, rtfVisualImageFormat );
-			return imageFileName.Replace( '\\', '/' );
+			string imageFileName = imageAdapter.ResolveFileName(index, rtfVisualImageFormat);
+			return imageFileName.Replace('\\', '/');
 		} // GetImageUrl
 
 		// ----------------------------------------------------------------------

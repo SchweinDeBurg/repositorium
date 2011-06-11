@@ -25,7 +25,7 @@ namespace Itenso.Sys
 	{
 
 		/// <value>Provides easy access to the assemblies version as a string.</value>
-		public static readonly string AssemblyVersion = typeof( VersionInfo ).Assembly.GetName().Version.ToString();
+		public static readonly string AssemblyVersion = typeof(VersionInfo).Assembly.GetName().Version.ToString();
 
 	} // class VersionInfo
 

@@ -18,24 +18,24 @@ namespace Itenso.Rtf.Model
 	{
 
 		// ----------------------------------------------------------------------
-		public RtfDocumentProperty( int propertyKindCode, string name, string staticValue ) :
-			this( propertyKindCode, name, staticValue, null )
+		public RtfDocumentProperty(int propertyKindCode, string name, string staticValue) :
+			this(propertyKindCode, name, staticValue, null)
 		{
 		} // RtfDocumentProperty
 
 		// ----------------------------------------------------------------------
-		public RtfDocumentProperty( int propertyKindCode, string name, string staticValue, string linkValue )
+		public RtfDocumentProperty(int propertyKindCode, string name, string staticValue, string linkValue)
 		{
-			if ( name == null )
+			if (name == null)
 			{
-				throw new ArgumentNullException( "name" );
+				throw new ArgumentNullException("name");
 			}
-			if ( staticValue == null )
+			if (staticValue == null)
 			{
-				throw new ArgumentNullException( "staticValue" );
+				throw new ArgumentNullException("staticValue");
 			}
 			this.propertyKindCode = propertyKindCode;
-			switch ( propertyKindCode )
+			switch (propertyKindCode)
 			{
 				case RtfSpec.PropertyTypeInteger:
 					propertyKind = RtfPropertyKind.IntegerNumber;
@@ -92,64 +92,64 @@ namespace Itenso.Rtf.Model
 		} // LinkValue
 
 		// ----------------------------------------------------------------------
-		public override bool Equals( object obj )
+		public override bool Equals(object obj)
 		{
-			if ( obj == this )
+			if (obj == this)
 			{
 				return true;
 			}
-			
-			if ( obj == null || GetType() != obj.GetType() )
+
+			if (obj == null || GetType() != obj.GetType())
 			{
 				return false;
 			}
 
-			return IsEqual( obj );
+			return IsEqual(obj);
 		} // Equals
 
 		// ----------------------------------------------------------------------
-		private bool IsEqual( object obj )
+		private bool IsEqual(object obj)
 		{
 			RtfDocumentProperty compare = obj as RtfDocumentProperty; // guaranteed to be non-null
 			return
 				compare != null &&
 				propertyKindCode == compare.propertyKindCode &&
 				propertyKind == compare.propertyKind &&
-				name.Equals( compare.name ) &&
-				CompareTool.AreEqual( staticValue, compare.staticValue ) &&
-				CompareTool.AreEqual( linkValue, compare.linkValue );
+				name.Equals(compare.name) &&
+				CompareTool.AreEqual(staticValue, compare.staticValue) &&
+				CompareTool.AreEqual(linkValue, compare.linkValue);
 		} // IsEqual
 
 		// ----------------------------------------------------------------------
 		public override int GetHashCode()
 		{
-			return HashTool.AddHashCode( GetType().GetHashCode(), ComputeHashCode() );
+			return HashTool.AddHashCode(GetType().GetHashCode(), ComputeHashCode());
 		} // GetHashCode
 
 		// ----------------------------------------------------------------------
 		private int ComputeHashCode()
 		{
 			int hash = propertyKindCode;
-			hash = HashTool.AddHashCode( hash, propertyKind );
-			hash = HashTool.AddHashCode( hash, name );
-			hash = HashTool.AddHashCode( hash, staticValue );
-			hash = HashTool.AddHashCode( hash, linkValue );
+			hash = HashTool.AddHashCode(hash, propertyKind);
+			hash = HashTool.AddHashCode(hash, name);
+			hash = HashTool.AddHashCode(hash, staticValue);
+			hash = HashTool.AddHashCode(hash, linkValue);
 			return hash;
 		} // ComputeHashCode
 
 		// ----------------------------------------------------------------------
 		public override string ToString()
 		{
-			StringBuilder buf = new StringBuilder( name );
-			if ( staticValue != null )
+			StringBuilder buf = new StringBuilder(name);
+			if (staticValue != null)
 			{
-				buf.Append( "=" );
-				buf.Append( staticValue );
+				buf.Append("=");
+				buf.Append(staticValue);
 			}
-			if ( linkValue != null )
+			if (linkValue != null)
 			{
-				buf.Append( "@" );
-				buf.Append( linkValue );
+				buf.Append("@");
+				buf.Append(linkValue);
 			}
 			return buf.ToString();
 		} // ToString

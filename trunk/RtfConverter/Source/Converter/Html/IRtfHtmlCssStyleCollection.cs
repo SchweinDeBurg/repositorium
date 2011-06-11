@@ -19,13 +19,13 @@ namespace Itenso.Rtf.Converter.Html
 		int Count { get; }
 
 		// ----------------------------------------------------------------------
-		IRtfHtmlCssStyle this[ int index ] { get; }
+		IRtfHtmlCssStyle this[int index] { get; }
 
 		// ----------------------------------------------------------------------
-		bool Contains( string selectorName );
+		bool Contains(string selectorName);
 
 		// ----------------------------------------------------------------------
-		void CopyTo( IRtfHtmlCssStyle[] array, int index );
+		void CopyTo(IRtfHtmlCssStyle[] array, int index);
 
 	} // interface IRtfHtmlCssStyleCollection
 

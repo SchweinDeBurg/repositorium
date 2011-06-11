@@ -22,7 +22,7 @@ namespace Itenso.Sys.Logging
 		} // LoggerImplBase
 
 		// ----------------------------------------------------------------------
-		protected LoggerImplBase( LoggerLevel level )
+		protected LoggerImplBase(LoggerLevel level)
 		{
 			this.level = level;
 		} // LoggerImplBase
@@ -37,188 +37,188 @@ namespace Itenso.Sys.Logging
 		// ----------------------------------------------------------------------
 		public bool IsDebugEnabled
 		{
-			get { return LoggerLevel.Debug.CompareTo( level ) <= 0; }
+			get { return LoggerLevel.Debug.CompareTo(level) <= 0; }
 		} // IsDebugEnabled
 
 		// ----------------------------------------------------------------------
 		public bool IsInfoEnabled
 		{
-			get { return LoggerLevel.Info.CompareTo( level ) <= 0; }
+			get { return LoggerLevel.Info.CompareTo(level) <= 0; }
 		} // IsInfoEnabled
 
 		// ----------------------------------------------------------------------
 		public bool IsWarnEnabled
 		{
-			get { return LoggerLevel.Warn.CompareTo( level ) <= 0; }
+			get { return LoggerLevel.Warn.CompareTo(level) <= 0; }
 		} // IsWarnEnabled
 
 		// ----------------------------------------------------------------------
 		public bool IsErrorEnabled
 		{
-			get { return LoggerLevel.Error.CompareTo( level ) <= 0; }
+			get { return LoggerLevel.Error.CompareTo(level) <= 0; }
 		} // IsErrorEnabled
 
 		// ----------------------------------------------------------------------
 		public bool IsFatalEnabled
 		{
-			get { return LoggerLevel.Fatal.CompareTo( level ) <= 0; }
+			get { return LoggerLevel.Fatal.CompareTo(level) <= 0; }
 		} // IsFatalEnabled
 
 		// ----------------------------------------------------------------------
-		public bool IsEnabledFor( LoggerLevel loggerLevel )
+		public bool IsEnabledFor(LoggerLevel loggerLevel)
 		{
-			return loggerLevel.CompareTo( level ) <= 0;
+			return loggerLevel.CompareTo(level) <= 0;
 		} // IsEnabledFor
 
 		// ----------------------------------------------------------------------
-		public virtual void Debug( object message )
+		public virtual void Debug(object message)
 		{
-			Log( LoggerLevel.Debug, message );
+			Log(LoggerLevel.Debug, message);
 		} // Debug
 
 		// ----------------------------------------------------------------------
-		public virtual void Debug( object message, Exception exception )
+		public virtual void Debug(object message, Exception exception)
 		{
-			Log( LoggerLevel.Debug, message, exception );
+			Log(LoggerLevel.Debug, message, exception);
 		} // Debug
 
 		// ----------------------------------------------------------------------
-		public virtual void DebugFormat( string format, params object[] args )
+		public virtual void DebugFormat(string format, params object[] args)
 		{
-			LogFormat( LoggerLevel.Debug, format, args );
+			LogFormat(LoggerLevel.Debug, format, args);
 		} // DebugFormat
 
 		// ----------------------------------------------------------------------
-		public virtual void DebugFormat( IFormatProvider provider, string format, params object[] args )
+		public virtual void DebugFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			LogFormat( LoggerLevel.Debug, provider, format, args );
+			LogFormat(LoggerLevel.Debug, provider, format, args);
 		} // DebugFormat
 
 		// ----------------------------------------------------------------------
-		public virtual void Info( object message )
+		public virtual void Info(object message)
 		{
-			Log( LoggerLevel.Info, message );
+			Log(LoggerLevel.Info, message);
 		} // Info
 
 		// ----------------------------------------------------------------------
-		public virtual void Info( object message, Exception exception )
+		public virtual void Info(object message, Exception exception)
 		{
-			Log( LoggerLevel.Info, message, exception );
+			Log(LoggerLevel.Info, message, exception);
 		} // Info
 
 		// ----------------------------------------------------------------------
-		public virtual void InfoFormat( string format, params object[] args )
+		public virtual void InfoFormat(string format, params object[] args)
 		{
-			LogFormat( LoggerLevel.Info, format, args );
+			LogFormat(LoggerLevel.Info, format, args);
 		} // InfoFormat
 
 		// ----------------------------------------------------------------------
-		public virtual void InfoFormat( IFormatProvider provider, string format, params object[] args )
+		public virtual void InfoFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			LogFormat( LoggerLevel.Info, provider, format, args );
+			LogFormat(LoggerLevel.Info, provider, format, args);
 		} // InfoFormat
 
 		// ----------------------------------------------------------------------
-		public virtual void Warn( object message )
+		public virtual void Warn(object message)
 		{
-			Log( LoggerLevel.Warn, message );
+			Log(LoggerLevel.Warn, message);
 		} // Warn
 
 		// ----------------------------------------------------------------------
-		public virtual void Warn( object message, Exception exception )
+		public virtual void Warn(object message, Exception exception)
 		{
-			Log( LoggerLevel.Warn, message, exception );
+			Log(LoggerLevel.Warn, message, exception);
 		} // Warn
 
 		// ----------------------------------------------------------------------
-		public virtual void WarnFormat( string format, params object[] args )
+		public virtual void WarnFormat(string format, params object[] args)
 		{
-			LogFormat( LoggerLevel.Warn, format, args );
+			LogFormat(LoggerLevel.Warn, format, args);
 		} // WarnFormat
 
 		// ----------------------------------------------------------------------
-		public virtual void WarnFormat( IFormatProvider provider, string format, params object[] args )
+		public virtual void WarnFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			LogFormat( LoggerLevel.Warn, provider, format, args );
+			LogFormat(LoggerLevel.Warn, provider, format, args);
 		} // WarnFormat
 
 		// ----------------------------------------------------------------------
-		public virtual void Error( object message )
+		public virtual void Error(object message)
 		{
-			Log( LoggerLevel.Error, message );
+			Log(LoggerLevel.Error, message);
 		} // Error
 
 		// ----------------------------------------------------------------------
-		public virtual void Error( object message, Exception exception )
+		public virtual void Error(object message, Exception exception)
 		{
-			Log( LoggerLevel.Error, message, exception );
+			Log(LoggerLevel.Error, message, exception);
 		} // Error
 
 		// ----------------------------------------------------------------------
-		public virtual void ErrorFormat( string format, params object[] args )
+		public virtual void ErrorFormat(string format, params object[] args)
 		{
-			LogFormat( LoggerLevel.Error, format, args );
+			LogFormat(LoggerLevel.Error, format, args);
 		} // ErrorFormat
 
 		// ----------------------------------------------------------------------
-		public virtual void ErrorFormat( IFormatProvider provider, string format, params object[] args )
+		public virtual void ErrorFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			LogFormat( LoggerLevel.Error, provider, format, args );
+			LogFormat(LoggerLevel.Error, provider, format, args);
 		} // ErrorFormat
 
 		// ----------------------------------------------------------------------
-		public virtual void Fatal( object message )
+		public virtual void Fatal(object message)
 		{
-			Log( LoggerLevel.Fatal, message );
+			Log(LoggerLevel.Fatal, message);
 		} // Fatal
 
 		// ----------------------------------------------------------------------
-		public virtual void Fatal( object message, Exception exception )
+		public virtual void Fatal(object message, Exception exception)
 		{
-			Log( LoggerLevel.Fatal, message, exception );
+			Log(LoggerLevel.Fatal, message, exception);
 		} // Fatal
 
 		// ----------------------------------------------------------------------
-		public virtual void FatalFormat( string format, params object[] args )
+		public virtual void FatalFormat(string format, params object[] args)
 		{
-			LogFormat( LoggerLevel.Fatal, format, args );
+			LogFormat(LoggerLevel.Fatal, format, args);
 		} // FatalFormat
 
 		// ----------------------------------------------------------------------
-		public virtual void FatalFormat( IFormatProvider provider, string format, params object[] args )
+		public virtual void FatalFormat(IFormatProvider provider, string format, params object[] args)
 		{
-			LogFormat( LoggerLevel.Fatal, provider, format, args );
+			LogFormat(LoggerLevel.Fatal, provider, format, args);
 		} // FatalFormat
 
 		// ----------------------------------------------------------------------
-		public virtual void Log( LoggerLevel loggerLevel, object message )
+		public virtual void Log(LoggerLevel loggerLevel, object message)
 		{
-			Log( loggerLevel, message, null );
+			Log(loggerLevel, message, null);
 		} // Log
 
 		// ----------------------------------------------------------------------
-		public virtual void Log( LoggerLevel loggerLevel, object message, Exception exception )
+		public virtual void Log(LoggerLevel loggerLevel, object message, Exception exception)
 		{
-			if ( IsEnabledFor( loggerLevel ) )
+			if (IsEnabledFor(loggerLevel))
 			{
-				Output( loggerLevel, message, exception );
+				Output(loggerLevel, message, exception);
 			}
 		} // Log
 
 		// ----------------------------------------------------------------------
-		public virtual void LogFormat( LoggerLevel loggerLevel, string format, params object[] args )
+		public virtual void LogFormat(LoggerLevel loggerLevel, string format, params object[] args)
 		{
-			Log( loggerLevel, string.Format( format, args ) );
+			Log(loggerLevel, string.Format(format, args));
 		} // LogFormat
 
 		// ----------------------------------------------------------------------
-		public virtual void LogFormat( LoggerLevel loggerLevel, IFormatProvider provider, string format, params object[] args )
+		public virtual void LogFormat(LoggerLevel loggerLevel, IFormatProvider provider, string format, params object[] args)
 		{
-			Log( loggerLevel, string.Format( provider, format, args ) );
+			Log(loggerLevel, string.Format(provider, format, args));
 		} // LogFormat
 
 		// ----------------------------------------------------------------------
-		protected abstract void Output( LoggerLevel level, object message, Exception exception );
+		protected abstract void Output(LoggerLevel level, object message, Exception exception);
 
 		// ----------------------------------------------------------------------
 		protected sealed override ILogger Logger

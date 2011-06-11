@@ -16,19 +16,19 @@ namespace Itenso.Sys.Logging
 	{
 
 		// ----------------------------------------------------------------------
-		public static bool InitializeLoggerFactory( string factoryName )
+		public static bool InitializeLoggerFactory(string factoryName)
 		{
-			if ( instance == null )
+			if (instance == null)
 			{
-				lock ( mutex )
+				lock (mutex)
 				{
-					if ( instance == null )
+					if (instance == null)
 					{
-						LoggerFactoryBuilder.SetDefaultLoggerFactory( factoryName );
+						LoggerFactoryBuilder.SetDefaultLoggerFactory(factoryName);
 					}
 				}
 			}
-			return Instance.GetType().FullName.Equals( factoryName );
+			return Instance.GetType().FullName.Equals(factoryName);
 		} // InitializeLoggerFactory
 
 		// ----------------------------------------------------------------------
@@ -36,11 +36,11 @@ namespace Itenso.Sys.Logging
 		{
 			get
 			{
-				if ( instance == null )
+				if (instance == null)
 				{
-					lock ( mutex )
+					lock (mutex)
 					{
-						if ( instance == null )
+						if (instance == null)
 						{
 							instance = LoggerFactoryBuilder.BuildFactoryInstance();
 						}
@@ -51,18 +51,18 @@ namespace Itenso.Sys.Logging
 		} // Instance
 
 		// ----------------------------------------------------------------------
-		public abstract ILogger GetLogger( string name );
+		public abstract ILogger GetLogger(string name);
 
 		// ----------------------------------------------------------------------
 		public ILoggerMonitor Monitor
 		{
 			get
 			{
-				if ( monitor == null )
+				if (monitor == null)
 				{
-					lock ( this )
+					lock (this)
 					{
-						if ( monitor == null )
+						if (monitor == null)
 						{
 							monitor = CreateMonitor();
 						}
@@ -79,9 +79,9 @@ namespace Itenso.Sys.Logging
 		} // CreateMonitor
 
 		// ----------------------------------------------------------------------
-		public virtual void SetLogFile( string absoluteLogFileName, bool append, string messagePattern )
+		public virtual void SetLogFile(string absoluteLogFileName, bool append, string messagePattern)
 		{
-			throw new InvalidOperationException( Strings.LoggerLogFileNotSupportedByType( GetType().FullName ) );
+			throw new InvalidOperationException(Strings.LoggerLogFileNotSupportedByType(GetType().FullName));
 		} // SetLogFile
 
 		// ----------------------------------------------------------------------

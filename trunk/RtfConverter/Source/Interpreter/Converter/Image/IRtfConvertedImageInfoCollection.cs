@@ -19,10 +19,10 @@ namespace Itenso.Rtf.Converter.Image
 		int Count { get; }
 
 		// ----------------------------------------------------------------------
-		IRtfConvertedImageInfo this[ int index ] { get; }
+		IRtfConvertedImageInfo this[int index] { get; }
 
 		// ----------------------------------------------------------------------
-		void CopyTo( IRtfConvertedImageInfo[] array, int index );
+		void CopyTo(IRtfConvertedImageInfo[] array, int index);
 
 	} // interface IRtfConvertedImageInfoCollection
 
