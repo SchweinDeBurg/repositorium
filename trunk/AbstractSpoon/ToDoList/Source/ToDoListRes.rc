@@ -27,8 +27,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 6,2,3,854
- PRODUCTVERSION 6,2,3,854
+ FILEVERSION 6,2,4,867
+ PRODUCTVERSION 6,2,4,867
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -46,14 +46,14 @@ BEGIN
             VALUE "Comments", "Compiler switches: /O1 /Ob1 /Oy /GF /EHsc /MD /Zp4 /Gy /W4 /TP"
             VALUE "CompanyName", "AbstractSpoon Software"
             VALUE "FileDescription", "ToDoList executable module"
-            VALUE "FileVersion", "6.2.3.854"
+            VALUE "FileVersion", "6.2.4.867"
             VALUE "InternalName", "ToDoList"
             VALUE "LegalCopyright", "Copyright © 2003-2011 by AbstractSpoon"
             VALUE "LegalTrademarks", "Windows™ is a trademark of Microsoft Corporation"
             VALUE "OriginalFilename", "ToDoList.exe"
             VALUE "PrivateBuild", "Built by Elijah Zarezky on \\\\SCHWEIN-DE-BURG."
             VALUE "ProductName", "ToDoList"
-            VALUE "ProductVersion", "6.2.3"
+            VALUE "ProductVersion", "6.2.4"
             VALUE "SpecialBuild", "Dependent on the non-shared Microsoft ® Visual C++ CRT/MFC redistributables version 9.0 SP1 with the ATL security update."
         END
     END
@@ -813,14 +813,14 @@ BEGIN
     LTEXT           "Note: You can modify this choice later using 'Tools > Preferences'",IDC_STATIC,16,50,223,8
 END
 
-IDD_TASKICON_DIALOG DIALOGEX 0, 0, 374, 246
+IDD_TASKICON_DIALOG DIALOGEX 0, 0, 411, 246
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Select Task Icon"
 FONT 8, "MS Shell Dlg 2", 0, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,261,224,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,317,224,50,14
-    CONTROL         "List1",IDC_ICONLIST,"SysListView32",LVS_LIST | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOLABELWRAP | LVS_AUTOARRANGE | LVS_EDITLABELS | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | WS_TABSTOP,7,7,360,212,WS_EX_CLIENTEDGE
+    DEFPUSHBUTTON   "OK",IDOK,297,224,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,354,224,50,14
+    CONTROL         "List1",IDC_ICONLIST,"SysListView32",LVS_LIST | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOLABELWRAP | LVS_AUTOARRANGE | LVS_EDITLABELS | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | WS_TABSTOP,7,7,397,212,WS_EX_CLIENTEDGE
     LTEXT           "Note: Task labels are editable",IDC_EDITTASKTEXT_LABEL,7,228,213,8
 END
 
@@ -1684,7 +1684,7 @@ BEGIN
     IDD_TASKICON_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 367
+        RIGHTMARGIN, 404
         TOPMARGIN, 7
         BOTTOMMARGIN, 238
     END

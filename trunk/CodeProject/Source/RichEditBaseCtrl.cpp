@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.4 sources
 //*****************************************************************************
 
 // RichEditBaseCtrl.cpp : implementation file
@@ -88,6 +88,7 @@ BEGIN_MESSAGE_MAP(CRichEditBaseCtrl, CRichEditCtrl)
 	ON_REGISTERED_MESSAGE(WM_FINDREPLACE, OnFindReplaceCmd)
 	ON_WM_SETFOCUS()
 	ON_MESSAGE(EM_SETSEL, OnEditSetSelection)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////

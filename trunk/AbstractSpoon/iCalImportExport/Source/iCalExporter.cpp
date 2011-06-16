@@ -26,7 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.4 sources
 //*****************************************************************************
 
 // iCalExporter.cpp: implementation of the CiCalExporter class.
@@ -36,6 +36,8 @@
 #include "StdAfx.h"
 #include "iCalImportExportApp.h"
 #include "iCalExporter.h"
+
+#include "../../../CodeProject/Source/DateHelper.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -147,7 +149,7 @@ void CiCalExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, c
 		WriteString(fileOut, _T("BEGIN:VEVENT"));
 
 		COleDateTime dtStart(tStartDate);
-		WriteString(fileOut, _T("DTSTART;VALUE=DATE:%04d%02d%02d"), dtStart.GetYear(), dtStart.GetMonth(), dtStart.GetDay());
+		WriteString(fileOut, FormatDateTime(_T("DTSTART"), dtStart));
 
 		// neither Google Calendar not Outlook pay any attention to the 'DUE' tag so we won't either.
 		// instead we use 'DTEND' to mark the duration of the task. There is also no way to mark a
@@ -156,7 +158,7 @@ void CiCalExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, c
 		// ics file dates are to 12am at the start of the day
 		// so we need to increment the date by one day.
 		COleDateTime dtDue(time_t(tDueDate + ONEDAY));
-		WriteString(fileOut, _T("DTEND;VALUE=DATE:%04d%02d%02d"), dtDue.GetYear(), dtDue.GetMonth(), dtDue.GetDay());
+		WriteString(fileOut, FormatDateTime(_T("DTEND"), dtDue));
 
 		WriteString(fileOut, _T("SUMMARY:%s"), (LPTSTR)pSrcTaskFile->GetTaskTitle(hTask));
 		WriteString(fileOut, _T("DESCRIPTION:%s"), (LPTSTR)pSrcTaskFile->GetTaskComments(hTask));
@@ -179,6 +181,25 @@ void CiCalExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, c
 
 	// copy across first sibling
 	ExportTask(pSrcTaskFile, pSrcTaskFile->GetNextTask(hTask), sParentUID, fileOut);
+}
+
+CString CiCalExporter::FormatDateTime(LPCTSTR szType, const COleDateTime& date)
+{
+	CString sDateTime;
+
+	if (CDateHelper::DateHasTime(date))
+	{
+		sDateTime.Format(_T("%s;VALUE=DATE-TIME:%04d%02d%02dT%02d%02d%02d"), szType, 
+			date.GetYear(), date.GetMonth(), date.GetDay(),
+			date.GetHour(), date.GetMinute(), date.GetSecond());
+	}
+	else // date only
+	{
+		sDateTime.Format(_T("%s;VALUE=DATE:%04d%02d%02d"), szType, 
+			date.GetYear(), date.GetMonth(), date.GetDay());
+	}
+
+	return sDateTime;
 }
 
 void __cdecl CiCalExporter::WriteString(CStdioFile& fileOut, LPCTSTR lpszFormat, ...)

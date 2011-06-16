@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.4 sources
 //*****************************************************************************
 
 // TaskListCsvImporter.h: interface for the CTaskListCsvImporter class.
@@ -92,7 +92,7 @@ protected:
 	CTDCCsvColumnMapping m_aColumnMapping;
 
 protected:
-	void ImportTask(ITaskList8* pTasks, const CString& sLine) const;
+	BOOL ImportTask(ITaskList8* pTasks, const CString& sLine) const;
 
 	void InitConsts();
 	int GetDepth(const CString& sLine);
@@ -108,6 +108,7 @@ protected:
 	void GetTaskAndParentIDs(const CStringArray& sValues, DWORD& dwTaskID, DWORD& dwParentID) const;
 	CString GetTaskTitle(const CStringArray& sValues) const;
 
+	static CString GetLine(const CStringArray& aLines, int& nLine);
 	static int SortProc(const void* item1, const void* item2);
 	static time_t String2Date(const CString& sDate);
 
