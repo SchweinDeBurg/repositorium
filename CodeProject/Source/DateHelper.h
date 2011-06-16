@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.4 sources
 //*****************************************************************************
 
 // DateHelper.h: interface for the CDateHelper class.
@@ -119,6 +119,7 @@ public:
 	static void SplitDate(const COleDateTime& date, double& dDateOnly, double& dTimeOnly);
 	static double MakeDate(const COleDateTime& dtTimeOnly, const COleDateTime& dtDateOnly);
 
+	static BOOL DateHasTime(const COleDateTime& date);
 	static double GetTimeOnly(const COleDateTime& date);
 	static double GetDateOnly(const COleDateTime& date);
 };

@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.4 sources
 //*****************************************************************************
 
 // EnString.h: interface for the CEnString class.
@@ -67,6 +68,7 @@ public:
 
 	CSize FormatDC(CDC* pDC, int nWidth, int nStyle = ES_END);
 	CSize Draw(CDC* pDC, LPRECT lpRect, int nStyle = ES_END);
+	int GetCharacterCount(TCHAR nChar, BOOL bCaseSensitive = TRUE) const;
 
 protected:
 	CSize FormatDCEx(CDC* pDC, int nWidth, int nStyle = ES_END);

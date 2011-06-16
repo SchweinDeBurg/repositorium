@@ -26,6 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
+// - merged with ToDoList version 6.2.4 sources
 //*****************************************************************************
 
 // SysImageList.h: interface for the CSysImageList class.
@@ -38,6 +39,8 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include <afxtempl.h>
 
 class CSysImageList
 {
@@ -65,10 +68,14 @@ protected:
 	int m_nFolderImage, m_nHtmlImage, m_nRemoteFolderImage;
 	HIMAGELIST m_hImageList;
 
+	static CMap<CString, LPCTSTR, int, int&> s_mapIndexCache;
+
 protected:
 	// raw version that resolves directly to SHGetFileInfo
 	int GetImageIndex(LPCTSTR szFile); // will call Initialize if nec.
+	int GetStoreImageIndex(int& nIndex, LPCTSTR szFile);
 
+	static BOOL IsPath(LPCTSTR szText);
 };
 
 #endif // !defined(AFX_SYSIMAGELIST_H__6280CAC5_7A95_48C8_8BBA_3EB7284234F7__INCLUDED_)

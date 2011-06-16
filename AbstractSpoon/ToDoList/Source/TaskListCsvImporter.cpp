@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.4 sources
 //*****************************************************************************
 
 // TaskListCsvImporter.cpp: implementation of the CTaskListCsvImporter class.
@@ -205,10 +206,35 @@ bool CTaskListCsvImporter::Import(const TCHAR* szSrcFilePath, ITaskList* pDestTa
 
 	for (int nLine = 0; nLine < aLines.GetSize(); nLine++)
 	{
-		ImportTask(pTasks8, aLines[nLine]);
+		CString sLine = GetLine(aLines, nLine);
+		ImportTask(pTasks8, sLine);
 	}
 
 	return true;
+}
+
+CString CTaskListCsvImporter::GetLine(const CStringArray& aLines, int& nLine)
+{
+	CEnString sLine(aLines[nLine]);
+
+	// if the line contains an odd number of double-quotes
+	// then assume we're in a comment and keep appending lines
+	// until we hit the closing double-quote
+	if (sLine.GetCharacterCount(_T('\"')) % 2)
+	{
+		while (++nLine < aLines.GetSize())
+		{
+			CEnString sNextLine(aLines[nLine]);
+			sLine += _T("\n") + sNextLine;
+
+			if (sNextLine.GetCharacterCount(_T('\"')) % 2)
+			{
+				break;
+			}
+		}
+	}
+
+	return sLine;
 }
 
 void CTaskListCsvImporter::GetTaskAndParentIDs(const CStringArray& sValues, DWORD& dwTaskID, DWORD& dwParentID) const
@@ -244,12 +270,17 @@ CString CTaskListCsvImporter::GetTaskTitle(const CStringArray& sValues) const
 	return sEmpty;
 }
 
-void CTaskListCsvImporter::ImportTask(ITaskList8* pTasks, const CString& sLine) const
+BOOL CTaskListCsvImporter::ImportTask(ITaskList8* pTasks, const CString& sLine) const
 {
 	CStringArray aValues;
 	Misc::Split(sLine, aValues, TRUE, DELIM);
 
 	ASSERT(aValues.GetSize() == m_aColumnMapping.GetSize());
+
+	if (aValues.GetSize() != m_aColumnMapping.GetSize())
+	{
+		return FALSE;   // then we can report this when we've finished importing
+	}
 
 	// get taskID and ParentID
 	DWORD dwTaskID, dwParentID;
@@ -282,6 +313,8 @@ void CTaskListCsvImporter::ImportTask(ITaskList8* pTasks, const CString& sLine) 
 	AddAttributeToTask(pTasks, hTask, TDCA_DONEDATE, aValues);
 	AddAttributeToTask(pTasks, hTask, TDCA_LASTMOD, aValues);
 	AddAttributeToTask(pTasks, hTask, TDCA_CREATIONDATE, aValues);
+
+	return TRUE;
 }
 
 int CTaskListCsvImporter::AttributeIndex(TDC_ATTRIBUTE attrib) const
@@ -311,11 +344,11 @@ int CTaskListCsvImporter::GetDepth(const CString& sLine)
 	// else
 	int nDepth = 0;
 
-	if (INDENT == "\t")
+	if (INDENT == _T("\t"))
 	{
 		while (nDepth < sLine.GetLength())
 		{
-			if (sLine[nDepth] == '\t')
+			if (sLine[nDepth] == _T('\t'))
 			{
 				nDepth++;
 			}
@@ -474,7 +507,7 @@ void CTaskListCsvImporter::AddAttributeToTask(ITaskList8* pTasks, HTASKITEM hTas
 		break;
 
 	case TDCA_PRIORITY:
-		pTasks->SetTaskRisk(hTask, (unsigned char)_ttoi(sValue));
+		pTasks->SetTaskPriority(hTask, (unsigned char)_ttoi(sValue));
 		break;
 
 	case TDCA_RISK:

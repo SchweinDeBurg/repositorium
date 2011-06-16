@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.4 sources
 //*****************************************************************************
 
 // EnString.cpp: implementation of the CEnString class.
@@ -110,6 +111,28 @@ CEnString::CEnString(const CString& str) : CString(str)
 
 CEnString::~CEnString()
 {
+}
+
+int CEnString::GetCharacterCount(TCHAR nChar, BOOL bCaseSensitive) const
+{
+	if (!bCaseSensitive)
+	{
+		CEnString sThis(*this);
+		sThis.MakeUpper();
+
+		return sThis.GetCharacterCount((TCHAR)_totupper(nChar));
+	}
+
+	int nCount = 0;
+	int nFind = Find(nChar, 0);
+
+	while (nFind != -1)
+	{
+		nCount++;
+		nFind = Find(nChar, nFind + 1);
+	}
+
+	return nCount;
 }
 
 CSize CEnString::FormatDC(CDC* pDC, int nWidth, int nStyle)

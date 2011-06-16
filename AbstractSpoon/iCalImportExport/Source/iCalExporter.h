@@ -26,7 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.4 sources
 //*****************************************************************************
 
 // iCalExporter.h: interface for the CiCalExporter class.
@@ -75,6 +75,8 @@ public:
 protected:
 	void ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, const CString& sParentUID, CStdioFile& fileOut);
 	void __cdecl WriteString(CStdioFile& fileOut, LPCTSTR lpszFormat, ...);
+
+	static CString FormatDateTime(LPCTSTR szType, const COleDateTime& date);
 };
 
 #endif // !defined(AFX_ICALEXPORTER_H__5CDCA505_6C5C_4342_8F80_67368C7EE6A5__INCLUDED_)

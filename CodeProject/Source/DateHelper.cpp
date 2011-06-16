@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.4 sources
 //*****************************************************************************
 
 // DateHelper.cpp: implementation of the CDateHelper class.
@@ -697,6 +697,11 @@ void CDateHelper::GetMonths(BOOL bShort, CStringArray& aMonths)
 double CDateHelper::GetTimeOnly(const COleDateTime& date)
 {
 	return (date.m_dt - GetDateOnly(date));
+}
+
+BOOL CDateHelper::DateHasTime(const COleDateTime& date)
+{
+	return (GetTimeOnly(date) > 0);
 }
 
 double CDateHelper::GetDateOnly(const COleDateTime& date)

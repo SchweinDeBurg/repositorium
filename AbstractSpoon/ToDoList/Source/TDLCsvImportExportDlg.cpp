@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.4 sources
 //*****************************************************************************
 
 // TDLCsvImportExportDlg.cpp : implementation file
@@ -259,7 +260,11 @@ int CTDLCsvImportExportDlg::LoadMasterColumnMapping()
 	if (!sDelim.IsEmpty())
 	{
 		m_sDelim = sDelim;
-		UpdateData(FALSE);
+
+		if (GetSafeHwnd())
+		{
+			UpdateData(FALSE);
+		}
 	}
 
 	return m_aMasterColumnMapping.GetSize();

@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.4 sources
 //*****************************************************************************
 
 // SysImageList.cpp: implementation of the CSysImageList class.
@@ -62,6 +62,8 @@ static char THIS_FILE[] = __FILE__;
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
+
+CMap<CString, LPCTSTR, int, int&> CSysImageList::s_mapIndexCache;
 
 CSysImageList::CSysImageList(BOOL bLargeIcons) :
 m_bLargeIcons(bLargeIcons),
@@ -108,7 +110,7 @@ BOOL CSysImageList::Initialize()
 
 int CSysImageList::GetImageIndex(LPCTSTR szFile)
 {
-	if (!m_hImageList && !Initialize())
+	if (!m_hImageList && !Initialize() || !szFile || !(*szFile))
 	{
 		return -1;
 	}
@@ -126,6 +128,16 @@ int CSysImageList::GetImageIndex(LPCTSTR szFile)
 	return -1;
 }
 
+int CSysImageList::GetStoreImageIndex(int& nIndex, LPCTSTR szFile)
+{
+	if (nIndex == -1)
+	{
+		nIndex = GetImageIndex(szFile);
+	}
+
+	return nIndex;
+}
+
 int CSysImageList::GetFileImageIndex(LPCTSTR szFilePath, BOOL bFailUnKnown)
 {
 	if (!m_hImageList && !Initialize() || !szFilePath || !(*szFilePath))
@@ -133,70 +145,79 @@ int CSysImageList::GetFileImageIndex(LPCTSTR szFilePath, BOOL bFailUnKnown)
 		return -1;
 	}
 
+	// check index cache
+	int nIndex = -1;
+
+	if (s_mapIndexCache.Lookup(szFilePath, nIndex))
+	{
+		return nIndex;
+	}
+
 	// test for web protocol
 	if (IsWebAddress(szFilePath))
 	{
-		if (m_nHtmlImage == -1)
-		{
-			m_nHtmlImage = GetImageIndex(_T("test.html"));
-		}
-
-		return m_nHtmlImage;
+		nIndex = GetStoreImageIndex(m_nHtmlImage, _T(".html"));
 	}
-
-	// get the file's extension
-	CString sExt;
-	FileMisc::SplitPath(szFilePath, NULL, NULL, NULL, &sExt);
-
-	// check if its a folder first if it has no extension
-	if (sExt.IsEmpty())
+	else
 	{
-		// if its a remote path then simply assume it is a folder for now
-		if (CDriveInfo::IsRemotePath(szFilePath, FALSE))
+		// get the file's extension
+		CString sExt;
+		FileMisc::SplitPath(szFilePath, NULL, NULL, NULL, &sExt);
+
+		// check if its a folder first if it has no extension
+		BOOL bRemotePath = CDriveInfo::IsRemotePath(szFilePath, FALSE);
+
+		if (sExt.IsEmpty())
 		{
-			if (m_nRemoteFolderImage == -1)
+			// if its a remote path then simply assume it is a folder for now
+			if (bRemotePath)
 			{
-				m_nRemoteFolderImage = GetImageIndex(_T("\\\\dummy\\."));
+				nIndex = GetStoreImageIndex(m_nRemoteFolderImage, _T("\\\\dummy\\."));
 			}
-
-			return m_nRemoteFolderImage;
+			else if (IsPath(szFilePath))
+			{
+				nIndex = m_nFolderImage;
+			}
 		}
 
-		// else
-		if (FileMisc::FolderExists(szFilePath))
+		// fail if no extension
+		if (bFailUnKnown && nIndex == -1)
 		{
-			return m_nFolderImage;
+			return -1;
+		}
+
+		// use only extension if not an exe
+		if (sExt != _T(".exe"))
+		{
+			nIndex = GetImageIndex(sExt);
+		}
+		// and only then if a local file
+		else if (bRemotePath)
+		{
+			nIndex = GetStoreImageIndex(m_nRemoteFolderImage, _T("\\\\dummy\\."));
+		}
+		else // local exe file
+		{
+			nIndex = GetImageIndex(szFilePath);
 		}
 	}
 
-	// fail if no extension
-	if (bFailUnKnown && sExt.IsEmpty())
+	// record for posterity
+	if (nIndex != -1)
 	{
-		return -1;
+		s_mapIndexCache[szFilePath] = nIndex;
 	}
 
-	// use the entire path if <= MAX_PATH in length else just the extension
-	if (lstrlen(szFilePath) > MAX_PATH)
-	{
-		szFilePath = sExt;
-	}
+	return nIndex;
+}
 
-	// else
-	SHFILEINFO sfi;
-
-	UINT nFlags = SHGFI_SYSICONINDEX | SHGFI_USEFILEATTRIBUTES | (m_bLargeIcons ? SHGFI_ICON : SHGFI_SMALLICON);
-	HIMAGELIST hIL = (HIMAGELIST)SHGetFileInfo(szFilePath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), nFlags);
-
-	ASSERT(!hIL || hIL == m_hImageList);
-
-	m_hImageList = hIL;
-
-	if (!hIL)
-	{
-		return -1;
-	}
-
-	return sfi.iIcon;
+BOOL CSysImageList::IsPath(LPCTSTR szText)
+{
+	// check for back slashes
+	return ((_tcsstr(szText, _T("\\\\")) != NULL) ||
+		(_tcsstr(szText, _T(":\\")) != NULL) ||
+		(_tcsstr(szText, _T("\\")) != NULL) ||
+		(_tcsstr(szText, _T(".")) != NULL));
 }
 
 int CSysImageList::GetFolderImageIndex()

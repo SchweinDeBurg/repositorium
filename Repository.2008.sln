@@ -146,6 +146,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GPExport", "AbstractSpoon\G
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iCalImportExport", "AbstractSpoon\iCalImportExport\iCalImportExport.2008.vcproj", "{E8FEC777-AB65-4135-A1E5-22F3FD335299}"
+	ProjectSection(ProjectDependencies) = postProject
+		{55F49127-D37F-4C01-861A-55ACC3A71242} = {55F49127-D37F-4C01-861A-55ACC3A71242}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLOImport", "AbstractSpoon\MLOImport\MLOImport.2008.vcproj", "{8CE77835-2DE4-48B1-B279-40D2B7522506}"
 	ProjectSection(ProjectDependencies) = postProject
