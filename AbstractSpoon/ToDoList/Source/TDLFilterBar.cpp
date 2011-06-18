@@ -635,6 +635,8 @@ int CTDLFilterBar::ReposControls(int nWidth, BOOL bCalcOnly)
 	// update bottom of filter bar
 	nYPosDLU += nCtrlHeightDLU;
 
+	nYPosDLU += 2; // space below
+
 	return dlu.ToPixelsY(nYPosDLU) + 2;
 }
 
