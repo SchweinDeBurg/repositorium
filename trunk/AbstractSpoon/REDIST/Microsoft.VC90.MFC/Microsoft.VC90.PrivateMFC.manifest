@@ -5,26 +5,26 @@
 	<assemblyIdentity
 		type="win32"
 		name="Microsoft.VC90.PrivateMFC"
-		version="9.0.30729.5570"
+		version="9.0.30729.6161"
 		processorArchitecture="x86"
 		publicKeyToken="1fc8b3b9a1e18e3b">
 	</assemblyIdentity>
-	<file name="mfc90u.dll" hashalg="SHA1" hash="e77755317bf86a434c102bbf9e7e2bfda7363bb6">
+	<file name="mfc90u.dll" hashalg="SHA1" hash="c596790262184e52e97241178ab8ee74e615bf09">
 		<asmv2:hash xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
 			<dsig:Transforms>
 				<dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity"></dsig:Transform>
 			</dsig:Transforms>
 			<dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></dsig:DigestMethod>
-			<dsig:DigestValue>qPbqNNcZ1/iuWteQSjboLQPokpE=</dsig:DigestValue>
+			<dsig:DigestValue>7/qvMUZevySLWk+RoXl5cwazJsk=</dsig:DigestValue>
 		</asmv2:hash>
 	</file>
-	<file name="mfcm90u.dll" hashalg="SHA1" hash="494b1e61ce82d57752e850d67317b793ca316e37">
+	<file name="mfcm90u.dll" hashalg="SHA1" hash="d6fbea421fe6b5d92e3514e66d1bf7a80aaf49ac">
 		<asmv2:hash xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
 			<dsig:Transforms>
 				<dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity"></dsig:Transform>
 			</dsig:Transforms>
 			<dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></dsig:DigestMethod>
-			<dsig:DigestValue>dI9+1vt9cD8uR50OL+Q58mk8a9I=</dsig:DigestValue>
+			<dsig:DigestValue>6DV8jI4/zakVZCyash21e2280ME=</dsig:DigestValue>
 		</asmv2:hash>
 	</file>
 </assembly>
