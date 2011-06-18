@@ -18,7 +18,7 @@ Compression=lzma
 SolidCompression=true
 OutputDir=.\SETUP
 OutputBaseFilename=ToDoList-6.2.4-setup
-VersionInfoVersion=6.2.4.867
+VersionInfoVersion=6.2.4.870
 VersionInfoProductName=ToDoList
 VersionInfoProductVersion=6.2.4
 MinVersion=0,5.0.2195
@@ -141,8 +141,16 @@ Source: ".\MLOImport\Output.2008\x86\Release\Unicode\MLOImport.dll"; DestDir: "{
 Source: ".\MySpellCheck\Output.2008\x86\Release\Unicode\MySpellCheck.dll"; DestDir: "{app}"
 Source: ".\OutlookImpExp\Output.2008\x86\Release\Unicode\OutlookImpExp.dll"; DestDir: "{app}"
 Source: ".\PlainTextImport\Output.2008\x86\Release\Unicode\PlainTextImport.dll"; DestDir: "{app}"
+Source: ".\Rtf2HtmlBridge\Output.2008\x86\Release\Unicode\Rtf2HtmlBridge.dll"; DestDir: "{app}"
 Source: ".\RTFContentCtrl\Output.2008\x86\Release\Unicode\RTFContentCtrl.dll"; DestDir: "{app}"
 Source: ".\EclipsePublicLicense.rtf"; DestDir: "{app}"; Flags: ignoreversion
+
+;; Itenso RTF converter
+Source: "..\RtfConverter\Output.2008\AnyCPU\Release\Itenso.Sys.dll"; DestDir: "{app}"
+Source: "..\RtfConverter\Output.2008\AnyCPU\Release\Itenso.Rtf.Interpreter.dll"; DestDir: "{app}"
+Source: "..\RtfConverter\Output.2008\AnyCPU\Release\Itenso.Rtf.Parser.dll"; DestDir: "{app}"
+Source: "..\RtfConverter\Output.2008\AnyCPU\Release\Itenso.Rtf.Converter.Html.dll"; DestDir: "{app}"
+Source: "..\RtfConverter\Output.2008\AnyCPU\Release\Itenso.Rtf2Html.dll"; DestDir: "{app}"
 
 ;; CRT redistributables
 Source: ".\REDIST\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"
