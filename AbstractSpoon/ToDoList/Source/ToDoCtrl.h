@@ -331,7 +331,7 @@ public:
 	BOOL SetSelectedTaskColor(COLORREF color);
 	BOOL ClearSelectedTaskColor()
 	{
-		return SetSelectedTaskColor((COLORREF) - 1);
+		return SetSelectedTaskColor((COLORREF)-1);
 	}
 	BOOL SetSelectedTaskTitle(LPCTSTR szTitle);
 	BOOL SetSelectedTaskPercentDone(int nPercent);
@@ -847,7 +847,7 @@ protected:
 	BOOL IsActivelyTimeTracking(BOOL bCheckScreenSaver) const; // this instant
 
 	BOOL SetTextChange(int nChange, CString& sItem, LPCTSTR szNewItem, TDC_ATTRIBUTE nAttrib, UINT nIDC);
-	void DrawGutterItemText(CDC* pDC, const CString& sText, const CRect& rect, int nAlign, COLORREF crText = (COLORREF) - 1);
+	void DrawGutterItemText(CDC* pDC, const CString& sText, const CRect& rect, int nAlign, COLORREF crText = (COLORREF)-1);
 	virtual void GetTaskTextColors(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, COLORREF& crText, COLORREF& crBack);
 
 	void RecalcSelectedTimeEstimate();

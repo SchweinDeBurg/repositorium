@@ -112,9 +112,7 @@ m_bCustomFilter(FALSE)
 	m_aVisibility.SetSize(TDCC_LAST);
 
 	// add update button to title text
-	m_eTitleFilter.AddButton(1, 0xC4,
-		CEnString(IDS_TDC_UPDATEFILTER_TIP),
-		CALC_BTNWIDTH, _T("Wingdings"));
+	m_eTitleFilter.AddButton(1, 0xC4, CEnString(IDS_TDC_UPDATEFILTER_TIP), CALC_BTNWIDTH, _T("Wingdings"));
 }
 
 void CTDLFilterBar::DoDataExchange(CDataExchange* pDX)
@@ -409,7 +407,7 @@ void CTDLFilterBar::RefreshFilterControls(const CFilteredToDoCtrl& tdc)
 
 	// priority
 	m_cbPriorityFilter.SetColors(m_aPriorityColors);
-	m_cbPriorityFilter.InsertColor(0, (COLORREF) - 1, CEnString(IDS_TDC_ANY)); // add a blank item
+	m_cbPriorityFilter.InsertColor(0, (COLORREF)-1, CEnString(IDS_TDC_ANY)); // add a blank item
 
 	// risk never needs changing
 
@@ -451,7 +449,7 @@ void CTDLFilterBar::SetPriorityColors(const CDWordArray& aColors)
 		int nSel = m_cbPriorityFilter.GetCurSel();
 
 		m_cbPriorityFilter.SetColors(aColors);
-		m_cbPriorityFilter.InsertColor(0, (COLORREF) - 1, CEnString(IDS_TDC_ANY)); // add a blank item
+		m_cbPriorityFilter.InsertColor(0, (COLORREF)-1, CEnString(IDS_TDC_ANY)); // add a blank item
 
 		m_cbPriorityFilter.SetCurSel(nSel);
 	}
@@ -542,8 +540,7 @@ int CTDLFilterBar::ReposControls(int nWidth, BOOL bCalcOnly)
 	// to line up with
 	const FILTERCTRL& fc0 = FILTERCTRLS[0];
 	const FILTERCTRL& fc1 = FILTERCTRLS[1];
-	int nLineIndentDLU = fc0.nLenLabelDLU + fc0.nLenCtrlDLU -
-		fc1.nLenLabelDLU - fc1.nLenCtrlDLU;
+	int nLineIndentDLU = fc0.nLenLabelDLU + fc0.nLenCtrlDLU - fc1.nLenLabelDLU - fc1.nLenCtrlDLU;
 
 	for (int nCtrl = 0; nCtrl < NUMFILTERCTRLS; nCtrl++)
 	{
@@ -730,7 +727,7 @@ void CTDLFilterBar::SetUIColors(COLORREF crBack, COLORREF crText)
 		m_crUIBack = crBack;
 		m_brUIBack.DeleteObject();
 
-		if (crBack != (COLORREF) - 1)
+		if (crBack != (COLORREF)-1)
 		{
 			m_brUIBack.CreateSolidBrush(m_crUIBack);
 		}

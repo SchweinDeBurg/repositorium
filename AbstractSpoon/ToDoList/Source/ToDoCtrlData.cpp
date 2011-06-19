@@ -972,7 +972,7 @@ int CToDoCtrlData::SetTaskColor(DWORD dwTaskID, COLORREF color)
 				color = 1;
 			}
 
-			else if (color == (COLORREF) - 1) // and treat -1 as meaning unset color
+			else if (color == (COLORREF)-1) // and treat -1 as meaning unset color
 			{
 				color = 0;
 			}

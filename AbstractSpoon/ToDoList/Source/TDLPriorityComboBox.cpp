@@ -226,7 +226,7 @@ void CTDLPriorityComboBox::BuildCombo()
 	BOOL bHasColors = m_aColors.GetSize();
 
 	// first item is 'None' and never has a colour
-	AddColor((COLORREF) - 1, CEnString(IDS_TDC_NONE));
+	AddColor((COLORREF)-1, CEnString(IDS_TDC_NONE));
 
 	for (int nLevel = 0; nLevel <= 10; nLevel++)
 	{
