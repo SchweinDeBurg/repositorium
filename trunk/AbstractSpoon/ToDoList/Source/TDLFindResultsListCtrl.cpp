@@ -236,7 +236,7 @@ COLORREF CTDLFindResultsListCtrl::GetItemTextColor(int nItem, int nSubItem, BOOL
 	{
 		FTDRESULT* pRes = (FTDRESULT*)GetItemData(nItem);
 
-		if (pRes && pRes->bDone && nSubItem == 0 && m_crDone != (COLORREF) - 1)
+		if (pRes && pRes->bDone && nSubItem == 0 && m_crDone != (COLORREF)-1)
 		{
 			return m_crDone;
 		}
@@ -270,7 +270,7 @@ void CTDLFindResultsListCtrl::RefreshUserPreferences()
 	}
 	else
 	{
-		m_crDone = (COLORREF) - 1;
+		m_crDone = (COLORREF)-1;
 	}
 
 	// update strike thru font

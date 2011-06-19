@@ -274,7 +274,7 @@ BOOL CTDLFilterDlg::OnInitDialog()
 
 	// priority
 	m_cbPriorityFilter.SetColors(m_aPriorityColors);
-	m_cbPriorityFilter.InsertColor(0, (COLORREF) - 1, CEnString(IDS_TDC_ANY)); // add a blank item
+	m_cbPriorityFilter.InsertColor(0, (COLORREF)-1, CEnString(IDS_TDC_ANY)); // add a blank item
 
 	// risk
 	m_cbRiskFilter.InsertString(0, CEnString(IDS_TDC_ANY)); // add a blank item

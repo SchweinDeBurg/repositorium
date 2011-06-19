@@ -116,7 +116,7 @@ const unsigned short MINNONCOMMENTHEIGHT = 250; // what's above the comment sect
 const unsigned short MINNONCOMMENTWIDTH = 350; // what's to the left of the comment section
 const COLORREF BLACK = RGB(0, 0, 0);
 const COLORREF WHITE = RGB(240, 240, 240);
-const COLORREF NOCOLOR = ((COLORREF) - 1);
+const COLORREF NOCOLOR = ((COLORREF)-1);
 const UINT CLOCKBTN = 0xb9;
 const UINT LINKBTN = 0x24;
 const COLORREF COMMENTSCOLOR = RGB(98, 98, 98);
@@ -244,7 +244,7 @@ m_bCommentsChange(FALSE),
 m_eLabel(PEC_AUTODESTROY),
 m_find(m_tree, m_data),
 m_nMaxColWidth(-1),
-m_crFlagged((COLORREF) - 1),
+m_crFlagged((COLORREF)-1),
 m_bMultiSort(FALSE),
 m_bFirstLoadCommentsPrefs(TRUE)
 {
@@ -7433,7 +7433,7 @@ void CToDoCtrl::GetTaskTextColors(const TODOITEM* pTDI, const TODOSTRUCTURE* pTD
 		}
 		else
 		{
-			if (m_crFlagged != (COLORREF) - 1 && pTDI->bFlagged)
+			if (m_crFlagged != (COLORREF)-1 && pTDI->bFlagged)
 			{
 				crText = m_crFlagged;
 			}

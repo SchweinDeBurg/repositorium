@@ -185,7 +185,7 @@ public:
 	int SetTaskIconIndex(DWORD dwID, int nIndex);
 	int ClearTaskColor(DWORD dwID)
 	{
-		SetTaskColor(dwID, (COLORREF) - 1);
+		SetTaskColor(dwID, (COLORREF)-1);
 	}
 	int SetTaskComments(DWORD dwID, LPCTSTR szComments, const CString& sCustomComments = _T(""), LPCTSTR szCommentsTypeID = NULL);
 	int SetTaskCommentsType(DWORD dwID, LPCTSTR szCommentsTypeID);

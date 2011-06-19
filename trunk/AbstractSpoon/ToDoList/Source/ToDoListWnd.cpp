@@ -9129,7 +9129,7 @@ void CToDoListWnd::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 			COLORREF crTag = (nStatus == TDCM_PAST) ? crDue : crDueToday;
 
-			if (crTag != (COLORREF) - 1)
+			if (crTag != (COLORREF)-1)
 			{
 				CDC* pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
 				const CRect& rect = lpDrawItemStruct->rcItem;
