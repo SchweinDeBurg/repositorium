@@ -146,7 +146,6 @@ void CTDLFilterBar::DoDataExchange(CDataExchange* pDX)
 		{
 			m_filter.nPriority = FT_ANYPRIORITY;
 		}
-
 		else if (nIndex == 1) // none
 		{
 			m_filter.nPriority = FT_NOPRIORITY;
@@ -163,7 +162,6 @@ void CTDLFilterBar::DoDataExchange(CDataExchange* pDX)
 		{
 			m_filter.nRisk = FT_ANYRISK;
 		}
-
 		else if (nIndex == 1) // none
 		{
 			m_filter.nRisk = FT_NORISK;
@@ -210,7 +208,6 @@ void CTDLFilterBar::DoDataExchange(CDataExchange* pDX)
 		{
 			nIndex = 0;
 		}
-
 		else if (m_filter.nPriority == FT_NOPRIORITY)
 		{
 			nIndex = 1;
@@ -227,7 +224,6 @@ void CTDLFilterBar::DoDataExchange(CDataExchange* pDX)
 		{
 			nIndex = 0;
 		}
-
 		else if (m_filter.nRisk == FT_NORISK)
 		{
 			nIndex = 1;
