@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -66,8 +71,7 @@
 //
 
 // {849CF988-79FE-418A-A40D-01FE3AFCAB2C}
-static const GUID RTF_TYPEID =
-{ 0x849cf988, 0x79fe, 0x418a, { 0xa4, 0xd, 0x1, 0xfe, 0x3a, 0xfc, 0xab, 0x2c } };
+static const GUID RTF_TYPEID = { 0x849cf988, 0x79fe, 0x418a, { 0xa4, 0xd, 0x1, 0xfe, 0x3a, 0xfc, 0xab, 0x2c } };
 
 class CRTFContentCtrlApp : public IContent, public CWinApp
 {
@@ -78,13 +82,11 @@ public:
 	const char* GetTypeID() const;
 	const char* GetTypeDescription() const;
 
-	IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
-		long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent);
+	IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle, long nLeft, long nTop, long nWidth,
+		long nHeight, HWND hwndParent);
 	void Release();
 
-	int ConvertToHtml(const unsigned char* pContent, int nLength,
-		const TCHAR* szCharSet, char*& szHtml);
-
+	int ConvertToHtml(const unsigned char* pContent, int nLength, const TCHAR* szCharSet, char*& szHtml);
 };
 
 /////////////////////////////////////////////////////////////////////////////

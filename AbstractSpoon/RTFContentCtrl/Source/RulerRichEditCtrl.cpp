@@ -103,7 +103,11 @@ static DWORD CALLBACK StreamOutLen(DWORD dwCookie, LPBYTE /*pbBuff*/, LONG cb, L
 
 struct STREAMINCOOKIE
 {
-	STREAMINCOOKIE(const CString& sContent) : sRTF(sContent), nStreamPos(0) {}
+	STREAMINCOOKIE(const CString& sContent):
+	sRTF(sContent),
+	nStreamPos(0)
+	{
+	}
 
 	int GetLength() const
 	{
@@ -174,7 +178,8 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CRulerRichEditCtrl
 
-CRulerRichEditCtrl::CRulerRichEditCtrl() : m_pen(PS_DOT, 0, RGB(0, 0, 0))
+CRulerRichEditCtrl::CRulerRichEditCtrl():
+m_pen(PS_DOT, 0, RGB(0, 0, 0))
 /* ============================================================
     Function :      CRulerRichEditCtrl::CRulerRichEditCtrl
     Description :   constructor
@@ -292,7 +297,7 @@ void CRulerRichEditCtrl::BuildTabStops(ParaFormat& para)
 	para.dwMask = PFM_TABSTOPS;
 	para.cTabCount = MAX_TAB_STOPS;
 
-	for (int t = 0; t < MAX_TAB_STOPS ; t++)
+	for (int t = 0; t < MAX_TAB_STOPS; t++)
 	{
 		para.rgxTabs[ t ] = 320 * (t + 1);
 	}
@@ -406,8 +411,8 @@ void CRulerRichEditCtrl::CreateMargins()
 	// Get the diff between the window- and client
 	// rect of the RTF-control. This gives the actual
 	// size of the RTF-control border.
-	CRect   r1;
-	CRect   r2;
+	CRect r1;
+	CRect r2;
 
 	m_rtf.GetWindowRect(r1);
 	m_rtf.GetClientRect(r2);
@@ -525,8 +530,6 @@ void CRulerRichEditCtrl::OnPaint()
 
    ============================================================*/
 {
-//	CPaintDC mainDC(this);
-//	UpdateTabStops();
 }
 
 BOOL CRulerRichEditCtrl::OnEraseBkgnd(CDC* /*pDC*/)
@@ -649,7 +652,7 @@ LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 
    ============================================================*/
 {
-	CPoint* point = (CPoint*) pt;
+	CPoint* point = (CPoint*)pt;
 	int toolbarHeight = 0;
 	if (m_showToolbar)
 	{
@@ -666,7 +669,7 @@ LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 			m_movingtab = -1;
 			CRect hitRect;
 			int y = RULER_HEIGHT - 9;
-			for (int t = 0 ; t < MAX_TAB_STOPS ; t++)
+			for (int t = 0; t < MAX_TAB_STOPS; t++)
 			{
 				int x = m_tabs[ t ] + m_margin - pos;
 				hitRect.SetRect(x - 2, y - 1, x + 3, y + 3);
@@ -783,7 +786,7 @@ LRESULT CRulerRichEditCtrl::OnTrackRuler(WPARAM mode, LPARAM pt)
 			// Convert current position to twips
 			double twip = (double)m_physicalInch / 1440;
 			int tabpos = m_tabs[ m_movingtab ];
-			tabpos = (int)((double) tabpos / twip + .5);
+			tabpos = (int)((double)tabpos / twip + .5);
 			para.rgxTabs[ m_movingtab ] = tabpos;
 
 			// Set tabs to control
@@ -939,7 +942,7 @@ void CRulerRichEditCtrl::SetRTF(const CString& rtf)
 		CharFormat cf(m_cfDefault);
 
 		m_rtf.SetSel(0, -1);
-		m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+		m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 		m_rtf.SetSel(-1, 0);
 	}
 	UpdateEditRect();
@@ -968,8 +971,8 @@ BOOL CRulerRichEditCtrl::Save(CString& filename)
 
 	CString* str = new CString;
 
-	EDITSTREAM	es;
-	es.dwCookie = (DWORD) str;
+	EDITSTREAM es;
+	es.dwCookie = (DWORD)str;
 	es.pfnCallback = StreamOut;
 	m_rtf.StreamOut(SF_RTF, es);
 
@@ -1005,8 +1008,8 @@ BOOL CRulerRichEditCtrl::Load(CString& filename)
 
 	if (result)
 	{
-		EDITSTREAM	es;
-		es.dwCookie = (DWORD) str;
+		EDITSTREAM es;
+		es.dwCookie = (DWORD)str;
 		es.pfnCallback = StreamIn;
 		m_rtf.StreamIn(SF_RTF, es);
 	}
@@ -1290,11 +1293,11 @@ void CRulerRichEditCtrl::SetTabStops(LPLONG tabs, int size)
 	m_tabs.RemoveAll();
 
 	double twip = (double)m_physicalInch / 1440;
-	for (int t = 0 ; t < size ; t++)
+	for (int t = 0; t < size; t++)
 	{
 		// Convert from twips to pixels
 		int tabpos = *(tabs + t);
-		tabpos = (int)((double) tabpos * twip + .5);
+		tabpos = (int)((double)tabpos * twip + .5);
 		m_tabs.Add(tabpos);
 	}
 
@@ -1352,10 +1355,10 @@ void CRulerRichEditCtrl::UpdateToolbarButtons()
 {
 	if (m_showToolbar && m_toolbar.m_hWnd)
 	{
-		CharFormat	cf;
+		CharFormat cf;
 		cf.dwMask = CFM_BOLD | CFM_ITALIC | CFM_UNDERLINE | CFM_COLOR | CFM_BACKCOLOR | CFM_STRIKEOUT;
 
-		m_rtf.SendMessage(EM_GETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+		m_rtf.SendMessage(EM_GETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 
 		ParaFormat2 para(PFM_ALIGNMENT | PFM_NUMBERING);
 		m_rtf.GetParaFormat(para);
@@ -1434,7 +1437,7 @@ void CRulerRichEditCtrl::SetEffect(int mask, int effect)
 	cf.dwMask = mask;
 	cf.dwEffects = effect;
 
-	m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+	m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 	m_rtf.SetFocus();
 }
 
@@ -1474,7 +1477,7 @@ void CRulerRichEditCtrl::SetAlignment(int alignment)
    ============================================================*/
 {
 	ParaFormat para(PFM_ALIGNMENT);
-	para.wAlignment = (WORD) alignment;
+	para.wAlignment = (WORD)alignment;
 
 	m_rtf.SetParaFormat(para);
 	UpdateToolbarButtons();
@@ -1500,7 +1503,7 @@ void CRulerRichEditCtrl::DoFont()
 	LOGFONT lf;
 	ZeroMemory(&lf, sizeof(LOGFONT));
 	CharFormat cf;
-	m_rtf.SendMessage(EM_GETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+	m_rtf.SendMessage(EM_GETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 	int height;
 
 	// Creating a LOGFONT from the current font settings
@@ -1515,7 +1518,7 @@ void CRulerRichEditCtrl::DoFont()
 	{
 		double twip = (double)m_physicalInch / 1440;
 		height = cf.yHeight;
-		height = -(int)((double) height * twip + .5);
+		height = -(int)((double)height * twip + .5);
 		lf.lfHeight = height;
 	}
 
@@ -1548,7 +1551,7 @@ void CRulerRichEditCtrl::DoFont()
 	}
 
 	// Show font dialog
-	CFontDialog	dlg(&lf);
+	CFontDialog dlg(&lf);
 
 	// color
 	dlg.m_cf.rgbColors = cf.crTextColor;
@@ -1584,7 +1587,7 @@ void CRulerRichEditCtrl::DoFont()
 			cf.dwEffects |= CFE_STRIKEOUT;
 		}
 
-		m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+		m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 	}
 
 	m_rtf.SetFocus();
@@ -1611,7 +1614,7 @@ void CRulerRichEditCtrl::SetCurrentFontName(const CString& font)
 
 	lstrcpy(cf.szFaceName, font);
 
-	m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+	m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 }
 
 void CRulerRichEditCtrl::SetCurrentFontSize(int size)
@@ -1635,7 +1638,7 @@ void CRulerRichEditCtrl::SetCurrentFontSize(int size)
 	cf.dwMask = CFM_SIZE;
 	cf.yHeight = size * 20;
 
-	m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+	m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 }
 
 void CRulerRichEditCtrl::SetCurrentFontColor(COLORREF color, BOOL bForeground)
@@ -1679,7 +1682,7 @@ void CRulerRichEditCtrl::SetCurrentFontColor(COLORREF color, BOOL bForeground)
 		}
 	}
 
-	m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+	m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 }
 
 LRESULT CRulerRichEditCtrl::OnSetCurrentFontName(WPARAM font, LPARAM)
@@ -1748,7 +1751,7 @@ LRESULT CRulerRichEditCtrl::OnSetCurrentFontColor(WPARAM bForeground, LPARAM col
 
    ============================================================*/
 {
-	SetCurrentFontColor((COLORREF) color, bForeground);
+	SetCurrentFontColor((COLORREF)color, bForeground);
 
 	m_rtf.SetFocus();
 	return 0;
@@ -1784,9 +1787,9 @@ void CRulerRichEditCtrl::DoColor()
    ============================================================*/
 {
 	// Get the current color
-	COLORREF    clr(RGB(0, 0, 0));
-	CharFormat  cf;
-	m_rtf.SendMessage(EM_GETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+	COLORREF clr(RGB(0, 0, 0));
+	CharFormat cf;
+	m_rtf.SendMessage(EM_GETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 	if (cf.dwMask & CFM_COLOR)
 	{
 		clr = cf.crTextColor;
@@ -1801,7 +1804,7 @@ void CRulerRichEditCtrl::DoColor()
 		cf.dwEffects = 0;
 		cf.crTextColor = dlg.GetColor();
 
-		m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+		m_rtf.SendMessage(EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 
 	}
 
@@ -1850,7 +1853,7 @@ void CRulerRichEditCtrl::DoStrikethrough()
 void CRulerRichEditCtrl::DoSuperscript()
 {
 	CharFormat cf;
-	m_rtf.SendMessage(EM_GETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+	m_rtf.SendMessage(EM_GETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 
 	BOOL bSuperscript = (cf.dwEffects & CFE_SUPERSCRIPT);
 
@@ -1860,7 +1863,7 @@ void CRulerRichEditCtrl::DoSuperscript()
 void CRulerRichEditCtrl::DoSubscript()
 {
 	CharFormat cf;
-	m_rtf.SendMessage(EM_GETCHARFORMAT, SCF_SELECTION, (LPARAM) &cf);
+	m_rtf.SendMessage(EM_GETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
 
 	BOOL bSubscript = (cf.dwEffects & CFE_SUBSCRIPT);
 
@@ -2069,12 +2072,12 @@ void CRulerRichEditCtrl::DoOutdent()
    ============================================================*/
 {
 	// Get the current indent, if any
-	ParaFormat	para(PFM_STARTINDENT | PFM_TABSTOPS);
+	ParaFormat para(PFM_STARTINDENT | PFM_TABSTOPS);
 	m_rtf.GetParaFormat(para);
 	int newindent = 0;
 
 	// Find closest smaller tab
-	for (int t = 0 ; t < MAX_TAB_STOPS ; t++)
+	for (int t = 0; t < MAX_TAB_STOPS; t++)
 	{
 		if (para.rgxTabs[ t ] < para.dxStartIndent)
 		{
@@ -2106,7 +2109,7 @@ void CRulerRichEditCtrl::DoBullet()
 {
 	m_toolbar.GetToolBarCtrl().CheckButton(BUTTON_BULLET, !m_toolbar.IsButtonChecked(BUTTON_BULLET));
 
-	ParaFormat2	para(PFM_NUMBERING | PFM_OFFSET);
+	ParaFormat2 para(PFM_NUMBERING | PFM_OFFSET);
 
 	if (m_toolbar.IsButtonChecked(BUTTON_BULLET))
 	{

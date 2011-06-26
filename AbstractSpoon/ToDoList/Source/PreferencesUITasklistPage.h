@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -173,39 +178,39 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesUITasklistPage)
 	enum { IDD = IDD_PREFUITASKLIST_PAGE };
-	BOOL    m_bUseISOForDates;
-	BOOL    m_bShowWeekdayInDates;
-	BOOL    m_bShowParentsAsFolders;
-	BOOL    m_bDisplayFirstCommentLine;
-	int     m_nMaxInfoTipCommentsLength;
-	BOOL    m_bLimitInfoTipCommentsLength;
-	BOOL    m_bAutoFocusTasklist;
-	BOOL    m_bShowSubtaskCompletion;
-	BOOL    m_bShowColumnsOnRight;
-	BOOL    m_bHideDueTimeField;
-	BOOL    m_bHideStartTimeField;
-	BOOL    m_bLimitColumnWidths;
-	int     m_nMaxColumnWidth;
-	BOOL    m_bHideDoneTimeField;
+	BOOL m_bUseISOForDates;
+	BOOL m_bShowWeekdayInDates;
+	BOOL m_bShowParentsAsFolders;
+	BOOL m_bDisplayFirstCommentLine;
+	int m_nMaxInfoTipCommentsLength;
+	BOOL m_bLimitInfoTipCommentsLength;
+	BOOL m_bAutoFocusTasklist;
+	BOOL m_bShowSubtaskCompletion;
+	BOOL m_bShowColumnsOnRight;
+	BOOL m_bHideDueTimeField;
+	BOOL m_bHideStartTimeField;
+	BOOL m_bLimitColumnWidths;
+	int m_nMaxColumnWidth;
+	BOOL m_bHideDoneTimeField;
 	//}}AFX_DATA
-	BOOL    m_bShowPathInHeader;
-	BOOL    m_bStrikethroughDone;
-	BOOL    m_bFullRowSelection;
-	BOOL    m_bTreeCheckboxes;
-	BOOL    m_bTreeTaskIcons;
+	BOOL m_bShowPathInHeader;
+	BOOL m_bStrikethroughDone;
+	BOOL m_bFullRowSelection;
+	BOOL m_bTreeCheckboxes;
+	BOOL m_bTreeTaskIcons;
 	CTDLColumnListBox m_lbColumnVisibility;
-	BOOL    m_bShowInfoTips;
-	BOOL    m_bShowComments;
-	BOOL    m_bShowPercentColumn;
-	BOOL    m_bShowPriorityColumn;
-	int     m_nSelColumnVisibility;
-	BOOL    m_bHideZeroTimeCost;
-	BOOL    m_bHideStartDueForDoneTasks;
-	BOOL    m_bRoundTimeFractions;
-	BOOL    m_bShowNonFilesAsText;
-	BOOL    m_bUseHMSTimeFormat;
-	BOOL    m_bShowPercentAsProgressbar;
-	BOOL    m_bHidePercentForDoneTasks;
+	BOOL m_bShowInfoTips;
+	BOOL m_bShowComments;
+	BOOL m_bShowPercentColumn;
+	BOOL m_bShowPriorityColumn;
+	int m_nSelColumnVisibility;
+	BOOL m_bHideZeroTimeCost;
+	BOOL m_bHideStartDueForDoneTasks;
+	BOOL m_bRoundTimeFractions;
+	BOOL m_bShowNonFilesAsText;
+	BOOL m_bUseHMSTimeFormat;
+	BOOL m_bShowPercentAsProgressbar;
+	BOOL m_bHidePercentForDoneTasks;
 	CGroupLineManager m_mgrGroupLines;
 
 // Overrides

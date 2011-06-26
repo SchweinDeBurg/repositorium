@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -105,8 +110,7 @@ public:
 	int GetSelectedTasks(CTaskFile& tasks, const TDCGETTASKS& filter = TDCGETTASKS(TDCGT_ALL)) const;
 	int GetFilteredTasks(CTaskFile& tasks, const TDCGETTASKS& filter = TDCGETTASKS(TDCGT_ALL)) const;
 
-	HTREEITEM NewTask(LPCTSTR szText, TDC_INSERTWHERE nWhere = TDC_INSERTATTOPOFSELTASKPARENT,
-		BOOL bEditText = TRUE);
+	HTREEITEM NewTask(LPCTSTR szText, TDC_INSERTWHERE nWhere = TDC_INSERTATTOPOFSELTASKPARENT, BOOL bEditText = TRUE);
 	BOOL SplitSelectedTask(int nNumSubtasks);
 
 	void SetModified(BOOL bMod = TRUE)
@@ -276,7 +280,8 @@ protected:
 	void ResyncListSelection();
 	BOOL IsItemSelected(int nItem) const;
 
-	void GetCompletedTasks(const TODOSTRUCTURE* pTDS, CTaskFile& tasks, HTASKITEM hTaskParent, BOOL bSelectedOnly = FALSE) const;
+	void GetCompletedTasks(const TODOSTRUCTURE* pTDS, CTaskFile& tasks, HTASKITEM hTaskParent,
+		BOOL bSelectedOnly = FALSE) const;
 	virtual BOOL RemoveArchivedTask(DWORD dwTaskID);
 
 	int FindTask(DWORD dwTaskID) const;

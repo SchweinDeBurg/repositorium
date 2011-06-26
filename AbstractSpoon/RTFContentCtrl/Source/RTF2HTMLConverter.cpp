@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // RTF2HTMLConverter.cpp: implementation of the CRTF_HTMLConverter class.
@@ -304,7 +309,7 @@ void CRTF_HTMLConverter::R2H_SetMetaData(CRTFNode& NodeRoot)
 
 			iStrPos += strTag.GetLength();
 
-			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos+1] == _T(' ')))
+			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos + 1] == _T(' ')))
 			{
 				iStrPos++;   //Ignore Blank after Tag
 			}
@@ -422,13 +427,11 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 	{
 		pElement = new CHTMLElement();
 	}
-	{
-//		TRACE ("RTF Tag was '%s'\n", strRTFTag);
-	}
 
 	//Special character (umlaut)
 	strTestTag = _T("\'");
-	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) && (strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
+	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) &&
+		(strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
 	{
 		CString strSpecialChar = strRTFTag;
 		strSpecialChar.Delete(0, strTestTag.GetLength());
@@ -466,32 +469,15 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 				if (pElementTest->m_enNodeType == CHTMLElement::c_nodText)
 				{
 					if ((pElementTest->m_strNodeText != _T("")) &&
-					    (pElementTest->m_strNodeText != _T("\r")) &&
-					    (pElementTest->m_strNodeText != _T("\n")) &&
-					    (pElementTest->m_strNodeText != _T("\r\n")) &&
-					    (pElementTest->m_strNodeText != _T("b")))
+						(pElementTest->m_strNodeText != _T("\r")) &&
+						(pElementTest->m_strNodeText != _T("\n")) &&
+						(pElementTest->m_strNodeText != _T("\r\n")) &&
+						(pElementTest->m_strNodeText != _T("b")))
 					{
 						bLastParaEmpty = FALSE;
 					}
 				}
 			}
-
-			/*
-			if (bLastParaEmpty)
-			{ //Insert modified blank (see above)
-			   CHTMLElement* pElementBlank = new CHTMLElement();
-			   pElementBlank->m_enNodeType=CHTMLElement::c_nodText;
-			   pElementBlank->m_strNodeText = "&nbsp;";
-			   m_arrHTMLElements.Add(pElementBlank);
-			}
-			*/
-
-			//Insert Closing </p>
-			/*         CHTMLElement* pElementClose = new CHTMLElement();
-			pElementClose->m_enNodeType=CHTMLElement::c_nodHTMLEnd;
-			pElementClose->m_strNodeText = "p";
-			m_arrHTMLElements.Add(pElementClose);
-			*/
 		}
 		//Add paragraph tag (<p>
 		pElement->m_enNodeType = CHTMLElement::c_nodHTMLBegin;
@@ -502,7 +488,8 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 
 	//Paragraph Alignment
 	strTestTag = _T("q");
-	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) && (strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
+	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) &&
+		(strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
 	{
 		//Get RTF alignment
 		CString strAlignRTF, strAlignHTML;
@@ -550,7 +537,8 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 
 	//font color
 	strTestTag = _T("cf");
-	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) && (strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
+	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) &&
+		(strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
 	{
 		CString strActColor;
 		pElement->m_enNodeType = CHTMLElement::c_nodHTMLBegin;
@@ -574,7 +562,8 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 	}
 	//font size
 	strTestTag = _T("fs");
-	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) && (strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
+	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) &&
+		(strRTFTag.Left(strTestTag.GetLength()) == strTestTag))
 	{
 		pElement->m_enNodeType = CHTMLElement::c_nodHTMLBegin;
 		pElement->m_strNodeText = _T("font");
@@ -585,7 +574,9 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 	}
 	//font name
 	strTestTag = _T("f"); //f+number
-	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) && (strRTFTag.Left(strTestTag.GetLength()) == strTestTag) && (strRTFTag.Mid(1).SpanIncluding(_T("01234567890")) == strRTFTag.Mid(1)))
+	if ((pElement->m_enNodeType == CHTMLElement::c_nodInvalid) && (strRTFTag.GetLength() >= strTestTag.GetLength()) &&
+		(strRTFTag.Left(strTestTag.GetLength()) == strTestTag) &&
+		(strRTFTag.Mid(1).SpanIncluding(_T("01234567890")) == strRTFTag.Mid(1)))
 	{
 		CString strActFontDsgn = strRTFTag;
 		pElement->m_enNodeType = CHTMLElement::c_nodHTMLBegin;
@@ -612,7 +603,8 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 			{
 				break;   //everything is OK
 			}
-			if ((pElementTest->m_enNodeType == CHTMLElement::c_nodHTMLBegin) && (pElementTest->m_strNodeText == _T("font")))
+			if ((pElementTest->m_enNodeType == CHTMLElement::c_nodHTMLBegin) &&
+				(pElementTest->m_strNodeText == _T("font")))
 			{
 				bMustClose = TRUE;
 				break; //everything is OK
@@ -628,7 +620,8 @@ void CRTF_HTMLConverter::R2H_InterpretTag(const CString& strRTFTag)
 		}
 		//Set font tag options
 		pElement->m_mapParams.SetAt(_T("color"), _T("\"") + m_strActFontColor + _T("\""));
-		pElement->m_mapParams.SetAt(_T("style"), _T("\"font-size: ") + m_strActFontSize + _T("pt; font-family:") + m_strActFontName + _T(";\""));
+		pElement->m_mapParams.SetAt(_T("style"), _T("\"font-size: ") + m_strActFontSize + _T("pt; font-family:") +
+			m_strActFontName + _T(";\""));
 	}
 	if (pElement->m_enNodeType != CHTMLElement::c_nodInvalid)
 	{
@@ -651,7 +644,7 @@ void CRTF_HTMLConverter::R2H_GetRTFTags(const CString& strRTFSource, CStringArra
 			CString strTag = R2H_GetRTFTag(strRTFSource, iStrPos);
 			arrTgt.Add(strTag);
 			iStrPos += strTag.GetLength();
-			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos+1] == _T(' ')))
+			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos + 1] == _T(' ')))
 			{
 				iStrPos++;   //Ignore Blank after Tag
 			}
@@ -709,7 +702,7 @@ void CRTF_HTMLConverter::R2H_GetHTMLElements(CString& strHTML)
 				CHTMLElement* pElemNext = m_arrHTMLElements[iElem + 1];
 
 				if (pElemNext->m_enNodeType == CHTMLElement::c_nodHTMLEnd &&
-				      pElemNext->m_strNodeText == pElem->m_strNodeText)
+					pElemNext->m_strNodeText == pElem->m_strNodeText)
 				{
 					//TRACE ("CRTF_HTMLConverter::R2H_GetHTMLElements(removing '%s')\n", pElemNext->m_strNodeText);
 					bEmpty = true;
@@ -770,7 +763,6 @@ void CRTF_HTMLConverter::R2H_GetHTMLElements(CString& strHTML)
 
 		if (!sElem.IsEmpty())
 		{
-//			TRACE ("CRTF_HTMLConverter::R2H_GetHTMLElements(adding '%s')\n", sElem);
 			strHTML += sElem;
 		}
 	}
@@ -794,9 +786,6 @@ void CRTF_HTMLConverter::R2H_GetHTMLElements(CString& strHTML)
 			}
 		}
 	}
-
-//	if (strHTML.GetLength() < 210)
-//		TRACE ("CRTF_HTMLConverter::R2H_GetHTMLElements(%s)\n", strHTML);
 }
 
 int CRTF_HTMLConverter::GetCodePage(const CString& sRtf)
@@ -849,24 +838,6 @@ void CRTF_HTMLConverter::R2H_CreateHTMLElements(const CString& strRTFSource)
 
 		if (strChTest == _T("\\"))
 		{
-			// check for multi-byte char
-			/*
-			if (strRTFSource.Find(MULTIBYTETAG, iStrPos) == iStrPos)
-			{
-				// extract next two elements as a single wide char
-				CString sLow = strRTFSource.Mid(iStrPos + 2, 2);
-				CString sHigh = strRTFSource.Mid(iStrPos + 6, 2);
-
-				wchar_t wChar = (WORD)strtol(sHigh + sLow, NULL, 16);
-				CString sChar = Misc::WideToMultiByte(wChar);
-
-				strCurrentText += sChar;
-
-				iStrPos += 7;
-				continue;
-			}
-			*/
-
 			//New tag
 			if (strCurrentText != _T(""))
 			{
@@ -879,7 +850,7 @@ void CRTF_HTMLConverter::R2H_CreateHTMLElements(const CString& strRTFSource)
 			CString strTag = R2H_GetRTFTag(strRTFSource, iStrPos);
 			R2H_InterpretTag(strTag);
 			iStrPos += strTag.GetLength();
-			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos+1] == _T(' ')))
+			if (((iStrPos + 1) < strRTFSource.GetLength()) && (strRTFSource[iStrPos + 1] == _T(' ')))
 			{
 				iStrPos++;   //Ignore Blank after Tag
 			}
@@ -1007,8 +978,6 @@ CRTF_HTMLConverter::CRTFNode CRTF_HTMLConverter::R2H_BuildTree(const CString& st
 	} //loop thru string
 
 
-//	ASSERT(lLevel==0); //Invalid RTF, more opening { than closing }
-
 	// Get the plain text (without \)
 	// reuse szNodeNew for efficiency
 	TCHAR* szPlain = szNodeNew;
@@ -1024,7 +993,7 @@ CRTF_HTMLConverter::CRTFNode CRTF_HTMLConverter::R2H_BuildTree(const CString& st
 			CString strTag = R2H_GetRTFTag(strNodeText, iStrPos);
 			iStrPos += strTag.GetLength();
 
-			if (((iStrPos + 1) < strNodeText.GetLength()) && (strNodeText[iStrPos+1] == _T(' ')))
+			if (((iStrPos + 1) < strNodeText.GetLength()) && (strNodeText[iStrPos + 1] == _T(' ')))
 			{
 				iStrPos++;   //Ignore Blank after Tag
 			}
@@ -1050,7 +1019,7 @@ CRTF_HTMLConverter::CRTFNode CRTF_HTMLConverter::R2H_BuildTree(const CString& st
 	return nodeThis;
 }
 
-CString& operator<< (CString& os, CRTF_HTMLConverter& conv)
+CString& operator<<(CString& os, CRTF_HTMLConverter& conv)
 {
 	//For streaming operations
 	if (conv.m_enMode == CRTF_HTMLConverter::c_modRTF2HTML)
@@ -1064,7 +1033,7 @@ CString& operator<< (CString& os, CRTF_HTMLConverter& conv)
 	return os;
 }
 
-CString& operator>> (CString& is, CRTF_HTMLConverter& conv)
+CString& operator>>(CString& is, CRTF_HTMLConverter& conv)
 {
 	//For streaming operations
 	CString strTemp;
@@ -1078,7 +1047,8 @@ CString& operator>> (CString& is, CRTF_HTMLConverter& conv)
 	return is;
 }
 
-CRTF_HTMLConverter::CHTMLElement::CHTMLElement(THTMLNodeType type, LPCTSTR szText)
-	: m_enNodeType(type), m_strNodeText(szText)
+CRTF_HTMLConverter::CHTMLElement::CHTMLElement(THTMLNodeType type, LPCTSTR szText):
+m_enNodeType(type),
+m_strNodeText(szText)
 {
 }

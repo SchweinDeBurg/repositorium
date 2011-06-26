@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -72,23 +77,29 @@ m_nAnonLogin(nAnonymousLogin)
 	int LOGINOFFSET = 0;
 
 	AddRCControl(_T("LTEXT"), _T(""), _T("Server:"), 0, 0, 7, 10, 24, 8, IDC_SD_SERVERLABEL);
-	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP | CBS_AUTOHSCROLL, 0, 49, 7, 134, 100, IDC_SD_SERVER);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP | CBS_AUTOHSCROLL, 0, 49, 7,
+		134, 100, IDC_SD_SERVER);
 
 	if (bShowAnonLogin)
 	{
-		AddRCControl(_T("CONTROL"), _T("Button"), _T("Anonymous Login"), BS_AUTOCHECKBOX | WS_TABSTOP, 0, 49, 29, 134, 10, IDC_SD_ANONLOGIN);
+		AddRCControl(_T("CONTROL"), _T("Button"), _T("Anonymous Login"), BS_AUTOCHECKBOX | WS_TABSTOP, 0, 49, 29, 134,
+			10, IDC_SD_ANONLOGIN);
 		LOGINOFFSET = 20;
 	}
 
 	AddRCControl(_T("LTEXT"), _T(""), _T("Username:"), 0, 0, 7, 29 + LOGINOFFSET, 35, 8, IDC_SD_USERNAMELABEL);
-	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP, 0, 49, 27 + LOGINOFFSET, 134, 100, IDC_SD_USERNAME);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP, 0, 49, 27 + LOGINOFFSET, 134,
+		100, IDC_SD_USERNAME);
 	AddRCControl(_T("LTEXT"), _T(""), _T("Password:"), 0, 0, 7, 48 + LOGINOFFSET, 34, 8, IDC_SD_PASSWORDLABEL);
-	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_PASSWORD | ES_AUTOHSCROLL | WS_TABSTOP, 0, 49, 45 + LOGINOFFSET, 134, 14, IDC_SD_PASSWORD);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_PASSWORD | ES_AUTOHSCROLL | WS_TABSTOP, 0, 49, 45 + LOGINOFFSET,
+		134, 14, IDC_SD_PASSWORD);
 
 	AddRCControl(_T("LTEXT"), _T(""), _T("Proxy:"), 0, 0, 7, 67 + LOGINOFFSET, 34, 8, IDC_SD_PROXYLABEL);
-	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_AUTOHSCROLL | WS_TABSTOP, 0, 49, 65 + LOGINOFFSET, 80, 14, IDC_SD_PROXY);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_AUTOHSCROLL | WS_TABSTOP, 0, 49, 65 + LOGINOFFSET, 80, 14,
+		IDC_SD_PROXY);
 	AddRCControl(_T("LTEXT"), _T(""), _T("Port:"), 0, 0, 133, 67 + LOGINOFFSET, 20, 8, IDC_SD_PROXYPORTLABEL);
-	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_NUMBER | ES_AUTOHSCROLL | WS_TABSTOP, 0, 153, 65 + LOGINOFFSET, 30, 14, IDC_SD_PROXYPORT);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_NUMBER | ES_AUTOHSCROLL | WS_TABSTOP, 0, 153, 65 + LOGINOFFSET, 30,
+		14, IDC_SD_PROXYPORT);
 
 	AddRCControl(_T("CONTROL"), _T("Static"), _T(""), SS_ETCHEDHORZ, 0, 7, 85 + LOGINOFFSET, 176, 1, (UINT)IDC_STATIC);
 	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_TABSTOP, 0, 77, 94 + LOGINOFFSET, 50, 14, IDOK);
@@ -106,7 +117,8 @@ m_nAnonLogin(nAnonymousLogin)
 
 	if (m_nAnonLogin == ANONLOGIN_AUTO)
 	{
-		m_nAnonLogin = AfxGetApp()->GetProfileInt(_T("RemoteSettings"), _T("LastAnonLogin"), ANONLOGIN_NO) ? ANONLOGIN_YES : ANONLOGIN_NO;
+		m_nAnonLogin = AfxGetApp()->GetProfileInt(_T("RemoteSettings"), _T("LastAnonLogin"),
+			ANONLOGIN_NO) ? ANONLOGIN_YES : ANONLOGIN_NO;
 	}
 
 	m_sProxy = AfxGetApp()->GetProfileString(_T("RemoteSettings"), _T("Proxy"));

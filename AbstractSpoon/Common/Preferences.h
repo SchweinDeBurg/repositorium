@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -45,7 +50,11 @@
 
 struct INIENTRY
 {
-	INIENTRY(LPCTSTR szName = NULL, LPCTSTR szValue = NULL) : sName(szName), sValue(szValue) {}
+	INIENTRY(LPCTSTR szName = NULL, LPCTSTR szValue = NULL):
+	sName(szName),
+	sValue(szValue)
+	{
+	}
 
 	CString sName;
 	CString sValue;
@@ -55,7 +64,10 @@ typedef CMap<CString, LPCTSTR, INIENTRY, INIENTRY&> CIniEntryMap;
 
 struct INISECTION
 {
-	INISECTION(LPCTSTR szName = NULL) : sSection(szName) {}
+	INISECTION(LPCTSTR szName = NULL):
+	sSection(szName)
+	{
+	}
 
 	CString sSection;
 	CIniEntryMap aEntries;

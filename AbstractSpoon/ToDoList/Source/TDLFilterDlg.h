@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -80,14 +85,14 @@ protected:
 	//{{AFX_DATA(CFilterDlg)
 	enum { IDD = IDD_FILTER_DIALOG };
 	//}}AFX_DATA
-	CEnCheckComboBox    m_cbCategoryFilter;
-	CEnCheckComboBox    m_cbStatusFilter;
-	CEnCheckComboBox    m_cbAllocToFilter;
-	CEnCheckComboBox    m_cbAllocByFilter;
-	CEnCheckComboBox    m_cbVersionFilter;
-	CTDLFilterComboBox  m_cbTaskFilter;
-	CTDLPriorityComboBox    m_cbPriorityFilter;
-	CTDLRiskComboBox    m_cbRiskFilter;
+	CEnCheckComboBox m_cbCategoryFilter;
+	CEnCheckComboBox m_cbStatusFilter;
+	CEnCheckComboBox m_cbAllocToFilter;
+	CEnCheckComboBox m_cbAllocByFilter;
+	CEnCheckComboBox m_cbVersionFilter;
+	CTDLFilterComboBox m_cbTaskFilter;
+	CTDLPriorityComboBox m_cbPriorityFilter;
+	CTDLRiskComboBox m_cbRiskFilter;
 	FTDCFILTER m_filter;
 	CStringArray m_aAllocTo;
 	CStringArray m_aAllocBy;

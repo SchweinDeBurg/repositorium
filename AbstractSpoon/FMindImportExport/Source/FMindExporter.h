@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -74,7 +79,7 @@ public:
 	bool Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDestFilePath, BOOL bSilent);
 
 protected:
-	void ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CXmlItem* pXIDestParent , int LEVEL);
+	void ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CXmlItem* pXIDestParent, int LEVEL);
 	CString FormatDate(time_t tDate);
 
 	void AddTaskAllocTo(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CXmlItem* pXIDestItem);

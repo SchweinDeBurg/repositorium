@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -166,7 +171,10 @@ const double TICKS2HOURS = 1.0 / (1000 * 3600);
 class CXmlParseController : public IXmlParse
 {
 public:
-	CXmlParseController(LPCTSTR szItem) : m_sItem(szItem) {}
+	CXmlParseController(LPCTSTR szItem):
+	m_sItem(szItem)
+	{
+	}
 
 	virtual BOOL Continue(LPCTSTR szItem, LPCTSTR /*szValue*/) const
 	{
@@ -193,7 +201,7 @@ short CToDoCtrl::s_nExtendedSelection = HOTKEYF_CONTROL | HOTKEYF_SHIFT;
 CTDCAttributeArray CToDoCtrl::s_aParentAttribs;
 BOOL CToDoCtrl::s_bUpdateInheritAttrib = FALSE;
 
-CToDoCtrl::CToDoCtrl(CContentMgr& mgr, const CONTENTFORMAT& cfDefault) :
+CToDoCtrl::CToDoCtrl(CContentMgr& mgr, const CONTENTFORMAT& cfDefault):
 m_bModified(FALSE),
 m_dwNextUniqueID(1),
 m_nPriority(-1),
@@ -255,9 +263,8 @@ m_bFirstLoadCommentsPrefs(TRUE)
 	{
 		const TDCCONTROL& ctrl = TDCCONTROLS[nCtrl];
 
-		AddRCControl(_T("CONTROL"), ctrl.szClass, CEnString(ctrl.nIDCaption),
-			ctrl.dwStyle, ctrl.dwExStyle,
-			ctrl.nX, ctrl.nY, ctrl.nCx, ctrl.nCy, ctrl.nID);
+		AddRCControl(_T("CONTROL"), ctrl.szClass, CEnString(ctrl.nIDCaption), ctrl.dwStyle, ctrl.dwExStyle, ctrl.nX,
+			ctrl.nY, ctrl.nCx, ctrl.nCy, ctrl.nID);
 	}
 
 	// source control name
@@ -273,14 +280,12 @@ m_bFirstLoadCommentsPrefs(TRUE)
 	m_eCost.SetMask(_T("-.0123456789"), ME_LOCALIZEDECIMAL);
 
 	// add chess clock button to 'time spent'
-	m_eTimeSpent.InsertButton(0, ID_TIMEEDITBTN, CLOCKBTN,
-		CEnString(IDS_TDC_STARTSTOPCLOCK),
-		DEF_BTNWIDTH + 4, _T("Wingdings"));
+	m_eTimeSpent.InsertButton(0, ID_TIMEEDITBTN, CLOCKBTN, CEnString(IDS_TDC_STARTSTOPCLOCK), DEF_BTNWIDTH + 4,
+		_T("Wingdings"));
 
 	// add link button to dependency
-	m_eDependency.AddButton(ID_DEPENDS_LINK, LINKBTN,
-		CEnString(IDS_TDC_DEPENDSLINK_TIP),
-		CALC_BTNWIDTH, _T("Wingdings"));
+	m_eDependency.AddButton(ID_DEPENDS_LINK, LINKBTN, CEnString(IDS_TDC_DEPENDSLINK_TIP), CALC_BTNWIDTH,
+		_T("Wingdings"));
 
 	// make some generic strings translatable
 	m_eTimeSpent.SetButtonTip(TEBTN_UNITS, CEnString(IDS_TIMEUNITS));
@@ -798,10 +803,10 @@ BOOL CToDoCtrl::CreateContentControl(BOOL bResendComments)
 	}
 
 	BOOL bVisible = (m_nMaxState != TDCMS_MAXTASKLIST) || HasStyle(TDCS_SHOWCOMMENTSALWAYS);
-	DWORD dwStyle = WS_TABSTOP | WS_CHILD  | (bVisible ? WS_VISIBLE : 0);
+	DWORD dwStyle = WS_TABSTOP | WS_CHILD | (bVisible ? WS_VISIBLE : 0);
 
-	BOOL bSuccess = m_mgrContent.CreateContentControl(m_cfComments, m_ctrlComments,
-		IDC_COMMENTS, dwStyle, WS_EX_CLIENTEDGE, rect, *this);
+	BOOL bSuccess = m_mgrContent.CreateContentControl(m_cfComments, m_ctrlComments, IDC_COMMENTS, dwStyle,
+		WS_EX_CLIENTEDGE, rect, *this);
 
 	if (!bSuccess)
 	{
@@ -809,8 +814,8 @@ BOOL CToDoCtrl::CreateContentControl(BOOL bResendComments)
 		// check to see if we really need to (re)create the control
 		if (!m_ctrlComments.IsFormat(m_cfDefault))
 		{
-			bSuccess = m_mgrContent.CreateContentControl(m_cfDefault, m_ctrlComments,
-				IDC_COMMENTS, dwStyle, WS_EX_CLIENTEDGE, rect, *this);
+			bSuccess = m_mgrContent.CreateContentControl(m_cfDefault, m_ctrlComments, IDC_COMMENTS, dwStyle,
+				WS_EX_CLIENTEDGE, rect, *this);
 		}
 		else
 		{
@@ -1449,8 +1454,8 @@ void CToDoCtrl::ReposComments(int cx, int cy, CDeferWndMove* pDWM, CRect& rComme
 	pDWM->MoveWindow(GetDlgItem(IDC_COMMENTS), rComField);
 }
 
-void CToDoCtrl::ReposControl(const CTRLITEM& ctrl, CDeferWndMove* pDWM, const CDlgUnits* pDLU,
-	int nCol, int nTop, int nClientRight)
+void CToDoCtrl::ReposControl(const CTRLITEM& ctrl, CDeferWndMove* pDWM, const CDlgUnits* pDLU, int nCol, int nTop,
+	int nClientRight)
 {
 	// the bottom of the ctrl is defined by its existing height
 	CRect rItem(0, nTop, 0, nTop + ResizeCtrl(ctrl.nCtrlID).Height());
@@ -4565,7 +4570,7 @@ BOOL CToDoCtrl::SetSelectedTaskFileRef(LPCTSTR szFilePath)
 	while (pos)
 	{
 		HTREEITEM hti = Selection().GetNextItem(pos);
-		int nItemRes =	m_data.SetTaskFileRef(GetTaskID(hti), szFilePath);
+		int nItemRes = m_data.SetTaskFileRef(GetTaskID(hti), szFilePath);
 
 		if (nItemRes == SET_CHANGE)
 		{
@@ -4594,7 +4599,7 @@ BOOL CToDoCtrl::SetSelectedTaskDependencies(const CStringArray& aDepends)
 	{
 		HTREEITEM hti = Selection().GetNextItem(pos);
 		DWORD dwTaskID = GetTaskID(hti);
-		int nItemRes =	m_data.SetTaskDependencies(dwTaskID, aDepends);
+		int nItemRes = m_data.SetTaskDependencies(dwTaskID, aDepends);
 
 		if (nItemRes == SET_CHANGE)
 		{
@@ -4650,7 +4655,7 @@ BOOL CToDoCtrl::SetSelectedTaskExtID(LPCTSTR szID)
 	{
 		HTREEITEM hti = Selection().GetNextItem(pos);
 		DWORD dwID = GetTaskID(hti);
-		int nItemRes =	m_data.SetTaskExtID(dwID, szID);
+		int nItemRes = m_data.SetTaskExtID(dwID, szID);
 
 		if (nItemRes == SET_CHANGE)
 		{
@@ -6961,7 +6966,8 @@ BOOL CToDoCtrl::ArchiveTasks(LPCTSTR szArchivePath, const CTaskFile& tasks)
 	return TRUE;
 }
 
-HTREEITEM CToDoCtrl::AddTaskToTreeItem(const CTaskFile& file, HTASKITEM hTask, HTREEITEM htiParent, HTREEITEM htiAfter, TDC_RESETIDS nResetID)
+HTREEITEM CToDoCtrl::AddTaskToTreeItem(const CTaskFile& file, HTASKITEM hTask, HTREEITEM htiParent, HTREEITEM htiAfter,
+	TDC_RESETIDS nResetID)
 {
 	HTREEITEM hti = TVI_ROOT; // default for root item
 	TODOITEM* pTDI = NULL;
@@ -7110,7 +7116,7 @@ void CToDoCtrl::OnTreeGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult)
 	DWORD dwTaskID = (DWORD)lptvdi->item.lParam;
 
 	// title text (unless it's being edited)
-	if ((nMask & TVIF_TEXT) &&  m_dwEditingID != dwTaskID)
+	if ((nMask & TVIF_TEXT) && m_dwEditingID != dwTaskID)
 	{
 		TODOITEM* pTDI = GetTask(dwTaskID);
 		ASSERT(pTDI);
@@ -7299,7 +7305,8 @@ void CToDoCtrl::OnTreeCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 }
 
-void CToDoCtrl::DrawCommentsText(CDC* pDC, const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const CRect& rText, TDI_STATE nState)
+void CToDoCtrl::DrawCommentsText(CDC* pDC, const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const CRect& rText,
+	TDI_STATE nState)
 {
 	if (!pTDI->sComments.IsEmpty())
 	{
@@ -7402,8 +7409,7 @@ void CToDoCtrl::DrawCommentsText(CDC* pDC, const TODOITEM* pTDI, const TODOSTRUC
 	}
 }
 
-void CToDoCtrl::GetTaskTextColors(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS,
-	COLORREF& crText, COLORREF& crBack)
+void CToDoCtrl::GetTaskTextColors(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, COLORREF& crText, COLORREF& crBack)
 {
 	crText = GetSysColor(COLOR_WINDOWTEXT);
 	BOOL bDone = m_data.IsTaskDone(pTDI, pTDS, TDCCHECKALL);
@@ -8064,8 +8070,8 @@ LRESULT CToDoCtrl::OnTreeDragDrop(WPARAM /*wParam*/, LPARAM /*lParam*/)
 						pSubMenu->EnableMenuItem(ID_TDD_TASKREFERENCE, MF_BYCOMMAND | MF_GRAYED);
 					}
 
-					UINT nCmdID = ::TrackPopupMenu(*pSubMenu, TPM_RETURNCMD | TPM_LEFTALIGN | TPM_LEFTBUTTON,
-						ptCursor.x, ptCursor.y, 0, *this, NULL);
+					UINT nCmdID = ::TrackPopupMenu(*pSubMenu, TPM_RETURNCMD | TPM_LEFTALIGN | TPM_LEFTBUTTON, ptCursor.x,
+						ptCursor.y, 0, *this, NULL);
 
 					switch (nCmdID)
 					{
@@ -8235,8 +8241,8 @@ void CToDoCtrl::PrepareTaskIDsForPaste(CTaskFile& tasks, TDC_RESETIDS nResetID) 
 #endif
 }
 
-void CToDoCtrl::BuildTaskIDMapForPaste(CTaskFile& tasks, HTASKITEM hTask, DWORD& dwNextID,
-	CMapID2ID& mapID, TDC_RESETIDS nResetID) const
+void CToDoCtrl::BuildTaskIDMapForPaste(CTaskFile& tasks, HTASKITEM hTask, DWORD& dwNextID, CMapID2ID& mapID,
+	TDC_RESETIDS nResetID) const
 {
 	if (nResetID == TDCR_NO) // sanity check
 	{
@@ -8862,7 +8868,7 @@ HTREEITEM CToDoCtrl::MoveItem(HTREEITEM hti, HTREEITEM htiDestParent, HTREEITEM 
 	}
 
 	// do the move and return the new tree item
-	return CTreeDragDropHelper::MoveTree(m_tree, htiTarget, hti, nWhere, DD_USESTEXTCALLBACK/* | DD_USESIMAGECALLBACK*/);
+	return CTreeDragDropHelper::MoveTree(m_tree, htiTarget, hti, nWhere, DD_USESTEXTCALLBACK);
 }
 
 BOOL CToDoCtrl::GotoNextTopLevelTask(TDC_GOTO nDirection)
@@ -9093,7 +9099,9 @@ BOOL CToDoCtrl::DrawItem(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const 
 				if ((!bDueToday && m_crDue != NOCOLOR) ||
 					(bDueToday && m_crDueToday != NOCOLOR))
 				{
-					POINT pt[3] = { { rItem.left, rItem.top + 7 },
+					POINT pt[3] =
+					{
+						{ rItem.left, rItem.top + 7 },
 						{ rItem.left, rItem.top },
 						{ rItem.left + 7, rItem.top }
 					};
@@ -9404,7 +9412,7 @@ BOOL CToDoCtrl::DrawItem(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const 
 	case TDCC_STARTDATE:
 		if (pTDI->HasStart())
 		{
-			if (!HasStyle(TDCS_HIDESTARTDUEFORDONETASKS) ||	!m_data.IsTaskDone(pTDI, pTDS, TDCCHECKALL))
+			if (!HasStyle(TDCS_HIDESTARTDUEFORDONETASKS) || !m_data.IsTaskDone(pTDI, pTDS, TDCCHECKALL))
 			{
 				if (pTDI->dateStart.m_dt > 0)
 				{
@@ -9539,8 +9547,7 @@ BOOL CToDoCtrl::DrawItem(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const 
 			{
 				rItem.DeflateRect(0, (rItem.Height() + 1 - 16) / 2);
 				rItem.left += NCG_COLPADDING;
-				::DrawIconEx(pNCGDI->pDC->GetSafeHdc(), rItem.left, rItem.top, hIcon,
-					16, 16, 0, NULL, DI_NORMAL);
+				::DrawIconEx(pNCGDI->pDC->GetSafeHdc(), rItem.left, rItem.top, hIcon, 16, 16, 0, NULL, DI_NORMAL);
 			}
 		}
 		break;
@@ -9558,8 +9565,7 @@ BOOL CToDoCtrl::DrawItem(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const 
 				{
 					rItem.DeflateRect(0, (rItem.Height() + 1 - 16) / 2);
 					rItem.left += NCG_COLPADDING;
-					::DrawIconEx(pNCGDI->pDC->GetSafeHdc(), rItem.left, rItem.top, hIcon,
-						16, 16, 0, NULL, DI_NORMAL);
+					::DrawIconEx(pNCGDI->pDC->GetSafeHdc(), rItem.left, rItem.top, hIcon, 16, 16, 0, NULL, DI_NORMAL);
 				}
 			}
 			else
@@ -9600,8 +9606,7 @@ BOOL CToDoCtrl::DrawItem(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const 
 			if (m_hilDone)
 			{
 				int nImage = bDone ? 2 : 1; // first image is blank
-				ImageList_Draw(m_hilDone, nImage, pNCGDI->pDC->GetSafeHdc(),
-					rItem.left, rItem.top, ILD_TRANSPARENT);
+				ImageList_Draw(m_hilDone, nImage, pNCGDI->pDC->GetSafeHdc(), rItem.left, rItem.top, ILD_TRANSPARENT);
 			}
 			else
 			{
@@ -10199,7 +10204,8 @@ CString CToDoCtrl::FormatInfoTip(const HTREEITEM hti, const TODOITEM* pTDI) cons
 
 	if (pTDI->IsDone())
 	{
-		sTip += CEnString(_T("\n%s %s"), CEnString(IDS_TDCTIP_DONEDATE), CDateHelper::FormatDate(pTDI->dateDone, dwDateFmt));
+		sTip += CEnString(_T("\n%s %s"), CEnString(IDS_TDCTIP_DONEDATE), CDateHelper::FormatDate(pTDI->dateDone,
+			dwDateFmt));
 	}
 	else
 	{
@@ -10215,7 +10221,8 @@ CString CToDoCtrl::FormatInfoTip(const HTREEITEM hti, const TODOITEM* pTDI) cons
 
 		if (IsColumnShowing(TDCC_STARTDATE) && pTDI->HasStart())
 		{
-			sTip += CEnString(_T("\n%s %s"), CEnString(IDS_TDCTIP_STARTDATE), CDateHelper::FormatDate(pTDI->dateStart, dwDateFmt));
+			sTip += CEnString(_T("\n%s %s"), CEnString(IDS_TDCTIP_STARTDATE), CDateHelper::FormatDate(pTDI->dateStart,
+				dwDateFmt));
 		}
 
 		if (IsColumnShowing(TDCC_DUEDATE) && pTDI->HasDue())
@@ -10225,7 +10232,8 @@ CString CToDoCtrl::FormatInfoTip(const HTREEITEM hti, const TODOITEM* pTDI) cons
 				dwDateFmt |= DHFD_TIME | DHFD_NOSEC;
 			}
 
-			sTip += CEnString(_T("\n%s %s"), CEnString(IDS_TDCTIP_DUEDATE), CDateHelper::FormatDate(pTDI->dateDue, dwDateFmt));
+			sTip += CEnString(_T("\n%s %s"), CEnString(IDS_TDCTIP_DUEDATE), CDateHelper::FormatDate(pTDI->dateDue,
+				dwDateFmt));
 		}
 
 		if (IsColumnShowing(TDCC_PERCENT))
@@ -10235,12 +10243,14 @@ CString CToDoCtrl::FormatInfoTip(const HTREEITEM hti, const TODOITEM* pTDI) cons
 
 		if (IsColumnShowing(TDCC_TIMEEST))
 		{
-			sTip += CEnString(_T("\n%s %.2f %c"), CEnString(IDS_TDCTIP_TIMEEST), m_data.CalcTimeEstimate(GetTaskID(hti), TDITU_HOURS), TIME_HOUR_ABBREV);
+			sTip += CEnString(_T("\n%s %.2f %c"), CEnString(IDS_TDCTIP_TIMEEST), m_data.CalcTimeEstimate(GetTaskID(hti),
+				TDITU_HOURS), TIME_HOUR_ABBREV);
 		}
 
 		if (IsColumnShowing(TDCC_TIMESPENT))
 		{
-			sTip += CEnString(_T("\n%s %.2f %c"), CEnString(IDS_TDCTIP_TIMESPENT), m_data.CalcTimeSpent(GetTaskID(hti), TDITU_HOURS), TIME_HOUR_ABBREV);
+			sTip += CEnString(_T("\n%s %.2f %c"), CEnString(IDS_TDCTIP_TIMESPENT), m_data.CalcTimeSpent(GetTaskID(hti),
+				TDITU_HOURS), TIME_HOUR_ABBREV);
 		}
 	}
 
@@ -10261,7 +10271,8 @@ CString CToDoCtrl::FormatInfoTip(const HTREEITEM hti, const TODOITEM* pTDI) cons
 
 	if (pTDI->tLastMod > 0)
 	{
-		sTip += CEnString(_T("\n%s %s (%s)"), CEnString(IDS_TDCTIP_LASTMOD), pTDI->tLastMod.Format(VAR_DATEVALUEONLY), pTDI->tLastMod.Format(VAR_TIMEVALUEONLY));
+		sTip += CEnString(_T("\n%s %s (%s)"), CEnString(IDS_TDCTIP_LASTMOD), pTDI->tLastMod.Format(VAR_DATEVALUEONLY),
+			pTDI->tLastMod.Format(VAR_TIMEVALUEONLY));
 	}
 
 	return sTip;
@@ -10924,8 +10935,8 @@ void CToDoCtrl::EndTimeTracking()
 		{
 			CTaskTimeLog log(GetFilePath());
 
-			log.LogTime(m_dwTimeTrackTaskID, GetTaskTitle(m_dwTimeTrackTaskID),
-				m_dLogTime, HasStyle(TDCS_LOGTASKTIMESEPARATELY));
+			log.LogTime(m_dwTimeTrackTaskID, GetTaskTitle(m_dwTimeTrackTaskID), m_dLogTime,
+				HasStyle(TDCS_LOGTASKTIMESEPARATELY));
 		}
 
 		// reset taskID and time
@@ -11709,7 +11720,8 @@ BOOL CToDoCtrl::AddSubTasksToTaskFile(const TODOSTRUCTURE* pTDSParent, CTaskFile
 	return TRUE;
 }
 
-BOOL CToDoCtrl::AddTaskToTaskFile(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, int nPos, CTaskFile& tasks, HTASKITEM hParentTask) const
+BOOL CToDoCtrl::AddTaskToTaskFile(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, int nPos, CTaskFile& tasks,
+	HTASKITEM hParentTask) const
 {
 	CString sTitle = pTDI->sTitle;
 	DWORD dwTaskID = pTDS->GetTaskID();
@@ -11912,8 +11924,8 @@ BOOL CToDoCtrl::InsertTasks(const CTaskFile& tasks, TDC_INSERTWHERE nWhere)
 	return AddTasksToTree(tasks, htiParent, htiAfter, TDCR_NO);
 }
 
-BOOL CToDoCtrl::SetTaskAttributes(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, CTaskFile& file,
-	HTASKITEM hTask, const TDCGETTASKS& filter, int nPos, BOOL bTitleCommentsOnly) const
+BOOL CToDoCtrl::SetTaskAttributes(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, CTaskFile& file, HTASKITEM hTask,
+	const TDCGETTASKS& filter, int nPos, BOOL bTitleCommentsOnly) const
 {
 	ASSERT(pTDI);
 
@@ -12255,8 +12267,8 @@ int CToDoCtrl::AddTreeChildrenToTaskFile(HTREEITEM hti, CTaskFile& file, HTASKIT
 	return nChildren;
 }
 
-BOOL CToDoCtrl::AddTreeItemToTaskFile(HTREEITEM hti, CTaskFile& file, HTASKITEM hParentTask,
-	const TDCGETTASKS& filter, int nPos) const
+BOOL CToDoCtrl::AddTreeItemToTaskFile(HTREEITEM hti, CTaskFile& file, HTASKITEM hParentTask, const TDCGETTASKS& filter,
+	int nPos) const
 {
 	// attributes
 	DWORD dwTaskID = GetTaskID(hti);
@@ -13038,12 +13050,12 @@ void CToDoCtrl::OnMouseMove(UINT nFlags, CPoint point)
 
 		if (HasStyle(TDCS_VERTCOMMENTS))
 		{
-			nMaxCommentSize  = rClient.Width() - GetMinNonCommentSize();
+			nMaxCommentSize = rClient.Width() - GetMinNonCommentSize();
 			nNewSize = nCommentsSize - (point.x - rTaskList.right);
 		}
 		else
 		{
-			nMaxCommentSize  = rClient.Height() - GetMinNonCommentSize();
+			nMaxCommentSize = rClient.Height() - GetMinNonCommentSize();
 			nNewSize = nCommentsSize - (point.y - rTaskList.bottom);
 		}
 
@@ -13171,7 +13183,8 @@ LRESULT CToDoCtrl::OnTimeUnitsChange(WPARAM wParam, LPARAM /*lParam*/)
 
 	if (bWantQueryRecalc)
 	{
-		nRecalcTime = MessageBox(CEnString(IDS_TE_RECALCPROMPT), CEnString(IDS_TE_RECALCTITLE), MB_ICONQUESTION | MB_YESNOCANCEL);
+		nRecalcTime = MessageBox(CEnString(IDS_TE_RECALCPROMPT), CEnString(IDS_TE_RECALCTITLE),
+			MB_ICONQUESTION | MB_YESNOCANCEL);
 	}
 
 	if (nRecalcTime != IDCANCEL)
@@ -13886,8 +13899,7 @@ BOOL CToDoCtrl::TaskHasIncompleteDependencies(HTREEITEM hti, CString& sIncomplet
 		// else pass to parent if we can't handle
 		else if (!sFile.IsEmpty())
 		{
-			BOOL bDependentIsDone = GetParent()->SendMessage(WM_TDCM_TASKISDONE,
-				dwTaskID, (LPARAM)(LPCTSTR)sFile);
+			BOOL bDependentIsDone = GetParent()->SendMessage(WM_TDCM_TASKISDONE, dwTaskID, (LPARAM)(LPCTSTR)sFile);
 
 			if (!bDependentIsDone)
 			{
@@ -14187,7 +14199,7 @@ BOOL CToDoCtrl::UndoLastActionItems(const CArrayUndoElements& aElms)
 				}
 
 				// undo the move
-				if (!CTreeDragDropHelper::MoveTree(m_tree, htiTarget, hti, nWhere, DD_USESTEXTCALLBACK/* | DD_USESIMAGECALLBACK*/))
+				if (!CTreeDragDropHelper::MoveTree(m_tree, htiTarget, hti, nWhere, DD_USESTEXTCALLBACK))
 				{
 					ASSERT(0);
 					return FALSE;
@@ -14382,15 +14394,18 @@ int CALLBACK CToDoCtrl::SortFuncMulti(LPARAM lParam1, LPARAM lParam2, LPARAM lPa
 	TDSORTPARAMS* pSS = (TDSORTPARAMS*)lParamSort;
 	ASSERT(pSS->sort.nBy1 != TDC_UNSORTED);
 
-	int nCompare = SortTasks(lParam1, lParam2, pSS->sort.nBy1, pSS->sort.bAscending1, pSS->bSortDueTodayHigh, pSS->dwTimeTrackID, pSS->pData);
+	int nCompare = SortTasks(lParam1, lParam2, pSS->sort.nBy1, pSS->sort.bAscending1, pSS->bSortDueTodayHigh,
+		pSS->dwTimeTrackID, pSS->pData);
 
 	if (nCompare == 0 && pSS->sort.nBy2 != TDC_UNSORTED)
 	{
-		nCompare = SortTasks(lParam1, lParam2, pSS->sort.nBy2, pSS->sort.bAscending2, pSS->bSortDueTodayHigh, pSS->dwTimeTrackID, pSS->pData);
+		nCompare = SortTasks(lParam1, lParam2, pSS->sort.nBy2, pSS->sort.bAscending2, pSS->bSortDueTodayHigh,
+			pSS->dwTimeTrackID, pSS->pData);
 
 		if (nCompare == 0 && pSS->sort.nBy3 != TDC_UNSORTED)
 		{
-			nCompare = SortTasks(lParam1, lParam2, pSS->sort.nBy3, pSS->sort.bAscending3, pSS->bSortDueTodayHigh, pSS->dwTimeTrackID, pSS->pData);
+			nCompare = SortTasks(lParam1, lParam2, pSS->sort.nBy3, pSS->sort.bAscending3, pSS->bSortDueTodayHigh,
+				pSS->dwTimeTrackID, pSS->pData);
 		}
 	}
 
@@ -14401,11 +14416,12 @@ int CALLBACK CToDoCtrl::SortFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSo
 {
 	TDSORTPARAMS* pSS = (TDSORTPARAMS*)lParamSort;
 
-	return SortTasks(lParam1, lParam2, pSS->sort.nBy1, pSS->sort.bAscending1, pSS->bSortDueTodayHigh, pSS->dwTimeTrackID, pSS->pData);
+	return SortTasks(lParam1, lParam2, pSS->sort.nBy1, pSS->sort.bAscending1, pSS->bSortDueTodayHigh,
+		pSS->dwTimeTrackID, pSS->pData);
 }
 
-int CToDoCtrl::SortTasks(LPARAM lParam1, LPARAM lParam2, TDC_SORTBY nSortBy, BOOL bAscending,
-		BOOL bSortDueTodayHigh, DWORD dwTimeTrackedID, const CToDoCtrlData* pData)
+int CToDoCtrl::SortTasks(LPARAM lParam1, LPARAM lParam2, TDC_SORTBY nSortBy, BOOL bAscending, BOOL bSortDueTodayHigh,
+	DWORD dwTimeTrackedID, const CToDoCtrlData* pData)
 {
 	if (nSortBy == TDC_SORTBYTIMETRACKING)
 	{

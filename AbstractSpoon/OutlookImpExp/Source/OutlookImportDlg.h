@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -61,9 +66,9 @@ public:
 // Dialog Data
 	//{{AFX_DATA(COutlookImportDlg)
 	enum { IDD = IDD_IMPORT_DIALOG };
-	BOOL	m_bRemoveOutlookTasks;
+	BOOL m_bRemoveOutlookTasks;
 	//}}AFX_DATA
-	CCheckListBoxEx	m_lbTasks;
+	CCheckListBoxEx m_lbTasks;
 	ITaskList7* m_pDestTaskFile;
 	_Application* m_pOutlook;
 	MAPIFolder* m_pFolder;

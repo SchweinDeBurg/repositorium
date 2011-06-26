@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -109,15 +114,15 @@ protected:
 	enum { IDD = IDD_PREFTASK_PAGE };
 	CString m_sDaysInWeek;
 	CString m_sHoursInDay;
-	BOOL    m_bLogTime;
-	BOOL    m_bLogTasksSeparately;
-	BOOL    m_bExclusiveTimeTracking;
-	BOOL    m_bAllowParentTimeTracking;
+	BOOL m_bLogTime;
+	BOOL m_bLogTasksSeparately;
+	BOOL m_bExclusiveTimeTracking;
+	BOOL m_bAllowParentTimeTracking;
 	//}}AFX_DATA
-	BOOL    m_bTrackNonSelectedTasks;
-	BOOL    m_bTrackOnScreenSaver;
-	BOOL    m_bTrackNonActiveTasklists;
-	BOOL    m_bTrackHibernated;
+	BOOL m_bTrackNonSelectedTasks;
+	BOOL m_bTrackOnScreenSaver;
+	BOOL m_bTrackNonActiveTasklists;
+	BOOL m_bTrackHibernated;
 	CGroupLineManager m_mgrGroupLines;
 
 // Overrides

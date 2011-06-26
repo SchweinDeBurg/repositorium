@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -189,7 +194,8 @@ CString CTaskListHtmlExporter::FormatCharSet(const ITaskList8* pTasks) const
 	return sCharSet;
 }
 
-CString& CTaskListHtmlExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM hTask, int nDepth, int nPos, const CString& sParentPos, CString& sOutput) const
+CString& CTaskListHtmlExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM hTask, int nDepth, int nPos,
+	const CString& sParentPos, CString& sOutput) const
 {
 	// handle locale specific decimal separator
 	_tsetlocale(LC_NUMERIC, _T(""));
@@ -352,7 +358,8 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM h
 				TXT2XML(sItemComments); // TODO
 
 				CString sColor = bDone ? DONECOLOR : _T("#606060");
-				sComments.Format(_T("<blockquote><font color='%s'>%s</font></blockquote>"), (LPCTSTR)sColor, (LPCTSTR)sItemComments);
+				sComments.Format(_T("<blockquote><font color='%s'>%s</font></blockquote>"), (LPCTSTR)sColor,
+					(LPCTSTR)sItemComments);
 
 				// replace carriage returns with <br>
 				sComments.Replace(ENDL, _T("<br>"));
@@ -464,8 +471,8 @@ CString& CTaskListHtmlExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM h
 	return sOutput;
 }
 
-BOOL CTaskListHtmlExporter::FormatAttribute(const ITaskList8* pTasks, HTASKITEM hTask,
-	LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
+BOOL CTaskListHtmlExporter::FormatAttribute(const ITaskList8* pTasks, HTASKITEM hTask, LPCTSTR szAttribName,
+	LPCTSTR szFormat, CString& sAttribText)
 {
 	if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAttribName)))
 	{
@@ -476,8 +483,8 @@ BOOL CTaskListHtmlExporter::FormatAttribute(const ITaskList8* pTasks, HTASKITEM 
 	return FALSE;
 }
 
-BOOL CTaskListHtmlExporter::FormatAttributeList(const ITaskList8* pTasks, HTASKITEM hTask,
-	LPCTSTR szNumAttribName, LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
+BOOL CTaskListHtmlExporter::FormatAttributeList(const ITaskList8* pTasks, HTASKITEM hTask, LPCTSTR szNumAttribName,
+	LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
 {
 	int nItemCount = _ttoi(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szNumAttribName)));
 

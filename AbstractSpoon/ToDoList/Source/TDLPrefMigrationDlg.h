@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_TDLPREFMIGRATIONDLG_H__57A43C77_570F_4B6D_A27B_4D33936B6CBF__INCLUDED_)
@@ -64,7 +69,7 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CTDLPrefMigrationDlg)
 	enum { IDD = IDD_REGMIGRATION_DIALOG };
-	CAnimateCtrl	m_animation;
+	CAnimateCtrl m_animation;
 	//}}AFX_DATA
 	CString m_sAnimationFilePath;
 

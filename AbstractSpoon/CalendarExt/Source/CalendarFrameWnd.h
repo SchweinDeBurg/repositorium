@@ -15,6 +15,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.3-6.2.2 sources
 //*****************************************************************************
 
@@ -57,37 +62,37 @@ public:
 	virtual void Release();
 
 	DWORD GetCompletedTasksStyle() const;
-	int  GetNumWeeksToDisplay() const;
-	int	 GetNumDaysToDisplay() const;
+	int GetNumWeeksToDisplay() const;
+	int GetNumDaysToDisplay() const;
 	BOOL IsWeekendsHidden() const;
 	BOOL IsDateHidden(const COleDateTime& _dt) const;
 
 //protected member functions
 protected:
-	int     GetStatusBarHeight() const;
-	BOOL    InitStatusBar();
-	void    UpdateStatusBar();
+	int GetStatusBarHeight() const;
+	BOOL InitStatusBar();
+	void UpdateStatusBar();
 
-	void    ResizeControls(int _nxFrame, int _nyFrame);
-	void    UpdateTitleBarText();
+	void ResizeControls(int _nxFrame, int _nyFrame);
+	void UpdateTitleBarText();
 
 //protected member variables
 protected:
-	CBigCalendarCtrl    m_BigCalendar;
-	CMiniCalendarCtrl   m_MiniCalendar;
-	CStatusBarACT       m_StatusBar;
-	CCalendarData*      m_pCalendarData;
-	HWND                m_hParentOfFrame;
-	CMenuEx             m_menubar;
+	CBigCalendarCtrl m_BigCalendar;
+	CMiniCalendarCtrl m_MiniCalendar;
+	CStatusBarACT m_StatusBar;
+	CCalendarData* m_pCalendarData;
+	HWND m_hParentOfFrame;
+	CMenuEx m_menubar;
 
-	DWORD               m_dwStyleCompletedTasks;
-	int                 m_nNumVisibleWeeks;
-	BOOL                m_bShowMiniCalendar;
-	BOOL                m_bShowStatusBar;
-	BOOL                m_bShowWeekends;
-	BOOL                m_bWindowMaximized;
-	CRect               m_rcWindowSize;
-	CString             m_strTasklistName;
+	DWORD m_dwStyleCompletedTasks;
+	int m_nNumVisibleWeeks;
+	BOOL m_bShowMiniCalendar;
+	BOOL m_bShowStatusBar;
+	BOOL m_bShowWeekends;
+	BOOL m_bWindowMaximized;
+	CRect m_rcWindowSize;
+	CString m_strTasklistName;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -106,7 +111,7 @@ protected:
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	afx_msg void OnClose();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg int  OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnViewMiniCalendar();
 	afx_msg void OnUpdateViewMiniCalendar(CCmdUI* pCmdUI);

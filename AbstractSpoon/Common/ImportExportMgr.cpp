@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -62,7 +67,8 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CImportExportMgr::CImportExportMgr() : m_bInitialized(FALSE)
+CImportExportMgr::CImportExportMgr():
+m_bInitialized(FALSE)
 {
 }
 
@@ -287,7 +293,8 @@ BOOL CImportExportMgr::ImportTaskList(LPCTSTR szSrcFile, ITaskList* pDestTasks, 
 	return FALSE;
 }
 
-BOOL CImportExportMgr::ExportTaskList(const ITaskList* pSrcTasks, LPCTSTR szDestFile, int nByExporter, BOOL bSilent) const
+BOOL CImportExportMgr::ExportTaskList(const ITaskList* pSrcTasks, LPCTSTR szDestFile, int nByExporter,
+	BOOL bSilent) const
 {
 	if (!m_bInitialized)
 	{
@@ -304,7 +311,8 @@ BOOL CImportExportMgr::ExportTaskList(const ITaskList* pSrcTasks, LPCTSTR szDest
 	return FALSE;
 }
 
-BOOL CImportExportMgr::ExportTaskLists(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile, int nByExporter, BOOL bSilent) const
+BOOL CImportExportMgr::ExportTaskLists(const IMultiTaskList* pSrcTasks, LPCTSTR szDestFile, int nByExporter,
+	BOOL bSilent) const
 {
 	if (!m_bInitialized)
 	{

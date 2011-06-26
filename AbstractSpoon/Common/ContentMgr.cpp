@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -61,7 +66,9 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CContentMgr::CContentMgr() : m_bInitialized(FALSE), m_bSomeBadVersions(FALSE)
+CContentMgr::CContentMgr():
+m_bInitialized(FALSE),
+m_bSomeBadVersions(FALSE)
 {
 }
 
@@ -196,8 +203,8 @@ BOOL CContentMgr::ContentFormatIsText(const CString& sTypeID) const
 	return ContentFormatIsText(FindContent(sTypeID));
 }
 
-BOOL CContentMgr::CreateContentControl(int nContent, CContentCtrl& ctrl, UINT nCtrlID, DWORD nStyle,
-	DWORD dwExStyle, const CRect& rect, HWND hwndParent)
+BOOL CContentMgr::CreateContentControl(int nContent, CContentCtrl& ctrl, UINT nCtrlID, DWORD nStyle, DWORD dwExStyle,
+	const CRect& rect, HWND hwndParent)
 {
 	if (!m_bInitialized)
 	{
@@ -208,8 +215,8 @@ BOOL CContentMgr::CreateContentControl(int nContent, CContentCtrl& ctrl, UINT nC
 	{
 		ASSERT(m_aContent[nContent] != NULL);
 
-		IContentControl* pControl = m_aContent[nContent]->CreateCtrl((WORD)nCtrlID, nStyle, rect.left,
-			rect.top, rect.Width(), rect.Height(), hwndParent);
+		IContentControl* pControl = m_aContent[nContent]->CreateCtrl((WORD)nCtrlID, nStyle, rect.left, rect.top,
+			rect.Width(), rect.Height(), hwndParent);
 
 		if (pControl && pControl->GetHwnd())
 		{
@@ -279,7 +286,8 @@ BOOL CContentMgr::ConvertContentToHtml(const CString& sContent, CString& sHtml, 
 
 	ASSERT(m_aContent[nContent] != NULL);
 
-	int nHtmlLen = m_aContent[nContent]->ConvertToHtml((const unsigned char*)(LPCTSTR)sContent, sContent.GetLength(), szCharSet, szHtml);
+	int nHtmlLen = m_aContent[nContent]->ConvertToHtml((const unsigned char*)(LPCTSTR)sContent, sContent.GetLength(),
+		szCharSet, szHtml);
 
 	if (nHtmlLen)
 	{

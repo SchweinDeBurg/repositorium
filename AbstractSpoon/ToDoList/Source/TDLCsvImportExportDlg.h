@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -74,11 +79,11 @@ public:
 protected:
 // Dialog Data
 	//{{AFX_DATA(CTDLCsvImportExportDlg)
-	CString	m_sDelim;
-	CString	m_sFilePath;
-	BOOL	m_bAlwaysExportTaskIDs;
+	CString m_sDelim;
+	CString m_sFilePath;
+	BOOL m_bAlwaysExportTaskIDs;
 	//}}AFX_DATA
-	CFileEdit	m_eFilePath;
+	CFileEdit m_eFilePath;
 	CTDLCsvAttributeSetupListCtrl m_lcColumnSetup;
 	BOOL m_bImporting;
 	CTDCCsvColumnMapping m_aMasterColumnMapping;

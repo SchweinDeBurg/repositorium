@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -49,15 +54,15 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-const int olFolderDeletedItems  = 3;
-const int olFolderOutbox        = 4;
-const int olFolderSentMail      = 5;
-const int olFolderInbox         = 6;
-const int olFolderCalendar      = 9;
-const int olFolderContacts      = 10;
-const int olFolderJournal       = 11;
-const int olFolderNotes         = 12;
-const int olFolderTasks         = 13;
+const int olFolderDeletedItems = 3;
+const int olFolderOutbox = 4;
+const int olFolderSentMail = 5;
+const int olFolderInbox = 6;
+const int olFolderCalendar = 9;
+const int olFolderContacts = 10;
+const int olFolderJournal = 11;
+const int olFolderNotes = 12;
+const int olFolderTasks = 13;
 
 LPCTSTR PATHDELIM = _T(" \\ ");
 
@@ -65,8 +70,10 @@ LPCTSTR PATHDELIM = _T(" \\ ");
 // COutlookImportDlg dialog
 
 
-COutlookImportDlg::COutlookImportDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(COutlookImportDlg::IDD, pParent), m_pDestTaskFile(NULL), m_pOutlook(NULL)
+COutlookImportDlg::COutlookImportDlg(CWnd* pParent /*=NULL*/):
+CDialog(COutlookImportDlg::IDD, pParent),
+m_pDestTaskFile(NULL),
+m_pOutlook(NULL)
 {
 	//{{AFX_DATA_INIT(COutlookImportDlg)
 	//}}AFX_DATA_INIT

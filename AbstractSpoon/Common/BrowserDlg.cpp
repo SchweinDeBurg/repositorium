@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -98,8 +103,7 @@ int CBrowserDlg::DoModal(LPCTSTR szCaption, LPCTSTR szUrlPath, CWnd* pParentWnd)
 
 	m_sUrl = szUrlPath;
 
-	return CRuntimeDlg::DoModal(szCaption, (DWORD)RTD_DEFSTYLE | WS_THICKFRAME, (DWORD)RTD_DEFEXSTYLE,
-		rectAuto, pParentWnd);
+	return CRuntimeDlg::DoModal(szCaption, (DWORD)RTD_DEFSTYLE | WS_THICKFRAME, (DWORD)RTD_DEFEXSTYLE, rectAuto, pParentWnd);
 }
 
 BOOL CBrowserDlg::Create(LPCTSTR szCaption, LPCTSTR szUrlPath, CWnd* pParentWnd)
@@ -111,8 +115,7 @@ BOOL CBrowserDlg::Create(LPCTSTR szCaption, LPCTSTR szUrlPath, CWnd* pParentWnd)
 
 	m_sUrl = szUrlPath;
 
-	return CRuntimeDlg::Create(szCaption, (DWORD)RTD_DEFSTYLE | WS_THICKFRAME, (DWORD)RTD_DEFEXSTYLE,
-		rectAuto, pParentWnd);
+	return CRuntimeDlg::Create(szCaption, (DWORD)RTD_DEFSTYLE | WS_THICKFRAME, (DWORD)RTD_DEFEXSTYLE, rectAuto, pParentWnd);
 }
 
 BOOL CBrowserDlg::Navigate(LPCTSTR szUrlPath)
@@ -131,8 +134,7 @@ BOOL CBrowserDlg::OnInitDialog()
 	{
 		AfxEnableControlContainer();
 
-		if (m_browser.Create(_T(""), WS_CHILD | WS_TABSTOP | WS_VISIBLE, CRect(0, 0, 400, 400),
-			this, 1))
+		if (m_browser.Create(_T(""), WS_CHILD | WS_TABSTOP | WS_VISIBLE, CRect(0, 0, 400, 400), this, 1))
 		{
 			COleVariant vFlags(0L), vFrame(_T("")), vData(_T("")), vHeaders(_T(""));
 			m_browser.Navigate(m_sUrl, vFlags, vFrame, vData, vHeaders);

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -61,7 +66,9 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CFilterOptionComboBox
 
-CTDLFilterOptionComboBox::CTDLFilterOptionComboBox() : CEnCheckComboBox(TRUE, 0, IDS_TDC_NONE), m_dwOptions((DWORD) - 1)
+CTDLFilterOptionComboBox::CTDLFilterOptionComboBox():
+CEnCheckComboBox(TRUE, 0, IDS_TDC_NONE),
+m_dwOptions((DWORD)-1)
 {
 }
 
@@ -81,7 +88,7 @@ END_MESSAGE_MAP()
 void CTDLFilterOptionComboBox::Initialize(DWORD dwFlags, DWORD dwOptions)
 {
 	ResetContent();
-	m_dwOptions = (DWORD) - 1;
+	m_dwOptions = (DWORD)-1;
 
 	CString sFlag;
 
@@ -109,7 +116,7 @@ void CTDLFilterOptionComboBox::Initialize(DWORD dwFlags, DWORD dwOptions)
 void CTDLFilterOptionComboBox::Initialize(const FTDCFILTER& filter, FTC_VIEW /*nView*/)
 {
 	ResetContent();
-	m_dwOptions = (DWORD) - 1;
+	m_dwOptions = (DWORD)-1;
 
 	// add flags to droplist depending on the filter being used
 	CString sFlag;

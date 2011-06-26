@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // OptionsDlg.cpp : implementation file
@@ -49,8 +54,8 @@ static char THIS_FILE[] = __FILE__;
 // COptionsDlg dialog
 
 
-COptionsDlg::COptionsDlg(BOOL bImport, CWnd* pParent /*=NULL*/)
-	: CDialog(IDD_OPTIONSDIALOG, pParent)
+COptionsDlg::COptionsDlg(BOOL bImport, CWnd* pParent /*=NULL*/):
+CDialog(IDD_OPTIONSDIALOG, pParent)
 {
 	//{{AFX_DATA_INIT(COptionsDlg)
 

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -59,15 +64,18 @@
 /////////////////////////////////////////////////////////////////////////////
 // CExportDlg dialog
 
-enum { ED_HTMLFMT, ED_TEXTFMT };
+enum
+{
+	ED_HTMLFMT,
+	ED_TEXTFMT
+};
 
 class CExportDlg : public CDialog
 {
 // Construction
 public:
 	CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL bShowSubtaskCheckbox = TRUE,
-		BOOL bVisibleColumnsOnly = TRUE, LPCTSTR szFilePath = NULL, LPCTSTR szFolderPath = NULL,
-		CWnd* pParent = NULL);
+		BOOL bVisibleColumnsOnly = TRUE, LPCTSTR szFilePath = NULL, LPCTSTR szFolderPath = NULL, CWnd* pParent = NULL);
 
 	BOOL GetExportAllTasklists();
 	int GetExportFormat()
@@ -88,11 +96,11 @@ public:
 protected:
 // Dialog Data
 	//{{AFX_DATA(CExportDlg)
-	CComboBox   m_cbFormat;
-	CFileEdit   m_eExportPath;
-	int     m_nExportOption;
+	CComboBox m_cbFormat;
+	CFileEdit m_eExportPath;
+	int m_nExportOption;
 	CString m_sExportPath;
-	BOOL    m_bExportOneFile;
+	BOOL m_bExportOneFile;
 	CString m_sPathLabel;
 	//}}AFX_DATA
 	CTaskSelectionDlg m_taskSel;

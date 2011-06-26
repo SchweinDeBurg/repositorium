@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -72,18 +77,18 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CTDLSetReminderDlg)
 	enum { IDD = IDD_SETREMINDER_DIALOG };
-	CTimeComboBox   m_cbAbsoluteTime;
-	CFileEdit   m_ePlaySound;
-	int     m_bRelativeFromDueDate;
+	CTimeComboBox m_cbAbsoluteTime;
+	CFileEdit m_ePlaySound;
+	int m_bRelativeFromDueDate;
 	CString m_sTaskTitle;
 	CComboBox m_cbLeadIn;
 	int m_nLeadIn;
 	double m_dRelativeLeadIn;
 	CString m_sSoundFile;
-	int     m_bRelative;
-	COleDateTime    m_dtAbsoluteDate;
+	int m_bRelative;
+	COleDateTime m_dtAbsoluteDate;
 	//}}AFX_DATA
-	double  m_dAbsoluteTime;
+	double m_dAbsoluteTime;
 
 
 // Overrides

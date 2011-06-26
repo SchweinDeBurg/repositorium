@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -148,7 +153,7 @@ public:
 	mutable BOOL bGoodAsDone;
 	mutable int nSubtasksCount, nSubtasksDone;
 
-	// C4995: name was marked as #pragma deprecated
+// C4995: name was marked as #pragma deprecated
 #pragma warning(disable: 4995)
 	DECLARE_FIXED_ALLOC(TODOITEM);
 #pragma warning(default: 4995)
@@ -159,7 +164,11 @@ class TODOSTRUCTURE
 	friend class CToDoCtrlStructure;
 
 public:
-	TODOSTRUCTURE() : m_dwID(0), m_pTDSParent(NULL) {}
+	TODOSTRUCTURE():
+	m_dwID(0),
+	m_pTDSParent(NULL)
+	{
+	}
 	TODOSTRUCTURE(DWORD dwID);
 	~TODOSTRUCTURE();
 
@@ -222,7 +231,10 @@ protected:
 class CToDoCtrlStructure : public TODOSTRUCTURE
 {
 public:
-	CToDoCtrlStructure() : TODOSTRUCTURE() {}
+	CToDoCtrlStructure():
+	TODOSTRUCTURE()
+	{
+	}
 	CToDoCtrlStructure(const CToDoCtrlStructure& tds);
 	~CToDoCtrlStructure();
 

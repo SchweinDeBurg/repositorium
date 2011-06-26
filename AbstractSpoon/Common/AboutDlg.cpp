@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // AboutDlg.cpp : implementation file
@@ -69,9 +74,8 @@ enum // ctrl IDs
 	IDC_LICENSE // 105
 };
 
-CAboutDlg::CAboutDlg(UINT nAppIconID, AB_STYLE nStyle,
-	LPCTSTR szAppName, LPCTSTR szAppDescription, LPCTSTR szCopyright, LPCTSTR szLicense,
-	int nAppLines, int nDescLines, int nCopyrightLines, int nLicenseLines):
+CAboutDlg::CAboutDlg(UINT nAppIconID, AB_STYLE nStyle, LPCTSTR szAppName, LPCTSTR szAppDescription, LPCTSTR szCopyright,
+	LPCTSTR szLicense, int nAppLines, int nDescLines, int nCopyrightLines, int nLicenseLines):
 CRuntimeDlg(),
 m_sAppName(szAppName),
 m_sAppDescription(szAppDescription),
@@ -85,8 +89,20 @@ m_nStyle(nStyle)
 	AddRCControl(_T("ICON"), _T(""), _T(""), SS_ICON, 0, 5, 5, 20, 20, IDC_APPICON);
 
 	// variable height items
-	const UINT ITEMIDS[] = { IDC_APPNAME, IDC_APPDESCRIPTION, IDC_COPYRIGHT, IDC_LICENSE };
-	const UINT NUMLINES[] =  { max(nAppLines, 0), max(nDescLines, 0), max(nCopyrightLines, 0), max(nLicenseLines, 0) };
+	const UINT ITEMIDS[] =
+	{
+		IDC_APPNAME,
+		IDC_APPDESCRIPTION,
+		IDC_COPYRIGHT,
+		IDC_LICENSE
+	};
+	const UINT NUMLINES[] =
+	{
+		max(nAppLines, 0),
+		max(nDescLines, 0),
+		max(nCopyrightLines, 0),
+		max(nLicenseLines, 0)
+	};
 	const UINT NUMITEMS = sizeof(ITEMIDS) / sizeof(UINT);
 
 	int nTop = 7;
@@ -98,7 +114,8 @@ m_nStyle(nStyle)
 		// special case: copyright
 		if (nItem == 2 && m_nStyle == ABS_EDITCOPYRIGHT)
 		{
-			AddRCControl(_T("CONTROL"), _T("RICHEDIT"), _T(""), ES_READONLY | ES_MULTILINE | WS_VSCROLL, WS_EX_STATICEDGE, 36, nTop, 174, nHeight, ITEMIDS[nItem]);
+			AddRCControl(_T("CONTROL"), _T("RICHEDIT"), _T(""), ES_READONLY | ES_MULTILINE | WS_VSCROLL, WS_EX_STATICEDGE,
+				36, nTop, 174, nHeight, ITEMIDS[nItem]);
 		}
 		else
 		{

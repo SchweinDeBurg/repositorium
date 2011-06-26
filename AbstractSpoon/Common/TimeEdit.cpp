@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -123,7 +128,9 @@ const TIMEUNIT& GetTimeUnit(int nUnits)
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-CTimeEdit::CTimeEdit(int nUnits, int nMaxDecPlaces) : m_nUnits(nUnits), m_nMaxDecPlaces(nMaxDecPlaces)
+CTimeEdit::CTimeEdit(int nUnits, int nMaxDecPlaces):
+m_nUnits(nUnits),
+m_nMaxDecPlaces(nMaxDecPlaces)
 {
 	// init static units
 	for (int nUnit = 0; nUnit < NUM_UNITS; nUnit++)
@@ -260,8 +267,8 @@ void CTimeEdit::OnBtnClick(UINT nID)
 		tpmp.cbSize = sizeof(TPMPARAMS);
 		tpmp.rcExclude = rButton;
 
-		UINT nID = ::TrackPopupMenuEx(menu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_RETURNCMD,
-			rButton.right, rButton.top, *this, &tpmp);
+		UINT nID = ::TrackPopupMenuEx(menu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_RETURNCMD, rButton.right,
+			rButton.top, *this, &tpmp);
 
 		// handle result
 		for (nUnit = 0; nUnit < NUM_UNITS; nUnit++)

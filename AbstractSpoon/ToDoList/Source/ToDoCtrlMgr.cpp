@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -64,11 +69,18 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CToDoCtrlMgr dialog
 
-enum { IM_NONE = -1, IM_READONLY, IM_CHECKEDIN, IM_CHECKEDOUT, IM_NOTLOADED };
+enum
+{
+	IM_NONE = -1,
+	IM_READONLY,
+	IM_CHECKEDIN,
+	IM_CHECKEDOUT,
+	IM_NOTLOADED
+};
 
 #define ASSERTVALIDINDEX(i) { ASSERT (i >= 0 && i < GetCount()); }
 
-CToDoCtrlMgr::CToDoCtrlMgr(CTabCtrl& tabCtrl) :
+CToDoCtrlMgr::CToDoCtrlMgr(CTabCtrl& tabCtrl):
 m_tabCtrl(tabCtrl),
 m_pPrefs(NULL)
 {
@@ -402,7 +414,7 @@ void CToDoCtrlMgr::UpdateToDoCtrlReadOnlyUIState(int nIndex)
 void CToDoCtrlMgr::UpdateToDoCtrlReadOnlyUIState(CFilteredToDoCtrl& tdc)
 {
 	LPCTSTR szPath = tdc.GetFilePath();
-	BOOL bReadOnly = CDriveInfo::IsReadonlyPath(szPath) >  0;
+	BOOL bReadOnly = CDriveInfo::IsReadonlyPath(szPath) > 0;
 
 	if (!bReadOnly)
 	{

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -137,14 +142,13 @@ public:
 	virtual const char* GetTypeID() const = 0;
 	virtual const char* GetTypeDescription() const = 0;
 
-	virtual IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
-		long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent) = 0;
+	virtual IContentControl* CreateCtrl(unsigned short nCtrlID, unsigned long nStyle, long nLeft, long nTop,
+		long nWidth, long nHeight, HWND hwndParent) = 0;
 
 	virtual void Release() = 0;
 
 	// returns the length of the html or zero if not supported
-	virtual int ConvertToHtml(const unsigned char* pContent, int nLength,
-		const TCHAR* szCharSet, char*& pHtml) = 0;
+	virtual int ConvertToHtml(const unsigned char* pContent, int nLength, const TCHAR* szCharSet, char*& pHtml) = 0;
 };
 
 class ISpellCheck;

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -124,19 +129,19 @@ public:
 protected:
 // Dialog Data
 	//{{AFX_DATA(CRecurringTaskOptionDlg)
-	int     m_nRegularity;
-	int     m_bRecalcFromDue;
-	int     m_nReuse;
+	int m_nRegularity;
+	int m_bRecalcFromDue;
+	int m_nReuse;
 	//}}AFX_DATA
-	int     m_nNumDays;
+	int m_nNumDays;
 	CCheckListBoxEx m_lbWeekdays;
-	int     m_nNumWeeks;
+	int m_nNumWeeks;
 	DWORD m_dwWeekdays;
-	CMonthComboBox  m_cbMonths;
-	int     m_nMonth;
-	int     m_nYearMonthDay;
-	int     m_nNumMonths;
-	int     m_nMonthDay;
+	CMonthComboBox m_cbMonths;
+	int m_nMonth;
+	int m_nYearMonthDay;
+	int m_nNumMonths;
+	int m_nMonthDay;
 
 // Overrides
 	// ClassWizard generated virtual function overrides

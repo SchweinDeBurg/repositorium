@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -89,14 +94,22 @@ CString& TXT2HTML(CString& txt)
 IMPLEMENT_FIXED_ALLOC(CXmlItem, 1024);
 #pragma warning(default: 4995)
 
-CXmlItem::CXmlItem(CXmlItem* pParent, LPCTSTR szName, LPCTSTR szValue, XI_TYPE nType) :
-	m_pParent(pParent), m_pSibling(NULL), m_sName(szName), m_sValue(szValue), m_nType(nType)
+CXmlItem::CXmlItem(CXmlItem* pParent, LPCTSTR szName, LPCTSTR szValue, XI_TYPE nType):
+m_pParent(pParent),
+m_pSibling(NULL),
+m_sName(szName),
+m_sValue(szValue),
+m_nType(nType)
 {
 	ValidateString(m_sValue);
 }
 
-CXmlItem::CXmlItem(const CXmlItem& xi, CXmlItem* pParent) :
-	m_pParent(pParent), m_pSibling(NULL), m_sName(xi.m_sName), m_sValue(xi.m_sValue), m_nType(xi.m_nType)
+CXmlItem::CXmlItem(const CXmlItem& xi, CXmlItem* pParent):
+m_pParent(pParent),
+m_pSibling(NULL),
+m_sName(xi.m_sName),
+m_sValue(xi.m_sValue),
+m_nType(xi.m_nType)
 {
 	Copy(xi, TRUE);
 }
@@ -720,8 +733,7 @@ void CXmlItem::SortItems(LPCTSTR szItemName, LPCTSTR szKeyName, XI_SORTKEY nKey,
 	}
 }
 
-int CXmlItem::CompareItems(const CXmlItem* pXIItem1, const CXmlItem* pXIItem2,
-	LPCTSTR szKeyName, XI_SORTKEY nKey)
+int CXmlItem::CompareItems(const CXmlItem* pXIItem1, const CXmlItem* pXIItem2, LPCTSTR szKeyName, XI_SORTKEY nKey)
 {
 	LPCTSTR szValue1 = pXIItem1->GetItemValue(szKeyName);
 	LPCTSTR szValue2 = pXIItem2->GetItemValue(szKeyName);
@@ -887,7 +899,8 @@ CString CXmlItem::ToString(double dValue)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CXmlFile::CXmlFile(LPCTSTR szRootItemName) : m_xiRoot(NULL, szRootItemName)
+CXmlFile::CXmlFile(LPCTSTR szRootItemName):
+m_xiRoot(NULL, szRootItemName)
 {
 }
 
@@ -975,7 +988,7 @@ BOOL CXmlFile::Open(LPCTSTR szFilePath, XF_OPEN nOpenFlag)
 
 	case XF_READWRITE:
 		bRes = CFile::Open(szFilePath, CFile::shareExclusive | CFile::modeReadWrite |
-				CFile::modeCreate | CFile::modeNoTruncate);
+			CFile::modeCreate | CFile::modeNoTruncate);
 		break;
 	}
 

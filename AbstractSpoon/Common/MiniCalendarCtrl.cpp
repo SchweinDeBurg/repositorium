@@ -43,6 +43,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -768,7 +773,8 @@ int CMiniCalendarCtrl::DrawHeader(CDC& _dc, int _iY, int _iLeftX, int _iRow, int
 	_dc.SetTextColor(MINICAL_COLOUR_HEADERFONT);
 	_dc.SetBkMode(TRANSPARENT);
 
-	_dc.DrawText(strText, CRect(_iLeftX + 1, _iY + 1, _iLeftX + m_szMonthSize.cx - 2, _iY + m_iHeaderHeight - 2), DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	_dc.DrawText(strText, CRect(_iLeftX + 1, _iY + 1, _iLeftX + m_szMonthSize.cx - 2, _iY + m_iHeaderHeight - 2),
+		DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
 	_dc.SelectObject(pOldFont);
 
@@ -926,7 +932,8 @@ int CMiniCalendarCtrl::DrawDays(CDC& _dc, int _iY, int _iLeftX, int _iRow, int _
 					}
 
 					_dc.SetTextColor(::GetSysColor(COLOR_HIGHLIGHTTEXT));
-					_dc.FillSolidRect(iX - 1, _iY, m_iIndividualDayWidth + 3, m_iDaysHeight + 1, ::GetSysColor(COLOR_HIGHLIGHT));
+					_dc.FillSolidRect(iX - 1, _iY, m_iIndividualDayWidth + 3, m_iDaysHeight + 1,
+						::GetSysColor(COLOR_HIGHLIGHT));
 				}
 				else if (m_pCalendarData->IsImportantDate(dt))
 				{
@@ -943,7 +950,7 @@ int CMiniCalendarCtrl::DrawDays(CDC& _dc, int _iY, int _iLeftX, int _iRow, int _
 						ASSERT(!listTasks.IsEmpty());
 
 						//look for non-hidden tasks
-						for (POSITION pos = listTasks.GetHeadPosition(); (pos != NULL) && !bImportantDate;)
+						for (POSITION pos = listTasks.GetHeadPosition(); (pos != NULL) && !bImportantDate; )
 						{
 							CTaskInfo ti = listTasks.GetNext(pos);
 							if (!ti.IsComplete())
@@ -972,15 +979,18 @@ int CMiniCalendarCtrl::DrawDays(CDC& _dc, int _iY, int _iLeftX, int _iRow, int _
 					_dc.SetTextColor(MINICAL_COLOUR_HIDDEN_WEEKEND_DAY);
 				}
 
-				_dc.DrawText(strText, CRect(iX, _iY, iX + m_iIndividualDayWidth, _iY + m_iDaysHeight), DT_BOTTOM | DT_RIGHT | DT_SINGLELINE);
+				_dc.DrawText(strText, CRect(iX, _iY, iX + m_iIndividualDayWidth, _iY + m_iDaysHeight),
+					DT_BOTTOM | DT_RIGHT | DT_SINGLELINE);
 
 				//highlight today
 				if (IsToday(dt))
 				{
-					_dc.Draw3dRect(iX - 2, _iY, m_iIndividualDayWidth + 5, m_iDaysHeight + 1, MINICAL_COLOUR_HEADERFONT, MINICAL_COLOUR_HEADERFONT);
+					_dc.Draw3dRect(iX - 2, _iY, m_iIndividualDayWidth + 5, m_iDaysHeight + 1, MINICAL_COLOUR_HEADERFONT,
+						MINICAL_COLOUR_HEADERFONT);
 				}
 
-				SetHotSpot(_iRow, iDayCounter, dt, CRect(iX - 3, _iY, iX - 3 + m_iIndividualDayWidth + 5, _iY + m_iDaysHeight + 2));
+				SetHotSpot(_iRow, iDayCounter, dt, CRect(iX - 3, _iY, iX - 3 + m_iIndividualDayWidth + 5,
+					_iY + m_iDaysHeight + 2));
 			}
 
 			dt += 1;

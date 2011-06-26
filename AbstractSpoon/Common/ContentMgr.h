@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -81,10 +86,10 @@ public:
 	BOOL ContentFormatIsText(int nContent) const;
 	BOOL ContentFormatIsText(const CString& sTypeID) const;
 
-	BOOL CreateContentControl(int nContent, CContentCtrl& ctrl, UINT nCtrlID, DWORD nStyle,
-		DWORD dwExStyle, const CRect& rect, HWND hwndParent);
-	BOOL CreateContentControl(const CONTENTFORMAT& cf, CContentCtrl& ctrl, UINT nCtrlID, DWORD nStyle,
-		DWORD dwExStyle, const CRect& rect, HWND hwndParent);
+	BOOL CreateContentControl(int nContent, CContentCtrl& ctrl, UINT nCtrlID, DWORD nStyle, DWORD dwExStyle,
+		const CRect& rect, HWND hwndParent);
+	BOOL CreateContentControl(const CONTENTFORMAT& cf, CContentCtrl& ctrl, UINT nCtrlID, DWORD nStyle, DWORD dwExStyle,
+		const CRect& rect, HWND hwndParent);
 
 	BOOL ConvertContentToHtml(const CString& sContent, CString& sHtml, LPCTSTR szID, LPCTSTR szCharSet);
 

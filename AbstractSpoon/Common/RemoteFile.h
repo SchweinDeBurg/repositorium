@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -109,8 +114,8 @@ struct FILERESULT;
 class CRemoteFile
 {
 public:
-	CRemoteFile(LPCTSTR szAgent = NULL, LPCTSTR szServer = NULL, LPCTSTR szUsername = NULL,
-		LPCTSTR szPassword = NULL, LPCTSTR szProxy = NULL, CWnd* pParent = NULL);
+	CRemoteFile(LPCTSTR szAgent = NULL, LPCTSTR szServer = NULL, LPCTSTR szUsername = NULL, LPCTSTR szPassword = NULL,
+		LPCTSTR szProxy = NULL, CWnd* pParent = NULL);
 	virtual ~CRemoteFile();
 
 	// sRemoteFile is always sans server eg 'abstractspoon\test.htm'

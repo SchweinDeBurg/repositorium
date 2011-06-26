@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -73,7 +78,7 @@ const COLORREF FLAGGEDCOLOR = (COLORREF)-1;
 
 IMPLEMENT_DYNCREATE(CPreferencesUITasklistColorsPage, CPreferencesPageBase)
 
-CPreferencesUITasklistColorsPage::CPreferencesUITasklistColorsPage() :
+CPreferencesUITasklistColorsPage::CPreferencesUITasklistColorsPage():
 CPreferencesPageBase(CPreferencesUITasklistColorsPage::IDD),
 m_nTextColorOption(COLOROPT_DEFAULT),
 m_cbCategories(TRUE)

@@ -51,14 +51,18 @@ class CFindReplaceDialogEx : public CFindReplaceDialog, public CHookMgr<CFindRep
 	friend class CHookMgr<CFindReplaceDialogEx>;
 
 public:
-	virtual ~CFindReplaceDialogEx() {}
+	virtual ~CFindReplaceDialogEx()
+	{
+	}
 	static CFindReplaceDialogEx& Instance()
 	{
 		return CHookMgr<CFindReplaceDialogEx>::GetInstance();
 	}
 
 protected:
-	CFindReplaceDialogEx() {}
+	CFindReplaceDialogEx()
+	{
+	}
 
 	virtual void PostNcDestroy()
 	{
@@ -107,7 +111,9 @@ CFindReplaceDialog* CRulerRichEdit::NewFindReplaceDlg()
 /////////////////////////////////////////////////////////////////////////////
 // CRulerRichEdit
 
-CRulerRichEdit::CRulerRichEdit() : m_bPasteSimple(FALSE), m_bIMEComposing(FALSE)
+CRulerRichEdit::CRulerRichEdit():
+m_bPasteSimple(FALSE),
+m_bIMEComposing(FALSE)
 /* ============================================================
     Function :      CRulerRichEdit::CRulerRichEdit
     Description :   constructor
@@ -140,12 +146,12 @@ CRulerRichEdit::~CRulerRichEdit()
 }
 
 BEGIN_MESSAGE_MAP(CRulerRichEdit, CUrlRichEditCtrl)
-//{{AFX_MSG_MAP(CRulerRichEdit)
+	//{{AFX_MSG_MAP(CRulerRichEdit)
 	ON_WM_HSCROLL()
 	ON_WM_GETDLGCODE()
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_CREATE()
-//}}AFX_MSG_MAP
+	//}}AFX_MSG_MAP
 	ON_MESSAGE(WM_DROPFILES, OnDropFiles)
 	ON_MESSAGE(WM_IME_STARTCOMPOSITION, OnIMEStartComposition)
 	ON_MESSAGE(WM_IME_ENDCOMPOSITION, OnIMEEndComposition)
@@ -178,7 +184,7 @@ void CRulerRichEdit::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
 	if (nSBCode == SB_THUMBTRACK)
 	{
-		SCROLLINFO	si;
+		SCROLLINFO si;
 		ZeroMemory(&si, sizeof(SCROLLINFO));
 		si.cbSize = sizeof(SCROLLINFO);
 		GetScrollInfo(SB_HORZ, &si);

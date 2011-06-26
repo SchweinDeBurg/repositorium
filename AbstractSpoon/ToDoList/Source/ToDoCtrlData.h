@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -175,8 +180,8 @@ public:
 	double CalcTimeSpent(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, int nUnits) const;
 	int CalcPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS) const;
 	int CalcPercentFromTime(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS) const; // spent / estimate
-	BOOL GetSubtaskTotals(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS,
-		int& nSubtasksTotal, int& nSubtasksDone) const;
+	BOOL GetSubtaskTotals(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, int& nSubtasksTotal,
+		int& nSubtasksDone) const;
 	BOOL IsTaskDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, DWORD dwExtraCheck) const;
 
 	// Sets. 0 = failed, 1 = success, -1 = success (no change)
@@ -187,7 +192,8 @@ public:
 	{
 		SetTaskColor(dwID, (COLORREF)-1);
 	}
-	int SetTaskComments(DWORD dwID, LPCTSTR szComments, const CString& sCustomComments = _T(""), LPCTSTR szCommentsTypeID = NULL);
+	int SetTaskComments(DWORD dwID, LPCTSTR szComments, const CString& sCustomComments = _T(""),
+		LPCTSTR szCommentsTypeID = NULL);
 	int SetTaskCommentsType(DWORD dwID, LPCTSTR szCommentsTypeID);
 	int SetTaskPercent(DWORD dwID, int nPercent);
 	int SetTaskTimeEstimate(DWORD dwID, double dTime, int nUnits = TDITU_HOURS);
@@ -213,7 +219,8 @@ public:
 	int CopyTaskAttributes(TODOITEM* pToTDI, DWORD dwFromTaskID, const CTDCAttributeArray& aAttribs);
 
 	BOOL TaskMatches(DWORD dwID, const SEARCHPARAMS& params, SEARCHRESULT& result) const;
-	BOOL TaskMatches(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const SEARCHPARAMS& params, SEARCHRESULT& result) const;
+	BOOL TaskMatches(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const SEARCHPARAMS& params,
+		SEARCHRESULT& result) const;
 
 	BOOL IsTaskTimeTrackable(DWORD dwID) const;
 	BOOL IsParentTaskDone(DWORD dwID) const;
@@ -228,10 +235,12 @@ public:
 	static int MapTimeUnits(const CString& sUnits);
 	static CString MapTimeUnits(int nUnits);
 
-	int CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSortBy, BOOL bAscending, BOOL bSortDueTodayHigh) const;
+	int CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSortBy, BOOL bAscending,
+		BOOL bSortDueTodayHigh) const;
 
 	int FindTasks(const SEARCHPARAMS& params, CResultArray& aResults) const;
-	int FindTasks(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const SEARCHPARAMS& params, CResultArray& aResults) const;
+	int FindTasks(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const SEARCHPARAMS& params,
+		CResultArray& aResults) const;
 	inline BOOL HasStyle(int nStyle) const
 	{
 		return m_aStyles[nStyle] ? TRUE : FALSE;
@@ -249,8 +258,8 @@ protected:
 
 	BOOL FindDependency(DWORD dwTaskID, DWORD dwDependsID) const;
 
-	BOOL AddUndoElement(TDCUNDOELMOP nOp, DWORD dwTaskID, DWORD dwParentID = 0,
-		DWORD dwPrevSiblingID = 0, WORD wFlags = 0);
+	BOOL AddUndoElement(TDCUNDOELMOP nOp, DWORD dwTaskID, DWORD dwParentID = 0, DWORD dwPrevSiblingID = 0, WORD wFlags =
+		0);
 
 	BOOL TaskMatches(const COleDateTime& date, const SEARCHPARAM& sp, SEARCHRESULT& result) const;
 	BOOL TaskMatches(const CString& sText, const SEARCHPARAM& sp, SEARCHRESULT& result) const;
@@ -258,8 +267,8 @@ protected:
 	BOOL TaskMatches(int nValue, const SEARCHPARAM& sp, SEARCHRESULT& result) const;
 	BOOL TaskMatches(const CStringArray& aItems, const SEARCHPARAM& sp, SEARCHRESULT& result) const;
 
-	void SumPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS,
-		double& dTotalPercent, double& dTotalWeighting) const;
+	void SumPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, double& dTotalPercent,
+		double& dTotalWeighting) const;
 
 
 	TODOITEM* GetTask(const TODOSTRUCTURE* pTDS) const;
@@ -267,8 +276,8 @@ protected:
 	BOOL ApplyLastChangeToSubtasks(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, TDC_ATTRIBUTE nAttrib);
 
 	BOOL Locate(DWORD dwParentID, DWORD dwPrevSiblingID, TODOSTRUCTURE*& pTDSParent, int& nPos) const;
-	int MoveTask(TODOSTRUCTURE* pTDSSrcParent, int nSrcPos, DWORD dwSrcPrevSiblingID,
-		TODOSTRUCTURE* pTDSDestParent, int nDestPos);
+	int MoveTask(TODOSTRUCTURE* pTDSSrcParent, int nSrcPos, DWORD dwSrcPrevSiblingID, TODOSTRUCTURE* pTDSDestParent,
+		int nDestPos);
 
 
 	static TDC_ATTRIBUTE MapDateToAttribute(TDC_DATE nDate);

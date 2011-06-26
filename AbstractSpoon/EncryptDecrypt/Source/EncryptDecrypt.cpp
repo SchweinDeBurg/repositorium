@@ -18,6 +18,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // EncryptDecrypt.cpp : Defines the entry point for the DLL application.
@@ -26,7 +31,7 @@
 #include "StdAfx.h"
 #include "Encryption.h"
 
-BOOL APIENTRY DllMain(HANDLE /*hModule*/, DWORD /*ul_reason_for_call*/, LPVOID /*lpReserved*/)
+BOOL APIENTRY DllMain(HANDLE /*hModule*/, DWORD /*dwReason*/, LPVOID /*lpReserved*/)
 {
 	return TRUE;
 }

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -67,8 +72,8 @@ const LPCTSTR URLMASK = _T("*\"<>|");
 const UINT VIEWBTN = 0x24;
 const UINT BROWSEBTN = 0x31;
 
-CFileEdit::CFileEdit(int nStyle, LPCTSTR szFilter) :
-CEnEdit(nStyle& FES_COMBOSTYLEBTN),
+CFileEdit::CFileEdit(int nStyle, LPCTSTR szFilter):
+CEnEdit(nStyle & FES_COMBOSTYLEBTN),
 m_nStyle(nStyle),
 m_bTipNeeded(FALSE),
 m_sFilter(szFilter),
@@ -85,8 +90,7 @@ m_sCurFolder(FileMisc::GetCwd())
 	{
 		BOOL bFolders = (m_nStyle & FES_FOLDERS);
 
-		AddButton(FEBTN_GO, VIEWBTN, bFolders ? FILEEDIT_VIEWFOLDER : FILEEDIT_VIEW,
-			CALC_BTNWIDTH, _T("Wingdings"));
+		AddButton(FEBTN_GO, VIEWBTN, bFolders ? FILEEDIT_VIEWFOLDER : FILEEDIT_VIEW, CALC_BTNWIDTH, _T("Wingdings"));
 	}
 
 	// mask
@@ -287,11 +291,9 @@ void CFileEdit::DrawFileIcon(CDC* pDC, const CRect& rWindow)
 		else
 		{
 			// try parent for override
-			HICON hIcon = (HICON)GetParent()->SendMessage(WM_FE_GETFILEICON, GetDlgCtrlID(),
-				(LPARAM)(LPCTSTR)sFilePath);
+			HICON hIcon = (HICON)GetParent()->SendMessage(WM_FE_GETFILEICON, GetDlgCtrlID(), (LPARAM)(LPCTSTR)sFilePath);
 
-			if (!hIcon || !::DrawIconEx(pDC->GetSafeHdc(), rIcon.left, rIcon.top, hIcon,
-				16, 16, 0, NULL, DI_NORMAL))
+			if (!hIcon || !::DrawIconEx(pDC->GetSafeHdc(), rIcon.left, rIcon.top, hIcon, 16, 16, 0, NULL, DI_NORMAL))
 			{
 				nImage = m_ilSys.GetFileImageIndex(sFilePath);
 			}

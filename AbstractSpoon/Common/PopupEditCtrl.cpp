@@ -28,7 +28,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CPopupEditCtrl
 
-CPopupEditCtrl::CPopupEditCtrl(PEC_CLEANUP nCleanup) : m_nCleanUp(nCleanup)
+CPopupEditCtrl::CPopupEditCtrl(PEC_CLEANUP nCleanup):
+m_nCleanUp(nCleanup)
 {
 	m_bEditEnded = FALSE;
 	m_pParent = NULL;

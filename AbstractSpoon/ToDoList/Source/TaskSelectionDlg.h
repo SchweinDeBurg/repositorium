@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -134,15 +139,15 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CTaskSelectionDlg)
 	enum { IDD = IDD_TASKSELECTION_DIALOG };
-	int     m_nAttribOption;
+	int m_nAttribOption;
 	//}}AFX_DATA
-	CTDLAttributeListBox    m_lbAttribList;
-	BOOL    m_bSelectedSubtasks;
-	BOOL    m_bCompletedTasks;
-	BOOL    m_bIncompleteTasks;
-	int     m_nWhatTasks;
+	CTDLAttributeListBox m_lbAttribList;
+	BOOL m_bSelectedSubtasks;
+	BOOL m_bCompletedTasks;
+	BOOL m_bIncompleteTasks;
+	int m_nWhatTasks;
 	CString m_sRegKey;
-	BOOL    m_bShowSubtaskCheckbox;
+	BOOL m_bShowSubtaskCheckbox;
 
 // Overrides
 	// ClassWizard generated virtual function overrides

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -64,7 +69,7 @@ static char THIS_FILE[] = __FILE__;
 CMap<UINT, UINT, CString, CString&> CSpellCheckDlg::s_mapText;
 
 
-CSpellCheckDlg::CSpellCheckDlg(LPCTSTR szDictionaryPath, ISpellCheck* pSpellCheck, LPCTSTR szText, CWnd* /*pParent*/) :
+CSpellCheckDlg::CSpellCheckDlg(LPCTSTR szDictionaryPath, ISpellCheck* pSpellCheck, LPCTSTR szText, CWnd* /*pParent*/):
 m_pSpellChecker(NULL),
 m_reSpellCheck(m_reText),
 m_sSelDictionary(szDictionaryPath),
@@ -81,16 +86,19 @@ void CSpellCheckDlg::InitDialog(ISpellCheck* pSpellCheck, LPCTSTR szText)
 	AfxInitRichEdit();
 
 	AddRCControl(_T("LTEXT"), _T(""), _T("Ac&tive Dictionary:"), 0, 0, 7, 9, 65, 8, IDC_SCD_DICTLABEL);
-	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWNLIST | WS_TABSTOP, 0, 66, 8, 182, 100, IDC_SCD_DICTIONARIES);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWNLIST | WS_TABSTOP, 0, 66, 8, 182, 100,
+		IDC_SCD_DICTIONARIES);
 	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Bro&wse"), WS_TABSTOP, 0, 256, 7, 50, 14, IDC_SCD_BROWSE);
 	AddRCControl(_T("LTEXT"), _T(""), _T("Download More Dictionaries"), WS_TABSTOP, 0, 66, 21, 90, 8, IDC_SCD_URL);
 	AddRCControl(_T("LTEXT"), _T(""), _T("C&hecking Text:"), 0, 0, 7, 30, 49, 8, IDC_SCD_CHECKINGLABEL);
-	AddRCControl(_T("CONTROL"), _T("RICHEDIT"), _T(""), ES_MULTILINE | ES_AUTOVSCROLL | ES_NOHIDESEL |/*WS_BORDER | */ ES_READONLY | WS_VSCROLL | WS_TABSTOP | WS_DISABLED, 0, 7, 40, 242, 68, IDC_SCD_TEXT);
+	AddRCControl(_T("CONTROL"), _T("RICHEDIT"), _T(""), ES_MULTILINE | ES_AUTOVSCROLL | ES_NOHIDESEL | ES_READONLY |
+		WS_VSCROLL | WS_TABSTOP | WS_DISABLED, 0, 7, 40, 242, 68, IDC_SCD_TEXT);
 	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("R&estart"), WS_TABSTOP, 0, 256, 40, 50, 14, IDC_SCD_RESTART);
 	AddRCControl(_T("LTEXT"), _T(""), _T("Replace:"), 0, 0, 7, 112, 30, 8, IDC_SCD_REPLACELABEL);
 	AddRCControl(_T("LTEXT"), _T(""), _T("Static"), 0, 0, 44, 112, 205, 8, IDC_SCD_MISSPELTWORD);
 	AddRCControl(_T("LTEXT"), _T(""), _T("&With:"), 0, 0, 7, 124, 18, 8, IDC_SCD_WITHLABEL);
-	AddRCControl(_T("LISTBOX"), _T(""), _T(""), LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP | LBS_NOTIFY, 0, 41, 124, 208, 51, IDC_SCD_SUGGESTIONS);
+	AddRCControl(_T("LISTBOX"), _T(""), _T(""), LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP | LBS_NOTIFY,
+		0, 41, 124, 208, 51, IDC_SCD_SUGGESTIONS);
 	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("&Replace"), WS_TABSTOP, 0, 256, 124, 50, 14, IDC_SCD_REPLACE);
 	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("&Next Word"), WS_TABSTOP, 0, 256, 144, 50, 14, IDC_SCD_NEXT);
 	AddRCControl(_T("CONTROL"), _T("static"), _T(""), SS_ETCHEDHORZ, 0, 7, 182, 299, 1, (UINT)IDC_STATIC);

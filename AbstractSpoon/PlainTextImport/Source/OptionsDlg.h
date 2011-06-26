@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_OPTIONSDLG_H__D9ADE42C_81F7_476C_B8D9_7B3D5FA2C91E__INCLUDED_)
@@ -58,13 +63,13 @@ public:
 protected:
 // Dialog Data
 	//{{AFX_DATA(COptionsDlg)
-	CComboBox	m_cbIndent;
-	CString	m_sLabel;
-	int		m_nIndent;
-	BOOL	m_bIncludeProject;
+	CComboBox m_cbIndent;
+	CString m_sLabel;
+	int m_nIndent;
+	BOOL m_bIncludeProject;
 	//}}AFX_DATA
 	BOOL m_bImport;
-	CString		m_sIndent, m_sTitle, m_sProjectLabel;
+	CString m_sIndent, m_sTitle, m_sProjectLabel;
 
 // Overrides
 	// ClassWizard generated virtual function overrides

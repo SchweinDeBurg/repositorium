@@ -8,6 +8,11 @@
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
 // - slightly reformatted source code
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #ifndef _CALENDARUTILS_H_
@@ -33,9 +38,9 @@ public:
 
 //static functions
 public:
-	static CString  LongToString(long lValue);
-	static time_t   DateToTime(const COleDateTime& _dt);
-	static time_t   TimeToTime(const time_t& _t);
+	static CString LongToString(long lValue);
+	static time_t DateToTime(const COleDateTime& _dt);
+	static time_t TimeToTime(const time_t& _t);
 #ifdef _DEBUG
 	static CString  DateToString(const COleDateTime& _dt);
 #endif
@@ -45,10 +50,10 @@ public:
 	static CString GetWeekday(int _iDayOfWeek, BOOL _bShort);
 	static void GetWeekdays(CStringList& _listDays, BOOL _bShort, BOOL _bWeekendsHidden);
 
-	static int  CompareDates(const COleDateTime& _dt1, const COleDateTime& _dt2);
+	static int CompareDates(const COleDateTime& _dt1, const COleDateTime& _dt2);
 
 	static BOOL IsDateValid(const COleDateTime& _dt);
-	static int  GetDaysInMonth(int _iMonth, int _iYear);
+	static int GetDaysInMonth(int _iMonth, int _iYear);
 
 	static void AddDay(COleDateTime& _dt, int _nNumDays = 1);
 	static void SubtractDay(COleDateTime& _dt, int _nNumDays = 1);

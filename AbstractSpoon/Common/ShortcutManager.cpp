@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -74,8 +79,10 @@ enum
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CShortcutManager::CShortcutManager(BOOL bAutoSendCmds)
-: m_bAutoSendCmds(bAutoSendCmds), m_wInvalidComb(0), m_wFallbackModifiers(0)
+CShortcutManager::CShortcutManager(BOOL bAutoSendCmds):
+m_bAutoSendCmds(bAutoSendCmds),
+m_wInvalidComb(0),
+m_wFallbackModifiers(0)
 {
 }
 
@@ -394,7 +401,7 @@ LRESULT CShortcutManager::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM 
 	case WM_DESTROY:
 		{
 			// must call rest of chain first
-			LRESULT lr =  CSubclassWnd::WindowProc(hRealWnd, msg, wp, lp);
+			LRESULT lr = CSubclassWnd::WindowProc(hRealWnd, msg, wp, lp);
 			HookWindow(NULL);
 
 			SaveSettings();
@@ -494,8 +501,7 @@ int CShortcutManager::BuildMapping(UINT nMenuID, CStringArray& aMapping, char cD
 	return BuildMapping(&menu, NULL, aMapping, cDelim);
 }
 
-int CShortcutManager::BuildMapping(CMenu* pMenu, LPCTSTR szParentName,
-	CStringArray& aMapping, char cDelim)
+int CShortcutManager::BuildMapping(CMenu* pMenu, LPCTSTR szParentName, CStringArray& aMapping, char cDelim)
 {
 	int nItems = pMenu->GetMenuItemCount();
 

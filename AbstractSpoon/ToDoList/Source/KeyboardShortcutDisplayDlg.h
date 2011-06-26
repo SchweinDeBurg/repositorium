@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_KEYBOARDSHORTCUTDISPLAYDLG_H__BE407DB6_8629_4228_A2C9_BB96F87D6055__INCLUDED_)
@@ -66,7 +71,7 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CKeyboardShortcutDisplayDlg)
 	enum { IDD = IDD_KEYBOARDSHORTCUTDISPLAYDIALOG };
-	CListCtrl	m_lcShortcuts;
+	CListCtrl m_lcShortcuts;
 	//}}AFX_DATA
 
 	const CStringArray& m_aMapping;

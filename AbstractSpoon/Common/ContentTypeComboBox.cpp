@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // ContentTypeComboBox.cpp : implementation file
@@ -58,8 +63,9 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CContentTypeComboBox
 
-CContentTypeComboBox::CContentTypeComboBox(const CContentMgr* pContentMgr) :
-m_pContentMgr(pContentMgr), m_nInitSel(0)
+CContentTypeComboBox::CContentTypeComboBox(const CContentMgr* pContentMgr):
+m_pContentMgr(pContentMgr),
+m_nInitSel(0)
 {
 }
 

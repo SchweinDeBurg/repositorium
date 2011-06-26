@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -70,9 +75,9 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CTDLMultiSortDlg)
 	enum { IDD = IDD_MULTISORT_DIALOG };
-	CComboBox	m_cbSortBy3;
-	CComboBox	m_cbSortBy2;
-	CComboBox	m_cbSortBy1;
+	CComboBox m_cbSortBy3;
+	CComboBox m_cbSortBy2;
+	CComboBox m_cbSortBy1;
 	//}}AFX_DATA
 	TDC_SORTBY m_nSortBy1, m_nSortBy2, m_nSortBy3;
 	BOOL m_bAscending1, m_bAscending2, m_bAscending3;

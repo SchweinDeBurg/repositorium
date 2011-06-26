@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -66,7 +71,10 @@ typedef CMap<CString, LPCTSTR, COLORREF, COLORREF&> CTDCColorMap;
 
 struct TDCSTARTUP
 {
-	TDCSTARTUP() : dwIDSel(0), dwPid(0), dwFlags(TLD_PASSWORDPROMPTING)
+	TDCSTARTUP():
+	dwIDSel(0),
+	dwPid(0),
+	dwFlags(TLD_PASSWORDPROMPTING)
 	{
 		szFilePath[0] = 0;
 		szNewTask[0] = 0;
@@ -88,7 +96,10 @@ struct TDCSTARTUP
 
 #define COPYTEXT(DEST, SRC) _tcsncpy(DEST, SRC, min(sizeof(DEST) - 1, SRC.GetLength() + 1))
 
-	TDCSTARTUP(const CEnCommandLineInfo& cmdInfo) : dwIDSel(0), dwPid(0), dwFlags(TLD_PASSWORDPROMPTING)
+	TDCSTARTUP(const CEnCommandLineInfo& cmdInfo):
+	dwIDSel(0),
+	dwPid(0),
+	dwFlags(TLD_PASSWORDPROMPTING)
 	{
 		// initialize strings
 		szFilePath[0] = 0;
@@ -206,7 +217,14 @@ struct TDIRECURRENCE
 //  RTER_MONTHLY      every 'n' months   day of month (1-31)
 //  RTER_YEARLY       month (1-12)       day of month (1-31)
 
-	TDIRECURRENCE() : nRegularity(TDIR_ONCE), dwSpecific1(1), dwSpecific2(0), bRecalcFromDue(TRUE), nReuse(TDIRO_REUSE) {}
+	TDIRECURRENCE():
+	nRegularity(TDIR_ONCE),
+	dwSpecific1(1),
+	dwSpecific2(0),
+	bRecalcFromDue(TRUE),
+	nReuse(TDIRO_REUSE)
+	{
+	}
 
 	BOOL operator==(const TDIRECURRENCE& tr) const
 	{
@@ -270,20 +288,20 @@ struct TDIRECURRENCE
 					// wrapping around
 					UINT nWeekdays[14] =
 					{
-						(dwSpecific2& TDIW_SUNDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_MONDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_TUESDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_WEDNESDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_THURSDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_FRIDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_SATURDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_SUNDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_MONDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_TUESDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_WEDNESDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_THURSDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_FRIDAY) ? 1 : 0,
-						(dwSpecific2& TDIW_SATURDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_SUNDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_MONDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_TUESDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_WEDNESDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_THURSDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_FRIDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_SATURDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_SUNDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_MONDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_TUESDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_WEDNESDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_THURSDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_FRIDAY) ? 1 : 0,
+						(dwSpecific2 & TDIW_SATURDAY) ? 1 : 0,
 					};
 
 					dtNext += 1.0; // always next day at least
@@ -367,7 +385,9 @@ struct TDIRECURRENCE
 
 struct TDCGETTASKS
 {
-	TDCGETTASKS() : nFilter(TDCGT_ALL), dwFlags(TDCGTF_ISODATES)
+	TDCGETTASKS():
+	nFilter(TDCGT_ALL),
+	dwFlags(TDCGTF_ISODATES)
 	{
 	}
 
@@ -380,8 +400,10 @@ struct TDCGETTASKS
 		aAttribs.Copy(filter.aAttribs);
 	}
 
-	TDCGETTASKS(TDC_GETTASKS filter, DWORD flags = 0, double dueBy = 0) :
-	nFilter(filter), dwFlags(flags), dateDueBy(dueBy)
+	TDCGETTASKS(TDC_GETTASKS filter, DWORD flags = 0, double dueBy = 0):
+	nFilter(filter),
+	dwFlags(flags),
+	dateDueBy(dueBy)
 	{
 		InitDueByDate();
 	}
@@ -609,8 +631,14 @@ static int MapColumnsToAttributes(const CTDCColumnArray& aCols, CTDCAttributeArr
 
 struct TDLSELECTION
 {
-	TDLSELECTION(CTreeCtrl& tree) : selection(tree), htiLastHandledLBtnDown(NULL),
-		tch(tree), nLBtnDownFlags(0), nNcLBtnDownColID(-1) {}
+	TDLSELECTION(CTreeCtrl& tree):
+	selection(tree),
+	htiLastHandledLBtnDown(NULL),
+	tch(tree),
+	nLBtnDownFlags(0),
+	nNcLBtnDownColID(-1)
+	{
+	}
 
 	CTreeSelectionHelper selection;
 	CTreeCtrlHelper tch;
@@ -706,7 +734,10 @@ struct TDLSELECTION
 
 struct TDLCLIPBOARD
 {
-	TDLCLIPBOARD() : hwndToDoCtrl(NULL) {}
+	TDLCLIPBOARD():
+	hwndToDoCtrl(NULL)
+	{
+	}
 
 	CTaskFile tasks;
 	HWND hwndToDoCtrl;
@@ -747,8 +778,13 @@ struct CTRLITEM
 
 struct SEARCHPARAM
 {
-	SEARCHPARAM(TDC_ATTRIBUTE a = TDCA_NONE, FIND_OPERATOR o = FO_NONE) :
-	attrib(a), op(o), dValue(0), nValue(0), bAnd(TRUE), dwFlags(0)
+	SEARCHPARAM(TDC_ATTRIBUTE a = TDCA_NONE, FIND_OPERATOR o = FO_NONE):
+	attrib(a),
+	op(o),
+	dValue(0),
+	nValue(0),
+	bAnd(TRUE),
+	dwFlags(0)
 	{
 		if (!HasValidOperator())
 		{
@@ -756,8 +792,13 @@ struct SEARCHPARAM
 		}
 	}
 
-	SEARCHPARAM(TDC_ATTRIBUTE a, FIND_OPERATOR o, CString s, BOOL and = TRUE) :
-	attrib(a), op(o), dValue(0), nValue(0), bAnd(and), dwFlags(0)
+	SEARCHPARAM(TDC_ATTRIBUTE a, FIND_OPERATOR o, CString s, BOOL and = TRUE):
+	attrib(a),
+	op(o),
+	dValue(0),
+	nValue(0),
+	bAnd(and),
+	dwFlags(0)
 	{
 		if (!HasValidOperator())
 		{
@@ -770,8 +811,13 @@ struct SEARCHPARAM
 		}
 	}
 
-	SEARCHPARAM(TDC_ATTRIBUTE a, FIND_OPERATOR o, double d, BOOL and = TRUE) :
-	attrib(a), op(o), dValue(0), nValue(0), bAnd(and), dwFlags(0)
+	SEARCHPARAM(TDC_ATTRIBUTE a, FIND_OPERATOR o, double d, BOOL and = TRUE):
+	attrib(a),
+	op(o),
+	dValue(0),
+	nValue(0),
+	bAnd(and),
+	dwFlags(0)
 	{
 		if (!HasValidOperator())
 		{
@@ -784,8 +830,13 @@ struct SEARCHPARAM
 		}
 	}
 
-	SEARCHPARAM(TDC_ATTRIBUTE a, FIND_OPERATOR o, int n, BOOL and = TRUE) :
-	attrib(a), op(o), dValue(0), nValue(0), bAnd(and), dwFlags(0)
+	SEARCHPARAM(TDC_ATTRIBUTE a, FIND_OPERATOR o, int n, BOOL and = TRUE):
+	attrib(a),
+	op(o),
+	dValue(0),
+	nValue(0),
+	bAnd(and),
+	dwFlags(0)
 	{
 		if (!HasValidOperator())
 		{
@@ -983,7 +1034,11 @@ typedef CArray<SEARCHPARAM, SEARCHPARAM> CSearchParamArray;
 
 struct SEARCHPARAMS
 {
-	SEARCHPARAMS() : bIgnoreDone(FALSE), bIgnoreOverDue(FALSE) {}
+	SEARCHPARAMS():
+	bIgnoreDone(FALSE),
+	bIgnoreOverDue(FALSE)
+	{
+	}
 
 	SEARCHPARAMS& operator=(const SEARCHPARAMS& params)
 	{
@@ -1019,16 +1074,16 @@ struct SEARCHPARAMS
 
 			// special cases
 			if (rules[nRule].attrib == TDCA_TASKNAMEORCOMMENTS &&
-					(attrib == TDCA_TASKNAME || attrib == TDCA_COMMENTS))
+				(attrib == TDCA_TASKNAME || attrib == TDCA_COMMENTS))
 			{
 				return TRUE;
 			}
 
 			else if (rules[nRule].attrib == TDCA_ANYTEXTATTRIBUTE &&
-					(attrib == TDCA_TASKNAME || attrib == TDCA_COMMENTS ||
-					attrib == TDCA_STATUS || attrib == TDCA_CATEGORY ||
-					attrib == TDCA_ALLOCBY || attrib == TDCA_ALLOCTO ||
-					attrib == TDCA_VERSION))
+				(attrib == TDCA_TASKNAME || attrib == TDCA_COMMENTS ||
+				attrib == TDCA_STATUS || attrib == TDCA_CATEGORY ||
+				attrib == TDCA_ALLOCBY || attrib == TDCA_ALLOCTO ||
+				attrib == TDCA_VERSION))
 			{
 				return TRUE;
 			}
@@ -1049,7 +1104,11 @@ struct SEARCHPARAMS
 
 struct SEARCHRESULT
 {
-	SEARCHRESULT() : dwID(0), dwFlags(0) {}
+	SEARCHRESULT():
+	dwID(0),
+	dwFlags(0)
+	{
+	}
 
 	SEARCHRESULT& operator=(const SEARCHRESULT& res)
 	{
@@ -1074,8 +1133,11 @@ typedef CArray<SEARCHRESULT, SEARCHRESULT&> CResultArray;
 
 struct FTDCFILTER
 {
-	FTDCFILTER() : nFilter(FT_ALL), nPriority(FT_ANYPRIORITY), nRisk(FT_ANYRISK),
-		dwFlags(FT_ANYALLOCTO | FT_ANYCATEGORY)
+	FTDCFILTER():
+	nFilter(FT_ALL),
+	nPriority(FT_ANYPRIORITY),
+	nRisk(FT_ANYRISK),
+	dwFlags(FT_ANYALLOCTO | FT_ANYCATEGORY)
 	{
 	}
 
@@ -1366,8 +1428,16 @@ class CFilteredToDoCtrl;
 
 struct TDCREMINDER
 {
-	TDCREMINDER() : dwTaskID(0), pTDC(NULL), dRelativeDaysLeadIn(0.0), dDaysSnooze(0.0),
-		nRelativeFromWhen(TDCR_DUEDATE), bEnabled(TRUE), bRelative(FALSE) {}
+	TDCREMINDER():
+	dwTaskID(0),
+	pTDC(NULL),
+	dRelativeDaysLeadIn(0.0),
+	dDaysSnooze(0.0),
+	nRelativeFromWhen(TDCR_DUEDATE),
+	bEnabled(TRUE),
+	bRelative(FALSE)
+	{
+	}
 
 	DWORD dwTaskID;
 	const CFilteredToDoCtrl* pTDC;

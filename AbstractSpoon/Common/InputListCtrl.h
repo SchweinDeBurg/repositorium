@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -59,13 +64,28 @@
 /////////////////////////////////////////////////////////////////////////////
 // CInputListCtrl window
 
-enum { NOTVALID, ADDITEM, EDITITEM };
-enum { TEXT, DROPLIST, BROWSE };
+enum
+{
+	NOTVALID,
+	ADDITEM,
+	EDITITEM
+};
+enum
+{
+	TEXT,
+	DROPLIST,
+	BROWSE
+};
 
 class CColumnData2 : public CColumnData
 {
 public:
-	CColumnData2() : CColumnData(), bEditEnabled(TRUE), nType(TEXT) { }
+	CColumnData2():
+	CColumnData(),
+	bEditEnabled(TRUE),
+	nType(TEXT)
+	{
+	}
 	BOOL bEditEnabled;
 	int nType;
 };
@@ -180,7 +200,9 @@ protected:
 	}
 	virtual int CompareItems(DWORD dwItemData1, DWORD dwItemData2, int nSortColumn);
 	virtual void GetCellEditRect(int nRow, int nCol, CRect& rCell);
-	virtual void PrepareControl(CWnd& /*ctrl*/, int /*nRow*/, int /*nCol*/) {}
+	virtual void PrepareControl(CWnd& /*ctrl*/, int /*nRow*/, int /*nCol*/)
+	{
+	}
 
 	void HideControl(CWnd& ctrl);
 	void ShowControl(CWnd& ctrl, int nRow, int nCol);

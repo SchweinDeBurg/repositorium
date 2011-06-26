@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.3 sources
 //*****************************************************************************
 
@@ -93,7 +98,9 @@ CString CUrlRichEditCtrl::s_sGotoErrMsg;
 /////////////////////////////////////////////////////////////////////////////
 // CUrlRichEditCtrl
 
-CUrlRichEditCtrl::CUrlRichEditCtrl() : m_nContextUrl(-1), m_nFileProtocol(-1)
+CUrlRichEditCtrl::CUrlRichEditCtrl():
+m_nContextUrl(-1),
+m_nFileProtocol(-1)
 {
 	EnableToolTips();
 
@@ -480,7 +487,7 @@ BOOL CUrlRichEditCtrl::UrlsMatch(const CUrlArray& aUrls)
 {
 	int nUrls = aUrls.GetSize();
 
-	if (nUrls !=  m_aUrls.GetSize())
+	if (nUrls != m_aUrls.GetSize())
 	{
 		return FALSE;
 	}
@@ -651,8 +658,8 @@ LRESULT CUrlRichEditCtrl::SendNotifyCustomUrl(LPCTSTR szUrl) const
 /////////////////////////////////////////////////////////////////////////////
 // CUrlRichEditCtrl
 
-HRESULT CUrlRichEditCtrl::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT* lpcfFormat,
-	DWORD /*reco*/, BOOL /*fReally*/, HGLOBAL /*hMetaPict*/)
+HRESULT CUrlRichEditCtrl::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT* lpcfFormat, DWORD /*reco*/,
+	BOOL /*fReally*/, HGLOBAL /*hMetaPict*/)
 {
 	BOOL bEnable = !(GetStyle() & ES_READONLY) && IsWindowEnabled();
 
@@ -759,8 +766,8 @@ void CUrlRichEditCtrl::TrackDragCursor()
 	ShowCaret();
 }
 
-HRESULT CUrlRichEditCtrl::GetContextMenu(WORD /*seltype*/, LPOLEOBJECT /*lpoleobj*/,
-	CHARRANGE* /*lpchrg*/, HMENU* /*lphmenu*/)
+HRESULT CUrlRichEditCtrl::GetContextMenu(WORD /*seltype*/, LPOLEOBJECT /*lpoleobj*/, CHARRANGE* /*lpchrg*/,
+	HMENU* /*lphmenu*/)
 {
 	CPoint point = m_ptContextMenu;
 
@@ -793,7 +800,7 @@ CString CUrlRichEditCtrl::GetUrl(int nURL, BOOL bAsFile) const
 		}
 
 		// else
-		if (sUrl.Find(_T('#')) ==  -1)
+		if (sUrl.Find(_T('#')) == -1)
 		{
 			sUrl = sUrl.Mid(sUrlLower.Find(FILEPREFIX) + lstrlen(FILEPREFIX));
 			sUrl.Replace(_T("%20"), _T(" "));
@@ -1140,7 +1147,7 @@ int CUrlRichEditCtrl::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
 {
 	int nHit = MAKELONG(point.x, point.y);
 	pTI->hwnd = m_hWnd;
-	pTI->uId  = nHit;
+	pTI->uId = nHit;
 	pTI->rect = CRect(CPoint(point.x - 1, point.y - 1), CSize(2, 2));
 	pTI->uFlags |= TTF_NOTBUTTON | TTF_ALWAYSTIP;
 	pTI->lpszText = LPSTR_TEXTCALLBACK;

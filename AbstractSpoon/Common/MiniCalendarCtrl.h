@@ -43,6 +43,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -60,8 +65,8 @@ class CCalendarFrameWnd;
 
 struct CMiniCalendarCtrlFontHotSpot
 {
-	CRect           m_rect;
-	COleDateTime    m_date;
+	CRect m_rect;
+	COleDateTime m_date;
 };
 
 class CMiniCalendarCtrlCell
@@ -96,7 +101,7 @@ public:
 		m_rect.SetRectEmpty();
 	}
 
-	int  GetRow() const
+	int GetRow() const
 	{
 		return m_iRow;
 	}
@@ -105,7 +110,7 @@ public:
 		m_iRow = _iRow;
 	}
 
-	int  GetCol() const
+	int GetCol() const
 	{
 		return m_iCol;
 	}
@@ -120,11 +125,11 @@ public:
 	}
 
 private:
-	CRect                           m_rectHeader;
-	CRect                           m_rect;
-	int                             m_iRow;
-	int                             m_iCol;
-	CMiniCalendarCtrlFontHotSpot*   m_parHotSpots;
+	CRect m_rectHeader;
+	CRect m_rect;
+	int m_iRow;
+	int m_iCol;
+	CMiniCalendarCtrlFontHotSpot* m_parHotSpots;
 };
 
 class CMiniCalendarCtrl : public CWnd
@@ -142,42 +147,42 @@ public:
 
 	//called from CMiniCalendarMonthPicker
 	CString GetMonthName(int _iMonth) const;
-	CFont*  GetDaysFont();
+	CFont* GetDaysFont();
 
 	//{{AFX_VIRTUAL(CMiniCalendarCtrl)
 	BOOL PreTranslateMessage(MSG* pMsg);
 	//}}AFX_VIRTUAL
 
 protected:
-	BOOL    IsToday(const COleDateTime& _date) const;
-	BOOL    IsDateSelected(const COleDateTime& _date) const;
-	BOOL    IsDateVisible(const COleDateTime& _date) const;
-	BOOL    IsWeekendDay(int _iDayOfWeek) const;
+	BOOL IsToday(const COleDateTime& _date) const;
+	BOOL IsDateSelected(const COleDateTime& _date) const;
+	BOOL IsDateVisible(const COleDateTime& _date) const;
+	BOOL IsWeekendDay(int _iDayOfWeek) const;
 
-	void    AllocateCells();
-	void    ClearHotSpots();
-	CSize   ComputeSize();
-	CSize   ComputeTotalSize();
-	void    FireNotifySelectDate();
-	void    FireNotifyClick();
-	void    FireNotifyMouseWheel(BOOL _bScrollUp);
-	void    ScrollLeft();
-	void    ScrollRight();
+	void AllocateCells();
+	void ClearHotSpots();
+	CSize ComputeSize();
+	CSize ComputeTotalSize();
+	void FireNotifySelectDate();
+	void FireNotifyClick();
+	void FireNotifyMouseWheel(BOOL _bScrollUp);
+	void ScrollLeft();
+	void ScrollRight();
 
-	void    SetCellHeaderPosition(int _iMonthRow, const CRect& _rect);
-	void    SetCellPosition(int _iMonthRow, const CRect& _rect);
+	void SetCellHeaderPosition(int _iMonthRow, const CRect& _rect);
+	void SetCellPosition(int _iMonthRow, const CRect& _rect);
 
-	void    SetFirstDayOfWeek(int _iDayOfWeek);
+	void SetFirstDayOfWeek(int _iDayOfWeek);
 
-	void    SetHotSpot(int _iMonthRow, int _iDayCounter, const COleDateTime& _date, const CRect& _rect);
-	void    SetRows(int _nRows);
+	void SetHotSpot(int _iMonthRow, int _iDayCounter, const COleDateTime& _date, const CRect& _rect);
+	void SetRows(int _nRows);
 
-	int     DrawHeader(CDC& _dc, int _iY, int _iLeftX, int _iRow, int _iMonth, int _iYear);
-	int     DrawDaysOfWeek(CDC& _dc, int _iY, int _iLeftX, int _iRow);
-	int     DrawDays(CDC& _dc, int _iY, int _iLeftX, int _iRow, int _iMonth, int _iYear);
+	int DrawHeader(CDC& _dc, int _iY, int _iLeftX, int _iRow, int _iMonth, int _iYear);
+	int DrawDaysOfWeek(CDC& _dc, int _iY, int _iLeftX, int _iRow);
+	int DrawDays(CDC& _dc, int _iY, int _iLeftX, int _iRow, int _iMonth, int _iYear);
 
-	CMiniCalendarCtrlFontHotSpot*   HitTest(const CPoint& _pt);
-	CMiniCalendarCtrlCell*          HeaderHitTest(const CPoint& _pt);
+	CMiniCalendarCtrlFontHotSpot* HitTest(const CPoint& _pt);
+	CMiniCalendarCtrlCell* HeaderHitTest(const CPoint& _pt);
 
 	//{{AFX_MSG(CMiniCalendarCtrl)
 	afx_msg void OnPaint();
@@ -199,38 +204,38 @@ public:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-	BOOL                            m_bSizeComputed;
-	int                             m_iHeaderHeight;
-	int                             m_iIndividualDayWidth;
-	int                             m_iDaysOfWeekHeight;
-	int                             m_iDaysHeight;
-	CSize                           m_szMonthSize;
+	BOOL m_bSizeComputed;
+	int m_iHeaderHeight;
+	int m_iIndividualDayWidth;
+	int m_iDaysOfWeekHeight;
+	int m_iDaysHeight;
+	CSize m_szMonthSize;
 
-	COleDateTime                    m_dateSelected;
-	CMiniCalendarCtrlCell*          m_parCells;
+	COleDateTime m_dateSelected;
+	CMiniCalendarCtrlCell* m_parCells;
 
-	CFont*                          m_pFont;
-	CFont*                          m_pFontBold;
+	CFont* m_pFont;
+	CFont* m_pFontBold;
 
-	int                             m_iCurrentMonth;
-	int                             m_iCurrentYear;
-	COLORREF                        m_cBackColor;
-	CString                         m_arrMonthNames[12];
-	CString                         m_arrShortDayOfWeekNames[7];
-	int                             m_iFirstDayOfWeek;
-	int                             m_iRows;
+	int m_iCurrentMonth;
+	int m_iCurrentYear;
+	COLORREF m_cBackColor;
+	CString m_arrMonthNames[12];
+	CString m_arrShortDayOfWeekNames[7];
+	int m_iFirstDayOfWeek;
+	int m_iRows;
 
-	BOOL                            m_bTracking;
-	BOOL                            m_bHeaderTracking;
-	UINT                            m_iHeaderTimerID;
-	CMiniCalendarCtrlCell*          m_pHeaderCell;
-	CMiniCalendarMonthPicker*       m_pHeaderList;
+	BOOL m_bTracking;
+	BOOL m_bHeaderTracking;
+	UINT m_iHeaderTimerID;
+	CMiniCalendarCtrlCell* m_pHeaderCell;
+	CMiniCalendarMonthPicker* m_pHeaderList;
 
-	CCalendarData*                  m_pCalendarData;
-	CCalendarFrameWnd*              m_pFrameWnd;
+	CCalendarData* m_pCalendarData;
+	CCalendarFrameWnd* m_pFrameWnd;
 
-	CRect                           m_rectScrollLeft;
-	CRect                           m_rectScrollRight;
+	CRect m_rectScrollLeft;
+	CRect m_rectScrollRight;
 };
 
 #endif//_MINICALENDARCTRL_H_

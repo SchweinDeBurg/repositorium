@@ -33,6 +33,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -58,13 +63,13 @@ class CCalendarFrameWnd;
 /////////////////////////////////////////////////////////////////////////////
 struct CBigCalendarCell
 {
-	COleDateTime    date;
-	CStringArray    arrTasks;
-	CDWordArray     arrTaskIDs;
-	CDWordArray     arrIsStartTask;
-	CDWordArray     arrIsDueTask;
-	CDWordArray     arrIsCompleteTask;
-	int             nListboxID;
+	COleDateTime date;
+	CStringArray arrTasks;
+	CDWordArray arrTaskIDs;
+	CDWordArray arrIsStartTask;
+	CDWordArray arrIsDueTask;
+	CDWordArray arrIsCompleteTask;
+	int nListboxID;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -99,16 +104,16 @@ public:
 	//}}AFX_VIRTUAL
 
 protected:
-	BOOL    GetGridCellFromPoint(CPoint _point, int& _nRow, int& _nCol) const;
-	BOOL    GetRectFromCell(int _nRow, int _nCol, CRect& _rect) const;
-	void    GetLastSelectedGridCell(int& _nRow, int& _nCol) const;
+	BOOL GetGridCellFromPoint(CPoint _point, int& _nRow, int& _nCol) const;
+	BOOL GetRectFromCell(int _nRow, int _nCol, CRect& _rect) const;
+	void GetLastSelectedGridCell(int& _nRow, int& _nCol) const;
 
-	CBigCalendarTask*       GetTaskListboxFromTaskListboxID(int _nListboxID) const;
-	CBigCalendarTask*       GetTaskListboxFromCell(int _nRow, int _nCol) const;
-	CBigCalendarTask*       GetTaskListboxFromDate(const COleDateTime& _date) const;
+	CBigCalendarTask* GetTaskListboxFromTaskListboxID(int _nListboxID) const;
+	CBigCalendarTask* GetTaskListboxFromCell(int _nRow, int _nCol) const;
+	CBigCalendarTask* GetTaskListboxFromDate(const COleDateTime& _date) const;
 	const CBigCalendarCell* GetCell(const COleDateTime& _date) const;
 
-	BOOL    IsDateVisible(const COleDateTime& _date, BOOL* _pbAfter = NULL) const;
+	BOOL IsDateVisible(const COleDateTime& _date, BOOL* _pbAfter = NULL) const;
 
 	static COLORREF GetFadedBlue(unsigned char _percent);
 
@@ -144,22 +149,22 @@ public:
 	DECLARE_MESSAGE_MAP()
 
 private:
-	CCalendarFrameWnd*  m_pFrameWnd;
-	CCalendarData*      m_pCalendarData;
-	HWND                m_hwndMessageRoutingWindow;
+	CCalendarFrameWnd* m_pFrameWnd;
+	CCalendarData* m_pCalendarData;
+	HWND m_hwndMessageRoutingWindow;
 
-	BOOL                m_bTracking;
-	BOOL                m_bMonthIsOdd;
-	int                 m_nFirstWeekDay; // 1 = sunday
-	int                 m_nSelectedTaskID;
-	int                 m_nVscrollMax;
-	int                 m_nVscrollPos;
+	BOOL m_bTracking;
+	BOOL m_bMonthIsOdd;
+	int m_nFirstWeekDay; // 1 = sunday
+	int m_nSelectedTaskID;
+	int m_nVscrollMax;
+	int m_nVscrollPos;
 
-	CFont*              m_pFont;
-	CFont*              m_pFontBold;
-	CBigCalendarCell    m_dayCells[CALENDAR_ROWS][CALENDAR_COLUMNS];
-	COleDateTime        m_dateSelected;
-	CPtrList            m_listCalendarTasks;
+	CFont* m_pFont;
+	CFont* m_pFontBold;
+	CBigCalendarCell m_dayCells[CALENDAR_ROWS][CALENDAR_COLUMNS];
+	COleDateTime m_dateSelected;
+	CPtrList m_listCalendarTasks;
 };
 
 #endif//_BIGCALENDARCTRL_H_

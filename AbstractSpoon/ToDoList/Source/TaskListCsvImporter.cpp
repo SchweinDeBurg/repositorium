@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.4 sources
 //*****************************************************************************
 
@@ -95,12 +100,10 @@ struct CSVSORT
 
 CTaskListCsvImporter::CTaskListCsvImporter()
 {
-
 }
 
 CTaskListCsvImporter::~CTaskListCsvImporter()
 {
-
 }
 
 void CTaskListCsvImporter::InitConsts()
@@ -403,7 +406,8 @@ time_t CTaskListCsvImporter::String2Date(const CString& sDate)
 	return tDate;
 }
 
-void CTaskListCsvImporter::AddAttributeToTask(ITaskList8* pTasks, HTASKITEM hTask, TDC_ATTRIBUTE nAttrib, const CStringArray& aValues) const
+void CTaskListCsvImporter::AddAttributeToTask(ITaskList8* pTasks, HTASKITEM hTask, TDC_ATTRIBUTE nAttrib,
+	const CStringArray& aValues) const
 {
 	int nCol = AttributeIndex(nAttrib);
 

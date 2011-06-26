@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -192,8 +197,8 @@ CString CTaskListCsvExporter::CalcIndent(int nDepth) const
 	return sIndent;
 }
 
-CString& CTaskListCsvExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM hTask, int nDepth,
-	int nPos, const CString& sParentPos, CString& sOutput) const
+CString& CTaskListCsvExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM hTask, int nDepth, int nPos,
+	const CString& sParentPos, CString& sOutput) const
 {
 	if (!pTasks)
 	{
@@ -309,8 +314,8 @@ CString& CTaskListCsvExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM hT
 	return sOutput;
 }
 
-void CTaskListCsvExporter::AppendAttributeList(const ITaskList8* pTasks, HTASKITEM hTask,
-	TDC_ATTRIBUTE attrib, LPCTSTR szNumAttribName, LPCTSTR szAttribName, CString& sOutput) const
+void CTaskListCsvExporter::AppendAttributeList(const ITaskList8* pTasks, HTASKITEM hTask, TDC_ATTRIBUTE attrib,
+	LPCTSTR szNumAttribName, LPCTSTR szAttribName, CString& sOutput) const
 {
 	if (!WantAttribute(attrib))
 	{
@@ -341,9 +346,8 @@ void CTaskListCsvExporter::AppendAttributeList(const ITaskList8* pTasks, HTASKIT
 	}
 }
 
-void CTaskListCsvExporter::AppendAttribute(const ITaskList8* pTasks, HTASKITEM hTask,
-	TDC_ATTRIBUTE attrib, LPCTSTR szAttribName, LPCTSTR szAltAttribName, CString& sOutput,
-	LPCTSTR szPrefix) const
+void CTaskListCsvExporter::AppendAttribute(const ITaskList8* pTasks, HTASKITEM hTask, TDC_ATTRIBUTE attrib,
+	LPCTSTR szAttribName, LPCTSTR szAltAttribName, CString& sOutput, LPCTSTR szPrefix) const
 {
 	if (!WantAttribute(attrib))
 	{
@@ -534,9 +538,8 @@ int CTaskListCsvExporter::BuildAttribList(const ITaskList8* pTasks, HTASKITEM hT
 	return aAttributes.GetSize();
 }
 
-void CTaskListCsvExporter::CheckAddAttribtoList(const ITaskList8* pTasks, HTASKITEM hTask,
-		TDC_ATTRIBUTE attrib, LPCTSTR szAttribName,
-		CTDCAttributeArray& aAttributes)
+void CTaskListCsvExporter::CheckAddAttribtoList(const ITaskList8* pTasks, HTASKITEM hTask, TDC_ATTRIBUTE attrib,
+	LPCTSTR szAttribName, CTDCAttributeArray& aAttributes)
 {
 	if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAttribName)))
 	{

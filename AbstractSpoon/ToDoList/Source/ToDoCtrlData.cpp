@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -74,7 +79,8 @@ static char THIS_FILE[] = __FILE__;
 #define SAVE_UNDO(op, id, pid, psid) AddUndoElement(op, id, pid, psid)
 #define SAVE_UNDOEDIT(id, tdi, a) if (m_undo.IsActive()) m_undo.SaveElement(TDCUEO_EDIT, id, 0, 0, (WORD)a, tdi)
 
-CUndoAction::CUndoAction(CToDoCtrlData& data, TDCUNDOACTIONTYPE nType) : m_data(data)
+CUndoAction::CUndoAction(CToDoCtrlData& data, TDCUNDOACTIONTYPE nType):
+m_data(data)
 {
 	m_bSuccess = m_data.BeginNewUndoAction(nType);
 }
@@ -89,7 +95,8 @@ CUndoAction::~CUndoAction()
 
 //////////////////////////////////////////////////////////////////////
 
-CToDoCtrlData::CToDoCtrlData(const CWordArray& aStyles) : m_aStyles(aStyles)
+CToDoCtrlData::CToDoCtrlData(const CWordArray& aStyles):
+m_aStyles(aStyles)
 {
 }
 
@@ -992,7 +999,8 @@ int CToDoCtrlData::SetTaskColor(DWORD dwTaskID, COLORREF color)
 	return SET_FAILED;
 }
 
-int CToDoCtrlData::SetTaskComments(DWORD dwTaskID, LPCTSTR szComments, const CString& sCustomComments, LPCTSTR szCommentsTypeID)
+int CToDoCtrlData::SetTaskComments(DWORD dwTaskID, LPCTSTR szComments, const CString& sCustomComments,
+	LPCTSTR szCommentsTypeID)
 {
 	if (dwTaskID)
 	{
@@ -1791,7 +1799,8 @@ BOOL CToDoCtrlData::EndCurrentUndoAction()
 	return m_undo.EndCurrentAction();
 }
 
-BOOL CToDoCtrlData::AddUndoElement(TDCUNDOELMOP nOp, DWORD dwTaskID, DWORD dwParentID, DWORD dwPrevSiblingID, WORD wFlags)
+BOOL CToDoCtrlData::AddUndoElement(TDCUNDOELMOP nOp, DWORD dwTaskID, DWORD dwParentID, DWORD dwPrevSiblingID,
+	WORD wFlags)
 {
 	if (!m_undo.IsActive())
 	{
@@ -2124,8 +2133,8 @@ int CToDoCtrlData::AreChildTasksDone(const TODOSTRUCTURE* pTDS) const
 	return TRUE;
 }
 
-BOOL CToDoCtrlData::GetSubtaskTotals(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS,
-	int& nSubtasksCount, int& nSubtasksDone) const
+BOOL CToDoCtrlData::GetSubtaskTotals(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, int& nSubtasksCount,
+	int& nSubtasksDone) const
 {
 	ASSERT(pTDS && pTDI);
 
@@ -2250,8 +2259,8 @@ int CToDoCtrlData::CalcPercentFromTime(const TODOITEM* pTDI, const TODOSTRUCTURE
 	}
 }
 
-void CToDoCtrlData::SumPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS,
-	double& dTotalPercent, double& dTotalWeighting) const
+void CToDoCtrlData::SumPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, double& dTotalPercent,
+	double& dTotalWeighting) const
 {
 	ASSERT(pTDS && pTDI);
 
@@ -2990,7 +2999,8 @@ BOOL CToDoCtrlData::IsTaskTimeTrackable(DWORD dwTaskID) const
 	return (!pTDI->IsDone());
 }
 
-int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSortBy, BOOL bAscending, BOOL bSortDueTodayHigh) const
+int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSortBy, BOOL bAscending,
+	BOOL bSortDueTodayHigh) const
 {
 	int nCompare = 0;
 
@@ -3021,8 +3031,8 @@ int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSo
 		BOOL bDone1 = FALSE, bDone2 = FALSE;
 
 		if (bSortDoneBelow ||
-				nSortBy == TDC_SORTBYDONE || nSortBy == TDC_SORTBYDONEDATE ||
-				(bHideDone && (nSortBy == TDC_SORTBYSTARTDATE || nSortBy == TDC_SORTBYDUEDATE)))
+			nSortBy == TDC_SORTBYDONE || nSortBy == TDC_SORTBYDONEDATE ||
+			(bHideDone && (nSortBy == TDC_SORTBYSTARTDATE || nSortBy == TDC_SORTBYDUEDATE)))
 		{
 			bDone1 = IsTaskDone(dwTask1ID, TDCCHECKALL);
 			bDone2 = IsTaskDone(dwTask2ID, TDCCHECKALL);
@@ -3203,7 +3213,7 @@ int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSo
 				}
 
 				else if (IsTaskDue(dwTask1ID) && HasStyle(TDCS_DUEHAVEHIGHESTPRIORITY) &&
-						(bSortDueTodayHigh || !IsTaskDue(dwTask1ID, TRUE)))
+					(bSortDueTodayHigh || !IsTaskDue(dwTask1ID, TRUE)))
 				{
 					nPriority1 = pTDI1->nPriority + 11;
 				}
@@ -3219,7 +3229,7 @@ int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSo
 				}
 
 				else if (IsTaskDue(dwTask2ID) && HasStyle(TDCS_DUEHAVEHIGHESTPRIORITY) &&
-						(bSortDueTodayHigh || !IsTaskDue(dwTask2ID, TRUE)))
+					(bSortDueTodayHigh || !IsTaskDue(dwTask2ID, TRUE)))
 				{
 					nPriority2 = pTDI2->nPriority + 11;
 				}
@@ -3272,8 +3282,7 @@ int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSo
 			break;
 
 		case TDC_SORTBYALLOCTO:
-			nCompare = Compare(Misc::FormatArray(pTDI1->aAllocTo),
-					Misc::FormatArray(pTDI2->aAllocTo), TRUE);
+			nCompare = Compare(Misc::FormatArray(pTDI1->aAllocTo), Misc::FormatArray(pTDI2->aAllocTo), TRUE);
 			break;
 
 		case TDC_SORTBYALLOCBY:
@@ -3293,8 +3302,7 @@ int CToDoCtrlData::CompareTasks(DWORD dwTask1ID, DWORD dwTask2ID, TDC_SORTBY nSo
 			break;
 
 		case TDC_SORTBYCATEGORY:
-			nCompare = Compare(Misc::FormatArray(pTDI1->aCategories),
-					Misc::FormatArray(pTDI2->aCategories), TRUE);
+			nCompare = Compare(Misc::FormatArray(pTDI1->aCategories), Misc::FormatArray(pTDI2->aCategories), TRUE);
 			break;
 
 		case TDC_SORTBYPERCENT:
@@ -3437,7 +3445,8 @@ int CToDoCtrlData::FindTasks(const SEARCHPARAMS& params, CResultArray& aResults)
 	return aResults.GetSize();
 }
 
-int CToDoCtrlData::FindTasks(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const SEARCHPARAMS& params, CResultArray& aResults) const
+int CToDoCtrlData::FindTasks(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const SEARCHPARAMS& params,
+	CResultArray& aResults) const
 {
 	SEARCHRESULT result;
 	int nResults = aResults.GetSize();
@@ -3486,8 +3495,8 @@ BOOL CToDoCtrlData::TaskMatches(DWORD dwTaskID, const SEARCHPARAMS& params, SEAR
 	return TaskMatches(pTDI, pTDS, params, result);
 }
 
-BOOL CToDoCtrlData::TaskMatches(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS,
-	const SEARCHPARAMS& params, SEARCHRESULT& result) const
+BOOL CToDoCtrlData::TaskMatches(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const SEARCHPARAMS& params,
+	SEARCHRESULT& result) const
 {
 	ASSERT(pTDI && pTDS);
 

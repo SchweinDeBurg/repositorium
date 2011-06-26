@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -59,10 +64,29 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-enum { ATTRIB, OPERATOR, VALUE, ANDOR };
-enum { ATTRIB_ID = 5000, OPERATOR_ID, ANDOR_ID, DATE_ID, TIME_ID };
+enum
+{
+	ATTRIB,
+	OPERATOR,
+	VALUE,
+	ANDOR
+};
+enum
+{
+	ATTRIB_ID = 5000,
+	OPERATOR_ID,
+	ANDOR_ID,
+	DATE_ID,
+	TIME_ID
+};
 
-const float COL_PROPORTIONS[] = { 12.0f / 47, 16.0f / 47, 13.0f / 47, 6.0f / 47 };
+const float COL_PROPORTIONS[] =
+{
+	12.0f / 47,
+	16.0f / 47,
+	13.0f / 47,
+	6.0f / 47
+};
 
 #define ADD_OP_2_COMBO(cb, op) { int i = cb->AddString(GetOpName(op)); cb->SetItemData(i, (DWORD)op); }
 

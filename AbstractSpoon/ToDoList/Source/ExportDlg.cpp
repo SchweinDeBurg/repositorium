@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -65,7 +70,11 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CExportDlg dialog
 
-enum { ACTIVETASKLIST, ALLTASKLISTS };
+enum
+{
+	ACTIVETASKLIST,
+	ALLTASKLISTS
+};
 
 int CExportDlg::s_nFormatOption = 0;
 
@@ -74,8 +83,10 @@ CExportDlg::CExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL b
 CDialog(IDD_EXPORT_DIALOG, pParent),
 m_mgrImportExport(mgr),
 m_bSingleTaskList(bSingleTaskList),
-m_sFilePath(szFilePath), m_sOrgFilePath(szFilePath),
-m_sFolderPath(szFolderPath), m_sOrgFolderPath(szFolderPath),
+m_sFilePath(szFilePath),
+m_sOrgFilePath(szFilePath),
+m_sFolderPath(szFolderPath),
+m_sOrgFolderPath(szFolderPath),
 m_taskSel(_T("Exporting"), bShowSubtaskCheckbox, bVisibleColumnsOnly),
 m_eExportPath(FES_COMBOSTYLEBTN | FES_SAVEAS)
 {

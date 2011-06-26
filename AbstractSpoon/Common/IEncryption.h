@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // IEncryption.h: interface for the IEncryption class.
@@ -121,13 +126,13 @@ public:
 
 	// returns a dynamically allocated buffer to the encrypted text
 	// caller responsible for calling FreeBuffer on the returned buffer
-	virtual bool Encrypt(const unsigned char* pInput, int nLenInput, const char* szPassword,
-		unsigned char*& pOutput, int& nLenOutput) = 0;
+	virtual bool Encrypt(const unsigned char* pInput, int nLenInput, const char* szPassword, unsigned char*& pOutput,
+		int& nLenOutput) = 0;
 
 	// returns a dynamically allocated buffer to the decrypted text
 	// caller responsible for calling FreeBuffer on the returned buffer
-	virtual bool Decrypt(const unsigned char* pInput, int nLenInput, const char* szPassword,
-		unsigned char*& pOutput, int& nLenOutput) = 0;
+	virtual bool Decrypt(const unsigned char* pInput, int nLenInput, const char* szPassword, unsigned char*& pOutput,
+		int& nLenOutput) = 0;
 
 	// frees a previously returned buffer and sets the ptr to NULL
 	// eg for buffer allocated with 'new' use 'delete []'

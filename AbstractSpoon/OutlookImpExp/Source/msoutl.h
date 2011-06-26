@@ -5,9 +5,17 @@
 class _DRecipientControl : public COleDispatchDriver
 {
 public:
-	_DRecipientControl() {}		// Calls COleDispatchDriver default constructor
-	_DRecipientControl(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_DRecipientControl(const _DRecipientControl& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_DRecipientControl()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_DRecipientControl(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_DRecipientControl(const _DRecipientControl& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -33,9 +41,17 @@ public:
 class _DRecipientControlEvents : public COleDispatchDriver
 {
 public:
-	_DRecipientControlEvents() {}		// Calls COleDispatchDriver default constructor
-	_DRecipientControlEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_DRecipientControlEvents(const _DRecipientControlEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_DRecipientControlEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_DRecipientControlEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_DRecipientControlEvents(const _DRecipientControlEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -49,9 +65,17 @@ public:
 class _DDocSiteControl : public COleDispatchDriver
 {
 public:
-	_DDocSiteControl() {}		// Calls COleDispatchDriver default constructor
-	_DDocSiteControl(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_DDocSiteControl(const _DDocSiteControl& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_DDocSiteControl()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_DDocSiteControl(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_DDocSiteControl(const _DDocSiteControl& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -69,9 +93,17 @@ public:
 class _DDocSiteControlEvents : public COleDispatchDriver
 {
 public:
-	_DDocSiteControlEvents() {}		// Calls COleDispatchDriver default constructor
-	_DDocSiteControlEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_DDocSiteControlEvents(const _DDocSiteControlEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_DDocSiteControlEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_DDocSiteControlEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_DDocSiteControlEvents(const _DDocSiteControlEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -85,9 +117,17 @@ public:
 class OlkControl : public COleDispatchDriver
 {
 public:
-	OlkControl() {}		// Calls COleDispatchDriver default constructor
-	OlkControl(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkControl(const OlkControl& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkControl()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkControl(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkControl(const OlkControl& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -119,9 +159,17 @@ public:
 class _OlkTextBox : public COleDispatchDriver
 {
 public:
-	_OlkTextBox() {}		// Calls COleDispatchDriver default constructor
-	_OlkTextBox(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkTextBox(const _OlkTextBox& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkTextBox()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkTextBox(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkTextBox(const _OlkTextBox& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -195,9 +243,17 @@ public:
 class OlkTextBoxEvents : public COleDispatchDriver
 {
 public:
-	OlkTextBoxEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkTextBoxEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkTextBoxEvents(const OlkTextBoxEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkTextBoxEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkTextBoxEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkTextBoxEvents(const OlkTextBoxEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -224,9 +280,17 @@ public:
 class _OlkLabel : public COleDispatchDriver
 {
 public:
-	_OlkLabel() {}		// Calls COleDispatchDriver default constructor
-	_OlkLabel(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkLabel(const _OlkLabel& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkLabel()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkLabel(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkLabel(const _OlkLabel& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -267,9 +331,17 @@ public:
 class OlkLabelEvents : public COleDispatchDriver
 {
 public:
-	OlkLabelEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkLabelEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkLabelEvents(const OlkLabelEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkLabelEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkLabelEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkLabelEvents(const OlkLabelEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -288,9 +360,17 @@ public:
 class _OlkCommandButton : public COleDispatchDriver
 {
 public:
-	_OlkCommandButton() {}		// Calls COleDispatchDriver default constructor
-	_OlkCommandButton(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkCommandButton(const _OlkCommandButton& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkCommandButton()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkCommandButton(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkCommandButton(const _OlkCommandButton& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -327,9 +407,17 @@ public:
 class OlkCommandButtonEvents : public COleDispatchDriver
 {
 public:
-	OlkCommandButtonEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkCommandButtonEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkCommandButtonEvents(const OlkCommandButtonEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkCommandButtonEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkCommandButtonEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkCommandButtonEvents(const OlkCommandButtonEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -355,9 +443,17 @@ public:
 class _OlkCheckBox : public COleDispatchDriver
 {
 public:
-	_OlkCheckBox() {}		// Calls COleDispatchDriver default constructor
-	_OlkCheckBox(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkCheckBox(const _OlkCheckBox& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkCheckBox()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkCheckBox(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkCheckBox(const _OlkCheckBox& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -396,9 +492,17 @@ public:
 class OlkCheckBoxEvents : public COleDispatchDriver
 {
 public:
-	OlkCheckBoxEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkCheckBoxEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkCheckBoxEvents(const OlkCheckBoxEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkCheckBoxEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkCheckBoxEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkCheckBoxEvents(const OlkCheckBoxEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -425,9 +529,17 @@ public:
 class _OlkOptionButton : public COleDispatchDriver
 {
 public:
-	_OlkOptionButton() {}		// Calls COleDispatchDriver default constructor
-	_OlkOptionButton(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkOptionButton(const _OlkOptionButton& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkOptionButton()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkOptionButton(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkOptionButton(const _OlkOptionButton& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -466,9 +578,17 @@ public:
 class OlkOptionButtonEvents : public COleDispatchDriver
 {
 public:
-	OlkOptionButtonEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkOptionButtonEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkOptionButtonEvents(const OlkOptionButtonEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkOptionButtonEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkOptionButtonEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkOptionButtonEvents(const OlkOptionButtonEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -495,9 +615,17 @@ public:
 class _OlkComboBox : public COleDispatchDriver
 {
 public:
-	_OlkComboBox() {}		// Calls COleDispatchDriver default constructor
-	_OlkComboBox(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkComboBox(const _OlkComboBox& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkComboBox()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkComboBox(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkComboBox(const _OlkComboBox& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -569,9 +697,17 @@ public:
 class OlkComboBoxEvents : public COleDispatchDriver
 {
 public:
-	OlkComboBoxEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkComboBoxEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkComboBoxEvents(const OlkComboBoxEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkComboBoxEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkComboBoxEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkComboBoxEvents(const OlkComboBoxEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -599,9 +735,17 @@ public:
 class _OlkListBox : public COleDispatchDriver
 {
 public:
-	_OlkListBox() {}		// Calls COleDispatchDriver default constructor
-	_OlkListBox(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkListBox(const _OlkListBox& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkListBox()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkListBox(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkListBox(const _OlkListBox& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -653,9 +797,17 @@ public:
 class OlkListBoxEvents : public COleDispatchDriver
 {
 public:
-	OlkListBoxEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkListBoxEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkListBoxEvents(const OlkListBoxEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkListBoxEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkListBoxEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkListBoxEvents(const OlkListBoxEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -682,9 +834,17 @@ public:
 class _OlkInfoBar : public COleDispatchDriver
 {
 public:
-	_OlkInfoBar() {}		// Calls COleDispatchDriver default constructor
-	_OlkInfoBar(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkInfoBar(const _OlkInfoBar& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkInfoBar()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkInfoBar(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkInfoBar(const _OlkInfoBar& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -702,9 +862,17 @@ public:
 class OlkInfoBarEvents : public COleDispatchDriver
 {
 public:
-	OlkInfoBarEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkInfoBarEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkInfoBarEvents(const OlkInfoBarEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkInfoBarEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkInfoBarEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkInfoBarEvents(const OlkInfoBarEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -723,9 +891,17 @@ public:
 class _OlkContactPhoto : public COleDispatchDriver
 {
 public:
-	_OlkContactPhoto() {}		// Calls COleDispatchDriver default constructor
-	_OlkContactPhoto(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkContactPhoto(const _OlkContactPhoto& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkContactPhoto()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkContactPhoto(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkContactPhoto(const _OlkContactPhoto& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -745,9 +921,17 @@ public:
 class OlkContactPhotoEvents : public COleDispatchDriver
 {
 public:
-	OlkContactPhotoEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkContactPhotoEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkContactPhotoEvents(const OlkContactPhotoEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkContactPhotoEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkContactPhotoEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkContactPhotoEvents(const OlkContactPhotoEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -772,9 +956,17 @@ public:
 class _OlkBusinessCardControl : public COleDispatchDriver
 {
 public:
-	_OlkBusinessCardControl() {}		// Calls COleDispatchDriver default constructor
-	_OlkBusinessCardControl(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkBusinessCardControl(const _OlkBusinessCardControl& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkBusinessCardControl()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkBusinessCardControl(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkBusinessCardControl(const _OlkBusinessCardControl& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -792,9 +984,17 @@ public:
 class OlkBusinessCardControlEvents : public COleDispatchDriver
 {
 public:
-	OlkBusinessCardControlEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkBusinessCardControlEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkBusinessCardControlEvents(const OlkBusinessCardControlEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkBusinessCardControlEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkBusinessCardControlEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkBusinessCardControlEvents(const OlkBusinessCardControlEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -813,9 +1013,17 @@ public:
 class _OlkPageControl : public COleDispatchDriver
 {
 public:
-	_OlkPageControl() {}		// Calls COleDispatchDriver default constructor
-	_OlkPageControl(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkPageControl(const _OlkPageControl& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkPageControl()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkPageControl(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkPageControl(const _OlkPageControl& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -831,9 +1039,17 @@ public:
 class OlkPageControlEvents : public COleDispatchDriver
 {
 public:
-	OlkPageControlEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkPageControlEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkPageControlEvents(const OlkPageControlEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkPageControlEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkPageControlEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkPageControlEvents(const OlkPageControlEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -847,9 +1063,17 @@ public:
 class _OlkDateControl : public COleDispatchDriver
 {
 public:
-	_OlkDateControl() {}		// Calls COleDispatchDriver default constructor
-	_OlkDateControl(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkDateControl(const _OlkDateControl& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkDateControl()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkDateControl(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkDateControl(const _OlkDateControl& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -897,9 +1121,17 @@ public:
 class OlkDateControlEvents : public COleDispatchDriver
 {
 public:
-	OlkDateControlEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkDateControlEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkDateControlEvents(const OlkDateControlEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkDateControlEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkDateControlEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkDateControlEvents(const OlkDateControlEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -927,9 +1159,17 @@ public:
 class _OlkTimeControl : public COleDispatchDriver
 {
 public:
-	_OlkTimeControl() {}		// Calls COleDispatchDriver default constructor
-	_OlkTimeControl(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkTimeControl(const _OlkTimeControl& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkTimeControl()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkTimeControl(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkTimeControl(const _OlkTimeControl& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -981,9 +1221,17 @@ public:
 class OlkTimeControlEvents : public COleDispatchDriver
 {
 public:
-	OlkTimeControlEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkTimeControlEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkTimeControlEvents(const OlkTimeControlEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkTimeControlEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkTimeControlEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkTimeControlEvents(const OlkTimeControlEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1011,9 +1259,17 @@ public:
 class _OlkCategory : public COleDispatchDriver
 {
 public:
-	_OlkCategory() {}		// Calls COleDispatchDriver default constructor
-	_OlkCategory(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkCategory(const _OlkCategory& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkCategory()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkCategory(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkCategory(const _OlkCategory& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1041,9 +1297,17 @@ public:
 class OlkCategoryEvents : public COleDispatchDriver
 {
 public:
-	OlkCategoryEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkCategoryEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkCategoryEvents(const OlkCategoryEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkCategoryEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkCategoryEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkCategoryEvents(const OlkCategoryEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1068,9 +1332,17 @@ public:
 class _OlkFrameHeader : public COleDispatchDriver
 {
 public:
-	_OlkFrameHeader() {}		// Calls COleDispatchDriver default constructor
-	_OlkFrameHeader(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkFrameHeader(const _OlkFrameHeader& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkFrameHeader()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkFrameHeader(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkFrameHeader(const _OlkFrameHeader& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1097,9 +1369,17 @@ public:
 class OlkFrameHeaderEvents : public COleDispatchDriver
 {
 public:
-	OlkFrameHeaderEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkFrameHeaderEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkFrameHeaderEvents(const OlkFrameHeaderEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkFrameHeaderEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkFrameHeaderEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkFrameHeaderEvents(const OlkFrameHeaderEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1113,9 +1393,17 @@ public:
 class _OlkSenderPhoto : public COleDispatchDriver
 {
 public:
-	_OlkSenderPhoto() {}		// Calls COleDispatchDriver default constructor
-	_OlkSenderPhoto(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkSenderPhoto(const _OlkSenderPhoto& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkSenderPhoto()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkSenderPhoto(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkSenderPhoto(const _OlkSenderPhoto& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1137,9 +1425,17 @@ public:
 class OlkSenderPhotoEvents : public COleDispatchDriver
 {
 public:
-	OlkSenderPhotoEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkSenderPhotoEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkSenderPhotoEvents(const OlkSenderPhotoEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkSenderPhotoEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkSenderPhotoEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkSenderPhotoEvents(const OlkSenderPhotoEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1159,9 +1455,17 @@ public:
 class _TimeZone : public COleDispatchDriver
 {
 public:
-	_TimeZone() {}		// Calls COleDispatchDriver default constructor
-	_TimeZone(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_TimeZone(const _TimeZone& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_TimeZone()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_TimeZone(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_TimeZone(const _TimeZone& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1188,9 +1492,17 @@ public:
 class _Application : public COleDispatchDriver
 {
 public:
-	_Application() {}		// Calls COleDispatchDriver default constructor
-	_Application(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Application(const _Application& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Application()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Application(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Application(const _Application& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1232,9 +1544,17 @@ public:
 class _NameSpace : public COleDispatchDriver
 {
 public:
-	_NameSpace() {}		// Calls COleDispatchDriver default constructor
-	_NameSpace(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_NameSpace(const _NameSpace& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_NameSpace()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_NameSpace(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_NameSpace(const _NameSpace& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1290,9 +1610,17 @@ public:
 class Recipient : public COleDispatchDriver
 {
 public:
-	Recipient() {}		// Calls COleDispatchDriver default constructor
-	Recipient(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Recipient(const Recipient& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Recipient()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Recipient(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Recipient(const Recipient& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1331,9 +1659,17 @@ public:
 class AddressEntry : public COleDispatchDriver
 {
 public:
-	AddressEntry() {}		// Calls COleDispatchDriver default constructor
-	AddressEntry(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	AddressEntry(const AddressEntry& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	AddressEntry()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	AddressEntry(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	AddressEntry(const AddressEntry& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1368,9 +1704,17 @@ public:
 class AddressEntries : public COleDispatchDriver
 {
 public:
-	AddressEntries() {}		// Calls COleDispatchDriver default constructor
-	AddressEntries(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	AddressEntries(const AddressEntries& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	AddressEntries()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	AddressEntries(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	AddressEntries(const AddressEntries& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1396,9 +1740,17 @@ public:
 class _ContactItem : public COleDispatchDriver
 {
 public:
-	_ContactItem() {}		// Calls COleDispatchDriver default constructor
-	_ContactItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ContactItem(const _ContactItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ContactItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ContactItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ContactItem(const _ContactItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1724,9 +2076,17 @@ public:
 class Actions : public COleDispatchDriver
 {
 public:
-	Actions() {}		// Calls COleDispatchDriver default constructor
-	Actions(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Actions(const Actions& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Actions()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Actions(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Actions(const Actions& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1748,9 +2108,17 @@ public:
 class Action : public COleDispatchDriver
 {
 public:
-	Action() {}		// Calls COleDispatchDriver default constructor
-	Action(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Action(const Action& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Action()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Action(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Action(const Action& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1786,9 +2154,17 @@ public:
 class Attachments : public COleDispatchDriver
 {
 public:
-	Attachments() {}		// Calls COleDispatchDriver default constructor
-	Attachments(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Attachments(const Attachments& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Attachments()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Attachments(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Attachments(const Attachments& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1810,9 +2186,17 @@ public:
 class Attachment : public COleDispatchDriver
 {
 public:
-	Attachment() {}		// Calls COleDispatchDriver default constructor
-	Attachment(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Attachment(const Attachment& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Attachment()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Attachment(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Attachment(const Attachment& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1843,9 +2227,17 @@ public:
 class _PropertyAccessor : public COleDispatchDriver
 {
 public:
-	_PropertyAccessor() {}		// Calls COleDispatchDriver default constructor
-	_PropertyAccessor(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_PropertyAccessor(const _PropertyAccessor& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_PropertyAccessor()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_PropertyAccessor(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_PropertyAccessor(const _PropertyAccessor& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1873,9 +2265,17 @@ public:
 class FormDescription : public COleDispatchDriver
 {
 public:
-	FormDescription() {}		// Calls COleDispatchDriver default constructor
-	FormDescription(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	FormDescription(const FormDescription& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	FormDescription()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	FormDescription(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	FormDescription(const FormDescription& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1926,9 +2326,17 @@ public:
 class _Inspector : public COleDispatchDriver
 {
 public:
-	_Inspector() {}		// Calls COleDispatchDriver default constructor
-	_Inspector(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Inspector(const _Inspector& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Inspector()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Inspector(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Inspector(const _Inspector& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1973,9 +2381,17 @@ public:
 class UserProperties : public COleDispatchDriver
 {
 public:
-	UserProperties() {}		// Calls COleDispatchDriver default constructor
-	UserProperties(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	UserProperties(const UserProperties& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	UserProperties()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	UserProperties(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	UserProperties(const UserProperties& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -1998,9 +2414,17 @@ public:
 class UserProperty : public COleDispatchDriver
 {
 public:
-	UserProperty() {}		// Calls COleDispatchDriver default constructor
-	UserProperty(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	UserProperty(const UserProperty& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	UserProperty()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	UserProperty(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	UserProperty(const UserProperty& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2029,9 +2453,17 @@ public:
 class MAPIFolder : public COleDispatchDriver
 {
 public:
-	MAPIFolder() {}		// Calls COleDispatchDriver default constructor
-	MAPIFolder(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	MAPIFolder(const MAPIFolder& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	MAPIFolder()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	MAPIFolder(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	MAPIFolder(const MAPIFolder& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2090,9 +2522,17 @@ public:
 class _Folders : public COleDispatchDriver
 {
 public:
-	_Folders() {}		// Calls COleDispatchDriver default constructor
-	_Folders(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Folders(const _Folders& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Folders()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Folders(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Folders(const _Folders& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2118,9 +2558,17 @@ public:
 class _Items : public COleDispatchDriver
 {
 public:
-	_Items() {}		// Calls COleDispatchDriver default constructor
-	_Items(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Items(const _Items& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Items()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Items(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Items(const _Items& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2154,9 +2602,17 @@ public:
 class _Explorer : public COleDispatchDriver
 {
 public:
-	_Explorer() {}		// Calls COleDispatchDriver default constructor
-	_Explorer(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Explorer(const _Explorer& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Explorer()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Explorer(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Explorer(const _Explorer& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2201,9 +2657,17 @@ public:
 class Panes : public COleDispatchDriver
 {
 public:
-	Panes() {}		// Calls COleDispatchDriver default constructor
-	Panes(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Panes(const Panes& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Panes()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Panes(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Panes(const Panes& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2223,9 +2687,17 @@ public:
 class Selection : public COleDispatchDriver
 {
 public:
-	Selection() {}		// Calls COleDispatchDriver default constructor
-	Selection(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Selection(const Selection& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Selection()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Selection(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Selection(const Selection& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2245,9 +2717,17 @@ public:
 class _NavigationPane : public COleDispatchDriver
 {
 public:
-	_NavigationPane() {}		// Calls COleDispatchDriver default constructor
-	_NavigationPane(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_NavigationPane(const _NavigationPane& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_NavigationPane()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_NavigationPane(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_NavigationPane(const _NavigationPane& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2272,9 +2752,17 @@ public:
 class _NavigationModule : public COleDispatchDriver
 {
 public:
-	_NavigationModule() {}		// Calls COleDispatchDriver default constructor
-	_NavigationModule(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_NavigationModule(const _NavigationModule& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_NavigationModule()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_NavigationModule(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_NavigationModule(const _NavigationModule& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2298,9 +2786,17 @@ public:
 class _NavigationModules : public COleDispatchDriver
 {
 public:
-	_NavigationModules() {}		// Calls COleDispatchDriver default constructor
-	_NavigationModules(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_NavigationModules(const _NavigationModules& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_NavigationModules()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_NavigationModules(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_NavigationModules(const _NavigationModules& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2321,9 +2817,17 @@ public:
 class View : public COleDispatchDriver
 {
 public:
-	View() {}		// Calls COleDispatchDriver default constructor
-	View(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	View(const View& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	View()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	View(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	View(const View& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2360,9 +2864,17 @@ public:
 class _Views : public COleDispatchDriver
 {
 public:
-	_Views() {}		// Calls COleDispatchDriver default constructor
-	_Views(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Views(const _Views& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Views()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Views(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Views(const _Views& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2384,9 +2896,17 @@ public:
 class _Store : public COleDispatchDriver
 {
 public:
-	_Store() {}		// Calls COleDispatchDriver default constructor
-	_Store(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Store(const _Store& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Store()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Store(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Store(const _Store& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2417,9 +2937,17 @@ public:
 class _Rules : public COleDispatchDriver
 {
 public:
-	_Rules() {}		// Calls COleDispatchDriver default constructor
-	_Rules(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Rules(const _Rules& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Rules()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Rules(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Rules(const _Rules& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2444,9 +2972,17 @@ public:
 class _Rule : public COleDispatchDriver
 {
 public:
-	_Rule() {}		// Calls COleDispatchDriver default constructor
-	_Rule(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Rule(const _Rule& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Rule()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Rule(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Rule(const _Rule& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2465,7 +3001,8 @@ public:
 	BOOL GetEnabled();
 	void SetEnabled(BOOL bNewValue);
 	BOOL GetIsLocalRule();
-	void Execute(const VARIANT& ShowProgress, const VARIANT& Folder, const VARIANT& IncludeSubfolders, const VARIANT& RuleExecuteOption);
+	void Execute(const VARIANT& ShowProgress, const VARIANT& Folder, const VARIANT& IncludeSubfolders,
+		const VARIANT& RuleExecuteOption);
 	LPDISPATCH GetActions();
 	LPDISPATCH GetConditions();
 	LPDISPATCH GetExceptions();
@@ -2476,9 +3013,17 @@ public:
 class _RuleActions : public COleDispatchDriver
 {
 public:
-	_RuleActions() {}		// Calls COleDispatchDriver default constructor
-	_RuleActions(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_RuleActions(const _RuleActions& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_RuleActions()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_RuleActions(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_RuleActions(const _RuleActions& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2515,9 +3060,17 @@ public:
 class _RuleAction : public COleDispatchDriver
 {
 public:
-	_RuleAction() {}		// Calls COleDispatchDriver default constructor
-	_RuleAction(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_RuleAction(const _RuleAction& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_RuleAction()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_RuleAction(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_RuleAction(const _RuleAction& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2538,9 +3091,17 @@ public:
 class _MoveOrCopyRuleAction : public COleDispatchDriver
 {
 public:
-	_MoveOrCopyRuleAction() {}		// Calls COleDispatchDriver default constructor
-	_MoveOrCopyRuleAction(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_MoveOrCopyRuleAction(const _MoveOrCopyRuleAction& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_MoveOrCopyRuleAction()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_MoveOrCopyRuleAction(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_MoveOrCopyRuleAction(const _MoveOrCopyRuleAction& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2563,9 +3124,17 @@ public:
 class _SendRuleAction : public COleDispatchDriver
 {
 public:
-	_SendRuleAction() {}		// Calls COleDispatchDriver default constructor
-	_SendRuleAction(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_SendRuleAction(const _SendRuleAction& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_SendRuleAction()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_SendRuleAction(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_SendRuleAction(const _SendRuleAction& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2587,9 +3156,17 @@ public:
 class Recipients : public COleDispatchDriver
 {
 public:
-	Recipients() {}		// Calls COleDispatchDriver default constructor
-	Recipients(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Recipients(const Recipients& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Recipients()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Recipients(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Recipients(const Recipients& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2612,9 +3189,17 @@ public:
 class _AssignToCategoryRuleAction : public COleDispatchDriver
 {
 public:
-	_AssignToCategoryRuleAction() {}		// Calls COleDispatchDriver default constructor
-	_AssignToCategoryRuleAction(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_AssignToCategoryRuleAction(const _AssignToCategoryRuleAction& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_AssignToCategoryRuleAction()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_AssignToCategoryRuleAction(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_AssignToCategoryRuleAction(const _AssignToCategoryRuleAction& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2637,9 +3222,17 @@ public:
 class _PlaySoundRuleAction : public COleDispatchDriver
 {
 public:
-	_PlaySoundRuleAction() {}		// Calls COleDispatchDriver default constructor
-	_PlaySoundRuleAction(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_PlaySoundRuleAction(const _PlaySoundRuleAction& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_PlaySoundRuleAction()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_PlaySoundRuleAction(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_PlaySoundRuleAction(const _PlaySoundRuleAction& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2662,9 +3255,17 @@ public:
 class _MarkAsTaskRuleAction : public COleDispatchDriver
 {
 public:
-	_MarkAsTaskRuleAction() {}		// Calls COleDispatchDriver default constructor
-	_MarkAsTaskRuleAction(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_MarkAsTaskRuleAction(const _MarkAsTaskRuleAction& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_MarkAsTaskRuleAction()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_MarkAsTaskRuleAction(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_MarkAsTaskRuleAction(const _MarkAsTaskRuleAction& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2689,9 +3290,17 @@ public:
 class _NewItemAlertRuleAction : public COleDispatchDriver
 {
 public:
-	_NewItemAlertRuleAction() {}		// Calls COleDispatchDriver default constructor
-	_NewItemAlertRuleAction(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_NewItemAlertRuleAction(const _NewItemAlertRuleAction& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_NewItemAlertRuleAction()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_NewItemAlertRuleAction(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_NewItemAlertRuleAction(const _NewItemAlertRuleAction& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2714,9 +3323,17 @@ public:
 class _RuleConditions : public COleDispatchDriver
 {
 public:
-	_RuleConditions() {}		// Calls COleDispatchDriver default constructor
-	_RuleConditions(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_RuleConditions(const _RuleConditions& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_RuleConditions()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_RuleConditions(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_RuleConditions(const _RuleConditions& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2761,9 +3378,17 @@ public:
 class _RuleCondition : public COleDispatchDriver
 {
 public:
-	_RuleCondition() {}		// Calls COleDispatchDriver default constructor
-	_RuleCondition(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_RuleCondition(const _RuleCondition& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_RuleCondition()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_RuleCondition(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_RuleCondition(const _RuleCondition& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2784,9 +3409,17 @@ public:
 class _ImportanceRuleCondition : public COleDispatchDriver
 {
 public:
-	_ImportanceRuleCondition() {}		// Calls COleDispatchDriver default constructor
-	_ImportanceRuleCondition(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ImportanceRuleCondition(const _ImportanceRuleCondition& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ImportanceRuleCondition()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ImportanceRuleCondition(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ImportanceRuleCondition(const _ImportanceRuleCondition& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2809,9 +3442,17 @@ public:
 class _AccountRuleCondition : public COleDispatchDriver
 {
 public:
-	_AccountRuleCondition() {}		// Calls COleDispatchDriver default constructor
-	_AccountRuleCondition(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_AccountRuleCondition(const _AccountRuleCondition& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_AccountRuleCondition()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_AccountRuleCondition(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_AccountRuleCondition(const _AccountRuleCondition& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2834,9 +3475,17 @@ public:
 class _Account : public COleDispatchDriver
 {
 public:
-	_Account() {}		// Calls COleDispatchDriver default constructor
-	_Account(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Account(const _Account& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Account()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Account(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Account(const _Account& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2858,9 +3507,17 @@ public:
 class _TextRuleCondition : public COleDispatchDriver
 {
 public:
-	_TextRuleCondition() {}		// Calls COleDispatchDriver default constructor
-	_TextRuleCondition(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_TextRuleCondition(const _TextRuleCondition& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_TextRuleCondition()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_TextRuleCondition(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_TextRuleCondition(const _TextRuleCondition& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2883,9 +3540,17 @@ public:
 class _CategoryRuleCondition : public COleDispatchDriver
 {
 public:
-	_CategoryRuleCondition() {}		// Calls COleDispatchDriver default constructor
-	_CategoryRuleCondition(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_CategoryRuleCondition(const _CategoryRuleCondition& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_CategoryRuleCondition()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_CategoryRuleCondition(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_CategoryRuleCondition(const _CategoryRuleCondition& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2908,9 +3573,17 @@ public:
 class _FormNameRuleCondition : public COleDispatchDriver
 {
 public:
-	_FormNameRuleCondition() {}		// Calls COleDispatchDriver default constructor
-	_FormNameRuleCondition(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_FormNameRuleCondition(const _FormNameRuleCondition& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_FormNameRuleCondition()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_FormNameRuleCondition(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_FormNameRuleCondition(const _FormNameRuleCondition& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2933,9 +3606,17 @@ public:
 class _ToOrFromRuleCondition : public COleDispatchDriver
 {
 public:
-	_ToOrFromRuleCondition() {}		// Calls COleDispatchDriver default constructor
-	_ToOrFromRuleCondition(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ToOrFromRuleCondition(const _ToOrFromRuleCondition& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ToOrFromRuleCondition()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ToOrFromRuleCondition(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ToOrFromRuleCondition(const _ToOrFromRuleCondition& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2957,9 +3638,17 @@ public:
 class _AddressRuleCondition : public COleDispatchDriver
 {
 public:
-	_AddressRuleCondition() {}		// Calls COleDispatchDriver default constructor
-	_AddressRuleCondition(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_AddressRuleCondition(const _AddressRuleCondition& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_AddressRuleCondition()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_AddressRuleCondition(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_AddressRuleCondition(const _AddressRuleCondition& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -2982,9 +3671,17 @@ public:
 class _SenderInAddressListRuleCondition : public COleDispatchDriver
 {
 public:
-	_SenderInAddressListRuleCondition() {}		// Calls COleDispatchDriver default constructor
-	_SenderInAddressListRuleCondition(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_SenderInAddressListRuleCondition(const _SenderInAddressListRuleCondition& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_SenderInAddressListRuleCondition()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_SenderInAddressListRuleCondition(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_SenderInAddressListRuleCondition(const _SenderInAddressListRuleCondition& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3007,9 +3704,17 @@ public:
 class AddressList : public COleDispatchDriver
 {
 public:
-	AddressList() {}		// Calls COleDispatchDriver default constructor
-	AddressList(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	AddressList(const AddressList& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	AddressList()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	AddressList(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	AddressList(const AddressList& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3037,9 +3742,17 @@ public:
 class _FromRssFeedRuleCondition : public COleDispatchDriver
 {
 public:
-	_FromRssFeedRuleCondition() {}		// Calls COleDispatchDriver default constructor
-	_FromRssFeedRuleCondition(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_FromRssFeedRuleCondition(const _FromRssFeedRuleCondition& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_FromRssFeedRuleCondition()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_FromRssFeedRuleCondition(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_FromRssFeedRuleCondition(const _FromRssFeedRuleCondition& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3062,9 +3775,17 @@ public:
 class _StorageItem : public COleDispatchDriver
 {
 public:
-	_StorageItem() {}		// Calls COleDispatchDriver default constructor
-	_StorageItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_StorageItem(const _StorageItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_StorageItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_StorageItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_StorageItem(const _StorageItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3097,9 +3818,17 @@ public:
 class _Table : public COleDispatchDriver
 {
 public:
-	_Table() {}		// Calls COleDispatchDriver default constructor
-	_Table(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Table(const _Table& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Table()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Table(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Table(const _Table& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3127,9 +3856,17 @@ public:
 class _Row : public COleDispatchDriver
 {
 public:
-	_Row() {}		// Calls COleDispatchDriver default constructor
-	_Row(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Row(const _Row& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Row()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Row(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Row(const _Row& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3152,9 +3889,17 @@ public:
 class _Columns : public COleDispatchDriver
 {
 public:
-	_Columns() {}		// Calls COleDispatchDriver default constructor
-	_Columns(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Columns(const _Columns& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Columns()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Columns(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Columns(const _Columns& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3177,9 +3922,17 @@ public:
 class _Column : public COleDispatchDriver
 {
 public:
-	_Column() {}		// Calls COleDispatchDriver default constructor
-	_Column(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Column(const _Column& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Column()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Column(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Column(const _Column& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3198,9 +3951,17 @@ public:
 class _CalendarSharing : public COleDispatchDriver
 {
 public:
-	_CalendarSharing() {}		// Calls COleDispatchDriver default constructor
-	_CalendarSharing(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_CalendarSharing(const _CalendarSharing& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_CalendarSharing()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_CalendarSharing(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_CalendarSharing(const _CalendarSharing& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3235,9 +3996,17 @@ public:
 class _MailItem : public COleDispatchDriver
 {
 public:
-	_MailItem() {}		// Calls COleDispatchDriver default constructor
-	_MailItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_MailItem(const _MailItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_MailItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_MailItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_MailItem(const _MailItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3398,9 +4167,17 @@ public:
 class Links : public COleDispatchDriver
 {
 public:
-	Links() {}		// Calls COleDispatchDriver default constructor
-	Links(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Links(const Links& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Links()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Links(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Links(const Links& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3422,9 +4199,17 @@ public:
 class Link : public COleDispatchDriver
 {
 public:
-	Link() {}		// Calls COleDispatchDriver default constructor
-	Link(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Link(const Link& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Link()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Link(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Link(const Link& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3445,9 +4230,17 @@ public:
 class ItemProperties : public COleDispatchDriver
 {
 public:
-	ItemProperties() {}		// Calls COleDispatchDriver default constructor
-	ItemProperties(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ItemProperties(const ItemProperties& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ItemProperties()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ItemProperties(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ItemProperties(const ItemProperties& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3469,9 +4262,17 @@ public:
 class ItemProperty : public COleDispatchDriver
 {
 public:
-	ItemProperty() {}		// Calls COleDispatchDriver default constructor
-	ItemProperty(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ItemProperty(const ItemProperty& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ItemProperty()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ItemProperty(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ItemProperty(const ItemProperty& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3494,9 +4295,17 @@ public:
 class Conflicts : public COleDispatchDriver
 {
 public:
-	Conflicts() {}		// Calls COleDispatchDriver default constructor
-	Conflicts(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Conflicts(const Conflicts& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Conflicts()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Conflicts(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Conflicts(const Conflicts& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3520,9 +4329,17 @@ public:
 class Conflict : public COleDispatchDriver
 {
 public:
-	Conflict() {}		// Calls COleDispatchDriver default constructor
-	Conflict(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Conflict(const Conflict& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Conflict()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Conflict(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Conflict(const Conflict& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3543,9 +4360,17 @@ public:
 class ItemEvents : public COleDispatchDriver
 {
 public:
-	ItemEvents() {}		// Calls COleDispatchDriver default constructor
-	ItemEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ItemEvents(const ItemEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ItemEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ItemEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ItemEvents(const ItemEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3574,9 +4399,17 @@ public:
 class ItemEvents_10 : public COleDispatchDriver
 {
 public:
-	ItemEvents_10() {}		// Calls COleDispatchDriver default constructor
-	ItemEvents_10(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ItemEvents_10(const ItemEvents_10& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ItemEvents_10()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ItemEvents_10(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ItemEvents_10(const ItemEvents_10& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3613,9 +4446,17 @@ public:
 class _UserDefinedProperties : public COleDispatchDriver
 {
 public:
-	_UserDefinedProperties() {}		// Calls COleDispatchDriver default constructor
-	_UserDefinedProperties(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_UserDefinedProperties(const _UserDefinedProperties& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_UserDefinedProperties()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_UserDefinedProperties(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_UserDefinedProperties(const _UserDefinedProperties& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3639,9 +4480,17 @@ public:
 class _UserDefinedProperty : public COleDispatchDriver
 {
 public:
-	_UserDefinedProperty() {}		// Calls COleDispatchDriver default constructor
-	_UserDefinedProperty(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_UserDefinedProperty(const _UserDefinedProperty& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_UserDefinedProperty()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_UserDefinedProperty(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_UserDefinedProperty(const _UserDefinedProperty& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3664,9 +4513,17 @@ public:
 class _ExchangeUser : public COleDispatchDriver
 {
 public:
-	_ExchangeUser() {}		// Calls COleDispatchDriver default constructor
-	_ExchangeUser(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ExchangeUser(const _ExchangeUser& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ExchangeUser()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ExchangeUser(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ExchangeUser(const _ExchangeUser& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3744,9 +4601,17 @@ public:
 class _ExchangeDistributionList : public COleDispatchDriver
 {
 public:
-	_ExchangeDistributionList() {}		// Calls COleDispatchDriver default constructor
-	_ExchangeDistributionList(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ExchangeDistributionList(const _ExchangeDistributionList& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ExchangeDistributionList()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ExchangeDistributionList(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ExchangeDistributionList(const _ExchangeDistributionList& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3788,9 +4653,17 @@ public:
 class AddressLists : public COleDispatchDriver
 {
 public:
-	AddressLists() {}		// Calls COleDispatchDriver default constructor
-	AddressLists(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	AddressLists(const AddressLists& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	AddressLists()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	AddressLists(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	AddressLists(const AddressLists& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3810,9 +4683,17 @@ public:
 class SyncObjects : public COleDispatchDriver
 {
 public:
-	SyncObjects() {}		// Calls COleDispatchDriver default constructor
-	SyncObjects(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	SyncObjects(const SyncObjects& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	SyncObjects()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	SyncObjects(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	SyncObjects(const SyncObjects& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3833,9 +4714,17 @@ public:
 class _SyncObject : public COleDispatchDriver
 {
 public:
-	_SyncObject() {}		// Calls COleDispatchDriver default constructor
-	_SyncObject(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_SyncObject(const _SyncObject& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_SyncObject()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_SyncObject(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_SyncObject(const _SyncObject& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3856,9 +4745,17 @@ public:
 class SyncObjectEvents : public COleDispatchDriver
 {
 public:
-	SyncObjectEvents() {}		// Calls COleDispatchDriver default constructor
-	SyncObjectEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	SyncObjectEvents(const SyncObjectEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	SyncObjectEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	SyncObjectEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	SyncObjectEvents(const SyncObjectEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3876,9 +4773,17 @@ public:
 class _Accounts : public COleDispatchDriver
 {
 public:
-	_Accounts() {}		// Calls COleDispatchDriver default constructor
-	_Accounts(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Accounts(const _Accounts& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Accounts()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Accounts(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Accounts(const _Accounts& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3898,9 +4803,17 @@ public:
 class _Stores : public COleDispatchDriver
 {
 public:
-	_Stores() {}		// Calls COleDispatchDriver default constructor
-	_Stores(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Stores(const _Stores& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Stores()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Stores(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Stores(const _Stores& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3920,9 +4833,17 @@ public:
 class StoresEvents_12 : public COleDispatchDriver
 {
 public:
-	StoresEvents_12() {}		// Calls COleDispatchDriver default constructor
-	StoresEvents_12(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	StoresEvents_12(const StoresEvents_12& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	StoresEvents_12()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	StoresEvents_12(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	StoresEvents_12(const StoresEvents_12& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3938,9 +4859,17 @@ public:
 class _SelectNamesDialog : public COleDispatchDriver
 {
 public:
-	_SelectNamesDialog() {}		// Calls COleDispatchDriver default constructor
-	_SelectNamesDialog(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_SelectNamesDialog(const _SelectNamesDialog& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_SelectNamesDialog()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_SelectNamesDialog(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_SelectNamesDialog(const _SelectNamesDialog& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -3980,9 +4909,17 @@ public:
 class _Categories : public COleDispatchDriver
 {
 public:
-	_Categories() {}		// Calls COleDispatchDriver default constructor
-	_Categories(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Categories(const _Categories& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Categories()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Categories(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Categories(const _Categories& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4004,9 +4941,17 @@ public:
 class _Category : public COleDispatchDriver
 {
 public:
-	_Category() {}		// Calls COleDispatchDriver default constructor
-	_Category(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Category(const _Category& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Category()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Category(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Category(const _Category& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4034,9 +4979,17 @@ public:
 class _SharingItem : public COleDispatchDriver
 {
 public:
-	_SharingItem() {}		// Calls COleDispatchDriver default constructor
-	_SharingItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_SharingItem(const _SharingItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_SharingItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_SharingItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_SharingItem(const _SharingItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4204,9 +5157,17 @@ public:
 class _Explorers : public COleDispatchDriver
 {
 public:
-	_Explorers() {}		// Calls COleDispatchDriver default constructor
-	_Explorers(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Explorers(const _Explorers& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Explorers()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Explorers(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Explorers(const _Explorers& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4227,9 +5188,17 @@ public:
 class ExplorerEvents : public COleDispatchDriver
 {
 public:
-	ExplorerEvents() {}		// Calls COleDispatchDriver default constructor
-	ExplorerEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ExplorerEvents(const ExplorerEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ExplorerEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ExplorerEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ExplorerEvents(const ExplorerEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4251,9 +5220,17 @@ public:
 class ExplorerEvents_10 : public COleDispatchDriver
 {
 public:
-	ExplorerEvents_10() {}		// Calls COleDispatchDriver default constructor
-	ExplorerEvents_10(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ExplorerEvents_10(const ExplorerEvents_10& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ExplorerEvents_10()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ExplorerEvents_10(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ExplorerEvents_10(const ExplorerEvents_10& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4282,9 +5259,17 @@ public:
 class _Inspectors : public COleDispatchDriver
 {
 public:
-	_Inspectors() {}		// Calls COleDispatchDriver default constructor
-	_Inspectors(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Inspectors(const _Inspectors& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Inspectors()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Inspectors(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Inspectors(const _Inspectors& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4305,9 +5290,17 @@ public:
 class InspectorEvents : public COleDispatchDriver
 {
 public:
-	InspectorEvents() {}		// Calls COleDispatchDriver default constructor
-	InspectorEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	InspectorEvents(const InspectorEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	InspectorEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	InspectorEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	InspectorEvents(const InspectorEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4324,9 +5317,17 @@ public:
 class InspectorEvents_10 : public COleDispatchDriver
 {
 public:
-	InspectorEvents_10() {}		// Calls COleDispatchDriver default constructor
-	InspectorEvents_10(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	InspectorEvents_10(const InspectorEvents_10& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	InspectorEvents_10()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	InspectorEvents_10(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	InspectorEvents_10(const InspectorEvents_10& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4348,9 +5349,17 @@ public:
 class Search : public COleDispatchDriver
 {
 public:
-	Search() {}		// Calls COleDispatchDriver default constructor
-	Search(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Search(const Search& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Search()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Search(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Search(const Search& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4377,9 +5386,17 @@ public:
 class _Results : public COleDispatchDriver
 {
 public:
-	_Results() {}		// Calls COleDispatchDriver default constructor
-	_Results(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Results(const _Results& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Results()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Results(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Results(const _Results& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4408,9 +5425,17 @@ public:
 class _Reminders : public COleDispatchDriver
 {
 public:
-	_Reminders() {}		// Calls COleDispatchDriver default constructor
-	_Reminders(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Reminders(const _Reminders& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Reminders()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Reminders(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Reminders(const _Reminders& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4431,9 +5456,17 @@ public:
 class _Reminder : public COleDispatchDriver
 {
 public:
-	_Reminder() {}		// Calls COleDispatchDriver default constructor
-	_Reminder(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_Reminder(const _Reminder& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_Reminder()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_Reminder(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_Reminder(const _Reminder& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4458,9 +5491,17 @@ public:
 class _TimeZones : public COleDispatchDriver
 {
 public:
-	_TimeZones() {}		// Calls COleDispatchDriver default constructor
-	_TimeZones(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_TimeZones(const _TimeZones& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_TimeZones()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_TimeZones(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_TimeZones(const _TimeZones& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4482,9 +5523,17 @@ public:
 class _OlkTimeZoneControl : public COleDispatchDriver
 {
 public:
-	_OlkTimeZoneControl() {}		// Calls COleDispatchDriver default constructor
-	_OlkTimeZoneControl(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OlkTimeZoneControl(const _OlkTimeZoneControl& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OlkTimeZoneControl()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OlkTimeZoneControl(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OlkTimeZoneControl(const _OlkTimeZoneControl& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4515,9 +5564,17 @@ public:
 class OlkTimeZoneControlEvents : public COleDispatchDriver
 {
 public:
-	OlkTimeZoneControlEvents() {}		// Calls COleDispatchDriver default constructor
-	OlkTimeZoneControlEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OlkTimeZoneControlEvents(const OlkTimeZoneControlEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OlkTimeZoneControlEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OlkTimeZoneControlEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OlkTimeZoneControlEvents(const OlkTimeZoneControlEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4545,9 +5602,17 @@ public:
 class ApplicationEvents : public COleDispatchDriver
 {
 public:
-	ApplicationEvents() {}		// Calls COleDispatchDriver default constructor
-	ApplicationEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ApplicationEvents(const ApplicationEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ApplicationEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ApplicationEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ApplicationEvents(const ApplicationEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4567,9 +5632,17 @@ public:
 class PropertyPages : public COleDispatchDriver
 {
 public:
-	PropertyPages() {}		// Calls COleDispatchDriver default constructor
-	PropertyPages(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	PropertyPages(const PropertyPages& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	PropertyPages()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	PropertyPages(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	PropertyPages(const PropertyPages& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4591,9 +5664,17 @@ public:
 class RecurrencePattern : public COleDispatchDriver
 {
 public:
-	RecurrencePattern() {}		// Calls COleDispatchDriver default constructor
-	RecurrencePattern(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	RecurrencePattern(const RecurrencePattern& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	RecurrencePattern()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	RecurrencePattern(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	RecurrencePattern(const RecurrencePattern& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4641,9 +5722,17 @@ public:
 class Exceptions : public COleDispatchDriver
 {
 public:
-	Exceptions() {}		// Calls COleDispatchDriver default constructor
-	Exceptions(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Exceptions(const Exceptions& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Exceptions()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Exceptions(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Exceptions(const Exceptions& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4663,9 +5752,17 @@ public:
 class Exception : public COleDispatchDriver
 {
 public:
-	Exception() {}		// Calls COleDispatchDriver default constructor
-	Exception(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Exception(const Exception& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Exception()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Exception(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Exception(const Exception& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4687,9 +5784,17 @@ public:
 class _AppointmentItem : public COleDispatchDriver
 {
 public:
-	_AppointmentItem() {}		// Calls COleDispatchDriver default constructor
-	_AppointmentItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_AppointmentItem(const _AppointmentItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_AppointmentItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_AppointmentItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_AppointmentItem(const _AppointmentItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4825,9 +5930,17 @@ public:
 class _MeetingItem : public COleDispatchDriver
 {
 public:
-	_MeetingItem() {}		// Calls COleDispatchDriver default constructor
-	_MeetingItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_MeetingItem(const _MeetingItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_MeetingItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_MeetingItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_MeetingItem(const _MeetingItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4931,9 +6044,17 @@ public:
 class ExplorersEvents : public COleDispatchDriver
 {
 public:
-	ExplorersEvents() {}		// Calls COleDispatchDriver default constructor
-	ExplorersEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ExplorersEvents(const ExplorersEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ExplorersEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ExplorersEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ExplorersEvents(const ExplorersEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4948,9 +6069,17 @@ public:
 class FoldersEvents : public COleDispatchDriver
 {
 public:
-	FoldersEvents() {}		// Calls COleDispatchDriver default constructor
-	FoldersEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	FoldersEvents(const FoldersEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	FoldersEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	FoldersEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	FoldersEvents(const FoldersEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4967,9 +6096,17 @@ public:
 class InspectorsEvents : public COleDispatchDriver
 {
 public:
-	InspectorsEvents() {}		// Calls COleDispatchDriver default constructor
-	InspectorsEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	InspectorsEvents(const InspectorsEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	InspectorsEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	InspectorsEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	InspectorsEvents(const InspectorsEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -4984,9 +6121,17 @@ public:
 class ItemsEvents : public COleDispatchDriver
 {
 public:
-	ItemsEvents() {}		// Calls COleDispatchDriver default constructor
-	ItemsEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ItemsEvents(const ItemsEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ItemsEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ItemsEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ItemsEvents(const ItemsEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5003,9 +6148,17 @@ public:
 class NameSpaceEvents : public COleDispatchDriver
 {
 public:
-	NameSpaceEvents() {}		// Calls COleDispatchDriver default constructor
-	NameSpaceEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	NameSpaceEvents(const NameSpaceEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	NameSpaceEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	NameSpaceEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	NameSpaceEvents(const NameSpaceEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5021,9 +6174,17 @@ public:
 class OutlookBarGroup : public COleDispatchDriver
 {
 public:
-	OutlookBarGroup() {}		// Calls COleDispatchDriver default constructor
-	OutlookBarGroup(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OutlookBarGroup(const OutlookBarGroup& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OutlookBarGroup()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OutlookBarGroup(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OutlookBarGroup(const OutlookBarGroup& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5046,9 +6207,17 @@ public:
 class _OutlookBarShortcuts : public COleDispatchDriver
 {
 public:
-	_OutlookBarShortcuts() {}		// Calls COleDispatchDriver default constructor
-	_OutlookBarShortcuts(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OutlookBarShortcuts(const _OutlookBarShortcuts& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OutlookBarShortcuts()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OutlookBarShortcuts(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OutlookBarShortcuts(const _OutlookBarShortcuts& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5070,9 +6239,17 @@ public:
 class OutlookBarShortcut : public COleDispatchDriver
 {
 public:
-	OutlookBarShortcut() {}		// Calls COleDispatchDriver default constructor
-	OutlookBarShortcut(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OutlookBarShortcut(const OutlookBarShortcut& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OutlookBarShortcut()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OutlookBarShortcut(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OutlookBarShortcut(const OutlookBarShortcut& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5094,9 +6271,17 @@ public:
 class _OutlookBarGroups : public COleDispatchDriver
 {
 public:
-	_OutlookBarGroups() {}		// Calls COleDispatchDriver default constructor
-	_OutlookBarGroups(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OutlookBarGroups(const _OutlookBarGroups& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OutlookBarGroups()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OutlookBarGroups(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OutlookBarGroups(const _OutlookBarGroups& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5118,9 +6303,17 @@ public:
 class OutlookBarGroupsEvents : public COleDispatchDriver
 {
 public:
-	OutlookBarGroupsEvents() {}		// Calls COleDispatchDriver default constructor
-	OutlookBarGroupsEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OutlookBarGroupsEvents(const OutlookBarGroupsEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OutlookBarGroupsEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OutlookBarGroupsEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OutlookBarGroupsEvents(const OutlookBarGroupsEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5137,9 +6330,17 @@ public:
 class _OutlookBarPane : public COleDispatchDriver
 {
 public:
-	_OutlookBarPane() {}		// Calls COleDispatchDriver default constructor
-	_OutlookBarPane(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OutlookBarPane(const _OutlookBarPane& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OutlookBarPane()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OutlookBarPane(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OutlookBarPane(const _OutlookBarPane& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5161,9 +6362,17 @@ public:
 class OutlookBarStorage : public COleDispatchDriver
 {
 public:
-	OutlookBarStorage() {}		// Calls COleDispatchDriver default constructor
-	OutlookBarStorage(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OutlookBarStorage(const OutlookBarStorage& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OutlookBarStorage()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OutlookBarStorage(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OutlookBarStorage(const OutlookBarStorage& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5182,9 +6391,17 @@ public:
 class OutlookBarPaneEvents : public COleDispatchDriver
 {
 public:
-	OutlookBarPaneEvents() {}		// Calls COleDispatchDriver default constructor
-	OutlookBarPaneEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OutlookBarPaneEvents(const OutlookBarPaneEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OutlookBarPaneEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OutlookBarPaneEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OutlookBarPaneEvents(const OutlookBarPaneEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5199,9 +6416,17 @@ public:
 class OutlookBarShortcutsEvents : public COleDispatchDriver
 {
 public:
-	OutlookBarShortcutsEvents() {}		// Calls COleDispatchDriver default constructor
-	OutlookBarShortcutsEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	OutlookBarShortcutsEvents(const OutlookBarShortcutsEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	OutlookBarShortcutsEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	OutlookBarShortcutsEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	OutlookBarShortcutsEvents(const OutlookBarShortcutsEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5218,9 +6443,17 @@ public:
 class PropertyPageSite : public COleDispatchDriver
 {
 public:
-	PropertyPageSite() {}		// Calls COleDispatchDriver default constructor
-	PropertyPageSite(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	PropertyPageSite(const PropertyPageSite& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	PropertyPageSite()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	PropertyPageSite(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	PropertyPageSite(const PropertyPageSite& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5239,9 +6472,17 @@ public:
 class Pages : public COleDispatchDriver
 {
 public:
-	Pages() {}		// Calls COleDispatchDriver default constructor
-	Pages(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	Pages(const Pages& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	Pages()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	Pages(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	Pages(const Pages& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5263,9 +6504,17 @@ public:
 class ApplicationEvents_10 : public COleDispatchDriver
 {
 public:
-	ApplicationEvents_10() {}		// Calls COleDispatchDriver default constructor
-	ApplicationEvents_10(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ApplicationEvents_10(const ApplicationEvents_10& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ApplicationEvents_10()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ApplicationEvents_10(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ApplicationEvents_10(const ApplicationEvents_10& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5288,9 +6537,17 @@ public:
 class ApplicationEvents_11 : public COleDispatchDriver
 {
 public:
-	ApplicationEvents_11() {}		// Calls COleDispatchDriver default constructor
-	ApplicationEvents_11(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ApplicationEvents_11(const ApplicationEvents_11& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ApplicationEvents_11()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ApplicationEvents_11(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ApplicationEvents_11(const ApplicationEvents_11& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5323,9 +6580,17 @@ public:
 class _AttachmentSelection : public COleDispatchDriver
 {
 public:
-	_AttachmentSelection() {}		// Calls COleDispatchDriver default constructor
-	_AttachmentSelection(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_AttachmentSelection(const _AttachmentSelection& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_AttachmentSelection()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_AttachmentSelection(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_AttachmentSelection(const _AttachmentSelection& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5345,9 +6610,17 @@ public:
 class MAPIFolderEvents_12 : public COleDispatchDriver
 {
 public:
-	MAPIFolderEvents_12() {}		// Calls COleDispatchDriver default constructor
-	MAPIFolderEvents_12(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	MAPIFolderEvents_12(const MAPIFolderEvents_12& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	MAPIFolderEvents_12()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	MAPIFolderEvents_12(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	MAPIFolderEvents_12(const MAPIFolderEvents_12& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5363,9 +6636,17 @@ public:
 class ResultsEvents : public COleDispatchDriver
 {
 public:
-	ResultsEvents() {}		// Calls COleDispatchDriver default constructor
-	ResultsEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ResultsEvents(const ResultsEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ResultsEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ResultsEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ResultsEvents(const ResultsEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5382,9 +6663,17 @@ public:
 class _ViewsEvents : public COleDispatchDriver
 {
 public:
-	_ViewsEvents() {}		// Calls COleDispatchDriver default constructor
-	_ViewsEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ViewsEvents(const _ViewsEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ViewsEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ViewsEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ViewsEvents(const _ViewsEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5400,9 +6689,17 @@ public:
 class ReminderCollectionEvents : public COleDispatchDriver
 {
 public:
-	ReminderCollectionEvents() {}		// Calls COleDispatchDriver default constructor
-	ReminderCollectionEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	ReminderCollectionEvents(const ReminderCollectionEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	ReminderCollectionEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	ReminderCollectionEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	ReminderCollectionEvents(const ReminderCollectionEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5422,9 +6719,17 @@ public:
 class _DistListItem : public COleDispatchDriver
 {
 public:
-	_DistListItem() {}		// Calls COleDispatchDriver default constructor
-	_DistListItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_DistListItem(const _DistListItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_DistListItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_DistListItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_DistListItem(const _DistListItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5527,9 +6832,17 @@ public:
 class _DocumentItem : public COleDispatchDriver
 {
 public:
-	_DocumentItem() {}		// Calls COleDispatchDriver default constructor
-	_DocumentItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_DocumentItem(const _DocumentItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_DocumentItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_DocumentItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_DocumentItem(const _DocumentItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5601,9 +6914,17 @@ public:
 class _JournalItem : public COleDispatchDriver
 {
 public:
-	_JournalItem() {}		// Calls COleDispatchDriver default constructor
-	_JournalItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_JournalItem(const _JournalItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_JournalItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_JournalItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_JournalItem(const _JournalItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5699,9 +7020,17 @@ public:
 class _NoteItem : public COleDispatchDriver
 {
 public:
-	_NoteItem() {}		// Calls COleDispatchDriver default constructor
-	_NoteItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_NoteItem(const _NoteItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_NoteItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_NoteItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_NoteItem(const _NoteItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5757,9 +7086,17 @@ public:
 class _PostItem : public COleDispatchDriver
 {
 public:
-	_PostItem() {}		// Calls COleDispatchDriver default constructor
-	_PostItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_PostItem(const _PostItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_PostItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_PostItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_PostItem(const _PostItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5871,9 +7208,17 @@ public:
 class _RemoteItem : public COleDispatchDriver
 {
 public:
-	_RemoteItem() {}		// Calls COleDispatchDriver default constructor
-	_RemoteItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_RemoteItem(const _RemoteItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_RemoteItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_RemoteItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_RemoteItem(const _RemoteItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -5949,9 +7294,17 @@ public:
 class _ReportItem : public COleDispatchDriver
 {
 public:
-	_ReportItem() {}		// Calls COleDispatchDriver default constructor
-	_ReportItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ReportItem(const _ReportItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ReportItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ReportItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ReportItem(const _ReportItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6023,9 +7376,17 @@ public:
 class _TaskItem : public COleDispatchDriver
 {
 public:
-	_TaskItem() {}		// Calls COleDispatchDriver default constructor
-	_TaskItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_TaskItem(const _TaskItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_TaskItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_TaskItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_TaskItem(const _TaskItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6162,9 +7523,17 @@ public:
 class _TaskRequestAcceptItem : public COleDispatchDriver
 {
 public:
-	_TaskRequestAcceptItem() {}		// Calls COleDispatchDriver default constructor
-	_TaskRequestAcceptItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_TaskRequestAcceptItem(const _TaskRequestAcceptItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_TaskRequestAcceptItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_TaskRequestAcceptItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_TaskRequestAcceptItem(const _TaskRequestAcceptItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6237,9 +7606,17 @@ public:
 class _TaskRequestDeclineItem : public COleDispatchDriver
 {
 public:
-	_TaskRequestDeclineItem() {}		// Calls COleDispatchDriver default constructor
-	_TaskRequestDeclineItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_TaskRequestDeclineItem(const _TaskRequestDeclineItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_TaskRequestDeclineItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_TaskRequestDeclineItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_TaskRequestDeclineItem(const _TaskRequestDeclineItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6312,9 +7689,17 @@ public:
 class _TaskRequestItem : public COleDispatchDriver
 {
 public:
-	_TaskRequestItem() {}		// Calls COleDispatchDriver default constructor
-	_TaskRequestItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_TaskRequestItem(const _TaskRequestItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_TaskRequestItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_TaskRequestItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_TaskRequestItem(const _TaskRequestItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6387,9 +7772,17 @@ public:
 class _TaskRequestUpdateItem : public COleDispatchDriver
 {
 public:
-	_TaskRequestUpdateItem() {}		// Calls COleDispatchDriver default constructor
-	_TaskRequestUpdateItem(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_TaskRequestUpdateItem(const _TaskRequestUpdateItem& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_TaskRequestUpdateItem()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_TaskRequestUpdateItem(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_TaskRequestUpdateItem(const _TaskRequestUpdateItem& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6462,9 +7855,17 @@ public:
 class _FormRegion : public COleDispatchDriver
 {
 public:
-	_FormRegion() {}		// Calls COleDispatchDriver default constructor
-	_FormRegion(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_FormRegion(const _FormRegion& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_FormRegion()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_FormRegion(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_FormRegion(const _FormRegion& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6499,9 +7900,17 @@ public:
 class FormRegionEvents : public COleDispatchDriver
 {
 public:
-	FormRegionEvents() {}		// Calls COleDispatchDriver default constructor
-	FormRegionEvents(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	FormRegionEvents(const FormRegionEvents& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	FormRegionEvents()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	FormRegionEvents(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	FormRegionEvents(const FormRegionEvents& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6517,9 +7926,17 @@ public:
 class _TableView : public COleDispatchDriver
 {
 public:
-	_TableView() {}		// Calls COleDispatchDriver default constructor
-	_TableView(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_TableView(const _TableView& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_TableView()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_TableView(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_TableView(const _TableView& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6591,9 +8008,17 @@ public:
 class _ViewFields : public COleDispatchDriver
 {
 public:
-	_ViewFields() {}		// Calls COleDispatchDriver default constructor
-	_ViewFields(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ViewFields(const _ViewFields& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ViewFields()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ViewFields(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ViewFields(const _ViewFields& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6616,9 +8041,17 @@ public:
 class _ViewField : public COleDispatchDriver
 {
 public:
-	_ViewField() {}		// Calls COleDispatchDriver default constructor
-	_ViewField(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ViewField(const _ViewField& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ViewField()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ViewField(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ViewField(const _ViewField& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6638,9 +8071,17 @@ public:
 class _ColumnFormat : public COleDispatchDriver
 {
 public:
-	_ColumnFormat() {}		// Calls COleDispatchDriver default constructor
-	_ColumnFormat(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ColumnFormat(const _ColumnFormat& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ColumnFormat()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ColumnFormat(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ColumnFormat(const _ColumnFormat& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6667,9 +8108,17 @@ public:
 class _OrderFields : public COleDispatchDriver
 {
 public:
-	_OrderFields() {}		// Calls COleDispatchDriver default constructor
-	_OrderFields(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OrderFields(const _OrderFields& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OrderFields()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OrderFields(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OrderFields(const _OrderFields& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6693,9 +8142,17 @@ public:
 class _OrderField : public COleDispatchDriver
 {
 public:
-	_OrderField() {}		// Calls COleDispatchDriver default constructor
-	_OrderField(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_OrderField(const _OrderField& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_OrderField()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_OrderField(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_OrderField(const _OrderField& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6716,9 +8173,17 @@ public:
 class _ViewFont : public COleDispatchDriver
 {
 public:
-	_ViewFont() {}		// Calls COleDispatchDriver default constructor
-	_ViewFont(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ViewFont(const _ViewFont& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ViewFont()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ViewFont(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ViewFont(const _ViewFont& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6750,9 +8215,17 @@ public:
 class _AutoFormatRules : public COleDispatchDriver
 {
 public:
-	_AutoFormatRules() {}		// Calls COleDispatchDriver default constructor
-	_AutoFormatRules(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_AutoFormatRules(const _AutoFormatRules& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_AutoFormatRules()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_AutoFormatRules(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_AutoFormatRules(const _AutoFormatRules& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6777,9 +8250,17 @@ public:
 class _AutoFormatRule : public COleDispatchDriver
 {
 public:
-	_AutoFormatRule() {}		// Calls COleDispatchDriver default constructor
-	_AutoFormatRule(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_AutoFormatRule(const _AutoFormatRule& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_AutoFormatRule()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_AutoFormatRule(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_AutoFormatRule(const _AutoFormatRule& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6806,9 +8287,17 @@ public:
 class _IconView : public COleDispatchDriver
 {
 public:
-	_IconView() {}		// Calls COleDispatchDriver default constructor
-	_IconView(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_IconView(const _IconView& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_IconView()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_IconView(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_IconView(const _IconView& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6850,9 +8339,17 @@ public:
 class _CardView : public COleDispatchDriver
 {
 public:
-	_CardView() {}		// Calls COleDispatchDriver default constructor
-	_CardView(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_CardView(const _CardView& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_CardView()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_CardView(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_CardView(const _CardView& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6902,9 +8399,17 @@ public:
 class _CalendarView : public COleDispatchDriver
 {
 public:
-	_CalendarView() {}		// Calls COleDispatchDriver default constructor
-	_CalendarView(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_CalendarView(const _CalendarView& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_CalendarView()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_CalendarView(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_CalendarView(const _CalendarView& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -6962,9 +8467,17 @@ public:
 class _TimelineView : public COleDispatchDriver
 {
 public:
-	_TimelineView() {}		// Calls COleDispatchDriver default constructor
-	_TimelineView(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_TimelineView(const _TimelineView& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_TimelineView()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_TimelineView(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_TimelineView(const _TimelineView& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7019,9 +8532,17 @@ public:
 class _MailModule : public COleDispatchDriver
 {
 public:
-	_MailModule() {}		// Calls COleDispatchDriver default constructor
-	_MailModule(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_MailModule(const _MailModule& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_MailModule()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_MailModule(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_MailModule(const _MailModule& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7046,9 +8567,17 @@ public:
 class _NavigationGroups : public COleDispatchDriver
 {
 public:
-	_NavigationGroups() {}		// Calls COleDispatchDriver default constructor
-	_NavigationGroups(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_NavigationGroups(const _NavigationGroups& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_NavigationGroups()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_NavigationGroups(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_NavigationGroups(const _NavigationGroups& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7071,9 +8600,17 @@ public:
 class _NavigationGroup : public COleDispatchDriver
 {
 public:
-	_NavigationGroup() {}		// Calls COleDispatchDriver default constructor
-	_NavigationGroup(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_NavigationGroup(const _NavigationGroup& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_NavigationGroup()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_NavigationGroup(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_NavigationGroup(const _NavigationGroup& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7097,9 +8634,17 @@ public:
 class _NavigationFolders : public COleDispatchDriver
 {
 public:
-	_NavigationFolders() {}		// Calls COleDispatchDriver default constructor
-	_NavigationFolders(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_NavigationFolders(const _NavigationFolders& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_NavigationFolders()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_NavigationFolders(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_NavigationFolders(const _NavigationFolders& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7121,9 +8666,17 @@ public:
 class _NavigationFolder : public COleDispatchDriver
 {
 public:
-	_NavigationFolder() {}		// Calls COleDispatchDriver default constructor
-	_NavigationFolder(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_NavigationFolder(const _NavigationFolder& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_NavigationFolder()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_NavigationFolder(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_NavigationFolder(const _NavigationFolder& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7150,9 +8703,17 @@ public:
 class _CalendarModule : public COleDispatchDriver
 {
 public:
-	_CalendarModule() {}		// Calls COleDispatchDriver default constructor
-	_CalendarModule(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_CalendarModule(const _CalendarModule& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_CalendarModule()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_CalendarModule(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_CalendarModule(const _CalendarModule& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7177,9 +8738,17 @@ public:
 class _ContactsModule : public COleDispatchDriver
 {
 public:
-	_ContactsModule() {}		// Calls COleDispatchDriver default constructor
-	_ContactsModule(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_ContactsModule(const _ContactsModule& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_ContactsModule()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_ContactsModule(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_ContactsModule(const _ContactsModule& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7204,9 +8773,17 @@ public:
 class _TasksModule : public COleDispatchDriver
 {
 public:
-	_TasksModule() {}		// Calls COleDispatchDriver default constructor
-	_TasksModule(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_TasksModule(const _TasksModule& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_TasksModule()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_TasksModule(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_TasksModule(const _TasksModule& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7231,9 +8808,17 @@ public:
 class _JournalModule : public COleDispatchDriver
 {
 public:
-	_JournalModule() {}		// Calls COleDispatchDriver default constructor
-	_JournalModule(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_JournalModule(const _JournalModule& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_JournalModule()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_JournalModule(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_JournalModule(const _JournalModule& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7258,9 +8843,17 @@ public:
 class _NotesModule : public COleDispatchDriver
 {
 public:
-	_NotesModule() {}		// Calls COleDispatchDriver default constructor
-	_NotesModule(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_NotesModule(const _NotesModule& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_NotesModule()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_NotesModule(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_NotesModule(const _NotesModule& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7285,9 +8878,17 @@ public:
 class NavigationPaneEvents_12 : public COleDispatchDriver
 {
 public:
-	NavigationPaneEvents_12() {}		// Calls COleDispatchDriver default constructor
-	NavigationPaneEvents_12(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	NavigationPaneEvents_12(const NavigationPaneEvents_12& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	NavigationPaneEvents_12()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	NavigationPaneEvents_12(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	NavigationPaneEvents_12(const NavigationPaneEvents_12& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7302,9 +8903,17 @@ public:
 class NavigationGroupsEvents_12 : public COleDispatchDriver
 {
 public:
-	NavigationGroupsEvents_12() {}		// Calls COleDispatchDriver default constructor
-	NavigationGroupsEvents_12(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	NavigationGroupsEvents_12(const NavigationGroupsEvents_12& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	NavigationGroupsEvents_12()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	NavigationGroupsEvents_12(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	NavigationGroupsEvents_12(const NavigationGroupsEvents_12& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7321,9 +8930,17 @@ public:
 class _BusinessCardView : public COleDispatchDriver
 {
 public:
-	_BusinessCardView() {}		// Calls COleDispatchDriver default constructor
-	_BusinessCardView(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_BusinessCardView(const _BusinessCardView& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_BusinessCardView()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_BusinessCardView(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_BusinessCardView(const _BusinessCardView& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:
@@ -7364,9 +8981,17 @@ public:
 class _FormRegionStartup : public COleDispatchDriver
 {
 public:
-	_FormRegionStartup() {}		// Calls COleDispatchDriver default constructor
-	_FormRegionStartup(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	_FormRegionStartup(const _FormRegionStartup& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	_FormRegionStartup()
+	{
+	}		// Calls COleDispatchDriver default constructor
+	_FormRegionStartup(LPDISPATCH pDispatch):
+	COleDispatchDriver(pDispatch)
+	{
+	}
+	_FormRegionStartup(const _FormRegionStartup& dispatchSrc):
+	COleDispatchDriver(dispatchSrc)
+	{
+	}
 
 // Attributes
 public:

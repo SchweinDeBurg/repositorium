@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -112,7 +117,9 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	//}}AFX_VIRTUAL
-	virtual void OnOK() {}
+	virtual void OnOK()
+	{
+	}
 	virtual void OnCancel();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	int OnCreate(LPCREATESTRUCT lpCreateStruct);
@@ -544,8 +551,8 @@ protected:
 	BOOL InitStatusbar();
 	void SetUITheme(const CString& sThemeFile);
 
-	BOOL ProcessStartupOptions(const TDCSTARTUP& startup/*, BOOL bPreviousInstance*/);
-	BOOL NewTask(LPCTSTR szTitle, TDC_INSERTWHERE nInsertWhere, /*BOOL bSelect = TRUE, */BOOL bEdit = TRUE);
+	BOOL ProcessStartupOptions(const TDCSTARTUP& startup);
+	BOOL NewTask(LPCTSTR szTitle, TDC_INSERTWHERE nInsertWhere, BOOL bEdit = TRUE);
 	TDC_SORTBY GetSortBy(UINT nSortID);
 	UINT GetSortID(TDC_SORTBY nSortBy);
 	void CheckMinWidth();
@@ -570,7 +577,16 @@ protected:
 	void RefreshUIExtensions(BOOL bEdit);
 	void UpdateAeroFeatures();
 
-	enum { CT_ASHTML, CT_ASTEXT, CT_ASREF, CT_ASDEPENDS, CT_ASREFFULL, CT_ASDEPENDSFULL, CT_ASPATH };
+	enum
+	{
+		CT_ASHTML,
+		CT_ASTEXT,
+		CT_ASREF,
+		CT_ASDEPENDS,
+		CT_ASREFFULL,
+		CT_ASDEPENDSFULL,
+		CT_ASPATH
+	};
 	void CopySelectedTasksToClipboard(int nAsFormat);
 
 	void RefreshFilterControls();
@@ -637,10 +653,10 @@ protected:
 	}
 
 	// helpers
-	int GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform,
-		const CTaskSelectionDlg& taskSel, CTaskFile& tasks) const;
-	int GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform,
-		TSD_TASKS nWhatTasks, TDCGETTASKS& filter, CTaskFile& tasks) const;
+	int GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform, const CTaskSelectionDlg& taskSel,
+		CTaskFile& tasks) const;
+	int GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform, TSD_TASKS nWhatTasks, TDCGETTASKS& filter,
+		CTaskFile& tasks) const;
 	int GetTasks(CFilteredToDoCtrl& tdc, TSD_TASKS nWhatTasks, CTaskFile& tasks) const;
 
 	void DoSendTasks(TD_SENDWHAT nWhat, TD_SENDAS nSendAs);

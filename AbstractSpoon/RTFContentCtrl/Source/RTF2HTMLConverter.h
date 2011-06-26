@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // RTF2HTMLConverter.h: interface for the CRTF_HTMLConverter class.
@@ -68,7 +73,8 @@ public:
 	//! Conversion direction (RTF<->HTML)
 	typedef enum
 	{
-		c_modRTF2HTML, c_modHTML2RTF
+		c_modRTF2HTML,
+		c_modHTML2RTF
 	} TMode;
 
 	//! Construction
@@ -78,10 +84,10 @@ public:
 	virtual ~CRTF_HTMLConverter();
 
 	//! Streaming out into string (Data has already been converted)
-	friend CString& operator<< (CString& os, CRTF_HTMLConverter& dt);
+	friend CString& operator<<(CString& os, CRTF_HTMLConverter& dt);
 	//! Streaming in of string and auto-perform conversion
 	/*! Depending on conversion direction */
-	friend CString& operator>> (CString& is, CRTF_HTMLConverter& dt);
+	friend CString& operator>>(CString& is, CRTF_HTMLConverter& dt);
 
 	static bool Convert(const CString& sRtf, CString& sHtml, BOOL bWantHeaderFooter = TRUE);
 	static int GetCodePage(const CString& sRtf);
@@ -115,9 +121,11 @@ protected:
 		} THTMLNodeType;
 
 		CHTMLElement(THTMLNodeType type = c_nodInvalid, LPCTSTR szText = NULL);
-		virtual ~CHTMLElement() {}
+		virtual ~CHTMLElement()
+		{
+		}
 		THTMLNodeType m_enNodeType;
-		CString       m_strNodeText;
+		CString m_strNodeText;
 		CMapStringToString m_mapParams; //!< Only relevant for m_enNodeType==c_nodHTMLBegin;
 	};
 
@@ -150,7 +158,7 @@ protected:
 	CString R2H_GetHTMLFooter();
 
 	//! Conversion direction (RTF<->HTML)
-	TMode   m_enMode;
+	TMode m_enMode;
 	//! RTF Code
 	CString m_strRTF;
 	//! HTML Code

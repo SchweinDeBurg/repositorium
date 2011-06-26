@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // FMindImporter.cpp: implementation of the CFMindImporter class.
@@ -147,7 +152,7 @@ bool CFMindImporter::ImportTask(const CXmlItem* pFMTask, ITaskList7* pDestTaskFi
 	//	pDestTaskFile->SetTaskColor(hTask, lBGColor);
 
 	//COLOR="#00b439"
-	long lFGColor = GetColor(pFMTask , _T("COLOR"));
+	long lFGColor = GetColor(pFMTask, _T("COLOR"));
 	if (lFGColor != 0)
 	{
 		pDestTaskFile->SetTaskColor(hTask, lFGColor);
@@ -171,43 +176,43 @@ bool CFMindImporter::ImportTask(const CXmlItem* pFMTask, ITaskList7* pDestTaskFi
 		pXIIconItem = pXIIcon->FindItem(_T("BUILTIN"), _T("full-1"), TRUE);
 		if (pXIIconItem != NULL)
 		{
-			pDestTaskFile->SetTaskPriority(hTask , 1);
+			pDestTaskFile->SetTaskPriority(hTask, 1);
 		}
 
 		pXIIconItem = pXIIcon->FindItem(_T("BUILTIN"), _T("full-2"), TRUE);
 		if (pXIIconItem != NULL)
 		{
-			pDestTaskFile->SetTaskPriority(hTask , 2);
+			pDestTaskFile->SetTaskPriority(hTask, 2);
 		}
 
 		pXIIconItem = pXIIcon->FindItem(_T("BUILTIN"), _T("full-3"), TRUE);
 		if (pXIIconItem != NULL)
 		{
-			pDestTaskFile->SetTaskPriority(hTask , 3);
+			pDestTaskFile->SetTaskPriority(hTask, 3);
 		}
 
 		pXIIconItem = pXIIcon->FindItem(_T("BUILTIN"), _T("full-4"), TRUE);
 		if (pXIIconItem != NULL)
 		{
-			pDestTaskFile->SetTaskPriority(hTask , 4);
+			pDestTaskFile->SetTaskPriority(hTask, 4);
 		}
 
 		pXIIconItem = pXIIcon->FindItem(_T("BUILTIN"), _T("full-5"), TRUE);
 		if (pXIIconItem != NULL)
 		{
-			pDestTaskFile->SetTaskPriority(hTask , 5);
+			pDestTaskFile->SetTaskPriority(hTask, 5);
 		}
 
 		pXIIconItem = pXIIcon->FindItem(_T("BUILTIN"), _T("full-6"), TRUE);
 		if (pXIIconItem != NULL)
 		{
-			pDestTaskFile->SetTaskPriority(hTask , 6);
+			pDestTaskFile->SetTaskPriority(hTask, 6);
 		}
 
 		pXIIconItem = pXIIcon->FindItem(_T("BUILTIN"), _T("full-7"), TRUE);
 		if (pXIIconItem != NULL)
 		{
-			pDestTaskFile->SetTaskPriority(hTask , 7);
+			pDestTaskFile->SetTaskPriority(hTask, 7);
 		}
 
 		pXIIcon = pXIIcon->GetSibling();
@@ -339,7 +344,7 @@ bool CFMindImporter::ImportTask(const CXmlItem* pFMTask, ITaskList7* pDestTaskFi
 	return true;
 }
 
-CString CFMindImporter::GetTaskRichContent(const CXmlItem* pFMTask , const char* szRichType) const
+CString CFMindImporter::GetTaskRichContent(const CXmlItem* pFMTask, const char* szRichType) const
 {
 	UNREFERENCED_PARAMETER(szRichType);
 
@@ -392,7 +397,7 @@ long CFMindImporter::GetColor(const CXmlItem* pFMTask, LPCTSTR szColorField) con
 	return 0;
 }
 
-CString CFMindImporter::GetAttribValueS(const CXmlItem* pFMTask , const char* szAttribName) const
+CString CFMindImporter::GetAttribValueS(const CXmlItem* pFMTask, const char* szAttribName) const
 {
 	// Completion Status (== icon)
 	const CXmlItem* pXIAttrib = pFMTask->GetItem(_T("attribute"));
@@ -422,19 +427,19 @@ CString CFMindImporter::GetAttribValueS(const CXmlItem* pFMTask , const char* sz
 	return _T("");
 }
 
-int CFMindImporter::GetAttribValueI(const CXmlItem* pFMTask , const char* szAttribName) const
+int CFMindImporter::GetAttribValueI(const CXmlItem* pFMTask, const char* szAttribName) const
 {
 	CString Result = GetAttribValueS(pFMTask, szAttribName);
 	return _ttoi(Result);
 }
 
-bool CFMindImporter::GetAttribValueB(const CXmlItem* pFMTask , const char* szAttribName) const
+bool CFMindImporter::GetAttribValueB(const CXmlItem* pFMTask, const char* szAttribName) const
 {
 	return (GetAttribValueI(pFMTask, szAttribName) != 0);
 
 }
 
-double CFMindImporter::GetAttribValueD(const CXmlItem* pFMTask , const char* szAttribName) const
+double CFMindImporter::GetAttribValueD(const CXmlItem* pFMTask, const char* szAttribName) const
 {
 	CString Result = GetAttribValueS(pFMTask, szAttribName);
 	return Misc::Atof(Result);

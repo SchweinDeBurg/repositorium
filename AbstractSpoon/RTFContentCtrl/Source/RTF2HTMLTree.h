@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #ifndef _T_TREE_H_INCLUDED
@@ -53,9 +58,11 @@
 
 using namespace std;
 
-template <class Type> class Ref;
+template <class Type>
+class Ref;
 
-template <class Type> class Data
+template <class Type>
+class Data
 {
 private:
 	typedef unsigned long ULONG;
@@ -111,7 +118,8 @@ private:
 	friend class Ref<Type>;
 };
 
-template <class Type> class Ref
+template <class Type>
+class Ref
 {
 	typedef Data<Type> DataT;
 
@@ -139,7 +147,7 @@ public:
 		pData = new DataT();
 	};
 	//Ref(Data<Type> *p) : pData(p) { if(p) p->AddRef();};
-	Ref(const Ref<Type> &rhs)
+	Ref(const Ref<Type>& rhs)
 	{
 		pData = (rhs.pData);
 		if (pData)
@@ -157,7 +165,7 @@ public:
 	};
 
 	//operators =
-	Ref& operator=(const Ref<Type> &rhs)
+	Ref& operator=(const Ref<Type>& rhs)
 	{
 		Release();
 		pData = rhs.pData;
@@ -187,7 +195,7 @@ public:
 		return *this;
 	};
 	// operator ==
-	bool operator==(const Ref<Type> &rhs)
+	bool operator==(const Ref<Type>& rhs)
 	{
 		return pData == rhs.pData;
 	};
@@ -255,22 +263,35 @@ protected:
 		}
 	};
 private:
-	Data<Type> *pData;
+	Data<Type>* pData;
 	friend class Ref<Type>;
 // niama new
 };
 
 
 
-template < class Type, class DataType2 = NodeData<Type> > class Tree;
-template <class Type> class NodeData
+template <class Type, class DataType2 = NodeData<Type> >
+class Tree;
+template <class Type>
+class NodeData
 {
 private:
 	typedef Ref<NodeData> NodeRef;
-	NodeData(const Type& Data) : tData(Data) {};
-	NodeData(Type* pData) : tData(pData) {};
-	NodeData() : Parent((NodeData*)NULL) {};
-	virtual ~NodeData() {};
+	NodeData(const Type& Data):
+	tData(Data)
+	{
+	};
+	NodeData(Type* pData):
+	tData(pData)
+	{
+	};
+	NodeData():
+	Parent((NodeData*)NULL)
+	{
+	};
+	virtual ~NodeData()
+	{
+	};
 private:
 	Ref<Type> tData;
 	std::vector<NodeRef> vChilds;
@@ -282,7 +303,8 @@ private:
 
 
 
-template < class Type, class DataType2 /*=NodeData<Type>*/ > class Tree : private Ref<DataType2>
+template <class Type, class DataType2 /*=NodeData<Type>*/ >
+class Tree : private Ref<DataType2>
 {
 	typedef Ref<DataType2> NodeBase;
 public:
@@ -316,7 +338,7 @@ public:
 	};
 	bool IsNode()
 	{
-		return NodeBase::get_Data()vChilds.size() > 0;
+		return NodeBase::get_Data().vChilds.size() > 0;
 	};
 	bool IsRoot()
 	{
@@ -370,12 +392,29 @@ public:
 			NodeBase::get_Data().vChilds.erase(iterator);
 		}
 	};
-	Tree(const Type& Data) : NodeBase(Data) {};
-	Tree(Type* Data) : NodeBase(Data) {};
-	Tree() {};
-	Tree(const Tree<Type> &rhs) : NodeBase(rhs) {};
-	Tree(const NodeBase& rhs) : NodeBase(rhs) {};
-	Tree(KEY key) : NodeBase(key) {};
+	Tree(const Type& Data):
+	NodeBase(Data)
+	{
+	};
+	Tree(Type* Data):
+	NodeBase(Data)
+	{
+	};
+	Tree()
+	{
+	};
+	Tree(const Tree<Type>& rhs):
+	NodeBase(rhs)
+	{
+	};
+	Tree(const NodeBase& rhs):
+	NodeBase(rhs)
+	{
+	};
+	Tree(KEY key):
+	NodeBase(key)
+	{
+	};
 	virtual ~Tree()
 	{
 		// if RefCount==ChildsCount+1, now is the time for release this (i.e. remove all refs to parent from childs
@@ -393,7 +432,7 @@ private:
 		ULONG nChilds = NodeBase::get_Data().vChilds.size();
 		if (nRefs == nChilds + 1)
 		{
-			std::vector<NodeBase> &vChilds = NodeBase::get_Data().vChilds;
+			std::vector<NodeBase>& vChilds = NodeBase::get_Data().vChilds;
 			for (ULONG n = 0; n < vChilds.size(); n++)
 			{
 				vChilds[n]->Parent.Release();

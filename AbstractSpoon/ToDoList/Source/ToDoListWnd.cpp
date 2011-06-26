@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.4 sources
 //*****************************************************************************
 
@@ -123,9 +128,31 @@ static char THIS_FILE[] = __FILE__;
 // CToDoListWnd dialog
 
 // popup menus
-enum { TRAYICON, TASKCONTEXT, TABCTRLCONTEXT, HEADERCONTEXT };
-enum { TB_TOOLBARHIDDEN, TB_DUMMY, TB_TOOLBARANDMENU };
-enum { FILEALL, NEWTASK, EDITTASK, VIEW, MOVE, SORTTASK, DELETETASK, TOOLS, HELP };
+enum
+{
+	TRAYICON,
+	TASKCONTEXT,
+	TABCTRLCONTEXT,
+	HEADERCONTEXT
+};
+enum
+{
+	TB_TOOLBARHIDDEN,
+	TB_DUMMY,
+	TB_TOOLBARANDMENU
+};
+enum
+{
+	FILEALL,
+	NEWTASK,
+	EDITTASK,
+	VIEW,
+	MOVE,
+	SORTTASK,
+	DELETETASK,
+	TOOLS,
+	HELP
+};
 
 const int TD_VERSION = 31000;
 const int BEVEL = 2; // pixels
@@ -161,7 +188,8 @@ enum
 
 /////////////////////////////////////////////////////////////////////////////
 
-CToDoListWnd::CToDoListWnd() : CFrameWnd(),
+CToDoListWnd::CToDoListWnd():
+CFrameWnd(),
 m_bVisible(-1),
 m_mruList(0, _T("MRU"), _T("TaskList%d"), 16, AFX_ABBREV_FILENAME_LEN, CEnString(IDS_RECENTFILES)),
 m_nLastSelItem(-1),
@@ -629,8 +657,9 @@ void CToDoListWnd::SetUITheme(const CString& sThemeFile)
 	}
 
 	// update the UI
-	m_toolbar.SetBackgroundColors(m_theme.crToolbarLight, m_theme.crToolbarDark, m_theme.nStyle	== UIS_GRADIENT);
-	m_statusBar.SetUIColors(m_theme.crStatusBarLight, m_theme.crStatusBarDark, m_theme.nStyle == UIS_GRADIENT, m_theme.crStatusBarText);
+	m_toolbar.SetBackgroundColors(m_theme.crToolbarLight, m_theme.crToolbarDark, m_theme.nStyle == UIS_GRADIENT);
+	m_statusBar.SetUIColors(m_theme.crStatusBarLight, m_theme.crStatusBarDark, m_theme.nStyle == UIS_GRADIENT,
+		m_theme.crStatusBarText);
 	m_menubar.SetBackgroundColor(m_theme.crMenuBack);
 	m_filterBar.SetUIColors(m_theme.crAppBackLight, m_theme.crAppText);
 	m_tabCtrl.SetBackgroundColor(m_theme.crAppBackDark);
@@ -760,8 +789,8 @@ int CToDoListWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_filterBar.EnableMultiSelection(Prefs().GetMultiSelFilters());
 
 	// tabctrl
-	if (!m_tabCtrl.Create(WS_CHILD | WS_VISIBLE | TCS_HOTTRACK | TCS_TABS | TCS_SINGLELINE | TCS_RIGHTJUSTIFY | TCS_TOOLTIPS,
-		CRect(0, 0, 10, 10), this, IDC_TABCONTROL))
+	if (!m_tabCtrl.Create(WS_CHILD | WS_VISIBLE | TCS_HOTTRACK | TCS_TABS | TCS_SINGLELINE | TCS_RIGHTJUSTIFY |
+		TCS_TOOLTIPS, CRect(0, 0, 10, 10), this, IDC_TABCONTROL))
 	{
 		return -1;
 	}
@@ -1084,14 +1113,14 @@ BOOL CToDoListWnd::InitStatusbar()
 {
 	static SBACTPANEINFO SB_PANES[] =
 	{
-		{ ID_SB_FILEPATH,		MAKEINTRESOURCE(IDS_SB_FILEPATH_TIP), SBACTF_STRETCHY | SBACTF_RESOURCETIP },
-		{ ID_SB_FILEVERSION,	MAKEINTRESOURCE(IDS_SB_FILEVERSION_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
-		{ ID_SB_TASKCOUNT,	MAKEINTRESOURCE(IDS_SB_TASKCOUNT_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
-		{ ID_SB_SELCOUNT,		MAKEINTRESOURCE(0), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
-		{ ID_SB_SELTIMEEST,	MAKEINTRESOURCE(IDS_SB_SELTIMEEST_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
-		{ ID_SB_SELTIMESPENT,	MAKEINTRESOURCE(IDS_SB_SELTIMESPENT_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
-		{ ID_SB_SELCOST,		MAKEINTRESOURCE(IDS_SB_SELCOST_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
-		{ ID_SB_FOCUS,		MAKEINTRESOURCE(IDS_SB_FOCUS_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_FILEPATH, MAKEINTRESOURCE(IDS_SB_FILEPATH_TIP), SBACTF_STRETCHY | SBACTF_RESOURCETIP },
+		{ ID_SB_FILEVERSION, MAKEINTRESOURCE(IDS_SB_FILEVERSION_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_TASKCOUNT, MAKEINTRESOURCE(IDS_SB_TASKCOUNT_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_SELCOUNT, MAKEINTRESOURCE(0), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_SELTIMEEST, MAKEINTRESOURCE(IDS_SB_SELTIMEEST_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_SELTIMESPENT, MAKEINTRESOURCE(IDS_SB_SELTIMESPENT_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_SELCOST, MAKEINTRESOURCE(IDS_SB_SELCOST_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
+		{ ID_SB_FOCUS, MAKEINTRESOURCE(IDS_SB_FOCUS_TIP), SBACTF_AUTOFIT | SBACTF_RESOURCETIP },
 	};
 
 	static int SB_PANECOUNT = sizeof(SB_PANES) / sizeof(SBACTPANEINFO);
@@ -1120,7 +1149,7 @@ BOOL CToDoListWnd::InitToolbar()
 	if (!m_toolbar.GetSafeHwnd())
 	{
 		if (m_toolbar.CreateEx(this, TBSTYLE_FLAT | TBSTYLE_WRAPABLE, WS_CHILD | WS_VISIBLE |
-				CBRS_ALIGN_TOP | WS_CLIPCHILDREN | CBRS_TOOLTIPS))
+			CBRS_ALIGN_TOP | WS_CLIPCHILDREN | CBRS_TOOLTIPS))
 		{
 			m_toolbar.LoadToolBar(IDR_TOOLBAR_NEW);
 			m_toolbar.SetImage(IDB_TOOLBAR16_NEW, RGB(255, 0, 255));
@@ -2217,7 +2246,8 @@ void CToDoListWnd::LoadSettings()
 	CPreferences prefs;
 
 	BOOL bMaxTasklists = prefs.GetProfileInt(_T("Settings"), _T("SimpleMode"), FALSE); // backward compatibility
-	m_nMaxState = (TDC_MAXSTATE)prefs.GetProfileInt(_T("Settings"), _T("ViewState"), bMaxTasklists ? TDCMS_MAXTASKLIST : TDCMS_NORMAL);
+	m_nMaxState = (TDC_MAXSTATE)prefs.GetProfileInt(_T("Settings"), _T("ViewState"),
+		bMaxTasklists ? TDCMS_MAXTASKLIST : TDCMS_NORMAL);
 
 	m_bShowFilterBar = prefs.GetProfileInt(_T("Settings"), _T("ShowFilterBar"), m_bShowFilterBar);
 	m_bShowProjectName = prefs.GetProfileInt(_T("Settings"), _T("ShowProjectName"), m_bShowProjectName);
@@ -2965,8 +2995,8 @@ void CToDoListWnd::OnTrayIconRClick(NMHDR* pNMHDR, LRESULT* pResult)
 			// in order to ensure that multiple password dialogs cannot
 			// appear we must make sure that all the command handling is
 			// done before we return from here
-			UINT nCmdID = ::TrackPopupMenu(*pSubMenu, TPM_RETURNCMD | TPM_LEFTALIGN | TPM_LEFTBUTTON,
-				pNMTI->ptAction.x, pNMTI->ptAction.y, 0, *this, NULL);
+			UINT nCmdID = ::TrackPopupMenu(*pSubMenu, TPM_RETURNCMD | TPM_LEFTALIGN | TPM_LEFTBUTTON, pNMTI->ptAction.x,
+				pNMTI->ptAction.y, 0, *this, NULL);
 
 			PostMessage(WM_NULL);
 
@@ -3015,7 +3045,7 @@ void CToDoListWnd::MinimizeToTray()
 	// hide main window and release resources
 	GUI::MinToTray(*this); // courtesy of floyd
 
-	SetProcessWorkingSetSize(GetCurrentProcess(), (DWORD) - 1, (DWORD) - 1);
+	SetProcessWorkingSetSize(GetCurrentProcess(), (DWORD)-1, (DWORD)-1);
 	m_bVisible = FALSE;
 
 	// hide find dialog
@@ -3296,7 +3326,8 @@ void CToDoListWnd::UpdateCaption()
 		}
 		else
 		{
-			sCaption.Format(_T("%s [%s][%s] - %s"), (LPCTSTR)sProjectName, (LPCTSTR)m_sCurrentFocus, (LPCTSTR)sStatus, (LPCTSTR)sCopyright);
+			sCaption.Format(_T("%s [%s][%s] - %s"), (LPCTSTR)sProjectName, (LPCTSTR)m_sCurrentFocus, (LPCTSTR)sStatus,
+				(LPCTSTR)sCopyright);
 		}
 	}
 	else
@@ -3359,7 +3390,8 @@ void CToDoListWnd::OnUpdateNewsubtaskAtBottom(CCmdUI* pCmdUI)
 	pCmdUI->Enable(!tdc.IsReadOnly() && nSelCount == 1);
 }
 
-BOOL CToDoListWnd::Export2Html(CFilteredToDoCtrl& tdc, LPCTSTR szFilePath, TSD_TASKS nWhatTasks, LPCTSTR szStylesheet) const
+BOOL CToDoListWnd::Export2Html(CFilteredToDoCtrl& tdc, LPCTSTR szFilePath, TSD_TASKS nWhatTasks,
+	LPCTSTR szStylesheet) const
 {
 	CWaitCursor cursor;
 	tdc.Flush();
@@ -4613,7 +4645,7 @@ void CToDoListWnd::CheckMinWidth()
 	}
 }
 
-BOOL CToDoListWnd::ProcessStartupOptions(const TDCSTARTUP& startup/*, BOOL bPreviousInstance*/)
+BOOL CToDoListWnd::ProcessStartupOptions(const TDCSTARTUP& startup)
 {
 	BOOL bRes = FALSE;
 
@@ -6481,7 +6513,12 @@ BOOL CToDoListWnd::InitCheckboxImageList()
 		return TRUE;
 	}
 
-	const int nStates[] = { -1, CBS_UNCHECKEDNORMAL, CBS_CHECKEDNORMAL };//, CBS_MIXEDNORMAL };
+	const int nStates[] =
+	{
+		-1,
+		CBS_UNCHECKEDNORMAL,
+		CBS_CHECKEDNORMAL
+	};
 	const int nNumStates = sizeof(nStates) / sizeof(int);
 
 	CThemed th;
@@ -8375,8 +8412,8 @@ int CToDoListWnd::GetTasks(CFilteredToDoCtrl& tdc, TSD_TASKS nWhatTasks, CTaskFi
 	return GetTasks(tdc, FALSE, FALSE, nWhatTasks, filter, tasks);
 }
 
-int CToDoListWnd::GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform,
-	TSD_TASKS nWhatTasks, TDCGETTASKS& filter, CTaskFile& tasks) const
+int CToDoListWnd::GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform, TSD_TASKS nWhatTasks,
+	TDCGETTASKS& filter, CTaskFile& tasks) const
 {
 	// preferences
 	const CPreferencesDlg& userPrefs = Prefs();
@@ -8448,8 +8485,8 @@ int CToDoListWnd::GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTra
 	return tasks.GetTaskCount();
 }
 
-int CToDoListWnd::GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform,
-	const CTaskSelectionDlg& taskSel, CTaskFile& tasks) const
+int CToDoListWnd::GetTasks(CFilteredToDoCtrl& tdc, BOOL bHtmlComments, BOOL bTransform, const CTaskSelectionDlg&
+	taskSel, CTaskFile& tasks) const
 {
 	DWORD dwFlags = 0;
 	TSD_TASKS nWhatTasks = taskSel.GetWantWhatTasks();
@@ -9396,7 +9433,7 @@ void CToDoListWnd::UpdateCwd()
 	// set cwd to active tasklist
 	if (GetTDCCount())
 	{
-		CString sFolder	= FileMisc::GetFolderFromFilePath(m_mgrToDoCtrls.GetFilePath(GetSelToDoCtrl()));
+		CString sFolder = FileMisc::GetFolderFromFilePath(m_mgrToDoCtrls.GetFilePath(GetSelToDoCtrl()));
 
 		if (FileMisc::FolderExists(sFolder))
 		{
@@ -10036,7 +10073,7 @@ void CToDoListWnd::OnViewStatusBar()
 
 void CToDoListWnd::OnUpdateViewStatusBar(CCmdUI* pCmdUI)
 {
-	pCmdUI->SetCheck(m_bShowStatusBar ? 1 : 0) ;
+	pCmdUI->SetCheck(m_bShowStatusBar ? 1 : 0);
 }
 
 BOOL CToDoListWnd::OnQueryOpen()
@@ -10575,7 +10612,8 @@ void CToDoListWnd::OnLoadFromWeb()
 
 				if (nTaskList != -1)
 				{
-					m_mgrToDoCtrls.SetWebDetails(nTaskList, rf.GetServer(), aRemoteFiles[nFile], rf.GetUsername(), rf.GetPassword());
+					m_mgrToDoCtrls.SetWebDetails(nTaskList, rf.GetServer(), aRemoteFiles[nFile], rf.GetUsername(),
+						rf.GetPassword());
 					UpdateStatusbar();
 				}
 			}

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -178,7 +183,12 @@ protected:
 	const CXmlItem* GetItemEx(LPCTSTR szItemName, LPCTSTR szSubItemName = NULL) const;
 	const CXmlItem* FindItemEx(LPCTSTR szItemName, LPCTSTR szItemValue, BOOL bSearchChildren = TRUE) const;
 
-	enum XI_SORTKEY { XISK_STRING, XISK_INT, XISK_FLOAT };
+	enum XI_SORTKEY
+	{
+		XISK_STRING,
+		XISK_INT,
+		XISK_FLOAT
+	};
 	void SortItems(LPCTSTR szItemName, LPCTSTR szKeyName, XI_SORTKEY nKey, BOOL bAscending);
 
 	static int CompareItems(const CXmlItem* pXIItem1, const CXmlItem* pXIItem2, LPCTSTR szKeyName, XI_SORTKEY nKey);

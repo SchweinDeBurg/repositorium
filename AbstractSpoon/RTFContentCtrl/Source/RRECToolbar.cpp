@@ -48,7 +48,7 @@ extern UINT urm_SETCURRENTFONTCOLOR;
 /////////////////////////////////////////////////////////////////////////////
 // CRRECToolBar
 
-CRRECToolBar::CRRECToolBar() :
+CRRECToolBar::CRRECToolBar():
 m_crBack(GetSysColor(COLOR_WINDOW)),
 m_crText(GetSysColor(COLOR_WINDOWTEXT))
 {
@@ -75,8 +75,8 @@ END_MESSAGE_MAP()
 
 BOOL CRRECToolBar::Create(CWnd* parent)
 {
-	if (CreateEx(parent, TBSTYLE_FLAT | TBSTYLE_WRAPABLE, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP,
-		CRect(0, 0, 0, 0), TOOLBAR_CONTROL) && LoadToolBar(TOOLBAR_CONTROL))
+	if (CreateEx(parent, TBSTYLE_FLAT | TBSTYLE_WRAPABLE, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP, CRect(0, 0, 0, 0),
+		TOOLBAR_CONTROL) && LoadToolBar(TOOLBAR_CONTROL))
 	{
 		SetImage(IDB_TOOLBAR, RGB(255, 0, 255));
 
@@ -130,13 +130,13 @@ BOOL CRRECToolBar::Create(CWnd* parent)
 		rect.top++;
 		rect.bottom += COMBO_HEIGHT;
 
-		if (!m_font.Create(WS_CHILD | WS_VSCROLL |	WS_VISIBLE | CBS_AUTOHSCROLL |
+		if (!m_font.Create(WS_CHILD | WS_VSCROLL | WS_VISIBLE | CBS_AUTOHSCROLL |
 			CBS_DROPDOWNLIST | CBS_SORT, rect, this, DROPDOWN_FONT))
 		{
 			return FALSE;
 		}
 
-		m_font.SetFont(CFont::FromHandle((HFONT) ::GetStockObject(DEFAULT_GUI_FONT)));
+		m_font.SetFont(CFont::FromHandle((HFONT)::GetStockObject(DEFAULT_GUI_FONT)));
 		m_font.FillCombo();
 
 		// The font size combo
@@ -153,7 +153,7 @@ BOOL CRRECToolBar::Create(CWnd* parent)
 			return FALSE;
 		}
 
-		m_size.SetFont(CFont::FromHandle((HFONT) ::GetStockObject(DEFAULT_GUI_FONT)));
+		m_size.SetFont(CFont::FromHandle((HFONT)::GetStockObject(DEFAULT_GUI_FONT)));
 		m_size.FillCombo();
 
 		return TRUE;
@@ -189,7 +189,7 @@ void CRRECToolBar::OnSelchangeFont()
 	if (index != CB_ERR)
 	{
 		m_font.GetLBText(index, font);
-		GetParent()->SendMessage(urm_SETCURRENTFONTNAME, (WPARAM)(LPCTSTR) font, 0);
+		GetParent()->SendMessage(urm_SETCURRENTFONTNAME, (WPARAM)(LPCTSTR)font, 0);
 	}
 }
 
@@ -201,9 +201,9 @@ void CRRECToolBar::OnSelchangeSize()
 	{
 		CString sz;
 		m_size.GetLBText(index, sz);
-		int size = _ttoi((LPCTSTR) sz);
+		int size = _ttoi((LPCTSTR)sz);
 
-		GetParent()->SendMessage(urm_SETCURRENTFONTSIZE, 0, (LPARAM) size);
+		GetParent()->SendMessage(urm_SETCURRENTFONTSIZE, 0, (LPARAM)size);
 	}
 }
 
@@ -231,7 +231,7 @@ LRESULT CRRECToolBar::OnColorButton(WPARAM color, LPARAM nCtrlID)
 	Invalidate();
 	UpdateWindow();
 
-	GetParent()->SendMessage(urm_SETCURRENTFONTCOLOR, bForeground, (LPARAM) color);
+	GetParent()->SendMessage(urm_SETCURRENTFONTCOLOR, bForeground, (LPARAM)color);
 
 	return 0;
 }

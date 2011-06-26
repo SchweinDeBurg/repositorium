@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -147,7 +152,8 @@ bool CTaskListTxtExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* sz
 	return ExportOutput(szDestFilePath, sOutput);
 }
 
-CString& CTaskListTxtExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM hTask, int nDepth, int nPos, const CString& sParentPos, CString& sOutput) const
+CString& CTaskListTxtExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM hTask, int nDepth, int nPos,
+	const CString& sParentPos, CString& sOutput) const
 {
 	// handle locale specific decimal separator
 	_tsetlocale(LC_NUMERIC, _T(""));
@@ -344,8 +350,8 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM hT
 	return sOutput;
 }
 
-BOOL CTaskListTxtExporter::FormatAttribute(const ITaskList8* pTasks, HTASKITEM hTask,
-	LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
+BOOL CTaskListTxtExporter::FormatAttribute(const ITaskList8* pTasks, HTASKITEM hTask, LPCTSTR szAttribName,
+	LPCTSTR szFormat, CString& sAttribText)
 {
 	if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(szAttribName)))
 	{
@@ -357,8 +363,8 @@ BOOL CTaskListTxtExporter::FormatAttribute(const ITaskList8* pTasks, HTASKITEM h
 }
 
 
-BOOL CTaskListTxtExporter::FormatAttributeList(const ITaskList8* pTasks, HTASKITEM hTask,
-	LPCTSTR szNumAttribName, LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
+BOOL CTaskListTxtExporter::FormatAttributeList(const ITaskList8* pTasks, HTASKITEM hTask, LPCTSTR szNumAttribName,
+	LPCTSTR szAttribName, LPCTSTR szFormat, CString& sAttribText)
 {
 	int nItemCount = _ttoi(pTasks->GetTaskAttribute(hTask, ATL::CT2A(szNumAttribName)));
 

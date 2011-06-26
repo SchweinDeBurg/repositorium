@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_TDLREUSERECURRINGTASKDLG_H__7626C173_829D_49EE_A467_DD6582D5750A__INCLUDED_)
@@ -68,7 +73,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CTDLReuseRecurringTaskDlg)
 	enum { IDD = IDD_REUSERECURRINGTASK_DIALOG };
-	int     m_bReuseTask;
+	int m_bReuseTask;
 	//}}AFX_DATA
 
 // Overrides

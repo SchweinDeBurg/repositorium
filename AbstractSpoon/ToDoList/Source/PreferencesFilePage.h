@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -137,25 +142,25 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesFilePage)
 	enum { IDD = IDD_PREFFILE_PAGE };
-	CFileEdit   m_eDueTaskStylesheet;
-	CComboBox   m_cbFontSize;
-	BOOL    m_bDisplayDueTasksInHtml;
-	BOOL    m_bRefreshFindOnLoad;
-	BOOL    m_bDueTaskTitlesOnly;
+	CFileEdit m_eDueTaskStylesheet;
+	CComboBox m_cbFontSize;
+	BOOL m_bDisplayDueTasksInHtml;
+	BOOL m_bRefreshFindOnLoad;
+	BOOL m_bDueTaskTitlesOnly;
 	CString m_sDueTasksStylesheet;
-	BOOL    m_bUseStyleSheetForDueTasks;
-	BOOL    m_bOnlyShowDueTasksForPerson;
+	BOOL m_bUseStyleSheetForDueTasks;
+	BOOL m_bOnlyShowDueTasksForPerson;
 	CString m_sDueTaskPerson;
-	BOOL    m_bWarnAddDeleteArchive;
-	BOOL    m_bDontRemoveFlagged;
-	BOOL    m_bExpandTasks;
+	BOOL m_bWarnAddDeleteArchive;
+	BOOL m_bDontRemoveFlagged;
+	BOOL m_bExpandTasks;
 	//}}AFX_DATA
-	BOOL    m_bNotifyDueOnLoad, m_bNotifyDueOnSwitch;
-	int     m_nNotifyDueByOnLoad, m_nNotifyDueByOnSwitch;
-	BOOL    m_bAutoArchive;
-	BOOL    m_bNotifyReadOnly;
-	BOOL    m_bRemoveArchivedTasks;
-	BOOL    m_bRemoveOnlyOnAbsoluteCompletion;
+	BOOL m_bNotifyDueOnLoad, m_bNotifyDueOnSwitch;
+	int m_nNotifyDueByOnLoad, m_nNotifyDueByOnSwitch;
+	BOOL m_bAutoArchive;
+	BOOL m_bNotifyReadOnly;
+	BOOL m_bRemoveArchivedTasks;
+	BOOL m_bRemoveOnlyOnAbsoluteCompletion;
 	CGroupLineManager m_mgrGroupLines;
 
 // Overrides

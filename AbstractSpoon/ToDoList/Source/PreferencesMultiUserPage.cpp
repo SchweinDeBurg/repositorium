@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -60,7 +65,7 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CPreferencesMultiUserPage, CPreferencesPageBase)
 
-CPreferencesMultiUserPage::CPreferencesMultiUserPage() :
+CPreferencesMultiUserPage::CPreferencesMultiUserPage():
 CPreferencesPageBase(CPreferencesMultiUserPage::IDD)
 {
 	//{{AFX_DATA_INIT(CPreferencesMultiUserPage)
@@ -247,7 +252,8 @@ void CPreferencesMultiUserPage::LoadPreferences(const CPreferences& prefs)
 	m_nCheckinNoEditTime = prefs.GetProfileInt(_T("Preferences"), _T("CheckinNoEditTime"), 1);
 	m_bCheckinNoChange = prefs.GetProfileInt(_T("Preferences"), _T("CheckinNoEdit"), TRUE);
 	m_bIncludeUserNameInCheckout = prefs.GetProfileInt(_T("Preferences"), _T("IncludeUserNameInCheckout"), FALSE);
-	m_bUse3rdPartySourceControl = !m_bEnableSourceControl && prefs.GetProfileInt(_T("Preferences"), _T("Use3rdPartySourceControl"), FALSE);
+	m_bUse3rdPartySourceControl = !m_bEnableSourceControl && prefs.GetProfileInt(_T("Preferences"),
+		_T("Use3rdPartySourceControl"), FALSE);
 }
 
 void CPreferencesMultiUserPage::SavePreferences(CPreferences& prefs)

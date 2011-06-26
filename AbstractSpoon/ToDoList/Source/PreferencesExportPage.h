@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -102,18 +107,18 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesExportPage)
 	enum { IDD = IDD_PREFEXPORT_PAGE };
-	CMaskEdit   m_eLineSpaces;
-	CComboBox   m_cbFontSize;
-	BOOL    m_bExportParentTitleCommentsOnly;
-	BOOL    m_bExportSpaceForNotes;
+	CMaskEdit m_eLineSpaces;
+	CComboBox m_cbFontSize;
+	BOOL m_bExportParentTitleCommentsOnly;
+	BOOL m_bExportSpaceForNotes;
 	CString m_sHtmlCharSet;
-	int     m_bUseSpaceIndents;
-	int     m_nTextIndent;
-	int     m_nLineSpaces;
+	int m_bUseSpaceIndents;
+	int m_nTextIndent;
+	int m_nLineSpaces;
 	//}}AFX_DATA
-	CFontComboBox   m_cbFonts;
-	BOOL    m_bPreviewExport;
-	BOOL    m_bExportVisibleOnly;
+	CFontComboBox m_cbFonts;
+	BOOL m_bPreviewExport;
+	BOOL m_bExportVisibleOnly;
 	CString m_sHtmlFont;
 	int m_nHtmlFontSize;
 	CEnEdit m_eCharset;

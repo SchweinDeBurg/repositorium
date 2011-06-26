@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -111,8 +116,8 @@ const char* CRTFContentCtrlApp::GetTypeDescription() const
 	return "Rich Text";
 }
 
-IContentControl* CRTFContentCtrlApp::CreateCtrl(unsigned short nCtrlID, unsigned long nStyle,
-	long nLeft, long nTop, long nWidth, long nHeight, HWND hwndParent)
+IContentControl* CRTFContentCtrlApp::CreateCtrl(unsigned short nCtrlID, unsigned long nStyle, long nLeft, long nTop,
+	long nWidth, long nHeight, HWND hwndParent)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -144,8 +149,8 @@ void CRTFContentCtrlApp::Release()
 {
 }
 
-int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent, int nLength,
-	const TCHAR* szCharSet, char*& szHtml)
+int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent, int nLength, const TCHAR* szCharSet,
+	char*& szHtml)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
@@ -209,8 +214,8 @@ int CRTFContentCtrlApp::ConvertToHtml(const unsigned char* pContent, int nLength
 			try
 			{
 				nLength = 0;
-				int nRet = fnRtf2Html(sTempRtf, FileMisc::GetTempFolder(), sImgDir, _T("/IT:png"),
-					_T("/DS:content"), sCharSet, _T(""), _T(""), _T(""), _T(""), _T(""));
+				int nRet = fnRtf2Html(sTempRtf, FileMisc::GetTempFolder(), sImgDir, _T("/IT:png"), _T("/DS:content"),
+					sCharSet, _T(""), _T(""), _T(""), _T(""), _T(""));
 				if (nRet)
 				{
 					CTextFileRead file(sTempHtml);

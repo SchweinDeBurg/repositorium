@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -82,9 +87,9 @@ const UINT WM_TDCM_TASKHASREMINDER = ::RegisterWindowMessage(_T("WM_TDCM_TASKHAS
 const UINT WM_TDCM_TASKLINK = ::RegisterWindowMessage(_T("WM_TDCM_TASKLINK")); // wParam = taskID, lParam = taskfile
 
 // internal TDC message
-const UINT WM_TDC_RESTOREFOCUSEDITEM            = (WM_APP + 1);
-const UINT WM_TDC_REFRESHPERCENTSPINVISIBILITY  = (WM_APP + 2);
-const UINT WM_TDC_REFRESHFILTER                 = (WM_APP + 3);
-const UINT WM_TDC_RECREATERECURRINGTASK         = (WM_APP + 4);
+const UINT WM_TDC_RESTOREFOCUSEDITEM = (WM_APP + 1);
+const UINT WM_TDC_REFRESHPERCENTSPINVISIBILITY = (WM_APP + 2);
+const UINT WM_TDC_REFRESHFILTER = (WM_APP + 3);
+const UINT WM_TDC_RECREATERECURRINGTASK = (WM_APP + 4);
 
 #endif // AFX_TDCMSG_H__5951FDE6_508A_4A9D_A55D_D16EB026AEF7__INCLUDED_

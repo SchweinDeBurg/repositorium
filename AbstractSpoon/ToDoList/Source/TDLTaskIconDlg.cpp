@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TDLTaskIconDlg.cpp : implementation file
@@ -60,7 +65,9 @@ static char THIS_FILE[] = __FILE__;
 // CTDLTaskIconDlg dialog
 
 CTDLTaskIconDlg::CTDLTaskIconDlg(const CImageList& ilIcons, int nSelIndex, CWnd* pParent /*=NULL*/):
-CDialog(CTDLTaskIconDlg::IDD, pParent), m_ilIcons(ilIcons), m_nIconIndex(nSelIndex)
+CDialog(CTDLTaskIconDlg::IDD, pParent),
+m_ilIcons(ilIcons),
+m_nIconIndex(nSelIndex)
 {
 	//{{AFX_DATA_INIT(CTDLTaskIconDlg)
 	// NOTE: the ClassWizard will add member initialization here

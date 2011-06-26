@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -84,7 +89,8 @@ enum FIND_INCLUDE
 // CTDLFindTasksDlg dialog
 
 CTDLFindTasksDlg::CTDLFindTasksDlg(CWnd* pParent /*=NULL*/):
-CDialog(CTDLFindTasksDlg::IDD, pParent), m_bDockable(FALSE)
+CDialog(CTDLFindTasksDlg::IDD, pParent),
+m_bDockable(FALSE)
 {
 	m_sResultsLabel.LoadString(IDS_FTD_RESULTS);
 
@@ -340,8 +346,8 @@ void CTDLFindTasksDlg::LoadSettings()
 		int nHeightDocked = prefs.GetProfileInt(_T("FindTasks"), _T("DockedHeight"), rDef.cy);
 		int nHeightDockedMax = prefs.GetProfileInt(_T("FindTasks"), _T("DockedHeightMax"), -1);
 
-		m_dockMgr.Initialize(GetParent(), this, nPos, nLastPos,
-			nWidthDocked, nWidthDockedMax, nHeightDocked, nHeightDockedMax);
+		m_dockMgr.Initialize(GetParent(), this, nPos, nLastPos, nWidthDocked, nWidthDockedMax, nHeightDocked,
+			nHeightDockedMax);
 	}
 
 	LoadSearches();
@@ -438,7 +444,8 @@ BOOL CTDLFindTasksDlg::Show(BOOL bShow)
 	return TRUE;
 }
 
-void CTDLFindTasksDlg::AddResult(const SEARCHRESULT& result, LPCTSTR szTask, LPCTSTR szPath, const CFilteredToDoCtrl* pTDC)
+void CTDLFindTasksDlg::AddResult(const SEARCHRESULT& result, LPCTSTR szTask, LPCTSTR szPath,
+	const CFilteredToDoCtrl* pTDC)
 {
 	if (GetSafeHwnd())
 	{

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_TDLFINDRESULTSLISTCTRL_H__E3FBC372_D7CC_457E_B7BB_1036256A64E9__INCLUDED_)
@@ -59,7 +64,12 @@
 
 struct FTDRESULT
 {
-	FTDRESULT(DWORD dwID = 0, const CFilteredToDoCtrl* pTaskList = NULL, BOOL done = FALSE) : dwTaskID(dwID), pTDC(pTaskList), bDone(done) {}
+	FTDRESULT(DWORD dwID = 0, const CFilteredToDoCtrl* pTaskList = NULL, BOOL done = FALSE):
+	dwTaskID(dwID),
+	pTDC(pTaskList),
+	bDone(done)
+	{
+	}
 
 	DWORD dwTaskID;
 	const CFilteredToDoCtrl* pTDC;
@@ -119,7 +129,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-	virtual COLORREF GetItemTextColor(int nItem, int nSubItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const;
+	virtual COLORREF GetItemTextColor(int nItem, int nSubItem, BOOL bSelected, BOOL bDropHighlighted,
+		BOOL bWndFocus) const;
 	virtual CFont* GetItemFont(int nItem, int nSubItem);
 	int GetNextResult(int nItem, BOOL bDown);
 };

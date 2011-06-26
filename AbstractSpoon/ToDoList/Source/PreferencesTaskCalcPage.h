@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -147,22 +152,22 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesTaskCalcPage)
 	enum { IDD = IDD_PREFTASKCALC_PAGE };
-	BOOL    m_bTreatSubCompletedAsDone;
-	BOOL    m_bUseHighestPriority;
-	BOOL    m_bAutoCalcTimeEst;
-	BOOL    m_bIncludeDoneInPriorityRiskCalc;
-	BOOL    m_bAutoCalcPercentDone;
-	BOOL    m_bAutoAdjustDependents;
-	BOOL    m_bWeightPercentCompletionByNumSubtasks;
-	BOOL    m_bDueTasksHaveHighestPriority;
-	BOOL    m_bDoneTasksHaveLowestPriority;
-	BOOL    m_bNoDueDateDueToday;
-	int     m_nCalcRemainingTime;
+	BOOL m_bTreatSubCompletedAsDone;
+	BOOL m_bUseHighestPriority;
+	BOOL m_bAutoCalcTimeEst;
+	BOOL m_bIncludeDoneInPriorityRiskCalc;
+	BOOL m_bAutoCalcPercentDone;
+	BOOL m_bAutoAdjustDependents;
+	BOOL m_bWeightPercentCompletionByNumSubtasks;
+	BOOL m_bDueTasksHaveHighestPriority;
+	BOOL m_bDoneTasksHaveLowestPriority;
+	BOOL m_bNoDueDateDueToday;
+	int m_nCalcRemainingTime;
 	//}}AFX_DATA
-	BOOL    m_bUseEarliestDueDate;
-	BOOL    m_bUsePercentDoneInTimeEst;
-	BOOL    m_bAveragePercentSubCompletion;
-	BOOL    m_bIncludeDoneInAverageCalc;
+	BOOL m_bUseEarliestDueDate;
+	BOOL m_bUsePercentDoneInTimeEst;
+	BOOL m_bAveragePercentSubCompletion;
+	BOOL m_bIncludeDoneInAverageCalc;
 
 // Overrides
 	// ClassWizard generate virtual function overrides

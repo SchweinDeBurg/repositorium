@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -159,40 +164,46 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesTaskDefPage)
 	enum { IDD = IDD_PREFTASKDEF_PAGE };
-	CTDLRiskComboBox    m_cbDefRisk;
-	CTDLPriorityComboBox    m_cbDefPriority;
-	CAutoComboBox   m_cbAllocByList;
-	CAutoComboBox   m_cbAllocToList;
-	CAutoComboBox   m_cbStatusList;
-	CAutoComboBox   m_cbCategoryList;
+	CTDLRiskComboBox m_cbDefRisk;
+	CTDLPriorityComboBox m_cbDefPriority;
+	CAutoComboBox m_cbAllocByList;
+	CAutoComboBox m_cbAllocToList;
+	CAutoComboBox m_cbStatusList;
+	CAutoComboBox m_cbCategoryList;
 	CString m_sDefCreatedBy;
-	double  m_dDefCost;
-	BOOL    m_bUpdateInheritAttributes;
+	double m_dDefCost;
+	BOOL m_bUpdateInheritAttributes;
 	//}}AFX_DATA
-	CTimeEdit   m_eTimeEst;
-	CTimeEdit   m_eTimeSpent;
+	CTimeEdit m_eTimeEst;
+	CTimeEdit m_eTimeSpent;
 	CMaskEdit m_eCost;
 	CCheckListBoxEx m_lbAttribUse;
-	int     m_nDefPriority;
-	int     m_nDefRisk;
-	double      m_dDefTimeEst, m_dDefTimeSpent;
+	int m_nDefPriority;
+	int m_nDefRisk;
+	double m_dDefTimeEst, m_dDefTimeSpent;
 	CString m_sDefAllocTo;
 	CString m_sDefAllocBy;
 	CString m_sDefStatus;
 	CString m_sDefCategory;
-	CColorButton    m_btDefColor;
+	CColorButton m_btDefColor;
 	COLORREF m_crDef;
-	BOOL    m_bInheritParentAttributes;
-	int     m_nSelAttribUse;
-	BOOL    m_bUseCreationForDefStartDate;
+	BOOL m_bInheritParentAttributes;
+	int m_nSelAttribUse;
+	BOOL m_bUseCreationForDefStartDate;
 	CWndPromptManager m_mgrPrompts;
 	CGroupLineManager m_mgrGroupLines;
 	CStringArray m_aDefCats, m_aDefStatus, m_aDefAllocTo, m_aDefAllocBy;
 
 	struct ATTRIBPREF
 	{
-		ATTRIBPREF() : nAttrib(PTPA_NONE), bUse(FALSE) {}
-		ATTRIBPREF(UINT nIDName, PTP_ATTRIB attrib, BOOL use) : nAttrib(attrib), bUse(use)
+		ATTRIBPREF():
+		nAttrib(PTPA_NONE),
+		bUse(FALSE)
+		{
+		}
+		ATTRIBPREF(UINT nIDName, PTP_ATTRIB attrib, BOOL use):
+		nAttrib(attrib),
+		bUse(use)
 		{
 			sName.LoadString(nIDName);
 		}

@@ -18,6 +18,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // Encryption.cpp: implementation of the CEncryption class.
@@ -59,22 +64,22 @@ void CEncryption::Release()
 	delete this;
 }
 
-bool CEncryption::Encrypt(const unsigned char* pInput, int nLenInput, const char* szPassword,
-	unsigned char*& pOutput, int& nLenOutput)
+bool CEncryption::Encrypt(const unsigned char* pInput, int nLenInput, const char* szPassword, unsigned char*& pOutput,
+	int& nLenOutput)
 {
-	bool            bResult = false;
-	TD_TLHEADER     hdr;
-	RD_UINT8        uFinalKey[32];
-	unsigned long   uFileSize = 0, uAllocated = 0, pos = 0;
-	int             nEncryptedPartSize = 0;
+	bool bResult = false;
+	TD_TLHEADER hdr;
+	RD_UINT8 uFinalKey[32];
+	unsigned long uFileSize = 0, uAllocated = 0, pos = 0;
+	int nEncryptedPartSize = 0;
 
 	_ASSERTE(NULL != pInput);
 	if (NULL == pInput)
 	{
 		return FALSE;
 	}
-	_ASSERTE(0	!= nLenInput);
-	if (0	== nLenInput)
+	_ASSERTE(0 != nLenInput);
+	if (0 == nLenInput)
 	{
 		return FALSE;
 	}
@@ -147,8 +152,8 @@ bool CEncryption::Encrypt(const unsigned char* pInput, int nLenInput, const char
 
 		Rijndael aes;
 		// Initialize Rijndael/AES
-		if (RIJNDAEL_SUCCESS == aes.init(Rijndael::CBC, Rijndael::Encrypt, uFinalKey,
-				Rijndael::Key32Bytes, hdr.aEncryptionIV))
+		if (RIJNDAEL_SUCCESS == aes.init(Rijndael::CBC, Rijndael::Encrypt, uFinalKey, Rijndael::Key32Bytes,
+			hdr.aEncryptionIV))
 		{
 			nEncryptedPartSize = aes.padEncrypt((RD_UINT8*)pInput, nLenInput, (RD_UINT8*)pOutput + sizeof(TD_TLHEADER));
 
@@ -171,13 +176,13 @@ bool CEncryption::Encrypt(const unsigned char* pInput, int nLenInput, const char
 	return (bResult);
 }
 
-bool CEncryption::Decrypt(const unsigned char* pInput, int nLenInput, const char* szPassword,
-	unsigned char*& pOutput, int& nLenOutput)
+bool CEncryption::Decrypt(const unsigned char* pInput, int nLenInput, const char* szPassword, unsigned char*& pOutput,
+	int& nLenOutput)
 {
-	bool            bResult = false;
-	TD_TLHEADER     hdr;
-	RD_UINT8        uFinalKey[32];
-	sha256_ctx      sha32;
+	bool bResult = false;
+	TD_TLHEADER hdr;
+	RD_UINT8 uFinalKey[32];
+	sha256_ctx sha32;
 
 
 	_ASSERTE(NULL != pInput);
@@ -185,8 +190,8 @@ bool CEncryption::Decrypt(const unsigned char* pInput, int nLenInput, const char
 	{
 		return FALSE;
 	}
-	_ASSERTE(0	!= nLenInput);
-	if (0	== nLenInput)
+	_ASSERTE(0 != nLenInput);
+	if (0 == nLenInput)
 	{
 		return FALSE;
 	}
@@ -254,10 +259,11 @@ bool CEncryption::Decrypt(const unsigned char* pInput, int nLenInput, const char
 
 		Rijndael aes;
 		// Initialize Rijndael/AES
-		if (RIJNDAEL_SUCCESS == aes.init(Rijndael::CBC, Rijndael::Decrypt, uFinalKey,
-				Rijndael::Key32Bytes, hdr.aEncryptionIV))
+		if (RIJNDAEL_SUCCESS == aes.init(Rijndael::CBC, Rijndael::Decrypt, uFinalKey, Rijndael::Key32Bytes,
+			hdr.aEncryptionIV))
 		{
-			nLenOutput = aes.padDecrypt((RD_UINT8*)pInput + sizeof(TD_TLHEADER), nLenInput - sizeof(TD_TLHEADER), (RD_UINT8*)pOutput);
+			nLenOutput = aes.padDecrypt((RD_UINT8*)pInput + sizeof(TD_TLHEADER), nLenInput - sizeof(TD_TLHEADER),
+				(RD_UINT8*)pOutput);
 
 			// Check if all went correct
 			_ASSERTE(0 <= nLenOutput);

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TaskListDropTarget.cpp: implementation of the CTaskListDropTarget class.
@@ -63,7 +68,9 @@ static char THIS_FILE[] = __FILE__;
 
 #define IS_WND_TYPE(pWnd, cls, type) (pWnd->IsKindOf(RUNTIME_CLASS(cls)) || CWinClasses::IsClass(*pWnd, type))
 
-CTaskListDropTarget::CTaskListDropTarget() : m_pParent(NULL), m_nLVPrevHilite(-1)
+CTaskListDropTarget::CTaskListDropTarget():
+m_pParent(NULL),
+m_nLVPrevHilite(-1)
 {
 }
 
@@ -78,7 +85,8 @@ BOOL CTaskListDropTarget::Register(CWnd* pTarget, CWnd* pParent)
 	return COleDropTarget::Register(pTarget);
 }
 
-DROPEFFECT CTaskListDropTarget::OnDragEnter(CWnd* pWnd, COleDataObject* /*pObject*/, DWORD /*dwKeyState*/, CPoint /*point*/)
+DROPEFFECT CTaskListDropTarget::OnDragEnter(CWnd* pWnd, COleDataObject* /*pObject*/, DWORD /*dwKeyState*/,
+	CPoint /*point*/)
 {
 	if (IS_WND_TYPE(pWnd, CTreeCtrl, WC_TREEVIEW))
 	{
@@ -163,7 +171,7 @@ DROPEFFECT CTaskListDropTarget::OnDragOver(CWnd* pWnd, COleDataObject* pObject, 
 		{
 			if (!(pWnd->GetStyle() & ES_READONLY))
 			{
-				return /*bFilename ? DROPEFFECT_LINK : */DROPEFFECT_COPY;
+				return DROPEFFECT_COPY;
 			}
 		}
 		else if (pWnd->IsKindOf(RUNTIME_CLASS(CDialog)) ||

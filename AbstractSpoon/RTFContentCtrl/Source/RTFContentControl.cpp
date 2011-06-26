@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -72,7 +77,9 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CRTFContentControl
 
-CRTFContentControl::CRTFContentControl() : m_bAllowNotify(TRUE), m_reSpellCheck(m_rtf)
+CRTFContentControl::CRTFContentControl():
+m_bAllowNotify(TRUE),
+m_reSpellCheck(m_rtf)
 {
 	// add custom protocol to comments field for linking to task IDs
 	GetRichEditCtrl().AddProtocol(TDL_PROTOCOL, TRUE);
@@ -150,7 +157,8 @@ int CRTFContentControl::GetContent(const CRTFContentControl* pCtrl, unsigned cha
 		unsigned char* pCompressed = NULL;
 		int nLenCompressed = 0;
 
-		if (Compression::Compress((unsigned char*)(LPSTR)(LPCTSTR)sContent, nLen, pCompressed, nLenCompressed) && nLenCompressed)
+		if (Compression::Compress((unsigned char*)(LPSTR)(LPCTSTR)sContent, nLen, pCompressed, nLenCompressed) &&
+			nLenCompressed)
 		{
 			CopyMemory(pContent, pCompressed, nLenCompressed);
 			nLen = nLenCompressed;
@@ -316,7 +324,7 @@ void CRTFContentControl::EnableMenuItem(CMenu* pMenu, UINT nCmdID, BOOL bEnable)
 
 void CRTFContentControl::CheckMenuItem(CMenu* pMenu, UINT nCmdID, BOOL bCheck)
 {
-	pMenu->CheckMenuItem(nCmdID, MF_BYCOMMAND | (bCheck ? MF_CHECKED  : MF_UNCHECKED));
+	pMenu->CheckMenuItem(nCmdID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 }
 
 void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
@@ -342,7 +350,7 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 
 				BOOL bHasSel = (cr.cpMax - cr.cpMin);
 
-				CharFormat	cf;
+				CharFormat cf;
 				cf.dwMask = CFM_BOLD | CFM_ITALIC | CFM_UNDERLINE | CFM_COLOR;
 				re.GetSelectionCharFormat(cf);
 
@@ -410,8 +418,8 @@ void CRTFContentControl::OnContextMenu(CWnd* pWnd, CPoint point)
 					::ClientToScreen(m_rtf, &point);
 				}
 
-				UINT nCmdID = ::TrackPopupMenu(*pPopup, TPM_RETURNCMD | TPM_LEFTALIGN | TPM_LEFTBUTTON,
-					point.x, point.y, 0, *this, NULL);
+				UINT nCmdID = ::TrackPopupMenu(*pPopup, TPM_RETURNCMD | TPM_LEFTALIGN | TPM_LEFTBUTTON, point.x, point.y,
+					0, *this, NULL);
 
 				switch (nCmdID)
 				{
@@ -647,7 +655,7 @@ BOOL CRTFContentControl::CanPaste()
 
 	BOOL bCanPaste = FALSE;
 
-	for (long i = 0;  i < formats_count;  ++i)
+	for (long i = 0; i < formats_count; ++i)
 	{
 		bCanPaste |= re.CanPaste(formats[i]);
 	}
