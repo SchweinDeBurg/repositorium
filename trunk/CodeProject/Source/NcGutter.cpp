@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -68,7 +73,7 @@ UINT BORDER = 0; // set in WM_NCCALCSIZE so not const
 const UINT SORTWIDTH = 10;
 const UINT MINCLIENTWIDTH = GetSystemMetrics(SM_CXVSCROLL) * 4;
 
-CNcGutter::CNcGutter(DWORD dwStyles) :
+CNcGutter::CNcGutter(DWORD dwStyles):
 m_bSetRedraw(TRUE),
 m_bFirstRecalc(TRUE),
 m_nHeaderColDown(-1),
@@ -791,7 +796,7 @@ LRESULT CNcGutter::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 	// registered messages must be handled explicitly
 	if (msg == WM_NCG_FORCERESIZE)
 	{
-		LRESULT lr  = SetWindowPos(hRealWnd, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER);
+		LRESULT lr = SetWindowPos(hRealWnd, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER);
 		UpdateHeaderHotRects();
 
 		return lr;
@@ -1037,10 +1042,16 @@ void CNcGutter::OnButtonDown(UINT nMsg, CPoint point)
 	SetFocus(GetHwnd());
 
 	// notify parent then hook window
-	NCGITEMCLICK ngic = { m_dwButtonDownItem,
+	NCGITEMCLICK ngic =
+	{
+		m_dwButtonDownItem,
 		0,
 		NCG_CLIENTCOLUMNID,
-		nMsg, { point.x, point.y }
+		nMsg,
+		{
+			point.x,
+			point.y
+		}
 	};
 
 	UINT nID = GetDlgCtrlID();
@@ -1088,10 +1099,16 @@ void CNcGutter::OnButtonUp(UINT nMsg, CPoint point)
 		if (dwItem == m_dwButtonDownItem)
 		{
 			// notify parent then hook window
-			NCGITEMCLICK ngic = { dwItem,
+			NCGITEMCLICK ngic =
+			{
+				dwItem,
 				m_dwButtonDownItem,
 				NCG_CLIENTCOLUMNID,
-				nMsg, { point.x, point.y }
+				nMsg,
+				{
+					point.x,
+					point.y
+				}
 			};
 
 			UINT nID = GetDlgCtrlID();
@@ -1139,7 +1156,17 @@ void CNcGutter::OnNcButtonDown(UINT nMsg, CPoint point)
 		{
 			m_dwButtonDownItem = dwItem;
 
-			NCGITEMCLICK ngic = { m_dwButtonDownItem, 0, pCD->nColID, nMsg, { point.x, point.y } };
+			NCGITEMCLICK ngic =
+			{
+				m_dwButtonDownItem,
+				0,
+				pCD->nColID,
+				nMsg,
+				{
+					point.x,
+					point.y
+				}
+			};
 
 			// try parent then hook window
 			UINT nID = GetDlgCtrlID();
@@ -1204,10 +1231,16 @@ void CNcGutter::OnNcButtonUp(UINT nMsg, CPoint point)
 		else if (nHitTest == NCGHT_ITEM && dwItem && dwItem == m_dwButtonDownItem)
 		{
 			// notify parent then hook window
-			NCGITEMCLICK ngic = { dwItem,
+			NCGITEMCLICK ngic =
+			{
+				dwItem,
 				m_dwButtonDownItem,
 				m_aColumns[nCol]->nColID,
-				nMsg, { point.x, point.y }
+				nMsg,
+				{
+					point.x,
+					point.y
+				}
 			};
 
 			UINT nID = GetDlgCtrlID();
@@ -1674,8 +1707,8 @@ void CNcGutter::OnNcPaint()
 	// blt to window dc if nec
 	if (pOutputDC == &dcMem)
 	{
-		dc.BitBlt(rGutter.left, rGutter.top, rGutter.Width(), rGutter.Height(),
-			&dcMem, rGutter.left, rGutter.top, SRCCOPY);
+		dc.BitBlt(rGutter.left, rGutter.top, rGutter.Width(), rGutter.Height(), &dcMem, rGutter.left, rGutter.top,
+			SRCCOPY);
 
 		dcMem.SelectObject(pBMOld); // V.V.IMPORTANT
 	}
@@ -1944,8 +1977,8 @@ DWORD CNcGutter::GetFirstVisibleTopLevelItem(int& nItem) const
 	return dwItem;
 }
 
-void CNcGutter::NcDrawItem(CDC* pDC, DWORD dwItem, DWORD dwParentItem, int nLevel, int nPos,
-	const CRect& rGutter, CRect& rItem /* out */, BOOL bDrawChildren)
+void CNcGutter::NcDrawItem(CDC* pDC, DWORD dwItem, DWORD dwParentItem, int nLevel, int nPos, const CRect& rGutter,
+	CRect& rItem /*out*/, BOOL bDrawChildren)
 {
 	rItem = GetWindowItemRect(dwItem);
 

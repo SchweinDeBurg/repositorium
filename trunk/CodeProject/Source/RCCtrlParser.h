@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // RCCtrlParser.h: interface for the CRCCtrlParser class.
@@ -66,8 +71,8 @@ public:
 		m_nIconID = 0;
 	}
 
-	RTCONTROL(CWnd* pWnd, LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-		const CRect& rect, UINT nID, BOOL bDLU, UINT nIconID = 0)
+	RTCONTROL(CWnd* pWnd, LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, const CRect& rect,
+		UINT nID, BOOL bDLU, UINT nIconID = 0)
 	{
 		ASSERT(pWnd || lstrlen(szClass));
 
@@ -121,7 +126,8 @@ protected:
 	static int FindNextRCControl(const CString& sRCControls, int nStart = 0);
 
 	static int GetRCControlTypeIndex(const CString& sRCCtrl);
-	static int ParseRCControl(const CString& sRCCtrl, CString& sCaption, UINT& uID, CString& sClass, DWORD& dwStyle, POINT& pos, SIZE& size, DWORD& dwExStyle, UINT& uIconID);
+	static int ParseRCControl(const CString& sRCCtrl, CString& sCaption, UINT& uID, CString& sClass, DWORD& dwStyle,
+		POINT& pos, SIZE& size, DWORD& dwExStyle, UINT& uIconID);
 	static void ExtractRCItems(const CString& sRCCtrl, LPCTSTR szType, CString* pItems[], int nMaxItems);
 
 	static DWORD ParseRCStyles(LPCTSTR szClass, const CString& sStyle);

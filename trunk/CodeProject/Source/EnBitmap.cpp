@@ -38,6 +38,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -60,7 +65,7 @@ static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
 
-const int HIMETRIC_INCH	= 2540;
+const int HIMETRIC_INCH = 2540;
 
 enum
 {
@@ -75,7 +80,8 @@ enum
 
 ///////////////////////////////////////////////////////////////////////
 
-C32BitImageProcessor::C32BitImageProcessor(BOOL bEnableWeighting) : m_bWeightingEnabled(bEnableWeighting)
+C32BitImageProcessor::C32BitImageProcessor(BOOL bEnableWeighting):
+m_bWeightingEnabled(bEnableWeighting)
 {
 }
 
@@ -88,8 +94,8 @@ CSize C32BitImageProcessor::CalcDestSize(CSize sizeSrc)
 	return sizeSrc; // default
 }
 
-BOOL C32BitImageProcessor::ProcessPixels(RGBX* pSrcPixels, CSize /*sizeSrc*/, RGBX* pDestPixels,
-	CSize sizeDest, COLORREF /*crMask*/)
+BOOL C32BitImageProcessor::ProcessPixels(RGBX* pSrcPixels, CSize /*sizeSrc*/, RGBX* pDestPixels, CSize sizeDest,
+	COLORREF /*crMask*/)
 {
 	CopyMemory(pDestPixels, pSrcPixels, sizeDest.cx * 4 * sizeDest.cy); // default
 	return TRUE;
@@ -101,7 +107,8 @@ BOOL C32BitImageProcessor::ProcessPixels(RGBX* pSrcPixels, CSize /*sizeSrc*/, RG
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CEnBitmap::CEnBitmap(COLORREF crBkgnd) : m_crBkgnd(crBkgnd)
+CEnBitmap::CEnBitmap(COLORREF crBkgnd):
+m_crBkgnd(crBkgnd)
 {
 }
 
@@ -222,10 +229,10 @@ IPicture* CEnBitmap::LoadFromBuffer(BYTE* pBuff, int nSize)
 
 BOOL CEnBitmap::GetResource(LPCTSTR lpName, LPCTSTR lpType, HMODULE hInst, void* pResource, int& nBufSize)
 {
-	HRSRC       hResInfo;
-	HANDLE      hRes;
-	LPSTR       lpRes   = NULL;
-	bool        bResult = FALSE;
+	HRSRC hResInfo;
+	HANDLE hRes;
+	LPSTR lpRes = NULL;
+	bool bResult = FALSE;
 
 	// Find the resource
 	hResInfo = FindResource(hInst, lpName, lpType);
@@ -292,8 +299,8 @@ HBITMAP CEnBitmap::ExtractBitmap(IPicture* pPicture, COLORREF crBack)
 		pPicture->get_Width(&hmWidth);
 		pPicture->get_Height(&hmHeight);
 
-		int nWidth	= MulDiv(hmWidth, pDC->GetDeviceCaps(LOGPIXELSX), HIMETRIC_INCH);
-		int nHeight	= MulDiv(hmHeight, pDC->GetDeviceCaps(LOGPIXELSY), HIMETRIC_INCH);
+		int nWidth = MulDiv(hmWidth, pDC->GetDeviceCaps(LOGPIXELSX), HIMETRIC_INCH);
+		int nHeight = MulDiv(hmHeight, pDC->GetDeviceCaps(LOGPIXELSY), HIMETRIC_INCH);
 
 		if (bmMem.CreateCompatibleBitmap(pDC, nWidth, nHeight))
 		{

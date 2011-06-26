@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // ColorComboBox.cpp : implementation file
@@ -57,7 +62,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CColorComboBox
 
-CColorComboBox::CColorComboBox() : m_bResized(FALSE)
+CColorComboBox::CColorComboBox():
+m_bResized(FALSE)
 {
 }
 
@@ -112,7 +118,7 @@ void CColorComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	{
 		CDlgUnits dlu(GetParent());
 
-		BOOL bHasColor = (lpDrawItemStruct->itemData != (DWORD) - 1);
+		BOOL bHasColor = (lpDrawItemStruct->itemData != (DWORD)-1);
 
 		if (!bHasColor)
 		{

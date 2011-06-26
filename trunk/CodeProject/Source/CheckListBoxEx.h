@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_CHECKLISTBOXEX_H__3862911F_2AC1_41DC_822D_CA68941B6FDC__INCLUDED_)
@@ -85,7 +90,7 @@ protected:
 	// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_MSG
 	afx_msg void OnDestroy();
-	afx_msg LRESULT OnSetFont(WPARAM , LPARAM);
+	afx_msg LRESULT OnSetFont(WPARAM, LPARAM);
 	DECLARE_MESSAGE_MAP()
 
 	void PreDrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);

@@ -38,6 +38,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // Compression.cpp: implementation of the CCompression class.
@@ -59,8 +64,7 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-BOOL Compression::Compress(const unsigned char* pContentSrc, int nLenSrc,
-	unsigned char*& pContentDest, int& nLenDest)
+BOOL Compression::Compress(const unsigned char* pContentSrc, int nLenSrc, unsigned char*& pContentDest, int& nLenDest)
 {
 	ULONG lDest = (int)(nLenSrc * 1.001) + 12; // zlib requirements
 	pContentDest = new unsigned char[lDest + 4]; // extra DWORD for storing the source length
@@ -85,8 +89,8 @@ BOOL Compression::Compress(const unsigned char* pContentSrc, int nLenSrc,
 	return (nRet == Z_OK);
 }
 
-BOOL Compression::Decompress(const unsigned char* pContentSrc, int nLenSrc,
-	unsigned char*& pContentDest, int& nLenDest)
+BOOL Compression::Decompress(const unsigned char* pContentSrc, int nLenSrc, unsigned char*& pContentDest,
+	int& nLenDest)
 {
 	// get the source length from the first 4 bytes
 	ULONG lDest = ((DWORD*)pContentSrc)[0];

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -57,7 +62,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // CRuntimeDlg window
 
-enum { RD_TITLE = 0 };
+enum
+{
+	RD_TITLE = 0
+};
 
 class CRuntimeDlg : public CDialog, public CDialogHelper
 {
@@ -93,21 +101,13 @@ protected: // intended to be used only from a derived class
 #define RTD_DEFSTYLE (WS_VISIBLE | WS_POPUPWINDOW  | WS_CAPTION | DS_CENTER)
 #define RTD_DEFEXSTYLE (WS_EX_DLGMODALFRAME)
 
-	virtual int DoModal(LPCTSTR szCaption,
-		DWORD dwStyle = RTD_DEFSTYLE,
-		DWORD dwExStyle = RTD_DEFEXSTYLE,
-		const CRect& rect = rectAuto,
-		CWnd* pParentWnd = NULL,
-		UINT nID = -1);
+	virtual int DoModal(LPCTSTR szCaption, DWORD dwStyle = RTD_DEFSTYLE, DWORD dwExStyle = RTD_DEFEXSTYLE, const CRect& rect = rectAuto, CWnd* pParentWnd = NULL, UINT nID = -1);
 
-	virtual BOOL Create(LPCTSTR szCaption,
-		DWORD dwStyle = RTD_DEFSTYLE,
-		DWORD dwExStyle = RTD_DEFEXSTYLE,
-		const CRect& rect = rectAuto,
-		CWnd* pParentWnd = NULL,
-		UINT nID = -1);
+	virtual BOOL Create(LPCTSTR szCaption, DWORD dwStyle = RTD_DEFSTYLE, DWORD dwExStyle = RTD_DEFEXSTYLE, const CRect& rect = rectAuto, CWnd* pParentWnd = NULL, UINT nID = -1);
 
-	virtual void PostCreate() {}
+	virtual void PostCreate()
+	{
+	}
 
 	// default borders are 7 DLU
 	void SetBorders(int nAll)
@@ -122,23 +122,22 @@ protected: // intended to be used only from a derived class
 	void SetBordersDLU(int nLeft, int nTop, int nRight, int nBottom);
 
 	// use these when you do _not_ want to subclass the control
-	virtual BOOL AddControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-		const CRect& rect, UINT nID); // pos in pixels
-	virtual BOOL AddControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-		int x, int y, int cx, int cy, UINT nID); // pos in pixels
+	virtual BOOL AddControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, const CRect& rect,
+		UINT nID); // pos in pixels
+	virtual BOOL AddControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx,
+		int cy, UINT nID); // pos in pixels
 
 	// use these when you _do_ want to subclass via MFC
-	virtual BOOL AddControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-		const CRect& rect, UINT nID); // pos in pixels
-	virtual BOOL AddControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-		int x, int y, int cx, int cy, UINT nID); // pos in pixels
+	virtual BOOL AddControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, const CRect& rect, UINT nID); // pos in pixels
+	virtual BOOL AddControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx, int cy,
+		UINT nID); // pos in pixels
 
 	// individual RC controls
-	virtual BOOL AddRCControl(LPCTSTR szRCType, LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle,
-		DWORD dwExStyle, int x, int y, int cx, int cy, UINT nID, UINT uIconID = 0); // pos in DLUs
+	virtual BOOL AddRCControl(LPCTSTR szRCType, LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
+		int x, int y, int cx, int cy, UINT nID, UINT uIconID = 0); // pos in DLUs
 
-	virtual BOOL AddRCControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle,
-		DWORD dwExStyle, int x, int y, int cx, int cy, UINT nID, UINT uIconID = 0); // pos in DLUs
+	virtual BOOL AddRCControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx,
+		int cy, UINT nID, UINT uIconID = 0); // pos in DLUs
 
 	// 'doctored' text straight from an RC file
 	virtual int AddRCControls(const CString& sRCControls);
@@ -181,12 +180,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-	virtual HWND CreateControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-		int x, int y, int cx, int cy, UINT nID, BOOL bDLU, UINT nIconID = 0);
+	virtual HWND CreateControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx,
+		int cy, UINT nID, BOOL bDLU, UINT nIconID = 0);
 
 	// use this when you _do_ want to subclass
-	virtual BOOL CreateControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-		int x, int y, int cx, int cy, UINT nID, BOOL bDLU, UINT nIconID = 0);
+	virtual BOOL CreateControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx,
+		int cy, UINT nID, BOOL bDLU, UINT nIconID = 0);
 
 	BOOL CreateControl(const RTCONTROL& ctrl);
 	void CreateControls();
@@ -226,8 +225,8 @@ protected:
 
 	static void BuildClassMap();
 	static CString GetControlClassName(CWnd* pWnd); // works up the derivation chain till it finds a 'standard' windows control class
-	static HWND CreateRichEdit(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-		int x, int y, int cx, int cy, HWND hwndParent);
+	static HWND CreateRichEdit(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx,
+		int cy, HWND hwndParent);
 	static int CalcLinesRequired(const CString& sText, int nWidthDLU);
 };
 

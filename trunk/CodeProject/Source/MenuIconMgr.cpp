@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // MenuIconMgr.cpp: implementation of the CMenuIconMgr class.
@@ -146,8 +151,7 @@ int CMenuIconMgr::AddImages(const CUIntArray& aCmdIDs, const CImageList& il)
 
 }
 
-int CMenuIconMgr::AddImages(const CUIntArray& aCmdIDs, UINT nIDBitmap, int nCx,
-	COLORREF crMask)
+int CMenuIconMgr::AddImages(const CUIntArray& aCmdIDs, UINT nIDBitmap, int nCx, COLORREF crMask)
 {
 	CImageList il;
 	CEnBitmapEx bm;
@@ -287,8 +291,8 @@ BOOL CMenuIconMgr::OnDrawItem(int /*nIDCtl*/, LPDRAWITEMSTRUCT lpdis)
 		BITMAP bitmap;
 		GetObject(iconinfo.hbmColor, sizeof(bitmap), &bitmap);
 
-		::DrawIconEx(lpdis->hDC, lpdis->rcItem.left, lpdis->rcItem.top, hIcon,
-			bitmap.bmWidth, bitmap.bmHeight, 0, NULL, DI_IMAGE | DI_MASK);
+		::DrawIconEx(lpdis->hDC, lpdis->rcItem.left, lpdis->rcItem.top, hIcon, bitmap.bmWidth, bitmap.bmHeight, 0, NULL,
+			DI_IMAGE | DI_MASK);
 
 		// cleanup
 		::DeleteObject(iconinfo.hbmColor);

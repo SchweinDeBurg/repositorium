@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -102,7 +107,7 @@ protected:
 	COLORREF m_crBkgnd;
 	int m_nOpaquePercent;
 
-	typedef DWORD (WINAPI* PSLWA)(HWND, DWORD, BYTE, DWORD);
+	typedef DWORD(WINAPI* PSLWA)(HWND, DWORD, BYTE, DWORD);
 	PSLWA m_pSetLayeredWindowAttributes;
 
 	// Generated message map functions

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TreeDragDropHelper.cpp: implementation of the CTreeDragDropHelper class.
@@ -62,8 +67,9 @@ const int MAXIMAGEWIDTH = 200;
 class CDragDropTreeData : public CDragDropData
 {
 public:
-	CDragDropTreeData(const CTreeSelectionHelper& selection) :
-	m_tree(selection.TreeCtrl()), m_ptDrawOffset(0)
+	CDragDropTreeData(const CTreeSelectionHelper& selection):
+	m_tree(selection.TreeCtrl()),
+	m_ptDrawOffset(0)
 	{
 		selection.CopySelection(m_selection);
 	}
@@ -193,10 +199,14 @@ enum
 const CPoint OUTERSPACE(-10000, -10000);
 
 CTreeDragDropHelper::CTreeDragDropHelper(CTreeSelectionHelper& selection, CTreeCtrl& tree, DWORD dwCallbackFlags):
-m_selection(selection), m_tree(tree),
+m_selection(selection),
+m_tree(tree),
 m_dwCallbackFlags(dwCallbackFlags),
-m_htiDropTarget(NULL), m_htiDropAfter(NULL), m_bEnabled(FALSE),
-m_nScrollTimer(0), m_nExpandTimer(0)
+m_htiDropTarget(NULL),
+m_htiDropAfter(NULL),
+m_bEnabled(FALSE),
+m_nScrollTimer(0),
+m_nExpandTimer(0)
 {
 }
 
@@ -686,7 +696,8 @@ VOID CALLBACK CTreeDragDropHelper::TimerProc(HWND /*hwnd*/, UINT /*uMsg*/, UINT 
 	}
 }
 
-HTREEITEM CTreeDragDropHelper::MoveTree(CTreeCtrl& tree, HTREEITEM hDest, HTREEITEM hSrc, DDWHERE nWhere, DWORD dwCallbackFlags)
+HTREEITEM CTreeDragDropHelper::MoveTree(CTreeCtrl& tree, HTREEITEM hDest, HTREEITEM hSrc, DDWHERE nWhere,
+	DWORD dwCallbackFlags)
 {
 	HTREEITEM htiNew = CopyTree(tree, hDest, hSrc, nWhere, dwCallbackFlags);
 	tree.DeleteItem(hSrc);
@@ -711,7 +722,8 @@ void CTreeDragDropHelper::BuildCopy(CTreeCtrl& tree, const HTREEITEM hti, TDDHCO
 	}
 }
 
-HTREEITEM CTreeDragDropHelper::CopyTree(CTreeCtrl& tree, HTREEITEM hDest, const TDDHCOPY* pSrc, DDWHERE nWhere, DWORD dwCallbackFlags)
+HTREEITEM CTreeDragDropHelper::CopyTree(CTreeCtrl& tree, HTREEITEM hDest, const TDDHCOPY* pSrc, DDWHERE nWhere,
+	DWORD dwCallbackFlags)
 {
 	HTREEITEM hSrc = pSrc->hti;
 
@@ -785,7 +797,8 @@ HTREEITEM CTreeDragDropHelper::CopyTree(CTreeCtrl& tree, HTREEITEM hDest, const 
 	return hNewItem;
 }
 
-HTREEITEM CTreeDragDropHelper::CopyTree(CTreeCtrl& tree, HTREEITEM hDest, HTREEITEM hSrc, DDWHERE nWhere, DWORD dwCallbackFlags)
+HTREEITEM CTreeDragDropHelper::CopyTree(CTreeCtrl& tree, HTREEITEM hDest, HTREEITEM hSrc, DDWHERE nWhere,
+	DWORD dwCallbackFlags)
 {
 	TDDHCOPY htcSrc;
 

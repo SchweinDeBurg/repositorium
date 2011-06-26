@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TreeSelectionHelper.cpp: implementation of the CTreeSelectionHelper class.
@@ -58,8 +63,11 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CTreeSelectionHelper::CTreeSelectionHelper(CTreeCtrl& tree) :
-m_tree(tree), m_nCurSelection(0), m_htiAnchor(NULL), m_tch(tree)
+CTreeSelectionHelper::CTreeSelectionHelper(CTreeCtrl& tree):
+m_tree(tree),
+m_nCurSelection(0),
+m_htiAnchor(NULL),
+m_tch(tree)
 {
 }
 
@@ -106,7 +114,7 @@ BOOL CTreeSelectionHelper::SetItem(HTREEITEM hti, TSH_SELECT nState, BOOL bRedra
 				m_lstSelection.RemoveAt(pos);
 			}
 
-			bRet =  TRUE;
+			bRet = TRUE;
 		}
 	}
 
@@ -471,7 +479,7 @@ void CTreeSelectionHelper::SortIfAllSiblings(BOOL bAscending)
 
 		if (bAscending)
 		{
-			for (int nItem = aItems.GetSize() - 1; nItem >= 0 ; nItem--)
+			for (int nItem = aItems.GetSize() - 1; nItem >= 0; nItem--)
 			{
 				const SORTITEM& si = aItems[nItem];
 				AddItem(si.hti, FALSE);
@@ -827,8 +835,8 @@ void CTreeSelectionHelper::GetAnchorSel(HTREEITEM& htiAnchor, HTREEITEM& htiTree
 	htiAnchor = GetAnchor();
 }
 
-void CTreeSelectionHelper::UpdateAnchorSel(HTREEITEM htiPrev, HTREEITEM htiNew,
-	HTREEITEM& htiAnchor, HTREEITEM& htiTreeSel) const
+void CTreeSelectionHelper::UpdateAnchorSel(HTREEITEM htiPrev, HTREEITEM htiNew, HTREEITEM& htiAnchor,
+	HTREEITEM& htiTreeSel) const
 {
 	if (htiTreeSel == htiPrev)
 	{
@@ -900,8 +908,8 @@ void CTreeSelectionHelper::OrderSelection(CHTIList& selection, const CTreeCtrl& 
 	selection.Copy(lstOrdered);
 }
 
-void CTreeSelectionHelper::BuildOrderedSelection(CHTIList& selection, const CTreeCtrl& tree,
-	HTREEITEM hti, CHTIList& lstOrdered)
+void CTreeSelectionHelper::BuildOrderedSelection(CHTIList& selection, const CTreeCtrl& tree, HTREEITEM hti,
+	CHTIList& lstOrdered)
 {
 	if (!hti)
 	{

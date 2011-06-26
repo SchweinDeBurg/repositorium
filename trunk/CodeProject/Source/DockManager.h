@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // DockManager.h: interface for the CDockManager class.
@@ -68,10 +73,8 @@ public:
 	CDockManager();
 	virtual ~CDockManager();
 
-	BOOL Initialize(CWnd* pMainWnd, CWnd* pDockWnd,
-		DM_POS nPos = DMP_UNDOCKED,	DM_POS nLastPos = DMP_RIGHT,
-		int nWidthDocked = -1, int nWidthDockedMax = -1,
-		int nHeightDocked = -1, int nHeightDockedMax = -1);
+	BOOL Initialize(CWnd* pMainWnd, CWnd* pDockWnd, DM_POS nPos = DMP_UNDOCKED, DM_POS nLastPos = DMP_RIGHT,
+		int nWidthDocked = -1, int nWidthDockedMax = -1, int nHeightDocked = -1, int nHeightDockedMax = -1);
 	BOOL Initialized()
 	{
 		return IsHooked();

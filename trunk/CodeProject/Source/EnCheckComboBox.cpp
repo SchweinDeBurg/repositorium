@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // EnCheckComboBox.cpp : implementation file
@@ -58,8 +63,11 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CEnCheckComboBox
 
-CEnCheckComboBox::CEnCheckComboBox(BOOL bMulti, UINT nIDNoneString, UINT nIDAnyString) :
-CCheckComboBox(ACBS_ALLOWDELETE), m_bMultiSel(bMulti), m_nIDNoneString(nIDNoneString), m_nIDAnyString(nIDAnyString)
+CEnCheckComboBox::CEnCheckComboBox(BOOL bMulti, UINT nIDNoneString, UINT nIDAnyString):
+CCheckComboBox(ACBS_ALLOWDELETE),
+m_bMultiSel(bMulti),
+m_nIDNoneString(nIDNoneString),
+m_nIDAnyString(nIDAnyString)
 {
 }
 
@@ -228,10 +236,7 @@ void CEnCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			GetLBText(lpDrawItemStruct->itemID, sText);
 		}
 
-		DrawItemText(lpDrawItemStruct->hDC,
-			lpDrawItemStruct->itemID,
-			lpDrawItemStruct->rcItem,
-			sText,
+		DrawItemText(lpDrawItemStruct->hDC, lpDrawItemStruct->itemID, lpDrawItemStruct->rcItem, sText,
 			lpDrawItemStruct->itemState);
 	}
 }

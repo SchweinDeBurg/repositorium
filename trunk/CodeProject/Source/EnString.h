@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.4 sources
 //*****************************************************************************
 
@@ -53,7 +58,13 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-enum { ES_END, ES_WORD, ES_PATH, ES_START };
+enum
+{
+	ES_END,
+	ES_WORD,
+	ES_PATH,
+	ES_START
+};
 
 class CEnString : public CString
 {

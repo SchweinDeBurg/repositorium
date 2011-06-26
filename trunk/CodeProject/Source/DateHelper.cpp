@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2-6.2.4 sources
 //*****************************************************************************
 
@@ -115,7 +120,9 @@ BOOL CDateHelper::DecodeISODate(const CString& sDate, time_t& date)
 
 	if (DecodeISODate(sDate, dt))
 	{
-		tm time = { 0,
+		tm time =
+		{
+			0,
 			0,
 			0,
 			dt.GetDay(),
@@ -184,7 +191,9 @@ BOOL CDateHelper::DecodeLocalShortDate(const CString& sDate, time_t& date)
 
 	if (DecodeLocalShortDate(sDate, dt))
 	{
-		tm time = { 0,
+		tm time =
+		{
+			0,
 			0,
 			0,
 			dt.GetDay(),
@@ -488,7 +497,7 @@ CString CDateHelper::GetWeekday(int nWeekday, BOOL bShort)
 		break; // sat
 	}
 
-	GetLocaleInfo(LOCALE_USER_DEFAULT, lct, sWeekday.GetBuffer(30),	29);
+	GetLocaleInfo(LOCALE_USER_DEFAULT, lct, sWeekday.GetBuffer(30), 29);
 	sWeekday.ReleaseBuffer();
 
 	return sWeekday;
@@ -641,31 +650,31 @@ CString CDateHelper::GetMonth(int nMonth, BOOL bShort)
 	switch (nMonth)
 	{
 	case 1:
-		lct = bShort ? LOCALE_SABBREVMONTHNAME1  : LOCALE_SMONTHNAME1;
+		lct = bShort ? LOCALE_SABBREVMONTHNAME1 : LOCALE_SMONTHNAME1;
 		break; // jan
 	case 2:
-		lct = bShort ? LOCALE_SABBREVMONTHNAME2  : LOCALE_SMONTHNAME2;
+		lct = bShort ? LOCALE_SABBREVMONTHNAME2 : LOCALE_SMONTHNAME2;
 		break; // feb
 	case 3:
-		lct = bShort ? LOCALE_SABBREVMONTHNAME3  : LOCALE_SMONTHNAME3;
+		lct = bShort ? LOCALE_SABBREVMONTHNAME3 : LOCALE_SMONTHNAME3;
 		break; // mar
 	case 4:
-		lct = bShort ? LOCALE_SABBREVMONTHNAME4  : LOCALE_SMONTHNAME4;
+		lct = bShort ? LOCALE_SABBREVMONTHNAME4 : LOCALE_SMONTHNAME4;
 		break; // apr
 	case 5:
-		lct = bShort ? LOCALE_SABBREVMONTHNAME5  : LOCALE_SMONTHNAME5;
+		lct = bShort ? LOCALE_SABBREVMONTHNAME5 : LOCALE_SMONTHNAME5;
 		break; // may
 	case 6:
-		lct = bShort ? LOCALE_SABBREVMONTHNAME6  : LOCALE_SMONTHNAME6;
+		lct = bShort ? LOCALE_SABBREVMONTHNAME6 : LOCALE_SMONTHNAME6;
 		break; // jun
 	case 7:
-		lct = bShort ? LOCALE_SABBREVMONTHNAME7  : LOCALE_SMONTHNAME7;
+		lct = bShort ? LOCALE_SABBREVMONTHNAME7 : LOCALE_SMONTHNAME7;
 		break; // jul
 	case 8:
-		lct = bShort ? LOCALE_SABBREVMONTHNAME8  : LOCALE_SMONTHNAME8;
+		lct = bShort ? LOCALE_SABBREVMONTHNAME8 : LOCALE_SMONTHNAME8;
 		break; // aug
 	case 9:
-		lct = bShort ? LOCALE_SABBREVMONTHNAME9  : LOCALE_SMONTHNAME9;
+		lct = bShort ? LOCALE_SABBREVMONTHNAME9 : LOCALE_SMONTHNAME9;
 		break; // sep
 	case 10:
 		lct = bShort ? LOCALE_SABBREVMONTHNAME10 : LOCALE_SMONTHNAME10;
@@ -678,7 +687,7 @@ CString CDateHelper::GetMonth(int nMonth, BOOL bShort)
 		break; // dec
 	}
 
-	GetLocaleInfo(LOCALE_USER_DEFAULT, lct, sMonth.GetBuffer(30),	29);
+	GetLocaleInfo(LOCALE_USER_DEFAULT, lct, sMonth.GetBuffer(30), 29);
 	sMonth.ReleaseBuffer();
 
 	return sMonth;

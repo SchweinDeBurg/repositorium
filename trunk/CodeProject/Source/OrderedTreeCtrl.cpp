@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // OrderedTreeCtrl.cpp : implementation file
@@ -65,7 +70,7 @@ const UINT MINGUTTER = 16;
 
 static CMap<int, int&, UINT, UINT&> g_mapWidths;
 
-COrderedTreeCtrl::COrderedTreeCtrl(DWORD dwGutterStyles) :
+COrderedTreeCtrl::COrderedTreeCtrl(DWORD dwGutterStyles):
 // because CTreeCtrlHelper wants a reference passed
 // to its constructor we have to pass '*this'. however
 // the compiler complains because 'this' is not yet
@@ -76,7 +81,7 @@ m_ht(*this),
 m_gutter(dwGutterStyles),
 m_bShowingPosColumn(TRUE),
 m_crGridlines(OTC_GRIDCOLOR),
-m_crAltLines((COLORREF) - 1),
+m_crAltLines((COLORREF)-1),
 m_bWantInit(FALSE)
 {
 	AddGutterColumn(OTC_POSCOLUMNID, _T("Pos")); // for the pos string
@@ -356,8 +361,7 @@ LRESULT COrderedTreeCtrl::OnGutterDrawItem(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		CRect rItem(pNCGDI->rItem);
 
-		NcDrawItem(pNCGDI->pDC, pNCGDI->dwItem, pNCGDI->dwParentItem,
-			pNCGDI->nColID, rItem, pNCGDI->nLevel,
+		NcDrawItem(pNCGDI->pDC, pNCGDI->dwItem, pNCGDI->dwParentItem, pNCGDI->nColID, rItem, pNCGDI->nLevel,
 			pNCGDI->nItemPos, pNCGDI->rWindow);
 
 		return TRUE; // we handled it
@@ -499,8 +503,8 @@ CString COrderedTreeCtrl::FormatPosition(DWORD dwItem, DWORD dwParentItem, int n
 	return sPos;
 }
 
-void COrderedTreeCtrl::NcDrawItem(CDC* pDC, DWORD dwItem, DWORD dwParentItem, UINT nColID, CRect& rItem,
-	int nLevel, int nPos, /*BOOL bSelected,*/ const CRect& rWindow)
+void COrderedTreeCtrl::NcDrawItem(CDC* pDC, DWORD dwItem, DWORD dwParentItem, UINT nColID, CRect& rItem, int nLevel,
+	int nPos, const CRect& rWindow)
 {
 	if (nColID == OTC_POSCOLUMNID) // this is all we deal with
 	{

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -53,7 +58,8 @@ CList<HWND, HWND&> CHoldRedraw::s_listHwnd;
 
 // ------------------------------------------------------------------------------
 
-CNcRedraw::CNcRedraw(HWND hWnd) : m_hWnd(hWnd)
+CNcRedraw::CNcRedraw(HWND hWnd):
+m_hWnd(hWnd)
 {
 }
 
@@ -67,7 +73,9 @@ CNcRedraw::~CNcRedraw()
 
 // ------------------------------------------------------------------------------
 
-CRedrawAll::CRedrawAll(HWND hWnd, DWORD dwFlags) : m_hWnd(hWnd), m_dwFlags(dwFlags)
+CRedrawAll::CRedrawAll(HWND hWnd, DWORD dwFlags):
+m_hWnd(hWnd),
+m_dwFlags(dwFlags)
 {
 }
 
@@ -94,7 +102,8 @@ CRedrawAll::~CRedrawAll()
 
 // ------------------------------------------------------------------------------
 
-CHoldRedraw::CHoldRedraw(HWND hWnd, DWORD dwFlags) : CRedrawAll(hWnd, dwFlags)
+CHoldRedraw::CHoldRedraw(HWND hWnd, DWORD dwFlags):
+CRedrawAll(hWnd, dwFlags)
 {
 	if (m_hWnd)
 	{

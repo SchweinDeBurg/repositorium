@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // RichEditNcBorder.cpp: implementation of the CRichEditNcBorder class.
@@ -64,7 +69,8 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CRichEditNcBorder::CRichEditNcBorder() : m_bThemedBorder(FALSE)
+CRichEditNcBorder::CRichEditNcBorder():
+m_bThemedBorder(FALSE)
 {
 }
 
@@ -210,6 +216,7 @@ void CRichEditNcBorder::VerifyThemedBorderState()
 	}
 
 	// Recalculate the NC area and repaint the window
-	SetWindowPos(GetHwnd(), NULL, NULL, NULL, NULL, NULL, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+	SetWindowPos(GetHwnd(), NULL, NULL, NULL, NULL, NULL, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE |
+		SWP_FRAMECHANGED);
 	RedrawWindow(GetHwnd(), NULL, NULL, RDW_INVALIDATE | RDW_NOCHILDREN | RDW_UPDATENOW | RDW_FRAME);
 }

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -53,54 +58,61 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-enum { MFS_BOLD = 0x01, MFS_ITALIC = 0x02, MFS_UNDERLINED = 0x04, MFS_STRIKETHRU = 0x08, MFS_SYMBOL = 0x10};
+enum
+{
+	MFS_BOLD = 0x01,
+	MFS_ITALIC = 0x02,
+	MFS_UNDERLINED = 0x04,
+	MFS_STRIKETHRU = 0x08,
+	MFS_SYMBOL = 0x10
+};
 
 namespace GraphicsMisc
 {
-void DrawGradient(HDC hdc, LPRECT pRect, COLORREF crFrom, COLORREF crTo, BOOL bHorz);
+	void DrawGradient(HDC hdc, LPRECT pRect, COLORREF crFrom, COLORREF crTo, BOOL bHorz);
 
-HFONT CreateFont(HFONT hFont, DWORD dwFlags = 0);
-HFONT CreateFont(LPCTSTR szFaceName, int nPoint = -1, DWORD dwFlags = 0);
-BOOL CreateFont(CFont& font, LPCTSTR szFaceName, int nPoint = -1, DWORD dwFlags = 0);
-BOOL CreateFont(CFont& fontOut, HFONT fontIn, DWORD dwFlags = 0);
+	HFONT CreateFont(HFONT hFont, DWORD dwFlags = 0);
+	HFONT CreateFont(LPCTSTR szFaceName, int nPoint = -1, DWORD dwFlags = 0);
+	BOOL CreateFont(CFont& font, LPCTSTR szFaceName, int nPoint = -1, DWORD dwFlags = 0);
+	BOOL CreateFont(CFont& fontOut, HFONT fontIn, DWORD dwFlags = 0);
 
-HCURSOR HandCursor();
+	HCURSOR HandCursor();
 
-DWORD GetFontFlags(HFONT hFont);
-int GetFontNameSize(HFONT hFont, CString& sFaceName);
-BOOL SameFont(HFONT hFont, LPCTSTR szFaceName, int nPoint);
-BOOL SameFontNameSize(HFONT hFont1, HFONT hFont2);
-CFont& WingDings();
-CFont& Marlett();
+	DWORD GetFontFlags(HFONT hFont);
+	int GetFontNameSize(HFONT hFont, CString& sFaceName);
+	BOOL SameFont(HFONT hFont, LPCTSTR szFaceName, int nPoint);
+	BOOL SameFontNameSize(HFONT hFont1, HFONT hFont2);
+	CFont& WingDings();
+	CFont& Marlett();
 
-int AFX_CDECL GetTextWidth(CDC* pDC, LPCTSTR lpszFormat, ...);
-float GetAverageCharWidth(CDC* pDC);
+	int AFX_CDECL GetTextWidth(CDC* pDC, LPCTSTR lpszFormat, ...);
+	float GetAverageCharWidth(CDC* pDC);
 
-COLORREF Lighter(COLORREF color, double dAmount);
-COLORREF Darker(COLORREF color, double dAmount);
+	COLORREF Lighter(COLORREF color, double dAmount);
+	COLORREF Darker(COLORREF color, double dAmount);
 
-BOOL EnableAeroPeek(HWND hWnd, BOOL bEnable = TRUE);
-BOOL EnableFlip3D(HWND hWnd, BOOL bEnable = TRUE);
+	BOOL EnableAeroPeek(HWND hWnd, BOOL bEnable = TRUE);
+	BOOL EnableFlip3D(HWND hWnd, BOOL bEnable = TRUE);
 
-template <class TYPE>
-BOOL DwmSetWindowAttribute(HWND hWnd, DWORD dwAttrib, TYPE* type)
-{
-	HMODULE hMod = ::LoadLibrary(_T("Dwmapi.dll"));
-
-	if (hMod)
+	template <class TYPE>
+	BOOL DwmSetWindowAttribute(HWND hWnd, DWORD dwAttrib, TYPE* type)
 	{
-		typedef HRESULT(*PFNDWMSETWINDOWATTRIBUTE)(HWND, DWORD, LPCVOID, DWORD);
-		PFNDWMSETWINDOWATTRIBUTE pFn = (PFNDWMSETWINDOWATTRIBUTE)::GetProcAddress(hMod, "DwmSetWindowAttribute");
+		HMODULE hMod = ::LoadLibrary(_T("Dwmapi.dll"));
 
-		if (pFn)
+		if (hMod)
 		{
-			HRESULT hr = pFn(hWnd, dwAttrib, type, sizeof(*type));
-			return SUCCEEDED(hr);
-		}
-	}
+			typedef HRESULT (*PFNDWMSETWINDOWATTRIBUTE)(HWND, DWORD, LPCVOID, DWORD);
+			PFNDWMSETWINDOWATTRIBUTE pFn = (PFNDWMSETWINDOWATTRIBUTE)::GetProcAddress(hMod, "DwmSetWindowAttribute");
 
-	return FALSE;
+			if (pFn)
+			{
+				HRESULT hr = pFn(hWnd, dwAttrib, type, sizeof(*type));
+				return SUCCEEDED(hr);
+			}
+		}
+
+		return FALSE;
+	}
 }
-};
 
 #endif // !defined(AFX_GRAPHICSMISC_H__A3408501_A44D_407B_A8C3_B6AB31370CD2__INCLUDED_)

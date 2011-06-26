@@ -27,6 +27,11 @@
 // - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
 // - renamed to CAfxRegKey because of conflict with ATL/MFC shared CRegKey
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #include "stdafx.h"
@@ -85,8 +90,7 @@ LONG CAfxRegKey::Open(HKEY hKeyRoot, const TCHAR* pszPath)
 	m_sPath = pszPath;
 	m_hKeyRoot = hKeyRoot;
 
-	lResult = ::RegCreateKeyEx(hKeyRoot, pszPath, 0L, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL,
-		&m_hKey, &dwDisp);
+	lResult = ::RegCreateKeyEx(hKeyRoot, pszPath, 0L, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &m_hKey, &dwDisp);
 
 	return lResult;
 }

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2-6.2.4 sources
 //*****************************************************************************
 
@@ -65,7 +70,7 @@ static char THIS_FILE[] = __FILE__;
 
 CMap<CString, LPCTSTR, int, int&> CSysImageList::s_mapIndexCache;
 
-CSysImageList::CSysImageList(BOOL bLargeIcons) :
+CSysImageList::CSysImageList(BOOL bLargeIcons):
 m_bLargeIcons(bLargeIcons),
 m_nFolderImage(-1),
 m_nHtmlImage(-1),
@@ -117,7 +122,7 @@ int CSysImageList::GetImageIndex(LPCTSTR szFile)
 
 	SHFILEINFO sfi;
 
-	UINT nFlags = SHGFI_SYSICONINDEX | SHGFI_USEFILEATTRIBUTES  | (m_bLargeIcons ? SHGFI_ICON : SHGFI_SMALLICON);
+	UINT nFlags = SHGFI_SYSICONINDEX | SHGFI_USEFILEATTRIBUTES | (m_bLargeIcons ? SHGFI_ICON : SHGFI_SMALLICON);
 	HIMAGELIST hIL = (HIMAGELIST)SHGetFileInfo(szFile, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), nFlags);
 
 	if (hIL)

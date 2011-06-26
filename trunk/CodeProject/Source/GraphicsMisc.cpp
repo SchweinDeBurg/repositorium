@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.7 sources
 //*****************************************************************************
 
@@ -61,21 +66,21 @@ static char THIS_FILE[] = __FILE__;
 
 void GraphicsMisc::DrawGradient(HDC hdc, LPRECT pRect, COLORREF crFrom, COLORREF crTo, BOOL bHorz)
 {
-	TRIVERTEX        vert[2] ;
-	GRADIENT_RECT    gRect;
-	vert [0] .x      = pRect->left;
-	vert [0] .y      = pRect->top;
-	vert [0] .Red    = MAKEWORD(0, GetRValue(crFrom));
-	vert [0] .Green  = MAKEWORD(0, GetGValue(crFrom));
-	vert [0] .Blue   = MAKEWORD(0, GetBValue(crFrom));
-	vert [0] .Alpha  = 0x0000;
-	vert [1] .x      = pRect->right;
-	vert [1] .y      = pRect->bottom;
-	vert [1] .Red    = MAKEWORD(0, GetRValue(crTo));
-	vert [1] .Green  = MAKEWORD(0, GetGValue(crTo));
-	vert [1] .Blue   = MAKEWORD(0, GetBValue(crTo));
-	vert [1] .Alpha  = 0x0000;
-	gRect.UpperLeft  = 0;
+	TRIVERTEX vert[2];
+	GRADIENT_RECT gRect;
+	vert [0].x = pRect->left;
+	vert [0].y = pRect->top;
+	vert [0].Red = MAKEWORD(0, GetRValue(crFrom));
+	vert [0].Green = MAKEWORD(0, GetGValue(crFrom));
+	vert [0].Blue = MAKEWORD(0, GetBValue(crFrom));
+	vert [0].Alpha = 0x0000;
+	vert [1].x = pRect->right;
+	vert [1].y = pRect->bottom;
+	vert [1].Red = MAKEWORD(0, GetRValue(crTo));
+	vert [1].Green = MAKEWORD(0, GetGValue(crTo));
+	vert [1].Blue = MAKEWORD(0, GetBValue(crTo));
+	vert [1].Alpha = 0x0000;
+	gRect.UpperLeft = 0;
 	gRect.LowerRight = 1;
 
 	GradientFill(hdc, vert, 2, &gRect, 1, bHorz ? GRADIENT_FILL_RECT_H : GRADIENT_FILL_RECT_V);
@@ -218,8 +223,7 @@ BOOL GraphicsMisc::SameFont(HFONT hFont, LPCTSTR szFaceName, int nPoint)
 	CString sFontName;
 	int nFontSize = GetFontNameSize(hFont, sFontName);
 
-	return ((nPoint <= 0 || nPoint == nFontSize) &&
-			(!szFaceName || sFontName.CompareNoCase(szFaceName) == 0));
+	return ((nPoint <= 0 || nPoint == nFontSize) && (!szFaceName || sFontName.CompareNoCase(szFaceName) == 0));
 }
 
 BOOL GraphicsMisc::SameFontNameSize(HFONT hFont1, HFONT hFont2)

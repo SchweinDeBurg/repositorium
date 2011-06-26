@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TreeSelectionHelper.h: interface for the CTreeSelectionHelper class.
@@ -58,7 +63,9 @@
 class CHTIList : public CList<HTREEITEM, HTREEITEM>
 {
 public:
-	CHTIList() {}
+	CHTIList()
+	{
+	}
 	CHTIList(const CHTIList& list)
 	{
 		Copy(list);
@@ -220,7 +227,9 @@ protected:
 	class CIDArray : public CArray<DWORD, DWORD&>
 	{
 	public:
-		CIDArray() {}
+		CIDArray()
+		{
+		}
 		CIDArray(const CIDArray& arr)
 		{
 			Copy(arr);
@@ -255,9 +264,7 @@ protected:
 	int FindPrevValidSelection() const;
 	int FindNextValidSelection() const;
 
-	static void BuildOrderedSelection(CHTIList& selection, const CTreeCtrl& tree,
-		HTREEITEM hti, CHTIList& lstOrdered);
-
+	static void BuildOrderedSelection(CHTIList& selection, const CTreeCtrl& tree, HTREEITEM hti, CHTIList& lstOrdered);
 };
 
 #endif // !defined(AFX_TREESELECTIONHELPER_H__098294B4_8B41_4369_8522_FE1637BA7EA1__INCLUDED_)

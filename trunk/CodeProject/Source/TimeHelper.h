@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -103,8 +108,8 @@ protected:
 
 protected:
 	static BOOL Compare(int nFromUnits, int nToUnits); // 0=same, -1=nFrom < nTo else 1
-	static CString FormatTimeHMS(double dTime, int nUnits, int nLeftOverUnits,
-		double dLeftOverMultiplier, BOOL bDecPlaces);
+	static CString FormatTimeHMS(double dTime, int nUnits, int nLeftOverUnits, double dLeftOverMultiplier,
+		BOOL bDecPlaces);
 };
 
 #endif // !defined(AFX_TIMEHELPER_H__BA0C1E67_FAAA_4E65_8EF3_01B011ACFBBC__INCLUDED_)

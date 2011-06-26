@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -71,13 +76,13 @@ CMap<int, int, TCHAR, TCHAR&> CTimeHelper::MAPUNIT2CH; // user definable
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CTimeHelper::CTimeHelper() :
+CTimeHelper::CTimeHelper():
 m_dHours2Days(HOURS2DAYS),
 m_dDaysToWeeks(DAYS2WEEKS)
 {
 }
 
-CTimeHelper::CTimeHelper(double dHoursInDay, double dDaysInWeek) :
+CTimeHelper::CTimeHelper(double dHoursInDay, double dDaysInWeek):
 m_dHours2Days(dHoursInDay),
 m_dDaysToWeeks(dDaysInWeek)
 {
@@ -304,8 +309,8 @@ CString CTimeHelper::FormatTimeHMS(double dTime, int nUnitsFrom, BOOL bDecPlaces
 
 }
 
-CString CTimeHelper::FormatTimeHMS(double dTime, int nUnits, int nLeftOverUnits,
-	double dLeftOverMultiplier, BOOL bDecPlaces)
+CString CTimeHelper::FormatTimeHMS(double dTime, int nUnits, int nLeftOverUnits, double dLeftOverMultiplier,
+	BOOL bDecPlaces)
 {
 	CString sTime;
 

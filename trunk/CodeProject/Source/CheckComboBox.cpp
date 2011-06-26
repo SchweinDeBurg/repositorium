@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -62,7 +67,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CCheckComboBox
 
-CCheckComboBox::CCheckComboBox(DWORD dwFlags) : CAutoComboBox(dwFlags)
+CCheckComboBox::CCheckComboBox(DWORD dwFlags):
+CAutoComboBox(dwFlags)
 {
 	m_bItemHeightSet = FALSE;
 	m_bDrawing = TRUE;
@@ -93,7 +99,7 @@ void CCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	HDC hdc = lpDrawItemStruct->hDC;
 
 	CRect rcBitmap = lpDrawItemStruct->rcItem;
-	CRect rcText   = lpDrawItemStruct->rcItem;
+	CRect rcText = lpDrawItemStruct->rcItem;
 	int nItem = (int)lpDrawItemStruct->itemID;
 
 	CString sText;
@@ -118,9 +124,9 @@ void CCheckComboBox::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		TEXTMETRIC metrics;
 		GetTextMetrics(hdc, &metrics);
 
-		rcBitmap.left    = 0;
-		rcBitmap.right   = rcBitmap.left + metrics.tmHeight + metrics.tmExternalLeading + 6;
-		rcBitmap.top    += 1;
+		rcBitmap.left = 0;
+		rcBitmap.right = rcBitmap.left + metrics.tmHeight + metrics.tmExternalLeading + 6;
+		rcBitmap.top += 1;
 		rcBitmap.bottom -= 1;
 
 		rcText.left = rcBitmap.right;
@@ -391,7 +397,7 @@ LRESULT CCheckComboBox::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM 
 		if (wp == VK_SPACE && GetDroppedState())
 		{
 			if ((hRealWnd == GetHwnd() && Misc::KeyIsPressed(VK_CONTROL)) /*Edit*/ ||
-					(hRealWnd == ScGetHwnd())) /*Listbox*/
+				(hRealWnd == ScGetHwnd())) /*Listbox*/
 			{
 				// Get the current selection
 				int nIndex = GetCurSel();
@@ -608,7 +614,7 @@ LRESULT CCheckComboBox::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp
 		break;
 
 	case EM_SETSEL:
-		if (GetDroppedState() && (wp == 0) && (lp == (LPARAM) - 1))
+		if (GetDroppedState() && (wp == 0) && (lp == (LPARAM)-1))
 		{
 			// avoid duplicate messages
 			static LONG lLastParams = 0;

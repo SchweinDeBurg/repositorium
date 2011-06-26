@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // DockManager.cpp: implementation of the CDockManager class.
@@ -64,7 +69,7 @@ const int MINMAXSIZE = GetSystemMetrics(SM_CYCAPTION) * 4;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDockManager::CDockManager() :
+CDockManager::CDockManager():
 m_nDockPos(DMP_UNDOCKED),
 m_nLastDockPos(DMP_RIGHT),
 m_nWidthDocked(-1),
@@ -82,10 +87,8 @@ CDockManager::~CDockManager()
 {
 }
 
-BOOL CDockManager::Initialize(CWnd* pMainWnd, CWnd* pDockWnd,
-	DM_POS nPos, DM_POS nLastPos,
-	int nWidthDocked, int nWidthDockedMax,
-	int nHeightDocked, int nHeightDockedMax)
+BOOL CDockManager::Initialize(CWnd* pMainWnd, CWnd* pDockWnd, DM_POS nPos, DM_POS nLastPos, int nWidthDocked,
+	int nWidthDockedMax, int nHeightDocked, int nHeightDockedMax)
 {
 	if (!HookWindow(*pMainWnd) || !ScHookWindow(*pDockWnd))
 	{
@@ -587,7 +590,7 @@ LRESULT CDockManager::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp
 				case DMP_LEFT:
 					if (nHitTest == HTTOPRIGHT || nHitTest == HTBOTTOMRIGHT ||
 						nHitTest == HTLEFT || nHitTest == HTTOPLEFT ||
-						nHitTest == HTBOTTOMLEFT ||	nHitTest == HTTOP || nHitTest == HTBOTTOM)
+						nHitTest == HTBOTTOMLEFT || nHitTest == HTTOP || nHitTest == HTBOTTOM)
 					{
 						nHitTest = HTCLIENT;
 					}
@@ -596,7 +599,7 @@ LRESULT CDockManager::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp
 				case DMP_RIGHT:
 					if (nHitTest == HTTOPRIGHT || nHitTest == HTBOTTOMRIGHT ||
 						nHitTest == HTRIGHT || nHitTest == HTTOPLEFT ||
-						nHitTest == HTBOTTOMLEFT ||	nHitTest == HTTOP || nHitTest == HTBOTTOM)
+						nHitTest == HTBOTTOMLEFT || nHitTest == HTTOP || nHitTest == HTBOTTOM)
 					{
 						nHitTest = HTCLIENT;
 					}
@@ -605,7 +608,7 @@ LRESULT CDockManager::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp
 				case DMP_BELOW:
 					if (nHitTest == HTTOPRIGHT || nHitTest == HTBOTTOMRIGHT ||
 						nHitTest == HTRIGHT || nHitTest == HTTOPLEFT ||
-						nHitTest == HTBOTTOMLEFT ||	nHitTest == HTLEFT || nHitTest == HTBOTTOM)
+						nHitTest == HTBOTTOMLEFT || nHitTest == HTLEFT || nHitTest == HTBOTTOM)
 					{
 						nHitTest = HTCLIENT;
 					}

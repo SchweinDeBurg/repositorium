@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // FocusWatcher.cpp: implementation of the CFocusWatcher class.
@@ -45,7 +50,8 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CFocusWatcher::CFocusWatcher() : m_pMainWnd(NULL)
+CFocusWatcher::CFocusWatcher():
+m_pMainWnd(NULL)
 {
 
 }

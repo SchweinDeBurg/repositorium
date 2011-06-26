@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -65,7 +70,9 @@ const UINT WM_REFRESHBUTTONSTATES = WM_APP + 1;
 /////////////////////////////////////////////////////////////////////////////
 // CEnToolBar
 
-CEnToolBar::CEnToolBar() : m_crFrom(NO_COLOR), m_crTo(NO_COLOR)
+CEnToolBar::CEnToolBar():
+m_crFrom(NO_COLOR),
+m_crTo(NO_COLOR)
 {
 }
 
@@ -254,7 +261,7 @@ void CEnToolBar::SetBackgroundColors(COLORREF crFrom, COLORREF crTo, BOOL bGradi
 {
 	m_crFrom = crFrom;
 
-	if (crTo == (COLORREF) - 1)
+	if (crTo == (COLORREF)-1)
 	{
 		m_crTo = m_crFrom;
 	}

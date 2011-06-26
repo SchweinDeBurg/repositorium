@@ -27,6 +27,11 @@
 // - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
 // - renamed to CAfxRegKey because of conflict with ATL/MFC shared CRegKey
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_REGKEY_H__E451D194_D4C3_11D1_AB17_0000E8425C3E__INCLUDED_)
@@ -89,8 +94,8 @@ public:
 	static CString GetAppRegPath(LPCTSTR szAppName = NULL);
 
 protected:
-	HKEY 	m_hKey;
-	HKEY 	m_hKeyRoot;
+	HKEY m_hKey;
+	HKEY m_hKeyRoot;
 	CString m_sPath;
 
 protected:

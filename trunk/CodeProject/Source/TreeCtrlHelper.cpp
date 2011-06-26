@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -62,7 +67,8 @@ static char THIS_FILE[] = __FILE__;
 
 const int HVISIBLE = 20;
 
-CTreeCtrlHelper::CTreeCtrlHelper(CTreeCtrl& tree) : m_tree(tree)
+CTreeCtrlHelper::CTreeCtrlHelper(CTreeCtrl& tree):
+m_tree(tree)
 {
 	m_pVisibleIndices = new CMapIndices();
 }
@@ -547,7 +553,7 @@ void CTreeCtrlHelper::SetItemChecked(HTREEITEM hti, BOOL bChecked)
 TCH_CHECK CTreeCtrlHelper::GetItemCheckState(HTREEITEM hti) const
 {
 	int nCheckState = m_tree.GetItemState(hti, TVIS_STATEIMAGEMASK);
-	return (TCH_CHECK)((nCheckState  >> 12) - 1);
+	return (TCH_CHECK)((nCheckState >> 12) - 1);
 }
 
 HTREEITEM CTreeCtrlHelper::GetTopLevelParentItem(HTREEITEM hti) const

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
@@ -58,8 +63,12 @@
 
 struct PAGEITEM
 {
-	PAGEITEM(CPropertyPage* _pPage = NULL, LPCTSTR szTitle = NULL, DWORD dwData = 0) :
-	pPage(_pPage), sTitle(szTitle), dwItemData(dwData) {}
+	PAGEITEM(CPropertyPage* _pPage = NULL, LPCTSTR szTitle = NULL, DWORD dwData = 0):
+	pPage(_pPage),
+	sTitle(szTitle),
+	dwItemData(dwData)
+	{
+	}
 
 	CPropertyPage* pPage;
 	CString sTitle;

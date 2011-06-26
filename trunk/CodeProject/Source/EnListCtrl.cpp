@@ -40,6 +40,11 @@
 //      --lineend=windows
 //      --suffix=none
 // - removed commented code
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // EnListCtrl.cpp : implementation file
@@ -137,7 +142,7 @@ void CEnListCtrl::OnPaint()
 
 		CBitmap bitmap;
 		bitmap.CreateCompatibleBitmap(&paintdc, rClient.right, rClient.bottom);
-		CBitmap* pOldBitmap = dc.SelectObject(& bitmap);
+		CBitmap* pOldBitmap = dc.SelectObject(&bitmap);
 
 		if (pHeader && m_nCurView == LVS_REPORT && !(GetStyle() & LVS_NOCOLUMNHEADER))
 		{
@@ -186,8 +191,7 @@ void CEnListCtrl::OnPaint()
 			}
 		}
 
-		paintdc.BitBlt(0, rClient.top, rClient.right, rClient.bottom,
-			&dc, 0, rClient.top, SRCCOPY);
+		paintdc.BitBlt(0, rClient.top, rClient.right, rClient.bottom, &dc, 0, rClient.top, SRCCOPY);
 
 		dc.SelectObject(pOldBitmap);
 		ReleaseDC(&paintdc);
@@ -443,7 +447,7 @@ int CEnListCtrl::GetCountPerPage() const
 
 	ASSERT(!rList.IsRectEmpty() && !rItem.IsRectEmpty());
 
-	return	rList.Height() / rItem.Height();
+	return rList.Height() / rItem.Height();
 }
 
 void CEnListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
@@ -665,8 +669,8 @@ void CEnListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	//	ReleaseDC(pDC);
 }
 
-COLORREF CEnListCtrl::GetItemTextColor(int /*nItem*/, int nSubItem,
-	BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const
+COLORREF CEnListCtrl::GetItemTextColor(int /*nItem*/, int nSubItem, BOOL bSelected, BOOL bDropHighlighted,
+	BOOL bWndFocus) const
 {
 	if (bSelected)
 	{
@@ -688,8 +692,7 @@ COLORREF CEnListCtrl::GetItemTextColor(int /*nItem*/, int nSubItem,
 	return GetColumnColor(nSubItem);
 }
 
-COLORREF CEnListCtrl::GetItemBackColor(int /*nItem*/, BOOL bSelected,
-	BOOL bDropHighlighted, BOOL bWndFocus) const
+COLORREF CEnListCtrl::GetItemBackColor(int /*nItem*/, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const
 {
 	if (bSelected)
 	{
@@ -914,8 +917,7 @@ void CEnListCtrl::SetView(int nView)
 {
 	CRect rClient;
 
-	ASSERT(nView == LVS_ICON || nView == LVS_LIST ||
-		nView == LVS_SMALLICON || nView == LVS_REPORT);
+	ASSERT(nView == LVS_ICON || nView == LVS_LIST || nView == LVS_SMALLICON || nView == LVS_REPORT);
 
 	ASSERT(m_hWnd);
 
@@ -1122,7 +1124,7 @@ void CEnListCtrl::OnSize(UINT nType, int cx, int cy)
 
 	CRect rClient, rPrev;
 	//	HD_LAYOUT   hdLayout;
-	WINDOWPOS   wpos;
+	WINDOWPOS wpos;
 
 	GetClientRect(rPrev);
 

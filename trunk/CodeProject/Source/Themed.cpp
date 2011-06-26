@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -91,7 +96,9 @@ typedef HRESULT(STDAPICALLTYPE* PFNGETTHEMEBACKGROUNDCONTENTRECT)(HTHEME hTheme,
 
 HMODULE CThemed::s_hUxTheme = HMODULE(-1);
 
-CThemed::CThemed(CWnd* pWnd, LPCTSTR szClassList) : m_hWnd(NULL), m_hTheme(NULL)
+CThemed::CThemed(CWnd* pWnd, LPCTSTR szClassList):
+m_hWnd(NULL),
+m_hTheme(NULL)
 {
 	InitUxTheme();
 
@@ -260,7 +267,8 @@ BOOL CThemed::DrawParentBackground(const CWnd* pWnd, CDC* pDC, LPRECT pRect)
 	return DrawThemeParentBackground(*pWnd, *pDC, pRect);
 }
 
-BOOL CThemed::DrawText(CDC* pDC, int nPart, int nState, const CString& sText, DWORD dwTextFlags, DWORD dwTextFlags2, const CRect& rect)
+BOOL CThemed::DrawText(CDC* pDC, int nPart, int nState, const CString& sText, DWORD dwTextFlags, DWORD dwTextFlags2,
+	const CRect& rect)
 {
 	ASSERT(m_hTheme);
 	ASSERT_VALID(pDC);
@@ -300,11 +308,13 @@ BOOL CThemed::GetSize(int nPart, int nState, CSize& size, BOOL bMin)
 	return GetThemePartSize(nPart, nState, bMin ? TS_MIN : TS_TRUE, &size);
 }
 
-BOOL CThemed::GetTextExtent(CDC* pDC, int nPart, int nState, const CString& sText, DWORD dwTextFlags, CRect& rExtent, LPCRECT prBounding)
+BOOL CThemed::GetTextExtent(CDC* pDC, int nPart, int nState, const CString& sText, DWORD dwTextFlags, CRect& rExtent,
+	LPCRECT prBounding)
 {
 	ASSERT(m_hTheme);
 
-	return GetThemeTextExtent(pDC ? *pDC : (HDC)NULL, nPart, nState, WSTR(sText), sText.GetLength(), dwTextFlags, prBounding, rExtent);
+	return GetThemeTextExtent(pDC ? *pDC : (HDC)NULL, nPart, nState, WSTR(sText), sText.GetLength(), dwTextFlags,
+		prBounding, rExtent);
 }
 
 BOOL CThemed::BuildImageList(CImageList& il, int nPart, const int nStates[], int nNumStates, COLORREF crMask)
@@ -413,7 +423,8 @@ DWORD CThemed::GetAppThemeProperties()
 {
 	if (InitUxTheme())
 	{
-		PFNGETTHEMEAPPPROPERTIES fnGetThemeAppProperties = (PFNGETTHEMEAPPPROPERTIES)GetProcAddress(s_hUxTheme, "GetThemeAppProperties");
+		PFNGETTHEMEAPPPROPERTIES fnGetThemeAppProperties = (PFNGETTHEMEAPPPROPERTIES)GetProcAddress(s_hUxTheme,
+			"GetThemeAppProperties");
 
 		if (fnGetThemeAppProperties)
 		{
@@ -454,8 +465,7 @@ BOOL CThemed::CloseThemeData(HTHEME hTheme)
 	return FALSE;
 }
 
-BOOL CThemed::DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT* pRect,
-	const RECT* pClipRect)
+BOOL CThemed::DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT* pRect, const RECT* pClipRect)
 {
 	if (InitUxTheme() && m_hTheme)
 	{
@@ -474,7 +484,8 @@ BOOL CThemed::DrawThemeParentBackground(HWND hWnd, HDC hdc, RECT* pRect)
 {
 	if (InitUxTheme() && m_hTheme)
 	{
-		PFNDRAWTHEMEPARENTBACKGROUND fnDrawThemeParentBackground = (PFNDRAWTHEMEPARENTBACKGROUND)GetProcAddress(s_hUxTheme, "DrawThemeParentBackground");
+		PFNDRAWTHEMEPARENTBACKGROUND fnDrawThemeParentBackground = (PFNDRAWTHEMEPARENTBACKGROUND)GetProcAddress(s_hUxTheme,
+			"DrawThemeParentBackground");
 
 		if (fnDrawThemeParentBackground)
 		{
@@ -485,8 +496,8 @@ BOOL CThemed::DrawThemeParentBackground(HWND hWnd, HDC hdc, RECT* pRect)
 	return FALSE;
 }
 
-BOOL CThemed::DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount,
-	DWORD dwTextFlags, DWORD dwTextFlags2, const RECT* pRect)
+BOOL CThemed::DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags,
+	DWORD dwTextFlags2, const RECT* pRect)
 {
 	if (InitUxTheme() && m_hTheme)
 	{
@@ -501,8 +512,8 @@ BOOL CThemed::DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText,
 	return FALSE;
 }
 
-BOOL CThemed::DrawThemeEdge(HDC hdc, int iPartId, int iStateId, const RECT* pDestRect, UINT uEdge,
-	UINT uFlags, RECT* pContentRect)
+BOOL CThemed::DrawThemeEdge(HDC hdc, int iPartId, int iStateId, const RECT* pDestRect, UINT uEdge, UINT uFlags,
+	RECT* pContentRect)
 {
 	if (InitUxTheme() && m_hTheme)
 	{
@@ -517,8 +528,7 @@ BOOL CThemed::DrawThemeEdge(HDC hdc, int iPartId, int iStateId, const RECT* pDes
 	return FALSE;
 }
 
-BOOL CThemed::DrawThemeIcon(HDC hdc, int iPartId, int iStateId, const RECT* pRect, HIMAGELIST himl,
-	int iImageIndex)
+BOOL CThemed::DrawThemeIcon(HDC hdc, int iPartId, int iStateId, const RECT* pRect, HIMAGELIST himl, int iImageIndex)
 {
 	if (InitUxTheme() && m_hTheme)
 	{
@@ -568,7 +578,8 @@ BOOL CThemed::GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR psz
 {
 	if (InitUxTheme() && m_hTheme)
 	{
-		PFNGETTHEMETEXTEXTENT fnGetThemeTextExtent = (PFNGETTHEMETEXTEXTENT)GetProcAddress(s_hUxTheme, "GetThemeTextExtent");
+		PFNGETTHEMETEXTEXTENT fnGetThemeTextExtent = (PFNGETTHEMETEXTEXTENT)GetProcAddress(s_hUxTheme,
+			"GetThemeTextExtent");
 
 		if (fnGetThemeTextExtent)
 		{
@@ -594,7 +605,8 @@ BOOL CThemed::GetThemeColor(int iPartId, int iStateId, int iPropId, COLORREF* pC
 	return FALSE;
 }
 
-BOOL CThemed::GetThemeBackgroundContentRect(HDC hdc, int iPartId, int iStateId, LPCRECT pBoundingRect, LPRECT pContentRect)
+BOOL CThemed::GetThemeBackgroundContentRect(HDC hdc, int iPartId, int iStateId, LPCRECT pBoundingRect,
+	LPRECT pContentRect)
 {
 	if (InitUxTheme() && m_hTheme)
 	{

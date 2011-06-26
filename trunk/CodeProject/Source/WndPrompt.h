@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // WndPrompt.h: interface for the CWndPrompt class.
@@ -83,15 +88,11 @@ public:
 	CWndPromptManager();
 	virtual ~CWndPromptManager();
 
-	BOOL SetPrompt(UINT nIDCtrl, HWND hwndParent, LPCTSTR szPrompt,
-		UINT nCheckMsg, LRESULT lRes = 0, int nVertOffset = 0);
-	BOOL SetPrompt(HWND hWnd, LPCTSTR szPrompt, UINT nCheckMsg,
-		LRESULT lRes = 0, int nVertOffset = 0);
+	BOOL SetPrompt(UINT nIDCtrl, HWND hwndParent, LPCTSTR szPrompt, UINT nCheckMsg, LRESULT lRes = 0, int nVertOffset = 0);
+	BOOL SetPrompt(HWND hWnd, LPCTSTR szPrompt, UINT nCheckMsg, LRESULT lRes = 0, int nVertOffset = 0);
 
-	BOOL SetPrompt(UINT nIDCtrl, HWND hwndParent, UINT nIDPrompt,
-		UINT nCheckMsg, LRESULT lRes = 0, int nVertOffset = 0);
-	BOOL SetPrompt(HWND hWnd, UINT nIDPrompt, UINT nCheckMsg,
-		LRESULT lRes = 0, int nVertOffset = 0);
+	BOOL SetPrompt(UINT nIDCtrl, HWND hwndParent, UINT nIDPrompt, UINT nCheckMsg, LRESULT lRes = 0, int nVertOffset = 0);
+	BOOL SetPrompt(HWND hWnd, UINT nIDPrompt, UINT nCheckMsg, LRESULT lRes = 0, int nVertOffset = 0);
 
 	// special cases
 	BOOL SetEditPrompt(UINT nIDEdit, HWND hwndParent, LPCTSTR szPrompt);

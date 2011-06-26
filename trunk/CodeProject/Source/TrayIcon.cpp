@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TrayIcon.cpp : implementation of the CTrayIcon class
@@ -118,8 +123,7 @@ CTrayIcon::~CTrayIcon()
 // this Create takes an ID for the tip text
 BOOL CTrayIcon::Create(DWORD dwStyle, CWnd* pParentWnd, UINT uID, UINT uIDIcon, UINT uIDTip)
 {
-	if (!CWnd::Create(NULL, _T("TrayIcon notification window"), WS_CHILD,
-		CRect(0, 0, 0, 0), pParentWnd, uID))
+	if (!CWnd::Create(NULL, _T("TrayIcon notification window"), WS_CHILD, CRect(0, 0, 0, 0), pParentWnd, uID))
 	{
 		return FALSE;
 	}
@@ -141,8 +145,7 @@ BOOL CTrayIcon::Create(DWORD dwStyle, CWnd* pParentWnd, UINT uID, UINT uIDIcon, 
 // this create takes a text string for the ti text
 BOOL CTrayIcon::Create(DWORD dwStyle, CWnd* pParentWnd, UINT uID, UINT uIDIcon, LPCTSTR sTip)
 {
-	if (!CWnd::Create(NULL, _T("TrayIcon notification window"), WS_CHILD,
-		CRect(0, 0, 0, 0), pParentWnd, uID))
+	if (!CWnd::Create(NULL, _T("TrayIcon notification window"), WS_CHILD, CRect(0, 0, 0, 0), pParentWnd, uID))
 	{
 		return FALSE;
 	}
@@ -269,8 +272,7 @@ LRESULT CTrayIcon::OnTrayIconNotify(WPARAM wParam, LPARAM lParam)
 		return TRUE;
 	}
 
-	LRESULT lr = GetParent()->SendMessage(WM_NOTIFY, GetDlgCtrlID(),
-		(LPARAM)&m_nm);
+	LRESULT lr = GetParent()->SendMessage(WM_NOTIFY, GetDlgCtrlID(), (LPARAM)&m_nm);
 
 	return lr;
 }
@@ -456,7 +458,7 @@ void CTrayIcon::OnTimer(UINT nIDEvent)
 		m_nPrevMsg = 0;
 
 		m_nm.hdr.code = NM_CLICK;
-		GetParent()->SendMessage(WM_NOTIFY, GetDlgCtrlID(),	(LPARAM)&m_nm);
+		GetParent()->SendMessage(WM_NOTIFY, GetDlgCtrlID(), (LPARAM)&m_nm);
 		break;
 	}
 
@@ -518,8 +520,7 @@ BOOL CTrayIcon::ShowBalloon(LPCTSTR szText, LPCTSTR szTitle, DWORD dwIcon, UINT 
 	}
 
 	// dwBalloonIcon must be valid.
-	ASSERT(NIIF_NONE == dwIcon    || NIIF_INFO == dwIcon ||
-		NIIF_WARNING == dwIcon || NIIF_ERROR == dwIcon);
+	ASSERT(NIIF_NONE == dwIcon    || NIIF_INFO == dwIcon || NIIF_WARNING == dwIcon || NIIF_ERROR == dwIcon);
 
 	// The timeout must be between 10 and 30 seconds.
 	uTimeout = min(max(uTimeout, 10), 30);

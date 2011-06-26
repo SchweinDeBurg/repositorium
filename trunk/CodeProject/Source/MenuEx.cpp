@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -134,7 +139,7 @@ BOOL CMenuEx::AddMDIButton(MENUEX_BTN nBtn, UINT nCmdID, BOOL bRightJustify)
 		nFlags |= MFT_OWNERDRAW;
 	}
 
-	if (InsertMenu((UINT) - 1, nFlags, nCmdID, CBitmap::FromHandle(hbm)))
+	if (InsertMenu((UINT)-1, nFlags, nCmdID, CBitmap::FromHandle(hbm)))
 	{
 		m_mapCmd2ID[nCmdID] = nBtn;
 		return TRUE;

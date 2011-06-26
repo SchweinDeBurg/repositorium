@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // EnListCtrl.h : header file
@@ -79,7 +84,7 @@ class CEnListCtrl : public CListCtrl
 {
 	DECLARE_DYNAMIC(CEnListCtrl)
 
-	// Construction
+// Construction
 public:
 	CEnHeaderCtrl* GetHeader();
 	const CEnHeaderCtrl* GetHeader() const;
@@ -157,7 +162,7 @@ public:
 	int GetColumnFormat(int nCol) const;
 	BOOL SetColumnText(int nCol, LPCTSTR szText);
 
-	// Attributes
+// Attributes
 protected:
 	CEnHeaderCtrl m_header;
 	BOOL m_bVertGrid, m_bHorzGrid;
@@ -185,10 +190,10 @@ private:
 	CMap<int, int, CColumnData*, CColumnData*> m_mapColumnData;
 	CMap<DWORD, DWORD, CString, CString&> m_mapSortStrings;
 
-	// Operations
+// Operations
 public:
 
-	// Overrides
+// Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CEnListCtrl)
 public:
@@ -224,15 +229,24 @@ protected:
 
 	// helpers
 	int GetImageIndex(int nItem, int nSubItem) const;
-	virtual void Copy() {} // derived class override provides logic
-	virtual void Delete() {} // derived class override provides logic
-	virtual void Cut() {} // derived class override provides logic
-	virtual void Paste() {} // derived class override provides logic
+	virtual void Copy()
+	{
+	} // derived class override provides logic
+	virtual void Delete()
+	{
+	} // derived class override provides logic
+	virtual void Cut()
+	{
+	} // derived class override provides logic
+	virtual void Paste()
+	{
+	} // derived class override provides logic
 	void NotifySelChange();
 	int GetColumnAtPoint(CPoint point) const;
 	void GetColumnExtents(int nCol, int& nColStart, int& nColEnd) const;
 	virtual int CompareItems(DWORD dwItemData1, DWORD dwItemData2, int nSortColumn);
-	virtual COLORREF GetItemTextColor(int nItem, int nSubItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const;
+	virtual COLORREF GetItemTextColor(int nItem, int nSubItem, BOOL bSelected, BOOL bDropHighlighted,
+		BOOL bWndFocus) const;
 	virtual COLORREF GetItemBackColor(int nItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const;
 	virtual CFont* GetItemFont(int /*nItem*/, int /*nSubItem*/)
 	{
