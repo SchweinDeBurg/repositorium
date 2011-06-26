@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // EnCommandLineInfo.cpp: implementation of the CEnCommandLineInfo class.
@@ -217,7 +222,7 @@ CString CEnCommandLineInfo::ResolveShortcut(LPCTSTR szShortcut)
 	CoInitialize(NULL);
 
 	HRESULT hResult;
-	IShellLink*	psl;
+	IShellLink* psl;
 	CString sTarget(szShortcut);
 
 	hResult = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER,

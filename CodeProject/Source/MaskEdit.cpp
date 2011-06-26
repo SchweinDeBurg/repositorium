@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // MaskEdit.cpp : implementation file
@@ -58,7 +63,9 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CMaskEdit
 
-CMaskEdit::CMaskEdit(LPCTSTR szMask, DWORD dwFlags) : m_sMask(szMask), m_dwFlags(dwFlags)
+CMaskEdit::CMaskEdit(LPCTSTR szMask, DWORD dwFlags):
+m_sMask(szMask),
+m_dwFlags(dwFlags)
 {
 	if (dwFlags & ME_LOCALIZEDECIMAL)
 	{

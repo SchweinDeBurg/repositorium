@@ -38,6 +38,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // ImageProcessors.h: C32BitImageProcessor derivations (c) daniel godson 2002.
@@ -238,8 +243,12 @@ protected:
 class CImageSysColorMapper : public C32BitImageProcessor
 {
 public:
-	CImageSysColorMapper() {}
-	virtual ~CImageSysColorMapper() {}
+	CImageSysColorMapper()
+	{
+	}
+	virtual ~CImageSysColorMapper()
+	{
+	}
 
 	// 0x000000 (black)         -> COLOR_BTNTEXT
 	// 0x808080 (dark gray)     -> COLOR_BTNSHADOW
@@ -252,8 +261,12 @@ public:
 class CImageEmbosser : public C32BitImageProcessor
 {
 public:
-	CImageEmbosser() {}
-	virtual ~CImageEmbosser() {}
+	CImageEmbosser()
+	{
+	}
+	virtual ~CImageEmbosser()
+	{
+	}
 
 	virtual BOOL ProcessPixels(RGBX* pSrcPixels, CSize sizeSrc, RGBX* pDestPixels, CSize sizeDest,
 		COLORREF crMask = -1);

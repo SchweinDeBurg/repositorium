@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -444,14 +449,14 @@ void CRuntimeDlg::AutoFit()
 	MoveWindow(rClient);
 }
 
-BOOL CRuntimeDlg::AddControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-	const CRect& rect, UINT nID)
+BOOL CRuntimeDlg::AddControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, const CRect& rect,
+	UINT nID)
 {
 	return AddControl(szClass, szCaption, dwStyle, dwExStyle, rect.left, rect.top, rect.Width(), rect.Height(), nID);
 }
 
-BOOL CRuntimeDlg::AddControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-	int x, int y, int cx, int cy, UINT nID)
+BOOL CRuntimeDlg::AddControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx,
+	int cy, UINT nID)
 {
 	if (GetSafeHwnd())
 	{
@@ -466,14 +471,14 @@ BOOL CRuntimeDlg::AddControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, 
 	return TRUE;
 }
 
-BOOL CRuntimeDlg::AddControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-	const CRect& rect, UINT nID)
+BOOL CRuntimeDlg::AddControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, const CRect& rect,
+	UINT nID)
 {
 	return AddControl(pWnd, szCaption, dwStyle, dwExStyle, rect.left, rect.top, rect.Width(), rect.Height(), nID);
 }
 
-BOOL CRuntimeDlg::AddControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-	int x, int y, int cx, int cy, UINT nID)
+BOOL CRuntimeDlg::AddControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx,
+	int cy, UINT nID)
 {
 	if (GetSafeHwnd())
 	{
@@ -488,8 +493,8 @@ BOOL CRuntimeDlg::AddControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD
 	return TRUE;
 }
 
-BOOL CRuntimeDlg::AddRCControl(LPCTSTR szRCType, LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle,
-	DWORD dwExStyle, int x, int y, int cx, int cy, UINT nID, UINT nIconID)
+BOOL CRuntimeDlg::AddRCControl(LPCTSTR szRCType, LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
+	int x, int y, int cx, int cy, UINT nID, UINT nIconID)
 {
 	CString sClass(szClass);
 
@@ -534,8 +539,8 @@ BOOL CRuntimeDlg::AddRCControl(LPCTSTR szRCType, LPCTSTR szClass, LPCTSTR szCapt
 	return TRUE;
 }
 
-BOOL CRuntimeDlg::AddRCControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle,
-	DWORD dwExStyle, int x, int y, int cx, int cy, UINT nID, UINT nIconID)
+BOOL CRuntimeDlg::AddRCControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx,
+	int cy, UINT nID, UINT nIconID)
 {
 	CString sClass = GetClassName(pWnd);
 
@@ -571,8 +576,8 @@ BOOL CRuntimeDlg::AddRCControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle,
 	return TRUE;
 }
 
-HWND CRuntimeDlg::CreateControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-	int x, int y, int cx, int cy, UINT nID, BOOL bDLU, UINT nIconID)
+HWND CRuntimeDlg::CreateControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y,
+	int cx, int cy, UINT nID, BOOL bDLU, UINT nIconID)
 {
 	if (bDLU)
 	{
@@ -648,8 +653,8 @@ HWND CRuntimeDlg::CreateControl(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyl
 	return hwnd;
 }
 
-HWND CRuntimeDlg::CreateRichEdit(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-	int x, int y, int cx, int cy, HWND hwndParent)
+HWND CRuntimeDlg::CreateRichEdit(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y,
+	int cx, int cy, HWND hwndParent)
 {
 	CRichEditHelper::InitRichEdit();
 
@@ -666,8 +671,8 @@ HWND CRuntimeDlg::CreateRichEdit(LPCTSTR szClass, LPCTSTR szCaption, DWORD dwSty
 	return hwnd;
 }
 
-BOOL CRuntimeDlg::CreateControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle,
-	int x, int y, int cx, int cy, UINT nID, BOOL bDLU, UINT nIconID)
+BOOL CRuntimeDlg::CreateControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DWORD dwExStyle, int x, int y, int cx,
+	int cy, UINT nID, BOOL bDLU, UINT nIconID)
 {
 	ASSERT(!pWnd->GetSafeHwnd());
 
@@ -698,15 +703,15 @@ BOOL CRuntimeDlg::CreateControl(CWnd* pWnd, LPCTSTR szCaption, DWORD dwStyle, DW
 BOOL CRuntimeDlg::CreateControl(const RTCONTROL& rtc)
 {
 	if (rtc.m_pWnd)
-		return CreateControl(rtc.m_pWnd, rtc.m_sCaption, rtc.m_dwStyle, rtc.m_dwExStyle,
-			rtc.m_rect.left, rtc.m_rect.top, rtc.m_rect.Width(), rtc.m_rect.Height(),
-			rtc.m_nID, rtc.m_bDLU, rtc.m_nIconID);
-
+	{
+		return CreateControl(rtc.m_pWnd, rtc.m_sCaption, rtc.m_dwStyle, rtc.m_dwExStyle, rtc.m_rect.left, rtc.m_rect.top,
+			rtc.m_rect.Width(), rtc.m_rect.Height(), rtc.m_nID, rtc.m_bDLU, rtc.m_nIconID);
+	}
 	else if (!rtc.m_sClass.IsEmpty())
-		return (NULL != CreateControl(rtc.m_sClass, rtc.m_sCaption, rtc.m_dwStyle, rtc.m_dwExStyle,
-			rtc.m_rect.left, rtc.m_rect.top, rtc.m_rect.Width(), rtc.m_rect.Height(),
-			rtc.m_nID, rtc.m_bDLU, rtc.m_nIconID));
-
+	{
+		return (NULL != CreateControl(rtc.m_sClass, rtc.m_sCaption, rtc.m_dwStyle, rtc.m_dwExStyle, rtc.m_rect.left,
+			rtc.m_rect.top, rtc.m_rect.Width(), rtc.m_rect.Height(), rtc.m_nID, rtc.m_bDLU, rtc.m_nIconID));
+	}
 	else
 	{
 		return FALSE;
@@ -737,29 +742,29 @@ void CRuntimeDlg::BuildClassMap()
 		return;   // already done
 	}
 
-	s_mapClasses[_T("CStatic")]         = WC_STATIC;
-	s_mapClasses[_T("CButton")]         = WC_BUTTON;
-	s_mapClasses[_T("CListBox")]        = WC_LISTBOX;
-	s_mapClasses[_T("CComboBox")]       = WC_COMBOBOX;
-	s_mapClasses[_T("CEdit")]           = WC_EDIT;
-	s_mapClasses[_T("CScrollBar")]      = WC_SCROLLBAR;
-	s_mapClasses[_T("CListCtrl")]       = WC_LISTVIEW;
-	s_mapClasses[_T("CTreeCtrl")]       = WC_TREEVIEW;
+	s_mapClasses[_T("CStatic")] = WC_STATIC;
+	s_mapClasses[_T("CButton")] = WC_BUTTON;
+	s_mapClasses[_T("CListBox")] = WC_LISTBOX;
+	s_mapClasses[_T("CComboBox")] = WC_COMBOBOX;
+	s_mapClasses[_T("CEdit")] = WC_EDIT;
+	s_mapClasses[_T("CScrollBar")] = WC_SCROLLBAR;
+	s_mapClasses[_T("CListCtrl")] = WC_LISTVIEW;
+	s_mapClasses[_T("CTreeCtrl")] = WC_TREEVIEW;
 	s_mapClasses[_T("CSpinButtonCtrl")] = WC_SPIN;
-	s_mapClasses[_T("CHeaderCtrl")]     = WC_HEADER;
-	s_mapClasses[_T("CSliderCtrl")]     = WC_SLIDER;
-	s_mapClasses[_T("CProgressCtrl")]   = WC_PROGRESS;
-	s_mapClasses[_T("CHotKeyCtrl")]     = WC_HOTKEY;
-	s_mapClasses[_T("CToolTipCtrl")]    = WC_TOOLTIPS;
-	s_mapClasses[_T("CTabCtrl")]        = WC_TABCONTROL;
-	s_mapClasses[_T("CAnimateCtrl")]    = WC_ANIMATE;
-	s_mapClasses[_T("CToolBarCtrl")]    = WC_TOOLBAR;
-	s_mapClasses[_T("CStatusBarCtrl")]  = WC_STATUSBAR;
-	s_mapClasses[_T("CRichEditCtrl")]   = WC_RICHEDIT20;
-	s_mapClasses[_T("CIPAddressCtrl")]  = WC_IPADDRESS;
-	s_mapClasses[_T("CDateTimeCtrl")]   = WC_DATETIMEPICK;
-	s_mapClasses[_T("CMonthCalCtrl")]   = WC_MONTHCAL;
-	s_mapClasses[_T("CReBar")]          = WC_REBAR;
+	s_mapClasses[_T("CHeaderCtrl")] = WC_HEADER;
+	s_mapClasses[_T("CSliderCtrl")] = WC_SLIDER;
+	s_mapClasses[_T("CProgressCtrl")] = WC_PROGRESS;
+	s_mapClasses[_T("CHotKeyCtrl")] = WC_HOTKEY;
+	s_mapClasses[_T("CToolTipCtrl")] = WC_TOOLTIPS;
+	s_mapClasses[_T("CTabCtrl")] = WC_TABCONTROL;
+	s_mapClasses[_T("CAnimateCtrl")] = WC_ANIMATE;
+	s_mapClasses[_T("CToolBarCtrl")] = WC_TOOLBAR;
+	s_mapClasses[_T("CStatusBarCtrl")] = WC_STATUSBAR;
+	s_mapClasses[_T("CRichEditCtrl")] = WC_RICHEDIT20;
+	s_mapClasses[_T("CIPAddressCtrl")] = WC_IPADDRESS;
+	s_mapClasses[_T("CDateTimeCtrl")] = WC_DATETIMEPICK;
+	s_mapClasses[_T("CMonthCalCtrl")] = WC_MONTHCAL;
+	s_mapClasses[_T("CReBar")] = WC_REBAR;
 	//	s_mapClasses[_T("")] = "";
 }
 

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -79,7 +84,8 @@ DEFINE_GUIDXXX(IID_ITextDocument, 0x8CC497C0, 0xA1DF, 0x11CE, 0x80, 0x98,
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CReBase::CReBase(HWND hwndRichEdit) : m_hwndRichedit(hwndRichEdit)
+CReBase::CReBase(HWND hwndRichEdit):
+m_hwndRichedit(hwndRichEdit)
 {
 }
 
@@ -90,7 +96,8 @@ CReBase::~CReBase()
 
 //////////////////////////////////////////////////////////////////////
 
-CReSaveCaret::CReSaveCaret(HWND hwndRichEdit) : CReBase(hwndRichEdit)
+CReSaveCaret::CReSaveCaret(HWND hwndRichEdit):
+CReBase(hwndRichEdit)
 {
 	CHARRANGE cr;
 	SendMessage(m_hwndRichedit, EM_EXGETSEL, 0, (LPARAM)&cr);
@@ -113,7 +120,10 @@ CReSaveCaret::~CReSaveCaret()
 
 //////////////////////////////////////////////////////////////////////
 
-CTextDocument::CTextDocument(HWND hwndRichEdit) : CReBase(hwndRichEdit), m_pDoc(NULL), m_pRichEditOle(NULL)
+CTextDocument::CTextDocument(HWND hwndRichEdit):
+CReBase(hwndRichEdit),
+m_pDoc(NULL),
+m_pRichEditOle(NULL)
 {
 	SendMessage(hwndRichEdit, EM_GETOLEINTERFACE, 0, (LPARAM)&m_pRichEditOle);
 
@@ -148,7 +158,8 @@ BOOL CTextDocument::Redo()
 
 //////////////////////////////////////////////////////////////////////
 
-CRePauseUndo::CRePauseUndo(HWND hwndRichEdit) : CTextDocument(hwndRichEdit)
+CRePauseUndo::CRePauseUndo(HWND hwndRichEdit):
+CTextDocument(hwndRichEdit)
 {
 	if (m_hwndRichedit && Valid())
 	{
@@ -305,7 +316,7 @@ BOOL CRichEditHelper::PasteFileInternal(CWnd& wnd, LPCTSTR szFilePath, RE_PASTE 
 
 //////////////////////////////////////////////////////////////////////
 
-CReFileObject::CReFileObject(HWND hwndRichEdit) :
+CReFileObject::CReFileObject(HWND hwndRichEdit):
 CReBase(hwndRichEdit),
 m_pObject(NULL),
 m_pClientSite(NULL),
@@ -346,11 +357,7 @@ BOOL CReFileObject::Create(LPCTSTR szFilePath)
 		return FALSE;
 	}
 
-	sc = ::StgCreateDocfileOnILockBytes(pLockBytes,
-		STGM_SHARE_EXCLUSIVE |
-		STGM_CREATE |
-		STGM_READWRITE,
-		0, &m_pStorage);
+	sc = ::StgCreateDocfileOnILockBytes(pLockBytes, STGM_SHARE_EXCLUSIVE | STGM_CREATE | STGM_READWRITE, 0, &m_pStorage);
 
 	if (sc != S_OK)
 	{
@@ -369,13 +376,8 @@ BOOL CReFileObject::Create(LPCTSTR szFilePath)
 	// create object
 	m_pRichEditOle->GetClientSite(&m_pClientSite);
 
-	sc = ::OleCreateFromFile(clsid, ATL::CT2OLE(szFilePath),
-		IID_IUnknown,
-		OLERENDER_DRAW,
-		NULL,
-		m_pClientSite,
-		m_pStorage,
-		(void**)&m_pObject);
+	sc = ::OleCreateFromFile(clsid, ATL::CT2OLE(szFilePath), IID_IUnknown, OLERENDER_DRAW, NULL, m_pClientSite,
+		m_pStorage, (void**)&m_pObject);
 
 	if (m_pObject)
 	{

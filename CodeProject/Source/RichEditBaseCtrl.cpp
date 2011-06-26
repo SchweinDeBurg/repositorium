@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2-6.2.4 sources
 //*****************************************************************************
 
@@ -216,16 +221,16 @@ void CRichEditBaseCtrl::SelectCurrentWord()
 	}
 }
 
-CRichEditBaseCtrl::CRichEditOleCallback::CRichEditOleCallback() : m_pOwner(NULL)
+CRichEditBaseCtrl::CRichEditOleCallback::CRichEditOleCallback():
+m_pOwner(NULL)
 {
 	m_pStorage = NULL;
 	m_iNumStorages = 0;
 	m_dwRef = 0;
 
 	// set up OLE storage
-	HRESULT hResult = ::StgCreateDocfile(NULL, STGM_TRANSACTED |
-		STGM_READWRITE | STGM_SHARE_EXCLUSIVE | STGM_CREATE | STGM_DELETEONRELEASE,
-		0, &m_pStorage);
+	HRESULT hResult = ::StgCreateDocfile(NULL, STGM_TRANSACTED | STGM_READWRITE | STGM_SHARE_EXCLUSIVE | STGM_CREATE |
+		STGM_DELETEONRELEASE, 0, &m_pStorage);
 
 	if (m_pStorage == NULL || hResult != S_OK)
 	{
@@ -254,9 +259,8 @@ CRichEditBaseCtrl::CRichEditOleCallback::GetNewStorage(LPSTORAGE* lplpstg)
 	swprintf(tName, L"REOLEStorage%d", m_iNumStorages);
 #endif
 
-	HRESULT hResult = m_pStorage->CreateStorage(tName,
-		STGM_TRANSACTED | STGM_READWRITE | STGM_SHARE_EXCLUSIVE | STGM_CREATE,
-		0, 0, lplpstg);
+	HRESULT hResult = m_pStorage->CreateStorage(tName, STGM_TRANSACTED | STGM_READWRITE | STGM_SHARE_EXCLUSIVE |
+		STGM_CREATE, 0, 0, lplpstg);
 
 	if (hResult != S_OK)
 	{
@@ -357,8 +361,8 @@ CRichEditBaseCtrl::CRichEditOleCallback::DeleteObject(LPOLEOBJECT lpoleobj)
 }
 
 HRESULT STDMETHODCALLTYPE
-CRichEditBaseCtrl::CRichEditOleCallback::QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT FAR* lpcfFormat,
-	DWORD reco, BOOL fReally, HGLOBAL hMetaPict)
+CRichEditBaseCtrl::CRichEditOleCallback::QueryAcceptData(LPDATAOBJECT lpdataobj,
+	CLIPFORMAT FAR* lpcfFormat, DWORD reco, BOOL fReally, HGLOBAL hMetaPict)
 {
 	if (m_pOwner)
 	{
@@ -548,8 +552,7 @@ void CRichEditBaseCtrl::OnFindNext(LPCTSTR lpszFind, BOOL bNext, BOOL bCase, BOO
 	ASSERT_VALID(this);
 }
 
-void CRichEditBaseCtrl::OnReplaceSel(LPCTSTR lpszFind, BOOL bNext, BOOL bCase,
-	BOOL bWord, LPCTSTR lpszReplace)
+void CRichEditBaseCtrl::OnReplaceSel(LPCTSTR lpszFind, BOOL bNext, BOOL bCase, BOOL bWord, LPCTSTR lpszReplace)
 {
 	ASSERT_VALID(this);
 
@@ -625,21 +628,19 @@ LRESULT CRichEditBaseCtrl::OnFindReplaceCmd(WPARAM, LPARAM lParam)
 	}
 	else if (pDialog->FindNext())
 	{
-		OnFindNext(pDialog->GetFindString(), pDialog->SearchDown(),
-			pDialog->MatchCase(), pDialog->MatchWholeWord());
+		OnFindNext(pDialog->GetFindString(), pDialog->SearchDown(), pDialog->MatchCase(), pDialog->MatchWholeWord());
 	}
 	else if (pDialog->ReplaceCurrent())
 	{
 		ASSERT(!m_findState.bFindOnly);
-		OnReplaceSel(pDialog->GetFindString(),
-			pDialog->SearchDown(), pDialog->MatchCase(), pDialog->MatchWholeWord(),
+		OnReplaceSel(pDialog->GetFindString(), pDialog->SearchDown(), pDialog->MatchCase(), pDialog->MatchWholeWord(),
 			pDialog->GetReplaceString());
 	}
 	else if (pDialog->ReplaceAll())
 	{
 		ASSERT(!m_findState.bFindOnly);
-		OnReplaceAll(pDialog->GetFindString(), pDialog->GetReplaceString(),
-			pDialog->MatchCase(), pDialog->MatchWholeWord());
+		OnReplaceAll(pDialog->GetFindString(), pDialog->GetReplaceString(), pDialog->MatchCase(),
+			pDialog->MatchWholeWord());
 	}
 	ASSERT_VALID(this);
 	return 0;

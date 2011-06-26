@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -78,17 +83,20 @@ public:
 
 	BOOL DrawParentBackground(const CWnd* pWnd, CDC* pDC, LPRECT pRect = NULL);
 	BOOL DrawBackground(CDC* pDC, int nPart, int nState, const CRect& rect, LPCRECT prClip = NULL);
-	BOOL DrawText(CDC* pDC, int nPart, int nState, const CString& sText, DWORD dwTextFlags, DWORD dwTextFlags2, const CRect& pRect);
-	BOOL DrawEdge(CDC* pDC, int nPart, int nState, const CRect& rDest, UINT nEdge, UINT nFlags, LPRECT prContent = NULL);
+	BOOL DrawText(CDC* pDC, int nPart, int nState, const CString& sText, DWORD dwTextFlags, DWORD dwTextFlags2,
+		const CRect& pRect);
+	BOOL DrawEdge(CDC* pDC, int nPart, int nState, const CRect& rDest, UINT nEdge, UINT nFlags,
+		LPRECT prContent = NULL);
 	BOOL DrawIcon(CDC* pDC, int nPart, int nState, const CRect& rect, const CImageList* pIL, int nImage);
 	BOOL DrawBorder(CDC* pDC, int nState, const CRect& rect);
 
 	BOOL GetSize(int nPart, int nState, CSize& size, BOOL bMin = FALSE);
-	BOOL GetTextExtent(CDC* pDC, int nPart, int nState, const CString& sText, DWORD dwTextFlags, CRect& rExtent, LPCRECT prBounding = NULL);
+	BOOL GetTextExtent(CDC* pDC, int nPart, int nState, const CString& sText, DWORD dwTextFlags, CRect& rExtent,
+		LPCRECT prBounding = NULL);
 	BOOL BuildImageList(CImageList& il, int nPart, const int nStates[], int nNumStates, COLORREF crMask = 255);
 
 	COLORREF GetThemeColor(int nPart, int nState, int nProp);
-	BOOL GetThemeBackgroundContentRect(CDC* pDC, int nPart,	int nState, const CRect& rBounding, CRect& rContent);
+	BOOL GetThemeBackgroundContentRect(CDC* pDC, int nPart, int nState, const CRect& rBounding, CRect& rContent);
 
 protected:
 	static HMODULE s_hUxTheme;
@@ -102,22 +110,19 @@ protected:
 	static DWORD GetAppThemeProperties();
 	HTHEME OpenThemeData(HWND hwnd, LPCWSTR pszClassList);
 	BOOL CloseThemeData(HTHEME hTheme);
-	BOOL DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT* pRect,
-		const RECT* pClipRect);
+	BOOL DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT* pRect, const RECT* pClipRect);
 	BOOL DrawThemeParentBackground(HWND hWnd, HDC hdc, RECT* pRect);
-	BOOL DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount,
-		DWORD dwTextFlags, DWORD dwTextFlags2, const RECT* pRect);
-	BOOL DrawThemeEdge(HDC hdc, int iPartId, int iStateId, const RECT* pDestRect, UINT uEdge,
-		UINT uFlags, RECT* pContentRect);
-	BOOL DrawThemeIcon(HDC hdc, int iPartId, int iStateId, const RECT* pRect, HIMAGELIST himl,
-		int iImageIndex);
+	BOOL DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags,
+		DWORD dwTextFlags2, const RECT* pRect);
+	BOOL DrawThemeEdge(HDC hdc, int iPartId, int iStateId, const RECT* pDestRect, UINT uEdge, UINT uFlags,
+		RECT* pContentRect);
+	BOOL DrawThemeIcon(HDC hdc, int iPartId, int iStateId, const RECT* pRect, HIMAGELIST himl, int iImageIndex);
 	BOOL DrawThemeBorder(HDC hdc, int iStateId, const RECT* pRect);
 	BOOL GetThemePartSize(int iPartId, int iStateId, THEMESIZE eSize, SIZE* psz);
-	BOOL GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount,
-		DWORD dwTextFlags, const RECT* pBoundingRect, RECT* pExtentRect);
+	BOOL GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags,
+		const RECT* pBoundingRect, RECT* pExtentRect);
 	BOOL GetThemeColor(int iPartId, int iStateId, int iPropId, COLORREF* pColor);
-	BOOL GetThemeBackgroundContentRect(HDC hdc, int iPartId, int iStateId,
-		LPCRECT pBoundingRect, LPRECT pContentRect);
+	BOOL GetThemeBackgroundContentRect(HDC hdc, int iPartId, int iStateId, LPCRECT pBoundingRect, LPRECT pContentRect);
 
 	// helpers
 	static BOOL GetThemeClassPartState(int nType, int nState, CString& sThClass, int& nThPart, int& nThState);

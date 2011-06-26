@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // HotTracker.cpp: implementation of the CHotTracker class.
@@ -66,7 +71,8 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CHotTracker::CHotTracker() : m_nHotRect(-1)
+CHotTracker::CHotTracker():
+m_nHotRect(-1)
 {
 }
 

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // DeferWndMove.cpp: implementation of the CDeferWndMove class.
@@ -58,7 +63,8 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDeferWndMove::CDeferWndMove(int nNumWindows) : m_hdwp(NULL)
+CDeferWndMove::CDeferWndMove(int nNumWindows):
+m_hdwp(NULL)
 {
 	if (nNumWindows)
 	{
@@ -157,9 +163,8 @@ BOOL CDeferWndMove::MoveWindow(CWnd* pWnd, int x, int y, int nWidth, int nHeight
 
 BOOL CDeferWndMove::MoveWindow(CWnd* pWnd, LPCRECT lpRect, BOOL bRepaint)
 {
-	return MoveWindow(pWnd, lpRect->left, lpRect->top,
-		lpRect->right - lpRect->left,
-		lpRect->bottom - lpRect->top, bRepaint);
+	return MoveWindow(pWnd, lpRect->left, lpRect->top, lpRect->right - lpRect->left, lpRect->bottom - lpRect->top,
+		bRepaint);
 }
 
 CRect CDeferWndMove::OffsetCtrl(CWnd* pParent, UINT nCtrlID, int x, int y)

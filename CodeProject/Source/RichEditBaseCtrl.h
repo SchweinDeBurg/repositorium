@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -92,7 +97,14 @@ protected:
 
 	struct FIND_STATE
 	{
-		FIND_STATE() : pFindReplaceDlg(NULL), bFindOnly(FALSE), bCase(FALSE), bNext(TRUE), bWord(FALSE) { }
+		FIND_STATE():
+		pFindReplaceDlg(NULL),
+		bFindOnly(FALSE),
+		bCase(FALSE),
+		bNext(TRUE),
+		bWord(FALSE)
+		{
+		}
 
 		CFindReplaceDialog* pFindReplaceDlg; // find or replace dialog
 		BOOL bFindOnly; // Is pFindReplace the find or replace?
@@ -204,10 +216,8 @@ protected:
 	}
 
 	virtual void OnFindNext(LPCTSTR lpszFind, BOOL bNext, BOOL bCase, BOOL bWord);
-	virtual void OnReplaceSel(LPCTSTR lpszFind, BOOL bNext, BOOL bCase,
-		BOOL bWord, LPCTSTR lpszReplace);
-	virtual void OnReplaceAll(LPCTSTR lpszFind, LPCTSTR lpszReplace,
-		BOOL bCase, BOOL bWord);
+	virtual void OnReplaceSel(LPCTSTR lpszFind, BOOL bNext, BOOL bCase, BOOL bWord, LPCTSTR lpszReplace);
+	virtual void OnReplaceAll(LPCTSTR lpszFind, LPCTSTR lpszReplace, BOOL bCase, BOOL bWord);
 
 	//{{AFX_MSG(CRichEditBaseCtrl)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

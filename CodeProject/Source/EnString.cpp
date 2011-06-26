@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.4 sources
 //*****************************************************************************
 
@@ -59,7 +64,8 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CEnString::CEnString() : CString()
+CEnString::CEnString():
+CString()
 {
 }
 
@@ -105,7 +111,8 @@ CEnString::CEnString(UINT nFormatID, int nData)
 	}
 }
 
-CEnString::CEnString(const CString& str) : CString(str)
+CEnString::CEnString(const CString& str):
+CString(str)
 {
 }
 

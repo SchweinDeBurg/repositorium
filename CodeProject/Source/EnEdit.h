@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_ENEDIT_H__65D418F0_0107_431F_95B2_E31BF25FF286__INCLUDED_)
@@ -114,7 +119,9 @@ public:
 protected:
 	virtual void PreSubclassWindow();
 	//}}AFX_VIRTUAL
-	virtual void OnSetReadOnly(BOOL /*bReadOnly*/) {}
+	virtual void OnSetReadOnly(BOOL /*bReadOnly*/)
+	{
+	}
 
 	// Implementation
 public:
@@ -140,7 +147,9 @@ protected:
 	afx_msg void OnEnable(BOOL bEnable);
 	afx_msg LRESULT OnSetReadOnly(WPARAM /*wp*/, LPARAM /*lp*/);
 	afx_msg LRESULT OnHotChange(WPARAM /*wp*/, LPARAM /*lp*/);
-	virtual void OnBtnClick(UINT /*nID*/) {}
+	virtual void OnBtnClick(UINT /*nID*/)
+	{
+	}
 	virtual void NcPaint(CDC* pDC, const CRect& rWindow);
 	virtual void RecalcBtnRects();
 	DECLARE_MESSAGE_MAP()
@@ -150,9 +159,8 @@ protected:
 	int ButtonHitTest(CPoint ptScreen) const;
 	int ButtonHitTest(UINT nID) const;
 	int GetButtonWidth(int nBtn) const;
-	BOOL InsertButton(int nPos, UINT nID, LPCTSTR szCaption, LPCTSTR szTip, int nWidth,
-		LPCTSTR szFont, BOOL bSymbolFont);
-
+	BOOL InsertButton(int nPos, UINT nID, LPCTSTR szCaption, LPCTSTR szTip, int nWidth, LPCTSTR szFont,
+		BOOL bSymbolFont);
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TreeDragDropHelper.h: interface for the CTreeDragDropHelper class.
@@ -121,7 +126,8 @@ protected:
 
 protected:
 	static void BuildCopy(CTreeCtrl& tree, const HTREEITEM hti, TDDHCOPY* pCopy);
-	static HTREEITEM CopyTree(CTreeCtrl& tree, HTREEITEM hDest, const TDDHCOPY* pSrc, DDWHERE nWhere, DWORD dwCallbackFlags = 0);
+	static HTREEITEM CopyTree(CTreeCtrl& tree, HTREEITEM hDest, const TDDHCOPY* pSrc, DDWHERE nWhere,
+		DWORD dwCallbackFlags = 0);
 
 	HTREEITEM HitTest(CPoint pt) const
 	{
@@ -132,7 +138,11 @@ protected:
 	HTREEITEM HighlightDropTarget(CPoint point);
 	HTREEITEM HighlightDropTarget(); // get current cursor pos
 
-	enum { TIMER_SCROLL, TIMER_EXPAND };
+	enum
+	{
+		TIMER_SCROLL,
+		TIMER_EXPAND
+	};
 	void SetTimer(int nTimer, UINT nPeriod);
 	static VOID CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 

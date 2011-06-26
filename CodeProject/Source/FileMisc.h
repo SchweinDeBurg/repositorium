@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -54,21 +59,15 @@
 class CFileBackup
 {
 public:
-	CFileBackup(const CString& sFile = _T(""),
-		const CString& sFolder = _T(""),
-		BOOL bTimeStamp = FALSE,
+	CFileBackup(const CString& sFile = _T(""), const CString& sFolder = _T(""), BOOL bTimeStamp = FALSE,
 		const CString& sExt = _T(".bak"));
 	~CFileBackup();
 
-	BOOL MakeBackup(const CString& sFile,
-		const CString& sFolder = _T(""),
-		BOOL bTimeStamp = FALSE,
+	BOOL MakeBackup(const CString& sFile, const CString& sFolder = _T(""), BOOL bTimeStamp = FALSE,
 		const CString& sExt = _T(".bak"));
 	BOOL RestoreBackup();
 
-	static CString BuildBackupPath(const CString& sFile,
-		const CString& sFolder = _T(""),
-		BOOL bTimeStamp = FALSE,
+	static CString BuildBackupPath(const CString& sFile, const CString& sFolder = _T(""), BOOL bTimeStamp = FALSE,
 		const CString& sExt = _T(".bak"));
 
 protected:
@@ -78,9 +77,7 @@ protected:
 class CTempFileBackup : public CFileBackup
 {
 public:
-	CTempFileBackup(const CString& sFile = _T(""),
-		const CString& sFolder = _T(""),
-		BOOL bTimeStamp = FALSE,
+	CTempFileBackup(const CString& sFile = _T(""), const CString& sFolder = _T(""), BOOL bTimeStamp = FALSE,
 		const CString& sExt = _T(".bak"));
 	~CTempFileBackup(); // auto deletes backup file
 
@@ -98,21 +95,13 @@ namespace FileMisc
 	bool ResetLastModified(const TCHAR* szPath); // resets to current time
 	double GetFileSize(const TCHAR* szPath);
 
-	bool RemoveFolder(const TCHAR* szFolder,
-		HANDLE hTerminate = NULL,
-		BOOL bProcessMsgLoop = TRUE);
+	bool RemoveFolder(const TCHAR* szFolder, HANDLE hTerminate = NULL, BOOL bProcessMsgLoop = TRUE);
 
-	bool DeleteFolderContents(const TCHAR* szFolder,
-		BOOL bIncludeSubFolders,
-		const TCHAR* szFileMask,
-		HANDLE hTerminate = NULL,
-		BOOL bProcessMsgLoop = TRUE);
+	bool DeleteFolderContents(const TCHAR* szFolder, BOOL bIncludeSubFolders, const TCHAR* szFileMask,
+		HANDLE hTerminate = NULL, BOOL bProcessMsgLoop = TRUE);
 
-	double GetFolderSize(const TCHAR* szFolder,
-		BOOL bIncludeSubFolders = TRUE,
-		const TCHAR* szFileMask = NULL,
-		HANDLE hTerminate = NULL,
-		BOOL bProcessMsgLoop = TRUE);
+	double GetFolderSize(const TCHAR* szFolder, BOOL bIncludeSubFolders = TRUE, const TCHAR* szFileMask = NULL,
+		HANDLE hTerminate = NULL, BOOL bProcessMsgLoop = TRUE);
 
 	bool CreateFolder(const TCHAR* szFolder);
 	bool CreateFolderFromFilePath(const TCHAR* szFilePath);
@@ -154,8 +143,10 @@ namespace FileMisc
 	CString GetWindowsFolder();
 	CString GetWindowsSystemFolder();
 
-	void SplitPath(const TCHAR* szPath, CString* pDrive, CString* pDir = NULL, CString* pFName = NULL, CString* pExt = NULL);
-	CString& MakePath(CString& sPath, const TCHAR* szDrive, const TCHAR* szDir = NULL, const TCHAR* szFName = NULL, const TCHAR* szExt = NULL);
+	void SplitPath(const TCHAR* szPath, CString* pDrive, CString* pDir = NULL, CString* pFName = NULL,
+		CString* pExt = NULL);
+	CString& MakePath(CString& sPath, const TCHAR* szDrive, const TCHAR* szDir = NULL, const TCHAR* szFName = NULL,
+		const TCHAR* szExt = NULL);
 
 	CString GetRelativePath(const CString& sFilePath, const CString& sRelativeToFolder, BOOL bFolder);
 	CString& MakeRelativePath(CString& sFilePath, const CString& sRelativeToFolder, BOOL bFolder);
@@ -168,37 +159,24 @@ namespace FileMisc
 	CString GetFileNameFromPath(const TCHAR* szFilepath, BOOL bIncExtension = TRUE);
 
 // will delete the source folder on success
-	bool MoveFolder(const TCHAR* szSrcFolder,
-		const TCHAR* szDestFolder,
-		HANDLE hTerminate = NULL,
+	bool MoveFolder(const TCHAR* szSrcFolder, const TCHAR* szDestFolder, HANDLE hTerminate = NULL,
 		BOOL bProcessMsgLoop = TRUE);
 
-	bool CopyFolder(const TCHAR* szSrcFolder,
-		const TCHAR* szDestFolder,
-		HANDLE hTerminate = NULL,
+	bool CopyFolder(const TCHAR* szSrcFolder, const TCHAR* szDestFolder, HANDLE hTerminate = NULL,
 		BOOL bProcessMsgLoop = TRUE);
 
 // will delete the source folder only if file mask was "*.*"
-	bool MoveFolder(const TCHAR* szSrcFolder,
-		const TCHAR* szDestFolder,
-		BOOL bIncludeSubFolders,
-		const TCHAR* szFileMask,
-		HANDLE hTerminate = NULL,
-		BOOL bProcessMsgLoop = TRUE);
+	bool MoveFolder(const TCHAR* szSrcFolder, const TCHAR* szDestFolder, BOOL bIncludeSubFolders, const TCHAR* szFileMask,
+		HANDLE hTerminate = NULL, BOOL bProcessMsgLoop = TRUE);
 
-	bool CopyFolder(const TCHAR* szSrcFolder,
-		const TCHAR* szDestFolder,
-		BOOL bIncludeSubFolders,
-		const TCHAR* szFileMask,
-		HANDLE hTerminate = NULL,
-		BOOL bProcessMsgLoop = TRUE);
+	bool CopyFolder(const TCHAR* szSrcFolder, const TCHAR* szDestFolder, BOOL bIncludeSubFolders, const TCHAR* szFileMask,
+		HANDLE hTerminate = NULL, BOOL bProcessMsgLoop = TRUE);
 
 // append a line of text to a text file
 	bool LogText(LPCTSTR szLine, bool bWantDateTime = true);
 	bool AppendLineToFile(LPCTSTR szPathname, LPCTSTR szLine);
 
 	DWORD Run(HWND hwnd, LPCTSTR lpFile, LPCTSTR lpDirectory = NULL, int nShowCmd = SW_SHOW);
-
 }
 
 #endif // _MISCFILE_FUNCTIONS_H_

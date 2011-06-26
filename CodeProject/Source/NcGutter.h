@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -242,9 +247,18 @@ protected:
 
 	struct COLUMNDESC
 	{
-		COLUMNDESC(UINT nID = 0) : nColID(nID), nWidth(0), bCalcWidth(TRUE), bPressed(FALSE),
-			nTextAlign(DT_LEFT), bClickable(TRUE), nSortDir(NCGSORT_NONE),
-			hFont(NULL), bSymbolFont(FALSE) {}
+		COLUMNDESC(UINT nID = 0):
+		nColID(nID),
+		nWidth(0),
+		bCalcWidth(TRUE),
+		bPressed(FALSE),
+		nTextAlign(DT_LEFT),
+		bClickable(TRUE),
+		nSortDir(NCGSORT_NONE),
+		hFont(NULL),
+		bSymbolFont(FALSE)
+		{
+		}
 		~COLUMNDESC()
 		{
 			::DeleteObject(hFont);
@@ -288,8 +302,8 @@ protected:
 	BOOL ParentWantRecalc();
 	BOOL ParentWantRedraw();
 
-	void NcDrawItem(CDC* pDC, DWORD dwItem, DWORD dwParentItem, int nLevel, int nPos,
-		const CRect& rGutter, CRect& rItem, BOOL bDrawChildren);
+	void NcDrawItem(CDC* pDC, DWORD dwItem, DWORD dwParentItem, int nLevel, int nPos, const CRect& rGutter,
+		CRect& rItem, BOOL bDrawChildren);
 	void PostNcDraw(CDC* pDC, const CRect& rWindow);
 	void PostNcDrawItem(CDC* pDC, DWORD dwItem, const CRect& rItem, int nLevel, BOOL bParent);
 
@@ -300,14 +314,23 @@ protected:
 	DWORD GetParentItem(DWORD dwItem) const;
 	void GetItemColors(DWORD dwItem, COLORREF& crText, COLORREF& crBack) const;
 
-	enum NCG_HITTEST { NCGHT_HEADER, NCGHT_ITEM, NCGHT_NOWHERE }; // private
+	enum NCG_HITTEST
+	{
+		NCGHT_HEADER,
+		NCGHT_ITEM,
+		NCGHT_NOWHERE
+	}; // private
 
 	NCG_HITTEST HitTest(CPoint ptScreen, DWORD& dwItem, int& nColumn) const;
 	NCG_HITTEST HitTest(CPoint ptScreen) const;
 	DWORD ItemHitTest(CPoint ptClient) const;
 	int ColumnHitTest(CPoint ptScreen) const;
 
-	enum HCHDRPART { NONCLIENT, CLIENT }; // private
+	enum HCHDRPART
+	{
+		NONCLIENT,
+		CLIENT
+	}; // private
 
 	void NcDrawHeader(CDC* pDC, const CRect& rHeader, HCHDRPART nPart, const LPPOINT pCursor);
 	void NcDrawHeaderColumn(CDC* pDC, int nColumn, CRect rColumn, CThemed* pTheme, const LPPOINT pCursor);
@@ -324,7 +347,12 @@ protected:
 	BOOL PrepareBitmap(CDC* pDC, CBitmap* pBitmap, const CRect& rect, BOOL bClient);
 	CFont* PrepareFont(CDC* pDC, BOOL bHeader, HFONT hFont = NULL); // returns 'old' font
 
-	enum GHR_WHAT { GHR_NONCLIENT, GHR_CLIENT, GHR_ALL }; // private
+	enum GHR_WHAT
+	{
+		GHR_NONCLIENT,
+		GHR_CLIENT,
+		GHR_ALL
+	}; // private
 
 	void GetHeaderRect(CRect& rHeader, GHR_WHAT nWhat, BOOL bScreen) const;
 	void GetWindowRectEx(CRect& rWindow, BOOL bScreen) const;

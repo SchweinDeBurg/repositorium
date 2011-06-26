@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -56,8 +61,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-CTempFileBackup::CTempFileBackup(const CString& sFile, const CString& sFolder, BOOL bTimeStamp, const CString& sExt)
-: CFileBackup(sFile, sFolder, bTimeStamp, sExt)
+CTempFileBackup::CTempFileBackup(const CString& sFile, const CString& sFolder, BOOL bTimeStamp, const CString& sExt):
+CFileBackup(sFile, sFolder, bTimeStamp, sExt)
 {
 }
 
@@ -460,8 +465,8 @@ bool FileMisc::RemoveFolder(const TCHAR* szFolder, HANDLE hTerminate, BOOL bProc
 	return false;
 }
 
-double FileMisc::GetFolderSize(const TCHAR* szFolder, BOOL bIncludeSubFolders, const TCHAR* szFileMask, HANDLE hTerminate,
-	BOOL bProcessMsgLoop)
+double FileMisc::GetFolderSize(const TCHAR* szFolder, BOOL bIncludeSubFolders, const TCHAR* szFileMask,
+	HANDLE hTerminate, BOOL bProcessMsgLoop)
 {
 	// if the dir does not exists just return
 	if (!FolderExists(szFolder))
@@ -1226,9 +1231,8 @@ CString FileMisc::GetRelativePath(const CString& sFilePath, const CString& sRela
 
 	TCHAR szRelPath[MAX_PATH + 1];
 
-	BOOL bRes = ::PathRelativePathTo(szRelPath,
-		UnterminatePath(sRelativeToFolder), FILE_ATTRIBUTE_DIRECTORY,
-		sFilePath, bFolder ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL);
+	BOOL bRes = ::PathRelativePathTo(szRelPath, UnterminatePath(sRelativeToFolder), FILE_ATTRIBUTE_DIRECTORY, sFilePath,
+		bFolder ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL);
 
 	return bRes ? CString(szRelPath) : sFilePath;
 }

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -63,7 +68,9 @@
 #	define SM_REMOTESESSION 0x1000
 #endif
 
-CLightBoxMgr::CLightBoxMgr() : m_crBkgnd(GetSysColor(COLOR_3DHILIGHT)), m_nOpaquePercent(50)
+CLightBoxMgr::CLightBoxMgr():
+m_crBkgnd(GetSysColor(COLOR_3DHILIGHT)),
+m_nOpaquePercent(50)
 {
 }
 
@@ -263,7 +270,7 @@ BOOL CLightBox::ShowTransparentWnd(BOOL bShow)
 	if (bShow && !m_pSetLayeredWindowAttributes)
 	{
 		HMODULE hDLL = LoadLibrary(_T("user32.dll"));
-		m_pSetLayeredWindowAttributes = (PSLWA) GetProcAddress(hDLL, "SetLayeredWindowAttributes");
+		m_pSetLayeredWindowAttributes = (PSLWA)GetProcAddress(hDLL, "SetLayeredWindowAttributes");
 
 		if (m_pSetLayeredWindowAttributes == NULL)
 		{
@@ -298,7 +305,7 @@ BOOL CLightBox::ShowTransparentWnd(BOOL bShow)
 
 BOOL CLightBox::OnEraseBkgnd(CDC* pDC)
 {
-	if (m_crBkgnd != (COLORREF) - 1)
+	if (m_crBkgnd != (COLORREF)-1)
 	{
 		CRect rClient;
 		CRuntimeDlg::GetClientRect(rClient);

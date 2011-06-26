@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -70,13 +75,12 @@ void AFXAPI DDX_AutoCBString(CDataExchange* pDX, int nIDC, CString& value)
 	else
 	{
 		// try exact first
-		int nIndex = (int)::SendMessage(hWndCtrl, CB_FINDSTRINGEXACT, (WPARAM) - 1,
-			(LPARAM)(LPCTSTR)value);
+		int nIndex = (int)::SendMessage(hWndCtrl, CB_FINDSTRINGEXACT, (WPARAM)-1, (LPARAM)(LPCTSTR)value);
 
 		// then partial
 		if (nIndex == CB_ERR)
 		{
-			nIndex = ::SendMessage(hWndCtrl, CB_SELECTSTRING, (WPARAM) - 1, (LPARAM)(LPCTSTR)value);
+			nIndex = ::SendMessage(hWndCtrl, CB_SELECTSTRING, (WPARAM)-1, (LPARAM)(LPCTSTR)value);
 
 			// if there's a match, check its not partial
 			if (nIndex != CB_ERR)
@@ -110,7 +114,10 @@ void AFXAPI DDX_AutoCBString(CDataExchange* pDX, int nIDC, CString& value)
 /////////////////////////////////////////////////////////////////////////////
 // CAutoComboBox
 
-CAutoComboBox::CAutoComboBox(DWORD dwFlags) : m_dwFlags(dwFlags), m_hwndListbox(NULL), m_bClosingUp(FALSE)
+CAutoComboBox::CAutoComboBox(DWORD dwFlags):
+m_dwFlags(dwFlags),
+m_hwndListbox(NULL),
+m_bClosingUp(FALSE)
 {
 }
 
@@ -405,7 +412,7 @@ void CAutoComboBox::OnSize(UINT nType, int cx, int cy)
 		CHoldRedraw hr(*pEdit);
 		CComboBox::OnSize(nType, cx, cy);
 
-		pEdit->SendMessage(EM_SETSEL, (UINT) - 1, 0);
+		pEdit->SendMessage(EM_SETSEL, (UINT)-1, 0);
 	}
 	else
 	{
@@ -611,8 +618,7 @@ BOOL CAutoComboBox::DeleteSelectedLBItem()
 		}
 
 		// notify parent that we've been fiddling
-		CComboBox::GetParent()->SendMessage(WM_ACB_ITEMDELETED,
-			MAKEWPARAM(CWnd::GetDlgCtrlID(), nSelItem),
+		CComboBox::GetParent()->SendMessage(WM_ACB_ITEMDELETED, MAKEWPARAM(CWnd::GetDlgCtrlID(), nSelItem),
 			(LPARAM)(LPCTSTR)sSelItem);
 
 		return TRUE;

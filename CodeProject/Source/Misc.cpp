@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -109,7 +114,7 @@ BOOL Misc::CopyTexttoClipboard(const CString& sText, HWND hwnd)
 
 	memcpy(lptstrCopy, (LPVOID)(LPCTSTR)sText, sText.GetLength() * sizeof(TCHAR));
 
-	lptstrCopy[sText.GetLength()] = (TCHAR) 0;    // null character
+	lptstrCopy[sText.GetLength()] = (TCHAR)0;    // null character
 	GlobalUnlock(hglbCopy);
 
 	// Place the handle on the clipboard.
@@ -246,7 +251,7 @@ void Misc::ProcessMsgLoop()
 {
 	MSG msg;
 
-	while (::PeekMessage((LPMSG) &msg, NULL, 0, 0, PM_REMOVE))
+	while (::PeekMessage((LPMSG)&msg, NULL, 0, 0, PM_REMOVE))
 	{
 		if (::IsDialogMessage(msg.hwnd, (LPMSG)&msg))
 		{
@@ -715,7 +720,7 @@ CString Misc::GetTimeSeparator()
 
 	if (sSep.IsEmpty()) // init first time only
 	{
-		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_STIME , sSep.GetBuffer(BUFLEN), BUFLEN - 1);
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_STIME, sSep.GetBuffer(BUFLEN), BUFLEN - 1);
 		sSep.ReleaseBuffer();
 
 		// Trim extra spaces
@@ -739,7 +744,7 @@ CString Misc::GetDateSeparator()
 
 	if (sSep.IsEmpty()) // init first time only
 	{
-		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDATE , sSep.GetBuffer(BUFLEN), BUFLEN - 1);
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDATE, sSep.GetBuffer(BUFLEN), BUFLEN - 1);
 		sSep.ReleaseBuffer();
 
 		// Trim extra spaces
@@ -916,9 +921,9 @@ BOOL Misc::IsWorkStationLocked()
 {
 	// note: we can't call OpenInputDesktop directly because it's not
 	// available on win 9x
-	typedef HDESK(WINAPI * PFNOPENDESKTOP)(LPSTR lpszDesktop, DWORD dwFlags, BOOL fInherit, ACCESS_MASK dwDesiredAccess);
-	typedef BOOL (WINAPI * PFNCLOSEDESKTOP)(HDESK hDesk);
-	typedef BOOL (WINAPI * PFNSWITCHDESKTOP)(HDESK hDesk);
+	typedef HDESK (WINAPI* PFNOPENDESKTOP)(LPSTR lpszDesktop, DWORD dwFlags, BOOL fInherit, ACCESS_MASK dwDesiredAccess);
+	typedef BOOL (WINAPI* PFNCLOSEDESKTOP)(HDESK hDesk);
+	typedef BOOL (WINAPI* PFNSWITCHDESKTOP)(HDESK hDesk);
 
 	// load user32.dll once only
 	static HMODULE hUser32 = LoadLibrary(_T("user32.dll"));

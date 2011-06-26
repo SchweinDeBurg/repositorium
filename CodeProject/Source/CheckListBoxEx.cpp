@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // CheckListBoxEx.cpp : implementation file
@@ -57,7 +62,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CCheckListBoxEx
 
-CCheckListBoxEx::CCheckListBoxEx() : m_nImageHeight(0)
+CCheckListBoxEx::CCheckListBoxEx():
+m_nImageHeight(0)
 {
 }
 
@@ -106,7 +112,11 @@ void CCheckListBoxEx::PreSubclassWindow()
 {
 	CCheckListBox::PreSubclassWindow();
 
-	const int nStates[] = { CBS_UNCHECKEDNORMAL, CBS_CHECKEDNORMAL };//, CBS_MIXEDNORMAL };
+	const int nStates[] =
+	{
+		CBS_UNCHECKEDNORMAL,
+		CBS_CHECKEDNORMAL
+	};
 	const int nNumStates = sizeof(nStates) / sizeof(int);
 
 	CThemed th;
@@ -168,7 +178,7 @@ void CCheckListBoxEx::PreMeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 	}
 }
 
-LRESULT CCheckListBoxEx::OnSetFont(WPARAM , LPARAM)
+LRESULT CCheckListBoxEx::OnSetFont(WPARAM, LPARAM)
 {
 	Default();
 

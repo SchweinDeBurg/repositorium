@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1 sources
 //*****************************************************************************
 
@@ -64,7 +69,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CPropertyPageHost
 
-CPropertyPageHost::CPropertyPageHost() : m_nSelIndex(-1)
+CPropertyPageHost::CPropertyPageHost():
+m_nSelIndex(-1)
 {
 }
 

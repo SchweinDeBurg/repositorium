@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // WndPrompt.cpp: implementation of the CWndPrompt class.
@@ -61,7 +66,10 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CWndPrompt::CWndPrompt() : m_nCheckMsg(0), m_lCheckResult(0), m_nVertOffset(0)
+CWndPrompt::CWndPrompt():
+m_nCheckMsg(0),
+m_lCheckResult(0),
+m_nVertOffset(0)
 {
 }
 
@@ -288,14 +296,14 @@ BOOL CWndPromptManager::SetPrompt(HWND hWnd, UINT nIDPrompt, UINT nCheckMsg, LRE
 	return SetPrompt(hWnd, CEnString(nIDPrompt), nCheckMsg, lRes, nVertOffset);
 }
 
-BOOL CWndPromptManager::SetPrompt(UINT nIDCtrl, HWND hwndParent, LPCTSTR szPrompt, UINT nCheckMsg,
-	LRESULT lRes, int nVertOffset)
+BOOL CWndPromptManager::SetPrompt(UINT nIDCtrl, HWND hwndParent, LPCTSTR szPrompt, UINT nCheckMsg, LRESULT lRes,
+	int nVertOffset)
 {
 	return SetPrompt(GetDlgItem(hwndParent, nIDCtrl), szPrompt, nCheckMsg, lRes, nVertOffset);
 }
 
-BOOL CWndPromptManager::SetPrompt(UINT nIDCtrl, HWND hwndParent, UINT nIDPrompt, UINT nCheckMsg,
-	LRESULT lRes, int nVertOffset)
+BOOL CWndPromptManager::SetPrompt(UINT nIDCtrl, HWND hwndParent, UINT nIDPrompt, UINT nCheckMsg, LRESULT lRes,
+	int nVertOffset)
 {
 	return SetPrompt(nIDCtrl, hwndParent, CEnString(nIDPrompt), nCheckMsg, lRes, nVertOffset);
 }

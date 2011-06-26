@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // HotKeyCtrlEx.cpp : implementation file
@@ -56,8 +61,10 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CHotKeyCtrlEx
 
-CHotKeyCtrlEx::CHotKeyCtrlEx(BOOL bGlobal) :
-m_wInvalidComb(0), m_wModifiers(0), m_bGlobal(bGlobal)
+CHotKeyCtrlEx::CHotKeyCtrlEx(BOOL bGlobal):
+m_wInvalidComb(0),
+m_wModifiers(0),
+m_bGlobal(bGlobal)
 {
 }
 

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // DlgUnits.cpp: implementation of the CDlgUnits class.
@@ -59,7 +64,8 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDlgUnits::CDlgUnits(HWND hWnd) : m_hWnd(NULL)
+CDlgUnits::CDlgUnits(HWND hWnd):
+m_hWnd(NULL)
 {
 	if (!hWnd || !CWinClasses::IsDialog(hWnd))
 	{
@@ -75,7 +81,8 @@ CDlgUnits::CDlgUnits(HWND hWnd) : m_hWnd(NULL)
 	}
 }
 
-CDlgUnits::CDlgUnits(CWnd* pWnd) : m_hWnd(NULL)
+CDlgUnits::CDlgUnits(CWnd* pWnd):
+m_hWnd(NULL)
 {
 	if (!pWnd || !pWnd->GetSafeHwnd() || !CWinClasses::IsDialog(*pWnd))
 	{

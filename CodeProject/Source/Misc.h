@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -55,8 +60,18 @@
 
 #include <afxtempl.h>
 
-enum { MKS_CTRL = 0x01, MKS_SHIFT = 0x02, MKS_ALT = 0x04 };
-enum { MKC_LEFTRIGHT = 0x01, MKC_UPDOWN = 0x02, MKC_ANY = (MKC_LEFTRIGHT | MKC_UPDOWN) };
+enum
+{
+	MKS_CTRL = 0x01,
+	MKS_SHIFT = 0x02,
+	MKS_ALT = 0x04
+};
+enum
+{
+	MKC_LEFTRIGHT = 0x01,
+	MKC_UPDOWN = 0x02,
+	MKC_ANY = (MKC_LEFTRIGHT | MKC_UPDOWN)
+};
 
 namespace Misc
 {
@@ -141,8 +156,8 @@ namespace Misc
 	CString GetDateSeparator();
 	BOOL IsMetricMeasurementSystem();
 
-	BOOL ArraysMatch(const CStringArray& array1, const CStringArray& array2,
-		BOOL bOrderSensitive = FALSE, BOOL bCaseSensitive = FALSE);
+	BOOL ArraysMatch(const CStringArray& array1, const CStringArray& array2, BOOL bOrderSensitive = FALSE,
+		BOOL bCaseSensitive = FALSE);
 	BOOL MatchAny(const CStringArray& array1, const CStringArray& array2, BOOL bCaseSensitive = FALSE);
 	CString FormatArray(const CStringArray& array, LPCTSTR szSep = NULL);
 	CString FormatArray(const CDWordArray& array, LPCTSTR szSep = NULL);
@@ -151,7 +166,8 @@ namespace Misc
 	int RemoveItems(const CStringArray& aItems, CStringArray& aFrom, BOOL bCaseSensitive = FALSE);
 	int AddUniqueItems(const CStringArray& aItems, CStringArray& aTo, BOOL bCaseSensitive = FALSE);
 	int AddUniqueItem(const CString& sItem, CStringArray& aTo, BOOL bCaseSensitive = FALSE);
-	int Split(const CString& sText, CStringArray& aValues, BOOL bAllowEmpty = FALSE, const CString& sSep = GetListSeparator());
+	int Split(const CString& sText, CStringArray& aValues, BOOL bAllowEmpty = FALSE, const CString& sSep =
+		GetListSeparator());
 	int Split(const CString& sText, TCHAR cDelim, CStringArray& aValues);
 
 	void SortArray(CStringArray& array, BOOL bAscending = TRUE);
@@ -179,6 +195,6 @@ namespace Misc
 	BOOL IsCursorKeyPressed(DWORD dwKeys = MKC_ANY);
 
 	BOOL HasFlag(DWORD dwFlags, DWORD dwFlag);
-};
+}
 
 #endif // !defined(AFX_MISC_H__4B2FDA3E_63C5_4F52_A139_9512105C3AD4__INCLUDED_)

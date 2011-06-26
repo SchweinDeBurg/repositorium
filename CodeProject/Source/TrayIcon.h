@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TrayIcon.h : header file for CTrayIcon
@@ -81,8 +86,7 @@ public:
 	BOOL SetTip(LPCTSTR sNewTip);
 	BOOL SetIcon(UINT uIDNewIcon);
 
-	BOOL ShowBalloon(LPCTSTR szText, LPCTSTR szTitle = NULL,
-			DWORD dwIcon = NIIF_NONE, UINT uTimeout = 5);
+	BOOL ShowBalloon(LPCTSTR szText, LPCTSTR szTitle = NULL, DWORD dwIcon = NIIF_NONE, UINT uTimeout = 5);
 
 	// Attributes
 private:

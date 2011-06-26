@@ -38,6 +38,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // EnBitmap.h: interface for the CEnBitmap class.
@@ -163,7 +168,7 @@ inline void C32BitImageProcessor::CalcWeightedColor(RGBX* pPixels, CSize size, d
 
 	rgbResult.btRed = (BYTE)max(0, min(255, nRed));
 	rgbResult.btGreen = (BYTE)max(0, min(255, nGreen));
-	rgbResult.btBlue = (BYTE) max(0, min(255, nBlue));
+	rgbResult.btBlue = (BYTE)max(0, min(255, nBlue));
 }
 
 #endif // !defined(AFX_ENBITMAP_H__1FDE0A4E_8AB4_11D6_95AD_EFA89432A428__INCLUDED_)

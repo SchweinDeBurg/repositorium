@@ -38,6 +38,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // Compression.h: interface for the CCompression class.
@@ -55,6 +60,6 @@ namespace Compression
 {
 	BOOL Compress(const unsigned char* pContentSrc, int nLenSrc, unsigned char*& pContentDest, int& nLenDest);
 	BOOL Decompress(const unsigned char* pContentSrc, int nLenSrc, unsigned char*& pContentDest, int& nLenDest);
-};
+}
 
 #endif // !defined(AFX_COMPRESSION_H__CEA5EF3E_A3BD_4542_B749_C6AC41F53E53__INCLUDED_)

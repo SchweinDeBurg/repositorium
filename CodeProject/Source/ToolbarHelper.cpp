@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // ToolbarHelper.cpp: implementation of the CToolbarHelper class.
@@ -72,9 +77,15 @@ public:
 	{
 		m_bEnabled = bOn;
 	}
-	virtual void SetCheck(int /*nCheck*/ = 1) {} // dummy
-	virtual void SetRadio(BOOL /*bOn*/ = TRUE) {} // dummy
-	virtual void SetText(LPCTSTR /*lpszText*/) {} // dummy
+	virtual void SetCheck(int /*nCheck*/ = 1)
+	{
+	} // dummy
+	virtual void SetRadio(BOOL /*bOn*/ = TRUE)
+	{
+	} // dummy
+	virtual void SetText(LPCTSTR /*lpszText*/)
+	{
+	} // dummy
 
 public:
 	BOOL m_bEnabled;
@@ -84,7 +95,10 @@ public:
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CToolbarHelper::CToolbarHelper() : m_pToolbar(NULL), m_bMultiline(FALSE), m_nMultilineWidth(200)
+CToolbarHelper::CToolbarHelper():
+m_pToolbar(NULL),
+m_bMultiline(FALSE),
+m_nMultilineWidth(200)
 {
 }
 
@@ -346,8 +360,7 @@ LRESULT CToolbarHelper::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp
 					CWnd* pTooltipCtrl = CWnd::FromHandle(pNMHDR->hwndFrom);
 					ASSERT(pTooltipCtrl);
 
-					pTooltipCtrl->SendMessage(TTM_SETMAXTIPWIDTH, 0,
-						m_bMultiline ? m_nMultilineWidth : UINT_MAX);
+					pTooltipCtrl->SendMessage(TTM_SETMAXTIPWIDTH, 0, m_bMultiline ? m_nMultilineWidth : UINT_MAX);
 				}
 				break;
 			}
@@ -392,7 +405,7 @@ LRESULT CToolbarHelper::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp
 	case WM_DESTROY:
 		{
 			// must call rest of chain first
-			LRESULT lr =  CSubclassWnd::WindowProc(hRealWnd, msg, wp, lp);
+			LRESULT lr = CSubclassWnd::WindowProc(hRealWnd, msg, wp, lp);
 			HookWindow(NULL);
 			return lr;
 		}
@@ -484,7 +497,7 @@ void CToolbarHelper::PrepareMenuItems(CMenu* pMenu, CWnd* pWnd)
 	{
 		UINT nCmdID = pMenu->GetMenuItemID(state.m_nIndex);
 
-		if (nCmdID == (UINT) - 1) // submenu
+		if (nCmdID == (UINT)-1) // submenu
 		{
 			CMenu* pSubMenu = pMenu->GetSubMenu(state.m_nIndex);
 
