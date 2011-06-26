@@ -43,6 +43,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -99,20 +104,20 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
-	int         m_iMiddleMonth;
-	int         m_iMiddleYear;
-	int         m_iItemsPerPage;
+	int m_iMiddleMonth;
+	int m_iMiddleYear;
+	int m_iItemsPerPage;
 
-	int         m_iSelMonth;
-	int         m_iSelYear;
+	int m_iSelMonth;
+	int m_iSelYear;
 
-	COLORREF    m_cBackColor;
-	COLORREF    m_cTextColor;
+	COLORREF m_cBackColor;
+	COLORREF m_cTextColor;
 
-	int         m_iUpFactor;
-	int         m_iDownFactor;
+	int m_iUpFactor;
+	int m_iDownFactor;
 
-	CMiniCalendarCtrl*          m_pwndCalendar;
+	CMiniCalendarCtrl* m_pwndCalendar;
 };
 
 #endif//_MINICALENDARMONTHPICKER_H_

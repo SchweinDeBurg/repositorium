@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -157,23 +162,23 @@ public:
 	BOOL SetTaskPriorityColor(HTASKITEM hTask, COLORREF color);
 	BOOL SetTaskCalcTimeEstimate(HTASKITEM hTask, double dTime);
 	BOOL SetTaskCalcTimeSpent(HTASKITEM hTask, double dTime);
-	BOOL SetTaskEarliestDueDate(HTASKITEM hTask,  const COleDateTime& date);
+	BOOL SetTaskEarliestDueDate(HTASKITEM hTask, const COleDateTime& date);
 	BOOL SetTaskCalcCompletion(HTASKITEM hTask, int nPercent);
 	BOOL SetTaskHighestPriority(HTASKITEM hTask, int nPriority);
 	BOOL SetTaskHighestRisk(HTASKITEM hTask, int nRisk);
 	BOOL SetTaskCalcCost(HTASKITEM hTask, double dCost);
 
 	BOOL SetTaskIconIndex(HTASKITEM hTask, int nIndex);
-	int  GetTaskIconIndex(HTASKITEM hTask) const;
+	int GetTaskIconIndex(HTASKITEM hTask) const;
 
 	BOOL SetTaskCategories(HTASKITEM hTask, const CStringArray& aCategories);
-	int  GetTaskCategories(HTASKITEM hTask, CStringArray& aCategories) const;
+	int GetTaskCategories(HTASKITEM hTask, CStringArray& aCategories) const;
 
 	BOOL SetTaskDependencies(HTASKITEM hTask, const CStringArray& aDepends);
-	int  GetTaskDependencies(HTASKITEM hTask, CStringArray& aDepends) const;
+	int GetTaskDependencies(HTASKITEM hTask, CStringArray& aDepends) const;
 
 	BOOL SetTaskAllocatedTo(HTASKITEM hTask, const CStringArray& aAllocTo);
-	int  GetTaskAllocatedTo(HTASKITEM hTask, CStringArray& aAllocTo) const;
+	int GetTaskAllocatedTo(HTASKITEM hTask, CStringArray& aAllocTo) const;
 
 	BOOL SetTaskCustomComments(HTASKITEM hTask, const CString& sContent, const CString& sType);
 	BOOL GetTaskCustomComments(HTASKITEM hTask, CString& sContent, CString& sType) const;
@@ -209,10 +214,10 @@ public:
 
 	//////////////////////////////////////////////////////////////
 	// ITaskList6 implementation
-	bool SetTaskRecurrence(HTASKITEM hTask, int nRegularity, DWORD dwSpecific1,
-		DWORD dwSpecific2, BOOL bRecalcFromDue, int nReuse);
-	bool GetTaskRecurrence(HTASKITEM hTask, int& nRegularity, DWORD& dwSpecific1,
-		DWORD& dwSpecific2, BOOL& bRecalcFromDue, int& nReuse) const;
+	bool SetTaskRecurrence(HTASKITEM hTask, int nRegularity, DWORD dwSpecific1, DWORD dwSpecific2, BOOL bRecalcFromDue,
+		int nReuse);
+	bool GetTaskRecurrence(HTASKITEM hTask, int& nRegularity, DWORD& dwSpecific1, DWORD& dwSpecific2,
+		BOOL& bRecalcFromDue, int& nReuse) const;
 
 	bool SetTaskVersion(HTASKITEM hTask, const char* szVersion);
 	const TCHAR* GetTaskVersion(HTASKITEM hTask) const;
@@ -368,7 +373,7 @@ public:
 	}
 
 protected:
-	CMap <HTASKITEM, HTASKITEM, CXmlItem*, CXmlItem*&> m_mapHandles;
+	CMap<HTASKITEM, HTASKITEM, CXmlItem*, CXmlItem*&> m_mapHandles;
 	DWORD m_dwNextUniqueID;
 	BOOL m_bISODates;
 
@@ -389,26 +394,21 @@ protected:
 	double GetTaskDouble(HTASKITEM hTask, LPCTSTR szDoubleItem) const;
 
 	bool SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, time_t tVal, BOOL bIncTime);
-	bool SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, const COleDateTime& tVal, BOOL bIncTime, LPCTSTR szDateStringItem = NULL);
+	bool SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, const COleDateTime& tVal, BOOL bIncTime,
+		LPCTSTR szDateStringItem = NULL);
 	bool SetTaskUChar(HTASKITEM hTask, LPCTSTR szUCharItem, unsigned char cVal);
 	bool SetTaskULong(HTASKITEM hTask, LPCTSTR szULongItem, unsigned long lVal);
 	bool SetTaskInt(HTASKITEM hTask, LPCTSTR szIntItem, int iVal);
 	bool SetTaskCChar(HTASKITEM hTask, LPCTSTR szCCharItem, const char* szVal, XI_TYPE nType = XIT_ATTRIB);
 	bool SetTaskDouble(HTASKITEM hTask, LPCTSTR szDoubleItem, double dVal);
-	bool SetTaskTime(HTASKITEM hTask, LPCTSTR szTimeItem, double dTime,
-		LPCTSTR szUnitsItem, TCHAR cUnits);
+	bool SetTaskTime(HTASKITEM hTask, LPCTSTR szTimeItem, double dTime, LPCTSTR szUnitsItem, TCHAR cUnits);
 
 	// for handling arrays at *task* level
-	bool AddTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag,
-		const char* szItemTag, const char* szItem);
-	const TCHAR* GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag,
-		const char* szItemTag, int nIndex) const;
-	BOOL SetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
-		const char* szItemTag, const CStringArray& aItems);
-	int GetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
-		const char* szItemTag, CStringArray& aItems) const;
-	bool DeleteTaskArray(HTASKITEM hTask, const char* szNumItemTag,
-		const char* szItemTag);
+	bool AddTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag, const char* szItemTag, const char* szItem);
+	const TCHAR* GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag, const char* szItemTag, int nIndex) const;
+	BOOL SetTaskArray(HTASKITEM hTask, const char* szNumItemTag, const char* szItemTag, const CStringArray& aItems);
+	int GetTaskArray(HTASKITEM hTask, const char* szNumItemTag, const char* szItemTag, CStringArray& aItems) const;
+	bool DeleteTaskArray(HTASKITEM hTask, const char* szNumItemTag, const char* szItemTag);
 
 	// for handling arrays at *tasklist* level
 	BOOL SetArray(const char* szItemTag, const CStringArray& aItems);

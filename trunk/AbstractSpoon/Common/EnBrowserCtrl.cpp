@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // EnBrowserCtrl.cpp : implementation file
@@ -59,12 +64,18 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-enum { EBC_NONE, EBC_PRINT, EBC_PRINTPREVIEW };
+enum
+{
+	EBC_NONE,
+	EBC_PRINT,
+	EBC_PRINTPREVIEW
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // CEnBrowserCtrl
 
-CEnBrowserCtrl::CEnBrowserCtrl() : m_nAction(EBC_NONE)
+CEnBrowserCtrl::CEnBrowserCtrl():
+m_nAction(EBC_NONE)
 {
 }
 

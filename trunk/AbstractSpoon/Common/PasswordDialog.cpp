@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // PasswordDialog.cpp : implementation file
@@ -62,7 +67,8 @@ CMap<UINT, UINT, CString, CString&> CPasswordDialog::s_mapText;
 #define WM_POSTINITDIALOG (WM_APP+1)
 
 CPasswordDialog::CPasswordDialog(BOOL bConfirm, LPCTSTR szExplanation, CWnd* /*pParent*/):
-CRuntimeDlg(), m_bConfirm(bConfirm)
+CRuntimeDlg(),
+m_bConfirm(bConfirm)
 {
 	//{{AFX_DATA_INIT(CPasswordDialog)
 	m_sPassword = _T("");
@@ -87,17 +93,22 @@ CRuntimeDlg(), m_bConfirm(bConfirm)
 	}
 
 	AddRCControl(_T("LTEXT"), _T(""), sPassword, 0, 0, 7, 9 + YEXPOFFSET, PROMPTLEN, 8, IDC_PD_PASSWORDLABEL);
-	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART, 7 + YEXPOFFSET, 110, 14, IDC_PD_PASSWORD);
+	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART,
+		7 + YEXPOFFSET, 110, 14, IDC_PD_PASSWORD);
 
 	if (m_bConfirm)
 	{
 		AddRCControl(_T("LTEXT"), _T(""), sConfirm, 0, 0, 7, 28 + YEXPOFFSET, PROMPTLEN, 8, IDC_PD_CONFIRMLABEL);
-		AddRCControl(_T("EDITTEXT"), _T(""), _T(""), WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART, 25 + YEXPOFFSET, 110, 14, IDC_PD_CONFIRM);
+		AddRCControl(_T("EDITTEXT"), _T(""), _T(""), WS_TABSTOP | ES_PASSWORD | ES_AUTOHSCROLL, 0, EDITSTART,
+			25 + YEXPOFFSET, 110, 14, IDC_PD_CONFIRM);
 	}
 
-	AddRCControl(_T("CONTROL"), _T("Static"), _T(""), SS_ETCHEDHORZ, 0, 7, 30 + YOFFSET + YEXPOFFSET, EDITEND - 7, 1, (UINT)IDC_STATIC);
-	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_DISABLED | WS_TABSTOP, 0, EDITEND - 50 - 4 - 50, 40 + YOFFSET + YEXPOFFSET, 50, 14, IDOK);
-	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0, EDITEND - 50, 40 + YOFFSET + YEXPOFFSET, 50, 14, IDCANCEL);
+	AddRCControl(_T("CONTROL"), _T("Static"), _T(""), SS_ETCHEDHORZ, 0, 7, 30 + YOFFSET + YEXPOFFSET, EDITEND - 7,
+		1, (UINT)IDC_STATIC);
+	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_DISABLED | WS_TABSTOP, 0, EDITEND - 50 - 4 - 50,
+		40 + YOFFSET + YEXPOFFSET, 50, 14, IDOK);
+	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0, EDITEND - 50, 40 + YOFFSET + YEXPOFFSET, 50, 14,
+		IDCANCEL);
 }
 
 

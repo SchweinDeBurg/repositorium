@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -312,7 +317,8 @@ int CTDLRecurringTaskEdit::CalcMaxRegularityWidth(CDC* pDC, BOOL bIncOnce)
 
 #define WM_VALUECHANGE (WM_APP+1)
 
-CTDLRecurringTaskOptionDlg::CTDLRecurringTaskOptionDlg(const TDIRECURRENCE& tr, const COleDateTime& dtDefault, CWnd* pParent /*=NULL*/):
+CTDLRecurringTaskOptionDlg::CTDLRecurringTaskOptionDlg(const TDIRECURRENCE& tr, const COleDateTime& dtDefault,
+	CWnd* pParent /*=NULL*/):
 CDialog(IDD_RECURRING_TASK_DIALOG, pParent)
 {
 	//{{AFX_DATA_INIT(CRecurringTaskOptionDlg)

@@ -38,12 +38,11 @@ void CWebBrowserCtrl::GoSearch()
 	InvokeHelper(0x67, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
 }
 
-void CWebBrowserCtrl::Navigate(LPCTSTR URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData, VARIANT* Headers)
+void CWebBrowserCtrl::Navigate(LPCTSTR URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData,
+	VARIANT* Headers)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT;
-	InvokeHelper(0x68, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 URL, Flags, TargetFrameName, PostData, Headers);
+	static BYTE parms[] = VTS_BSTR VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT;
+	InvokeHelper(0x68, DISPATCH_METHOD, VT_EMPTY, NULL, parms, URL, Flags, TargetFrameName, PostData, Headers);
 }
 
 void CWebBrowserCtrl::Refresh()
@@ -53,10 +52,8 @@ void CWebBrowserCtrl::Refresh()
 
 void CWebBrowserCtrl::Refresh2(VARIANT* Level)
 {
-	static BYTE parms[] =
-		VTS_PVARIANT;
-	InvokeHelper(0x69, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Level);
+	static BYTE parms[] = VTS_PVARIANT;
+	InvokeHelper(0x69, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Level);
 }
 
 void CWebBrowserCtrl::Stop()
@@ -115,10 +112,8 @@ long CWebBrowserCtrl::GetLeft()
 
 void CWebBrowserCtrl::SetLeft(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xce, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xce, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long CWebBrowserCtrl::GetTop()
@@ -130,10 +125,8 @@ long CWebBrowserCtrl::GetTop()
 
 void CWebBrowserCtrl::SetTop(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xcf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xcf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long CWebBrowserCtrl::GetWidth()
@@ -145,10 +138,8 @@ long CWebBrowserCtrl::GetWidth()
 
 void CWebBrowserCtrl::SetWidth(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xd0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xd0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long CWebBrowserCtrl::GetHeight()
@@ -160,10 +151,8 @@ long CWebBrowserCtrl::GetHeight()
 
 void CWebBrowserCtrl::SetHeight(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xd1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xd1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString CWebBrowserCtrl::GetLocationName()
@@ -194,27 +183,21 @@ void CWebBrowserCtrl::Quit()
 
 void CWebBrowserCtrl::ClientToWindow(long* pcx, long* pcy)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_PI4;
-	InvokeHelper(0x12d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pcx, pcy);
+	static BYTE parms[] = VTS_PI4 VTS_PI4;
+	InvokeHelper(0x12d, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pcx, pcy);
 }
 
 void CWebBrowserCtrl::PutProperty(LPCTSTR Property_, const VARIANT& vtValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x12e, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Property_, &vtValue);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x12e, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Property_, &vtValue);
 }
 
 VARIANT CWebBrowserCtrl::GetProperty_(LPCTSTR Property_)
 {
 	VARIANT result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x12f, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms,
-		Property_);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x12f, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms, Property_);
 	return result;
 }
 
@@ -255,10 +238,8 @@ BOOL CWebBrowserCtrl::GetVisible()
 
 void CWebBrowserCtrl::SetVisible(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x192, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x192, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL CWebBrowserCtrl::GetStatusBar()
@@ -270,10 +251,8 @@ BOOL CWebBrowserCtrl::GetStatusBar()
 
 void CWebBrowserCtrl::SetStatusBar(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x193, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x193, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString CWebBrowserCtrl::GetStatusText()
@@ -285,10 +264,8 @@ CString CWebBrowserCtrl::GetStatusText()
 
 void CWebBrowserCtrl::SetStatusText(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x194, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x194, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long CWebBrowserCtrl::GetToolBar()
@@ -300,10 +277,8 @@ long CWebBrowserCtrl::GetToolBar()
 
 void CWebBrowserCtrl::SetToolBar(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x195, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x195, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL CWebBrowserCtrl::GetMenuBar()
@@ -315,10 +290,8 @@ BOOL CWebBrowserCtrl::GetMenuBar()
 
 void CWebBrowserCtrl::SetMenuBar(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x196, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x196, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL CWebBrowserCtrl::GetFullScreen()
@@ -330,44 +303,35 @@ BOOL CWebBrowserCtrl::GetFullScreen()
 
 void CWebBrowserCtrl::SetFullScreen(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x197, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x197, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
-void CWebBrowserCtrl::Navigate2(VARIANT* URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData, VARIANT* Headers)
+void CWebBrowserCtrl::Navigate2(VARIANT* URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData,
+	VARIANT* Headers)
 {
-	static BYTE parms[] =
-		VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT;
-	InvokeHelper(0x1f4, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 URL, Flags, TargetFrameName, PostData, Headers);
+	static BYTE parms[] = VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT;
+	InvokeHelper(0x1f4, DISPATCH_METHOD, VT_EMPTY, NULL, parms, URL, Flags, TargetFrameName, PostData, Headers);
 }
 
 long CWebBrowserCtrl::QueryStatusWB(long cmdID)
 {
 	long result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x1f5, DISPATCH_METHOD, VT_I4, (void*)&result, parms,
-		cmdID);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x1f5, DISPATCH_METHOD, VT_I4, (void*)&result, parms, cmdID);
 	return result;
 }
 
 void CWebBrowserCtrl::ExecWB(long cmdID, long cmdexecopt, VARIANT* pvaIn, VARIANT* pvaOut)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_PVARIANT VTS_PVARIANT;
-	InvokeHelper(0x1f6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 cmdID, cmdexecopt, pvaIn, pvaOut);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_PVARIANT VTS_PVARIANT;
+	InvokeHelper(0x1f6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, cmdID, cmdexecopt, pvaIn, pvaOut);
 }
 
 void CWebBrowserCtrl::ShowBrowserBar(VARIANT* pvaClsid, VARIANT* pvarShow, VARIANT* pvarSize)
 {
-	static BYTE parms[] =
-		VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT;
-	InvokeHelper(0x1f7, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 pvaClsid, pvarShow, pvarSize);
+	static BYTE parms[] = VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT;
+	InvokeHelper(0x1f7, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pvaClsid, pvarShow, pvarSize);
 }
 
 long CWebBrowserCtrl::GetReadyState()
@@ -386,10 +350,8 @@ BOOL CWebBrowserCtrl::GetOffline()
 
 void CWebBrowserCtrl::SetOffline(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x226, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x226, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL CWebBrowserCtrl::GetSilent()
@@ -401,10 +363,8 @@ BOOL CWebBrowserCtrl::GetSilent()
 
 void CWebBrowserCtrl::SetSilent(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x227, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x227, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL CWebBrowserCtrl::GetRegisterAsBrowser()
@@ -416,10 +376,8 @@ BOOL CWebBrowserCtrl::GetRegisterAsBrowser()
 
 void CWebBrowserCtrl::SetRegisterAsBrowser(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x228, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x228, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL CWebBrowserCtrl::GetRegisterAsDropTarget()
@@ -431,10 +389,8 @@ BOOL CWebBrowserCtrl::GetRegisterAsDropTarget()
 
 void CWebBrowserCtrl::SetRegisterAsDropTarget(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x229, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x229, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL CWebBrowserCtrl::GetTheaterMode()
@@ -446,10 +402,8 @@ BOOL CWebBrowserCtrl::GetTheaterMode()
 
 void CWebBrowserCtrl::SetTheaterMode(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x22a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x22a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL CWebBrowserCtrl::GetAddressBar()
@@ -461,10 +415,8 @@ BOOL CWebBrowserCtrl::GetAddressBar()
 
 void CWebBrowserCtrl::SetAddressBar(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x22b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x22b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL CWebBrowserCtrl::GetResizable()
@@ -476,8 +428,6 @@ BOOL CWebBrowserCtrl::GetResizable()
 
 void CWebBrowserCtrl::SetResizable(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x22c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x22c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }

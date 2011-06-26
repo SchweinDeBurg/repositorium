@@ -26,10 +26,8 @@ long _DRecipientControl::GetBackColor()
 
 void _DRecipientControl::SetBackColor(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _DRecipientControl::GetForeColor()
@@ -41,10 +39,8 @@ long _DRecipientControl::GetForeColor()
 
 void _DRecipientControl::SetForeColor(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _DRecipientControl::GetFont()
@@ -56,10 +52,8 @@ LPDISPATCH _DRecipientControl::GetFont()
 
 void _DRecipientControl::SetFont(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(DISPID_FONT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(DISPID_FONT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _DRecipientControl::GetSpecialEffect()
@@ -71,10 +65,8 @@ long _DRecipientControl::GetSpecialEffect()
 
 void _DRecipientControl::SetSpecialEffect(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -114,10 +106,8 @@ CString OlkControl::GetItemProperty()
 
 void OlkControl::SetItemProperty(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8001f001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8001f001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString OlkControl::GetControlProperty()
@@ -129,10 +119,8 @@ CString OlkControl::GetControlProperty()
 
 void OlkControl::SetControlProperty(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8001f003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8001f003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString OlkControl::GetPossibleValues()
@@ -144,10 +132,8 @@ CString OlkControl::GetPossibleValues()
 
 void OlkControl::SetPossibleValues(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8001f004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8001f004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long OlkControl::GetFormat()
@@ -159,10 +145,8 @@ long OlkControl::GetFormat()
 
 void OlkControl::SetFormat(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8001f002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8001f002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL OlkControl::GetEnableAutoLayout()
@@ -174,10 +158,8 @@ BOOL OlkControl::GetEnableAutoLayout()
 
 void OlkControl::SetEnableAutoLayout(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8001f011, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8001f011, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long OlkControl::GetMinimumWidth()
@@ -189,10 +171,8 @@ long OlkControl::GetMinimumWidth()
 
 void OlkControl::SetMinimumWidth(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8001f012, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8001f012, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long OlkControl::GetMinimumHeight()
@@ -204,10 +184,8 @@ long OlkControl::GetMinimumHeight()
 
 void OlkControl::SetMinimumHeight(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8001f013, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8001f013, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long OlkControl::GetHorizontalLayout()
@@ -219,10 +197,8 @@ long OlkControl::GetHorizontalLayout()
 
 void OlkControl::SetHorizontalLayout(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8001f014, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8001f014, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long OlkControl::GetVerticalLayout()
@@ -234,10 +210,8 @@ long OlkControl::GetVerticalLayout()
 
 void OlkControl::SetVerticalLayout(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8001f015, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8001f015, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -256,10 +230,8 @@ BOOL _OlkTextBox::GetAutoSize()
 
 void _OlkTextBox::SetAutoSize(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkTextBox::GetAutoTab()
@@ -271,10 +243,8 @@ BOOL _OlkTextBox::GetAutoTab()
 
 void _OlkTextBox::SetAutoTab(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xd9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xd9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkTextBox::GetAutoWordSelect()
@@ -286,10 +256,8 @@ BOOL _OlkTextBox::GetAutoWordSelect()
 
 void _OlkTextBox::SetAutoWordSelect(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xda, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xda, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 unsigned long _OlkTextBox::GetBackColor()
@@ -301,10 +269,8 @@ unsigned long _OlkTextBox::GetBackColor()
 
 void _OlkTextBox::SetBackColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkTextBox::GetBorderStyle()
@@ -316,10 +282,8 @@ long _OlkTextBox::GetBorderStyle()
 
 void _OlkTextBox::SetBorderStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BORDERSTYLE, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BORDERSTYLE, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkTextBox::GetDragBehavior()
@@ -331,10 +295,8 @@ long _OlkTextBox::GetDragBehavior()
 
 void _OlkTextBox::SetDragBehavior(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xe1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xe1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkTextBox::GetEnabled()
@@ -346,10 +308,8 @@ BOOL _OlkTextBox::GetEnabled()
 
 void _OlkTextBox::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _OlkTextBox::GetEnterFieldBehavior()
@@ -361,10 +321,8 @@ long _OlkTextBox::GetEnterFieldBehavior()
 
 void _OlkTextBox::SetEnterFieldBehavior(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xe0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xe0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkTextBox::GetEnterKeyBehavior()
@@ -376,10 +334,8 @@ BOOL _OlkTextBox::GetEnterKeyBehavior()
 
 void _OlkTextBox::SetEnterKeyBehavior(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffde0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffde0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkTextBox::GetFont()
@@ -398,10 +354,8 @@ unsigned long _OlkTextBox::GetForeColor()
 
 void _OlkTextBox::SetForeColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _OlkTextBox::GetHideSelection()
@@ -413,10 +367,8 @@ BOOL _OlkTextBox::GetHideSelection()
 
 void _OlkTextBox::SetHideSelection(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xcf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xcf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkTextBox::GetIntegralHeight()
@@ -428,10 +380,8 @@ BOOL _OlkTextBox::GetIntegralHeight()
 
 void _OlkTextBox::SetIntegralHeight(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x25c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x25c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkTextBox::GetLocked()
@@ -443,10 +393,8 @@ BOOL _OlkTextBox::GetLocked()
 
 void _OlkTextBox::SetLocked(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _OlkTextBox::GetMaxLength()
@@ -458,10 +406,8 @@ long _OlkTextBox::GetMaxLength()
 
 void _OlkTextBox::SetMaxLength(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdeb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdeb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _OlkTextBox::GetMouseIcon()
@@ -473,10 +419,8 @@ LPDISPATCH _OlkTextBox::GetMouseIcon()
 
 void _OlkTextBox::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkTextBox::GetMousePointer()
@@ -488,10 +432,8 @@ long _OlkTextBox::GetMousePointer()
 
 void _OlkTextBox::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkTextBox::GetMultiLine()
@@ -503,10 +445,8 @@ BOOL _OlkTextBox::GetMultiLine()
 
 void _OlkTextBox::SetMultiLine(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffde7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffde7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _OlkTextBox::GetPasswordChar()
@@ -518,10 +458,8 @@ CString _OlkTextBox::GetPasswordChar()
 
 void _OlkTextBox::SetPasswordChar(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfffffdea, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfffffdea, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _OlkTextBox::GetScrollbars()
@@ -533,10 +471,8 @@ long _OlkTextBox::GetScrollbars()
 
 void _OlkTextBox::SetScrollbars(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffde9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffde9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkTextBox::GetSelectionMargin()
@@ -548,10 +484,8 @@ BOOL _OlkTextBox::GetSelectionMargin()
 
 void _OlkTextBox::SetSelectionMargin(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xdc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xdc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkTextBox::GetTabKeyBehavior()
@@ -563,10 +497,8 @@ BOOL _OlkTextBox::GetTabKeyBehavior()
 
 void _OlkTextBox::SetTabKeyBehavior(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffddf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffddf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _OlkTextBox::GetText()
@@ -578,10 +510,8 @@ CString _OlkTextBox::GetText()
 
 void _OlkTextBox::SetText(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(DISPID_TEXT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(DISPID_TEXT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _OlkTextBox::GetTextAlign()
@@ -593,10 +523,8 @@ long _OlkTextBox::GetTextAlign()
 
 void _OlkTextBox::SetTextAlign(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 VARIANT _OlkTextBox::GetValue()
@@ -608,10 +536,8 @@ VARIANT _OlkTextBox::GetValue()
 
 void _OlkTextBox::SetValue(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 BOOL _OlkTextBox::GetWordWrap()
@@ -623,10 +549,8 @@ BOOL _OlkTextBox::GetWordWrap()
 
 void _OlkTextBox::SetWordWrap(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffde8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffde8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _OlkTextBox::GetSelStart()
@@ -638,10 +562,8 @@ long _OlkTextBox::GetSelStart()
 
 void _OlkTextBox::SetSelStart(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffddd, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffddd, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkTextBox::GetSelLength()
@@ -653,10 +575,8 @@ long _OlkTextBox::GetSelLength()
 
 void _OlkTextBox::SetSelLength(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffddc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffddc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _OlkTextBox::GetSelText()
@@ -705,26 +625,20 @@ void OlkTextBoxEvents::DoubleClick()
 
 void OlkTextBoxEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkTextBoxEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkTextBoxEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkTextBoxEvents::Enter()
@@ -734,34 +648,26 @@ void OlkTextBoxEvents::Enter()
 
 void OlkTextBoxEvents::Exit(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OlkTextBoxEvents::KeyDown(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkTextBoxEvents::KeyPress(long* KeyAscii)
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyAscii);
+	static BYTE parms[] = VTS_PI4;
+	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyAscii);
 }
 
 void OlkTextBoxEvents::KeyUp(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkTextBoxEvents::Change()
@@ -776,10 +682,8 @@ void OlkTextBoxEvents::AfterUpdate()
 
 void OlkTextBoxEvents::BeforeUpdate(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 
@@ -798,10 +702,8 @@ CString _OlkLabel::GetAccelerator()
 
 void _OlkLabel::SetAccelerator(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfffffde1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfffffde1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _OlkLabel::GetAutoSize()
@@ -813,10 +715,8 @@ BOOL _OlkLabel::GetAutoSize()
 
 void _OlkLabel::SetAutoSize(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 unsigned long _OlkLabel::GetBackColor()
@@ -828,10 +728,8 @@ unsigned long _OlkLabel::GetBackColor()
 
 void _OlkLabel::SetBackColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkLabel::GetBackStyle()
@@ -843,10 +741,8 @@ long _OlkLabel::GetBackStyle()
 
 void _OlkLabel::SetBackStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkLabel::GetBorderStyle()
@@ -858,10 +754,8 @@ long _OlkLabel::GetBorderStyle()
 
 void _OlkLabel::SetBorderStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BORDERSTYLE, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BORDERSTYLE, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _OlkLabel::GetCaption()
@@ -873,10 +767,8 @@ CString _OlkLabel::GetCaption()
 
 void _OlkLabel::SetCaption(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(DISPID_CAPTION, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(DISPID_CAPTION, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _OlkLabel::GetEnabled()
@@ -888,10 +780,8 @@ BOOL _OlkLabel::GetEnabled()
 
 void _OlkLabel::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkLabel::GetFont()
@@ -910,10 +800,8 @@ unsigned long _OlkLabel::GetForeColor()
 
 void _OlkLabel::SetForeColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH _OlkLabel::GetMouseIcon()
@@ -925,10 +813,8 @@ LPDISPATCH _OlkLabel::GetMouseIcon()
 
 void _OlkLabel::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkLabel::GetMousePointer()
@@ -940,10 +826,8 @@ long _OlkLabel::GetMousePointer()
 
 void _OlkLabel::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkLabel::GetTextAlign()
@@ -955,10 +839,8 @@ long _OlkLabel::GetTextAlign()
 
 void _OlkLabel::SetTextAlign(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkLabel::GetWordWrap()
@@ -970,10 +852,8 @@ BOOL _OlkLabel::GetWordWrap()
 
 void _OlkLabel::SetWordWrap(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffde8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffde8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkLabel::GetUseHeaderColor()
@@ -985,10 +865,8 @@ BOOL _OlkLabel::GetUseHeaderColor()
 
 void _OlkLabel::SetUseHeaderColor(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfc19, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfc19, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 
@@ -1010,26 +888,20 @@ void OlkLabelEvents::DoubleClick()
 
 void OlkLabelEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkLabelEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkLabelEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 
@@ -1048,10 +920,8 @@ CString _OlkCommandButton::GetAccelerator()
 
 void _OlkCommandButton::SetAccelerator(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfffffde1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfffffde1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _OlkCommandButton::GetAutoSize()
@@ -1063,10 +933,8 @@ BOOL _OlkCommandButton::GetAutoSize()
 
 void _OlkCommandButton::SetAutoSize(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _OlkCommandButton::GetCaption()
@@ -1078,10 +946,8 @@ CString _OlkCommandButton::GetCaption()
 
 void _OlkCommandButton::SetCaption(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(DISPID_CAPTION, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(DISPID_CAPTION, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _OlkCommandButton::GetEnabled()
@@ -1093,10 +959,8 @@ BOOL _OlkCommandButton::GetEnabled()
 
 void _OlkCommandButton::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkCommandButton::GetFont()
@@ -1115,10 +979,8 @@ LPDISPATCH _OlkCommandButton::GetMouseIcon()
 
 void _OlkCommandButton::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkCommandButton::GetMousePointer()
@@ -1130,10 +992,8 @@ long _OlkCommandButton::GetMousePointer()
 
 void _OlkCommandButton::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkCommandButton::GetWordWrap()
@@ -1145,10 +1005,8 @@ BOOL _OlkCommandButton::GetWordWrap()
 
 void _OlkCommandButton::SetWordWrap(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffde8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffde8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _OlkCommandButton::GetTextAlign()
@@ -1160,10 +1018,8 @@ long _OlkCommandButton::GetTextAlign()
 
 void _OlkCommandButton::SetTextAlign(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _OlkCommandButton::GetPicture()
@@ -1175,10 +1031,8 @@ LPDISPATCH _OlkCommandButton::GetPicture()
 
 void _OlkCommandButton::SetPicture(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkCommandButton::GetPictureAlignment()
@@ -1190,10 +1044,8 @@ long _OlkCommandButton::GetPictureAlignment()
 
 void _OlkCommandButton::SetPictureAlignment(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkCommandButton::GetDisplayDropArrow()
@@ -1205,10 +1057,8 @@ BOOL _OlkCommandButton::GetDisplayDropArrow()
 
 void _OlkCommandButton::SetDisplayDropArrow(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfc20, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfc20, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 
@@ -1230,26 +1080,20 @@ void OlkCommandButtonEvents::DoubleClick()
 
 void OlkCommandButtonEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkCommandButtonEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkCommandButtonEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkCommandButtonEvents::Enter()
@@ -1259,34 +1103,26 @@ void OlkCommandButtonEvents::Enter()
 
 void OlkCommandButtonEvents::Exit(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OlkCommandButtonEvents::KeyDown(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkCommandButtonEvents::KeyPress(long* KeyAscii)
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyAscii);
+	static BYTE parms[] = VTS_PI4;
+	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyAscii);
 }
 
 void OlkCommandButtonEvents::KeyUp(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkCommandButtonEvents::AfterUpdate()
@@ -1296,10 +1132,8 @@ void OlkCommandButtonEvents::AfterUpdate()
 
 void OlkCommandButtonEvents::BeforeUpdate(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 
@@ -1318,10 +1152,8 @@ CString _OlkCheckBox::GetAccelerator()
 
 void _OlkCheckBox::SetAccelerator(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfffffde1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfffffde1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _OlkCheckBox::GetAlignment()
@@ -1333,10 +1165,8 @@ long _OlkCheckBox::GetAlignment()
 
 void _OlkCheckBox::SetAlignment(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2c6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2c6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 unsigned long _OlkCheckBox::GetBackColor()
@@ -1348,10 +1178,8 @@ unsigned long _OlkCheckBox::GetBackColor()
 
 void _OlkCheckBox::SetBackColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkCheckBox::GetBackStyle()
@@ -1363,10 +1191,8 @@ long _OlkCheckBox::GetBackStyle()
 
 void _OlkCheckBox::SetBackStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _OlkCheckBox::GetCaption()
@@ -1378,10 +1204,8 @@ CString _OlkCheckBox::GetCaption()
 
 void _OlkCheckBox::SetCaption(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(DISPID_CAPTION, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(DISPID_CAPTION, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _OlkCheckBox::GetEnabled()
@@ -1393,10 +1217,8 @@ BOOL _OlkCheckBox::GetEnabled()
 
 void _OlkCheckBox::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkCheckBox::GetFont()
@@ -1415,10 +1237,8 @@ unsigned long _OlkCheckBox::GetForeColor()
 
 void _OlkCheckBox::SetForeColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH _OlkCheckBox::GetMouseIcon()
@@ -1430,10 +1250,8 @@ LPDISPATCH _OlkCheckBox::GetMouseIcon()
 
 void _OlkCheckBox::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkCheckBox::GetMousePointer()
@@ -1445,10 +1263,8 @@ long _OlkCheckBox::GetMousePointer()
 
 void _OlkCheckBox::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkCheckBox::GetTripleState()
@@ -1460,10 +1276,8 @@ BOOL _OlkCheckBox::GetTripleState()
 
 void _OlkCheckBox::SetTripleState(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x2bc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x2bc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 VARIANT _OlkCheckBox::GetValue()
@@ -1475,10 +1289,8 @@ VARIANT _OlkCheckBox::GetValue()
 
 void _OlkCheckBox::SetValue(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 BOOL _OlkCheckBox::GetWordWrap()
@@ -1490,10 +1302,8 @@ BOOL _OlkCheckBox::GetWordWrap()
 
 void _OlkCheckBox::SetWordWrap(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffde8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffde8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 
@@ -1515,26 +1325,20 @@ void OlkCheckBoxEvents::DoubleClick()
 
 void OlkCheckBoxEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkCheckBoxEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkCheckBoxEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkCheckBoxEvents::Enter()
@@ -1544,34 +1348,26 @@ void OlkCheckBoxEvents::Enter()
 
 void OlkCheckBoxEvents::Exit(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OlkCheckBoxEvents::KeyDown(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkCheckBoxEvents::KeyPress(long* KeyAscii)
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyAscii);
+	static BYTE parms[] = VTS_PI4;
+	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyAscii);
 }
 
 void OlkCheckBoxEvents::KeyUp(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkCheckBoxEvents::Change()
@@ -1586,10 +1382,8 @@ void OlkCheckBoxEvents::AfterUpdate()
 
 void OlkCheckBoxEvents::BeforeUpdate(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 
@@ -1608,10 +1402,8 @@ CString _OlkOptionButton::GetAccelerator()
 
 void _OlkOptionButton::SetAccelerator(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfffffde1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfffffde1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _OlkOptionButton::GetAlignment()
@@ -1623,10 +1415,8 @@ long _OlkOptionButton::GetAlignment()
 
 void _OlkOptionButton::SetAlignment(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2c6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2c6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 unsigned long _OlkOptionButton::GetBackColor()
@@ -1638,10 +1428,8 @@ unsigned long _OlkOptionButton::GetBackColor()
 
 void _OlkOptionButton::SetBackColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkOptionButton::GetBackStyle()
@@ -1653,10 +1441,8 @@ long _OlkOptionButton::GetBackStyle()
 
 void _OlkOptionButton::SetBackStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _OlkOptionButton::GetCaption()
@@ -1668,10 +1454,8 @@ CString _OlkOptionButton::GetCaption()
 
 void _OlkOptionButton::SetCaption(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(DISPID_CAPTION, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(DISPID_CAPTION, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _OlkOptionButton::GetEnabled()
@@ -1683,10 +1467,8 @@ BOOL _OlkOptionButton::GetEnabled()
 
 void _OlkOptionButton::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkOptionButton::GetFont()
@@ -1705,10 +1487,8 @@ unsigned long _OlkOptionButton::GetForeColor()
 
 void _OlkOptionButton::SetForeColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _OlkOptionButton::GetGroupName()
@@ -1720,10 +1500,8 @@ CString _OlkOptionButton::GetGroupName()
 
 void _OlkOptionButton::SetGroupName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfffffde3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfffffde3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _OlkOptionButton::GetMouseIcon()
@@ -1735,10 +1513,8 @@ LPDISPATCH _OlkOptionButton::GetMouseIcon()
 
 void _OlkOptionButton::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkOptionButton::GetMousePointer()
@@ -1750,10 +1526,8 @@ long _OlkOptionButton::GetMousePointer()
 
 void _OlkOptionButton::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 VARIANT _OlkOptionButton::GetValue()
@@ -1765,10 +1539,8 @@ VARIANT _OlkOptionButton::GetValue()
 
 void _OlkOptionButton::SetValue(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 BOOL _OlkOptionButton::GetWordWrap()
@@ -1780,10 +1552,8 @@ BOOL _OlkOptionButton::GetWordWrap()
 
 void _OlkOptionButton::SetWordWrap(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffde8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffde8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 
@@ -1805,26 +1575,20 @@ void OlkOptionButtonEvents::DoubleClick()
 
 void OlkOptionButtonEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkOptionButtonEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkOptionButtonEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkOptionButtonEvents::Enter()
@@ -1834,34 +1598,26 @@ void OlkOptionButtonEvents::Enter()
 
 void OlkOptionButtonEvents::Exit(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OlkOptionButtonEvents::KeyDown(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkOptionButtonEvents::KeyPress(long* KeyAscii)
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyAscii);
+	static BYTE parms[] = VTS_PI4;
+	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyAscii);
 }
 
 void OlkOptionButtonEvents::KeyUp(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkOptionButtonEvents::Change()
@@ -1876,10 +1632,8 @@ void OlkOptionButtonEvents::AfterUpdate()
 
 void OlkOptionButtonEvents::BeforeUpdate(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 
@@ -1898,10 +1652,8 @@ BOOL _OlkComboBox::GetAutoSize()
 
 void _OlkComboBox::SetAutoSize(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkComboBox::GetAutoTab()
@@ -1913,10 +1665,8 @@ BOOL _OlkComboBox::GetAutoTab()
 
 void _OlkComboBox::SetAutoTab(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xd9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xd9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkComboBox::GetAutoWordSelect()
@@ -1928,10 +1678,8 @@ BOOL _OlkComboBox::GetAutoWordSelect()
 
 void _OlkComboBox::SetAutoWordSelect(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xda, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xda, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 unsigned long _OlkComboBox::GetBackColor()
@@ -1943,10 +1691,8 @@ unsigned long _OlkComboBox::GetBackColor()
 
 void _OlkComboBox::SetBackColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkComboBox::GetBorderStyle()
@@ -1958,10 +1704,8 @@ long _OlkComboBox::GetBorderStyle()
 
 void _OlkComboBox::SetBorderStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BORDERSTYLE, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BORDERSTYLE, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkComboBox::GetDragBehavior()
@@ -1973,10 +1717,8 @@ long _OlkComboBox::GetDragBehavior()
 
 void _OlkComboBox::SetDragBehavior(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xe1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xe1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkComboBox::GetEnabled()
@@ -1988,10 +1730,8 @@ BOOL _OlkComboBox::GetEnabled()
 
 void _OlkComboBox::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _OlkComboBox::GetEnterFieldBehavior()
@@ -2003,10 +1743,8 @@ long _OlkComboBox::GetEnterFieldBehavior()
 
 void _OlkComboBox::SetEnterFieldBehavior(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xe0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xe0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _OlkComboBox::GetFont()
@@ -2025,10 +1763,8 @@ unsigned long _OlkComboBox::GetForeColor()
 
 void _OlkComboBox::SetForeColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _OlkComboBox::GetHideSelection()
@@ -2040,10 +1776,8 @@ BOOL _OlkComboBox::GetHideSelection()
 
 void _OlkComboBox::SetHideSelection(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xcf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xcf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkComboBox::GetLocked()
@@ -2055,10 +1789,8 @@ BOOL _OlkComboBox::GetLocked()
 
 void _OlkComboBox::SetLocked(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _OlkComboBox::GetMaxLength()
@@ -2070,10 +1802,8 @@ long _OlkComboBox::GetMaxLength()
 
 void _OlkComboBox::SetMaxLength(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdeb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdeb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _OlkComboBox::GetMouseIcon()
@@ -2085,10 +1815,8 @@ LPDISPATCH _OlkComboBox::GetMouseIcon()
 
 void _OlkComboBox::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkComboBox::GetMousePointer()
@@ -2100,10 +1828,8 @@ long _OlkComboBox::GetMousePointer()
 
 void _OlkComboBox::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkComboBox::GetSelectionMargin()
@@ -2115,10 +1841,8 @@ BOOL _OlkComboBox::GetSelectionMargin()
 
 void _OlkComboBox::SetSelectionMargin(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xdc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xdc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _OlkComboBox::GetStyle()
@@ -2130,10 +1854,8 @@ long _OlkComboBox::GetStyle()
 
 void _OlkComboBox::SetStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x134, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x134, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _OlkComboBox::GetText()
@@ -2145,10 +1867,8 @@ CString _OlkComboBox::GetText()
 
 void _OlkComboBox::SetText(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(DISPID_TEXT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(DISPID_TEXT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _OlkComboBox::GetTextAlign()
@@ -2160,10 +1880,8 @@ long _OlkComboBox::GetTextAlign()
 
 void _OlkComboBox::SetTextAlign(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkComboBox::GetTopIndex()
@@ -2175,10 +1893,8 @@ long _OlkComboBox::GetTopIndex()
 
 void _OlkComboBox::SetTopIndex(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x263, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x263, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 VARIANT _OlkComboBox::GetValue()
@@ -2190,10 +1906,8 @@ VARIANT _OlkComboBox::GetValue()
 
 void _OlkComboBox::SetValue(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 long _OlkComboBox::GetListIndex()
@@ -2205,10 +1919,8 @@ long _OlkComboBox::GetListIndex()
 
 void _OlkComboBox::SetListIndex(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkComboBox::GetListCount()
@@ -2227,10 +1939,8 @@ long _OlkComboBox::GetSelStart()
 
 void _OlkComboBox::SetSelStart(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffddd, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffddd, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkComboBox::GetSelLength()
@@ -2242,10 +1952,8 @@ long _OlkComboBox::GetSelLength()
 
 void _OlkComboBox::SetSelLength(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffddc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffddc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _OlkComboBox::GetSelText()
@@ -2258,19 +1966,15 @@ CString _OlkComboBox::GetSelText()
 CString _OlkComboBox::GetItem(long Index)
 {
 	CString result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2109, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms,
-		Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2109, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms, Index);
 	return result;
 }
 
 void _OlkComboBox::SetItem(long Index, LPCTSTR Item)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_BSTR;
-	InvokeHelper(0xfbde, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index, Item);
+	static BYTE parms[] = VTS_I4 VTS_BSTR;
+	InvokeHelper(0xfbde, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index, Item);
 }
 
 void _OlkComboBox::Cut()
@@ -2295,18 +1999,14 @@ void _OlkComboBox::Clear()
 
 void _OlkComboBox::AddItem(LPCTSTR ItemText, const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xfffffdd7, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 ItemText, &Index);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xfffffdd7, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ItemText, &Index);
 }
 
 void _OlkComboBox::RemoveItem(long Index)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdd5, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdd5, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index);
 }
 
 void _OlkComboBox::DropDown()
@@ -2333,26 +2033,20 @@ void OlkComboBoxEvents::DoubleClick()
 
 void OlkComboBoxEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkComboBoxEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkComboBoxEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkComboBoxEvents::Enter()
@@ -2362,34 +2056,26 @@ void OlkComboBoxEvents::Enter()
 
 void OlkComboBoxEvents::Exit(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OlkComboBoxEvents::KeyDown(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkComboBoxEvents::KeyPress(long* KeyAscii)
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyAscii);
+	static BYTE parms[] = VTS_PI4;
+	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyAscii);
 }
 
 void OlkComboBoxEvents::KeyUp(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkComboBoxEvents::Change()
@@ -2409,10 +2095,8 @@ void OlkComboBoxEvents::AfterUpdate()
 
 void OlkComboBoxEvents::BeforeUpdate(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 
@@ -2431,10 +2115,8 @@ long _OlkListBox::GetBorderStyle()
 
 void _OlkListBox::SetBorderStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BORDERSTYLE, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BORDERSTYLE, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 unsigned long _OlkListBox::GetBackColor()
@@ -2446,10 +2128,8 @@ unsigned long _OlkListBox::GetBackColor()
 
 void _OlkListBox::SetBackColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _OlkListBox::GetEnabled()
@@ -2461,10 +2141,8 @@ BOOL _OlkListBox::GetEnabled()
 
 void _OlkListBox::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkListBox::GetFont()
@@ -2483,10 +2161,8 @@ unsigned long _OlkListBox::GetForeColor()
 
 void _OlkListBox::SetForeColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _OlkListBox::GetLocked()
@@ -2498,10 +2174,8 @@ BOOL _OlkListBox::GetLocked()
 
 void _OlkListBox::SetLocked(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _OlkListBox::GetMatchEntry()
@@ -2513,10 +2187,8 @@ long _OlkListBox::GetMatchEntry()
 
 void _OlkListBox::SetMatchEntry(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x1f8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x1f8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _OlkListBox::GetMouseIcon()
@@ -2528,10 +2200,8 @@ LPDISPATCH _OlkListBox::GetMouseIcon()
 
 void _OlkListBox::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkListBox::GetMousePointer()
@@ -2543,10 +2213,8 @@ long _OlkListBox::GetMousePointer()
 
 void _OlkListBox::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkListBox::GetMultiSelect()
@@ -2558,10 +2226,8 @@ long _OlkListBox::GetMultiSelect()
 
 void _OlkListBox::SetMultiSelect(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdec, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdec, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _OlkListBox::GetText()
@@ -2573,10 +2239,8 @@ CString _OlkListBox::GetText()
 
 void _OlkListBox::SetText(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(DISPID_TEXT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(DISPID_TEXT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _OlkListBox::GetTextAlign()
@@ -2588,10 +2252,8 @@ long _OlkListBox::GetTextAlign()
 
 void _OlkListBox::SetTextAlign(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkListBox::GetTopIndex()
@@ -2603,10 +2265,8 @@ long _OlkListBox::GetTopIndex()
 
 void _OlkListBox::SetTopIndex(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x263, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x263, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 VARIANT _OlkListBox::GetValue()
@@ -2618,10 +2278,8 @@ VARIANT _OlkListBox::GetValue()
 
 void _OlkListBox::SetValue(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 long _OlkListBox::GetListIndex()
@@ -2633,10 +2291,8 @@ long _OlkListBox::GetListIndex()
 
 void _OlkListBox::SetListIndex(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkListBox::GetListCount()
@@ -2649,37 +2305,29 @@ long _OlkListBox::GetListCount()
 CString _OlkListBox::GetItem(long Index)
 {
 	CString result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2109, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms,
-		Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2109, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms, Index);
 	return result;
 }
 
 void _OlkListBox::SetItem(long Index, LPCTSTR Item)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_BSTR;
-	InvokeHelper(0xfbde, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index, Item);
+	static BYTE parms[] = VTS_I4 VTS_BSTR;
+	InvokeHelper(0xfbde, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index, Item);
 }
 
 BOOL _OlkListBox::GetSelected(long Index)
 {
 	BOOL result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbdf, DISPATCH_METHOD, VT_BOOL, (void*)&result, parms,
-		Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbdf, DISPATCH_METHOD, VT_BOOL, (void*)&result, parms, Index);
 	return result;
 }
 
 void _OlkListBox::SetSelected(long Index, BOOL Selected)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_BOOL;
-	InvokeHelper(0xfbe0, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index, Selected);
+	static BYTE parms[] = VTS_I4 VTS_BOOL;
+	InvokeHelper(0xfbe0, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index, Selected);
 }
 
 void _OlkListBox::Copy()
@@ -2694,18 +2342,14 @@ void _OlkListBox::Clear()
 
 void _OlkListBox::AddItem(LPCTSTR ItemText, const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xfffffdd7, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 ItemText, &Index);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xfffffdd7, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ItemText, &Index);
 }
 
 void _OlkListBox::RemoveItem(long Index)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdd5, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdd5, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index);
 }
 
 
@@ -2727,26 +2371,20 @@ void OlkListBoxEvents::DoubleClick()
 
 void OlkListBoxEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkListBoxEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkListBoxEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkListBoxEvents::Enter()
@@ -2756,34 +2394,26 @@ void OlkListBoxEvents::Enter()
 
 void OlkListBoxEvents::Exit(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OlkListBoxEvents::KeyDown(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkListBoxEvents::KeyPress(long* KeyAscii)
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyAscii);
+	static BYTE parms[] = VTS_PI4;
+	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyAscii);
 }
 
 void OlkListBoxEvents::KeyUp(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkListBoxEvents::Change()
@@ -2798,10 +2428,8 @@ void OlkListBoxEvents::AfterUpdate()
 
 void OlkListBoxEvents::BeforeUpdate(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 
@@ -2820,10 +2448,8 @@ LPDISPATCH _OlkInfoBar::GetMouseIcon()
 
 void _OlkInfoBar::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkInfoBar::GetMousePointer()
@@ -2835,10 +2461,8 @@ long _OlkInfoBar::GetMousePointer()
 
 void _OlkInfoBar::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -2860,26 +2484,20 @@ void OlkInfoBarEvents::DoubleClick()
 
 void OlkInfoBarEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkInfoBarEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkInfoBarEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 
@@ -2898,10 +2516,8 @@ BOOL _OlkContactPhoto::GetEnabled()
 
 void _OlkContactPhoto::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkContactPhoto::GetMouseIcon()
@@ -2913,10 +2529,8 @@ LPDISPATCH _OlkContactPhoto::GetMouseIcon()
 
 void _OlkContactPhoto::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkContactPhoto::GetMousePointer()
@@ -2928,10 +2542,8 @@ long _OlkContactPhoto::GetMousePointer()
 
 void _OlkContactPhoto::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -2953,26 +2565,20 @@ void OlkContactPhotoEvents::DoubleClick()
 
 void OlkContactPhotoEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkContactPhotoEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkContactPhotoEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkContactPhotoEvents::Enter()
@@ -2982,34 +2588,26 @@ void OlkContactPhotoEvents::Enter()
 
 void OlkContactPhotoEvents::Exit(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OlkContactPhotoEvents::KeyDown(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkContactPhotoEvents::KeyPress(long* KeyAscii)
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyAscii);
+	static BYTE parms[] = VTS_PI4;
+	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyAscii);
 }
 
 void OlkContactPhotoEvents::KeyUp(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkContactPhotoEvents::Change()
@@ -3033,10 +2631,8 @@ LPDISPATCH _OlkBusinessCardControl::GetMouseIcon()
 
 void _OlkBusinessCardControl::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkBusinessCardControl::GetMousePointer()
@@ -3048,10 +2644,8 @@ long _OlkBusinessCardControl::GetMousePointer()
 
 void _OlkBusinessCardControl::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -3073,26 +2667,20 @@ void OlkBusinessCardControlEvents::DoubleClick()
 
 void OlkBusinessCardControlEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkBusinessCardControlEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkBusinessCardControlEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 
@@ -3111,10 +2699,8 @@ long _OlkPageControl::GetPage()
 
 void _OlkPageControl::SetPage(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbd1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbd1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -3140,10 +2726,8 @@ BOOL _OlkDateControl::GetAutoSize()
 
 void _OlkDateControl::SetAutoSize(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkDateControl::GetAutoWordSelect()
@@ -3155,10 +2739,8 @@ BOOL _OlkDateControl::GetAutoWordSelect()
 
 void _OlkDateControl::SetAutoWordSelect(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xda, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xda, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 unsigned long _OlkDateControl::GetBackColor()
@@ -3170,10 +2752,8 @@ unsigned long _OlkDateControl::GetBackColor()
 
 void _OlkDateControl::SetBackColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkDateControl::GetBackStyle()
@@ -3185,10 +2765,8 @@ long _OlkDateControl::GetBackStyle()
 
 void _OlkDateControl::SetBackStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _OlkDateControl::GetDate()
@@ -3200,10 +2778,8 @@ DATE _OlkDateControl::GetDate()
 
 void _OlkDateControl::SetDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfbd2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfbd2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _OlkDateControl::GetEnabled()
@@ -3215,10 +2791,8 @@ BOOL _OlkDateControl::GetEnabled()
 
 void _OlkDateControl::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _OlkDateControl::GetEnterFieldBehavior()
@@ -3230,10 +2804,8 @@ long _OlkDateControl::GetEnterFieldBehavior()
 
 void _OlkDateControl::SetEnterFieldBehavior(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xe0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xe0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _OlkDateControl::GetFont()
@@ -3252,10 +2824,8 @@ unsigned long _OlkDateControl::GetForeColor()
 
 void _OlkDateControl::SetForeColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _OlkDateControl::GetHideSelection()
@@ -3267,10 +2837,8 @@ BOOL _OlkDateControl::GetHideSelection()
 
 void _OlkDateControl::SetHideSelection(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xcf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xcf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkDateControl::GetLocked()
@@ -3282,10 +2850,8 @@ BOOL _OlkDateControl::GetLocked()
 
 void _OlkDateControl::SetLocked(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkDateControl::GetMouseIcon()
@@ -3297,10 +2863,8 @@ LPDISPATCH _OlkDateControl::GetMouseIcon()
 
 void _OlkDateControl::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkDateControl::GetMousePointer()
@@ -3312,10 +2876,8 @@ long _OlkDateControl::GetMousePointer()
 
 void _OlkDateControl::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkDateControl::GetShowNoneButton()
@@ -3327,10 +2889,8 @@ BOOL _OlkDateControl::GetShowNoneButton()
 
 void _OlkDateControl::SetShowNoneButton(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbd3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbd3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _OlkDateControl::GetText()
@@ -3342,10 +2902,8 @@ CString _OlkDateControl::GetText()
 
 void _OlkDateControl::SetText(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(DISPID_TEXT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(DISPID_TEXT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _OlkDateControl::GetTextAlign()
@@ -3357,10 +2915,8 @@ long _OlkDateControl::GetTextAlign()
 
 void _OlkDateControl::SetTextAlign(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 VARIANT _OlkDateControl::GetValue()
@@ -3372,10 +2928,8 @@ VARIANT _OlkDateControl::GetValue()
 
 void _OlkDateControl::SetValue(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 void _OlkDateControl::DropDown()
@@ -3402,26 +2956,20 @@ void OlkDateControlEvents::DoubleClick()
 
 void OlkDateControlEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkDateControlEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkDateControlEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkDateControlEvents::Enter()
@@ -3431,34 +2979,26 @@ void OlkDateControlEvents::Enter()
 
 void OlkDateControlEvents::Exit(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OlkDateControlEvents::KeyDown(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkDateControlEvents::KeyPress(long* KeyAscii)
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyAscii);
+	static BYTE parms[] = VTS_PI4;
+	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyAscii);
 }
 
 void OlkDateControlEvents::KeyUp(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkDateControlEvents::Change()
@@ -3478,10 +3018,8 @@ void OlkDateControlEvents::AfterUpdate()
 
 void OlkDateControlEvents::BeforeUpdate(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 
@@ -3500,10 +3038,8 @@ BOOL _OlkTimeControl::GetAutoSize()
 
 void _OlkTimeControl::SetAutoSize(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkTimeControl::GetAutoWordSelect()
@@ -3515,10 +3051,8 @@ BOOL _OlkTimeControl::GetAutoWordSelect()
 
 void _OlkTimeControl::SetAutoWordSelect(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xda, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xda, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 unsigned long _OlkTimeControl::GetBackColor()
@@ -3530,10 +3064,8 @@ unsigned long _OlkTimeControl::GetBackColor()
 
 void _OlkTimeControl::SetBackColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkTimeControl::GetBackStyle()
@@ -3545,10 +3077,8 @@ long _OlkTimeControl::GetBackStyle()
 
 void _OlkTimeControl::SetBackStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkTimeControl::GetEnabled()
@@ -3560,10 +3090,8 @@ BOOL _OlkTimeControl::GetEnabled()
 
 void _OlkTimeControl::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _OlkTimeControl::GetEnterFieldBehavior()
@@ -3575,10 +3103,8 @@ long _OlkTimeControl::GetEnterFieldBehavior()
 
 void _OlkTimeControl::SetEnterFieldBehavior(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xe0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xe0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _OlkTimeControl::GetFont()
@@ -3597,10 +3123,8 @@ unsigned long _OlkTimeControl::GetForeColor()
 
 void _OlkTimeControl::SetForeColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _OlkTimeControl::GetHideSelection()
@@ -3612,10 +3136,8 @@ BOOL _OlkTimeControl::GetHideSelection()
 
 void _OlkTimeControl::SetHideSelection(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xcf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xcf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkTimeControl::GetLocked()
@@ -3627,10 +3149,8 @@ BOOL _OlkTimeControl::GetLocked()
 
 void _OlkTimeControl::SetLocked(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkTimeControl::GetMouseIcon()
@@ -3642,10 +3162,8 @@ LPDISPATCH _OlkTimeControl::GetMouseIcon()
 
 void _OlkTimeControl::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkTimeControl::GetMousePointer()
@@ -3657,10 +3175,8 @@ long _OlkTimeControl::GetMousePointer()
 
 void _OlkTimeControl::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _OlkTimeControl::GetReferenceTime()
@@ -3672,10 +3188,8 @@ DATE _OlkTimeControl::GetReferenceTime()
 
 void _OlkTimeControl::SetReferenceTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfbd4, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfbd4, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkTimeControl::GetStyle()
@@ -3687,10 +3201,8 @@ long _OlkTimeControl::GetStyle()
 
 void _OlkTimeControl::SetStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbd5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbd5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _OlkTimeControl::GetTime()
@@ -3702,10 +3214,8 @@ DATE _OlkTimeControl::GetTime()
 
 void _OlkTimeControl::SetTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfbd2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfbd2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _OlkTimeControl::GetText()
@@ -3717,10 +3227,8 @@ CString _OlkTimeControl::GetText()
 
 void _OlkTimeControl::SetText(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(DISPID_TEXT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(DISPID_TEXT, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _OlkTimeControl::GetTextAlign()
@@ -3732,10 +3240,8 @@ long _OlkTimeControl::GetTextAlign()
 
 void _OlkTimeControl::SetTextAlign(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2714, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 VARIANT _OlkTimeControl::GetValue()
@@ -3747,10 +3253,8 @@ VARIANT _OlkTimeControl::GetValue()
 
 void _OlkTimeControl::SetValue(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 DATE _OlkTimeControl::GetIntervalTime()
@@ -3762,10 +3266,8 @@ DATE _OlkTimeControl::GetIntervalTime()
 
 void _OlkTimeControl::SetIntervalTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfbdb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfbdb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 void _OlkTimeControl::DropDown()
@@ -3792,26 +3294,20 @@ void OlkTimeControlEvents::DoubleClick()
 
 void OlkTimeControlEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkTimeControlEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkTimeControlEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkTimeControlEvents::Enter()
@@ -3821,34 +3317,26 @@ void OlkTimeControlEvents::Enter()
 
 void OlkTimeControlEvents::Exit(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OlkTimeControlEvents::KeyDown(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkTimeControlEvents::KeyPress(long* KeyAscii)
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyAscii);
+	static BYTE parms[] = VTS_PI4;
+	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyAscii);
 }
 
 void OlkTimeControlEvents::KeyUp(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkTimeControlEvents::Change()
@@ -3868,10 +3356,8 @@ void OlkTimeControlEvents::AfterUpdate()
 
 void OlkTimeControlEvents::BeforeUpdate(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 
@@ -3890,10 +3376,8 @@ BOOL _OlkCategory::GetAutoSize()
 
 void _OlkCategory::SetAutoSize(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 unsigned long _OlkCategory::GetBackColor()
@@ -3905,10 +3389,8 @@ unsigned long _OlkCategory::GetBackColor()
 
 void _OlkCategory::SetBackColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkCategory::GetBackStyle()
@@ -3920,10 +3402,8 @@ long _OlkCategory::GetBackStyle()
 
 void _OlkCategory::SetBackStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffe0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkCategory::GetEnabled()
@@ -3935,10 +3415,8 @@ BOOL _OlkCategory::GetEnabled()
 
 void _OlkCategory::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 unsigned long _OlkCategory::GetForeColor()
@@ -3950,10 +3428,8 @@ unsigned long _OlkCategory::GetForeColor()
 
 void _OlkCategory::SetForeColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH _OlkCategory::GetMouseIcon()
@@ -3965,10 +3441,8 @@ LPDISPATCH _OlkCategory::GetMouseIcon()
 
 void _OlkCategory::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkCategory::GetMousePointer()
@@ -3980,10 +3454,8 @@ long _OlkCategory::GetMousePointer()
 
 void _OlkCategory::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -4005,26 +3477,20 @@ void OlkCategoryEvents::DoubleClick()
 
 void OlkCategoryEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkCategoryEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkCategoryEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkCategoryEvents::Enter()
@@ -4034,34 +3500,26 @@ void OlkCategoryEvents::Enter()
 
 void OlkCategoryEvents::Exit(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OlkCategoryEvents::KeyDown(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkCategoryEvents::KeyPress(long* KeyAscii)
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyAscii);
+	static BYTE parms[] = VTS_PI4;
+	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyAscii);
 }
 
 void OlkCategoryEvents::KeyUp(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkCategoryEvents::Change()
@@ -4085,10 +3543,8 @@ long _OlkFrameHeader::GetAlignment()
 
 void _OlkFrameHeader::SetAlignment(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2c6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2c6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _OlkFrameHeader::GetCaption()
@@ -4100,10 +3556,8 @@ CString _OlkFrameHeader::GetCaption()
 
 void _OlkFrameHeader::SetCaption(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(DISPID_CAPTION, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(DISPID_CAPTION, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _OlkFrameHeader::GetFont()
@@ -4122,10 +3576,8 @@ unsigned long _OlkFrameHeader::GetForeColor()
 
 void _OlkFrameHeader::SetForeColor(unsigned long newValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_FORECOLOR, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _OlkFrameHeader::GetEnabled()
@@ -4137,10 +3589,8 @@ BOOL _OlkFrameHeader::GetEnabled()
 
 void _OlkFrameHeader::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkFrameHeader::GetMouseIcon()
@@ -4152,10 +3602,8 @@ LPDISPATCH _OlkFrameHeader::GetMouseIcon()
 
 void _OlkFrameHeader::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkFrameHeader::GetMousePointer()
@@ -4167,10 +3615,8 @@ long _OlkFrameHeader::GetMousePointer()
 
 void _OlkFrameHeader::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -4196,10 +3642,8 @@ BOOL _OlkSenderPhoto::GetEnabled()
 
 void _OlkSenderPhoto::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkSenderPhoto::GetMouseIcon()
@@ -4211,10 +3655,8 @@ LPDISPATCH _OlkSenderPhoto::GetMouseIcon()
 
 void _OlkSenderPhoto::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkSenderPhoto::GetMousePointer()
@@ -4226,10 +3668,8 @@ long _OlkSenderPhoto::GetMousePointer()
 
 void _OlkSenderPhoto::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkSenderPhoto::GetPreferredWidth()
@@ -4265,26 +3705,20 @@ void OlkSenderPhotoEvents::DoubleClick()
 
 void OlkSenderPhotoEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkSenderPhotoEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkSenderPhotoEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkSenderPhotoEvents::Change()
@@ -4456,40 +3890,32 @@ LPDISPATCH _Application::ActiveInspector()
 LPDISPATCH _Application::CreateItem(long ItemType)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x10a, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		ItemType);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x10a, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, ItemType);
 	return result;
 }
 
 LPDISPATCH _Application::CreateItemFromTemplate(LPCTSTR TemplatePath, const VARIANT& InFolder)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x10b, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		TemplatePath, &InFolder);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x10b, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, TemplatePath, &InFolder);
 	return result;
 }
 
 LPDISPATCH _Application::CreateObject(LPCTSTR ObjectName)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x115, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		ObjectName);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x115, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, ObjectName);
 	return result;
 }
 
 LPDISPATCH _Application::GetNamespace(LPCTSTR Type)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x110, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Type);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x110, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Type);
 	return result;
 }
 
@@ -4543,30 +3969,25 @@ LPDISPATCH _Application::ActiveWindow()
 LPDISPATCH _Application::CopyFile(LPCTSTR FilePath, LPCTSTR DestFolderPath)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_BSTR;
-	InvokeHelper(0xfa62, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		FilePath, DestFolderPath);
+	static BYTE parms[] = VTS_BSTR VTS_BSTR;
+	InvokeHelper(0xfa62, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, FilePath, DestFolderPath);
 	return result;
 }
 
-LPDISPATCH _Application::AdvancedSearch(LPCTSTR Scope, const VARIANT& Filter, const VARIANT& SearchSubFolders, const VARIANT& Tag)
+LPDISPATCH _Application::AdvancedSearch(LPCTSTR Scope, const VARIANT& Filter, const VARIANT& SearchSubFolders,
+	const VARIANT& Tag)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0xfa65, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Scope, &Filter, &SearchSubFolders, &Tag);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0xfa65, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Scope, &Filter, &SearchSubFolders, &Tag);
 	return result;
 }
 
 BOOL _Application::IsSearchSynchronous(LPCTSTR LookInFolders)
 {
 	BOOL result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa6c, DISPATCH_METHOD, VT_BOOL, (void*)&result, parms,
-		LookInFolders);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa6c, DISPATCH_METHOD, VT_BOOL, (void*)&result, parms, LookInFolders);
 	return result;
 }
 
@@ -4594,10 +4015,8 @@ BOOL _Application::GetIsTrusted()
 LPDISPATCH _Application::GetObjectReference(LPDISPATCH Item, long ReferenceType)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_I4;
-	InvokeHelper(0xfbd6, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Item, ReferenceType);
+	static BYTE parms[] = VTS_DISPATCH VTS_I4;
+	InvokeHelper(0xfbd6, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Item, ReferenceType);
 	return result;
 }
 
@@ -4681,60 +4100,48 @@ LPDISPATCH _NameSpace::GetAddressLists()
 LPDISPATCH _NameSpace::CreateRecipient(LPCTSTR RecipientName)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x210a, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		RecipientName);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x210a, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, RecipientName);
 	return result;
 }
 
 LPDISPATCH _NameSpace::GetDefaultFolder(long FolderType)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x210b, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		FolderType);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x210b, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, FolderType);
 	return result;
 }
 
 LPDISPATCH _NameSpace::GetFolderFromID(LPCTSTR EntryIDFolder, const VARIANT& EntryIDStore)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x2108, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		EntryIDFolder, &EntryIDStore);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x2108, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, EntryIDFolder, &EntryIDStore);
 	return result;
 }
 
 LPDISPATCH _NameSpace::GetItemFromID(LPCTSTR EntryIDItem, const VARIANT& EntryIDStore)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x2109, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		EntryIDItem, &EntryIDStore);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x2109, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, EntryIDItem, &EntryIDStore);
 	return result;
 }
 
 LPDISPATCH _NameSpace::GetRecipientFromID(LPCTSTR EntryID)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x2107, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		EntryID);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x2107, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, EntryID);
 	return result;
 }
 
 LPDISPATCH _NameSpace::GetSharedDefaultFolder(LPDISPATCH Recipient, long FolderType)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_I4;
-	InvokeHelper(0x210c, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Recipient, FolderType);
+	static BYTE parms[] = VTS_DISPATCH VTS_I4;
+	InvokeHelper(0x210c, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Recipient, FolderType);
 	return result;
 }
 
@@ -4743,12 +4150,11 @@ void _NameSpace::Logoff()
 	InvokeHelper(0x2106, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
 }
 
-void _NameSpace::Logon(const VARIANT& Profile, const VARIANT& Password, const VARIANT& ShowDialog, const VARIANT& NewSession)
+void _NameSpace::Logon(const VARIANT& Profile, const VARIANT& Password, const VARIANT& ShowDialog,
+	const VARIANT& NewSession)
 {
-	static BYTE parms[] =
-		VTS_VARIANT VTS_VARIANT VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x2105, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Profile, &Password, &ShowDialog, &NewSession);
+	static BYTE parms[] = VTS_VARIANT VTS_VARIANT VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0x2105, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Profile, &Password, &ShowDialog, &NewSession);
 }
 
 LPDISPATCH _NameSpace::PickFolder()
@@ -4767,18 +4173,14 @@ LPDISPATCH _NameSpace::GetSyncObjects()
 
 void _NameSpace::AddStore(const VARIANT& Store)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x2119, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Store);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x2119, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Store);
 }
 
 void _NameSpace::RemoveStore(LPDISPATCH Folder)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0x211a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Folder);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0x211a, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Folder);
 }
 
 BOOL _NameSpace::GetOffline()
@@ -4790,10 +4192,8 @@ BOOL _NameSpace::GetOffline()
 
 void _NameSpace::Dial(const VARIANT& ContactItem)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfa0d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &ContactItem);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfa0d, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &ContactItem);
 }
 
 long _NameSpace::GetExchangeConnectionMode()
@@ -4805,10 +4205,8 @@ long _NameSpace::GetExchangeConnectionMode()
 
 void _NameSpace::AddStoreEx(const VARIANT& Store, long Type)
 {
-	static BYTE parms[] =
-		VTS_VARIANT VTS_I4;
-	InvokeHelper(0xfac5, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Store, Type);
+	static BYTE parms[] = VTS_VARIANT VTS_I4;
+	InvokeHelper(0xfac5, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Store, Type);
 }
 
 LPDISPATCH _NameSpace::GetAccounts()
@@ -4841,10 +4239,8 @@ LPDISPATCH _NameSpace::GetSelectNamesDialog()
 
 void _NameSpace::SendAndReceive(BOOL showProgressDialog)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfad7, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 showProgressDialog);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfad7, DISPATCH_METHOD, VT_EMPTY, NULL, parms, showProgressDialog);
 }
 
 LPDISPATCH _NameSpace::GetDefaultStore()
@@ -4857,10 +4253,8 @@ LPDISPATCH _NameSpace::GetDefaultStore()
 LPDISPATCH _NameSpace::GetAddressEntryFromID(LPCTSTR ID)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb04, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		ID);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb04, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, ID);
 	return result;
 }
 
@@ -4874,10 +4268,8 @@ LPDISPATCH _NameSpace::GetGlobalAddressList()
 LPDISPATCH _NameSpace::GetStoreFromID(LPCTSTR ID)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb06, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		ID);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb06, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, ID);
 	return result;
 }
 
@@ -4888,11 +4280,11 @@ LPDISPATCH _NameSpace::GetCategories()
 	return result;
 }
 
-LPDISPATCH _NameSpace::OpenSharedFolder(LPCTSTR Path, const VARIANT& Name, const VARIANT& DownloadAttachments, const VARIANT& UseTTL)
+LPDISPATCH _NameSpace::OpenSharedFolder(LPCTSTR Path, const VARIANT& Name, const VARIANT& DownloadAttachments,
+	const VARIANT& UseTTL)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT VTS_VARIANT VTS_VARIANT;
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT VTS_VARIANT VTS_VARIANT;
 	InvokeHelper(0xfbf6, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
 		Path, &Name, &DownloadAttachments, &UseTTL);
 	return result;
@@ -4901,20 +4293,16 @@ LPDISPATCH _NameSpace::OpenSharedFolder(LPCTSTR Path, const VARIANT& Name, const
 LPDISPATCH _NameSpace::OpenSharedItem(LPCTSTR Path)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfbf7, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Path);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfbf7, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Path);
 	return result;
 }
 
 LPDISPATCH _NameSpace::CreateSharingItem(const VARIANT& Context, const VARIANT& Provider)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0xfbe4, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Context, &Provider);
+	static BYTE parms[] = VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0xfbe4, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Context, &Provider);
 	return result;
 }
 
@@ -4935,10 +4323,8 @@ CString _NameSpace::GetExchangeMailboxServerVersion()
 BOOL _NameSpace::CompareEntryIDs(LPCTSTR FirstEntryID, LPCTSTR SecondEntryID)
 {
 	BOOL result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_BSTR;
-	InvokeHelper(0xfbfc, DISPATCH_METHOD, VT_BOOL, (void*)&result, parms,
-		FirstEntryID, SecondEntryID);
+	static BYTE parms[] = VTS_BSTR VTS_BSTR;
+	InvokeHelper(0xfbfc, DISPATCH_METHOD, VT_BOOL, (void*)&result, parms, FirstEntryID, SecondEntryID);
 	return result;
 }
 
@@ -5007,10 +4393,8 @@ LPDISPATCH Recipient::GetAddressEntry()
 
 void Recipient::SetRefAddressEntry(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0x79, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0x79, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString Recipient::GetAutoResponse()
@@ -5022,10 +4406,8 @@ CString Recipient::GetAutoResponse()
 
 void Recipient::SetAutoResponse(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x6a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x6a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long Recipient::GetDisplayType()
@@ -5079,10 +4461,8 @@ long Recipient::GetTrackingStatus()
 
 void Recipient::SetTrackingStatus(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x76, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x76, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE Recipient::GetTrackingStatusTime()
@@ -5094,10 +4474,8 @@ DATE Recipient::GetTrackingStatusTime()
 
 void Recipient::SetTrackingStatusTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x77, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x77, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long Recipient::GetType()
@@ -5109,10 +4487,8 @@ long Recipient::GetType()
 
 void Recipient::SetType(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xc15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xc15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 void Recipient::Delete()
@@ -5123,10 +4499,8 @@ void Recipient::Delete()
 CString Recipient::FreeBusy(DATE Start, long MinPerChar, const VARIANT& CompleteFormat)
 {
 	CString result;
-	static BYTE parms[] =
-		VTS_DATE VTS_I4 VTS_VARIANT;
-	InvokeHelper(0x6f, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms,
-		Start, MinPerChar, &CompleteFormat);
+	static BYTE parms[] = VTS_DATE VTS_I4 VTS_VARIANT;
+	InvokeHelper(0x6f, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms, Start, MinPerChar, &CompleteFormat);
 	return result;
 }
 
@@ -5188,10 +4562,8 @@ CString AddressEntry::GetAddress()
 
 void AddressEntry::SetAddress(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long AddressEntry::GetDisplayType()
@@ -5217,10 +4589,8 @@ CString AddressEntry::GetName()
 
 void AddressEntry::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString AddressEntry::GetType()
@@ -5232,10 +4602,8 @@ CString AddressEntry::GetType()
 
 void AddressEntry::SetType(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void AddressEntry::Delete()
@@ -5245,28 +4613,22 @@ void AddressEntry::Delete()
 
 void AddressEntry::Details(const VARIANT& HWnd)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x301, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &HWnd);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x301, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &HWnd);
 }
 
 CString AddressEntry::GetFreeBusy(DATE Start, long MinPerChar, const VARIANT& CompleteFormat)
 {
 	CString result;
-	static BYTE parms[] =
-		VTS_DATE VTS_I4 VTS_VARIANT;
-	InvokeHelper(0x306, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms,
-		Start, MinPerChar, &CompleteFormat);
+	static BYTE parms[] = VTS_DATE VTS_I4 VTS_VARIANT;
+	InvokeHelper(0x306, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms, Start, MinPerChar, &CompleteFormat);
 	return result;
 }
 
 void AddressEntry::Update(const VARIANT& MakePermanent, const VARIANT& Refresh)
 {
-	static BYTE parms[] =
-		VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x300, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &MakePermanent, &Refresh);
+	static BYTE parms[] = VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0x300, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &MakePermanent, &Refresh);
 }
 
 LPDISPATCH AddressEntry::GetContact()
@@ -5349,20 +4711,16 @@ long AddressEntries::GetCount()
 LPDISPATCH AddressEntries::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH AddressEntries::Add(LPCTSTR Type, const VARIANT& Name, const VARIANT& Address)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Type, &Name, &Address);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Type, &Name, &Address);
 	return result;
 }
 
@@ -5396,10 +4754,8 @@ LPDISPATCH AddressEntries::GetPrevious()
 
 void AddressEntries::Sort(const VARIANT& Property_, const VARIANT& Order)
 {
-	static BYTE parms[] =
-		VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x61, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Property_, &Order);
+	static BYTE parms[] = VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0x61, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Property_, &Order);
 }
 
 
@@ -5460,10 +4816,8 @@ CString _ContactItem::GetBillingInformation()
 
 void _ContactItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetBody()
@@ -5475,10 +4829,8 @@ CString _ContactItem::GetBody()
 
 void _ContactItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetCategories()
@@ -5490,10 +4842,8 @@ CString _ContactItem::GetCategories()
 
 void _ContactItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetCompanies()
@@ -5505,10 +4855,8 @@ CString _ContactItem::GetCompanies()
 
 void _ContactItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetConversationIndex()
@@ -5562,10 +4910,8 @@ long _ContactItem::GetImportance()
 
 void _ContactItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _ContactItem::GetLastModificationTime()
@@ -5584,10 +4930,8 @@ CString _ContactItem::GetMessageClass()
 
 void _ContactItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetMileage()
@@ -5599,10 +4943,8 @@ CString _ContactItem::GetMileage()
 
 void _ContactItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _ContactItem::GetNoAging()
@@ -5614,10 +4956,8 @@ BOOL _ContactItem::GetNoAging()
 
 void _ContactItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _ContactItem::GetOutlookInternalVersion()
@@ -5650,10 +4990,8 @@ long _ContactItem::GetSensitivity()
 
 void _ContactItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _ContactItem::GetSize()
@@ -5672,10 +5010,8 @@ CString _ContactItem::GetSubject()
 
 void _ContactItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _ContactItem::GetUnRead()
@@ -5687,10 +5023,8 @@ BOOL _ContactItem::GetUnRead()
 
 void _ContactItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _ContactItem::GetUserProperties()
@@ -5702,10 +5036,8 @@ LPDISPATCH _ContactItem::GetUserProperties()
 
 void _ContactItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _ContactItem::Copy()
@@ -5722,19 +5054,15 @@ void _ContactItem::Delete()
 
 void _ContactItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _ContactItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -5750,10 +5078,8 @@ void _ContactItem::Save()
 
 void _ContactItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 CString _ContactItem::GetAccount()
@@ -5765,10 +5091,8 @@ CString _ContactItem::GetAccount()
 
 void _ContactItem::SetAccount(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a00, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a00, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _ContactItem::GetAnniversary()
@@ -5780,10 +5104,8 @@ DATE _ContactItem::GetAnniversary()
 
 void _ContactItem::SetAnniversary(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x3a41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x3a41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _ContactItem::GetAssistantName()
@@ -5795,10 +5117,8 @@ CString _ContactItem::GetAssistantName()
 
 void _ContactItem::SetAssistantName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a30, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a30, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetAssistantTelephoneNumber()
@@ -5810,10 +5130,8 @@ CString _ContactItem::GetAssistantTelephoneNumber()
 
 void _ContactItem::SetAssistantTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a2e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a2e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _ContactItem::GetBirthday()
@@ -5825,10 +5143,8 @@ DATE _ContactItem::GetBirthday()
 
 void _ContactItem::SetBirthday(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x3a42, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x3a42, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _ContactItem::GetBusiness2TelephoneNumber()
@@ -5840,10 +5156,8 @@ CString _ContactItem::GetBusiness2TelephoneNumber()
 
 void _ContactItem::SetBusiness2TelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a1b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a1b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetBusinessAddress()
@@ -5855,10 +5169,8 @@ CString _ContactItem::GetBusinessAddress()
 
 void _ContactItem::SetBusinessAddress(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x801b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x801b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetBusinessAddressCity()
@@ -5870,10 +5182,8 @@ CString _ContactItem::GetBusinessAddressCity()
 
 void _ContactItem::SetBusinessAddressCity(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8046, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8046, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetBusinessAddressCountry()
@@ -5885,10 +5195,8 @@ CString _ContactItem::GetBusinessAddressCountry()
 
 void _ContactItem::SetBusinessAddressCountry(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8049, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8049, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetBusinessAddressPostalCode()
@@ -5900,10 +5208,8 @@ CString _ContactItem::GetBusinessAddressPostalCode()
 
 void _ContactItem::SetBusinessAddressPostalCode(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8048, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8048, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetBusinessAddressPostOfficeBox()
@@ -5915,10 +5221,8 @@ CString _ContactItem::GetBusinessAddressPostOfficeBox()
 
 void _ContactItem::SetBusinessAddressPostOfficeBox(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x804a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x804a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetBusinessAddressState()
@@ -5930,10 +5234,8 @@ CString _ContactItem::GetBusinessAddressState()
 
 void _ContactItem::SetBusinessAddressState(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8047, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8047, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetBusinessAddressStreet()
@@ -5945,10 +5247,8 @@ CString _ContactItem::GetBusinessAddressStreet()
 
 void _ContactItem::SetBusinessAddressStreet(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8045, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8045, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetBusinessFaxNumber()
@@ -5960,10 +5260,8 @@ CString _ContactItem::GetBusinessFaxNumber()
 
 void _ContactItem::SetBusinessFaxNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a24, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a24, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetBusinessHomePage()
@@ -5975,10 +5273,8 @@ CString _ContactItem::GetBusinessHomePage()
 
 void _ContactItem::SetBusinessHomePage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a51, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a51, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetBusinessTelephoneNumber()
@@ -5990,10 +5286,8 @@ CString _ContactItem::GetBusinessTelephoneNumber()
 
 void _ContactItem::SetBusinessTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a08, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a08, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetCallbackTelephoneNumber()
@@ -6005,10 +5299,8 @@ CString _ContactItem::GetCallbackTelephoneNumber()
 
 void _ContactItem::SetCallbackTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetCarTelephoneNumber()
@@ -6020,10 +5312,8 @@ CString _ContactItem::GetCarTelephoneNumber()
 
 void _ContactItem::SetCarTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a1e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a1e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetChildren()
@@ -6035,10 +5325,8 @@ CString _ContactItem::GetChildren()
 
 void _ContactItem::SetChildren(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x800c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x800c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetCompanyAndFullName()
@@ -6071,10 +5359,8 @@ CString _ContactItem::GetCompanyMainTelephoneNumber()
 
 void _ContactItem::SetCompanyMainTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a57, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a57, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetCompanyName()
@@ -6086,10 +5372,8 @@ CString _ContactItem::GetCompanyName()
 
 void _ContactItem::SetCompanyName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a16, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a16, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetComputerNetworkName()
@@ -6101,10 +5385,8 @@ CString _ContactItem::GetComputerNetworkName()
 
 void _ContactItem::SetComputerNetworkName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a49, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a49, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetCustomerID()
@@ -6116,10 +5398,8 @@ CString _ContactItem::GetCustomerID()
 
 void _ContactItem::SetCustomerID(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a4a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a4a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetDepartment()
@@ -6131,10 +5411,8 @@ CString _ContactItem::GetDepartment()
 
 void _ContactItem::SetDepartment(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a18, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a18, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetEmail1Address()
@@ -6146,10 +5424,8 @@ CString _ContactItem::GetEmail1Address()
 
 void _ContactItem::SetEmail1Address(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8083, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8083, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetEmail1AddressType()
@@ -6161,10 +5437,8 @@ CString _ContactItem::GetEmail1AddressType()
 
 void _ContactItem::SetEmail1AddressType(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8082, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8082, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetEmail1DisplayName()
@@ -6190,10 +5464,8 @@ CString _ContactItem::GetEmail2Address()
 
 void _ContactItem::SetEmail2Address(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8093, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8093, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetEmail2AddressType()
@@ -6205,10 +5477,8 @@ CString _ContactItem::GetEmail2AddressType()
 
 void _ContactItem::SetEmail2AddressType(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8092, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8092, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetEmail2DisplayName()
@@ -6234,10 +5504,8 @@ CString _ContactItem::GetEmail3Address()
 
 void _ContactItem::SetEmail3Address(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x80a3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x80a3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetEmail3AddressType()
@@ -6249,10 +5517,8 @@ CString _ContactItem::GetEmail3AddressType()
 
 void _ContactItem::SetEmail3AddressType(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x80a2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x80a2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetEmail3DisplayName()
@@ -6278,10 +5544,8 @@ CString _ContactItem::GetFileAs()
 
 void _ContactItem::SetFileAs(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8005, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8005, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetFirstName()
@@ -6293,10 +5557,8 @@ CString _ContactItem::GetFirstName()
 
 void _ContactItem::SetFirstName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a06, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a06, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetFTPSite()
@@ -6308,10 +5570,8 @@ CString _ContactItem::GetFTPSite()
 
 void _ContactItem::SetFTPSite(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a4c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a4c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetFullName()
@@ -6323,10 +5583,8 @@ CString _ContactItem::GetFullName()
 
 void _ContactItem::SetFullName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetFullNameAndCompany()
@@ -6345,10 +5603,8 @@ long _ContactItem::GetGender()
 
 void _ContactItem::SetGender(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x3a4d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x3a4d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _ContactItem::GetGovernmentIDNumber()
@@ -6360,10 +5616,8 @@ CString _ContactItem::GetGovernmentIDNumber()
 
 void _ContactItem::SetGovernmentIDNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a07, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a07, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetHobby()
@@ -6375,10 +5629,8 @@ CString _ContactItem::GetHobby()
 
 void _ContactItem::SetHobby(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a43, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a43, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetHome2TelephoneNumber()
@@ -6390,10 +5642,8 @@ CString _ContactItem::GetHome2TelephoneNumber()
 
 void _ContactItem::SetHome2TelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a2f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a2f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetHomeAddress()
@@ -6405,10 +5655,8 @@ CString _ContactItem::GetHomeAddress()
 
 void _ContactItem::SetHomeAddress(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x801a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x801a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetHomeAddressCity()
@@ -6420,10 +5668,8 @@ CString _ContactItem::GetHomeAddressCity()
 
 void _ContactItem::SetHomeAddressCity(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a59, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a59, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetHomeAddressCountry()
@@ -6435,10 +5681,8 @@ CString _ContactItem::GetHomeAddressCountry()
 
 void _ContactItem::SetHomeAddressCountry(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a5a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a5a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetHomeAddressPostalCode()
@@ -6450,10 +5694,8 @@ CString _ContactItem::GetHomeAddressPostalCode()
 
 void _ContactItem::SetHomeAddressPostalCode(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a5b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a5b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetHomeAddressPostOfficeBox()
@@ -6465,10 +5707,8 @@ CString _ContactItem::GetHomeAddressPostOfficeBox()
 
 void _ContactItem::SetHomeAddressPostOfficeBox(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a5e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a5e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetHomeAddressState()
@@ -6480,10 +5720,8 @@ CString _ContactItem::GetHomeAddressState()
 
 void _ContactItem::SetHomeAddressState(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a5c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a5c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetHomeAddressStreet()
@@ -6495,10 +5733,8 @@ CString _ContactItem::GetHomeAddressStreet()
 
 void _ContactItem::SetHomeAddressStreet(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a5d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a5d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetHomeFaxNumber()
@@ -6510,10 +5746,8 @@ CString _ContactItem::GetHomeFaxNumber()
 
 void _ContactItem::SetHomeFaxNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a25, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a25, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetHomeTelephoneNumber()
@@ -6525,10 +5759,8 @@ CString _ContactItem::GetHomeTelephoneNumber()
 
 void _ContactItem::SetHomeTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a09, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a09, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetInitials()
@@ -6540,10 +5772,8 @@ CString _ContactItem::GetInitials()
 
 void _ContactItem::SetInitials(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a0a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetInternetFreeBusyAddress()
@@ -6555,10 +5785,8 @@ CString _ContactItem::GetInternetFreeBusyAddress()
 
 void _ContactItem::SetInternetFreeBusyAddress(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x80d8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x80d8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetISDNNumber()
@@ -6570,10 +5798,8 @@ CString _ContactItem::GetISDNNumber()
 
 void _ContactItem::SetISDNNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a2d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a2d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetJobTitle()
@@ -6585,10 +5811,8 @@ CString _ContactItem::GetJobTitle()
 
 void _ContactItem::SetJobTitle(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _ContactItem::GetJournal()
@@ -6600,10 +5824,8 @@ BOOL _ContactItem::GetJournal()
 
 void _ContactItem::SetJournal(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8025, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8025, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _ContactItem::GetLanguage()
@@ -6615,10 +5837,8 @@ CString _ContactItem::GetLanguage()
 
 void _ContactItem::SetLanguage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a0c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetLastFirstAndSuffix()
@@ -6665,10 +5885,8 @@ CString _ContactItem::GetLastName()
 
 void _ContactItem::SetLastName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a11, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a11, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetLastNameAndFirstName()
@@ -6687,10 +5905,8 @@ CString _ContactItem::GetMailingAddress()
 
 void _ContactItem::SetMailingAddress(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetMailingAddressCity()
@@ -6702,10 +5918,8 @@ CString _ContactItem::GetMailingAddressCity()
 
 void _ContactItem::SetMailingAddressCity(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetMailingAddressCountry()
@@ -6717,10 +5931,8 @@ CString _ContactItem::GetMailingAddressCountry()
 
 void _ContactItem::SetMailingAddressCountry(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a26, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a26, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetMailingAddressPostalCode()
@@ -6732,10 +5944,8 @@ CString _ContactItem::GetMailingAddressPostalCode()
 
 void _ContactItem::SetMailingAddressPostalCode(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a2a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a2a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetMailingAddressPostOfficeBox()
@@ -6747,10 +5957,8 @@ CString _ContactItem::GetMailingAddressPostOfficeBox()
 
 void _ContactItem::SetMailingAddressPostOfficeBox(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a2b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a2b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetMailingAddressState()
@@ -6762,10 +5970,8 @@ CString _ContactItem::GetMailingAddressState()
 
 void _ContactItem::SetMailingAddressState(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a28, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a28, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetMailingAddressStreet()
@@ -6777,10 +5983,8 @@ CString _ContactItem::GetMailingAddressStreet()
 
 void _ContactItem::SetMailingAddressStreet(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a29, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a29, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetManagerName()
@@ -6792,10 +5996,8 @@ CString _ContactItem::GetManagerName()
 
 void _ContactItem::SetManagerName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a4e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a4e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetMiddleName()
@@ -6807,10 +6009,8 @@ CString _ContactItem::GetMiddleName()
 
 void _ContactItem::SetMiddleName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a44, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a44, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetMobileTelephoneNumber()
@@ -6822,10 +6022,8 @@ CString _ContactItem::GetMobileTelephoneNumber()
 
 void _ContactItem::SetMobileTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a1c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a1c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetNetMeetingAlias()
@@ -6837,10 +6035,8 @@ CString _ContactItem::GetNetMeetingAlias()
 
 void _ContactItem::SetNetMeetingAlias(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x805f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x805f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetNetMeetingServer()
@@ -6852,10 +6048,8 @@ CString _ContactItem::GetNetMeetingServer()
 
 void _ContactItem::SetNetMeetingServer(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8060, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8060, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetNickName()
@@ -6867,10 +6061,8 @@ CString _ContactItem::GetNickName()
 
 void _ContactItem::SetNickName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a4f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a4f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetOfficeLocation()
@@ -6882,10 +6074,8 @@ CString _ContactItem::GetOfficeLocation()
 
 void _ContactItem::SetOfficeLocation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a19, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a19, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetOrganizationalIDNumber()
@@ -6897,10 +6087,8 @@ CString _ContactItem::GetOrganizationalIDNumber()
 
 void _ContactItem::SetOrganizationalIDNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a10, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a10, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetOtherAddress()
@@ -6912,10 +6100,8 @@ CString _ContactItem::GetOtherAddress()
 
 void _ContactItem::SetOtherAddress(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x801c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x801c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetOtherAddressCity()
@@ -6927,10 +6113,8 @@ CString _ContactItem::GetOtherAddressCity()
 
 void _ContactItem::SetOtherAddressCity(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a5f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a5f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetOtherAddressCountry()
@@ -6942,10 +6126,8 @@ CString _ContactItem::GetOtherAddressCountry()
 
 void _ContactItem::SetOtherAddressCountry(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a60, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a60, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetOtherAddressPostalCode()
@@ -6957,10 +6139,8 @@ CString _ContactItem::GetOtherAddressPostalCode()
 
 void _ContactItem::SetOtherAddressPostalCode(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a61, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a61, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetOtherAddressPostOfficeBox()
@@ -6972,10 +6152,8 @@ CString _ContactItem::GetOtherAddressPostOfficeBox()
 
 void _ContactItem::SetOtherAddressPostOfficeBox(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a64, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a64, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetOtherAddressState()
@@ -6987,10 +6165,8 @@ CString _ContactItem::GetOtherAddressState()
 
 void _ContactItem::SetOtherAddressState(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a62, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a62, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetOtherAddressStreet()
@@ -7002,10 +6178,8 @@ CString _ContactItem::GetOtherAddressStreet()
 
 void _ContactItem::SetOtherAddressStreet(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a63, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a63, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetOtherFaxNumber()
@@ -7017,10 +6191,8 @@ CString _ContactItem::GetOtherFaxNumber()
 
 void _ContactItem::SetOtherFaxNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a23, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a23, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetOtherTelephoneNumber()
@@ -7032,10 +6204,8 @@ CString _ContactItem::GetOtherTelephoneNumber()
 
 void _ContactItem::SetOtherTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetPagerNumber()
@@ -7047,10 +6217,8 @@ CString _ContactItem::GetPagerNumber()
 
 void _ContactItem::SetPagerNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a21, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a21, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetPersonalHomePage()
@@ -7062,10 +6230,8 @@ CString _ContactItem::GetPersonalHomePage()
 
 void _ContactItem::SetPersonalHomePage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a50, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a50, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetPrimaryTelephoneNumber()
@@ -7077,10 +6243,8 @@ CString _ContactItem::GetPrimaryTelephoneNumber()
 
 void _ContactItem::SetPrimaryTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetProfession()
@@ -7092,10 +6256,8 @@ CString _ContactItem::GetProfession()
 
 void _ContactItem::SetProfession(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a46, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a46, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetRadioTelephoneNumber()
@@ -7107,10 +6269,8 @@ CString _ContactItem::GetRadioTelephoneNumber()
 
 void _ContactItem::SetRadioTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a1d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a1d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetReferredBy()
@@ -7122,10 +6282,8 @@ CString _ContactItem::GetReferredBy()
 
 void _ContactItem::SetReferredBy(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a47, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a47, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _ContactItem::GetSelectedMailingAddress()
@@ -7137,10 +6295,8 @@ long _ContactItem::GetSelectedMailingAddress()
 
 void _ContactItem::SetSelectedMailingAddress(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8022, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8022, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _ContactItem::GetSpouse()
@@ -7152,10 +6308,8 @@ CString _ContactItem::GetSpouse()
 
 void _ContactItem::SetSpouse(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a48, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a48, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetSuffix()
@@ -7167,10 +6321,8 @@ CString _ContactItem::GetSuffix()
 
 void _ContactItem::SetSuffix(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a05, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a05, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetTelexNumber()
@@ -7182,10 +6334,8 @@ CString _ContactItem::GetTelexNumber()
 
 void _ContactItem::SetTelexNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a2c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a2c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetTitle()
@@ -7197,10 +6347,8 @@ CString _ContactItem::GetTitle()
 
 void _ContactItem::SetTitle(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a45, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a45, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetTTYTDDTelephoneNumber()
@@ -7212,10 +6360,8 @@ CString _ContactItem::GetTTYTDDTelephoneNumber()
 
 void _ContactItem::SetTTYTDDTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a4b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a4b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetUser1()
@@ -7227,10 +6373,8 @@ CString _ContactItem::GetUser1()
 
 void _ContactItem::SetUser1(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x804f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x804f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetUser2()
@@ -7242,10 +6386,8 @@ CString _ContactItem::GetUser2()
 
 void _ContactItem::SetUser2(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8050, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8050, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetUser3()
@@ -7257,10 +6399,8 @@ CString _ContactItem::GetUser3()
 
 void _ContactItem::SetUser3(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8051, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8051, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetUser4()
@@ -7272,10 +6412,8 @@ CString _ContactItem::GetUser4()
 
 void _ContactItem::SetUser4(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8052, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8052, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetWebPage()
@@ -7287,10 +6425,8 @@ CString _ContactItem::GetWebPage()
 
 void _ContactItem::SetWebPage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x802b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x802b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetYomiCompanyName()
@@ -7302,10 +6438,8 @@ CString _ContactItem::GetYomiCompanyName()
 
 void _ContactItem::SetYomiCompanyName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x802e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x802e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetYomiFirstName()
@@ -7317,10 +6451,8 @@ CString _ContactItem::GetYomiFirstName()
 
 void _ContactItem::SetYomiFirstName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x802c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x802c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ContactItem::GetYomiLastName()
@@ -7332,10 +6464,8 @@ CString _ContactItem::GetYomiLastName()
 
 void _ContactItem::SetYomiLastName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x802d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x802d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _ContactItem::ForwardAsVcard()
@@ -7387,10 +6517,8 @@ CString _ContactItem::GetIMAddress()
 
 void _ContactItem::SetIMAddress(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8062, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8062, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _ContactItem::GetMarkForDownload()
@@ -7402,34 +6530,26 @@ long _ContactItem::GetMarkForDownload()
 
 void _ContactItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 void _ContactItem::SetEmail1DisplayName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8080, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8080, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _ContactItem::SetEmail2DisplayName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8090, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8090, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _ContactItem::SetEmail3DisplayName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x80a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x80a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _ContactItem::GetIsConflict()
@@ -7455,10 +6575,8 @@ LPDISPATCH _ContactItem::GetConflicts()
 
 void _ContactItem::AddPicture(LPCTSTR Path)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfabd, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfabd, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path);
 }
 
 void _ContactItem::RemovePicture()
@@ -7494,18 +6612,14 @@ void _ContactItem::ShowBusinessCardEditor()
 
 void _ContactItem::SaveBusinessCardImage(LPCTSTR Path)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb97, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb97, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path);
 }
 
 void _ContactItem::ShowCheckPhoneDialog(long PhoneNumber)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbd7, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 PhoneNumber);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbd7, DISPATCH_METHOD, VT_EMPTY, NULL, parms, PhoneNumber);
 }
 
 CString _ContactItem::GetTaskSubject()
@@ -7517,10 +6631,8 @@ CString _ContactItem::GetTaskSubject()
 
 void _ContactItem::SetTaskSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfc1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfc1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _ContactItem::GetTaskDueDate()
@@ -7532,10 +6644,8 @@ DATE _ContactItem::GetTaskDueDate()
 
 void _ContactItem::SetTaskDueDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _ContactItem::GetTaskStartDate()
@@ -7547,10 +6657,8 @@ DATE _ContactItem::GetTaskStartDate()
 
 void _ContactItem::SetTaskStartDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _ContactItem::GetTaskCompletedDate()
@@ -7562,10 +6670,8 @@ DATE _ContactItem::GetTaskCompletedDate()
 
 void _ContactItem::SetTaskCompletedDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _ContactItem::GetToDoTaskOrdinal()
@@ -7577,10 +6683,8 @@ DATE _ContactItem::GetToDoTaskOrdinal()
 
 void _ContactItem::SetToDoTaskOrdinal(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _ContactItem::GetReminderOverrideDefault()
@@ -7592,10 +6696,8 @@ BOOL _ContactItem::GetReminderOverrideDefault()
 
 void _ContactItem::SetReminderOverrideDefault(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _ContactItem::GetReminderPlaySound()
@@ -7607,10 +6709,8 @@ BOOL _ContactItem::GetReminderPlaySound()
 
 void _ContactItem::SetReminderPlaySound(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _ContactItem::GetReminderSet()
@@ -7622,10 +6722,8 @@ BOOL _ContactItem::GetReminderSet()
 
 void _ContactItem::SetReminderSet(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _ContactItem::GetReminderSoundFile()
@@ -7637,10 +6735,8 @@ CString _ContactItem::GetReminderSoundFile()
 
 void _ContactItem::SetReminderSoundFile(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _ContactItem::GetReminderTime()
@@ -7652,18 +6748,14 @@ DATE _ContactItem::GetReminderTime()
 
 void _ContactItem::SetReminderTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 void _ContactItem::MarkAsTask(long MarkInterval)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbfe, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 MarkInterval);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbfe, DISPATCH_METHOD, VT_EMPTY, NULL, parms, MarkInterval);
 }
 
 void _ContactItem::ClearTaskFlag()
@@ -7687,10 +6779,8 @@ CString _ContactItem::GetBusinessCardLayoutXml()
 
 void _ContactItem::SetBusinessCardLayoutXml(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfc0d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfc0d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _ContactItem::ResetBusinessCard()
@@ -7700,10 +6790,8 @@ void _ContactItem::ResetBusinessCard()
 
 void _ContactItem::AddBusinessCardLogoPicture(LPCTSTR Path)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfc0f, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfc0f, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path);
 }
 
 long _ContactItem::GetBusinessCardType()
@@ -7758,10 +6846,8 @@ long Actions::GetCount()
 LPDISPATCH Actions::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -7774,10 +6860,8 @@ LPDISPATCH Actions::Add()
 
 void Actions::Remove(long Index)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index);
 }
 
 
@@ -7824,10 +6908,8 @@ long Action::GetCopyLike()
 
 void Action::SetCopyLike(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x64, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x64, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL Action::GetEnabled()
@@ -7839,10 +6921,8 @@ BOOL Action::GetEnabled()
 
 void Action::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString Action::GetMessageClass()
@@ -7854,10 +6934,8 @@ CString Action::GetMessageClass()
 
 void Action::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString Action::GetName()
@@ -7869,10 +6947,8 @@ CString Action::GetName()
 
 void Action::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString Action::GetPrefix()
@@ -7884,10 +6960,8 @@ CString Action::GetPrefix()
 
 void Action::SetPrefix(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long Action::GetReplyStyle()
@@ -7899,10 +6973,8 @@ long Action::GetReplyStyle()
 
 void Action::SetReplyStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x65, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x65, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long Action::GetResponseStyle()
@@ -7914,10 +6986,8 @@ long Action::GetResponseStyle()
 
 void Action::SetResponseStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x66, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x66, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long Action::GetShowOn()
@@ -7929,10 +6999,8 @@ long Action::GetShowOn()
 
 void Action::SetShowOn(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x69, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x69, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 void Action::Delete()
@@ -7992,29 +7060,24 @@ long Attachments::GetCount()
 LPDISPATCH Attachments::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
-LPDISPATCH Attachments::Add(const VARIANT& Source, const VARIANT& Type, const VARIANT& Position, const VARIANT& DisplayName)
+LPDISPATCH Attachments::Add(const VARIANT& Source, const VARIANT& Type, const VARIANT& Position,
+	const VARIANT& DisplayName)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT VTS_VARIANT VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x65, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Source, &Type, &Position, &DisplayName);
+	static BYTE parms[] = VTS_VARIANT VTS_VARIANT VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0x65, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Source, &Type, &Position, &DisplayName);
 	return result;
 }
 
 void Attachments::Remove(long Index)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index);
 }
 
 
@@ -8061,10 +7124,8 @@ CString Attachment::GetDisplayName()
 
 void Attachment::SetDisplayName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString Attachment::GetFileName()
@@ -8097,10 +7158,8 @@ long Attachment::GetPosition()
 
 void Attachment::SetPosition(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x72, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x72, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long Attachment::GetType()
@@ -8117,10 +7176,8 @@ void Attachment::Delete()
 
 void Attachment::SaveAsFile(LPCTSTR Path)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x68, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x68, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path);
 }
 
 LPDISPATCH Attachment::GetPropertyAccessor()
@@ -8182,96 +7239,76 @@ LPDISPATCH _PropertyAccessor::GetParent()
 VARIANT _PropertyAccessor::GetProperty_(LPCTSTR SchemaName)
 {
 	VARIANT result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfafb, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms,
-		SchemaName);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfafb, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms, SchemaName);
 	return result;
 }
 
 void _PropertyAccessor::SetProperty_(LPCTSTR SchemaName, const VARIANT& Value)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xfafc, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SchemaName, &Value);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xfafc, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SchemaName, &Value);
 }
 
 VARIANT _PropertyAccessor::GetProperties(const VARIANT& SchemaNames)
 {
 	VARIANT result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfafe, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms,
-		&SchemaNames);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfafe, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms, &SchemaNames);
 	return result;
 }
 
 VARIANT _PropertyAccessor::SetProperties(const VARIANT& SchemaNames, const VARIANT& Values)
 {
 	VARIANT result;
-	static BYTE parms[] =
-		VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0xfaff, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms,
-		&SchemaNames, &Values);
+	static BYTE parms[] = VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0xfaff, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms, &SchemaNames, &Values);
 	return result;
 }
 
 DATE _PropertyAccessor::UTCToLocalTime(DATE Value)
 {
 	DATE result;
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfb00, DISPATCH_METHOD, VT_DATE, (void*)&result, parms,
-		Value);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfb00, DISPATCH_METHOD, VT_DATE, (void*)&result, parms, Value);
 	return result;
 }
 
 DATE _PropertyAccessor::LocalTimeToUTC(DATE Value)
 {
 	DATE result;
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfb01, DISPATCH_METHOD, VT_DATE, (void*)&result, parms,
-		Value);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfb01, DISPATCH_METHOD, VT_DATE, (void*)&result, parms, Value);
 	return result;
 }
 
 VARIANT _PropertyAccessor::StringToBinary(LPCTSTR Value)
 {
 	VARIANT result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb02, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms,
-		Value);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb02, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms, Value);
 	return result;
 }
 
 CString _PropertyAccessor::BinaryToString(const VARIANT& Value)
 {
 	CString result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfb03, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms,
-		&Value);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfb03, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms, &Value);
 	return result;
 }
 
 void _PropertyAccessor::DeleteProperty(LPCTSTR SchemaName)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb91, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SchemaName);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb91, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SchemaName);
 }
 
 VARIANT _PropertyAccessor::DeleteProperties(VARIANT* SchemaNames)
 {
 	VARIANT result;
-	static BYTE parms[] =
-		VTS_PVARIANT;
-	InvokeHelper(0xfb92, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms,
-		SchemaNames);
+	static BYTE parms[] = VTS_PVARIANT;
+	InvokeHelper(0xfb92, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms, SchemaNames);
 	return result;
 }
 
@@ -8319,10 +7356,8 @@ CString FormDescription::GetCategory()
 
 void FormDescription::SetCategory(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3304, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3304, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString FormDescription::GetCategorySub()
@@ -8334,10 +7369,8 @@ CString FormDescription::GetCategorySub()
 
 void FormDescription::SetCategorySub(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3305, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3305, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString FormDescription::GetComment()
@@ -8349,10 +7382,8 @@ CString FormDescription::GetComment()
 
 void FormDescription::SetComment(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString FormDescription::GetContactName()
@@ -8364,10 +7395,8 @@ CString FormDescription::GetContactName()
 
 void FormDescription::SetContactName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3303, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3303, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString FormDescription::GetDisplayName()
@@ -8379,10 +7408,8 @@ CString FormDescription::GetDisplayName()
 
 void FormDescription::SetDisplayName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL FormDescription::GetHidden()
@@ -8394,10 +7421,8 @@ BOOL FormDescription::GetHidden()
 
 void FormDescription::SetHidden(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x3307, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x3307, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString FormDescription::GetIcon()
@@ -8409,10 +7434,8 @@ CString FormDescription::GetIcon()
 
 void FormDescription::SetIcon(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xffd, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xffd, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL FormDescription::GetLocked()
@@ -8424,10 +7447,8 @@ BOOL FormDescription::GetLocked()
 
 void FormDescription::SetLocked(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x66, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x66, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString FormDescription::GetMessageClass()
@@ -8446,10 +7467,8 @@ CString FormDescription::GetMiniIcon()
 
 void FormDescription::SetMiniIcon(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xffc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xffc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString FormDescription::GetName()
@@ -8461,10 +7480,8 @@ CString FormDescription::GetName()
 
 void FormDescription::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xf01d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xf01d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString FormDescription::GetNumber()
@@ -8476,10 +7493,8 @@ CString FormDescription::GetNumber()
 
 void FormDescription::SetNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x68, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x68, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL FormDescription::GetOneOff()
@@ -8491,10 +7506,8 @@ BOOL FormDescription::GetOneOff()
 
 void FormDescription::SetOneOff(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x65, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x65, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString FormDescription::GetScriptText()
@@ -8513,10 +7526,8 @@ CString FormDescription::GetTemplate()
 
 void FormDescription::SetTemplate(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x6a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x6a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL FormDescription::GetUseWordMail()
@@ -8528,10 +7539,8 @@ BOOL FormDescription::GetUseWordMail()
 
 void FormDescription::SetUseWordMail(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x69, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x69, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString FormDescription::GetVersion()
@@ -8543,18 +7552,14 @@ CString FormDescription::GetVersion()
 
 void FormDescription::SetVersion(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3301, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3301, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void FormDescription::PublishForm(long Registry, const VARIANT& Folder)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_VARIANT;
-	InvokeHelper(0x6b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Registry, &Folder);
+	static BYTE parms[] = VTS_I4 VTS_VARIANT;
+	InvokeHelper(0x6b, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Registry, &Folder);
 }
 
 
@@ -8622,26 +7627,20 @@ LPDISPATCH _Inspector::GetModifiedFormPages()
 
 void _Inspector::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2103, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2103, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 void _Inspector::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x2104, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x2104, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 void _Inspector::HideFormPage(LPCTSTR PageName)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x2108, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 PageName);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x2108, DISPATCH_METHOD, VT_EMPTY, NULL, parms, PageName);
 }
 
 BOOL _Inspector::IsWordMail()
@@ -8653,18 +7652,14 @@ BOOL _Inspector::IsWordMail()
 
 void _Inspector::SetCurrentFormPage(LPCTSTR PageName)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x210c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 PageName);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x210c, DISPATCH_METHOD, VT_EMPTY, NULL, parms, PageName);
 }
 
 void _Inspector::ShowFormPage(LPCTSTR PageName)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x2109, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 PageName);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x2109, DISPATCH_METHOD, VT_EMPTY, NULL, parms, PageName);
 }
 
 LPDISPATCH _Inspector::GetWordEditor()
@@ -8690,10 +7685,8 @@ long _Inspector::GetHeight()
 
 void _Inspector::SetHeight(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2114, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2114, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _Inspector::GetLeft()
@@ -8705,10 +7698,8 @@ long _Inspector::GetLeft()
 
 void _Inspector::SetLeft(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2115, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2115, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _Inspector::GetTop()
@@ -8720,10 +7711,8 @@ long _Inspector::GetTop()
 
 void _Inspector::SetTop(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2116, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2116, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _Inspector::GetWidth()
@@ -8735,10 +7724,8 @@ long _Inspector::GetWidth()
 
 void _Inspector::SetWidth(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2117, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2117, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _Inspector::GetWindowState()
@@ -8750,10 +7737,8 @@ long _Inspector::GetWindowState()
 
 void _Inspector::SetWindowState(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2112, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2112, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 void _Inspector::Activate()
@@ -8763,10 +7748,8 @@ void _Inspector::Activate()
 
 void _Inspector::SetControlItemProperty(LPDISPATCH Control, LPCTSTR PropertyName)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_BSTR;
-	InvokeHelper(0xfac9, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Control, PropertyName);
+	static BYTE parms[] = VTS_DISPATCH VTS_BSTR;
+	InvokeHelper(0xfac9, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Control, PropertyName);
 }
 
 LPDISPATCH _Inspector::NewFormRegion()
@@ -8779,19 +7762,15 @@ LPDISPATCH _Inspector::NewFormRegion()
 LPDISPATCH _Inspector::OpenFormRegion(LPCTSTR Path)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfbff, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Path);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfbff, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Path);
 	return result;
 }
 
 void _Inspector::SaveFormRegion(LPDISPATCH Page, LPCTSTR FileName)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_BSTR;
-	InvokeHelper(0xfc00, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Page, FileName);
+	static BYTE parms[] = VTS_DISPATCH VTS_BSTR;
+	InvokeHelper(0xfc00, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Page, FileName);
 }
 
 
@@ -8839,39 +7818,32 @@ long UserProperties::GetCount()
 LPDISPATCH UserProperties::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH UserProperties::Add(LPCTSTR Name, long Type, const VARIANT& AddToFolderFields, const VARIANT& DisplayFormat)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4 VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x66, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, Type, &AddToFolderFields, &DisplayFormat);
+	static BYTE parms[] = VTS_BSTR VTS_I4 VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0x66, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name,
+		Type, &AddToFolderFields, &DisplayFormat);
 	return result;
 }
 
 LPDISPATCH UserProperties::Find(LPCTSTR Name, const VARIANT& Custom)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x67, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, &Custom);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x67, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, &Custom);
 	return result;
 }
 
 void UserProperties::Remove(long Index)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index);
 }
 
 
@@ -8918,10 +7890,8 @@ CString UserProperty::GetFormula()
 
 void UserProperty::SetFormula(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString UserProperty::GetName()
@@ -8947,10 +7917,8 @@ CString UserProperty::GetValidationFormula()
 
 void UserProperty::SetValidationFormula(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x68, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x68, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString UserProperty::GetValidationText()
@@ -8962,10 +7930,8 @@ CString UserProperty::GetValidationText()
 
 void UserProperty::SetValidationText(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x69, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x69, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 VARIANT UserProperty::GetValue()
@@ -8977,10 +7943,8 @@ VARIANT UserProperty::GetValue()
 
 void UserProperty::SetValue(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 void UserProperty::Delete()
@@ -9046,10 +8010,8 @@ CString MAPIFolder::GetDescription()
 
 void MAPIFolder::SetDescription(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString MAPIFolder::GetEntryID()
@@ -9082,10 +8044,8 @@ CString MAPIFolder::GetName()
 
 void MAPIFolder::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString MAPIFolder::GetStoreID()
@@ -9105,10 +8065,8 @@ long MAPIFolder::GetUnReadItemCount()
 LPDISPATCH MAPIFolder::CopyTo(LPDISPATCH DestinationFolder)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestinationFolder);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestinationFolder);
 	return result;
 }
 
@@ -9125,19 +8083,15 @@ void MAPIFolder::Display()
 LPDISPATCH MAPIFolder::GetExplorer(const VARIANT& DisplayMode)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x3101, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&DisplayMode);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x3101, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &DisplayMode);
 	return result;
 }
 
 void MAPIFolder::MoveTo(LPDISPATCH DestinationFolder)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 DestinationFolder);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_EMPTY, NULL, parms, DestinationFolder);
 }
 
 BOOL MAPIFolder::GetWebViewOn()
@@ -9149,10 +8103,8 @@ BOOL MAPIFolder::GetWebViewOn()
 
 void MAPIFolder::SetWebViewOn(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x3112, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x3112, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString MAPIFolder::GetWebViewURL()
@@ -9164,10 +8116,8 @@ CString MAPIFolder::GetWebViewURL()
 
 void MAPIFolder::SetWebViewURL(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3113, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3113, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void MAPIFolder::AddToPFFavorites()
@@ -9184,10 +8134,8 @@ CString MAPIFolder::GetAddressBookName()
 
 void MAPIFolder::SetAddressBookName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa6e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa6e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL MAPIFolder::GetShowAsOutlookAB()
@@ -9199,10 +8147,8 @@ BOOL MAPIFolder::GetShowAsOutlookAB()
 
 void MAPIFolder::SetShowAsOutlookAB(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfa6f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfa6f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString MAPIFolder::GetFolderPath()
@@ -9221,10 +8167,8 @@ BOOL MAPIFolder::GetInAppFolderSyncObject()
 
 void MAPIFolder::SetInAppFolderSyncObject(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfa4b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfa4b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH MAPIFolder::GetCurrentView()
@@ -9243,10 +8187,8 @@ BOOL MAPIFolder::GetCustomViewsOnly()
 
 void MAPIFolder::SetCustomViewsOnly(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfa46, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfa46, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH MAPIFolder::GetViews()
@@ -9272,10 +8214,8 @@ long MAPIFolder::GetShowItemCount()
 
 void MAPIFolder::SetShowItemCount(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfac2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfac2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH MAPIFolder::GetStore()
@@ -9288,20 +8228,16 @@ LPDISPATCH MAPIFolder::GetStore()
 LPDISPATCH MAPIFolder::GetStorage(LPCTSTR StorageIdentifier, long StorageIdentifierType)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4;
-	InvokeHelper(0xfb08, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		StorageIdentifier, StorageIdentifierType);
+	static BYTE parms[] = VTS_BSTR VTS_I4;
+	InvokeHelper(0xfb08, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, StorageIdentifier, StorageIdentifierType);
 	return result;
 }
 
 LPDISPATCH MAPIFolder::GetTable(const VARIANT& Filter, const VARIANT& TableContents)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0xfb1d, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Filter, &TableContents);
+	static BYTE parms[] = VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0xfb1d, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Filter, &TableContents);
 	return result;
 }
 
@@ -9371,20 +8307,16 @@ long _Folders::GetCount()
 LPDISPATCH _Folders::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _Folders::Add(LPCTSTR Name, const VARIANT& Type)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, &Type);
 	return result;
 }
 
@@ -9418,10 +8350,8 @@ LPDISPATCH _Folders::GetPrevious()
 
 void _Folders::Remove(long Index)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index);
 }
 
 
@@ -9469,10 +8399,8 @@ long _Items::GetCount()
 LPDISPATCH _Items::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -9485,29 +8413,23 @@ BOOL _Items::GetIncludeRecurrences()
 
 void _Items::SetIncludeRecurrences(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xce, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xce, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _Items::Add(const VARIANT& Type)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Type);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Type);
 	return result;
 }
 
 LPDISPATCH _Items::Find(LPCTSTR Filter)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x62, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Filter);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x62, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Filter);
 	return result;
 }
 
@@ -9548,10 +8470,8 @@ LPDISPATCH _Items::GetPrevious()
 
 void _Items::Remove(long Index)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index);
 }
 
 void _Items::ResetColumns()
@@ -9562,27 +8482,21 @@ void _Items::ResetColumns()
 LPDISPATCH _Items::Restrict(LPCTSTR Filter)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x64, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Filter);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x64, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Filter);
 	return result;
 }
 
 void _Items::SetColumns(LPCTSTR Columns)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x5c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Columns);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x5c, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Columns);
 }
 
 void _Items::Sort(LPCTSTR Property_, const VARIANT& Descending)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x61, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Property_, &Descending);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x61, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Property_, &Descending);
 }
 
 
@@ -9636,10 +8550,8 @@ LPDISPATCH _Explorer::GetCurrentFolder()
 
 void _Explorer::SetRefCurrentFolder(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0x2101, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0x2101, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms, newValue);
 }
 
 void _Explorer::Close()
@@ -9668,10 +8580,8 @@ VARIANT _Explorer::GetCurrentView()
 
 void _Explorer::SetCurrentView(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x2200, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x2200, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 long _Explorer::GetHeight()
@@ -9683,10 +8593,8 @@ long _Explorer::GetHeight()
 
 void _Explorer::SetHeight(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2114, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2114, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _Explorer::GetLeft()
@@ -9698,10 +8606,8 @@ long _Explorer::GetLeft()
 
 void _Explorer::SetLeft(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2115, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2115, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _Explorer::GetPanes()
@@ -9727,10 +8633,8 @@ long _Explorer::GetTop()
 
 void _Explorer::SetTop(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2116, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2116, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _Explorer::GetWidth()
@@ -9742,10 +8646,8 @@ long _Explorer::GetWidth()
 
 void _Explorer::SetWidth(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2117, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2117, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _Explorer::GetWindowState()
@@ -9757,10 +8659,8 @@ long _Explorer::GetWindowState()
 
 void _Explorer::SetWindowState(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2112, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2112, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 void _Explorer::Activate()
@@ -9771,19 +8671,15 @@ void _Explorer::Activate()
 BOOL _Explorer::IsPaneVisible(long Pane)
 {
 	BOOL result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2203, DISPATCH_METHOD, VT_BOOL, (void*)&result, parms,
-		Pane);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2203, DISPATCH_METHOD, VT_BOOL, (void*)&result, parms, Pane);
 	return result;
 }
 
 void _Explorer::ShowPane(long Pane, BOOL Visible)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_BOOL;
-	InvokeHelper(0x2204, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Pane, Visible);
+	static BYTE parms[] = VTS_I4 VTS_BOOL;
+	InvokeHelper(0x2204, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Pane, Visible);
 }
 
 LPDISPATCH _Explorer::GetHTMLDocument()
@@ -9807,10 +8703,8 @@ void _Explorer::ClearSearch()
 
 void _Explorer::Search(LPCTSTR Query, long SearchScope)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4;
-	InvokeHelper(0xfa65, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Query, SearchScope);
+	static BYTE parms[] = VTS_BSTR VTS_I4;
+	InvokeHelper(0xfa65, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Query, SearchScope);
 }
 
 
@@ -9858,10 +8752,8 @@ long Panes::GetCount()
 LPDISPATCH Panes::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -9910,10 +8802,8 @@ long Selection::GetCount()
 LPDISPATCH Selection::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -9961,10 +8851,8 @@ BOOL _NavigationPane::GetIsCollapsed()
 
 void _NavigationPane::SetIsCollapsed(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbb4, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbb4, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _NavigationPane::GetCurrentModule()
@@ -9976,10 +8864,8 @@ LPDISPATCH _NavigationPane::GetCurrentModule()
 
 void _NavigationPane::SetRefCurrentModule(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfbb5, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfbb5, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _NavigationPane::GetDisplayedModuleCount()
@@ -9991,10 +8877,8 @@ long _NavigationPane::GetDisplayedModuleCount()
 
 void _NavigationPane::SetDisplayedModuleCount(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbb6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbb6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _NavigationPane::GetModules()
@@ -10062,10 +8946,8 @@ long _NavigationModule::GetPosition()
 
 void _NavigationModule::SetPosition(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _NavigationModule::GetVisible()
@@ -10077,10 +8959,8 @@ BOOL _NavigationModule::GetVisible()
 
 void _NavigationModule::SetVisible(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 
@@ -10128,20 +9008,16 @@ long _NavigationModules::GetCount()
 LPDISPATCH _NavigationModules::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _NavigationModules::GetNavigationModule(long ModuleType)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbb8, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		ModuleType);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbb8, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, ModuleType);
 	return result;
 }
 
@@ -10188,10 +9064,8 @@ void View::Apply()
 LPDISPATCH View::Copy(LPCTSTR Name, long SaveOption)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4;
-	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, SaveOption);
+	static BYTE parms[] = VTS_BSTR VTS_I4;
+	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, SaveOption);
 	return result;
 }
 
@@ -10219,10 +9093,8 @@ CString View::GetLanguage()
 
 void View::SetLanguage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL View::GetLockUserChanges()
@@ -10234,10 +9106,8 @@ BOOL View::GetLockUserChanges()
 
 void View::SetLockUserChanges(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString View::GetName()
@@ -10249,10 +9119,8 @@ CString View::GetName()
 
 void View::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long View::GetSaveOption()
@@ -10285,18 +9153,14 @@ CString View::GetXml()
 
 void View::SetXml(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void View::GoToDate(DATE Date)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Date);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Date);
 }
 
 CString View::GetFilter()
@@ -10308,10 +9172,8 @@ CString View::GetFilter()
 
 void View::SetFilter(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 
@@ -10359,29 +9221,23 @@ long _Views::GetCount()
 LPDISPATCH _Views::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _Views::Add(LPCTSTR Name, long ViewType, long SaveOption)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4 VTS_I4;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, ViewType, SaveOption);
+	static BYTE parms[] = VTS_BSTR VTS_I4 VTS_I4;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, ViewType, SaveOption);
 	return result;
 }
 
 void _Views::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 
@@ -10499,10 +9355,8 @@ LPDISPATCH _Store::GetPropertyAccessor()
 LPDISPATCH _Store::GetSpecialFolder(long FolderType)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2108, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		FolderType);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2108, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, FolderType);
 	return result;
 }
 
@@ -10558,37 +9412,29 @@ long _Rules::GetCount()
 LPDISPATCH _Rules::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _Rules::Create(LPCTSTR Name, long RuleType)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4;
-	InvokeHelper(0xfb0a, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, RuleType);
+	static BYTE parms[] = VTS_BSTR VTS_I4;
+	InvokeHelper(0xfb0a, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, RuleType);
 	return result;
 }
 
 void _Rules::Save(const VARIANT& ShowProgress)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf048, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &ShowProgress);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf048, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &ShowProgress);
 }
 
 void _Rules::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 BOOL _Rules::GetIsRssRulesProcessingEnabled()
@@ -10600,10 +9446,8 @@ BOOL _Rules::GetIsRssRulesProcessingEnabled()
 
 void _Rules::SetIsRssRulesProcessingEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfc15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfc15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 
@@ -10650,10 +9494,8 @@ CString _Rule::GetName()
 
 void _Rule::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x2102, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x2102, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _Rule::GetExecutionOrder()
@@ -10665,10 +9507,8 @@ long _Rule::GetExecutionOrder()
 
 void _Rule::SetExecutionOrder(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb0b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb0b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _Rule::GetRuleType()
@@ -10687,10 +9527,8 @@ BOOL _Rule::GetEnabled()
 
 void _Rule::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _Rule::GetIsLocalRule()
@@ -10700,12 +9538,12 @@ BOOL _Rule::GetIsLocalRule()
 	return result;
 }
 
-void _Rule::Execute(const VARIANT& ShowProgress, const VARIANT& Folder, const VARIANT& IncludeSubfolders, const VARIANT& RuleExecuteOption)
+void _Rule::Execute(const VARIANT& ShowProgress, const VARIANT& Folder, const VARIANT& IncludeSubfolders,
+	const VARIANT& RuleExecuteOption)
 {
-	static BYTE parms[] =
-		VTS_VARIANT VTS_VARIANT VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0xfb0e, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &ShowProgress, &Folder, &IncludeSubfolders, &RuleExecuteOption);
+	static BYTE parms[] = VTS_VARIANT VTS_VARIANT VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0xfb0e, DISPATCH_METHOD, VT_EMPTY, NULL,
+		parms, &ShowProgress, &Folder, &IncludeSubfolders, &RuleExecuteOption);
 }
 
 LPDISPATCH _Rule::GetActions()
@@ -10774,10 +9612,8 @@ long _RuleActions::GetCount()
 LPDISPATCH _RuleActions::Item(long Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Index);
 	return result;
 }
 
@@ -10944,10 +9780,8 @@ BOOL _RuleAction::GetEnabled()
 
 void _RuleAction::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _RuleAction::GetActionType()
@@ -11001,10 +9835,8 @@ BOOL _MoveOrCopyRuleAction::GetEnabled()
 
 void _MoveOrCopyRuleAction::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _MoveOrCopyRuleAction::GetActionType()
@@ -11023,10 +9855,8 @@ LPDISPATCH _MoveOrCopyRuleAction::GetFolder()
 
 void _MoveOrCopyRuleAction::SetFolder(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfb11, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfb11, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 
@@ -11073,10 +9903,8 @@ BOOL _SendRuleAction::GetEnabled()
 
 void _SendRuleAction::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _SendRuleAction::GetActionType()
@@ -11138,29 +9966,23 @@ long Recipients::GetCount()
 LPDISPATCH Recipients::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH Recipients::Add(LPCTSTR Name)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x6f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x6f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name);
 	return result;
 }
 
 void Recipients::Remove(long Index)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index);
 }
 
 BOOL Recipients::ResolveAll()
@@ -11214,10 +10036,8 @@ BOOL _AssignToCategoryRuleAction::GetEnabled()
 
 void _AssignToCategoryRuleAction::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _AssignToCategoryRuleAction::GetActionType()
@@ -11236,10 +10056,8 @@ VARIANT _AssignToCategoryRuleAction::GetCategories()
 
 void _AssignToCategoryRuleAction::SetCategories(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfb21, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfb21, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 
@@ -11286,10 +10104,8 @@ BOOL _PlaySoundRuleAction::GetEnabled()
 
 void _PlaySoundRuleAction::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _PlaySoundRuleAction::GetActionType()
@@ -11308,10 +10124,8 @@ CString _PlaySoundRuleAction::GetFilePath()
 
 void _PlaySoundRuleAction::SetFilePath(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfadd, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfadd, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 
@@ -11358,10 +10172,8 @@ BOOL _MarkAsTaskRuleAction::GetEnabled()
 
 void _MarkAsTaskRuleAction::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _MarkAsTaskRuleAction::GetActionType()
@@ -11380,10 +10192,8 @@ CString _MarkAsTaskRuleAction::GetFlagTo()
 
 void _MarkAsTaskRuleAction::SetFlagTo(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb24, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb24, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _MarkAsTaskRuleAction::GetMarkInterval()
@@ -11395,10 +10205,8 @@ long _MarkAsTaskRuleAction::GetMarkInterval()
 
 void _MarkAsTaskRuleAction::SetMarkInterval(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb25, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb25, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -11445,10 +10253,8 @@ BOOL _NewItemAlertRuleAction::GetEnabled()
 
 void _NewItemAlertRuleAction::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _NewItemAlertRuleAction::GetActionType()
@@ -11467,10 +10273,8 @@ CString _NewItemAlertRuleAction::GetText()
 
 void _NewItemAlertRuleAction::SetText(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 
@@ -11518,10 +10322,8 @@ long _RuleConditions::GetCount()
 LPDISPATCH _RuleConditions::Item(long Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Index);
 	return result;
 }
 
@@ -11744,10 +10546,8 @@ BOOL _RuleCondition::GetEnabled()
 
 void _RuleCondition::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _RuleCondition::GetConditionType()
@@ -11801,10 +10601,8 @@ BOOL _ImportanceRuleCondition::GetEnabled()
 
 void _ImportanceRuleCondition::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _ImportanceRuleCondition::GetConditionType()
@@ -11823,10 +10621,8 @@ long _ImportanceRuleCondition::GetImportance()
 
 void _ImportanceRuleCondition::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb2b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb2b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -11873,10 +10669,8 @@ BOOL _AccountRuleCondition::GetEnabled()
 
 void _AccountRuleCondition::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _AccountRuleCondition::GetConditionType()
@@ -11895,10 +10689,8 @@ LPDISPATCH _AccountRuleCondition::GetAccount()
 
 void _AccountRuleCondition::SetAccount(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfad1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfad1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 
@@ -12008,10 +10800,8 @@ BOOL _TextRuleCondition::GetEnabled()
 
 void _TextRuleCondition::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _TextRuleCondition::GetConditionType()
@@ -12030,10 +10820,8 @@ VARIANT _TextRuleCondition::GetText()
 
 void _TextRuleCondition::SetText(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfb27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfb27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 
@@ -12080,10 +10868,8 @@ BOOL _CategoryRuleCondition::GetEnabled()
 
 void _CategoryRuleCondition::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _CategoryRuleCondition::GetConditionType()
@@ -12102,10 +10888,8 @@ VARIANT _CategoryRuleCondition::GetCategories()
 
 void _CategoryRuleCondition::SetCategories(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfb45, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfb45, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 
@@ -12152,10 +10936,8 @@ BOOL _FormNameRuleCondition::GetEnabled()
 
 void _FormNameRuleCondition::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _FormNameRuleCondition::GetConditionType()
@@ -12174,10 +10956,8 @@ VARIANT _FormNameRuleCondition::GetFormName()
 
 void _FormNameRuleCondition::SetFormName(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfb46, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfb46, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 
@@ -12224,10 +11004,8 @@ BOOL _ToOrFromRuleCondition::GetEnabled()
 
 void _ToOrFromRuleCondition::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _ToOrFromRuleCondition::GetConditionType()
@@ -12288,10 +11066,8 @@ BOOL _AddressRuleCondition::GetEnabled()
 
 void _AddressRuleCondition::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _AddressRuleCondition::GetConditionType()
@@ -12310,10 +11086,8 @@ VARIANT _AddressRuleCondition::GetAddress()
 
 void _AddressRuleCondition::SetAddress(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfb27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfb27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 
@@ -12360,10 +11134,8 @@ BOOL _SenderInAddressListRuleCondition::GetEnabled()
 
 void _SenderInAddressListRuleCondition::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _SenderInAddressListRuleCondition::GetConditionType()
@@ -12382,10 +11154,8 @@ LPDISPATCH _SenderInAddressListRuleCondition::GetAddressList()
 
 void _SenderInAddressListRuleCondition::SetAddressList(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfb47, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfb47, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 
@@ -12537,10 +11307,8 @@ BOOL _FromRssFeedRuleCondition::GetEnabled()
 
 void _FromRssFeedRuleCondition::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _FromRssFeedRuleCondition::GetConditionType()
@@ -12559,10 +11327,8 @@ VARIANT _FromRssFeedRuleCondition::GetFromRssFeed()
 
 void _FromRssFeedRuleCondition::SetFromRssFeed(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfb27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfb27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 
@@ -12640,10 +11406,8 @@ CString _StorageItem::GetBody()
 
 void _StorageItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _StorageItem::GetAttachments()
@@ -12683,10 +11447,8 @@ CString _StorageItem::GetSubject()
 
 void _StorageItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _StorageItem::GetCreator()
@@ -12698,10 +11460,8 @@ CString _StorageItem::GetCreator()
 
 void _StorageItem::SetCreator(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x85bc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x85bc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 
@@ -12742,10 +11502,8 @@ LPDISPATCH _Table::GetParent()
 LPDISPATCH _Table::FindRow(LPCTSTR Filter)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x62, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Filter);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x62, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Filter);
 	return result;
 }
 
@@ -12759,10 +11517,8 @@ LPDISPATCH _Table::FindNextRow()
 VARIANT _Table::GetArray(long MaxRows)
 {
 	VARIANT result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbcf, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms,
-		MaxRows);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbcf, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms, MaxRows);
 	return result;
 }
 
@@ -12788,19 +11544,15 @@ void _Table::MoveToStart()
 LPDISPATCH _Table::Restrict(LPCTSTR Filter)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x64, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Filter);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x64, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Filter);
 	return result;
 }
 
 void _Table::Sort(LPCTSTR SortProperty, const VARIANT& Descending)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x61, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SortProperty, &Descending);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x61, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SortProperty, &Descending);
 }
 
 LPDISPATCH _Table::GetColumns()
@@ -12855,10 +11607,8 @@ LPDISPATCH _Row::GetParent()
 CString _Row::BinaryToString(const VARIANT& Index)
 {
 	CString result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfb03, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfb03, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -12872,30 +11622,24 @@ VARIANT _Row::GetValues()
 VARIANT _Row::Item(const VARIANT& Index)
 {
 	VARIANT result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms, &Index);
 	return result;
 }
 
 DATE _Row::LocalTimeToUTC(const VARIANT& Index)
 {
 	DATE result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfb01, DISPATCH_METHOD, VT_DATE, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfb01, DISPATCH_METHOD, VT_DATE, (void*)&result, parms, &Index);
 	return result;
 }
 
 DATE _Row::UTCToLocalTime(const VARIANT& Index)
 {
 	DATE result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfb00, DISPATCH_METHOD, VT_DATE, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfb00, DISPATCH_METHOD, VT_DATE, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -12944,29 +11688,23 @@ long _Columns::GetCount()
 LPDISPATCH _Columns::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _Columns::Add(LPCTSTR Name)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name);
 	return result;
 }
 
 void _Columns::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 void _Columns::RemoveAll()
@@ -13053,19 +11791,15 @@ LPDISPATCH _CalendarSharing::GetParent()
 
 void _CalendarSharing::SaveAsICal(LPCTSTR Path)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb98, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb98, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path);
 }
 
 LPDISPATCH _CalendarSharing::ForwardAsICal(long MailFormat)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb99, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		MailFormat);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb99, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, MailFormat);
 	return result;
 }
 
@@ -13078,10 +11812,8 @@ long _CalendarSharing::GetCalendarDetail()
 
 void _CalendarSharing::SetCalendarDetail(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb9a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb9a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _CalendarSharing::GetEndDate()
@@ -13093,10 +11825,8 @@ DATE _CalendarSharing::GetEndDate()
 
 void _CalendarSharing::SetEndDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfb9b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfb9b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH _CalendarSharing::GetFolder()
@@ -13115,10 +11845,8 @@ BOOL _CalendarSharing::GetIncludeAttachments()
 
 void _CalendarSharing::SetIncludeAttachments(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb9d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb9d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _CalendarSharing::GetIncludePrivateDetails()
@@ -13130,10 +11858,8 @@ BOOL _CalendarSharing::GetIncludePrivateDetails()
 
 void _CalendarSharing::SetIncludePrivateDetails(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb9e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb9e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _CalendarSharing::GetRestrictToWorkingHours()
@@ -13145,10 +11871,8 @@ BOOL _CalendarSharing::GetRestrictToWorkingHours()
 
 void _CalendarSharing::SetRestrictToWorkingHours(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb9f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb9f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 DATE _CalendarSharing::GetStartDate()
@@ -13160,10 +11884,8 @@ DATE _CalendarSharing::GetStartDate()
 
 void _CalendarSharing::SetStartDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfba0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfba0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _CalendarSharing::GetIncludeWholeCalendar()
@@ -13175,10 +11897,8 @@ BOOL _CalendarSharing::GetIncludeWholeCalendar()
 
 void _CalendarSharing::SetIncludeWholeCalendar(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfba1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfba1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 
@@ -13239,10 +11959,8 @@ CString _MailItem::GetBillingInformation()
 
 void _MailItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MailItem::GetBody()
@@ -13254,10 +11972,8 @@ CString _MailItem::GetBody()
 
 void _MailItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MailItem::GetCategories()
@@ -13269,10 +11985,8 @@ CString _MailItem::GetCategories()
 
 void _MailItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MailItem::GetCompanies()
@@ -13284,10 +11998,8 @@ CString _MailItem::GetCompanies()
 
 void _MailItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MailItem::GetConversationIndex()
@@ -13341,10 +12053,8 @@ long _MailItem::GetImportance()
 
 void _MailItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _MailItem::GetLastModificationTime()
@@ -13363,10 +12073,8 @@ CString _MailItem::GetMessageClass()
 
 void _MailItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MailItem::GetMileage()
@@ -13378,10 +12086,8 @@ CString _MailItem::GetMileage()
 
 void _MailItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _MailItem::GetNoAging()
@@ -13393,10 +12099,8 @@ BOOL _MailItem::GetNoAging()
 
 void _MailItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _MailItem::GetOutlookInternalVersion()
@@ -13429,10 +12133,8 @@ long _MailItem::GetSensitivity()
 
 void _MailItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _MailItem::GetSize()
@@ -13451,10 +12153,8 @@ CString _MailItem::GetSubject()
 
 void _MailItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _MailItem::GetUnRead()
@@ -13466,10 +12166,8 @@ BOOL _MailItem::GetUnRead()
 
 void _MailItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _MailItem::GetUserProperties()
@@ -13481,10 +12179,8 @@ LPDISPATCH _MailItem::GetUserProperties()
 
 void _MailItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _MailItem::Copy()
@@ -13501,19 +12197,15 @@ void _MailItem::Delete()
 
 void _MailItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _MailItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -13529,10 +12221,8 @@ void _MailItem::Save()
 
 void _MailItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 BOOL _MailItem::GetAlternateRecipientAllowed()
@@ -13544,10 +12234,8 @@ BOOL _MailItem::GetAlternateRecipientAllowed()
 
 void _MailItem::SetAlternateRecipientAllowed(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _MailItem::GetAutoForwarded()
@@ -13559,10 +12247,8 @@ BOOL _MailItem::GetAutoForwarded()
 
 void _MailItem::SetAutoForwarded(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _MailItem::GetBcc()
@@ -13574,10 +12260,8 @@ CString _MailItem::GetBcc()
 
 void _MailItem::SetBcc(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MailItem::GetCc()
@@ -13589,10 +12273,8 @@ CString _MailItem::GetCc()
 
 void _MailItem::SetCc(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe03, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe03, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _MailItem::GetDeferredDeliveryTime()
@@ -13604,10 +12286,8 @@ DATE _MailItem::GetDeferredDeliveryTime()
 
 void _MailItem::SetDeferredDeliveryTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _MailItem::GetDeleteAfterSubmit()
@@ -13619,10 +12299,8 @@ BOOL _MailItem::GetDeleteAfterSubmit()
 
 void _MailItem::SetDeleteAfterSubmit(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xe01, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xe01, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 DATE _MailItem::GetExpiryTime()
@@ -13634,10 +12312,8 @@ DATE _MailItem::GetExpiryTime()
 
 void _MailItem::SetExpiryTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _MailItem::GetFlagRequest()
@@ -13649,10 +12325,8 @@ CString _MailItem::GetFlagRequest()
 
 void _MailItem::SetFlagRequest(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8530, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8530, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MailItem::GetHTMLBody()
@@ -13664,10 +12338,8 @@ CString _MailItem::GetHTMLBody()
 
 void _MailItem::SetHTMLBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xf404, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xf404, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _MailItem::GetOriginatorDeliveryReportRequested()
@@ -13679,10 +12351,8 @@ BOOL _MailItem::GetOriginatorDeliveryReportRequested()
 
 void _MailItem::SetOriginatorDeliveryReportRequested(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x23, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x23, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _MailItem::GetReadReceiptRequested()
@@ -13694,10 +12364,8 @@ BOOL _MailItem::GetReadReceiptRequested()
 
 void _MailItem::SetReadReceiptRequested(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x29, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x29, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _MailItem::GetReceivedByEntryID()
@@ -13744,10 +12412,8 @@ BOOL _MailItem::GetRecipientReassignmentProhibited()
 
 void _MailItem::SetRecipientReassignmentProhibited(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x2b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x2b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _MailItem::GetRecipients()
@@ -13766,10 +12432,8 @@ BOOL _MailItem::GetReminderOverrideDefault()
 
 void _MailItem::SetReminderOverrideDefault(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _MailItem::GetReminderPlaySound()
@@ -13781,10 +12445,8 @@ BOOL _MailItem::GetReminderPlaySound()
 
 void _MailItem::SetReminderPlaySound(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _MailItem::GetReminderSet()
@@ -13796,10 +12458,8 @@ BOOL _MailItem::GetReminderSet()
 
 void _MailItem::SetReminderSet(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _MailItem::GetReminderSoundFile()
@@ -13811,10 +12471,8 @@ CString _MailItem::GetReminderSoundFile()
 
 void _MailItem::SetReminderSoundFile(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _MailItem::GetReminderTime()
@@ -13826,10 +12484,8 @@ DATE _MailItem::GetReminderTime()
 
 void _MailItem::SetReminderTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _MailItem::GetRemoteStatus()
@@ -13841,10 +12497,8 @@ long _MailItem::GetRemoteStatus()
 
 void _MailItem::SetRemoteStatus(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8511, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8511, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _MailItem::GetReplyRecipientNames()
@@ -13870,10 +12524,8 @@ LPDISPATCH _MailItem::GetSaveSentMessageFolder()
 
 void _MailItem::SetRefSaveSentMessageFolder(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf401, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf401, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _MailItem::GetSenderName()
@@ -13906,10 +12558,8 @@ CString _MailItem::GetSentOnBehalfOfName()
 
 void _MailItem::SetSentOnBehalfOfName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x42, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x42, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _MailItem::GetSubmitted()
@@ -13928,10 +12578,8 @@ CString _MailItem::GetTo()
 
 void _MailItem::SetTo(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe04, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe04, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MailItem::GetVotingOptions()
@@ -13943,10 +12591,8 @@ CString _MailItem::GetVotingOptions()
 
 void _MailItem::SetVotingOptions(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xf01b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xf01b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MailItem::GetVotingResponse()
@@ -13958,10 +12604,8 @@ CString _MailItem::GetVotingResponse()
 
 void _MailItem::SetVotingResponse(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8524, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8524, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _MailItem::ClearConversationIndex()
@@ -14018,10 +12662,8 @@ long _MailItem::GetBodyFormat()
 
 void _MailItem::SetBodyFormat(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfa49, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfa49, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _MailItem::GetDownloadState()
@@ -14045,10 +12687,8 @@ long _MailItem::GetInternetCodepage()
 
 void _MailItem::SetInternetCodepage(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x3fde, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x3fde, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _MailItem::GetMarkForDownload()
@@ -14060,10 +12700,8 @@ long _MailItem::GetMarkForDownload()
 
 void _MailItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _MailItem::GetIsConflict()
@@ -14110,10 +12748,8 @@ long _MailItem::GetPermission()
 
 void _MailItem::SetPermission(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfac6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfac6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _MailItem::GetPermissionService()
@@ -14125,10 +12761,8 @@ long _MailItem::GetPermissionService()
 
 void _MailItem::SetPermissionService(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfacb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfacb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _MailItem::GetPropertyAccessor()
@@ -14140,10 +12774,8 @@ LPDISPATCH _MailItem::GetPropertyAccessor()
 
 void _MailItem::AddBusinessCard(LPDISPATCH contact)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfb96, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 contact);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfb96, DISPATCH_METHOD, VT_EMPTY, NULL, parms, contact);
 }
 
 LPDISPATCH _MailItem::GetSendUsingAccount()
@@ -14155,10 +12787,8 @@ LPDISPATCH _MailItem::GetSendUsingAccount()
 
 void _MailItem::SetSendUsingAccount(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfad1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfad1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _MailItem::GetTaskSubject()
@@ -14170,10 +12800,8 @@ CString _MailItem::GetTaskSubject()
 
 void _MailItem::SetTaskSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfc1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfc1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _MailItem::GetTaskDueDate()
@@ -14185,10 +12813,8 @@ DATE _MailItem::GetTaskDueDate()
 
 void _MailItem::SetTaskDueDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _MailItem::GetTaskStartDate()
@@ -14200,10 +12826,8 @@ DATE _MailItem::GetTaskStartDate()
 
 void _MailItem::SetTaskStartDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _MailItem::GetTaskCompletedDate()
@@ -14215,10 +12839,8 @@ DATE _MailItem::GetTaskCompletedDate()
 
 void _MailItem::SetTaskCompletedDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _MailItem::GetToDoTaskOrdinal()
@@ -14230,18 +12852,14 @@ DATE _MailItem::GetToDoTaskOrdinal()
 
 void _MailItem::SetToDoTaskOrdinal(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 void _MailItem::MarkAsTask(long MarkInterval)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbfe, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 MarkInterval);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbfe, DISPATCH_METHOD, VT_EMPTY, NULL, parms, MarkInterval);
 }
 
 void _MailItem::ClearTaskFlag()
@@ -14301,29 +12919,23 @@ long Links::GetCount()
 LPDISPATCH Links::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH Links::Add(LPDISPATCH Item)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Item);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Item);
 	return result;
 }
 
 void Links::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 
@@ -14427,29 +13039,24 @@ long ItemProperties::GetCount()
 LPDISPATCH ItemProperties::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH ItemProperties::Add(LPCTSTR Name, long Type, const VARIANT& AddToFolderFields, const VARIANT& DisplayFormat)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4 VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x66, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, Type, &AddToFolderFields, &DisplayFormat);
+	static BYTE parms[] = VTS_BSTR VTS_I4 VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0x66, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name,
+		Type, &AddToFolderFields, &DisplayFormat);
 	return result;
 }
 
 void ItemProperties::Remove(long Index)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index);
 }
 
 
@@ -14510,10 +13117,8 @@ VARIANT ItemProperty::GetValue()
 
 void ItemProperty::SetValue(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 BOOL ItemProperty::GetIsUserProperty()
@@ -14568,10 +13173,8 @@ long Conflicts::GetCount()
 LPDISPATCH Conflicts::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -14668,50 +13271,38 @@ long Conflict::GetType()
 
 void ItemEvents::Open(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0xf003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0xf003, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void ItemEvents::CustomAction(LPDISPATCH Action, LPDISPATCH Response, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xf006, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Action, Response, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xf006, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Action, Response, Cancel);
 }
 
 void ItemEvents::CustomPropertyChange(LPCTSTR Name)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xf008, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Name);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xf008, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Name);
 }
 
 void ItemEvents::Forward(LPDISPATCH Forward, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xf468, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Forward, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xf468, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Forward, Cancel);
 }
 
 void ItemEvents::Close(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0xf004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0xf004, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void ItemEvents::PropertyChange(LPCTSTR Name)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xf009, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Name);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xf009, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Name);
 }
 
 void ItemEvents::Read()
@@ -14721,66 +13312,50 @@ void ItemEvents::Read()
 
 void ItemEvents::Reply(LPDISPATCH Response, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xf466, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Response, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xf466, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Response, Cancel);
 }
 
 void ItemEvents::ReplyAll(LPDISPATCH Response, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xf467, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Response, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xf467, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Response, Cancel);
 }
 
 void ItemEvents::Send(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0xf005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0xf005, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void ItemEvents::Write(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void ItemEvents::BeforeCheckNames(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0xf00a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0xf00a, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void ItemEvents::AttachmentAdd(LPDISPATCH Attachment)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf00b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Attachment);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf00b, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Attachment);
 }
 
 void ItemEvents::AttachmentRead(LPDISPATCH Attachment)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf00c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Attachment);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf00c, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Attachment);
 }
 
 void ItemEvents::BeforeAttachmentSave(LPDISPATCH Attachment, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xf00d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Attachment, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xf00d, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Attachment, Cancel);
 }
 
 
@@ -14792,50 +13367,38 @@ void ItemEvents::BeforeAttachmentSave(LPDISPATCH Attachment, BOOL* Cancel)
 
 void ItemEvents_10::BeforeDelete(LPDISPATCH Item, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xfa75, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Item, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xfa75, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Item, Cancel);
 }
 
 void ItemEvents_10::AttachmentRemove(LPDISPATCH Attachment)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfbae, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Attachment);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfbae, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Attachment);
 }
 
 void ItemEvents_10::BeforeAttachmentAdd(LPDISPATCH Attachment, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xfbb0, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Attachment, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xfbb0, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Attachment, Cancel);
 }
 
 void ItemEvents_10::BeforeAttachmentPreview(LPDISPATCH Attachment, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xfbaf, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Attachment, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xfbaf, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Attachment, Cancel);
 }
 
 void ItemEvents_10::BeforeAttachmentRead(LPDISPATCH Attachment, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xfbab, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Attachment, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xfbab, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Attachment, Cancel);
 }
 
 void ItemEvents_10::BeforeAttachmentWriteToTempFile(LPDISPATCH Attachment, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xfbb2, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Attachment, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xfbb2, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Attachment, Cancel);
 }
 
 void ItemEvents_10::Unload()
@@ -14845,10 +13408,8 @@ void ItemEvents_10::Unload()
 
 void ItemEvents_10::BeforeAutoSave(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0xfc02, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0xfc02, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 
@@ -14896,39 +13457,31 @@ long _UserDefinedProperties::GetCount()
 LPDISPATCH _UserDefinedProperties::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _UserDefinedProperties::Add(LPCTSTR Name, long Type, const VARIANT& DisplayFormat, const VARIANT& Formula)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4 VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x66, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, Type, &DisplayFormat, &Formula);
+	static BYTE parms[] = VTS_BSTR VTS_I4 VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0x66, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, Type, &DisplayFormat, &Formula);
 	return result;
 }
 
 LPDISPATCH _UserDefinedProperties::Find(LPCTSTR Name)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x67, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x67, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name);
 	return result;
 }
 
 void _UserDefinedProperties::Remove(long Index)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index);
 }
 
 void _UserDefinedProperties::Refresh()
@@ -15048,10 +13601,8 @@ CString _ExchangeUser::GetAddress()
 
 void _ExchangeUser::SetAddress(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _ExchangeUser::GetDisplayType()
@@ -15077,10 +13628,8 @@ CString _ExchangeUser::GetName()
 
 void _ExchangeUser::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetType()
@@ -15092,10 +13641,8 @@ CString _ExchangeUser::GetType()
 
 void _ExchangeUser::SetType(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _ExchangeUser::Delete()
@@ -15105,28 +13652,22 @@ void _ExchangeUser::Delete()
 
 void _ExchangeUser::Details(const VARIANT& HWnd)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x301, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &HWnd);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x301, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &HWnd);
 }
 
 CString _ExchangeUser::GetFreeBusy(DATE Start, long MinPerChar, const VARIANT& CompleteFormat)
 {
 	CString result;
-	static BYTE parms[] =
-		VTS_DATE VTS_I4 VTS_VARIANT;
-	InvokeHelper(0x306, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms,
-		Start, MinPerChar, &CompleteFormat);
+	static BYTE parms[] = VTS_DATE VTS_I4 VTS_VARIANT;
+	InvokeHelper(0x306, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms, Start, MinPerChar, &CompleteFormat);
 	return result;
 }
 
 void _ExchangeUser::Update(const VARIANT& MakePermanent, const VARIANT& Refresh)
 {
-	static BYTE parms[] =
-		VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x300, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &MakePermanent, &Refresh);
+	static BYTE parms[] = VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0x300, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &MakePermanent, &Refresh);
 }
 
 LPDISPATCH _ExchangeUser::GetContact()
@@ -15194,10 +13735,8 @@ CString _ExchangeUser::GetAssistantName()
 
 void _ExchangeUser::SetAssistantName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a30, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a30, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetBusinessTelephoneNumber()
@@ -15209,10 +13748,8 @@ CString _ExchangeUser::GetBusinessTelephoneNumber()
 
 void _ExchangeUser::SetBusinessTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a08, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a08, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetCity()
@@ -15224,10 +13761,8 @@ CString _ExchangeUser::GetCity()
 
 void _ExchangeUser::SetCity(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetComments()
@@ -15239,10 +13774,8 @@ CString _ExchangeUser::GetComments()
 
 void _ExchangeUser::SetComments(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetCompanyName()
@@ -15254,10 +13787,8 @@ CString _ExchangeUser::GetCompanyName()
 
 void _ExchangeUser::SetCompanyName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a16, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a16, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetDepartment()
@@ -15269,10 +13800,8 @@ CString _ExchangeUser::GetDepartment()
 
 void _ExchangeUser::SetDepartment(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a18, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a18, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetFirstName()
@@ -15284,10 +13813,8 @@ CString _ExchangeUser::GetFirstName()
 
 void _ExchangeUser::SetFirstName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a06, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a06, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetJobTitle()
@@ -15299,10 +13826,8 @@ CString _ExchangeUser::GetJobTitle()
 
 void _ExchangeUser::SetJobTitle(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetLastName()
@@ -15314,10 +13839,8 @@ CString _ExchangeUser::GetLastName()
 
 void _ExchangeUser::SetLastName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a11, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a11, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetMobileTelephoneNumber()
@@ -15329,10 +13852,8 @@ CString _ExchangeUser::GetMobileTelephoneNumber()
 
 void _ExchangeUser::SetMobileTelephoneNumber(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a1c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a1c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetOfficeLocation()
@@ -15344,10 +13865,8 @@ CString _ExchangeUser::GetOfficeLocation()
 
 void _ExchangeUser::SetOfficeLocation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a19, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a19, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetPostalCode()
@@ -15359,10 +13878,8 @@ CString _ExchangeUser::GetPostalCode()
 
 void _ExchangeUser::SetPostalCode(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a2a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a2a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetPrimarySmtpAddress()
@@ -15381,10 +13898,8 @@ CString _ExchangeUser::GetStateOrProvince()
 
 void _ExchangeUser::SetStateOrProvince(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a28, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a28, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetStreetAddress()
@@ -15396,10 +13911,8 @@ CString _ExchangeUser::GetStreetAddress()
 
 void _ExchangeUser::SetStreetAddress(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3a29, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3a29, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _ExchangeUser::GetExchangeUserManager()
@@ -15418,10 +13931,8 @@ CString _ExchangeUser::GetYomiCompanyName()
 
 void _ExchangeUser::SetYomiCompanyName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x802e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x802e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetYomiFirstName()
@@ -15433,10 +13944,8 @@ CString _ExchangeUser::GetYomiFirstName()
 
 void _ExchangeUser::SetYomiFirstName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x802c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x802c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetYomiLastName()
@@ -15448,10 +13957,8 @@ CString _ExchangeUser::GetYomiLastName()
 
 void _ExchangeUser::SetYomiLastName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x802d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x802d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetYomiDisplayName()
@@ -15463,10 +13970,8 @@ CString _ExchangeUser::GetYomiDisplayName()
 
 void _ExchangeUser::SetYomiDisplayName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfbe7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfbe7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeUser::GetYomiDepartment()
@@ -15478,10 +13983,8 @@ CString _ExchangeUser::GetYomiDepartment()
 
 void _ExchangeUser::SetYomiDepartment(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfbe8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfbe8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 
@@ -15528,10 +14031,8 @@ CString _ExchangeDistributionList::GetAddress()
 
 void _ExchangeDistributionList::SetAddress(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _ExchangeDistributionList::GetDisplayType()
@@ -15557,10 +14058,8 @@ CString _ExchangeDistributionList::GetName()
 
 void _ExchangeDistributionList::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeDistributionList::GetType()
@@ -15572,10 +14071,8 @@ CString _ExchangeDistributionList::GetType()
 
 void _ExchangeDistributionList::SetType(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _ExchangeDistributionList::Delete()
@@ -15585,28 +14082,22 @@ void _ExchangeDistributionList::Delete()
 
 void _ExchangeDistributionList::Details(const VARIANT& HWnd)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x301, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &HWnd);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x301, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &HWnd);
 }
 
 CString _ExchangeDistributionList::GetFreeBusy(DATE Start, long MinPerChar, const VARIANT& CompleteFormat)
 {
 	CString result;
-	static BYTE parms[] =
-		VTS_DATE VTS_I4 VTS_VARIANT;
-	InvokeHelper(0x306, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms,
-		Start, MinPerChar, &CompleteFormat);
+	static BYTE parms[] = VTS_DATE VTS_I4 VTS_VARIANT;
+	InvokeHelper(0x306, DISPATCH_METHOD, VT_BSTR, (void*)&result, parms, Start, MinPerChar, &CompleteFormat);
 	return result;
 }
 
 void _ExchangeDistributionList::Update(const VARIANT& MakePermanent, const VARIANT& Refresh)
 {
-	static BYTE parms[] =
-		VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x300, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &MakePermanent, &Refresh);
+	static BYTE parms[] = VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0x300, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &MakePermanent, &Refresh);
 }
 
 LPDISPATCH _ExchangeDistributionList::GetContact()
@@ -15674,10 +14165,8 @@ CString _ExchangeDistributionList::GetComments()
 
 void _ExchangeDistributionList::SetComments(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x3004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x3004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ExchangeDistributionList::GetPrimarySmtpAddress()
@@ -15739,10 +14228,8 @@ long AddressLists::GetCount()
 LPDISPATCH AddressLists::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -15791,10 +14278,8 @@ long SyncObjects::GetCount()
 LPDISPATCH SyncObjects::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -15871,18 +14356,14 @@ void SyncObjectEvents::SyncStart()
 
 void SyncObjectEvents::Progress(long State, LPCTSTR Description, long Value, long Max)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_BSTR VTS_I4 VTS_I4;
-	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 State, Description, Value, Max);
+	static BYTE parms[] = VTS_I4 VTS_BSTR VTS_I4 VTS_I4;
+	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, State, Description, Value, Max);
 }
 
 void SyncObjectEvents::OnError(long Code, LPCTSTR Description)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_BSTR;
-	InvokeHelper(0xf003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Code, Description);
+	static BYTE parms[] = VTS_I4 VTS_BSTR;
+	InvokeHelper(0xf003, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Code, Description);
 }
 
 void SyncObjectEvents::SyncEnd()
@@ -15935,10 +14416,8 @@ long _Accounts::GetCount()
 LPDISPATCH _Accounts::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -15987,10 +14466,8 @@ long _Stores::GetCount()
 LPDISPATCH _Stores::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -16003,18 +14480,14 @@ LPDISPATCH _Stores::Item(const VARIANT& Index)
 
 void StoresEvents_12::BeforeStoreRemove(LPDISPATCH Store, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xfbb1, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Store, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xfbb1, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Store, Cancel);
 }
 
 void StoresEvents_12::StoreAdd(LPDISPATCH Store)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Store);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Store);
 }
 
 
@@ -16061,10 +14534,8 @@ CString _SelectNamesDialog::GetCaption()
 
 void _SelectNamesDialog::SetCaption(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfae2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfae2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _SelectNamesDialog::Display()
@@ -16083,10 +14554,8 @@ LPDISPATCH _SelectNamesDialog::GetRecipients()
 
 void _SelectNamesDialog::SetRecipients(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf814, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf814, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _SelectNamesDialog::GetBccLabel()
@@ -16098,10 +14567,8 @@ CString _SelectNamesDialog::GetBccLabel()
 
 void _SelectNamesDialog::SetBccLabel(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfae3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfae3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _SelectNamesDialog::GetCcLabel()
@@ -16113,10 +14580,8 @@ CString _SelectNamesDialog::GetCcLabel()
 
 void _SelectNamesDialog::SetCcLabel(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfae4, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfae4, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _SelectNamesDialog::GetToLabel()
@@ -16128,10 +14593,8 @@ CString _SelectNamesDialog::GetToLabel()
 
 void _SelectNamesDialog::SetToLabel(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfae5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfae5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _SelectNamesDialog::GetAllowMultipleSelection()
@@ -16143,10 +14606,8 @@ BOOL _SelectNamesDialog::GetAllowMultipleSelection()
 
 void _SelectNamesDialog::SetAllowMultipleSelection(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfae6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfae6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _SelectNamesDialog::GetForceResolution()
@@ -16158,10 +14619,8 @@ BOOL _SelectNamesDialog::GetForceResolution()
 
 void _SelectNamesDialog::SetForceResolution(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfae7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfae7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _SelectNamesDialog::GetShowOnlyInitialAddressList()
@@ -16173,10 +14632,8 @@ BOOL _SelectNamesDialog::GetShowOnlyInitialAddressList()
 
 void _SelectNamesDialog::SetShowOnlyInitialAddressList(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfae8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfae8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _SelectNamesDialog::GetNumberOfRecipientSelectors()
@@ -16188,10 +14645,8 @@ long _SelectNamesDialog::GetNumberOfRecipientSelectors()
 
 void _SelectNamesDialog::SetNumberOfRecipientSelectors(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfae9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfae9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _SelectNamesDialog::GetInitialAddressList()
@@ -16203,18 +14658,14 @@ LPDISPATCH _SelectNamesDialog::GetInitialAddressList()
 
 void _SelectNamesDialog::SetInitialAddressList(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfaea, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfaea, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 void _SelectNamesDialog::SetDefaultDisplayMode(long defaultMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfaeb, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 defaultMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfaeb, DISPATCH_METHOD, VT_EMPTY, NULL, parms, defaultMode);
 }
 
 
@@ -16262,29 +14713,23 @@ long _Categories::GetCount()
 LPDISPATCH _Categories::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _Categories::Add(LPCTSTR Name, const VARIANT& Color, const VARIANT& ShortcutKey)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, &Color, &ShortcutKey);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, &Color, &ShortcutKey);
 	return result;
 }
 
 void _Categories::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 
@@ -16331,10 +14776,8 @@ CString _Category::GetName()
 
 void _Category::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x2102, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x2102, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _Category::GetColor()
@@ -16346,10 +14789,8 @@ long _Category::GetColor()
 
 void _Category::SetColor(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfba3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfba3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _Category::GetShortcutKey()
@@ -16361,10 +14802,8 @@ long _Category::GetShortcutKey()
 
 void _Category::SetShortcutKey(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfba4, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfba4, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _Category::GetCategoryID()
@@ -16453,10 +14892,8 @@ CString _SharingItem::GetBillingInformation()
 
 void _SharingItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _SharingItem::GetBody()
@@ -16468,10 +14905,8 @@ CString _SharingItem::GetBody()
 
 void _SharingItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _SharingItem::GetCategories()
@@ -16483,10 +14918,8 @@ CString _SharingItem::GetCategories()
 
 void _SharingItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _SharingItem::GetCompanies()
@@ -16498,10 +14931,8 @@ CString _SharingItem::GetCompanies()
 
 void _SharingItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _SharingItem::GetConversationIndex()
@@ -16555,10 +14986,8 @@ long _SharingItem::GetImportance()
 
 void _SharingItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _SharingItem::GetLastModificationTime()
@@ -16577,10 +15006,8 @@ CString _SharingItem::GetMessageClass()
 
 void _SharingItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _SharingItem::GetMileage()
@@ -16592,10 +15019,8 @@ CString _SharingItem::GetMileage()
 
 void _SharingItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _SharingItem::GetNoAging()
@@ -16607,10 +15032,8 @@ BOOL _SharingItem::GetNoAging()
 
 void _SharingItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _SharingItem::GetOutlookInternalVersion()
@@ -16643,10 +15066,8 @@ long _SharingItem::GetSensitivity()
 
 void _SharingItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _SharingItem::GetSize()
@@ -16665,10 +15086,8 @@ CString _SharingItem::GetSubject()
 
 void _SharingItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _SharingItem::GetUnRead()
@@ -16680,10 +15099,8 @@ BOOL _SharingItem::GetUnRead()
 
 void _SharingItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _SharingItem::GetUserProperties()
@@ -16695,10 +15112,8 @@ LPDISPATCH _SharingItem::GetUserProperties()
 
 void _SharingItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _SharingItem::Copy()
@@ -16715,19 +15130,15 @@ void _SharingItem::Delete()
 
 void _SharingItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _SharingItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -16743,10 +15154,8 @@ void _SharingItem::Save()
 
 void _SharingItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 void _SharingItem::Allow()
@@ -16819,10 +15228,8 @@ BOOL _SharingItem::GetAllowWriteAccess()
 
 void _SharingItem::SetAllowWriteAccess(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbf8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbf8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _SharingItem::GetType()
@@ -16834,10 +15241,8 @@ long _SharingItem::GetType()
 
 void _SharingItem::SetType(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbf9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbf9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _SharingItem::GetRequestedFolder()
@@ -16856,10 +15261,8 @@ LPDISPATCH _SharingItem::GetSendUsingAccount()
 
 void _SharingItem::SetSendUsingAccount(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfad1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfad1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _SharingItem::GetAlternateRecipientAllowed()
@@ -16871,10 +15274,8 @@ BOOL _SharingItem::GetAlternateRecipientAllowed()
 
 void _SharingItem::SetAlternateRecipientAllowed(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _SharingItem::GetAutoForwarded()
@@ -16886,10 +15287,8 @@ BOOL _SharingItem::GetAutoForwarded()
 
 void _SharingItem::SetAutoForwarded(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _SharingItem::GetBcc()
@@ -16901,10 +15300,8 @@ CString _SharingItem::GetBcc()
 
 void _SharingItem::SetBcc(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _SharingItem::GetCc()
@@ -16916,10 +15313,8 @@ CString _SharingItem::GetCc()
 
 void _SharingItem::SetCc(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe03, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe03, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _SharingItem::GetDeferredDeliveryTime()
@@ -16931,10 +15326,8 @@ DATE _SharingItem::GetDeferredDeliveryTime()
 
 void _SharingItem::SetDeferredDeliveryTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _SharingItem::GetDeleteAfterSubmit()
@@ -16946,10 +15339,8 @@ BOOL _SharingItem::GetDeleteAfterSubmit()
 
 void _SharingItem::SetDeleteAfterSubmit(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xe01, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xe01, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 DATE _SharingItem::GetExpiryTime()
@@ -16961,10 +15352,8 @@ DATE _SharingItem::GetExpiryTime()
 
 void _SharingItem::SetExpiryTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _SharingItem::GetFlagRequest()
@@ -16976,10 +15365,8 @@ CString _SharingItem::GetFlagRequest()
 
 void _SharingItem::SetFlagRequest(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8530, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8530, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _SharingItem::GetHTMLBody()
@@ -16991,10 +15378,8 @@ CString _SharingItem::GetHTMLBody()
 
 void _SharingItem::SetHTMLBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xf404, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xf404, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _SharingItem::GetOriginatorDeliveryReportRequested()
@@ -17006,10 +15391,8 @@ BOOL _SharingItem::GetOriginatorDeliveryReportRequested()
 
 void _SharingItem::SetOriginatorDeliveryReportRequested(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x23, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x23, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _SharingItem::GetReadReceiptRequested()
@@ -17021,10 +15404,8 @@ BOOL _SharingItem::GetReadReceiptRequested()
 
 void _SharingItem::SetReadReceiptRequested(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x29, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x29, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _SharingItem::GetReceivedByEntryID()
@@ -17071,10 +15452,8 @@ BOOL _SharingItem::GetRecipientReassignmentProhibited()
 
 void _SharingItem::SetRecipientReassignmentProhibited(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x2b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x2b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _SharingItem::GetRecipients()
@@ -17093,10 +15472,8 @@ BOOL _SharingItem::GetReminderOverrideDefault()
 
 void _SharingItem::SetReminderOverrideDefault(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _SharingItem::GetReminderPlaySound()
@@ -17108,10 +15485,8 @@ BOOL _SharingItem::GetReminderPlaySound()
 
 void _SharingItem::SetReminderPlaySound(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _SharingItem::GetReminderSet()
@@ -17123,10 +15498,8 @@ BOOL _SharingItem::GetReminderSet()
 
 void _SharingItem::SetReminderSet(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _SharingItem::GetReminderSoundFile()
@@ -17138,10 +15511,8 @@ CString _SharingItem::GetReminderSoundFile()
 
 void _SharingItem::SetReminderSoundFile(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _SharingItem::GetReminderTime()
@@ -17153,10 +15524,8 @@ DATE _SharingItem::GetReminderTime()
 
 void _SharingItem::SetReminderTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _SharingItem::GetRemoteStatus()
@@ -17168,10 +15537,8 @@ long _SharingItem::GetRemoteStatus()
 
 void _SharingItem::SetRemoteStatus(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8511, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8511, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _SharingItem::GetReplyRecipientNames()
@@ -17197,10 +15564,8 @@ LPDISPATCH _SharingItem::GetSaveSentMessageFolder()
 
 void _SharingItem::SetRefSaveSentMessageFolder(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf401, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf401, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _SharingItem::GetSenderName()
@@ -17233,10 +15598,8 @@ CString _SharingItem::GetSentOnBehalfOfName()
 
 void _SharingItem::SetSentOnBehalfOfName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x42, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x42, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _SharingItem::GetSubmitted()
@@ -17255,10 +15618,8 @@ CString _SharingItem::GetTo()
 
 void _SharingItem::SetTo(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe04, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe04, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _SharingItem::ClearConversationIndex()
@@ -17308,10 +15669,8 @@ long _SharingItem::GetBodyFormat()
 
 void _SharingItem::SetBodyFormat(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfa49, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfa49, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _SharingItem::GetDownloadState()
@@ -17335,10 +15694,8 @@ long _SharingItem::GetInternetCodepage()
 
 void _SharingItem::SetInternetCodepage(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x3fde, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x3fde, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _SharingItem::GetMarkForDownload()
@@ -17350,10 +15707,8 @@ long _SharingItem::GetMarkForDownload()
 
 void _SharingItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _SharingItem::GetIsConflict()
@@ -17365,10 +15720,8 @@ BOOL _SharingItem::GetIsConflict()
 
 void _SharingItem::AddBusinessCard(LPDISPATCH contact)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfb96, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 contact);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfb96, DISPATCH_METHOD, VT_EMPTY, NULL, parms, contact);
 }
 
 CString _SharingItem::GetTaskSubject()
@@ -17380,10 +15733,8 @@ CString _SharingItem::GetTaskSubject()
 
 void _SharingItem::SetTaskSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfc1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfc1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _SharingItem::GetTaskDueDate()
@@ -17395,10 +15746,8 @@ DATE _SharingItem::GetTaskDueDate()
 
 void _SharingItem::SetTaskDueDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _SharingItem::GetTaskStartDate()
@@ -17410,10 +15759,8 @@ DATE _SharingItem::GetTaskStartDate()
 
 void _SharingItem::SetTaskStartDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _SharingItem::GetTaskCompletedDate()
@@ -17425,10 +15772,8 @@ DATE _SharingItem::GetTaskCompletedDate()
 
 void _SharingItem::SetTaskCompletedDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _SharingItem::GetToDoTaskOrdinal()
@@ -17440,10 +15785,8 @@ DATE _SharingItem::GetToDoTaskOrdinal()
 
 void _SharingItem::SetToDoTaskOrdinal(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH _SharingItem::GetConflicts()
@@ -17476,10 +15819,8 @@ long _SharingItem::GetPermission()
 
 void _SharingItem::SetPermission(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfac6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfac6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _SharingItem::GetPermissionService()
@@ -17491,18 +15832,14 @@ long _SharingItem::GetPermissionService()
 
 void _SharingItem::SetPermissionService(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfacb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfacb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 void _SharingItem::MarkAsTask(long MarkInterval)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbfe, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 MarkInterval);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbfe, DISPATCH_METHOD, VT_EMPTY, NULL, parms, MarkInterval);
 }
 
 void _SharingItem::ClearTaskFlag()
@@ -17562,20 +15899,16 @@ long _Explorers::GetCount()
 LPDISPATCH _Explorers::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _Explorers::Add(const VARIANT& Folder, long DisplayMode)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT VTS_I4;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Folder, DisplayMode);
+	static BYTE parms[] = VTS_VARIANT VTS_I4;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Folder, DisplayMode);
 	return result;
 }
 
@@ -17598,10 +15931,8 @@ void ExplorerEvents::FolderSwitch()
 
 void ExplorerEvents::BeforeFolderSwitch(LPDISPATCH NewFolder, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xf003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 NewFolder, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xf003, DISPATCH_METHOD, VT_EMPTY, NULL, parms, NewFolder, Cancel);
 }
 
 void ExplorerEvents::ViewSwitch()
@@ -17611,10 +15942,8 @@ void ExplorerEvents::ViewSwitch()
 
 void ExplorerEvents::BeforeViewSwitch(const VARIANT& NewView, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_VARIANT VTS_PBOOL;
-	InvokeHelper(0xf005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &NewView, Cancel);
+	static BYTE parms[] = VTS_VARIANT VTS_PBOOL;
+	InvokeHelper(0xf005, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &NewView, Cancel);
 }
 
 void ExplorerEvents::Deactivate()
@@ -17641,26 +15970,20 @@ void ExplorerEvents::Close()
 
 void ExplorerEvents_10::BeforeItemCopy(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0xfa0e, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0xfa0e, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void ExplorerEvents_10::BeforeItemCut(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0xfa0f, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0xfa0f, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void ExplorerEvents_10::BeforeItemPaste(VARIANT* ClipboardContent, LPDISPATCH Target, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PVARIANT VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xfa10, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 ClipboardContent, Target, Cancel);
+	static BYTE parms[] = VTS_PVARIANT VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xfa10, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ClipboardContent, Target, Cancel);
 }
 
 
@@ -17708,20 +16031,16 @@ long _Inspectors::GetCount()
 LPDISPATCH _Inspectors::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _Inspectors::Add(LPDISPATCH Item)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Item);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Item);
 	return result;
 }
 
@@ -17756,10 +16075,8 @@ void InspectorEvents::Close()
 
 void InspectorEvents_10::PageChange(BSTR* ActivePageName)
 {
-	static BYTE parms[] =
-		VTS_PBSTR;
-	InvokeHelper(0xfbf4, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 ActivePageName);
+	static BYTE parms[] = VTS_PBSTR;
+	InvokeHelper(0xfbf4, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ActivePageName);
 }
 
 
@@ -17847,10 +16164,8 @@ CString Search::GetScope()
 LPDISPATCH Search::Save(LPCTSTR Name)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfaad, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfaad, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name);
 	return result;
 }
 
@@ -17906,10 +16221,8 @@ long _Results::GetCount()
 LPDISPATCH _Results::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -17948,18 +16261,14 @@ void _Results::ResetColumns()
 
 void _Results::SetColumns(LPCTSTR Columns)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x5c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Columns);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x5c, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Columns);
 }
 
 void _Results::Sort(LPCTSTR Property_, const VARIANT& Descending)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x61, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Property_, &Descending);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x61, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Property_, &Descending);
 }
 
 long _Results::GetDefaultItemType()
@@ -17971,10 +16280,8 @@ long _Results::GetDefaultItemType()
 
 void _Results::SetDefaultItemType(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfa8f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfa8f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -18022,19 +16329,15 @@ long _Reminders::GetCount()
 LPDISPATCH _Reminders::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 void _Reminders::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 
@@ -18079,10 +16382,8 @@ void _Reminder::Dismiss()
 
 void _Reminder::Snooze(const VARIANT& SnoozeTime)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfa9b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &SnoozeTime);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfa9b, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &SnoozeTime);
 }
 
 CString _Reminder::GetCaption()
@@ -18165,20 +16466,17 @@ long _TimeZones::GetCount()
 LPDISPATCH _TimeZones::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 DATE _TimeZones::ConvertTime(DATE SourceDateTime, LPDISPATCH SourceTimeZone, LPDISPATCH DestinationTimeZone)
 {
 	DATE result;
-	static BYTE parms[] =
-		VTS_DATE VTS_DISPATCH VTS_DISPATCH;
-	InvokeHelper(0xfc26, DISPATCH_METHOD, VT_DATE, (void*)&result, parms,
-		SourceDateTime, SourceTimeZone, DestinationTimeZone);
+	static BYTE parms[] = VTS_DATE VTS_DISPATCH VTS_DISPATCH;
+	InvokeHelper(0xfc26, DISPATCH_METHOD, VT_DATE, (void*)&result, parms, SourceDateTime, SourceTimeZone,
+		DestinationTimeZone);
 	return result;
 }
 
@@ -18205,10 +16503,8 @@ long _OlkTimeZoneControl::GetAppointmentTimeField()
 
 void _OlkTimeZoneControl::SetAppointmentTimeField(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfc2f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfc2f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkTimeZoneControl::GetBorderStyle()
@@ -18220,10 +16516,8 @@ long _OlkTimeZoneControl::GetBorderStyle()
 
 void _OlkTimeZoneControl::SetBorderStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(DISPID_BORDERSTYLE, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(DISPID_BORDERSTYLE, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _OlkTimeZoneControl::GetEnabled()
@@ -18235,10 +16529,8 @@ BOOL _OlkTimeZoneControl::GetEnabled()
 
 void _OlkTimeZoneControl::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(DISPID_ENABLED, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _OlkTimeZoneControl::GetLocked()
@@ -18250,10 +16542,8 @@ BOOL _OlkTimeZoneControl::GetLocked()
 
 void _OlkTimeZoneControl::SetLocked(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _OlkTimeZoneControl::GetMouseIcon()
@@ -18265,10 +16555,8 @@ LPDISPATCH _OlkTimeZoneControl::GetMouseIcon()
 
 void _OlkTimeZoneControl::SetMouseIcon(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _OlkTimeZoneControl::GetMousePointer()
@@ -18280,10 +16568,8 @@ long _OlkTimeZoneControl::GetMousePointer()
 
 void _OlkTimeZoneControl::SetMousePointer(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _OlkTimeZoneControl::GetSelectedTimeZoneIndex()
@@ -18295,10 +16581,8 @@ long _OlkTimeZoneControl::GetSelectedTimeZoneIndex()
 
 void _OlkTimeZoneControl::SetSelectedTimeZoneIndex(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfc30, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfc30, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 VARIANT _OlkTimeZoneControl::GetValue()
@@ -18310,10 +16594,8 @@ VARIANT _OlkTimeZoneControl::GetValue()
 
 void _OlkTimeZoneControl::SetValue(const VARIANT& newValue)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 &newValue);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, &newValue);
 }
 
 void _OlkTimeZoneControl::DropDown()
@@ -18340,26 +16622,20 @@ void OlkTimeZoneControlEvents::DoubleClick()
 
 void OlkTimeZoneControlEvents::MouseDown(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkTimeZoneControlEvents::MouseMove(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEMOVE, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkTimeZoneControlEvents::MouseUp(long Button, long Shift, float X, float Y)
 {
-	static BYTE parms[] =
-		VTS_I4 VTS_I4 VTS_R4 VTS_R4;
-	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Button, Shift, X, Y);
+	static BYTE parms[] = VTS_I4 VTS_I4 VTS_R4 VTS_R4;
+	InvokeHelper(DISPID_MOUSEUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Button, Shift, X, Y);
 }
 
 void OlkTimeZoneControlEvents::Enter()
@@ -18369,34 +16645,26 @@ void OlkTimeZoneControlEvents::Enter()
 
 void OlkTimeZoneControlEvents::Exit(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018203, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OlkTimeZoneControlEvents::KeyDown(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYDOWN, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkTimeZoneControlEvents::KeyPress(long* KeyAscii)
 {
-	static BYTE parms[] =
-		VTS_PI4;
-	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyAscii);
+	static BYTE parms[] = VTS_PI4;
+	InvokeHelper(DISPID_KEYPRESS, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyAscii);
 }
 
 void OlkTimeZoneControlEvents::KeyUp(long* KeyCode, long Shift)
 {
-	static BYTE parms[] =
-		VTS_PI4 VTS_I4;
-	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 KeyCode, Shift);
+	static BYTE parms[] = VTS_PI4 VTS_I4;
+	InvokeHelper(DISPID_KEYUP, DISPATCH_METHOD, VT_EMPTY, NULL, parms, KeyCode, Shift);
 }
 
 void OlkTimeZoneControlEvents::Change()
@@ -18416,10 +16684,8 @@ void OlkTimeZoneControlEvents::AfterUpdate()
 
 void OlkTimeZoneControlEvents::BeforeUpdate(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0x80018201, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 
@@ -18431,10 +16697,8 @@ void OlkTimeZoneControlEvents::BeforeUpdate(BOOL* Cancel)
 
 void ApplicationEvents::ItemSend(LPDISPATCH Item, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Item, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Item, Cancel);
 }
 
 void ApplicationEvents::NewMail()
@@ -18444,18 +16708,14 @@ void ApplicationEvents::NewMail()
 
 void ApplicationEvents::Reminder(LPDISPATCH Item)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf004, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Item);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf004, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Item);
 }
 
 void ApplicationEvents::OptionsPagesAdd(LPDISPATCH Pages)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Pages);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf005, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Pages);
 }
 
 void ApplicationEvents::Startup()
@@ -18513,27 +16773,21 @@ long PropertyPages::GetCount()
 LPDISPATCH PropertyPages::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 void PropertyPages::Add(const VARIANT& Page, LPCTSTR Title)
 {
-	static BYTE parms[] =
-		VTS_VARIANT VTS_BSTR;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Page, Title);
+	static BYTE parms[] = VTS_VARIANT VTS_BSTR;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Page, Title);
 }
 
 void PropertyPages::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 
@@ -18580,10 +16834,8 @@ long RecurrencePattern::GetDayOfMonth()
 
 void RecurrencePattern::SetDayOfMonth(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x1000, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x1000, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long RecurrencePattern::GetDayOfWeekMask()
@@ -18595,10 +16847,8 @@ long RecurrencePattern::GetDayOfWeekMask()
 
 void RecurrencePattern::SetDayOfWeekMask(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x1001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x1001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long RecurrencePattern::GetDuration()
@@ -18610,10 +16860,8 @@ long RecurrencePattern::GetDuration()
 
 void RecurrencePattern::SetDuration(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x100d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x100d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE RecurrencePattern::GetEndTime()
@@ -18625,10 +16873,8 @@ DATE RecurrencePattern::GetEndTime()
 
 void RecurrencePattern::SetEndTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x100c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x100c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH RecurrencePattern::GetExceptions()
@@ -18647,10 +16893,8 @@ long RecurrencePattern::GetInstance()
 
 void RecurrencePattern::SetInstance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x1003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x1003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long RecurrencePattern::GetInterval()
@@ -18662,10 +16906,8 @@ long RecurrencePattern::GetInterval()
 
 void RecurrencePattern::SetInterval(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x1004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x1004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long RecurrencePattern::GetMonthOfYear()
@@ -18677,10 +16919,8 @@ long RecurrencePattern::GetMonthOfYear()
 
 void RecurrencePattern::SetMonthOfYear(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x1006, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x1006, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL RecurrencePattern::GetNoEndDate()
@@ -18692,10 +16932,8 @@ BOOL RecurrencePattern::GetNoEndDate()
 
 void RecurrencePattern::SetNoEndDate(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x100b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x100b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long RecurrencePattern::GetOccurrences()
@@ -18707,10 +16945,8 @@ long RecurrencePattern::GetOccurrences()
 
 void RecurrencePattern::SetOccurrences(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x1005, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x1005, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE RecurrencePattern::GetPatternEndDate()
@@ -18722,10 +16958,8 @@ DATE RecurrencePattern::GetPatternEndDate()
 
 void RecurrencePattern::SetPatternEndDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x1002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x1002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE RecurrencePattern::GetPatternStartDate()
@@ -18737,10 +16971,8 @@ DATE RecurrencePattern::GetPatternStartDate()
 
 void RecurrencePattern::SetPatternStartDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x1008, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x1008, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long RecurrencePattern::GetRecurrenceType()
@@ -18752,10 +16984,8 @@ long RecurrencePattern::GetRecurrenceType()
 
 void RecurrencePattern::SetRecurrenceType(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x1007, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x1007, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL RecurrencePattern::GetRegenerate()
@@ -18767,10 +16997,8 @@ BOOL RecurrencePattern::GetRegenerate()
 
 void RecurrencePattern::SetRegenerate(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x100a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x100a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 DATE RecurrencePattern::GetStartTime()
@@ -18782,19 +17010,15 @@ DATE RecurrencePattern::GetStartTime()
 
 void RecurrencePattern::SetStartTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x1009, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x1009, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH RecurrencePattern::GetOccurrence(DATE StartDate)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x100f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		StartDate);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x100f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, StartDate);
 	return result;
 }
 
@@ -18843,10 +17067,8 @@ long Exceptions::GetCount()
 LPDISPATCH Exceptions::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -18971,10 +17193,8 @@ CString _AppointmentItem::GetBillingInformation()
 
 void _AppointmentItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _AppointmentItem::GetBody()
@@ -18986,10 +17206,8 @@ CString _AppointmentItem::GetBody()
 
 void _AppointmentItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _AppointmentItem::GetCategories()
@@ -19001,10 +17219,8 @@ CString _AppointmentItem::GetCategories()
 
 void _AppointmentItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _AppointmentItem::GetCompanies()
@@ -19016,10 +17232,8 @@ CString _AppointmentItem::GetCompanies()
 
 void _AppointmentItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _AppointmentItem::GetConversationIndex()
@@ -19073,10 +17287,8 @@ long _AppointmentItem::GetImportance()
 
 void _AppointmentItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _AppointmentItem::GetLastModificationTime()
@@ -19095,10 +17307,8 @@ CString _AppointmentItem::GetMessageClass()
 
 void _AppointmentItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _AppointmentItem::GetMileage()
@@ -19110,10 +17320,8 @@ CString _AppointmentItem::GetMileage()
 
 void _AppointmentItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _AppointmentItem::GetNoAging()
@@ -19125,10 +17333,8 @@ BOOL _AppointmentItem::GetNoAging()
 
 void _AppointmentItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _AppointmentItem::GetOutlookInternalVersion()
@@ -19161,10 +17367,8 @@ long _AppointmentItem::GetSensitivity()
 
 void _AppointmentItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _AppointmentItem::GetSize()
@@ -19183,10 +17387,8 @@ CString _AppointmentItem::GetSubject()
 
 void _AppointmentItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _AppointmentItem::GetUnRead()
@@ -19198,10 +17400,8 @@ BOOL _AppointmentItem::GetUnRead()
 
 void _AppointmentItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _AppointmentItem::GetUserProperties()
@@ -19213,10 +17413,8 @@ LPDISPATCH _AppointmentItem::GetUserProperties()
 
 void _AppointmentItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _AppointmentItem::Copy()
@@ -19233,19 +17431,15 @@ void _AppointmentItem::Delete()
 
 void _AppointmentItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _AppointmentItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -19261,10 +17455,8 @@ void _AppointmentItem::Save()
 
 void _AppointmentItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 BOOL _AppointmentItem::GetAllDayEvent()
@@ -19276,10 +17468,8 @@ BOOL _AppointmentItem::GetAllDayEvent()
 
 void _AppointmentItem::SetAllDayEvent(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8215, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8215, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _AppointmentItem::GetBusyStatus()
@@ -19291,10 +17481,8 @@ long _AppointmentItem::GetBusyStatus()
 
 void _AppointmentItem::SetBusyStatus(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8205, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8205, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _AppointmentItem::GetDuration()
@@ -19306,10 +17494,8 @@ long _AppointmentItem::GetDuration()
 
 void _AppointmentItem::SetDuration(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8213, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8213, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _AppointmentItem::GetEnd()
@@ -19321,10 +17507,8 @@ DATE _AppointmentItem::GetEnd()
 
 void _AppointmentItem::SetEnd(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x820e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x820e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _AppointmentItem::GetIsRecurring()
@@ -19343,10 +17527,8 @@ CString _AppointmentItem::GetLocation()
 
 void _AppointmentItem::SetLocation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8208, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8208, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _AppointmentItem::GetMeetingStatus()
@@ -19358,10 +17540,8 @@ long _AppointmentItem::GetMeetingStatus()
 
 void _AppointmentItem::SetMeetingStatus(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8217, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8217, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _AppointmentItem::GetOptionalAttendees()
@@ -19373,10 +17553,8 @@ CString _AppointmentItem::GetOptionalAttendees()
 
 void _AppointmentItem::SetOptionalAttendees(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe03, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe03, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _AppointmentItem::GetOrganizer()
@@ -19409,10 +17587,8 @@ long _AppointmentItem::GetReminderMinutesBeforeStart()
 
 void _AppointmentItem::SetReminderMinutesBeforeStart(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8501, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8501, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _AppointmentItem::GetReminderOverrideDefault()
@@ -19424,10 +17600,8 @@ BOOL _AppointmentItem::GetReminderOverrideDefault()
 
 void _AppointmentItem::SetReminderOverrideDefault(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _AppointmentItem::GetReminderPlaySound()
@@ -19439,10 +17613,8 @@ BOOL _AppointmentItem::GetReminderPlaySound()
 
 void _AppointmentItem::SetReminderPlaySound(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _AppointmentItem::GetReminderSet()
@@ -19454,10 +17626,8 @@ BOOL _AppointmentItem::GetReminderSet()
 
 void _AppointmentItem::SetReminderSet(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _AppointmentItem::GetReminderSoundFile()
@@ -19469,10 +17639,8 @@ CString _AppointmentItem::GetReminderSoundFile()
 
 void _AppointmentItem::SetReminderSoundFile(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _AppointmentItem::GetReplyTime()
@@ -19484,10 +17652,8 @@ DATE _AppointmentItem::GetReplyTime()
 
 void _AppointmentItem::SetReplyTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8220, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8220, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _AppointmentItem::GetRequiredAttendees()
@@ -19499,10 +17665,8 @@ CString _AppointmentItem::GetRequiredAttendees()
 
 void _AppointmentItem::SetRequiredAttendees(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe04, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe04, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _AppointmentItem::GetResources()
@@ -19514,10 +17678,8 @@ CString _AppointmentItem::GetResources()
 
 void _AppointmentItem::SetResources(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _AppointmentItem::GetResponseRequested()
@@ -19529,10 +17691,8 @@ BOOL _AppointmentItem::GetResponseRequested()
 
 void _AppointmentItem::SetResponseRequested(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x63, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x63, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _AppointmentItem::GetResponseStatus()
@@ -19551,10 +17711,8 @@ DATE _AppointmentItem::GetStart()
 
 void _AppointmentItem::SetStart(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x820d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x820d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 void _AppointmentItem::ClearRecurrencePattern()
@@ -19579,10 +17737,8 @@ LPDISPATCH _AppointmentItem::GetRecurrencePattern()
 LPDISPATCH _AppointmentItem::Respond(long Response, const VARIANT& fNoUI, const VARIANT& fAdditionalTextDialog)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_I4 VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0xf502, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Response, &fNoUI, &fAdditionalTextDialog);
+	static BYTE parms[] = VTS_I4 VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0xf502, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Response, &fNoUI, &fAdditionalTextDialog);
 	return result;
 }
 
@@ -19626,10 +17782,8 @@ long _AppointmentItem::GetInternetCodepage()
 
 void _AppointmentItem::SetInternetCodepage(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x3fde, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x3fde, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _AppointmentItem::GetMarkForDownload()
@@ -19641,10 +17795,8 @@ long _AppointmentItem::GetMarkForDownload()
 
 void _AppointmentItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _AppointmentItem::GetIsConflict()
@@ -19691,10 +17843,8 @@ LPDISPATCH _AppointmentItem::GetSendUsingAccount()
 
 void _AppointmentItem::SetSendUsingAccount(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfad1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfad1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _AppointmentItem::GetGlobalAppointmentID()
@@ -19713,10 +17863,8 @@ BOOL _AppointmentItem::GetForceUpdateToAllAttendees()
 
 void _AppointmentItem::SetForceUpdateToAllAttendees(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf53a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf53a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 DATE _AppointmentItem::GetStartUTC()
@@ -19728,10 +17876,8 @@ DATE _AppointmentItem::GetStartUTC()
 
 void _AppointmentItem::SetStartUTC(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8268, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8268, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _AppointmentItem::GetEndUTC()
@@ -19743,10 +17889,8 @@ DATE _AppointmentItem::GetEndUTC()
 
 void _AppointmentItem::SetEndUTC(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8269, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8269, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _AppointmentItem::GetStartInStartTimeZone()
@@ -19758,10 +17902,8 @@ DATE _AppointmentItem::GetStartInStartTimeZone()
 
 void _AppointmentItem::SetStartInStartTimeZone(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8266, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8266, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _AppointmentItem::GetEndInEndTimeZone()
@@ -19773,10 +17915,8 @@ DATE _AppointmentItem::GetEndInEndTimeZone()
 
 void _AppointmentItem::SetEndInEndTimeZone(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8267, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8267, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH _AppointmentItem::GetStartTimeZone()
@@ -19788,10 +17928,8 @@ LPDISPATCH _AppointmentItem::GetStartTimeZone()
 
 void _AppointmentItem::SetStartTimeZone(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfc27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfc27, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH _AppointmentItem::GetEndTimeZone()
@@ -19803,10 +17941,8 @@ LPDISPATCH _AppointmentItem::GetEndTimeZone()
 
 void _AppointmentItem::SetEndTimeZone(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfc28, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfc28, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 
@@ -19867,10 +18003,8 @@ CString _MeetingItem::GetBillingInformation()
 
 void _MeetingItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MeetingItem::GetBody()
@@ -19882,10 +18016,8 @@ CString _MeetingItem::GetBody()
 
 void _MeetingItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MeetingItem::GetCategories()
@@ -19897,10 +18029,8 @@ CString _MeetingItem::GetCategories()
 
 void _MeetingItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MeetingItem::GetCompanies()
@@ -19912,10 +18042,8 @@ CString _MeetingItem::GetCompanies()
 
 void _MeetingItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MeetingItem::GetConversationIndex()
@@ -19969,10 +18097,8 @@ long _MeetingItem::GetImportance()
 
 void _MeetingItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _MeetingItem::GetLastModificationTime()
@@ -19991,10 +18117,8 @@ CString _MeetingItem::GetMessageClass()
 
 void _MeetingItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _MeetingItem::GetMileage()
@@ -20006,10 +18130,8 @@ CString _MeetingItem::GetMileage()
 
 void _MeetingItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _MeetingItem::GetNoAging()
@@ -20021,10 +18143,8 @@ BOOL _MeetingItem::GetNoAging()
 
 void _MeetingItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _MeetingItem::GetOutlookInternalVersion()
@@ -20057,10 +18177,8 @@ long _MeetingItem::GetSensitivity()
 
 void _MeetingItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _MeetingItem::GetSize()
@@ -20079,10 +18197,8 @@ CString _MeetingItem::GetSubject()
 
 void _MeetingItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _MeetingItem::GetUnRead()
@@ -20094,10 +18210,8 @@ BOOL _MeetingItem::GetUnRead()
 
 void _MeetingItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _MeetingItem::GetUserProperties()
@@ -20109,10 +18223,8 @@ LPDISPATCH _MeetingItem::GetUserProperties()
 
 void _MeetingItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _MeetingItem::Copy()
@@ -20129,19 +18241,15 @@ void _MeetingItem::Delete()
 
 void _MeetingItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _MeetingItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -20157,10 +18265,8 @@ void _MeetingItem::Save()
 
 void _MeetingItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 BOOL _MeetingItem::GetAutoForwarded()
@@ -20172,10 +18278,8 @@ BOOL _MeetingItem::GetAutoForwarded()
 
 void _MeetingItem::SetAutoForwarded(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 DATE _MeetingItem::GetDeferredDeliveryTime()
@@ -20187,10 +18291,8 @@ DATE _MeetingItem::GetDeferredDeliveryTime()
 
 void _MeetingItem::SetDeferredDeliveryTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xf, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _MeetingItem::GetDeleteAfterSubmit()
@@ -20202,10 +18304,8 @@ BOOL _MeetingItem::GetDeleteAfterSubmit()
 
 void _MeetingItem::SetDeleteAfterSubmit(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xe01, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xe01, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 DATE _MeetingItem::GetExpiryTime()
@@ -20217,10 +18317,8 @@ DATE _MeetingItem::GetExpiryTime()
 
 void _MeetingItem::SetExpiryTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _MeetingItem::GetOriginatorDeliveryReportRequested()
@@ -20232,10 +18330,8 @@ BOOL _MeetingItem::GetOriginatorDeliveryReportRequested()
 
 void _MeetingItem::SetOriginatorDeliveryReportRequested(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x23, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x23, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 DATE _MeetingItem::GetReceivedTime()
@@ -20247,10 +18343,8 @@ DATE _MeetingItem::GetReceivedTime()
 
 void _MeetingItem::SetReceivedTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xe06, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xe06, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH _MeetingItem::GetRecipients()
@@ -20269,10 +18363,8 @@ BOOL _MeetingItem::GetReminderSet()
 
 void _MeetingItem::SetReminderSet(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 DATE _MeetingItem::GetReminderTime()
@@ -20284,10 +18376,8 @@ DATE _MeetingItem::GetReminderTime()
 
 void _MeetingItem::SetReminderTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH _MeetingItem::GetReplyRecipients()
@@ -20306,10 +18396,8 @@ LPDISPATCH _MeetingItem::GetSaveSentMessageFolder()
 
 void _MeetingItem::SetRefSaveSentMessageFolder(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf401, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf401, DISPATCH_PROPERTYPUTREF, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _MeetingItem::GetSenderName()
@@ -20350,10 +18438,8 @@ LPDISPATCH _MeetingItem::Forward()
 LPDISPATCH _MeetingItem::GetAssociatedAppointment(BOOL AddToCalendar)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf760, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		AddToCalendar);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf760, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, AddToCalendar);
 	return result;
 }
 
@@ -20411,10 +18497,8 @@ long _MeetingItem::GetMarkForDownload()
 
 void _MeetingItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _MeetingItem::GetIsConflict()
@@ -20475,10 +18559,8 @@ LPDISPATCH _MeetingItem::GetPropertyAccessor()
 
 void ExplorersEvents::NewExplorer(LPDISPATCH Explorer)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Explorer);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Explorer);
 }
 
 
@@ -20490,18 +18572,14 @@ void ExplorersEvents::NewExplorer(LPDISPATCH Explorer)
 
 void FoldersEvents::FolderAdd(LPDISPATCH Folder)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Folder);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Folder);
 }
 
 void FoldersEvents::FolderChange(LPDISPATCH Folder)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Folder);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Folder);
 }
 
 void FoldersEvents::FolderRemove()
@@ -20518,10 +18596,8 @@ void FoldersEvents::FolderRemove()
 
 void InspectorsEvents::NewInspector(LPDISPATCH Inspector)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Inspector);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Inspector);
 }
 
 
@@ -20533,18 +18609,14 @@ void InspectorsEvents::NewInspector(LPDISPATCH Inspector)
 
 void ItemsEvents::ItemAdd(LPDISPATCH Item)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Item);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Item);
 }
 
 void ItemsEvents::ItemChange(LPDISPATCH Item)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Item);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Item);
 }
 
 void ItemsEvents::ItemRemove()
@@ -20561,10 +18633,8 @@ void ItemsEvents::ItemRemove()
 
 void NameSpaceEvents::OptionsPagesAdd(LPDISPATCH Pages, LPDISPATCH Folder)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_DISPATCH;
-	InvokeHelper(0xf005, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Pages, Folder);
+	static BYTE parms[] = VTS_DISPATCH VTS_DISPATCH;
+	InvokeHelper(0xf005, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Pages, Folder);
 }
 
 void NameSpaceEvents::AutoDiscoverComplete()
@@ -20616,10 +18686,8 @@ CString OutlookBarGroup::GetName()
 
 void OutlookBarGroup::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH OutlookBarGroup::GetShortcuts()
@@ -20638,10 +18706,8 @@ long OutlookBarGroup::GetViewType()
 
 void OutlookBarGroup::SetViewType(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2103, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2103, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -20689,29 +18755,23 @@ long _OutlookBarShortcuts::GetCount()
 LPDISPATCH _OutlookBarShortcuts::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _OutlookBarShortcuts::Add(const VARIANT& Target, LPCTSTR Name, const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Target, Name, &Index);
+	static BYTE parms[] = VTS_VARIANT VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Target, Name, &Index);
 	return result;
 }
 
 void _OutlookBarShortcuts::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 
@@ -20758,10 +18818,8 @@ CString OutlookBarShortcut::GetName()
 
 void OutlookBarShortcut::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 VARIANT OutlookBarShortcut::GetTarget()
@@ -20773,10 +18831,8 @@ VARIANT OutlookBarShortcut::GetTarget()
 
 void OutlookBarShortcut::SetIcon(const VARIANT& Icon)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xfaa2, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Icon);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xfaa2, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Icon);
 }
 
 
@@ -20824,29 +18880,23 @@ long _OutlookBarGroups::GetCount()
 LPDISPATCH _OutlookBarGroups::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _OutlookBarGroups::Add(LPCTSTR Name, const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, &Index);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, &Index);
 	return result;
 }
 
 void _OutlookBarGroups::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x54, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 
@@ -20858,26 +18908,20 @@ void _OutlookBarGroups::Remove(const VARIANT& Index)
 
 void OutlookBarGroupsEvents::GroupAdd(LPDISPATCH NewGroup)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 NewGroup);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, NewGroup);
 }
 
 void OutlookBarGroupsEvents::BeforeGroupAdd(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OutlookBarGroupsEvents::BeforeGroupRemove(LPDISPATCH Group, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xf003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Group, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xf003, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Group, Cancel);
 }
 
 
@@ -20938,10 +18982,8 @@ BOOL _OutlookBarPane::GetVisible()
 
 void _OutlookBarPane::SetVisible(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x2103, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x2103, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 
@@ -20995,10 +19037,8 @@ LPDISPATCH OutlookBarStorage::GetGroups()
 
 void OutlookBarPaneEvents::BeforeNavigate(LPDISPATCH Shortcut, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Shortcut, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Shortcut, Cancel);
 }
 
 
@@ -21010,26 +19050,20 @@ void OutlookBarPaneEvents::BeforeNavigate(LPDISPATCH Shortcut, BOOL* Cancel)
 
 void OutlookBarShortcutsEvents::ShortcutAdd(LPDISPATCH NewShortcut)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 NewShortcut);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, NewShortcut);
 }
 
 void OutlookBarShortcutsEvents::BeforeShortcutAdd(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void OutlookBarShortcutsEvents::BeforeShortcutRemove(LPDISPATCH Shortcut, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xf003, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Shortcut, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xf003, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Shortcut, Cancel);
 }
 
 
@@ -21117,29 +19151,23 @@ long Pages::GetCount()
 LPDISPATCH Pages::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH Pages::Add(const VARIANT& Name)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x12c, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Name);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x12c, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Name);
 	return result;
 }
 
 void Pages::Remove(long Index)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x12d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x12d, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Index);
 }
 
 
@@ -21151,18 +19179,14 @@ void Pages::Remove(long Index)
 
 void ApplicationEvents_10::AdvancedSearchComplete(LPDISPATCH SearchObject)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfa6a, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SearchObject);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfa6a, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SearchObject);
 }
 
 void ApplicationEvents_10::AdvancedSearchStopped(LPDISPATCH SearchObject)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfa6b, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SearchObject);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfa6b, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SearchObject);
 }
 
 void ApplicationEvents_10::MAPILogonComplete()
@@ -21179,74 +19203,56 @@ void ApplicationEvents_10::MAPILogonComplete()
 
 void ApplicationEvents_11::NewMailEx(LPCTSTR EntryIDCollection)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfab5, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 EntryIDCollection);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfab5, DISPATCH_METHOD, VT_EMPTY, NULL, parms, EntryIDCollection);
 }
 
 void ApplicationEvents_11::FolderContextMenuDisplay(LPDISPATCH CommandBar, LPDISPATCH Folder)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_DISPATCH;
-	InvokeHelper(0xfb42, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 CommandBar, Folder);
+	static BYTE parms[] = VTS_DISPATCH VTS_DISPATCH;
+	InvokeHelper(0xfb42, DISPATCH_METHOD, VT_EMPTY, NULL, parms, CommandBar, Folder);
 }
 
 void ApplicationEvents_11::StoreContextMenuDisplay(LPDISPATCH CommandBar, LPDISPATCH Store)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_DISPATCH;
-	InvokeHelper(0xfb43, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 CommandBar, Store);
+	static BYTE parms[] = VTS_DISPATCH VTS_DISPATCH;
+	InvokeHelper(0xfb43, DISPATCH_METHOD, VT_EMPTY, NULL, parms, CommandBar, Store);
 }
 
 void ApplicationEvents_11::ShortcutContextMenuDisplay(LPDISPATCH CommandBar, LPDISPATCH Shortcut)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_DISPATCH;
-	InvokeHelper(0xfb44, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 CommandBar, Shortcut);
+	static BYTE parms[] = VTS_DISPATCH VTS_DISPATCH;
+	InvokeHelper(0xfb44, DISPATCH_METHOD, VT_EMPTY, NULL, parms, CommandBar, Shortcut);
 }
 
 void ApplicationEvents_11::ViewContextMenuDisplay(LPDISPATCH CommandBar, LPDISPATCH View)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_DISPATCH;
-	InvokeHelper(0xfb40, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 CommandBar, View);
+	static BYTE parms[] = VTS_DISPATCH VTS_DISPATCH;
+	InvokeHelper(0xfb40, DISPATCH_METHOD, VT_EMPTY, NULL, parms, CommandBar, View);
 }
 
 void ApplicationEvents_11::ItemContextMenuDisplay(LPDISPATCH CommandBar, LPDISPATCH Selection)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_DISPATCH;
-	InvokeHelper(0xfb41, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 CommandBar, Selection);
+	static BYTE parms[] = VTS_DISPATCH VTS_DISPATCH;
+	InvokeHelper(0xfb41, DISPATCH_METHOD, VT_EMPTY, NULL, parms, CommandBar, Selection);
 }
 
 void ApplicationEvents_11::ContextMenuClose(long ContextMenu)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfba6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 ContextMenu);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfba6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ContextMenu);
 }
 
 void ApplicationEvents_11::ItemLoad(LPDISPATCH Item)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfba7, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Item);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfba7, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Item);
 }
 
 void ApplicationEvents_11::BeforeFolderSharingDialog(LPDISPATCH FolderToShare, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xfc01, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 FolderToShare, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xfc01, DISPATCH_METHOD, VT_EMPTY, NULL, parms, FolderToShare, Cancel);
 }
 
 
@@ -21294,10 +19300,8 @@ long _AttachmentSelection::GetCount()
 LPDISPATCH _AttachmentSelection::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
@@ -21310,18 +19314,14 @@ LPDISPATCH _AttachmentSelection::Item(const VARIANT& Index)
 
 void MAPIFolderEvents_12::BeforeFolderMove(LPDISPATCH MoveTo, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xfba8, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 MoveTo, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xfba8, DISPATCH_METHOD, VT_EMPTY, NULL, parms, MoveTo, Cancel);
 }
 
 void MAPIFolderEvents_12::BeforeItemMove(LPDISPATCH Item, LPDISPATCH MoveTo, BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_DISPATCH VTS_PBOOL;
-	InvokeHelper(0xfba9, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Item, MoveTo, Cancel);
+	static BYTE parms[] = VTS_DISPATCH VTS_DISPATCH VTS_PBOOL;
+	InvokeHelper(0xfba9, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Item, MoveTo, Cancel);
 }
 
 
@@ -21333,18 +19333,14 @@ void MAPIFolderEvents_12::BeforeItemMove(LPDISPATCH Item, LPDISPATCH MoveTo, BOO
 
 void ResultsEvents::ItemAdd(LPDISPATCH Item)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Item);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Item);
 }
 
 void ResultsEvents::ItemChange(LPDISPATCH Item)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Item);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Item);
 }
 
 void ResultsEvents::ItemRemove()
@@ -21361,18 +19357,14 @@ void ResultsEvents::ItemRemove()
 
 void _ViewsEvents::ViewAdd(LPDISPATCH View)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0x190, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 View);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0x190, DISPATCH_METHOD, VT_EMPTY, NULL, parms, View);
 }
 
 void _ViewsEvents::ViewRemove(LPDISPATCH View)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfa47, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 View);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfa47, DISPATCH_METHOD, VT_EMPTY, NULL, parms, View);
 }
 
 
@@ -21384,34 +19376,26 @@ void _ViewsEvents::ViewRemove(LPDISPATCH View)
 
 void ReminderCollectionEvents::BeforeReminderShow(BOOL* Cancel)
 {
-	static BYTE parms[] =
-		VTS_PBOOL;
-	InvokeHelper(0xfa93, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Cancel);
+	static BYTE parms[] = VTS_PBOOL;
+	InvokeHelper(0xfa93, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Cancel);
 }
 
 void ReminderCollectionEvents::ReminderAdd(LPDISPATCH ReminderObject)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfa94, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 ReminderObject);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfa94, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ReminderObject);
 }
 
 void ReminderCollectionEvents::ReminderChange(LPDISPATCH ReminderObject)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfa95, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 ReminderObject);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfa95, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ReminderObject);
 }
 
 void ReminderCollectionEvents::ReminderFire(LPDISPATCH ReminderObject)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfa96, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 ReminderObject);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfa96, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ReminderObject);
 }
 
 void ReminderCollectionEvents::ReminderRemove()
@@ -21421,10 +19405,8 @@ void ReminderCollectionEvents::ReminderRemove()
 
 void ReminderCollectionEvents::Snooze(LPDISPATCH ReminderObject)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfa98, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 ReminderObject);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfa98, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ReminderObject);
 }
 
 
@@ -21485,10 +19467,8 @@ CString _DistListItem::GetBillingInformation()
 
 void _DistListItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _DistListItem::GetBody()
@@ -21500,10 +19480,8 @@ CString _DistListItem::GetBody()
 
 void _DistListItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _DistListItem::GetCategories()
@@ -21515,10 +19493,8 @@ CString _DistListItem::GetCategories()
 
 void _DistListItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _DistListItem::GetCompanies()
@@ -21530,10 +19506,8 @@ CString _DistListItem::GetCompanies()
 
 void _DistListItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _DistListItem::GetConversationIndex()
@@ -21587,10 +19561,8 @@ long _DistListItem::GetImportance()
 
 void _DistListItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _DistListItem::GetLastModificationTime()
@@ -21609,10 +19581,8 @@ CString _DistListItem::GetMessageClass()
 
 void _DistListItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _DistListItem::GetMileage()
@@ -21624,10 +19594,8 @@ CString _DistListItem::GetMileage()
 
 void _DistListItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _DistListItem::GetNoAging()
@@ -21639,10 +19607,8 @@ BOOL _DistListItem::GetNoAging()
 
 void _DistListItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _DistListItem::GetOutlookInternalVersion()
@@ -21675,10 +19641,8 @@ long _DistListItem::GetSensitivity()
 
 void _DistListItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _DistListItem::GetSize()
@@ -21697,10 +19661,8 @@ CString _DistListItem::GetSubject()
 
 void _DistListItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _DistListItem::GetUnRead()
@@ -21712,10 +19674,8 @@ BOOL _DistListItem::GetUnRead()
 
 void _DistListItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _DistListItem::GetUserProperties()
@@ -21727,10 +19687,8 @@ LPDISPATCH _DistListItem::GetUserProperties()
 
 void _DistListItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _DistListItem::Copy()
@@ -21747,19 +19705,15 @@ void _DistListItem::Delete()
 
 void _DistListItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _DistListItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -21775,10 +19729,8 @@ void _DistListItem::Save()
 
 void _DistListItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 CString _DistListItem::GetDLName()
@@ -21790,10 +19742,8 @@ CString _DistListItem::GetDLName()
 
 void _DistListItem::SetDLName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8053, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8053, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _DistListItem::GetMemberCount()
@@ -21812,27 +19762,21 @@ LPDISPATCH _DistListItem::GetLinks()
 
 void _DistListItem::AddMembers(LPDISPATCH Recipients)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf900, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Recipients);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf900, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Recipients);
 }
 
 void _DistListItem::RemoveMembers(LPDISPATCH Recipients)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf901, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Recipients);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf901, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Recipients);
 }
 
 LPDISPATCH _DistListItem::GetMember(long Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf905, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Index);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf905, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Index);
 	return result;
 }
 
@@ -21850,18 +19794,14 @@ void _DistListItem::ShowCategoriesDialog()
 
 void _DistListItem::AddMember(LPDISPATCH Recipient)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfa8c, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Recipient);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfa8c, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Recipient);
 }
 
 void _DistListItem::RemoveMember(LPDISPATCH Recipient)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfa8d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Recipient);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfa8d, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Recipient);
 }
 
 LPDISPATCH _DistListItem::GetItemProperties()
@@ -21880,10 +19820,8 @@ long _DistListItem::GetMarkForDownload()
 
 void _DistListItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _DistListItem::GetIsConflict()
@@ -21923,10 +19861,8 @@ CString _DistListItem::GetTaskSubject()
 
 void _DistListItem::SetTaskSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfc1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfc1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _DistListItem::GetTaskDueDate()
@@ -21938,10 +19874,8 @@ DATE _DistListItem::GetTaskDueDate()
 
 void _DistListItem::SetTaskDueDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _DistListItem::GetTaskStartDate()
@@ -21953,10 +19887,8 @@ DATE _DistListItem::GetTaskStartDate()
 
 void _DistListItem::SetTaskStartDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _DistListItem::GetTaskCompletedDate()
@@ -21968,10 +19900,8 @@ DATE _DistListItem::GetTaskCompletedDate()
 
 void _DistListItem::SetTaskCompletedDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _DistListItem::GetToDoTaskOrdinal()
@@ -21983,10 +19913,8 @@ DATE _DistListItem::GetToDoTaskOrdinal()
 
 void _DistListItem::SetToDoTaskOrdinal(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _DistListItem::GetReminderOverrideDefault()
@@ -21998,10 +19926,8 @@ BOOL _DistListItem::GetReminderOverrideDefault()
 
 void _DistListItem::SetReminderOverrideDefault(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _DistListItem::GetReminderPlaySound()
@@ -22013,10 +19939,8 @@ BOOL _DistListItem::GetReminderPlaySound()
 
 void _DistListItem::SetReminderPlaySound(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _DistListItem::GetReminderSet()
@@ -22028,10 +19952,8 @@ BOOL _DistListItem::GetReminderSet()
 
 void _DistListItem::SetReminderSet(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _DistListItem::GetReminderSoundFile()
@@ -22043,10 +19965,8 @@ CString _DistListItem::GetReminderSoundFile()
 
 void _DistListItem::SetReminderSoundFile(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _DistListItem::GetReminderTime()
@@ -22058,18 +19978,14 @@ DATE _DistListItem::GetReminderTime()
 
 void _DistListItem::SetReminderTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 void _DistListItem::MarkAsTask(long MarkInterval)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbfe, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 MarkInterval);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbfe, DISPATCH_METHOD, VT_EMPTY, NULL, parms, MarkInterval);
 }
 
 void _DistListItem::ClearTaskFlag()
@@ -22142,10 +20058,8 @@ CString _DocumentItem::GetBillingInformation()
 
 void _DocumentItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _DocumentItem::GetBody()
@@ -22157,10 +20071,8 @@ CString _DocumentItem::GetBody()
 
 void _DocumentItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _DocumentItem::GetCategories()
@@ -22172,10 +20084,8 @@ CString _DocumentItem::GetCategories()
 
 void _DocumentItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _DocumentItem::GetCompanies()
@@ -22187,10 +20097,8 @@ CString _DocumentItem::GetCompanies()
 
 void _DocumentItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _DocumentItem::GetConversationIndex()
@@ -22244,10 +20152,8 @@ long _DocumentItem::GetImportance()
 
 void _DocumentItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _DocumentItem::GetLastModificationTime()
@@ -22266,10 +20172,8 @@ CString _DocumentItem::GetMessageClass()
 
 void _DocumentItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _DocumentItem::GetMileage()
@@ -22281,10 +20185,8 @@ CString _DocumentItem::GetMileage()
 
 void _DocumentItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _DocumentItem::GetNoAging()
@@ -22296,10 +20198,8 @@ BOOL _DocumentItem::GetNoAging()
 
 void _DocumentItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _DocumentItem::GetOutlookInternalVersion()
@@ -22332,10 +20232,8 @@ long _DocumentItem::GetSensitivity()
 
 void _DocumentItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _DocumentItem::GetSize()
@@ -22354,10 +20252,8 @@ CString _DocumentItem::GetSubject()
 
 void _DocumentItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _DocumentItem::GetUnRead()
@@ -22369,10 +20265,8 @@ BOOL _DocumentItem::GetUnRead()
 
 void _DocumentItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _DocumentItem::GetUserProperties()
@@ -22384,10 +20278,8 @@ LPDISPATCH _DocumentItem::GetUserProperties()
 
 void _DocumentItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _DocumentItem::Copy()
@@ -22404,19 +20296,15 @@ void _DocumentItem::Delete()
 
 void _DocumentItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _DocumentItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -22432,10 +20320,8 @@ void _DocumentItem::Save()
 
 void _DocumentItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 LPDISPATCH _DocumentItem::GetLinks()
@@ -22473,10 +20359,8 @@ long _DocumentItem::GetMarkForDownload()
 
 void _DocumentItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _DocumentItem::GetIsConflict()
@@ -22565,10 +20449,8 @@ CString _JournalItem::GetBillingInformation()
 
 void _JournalItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _JournalItem::GetBody()
@@ -22580,10 +20462,8 @@ CString _JournalItem::GetBody()
 
 void _JournalItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _JournalItem::GetCategories()
@@ -22595,10 +20475,8 @@ CString _JournalItem::GetCategories()
 
 void _JournalItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _JournalItem::GetCompanies()
@@ -22610,10 +20488,8 @@ CString _JournalItem::GetCompanies()
 
 void _JournalItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _JournalItem::GetConversationIndex()
@@ -22667,10 +20543,8 @@ long _JournalItem::GetImportance()
 
 void _JournalItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _JournalItem::GetLastModificationTime()
@@ -22689,10 +20563,8 @@ CString _JournalItem::GetMessageClass()
 
 void _JournalItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _JournalItem::GetMileage()
@@ -22704,10 +20576,8 @@ CString _JournalItem::GetMileage()
 
 void _JournalItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _JournalItem::GetNoAging()
@@ -22719,10 +20589,8 @@ BOOL _JournalItem::GetNoAging()
 
 void _JournalItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _JournalItem::GetOutlookInternalVersion()
@@ -22755,10 +20623,8 @@ long _JournalItem::GetSensitivity()
 
 void _JournalItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _JournalItem::GetSize()
@@ -22777,10 +20643,8 @@ CString _JournalItem::GetSubject()
 
 void _JournalItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _JournalItem::GetUnRead()
@@ -22792,10 +20656,8 @@ BOOL _JournalItem::GetUnRead()
 
 void _JournalItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _JournalItem::GetUserProperties()
@@ -22807,10 +20669,8 @@ LPDISPATCH _JournalItem::GetUserProperties()
 
 void _JournalItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _JournalItem::Copy()
@@ -22827,19 +20687,15 @@ void _JournalItem::Delete()
 
 void _JournalItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _JournalItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -22855,10 +20711,8 @@ void _JournalItem::Save()
 
 void _JournalItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 CString _JournalItem::GetContactNames()
@@ -22870,10 +20724,8 @@ CString _JournalItem::GetContactNames()
 
 void _JournalItem::SetContactNames(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe04, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe04, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _JournalItem::GetDocPosted()
@@ -22885,10 +20737,8 @@ BOOL _JournalItem::GetDocPosted()
 
 void _JournalItem::SetDocPosted(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8711, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8711, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _JournalItem::GetDocPrinted()
@@ -22900,10 +20750,8 @@ BOOL _JournalItem::GetDocPrinted()
 
 void _JournalItem::SetDocPrinted(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x870e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x870e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _JournalItem::GetDocRouted()
@@ -22915,10 +20763,8 @@ BOOL _JournalItem::GetDocRouted()
 
 void _JournalItem::SetDocRouted(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8710, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8710, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _JournalItem::GetDocSaved()
@@ -22930,10 +20776,8 @@ BOOL _JournalItem::GetDocSaved()
 
 void _JournalItem::SetDocSaved(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x870f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x870f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _JournalItem::GetDuration()
@@ -22945,10 +20789,8 @@ long _JournalItem::GetDuration()
 
 void _JournalItem::SetDuration(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8707, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8707, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _JournalItem::GetEnd()
@@ -22960,10 +20802,8 @@ DATE _JournalItem::GetEnd()
 
 void _JournalItem::SetEnd(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8708, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8708, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _JournalItem::GetType()
@@ -22975,10 +20815,8 @@ CString _JournalItem::GetType()
 
 void _JournalItem::SetType(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8700, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8700, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _JournalItem::GetRecipients()
@@ -22997,10 +20835,8 @@ DATE _JournalItem::GetStart()
 
 void _JournalItem::SetStart(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8706, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8706, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 LPDISPATCH _JournalItem::Forward()
@@ -23069,10 +20905,8 @@ long _JournalItem::GetMarkForDownload()
 
 void _JournalItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _JournalItem::GetIsConflict()
@@ -23147,10 +20981,8 @@ CString _NoteItem::GetBody()
 
 void _NoteItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _NoteItem::GetCategories()
@@ -23162,10 +20994,8 @@ CString _NoteItem::GetCategories()
 
 void _NoteItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _NoteItem::GetCreationTime()
@@ -23198,10 +21028,8 @@ long _NoteItem::GetHeight()
 
 void _NoteItem::SetHeight(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8b03, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8b03, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _NoteItem::GetLastModificationTime()
@@ -23220,10 +21048,8 @@ long _NoteItem::GetLeft()
 
 void _NoteItem::SetLeft(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8b04, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8b04, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _NoteItem::GetMessageClass()
@@ -23235,10 +21061,8 @@ CString _NoteItem::GetMessageClass()
 
 void _NoteItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _NoteItem::GetSaved()
@@ -23271,10 +21095,8 @@ long _NoteItem::GetTop()
 
 void _NoteItem::SetTop(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8b05, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8b05, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _NoteItem::GetWidth()
@@ -23286,18 +21108,14 @@ long _NoteItem::GetWidth()
 
 void _NoteItem::SetWidth(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8b02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8b02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 void _NoteItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _NoteItem::Copy()
@@ -23314,19 +21132,15 @@ void _NoteItem::Delete()
 
 void _NoteItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _NoteItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -23342,10 +21156,8 @@ void _NoteItem::Save()
 
 void _NoteItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 LPDISPATCH _NoteItem::GetLinks()
@@ -23378,10 +21190,8 @@ long _NoteItem::GetMarkForDownload()
 
 void _NoteItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _NoteItem::GetIsConflict()
@@ -23470,10 +21280,8 @@ CString _PostItem::GetBillingInformation()
 
 void _PostItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _PostItem::GetBody()
@@ -23485,10 +21293,8 @@ CString _PostItem::GetBody()
 
 void _PostItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _PostItem::GetCategories()
@@ -23500,10 +21306,8 @@ CString _PostItem::GetCategories()
 
 void _PostItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _PostItem::GetCompanies()
@@ -23515,10 +21319,8 @@ CString _PostItem::GetCompanies()
 
 void _PostItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _PostItem::GetConversationIndex()
@@ -23572,10 +21374,8 @@ long _PostItem::GetImportance()
 
 void _PostItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _PostItem::GetLastModificationTime()
@@ -23594,10 +21394,8 @@ CString _PostItem::GetMessageClass()
 
 void _PostItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _PostItem::GetMileage()
@@ -23609,10 +21407,8 @@ CString _PostItem::GetMileage()
 
 void _PostItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _PostItem::GetNoAging()
@@ -23624,10 +21420,8 @@ BOOL _PostItem::GetNoAging()
 
 void _PostItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _PostItem::GetOutlookInternalVersion()
@@ -23660,10 +21454,8 @@ long _PostItem::GetSensitivity()
 
 void _PostItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _PostItem::GetSize()
@@ -23682,10 +21474,8 @@ CString _PostItem::GetSubject()
 
 void _PostItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _PostItem::GetUnRead()
@@ -23697,10 +21487,8 @@ BOOL _PostItem::GetUnRead()
 
 void _PostItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _PostItem::GetUserProperties()
@@ -23712,10 +21500,8 @@ LPDISPATCH _PostItem::GetUserProperties()
 
 void _PostItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _PostItem::Copy()
@@ -23732,19 +21518,15 @@ void _PostItem::Delete()
 
 void _PostItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _PostItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -23760,10 +21542,8 @@ void _PostItem::Save()
 
 void _PostItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 DATE _PostItem::GetExpiryTime()
@@ -23775,10 +21555,8 @@ DATE _PostItem::GetExpiryTime()
 
 void _PostItem::SetExpiryTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x15, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 CString _PostItem::GetHTMLBody()
@@ -23790,10 +21568,8 @@ CString _PostItem::GetHTMLBody()
 
 void _PostItem::SetHTMLBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xf404, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xf404, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _PostItem::GetReceivedTime()
@@ -23864,10 +21640,8 @@ long _PostItem::GetBodyFormat()
 
 void _PostItem::SetBodyFormat(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfa49, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfa49, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _PostItem::GetDownloadState()
@@ -23891,10 +21665,8 @@ long _PostItem::GetInternetCodepage()
 
 void _PostItem::SetInternetCodepage(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x3fde, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x3fde, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _PostItem::GetMarkForDownload()
@@ -23906,10 +21678,8 @@ long _PostItem::GetMarkForDownload()
 
 void _PostItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _PostItem::GetIsConflict()
@@ -23963,10 +21733,8 @@ CString _PostItem::GetTaskSubject()
 
 void _PostItem::SetTaskSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfc1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfc1f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _PostItem::GetTaskDueDate()
@@ -23978,10 +21746,8 @@ DATE _PostItem::GetTaskDueDate()
 
 void _PostItem::SetTaskDueDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _PostItem::GetTaskStartDate()
@@ -23993,10 +21759,8 @@ DATE _PostItem::GetTaskStartDate()
 
 void _PostItem::SetTaskStartDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _PostItem::GetTaskCompletedDate()
@@ -24008,10 +21772,8 @@ DATE _PostItem::GetTaskCompletedDate()
 
 void _PostItem::SetTaskCompletedDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _PostItem::GetToDoTaskOrdinal()
@@ -24023,10 +21785,8 @@ DATE _PostItem::GetToDoTaskOrdinal()
 
 void _PostItem::SetToDoTaskOrdinal(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _PostItem::GetReminderOverrideDefault()
@@ -24038,10 +21798,8 @@ BOOL _PostItem::GetReminderOverrideDefault()
 
 void _PostItem::SetReminderOverrideDefault(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _PostItem::GetReminderPlaySound()
@@ -24053,10 +21811,8 @@ BOOL _PostItem::GetReminderPlaySound()
 
 void _PostItem::SetReminderPlaySound(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _PostItem::GetReminderSet()
@@ -24068,10 +21824,8 @@ BOOL _PostItem::GetReminderSet()
 
 void _PostItem::SetReminderSet(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _PostItem::GetReminderSoundFile()
@@ -24083,10 +21837,8 @@ CString _PostItem::GetReminderSoundFile()
 
 void _PostItem::SetReminderSoundFile(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _PostItem::GetReminderTime()
@@ -24098,18 +21850,14 @@ DATE _PostItem::GetReminderTime()
 
 void _PostItem::SetReminderTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 void _PostItem::MarkAsTask(long MarkInterval)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbfe, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 MarkInterval);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbfe, DISPATCH_METHOD, VT_EMPTY, NULL, parms, MarkInterval);
 }
 
 void _PostItem::ClearTaskFlag()
@@ -24182,10 +21930,8 @@ CString _RemoteItem::GetBillingInformation()
 
 void _RemoteItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _RemoteItem::GetBody()
@@ -24197,10 +21943,8 @@ CString _RemoteItem::GetBody()
 
 void _RemoteItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _RemoteItem::GetCategories()
@@ -24212,10 +21956,8 @@ CString _RemoteItem::GetCategories()
 
 void _RemoteItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _RemoteItem::GetCompanies()
@@ -24227,10 +21969,8 @@ CString _RemoteItem::GetCompanies()
 
 void _RemoteItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _RemoteItem::GetConversationIndex()
@@ -24284,10 +22024,8 @@ long _RemoteItem::GetImportance()
 
 void _RemoteItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _RemoteItem::GetLastModificationTime()
@@ -24306,10 +22044,8 @@ CString _RemoteItem::GetMessageClass()
 
 void _RemoteItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _RemoteItem::GetMileage()
@@ -24321,10 +22057,8 @@ CString _RemoteItem::GetMileage()
 
 void _RemoteItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _RemoteItem::GetNoAging()
@@ -24336,10 +22070,8 @@ BOOL _RemoteItem::GetNoAging()
 
 void _RemoteItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _RemoteItem::GetOutlookInternalVersion()
@@ -24372,10 +22104,8 @@ long _RemoteItem::GetSensitivity()
 
 void _RemoteItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _RemoteItem::GetSize()
@@ -24394,10 +22124,8 @@ CString _RemoteItem::GetSubject()
 
 void _RemoteItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _RemoteItem::GetUnRead()
@@ -24409,10 +22137,8 @@ BOOL _RemoteItem::GetUnRead()
 
 void _RemoteItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _RemoteItem::GetUserProperties()
@@ -24424,10 +22150,8 @@ LPDISPATCH _RemoteItem::GetUserProperties()
 
 void _RemoteItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _RemoteItem::Copy()
@@ -24444,19 +22168,15 @@ void _RemoteItem::Delete()
 
 void _RemoteItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _RemoteItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -24472,10 +22192,8 @@ void _RemoteItem::Save()
 
 void _RemoteItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 BOOL _RemoteItem::GetHasAttachment()
@@ -24541,10 +22259,8 @@ long _RemoteItem::GetMarkForDownload()
 
 void _RemoteItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _RemoteItem::GetIsConflict()
@@ -24633,10 +22349,8 @@ CString _ReportItem::GetBillingInformation()
 
 void _ReportItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ReportItem::GetBody()
@@ -24648,10 +22362,8 @@ CString _ReportItem::GetBody()
 
 void _ReportItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ReportItem::GetCategories()
@@ -24663,10 +22375,8 @@ CString _ReportItem::GetCategories()
 
 void _ReportItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ReportItem::GetCompanies()
@@ -24678,10 +22388,8 @@ CString _ReportItem::GetCompanies()
 
 void _ReportItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ReportItem::GetConversationIndex()
@@ -24735,10 +22443,8 @@ long _ReportItem::GetImportance()
 
 void _ReportItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _ReportItem::GetLastModificationTime()
@@ -24757,10 +22463,8 @@ CString _ReportItem::GetMessageClass()
 
 void _ReportItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _ReportItem::GetMileage()
@@ -24772,10 +22476,8 @@ CString _ReportItem::GetMileage()
 
 void _ReportItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _ReportItem::GetNoAging()
@@ -24787,10 +22489,8 @@ BOOL _ReportItem::GetNoAging()
 
 void _ReportItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _ReportItem::GetOutlookInternalVersion()
@@ -24823,10 +22523,8 @@ long _ReportItem::GetSensitivity()
 
 void _ReportItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _ReportItem::GetSize()
@@ -24845,10 +22543,8 @@ CString _ReportItem::GetSubject()
 
 void _ReportItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _ReportItem::GetUnRead()
@@ -24860,10 +22556,8 @@ BOOL _ReportItem::GetUnRead()
 
 void _ReportItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _ReportItem::GetUserProperties()
@@ -24875,10 +22569,8 @@ LPDISPATCH _ReportItem::GetUserProperties()
 
 void _ReportItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _ReportItem::Copy()
@@ -24895,19 +22587,15 @@ void _ReportItem::Delete()
 
 void _ReportItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _ReportItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -24923,10 +22611,8 @@ void _ReportItem::Save()
 
 void _ReportItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 LPDISPATCH _ReportItem::GetLinks()
@@ -24964,10 +22650,8 @@ long _ReportItem::GetMarkForDownload()
 
 void _ReportItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _ReportItem::GetIsConflict()
@@ -25056,10 +22740,8 @@ CString _TaskItem::GetBillingInformation()
 
 void _TaskItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskItem::GetBody()
@@ -25071,10 +22753,8 @@ CString _TaskItem::GetBody()
 
 void _TaskItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskItem::GetCategories()
@@ -25086,10 +22766,8 @@ CString _TaskItem::GetCategories()
 
 void _TaskItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskItem::GetCompanies()
@@ -25101,10 +22779,8 @@ CString _TaskItem::GetCompanies()
 
 void _TaskItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskItem::GetConversationIndex()
@@ -25158,10 +22834,8 @@ long _TaskItem::GetImportance()
 
 void _TaskItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _TaskItem::GetLastModificationTime()
@@ -25180,10 +22854,8 @@ CString _TaskItem::GetMessageClass()
 
 void _TaskItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskItem::GetMileage()
@@ -25195,10 +22867,8 @@ CString _TaskItem::GetMileage()
 
 void _TaskItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskItem::GetNoAging()
@@ -25210,10 +22880,8 @@ BOOL _TaskItem::GetNoAging()
 
 void _TaskItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _TaskItem::GetOutlookInternalVersion()
@@ -25246,10 +22914,8 @@ long _TaskItem::GetSensitivity()
 
 void _TaskItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _TaskItem::GetSize()
@@ -25268,10 +22934,8 @@ CString _TaskItem::GetSubject()
 
 void _TaskItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskItem::GetUnRead()
@@ -25283,10 +22947,8 @@ BOOL _TaskItem::GetUnRead()
 
 void _TaskItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _TaskItem::GetUserProperties()
@@ -25298,10 +22960,8 @@ LPDISPATCH _TaskItem::GetUserProperties()
 
 void _TaskItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _TaskItem::Copy()
@@ -25318,19 +22978,15 @@ void _TaskItem::Delete()
 
 void _TaskItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _TaskItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -25346,10 +23002,8 @@ void _TaskItem::Save()
 
 void _TaskItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 long _TaskItem::GetActualWork()
@@ -25361,10 +23015,8 @@ long _TaskItem::GetActualWork()
 
 void _TaskItem::SetActualWork(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8110, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8110, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _TaskItem::GetCardData()
@@ -25376,10 +23028,8 @@ CString _TaskItem::GetCardData()
 
 void _TaskItem::SetCardData(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x812b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x812b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskItem::GetComplete()
@@ -25391,10 +23041,8 @@ BOOL _TaskItem::GetComplete()
 
 void _TaskItem::SetComplete(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x811c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x811c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _TaskItem::GetContactNames()
@@ -25406,10 +23054,8 @@ CString _TaskItem::GetContactNames()
 
 void _TaskItem::SetContactNames(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _TaskItem::GetDateCompleted()
@@ -25421,10 +23067,8 @@ DATE _TaskItem::GetDateCompleted()
 
 void _TaskItem::SetDateCompleted(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x810f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _TaskItem::GetDelegationState()
@@ -25450,10 +23094,8 @@ DATE _TaskItem::GetDueDate()
 
 void _TaskItem::SetDueDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8105, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _TaskItem::GetIsRecurring()
@@ -25472,10 +23114,8 @@ long _TaskItem::GetOrdinal()
 
 void _TaskItem::SetOrdinal(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8123, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8123, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _TaskItem::GetOwner()
@@ -25487,10 +23127,8 @@ CString _TaskItem::GetOwner()
 
 void _TaskItem::SetOwner(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x811f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x811f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _TaskItem::GetOwnership()
@@ -25509,10 +23147,8 @@ long _TaskItem::GetPercentComplete()
 
 void _TaskItem::SetPercentComplete(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf61f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf61f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _TaskItem::GetRecipients()
@@ -25531,10 +23167,8 @@ DATE _TaskItem::GetReminderTime()
 
 void _TaskItem::SetReminderTime(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8502, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _TaskItem::GetReminderOverrideDefault()
@@ -25546,10 +23180,8 @@ BOOL _TaskItem::GetReminderOverrideDefault()
 
 void _TaskItem::SetReminderOverrideDefault(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _TaskItem::GetReminderPlaySound()
@@ -25561,10 +23193,8 @@ BOOL _TaskItem::GetReminderPlaySound()
 
 void _TaskItem::SetReminderPlaySound(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x851e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _TaskItem::GetReminderSet()
@@ -25576,10 +23206,8 @@ BOOL _TaskItem::GetReminderSet()
 
 void _TaskItem::SetReminderSet(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8503, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _TaskItem::GetReminderSoundFile()
@@ -25591,10 +23219,8 @@ CString _TaskItem::GetReminderSoundFile()
 
 void _TaskItem::SetReminderSoundFile(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x851f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _TaskItem::GetResponseState()
@@ -25613,10 +23239,8 @@ CString _TaskItem::GetRole()
 
 void _TaskItem::SetRole(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8127, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8127, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskItem::GetSchedulePlusPriority()
@@ -25628,10 +23252,8 @@ CString _TaskItem::GetSchedulePlusPriority()
 
 void _TaskItem::SetSchedulePlusPriority(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x812f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x812f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 DATE _TaskItem::GetStartDate()
@@ -25643,10 +23265,8 @@ DATE _TaskItem::GetStartDate()
 
 void _TaskItem::SetStartDate(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x8104, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 long _TaskItem::GetStatus()
@@ -25658,10 +23278,8 @@ long _TaskItem::GetStatus()
 
 void _TaskItem::SetStatus(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8101, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8101, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 CString _TaskItem::GetStatusOnCompletionRecipients()
@@ -25673,10 +23291,8 @@ CString _TaskItem::GetStatusOnCompletionRecipients()
 
 void _TaskItem::SetStatusOnCompletionRecipients(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe02, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskItem::GetStatusUpdateRecipients()
@@ -25688,10 +23304,8 @@ CString _TaskItem::GetStatusUpdateRecipients()
 
 void _TaskItem::SetStatusUpdateRecipients(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xe03, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xe03, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskItem::GetTeamTask()
@@ -25703,10 +23317,8 @@ BOOL _TaskItem::GetTeamTask()
 
 void _TaskItem::SetTeamTask(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x8103, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x8103, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _TaskItem::GetTotalWork()
@@ -25718,10 +23330,8 @@ long _TaskItem::GetTotalWork()
 
 void _TaskItem::SetTotalWork(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8111, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8111, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _TaskItem::Assign()
@@ -25756,10 +23366,8 @@ void _TaskItem::MarkComplete()
 LPDISPATCH _TaskItem::Respond(long Response, const VARIANT& fNoUI, const VARIANT& fAdditionalTextDialog)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_I4 VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0xf621, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Response, &fNoUI, &fAdditionalTextDialog);
+	static BYTE parms[] = VTS_I4 VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0xf621, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Response, &fNoUI, &fAdditionalTextDialog);
 	return result;
 }
 
@@ -25817,10 +23425,8 @@ long _TaskItem::GetInternetCodepage()
 
 void _TaskItem::SetInternetCodepage(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x3fde, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x3fde, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _TaskItem::GetMarkForDownload()
@@ -25832,10 +23438,8 @@ long _TaskItem::GetMarkForDownload()
 
 void _TaskItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TaskItem::GetIsConflict()
@@ -25875,10 +23479,8 @@ LPDISPATCH _TaskItem::GetSendUsingAccount()
 
 void _TaskItem::SetSendUsingAccount(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfad1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfad1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 DATE _TaskItem::GetToDoTaskOrdinal()
@@ -25890,10 +23492,8 @@ DATE _TaskItem::GetToDoTaskOrdinal()
 
 void _TaskItem::SetToDoTaskOrdinal(DATE newValue)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0x85a0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 
@@ -25954,10 +23554,8 @@ CString _TaskRequestAcceptItem::GetBillingInformation()
 
 void _TaskRequestAcceptItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestAcceptItem::GetBody()
@@ -25969,10 +23567,8 @@ CString _TaskRequestAcceptItem::GetBody()
 
 void _TaskRequestAcceptItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestAcceptItem::GetCategories()
@@ -25984,10 +23580,8 @@ CString _TaskRequestAcceptItem::GetCategories()
 
 void _TaskRequestAcceptItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestAcceptItem::GetCompanies()
@@ -25999,10 +23593,8 @@ CString _TaskRequestAcceptItem::GetCompanies()
 
 void _TaskRequestAcceptItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestAcceptItem::GetConversationIndex()
@@ -26056,10 +23648,8 @@ long _TaskRequestAcceptItem::GetImportance()
 
 void _TaskRequestAcceptItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _TaskRequestAcceptItem::GetLastModificationTime()
@@ -26078,10 +23668,8 @@ CString _TaskRequestAcceptItem::GetMessageClass()
 
 void _TaskRequestAcceptItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestAcceptItem::GetMileage()
@@ -26093,10 +23681,8 @@ CString _TaskRequestAcceptItem::GetMileage()
 
 void _TaskRequestAcceptItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskRequestAcceptItem::GetNoAging()
@@ -26108,10 +23694,8 @@ BOOL _TaskRequestAcceptItem::GetNoAging()
 
 void _TaskRequestAcceptItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _TaskRequestAcceptItem::GetOutlookInternalVersion()
@@ -26144,10 +23728,8 @@ long _TaskRequestAcceptItem::GetSensitivity()
 
 void _TaskRequestAcceptItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _TaskRequestAcceptItem::GetSize()
@@ -26166,10 +23748,8 @@ CString _TaskRequestAcceptItem::GetSubject()
 
 void _TaskRequestAcceptItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskRequestAcceptItem::GetUnRead()
@@ -26181,10 +23761,8 @@ BOOL _TaskRequestAcceptItem::GetUnRead()
 
 void _TaskRequestAcceptItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _TaskRequestAcceptItem::GetUserProperties()
@@ -26196,10 +23774,8 @@ LPDISPATCH _TaskRequestAcceptItem::GetUserProperties()
 
 void _TaskRequestAcceptItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _TaskRequestAcceptItem::Copy()
@@ -26216,19 +23792,15 @@ void _TaskRequestAcceptItem::Delete()
 
 void _TaskRequestAcceptItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _TaskRequestAcceptItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -26244,19 +23816,15 @@ void _TaskRequestAcceptItem::Save()
 
 void _TaskRequestAcceptItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 LPDISPATCH _TaskRequestAcceptItem::GetAssociatedTask(BOOL AddToTaskList)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf014, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		AddToTaskList);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf014, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, AddToTaskList);
 	return result;
 }
 
@@ -26295,10 +23863,8 @@ long _TaskRequestAcceptItem::GetMarkForDownload()
 
 void _TaskRequestAcceptItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TaskRequestAcceptItem::GetIsConflict()
@@ -26387,10 +23953,8 @@ CString _TaskRequestDeclineItem::GetBillingInformation()
 
 void _TaskRequestDeclineItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestDeclineItem::GetBody()
@@ -26402,10 +23966,8 @@ CString _TaskRequestDeclineItem::GetBody()
 
 void _TaskRequestDeclineItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestDeclineItem::GetCategories()
@@ -26417,10 +23979,8 @@ CString _TaskRequestDeclineItem::GetCategories()
 
 void _TaskRequestDeclineItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestDeclineItem::GetCompanies()
@@ -26432,10 +23992,8 @@ CString _TaskRequestDeclineItem::GetCompanies()
 
 void _TaskRequestDeclineItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestDeclineItem::GetConversationIndex()
@@ -26489,10 +24047,8 @@ long _TaskRequestDeclineItem::GetImportance()
 
 void _TaskRequestDeclineItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _TaskRequestDeclineItem::GetLastModificationTime()
@@ -26511,10 +24067,8 @@ CString _TaskRequestDeclineItem::GetMessageClass()
 
 void _TaskRequestDeclineItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestDeclineItem::GetMileage()
@@ -26526,10 +24080,8 @@ CString _TaskRequestDeclineItem::GetMileage()
 
 void _TaskRequestDeclineItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskRequestDeclineItem::GetNoAging()
@@ -26541,10 +24093,8 @@ BOOL _TaskRequestDeclineItem::GetNoAging()
 
 void _TaskRequestDeclineItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _TaskRequestDeclineItem::GetOutlookInternalVersion()
@@ -26577,10 +24127,8 @@ long _TaskRequestDeclineItem::GetSensitivity()
 
 void _TaskRequestDeclineItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _TaskRequestDeclineItem::GetSize()
@@ -26599,10 +24147,8 @@ CString _TaskRequestDeclineItem::GetSubject()
 
 void _TaskRequestDeclineItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskRequestDeclineItem::GetUnRead()
@@ -26614,10 +24160,8 @@ BOOL _TaskRequestDeclineItem::GetUnRead()
 
 void _TaskRequestDeclineItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _TaskRequestDeclineItem::GetUserProperties()
@@ -26629,10 +24173,8 @@ LPDISPATCH _TaskRequestDeclineItem::GetUserProperties()
 
 void _TaskRequestDeclineItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _TaskRequestDeclineItem::Copy()
@@ -26649,19 +24191,15 @@ void _TaskRequestDeclineItem::Delete()
 
 void _TaskRequestDeclineItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _TaskRequestDeclineItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -26677,19 +24215,15 @@ void _TaskRequestDeclineItem::Save()
 
 void _TaskRequestDeclineItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 LPDISPATCH _TaskRequestDeclineItem::GetAssociatedTask(BOOL AddToTaskList)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf014, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		AddToTaskList);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf014, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, AddToTaskList);
 	return result;
 }
 
@@ -26728,10 +24262,8 @@ long _TaskRequestDeclineItem::GetMarkForDownload()
 
 void _TaskRequestDeclineItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TaskRequestDeclineItem::GetIsConflict()
@@ -26820,10 +24352,8 @@ CString _TaskRequestItem::GetBillingInformation()
 
 void _TaskRequestItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestItem::GetBody()
@@ -26835,10 +24365,8 @@ CString _TaskRequestItem::GetBody()
 
 void _TaskRequestItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestItem::GetCategories()
@@ -26850,10 +24378,8 @@ CString _TaskRequestItem::GetCategories()
 
 void _TaskRequestItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestItem::GetCompanies()
@@ -26865,10 +24391,8 @@ CString _TaskRequestItem::GetCompanies()
 
 void _TaskRequestItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestItem::GetConversationIndex()
@@ -26922,10 +24446,8 @@ long _TaskRequestItem::GetImportance()
 
 void _TaskRequestItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _TaskRequestItem::GetLastModificationTime()
@@ -26944,10 +24466,8 @@ CString _TaskRequestItem::GetMessageClass()
 
 void _TaskRequestItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestItem::GetMileage()
@@ -26959,10 +24479,8 @@ CString _TaskRequestItem::GetMileage()
 
 void _TaskRequestItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskRequestItem::GetNoAging()
@@ -26974,10 +24492,8 @@ BOOL _TaskRequestItem::GetNoAging()
 
 void _TaskRequestItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _TaskRequestItem::GetOutlookInternalVersion()
@@ -27010,10 +24526,8 @@ long _TaskRequestItem::GetSensitivity()
 
 void _TaskRequestItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _TaskRequestItem::GetSize()
@@ -27032,10 +24546,8 @@ CString _TaskRequestItem::GetSubject()
 
 void _TaskRequestItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskRequestItem::GetUnRead()
@@ -27047,10 +24559,8 @@ BOOL _TaskRequestItem::GetUnRead()
 
 void _TaskRequestItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _TaskRequestItem::GetUserProperties()
@@ -27062,10 +24572,8 @@ LPDISPATCH _TaskRequestItem::GetUserProperties()
 
 void _TaskRequestItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _TaskRequestItem::Copy()
@@ -27082,19 +24590,15 @@ void _TaskRequestItem::Delete()
 
 void _TaskRequestItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _TaskRequestItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -27110,19 +24614,15 @@ void _TaskRequestItem::Save()
 
 void _TaskRequestItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 LPDISPATCH _TaskRequestItem::GetAssociatedTask(BOOL AddToTaskList)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf014, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		AddToTaskList);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf014, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, AddToTaskList);
 	return result;
 }
 
@@ -27161,10 +24661,8 @@ long _TaskRequestItem::GetMarkForDownload()
 
 void _TaskRequestItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TaskRequestItem::GetIsConflict()
@@ -27253,10 +24751,8 @@ CString _TaskRequestUpdateItem::GetBillingInformation()
 
 void _TaskRequestUpdateItem::SetBillingInformation(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8535, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestUpdateItem::GetBody()
@@ -27268,10 +24764,8 @@ CString _TaskRequestUpdateItem::GetBody()
 
 void _TaskRequestUpdateItem::SetBody(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9100, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestUpdateItem::GetCategories()
@@ -27283,10 +24777,8 @@ CString _TaskRequestUpdateItem::GetCategories()
 
 void _TaskRequestUpdateItem::SetCategories(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x9001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestUpdateItem::GetCompanies()
@@ -27298,10 +24790,8 @@ CString _TaskRequestUpdateItem::GetCompanies()
 
 void _TaskRequestUpdateItem::SetCompanies(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x853b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestUpdateItem::GetConversationIndex()
@@ -27355,10 +24845,8 @@ long _TaskRequestUpdateItem::GetImportance()
 
 void _TaskRequestUpdateItem::SetImportance(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 DATE _TaskRequestUpdateItem::GetLastModificationTime()
@@ -27377,10 +24865,8 @@ CString _TaskRequestUpdateItem::GetMessageClass()
 
 void _TaskRequestUpdateItem::SetMessageClass(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TaskRequestUpdateItem::GetMileage()
@@ -27392,10 +24878,8 @@ CString _TaskRequestUpdateItem::GetMileage()
 
 void _TaskRequestUpdateItem::SetMileage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x8534, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskRequestUpdateItem::GetNoAging()
@@ -27407,10 +24891,8 @@ BOOL _TaskRequestUpdateItem::GetNoAging()
 
 void _TaskRequestUpdateItem::SetNoAging(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x850e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _TaskRequestUpdateItem::GetOutlookInternalVersion()
@@ -27443,10 +24925,8 @@ long _TaskRequestUpdateItem::GetSensitivity()
 
 void _TaskRequestUpdateItem::SetSensitivity(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x36, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _TaskRequestUpdateItem::GetSize()
@@ -27465,10 +24945,8 @@ CString _TaskRequestUpdateItem::GetSubject()
 
 void _TaskRequestUpdateItem::SetSubject(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x37, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TaskRequestUpdateItem::GetUnRead()
@@ -27480,10 +24958,8 @@ BOOL _TaskRequestUpdateItem::GetUnRead()
 
 void _TaskRequestUpdateItem::SetUnRead(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf01c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _TaskRequestUpdateItem::GetUserProperties()
@@ -27495,10 +24971,8 @@ LPDISPATCH _TaskRequestUpdateItem::GetUserProperties()
 
 void _TaskRequestUpdateItem::Close(long SaveMode)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 SaveMode);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xf023, DISPATCH_METHOD, VT_EMPTY, NULL, parms, SaveMode);
 }
 
 LPDISPATCH _TaskRequestUpdateItem::Copy()
@@ -27515,19 +24989,15 @@ void _TaskRequestUpdateItem::Delete()
 
 void _TaskRequestUpdateItem::Display(const VARIANT& Modal)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Modal);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0xf0a6, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Modal);
 }
 
 LPDISPATCH _TaskRequestUpdateItem::Move(LPDISPATCH DestFldr)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DestFldr);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xf034, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DestFldr);
 	return result;
 }
 
@@ -27543,19 +25013,15 @@ void _TaskRequestUpdateItem::Save()
 
 void _TaskRequestUpdateItem::SaveAs(LPCTSTR Path, const VARIANT& Type)
 {
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Path, &Type);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xf051, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Path, &Type);
 }
 
 LPDISPATCH _TaskRequestUpdateItem::GetAssociatedTask(BOOL AddToTaskList)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xf014, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		AddToTaskList);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xf014, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, AddToTaskList);
 	return result;
 }
 
@@ -27594,10 +25060,8 @@ long _TaskRequestUpdateItem::GetMarkForDownload()
 
 void _TaskRequestUpdateItem::SetMarkForDownload(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x8571, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TaskRequestUpdateItem::GetIsConflict()
@@ -27686,10 +25150,8 @@ CString _FormRegion::GetDetail()
 
 void _FormRegion::SetDetail(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb35, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb35, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _FormRegion::GetItem()
@@ -27741,10 +25203,8 @@ CString _FormRegion::GetInternalName()
 
 void _FormRegion::SetControlItemProperty(LPDISPATCH Control, LPCTSTR PropertyName)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH VTS_BSTR;
-	InvokeHelper(0xfac9, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Control, PropertyName);
+	static BYTE parms[] = VTS_DISPATCH VTS_BSTR;
+	InvokeHelper(0xfac9, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Control, PropertyName);
 }
 
 BOOL _FormRegion::GetSuppressControlReplacement()
@@ -27756,10 +25216,8 @@ BOOL _FormRegion::GetSuppressControlReplacement()
 
 void _FormRegion::SetSuppressControlReplacement(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfc06, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfc06, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 void _FormRegion::Select()
@@ -27776,10 +25234,8 @@ BOOL _FormRegion::GetEnableAutoLayout()
 
 void _FormRegion::SetEnableAutoLayout(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfc1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfc1a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 
@@ -27791,10 +25247,8 @@ void _FormRegion::SetEnableAutoLayout(BOOL bNewValue)
 
 void FormRegionEvents::Expanded(BOOL Expand)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb38, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Expand);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb38, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Expand);
 }
 
 void FormRegionEvents::Close()
@@ -27845,10 +25299,8 @@ void _TableView::Apply()
 LPDISPATCH _TableView::Copy(LPCTSTR Name, long SaveOption)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4;
-	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, SaveOption);
+	static BYTE parms[] = VTS_BSTR VTS_I4;
+	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, SaveOption);
 	return result;
 }
 
@@ -27876,10 +25328,8 @@ CString _TableView::GetLanguage()
 
 void _TableView::SetLanguage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TableView::GetLockUserChanges()
@@ -27891,10 +25341,8 @@ BOOL _TableView::GetLockUserChanges()
 
 void _TableView::SetLockUserChanges(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _TableView::GetName()
@@ -27906,10 +25354,8 @@ CString _TableView::GetName()
 
 void _TableView::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _TableView::GetSaveOption()
@@ -27942,18 +25388,14 @@ CString _TableView::GetXml()
 
 void _TableView::SetXml(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _TableView::GoToDate(DATE Date)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Date);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Date);
 }
 
 CString _TableView::GetFilter()
@@ -27965,10 +25407,8 @@ CString _TableView::GetFilter()
 
 void _TableView::SetFilter(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _TableView::GetViewFields()
@@ -28001,10 +25441,8 @@ long _TableView::GetMaxLinesInMultiLineView()
 
 void _TableView::SetMaxLinesInMultiLineView(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb5b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb5b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TableView::GetAutomaticGrouping()
@@ -28016,10 +25454,8 @@ BOOL _TableView::GetAutomaticGrouping()
 
 void _TableView::SetAutomaticGrouping(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb59, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb59, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _TableView::GetDefaultExpandCollapseSetting()
@@ -28031,10 +25467,8 @@ long _TableView::GetDefaultExpandCollapseSetting()
 
 void _TableView::SetDefaultExpandCollapseSetting(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb80, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb80, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TableView::GetAutomaticColumnSizing()
@@ -28046,10 +25480,8 @@ BOOL _TableView::GetAutomaticColumnSizing()
 
 void _TableView::SetAutomaticColumnSizing(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb5c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb5c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _TableView::GetMultiLine()
@@ -28061,10 +25493,8 @@ long _TableView::GetMultiLine()
 
 void _TableView::SetMultiLine(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb5d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb5d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _TableView::GetMultiLineWidth()
@@ -28076,10 +25506,8 @@ long _TableView::GetMultiLineWidth()
 
 void _TableView::SetMultiLineWidth(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb5e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb5e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TableView::GetAllowInCellEditing()
@@ -28091,10 +25519,8 @@ BOOL _TableView::GetAllowInCellEditing()
 
 void _TableView::SetAllowInCellEditing(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb5f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb5f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _TableView::GetShowNewItemRow()
@@ -28106,10 +25532,8 @@ BOOL _TableView::GetShowNewItemRow()
 
 void _TableView::SetShowNewItemRow(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb60, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb60, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _TableView::GetGridLineStyle()
@@ -28121,10 +25545,8 @@ long _TableView::GetGridLineStyle()
 
 void _TableView::SetGridLineStyle(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb61, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb61, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TableView::GetShowItemsInGroups()
@@ -28136,10 +25558,8 @@ BOOL _TableView::GetShowItemsInGroups()
 
 void _TableView::SetShowItemsInGroups(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb62, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb62, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _TableView::GetShowReadingPane()
@@ -28151,10 +25571,8 @@ BOOL _TableView::GetShowReadingPane()
 
 void _TableView::SetShowReadingPane(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb63, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb63, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _TableView::GetHideReadingPaneHeaderInfo()
@@ -28166,10 +25584,8 @@ BOOL _TableView::GetHideReadingPaneHeaderInfo()
 
 void _TableView::SetHideReadingPaneHeaderInfo(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb64, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb64, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _TableView::GetShowUnreadAndFlaggedMessages()
@@ -28181,10 +25597,8 @@ BOOL _TableView::GetShowUnreadAndFlaggedMessages()
 
 void _TableView::SetShowUnreadAndFlaggedMessages(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb65, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb65, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _TableView::GetRowFont()
@@ -28217,10 +25631,8 @@ long _TableView::GetAutoPreview()
 
 void _TableView::SetAutoPreview(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb78, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb78, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _TableView::GetAutoFormatRules()
@@ -28275,39 +25687,31 @@ long _ViewFields::GetCount()
 LPDISPATCH _ViewFields::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _ViewFields::Add(LPCTSTR PropertyName)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		PropertyName);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, PropertyName);
 	return result;
 }
 
 LPDISPATCH _ViewFields::Insert(LPCTSTR PropertyName, const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xfb56, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		PropertyName, &Index);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xfb56, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, PropertyName, &Index);
 	return result;
 }
 
 void _ViewFields::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 
@@ -28403,10 +25807,8 @@ CString _ColumnFormat::GetLabel()
 
 void _ColumnFormat::SetLabel(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa1e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa1e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _ColumnFormat::GetFieldFormat()
@@ -28418,10 +25820,8 @@ long _ColumnFormat::GetFieldFormat()
 
 void _ColumnFormat::SetFieldFormat(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb8c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb8c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _ColumnFormat::GetWidth()
@@ -28433,10 +25833,8 @@ long _ColumnFormat::GetWidth()
 
 void _ColumnFormat::SetWidth(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2117, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2117, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _ColumnFormat::GetAlign()
@@ -28448,10 +25846,8 @@ long _ColumnFormat::GetAlign()
 
 void _ColumnFormat::SetAlign(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfa22, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfa22, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _ColumnFormat::GetFieldType()
@@ -28506,29 +25902,23 @@ long _OrderFields::GetCount()
 LPDISPATCH _OrderFields::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _OrderFields::Add(LPCTSTR PropertyName, const VARIANT& IsDescending)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		PropertyName, &IsDescending);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, PropertyName, &IsDescending);
 	return result;
 }
 
 void _OrderFields::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 void _OrderFields::RemoveAll()
@@ -28539,10 +25929,8 @@ void _OrderFields::RemoveAll()
 LPDISPATCH _OrderFields::Insert(LPCTSTR PropertyName, const VARIANT& Index, const VARIANT& IsDescending)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0xfb56, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		PropertyName, &Index, &IsDescending);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT VTS_VARIANT;
+	InvokeHelper(0xfb56, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, PropertyName, &Index, &IsDescending);
 	return result;
 }
 
@@ -28597,10 +25985,8 @@ BOOL _OrderField::GetIsDescending()
 
 void _OrderField::SetIsDescending(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb8a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb8a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 
@@ -28647,10 +26033,8 @@ BOOL _ViewFont::GetBold()
 
 void _ViewFont::SetBold(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb81, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb81, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _ViewFont::GetItalic()
@@ -28662,10 +26046,8 @@ BOOL _ViewFont::GetItalic()
 
 void _ViewFont::SetItalic(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb83, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb83, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _ViewFont::GetName()
@@ -28677,10 +26059,8 @@ CString _ViewFont::GetName()
 
 void _ViewFont::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb84, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb84, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _ViewFont::GetSize()
@@ -28692,10 +26072,8 @@ long _ViewFont::GetSize()
 
 void _ViewFont::SetSize(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb85, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb85, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _ViewFont::GetStrikethrough()
@@ -28707,10 +26085,8 @@ BOOL _ViewFont::GetStrikethrough()
 
 void _ViewFont::SetStrikethrough(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb86, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb86, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _ViewFont::GetUnderline()
@@ -28722,10 +26098,8 @@ BOOL _ViewFont::GetUnderline()
 
 void _ViewFont::SetUnderline(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb87, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb87, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _ViewFont::GetColor()
@@ -28737,10 +26111,8 @@ long _ViewFont::GetColor()
 
 void _ViewFont::SetColor(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb8b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb8b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -28788,39 +26160,31 @@ long _AutoFormatRules::GetCount()
 LPDISPATCH _AutoFormatRules::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _AutoFormatRules::Add(LPCTSTR Name)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x5f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name);
 	return result;
 }
 
 LPDISPATCH _AutoFormatRules::Insert(LPCTSTR Name, const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0xfb56, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, &Index);
+	static BYTE parms[] = VTS_BSTR VTS_VARIANT;
+	InvokeHelper(0xfb56, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, &Index);
 	return result;
 }
 
 void _AutoFormatRules::Remove(const VARIANT& Index)
 {
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 &Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x52, DISPATCH_METHOD, VT_EMPTY, NULL, parms, &Index);
 }
 
 void _AutoFormatRules::RemoveAll()
@@ -28877,10 +26241,8 @@ CString _AutoFormatRule::GetName()
 
 void _AutoFormatRule::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x2102, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x2102, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _AutoFormatRule::GetFilter()
@@ -28892,10 +26254,8 @@ CString _AutoFormatRule::GetFilter()
 
 void _AutoFormatRule::SetFilter(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa18, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa18, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _AutoFormatRule::GetEnabled()
@@ -28907,10 +26267,8 @@ BOOL _AutoFormatRule::GetEnabled()
 
 void _AutoFormatRule::SetEnabled(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0x67, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _AutoFormatRule::GetFont()
@@ -28922,10 +26280,8 @@ LPDISPATCH _AutoFormatRule::GetFont()
 
 void _AutoFormatRule::SetFont(LPDISPATCH newValue)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfa17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfa17, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 }
 
 BOOL _AutoFormatRule::GetStandard()
@@ -28978,10 +26334,8 @@ void _IconView::Apply()
 LPDISPATCH _IconView::Copy(LPCTSTR Name, long SaveOption)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4;
-	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, SaveOption);
+	static BYTE parms[] = VTS_BSTR VTS_I4;
+	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, SaveOption);
 	return result;
 }
 
@@ -29009,10 +26363,8 @@ CString _IconView::GetLanguage()
 
 void _IconView::SetLanguage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _IconView::GetLockUserChanges()
@@ -29024,10 +26376,8 @@ BOOL _IconView::GetLockUserChanges()
 
 void _IconView::SetLockUserChanges(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _IconView::GetName()
@@ -29039,10 +26389,8 @@ CString _IconView::GetName()
 
 void _IconView::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _IconView::GetSaveOption()
@@ -29075,18 +26423,14 @@ CString _IconView::GetXml()
 
 void _IconView::SetXml(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _IconView::GoToDate(DATE Date)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Date);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Date);
 }
 
 CString _IconView::GetFilter()
@@ -29098,10 +26442,8 @@ CString _IconView::GetFilter()
 
 void _IconView::SetFilter(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _IconView::GetSortFields()
@@ -29120,10 +26462,8 @@ long _IconView::GetIconViewType()
 
 void _IconView::SetIconViewType(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb6a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb6a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _IconView::GetIconPlacement()
@@ -29135,10 +26475,8 @@ long _IconView::GetIconPlacement()
 
 void _IconView::SetIconPlacement(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb6b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb6b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -29184,10 +26522,8 @@ void _CardView::Apply()
 LPDISPATCH _CardView::Copy(LPCTSTR Name, long SaveOption)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4;
-	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, SaveOption);
+	static BYTE parms[] = VTS_BSTR VTS_I4;
+	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, SaveOption);
 	return result;
 }
 
@@ -29215,10 +26551,8 @@ CString _CardView::GetLanguage()
 
 void _CardView::SetLanguage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _CardView::GetLockUserChanges()
@@ -29230,10 +26564,8 @@ BOOL _CardView::GetLockUserChanges()
 
 void _CardView::SetLockUserChanges(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _CardView::GetName()
@@ -29245,10 +26577,8 @@ CString _CardView::GetName()
 
 void _CardView::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _CardView::GetSaveOption()
@@ -29281,18 +26611,14 @@ CString _CardView::GetXml()
 
 void _CardView::SetXml(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _CardView::GoToDate(DATE Date)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Date);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Date);
 }
 
 CString _CardView::GetFilter()
@@ -29304,10 +26630,8 @@ CString _CardView::GetFilter()
 
 void _CardView::SetFilter(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _CardView::GetSortFields()
@@ -29326,10 +26650,8 @@ BOOL _CardView::GetAllowInCellEditing()
 
 void _CardView::SetAllowInCellEditing(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb5f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb5f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _CardView::GetShowEmptyFields()
@@ -29341,10 +26663,8 @@ BOOL _CardView::GetShowEmptyFields()
 
 void _CardView::SetShowEmptyFields(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb76, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb76, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _CardView::GetWidth()
@@ -29356,10 +26676,8 @@ long _CardView::GetWidth()
 
 void _CardView::SetWidth(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x2117, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0x2117, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _CardView::GetMultiLineFieldHeight()
@@ -29371,10 +26689,8 @@ long _CardView::GetMultiLineFieldHeight()
 
 void _CardView::SetMultiLineFieldHeight(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb6c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb6c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 LPDISPATCH _CardView::GetViewFields()
@@ -29448,10 +26764,8 @@ void _CalendarView::Apply()
 LPDISPATCH _CalendarView::Copy(LPCTSTR Name, long SaveOption)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4;
-	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, SaveOption);
+	static BYTE parms[] = VTS_BSTR VTS_I4;
+	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, SaveOption);
 	return result;
 }
 
@@ -29479,10 +26793,8 @@ CString _CalendarView::GetLanguage()
 
 void _CalendarView::SetLanguage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _CalendarView::GetLockUserChanges()
@@ -29494,10 +26806,8 @@ BOOL _CalendarView::GetLockUserChanges()
 
 void _CalendarView::SetLockUserChanges(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _CalendarView::GetName()
@@ -29509,10 +26819,8 @@ CString _CalendarView::GetName()
 
 void _CalendarView::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _CalendarView::GetSaveOption()
@@ -29545,18 +26853,14 @@ CString _CalendarView::GetXml()
 
 void _CalendarView::SetXml(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _CalendarView::GoToDate(DATE Date)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Date);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Date);
 }
 
 CString _CalendarView::GetFilter()
@@ -29568,10 +26872,8 @@ CString _CalendarView::GetFilter()
 
 void _CalendarView::SetFilter(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _CalendarView::GetStartField()
@@ -29583,10 +26885,8 @@ CString _CalendarView::GetStartField()
 
 void _CalendarView::SetStartField(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x2101, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x2101, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _CalendarView::GetEndField()
@@ -29598,10 +26898,8 @@ CString _CalendarView::GetEndField()
 
 void _CalendarView::SetEndField(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb7b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb7b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _CalendarView::GetCalendarViewMode()
@@ -29613,10 +26911,8 @@ long _CalendarView::GetCalendarViewMode()
 
 void _CalendarView::SetCalendarViewMode(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb77, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb77, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 long _CalendarView::GetDayWeekTimeScale()
@@ -29628,10 +26924,8 @@ long _CalendarView::GetDayWeekTimeScale()
 
 void _CalendarView::SetDayWeekTimeScale(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb6d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb6d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _CalendarView::GetMonthShowEndTime()
@@ -29643,10 +26937,8 @@ BOOL _CalendarView::GetMonthShowEndTime()
 
 void _CalendarView::SetMonthShowEndTime(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb71, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb71, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _CalendarView::GetBoldDatesWithItems()
@@ -29658,10 +26950,8 @@ BOOL _CalendarView::GetBoldDatesWithItems()
 
 void _CalendarView::SetBoldDatesWithItems(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb73, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb73, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _CalendarView::GetDayWeekTimeFont()
@@ -29701,10 +26991,8 @@ long _CalendarView::GetDaysInMultiDayMode()
 
 void _CalendarView::SetDaysInMultiDayMode(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb82, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb82, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 VARIANT _CalendarView::GetDisplayedDates()
@@ -29723,10 +27011,8 @@ BOOL _CalendarView::GetBoldSubjects()
 
 void _CalendarView::SetBoldSubjects(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfc11, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfc11, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 
@@ -29772,10 +27058,8 @@ void _TimelineView::Apply()
 LPDISPATCH _TimelineView::Copy(LPCTSTR Name, long SaveOption)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4;
-	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, SaveOption);
+	static BYTE parms[] = VTS_BSTR VTS_I4;
+	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, SaveOption);
 	return result;
 }
 
@@ -29803,10 +27087,8 @@ CString _TimelineView::GetLanguage()
 
 void _TimelineView::SetLanguage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _TimelineView::GetLockUserChanges()
@@ -29818,10 +27100,8 @@ BOOL _TimelineView::GetLockUserChanges()
 
 void _TimelineView::SetLockUserChanges(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _TimelineView::GetName()
@@ -29833,10 +27113,8 @@ CString _TimelineView::GetName()
 
 void _TimelineView::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _TimelineView::GetSaveOption()
@@ -29869,18 +27147,14 @@ CString _TimelineView::GetXml()
 
 void _TimelineView::SetXml(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _TimelineView::GoToDate(DATE Date)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Date);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Date);
 }
 
 CString _TimelineView::GetFilter()
@@ -29892,10 +27166,8 @@ CString _TimelineView::GetFilter()
 
 void _TimelineView::SetFilter(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TimelineView::GetStartField()
@@ -29907,10 +27179,8 @@ CString _TimelineView::GetStartField()
 
 void _TimelineView::SetStartField(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x2101, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x2101, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 CString _TimelineView::GetEndField()
@@ -29922,10 +27192,8 @@ CString _TimelineView::GetEndField()
 
 void _TimelineView::SetEndField(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfb7b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfb7b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _TimelineView::GetGroupByFields()
@@ -29944,10 +27212,8 @@ long _TimelineView::GetDefaultExpandCollapseSetting()
 
 void _TimelineView::SetDefaultExpandCollapseSetting(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb80, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb80, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TimelineView::GetShowWeekNumbers()
@@ -29959,10 +27225,8 @@ BOOL _TimelineView::GetShowWeekNumbers()
 
 void _TimelineView::SetShowWeekNumbers(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb75, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb75, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _TimelineView::GetMaxLabelWidth()
@@ -29974,10 +27238,8 @@ long _TimelineView::GetMaxLabelWidth()
 
 void _TimelineView::SetMaxLabelWidth(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfa2b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfa2b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TimelineView::GetShowLabelWhenViewingByMonth()
@@ -29989,10 +27251,8 @@ BOOL _TimelineView::GetShowLabelWhenViewingByMonth()
 
 void _TimelineView::SetShowLabelWhenViewingByMonth(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfb74, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfb74, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _TimelineView::GetUpperScaleFont()
@@ -30025,10 +27285,8 @@ long _TimelineView::GetTimelineViewMode()
 
 void _TimelineView::SetTimelineViewMode(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfb88, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfb88, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -30089,10 +27347,8 @@ long _MailModule::GetPosition()
 
 void _MailModule::SetPosition(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _MailModule::GetVisible()
@@ -30104,10 +27360,8 @@ BOOL _MailModule::GetVisible()
 
 void _MailModule::SetVisible(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _MailModule::GetNavigationGroups()
@@ -30162,38 +27416,30 @@ long _NavigationGroups::GetCount()
 LPDISPATCH _NavigationGroups::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _NavigationGroups::Create(LPCTSTR GroupDisplayName)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfbbd, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		GroupDisplayName);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfbbd, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, GroupDisplayName);
 	return result;
 }
 
 void _NavigationGroups::Delete(LPDISPATCH Group)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfbbe, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Group);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfbbe, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Group);
 }
 
 LPDISPATCH _NavigationGroups::GetDefaultNavigationGroup(long DefaultFolderGroup)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbbf, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		DefaultFolderGroup);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbbf, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, DefaultFolderGroup);
 	return result;
 }
 
@@ -30255,10 +27501,8 @@ CString _NavigationGroup::GetName()
 
 void _NavigationGroup::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x2102, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x2102, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _NavigationGroup::GetPosition()
@@ -30270,10 +27514,8 @@ long _NavigationGroup::GetPosition()
 
 void _NavigationGroup::SetPosition(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbc7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbc7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -30321,29 +27563,23 @@ long _NavigationFolders::GetCount()
 LPDISPATCH _NavigationFolders::Item(const VARIANT& Index)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&Index);
+	static BYTE parms[] = VTS_VARIANT;
+	InvokeHelper(0x51, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, &Index);
 	return result;
 }
 
 LPDISPATCH _NavigationFolders::Add(LPDISPATCH Folder)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfbc2, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Folder);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfbc2, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Folder);
 	return result;
 }
 
 void _NavigationFolders::Remove(LPDISPATCH RemovableFolder)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfbc3, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 RemovableFolder);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfbc3, DISPATCH_METHOD, VT_EMPTY, NULL, parms, RemovableFolder);
 }
 
 
@@ -30397,10 +27633,8 @@ BOOL _NavigationFolder::GetIsSelected()
 
 void _NavigationFolder::SetIsSelected(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbc5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbc5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 BOOL _NavigationFolder::GetIsSideBySide()
@@ -30412,10 +27646,8 @@ BOOL _NavigationFolder::GetIsSideBySide()
 
 void _NavigationFolder::SetIsSideBySide(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbc6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbc6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 long _NavigationFolder::GetPosition()
@@ -30427,10 +27659,8 @@ long _NavigationFolder::GetPosition()
 
 void _NavigationFolder::SetPosition(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbc7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbc7, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _NavigationFolder::GetIsRemovable()
@@ -30505,10 +27735,8 @@ long _CalendarModule::GetPosition()
 
 void _CalendarModule::SetPosition(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _CalendarModule::GetVisible()
@@ -30520,10 +27748,8 @@ BOOL _CalendarModule::GetVisible()
 
 void _CalendarModule::SetVisible(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _CalendarModule::GetNavigationGroups()
@@ -30591,10 +27817,8 @@ long _ContactsModule::GetPosition()
 
 void _ContactsModule::SetPosition(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _ContactsModule::GetVisible()
@@ -30606,10 +27830,8 @@ BOOL _ContactsModule::GetVisible()
 
 void _ContactsModule::SetVisible(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _ContactsModule::GetNavigationGroups()
@@ -30677,10 +27899,8 @@ long _TasksModule::GetPosition()
 
 void _TasksModule::SetPosition(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _TasksModule::GetVisible()
@@ -30692,10 +27912,8 @@ BOOL _TasksModule::GetVisible()
 
 void _TasksModule::SetVisible(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _TasksModule::GetNavigationGroups()
@@ -30763,10 +27981,8 @@ long _JournalModule::GetPosition()
 
 void _JournalModule::SetPosition(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _JournalModule::GetVisible()
@@ -30778,10 +27994,8 @@ BOOL _JournalModule::GetVisible()
 
 void _JournalModule::SetVisible(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _JournalModule::GetNavigationGroups()
@@ -30849,10 +28063,8 @@ long _NotesModule::GetPosition()
 
 void _NotesModule::SetPosition(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbba, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 BOOL _NotesModule::GetVisible()
@@ -30864,10 +28076,8 @@ BOOL _NotesModule::GetVisible()
 
 void _NotesModule::SetVisible(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfbbb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 LPDISPATCH _NotesModule::GetNavigationGroups()
@@ -30886,10 +28096,8 @@ LPDISPATCH _NotesModule::GetNavigationGroups()
 
 void NavigationPaneEvents_12::ModuleSwitch(LPDISPATCH CurrentModule)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfbc9, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 CurrentModule);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfbc9, DISPATCH_METHOD, VT_EMPTY, NULL, parms, CurrentModule);
 }
 
 
@@ -30901,18 +28109,14 @@ void NavigationPaneEvents_12::ModuleSwitch(LPDISPATCH CurrentModule)
 
 void NavigationGroupsEvents_12::SelectedChange(LPDISPATCH NavigationFolder)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfbca, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 NavigationFolder);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfbca, DISPATCH_METHOD, VT_EMPTY, NULL, parms, NavigationFolder);
 }
 
 void NavigationGroupsEvents_12::NavigationFolderAdd(LPDISPATCH NavigationFolder)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfbcb, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 NavigationFolder);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfbcb, DISPATCH_METHOD, VT_EMPTY, NULL, parms, NavigationFolder);
 }
 
 void NavigationGroupsEvents_12::NavigationFolderRemove()
@@ -30963,10 +28167,8 @@ void _BusinessCardView::Apply()
 LPDISPATCH _BusinessCardView::Copy(LPCTSTR Name, long SaveOption)
 {
 	LPDISPATCH result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4;
-	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		Name, SaveOption);
+	static BYTE parms[] = VTS_BSTR VTS_I4;
+	InvokeHelper(0xf032, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, SaveOption);
 	return result;
 }
 
@@ -30994,10 +28196,8 @@ CString _BusinessCardView::GetLanguage()
 
 void _BusinessCardView::SetLanguage(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa41, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 BOOL _BusinessCardView::GetLockUserChanges()
@@ -31009,10 +28209,8 @@ BOOL _BusinessCardView::GetLockUserChanges()
 
 void _BusinessCardView::SetLockUserChanges(BOOL bNewValue)
 {
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
+	static BYTE parms[] = VTS_BOOL;
+	InvokeHelper(0xfa40, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, bNewValue);
 }
 
 CString _BusinessCardView::GetName()
@@ -31024,10 +28222,8 @@ CString _BusinessCardView::GetName()
 
 void _BusinessCardView::SetName(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x0, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 long _BusinessCardView::GetSaveOption()
@@ -31060,18 +28256,14 @@ CString _BusinessCardView::GetXml()
 
 void _BusinessCardView::SetXml(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0xfa3c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 void _BusinessCardView::GoToDate(DATE Date)
 {
-	static BYTE parms[] =
-		VTS_DATE;
-	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 Date);
+	static BYTE parms[] = VTS_DATE;
+	InvokeHelper(0xfa36, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Date);
 }
 
 CString _BusinessCardView::GetFilter()
@@ -31083,10 +28275,8 @@ CString _BusinessCardView::GetFilter()
 
 void _BusinessCardView::SetFilter(LPCTSTR lpszNewValue)
 {
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 lpszNewValue);
+	static BYTE parms[] = VTS_BSTR;
+	InvokeHelper(0x199, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, lpszNewValue);
 }
 
 LPDISPATCH _BusinessCardView::GetHeadingsFont()
@@ -31112,10 +28302,8 @@ long _BusinessCardView::GetCardSize()
 
 void _BusinessCardView::SetCardSize(long nNewValue)
 {
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0xfbda, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+	static BYTE parms[] = VTS_I4;
+	InvokeHelper(0xfbda, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, nNewValue);
 }
 
 
@@ -31125,40 +28313,34 @@ void _BusinessCardView::SetCardSize(long nNewValue)
 /////////////////////////////////////////////////////////////////////////////
 // _FormRegionStartup operations
 
-VARIANT _FormRegionStartup::GetFormRegionStorage(LPCTSTR FormRegionName, LPDISPATCH Item, long LCID, long FormRegionMode, long FormRegionSize)
+VARIANT _FormRegionStartup::GetFormRegionStorage(LPCTSTR FormRegionName, LPDISPATCH Item, long LCID,
+	long FormRegionMode, long FormRegionSize)
 {
 	VARIANT result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_DISPATCH VTS_I4 VTS_I4 VTS_I4;
-	InvokeHelper(0xfb36, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms,
-		FormRegionName, Item, LCID, FormRegionMode, FormRegionSize);
+	static BYTE parms[] = VTS_BSTR VTS_DISPATCH VTS_I4 VTS_I4 VTS_I4;
+	InvokeHelper(0xfb36, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms, FormRegionName, Item, LCID, FormRegionMode,
+		FormRegionSize);
 	return result;
 }
 
 void _FormRegionStartup::BeforeFormRegionShow(LPDISPATCH FormRegion)
 {
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfb3d, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 FormRegion);
+	static BYTE parms[] = VTS_DISPATCH;
+	InvokeHelper(0xfb3d, DISPATCH_METHOD, VT_EMPTY, NULL, parms, FormRegion);
 }
 
 VARIANT _FormRegionStartup::GetFormRegionManifest(LPCTSTR FormRegionName, long LCID)
 {
 	VARIANT result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4;
-	InvokeHelper(0xfc33, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms,
-		FormRegionName, LCID);
+	static BYTE parms[] = VTS_BSTR VTS_I4;
+	InvokeHelper(0xfc33, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms, FormRegionName, LCID);
 	return result;
 }
 
 VARIANT _FormRegionStartup::GetFormRegionIcon(LPCTSTR FormRegionName, long LCID, long Icon)
 {
 	VARIANT result;
-	static BYTE parms[] =
-		VTS_BSTR VTS_I4 VTS_I4;
-	InvokeHelper(0xfc34, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms,
-		FormRegionName, LCID, Icon);
+	static BYTE parms[] = VTS_BSTR VTS_I4 VTS_I4;
+	InvokeHelper(0xfc34, DISPATCH_METHOD, VT_VARIANT, (void*)&result, parms, FormRegionName, LCID, Icon);
 	return result;
 }

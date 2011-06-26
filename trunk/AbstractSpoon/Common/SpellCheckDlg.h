@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -97,7 +102,8 @@ class CSpellCheckDlg : public CRuntimeDlg
 {
 // Construction
 public:
-	CSpellCheckDlg(LPCTSTR szDictionaryPath = NULL, ISpellCheck* pSpellCheck = NULL, LPCTSTR szText = NULL, CWnd* pParent = NULL);   // standard constructor
+	CSpellCheckDlg(LPCTSTR szDictionaryPath = NULL, ISpellCheck* pSpellCheck = NULL, LPCTSTR szText = NULL,
+		CWnd* pParent = NULL);   // standard constructor
 	virtual ~CSpellCheckDlg();
 
 	BOOL IsInitialized()
@@ -126,8 +132,8 @@ public:
 protected:
 // Dialog Data
 	//{{AFX_DATA(CSpellCheckDlg)
-	CRichEditBaseCtrl   m_reText;
-	CListBox    m_lbSuggestions;
+	CRichEditBaseCtrl m_reText;
+	CListBox m_lbSuggestions;
 	CString m_sText;
 	CString m_sMisspeltWord;
 	CString m_sSuggestion;
@@ -170,7 +176,12 @@ protected:
 	afx_msg void OnDblClkSuggestions();
 	DECLARE_MESSAGE_MAP()
 
-	enum CHECKFROM { CH_START, CH_CURRENT, CH_NEXT };
+	enum CHECKFROM
+	{
+		CH_START,
+		CH_CURRENT,
+		CH_NEXT
+	};
 
 	BOOL StartChecking(CHECKFROM nFrom = CH_START);
 	BOOL FindNextWord(CString& sWord, CHECKFROM nFrom = CH_NEXT);

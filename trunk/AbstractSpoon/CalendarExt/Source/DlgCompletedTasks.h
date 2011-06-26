@@ -7,6 +7,11 @@
 // - improved compatibility with the Unicode-based builds
 // - adjusted #include's paths
 // - slightly reformatted source code
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #ifndef _DLGCOMPLETEDTASKS_H_
@@ -55,9 +60,9 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
-	void    UpdateFlags();
+	void UpdateFlags();
 
-	DWORD   m_dwFlags;
+	DWORD m_dwFlags;
 };
 
 //{{AFX_INSERT_LOCATION}}

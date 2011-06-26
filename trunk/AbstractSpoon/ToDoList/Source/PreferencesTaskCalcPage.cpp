@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -62,7 +67,7 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CPreferencesTaskCalcPage, CPreferencesPageBase)
 
-CPreferencesTaskCalcPage::CPreferencesTaskCalcPage() :
+CPreferencesTaskCalcPage::CPreferencesTaskCalcPage():
 CPreferencesPageBase(CPreferencesTaskCalcPage::IDD)
 {
 	//{{AFX_DATA_INIT(CPreferencesTaskCalcPage)
@@ -178,7 +183,8 @@ void CPreferencesTaskCalcPage::LoadPreferences(const CPreferences& prefs)
 	m_bDueTasksHaveHighestPriority = prefs.GetProfileInt(_T("Preferences"), _T("DueTasksHaveHighestPriority"), FALSE);
 	m_bDoneTasksHaveLowestPriority = prefs.GetProfileInt(_T("Preferences"), _T("DoneTasksHaveLowestPriority"), TRUE);
 	m_bNoDueDateDueToday = prefs.GetProfileInt(_T("Preferences"), _T("NoDueDateIsDueToday"), FALSE);
-	m_bWeightPercentCompletionByNumSubtasks = prefs.GetProfileInt(_T("Preferences"), _T("WeightPercentCompletionByNumSubtasks"), TRUE);
+	m_bWeightPercentCompletionByNumSubtasks = prefs.GetProfileInt(_T("Preferences"),
+		_T("WeightPercentCompletionByNumSubtasks"), TRUE);
 	m_nCalcRemainingTime = prefs.GetProfileInt(_T("Preferences"), _T("CalcRemainingTime"), 0);
 
 	// fix up m_bAveragePercentSubCompletion because it's overridden by m_bAutoCalcPercentDone
@@ -199,7 +205,8 @@ void CPreferencesTaskCalcPage::SavePreferences(CPreferences& prefs)
 	prefs.WriteProfileInt(_T("Preferences"), _T("UseHighestPriority"), m_bUseHighestPriority);
 	prefs.WriteProfileInt(_T("Preferences"), _T("AutoCalcTimeEst"), m_bAutoCalcTimeEst);
 	prefs.WriteProfileInt(_T("Preferences"), _T("IncludeDoneInPriorityCalc"), m_bIncludeDoneInPriorityRiskCalc);
-	prefs.WriteProfileInt(_T("Preferences"), _T("WeightPercentCompletionByNumSubtasks"), m_bWeightPercentCompletionByNumSubtasks);
+	prefs.WriteProfileInt(_T("Preferences"), _T("WeightPercentCompletionByNumSubtasks"),
+		m_bWeightPercentCompletionByNumSubtasks);
 	prefs.WriteProfileInt(_T("Preferences"), _T("AutoCalcPercentDone"), m_bAutoCalcPercentDone);
 	prefs.WriteProfileInt(_T("Preferences"), _T("AutoAdjustDependents"), m_bAutoAdjustDependents);
 	prefs.WriteProfileInt(_T("Preferences"), _T("DueTasksHaveHighestPriority"), m_bDueTasksHaveHighestPriority);

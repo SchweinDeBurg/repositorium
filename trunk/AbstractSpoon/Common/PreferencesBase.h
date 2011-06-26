@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -66,8 +71,12 @@ public:
 	CPreferencesPageBase(UINT nID = 0);
 	~CPreferencesPageBase();
 
-	virtual void LoadPreferences(const CPreferences& /*prefs*/) {}
-	virtual void SavePreferences(CPreferences& /*prefs*/) {}
+	virtual void LoadPreferences(const CPreferences& /*prefs*/)
+	{
+	}
+	virtual void SavePreferences(CPreferences& /*prefs*/)
+	{
+	}
 
 protected:
 	CWnd* GetDlgItem(UINT nID) const;

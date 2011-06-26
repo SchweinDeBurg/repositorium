@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_ABOUTDLG_H__31BB99EB_BB66_4016_82F1_8688520BE14A__INCLUDED_)
@@ -66,9 +71,8 @@ class CAboutDlg : public CRuntimeDlg
 {
 // Construction
 public:
-	CAboutDlg(UINT nAppIconID, AB_STYLE nStyle,
-		LPCTSTR szAppName, LPCTSTR szAppDescription, LPCTSTR szCopyright, LPCTSTR szLicense,
-		int nAppLines = 1, int nDescLines = 3, int nCopyrightLines = 2, int nLicenseLines = 2);
+	CAboutDlg(UINT nAppIconID, AB_STYLE nStyle, LPCTSTR szAppName, LPCTSTR szAppDescription, LPCTSTR szCopyright,
+		LPCTSTR szLicense, int nAppLines = 1, int nDescLines = 3, int nCopyrightLines = 2, int nLicenseLines = 2);
 
 	int DoModal();
 

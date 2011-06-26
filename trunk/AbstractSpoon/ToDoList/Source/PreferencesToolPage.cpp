@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -67,7 +72,8 @@ const TCHAR* SAFEQUOTE = _T("{QUOTES}");
 
 IMPLEMENT_DYNCREATE(CPreferencesToolPage, CPreferencesPageBase)
 
-CPreferencesToolPage::CPreferencesToolPage() : CPreferencesPageBase(CPreferencesToolPage::IDD),
+CPreferencesToolPage::CPreferencesToolPage():
+CPreferencesPageBase(CPreferencesToolPage::IDD),
 m_eToolPath(FES_COMBOSTYLEBTN | FES_ALLOWURL),
 m_eIconPath(FES_COMBOSTYLEBTN)
 {
@@ -459,8 +465,7 @@ LRESULT CPreferencesToolPage::OnEEBtnClick(WPARAM wParam, LPARAM lParam)
 					tpmp.cbSize = sizeof(TPMPARAMS);
 					tpmp.rcExclude = rButton;
 
-					::TrackPopupMenuEx(*pSubMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON,
-						rButton.right, rButton.top, *this, &tpmp);
+					::TrackPopupMenuEx(*pSubMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON, rButton.right, rButton.top, *this, &tpmp);
 				}
 			}
 		}

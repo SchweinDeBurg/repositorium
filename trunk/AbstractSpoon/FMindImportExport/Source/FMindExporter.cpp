@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -81,7 +86,7 @@ bool CFMindExporter::Export(const ITaskList* pSrcTaskFile, const TCHAR* szDestFi
 	const ITaskList7* pITL7 = GetITLInterface<ITaskList7>(pSrcTaskFile, IID_TASKLIST7);
 	ASSERT(pITL7);
 
-	ExportTask(pITL7, pITL7->GetFirstTask(), firstItem , 0);
+	ExportTask(pITL7, pITL7->GetFirstTask(), firstItem, 0);
 
 	// save output manually to restore non-escaping of &
 	CString sOutput;
@@ -117,7 +122,7 @@ bool CFMindExporter::Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szD
 			attribManItem->AddItem(_T("SHOW_ATTRIBUTES"), _T("hide"));
 
 			// export first task
-			ExportTask(pITL7, pITL7->GetFirstTask(), firstItem , 0);
+			ExportTask(pITL7, pITL7->GetFirstTask(), firstItem, 0);
 		}
 	}
 
@@ -156,7 +161,7 @@ CString CFMindExporter::Translate(LPCTSTR szText)
 	return sTranslated;
 }
 
-void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CXmlItem* pXIDestParent , int LEVEL)
+void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CXmlItem* pXIDestParent, int LEVEL)
 {
 	if (!hTask)
 	{
@@ -385,14 +390,14 @@ void CFMindExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
 		{
 			pXIDestItem->AddItem(_T("POSITION"), _T("left"));
 		}
-		bRight = ! bRight;
+		bRight = !bRight;
 	}
 
 	// copy across first child
-	ExportTask(pSrcTaskFile, pSrcTaskFile->GetFirstTask(hTask), pXIDestItem , LEVEL + 1);
+	ExportTask(pSrcTaskFile, pSrcTaskFile->GetFirstTask(hTask), pXIDestItem, LEVEL + 1);
 
 	// copy across first sibling
-	ExportTask(pSrcTaskFile, pSrcTaskFile->GetNextTask(hTask), pXIDestParent , LEVEL);
+	ExportTask(pSrcTaskFile, pSrcTaskFile->GetNextTask(hTask), pXIDestParent, LEVEL);
 }
 
 CString CFMindExporter::FormatDate(time_t tDate)

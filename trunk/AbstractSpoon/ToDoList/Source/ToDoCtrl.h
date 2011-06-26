@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -244,8 +249,7 @@ public:
 	void SetDefaultCategoryNames(const CStringArray& aNames);
 	void SetDefaultStatusNames(const CStringArray& aNames);
 
-	HTREEITEM NewTask(LPCTSTR szText, TDC_INSERTWHERE nWhere = TDC_INSERTATTOPOFSELTASKPARENT,
-		BOOL bEditText = TRUE);
+	HTREEITEM NewTask(LPCTSTR szText, TDC_INSERTWHERE nWhere = TDC_INSERTATTOPOFSELTASKPARENT, BOOL bEditText = TRUE);
 	void SetSubtaskDragDropPos(BOOL bTop = TRUE)
 	{
 		m_bDragDropSubtasksAtTop = bTop;
@@ -399,8 +403,8 @@ public:
 	virtual BOOL IsMultiSorting() const;
 	static int CALLBACK SortFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
 	static int CALLBACK SortFuncMulti(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
-	static int SortTasks(LPARAM lParam1, LPARAM lParam2, TDC_SORTBY nSortBy, BOOL bAscending,
-		BOOL bSortDueTodayHigh, DWORD dwTimeTrackedID, const CToDoCtrlData* pData);
+	static int SortTasks(LPARAM lParam1, LPARAM lParam2, TDC_SORTBY nSortBy, BOOL bAscending, BOOL bSortDueTodayHigh,
+		DWORD dwTimeTrackedID, const CToDoCtrlData* pData);
 
 	// move functions
 	virtual BOOL MoveSelectedTask(TDC_MOVETASK nDirection);
@@ -805,8 +809,8 @@ protected:
 	virtual void Resize(int cx = 0, int cy = 0);
 	int CalcVisibleCtrlCount();
 	BOOL IsCtrlShowing(const CTRLITEM& ctrl);
-	void ReposControl(const CTRLITEM& ctrl, CDeferWndMove* pDWM, const CDlgUnits* pDLU,
-		int nCol, int nTop, int nClientRight);
+	void ReposControl(const CTRLITEM& ctrl, CDeferWndMove* pDWM, const CDlgUnits* pDLU, int nCol, int nTop,
+		int nClientRight);
 	void ReposComments(int cx, int cy, CDeferWndMove* pDWM, CRect& rComments /*out*/);
 	int GetMinNonCommentSize();
 	virtual void ReposTaskTree(CDeferWndMove* pDWM, const CRect& rPos);
@@ -818,12 +822,16 @@ protected:
 	void InitEditPrompts();
 
 	int AddTreeChildrenToTaskFile(HTREEITEM hti, CTaskFile& file, HTASKITEM hTask, const TDCGETTASKS& filter) const;
-	BOOL AddTreeItemToTaskFile(HTREEITEM hti, CTaskFile& file, HTASKITEM hParentTask, const TDCGETTASKS& filter, int nPos) const;
+	BOOL AddTreeItemToTaskFile(HTREEITEM hti, CTaskFile& file, HTASKITEM hParentTask, const TDCGETTASKS& filter,
+		int nPos) const;
 	BOOL AddSubTasksToTaskFile(const TODOSTRUCTURE* pTDSParent, CTaskFile& tasks, HTASKITEM hParentTask) const;
-	BOOL AddTaskToTaskFile(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, int nPos, CTaskFile& tasks, HTASKITEM hParentTask) const;
-	BOOL SetTaskAttributes(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, CTaskFile& file, HTASKITEM hTask, const TDCGETTASKS& filter, int nPos, BOOL bTitleCommentsOnly) const;
+	BOOL AddTaskToTaskFile(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, int nPos, CTaskFile& tasks,
+		HTASKITEM hParentTask) const;
+	BOOL SetTaskAttributes(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, CTaskFile& file, HTASKITEM hTask,
+		const TDCGETTASKS& filter, int nPos, BOOL bTitleCommentsOnly) const;
 
-	HTREEITEM AddTaskToTreeItem(const CTaskFile& file, HTASKITEM hTask, HTREEITEM htiParent = NULL, HTREEITEM htiAfter = TVI_LAST, TDC_RESETIDS nResetID = TDCR_NO);
+	HTREEITEM AddTaskToTreeItem(const CTaskFile& file, HTASKITEM hTask, HTREEITEM htiParent = NULL,
+		HTREEITEM htiAfter = TVI_LAST, TDC_RESETIDS nResetID = TDCR_NO);
 	BOOL AddTasksToTree(const CTaskFile& tasks, HTREEITEM htiDest, HTREEITEM htiDestAfter, TDC_RESETIDS nResetID);
 	HTREEITEM InsertItem(LPCTSTR szText, HTREEITEM htiParent, HTREEITEM htiAfter, BOOL bEdit);
 	BOOL GetInsertLocation(TDC_INSERTWHERE nWhere, HTREEITEM& htiDest, HTREEITEM& htiDestAfter);
@@ -888,8 +896,8 @@ protected:
 
 	typedef CMap<DWORD, DWORD, DWORD, DWORD&> CMapID2ID;
 	void PrepareTaskIDsForPaste(CTaskFile& tasks, TDC_RESETIDS nResetID) const;
-	void BuildTaskIDMapForPaste(CTaskFile& tasks, HTASKITEM hTask,
-		DWORD& dwNextID, CMapID2ID& mapID, TDC_RESETIDS nResetID) const;
+	void BuildTaskIDMapForPaste(CTaskFile& tasks, HTASKITEM hTask, DWORD& dwNextID, CMapID2ID& mapID,
+		TDC_RESETIDS nResetID) const;
 	void PrepareTaskIDsForPaste(CTaskFile& tasks, HTASKITEM hTask, const CMapID2ID& mapID) const;
 	BOOL PrepareTaskIDsForPaste(CString& sLink, const CMapID2ID& mapID) const;
 
@@ -915,7 +923,8 @@ protected:
 	BOOL DrawItem(DWORD dwID, const NCGDRAWITEM* pNCGDI, TDI_STATE nState);
 	BOOL DrawItem(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const NCGDRAWITEM* pNCGDI, TDI_STATE nState);
 	void GetItemColors(DWORD dwID, NCGITEMCOLORS* pColors, TDI_STATE nState);
-	void DrawCommentsText(CDC* pDC, const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const CRect& rText, TDI_STATE nState);
+	void DrawCommentsText(CDC* pDC, const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, const CRect& rText,
+		TDI_STATE nState);
 	void DrawItemBackColor(CDC* pDC, const LPRECT rect, COLORREF crBack);
 
 	void MultiSortTree(const TDSORTCOLUMNS& sort, HTREEITEM htiRoot = NULL, BOOL bSortChildren = TRUE);

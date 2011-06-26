@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TabbedComboBox.cpp : implementation file
@@ -57,7 +62,9 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTabbedComboBox
 
-CTabbedComboBox::CTabbedComboBox(int nTabStops) : TABSTOPS(nTabStops), m_bResized(FALSE)
+CTabbedComboBox::CTabbedComboBox(int nTabStops):
+TABSTOPS(nTabStops),
+m_bResized(FALSE)
 {
 }
 

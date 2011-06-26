@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -119,7 +124,7 @@ protected:
 
 	static int BuildAttribList(const ITaskList8* pTasks, HTASKITEM hTask, CTDCAttributeArray& aAttributes);
 	static void CheckAddAttribtoList(const ITaskList8* pTasks, HTASKITEM hTask, TDC_ATTRIBUTE attrib,
-			LPCTSTR szAttribName, CTDCAttributeArray& aAttrib);
+		LPCTSTR szAttribName, CTDCAttributeArray& aAttrib);
 
 	CString CalcIndent(int nDepth) const;
 

@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // PlainTextImportApp.cpp : Defines the initialization routines for the DLL.
@@ -44,8 +49,7 @@ static char THIS_FILE[] = __FILE__;
 
 static AFX_EXTENSION_MODULE AfxdllDLL = { NULL, NULL };
 
-extern "C" int APIENTRY
-DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
+extern "C" int APIENTRY DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
 	// Remove this if you use lpReserved
 	UNREFERENCED_PARAMETER(lpReserved);

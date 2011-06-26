@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -64,7 +69,13 @@
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesUITasklistColorsPage dialog
 
-enum { COLOROPT_CATEGORY, COLOROPT_PRIORITY, COLOROPT_DEFAULT, COLOROPT_NONE };
+enum
+{
+	COLOROPT_CATEGORY,
+	COLOROPT_PRIORITY,
+	COLOROPT_DEFAULT,
+	COLOROPT_NONE
+};
 
 struct CATCOLOR
 {
@@ -134,47 +145,47 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesUITasklistColorsPage)
 	enum { IDD = IDD_PREFUITASKLISTCOLORS_PAGE };
-	CAutoComboBox   m_cbCategories;
-	BOOL    m_bColorTaskBackground;
-	BOOL    m_bCommentsUseTreeFont;
-	BOOL    m_bHLSColorGradient;
-	BOOL    m_bHidePriorityNumber;
-	BOOL    m_bAlternateLineColor;
-	int     m_nTextColorOption;
+	CAutoComboBox m_cbCategories;
+	BOOL m_bColorTaskBackground;
+	BOOL m_bCommentsUseTreeFont;
+	BOOL m_bHLSColorGradient;
+	BOOL m_bHidePriorityNumber;
+	BOOL m_bAlternateLineColor;
+	int m_nTextColorOption;
 	CString m_sSelCategory;
-	BOOL    m_bSpecifyDueColor;
+	BOOL m_bSpecifyDueColor;
 	//}}AFX_DATA
-	BOOL    m_bSpecifyDueTodayColor;
-	BOOL    m_bSpecifyGridColor;
-	BOOL    m_bSpecifyDoneColor;
-	BOOL    m_bSpecifyFlaggedColor;
-	CColorButton    m_btFilteredColor;
-	CColorButton    m_btCatColor;
-	CColorButton    m_btDoneColor;
-	CColorButton    m_btGridlineColor;
-	CColorButton    m_btDueColor;
-	CColorButton    m_btDueTodayColor;
-	CColorButton    m_btFlaggedColor;
-	CComboBox   m_cbTreeFontSize, m_cbCommentsFontSize;
-	CFontComboBox   m_cbTreeFonts, m_cbCommentsFonts;
-	BOOL    m_bSpecifyTreeFont;
-	BOOL    m_bSpecifyCommentsFont;
-	CColorButton    m_btSetColor;
-	CColorButton    m_btLowColor;
-	CColorButton    m_btHighColor;
-	BOOL    m_bColorPriority;
-	int     m_bGradientPriorityColors;
-	int     m_nSelPriorityColor;
-	BOOL    m_bShowTimeColumn;
+	BOOL m_bSpecifyDueTodayColor;
+	BOOL m_bSpecifyGridColor;
+	BOOL m_bSpecifyDoneColor;
+	BOOL m_bSpecifyFlaggedColor;
+	CColorButton m_btFilteredColor;
+	CColorButton m_btCatColor;
+	CColorButton m_btDoneColor;
+	CColorButton m_btGridlineColor;
+	CColorButton m_btDueColor;
+	CColorButton m_btDueTodayColor;
+	CColorButton m_btFlaggedColor;
+	CComboBox m_cbTreeFontSize, m_cbCommentsFontSize;
+	CFontComboBox m_cbTreeFonts, m_cbCommentsFonts;
+	BOOL m_bSpecifyTreeFont;
+	BOOL m_bSpecifyCommentsFont;
+	CColorButton m_btSetColor;
+	CColorButton m_btLowColor;
+	CColorButton m_btHighColor;
+	BOOL m_bColorPriority;
+	int m_bGradientPriorityColors;
+	int m_nSelPriorityColor;
+	BOOL m_bShowTimeColumn;
 	CDWordArray m_aPriorityColors;
 	CCatColorArray m_aCategoryColors;
 	COLORREF m_crLow, m_crHigh;
 	CString m_sTreeFont;
-	int     m_nTreeFontSize;
+	int m_nTreeFontSize;
 	CString m_sCommentsFont;
-	int     m_nCommentsFontSize;
+	int m_nCommentsFontSize;
 	COLORREF m_crGridlines, m_crDone;
-	CColorButton    m_btAltLineColor;
+	CColorButton m_btAltLineColor;
 	COLORREF m_crAltLine;
 	COLORREF m_crDue, m_crDueToday;
 	CGroupLineManager m_mgrGroupLines;

@@ -18,6 +18,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // Encryption.h: interface for the CEncryption class.
@@ -69,21 +74,21 @@ public:
 	virtual ~CEncryption();
 
 	void Release();
-	bool Encrypt(const unsigned char* szInput, int nLenInput, const char* szPassword,
-		unsigned char*& pOutput, int& nLenOutput);
-	bool Decrypt(const unsigned char* pInput, int nLenInput, const char* szPassword,
-		unsigned char*& pOutput, int& nLenOutput);
+	bool Encrypt(const unsigned char* szInput, int nLenInput, const char* szPassword, unsigned char*& pOutput,
+		int& nLenOutput);
+	bool Decrypt(const unsigned char* pInput, int nLenInput, const char* szPassword, unsigned char*& pOutput,
+		int& nLenOutput);
 	void FreeBuffer(unsigned char*& pBuffer);
 
 private:
 	// Encrypt the master key a few times to make brute-force key-search harder
 	BOOL _TransformMasterKey(BYTE* pKeySeed);
 
-	BYTE    m_pMasterKey[32]; // Master key used to encrypt the whole database
-	BYTE    m_pTransformedMasterKey[32]; // Master key encrypted several times
-	DWORD   m_dwKeyEncRounds;
+	BYTE m_pMasterKey[32]; // Master key used to encrypt the whole database
+	BYTE m_pTransformedMasterKey[32]; // Master key encrypted several times
+	DWORD m_dwKeyEncRounds;
 
-	CNewRandom  m_random; // Pseudo-random number generator
+	CNewRandom m_random; // Pseudo-random number generator
 
 };
 

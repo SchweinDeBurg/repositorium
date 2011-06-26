@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -124,23 +129,23 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesMultiUserPage)
 	enum { IDD = IDD_PREFMULTIUSER_PAGE };
-	CComboBox   m_cbNoEditTime;
-	BOOL    m_bCheckinNoChange;
-	BOOL    m_bUse3rdPartySourceControl;
-	BOOL    m_bIncludeUserNameInCheckout;
+	CComboBox m_cbNoEditTime;
+	BOOL m_bCheckinNoChange;
+	BOOL m_bUse3rdPartySourceControl;
+	BOOL m_bIncludeUserNameInCheckout;
 	//}}AFX_DATA
-	CComboBox   m_cbRemoteFileCheck;
-	BOOL    m_bEnableSourceControl;
-	BOOL    m_bSourceControlLanOnly;
-	BOOL    m_bAutoCheckOut;
-	BOOL    m_bCheckoutOnCheckin;
-	int     m_nReadonlyReloadOption;
-	int     m_nTimestampReloadOption;
-	BOOL    m_bCheckinOnClose;
-	UINT    m_nRemoteFileCheckFreq;
-	BOOL    m_bPromptReloadOnWritable;
-	BOOL    m_bPromptReloadOnTimestamp;
-	UINT    m_nCheckinNoEditTime;
+	CComboBox m_cbRemoteFileCheck;
+	BOOL m_bEnableSourceControl;
+	BOOL m_bSourceControlLanOnly;
+	BOOL m_bAutoCheckOut;
+	BOOL m_bCheckoutOnCheckin;
+	int m_nReadonlyReloadOption;
+	int m_nTimestampReloadOption;
+	BOOL m_bCheckinOnClose;
+	UINT m_nRemoteFileCheckFreq;
+	BOOL m_bPromptReloadOnWritable;
+	BOOL m_bPromptReloadOnTimestamp;
+	UINT m_nCheckinNoEditTime;
 
 // Overrides
 	// ClassWizard generate virtual function overrides

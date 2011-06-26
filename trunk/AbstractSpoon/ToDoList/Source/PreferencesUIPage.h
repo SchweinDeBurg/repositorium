@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -173,32 +178,32 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesUIPage)
 	enum { IDD = IDD_PREFUI_PAGE };
-	CFileEdit   m_eUITheme;
-	BOOL    m_bShowCtrlsAsColumns;
-	BOOL    m_bShowCommentsAlways;
-	BOOL    m_bAutoReposCtrls;
-	BOOL    m_bSpecifyToolbarImage;
-	BOOL    m_bSharedCommentsHeight;
-	BOOL    m_bAutoHideTabbar;
-	BOOL    m_bStackTabbarItems;
-	BOOL    m_bRightAlignLabels;
-	BOOL    m_bFocusTreeOnEnter;
-	int     m_nNewTaskPos;
-	int     m_nNewSubtaskPos;
-	BOOL    m_bKeepTabsOrdered;
-	BOOL    m_bShowTasklistCloseButton;
-	BOOL    m_bRTLComments;
-	BOOL    m_bShowEditMenuAsColumns;
-	BOOL    m_bMultiSelFilters;
-	BOOL    m_bRestoreTasklistFilters;
-	BOOL    m_bAutoRefilter;
+	CFileEdit m_eUITheme;
+	BOOL m_bShowCtrlsAsColumns;
+	BOOL m_bShowCommentsAlways;
+	BOOL m_bAutoReposCtrls;
+	BOOL m_bSpecifyToolbarImage;
+	BOOL m_bSharedCommentsHeight;
+	BOOL m_bAutoHideTabbar;
+	BOOL m_bStackTabbarItems;
+	BOOL m_bRightAlignLabels;
+	BOOL m_bFocusTreeOnEnter;
+	int m_nNewTaskPos;
+	int m_nNewSubtaskPos;
+	BOOL m_bKeepTabsOrdered;
+	BOOL m_bShowTasklistCloseButton;
+	BOOL m_bRTLComments;
+	BOOL m_bShowEditMenuAsColumns;
+	BOOL m_bMultiSelFilters;
+	BOOL m_bRestoreTasklistFilters;
+	BOOL m_bAutoRefilter;
 	CString m_sUIThemeFile;
-	BOOL    m_bUseUITheme;
-	BOOL    m_bEnableLightboxMgr;
+	BOOL m_bUseUITheme;
+	BOOL m_bEnableLightboxMgr;
 	//}}AFX_DATA
-	int     m_nCommentsPos;
-	CContentTypeComboBox    m_cbCommentsFmt;
-	BOOL    m_bSortDoneTasksAtBottom;
+	int m_nCommentsPos;
+	CContentTypeComboBox m_cbCommentsFmt;
+	BOOL m_bSortDoneTasksAtBottom;
 	const CContentMgr* m_pContentMgr;
 	CGroupLineManager m_mgrGroupLines;
 	CONTENTFORMAT m_cfDefault;

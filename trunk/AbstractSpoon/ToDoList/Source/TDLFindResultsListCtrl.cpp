@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TDLFindResultsListCtrl.cpp : implementation file
@@ -224,13 +229,15 @@ void CTDLFindResultsListCtrl::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 		// draw a horizontal dividing line
 		pDC->DrawText(sText, rLabel, DT_TOP | DT_LEFT | DT_END_ELLIPSIS | DT_NOPREFIX | DT_CALCRECT);
-		pDC->FillSolidRect(rLabel.right + 6, rLabel.top + rLabel.Height() / 2, rItem.right - rLabel.right, 1, GetSysColor(COLOR_3DSHADOW));
+		pDC->FillSolidRect(rLabel.right + 6, rLabel.top + rLabel.Height() / 2, rItem.right - rLabel.right, 1,
+			GetSysColor(COLOR_3DSHADOW));
 
 		pDC->RestoreDC(nSave);
 	}
 }
 
-COLORREF CTDLFindResultsListCtrl::GetItemTextColor(int nItem, int nSubItem, BOOL bSelected, BOOL bDropHighlighted, BOOL bWndFocus) const
+COLORREF CTDLFindResultsListCtrl::GetItemTextColor(int nItem, int nSubItem, BOOL bSelected, BOOL bDropHighlighted,
+	BOOL bWndFocus) const
 {
 	if (!bSelected && !bDropHighlighted)
 	{
@@ -292,7 +299,8 @@ void CTDLFindResultsListCtrl::RefreshUserPreferences()
 	}
 }
 
-int CTDLFindResultsListCtrl::AddResult(const SEARCHRESULT& result, LPCTSTR szTask, LPCTSTR /*szPath*/, const CFilteredToDoCtrl* pTDC)
+int CTDLFindResultsListCtrl::AddResult(const SEARCHRESULT& result, LPCTSTR szTask, LPCTSTR/*szPath*/,
+	const CFilteredToDoCtrl* pTDC)
 {
 	int nPos = GetItemCount();
 

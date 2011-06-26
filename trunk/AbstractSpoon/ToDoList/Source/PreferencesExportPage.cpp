@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -66,7 +71,7 @@ const UINT RESETBTN = 0xc4;
 
 IMPLEMENT_DYNCREATE(CPreferencesExportPage, CPreferencesPageBase)
 
-CPreferencesExportPage::CPreferencesExportPage() :
+CPreferencesExportPage::CPreferencesExportPage():
 CPreferencesPageBase(CPreferencesExportPage::IDD),
 m_eTextIndent(_T("0123456789")),
 m_eLineSpaces(_T("0123456789"))
@@ -77,9 +82,8 @@ m_eLineSpaces(_T("0123456789"))
 	//}}AFX_DATA_INIT
 
 	// add a 'reset' button to the charset field
-	m_eCharset.InsertButton(0, ID_RESETCHARSET, RESETBTN,
-		CEnString(IDS_PEP_RESETCHARSET),
-		DEF_BTNWIDTH + 4, _T("Wingdings"));
+	m_eCharset.InsertButton(0, ID_RESETCHARSET, RESETBTN, CEnString(IDS_PEP_RESETCHARSET), DEF_BTNWIDTH + 4,
+		_T("Wingdings"));
 }
 
 CPreferencesExportPage::~CPreferencesExportPage()

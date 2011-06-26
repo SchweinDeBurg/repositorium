@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // XmlFileEx.cpp: implementation of the CXmlFileEx class.
@@ -71,7 +76,9 @@ const LPCTSTR ENCODEDDATA = _T("ENCODEDDATA");
 const LPCTSTR ENCODEDDATALEN = _T("DATALEN");
 
 CXmlFileEx::CXmlFileEx(LPCTSTR szRootItemName, LPCTSTR szPassword):
-CXmlFile(szRootItemName), m_pEncryptor(NULL), m_sPassword(szPassword)
+CXmlFile(szRootItemName),
+m_pEncryptor(NULL),
+m_sPassword(szPassword)
 {
 }
 
@@ -337,8 +344,8 @@ BOOL CXmlFileEx::Decrypt(LPCTSTR szInput, CString& sOutput, LPCTSTR szPassword)
 	unsigned char* pDecrypted = NULL;
 	int nLenDecrypted = 0;
 
-	if (!m_pEncryptor->Decrypt((unsigned char*)pDecodedDataBuffer, nReqBufLen, ATL::CT2A(szPassword),
-		pDecrypted, nLenDecrypted))
+	if (!m_pEncryptor->Decrypt((unsigned char*)pDecodedDataBuffer, nReqBufLen, ATL::CT2A(szPassword), pDecrypted,
+		nLenDecrypted))
 	{
 		return FALSE;
 	}

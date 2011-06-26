@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // ProgressDlg.cpp : implementation file
@@ -64,7 +69,8 @@ enum
 };
 
 
-CProgressDlg::CProgressDlg(BOOL bCancelButton, CWnd* /*pParent*/ /*=NULL*/) : m_bContinue(FALSE)
+CProgressDlg::CProgressDlg(BOOL bCancelButton, CWnd* /*pParent*/):
+m_bContinue(FALSE)
 {
 	//{{AFX_DATA_INIT(CProgressDlg)
 	m_sProgress = _T("");
@@ -181,7 +187,7 @@ BOOL CProgressDlg::Continue()
 	MSG msg;
 
 	// check messages for the cancel dialog
-	while (::PeekMessage((LPMSG) &msg, NULL, 0, 0, PM_REMOVE))
+	while (::PeekMessage((LPMSG)&msg, NULL, 0, 0, PM_REMOVE))
 	{
 		BOOL bDlgMsg = ::IsDialogMessage(*this, &msg);
 

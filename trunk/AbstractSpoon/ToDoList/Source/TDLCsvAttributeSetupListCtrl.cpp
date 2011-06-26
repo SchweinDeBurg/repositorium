@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TDLCsvAttributeSetupListCtrl.cpp : implementation file
@@ -55,16 +60,28 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-enum { IMPORT_COLUMNNAME, IMPORT_COLUMNID };
-enum { EXPORT_COLUMNID, EXPORT_COLUMNNAME };
+enum
+{
+	IMPORT_COLUMNNAME,
+	IMPORT_COLUMNID
+};
+enum
+{
+	EXPORT_COLUMNID,
+	EXPORT_COLUMNNAME
+};
 
-enum { ATTRIB_ID = 5000 };
+enum
+{
+	ATTRIB_ID = 5000
+};
 const int COL_WIDTH = 200;
 
 /////////////////////////////////////////////////////////////////////////////
 // CTDLCsvAttributeSetupListCtrl
 
-CTDLCsvAttributeSetupListCtrl::CTDLCsvAttributeSetupListCtrl(BOOL bImporting) : m_bImporting(bImporting)
+CTDLCsvAttributeSetupListCtrl::CTDLCsvAttributeSetupListCtrl(BOOL bImporting):
+m_bImporting(bImporting)
 {
 }
 
@@ -117,8 +134,8 @@ void CTDLCsvAttributeSetupListCtrl::PreSubclassWindow()
 
 		// ignore special attributes
 		if (att.attrib == TDCA_COLOR || att.attrib == TDCA_PROJNAME ||
-				att.attrib == TDCA_RECURRENCE || att.attrib == TDCA_POSITION ||
-				att.attrib == TDCA_TASKNAMEORCOMMENTS || att.attrib == TDCA_ANYTEXTATTRIBUTE)
+			att.attrib == TDCA_RECURRENCE || att.attrib == TDCA_POSITION ||
+			att.attrib == TDCA_TASKNAMEORCOMMENTS || att.attrib == TDCA_ANYTEXTATTRIBUTE)
 		{
 			continue;
 		}
@@ -149,7 +166,6 @@ void CTDLCsvAttributeSetupListCtrl::PreSubclassWindow()
 		SetColumnType(EXPORT_COLUMNNAME, TEXT);
 	}
 	SetView(LVS_REPORT);
-//	SetLastAttributeStretchy(TRUE);
 
 	AutoAdd(FALSE, FALSE);
 
@@ -249,8 +265,7 @@ int CTDLCsvAttributeSetupListCtrl::FindMappedAttribute(const CString& sName, int
 
 void CTDLCsvAttributeSetupListCtrl::EditCell(int nItem, int nCol)
 {
-	if ((m_bImporting && nCol == IMPORT_COLUMNID) ||
-			(!m_bImporting && nCol == EXPORT_COLUMNID))
+	if ((m_bImporting && nCol == IMPORT_COLUMNID) || (!m_bImporting && nCol == EXPORT_COLUMNID))
 	{
 		PrepareEdit(nItem, nCol);
 		ShowControl(m_cbAttributes, nItem, nCol);
@@ -263,8 +278,7 @@ void CTDLCsvAttributeSetupListCtrl::EditCell(int nItem, int nCol)
 
 BOOL CTDLCsvAttributeSetupListCtrl::IsEditing() const
 {
-	return CInputListCtrl::IsEditing() ||
-			m_cbAttributes.IsWindowVisible();
+	return CInputListCtrl::IsEditing() || m_cbAttributes.IsWindowVisible();
 }
 
 BOOL CTDLCsvAttributeSetupListCtrl::CanEditSelectedCell() const
@@ -295,8 +309,7 @@ BOOL CTDLCsvAttributeSetupListCtrl::CanDeleteSelectedCell() const
 	int nRow, nCol;
 	GetCurSel(nRow, nCol);
 
-	return ((m_bImporting && nCol == IMPORT_COLUMNID) ||
-			(!m_bImporting && nCol == EXPORT_COLUMNNAME));
+	return ((m_bImporting && nCol == IMPORT_COLUMNID) || (!m_bImporting && nCol == EXPORT_COLUMNNAME));
 }
 
 BOOL CTDLCsvAttributeSetupListCtrl::DeleteSelectedCell()
@@ -304,8 +317,7 @@ BOOL CTDLCsvAttributeSetupListCtrl::DeleteSelectedCell()
 	int nRow, nCol;
 	GetCurSel(nRow, nCol);
 
-	if ((m_bImporting && nCol == IMPORT_COLUMNID) ||
-			(!m_bImporting && nCol == EXPORT_COLUMNNAME))
+	if ((m_bImporting && nCol == IMPORT_COLUMNID) || (!m_bImporting && nCol == EXPORT_COLUMNNAME))
 	{
 		if (m_bImporting)
 		{

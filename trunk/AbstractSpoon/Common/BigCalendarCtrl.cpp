@@ -33,6 +33,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -99,7 +104,7 @@ m_nVscrollPos(50)
 
 CBigCalendarCtrl::~CBigCalendarCtrl()
 {
-	for (POSITION pos = m_listCalendarTasks.GetHeadPosition(); pos != NULL;)
+	for (POSITION pos = m_listCalendarTasks.GetHeadPosition(); pos != NULL; )
 	{
 		delete(CBigCalendarTask*)(m_listCalendarTasks.GetNext(pos));
 	}
@@ -536,7 +541,7 @@ BOOL CBigCalendarCtrl::PreTranslateMessage(MSG* pMsg)
 	return CWnd::PreTranslateMessage(pMsg);
 }
 
-BOOL CBigCalendarCtrl::GetGridCellFromPoint(CPoint _point, int& _nRow,  int& _nCol) const
+BOOL CBigCalendarCtrl::GetGridCellFromPoint(CPoint _point, int& _nRow, int& _nCol) const
 {
 	if (_point.y > CALENDAR_HEADER_HEIGHT)
 	{
@@ -832,7 +837,7 @@ void CBigCalendarCtrl::DrawHeader(CDC* _pDC)
 	POSITION pos;
 
 	BOOL bShort = FALSE;
-	for (pos = listDays.GetHeadPosition(); pos;)
+	for (pos = listDays.GetHeadPosition(); pos; )
 	{
 		CString strDay = listDays.GetNext(pos);
 		CSize szTitle(_pDC->GetTextExtent(strDay));
@@ -852,10 +857,10 @@ void CBigCalendarCtrl::DrawHeader(CDC* _pDC)
 	}
 
 	i = 0;
-	for (pos = listDays.GetHeadPosition(); pos;)
+	for (pos = listDays.GetHeadPosition(); pos; )
 	{
 		CString strDay = listDays.GetNext(pos);
-		CRect rcText(i * nWidth, 2, (i + 1)*nWidth, CALENDAR_HEADER_HEIGHT);
+		CRect rcText(i * nWidth, 2, (i + 1) * nWidth, CALENDAR_HEADER_HEIGHT);
 		_pDC->DrawText(strDay, rcText, DT_CENTER | DT_VCENTER);
 		i++;
 	}
@@ -924,7 +929,7 @@ void CBigCalendarCtrl::DrawCells(CDC* _pDC)
 				{
 					CBrush br;
 					br.CreateSolidBrush(CALENDAR_LIGHTGREY);
-					_pDC->FillRect(&rect , &br);
+					_pDC->FillRect(&rect, &br);
 				}
 
 				BOOL bToday = FALSE;
@@ -1093,7 +1098,7 @@ void CBigCalendarCtrl::CreateTasks(BOOL _bRecreate/*=FALSE*/)
 {
 	if (_bRecreate)
 	{
-		for (POSITION pos = m_listCalendarTasks.GetHeadPosition(); pos;)
+		for (POSITION pos = m_listCalendarTasks.GetHeadPosition(); pos; )
 		{
 			CBigCalendarTask* pTaskWnd = (CBigCalendarTask*)m_listCalendarTasks.GetNext(pos);
 			pTaskWnd->DestroyWindow();
@@ -1116,8 +1121,8 @@ void CBigCalendarCtrl::CreateTasks(BOOL _bRecreate/*=FALSE*/)
 			CBigCalendarTask* pTaskWnd = new CBigCalendarTask(this, dwStyleCompletedTasks);
 			m_listCalendarTasks.AddTail(pTaskWnd);
 
-			pTaskWnd->Create(LBS_OWNERDRAWFIXED | LBS_SORT | LBS_HASSTRINGS | WS_VISIBLE,
-				CRect(0, 0, 0, 0), this, nTaskWindowID);
+			pTaskWnd->Create(LBS_OWNERDRAWFIXED | LBS_SORT | LBS_HASSTRINGS | WS_VISIBLE, CRect(0, 0, 0, 0), this,
+				nTaskWindowID);
 
 			m_dayCells[i][u].nListboxID = nTaskWindowID;
 			nTaskWindowID++;
@@ -1226,7 +1231,7 @@ void CBigCalendarCtrl::RepopulateAllCells(const COleDateTime& _dateFirstCell)
 				CBigCalendarCell* pCell = (CBigCalendarCell*)GetCell(dateCurrent);   //frig to de-const the cell
 				if (pCell)
 				{
-					for (POSITION pos = listTasks.GetHeadPosition(); pos != NULL;)
+					for (POSITION pos = listTasks.GetHeadPosition(); pos != NULL; )
 					{
 						CTaskInfo ti = listTasks.GetNext(pos);
 						if (!(dwStyleCompletedTasks & COMPLETEDTASKS_HIDDEN) || (!ti.IsComplete()))
@@ -1287,7 +1292,7 @@ void CBigCalendarCtrl::OnPaint()
 
 	CBrush brBkGnd;
 	brBkGnd.CreateSolidBrush(COLOUR_BACKGROUND);
-	MemDC.FillRect(&rc , &brBkGnd);
+	MemDC.FillRect(&rc, &brBkGnd);
 	MemDC.SetBkMode(TRANSPARENT);
 
 	// Draw calendar elements

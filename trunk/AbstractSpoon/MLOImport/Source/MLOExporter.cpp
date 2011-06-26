@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -122,8 +127,7 @@ bool CMLOExporter::Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDes
 	return (fileDest.Save(szDestFilePath) != FALSE);
 }
 
-bool CMLOExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask,
-	CXmlItem* pXIDestParent)
+bool CMLOExporter::ExportTask(const ITaskList7* pSrcTaskFile, HTASKITEM hTask, CXmlItem* pXIDestParent)
 {
 	if (!hTask)
 	{

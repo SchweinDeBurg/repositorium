@@ -51,7 +51,7 @@ public:
 	BOOL SetButtonState(int nID, UINT nState);
 	BOOL IsButtonChecked(int nID) const;
 	BOOL CheckButton(int nID, BOOL bChecked);
-	operator CToolBarCtrl& ()
+	operator CToolBarCtrl&()
 	{
 		return GetToolBarCtrl();
 	}
@@ -97,9 +97,9 @@ protected:
 
 private:
 
-	CFontComboBox   m_font;
-	CSizeComboBox   m_size;
-	COLORREF        m_crText, m_crBack;
+	CFontComboBox m_font;
+	CSizeComboBox m_size;
+	COLORREF m_crText, m_crBack;
 };
 
 /////////////////////////////////////////////////////////////////////////////

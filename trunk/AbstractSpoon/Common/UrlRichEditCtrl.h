@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -69,7 +74,11 @@ struct URLITEM
 
 struct PROTOCOL
 {
-	PROTOCOL(LPCTSTR szProtocol = NULL, BOOL bNotify = FALSE) : sProtocol(szProtocol), bWantNotify(bNotify) {}
+	PROTOCOL(LPCTSTR szProtocol = NULL, BOOL bNotify = FALSE):
+	sProtocol(szProtocol),
+	bWantNotify(bNotify)
+	{
+	}
 
 	CString sProtocol;
 	BOOL bWantNotify;
@@ -160,11 +169,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-	virtual HRESULT QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT FAR* lpcfFormat,
-		DWORD reco, BOOL fReally, HGLOBAL hMetaPict);
+	virtual HRESULT QueryAcceptData(LPDATAOBJECT lpdataobj, CLIPFORMAT FAR* lpcfFormat, DWORD reco, BOOL fReally,
+		HGLOBAL hMetaPict);
 	virtual HRESULT GetDragDropEffect(BOOL fDrag, DWORD grfKeyState, LPDWORD pdwEffect);
-	virtual HRESULT GetContextMenu(WORD seltyp, LPOLEOBJECT lpoleobj, CHARRANGE FAR* lpchrg,
-		HMENU FAR* lphmenu);
+	virtual HRESULT GetContextMenu(WORD seltyp, LPOLEOBJECT lpoleobj, CHARRANGE FAR* lpchrg, HMENU FAR* lphmenu);
 	virtual CLIPFORMAT GetAcceptableClipFormat(LPDATAOBJECT lpDataOb, CLIPFORMAT format);
 
 protected:

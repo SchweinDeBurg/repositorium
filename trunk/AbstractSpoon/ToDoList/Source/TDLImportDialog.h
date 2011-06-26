@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -82,12 +87,12 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CTDLImportDialog)
 	enum { IDD = IDD_IMPORT_DIALOG };
-	CFileEdit   m_eFilePath;
-	CComboBox   m_cbFormat;
-	int     m_bFromClipboard;
+	CFileEdit m_eFilePath;
+	CComboBox m_cbFormat;
+	int m_bFromClipboard;
 	CString m_sFromFilePath;
-	int     m_nImportTo;
-	int     m_nFormatOption;
+	int m_nImportTo;
+	int m_nFormatOption;
 	CString m_sClipboardText;
 	//}}AFX_DATA
 	const CImportExportMgr& m_mgrImportExport;

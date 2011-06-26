@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.4 sources
 //*****************************************************************************
 
@@ -63,9 +68,12 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTDLCsvImportExportDlg dialog
 
-CTDLCsvImportExportDlg::CTDLCsvImportExportDlg(const CString& sFilePath, CWnd* pParent /*=NULL*/)
-	: CDialog(IDD_CSVIMPORTEXPORT_DIALOG, pParent),
-	  m_sFilePath(sFilePath), m_lcColumnSetup(TRUE), m_bImporting(TRUE), m_eFilePath(FES_NOBROWSE)
+CTDLCsvImportExportDlg::CTDLCsvImportExportDlg(const CString& sFilePath, CWnd* pParent /*=NULL*/):
+CDialog(IDD_CSVIMPORTEXPORT_DIALOG, pParent),
+m_sFilePath(sFilePath),
+m_lcColumnSetup(TRUE),
+m_bImporting(TRUE),
+m_eFilePath(FES_NOBROWSE)
 {
 	m_bAlwaysExportTaskIDs = TRUE;
 	m_sDelim = Misc::GetListSeparator();
@@ -78,9 +86,13 @@ CTDLCsvImportExportDlg::CTDLCsvImportExportDlg(const CString& sFilePath, CWnd* p
 	m_lcColumnSetup.SetColumnMapping(aMapping);
 }
 
-CTDLCsvImportExportDlg::CTDLCsvImportExportDlg(const CString& sFilePath, const CTDCAttributeArray& aExportAttributes, CWnd* pParent /*=NULL*/)
-	: CDialog(IDD_CSVIMPORTEXPORT_DIALOG, pParent),
-	  m_sFilePath(sFilePath), m_lcColumnSetup(FALSE), m_bImporting(FALSE), m_eFilePath(FES_NOBROWSE)
+CTDLCsvImportExportDlg::CTDLCsvImportExportDlg(const CString& sFilePath, const CTDCAttributeArray& aExportAttributes,
+	CWnd* pParent /*=NULL*/):
+CDialog(IDD_CSVIMPORTEXPORT_DIALOG, pParent),
+m_sFilePath(sFilePath),
+m_lcColumnSetup(FALSE),
+m_bImporting(FALSE),
+m_eFilePath(FES_NOBROWSE)
 {
 	m_bAlwaysExportTaskIDs = TRUE;
 	m_sDelim = Misc::GetListSeparator();

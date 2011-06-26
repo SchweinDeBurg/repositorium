@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -70,7 +75,10 @@ static char THIS_FILE[] = __FILE__;
 class CTFHeaderParse : public IXmlParse
 {
 public:
-	CTFHeaderParse() : m_sTask(TDL_TASK) {}
+	CTFHeaderParse():
+	m_sTask(TDL_TASK)
+	{
+	}
 
 	virtual BOOL Continue(LPCTSTR szItem, LPCTSTR /*szValue*/) const
 	{
@@ -87,7 +95,9 @@ protected:
 
 #define GET_TASK(t, h, r) { t = TaskFromHandle(h); if (!t) return r; }
 
-CTaskFile::CTaskFile(LPCTSTR szPassword) : m_dwNextUniqueID(1), m_bISODates(TRUE),
+CTaskFile::CTaskFile(LPCTSTR szPassword):
+m_dwNextUniqueID(1),
+m_bISODates(TRUE),
 #ifdef NO_TL_ENCRYPTDECRYPT
 CXmlFile(TDL_ROOT)
 #else
@@ -96,7 +106,9 @@ CXmlFileEx(TDL_ROOT, szPassword)
 {
 }
 
-CTaskFile::CTaskFile(const CTaskFile& tasks, LPCTSTR szPassword) : m_dwNextUniqueID(1), m_bISODates(TRUE),
+CTaskFile::CTaskFile(const CTaskFile& tasks, LPCTSTR szPassword):
+m_dwNextUniqueID(1),
+m_bISODates(TRUE),
 #ifdef NO_TL_ENCRYPTDECRYPT
 CXmlFile(TDL_ROOT)
 #else
@@ -106,7 +118,9 @@ CXmlFileEx(TDL_ROOT, szPassword)
 	Copy(tasks);
 }
 
-CTaskFile::CTaskFile(const ITaskList* pTasks, LPCTSTR szPassword) : m_dwNextUniqueID(1), m_bISODates(TRUE),
+CTaskFile::CTaskFile(const ITaskList* pTasks, LPCTSTR szPassword):
+m_dwNextUniqueID(1),
+m_bISODates(TRUE),
 #ifdef NO_TL_ENCRYPTDECRYPT
 CXmlFile(TDL_ROOT)
 #else
@@ -587,7 +601,9 @@ time_t CTaskFile::GetLastModified() const
 {
 	COleDateTime date(GetItemValueF(TDL_LASTMODIFIED));
 
-	tm time = { date.GetHour(),
+	tm time =
+	{
+		date.GetHour(),
 		0,
 		date.GetDay(),
 		date.GetMinute(),
@@ -1326,8 +1342,7 @@ double CTaskFile::GetTaskCost(HTASKITEM hTask, BOOL bCalc) const
 
 BOOL CTaskFile::GetTaskRecurrence(HTASKITEM hTask, TDIRECURRENCE& tr) const
 {
-	if (GetTaskRecurrence(hTask, (int&)tr.nRegularity, tr.dwSpecific1,
-		tr.dwSpecific2, tr.bRecalcFromDue, (int&)tr.nReuse))
+	if (GetTaskRecurrence(hTask, (int&)tr.nRegularity, tr.dwSpecific1, tr.dwSpecific2, tr.bRecalcFromDue, (int&)tr.nReuse))
 	{
 		CXmlItem* pXI = TaskFromHandle(hTask);
 
@@ -1348,8 +1363,8 @@ BOOL CTaskFile::GetTaskRecurrence(HTASKITEM hTask, TDIRECURRENCE& tr) const
 	return FALSE;
 }
 
-bool CTaskFile::GetTaskRecurrence(HTASKITEM hTask, int& nRegularity, DWORD& dwSpecific1,
-	DWORD& dwSpecific2, BOOL& bRecalcFromDue, int& nReuse) const
+bool CTaskFile::GetTaskRecurrence(HTASKITEM hTask, int& nRegularity, DWORD& dwSpecific1, DWORD& dwSpecific2,
+	BOOL& bRecalcFromDue, int& nReuse) const
 {
 	CXmlItem* pXI = TaskFromHandle(hTask);
 
@@ -1620,7 +1635,8 @@ const TCHAR* CTaskFile::GetTaskAttribute(HTASKITEM hTask, const char* szAttrib) 
 	CString sValue = pXITask->GetItemValue(ATL::CA2T(szAttrib));
 
 	// special case: Parent ID
-	if (sValue.IsEmpty() && strcmp(szAttrib, ATL::CT2A(TDL_TASKPARENTID)) == 0 && TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKID)))
+	if (sValue.IsEmpty() && strcmp(szAttrib, ATL::CT2A(TDL_TASKPARENTID)) == 0 &&
+		TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKID)))
 	{
 		static CString sPID;
 		sPID.Format(_T("%d"), GetTaskParentID(hTask));
@@ -1803,14 +1819,12 @@ bool CTaskFile::SetTaskCost(HTASKITEM hTask, double dCost)
 
 bool CTaskFile::SetTaskTimeEstimate(HTASKITEM hTask, double dTimeEst, TCHAR cUnits)
 {
-	return SetTaskTime(hTask, TDL_TASKTIMEESTIMATE, dTimeEst,
-		TDL_TASKTIMEESTUNITS, cUnits);
+	return SetTaskTime(hTask, TDL_TASKTIMEESTIMATE, dTimeEst, TDL_TASKTIMEESTUNITS, cUnits);
 }
 
 bool CTaskFile::SetTaskTimeSpent(HTASKITEM hTask, double dTimeSpent, TCHAR cUnits)
 {
-	return SetTaskTime(hTask, TDL_TASKTIMESPENT, dTimeSpent,
-		TDL_TASKTIMESPENTUNITS, cUnits);
+	return SetTaskTime(hTask, TDL_TASKTIMESPENT, dTimeSpent, TDL_TASKTIMESPENTUNITS, cUnits);
 }
 
 bool CTaskFile::SetTaskLastModified(HTASKITEM hTask, time_t tLastMod)
@@ -1874,8 +1888,8 @@ BOOL CTaskFile::SetTaskRecurrence(HTASKITEM hTask, const TDIRECURRENCE& tr)
 	return false;
 }
 
-bool CTaskFile::SetTaskRecurrence(HTASKITEM hTask, int nRegularity, DWORD dwSpecific1,
-	DWORD dwSpecific2, BOOL bRecalcFromDue, int nReuse)
+bool CTaskFile::SetTaskRecurrence(HTASKITEM hTask, int nRegularity, DWORD dwSpecific1, DWORD dwSpecific2,
+	BOOL bRecalcFromDue, int nReuse)
 {
 	CXmlItem* pXI = TaskFromHandle(hTask);
 
@@ -2009,7 +2023,9 @@ time_t CTaskFile::GetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, BOOL bIncTime
 
 	if (date.m_dt)
 	{
-		tm time = { date.GetSecond(),
+		tm time =
+		{
+			date.GetSecond(),
 			date.GetMinute(),
 			date.GetHour(),
 			date.GetDay(),
@@ -2091,8 +2107,8 @@ char CTaskFile::GetTaskTimeUnits(HTASKITEM hTask, LPCTSTR szUnitsItem) const
 
 ////////////////////////////////////////////////////////////////////
 
-bool CTaskFile::SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, const COleDateTime& date,
-	BOOL bIncTime, LPCTSTR szDateStringItem)
+bool CTaskFile::SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, const COleDateTime& date, BOOL bIncTime,
+	LPCTSTR szDateStringItem)
 {
 	double dDate = bIncTime ? date.m_dt : floor(date.m_dt);
 
@@ -2131,7 +2147,7 @@ bool CTaskFile::SetTaskDate(HTASKITEM hTask, LPCTSTR szDateItem, time_t tVal, BO
 	tm* pTime = &time;
 	// Get time as 64-bit integer.
 	// Convert to local time
-	err = localtime_s(pTime , &tVal);
+	err = localtime_s(pTime, &tVal);
 #else
 	tm* pTime = localtime(&tVal);
 #endif
@@ -2189,8 +2205,7 @@ bool CTaskFile::SetTaskDouble(HTASKITEM hTask, LPCTSTR szDoubleItem, double dVal
 	return (pXITask->SetItemValue(szDoubleItem, dVal, XIT_ATTRIB) != NULL);
 }
 
-bool CTaskFile::SetTaskTime(HTASKITEM hTask, LPCTSTR szTimeItem, double dTime,
-	LPCTSTR szUnitsItem, TCHAR cUnits)
+bool CTaskFile::SetTaskTime(HTASKITEM hTask, LPCTSTR szTimeItem, double dTime, LPCTSTR szUnitsItem, TCHAR cUnits)
 {
 	TCHAR* szUnits;
 
@@ -2246,8 +2261,8 @@ CString CTaskFile::GetWebColor(COLORREF color)
 	return sColor;
 }
 
-const TCHAR* CTaskFile::GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag,
-	const char* szItemTag, int nIndex) const
+const TCHAR* CTaskFile::GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag, const char* szItemTag,
+	int nIndex) const
 {
 	if (nIndex == 0)
 	{
@@ -2268,8 +2283,7 @@ const TCHAR* CTaskFile::GetTaskArrayItem(HTASKITEM hTask, const char* szNumItemT
 	return GetTaskCChar(hTask, sItem);
 }
 
-bool CTaskFile::DeleteTaskArray(HTASKITEM hTask, const char* szNumItemTag,
-	const char* szItemTag)
+bool CTaskFile::DeleteTaskArray(HTASKITEM hTask, const char* szNumItemTag, const char* szItemTag)
 {
 	CXmlItem* pXITask = NULL;
 	GET_TASK(pXITask, hTask, false);
@@ -2291,8 +2305,7 @@ bool CTaskFile::DeleteTaskArray(HTASKITEM hTask, const char* szNumItemTag,
 	return true;
 }
 
-bool CTaskFile::AddTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag,
-	const char* szItemTag, const char* szItem)
+bool CTaskFile::AddTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag, const char* szItemTag, const char* szItem)
 {
 	CXmlItem* pXITask = NULL;
 	GET_TASK(pXITask, hTask, false);
@@ -2344,8 +2357,8 @@ bool CTaskFile::AddTaskArrayItem(HTASKITEM hTask, const char* szNumItemTag,
 	return true;
 }
 
-int CTaskFile::GetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
-	const char* szItemTag, CStringArray& aItems) const
+int CTaskFile::GetTaskArray(HTASKITEM hTask, const char* szNumItemTag, const char* szItemTag,
+	CStringArray& aItems) const
 {
 	aItems.RemoveAll();
 
@@ -2369,8 +2382,8 @@ int CTaskFile::GetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
 
 }
 
-BOOL CTaskFile::SetTaskArray(HTASKITEM hTask, const char* szNumItemTag,
-	const char* szItemTag, const CStringArray& aItems)
+BOOL CTaskFile::SetTaskArray(HTASKITEM hTask, const char* szNumItemTag, const char* szItemTag,
+	const CStringArray& aItems)
 {
 	CXmlItem* pXITask = NULL;
 	GET_TASK(pXITask, hTask, FALSE);

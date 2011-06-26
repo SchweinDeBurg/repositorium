@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -101,16 +106,16 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CFilterBar)
 	//}}AFX_DATA
-	CTDLFilterComboBox  m_cbTaskFilter;
+	CTDLFilterComboBox m_cbTaskFilter;
 	CEnEdit m_eTitleFilter;
-	CEnCheckComboBox    m_cbAllocToFilter;
-	CEnCheckComboBox    m_cbAllocByFilter;
-	CEnCheckComboBox    m_cbCategoryFilter;
-	CEnCheckComboBox    m_cbStatusFilter;
-	CEnCheckComboBox    m_cbVersionFilter;
-	CTDLPriorityComboBox    m_cbPriorityFilter;
-	CTDLRiskComboBox    m_cbRiskFilter;
-	CTDLFilterOptionComboBox    m_cbOptions;
+	CEnCheckComboBox m_cbAllocToFilter;
+	CEnCheckComboBox m_cbAllocByFilter;
+	CEnCheckComboBox m_cbCategoryFilter;
+	CEnCheckComboBox m_cbStatusFilter;
+	CEnCheckComboBox m_cbVersionFilter;
+	CTDLPriorityComboBox m_cbPriorityFilter;
+	CTDLRiskComboBox m_cbRiskFilter;
+	CTDLFilterOptionComboBox m_cbOptions;
 	FTDCFILTER m_filter;
 	CDWordArray m_aPriorityColors;
 	CDWordArray m_aVisibility;

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -109,11 +114,11 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CTDLFindTasksDlg)
 	enum { IDD = IDD_FINDTASKS_DIALOG };
-	CCheckComboBox	m_cbInclude;
-	CComboBox	m_cbSearches;
+	CCheckComboBox m_cbInclude;
+	CComboBox m_cbSearches;
 	//}}AFX_DATA
-	CTDLFindTaskExpressionListCtrl	m_lcFindSetup;
-	CTDLFindResultsListCtrl	m_lcResults;
+	CTDLFindTaskExpressionListCtrl m_lcFindSetup;
+	CTDLFindResultsListCtrl m_lcResults;
 
 	CWndPromptManager m_mgrPrompts;
 	CDockManager m_dockMgr;
@@ -121,9 +126,9 @@ protected:
 	CToolbarHelper m_tbHelper;
 	BOOL m_bDockable;
 	int m_nCurSel;
-	int		m_bAllTasklists;
-	CString	m_sResultsLabel;
-	BOOL	m_bAutoSelectSingles;
+	int m_bAllTasklists;
+	CString m_sResultsLabel;
+	BOOL m_bAutoSelectSingles;
 	CString m_sActiveSearch;
 	UITHEME m_theme;
 	CBrush m_brBkgnd;

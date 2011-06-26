@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -65,18 +70,24 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CExportDlg dialog
 
-enum { ACTIVETASKLIST, ALLTASKLISTS };
+enum
+{
+	ACTIVETASKLIST,
+	ALLTASKLISTS
+};
 
 CTDLExportDlg::CTDLExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, BOOL bShowSubtaskCheckbox,
-		BOOL bVisibleColumnsOnly, LPCTSTR szFilePath, LPCTSTR szFolderPath, CWnd* pParent /*=NULL*/)
-	: CDialog(IDD_EXPORT_DIALOG, pParent),
-	  m_mgrImportExport(mgr),
-	  m_bSingleTaskList(bSingleTaskList),
-	  m_sFilePath(szFilePath), m_sOrgFilePath(szFilePath),
-	  m_sFolderPath(szFolderPath), m_sOrgFolderPath(szFolderPath),
-	  m_taskSel(_T("Exporting"), bShowSubtaskCheckbox, bVisibleColumnsOnly),
-	  m_eExportPath(FES_COMBOSTYLEBTN | FES_SAVEAS),
-	  m_nFormatOption(0)
+	BOOL bVisibleColumnsOnly, LPCTSTR szFilePath, LPCTSTR szFolderPath, CWnd* pParent /*=NULL*/):
+CDialog(IDD_EXPORT_DIALOG, pParent),
+m_mgrImportExport(mgr),
+m_bSingleTaskList(bSingleTaskList),
+m_sFilePath(szFilePath),
+m_sOrgFilePath(szFilePath),
+m_sFolderPath(szFolderPath),
+m_sOrgFolderPath(szFolderPath),
+m_taskSel(_T("Exporting"), bShowSubtaskCheckbox, bVisibleColumnsOnly),
+m_eExportPath(FES_COMBOSTYLEBTN | FES_SAVEAS),
+m_nFormatOption(0)
 {
 	CPreferences prefs;
 
@@ -110,8 +121,7 @@ CTDLExportDlg::CTDLExportDlg(const CImportExportMgr& mgr, BOOL bSingleTaskList, 
 	{
 		m_sExportPath = m_sFilePath; // default
 
-		if ((m_sFilePath.IsEmpty() || PathIsRelative(m_sFilePath)) &&
-				!m_sFolderPath.IsEmpty())
+		if ((m_sFilePath.IsEmpty() || PathIsRelative(m_sFilePath)) && !m_sFolderPath.IsEmpty())
 		{
 			CString sFName;
 			FileMisc::SplitPath(m_sFilePath, NULL, NULL, &sFName);
@@ -357,8 +367,8 @@ void CTDLExportDlg::OnOK()
 
 		// make sure the output folder is valid
 		BOOL bBadFolder = (m_nExportOption == ALLTASKLISTS && !m_bExportOneFile) ?
-				!FileMisc::CreateFolder(m_sExportPath) :
-				!FileMisc::CreateFolderFromFilePath(m_sExportPath);
+			!FileMisc::CreateFolder(m_sExportPath) :
+			!FileMisc::CreateFolderFromFilePath(m_sExportPath);
 
 		if (bBadFolder)
 		{

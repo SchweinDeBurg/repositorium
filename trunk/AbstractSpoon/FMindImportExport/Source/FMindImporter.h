@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // FMindImporter.h: interface for the CFMindImporter class.
@@ -74,11 +79,11 @@ protected:
 	bool ImportTask(const CXmlItem* pFMTask, ITaskList7* pDestTaskFile, HTASKITEM hParent) const;
 	long GetColor(const CXmlItem* pFMTask, LPCTSTR szColorField) const;
 	long GetDate(const CXmlItem* pFMTask, LPCTSTR szColorField) const;
-	CString GetAttribValueS(const CXmlItem* pFMTask , const char* szAttribName) const;
-	int GetAttribValueI(const CXmlItem* pFMTask , const char* szAttribName) const;
-	bool GetAttribValueB(const CXmlItem* pFMTask , const char* szAttribName) const;
-	double GetAttribValueD(const CXmlItem* pFMTask , const char* szAttribName) const;
-	CString GetTaskRichContent(const CXmlItem* pFMTask , const char* szRichType) const;
+	CString GetAttribValueS(const CXmlItem* pFMTask, const char* szAttribName) const;
+	int GetAttribValueI(const CXmlItem* pFMTask, const char* szAttribName) const;
+	bool GetAttribValueB(const CXmlItem* pFMTask, const char* szAttribName) const;
+	double GetAttribValueD(const CXmlItem* pFMTask, const char* szAttribName) const;
+	CString GetTaskRichContent(const CXmlItem* pFMTask, const char* szRichType) const;
 
 };
 

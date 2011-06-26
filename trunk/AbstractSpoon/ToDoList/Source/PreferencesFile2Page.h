@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -117,30 +122,30 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesFile2Page)
 	enum { IDD = IDD_PREFFILE2_PAGE };
-	CComboBox   m_cbKeepBackups;
-	CFileEdit   m_eBackupLocation;
-	BOOL    m_bBackupOnSave;
+	CComboBox m_cbKeepBackups;
+	CFileEdit m_eBackupLocation;
+	BOOL m_bBackupOnSave;
 	CString m_sBackupLocation;
-	int     m_nKeepBackups;
-	BOOL    m_bExportFilteredOnly;
+	int m_nKeepBackups;
+	BOOL m_bExportFilteredOnly;
 	//}}AFX_DATA
 	CGroupLineManager m_mgrGroupLines;
 
 	// saving
-	CComboBox   m_cbOtherExporters;
-	CFileEdit   m_eSaveExportStylesheet;
-	CFileEdit   m_eExportFolderPath;
-	BOOL    m_bExportToFolder;
+	CComboBox m_cbOtherExporters;
+	CFileEdit m_eSaveExportStylesheet;
+	CFileEdit m_eExportFolderPath;
+	BOOL m_bExportToFolder;
 	CString m_sExportFolderPath;
-	CComboBox   m_cbAutoSave;
-	int     m_nAutoSaveFrequency;
-	BOOL    m_bAutoSave;
-	BOOL    m_bAutoExport;
-	BOOL    m_bAutoSaveOnSwitchTasklist;
-	BOOL    m_bAutoSaveOnSwitchApp;
-	int     m_bOtherExport;
-	int     m_nOtherExporter;
-	BOOL    m_bUseStylesheetForSaveExport;
+	CComboBox m_cbAutoSave;
+	int m_nAutoSaveFrequency;
+	BOOL m_bAutoSave;
+	BOOL m_bAutoExport;
+	BOOL m_bAutoSaveOnSwitchTasklist;
+	BOOL m_bAutoSaveOnSwitchApp;
+	int m_bOtherExport;
+	int m_nOtherExporter;
+	BOOL m_bUseStylesheetForSaveExport;
 	const CImportExportMgr* m_pExportMgr;
 	CString m_sSaveExportStylesheet;
 

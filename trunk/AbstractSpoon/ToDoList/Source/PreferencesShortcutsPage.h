@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -78,9 +83,9 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CPreferencesShortcutsPage)
 	enum { IDD = IDD_PREFSHORTCUTS_PAGE };
-	CHotKeyCtrlEx   m_hkCur;
-	COrderedTreeCtrl    m_tcCommands;
-	CHotKeyCtrlEx   m_hkNew;
+	CHotKeyCtrlEx m_hkCur;
+	COrderedTreeCtrl m_tcCommands;
+	CHotKeyCtrlEx m_hkNew;
 	CString m_sOtherCmdID;
 	BOOL m_bShowCommandIDs;
 	//}}AFX_DATA

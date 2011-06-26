@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -65,7 +70,8 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNAMIC(CTDLWelcomeWizard, CPropertySheet)
 
-CTDLWelcomeWizard::CTDLWelcomeWizard() : CPropertySheet(_T(""), NULL, 0)
+CTDLWelcomeWizard::CTDLWelcomeWizard():
+CPropertySheet(_T(""), NULL, 0)
 {
 	InitSheet();
 }
@@ -126,7 +132,8 @@ void CTDLWelcomeWizard::OnWizFinish()
 
 IMPLEMENT_DYNCREATE(CTDLWelcomePage1, CPropertyPage)
 
-CTDLWelcomePage1::CTDLWelcomePage1() : CPropertyPage(CTDLWelcomePage1::IDD)
+CTDLWelcomePage1::CTDLWelcomePage1():
+CPropertyPage(CTDLWelcomePage1::IDD)
 {
 	//{{AFX_DATA_INIT(CWelcomePage1)
 	m_bShareTasklists = 0;
@@ -170,7 +177,8 @@ BOOL CTDLWelcomePage1::OnInitDialog()
 
 IMPLEMENT_DYNCREATE(CTDLWelcomePage2, CPropertyPage)
 
-CTDLWelcomePage2::CTDLWelcomePage2() : CPropertyPage(CTDLWelcomePage2::IDD)
+CTDLWelcomePage2::CTDLWelcomePage2():
+CPropertyPage(CTDLWelcomePage2::IDD)
 {
 	//{{AFX_DATA_INIT(CWelcomePage2)
 	//}}AFX_DATA_INIT
@@ -232,8 +240,9 @@ BOOL CTDLWelcomePage2::OnSetActive()
 
 IMPLEMENT_DYNCREATE(CTDLWelcomePage3, CPropertyPage)
 
-CTDLWelcomePage3::CTDLWelcomePage3() : CPropertyPage(CTDLWelcomePage3::IDD),
-	m_eSampleTasklist(FES_COMBOSTYLEBTN | FES_RELATIVEPATHS)
+CTDLWelcomePage3::CTDLWelcomePage3():
+CPropertyPage(CTDLWelcomePage3::IDD),
+m_eSampleTasklist(FES_COMBOSTYLEBTN | FES_RELATIVEPATHS)
 {
 	//{{AFX_DATA_INIT(CWelcomePage3)
 	m_bHideAttrib = 1;

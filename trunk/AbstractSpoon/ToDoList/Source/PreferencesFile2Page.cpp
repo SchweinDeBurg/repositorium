@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -65,7 +70,7 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CPreferencesFile2Page, CPreferencesPageBase)
 
-CPreferencesFile2Page::CPreferencesFile2Page(const CImportExportMgr* pExportMgr) :
+CPreferencesFile2Page::CPreferencesFile2Page(const CImportExportMgr* pExportMgr):
 CPreferencesPageBase(CPreferencesFile2Page::IDD),
 m_eExportFolderPath(FES_FOLDERS | FES_COMBOSTYLEBTN | FES_RELATIVEPATHS),
 m_eSaveExportStylesheet(FES_COMBOSTYLEBTN | FES_RELATIVEPATHS, CEnString(IDS_XSLFILEFILTER)),
@@ -239,7 +244,8 @@ void CPreferencesFile2Page::LoadPreferences(const CPreferences& prefs)
 	m_bExportFilteredOnly = prefs.GetProfileInt(_T("Preferences"), _T("ExportFilteredOnly"), FALSE);
 
 	// these are dependent on the values they control for backward compat
-	m_bUseStylesheetForSaveExport = prefs.GetProfileInt(_T("Preferences"), _T("UseStylesheetForSaveExport"), !m_sSaveExportStylesheet.IsEmpty());
+	m_bUseStylesheetForSaveExport = prefs.GetProfileInt(_T("Preferences"), _T("UseStylesheetForSaveExport"),
+		!m_sSaveExportStylesheet.IsEmpty());
 	m_bExportToFolder = prefs.GetProfileInt(_T("Preferences"), _T("ExportToFolder"), !m_sExportFolderPath.IsEmpty());
 
 	m_sExportFolderPath.TrimLeft();

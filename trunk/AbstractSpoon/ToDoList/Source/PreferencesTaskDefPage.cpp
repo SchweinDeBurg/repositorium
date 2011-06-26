@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -64,7 +69,7 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CPreferencesTaskDefPage, CPreferencesPageBase)
 
-CPreferencesTaskDefPage::CPreferencesTaskDefPage() :
+CPreferencesTaskDefPage::CPreferencesTaskDefPage():
 CPreferencesPageBase(CPreferencesTaskDefPage::IDD),
 m_cbAllocByList(TRUE),
 m_cbAllocToList(TRUE),
@@ -359,7 +364,7 @@ PTDP_LIST CPreferencesTaskDefPage::MapCtrlIDToList(UINT nListID)
 	}
 
 	ASSERT(0);
-	return (PTDP_LIST) - 1;
+	return (PTDP_LIST)-1;
 }
 
 LRESULT CPreferencesTaskDefPage::OnListAddItem(WPARAM wp, LPARAM lp)
@@ -539,7 +544,8 @@ void CPreferencesTaskDefPage::LoadPreferences(const CPreferences& prefs)
 	m_sDefCategory = prefs.GetProfileString(_T("Preferences"), _T("DefaultCategory"));
 	m_sDefCreatedBy = prefs.GetProfileString(_T("Preferences"), _T("DefaultCreatedBy"));
 	m_crDef = prefs.GetProfileInt(_T("Preferences"), _T("DefaultColor"), 0);
-	m_bInheritParentAttributes = prefs.GetProfileInt(_T("Preferences"), _T("InheritParentAttributes"), prefs.GetProfileInt(_T("Preferences"), _T("UseParentAttributes")));
+	m_bInheritParentAttributes = prefs.GetProfileInt(_T("Preferences"), _T("InheritParentAttributes"),
+		prefs.GetProfileInt(_T("Preferences"), _T("UseParentAttributes")));
 	m_bUpdateInheritAttributes = prefs.GetProfileInt(_T("Preferences"), _T("UpdateInheritAttributes"), FALSE);
 	m_bUseCreationForDefStartDate = prefs.GetProfileInt(_T("Preferences"), _T("UseCreationForDefStartDate"), TRUE);
 	m_dDefCost = Misc::Atof(prefs.GetProfileString(_T("Preferences"), _T("DefaultCost"), _T("0")));

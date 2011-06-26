@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -68,7 +73,10 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CToolsHelper::CToolsHelper(BOOL bTDLEnabled, UINT nStart, int nSize) : m_nStartID(nStart), m_nSize(nSize), m_bTDLEnabled(bTDLEnabled)
+CToolsHelper::CToolsHelper(BOOL bTDLEnabled, UINT nStart, int nSize):
+m_nStartID(nStart),
+m_nSize(nSize),
+m_bTDLEnabled(bTDLEnabled)
 {
 }
 
@@ -84,7 +92,8 @@ BOOL CToolsHelper::RunTool(const USERTOOL& tool, const USERTOOLARGS& args, CWnd*
 	{
 		HWND hWnd = pWnd ? pWnd->GetSafeHwnd() : NULL;
 
-		int nRes = (int)ShellExecute(hWnd, NULL, tool.sToolPath, sCmdline, NULL, tool.bRunMinimized ? SW_MINIMIZE : SW_SHOWNORMAL);
+		int nRes = (int)ShellExecute(hWnd, NULL, tool.sToolPath, sCmdline, NULL,
+			tool.bRunMinimized ? SW_MINIMIZE : SW_SHOWNORMAL);
 		return (nRes > 32);
 	}
 
@@ -104,7 +113,8 @@ void CToolsHelper::TestTool(const USERTOOL& tool, const USERTOOLARGS& args, CWnd
 
 		if (::MessageBox(hWnd, sMessage, CEnString(IDS_TH_TESTTOOL_TITLE), MB_YESNO | MB_ICONQUESTION) == IDYES)
 		{
-			int nRes = (int)ShellExecute(hWnd, NULL, tool.sToolPath, sCmdline, NULL, tool.bRunMinimized ? SW_MINIMIZE : SW_SHOWNORMAL);
+			int nRes = (int)ShellExecute(hWnd, NULL, tool.sToolPath, sCmdline, NULL,
+				tool.bRunMinimized ? SW_MINIMIZE : SW_SHOWNORMAL);
 
 			if (nRes <= 32)
 			{
@@ -183,8 +193,8 @@ void CToolsHelper::UpdateMenu(CCmdUI* pCmdUI, const CUserToolArray& tools, CMenu
 						sMenuItem = tool.sToolName;
 					}
 
-					pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex++, MF_BYPOSITION | MF_STRING,
-						m_nStartID + nTool, sMenuItem);
+					pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex++, MF_BYPOSITION | MF_STRING, m_nStartID + nTool,
+						sMenuItem);
 
 					iconMgr.SetImage(m_nStartID + nTool, GetToolIcon(sil, tool));
 
@@ -202,8 +212,8 @@ void CToolsHelper::UpdateMenu(CCmdUI* pCmdUI, const CUserToolArray& tools, CMenu
 		// if nothing to add just re-add placeholder
 		if (!aTools.GetSize())
 		{
-			pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex, MF_BYPOSITION | MF_STRING | MF_GRAYED,
-				m_nStartID, CEnString(IDS_USERDEFINEDTOOLS));
+			pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex, MF_BYPOSITION | MF_STRING | MF_GRAYED, m_nStartID,
+				CEnString(IDS_USERDEFINEDTOOLS));
 		}
 	}
 }

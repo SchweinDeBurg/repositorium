@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // ColorButton.cpp : implementation file
@@ -59,7 +64,8 @@ static char THIS_FILE[] = __FILE__;
 
 #define WM_SHOWACCELERATORS 0x0128
 
-CColorButton::CColorButton() : m_color(0)
+CColorButton::CColorButton():
+m_color(0)
 {
 }
 

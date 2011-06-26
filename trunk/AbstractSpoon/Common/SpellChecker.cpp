@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // SpellChecker.cpp: implementation of the CSpellChecker class.
@@ -53,7 +58,7 @@
 //////////////////////////////////////////////////////////////////////
 
 CSpellChecker::CSpellChecker(const TCHAR* szAffPath, const TCHAR* szDicPath):
-	MySpell(ATL::CT2A(szAffPath), ATL::CT2A(szDicPath))
+MySpell(ATL::CT2A(szAffPath), ATL::CT2A(szDicPath))
 {
 }
 

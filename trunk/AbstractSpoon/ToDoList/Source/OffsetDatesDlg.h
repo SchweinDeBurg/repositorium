@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_OFFSETDATESDLG_H__9B2E2FE0_370B_41F4_98C1_2D3BB6D1526E__INCLUDED_)
@@ -56,7 +61,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // COffsetDatesDlg dialog
 
-enum ODD_UNITS { ODDU_DAYS, ODDU_WEEKS, ODDU_MONTHS };
+enum ODD_UNITS
+{
+	ODDU_DAYS,
+	ODDU_WEEKS,
+	ODDU_MONTHS
+};
 
 enum
 {
@@ -82,13 +92,13 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(COffsetDatesDlg)
 	enum { IDD = IDD_OFFSETDATES_DIALOG };
-	BOOL    m_bOffsetStartDate;
-	BOOL    m_bOffsetDueDate;
-	BOOL    m_bOffsetDoneDate;
-	int     m_bForward;
-	int     m_nOffsetBy;
-	int     m_nOffsetByUnits;
-	BOOL    m_bOffsetSubtasks;
+	BOOL m_bOffsetStartDate;
+	BOOL m_bOffsetDueDate;
+	BOOL m_bOffsetDoneDate;
+	int m_bForward;
+	int m_nOffsetBy;
+	int m_nOffsetByUnits;
+	BOOL m_bOffsetSubtasks;
 	//}}AFX_DATA
 
 

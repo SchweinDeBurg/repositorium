@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -62,7 +67,9 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CUIExtension::CUIExtension(IUIExtension* pExt) : m_pExtension(pExt), m_pMapWindows(NULL)
+CUIExtension::CUIExtension(IUIExtension* pExt):
+m_pExtension(pExt),
+m_pMapWindows(NULL)
 {
 }
 
@@ -253,7 +260,8 @@ UIEXTENSIONWINDOW* CUIExtension::FindWindow(DWORD dwItemData) const
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CUIExtensionMgr::CUIExtensionMgr() : m_bInitialized(FALSE)
+CUIExtensionMgr::CUIExtensionMgr():
+m_bInitialized(FALSE)
 {
 }
 
@@ -356,8 +364,8 @@ CString& CUIExtensionMgr::Clean(CString& sText)
 	return sText;
 }
 
-IUIExtensionWindow* CUIExtensionMgr::GetExtensionWindow(int nExtension, DWORD dwItemData,
-	HWND hParent, BOOL bAutoCreate)
+IUIExtensionWindow* CUIExtensionMgr::GetExtensionWindow(int nExtension, DWORD dwItemData, HWND hParent,
+	BOOL bAutoCreate)
 {
 	IUIExtensionWindow* pWindow = NULL;
 

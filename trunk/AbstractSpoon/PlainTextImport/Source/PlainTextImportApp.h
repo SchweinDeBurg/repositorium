@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // PlainTextImportApp.h : main header file for the PLAINTEXTIMPORT DLL
@@ -52,7 +57,9 @@
 class CPlainTextImportApp : public CWinApp
 {
 public:
-	CPlainTextImportApp() {}
+	CPlainTextImportApp()
+	{
+	}
 };
 
 

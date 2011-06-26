@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -73,7 +78,9 @@ const UINT WM_SETWORDWRAP = (WM_USER + 1);
 /////////////////////////////////////////////////////////////////////////////
 // CToDoCommentsCtrl
 
-CToDoCommentsCtrl::CToDoCommentsCtrl() : m_bAllowNotify(TRUE), m_bWordWrap(TRUE),
+CToDoCommentsCtrl::CToDoCommentsCtrl():
+m_bAllowNotify(TRUE),
+m_bWordWrap(TRUE),
 #pragma warning (disable: 4355)
 m_reSpellCheck(*this)
 #pragma warning (default: 4355)

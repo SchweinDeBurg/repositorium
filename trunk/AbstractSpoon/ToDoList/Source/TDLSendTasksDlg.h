@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_TDLSENDTASKSDLG_H__02DB12DD_A125_4754_AE1C_F8BB9EE45903__INCLUDED_)
@@ -82,8 +87,8 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CTDLSendTasksDlg)
 	enum { IDD = IDD_SENDTASKS_DIALOG };
-	int		m_nSendWhat;
-	int		m_nSendTasksAsOption;
+	int m_nSendWhat;
+	int m_nSendTasksAsOption;
 	//}}AFX_DATA
 
 // Overrides

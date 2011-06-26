@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // RemoteFileDialog.cpp : implementation file
@@ -93,13 +98,26 @@ enum // columns
 	MODDATE,
 };
 
-const UINT VIEWIDS[] = { ID_VIEW_LARGEICON, ID_VIEW_DETAILS, ID_VIEW_SMALLICON, ID_VIEW_LIST};
-const UINT VIEWS[] = { LVS_SMALLICON, LVS_ICON, LVS_LIST, LVS_REPORT };
+const UINT VIEWIDS[] =
+{
+	ID_VIEW_LARGEICON,
+	ID_VIEW_DETAILS,
+	ID_VIEW_SMALLICON,
+	ID_VIEW_LIST
+};
+const UINT VIEWS[] =
+{
+	LVS_SMALLICON,
+	LVS_ICON,
+	LVS_LIST,
+	LVS_REPORT
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // CRemoteFileDialog dialog
 
-CRemoteFileDialog::CRemoteFileDialog(CFtpConnection* pConnection, LPCTSTR szServer, LPCTSTR szFilters, LPCTSTR szInitialFolder):
+CRemoteFileDialog::CRemoteFileDialog(CFtpConnection* pConnection, LPCTSTR szServer, LPCTSTR szFilters,
+	LPCTSTR szInitialFolder):
 m_pConnection(pConnection),
 m_sServer(szServer),
 m_sCurFolder(szInitialFolder),
@@ -120,12 +138,14 @@ m_bFilling(FALSE)
 	AddRCControl(_T("SCROLLBAR"), _T(""), _T(""), SBS_RIGHTALIGN, 0, 270, 160, 8, 16, IDC_GRIPPER);
 	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_AUTOHSCROLL | WS_TABSTOP, 0, 74, 144, 154, 13, IDC_FILENAME);
 	AddRCControl(_T("LTEXT"), _T(""), _T("Files of &type:"), 0, 0, 0, 164, 40, 8, IDC_FILETYPESLABEL);
-	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP, 0, 74, 163, 154, 100, IDC_FILETYPES);
+	AddRCControl(_T("COMBOBOX"), _T(""), _T(""), CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP, 0, 74, 163, 154,
+		100, IDC_FILETYPES);
 	AddRCControl(_T("DEFPUSHBUTTON"), _T(""), _T("OK"), WS_TABSTOP, 0, 230, 143, 50, 14, IDOK);
 	AddRCControl(_T("PUSHBUTTON"), _T(""), _T("Cancel"), WS_TABSTOP, 0, 230, 162, 50, 14, IDCANCEL);
 	AddRCControl(_T("LTEXT"), _T(""), _T("Current Folder:"), 0, 0, 0, 7, 47, 8, IDC_CURFOLDERLABEL);
 	AddRCControl(_T("EDITTEXT"), _T(""), _T(""), ES_AUTOHSCROLL | ES_READONLY, 0, 58, 4, 210, 14, IDC_CURRENTFOLDER);
-	AddRCControl(_T("CONTROL"), _T("SysListView32"), _T(""), LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_LIST | LVS_SHAREIMAGELISTS | WS_TABSTOP, WS_EX_CLIENTEDGE, 0, 22, 280, 114, IDC_FILELIST);
+	AddRCControl(_T("CONTROL"), _T("SysListView32"), _T(""), LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_LIST |
+		LVS_SHAREIMAGELISTS | WS_TABSTOP, WS_EX_CLIENTEDGE, 0, 22, 280, 114, IDC_FILELIST);
 	AddRCControl(_T("LTEXT"), _T(""), _T("Remote file &name:"), 0, 0, 0, 146, 66, 8, IDC_FILENAMELABEL);
 
 	InitFilterArray(szFilters);
@@ -560,15 +580,15 @@ int CRemoteFileDialog::GetFirstSelectedItem()
 	return pos ? m_lcFiles.GetNextSelectedItem(pos) : -1;
 }
 
-int CRemoteFileDialog::AddFileItem(LPCTSTR szFileName, int nType, UINT nUniqueID, DWORD dwFileSize, const FILETIME* pLastMod, int nImage)
+int CRemoteFileDialog::AddFileItem(LPCTSTR szFileName, int nType, UINT nUniqueID, DWORD dwFileSize,
+	const FILETIME* pLastMod, int nImage)
 {
 	if (nImage == -1)
 	{
 		nImage = CSysImageList().GetFileImageIndex(szFileName);
 	}
 
-	int nItem = m_lcFiles.InsertItem(LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM,
-		0, szFileName, 0, 0, nImage, nUniqueID);
+	int nItem = m_lcFiles.InsertItem(LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM, 0, szFileName, 0, 0, nImage, nUniqueID);
 
 	// add to map
 	FILEITEM fi;

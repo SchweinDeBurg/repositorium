@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2-6.2.4 sources
 //*****************************************************************************
 
@@ -113,7 +118,8 @@ bool CiCalExporter::Export(const IMultiTaskList* pSrcTaskFile, const TCHAR* szDe
 	return false;
 }
 
-void CiCalExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, const CString& sParentUID, CStdioFile& fileOut)
+void CiCalExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, const CString& sParentUID,
+	CStdioFile& fileOut)
 {
 	if (!hTask)
 	{
@@ -189,14 +195,12 @@ CString CiCalExporter::FormatDateTime(LPCTSTR szType, const COleDateTime& date)
 
 	if (CDateHelper::DateHasTime(date))
 	{
-		sDateTime.Format(_T("%s;VALUE=DATE-TIME:%04d%02d%02dT%02d%02d%02d"), szType, 
-			date.GetYear(), date.GetMonth(), date.GetDay(),
-			date.GetHour(), date.GetMinute(), date.GetSecond());
+		sDateTime.Format(_T("%s;VALUE=DATE-TIME:%04d%02d%02dT%02d%02d%02d"), szType, date.GetYear(), date.GetMonth(),
+			date.GetDay(), date.GetHour(), date.GetMinute(), date.GetSecond());
 	}
 	else // date only
 	{
-		sDateTime.Format(_T("%s;VALUE=DATE:%04d%02d%02d"), szType, 
-			date.GetYear(), date.GetMonth(), date.GetDay());
+		sDateTime.Format(_T("%s;VALUE=DATE:%04d%02d%02d"), szType, date.GetYear(), date.GetMonth(), date.GetDay());
 	}
 
 	return sDateTime;

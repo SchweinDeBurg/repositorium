@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -68,7 +73,8 @@ const UINT SPACING = 6;
 const UINT BTN_CX = 50;
 const UINT BTN_CY = 14;
 
-CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp) : CRuntimeDlg()
+CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp):
+CRuntimeDlg()
 {
 	//{{AFX_DATA_INIT(CToolsUserInputDlg)
 	// NOTE: the ClassWizard will add member initialization here
@@ -162,10 +168,12 @@ CToolsUserInputDlg::CToolsUserInputDlg(const CToolsCmdlineParser& tcp) : CRuntim
 		{
 			TUINPUTITEM& tuii = m_aInputItems[nCtrl];
 
-			if (AddRCControl(tuii.pCtrl, tuii.sDefValue, tuii.nStyle, WS_EX_CLIENTEDGE, ITEM_X, nYPos, tuii.sizeDLU.cx, tuii.sizeDLU.cy, tuii.nCtrlID))
+			if (AddRCControl(tuii.pCtrl, tuii.sDefValue, tuii.nStyle, WS_EX_CLIENTEDGE, ITEM_X, nYPos, tuii.sizeDLU.cx,
+				tuii.sizeDLU.cy, tuii.nCtrlID))
 			{
 				// add label
-				AddRCControl(_T("LTEXT"), NULL, tuii.sLabel, SS_CENTERIMAGE, 0, 0, nYPos, ITEM_X - LABEL_X - 3, tuii.sizeDLU.cy, 0);
+				AddRCControl(_T("LTEXT"), NULL, tuii.sLabel, SS_CENTERIMAGE, 0, 0, nYPos, ITEM_X - LABEL_X - 3,
+					tuii.sizeDLU.cy, 0);
 
 				nYPos += (tuii.sizeDLU.cy + SPACING);
 
@@ -248,7 +256,7 @@ void CToolsUserInputDlg::OnOK()
 			{
 				SYSTEMTIME sysTime;
 
-				if (GDT_VALID == tuii.pCtrl->SendMessage(DTM_GETSYSTEMTIME, 0, (LPARAM) &sysTime))
+				if (GDT_VALID == tuii.pCtrl->SendMessage(DTM_GETSYSTEMTIME, 0, (LPARAM)&sysTime))
 				{
 					COleDateTime date(sysTime);
 					sResult = date.Format(_T("%Y-%m-%d"));
@@ -293,7 +301,7 @@ BOOL CToolsUserInputDlg::OnInitDialog()
 
 				if (nRes == 3)
 				{
-					tuii.pCtrl->SendMessage(DTM_SETSYSTEMTIME, GDT_VALID, (LPARAM) &sysTime);
+					tuii.pCtrl->SendMessage(DTM_SETSYSTEMTIME, GDT_VALID, (LPARAM)&sysTime);
 				}
 			}
 			break;

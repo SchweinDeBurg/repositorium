@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -65,7 +70,7 @@ static char THIS_FILE[] = __FILE__;
 IMPLEMENT_FIXED_ALLOC(TODOITEM, 1024);
 #pragma warning(default: 4995)
 
-TODOITEM::TODOITEM(LPCTSTR szTitle, LPCTSTR szComments) :
+TODOITEM::TODOITEM(LPCTSTR szTitle, LPCTSTR szComments):
 sTitle(szTitle),
 sComments(szComments),
 color(0),
@@ -94,7 +99,7 @@ nSubtasksDone(0)
 {
 }
 
-TODOITEM::TODOITEM() :
+TODOITEM::TODOITEM():
 color(0),
 nPriority(5),
 nRisk(0),
@@ -416,7 +421,9 @@ CString TODOITEM::MakeTaskLink(DWORD dwTaskID, const CString& sFile)
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-TODOSTRUCTURE::TODOSTRUCTURE(DWORD dwID) : m_dwID(dwID), m_pTDSParent(NULL)
+TODOSTRUCTURE::TODOSTRUCTURE(DWORD dwID):
+m_dwID(dwID),
+m_pTDSParent(NULL)
 {
 	ASSERT(dwID);
 }

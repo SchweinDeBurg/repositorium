@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1-6.2.2 sources
 //*****************************************************************************
 
@@ -239,10 +244,10 @@ class ITaskList6 : public ITaskList5
 {
 	// new methods
 public:
-	virtual bool SetTaskRecurrence(HTASKITEM hTask, int nRegularity, DWORD dwSpecific1,
-		DWORD dwSpecific2, BOOL bRecalcFromDue, int nReuse) = 0;
-	virtual bool GetTaskRecurrence(HTASKITEM hTask, int& nRegularity, DWORD& dwSpecific1,
-		DWORD& dwSpecific2, BOOL& bRecalcFromDue, int& nReuse) const = 0;
+	virtual bool SetTaskRecurrence(HTASKITEM hTask, int nRegularity, DWORD dwSpecific1, DWORD dwSpecific2,
+		BOOL bRecalcFromDue, int nReuse) = 0;
+	virtual bool GetTaskRecurrence(HTASKITEM hTask, int& nRegularity, DWORD& dwSpecific1, DWORD& dwSpecific2,
+		BOOL& bRecalcFromDue, int& nReuse) const = 0;
 
 	virtual bool SetTaskVersion(HTASKITEM hTask, const char* szVersion) = 0;
 	virtual const TCHAR* GetTaskVersion(HTASKITEM hTask) const = 0;

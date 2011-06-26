@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -71,7 +76,7 @@ public:
 	enum { IDD = IDD_SHOWREMINDER_DIALOG };
 	CString m_sWhen;
 	CString m_sTaskTitle;
-	int     m_nSnoozeIndex;
+	int m_nSnoozeIndex;
 	//}}AFX_DATA
 	CString m_sSoundFile;
 

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -76,7 +81,11 @@ public:
 protected:
 	struct COLUMNVIS
 	{
-		COLUMNVIS() : nTDCCol(TDCC_NONE), bVisible(FALSE) {}
+		COLUMNVIS():
+		nTDCCol(TDCC_NONE),
+		bVisible(FALSE)
+		{
+		}
 		COLUMNVIS(UINT nIDName, TDC_COLUMN tdcCol, BOOL bVis)
 		{
 			sName.LoadString(nIDName);

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -221,8 +226,10 @@ void CPreferencesFilePage::LoadPreferences(const CPreferences& prefs)
 	m_sDueTasksStylesheet = FileMisc::GetRelativePath(m_sDueTasksStylesheet, sFolder, FALSE);
 
 	// these are dependent on the values they control for backward compat
-	m_bOnlyShowDueTasksForPerson = prefs.GetProfileInt(_T("Preferences"), _T("OnlyShowDueTasksForPerson"), !m_sDueTaskPerson.IsEmpty());
-	m_bUseStyleSheetForDueTasks = prefs.GetProfileInt(_T("Preferences"), _T("UseStylesheetForDueTasks"), !m_sDueTasksStylesheet.IsEmpty());
+	m_bOnlyShowDueTasksForPerson = prefs.GetProfileInt(_T("Preferences"), _T("OnlyShowDueTasksForPerson"),
+		!m_sDueTaskPerson.IsEmpty());
+	m_bUseStyleSheetForDueTasks = prefs.GetProfileInt(_T("Preferences"), _T("UseStylesheetForDueTasks"),
+		!m_sDueTasksStylesheet.IsEmpty());
 }
 
 void CPreferencesFilePage::SavePreferences(CPreferences& prefs)

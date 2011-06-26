@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_EDITWEBLINKDLG_H__DD0DB833_7D2B_4E92_8478_FD1B43B3207E__INCLUDED_)
@@ -68,7 +73,7 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CEditWebLinkDlg)
 	enum { IDD = IDD_EDITWEBLINK_DIALOG };
-	CString	m_sWebLink;
+	CString m_sWebLink;
 	//}}AFX_DATA
 
 

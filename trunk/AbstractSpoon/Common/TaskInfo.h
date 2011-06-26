@@ -8,6 +8,11 @@
 // - taken out from the original TDL_Calendar package for better sharing
 // - adjusted #include's paths
 // - slightly reformatted source code
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #ifndef _TASKINFO_H_
@@ -22,26 +27,27 @@
 class CTaskInfo
 {
 public:
-	CTaskInfo(int _nTaskID = -1, const CString& _strTaskTitle = _T(""), BOOL _bIsStart = FALSE, BOOL _bIsDue = FALSE, BOOL _bIsComplete = FALSE);
+	CTaskInfo(int _nTaskID = -1, const CString& _strTaskTitle = _T(""), BOOL _bIsStart = FALSE, BOOL _bIsDue = FALSE,
+		BOOL _bIsComplete = FALSE);
 	~CTaskInfo();
 
 	CTaskInfo(const CTaskInfo& _that);              //copy constructor
 	CTaskInfo& operator=(const CTaskInfo& _that);   //assignment operator
 
-	int     GetTaskID() const;
+	int GetTaskID() const;
 	CString GetTaskTitle() const;
-	BOOL    IsStart() const;
-	BOOL    IsDue() const;
-	BOOL    IsComplete() const;
+	BOOL IsStart() const;
+	BOOL IsDue() const;
+	BOOL IsComplete() const;
 
 protected:
-	int     m_nTaskID;
+	int m_nTaskID;
 	CString m_strTaskTitle;
-	BOOL    m_bIsStart;
-	BOOL    m_bIsDue;
-	BOOL    m_bIsComplete;
+	BOOL m_bIsStart;
+	BOOL m_bIsDue;
+	BOOL m_bIsComplete;
 };
 
-typedef CList <CTaskInfo, CTaskInfo&> CTaskInfoList;
+typedef CList<CTaskInfo, CTaskInfo&> CTaskInfoList;
 
 #endif//_TASKINFO_H_

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_TDLTASKICONDLG_H__73512EBA_90D6_40EA_A2C3_F2089A567486__INCLUDED_)
@@ -68,7 +73,7 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CTDLTaskIconDlg)
 	enum { IDD = IDD_TASKICON_DIALOG };
-	CListCtrl	m_lcIcons;
+	CListCtrl m_lcIcons;
 	//}}AFX_DATA
 	const CImageList& m_ilIcons;
 	int m_nIconIndex;

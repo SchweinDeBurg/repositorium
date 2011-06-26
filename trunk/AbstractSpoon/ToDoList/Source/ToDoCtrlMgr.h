@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -61,8 +66,21 @@
 /////////////////////////////////////////////////////////////////////////////
 // CToDoCtrlMgr dialog
 
-enum TDCM_PATHTYPE { TDCM_UNDEF = -1, TDCM_REMOVABLE, TDCM_FIXED, TDCM_REMOTE, TDCM_WEB }; // drive types
-enum TDCM_DUESTATUS { TDCM_NONE = -1, TDCM_PAST, TDCM_TODAY, TDCM_FUTURE };
+enum TDCM_PATHTYPE
+{
+	TDCM_UNDEF = -1,
+	TDCM_REMOVABLE,
+	TDCM_FIXED,
+	TDCM_REMOTE,
+	TDCM_WEB
+}; // drive types
+enum TDCM_DUESTATUS
+{
+	TDCM_NONE = -1,
+	TDCM_PAST,
+	TDCM_TODAY,
+	TDCM_FUTURE
+};
 
 class CPreferences;
 

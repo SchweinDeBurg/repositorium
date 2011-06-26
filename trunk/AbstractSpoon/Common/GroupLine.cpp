@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // GroupLine.cpp: implementation of the CGroupLine class.
@@ -152,13 +157,13 @@ LRESULT CGroupLine::WindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPARAM lp)
 
 			if (dwStyle & SS_RIGHT)
 			{
-				dc.Draw3dRect(rClient.left, nY, rClient.Width() - sizeText.cx, 2,
-					GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHIGHLIGHT));
+				dc.Draw3dRect(rClient.left, nY, rClient.Width() - sizeText.cx, 2, GetSysColor(COLOR_3DSHADOW),
+					GetSysColor(COLOR_3DHIGHLIGHT));
 			}
 			else if (dwStyle & SS_CENTER)
 			{
-				dc.Draw3dRect(rClient.left, nY, (rClient.Width() - sizeText.cx) / 2, 2,
-					GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHIGHLIGHT));
+				dc.Draw3dRect(rClient.left, nY, (rClient.Width() - sizeText.cx) / 2, 2, GetSysColor(COLOR_3DSHADOW),
+					GetSysColor(COLOR_3DHIGHLIGHT));
 				dc.Draw3dRect((rClient.Width() + sizeText.cx) / 2, nY, (rClient.Width() - sizeText.cx) / 2, 2,
 					GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHIGHLIGHT));
 			}

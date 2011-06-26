@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -84,8 +89,8 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CWelcomePage1)
 	enum { IDD = IDD_WELCOME_PAGE1 };
-	int     m_bShareTasklists;
-	int     m_bUseIniFile;
+	int m_bShareTasklists;
+	int m_bUseIniFile;
 	//}}AFX_DATA
 	HFONT m_hFont;
 
@@ -178,10 +183,10 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CWelcomePage3)
 	enum { IDD = IDD_WELCOME_PAGE3 };
-    CFileEdit   m_eSampleTasklist;
-    CString m_sSampleTaskList;
-    int     m_bHideAttrib;
-    int     m_bViewSample;
+	CFileEdit m_eSampleTasklist;
+	CString m_sSampleTaskList;
+	int m_bHideAttrib;
+	int m_bViewSample;
 	//}}AFX_DATA
 	HFONT m_hFont;
 

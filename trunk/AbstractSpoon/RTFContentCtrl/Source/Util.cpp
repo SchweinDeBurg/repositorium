@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #include "StdAfx.h"
@@ -68,7 +73,7 @@ long StringToLong(CString newValue)
 	char* p_endstr;
 	CString str;
 	str = newValue;
-	p_str = (LPSTR) LPCTSTR(str);
+	p_str = (LPSTR)LPCTSTR(str);
 	lvalue = strtol(p_str, &p_endstr, 10);
 
 	return lvalue;

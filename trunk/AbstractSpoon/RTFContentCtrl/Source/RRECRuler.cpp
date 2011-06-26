@@ -201,17 +201,17 @@ void CRRECRuler::OnPaint()
 
 	if (m_mode == MODE_INCH)
 	{
-		int inch4 = (int)((double) m_physicalInch / 4.0 + .5);
-		int inch8 = (int)((double) m_physicalInch / 8.0 + .5);
+		int inch4 = (int)((double)m_physicalInch / 4.0 + .5);
+		int inch8 = (int)((double)m_physicalInch / 8.0 + .5);
 
 		// Drawing scale markers
-		for (t = (leftmarg + (int)(inch8 + .5)) ; t < rect.right - m_margin ; t += (int)(inch8 + .5))
+		for (t = (leftmarg + (int)(inch8 + .5)); t < rect.right - m_margin; t += (int)(inch8 + .5))
 		{
 			dc.MoveTo(t, midpoint - 1);
 			dc.LineTo(t, midpoint + 1);
 		}
 
-		for (t = leftmarg + inch4 ; t < rect.right - m_margin ; t += inch4)
+		for (t = leftmarg + inch4; t < rect.right - m_margin; t += inch4)
 		{
 			dc.MoveTo(t, midpoint - 3);
 			dc.LineTo(t, midpoint + 3);
@@ -222,7 +222,7 @@ void CRRECRuler::OnPaint()
 		int count = 1;
 
 		// Drawing numbers
-		for (t = leftmarg + m_physicalInch ; t < rect.right - m_margin ; t += m_physicalInch)
+		for (t = leftmarg + m_physicalInch; t < rect.right - m_margin; t += m_physicalInch)
 		{
 			rectInch.SetRect(t - width / 2, winRect.top + 2, t + width / 2, winRect.bottom - 2);
 			counter.Format(_T("%i"), count);
@@ -232,11 +232,11 @@ void CRRECRuler::OnPaint()
 	}
 	else
 	{
-		int cm = (int)((double) m_physicalInch / 2.54 + .5);
-		int cm2 = (int)((double) cm / 2.0);
+		int cm = (int)((double)m_physicalInch / 2.54 + .5);
+		int cm2 = (int)((double)cm / 2.0);
 
 		// Drawing scale markers
-		for (t = leftmarg + cm2 ; t < rect.right - m_margin ; t += cm2)
+		for (t = leftmarg + cm2; t < rect.right - m_margin; t += cm2)
 		{
 			dc.MoveTo(t, midpoint - 1);
 			dc.LineTo(t, midpoint + 2);
@@ -247,7 +247,7 @@ void CRRECRuler::OnPaint()
 		int count = 1;
 
 		// Drawing numbers
-		for (t = leftmarg + cm ; t < rect.right - m_margin ; t += cm)
+		for (t = leftmarg + cm; t < rect.right - m_margin; t += cm)
 		{
 			rectNum.SetRect(t - width / 2, winRect.top + 2, t + width / 2, winRect.bottom - 2);
 			counter.Format(_T("%i"), count);
@@ -258,7 +258,7 @@ void CRRECRuler::OnPaint()
 
 	// Draw tab markers
 	int max = m_tabs.GetSize();
-	for (t = 0 ; t < max ; t++)
+	for (t = 0; t < max; t++)
 	{
 		int x = (leftmarg + m_tabs[ t ] - 2);
 		if (x > winRect.left && x + 3 < winRect.right)
@@ -375,7 +375,7 @@ void CRRECRuler::SetTabStops(const CDWordArray& arr)
 {
 	m_tabs.RemoveAll();
 	int max = arr.GetSize();
-	for (int t = 0 ; t < max ; t++)
+	for (int t = 0; t < max; t++)
 	{
 		m_tabs.Add(arr[ t ]);
 	}
@@ -404,8 +404,8 @@ void CRRECRuler::OnLButtonDown(UINT nFlags, CPoint point)
    ============================================================*/
 {
 	SetCapture();
-	GetParent()->SendMessage(urm_RULERACTION, DOWN, (LPARAM) &point);
-	CWnd::OnLButtonDown(nFlags,  point);
+	GetParent()->SendMessage(urm_RULERACTION, DOWN, (LPARAM)&point);
+	CWnd::OnLButtonDown(nFlags, point);
 }
 
 void CRRECRuler::OnLButtonUp(UINT nFlags, CPoint point)
@@ -425,8 +425,8 @@ void CRRECRuler::OnLButtonUp(UINT nFlags, CPoint point)
    ============================================================*/
 {
 	ReleaseCapture();
-	GetParent()->SendMessage(urm_RULERACTION, UP, (LPARAM) &point);
-	CWnd::OnLButtonUp(nFlags,  point);
+	GetParent()->SendMessage(urm_RULERACTION, UP, (LPARAM)&point);
+	CWnd::OnLButtonUp(nFlags, point);
 }
 
 void CRRECRuler::OnMouseMove(UINT nFlags, CPoint point)
@@ -445,8 +445,8 @@ void CRRECRuler::OnMouseMove(UINT nFlags, CPoint point)
 
    ============================================================*/
 {
-	GetParent()->SendMessage(urm_RULERACTION, MOVE, (LPARAM) &point);
-	CWnd::OnMouseMove(nFlags,  point);
+	GetParent()->SendMessage(urm_RULERACTION, MOVE, (LPARAM)&point);
+	CWnd::OnMouseMove(nFlags, point);
 }
 
 void CRRECRuler::OnEnable(BOOL bEnable)

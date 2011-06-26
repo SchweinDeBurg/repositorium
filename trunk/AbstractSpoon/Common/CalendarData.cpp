@@ -20,6 +20,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -108,7 +113,7 @@ void CCalendarData::GetTasks(const COleDateTime& _dt, CTaskInfoList& _listTasks)
 	CMapTimeToTaskItemList* pmapItems = NULL;
 	if (m_mapDateToHTASKITEMs.Lookup(tDate, pmapItems))
 	{
-		for (POSITION pos = pmapItems->GetStartPosition(); pos;)
+		for (POSITION pos = pmapItems->GetStartPosition(); pos; )
 		{
 			HTASKITEM hTask = NULL;
 			void* pUnused = NULL;
@@ -340,7 +345,7 @@ void CCalendarData::ClearImportantDateMap()
 {
 	if (!m_mapDateToHTASKITEMs.IsEmpty())
 	{
-		for (POSITION posClear = m_mapDateToHTASKITEMs.GetStartPosition(); posClear;)
+		for (POSITION posClear = m_mapDateToHTASKITEMs.GetStartPosition(); posClear; )
 		{
 			time_t tUnused = 0;
 			CMapTimeToTaskItemList* pmapItems = NULL;
@@ -412,13 +417,15 @@ void CCalendarData::ReadValueFromIni(const CString& _strKey, CString& _strValue,
 
 	DWORD dwLen = dwChunkSize;
 	TCHAR* pszValue = new TCHAR[dwLen + 1];
-	DWORD dwCopied = ::GetPrivateProfileString(CALENDAR_INI_SECTION_NAME, _strKey, strDefault, pszValue, dwLen, strIniFilename);
+	DWORD dwCopied = ::GetPrivateProfileString(CALENDAR_INI_SECTION_NAME, _strKey, strDefault, pszValue, dwLen,
+		strIniFilename);
 	while (dwCopied + 1 >= dwLen)
 	{
 		dwLen += dwChunkSize;
 		delete[] pszValue;
 		pszValue = new TCHAR[dwLen + 1];
-		dwCopied = ::GetPrivateProfileString(CALENDAR_INI_SECTION_NAME, _strKey, strDefault, pszValue, dwLen, strIniFilename);
+		dwCopied = ::GetPrivateProfileString(CALENDAR_INI_SECTION_NAME, _strKey, strDefault, pszValue, dwLen,
+			strIniFilename);
 	}
 
 	_strValue = pszValue;

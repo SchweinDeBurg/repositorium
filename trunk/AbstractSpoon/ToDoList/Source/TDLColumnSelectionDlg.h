@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_TDLCOLUMNSELECTIONDLG_H__B8AF67E2_DDBA_4D08_B930_397D338F9D43__INCLUDED_)
@@ -72,8 +77,8 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CTDLColumnSelectionDlg)
 	enum { IDD = IDD_COLUMNSELECTION_DIALOG };
-	CTDLColumnListBox   m_lbColumns;
-	int     m_bActiveTasklist;
+	CTDLColumnListBox m_lbColumns;
+	int m_bActiveTasklist;
 	//}}AFX_DATA
 	CTDCColumnArray m_aVisibleColumns;
 

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TDLSendTasksDlg.cpp : implementation file
@@ -58,7 +63,9 @@ static char THIS_FILE[] = __FILE__;
 // CTDLSendTasksDlg dialog
 
 CTDLSendTasksDlg::CTDLSendTasksDlg(TD_SENDWHAT nWhat, TD_SENDAS nSendAs, CWnd* pParent /*=NULL*/):
-CDialog(CTDLSendTasksDlg::IDD, pParent), m_nSendWhat(nWhat), m_nSendTasksAsOption(nSendAs)
+CDialog(CTDLSendTasksDlg::IDD, pParent),
+m_nSendWhat(nWhat),
+m_nSendTasksAsOption(nSendAs)
 {
 	//{{AFX_DATA_INIT(CTDLSendTasksDlg)
 	//}}AFX_DATA_INIT

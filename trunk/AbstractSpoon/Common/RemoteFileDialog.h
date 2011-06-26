@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_REMOTEFILEDIALOG_H__1EB7B1E7_62C6_4402_945E_D60A50455E39__INCLUDED_)
@@ -102,7 +107,8 @@ class CRemoteFileDialog : public CRuntimeDlg
 {
 // Construction
 public:
-	CRemoteFileDialog(CFtpConnection* pConnection, LPCTSTR szServer, LPCTSTR szFilters = NULL, LPCTSTR szInitialFolder = NULL);   // standard constructor
+	CRemoteFileDialog(CFtpConnection* pConnection, LPCTSTR szServer, LPCTSTR szFilters = NULL,
+		LPCTSTR szInitialFolder = NULL);   // standard constructor
 	virtual ~CRemoteFileDialog();
 
 	int DoModal(DWORD dwOptions = RFD_DOWNLOAD | RFD_FILEMUSTEXIST | RFD_MULTISELECT, LPCTSTR szFilename = NULL);
@@ -129,15 +135,15 @@ public:
 protected:
 // Dialog Data
 	//{{AFX_DATA(CRemoteFileDialog)
-	CComboBox   m_cbFileTypes;
-	CListCtrl   m_lcFiles;
+	CComboBox m_cbFileTypes;
+	CListCtrl m_lcFiles;
 	CString m_sCurFolder;
 	CString m_sFilenames;
 	CString m_sServer;
 	//}}AFX_DATA
 	CString m_sFilterExt;
-	CFileEdit   m_eCurFolder;
-	CFileEdit   m_eFilename;
+	CFileEdit m_eCurFolder;
+	CFileEdit m_eFilename;
 	CFtpConnection* m_pConnection;
 	DWORD m_dwFileSize; // selected file
 	CToolBar m_toolbar;
@@ -147,8 +153,14 @@ protected:
 
 	struct FILEFILTER
 	{
-		FILEFILTER() {}
-		FILEFILTER(LPCTSTR szName, LPCTSTR szExt) : sName(szName), sExt(szExt) {}
+		FILEFILTER()
+		{
+		}
+		FILEFILTER(LPCTSTR szName, LPCTSTR szExt):
+		sName(szName),
+		sExt(szExt)
+		{
+		}
 
 		CString sName;
 		CString sExt;
@@ -210,8 +222,8 @@ protected:
 
 	void SetCurrentFolder(LPCTSTR szFolder);
 	int GetFirstSelectedItem(); // assumes single selection
-	int AddFileItem(LPCTSTR szFileName, int nType, UINT nUniqueID, DWORD dwFileSize,
-		const FILETIME* pLastMod = NULL, int nImage = -1);
+	int AddFileItem(LPCTSTR szFileName, int nType, UINT nUniqueID, DWORD dwFileSize, const FILETIME* pLastMod = NULL,
+		int nImage = -1);
 	int GetItemType(int nItem);
 	DWORD GetItemSize(int nItem);
 	void InitFilterArray(LPCTSTR szFilters);

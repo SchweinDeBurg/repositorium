@@ -15,6 +15,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.3-6.2.2 sources
 //*****************************************************************************
 
@@ -77,7 +82,8 @@ m_dwStyleCompletedTasks(0)
 	CCalendarData::ReadValueFromIni(CALENDAR_INI_KEY_NUMWEEKS, m_nNumVisibleWeeks, 6);
 	CCalendarData::ReadValueFromIni(CALENDAR_INI_KEY_WINDOWMAXIMIZED, m_bWindowMaximized, FALSE);
 	CCalendarData::ReadValueFromIni(CALENDAR_INI_KEY_WINDOWSIZE, m_rcWindowSize, CRect(200, 200, 700, 600));
-	CCalendarData::ReadValueFromIni(CALENDAR_INI_KEY_COMPLETEDTASKS, m_dwStyleCompletedTasks, COMPLETEDTASKS_STRIKETHRU | COMPLETEDTASKS_GREY);
+	CCalendarData::ReadValueFromIni(CALENDAR_INI_KEY_COMPLETEDTASKS, m_dwStyleCompletedTasks,
+		COMPLETEDTASKS_STRIKETHRU | COMPLETEDTASKS_GREY);
 }
 
 CCalendarFrameWnd::~CCalendarFrameWnd()
@@ -141,7 +147,8 @@ BOOL CCalendarFrameWnd::Create(HWND hParent, BOOL bShow, LPSIZE pSize)
 
 	CWnd* pParent = CWnd::FromHandle(hParent);
 
-	if (CFrameWnd::LoadFrame(IDR_CALENDAR, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MAXIMIZEBOX | WS_THICKFRAME, pParent))
+	if (CFrameWnd::LoadFrame(IDR_CALENDAR, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MAXIMIZEBOX | WS_THICKFRAME,
+		pParent))
 	{
 		if (pSize)
 		{
@@ -172,8 +179,8 @@ void CCalendarFrameWnd::SetUITheme(const UITHEME& theme)
 		m_menubar.SetBackgroundColor(theme.crMenuBack);
 		DrawMenuBar();
 
-		m_StatusBar.SetUIColors(theme.crStatusBarLight, theme.crStatusBarDark, 
-			theme.nStyle == UIS_GRADIENT, theme.crStatusBarText);
+		m_StatusBar.SetUIColors(theme.crStatusBarLight, theme.crStatusBarDark, theme.nStyle == UIS_GRADIENT,
+			theme.crStatusBarText);
 	}
 }
 
@@ -756,11 +763,11 @@ BOOL CCalendarFrameWnd::InitStatusBar()
 {
 	static SBACTPANEINFO SB_PANES[] =
 	{
-		{ ID_SB_STARTDATE,    MAKEINTRESOURCE(ID_SB_STARTDATE_TIP), SBACTF_NORMAL | SBACTF_RESOURCETIP },
-		{ ID_SB_DUEDATE,      MAKEINTRESOURCE(ID_SB_DUEDATE_TIP), SBACTF_NORMAL | SBACTF_RESOURCETIP },
-		{ ID_SB_DONEDATE,     MAKEINTRESOURCE(ID_SB_DONEDATE_TIP), SBACTF_STRETCHY | SBACTF_RESOURCETIP },
+		{ ID_SB_STARTDATE, MAKEINTRESOURCE(ID_SB_STARTDATE_TIP), SBACTF_NORMAL | SBACTF_RESOURCETIP },
+		{ ID_SB_DUEDATE, MAKEINTRESOURCE(ID_SB_DUEDATE_TIP), SBACTF_NORMAL | SBACTF_RESOURCETIP },
+		{ ID_SB_DONEDATE, MAKEINTRESOURCE(ID_SB_DONEDATE_TIP), SBACTF_STRETCHY | SBACTF_RESOURCETIP },
 		{ ID_SB_TIMEESTIMATE, MAKEINTRESOURCE(ID_SB_TIMEESTIMATE_TIP), SBACTF_NORMAL | SBACTF_RESOURCETIP },
-		{ ID_SB_TIMESPENT,    MAKEINTRESOURCE(ID_SB_TIMESPENT_TIP), SBACTF_NORMAL | SBACTF_RESOURCETIP },
+		{ ID_SB_TIMESPENT, MAKEINTRESOURCE(ID_SB_TIMESPENT_TIP), SBACTF_NORMAL | SBACTF_RESOURCETIP },
 	};
 
 	static int SB_PANECOUNT = sizeof(SB_PANES) / sizeof(SBACTPANEINFO);

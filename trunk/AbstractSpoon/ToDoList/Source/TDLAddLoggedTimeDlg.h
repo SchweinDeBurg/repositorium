@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.6-6.2.2 sources
 //*****************************************************************************
 
@@ -74,14 +79,14 @@ protected:
 // Dialog Data
 	//{{AFX_DATA(CTDLAddLoggedTimeDlg)
 	enum { IDD = IDD_ADDLOGGEDTIME_DIALOG };
-	CDateTimeCtrl   m_dateWhen;
-	CTimeComboBox   m_cbTimeWhen;
-	double  m_dLoggedTime;
-	DWORD   m_dwTaskID;
+	CDateTimeCtrl m_dateWhen;
+	CTimeComboBox m_cbTimeWhen;
+	double m_dLoggedTime;
+	DWORD m_dwTaskID;
 	CString m_sTaskTitle;
-	BOOL    m_bAddTimeToTimeSpent;
+	BOOL m_bAddTimeToTimeSpent;
 	//}}AFX_DATA
-	CTimeEdit   m_eLoggedTime;
+	CTimeEdit m_eLoggedTime;
 	int m_nUnits;
 	COleDateTime m_dtWhen;
 

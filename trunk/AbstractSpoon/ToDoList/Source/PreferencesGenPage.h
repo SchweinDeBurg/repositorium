@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -142,24 +147,24 @@ public:
 	//{{AFX_DATA(CPreferencesGenPage)
 	enum { IDD = IDD_PREFGEN_PAGE };
 	CStatic m_stVistaShield;
-	CHotKeyCtrlEx   m_hkGlobal;
-	BOOL    m_bAlwaysOnTop;
-	BOOL    m_bUseSysTray;
-	BOOL    m_bConfirmDelete;
-	BOOL    m_bConfirmSaveOnExit;
-	BOOL    m_bMultiInstance;
-	BOOL    m_bShowOnStartup;
-	int     m_nSysTrayOption;
-	BOOL    m_bToggleTrayVisibility;
-	BOOL    m_bSpecifyGlobalHotkey;
-	BOOL    m_bAddFilesToMRU;
-	BOOL    m_bEnableTDLExtension;
-	BOOL    m_bAutoCheckForUpdates;
-	BOOL    m_bEscapeMinimizes;
-	BOOL    m_bEnableTDLProtocol;
-	BOOL    m_bEnableDelayedLoading;
+	CHotKeyCtrlEx m_hkGlobal;
+	BOOL m_bAlwaysOnTop;
+	BOOL m_bUseSysTray;
+	BOOL m_bConfirmDelete;
+	BOOL m_bConfirmSaveOnExit;
+	BOOL m_bMultiInstance;
+	BOOL m_bShowOnStartup;
+	int m_nSysTrayOption;
+	BOOL m_bToggleTrayVisibility;
+	BOOL m_bSpecifyGlobalHotkey;
+	BOOL m_bAddFilesToMRU;
+	BOOL m_bEnableTDLExtension;
+	BOOL m_bAutoCheckForUpdates;
+	BOOL m_bEscapeMinimizes;
+	BOOL m_bEnableTDLProtocol;
+	BOOL m_bEnableDelayedLoading;
 	//}}AFX_DATA
-	DWORD   m_dwGlobalHotkey;
+	DWORD m_dwGlobalHotkey;
 
 // Overrides
 	// ClassWizard generate virtual function overrides

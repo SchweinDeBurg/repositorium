@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -74,8 +79,8 @@ static char THIS_FILE[] = __FILE__;
 const UINT BUFSIZE = 5 * 1024;
 const LPCTSTR ALLFILES = _T("All Files (*.*)\0*.*\0");
 
-CRemoteFile::CRemoteFile(LPCTSTR szAgent, LPCTSTR szServer, LPCTSTR szUsername,
-LPCTSTR szPassword, LPCTSTR szProxy, CWnd* pParent):
+CRemoteFile::CRemoteFile(LPCTSTR szAgent, LPCTSTR szServer, LPCTSTR szUsername, LPCTSTR szPassword, LPCTSTR szProxy,
+	CWnd* pParent):
 m_sAgent(szAgent),
 m_sProxyAndPort(szProxy),
 m_sServer(szServer),
@@ -427,8 +432,8 @@ BOOL CRemoteFile::RemotePathIsFolder(const CString& sPath)
 }
 
 // for upload
-RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, const CStringArray& aLocalFiles,
-	DWORD dwOptions, LPCTSTR szRemoteDir, LPCTSTR szLocalRoot)
+RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, const CStringArray& aLocalFiles, DWORD dwOptions,
+	LPCTSTR szRemoteDir, LPCTSTR szLocalRoot)
 {
 	aRemoteFiles.RemoveAll();
 
@@ -611,7 +616,8 @@ RMERR CRemoteFile::GetRemotePaths(CFRArray& aRemoteFiles, DWORD dwOptions, LPCTS
 }
 
 // for download
-RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, BOOL& bTemp, const CFRArray& aRemoteFiles, DWORD dwOptions, LPCTSTR szLocalDir)
+RMERR CRemoteFile::GetLocalPaths(CStringArray& aLocalFiles, BOOL& bTemp, const CFRArray& aRemoteFiles, DWORD dwOptions,
+	LPCTSTR szLocalDir)
 {
 	aLocalFiles.RemoveAll();
 
@@ -973,7 +979,8 @@ BOOL CRemoteFile::EstablishConnection(RMERR& nRes, DWORD dwOptions)
 			if (bAllowDialog)
 			{
 				CString sMessage;
-				sMessage.Format(_T("A connection to '%s' could not be established.\n\nWould you like to check your details and try again?"), m_sServer);
+				sMessage.Format(_T("A connection to '%s' could not be established.\n\nWould you like to check your details and try again?"),
+					m_sServer);
 
 				if (AfxMessageBox(sMessage, MB_YESNO) == IDNO)
 				{
@@ -1054,7 +1061,7 @@ BOOL CRemoteFile::SetProxy(const CString& sProxy, UINT nPort)
 	}
 
 	// else
-	return TRUE;;
+	return TRUE;
 }
 
 BOOL CRemoteFile::RestartSession()
@@ -1118,7 +1125,7 @@ DWORD CRemoteFile::GetRemoteFileSize(LPCTSTR szRemotePath)
 	{
 	}
 
-	return (DWORD) - 1;
+	return (DWORD)-1;
 }
 
 BOOL CRemoteFile::RemoteFileExists(LPCTSTR szRemotePath)
@@ -1338,7 +1345,8 @@ void CRemoteFile::DoProgress(CProgressDlg* pDlg, DWORD dwBytesRead, DWORD dwFile
 	if (bUpload)
 	{
 		nPercent = MulDiv(dwBytesRead, 100, dwFileSize);
-		sProgress.Format(_T("%0.1f Kb uploaded so far (%0.1f Kb remaining)"), dwBytesRead / 1024.0, (dwFileSize - dwBytesRead) / 1024.0);
+		sProgress.Format(_T("%0.1f Kb uploaded so far (%0.1f Kb remaining)"), dwBytesRead / 1024.0,
+			(dwFileSize - dwBytesRead) / 1024.0);
 		sTitle.Format(_T("Upload Progress (%d%%)"), nPercent);
 	}
 	else // download
@@ -1352,7 +1360,8 @@ void CRemoteFile::DoProgress(CProgressDlg* pDlg, DWORD dwBytesRead, DWORD dwFile
 		else
 		{
 			nPercent = MulDiv(dwBytesRead, 100, dwFileSize);
-			sProgress.Format(_T("%0.1f Kb downloaded so far (%0.1f Kb remaining)"), dwBytesRead / 1024.0, (dwFileSize - dwBytesRead) / 1024.0);
+			sProgress.Format(_T("%0.1f Kb downloaded so far (%0.1f Kb remaining)"), dwBytesRead / 1024.0,
+				(dwFileSize - dwBytesRead) / 1024.0);
 			sTitle.Format(_T("Download Progress (%d%%)"), nPercent);
 		}
 	}
@@ -1390,7 +1399,8 @@ RMERR CRemoteFile::UploadFile(LPCTSTR szFromLocalPath, const FILERESULT* pRemote
 	if (bRemoteExists && (dwOptions & RMO_CONFIRMOVERWRITE))
 	{
 		CString sMessage;
-		sMessage.Format(_T("The remote file '%s' already exists on the server.\n\nAre you sure you want to overwrite it?"), sRemotePath);
+		sMessage.Format(_T("The remote file '%s' already exists on the server.\n\nAre you sure you want to overwrite it?"),
+			sRemotePath);
 
 		HWND hWnd = m_pParent ? m_pParent->GetSafeHwnd() : NULL;
 

@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // UIExtensionUIHelper.cpp: implementation of the CUIExtensionUIHelper class.
@@ -62,8 +67,10 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CUIExtensionUIHelper::CUIExtensionUIHelper(const CUIExtensionMgr& mgrUIExt, UINT nStart, int nSize) :
-m_mgrUIExt(mgrUIExt), m_nStartID(nStart), m_nSize(nSize)
+CUIExtensionUIHelper::CUIExtensionUIHelper(const CUIExtensionMgr& mgrUIExt, UINT nStart, int nSize):
+m_mgrUIExt(mgrUIExt),
+m_nStartID(nStart),
+m_nSize(nSize)
 {
 }
 
@@ -106,8 +113,7 @@ void CUIExtensionUIHelper::UpdateMenu(CCmdUI* pCmdUI, CMenuIconMgr& mgrIcon, BOO
 					sMenuItem = sText;
 				}
 
-				pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex++, nFlags,
-					m_nStartID + nExt, sMenuItem);
+				pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex++, nFlags, m_nStartID + nExt, sMenuItem);
 
 				// icon
 				HICON hIcon = m_mgrUIExt.GetUIExtensionIcon(nExt);
@@ -124,8 +130,8 @@ void CUIExtensionUIHelper::UpdateMenu(CCmdUI* pCmdUI, CMenuIconMgr& mgrIcon, BOO
 		}
 		else // if nothing to add just re-add placeholder
 		{
-			pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex, MF_BYPOSITION | MF_STRING | MF_GRAYED,
-				m_nStartID, _T("3rd Party Extensions"));
+			pCmdUI->m_pMenu->InsertMenu(pCmdUI->m_nIndex, MF_BYPOSITION | MF_STRING | MF_GRAYED, m_nStartID,
+				_T("3rd Party Extensions"));
 		}
 	}
 }

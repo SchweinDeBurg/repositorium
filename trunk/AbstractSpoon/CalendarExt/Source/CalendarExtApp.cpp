@@ -15,6 +15,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // CalendarExtApp.cpp : Defines the initialization routines for the DLL.
@@ -34,8 +39,7 @@ static char THIS_FILE[] = __FILE__;
 
 static AFX_EXTENSION_MODULE CalendarExtDLL = { NULL, NULL };
 
-extern "C" int APIENTRY
-DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
+extern "C" int APIENTRY DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
 	// Remove this if you use lpReserved
 	UNREFERENCED_PARAMETER(lpReserved);
@@ -87,14 +91,14 @@ DLL_DECLSPEC int GetInterfaceVersion()
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCalendarExtApp::CCalendarExtApp() : m_hIcon(NULL)
+CCalendarExtApp::CCalendarExtApp():
+m_hIcon(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_CALENDAR);
 }
 
 CCalendarExtApp::~CCalendarExtApp()
 {
-
 }
 
 void CCalendarExtApp::Release()

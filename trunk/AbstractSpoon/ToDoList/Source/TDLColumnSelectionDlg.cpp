@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // TDLColumnSelectionDlg.cpp : implementation file
@@ -57,7 +62,8 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTDLColumnSelectionDlg dialog
 
-CTDLColumnSelectionDlg::CTDLColumnSelectionDlg(const CTDCColumnArray& aColumns, BOOL bActiveTasklist, CWnd* pParent /*=NULL*/):
+CTDLColumnSelectionDlg::CTDLColumnSelectionDlg(const CTDCColumnArray& aColumns, BOOL bActiveTasklist,
+	CWnd* pParent /*=NULL*/):
 CDialog(CTDLColumnSelectionDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CTDLColumnSelectionDlg)

@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 #if !defined(AFX_PROGRESSDLG_H__A8A46BFB_E2CA_4BBF_A76D_C363065DEFA7__INCLUDED_)
@@ -60,9 +65,9 @@ public:
 protected:
 // Dialog Data
 	//{{AFX_DATA(CProgressDlg)
-	CProgressCtrl	m_progress;
-	CString	m_sProgress;
-	CString	m_sDescription;
+	CProgressCtrl m_progress;
+	CString m_sProgress;
+	CString m_sDescription;
 	//}}AFX_DATA
 	BOOL m_bContinue;
 

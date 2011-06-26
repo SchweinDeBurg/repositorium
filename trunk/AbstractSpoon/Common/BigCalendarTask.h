@@ -21,6 +21,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -42,11 +47,11 @@ public:
 	CBigCalendarTask(CBigCalendarCtrl* _pParent = NULL, DWORD _dwStyleCompletedTasks = 0);
 	virtual ~CBigCalendarTask();
 
-	int  AddItem(const CString& _strText, DWORD _dwTaskID, BOOL _bStartTask, BOOL _bCompleteTask);
+	int AddItem(const CString& _strText, DWORD _dwTaskID, BOOL _bStartTask, BOOL _bCompleteTask);
 	void ResetContent();
 
 protected:
-	int	 OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
+	int OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
 	BOOL OnToolTipText(UINT id, NMHDR* pTTTStruct, LRESULT* pResult);
 
 	//{{AFX_MSG(CBigCalendarTask)
@@ -62,11 +67,11 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-	CBigCalendarCtrl*   m_pParent;
+	CBigCalendarCtrl* m_pParent;
 
 private:
-	CMap <DWORD, DWORD&, BOOL, BOOL&> m_mapTaskIDToStartTask;
-	CMap <DWORD, DWORD&, BOOL, BOOL&> m_mapTaskIDToCompleteTask;
+	CMap<DWORD, DWORD&, BOOL, BOOL&> m_mapTaskIDToStartTask;
+	CMap<DWORD, DWORD&, BOOL, BOOL&> m_mapTaskIDToCompleteTask;
 };
 
 #endif//_BIGCALENDARTASK_H_

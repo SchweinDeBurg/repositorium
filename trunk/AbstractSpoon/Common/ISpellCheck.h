@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // ISpellChecker.h: interface for the ISpellChecker class.
@@ -123,10 +128,10 @@ public:
 
 	//
 	virtual bool CheckSpelling(const char* szWord) = 0;
-	virtual bool CheckSpelling(const char* szWord, char** & pSuggestions, int& nNumSuggestions) = 0;
+	virtual bool CheckSpelling(const char* szWord, char**& pSuggestions, int& nNumSuggestions) = 0;
 
 	// frees a previously returned buffer and sets the ptr to NULL
-	virtual void FreeSuggestions(char** & pSuggestions) = 0;
+	virtual void FreeSuggestions(char**& pSuggestions) = 0;
 };
 
 static void ReleaseSpellCheckerInterface(ISpellChecker*& pInterface)

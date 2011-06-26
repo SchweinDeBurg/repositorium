@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -86,7 +91,7 @@ const UINT SORTWIDTH = 10;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CFilteredToDoCtrl::CFilteredToDoCtrl(CContentMgr& mgr, const CONTENTFORMAT& cfDefault) :
+CFilteredToDoCtrl::CFilteredToDoCtrl(CContentMgr& mgr, const CONTENTFORMAT& cfDefault):
 CToDoCtrl(mgr, cfDefault),
 m_nCurView(FTCV_UNSET),
 m_bListNeedRefilter(TRUE),
@@ -103,9 +108,8 @@ m_bListMultiSort(FALSE)
 	{
 		const TDCCONTROL& ctrl = FTDCCONTROLS[nCtrl];
 
-		AddRCControl(_T("CONTROL"), ctrl.szClass, CEnString(ctrl.nIDCaption),
-			ctrl.dwStyle, ctrl.dwExStyle,
-			ctrl.nX, ctrl.nY, ctrl.nCx, ctrl.nCy, ctrl.nID);
+		AddRCControl(_T("CONTROL"), ctrl.szClass, CEnString(ctrl.nIDCaption), ctrl.dwStyle, ctrl.dwExStyle, ctrl.nX,
+			ctrl.nY, ctrl.nCx, ctrl.nCy, ctrl.nID);
 	}
 
 	m_sortList.nBy1 = TDC_UNSORTED;
@@ -446,7 +450,7 @@ void CFilteredToDoCtrl::OnListGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult)
 	UINT nMask = lplvdi->item.mask;
 	DWORD dwTaskID = (DWORD)lplvdi->item.lParam;
 
-	if ((nMask & LVIF_TEXT) &&  m_dwEditingID != dwTaskID)
+	if ((nMask & LVIF_TEXT) && m_dwEditingID != dwTaskID)
 	{
 		TODOITEM* pTDI = GetTask(dwTaskID);
 
@@ -589,7 +593,8 @@ BOOL CFilteredToDoCtrl::RemoveArchivedTask(DWORD dwTaskID)
 	return m_data.DeleteTask(dwTaskID);
 }
 
-void CFilteredToDoCtrl::GetCompletedTasks(const TODOSTRUCTURE* pTDS, CTaskFile& tasks, HTASKITEM hTaskParent, BOOL bSelectedOnly) const
+void CFilteredToDoCtrl::GetCompletedTasks(const TODOSTRUCTURE* pTDS, CTaskFile& tasks, HTASKITEM hTaskParent,
+	BOOL bSelectedOnly) const
 {
 	const TODOITEM* pTDI = NULL;
 
@@ -3754,7 +3759,7 @@ LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPAR
 			// because the visual state of the list selection is actually handled by
 			// whether the tree selection is up to date we need to update the tree
 			// selection here, because the list ctrl does it this way natively.
-			LRESULT	lr = CSubclasser::ScWindowProc(hRealWnd, msg, wp, lp);
+			LRESULT lr = CSubclasser::ScWindowProc(hRealWnd, msg, wp, lp);
 			UpdateTreeSelection();
 
 			return lr;
@@ -3889,7 +3894,7 @@ BOOL CFilteredToDoCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 
 		if (nHit >= 0)
 		{
-			TDC_COLUMN nCol	= GetColumnID(lvhti.iSubItem);
+			TDC_COLUMN nCol = GetColumnID(lvhti.iSubItem);
 			DWORD dwID = m_list.GetItemData(nHit);
 
 			BOOL bCtrl = Misc::ModKeysArePressed(MKS_CTRL);

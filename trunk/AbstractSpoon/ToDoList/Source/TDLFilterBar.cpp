@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2-6.2.2 sources
 //*****************************************************************************
 
@@ -317,8 +322,7 @@ LRESULT CTDLFilterBar::OnEEBtnClick(WPARAM /*wp*/, LPARAM /*lp*/)
 BOOL CTDLFilterBar::PreTranslateMessage(MSG* pMsg)
 {
 	// handle return key in title field
-	if (pMsg->message == WM_KEYDOWN && pMsg->hwnd == m_eTitleFilter &&
-			pMsg->wParam == VK_RETURN)
+	if (pMsg->message == WM_KEYDOWN && pMsg->hwnd == m_eTitleFilter && pMsg->wParam == VK_RETURN)
 	{
 		OnSelchangeFilter();
 		return TRUE;

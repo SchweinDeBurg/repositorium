@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.1.2 sources
 //*****************************************************************************
 
@@ -59,8 +64,8 @@
 
 struct TDCUNDOELEMENT
 {
-	TDCUNDOELEMENT(TDCUNDOELMOP op = TDCUEO_EDIT, DWORD taskID = 0, DWORD parentID = 0,
-		DWORD prevSiblingID = 0, WORD flags = 0, const TODOITEM* pTDI = NULL) :
+	TDCUNDOELEMENT(TDCUNDOELMOP op = TDCUEO_EDIT, DWORD taskID = 0, DWORD parentID = 0, DWORD prevSiblingID = 0,
+		WORD flags = 0, const TODOITEM* pTDI = NULL):
 	nOp(op),
 	dwTaskID(taskID),
 	dwParentID(parentID),
@@ -109,7 +114,8 @@ typedef CArray<TDCUNDOELEMENT, TDCUNDOELEMENT&> CArrayUndoElements;
 
 struct TDCUNDOACTION
 {
-	TDCUNDOACTION(TDCUNDOACTIONTYPE type = TDCUAT_NONE) : nType(type)
+	TDCUNDOACTION(TDCUNDOACTIONTYPE type = TDCUAT_NONE):
+	nType(type)
 	{
 	}
 
@@ -165,8 +171,8 @@ public:
 	}
 	BOOL EndCurrentAction();
 
-	BOOL SaveElement(TDCUNDOELMOP nOp, DWORD dwTaskID, DWORD dwParentID, DWORD dwPrevSiblingID,
-		WORD wFlags, const TODOITEM* pTDI);
+	BOOL SaveElement(TDCUNDOELMOP nOp, DWORD dwTaskID, DWORD dwParentID, DWORD dwPrevSiblingID, WORD wFlags,
+		const TODOITEM* pTDI);
 	BOOL IsValidElementOperation(TDCUNDOELMOP nOp) const;
 
 	int GetLastUndoActionTaskIDs(CDWordArray& aIDs) const;

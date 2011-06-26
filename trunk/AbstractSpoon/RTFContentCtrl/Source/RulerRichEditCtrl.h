@@ -100,8 +100,8 @@ public:
 	virtual BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, BOOL autohscroll = FALSE);
 
 // Attributes
-	void    SetMode(int mode);
-	int     GetMode() const;
+	void SetMode(int mode);
+	int GetMode() const;
 
 	void ShowToolbar(BOOL show = TRUE);
 	void ShowRuler(BOOL show = TRUE);
@@ -122,9 +122,9 @@ public:
 // Implementation
 	CString GetRTF();
 	int GetRTFLength();
-	void    SetRTF(const CString& rtf);
-	BOOL    Save(CString& filename);
-	BOOL    Load(CString& filename);
+	void SetRTF(const CString& rtf);
+	BOOL Save(CString& filename);
+	BOOL Load(CString& filename);
 
 	void SetReadOnly(BOOL readOnly);
 	BOOL GetReadOnly() const;
@@ -204,44 +204,44 @@ protected:
 
 protected:
 	// Internal data
-	int             m_rulerPosition;    // The x-position of the ruler line when dragging a tab
-	CPen            m_pen;              // The pen to use for drawing the XORed ruler line
+	int m_rulerPosition;    // The x-position of the ruler line when dragging a tab
+	CPen m_pen;             // The pen to use for drawing the XORed ruler line
 
-	CDWordArray     m_tabs;             // An array containing the tab-positions in device pixels
-	int             m_margin;           // The margin to use for the ruler and buttons
+	CDWordArray m_tabs;     // An array containing the tab-positions in device pixels
+	int m_margin;           // The margin to use for the ruler and buttons
 
-	int             m_physicalInch;     // The number of pixels for an inch on screen
-	int             m_movingtab;        // The tab-position being moved, or -1 if none
-	int             m_offset;           // Internal offset of the tab-marker being moved.
-	CharFormat      m_cfDefault;
-    CHARRANGE       m_crSel;
+	int m_physicalInch;     // The number of pixels for an inch on screen
+	int m_movingtab;        // The tab-position being moved, or -1 if none
+	int m_offset;           // Internal offset of the tab-marker being moved.
+	CharFormat m_cfDefault;
+	CHARRANGE m_crSel;
 
-	BOOL            m_showToolbar;
-	BOOL            m_showRuler;
-	BOOL            m_readOnly;
-	BOOL            m_bWordWrap;
+	BOOL m_showToolbar;
+	BOOL m_showRuler;
+	BOOL m_readOnly;
+	BOOL m_bWordWrap;
 
 	// Sub-controls
-	CRulerRichEdit  m_rtf;
-	CRRECToolBar    m_toolbar;
-	CRRECRuler      m_ruler;
+	CRulerRichEdit m_rtf;
+	CRRECToolBar m_toolbar;
+	CRRECRuler m_ruler;
 
 	// Private helpers
-	void    SetTabStops(LPLONG tabs, int size);
-	void    UpdateTabStops();
+	void SetTabStops(LPLONG tabs, int size);
+	void UpdateTabStops();
 
-	BOOL    CreateToolbar();
-	BOOL    CreateRuler();
-	BOOL    CreateRTFControl(BOOL autohscroll);
-	void    CreateMargins();
+	BOOL CreateToolbar();
+	BOOL CreateRuler();
+	BOOL CreateRTFControl(BOOL autohscroll);
+	void CreateMargins();
 
-	void    UpdateToolbarButtons();
-	void    UpdateEditRect();
+	void UpdateToolbarButtons();
+	void UpdateEditRect();
 
-	void    SetEffect(int mask, int effect);
-	void    SetAlignment(int alignment);
+	void SetEffect(int mask, int effect);
+	void SetAlignment(int alignment);
 
-	void    LayoutControls(int width, int height);
+	void LayoutControls(int width, int height);
 
 	BOOL FixupTabStops(ParaFormat& para);
 	void BuildTabStops(ParaFormat& para);

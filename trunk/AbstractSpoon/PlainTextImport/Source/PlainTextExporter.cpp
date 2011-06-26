@@ -26,6 +26,11 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - adjusted #include's paths
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 // - merged with ToDoList version 6.2.2 sources
 //*****************************************************************************
 
@@ -167,8 +172,7 @@ bool CPlainTextExporter::Export(const IMultiTaskList* pSrcTaskFile, const TCHAR*
 	return false;
 }
 
-void CPlainTextExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask,
-	CStdioFile& fileOut, int nDepth)
+void CPlainTextExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, CStdioFile& fileOut, int nDepth)
 {
 	if (!hTask)
 	{

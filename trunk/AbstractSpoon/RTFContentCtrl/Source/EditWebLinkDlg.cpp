@@ -39,6 +39,11 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - restyled using ProFactor StyleManager v1.17:
+//      * removed unnecessary spaces and empty lines
+//      * wrapped extremely long lines
+//      * reformatted all the ctors to be more readable
+//      * eliminated dead commented code
 //*****************************************************************************
 
 // EditWebLinkDlg.cpp : implementation file
@@ -58,8 +63,8 @@ static char THIS_FILE[] = __FILE__;
 // CEditWebLinkDlg dialog
 
 
-CEditWebLinkDlg::CEditWebLinkDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CEditWebLinkDlg::IDD, pParent)
+CEditWebLinkDlg::CEditWebLinkDlg(CWnd* pParent /*=NULL*/):
+CDialog(CEditWebLinkDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CEditWebLinkDlg)
 	m_sWebLink = _T("http://www.");

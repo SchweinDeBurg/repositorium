@@ -37,11 +37,11 @@ public:
 	virtual BOOL Create(const CRect& rect, CWnd* parent, UINT id);
 
 // Implementation
-	void    SetMode(int mode);
-	int     GetMode() const;
-	void    SetMargin(int margin);
-	void    SetTabStops(const CDWordArray& arr);
-	void    SetBackgroundColor(COLORREF color)
+	void SetMode(int mode);
+	int GetMode() const;
+	void SetMargin(int margin);
+	void SetTabStops(const CDWordArray& arr);
+	void SetBackgroundColor(COLORREF color)
 	{
 		m_crBack = color;
 		Invalidate();
