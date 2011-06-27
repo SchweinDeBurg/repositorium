@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2-6.2.2 sources
+// - merged with ToDoList version 6.1.2-6.2.6 sources
 //*****************************************************************************
 
 // ToDoCommentsCtrl.cpp : implementation file
@@ -583,6 +583,9 @@ int CToDoCommentsCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// set max edit length
 	LimitText(1024 * 1024 * 1024); // one gigabyte
 
+	// set text mode to plain text
+	SendMessage(EM_SETTEXTMODE, TM_PLAINTEXT | TM_MULTILEVELUNDO | TM_MULTICODEPAGE, 0L);
+
 	return 0;
 }
 
@@ -591,8 +594,8 @@ bool CToDoCommentsCtrl::ProcessMessage(MSG* pMsg)
 	// process editing shortcuts
 	if (pMsg->message == WM_KEYDOWN)
 	{
-		BOOL bCtrl = Misc::ModKeysArePressed(MKS_CTRL);
-		BOOL bShift = Misc::ModKeysArePressed(MKS_SHIFT);
+		BOOL bCtrl = Misc::KeyIsPressed(VK_CONTROL);
+		BOOL bShift = Misc::KeyIsPressed(VK_SHIFT);
 
 		if (bCtrl)
 		{
@@ -663,16 +666,4 @@ bool CToDoCommentsCtrl::ProcessMessage(MSG* pMsg)
 	}
 
 	return false;
-}
-
-void CToDoCommentsCtrl::Copy()
-{
-	// only copy plain text
-	CUrlRichEditCtrl::Copy();
-
-	// append a newline character to fix a bug running as CF_TEXT
-	CString sText = Misc::GetClipboardText(GetSafeHwnd());
-	sText += '\n';
-
-	Misc::CopyTexttoClipboard(sText, GetSafeHwnd());
 }

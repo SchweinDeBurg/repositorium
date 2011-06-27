@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2-6.2.2 sources
+// - merged with ToDoList version 6.1.2-6.2.6 sources
 //*****************************************************************************
 
 // TaskListTxtExporter.cpp: implementation of the CTaskListTxtExporter class.
@@ -281,7 +281,7 @@ CString& CTaskListTxtExporter::ExportTask(const ITaskList8* pTasks, HTASKITEM hT
 		// comments
 		if (pTasks->TaskHasAttribute(hTask, ATL::CT2A(TDL_TASKCOMMENTS)))
 		{
-			sComments.Format(_T("%s%s[%s]"), ENDL, (LPCTSTR)sTabs, (LPTSTR)pTasks->GetTaskComments(hTask));
+			sComments.Format(_T("%s%s%s"), ENDL, (LPCTSTR)sTabs, (LPTSTR)pTasks->GetTaskComments(hTask));
 		}
 
 		sItem.Format(_T("%s %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"),

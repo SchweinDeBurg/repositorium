@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2-6.2.2 sources
+// - merged with ToDoList version 6.1.2-6.2.6 sources
 //*****************************************************************************
 
 // ToDoCtrlData.cpp: implementation of the CToDoCtrlData class.
@@ -2144,8 +2144,7 @@ BOOL CToDoCtrlData::GetSubtaskTotals(const TODOITEM* pTDI, const TODOSTRUCTURE* 
 	}
 
 	// do we need to recalc?
-	if (pTDI->AttribNeedsRecalc(TDIR_SUBTASKSCOUNT) ||
-		pTDI->AttribNeedsRecalc(TDIR_SUBTASKSDONE))
+	if (pTDI->AttribNeedsRecalc(TDIR_SUBTASKSCOUNT) || pTDI->AttribNeedsRecalc(TDIR_SUBTASKSDONE))
 	{
 		nSubtasksDone = nSubtasksCount = 0;
 
@@ -2197,34 +2196,27 @@ int CToDoCtrlData::CalcPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pT
 			{
 				nPercent = 100;
 			}
-
 			else if (HasStyle(TDCS_AUTOCALCPERCENTDONE))
 			{
 				nPercent = CalcPercentFromTime(pTDI, pTDS);
 			}
-
 			else
 			{
 				nPercent = pTDI->nPercentDone;
 			}
 		}
-		else
+		else if (HasStyle(TDCS_AVERAGEPERCENTSUBCOMPLETION)) // has subtasks and we must average their completion
 		{
-			// else
-			double dTotalPercent = 0, dTotalWeighting = 0, dPercent = 0;
-
-			SumPercentDone(pTDI, pTDS, dTotalPercent, dTotalWeighting);
-
-			if (dTotalWeighting > 0)
+			// note: we have separate functions for weighted/unweighted
+			// just to keep the logic for each as clear as possible
+			if (HasStyle(TDCS_WEIGHTPERCENTCALCBYNUMSUB))
 			{
-				dPercent = dTotalPercent / dTotalWeighting;
+				nPercent = (int)Misc::Round(SumWeightedPercentDone(pTDI, pTDS));
 			}
 			else
 			{
-				ASSERT(dTotalPercent == 0);   // sanity check
+				nPercent = (int)Misc::Round(SumPercentDone(pTDI, pTDS));
 			}
-
-			nPercent = (int)dPercent;
 		}
 
 		// update calc'ed value
@@ -2259,71 +2251,157 @@ int CToDoCtrlData::CalcPercentFromTime(const TODOITEM* pTDI, const TODOSTRUCTURE
 	}
 }
 
-void CToDoCtrlData::SumPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, double& dTotalPercent,
-	double& dTotalWeighting) const
+double CToDoCtrlData::SumPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS) const
 {
 	ASSERT(pTDS && pTDI);
 
 	if (!pTDS || !pTDI)
 	{
-		return;
+		return 0;
 	}
 
 	ASSERT(HasStyle(TDCS_AVERAGEPERCENTSUBCOMPLETION));  // sanity check
 
 	if (!pTDS->HasSubTasks() || pTDI->IsDone())
 	{
-		double dWeighting = 1; // default
-		double dPercent = 0;
-
 		// base percent
 		if (pTDI->IsDone())
 		{
-			dPercent = 100;
+			return 100;
 		}
-
 		else if (HasStyle(TDCS_AUTOCALCPERCENTDONE))
 		{
-			dPercent = CalcPercentFromTime(pTDI, pTDS);
+			return CalcPercentFromTime(pTDI, pTDS);
 		}
-
 		else
 		{
-			dPercent = pTDI->nPercentDone;
+			return pTDI->nPercentDone;
 		}
-
-		dTotalWeighting += dWeighting;
-		dTotalPercent += dPercent;
 	}
-	else // aggregate child percentages
+
+	// else aggregate child percentages
+	// optionally ignoring completed tasks
+	BOOL bIncludeDone = HasStyle(TDCS_INCLUDEDONEINAVERAGECALC);
+	int nNumSubtasks = 0, nNumDoneSubtasks = 0;
+
+	if (bIncludeDone)
 	{
-		double dChildWeighting = 0;
-		double dChildPercent = 0;
+		nNumSubtasks = pTDS->GetSubTaskCount();
+		ASSERT(nNumSubtasks);
+	}
+	else
+	{
+		GetSubtaskTotals(pTDI, pTDS, nNumSubtasks, nNumDoneSubtasks);
 
-		for (int nSubTask = 0; nSubTask < pTDS->GetSubTaskCount(); nSubTask++)
+		if (nNumDoneSubtasks == nNumSubtasks) // all subtasks are completed
 		{
-			const TODOSTRUCTURE* pTDSChild = pTDS->GetSubTask(nSubTask);
-			ASSERT(pTDSChild);
-
-			TODOITEM* pTDIChild = GetTask(pTDSChild);
-
-			if (!pTDIChild->IsDone() || HasStyle(TDCS_INCLUDEDONEINAVERAGECALC))
-			{
-				SumPercentDone(pTDIChild, pTDSChild, dChildPercent, dChildWeighting);
-			}
+			return 0;
 		}
+	}
 
-		if (HasStyle(TDCS_WEIGHTPERCENTCALCBYNUMSUB))
+	// Get default done value for each child (ex.4 child = 25, 3 child = 33.33, etc.)
+	double dSplitDoneValue = (1.0 / (nNumSubtasks - nNumDoneSubtasks));
+	double dTotalPercentDone = 0;
+
+	for (int nSubTask = 0; nSubTask < pTDS->GetSubTaskCount(); nSubTask++)
+	{
+		const TODOSTRUCTURE* pTDSChild = pTDS->GetSubTask(nSubTask);
+		ASSERT(pTDSChild);
+
+		TODOITEM* pTDIChild = GetTask(pTDSChild); // I assume this is for acquiring the child
+
+		if (HasStyle(TDCS_INCLUDEDONEINAVERAGECALC) || !IsTaskDone(pTDIChild, pTDSChild, TDCCHECKALL))
 		{
-			dTotalPercent += dChildPercent;
-			dTotalWeighting += dChildWeighting;
+			//add percent per child(ex.2 child = 50 each if 1st child has 75% completed then will add 50*75/100 = 37.5)
+			dTotalPercentDone += dSplitDoneValue * SumPercentDone(pTDIChild, pTDSChild);
+		}
+	}
+
+	return dTotalPercentDone;
+}
+
+int CToDoCtrlData::GetTaskLeafCount(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, BOOL bIncludeDone) const
+{
+	if (bIncludeDone)
+	{
+		return pTDS->GetLeafCount();
+	}
+	else if (pTDI->IsDone())
+	{
+		return 0;
+	}
+
+	// else traverse sub items
+	int nLeafCount = 0;
+
+	for (int nSubTask = 0; nSubTask < pTDS->GetSubTaskCount(); nSubTask++)
+	{
+		const TODOSTRUCTURE* pTDSChild = pTDS->GetSubTask(nSubTask);
+		ASSERT(pTDSChild);
+
+		TODOITEM* pTDIChild = GetTask(pTDSChild);
+		ASSERT(pTDIChild);
+
+		nLeafCount += GetTaskLeafCount(pTDIChild, pTDSChild, bIncludeDone);
+	}
+
+	return nLeafCount;
+}
+
+double CToDoCtrlData::SumWeightedPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS) const
+{
+	ASSERT(pTDS && pTDI);
+
+	if (!pTDS || !pTDI)
+	{
+		return 0;
+	}
+
+	ASSERT(HasStyle(TDCS_AVERAGEPERCENTSUBCOMPLETION));  // sanity check
+	ASSERT(HasStyle(TDCS_WEIGHTPERCENTCALCBYNUMSUB));  // sanity check
+
+	if (!pTDS->HasSubTasks() || pTDI->IsDone())
+	{
+		if (pTDI->IsDone())
+		{
+			return 100;
+		}
+		else if (HasStyle(TDCS_AUTOCALCPERCENTDONE))
+		{
+			return CalcPercentFromTime(pTDI, pTDS);
 		}
 		else
 		{
-			dTotalPercent += (dChildPercent / dChildWeighting);
-			dTotalWeighting += 1;
+			return pTDI->nPercentDone;
 		}
 	}
+
+	// calculate the total number of task leaves for this task
+	// we will proportion our children percentages against these values
+	int nTotalNumSubtasks = GetTaskLeafCount(pTDI, pTDS, HasStyle(TDCS_INCLUDEDONEINAVERAGECALC));
+	double dTotalPercentDone = 0;
+
+	// process the children multiplying the split percent by the
+	// proportion of this subtask's subtasks to the whole
+	for (int nSubTask = 0; nSubTask < pTDS->GetSubTaskCount(); nSubTask++)
+	{
+		const TODOSTRUCTURE* pTDSChild = pTDS->GetSubTask(nSubTask);
+		ASSERT(pTDSChild);
+
+		TODOITEM* pTDIChild = GetTask(pTDSChild);
+		ASSERT(pTDIChild);
+
+		int nChildNumSubtasks = GetTaskLeafCount(pTDIChild, pTDSChild, HasStyle(TDCS_INCLUDEDONEINAVERAGECALC));
+
+		if (HasStyle(TDCS_INCLUDEDONEINAVERAGECALC) || !IsTaskDone(pTDIChild, pTDSChild, TDCCHECKCHILDREN))
+		{
+			double dChildPercent = SumWeightedPercentDone(pTDIChild, pTDSChild);
+
+			dTotalPercentDone += dChildPercent * ((double)nChildNumSubtasks / (double)nTotalNumSubtasks);
+		}
+	}
+
+	return dTotalPercentDone;
 }
 
 double CToDoCtrlData::CalcCost(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS) const

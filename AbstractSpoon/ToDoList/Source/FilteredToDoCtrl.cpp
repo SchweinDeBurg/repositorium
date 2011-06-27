@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2-6.2.2 sources
+// - merged with ToDoList version 6.1.2-6.2.6 sources
 //*****************************************************************************
 
 // FilteredToDoCtrl.cpp: implementation of the CFilteredToDoCtrl class.
@@ -3717,7 +3717,7 @@ LRESULT CFilteredToDoCtrl::ScWindowProc(HWND hRealWnd, UINT msg, WPARAM wp, LPAR
 					// if the click was on the task title of an already singly selected item
 					// we record the task ID unless the control key is down in which case
 					// it really means that the user has deselected the item
-					if (!Misc::ModKeysArePressed(MKS_CTRL))
+					if (!Misc::KeyIsPressed(VK_CONTROL))
 					{
 						m_dw2ndClickItem = 0;
 
@@ -3897,7 +3897,7 @@ BOOL CFilteredToDoCtrl::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 			TDC_COLUMN nCol = GetColumnID(lvhti.iSubItem);
 			DWORD dwID = m_list.GetItemData(nHit);
 
-			BOOL bCtrl = Misc::ModKeysArePressed(MKS_CTRL);
+			BOOL bCtrl = Misc::KeyIsPressed(VK_CONTROL);
 			BOOL bShowHand = FALSE;
 
 			switch (nCol)
