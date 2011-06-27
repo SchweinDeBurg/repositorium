@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.6 sources
 //*****************************************************************************
 
 // WinClasses.h: interface for the CWinClasses class.
@@ -72,6 +73,7 @@ public:
 
 	static BOOL IsDialog(HWND hWnd);
 	static BOOL IsEditControl(HWND hWnd);
+	static BOOL IsEditControl(LPCTSTR szClass);
 	static BOOL IsRichEditControl(LPCTSTR szClass);
 	static BOOL IsRichEditControl(HWND hWnd);
 

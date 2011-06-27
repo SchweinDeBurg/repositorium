@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.2.2-6.2.4 sources
+// - merged with ToDoList version 6.2.2-6.2.6 sources
 //*****************************************************************************
 
 // SysImageList.cpp: implementation of the CSysImageList class.
@@ -75,7 +75,8 @@ m_bLargeIcons(bLargeIcons),
 m_nFolderImage(-1),
 m_nHtmlImage(-1),
 m_hImageList(NULL),
-m_nRemoteFolderImage(-1)
+m_nRemoteFolderImage(-1),
+m_nUnknownTypeImage(-1)
 {
 }
 
@@ -133,16 +134,6 @@ int CSysImageList::GetImageIndex(LPCTSTR szFile)
 	return -1;
 }
 
-int CSysImageList::GetStoreImageIndex(int& nIndex, LPCTSTR szFile)
-{
-	if (nIndex == -1)
-	{
-		nIndex = GetImageIndex(szFile);
-	}
-
-	return nIndex;
-}
-
 int CSysImageList::GetFileImageIndex(LPCTSTR szFilePath, BOOL bFailUnKnown)
 {
 	if (!m_hImageList && !Initialize() || !szFilePath || !(*szFilePath))
@@ -161,59 +152,118 @@ int CSysImageList::GetFileImageIndex(LPCTSTR szFilePath, BOOL bFailUnKnown)
 	// test for web protocol
 	if (IsWebAddress(szFilePath))
 	{
-		nIndex = GetStoreImageIndex(m_nHtmlImage, _T(".html"));
+		nIndex = GetWebImage();
 	}
 	else
 	{
-		// get the file's extension
-		CString sExt;
-		FileMisc::SplitPath(szFilePath, NULL, NULL, NULL, &sExt);
+		// get the file's name and extension
+		CString sFName, sExt;
+		FileMisc::SplitPath(szFilePath, NULL, NULL, &sFName, &sExt);
 
 		// check if its a folder first if it has no extension
 		BOOL bRemotePath = CDriveInfo::IsRemotePath(szFilePath, FALSE);
 
-		if (sExt.IsEmpty())
+		if (bRemotePath)
 		{
-			// if its a remote path then simply assume it is a folder for now
-			if (bRemotePath)
-			{
-				nIndex = GetStoreImageIndex(m_nRemoteFolderImage, _T("\\\\dummy\\."));
-			}
-			else if (IsPath(szFilePath))
-			{
-				nIndex = m_nFolderImage;
-			}
-		}
+			// do not access the file for any reason. 
+			// ie. we need to make an educated guess
 
-		// fail if no extension
-		if (bFailUnKnown && nIndex == -1)
-		{
-			return -1;
-		}
+			// if no extension assume a folder
+			if (sExt.IsEmpty() || sExt == _T("."))
+			{
+				nIndex = GetRemoteFolderImage();
+			}
+			else 
+			{
+				nIndex = GetImageIndex(sExt);
 
-		// use only extension if not an exe
-		if (sExt != _T(".exe"))
-		{
-			nIndex = GetImageIndex(sExt);
+				// if the icon index is invalid or there's no filename
+				// then assume it's a folder
+				if (nIndex < 0 || sFName.IsEmpty())
+				{
+					nIndex = GetRemoteFolderImage();
+				}
+			}
 		}
-		// and only then if a local file
-		else if (bRemotePath)
+		// local file so we can do whatever we like ;)
+		else if (sExt.CompareNoCase(_T(".lnk")) == 0)
 		{
-			nIndex = GetStoreImageIndex(m_nRemoteFolderImage, _T("\\\\dummy\\."));
+			// get icon for item pointed to
+			CString sReferencedFile = FileMisc::ResolveShortcut(szFilePath);
+			FileMisc::SplitPath(sReferencedFile, NULL, NULL, &sExt);
+
+			if (sExt.CompareNoCase(_T(".lnk")) != 0)
+			{
+				nIndex = GetImageIndex(sReferencedFile);
+			}
+			else
+			{
+				nIndex = GetImageIndex(sExt);
+			}
 		}
-		else // local exe file
+		else if (sExt.CompareNoCase(_T(".exe")) == 0)
 		{
 			nIndex = GetImageIndex(szFilePath);
 		}
+		else if (!sFName.IsEmpty() && !sExt.IsEmpty() && sExt != _T("."))
+		{
+			// try to get this file type's icon
+			nIndex = GetImageIndex(sExt);
+
+			if (bFailUnKnown && (nIndex < 0 || nIndex == GetUnknownTypeImage()))
+			{
+				return -1;
+			}
+		}
+		else if (sFName.IsEmpty() || IsPath(szFilePath) || FileMisc::FolderExists(szFilePath))
+		{
+			nIndex = GetLocalFolderImage();
+		}
 	}
 
-	// record for posterity
-	if (nIndex != -1)
+	// record for posterity unless icon was not retrieved
+	if (nIndex != -1 && nIndex != GetUnknownTypeImage())
 	{
 		s_mapIndexCache[szFilePath] = nIndex;
 	}
 
 	return nIndex;
+}
+
+int CSysImageList::GetWebImage()
+{
+	if (m_nHtmlImage == -1)
+	{
+		m_nHtmlImage = GetImageIndex(_T(".html"));
+	}
+
+	return m_nHtmlImage;
+}
+
+int CSysImageList::GetLocalFolderImage()
+{
+	ASSERT(m_nFolderImage != -1);
+	return m_nFolderImage;
+}
+
+int CSysImageList::GetRemoteFolderImage()
+{
+	if (m_nRemoteFolderImage == -1)
+	{
+		m_nRemoteFolderImage = GetImageIndex(_T("\\\\dummy\\."));
+	}
+
+	return m_nRemoteFolderImage;
+}
+
+int CSysImageList::GetUnknownTypeImage()
+{
+	if (m_nUnknownTypeImage == -1)
+	{
+		m_nUnknownTypeImage = GetImageIndex(_T(".6553BB15-9369-4227-BCA0-F523A35F1DAB"));
+	}
+
+	return m_nUnknownTypeImage;
 }
 
 BOOL CSysImageList::IsPath(LPCTSTR szText)

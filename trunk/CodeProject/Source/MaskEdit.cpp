@@ -44,6 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
+// - merged with ToDoList version 6.2.6 sources
 //*****************************************************************************
 
 // MaskEdit.cpp : implementation file
@@ -102,7 +103,7 @@ void CMaskEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 	case 24:  // x
 		if (CWinClasses::IsEditControl(*this))
 		{
-			ASSERT(GetKeyState(VK_CONTROL) & 0x8000);
+			ASSERT(Misc::KeyIsPressed(VK_CONTROL));
 			break;
 		}
 		// else drop thru
@@ -113,7 +114,7 @@ void CMaskEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 	case _T('V'):
 	case _T('x'):
 	case _T('X'):
-		if (GetKeyState(VK_CONTROL) & 0x8000)
+		if (Misc::KeyIsPressed(VK_CONTROL))
 		{
 			break;
 		}

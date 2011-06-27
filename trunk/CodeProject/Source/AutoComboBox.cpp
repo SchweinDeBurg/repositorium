@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.6 sources
 //*****************************************************************************
 
 // AutoComboBox.cpp : implementation file
@@ -55,6 +55,7 @@
 #include "HoldRedraw.h"
 #include "DialogHelper.h"
 #include "AutoFlag.h"
+#include "Misc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -474,7 +475,7 @@ LRESULT CAutoComboBox::WindowProc(HWND /*hRealWnd*/, UINT msg, WPARAM wp, LPARAM
 	{
 	case WM_KEYDOWN:
 		// <Ctrl> + <Delete>
-		if (AllowDelete() && wp == VK_DELETE && GetDroppedState() && (GetKeyState(VK_CONTROL) & 0x8000))
+		if (AllowDelete() && wp == VK_DELETE && GetDroppedState() && Misc::KeyIsPressed(VK_CONTROL))
 		{
 			if (DeleteSelectedLBItem())
 			{

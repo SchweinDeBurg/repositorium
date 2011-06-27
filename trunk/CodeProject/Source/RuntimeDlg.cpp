@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.6 sources
 //*****************************************************************************
 
 // RuntimeDlg.cpp : implementation file
@@ -59,6 +59,7 @@
 #include "RichEditHelper.h"
 #include "DialogHelper.h"
 #include "FileMisc.h"
+#include "Misc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -822,7 +823,7 @@ BOOL CRuntimeDlg::PreTranslateMessage(MSG* pMsg)
 	// also filter out what look like accelerator keys
 	if (pMsg->message == WM_KEYDOWN)
 	{
-		if (pMsg->wParam != VK_CONTROL && (GetKeyState(VK_CONTROL) & 0x8000))
+		if (pMsg->wParam != VK_CONTROL && Misc::KeyIsPressed(VK_CONTROL))
 		{
 			return FALSE;
 		}

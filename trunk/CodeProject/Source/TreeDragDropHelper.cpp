@@ -44,6 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
+// - merged with ToDoList version 6.2.6 sources
 //*****************************************************************************
 
 // TreeDragDropHelper.cpp: implementation of the CTreeDragDropHelper class.
@@ -53,6 +54,7 @@
 #include "stdafx.h"
 #include "TreeDragDropHelper.h"
 #include "HoldRedraw.h"
+#include "Misc.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -410,7 +412,7 @@ UINT CTreeDragDropHelper::OnDragOver(const DRAGDROPINFO* pDDI)
 	{
 		if (pDDI->bLeftDrag)
 		{
-			BOOL bCopy = (GetKeyState(VK_CONTROL) & 0x8000);
+			BOOL bCopy = Misc::KeyIsPressed(VK_CONTROL);
 			return bCopy ? DD_DROPEFFECT_COPY : DD_DROPEFFECT_MOVE;
 		}
 		else
@@ -425,8 +427,6 @@ UINT CTreeDragDropHelper::OnDragOver(const DRAGDROPINFO* pDDI)
 
 BOOL CTreeDragDropHelper::OnDragDrop(const DRAGDROPINFO* pDDI)
 {
-	//TRACE ("CTreeDragDropHelper::OnDragDrop(enter)\n");
-
 	if (!m_bEnabled || !m_selection.GetCount())
 	{
 		return FALSE;
@@ -582,7 +582,7 @@ HTREEITEM CTreeDragDropHelper::HighlightDropTarget(CPoint point)
 
 	// drop item cannot be selected unless this is a copy
 	// nor can it be a child of a selected item unless its a copy
-	BOOL bCopy = (GetKeyState(VK_CONTROL) & 0x8000);
+	BOOL bCopy = Misc::KeyIsPressed(VK_CONTROL);
 
 	if (!bCopy && (m_selection.HasItem(hItem) || m_selection.HasSelectedParent(hItem)))
 	{

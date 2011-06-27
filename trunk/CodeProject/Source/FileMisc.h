@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.6 sources
 //*****************************************************************************
 
 #ifndef _MISCFILE_FUNCTIONS_H_
@@ -107,6 +107,7 @@ namespace FileMisc
 	bool CreateFolderFromFilePath(const TCHAR* szFilePath);
 	bool FolderExists(const TCHAR* szFolder);
 	bool FileExists(const TCHAR* szFile);
+	bool PathExists(const TCHAR* szPath); // file or folder
 	bool FolderFromFilePathExists(const TCHAR* szFilePath);
 	bool PathHasWildcard(const TCHAR* szFilePath);
 
@@ -152,6 +153,8 @@ namespace FileMisc
 	CString& MakeRelativePath(CString& sFilePath, const CString& sRelativeToFolder, BOOL bFolder);
 	CString GetFullPath(const CString& sFilePath, const CString& sRelativeToFolder = GetCwd());
 	CString& MakeFullPath(CString& sFilePath, const CString& sRelativeToFolder = GetCwd());
+
+	CString ResolveShortcut(LPCTSTR szShortcut);
 
 	BOOL IsSameFile(const CString& sFilePath1, const CString& sFilePath2);
 

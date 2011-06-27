@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2 sources
+// - merged with ToDoList version 6.1.2-6.2.6 sources
 //*****************************************************************************
 
 // CDriveInfo.cpp
@@ -174,22 +174,7 @@ int CDriveInfo::GetType(int nDrive)
 		return DRIVE_REMOVABLE;
 	}
 
-	if (IsDriveAvailable(nDrive))
-	{
-		sVolume = GetVolume(nDrive);
-		FormatName(sVolume);
-
-		if (sVolume.Find(_T("Host")) >= 0)
-		{
-			return DRIVE_HOST;
-		}
-		else
-		{
-			return ::GetDriveType(GetRoot(nDrive));
-		}
-	}
-
-	return DRIVE_UNKNOWN;
+	return ::GetDriveType(GetRoot(nDrive));
 }
 
 int CDriveInfo::GetPathType(LPCTSTR szPathName)

@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.6 sources
 //*****************************************************************************
 
 // CDialogHelper.cpp: implementation of the CDialogHelper class.
@@ -658,7 +658,7 @@ BOOL CDialogHelper::ProcessDialogControlShortcut(const MSG* pMsg)
 		return FALSE;
 	}
 
-	if (!Misc::ModKeysArePressed(MKS_ALT))
+	if (!Misc::KeyIsPressed(VK_MENU))
 	{
 		return FALSE;
 	}

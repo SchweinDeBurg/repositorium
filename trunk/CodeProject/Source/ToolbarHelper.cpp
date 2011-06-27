@@ -44,6 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
+// - merged with ToDoList version 6.2.6 sources
 //*****************************************************************************
 
 // ToolbarHelper.cpp: implementation of the CToolbarHelper class.
@@ -52,6 +53,7 @@
 
 #include "stdafx.h"
 #include "ToolbarHelper.h"
+#include "Misc.h"
 
 #include "EnBitmap.h"
 #include <afxpriv.h>        // for WM_KICKIDLE
@@ -629,7 +631,7 @@ BOOL CToolbarHelper::ProcessMessage(MSG* pMsg)
 	}
 
 	// see if key press matches any hotkey
-	if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam != VK_MENU && (GetKeyState(VK_MENU) & 0x8000))
+	if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam != VK_MENU && Misc::KeyIsPressed(VK_MENU))
 	{
 		int nKey = (int)pMsg->wParam;
 		char cLower = 0, cUpper = 0;

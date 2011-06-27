@@ -26,7 +26,7 @@
 // - improved compatibility with the Unicode-based builds
 // - added AbstractSpoon Software copyright notice and license information
 // - taken out from the original ToDoList package for better sharing
-// - merged with ToDoList version 6.2.4 sources
+// - merged with ToDoList version 6.2.4-6.2.6 sources
 //*****************************************************************************
 
 // SysImageList.h: interface for the CSysImageList class.
@@ -65,15 +65,19 @@ public:
 
 protected:
 	BOOL m_bLargeIcons;
-	int m_nFolderImage, m_nHtmlImage, m_nRemoteFolderImage;
 	HIMAGELIST m_hImageList;
+	int m_nFolderImage, m_nHtmlImage, m_nRemoteFolderImage, m_nUnknownTypeImage;
 
 	static CMap<CString, LPCTSTR, int, int&> s_mapIndexCache;
 
 protected:
 	// raw version that resolves directly to SHGetFileInfo
 	int GetImageIndex(LPCTSTR szFile); // will call Initialize if nec.
-	int GetStoreImageIndex(int& nIndex, LPCTSTR szFile);
+
+	int GetWebImage();
+	int GetLocalFolderImage();
+	int GetRemoteFolderImage();
+	int GetUnknownTypeImage();
 
 	static BOOL IsPath(LPCTSTR szText);
 };

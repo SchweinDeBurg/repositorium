@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.6 sources
 //*****************************************************************************
 
 // LightBox.h: interface for the CLightBox class.
@@ -75,7 +75,7 @@ public:
 	static BOOL Initialize(CWnd* pMainWnd, COLORREF crBkgnd = GetSysColor(COLOR_3DLIGHT), int nOpaquePercent = 50);
 	static void Disable()
 	{
-		Instance().Release();
+		Instance().ReleaseHooks();
 	}
 
 protected:
