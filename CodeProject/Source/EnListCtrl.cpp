@@ -45,6 +45,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
+// - merged with ToDoList version 6.2.6 sources
 //*****************************************************************************
 
 // EnListCtrl.cpp : implementation file
@@ -54,6 +55,7 @@
 #include "EnListCtrl.h"
 #include "EnHeaderCtrl.h"
 #include "DlgUnits.h"
+#include "Misc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -979,11 +981,9 @@ int CEnListCtrl::GetImageIndex(int nItem, int nSubItem) const
 
 void CEnListCtrl::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-	BOOL bCtrlDown;
-
 	// check if user did a cut, copy, paste or delete and we're not readonly query parent
 	// if parent returns TRUE then do action
-	bCtrlDown = ((::GetKeyState(VK_CONTROL) & 0x8000) == 0x8000);
+	BOOL bCtrlDown = Misc::KeyIsPressed(VK_CONTROL);
 	m_nmhdr.hwndFrom = m_hWnd;
 	m_nmhdr.idFrom = GetDlgCtrlID();
 

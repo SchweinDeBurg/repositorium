@@ -44,6 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
+// - merged with ToDoList version 6.2.6 sources
 //*****************************************************************************
 
 // EnCommandLineInfo.cpp: implementation of the CEnCommandLineInfo class.
@@ -52,6 +53,7 @@
 
 #include "stdafx.h"
 #include "EnCommandLineInfo.h"
+#include "FileMisc.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -209,66 +211,4 @@ BOOL CEnCommandLineInfo::HasOption(LPCTSTR szFlag) const
 void CEnCommandLineInfo::DeleteOption(LPCTSTR szFlag)
 {
 	m_mapCommandLine.RemoveKey(szFlag);
-}
-
-CString CEnCommandLineInfo::ResolveShortcut(LPCTSTR szShortcut)
-{
-	// start by checking its a valid file
-	if (::GetFileAttributes(szShortcut) == 0xffffffff)
-	{
-		return _T("");
-	}
-
-	CoInitialize(NULL);
-
-	HRESULT hResult;
-	IShellLink* psl;
-	CString sTarget(szShortcut);
-
-	hResult = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER,
-		IID_IShellLink, (LPVOID*)&psl);
-
-	if (SUCCEEDED(hResult))
-	{
-		LPPERSISTFILE ppf;
-
-		hResult = psl->QueryInterface(IID_IPersistFile, (LPVOID*)&ppf);
-
-		if (SUCCEEDED(hResult))
-		{
-			hResult = ppf->Load(ATL::CT2OLE(szShortcut), STGM_READ);
-
-			if (SUCCEEDED(hResult))
-			{
-				hResult = psl->Resolve(NULL, SLR_ANY_MATCH | SLR_NO_UI);
-
-				if (SUCCEEDED(hResult))
-				{
-					TCHAR szPath[MAX_PATH];
-					WIN32_FIND_DATA wfd;
-
-					//fabio_2005
-#if _MSC_VER >= 1400
-					_tcscpy_s(szPath, _countof(szPath), szShortcut);
-#else
-					_tcscpy(szPath, szShortcut);
-#endif
-					hResult = psl->GetPath(szPath, MAX_PATH, (WIN32_FIND_DATA*)&wfd, SLGP_SHORTPATH);
-
-					if (SUCCEEDED(hResult))
-					{
-						sTarget = CString(szPath);
-					}
-				}
-			}
-
-			ppf->Release();
-		}
-
-		psl->Release();
-	}
-
-	CoUninitialize();
-
-	return sTarget;
 }

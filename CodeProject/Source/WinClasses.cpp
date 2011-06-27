@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.6 sources
 //*****************************************************************************
 
 // WinClasses.cpp: implementation of the CWinClasses class.
@@ -321,14 +322,12 @@ BOOL CWinClasses::IsControlClass(LPCTSTR szClass)
 
 BOOL CWinClasses::IsEditControl(HWND hWnd)
 {
-	CString sClass = GetClass(hWnd);
+	return IsEditControl(GetClass(hWnd));
+}
 
-	if (IsRichEditControl(sClass))
-	{
-		return TRUE;
-	}
-
-	return IsClass(sClass, WC_EDIT);
+BOOL CWinClasses::IsEditControl(LPCTSTR szClass)
+{
+	return (IsRichEditControl(szClass) || IsClass(szClass, WC_EDIT));
 }
 
 BOOL CWinClasses::IsRichEditControl(HWND hWnd)

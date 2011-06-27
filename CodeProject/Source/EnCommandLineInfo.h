@@ -39,6 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
+// - merged with ToDoList version 6.2.6 sources
 //*****************************************************************************
 
 // EnCommandLineInfo.h: interface for the CEnCommandLineInfo class.
@@ -67,8 +68,6 @@ public:
 
 	BOOL SetOption(LPCTSTR szFlag, LPCTSTR szParam);
 	BOOL SetOption(LPCTSTR szFlag, DWORD dwParam);
-
-	static CString ResolveShortcut(LPCTSTR szShortcut);
 
 protected:
 	CMapStringToString m_mapCommandLine;

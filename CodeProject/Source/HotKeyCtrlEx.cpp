@@ -44,6 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
+// - merged with ToDoList version 6.2.6 sources
 //*****************************************************************************
 
 // HotKeyCtrlEx.cpp : implementation file
@@ -51,6 +52,7 @@
 
 #include "stdafx.h"
 #include "HotKeyCtrlEx.h"
+#include "Misc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -107,12 +109,13 @@ BOOL CHotKeyCtrlEx::PreTranslateMessage(MSG* pMsg)
 		UINT nChar = pMsg->wParam;
 		UINT nFlags = HIWORD(pMsg->lParam);
 
-		BOOL bCtrl = (GetKeyState(VK_CONTROL) & 0x8000);
-		BOOL bShift = (GetKeyState(VK_SHIFT) & 0x8000);
-		BOOL bAlt = (GetKeyState(VK_MENU) & 0x8000);
+		BOOL bCtrl = Misc::KeyIsPressed(VK_CONTROL);
+		BOOL bShift = Misc::KeyIsPressed(VK_SHIFT);
+		BOOL bAlt = Misc::KeyIsPressed(VK_MENU);
 		BOOL bExtended = (nFlags & 0x100);
 
-		WORD wModifiers = (WORD)((bCtrl ? HOTKEYF_CONTROL : 0) |
+		WORD wModifiers = (WORD)(
+			(bCtrl ? HOTKEYF_CONTROL : 0) |
 			(bShift ? HOTKEYF_SHIFT : 0) |
 			(bAlt ? HOTKEYF_ALT : 0) |
 			(bExtended ? HOTKEYF_EXT : 0));

@@ -39,7 +39,7 @@
 //      --align-pointer=type
 //      --lineend=windows
 //      --suffix=none
-// - merged with ToDoList version 6.2.2 sources
+// - merged with ToDoList version 6.2.2-6.2.6 sources
 //*****************************************************************************
 
 // HookMgr.h: interface for the CHookMgr class.
@@ -117,14 +117,14 @@ class CHookMgr
 public:
 	virtual ~CHookMgr()
 	{
-		Release();
+		ReleaseHooks();
 	}
 
 
 protected:
 	BOOL InitHooks(DWORD dwOptions = HM_CALLWNDPROC, LPCTSTR szClassFilter = NULL)
 	{
-		Release(); // reset
+		ReleaseHooks(); // reset
 
 		INITHOOK(m_hCallWndHook, HM_CALLWNDPROC, WH_CALLWNDPROC, CallWndProc);
 		INITHOOK(m_hCallWndRetHook, HM_CALLWNDPROCRET, WH_CALLWNDPROCRET, CallWndRetProc);
@@ -151,7 +151,7 @@ protected:
 		return TRUE;
 	}
 
-	void Release()
+	void ReleaseHooks()
 	{
 		RELEASEHOOK(m_hCallWndHook);
 		RELEASEHOOK(m_hCallWndRetHook);
