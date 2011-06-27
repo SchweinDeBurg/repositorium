@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2-6.2.2 sources
+// - merged with ToDoList version 6.1.2-6.2.6 sources
 //*****************************************************************************
 
 // ToDoItem.cpp: implementation of the CToDoItem class.
@@ -463,6 +463,18 @@ const TODOSTRUCTURE& TODOSTRUCTURE::operator=(const TODOSTRUCTURE& tds)
 	}
 
 	return *this;
+}
+
+int TODOSTRUCTURE::GetLeafCount() const
+{
+	int nLeafCount = 0;
+
+	for (int nSubTask = 0; nSubTask < GetSubTaskCount(); nSubTask++)
+	{
+		nLeafCount += GetSubTask(nSubTask)->GetLeafCount();
+	}
+
+	return (nLeafCount == 0) ? 1 : nLeafCount;
 }
 
 TODOSTRUCTURE* TODOSTRUCTURE::GetSubTask(int nPos) const

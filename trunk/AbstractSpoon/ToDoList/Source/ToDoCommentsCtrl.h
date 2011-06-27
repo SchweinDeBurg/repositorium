@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2-6.2.2 sources
+// - merged with ToDoList version 6.1.2-6.2.6 sources
 //*****************************************************************************
 
 #if !defined(AFX_TODOCOMMENTSCTRL_H__E9A5D982_4D40_43B2_A071_E3BE70D122B7__INCLUDED_)
@@ -155,7 +155,6 @@ protected:
 protected:
 	BOOL IsTDLClipboardEmpty() const;
 	void SetWordWrap(BOOL bWrap);
-	void Copy();
 	BOOL Paste();
 	BOOL CanPaste();
 };

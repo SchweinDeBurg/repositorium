@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2-6.2.2 sources
+// - merged with ToDoList version 6.1.2-6.2.6 sources
 //*****************************************************************************
 
 // ToDoCtrlData.h: interface for the CToDoCtrlData class.
@@ -258,8 +258,8 @@ protected:
 
 	BOOL FindDependency(DWORD dwTaskID, DWORD dwDependsID) const;
 
-	BOOL AddUndoElement(TDCUNDOELMOP nOp, DWORD dwTaskID, DWORD dwParentID = 0, DWORD dwPrevSiblingID = 0, WORD wFlags =
-		0);
+	BOOL AddUndoElement(TDCUNDOELMOP nOp, DWORD dwTaskID, DWORD dwParentID = 0, DWORD dwPrevSiblingID = 0,
+		WORD wFlags = 0);
 
 	BOOL TaskMatches(const COleDateTime& date, const SEARCHPARAM& sp, SEARCHRESULT& result) const;
 	BOOL TaskMatches(const CString& sText, const SEARCHPARAM& sp, SEARCHRESULT& result) const;
@@ -267,10 +267,10 @@ protected:
 	BOOL TaskMatches(int nValue, const SEARCHPARAM& sp, SEARCHRESULT& result) const;
 	BOOL TaskMatches(const CStringArray& aItems, const SEARCHPARAM& sp, SEARCHRESULT& result) const;
 
-	void SumPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, double& dTotalPercent,
-		double& dTotalWeighting) const;
+	double SumPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS) const;
+	double SumWeightedPercentDone(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS) const;
 
-
+	int GetTaskLeafCount(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, BOOL bIncludeDone) const;
 	TODOITEM* GetTask(const TODOSTRUCTURE* pTDS) const;
 
 	BOOL ApplyLastChangeToSubtasks(const TODOITEM* pTDI, const TODOSTRUCTURE* pTDS, TDC_ATTRIBUTE nAttrib);
@@ -278,7 +278,6 @@ protected:
 	BOOL Locate(DWORD dwParentID, DWORD dwPrevSiblingID, TODOSTRUCTURE*& pTDSParent, int& nPos) const;
 	int MoveTask(TODOSTRUCTURE* pTDSSrcParent, int nSrcPos, DWORD dwSrcPrevSiblingID, TODOSTRUCTURE* pTDSDestParent,
 		int nDestPos);
-
 
 	static TDC_ATTRIBUTE MapDateToAttribute(TDC_DATE nDate);
 

@@ -66,7 +66,7 @@ protected:
 
 	virtual void PostNcDestroy()
 	{
-		Release();
+		ReleaseHooks();
 	}
 	virtual BOOL OnInitDialog();
 	virtual BOOL OnKeyboard(UINT uVirtKey, UINT /*uFlags*/);

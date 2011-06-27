@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2-6.2.2 sources
+// - merged with ToDoList version 6.1.2-6.2.6 sources
 //*****************************************************************************
 
 // ToDoCtrl.cpp : implementation file
@@ -8407,9 +8407,9 @@ BOOL CToDoCtrl::IsReservedShortcut(DWORD dwShortcut)
 
 BOOL CToDoCtrl::PreTranslateMessage(MSG* pMsg)
 {
-	BOOL bCtrl = (GetKeyState(VK_CONTROL) & 0x8000);
-	BOOL bShift = (GetKeyState(VK_SHIFT) & 0x8000);
-	BOOL bAlt = (GetKeyState(VK_MENU) & 0x8000);
+	BOOL bCtrl = Misc::KeyIsPressed(VK_CONTROL);
+	BOOL bShift = Misc::KeyIsPressed(VK_SHIFT);
+	BOOL bAlt = Misc::KeyIsPressed(VK_MENU);
 
 	if (m_ctrlComments.PreTranslateMessage(pMsg))
 	{
@@ -11917,7 +11917,9 @@ BOOL CToDoCtrl::InsertTasks(const CTaskFile& tasks, TDC_INSERTWHERE nWhere)
 	if (GetTaskCount())
 	{
 		CTaskFile copy(tasks);
-		PrepareTaskIDsForPaste(copy, TDCR_CHECK);
+
+		// and always assign new IDs
+		PrepareTaskIDsForPaste(copy, TDCR_YES);
 		return AddTasksToTree(copy, htiParent, htiAfter, TDCR_NO);
 	}
 
@@ -12705,7 +12707,7 @@ LRESULT CToDoCtrl::OnGutterGetCursor(WPARAM /*wParam*/, LPARAM lParam)
 	{
 	case TDCC_FILEREF:
 		// we handle the file ref column if the ctrl key is down
-		if (Misc::ModKeysArePressed(MKS_CTRL) && hti)
+		if (Misc::KeyIsPressed(VK_CONTROL) && hti)
 		{
 			DWORD dwUniqueID = GetTaskID(hti);
 			TODOITEM* pTDI = GetTask(dwUniqueID);
@@ -12719,7 +12721,7 @@ LRESULT CToDoCtrl::OnGutterGetCursor(WPARAM /*wParam*/, LPARAM lParam)
 
 	case TDCC_DEPENDENCY:
 		// we handle the depends column if the ctrl key is down
-		if (Misc::ModKeysArePressed(MKS_CTRL) && hti)
+		if (Misc::KeyIsPressed(VK_CONTROL) && hti)
 		{
 			DWORD dwUniqueID = GetTaskID(hti);
 			TODOITEM* pTDI = GetTask(dwUniqueID);

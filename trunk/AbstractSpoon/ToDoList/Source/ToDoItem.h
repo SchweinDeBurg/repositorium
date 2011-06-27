@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2-6.2.2 sources
+// - merged with ToDoList version 6.1.2-6.2.6 sources
 //*****************************************************************************
 
 // ToDoItem.h: interface for the CToDoItem class.
@@ -105,8 +105,6 @@ public:
 	static BOOL HasTime(const COleDateTime& date);
 	static void ParseTaskLink(const CString& sLink, DWORD& dwTaskID, CString& sFile);
 	static CString MakeTaskLink(DWORD dwTaskID, const CString& sFile = _T(""));
-
-	//  ------------------------------------------
 
 	CString sTitle;
 	CString sComments, sCustomComments;
@@ -203,6 +201,7 @@ public:
 	{
 		return GetSubTaskCount() > 0;
 	}
+	int GetLeafCount() const;
 
 	TODOSTRUCTURE* GetSubTask(int nPos) const;
 	int GetSubTaskPos(TODOSTRUCTURE* pTDS) const;

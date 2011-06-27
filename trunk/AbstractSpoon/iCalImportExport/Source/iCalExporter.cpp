@@ -31,7 +31,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.2.2-6.2.4 sources
+// - merged with ToDoList version 6.2.2-6.2.6 sources
 //*****************************************************************************
 
 // iCalExporter.cpp: implementation of the CiCalExporter class.
@@ -53,8 +53,6 @@ static char THIS_FILE[] = __FILE__;
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-
-const UINT ONEDAY = 24 * 60 * 60;
 
 CiCalExporter::CiCalExporter()
 {
@@ -155,16 +153,14 @@ void CiCalExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, c
 		WriteString(fileOut, _T("BEGIN:VEVENT"));
 
 		COleDateTime dtStart(tStartDate);
-		WriteString(fileOut, FormatDateTime(_T("DTSTART"), dtStart));
+		WriteString(fileOut, FormatDateTime(_T("DTSTART"), dtStart, TRUE));
 
 		// neither Google Calendar not Outlook pay any attention to the 'DUE' tag so we won't either.
 		// instead we use 'DTEND' to mark the duration of the task. There is also no way to mark a
 		// task as complete so we ignore our completion status
 
-		// ics file dates are to 12am at the start of the day
-		// so we need to increment the date by one day.
-		COleDateTime dtDue(time_t(tDueDate + ONEDAY));
-		WriteString(fileOut, FormatDateTime(_T("DTEND"), dtDue));
+		COleDateTime dtDue(tDueDate);
+		WriteString(fileOut, FormatDateTime(_T("DTEND"), dtDue, FALSE));
 
 		WriteString(fileOut, _T("SUMMARY:%s"), (LPTSTR)pSrcTaskFile->GetTaskTitle(hTask));
 		WriteString(fileOut, _T("DESCRIPTION:%s"), (LPTSTR)pSrcTaskFile->GetTaskComments(hTask));
@@ -189,7 +185,7 @@ void CiCalExporter::ExportTask(const ITaskList* pSrcTaskFile, HTASKITEM hTask, c
 	ExportTask(pSrcTaskFile, pSrcTaskFile->GetNextTask(hTask), sParentUID, fileOut);
 }
 
-CString CiCalExporter::FormatDateTime(LPCTSTR szType, const COleDateTime& date)
+CString CiCalExporter::FormatDateTime(LPCTSTR szType, const COleDateTime& date, BOOL bStartOfDay)
 {
 	CString sDateTime;
 
@@ -198,9 +194,16 @@ CString CiCalExporter::FormatDateTime(LPCTSTR szType, const COleDateTime& date)
 		sDateTime.Format(_T("%s;VALUE=DATE-TIME:%04d%02d%02dT%02d%02d%02d"), szType, date.GetYear(), date.GetMonth(),
 			date.GetDay(), date.GetHour(), date.GetMinute(), date.GetSecond());
 	}
-	else // date only
+	else // no time component
 	{
-		sDateTime.Format(_T("%s;VALUE=DATE:%04d%02d%02d"), szType, date.GetYear(), date.GetMonth(), date.GetDay());
+		if (bStartOfDay)
+		{
+			sDateTime.Format(_T("%s;VALUE=DATE:%04d%02d%02dT000000"), szType, date.GetYear(), date.GetMonth(), date.GetDay());
+		}
+		else // end of day
+		{
+			sDateTime.Format(_T("%s;VALUE=DATE:%04d%02d%02dT240000"), szType, date.GetYear(), date.GetMonth(), date.GetDay());
+		}
 	}
 
 	return sDateTime;
