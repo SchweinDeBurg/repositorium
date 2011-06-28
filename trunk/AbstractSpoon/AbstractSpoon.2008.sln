@@ -86,6 +86,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inno Setup Files", "Inno Se
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Rtf2HtmlBridge", "Rtf2HtmlBridge\Rtf2HtmlBridge.2008.vcproj", "{3D0C6F8D-DBCF-4A58-957C-C40E348FB9F5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1691252C-C5A4-4044-877F-4BA925C86332} = {1691252C-C5A4-4044-877F-4BA925C86332}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RtfConverter", "..\RtfConverter\RtfConverter.2008.vcproj", "{1691252C-C5A4-4044-877F-4BA925C86332}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -223,6 +228,14 @@ Global
 		{3D0C6F8D-DBCF-4A58-957C-C40E348FB9F5}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
 		{3D0C6F8D-DBCF-4A58-957C-C40E348FB9F5}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
 		{3D0C6F8D-DBCF-4A58-957C-C40E348FB9F5}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
+		{1691252C-C5A4-4044-877F-4BA925C86332}.MBCS Debug|Win32.ActiveCfg = MBCS Debug|Win32
+		{1691252C-C5A4-4044-877F-4BA925C86332}.MBCS Debug|Win32.Build.0 = MBCS Debug|Win32
+		{1691252C-C5A4-4044-877F-4BA925C86332}.MBCS Release|Win32.ActiveCfg = MBCS Release|Win32
+		{1691252C-C5A4-4044-877F-4BA925C86332}.MBCS Release|Win32.Build.0 = MBCS Release|Win32
+		{1691252C-C5A4-4044-877F-4BA925C86332}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{1691252C-C5A4-4044-877F-4BA925C86332}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{1691252C-C5A4-4044-877F-4BA925C86332}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
+		{1691252C-C5A4-4044-877F-4BA925C86332}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -232,5 +245,6 @@ Global
 		{2EBC127D-357A-4258-B19F-78466C0C467B} = {F382683D-C383-44E2-886F-CDABF9DFCDD5}
 		{27C082A8-D189-4526-A465-1D0404F1FADC} = {F382683D-C383-44E2-886F-CDABF9DFCDD5}
 		{4B70F6A5-35AE-4CEE-815C-20E1F31B5F5E} = {F382683D-C383-44E2-886F-CDABF9DFCDD5}
+		{1691252C-C5A4-4044-877F-4BA925C86332} = {F382683D-C383-44E2-886F-CDABF9DFCDD5}
 	EndGlobalSection
 EndGlobal
