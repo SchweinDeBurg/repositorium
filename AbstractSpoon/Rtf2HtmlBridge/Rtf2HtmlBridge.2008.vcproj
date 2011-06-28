@@ -28,7 +28,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="PUSHD ..\..\RtfConverter&#x0D;&#x0A;$(FrameworkDir)\$(Framework35Version)\msbuild Rtf2Html.2008.sln /t:Rebuild /p:Configuration=Debug /p:Platform=&quot;Any CPU&quot;&#x0D;&#x0A;POPD"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -127,7 +126,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="PUSHD ..\..\RtfConverter&#x0D;&#x0A;$(FrameworkDir)\$(Framework35Version)\msbuild Rtf2Html.2008.sln /t:Rebuild /p:Configuration=Release /p:Platform=&quot;Any CPU&quot;&#x0D;&#x0A;POPD"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -225,7 +223,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="PUSHD ..\..\RtfConverter&#x0D;&#x0A;$(FrameworkDir)\$(Framework35Version)\msbuild Rtf2Html.2008.sln /t:Rebuild /p:Configuration=Debug /p:Platform=&quot;Any CPU&quot;&#x0D;&#x0A;POPD"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -324,7 +321,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="PUSHD ..\..\RtfConverter&#x0D;&#x0A;$(FrameworkDir)\$(Framework35Version)\msbuild Rtf2Html.2008.sln /t:Rebuild /p:Configuration=Release /p:Platform=&quot;Any CPU&quot;&#x0D;&#x0A;POPD"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
