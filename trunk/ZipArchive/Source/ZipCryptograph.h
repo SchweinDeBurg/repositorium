@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -144,11 +144,14 @@ public:
 	
 		\param storage
 			The current CZipStorage.
+
+		\param ignoreCheck
+			If \c true, skips control bytes verifications.
 	
 		\return
 			\c true, if the password is initially considered correct; \c false otherwise.	
 	 */
-	virtual bool InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage) = 0;
+	virtual bool InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage, bool ignoreCheck) = 0;
 
 	/**
 		The method called when a new file is opened for compression.

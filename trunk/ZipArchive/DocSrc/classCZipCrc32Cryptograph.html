@@ -40,7 +40,8 @@ Inheritance diagram for CZipCrc32Cryptograph:<!-- endSectionHeader --></div>
 <!-- startSectionSummary --><!-- endSectionSummary --><!-- startSectionContent --><div class="dyncontent">
 <div class="center"><img src="classCZipCrc32Cryptograph__inherit__graph.gif" border="0" usemap="#CZipCrc32Cryptograph_inherit__map" alt="Inheritance graph"/></div>
 <map name="CZipCrc32Cryptograph_inherit__map" id="CZipCrc32Cryptograph_inherit__map">
-<area shape="rect" id="node2" href="classCZipCryptograph.html" title="{CZipCryptograph\n||+ CanHandle()\l+ Decode()\l+ Encode()\l+ FinishDecode()\l+ FinishEncode()\l+ InitDecode()\l+ InitEncode()\l+ ~CZipCryptograph()\l+ CreateCryptograph()\l+ GetEncryptedInfoSize()\l+ GetEncryptedInfoSizeAfterData()\l+ GetEncryptedInfoSizeBeforeData()\l+ IsEncryptionSupported()\l+ IsWinZipAesEncryption()\l}" alt="" coords="5,6,237,317"/></map>
+<area shape="rect" id="node2" href="classCZipCryptograph.html" title="{CZipCryptograph\n||+ CanHandle()\l+ Decode()\l+ Encode()\l+ FinishDecode()\l+ FinishEncode()\l+ InitDecode()\l+ InitEncode()\l+ ~CZipCryptograph()\l+ CreateCryptograph()\l+ GetEncryptedInfoSize()\l+ GetEncryptedInfoSizeAfterData()\l+ GetEncryptedInfoSizeBeforeData()\l+ IsEncryptionSupported()\l+ IsWinZipAesEncryption()\l}" alt="" coords="5,6,237,317"/>
+</map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center><!-- endSectionContent --></div>
 
 <p><a href="classCZipCrc32Cryptograph-members.html">List of all members.</a></p>
@@ -50,7 +51,7 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCZipCrc32Cryptograph.html#a9f181c2ea7c24ad45518de605b29654d">CanHandle</a> (int iEncryptionMethod)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCZipCrc32Cryptograph.html#a9eae35844956f97e8344c9ad9c536d20">Decode</a> (char *pBuffer, DWORD uSize)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCZipCrc32Cryptograph.html#ae253b41e9aa56807d2613eafe76320e2">Encode</a> (char *pBuffer, DWORD uSize)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCZipCrc32Cryptograph.html#a1c3524ac683c6d3d14e069da70e73e18">InitDecode</a> (CZipAutoBuffer &amp;password, <a class="el" href="classCZipFileHeader.html">CZipFileHeader</a> &amp;currentFile, <a class="el" href="classCZipStorage.html">CZipStorage</a> &amp;storage)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCZipCrc32Cryptograph.html#a57476796076e1659aa06d86e748d5238">InitDecode</a> (CZipAutoBuffer &amp;password, <a class="el" href="classCZipFileHeader.html">CZipFileHeader</a> &amp;currentFile, <a class="el" href="classCZipStorage.html">CZipStorage</a> &amp;storage, bool ignoreCheck)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCZipCrc32Cryptograph.html#af6f346c3565835a52944856d93060c53">InitEncode</a> (CZipAutoBuffer &amp;password, <a class="el" href="classCZipFileHeader.html">CZipFileHeader</a> &amp;currentFile, <a class="el" href="classCZipStorage.html">CZipStorage</a> &amp;storage)</td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -228,7 +229,7 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a1c3524ac683c6d3d14e069da70e73e18"></a><!-- doxytag: member="CZipCrc32Cryptograph::InitDecode" ref="a1c3524ac683c6d3d14e069da70e73e18" args="(CZipAutoBuffer &amp;password, CZipFileHeader &amp;currentFile, CZipStorage &amp;storage)" -->
+<a class="anchor" id="a57476796076e1659aa06d86e748d5238"></a><!-- doxytag: member="CZipCrc32Cryptograph::InitDecode" ref="a57476796076e1659aa06d86e748d5238" args="(CZipAutoBuffer &amp;password, CZipFileHeader &amp;currentFile, CZipStorage &amp;storage, bool ignoreCheck)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -248,7 +249,13 @@ Static Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classCZipStorage.html">CZipStorage</a> &amp;&#160;</td>
-          <td class="paramname"> <em>storage</em>&#160;</td>
+          <td class="paramname"> <em>storage</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"> <em>ignoreCheck</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -264,12 +271,13 @@ Static Public Member Functions</h2></td></tr>
     <tr><td class="paramname">password</td><td>The supplied password with the <a class="el" href="classCZipArchive.html#af68297f88e912ec811ba1c27496a6683">CZipArchive::SetPassword</a> method.</td></tr>
     <tr><td class="paramname">currentFile</td><td>The file being decoded and extracted.</td></tr>
     <tr><td class="paramname">storage</td><td>The current <a class="el" href="classCZipStorage.html">CZipStorage</a>.</td></tr>
+    <tr><td class="paramname">ignoreCheck</td><td>If <code>true</code>, skips control bytes verifications.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>true</code>, if the password is initially considered correct; <code>false</code> otherwise. </dd></dl>
 
-<p>Implements <a class="el" href="classCZipCryptograph.html#a8f25b73dfec3238d000a1d98c927846f">CZipCryptograph</a>.</p>
+<p>Implements <a class="el" href="classCZipCryptograph.html#af5f25c6738526dc92af1a6979925ae44">CZipCryptograph</a>.</p>
 
 </div>
 </div>
@@ -322,7 +330,7 @@ Static Public Member Functions</h2></td></tr>
 </ul>
 </div>
 <hr><address><small>
-The ZipArchive Library Copyright &copy;&nbsp;2000 - 2010 Artpol Software - Tadeusz Dracz. Generated at Wed Nov 3 2010 11:11:32.
+The ZipArchive Library Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz. Generated at Tue Jun 28 2011 09:45:05.
 </small></address>
 </body>
 </html>

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,7 +15,7 @@
 #include "stdafx.h"
 #include "ZipCrc32Cryptograph.h"
 
-bool CZipCrc32Cryptograph::InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage)
+bool CZipCrc32Cryptograph::InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage, bool ignoreCheck)
 {
 	CryptInitKeys(password);
 	CZipAutoBuffer buf(ZIPARCHIVE_ENCR_HEADER_LEN);
@@ -27,8 +27,8 @@ bool CZipCrc32Cryptograph::InitDecode(CZipAutoBuffer& password, CZipFileHeader& 
 		CryptDecode((char&)b);
 	}
 	// check the last byte
-	return currentFile.IsDataDescriptor() ?
-		(BYTE(currentFile.m_uModTime >> 8) == b) : (BYTE(currentFile.m_uCrc32 >> 24) == b);
+	return ignoreCheck || (currentFile.IsDataDescriptor() ?
+		(BYTE(currentFile.m_uModTime >> 8) == b) : (BYTE(currentFile.m_uCrc32 >> 24) == b));
 }
 
 void CZipCrc32Cryptograph::InitEncode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage)

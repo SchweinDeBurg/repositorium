@@ -79,6 +79,10 @@ Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a file.  <a href="#aa85a6cb5225005b741ac42364d0eff5a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ZIP_API bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZipPlatform.html#a7186bd71ba97c2d20c8f24b0b7b07f0a">RenameFile</a> (LPCTSTR lpszOldName, LPCTSTR lpszNewName, bool bThrow=true)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Renames a file.  <a href="#a7186bd71ba97c2d20c8f24b0b7b07f0a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">ZIP_API bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZipPlatform.html#ac5d36fc4bd2f8e4d809afc3d4c0a7ad4">SetFileAttr</a> (HANDLE handle, DWORD uAttr)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the file attributes.  <a href="#ac5d36fc4bd2f8e4d809afc3d4c0a7ad4"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">ZIP_API bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZipPlatform.html#a2ed4965084db97a6b884ed425867e0de">SetFileModTime</a> (HANDLE handle, time_t ttime)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the file modification time.  <a href="#a2ed4965084db97a6b884ed425867e0de"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ZIP_API bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZipPlatform.html#acd1a600c4eabbcf18a1ba603251fe4e4">TruncateFile</a> (int iDes, ULONGLONG uSize)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ZIP_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZipPlatform.html#a3c1d17d400f71485ff45bba1a43aa411">OpenFile</a> (LPCTSTR lpszFileName, UINT iMode, int iShareMode)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ZIP_API bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceZipPlatform.html#aafabca9759efde12d29c4b36c12f458c">FlushFile</a> (int iDes)</td></tr>
@@ -716,6 +720,35 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ac5d36fc4bd2f8e4d809afc3d4c0a7ad4"></a><!-- doxytag: member="ZipPlatform::SetFileAttr" ref="ac5d36fc4bd2f8e4d809afc3d4c0a7ad4" args="(HANDLE handle, DWORD uAttr)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ZIP_API bool ZipPlatform::SetFileAttr </td>
+          <td>(</td>
+          <td class="paramtype">HANDLE&#160;</td>
+          <td class="paramname"> <em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DWORD&#160;</td>
+          <td class="paramname"> <em>uAttr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the file attributes. </p>
+
+</div>
+</div>
 <a class="anchor" id="ab2a2c8d4c1ee2d66086e844d98cd354a"></a><!-- doxytag: member="ZipPlatform::SetFileAttr" ref="ab2a2c8d4c1ee2d66086e844d98cd354a" args="(LPCTSTR lpFileName, DWORD uAttr)" -->
 <div class="memitem">
 <div class="memproto">
@@ -754,6 +787,35 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">LPCTSTR&#160;</td>
           <td class="paramname"> <em>lpFileName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">time_t&#160;</td>
+          <td class="paramname"> <em>ttime</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Set the file modification time. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2ed4965084db97a6b884ed425867e0de"></a><!-- doxytag: member="ZipPlatform::SetFileModTime" ref="a2ed4965084db97a6b884ed425867e0de" args="(HANDLE handle, time_t ttime)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ZIP_API bool ZipPlatform::SetFileModTime </td>
+          <td>(</td>
+          <td class="paramtype">HANDLE&#160;</td>
+          <td class="paramname"> <em>handle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -878,7 +940,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <hr><address><small>
-The ZipArchive Library Copyright &copy;&nbsp;2000 - 2010 Artpol Software - Tadeusz Dracz. Generated at Wed Nov 3 2010 11:11:32.
+The ZipArchive Library Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz. Generated at Tue Jun 28 2011 09:45:06.
 </small></address>
 </body>
 </html>

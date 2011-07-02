@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2009 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -76,7 +76,6 @@ __declspec(selectany) int _forceMFCManifestCUR;
 // uncomment to disable compiling standard error messages into the library
 #define _ZIP_ENABLE_ERROR_DESCRIPTION
 
-// #define _ZIP_TRIAL
 #if _MSC_VER < 1300 && !defined __BORLANDC__ && !defined (__GNUC__)
 	#define ZIPINLINE inline
 #else
@@ -136,6 +135,9 @@ __declspec(selectany) int _forceMFCManifestCUR;
 	#endif
 	#ifdef _ZIP_UNICODE_CUSTOM
 		#undef _ZIP_UNICODE_CUSTOM
+	#endif
+	#if defined _ZIP_UNICODE && defined _ZIP_SYSTEM_WIN
+		#undef _ZIP_UNICODE
 	#endif
 #endif
 

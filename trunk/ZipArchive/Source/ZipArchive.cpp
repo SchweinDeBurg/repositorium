@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -34,8 +34,8 @@
 
 using namespace ZipArchiveLib;
 
-const char CZipArchive::m_gszCopyright[] = {"The ZipArchive Library Copyright (c) 2000 - 2010 Artpol Software - Tadeusz Dracz"};
-const char CZipArchive::m_gszVersion[] = {"4.1.0"};
+const char CZipArchive::m_gszCopyright[] = {"The ZipArchive Library Copyright (c) 2000 - 2011 Artpol Software - Tadeusz Dracz"};
+const char CZipArchive::m_gszVersion[] = {"4.1.1"};
 
 void CZipAddNewFileInfo::Defaults()
 {
@@ -187,9 +187,9 @@ void CZipArchive::OpenInternal(int iMode)
 	}
 }
 
-void CZipArchive::ThrowError(int err) const
+void CZipArchive::ThrowError(int err, LPCTSTR lpszFilePath) const
 {
-	CZipException::Throw(err, IsClosed() ? _T("") : (LPCTSTR)m_storage.m_pFile->GetFilePath());
+	CZipException::Throw(err, lpszFilePath != NULL ? lpszFilePath : (IsClosed() ? _T("") : (LPCTSTR)m_storage.m_pFile->GetFilePath()));
 }
 
 bool CZipArchive::GetFileInfo(CZipFileHeader & fhInfo, ZIP_INDEX_TYPE uIndex) const
@@ -306,7 +306,7 @@ bool CZipArchive::OpenFile(ZIP_INDEX_TYPE uIndex)
 				ThrowError(CZipException::badPassword);
 		}
 		CreateCryptograph(CurrentFile()->m_uEncryptionMethod);
-		if (!m_pCryptograph->InitDecode(m_pszPassword, *CurrentFile(), m_storage))
+		if (!m_pCryptograph->InitDecode(m_pszPassword, *CurrentFile(), m_storage, !m_centralDir.IsConsistencyCheckOn(checkDecryptionVerifier)))
 			ThrowError(CZipException::badPassword); 
 
 	}
@@ -388,8 +388,8 @@ CZipString CZipArchive::Close(int iAfterException, bool bUpdateTimeStamp)
 	ResetStringStoreSettings();
 #endif
 	m_centralDir.Close();
-	m_pszPassword.Release();
 	CZipString szFileName = m_storage.Close(bWrite, iAfterException != afAfterException);
+	m_pszPassword.Release();
 	if (bUpdateTimeStamp && !szFileName.IsEmpty())
 		ZipPlatform::SetFileModTime(szFileName, tNewestTime);
 	return szFileName;
@@ -417,9 +417,17 @@ void CZipArchive::SetAdvanced(int iWriteBuffer, int iGeneralBuffer, int iSearchB
 
 int CZipArchive::CloseFile(CZipFile &file)
 {
+#ifdef _ZIP_SYSTEM_WIN	
+	int iRet = ZipPlatform::SetFileModTime((HANDLE)file, CurrentFile()->GetTime())
+				&& ZipPlatform::SetFileAttr(file.GetFilePath(), CurrentFile()->GetSystemAttr()) ? 1 : -2;
+	file.Close();
+	int iCloseRet = CloseFile(NULL);
+	return iRet == 1 ? iCloseRet : iRet;
+#else
 	CZipString temp = file.GetFilePath();
 	file.Close();
 	return CloseFile(temp);
+#endif
 }
 
 int CZipArchive::CloseFile(LPCTSTR lpszFilePath, bool bAfterException)
@@ -485,7 +493,7 @@ bool CZipArchive::OpenNewFile(CZipFileHeader & header, int iLevel, LPCTSTR lpszF
 		{
 			// do not continue - if the file was a directory then not recognizing it will cause 
 			// serious errors (need uAttr to recognize it)
-			ThrowError(CZipException::fileError);
+			ThrowError(CZipException::fileError, lpszFilePath);
 		}
 		ZipPlatform::GetFileModTime(lpszFilePath, ttime);
 		header.SetTime(ttime);
@@ -1324,7 +1332,7 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 	else
 	{
 		if (!ZipPlatform::GetFileAttr(info.m_szFilePath, uAttr))
-			ThrowError(CZipException::fileError); // we don't know whether it is a file or a directory
+			ThrowError(CZipException::fileError, info.m_szFilePath); // we don't know whether it is a file or a directory
 		ZipPlatform::GetFileModTime(info.m_szFilePath, ttime);
 	}
 	CZipFileHeader header;	
@@ -2542,7 +2550,7 @@ ZIP_SIZE_TYPE CZipArchive::PredictMaximumFileSizeInArchive(LPCTSTR lpszFilePath,
 {
 	DWORD attr;
 	if (!ZipPlatform::GetFileAttr(lpszFilePath, attr))
-		ThrowError(CZipException::fileError);
+		ThrowError(CZipException::fileError, lpszFilePath);
 	CZipFileHeader fh;		
 	
 	fh.SetSystemAttr(attr);
