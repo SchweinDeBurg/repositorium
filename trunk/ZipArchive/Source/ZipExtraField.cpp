@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -27,7 +27,7 @@ bool CZipExtraField::Read(CZipStorage *pStorage, WORD uSize)
 	pStorage->Read(buffer, uSize, true);
 	char* position = (char*) buffer;
 	do
-	{		
+	{
 		CZipExtraData* pExtra = new CZipExtraData();
 		if (!pExtra->Read(position, uSize))
 		{
@@ -50,7 +50,7 @@ void CZipExtraField::Write(char* buffer)const
 {
 	int offset = 0;
 	for (int i = 0; i < GetCount(); i++)
-	{	
+	{
 		offset += GetAt(i)->Write(buffer + offset);
 	}
 }
@@ -68,7 +68,7 @@ void CZipExtraField::RemoveInternalHeaders()
 	for (int i = GetCount() - 1; i >= 0; i--)
 	{
 		WORD headerID = GetAt(i)->GetHeaderID();
-		if (headerID == ZIP_EXTRA_PKZIP 
+		if (headerID == ZIP_EXTRA_PKZIP
 			|| headerID == ZIP_EXTRA_WINZIP_AES
 			|| headerID == ZIP_EXTRA_UNICODE_PATH
 			|| headerID == ZIP_EXTRA_UNICODE_COMMENT

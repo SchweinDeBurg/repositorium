@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -38,8 +38,8 @@ namespace ZipArchiveLib
 	Compresses and decompresses data using the Zlib library.
 */
 class ZIP_API CDeflateCompressor : public CBaseLibCompressor
-{			
-public:	
+{
+public:
 	/**
 		Represents options of the CDeflateCompressor.
 
@@ -70,9 +70,9 @@ public:
 			This should be enabled to protect against malformed data.
 			\c true, if the checking of the last block should be enabled; \c false otherwise.
 		*/
-		bool m_bCheckLastBlock;	
+		bool m_bCheckLastBlock;
 
-	};	
+	};
 
 	/**
 		Initializes a new instance of the CDeflateCompressor class.
@@ -89,7 +89,7 @@ public:
 
 	DWORD Decompress(void *pBuffer, DWORD uSize);
 	void Compress(const void *pBuffer, DWORD uSize);
-	
+
 	void FinishCompression(bool bAfterException);
 	void FinishDecompression(bool bAfterException);
 
@@ -107,7 +107,7 @@ protected:
 	{
 		m_options = *(COptions*)pOptions;
 	}
-	
+
 	int ConvertInternalError(int iErr) const
 	{
 		switch (iErr)
@@ -138,7 +138,7 @@ protected:
 		return iErr == Z_OK || iErr == Z_NEED_DICT;
 	}
 
-private:			
+private:
 	COptions m_options;
 	z_stream m_stream;
 };

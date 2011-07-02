@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -41,7 +41,7 @@
 */
 class ZIP_API CZipSplitNamesHandler
 {
-	
+
 public:
 	/**
 		Flags for the #GetVolumeName method.
@@ -57,12 +57,12 @@ public:
 		Initializes a new instance of the CZipSplitNamesHandler class.
 	*/
 	CZipSplitNamesHandler()
-	{		
+	{
 
 	}
 
 	/**
-		Called when opening an archive. 
+		Called when opening an archive.
 
 		\param szArchiveName
 			The archive path provided when opening an archive.
@@ -93,7 +93,7 @@ public:
 			The volume path.
 
 		\return
-			The volume number parsed from the \a szVolumePath. The first volume number is \c 1. 
+			The volume number parsed from the \a szVolumePath. The first volume number is \c 1.
 			Return \c 0 to indicate an error during parsing.
 
 		\note
@@ -134,7 +134,7 @@ public:
 	}
 
 	CZipString GetVolumeName(const CZipString& szArchiveName, ZIP_VOLUME_TYPE uCurrentVolume, ZipArchiveLib::CBitFlag flags) const
-	{		 
+	{
 		CZipString szExt;
 		if (flags.IsSetAny(CZipSplitNamesHandler::flLast))
 			szExt = m_szExt;
@@ -148,7 +148,7 @@ public:
 		CZipPathComponent zpc(szArchiveName);
 		zpc.SetExtension(szExt);
 		return zpc.GetFullPath();
-	}	
+	}
 };
 
 /**
@@ -188,12 +188,12 @@ public:
 			return 0;
 		__int64 ret;
 #if !defined __GNUC__ || defined __MINGW32__
-		ret = _ttoi64((LPCTSTR)szExt);		
+		ret = _ttoi64((LPCTSTR)szExt);
 #else
 		errno = 0;
 		ret = (__int64)strtoll((LPCTSTR)szExt, NULL, 10);
 		if (errno != 0)
-			return 0;		
+			return 0;
 #endif
 		return (ZIP_VOLUME_TYPE)((ret <= 0 || ret > UINT_MAX) ? 0 : ret);
 	}

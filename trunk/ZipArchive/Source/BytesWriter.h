@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -30,13 +30,13 @@
 namespace ZipArchiveLib
 {
 	/**
-		Provides implementation for various 
+		Provides implementation for various
 		buffer operations depending on the current platform and configuration.
 	 */
 	class ZIP_API CBytesWriter
 	{
 	public:
-		
+
 	#ifndef _ZIP_BIG_ENDIAN
 		/**
 			Reads \a iCount bytes from \a pSource into \a pDestination.
@@ -47,7 +47,7 @@ namespace ZipArchiveLib
 			\param[in] pSource
 				The buffer with little-endian ordered data.
 
-			\param iCount 
+			\param iCount
 				The number of bytes to read.
 		*/
 		static void ReadBytes(WORD& uDestination, const char* pSource, int iCount = 2)
@@ -71,7 +71,7 @@ namespace ZipArchiveLib
 		}
 		#endif
 
-		
+
 		static void WriteBytes(char* pDestination, WORD uSource)
 		{
 			memcpy(pDestination, &uSource, 2);
@@ -86,7 +86,7 @@ namespace ZipArchiveLib
 			\param[in] uSource
 				The buffer with byte-ordering depending on the machine.
 
-			\param iCount 
+			\param iCount
 				The number of bytes to write.
 		*/
 		static void WriteBytes(char* pDestination, DWORD uSource, int iCount = 4)
@@ -114,7 +114,7 @@ namespace ZipArchiveLib
 			for (; i < iCount; i++)
 				(pDestination)[i] = pSource[iCount - i - 1];
 		}
-		
+
 		static void ReadBytes(WORD& uDestination, const char* pSource, int iCount = 2)
 		{
 			ReadBytes((char*)&uDestination, pSource, 2, iCount);
@@ -155,7 +155,7 @@ namespace ZipArchiveLib
 		#endif
 
 	#endif
-		
+
 		static DWORD WriteSafeU32(DWORD uValue)
 		{
 			return uValue;

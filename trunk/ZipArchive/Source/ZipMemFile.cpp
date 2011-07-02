@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -25,8 +25,8 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-#if defined _ZIP_IMPL_MFC && (_MSC_VER >= 1300 || _ZIP_FILE_IMPLEMENTATION != ZIP_ZFI_WIN) 
-IMPLEMENT_DYNAMIC(CZipMemFile, CFile) 
+#if defined _ZIP_IMPL_MFC && (_MSC_VER >= 1300 || _ZIP_FILE_IMPLEMENTATION != ZIP_ZFI_WIN)
+IMPLEMENT_DYNAMIC(CZipMemFile, CFile)
 #endif
 
 void CZipMemFile::Grow(size_t nGrowTo)
@@ -49,7 +49,7 @@ void CZipMemFile::Grow(size_t nGrowTo)
 		m_nBufSize = nNewSize;
 		m_lpBuf = lpNew;
 	}
-} 
+}
 
 void CZipMemFile::SetLength(ZIP_FILE_USIZE nNewLen)
 {
@@ -113,7 +113,7 @@ ZIP_FILE_USIZE CZipMemFile::Seek(ZIP_FILE_SIZE lOff, int nFrom)
 		CZipException::Throw(CZipException::memError);
 	if (lNew > m_nDataSize)
 		Grow((size_t)lNew);
-	
+
 	m_nPos = (size_t)lNew;
 	return lNew;
 }

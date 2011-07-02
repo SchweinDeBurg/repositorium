@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -28,9 +28,9 @@ class ZIP_API CZipFile : public CZipAbstractFile, public CFile
 {
 public:
 	DECLARE_DYNAMIC(CZipFile)
-	void Flush(){CFile::Flush();}	
+	void Flush(){CFile::Flush();}
 	CZipString GetFilePath() const
-	{		
+	{
 		try
 		{
 			// it throws an exception when working on an offline file
@@ -42,9 +42,9 @@ public:
 			return this->m_strFileName;
 		}
 	}
-	
+
 	ZIP_FILE_USIZE GetPosition() const {return CFile::GetPosition() ;}
-	void SetLength(ZIP_FILE_USIZE nNewLen) {CFile::SetLength(nNewLen);}	
+	void SetLength(ZIP_FILE_USIZE nNewLen) {CFile::SetLength(nNewLen);}
 	ZIP_FILE_USIZE Seek(ZIP_FILE_SIZE lOff , int nFrom){return CFile::Seek(lOff, nFrom);}
 	ZIP_FILE_USIZE GetLength() const {return CFile::GetLength();}
 	bool HasFilePath() const
@@ -64,7 +64,7 @@ public:
 		return bRet;
 	}
 	CZipFile();
-	bool IsClosed() const 
+	bool IsClosed() const
 	{
 		return m_hFile == CFile::hFileNull;
 	}
@@ -85,6 +85,6 @@ public:
 };
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (pop)	
+	#pragma warning (pop)
 #endif
 

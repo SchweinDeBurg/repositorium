@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -29,11 +29,11 @@
 
 // *********************** WINDOWS **************************
 #ifndef _WIN32
-	#define FILE_ATTRIBUTE_READONLY             0x00000001  
-	#define FILE_ATTRIBUTE_HIDDEN               0x00000002  
-	#define FILE_ATTRIBUTE_SYSTEM               0x00000004  
-	#define FILE_ATTRIBUTE_DIRECTORY            0x00000010  
-	#define FILE_ATTRIBUTE_ARCHIVE              0x00000020 
+	#define FILE_ATTRIBUTE_READONLY             0x00000001
+	#define FILE_ATTRIBUTE_HIDDEN               0x00000002
+	#define FILE_ATTRIBUTE_SYSTEM               0x00000004
+	#define FILE_ATTRIBUTE_DIRECTORY            0x00000010
+	#define FILE_ATTRIBUTE_ARCHIVE              0x00000020
 #endif
 // *********************** UINX **************************
 
@@ -100,7 +100,7 @@ DWORD ZipCompatibility::ConvertToSystem(DWORD uAttr, int iFromSystem, int iToSys
 	 	else
 	 		CZipException::Throw(CZipException::platfNotSupp);
 	}
-	return uAttr; 
+	return uAttr;
 }
 
 DWORD ZipCompatibility::GetAsInternalAttributes(DWORD uAttr, int iFromSystem)
@@ -118,7 +118,7 @@ DWORD ZipCompatibility::GetAsInternalAttributes(DWORD uAttr, int iFromSystem)
 
 DWORD AttrDos(DWORD uAttr, bool )
 {
-	return uAttr;	
+	return uAttr;
 }
 
 DWORD AttrUnix(DWORD uAttr, bool bFrom)
@@ -139,10 +139,10 @@ DWORD AttrUnix(DWORD uAttr, bool bFrom)
 		if (!isDir && !(uAttr & UNIX_EXEC))
 			uNewAttr |= attArch	;
 
-		if (!(uAttr & UNIX_WRITE)) 
+		if (!(uAttr & UNIX_WRITE))
 		    uNewAttr |= attROnly;
 
-	    if (!(uGroupAttr & UNIX_READ) && !(uOtherAttr & UNIX_READ)) 
+	    if (!(uGroupAttr & UNIX_READ) && !(uOtherAttr & UNIX_READ))
 		    uNewAttr |= attHidd;
 	}
 	else
@@ -150,17 +150,17 @@ DWORD AttrUnix(DWORD uAttr, bool bFrom)
 
 		uNewAttr = CREATE_USER_PERMISSIONS (UNIX_READ);
 
-		// we cannot assume that if the file hasn't the archive attribute set		
+		// we cannot assume that if the file hasn't the archive attribute set
 		// then it is executable and set execute permissions
 
-		if (!(uAttr & attHidd)) 
+		if (!(uAttr & attHidd))
 			uNewAttr |= (CREATE_OTHER_PERMISSIONS (UNIX_READ) | CREATE_GROUP_PERMISSIONS (UNIX_READ));
-							
+
 
 		if (!(uAttr & attROnly))
 			uNewAttr |= (CREATE_GROUP_PERMISSIONS (UNIX_WRITE) | CREATE_USER_PERMISSIONS (UNIX_WRITE));
 
-		if (uAttr & attDir) 
+		if (uAttr & attDir)
 		{
 			uNewAttr |= UNIX_DIRECTORY_ATTRIBUTE;
 			uNewAttr |= (CREATE_OTHER_PERMISSIONS (UNIX_EXEC) | CREATE_GROUP_PERMISSIONS (UNIX_EXEC)) |
@@ -171,7 +171,7 @@ DWORD AttrUnix(DWORD uAttr, bool bFrom)
 
 	}
 
-	return uNewAttr;	
+	return uNewAttr;
 }
 
 DWORD AttrMac(DWORD uAttr, bool )
@@ -188,7 +188,7 @@ ZIPINLINE bool ZipCompatibility::IsPlatformSupported(int iCode)
 
 void ZipCompatibility::ConvertBufferToString(CZipString& szString, const CZipAutoBuffer& buffer, UINT uCodePage)
 {
-#ifdef _UNICODE	
+#ifdef _UNICODE
 	ZipPlatform::MultiByteToWide(buffer, szString, uCodePage);
 #else
 	// 	iLen does not include the NULL character
@@ -197,13 +197,13 @@ void ZipCompatibility::ConvertBufferToString(CZipString& szString, const CZipAut
 	{
 		CZipAutoBuffer buf;
 		buf = buffer;
-		ZipPlatform::AnsiOem(buf, false);		
+		ZipPlatform::AnsiOem(buf, false);
 		iLen = buf.GetSize();
 		memcpy(szString.GetBuffer(iLen), buf.GetBuffer(), iLen);
 	}
 	else
 	{
-		iLen = buffer.GetSize();		
+		iLen = buffer.GetSize();
 		memcpy(szString.GetBuffer(iLen), buffer.GetBuffer(), iLen);
 	}
 	szString.ReleaseBuffer(iLen);

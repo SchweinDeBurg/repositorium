@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -34,9 +34,9 @@
 /**
 	Splits a file path into components.
 */
-class ZIP_API CZipPathComponent  
+class ZIP_API CZipPathComponent
 {
-	
+
 public:
 #ifdef _ZIP_SYSTEM_WIN
 	static const CZipString PathPrefix;
@@ -49,7 +49,7 @@ public:
 		ptUnc = 2,			///< UNC path.
 		ptUnicode = 4,		///< Unicode path.
 		ptUncWin = 8		///< Windows UNC path.
-	};	
+	};
 	/**
 		Returns the length of the path prefix detected.
 
@@ -160,7 +160,7 @@ public:
     /**
 		Returns the value indicating whether the given character is a path separator.
 
-		\param c 
+		\param c
 			The character to test.
 
 		\return
@@ -170,7 +170,7 @@ public:
 	{
 		return c == _T('\\') || c == _T('/');
 	}
-	
+
 	/**
 		Checks if \a szPath has a path separator appended.
 
@@ -188,7 +188,7 @@ public:
 		else
 			return false;
 	}
-	
+
 	/**
 		Sets the full path to the file.
 
@@ -214,14 +214,14 @@ public:
 	*/
 	void SetFileTitle(LPCTSTR lpszFileTitle) { m_szFileTitle = lpszFileTitle;}
 
-	
+
 	/**
 		Sets the extension.
 
 		\param	lpszExt
 			The extension to set. May contain the dot character at the beginning, but doesn't have to.
 	*/
-	void SetExtension(LPCTSTR lpszExt) 
+	void SetExtension(LPCTSTR lpszExt)
 	{
 		m_szFileExt = lpszExt;
 		m_szFileExt.TrimLeft(_T('.'));
@@ -301,7 +301,7 @@ public:
 		if (!szDrive.IsEmpty() && !szDir.IsEmpty())
 			szDrive += m_cSeparator;
 
-		return m_szPrefix + szDrive + szDir;	
+		return m_szPrefix + szDrive + szDir;
 	}
 protected:
 	/**
@@ -314,11 +314,11 @@ protected:
 		m_szDrive,				///< The drive (if the system path standard uses it). It does not include a path separator at the end.
 		m_szPrefix;				///< The prefix (e.g. for the UNC path or Unicode path under Windows).
 	//@}
-	
+
 };
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (pop)	
+	#pragma warning (pop)
 #endif
 
 

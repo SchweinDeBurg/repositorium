@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -36,7 +36,7 @@
 namespace ZipArchiveLib
 {
 
-class ZIP_API CZipCallbackProvider : public CZipMap<CZipActionCallback::CallbackType, CZipActionCallback*>		
+class ZIP_API CZipCallbackProvider : public CZipMap<CZipActionCallback::CallbackType, CZipActionCallback*>
 {
 public:
 	void Set(CZipActionCallback* pCallback, int iWhich)
@@ -71,13 +71,13 @@ protected:
 		}
 		else
 			RemoveKey(iType);
-	}	
+	}
 };
 
 } // namespace
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (pop)	
+	#pragma warning (pop)
 #endif
 
 

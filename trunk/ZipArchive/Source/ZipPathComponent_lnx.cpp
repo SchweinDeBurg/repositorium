@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -25,7 +25,7 @@ CZipPathComponent::~CZipPathComponent()
 
 void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 {
-	
+
 	CZipString szTempPath(lpszFullPath);
 	const CZipString szPrefix = _T("\\\\?\\unc\\");
 	int i = -1, iLen = szPrefix.GetLength();
@@ -33,17 +33,17 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 		iLen = szTempPath.GetLength();
 	CZipString szPossiblePrefix = szTempPath.Left(iLen);
 	szPossiblePrefix.MakeLower(); // must perform case insensitive comparison
-	while (++i < iLen && szPossiblePrefix[i] == szPrefix[i]); 
+	while (++i < iLen && szPossiblePrefix[i] == szPrefix[i]);
 	if (i == 2 || i == 4 || i == 8) // unc path, Unicode path or unc path meeting windows file name conventions
 	{
 		m_szPrefix = szTempPath.Left(i);
-		szTempPath = szTempPath.Mid(i);		
+		szTempPath = szTempPath.Mid(i);
 	}
 	else
 		m_szPrefix.Empty();
 
 
-	m_szDrive.Empty(); 
+	m_szDrive.Empty();
 	m_szFileTitle.Empty();
 	m_szDirectory.Empty();
 	m_szFileExt.Empty();
@@ -57,10 +57,10 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 		m_szDirectory = szTempPath.Left(p);
 		if (p == szTempPath.GetLength() - 1 )
 			return; // no filename present
-		else 
+		else
 			p++;
 	}
-	else 
+	else
 		p = 0;
 
 	// p points at the beginning of the filename
@@ -76,7 +76,7 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 	}
 
 
-	
+
 }
 
 CZipString CZipPathComponent::GetNoDrive() const
@@ -87,7 +87,7 @@ CZipString CZipPathComponent::GetNoDrive() const
 		szPath += m_cSeparator;
 
 	szPath += szFileName;
-	return szPath;	
+	return szPath;
 }
 
 #endif // _ZIP_SYSTEM_LINUX

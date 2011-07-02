@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -41,7 +41,7 @@ int CZipPathComponent::IsPrefixed(const CZipString& path)
 #if defined _UNICODE && _MSC_VER >= 1400
 
 CZipString CZipPathComponent::AddPrefix(LPCTSTR path, bool isFolder)
-{	
+{
 
 	CZipString ret = path;
 	AddPrefix(ret, isFolder);
@@ -49,13 +49,13 @@ CZipString CZipPathComponent::AddPrefix(LPCTSTR path, bool isFolder)
 }
 
 void CZipPathComponent::AddPrefix(CZipString& path, bool isFolder)
-{	
+{
 
 	if (path.GetLength() >= (isFolder ? 248 : MAX_PATH))
 	{
 		int prefixLength = IsPrefixed(path);
 		if (prefixLength < ptUnicode)
-		{			
+		{
 			if (prefixLength == ptUnc)
 			{
 				path = path.Mid(prefixLength);
@@ -74,12 +74,12 @@ void CZipPathComponent::AddPrefix(CZipString& path, bool isFolder)
 #else
 
 CZipString CZipPathComponent::AddPrefix(LPCTSTR path, bool)
-{	
+{
 	return path;
 }
 
 void CZipPathComponent::AddPrefix(CZipString&, bool)
-{	
+{
 
 }
 
@@ -95,14 +95,14 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 #endif
 	TCHAR szFname[_MAX_FNAME];
 	TCHAR szExt[_MAX_EXT];
-	
-	
+
+
 	CZipString szTempPath(lpszFullPath);
-	int i = IsPrefixed(szTempPath);	
+	int i = IsPrefixed(szTempPath);
 	if (i == ptUnc || i == ptUnicode || i == ptUncWin) // unc path, Unicode path or unc path meeting windows file name conventions
 	{
 		m_szPrefix = szTempPath.Left(i);
-		szTempPath = szTempPath.Mid(i);		
+		szTempPath = szTempPath.Mid(i);
 	}
 	else
 		m_szPrefix.Empty();
@@ -115,10 +115,10 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 #else
 	_tsplitpath(szTempPath, szDrive, szDir, szFname, szExt);
 #endif
-	
+
 	m_szDrive = szDrive;
 	m_szDirectory = szDir;
-	
+
 	m_szDirectory.TrimLeft(m_cSeparator);
 	m_szDirectory.TrimRight(m_cSeparator);
 	SetExtension(szExt);
@@ -134,7 +134,7 @@ CZipString CZipPathComponent::GetNoDrive() const
 		szPath += m_cSeparator;
 
 	szPath += szFileName;
-	return szPath;	
+	return szPath;
 }
 
 #endif // _ZIP_SYSTEM_WIN

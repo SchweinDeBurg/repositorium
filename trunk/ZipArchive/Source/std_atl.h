@@ -2,8 +2,8 @@
 // This source file is part of the ZipArchive library source distribution and
 // is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
 //
-// This source code is licensed as closed source and its use is 
-// strictly subject to the terms and conditions of the 
+// This source code is licensed as closed source and its use is
+// strictly subject to the terms and conditions of the
 // The ZipArchive Library Commercial License.
 // The license is distributed with the source code in the License.txt file.
 //
@@ -16,17 +16,17 @@
 
 #if !defined(UNDER_CE)
 
-#if _MSC_VER > 1000	
-	#if _MSC_VER < 1500		
+#if _MSC_VER > 1000
+	#if _MSC_VER < 1500
 		#if !defined WINVER && !defined _WIN32_WINNT
-			#if _MSC_VER < 1300		
+			#if _MSC_VER < 1300
 				#define WINVER 0x0400
 			#else
 				#define WINVER 0x0501
 			#endif
 		#endif
 	#else
-		// Including this header for earlier versions of Visual Studio will cause 
+		// Including this header for earlier versions of Visual Studio will cause
 		// warning messages with Platform SDK, but is safe otherwise.
 		#include "sdkddkver.h"
 	#endif
@@ -65,9 +65,9 @@ typedef BOOL ZBOOL;
 #if _MSC_VER >= 1300 || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_WIN || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
 	#define ZIP_FILE_USIZE ULONGLONG
 	#define ZIP_FILE_SIZE LONGLONG
-	#define ZIP_FILE_SIZEMAX _I64_MAX	
+	#define ZIP_FILE_SIZEMAX _I64_MAX
 #else
 	#define ZIP_FILE_USIZE DWORD
 	#define ZIP_FILE_SIZE LONG
-	#define ZIP_FILE_SIZEMAX MAXLONG		
+	#define ZIP_FILE_SIZEMAX MAXLONG
 #endif

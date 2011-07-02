@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -16,7 +16,7 @@
 
 #if defined(_MSC_VER) && _MSC_VER < 1300
 	// STL warnings
-	#pragma warning (push, 3) 
+	#pragma warning (push, 3)
 #endif
 
 #include "DirEnumerator.h"
@@ -28,7 +28,7 @@
 
 #if defined __GNUC__ && !defined __MINGW32__
 	#include <sys/stat.h>
-	#include <dirent.h>	
+	#include <dirent.h>
 #else
 	#include <io.h>
 	#ifdef __BORLANDC__
@@ -40,8 +40,8 @@
 		#endif
 		#ifndef _tfinddatai64_t
 			#define _tfinddatai64_t __tfinddatai64_t
-		#endif		
-	#endif	
+		#endif
+	#endif
 #endif
 
 #else
@@ -53,7 +53,7 @@ static time_t FileTimeToCrtTime(const FILETIME* pftSrc)
 	{
 		return (time_t(-1));
 	}
-	
+
 	SYSTEMTIME stTemp = { 0 };
 	if (!::FileTimeToSystemTime(&ftLocal, &stTemp))
 	{
@@ -83,7 +83,7 @@ namespace ZipArchiveLib
 
 
 bool CDirEnumerator::Start(CFileFilter& filter)
-{	
+{
 	OnEnumerationBegin();
 	std::queue<CZipString> dirs;
 	dirs.push(CZipString(m_lpszDirectory));
@@ -103,7 +103,7 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 			{
 				struct dirent* entry = readdir(dp);
 				if (!entry)
-					break;								
+					break;
 				CZipString path(m_szCurrentDirectory + entry->d_name);
 	#if !defined __APPLE__ && !defined __CYGWIN__
 				struct stat64 sStats;
@@ -116,11 +116,11 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 
 				LPCTSTR name = entry->d_name;
 				CFileInfo info;
-				info.m_uAttributes = sStats.st_mode;				
-				
+				info.m_uAttributes = sStats.st_mode;
+
 #else
 		CZipString szFullFileName = m_szCurrentDirectory + _T("*");
-		
+
 #if !defined(UNDER_CE)
 		_tfinddatai64_t ffInfo;
 #if _MSC_VER > 1200
@@ -151,22 +151,22 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 				if (ZipPlatform::IsDirectory(info.m_uAttributes))
 				{
 					if (!m_bRecursive || IsDots(name))
-						continue;					
+						continue;
 					isDir = true;
 				}
 				else
-					isDir = false;									
+					isDir = false;
 
 #ifdef ZIP_ENUMERATOR_FOR_GNUC
 				info.m_uSize  = (ZIP_FILE_USIZE)sStats.st_size;
 				info.m_uCreateTime = sStats.st_ctime;
 				info.m_uModTime = sStats.st_mtime;
-				info.m_uAccessTime = sStats.st_atime;				
+				info.m_uAccessTime = sStats.st_atime;
 #elif !defined(UNDER_CE)
 				info.m_uSize = (ZIP_FILE_USIZE)ffInfo.size;
 				info.m_uCreateTime = ffInfo.time_create;
 				info.m_uModTime = ffInfo.time_write;
-				info.m_uAccessTime = ffInfo.time_access;	
+				info.m_uAccessTime = ffInfo.time_access;
 				CZipString path(m_szCurrentDirectory + ffInfo.name);
 #else
 				info.m_uSize = (ZIP_FILE_USIZE)(wfd.nFileSizeHigh * MAXDWORD + 1) + wfd.nFileSizeLow;
@@ -174,8 +174,8 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 				info.m_uModTime = FileTimeToCrtTime(&wfd.ftLastWriteTime);
 				info.m_uAccessTime = FileTimeToCrtTime(&wfd.ftLastAccessTime);
 				CZipString path(m_szCurrentDirectory + wfd.cFileName);
-#endif				
-				
+#endif
+
 				if (isDir)
 				{
 					bool bAllow;
@@ -188,7 +188,7 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 					if (bAllow)
 						dirs.push(path);
 				}
-				else 
+				else
 				{
 					bool bAllow;
 					if (filter.HandlesFile(info))
@@ -207,7 +207,7 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 #ifdef ZIP_ENUMERATOR_FOR_GNUC
 			}
 			closedir(dp);
-		}		
+		}
 #elif !defined(UNDER_CE)
 			}
 			while (_tfindnexti64(hFile, &ffInfo) == 0L);
@@ -218,7 +218,7 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 			while (::FindNextFile(hFile, &wfd) != 0);
 			::FindClose(hFile);
 		}
-#endif		
+#endif
 		ExitDirectory();
 	}
 	while(!dirs.empty() && ret);
@@ -235,7 +235,7 @@ bool CDirEnumerator::IsDots(LPCTSTR lpszName)
 } // namespace
 
 #if defined(_MSC_VER) && _MSC_VER < 1300
-	// STL warnings 
-	#pragma warning (pop) 
+	// STL warnings
+	#pragma warning (pop)
 #endif
 

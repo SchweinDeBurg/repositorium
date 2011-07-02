@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -116,7 +116,7 @@ bool CZipFile::Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow)
 		else
 			return false;
 	}
-		
+
 	m_szFileName = lpszFileName;
 	return true;
 }
@@ -155,10 +155,10 @@ ZIP_FILE_USIZE CZipFile::GetPosition() const
 	ASSERT(m_hFile != INVALID_HANDLE_VALUE);
 
 	// do not call Seek, to keep GetPosition const
-#if (defined(NTDDI_VERSION) && NTDDI_VERSION >=NTDDI_WIN2K) || (_WIN32_WINNT >= 0x0500 && WINVER >= 0x0500)	
+#if (defined(NTDDI_VERSION) && NTDDI_VERSION >=NTDDI_WIN2K) || (_WIN32_WINNT >= 0x0500 && WINVER >= 0x0500)
 	LARGE_INTEGER li, oli = {0};
 	li.QuadPart = (LONGLONG)0;
-	if (::SetFilePointerEx(m_hFile, li, &oli, FILE_CURRENT) == FALSE)	
+	if (::SetFilePointerEx(m_hFile, li, &oli, FILE_CURRENT) == FALSE)
 	{
 		ThrowError();
 	}
@@ -183,7 +183,7 @@ ZIP_FILE_USIZE CZipFile::Seek(ZIP_FILE_SIZE dOff, int nFrom)
 #if (defined(NTDDI_VERSION) && NTDDI_VERSION >= NTDDI_WIN2K) || (_WIN32_WINNT >= 0x0500 && WINVER >= 0x0500)
 	LARGE_INTEGER li, oli = {0};
 	li.QuadPart = (LONGLONG)dOff;
-	if (::SetFilePointerEx(m_hFile, li, &oli, (DWORD)nFrom) == FALSE)	
+	if (::SetFilePointerEx(m_hFile, li, &oli, (DWORD)nFrom) == FALSE)
 	{
 		ThrowError();
 	}

@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -41,7 +41,7 @@ class CZipFileHeader;
 class ZIP_API CZipCryptograph
 {
 public:
-	
+
 	/**
 		The encryption method.
 
@@ -129,72 +129,72 @@ public:
 			\c true, if the method is supported; \c false otherwise.
 	*/
 	static bool IsEncryptionSupported(int iEncryptionMethod)
-	{		
+	{
 		return iEncryptionMethod == encStandard;
 	}
 
 	/**
 		The method called when an existing file is opened for extraction.
-	
+
 		\param password
 			The supplied password with the CZipArchive::SetPassword method.
-	
+
 		\param currentFile
 			The file being decoded and extracted.
-	
+
 		\param storage
 			The current CZipStorage.
 
 		\param ignoreCheck
 			If \c true, skips control bytes verifications.
-	
+
 		\return
-			\c true, if the password is initially considered correct; \c false otherwise.	
+			\c true, if the password is initially considered correct; \c false otherwise.
 	 */
 	virtual bool InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage, bool ignoreCheck) = 0;
 
 	/**
 		The method called when a new file is opened for compression.
-		
+
 		\param password
 			The supplied password with the CZipArchive::SetPassword method.
-		
+
 		\param currentFile
 			The file being compressed and encoded.
-		
+
 		\param storage
-			The current CZipStorage.		
+			The current CZipStorage.
 	 */
 	virtual void InitEncode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage) = 0;
 
 	/**
 		Decodes the given data.
-	
+
 		\param pBuffer
 			The buffer that holds the data to decode and that receives the results.
-	
+
 		\param uSize
-			The size of \a pBuffer.	
+			The size of \a pBuffer.
 	 */
 	virtual void Decode(char* pBuffer, DWORD uSize) = 0;
 
 	/**
 		Encodes the given data.
-	
+
 		\param pBuffer
 			The buffer that holds the data to encode and that receives the results.
-	
+
 		\param uSize
-			The size of \a pBuffer.	
+			The size of \a pBuffer.
 	 */
 	virtual void Encode(char* pBuffer, DWORD uSize) = 0;
 
 	/**
 		The method called at the end of the decoding process.
-	
+
 		\param currentFile
 			The file being decoded and extracted.
-	
+
 		\param storage
 			The current CZipStorage.
 	 */
@@ -202,10 +202,10 @@ public:
 
 	/**
 		The method called at the end of the decoding process.
-	
+
 		\param currentFile
 			The file being compressed and encoded.
-	
+
 		\param storage
 			The current CZipStorage.
 	 */
@@ -217,7 +217,7 @@ public:
 		\param iEncryptionMethod
 			The encryption method to test. It can be one of the #EncryptionMethod values.
 
-		\return 
+		\return
 			\c true, if the current compressor can handle the given encryption method; \c false otherwise.
 	*/
 	virtual bool CanHandle(int iEncryptionMethod)

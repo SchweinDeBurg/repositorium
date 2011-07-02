@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -37,7 +37,7 @@
 		<a href="kb">0610242300</a>
 */
 class ZIP_API CZipExtraData
-{	
+{
 	friend class CZipExtraField;
 public:
 
@@ -49,7 +49,7 @@ public:
 	/**
 		If \c true, the size of the extra data record is read from the archive and written to it.
 		This is default behavior consistent with the common ZIP format.
-		If \c false, the size is not read or written. 
+		If \c false, the size is not read or written.
 		You should change this value only when you need special handling.
 	*/
 	bool m_bHasSize;
@@ -123,11 +123,11 @@ public:
 	{
 		return (m_bHasSize ? 4 : 2) + m_data.GetSize();
 	}
-	
+
 	/**
 		Returns the data ID.
 
-		\return 
+		\return
 			The data ID.
 	*/
 	WORD GetHeaderID() const
@@ -136,7 +136,7 @@ public:
 	}
 
 protected:
-	
+
 	/**
 		Reads the extra data record from \a buffer.
 
@@ -162,7 +162,7 @@ protected:
 	*/
 	WORD Write(char* buffer)const;
 
-private:	
+private:
 	WORD m_uHeaderID;
 };
 

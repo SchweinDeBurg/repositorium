@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -18,17 +18,17 @@
 
 #if !defined(UNDER_CE)
 
-#if _MSC_VER > 1000	
-	#if _MSC_VER < 1500		
+#if _MSC_VER > 1000
+	#if _MSC_VER < 1500
 		#if !defined WINVER && !defined _WIN32_WINNT
-			#if _MSC_VER < 1300		
+			#if _MSC_VER < 1300
 				#define WINVER 0x0400
 			#else
 				#define WINVER 0x0501
 			#endif
 		#endif
 	#else
-		// Including this header for earlier versions of Visual Studio will cause 
+		// Including this header for earlier versions of Visual Studio will cause
 		// warning messages with Platform SDK, but is safe otherwise.
 		#include "sdkddkver.h"
 	#endif
@@ -64,9 +64,9 @@ typedef BOOL ZBOOL;
 #if _MSC_VER >= 1300 || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_WIN || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
 	#define ZIP_FILE_USIZE ULONGLONG
 	#define ZIP_FILE_SIZE LONGLONG
-	#define ZIP_FILE_SIZEMAX _I64_MAX	
+	#define ZIP_FILE_SIZEMAX _I64_MAX
 #else
 	#define ZIP_FILE_USIZE DWORD
 	#define ZIP_FILE_SIZE LONG
-	#define ZIP_FILE_SIZEMAX MAXLONG		
+	#define ZIP_FILE_SIZEMAX MAXLONG
 #endif

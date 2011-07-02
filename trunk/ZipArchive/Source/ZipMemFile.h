@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -34,7 +34,7 @@
 */
 class ZIP_API CZipMemFile : public CZipAbstractFile
 // when ZIP_ZFI_WIN is defined under VS 6.0, do not derive from CFile, as sizes are limited to DWORD
-#if defined _ZIP_IMPL_MFC && (_MSC_VER >= 1300 || _ZIP_FILE_IMPLEMENTATION != ZIP_ZFI_WIN) 
+#if defined _ZIP_IMPL_MFC && (_MSC_VER >= 1300 || _ZIP_FILE_IMPLEMENTATION != ZIP_ZFI_WIN)
 	, public CFile
 #endif
 {
@@ -60,7 +60,7 @@ protected:
 	}
 	void Grow(size_t nBytes);
 public:
-#if defined _ZIP_IMPL_MFC && (_MSC_VER >= 1300 || _ZIP_FILE_IMPLEMENTATION != ZIP_ZFI_WIN) 
+#if defined _ZIP_IMPL_MFC && (_MSC_VER >= 1300 || _ZIP_FILE_IMPLEMENTATION != ZIP_ZFI_WIN)
 	DECLARE_DYNAMIC(CZipMemFile)
 #endif
 	bool IsClosed() const { return m_lpBuf == NULL;}
@@ -71,7 +71,7 @@ public:
 	void Write(const void* lpBuf, UINT nCount);
 	UINT Read(void* lpBuf, UINT nCount);
 	void SetLength(ZIP_FILE_USIZE nNewLen);
-	CZipString GetFilePath() const  {return _T("");} 	
+	CZipString GetFilePath() const  {return _T("");}
 	bool HasFilePath() const
 	{
 		return false;

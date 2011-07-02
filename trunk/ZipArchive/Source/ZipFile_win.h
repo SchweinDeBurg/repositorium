@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -43,7 +43,7 @@ public:
 		modeCreate =       0x01000,
 		modeNoTruncate =   0x02000
 	};
-	
+
 	CZipFile();
 	CZipFile(LPCTSTR lpszFileName, UINT openFlags);
 	void Flush();
@@ -55,15 +55,15 @@ public:
 	}
 	bool IsClosed()const { return m_hFile == INVALID_HANDLE_VALUE;}
 	bool Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow);
-	void Close(); 
+	void Close();
 
 	void Write(const void* lpBuf, UINT nCount);
-	ZIP_FILE_USIZE GetPosition() const;	
+	ZIP_FILE_USIZE GetPosition() const;
 	void SetLength(ZIP_FILE_USIZE uNewLen);
 	UINT Read(void *lpBuf, UINT nCount);
 
 	ZIP_FILE_USIZE Seek(ZIP_FILE_SIZE dOff, int nFrom);
-	
+
 	virtual ~CZipFile (){Close();};
 protected:
 	CZipString m_szFileName;

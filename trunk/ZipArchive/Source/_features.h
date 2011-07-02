@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -26,7 +26,7 @@
 
 #if !defined(ZIPARCHIVE_FEATURES_DOT_H)
 /// @cond
-#define ZIPARCHIVE_FEATURES_DOT_H 
+#define ZIPARCHIVE_FEATURES_DOT_H
 /// @endcond
 
 #if _MSC_VER > 1000
@@ -121,7 +121,7 @@
 
 
 /**
-	Default implementation of CZipFile class. 
+	Default implementation of CZipFile class.
 
 	\see
 			<a href="kb">0610050933|fileImpl</a>
@@ -129,7 +129,7 @@
 #define ZIP_ZFI_DEFAULT 0
 
 /**
-	STL implementation of CZipFile class. 
+	STL implementation of CZipFile class.
 
 	\see
 			<a href="kb">0610050933|fileImpl</a>
@@ -137,7 +137,7 @@
 #define ZIP_ZFI_STL 1
 
 /**
-	Windows API implementation of CZipFile class. 
+	Windows API implementation of CZipFile class.
 
 	\see
 			<a href="kb">0610050933|fileImpl</a>
@@ -145,7 +145,7 @@
 #define ZIP_ZFI_WIN 2
 
 /**
-	Active implementation of CZipFile class. 
+	Active implementation of CZipFile class.
 
 	\see
 			<a href="kb">0610050933|fileImpl</a>

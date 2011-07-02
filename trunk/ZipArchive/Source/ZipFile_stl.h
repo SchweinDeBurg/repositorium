@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -24,13 +24,13 @@
 	#include <io.h>
 #else
 	#include <unistd.h>
-	#include <errno.h>	
+	#include <errno.h>
 #endif
 
-#if !defined (_MSC_VER) || _MSC_VER < 1400	
+#if !defined (_MSC_VER) || _MSC_VER < 1400
 
-// there seems to be a problem under Windows sometimes when using one of the functions below 
-// without the underscore at the beginning	
+// there seems to be a problem under Windows sometimes when using one of the functions below
+// without the underscore at the beginning
 #ifndef _lseek
 	#define _lseek lseek
 #endif
@@ -51,7 +51,7 @@
 	#define _write write
 #endif
 
-#endif 
+#endif
 class ZIP_API CZipFile : public CZipAbstractFile
 {
 	void ThrowError() const;
@@ -70,7 +70,7 @@ public:
 		modeCreate =       0x01000,
 		modeNoTruncate =   0x02000
 	};
-	
+
 	CZipFile();
 	CZipFile(LPCTSTR lpszFileName, UINT openFlags);
 	void Flush();
@@ -82,14 +82,14 @@ public:
 	}
 	bool IsClosed()const { return m_hFile == -1;}
 	bool Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow);
-	void Close(); 
+	void Close();
 
 	void Write(const void* lpBuf, UINT nCount);
-	ZIP_FILE_USIZE GetPosition() const;	
+	ZIP_FILE_USIZE GetPosition() const;
 	void SetLength(ZIP_FILE_USIZE uNewLen);
 	UINT Read(void *lpBuf, UINT nCount);
 	ZIP_FILE_USIZE Seek(ZIP_FILE_SIZE dOff, int nFrom);
-	
+
 	virtual ~CZipFile (){Close();};
 protected:
 	CZipString m_szFileName;

@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -48,7 +48,7 @@ namespace ZipArchiveLib
 		LPCTSTR m_lpszDirectory;
 		LPCTSTR m_lpszFileNameMask;
 		bool m_bRecursive;
-		CZipString m_szCurrentDirectory;	
+		CZipString m_szCurrentDirectory;
 	protected:
 		/**
 			Initializes a new CDirEnumerator object.
@@ -56,13 +56,13 @@ namespace ZipArchiveLib
 			\param lpszDirectory
 				A directory to process.
 
-			\param bRecursive 
+			\param bRecursive
 				The value indicating whether the subfolders of \a lpszDirectory
 				should be processed recursively.
 
 			\see
 				GetDirectory
-			\see 
+			\see
 				IsRecursive
 		*/
 		CDirEnumerator(LPCTSTR lpszDirectory, bool bRecursive = true)
@@ -71,7 +71,7 @@ namespace ZipArchiveLib
 			if (dir.IsEmpty())
 				m_lpszDirectory = _T(".");
 			else
-				m_lpszDirectory = lpszDirectory;	
+				m_lpszDirectory = lpszDirectory;
 			m_bRecursive = bRecursive;
 		}
 
@@ -91,19 +91,19 @@ namespace ZipArchiveLib
 
 			\see
 				CFileFilter::Evaluate
-				
+
 		*/
 		virtual bool Process(LPCTSTR lpszPath, const CFileInfo& info) = 0;
 
-		/** 
+		/**
 			This method is called at the beginning of the enumeration process.
 
-			\see 
+			\see
 				OnEnumerationEnd
 		*/
 		virtual void OnEnumerationBegin(){}
 
-		/** 
+		/**
 			This method is called at the end of the enumeration process.
 
 			\param bResult
@@ -118,7 +118,7 @@ namespace ZipArchiveLib
 		/**
 			This method is called when an enumeration process enters a new directory.
 
-			\see 
+			\see
 				GetCurrentDirectory
 			\see
 				ExitDirectory
@@ -128,28 +128,28 @@ namespace ZipArchiveLib
 		/**
 			This method is called when an enumeration process exits a directory.
 
-			\see 
+			\see
 				GetCurrentDirectory
 			\see
 				EnterDirectory
 		*/
 		virtual void ExitDirectory(){}
-		
-	public:		
+
+	public:
 
 		/**
 			Returns the directory being enumerated.
 
 			\return
-				The directory being enumerated (root).	
+				The directory being enumerated (root).
 
 			\see
 				CDirEnumerator::CDirEnumerator
 		*/
-		LPCTSTR GetDirectory() const {return m_lpszDirectory;} 	
+		LPCTSTR GetDirectory() const {return m_lpszDirectory;}
 
 		/**
-			Returns the value indicating whether the subfolders of the root directory 
+			Returns the value indicating whether the subfolders of the root directory
 			are processed recursively.
 
 			\return
@@ -163,7 +163,7 @@ namespace ZipArchiveLib
 		/**
 			Returns the directory being currently processed.
 
-			\return 
+			\return
 				The directory being currently processed.
 		*/
 		LPCTSTR GetCurrentDirectory() const {return m_szCurrentDirectory;}
@@ -175,7 +175,7 @@ namespace ZipArchiveLib
 			\param filter
 				A filter that decides which directories and/or files should be processed and which should not.
 
-			\return 
+			\return
 				\c false, if the process was aborted (the #Process method returned \c false); \c true otherwise.
 
 			\see

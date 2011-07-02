@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -34,7 +34,7 @@ bool CZipCrc32Cryptograph::InitDecode(CZipAutoBuffer& password, CZipFileHeader& 
 void CZipCrc32Cryptograph::InitEncode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage)
 {
 	CZipAutoBuffer buf(ZIPARCHIVE_ENCR_HEADER_LEN);
-	// use pseudo-crc since we don't know it yet	
+	// use pseudo-crc since we don't know it yet
 	CryptInitKeys(password);
 	srand(UINT(time(NULL)));
 	// generate pseudo-random sequence
@@ -50,7 +50,7 @@ void CZipCrc32Cryptograph::InitEncode(CZipAutoBuffer& password, CZipFileHeader& 
 		buffer[i] = c;
 
 	}
-	int iCrc = (int)currentFile.m_uModTime << 16;	
+	int iCrc = (int)currentFile.m_uModTime << 16;
 	c = (char)((iCrc >> 16) & 0xFF);
 	CryptEncode(c);
 	buffer[ZIPARCHIVE_ENCR_HEADER_LEN - 2] = c;
@@ -71,7 +71,7 @@ void CZipCrc32Cryptograph::CryptInitKeys(CZipAutoBuffer& password)
 }
 
 void CZipCrc32Cryptograph::CryptUpdateKeys(char c)
-{	
+{
 	m_keys[0] = CryptCRC32(m_keys[0], c);
 	m_keys[1] += m_keys[0] & 0xff;
 	m_keys[1] = m_keys[1] * 134775813L + 1;
