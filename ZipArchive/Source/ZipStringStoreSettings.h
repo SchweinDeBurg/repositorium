@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -55,9 +55,9 @@ public:
 
 	/**
 		Sets the default filename code page depending on the given platform.
-	
+
 		\param iPlatform
-			One of the ZipCompatibility::ZipPlatforms values.	
+			One of the ZipCompatibility::ZipPlatforms values.
 	 */
 	void SetDefaultNameCodePage(int iPlatform)
 	{
@@ -71,7 +71,7 @@ public:
 		\return
 			\c true, if the current filename code page is standard; \c false otherwise.
 
-		\see 
+		\see
 			ZipPlatform::GetSystemID
 	*/
 	bool IsStandardNameCodePage() const
@@ -151,7 +151,7 @@ public:
 
 	/**
 		Reset the settings to its default values for the current platform.
-		
+
 		\see
 			Reset(int)
 		\see

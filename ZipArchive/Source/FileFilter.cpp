@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -14,9 +14,9 @@
 
 #include "stdafx.h"
 
-#if defined(_MSC_VER) && _MSC_VER < 1300	
-	// STL warnings 
-	#pragma warning (push, 3) 
+#if defined(_MSC_VER) && _MSC_VER < 1300
+	// STL warnings
+	#pragma warning (push, 3)
 #endif
 
 #include "FileFilter.h"
@@ -49,13 +49,13 @@ bool CGroupFileFilter::Accept(LPCTSTR lpszParentDir, LPCTSTR lpszName, const CFi
 	}
 
 	return !valueToReturn;
-	
+
 }
 
 } // namespace
 
 
 #if defined(_MSC_VER) && _MSC_VER < 1300
-	// STL warnings 
-	#pragma warning (pop) 
+	// STL warnings
+	#pragma warning (pop)
 #endif

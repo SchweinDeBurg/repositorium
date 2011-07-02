@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -14,7 +14,7 @@
 
 /**
 * \file ZipStorage.h
-* Includes the CZipStorage class.	
+* Includes the CZipStorage class.
 *
 */
 
@@ -29,7 +29,7 @@
 	#endif
 #endif
 
-#include "ZipFile.h"	
+#include "ZipFile.h"
 #include "ZipAutoBuffer.h"
 #include "ZipString.h"
 #include "ZipMemFile.h"
@@ -70,8 +70,8 @@ public:
 		stateSplit			= stateSegmented | 0x0020,	///< The current archive is split.
 		stateBinarySplit	= stateSplit	 | 0x0040,	///< The current archive is binary split.
 		stateSpan			= stateSegmented | 0x0080	///< The current archive is spanned.
-	};	
-	
+	};
+
 	/**
 		The direction of the seeking operation.
 
@@ -113,7 +113,7 @@ public:
 	*/
 	void FinalizeSegm();
 
-	
+
 	/**
 		Called only by CZipCentralDir::Read when opening an existing archive.
 
@@ -150,11 +150,11 @@ public:
 	*/
 	void Write(const void *pBuf, DWORD iSize, bool bAtOnce);
 
-	/** 
+	/**
 		Returns the total size currently occupied by the archive.
 
 		\return
-			The length of the current archive file increased by the number of bytes in the write buffer.	
+			The length of the current archive file increased by the number of bytes in the write buffer.
 	*/
 	ZIP_SIZE_TYPE GetOccupiedSpace() const
 	{
@@ -164,7 +164,7 @@ public:
 	/**
 		The same as the CZipArchive::IsClosed method.
 	*/
-	bool IsClosed(bool bArchive) const 
+	bool IsClosed(bool bArchive) const
 	{
 		if (bArchive)
 			return !m_state.IsSetAny(stateOpened);
@@ -183,17 +183,17 @@ public:
 			The number of bytes to read.
 
 		\param	bAtOnce
-			If \c true, no volume change is allowed during reading. 
+			If \c true, no volume change is allowed during reading.
 			If the requested number of bytes cannot be read from a single volume, an exception is thrown.
 
 	*/
 	DWORD Read(void* pBuf, DWORD iSize, bool bAtOnce);
 
 	/**
-		Returns the position in the file, taking into account the number of bytes in the write buffer 
-		and the number of bytes before the archive. 		
+		Returns the position in the file, taking into account the number of bytes in the write buffer
+		and the number of bytes before the archive.
 
-		\return 
+		\return
 			The position in the file.
 
 		\note
@@ -256,7 +256,7 @@ public:
 	*/
 	ZIP_VOLUME_TYPE GetCurrentVolume() const {return m_uCurrentVolume;}
 
- 
+
 	/**
 		Changes the volume during extract operations.
 
@@ -282,7 +282,7 @@ public:
 			ThrowError(CZipException::badZipFile);
 		ChangeVolume((ZIP_VOLUME_TYPE)(m_uCurrentVolume - 1));
 	}
-	
+
 	/**
 		Returns the value indicating whether the archive is a split archive (binary or regular).
 
@@ -334,7 +334,7 @@ public:
 	{
 		return m_state.IsSetAny(stateReadOnly) || IsExistingSegmented();
 	}
-	
+
 	/**
 		Returns the value indicating whether the archive is an existing segmented archive.
 
@@ -425,7 +425,7 @@ public:
 	{
 		return m_pSplitNames;
 	}
-	
+
 	/**
 		Performs the seeking operation on the #m_pFile.
 
@@ -436,7 +436,7 @@ public:
 			The direction of the seek operation.
 			It can be one of the #SeekType values.
 	*/
-	ULONGLONG Seek(ULONGLONG lOff, SeekType iSeekType = seekFromBeginning);	
+	ULONGLONG Seek(ULONGLONG lOff, SeekType iSeekType = seekFromBeginning);
 
 	/**
 		Performs the seeking operation in a binary split archive.
@@ -448,17 +448,17 @@ public:
 			If \c true, the file pointer is moved to the beginning before seeking.
 			If \c false, the file pointer is moved relatively to the current position.
 	*/
-	void SeekInBinary(ZIP_FILE_SIZE lOff, bool bSeekToBegin = false);	
+	void SeekInBinary(ZIP_FILE_SIZE lOff, bool bSeekToBegin = false);
 
 	/**
-		Returns the number of free bytes on the current volume.	
+		Returns the number of free bytes on the current volume.
 
-		\return 
+		\return
 			The number of free bytes on the current volume.
 	*/
 	ZIP_SIZE_TYPE VolumeLeft() const;
-	
-	/**	
+
+	/**
 		Closes the storage.
 
 		\param	bWrite
@@ -493,14 +493,14 @@ protected:
 	/**
 		Returns the file offset after the last data byte in the archive.
 
-		\return 
+		\return
 			The file offset after the last data byte in the archive.
 	*/
 	ZIP_SIZE_TYPE GetLastDataOffset()
 	{
 		return (ZIP_SIZE_TYPE)m_pFile->GetLength() - m_uBytesBeforeZip;
 	}
-	
+
 	/**
 		Reverse-finds the location of the given signature starting from the current position in file.
 
@@ -515,7 +515,7 @@ protected:
 
 	*/
 	ZIP_FILE_USIZE LocateSignature(char* szSignature, ZIP_SIZE_TYPE uMaxDepth);
-		
+
 
 	/**
 		Flushes without writing. It can be used only on not segmented archives.
@@ -605,19 +605,19 @@ protected:
 		\return
 			The free space in bytes.
 	*/
-	DWORD GetFreeInBuffer() const {return m_pWriteBuffer.GetSize() - m_uBytesInWriteBuffer;}	
+	DWORD GetFreeInBuffer() const {return m_pWriteBuffer.GetSize() - m_uBytesInWriteBuffer;}
 
 	/**
-		The value it holds, depends on the current mode:		
+		The value it holds, depends on the current mode:
 		- An opened existing split archive: the number of the last volume ( usually the one with the "zip" extension).
 		- A split archive in creation: the size of the volume.
 
 		This method is used only when processing split archives.
 	*/
 	ZIP_SIZE_TYPE m_uSplitData;
-	
+
 	/**
-		The number of bytes available in the write buffer.		
+		The number of bytes available in the write buffer.
 	*/
 	DWORD m_uBytesInWriteBuffer;
 
@@ -637,14 +637,14 @@ protected:
 		Stores the number of bytes that have been written physically to the current segment.
 		Used only when processing a segmented archive in creation.
 	*/
-	ZIP_SIZE_TYPE m_uBytesWritten;	
+	ZIP_SIZE_TYPE m_uBytesWritten;
 
 	/**
 		The current volume number in a segmented archive.
 		The value is zero-based.
 	*/
 	ZIP_VOLUME_TYPE m_uCurrentVolume;
-	
+
 	/**
 		The number of bytes before the actual zip archive in a file.
 		\see
@@ -654,7 +654,7 @@ protected:
 
 
 	/**
-		The size of the write buffer. 		
+		The size of the write buffer.
 
 		\see
 			CZipArchive::SetAdvanced
@@ -667,7 +667,7 @@ protected:
 		\see
 			CZipArchive::SetAdvanced
 	*/
-	int m_iLocateBufferSize;		
+	int m_iLocateBufferSize;
 
 	/**
 		A callback object called when there is a need for a volume change
@@ -686,7 +686,7 @@ protected:
 			CZipArchive::SetSegmCallback
 	*/
 	CZipSegmCallback* m_pSplitChangeVolumeFunc;
-	
+
 private:
 	ZIP_FILE_USIZE LocateSignature(char* szSignature, ZIP_SIZE_TYPE uMaxDepth, int& leftToFind, bool& found, ZIP_FILE_USIZE uFileLength);
 	CZipString GetSplitVolumeName(bool bLast)
@@ -761,7 +761,7 @@ private:
 };
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (pop)	
+	#pragma warning (pop)
 #endif
 
 

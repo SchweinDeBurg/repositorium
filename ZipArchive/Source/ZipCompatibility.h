@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -37,10 +37,10 @@ class CZipFileHeader;
 #include "ZipString.h"
 #include "ZipPlatform.h"
 /**
-	Includes functions that provide support for the proper conversion of attributes 
+	Includes functions that provide support for the proper conversion of attributes
 	and filenames between different system platforms.
 */
-namespace ZipCompatibility  
+namespace ZipCompatibility
 {
 	/**
 		The codes of the compatibility of the file attribute information.
@@ -53,17 +53,17 @@ namespace ZipCompatibility
 			ZipPlatform::GetSystemID
 	*/
 	enum ZipPlatforms
-	{		   
+	{
 	   zcDosFat,		///< MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)
-       zcAmiga,			///< Amiga 
+       zcAmiga,			///< Amiga
        zcVaxVms,		///< VAX/VMS
        zcUnix,			///< Unix / Linux
        zcVmCms,			///< VM/CMS
        zcAtari,			///< Atari ST
        zcOs2Hpfs,		///< OS/2 H.P.F.S.
-       zcMacintosh,		///< Macintosh 
+       zcMacintosh,		///< Macintosh
        zcZsystem,		///< Z-System
-       zcCpm,			///< CP/M 
+       zcCpm,			///< CP/M
 	   zcTops20,		///< TOPS-20
        zcNtfs,			///< Windows NTFS
 	   zcQDos,			///< SMS/QDOS
@@ -118,7 +118,7 @@ namespace ZipCompatibility
 		\return
 			The converted attributes.
 
-		
+
 		\see
 			ZipPlatforms
 	*/
@@ -137,7 +137,7 @@ namespace ZipCompatibility
 			The code page used in conversion.
 	*/
 	ZIP_API void ConvertBufferToString(CZipString& szString, const CZipAutoBuffer& buffer, UINT uCodePage);
-	
+
 	/**
 		Converts the \a lpszString using the given code page.
 
@@ -175,18 +175,18 @@ namespace ZipCompatibility
 		Returns the default filename code page for the given platform.
 
 		\param iPlatform
-			One of the ZipCompatibility::ZipPlatforms values.	
+			One of the ZipCompatibility::ZipPlatforms values.
 
-		\return 
+		\return
 			The default filename code page.
 	*/
 	ZIP_API UINT GetDefaultNameCodePage(int iPlatform);
 
-	
+
 	/**
 		Returns the default filename code page for the current platform.
 
-		\return 
+		\return
 			The default filename code page.
 	*/
 	ZIP_API UINT GetDefaultNameCodePage();
@@ -197,7 +197,7 @@ namespace ZipCompatibility
 		\param iPlatform
 			One of the ZipCompatibility::ZipPlatforms values.
 
-		\return 
+		\return
 			The default comment code page.
 	*/
 	ZIP_API UINT GetDefaultCommentCodePage(int iPlatform);
@@ -208,7 +208,7 @@ namespace ZipCompatibility
 		\param iPlatform
 			One of the ZipCompatibility::ZipPlatforms values.
 
-		\return 
+		\return
 			The default password code page.
 	*/
 	ZIP_API UINT GetDefaultPasswordCodePage(int iPlatform);
@@ -216,7 +216,7 @@ namespace ZipCompatibility
 	/**
 		Returns the default comment code page for the current platform.
 
-		\return 
+		\return
 			The default comment code page.
 	*/
 	ZIP_API UINT GetDefaultCommentCodePage();

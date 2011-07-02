@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -19,7 +19,7 @@
 CZipAutoBuffer::CZipAutoBuffer()
 {
 	m_iSize = 0;
-	m_pBuffer = NULL;	
+	m_pBuffer = NULL;
 }
 
 CZipAutoBuffer::CZipAutoBuffer(DWORD iSize, bool bZeroMemory)
@@ -63,7 +63,7 @@ char* CZipAutoBuffer::Allocate(DWORD iSize, bool bZeroMemory)
 				memset(m_pBuffer, 0, iSize);
 			m_iSize = iSize;
 	}
-	else 
+	else
 		m_pBuffer = NULL;
 
 	return m_pBuffer;
@@ -79,7 +79,7 @@ CZipAutoBuffer::CZipAutoBuffer(const CZipAutoBuffer& buffer)
 	{
 		Allocate(buffer.m_iSize);
 		memcpy(m_pBuffer, buffer.m_pBuffer, buffer.m_iSize);
-	}	
+	}
 }
 CZipAutoBuffer& CZipAutoBuffer::operator=(const CZipAutoBuffer& buffer)
 {

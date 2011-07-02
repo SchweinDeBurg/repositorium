@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -19,8 +19,8 @@
 #if defined __APPLE__ || defined __CYGWIN__
 	#define FILE_FUNCTIONS_64B_BY_DEFAULT
 #else
-	#undef FILE_FUNCTIONS_64B_BY_DEFAULT	
-#endif	
+	#undef FILE_FUNCTIONS_64B_BY_DEFAULT
+#endif
 
 #include "ZipPlatform.h"
 #include "Private/ZipFileHeader.h"
@@ -92,7 +92,7 @@ CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, ZIP_SIZE_TYPE uSizeNeed
 		return tempPath;
 	}
 	else
-		return empty;		
+		return empty;
 }
 
 bool ZipPlatform::GetCurrentDirectory(CZipString& sz)
@@ -156,7 +156,7 @@ bool ZipPlatform::SetFileModTime(LPCTSTR lpFileName, time_t ttime)
 
 bool ZipPlatform::ChangeDirectory(LPCTSTR lpDirectory)
 {
-	return chdir(lpDirectory) == 0; 
+	return chdir(lpDirectory) == 0;
 }
 int ZipPlatform::FileExists(LPCTSTR lpszName)
 {
@@ -203,13 +203,13 @@ ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow, int i
 	if (unlink(lpszFileName) != 0)
 		if (bThrow)
 			CZipException::Throw(CZipException::notRemoved, lpszFileName);
-		else 
+		else
 			return false;
 	return true;
 }
 
 ZIPINLINE  bool ZipPlatform::RenameFile( LPCTSTR lpszOldName, LPCTSTR lpszNewName, bool bThrow)
-{	
+{
 	if (rename(lpszOldName, lpszNewName) != 0)
 	{
 		if (bThrow)
@@ -225,7 +225,7 @@ ZIPINLINE  bool ZipPlatform::IsDirectory(DWORD uAttr)
 }
 
 ZIPINLINE  bool ZipPlatform::CreateNewDirectory(LPCTSTR lpDirectory)
-{	
+{
 	return mkdir(lpDirectory, ZIP_DEFAULT_DIR_ATTRIBUTES) == 0;
 }
 
@@ -257,7 +257,7 @@ bool ZipPlatform::TruncateFile(int iDes, ULONGLONG uSize)
 	return ftruncate(iDes, uSize) == 0;
 #else
 	return ftruncate64(iDes, uSize) == 0;
-	
+
 #endif
 
 }
@@ -265,9 +265,9 @@ bool ZipPlatform::TruncateFile(int iDes, ULONGLONG uSize)
 int ZipPlatform::OpenFile(LPCTSTR lpszFileName, UINT iMode, int iShareMode)
 {
 #ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
-	return open(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );	
+	return open(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );
 #else
-	return open64(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );	
+	return open64(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );
 #endif
 }
 

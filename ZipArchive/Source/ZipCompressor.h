@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -46,7 +46,7 @@ protected:
 	CZipCryptograph* m_pCryptograph;	///< The current cryptograph.
 	CZipFileHeader* m_pFile;			///< The file header being compressed or decompressed.
 
-	
+
 	/**
 		Initializes a new instance of the CZipCompressor class.
 
@@ -61,8 +61,8 @@ protected:
 		m_uComprLeft  = 0;
 		m_uCrc32 = 0;
 	}
-	
-public:		
+
+public:
 	/**
 		The type of a compressor.
 	*/
@@ -77,7 +77,7 @@ public:
 		The compression level.
 	*/
 	enum CompressionLevel
-	{		
+	{
 		levelDefault = -1,	///< The default compression level (equals \c 6 for deflate).
 		levelStore = 0,		///< No compression used. Data is stored.
 		levelFastest = 1,	///< The fastest compression. The compression ratio is the lowest (apart from #levelStore).
@@ -95,14 +95,14 @@ public:
 			The bzip2 compression method.
 
 			\see
-				<a href="kb">0610231446|bzip2</a>				
+				<a href="kb">0610231446|bzip2</a>
 		*/
 		methodBzip2 = 12,
 
 		/**
 			This value means that WinZip AES encryption is used.
 			The original compression method is stored in a WinZip extra field.
-			It is only an informational value - you cannot set it as a compression method. The ZipArchive 
+			It is only an informational value - you cannot set it as a compression method. The ZipArchive
 			Library handles this value internally.
 
 			\see
@@ -122,7 +122,7 @@ public:
 	struct ZIP_API COptions
 	{
 
-		/**	  
+		/**
 			  Helper constants.
 		*/
 		enum Constants
@@ -149,14 +149,14 @@ public:
 		/**
 			Clones the current options object.
 
-			\return 
+			\return
 				The cloned object of the same type as the current object.
 		*/
 		virtual COptions* Clone() const = 0;
 
 		/**
-			The size of the buffer used in compression and decompression operations. 
-			By default it is set to #cDefaultBufferSize. For the optimal performance of the 
+			The size of the buffer used in compression and decompression operations.
+			By default it is set to #cDefaultBufferSize. For the optimal performance of the
 			deflate algorithm it should be set at least to 128kB.
 
 			\see
@@ -180,60 +180,60 @@ public:
 		public:
 			void Set(const COptions* pOptions);
 			void Remove(int iType);
-			COptions* Get(int iType) const; 
+			COptions* Get(int iType) const;
 			~COptionsMap();
 	};
 
 	/**
 		Returns the value indicating whether the given compression method is supported by the ZipArchive Library.
-		
+
 		\param uCompressionMethod
 			The compression method. It can be one of the #CompressionMethod values.
 
-		\return 
+		\return
 			\c true, if the compression method is supported, \c false otherwise.
 	*/
 	static bool IsCompressionSupported(WORD uCompressionMethod)
-	{		
+	{
 		return uCompressionMethod == methodStore || uCompressionMethod == methodDeflate
 			;
 	}
 
 	ZIP_SIZE_TYPE m_uUncomprLeft;	///< The number of bytes left to decompress.
 	ZIP_SIZE_TYPE m_uComprLeft;		///< The number of bytes left to compress.
-	DWORD m_uCrc32;	///< The CRC32 file checksum.	
+	DWORD m_uCrc32;	///< The CRC32 file checksum.
 
 	/**
 		Returns the value indicating whether the current #CZipCompressor object supports the given compression method.
-		
+
 		\param uMethod
 			The compression method. It can be one of the #CompressionMethod values.
 
-		\return 
+		\return
 			\c true, if the compression method is supported; \c false otherwise.
-			
+
 	*/
 	virtual bool CanProcess(WORD uMethod) = 0;
 
 
 	/**
 		The method called when a new file is opened for compression.
-		
+
 		\param iLevel
 			The compression level.
-		
+
 		\param pFile
 			The file being compressed.
-		
+
 		\param pCryptograph
 			The current CZipCryptograph. It can be \c NULL, if no encryption is used.
 
 		\see
 			Compress
-		\see 
+		\see
 			FinishCompression
 	 */
-	virtual void InitCompression(int iLevel, CZipFileHeader* pFile, CZipCryptograph* pCryptograph)	
+	virtual void InitCompression(int iLevel, CZipFileHeader* pFile, CZipCryptograph* pCryptograph)
 	{
 		InitBuffer();
 		m_uComprLeft = 0;
@@ -243,16 +243,16 @@ public:
 
 	/**
 		The method called when a new file is opened for extraction.
-		
+
 		\param pFile
 			The file being extracted.
-		
+
 		\param pCryptograph
 			The current CZipCryptograph. It can be \c NULL, if no decryption is used.
 
 		\see
 			Decompress
-		\see 
+		\see
 			FinishDecompression
 	 */
 	virtual void InitDecompression(CZipFileHeader* pFile, CZipCryptograph* pCryptograph)
@@ -268,30 +268,30 @@ public:
 
 	/**
 		Compresses the given data.
-	
+
 		\param pBuffer
 			The buffer that holds the data to compress.
-	
+
 		\param uSize
-			The size of \a pBuffer.	
+			The size of \a pBuffer.
 
 		\see
 			InitCompression
-		\see 
+		\see
 			FinishCompression
 	 */
 	virtual void Compress(const void *pBuffer, DWORD uSize) = 0;
 
 	/**
 		Decompresses the given data.
-	
+
 		\param pBuffer
 			The buffer that receives the decompressed data.
-	
-		\param uSize
-			The size of \a pBuffer.	
 
-		\return 
+		\param uSize
+			The size of \a pBuffer.
+
+		\return
 			The number of bytes decompressed and written to \a pBuffer.
 
 		\note
@@ -299,33 +299,33 @@ public:
 
 		\see
 			InitDecompression
-		\see 
+		\see
 			FinishDecompression
 	 */
 	virtual DWORD Decompress(void *pBuffer, DWORD uSize) = 0;
 
 	/**
 		The method called at the end of the compression process.
-	
+
 		\param bAfterException
 			Set to \c true, if an exception occurred before or to \c false otherwise.
 
 		\see
 			InitCompression
-		\see 
+		\see
 			Compress
 	 */
 	virtual void FinishCompression(bool bAfterException){}
 
 	/**
 		The method called at the end of the decompression process.
-	
+
 		\param bAfterException
 			Set to \c true, if an exception occurred before or to \c false otherwise.
 
 		\see
 			InitDecompression
-		\see 
+		\see
 			Decompress
 	 */
 	virtual void FinishDecompression(bool bAfterException){}
@@ -340,7 +340,7 @@ public:
 			<a href="kb">0610231446|options</a>
 		\see
 			CZipArchive::SetCompressionOptions
-		\see 
+		\see
 			UpdateOptions
 	*/
 	virtual const COptions* GetOptions() const
@@ -358,7 +358,7 @@ public:
 		\see
 			<a href="kb">0610231446|options</a>
 		\see
-			GetOptions		
+			GetOptions
 	*/
 	void UpdateOptions(const COptionsMap& optionsMap);
 
@@ -378,7 +378,7 @@ public:
 	*/
 	static CZipCompressor* CreateCompressor(WORD uMethod, CZipStorage* pStorage);
 
-	
+
 protected:
 	/**
 		Updates the current options with the new options.
@@ -387,10 +387,10 @@ protected:
 			The new options to apply.
 	*/
 	virtual void UpdateOptions(const COptions* pOptions)
-	{		
+	{
 	}
 	/**
-		Updates CRC value while compression. 
+		Updates CRC value while compression.
 
 		\param pBuffer
 			A buffer with data for which the CRC value should be updated.
@@ -401,7 +401,7 @@ protected:
 	void UpdateFileCrc(const void *pBuffer, DWORD uSize);
 
 	/**
-		Updates CRC value while decompression. 
+		Updates CRC value while decompression.
 
 		\param pBuffer
 			A buffer with data for which the CRC value should be updated.
@@ -436,7 +436,7 @@ protected:
 			return;
 		if (m_pCryptograph)
 			m_pCryptograph->Encode(pBuffer, uSize);
-		m_pStorage->Write(pBuffer, uSize, false);		
+		m_pStorage->Write(pBuffer, uSize, false);
 	}
 
 	/**
@@ -450,7 +450,7 @@ protected:
 		DWORD uToRead = m_pBuffer.GetSize();
 		if (m_uComprLeft < uToRead)
 			uToRead = (DWORD)m_uComprLeft;
-		
+
 		if (uToRead > 0)
 		{
 			m_pStorage->Read(m_pBuffer, uToRead, false);
@@ -503,7 +503,7 @@ protected:
 		\param bInternal
 			\c true, if \a iErr is an internal error code and needs a conversion to the ZipArchive Library error code; \c false otherwise.
 
-		
+
 		\see
 			ConvertInternalError
 	*/

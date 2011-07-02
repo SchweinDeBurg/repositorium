@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -44,10 +44,10 @@ CZipCentralDir::CZipCentralDir()
 {
 	m_pInfo = NULL;
 	m_pHeaders = NULL;
-	m_pFindArray = NULL;	
+	m_pFindArray = NULL;
 	m_pOpenedFile = NULL;
 	m_iIgnoredChecks = 0;
-	m_specialFlags = CZipArchive::sfNone;	
+	m_specialFlags = CZipArchive::sfNone;
 	InitUnicode();
 }
 
@@ -67,20 +67,20 @@ void CZipCentralDir::InitOnCreate(CZipArchive* pArchive)
 }
 
 void CZipCentralDir::Init(CZipCentralDir* pSource)
-{	
-	m_pOpenedFile = NULL;	
+{
+	m_pOpenedFile = NULL;
 	m_iIgnoredChecks = CZipArchive::checkIgnoredByDefault;
 	// just in case
 	DestroySharedData();
 	if (pSource != NULL)
-	{	
+	{
 #ifdef _ZIP_USE_LOCKING
 		pSource->LockAccess();
 #endif
 		m_pInfo = pSource->m_pInfo;
 		m_pInfo->m_iReference++;
 		m_pHeaders = pSource->m_pHeaders;
-		m_pFindArray = pSource->m_pFindArray;				
+		m_pFindArray = pSource->m_pFindArray;
 #ifdef _ZIP_USE_LOCKING
 		// points to the same object now
 		UnlockAccess();
@@ -88,7 +88,7 @@ void CZipCentralDir::Init(CZipCentralDir* pSource)
 
 		m_pStorage->UpdateSegmMode(m_pInfo->m_uLastVolume);
 		m_pStorage->m_uBytesBeforeZip = pSource->m_pStorage->m_uBytesBeforeZip;
-		
+
 	}
 	else
 		CreateSharedData();
@@ -109,9 +109,9 @@ void CZipCentralDir::Read()
 
 	ZIP_FILE_USIZE location = LocateSignature();
 
-	if (location == CZipStorage::SignatureNotFound)	
+	if (location == CZipStorage::SignatureNotFound)
 		ThrowError(CZipException::cdirNotFound);
-	
+
 	bool isBinary = m_pStorage->IsBinarySplit();
 	if (!isBinary)
 	{
@@ -125,10 +125,10 @@ void CZipCentralDir::Read()
 		m_pStorage->SeekInBinary(-(ZIP_FILE_SIZE)(uPos - location) + 4);
 		m_pInfo->m_uEndOffset = m_pStorage->GetPosition() - 4;
 	}
-		
+
 	CZipAutoBuffer buf(CENTRAL_DIR_END_SIZE - 4);
 
-	// we can skip the signature, we already know it is good - it was found 
+	// we can skip the signature, we already know it is good - it was found
 	m_pStorage->Read(buf, CENTRAL_DIR_END_SIZE - 4, true);
 
 	WORD uCommentSize;
@@ -139,7 +139,7 @@ void CZipCentralDir::Read()
 	CBytesWriter::ReadBytes(m_pInfo->m_uSize,			buf + 8, 4);
 	CBytesWriter::ReadBytes(m_pInfo->m_uOffset,		buf + 12, 4);
 	CBytesWriter::ReadBytes(uCommentSize,			buf + 16);
-	buf.Release();		
+	buf.Release();
 
 	if (uCommentSize)
 	{
@@ -161,10 +161,10 @@ void CZipCentralDir::Read()
 		}
 		// when the zip64 locator is not found, try to treat this archive as normal
 	}
-	
+
 	// if m_uLastVolume is not zero, it is enough to say that it is a multi-volume archive unless it is a binary split archive
 	if (IsConsistencyCheckOn(CZipArchive::checkVolumeEntries))
-		if (!((!m_pInfo->m_uLastVolume && (m_pInfo->m_uEntriesNumber == m_pInfo->m_uVolumeEntriesNo) && !m_pInfo->m_uVolumeWithCD) 
+		if (!((!m_pInfo->m_uLastVolume && (m_pInfo->m_uEntriesNumber == m_pInfo->m_uVolumeEntriesNo) && !m_pInfo->m_uVolumeWithCD)
 			|| m_pInfo->m_uLastVolume))
 			ThrowError(CZipException::badZipFile);
 
@@ -201,7 +201,7 @@ void CZipCentralDir::ReadHeaders()
 		m_pStorage->Seek(m_pInfo->m_uOffset);
 	else
 		m_pStorage->SeekInBinary(m_pInfo->m_uOffset, true);
-		
+
 	RemoveHeaders(); //just in case
 	for (ZIP_INDEX_TYPE i = 0; i < m_pInfo->m_uEntriesNumber; i++)
 	{
@@ -226,13 +226,13 @@ void CZipCentralDir::ReadHeaders()
 					CZipFileHeader* pHeader = new CZipFileHeader(this);
 					m_pHeaders->Add(pHeader);
 					if (!pHeader->Read(false))
-						ThrowError(CZipException::badZipFile);			
+						ThrowError(CZipException::badZipFile);
 				}
 		}
-	
+
 	// this is necessary when removing data descriptors, CZipArchive::MakeSpaceForReplace, deleting, replacing or encrypting files
 	// sort always, to yield the same results in requesting files by index regardless of the reason for opening
-	m_pHeaders->Sort(CompareHeaders); 
+	m_pHeaders->Sort(CompareHeaders);
 	RebuildFindFastArray();
 }
 
@@ -255,7 +255,7 @@ bool CZipCentralDir::IsValidIndex(ZIP_INDEX_TYPE uIndex)const
 
 void CZipCentralDir::OpenFile(ZIP_INDEX_TYPE uIndex)
 {
-	CZipFileHeader* pOpenedFile = (*this)[uIndex];	
+	CZipFileHeader* pOpenedFile = (*this)[uIndex];
 	if (!pOpenedFile->ReadLocal(this))
 		ThrowError(CZipException::badZipFile);
 	m_pOpenedFile = pOpenedFile;
@@ -295,9 +295,9 @@ CZipFileHeader* CZipCentralDir::AddNewFile(const CZipFileHeader & header, ZIP_IN
 		pHeader->m_aLocalExtraData = header.m_aLocalExtraData;
 		// local will be removed in a moment in PrepareData
 		pHeader->m_aCentralExtraData = header.m_aCentralExtraData;
-		pHeader->m_aCentralExtraData.RemoveInternalHeaders();	
+		pHeader->m_aCentralExtraData.RemoveInternalHeaders();
 		pHeader->m_iSystemCompatibility = header.m_iSystemCompatibility;
-		pHeader->m_uEncryptionMethod = header.m_uEncryptionMethod;		
+		pHeader->m_uEncryptionMethod = header.m_uEncryptionMethod;
 		pHeader->UpdateStringsFlags(false);
 #ifdef _ZIP_UNICODE_CUSTOM
 		// current settings
@@ -307,11 +307,11 @@ CZipFileHeader* CZipCentralDir::AddNewFile(const CZipFileHeader & header, ZIP_IN
 		// set only when adding a new file, not in PrepareData (which may be called under different circumstances)
 		// we need the proper encryption method to be set already
 		RemoveFromDisk();
-		
+
 		bool bReplace = IsValidIndex(uReplaceIndex);
-			
+
 		pHeader->PrepareData(iLevel, m_pStorage->IsSegmented());
-		
+
 		if (bRichHeaderTemplateCopy)
 		{
 			// call here, because PrepareData will zero them
@@ -320,7 +320,7 @@ CZipFileHeader* CZipCentralDir::AddNewFile(const CZipFileHeader & header, ZIP_IN
 			pHeader->m_uUncomprSize = header.m_uUncomprSize;
 		}
 
-		// now that everything is all right, we can add the new file		
+		// now that everything is all right, we can add the new file
 		if (bReplace)
 		{
 			// PrepareStringBuffers was called in CZipArchive::OpenNewFile
@@ -332,8 +332,8 @@ CZipFileHeader* CZipCentralDir::AddNewFile(const CZipFileHeader & header, ZIP_IN
 			m_pStorage->Seek(pfh->m_uOffset);
 			RemoveFile(pfh, uReplaceIndex, false);
 			m_pHeaders->InsertAt((ZIP_ARRAY_SIZE_TYPE)uReplaceIndex, pHeader);
-			m_pOpenedFile = pHeader;				
-			uIndex = uReplaceIndex;		
+			m_pOpenedFile = pHeader;
+			uIndex = uReplaceIndex;
 		}
 		else
 		{
@@ -388,7 +388,7 @@ void CZipCentralDir::Write()
 	if (m_pInfo->m_bInArchive)
 		return;
 
-	m_pInfo->m_uEntriesNumber = (ZIP_INDEX_TYPE)m_pHeaders->GetSize();	
+	m_pInfo->m_uEntriesNumber = (ZIP_INDEX_TYPE)m_pHeaders->GetSize();
 
 	if (!m_pStorage->IsSegmented())
 	{
@@ -400,14 +400,14 @@ void CZipCentralDir::Write()
 
 	m_pInfo->m_uSize = 0;
 	bool bDontAllowVolumeChange = false;
-	
+
 	if (m_pStorage->IsSegmented())
 	{
 		// segmentation signature at the beginning (4 bytes) + the size of the data descr. for each file
 		ZIP_SIZE_TYPE uSize = GetSize(true);
 		// if there is a segmented archive in creation and it is only one-volume,
-		//	(current volume number is 0 so far, no bytes has been written so we know they are 
-		//  all in the buffer)	make sure that it will be after writing central dir 
+		//	(current volume number is 0 so far, no bytes has been written so we know they are
+		//  all in the buffer)	make sure that it will be after writing central dir
 		// and make it a not segmented archive
 		if (m_pStorage->GetCurrentVolume() == 0)
 		{
@@ -427,8 +427,8 @@ void CZipCentralDir::Write()
 			}
 
 			ZIP_SIZE_TYPE uVolumeFree = m_pStorage->VolumeLeft();
-			
-			if (uVolumeFree >= uToGrow) 
+
+			if (uVolumeFree >= uToGrow)
 			// lets make sure it will be one-volume archive
 			{
 				// can the operation be done only in the buffer?
@@ -455,14 +455,14 @@ void CZipCentralDir::Write()
 	try
 	{
 		WriteHeaders(bDontAllowVolumeChange || !m_pStorage->IsSegmented());
-				
+
 		WriteCentralEnd();
 
 		if (bDontAllowVolumeChange)
 		{
 			if (m_pStorage->GetCurrentVolume() != 0)
 				ThrowError(CZipException::badZipFile);
-		}		
+		}
 	}
 	catch (...)
 	{
@@ -510,14 +510,14 @@ void CZipCentralDir::WriteHeaders(bool bOneDisk)
 		for (;;)
 		{
 			CZipFileHeader* pHeader = (*this)[i];
-			
+
 			m_pInfo->m_uSize += pHeader->Write(m_pStorage);
 
 			if (!binarySplit && m_pStorage->GetCurrentVolume() != uDisk)
 			{
 				m_pInfo->m_uVolumeEntriesNo = 1;
 				uDisk = m_pStorage->GetCurrentVolume();
-				// update the information about the offset and starting volume if the 
+				// update the information about the offset and starting volume if the
 				// first header was written in the new volume
 				if (i == 0)
 				{
@@ -525,7 +525,7 @@ void CZipCentralDir::WriteHeaders(bool bOneDisk)
 					m_pInfo->m_uVolumeWithCD = uDisk;
 				}
 			}
-			else 
+			else
 				m_pInfo->m_uVolumeEntriesNo++;
 
 			if (pCallback)
@@ -549,11 +549,11 @@ void CZipCentralDir::WriteHeaders(bool bOneDisk)
 				}
 				else
 				{
-					if (bOneDisk) 
-					{						
+					if (bOneDisk)
+					{
 						ASSERT(!m_pStorage->IsSegmented());
 						// if segmented, would need to m_pStorage->Flush(), but the headers can span multiple volumes
-						m_pStorage->EmptyWriteBuffer();						
+						m_pStorage->EmptyWriteBuffer();
 						// remove saved part from the volume
 						m_pStorage->m_pFile->SetLength((ZIP_FILE_USIZE)(m_pStorage->m_uBytesBeforeZip + m_pInfo->m_uOffset));
 	//	 				We can now abort safely
@@ -652,7 +652,7 @@ ZIP_INDEX_TYPE CZipCentralDir::RemoveFindFastElement(CZipFileHeader* pHeader, bo
 			return uElementIndex;
 		}
 	}
-	ASSERT(FALSE);	
+	ASSERT(FALSE);
 	return ZIP_FILE_INDEX_NOT_FOUND;
 }
 
@@ -675,7 +675,7 @@ void CZipCentralDir::RemoveFile(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uIndex, 
 
 	if (m_pInfo->m_bFindFastEnabled)
 	{
-		RemoveFindFastElement(pHeader, bShift);	
+		RemoveFindFastElement(pHeader, bShift);
 	}
 
 	if (uIndex != ZIP_FILE_INDEX_UNSPECIFIED)
@@ -698,7 +698,7 @@ void CZipCentralDir::RemoveLastFile(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uInd
 	if (uIndex == ZIP_FILE_INDEX_UNSPECIFIED)
 	{
 		if (m_pHeaders->GetSize() == 0)
-			return;			
+			return;
 		uIndex = (ZIP_VOLUME_TYPE)(m_pHeaders->GetSize() - 1);
 	}
 	if (!pHeader)
@@ -769,7 +769,7 @@ bool CZipCentralDir::RemoveDataDescr(bool bFromBuffer)
 			pHeader->m_uFlag &= ~8;
 			// update local header:
 			// write modified flag in the local header
-			CBytesWriter::WriteBytes(pSource + 6, pHeader->m_uFlag);			
+			CBytesWriter::WriteBytes(pSource + 6, pHeader->m_uFlag);
 			pHeader->WriteSmallDataDescriptor(pSource + 14, false);
 		}
 
@@ -813,7 +813,7 @@ void CZipCentralDir::BuildFindFastArray( bool bCaseSensitive )
 
 	for (ZIP_INDEX_TYPE i = 0; i < uCount; i++)
 		m_pFindArray->Add(new CZipFindFast((*m_pHeaders)[(ZIP_ARRAY_SIZE_TYPE)i], i));
-	
+
 	m_pFindArray->Sort(bCaseSensitive ? CompareFindFastCollate : CompareFindFastCollateNoCase);
 }
 
@@ -839,7 +839,7 @@ ZIP_INDEX_TYPE CZipCentralDir::FindFile(LPCTSTR lpszFileName, bool bCaseSensitiv
 
 		// set the proper compare function
 		ZIPSTRINGCOMPARE pCompare = bCaseSensitive == m_pInfo->m_bCaseSensitive ? m_pInfo->m_pCompare : GetCZipStrCompFunc(bCaseSensitive);
-		
+
 		ZIP_INDEX_TYPE uSize = (ZIP_INDEX_TYPE)m_pFindArray->GetSize();
 		for (ZIP_INDEX_TYPE i = 0; i < uSize; i++)
 		{
@@ -862,7 +862,7 @@ ZIP_INDEX_TYPE CZipCentralDir::FindFile(LPCTSTR lpszFileName, bool bCaseSensitiv
 		{
 			// a non-effective search (treat an array as unsorted)
 			// do not use m_pInfo->m_pCompare, as it may be shared
-			ZIPSTRINGCOMPARE pCompare = GetCZipStrCompFunc(bCaseSensitive);			
+			ZIPSTRINGCOMPARE pCompare = GetCZipStrCompFunc(bCaseSensitive);
 			ZIP_INDEX_TYPE uSize = (ZIP_INDEX_TYPE)m_pFindArray->GetSize();
 			for (ZIP_INDEX_TYPE i = 0; i < uSize; i++)
 				if (((*m_pFindArray)[(ZIP_ARRAY_SIZE_TYPE)i]->m_pHeader->GetFileName().*pCompare)(lpszFileName) == 0)
@@ -873,11 +873,11 @@ ZIP_INDEX_TYPE CZipCentralDir::FindFile(LPCTSTR lpszFileName, bool bCaseSensitiv
 		}
 		else
 		{
-			BuildFindFastArray(bCaseSensitive);		
+			BuildFindFastArray(bCaseSensitive);
 			uResult = FindFileNameIndex(lpszFileName);
 		}
 	}
-	return uResult == ZIP_FILE_INDEX_NOT_FOUND ? ZIP_FILE_INDEX_NOT_FOUND : (*m_pFindArray)[(ZIP_ARRAY_SIZE_TYPE)uResult]->m_uIndex;	
+	return uResult == ZIP_FILE_INDEX_NOT_FOUND ? ZIP_FILE_INDEX_NOT_FOUND : (*m_pFindArray)[(ZIP_ARRAY_SIZE_TYPE)uResult]->m_uIndex;
 }
 
 ZIP_INDEX_TYPE CZipCentralDir::InsertFindFastElement(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uIndex)
@@ -918,7 +918,7 @@ ZIP_INDEX_TYPE CZipCentralDir::InsertFindFastElement(CZipFileHeader* pHeader, ZI
 			break;
 		}
 	}
-	m_pFindArray->InsertAt(start, new CZipFindFast(pHeader, uIndex == ZIP_FILE_INDEX_UNSPECIFIED ? (ZIP_INDEX_TYPE)uSize : uIndex /* just in case */)); 
+	m_pFindArray->InsertAt(start, new CZipFindFast(pHeader, uIndex == ZIP_FILE_INDEX_UNSPECIFIED ? (ZIP_INDEX_TYPE)uSize : uIndex /* just in case */));
 	return (ZIP_INDEX_TYPE)start;
 }
 
@@ -1010,7 +1010,7 @@ bool CZipCentralDir::OnFileCentralChange()
 void CZipCentralDir::CreateSharedData()
 {
 	m_pInfo = new CInfo();
-	m_pInfo->Init();	
+	m_pInfo->Init();
 	m_pHeaders = new CZipArray<CZipFileHeader*>();
 	m_pFindArray = new CZipArray<CZipFindFast*>();
 }
@@ -1043,14 +1043,14 @@ void CZipCentralDir::DestroySharedData()
 				delete m_pHeaders;
 				m_pHeaders = NULL;
 			}
-			
+
 			if (m_pFindArray != NULL)
 			{
 				ClearFindFastArray();
 				delete m_pFindArray;
 				m_pFindArray = NULL;
 			}
-#ifdef _ZIP_USE_LOCKING				
+#ifdef _ZIP_USE_LOCKING
 			UnlockAccess();
 #endif
 			delete m_pInfo;

@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -92,9 +92,9 @@
 		#define CP_UTF8	65001
 	#endif
 
-	
+
 	#ifndef _I64_MAX
-		#ifdef LLONG_MAX	
+		#ifdef LLONG_MAX
 			#define _I64_MAX LLONG_MAX
 		#elif defined LONG_LONG_MAX
 			#define _I64_MAX LONG_LONG_MAX
@@ -103,27 +103,27 @@
 		#endif
 	#endif
 	#ifndef _UI64_MAX
-		#ifdef ULLONG_MAX	
+		#ifdef ULLONG_MAX
 			#define _UI64_MAX ULLONG_MAX
 		#elif defined ULONG_LONG_MAX
 			#define _UI64_MAX ULONG_LONG_MAX
-		#else 
+		#else
 			#define _UI64_MAX ULONGLONG_MAX
 		#endif
 	#endif
 	#define _lseeki64 lseek64
 #else
 	#include <TCHAR.H>
-   	#include <windows.h>	
+   	#include <windows.h>
 	#include <stddef.h>
 #ifndef _I64_MAX
 	#include <limits.h>
 #endif
   	#ifndef STRICT
 		#define STRICT
-	#endif	
+	#endif
 	typedef BOOL ZBOOL;
-	
+
 #endif	// #ifndef _WIN32
 
 

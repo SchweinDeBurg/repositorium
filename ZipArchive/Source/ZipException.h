@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -35,7 +35,7 @@
 #include "ZipString.h"
 #include "ZipBaseException.h"
 #include "ZipExport.h"
- 
+
 #if defined(__INTEL_COMPILER)
 // remark #271: trailing comma is nonstandard
 #pragma warning(disable: 271)
@@ -55,7 +55,7 @@ public:
 
 	/**
 		Throws an exception.
-		Whether it throws an object or a pointer to it, depends 
+		Whether it throws an object or a pointer to it, depends
 		on the current version (STL or MFC correspondingly).
 
 		\param	iCause
@@ -102,27 +102,27 @@ public:
     /**
 		Returns the error description.
 
-		\return 
+		\return
 			The error description.
      */
 	CZipString GetErrorDescription();
 
-	
+
     /**
 		Returns the error description. This method is provided for compatibility with the MFC version (\c CException::GetErrorMessage).
 
-		\param lpszError 
+		\param lpszError
 			The buffer to receive the error message.
 
 		\param nMaxError
-			The maximum number of characters \a lpszError can hold, 
+			The maximum number of characters \a lpszError can hold,
 			including the ending \c NULL character.
 
-		\return 
+		\return
 			\c TRUE if the error string was successfully copied to \a lpszError; \c FALSE otherwise.
 
-		\note 
-			The method will not copy more than \c nMaxError - 1 characters 
+		\note
+			The method will not copy more than \c nMaxError - 1 characters
 			to the buffer, and it always appends a \c NULL character.
 			If \a lpszError is too small, the error message will be truncated.
      */
@@ -162,7 +162,7 @@ public:
 		notRemoved,			///< Error while removing a file. Examine #m_iSystemError for more information.
 		notRenamed,			///< Error while renaming a file. Examine #m_iSystemError for more information.
 		platfNotSupp,		///< Cannot create a file for the specified platform.
-		cdirNotFound,		///< The central directory was not found in the archive (or you were trying to open not the last disk of a segmented archive).				
+		cdirNotFound,		///< The central directory was not found in the archive (or you were trying to open not the last disk of a segmented archive).
 		noZip64,			///< The Zip64 format has not been enabled for the library, but is required to use the archive.
 		noAES,				///< WinZip AES encryption has not been enabled for the library, but is required to decompress the archive.
 #ifdef _ZIP_IMPL_STL
@@ -187,7 +187,7 @@ public:
 	int m_iCause;
 	/**
 		An error code reported by the system during the recent operation.
-		It is set to \c <code>GetLastError()</code> value on Windows and to \c errno on other platforms.		
+		It is set to \c <code>GetLastError()</code> value on Windows and to \c errno on other platforms.
 	*/
 	ZIP_SYSTEM_ERROR_TYPE m_iSystemError;
 	virtual ~CZipException() throw();
@@ -205,7 +205,7 @@ protected:
 		\param bNoLoop
 			If \c true, does not search for en error description, it the error code is #genericError.
 
-		\return 
+		\return
 			The error description.
 	 */
 	CZipString GetInternalErrorDescription(int iCause, bool bNoLoop = false);
@@ -213,8 +213,8 @@ protected:
 
 	/**
 	   Returns the error description based on system variables.
-	   
-	  \return 
+
+	  \return
 			The error description.
 	 */
 	CZipString GetSystemErrorDescription();

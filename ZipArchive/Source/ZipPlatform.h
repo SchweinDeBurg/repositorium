@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -84,7 +84,7 @@ namespace ZipPlatform
 		\return
 			The default file attributes.
 	*/
-	ZIP_API DWORD GetDefaultAttributes(); 
+	ZIP_API DWORD GetDefaultAttributes();
 
 	/**
 		Returns the default directory attributes for the current system.
@@ -112,7 +112,7 @@ namespace ZipPlatform
 			The path to the directory to initially create the file in.
 
 		\param uSizeNeeded
-			The requested free space size in bytes. If set to <code>0</code>, the 
+			The requested free space size in bytes. If set to <code>0</code>, the
 			space availability is not checked.
 	*/
 	ZIP_API CZipString GetTmpFileName(LPCTSTR lpszPath = NULL, ZIP_SIZE_TYPE uSizeNeeded = 0);
@@ -224,7 +224,7 @@ namespace ZipPlatform
 		\param	lpszName
 			The path to the file or directory to test.
 
-		\return	
+		\return
 			One of the following values:
 			- \c -1 : the given file exists and is a directory
 			- \c 1 : the given file exists and is a regular file
@@ -232,7 +232,7 @@ namespace ZipPlatform
 	*/
 	ZIP_API int FileExists(LPCTSTR lpszName);
 
-#ifdef _UNICODE	
+#ifdef _UNICODE
 	/**
 		Converts a wide character string to a multi-byte character string.
 
@@ -246,10 +246,10 @@ namespace ZipPlatform
 		\param uCodePage
 			The code page used in conversion.
 
-		\return	
+		\return
 			The \a szOut buffer length, or \c -1 when not succeeded.
 
-		\note 
+		\note
 			Defined only in the UNICODE version.
 	*/
 	ZIP_API int WideToMultiByte(LPCWSTR lpszIn, CZipAutoBuffer &szOut, UINT uCodePage);
@@ -271,9 +271,9 @@ namespace ZipPlatform
 			The length of the string after the conversion (without the terminating \c NULL character)
 			or \c -1 when the function did not succeed.
 
-		\note 
+		\note
 			Defined only in the UNICODE version.
-	*/	
+	*/
 	ZIP_API int MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, UINT uCodePage);
 #endif
 };

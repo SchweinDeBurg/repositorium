@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -63,7 +63,7 @@ CZipException::~CZipException() throw()
 // 	CZipException e(iZipError, lpszZipName);
 // 	throw e;
 // #endif
-// MSVC++: ignore "Unreachable code" warning here, it's due to 
+// MSVC++: ignore "Unreachable code" warning here, it's due to
 // optimizations
 // }
 
@@ -84,13 +84,13 @@ ZBOOL CZipException::GetErrorMessage(LPTSTR lpszError, UINT nMaxError,
 		iLen = nMaxError - 1;
 	LPTSTR lpsz = sz.GetBuffer(iLen);
 #if _MSC_VER >= 1400
-	#ifdef _UNICODE	
+	#ifdef _UNICODE
 		wcsncpy_s(lpszError, nMaxError, lpsz, iLen);
 	#else
 		strncpy_s(lpszError, nMaxError, lpsz, iLen);
 	#endif
 #else
-	#ifdef _UNICODE	
+	#ifdef _UNICODE
 		wcsncpy(lpszError, lpsz, iLen);
 	#else
 		strncpy(lpszError, lpsz, iLen);
@@ -115,8 +115,8 @@ CZipString CZipException::GetSystemErrorDescription()
 	if (x)
 	{
 		LPVOID lpMsgBuf;
-		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |FORMAT_MESSAGE_IGNORE_INSERTS,    
-			          NULL, x, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
+		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |FORMAT_MESSAGE_IGNORE_INSERTS,
+			          NULL, x, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 				      (LPTSTR) &lpMsgBuf, 0, NULL);
 		CZipString sz = (LPCTSTR)lpMsgBuf;
 		LocalFree(lpMsgBuf);

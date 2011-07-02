@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -37,17 +37,17 @@
 #include "ZipString.h"
 
 namespace ZipArchiveLib
-{	
+{
 	/**
-		A class used in the wildcard pattern matching.		
+		A class used in the wildcard pattern matching.
 
 		\see
 			<a href="kb">0610242025|wildcards</a>
 	*/
-	class ZIP_API CWildcard  
+	class ZIP_API CWildcard
 	{
 	public:
-		
+
 		enum Match
 		{
 			matchNone,			///< For internal use.
@@ -58,8 +58,8 @@ namespace ZipArchiveLib
 			matchLiteral,		///< Match failure on a literal match
 			matchPattern		///< A bad pattern.
 		};
-		
-		enum Pattern 
+
+		enum Pattern
 		{
 			patternEmpty = -4,	///< The \c [..] construct is empty
 			patternClose,		///< There is no end bracket in the \c [..] construct.
@@ -67,13 +67,13 @@ namespace ZipArchiveLib
 			patternEsc,			///< There is a literal escape at the end of the pattern.
 			patternValid,		///< A valid pattern.
 		};
-		
-		
+
+
 		/**
 			Matches \a lpszText against the pattern.
 			A match means the entire \a lpszText is used in matching.
 			Set the pattern with the #SetPattern method or in the constructor.
-			
+
 			\param lpszText
 				The string to match against the pattern.
 
@@ -93,7 +93,7 @@ namespace ZipArchiveLib
 
 			\param lpszPattern
 				The pattern to test.
-       
+
 			\return
 				\c true, if the pattern has wildcard characters; \c false otherwise.
 
@@ -102,7 +102,7 @@ namespace ZipArchiveLib
 
 		/**
 			Tests \a lpszPattern for validity.
-       
+
 			\param lpszPattern
 				The pattern to test.
 
@@ -114,27 +114,27 @@ namespace ZipArchiveLib
 				to the CWildcard class syntax (see #SetPattern); \c false otherwise.
 		 */
 		static bool IsPatternValid(LPCTSTR lpszPattern, int* iErrorType = NULL);
-		
+
 		/**
 			Matches \a lpszText against \a lpszPattern.
 
 			A match means the entire \a lpszText is used in matching.
-		  
+
 			\param lpszPattern
 				The pattern to match.
 
 			\param lpszText
 				The string to match against the pattern.
 
-			\return 
+			\return
 				One of the #Match values.
 
 			\see
 				SetPattern
 		*/
 		static int Match(LPCTSTR lpszPattern, LPCTSTR lpszText);
-		
-		/**	
+
+		/**
 			Initializes a new instance of the CWildcard class.
 		*/
 		CWildcard(){}
@@ -157,7 +157,7 @@ namespace ZipArchiveLib
 		}
 
 		virtual ~CWildcard(){}
-		
+
 		/**
 			Sets the current pattern
 
@@ -182,14 +182,14 @@ namespace ZipArchiveLib
 			return (LPCTSTR)m_szPattern;
 		}
 	private:
-		bool m_bCaseSensitive;		
+		bool m_bCaseSensitive;
 		static int MatchAfterStar(LPCTSTR p , LPCTSTR t);
 		CZipString m_szPattern;
 	};
 }
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (pop)	
+	#pragma warning (pop)
 #endif
 
 #endif

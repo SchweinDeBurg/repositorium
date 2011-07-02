@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -55,7 +55,7 @@ namespace ZipArchiveLib
 		CBitFlag(int value)
 			:m_value(value)
 		{
-		}		
+		}
 
 		/**
 			Sets the given flags.
@@ -67,7 +67,7 @@ namespace ZipArchiveLib
 		{
 			m_value |= flags;
 		}
-		
+
 		/**
 			Clears the given flags.
 
@@ -155,7 +155,7 @@ namespace ZipArchiveLib
 			\param flags
 				The flags to change.
 			\param set
-				If \c true, the flags will be set; otherwise the flags will be cleared. 
+				If \c true, the flags will be set; otherwise the flags will be cleared.
 
 			\return
 				\c true, if the operation caused a modification; \c false otherwise.
@@ -172,7 +172,7 @@ namespace ZipArchiveLib
 				The flags to change.
 
 			\param set
-				If \c true, the flags will be set; otherwise the flags will be cleared. 
+				If \c true, the flags will be set; otherwise the flags will be cleared.
 		*/
 		void Change(int flags, bool set)
 		{

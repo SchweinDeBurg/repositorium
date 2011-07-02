@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -43,9 +43,9 @@ private:
 	{
 		TYPE w1 = *(TYPE*)pArg1;
 		TYPE w2 = *(TYPE*)pArg2;
-		return w1 == w2 ? 0 :(w1 > w2 ? - 1 : 1);		
+		return w1 == w2 ? 0 :(w1 > w2 ? - 1 : 1);
 	}
-public:	
+public:
 	void Sort(bool bAscending)
 	{
 		Sort(bAscending ? CompareAsc : CompareDesc);

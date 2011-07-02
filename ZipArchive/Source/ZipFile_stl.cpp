@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -19,8 +19,8 @@
 #if defined __APPLE__ || defined __CYGWIN__
 	#define FILE_FUNCTIONS_64B_BY_DEFAULT
 #else
-	#undef FILE_FUNCTIONS_64B_BY_DEFAULT	
-#endif	
+	#undef FILE_FUNCTIONS_64B_BY_DEFAULT
+#endif
 
 #include "_features.h"
 #include "ZipFile.h"
@@ -54,21 +54,21 @@ ZIP_FILE_USIZE CZipFile::GetLength() const
 #ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
 	lCur = (ZIP_SIZE_TYPE)_lseek(m_hFile, 0, current);
 #else
-	lCur = (ZIP_SIZE_TYPE)_lseeki64(m_hFile, 0, current);	
+	lCur = (ZIP_SIZE_TYPE)_lseeki64(m_hFile, 0, current);
 #endif
 	if (lCur == (ZIP_SIZE_TYPE)-1)
 		ThrowError();
 #ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
 	lLen = (ZIP_SIZE_TYPE)_lseek(m_hFile, 0, end);
 #else
-	lLen = (ZIP_SIZE_TYPE)_lseeki64(m_hFile, 0, end);	
+	lLen = (ZIP_SIZE_TYPE)_lseeki64(m_hFile, 0, end);
 #endif
 
 	// first go back
 #ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
 	bool err = _lseek(m_hFile, lCur, begin) == -1;
 #else
-	bool err = _lseeki64(m_hFile, lCur, begin) == -1;	
+	bool err = _lseeki64(m_hFile, lCur, begin) == -1;
 #endif
 
 	if (err || lLen == (ZIP_SIZE_TYPE)-1)
@@ -105,7 +105,7 @@ bool CZipFile::Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow)
 		bReadOnly = true;
 		iNewFlags |= O_RDONLY;
 	}
-	
+
 	if (openFlags & modeCreate)
 		iNewFlags |= O_CREAT;
 
@@ -144,7 +144,7 @@ ZIP_FILE_USIZE CZipFile::GetPosition() const
 		ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)_telli64(m_hFile);
 	#else
 		ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)lseek64(m_hFile, 0, SEEK_CUR);
-	#endif			
+	#endif
 #endif
 	if (ret == (ZIP_FILE_USIZE)-1)
 		ThrowError();
@@ -179,7 +179,7 @@ void CZipFile::Close()
 
 void CZipFile::Flush()
 {
-	if (!ZipPlatform::FlushFile(m_hFile)) 
+	if (!ZipPlatform::FlushFile(m_hFile))
 		ThrowError();
 }
 

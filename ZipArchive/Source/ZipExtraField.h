@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -34,7 +34,7 @@
 
 #define ZIP_EXTRA_ZARCH_NAME 0x5A4C // ZL - ZipArchive Library
 
-#define ZIP_EXTRA_ZARCH_SEEK 0x5A4D 
+#define ZIP_EXTRA_ZARCH_SEEK 0x5A4D
 
 #define ZIP_EXTRA_WINZIP_AES 0x9901
 
@@ -63,7 +63,7 @@ public:
 	{
 	}
 	CZipExtraField(const CZipExtraField& arr)
-	{		
+	{
 		*this = arr;
 	}
 	CZipExtraField& operator=(const CZipExtraField& field)
@@ -92,7 +92,7 @@ public:
 	{
 		return GetTotalSize() <= (int)USHRT_MAX;
 	}
-	
+
 	/**
 		Returns the number of extra data records included in the extra field.
 
@@ -114,7 +114,7 @@ public:
 			The extra data record.
 	*/
 	CZipExtraData* GetAt(int index) const
-	{		
+	{
 		return m_aData.GetAt(index);
 	}
 
@@ -171,7 +171,7 @@ public:
 			The extra data ID.
 
 		\param idx
-			Receives the value of the index of the new 
+			Receives the value of the index of the new
 			extra data in the internal collection.
 
 		\return
@@ -229,7 +229,7 @@ public:
 		\param headerID
 			The ID of the extra data to check.
 
-		\return 
+		\return
 			\c true, if the extra data record with the given ID is present in the extra field; \c false otherwise.
 	*/
 	bool HasHeader(WORD headerID)
@@ -244,7 +244,7 @@ public:
 			The ID of the extra data to search.
 
 		\param index
-			Receives the value of the index of the found 
+			Receives the value of the index of the found
 			extra data in the internal collection.
 
 		\return
@@ -274,7 +274,7 @@ public:
 			\c true, if the extra data record writes its size; \c false otherwise.
 
 		\see
-			m_aNoSizeExtraHeadersID			
+			m_aNoSizeExtraHeadersID
 	*/
 	static bool HasSize(WORD headerID)
 	{
@@ -297,7 +297,7 @@ protected:
 		for (int i = 0; i < GetCount(); i++)
 			delete (GetAt(i));
 		m_aData.RemoveAll();
-	}	
+	}
 
 	/**
 		Reads the extra field from \a buffer.
@@ -319,10 +319,10 @@ protected:
 		\param buffer
 			The buffer to write to.
 	*/
-	void Write(char* buffer) const;	
-	
+	void Write(char* buffer) const;
+
 private:
-	
+
 	CZipArray<CZipExtraData*> m_aData;
 };
 

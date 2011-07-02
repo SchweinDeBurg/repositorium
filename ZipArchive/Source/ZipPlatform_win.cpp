@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -54,7 +54,7 @@
 #include <share.h>
 #endif   // UNDER_CE
 
-#include <time.h> 
+#include <time.h>
 #include "ZipPathComponent.h"
 #include "ZipCompatibility.h"
 
@@ -109,7 +109,7 @@ ULONGLONG ZipPlatform::GetDeviceFreeSpace(LPCTSTR lpszPath)
 			szDrive,
 			(PULARGE_INTEGER)&uFreeBytesToCaller,
 			(PULARGE_INTEGER)&uTotalBytes,
-			(PULARGE_INTEGER)&uFreeBytes))	
+			(PULARGE_INTEGER)&uFreeBytes))
 				return 0;
 	}
 	return uFreeBytes;
@@ -131,7 +131,7 @@ CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, ZIP_SIZE_TYPE uSizeNeed
 			DWORD size = GetTempPath(0, empty);
 			if (size == 0)
 				return (CZipString)empty;
-		
+
 			GetTempPath(size, tempPath.GetBuffer(size));
 			tempPath.ReleaseBuffer();
 			if (GetDeviceFreeSpace(tempPath) < uSizeNeeded)
@@ -181,7 +181,7 @@ bool ZipPlatform::GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr)
 		return false;
 	uAttr = temp;
 	return true;
-	
+
 }
 
 bool ZipPlatform::GetFileModTime(LPCTSTR lpFileName, time_t & ttime)
@@ -206,7 +206,7 @@ bool ZipPlatform::GetFileModTime(LPCTSTR lpFileName, time_t & ttime)
     }
 	FindClose(handle);
 	if (ret == false)
-		ttime = time(NULL);	
+		ttime = time(NULL);
 	return ret;
 }
 
@@ -217,13 +217,13 @@ bool ZipPlatform::SetFileModTime(LPCTSTR lpFileName, time_t ttime)
 	{
 		return false;
 	}
-	bool ret = ZipPlatform::SetFileModTime(handle, ttime);	
+	bool ret = ZipPlatform::SetFileModTime(handle, ttime);
 	CloseHandle(handle);
 	return ret;
 }
 
 bool ZipPlatform::SetFileModTime(HANDLE handle, time_t ttime)
-{	
+{
 	FILETIME ft;
 	LONGLONG val = ((LONGLONG)ttime * 10000000) + SUFFIX_I64(116444736000000000);
     ft.dwLowDateTime = (DWORD)(val & 0xFFFFFFFF);
@@ -338,7 +338,7 @@ ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow, int i
 	if ((iMode & ZipPlatform::dfmRecycleBin) == 0)
 	{
 #endif
-		if (::DeleteFile((LPTSTR)(LPCTSTR)CZipPathComponent::AddPrefix(lpszFileName, false)))		
+		if (::DeleteFile((LPTSTR)(LPCTSTR)CZipPathComponent::AddPrefix(lpszFileName, false)))
 			return true;
 #ifdef SHFileOperation
 	}
@@ -355,13 +355,13 @@ ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow, int i
 			{
 				size = ::GetShortPathName(temp, file.GetBuffer(size), size);
 				file.ReleaseBuffer();
-			}			
+			}
 			if (size == 0)
 			{
 				if (bThrow)
 					CZipException::Throw(CZipException::notRemoved, lpszFileName);
 				return false;
-			}			
+			}
 			// GetShortPathName keeps the prefix - remove it
 			int prefixLength = CZipPathComponent::IsPrefixed(file);
 			if (prefixLength > 0)
@@ -375,7 +375,7 @@ ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow, int i
 		memcpy(buffer, (LPCTSTR)file, length * sizeof(TCHAR));
 		SHFILEOPSTRUCT shFileOp = {0};
 		shFileOp.wFunc = FO_DELETE;
-		shFileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT | FOF_NOERRORUI; 
+		shFileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT | FOF_NOERRORUI;
 		shFileOp.pFrom = (LPCTSTR)(char*)buffer;
 		if (SHFileOperation(&shFileOp) == 0 && !shFileOp.fAnyOperationsAborted)
 			return true;
@@ -383,16 +383,16 @@ ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow, int i
 #endif
 	if (bThrow)
 		CZipException::Throw(CZipException::notRemoved, lpszFileName);
-	return false;		
+	return false;
 }
 
 ZIPINLINE  bool ZipPlatform::RenameFile( LPCTSTR lpszOldName, LPCTSTR lpszNewName, bool bThrow)
 {
-	if (!::MoveFile((LPTSTR)(LPCTSTR)CZipPathComponent::AddPrefix(lpszOldName, false), 
+	if (!::MoveFile((LPTSTR)(LPCTSTR)CZipPathComponent::AddPrefix(lpszOldName, false),
 		(LPTSTR)(LPCTSTR)CZipPathComponent::AddPrefix(lpszNewName, false)))
 		if (bThrow)
 			CZipException::Throw(CZipException::notRenamed, lpszOldName);
-		else 
+		else
 			return false;
 	return true;
 
@@ -445,12 +445,12 @@ int ZipPlatform::WideToMultiByte(LPCWSTR lpszIn, CZipAutoBuffer &szOut, UINT uCo
 	}
 
 	// iLen does not include terminating character
-	int iLen = WideCharToMultiByte(uCodePage, 0, lpszIn, (int)wideLen, szOut, 
+	int iLen = WideCharToMultiByte(uCodePage, 0, lpszIn, (int)wideLen, szOut,
 		0, NULL, NULL);
 	if (iLen > 0)
 	{
 		szOut.Allocate(iLen, true);
-		iLen = WideCharToMultiByte(uCodePage, 0, lpszIn , (int)wideLen, szOut, 
+		iLen = WideCharToMultiByte(uCodePage, 0, lpszIn , (int)wideLen, szOut,
 			iLen, NULL, NULL);
 		ASSERT(iLen > 0);
 		return iLen > 0 ? iLen : -1;
@@ -462,20 +462,20 @@ int ZipPlatform::WideToMultiByte(LPCWSTR lpszIn, CZipAutoBuffer &szOut, UINT uCo
 	}
 }
 int ZipPlatform::MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, UINT uCodePage)
-{	
+{
 	int singleLen = szIn.GetSize();
 	if (singleLen == 0)
 	{
 		szOut.Empty();
 		return 0;
 	}
-	
+
 	// iLen doesn't include terminating character
 	DWORD dwFlags = uCodePage <= CP_OEMCP ? MB_PRECOMPOSED : 0;
 	int iLen = MultiByteToWideChar(uCodePage, dwFlags, szIn.GetBuffer(), singleLen, NULL, 0);
 	if (iLen > 0)
 	{
-		iLen = MultiByteToWideChar(uCodePage, dwFlags, szIn.GetBuffer(), singleLen, 
+		iLen = MultiByteToWideChar(uCodePage, dwFlags, szIn.GetBuffer(), singleLen,
 			szOut.GetBuffer(iLen) , iLen);
 		szOut.ReleaseBuffer(iLen);
 		ASSERT(iLen > 0);
@@ -484,14 +484,14 @@ int ZipPlatform::MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, 
 #ifdef _ZIP_UNICODE_NORMALIZE
 		// if there is a problem with compilation here, you may need uncomment the block defining WINVER = 0x0600 at the bottom of _features.h file
 		if (IsNormalizedString(NormalizationC, szOut, iLen + 1) == TRUE)
-			return iLen;		
+			return iLen;
 		int iNewLen = NormalizeString(NormalizationC, szOut, iLen, NULL, 0);
 		if (iNewLen <= 0)
 		{
 			return iLen;
 		}
 		CZipString szNormalized;
-		iNewLen = NormalizeString(NormalizationC, szOut, iLen, szNormalized.GetBuffer(iNewLen), iNewLen);		
+		iNewLen = NormalizeString(NormalizationC, szOut, iLen, szNormalized.GetBuffer(iNewLen), iNewLen);
 		if (iNewLen <= 0)
 		{
 			szNormalized.ReleaseBuffer(0);
@@ -508,7 +508,7 @@ int ZipPlatform::MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, 
 	{
 		szOut.Empty();
 		return -1;
-	}	
+	}
 }
 #endif
 
@@ -521,7 +521,7 @@ int ZipPlatform::MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, 
 
 
 bool ZipPlatform::TruncateFile(int iDes, ULONGLONG uSize)
-{	
+{
 #if (_MSC_VER >= 1400)
 	return _chsize_s(iDes, uSize) == 0;
 #else
@@ -572,7 +572,7 @@ int ZipPlatform::OpenFile(LPCTSTR lpszFileName, UINT iMode, int iShareMode)
 #else
 	return  _tsopen(lpszFileName, iMode, iShareMode, S_IREAD | S_IWRITE /*required only when O_CREAT mode*/);
 #endif
-	
+
 }
 
 bool ZipPlatform::FlushFile(int iDes)

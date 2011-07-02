@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -37,7 +37,7 @@ namespace ZipArchiveLib
 	A base class for compressors that use external libraries, such as zlib or bzip2.
 */
 class ZIP_API CBaseLibCompressor : public CZipCompressor
-{	
+{
 public:
 	/**
 		Represents options of compressors that use external libraries.
@@ -54,8 +54,8 @@ public:
 			m_bDetectLibMemoryLeaks = true;
 		}
 
-		/**		
-			\c true, if the ZipArchive Library should detect memory leaks in an external library; \c false otherwise. 
+		/**
+			\c true, if the ZipArchive Library should detect memory leaks in an external library; \c false otherwise.
 			Recommended to be set to \c true.
 		*/
 		bool m_bDetectLibMemoryLeaks;
@@ -71,18 +71,18 @@ public:
 		:CZipCompressor(pStorage)
 	{
 	}
-	
+
 	void InitDecompression(CZipFileHeader* pFile, CZipCryptograph* pCryptograph)
 	{
 		CZipCompressor::InitDecompression(pFile, pCryptograph);
 		m_bDecompressionDone = false;
-	}	
+	}
 
 	~CBaseLibCompressor()
 	{
 		EmptyPtrList();
 	}
-protected:	
+protected:
 
 	/**
 		A memory allocation method called by an external library.
@@ -96,7 +96,7 @@ protected:
 		\param size
 			The size of each block to allocate.
 
-		\return 
+		\return
 			The address of a newly allocated memory.
 	*/
 	static void* _zipalloc(void* opaque, UINT items, UINT size)

@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -34,7 +34,7 @@
 #elif defined(_ZIP_IMPL_ATL)
 	#include "ZipCollections_atl.h"
 #else
-	#include "ZipCollections_mfc.h"	
+	#include "ZipCollections_mfc.h"
 #endif
 
 typedef CZipArray<ZIP_INDEX_TYPE> CZipIndexesArray;

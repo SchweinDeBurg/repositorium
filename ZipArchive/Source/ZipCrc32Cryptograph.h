@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -37,7 +37,7 @@
 
 /**
 	Performs the traditional zip encryption.
-	
+
 	\see
 		<a href="kb">0610201627|std</a>
 */
@@ -45,9 +45,9 @@ class ZIP_API CZipCrc32Cryptograph : public CZipCryptograph
 {
 public:
 	CZipCrc32Cryptograph(){}
-	
-	bool InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage, bool ignoreCheck);	
-	void InitEncode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage);	
+
+	bool InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage, bool ignoreCheck);
+	void InitEncode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage);
 	void Decode(char* pBuffer, DWORD uSize)
 	{
 		for (DWORD i = 0; i < uSize; i++)
@@ -100,7 +100,7 @@ private:
 		int temp = (m_keys[2] & 0xffff) | 2;
 		return (char)(((temp * (temp ^ 1)) >> 8) & 0xff);
 	}
-	void CryptInitKeys(CZipAutoBuffer& password);	
+	void CryptInitKeys(CZipAutoBuffer& password);
 	void CryptUpdateKeys(char c);
 	DWORD CryptCRC32(DWORD l, char c)
 	{
@@ -114,7 +114,7 @@ private:
 		c ^= t;
 	}
 	DWORD m_keys[3];
-public:	
+public:
 	~CZipCrc32Cryptograph(){}
 };
 

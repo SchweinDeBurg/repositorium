@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -87,7 +87,7 @@ void CZipCompressor::COptionsMap::Remove(int iType)
 	{
 		delete pTemp;
 		RemoveKey(iType);
-	}	
+	}
 }
 
 CZipCompressor::COptionsMap::~COptionsMap()

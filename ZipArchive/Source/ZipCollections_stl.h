@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -17,7 +17,7 @@
 #endif
 
 #if _MSC_VER > 1000
-	#pragma warning( push, 3 ) // STL 
+	#pragma warning( push, 3 ) // STL
 	#pragma warning (disable : 4284) //return type for 'identifier::operator >' is not a UDT or reference to a UDT. Will produce errors if applied using infix notation
 	#pragma warning (disable : 4018) //'expression' : signed/unsigned mismatch
 #endif
@@ -70,11 +70,11 @@ public:
 			std::sort (this->begin(), this->end(), std::greater<TYPE>());
 	}
 	void Sort(CompareFunction pFunction)
-	{		
+	{
 		std::sort(this->begin(), this->end(), Sorter(pFunction));
 	}
 
-	
+
 	size_t GetSize() const{return this->size();	}
 	void SetSize(size_t uSize) {this->resize(uSize); }
 	size_t GetCount() const{return this->size(); }
@@ -86,7 +86,7 @@ public:
 		return ret - 1;
 	}
 	TYPE& GetAt(size_t uIndex) {return this->at(uIndex);}
-	const TYPE& GetAt(size_t uIndex) const {return this->at(uIndex);} 
+	const TYPE& GetAt(size_t uIndex) const {return this->at(uIndex);}
 	void SetAt(size_t uIndex, TYPE value) {inherited::operator[](uIndex) = value; }
 	size_t Add(const TYPE& x) {push_back(x);return GetUpperBound();}
 	void RemoveAll() {this->clear();}

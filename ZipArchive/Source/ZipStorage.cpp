@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -37,10 +37,10 @@ CZipStorage::CZipStorage()
 }
 
 void CZipStorage::Initialize()
-{	
+{
 	m_pSplitChangeVolumeFunc = m_pSpanChangeVolumeFunc = m_pChangeVolumeFunc = NULL;
-	m_iWriteBufferSize = 65536;	
-	m_pFile = NULL;	
+	m_iWriteBufferSize = 65536;
+	m_pFile = NULL;
 	m_iLocateBufferSize = 32768;
 	m_uBytesBeforeZip = 0;
 	m_uCurrentVolume = ZIP_VOLUME_NUMBER_UNSPECIFIED;
@@ -96,7 +96,7 @@ DWORD CZipStorage::Read(void *pBuf, DWORD iSize, bool bAtOnce)
 void CZipStorage::Open(LPCTSTR lpszPathName, int iMode, ZIP_SIZE_TYPE uVolumeSize)
 {
 	m_uCurrentVolume = ZIP_VOLUME_NUMBER_UNSPECIFIED;
-	m_pWriteBuffer.Allocate(m_iWriteBufferSize); 
+	m_pWriteBuffer.Allocate(m_iWriteBufferSize);
 	m_uBytesInWriteBuffer = 0;
 	m_state.Set(stateOpened | stateAutoClose);
 	m_pFile = &m_internalfile;
@@ -106,14 +106,14 @@ void CZipStorage::Open(LPCTSTR lpszPathName, int iMode, ZIP_SIZE_TYPE uVolumeSiz
 	CBitFlag mode(iMode);
 
 	if (mode.IsSetAny(CZipArchive::zipCreate)) // create new archive
-	{		
+	{
 		m_uCurrentVolume = 0;
 		if (!mode.IsSetAny(CZipArchive::zipModeSegmented))
 		{
 			OpenFile(lpszPathName, (mode.IsSetAll(CZipArchive::zipCreateAppend) ? CZipFile::modeNoTruncate : CZipFile::modeCreate) | CZipFile::modeReadWrite);
 		}
 		else // create a segmented archive
-		{			
+		{
 			m_uBytesWritten = 0;
 			if (mode.IsSetAny(CZipArchive::zipModeSpan))
 			{
@@ -165,7 +165,7 @@ void CZipStorage::Open(LPCTSTR lpszPathName, int iMode, ZIP_SIZE_TYPE uVolumeSiz
 				ThrowError(CZipException::badZipFile);
 			m_uCurrentVolume -= 1;
 			if (m_uCurrentVolume > 0)
-			{				
+			{
 				m_uSplitData = m_uCurrentVolume;
 				CacheSizes();
 			}
@@ -177,7 +177,7 @@ void CZipStorage::Open(LPCTSTR lpszPathName, int iMode, ZIP_SIZE_TYPE uVolumeSiz
 		}
 		else if (mode.IsSetAny(CZipArchive::zipModeSplit))
 			m_state.Set(stateSplit);
-	}	
+	}
 }
 
 void CZipStorage::CacheSizes()
@@ -198,7 +198,7 @@ void CZipStorage::CacheSizes()
 
 void CZipStorage::Open(CZipAbstractFile& af, int iMode, bool bAutoClose)
 {
-	m_pWriteBuffer.Allocate(m_iWriteBufferSize); 
+	m_pWriteBuffer.Allocate(m_iWriteBufferSize);
 	m_uBytesInWriteBuffer = 0;
 	m_state.Set(stateOpened);
 	if (bAutoClose)
@@ -208,7 +208,7 @@ void CZipStorage::Open(CZipAbstractFile& af, int iMode, bool bAutoClose)
 	CBitFlag mode(iMode);
 
 	if (mode.IsSetAny(CZipArchive::zipCreate))
-	{		
+	{
 		m_uCurrentVolume = 0;
 		if (mode.IsSetAll(CZipArchive::zipCreateAppend))
 			af.SeekToEnd();
@@ -230,7 +230,7 @@ void CZipStorage::ChangeVolume(ZIP_VOLUME_TYPE uNumber)
 	if (uNumber == m_uCurrentVolume || !IsSegmented()) // the second condition may happen in some bad archives
 		return;
 
-	m_uCurrentVolume = uNumber;	
+	m_uCurrentVolume = uNumber;
 	OpenFile(IsSpanned() ? ChangeSpannedRead() : ChangeSplitRead(),
 		CZipFile::modeNoTruncate | CZipFile::modeRead);
 }
@@ -336,7 +336,7 @@ CZipString CZipStorage::Close(bool bWrite, bool bGetLastVolumeName)
 		else
 			sz = m_pFile->GetFilePath();
 	}
-	
+
 	if (bClose)
 	{
 		if (bWrite)
@@ -367,10 +367,10 @@ void CZipStorage::NextVolume(ZIP_SIZE_TYPE uNeeded)
 		ZIP_VOLUME_TYPE uMaxVolumes = (ZIP_VOLUME_TYPE)(bSpan ? 999 : 0xFFFF);
 		if (m_uCurrentVolume >= uMaxVolumes) // m_uCurrentVolume is a zero-based index
 			ThrowError(CZipException::tooManyVolumes);
-	} 
+	}
 
 	CZipString szFileName;
-	
+
 	if (bSpan)
 		szFileName  = m_szArchiveName;
 	else
@@ -382,7 +382,7 @@ void CZipStorage::NextVolume(ZIP_SIZE_TYPE uNeeded)
 		if (IsBinarySplit())
 			m_pCachedSizes->Add(m_pFile->GetLength());
 		m_pFile->Close();
-	}	
+	}
 
 	if (m_pChangeVolumeFunc)
 	{
@@ -406,8 +406,8 @@ void CZipStorage::NextVolume(ZIP_SIZE_TYPE uNeeded)
 						iCode = CZipSegmCallback::scCannotSetVolLabel;
 						continue;
 					}
-				}					
-				
+				}
+
 				if (OpenFile(szFileName, CZipFile::modeCreate | CZipFile::modeReadWrite, false))
 					break;
 				else
@@ -432,7 +432,7 @@ void CZipStorage::CallCallback(ZIP_SIZE_TYPE uNeeded, int iCode, CZipString szTe
 		ThrowError(CZipException::internalError);
 	m_pChangeVolumeFunc->m_szExternalFile = szTemp;
 	m_pChangeVolumeFunc->m_uVolumeNeeded = (ZIP_VOLUME_TYPE)(m_uCurrentVolume + 1);
-	m_pChangeVolumeFunc->m_iCode = iCode; 
+	m_pChangeVolumeFunc->m_iCode = iCode;
 	if (!m_pChangeVolumeFunc->Callback(uNeeded))
 		CZipException::Throw(CZipException::aborted, szTemp);
 }
@@ -467,7 +467,7 @@ void CZipStorage::UpdateSegmMode(ZIP_VOLUME_TYPE uLastDisk)
 		CZipString szFilePath = m_pFile->GetFilePath();
 		if (!m_state.IsSetAny(stateSegmented))
 			m_state.Set(ZipPlatform::IsDriveRemovable(szFilePath) ? stateSpan : stateSplit);
-		
+
 		if (IsSpanned())
 		{
 			if (!m_pSpanChangeVolumeFunc)
@@ -494,7 +494,7 @@ ZIP_SIZE_TYPE CZipStorage::AssureFree(ZIP_SIZE_TYPE uNeeded)
 	while ((uFree = VolumeLeft()) < uNeeded)
 	{
 		if (IsSplit() && !m_uBytesWritten && !m_uBytesInWriteBuffer)
-			// in the splitArchive mode, if the size of the archive is less 
+			// in the splitArchive mode, if the size of the archive is less
 			// than the size of the packet to be written at once,
 			// increase once the size of the volume
 			m_uCurrentVolSize = uNeeded;
@@ -512,11 +512,11 @@ void CZipStorage::Write(const void *pBuf, DWORD iSize, bool bAtOnce)
 	{
 		bool atOnce = bAtOnce && !IsBinarySplit();
 		// if not at once, one byte is enough of free space
-		DWORD iNeeded = atOnce ? iSize : 1; 
+		DWORD iNeeded = atOnce ? iSize : 1;
 		DWORD uTotal = 0;
 
 		while (uTotal < iSize)
-		{			
+		{
 			ZIP_SIZE_TYPE uFree = AssureFree(iNeeded);
 			DWORD uLeftToWrite = iSize - uTotal;
 			DWORD uToWrite = uFree < uLeftToWrite ? (DWORD)uFree : uLeftToWrite;
@@ -553,12 +553,12 @@ void CZipStorage::WriteInternalBuffer(const char *pBuf, DWORD uSize)
 ZIP_SIZE_TYPE CZipStorage::VolumeLeft() const
 {
 	// for spanned archives m_uCurrentVolSize is updated after each flush()
-	ZIP_SIZE_TYPE uBytes = m_uBytesInWriteBuffer + (IsSpanned() ? 0 : m_uBytesWritten);	
+	ZIP_SIZE_TYPE uBytes = m_uBytesInWriteBuffer + (IsSpanned() ? 0 : m_uBytesWritten);
 	return uBytes > m_uCurrentVolSize ? 0 : m_uCurrentVolSize - uBytes;
 }
 
 void CZipStorage::Flush()
-{	
+{
 	if (m_uBytesInWriteBuffer)
 	{
 		m_pFile->Write(m_pWriteBuffer, m_uBytesInWriteBuffer);
@@ -566,23 +566,23 @@ void CZipStorage::Flush()
 			m_uBytesWritten += m_uBytesInWriteBuffer;
 		m_uBytesInWriteBuffer = 0;
 	}
-	if (IsSpanned()) 
-		// after writing it is difficult to predict the free space due to 
+	if (IsSpanned())
+		// after writing it is difficult to predict the free space due to
 		// not completely written clusters, write operation may start from a new cluster
-		m_uCurrentVolSize = GetFreeVolumeSpace();	
+		m_uCurrentVolSize = GetFreeVolumeSpace();
 }
 
 ZIP_FILE_USIZE CZipStorage::LocateSignature(char* szSignature, ZIP_SIZE_TYPE uMaxDepth)
 {
 	m_pFile->SeekToEnd();
 	int leftToFind = SIGNATURE_SIZE - 1;
-	bool found = false; // for fast checking if leftToFind needs resetting	
+	bool found = false; // for fast checking if leftToFind needs resetting
 	if (!IsBinarySplit())
 	{
 		return LocateSignature(szSignature, uMaxDepth, leftToFind, found, m_pFile->GetLength());
 	}
 	else
-	{		
+	{
 		for(;;)
 		{
 			ZIP_FILE_USIZE uFileLength = GetCachedSize(m_uCurrentVolume);
@@ -601,13 +601,13 @@ ZIP_FILE_USIZE CZipStorage::LocateSignature(char* szSignature, ZIP_SIZE_TYPE uMa
 ZIP_FILE_USIZE CZipStorage::LocateSignature(char* szSignature, ZIP_SIZE_TYPE uMaxDepth, int& leftToFind, bool& found, ZIP_FILE_USIZE uFileLength)
 {
 	CZipAutoBuffer buffer(m_iLocateBufferSize);
-	
+
 	ZIP_SIZE_TYPE max = (ZIP_SIZE_TYPE)(uFileLength < uMaxDepth ? uFileLength : uMaxDepth);
 	ZIP_SIZE_TYPE position = (ZIP_SIZE_TYPE)(uFileLength - m_pFile->GetPosition());
 	int offset = 0;
-	
+
 	int toRead = m_iLocateBufferSize;
-	
+
 	while ( position < max )
 	{
 		position += toRead;
@@ -618,7 +618,7 @@ ZIP_FILE_USIZE CZipStorage::LocateSignature(char* szSignature, ZIP_SIZE_TYPE uMa
 			offset = diff;
 			position = max;
 		}
-		Seek(position, seekFromEnd);	
+		Seek(position, seekFromEnd);
 		int actuallyRead = m_pFile->Read((char*)buffer + offset, toRead);
 		if (actuallyRead != toRead)
 			ThrowError(CZipException::badZipFile);
@@ -644,7 +644,7 @@ ZIP_FILE_USIZE CZipStorage::LocateSignature(char* szSignature, ZIP_SIZE_TYPE uMa
 				pos--;
 		}
 	}
-	return SignatureNotFound;	
+	return SignatureNotFound;
 }
 
 void CZipStorage::SeekInBinary(ZIP_FILE_SIZE lOff, bool bSeekToBegin)
@@ -674,7 +674,7 @@ void CZipStorage::SeekInBinary(ZIP_FILE_SIZE lOff, bool bSeekToBegin)
 			{
 				ChangeVolume(uVolume);
 				if (lOff > 0)
-				{					
+				{
 					m_pFile->Seek(lOff, CZipAbstractFile::current);
 				}
 				return;
@@ -701,7 +701,7 @@ void CZipStorage::SeekInBinary(ZIP_FILE_SIZE lOff, bool bSeekToBegin)
 			{
 				ChangeVolume(uVolume);
 				if (lOff < 0)
-				{					
+				{
 					m_pFile->Seek(lOff, CZipAbstractFile::end);
 				}
 				return;
@@ -716,9 +716,9 @@ void CZipStorage::SeekInBinary(ZIP_FILE_SIZE lOff, bool bSeekToBegin)
 }
 
 ULONGLONG CZipStorage::Seek(ULONGLONG lOff, SeekType iSeekType)
-{	
+{
 	if (iSeekType == seekCurrent)
-	{		
+	{
 		if (IsExistingSegmented())
 		{
 			ZIP_SIZE_TYPE uPosition = (ZIP_SIZE_TYPE)m_pFile->GetPosition();
@@ -734,7 +734,7 @@ ULONGLONG CZipStorage::Seek(ULONGLONG lOff, SeekType iSeekType)
 			return lOff > 0 ? m_pFile->SafeSeek((ZIP_FILE_USIZE)lOff) : 0;
 		}
 		else
-			return m_pFile->Seek((ZIP_FILE_SIZE)lOff, CZipAbstractFile::current);			
+			return m_pFile->Seek((ZIP_FILE_SIZE)lOff, CZipAbstractFile::current);
 	}
 	else
 	{
@@ -785,6 +785,6 @@ void CZipStorage::FinalizeSegm()
 		}
 	}
 
-	OpenFile(szFileName, CZipFile::modeNoTruncate | (IsSegmented() ? CZipFile::modeReadWrite : CZipFile::modeRead));	
+	OpenFile(szFileName, CZipFile::modeNoTruncate | (IsSegmented() ? CZipFile::modeReadWrite : CZipFile::modeRead));
 }
 

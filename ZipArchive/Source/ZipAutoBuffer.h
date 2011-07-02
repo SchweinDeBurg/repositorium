@@ -6,7 +6,7 @@
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
-// 
+//
 // For the licensing details refer to the License.txt file.
 //
 // Web Site: http://www.artpol-software.com
@@ -45,7 +45,7 @@ public:
 	const char* GetBuffer() const {return m_pBuffer;}
 	char* Allocate(DWORD iSize, bool bZeroMemory = false);
 	void Release();
-	DWORD GetSize() const 
+	DWORD GetSize() const
 	{
 		return m_iSize;
 	}
@@ -64,4 +64,4 @@ protected:
 };
 
 #endif // !defined(ZIPARCHIVE_ZIPAUTOBUFFER_DOT_H)
-	
+
