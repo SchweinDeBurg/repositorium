@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -380,7 +380,7 @@ bool CZipFileHeader::ReadLocal(CZipCentralDir* pCentralDir)
 	CBytesWriter::ReadBytes(uTemp, buf + 6);
 	// do not compare the whole flag - the bits reserved by PKWARE may differ 
 	// in local and central headers
-	if (pCentralDir->IsConsistencyCheckOn( CZipArchive::checkLocalFlag)
+	if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalFlag)
 		&& (uTemp & 0xf) != (m_uFlag & 0xf))
 		return false;
 	
@@ -411,20 +411,20 @@ bool CZipFileHeader::ReadLocal(CZipCentralDir* pCentralDir)
 	if (uMethod == CZipCompressor::methodWinZipAes && IsEncrypted())
 		CZipException::Throw(CZipException::noAES);
 
-	if (pCentralDir->IsConsistencyCheckOn( CZipArchive::checkLocalMethod)
+	if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalMethod)
 		&& uMethod != m_uMethod )
 		return false;
 
-	if (!bIsDataDescr && pCentralDir->IsConsistencyCheckOn( CZipArchive::checkLocalCRC | CZipArchive::checkLocalSizes))
+	if (!bIsDataDescr && pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalCRC | CZipArchive::checkLocalSizes))
 	{
 		// read all at once - probably faster than checking and reading separately
 		DWORD uCrc32;
 		CBytesWriter::ReadBytes(uCrc32, buf + 14);
-		if (pCentralDir->IsConsistencyCheckOn( CZipArchive::checkLocalCRC)
+		if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalCRC)
 			&& uCrc32 != m_uCrc32)
 			return false;
 
-		if (pCentralDir->IsConsistencyCheckOn( CZipArchive::checkLocalSizes)
+		if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalSizes)
 			// do not check, if local compressed size is 0 - this usually means, that some archiver 
 			// could not update the compressed size after compression
 			&& ( m_uLocalComprSize != 0 && m_uLocalComprSize != m_uComprSize || m_uLocalUncomprSize != m_uUncomprSize))

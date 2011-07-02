@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -140,6 +140,10 @@ namespace ZipPlatform
 
 #ifdef _ZIP_SYSTEM_LINUX
 	ZIP_API bool SetExeAttr( LPCTSTR lpFileName ); ///< Sets executable permissions for a file.
+#endif
+#ifdef _ZIP_SYSTEM_WIN
+	ZIP_API bool SetFileAttr(HANDLE handle, DWORD uAttr);	///< Sets the file attributes.
+	ZIP_API bool SetFileModTime(HANDLE handle, time_t ttime);	 ///< Set the file modification time.
 #endif
 
 #if !defined(UNDER_CE) && (defined _ZIP_IMPL_STL || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL)

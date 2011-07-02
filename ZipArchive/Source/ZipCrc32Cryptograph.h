@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -46,7 +46,7 @@ class ZIP_API CZipCrc32Cryptograph : public CZipCryptograph
 public:
 	CZipCrc32Cryptograph(){}
 	
-	bool InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage);	
+	bool InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage, bool ignoreCheck);	
 	void InitEncode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage);	
 	void Decode(char* pBuffer, DWORD uSize)
 	{

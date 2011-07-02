@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -217,15 +217,19 @@ bool ZipPlatform::SetFileModTime(LPCTSTR lpFileName, time_t ttime)
 	{
 		return false;
 	}
-	
+	bool ret = ZipPlatform::SetFileModTime(handle, ttime);	
+	CloseHandle(handle);
+	return ret;
+}
+
+bool ZipPlatform::SetFileModTime(HANDLE handle, time_t ttime)
+{	
 	FILETIME ft;
 	LONGLONG val = ((LONGLONG)ttime * 10000000) + SUFFIX_I64(116444736000000000);
     ft.dwLowDateTime = (DWORD)(val & 0xFFFFFFFF);
     ft.dwHighDateTime = (DWORD)((val >> 32) & 0xFFFFFFFF);
 
-	bool ret = ::SetFileTime(handle, NULL, NULL, &ft) != 0;
-	CloseHandle(handle);
-	return ret;
+	return ::SetFileTime(handle, NULL, NULL, &ft) != 0;
 }
 
 #if !defined(UNDER_CE)
@@ -369,7 +373,7 @@ ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow, int i
 		int length = file.GetLength();
 		CZipAutoBuffer buffer((length + 2) * sizeof(TCHAR), true); // double NULL is required
 		memcpy(buffer, (LPCTSTR)file, length * sizeof(TCHAR));
-		SHFILEOPSTRUCT shFileOp;
+		SHFILEOPSTRUCT shFileOp = {0};
 		shFileOp.wFunc = FO_DELETE;
 		shFileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT | FOF_NOERRORUI; 
 		shFileOp.pFrom = (LPCTSTR)(char*)buffer;

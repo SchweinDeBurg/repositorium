@@ -68,7 +68,8 @@ Public Types</h2></td></tr>
 <a class="el" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4daff3c8c747216fe654286edcd57f55230">checkDataDescriptor</a> =  0x0100, 
 <br/>
 &#160;&#160;<a class="el" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4daca249fea9a22c531bd4b69a277097f33">checkVolumeEntries</a> =  0x0200, 
-<a class="el" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4da9263f24723fdc0985f274d84ee54b6f7">checkAll</a> =  checkCRC | checkLocalAll | checkDataDescriptor | checkVolumeEntries, 
+<a class="el" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4da7ecd57be82b9d2a43d0ef3d720f8fca8">checkDecryptionVerifier</a> =  0x0400, 
+<a class="el" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4da9263f24723fdc0985f274d84ee54b6f7">checkAll</a> =  checkCRC | checkLocalAll | checkDataDescriptor | checkVolumeEntries | checkDecryptionVerifier, 
 <a class="el" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4dabc39679fb833080779440a4a4b88d93f">checkIgnoredByDefault</a> =  checkDataDescriptor | checkVolumeEntries
 <br/>
  }</td></tr>
@@ -356,7 +357,7 @@ Protected Attributes</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02951">2951</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02952">2952</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -398,6 +399,9 @@ Protected Attributes</h2></td></tr>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a23977e24b0930a40a83c0e4075860e4daca249fea9a22c531bd4b69a277097f33"></a><!-- doxytag: member="checkVolumeEntries" ref="a23977e24b0930a40a83c0e4075860e4daca249fea9a22c531bd4b69a277097f33" args="" -->checkVolumeEntries</em>&nbsp;</td><td>
 <p>Verifies that the number of volumes and entries are correctly reported. </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a23977e24b0930a40a83c0e4075860e4da7ecd57be82b9d2a43d0ef3d720f8fca8"></a><!-- doxytag: member="checkDecryptionVerifier" ref="a23977e24b0930a40a83c0e4075860e4da7ecd57be82b9d2a43d0ef3d720f8fca8" args="" -->checkDecryptionVerifier</em>&nbsp;</td><td>
+<p>Verifies control bytes during CRC32 and AES decryption initialization. </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a23977e24b0930a40a83c0e4075860e4da9263f24723fdc0985f274d84ee54b6f7"></a><!-- doxytag: member="checkAll" ref="a23977e24b0930a40a83c0e4075860e4da9263f24723fdc0985f274d84ee54b6f7" args="" -->checkAll</em>&nbsp;</td><td>
 <p>Logical sum of all possible verifications. </p>
@@ -467,7 +471,7 @@ Protected Attributes</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03264">3264</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03265">3265</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -656,7 +660,7 @@ Protected Attributes</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02843">2843</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02844">2844</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -1079,7 +1083,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>true</code>, if the archive can be modified; <code>false</code> otherwise. </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03096">3096</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03097">3097</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -1098,7 +1102,7 @@ Protected Attributes</h2></td></tr>
 <div class="memdoc">
 <p>Releases the current compressor. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03373">3373</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03374">3374</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -1117,7 +1121,7 @@ Protected Attributes</h2></td></tr>
 <div class="memdoc">
 <p>Releases the current cryptograph. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03337">3337</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03338">3338</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -1323,7 +1327,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classCZipCompressor.html#ab68b3b3437bcae944edd4a20ab1ca777">CZipCompressor::CompressionMethod</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03391">3391</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03392">3392</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -1350,7 +1354,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classCZipCryptograph.html#ab3e0a46c0680f616ccf7a163f4f40332">CZipCryptograph::EncryptionMethod</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03355">3355</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03356">3356</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -2068,7 +2072,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <dd>
 <a class="el" href="classCZipArchive.html#a817d828483c57299b4de7b7b6319a88a">CommitChanges</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02988">2988</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02989">2989</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -2157,7 +2161,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <p>Retrieves the current compressor. The type of the compressor depends on the compression method used for compressing or decompressing data.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#a297a68eee12eb680c945a420ae407db0">SetCompressionMethod</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03079">3079</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03080">3080</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -2595,7 +2599,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <p>Returns the currently ignored consistency checks. It can be one or more of the <a class="el" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4d">ConsistencyCheck</a> values.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#a6c97370520628da3908d7dca9b58fdeb">SetIgnoredConsistencyChecks</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02885">2885</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02886">2886</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -2735,7 +2739,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <p>Returns the currently set special flags. It can be one or more of the <a class="el" href="classCZipArchive.html#a97ab2d09b10ab2f1ae446560a4f44561">SpecialFlags</a> values.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#a996973569d480fba3627607dc7552db7">SetSpecialFlags</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02912">2912</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02913">2913</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -2945,7 +2949,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <dd>
 <a class="el" href="classCZipArchive.html#a817d828483c57299b4de7b7b6319a88a">CommitChanges</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03024">3024</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03025">3025</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -3802,7 +3806,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03189">3189</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03190">3190</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -4246,7 +4250,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <dd>
 <a class="el" href="classCZipArchive.html#a817d828483c57299b4de7b7b6319a88a">CommitChanges</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02970">2970</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02971">2971</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -4414,7 +4418,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <dd>
 <a class="el" href="classCZipArchive.html#a69d2178514e8d8e0a4f91b6bb1e5864e">GetIgnoredConsistencyChecks</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02869">2869</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02870">2870</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -4550,7 +4554,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <p>Sets special flags. It can be one or more of the <a class="el" href="classCZipArchive.html#a97ab2d09b10ab2f1ae446560a4f44561">SpecialFlags</a> values.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#ada64e986cf98b13789acc996af7d3a90">GetSpecialFlags</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02896">2896</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l02897">2897</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5116,7 +5120,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The value set with <a class="el" href="classCZipArchive.html#a368ef976b50ad90491f56a1f9bd555d5">SetAutoFinalize()</a>. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03279">3279</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03280">3280</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5132,7 +5136,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The value set with <a class="el" href="classCZipArchive.html#aec981beb4dfb55e4a2f054c410ee3031">SetCaseSensitivity</a>. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03237">3237</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03238">3238</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5148,7 +5152,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>If <code>true</code>, the drive letter is removed from the filename stored inside the archive when adding a new file to the archive or extracting an existing one. It affects <a class="el" href="classCZipArchive.html#a835a92a9a94ae71ab1742c50d282d0d2">AddNewFile</a>, <a class="el" href="classCZipArchive.html#afc74ef6df3ccbb27e1855b4cd52004f7">ExtractFile</a>, <a class="el" href="classCZipArchive.html#a9d875516849ce5632a024b3acb4613cf">PredictFileNameInZip</a>, <a class="el" href="classCZipArchive.html#ae34cef405c28c66cbf7fc6f1e45b09d6">PredictExtractedFileName</a>, <a class="el" href="classCZipArchive.html#a136b89cc32a24b3f358f592c9d060a78">WillBeDuplicated</a> methods. The default value is <code>true</code>. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03178">3178</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03179">3179</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5164,7 +5168,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>Holds currently set callback objects. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03226">3226</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03227">3227</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5181,7 +5185,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <p>The central directory object. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classCZipCentralDir.html">CZipCentralDir</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03259">3259</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03260">3260</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5197,7 +5201,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The value set with <a class="el" href="classCZipArchive.html#a3b22230148bd8a11a9f1f92bff446e1b">SetSystemCompatibility</a>. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03320">3320</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03321">3321</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5214,7 +5218,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <p>The size of the <a class="el" href="classCZipArchive.html#a2c10424365afc7d073e53bc1e120c410">m_pBuffer</a> buffer. Set it before opening the archive. It is usually set with the <a class="el" href="classCZipArchive.html#abe06c912f3dbacfe3d327d7c7a2d0e88">SetAdvanced</a> method (specify this value as the second argument).</p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classCZipArchive.html#abe06c912f3dbacfe3d327d7c7a2d0e88">SetAdvanced</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03435">3435</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03436">3436</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5230,7 +5234,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The value set with <a class="el" href="classCZipArchive.html#a28f18c652496e2599bd49d0f0648769d">SetCommitMode()</a>. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03284">3284</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03285">3285</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5246,7 +5250,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The value set with <a class="el" href="classCZipArchive.html#a00d53cf407629000c551cb134c8c7993">SetEncryptionMethod</a>. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03409">3409</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03410">3410</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5262,7 +5266,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>Takes one of the <a class="el" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671">CZipArchive::OpenFileType</a> enum values. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03274">3274</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03275">3275</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5281,7 +5285,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <dd>
 <a class="el" href="classCZipArchive.html#abe06c912f3dbacfe3d327d7c7a2d0e88">SetAdvanced</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03425">3425</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03426">3426</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5297,7 +5301,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The current compressor. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03404">3404</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03405">3405</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5313,7 +5317,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The current cryptograph. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03368">3368</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03369">3369</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5329,7 +5333,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The value set with <a class="el" href="classCZipArchive.html#af68297f88e912ec811ba1c27496a6683">SetPassword</a>. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03325">3325</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03326">3326</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5345,7 +5349,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>A pointer to a method used to compare strings. Can point to <code>Compare</code>, <code>CompareNoCase</code>, <code>Collate</code> or <code>CollateNoCase</code> method. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03244">3244</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03245">3245</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5362,7 +5366,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <p>Physical layer of the archive. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classCZipStorage.html">CZipStorage</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03252">3252</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03253">3253</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5378,7 +5382,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The value set with the <a class="el" href="classCZipArchive.html#ac497dc2ebb4b65be1f5b7d08fe024a29">SetStringStoreSettings()</a> method. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03441">3441</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03442">3442</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5394,7 +5398,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The value set with <a class="el" href="classCZipArchive.html#a0e623537c7cbf00c6b255c3a5728acd9">SetRootPath()</a>. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03289">3289</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03290">3290</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5410,7 +5414,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The value set with <a class="el" href="classCZipArchive.html#ac20345ce4f4760630d6514600fe3cbe0">SetTempPath()</a>. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03294">3294</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03295">3295</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5426,7 +5430,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 <div class="memdoc">
 <p>The value set with <a class="el" href="classCZipArchive.html#a297a68eee12eb680c945a420ae407db0">SetCompressionMethod</a>. </p>
 
-<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03414">3414</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
+<p>Definition at line <a class="el" href="ZipArchive_8h_source.html#l03415">3415</a> of file <a class="el" href="ZipArchive_8h_source.html">ZipArchive.h</a>.</p>
 
 </div>
 </div>
@@ -5435,7 +5439,7 @@ ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&amp;, bool, ZipPlatform::DeleteFile
 </ul>
 </div>
 <hr><address><small>
-The ZipArchive Library Copyright &copy;&nbsp;2000 - 2010 Artpol Software - Tadeusz Dracz. Generated at Wed Nov 3 2010 11:11:32.
+The ZipArchive Library Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz. Generated at Tue Jun 28 2011 09:45:05.
 </small></address>
 </body>
 </html>

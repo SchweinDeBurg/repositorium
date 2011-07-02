@@ -23,6 +23,7 @@
         <div class="kbaindex">
             <ul class="kbaindex">
 
+<li><a class="linkindex" href="#4.1.1">4.1.1 (2011-06-27)</a></li>
 <li><a class="linkindex" href="#4.1.0">4.1.0 (2010-10-31)</a></li>
 <li><a class="linkindex" href="#4.0.1">4.0.1 (2009-04-24)</a></li>
 <li><a class="linkindex" href="#4.0.0">4.0.0 (2009-03-24)</a></li>
@@ -30,7 +31,22 @@
 
         </div>
         <div class="kbacontents">
-            <h2 class="kb" id="4.1.0" name="4.1.0">4.1.0 (2010-10-31)
+            <h2 class="kb" id="4.1.1" name="4.1.1">4.1.1 (2011-06-27)
+            </h2><h4 class="kb">New Features</h4><ul><li>
+				Added <a class="linkapi" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4da7ecd57be82b9d2a43d0ef3d720f8fca8">CZipArchive::checkDecryptionVerifier</a> to allow skipping verification of decryption control bytes to recover some invalid archives.
+			</li></ul><h4 class="kb">Changes</h4><ul><li>
+				<code>CZipString</code> in the STL version no longer derives from <code>std::basic_string&lt;TCHAR&gt;</code>, but uses the STL string as a variable. This is changed because of Visual Studio 2010 having problems with linking it (thanks to Christian Khoukaz for providing the fix).
+			</li></ul><h4 class="kb">Bugs Fixed</h4><ul><li>
+				Fixed a crash caused by lack of initialization when using Recycle Bin (<code>ZipPlatform::dfmRecycleBin</code>) for files removal.
+			</li><li>
+				Fixed a crash when reading extra fields from certain corrupted archives.
+			</li><li>
+				Setting a file modification time after file extraction under Windows could fail when it was locked by a file system notification hook (thanks to Dengg Helmut).
+			</li><li>
+				When <a class="linkapi" href="classCZipArchive.html">CZipArchive</a> is throwing an exception related to an external file (when e.g. adding a non-existing file), it includes now this external file path information in the exception instead of the zip archive path information (thanks to Miroslav Bonchev).
+			</li><li>
+				Fixed trial versions.
+			</li></ul><h2 class="kb" id="4.1.0" name="4.1.0">4.1.0 (2010-10-31)
             </h2><h4 class="kb">New Features</h4><ul><li>
 				Added project files for Visual Studio 2010. These are now default project files for the ZipArchive Library.
 			</li><li>
@@ -250,7 +266,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2010 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

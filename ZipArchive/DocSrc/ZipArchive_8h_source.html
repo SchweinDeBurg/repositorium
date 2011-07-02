@@ -28,7 +28,7 @@
 <div class="contents">
 <a href="ZipArchive_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 
 <a name="l00002"></a>00002 <span class="comment">// This source file is part of the ZipArchive library source distribution and</span>
-<a name="l00003"></a>00003 <span class="comment">// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz</span>
+<a name="l00003"></a>00003 <span class="comment">// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz</span>
 <a name="l00004"></a>00004 <span class="comment">//</span>
 <a name="l00005"></a>00005 <span class="comment">// This program is free software; you can redistribute it and/or</span>
 <a name="l00006"></a>00006 <span class="comment">// modify it under the terms of the GNU General Public License</span>
@@ -672,263 +672,264 @@
 <a name="l02830"></a><a class="code" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4da444c069eb1e6f70192ff7b595d2db0a1">02830</a>   checkLocalAll   = checkLocalMethod | checkLocalSizes | checkLocalCRC | checkLocalFlag, 
 <a name="l02831"></a><a class="code" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4daff3c8c747216fe654286edcd57f55230">02831</a>   checkDataDescriptor  = 0x0100, 
 <a name="l02832"></a><a class="code" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4daca249fea9a22c531bd4b69a277097f33">02832</a>   checkVolumeEntries  = 0x0200, 
-<a name="l02833"></a><a class="code" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4da9263f24723fdc0985f274d84ee54b6f7">02833</a>   checkAll    = checkCRC | checkLocalAll | checkDataDescriptor | checkVolumeEntries, 
-<a name="l02834"></a><a class="code" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4dabc39679fb833080779440a4a4b88d93f">02834</a>   checkIgnoredByDefault = checkDataDescriptor | checkVolumeEntries 
-<a name="l02835"></a>02835  };
-<a name="l02836"></a>02836 
-<a name="l02843"></a><a class="code" href="classCZipArchive.html#a97ab2d09b10ab2f1ae446560a4f44561">02843</a>  <span class="keyword">enum</span> <a class="code" href="classCZipArchive.html#a97ab2d09b10ab2f1ae446560a4f44561">SpecialFlags</a>
-<a name="l02844"></a>02844  {
-<a name="l02845"></a>02845   sfNone,
-<a name="l02854"></a><a class="code" href="classCZipArchive.html#a97ab2d09b10ab2f1ae446560a4f44561a1c6105efbaf985ec970d338502f020cb">02854</a>   <a class="code" href="classCZipArchive.html#a97ab2d09b10ab2f1ae446560a4f44561a1c6105efbaf985ec970d338502f020cb">sfExhaustiveRead</a>,
-<a name="l02855"></a>02855  };
-<a name="l02856"></a>02856 
-<a name="l02869"></a><a class="code" href="classCZipArchive.html#a6c97370520628da3908d7dca9b58fdeb">02869</a>  <span class="keywordtype">void</span> SetIgnoredConsistencyChecks(<span class="keywordtype">int</span> iLevel = checkIgnoredByDefault)
-<a name="l02870"></a>02870  {
-<a name="l02871"></a>02871   <span class="keywordflow">if</span> (IsClosed())
-<a name="l02872"></a>02872   {
-<a name="l02873"></a>02873    ZIPTRACE(<span class="stringliteral">&quot;%s(%i) : Set it after opening the archive.\n&quot;</span>);
-<a name="l02874"></a>02874    <span class="keywordflow">return</span>;
-<a name="l02875"></a>02875   }
-<a name="l02876"></a>02876   m_centralDir.m_iIgnoredChecks = iLevel;
-<a name="l02877"></a>02877  }
-<a name="l02878"></a>02878  
-<a name="l02885"></a><a class="code" href="classCZipArchive.html#a69d2178514e8d8e0a4f91b6bb1e5864e">02885</a>  <span class="keywordtype">int</span> GetIgnoredConsistencyChecks()<span class="keyword"> const</span>
-<a name="l02886"></a>02886 <span class="keyword"> </span>{
-<a name="l02887"></a>02887   <span class="keywordflow">return</span> m_centralDir.m_iIgnoredChecks;
-<a name="l02888"></a>02888  }
-<a name="l02889"></a>02889 
-<a name="l02896"></a><a class="code" href="classCZipArchive.html#a996973569d480fba3627607dc7552db7">02896</a>  <span class="keywordtype">void</span> SetSpecialFlags(<span class="keywordtype">int</span> iSpecialFlags)
-<a name="l02897"></a>02897  {
-<a name="l02898"></a>02898   <span class="keywordflow">if</span> (!IsClosed())
-<a name="l02899"></a>02899   {
-<a name="l02900"></a>02900    ZIPTRACE(<span class="stringliteral">&quot;%s(%i) : Set it before opening the archive.\n&quot;</span>);
-<a name="l02901"></a>02901    <span class="keywordflow">return</span>;
-<a name="l02902"></a>02902   }
-<a name="l02903"></a>02903   m_centralDir.m_specialFlags = iSpecialFlags;
-<a name="l02904"></a>02904  }
-<a name="l02905"></a>02905 
-<a name="l02912"></a><a class="code" href="classCZipArchive.html#ada64e986cf98b13789acc996af7d3a90">02912</a>  <span class="keywordtype">int</span> GetSpecialFlags()<span class="keyword"> const</span>
-<a name="l02913"></a>02913 <span class="keyword"> </span>{
-<a name="l02914"></a>02914   <span class="keywordflow">return</span> m_centralDir.m_specialFlags;
-<a name="l02915"></a>02915  }
-<a name="l02916"></a>02916 
-<a name="l02943"></a>02943  <span class="keywordtype">void</span> FindMatches(LPCTSTR lpszPattern, CZipIndexesArray&amp; ar, <span class="keywordtype">bool</span> bFullPath = <span class="keyword">true</span>);
-<a name="l02944"></a>02944  
-<a name="l02951"></a><a class="code" href="classCZipArchive.html#aec499339bf3f20e7a198289b4288d7a4">02951</a>  <span class="keyword">enum</span> <a class="code" href="classCZipArchive.html#aec499339bf3f20e7a198289b4288d7a4">CommitMode</a>
-<a name="l02952"></a>02952  {
-<a name="l02953"></a><a class="code" href="classCZipArchive.html#aec499339bf3f20e7a198289b4288d7a4a1fc91e619248861ee0b182ed90bea791">02953</a>   <a class="code" href="classCZipArchive.html#aec499339bf3f20e7a198289b4288d7a4a1fc91e619248861ee0b182ed90bea791" title="Changes will be committed when the CommitChanges method is called or when closing the archive...">cmManual</a>, 
-<a name="l02954"></a><a class="code" href="classCZipArchive.html#aec499339bf3f20e7a198289b4288d7a4abb999d299acb20bd6995524b2c134be3">02954</a>   cmOnChange 
-<a name="l02955"></a>02955  };
-<a name="l02956"></a>02956 
-<a name="l02970"></a><a class="code" href="classCZipArchive.html#a28f18c652496e2599bd49d0f0648769d">02970</a>  <span class="keywordtype">void</span> SetCommitMode(<span class="keywordtype">int</span> iCommitMode = cmOnChange) 
-<a name="l02971"></a>02971  { 
-<a name="l02972"></a>02972   m_iCommitMode = iCommitMode;
-<a name="l02973"></a>02973  }
-<a name="l02974"></a>02974 
-<a name="l02988"></a><a class="code" href="classCZipArchive.html#a3adb7bec41b0cfb44871c297a85c592e">02988</a>  <span class="keywordtype">int</span> <a class="code" href="classCZipArchive.html#a3adb7bec41b0cfb44871c297a85c592e">GetCommitMode</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_iCommitMode;}
-<a name="l02989"></a>02989 
-<a name="l03011"></a>03011  <span class="keywordtype">bool</span> CommitChanges();
-<a name="l03012"></a>03012 
-<a name="l03024"></a><a class="code" href="classCZipArchive.html#a871adedb7077a464d52a2ab6ef36b4b7">03024</a>  <span class="keywordtype">bool</span> <a class="code" href="classCZipArchive.html#a871adedb7077a464d52a2ab6ef36b4b7">IsModified</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_centralDir.IsAnyFileModified();}
-<a name="l03025"></a>03025  
-<a name="l03036"></a>03036  <span class="keywordtype">bool</span> RemoveCentralDirectoryFromArchive();
-<a name="l03037"></a>03037 
-<a name="l03053"></a>03053  <span class="keywordtype">bool</span> ReadLocalHeader(ZIP_INDEX_TYPE uIndex);
-<a name="l03054"></a>03054 
-<a name="l03070"></a>03070  <span class="keywordtype">bool</span> OverwriteLocalHeader(ZIP_INDEX_TYPE uIndex);
-<a name="l03071"></a>03071 
-<a name="l03079"></a><a class="code" href="classCZipArchive.html#a53b9a02f389496fc4707a39036fc560a">03079</a>  <span class="keyword">const</span> <a class="code" href="classCZipCompressor.html">CZipCompressor</a>* GetCurrentCompressor()<span class="keyword"> const</span>
-<a name="l03080"></a>03080 <span class="keyword"> </span>{
-<a name="l03081"></a>03081   <span class="keywordflow">return</span> m_pCompressor;
-<a name="l03082"></a>03082  }
-<a name="l03083"></a>03083 
-<a name="l03096"></a><a class="code" href="classCZipArchive.html#a7bc5e2fdbda00dc96e237423e855af19">03096</a>  <span class="keywordtype">bool</span> CanModify(<span class="keywordtype">bool</span> bAllowNewSegmented = <span class="keyword">false</span>, <span class="keywordtype">bool</span> bNeedsClosed = <span class="keyword">true</span>)
-<a name="l03097"></a>03097  {
-<a name="l03098"></a>03098   <span class="keywordflow">if</span> (IsClosed())
-<a name="l03099"></a>03099   {
-<a name="l03100"></a>03100    ZIPTRACE(<span class="stringliteral">&quot;%s(%i) : ZipArchive is closed.\n&quot;</span>);
-<a name="l03101"></a>03101    <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l03102"></a>03102   }
-<a name="l03103"></a>03103 
-<a name="l03104"></a>03104   <span class="keywordflow">if</span> (m_storage.IsReadOnly())
-<a name="l03105"></a>03105   {
-<a name="l03106"></a>03106    <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l03107"></a>03107   }
-<a name="l03108"></a>03108   
-<a name="l03109"></a>03109   <span class="keywordflow">if</span> (m_storage.IsNewSegmented() &amp;&amp; !bAllowNewSegmented)
-<a name="l03110"></a>03110   {
-<a name="l03111"></a>03111    <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l03112"></a>03112   }
-<a name="l03113"></a>03113   
-<a name="l03114"></a>03114   <span class="keywordflow">if</span> (bNeedsClosed &amp;&amp; m_iFileOpened)
-<a name="l03115"></a>03115   {
-<a name="l03116"></a>03116    ZIPTRACE(<span class="stringliteral">&quot;%s(%i) : The file cannot be open during modifications.\n&quot;</span>);
-<a name="l03117"></a>03117    <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l03118"></a>03118   }
-<a name="l03119"></a>03119 
-<a name="l03120"></a>03120   <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l03121"></a>03121  }
-<a name="l03122"></a>03122 
-<a name="l03123"></a>03123  <span class="keywordtype">bool</span> IsPasswordSet()<span class="keyword"> const</span>
-<a name="l03124"></a>03124 <span class="keyword"> </span>{
-<a name="l03125"></a>03125   <span class="keywordflow">return</span> m_pszPassword.GetSize() &gt; 0;
-<a name="l03126"></a>03126  }
-<a name="l03127"></a>03127 
-<a name="l03128"></a>03128  
-<a name="l03139"></a>03139  <span class="keywordtype">bool</span> ResetCurrentVolume();
-<a name="l03140"></a>03140 
-<a name="l03153"></a>03153  <span class="keyword">static</span> <span class="keywordtype">bool</span> IsZipArchive(LPCTSTR lpszPathName);
-<a name="l03154"></a>03154 
-<a name="l03170"></a>03170  <span class="keyword">static</span> <span class="keywordtype">bool</span> IsZipArchive(CZipAbstractFile&amp; af, <span class="keywordtype">bool</span> bAutoClose = <span class="keyword">false</span>);
-<a name="l03171"></a>03171 
-<a name="l03178"></a><a class="code" href="classCZipArchive.html#a940810c83896365f88e4be14809674c9">03178</a>  <span class="keywordtype">bool</span> <a class="code" href="classCZipArchive.html#a940810c83896365f88e4be14809674c9">m_bRemoveDriveLetter</a>;
-<a name="l03179"></a>03179  
-<a name="l03180"></a>03180 <span class="keyword">protected</span>:
-<a name="l03181"></a>03181  
-<a name="l03189"></a><a class="code" href="classCZipArchive.html#ac93ea693b6cba8ceb429b73d3fad2ff5">03189</a>  <span class="keywordtype">void</span> ReadLocalHeaderInternal(ZIP_INDEX_TYPE uIndex)
-<a name="l03190"></a>03190  {
-<a name="l03191"></a>03191   <span class="comment">// update sizes of the local filename and the extra field - they may differ from the ones in the central directory</span>
-<a name="l03192"></a>03192   GetFileInfo(uIndex)-&gt;ReadLocal(&amp;m_centralDir);
-<a name="l03193"></a>03193  }
-<a name="l03194"></a>03194 
-<a name="l03207"></a>03207  <span class="keywordtype">bool</span> EncryptFilesInternal(CZipIndexesArray* pIndexes);
-<a name="l03208"></a>03208 
+<a name="l02833"></a><a class="code" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4da7ecd57be82b9d2a43d0ef3d720f8fca8">02833</a>   checkDecryptionVerifier = 0x0400, 
+<a name="l02834"></a><a class="code" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4da9263f24723fdc0985f274d84ee54b6f7">02834</a>   checkAll    = checkCRC | checkLocalAll | checkDataDescriptor | checkVolumeEntries | checkDecryptionVerifier, 
+<a name="l02835"></a><a class="code" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4dabc39679fb833080779440a4a4b88d93f">02835</a>   checkIgnoredByDefault = checkDataDescriptor | checkVolumeEntries 
+<a name="l02836"></a>02836  };
+<a name="l02837"></a>02837 
+<a name="l02844"></a><a class="code" href="classCZipArchive.html#a97ab2d09b10ab2f1ae446560a4f44561">02844</a>  <span class="keyword">enum</span> <a class="code" href="classCZipArchive.html#a97ab2d09b10ab2f1ae446560a4f44561">SpecialFlags</a>
+<a name="l02845"></a>02845  {
+<a name="l02846"></a>02846   sfNone,
+<a name="l02855"></a><a class="code" href="classCZipArchive.html#a97ab2d09b10ab2f1ae446560a4f44561a1c6105efbaf985ec970d338502f020cb">02855</a>   <a class="code" href="classCZipArchive.html#a97ab2d09b10ab2f1ae446560a4f44561a1c6105efbaf985ec970d338502f020cb">sfExhaustiveRead</a>,
+<a name="l02856"></a>02856  };
+<a name="l02857"></a>02857 
+<a name="l02870"></a><a class="code" href="classCZipArchive.html#a6c97370520628da3908d7dca9b58fdeb">02870</a>  <span class="keywordtype">void</span> SetIgnoredConsistencyChecks(<span class="keywordtype">int</span> iLevel = checkIgnoredByDefault)
+<a name="l02871"></a>02871  {
+<a name="l02872"></a>02872   <span class="keywordflow">if</span> (IsClosed())
+<a name="l02873"></a>02873   {
+<a name="l02874"></a>02874    ZIPTRACE(<span class="stringliteral">&quot;%s(%i) : Set it after opening the archive.\n&quot;</span>);
+<a name="l02875"></a>02875    <span class="keywordflow">return</span>;
+<a name="l02876"></a>02876   }
+<a name="l02877"></a>02877   m_centralDir.m_iIgnoredChecks = iLevel;
+<a name="l02878"></a>02878  }
+<a name="l02879"></a>02879  
+<a name="l02886"></a><a class="code" href="classCZipArchive.html#a69d2178514e8d8e0a4f91b6bb1e5864e">02886</a>  <span class="keywordtype">int</span> GetIgnoredConsistencyChecks()<span class="keyword"> const</span>
+<a name="l02887"></a>02887 <span class="keyword"> </span>{
+<a name="l02888"></a>02888   <span class="keywordflow">return</span> m_centralDir.m_iIgnoredChecks;
+<a name="l02889"></a>02889  }
+<a name="l02890"></a>02890 
+<a name="l02897"></a><a class="code" href="classCZipArchive.html#a996973569d480fba3627607dc7552db7">02897</a>  <span class="keywordtype">void</span> SetSpecialFlags(<span class="keywordtype">int</span> iSpecialFlags)
+<a name="l02898"></a>02898  {
+<a name="l02899"></a>02899   <span class="keywordflow">if</span> (!IsClosed())
+<a name="l02900"></a>02900   {
+<a name="l02901"></a>02901    ZIPTRACE(<span class="stringliteral">&quot;%s(%i) : Set it before opening the archive.\n&quot;</span>);
+<a name="l02902"></a>02902    <span class="keywordflow">return</span>;
+<a name="l02903"></a>02903   }
+<a name="l02904"></a>02904   m_centralDir.m_specialFlags = iSpecialFlags;
+<a name="l02905"></a>02905  }
+<a name="l02906"></a>02906 
+<a name="l02913"></a><a class="code" href="classCZipArchive.html#ada64e986cf98b13789acc996af7d3a90">02913</a>  <span class="keywordtype">int</span> GetSpecialFlags()<span class="keyword"> const</span>
+<a name="l02914"></a>02914 <span class="keyword"> </span>{
+<a name="l02915"></a>02915   <span class="keywordflow">return</span> m_centralDir.m_specialFlags;
+<a name="l02916"></a>02916  }
+<a name="l02917"></a>02917 
+<a name="l02944"></a>02944  <span class="keywordtype">void</span> FindMatches(LPCTSTR lpszPattern, CZipIndexesArray&amp; ar, <span class="keywordtype">bool</span> bFullPath = <span class="keyword">true</span>);
+<a name="l02945"></a>02945  
+<a name="l02952"></a><a class="code" href="classCZipArchive.html#aec499339bf3f20e7a198289b4288d7a4">02952</a>  <span class="keyword">enum</span> <a class="code" href="classCZipArchive.html#aec499339bf3f20e7a198289b4288d7a4">CommitMode</a>
+<a name="l02953"></a>02953  {
+<a name="l02954"></a><a class="code" href="classCZipArchive.html#aec499339bf3f20e7a198289b4288d7a4a1fc91e619248861ee0b182ed90bea791">02954</a>   <a class="code" href="classCZipArchive.html#aec499339bf3f20e7a198289b4288d7a4a1fc91e619248861ee0b182ed90bea791" title="Changes will be committed when the CommitChanges method is called or when closing the archive...">cmManual</a>, 
+<a name="l02955"></a><a class="code" href="classCZipArchive.html#aec499339bf3f20e7a198289b4288d7a4abb999d299acb20bd6995524b2c134be3">02955</a>   cmOnChange 
+<a name="l02956"></a>02956  };
+<a name="l02957"></a>02957 
+<a name="l02971"></a><a class="code" href="classCZipArchive.html#a28f18c652496e2599bd49d0f0648769d">02971</a>  <span class="keywordtype">void</span> SetCommitMode(<span class="keywordtype">int</span> iCommitMode = cmOnChange) 
+<a name="l02972"></a>02972  { 
+<a name="l02973"></a>02973   m_iCommitMode = iCommitMode;
+<a name="l02974"></a>02974  }
+<a name="l02975"></a>02975 
+<a name="l02989"></a><a class="code" href="classCZipArchive.html#a3adb7bec41b0cfb44871c297a85c592e">02989</a>  <span class="keywordtype">int</span> <a class="code" href="classCZipArchive.html#a3adb7bec41b0cfb44871c297a85c592e">GetCommitMode</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_iCommitMode;}
+<a name="l02990"></a>02990 
+<a name="l03012"></a>03012  <span class="keywordtype">bool</span> CommitChanges();
+<a name="l03013"></a>03013 
+<a name="l03025"></a><a class="code" href="classCZipArchive.html#a871adedb7077a464d52a2ab6ef36b4b7">03025</a>  <span class="keywordtype">bool</span> <a class="code" href="classCZipArchive.html#a871adedb7077a464d52a2ab6ef36b4b7">IsModified</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_centralDir.IsAnyFileModified();}
+<a name="l03026"></a>03026  
+<a name="l03037"></a>03037  <span class="keywordtype">bool</span> RemoveCentralDirectoryFromArchive();
+<a name="l03038"></a>03038 
+<a name="l03054"></a>03054  <span class="keywordtype">bool</span> ReadLocalHeader(ZIP_INDEX_TYPE uIndex);
+<a name="l03055"></a>03055 
+<a name="l03071"></a>03071  <span class="keywordtype">bool</span> OverwriteLocalHeader(ZIP_INDEX_TYPE uIndex);
+<a name="l03072"></a>03072 
+<a name="l03080"></a><a class="code" href="classCZipArchive.html#a53b9a02f389496fc4707a39036fc560a">03080</a>  <span class="keyword">const</span> <a class="code" href="classCZipCompressor.html">CZipCompressor</a>* GetCurrentCompressor()<span class="keyword"> const</span>
+<a name="l03081"></a>03081 <span class="keyword"> </span>{
+<a name="l03082"></a>03082   <span class="keywordflow">return</span> m_pCompressor;
+<a name="l03083"></a>03083  }
+<a name="l03084"></a>03084 
+<a name="l03097"></a><a class="code" href="classCZipArchive.html#a7bc5e2fdbda00dc96e237423e855af19">03097</a>  <span class="keywordtype">bool</span> CanModify(<span class="keywordtype">bool</span> bAllowNewSegmented = <span class="keyword">false</span>, <span class="keywordtype">bool</span> bNeedsClosed = <span class="keyword">true</span>)
+<a name="l03098"></a>03098  {
+<a name="l03099"></a>03099   <span class="keywordflow">if</span> (IsClosed())
+<a name="l03100"></a>03100   {
+<a name="l03101"></a>03101    ZIPTRACE(<span class="stringliteral">&quot;%s(%i) : ZipArchive is closed.\n&quot;</span>);
+<a name="l03102"></a>03102    <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l03103"></a>03103   }
+<a name="l03104"></a>03104 
+<a name="l03105"></a>03105   <span class="keywordflow">if</span> (m_storage.IsReadOnly())
+<a name="l03106"></a>03106   {
+<a name="l03107"></a>03107    <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l03108"></a>03108   }
+<a name="l03109"></a>03109   
+<a name="l03110"></a>03110   <span class="keywordflow">if</span> (m_storage.IsNewSegmented() &amp;&amp; !bAllowNewSegmented)
+<a name="l03111"></a>03111   {
+<a name="l03112"></a>03112    <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l03113"></a>03113   }
+<a name="l03114"></a>03114   
+<a name="l03115"></a>03115   <span class="keywordflow">if</span> (bNeedsClosed &amp;&amp; m_iFileOpened)
+<a name="l03116"></a>03116   {
+<a name="l03117"></a>03117    ZIPTRACE(<span class="stringliteral">&quot;%s(%i) : The file cannot be open during modifications.\n&quot;</span>);
+<a name="l03118"></a>03118    <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l03119"></a>03119   }
+<a name="l03120"></a>03120 
+<a name="l03121"></a>03121   <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l03122"></a>03122  }
+<a name="l03123"></a>03123 
+<a name="l03124"></a>03124  <span class="keywordtype">bool</span> IsPasswordSet()<span class="keyword"> const</span>
+<a name="l03125"></a>03125 <span class="keyword"> </span>{
+<a name="l03126"></a>03126   <span class="keywordflow">return</span> m_pszPassword.GetSize() &gt; 0;
+<a name="l03127"></a>03127  }
+<a name="l03128"></a>03128 
+<a name="l03129"></a>03129  
+<a name="l03140"></a>03140  <span class="keywordtype">bool</span> ResetCurrentVolume();
+<a name="l03141"></a>03141 
+<a name="l03154"></a>03154  <span class="keyword">static</span> <span class="keywordtype">bool</span> IsZipArchive(LPCTSTR lpszPathName);
+<a name="l03155"></a>03155 
+<a name="l03171"></a>03171  <span class="keyword">static</span> <span class="keywordtype">bool</span> IsZipArchive(CZipAbstractFile&amp; af, <span class="keywordtype">bool</span> bAutoClose = <span class="keyword">false</span>);
+<a name="l03172"></a>03172 
+<a name="l03179"></a><a class="code" href="classCZipArchive.html#a940810c83896365f88e4be14809674c9">03179</a>  <span class="keywordtype">bool</span> <a class="code" href="classCZipArchive.html#a940810c83896365f88e4be14809674c9">m_bRemoveDriveLetter</a>;
+<a name="l03180"></a>03180  
+<a name="l03181"></a>03181 <span class="keyword">protected</span>:
+<a name="l03182"></a>03182  
+<a name="l03190"></a><a class="code" href="classCZipArchive.html#ac93ea693b6cba8ceb429b73d3fad2ff5">03190</a>  <span class="keywordtype">void</span> ReadLocalHeaderInternal(ZIP_INDEX_TYPE uIndex)
+<a name="l03191"></a>03191  {
+<a name="l03192"></a>03192   <span class="comment">// update sizes of the local filename and the extra field - they may differ from the ones in the central directory</span>
+<a name="l03193"></a>03193   GetFileInfo(uIndex)-&gt;ReadLocal(&amp;m_centralDir);
+<a name="l03194"></a>03194  }
+<a name="l03195"></a>03195 
+<a name="l03208"></a>03208  <span class="keywordtype">bool</span> EncryptFilesInternal(CZipIndexesArray* pIndexes);
 <a name="l03209"></a>03209 
-<a name="l03221"></a>03221  <span class="keywordtype">bool</span> OpenNewFile(<a class="code" href="classCZipFileHeader.html">CZipFileHeader</a> &amp; header, <span class="keywordtype">int</span> iLevel, LPCTSTR lpszFilePath, ZIP_INDEX_TYPE uReplaceIndex);
-<a name="l03222"></a>03222  
-<a name="l03226"></a><a class="code" href="classCZipArchive.html#aa795b1019332361e82b4f09d4c09f4a4">03226</a>  ZipArchiveLib::CZipCallbackProvider <a class="code" href="classCZipArchive.html#aa795b1019332361e82b4f09d4c09f4a4">m_callbacks</a>;
-<a name="l03227"></a>03227  
-<a name="l03228"></a>03228 
-<a name="l03232"></a>03232  <span class="keywordtype">void</span> WriteCentralDirectory(<span class="keywordtype">bool</span> bFlush = <span class="keyword">true</span>);
-<a name="l03233"></a>03233 
-<a name="l03237"></a><a class="code" href="classCZipArchive.html#a63c15f0ac2da695bbf5b2abaaa1c63b9">03237</a>  <span class="keywordtype">bool</span> <a class="code" href="classCZipArchive.html#a63c15f0ac2da695bbf5b2abaaa1c63b9">m_bCaseSensitive</a>;
-<a name="l03238"></a>03238  
-<a name="l03239"></a>03239 
-<a name="l03244"></a><a class="code" href="classCZipArchive.html#a583ac1a566a2d990a633ed667da1c143">03244</a>  ZIPSTRINGCOMPARE <a class="code" href="classCZipArchive.html#a583ac1a566a2d990a633ed667da1c143">m_pZipCompare</a>;
-<a name="l03245"></a>03245 
+<a name="l03210"></a>03210 
+<a name="l03222"></a>03222  <span class="keywordtype">bool</span> OpenNewFile(<a class="code" href="classCZipFileHeader.html">CZipFileHeader</a> &amp; header, <span class="keywordtype">int</span> iLevel, LPCTSTR lpszFilePath, ZIP_INDEX_TYPE uReplaceIndex);
+<a name="l03223"></a>03223  
+<a name="l03227"></a><a class="code" href="classCZipArchive.html#aa795b1019332361e82b4f09d4c09f4a4">03227</a>  ZipArchiveLib::CZipCallbackProvider <a class="code" href="classCZipArchive.html#aa795b1019332361e82b4f09d4c09f4a4">m_callbacks</a>;
+<a name="l03228"></a>03228  
+<a name="l03229"></a>03229 
+<a name="l03233"></a>03233  <span class="keywordtype">void</span> WriteCentralDirectory(<span class="keywordtype">bool</span> bFlush = <span class="keyword">true</span>);
+<a name="l03234"></a>03234 
+<a name="l03238"></a><a class="code" href="classCZipArchive.html#a63c15f0ac2da695bbf5b2abaaa1c63b9">03238</a>  <span class="keywordtype">bool</span> <a class="code" href="classCZipArchive.html#a63c15f0ac2da695bbf5b2abaaa1c63b9">m_bCaseSensitive</a>;
+<a name="l03239"></a>03239  
+<a name="l03240"></a>03240 
+<a name="l03245"></a><a class="code" href="classCZipArchive.html#a583ac1a566a2d990a633ed667da1c143">03245</a>  ZIPSTRINGCOMPARE <a class="code" href="classCZipArchive.html#a583ac1a566a2d990a633ed667da1c143">m_pZipCompare</a>;
 <a name="l03246"></a>03246 
-<a name="l03252"></a><a class="code" href="classCZipArchive.html#a54baf3557f580c2db1577a3c3da98a2b">03252</a>  <a class="code" href="classCZipStorage.html">CZipStorage</a> <a class="code" href="classCZipArchive.html#a54baf3557f580c2db1577a3c3da98a2b">m_storage</a>;
-<a name="l03253"></a>03253 
-<a name="l03259"></a><a class="code" href="classCZipArchive.html#aee3ada39e4ec242778b433cfd887278e">03259</a>  <a class="code" href="classCZipCentralDir.html">CZipCentralDir</a> <a class="code" href="classCZipArchive.html#aee3ada39e4ec242778b433cfd887278e">m_centralDir</a>;
-<a name="l03260"></a>03260 
-<a name="l03264"></a><a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671">03264</a>  <span class="keyword">enum</span> <a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671">OpenFileType</a>
-<a name="l03265"></a>03265  {
-<a name="l03266"></a><a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671ad22f504670df3b8e7ceb8f7a37917378">03266</a>   extract = -1, 
-<a name="l03267"></a><a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671af4d8c9f91c22e297b77896ebdc52b239">03267</a>   <a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671af4d8c9f91c22e297b77896ebdc52b239" title="There is no file inside the archive opened.">nothing</a>,  
-<a name="l03268"></a><a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671a99445f88722247f1f8cbb185572a3542">03268</a>   compress  
-<a name="l03269"></a>03269  };
-<a name="l03270"></a>03270  
-<a name="l03274"></a><a class="code" href="classCZipArchive.html#a798fcb7bc9984133999dbd1c6e6823e5">03274</a>  <span class="keywordtype">int</span> <a class="code" href="classCZipArchive.html#a798fcb7bc9984133999dbd1c6e6823e5">m_iFileOpened</a>;
-<a name="l03275"></a>03275 
-<a name="l03279"></a><a class="code" href="classCZipArchive.html#a53e452ea83aa5d8d611062880b57ba5a">03279</a>  <span class="keywordtype">bool</span> <a class="code" href="classCZipArchive.html#a53e452ea83aa5d8d611062880b57ba5a">m_bAutoFinalize</a>;
-<a name="l03280"></a>03280 
-<a name="l03284"></a><a class="code" href="classCZipArchive.html#aa97444697499eb2c956744a7ac16f9e7">03284</a>  <span class="keywordtype">int</span> <a class="code" href="classCZipArchive.html#aa97444697499eb2c956744a7ac16f9e7">m_iCommitMode</a>;
-<a name="l03285"></a>03285 
-<a name="l03289"></a><a class="code" href="classCZipArchive.html#aa1895d5447111f55159aed88fa1f1d4d">03289</a>  CZipString <a class="code" href="classCZipArchive.html#aa1895d5447111f55159aed88fa1f1d4d">m_szRootPath</a>;
-<a name="l03290"></a>03290 
-<a name="l03294"></a><a class="code" href="classCZipArchive.html#a0fe6e4697b6a9e7e6f52011c66621936">03294</a>  CZipString <a class="code" href="classCZipArchive.html#a0fe6e4697b6a9e7e6f52011c66621936">m_szTempPath</a>;
-<a name="l03295"></a>03295 
+<a name="l03247"></a>03247 
+<a name="l03253"></a><a class="code" href="classCZipArchive.html#a54baf3557f580c2db1577a3c3da98a2b">03253</a>  <a class="code" href="classCZipStorage.html">CZipStorage</a> <a class="code" href="classCZipArchive.html#a54baf3557f580c2db1577a3c3da98a2b">m_storage</a>;
+<a name="l03254"></a>03254 
+<a name="l03260"></a><a class="code" href="classCZipArchive.html#aee3ada39e4ec242778b433cfd887278e">03260</a>  <a class="code" href="classCZipCentralDir.html">CZipCentralDir</a> <a class="code" href="classCZipArchive.html#aee3ada39e4ec242778b433cfd887278e">m_centralDir</a>;
+<a name="l03261"></a>03261 
+<a name="l03265"></a><a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671">03265</a>  <span class="keyword">enum</span> <a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671">OpenFileType</a>
+<a name="l03266"></a>03266  {
+<a name="l03267"></a><a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671ad22f504670df3b8e7ceb8f7a37917378">03267</a>   extract = -1, 
+<a name="l03268"></a><a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671af4d8c9f91c22e297b77896ebdc52b239">03268</a>   <a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671af4d8c9f91c22e297b77896ebdc52b239" title="There is no file inside the archive opened.">nothing</a>,  
+<a name="l03269"></a><a class="code" href="classCZipArchive.html#a50a0edbfe33ae586c7a119c93b326671a99445f88722247f1f8cbb185572a3542">03269</a>   compress  
+<a name="l03270"></a>03270  };
+<a name="l03271"></a>03271  
+<a name="l03275"></a><a class="code" href="classCZipArchive.html#a798fcb7bc9984133999dbd1c6e6823e5">03275</a>  <span class="keywordtype">int</span> <a class="code" href="classCZipArchive.html#a798fcb7bc9984133999dbd1c6e6823e5">m_iFileOpened</a>;
+<a name="l03276"></a>03276 
+<a name="l03280"></a><a class="code" href="classCZipArchive.html#a53e452ea83aa5d8d611062880b57ba5a">03280</a>  <span class="keywordtype">bool</span> <a class="code" href="classCZipArchive.html#a53e452ea83aa5d8d611062880b57ba5a">m_bAutoFinalize</a>;
+<a name="l03281"></a>03281 
+<a name="l03285"></a><a class="code" href="classCZipArchive.html#aa97444697499eb2c956744a7ac16f9e7">03285</a>  <span class="keywordtype">int</span> <a class="code" href="classCZipArchive.html#aa97444697499eb2c956744a7ac16f9e7">m_iCommitMode</a>;
+<a name="l03286"></a>03286 
+<a name="l03290"></a><a class="code" href="classCZipArchive.html#aa1895d5447111f55159aed88fa1f1d4d">03290</a>  CZipString <a class="code" href="classCZipArchive.html#aa1895d5447111f55159aed88fa1f1d4d">m_szRootPath</a>;
+<a name="l03291"></a>03291 
+<a name="l03295"></a><a class="code" href="classCZipArchive.html#a0fe6e4697b6a9e7e6f52011c66621936">03295</a>  CZipString <a class="code" href="classCZipArchive.html#a0fe6e4697b6a9e7e6f52011c66621936">m_szTempPath</a>;
 <a name="l03296"></a>03296 
-<a name="l03303"></a>03303  <span class="keywordtype">void</span> OpenInternal(<span class="keywordtype">int</span> iMode);
-<a name="l03304"></a>03304 
-<a name="l03315"></a>03315  <span class="keywordtype">void</span> InitOnOpen(<span class="keywordtype">int</span> iArchiveSystCompatib, <a class="code" href="classCZipCentralDir.html">CZipCentralDir</a>* pSource = NULL);
-<a name="l03316"></a>03316 
-<a name="l03320"></a><a class="code" href="classCZipArchive.html#a23a52208759f43b1efe57af59264a407">03320</a>  <span class="keywordtype">int</span> <a class="code" href="classCZipArchive.html#a23a52208759f43b1efe57af59264a407">m_iArchiveSystCompatib</a>;
-<a name="l03321"></a>03321 
-<a name="l03325"></a><a class="code" href="classCZipArchive.html#afd1df17f464a949ea40859bae5689e4a">03325</a>  CZipAutoBuffer <a class="code" href="classCZipArchive.html#afd1df17f464a949ea40859bae5689e4a">m_pszPassword</a>;
-<a name="l03326"></a>03326 
-<a name="l03332"></a>03332  <a class="code" href="classCZipFileHeader.html">CZipFileHeader</a>* CurrentFile();
-<a name="l03333"></a>03333 
-<a name="l03337"></a><a class="code" href="classCZipArchive.html#ae8d24271cb186f4db02064d82c9f6655">03337</a>  <span class="keywordtype">void</span> ClearCryptograph()
-<a name="l03338"></a>03338  {
-<a name="l03339"></a>03339   <span class="keywordflow">if</span> (m_pCryptograph)
-<a name="l03340"></a>03340   {
-<a name="l03341"></a>03341    <span class="keyword">delete</span> m_pCryptograph;
-<a name="l03342"></a>03342    m_pCryptograph = NULL;
-<a name="l03343"></a>03343   }
-<a name="l03344"></a>03344  }
-<a name="l03345"></a>03345 
-<a name="l03355"></a><a class="code" href="classCZipArchive.html#a008c35d0a4f148b88c5d2177ebab46ec">03355</a>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> CreateCryptograph(<span class="keywordtype">int</span> iEncryptionMethod)
-<a name="l03356"></a>03356  {
-<a name="l03357"></a>03357   <span class="keywordflow">if</span> (m_pCryptograph != NULL)
-<a name="l03358"></a>03358    <span class="keywordflow">if</span> (m_pCryptograph-&gt;CanHandle(iEncryptionMethod))
-<a name="l03359"></a>03359     <span class="keywordflow">return</span>;
-<a name="l03360"></a>03360 
-<a name="l03361"></a>03361   ClearCryptograph();
-<a name="l03362"></a>03362   m_pCryptograph = <a class="code" href="classCZipCryptograph.html#a67ea47605ae88bc06e0a07837505459e">CZipCryptograph::CreateCryptograph</a>(iEncryptionMethod);
-<a name="l03363"></a>03363  }
-<a name="l03364"></a>03364 
-<a name="l03368"></a><a class="code" href="classCZipArchive.html#a8650f1fa6f5eb19665d451921b27abca">03368</a>  <a class="code" href="classCZipCryptograph.html">CZipCryptograph</a>* <a class="code" href="classCZipArchive.html#a8650f1fa6f5eb19665d451921b27abca">m_pCryptograph</a>;
-<a name="l03369"></a>03369 
-<a name="l03373"></a><a class="code" href="classCZipArchive.html#a9054cd040e9a2915898b291f68728c4e">03373</a>  <span class="keywordtype">void</span> ClearCompressor()
-<a name="l03374"></a>03374  {
-<a name="l03375"></a>03375   <span class="keywordflow">if</span> (m_pCompressor)
-<a name="l03376"></a>03376   {
-<a name="l03377"></a>03377    <span class="keyword">delete</span> m_pCompressor;
-<a name="l03378"></a>03378    m_pCompressor = NULL;
-<a name="l03379"></a>03379   }
-<a name="l03380"></a>03380  }
-<a name="l03381"></a>03381 
-<a name="l03391"></a><a class="code" href="classCZipArchive.html#a5cf921a705ed1f79304880ba7c375660">03391</a>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> CreateCompressor(WORD uMethod)
-<a name="l03392"></a>03392  {
-<a name="l03393"></a>03393   <span class="keywordflow">if</span> (m_pCompressor == NULL || !m_pCompressor-&gt;CanProcess(uMethod))
-<a name="l03394"></a>03394   {
-<a name="l03395"></a>03395    ClearCompressor();
-<a name="l03396"></a>03396    m_pCompressor = <a class="code" href="classCZipCompressor.html#adb9fc500cbf2e53fba533e615d8e9b29">CZipCompressor::CreateCompressor</a>(uMethod, &amp;m_storage);
-<a name="l03397"></a>03397   }
-<a name="l03398"></a>03398   m_pCompressor-&gt;UpdateOptions(m_compressorsOptions);
-<a name="l03399"></a>03399  }
-<a name="l03400"></a>03400 
-<a name="l03404"></a><a class="code" href="classCZipArchive.html#acb4fdfe54136a786dcf46c225bcdc93d">03404</a>  <a class="code" href="classCZipCompressor.html">CZipCompressor</a>* <a class="code" href="classCZipArchive.html#acb4fdfe54136a786dcf46c225bcdc93d">m_pCompressor</a>;
-<a name="l03405"></a>03405 
-<a name="l03409"></a><a class="code" href="classCZipArchive.html#a4982e7da972267e0cd5db1e5b41094eb">03409</a>  <span class="keywordtype">int</span> <a class="code" href="classCZipArchive.html#a4982e7da972267e0cd5db1e5b41094eb">m_iEncryptionMethod</a>;
-<a name="l03410"></a>03410 
-<a name="l03414"></a><a class="code" href="classCZipArchive.html#a135fd4a99a8befe6e7f38301e35e83a9">03414</a>  WORD <a class="code" href="classCZipArchive.html#a135fd4a99a8befe6e7f38301e35e83a9">m_uCompressionMethod</a>;
-<a name="l03415"></a>03415  
-<a name="l03416"></a>03416 
-<a name="l03425"></a><a class="code" href="classCZipArchive.html#a2c10424365afc7d073e53bc1e120c410">03425</a>  CZipAutoBuffer <a class="code" href="classCZipArchive.html#a2c10424365afc7d073e53bc1e120c410">m_pBuffer</a>;
-<a name="l03426"></a>03426 
-<a name="l03435"></a><a class="code" href="classCZipArchive.html#aeb1fe32b8b4218244c88f0eb0d52688e">03435</a>  DWORD <a class="code" href="classCZipArchive.html#aeb1fe32b8b4218244c88f0eb0d52688e">m_iBufferSize</a>;
-<a name="l03436"></a>03436 
-<a name="l03437"></a>03437 <span class="preprocessor">#ifdef _ZIP_UNICODE_CUSTOM</span>
-<a name="l03438"></a>03438 <span class="preprocessor"></span>
-<a name="l03441"></a><a class="code" href="classCZipArchive.html#ad0613d8a6210b68a6569b45140a2e9a6">03441</a>  <a class="code" href="classCZipStringStoreSettings.html">CZipStringStoreSettings</a> <a class="code" href="classCZipArchive.html#ad0613d8a6210b68a6569b45140a2e9a6">m_stringSettings</a>;
-<a name="l03442"></a>03442 <span class="preprocessor">#endif</span>
-<a name="l03443"></a>03443 <span class="preprocessor"></span> 
-<a name="l03444"></a>03444 <span class="keyword">private</span>:
-<a name="l03445"></a>03445  <a class="code" href="classCZipCompressor_1_1COptionsMap.html">CZipCompressor::COptionsMap</a> m_compressorsOptions;
-<a name="l03446"></a>03446  <span class="keywordtype">void</span> Initialize();
-<a name="l03447"></a>03447  <span class="keywordtype">void</span> MakeSpaceForReplace(ZIP_INDEX_TYPE iReplaceIndex, ZIP_SIZE_TYPE uTotal, LPCTSTR lpszFileName);
-<a name="l03448"></a>03448 
-<a name="l03449"></a>03449  <span class="keywordtype">void</span> MovePackedFiles(ZIP_SIZE_TYPE uStartOffset, ZIP_SIZE_TYPE uEndOffset, ZIP_SIZE_TYPE uMoveBy, <a class="code" href="structCZipActionCallback.html">CZipActionCallback</a>* pCallback, <span class="keywordtype">bool</span> bForward = <span class="keyword">false</span>, <span class="keywordtype">bool</span> bLastCall = <span class="keyword">true</span>);
-<a name="l03450"></a>03450  
-<a name="l03451"></a>03451  <span class="keywordtype">bool</span> RemoveLast(<span class="keywordtype">bool</span> bRemoveAnyway = <span class="keyword">false</span>);
-<a name="l03452"></a>03452 
-<a name="l03453"></a>03453  <span class="keywordtype">bool</span> GetFromArchive(<a class="code" href="classCZipArchive.html" title="Represents a zip archive file.">CZipArchive</a>&amp; zip, ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewFileName, ZIP_INDEX_TYPE iReplaceIndex, <span class="keywordtype">bool</span> bKeepSystComp, <a class="code" href="structCZipActionCallback.html">CZipActionCallback</a>* pCallback);
-<a name="l03454"></a>03454 
-<a name="l03455"></a>03455  <span class="keywordtype">bool</span> UpdateReplaceIndex(ZIP_INDEX_TYPE&amp; iReplaceIndex);
-<a name="l03456"></a>03456  
-<a name="l03457"></a>03457  <span class="keywordtype">void</span> ThrowError(<span class="keywordtype">int</span> err) <span class="keyword">const</span>;  
-<a name="l03458"></a>03458 
-<a name="l03459"></a>03459  <span class="keywordtype">void</span> InitBuffer()
-<a name="l03460"></a>03460  {
-<a name="l03461"></a>03461   m_pBuffer.Allocate(m_iBufferSize);
-<a name="l03462"></a>03462  }
-<a name="l03463"></a>03463  <span class="keywordtype">void</span> ReleaseBuffer()
-<a name="l03464"></a>03464  {
-<a name="l03465"></a>03465   m_pBuffer.Release();
-<a name="l03466"></a>03466  }
-<a name="l03467"></a>03467 };
-<a name="l03468"></a>03468 
-<a name="l03469"></a>03469 <span class="preprocessor">#if (_MSC_VER &gt; 1000) &amp;&amp; (defined ZIP_HAS_DLL)</span>
-<a name="l03470"></a>03470 <span class="preprocessor"></span><span class="preprocessor"> #pragma warning (pop)</span>
-<a name="l03471"></a>03471 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l03472"></a>03472 <span class="preprocessor"></span>
-<a name="l03473"></a>03473 <span class="preprocessor">#endif // !defined(ZIPARCHIVE_ZIPARCHIVE_DOT_H)</span>
+<a name="l03297"></a>03297 
+<a name="l03304"></a>03304  <span class="keywordtype">void</span> OpenInternal(<span class="keywordtype">int</span> iMode);
+<a name="l03305"></a>03305 
+<a name="l03316"></a>03316  <span class="keywordtype">void</span> InitOnOpen(<span class="keywordtype">int</span> iArchiveSystCompatib, <a class="code" href="classCZipCentralDir.html">CZipCentralDir</a>* pSource = NULL);
+<a name="l03317"></a>03317 
+<a name="l03321"></a><a class="code" href="classCZipArchive.html#a23a52208759f43b1efe57af59264a407">03321</a>  <span class="keywordtype">int</span> <a class="code" href="classCZipArchive.html#a23a52208759f43b1efe57af59264a407">m_iArchiveSystCompatib</a>;
+<a name="l03322"></a>03322 
+<a name="l03326"></a><a class="code" href="classCZipArchive.html#afd1df17f464a949ea40859bae5689e4a">03326</a>  CZipAutoBuffer <a class="code" href="classCZipArchive.html#afd1df17f464a949ea40859bae5689e4a">m_pszPassword</a>;
+<a name="l03327"></a>03327 
+<a name="l03333"></a>03333  <a class="code" href="classCZipFileHeader.html">CZipFileHeader</a>* CurrentFile();
+<a name="l03334"></a>03334 
+<a name="l03338"></a><a class="code" href="classCZipArchive.html#ae8d24271cb186f4db02064d82c9f6655">03338</a>  <span class="keywordtype">void</span> ClearCryptograph()
+<a name="l03339"></a>03339  {
+<a name="l03340"></a>03340   <span class="keywordflow">if</span> (m_pCryptograph)
+<a name="l03341"></a>03341   {
+<a name="l03342"></a>03342    <span class="keyword">delete</span> m_pCryptograph;
+<a name="l03343"></a>03343    m_pCryptograph = NULL;
+<a name="l03344"></a>03344   }
+<a name="l03345"></a>03345  }
+<a name="l03346"></a>03346 
+<a name="l03356"></a><a class="code" href="classCZipArchive.html#a008c35d0a4f148b88c5d2177ebab46ec">03356</a>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> CreateCryptograph(<span class="keywordtype">int</span> iEncryptionMethod)
+<a name="l03357"></a>03357  {
+<a name="l03358"></a>03358   <span class="keywordflow">if</span> (m_pCryptograph != NULL)
+<a name="l03359"></a>03359    <span class="keywordflow">if</span> (m_pCryptograph-&gt;CanHandle(iEncryptionMethod))
+<a name="l03360"></a>03360     <span class="keywordflow">return</span>;
+<a name="l03361"></a>03361 
+<a name="l03362"></a>03362   ClearCryptograph();
+<a name="l03363"></a>03363   m_pCryptograph = <a class="code" href="classCZipCryptograph.html#a67ea47605ae88bc06e0a07837505459e">CZipCryptograph::CreateCryptograph</a>(iEncryptionMethod);
+<a name="l03364"></a>03364  }
+<a name="l03365"></a>03365 
+<a name="l03369"></a><a class="code" href="classCZipArchive.html#a8650f1fa6f5eb19665d451921b27abca">03369</a>  <a class="code" href="classCZipCryptograph.html">CZipCryptograph</a>* <a class="code" href="classCZipArchive.html#a8650f1fa6f5eb19665d451921b27abca">m_pCryptograph</a>;
+<a name="l03370"></a>03370 
+<a name="l03374"></a><a class="code" href="classCZipArchive.html#a9054cd040e9a2915898b291f68728c4e">03374</a>  <span class="keywordtype">void</span> ClearCompressor()
+<a name="l03375"></a>03375  {
+<a name="l03376"></a>03376   <span class="keywordflow">if</span> (m_pCompressor)
+<a name="l03377"></a>03377   {
+<a name="l03378"></a>03378    <span class="keyword">delete</span> m_pCompressor;
+<a name="l03379"></a>03379    m_pCompressor = NULL;
+<a name="l03380"></a>03380   }
+<a name="l03381"></a>03381  }
+<a name="l03382"></a>03382 
+<a name="l03392"></a><a class="code" href="classCZipArchive.html#a5cf921a705ed1f79304880ba7c375660">03392</a>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> CreateCompressor(WORD uMethod)
+<a name="l03393"></a>03393  {
+<a name="l03394"></a>03394   <span class="keywordflow">if</span> (m_pCompressor == NULL || !m_pCompressor-&gt;CanProcess(uMethod))
+<a name="l03395"></a>03395   {
+<a name="l03396"></a>03396    ClearCompressor();
+<a name="l03397"></a>03397    m_pCompressor = <a class="code" href="classCZipCompressor.html#adb9fc500cbf2e53fba533e615d8e9b29">CZipCompressor::CreateCompressor</a>(uMethod, &amp;m_storage);
+<a name="l03398"></a>03398   }
+<a name="l03399"></a>03399   m_pCompressor-&gt;UpdateOptions(m_compressorsOptions);
+<a name="l03400"></a>03400  }
+<a name="l03401"></a>03401 
+<a name="l03405"></a><a class="code" href="classCZipArchive.html#acb4fdfe54136a786dcf46c225bcdc93d">03405</a>  <a class="code" href="classCZipCompressor.html">CZipCompressor</a>* <a class="code" href="classCZipArchive.html#acb4fdfe54136a786dcf46c225bcdc93d">m_pCompressor</a>;
+<a name="l03406"></a>03406 
+<a name="l03410"></a><a class="code" href="classCZipArchive.html#a4982e7da972267e0cd5db1e5b41094eb">03410</a>  <span class="keywordtype">int</span> <a class="code" href="classCZipArchive.html#a4982e7da972267e0cd5db1e5b41094eb">m_iEncryptionMethod</a>;
+<a name="l03411"></a>03411 
+<a name="l03415"></a><a class="code" href="classCZipArchive.html#a135fd4a99a8befe6e7f38301e35e83a9">03415</a>  WORD <a class="code" href="classCZipArchive.html#a135fd4a99a8befe6e7f38301e35e83a9">m_uCompressionMethod</a>;
+<a name="l03416"></a>03416  
+<a name="l03417"></a>03417 
+<a name="l03426"></a><a class="code" href="classCZipArchive.html#a2c10424365afc7d073e53bc1e120c410">03426</a>  CZipAutoBuffer <a class="code" href="classCZipArchive.html#a2c10424365afc7d073e53bc1e120c410">m_pBuffer</a>;
+<a name="l03427"></a>03427 
+<a name="l03436"></a><a class="code" href="classCZipArchive.html#aeb1fe32b8b4218244c88f0eb0d52688e">03436</a>  DWORD <a class="code" href="classCZipArchive.html#aeb1fe32b8b4218244c88f0eb0d52688e">m_iBufferSize</a>;
+<a name="l03437"></a>03437 
+<a name="l03438"></a>03438 <span class="preprocessor">#ifdef _ZIP_UNICODE_CUSTOM</span>
+<a name="l03439"></a>03439 <span class="preprocessor"></span>
+<a name="l03442"></a><a class="code" href="classCZipArchive.html#ad0613d8a6210b68a6569b45140a2e9a6">03442</a>  <a class="code" href="classCZipStringStoreSettings.html">CZipStringStoreSettings</a> <a class="code" href="classCZipArchive.html#ad0613d8a6210b68a6569b45140a2e9a6">m_stringSettings</a>;
+<a name="l03443"></a>03443 <span class="preprocessor">#endif</span>
+<a name="l03444"></a>03444 <span class="preprocessor"></span> 
+<a name="l03445"></a>03445 <span class="keyword">private</span>:
+<a name="l03446"></a>03446  <a class="code" href="classCZipCompressor_1_1COptionsMap.html">CZipCompressor::COptionsMap</a> m_compressorsOptions;
+<a name="l03447"></a>03447  <span class="keywordtype">void</span> Initialize();
+<a name="l03448"></a>03448  <span class="keywordtype">void</span> MakeSpaceForReplace(ZIP_INDEX_TYPE iReplaceIndex, ZIP_SIZE_TYPE uTotal, LPCTSTR lpszFileName);
+<a name="l03449"></a>03449 
+<a name="l03450"></a>03450  <span class="keywordtype">void</span> MovePackedFiles(ZIP_SIZE_TYPE uStartOffset, ZIP_SIZE_TYPE uEndOffset, ZIP_SIZE_TYPE uMoveBy, <a class="code" href="structCZipActionCallback.html">CZipActionCallback</a>* pCallback, <span class="keywordtype">bool</span> bForward = <span class="keyword">false</span>, <span class="keywordtype">bool</span> bLastCall = <span class="keyword">true</span>);
+<a name="l03451"></a>03451  
+<a name="l03452"></a>03452  <span class="keywordtype">bool</span> RemoveLast(<span class="keywordtype">bool</span> bRemoveAnyway = <span class="keyword">false</span>);
+<a name="l03453"></a>03453 
+<a name="l03454"></a>03454  <span class="keywordtype">bool</span> GetFromArchive(<a class="code" href="classCZipArchive.html" title="Represents a zip archive file.">CZipArchive</a>&amp; zip, ZIP_INDEX_TYPE uIndex, LPCTSTR lpszNewFileName, ZIP_INDEX_TYPE iReplaceIndex, <span class="keywordtype">bool</span> bKeepSystComp, <a class="code" href="structCZipActionCallback.html">CZipActionCallback</a>* pCallback);
+<a name="l03455"></a>03455 
+<a name="l03456"></a>03456  <span class="keywordtype">bool</span> UpdateReplaceIndex(ZIP_INDEX_TYPE&amp; iReplaceIndex);
+<a name="l03457"></a>03457  
+<a name="l03458"></a>03458  <span class="keywordtype">void</span> ThrowError(<span class="keywordtype">int</span> err, LPCTSTR lpszFilePath = NULL) <span class="keyword">const</span>;  
+<a name="l03459"></a>03459 
+<a name="l03460"></a>03460  <span class="keywordtype">void</span> InitBuffer()
+<a name="l03461"></a>03461  {
+<a name="l03462"></a>03462   m_pBuffer.Allocate(m_iBufferSize);
+<a name="l03463"></a>03463  }
+<a name="l03464"></a>03464  <span class="keywordtype">void</span> ReleaseBuffer()
+<a name="l03465"></a>03465  {
+<a name="l03466"></a>03466   m_pBuffer.Release();
+<a name="l03467"></a>03467  }
+<a name="l03468"></a>03468 };
+<a name="l03469"></a>03469 
+<a name="l03470"></a>03470 <span class="preprocessor">#if (_MSC_VER &gt; 1000) &amp;&amp; (defined ZIP_HAS_DLL)</span>
+<a name="l03471"></a>03471 <span class="preprocessor"></span><span class="preprocessor"> #pragma warning (pop)</span>
+<a name="l03472"></a>03472 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l03473"></a>03473 <span class="preprocessor"></span>
+<a name="l03474"></a>03474 <span class="preprocessor">#endif // !defined(ZIPARCHIVE_ZIPARCHIVE_DOT_H)</span>
 </pre></div></div>
 </div>
 <hr><address><small>
-The ZipArchive Library Copyright &copy;&nbsp;2000 - 2010 Artpol Software - Tadeusz Dracz. Generated at Wed Nov 3 2010 11:11:31.
+The ZipArchive Library Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz. Generated at Tue Jun 28 2011 09:45:05.
 </small></address>
 </body>
 </html>

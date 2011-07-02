@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2010 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -2828,9 +2828,10 @@ public:
 		checkLocalCRC			= 0x0008,	///< Verifies that the CRC written in a local header matches the CRC written in a central header. 
 		checkLocalFlag			= 0x0010,	///< Verifies that the general purpose flag value written in a local header matches its counterpart written in a central header. 
 		checkLocalAll			= checkLocalMethod | checkLocalSizes | checkLocalCRC | checkLocalFlag, ///< Examines all possible inconsistencies between central and local headers. These verifications are performed when opening a file for extraction. 
-		checkDataDescriptor		= 0x0100, ///< Verifies that values written in extra data descriptor match values written in central header. This verification is performed when closing a file after extraction, but only if a file has a data descriptor (see CZipFileHeader::IsDataDescriptor()). Ignored by default (it is consistent with behavior of popular archivers).
-		checkVolumeEntries		= 0x0200, ///< Verifies that the number of volumes and entries are correctly reported.
-		checkAll				= checkCRC | checkLocalAll | checkDataDescriptor | checkVolumeEntries, ///< Logical sum of all possible verifications.
+		checkDataDescriptor		= 0x0100,	///< Verifies that values written in extra data descriptor match values written in central header. This verification is performed when closing a file after extraction, but only if a file has a data descriptor (see CZipFileHeader::IsDataDescriptor()). Ignored by default (it is consistent with behavior of popular archivers).
+		checkVolumeEntries		= 0x0200,	///< Verifies that the number of volumes and entries are correctly reported.
+		checkDecryptionVerifier = 0x0400,	///< Verifies control bytes during CRC32 and AES decryption initialization.
+		checkAll				= checkCRC | checkLocalAll | checkDataDescriptor | checkVolumeEntries | checkDecryptionVerifier, ///< Logical sum of all possible verifications.
 		checkIgnoredByDefault	= checkDataDescriptor | checkVolumeEntries ///< Checks that are ignored by default by the ZipArchive Library
 	};
 
@@ -3454,7 +3455,7 @@ private:
 
 	bool UpdateReplaceIndex(ZIP_INDEX_TYPE& iReplaceIndex);
 	
-	void ThrowError(int err) const;		
+	void ThrowError(int err, LPCTSTR lpszFilePath = NULL) const;		
 
 	void InitBuffer()
 	{
