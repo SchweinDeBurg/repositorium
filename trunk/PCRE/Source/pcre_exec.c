@@ -969,7 +969,7 @@ for (;;)
         ecode += GET(ecode, 1);
         if (*ecode != OP_ALT) break; 
         }
-        
+
       if (!matched_once)
         { 
         md->offset_vector[offset] = save_offset1;
@@ -1018,6 +1018,7 @@ for (;;)
         eptrb, RM48);
       if (rrc == MATCH_KETRPOS)
         {
+        offset_top = md->end_offset_top;
         eptr = md->end_match_ptr;
         ecode = md->start_code + code_offset; 
         matched_once = TRUE; 
