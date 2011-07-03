@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 #include "BaseLibCompressor.h"
 
@@ -30,7 +50,9 @@ void CBaseLibCompressor::EmptyPtrList()
 		// if some memory hasn't been freed due to an error in zlib, so free it now
 		CZipPtrListIter iter = m_list.GetHeadPosition();
 		while (m_list.IteratorValid(iter))
-			delete[] (char*) m_list.GetNext(iter);
+		{
+			delete[] (char*)m_list.GetNext(iter);
+		}
 	}
 	m_list.RemoveAll();
 }

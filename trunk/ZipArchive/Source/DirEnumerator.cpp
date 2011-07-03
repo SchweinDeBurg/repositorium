@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 
 #if defined(_MSC_VER) && _MSC_VER < 1300
@@ -103,15 +123,17 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 			{
 				struct dirent* entry = readdir(dp);
 				if (!entry)
+				{
 					break;
+				}
 				CZipString path(m_szCurrentDirectory + entry->d_name);
-	#if !defined __APPLE__ && !defined __CYGWIN__
+#if !defined __APPLE__ && !defined __CYGWIN__
 				struct stat64 sStats;
 				if (stat64(path, &sStats) == -1)
-	#else
+#else
 				struct stat sStats;
 				if (stat(path, &sStats) == -1)
-	#endif
+#endif
 					continue;
 
 				LPCTSTR name = entry->d_name;
@@ -128,7 +150,7 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 #else
 		long hFile;
 #endif
-		if( (hFile = _tfindfirsti64( (LPTSTR)(LPCTSTR)szFullFileName, &ffInfo )) != -1L )
+		if ((hFile = _tfindfirsti64((LPTSTR)(LPCTSTR)szFullFileName, &ffInfo)) != -1L)
 #else
 		WIN32_FIND_DATA wfd = { 0 };
 		HANDLE hFile = INVALID_HANDLE_VALUE;
@@ -151,11 +173,15 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 				if (ZipPlatform::IsDirectory(info.m_uAttributes))
 				{
 					if (!m_bRecursive || IsDots(name))
+					{
 						continue;
+					}
 					isDir = true;
 				}
 				else
+				{
 					isDir = false;
+				}
 
 #ifdef ZIP_ENUMERATOR_FOR_GNUC
 				info.m_uSize  = (ZIP_FILE_USIZE)sStats.st_size;
@@ -180,22 +206,32 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 				{
 					bool bAllow;
 					if (filter.HandlesFile(info))
+					{
 						bAllow = filter.Evaluate(path, name, info) && Process(path, info);
+					}
 					else
 						// examine directory, if the filter cannot decide
+					{
 						bAllow = true;
+					}
 
 					if (bAllow)
+					{
 						dirs.push(path);
+					}
 				}
 				else
 				{
 					bool bAllow;
 					if (filter.HandlesFile(info))
+					{
 						bAllow = filter.Evaluate(path, name, info);
+					}
 					else
 						// skip file, if the filter cannot decide
+					{
 						bAllow = false;
+					}
 
 					if (bAllow && !Process(path, info))
 					{
@@ -221,7 +257,7 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 #endif
 		ExitDirectory();
 	}
-	while(!dirs.empty() && ret);
+	while (!dirs.empty() && ret);
 	OnEnumerationEnd(ret);
 	return ret;
 }

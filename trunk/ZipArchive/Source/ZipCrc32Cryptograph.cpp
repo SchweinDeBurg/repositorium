@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 #include "ZipCrc32Cryptograph.h"
 
@@ -45,7 +65,9 @@ void CZipCrc32Cryptograph::InitEncode(CZipAutoBuffer& password, CZipFileHeader& 
 		int t1 = rand();
 		c = (char)((t1 >> 6) & 0xFF);
 		if (!c)
+		{
 			c = (char)(t1 & 0xFF);
+		}
 		CryptEncode(c);
 		buffer[i] = c;
 
@@ -67,7 +89,9 @@ void CZipCrc32Cryptograph::CryptInitKeys(CZipAutoBuffer& password)
 	m_keys[1] = 591751049L;
 	m_keys[2] = 878082192L;
 	for (DWORD i = 0; i < password.GetSize(); i++)
+	{
 		CryptUpdateKeys(password[i]);
+	}
 }
 
 void CZipCrc32Cryptograph::CryptUpdateKeys(char c)

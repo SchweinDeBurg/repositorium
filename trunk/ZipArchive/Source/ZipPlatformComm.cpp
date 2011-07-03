@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 #include "ZipFile.h"
 #include "ZipPlatform.h"
@@ -32,13 +52,18 @@ bool ZipPlatform::ForceDirectory(LPCTSTR lpDirectory)
 	CZipString szDirectory = lpDirectory;
 	szDirectory.TrimRight(CZipPathComponent::m_cSeparator);
 	CZipPathComponent zpc(szDirectory);
-	if ((zpc.GetFilePath().Compare((LPCTSTR)szDirectory)) == 0 ||
-		(FileExists(szDirectory) == -1))
+	if ((zpc.GetFilePath().Compare((LPCTSTR)szDirectory)) == 0 || (FileExists(szDirectory) == -1))
+	{
 		return true;
+	}
 	if (!ForceDirectory(zpc.GetFilePath()))
+	{
 		return false;
+	}
 	if (!CreateNewDirectory(szDirectory))
+	{
 		return false;
+	}
 	return true;
 }
 
@@ -46,7 +71,9 @@ bool ZipPlatform::GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize)
 {
 	CZipFile f;
 	if (!f.Open(lpszFileName, CZipFile::modeRead | CZipFile::shareDenyWrite, false))
+	{
 		return false;
+	}
 	bool ret;
 	try
 	{
@@ -54,10 +81,12 @@ bool ZipPlatform::GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize)
 		// the file may be too large if zip64 is not enabled
 		ret = size <= ZIP_SIZE_TYPE(-1);
 		if (ret)
+		{
 			dSize = (ZIP_SIZE_TYPE)size;
+		}
 	}
 #if defined(_ZIP_IMPL_MFC)
-	catch(CZipBaseException* e)
+	catch (CZipBaseException* e)
 	{
 		e->Delete();
 		ret = false;
@@ -68,7 +97,7 @@ bool ZipPlatform::GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize)
 		ret = false;
 	}
 #else
-	catch(CZipBaseException e)
+	catch (CZipBaseException e)
 	{
 		ret = false;
 	}
@@ -79,7 +108,7 @@ bool ZipPlatform::GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize)
 		f.Close();
 	}
 #if defined(_ZIP_IMPL_MFC)
-	catch(CZipBaseException* e)
+	catch (CZipBaseException* e)
 	{
 		e->Delete();
 	}
@@ -89,7 +118,7 @@ bool ZipPlatform::GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize)
 		ret = false;
 	}
 #else
-	catch(CZipBaseException e)
+	catch (CZipBaseException e)
 	{
 	}
 #endif

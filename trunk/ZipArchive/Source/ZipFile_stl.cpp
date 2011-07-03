@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 
 #if (defined _ZIP_IMPL_STL && (!defined _ZIP_FILE_IMPLEMENTATION || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_DEFAULT)) || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
@@ -57,7 +77,9 @@ ZIP_FILE_USIZE CZipFile::GetLength() const
 	lCur = (ZIP_SIZE_TYPE)_lseeki64(m_hFile, 0, current);
 #endif
 	if (lCur == (ZIP_SIZE_TYPE)-1)
+	{
 		ThrowError();
+	}
 #ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
 	lLen = (ZIP_SIZE_TYPE)_lseek(m_hFile, 0, end);
 #else
@@ -72,7 +94,9 @@ ZIP_FILE_USIZE CZipFile::GetLength() const
 #endif
 
 	if (err || lLen == (ZIP_SIZE_TYPE)-1)
+	{
 		ThrowError();
+	}
 	return lLen;
 
 }
@@ -81,7 +105,9 @@ ZIP_FILE_USIZE CZipFile::GetLength() const
 bool CZipFile::Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow)
 {
 	if (!IsClosed())
+	{
 		Close();
+	}
 
 #ifdef O_BINARY
 	UINT iNewFlags = O_BINARY;
@@ -107,17 +133,27 @@ bool CZipFile::Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow)
 	}
 
 	if (openFlags & modeCreate)
+	{
 		iNewFlags |= O_CREAT;
+	}
 
 	if (!(openFlags & modeNoTruncate) && !bReadOnly)
+	{
 		iNewFlags |= O_TRUNC;
+	}
 
 	m_hFile = ZipPlatform::OpenFile(lpszFileName, iNewFlags, openFlags & 0x70);
 	if (m_hFile == -1)
+	{
 		if (bThrow)
+		{
 			CZipException::Throw(errno, lpszFileName);
+		}
 		else
+		{
 			return false;
+		}
+	}
 	m_szFileName = lpszFileName;
 	return true;
 }
@@ -135,19 +171,21 @@ ZIP_FILE_USIZE CZipFile::GetPosition() const
 {
 #ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
 	#ifndef __GNUC__
-		ZIP_FILE_USIZE ret = _tell(m_hFile);
+	ZIP_FILE_USIZE ret = _tell(m_hFile);
 	#else
-		ZIP_FILE_USIZE ret = lseek(m_hFile, 0, SEEK_CUR);
+	ZIP_FILE_USIZE ret = lseek(m_hFile, 0, SEEK_CUR);
 	#endif
 #else
 	#ifndef __GNUC__
-		ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)_telli64(m_hFile);
+	ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)_telli64(m_hFile);
 	#else
-		ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)lseek64(m_hFile, 0, SEEK_CUR);
+	ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)lseek64(m_hFile, 0, SEEK_CUR);
 	#endif
 #endif
 	if (ret == (ZIP_FILE_USIZE)-1)
+	{
 		ThrowError();
+	}
 	return ret;
 }
 
@@ -160,16 +198,22 @@ ZIP_FILE_USIZE CZipFile::Seek(ZIP_FILE_SIZE dOff, int nFrom)
 	ZIP_FILE_USIZE ret = (ZIP_FILE_USIZE)_lseeki64(m_hFile, dOff, nFrom);
 #endif
 	if (ret == (ZIP_FILE_USIZE)-1)
+	{
 		ThrowError();
+	}
 	return (ZIP_FILE_USIZE)ret;
 }
 
 void CZipFile::Close()
 {
 	if (IsClosed())
+	{
 		return;
+	}
 	if (_close(m_hFile) != 0)
+	{
 		ThrowError();
+	}
 	else
 	{
 		m_szFileName.Empty();
@@ -180,14 +224,18 @@ void CZipFile::Close()
 void CZipFile::Flush()
 {
 	if (!ZipPlatform::FlushFile(m_hFile))
+	{
 		ThrowError();
+	}
 }
 
 CZipFile::operator HANDLE()
 {
 	intptr_t fh = ZipPlatform::GetFileSystemHandle(m_hFile);
 	if (fh == -1)
+	{
 		ThrowError();
+	}
 	return (HANDLE)fh;
 }
 
@@ -198,10 +246,12 @@ void CZipFile::Write(const void* lpBuf, UINT nCount)
 		return;
 	}
 	if (_write(m_hFile, lpBuf, nCount) != (int) nCount)
+	{
 		ThrowError();
+	}
 }
 
-UINT CZipFile::Read(void *lpBuf, UINT nCount)
+UINT CZipFile::Read(void* lpBuf, UINT nCount)
 {
 	if (nCount == 0)
 	{
@@ -210,7 +260,9 @@ UINT CZipFile::Read(void *lpBuf, UINT nCount)
 	errno = 0;
 	int ret = _read(m_hFile, lpBuf, nCount);
 	if (ret < (int) nCount && errno != 0)
+	{
 		ThrowError();
+	}
 	return ret;
 
 }

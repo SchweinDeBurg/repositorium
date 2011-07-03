@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 
 #if _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_WIN
@@ -45,7 +65,9 @@ void CZipFile::ThrowError() const
 bool CZipFile::Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow)
 {
 	if (!IsClosed())
+	{
 		Close();
+	}
 
 	CZipString fileName = lpszFileName;
 	if (fileName.IsEmpty())
@@ -112,9 +134,13 @@ bool CZipFile::Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow)
 	if (m_hFile == INVALID_HANDLE_VALUE)
 	{
 		if (bThrow)
+		{
 			ThrowError();
+		}
 		else
+		{
 			return false;
+		}
 	}
 
 	m_szFileName = lpszFileName;
@@ -203,7 +229,9 @@ ZIP_FILE_USIZE CZipFile::Seek(ZIP_FILE_SIZE dOff, int nFrom)
 void CZipFile::Close()
 {
 	if (IsClosed())
+	{
 		return;
+	}
 	bool ok = ::CloseHandle(m_hFile) == TRUE;
 	m_hFile = INVALID_HANDLE_VALUE;
 	m_szFileName.Empty();
@@ -242,7 +270,7 @@ void CZipFile::Write(const void* lpBuf, UINT nCount)
 	}
 }
 
-UINT CZipFile::Read(void *lpBuf, UINT nCount)
+UINT CZipFile::Read(void* lpBuf, UINT nCount)
 {
 	ASSERT(m_hFile != INVALID_HANDLE_VALUE);
 	if (nCount == 0)
