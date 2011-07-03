@@ -85,8 +85,8 @@ namespace ZipArchiveLib
 			\param pStorage
 				The current storage object.
 		 */
-		CBaseLibCompressor(CZipStorage* pStorage)
-			: CZipCompressor(pStorage)
+		CBaseLibCompressor(CZipStorage* pStorage):
+		CZipCompressor(pStorage)
 		{
 		}
 

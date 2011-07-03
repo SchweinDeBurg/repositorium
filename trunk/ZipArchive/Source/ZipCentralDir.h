@@ -89,7 +89,9 @@ public:
 			m_uIndex = 0;
 			m_pHeader = NULL;
 		}
-		CZipFindFast(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uIndex): m_pHeader(pHeader), m_uIndex(uIndex) {}
+		CZipFindFast(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uIndex): m_pHeader(pHeader), m_uIndex(uIndex)
+		{
+		}
 
 		/**
 			A pointer to the structure in CZipCentralDir. We extract a name from it.

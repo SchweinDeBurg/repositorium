@@ -55,7 +55,9 @@ public:
 		current = SEEK_CUR, // 1
 		end		= SEEK_END  // 2
 	};
-	CZipAbstractFile() {}
+	CZipAbstractFile()
+	{
+	}
 	virtual bool Open(LPCTSTR, UINT, bool)
 	{
 		return false;
@@ -101,7 +103,9 @@ public:
 	virtual UINT Read(void* lpBuf, UINT nCount) = 0;
 	virtual void Write(const void* lpBuf, UINT nCount) = 0;
 	virtual bool IsClosed() const = 0;
-	virtual ~CZipAbstractFile() {};
+	virtual ~CZipAbstractFile()
+	{
+	}
 
 };
 

@@ -112,7 +112,9 @@ struct ZIP_API CZipCallback
 		You can set its value, to change the currently used path.
 	*/
 	CZipString m_szExternalFile;
-	virtual ~CZipCallback() {}
+	virtual ~CZipCallback()
+	{
+	}
 };
 
 /**

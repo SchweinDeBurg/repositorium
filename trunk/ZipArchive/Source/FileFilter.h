@@ -76,8 +76,8 @@ namespace ZipArchiveLib
 			\see
 				SetInverted
 		*/
-		CFileFilter(bool bInverted = false)
-			: m_bInverted(bInverted)
+		CFileFilter(bool bInverted = false):
+		m_bInverted(bInverted)
 		{
 		}
 
@@ -329,8 +329,8 @@ namespace ZipArchiveLib
 			\see
 				ZipPlatform::GetSystemCaseSensitivity
 		*/
-		CNameFileFilter(LPCTSTR lpszPattern = _T("*"), bool bInverted = false, int iAppliesToTypes = toFile, bool bCaseSensitive = ZipPlatform::GetSystemCaseSensitivity())
-			: CFileFilter(bInverted), m_matcher(lpszPattern, bCaseSensitive)
+		CNameFileFilter(LPCTSTR lpszPattern = _T("*"), bool bInverted = false, int iAppliesToTypes = toFile, bool bCaseSensitive = ZipPlatform::GetSystemCaseSensitivity()):
+		CFileFilter(bInverted), m_matcher(lpszPattern, bCaseSensitive)
 		{
 			m_iAppliesToTypes = iAppliesToTypes;
 		}
@@ -456,8 +456,8 @@ namespace ZipArchiveLib
 			\see
 				HandlesInversion
 		*/
-		CGroupFileFilter(GroupType groupType = CGroupFileFilter::And, bool bAutoDelete = true, bool bInverted = false)
-			: CFileFilter(bInverted), m_iType(groupType), m_bAutoDelete(bAutoDelete)
+		CGroupFileFilter(GroupType groupType = CGroupFileFilter::And, bool bAutoDelete = true, bool bInverted = false):
+		CFileFilter(bInverted), m_iType(groupType), m_bAutoDelete(bAutoDelete)
 		{
 		}
 

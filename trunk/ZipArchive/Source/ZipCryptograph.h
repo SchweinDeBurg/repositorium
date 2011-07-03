@@ -216,7 +216,9 @@ public:
 		\param storage
 			The current CZipStorage.
 	 */
-	virtual void FinishDecode(CZipFileHeader& currentFile, CZipStorage& storage) {};
+	virtual void FinishDecode(CZipFileHeader& currentFile, CZipStorage& storage)
+	{
+	}
 
 	/**
 		The method called at the end of the decoding process.
@@ -227,7 +229,9 @@ public:
 		\param storage
 			The current CZipStorage.
 	 */
-	virtual void FinishEncode(CZipFileHeader& currentFile, CZipStorage& storage) {};
+	virtual void FinishEncode(CZipFileHeader& currentFile, CZipStorage& storage)
+	{
+	}
 
 	/**
 		Returns the value indicating whether the current compressor can handle the given encryption method.
@@ -242,7 +246,9 @@ public:
 	{
 		return false;
 	}
-	virtual ~CZipCryptograph() {}
+	virtual ~CZipCryptograph()
+	{
+	}
 };
 
 #if (_MSC_VER > 1000)

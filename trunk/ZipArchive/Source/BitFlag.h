@@ -59,8 +59,8 @@ namespace ZipArchiveLib
 		/**
 			Initializes a new instance of the CBitFlag class.
 		 */
-		CBitFlag()
-			: m_value(0)
+		CBitFlag():
+		m_value(0)
 		{
 		}
 
@@ -70,8 +70,8 @@ namespace ZipArchiveLib
 			\param value
 				The initial value.
 		 */
-		CBitFlag(int value)
-			: m_value(value)
+		CBitFlag(int value):
+		m_value(value)
 		{
 		}
 

@@ -106,7 +106,9 @@ public:
 	static void AddPrefix(CZipString& path, bool isFolder = true);
 
 #endif
-	CZipPathComponent() {}
+	CZipPathComponent()
+	{
+	}
 	/**
 		Initializes a new instance of the CZipPathComponent class.
 

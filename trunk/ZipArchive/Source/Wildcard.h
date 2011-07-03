@@ -155,7 +155,9 @@ namespace ZipArchiveLib
 		/**
 			Initializes a new instance of the CWildcard class.
 		*/
-		CWildcard() {}
+		CWildcard()
+		{
+		}
 
 		/**
 			Initializes a new instance of the CWildcard class.
@@ -174,7 +176,9 @@ namespace ZipArchiveLib
 			SetPattern(lpszPattern, bCaseSensitive);
 		}
 
-		virtual ~CWildcard() {}
+		virtual ~CWildcard()
+		{
+		}
 
 		/**
 			Sets the current pattern

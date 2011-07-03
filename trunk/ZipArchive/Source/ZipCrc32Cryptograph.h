@@ -62,7 +62,9 @@
 class ZIP_API CZipCrc32Cryptograph : public CZipCryptograph
 {
 public:
-	CZipCrc32Cryptograph() {}
+	CZipCrc32Cryptograph()
+	{
+	}
 
 	bool InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage, bool ignoreCheck);
 	void InitEncode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage);
@@ -137,7 +139,9 @@ private:
 	}
 	DWORD m_keys[3];
 public:
-	~CZipCrc32Cryptograph() {}
+	~CZipCrc32Cryptograph()
+	{
+	}
 };
 
 #endif
