@@ -21,12 +21,12 @@
 #if !defined(ZIPARCHIVE_DIRENUMERATOR_DOT_H)
 #define ZIPARCHIVE_DIRENUMERATOR_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 	#pragma once
-	#pragma warning( push )
-	#pragma warning (disable : 4100) // unreferenced formal parameter
+	#pragma warning(push)
+	#pragma warning(disable: 4100) // unreferenced formal parameter
 	#if defined ZIP_HAS_DLL
-		#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
+		#pragma warning(disable: 4251) // needs to have dll-interface to be used by clients of class
 	#endif
 #endif
 
@@ -190,8 +190,8 @@ namespace ZipArchiveLib
 
 }
 
-#if _MSC_VER > 1000
-	#pragma warning( pop )
+#if (_MSC_VER > 1000)
+	#pragma warning(pop)
 #endif
 
 #endif

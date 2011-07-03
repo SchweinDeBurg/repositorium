@@ -22,7 +22,7 @@
 #include "ZipPathComponent.h"
 #include "BitFlag.h"
 
-#if _MSC_VER < 1300 && !defined INVALID_SET_FILE_POINTER
+#if (_MSC_VER < 1300) && !defined INVALID_SET_FILE_POINTER
 	#define INVALID_SET_FILE_POINTER (DWORD)(-1)
 #endif
 

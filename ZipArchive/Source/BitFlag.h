@@ -20,7 +20,7 @@
 #if !defined(ZIPARCHIVE_BITFLAG_DOT_H)
 #define ZIPARCHIVE_BITFLAG_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 	#pragma once
 #endif
 

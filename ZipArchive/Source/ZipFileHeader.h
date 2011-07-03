@@ -20,7 +20,7 @@
 #if !defined(ZIPARCHIVE_ZIPFILEHEADER_DOT_H)
 #define ZIPARCHIVE_ZIPFILEHEADER_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 #pragma once
 #endif
 
@@ -310,7 +310,7 @@ public:
 	*/
 	float GetCompressionRatio()
 	{
-#if _MSC_VER >= 1300 || !defined(_ZIP_ZIP64)
+#if (_MSC_VER >= 1300) || !defined(_ZIP_ZIP64)
 		return m_uUncomprSize ? ((float)m_uComprSize * 100 ) / m_uUncomprSize: 0;
 #else
 		return m_uUncomprSize ? ((float)(__int64)(m_uComprSize) / (float)(__int64)m_uUncomprSize) * 100: 0;

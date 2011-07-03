@@ -14,9 +14,9 @@
 	#error Do not include this file directly. Include ZipCollections.h instead
 #endif
 
-#if _MSC_VER > 1000
-	#pragma warning( push )
-	#pragma warning (disable:4786) // 'identifier' : identifier was truncated to 'number' characters in the debug information
+#if (_MSC_VER > 1000)
+	#pragma warning(push)
+	#pragma warning(disable: 4786) // 'identifier' : identifier was truncated to 'number' characters in the debug information
 #endif
 
 #include <atlcoll.h>
@@ -92,6 +92,6 @@ public:
 	}
 };
 
-#if _MSC_VER > 1000
-	#pragma warning( pop )
+#if (_MSC_VER > 1000)
+	#pragma warning(pop)
 #endif

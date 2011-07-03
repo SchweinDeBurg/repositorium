@@ -16,10 +16,10 @@
 	#error Do not include this file directly. Include ZipCollections.h instead
 #endif
 
-#if _MSC_VER > 1000
-	#pragma warning( push, 3 ) // STL
-	#pragma warning (disable : 4284) //return type for 'identifier::operator >' is not a UDT or reference to a UDT. Will produce errors if applied using infix notation
-	#pragma warning (disable : 4018) //'expression' : signed/unsigned mismatch
+#if (_MSC_VER > 1000)
+	#pragma warning(push, 3) // STL
+	#pragma warning(disable: 4284) //return type for 'identifier::operator >' is not a UDT or reference to a UDT. Will produce errors if applied using infix notation
+	#pragma warning(disable: 4018) //'expression' : signed/unsigned mismatch
 #endif
 
 #include <vector>
@@ -220,8 +220,8 @@ public:
 
 };
 
-#if _MSC_VER > 1000
-	#pragma warning( pop)
+#if (_MSC_VER > 1000)
+	#pragma warning(pop)
 #endif
 
 

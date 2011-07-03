@@ -18,10 +18,10 @@
 
 #if !defined(UNDER_CE)
 
-#if _MSC_VER > 1000
-	#if _MSC_VER < 1500
+#if (_MSC_VER > 1000)
+	#if (_MSC_VER < 1500)
 		#if !defined WINVER && !defined _WIN32_WINNT
-			#if _MSC_VER < 1300
+			#if (_MSC_VER < 1300)
 				#define WINVER 0x0400
 			#else
 				#define WINVER 0x0501
@@ -61,7 +61,7 @@
 
 typedef BOOL ZBOOL;
 
-#if _MSC_VER >= 1300 || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_WIN || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
+#if (_MSC_VER >= 1300) || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_WIN || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL
 	#define ZIP_FILE_USIZE ULONGLONG
 	#define ZIP_FILE_SIZE LONGLONG
 	#define ZIP_FILE_SIZEMAX _I64_MAX

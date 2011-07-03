@@ -21,10 +21,10 @@
 #if !defined(ZIPARCHIVE_ZIPSPLITNAMESHANDLER_DOT_H)
 #define ZIPARCHIVE_ZIPSPLITNAMESHANDLER_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 	#pragma once
-	#pragma warning( push )
-	#pragma warning (disable : 4100) // unreferenced formal parameter
+	#pragma warning(push)
+	#pragma warning(disable: 4100) // unreferenced formal parameter
 #endif
 
 #include "_features.h"
@@ -199,8 +199,8 @@ public:
 	}
 };
 
-#if _MSC_VER > 1000
-	#pragma warning( pop )
+#if (_MSC_VER > 1000)
+	#pragma warning(pop)
 #endif
 
 #endif

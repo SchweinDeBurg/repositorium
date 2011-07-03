@@ -29,7 +29,7 @@
 #define ZIPARCHIVE_FEATURES_DOT_H
 /// @endcond
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 #pragma once
 #endif
 

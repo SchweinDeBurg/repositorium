@@ -21,13 +21,13 @@
 #if !defined(ZIPARCHIVE_ZIPCENTRALDIR_DOT_H)
 #define ZIPARCHIVE_ZIPCENTRALDIR_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 #pragma once
 #endif
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (push)
-	#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
+	#pragma warning(push)
+	#pragma warning(disable: 4251) // needs to have dll-interface to be used by clients of class
 #endif
 
 #include "Private/ZipException.h"
@@ -611,9 +611,9 @@ protected:
 	CZipStorage* m_pStorage;
 
 
-#if _MSC_VER > 1000
-	#pragma warning( push )
-	#pragma warning (disable : 4702) // unreachable code
+#if (_MSC_VER > 1000)
+	#pragma warning(push)
+	#pragma warning(disable: 4702) // unreachable code
 #endif
 
 	/**
@@ -650,8 +650,8 @@ protected:
 			return 1;
 	}
 
-#if _MSC_VER > 1000
-	#pragma warning( pop )
+#if (_MSC_VER > 1000)
+	#pragma warning(pop)
 #endif
 
 	static int CompareFindFastCollate(const void* pArg1, const void* pArg2)
@@ -852,7 +852,7 @@ private:
 };
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (pop)
+	#pragma warning(pop)
 #endif
 
 

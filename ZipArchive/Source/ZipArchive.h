@@ -31,9 +31,9 @@
 #define ZIPARCHIVE_ZIPARCHIVE_DOT_H
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (push)
-	#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
-	#pragma warning( disable : 4275 ) // non dll-interface class used as base for dll-interface
+	#pragma warning(push)
+	#pragma warning(disable: 4251) // needs to have dll-interface to be used by clients of class
+	#pragma warning(disable: 4275) // non dll-interface class used as base for dll-interface
 #endif
 
 #include "_features.h"
@@ -3468,7 +3468,7 @@ private:
 };
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (pop)
+	#pragma warning(pop)
 #endif
 
 #endif // !defined(ZIPARCHIVE_ZIPARCHIVE_DOT_H)

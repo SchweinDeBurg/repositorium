@@ -21,13 +21,13 @@
 #if !defined(ZIPARCHIVE_ZIPEXCEPTION_DOT_H)
 #define ZIPARCHIVE_ZIPEXCEPTION_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 #pragma once
-#pragma warning( push )
-#pragma warning (disable:4702) // disable "Unreachable code" warning in Throw function in the Release mode
+#pragma warning(push)
+#pragma warning(disable: 4702) // disable "Unreachable code" warning in Throw function in the Release mode
 	#if defined ZIP_HAS_DLL
-		#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
-		#pragma warning( disable : 4275 ) // non dll-interface used as base for dll-interface class
+		#pragma warning(disable: 4251) // needs to have dll-interface to be used by clients of class
+		#pragma warning(disable: 4275) // non dll-interface used as base for dll-interface class
 	#endif
 #endif
 
@@ -227,8 +227,8 @@ protected:
 #endif
 };
 
-#if _MSC_VER > 1000
-	#pragma warning( pop )
+#if (_MSC_VER > 1000)
+	#pragma warning(pop)
 #endif
 
 #endif // !defined(ZIPARCHIVE_ZIPEXCEPTION_DOT_H)

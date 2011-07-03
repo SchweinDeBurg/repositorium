@@ -22,10 +22,10 @@
 #if !defined(ZIPARCHIVE_FILEFILTER_DOT_H)
 #define ZIPARCHIVE_FILEFILTER_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 	#pragma once
-	#pragma warning( push )
-	#pragma warning (disable : 4100) // unreferenced formal parameter
+	#pragma warning(push)
+	#pragma warning(disable: 4100) // unreferenced formal parameter
 #endif
 
 #include "stdafx.h"
@@ -637,21 +637,21 @@ protected:
 	private:
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (push)
-	#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
+	#pragma warning(push)
+	#pragma warning(disable: 4251) // needs to have dll-interface to be used by clients of class
 #endif
 
 		CZipArray<CFileFilter*> m_filters;
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning( pop)
+	#pragma warning(pop)
 #endif
 
 	};
 }
 
-#if _MSC_VER > 1000
-	#pragma warning( pop )
+#if (_MSC_VER > 1000)
+	#pragma warning(pop)
 #endif
 
 #endif

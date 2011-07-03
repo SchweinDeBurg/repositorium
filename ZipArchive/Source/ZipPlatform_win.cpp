@@ -514,9 +514,9 @@ int ZipPlatform::MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, 
 
 #if !defined(UNDER_CE) && (defined _ZIP_IMPL_STL || _ZIP_FILE_IMPLEMENTATION == ZIP_ZFI_STL)
 
-#if _MSC_VER > 1000
-	#pragma warning( push )
-	#pragma warning (disable : 4702) // unreachable code
+#if (_MSC_VER > 1000)
+	#pragma warning(push)
+	#pragma warning(disable: 4702) // unreachable code
 #endif
 
 
@@ -542,8 +542,8 @@ bool ZipPlatform::TruncateFile(int iDes, ULONGLONG uSize)
 
 }
 
-#if _MSC_VER > 1000
-	#pragma warning( pop )
+#if (_MSC_VER > 1000)
+	#pragma warning(pop)
 #endif
 
 
@@ -563,7 +563,7 @@ int ZipPlatform::OpenFile(LPCTSTR lpszFileName, UINT iMode, int iShareMode)
 	default:
 		iShareMode = SH_DENYNO;
 	}
-#if _MSC_VER >= 1400
+#if (_MSC_VER >= 1400)
 	int handle;
 	if (_tsopen_s(&handle, lpszFileName, iMode, iShareMode, S_IREAD | S_IWRITE /*required only when O_CREAT mode*/) != 0)
 		return -1;
