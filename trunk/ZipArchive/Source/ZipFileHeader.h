@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipFileHeader.h
@@ -21,7 +39,7 @@
 #define ZIPARCHIVE_ZIPFILEHEADER_DOT_H
 
 #if (_MSC_VER > 1000)
-#pragma once
+	#pragma once
 #endif
 
 #include "ZipExport.h"
@@ -205,7 +223,10 @@ public:
 		\return
 			\c true, if the data descriptor is present; \c false otherwise.
 	*/
-	bool IsDataDescriptor() const {	return (m_uFlag & (WORD) 8) != 0;}
+	bool IsDataDescriptor() const
+	{
+		return (m_uFlag & (WORD) 8) != 0;
+	}
 
 	/**
 		Returns the data descriptor size as it is required for the current file.
@@ -311,9 +332,9 @@ public:
 	float GetCompressionRatio()
 	{
 #if (_MSC_VER >= 1300) || !defined(_ZIP_ZIP64)
-		return m_uUncomprSize ? ((float)m_uComprSize * 100 ) / m_uUncomprSize: 0;
+		return m_uUncomprSize ? ((float)m_uComprSize * 100) / m_uUncomprSize : 0;
 #else
-		return m_uUncomprSize ? ((float)(__int64)(m_uComprSize) / (float)(__int64)m_uUncomprSize) * 100: 0;
+		return m_uUncomprSize ? ((float)(__int64)(m_uComprSize) / (float)(__int64)m_uUncomprSize) * 100 : 0;
 #endif
 	}
 
@@ -399,7 +420,10 @@ public:
 		\see
 			GetSystemAttr
 	*/
-	DWORD GetOriginalAttributes() const {return m_uExternalAttr;}
+	DWORD GetOriginalAttributes() const
+	{
+		return m_uExternalAttr;
+	}
 
 	/**
 		Returns the value indicating whether the file represents a directory.
@@ -442,7 +466,10 @@ public:
 		\see
 			CZipArchive::SetPassword
 	*/
-	bool IsEncrypted() const {	return m_uEncryptionMethod != CZipCryptograph::encNone;}
+	bool IsEncrypted() const
+	{
+		return m_uEncryptionMethod != CZipCryptograph::encNone;
+	}
 
 	/**
 		Returns the encryption method of the file.
@@ -450,7 +477,10 @@ public:
 		\return
 			The file encryption method. It can be one of the CZipCryptograph::EncryptionMethod values.
 	*/
-	int GetEncryptionMethod() const {return m_uEncryptionMethod;}
+	int GetEncryptionMethod() const
+	{
+		return m_uEncryptionMethod;
+	}
 
 	/**
 		Returns the value indicating whether the file is encrypted using WinZip AES encryption method.
@@ -528,7 +558,7 @@ public:
 	CZipExtraField m_aCentralExtraData; ///< The central extra field.
 protected:
 	DWORD m_uExternalAttr;				///< External file attributes.
- 	WORD m_uLocalFileNameSize;			///< The local filename length.
+	WORD m_uLocalFileNameSize;			///< The local filename length.
 	BYTE m_uEncryptionMethod;			///< The file encryption method. It can be one of the CZipCryptograph::EncryptionMethod values.
 	bool m_bIgnoreCrc32;				///< The value indicating whether to ignore Crc32 checking.
 	DWORD m_uLocalHeaderSize;
@@ -611,7 +641,7 @@ protected:
 			The storage to write the local file header to.
 
 	*/
-	void WriteLocal(CZipStorage *pStorage);
+	void WriteLocal(CZipStorage* pStorage);
 
 	/**
 		Reads the local file header from the archive and validates the read data.
@@ -638,7 +668,7 @@ protected:
 			The size of the file header.
 
 	*/
-	DWORD Write(CZipStorage *pStorage);
+	DWORD Write(CZipStorage* pStorage);
 
 	/**
 		Reads the central file header from \a pStorage and validates the read data.
@@ -664,11 +694,17 @@ protected:
 	bool CheckLengths(bool local) const
 	{
 		if (m_comment.GetBufferSize() > (int)USHRT_MAX || m_fileName.GetBufferSize() > (int)USHRT_MAX)
+		{
 			return false;
+		}
 		else if (local)
+		{
 			return m_aLocalExtraData.Validate();
+		}
 		else
+		{
 			return m_aCentralExtraData.Validate();
+		}
 	}
 
 	/**
@@ -773,10 +809,14 @@ protected:
 	void UpdateFlag(bool bSegm)
 	{
 		if (bSegm || m_uEncryptionMethod == CZipCryptograph::encStandard)
-			m_uFlag  |= 8; // data descriptor present
+		{
+			m_uFlag  |= 8;   // data descriptor present
+		}
 
 		if (IsEncrypted())
-			m_uFlag  |= 1;		// encrypted file
+		{
+			m_uFlag  |= 1;   // encrypted file
+		}
 	}
 
 
@@ -843,7 +883,9 @@ private:
 		void SetString(LPCTSTR value)
 		{
 			if (!HasString())
+			{
 				AllocateString();
+			}
 			*m_pString = value;
 		}
 

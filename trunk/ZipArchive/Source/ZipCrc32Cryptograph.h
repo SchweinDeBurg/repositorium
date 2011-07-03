@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipCrc32Cryptograph.h
@@ -44,19 +62,23 @@
 class ZIP_API CZipCrc32Cryptograph : public CZipCryptograph
 {
 public:
-	CZipCrc32Cryptograph(){}
+	CZipCrc32Cryptograph() {}
 
 	bool InitDecode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage, bool ignoreCheck);
 	void InitEncode(CZipAutoBuffer& password, CZipFileHeader& currentFile, CZipStorage& storage);
 	void Decode(char* pBuffer, DWORD uSize)
 	{
 		for (DWORD i = 0; i < uSize; i++)
+		{
 			CryptDecode(pBuffer[i]);
+		}
 	}
 	void Encode(char* pBuffer, DWORD uSize)
 	{
 		for (DWORD i = 0; i < uSize; i++)
+		{
 			CryptEncode(pBuffer[i]);
+		}
 	}
 
 	bool CanHandle(int iEncryptionMethod)
@@ -85,11 +107,11 @@ public:
 	*/
 	static const unsigned long* GetCRCTable()
 	{
-			return z_get_crc_table();
+		return z_get_crc_table();
 	}
 private:
 
-	void CryptDecode(char &c)
+	void CryptDecode(char& c)
 	{
 		c ^= CryptDecryptByte();
 		CryptUpdateKeys(c);
@@ -107,7 +129,7 @@ private:
 		const unsigned long* CRC_TABLE = z_get_crc_table();
 		return CRC_TABLE[(l ^ c) & 0xff] ^ (l >> 8);
 	}
-	void CryptEncode(char &c)
+	void CryptEncode(char& c)
 	{
 		char t = CryptDecryptByte();
 		CryptUpdateKeys(c);
@@ -115,7 +137,7 @@ private:
 	}
 	DWORD m_keys[3];
 public:
-	~CZipCrc32Cryptograph(){}
+	~CZipCrc32Cryptograph() {}
 };
 
 #endif

@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 #ifndef ZIPARCHIVE_ZIPCOLLECTIONS_DOT_H
 	#error Do not include this file directly. Include ZipCollections.h instead
@@ -33,17 +51,17 @@ class CZipArray : public CArray<TYPE, TYPE>
 public:
 	typedef int (*CompareFunction)(const void* pArg1, const void* pArg2);
 private:
-	static int CompareAsc(const void *pArg1, const void *pArg2)
+	static int CompareAsc(const void* pArg1, const void* pArg2)
 	{
 		TYPE w1 = *(TYPE*)pArg1;
 		TYPE w2 = *(TYPE*)pArg2;
-		return w1 == w2 ? 0 :(w2 > w1 ? - 1 : 1);
+		return w1 == w2 ? 0 : (w2 > w1 ? - 1 : 1);
 	}
-	static int CompareDesc(const void *pArg1, const void *pArg2)
+	static int CompareDesc(const void* pArg1, const void* pArg2)
 	{
 		TYPE w1 = *(TYPE*)pArg1;
 		TYPE w2 = *(TYPE*)pArg2;
-		return w1 == w2 ? 0 :(w1 > w2 ? - 1 : 1);
+		return w1 == w2 ? 0 : (w1 > w2 ? - 1 : 1);
 	}
 public:
 	void Sort(bool bAscending)
@@ -54,8 +72,10 @@ public:
 	{
 		INT_PTR uSize = GetSize();
 		if (!uSize) // if omitted operator [] will fail if empty
+		{
 			return;
-		qsort((void*)&((*this)[0]), (size_t)uSize , sizeof(TYPE), pFunction);
+		}
+		qsort((void*) & ((*this)[0]), (size_t)uSize , sizeof(TYPE), pFunction);
 	}
 };
 
@@ -66,7 +86,7 @@ public:
 	typedef POSITION iterator;
 	typedef POSITION const_iterator;
 
-	bool IteratorValid(const iterator &iter) const
+	bool IteratorValid(const iterator& iter) const
 	{
 		return iter != NULL;
 	}
@@ -80,7 +100,7 @@ public:
 	typedef POSITION iterator;
 	typedef POSITION const_iterator;
 
-	bool IteratorValid(const iterator &iter) const
+	bool IteratorValid(const iterator& iter) const
 	{
 		return iter != NULL;
 	}

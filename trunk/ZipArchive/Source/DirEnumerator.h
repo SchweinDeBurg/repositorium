@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file DirEnumerator.h
@@ -69,9 +87,13 @@ namespace ZipArchiveLib
 		{
 			CZipString dir(lpszDirectory);
 			if (dir.IsEmpty())
+			{
 				m_lpszDirectory = _T(".");
+			}
 			else
+			{
 				m_lpszDirectory = lpszDirectory;
+			}
 			m_bRecursive = bRecursive;
 		}
 
@@ -101,7 +123,7 @@ namespace ZipArchiveLib
 			\see
 				OnEnumerationEnd
 		*/
-		virtual void OnEnumerationBegin(){}
+		virtual void OnEnumerationBegin() {}
 
 		/**
 			This method is called at the end of the enumeration process.
@@ -113,7 +135,7 @@ namespace ZipArchiveLib
 			\see
 				OnEnumerationBegin
 		*/
-		virtual void OnEnumerationEnd(bool bResult){}
+		virtual void OnEnumerationEnd(bool bResult) {}
 
 		/**
 			This method is called when an enumeration process enters a new directory.
@@ -123,7 +145,7 @@ namespace ZipArchiveLib
 			\see
 				ExitDirectory
 		*/
-		virtual void EnterDirectory(){}
+		virtual void EnterDirectory() {}
 
 		/**
 			This method is called when an enumeration process exits a directory.
@@ -133,7 +155,7 @@ namespace ZipArchiveLib
 			\see
 				EnterDirectory
 		*/
-		virtual void ExitDirectory(){}
+		virtual void ExitDirectory() {}
 
 	public:
 
@@ -146,7 +168,10 @@ namespace ZipArchiveLib
 			\see
 				CDirEnumerator::CDirEnumerator
 		*/
-		LPCTSTR GetDirectory() const {return m_lpszDirectory;}
+		LPCTSTR GetDirectory() const
+		{
+			return m_lpszDirectory;
+		}
 
 		/**
 			Returns the value indicating whether the subfolders of the root directory
@@ -158,7 +183,10 @@ namespace ZipArchiveLib
 			\see
 				CDirEnumerator::CDirEnumerator
 		*/
-		bool IsRecursive() const {return m_bRecursive;}
+		bool IsRecursive() const
+		{
+			return m_bRecursive;
+		}
 
 		/**
 			Returns the directory being currently processed.
@@ -166,7 +194,10 @@ namespace ZipArchiveLib
 			\return
 				The directory being currently processed.
 		*/
-		LPCTSTR GetCurrentDirectory() const {return m_szCurrentDirectory;}
+		LPCTSTR GetCurrentDirectory() const
+		{
+			return m_szCurrentDirectory;
+		}
 
 		/**
 			Starts the enumeration process. Calls CFileFilter::Evaluate method for every file or directory found.
@@ -183,12 +214,12 @@ namespace ZipArchiveLib
 		*/
 		bool Start(CFileFilter& filter);
 
-		virtual ~CDirEnumerator(){}
+		virtual ~CDirEnumerator() {}
 	private:
 		static bool IsDots(LPCTSTR lpszName);
 	};
 
-}
+} // namespace
 
 #if (_MSC_VER > 1000)
 	#pragma warning(pop)

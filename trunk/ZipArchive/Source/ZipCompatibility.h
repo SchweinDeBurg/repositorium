@@ -11,7 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
-
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipCompatibility.h
@@ -23,7 +40,7 @@
 #define ZIPARCHIVE_ZIPCOMPATIBILITY_DOT_H
 
 #if (_MSC_VER > 1000)
-#pragma once
+	#pragma once
 #endif
 
 #if defined(__INTEL_COMPILER)
@@ -54,28 +71,28 @@ namespace ZipCompatibility
 	*/
 	enum ZipPlatforms
 	{
-	   zcDosFat,		///< MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)
-       zcAmiga,			///< Amiga
-       zcVaxVms,		///< VAX/VMS
-       zcUnix,			///< Unix / Linux
-       zcVmCms,			///< VM/CMS
-       zcAtari,			///< Atari ST
-       zcOs2Hpfs,		///< OS/2 H.P.F.S.
-       zcMacintosh,		///< Macintosh
-       zcZsystem,		///< Z-System
-       zcCpm,			///< CP/M
-	   zcTops20,		///< TOPS-20
-       zcNtfs,			///< Windows NTFS
-	   zcQDos,			///< SMS/QDOS
-	   zcAcorn,			///< Acorn RISC OS
-	   ZcMvs,			///< MVS
-	   zcVfat,			///< Win32 VFAT
-	   zcAtheOS,		///< AtheOS
-	   zcBeOS,			///< BeOS
-	   zcTandem,		///< Tandem NSK
-	   zcTheos,			///< Theos
-	   zcMacDarwin,		///< Mac OS/X (Darwin)
-	   zcLast			///< For the internal use
+		zcDosFat,		///< MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)
+		zcAmiga,			///< Amiga
+		zcVaxVms,		///< VAX/VMS
+		zcUnix,			///< Unix / Linux
+		zcVmCms,			///< VM/CMS
+		zcAtari,			///< Atari ST
+		zcOs2Hpfs,		///< OS/2 H.P.F.S.
+		zcMacintosh,		///< Macintosh
+		zcZsystem,		///< Z-System
+		zcCpm,			///< CP/M
+		zcTops20,		///< TOPS-20
+		zcNtfs,			///< Windows NTFS
+		zcQDos,			///< SMS/QDOS
+		zcAcorn,			///< Acorn RISC OS
+		ZcMvs,			///< MVS
+		zcVfat,			///< Win32 VFAT
+		zcAtheOS,		///< AtheOS
+		zcBeOS,			///< BeOS
+		zcTandem,		///< Tandem NSK
+		zcTheos,			///< Theos
+		zcMacDarwin,		///< Mac OS/X (Darwin)
+		zcLast			///< For the internal use
 	};
 
 	/**

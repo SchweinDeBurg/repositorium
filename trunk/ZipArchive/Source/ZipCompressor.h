@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipCompressor.h
@@ -54,7 +72,7 @@ protected:
 			The current storage object.
 	 */
 	CZipCompressor(CZipStorage* pStorage)
-		:m_pStorage(pStorage)
+		: m_pStorage(pStorage)
 	{
 		m_pCryptograph = NULL;
 		m_uUncomprLeft = 0;
@@ -177,11 +195,11 @@ public:
 	*/
 	class ZIP_API COptionsMap : public CZipMap<int, COptions*>
 	{
-		public:
-			void Set(const COptions* pOptions);
-			void Remove(int iType);
-			COptions* Get(int iType) const;
-			~COptionsMap();
+	public:
+		void Set(const COptions* pOptions);
+		void Remove(int iType);
+		COptions* Get(int iType) const;
+		~COptionsMap();
 	};
 
 	/**
@@ -195,8 +213,7 @@ public:
 	*/
 	static bool IsCompressionSupported(WORD uCompressionMethod)
 	{
-		return uCompressionMethod == methodStore || uCompressionMethod == methodDeflate
-			;
+		return uCompressionMethod == methodStore || uCompressionMethod == methodDeflate;
 	}
 
 	ZIP_SIZE_TYPE m_uUncomprLeft;	///< The number of bytes left to decompress.
@@ -280,7 +297,7 @@ public:
 		\see
 			FinishCompression
 	 */
-	virtual void Compress(const void *pBuffer, DWORD uSize) = 0;
+	virtual void Compress(const void* pBuffer, DWORD uSize) = 0;
 
 	/**
 		Decompresses the given data.
@@ -302,7 +319,7 @@ public:
 		\see
 			FinishDecompression
 	 */
-	virtual DWORD Decompress(void *pBuffer, DWORD uSize) = 0;
+	virtual DWORD Decompress(void* pBuffer, DWORD uSize) = 0;
 
 	/**
 		The method called at the end of the compression process.
@@ -315,7 +332,7 @@ public:
 		\see
 			Compress
 	 */
-	virtual void FinishCompression(bool bAfterException){}
+	virtual void FinishCompression(bool bAfterException) {}
 
 	/**
 		The method called at the end of the decompression process.
@@ -328,7 +345,7 @@ public:
 		\see
 			Decompress
 	 */
-	virtual void FinishDecompression(bool bAfterException){}
+	virtual void FinishDecompression(bool bAfterException) {}
 
 	/**
 		Returns the current options of the compressor.
@@ -398,7 +415,7 @@ protected:
 		\param uSize
 			The size of the buffer.
 	*/
-	void UpdateFileCrc(const void *pBuffer, DWORD uSize);
+	void UpdateFileCrc(const void* pBuffer, DWORD uSize);
 
 	/**
 		Updates CRC value while decompression.
@@ -409,7 +426,7 @@ protected:
 		\param uSize
 			The size of the buffer.
 	*/
-	void UpdateCrc(const void *pBuffer, DWORD uSize);
+	void UpdateCrc(const void* pBuffer, DWORD uSize);
 
 	/**
 		Flushes data in the buffer into the storage, encrypting the data if needed.
@@ -433,9 +450,13 @@ protected:
 	void WriteBuffer(char* pBuffer, DWORD uSize)
 	{
 		if (uSize == 0)
+		{
 			return;
+		}
 		if (m_pCryptograph)
+		{
 			m_pCryptograph->Encode(pBuffer, uSize);
+		}
 		m_pStorage->Write(pBuffer, uSize, false);
 	}
 
@@ -449,13 +470,17 @@ protected:
 	{
 		DWORD uToRead = m_pBuffer.GetSize();
 		if (m_uComprLeft < uToRead)
+		{
 			uToRead = (DWORD)m_uComprLeft;
+		}
 
 		if (uToRead > 0)
 		{
 			m_pStorage->Read(m_pBuffer, uToRead, false);
 			if (m_pCryptograph)
+			{
 				m_pCryptograph->Decode(m_pBuffer, uToRead);
+			}
 			m_uComprLeft -= uToRead;
 		}
 		return uToRead;
@@ -510,7 +535,9 @@ protected:
 	void ThrowError(int iErr, bool bInternal = false)
 	{
 		if (bInternal)
+		{
 			iErr = ConvertInternalError(iErr);
+		}
 		CZipException::Throw(iErr, m_pStorage->IsClosed(true) ? _T("") : (LPCTSTR)m_pStorage->m_pFile->GetFilePath());
 	}
 };

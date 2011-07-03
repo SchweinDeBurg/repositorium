@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipCallbackProvider.h
@@ -36,43 +54,49 @@
 namespace ZipArchiveLib
 {
 
-class ZIP_API CZipCallbackProvider : public CZipMap<CZipActionCallback::CallbackType, CZipActionCallback*>
-{
-public:
-	void Set(CZipActionCallback* pCallback, int iWhich)
+	class ZIP_API CZipCallbackProvider : public CZipMap<CZipActionCallback::CallbackType, CZipActionCallback*>
 	{
-		CZipActionCallback::CallbackType cbs[] = {CZipActionCallback::cbAdd, CZipActionCallback::cbAddTmp, CZipActionCallback::cbAddStore, CZipActionCallback::cbExtract, CZipActionCallback::cbDeleteCnt, CZipActionCallback::cbDelete, CZipActionCallback::cbTest, CZipActionCallback::cbSave, CZipActionCallback::cbGet, CZipActionCallback::cbModify, CZipActionCallback::cbMoveData, CZipActionCallback::cbCalculateForMulti, CZipActionCallback::cbMultiAdd, CZipActionCallback::cbEncryptPrepare, CZipActionCallback::cbEncryptMoveData, CZipActionCallback::cbEncrypt, CZipActionCallback::cbMultiEncrypt};
-		int iCount = sizeof(cbs)/sizeof(CZipActionCallback::CallbackType);
-		for (int i = 0; i < iCount; i++)
+	public:
+		void Set(CZipActionCallback* pCallback, int iWhich)
 		{
-			CZipActionCallback::CallbackType iCallback = cbs[i];
-			if (iWhich & iCallback)
-				SetInternal(pCallback, iCallback);
+			CZipActionCallback::CallbackType cbs[] = {CZipActionCallback::cbAdd, CZipActionCallback::cbAddTmp, CZipActionCallback::cbAddStore, CZipActionCallback::cbExtract, CZipActionCallback::cbDeleteCnt, CZipActionCallback::cbDelete, CZipActionCallback::cbTest, CZipActionCallback::cbSave, CZipActionCallback::cbGet, CZipActionCallback::cbModify, CZipActionCallback::cbMoveData, CZipActionCallback::cbCalculateForMulti, CZipActionCallback::cbMultiAdd, CZipActionCallback::cbEncryptPrepare, CZipActionCallback::cbEncryptMoveData, CZipActionCallback::cbEncrypt, CZipActionCallback::cbMultiEncrypt};
+			int iCount = sizeof(cbs) / sizeof(CZipActionCallback::CallbackType);
+			for (int i = 0; i < iCount; i++)
+			{
+				CZipActionCallback::CallbackType iCallback = cbs[i];
+				if (iWhich & iCallback)
+				{
+					SetInternal(pCallback, iCallback);
+				}
+			}
 		}
-	}
 
-	CZipActionCallback* Get(CZipActionCallback::CallbackType iType)
-	{
-		CZipActionCallback* pCallback = NULL;
-		if (Lookup(iType, pCallback))
+		CZipActionCallback* Get(CZipActionCallback::CallbackType iType)
 		{
-			pCallback->m_iType = iType;
-			return pCallback;
+			CZipActionCallback* pCallback = NULL;
+			if (Lookup(iType, pCallback))
+			{
+				pCallback->m_iType = iType;
+				return pCallback;
+			}
+			else
+			{
+				return NULL;
+			}
 		}
-		else
-			return NULL;
-	}
-protected:
-	void SetInternal(CZipActionCallback* pCallback, CZipActionCallback::CallbackType iType)
-	{
-		if (pCallback)
+	protected:
+		void SetInternal(CZipActionCallback* pCallback, CZipActionCallback::CallbackType iType)
 		{
-			SetAt(iType, pCallback);
+			if (pCallback)
+			{
+				SetAt(iType, pCallback);
+			}
+			else
+			{
+				RemoveKey(iType);
+			}
 		}
-		else
-			RemoveKey(iType);
-	}
-};
+	};
 
 } // namespace
 

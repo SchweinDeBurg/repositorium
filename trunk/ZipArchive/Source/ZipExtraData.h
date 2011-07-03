@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipExtraData.h
@@ -22,7 +40,7 @@
 #define ZIPARCHIVE_ZIPEXTRADATA_DOT_H
 
 #if (_MSC_VER > 1000)
-#pragma once
+	#pragma once
 #endif
 
 #include "ZipExport.h"
@@ -84,7 +102,9 @@ public:
 		m_data.Allocate(uSize);
 		m_bHasSize = extra.m_bHasSize;
 		if (uSize > 0)
+		{
 			memcpy(m_data, extra.m_data, uSize);
+		}
 		return *this;
 	}
 	bool operator==(const CZipExtraData& extra)

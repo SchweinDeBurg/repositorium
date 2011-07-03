@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file BytesWriter.h
@@ -37,7 +55,7 @@ namespace ZipArchiveLib
 	{
 	public:
 
-	#ifndef _ZIP_BIG_ENDIAN
+#ifndef _ZIP_BIG_ENDIAN
 		/**
 			Reads \a iCount bytes from \a pSource into \a pDestination.
 
@@ -63,13 +81,13 @@ namespace ZipArchiveLib
 		}
 
 
-		#ifndef _ZIP_STRICT_U16
+#ifndef _ZIP_STRICT_U16
 		static void ReadBytes(int& iDestination, const char* pSource, int iCount)
 		{
 			iDestination = 0;
 			memcpy(&iDestination, pSource, iCount);
 		}
-		#endif
+#endif
 
 
 		static void WriteBytes(char* pDestination, WORD uSource)
@@ -94,14 +112,14 @@ namespace ZipArchiveLib
 			memcpy(pDestination, &uSource, iCount);
 		}
 
-		#ifndef _ZIP_STRICT_U16
+#ifndef _ZIP_STRICT_U16
 		static void WriteBytes(char* pDestination, int uSource, int iCount)
 		{
 			memcpy(pDestination, &uSource, iCount);
 		}
-		#endif
+#endif
 
-	#else
+#else
 
 		static void ReadBytes(char* pDestination, const char* pSource, int iDestSize, int iCount)
 		{
@@ -112,7 +130,9 @@ namespace ZipArchiveLib
 				i++;
 			}
 			for (; i < iCount; i++)
+			{
 				(pDestination)[i] = pSource[iCount - i - 1];
+			}
 		}
 
 		static void ReadBytes(WORD& uDestination, const char* pSource, int iCount = 2)
@@ -126,55 +146,61 @@ namespace ZipArchiveLib
 		}
 
 
-		#ifndef _ZIP_STRICT_U16
+#ifndef _ZIP_STRICT_U16
 		static void ReadBytes(int& iDestination, const char* pSource, int iCount)
 		{
 			ReadBytes((char*)&iDestination, pSource, sizeof(int), iCount);
 		}
-		#endif
+#endif
 
 
 		static void WriteBytes(char* pDestination, WORD uSource)
 		{
 			for (int i = 0; i < 2; i++)
+			{
 				pDestination[i] = ((char*)&uSource)[2 - i - 1];
+			}
 		}
 
 		static void WriteBytes(char* pDestination, DWORD uSource, int iCount = 4)
 		{
 			for (int i = 0; i < iCount; i++)
+			{
 				pDestination[i] = ((char*)&uSource)[4 - i - 1];
+			}
 		}
 
-		#ifndef _ZIP_STRICT_U16
+#ifndef _ZIP_STRICT_U16
 		static void WriteBytes(char* pDestination, int iSource, int iCount)
 		{
 			for (int i = 0; i < iCount; i++)
+			{
 				pDestination[i] = ((char*)&iSource)[sizeof(int) - i - 1];
+			}
 		}
-		#endif
+#endif
 
-	#endif
+#endif
 
 		static DWORD WriteSafeU32(DWORD uValue)
 		{
 			return uValue;
 		}
 
-	#ifdef _ZIP_STRICT_U16
+#ifdef _ZIP_STRICT_U16
 		static WORD WriteSafeU16(WORD uValue)
 		{
 			return uValue;
 		}
-	#else
+#else
 		static WORD WriteSafeU16(int uValue)
 		{
 			return (WORD)uValue;
 		}
-	#endif
-
+#endif
 
 	};
-}
+
+} // namespace
 
 #endif

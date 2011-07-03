@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipException.h
@@ -70,12 +88,12 @@ public:
 	*/
 	static void Throw(int iCause = CZipException::genericError, LPCTSTR lpszZipName = NULL)
 	{
-		#ifdef _ZIP_IMPL_MFC
-			throw new CZipException(iCause, lpszZipName);
-		#else
-			CZipException e(iCause, lpszZipName);
-			throw e;
-		#endif
+#ifdef _ZIP_IMPL_MFC
+		throw new CZipException(iCause, lpszZipName);
+#else
+		CZipException e(iCause, lpszZipName);
+		throw e;
+#endif
 	}
 
 	/**
@@ -99,16 +117,16 @@ public:
 
 #ifdef _ZIP_ENABLE_ERROR_DESCRIPTION
 
-    /**
+	/**
 		Returns the error description.
 
 		\return
 			The error description.
-     */
+	*/
 	CZipString GetErrorDescription();
 
 
-    /**
+	/**
 		Returns the error description. This method is provided for compatibility with the MFC version (\c CException::GetErrorMessage).
 
 		\param lpszError
@@ -125,7 +143,7 @@ public:
 			The method will not copy more than \c nMaxError - 1 characters
 			to the buffer, and it always appends a \c NULL character.
 			If \a lpszError is too small, the error message will be truncated.
-     */
+	*/
 	ZBOOL GetErrorMessage(LPTSTR lpszError, UINT nMaxError, UINT* = NULL);
 
 #endif //_ZIP_ENABLE_ERROR_DESCRIPTION

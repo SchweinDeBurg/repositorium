@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 #ifndef ZIPARCHIVE_ZIPSTRING_DOT_H
 	#error Do not include this file directly. Include ZipString.h instead
@@ -25,7 +43,7 @@ typedef CString CZipString;
 /**
 	A pointer type to point to one of: Collate, CollateNoCase, Compare, CompareNoCase.
 */
-typedef int (CZipString::*ZIPSTRINGCOMPARE)( LPCTSTR ) const;
+typedef int (CZipString::*ZIPSTRINGCOMPARE)(LPCTSTR) const;
 
 /**
 	Returns a pointer to a method in the CZipString structure,

@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file BitFlag.h
@@ -42,7 +60,7 @@ namespace ZipArchiveLib
 			Initializes a new instance of the CBitFlag class.
 		 */
 		CBitFlag()
-			:m_value(0)
+			: m_value(0)
 		{
 		}
 
@@ -53,7 +71,7 @@ namespace ZipArchiveLib
 				The initial value.
 		 */
 		CBitFlag(int value)
-			:m_value(value)
+			: m_value(value)
 		{
 		}
 
@@ -126,7 +144,9 @@ namespace ZipArchiveLib
 				return true;
 			}
 			else
+			{
 				return false;
+			}
 		}
 
 		/**
@@ -146,7 +166,9 @@ namespace ZipArchiveLib
 				return true;
 			}
 			else
+			{
 				return false;
+			}
 		}
 
 		/**
@@ -203,8 +225,7 @@ namespace ZipArchiveLib
 			return m_value == flag.m_value;
 		}
 	};
-}
+
+} // namespace
 
 #endif
-
-

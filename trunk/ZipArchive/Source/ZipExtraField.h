@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipExtraField.h
@@ -22,7 +40,7 @@
 #define ZIPARCHIVE_ZIPEXTRAFIELD_DOT_H
 
 #if (_MSC_VER > 1000)
-#pragma once
+	#pragma once
 #endif
 
 #include "ZipExport.h"
@@ -70,7 +88,9 @@ public:
 	{
 		Clear();
 		for (int i = 0; i < field.GetCount(); i++)
+		{
 			Add(new CZipExtraData(*field.GetAt(i)));
+		}
 		return *this;
 	}
 
@@ -126,7 +146,7 @@ public:
 	*/
 	void RemoveAt(int index)
 	{
-		delete (GetAt(index));
+		delete(GetAt(index));
 		m_aData.RemoveAt(index);
 	}
 
@@ -282,7 +302,9 @@ public:
 		for (ZIP_ARRAY_SIZE_TYPE i = 0; i < size; i++)
 		{
 			if (m_aNoSizeExtraHeadersID.GetAt(i) == headerID)
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -295,7 +317,9 @@ protected:
 	void Clear()
 	{
 		for (int i = 0; i < GetCount(); i++)
-			delete (GetAt(i));
+		{
+			delete(GetAt(i));
+		}
 		m_aData.RemoveAll();
 	}
 

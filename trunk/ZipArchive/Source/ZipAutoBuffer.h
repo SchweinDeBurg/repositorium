@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipAutoBuffer.h
@@ -22,7 +40,7 @@
 #define ZIPARCHIVE_ZIPAUTOBUFFER_DOT_H
 
 #if (_MSC_VER > 1000)
-#pragma once
+	#pragma once
 #endif
 
 #include "ZipExport.h"
@@ -32,17 +50,20 @@
 class ZIP_API CZipAutoBuffer
 {
 public:
-	operator char*()
+	operator char* ()
 	{
 		return m_pBuffer;
 	}
 #if !defined (__BORLANDC__) || (__BORLANDC__ > 0x560) // The actual version may be different.
-	operator const char*() const
+	operator const char* () const
 	{
 		return m_pBuffer;
 	}
 #endif
-	const char* GetBuffer() const {return m_pBuffer;}
+	const char* GetBuffer() const
+	{
+		return m_pBuffer;
+	}
 	char* Allocate(DWORD iSize, bool bZeroMemory = false);
 	void Release();
 	DWORD GetSize() const

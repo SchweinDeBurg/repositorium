@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file BaseLibCompressor.h
@@ -22,7 +40,7 @@
 #define ZIPARCHIVE_BASELIBCOMPRESSOR_DOT_H
 
 #if (_MSC_VER > 1000)
-#pragma once
+	#pragma once
 #endif
 
 #include "ZipExport.h"
@@ -33,163 +51,167 @@
 namespace ZipArchiveLib
 {
 
-/**
-	A base class for compressors that use external libraries, such as zlib or bzip2.
-*/
-class ZIP_API CBaseLibCompressor : public CZipCompressor
-{
-public:
 	/**
-		Represents options of compressors that use external libraries.
-
-		\see
-			<a href="kb">0610231446|options</a>
-		\see
-			CZipArchive::SetCompressionOptions
+		A base class for compressors that use external libraries, such as zlib or bzip2.
 	*/
-	struct ZIP_API COptions : CZipCompressor::COptions
+	class ZIP_API CBaseLibCompressor : public CZipCompressor
 	{
-		COptions()
+	public:
+		/**
+			Represents options of compressors that use external libraries.
+
+			\see
+				<a href="kb">0610231446|options</a>
+			\see
+				CZipArchive::SetCompressionOptions
+		*/
+		struct ZIP_API COptions : CZipCompressor::COptions
 		{
-			m_bDetectLibMemoryLeaks = true;
+			COptions()
+			{
+				m_bDetectLibMemoryLeaks = true;
+			}
+
+			/**
+				\c true, if the ZipArchive Library should detect memory leaks in an external library; \c false otherwise.
+				Recommended to be set to \c true.
+			*/
+			bool m_bDetectLibMemoryLeaks;
+		};
+
+		/**
+			Initializes a new instance of the CBaseLibCompressor class.
+
+			\param pStorage
+				The current storage object.
+		 */
+		CBaseLibCompressor(CZipStorage* pStorage)
+			: CZipCompressor(pStorage)
+		{
+		}
+
+		void InitDecompression(CZipFileHeader* pFile, CZipCryptograph* pCryptograph)
+		{
+			CZipCompressor::InitDecompression(pFile, pCryptograph);
+			m_bDecompressionDone = false;
+		}
+
+		~CBaseLibCompressor()
+		{
+			EmptyPtrList();
+		}
+	protected:
+
+		/**
+			A memory allocation method called by an external library.
+
+			\param opaque
+				Internal data.
+
+			\param items
+				The number of blocks to allocate.
+
+			\param size
+				The size of each block to allocate.
+
+			\return
+				The address of a newly allocated memory.
+		*/
+		static void* _zipalloc(void* opaque, UINT items, UINT size)
+		{
+			void* p = new char[size * items];
+			if (opaque)
+			{
+				CZipPtrList<void*>* list  = (CZipPtrList<void*>*) opaque;
+				list->AddTail(p);
+			}
+			return p;
 		}
 
 		/**
-			\c true, if the ZipArchive Library should detect memory leaks in an external library; \c false otherwise.
-			Recommended to be set to \c true.
+			A memory deallocation method called by an external library.
+
+			\param opaque
+				Internal data.
+
+			\param address
+				Memory address to free.
 		*/
-		bool m_bDetectLibMemoryLeaks;
-	};
-
-	/**
-		Initializes a new instance of the CBaseLibCompressor class.
-
-		\param pStorage
-			The current storage object.
-	 */
-	CBaseLibCompressor(CZipStorage* pStorage)
-		:CZipCompressor(pStorage)
-	{
-	}
-
-	void InitDecompression(CZipFileHeader* pFile, CZipCryptograph* pCryptograph)
-	{
-		CZipCompressor::InitDecompression(pFile, pCryptograph);
-		m_bDecompressionDone = false;
-	}
-
-	~CBaseLibCompressor()
-	{
-		EmptyPtrList();
-	}
-protected:
-
-	/**
-		A memory allocation method called by an external library.
-
-		\param opaque
-			Internal data.
-
-		\param items
-			The number of blocks to allocate.
-
-		\param size
-			The size of each block to allocate.
-
-		\return
-			The address of a newly allocated memory.
-	*/
-	static void* _zipalloc(void* opaque, UINT items, UINT size)
-	{
-		void* p = new char[size * items];
-		if (opaque)
+		static void _zipfree(void* opaque, void* address)
 		{
-			CZipPtrList<void*>* list  = (CZipPtrList<void*>*) opaque;
-			list->AddTail(p);
+			if (opaque)
+			{
+				CZipPtrList<void*>* list  = (CZipPtrList<void*>*) opaque;
+				CZipPtrListIter iter = list->Find(address);
+				if (list->IteratorValid(iter))
+				{
+					list->RemoveAt(iter);
+				}
+			}
+			delete[](char*) address;
 		}
-		return p;
-	}
 
-	/**
-		A memory deallocation method called by an external library.
+		/**
+			Frees the memory allocated by an external library that hasn't been freed
+			due to an error in the library (it should never happen).
+		*/
+		void EmptyPtrList();
 
-		\param opaque
-			Internal data.
+		/**
+			Checks whether \a iErr value is an error code.
 
-		\param address
-			Memory address to free.
-	*/
-	static void _zipfree(void* opaque, void* address)
-	{
-		if (opaque)
+			\param iErr
+				The code to check.
+
+			\return
+				\c true, if \a iErr is an error code; \c false otherwise.
+		*/
+		virtual bool IsCodeErrorOK(int iErr) const = 0;
+
+		/**
+			Checks whether \a iErr value is an error code and throws an exception if it is.
+
+			\param iErr
+				The error code.
+
+		*/
+		void CheckForError(int iErr)
 		{
-			CZipPtrList<void*>* list  = (CZipPtrList<void*>*) opaque;
-			CZipPtrListIter iter = list->Find(address);
-			if (list->IteratorValid(iter))
-				list->RemoveAt(iter);
+			if (!IsCodeErrorOK(iErr))
+			{
+				ThrowError(iErr, true);
+			}
 		}
-		delete[] (char*) address;
-	}
 
-	/**
-		Frees the memory allocated by an external library that hasn't been freed
-		due to an error in the library (it should never happen).
-	*/
-	void EmptyPtrList();
+		/**
+			Sets an address of internal data used in ZipArchive Library memory allocation and deallocation methods.
 
-	/**
-		Checks whether \a iErr value is an error code.
+			\param opaque
+				Receives an address of the internal data.
+			\param pOptions
+				The current decompressor options.
+		*/
+		void SetOpaque(void** opaque, const	COptions* pOptions);
 
-		\param iErr
-			The code to check.
-
-		\return
-			\c true, if \a iErr is an error code; \c false otherwise.
-	*/
-	virtual bool IsCodeErrorOK(int iErr) const = 0;
-
-	/**
-		Checks whether \a iErr value is an error code and throws an exception if it is.
-
-		\param iErr
-			The error code.
-
-	*/
-	void CheckForError(int iErr)
-	{
-		if (!IsCodeErrorOK(iErr))
-			ThrowError(iErr, true);
-	}
-
-	/**
-		Sets an address of internal data used in ZipArchive Library memory allocation and deallocation methods.
-
-		\param opaque
-			Receives an address of the internal data.
-		\param pOptions
-			The current decompressor options.
-	*/
-	void SetOpaque(void** opaque, const	COptions* pOptions);
-
-	/**
-		Signalizes that the decompression process reached the end of the compressed data. It is internally set by derived classes.
-	*/
-	bool m_bDecompressionDone;
-private:
-	typedef CZipPtrList<void*>::iterator CZipPtrListIter;
+		/**
+			Signalizes that the decompression process reached the end of the compressed data. It is internally set by derived classes.
+		*/
+		bool m_bDecompressionDone;
+	private:
+		typedef CZipPtrList<void*>::iterator CZipPtrListIter;
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
 	#pragma warning(push)
 	#pragma warning(disable: 4251) // needs to have dll-interface to be used by clients of class
 #endif
 
-	CZipPtrList<void*> m_list; ///< A list holding pointers to the memory areas allocated by an external library.
+		CZipPtrList<void*> m_list; ///< A list holding pointers to the memory areas allocated by an external library.
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
 	#pragma warning(pop)
 #endif
 
-};
+	};
 
 } // namespace
 
