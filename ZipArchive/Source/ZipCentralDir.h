@@ -253,7 +253,7 @@ public:
 		\return
 			\c true, if the file with the given index exists inside the archive; \c false otherwise.
 	*/
-	bool IsValidIndex(ZIP_INDEX_TYPE uIndex)const;
+	bool IsValidIndex(ZIP_INDEX_TYPE uIndex) const;
 
 	/**
 		Removes a file header from the central directory.
@@ -391,7 +391,7 @@ public:
 		\see
 			CZipArchive::GetFindFastIndex
 	*/
-	ZIP_INDEX_TYPE GetFindFastIndex(ZIP_INDEX_TYPE uFindFastIndex)const
+	ZIP_INDEX_TYPE GetFindFastIndex(ZIP_INDEX_TYPE uFindFastIndex) const
 	{
 		if (!IsValidIndex(uFindFastIndex) || !m_pInfo->m_bFindFastEnabled)
 			return ZIP_FILE_INDEX_NOT_FOUND;

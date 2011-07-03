@@ -154,13 +154,13 @@ void CZipCentralDir::Read()
 	m_pStorage->Read(buf, CENTRAL_DIR_END_SIZE - 4, true);
 
 	WORD uCommentSize;
-	CBytesWriter::ReadBytes(m_pInfo->m_uLastVolume,		buf, 2);
-	CBytesWriter::ReadBytes(m_pInfo->m_uVolumeWithCD,	buf + 2, 2);
+	CBytesWriter::ReadBytes(m_pInfo->m_uLastVolume, buf, 2);
+	CBytesWriter::ReadBytes(m_pInfo->m_uVolumeWithCD, buf + 2, 2);
 	CBytesWriter::ReadBytes(m_pInfo->m_uVolumeEntriesNo, buf + 4, 2);
 	CBytesWriter::ReadBytes(m_pInfo->m_uEntriesNumber, buf + 6, 2);
-	CBytesWriter::ReadBytes(m_pInfo->m_uSize,			buf + 8, 4);
-	CBytesWriter::ReadBytes(m_pInfo->m_uOffset,		buf + 12, 4);
-	CBytesWriter::ReadBytes(uCommentSize,			buf + 16);
+	CBytesWriter::ReadBytes(m_pInfo->m_uSize, buf + 8, 4);
+	CBytesWriter::ReadBytes(m_pInfo->m_uOffset, buf + 12, 4);
+	CBytesWriter::ReadBytes(uCommentSize, buf + 16);
 	buf.Release();
 
 	if (uCommentSize)
@@ -296,7 +296,7 @@ void CZipCentralDir::Close()
 	InitUnicode();
 }
 
-bool CZipCentralDir::IsValidIndex(ZIP_INDEX_TYPE uIndex)const
+bool CZipCentralDir::IsValidIndex(ZIP_INDEX_TYPE uIndex) const
 {
 	return uIndex < (ZIP_INDEX_TYPE)m_pHeaders->GetSize() && uIndex != ZIP_FILE_INDEX_UNSPECIFIED;
 }

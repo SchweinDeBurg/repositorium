@@ -53,7 +53,7 @@ public:
 	{
 		return true;
 	}
-	bool IsClosed()const { return m_hFile == INVALID_HANDLE_VALUE;}
+	bool IsClosed() const { return m_hFile == INVALID_HANDLE_VALUE;}
 	bool Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow);
 	void Close();
 

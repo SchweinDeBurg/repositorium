@@ -205,7 +205,7 @@ public:
 		\return
 			\c true, if the data descriptor is present; \c false otherwise.
 	*/
-	bool IsDataDescriptor()const {	return (m_uFlag & (WORD) 8) != 0;}
+	bool IsDataDescriptor() const {	return (m_uFlag & (WORD) 8) != 0;}
 
 	/**
 		Returns the data descriptor size as it is required for the current file.
@@ -337,7 +337,7 @@ public:
 		\see
 			SetTime
 	*/
-	time_t GetTime()const;
+	time_t GetTime() const;
 
 	/**
 		Returns the file system compatibility.
@@ -352,7 +352,7 @@ public:
 		\see
 			ZipPlatform::GetSystemID
 	*/
-	int GetSystemCompatibility()const
+	int GetSystemCompatibility() const
 	{
 		return (int)m_iSystemCompatibility;
 	}
@@ -442,7 +442,7 @@ public:
 		\see
 			CZipArchive::SetPassword
 	*/
-	bool IsEncrypted()const {	return m_uEncryptionMethod != CZipCryptograph::encNone;}
+	bool IsEncrypted() const {	return m_uEncryptionMethod != CZipCryptograph::encNone;}
 
 	/**
 		Returns the encryption method of the file.
@@ -892,7 +892,7 @@ private:
 
 	void ClearFileName();
 
-	void GetCrcAndSizes(char* pBuffer)const;
+	void GetCrcAndSizes(char* pBuffer) const;
 
 	bool NeedsZip64() const
 	{
