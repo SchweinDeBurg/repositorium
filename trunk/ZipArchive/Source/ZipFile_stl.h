@@ -80,7 +80,7 @@ public:
 	{
 		return true;
 	}
-	bool IsClosed()const { return m_hFile == -1;}
+	bool IsClosed() const { return m_hFile == -1;}
 	bool Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow);
 	void Close();
 

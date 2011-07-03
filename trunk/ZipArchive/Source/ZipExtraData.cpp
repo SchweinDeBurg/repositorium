@@ -68,7 +68,7 @@ bool CZipExtraData::Read(char* buffer, WORD uSize)
 	return true;
 }
 
-WORD CZipExtraData::Write(char* buffer)const
+WORD CZipExtraData::Write(char* buffer) const
 {
 	CBytesWriter::WriteBytes(buffer, m_uHeaderID);
 	WORD size = (WORD)m_data.GetSize();

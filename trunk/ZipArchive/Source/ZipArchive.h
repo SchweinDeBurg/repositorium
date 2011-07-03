@@ -243,7 +243,7 @@ public:
 		\see
 			SetPassword
 	*/
-	CZipString GetPassword()const ;
+	CZipString GetPassword() const ;
 
 	/**
 		Returns the value indicating whether the next file will be encrypted. To encrypt a file,
@@ -806,7 +806,7 @@ public:
 		\see
 			SetRootPath
      */
-	CZipString GetRootPath()const
+	CZipString GetRootPath() const
 	{
 		return m_szRootPath;
 	}
@@ -1793,7 +1793,7 @@ public:
 		\see
 			SetGlobalComment
 	*/
-	CZipString GetGlobalComment()const ;
+	CZipString GetGlobalComment() const ;
 
 
 	/**
@@ -1804,7 +1804,7 @@ public:
 		\see
 			<a href="kb">0610051553</a>
 	*/
-	CZipString GetArchivePath()const;
+	CZipString GetArchivePath() const;
 
 	/**
 		Returns the archive volume number currently being processed. The first volume has the number 1.
@@ -2152,7 +2152,7 @@ public:
 		\see
 			Close
 	*/
-	bool IsClosed(bool bArchive = true)const
+	bool IsClosed(bool bArchive = true) const
 	{
 		return m_storage.IsClosed(bArchive);
 	}
@@ -2237,7 +2237,7 @@ public:
 		\see
 			Finalize
 	*/
-	bool GetAutoFinalize()const {return m_bAutoFinalize;}
+	bool GetAutoFinalize() const {return m_bAutoFinalize;}
 
 	/**
 		Sets the system compatibility of the archive. Use it after opening the archive,
@@ -2539,7 +2539,7 @@ public:
 		\see
 			SetTempPath
      */
-	CZipString GetTempPath()const
+	CZipString GetTempPath() const
 	{
 		return m_szTempPath;
 	}
@@ -2569,7 +2569,7 @@ public:
        \return
 			The filename as it would be stored in the archive.
      */
-	CZipString PredictFileNameInZip(LPCTSTR lpszFilePath, bool bFullPath, int iWhat = prAuto)const ;
+	CZipString PredictFileNameInZip(LPCTSTR lpszFilePath, bool bFullPath, int iWhat = prAuto) const ;
 
 	/**
 		Calculates the maximum number of bytes that the file represented by #CZipFileHeader would occupy in the current archive.
@@ -2665,7 +2665,7 @@ public:
        \return
 			The predicted resulting file path.
      */
-	CZipString PredictExtractedFileName(LPCTSTR lpszFileNameInZip, LPCTSTR lpszPath, bool bFullPath, LPCTSTR lpszNewName = NULL)const ;
+	CZipString PredictExtractedFileName(LPCTSTR lpszFileNameInZip, LPCTSTR lpszPath, bool bFullPath, LPCTSTR lpszNewName = NULL) const ;
 
 
 /**
@@ -2746,7 +2746,7 @@ public:
 		\see
 			GetCentralDirSize
 	*/
-	void GetCentralDirInfo(CZipCentralDir::CInfo& info)const;
+	void GetCentralDirInfo(CZipCentralDir::CInfo& info) const;
 
 
 	/**

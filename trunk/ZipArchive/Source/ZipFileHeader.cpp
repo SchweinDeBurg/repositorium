@@ -119,22 +119,22 @@ bool CZipFileHeader::Read(bool bReadSignature)
 	}
 
 	WORD uVersionMadeBy;
-	CBytesWriter::ReadBytes(uVersionMadeBy,	buf + 4);
-	CBytesWriter::ReadBytes(m_uVersionNeeded,	buf + 6);
-	CBytesWriter::ReadBytes(m_uFlag,			buf + 8);
-	CBytesWriter::ReadBytes(m_uMethod,			buf + 10);
-	CBytesWriter::ReadBytes(m_uModTime,			buf + 12);
-	CBytesWriter::ReadBytes(m_uModDate,			buf + 14);
-	CBytesWriter::ReadBytes(m_uCrc32,			buf + 16);
-	CBytesWriter::ReadBytes(m_uComprSize,		buf + 20, 4);
-	CBytesWriter::ReadBytes(m_uUncomprSize,		buf + 24, 4);
-	CBytesWriter::ReadBytes(uFileNameSize,		buf + 28);
-	CBytesWriter::ReadBytes(uExtraFieldSize,	buf + 30);
-	CBytesWriter::ReadBytes(uCommentSize,		buf + 32);
-	CBytesWriter::ReadBytes(m_uVolumeStart,		buf + 34, 2);
-	CBytesWriter::ReadBytes(m_uInternalAttr,	buf + 36);
-	CBytesWriter::ReadBytes(m_uExternalAttr,	buf + 38);
-	CBytesWriter::ReadBytes(m_uOffset,			buf + 42, 4);
+	CBytesWriter::ReadBytes(uVersionMadeBy, buf + 4);
+	CBytesWriter::ReadBytes(m_uVersionNeeded, buf + 6);
+	CBytesWriter::ReadBytes(m_uFlag, buf + 8);
+	CBytesWriter::ReadBytes(m_uMethod, buf + 10);
+	CBytesWriter::ReadBytes(m_uModTime, buf + 12);
+	CBytesWriter::ReadBytes(m_uModDate, buf + 14);
+	CBytesWriter::ReadBytes(m_uCrc32, buf + 16);
+	CBytesWriter::ReadBytes(m_uComprSize, buf + 20, 4);
+	CBytesWriter::ReadBytes(m_uUncomprSize, buf + 24, 4);
+	CBytesWriter::ReadBytes(uFileNameSize, buf + 28);
+	CBytesWriter::ReadBytes(uExtraFieldSize, buf + 30);
+	CBytesWriter::ReadBytes(uCommentSize, buf + 32);
+	CBytesWriter::ReadBytes(m_uVolumeStart, buf + 34, 2);
+	CBytesWriter::ReadBytes(m_uInternalAttr, buf + 36);
+	CBytesWriter::ReadBytes(m_uExternalAttr, buf + 38);
+	CBytesWriter::ReadBytes(m_uOffset, buf + 42, 4);
 	buf.Release();
 
 	m_uVersionMadeBy = uVersionMadeBy & 0xFF;
@@ -270,7 +270,7 @@ bool CZipFileHeader::Read(bool bReadSignature)
 }
 
 
-time_t CZipFileHeader::GetTime()const
+time_t CZipFileHeader::GetTime() const
 {
 	struct tm atm;
 	atm.tm_sec = (m_uModTime & ~0xFFE0) << 1;
@@ -769,7 +769,7 @@ void CZipFileHeader::PrepareData(int iLevel, bool bSegm)
 }
 
 
-void CZipFileHeader::GetCrcAndSizes(char* pBuffer)const
+void CZipFileHeader::GetCrcAndSizes(char* pBuffer) const
 {
 	WriteCrc32(pBuffer);
 	CBytesWriter::WriteBytes(pBuffer + 4, m_uComprSize, 4);
@@ -808,13 +808,13 @@ bool CZipFileHeader::CheckDataDescriptor(CZipStorage* pStorage) const
 	DWORD uCrc32 = 0;
 	ZIP_SIZE_TYPE uCompressed = 0, uUncompressed = 0;
 
-	CBytesWriter::ReadBytes(uCrc32,			pBuf);
-	CBytesWriter::ReadBytes(uCompressed,	pBuf + 4, sizeOfSize);
-	CBytesWriter::ReadBytes(uUncompressed,	pBuf + 4 + sizeOfSize, sizeOfSize);
+	CBytesWriter::ReadBytes(uCrc32, pBuf);
+	CBytesWriter::ReadBytes(uCompressed, pBuf + 4, sizeOfSize);
+	CBytesWriter::ReadBytes(uUncompressed, pBuf + 4 + sizeOfSize, sizeOfSize);
 	return uCrc32 == m_uCrc32 && uCompressed == m_uComprSize && uUncompressed == m_uUncomprSize;
 }
 
-DWORD CZipFileHeader::GetSize()const
+DWORD CZipFileHeader::GetSize() const
 {
 	DWORD uSize = FILEHEADERSIZE + PredictFileNameSize() + PredictCommentSize();
 	uSize += m_aCentralExtraData.GetTotalSize();
@@ -850,7 +850,7 @@ DWORD CZipFileHeader::GetSize()const
 	return uSize;
 }
 
-DWORD CZipFileHeader::GetLocalSize(bool bReal)const
+DWORD CZipFileHeader::GetLocalSize(bool bReal) const
 {
 	if (bReal)
 	{

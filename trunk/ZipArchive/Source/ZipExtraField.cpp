@@ -70,7 +70,7 @@ bool CZipExtraField::Read(CZipStorage* pStorage, WORD uSize)
 }
 
 
-void CZipExtraField::Write(char* buffer)const
+void CZipExtraField::Write(char* buffer) const
 {
 	int offset = 0;
 	for (int i = 0; i < GetCount(); i++)
@@ -79,7 +79,7 @@ void CZipExtraField::Write(char* buffer)const
 	}
 }
 
-int CZipExtraField::GetTotalSize()const
+int CZipExtraField::GetTotalSize() const
 {
 	int total = 0;
 	for (int i = 0; i < GetCount(); i++)

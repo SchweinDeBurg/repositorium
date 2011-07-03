@@ -160,7 +160,7 @@ protected:
 		\return
 			The total size of extra data in bytes.
 	*/
-	WORD Write(char* buffer)const;
+	WORD Write(char* buffer) const;
 
 private:
 	WORD m_uHeaderID;
