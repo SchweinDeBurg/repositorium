@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 #include "Private/ZipArchive.h"
 #include "ZipExtraData.h"
@@ -22,7 +42,9 @@ using namespace ZipArchiveLib;
 bool CZipExtraData::Read(char* buffer, WORD uSize)
 {
 	if (uSize < 4)
+	{
 		return false;
+	}
 	CBytesWriter::ReadBytes(m_uHeaderID, buffer);
 	m_bHasSize = CZipExtraField::HasSize(m_uHeaderID);
 	WORD size;
@@ -30,7 +52,9 @@ bool CZipExtraData::Read(char* buffer, WORD uSize)
 	{
 		CBytesWriter::ReadBytes(size, buffer + 2);
 		if (size > (WORD)(uSize - 4))
+		{
 			return false;
+		}
 		m_data.Allocate(size);
 		memcpy(m_data, buffer + 4, size);
 	}

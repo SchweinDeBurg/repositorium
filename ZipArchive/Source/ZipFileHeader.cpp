@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 #include "Private/ZipFileHeader.h"
 #include "ZipAutoBuffer.h"
@@ -82,17 +102,21 @@ bool CZipFileHeader::Read(bool bReadSignature)
 {
 	m_state = sfNone;
 
-	CZipStorage *pStorage = m_pCentralDir->GetStorage();
+	CZipStorage* pStorage = m_pCentralDir->GetStorage();
 	WORD uFileNameSize, uCommentSize, uExtraFieldSize;
 	CZipAutoBuffer buf(FILEHEADERSIZE);
 	if (bReadSignature)
 	{
 		pStorage->Read(buf, FILEHEADERSIZE, true);
 		if (!VerifySignature(buf))
+		{
 			return false;
+		}
 	}
 	else
+	{
 		pStorage->Read((char*)buf + 4, FILEHEADERSIZE - 4, true);
+	}
 
 	WORD uVersionMadeBy;
 	CBytesWriter::ReadBytes(uVersionMadeBy,	buf + 4);
@@ -127,16 +151,24 @@ bool CZipFileHeader::Read(bool bReadSignature)
 	const CZipStringStoreSettings& stringStoreSettings = m_pCentralDir->GetStringStoreSettings();
 
 	if (stringStoreSettings.IsStandardNameCodePage())
+	{
 		m_stringSettings.SetDefaultNameCodePage(GetSystemCompatibility());
+	}
 	else
+	{
 		m_stringSettings.m_uNameCodePage = stringStoreSettings.m_uNameCodePage;
+	}
 
 	if (!stringStoreSettings.IsStandardCommentCodePage())
+	{
 		m_stringSettings.m_uCommentCodePage = stringStoreSettings.m_uCommentCodePage;
+	}
 #endif
 
 	if (!m_aCentralExtraData.Read(pStorage, uExtraFieldSize))
+	{
 		return false;
+	}
 #if defined _ZIP_UNICODE || defined _ZIP_UNICODE_CUSTOM || defined _ZIP_AES || defined _ZIP_ZIP64
 	CZipExtraData* pExtra;
 #endif
@@ -153,19 +185,25 @@ bool CZipFileHeader::Read(bool bReadSignature)
 			WORD uExtraDataSize = (WORD)pExtra->m_data.GetSize();
 			int offset = 1;
 			if (offset > uExtraDataSize)
+			{
 				return false;
+			}
 			if (pExtra->m_data[0] <= ZIP_EXTRA_ZARCH_NAME_VER) // else don't parse it
 			{
 				offset++;
 				if (offset > uExtraDataSize)
+				{
 					return false;
+				}
 				BYTE flag = pExtra->m_data[1];
 				bool bReadCommentCp = (flag & 4) != 0;
 				if ((flag & 1) != 0)
 				{
 					// code page present
 					if (offset + 4 > uExtraDataSize)
+					{
 						return false;
+					}
 					// avoid warnings
 					DWORD temp;
 					CBytesWriter::ReadBytes(temp, pExtra->m_data + offset);
@@ -178,10 +216,14 @@ bool CZipFileHeader::Read(bool bReadSignature)
 					m_stringSettings.m_bStoreNameInExtraData = true;
 					int iFileNameSize = pExtra->m_data.GetSize() - 2 - 4;
 					if (bReadCommentCp)
+					{
 						iFileNameSize -= 4;
+					}
 					// code page present
 					if (offset + iFileNameSize > uExtraDataSize || iFileNameSize <= 0)
+					{
 						return false;
+					}
 					// just in case
 					m_fileName.ClearString();
 					m_fileName.m_buffer.Allocate(iFileNameSize);
@@ -189,13 +231,17 @@ bool CZipFileHeader::Read(bool bReadSignature)
 					offset += iFileNameSize;
 				}
 				else
+				{
 					m_stringSettings.m_bStoreNameInExtraData = false;
+				}
 
 				if (bReadCommentCp)
 				{
 					// code page present
 					if (offset + 4 > uExtraDataSize)
+					{
 						return false;
+					}
 					DWORD temp;
 					CBytesWriter::ReadBytes(temp, pExtra->m_data + offset);
 					m_stringSettings.m_uCommentCodePage = temp;
@@ -239,7 +285,7 @@ time_t CZipFileHeader::GetTime()const
 }
 
 // write the header to the central dir
-DWORD CZipFileHeader::Write(CZipStorage *pStorage)
+DWORD CZipFileHeader::Write(CZipStorage* pStorage)
 {
 	m_aCentralExtraData.RemoveInternalHeaders();
 
@@ -248,7 +294,9 @@ DWORD CZipFileHeader::Write(CZipStorage *pStorage)
 	PrepareStringBuffers();
 
 	if (!CheckLengths(false))
+	{
 		CZipException::Throw(CZipException::tooLongData);
+	}
 
 #ifdef _ZIP_UNICODE_CUSTOM
 	if (m_state == sfCustomUnicode)
@@ -256,11 +304,15 @@ DWORD CZipFileHeader::Write(CZipStorage *pStorage)
 		if (m_stringSettings.m_bStoreNameInExtraData)
 		{
 			if (!m_fileName.HasString() && m_fileName.HasBuffer())
-				GetFileName(false); // don't clear the buffer, it will be needed in a moment
+			{
+				GetFileName(false);   // don't clear the buffer, it will be needed in a moment
+			}
 			ASSERT(m_fileName.HasString());
 			ASSERT(m_fileName.HasBuffer());
 			if (m_fileName.GetString().GetLength() == 0)
+			{
 				m_stringSettings.m_bStoreNameInExtraData = false;
+			}
 		}
 
 		if (!m_stringSettings.IsStandard(GetSystemCompatibility()))
@@ -278,7 +330,9 @@ DWORD CZipFileHeader::Write(CZipStorage *pStorage)
 				ZipCompatibility::ConvertStringToBuffer(m_fileName.GetString(), buffer, m_stringSettings.m_uNameCodePage);
 				int size = 2 + 4 + buffer.GetSize();
 				if (bWriteCommentCp)
+				{
 					size += 4;
+				}
 				pExtra->m_data.Allocate(size);
 				data = (char*)pExtra->m_data;
 				CBytesWriter::WriteBytes(data + offset, (DWORD)m_stringSettings.m_uNameCodePage);
@@ -291,7 +345,9 @@ DWORD CZipFileHeader::Write(CZipStorage *pStorage)
 			{
 				int size = 2 + 4;
 				if (bWriteCommentCp)
+				{
 					size += 4;
+				}
 				pExtra->m_data.Allocate(size);
 				data = (char*)pExtra->m_data;
 				CBytesWriter::WriteBytes(data + offset, (DWORD)m_stringSettings.m_uNameCodePage);
@@ -345,10 +401,14 @@ DWORD CZipFileHeader::Write(CZipStorage *pStorage)
 	memcpy(dest + 46, m_fileName.m_buffer, uFileNameSize);
 
 	if (uExtraFieldSize)
+	{
 		m_aCentralExtraData.Write(dest + 46 + uFileNameSize);
+	}
 
 	if (uCommentSize)
+	{
 		memcpy(dest + 46 + uFileNameSize + uExtraFieldSize, m_comment.m_buffer, uCommentSize);
+	}
 
 	pStorage->Write(dest, uSize, true);
 
@@ -364,15 +424,21 @@ bool CZipFileHeader::ReadLocal(CZipCentralDir* pCentralDir)
 	pStorage->ChangeVolume(m_uVolumeStart);
 	bool isBinary = pStorage->IsBinarySplit();
 	if (isBinary)
+	{
 		pStorage->SeekInBinary(m_uOffset, true);
+	}
 	else
+	{
 		pStorage->Seek(m_uOffset);
+	}
 
 	char buf[LOCALFILEHEADERSIZE];
 
 	pStorage->Read(buf, LOCALFILEHEADERSIZE, true);
 	if (memcmp(buf, m_gszLocalSignature, 4) != 0)
+	{
 		return false;
+	}
 
 	bool bIsDataDescr = (((WORD)*(buf + 6)) & 8) != 0;
 
@@ -382,7 +448,9 @@ bool CZipFileHeader::ReadLocal(CZipCentralDir* pCentralDir)
 	// in local and central headers
 	if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalFlag)
 		&& (uTemp & 0xf) != (m_uFlag & 0xf))
+	{
 		return false;
+	}
 
 	// method
 	WORD uMethod;
@@ -396,44 +464,56 @@ bool CZipFileHeader::ReadLocal(CZipCentralDir* pCentralDir)
 	// skip reading the local file name
 
 	if (isBinary)
+	{
 		pStorage->SeekInBinary(m_uLocalFileNameSize);
+	}
 	else
+	{
 		pStorage->m_pFile->Seek(m_uLocalFileNameSize, CZipAbstractFile::current);
+	}
 
 	m_uLocalHeaderSize = LOCALFILEHEADERSIZE + m_uLocalFileNameSize + uExtraFieldSize;
 	if (!m_aLocalExtraData.Read(pStorage, uExtraFieldSize))
+	{
 		return false;
+	}
 
-		CBytesWriter::ReadBytes(m_uLocalComprSize, buf + 18, 4);
-		CBytesWriter::ReadBytes(m_uLocalUncomprSize, buf + 22, 4);
+	CBytesWriter::ReadBytes(m_uLocalComprSize, buf + 18, 4);
+	CBytesWriter::ReadBytes(m_uLocalUncomprSize, buf + 22, 4);
 
 
 	if (uMethod == CZipCompressor::methodWinZipAes && IsEncrypted())
+	{
 		CZipException::Throw(CZipException::noAES);
+	}
 
-	if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalMethod)
-		&& uMethod != m_uMethod )
+	if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalMethod) && uMethod != m_uMethod)
+	{
 		return false;
+	}
 
 	if (!bIsDataDescr && pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalCRC | CZipArchive::checkLocalSizes))
 	{
 		// read all at once - probably faster than checking and reading separately
 		DWORD uCrc32;
 		CBytesWriter::ReadBytes(uCrc32, buf + 14);
-		if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalCRC)
-			&& uCrc32 != m_uCrc32)
+		if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalCRC) && uCrc32 != m_uCrc32)
+		{
 			return false;
+		}
 
 		if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalSizes)
 			// do not check, if local compressed size is 0 - this usually means, that some archiver
 			// could not update the compressed size after compression
-			&& ( m_uLocalComprSize != 0 && m_uLocalComprSize != m_uComprSize || m_uLocalUncomprSize != m_uUncomprSize))
+			&& (m_uLocalComprSize != 0 && m_uLocalComprSize != m_uComprSize || m_uLocalUncomprSize != m_uUncomprSize))
+		{
 			return false;
+		}
 	}
 	return pStorage->GetCurrentVolume() == uCurDsk || isBinary; // check that the whole header is in one volume
 }
 
-void CZipFileHeader::SetTime(const time_t & ttime)
+void CZipFileHeader::SetTime(const time_t& ttime)
 {
 #if !defined(UNDER_CE) && (_MSC_VER >= 1400)
 	tm gts;
@@ -453,9 +533,13 @@ void CZipFileHeader::SetTime(const time_t & ttime)
 	{
 		year = (WORD)(gt->tm_year + 1900);
 		if (year <= 1980)
+		{
 			year = 0;
+		}
 		else
+		{
 			year -= 1980;
+		}
 		month = (WORD)gt->tm_mon + 1;
 		day = (WORD)gt->tm_mday;
 		hour = (WORD)gt->tm_hour;
@@ -463,14 +547,16 @@ void CZipFileHeader::SetTime(const time_t & ttime)
 		sec = (WORD)gt->tm_sec;
 	}
 
-    m_uModDate = (WORD) (day + ( month << 5) + (year << 9));
-    m_uModTime = (WORD) ((sec >> 1) + (min << 5) + (hour << 11));
+	m_uModDate = (WORD)(day + (month << 5) + (year << 9));
+	m_uModTime = (WORD)((sec >> 1) + (min << 5) + (hour << 11));
 }
 
 void CZipFileHeader::ConvertFileName(CZipAutoBuffer& buffer) const
 {
 	if (!m_fileName.HasString())
+	{
 		return;
+	}
 	CZipString temp = m_fileName.GetString();
 	ZipCompatibility::SlashBackslashChg(temp, false);
 	UINT codePage;
@@ -499,7 +585,9 @@ void CZipFileHeader::ConvertFileName(CZipAutoBuffer& buffer) const
 void CZipFileHeader::ConvertFileName(CZipString& szFileName) const
 {
 	if (!m_fileName.HasBuffer())
+	{
 		return;
+	}
 	UINT codePage;
 #ifdef _ZIP_UNICODE_CUSTOM
 	if (m_state.IsSetAny(sfCustomUnicode))
@@ -519,7 +607,9 @@ void CZipFileHeader::ConvertFileName(CZipString& szFileName) const
 void CZipFileHeader::ConvertComment(CZipAutoBuffer& buffer) const
 {
 	if (!m_comment.HasString())
+	{
 		return;
+	}
 	UINT codePage;
 #ifdef _ZIP_UNICODE_CUSTOM
 	if (m_state.IsSetAny(sfCustomUnicode))
@@ -538,7 +628,9 @@ void CZipFileHeader::ConvertComment(CZipAutoBuffer& buffer) const
 void CZipFileHeader::ConvertComment(CZipString& szComment) const
 {
 	if (!m_comment.HasBuffer())
+	{
 		return;
+	}
 	UINT codePage;
 #ifdef _ZIP_UNICODE_CUSTOM
 	if (m_state.IsSetAny(sfCustomUnicode))
@@ -554,7 +646,7 @@ void CZipFileHeader::ConvertComment(CZipString& szComment) const
 }
 
 // write the local header
-void CZipFileHeader::WriteLocal(CZipStorage *pStorage)
+void CZipFileHeader::WriteLocal(CZipStorage* pStorage)
 {
 	m_aLocalExtraData.RemoveInternalLocalHeaders();
 	if (IsDataDescriptor())
@@ -564,7 +656,9 @@ void CZipFileHeader::WriteLocal(CZipStorage *pStorage)
 		// complain otherwise (this seems like a bug, because the data descriptor is present and
 		// local descriptor should be discarded)
 		if (!IsWinZipAesEncryption())
+		{
 			m_uLocalUncomprSize = 0;
+		}
 	}
 	else
 	{
@@ -575,7 +669,9 @@ void CZipFileHeader::WriteLocal(CZipStorage *pStorage)
 	PrepareStringBuffers();
 	// this check was already performed, if a file was replaced
 	if (!CheckLengths(true))
+	{
 		m_pCentralDir->ThrowError(CZipException::tooLongData);
+	}
 	m_uLocalFileNameSize = (WORD)m_fileName.GetBufferSize();
 	DWORD uExtraFieldSize = m_aLocalExtraData.GetTotalSize();
 	m_uLocalHeaderSize = LOCALFILEHEADERSIZE + uExtraFieldSize + m_uLocalFileNameSize;
@@ -594,7 +690,9 @@ void CZipFileHeader::WriteLocal(CZipStorage *pStorage)
 	memcpy(dest + 30, m_fileName.m_buffer, m_uLocalFileNameSize);
 
 	if (uExtraFieldSize)
+	{
 		m_aLocalExtraData.Write(dest + 30 + m_uLocalFileNameSize);
+	}
 
 	// possible volume change before writing to the file in the segmented archive
 	// so write the local header first
@@ -617,7 +715,9 @@ WORD CZipFileHeader::GetDataDescriptorSize(bool bConsiderSignature) const
 		return (WORD)(bConsiderSignature ? size + 4 : size);
 	}
 	else
+	{
 		return 0;
+	}
 }
 
 bool CZipFileHeader::NeedsDataDescriptor() const
@@ -663,11 +763,13 @@ void CZipFileHeader::PrepareData(int iLevel, bool bSegm)
 
 	m_uVersionNeeded = 0;
 	if (m_uVersionNeeded == 0)
-		m_uVersionNeeded = IsDirectory() ? 0xa : 0x14; // 1.0 or 2.0
+	{
+		m_uVersionNeeded = IsDirectory() ? 0xa : 0x14;   // 1.0 or 2.0
+	}
 }
 
 
-void CZipFileHeader::GetCrcAndSizes(char * pBuffer)const
+void CZipFileHeader::GetCrcAndSizes(char* pBuffer)const
 {
 	WriteCrc32(pBuffer);
 	CBytesWriter::WriteBytes(pBuffer + 4, m_uComprSize, 4);
@@ -677,7 +779,9 @@ void CZipFileHeader::GetCrcAndSizes(char * pBuffer)const
 bool CZipFileHeader::CheckDataDescriptor(CZipStorage* pStorage) const
 {
 	if (!IsDataDescriptor())
+	{
 		return true;
+	}
 
 	const int sizeOfSize = 4;
 
@@ -697,7 +801,9 @@ bool CZipFileHeader::CheckDataDescriptor(CZipStorage* pStorage) const
 		pBuf = (char*)buf + 4;
 	}
 	else
+	{
 		pBuf = buf;
+	}
 
 	DWORD uCrc32 = 0;
 	ZIP_SIZE_TYPE uCompressed = 0, uUncompressed = 0;
@@ -720,9 +826,13 @@ DWORD CZipFileHeader::GetSize()const
 		{
 			CZipString temp;
 			if (m_fileName.HasString())
+			{
 				temp = m_fileName.GetString();
+			}
 			else
+			{
 				ConvertFileName(temp);
+			}
 			if (temp.GetLength() > 0)
 			{
 				uSize += 4 + 2 + 4; // headerID, size + version, flag + filename code page
@@ -730,7 +840,9 @@ DWORD CZipFileHeader::GetSize()const
 				ZipCompatibility::ConvertStringToBuffer(temp, buffer, m_stringSettings.m_uNameCodePage);
 				uSize += buffer.GetSize();
 				if (!m_stringSettings.IsStandardCommentCodePage(GetSystemCompatibility()))
+				{
 					uSize += 4;
+				}
 			}
 		}
 	}
@@ -741,7 +853,9 @@ DWORD CZipFileHeader::GetSize()const
 DWORD CZipFileHeader::GetLocalSize(bool bReal)const
 {
 	if (bReal)
+	{
 		return m_uLocalHeaderSize;
+	}
 
 	DWORD uSize = LOCALFILEHEADERSIZE + m_aLocalExtraData.GetTotalSize() + PredictFileNameSize();
 	return uSize;
@@ -757,17 +871,21 @@ bool CZipFileHeader::SetComment(LPCTSTR lpszComment)
 		if (!UpdateCommentFlags(&newComment))
 		{
 			if (m_comment.GetString().Collate(newComment) == 0)
+			{
 				return true;
+			}
 		}
 		// just in case
 		m_comment.ClearBuffer();
 
 		bool ret;
-		CZipString oldComment= m_comment.GetString();
+		CZipString oldComment = m_comment.GetString();
 		m_comment.SetString(lpszComment);
 		ret = m_pCentralDir->OnFileCentralChange();
 		if (!ret)
+		{
 			m_comment.SetString(oldComment);
+		}
 
 		return ret;
 	}
@@ -788,22 +906,34 @@ const CZipString& CZipFileHeader::GetComment(bool bClearBuffer)
 	m_comment.AllocateString();
 	ConvertComment(m_comment.GetString());
 	if (bClearBuffer)
+	{
 		m_comment.ClearBuffer();
+	}
 	return m_comment.GetString();
 }
 
 int CZipFileHeader::GetCompressionLevel() const
 {
 	if (m_uMethod == CZipCompressor::methodStore)
+	{
 		return CZipCompressor::levelStore;
+	}
 	else if ((m_uFlag & (WORD) 6) != 0)
+	{
 		return 1;
+	}
 	else if ((m_uFlag & (WORD) 4) != 0)
+	{
 		return 2;
+	}
 	else if ((m_uFlag & (WORD) 2) != 0)
+	{
 		return CZipCompressor::levelBest;
+	}
 	else
+	{
 		return CZipCompressor::levelDefault;
+	}
 }
 
 bool CZipFileHeader::SetFileName(LPCTSTR lpszFileName)
@@ -811,7 +941,9 @@ bool CZipFileHeader::SetFileName(LPCTSTR lpszFileName)
 	CZipString newFileName(lpszFileName);
 	if (!IsDirectory() || newFileName.GetLength() != 1 || !CZipPathComponent::IsSeparator(newFileName[0]))
 		// do not remove from directories where only path separator is present
+	{
 		CZipPathComponent::RemoveSeparatorsLeft(newFileName);
+	}
 	if (m_pCentralDir)
 	{
 		// update the lpszFileName to make sure the renaming is necessary
@@ -820,12 +952,18 @@ bool CZipFileHeader::SetFileName(LPCTSTR lpszFileName)
 		if (!UpdateFileNameFlags(&newFileName, true))
 		{
 			if (IsDirectory())
+			{
 				CZipPathComponent::AppendSeparator(newFileName);
+			}
 			else
+			{
 				CZipPathComponent::RemoveSeparators(newFileName);
+			}
 
 			if (m_fileName.GetString().Collate(newFileName) == 0)
+			{
 				return true;
+			}
 		}
 		// just in case
 		m_fileName.ClearBuffer();
@@ -839,7 +977,9 @@ bool CZipFileHeader::SetFileName(LPCTSTR lpszFileName)
 			SetModified();
 		}
 		else
+		{
 			m_fileName.SetString(oldFileName);
+		}
 
 		return ret;
 	}
@@ -879,21 +1019,27 @@ DWORD CZipFileHeader::GetSystemAttr()
 		DWORD uAttr = GetSystemCompatibility() == ZipCompatibility::zcUnix ? (m_uExternalAttr >> 16) : (m_uExternalAttr & 0xFFFF);
 		DWORD uConvertedAttr = ZipCompatibility::ConvertToSystem(uAttr, GetSystemCompatibility(), ZipPlatform::GetSystemID());
 		if (m_uComprSize == 0 && !ZipPlatform::IsDirectory(uConvertedAttr) && CZipPathComponent::HasEndingSeparator(GetFileName()))
+		{
 			// can happen, a folder can have attributes set and no dir attribute (Python modules)
 			// TODO: [postponed] fix and cache after reading from central dir, but avoid calling GetFileName() there to keep lazy name conversion
 			return ZipPlatform::GetDefaultDirAttributes() | uConvertedAttr;
+		}
 		else
 		{
 #ifdef _ZIP_SYSTEM_LINUX
 			// converting from Windows attributes may create a not readable linux directory
 			if (GetSystemCompatibility() != ZipCompatibility::zcUnix && ZipPlatform::IsDirectory(uConvertedAttr))
+			{
 				return ZipPlatform::GetDefaultDirAttributes();
+			}
 #endif
 			return uConvertedAttr;
 		}
 	}
 	else
+	{
 		return CZipPathComponent::HasEndingSeparator(GetFileName()) ? ZipPlatform::GetDefaultDirAttributes() : ZipPlatform::GetDefaultAttributes();
+	}
 }
 
 bool CZipFileHeader::SetSystemAttr(DWORD uAttr)
@@ -907,11 +1053,15 @@ bool CZipFileHeader::SetSystemAttr(DWORD uAttr)
 	{
 		uNewAtrr <<= 16;
 		if (ZipPlatform::IsDirectory(uAttr))
-			uNewAtrr |= 0x10; // make it recognizable under other systems (all use 0x10 for directory)
+		{
+			uNewAtrr |= 0x10;   // make it recognizable under other systems (all use 0x10 for directory)
+		}
 	}
 	else
+	{
 		// make it readable under linux
 		uNewAtrr |= (ZipCompatibility::ConvertToSystem(uAttr, ZipPlatform::GetSystemID(), ZipCompatibility::zcUnix) << 16);
+	}
 
 	if (uNewAtrr != m_uExternalAttr)
 	{
@@ -981,7 +1131,9 @@ void CZipFileHeader::WriteSmallDataDescriptor(char* pDest, bool bLocal)
 void CZipFileHeader::WriteDataDescriptor(CZipStorage* pStorage)
 {
 	if (!IsDataDescriptor())
+	{
 		return;
+	}
 	bool signature = NeedsSignatureInDataDescriptor(pStorage);
 	CZipAutoBuffer buf;
 	buf.Allocate(GetDataDescriptorSize(signature));
@@ -992,28 +1144,32 @@ void CZipFileHeader::WriteDataDescriptor(CZipStorage* pStorage)
 		pBuf = (char*)buf + 4;
 	}
 	else
+	{
 		pBuf = buf;
+	}
 	WriteCrc32(pBuf);
-		CBytesWriter::WriteBytes(pBuf + 4, m_uComprSize, 4);
-		CBytesWriter::WriteBytes(pBuf + 8, m_uUncomprSize, 4);
+	CBytesWriter::WriteBytes(pBuf + 4, m_uComprSize, 4);
+	CBytesWriter::WriteBytes(pBuf + 8, m_uUncomprSize, 4);
 	pStorage->Write(buf, buf.GetSize(), true);
 }
 
 void CZipFileHeader::UpdateLocalHeader(CZipStorage* pStorage)
 {
 	if (pStorage->IsSegmented() || IsDataDescriptor())
+	{
 		// there is nothing to fix
 		return;
+	}
 	pStorage->Flush();
 	ZIP_FILE_USIZE uPos = pStorage->m_pFile->GetPosition();
-		// update crc and sizes, the sizes may already be all right,
-		// but 8 more bytes won't make a difference, we need to update crc32 anyway
-		CZipAutoBuffer buf(12);
-		m_uLocalComprSize = CBytesWriter::WriteSafeU32(m_uComprSize);
-		m_uLocalUncomprSize = CBytesWriter::WriteSafeU32(m_uUncomprSize);
-		WriteSmallDataDescriptor(buf);
-		pStorage->Seek(m_uOffset + 14);
-		pStorage->m_pFile->Write(buf, 12);
+	// update crc and sizes, the sizes may already be all right,
+	// but 8 more bytes won't make a difference, we need to update crc32 anyway
+	CZipAutoBuffer buf(12);
+	m_uLocalComprSize = CBytesWriter::WriteSafeU32(m_uComprSize);
+	m_uLocalUncomprSize = CBytesWriter::WriteSafeU32(m_uUncomprSize);
+	WriteSmallDataDescriptor(buf);
+	pStorage->Seek(m_uOffset + 14);
+	pStorage->m_pFile->Write(buf, 12);
 
 	pStorage->m_pFile->SafeSeek(uPos);
 }
@@ -1028,13 +1184,17 @@ void CZipFileHeader::WriteCrc32(char* pBuf) const
 void CZipFileHeader::ClearFileName()
 {
 #ifdef _ZIP_UNICODE_CUSTOM
-		if (m_state.IsSetAny(sfCustomUnicode) && m_stringSettings.m_bStoreNameInExtraData)
-			// we are keeping m_pszFileName, clear the buffer, we need the original, when writing extra header in central directory (can happen many times - better performance)
-			// and when accessing the filename
-			m_fileName.ClearBuffer();
-		else
+	if (m_state.IsSetAny(sfCustomUnicode) && m_stringSettings.m_bStoreNameInExtraData)
+	{
+		// we are keeping m_pszFileName, clear the buffer, we need the original, when writing extra header in central directory (can happen many times - better performance)
+		// and when accessing the filename
+		m_fileName.ClearBuffer();
+	}
+	else
 #endif
-			m_fileName.ClearString();
+	{
+		m_fileName.ClearString();
+	}
 }
 
 bool CZipFileHeader::UpdateFileNameFlags(const CZipString* szNewFileName, bool bAllowRemoveCDir)
@@ -1059,13 +1219,17 @@ bool CZipFileHeader::UpdateFileNameFlags(const CZipString* szNewFileName, bool b
 			m_stringSettings.m_uNameCodePage = stringStoreSettings.m_uNameCodePage;
 			if (!m_stringSettings.m_bStoreNameInExtraData && m_stringSettings.m_uNameCodePage != GetDefaultFileNameCodePage())
 				// the local filename needs to be rewritten, the name code page has changed
+			{
 				changed = true;
+			}
 		}
 		else
 		{
 			// changed from custom
 			if (!m_stringSettings.m_bStoreNameInExtraData && m_stringSettings.m_uNameCodePage != GetDefaultFileNameCodePage())
+			{
 				changed = true;
+			}
 
 			m_stringSettings.m_bStoreNameInExtraData = stringStoreSettings.m_bStoreNameInExtraData;
 			m_stringSettings.m_uNameCodePage = stringStoreSettings.m_uNameCodePage;
@@ -1086,7 +1250,9 @@ bool CZipFileHeader::UpdateFileNameFlags(const CZipString* szNewFileName, bool b
 			}
 		}
 		else if (!m_stringSettings.m_bStoreNameInExtraData)
+		{
 			changed |= (stringStoreSettings.m_uNameCodePage != m_stringSettings.m_uNameCodePage);
+		}
 
 		m_stringSettings.m_bStoreNameInExtraData = stringStoreSettings.m_bStoreNameInExtraData;
 		m_stringSettings.m_uNameCodePage = stringStoreSettings.m_uNameCodePage;
@@ -1098,7 +1264,9 @@ bool CZipFileHeader::UpdateFileNameFlags(const CZipString* szNewFileName, bool b
 	}
 	// remove the central directory in case the filename did not changed, but the comment flags changed
 	if (!changed && centralDirChanged && bAllowRemoveCDir && m_pCentralDir && m_comment.HasString())
+	{
 		m_pCentralDir->OnFileCentralChange();
+	}
 	return changed;
 }
 
@@ -1109,14 +1277,14 @@ bool CZipFileHeader::UpdateCommentFlags(const CZipString* szNewComment)
 #endif
 	bool changed = false;
 #ifdef _ZIP_UNICODE_CUSTOM
-		bool isCustom = iMode == CZipArchive::umCustom;
-		changed |= m_state.ChangeWithCheck(sfCustomUnicode, isCustom);
-		if (isCustom)
-		{
-			const CZipStringStoreSettings& stringStoreSettings = m_pCentralDir->GetStringStoreSettings();
-			changed |= (m_stringSettings.m_uCommentCodePage != stringStoreSettings.m_uCommentCodePage);
-			m_stringSettings.m_uCommentCodePage = stringStoreSettings.m_uCommentCodePage;
-		}
+	bool isCustom = iMode == CZipArchive::umCustom;
+	changed |= m_state.ChangeWithCheck(sfCustomUnicode, isCustom);
+	if (isCustom)
+	{
+		const CZipStringStoreSettings& stringStoreSettings = m_pCentralDir->GetStringStoreSettings();
+		changed |= (m_stringSettings.m_uCommentCodePage != stringStoreSettings.m_uCommentCodePage);
+		m_stringSettings.m_uCommentCodePage = stringStoreSettings.m_uCommentCodePage;
+	}
 #endif
 	return changed;
 }

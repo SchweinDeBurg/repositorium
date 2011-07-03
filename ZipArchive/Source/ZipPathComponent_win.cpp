@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 
 #ifdef _ZIP_SYSTEM_WIN
@@ -31,7 +51,9 @@ int CZipPathComponent::IsPrefixed(const CZipString& path)
 	int i = -1, iLen = PathPrefix.GetLength();
 	int pathLen = path.GetLength();
 	if (iLen > pathLen)
+	{
 		iLen = pathLen;
+	}
 	CZipString szPossiblePrefix = path.Left(iLen);
 	szPossiblePrefix.MakeLower(); // must perform case insensitive comparison
 	while (++i < iLen && szPossiblePrefix[i] == PathPrefix[i]);
@@ -105,7 +127,9 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 		szTempPath = szTempPath.Mid(i);
 	}
 	else
+	{
 		m_szPrefix.Empty();
+	}
 #if (_MSC_VER >= 1400)
 #if !defined(UNDER_CE)
 	_tsplitpath_s(szTempPath, szDrive, szDir, szFname, szExt);
@@ -131,7 +155,9 @@ CZipString CZipPathComponent::GetNoDrive() const
 	CZipString szPath = m_szDirectory;
 	CZipString szFileName = GetFileName();
 	if (!szFileName.IsEmpty() && !szPath.IsEmpty())
+	{
 		szPath += m_cSeparator;
+	}
 
 	szPath += szFileName;
 	return szPath;

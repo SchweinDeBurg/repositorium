@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 
 #ifdef _ZIP_SYSTEM_LINUX
@@ -62,14 +82,16 @@ ULONGLONG ZipPlatform::GetDeviceFreeSpace(LPCTSTR lpszPath)
 {
 	struct statfs sStats;
 
-	#if defined (__SVR4) && defined (__sun)
-		if (statvfs(lpszPath, &sStats) == -1) // Solaris
-	#else
-		if (statfs(lpszPath, &sStats) == -1)
-	#endif
+#if defined (__SVR4) && defined (__sun)
+	if (statvfs(lpszPath, &sStats) == -1) // Solaris
+#else
+	if (statfs(lpszPath, &sStats) == -1)
+#endif
+	{
 		return 0;
+	}
 
-        return sStats.f_bsize * sStats.f_bavail;
+	return sStats.f_bsize * sStats.f_bavail;
 }
 
 
@@ -78,9 +100,13 @@ CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, ZIP_SIZE_TYPE uSizeNeed
 	TCHAR empty[] = _T(""), prefix [] = _T("zar");
 	CZipString tempPath = lpszPath;
 	if (tempPath.IsEmpty())
+	{
 		tempPath = "/tmp";
+	}
 	if (uSizeNeeded > 0 && ZipPlatform::GetDeviceFreeSpace(tempPath) < uSizeNeeded)
+	{
 		return empty;
+	}
 	CZipPathComponent::AppendSeparator(tempPath);
 	tempPath += prefix;
 	tempPath += _T("XXXXXX");
@@ -92,14 +118,18 @@ CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, ZIP_SIZE_TYPE uSizeNeed
 		return tempPath;
 	}
 	else
+	{
 		return empty;
+	}
 }
 
 bool ZipPlatform::GetCurrentDirectory(CZipString& sz)
 {
 	char* pBuf = getcwd(NULL, 0);
 	if (!pBuf)
+	{
 		return false;
+	}
 	sz = pBuf;
 	free(pBuf);
 	return true;
@@ -114,35 +144,43 @@ bool ZipPlatform::GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr)
 {
 	struct stat sStats;
 	if (stat(lpFileName, &sStats) == -1)
+	{
 		return false;
-  	uAttr = (sStats.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO | S_IFMT));
-  	return true;
+	}
+	uAttr = (sStats.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO | S_IFMT));
+	return true;
 }
 
 bool ZipPlatform::SetExeAttr(LPCTSTR lpFileName)
 {
 	DWORD uAttr;
 	if (!GetFileAttr(lpFileName, uAttr))
+	{
 		return false;
+	}
 	uAttr |= S_IXUSR;
 	return ZipPlatform::SetFileAttr(lpFileName, uAttr);
 }
 
 
-bool ZipPlatform::GetFileModTime(LPCTSTR lpFileName, time_t & ttime)
+bool ZipPlatform::GetFileModTime(LPCTSTR lpFileName, time_t& ttime)
 {
-    struct stat st;
+	struct stat st;
 	if (stat(lpFileName, &st) != 0)
+	{
 		return false;
+	}
 
- 	ttime = st.st_mtime;
+	ttime = st.st_mtime;
 	if (ttime == (time_t)-1)
 	{
 		ttime = time(NULL);
 		return false;
 	}
 	else
+	{
 		return true;
+	}
 }
 
 bool ZipPlatform::SetFileModTime(LPCTSTR lpFileName, time_t ttime)
@@ -160,15 +198,21 @@ bool ZipPlatform::ChangeDirectory(LPCTSTR lpDirectory)
 }
 int ZipPlatform::FileExists(LPCTSTR lpszName)
 {
-    	struct stat st;
+	struct stat st;
 	if (stat(lpszName, &st) != 0)
+	{
 		return 0;
+	}
 	else
 	{
 		if (S_ISDIR(st.st_mode))
+		{
 			return -1;
+		}
 		else
+		{
 			return 1;
+		}
 	}
 }
 
@@ -181,7 +225,7 @@ ZIPINLINE  bool ZipPlatform::IsDriveRemovable(LPCTSTR lpszFilePath)
 ZIPINLINE  bool ZipPlatform::SetVolLabel(LPCTSTR lpszPath, LPCTSTR lpszLabel)
 {
 	// not implemented
-        return true;
+	return true;
 }
 
 ZIPINLINE void ZipPlatform::AnsiOem(CZipAutoBuffer& buffer, bool bAnsiToOem)
@@ -201,19 +245,27 @@ ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow, int i
 		}
 	}
 	if (unlink(lpszFileName) != 0)
+	{
 		if (bThrow)
+		{
 			CZipException::Throw(CZipException::notRemoved, lpszFileName);
+		}
 		else
+		{
 			return false;
+		}
+	}
 	return true;
 }
 
-ZIPINLINE  bool ZipPlatform::RenameFile( LPCTSTR lpszOldName, LPCTSTR lpszNewName, bool bThrow)
+ZIPINLINE bool ZipPlatform::RenameFile(LPCTSTR lpszOldName, LPCTSTR lpszNewName, bool bThrow)
 {
 	if (rename(lpszOldName, lpszNewName) != 0)
 	{
 		if (bThrow)
+		{
 			CZipException::Throw(CZipException::notRenamed, lpszOldName);
+		}
 		return false;
 	}
 	return true;
@@ -265,9 +317,9 @@ bool ZipPlatform::TruncateFile(int iDes, ULONGLONG uSize)
 int ZipPlatform::OpenFile(LPCTSTR lpszFileName, UINT iMode, int iShareMode)
 {
 #ifdef FILE_FUNCTIONS_64B_BY_DEFAULT
-	return open(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );
+	return open(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #else
-	return open64(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );
+	return open64(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
 }
 
@@ -278,7 +330,7 @@ bool ZipPlatform::FlushFile(int iDes)
 
 intptr_t ZipPlatform::GetFileSystemHandle(int iDes)
 {
-        return iDes;
+	return iDes;
 }
 
 

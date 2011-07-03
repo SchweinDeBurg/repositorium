@@ -12,15 +12,37 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 #include "Private/ZipExtraField.h"
 
 CZipArray<WORD> CZipExtraField::m_aNoSizeExtraHeadersID;
 
-bool CZipExtraField::Read(CZipStorage *pStorage, WORD uSize)
+bool CZipExtraField::Read(CZipStorage* pStorage, WORD uSize)
 {
 	if (uSize == 0)
+	{
 		return true;
+	}
 	Clear();
 	CZipAutoBuffer buffer;
 	buffer.Allocate(uSize);
@@ -36,7 +58,9 @@ bool CZipExtraField::Read(CZipStorage *pStorage, WORD uSize)
 		}
 		int totalSize = pExtra->GetTotalSize();
 		if (totalSize > uSize || totalSize < 0)
+		{
 			return false;
+		}
 		position += totalSize;
 		uSize = (WORD)(uSize - totalSize);
 		Add(pExtra);
@@ -59,7 +83,9 @@ int CZipExtraField::GetTotalSize()const
 {
 	int total = 0;
 	for (int i = 0; i < GetCount(); i++)
+	{
 		total += GetAt(i)->GetTotalSize();
+	}
 	return total;
 }
 
@@ -73,7 +99,9 @@ void CZipExtraField::RemoveInternalHeaders()
 			|| headerID == ZIP_EXTRA_UNICODE_PATH
 			|| headerID == ZIP_EXTRA_UNICODE_COMMENT
 			|| headerID == ZIP_EXTRA_ZARCH_NAME)
-				RemoveAt(i);
+		{
+			RemoveAt(i);
+		}
 	}
 }
 
@@ -85,7 +113,9 @@ void CZipExtraField::RemoveInternalLocalHeaders()
 		if (headerID == ZIP_EXTRA_WINZIP_AES
 			|| headerID == ZIP_EXTRA_UNICODE_PATH
 			|| headerID == ZIP_EXTRA_UNICODE_COMMENT)
-				RemoveAt(i);
+		{
+			RemoveAt(i);
+		}
 	}
 }
 
@@ -94,7 +124,9 @@ void CZipExtraField::Remove(WORD headerID)
 	for (int i = GetCount() - 1; i >= 0; i--)
 	{
 		if (headerID == GetAt(i)->GetHeaderID())
+		{
 			RemoveAt(i);
+		}
 	}
 }
 

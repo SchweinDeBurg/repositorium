@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 #include "ZipCompatibility.h"
 #include "ZipPlatform.h"
@@ -59,33 +79,35 @@
 
 using namespace ZipCompatibility;
 
-typedef DWORD(*conv_func)(DWORD , bool );
+typedef DWORD(*conv_func)(DWORD , bool);
 
-DWORD AttrDos(DWORD , bool );
+DWORD AttrDos(DWORD , bool);
 DWORD AttrUnix(DWORD, bool);
-DWORD AttrMac(DWORD , bool );
+DWORD AttrMac(DWORD , bool);
 
-conv_func conv_funcs[21] = {AttrDos,
-							NULL,
-							NULL,
-							AttrUnix,
-							NULL,
-							NULL,
-							AttrDos,
-							AttrMac,
-							NULL,
-							NULL,
-							NULL,
-							AttrDos,
-							NULL,
-							NULL,
-							NULL,
-							AttrDos,
-							NULL,
-							NULL,
-							NULL,
-							NULL,
-							AttrMac,
+conv_func conv_funcs[21] =
+{
+	AttrDos,
+	NULL,
+	NULL,
+	AttrUnix,
+	NULL,
+	NULL,
+	AttrDos,
+	AttrMac,
+	NULL,
+	NULL,
+	NULL,
+	AttrDos,
+	NULL,
+	NULL,
+	NULL,
+	AttrDos,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	AttrMac
 };
 
 
@@ -96,9 +118,13 @@ DWORD ZipCompatibility::ConvertToSystem(DWORD uAttr, int iFromSystem, int iToSys
 	{
 		conv_func p = conv_funcs[iFromSystem], q = conv_funcs[iToSystem];
 		if (p && q)
-			uAttr = q( p(uAttr, true), false);
-	 	else
-	 		CZipException::Throw(CZipException::platfNotSupp);
+		{
+			uAttr = q(p(uAttr, true), false);
+		}
+		else
+		{
+			CZipException::Throw(CZipException::platfNotSupp);
+		}
 	}
 	return uAttr;
 }
@@ -109,14 +135,16 @@ DWORD ZipCompatibility::GetAsInternalAttributes(DWORD uAttr, int iFromSystem)
 	{
 		conv_func f = conv_funcs[iFromSystem];
 		if (!f)
+		{
 			CZipException::Throw(CZipException::platfNotSupp);
+		}
 		return f(uAttr, true);
 	}
 	return uAttr;
 }
 
 
-DWORD AttrDos(DWORD uAttr, bool )
+DWORD AttrDos(DWORD uAttr, bool)
 {
 	return uAttr;
 }
@@ -128,53 +156,67 @@ DWORD AttrUnix(DWORD uAttr, bool bFrom)
 	{
 		bool isDir = (uAttr & UNIX_DIRECTORY_ATTRIBUTE) != 0;
 		if (isDir)
+		{
 			uNewAttr = attDir;
+		}
 
 		DWORD uGroupAttr = EXTRACT_GROUP_PERMISSIONS(uAttr);
 		DWORD uOtherAttr = EXTRACT_OTHER_PERMISSIONS(uAttr);
-		uAttr = EXTRACT_USER_PERMISSIONS (uAttr);
+		uAttr = EXTRACT_USER_PERMISSIONS(uAttr);
 
 		// we may set archive attribute if the file hasn't got the execute permissions
 		// and is not a directory
 		if (!isDir && !(uAttr & UNIX_EXEC))
+		{
 			uNewAttr |= attArch	;
+		}
 
 		if (!(uAttr & UNIX_WRITE))
-		    uNewAttr |= attROnly;
+		{
+			uNewAttr |= attROnly;
+		}
 
-	    if (!(uGroupAttr & UNIX_READ) && !(uOtherAttr & UNIX_READ))
-		    uNewAttr |= attHidd;
+		if (!(uGroupAttr & UNIX_READ) && !(uOtherAttr & UNIX_READ))
+		{
+			uNewAttr |= attHidd;
+		}
 	}
 	else
 	{
 
-		uNewAttr = CREATE_USER_PERMISSIONS (UNIX_READ);
+		uNewAttr = CREATE_USER_PERMISSIONS(UNIX_READ);
 
 		// we cannot assume that if the file hasn't the archive attribute set
 		// then it is executable and set execute permissions
 
 		if (!(uAttr & attHidd))
-			uNewAttr |= (CREATE_OTHER_PERMISSIONS (UNIX_READ) | CREATE_GROUP_PERMISSIONS (UNIX_READ));
+		{
+			uNewAttr |= (CREATE_OTHER_PERMISSIONS(UNIX_READ) | CREATE_GROUP_PERMISSIONS(UNIX_READ));
+		}
 
 
 		if (!(uAttr & attROnly))
-			uNewAttr |= (CREATE_GROUP_PERMISSIONS (UNIX_WRITE) | CREATE_USER_PERMISSIONS (UNIX_WRITE));
+		{
+			uNewAttr |= (CREATE_GROUP_PERMISSIONS(UNIX_WRITE) | CREATE_USER_PERMISSIONS(UNIX_WRITE));
+		}
 
 		if (uAttr & attDir)
 		{
 			uNewAttr |= UNIX_DIRECTORY_ATTRIBUTE;
-			uNewAttr |= (CREATE_OTHER_PERMISSIONS (UNIX_EXEC) | CREATE_GROUP_PERMISSIONS (UNIX_EXEC)) |
-				CREATE_USER_PERMISSIONS (UNIX_EXEC);
+			uNewAttr |= (CREATE_OTHER_PERMISSIONS(UNIX_EXEC) | CREATE_GROUP_PERMISSIONS(UNIX_EXEC)) |
+				CREATE_USER_PERMISSIONS(UNIX_EXEC);
 		}
 		else
+		{
 			uNewAttr |= UNIX_FILE_ATTRIBUTE;
+		}
 
 	}
 
 	return uNewAttr;
 }
 
-DWORD AttrMac(DWORD uAttr, bool )
+DWORD AttrMac(DWORD uAttr, bool)
 {
 	return uAttr & (attDir | attROnly);
 }
@@ -220,7 +262,9 @@ void ZipCompatibility::ConvertStringToBuffer(LPCTSTR lpszString, CZipAutoBuffer&
 	buffer.Allocate(iLen);
 	memcpy(buffer, lpszString, (size_t)iLen);
 	if (uCodePage == CP_OEMCP)
+	{
 		ZipPlatform::AnsiOem(buffer, true);
+	}
 #endif
 }
 
@@ -249,11 +293,17 @@ void ZipCompatibility::NormalizePathSeparators(CZipString& szFileName)
 UINT ZipCompatibility::GetDefaultNameCodePage(int iPlatform)
 {
 	if (iPlatform == ZipCompatibility::zcDosFat || iPlatform == ZipCompatibility::zcNtfs)
+	{
 		return CP_OEMCP;
+	}
 	else if (iPlatform == ZipCompatibility::zcUnix || iPlatform == ZipCompatibility::zcMacintosh || iPlatform == zcMacDarwin)
+	{
 		return CP_UTF8;
+	}
 	else
+	{
 		return CP_ACP;
+	}
 }
 
 UINT ZipCompatibility::GetDefaultNameCodePage()
@@ -264,17 +314,25 @@ UINT ZipCompatibility::GetDefaultNameCodePage()
 UINT ZipCompatibility::GetDefaultCommentCodePage(int iPlatform)
 {
 	if (iPlatform == ZipCompatibility::zcUnix || iPlatform == ZipCompatibility::zcMacintosh || iPlatform == zcMacDarwin)
+	{
 		return CP_UTF8;
+	}
 	else
+	{
 		return CP_ACP;
+	}
 }
 
 UINT ZipCompatibility::GetDefaultPasswordCodePage(int iPlatform)
 {
 	if (iPlatform == ZipCompatibility::zcUnix || iPlatform == ZipCompatibility::zcMacintosh || iPlatform == zcMacDarwin)
+	{
 		return CP_UTF8;
+	}
 	else
+	{
 		return CP_ACP;
+	}
 }
 
 UINT ZipCompatibility::GetDefaultCommentCodePage()

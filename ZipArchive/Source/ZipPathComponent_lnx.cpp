@@ -12,6 +12,26 @@
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+//******************************************************************************
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+//******************************************************************************
+
 #include "stdafx.h"
 
 #ifdef _ZIP_SYSTEM_LINUX
@@ -30,7 +50,9 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 	const CZipString szPrefix = _T("\\\\?\\unc\\");
 	int i = -1, iLen = szPrefix.GetLength();
 	if (iLen > szTempPath.GetLength())
+	{
 		iLen = szTempPath.GetLength();
+	}
 	CZipString szPossiblePrefix = szTempPath.Left(iLen);
 	szPossiblePrefix.MakeLower(); // must perform case insensitive comparison
 	while (++i < iLen && szPossiblePrefix[i] == szPrefix[i]);
@@ -40,7 +62,9 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 		szTempPath = szTempPath.Mid(i);
 	}
 	else
+	{
 		m_szPrefix.Empty();
+	}
 
 
 	m_szDrive.Empty();
@@ -50,28 +74,38 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 	int p;
 	for (p = szTempPath.GetLength() - 1; p >= 0; p--)
 		if (szTempPath[p] == m_cSeparator)
+		{
 			break;
+		}
 
 	if (p != -1)
 	{
 		m_szDirectory = szTempPath.Left(p);
-		if (p == szTempPath.GetLength() - 1 )
-			return; // no filename present
+		if (p == szTempPath.GetLength() - 1)
+		{
+			return;   // no filename present
+		}
 		else
+		{
 			p++;
+		}
 	}
 	else
+	{
 		p = 0;
+	}
 
 	// p points at the beginning of the filename
 	m_szFileTitle = szTempPath.Mid(p);
 	for (p = m_szFileTitle.GetLength() - 1; p >= 0; p--)
 		if (m_szFileTitle[p] == _T('.'))
+		{
 			break;
+		}
 
 	if (p != -1)
 	{
-		m_szFileExt = m_szFileTitle.Mid(p+1);
+		m_szFileExt = m_szFileTitle.Mid(p + 1);
 		m_szFileTitle = m_szFileTitle.Left(p);
 	}
 
@@ -84,7 +118,9 @@ CZipString CZipPathComponent::GetNoDrive() const
 	CZipString szPath = m_szDirectory;
 	CZipString szFileName = GetFileName();
 	if (!szFileName.IsEmpty() && !szPath.IsEmpty())
+	{
 		szPath += m_cSeparator;
+	}
 
 	szPath += szFileName;
 	return szPath;
