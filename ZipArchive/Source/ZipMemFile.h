@@ -85,7 +85,9 @@ public:
 	{
 		return m_lpBuf == NULL;
 	}
-	void Flush() {}
+	void Flush()
+	{
+	}
 
 	ZIP_FILE_USIZE Seek(ZIP_FILE_SIZE lOff, int nFrom);
 	ZIP_FILE_USIZE GetLength() const

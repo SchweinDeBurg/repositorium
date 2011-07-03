@@ -140,8 +140,8 @@ class ZIP_API CZipRegularSplitNamesHandler : public CZipSplitNamesHandler
 protected:
 	CZipString m_szExt;
 public:
-	CZipRegularSplitNamesHandler()
-		: m_szExt(_T("zip"))
+	CZipRegularSplitNamesHandler():
+	m_szExt(_T("zip"))
 	{
 	}
 

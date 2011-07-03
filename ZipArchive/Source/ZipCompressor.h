@@ -71,8 +71,8 @@ protected:
 		\param pStorage
 			The current storage object.
 	 */
-	CZipCompressor(CZipStorage* pStorage)
-		: m_pStorage(pStorage)
+	CZipCompressor(CZipStorage* pStorage):
+	m_pStorage(pStorage)
 	{
 		m_pCryptograph = NULL;
 		m_uUncomprLeft = 0;
@@ -332,7 +332,9 @@ public:
 		\see
 			Compress
 	 */
-	virtual void FinishCompression(bool bAfterException) {}
+	virtual void FinishCompression(bool bAfterException)
+	{
+	}
 
 	/**
 		The method called at the end of the decompression process.
@@ -345,7 +347,9 @@ public:
 		\see
 			Decompress
 	 */
-	virtual void FinishDecompression(bool bAfterException) {}
+	virtual void FinishDecompression(bool bAfterException)
+	{
+	}
 
 	/**
 		Returns the current options of the compressor.

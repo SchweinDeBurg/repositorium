@@ -123,7 +123,9 @@ namespace ZipArchiveLib
 			\see
 				OnEnumerationEnd
 		*/
-		virtual void OnEnumerationBegin() {}
+		virtual void OnEnumerationBegin()
+		{
+		}
 
 		/**
 			This method is called at the end of the enumeration process.
@@ -135,7 +137,9 @@ namespace ZipArchiveLib
 			\see
 				OnEnumerationBegin
 		*/
-		virtual void OnEnumerationEnd(bool bResult) {}
+		virtual void OnEnumerationEnd(bool bResult)
+		{
+		}
 
 		/**
 			This method is called when an enumeration process enters a new directory.
@@ -145,7 +149,9 @@ namespace ZipArchiveLib
 			\see
 				ExitDirectory
 		*/
-		virtual void EnterDirectory() {}
+		virtual void EnterDirectory()
+		{
+		}
 
 		/**
 			This method is called when an enumeration process exits a directory.
@@ -155,7 +161,9 @@ namespace ZipArchiveLib
 			\see
 				EnterDirectory
 		*/
-		virtual void ExitDirectory() {}
+		virtual void ExitDirectory()
+		{
+		}
 
 	public:
 
@@ -214,7 +222,9 @@ namespace ZipArchiveLib
 		*/
 		bool Start(CFileFilter& filter);
 
-		virtual ~CDirEnumerator() {}
+		virtual ~CDirEnumerator()
+		{
+		}
 	private:
 		static bool IsDots(LPCTSTR lpszName);
 	};

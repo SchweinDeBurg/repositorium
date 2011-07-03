@@ -145,8 +145,13 @@ class ZIP_API CZipString
 	}
 
 public:
-	CZipString() {}
-	explicit CZipString(TCHAR ch, int nRepeat = 1): m_str(nRepeat, ch) {}
+	CZipString()
+	{
+	}
+	explicit CZipString(TCHAR ch, int nRepeat = 1):
+	m_str(nRepeat, ch)
+	{
+	}
 	CZipString(const CZipString& stringSrc)
 	{
 		m_str.assign(stringSrc.m_str);
