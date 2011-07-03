@@ -14,9 +14,9 @@
 	#error Do not include this file directly. Include ZipFile.h instead
 #endif
 
-#if _MSC_VER > 1000 && defined ZIP_HAS_DLL
-		#pragma warning (push)
-		#pragma warning( disable : 4275 ) // non dll-interface used as base for dll-interface class
+#if (_MSC_VER > 1000) && defined ZIP_HAS_DLL
+		#pragma warning(push)
+		#pragma warning(disable: 4275) // non dll-interface used as base for dll-interface class
 #endif
 
 #include "ZipAbstractFile.h"
@@ -118,5 +118,5 @@ protected:
 };
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (pop)
+	#pragma warning(pop)
 #endif

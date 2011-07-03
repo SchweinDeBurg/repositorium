@@ -21,10 +21,10 @@
 #if !defined(ZIPARCHIVE_ZIPCRYPTOGRAPH_DOT_H)
 #define ZIPARCHIVE_ZIPCRYPTOGRAPH_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 	#pragma once
-	#pragma warning( push )
-	#pragma warning (disable : 4100) // unreferenced formal parameter
+	#pragma warning(push)
+	#pragma warning(disable: 4100) // unreferenced formal parameter
 #endif // _MSC_VER > 1000
 
 #include "ZipAutoBuffer.h"
@@ -227,8 +227,8 @@ public:
 	virtual ~CZipCryptograph(){}
 };
 
-#if _MSC_VER > 1000
-	#pragma warning( pop )
+#if (_MSC_VER > 1000)
+	#pragma warning(pop)
 #endif // _MSC_VER > 1000
 
 #endif

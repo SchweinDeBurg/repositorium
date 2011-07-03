@@ -22,12 +22,12 @@
 	#define _DEBUG
 #endif
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 	// STL warnings
-	#pragma warning (disable : 4710) // 'function' : function not inlined
-	#pragma warning (disable : 4514) // unreferenced inline/local function has been removed
-	#pragma warning (disable : 4786) // 'identifier' : identifier was truncated to 'number' characters in the debug information
-	#pragma warning (disable : 4702) // unreachable code
+	#pragma warning(disable: 4710) // 'function' : function not inlined
+	#pragma warning(disable: 4514) // unreferenced inline/local function has been removed
+	#pragma warning(disable: 4786) // 'identifier' : identifier was truncated to 'number' characters in the debug information
+	#pragma warning(disable: 4702) // unreachable code
 #endif
 
 #if defined (_UNICODE) && !defined (UNICODE)

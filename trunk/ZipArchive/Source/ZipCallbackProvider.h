@@ -21,11 +21,11 @@
 #if !defined(ZIPARCHIVE_ZIPCALLBACKPROVIDER_DOT_H)
 #define ZIPARCHIVE_ZIPCALLBACKPROVIDER_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 	#pragma once
 	#if defined ZIP_HAS_DLL
-		#pragma warning (push)
-		#pragma warning( disable : 4275 ) // non dll-interface used as base for dll-interface class
+		#pragma warning(push)
+		#pragma warning(disable: 4275) // non dll-interface used as base for dll-interface class
 	#endif
 #endif
 
@@ -77,7 +77,7 @@ protected:
 } // namespace
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (pop)
+	#pragma warning(pop)
 #endif
 
 

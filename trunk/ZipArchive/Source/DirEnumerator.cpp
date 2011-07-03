@@ -16,7 +16,7 @@
 
 #if defined(_MSC_VER) && _MSC_VER < 1300
 	// STL warnings
-	#pragma warning (push, 3)
+	#pragma warning(push, 3)
 #endif
 
 #include "DirEnumerator.h"
@@ -123,7 +123,7 @@ bool CDirEnumerator::Start(CFileFilter& filter)
 
 #if !defined(UNDER_CE)
 		_tfinddatai64_t ffInfo;
-#if _MSC_VER > 1200
+#if (_MSC_VER > 1200)
 		intptr_t hFile;
 #else
 		long hFile;
@@ -236,6 +236,6 @@ bool CDirEnumerator::IsDots(LPCTSTR lpszName)
 
 #if defined(_MSC_VER) && _MSC_VER < 1300
 	// STL warnings
-	#pragma warning (pop)
+	#pragma warning(pop)
 #endif
 

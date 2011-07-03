@@ -106,7 +106,7 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 	}
 	else
 		m_szPrefix.Empty();
-#if _MSC_VER >= 1400
+#if (_MSC_VER >= 1400)
 #if !defined(UNDER_CE)
 	_tsplitpath_s(szTempPath, szDrive, szDir, szFname, szExt);
 #else

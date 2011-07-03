@@ -21,11 +21,11 @@
 #if !defined(ZIPARCHIVE_ZIPCALLBACK_DOT_H)
 #define ZIPARCHIVE_ZIPCALLBACK_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 	#pragma once
 	#if defined ZIP_HAS_DLL
-		#pragma warning (push)
-		#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
+		#pragma warning(push)
+		#pragma warning(disable: 4251) // needs to have dll-interface to be used by clients of class
 	#endif
 #endif
 
@@ -725,7 +725,7 @@ private:
 };
 
 #if (_MSC_VER > 1000) && (defined ZIP_HAS_DLL)
-	#pragma warning (pop)
+	#pragma warning(pop)
 #endif
 
 

@@ -13,15 +13,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #ifndef ZIPARCHIVE_ZIPSTRING_DOT_H
-#error Do not include this file directly. Include ZipString.h instead
+	#error Do not include this file directly. Include ZipString.h instead
 #endif
 
 #include "stdafx.h"
 
-#if _MSC_VER > 1000
-#pragma warning( push, 3 ) // STL requirements
-#pragma warning( disable : 4275 ) // non dll-interface class used as base for dll-interface
-#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
+#if (_MSC_VER > 1000)
+	#pragma warning(push, 3) // STL requirements
+	#pragma warning(disable: 4275) // non dll-interface class used as base for dll-interface
+	#pragma warning(disable: 4251) // needs to have dll-interface to be used by clients of class
 #endif
 
 
@@ -40,20 +40,20 @@
 #include "ZipExport.h"
 
 #ifndef __GNUC__
-#ifndef _vsntprintf
-#ifdef  _UNICODE
-#define _vsntprintf _vsnwprintf
-#else
-#define _vsntprintf _vsnprintf
-#endif
-#endif
+	#ifndef _vsntprintf
+		#ifdef  _UNICODE
+			#define _vsntprintf _vsnwprintf
+		#else
+			#define _vsntprintf _vsnprintf
+		#endif
+	#endif
 #elif !defined(_vsntprintf)
-#define _vsntprintf vsnprintf
+	#define _vsntprintf vsnprintf
 #endif
 
 typedef std::basic_string<TCHAR> stdbs;
 /**
-It contains mostly the methods required by ZipArchive Library.
+	It contains mostly the methods required by ZipArchive Library.
 */
 class ZIP_API CZipString
 {
@@ -203,9 +203,9 @@ public:
 	}
 
 
-#if _MSC_VER >= 1300
-#pragma warning( push )
-#pragma warning (disable : 4793) // 'vararg' : causes native code generation for function 'void CZipString::Format(LPCTSTR,...)'
+#if (_MSC_VER >= 1300)
+#pragma warning(push)
+#pragma warning(disable: 4793) // 'vararg' : causes native code generation for function 'void CZipString::Format(LPCTSTR,...)'
 #endif
 
 	void Format(LPCTSTR lpszFormat, ...)
@@ -255,8 +255,8 @@ public:
 		free(pBuf);
 	}
 
-#if _MSC_VER >= 1300
-#pragma warning( pop )
+#if (_MSC_VER >= 1300)
+#pragma warning(pop)
 #endif
 
 	void Insert( int nIndex, LPCTSTR pstr ){m_str.insert(nIndex, pstr, zslen(pstr));}
@@ -407,18 +407,18 @@ inline bool operator!=(const CZipString& left, const CZipString& right)
 }
 
 /**
-A pointer type to point to CZipString to Collate or CollateNoCase
-or Compare or CompareNoCase
+	A pointer type to point to CZipString to Collate or CollateNoCase
+	or Compare or CompareNoCase
 */
 typedef int (CZipString::*ZIPSTRINGCOMPARE)( LPCTSTR ) const;
 
 /**
-return a pointer to the function in CZipString structure,
-used to compare elements depending on the arguments
+	return a pointer to the function in CZipString structure,
+	used to compare elements depending on the arguments
 */
 ZIP_API ZIPSTRINGCOMPARE GetCZipStrCompFunc(bool bCaseSensitive, bool bCollate = true);
 
 
-#if _MSC_VER > 1000
-#pragma warning( pop)
+#if (_MSC_VER > 1000)
+	#pragma warning(pop)
 #endif

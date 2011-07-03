@@ -21,11 +21,11 @@
 #if !defined(ZIPARCHIVE_ZIPCOMPRESSOR_DOT_H)
 #define ZIPARCHIVE_ZIPCOMPRESSOR_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 	#pragma once
-	#pragma warning( push )
-	#pragma warning (disable: 4100) // unreferenced formal parameter
-	#pragma warning (disable: 4275) // non dll-interface class 'CObject' used as base for dll-interface class 'CMap<KEY,ARG_KEY,VALUE,ARG_VALUE>'
+	#pragma warning(push)
+	#pragma warning(disable: 4100) // unreferenced formal parameter
+	#pragma warning(disable: 4275) // non dll-interface class 'CObject' used as base for dll-interface class 'CMap<KEY,ARG_KEY,VALUE,ARG_VALUE>'
 #endif
 
 #include "ZipExport.h"
@@ -515,8 +515,8 @@ protected:
 	}
 };
 
-#if _MSC_VER > 1000
-	#pragma warning( pop )
+#if (_MSC_VER > 1000)
+	#pragma warning(pop)
 #endif
 
 #endif

@@ -83,7 +83,7 @@ ZBOOL CZipException::GetErrorMessage(LPTSTR lpszError, UINT nMaxError,
 	if (nMaxError - 1 < iLen)
 		iLen = nMaxError - 1;
 	LPTSTR lpsz = sz.GetBuffer(iLen);
-#if _MSC_VER >= 1400
+#if (_MSC_VER >= 1400)
 	#ifdef _UNICODE
 		wcsncpy_s(lpszError, nMaxError, lpsz, iLen);
 	#else

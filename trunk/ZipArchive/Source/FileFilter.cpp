@@ -16,7 +16,7 @@
 
 #if defined(_MSC_VER) && _MSC_VER < 1300
 	// STL warnings
-	#pragma warning (push, 3)
+	#pragma warning(push, 3)
 #endif
 
 #include "FileFilter.h"
@@ -57,5 +57,5 @@ bool CGroupFileFilter::Accept(LPCTSTR lpszParentDir, LPCTSTR lpszName, const CFi
 
 #if defined(_MSC_VER) && _MSC_VER < 1300
 	// STL warnings
-	#pragma warning (pop)
+	#pragma warning(pop)
 #endif

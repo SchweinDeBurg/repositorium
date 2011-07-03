@@ -22,7 +22,7 @@
 #if !defined(ZIPARCHIVE_ZIPFILEMAPPING_DOT_H)
 #define ZIPARCHIVE_ZIPFILEMAPPING_DOT_H
 
-#if _MSC_VER > 1000
+#if (_MSC_VER > 1000)
 #pragma once
 #endif
 
