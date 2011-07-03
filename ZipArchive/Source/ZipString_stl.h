@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 #ifndef ZIPARCHIVE_ZIPSTRING_DOT_H
 	#error Do not include this file directly. Include ZipString.h instead
@@ -62,21 +80,30 @@ class ZIP_API CZipString
 	void TrimInternalL(stdbs::size_type iPos)
 	{
 		if (iPos == stdbs::npos)
-			m_str.erase ();
+		{
+			m_str.erase();
+		}
 		if (iPos)
+		{
 			m_str.erase(0, iPos);
+		}
 	}
 	void TrimInternalR(stdbs::size_type iPos)
 	{
 		if (iPos == stdbs::npos)
-			m_str.erase ();
+		{
+			m_str.erase();
+		}
 		m_str.erase(++iPos);
 	}
 
 #ifndef __GNUC__
 	static int zslen(const TCHAR* lpsz)
 	{
-		if (!lpsz) return 0;
+		if (!lpsz)
+		{
+			return 0;
+		}
 
 		// we want to take into account the locale stuff (by using standard templates)
 
@@ -118,45 +145,93 @@ class ZIP_API CZipString
 	}
 
 public:
-	CZipString(){}
-	explicit CZipString (TCHAR ch, int nRepeat = 1):m_str(nRepeat, ch){}
-	CZipString( const CZipString& stringSrc ) {m_str.assign(stringSrc.m_str);}
-	CZipString( const stdbs& stringSrc ) {m_str.assign(stringSrc);}
-	CZipString( LPCTSTR lpsz ){if (!lpsz) Empty(); else m_str.assign(lpsz);}
-	operator LPCTSTR() const{return m_str.c_str();}
-	operator stdbs&() {return m_str;}
-	operator const stdbs&() const {return m_str;}
+	CZipString() {}
+	explicit CZipString(TCHAR ch, int nRepeat = 1): m_str(nRepeat, ch) {}
+	CZipString(const CZipString& stringSrc)
+	{
+		m_str.assign(stringSrc.m_str);
+	}
+	CZipString(const stdbs& stringSrc)
+	{
+		m_str.assign(stringSrc);
+	}
+	CZipString(LPCTSTR lpsz)
+	{
+		if (!lpsz)
+		{
+			Empty();
+		}
+		else
+		{
+			m_str.assign(lpsz);
+		}
+	}
+	operator LPCTSTR() const
+	{
+		return m_str.c_str();
+	}
+	operator stdbs& ()
+	{
+		return m_str;
+	}
+	operator const stdbs& () const
+	{
+		return m_str;
+	}
 	void SetString(stdbs& stringSrc)
 	{
 		m_str = stringSrc;
 	}
 
-	int GetLength() const {return (int) m_str.size();}
-	bool IsEmpty() const {return m_str.empty();}
-	void Empty() {m_str.erase(m_str.begin(), m_str.end());}
-	TCHAR GetAt (int iIndex) const{return m_str.at(iIndex);}
-	TCHAR operator[] (int iIndex) const{return m_str.at(iIndex);}
-	void SetAt( int nIndex, TCHAR ch ) {m_str.at(nIndex) = ch;}
+	int GetLength() const
+	{
+		return (int) m_str.size();
+	}
+	bool IsEmpty() const
+	{
+		return m_str.empty();
+	}
+	void Empty()
+	{
+		m_str.erase(m_str.begin(), m_str.end());
+	}
+	TCHAR GetAt(int iIndex) const
+	{
+		return m_str.at(iIndex);
+	}
+	TCHAR operator[](int iIndex) const
+	{
+		return m_str.at(iIndex);
+	}
+	void SetAt(int nIndex, TCHAR ch)
+	{
+		m_str.at(nIndex) = ch;
+	}
 	LPTSTR GetBuffer(int nMinBufLength)
 	{
 		if ((int)m_str.size() < nMinBufLength)
+		{
 			m_str.resize(nMinBufLength);
+		}
 		return m_str.empty() ? const_cast<TCHAR*>(m_str.data()) : &(m_str.at(0));
 	}
-	void ReleaseBuffer( int nNewLength = -1 ) { m_str.resize(nNewLength > -1 ? nNewLength : zslen(m_str.c_str()));}
-	void TrimLeft( TCHAR chTarget )
+	void ReleaseBuffer(int nNewLength = -1)
+	{
+		m_str.resize(nNewLength > -1 ? nNewLength : zslen(m_str.c_str()));
+	}
+	void TrimLeft(TCHAR chTarget)
 	{
 		TrimInternalL(m_str.find_first_not_of(chTarget));
 	}
-	void TrimLeft( LPCTSTR lpszTargets )
+	void TrimLeft(LPCTSTR lpszTargets)
 	{
 		TrimInternalL(m_str.find_first_not_of(lpszTargets));
 	}
-	void TrimRight( TCHAR chTarget )
+	void TrimRight(TCHAR chTarget)
 	{
 		TrimInternalR(m_str.find_last_not_of(chTarget));
 	}
-	void TrimRight( LPCTSTR lpszTargets )
+	void TrimRight(LPCTSTR lpszTargets)
 	{
 		TrimInternalR(m_str.find_last_not_of(lpszTargets));
 	}
@@ -211,7 +286,7 @@ public:
 	void Format(LPCTSTR lpszFormat, ...)
 	{
 		va_list arguments;
-		va_start (arguments, lpszFormat);
+		va_start(arguments, lpszFormat);
 		TCHAR* pBuf = NULL;
 		int iCounter = 1, uTotal = 0;
 		do
@@ -223,8 +298,10 @@ public:
 			if (!pTempBuf)
 			{
 				if (pBuf != NULL)
+				{
 					free(pBuf);
-				va_end (arguments);
+				}
+				va_end(arguments);
 				return;
 			}
 			pBuf = pTempBuf;
@@ -235,11 +312,13 @@ public:
 			uTotal = _vsntprintf(pBuf, nChars - 1, lpszFormat, arguments);
 #endif
 
-			if (uTotal == -1 || (uTotal == nChars - 1) ) // for some implementations
+			if (uTotal == -1 || (uTotal == nChars - 1))  // for some implementations
 			{
 				pBuf[nChars - 1] = _T('\0');
 				if (iCounter == 7)
+				{
 					break;
+				}
 			}
 			else
 			{
@@ -248,20 +327,27 @@ public:
 			}
 			iCounter++;
 
-		} while (true);
+		}
+		while (true);
 
-		va_end (arguments);
+		va_end(arguments);
 		*this = pBuf;
 		free(pBuf);
 	}
 
 #if (_MSC_VER >= 1300)
-#pragma warning(pop)
+	#pragma warning(pop)
 #endif
 
-	void Insert( int nIndex, LPCTSTR pstr ){m_str.insert(nIndex, pstr, zslen(pstr));}
-	void Insert( int nIndex, TCHAR ch ) {m_str.insert(nIndex, 1, ch);}
-	int Delete( int nIndex, int nCount = 1 )
+	void Insert(int nIndex, LPCTSTR pstr)
+	{
+		m_str.insert(nIndex, pstr, zslen(pstr));
+	}
+	void Insert(int nIndex, TCHAR ch)
+	{
+		m_str.insert(nIndex, 1, ch);
+	}
+	int Delete(int nIndex, int nCount = 1)
 	{
 		int iSize = (int) m_str.size();
 		int iToDelete = iSize < nIndex + nCount ? iSize - nIndex : nCount;
@@ -275,20 +361,20 @@ public:
 #ifndef __MINGW32__
 	void MakeLower()
 	{
-		std::transform(m_str.begin(),m_str.end(),m_str.begin(),tl);
+		std::transform(m_str.begin(), m_str.end(), m_str.begin(), tl);
 	}
 	void MakeUpper()
 	{
-		std::transform(m_str.begin(),m_str.end(),m_str.begin(),tu);
+		std::transform(m_str.begin(), m_str.end(), m_str.begin(), tu);
 	}
 #else
 	void MakeLower()
 	{
-		std::transform(m_str.begin(),m_str.end(),m_str.begin(),tolower);
+		std::transform(m_str.begin(), m_str.end(), m_str.begin(), tolower);
 	}
 	void MakeUpper()
 	{
-		std::transform(m_str.begin(),m_str.end(),m_str.begin(),toupper);
+		std::transform(m_str.begin(), m_str.end(), m_str.begin(), toupper);
 	}
 #endif
 	void MakeReverse()
@@ -296,16 +382,25 @@ public:
 		std::reverse(m_str.begin(), m_str.end());
 
 	}
-	CZipString Left( int nCount ) const { return m_str.substr(0, nCount);}
-	CZipString Right( int nCount) const
+	CZipString Left(int nCount) const
+	{
+		return m_str.substr(0, nCount);
+	}
+	CZipString Right(int nCount) const
 	{
 		int s = (int)m_str.size();
 		nCount = s < nCount ? s : nCount;
 		return m_str.substr(s - nCount);
 	}
-	CZipString Mid( int nFirst ) const {return m_str.substr(nFirst);}
-	CZipString Mid( int nFirst, int nCount ) const {return m_str.substr(nFirst, nCount);}
-	int Collate( LPCTSTR lpsz ) const
+	CZipString Mid(int nFirst) const
+	{
+		return m_str.substr(nFirst);
+	}
+	CZipString Mid(int nFirst, int nCount) const
+	{
+		return m_str.substr(nFirst, nCount);
+	}
+	int Collate(LPCTSTR lpsz) const
 	{
 #if defined(UNDER_CE)
 		return (::CompareString(LOCALE_USER_DEFAULT, 0, c_str(), -1, lpsz, -1) - 2);
@@ -316,7 +411,7 @@ public:
 #endif
 	}
 
-	int CollateNoCase( LPCTSTR lpsz ) const
+	int CollateNoCase(LPCTSTR lpsz) const
 	{
 #if defined(UNDER_CE)
 		return (::CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, c_str(), -1, lpsz, -1) - 2);
@@ -324,19 +419,23 @@ public:
 		return _tcsicoll(m_str.c_str(), lpsz);
 #else
 		if (std::locale() == std::locale::classic())
+		{
 			return strcasecmp(m_str.c_str(), lpsz);
+		}
 		else
+		{
 			// this may be not case-insensitive !!!
 			return strcoll(m_str.c_str(), lpsz);
+		}
 #endif
 	}
 
-	int Compare( LPCTSTR lpsz ) const
+	int Compare(LPCTSTR lpsz) const
 	{
 		return m_str.compare(lpsz);
 	}
 
-	int CompareNoCase( LPCTSTR lpsz ) const
+	int CompareNoCase(LPCTSTR lpsz) const
 	{
 #if !defined __GNUC__ || defined __MINGW32__
 		return _tcsicmp(m_str.c_str(), lpsz);
@@ -353,17 +452,17 @@ public:
 	{
 		return Compare(lpsz) == 0;
 	}
-	int Find( TCHAR ch, int nStart = 0) const
+	int Find(TCHAR ch, int nStart = 0) const
 	{
 		return (int) m_str.find(ch, nStart);
 	}
 
-	int Find( LPCTSTR pstr, int nStart = 0) const
+	int Find(LPCTSTR pstr, int nStart = 0) const
 	{
 		return (int) m_str.find(pstr, nStart);
 	}
 
-	int Replace( TCHAR chOld, TCHAR chNew )
+	int Replace(TCHAR chOld, TCHAR chNew)
 	{
 		int iCount = 0;
 		for (stdbs::iterator it = m_str.begin(); it != m_str.end(); ++it)
@@ -372,7 +471,7 @@ public:
 				*it = chNew;
 				iCount++;
 			}
-			return iCount;
+		return iCount;
 	}
 };
 
@@ -410,7 +509,7 @@ inline bool operator!=(const CZipString& left, const CZipString& right)
 	A pointer type to point to CZipString to Collate or CollateNoCase
 	or Compare or CompareNoCase
 */
-typedef int (CZipString::*ZIPSTRINGCOMPARE)( LPCTSTR ) const;
+typedef int (CZipString::*ZIPSTRINGCOMPARE)(LPCTSTR) const;
 
 /**
 	return a pointer to the function in CZipString structure,

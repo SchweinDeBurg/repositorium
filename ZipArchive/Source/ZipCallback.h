@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipCallback.h
@@ -94,7 +112,7 @@ struct ZIP_API CZipCallback
 		You can set its value, to change the currently used path.
 	*/
 	CZipString m_szExternalFile;
-	virtual ~CZipCallback(){}
+	virtual ~CZipCallback() {}
 };
 
 /**
@@ -257,7 +275,7 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 			not set (because it is unknown and that's why the counting is performed),
 			but it allows to abort the counting process.
 		*/
-		cbCalculateForMulti= 0x0800,
+		cbCalculateForMulti = 0x0800,
 
 		/**
 			The callback called when adding multiple files with one of the CZipArchive::AddNewFiles
@@ -275,7 +293,7 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 			\see
 				<a href="kb">0610201627|existing</a>
 		*/
-		cbEncryptPrepare= 0x2000,
+		cbEncryptPrepare = 0x2000,
 
 		/**
 			The callback called in order to report the progress of adjusting space inside the archive before the actual encryption takes place.
@@ -283,7 +301,7 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 			\see
 				<a href="kb">0610201627|existing</a>
 		*/
-		cbEncryptMoveData= 0x4000,
+		cbEncryptMoveData = 0x4000,
 
 		/**
 			The callback called for every file being encrypted.
@@ -361,14 +379,20 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 			\return
 				The number of files left to process.
 		*/
-		ZIP_SIZE_TYPE LeftFilesToProcess() const {return m_uTotalFilesToProcess - m_uFilesProcessed;}
+		ZIP_SIZE_TYPE LeftFilesToProcess() const
+		{
+			return m_uTotalFilesToProcess - m_uFilesProcessed;
+		}
 
 		/**
 			Returns the number of bytes left to process.
 			\return
 				The number of bytes left to process.
 		*/
-		ZIP_SIZE_TYPE LeftBytesToProcess() const {return m_uTotalBytesToProcess - m_uBytesProcessed;}
+		ZIP_SIZE_TYPE LeftBytesToProcess() const
+		{
+			return m_uTotalBytesToProcess - m_uBytesProcessed;
+		}
 	private:
 		void Init(ZIP_SIZE_TYPE uTotalItemsToProcess, ZIP_SIZE_TYPE uTotalBytesToProcess, int iReactType)
 		{
@@ -388,7 +412,9 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		void OnCallCallback(ZIP_SIZE_TYPE uProgress)
 		{
 			if (m_bActive)
+			{
 				m_uBytesProcessed += uProgress;
+			}
 		}
 		bool OnNextFile()
 		{
@@ -398,7 +424,9 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 				return true;
 			}
 			else
+			{
 				return false;
+			}
 		}
 		bool m_bActive;
 		int m_iReactType;
@@ -458,8 +486,10 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		CacheStepSize();
 		ResetProgressStage();
 		if (m_pMultiActionsInfo)
+		{
 			// the type is known now
 			m_pMultiActionsInfo->OnCallbackInit(m_iType);
+		}
 	}
 
 	/**
@@ -490,9 +520,13 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 	virtual bool MultiActionsNext()
 	{
 		if (m_pMultiActionsInfo && m_pMultiActionsInfo->OnNextFile())
+		{
 			return Callback(0);
+		}
 		else
+		{
 			return true;
+		}
 	}
 
 	/**
@@ -526,7 +560,10 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 		\return
 			The amount of data left to process.
 	*/
-	ZIP_SIZE_TYPE LeftToProcess() const {return m_uTotalToProcess - m_uProcessed;}
+	ZIP_SIZE_TYPE LeftToProcess() const
+	{
+		return m_uTotalToProcess - m_uProcessed;
+	}
 
 	/**
 		The total amount of data to process. This value is set when the #SetTotal method is called.
@@ -617,9 +654,13 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 	bool RequestCallback(ZIP_SIZE_TYPE uProgress = 1)
 	{
 		if (!uProgress)
+		{
 			return true;
+		}
 		if (m_iCachedStepSize == 1)
+		{
 			return CallCallback(uProgress);
+		}
 		else
 		{
 			m_uAccumulatedProgress += uProgress;
@@ -654,9 +695,13 @@ struct ZIP_API CZipActionCallback : public CZipCallback
 	{
 		bool ret;
 		if (m_uAccumulatedProgress == 0 && uProgress == 0)
+		{
 			ret = true;
+		}
 		else
+		{
 			ret = CallCallback(m_uAccumulatedProgress + uProgress);
+		}
 		ResetProgressStage();
 		return ret;
 	}
@@ -677,7 +722,9 @@ protected:
 	{
 		m_uProcessed += uProgress;
 		if (m_pMultiActionsInfo)
+		{
 			m_pMultiActionsInfo->OnCallCallback(uProgress);
+		}
 		return Callback(uProgress);
 	}
 
@@ -688,7 +735,9 @@ protected:
 	{
 		m_iCachedStepSize = GetStepSize();
 		if (m_iCachedStepSize == 0)
+		{
 			m_iCachedStepSize = 1;
+		}
 	}
 
 	/**

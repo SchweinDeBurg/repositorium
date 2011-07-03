@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipCentralDir.h
@@ -69,9 +87,9 @@ public:
 		CZipFindFast()
 		{
 			m_uIndex = 0;
-			m_pHeader= NULL;
+			m_pHeader = NULL;
 		}
-		CZipFindFast(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uIndex):m_pHeader(pHeader), m_uIndex(uIndex){}
+		CZipFindFast(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uIndex): m_pHeader(pHeader), m_uIndex(uIndex) {}
 
 		/**
 			A pointer to the structure in CZipCentralDir. We extract a name from it.
@@ -272,16 +290,16 @@ public:
 	void RemoveFile(CZipFileHeader* pHeader, ZIP_INDEX_TYPE uIndex = ZIP_FILE_INDEX_UNSPECIFIED, bool bShift = true);
 
 
-    /**
-       Removes last file from the central directory.
+	/**
+	   Removes last file from the central directory.
 
-	   \param	pHeader
+		\param	pHeader
 			The header to remove.
 
 		\param uIndex
 			The index of the header to remove. Use \c ZIP_FILE_INDEX_UNSPECIFIED, if the index is unknown.
 
-     */
+	*/
 	void RemoveLastFile(CZipFileHeader* pHeader = NULL, ZIP_INDEX_TYPE uIndex = ZIP_FILE_INDEX_UNSPECIFIED);
 
 	/**
@@ -314,7 +332,7 @@ public:
 			The new header.
 
 	*/
-	CZipFileHeader* AddNewFile(const CZipFileHeader & header, ZIP_INDEX_TYPE uReplaceIndex, int iLevel, bool bRichHeaderTemplateCopy = false);
+	CZipFileHeader* AddNewFile(const CZipFileHeader& header, ZIP_INDEX_TYPE uReplaceIndex, int iLevel, bool bRichHeaderTemplateCopy = false);
 
 	/**
 		Returns the index of the recently added file (if any).
@@ -394,7 +412,9 @@ public:
 	ZIP_INDEX_TYPE GetFindFastIndex(ZIP_INDEX_TYPE uFindFastIndex) const
 	{
 		if (!IsValidIndex(uFindFastIndex) || !m_pInfo->m_bFindFastEnabled)
+		{
 			return ZIP_FILE_INDEX_NOT_FOUND;
+		}
 
 		return (*m_pFindArray)[(ZIP_ARRAY_SIZE_TYPE)uFindFastIndex]->m_uIndex;
 	}
@@ -473,7 +493,10 @@ public:
 		\see
 			CZipArchive::GetCentralDirInfo
 	*/
-	void GetInfo(CInfo& info) const {info = *m_pInfo;}
+	void GetInfo(CInfo& info) const
+	{
+		info = *m_pInfo;
+	}
 
 	/**
 		Returns the value indicating whether the Find Fast feature is enabled.
@@ -481,7 +504,10 @@ public:
 		\return
 			The value of CInfo::m_bFindFastEnabled.
 	*/
-	bool IsFindFastEnabled(){return m_pInfo->m_bFindFastEnabled;}
+	bool IsFindFastEnabled()
+	{
+		return m_pInfo->m_bFindFastEnabled;
+	}
 
 	/**
 		Rebuilds the CZipCentralDir::m_pFindArray array.
@@ -489,7 +515,9 @@ public:
 	void RebuildFindFastArray()
 	{
 		if (m_pInfo->m_bFindFastEnabled)
+		{
 			BuildFindFastArray(m_pInfo->m_bCaseSensitive);
+		}
 	}
 
 	/**
@@ -532,7 +560,10 @@ public:
 		\return
 			The current storage.
 	*/
-	CZipStorage* GetStorage() {return m_pStorage;}
+	CZipStorage* GetStorage()
+	{
+		return m_pStorage;
+	}
 #ifdef _ZIP_UNICODE_CUSTOM
 	/**
 		Returns the current string store settings.
@@ -566,7 +597,10 @@ public:
 		\see
 			CZipArchive::SetUnicodeMode
 	*/
-	void SetUnicodeMode(int iMode) {m_iUnicodeMode = iMode;}
+	void SetUnicodeMode(int iMode)
+	{
+		m_iUnicodeMode = iMode;
+	}
 
 	/**
 		Returns the current Unicode mode.
@@ -574,7 +608,10 @@ public:
 		\see
 			CZipArchive::GetUnicodeMode
 	*/
-	int GetUnicodeMode() const {return m_iUnicodeMode;}
+	int GetUnicodeMode() const
+	{
+		return m_iUnicodeMode;
+	}
 
 	/**
 		Examines whether any file is modified.
@@ -624,20 +661,26 @@ protected:
 	/**
 		The method used in comparison when sorting headers.
 	*/
-	static int CompareHeaders(const void *pArg1, const void *pArg2)
+	static int CompareHeaders(const void* pArg1, const void* pArg2)
 	{
 		CZipFileHeader* pw1 = *(CZipFileHeader**)pArg1;
 		CZipFileHeader* pw2 = *(CZipFileHeader**)pArg2;
 		if (pw1 == pw2)
+		{
 			return 0;
+		}
 
 		if (pw1->m_uVolumeStart == pw2->m_uVolumeStart)
 		{
 			if (pw1->m_uOffset < pw2->m_uOffset)
+			{
 				return -1;
+			}
 			else if (pw1->m_uOffset > pw2->m_uOffset)
+			{
 				return 1;
-				ASSERT(FALSE);
+			}
+			ASSERT(FALSE);
 
 
 			// two files with the same offsets in the same volume???
@@ -645,9 +688,13 @@ protected:
 			return 0; // just for the compiler comfort (and discomfort of another)
 		}
 		else if (pw1->m_uVolumeStart < pw2->m_uVolumeStart)
+		{
 			return -1;
+		}
 		else // if (pw1->m_uVolumeStart > pw2->m_uVolumeStart)
+		{
 			return 1;
+		}
 	}
 
 #if (_MSC_VER > 1000)
@@ -680,13 +727,15 @@ protected:
 	/**
 		Builds the CZipCentralDir::m_pFindArray array.
 	*/
-	void BuildFindFastArray( bool bCaseSensitive );
+	void BuildFindFastArray(bool bCaseSensitive);
 
 	void ClearFindFastArray()
 	{
 		ZIP_ARRAY_SIZE_TYPE uCount = m_pFindArray->GetSize();
 		for (ZIP_ARRAY_SIZE_TYPE i = 0; i < uCount; i++)
-			delete (*m_pFindArray)[i];
+		{
+			delete(*m_pFindArray)[i];
+		}
 		m_pFindArray->RemoveAll();
 	}
 
@@ -844,7 +893,9 @@ protected:
 	void UnlockAccess()
 	{
 		if (m_pInfo)
+		{
 			m_pInfo->m_mutex.Unlock();
+		}
 	}
 #endif
 private:

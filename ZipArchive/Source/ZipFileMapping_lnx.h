@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 #ifndef ZIPARCHIVE_ZIPFILEMAPPING_DOT_H
 	#error Do not include this file directly. Include ZipFileMapping.h instead
@@ -31,9 +49,11 @@ namespace ZipArchiveLib
 		bool CreateMapping(CZipFile* pFile)
 		{
 			if (!pFile)
+			{
 				return false;
+			}
 			m_iSize = pFile->GetLength();
-			m_pFileMap = mmap(0, m_iSize, PROT_READ|PROT_WRITE, MAP_SHARED, pFile->m_hFile, 0);
+			m_pFileMap = mmap(0, m_iSize, PROT_READ | PROT_WRITE, MAP_SHARED, pFile->m_hFile, 0);
 			return (m_pFileMap != NULL);
 		}
 		void RemoveMapping()
@@ -51,7 +71,7 @@ namespace ZipArchiveLib
 		}
 		char* GetMappedMemory()
 		{
-			return reinterpret_cast<char*> (m_pFileMap);
+			return reinterpret_cast<char*>(m_pFileMap);
 		}
 	protected:
 		void* m_pFileMap;

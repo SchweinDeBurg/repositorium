@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 #ifndef ZIPARCHIVE_ZIPFILE_DOT_H
 	#error Do not include this file directly. Include ZipFile.h instead
@@ -48,23 +66,32 @@ public:
 	CZipFile(LPCTSTR lpszFileName, UINT openFlags);
 	void Flush();
 	ZIP_FILE_USIZE GetLength() const;
-	CZipString GetFilePath() const {return m_szFileName;}
+	CZipString GetFilePath() const
+	{
+		return m_szFileName;
+	}
 	bool HasFilePath() const
 	{
 		return true;
 	}
-	bool IsClosed() const { return m_hFile == INVALID_HANDLE_VALUE;}
+	bool IsClosed() const
+	{
+		return m_hFile == INVALID_HANDLE_VALUE;
+	}
 	bool Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow);
 	void Close();
 
 	void Write(const void* lpBuf, UINT nCount);
 	ZIP_FILE_USIZE GetPosition() const;
 	void SetLength(ZIP_FILE_USIZE uNewLen);
-	UINT Read(void *lpBuf, UINT nCount);
+	UINT Read(void* lpBuf, UINT nCount);
 
 	ZIP_FILE_USIZE Seek(ZIP_FILE_SIZE dOff, int nFrom);
 
-	virtual ~CZipFile (){Close();};
+	virtual ~CZipFile()
+	{
+		Close();
+	};
 protected:
 	CZipString m_szFileName;
 };

@@ -11,15 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
-// Check the site http://www.artpol-software.com for the updated version of the library.
-//
-//	The following information files are distributed along with this library:
-//		License.txt		- licensing information
-//		Appnote.txt		- details on the zip format
-//							( also available at ftp://ftp.pkware.com/appnote.zip)
-//
-
-
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipArchive.h
@@ -373,7 +382,7 @@ public:
 			EncryptAllFiles
 
 	*/
-	bool EncryptFiles(CZipIndexesArray &aIndexes)
+	bool EncryptFiles(CZipIndexesArray& aIndexes)
 	{
 		return EncryptFilesInternal(&aIndexes);
 	}
@@ -513,18 +522,24 @@ public:
 		\see
 			SetAdvanced
 	 */
-	void GetAdvanced(int* piWriteBuffer = NULL, int* piGeneralBuffer = NULL, int* piSearchBuffer= NULL)
+	void GetAdvanced(int* piWriteBuffer = NULL, int* piGeneralBuffer = NULL, int* piSearchBuffer = NULL)
 	{
 		if (piWriteBuffer)
+		{
 			*piWriteBuffer = 	m_storage.m_iWriteBufferSize;
+		}
 		if (piGeneralBuffer)
+		{
 			*piGeneralBuffer = m_iBufferSize;
+		}
 		if (piSearchBuffer)
+		{
 			*piSearchBuffer = m_storage.m_iLocateBufferSize;
+		}
 	}
 
 
-    /**
+	/**
 		Registers the callback object to receive specified notifications.
 
 		\param pCallback
@@ -543,7 +558,7 @@ public:
 		\see
 			GetCallback
 
-     */
+	*/
 	void SetCallback(CZipActionCallback* pCallback = NULL, int iWhich = CZipActionCallback::cbAll)
 	{
 		m_callbacks.Set(pCallback, iWhich);
@@ -797,7 +812,7 @@ public:
 	void SetRootPath(LPCTSTR szPath = NULL);
 
 
-    /**
+	/**
 		Returns the value set previously with the SetRootPath() method.
 
 		\return
@@ -805,7 +820,7 @@ public:
 
 		\see
 			SetRootPath
-     */
+	*/
 	CZipString GetRootPath() const
 	{
 		return m_szRootPath;
@@ -920,10 +935,10 @@ public:
 		The parameters are equivalent to CZipAddNewFileInfo member variables.
 	*/
 	bool AddNewFile(LPCTSTR lpszFilePath,
-							 LPCTSTR lpszFileNameInZip,
-                             int iComprLevel = -1,
-							 int iSmartLevel = zipsmSafeSmart,
-                             unsigned long nBufSize = 65536);
+		LPCTSTR lpszFileNameInZip,
+		int iComprLevel = -1,
+		int iSmartLevel = zipsmSafeSmart,
+		unsigned long nBufSize = 65536);
 
 	/**
 		Adds a new file to the opened archive.
@@ -931,10 +946,10 @@ public:
 		The parameters are equivalent to CZipAddNewFileInfo member variables.
 	*/
 	bool AddNewFile(CZipAbstractFile& af,
-							 LPCTSTR lpszFileNameInZip,
-                             int iComprLevel = -1,
-							 int iSmartLevel = zipsmSafeSmart,
-                             unsigned long nBufSize = 65536);
+		LPCTSTR lpszFileNameInZip,
+		int iComprLevel = -1,
+		int iSmartLevel = zipsmSafeSmart,
+		unsigned long nBufSize = 65536);
 
 
 	/**
@@ -988,12 +1003,12 @@ public:
 
 	*/
 	bool AddNewFiles(LPCTSTR lpszPath,
-						ZipArchiveLib::CFileFilter& filter,
-						bool bRecursive = true,
-						int iComprLevel = -1,
-						bool bSkipInitialPath = true,
-						int iSmartLevel = zipsmSafeSmart,
-						unsigned long nBufSize = 65536);
+		ZipArchiveLib::CFileFilter& filter,
+		bool bRecursive = true,
+		int iComprLevel = -1,
+		bool bSkipInitialPath = true,
+		int iSmartLevel = zipsmSafeSmart,
+		unsigned long nBufSize = 65536);
 
 	/**
 		Adds new files to the opened archive from the specified directory using a filename mask.
@@ -1040,16 +1055,15 @@ public:
 			AddNewFile(CZipAbstractFile&, LPCTSTR, int, int, unsigned long)
 	*/
 	bool AddNewFiles(LPCTSTR lpszPath,
-						LPCTSTR lpszFileMask = _T("*.*"),
-						bool bRecursive = true,
-						int iComprLevel = -1,
-						bool bSkipInitialPath = true,
-						int iSmartLevel = zipsmSafeSmart,
-						unsigned long nBufSize = 65536)
+		LPCTSTR lpszFileMask = _T("*.*"),
+		bool bRecursive = true,
+		int iComprLevel = -1,
+		bool bSkipInitialPath = true,
+		int iSmartLevel = zipsmSafeSmart,
+		unsigned long nBufSize = 65536)
 	{
 		ZipArchiveLib::CNameFileFilter filter(lpszFileMask);
-		return AddNewFiles(lpszPath, filter, bRecursive, iComprLevel,
-			bSkipInitialPath, iSmartLevel, nBufSize);
+		return AddNewFiles(lpszPath, filter, bRecursive, iComprLevel, bSkipInitialPath, iSmartLevel, nBufSize);
 	}
 
 	/**
@@ -1146,7 +1160,7 @@ public:
 		\see
 			CloseNewFile
 	*/
-	bool WriteNewFile(const void *pBuf, DWORD uSize);
+	bool WriteNewFile(const void* pBuf, DWORD uSize);
 
 	/**
 		Closes the new file in the archive.
@@ -1228,14 +1242,16 @@ public:
 		{
 			bRet = GetFromArchive(zip, uIndex, lpszNewFileName, uReplaceIndex, bKeepSystComp, GetCallback(CZipActionCallback::cbGet));
 		}
-		catch(...)
+		catch (...)
 		{
 			ReleaseBuffer();
 			throw;
 		}
 		ReleaseBuffer();
 		if (bRet)
+		{
 			Finalize(true);
+		}
 
 		return bRet;
 	}
@@ -1286,7 +1302,7 @@ public:
 		\see
 			SetPassword
 	*/
-	bool GetFromArchive(CZipArchive& zip, CZipIndexesArray &aIndexes, bool bKeepSystComp = false);
+	bool GetFromArchive(CZipArchive& zip, CZipIndexesArray& aIndexes, bool bKeepSystComp = false);
 
 	/**
 		Acquires files with the given names from another archive.
@@ -1336,7 +1352,7 @@ public:
 			SetPassword
 	*/
 
-	bool GetFromArchive(CZipArchive& zip, CZipStringArray &aNames, bool bKeepSystComp = false)
+	bool GetFromArchive(CZipArchive& zip, CZipStringArray& aNames, bool bKeepSystComp = false)
 	{
 		CZipIndexesArray indexes;
 		zip.GetIndexes(aNames, indexes);
@@ -1361,7 +1377,7 @@ public:
 		\see
 			EnableFindFast
 	*/
-	void GetIndexes(const CZipStringArray &aNames, CZipIndexesArray& aIndexes);
+	void GetIndexes(const CZipStringArray& aNames, CZipIndexesArray& aIndexes);
 
 	/**
 		Extracts a file from the archive.
@@ -1511,7 +1527,7 @@ public:
 		\see
 			CloseFile
 	*/
-	DWORD ReadFile(void *pBuf, DWORD uSize);
+	DWORD ReadFile(void* pBuf, DWORD uSize);
 
 
 	/**
@@ -1563,11 +1579,11 @@ public:
 		\see
 			CloseFile(LPCTSTR, bool)
 	*/
-	int CloseFile(CZipFile &file);
+	int CloseFile(CZipFile& file);
 
 	/**
 		Tests the file with the given index for the integrity.
- 		The method throws exceptions but performs all the necessary cleanup
+		The method throws exceptions but performs all the necessary cleanup
 		before, so that the next file can be tested after catching the exception.
 
 		\param	uIndex
@@ -1729,7 +1745,7 @@ public:
 #else
 		_T("")
 #endif
-		);
+	);
 
 	/**
 		Inserts data contained in the \a file before the archive data. You can use this method for example to convert
@@ -1849,7 +1865,7 @@ public:
 		/**
 			Performs a non-case-sensitive search. If the CZipArchive is case-sensitive,
 			a less effective search is performed. It does not rebuild the Find Fast array,
- 			but if the array hasn't been built yet, it is build now as \b case-sensitive.
+			but if the array hasn't been built yet, it is build now as \b case-sensitive.
 			You can use \c SetCaseSensitivity(false) and then #ffDefault to build it as non-case-sensitive.
 		*/
 		ffNoCaseSens
@@ -2039,7 +2055,9 @@ public:
 	ZIP_INDEX_TYPE GetCount(bool bOnlyFiles)
 	{
 		if (IsClosed())
+		{
 			return 0;
+		}
 
 		ZIP_INDEX_TYPE iTotalCount = GetCount();
 		if (bOnlyFiles)
@@ -2048,12 +2066,16 @@ public:
 			for (ZIP_INDEX_TYPE i = 0; i < iTotalCount; i++)
 			{
 				if (!m_centralDir[i]->IsDirectory())
+				{
 					iCount++;
+				}
 			}
 			return iCount;
 		}
 		else
+		{
 			return iTotalCount;
+		}
 	}
 
 	/**
@@ -2237,7 +2259,10 @@ public:
 		\see
 			Finalize
 	*/
-	bool GetAutoFinalize() const {return m_bAutoFinalize;}
+	bool GetAutoFinalize() const
+	{
+		return m_bAutoFinalize;
+	}
 
 	/**
 		Sets the system compatibility of the archive. Use it after opening the archive,
@@ -2285,7 +2310,10 @@ public:
 		\see
 			ZipPlatform::GetSystemID
 	*/
-	int GetSystemCompatibility() const {return m_iArchiveSystCompatib;}
+	int GetSystemCompatibility() const
+	{
+		return m_iArchiveSystCompatib;
+	}
 
 	/**
 		Returns the underlying archive storage object.
@@ -2296,10 +2324,13 @@ public:
 		\see
 			CZipStorage
 	*/
-	CZipStorage* GetStorage(){return &m_storage;}
+	CZipStorage* GetStorage()
+	{
+		return &m_storage;
+	}
 
 #ifdef _ZIP_UNICODE_CUSTOM
-		/**
+	/**
 		Sets the current settings that control storing of filenames and comments in the archive.
 
 		\param settings
@@ -2443,7 +2474,10 @@ public:
 		\see
 			<a href="kb">0610051525</a>
 	*/
-	void SetUnicodeMode(int iMode){ m_centralDir.SetUnicodeMode(iMode); }
+	void SetUnicodeMode(int iMode)
+	{
+		m_centralDir.SetUnicodeMode(iMode);
+	}
 
 	/**
 		Returns the current Unicode mode.
@@ -2454,7 +2488,10 @@ public:
 		\see
 			<a href="kb">0610051525</a>
 	*/
-	int GetUnicodeMode() const { return m_centralDir.GetUnicodeMode(); }
+	int GetUnicodeMode() const
+	{
+		return m_centralDir.GetUnicodeMode();
+	}
 
 	/**
 		Enables or disables fast searching for files inside the archive using filenames.
@@ -2471,14 +2508,14 @@ public:
 	void EnableFindFast(bool bEnable = true);
 
 
-    /**
+	/**
 		Allows to retrieve the order of sorted files after you enabled the Find Fast feature with the EnableFindFast() method.
 
-       \param iFindFastIndex
+		\param iFindFastIndex
 			The index of the file in the sorted array.
 
-       \return
-	        The index of the file in the central directory. You can use the return value
+		\return
+			The index of the file in the central directory. You can use the return value
 			in other methods that require the file index (such as #GetFileInfo).
 			This method returns \c -1, if you have not called
 			#EnableFindFast before or the archive is closed or the \a iFindFastIndex
@@ -2488,7 +2525,7 @@ public:
 			<a href="kb">0610242025|findfast</a>
 		\see
 			EnableFindFast
-     */
+	*/
 	ZIP_INDEX_TYPE GetFindFastIndex(ZIP_INDEX_TYPE iFindFastIndex) const
 	{
 		if (IsClosed())
@@ -2538,7 +2575,7 @@ public:
 
 		\see
 			SetTempPath
-     */
+	*/
 	CZipString GetTempPath() const
 	{
 		return m_szTempPath;
@@ -2555,20 +2592,20 @@ public:
 		prAuto  ///< Treats \a lpszFilePath as a directory only if it has a path separator appended.
 	};
 
-    /**
-       Predicts the filename as it would be stored in the archive, when given parameters would be used with
-	   one of the AddNewFile() methods. The method takes into account the root path set with the #SetRootPath method.
-	   You can use this method to eliminate duplicates before adding a list of files.
+	/**
+		Predicts the filename as it would be stored in the archive, when given parameters would be used with
+		one of the AddNewFile() methods. The method takes into account the root path set with the #SetRootPath method.
+		You can use this method to eliminate duplicates before adding a list of files.
 
-       \param lpszFilePath
+		\param lpszFilePath
 			The file path, the same as CZipAddNewFileInfo::m_szFilePath.
-	   \param bFullPath
+		\param bFullPath
 			The same as CZipAddNewFileInfo::m_bFullPath.
-       \param iWhat
+		\param iWhat
 			One of the #Predict values to interpret \a lpszFilePath correctly.
-       \return
+		\return
 			The filename as it would be stored in the archive.
-     */
+	*/
 	CZipString PredictFileNameInZip(LPCTSTR lpszFilePath, bool bFullPath, int iWhat = prAuto) const ;
 
 	/**
@@ -2605,7 +2642,7 @@ public:
 	*/
 	ZIP_SIZE_TYPE PredictMaximumFileSizeInArchive(CZipFileHeader& fh);
 
-	 /**
+	/**
 		Calls the PredictMaximumFileSizeInArchive(CZipFileHeader&) method.
 		Before calling, fills the #CZipFileHeader structure with the filename as it
 		would appear in the archive and sets the proper file size (unless \a lpszFilePath is a directory).
@@ -2621,7 +2658,7 @@ public:
 
 		\see
 			PredictMaximumFileSizeInArchive(CZipFileHeader&)
-	 */
+	*/
 	ZIP_SIZE_TYPE PredictMaximumFileSizeInArchive(LPCTSTR lpszFilePath, bool bFullPath);
 
 
@@ -2647,28 +2684,28 @@ public:
 	*/
 	ZIP_INDEX_TYPE WillBeDuplicated(LPCTSTR lpszFilePath, bool bFullPath, bool bFileNameOnly = false, int iWhat = prAuto);
 
-    /**
-       Predicts the full resulting filename with path after extraction.
-	   The parameters (except for the first) are in the form you would pass
-	   to the #ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&, bool, ZipPlatform::DeleteFileMode, CZipCompressor::COffsetsPair*, DWORD)
-	   The method takes into account the root path set with the #SetRootPath method.
+	/**
+		Predicts the full resulting filename with path after extraction.
+		The parameters (except for the first) are in the form you would pass
+		to the #ExtractFile(ZIP_INDEX_TYPE, CZipAbstractFile&, bool, ZipPlatform::DeleteFileMode, CZipCompressor::COffsetsPair*, DWORD)
+		The method takes into account the root path set with the #SetRootPath method.
 
-       \param lpszFileNameInZip
+		\param lpszFileNameInZip
 			The filename of the file inside the archive (may be \c NULL if \a lpszNewName is not \c NULL).
 
-       \param lpszPath
+		\param lpszPath
 
-       \param bFullPath
+		\param bFullPath
 
-       \param lpszNewName
+		\param lpszNewName
 
-       \return
+		\return
 			The predicted resulting file path.
-     */
+	*/
 	CZipString PredictExtractedFileName(LPCTSTR lpszFileNameInZip, LPCTSTR lpszPath, bool bFullPath, LPCTSTR lpszNewName = NULL) const ;
 
 
-/**
+	/**
 		Removes the root path from \a zpc.
 
 		\param	zpc
@@ -2676,10 +2713,10 @@ public:
 
 		\see
 			SetRootPath
-*/
+	*/
 	CZipString TrimRootPath(CZipPathComponent& zpc) const ;
 
-    /**
+	/**
 		Removes \a lpszBeginning from the beginning of \a szPath. Both argument are
 		considered to be paths - they must match up to the path separator.
 
@@ -2694,7 +2731,7 @@ public:
 
 		\return
 			\c true, if the path beginning was removed; \c false otherwise.
-     */
+	*/
 	static bool RemovePathBeginning(LPCTSTR lpszBeginning, CZipString& szPath, ZIPSTRINGCOMPARE pCompareFunction);
 
 	/**
@@ -2779,7 +2816,10 @@ public:
 		\return
 			\c true if the archive is read-only; \c false otherwise.
 	*/
-	bool IsReadOnly(){return m_storage.IsReadOnly();} const
+	bool IsReadOnly()
+	{
+		return m_storage.IsReadOnly();
+	} const
 
 	/**
 		Sets the number of extra bytes that are present before the actual archive in the archive file.
@@ -2915,19 +2955,19 @@ public:
 		return m_centralDir.m_specialFlags;
 	}
 
-    /**
+	/**
 		Finds indexes of the files, which filenames match the specified pattern. The indexes are stored in the \a ar array.
 		The indexes can be used then e.g. in deleting or extracting files.
 
-       \param lpszPattern
+		\param lpszPattern
 			The pattern to match. The case-sensitivity of the pattern
 			is set to the global archive case-sensitivity (set with the #SetCaseSensitivity method).
 
-       \param ar
+		\param ar
 			The array which will contain the resulting indexes. The contents of \a ar are not cleared, but the
 			indexes are appended to it.
 
-	   \param bFullPath
+		\param bFullPath
 			\li If \c true, the method matches the filename with path (if present) of the file.
 			If the file is a directory, end it with a path separator or use a pattern that will recognize it.
 			\li If \c false, the method matches only the name of the file. If the file is a directory,
@@ -2940,7 +2980,7 @@ public:
 		\see
 			ZipArchiveLib::CWildcard
 
-     */
+	*/
 	void FindMatches(LPCTSTR lpszPattern, CZipIndexesArray& ar, bool bFullPath = true);
 
 	/**
@@ -2986,7 +3026,10 @@ public:
 		\see
 			CommitChanges
 	*/
-	int GetCommitMode() const {return m_iCommitMode;}
+	int GetCommitMode() const
+	{
+		return m_iCommitMode;
+	}
 
 	/**
 		Writes pending changes to the archive.
@@ -3022,7 +3065,10 @@ public:
 		\see
 			CommitChanges
 	*/
-	bool IsModified() const {return m_centralDir.IsAnyFileModified();}
+	bool IsModified() const
+	{
+		return m_centralDir.IsAnyFileModified();
+	}
 
 	/**
 		Removes the central directory from the archive.
@@ -3219,7 +3265,7 @@ protected:
 		\see
 			OpenNewFile(CZipFileHeader&, int, LPCTSTR)
 	*/
-	bool OpenNewFile(CZipFileHeader & header, int iLevel, LPCTSTR lpszFilePath, ZIP_INDEX_TYPE uReplaceIndex);
+	bool OpenNewFile(CZipFileHeader& header, int iLevel, LPCTSTR lpszFilePath, ZIP_INDEX_TYPE uReplaceIndex);
 
 	/**
 		Holds currently set callback objects.
@@ -3356,8 +3402,12 @@ protected:
 	virtual void CreateCryptograph(int iEncryptionMethod)
 	{
 		if (m_pCryptograph != NULL)
+		{
 			if (m_pCryptograph->CanHandle(iEncryptionMethod))
+			{
 				return;
+			}
+		}
 
 		ClearCryptograph();
 		m_pCryptograph = CZipCryptograph::CreateCryptograph(iEncryptionMethod);

@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipSplitNamesHandler.h
@@ -123,7 +141,7 @@ protected:
 	CZipString m_szExt;
 public:
 	CZipRegularSplitNamesHandler()
-		:m_szExt(_T("zip"))
+		: m_szExt(_T("zip"))
 	{
 	}
 
@@ -137,13 +155,19 @@ public:
 	{
 		CZipString szExt;
 		if (flags.IsSetAny(CZipSplitNamesHandler::flLast))
+		{
 			szExt = m_szExt;
+		}
 		else
 		{
 			if (uCurrentVolume < 100)
+			{
 				szExt.Format(_T("z%.2u"), uCurrentVolume);
+			}
 			else
+			{
 				szExt.Format(_T("z%u"), uCurrentVolume);
+			}
 		}
 		CZipPathComponent zpc(szArchiveName);
 		zpc.SetExtension(szExt);
@@ -164,9 +188,13 @@ public:
 	{
 		CZipString szExt;
 		if (uCurrentVolume < 1000)
+		{
 			szExt.Format(_T("%.3u"), uCurrentVolume);
+		}
 		else
+		{
 			szExt.Format(_T("%u"), uCurrentVolume);
+		}
 		if (flags.IsSetAny(CZipSplitNamesHandler::flExisting))
 		{
 			CZipPathComponent zpc(szArchiveName);
@@ -185,7 +213,9 @@ public:
 		CZipString szExt = zpc.GetFileExt();
 		szExt.MakeLower();
 		if (szExt.GetLength() < 3)
+		{
 			return 0;
+		}
 		__int64 ret;
 #if !defined __GNUC__ || defined __MINGW32__
 		ret = _ttoi64((LPCTSTR)szExt);
@@ -193,7 +223,9 @@ public:
 		errno = 0;
 		ret = (__int64)strtoll((LPCTSTR)szExt, NULL, 10);
 		if (errno != 0)
+		{
 			return 0;
+		}
 #endif
 		return (ZIP_VOLUME_TYPE)((ret <= 0 || ret > UINT_MAX) ? 0 : ret);
 	}

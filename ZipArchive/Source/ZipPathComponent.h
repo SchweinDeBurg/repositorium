@@ -11,12 +11,31 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipPathComponent.h
 * Includes the CZipPathComponent class.
 *
 */
+
 #if !defined(ZIPARCHIVE_ZIPPATHCOMPONENT_DOT_H)
 #define ZIPARCHIVE_ZIPPATHCOMPONENT_DOT_H
 
@@ -87,7 +106,7 @@ public:
 	static void AddPrefix(CZipString& path, bool isFolder = true);
 
 #endif
-	CZipPathComponent(){}
+	CZipPathComponent() {}
 	/**
 		Initializes a new instance of the CZipPathComponent class.
 
@@ -131,7 +150,9 @@ public:
 	{
 		AppendSeparator(szPath);
 		if (lpszName != NULL)
+		{
 			szPath += lpszName;
+		}
 	}
 
 	/**
@@ -157,7 +178,7 @@ public:
 	}
 
 
-    /**
+	/**
 		Returns the value indicating whether the given character is a path separator.
 
 		\param c
@@ -165,7 +186,7 @@ public:
 
 		\return
 			\c true, if \a c is a path separator; \c false otherwise.
-     */
+	*/
 	static bool IsSeparator(TCHAR c)
 	{
 		return c == _T('\\') || c == _T('/');
@@ -184,9 +205,13 @@ public:
 	{
 		int iLen = szPath.GetLength();
 		if (iLen)
+		{
 			return IsSeparator(szPath[iLen - 1]);
+		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/**
@@ -204,7 +229,10 @@ public:
 		\return
 			The title of the file.
 	*/
-	CZipString GetFileTitle() const { return m_szFileTitle;}
+	CZipString GetFileTitle() const
+	{
+		return m_szFileTitle;
+	}
 
 	/**
 		Sets the file title (the name without the extension and without the path).
@@ -212,7 +240,10 @@ public:
 		\param	lpszFileTitle
 			The title to set.
 	*/
-	void SetFileTitle(LPCTSTR lpszFileTitle) { m_szFileTitle = lpszFileTitle;}
+	void SetFileTitle(LPCTSTR lpszFileTitle)
+	{
+		m_szFileTitle = lpszFileTitle;
+	}
 
 
 	/**
@@ -233,7 +264,10 @@ public:
 		\return
 			The extension without the dot character.
 	*/
-	CZipString GetFileExt() const { return m_szFileExt;}
+	CZipString GetFileExt() const
+	{
+		return m_szFileExt;
+	}
 
 	/**
 		Returns the drive of the file.
@@ -241,7 +275,10 @@ public:
 		\return
 			The drive without a path separator at the end.
 	*/
-	CZipString GetFileDrive() const { return m_szDrive;}
+	CZipString GetFileDrive() const
+	{
+		return m_szDrive;
+	}
 
 	/**
 		Returns the full path to the file without the drive.
@@ -281,7 +318,9 @@ public:
 		if (!szFileName.IsEmpty())
 		{
 			if (szFullPath.IsEmpty())
+			{
 				szFullPath += _T('.');
+			}
 			szFullPath  += m_cSeparator;
 			szFullPath  += szFileName;
 		}
@@ -299,7 +338,9 @@ public:
 		CZipString szDrive = m_szDrive;
 		CZipString szDir = m_szDirectory;
 		if (!szDrive.IsEmpty() && !szDir.IsEmpty())
+		{
 			szDrive += m_cSeparator;
+		}
 
 		return m_szPrefix + szDrive + szDir;
 	}

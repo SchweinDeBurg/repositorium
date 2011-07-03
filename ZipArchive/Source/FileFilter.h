@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file FileFilter.h
@@ -59,7 +77,7 @@ namespace ZipArchiveLib
 				SetInverted
 		*/
 		CFileFilter(bool bInverted = false)
-			:m_bInverted(bInverted)
+			: m_bInverted(bInverted)
 		{
 		}
 
@@ -107,7 +125,9 @@ namespace ZipArchiveLib
 		{
 			bool ret = Accept(lpszParentDir, lpszName, info);
 			if (!HandlesInversion())
+			{
 				return m_bInverted ? !ret : ret;
+			}
 			return ret;
 		}
 
@@ -127,7 +147,10 @@ namespace ZipArchiveLib
 			\see
 				IsInverted
 		*/
-		void SetInverted(bool bInverted = true) { m_bInverted = bInverted;}
+		void SetInverted(bool bInverted = true)
+		{
+			m_bInverted = bInverted;
+		}
 
 		/**
 			Returns the value indicating whether the filter operates in an inverted mode or in a normal mode.
@@ -140,7 +163,10 @@ namespace ZipArchiveLib
 			\see
 				HandlesInversion
 		*/
-		bool IsInverted() const {return m_bInverted;}
+		bool IsInverted() const
+		{
+			return m_bInverted;
+		}
 
 		/**
 			Returns the value indicating whether the filter can decide about processing of the \a info file.
@@ -174,7 +200,7 @@ namespace ZipArchiveLib
 		virtual ~CFileFilter()
 		{
 		}
-protected:
+	protected:
 		/**
 			This method is directly called by the #Evaluate method during an enumeration process.
 
@@ -304,7 +330,7 @@ protected:
 				ZipPlatform::GetSystemCaseSensitivity
 		*/
 		CNameFileFilter(LPCTSTR lpszPattern = _T("*"), bool bInverted = false, int iAppliesToTypes = toFile, bool bCaseSensitive = ZipPlatform::GetSystemCaseSensitivity())
-			:CFileFilter(bInverted), m_matcher(lpszPattern, bCaseSensitive)
+			: CFileFilter(bInverted), m_matcher(lpszPattern, bCaseSensitive)
 		{
 			m_iAppliesToTypes = iAppliesToTypes;
 		}
@@ -338,7 +364,10 @@ protected:
 				GetAppliesToTypes
 
 		*/
-		void SetAppliesToTypes(int iType) { m_iAppliesToTypes = iType; }
+		void SetAppliesToTypes(int iType)
+		{
+			m_iAppliesToTypes = iType;
+		}
 
 		/**
 			Returns the file type to which this filter applies.
@@ -349,7 +378,10 @@ protected:
 			\see
 				SetAppliesToTypes
 		*/
-		int GetAppliesToTypes() {return m_iAppliesToTypes;}
+		int GetAppliesToTypes()
+		{
+			return m_iAppliesToTypes;
+		}
 
 		/**
 			Returns the value indicating whether the filter can decide about processing of the \a info file.
@@ -425,7 +457,7 @@ protected:
 				HandlesInversion
 		*/
 		CGroupFileFilter(GroupType groupType = CGroupFileFilter::And, bool bAutoDelete = true, bool bInverted = false)
-			:CFileFilter(bInverted), m_iType(groupType), m_bAutoDelete(bAutoDelete)
+			: CFileFilter(bInverted), m_iType(groupType), m_bAutoDelete(bAutoDelete)
 		{
 		}
 
@@ -468,7 +500,7 @@ protected:
 			\param uIndex
 				The index of the filter to return.
 		*/
-		const CFileFilter* operator[] (ZIP_ARRAY_SIZE_TYPE uIndex) const
+		const CFileFilter* operator[](ZIP_ARRAY_SIZE_TYPE uIndex) const
 		{
 			return GetAt(uIndex);
 		}
@@ -479,7 +511,7 @@ protected:
 			\param uIndex
 				The index of the filter to return.
 		*/
-		CFileFilter* operator[] (ZIP_ARRAY_SIZE_TYPE uIndex)
+		CFileFilter* operator[](ZIP_ARRAY_SIZE_TYPE uIndex)
 		{
 			return GetAt(uIndex);
 		}
@@ -501,7 +533,9 @@ protected:
 			// first remove, then delete
 			m_filters.RemoveAt(uIndex);
 			if (m_bAutoDelete)
+			{
 				delete filter;
+			}
 		}
 
 
@@ -518,14 +552,18 @@ protected:
 		void Clear()
 		{
 			if (m_filters.GetSize() == 0)
+			{
 				return;
+			}
 
 			ZIP_ARRAY_SIZE_TYPE i = m_filters.GetSize() - 1;
 			for (; ;)
 			{
 				RemoveAt(i);
 				if (i == 0)
+				{
 					break;
+				}
 				i--;
 			}
 		}
@@ -551,7 +589,10 @@ protected:
 			\see
 				GetType
 		*/
-		void SetType(GroupType iType) {m_iType = iType;}
+		void SetType(GroupType iType)
+		{
+			m_iType = iType;
+		}
 
 		/**
 			Returns the type of grouping.
@@ -562,7 +603,10 @@ protected:
 			\see
 				SetType
 		*/
-		GroupType GetType() const {return m_iType;}
+		GroupType GetType() const
+		{
+			return m_iType;
+		}
 
 		/**
 			Enables or disables auto-deletion of grouped filters.
@@ -576,7 +620,10 @@ protected:
 			\see
 				IsAutoDelete
 		*/
-		void SetAutoDelete(bool bAutoDelete) {m_bAutoDelete = bAutoDelete;}
+		void SetAutoDelete(bool bAutoDelete)
+		{
+			m_bAutoDelete = bAutoDelete;
+		}
 
 		/**
 			Returns the value indicating whether the auto-deletion is enabled.
@@ -587,7 +634,10 @@ protected:
 			\see
 				SetAutoDelete
 		*/
-		bool IsAutoDelete() const {return m_bAutoDelete;}
+		bool IsAutoDelete() const
+		{
+			return m_bAutoDelete;
+		}
 
 		/**
 			Returns the value indicating whether the filter can decide about processing of the \a info file.
@@ -603,9 +653,13 @@ protected:
 		bool HandlesFile(const CFileInfo& info)
 		{
 			for (ZIP_ARRAY_SIZE_TYPE i = 0; i < m_filters.GetSize(); i++)
+			{
 				// it is enough that one filter handles it
 				if (m_filters[i]->HandlesFile(info))
+				{
 					return true;
+				}
+			}
 			return false;
 		}
 
@@ -648,7 +702,8 @@ protected:
 #endif
 
 	};
-}
+
+} // namespace
 
 #if (_MSC_VER > 1000)
 	#pragma warning(pop)

@@ -11,17 +11,36 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipPlatform.h
 * ZipPlatform namespace declaration.
 *
 */
+
 #if !defined(ZIPARCHIVE_ZIPPLATFORM_DOT_H)
 #define ZIPARCHIVE_ZIPPLATFORM_DOT_H
 
 #if (_MSC_VER > 1000)
-#pragma once
+	#pragma once
 #endif
 
 class CZipFileHeader;
@@ -129,17 +148,17 @@ namespace ZipPlatform
 #endif   // UNDER_CE
 	ZIP_API bool SetFileAttr(LPCTSTR lpFileName, DWORD uAttr);	///< Sets the file attributes.
 	ZIP_API bool GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr); ///< Returns the file attributes.
-	ZIP_API bool GetFileModTime(LPCTSTR lpFileName, time_t & ttime); ///< Returns the file modification time.
+	ZIP_API bool GetFileModTime(LPCTSTR lpFileName, time_t& ttime);  ///< Returns the file modification time.
 	ZIP_API bool SetFileModTime(LPCTSTR lpFileName, time_t ttime);	 ///< Set the file modification time.
 	ZIP_API bool GetFileSize(LPCTSTR lpszFileName, ZIP_SIZE_TYPE& dSize); ///< Returns the file size.
 	ZIP_API bool CreateNewDirectory(LPCTSTR lpDirectory);	///< Creates a new directory.
 	ZIP_API bool SetVolLabel(LPCTSTR lpszPath, LPCTSTR lpszLabel); ///< Sets a label on a removable device. \c lpszPath may point to a file on the device.
 	ZIP_API bool ForceDirectory(LPCTSTR lpDirectory);	///< Creates nested directories at once.
 	ZIP_API bool RemoveFile(LPCTSTR lpszFileName, bool bThrow = true, int iMode = dfmRegular); ///< Removes a file.
-	ZIP_API bool RenameFile( LPCTSTR lpszOldName, LPCTSTR lpszNewName, bool bThrow = true); ///< Renames a file.
+	ZIP_API bool RenameFile(LPCTSTR lpszOldName, LPCTSTR lpszNewName, bool bThrow = true);  ///< Renames a file.
 
 #ifdef _ZIP_SYSTEM_LINUX
-	ZIP_API bool SetExeAttr( LPCTSTR lpFileName ); ///< Sets executable permissions for a file.
+	ZIP_API bool SetExeAttr(LPCTSTR lpFileName);   ///< Sets executable permissions for a file.
 #endif
 #ifdef _ZIP_SYSTEM_WIN
 	ZIP_API bool SetFileAttr(HANDLE handle, DWORD uAttr);	///< Sets the file attributes.
@@ -252,7 +271,7 @@ namespace ZipPlatform
 		\note
 			Defined only in the UNICODE version.
 	*/
-	ZIP_API int WideToMultiByte(LPCWSTR lpszIn, CZipAutoBuffer &szOut, UINT uCodePage);
+	ZIP_API int WideToMultiByte(LPCWSTR lpszIn, CZipAutoBuffer& szOut, UINT uCodePage);
 
 	/**
 		Converts a multi-byte character string to a wide character string.
@@ -274,7 +293,7 @@ namespace ZipPlatform
 		\note
 			Defined only in the UNICODE version.
 	*/
-	ZIP_API int MultiByteToWide(const CZipAutoBuffer &szIn, CZipString& szOut, UINT uCodePage);
+	ZIP_API int MultiByteToWide(const CZipAutoBuffer& szIn, CZipString& szOut, UINT uCodePage);
 #endif
 };
 

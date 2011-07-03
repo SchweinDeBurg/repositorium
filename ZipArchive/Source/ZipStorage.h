@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipStorage.h
@@ -148,7 +166,7 @@ public:
 			If there is not enough free space, a volume change is performed.
 
 	*/
-	void Write(const void *pBuf, DWORD iSize, bool bAtOnce);
+	void Write(const void* pBuf, DWORD iSize, bool bAtOnce);
 
 	/**
 		Returns the total size currently occupied by the archive.
@@ -167,10 +185,14 @@ public:
 	bool IsClosed(bool bArchive) const
 	{
 		if (bArchive)
+		{
 			return !m_state.IsSetAny(stateOpened);
+		}
 		else
+		{
 			// assume not auto-close files always opened
 			return !m_pFile || m_state.IsSetAny(stateAutoClose) && m_pFile->IsClosed();
+		}
 	}
 
 	/**
@@ -203,7 +225,9 @@ public:
 	{
 		ZIP_SIZE_TYPE uPos = (ZIP_SIZE_TYPE)(m_pFile->GetPosition()) + m_uBytesInWriteBuffer;
 		if (m_uCurrentVolume == 0)
+		{
 			uPos -= m_uBytesBeforeZip;
+		}
 		else if (IsBinarySplit()) // not for the first volume
 		{
 			ZIP_VOLUME_TYPE uVolume = m_uCurrentVolume;
@@ -232,7 +256,9 @@ public:
 	void FlushFile()
 	{
 		if (!IsReadOnly())
+		{
 			m_pFile->Flush();
+		}
 	}
 
 	void FlushBuffers()
@@ -254,7 +280,10 @@ public:
 	/**
 		Returns a zero-based number of the current volume.
 	*/
-	ZIP_VOLUME_TYPE GetCurrentVolume() const {return m_uCurrentVolume;}
+	ZIP_VOLUME_TYPE GetCurrentVolume() const
+	{
+		return m_uCurrentVolume;
+	}
 
 
 	/**
@@ -279,7 +308,9 @@ public:
 	void ChangeVolumeDec()
 	{
 		if (m_uCurrentVolume == 0)
+		{
 			ThrowError(CZipException::badZipFile);
+		}
 		ChangeVolume((ZIP_VOLUME_TYPE)(m_uCurrentVolume - 1));
 	}
 
@@ -560,7 +591,7 @@ protected:
 			The number of bytes to write.
 
 	*/
-	void WriteInternalBuffer(const char *pBuf, DWORD uSize);
+	void WriteInternalBuffer(const char* pBuf, DWORD uSize);
 
 	/**
 		Returns the free space size on the current removable disk.
@@ -605,7 +636,10 @@ protected:
 		\return
 			The free space in bytes.
 	*/
-	DWORD GetFreeInBuffer() const {return m_pWriteBuffer.GetSize() - m_uBytesInWriteBuffer;}
+	DWORD GetFreeInBuffer() const
+	{
+		return m_pWriteBuffer.GetSize() - m_uBytesInWriteBuffer;
+	}
 
 	/**
 		The value it holds, depends on the current mode:
@@ -697,7 +731,9 @@ private:
 		}
 		int flags = bLast ? CZipSplitNamesHandler::flLast : CZipSplitNamesHandler::flNone;
 		if (IsExisting())
+		{
 			flags |= CZipSplitNamesHandler::flExisting;
+		}
 		return m_pSplitNames->GetVolumeName(m_szArchiveName, (ZIP_VOLUME_TYPE)(m_uCurrentVolume + 1), flags);
 	}
 
@@ -706,7 +742,9 @@ private:
 		if (m_pSplitNames)
 		{
 			if (m_bAutoDeleteSplitNames)
+			{
 				delete m_pSplitNames;
+			}
 			m_pSplitNames = NULL;
 			m_bAutoDeleteSplitNames = false;
 		}
@@ -729,9 +767,13 @@ private:
 			{
 				m_bAutoDeleteSplitNames = true;
 				if (m_state.IsSetAll(stateBinarySplit))
+				{
 					m_pSplitNames = new CZipBinSplitNamesHandler();
+				}
 				else
+				{
 					m_pSplitNames = new CZipRegularSplitNamesHandler();
+				}
 			}
 			m_pSplitNames->Initialize(m_szArchiveName);
 		}
@@ -741,7 +783,9 @@ private:
 	{
 		ASSERT(m_pCachedSizes);
 		if (m_pCachedSizes->GetSize() > (ZIP_ARRAY_SIZE_TYPE)uVolume)
+		{
 			return m_pCachedSizes->GetAt((ZIP_ARRAY_SIZE_TYPE)uVolume);
+		}
 		ThrowError(CZipException::genericError);
 		// for a compiler
 		return 0;

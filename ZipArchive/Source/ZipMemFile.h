@@ -11,6 +11,24 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 /**
 * \file ZipMemFile.h
@@ -21,7 +39,7 @@
 #define ZIPARCHIVE_ZIPMEMFILE_DOT_H
 
 #if (_MSC_VER > 1000)
-#pragma once
+	#pragma once
 #endif
 
 #include "ZipAbstractFile.h"
@@ -63,15 +81,24 @@ public:
 #if defined _ZIP_IMPL_MFC && (_MSC_VER >= 1300 || _ZIP_FILE_IMPLEMENTATION != ZIP_ZFI_WIN)
 	DECLARE_DYNAMIC(CZipMemFile)
 #endif
-	bool IsClosed() const { return m_lpBuf == NULL;}
-	void Flush(){}
+	bool IsClosed() const
+	{
+		return m_lpBuf == NULL;
+	}
+	void Flush() {}
 
 	ZIP_FILE_USIZE Seek(ZIP_FILE_SIZE lOff, int nFrom);
-	ZIP_FILE_USIZE GetLength() const {return m_nDataSize;}
+	ZIP_FILE_USIZE GetLength() const
+	{
+		return m_nDataSize;
+	}
 	void Write(const void* lpBuf, UINT nCount);
 	UINT Read(void* lpBuf, UINT nCount);
 	void SetLength(ZIP_FILE_USIZE nNewLen);
-	CZipString GetFilePath() const  {return _T("");}
+	CZipString GetFilePath() const
+	{
+		return _T("");
+	}
 	bool HasFilePath() const
 	{
 		return false;
@@ -101,7 +128,10 @@ public:
 		from.Read(m_lpBuf, (UINT)from.m_nDataSize);
 	}
 
-	ZIP_FILE_USIZE GetPosition() const {	return m_nPos;}
+	ZIP_FILE_USIZE GetPosition() const
+	{
+		return m_nPos;
+	}
 	void Attach(BYTE* lpBuf, UINT nBufSize, long nGrowBy = 0)
 	{
 		Close();
@@ -130,10 +160,15 @@ public:
 	void Close()
 	{
 		if (m_bAutoDelete)
+		{
 			Free();
+		}
 		Init();
 	}
-	virtual ~CZipMemFile(){Close();}
+	virtual ~CZipMemFile()
+	{
+		Close();
+	}
 
 };
 

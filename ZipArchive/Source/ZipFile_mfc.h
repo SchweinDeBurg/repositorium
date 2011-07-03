@@ -11,14 +11,32 @@
 //
 // Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
+// Modified by Elijah Zarezky aka SchweinDeBurg (elijah.zarezky@gmail.com):
+// - reformatted using Artistic Style 2.02 with the following options:
+//      --indent=tab=3
+//      --indent=force-tab=3
+//      --indent-cases
+//      --min-conditional-indent=0
+//      --max-instatement-indent=2
+//      --style=allman
+//      --add-brackets
+//      --pad-oper
+//      --unpad-paren
+//      --pad-header
+//      --align-pointer=type
+//      --lineend=windows
+//      --suffix=none
+// - implemented support for the Windows Mobile/CE tragets
+// - added possibility to seamless usage in the ATL-based projects
+////////////////////////////////////////////////////////////////////////////////
 
 #ifndef ZIPARCHIVE_ZIPFILE_DOT_H
 	#error Do not include this file directly. Include ZipFile.h instead
 #endif
 
 #if (_MSC_VER > 1000) && defined ZIP_HAS_DLL
-		#pragma warning(push)
-		#pragma warning(disable: 4275) // non dll-interface used as base for dll-interface class
+	#pragma warning(push)
+	#pragma warning(disable: 4275) // non dll-interface used as base for dll-interface class
 #endif
 
 #include "ZipAbstractFile.h"
@@ -28,7 +46,10 @@ class ZIP_API CZipFile : public CZipAbstractFile, public CFile
 {
 public:
 	DECLARE_DYNAMIC(CZipFile)
-	void Flush(){CFile::Flush();}
+	void Flush()
+	{
+		CFile::Flush();
+	}
 	CZipString GetFilePath() const
 	{
 		try
@@ -43,23 +64,43 @@ public:
 		}
 	}
 
-	ZIP_FILE_USIZE GetPosition() const {return CFile::GetPosition() ;}
-	void SetLength(ZIP_FILE_USIZE nNewLen) {CFile::SetLength(nNewLen);}
-	ZIP_FILE_USIZE Seek(ZIP_FILE_SIZE lOff , int nFrom){return CFile::Seek(lOff, nFrom);}
-	ZIP_FILE_USIZE GetLength() const {return CFile::GetLength();}
+	ZIP_FILE_USIZE GetPosition() const
+	{
+		return CFile::GetPosition() ;
+	}
+	void SetLength(ZIP_FILE_USIZE nNewLen)
+	{
+		CFile::SetLength(nNewLen);
+	}
+	ZIP_FILE_USIZE Seek(ZIP_FILE_SIZE lOff , int nFrom)
+	{
+		return CFile::Seek(lOff, nFrom);
+	}
+	ZIP_FILE_USIZE GetLength() const
+	{
+		return CFile::GetLength();
+	}
 	bool HasFilePath() const
 	{
 		return true;
 	}
 
-	UINT Read(void *lpBuf, UINT nCount){return CFile::Read(lpBuf, nCount);}
-	void Write(const void* lpBuf, UINT nCount){CFile::Write(lpBuf, nCount);}
-	bool Open( LPCTSTR lpszFileName, UINT nOpenFlags, bool bThrowExc)
+	UINT Read(void* lpBuf, UINT nCount)
+	{
+		return CFile::Read(lpBuf, nCount);
+	}
+	void Write(const void* lpBuf, UINT nCount)
+	{
+		CFile::Write(lpBuf, nCount);
+	}
+	bool Open(LPCTSTR lpszFileName, UINT nOpenFlags, bool bThrowExc)
 	{
 		CFileException* e = new CFileException;
 		bool bRet = CFile::Open(lpszFileName, nOpenFlags, e) != 0;
 		if (!bRet && bThrowExc)
+		{
 			throw e;
+		}
 		e->Delete();
 		return bRet;
 	}
@@ -70,14 +111,16 @@ public:
 	}
 
 
-	CZipFile( LPCTSTR lpszFileName, UINT nOpenFlags ):CFile(lpszFileName, nOpenFlags)
+	CZipFile(LPCTSTR lpszFileName, UINT nOpenFlags): CFile(lpszFileName, nOpenFlags)
 	{
 	}
 
-	void Close( )
+	void Close()
 	{
- 		if (!IsClosed())
+		if (!IsClosed())
+		{
 			CFile::Close();
+		}
 	}
 	operator HANDLE();
 	virtual ~CZipFile();
