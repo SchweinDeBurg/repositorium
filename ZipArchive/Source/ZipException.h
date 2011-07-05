@@ -240,7 +240,7 @@ protected:
 
 #endif //_ZIP_ENABLE_ERROR_DESCRIPTION
 
-#if defined _MFC_VER && defined _ZIP_IMPL_MFC
+#if defined(_MFC_VER) && defined(_ZIP_IMPL_MFC)
 	DECLARE_DYNAMIC(CZipException)
 #endif
 };

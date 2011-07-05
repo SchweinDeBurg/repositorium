@@ -444,8 +444,7 @@ bool CZipFileHeader::ReadLocal(CZipCentralDir* pCentralDir)
 	CBytesWriter::ReadBytes(uTemp, buf + 6);
 	// do not compare the whole flag - the bits reserved by PKWARE may differ
 	// in local and central headers
-	if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalFlag)
-		&& (uTemp & 0xf) != (m_uFlag & 0xf))
+	if (pCentralDir->IsConsistencyCheckOn(CZipArchive::checkLocalFlag) && (uTemp & 0xf) != (m_uFlag & 0xf))
 	{
 		return false;
 	}
@@ -938,8 +937,8 @@ bool CZipFileHeader::SetFileName(LPCTSTR lpszFileName)
 {
 	CZipString newFileName(lpszFileName);
 	if (!IsDirectory() || newFileName.GetLength() != 1 || !CZipPathComponent::IsSeparator(newFileName[0]))
-		// do not remove from directories where only path separator is present
 	{
+		// do not remove from directories where only path separator is present
 		CZipPathComponent::RemoveSeparatorsLeft(newFileName);
 	}
 	if (m_pCentralDir)
@@ -1216,8 +1215,8 @@ bool CZipFileHeader::UpdateFileNameFlags(const CZipString* szNewFileName, bool b
 			m_stringSettings.m_bStoreNameInExtraData = stringStoreSettings.m_bStoreNameInExtraData;
 			m_stringSettings.m_uNameCodePage = stringStoreSettings.m_uNameCodePage;
 			if (!m_stringSettings.m_bStoreNameInExtraData && m_stringSettings.m_uNameCodePage != GetDefaultFileNameCodePage())
-				// the local filename needs to be rewritten, the name code page has changed
 			{
+				// the local filename needs to be rewritten, the name code page has changed
 				changed = true;
 			}
 		}

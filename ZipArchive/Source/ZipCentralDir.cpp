@@ -259,6 +259,7 @@ void CZipCentralDir::ReadHeaders()
 		ZIP_FILE_USIZE uPosition = m_pStorage->GetPosition();
 		// different offset, or different parts
 		if (uPosition != m_pInfo->m_uEndOffset || m_pStorage->IsSegmented() && !m_pStorage->IsBinarySplit() && m_pStorage->GetCurrentVolume() != m_pInfo->m_uLastVolume)
+		{
 			for (;;)
 			{
 				CZipAutoBuffer buf(4);
@@ -274,6 +275,7 @@ void CZipCentralDir::ReadHeaders()
 					ThrowError(CZipException::badZipFile);
 				}
 			}
+		}
 	}
 
 	// this is necessary when removing data descriptors, CZipArchive::MakeSpaceForReplace, deleting, replacing or encrypting files
@@ -1153,10 +1155,12 @@ bool CZipCentralDir::IsAnyFileModified() const
 {
 	ZIP_INDEX_TYPE uCount = (ZIP_INDEX_TYPE)m_pHeaders->GetSize();
 	for (ZIP_INDEX_TYPE i = 0; i < uCount; i++)
+	{
 		if ((*m_pHeaders)[(ZIP_ARRAY_SIZE_TYPE)i]->IsModified())
 		{
 			return true;
 		}
+	}
 	return false;
 }
 

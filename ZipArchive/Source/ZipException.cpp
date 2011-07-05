@@ -47,13 +47,13 @@
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-#if defined _MFC_VER && defined _ZIP_IMPL_MFC
-	IMPLEMENT_DYNAMIC(CZipException, CException)
+#if defined(_MFC_VER) && defined(_ZIP_IMPL_MFC)
+IMPLEMENT_DYNAMIC(CZipException, CException)
 #endif
 
 CZipException::CZipException(int iCause, LPCTSTR lpszZipName)
 #ifdef _MFC_VER
-	: CException(TRUE)
+: CException(TRUE)
 #endif
 {
 	m_iCause = iCause;

@@ -842,7 +842,6 @@ bool CZipArchive::ExtractFile(ZIP_INDEX_TYPE uIndex,
 		pCallback->SetTotal(pHeader->m_uUncomprSize);
 	}
 
-
 	CZipAutoBuffer buf(nBufSize);
 	//af.SeekToEnd();
 	ZIP_FILE_USIZE oldPos = 0;
@@ -3271,6 +3270,7 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTST
 		if (pCallback)
 		{
 			if (!iAborted && !pCallback->RequestLastCallback())
+			{
 				if (uTotalToMove > 0)
 				{
 					iAborted = CZipException::abortedAction;
@@ -3285,6 +3285,7 @@ bool CZipArchive::GetFromArchive(CZipArchive& zip, ZIP_INDEX_TYPE uIndex, LPCTST
 					pHeader->WriteDataDescriptor(&m_storage);
 					iAborted = CZipException::abortedSafely;
 				}
+			}
 
 			if (iAborted)
 			{
