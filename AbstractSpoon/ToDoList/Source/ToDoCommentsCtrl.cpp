@@ -580,11 +580,10 @@ int CToDoCommentsCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
+	CAutoFlag af(m_bAllowNotify, FALSE); // else we can get a false edit change
+
 	// set max edit length
 	LimitText(1024 * 1024 * 1024); // one gigabyte
-
-	// set text mode to plain text
-	SendMessage(EM_SETTEXTMODE, TM_PLAINTEXT | TM_MULTILEVELUNDO | TM_MULTICODEPAGE, 0L);
 
 	return 0;
 }
@@ -595,9 +594,9 @@ bool CToDoCommentsCtrl::ProcessMessage(MSG* pMsg)
 	if (pMsg->message == WM_KEYDOWN)
 	{
 		BOOL bCtrl = Misc::KeyIsPressed(VK_CONTROL);
-		BOOL bShift = Misc::KeyIsPressed(VK_SHIFT);
+		BOOL bAlt = Misc::KeyIsPressed(VK_MENU);
 
-		if (bCtrl)
+		if (bCtrl && !bAlt)
 		{
 			switch (pMsg->wParam)
 			{

@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.2.2-6.2.6 sources
+// - merged with ToDoList version 6.2.2-6.2.8 sources
 //*****************************************************************************
 
 // SysImageList.cpp: implementation of the CSysImageList class.
@@ -185,39 +185,42 @@ int CSysImageList::GetFileImageIndex(LPCTSTR szFilePath, BOOL bFailUnKnown)
 				}
 			}
 		}
-		// local file so we can do whatever we like ;)
-		else if (sExt.CompareNoCase(_T(".lnk")) == 0)
+		else // local file so we can do whatever we like ;)
 		{
-			// get icon for item pointed to
-			CString sReferencedFile = FileMisc::ResolveShortcut(szFilePath);
-			FileMisc::SplitPath(sReferencedFile, NULL, NULL, &sExt);
-
-			if (sExt.CompareNoCase(_T(".lnk")) != 0)
+			if (FileMisc::FolderExists(szFilePath))
 			{
-				nIndex = GetImageIndex(sReferencedFile);
+				nIndex = GetFolderImageIndex();
+			}
+			else if (sExt.CompareNoCase(_T(".lnk")) == 0)
+			{
+				// get icon for item pointed to
+				CString sReferencedFile = FileMisc::ResolveShortcut(szFilePath);
+
+				// RECURSIVE call
+				nIndex = GetFileImageIndex(sReferencedFile); 
 			}
 			else
 			{
-				nIndex = GetImageIndex(sExt);
-			}
-		}
-		else if (sExt.CompareNoCase(_T(".exe")) == 0)
-		{
-			nIndex = GetImageIndex(szFilePath);
-		}
-		else if (!sFName.IsEmpty() && !sExt.IsEmpty() && sExt != _T("."))
-		{
-			// try to get this file type's icon
-			nIndex = GetImageIndex(sExt);
+ 				nIndex = GetImageIndex(szFilePath);
 
-			if (bFailUnKnown && (nIndex < 0 || nIndex == GetUnknownTypeImage()))
-			{
-				return -1;
+				// can fail with full path, so we then revert to extension only
+				if (nIndex < 0)
+				{
+					nIndex = GetImageIndex(sExt);
+				}
 			}
-		}
-		else if (sFName.IsEmpty() || IsPath(szFilePath) || FileMisc::FolderExists(szFilePath))
-		{
-			nIndex = GetLocalFolderImage();
+
+			if (nIndex < 0 || nIndex == GetUnknownTypeImage())
+			{
+				if (bFailUnKnown && !IsPath(szFilePath))
+				{
+					return -1;
+				}
+				else if (sFName.IsEmpty() || sExt.IsEmpty()) // assume it's a folder unless it looks like a file
+				{
+					nIndex = GetFolderImageIndex();
+				}
+			}
 		}
 	}
 

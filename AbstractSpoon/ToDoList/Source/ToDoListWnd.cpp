@@ -44,7 +44,7 @@
 //      * wrapped extremely long lines
 //      * reformatted all the ctors to be more readable
 //      * eliminated dead commented code
-// - merged with ToDoList version 6.1.2-6.2.6 sources
+// - merged with ToDoList version 6.1.2-6.2.8 sources
 //*****************************************************************************
 
 // ToDoListWnd.cpp : implementation file
@@ -4217,7 +4217,7 @@ BOOL CToDoListWnd::DoDueTaskNotification(const CFilteredToDoCtrl* pCtrl, int nDu
 
 void CToDoListWnd::OnAbout()
 {
-	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.2.6</b> (mod by Elijah Zarezky)"),
+	CAboutDlg dialog(IDR_MAINFRAME, ABS_EDITCOPYRIGHT, _T("<b>ToDoList 6.2.8</b> (mod by Elijah Zarezky)"),
 		CEnString(IDS_ABOUTHEADING), CEnString(IDS_ABOUTCOPYRIGHT), CEnString(IDS_LICENSE), 1, 2, 8);
 
 	dialog.DoModal();
