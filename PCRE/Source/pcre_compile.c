@@ -1694,6 +1694,7 @@ _pcre_find_bracket(const uschar *code, BOOL utf8, int number)
 for (;;)
   {
   register int c = *code;
+
   if (c == OP_END) return NULL;
 
   /* XCLASS is used for classes that cannot be represented just by a bit
@@ -1974,13 +1975,30 @@ for (code = first_significant_code(code + _pcre_OP_lengths[*code], TRUE);
     }
 
   /* For a recursion/subroutine call, if its end has been reached, which
-  implies a subroutine call, we can scan it. */
+  implies a backward reference subroutine call, we can scan it. If it's a
+  forward reference subroutine call, we can't. To detect forward reference
+  we have to scan up the list that is kept in the workspace. This function is 
+  called only when doing the real compile, not during the pre-compile that 
+  measures the size of the compiled pattern. */
 
   if (c == OP_RECURSE)
     {
-    BOOL empty_branch = FALSE;
-    const uschar *scode = cd->start_code + GET(code, 1);
+    const uschar *scode;
+    BOOL empty_branch;
+    
+    /* Test for forward reference */
+     
+    for (scode = cd->start_workspace; scode < cd->hwm; scode += LINK_SIZE)
+      if (GET(scode, 0) == code + 1 - cd->start_code) return TRUE;   
+
+    /* Not a forward reference, test for completed backward reference */
+     
+    empty_branch = FALSE;
+    scode = cd->start_code + GET(code, 1);
     if (GET(scode, 1) == 0) return TRUE;    /* Unclosed */
+    
+    /* Completed backwards reference */
+     
     do
       {
       if (could_be_empty_branch(scode, endcode, utf8, cd))
@@ -1991,6 +2009,7 @@ for (code = first_significant_code(code + _pcre_OP_lengths[*code], TRUE);
       scode += GET(scode, 1);
       }
     while (*scode == OP_ALT);
+     
     if (!empty_branch) return FALSE;  /* All branches are non-empty */
     continue;
     }
@@ -2216,6 +2235,8 @@ return TRUE;
 the current branch of the current pattern to see if it could match the empty
 string. If it could, we must look outwards for branches at other levels,
 stopping when we pass beyond the bracket which is the subject of the recursion.
+This function is called only during the real compile, not during the 
+pre-compile.
 
 Arguments:
   code        points to start of the recursion
@@ -4216,6 +4237,35 @@ for (;; ptr++)
       ptr++;
       }
     else repeat_type = greedy_default;
+    
+    /* If previous was a recursion call, wrap it in atomic brackets so that 
+    previous becomes the atomic group. All recursions were so wrapped in the
+    past, but it no longer happens for non-repeated recursions. In fact, the
+    repeated ones could be re-implemented independently so as not to need this,
+    but for the moment we rely on the code for repeating groups. */
+    
+    if (*previous == OP_RECURSE)
+      {
+      memmove(previous + 1 + LINK_SIZE, previous, 1 + LINK_SIZE);
+      *previous = OP_ONCE;
+      PUT(previous, 1, 2 + 2*LINK_SIZE);
+      previous[2 + 2*LINK_SIZE] = OP_KET;
+      PUT(previous, 3 + 2*LINK_SIZE, 2 + 2*LINK_SIZE);
+      code += 2 + 2 * LINK_SIZE;
+      length_prevgroup = 3 + 3*LINK_SIZE;
+      
+      /* When actually compiling, we need to check whether this was a forward
+      reference, and if so, adjust the offset. */
+      
+      if (lengthptr == NULL && cd->hwm >= cd->start_workspace + LINK_SIZE)
+        {
+        int offset = GET(cd->hwm, -LINK_SIZE);
+        if (offset == previous + 1 - cd->start_code)
+          PUT(cd->hwm, -LINK_SIZE, offset + 1 + LINK_SIZE); 
+        }    
+      }    
+      
+    /* Now handle repetition for the different types of item. */
 
     /* If previous was a character match, abolish the item and generate a
     repeat item instead. If a char item has a minumum of more than one, ensure
@@ -4735,7 +4785,10 @@ for (;; ptr++)
         }
 
       /* If the maximum is unlimited, set a repeater in the final copy. For
-      ONCE brackets, that's all we need to do.
+      ONCE brackets, that's all we need to do. However, possessively repeated
+      ONCE brackets can be converted into non-capturing brackets, as the
+      behaviour of (?:xx)++ is the same as (?>xx)++ and this saves having to
+      deal with possessive ONCEs specially.
 
       Otherwise, if the quantifier was possessive, we convert the BRA code to
       the POS form, and the KET code to KETRPOS. (It turns out to be convenient
@@ -4756,8 +4809,9 @@ for (;; ptr++)
         {
         uschar *ketcode = code - 1 - LINK_SIZE;
         uschar *bracode = ketcode - GET(ketcode, 1);
-
-        if (*bracode == OP_ONCE)
+         
+        if (*bracode == OP_ONCE && possessive_quantifier) *bracode = OP_BRA; 
+        if (*bracode == OP_ONCE) 
           *ketcode = OP_KETRMAX + repeat_type;
         else
           {
@@ -5673,10 +5727,10 @@ for (;; ptr++)
 
               /* Fudge the value of "called" so that when it is inserted as an
               offset below, what it actually inserted is the reference number
-              of the group. */
+              of the group. Then remember the forward reference. */
 
               called = cd->start_code + recno;
-              PUTINC(cd->hwm, 0, (int)(code + 2 + LINK_SIZE - cd->start_code));
+              PUTINC(cd->hwm, 0, (int)(code + 1 - cd->start_code));
               }
 
             /* If not a forward reference, and the subpattern is still open,
@@ -5691,23 +5745,11 @@ for (;; ptr++)
               }
             }
 
-          /* Insert the recursion/subroutine item, automatically wrapped inside
-          "once" brackets. Set up a "previous group" length so that a
-          subsequent quantifier will work. */
-
-          *code = OP_ONCE;
-          PUT(code, 1, 2 + 2*LINK_SIZE);
-          code += 1 + LINK_SIZE;
-
+          /* Insert the recursion/subroutine item. */
+          
           *code = OP_RECURSE;
           PUT(code, 1, (int)(called - cd->start_code));
           code += 1 + LINK_SIZE;
-
-          *code = OP_KET;
-          PUT(code, 1, 2 + 2*LINK_SIZE);
-          code += 1 + LINK_SIZE;
-
-          length_prevgroup = 3 + 3*LINK_SIZE;
           }
 
         /* Can't determine a first byte now */
