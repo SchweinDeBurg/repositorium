@@ -126,6 +126,38 @@ Version 8.13 30-Apr-2011
 23. Add the ++ qualifier feature to pcretest, to show the remainder of the 
     subject after a captured substring (to make it easier to tell which of a 
     number of identical substrings has been captured).
+    
+24. The way atomic groups are processed by pcre_exec() has been changed so that
+    if they are repeated, backtracking one repetition now resets captured 
+    values correctly. For example, if ((?>(a+)b)+aabab) is matched against
+    "aaaabaaabaabab" the value of captured group 2 is now correctly recorded as 
+    "aaa". Previously, it would have been "a". As part of this code 
+    refactoring, the way recursive calls are handled has also been changed.
+    
+24. If an assertion condition captured any substrings, they were not passed 
+    back unless some other capturing happened later. For example, if
+    (?(?=(a))a) was matched against "a", no capturing was returned.
+    
+25. When studying a pattern that contained subroutine calls or assertions,
+    the code for finding the minimum length of a possible match was handling 
+    direct recursions such as (xxx(?1)|yyy) but not mutual recursions (where 
+    group 1 called group 2 while simultaneously a separate group 2 called group
+    1). A stack overflow occurred in this case. I have fixed this by limiting
+    the recursion depth to 10.
+    
+26. Updated RunTest.bat in the distribution to the version supplied by Tom
+    Fortmann. This supports explicit test numbers on the command line, and has
+    argument validation and error reporting.
+    
+27. An instance of \X with an unlimited repeat could fail if at any point the 
+    first character it looked at was a mark character. 
+    
+28. Some minor code refactoring concerning Unicode properties and scripts 
+    should reduce the stack requirement of match() slightly. 
+    
+29. Added the '=' option to pcretest to check the setting of unused capturing
+    slots at the end of the pattern, which are documented as being -1, but are
+    not included in the return count.  
 
 
 Version 8.12 15-Jan-2011
