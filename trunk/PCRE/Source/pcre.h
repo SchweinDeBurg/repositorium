@@ -43,8 +43,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #define PCRE_MAJOR          8
 #define PCRE_MINOR          13
-#define PCRE_PRERELEASE     -RC1
-#define PCRE_DATE           2011-04-30
+#define PCRE_PRERELEASE
+#define PCRE_DATE           2011-08-16
 
 /* When an application links to a PCRE DLL in Windows, the symbols that are
 imported have to be identified as such. When building PCRE, the appropriate
@@ -163,6 +163,7 @@ compile-time only bits for runtime options, or vice versa. */
 #define PCRE_ERROR_BADNEWLINE     (-23)
 #define PCRE_ERROR_BADOFFSET      (-24)
 #define PCRE_ERROR_SHORTUTF8      (-25)
+#define PCRE_ERROR_RECURSELOOP    (-26)
 
 /* Specific error codes for UTF-8 validity checks */
 
@@ -279,6 +280,8 @@ typedef struct pcre_callout_block {
   /* ------------------- Added for Version 1 -------------------------- */
   int          pattern_position;  /* Offset to next item in the pattern */
   int          next_item_length;  /* Length of next item in the pattern */
+  /* ------------------- Added for Version 2 -------------------------- */
+  const unsigned char *mark;      /* Pointer to current mark or NULL    */
   /* ------------------------------------------------------------------ */
 } pcre_callout_block;
 

@@ -301,7 +301,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #define PACKAGE_NAME "PCRE"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "PCRE 8.10"
+#define PACKAGE_STRING "PCRE 8.13"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "pcre"
@@ -310,7 +310,17 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "8.10"
+#define PACKAGE_VERSION "8.13"
+
+/* The value of PCREGREP_BUFSIZE determines the size of buffer used by
+   pcregrep to hold parts of the file it is searching. On systems that support
+   it, "configure" can be used to override the default, which is 8192. This is
+   also the minimum value. The actual amount of memory used by pcregrep is
+   three times this number, because it allows for the buffering of "before"
+   and "after" lines. */
+#ifndef PCREGREP_BUFSIZE
+#define PCREGREP_BUFSIZE 20480
+#endif
 
 
 /* If you are compiling for a system other than a Unix-like system or
@@ -373,7 +383,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 
 /* Version number of package */
 #ifndef VERSION
-#define VERSION "8.10"
+#define VERSION "8.13"
 #endif
 
 /* Define to empty if `const' does not conform to ANSI C. */
