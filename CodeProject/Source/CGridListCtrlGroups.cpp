@@ -122,8 +122,8 @@ CString CGridListCtrlGroups::GetGroupHeader(int nGroupId)
 #ifdef UNICODE
 	return lg.pszHeader;
 #elif  _MSC_VER >= 1300
-	CComBSTR header( lg.pszHeader );
-	return (LPCTSTR)COLE2T(header);
+	CString strHeader(lg.pszHeader);
+	return strHeader;
 #else
 	USES_CONVERSION;
 	return W2A(lg.pszHeader);
@@ -208,29 +208,6 @@ int CGridListCtrlGroups::GroupHitTest(const CPoint& point)
 
 	if (HitTest(point)!=-1)
 		return -1;
-
-	if (IsGroupStateEnabled())
-	{
-#if _WIN32_WINNT >= 0x0600
-#ifdef ListView_HitTestEx
-#ifdef LVHT_EX_GROUP
-#ifdef ListView_GetGroupInfoByIndex
-		LVHITTESTINFO lvhitinfo = {0};
-		lvhitinfo.pt = point;
-		ListView_HitTestEx(m_hWnd, &lvhitinfo);
-		if ((lvhitinfo.flags & LVHT_EX_GROUP)==0)
-			return -1;
-
-		LVGROUP lg = {0};
-		lg.cbSize = sizeof(lg);
-		lg.mask = LVGF_GROUPID;
-		VERIFY( ListView_GetGroupInfoByIndex(m_hWnd, lvhitinfo.iGroup, &lg) );
-		return lg.iGroupId;
-#endif
-#endif
-#endif
-#endif
-	}
 
 	if (IsGroupStateEnabled())
 	{
@@ -669,7 +646,6 @@ void CGridListCtrlGroups::OnContextMenuHeader(CWnd* pWnd, CPoint point, int nCol
 void CGridListCtrlGroups::OnContextMenuGroup(CWnd* pWnd, CPoint point, int nGroupId)
 {
 	CMenu menu;
-	UINT uFlags = MF_BYPOSITION | MF_STRING;
 	VERIFY( menu.CreatePopupMenu() );
 	
 	const CString& groupHeader = GetGroupHeader(nGroupId);
@@ -681,12 +657,12 @@ void CGridListCtrlGroups::OnContextMenuGroup(CWnd* pWnd, CPoint point, int nGrou
 		if (HasGroupState(nGroupId,LVGS_COLLAPSED))
 		{
 			CString menuText = CString(_T("Expand group: ")) + groupHeader;
-			menu.InsertMenu(0, uFlags, 1, menuText);
+			menu.AppendMenu(MF_STRING, 1, menuText);
 		}
 		else
 		{
 			CString menuText = CString(_T("Collapse group: ")) + groupHeader;
-			menu.InsertMenu(0, uFlags, 2, menuText);
+			menu.AppendMenu(MF_STRING, 2, menuText);
 		}
 	}
 #endif
@@ -694,9 +670,18 @@ void CGridListCtrlGroups::OnContextMenuGroup(CWnd* pWnd, CPoint point, int nGrou
 	if (GetExtendedStyle() & LVS_EX_CHECKBOXES)
 	{
 		CString menuText = CString(_T("Check group: ")) + groupHeader;
-		menu.InsertMenu(1, uFlags, 3, menuText);
+		menu.AppendMenu(MF_STRING, 3, menuText);
 		menuText = CString(_T("Uncheck group: ")) + groupHeader;
-		menu.InsertMenu(2, uFlags, 4, menuText);
+		menu.AppendMenu(MF_STRING, 4, menuText);
+	}
+
+	if (IsGroupStateEnabled())
+	{
+		if (menu.GetMenuItemCount() > 0)
+			menu.AppendMenu(MF_SEPARATOR, 0, _T(""));
+		menu.AppendMenu(MF_STRING, 5, _T("Expand all groups"));
+		menu.AppendMenu(MF_STRING, 6, _T("Collapse all groups"));
+		menu.AppendMenu(MF_STRING, 7, _T("Disable grouping"));
 	}
 
 	int nResult = menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD, point.x, point.y, this, 0);
@@ -706,6 +691,9 @@ void CGridListCtrlGroups::OnContextMenuGroup(CWnd* pWnd, CPoint point, int nGrou
 		case 2: SetGroupState(nGroupId, LVGS_COLLAPSED); break;
 		case 3: CheckEntireGroup(nGroupId, true); break;
 		case 4: CheckEntireGroup(nGroupId, false); break;
+		case 5: ExpandAllGroups(); break;
+		case 6: CollapseAllGroups(); break;
+		case 7: RemoveAllGroups(); EnableGroupView(FALSE); break;
 	}
 }
 
@@ -721,12 +709,11 @@ void CGridListCtrlGroups::OnContextMenuGrid(CWnd* pWnd, CPoint point)
 	if (IsGroupStateEnabled())
 	{
 		CMenu menu;
-		UINT uFlags = MF_BYPOSITION | MF_STRING;
 		VERIFY( menu.CreatePopupMenu() );
 
-		menu.InsertMenu(0, uFlags, 1, _T("Expand all groups"));
-		menu.InsertMenu(1, uFlags, 2, _T("Collapse all groups"));
-		menu.InsertMenu(2, uFlags, 3, _T("Disable grouping"));
+		menu.AppendMenu(MF_STRING, 1, _T("Expand all groups"));
+		menu.AppendMenu(MF_STRING, 2, _T("Collapse all groups"));
+		menu.AppendMenu(MF_STRING, 3, _T("Disable grouping"));
 
 		int nResult = menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD, point.x, point.y, this, 0);
 		switch(nResult)
@@ -971,13 +958,7 @@ void CGridListCtrlGroups::OnLButtonDblClk(UINT nFlags, CPoint point)
 		return;
 	
 	int nGroupId = GroupHitTest(point);
-	if (nGroupId!=-1)
-	{
-		if (HasGroupState(nGroupId, LVGS_COLLAPSED))
-			SetGroupState(nGroupId, LVGS_NORMAL);
-		else
-			SetGroupState(nGroupId, LVGS_COLLAPSED);
-	}
+	nGroupId;	// Avoid unreferenced variable warning
 }
 
 //------------------------------------------------------------------------
