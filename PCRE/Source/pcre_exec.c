@@ -473,13 +473,11 @@ Returns:       MATCH_MATCH if matched            )  these values are >= 0
                  (e.g. stopped by repeated call or recursion limit)
 */
 
-/* Potentially uninitialized local variable 'name' used. */
-#pragma warning(disable: 4701)
-
 static int
 match(REGISTER USPTR eptr, REGISTER const uschar *ecode, USPTR mstart,
   const uschar *markptr, int offset_top, match_data *md, eptrblock *eptrb,
   unsigned int rdepth)
+#pragma warning(disable: 4701)
 {
 /* These variables do not need to be preserved over recursion in this function,
 so they can be ordinary variables in all cases. Mark some of them with
@@ -1073,7 +1071,7 @@ for (;;)
       if (pcre_callout != NULL)
         {
         pcre_callout_block cb;
-        cb.version          = 1;   /* Version 1 of the callout block */
+        cb.version          = 2;   /* Version 1 of the callout block */
         cb.callout_number   = ecode[LINK_SIZE+2];
         cb.offset_vector    = md->offset_vector;
         cb.subject          = (PCRE_SPTR)md->start_subject;
@@ -1085,6 +1083,7 @@ for (;;)
         cb.capture_top      = offset_top/2;
         cb.capture_last     = md->capture_last;
         cb.callout_data     = md->callout_data;
+        cb.mark             = markptr;
         if ((rrc = (*pcre_callout)(&cb)) > 0) MRRETURN(MATCH_NOMATCH);
         if (rrc < 0) RRETURN(rrc);
         }
@@ -1368,6 +1367,7 @@ for (;;)
       if (rrc == MATCH_MATCH || rrc == MATCH_ACCEPT)
         {
         mstart = md->start_match_ptr;   /* In case \K reset it */
+        markptr = md->mark;
         break;
         }
       if (rrc != MATCH_NOMATCH &&
@@ -1466,7 +1466,7 @@ for (;;)
     if (pcre_callout != NULL)
       {
       pcre_callout_block cb;
-      cb.version          = 1;   /* Version 1 of the callout block */
+      cb.version          = 2;   /* Version 1 of the callout block */
       cb.callout_number   = ecode[1];
       cb.offset_vector    = md->offset_vector;
       cb.subject          = (PCRE_SPTR)md->start_subject;
@@ -1478,6 +1478,7 @@ for (;;)
       cb.capture_top      = offset_top/2;
       cb.capture_last     = md->capture_last;
       cb.callout_data     = md->callout_data;
+      cb.mark             = markptr;
       if ((rrc = (*pcre_callout)(&cb)) > 0) MRRETURN(MATCH_NOMATCH);
       if (rrc < 0) RRETURN(rrc);
       }
@@ -1503,12 +1504,25 @@ for (;;)
 
     case OP_RECURSE:
       {
+      recursion_info *ri;
+      int recno;
+
       callpat = md->start_code + GET(ecode, 1);
-      new_recursive.group_num = (callpat == md->start_code)? 0 :
+      recno = (callpat == md->start_code)? 0 :
         GET2(callpat, 1 + LINK_SIZE);
+
+      /* Check for repeating a recursion without advancing the subject pointer.
+      This should catch convoluted mutual recursions. (Some simple cases are
+      caught at compile time.) */
+
+      for (ri = md->recursive; ri != NULL; ri = ri->prevrec)
+        if (recno == ri->group_num && eptr == ri->subject_position)
+          RRETURN(PCRE_ERROR_RECURSELOOP);
 
       /* Add to "recursing stack" */
 
+      new_recursive.group_num = recno;
+      new_recursive.subject_position = eptr;
       new_recursive.prevrec = md->recursive;
       md->recursive = &new_recursive;
 
@@ -1656,7 +1670,7 @@ for (;;)
       md->end_match_ptr = eptr;      /* For ONCE */
       md->end_offset_top = offset_top;
       md->start_match_ptr = mstart;
-      MRRETURN(MATCH_MATCH);
+      MRRETURN(MATCH_MATCH);         /* Sets md->mark */
       }
 
     /* For capturing groups we have to check the group number back at the start
@@ -2001,11 +2015,12 @@ for (;;)
     /* Fall through */
 
     case OP_ALLANY:
-    if (eptr++ >= md->end_subject)
-      {
+    if (eptr >= md->end_subject)   /* DO NOT merge the eptr++ here; it must */
+      {                            /* not be updated before SCHECK_PARTIAL. */
       SCHECK_PARTIAL();
       MRRETURN(MATCH_NOMATCH);
       }
+    eptr++;
     if (utf8) while (eptr < md->end_subject && (*eptr & 0xc0) == 0x80) eptr++;
     ecode++;
     break;
@@ -2014,11 +2029,12 @@ for (;;)
     any byte, even newline, independent of the setting of PCRE_DOTALL. */
 
     case OP_ANYBYTE:
-    if (eptr++ >= md->end_subject)
-      {
+    if (eptr >= md->end_subject)   /* DO NOT merge the eptr++ here; it must */
+      {                            /* not be updated before SCHECK_PARTIAL. */
       SCHECK_PARTIAL();
       MRRETURN(MATCH_NOMATCH);
       }
+    eptr++;
     ecode++;
     break;
 
@@ -5167,7 +5183,11 @@ for (;;)
               while (eptr < md->end_subject && (*eptr & 0xc0) == 0x80) eptr++;
               }
             }
-          else eptr = md->end_subject;   /* Unlimited UTF-8 repeat */
+          else
+            {
+            eptr = md->end_subject;   /* Unlimited UTF-8 repeat */
+            SCHECK_PARTIAL();
+            }
           break;
 
           /* The byte case is the same as non-UTF8 */
@@ -5656,8 +5676,6 @@ switch (frame->Xwhere)
 #undef LBL
 #endif  /* NO_RECURSE */
 }
-
-/* Potentially uninitialized local variable 'name' used. */
 #pragma warning(default: 4701)
 
 
@@ -6372,7 +6390,7 @@ if (rc == MATCH_MATCH || rc == MATCH_ACCEPT)
   the pattern to -1 for backwards compatibility. It is documented that this
   happens. In earlier versions, the whole set of potential capturing offsets
   was set to -1 each time round the loop, but this is handled differently now.
-  "Gaps" are set to -1 dynamically instead (this fixes a bug). Thus, it is only 
+  "Gaps" are set to -1 dynamically instead (this fixes a bug). Thus, it is only
   those at the end that need unsetting here. We can't just unset them all at
   the start of the whole thing because they may get set in one branch that is
   not the final matching branch. */

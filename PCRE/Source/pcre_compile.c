@@ -393,7 +393,7 @@ static const char error_texts[] =
   "internal error: previously-checked referenced subpattern not found\0"
   "DEFINE group contains more than one branch\0"
   /* 55 */
-  "repeating a DEFINE group is not allowed\0"
+  "repeating a DEFINE group is not allowed\0"  /** DEAD **/
   "inconsistent NEWLINE options\0"
   "\\g is not followed by a braced, angle-bracketed, or quoted name/number or by a plain number\0"
   "a numbered reference must not be zero\0"
@@ -409,6 +409,7 @@ static const char error_texts[] =
   "(*MARK) must have an argument\0"
   "this version of PCRE is not compiled with PCRE_UCP support\0"
   "\\c must be followed by an ASCII character\0"
+  "\\k is not followed by a braced, angle-bracketed, or quoted name\0"
   ;
 
 /* Table to identify digits and hex digits. This is used when compiling
@@ -545,8 +546,8 @@ static const unsigned char ebcdic_chartab[] = { /* chartable partial dup */
 /* Definition to allow mutual recursion */
 
 static BOOL
-  compile_regex(int, uschar **, const uschar **, int *, BOOL, BOOL, int, int *,
-    int *, branch_chain *, compile_data *, int *);
+  compile_regex(int, uschar **, const uschar **, int *, BOOL, BOOL, int, int,
+    int *, int *, branch_chain *, compile_data *, int *);
 
 
 
@@ -574,6 +575,39 @@ for (; n > 0; n--)
   }
 return s;
 }
+
+
+/*************************************************
+*            Check for counted repeat            *
+*************************************************/
+
+/* This function is called when a '{' is encountered in a place where it might
+start a quantifier. It looks ahead to see if it really is a quantifier or not.
+It is only a quantifier if it is one of the forms {ddd} {ddd,} or {ddd,ddd}
+where the ddds are digits.
+
+Arguments:
+  p         pointer to the first char after '{'
+
+Returns:    TRUE or FALSE
+*/
+
+static BOOL
+is_counted_repeat(const uschar *p)
+{
+if ((digitab[*p++] & ctype_digit) == 0) return FALSE;
+while ((digitab[*p] & ctype_digit) != 0) p++;
+if (*p == CHAR_RIGHT_CURLY_BRACKET) return TRUE;
+
+if (*p++ != CHAR_COMMA) return FALSE;
+if (*p == CHAR_RIGHT_CURLY_BRACKET) return TRUE;
+
+if ((digitab[*p++] & ctype_digit) == 0) return FALSE;
+while ((digitab[*p] & ctype_digit) != 0) p++;
+
+return (*p == CHAR_RIGHT_CURLY_BRACKET);
+}
+
 
 
 /*************************************************
@@ -647,7 +681,8 @@ else
     *errorcodeptr = ERR37;
     break;
 
-    /* \g must be followed by one of a number of specific things:
+    /* In a character class, \g is just a literal "g". Outside a character
+    class, \g must be followed by one of a number of specific things:
 
     (1) A number, either plain or braced. If positive, it is an absolute
     backreference. If negative, it is a relative backreference. This is a Perl
@@ -664,6 +699,7 @@ else
     the -ESC_g code (cf \k). */
 
     case CHAR_g:
+    if (isclass) break;
     if (ptr[1] == CHAR_LESS_THAN_SIGN || ptr[1] == CHAR_APOSTROPHE)
       {
       c = -ESC_g;
@@ -885,9 +921,11 @@ else
   }
 
 /* Perl supports \N{name} for character names, as well as plain \N for "not
-newline". PCRE does not support \N{name}. */
+newline". PCRE does not support \N{name}. However, it does support
+quantification such as \N{2,3}. */
 
-if (c == -ESC_N && ptr[1] == CHAR_LEFT_CURLY_BRACKET)
+if (c == -ESC_N && ptr[1] == CHAR_LEFT_CURLY_BRACKET &&
+     !is_counted_repeat(ptr+2))
   *errorcodeptr = ERR37;
 
 /* If PCRE_UCP is set, we change the values for \d etc. */
@@ -993,39 +1031,6 @@ return -1;
 }
 #endif
 
-
-
-
-/*************************************************
-*            Check for counted repeat            *
-*************************************************/
-
-/* This function is called when a '{' is encountered in a place where it might
-start a quantifier. It looks ahead to see if it really is a quantifier or not.
-It is only a quantifier if it is one of the forms {ddd} {ddd,} or {ddd,ddd}
-where the ddds are digits.
-
-Arguments:
-  p         pointer to the first char after '{'
-
-Returns:    TRUE or FALSE
-*/
-
-static BOOL
-is_counted_repeat(const uschar *p)
-{
-if ((digitab[*p++] & ctype_digit) == 0) return FALSE;
-while ((digitab[*p] & ctype_digit) != 0) p++;
-if (*p == CHAR_RIGHT_CURLY_BRACKET) return TRUE;
-
-if (*p++ != CHAR_COMMA) return FALSE;
-if (*p == CHAR_RIGHT_CURLY_BRACKET) return TRUE;
-
-if ((digitab[*p++] & ctype_digit) == 0) return FALSE;
-while ((digitab[*p] & ctype_digit) != 0) p++;
-
-return (*p == CHAR_RIGHT_CURLY_BRACKET);
-}
 
 
 
@@ -1977,28 +1982,28 @@ for (code = first_significant_code(code + _pcre_OP_lengths[*code], TRUE);
   /* For a recursion/subroutine call, if its end has been reached, which
   implies a backward reference subroutine call, we can scan it. If it's a
   forward reference subroutine call, we can't. To detect forward reference
-  we have to scan up the list that is kept in the workspace. This function is 
-  called only when doing the real compile, not during the pre-compile that 
+  we have to scan up the list that is kept in the workspace. This function is
+  called only when doing the real compile, not during the pre-compile that
   measures the size of the compiled pattern. */
 
   if (c == OP_RECURSE)
     {
     const uschar *scode;
     BOOL empty_branch;
-    
+
     /* Test for forward reference */
-     
+
     for (scode = cd->start_workspace; scode < cd->hwm; scode += LINK_SIZE)
-      if (GET(scode, 0) == code + 1 - cd->start_code) return TRUE;   
+      if (GET(scode, 0) == code + 1 - cd->start_code) return TRUE;
 
     /* Not a forward reference, test for completed backward reference */
-     
+
     empty_branch = FALSE;
     scode = cd->start_code + GET(code, 1);
     if (GET(scode, 1) == 0) return TRUE;    /* Unclosed */
-    
+
     /* Completed backwards reference */
-     
+
     do
       {
       if (could_be_empty_branch(scode, endcode, utf8, cd))
@@ -2009,7 +2014,7 @@ for (code = first_significant_code(code + _pcre_OP_lengths[*code], TRUE);
       scode += GET(scode, 1);
       }
     while (*scode == OP_ALT);
-     
+
     if (!empty_branch) return FALSE;  /* All branches are non-empty */
     continue;
     }
@@ -2235,7 +2240,7 @@ return TRUE;
 the current branch of the current pattern to see if it could match the empty
 string. If it could, we must look outwards for branches at other levels,
 stopping when we pass beyond the bracket which is the subject of the recursion.
-This function is called only during the real compile, not during the 
+This function is called only during the real compile, not during the
 pre-compile.
 
 Arguments:
@@ -2287,6 +2292,12 @@ where Perl recognizes it as the POSIX class "lower" but PCRE does not recognize
 "l\ower". This is a lesser evil that not diagnosing bad classes when Perl does,
 I think.
 
+A user pointed out that PCRE was rejecting [:a[:digit:]] whereas Perl was not.
+It seems that the appearance of a nested POSIX class supersedes an apparent
+external class. For example, [:a[:digit:]b:] matches "a", "b", ":", or
+a digit. Also, unescaped square brackets may also appear as part of class
+names. For example, [:a[:abc]b:] gives unknown class "[:abc]b:]"in Perl.
+
 Arguments:
   ptr      pointer to the initial [
   endptr   where to return the end pointer
@@ -2301,14 +2312,20 @@ int terminator;          /* Don't combine these lines; the Solaris cc */
 terminator = *(++ptr);   /* compiler warns about "non-constant" initializer. */
 for (++ptr; *ptr != 0; ptr++)
   {
-  if (*ptr == CHAR_BACKSLASH && ptr[1] == CHAR_RIGHT_SQUARE_BRACKET) ptr++; else
+  if (*ptr == CHAR_BACKSLASH && ptr[1] == CHAR_RIGHT_SQUARE_BRACKET)
+    ptr++;
+  else
     {
-    if (*ptr == CHAR_RIGHT_SQUARE_BRACKET) return FALSE;
     if (*ptr == terminator && ptr[1] == CHAR_RIGHT_SQUARE_BRACKET)
       {
       *endptr = ptr;
       return TRUE;
       }
+    if (*ptr == CHAR_LEFT_SQUARE_BRACKET &&
+         (ptr[1] == CHAR_COLON || ptr[1] == CHAR_DOT ||
+          ptr[1] == CHAR_EQUALS_SIGN) &&
+        check_posix_syntax(ptr, endptr))
+      return FALSE;
     }
   }
 return FALSE;
@@ -2488,12 +2505,10 @@ Arguments:
 Yield:        TRUE when range returned; FALSE when no more
 */
 
-/* Potentially uninitialized local variable 'name' used. */
-#pragma warning(disable: 4701)
-
 static BOOL
 get_othercase_range(unsigned int *cptr, unsigned int d, unsigned int *ocptr,
   unsigned int *odptr)
+#pragma warning(disable: 4701)
 {
 unsigned int c, othercase, next;
 
@@ -2516,8 +2531,6 @@ for (++c; c <= d; c++)
 
 return TRUE;
 }
-
-/* Potentially uninitialized local variable 'name' used. */
 #pragma warning(default: 4701)
 
 
@@ -3024,6 +3037,7 @@ Arguments:
   firstbyteptr   set to initial literal character, or < 0 (REQ_UNSET, REQ_NONE)
   reqbyteptr     set to the last literal character required, else < 0
   bcptr          points to current branch chain
+  cond_depth     conditional nesting depth
   cd             contains pointers to tables etc.
   lengthptr      NULL during the real compile phase
                  points to length accumulator during pre-compile phase
@@ -3032,13 +3046,10 @@ Returns:         TRUE on success
                  FALSE, with *errorcodeptr set non-zero on error
 */
 
-/* Signed/unsigned mismatch. */
-#pragma warning(disable: 4389)
-
 static BOOL
 compile_branch(int *optionsptr, uschar **codeptr, const uschar **ptrptr,
   int *errorcodeptr, int *firstbyteptr, int *reqbyteptr, branch_chain *bcptr,
-  compile_data *cd, int *lengthptr)
+  int cond_depth, compile_data *cd, int *lengthptr)
 {
 int repeat_type, op_type;
 int repeat_min = 0, repeat_max = 0;      /* To please picky compilers */
@@ -3047,7 +3058,7 @@ int greedy_default, greedy_non_default;
 int firstbyte, reqbyte;
 int zeroreqbyte, zerofirstbyte;
 int req_caseopt, reqvary, tempreqvary;
-int options = *optionsptr;
+int options = *optionsptr;               /* May change dynamically */
 int after_manual_callout = 0;
 int length_prevgroup = 0;
 register int c;
@@ -3064,6 +3075,10 @@ uschar *previous = NULL;
 uschar *previous_callout = NULL;
 uschar *save_hwm = NULL;
 uschar classbits[32];
+
+/* We can fish out the UTF-8 setting once and for all into a BOOL, but we
+must not do this for other options (e.g. PCRE_EXTENDED) because they may change
+dynamically as we process the pattern. */
 
 #ifdef SUPPORT_UTF8
 BOOL class_utf8;
@@ -3245,7 +3260,7 @@ for (;; ptr++)
     previous_callout = NULL;
     }
 
-  /* In extended mode, skip white space and comments */
+  /* In extended mode, skip white space and comments. */
 
   if ((options & PCRE_EXTENDED) != 0)
     {
@@ -4012,7 +4027,9 @@ for (;; ptr++)
         if ((options & PCRE_CASELESS) != 0)
           {
           unsigned int othercase;
+#pragma warning(disable: 4389)
           if ((othercase = UCD_OTHERCASE(c)) != c)
+#pragma warning(default: 4389)
             {
             *class_utf8data++ = XCL_SINGLE;
             class_utf8data += _pcre_ord2utf8(othercase, class_utf8data);
@@ -4214,8 +4231,8 @@ for (;; ptr++)
     op_type = 0;                    /* Default single-char op codes */
     possessive_quantifier = FALSE;  /* Default not possessive quantifier */
 
-    /* Save start of previous item, in case we have to move it up to make space
-    for an inserted OP_ONCE for the additional '+' extension. */
+    /* Save start of previous item, in case we have to move it up in order to
+    insert something before it. */
 
     tempcode = previous;
 
@@ -4237,13 +4254,13 @@ for (;; ptr++)
       ptr++;
       }
     else repeat_type = greedy_default;
-    
-    /* If previous was a recursion call, wrap it in atomic brackets so that 
+
+    /* If previous was a recursion call, wrap it in atomic brackets so that
     previous becomes the atomic group. All recursions were so wrapped in the
     past, but it no longer happens for non-repeated recursions. In fact, the
     repeated ones could be re-implemented independently so as not to need this,
     but for the moment we rely on the code for repeating groups. */
-    
+
     if (*previous == OP_RECURSE)
       {
       memmove(previous + 1 + LINK_SIZE, previous, 1 + LINK_SIZE);
@@ -4253,18 +4270,18 @@ for (;; ptr++)
       PUT(previous, 3 + 2*LINK_SIZE, 2 + 2*LINK_SIZE);
       code += 2 + 2 * LINK_SIZE;
       length_prevgroup = 3 + 3*LINK_SIZE;
-      
+
       /* When actually compiling, we need to check whether this was a forward
       reference, and if so, adjust the offset. */
-      
+
       if (lengthptr == NULL && cd->hwm >= cd->start_workspace + LINK_SIZE)
         {
         int offset = GET(cd->hwm, -LINK_SIZE);
         if (offset == previous + 1 - cd->start_code)
-          PUT(cd->hwm, -LINK_SIZE, offset + 1 + LINK_SIZE); 
-        }    
-      }    
-      
+          PUT(cd->hwm, -LINK_SIZE, offset + 1 + LINK_SIZE);
+        }
+      }
+
     /* Now handle repetition for the different types of item. */
 
     /* If previous was a character match, abolish the item and generate a
@@ -4558,24 +4575,35 @@ for (;; ptr++)
       }
 
     /* If previous was a bracket group, we may have to replicate it in certain
-    cases. Note that at this point we can encounter only the "basic" BRA and
-    KET opcodes, as this is the place where they get converted into the more
-    special varieties. */
+    cases. Note that at this point we can encounter only the "basic" bracket
+    opcodes such as BRA and CBRA, as this is the place where they get converted
+    into the more special varieties such as BRAPOS and SBRA. A test for >=
+    OP_ASSERT and <= OP_COND includes ASSERT, ASSERT_NOT, ASSERTBACK,
+    ASSERTBACK_NOT, ONCE, BRA, CBRA, and COND. Originally, PCRE did not allow
+    repetition of assertions, but now it does, for Perl compatibility. */
 
-    else if (*previous == OP_BRA  || *previous == OP_CBRA ||
-             *previous == OP_ONCE || *previous == OP_COND)
+    else if (*previous >= OP_ASSERT && *previous <= OP_COND)
       {
       register int i;
       int len = (int)(code - previous);
       uschar *bralink = NULL;
       uschar *brazeroptr = NULL;
 
-      /* Repeating a DEFINE group is pointless */
+      /* Repeating a DEFINE group is pointless, but Perl allows the syntax, so
+      we just ignore the repeat. */
 
       if (*previous == OP_COND && previous[LINK_SIZE+1] == OP_DEF)
+        goto END_REPEAT;
+
+      /* There is no sense in actually repeating assertions. The only potential
+      use of repetition is in cases when the assertion is optional. Therefore,
+      if the minimum is greater than zero, just ignore the repeat. If the
+      maximum is not not zero or one, set it to 1. */
+
+      if (*previous < OP_ONCE)    /* Assertion */
         {
-        *errorcodeptr = ERR55;
-        goto FAILED;
+        if (repeat_min > 0) goto END_REPEAT;
+        if (repeat_max < 0 || repeat_max > 1) repeat_max = 1;
         }
 
       /* The case of a zero minimum is special because of the need to stick
@@ -4596,10 +4624,11 @@ for (;; ptr++)
         **   goto END_REPEAT;
         **   }
 
-        However, that fails when a group is referenced as a subroutine from
-        elsewhere in the pattern, so now we stick in OP_SKIPZERO in front of it
-        so that it is skipped on execution. As we don't have a list of which
-        groups are referenced, we cannot do this selectively.
+        However, that fails when a group or a subgroup within it is referenced
+        as a subroutine from elsewhere in the pattern, so now we stick in
+        OP_SKIPZERO in front of it so that it is skipped on execution. As we
+        don't have a list of which groups are referenced, we cannot do this
+        selectively.
 
         If the maximum is 1 or unlimited, we just have to stick in the BRAZERO
         and do no more at this point. However, we do need to adjust any
@@ -4809,9 +4838,9 @@ for (;; ptr++)
         {
         uschar *ketcode = code - 1 - LINK_SIZE;
         uschar *bracode = ketcode - GET(ketcode, 1);
-         
-        if (*bracode == OP_ONCE && possessive_quantifier) *bracode = OP_BRA; 
-        if (*bracode == OP_ONCE) 
+
+        if (*bracode == OP_ONCE && possessive_quantifier) *bracode = OP_BRA;
+        if (*bracode == OP_ONCE)
           *ketcode = OP_KETRMAX + repeat_type;
         else
           {
@@ -4862,12 +4891,12 @@ for (;; ptr++)
     there are special alternative opcodes for this case. For anything else, we
     wrap the entire repeated item inside OP_ONCE brackets. Logically, the '+'
     notation is just syntactic sugar, taken from Sun's Java package, but the
-    special opcodes can optimize it. 
-    
+    special opcodes can optimize it.
+
     Possessively repeated subpatterns have already been handled in the code
-    just above, so possessive_quantifier is always FALSE for them at this 
+    just above, so possessive_quantifier is always FALSE for them at this
     stage.
-    
+
     Note that the repeated item starts at tempcode, not at previous, which
     might be the first part of a string whose (former) last char we repeated.
 
@@ -4973,11 +5002,14 @@ for (;; ptr++)
       while ((cd->ctypes[*++ptr] & ctype_letter) != 0) {};
       namelen = (int)(ptr - name);
 
+      /* It appears that Perl allows any characters whatsoever, other than
+      a closing parenthesis, to appear in arguments, so we no longer insist on
+      letters, digits, and underscores. */
+
       if (*ptr == CHAR_COLON)
         {
         arg = ++ptr;
-        while ((cd->ctypes[*ptr] & (ctype_letter|ctype_digit)) != 0
-          || *ptr == '_') ptr++;
+        while (*ptr != 0 && *ptr != CHAR_RIGHT_PARENTHESIS) ptr++;
         arglen = (int)(ptr - arg);
         }
 
@@ -4994,7 +5026,7 @@ for (;; ptr++)
         if (namelen == verbs[i].len &&
             strncmp((char *)name, vn, namelen) == 0)
           {
-          /* Check for open captures before ACCEPT and convert it to 
+          /* Check for open captures before ACCEPT and convert it to
           ASSERT_ACCEPT if in an assertion. */
 
           if (verbs[i].op == OP_ACCEPT)
@@ -5004,7 +5036,7 @@ for (;; ptr++)
               {
               *errorcodeptr = ERR59;
               goto FAILED;
-              }   
+              }
             cd->had_accept = TRUE;
             for (oc = cd->open_caps; oc != NULL; oc = oc->next)
               {
@@ -5305,7 +5337,7 @@ for (;; ptr++)
         /* ------------------------------------------------------------ */
         case CHAR_EQUALS_SIGN:                 /* Positive lookahead */
         bravalue = OP_ASSERT;
-        cd->assert_depth += 1; 
+        cd->assert_depth += 1;
         ptr++;
         break;
 
@@ -5320,7 +5352,7 @@ for (;; ptr++)
           continue;
           }
         bravalue = OP_ASSERT_NOT;
-        cd->assert_depth += 1; 
+        cd->assert_depth += 1;
         break;
 
 
@@ -5330,13 +5362,13 @@ for (;; ptr++)
           {
           case CHAR_EQUALS_SIGN:               /* Positive lookbehind */
           bravalue = OP_ASSERTBACK;
-          cd->assert_depth += 1; 
+          cd->assert_depth += 1;
           ptr += 2;
           break;
 
           case CHAR_EXCLAMATION_MARK:          /* Negative lookbehind */
           bravalue = OP_ASSERTBACK_NOT;
-          cd->assert_depth += 1; 
+          cd->assert_depth += 1;
           ptr += 2;
           break;
 
@@ -5735,9 +5767,14 @@ for (;; ptr++)
 
             /* If not a forward reference, and the subpattern is still open,
             this is a recursive call. We check to see if this is a left
-            recursion that could loop for ever, and diagnose that case. */
+            recursion that could loop for ever, and diagnose that case. We
+            must not, however, do this check if we are in a conditional
+            subpattern because the condition might be testing for recursion in
+            a pattern such as /(?(R)a+|(?R)b)/, which is perfectly valid.
+            Forever loops are also detected at runtime, so those that occur in
+            conditional subpatterns will be picked up then. */
 
-            else if (GET(called, 1) == 0 &&
+            else if (GET(called, 1) == 0 && cond_depth <= 0 &&
                      could_be_empty(called, code, bcptr, utf8, cd))
               {
               *errorcodeptr = ERR40;
@@ -5746,7 +5783,7 @@ for (;; ptr++)
             }
 
           /* Insert the recursion/subroutine item. */
-          
+
           *code = OP_RECURSE;
           PUT(code, 1, (int)(called - cd->start_code));
           code += 1 + LINK_SIZE;
@@ -5864,37 +5901,39 @@ for (;; ptr++)
       skipbytes = 2;
       }
 
-    /* Process nested bracketed regex. Assertions may not be repeated, but
-    other kinds can be. All their opcodes are >= OP_ONCE. We copy code into a
-    non-register variable (tempcode) in order to be able to pass its address
-    because some compilers complain otherwise. */
+    /* Process nested bracketed regex. Assertions used not to be repeatable,
+    but this was changed for Perl compatibility, so all kinds can now be
+    repeated. We copy code into a non-register variable (tempcode) in order to
+    be able to pass its address because some compilers complain otherwise. */
 
-    previous = (bravalue >= OP_ONCE)? code : NULL;
+    previous = code;                      /* For handling repetition */
     *code = bravalue;
     tempcode = code;
-    tempreqvary = cd->req_varyopt;     /* Save value before bracket */
-    length_prevgroup = 0;              /* Initialize for pre-compile phase */
+    tempreqvary = cd->req_varyopt;        /* Save value before bracket */
+    length_prevgroup = 0;                 /* Initialize for pre-compile phase */
 
     if (!compile_regex(
-         newoptions,                   /* The complete new option state */
-         &tempcode,                    /* Where to put code (updated) */
-         &ptr,                         /* Input pointer (updated) */
-         errorcodeptr,                 /* Where to put an error message */
+         newoptions,                      /* The complete new option state */
+         &tempcode,                       /* Where to put code (updated) */
+         &ptr,                            /* Input pointer (updated) */
+         errorcodeptr,                    /* Where to put an error message */
          (bravalue == OP_ASSERTBACK ||
           bravalue == OP_ASSERTBACK_NOT), /* TRUE if back assert */
-         reset_bracount,               /* True if (?| group */
-         skipbytes,                    /* Skip over bracket number */
-         &subfirstbyte,                /* For possible first char */
-         &subreqbyte,                  /* For possible last char */
-         bcptr,                        /* Current branch chain */
-         cd,                           /* Tables block */
-         (lengthptr == NULL)? NULL :   /* Actual compile phase */
-           &length_prevgroup           /* Pre-compile phase */
+         reset_bracount,                  /* True if (?| group */
+         skipbytes,                       /* Skip over bracket number */
+         cond_depth +
+           ((bravalue == OP_COND)?1:0),   /* Depth of condition subpatterns */
+         &subfirstbyte,                   /* For possible first char */
+         &subreqbyte,                     /* For possible last char */
+         bcptr,                           /* Current branch chain */
+         cd,                              /* Tables block */
+         (lengthptr == NULL)? NULL :      /* Actual compile phase */
+           &length_prevgroup              /* Pre-compile phase */
          ))
       goto FAILED;
-      
+
     if (bravalue >= OP_ASSERT && bravalue <= OP_ASSERTBACK_NOT)
-      cd->assert_depth -= 1; 
+      cd->assert_depth -= 1;
 
     /* At the end of compiling, code is still pointing to the start of the
     group, while tempcode has been updated to point past the end of the group
@@ -6134,11 +6173,16 @@ for (;; ptr++)
         }
 
       /* \k<name> or \k'name' is a back reference by name (Perl syntax).
-      We also support \k{name} (.NET syntax) */
+      We also support \k{name} (.NET syntax).  */
 
-      if (-c == ESC_k && (ptr[1] == CHAR_LESS_THAN_SIGN ||
-          ptr[1] == CHAR_APOSTROPHE || ptr[1] == CHAR_LEFT_CURLY_BRACKET))
+      if (-c == ESC_k)
         {
+        if ((ptr[1] != CHAR_LESS_THAN_SIGN &&
+          ptr[1] != CHAR_APOSTROPHE && ptr[1] != CHAR_LEFT_CURLY_BRACKET))
+          {
+          *errorcodeptr = ERR69;
+          break;
+          }
         is_recurse = FALSE;
         terminator = (*(++ptr) == CHAR_LESS_THAN_SIGN)?
           CHAR_GREATER_THAN_SIGN : (*ptr == CHAR_APOSTROPHE)?
@@ -6320,9 +6364,6 @@ FAILED:
 return FALSE;
 }
 
-/* Signed/unsigned mismatch. */
-#pragma warning(default: 4389)
-
 
 
 
@@ -6345,6 +6386,7 @@ Arguments:
   lookbehind     TRUE if this is a lookbehind assertion
   reset_bracount TRUE to reset the count for each branch
   skipbytes      skip this many bytes at start (for brackets and OP_COND)
+  cond_depth     depth of nesting for conditional subpatterns
   firstbyteptr   place to put the first required character, or a negative number
   reqbyteptr     place to put the last required character, or a negative number
   bcptr          pointer to the chain of currently open branches
@@ -6358,8 +6400,8 @@ Returns:         TRUE on success
 static BOOL
 compile_regex(int options, uschar **codeptr, const uschar **ptrptr,
   int *errorcodeptr, BOOL lookbehind, BOOL reset_bracount, int skipbytes,
-  int *firstbyteptr, int *reqbyteptr, branch_chain *bcptr, compile_data *cd,
-  int *lengthptr)
+  int cond_depth, int *firstbyteptr, int *reqbyteptr, branch_chain *bcptr,
+  compile_data *cd, int *lengthptr)
 {
 const uschar *ptr = *ptrptr;
 uschar *code = *codeptr;
@@ -6396,8 +6438,8 @@ pre-compile phase to find out whether anything has yet been compiled or not. */
 
 /* If this is a capturing subpattern, add to the chain of open capturing items
 so that we can detect them if (*ACCEPT) is encountered. This is also used to
-detect groups that contain recursive back references to themselves. Note that 
-only OP_CBRA need be tested here; changing this opcode to one of its variants, 
+detect groups that contain recursive back references to themselves. Note that
+only OP_CBRA need be tested here; changing this opcode to one of its variants,
 e.g. OP_SCBRAPOS, happens later, after the group has been compiled. */
 
 if (*code == OP_CBRA)
@@ -6438,7 +6480,8 @@ for (;;)
   into the length. */
 
   if (!compile_branch(&options, &code, &ptr, errorcodeptr, &branchfirstbyte,
-        &branchreqbyte, &bc, cd, (lengthptr == NULL)? NULL : &length))
+        &branchreqbyte, &bc, cond_depth, cd,
+        (lengthptr == NULL)? NULL : &length))
     {
     *ptrptr = ptr;
     return FALSE;
@@ -6871,7 +6914,7 @@ do {
      case OP_EXACT:
      scode += 2;
      /* Fall through */
-      
+
      case OP_CHAR:
      case OP_PLUS:
      case OP_MINPLUS:
@@ -6884,7 +6927,7 @@ do {
      case OP_EXACTI:
      scode += 2;
      /* Fall through */
-      
+
      case OP_CHARI:
      case OP_PLUSI:
      case OP_MINPLUSI:
@@ -7044,7 +7087,7 @@ utf8 = (options & PCRE_UTF8) != 0;
 
 /* Can't support UTF8 unless PCRE has been compiled to include the code. The
 return of an error code from _pcre_valid_utf8() is a new feature, introduced in
-release 8.13. It is passed back from pcre_[dfa_]exec(), but at the moment is 
+release 8.13. It is passed back from pcre_[dfa_]exec(), but at the moment is
 not used here. */
 
 #ifdef SUPPORT_UTF8
@@ -7074,13 +7117,11 @@ if ((options & PCRE_UCP) != 0)
 
 /* Check validity of \R options. */
 
-switch (options & (PCRE_BSR_ANYCRLF|PCRE_BSR_UNICODE))
+if ((options & (PCRE_BSR_ANYCRLF|PCRE_BSR_UNICODE)) ==
+     (PCRE_BSR_ANYCRLF|PCRE_BSR_UNICODE))
   {
-  case 0:
-  case PCRE_BSR_ANYCRLF:
-  case PCRE_BSR_UNICODE:
-  break;
-  default: errorcode = ERR56; goto PCRE_EARLY_ERROR_RETURN;
+  errorcode = ERR56;
+  goto PCRE_EARLY_ERROR_RETURN;
   }
 
 /* Handle different types of newline. The three bits give seven cases. The
@@ -7165,8 +7206,8 @@ outside can help speed up starting point checks. */
 ptr += skipatstart;
 code = cworkspace;
 *code = OP_BRA;
-(void)compile_regex(cd->external_options, &code, &ptr, &errorcode, FALSE, 
-  FALSE, 0, &firstbyte, &reqbyte, NULL, cd, &length);
+(void)compile_regex(cd->external_options, &code, &ptr, &errorcode, FALSE,
+  FALSE, 0, 0, &firstbyte, &reqbyte, NULL, cd, &length);
 if (errorcode != 0) goto PCRE_EARLY_ERROR_RETURN;
 
 DPRINTF(("end pre-compile: length=%d workspace=%d\n", length,
@@ -7239,7 +7280,7 @@ of the function here. */
 ptr = (const uschar *)pattern + skipatstart;
 code = (uschar *)codestart;
 *code = OP_BRA;
-(void)compile_regex(re->options, &code, &ptr, &errorcode, FALSE, FALSE, 0, 
+(void)compile_regex(re->options, &code, &ptr, &errorcode, FALSE, FALSE, 0, 0,
   &firstbyte, &reqbyte, NULL, cd, NULL);
 re->top_bracket = cd->bracount;
 re->top_backref = cd->top_backref;

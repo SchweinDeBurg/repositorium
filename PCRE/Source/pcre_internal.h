@@ -7,7 +7,7 @@
 and semantics are as close as possible to those of the Perl 5 language.
 
                        Written by Philip Hazel
-           Copyright (c) 1997-2010 University of Cambridge
+           Copyright (c) 1997-2011 University of Cambridge
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -1448,16 +1448,16 @@ enum {
   /* The assertions must come before BRA, CBRA, ONCE, and COND, and the four
   asserts must remain in order. */
 
-  OP_ASSERT,         /* 118 Positive lookahead */
-  OP_ASSERT_NOT,     /* 119 Negative lookahead */
-  OP_ASSERTBACK,     /* 120 Positive lookbehind */
-  OP_ASSERTBACK_NOT, /* 121 Negative lookbehind */
-  OP_REVERSE,        /* 122 Move pointer back - used in lookbehind assertions */
+  OP_REVERSE,        /* 118 Move pointer back - used in lookbehind assertions */
+  OP_ASSERT,         /* 119 Positive lookahead */
+  OP_ASSERT_NOT,     /* 120 Negative lookahead */
+  OP_ASSERTBACK,     /* 121 Positive lookbehind */
+  OP_ASSERTBACK_NOT, /* 122 Negative lookbehind */
 
-  /* ONCE, BRA, BRAPOS, CBRA, CBRAPOS, and COND must come after the assertions,
-  with ONCE first, as there's a test for >= ONCE for a subpattern that isn't an
-  assertion. The POS versions must immediately follow the non-POS versions in
-  each case. */
+  /* ONCE, BRA, BRAPOS, CBRA, CBRAPOS, and COND must come immediately after the
+  assertions, with ONCE first, as there's a test for >= ONCE for a subpattern
+  that isn't an assertion. The POS versions must immediately follow the non-POS
+  versions in each case. */
 
   OP_ONCE,           /* 123 Atomic group */
   OP_BRA,            /* 124 Start of non-capturing bracket */
@@ -1550,7 +1550,7 @@ some cases doesn't actually use these names at all). */
   "class", "nclass", "xclass", "Ref", "Refi",                     \
   "Recurse", "Callout",                                           \
   "Alt", "Ket", "KetRmax", "KetRmin", "KetRpos",                  \
-  "Assert", "Assert not", "AssertB", "AssertB not", "Reverse",    \
+  "Reverse", "Assert", "Assert not", "AssertB", "AssertB not",    \
   "Once",                                                         \
   "Bra", "BraPos", "CBra", "CBraPos",                             \
   "Cond",                                                         \
@@ -1619,11 +1619,11 @@ in UTF-8 mode. The code that uses this table must know about such things. */
   1+LINK_SIZE,                   /* KetRmax                                */ \
   1+LINK_SIZE,                   /* KetRmin                                */ \
   1+LINK_SIZE,                   /* KetRpos                                */ \
+  1+LINK_SIZE,                   /* Reverse                                */ \
   1+LINK_SIZE,                   /* Assert                                 */ \
   1+LINK_SIZE,                   /* Assert not                             */ \
   1+LINK_SIZE,                   /* Assert behind                          */ \
   1+LINK_SIZE,                   /* Assert behind not                      */ \
-  1+LINK_SIZE,                   /* Reverse                                */ \
   1+LINK_SIZE,                   /* ONCE                                   */ \
   1+LINK_SIZE,                   /* BRA                                    */ \
   1+LINK_SIZE,                   /* BRAPOS                                 */ \
@@ -1660,7 +1660,7 @@ enum { ERR0,  ERR1,  ERR2,  ERR3,  ERR4,  ERR5,  ERR6,  ERR7,  ERR8,  ERR9,
        ERR30, ERR31, ERR32, ERR33, ERR34, ERR35, ERR36, ERR37, ERR38, ERR39,
        ERR40, ERR41, ERR42, ERR43, ERR44, ERR45, ERR46, ERR47, ERR48, ERR49,
        ERR50, ERR51, ERR52, ERR53, ERR54, ERR55, ERR56, ERR57, ERR58, ERR59,
-       ERR60, ERR61, ERR62, ERR63, ERR64, ERR65, ERR66, ERR67, ERR68,
+       ERR60, ERR61, ERR62, ERR63, ERR64, ERR65, ERR66, ERR67, ERR68, ERR69,
        ERRCOUNT };
 
 /* The real format of the start of the pcre block; the index of names and the
@@ -1741,7 +1741,7 @@ typedef struct compile_data {
   int  final_bracount;          /* Saved value after first pass */
   int  top_backref;             /* Maximum back reference */
   unsigned int backref_map;     /* Bitmap of low back refs */
-  int  assert_depth;            /* Depth of nested assertions */ 
+  int  assert_depth;            /* Depth of nested assertions */
   int  external_options;        /* External (initial) options */
   int  external_flags;          /* External flag bits to be set */
   int  req_varyopt;             /* "After variable item" flag for reqbyte */
@@ -1753,7 +1753,7 @@ typedef struct compile_data {
 } compile_data;
 
 /* Structure for maintaining a chain of pointers to the currently incomplete
-branches, for testing for left recursion. */
+branches, for testing for left recursion while compiling. */
 
 typedef struct branch_chain {
   struct branch_chain *outer;
@@ -1761,18 +1761,28 @@ typedef struct branch_chain {
 } branch_chain;
 
 /* Structure for items in a linked list that represents an explicit recursive
-call within the pattern. */
+call within the pattern; used by pcre_exec(). */
 
 typedef struct recursion_info {
   struct recursion_info *prevrec; /* Previous recursion record (or NULL) */
   int group_num;                  /* Number of group that was called */
   int *offset_save;               /* Pointer to start of saved offsets */
   int saved_max;                  /* Number of saved offsets */
+  USPTR subject_position;         /* Position at start of recursion */
 } recursion_info;
+
+/* A similar structure for pcre_dfa_exec(). */
+
+typedef struct dfa_recursion_info {
+  struct dfa_recursion_info *prevrec;
+  int group_num;
+  USPTR subject_position;
+} dfa_recursion_info;
 
 /* Structure for building a chain of data for holding the values of the subject
 pointer at the start of each subpattern, so as to detect when an empty string
-has been matched by a subpattern - to break infinite loops. */
+has been matched by a subpattern - to break infinite loops; used by
+pcre_exec(). */
 
 typedef struct eptrblock {
   struct eptrblock *epb_prev;
@@ -1825,25 +1835,26 @@ typedef struct match_data {
   recursion_info *recursive;    /* Linked list of recursion data */
   void  *callout_data;          /* To pass back to callouts */
   const  uschar *mark;          /* Mark pointer to pass back */
-  const  uschar *once_target;   /* Where to back up to for atomic groups */ 
+  const  uschar *once_target;   /* Where to back up to for atomic groups */
 } match_data;
 
 /* A similar structure is used for the same purpose by the DFA matching
 functions. */
 
 typedef struct dfa_match_data {
-  const uschar *start_code;     /* Start of the compiled pattern */
-  const uschar *start_subject;  /* Start of the subject string */
-  const uschar *end_subject;    /* End of subject string */
-  const uschar *start_used_ptr; /* Earliest consulted character */
-  const uschar *tables;         /* Character tables */
-  int   start_offset;           /* The start offset value */
-  int   moptions;               /* Match options */
-  int   poptions;               /* Pattern options */
-  int    nltype;                /* Newline type */
-  int    nllen;                 /* Newline string length */
-  uschar nl[4];                 /* Newline string when fixed */
-  void  *callout_data;          /* To pass back to callouts */
+  const uschar *start_code;      /* Start of the compiled pattern */
+  const uschar *start_subject;   /* Start of the subject string */
+  const uschar *end_subject;     /* End of subject string */
+  const uschar *start_used_ptr;  /* Earliest consulted character */
+  const uschar *tables;          /* Character tables */
+  int   start_offset;            /* The start offset value */
+  int   moptions;                /* Match options */
+  int   poptions;                /* Pattern options */
+  int    nltype;                 /* Newline type */
+  int    nllen;                  /* Newline string length */
+  uschar nl[4];                  /* Newline string when fixed */
+  void  *callout_data;           /* To pass back to callouts */
+  dfa_recursion_info *recursive; /* Linked list of recursion data */
 } dfa_match_data;
 
 /* Bit definitions for entries in the pcre_ctypes table. */

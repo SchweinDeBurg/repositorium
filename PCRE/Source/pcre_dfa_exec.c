@@ -159,11 +159,11 @@ static const uschar coptable[] = {
   0,                             /* KetRmax                                */
   0,                             /* KetRmin                                */
   0,                             /* KetRpos                                */
+  0,                             /* Reverse                                */
   0,                             /* Assert                                 */
   0,                             /* Assert not                             */
   0,                             /* Assert behind                          */
   0,                             /* Assert behind not                      */
-  0,                             /* Reverse                                */
   0, 0, 0, 0, 0, 0,              /* ONCE, BRA, BRAPOS, CBRA, CBRAPOS, COND */
   0, 0, 0, 0, 0,                 /* SBRA, SBRAPOS, SCBRA, SCBRAPOS, SCOND  */
   0, 0,                          /* CREF, NCREF                            */
@@ -227,11 +227,11 @@ static const uschar poptable[] = {
   0,                             /* KetRmax                                */
   0,                             /* KetRmin                                */
   0,                             /* KetRpos                                */
+  0,                             /* Reverse                                */
   0,                             /* Assert                                 */
   0,                             /* Assert not                             */
   0,                             /* Assert behind                          */
   0,                             /* Assert behind not                      */
-  0,                             /* Reverse                                */
   0, 0, 0, 0, 0, 0,              /* ONCE, BRA, BRAPOS, CBRA, CBRAPOS, COND */
   0, 0, 0, 0, 0,                 /* SBRA, SBRAPOS, SCBRA, SCBRAPOS, SCOND  */
   0, 0,                          /* CREF, NCREF                            */
@@ -328,7 +328,6 @@ Arguments:
   workspace         vector of workspace
   wscount           size of same
   rlevel            function call recursion level
-  recursing         regex recursive call level
 
 Returns:            > 0 => number of match offset pairs placed in offsets
                     = 0 => offsets overflowed; longest matches are present
@@ -392,8 +391,7 @@ internal_dfa_exec(
   int offsetcount,
   int *workspace,
   int wscount,
-  int  rlevel,
-  int  recursing)
+  int  rlevel)
 {
 stateblock *active_states, *new_states, *temp_states;
 stateblock *next_active_state, *next_new_state;
@@ -401,6 +399,8 @@ stateblock *next_active_state, *next_new_state;
 const uschar *ctypes, *lcc, *fcc;
 const uschar *ptr;
 const uschar *end_code, *first_op;
+
+dfa_recursion_info new_recursive;
 
 int active_count, new_count, match_count;
 
@@ -425,8 +425,8 @@ wscount = (wscount - (wscount % (INTS_PER_STATEBLOCK * 2))) /
           (2 * INTS_PER_STATEBLOCK);
 
 DPRINTF(("\n%.*s---------------------\n"
-  "%.*sCall to internal_dfa_exec f=%d r=%d\n",
-  rlevel*2-2, SP, rlevel*2-2, SP, rlevel, recursing));
+  "%.*sCall to internal_dfa_exec f=%d\n",
+  rlevel*2-2, SP, rlevel*2-2, SP, rlevel));
 
 ctypes = md->tables + ctypes_offset;
 lcc = md->tables + lcc_offset;
@@ -540,7 +540,7 @@ else
     {
     int length = 1 + LINK_SIZE +
       ((*this_start_code == OP_CBRA || *this_start_code == OP_SCBRA ||
-        *this_start_code == OP_CBRAPOS || *this_start_code == OP_SCBRAPOS)? 
+        *this_start_code == OP_CBRAPOS || *this_start_code == OP_SCBRAPOS)?
         2:0);
     do
       {
@@ -621,7 +621,7 @@ for (;;)
   for (i = 0; i < active_count; i++)
     {
     stateblock *current_state = active_states + i;
-    BOOL caseless = FALSE; 
+    BOOL caseless = FALSE;
     const uschar *code;
     int state_offset = current_state->offset;
     int count, codevalue, rrc;
@@ -738,11 +738,11 @@ for (;;)
 
 /* ========================================================================== */
       /* Reached a closing bracket. If not at the end of the pattern, carry
-      on with the next opcode. For repeating opcodes, also add the repeat 
-      state. Note that KETRPOS will always be encountered at the end of the 
-      subpattern, because the possessive subpattern repeats are always handled 
+      on with the next opcode. For repeating opcodes, also add the repeat
+      state. Note that KETRPOS will always be encountered at the end of the
+      subpattern, because the possessive subpattern repeats are always handled
       using recursive calls. Thus, it never adds any new states.
-       
+
       At the end of the (sub)pattern, unless we have an empty string and
       PCRE_NOTEMPTY is set, or PCRE_NOTEMPTY_ATSTART is set and we are at the
       start of the subject, save the match data, shifting up all previous
@@ -751,7 +751,7 @@ for (;;)
       case OP_KET:
       case OP_KETRMIN:
       case OP_KETRMAX:
-      case OP_KETRPOS: 
+      case OP_KETRPOS:
       if (code != end_code)
         {
         ADD_ACTIVE(state_offset + 1 + LINK_SIZE, 0);
@@ -2179,7 +2179,7 @@ for (;;)
       checking (c) can be multibyte. */
 
       case OP_NOTI:
-      if (clen > 0 && c != d && c != fcc[d]) 
+      if (clen > 0 && c != d && c != fcc[d])
         { ADD_NEW(state_offset + dlen + 1, 0); }
       break;
 
@@ -2192,7 +2192,7 @@ for (;;)
       case OP_NOTPOSPLUSI:
       caseless = TRUE;
       codevalue -= OP_STARI - OP_STAR;
- 
+
       /* Fall through */
       case OP_PLUS:
       case OP_MINPLUS:
@@ -2521,8 +2521,7 @@ for (;;)
           sizeof(local_offsets)/sizeof(int),    /* size of same */
           local_workspace,                      /* workspace vector */
           sizeof(local_workspace)/sizeof(int),  /* size of same */
-          rlevel,                               /* function recursion level */
-          recursing);                           /* pass on regex recursion */
+          rlevel);                              /* function recursion level */
 
         if (rc == PCRE_ERROR_DFA_UITEM) return rc;
         if ((rc >= 0) == (codevalue == OP_ASSERT || codevalue == OP_ASSERTBACK))
@@ -2561,6 +2560,7 @@ for (;;)
             cb.capture_top      = 1;
             cb.capture_last     = -1;
             cb.callout_data     = md->callout_data;
+            cb.mark             = NULL;   /* No (*MARK) support */
             if ((rrc = (*pcre_callout)(&cb)) < 0) return rrc;   /* Abandon */
             }
           if (rrc > 0) break;                      /* Fail this thread */
@@ -2587,7 +2587,7 @@ for (;;)
           {
           int value = GET2(code, LINK_SIZE+2);
           if (value != RREF_ANY) return PCRE_ERROR_DFA_UCOND;
-          if (recursing > 0)
+          if (md->recursive != NULL)
             { ADD_ACTIVE(state_offset + LINK_SIZE + 4, 0); }
           else { ADD_ACTIVE(state_offset + codelink + LINK_SIZE + 1, 0); }
           }
@@ -2611,8 +2611,7 @@ for (;;)
             sizeof(local_offsets)/sizeof(int),    /* size of same */
             local_workspace,                      /* workspace vector */
             sizeof(local_workspace)/sizeof(int),  /* size of same */
-            rlevel,                               /* function recursion level */
-            recursing);                           /* pass on regex recursion */
+            rlevel);                              /* function recursion level */
 
           if (rc == PCRE_ERROR_DFA_UITEM) return rc;
           if ((rc >= 0) ==
@@ -2627,27 +2626,47 @@ for (;;)
       /*-----------------------------------------------------------------*/
       case OP_RECURSE:
         {
+        dfa_recursion_info *ri;
         int local_offsets[1000];
         int local_workspace[1000];
+        const uschar *callpat = start_code + GET(code, 1);
+        int recno = (callpat == md->start_code)? 0 :
+          GET2(callpat, 1 + LINK_SIZE);
         int rc;
 
-        DPRINTF(("%.*sStarting regex recursion %d\n", rlevel*2-2, SP,
-          recursing + 1));
+        DPRINTF(("%.*sStarting regex recursion\n", rlevel*2-2, SP));
+
+        /* Check for repeating a recursion without advancing the subject
+        pointer. This should catch convoluted mutual recursions. (Some simple
+        cases are caught at compile time.) */
+
+        for (ri = md->recursive; ri != NULL; ri = ri->prevrec)
+          if (recno == ri->group_num && ptr == ri->subject_position)
+            return PCRE_ERROR_RECURSELOOP;
+
+        /* Remember this recursion and where we started it so as to
+        catch infinite loops. */
+
+        new_recursive.group_num = recno;
+        new_recursive.subject_position = ptr;
+        new_recursive.prevrec = md->recursive;
+        md->recursive = &new_recursive;
 
         rc = internal_dfa_exec(
           md,                                   /* fixed match data */
-          start_code + GET(code, 1),            /* this subexpression's code */
+          callpat,                              /* this subexpression's code */
           ptr,                                  /* where we currently are */
           (int)(ptr - start_subject),           /* start offset */
           local_offsets,                        /* offset vector */
           sizeof(local_offsets)/sizeof(int),    /* size of same */
           local_workspace,                      /* workspace vector */
           sizeof(local_workspace)/sizeof(int),  /* size of same */
-          rlevel,                               /* function recursion level */
-          recursing + 1);                       /* regex recurse level */
+          rlevel);                              /* function recursion level */
 
-        DPRINTF(("%.*sReturn from regex recursion %d: rc=%d\n", rlevel*2-2, SP,
-          recursing + 1, rc));
+        md->recursive = new_recursive.prevrec;  /* Done this recursion */
+
+        DPRINTF(("%.*sReturn from regex recursion: rc=%d\n", rlevel*2-2, SP,
+          rc));
 
         /* Ran out of internal offsets */
 
@@ -2684,27 +2703,27 @@ for (;;)
       case OP_SBRAPOS:
       case OP_CBRAPOS:
       case OP_SCBRAPOS:
-      case OP_BRAPOSZERO: 
+      case OP_BRAPOSZERO:
         {
         int charcount, matched_count;
         const uschar *local_ptr = ptr;
         BOOL allow_zero;
-        
+
         if (codevalue == OP_BRAPOSZERO)
           {
           allow_zero = TRUE;
           codevalue = *(++code);  /* Codevalue will be one of above BRAs */
           }
-        else allow_zero = FALSE;          
-        
-        /* Loop to match the subpattern as many times as possible as if it were 
-        a complete pattern. */ 
-           
+        else allow_zero = FALSE;
+
+        /* Loop to match the subpattern as many times as possible as if it were
+        a complete pattern. */
+
         for (matched_count = 0;; matched_count++)
           {
           int local_offsets[2];
           int local_workspace[1000];
-        
+
           int rc = internal_dfa_exec(
             md,                                   /* fixed match data */
             code,                                 /* this subexpression's code */
@@ -2714,33 +2733,32 @@ for (;;)
             sizeof(local_offsets)/sizeof(int),    /* size of same */
             local_workspace,                      /* workspace vector */
             sizeof(local_workspace)/sizeof(int),  /* size of same */
-            rlevel,                               /* function recursion level */
-            recursing);                           /* pass on regex recursion */
-            
+            rlevel);                              /* function recursion level */
+
           /* Failed to match */
-           
-          if (rc < 0) 
+
+          if (rc < 0)
             {
             if (rc != PCRE_ERROR_NOMATCH) return rc;
             break;
-            } 
-          
+            }
+
           /* Matched: break the loop if zero characters matched. */
-           
+
           charcount = local_offsets[1] - local_offsets[0];
-          if (charcount == 0) break; 
+          if (charcount == 0) break;
           local_ptr += charcount;    /* Advance temporary position ptr */
-          }      
+          }
 
         /* At this point we have matched the subpattern matched_count
-        times, and local_ptr is pointing to the character after the end of the 
-        last match. */ 
+        times, and local_ptr is pointing to the character after the end of the
+        last match. */
 
         if (matched_count > 0 || allow_zero)
-          { 
+          {
           const uschar *end_subpattern = code;
           int next_state_offset;
-  
+
           do { end_subpattern += GET(end_subpattern, 1); }
             while (*end_subpattern == OP_ALT);
           next_state_offset =
@@ -2761,14 +2779,14 @@ for (;;)
             {
             const uschar *p = ptr;
             const uschar *pp = local_ptr;
-            charcount = pp - p; 
+            charcount = pp - p;
             while (p < pp) if ((*p++ & 0xc0) == 0x80) charcount--;
             ADD_NEW_DATA(-next_state_offset, 0, (charcount - 1));
             }
-          }   
-        }   
+          }
+        }
       break;
- 
+
       /*-----------------------------------------------------------------*/
       case OP_ONCE:
         {
@@ -2784,8 +2802,7 @@ for (;;)
           sizeof(local_offsets)/sizeof(int),    /* size of same */
           local_workspace,                      /* workspace vector */
           sizeof(local_workspace)/sizeof(int),  /* size of same */
-          rlevel,                               /* function recursion level */
-          recursing);                           /* pass on regex recursion */
+          rlevel);                              /* function recursion level */
 
         if (rc >= 0)
           {
@@ -2875,6 +2892,7 @@ for (;;)
         cb.capture_top      = 1;
         cb.capture_last     = -1;
         cb.callout_data     = md->callout_data;
+        cb.mark             = NULL;   /* No (*MARK) support */
         if ((rrc = (*pcre_callout)(&cb)) < 0) return rrc;   /* Abandon */
         }
       if (rrc == 0)
@@ -3125,7 +3143,7 @@ back the character offset. */
 #ifdef SUPPORT_UTF8
 if (utf8 && (options & PCRE_NO_UTF8_CHECK) == 0)
   {
-  int erroroffset; 
+  int erroroffset;
   int errorcode = _pcre_valid_utf8((uschar *)subject, length, &erroroffset);
   if (errorcode != 0)
     {
@@ -3133,12 +3151,12 @@ if (utf8 && (options & PCRE_NO_UTF8_CHECK) == 0)
       {
       offsets[0] = erroroffset;
       offsets[1] = errorcode;
-      }    
+      }
     return (errorcode <= PCRE_UTF8_ERR5 && (options & PCRE_PARTIAL_HARD) != 0)?
       PCRE_ERROR_SHORTUTF8 : PCRE_ERROR_BADUTF8;
-    }  
+    }
   if (start_offset > 0 && start_offset < length &&
-        (((USPTR)subject)[start_offset] & 0xc0) == 0x80) 
+        (((USPTR)subject)[start_offset] & 0xc0) == 0x80)
     return PCRE_ERROR_BADUTF8_OFFSET;
   }
 #endif
@@ -3377,6 +3395,7 @@ for (;;)
   /* OK, now we can do the business */
 
   md->start_used_ptr = current_subject;
+  md->recursive = NULL;
 
   rc = internal_dfa_exec(
     md,                                /* fixed match data */
@@ -3387,8 +3406,7 @@ for (;;)
     offsetcount,                       /* size of same */
     workspace,                         /* workspace vector */
     wscount,                           /* size of same */
-    0,                                 /* function recurse level */
-    0);                                /* regex recurse level */
+    0);                                /* function recurse level */
 
   /* Anything other than "no match" means we are done, always; otherwise, carry
   on only if not anchored. */
