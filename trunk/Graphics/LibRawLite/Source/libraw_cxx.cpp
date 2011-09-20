@@ -822,6 +822,13 @@ int LibRaw::dcraw_document_mode_processing(void)
         if (O.user_black >= 0) 
             C.black = O.user_black;
         subtract_black();
+        
+        int cropped = 0;
+        if (~O.cropbox[2] && ~O.cropbox[3])
+            {
+                crop_pixels();
+                cropped = 1;
+            }
 
         if(IO.fwidth) 
             rotate_fuji_raw();
@@ -842,17 +849,16 @@ int LibRaw::dcraw_document_mode_processing(void)
 
         O.use_fuji_rotate = 0;
 
-        if(O.bad_pixels) 
+        if(O.bad_pixels && !cropped) 
             {
                 bad_pixels(O.bad_pixels);
                 SET_PROC_FLAG(LIBRAW_PROGRESS_BAD_PIXELS);
             }
-        if (O.dark_frame)
+        if (O.dark_frame && !cropped)
             {
                 subtract (O.dark_frame);
                 SET_PROC_FLAG(LIBRAW_PROGRESS_DARK_FRAME);
             }
-        if (~O.cropbox[2] && ~O.cropbox[3]) crop_pixels();
 
 
         adjust_maximum();
@@ -1243,7 +1249,7 @@ int LibRaw::dcraw_ppm_tiff_writer(const char *filename)
 
     if(!f) 
         return errno;
-        
+
     try {
         if(!libraw_internal_data.output_data.histogram)
             {
@@ -1789,6 +1795,14 @@ int LibRaw::dcraw_process(void)
         if (O.user_black >= 0) C.black = O.user_black;
         subtract_black();
 
+        int cropped = 0;
+        if (~O.cropbox[2] && ~O.cropbox[3])
+            {
+                crop_pixels();
+                cropped=1;
+            }
+
+
         if(IO.fwidth) 
             rotate_fuji_raw();
 
@@ -1796,18 +1810,18 @@ int LibRaw::dcraw_process(void)
         if(O.half_size) 
             O.four_color_rgb = 1;
 
-        if(O.bad_pixels) 
+        if(O.bad_pixels && !cropped) 
             {
                 bad_pixels(O.bad_pixels);
                 SET_PROC_FLAG(LIBRAW_PROGRESS_BAD_PIXELS);
             }
-        if (O.dark_frame)
+
+        if (O.dark_frame && !cropped)
             {
                 subtract (O.dark_frame);
                 SET_PROC_FLAG(LIBRAW_PROGRESS_DARK_FRAME);
             }
 
-        if (~O.cropbox[2] && ~O.cropbox[3]) crop_pixels();
 
         quality = 2 + !IO.fuji_width;
 
