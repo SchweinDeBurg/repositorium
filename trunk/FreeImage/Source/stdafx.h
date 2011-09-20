@@ -81,6 +81,8 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #define NOMINMAX
 using std::min;
 using std::max;
+#define _MSWSOCK_
+#include <winsock2.h>
 #include <windows.h>
 #include <tchar.h>
 #include <atlbase.h>
