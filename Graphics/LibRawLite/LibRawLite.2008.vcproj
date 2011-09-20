@@ -45,7 +45,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;LIBRAWLITE_LIB_BUILD;_CRT_SECURE_NO_WARNINGS;LIBRAW_NODLL;NO_LCMS;LIBRAW_LIBRARY_BUILD"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;LIBRAWLITE_LIB_BUILD;_CRT_SECURE_NO_WARNINGS;LIBRAW_NODLL;NO_LCMS"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -60,7 +60,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
+				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4700;4701;4702;4706;4804"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -123,7 +123,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;LIBRAWLITE_LIB_BUILD;_CRT_SECURE_NO_WARNINGS;LIBRAW_NODLL;NO_LCMS;LIBRAW_LIBRARY_BUILD"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;LIBRAWLITE_LIB_BUILD;_CRT_SECURE_NO_WARNINGS;LIBRAW_NODLL;NO_LCMS"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -135,7 +135,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
+				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4700;4701;4702;4706;4804"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -197,7 +197,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;LIBRAWLITE_LIB_BUILD;_CRT_SECURE_NO_WARNINGS;LIBRAW_NODLL;NO_LCMS;LIBRAW_LIBRARY_BUILD"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;LIBRAWLITE_LIB_BUILD;_CRT_SECURE_NO_WARNINGS;LIBRAW_NODLL;NO_LCMS"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -212,7 +212,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
+				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4700;4701;4702;4706;4804"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -275,7 +275,7 @@
 				Optimization="1"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;LIBRAWLITE_LIB_BUILD;_CRT_SECURE_NO_WARNINGS;LIBRAW_NODLL;NO_LCMS;LIBRAW_LIBRARY_BUILD"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;LIBRAWLITE_LIB_BUILD;_CRT_SECURE_NO_WARNINGS;LIBRAW_NODLL;NO_LCMS"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
@@ -287,7 +287,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4701;4702;4706;4804"
+				DisableSpecificWarnings="4005;4018;4100;4101;4127;4146;4189;4244;4245;4305;4309;4389;4554;4700;4701;4702;4706;4804"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -356,6 +356,10 @@
 					RelativePath=".\Source\libraw_cxx.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Source\libraw_datastream.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -368,6 +372,10 @@
 				>
 				<File
 					RelativePath=".\Source\internal\defines.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\internal\libraw_bytebuffer.h"
 					>
 				</File>
 				<File
