@@ -346,6 +346,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\pcre_jit_compile.c"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\pcre_maketables.c"
 				>
 			</File>
