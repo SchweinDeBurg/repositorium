@@ -2295,8 +2295,13 @@ I think.
 A user pointed out that PCRE was rejecting [:a[:digit:]] whereas Perl was not.
 It seems that the appearance of a nested POSIX class supersedes an apparent
 external class. For example, [:a[:digit:]b:] matches "a", "b", ":", or
-a digit. Also, unescaped square brackets may also appear as part of class
-names. For example, [:a[:abc]b:] gives unknown class "[:abc]b:]"in Perl.
+a digit.
+
+In Perl, unescaped square brackets may also appear as part of class names. For
+example, [:a[:abc]b:] gives unknown POSIX class "[:abc]b:]". However, for
+[:a[:abc]b][b:] it gives unknown POSIX class "[:abc]b][b:]", which does not
+seem right at all. PCRE does not allow closing square brackets in POSIX class
+names.
 
 Arguments:
   ptr      pointer to the initial [
@@ -2314,6 +2319,7 @@ for (++ptr; *ptr != 0; ptr++)
   {
   if (*ptr == CHAR_BACKSLASH && ptr[1] == CHAR_RIGHT_SQUARE_BRACKET)
     ptr++;
+  else if (*ptr == CHAR_RIGHT_SQUARE_BRACKET) return FALSE;
   else
     {
     if (*ptr == terminator && ptr[1] == CHAR_RIGHT_SQUARE_BRACKET)
@@ -3088,7 +3094,6 @@ uschar *class_utf8data_base;
 uschar utf8_char[6];
 #else
 BOOL utf8 = FALSE;
-uschar *utf8_char = NULL;
 #endif
 
 #ifdef PCRE_DEBUG
@@ -5044,6 +5049,9 @@ for (;; ptr++)
               PUT2INC(code, 0, oc->number);
               }
             *code++ = (cd->assert_depth > 0)? OP_ASSERT_ACCEPT : OP_ACCEPT;
+            
+            /* Do not set firstbyte after *ACCEPT */
+            if (firstbyte == REQ_UNSET) firstbyte = REQ_NONE;
             }
 
           /* Handle other cases with/without an argument */
@@ -5060,6 +5068,7 @@ for (;; ptr++)
               {
               PUT(code, 0, code - bcptr->current_branch - 1);
               code += LINK_SIZE;
+              cd->external_flags |= PCRE_HASTHEN; 
               }
             }
 
@@ -6322,7 +6331,7 @@ for (;; ptr++)
     byte, set it from this character, but revert to none on a zero repeat.
     Otherwise, leave the firstbyte value alone, and don't change it on a zero
     repeat. */
-
+    
     if (firstbyte == REQ_UNSET)
       {
       zerofirstbyte = REQ_NONE;
@@ -6339,7 +6348,7 @@ for (;; ptr++)
       else firstbyte = reqbyte = REQ_NONE;
       }
 
-    /* firstbyte was previously set; we can set reqbyte only the length is
+    /* firstbyte was previously set; we can set reqbyte only if the length is
     1 or the matching is caseful. */
 
     else
@@ -7286,7 +7295,7 @@ re->top_bracket = cd->bracount;
 re->top_backref = cd->top_backref;
 re->flags = cd->external_flags;
 
-if (cd->had_accept) reqbyte = -1;   /* Must disable after (*ACCEPT) */
+if (cd->had_accept) reqbyte = REQ_NONE;   /* Must disable after (*ACCEPT) */
 
 /* If not reached end of pattern on success, there's an excess bracket. */
 
