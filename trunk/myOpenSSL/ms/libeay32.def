@@ -1805,11 +1805,16 @@ EXPORTS
     OPENSSL_asc2uni                         @1282
     OPENSSL_cleanse                         @3245
     OPENSSL_config                          @3188
+    OPENSSL_gmtime                          @4567
+    OPENSSL_gmtime_adj                      @4568
     OPENSSL_ia32cap_loc                     @3467
     OPENSSL_isservice                       @4048
     OPENSSL_issetugid                       @2465
     OPENSSL_load_builtin_modules            @3214
+    OPENSSL_memcmp                          @4565
     OPENSSL_no_config                       @3228
+    OPENSSL_strcasecmp                      @4564
+    OPENSSL_strncasecmp                     @4566
     OPENSSL_uni2asc                         @1283
     OTHERNAME_cmp                           @4224
     OTHERNAME_free                          @2112
