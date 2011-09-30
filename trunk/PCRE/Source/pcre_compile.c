@@ -5049,7 +5049,7 @@ for (;; ptr++)
               PUT2INC(code, 0, oc->number);
               }
             *code++ = (cd->assert_depth > 0)? OP_ASSERT_ACCEPT : OP_ACCEPT;
-            
+
             /* Do not set firstbyte after *ACCEPT */
             if (firstbyte == REQ_UNSET) firstbyte = REQ_NONE;
             }
@@ -5068,7 +5068,7 @@ for (;; ptr++)
               {
               PUT(code, 0, code - bcptr->current_branch - 1);
               code += LINK_SIZE;
-              cd->external_flags |= PCRE_HASTHEN; 
+              cd->external_flags |= PCRE_HASTHEN;
               }
             }
 
@@ -6331,7 +6331,7 @@ for (;; ptr++)
     byte, set it from this character, but revert to none on a zero repeat.
     Otherwise, leave the firstbyte value alone, and don't change it on a zero
     repeat. */
-    
+
     if (firstbyte == REQ_UNSET)
       {
       zerofirstbyte = REQ_NONE;
