@@ -1,0 +1,20 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{D4EFD700-BBAA-11D2-8EE0-00C04F5E0C38}") = "CGridListCtrlEx", "CGridListCtrlEx.HWProj", "{581F8192-7045-4D98-8054-A07F77AE73D5}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{581F8192-7045-4D98-8054-A07F77AE73D5}.Release.ActiveCfg = Release
+		{581F8192-7045-4D98-8054-A07F77AE73D5}.Release.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
