@@ -1,0 +1,842 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+	<param name="Auto Generated" value="Yes">
+</OBJECT>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Class List">
+		<param name="Local" value="annotated.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CViewConfigSection Class Reference">
+		<param name="Local" value="class_c_view_config_section.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_view_config_section.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_view_config_section.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_view_config_section.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_view_config_section.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Constructor &amp;&amp; Destructor Documentation">
+			<param name="Local" value="class_c_view_config_section.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_view_config_section.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CViewConfigSectionDefault Class Reference">
+		<param name="Local" value="class_c_view_config_section_default.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Classes">
+			<param name="Local" value="class_c_view_config_section_default.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_view_config_section_default.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_view_config_section_default.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_view_config_section_default.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Constructor &amp;&amp; Destructor Documentation">
+			<param name="Local" value="class_c_view_config_section_default.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_view_config_section_default.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CViewConfigSectionDefault::CViewConfigSectionLocal Class Reference">
+		<param name="Local" value="class_c_view_config_section_default_1_1_c_view_config_section_local.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_view_config_section_default_1_1_c_view_config_section_local.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_view_config_section_default_1_1_c_view_config_section_local.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_view_config_section_default_1_1_c_view_config_section_local.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_view_config_section_default_1_1_c_view_config_section_local.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Constructor &amp;&amp; Destructor Documentation">
+			<param name="Local" value="class_c_view_config_section_default_1_1_c_view_config_section_local.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_view_config_section_default_1_1_c_view_config_section_local.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CViewConfigSectionDefault::CViewConfigSectionLocal Member List">
+		<param name="Local" value="class_c_view_config_section_default_1_1_c_view_config_section_local-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CViewConfigSectionDefault Member List">
+		<param name="Local" value="class_c_view_config_section_default-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CViewConfigSectionProfiles Class Reference">
+		<param name="Local" value="class_c_view_config_section_profiles.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_view_config_section_profiles.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_view_config_section_profiles.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_view_config_section_profiles.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_view_config_section_profiles.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Constructor &amp;&amp; Destructor Documentation">
+			<param name="Local" value="class_c_view_config_section_profiles.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_view_config_section_profiles.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CViewConfigSectionProfiles Member List">
+		<param name="Local" value="class_c_view_config_section_profiles-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CViewConfigSectionWinApp Class Reference">
+		<param name="Local" value="class_c_view_config_section_win_app.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_view_config_section_win_app.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_view_config_section_win_app.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_view_config_section_win_app.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Constructor &amp;&amp; Destructor Documentation">
+			<param name="Local" value="class_c_view_config_section_win_app.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_view_config_section_win_app.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CViewConfigSectionWinApp Member List">
+		<param name="Local" value="class_c_view_config_section_win_app-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CViewConfigSection Member List">
+		<param name="Local" value="class_c_view_config_section-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTrait Class Reference">
+		<param name="Local" value="class_c_grid_column_trait.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Classes">
+			<param name="Local" value="class_c_grid_column_trait.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_column_trait.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_column_trait.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_column_trait.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_column_trait.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitCombo Class Reference">
+		<param name="Local" value="class_c_grid_column_trait_combo.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_combo.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_combo.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_column_trait_combo.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_column_trait_combo.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_column_trait_combo.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitCombo Member List">
+		<param name="Local" value="class_c_grid_column_trait_combo-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitDateTime Class Reference">
+		<param name="Local" value="class_c_grid_column_trait_date_time.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_date_time.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_date_time.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_column_trait_date_time.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_column_trait_date_time.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_column_trait_date_time.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitDateTime Member List">
+		<param name="Local" value="class_c_grid_column_trait_date_time-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitEdit Class Reference">
+		<param name="Local" value="class_c_grid_column_trait_edit.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_edit.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_edit.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_column_trait_edit.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_column_trait_edit.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_column_trait_edit.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitEdit Member List">
+		<param name="Local" value="class_c_grid_column_trait_edit-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitImage Class Reference">
+		<param name="Local" value="class_c_grid_column_trait_image.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_image.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Static Public Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_image.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_image.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_column_trait_image.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_column_trait_image.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Constructor &amp;&amp; Destructor Documentation">
+			<param name="Local" value="class_c_grid_column_trait_image.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_column_trait_image.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitImage Member List">
+		<param name="Local" value="class_c_grid_column_trait_image-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitText Class Reference">
+		<param name="Local" value="class_c_grid_column_trait_text.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_column_trait_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_column_trait_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_column_trait_text.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitText Member List">
+		<param name="Local" value="class_c_grid_column_trait_text-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitVisitor Class Reference">
+		<param name="Local" value="class_c_grid_column_trait_visitor.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_column_trait_visitor.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_column_trait_visitor.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTraitVisitor Member List">
+		<param name="Local" value="class_c_grid_column_trait_visitor-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTrait Member List">
+		<param name="Local" value="class_c_grid_column_trait-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridEditorComboBox Class Reference">
+		<param name="Local" value="class_c_grid_editor_combo_box.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_editor_combo_box.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_editor_combo_box.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_editor_combo_box.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_editor_combo_box.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_editor_combo_box.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridEditorComboBoxEdit Class Reference">
+		<param name="Local" value="class_c_grid_editor_combo_box_edit.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_editor_combo_box_edit.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_editor_combo_box_edit.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_editor_combo_box_edit.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridEditorComboBoxEdit Member List">
+		<param name="Local" value="class_c_grid_editor_combo_box_edit-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridEditorComboBox Member List">
+		<param name="Local" value="class_c_grid_editor_combo_box-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridEditorDateTimeCtrl Class Reference">
+		<param name="Local" value="class_c_grid_editor_date_time_ctrl.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_editor_date_time_ctrl.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_editor_date_time_ctrl.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_editor_date_time_ctrl.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_editor_date_time_ctrl.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Constructor &amp;&amp; Destructor Documentation">
+			<param name="Local" value="class_c_grid_editor_date_time_ctrl.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_editor_date_time_ctrl.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridEditorDateTimeCtrl Member List">
+		<param name="Local" value="class_c_grid_editor_date_time_ctrl-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridEditorText Class Reference">
+		<param name="Local" value="class_c_grid_editor_text.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_editor_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_editor_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_editor_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_editor_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_editor_text.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridEditorText Member List">
+		<param name="Local" value="class_c_grid_editor_text-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridListCtrlEx Class Reference">
+		<param name="Local" value="class_c_grid_list_ctrl_ex.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_list_ctrl_ex.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Static Public Member Functions">
+			<param name="Local" value="class_c_grid_list_ctrl_ex.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_list_ctrl_ex.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_list_ctrl_ex.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Friends">
+			<param name="Local" value="class_c_grid_list_ctrl_ex.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_list_ctrl_ex.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_list_ctrl_ex.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridListCtrlEx Member List">
+		<param name="Local" value="class_c_grid_list_ctrl_ex-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridListCtrlGroups Class Reference">
+		<param name="Local" value="class_c_grid_list_ctrl_groups.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_list_ctrl_groups.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_list_ctrl_groups.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_list_ctrl_groups.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_list_ctrl_groups.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_list_ctrl_groups.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridListCtrlGroups Member List">
+		<param name="Local" value="class_c_grid_list_ctrl_groups-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridRowTrait Class Reference">
+		<param name="Local" value="class_c_grid_row_trait.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_row_trait.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_row_trait.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_row_trait.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridRowTraitText Class Reference">
+		<param name="Local" value="class_c_grid_row_trait_text.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_row_trait_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_row_trait_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Attributes">
+			<param name="Local" value="class_c_grid_row_trait_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_row_trait_text.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_row_trait_text.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridRowTraitText Member List">
+		<param name="Local" value="class_c_grid_row_trait_text-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridRowTraitVisitor Class Reference">
+		<param name="Local" value="class_c_grid_row_trait_visitor.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_row_trait_visitor.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_row_trait_visitor.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridRowTraitVisitor Member List">
+		<param name="Local" value="class_c_grid_row_trait_visitor-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridRowTraitXP Class Reference">
+		<param name="Local" value="class_c_grid_row_trait_x_p.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Member Functions">
+			<param name="Local" value="class_c_grid_row_trait_x_p.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Protected Member Functions">
+			<param name="Local" value="class_c_grid_row_trait_x_p.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Detailed Description">
+			<param name="Local" value="class_c_grid_row_trait_x_p.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Function Documentation">
+			<param name="Local" value="class_c_grid_row_trait_x_p.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridRowTraitXP Member List">
+		<param name="Local" value="class_c_grid_row_trait_x_p-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridRowTrait Member List">
+		<param name="Local" value="class_c_grid_row_trait-members.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Class Index">
+		<param name="Local" value="classes.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="- a -">
+			<param name="Local" value="functions.html">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- j -">
+				<param name="Local" value="functions_0x6a.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- l -">
+				<param name="Local" value="functions_0x6c.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- m -">
+				<param name="Local" value="functions_0x6d.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- o -">
+				<param name="Local" value="functions_0x6f.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- ~ -">
+				<param name="Local" value="functions_0x7e.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- c -">
+				<param name="Local" value="functions_0x63.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- d -">
+				<param name="Local" value="functions_0x64.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- e -">
+				<param name="Local" value="functions_0x65.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- g -">
+				<param name="Local" value="functions_0x67.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- h -">
+				<param name="Local" value="functions_0x68.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- i -">
+				<param name="Local" value="functions_0x69.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- p -">
+				<param name="Local" value="functions_0x70.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- r -">
+				<param name="Local" value="functions_0x72.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- s -">
+				<param name="Local" value="functions_0x73.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- u -">
+				<param name="Local" value="functions_0x75.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- w -">
+				<param name="Local" value="functions_0x77.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- a -">
+				<param name="Local" value="functions_func.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- j -">
+				<param name="Local" value="functions_func_0x6a.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- l -">
+				<param name="Local" value="functions_func_0x6c.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- m -">
+				<param name="Local" value="functions_func_0x6d.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- o -">
+				<param name="Local" value="functions_func_0x6f.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- ~ -">
+				<param name="Local" value="functions_func_0x7e.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- c -">
+				<param name="Local" value="functions_func_0x63.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- d -">
+				<param name="Local" value="functions_func_0x64.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- e -">
+				<param name="Local" value="functions_func_0x65.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- g -">
+				<param name="Local" value="functions_func_0x67.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- h -">
+				<param name="Local" value="functions_func_0x68.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- i -">
+				<param name="Local" value="functions_func_0x69.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- p -">
+				<param name="Local" value="functions_func_0x70.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- r -">
+				<param name="Local" value="functions_func_0x72.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- s -">
+				<param name="Local" value="functions_func_0x73.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- u -">
+				<param name="Local" value="functions_func_0x75.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- w -">
+				<param name="Local" value="functions_func_0x77.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="- m -">
+				<param name="Local" value="functions_vars.html">
+				</OBJECT>
+		</UL>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Class Hierarchy">
+		<param name="Local" value="hierarchy.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Introduction">
+		<param name="Local" value="index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTrait::ColumnState Struct Reference">
+		<param name="Local" value="struct_c_grid_column_trait_1_1_column_state.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Public Attributes">
+			<param name="Local" value="struct_c_grid_column_trait_1_1_column_state.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Member Data Documentation">
+			<param name="Local" value="struct_c_grid_column_trait_1_1_column_state.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CGridColumnTrait::ColumnState Member List">
+		<param name="Local" value="struct_c_grid_column_trait_1_1_column_state-members.html">
+		</OBJECT>
+</UL>
+</BODY></HTML>
