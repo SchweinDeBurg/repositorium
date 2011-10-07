@@ -19,8 +19,8 @@
    *If you have not modified dcraw.c in any way, a link to my
    homepage qualifies as "full source code".
 
-   $Revision: 1.23 $
-   $Date: 2011/09/07 17:51:40 $
+   $Revision: 1.24 $
+   $Date: 2011/10/02 12:45:59 $
  */
 
 #define DCRAW_VERSION "9.10"
@@ -51,10 +51,10 @@
 #include <jasper/jasper.h>	/* Decode RED camera movies */
 #endif
 #ifndef NO_JPEG
-#include "../../../libjpeg/Source/jpeglib.h"
+#include "../../../libjpeg/Source/jpeglib.h"		/* Decode compressed Kodak DC120 photos */
 #endif
 #ifndef NO_LCMS
-#include <lcms.h>
+#include <lcms.h>		/* Support color profiles */
 #endif
 #ifdef LOCALEDIR
 #include <libintl.h>
