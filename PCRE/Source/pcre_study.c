@@ -423,7 +423,6 @@ for (;;)
 
     case OP_RECURSE:
     cs = ce = (uschar *)startcode + GET(cc, 1);
-    if (cs == NULL) return -2;
     do ce += GET(ce, 1); while (*ce == OP_ALT);
     if ((cc > cs && cc < ce) || recurse_depth > 10)
       had_recurse = TRUE;
@@ -492,11 +491,8 @@ for (;;)
     case OP_MARK:
     case OP_PRUNE_ARG:
     case OP_SKIP_ARG:
-    cc += _pcre_OP_lengths[op] + cc[1];
-    break;
-
     case OP_THEN_ARG:
-    cc += _pcre_OP_lengths[op] + cc[1+LINK_SIZE];
+    cc += _pcre_OP_lengths[op] + cc[1];
     break;
 
     /* The remaining opcodes are just skipped over. */
