@@ -308,13 +308,15 @@ int LibRaw::get_decoder_info(libraw_decoder_info_t* d_info)
         {
             // Check rbayer
             d_info->decoder_name = "adobe_dng_load_raw_lj()"; 
-            d_info->decoder_flags = imgdata.idata.filters ? LIBRAW_DECODER_FLATFIELD : LIBRAW_DECODER_4COMPONENT;
+            d_info->decoder_flags = imgdata.idata.filters ? LIBRAW_DECODER_FLATFIELD : LIBRAW_DECODER_4COMPONENT ;
+            d_info->decoder_flags |= LIBRAW_DECODER_HASCURVE;
         }
     else if (load_raw == &LibRaw::adobe_dng_load_raw_nc)
         {
             // Check rbayer
             d_info->decoder_name = "adobe_dng_load_raw_nc()"; 
             d_info->decoder_flags = imgdata.idata.filters ? LIBRAW_DECODER_FLATFIELD : LIBRAW_DECODER_4COMPONENT;
+            d_info->decoder_flags |= LIBRAW_DECODER_HASCURVE;
         }
     else if (load_raw == &LibRaw::canon_600_load_raw) 
         {
@@ -335,6 +337,7 @@ int LibRaw::get_decoder_info(libraw_decoder_info_t* d_info)
         {
             d_info->decoder_name = "eight_bit_load_raw()";
             d_info->decoder_flags = LIBRAW_DECODER_FLATFIELD;
+            d_info->decoder_flags |= LIBRAW_DECODER_HASCURVE;
         }
     else if (load_raw == &LibRaw::foveon_load_raw )
         {
@@ -360,11 +363,13 @@ int LibRaw::get_decoder_info(libraw_decoder_info_t* d_info)
         {
             d_info->decoder_name = "kodak_262_load_raw()"; // UNTESTED!
             d_info->decoder_flags = LIBRAW_DECODER_FLATFIELD;
+            d_info->decoder_flags |= LIBRAW_DECODER_HASCURVE;
         }
     else if (load_raw == &LibRaw::kodak_65000_load_raw )
         {
             d_info->decoder_name = "kodak_65000_load_raw()";
             d_info->decoder_flags = LIBRAW_DECODER_FLATFIELD;
+            d_info->decoder_flags |= LIBRAW_DECODER_HASCURVE;
         }
     else if (load_raw == &LibRaw::kodak_dc120_load_raw )
         {
@@ -392,12 +397,14 @@ int LibRaw::get_decoder_info(libraw_decoder_info_t* d_info)
         {
             d_info->decoder_name = "kodak_yrgb_load_raw()"; 
             d_info->decoder_flags = LIBRAW_DECODER_4COMPONENT;
+            d_info->decoder_flags |= LIBRAW_DECODER_HASCURVE;
         }
     else if (load_raw == &LibRaw::kodak_ycbcr_load_raw )
         {
             // UNTESTED
             d_info->decoder_name = "kodak_ycbcr_load_raw()"; 
             d_info->decoder_flags = LIBRAW_DECODER_4COMPONENT;
+            d_info->decoder_flags |= LIBRAW_DECODER_HASCURVE;
         }
     else if (load_raw == &LibRaw::leaf_hdr_load_raw )
         {
@@ -408,7 +415,7 @@ int LibRaw::get_decoder_info(libraw_decoder_info_t* d_info)
         {
             // Check rbayer
             d_info->decoder_name = "lossless_jpeg_load_raw()"; 
-            d_info->decoder_flags = LIBRAW_DECODER_FLATFIELD;
+            d_info->decoder_flags = LIBRAW_DECODER_FLATFIELD | LIBRAW_DECODER_HASCURVE;
         }
     else if (load_raw == &LibRaw::minolta_rd175_load_raw ) 
         {  
@@ -502,6 +509,7 @@ int LibRaw::get_decoder_info(libraw_decoder_info_t* d_info)
         {
             d_info->decoder_name = "sony_arw2_load_raw()";
             d_info->decoder_flags = LIBRAW_DECODER_FLATFIELD;
+            d_info->decoder_flags |= LIBRAW_DECODER_HASCURVE;
         }
     else if (load_raw == &LibRaw::unpacked_load_raw )
         {
@@ -512,6 +520,7 @@ int LibRaw::get_decoder_info(libraw_decoder_info_t* d_info)
         {
             d_info->decoder_name = "redcine_load_raw()";
             d_info->decoder_flags = LIBRAW_DECODER_FLATFIELD; 
+            d_info->decoder_flags |= LIBRAW_DECODER_HASCURVE;
         }
     else
         {
@@ -2399,6 +2408,7 @@ static const char  *static_camera_list[] =
 "Fuji FinePix HS10/HS11",
 "Fuji FinePix HS20EXR",
 "Fuji FinePix F550EXR",
+"Fuji FinePix F600EXR",
 "Fuji FinePix X100",
 "Fuji IS-1",
 "Hasselblad CFV",
@@ -2551,6 +2561,7 @@ static const char  *static_camera_list[] =
 "Nikon E8800",
 "Nikon Coolpix P6000",
 "Nikon Coolpix P7000",
+"Nikon Coolpix P7100",
 "Nikon Coolpix S6 (\"DIAG RAW\" hack)",
 "Nokia N95",
 "Nokia X2",
@@ -2584,6 +2595,8 @@ static const char  *static_camera_list[] =
 "Olympus E-PL1",
 "Olympus E-PL1s",
 "Olympus E-PL2",
+"Olympus E-PL3",
+"Olympus E-PM1",
 "Olympus SP310",
 "Olympus SP320",
 "Olympus SP350",
@@ -2601,6 +2614,7 @@ static const char  *static_camera_list[] =
 "Panasonic DMC-FZ40",
 "Panasonic DMC-FZ50",
 "Panasonic DMC-FZ100",
+"Panasonic DMC-FZ150",
 "Panasonic DMC-FX150",
 "Panasonic DMC-G1",
 "Panasonic DMC-G10",
@@ -2702,10 +2716,13 @@ static const char  *static_camera_list[] =
 "Sony DSLR-A900",
 "Sony NEX-3",
 "Sony NEX-5",
+"Sony NEX-5N",
 "Sony NEX-C3",
 "Sony SLT-A33",
 "Sony SLT-A35",
 "Sony SLT-A55V",
+"Sony SLT-A65V",
+"Sony SLT-A77V",
 "Sony XCD-SX910CR",
 "STV680 VGA",
    NULL
