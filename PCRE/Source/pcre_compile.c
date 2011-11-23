@@ -412,6 +412,8 @@ static const char error_texts[] =
   "\\k is not followed by a braced, angle-bracketed, or quoted name\0"
   /* 70 */
   "internal error: unknown opcode in find_fixedlength()\0"
+  "\\N is not supported in a class\0" 
+  "too many forward references\0" 
   ;
 
 /* Table to identify digits and hex digits. This is used when compiling
@@ -1528,7 +1530,7 @@ Arguments:
 
 Returns:   the fixed length,
              or -1 if there is no fixed length,
-             or -2 if \C was encountered
+             or -2 if \C was encountered (in UTF-8 mode only)
              or -3 if an OP_RECURSE item was encountered and atend is FALSE
              or -4 if an unknown opcode was encountered (internal error)
 */
@@ -1702,7 +1704,8 @@ for (;;)
     cc++;
     break;
 
-    /* The single-byte matcher isn't allowed */
+    /* The single-byte matcher isn't allowed. This only happens in UTF-8 mode; 
+    otherwise \C is coded as OP_ALLANY. */
 
     case OP_ANYBYTE:
     return -2;
@@ -3354,7 +3357,8 @@ for (;; ptr++)
       }
 
     *lengthptr += (int)(code - last_code);
-    DPRINTF(("length=%d added %d c=%c\n", *lengthptr, code - last_code, c));
+    DPRINTF(("length=%d added %d c=%c\n", *lengthptr, (int)(code - last_code),
+      c));
 
     /* If "previous" is set and it is not at the start of the work space, move
     it back to there, in order to avoid filling up the work space. Otherwise,
@@ -3770,6 +3774,11 @@ for (;; ptr++)
         if (*errorcodeptr != 0) goto FAILED;
 
         if (-c == ESC_b) c = CHAR_BS;    /* \b is backspace in a class */
+        else if (-c == ESC_N)            /* \N is not supported in a class */
+          {
+          *errorcodeptr = ERR71;
+          goto FAILED;  
+          }   
         else if (-c == ESC_Q)            /* Handle start of quoted string */
           {
           if (ptr[1] == CHAR_BACKSLASH && ptr[2] == CHAR_E)
@@ -4428,7 +4437,7 @@ for (;; ptr++)
     past, but it no longer happens for non-repeated recursions. In fact, the
     repeated ones could be re-implemented independently so as not to need this,
     but for the moment we rely on the code for repeating groups. */
-
+    
     if (*previous == OP_RECURSE)
       {
       memmove(previous + 1 + LINK_SIZE, previous, 1 + LINK_SIZE);
@@ -4879,7 +4888,8 @@ for (;; ptr++)
             *lengthptr += delta;
             }
 
-          /* This is compiling for real */
+          /* This is compiling for real. If there is a set first byte for
+          the group, and we have not yet set a "required byte", set it. */
 
           else
             {
@@ -4891,6 +4901,11 @@ for (;; ptr++)
               memcpy(code, previous, len);
               for (hc = save_hwm; hc < this_hwm; hc += LINK_SIZE)
                 {
+                if (cd->hwm >= cd->start_workspace + WORK_SIZE_CHECK)
+                  {
+                  *errorcodeptr = ERR72;
+                  goto FAILED;  
+                  }   
                 PUT(cd->hwm, 0, GET(hc, 0) + len);
                 cd->hwm += LINK_SIZE;
                 }
@@ -4918,7 +4933,7 @@ for (;; ptr++)
         add 2 + 2*LINKSIZE to allow for the nesting that occurs. Do some
         paranoid checks to avoid integer overflow. The INT64_OR_DOUBLE type is
         a 64-bit integer type when available, otherwise double. */
-
+        
         if (lengthptr != NULL && repeat_max > 0)
           {
           int delta = repeat_max * (length_prevgroup + 1 + 2 + 2*LINK_SIZE) -
@@ -4958,6 +4973,11 @@ for (;; ptr++)
           memcpy(code, previous, len);
           for (hc = save_hwm; hc < this_hwm; hc += LINK_SIZE)
             {
+            if (cd->hwm >= cd->start_workspace + WORK_SIZE_CHECK)
+              {
+              *errorcodeptr = ERR72;
+              goto FAILED;  
+              }   
             PUT(cd->hwm, 0, GET(hc, 0) + len + ((i != 0)? 2+LINK_SIZE : 1));
             cd->hwm += LINK_SIZE;
             }
@@ -4986,43 +5006,49 @@ for (;; ptr++)
       ONCE brackets can be converted into non-capturing brackets, as the
       behaviour of (?:xx)++ is the same as (?>xx)++ and this saves having to
       deal with possessive ONCEs specially.
+      
+      Otherwise, when we are doing the actual compile phase, check to see
+      whether this group is one that could match an empty string. If so,
+      convert the initial operator to the S form (e.g. OP_BRA -> OP_SBRA) so
+      that runtime checking can be done. [This check is also applied to ONCE
+      groups at runtime, but in a different way.]
 
-      Otherwise, if the quantifier was possessive, we convert the BRA code to
-      the POS form, and the KET code to KETRPOS. (It turns out to be convenient
-      at runtime to detect this kind of subpattern at both the start and at the
-      end.) The use of special opcodes makes it possible to reduce greatly the
-      stack usage in pcre_exec(). If the group is preceded by OP_BRAZERO,
-      convert this to OP_BRAPOSZERO. Then cancel the possessive flag so that
-      the default action below, of wrapping everything inside atomic brackets,
-      does not happen.
-
-      Then, when we are doing the actual compile phase, check to see whether
-      this group is one that could match an empty string. If so, convert the
-      initial operator to the S form (e.g. OP_BRA -> OP_SBRA) so that runtime
-      checking can be done. [This check is also applied to ONCE groups at
-      runtime, but in a different way.] */
+      Then, if the quantifier was possessive and the bracket is not a 
+      conditional, we convert the BRA code to the POS form, and the KET code to
+      KETRPOS. (It turns out to be convenient at runtime to detect this kind of
+      subpattern at both the start and at the end.) The use of special opcodes
+      makes it possible to reduce greatly the stack usage in pcre_exec(). If
+      the group is preceded by OP_BRAZERO, convert this to OP_BRAPOSZERO. 
+       
+      Then, if the minimum number of matches is 1 or 0, cancel the possessive
+      flag so that the default action below, of wrapping everything inside
+      atomic brackets, does not happen. When the minimum is greater than 1,
+      there will be earlier copies of the group, and so we still have to wrap 
+      the whole thing. */
 
       else
         {
         uschar *ketcode = code - 1 - LINK_SIZE;
         uschar *bracode = ketcode - GET(ketcode, 1);
 
+        /* Convert possessive ONCE brackets to non-capturing */
+         
         if ((*bracode == OP_ONCE || *bracode == OP_ONCE_NC) &&
             possessive_quantifier) *bracode = OP_BRA;
 
+        /* For non-possessive ONCE brackets, all we need to do is to
+        set the KET. */
+          
         if (*bracode == OP_ONCE || *bracode == OP_ONCE_NC)
           *ketcode = OP_KETRMAX + repeat_type;
+        
+        /* Handle non-ONCE brackets and possessive ONCEs (which have been
+        converted to non-capturing above). */ 
+   
         else
           {
-          if (possessive_quantifier)
-            {
-            *bracode += 1;                   /* Switch to xxxPOS opcodes */
-            *ketcode = OP_KETRPOS;
-            if (brazeroptr != NULL) *brazeroptr = OP_BRAPOSZERO;
-            possessive_quantifier = FALSE;
-            }
-          else *ketcode = OP_KETRMAX + repeat_type;
-
+          /* In the compile phase, check for empty string matching. */
+             
           if (lengthptr == NULL)
             {
             uschar *scode = bracode;
@@ -5037,6 +5063,48 @@ for (;; ptr++)
               }
             while (*scode == OP_ALT);
             }
+          
+          /* Handle possessive quantifiers. */
+
+          if (possessive_quantifier)
+            {
+            /* For COND brackets, we wrap the whole thing in a possessively
+            repeated non-capturing bracket, because we have not invented POS
+            versions of the COND opcodes. Because we are moving code along, we
+            must ensure that any pending recursive references are updated. */
+   
+            if (*bracode == OP_COND || *bracode == OP_SCOND)
+              {
+              int nlen = (int)(code - bracode);
+              *code = OP_END;
+              adjust_recurse(bracode, 1 + LINK_SIZE, utf8, cd, save_hwm);
+              memmove(bracode + 1+LINK_SIZE, bracode, nlen);
+              code += 1 + LINK_SIZE;
+              nlen += 1 + LINK_SIZE;
+              *bracode = OP_BRAPOS;
+              *code++ = OP_KETRPOS;
+              PUTINC(code, 0, nlen);
+              PUT(bracode, 1, nlen);
+              }  
+ 
+            /* For non-COND brackets, we modify the BRA code and use KETRPOS. */
+             
+            else 
+              {
+              *bracode += 1;              /* Switch to xxxPOS opcodes */
+              *ketcode = OP_KETRPOS;
+              }
+            
+            /* If the minimum is zero, mark it as possessive, then unset the 
+            possessive flag when the minimum is 0 or 1. */
+             
+            if (brazeroptr != NULL) *brazeroptr = OP_BRAPOSZERO;
+            if (repeat_min < 2) possessive_quantifier = FALSE;
+            }
+            
+          /* Non-possessive quantifier */
+           
+          else *ketcode = OP_KETRMAX + repeat_type;
           }
         }
       }
@@ -5063,9 +5131,9 @@ for (;; ptr++)
     notation is just syntactic sugar, taken from Sun's Java package, but the
     special opcodes can optimize it.
 
-    Possessively repeated subpatterns have already been handled in the code
-    just above, so possessive_quantifier is always FALSE for them at this
-    stage.
+    Some (but not all) possessively repeated subpatterns have already been
+    completely handled in the code just above. For them, possessive_quantifier
+    is always FALSE at this stage.
 
     Note that the repeated item starts at tempcode, not at previous, which
     might be the first part of a string whose (former) last char we repeated.
@@ -5555,8 +5623,8 @@ for (;; ptr++)
 
         /* ------------------------------------------------------------ */
         case CHAR_C:                 /* Callout - may be followed by digits; */
-        previous_callout = code;  /* Save for later completion */
-        after_manual_callout = 1; /* Skip one item before completing */
+        previous_callout = code;     /* Save for later completion */
+        after_manual_callout = 1;    /* Skip one item before completing */
         *code++ = OP_CALLOUT;
           {
           int n = 0;
@@ -5925,8 +5993,13 @@ for (;; ptr++)
               /* Fudge the value of "called" so that when it is inserted as an
               offset below, what it actually inserted is the reference number
               of the group. Then remember the forward reference. */
-
+              
               called = cd->start_code + recno;
+              if (cd->hwm >= cd->start_workspace + WORK_SIZE_CHECK)
+                {
+                *errorcodeptr = ERR72;
+                goto FAILED;  
+                }   
               PUTINC(cd->hwm, 0, (int)(code + 1 - cd->start_code));
               }
 
@@ -5947,11 +6020,14 @@ for (;; ptr++)
               }
             }
 
-          /* Insert the recursion/subroutine item. */
+          /* Insert the recursion/subroutine item. It does not have a set first
+          byte (relevant if it is repeated, because it will then be wrapped 
+          with ONCE brackets). */
 
           *code = OP_RECURSE;
           PUT(code, 1, (int)(called - cd->start_code));
           code += 1 + LINK_SIZE;
+          groupsetfirstbyte = FALSE; 
           }
 
         /* Can't determine a first byte now */
@@ -6433,9 +6509,12 @@ for (;; ptr++)
           }
         else
 #endif
-          {
+        /* In non-UTF-8 mode, we turn \C into OP_ALLANY instead of OP_ANYBYTE
+        so that it works in DFA mode and in lookbehinds. */
+         
+          {  
           previous = (-c > ESC_b && -c < ESC_Z)? code : NULL;
-          *code++ = -c;
+          *code++ = (!utf8 && c == -ESC_C)? OP_ALLANY : -c;
           }
         }
       continue;

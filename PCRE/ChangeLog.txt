@@ -33,6 +33,34 @@ Version 8.21
     rejected were: (*ACCEPT), (*COMMIT), (*FAIL), (*MARK), (*PRUNE), (*SKIP), 
     (*THEN), \h, \H, \v, \V, and single character negative classes with fixed 
     repetitions, e.g. [^a]{3}, with and without PCRE_CASELESS.
+    
+8.  A possessively repeated conditional subpattern such as (?(?=c)c|d)++ was
+    being incorrectly compiled and would have given unpredicatble results. 
+    
+9.  A possessively repeated subpattern with minimum repeat count greater than 
+    one behaved incorrectly. For example, (A){2,}+ behaved as if it was
+    (A)(A)++ which meant that, after a subsequent mismatch, backtracking into 
+    the first (A) could occur when it should not. 
+    
+10. Add a cast and remove a redundant test from the code. 
+
+11. JIT should use pcre_malloc/pcre_free for allocation.
+
+12. Updated pcre-config so that it no longer shows -L/usr/lib, which seems
+    best practice nowadays, and helps with cross-compiling. (If the exec_prefix 
+    is anything other than /usr, -L is still shown). 
+    
+13. In non-UTF-8 mode, \C is now supported in lookbehinds and DFA matching.
+
+14. Perl does not support \N without a following name in a [] class; PCRE now
+    also gives an error.
+    
+15. If a forward reference was repeated with an upper limit of around 2000,
+    it caused the error "internal error: overran compiling workspace". This
+    is now checked, and causes "too many forward references" instead.  
+    
+16. A repeated forward reference in a pattern such as (a)(?2){2}(.) was
+    incorrectly expecting the subject to contain another "a" after the start.
 
 
 Version 8.20 21-Oct-2011
