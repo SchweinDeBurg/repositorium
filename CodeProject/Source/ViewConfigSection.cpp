@@ -5,8 +5,6 @@
 //------------------------------------------------------------------------
 
 #include "stdafx.h"
-#pragma warning(disable:4100)	// unreferenced formal parameter
-
 #include "ViewConfigSection.h"
 
 //------------------------------------------------------------------------
@@ -559,6 +557,8 @@ CViewConfigSectionDefault::CViewConfigSectionLocal& CViewConfigSectionDefault::C
 //------------------------------------------------------------------------
 CString CViewConfigSectionDefault::CViewConfigSectionLocal::ReadSetting(const CString& strSection, const CString& strSetting, const CString& strDefval) const
 {
+	strSection;	// Avoid compiler warning
+
 	for(int i = 0; i < m_LocalSettings.GetSize(); ++i)
 		if (m_LocalSettings.GetKeyAt(i)==strSetting)
 			return m_LocalSettings.GetValueAt(i);
@@ -575,6 +575,7 @@ CString CViewConfigSectionDefault::CViewConfigSectionLocal::ReadSetting(const CS
 //------------------------------------------------------------------------
 void CViewConfigSectionDefault::CViewConfigSectionLocal::WriteSetting(const CString& strSection, const CString& strSetting, const CString& strValue)
 {
+	strSection;	// Avoid compiler warning
 	m_LocalSettings.Add(strSetting, strValue);
 }
 
@@ -585,6 +586,7 @@ void CViewConfigSectionDefault::CViewConfigSectionLocal::WriteSetting(const CStr
 //------------------------------------------------------------------------
 void CViewConfigSectionDefault::CViewConfigSectionLocal::RemoveSection(const CString& strSection)
 {
+	strSection;	// Avoid compiler warning
 	m_LocalSettings.RemoveAll();
 }
 
