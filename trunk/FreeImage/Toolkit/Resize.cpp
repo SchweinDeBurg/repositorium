@@ -109,7 +109,7 @@ CWeightsTable::CWeightsTable(CGenericFilter *pFilter, unsigned uDstSize, unsigne
 }
 
 CWeightsTable::~CWeightsTable() {
-	for(DWORD u = 0; u < m_LineLength; u++) {
+	for(unsigned u = 0; u < m_LineLength; u++) {
 		// free contributions for every pixel
 		free(m_WeightTable[u].Weights);
 	}
@@ -134,8 +134,8 @@ CWeightsTable::~CWeightsTable() {
 */
 
 FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_height) { 
-	DWORD src_width  = FreeImage_GetWidth(src); 
-	DWORD src_height = FreeImage_GetHeight(src);
+	unsigned src_width  = FreeImage_GetWidth(src); 
+	unsigned src_height = FreeImage_GetHeight(src);
 
 	unsigned redMask	= FreeImage_GetRedMask(src);
 	unsigned greenMask	= FreeImage_GetGreenMask(src);
@@ -175,19 +175,19 @@ FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_h
 	Try to minimize calculations by counting the number of convolution multiplies
 	if(dst_width*src_height <= src_width*dst_height) {
 		// xy filtering
-	} else 
+	} else {
 		// yx filtering
 	}
 	--- The practice ---
 	Try to minimize calculations by counting the number of vertical convolutions (the most time consuming task)
 	if(dst_width*dst_height <= src_width*dst_height) {
 		// xy filtering
-	} else 
+	} else {
 		// yx filtering
 	}
 	*/
 
-	if(dst_width*dst_height <= src_width*dst_height) {
+	if(dst_width <= src_width) {
 		// xy filtering
 		// -------------
 
@@ -295,7 +295,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *src, unsigned src_width, unsigned
 								value *= 255;
 
 								// clamp and place result in destination pixel
-								dst_bits[x] = (BYTE)MIN(MAX((int)0, (int)(value + 0.5)), (int)255);
+								dst_bits[x] = (BYTE)CLAMP<int>((int)(value + 0.5), 0, 255);
 							} 
 						}
 					}
@@ -332,7 +332,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *src, unsigned src_width, unsigned
 
 								// clamp and place result in destination pixel
 								for (unsigned j = 0; j < bytespp; j++) {
-									dst_bits[j] = (BYTE)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)255);
+									dst_bits[j] = (BYTE)CLAMP<int>((int)(value[j] + 0.5), 0, 0xFF);
 								}
 
 								dst_bits += bytespp;
@@ -375,7 +375,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *src, unsigned src_width, unsigned
 
 						// clamp and place result in destination pixel
 						for (unsigned j = 0; j < wordspp; j++) {
-							dst_bits[j] = (WORD)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)0xFFFF);
+							dst_bits[j] = (WORD)CLAMP<int>((int)(value[j] + 0.5), 0, 0xFFFF);
 						}
 
 						dst_bits += wordspp;
@@ -490,7 +490,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 								for(unsigned i = iLeft; i <= iRight; i++) {
 									// scan between boundaries
 									// accumulate weighted effect of each neighboring pixel
-									const double weight = weightsTable.getWeight(y, i-iLeft);	
+									const double weight = weightsTable.getWeight(y, i-iLeft);
 									
 									const BYTE pixel = (src_bits[x >> 3] & (0x80 >> (x & 0x07))) != 0;
 									value += (weight * (double)pixel);
@@ -500,7 +500,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 								value *= 255;
 
 								// clamp and place result in destination pixel
-								*dst_bits = (BYTE)MIN(MAX((int)0, (int)(value + 0.5)), (int)255);
+								*dst_bits = (BYTE)CLAMP<int>((int)(value + 0.5), 0, 0xFF);
 
 								dst_bits += dst_pitch;
 							}
@@ -536,7 +536,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 								for(unsigned i = iLeft; i <= iRight; i++) {
 									// scan between boundaries
 									// accumulate weighted effect of each neighboring pixel
-									const double weight = weightsTable.getWeight(y, i-iLeft);							
+									const double weight = weightsTable.getWeight(y, i-iLeft);
 									for (unsigned j = 0; j < bytespp; j++) {
 										value[j] += (weight * (double)src_bits[j]);
 									}
@@ -546,7 +546,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 
 								// clamp and place result in destination pixel
 								for (unsigned j = 0; j < bytespp; j++) {
-									dst_bits[j] = (BYTE)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)255);
+									dst_bits[j] = (BYTE)CLAMP<int>((int)(value[j] + 0.5), 0, 0xFF);
 								}
 
 								dst_bits += dst_pitch;
@@ -586,7 +586,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 						for(unsigned i = iLeft; i <= iRight; i++) {
 							// scan between boundaries
 							// accumulate weighted effect of each neighboring pixel
-							const double weight = weightsTable.getWeight(y, i-iLeft);							
+							const double weight = weightsTable.getWeight(y, i-iLeft);
 							for (unsigned j = 0; j < wordspp; j++) {
 								value[j] += (weight * (double)src_bits[j]);
 							}
@@ -596,7 +596,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 
 						// clamp and place result in destination pixel
 						for (unsigned j = 0; j < wordspp; j++) {
-							dst_bits[j] = (WORD)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)0xFFFF);
+							dst_bits[j] = (WORD)CLAMP<int>((int)(value[j] + 0.5), 0, 0xFFFF);
 						}
 
 						dst_bits += dst_pitch;
@@ -633,7 +633,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 						for(unsigned i = iLeft; i <= iRight; i++) {
 							// scan between boundaries
 							// accumulate weighted effect of each neighboring pixel
-							const double weight = weightsTable.getWeight(y, i-iLeft);							
+							const double weight = weightsTable.getWeight(y, i-iLeft);
 							for (unsigned j = 0; j < floatspp; j++) {
 								value[j] += (weight * (double)src_bits[j]);
 							}
