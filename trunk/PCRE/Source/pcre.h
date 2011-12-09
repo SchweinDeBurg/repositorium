@@ -43,8 +43,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #define PCRE_MAJOR          8
 #define PCRE_MINOR          21
-#define PCRE_PRERELEASE     -RC1
-#define PCRE_DATE           2011-11-14
+#define PCRE_PRERELEASE
+#define PCRE_DATE           2011-12-05
 
 /* When an application links to a PCRE DLL in Windows, the symbols that are
 imported have to be identified as such. When building PCRE, the appropriate
@@ -98,9 +98,9 @@ extern "C" {
 /* Options. Some are compile-time only, some are run-time only, and some are
 both, so we keep them all distinct. However, almost all the bits in the options
 word are now used. In the long run, we may have to re-use some of the
-compile-time only bits for runtime options, or vice versa. In the comments 
-below, "compile", "exec", and "DFA exec" mean that the option is permitted to 
-be set for those functions; "used in" means that an option may be set only for 
+compile-time only bits for runtime options, or vice versa. In the comments
+below, "compile", "exec", and "DFA exec" mean that the option is permitted to
+be set for those functions; "used in" means that an option may be set only for
 compile, but is subsequently referenced in exec and/or DFA exec. Any of the
 compile-time options may be inspected during studying (and therefore JIT
 compiling). */
@@ -216,6 +216,7 @@ compiling). */
 #define PCRE_INFO_HASCRORLF         14
 #define PCRE_INFO_MINLENGTH         15
 #define PCRE_INFO_JIT               16
+#define PCRE_INFO_JITSIZE           17
 
 /* Request types for pcre_config(). Do not re-arrange, in order to remain
 compatible. */
