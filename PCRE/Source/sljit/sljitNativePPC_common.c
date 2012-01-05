@@ -1,7 +1,7 @@
 /*
  *    Stack-less Just-In-Time compiler
  *
- *    Copyright 2009-2010 Zoltan Herczeg (hzmester@freemail.hu). All rights reserved.
+ *    Copyright 2009-2012 Zoltan Herczeg (hzmester@freemail.hu). All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -101,6 +101,10 @@ static void ppc_cache_flush(sljit_ins *from, sljit_ins *to)
 #define CMPL		(HI(31) | LO(32))
 #define CMPLI		(HI(10))
 #define CROR		(HI(19) | LO(449))
+#define DIVD		(HI(31) | LO(489))
+#define DIVDU		(HI(31) | LO(457))
+#define DIVW		(HI(31) | LO(491))
+#define DIVWU		(HI(31) | LO(459))
 #define EXTSB		(HI(31) | LO(954))
 #define EXTSH		(HI(31) | LO(922))
 #define EXTSW		(HI(31) | LO(986))
@@ -123,6 +127,10 @@ static void ppc_cache_flush(sljit_ins *from, sljit_ins *to)
 #define MTCTR		(HI(31) | LO(467) | 0x90000)
 #define MTLR		(HI(31) | LO(467) | 0x80000)
 #define MTXER		(HI(31) | LO(467) | 0x10000)
+#define MULHD		(HI(31) | LO(73))
+#define MULHDU		(HI(31) | LO(9))
+#define MULHW		(HI(31) | LO(75))
+#define MULHWU		(HI(31) | LO(11))
 #define MULLD		(HI(31) | LO(233))
 #define MULLI		(HI(7))
 #define MULLW		(HI(31) | LO(235))
@@ -1028,12 +1036,38 @@ SLJIT_API_FUNC_ATTRIBUTE int sljit_emit_op0(struct sljit_compiler *compiler, int
 	CHECK_ERROR();
 	check_sljit_emit_op0(compiler, op);
 
-	op = GET_OPCODE(op);
-	switch (op) {
+	switch (GET_OPCODE(op)) {
 	case SLJIT_BREAKPOINT:
 	case SLJIT_NOP:
 		return push_inst(compiler, NOP);
 		break;
+	case SLJIT_UMUL:
+	case SLJIT_SMUL:
+		FAIL_IF(push_inst(compiler, OR | S(SLJIT_TEMPORARY_REG1) | A(TMP_REG1) | B(SLJIT_TEMPORARY_REG1)));
+#if (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64)
+		FAIL_IF(push_inst(compiler, MULLD | D(SLJIT_TEMPORARY_REG1) | A(TMP_REG1) | B(SLJIT_TEMPORARY_REG2)));
+		return push_inst(compiler, (GET_OPCODE(op) == SLJIT_UMUL ? MULHDU : MULHD) | D(SLJIT_TEMPORARY_REG2) | A(TMP_REG1) | B(SLJIT_TEMPORARY_REG2));
+#else
+		FAIL_IF(push_inst(compiler, MULLW | D(SLJIT_TEMPORARY_REG1) | A(TMP_REG1) | B(SLJIT_TEMPORARY_REG2)));
+		return push_inst(compiler, (GET_OPCODE(op) == SLJIT_UMUL ? MULHWU : MULHW) | D(SLJIT_TEMPORARY_REG2) | A(TMP_REG1) | B(SLJIT_TEMPORARY_REG2));
+#endif
+	case SLJIT_UDIV:
+	case SLJIT_SDIV:
+		FAIL_IF(push_inst(compiler, OR | S(SLJIT_TEMPORARY_REG1) | A(TMP_REG1) | B(SLJIT_TEMPORARY_REG1)));
+#if (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64)
+		if (op & SLJIT_INT_OP) {
+			FAIL_IF(push_inst(compiler, (GET_OPCODE(op) == SLJIT_UDIV ? DIVWU : DIVW) | D(SLJIT_TEMPORARY_REG1) | A(TMP_REG1) | B(SLJIT_TEMPORARY_REG2)));
+			FAIL_IF(push_inst(compiler, MULLW | D(SLJIT_TEMPORARY_REG2) | A(SLJIT_TEMPORARY_REG1) | B(SLJIT_TEMPORARY_REG2)));
+			return push_inst(compiler, SUBF | D(SLJIT_TEMPORARY_REG2) | A(SLJIT_TEMPORARY_REG2) | B(TMP_REG1));
+		}
+		FAIL_IF(push_inst(compiler, (GET_OPCODE(op) == SLJIT_UDIV ? DIVDU : DIVD) | D(SLJIT_TEMPORARY_REG1) | A(TMP_REG1) | B(SLJIT_TEMPORARY_REG2)));
+		FAIL_IF(push_inst(compiler, MULLD | D(SLJIT_TEMPORARY_REG2) | A(SLJIT_TEMPORARY_REG1) | B(SLJIT_TEMPORARY_REG2)));
+		return push_inst(compiler, SUBF | D(SLJIT_TEMPORARY_REG2) | A(SLJIT_TEMPORARY_REG2) | B(TMP_REG1));
+#else
+		FAIL_IF(push_inst(compiler, (GET_OPCODE(op) == SLJIT_UDIV ? DIVWU : DIVW) | D(SLJIT_TEMPORARY_REG1) | A(TMP_REG1) | B(SLJIT_TEMPORARY_REG2)));
+		FAIL_IF(push_inst(compiler, MULLW | D(SLJIT_TEMPORARY_REG2) | A(SLJIT_TEMPORARY_REG1) | B(SLJIT_TEMPORARY_REG2)));
+		return push_inst(compiler, SUBF | D(SLJIT_TEMPORARY_REG2) | A(SLJIT_TEMPORARY_REG2) | B(TMP_REG1));
+#endif
 	}
 
 	return SLJIT_SUCCESS;
@@ -1322,6 +1356,22 @@ SLJIT_API_FUNC_ATTRIBUTE int sljit_emit_op2(struct sljit_compiler *compiler, int
 	}
 
 	return SLJIT_SUCCESS;
+}
+
+SLJIT_API_FUNC_ATTRIBUTE int sljit_get_register_index(int reg)
+{
+	check_sljit_get_register_index(reg);
+	return reg_map[reg];
+}
+
+SLJIT_API_FUNC_ATTRIBUTE int sljit_emit_op_custom(struct sljit_compiler *compiler,
+	void *instruction, int size)
+{
+	CHECK_ERROR();
+	check_sljit_emit_op_custom(compiler, instruction, size);
+	SLJIT_ASSERT(size == 4);
+
+	return push_inst(compiler, *(sljit_ins*)instruction);
 }
 
 /* --------------------------------------------------------------------- */

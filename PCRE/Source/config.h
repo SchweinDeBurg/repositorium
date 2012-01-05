@@ -301,7 +301,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #define PACKAGE_NAME "PCRE"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "PCRE 8.13"
+#define PACKAGE_STRING "PCRE 8.30"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "pcre"
@@ -310,7 +310,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "8.13"
+#define PACKAGE_VERSION "8.30"
 
 /* The value of PCREGREP_BUFSIZE determines the size of buffer used by
    pcregrep to hold parts of the file it is searching. On systems that support
@@ -357,6 +357,9 @@ __declspec(selectany) int _forceMFCManifestCUR;
 #define STDC_HEADERS 1
 #endif
 
+/* Define to enable support for Just-In-Time compiling. */
+/* #undef SUPPORT_JIT */
+
 /* Define to allow pcregrep to be linked with libbz2, so that it is able to
    handle .bz2 files. */
 /* #undef SUPPORT_LIBBZ2 */
@@ -368,7 +371,10 @@ __declspec(selectany) int _forceMFCManifestCUR;
    handle .gz files. */
 /* #undef SUPPORT_LIBZ */
 
-/* Define to enable support for Unicode properties */
+/* Define to enable JIT support in pcregrep. */
+/* #undef SUPPORT_PCREGREP_JIT */
+
+/* Define to enable support for Unicode properties. */
 /* #undef SUPPORT_UCP */
 #if defined(UNICODE) || defined(_UNICODE)
 #define SUPPORT_UCP
@@ -383,7 +389,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
 
 /* Version number of package */
 #ifndef VERSION
-#define VERSION "8.13"
+#define VERSION "8.30"
 #endif
 
 /* Define to empty if `const' does not conform to ANSI C. */

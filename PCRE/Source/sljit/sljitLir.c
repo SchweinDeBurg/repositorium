@@ -1,7 +1,7 @@
 /*
  *    Stack-less Just-In-Time compiler
  *
- *    Copyright 2009-2010 Zoltan Herczeg (hzmester@freemail.hu). All rights reserved.
+ *    Copyright 2009-2012 Zoltan Herczeg (hzmester@freemail.hu). All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -616,6 +616,7 @@ static char* freg_names[] = {
 static SLJIT_CONST char* op_names[] = {
 	/* op0 */
 	(char*)"breakpoint", (char*)"nop",
+	(char*)"umul", (char*)"smul", (char*)"udiv", (char*)"sdiv",
 	/* op1 */
 	(char*)"mov", (char*)"mov.ub", (char*)"mov.sb", (char*)"mov.uh",
 	(char*)"mov.sh", (char*)"mov.ui", (char*)"mov.si", (char*)"movu",
@@ -793,10 +794,11 @@ static SLJIT_INLINE void check_sljit_emit_op0(struct sljit_compiler *compiler, i
 	SLJIT_UNUSED_ARG(compiler);
 	SLJIT_UNUSED_ARG(op);
 
-	SLJIT_ASSERT(op >= SLJIT_BREAKPOINT && op <= SLJIT_NOP);
+	SLJIT_ASSERT((op >= SLJIT_BREAKPOINT && op <= SLJIT_SMUL)
+		|| ((op & ~SLJIT_INT_OP) >= SLJIT_UDIV && (op & ~SLJIT_INT_OP) <= SLJIT_SDIV));
 #if (defined SLJIT_VERBOSE && SLJIT_VERBOSE)
 	if (SLJIT_UNLIKELY(!!compiler->verbose))
-		fprintf(compiler->verbose, "  %s\n", op_names[op]);
+		fprintf(compiler->verbose, "  %s%s\n", op_names[GET_OPCODE(op)], !(op & SLJIT_INT_OP) ? "" : "i");
 #endif
 }
 
@@ -872,6 +874,21 @@ static SLJIT_INLINE void check_sljit_emit_op2(struct sljit_compiler *compiler, i
 		fprintf(compiler->verbose, "\n");
 	}
 #endif
+}
+
+static SLJIT_INLINE void check_sljit_get_register_index(int reg)
+{
+	SLJIT_UNUSED_ARG(reg);
+	SLJIT_ASSERT(reg > 0 && reg <= SLJIT_NO_REGISTERS);
+}
+
+static SLJIT_INLINE void check_sljit_emit_op_custom(struct sljit_compiler *compiler,
+	void *instruction, int size)
+{
+	SLJIT_UNUSED_ARG(compiler);
+	SLJIT_UNUSED_ARG(instruction);
+	SLJIT_UNUSED_ARG(size);
+	SLJIT_ASSERT(instruction);
 }
 
 static SLJIT_INLINE void check_sljit_emit_fop1(struct sljit_compiler *compiler, int op,
