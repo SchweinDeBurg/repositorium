@@ -362,7 +362,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\pcre_printint.src"
+				RelativePath=".\Source\pcre_printint.c"
 				>
 				<FileConfiguration
 					Name="MBCS Debug|Win32"
