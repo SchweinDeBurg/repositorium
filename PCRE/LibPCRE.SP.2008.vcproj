@@ -235,7 +235,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\pcre_printint.src"
+				RelativePath=".\Source\pcre_printint.c"
 				>
 				<FileConfiguration
 					Name="Smartphone Debug|Windows Mobile 5.0 Smartphone SDK (ARMV4I)"
