@@ -3,14 +3,14 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>CScintillaCtrl, CScintillaView &amp; CScintillaDoc v1.27</title>
+<title>CScintillaCtrl, CScintillaView &amp; CScintillaDoc v1.28</title>
 <link rel="stylesheet" type="text/css" href="naughter.css">
 </head>
 
 <body>
 
 <h2><strong>CScintillaCtrl, CScintillaView &amp; 
-CScintillaDoc v1.27</strong></h2>
+CScintillaDoc v1.28</strong></h2>
 
 <h2><i>Freeware MFC wrapper classes for the Scintilla edit 
 control</i></h2>
@@ -57,7 +57,7 @@ it easier to include the control in MFC projects on Windows.</p>
 
 <ul>
   <li>Implements all the 
-  functionality provided by Scintilla v2.25.</li>
+  functionality provided by Scintilla v3.0.2.</li>
   <li>The CScintillaCtrl wrapper class observes the same 
   semantics as the built in MFC &quot;CEdit&quot; wrapper class.</li>
   <li>Uses the direct access functions provided by scintilla 
@@ -576,6 +576,25 @@ it easier to include the control in MFC projects on Windows.</p>
 	instead of AfxGetResourceHandle. Thanks to Nißl Markus for reporting this 
 	nice addition.</li>
 </ul>
+
+<p><strong>V1.28 (12 December 2011)</strong></p>
+
+<ul>
+	<li>
+	Updated class to work with Scintilla v3.0.2. New messages wrapped include: 
+	SCI_MARKERSETBACKSELECTED, SCI_MARKERENABLEHIGHLIGHT, 
+	SCI_STYLESETSIZEFRACTIONAL, SCI_STYLEGETSIZEFRACTIONAL, SCI_STYLESETWEIGHT, 
+	SCI_STYLEGETWEIGHT, SCI_COUNTCHARACTERS, SCI_SETEMPTYSELECTION, 
+	SCI_CALLTIPSETPOSITION, SCI_GETALLLINESVISIBLE, SCI_BRACEHIGHLIGHTINDICATOR, 
+	SCI_BRACEBADLIGHTINDICATOR, SCI_INDICSETOUTLINEALPHA, 
+	SCI_INDICGETOUTLINEALPHA, SCI_SETMARGINOPTIONS, SCI_GETMARGINOPTIONS, 
+	SCI_MOVESELECTEDLINESUP, SCI_MOVESELECTEDLINESDOWN, SCI_SETIDENTIFIER, 
+	SCI_GETIDENTIFIER, SCI_RGBAIMAGESETWIDTH, SCI_RGBAIMAGESETHEIGHT, 
+	SCI_MARKERDEFINERGBAIMAGE, SCI_REGISTERRGBAIMAGE, SCI_SCROLLTOSTART, 
+	SCI_SCROLLTOEND, SCI_SETTECHNOLOGY, SCI_GETTECHNOLOGY &amp; SCI_CREATELOADER 
+	Messages dropped include: SCI_SETUSEPALETTE &amp; SCI_GETUSEPALETTE 
+	</li>
+</ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -619,6 +638,6 @@ it easier to include the control in MFC projects on Windows.</p>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-1 April 2011</p>
+9 December 2011</p>
 </body>
 </html>
