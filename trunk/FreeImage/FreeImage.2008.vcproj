@@ -537,6 +537,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\MNGHelper.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\Plugin.cpp"
 					>
 				</File>
@@ -578,6 +582,10 @@
 				</File>
 				<File
 					RelativePath=".\Source\PluginJ2K.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\PluginJNG.cpp"
 					>
 				</File>
 				<File

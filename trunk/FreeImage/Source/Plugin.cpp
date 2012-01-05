@@ -235,8 +235,8 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
 #if !defined(FREEIMAGE_NO_JPEG)
 			s_plugins->AddNode(InitJPEG);
 #endif
-#if !defined(FREEIMAGE_NO_MNG)
-			s_plugins->AddNode(InitMNG, NULL, "JNG", "JPEG Network Graphics", "jng", "");
+#if !defined(FREEIMAGE_NO_JNG)
+			s_plugins->AddNode(InitJNG);
 #endif
 #if !defined(FREEIMAGE_NO_KOALA)
 			s_plugins->AddNode(InitKOALA);
