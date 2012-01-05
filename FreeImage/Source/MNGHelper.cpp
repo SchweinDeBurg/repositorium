@@ -24,6 +24,8 @@
 #include "FreeImage.h"
 #include "Utilities.h"
 
+#if !defined(FREEIMAGE_NO_JPEG)
+
 /**
 References
 http://www.libpng.org/pub/mng/spec/jng.html
@@ -1309,3 +1311,5 @@ mng_WriteJNG(int format_id, FreeImageIO *io, FIBITMAP *dib, fi_handle handle, in
 		return FALSE;
 	}
 }
+
+#endif   // FREEIMAGE_NO_JPEG
