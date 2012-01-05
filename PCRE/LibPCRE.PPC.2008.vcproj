@@ -51,7 +51,7 @@
 				BrowseInformation="1"
 				WarningLevel="4"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4244"
+				DisableSpecificWarnings="4018;4127;4244;4389;4702"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -131,7 +131,7 @@
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
 				WarningLevel="4"
-				DisableSpecificWarnings="4244"
+				DisableSpecificWarnings="4018;4127;4244;4389;4702"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -187,6 +187,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Source\pcre_byte_order.c"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\pcre_chartables.c"
 				>
 			</File>
@@ -219,7 +223,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\pcre_info.c"
+				RelativePath=".\Source\pcre_jit_compile.c"
 				>
 			</File>
 			<File
@@ -259,15 +263,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\pcre_string_utils.c"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\pcre_study.c"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\pcre_tables.c"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\pcre_try_flipped.c"
 				>
 			</File>
 			<File
@@ -500,7 +504,15 @@
 			</Filter>
 		</Filter>
 		<File
+			RelativePath=".\Authors.txt"
+			>
+		</File>
+		<File
 			RelativePath=".\ChangeLog.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\Hacking.txt"
 			>
 		</File>
 		<File
