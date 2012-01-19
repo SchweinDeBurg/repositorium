@@ -26,11 +26,7 @@
 
 SLJIT_API_FUNC_ATTRIBUTE SLJIT_CONST char* sljit_get_platform_name()
 {
-#if (defined SLJIT_CONFIG_X86_32 && SLJIT_CONFIG_X86_32)
-	return "x86-32";
-#else
-	return "x86-64";
-#endif
+	return "x86" SLJIT_CPUINFO;
 }
 
 /*
@@ -80,8 +76,8 @@ static SLJIT_CONST sljit_ub reg_map[SLJIT_NO_REGISTERS + 2] = {
 		p = SLJIT_MEM1(SLJIT_LOCALS_REG); \
 		do; \
 	} \
-	else if (p >= SLJIT_GENERAL_EREG1 && p <= SLJIT_GENERAL_EREG2) { \
-		w = compiler->generals_start + (p - SLJIT_GENERAL_EREG1) * sizeof(sljit_w); \
+	else if (p >= SLJIT_SAVED_EREG1 && p <= SLJIT_SAVED_EREG2) { \
+		w = compiler->saveds_start + (p - SLJIT_SAVED_EREG1) * sizeof(sljit_w); \
 		p = SLJIT_MEM1(SLJIT_LOCALS_REG); \
 		do; \
 	}
@@ -95,7 +91,7 @@ static SLJIT_CONST sljit_ub reg_map[SLJIT_NO_REGISTERS + 2] = {
 
 /* Note: r12 & 0x7 == 0b100, which decoded as SIB byte present
    Note: avoid to use r12 and r13 for memory addessing
-   therefore r12 is better for GENERAL_EREG than GENERAL_REG. */
+   therefore r12 is better for SAVED_EREG than SAVED_REG. */
 #ifndef _WIN64
 /* 1st passed in rdi, 2nd argument passed in rsi, 3rd in rdx. */
 static SLJIT_CONST sljit_ub reg_map[SLJIT_NO_REGISTERS + 4] = {
@@ -602,34 +598,26 @@ SLJIT_API_FUNC_ATTRIBUTE int sljit_emit_op0(struct sljit_compiler *compiler, int
 		if (op == SLJIT_SDIV) {
 #if (defined SLJIT_CONFIG_X86_32 && SLJIT_CONFIG_X86_32) || defined(_WIN64)
 			EMIT_MOV(compiler, TMP_REGISTER, 0, SLJIT_TEMPORARY_REG2, 0);
-			EMIT_MOV(compiler, SLJIT_TEMPORARY_REG2, 0, SLJIT_TEMPORARY_REG1, 0);
-#else
-			EMIT_MOV(compiler, TMP_REGISTER, 0, SLJIT_TEMPORARY_REG1, 0);
 #endif
 
+			/* CDQ instruction */
 #if (defined SLJIT_CONFIG_X86_32 && SLJIT_CONFIG_X86_32)
-			buf = (sljit_ub*)ensure_buf(compiler, 1 + 3);
+			buf = (sljit_ub*)ensure_buf(compiler, 1 + 1);
 			FAIL_IF(!buf);
-			INC_SIZE(3);
-			*buf++ = 0xc1;
-			*buf++ = 0xfa;
-			*buf = 0x1f;
+			INC_SIZE(1);
+			*buf = 0x99;
 #else
 			if (compiler->mode32) {
-				buf = (sljit_ub*)ensure_buf(compiler, 1 + 3);
+				buf = (sljit_ub*)ensure_buf(compiler, 1 + 1);
 				FAIL_IF(!buf);
-				INC_SIZE(3);
-				*buf++ = 0xc1;
-				*buf++ = 0xfa;
-				*buf = 0x1f;
+				INC_SIZE(1);
+				*buf = 0x99;
 			} else {
-				buf = (sljit_ub*)ensure_buf(compiler, 1 + 4);
+				buf = (sljit_ub*)ensure_buf(compiler, 1 + 2);
 				FAIL_IF(!buf);
-				INC_SIZE(4);
+				INC_SIZE(2);
 				*buf++ = REX_W;
-				*buf++ = 0xc1;
-				*buf++ = 0xfa;
-				*buf = 0x3f;
+				*buf = 0x99;
 			}
 #endif
 		}
@@ -1993,7 +1981,7 @@ SLJIT_API_FUNC_ATTRIBUTE int sljit_get_register_index(int reg)
 	check_sljit_get_register_index(reg);
 #if (defined SLJIT_CONFIG_X86_32 && SLJIT_CONFIG_X86_32)
 	if (reg == SLJIT_TEMPORARY_EREG1 || reg == SLJIT_TEMPORARY_EREG2
-			|| reg == SLJIT_GENERAL_EREG1 || reg == SLJIT_GENERAL_EREG2)
+			|| reg == SLJIT_SAVED_EREG1 || reg == SLJIT_SAVED_EREG2)
 		return -1;
 #endif
 	return reg_map[reg];
@@ -2760,7 +2748,7 @@ SLJIT_API_FUNC_ATTRIBUTE int sljit_emit_cond_value(struct sljit_compiler *compil
 
 			*buf++ = 0x0f;
 			*buf++ = 0xb6;
-			if (dst >= SLJIT_GENERAL_REG1 && dst <= SLJIT_NO_REGISTERS)
+			if (dst >= SLJIT_SAVED_REG1 && dst <= SLJIT_NO_REGISTERS)
 				*buf = 0xC0 | (reg_map[dst] << 3);
 			else {
 				*buf = 0xC0;
