@@ -152,7 +152,9 @@ public:
 	virtual bool OnDisplayCellImage(int nRow, int nCol, int& nImageId);
 	virtual bool OnDisplayCellTooltip(const CPoint& point) const;
 	virtual bool OnDisplayCellTooltip(int nRow, int nCol, CString& strResult);
+	virtual bool OnDisplayCellColor(NMLVCUSTOMDRAW* pLVCD);
 	virtual bool OnDisplayCellColor(int nRow, int nCol, COLORREF& textColor, COLORREF& backColor);
+	virtual bool OnDisplayCellFont(NMLVCUSTOMDRAW* pLVCD, LOGFONT& font);
 	virtual bool OnDisplayCellFont(int nRow, int nCol, LOGFONT& font);
 	virtual bool OnDisplayRowColor(int nRow, COLORREF& textColor, COLORREF& backColor);
 	virtual bool OnDisplayRowFont(int nRow, LOGFONT& font);
@@ -162,7 +164,7 @@ public:
 	virtual bool OnDisplayToClipboard(int nRow, int nCol, CString& strResult);
 	virtual bool OnDisplayToDragDrop(CString& strResult);
 	virtual bool OnOwnerDataDisplayCheckbox(int nRow);
-	virtual void OnOwnerDataToggleCheckBox(int nRow);
+	virtual void OnOwnerDataToggleCheckBox(int nRow, bool bChecked);
 	virtual int  OnKeyboardSearch(int nCol, int nStartRow, const CString& strSearch);
 
 protected:
@@ -282,6 +284,7 @@ protected:
 	virtual afx_msg LRESULT OnCopy(WPARAM wParam, LPARAM lParam);
 	virtual afx_msg LRESULT OnSetFont(WPARAM wParam, LPARAM lParam);
 	virtual afx_msg BOOL OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult);
+	virtual afx_msg BOOL OnItemChanged(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP();
