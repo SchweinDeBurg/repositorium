@@ -424,7 +424,7 @@ CWnd* CGridColumnTraitImage::OnEditBegin(CGridListCtrlEx& owner, int nRow, int n
 					}
 
 					if (owner.GetStyle() & LVS_OWNERDATA)
-						owner.OnOwnerDataToggleCheckBox(nSelectedRow);
+						owner.OnOwnerDataToggleCheckBox(nSelectedRow, bChecked != 0);
 					else
 						owner.SetCheck(nSelectedRow, bChecked);
 				}
