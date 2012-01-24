@@ -3509,7 +3509,7 @@ for (;;)
     GETCHARINCTEST(c, eptr);
     if (op == OP_NOTI)         /* The caseless case */
       {
-      register int ch, och;
+      register unsigned int ch, och;
       ch = *ecode++;
 #ifdef COMPILE_PCRE8
       /* ch must be < 128 if UTF is enabled. */
@@ -3655,7 +3655,7 @@ for (;;)
             RRETURN(MATCH_NOMATCH);
             }
           GETCHARINC(d, eptr);
-          if (fc == d || foc == d) RRETURN(MATCH_NOMATCH);
+          if (fc == d || (unsigned int) foc == d) RRETURN(MATCH_NOMATCH);
           }
         }
       else
@@ -3693,7 +3693,7 @@ for (;;)
               RRETURN(MATCH_NOMATCH);
               }
             GETCHARINC(d, eptr);
-            if (fc == d || foc == d) RRETURN(MATCH_NOMATCH);
+            if (fc == d || (unsigned int)foc == d) RRETURN(MATCH_NOMATCH);
             }
           }
         else
@@ -3736,7 +3736,7 @@ for (;;)
               break;
               }
             GETCHARLEN(d, eptr, len);
-            if (fc == d || foc == d) break;
+            if (fc == d || (unsigned int)foc == d) break;
             eptr += len;
             }
           if (possessive) continue;
@@ -6498,7 +6498,7 @@ if (!anchored)
   if ((re->flags & PCRE_FIRSTSET) != 0)
     {
     has_first_char = TRUE;
-    first_char = first_char2 = re->first_char;
+    first_char = first_char2 = (pcre_uchar)(re->first_char);
     if ((re->flags & PCRE_FCH_CASELESS) != 0)
       {
       first_char2 = TABLE_GET(first_char, md->fcc, first_char);
@@ -6520,7 +6520,7 @@ character" set. */
 if ((re->flags & PCRE_REQCHSET) != 0)
   {
   has_req_char = TRUE;
-  req_char = req_char2 = re->req_char;
+  req_char = req_char2 = (pcre_uchar)(re->req_char);
   if ((re->flags & PCRE_RCH_CASELESS) != 0)
     {
     req_char2 = TABLE_GET(req_char, md->fcc, req_char);
