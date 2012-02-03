@@ -142,7 +142,7 @@ RegExpr() {
 
 static const char * DLL_CALLCONV
 MimeType() {
-	return "image/exr";
+	return "image/x-exr";
 }
 
 static BOOL DLL_CALLCONV

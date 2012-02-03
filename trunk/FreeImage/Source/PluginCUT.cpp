@@ -78,7 +78,7 @@ RegExpr() {
 
 static const char * DLL_CALLCONV
 MimeType() {
-	return "image/freeimage-cut";
+	return "image/x-cut";
 }
 
 static BOOL DLL_CALLCONV
