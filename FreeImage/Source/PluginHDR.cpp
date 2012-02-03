@@ -574,7 +574,7 @@ RegExpr() {
 
 static const char * DLL_CALLCONV
 MimeType() {
-	return "image/freeimage-hdr";
+	return "image/vnd.radiance";
 }
 
 static BOOL DLL_CALLCONV

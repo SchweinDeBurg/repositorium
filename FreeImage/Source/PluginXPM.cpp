@@ -118,7 +118,7 @@ RegExpr() {
 
 static const char * DLL_CALLCONV
 MimeType() {
-	return "image/xpm";
+	return "image/x-xpixmap";
 }
 
 static BOOL DLL_CALLCONV
