@@ -152,6 +152,7 @@ static INLINE long lrintf(float f){
 #include "j2k_lib.h"
 #include "opj_malloc.h"
 #include "event.h"
+#include "bio.h"
 #include "cio.h"
 
 #include "image.h"
@@ -171,6 +172,9 @@ static INLINE long lrintf(float f){
 #include "mct.h"
 #include "int.h"
 #include "fix.h"
+
+#include "cidx_manager.h"
+#include "indexbox_manager.h"
 
 /* JPWL>> */
 #ifdef USE_JPWL

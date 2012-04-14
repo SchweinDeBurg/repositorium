@@ -333,6 +333,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\cidx_manager.c"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\cio.c"
 				>
 			</File>
@@ -377,7 +381,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\phix_manager.c"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\pi.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ppix_manager.c"
 				>
 			</File>
 			<File
@@ -400,6 +412,14 @@
 				RelativePath=".\Source\tgt.c"
 				>
 			</File>
+			<File
+				RelativePath=".\Source\thix_manager.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\tpix_manager.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -408,6 +428,10 @@
 			>
 			<File
 				RelativePath=".\Source\bio.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\cidx_manager.h"
 				>
 			</File>
 			<File
@@ -428,6 +452,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\image.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\indexbox_manager.h"
 				>
 			</File>
 			<File
@@ -503,12 +531,69 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="JPWL Files"
+			Filter="h;c"
+			>
+			<File
+				RelativePath=".\Source\jpwl\crc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\jpwl\crc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\jpwl\jpwl.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\jpwl\jpwl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\jpwl\jpwl_lib.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\jpwl\rs.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\jpwl\rs.h"
+				>
+			</File>
+		</Filter>
 		<File
-			RelativePath=".\changelog.txt"
+			RelativePath=".\authors.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\changes.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\install.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\jpwl_readme.txt"
 			>
 		</File>
 		<File
 			RelativePath=".\license.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\news.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\readme.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\thanks.txt"
 			>
 		</File>
 	</Files>
