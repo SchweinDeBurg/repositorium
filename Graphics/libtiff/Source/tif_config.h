@@ -290,7 +290,7 @@ __declspec(selectany) int _forceMFCManifestCUR;
   #endif // _MSC_VER
 #endif // __cplusplus
 
-#ifdef _MSC_VER 
+#ifdef _MSC_VER
 #define lfind _lfind
 /* Define to 1 if you have the <search.h> header file. */
 #define HAVE_SEARCH_H 1
