@@ -1,4 +1,4 @@
-/* $Id: tif_config.wince.h,v 1.21 2011/04/10 17:14:09 drolon Exp $ */
+/* $Id: tif_config.wince.h,v 1.2 2012/02/25 17:48:19 drolon Exp $ */
 
 /*
  * TIFF library configuration header for Windows CE platform.
@@ -45,9 +45,6 @@
 
 /* The size of a `int', as computed by sizeof. */
 #define SIZEOF_INT 4
-
-/* The size of a `long', as computed by sizeof. */
-#define SIZEOF_LONG 4
 
 /* Set the native cpu bit order */
 #define HOST_FILLORDER FILLORDER_LSB2MSB

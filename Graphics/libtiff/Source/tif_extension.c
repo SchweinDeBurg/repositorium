@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/freeimage/FreeImage/Source/LibTIFF/tif_extension.c,v 1.37 2011/04/10 17:14:09 drolon Exp $ */
+/* $Header: /cvsroot/freeimage/FreeImage/Source/LibTIFF4/tif_extension.c,v 1.2 2012/02/25 17:48:19 drolon Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -41,13 +41,13 @@ int TIFFGetTagListCount( TIFF *tif )
     return td->td_customValueCount;
 }
 
-ttag_t TIFFGetTagListEntry( TIFF *tif, int tag_index )
+uint32 TIFFGetTagListEntry( TIFF *tif, int tag_index )
 
 {
     TIFFDirectory* td = &tif->tif_dir;
 
     if( tag_index < 0 || tag_index >= td->td_customValueCount )
-        return (ttag_t) -1;
+        return (uint32)(-1);
     else
         return td->td_customValues[tag_index].info->field_tag;
 }
@@ -102,7 +102,7 @@ void TIFFSetClientInfo( TIFF *tif, void *data, const char *name )
     link = (TIFFClientInfoLink *) _TIFFmalloc(sizeof(TIFFClientInfoLink));
     assert (link != NULL);
     link->next = tif->tif_clientinfo;
-    link->name = (char *) _TIFFmalloc(strlen(name)+1);
+    link->name = (char *) _TIFFmalloc((tmsize_t)(strlen(name)+1));
     assert (link->name != NULL);
     strcpy(link->name, name);
     link->data = data;

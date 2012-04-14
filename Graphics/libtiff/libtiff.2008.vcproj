@@ -60,7 +60,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4018;4100;4127;4244"
+				DisableSpecificWarnings="4018;4100;4121;4127;4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -135,7 +135,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4018;4100;4127;4244"
+				DisableSpecificWarnings="4018;4100;4121;4127;4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -212,7 +212,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4018;4100;4127;4244"
+				DisableSpecificWarnings="4018;4100;4121;4127;4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -287,7 +287,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4018;4100;4127;4244"
+				DisableSpecificWarnings="4018;4100;4121;4127;4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -399,6 +399,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\tif_luv.c"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\tif_lzma.c"
 				>
 			</File>
 			<File
@@ -518,6 +522,10 @@
 		</Filter>
 		<File
 			RelativePath=".\changelog.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\copyright.txt"
 			>
 		</File>
 		<File
