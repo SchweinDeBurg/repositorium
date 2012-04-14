@@ -1,4 +1,4 @@
-/* $Id: t4.h,v 1.37 2011/04/10 17:14:09 drolon Exp $ */
+/* $Id: t4.h,v 1.2 2012/02/25 17:48:19 drolon Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -33,18 +33,18 @@
  * worthwhile to make code & length 8 bits.
  */
 typedef struct tableentry {
-    unsigned short length;	/* bit length of g3 code */
-    unsigned short code;	/* g3 code */
-    short	runlen;		/* run length in bits */
+    unsigned short length;  /* bit length of g3 code */
+    unsigned short code;    /* g3 code */
+    short runlen;           /* run length in bits */
 } tableentry;
 
-#define	EOL	0x001	/* EOL code value - 0000 0000 0000 1 */
+#define EOL	0x001	/* EOL code value - 0000 0000 0000 1 */
 
 /* status values returned instead of a run length */
-#define	G3CODE_EOL	-1	/* NB: ACT_EOL - ACT_WRUNT */
-#define	G3CODE_INVALID	-2	/* NB: ACT_INVALID - ACT_WRUNT */
-#define	G3CODE_EOF	-3	/* end of input data */
-#define	G3CODE_INCOMP	-4	/* incomplete run code */
+#define G3CODE_EOL	-1	/* NB: ACT_EOL - ACT_WRUNT */
+#define G3CODE_INVALID	-2	/* NB: ACT_INVALID - ACT_WRUNT */
+#define G3CODE_EOF	-3	/* end of input data */
+#define G3CODE_INCOMP	-4	/* incomplete run code */
 
 /*
  * Note that these tables are ordered such that the
@@ -279,8 +279,8 @@ const tableentry TIFFFaxBlackCodes[] = {
     { 12, 0x0, G3CODE_INVALID },	/* 0000 0000 0000 */
 };
 #else
-extern	const tableentry TIFFFaxWhiteCodes[];
-extern	const tableentry TIFFFaxBlackCodes[];
+extern const tableentry TIFFFaxWhiteCodes[];
+extern const tableentry TIFFFaxBlackCodes[];
 #endif
 #endif /* _T4_ */
 /*
