@@ -134,7 +134,7 @@ BEGIN_MESSAGE_MAP(CGridListCtrlEx, CListCtrl)
 	ON_NOTIFY_REFLECT_EX(NM_CLICK, OnItemClick)				// Cell Click
 	ON_NOTIFY_REFLECT_EX(NM_DBLCLK, OnItemDblClick)			// Cell Double Click
 	ON_NOTIFY_REFLECT_EX(LVN_ODFINDITEM, OnOwnerDataFindItem)	// Owner Data Find Item
-	ON_NOTIFY_REFLECT_EX(LVN_BEGINDRAG, OnBeginDrag)		// Begin Drag Dropb
+	ON_NOTIFY_REFLECT_EX(LVN_BEGINDRAG, OnBeginDrag)		// Begin Drag Drop
 	ON_NOTIFY_REFLECT_EX(LVN_ITEMCHANGED, OnItemChanged)	// Cell State Change
 	ON_WM_CONTEXTMENU()	// OnContextMenu
 	ON_WM_KEYDOWN()		// OnKeyDown
@@ -197,6 +197,7 @@ CGridListCtrlEx::~CGridListCtrlEx()
 //! Sets the interface for handling state persistence for the list control
 //! 
 //! @param pColumnConfig The new column state interface handler
+//! @param bConfigOwner Destructor should free the column state object (true / false)
 //------------------------------------------------------------------------
 void CGridListCtrlEx::SetupColumnConfig(CViewConfigSectionProfiles* pColumnConfig, bool bConfigOwner)
 {
@@ -1064,8 +1065,9 @@ BOOL CGridListCtrlEx::GetCellRect(int nRow, int nCol, UINT nCode, CRect& rect)
 //! @param pt The position to hit test, in client coordinates. 
 //! @param nRow The index of the row (Returns -1 if no row)
 //! @param nCol The index of the column (Returns -1 if no column)
+//! @return Returns the location of the cell hit (LVHT_NOWHERE, LVHT_ONITEMICON, LVHT_ONITEMLABEL, LVHT_ONITEMSTATEICON, LVHT_ONITEM)
 //------------------------------------------------------------------------
-void CGridListCtrlEx::CellHitTest(const CPoint& pt, int& nRow, int& nCol) const
+UINT CGridListCtrlEx::CellHitTest(const CPoint& pt, int& nRow, int& nCol) const
 {
 	nRow = -1;
 	nCol = -1;
@@ -1076,6 +1078,8 @@ void CGridListCtrlEx::CellHitTest(const CPoint& pt, int& nRow, int& nCol) const
 	nCol = lvhti.iSubItem;
 	if (!(lvhti.flags & LVHT_ONITEM))
 		nRow = -1;
+
+	return lvhti.flags;
 }
 
 //------------------------------------------------------------------------
@@ -1840,8 +1844,8 @@ void CGridListCtrlEx::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 //------------------------------------------------------------------------
 //! Override this method to provide text string and image index when drawing cells
-//!	 - Called when using LPSTR_TEXTCALLBACK with CListCtrl::SetItemText()
-//!  - Called when using I_IMAGECALLBACK with SetCellImage()
+//!	- Called when using LPSTR_TEXTCALLBACK with CListCtrl::SetItemText()
+//!	- Called when using I_IMAGECALLBACK with SetCellImage()
 //!
 //! @param lvi The item that requires cell text and image index
 //------------------------------------------------------------------------
@@ -2115,6 +2119,19 @@ int CGridListCtrlEx::OnClickEditStart(int nRow, int nCol, CPoint pt, bool bDblCl
 //!
 //! @param nRow The index of the row
 //! @param nCol The index of the column
+//! @return Pointer to the cell editor (If NULL then block cell editing)
+//------------------------------------------------------------------------
+CWnd* CGridListCtrlEx::OnEditBegin(int nRow, int nCol)
+{
+	return OnEditBegin(nRow, nCol, CPoint(-1,-1));
+}
+
+//------------------------------------------------------------------------
+//! Override this method to control whether cell editing is allowed for a cell.
+//! Called when start editing a cell value
+//!
+//! @param nRow The index of the row
+//! @param nCol The index of the column
 //! @param pt The position clicked, in client coordinates.
 //! @return Pointer to the cell editor (If NULL then block cell editing)
 //------------------------------------------------------------------------
@@ -2147,6 +2164,18 @@ bool CGridListCtrlEx::OnEditComplete(int nRow, int nCol, CWnd* pEditor, LV_DISPI
 		pTrait->OnEditEnd();
 
 	return true;	// Accept edit
+}
+
+//------------------------------------------------------------------------
+//! Starts the edit of a cell and sends a message to the parent window.
+//!
+//! @param nRow The index of the row
+//! @param nCol The index of the column
+//! @return Pointer to the cell editor (If NULL then block cell editing)
+//------------------------------------------------------------------------
+CWnd* CGridListCtrlEx::EditCell(int nRow, int nCol)
+{
+	return EditCell(nRow, nCol, CPoint(-1,-1));
 }
 
 //------------------------------------------------------------------------
@@ -2845,12 +2874,15 @@ void CGridListCtrlEx::OnContextMenu(CWnd* pWnd, CPoint point)
 		}
 		else
 		{
+			// Right-clicking the stateicon checkbox will make it flip, don't also display context menu
 			int nRow, nCol;
-			CellHitTest(pt, nRow, nCol);
-			if (nRow!=-1)
-                OnContextMenuCell(pWnd, point, nRow, nCol);
-			else
-				OnContextMenuGrid(pWnd, point);
+			if (CellHitTest(pt, nRow, nCol)!=LVHT_ONITEMSTATEICON)
+			{
+				if (nRow!=-1)
+					OnContextMenuCell(pWnd, point, nRow, nCol);
+				else
+					OnContextMenuGrid(pWnd, point);
+			}
 		}
 	}
 }
@@ -3878,6 +3910,7 @@ bool CGridListCtrlEx::MoveSelectedRows(int nDropRow)
 
 //------------------------------------------------------------------------
 //! LVN_ITEMCHANGED message handler called when a row changes state
+//! When using LVS_OWNERDATA style, this only gets called for single item state change.
 //!
 //! @param pNMHDR Pointer to LPNMLISTVIEW structure
 //! @param pResult Not used
