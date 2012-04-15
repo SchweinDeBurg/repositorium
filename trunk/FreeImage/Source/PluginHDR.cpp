@@ -268,7 +268,7 @@ static BOOL
 rgbe_WriteHeader(FreeImageIO *io, fi_handle handle, unsigned width, unsigned height, rgbeHeaderInfo *info) {
 	char buffer[HDR_MAXLINE];
 
-	char *programtype = "RADIANCE";
+	const char *programtype = "RADIANCE";
 
 	if(info && (info->valid & RGBE_VALID_PROGRAMTYPE)) {
 		programtype = info->programtype;
