@@ -71,7 +71,7 @@
 			<li>To keep the contents of the memory file and append the archive at the end of it, open the archive using the <a class="linkapi" href="classCZipArchive.html#a5d80f4df2aa34edda55d5fb98cffafdba16ee2398b435a10f65b718e0ec1abd73">CZipArchive::zipCreateAppend</a> mode.</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipMemFile mf;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipMemFile mf;
     CZipArchive zip;    
     <span class="comment">// create the archive in memory</span>
     zip.Open(mf, CZipArchive::zipCreate);
@@ -90,11 +90,11 @@
         <span class="comment">// we must free the detached memory</span>
         free(b);
     }
-</pre></div> 
+</pre></div> </div>
 		<h3 id="open" name="open" class="kb">
 			Opening</h3>
 		If you are opening an existing archive, the memory file should already hold an archive.<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipFile f;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipFile f;
     <span class="keywordflow">if</span> (f.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>), CZipFile::modeRead, <span class="keyword">false</span>))
     {
         <span class="comment">// read the contents of the file into the memory file</span>
@@ -110,7 +110,7 @@
         zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>));
         zip.Close();
     }
-</pre></div> <h2 id="process" name="process" class="kb">
+</pre></div> </div><h2 id="process" name="process" class="kb">
 			In-Memory Data Compressing and Extracting</h2>
 		<ul>
 			<li>To compress a memory file, use one of the following methods:
@@ -125,7 +125,7 @@
 				re-allocations.</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    LPCTSTR zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
+<div class="textblock"><div class="fragment"><pre class="fragment">    LPCTSTR zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
     CZipArchive zip;
     zip.Open(zipFileName, CZipArchive::zipCreate);
     CZipMemFile mf;
@@ -149,7 +149,7 @@
     _tprintf((LPCTSTR)b);
     <span class="comment">// we must free the detached memory</span>
     free(b);
-</pre></div> 
+</pre></div> </div>
 		<h2 id="api" name="api" class="kb">
 			See Also API Links</h2>
 		<ul class="non">
@@ -165,7 +165,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

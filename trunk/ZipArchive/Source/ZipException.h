@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2012 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -177,6 +177,7 @@ public:
 		dirWithSize,		///< The directory with a non-zero size found while testing.
 		internalError,		///< An internal error.
 		fileError,			///< A file error occurred. Examine #m_iSystemError for more information.
+		notFound,			///< A file was not found.
 		notRemoved,			///< Error while removing a file. Examine #m_iSystemError for more information.
 		notRenamed,			///< Error while renaming a file. Examine #m_iSystemError for more information.
 		platfNotSupp,		///< Cannot create a file for the specified platform.

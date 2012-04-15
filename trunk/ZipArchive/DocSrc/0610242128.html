@@ -85,7 +85,7 @@
 			<li><a class="linkapi" href="classCZipFileHeader.html#ae4cbf85b55f10be47fa3782a0bb812b8">CZipFileHeader::m_aLocalExtraData</a></li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// open an existing archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     <span class="keywordflow">for</span> (ZIP_INDEX_TYPE i = 0; i &lt; zip.GetCount(); i++)
@@ -108,10 +108,10 @@
             i, name, uncomprSize, comprSize, extraSize);
 <span class="preprocessor">#endif</span>
 <span class="preprocessor">    }</span>
-</pre></div> 
+</pre></div> </div>
 		<h4 id="iter" name="iter" class="kb">
 			Iterating Over Items</h4>
-		To find out about the number of files in an archive, use the <a class="linkapi" href="classCZipArchive.html#a50fa2f64fc0150c7685fb1f52adf747f">CZipArchive::GetCount()</a>
+		To find out about the number of files in an archive, use the <a class="linkapi" href="classCZipArchive.html#ab3bdd0322dd12c40434cd8f0d9ad2523">CZipArchive::GetCount()</a>
 		method. This method and the <code>GetSize()</code> and <code>GetCount()</code> methods
 		(collections' members) in some implementations, return an unsigned type. To check
 		the data type used by collections, examine the <span class="preproc">ZIP_ARRAY_SIZE_TYPE</span>
@@ -122,7 +122,7 @@
 		value for the unsigned type, the loop may run forever. The code below represents
 		an <strong style="color: Red">invalid code</strong>.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    <span class="comment">/* THIS IS A BAD CODE. */</span>
+<div class="textblock"><div class="fragment"><pre class="fragment">    <span class="comment">/* THIS IS A BAD CODE. */</span>
     <span class="comment">/* IT WILL THROW AN EXCEPTION OR RUN FOREVER */</span>
 
     CZipArchive zip;
@@ -136,12 +136,12 @@
          <span class="comment">//... do something</span>
     }
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<p />
 		The <strong style="color: Green">correct way</strong> for reverse iteration illustrates
 		the code below.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     ZIP_INDEX_TYPE i = zip.GetCount();
     <span class="comment">// correct reverse iteration</span>
@@ -153,7 +153,7 @@
         <span class="comment">// ... do something</span>
     }    
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<p />
 		Please pay attention when you use your code in both MFC and STL versions, because
 		you will use both signed and unsigned types as <span class="preproc">ZIP_ARRAY_SIZE_TYPE</span>.
@@ -181,7 +181,7 @@
 		The ZipArchive Library provides the following methods for predicting names and sizes:
 		<ul class="non">
 			<li><a class="linkapi" href="classCZipArchive.html#a9d875516849ce5632a024b3acb4613cf">CZipArchive::PredictFileNameInZip()</a></li>
-			<li><a class="linkapi" href="classCZipArchive.html#afc3097b486b8acefca0ccf07aa300d3f">CZipArchive::PredictMaximumFileSizeInArchive()</a></li>
+			<li><a class="linkapi" href="classCZipArchive.html#a65a7724e8724a6a0c1f0465ec382e1ff">CZipArchive::PredictMaximumFileSizeInArchive()</a></li>
 			<li><a class="linkapi" href="classCZipArchive.html#ae34cef405c28c66cbf7fc6f1e45b09d6">CZipArchive::PredictExtractedFileName()</a></li>
 			<li><a class="linkapi" href="classCZipArchive.html#a136b89cc32a24b3f358f592c9d060a78">CZipArchive::WillBeDuplicated()</a></li>
 		</ul>
@@ -192,7 +192,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

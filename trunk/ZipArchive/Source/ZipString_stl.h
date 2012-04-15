@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2012 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -50,9 +50,9 @@
 #include <cctype>
 
 #if !defined(UNDER_CE)
-#include <locale>
+	#include <locale>
 #else
-#include <string>
+	#include <string>
 #endif   // UNDER_CE
 
 #include "ZipExport.h"
@@ -284,8 +284,8 @@ public:
 
 
 #if (_MSC_VER >= 1300)
-#pragma warning(push)
-#pragma warning(disable: 4793) // 'vararg' : causes native code generation for function 'void CZipString::Format(LPCTSTR,...)'
+	#pragma warning(push)
+	#pragma warning(disable: 4793) // 'vararg' : causes native code generation for function 'void CZipString::Format(LPCTSTR,...)'
 #endif
 
 	void Format(LPCTSTR lpszFormat, ...)

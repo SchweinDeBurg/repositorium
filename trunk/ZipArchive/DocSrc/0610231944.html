@@ -78,14 +78,14 @@
 			</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     CZipAddNewFileInfo info(_T(<span class="stringliteral">"C:\\Temp\\file.dat"</span>), _T(<span class="stringliteral">"replacement.dat"</span>));
     <span class="comment">// replace the first file in the archive</span>
     info.m_uReplaceIndex = 0;
     zip.AddNewFile(info);
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h3 id="replcallback" name="replcallback" class="kb">
 			Callbacks Called</h3>
 		<ul>
@@ -123,7 +123,7 @@
 			<code>bRemoveData</code> parameter to <code>false</code>.
 		</p>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     <span class="comment">// delete the first file</span>
     zip.RemoveFile(0);
@@ -138,7 +138,7 @@
     names.Add(_T(<span class="stringliteral">"file4.dat"</span>));
     zip.RemoveFiles(names);
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h3 id="delcallback" name="delcallback" class="kb">
 			Callbacks Called</h3>
 		<ul>
@@ -176,7 +176,7 @@
 		method notifies about the progress using the <a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734ab22f5bc26e3bf0785fe31eb24e1225b4">CZipActionCallback::cbModify</a>
 		callback.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     zip.SetCommitMode(CZipArchive::cmManual);
     <span class="comment">// rename the first file in the archive</span>
@@ -185,7 +185,7 @@
     zip.CommitChanges();
     <span class="comment">// perform possibly some other operations</span>
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h2 id="rename" name="rename" class="kb">
 			Renaming</h2>
 		<ul>
@@ -196,7 +196,7 @@
 			<li>To rename multiple files at once, you may want to use the <a class="linkapi" href="classCZipArchive.html#aec499339bf3f20e7a198289b4288d7a4a1fc91e619248861ee0b182ed90bea791">CZipArchive::cmManual</a> commit changes mode. </li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     zip.SetCommitMode(CZipArchive::cmManual);
     <span class="comment">// rename the first file in the archive</span>
@@ -204,7 +204,7 @@
     zip[2]-&gt;SetFileName(_T(<span class="stringliteral">"renamed2.dat"</span>));
     <span class="comment">// this will call CommitChanges</span>
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h2 id="time" name="time" class="kb">
 			Changing the Modification Time of Files Inside an Archive</h2>
 		The modification time of the file is written in both local and central headers.
@@ -237,7 +237,7 @@
 				method.</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     <span class="keywordtype">int</span> iIndexOfFile = 1;
     <span class="comment">// read the local header information</span>
@@ -251,7 +251,7 @@
     <span class="comment">// the central directory will be written back to the archive</span>
     <span class="comment">// during closing</span>
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h2 id="comment" name="comment" class="kb">
 			Writing and Reading File and Archive Comments</h2>
 		The ZipArchive Library provides the following methods to write and read comments.
@@ -293,7 +293,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

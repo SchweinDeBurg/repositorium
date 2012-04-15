@@ -107,7 +107,7 @@
 		the <a class="linkapi" href="structCZipActionCallback.html#abc0a90bcffefb9629ffa9c8421173338">CZipActionCallback::m_iType</a> value from within the
 		<a class="linkapi" href="structCZipActionCallback.html#aa46f7eb83d53542b279c194cb3699cad">CZipActionCallback::GetStepSize()</a> method.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment"><span class="keyword">class </span>CProgressCallback : <span class="keyword">public</span> CZipActionCallback
+<div class="textblock"><div class="fragment"><pre class="fragment"><span class="keyword">class </span>CProgressCallback : <span class="keyword">public</span> CZipActionCallback
 {    
     <span class="keywordtype">void</span> Init(LPCTSTR lpszFileInZip, LPCTSTR lpszExternalFile) 
     {
@@ -165,7 +165,7 @@
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"file.ext"</span>));
     zip.Close();
 }
-</pre></div> 
+</pre></div> </div>
 		<h2 id="multi" name="multi" class="kb">
 			Multiple Actions Callbacks</h2>
 		When processing multiple files in one step, there is additional information available
@@ -186,7 +186,7 @@
 				when the whole processing finishes.</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment"><span class="keyword">class </span>CMultiProgressCallback : <span class="keyword">public</span> CZipActionCallback
+<div class="textblock"><div class="fragment"><pre class="fragment"><span class="keyword">class </span>CMultiProgressCallback : <span class="keyword">public</span> CZipActionCallback
 {    
     <span class="keywordtype">bool</span> Callback(ZIP_SIZE_TYPE)
     {
@@ -258,7 +258,7 @@
     zip.AddNewFiles(_T(<span class="stringliteral">"C:\\Temp"</span>), _T(<span class="stringliteral">"*.bin"</span>), <span class="keyword">false</span>);
     zip.Close();
 }
-</pre></div> 
+</pre></div> </div>
 		<h2 id="api" name="api" class="kb">
 			See Also API Links</h2>
 		<ul class="non">
@@ -274,7 +274,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

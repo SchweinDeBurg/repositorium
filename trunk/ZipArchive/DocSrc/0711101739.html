@@ -73,12 +73,12 @@
         To use the seeking feature, it is needed to include the proper header and use the
         <code>ZipArchiveLib</code> namespace as provided in the sample code below.
         <div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment"><span class="comment">// This header needs to be included.</span>
+<div class="textblock"><div class="fragment"><pre class="fragment"><span class="comment">// This header needs to be included.</span>
 <span class="preprocessor">#include "DeflateCompressor.h"</span>
 
 <span class="comment">// Use the following namespace or prefix the classes with its name.</span>
 <span class="keyword">using namespace </span>ZipArchiveLib;
-</pre></div> 
+</pre></div> </div>
         All the following samples assume that the above declarations are already made.
         <h2 id="creating" name="creating" class="kb">
             Creating Seekable Data</h2>
@@ -103,7 +103,7 @@
             the compressed data later.
         </p>
         <div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\archive.zip"</span>), CZipArchive::zipCreate);
 
     <span class="comment">// Request frequent creating of the synchronization blocks</span>
@@ -147,7 +147,7 @@
     <span class="comment">// ...</span>
 
     zip.Close();
-</pre></div> 
+</pre></div> </div>
         <h3 id="stat" name="stat" class="kb">
             Determining Statistics of the Compressed Data</h3>
         To find the balance between the compression ratio and the frequency of creating
@@ -175,7 +175,7 @@
             for the current file.
         </p>
         <div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    <span class="comment">// ... continues the previous sample</span>
+<div class="textblock"><div class="fragment"><pre class="fragment">    <span class="comment">// ... continues the previous sample</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\archive.zip"</span>));
 
     <span class="comment">// Load the offsets array from the buffer where it was saved before.</span>
@@ -192,7 +192,7 @@
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">true</span>, NULL, ZipPlatform::dfmRegular, pPair);
 
     zip.Close();
-</pre></div> 
+</pre></div> </div>
         <h3 id="multi" name="multi" class="kb">
             Multiple Seeking in Data</h3>
         You can perform multiple seek and extract operations on a file that is opened for
@@ -202,7 +202,7 @@
         can start decompressing a file with calls to the <a class="linkapi" href="classCZipArchive.html#adebd2684eca1d30e3ba50865c11a7cc6">CZipArchive::ReadFile()</a>
         method.
         <div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    <span class="comment">// ... continues the previous sample</span>
+<div class="textblock"><div class="fragment"><pre class="fragment">    <span class="comment">// ... continues the previous sample</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\archive.zip"</span>));
 
     <span class="comment">// Load the offsets array from the buffer where it was saved before.</span>
@@ -249,7 +249,7 @@
     <span class="comment">// ...</span>
 
     zip.Close();
-</pre></div> 
+</pre></div> </div>
         <h2 id="extra" name="extra" class="kb">
             Preserving Offsets Array</h2>
         <p>
@@ -277,7 +277,7 @@
             for more information about Zip64 support).
         </p>
         <div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\archive.zip"</span>), CZipArchive::zipCreate);
 
     <span class="comment">// Request creating of the synchronization blocks.</span>
@@ -317,7 +317,7 @@
     <span class="comment">// ...</span>
 
     zip.Close();
-</pre></div> 
+</pre></div> </div>
         <h2 id="api" name="api" class="kb">
             See Also API Links</h2>
         <ul class="non">
@@ -338,7 +338,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

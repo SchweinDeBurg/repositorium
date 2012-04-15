@@ -83,7 +83,7 @@
 			<li>a new name for the extracted file - it can be different from the original filename.</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// open an existing archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     <span class="comment">// extract the first file</span>
@@ -91,7 +91,7 @@
     <span class="comment">// extract the second file with the resulting filename changed</span>
     zip.ExtractFile(1, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"just extracted.dat"</span>));    
     zip.Close();    
-</pre></div> 
+</pre></div> </div>
 		<h3 id="callback" name="callback" class="kb">
 			Callbacks Called</h3>
 		The methods for easy extraction can call the <a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734a6b92922ec8ce88d0ad043878fb096d97">CZipActionCallback::cbExtract</a> callback to notify
@@ -122,7 +122,7 @@
 			</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// open an existing archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));    
     <span class="comment">// open the first file in the archive for extraction</span>
@@ -164,7 +164,7 @@
         zip.Close(CZipArchive::afAfterException);
         <span class="keywordflow">throw</span>;
     }        
-</pre></div> 
+</pre></div> </div>
 		<h2 id="thread" name="thread" class="kb">
 			Shared and Multithreaded Extraction</h2>
 		You can share one copy of the central directory between multiple <a class="linkapi" href="classCZipArchive.html">CZipArchive</a> objects that refer
@@ -181,7 +181,7 @@
 		The sample code below illustrates the idea (it does not contain the code that starts extraction asynchronously in multiple
 		threads).
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment"><span class="comment">// A thread method</span>
+<div class="textblock"><div class="fragment"><pre class="fragment"><span class="comment">// A thread method</span>
 <span class="keywordtype">void</span> RunThread(ZIP_INDEX_TYPE uStartIdx, ZIP_INDEX_TYPE uEndIdx, CZipArchive&amp; zip)
 {
     CZipArchive zipInThread;
@@ -230,7 +230,7 @@
             <span class="keywordflow">break</span>;
     }
 }
-</pre></div> 
+</pre></div> </div>
 		<h3 id="threadNotes" name="threadNotes" class="kb">
 			Additional Considerations</h3>
 		<ul>
@@ -246,7 +246,7 @@
 		To check, if a file inside an archive is correct, test the file with the <a class="linkapi" href="classCZipArchive.html#ae21b124b0708d7b3b5d19807dcb0dc68">CZipArchive::TestFile()</a>
 		method.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// open an existing archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));    
     <span class="comment">// test all files</span>
@@ -278,7 +278,7 @@
     }
     zip.Close();
     <span class="keywordflow">return</span> ret;
-</pre></div> 
+</pre></div> </div>
 		<h2 id="api" name="api" class="kb">
 			See Also API Links</h2>
 		<ul class="non">
@@ -301,7 +301,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

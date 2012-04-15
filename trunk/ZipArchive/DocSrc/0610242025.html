@@ -65,7 +65,7 @@
 		methods) of the sorted files using the <a class="linkapi" href="classCZipArchive.html#ad5f980abfefe3f4e075da12623d13274">CZipArchive::GetFindFastIndex()</a>
 		method.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// open an existing archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     ZIP_INDEX_TYPE index = zip.FindFile(_T(<span class="stringliteral">"file1.dat"</span>));
@@ -99,7 +99,7 @@
 <span class="preprocessor">#endif</span>
 <span class="preprocessor"></span>        }
     }
-</pre></div> 
+</pre></div> </div>
 		<h2 id="match" name="match" class="kb">
 			Searching by Wildcards</h2>
 		To search for files in an archive using wildcards, use the <a class="linkapi" href="classCZipArchive.html#ab6d202ba9404fb24e27c23497638b6e0">CZipArchive::FindMatches()</a>
@@ -129,7 +129,7 @@
 		is the minimal set of characters allowed in the <strong>set</strong> pattern construct.
 		Other characters are allowed (only 8-bit characters), if your system supports them.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// open an existing archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     CZipIndexesArray indexes;
@@ -148,7 +148,7 @@
 <span class="preprocessor">#endif</span>
 <span class="preprocessor"></span>    }
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h4 id="api" name="api" class="kb">
 			Searching for Files in Specified Directory</h4>
 		To find all files that are located in a particular directory inside of an archive,
@@ -170,7 +170,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

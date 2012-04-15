@@ -52,7 +52,7 @@
         First you need to create a self-extracting executable stub. The following sample
         code shows an example of it.
         <div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment"><span class="comment">//Windows code</span>
+<div class="textblock"><div class="fragment"><pre class="fragment"><span class="comment">//Windows code</span>
 <span class="keywordtype">int</span> APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR,    <span class="keywordtype">int</span>)
 {
     CZipArchive zip;
@@ -72,7 +72,7 @@
     zip.Close();
     <span class="keywordflow">return</span> 0;
 }
-</pre></div> 
+</pre></div> </div>
         <h3 id="append" name="append" class="kb">
             Appending Archive to Self-Extracting Stub</h3>
         To create a self-extracting archive, create a new archive using the <a class="linkapi" href="classCZipArchive.html#a5d80f4df2aa34edda55d5fb98cffafdba16ee2398b435a10f65b718e0ec1abd73">CZipArchive::zipCreateAppend</a> mode and pass the path of your self-extracting
@@ -81,7 +81,7 @@
         Then, you can for example add some files to it. This will create a self-extracting archive
         that is compatible with popular archivers.
         <div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\my-sf-stub.exe"</span>), CZipArchive::zipCreateAppend);
 
     <span class="comment">// now add some files</span>
@@ -90,19 +90,19 @@
     zip.Close();
 
     <span class="comment">// now your file z:\Temp\my-sf-stub.exe is a self-extracting archive.</span>
-</pre></div> 
+</pre></div> </div>
         <br />
         You can later open the archive for modifications. In case you need it, the offset
         of the first file in the archive tells you the size of the self-extracting stub:
         <div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\my-sf-stub.exe"</span>));
 
     ZIP_SIZE_TYPE stubSize = zip.GetFileInfo(0)-&gt;m_uOffset;
     <span class="comment">//...</span>
 
     zip.Close();
-</pre></div> 
+</pre></div> </div>
         <h3 id="convert" name="convert" class="kb">
             Converting Existing Archive to Self-Extracting Archive</h3>
         To convert an existing archive into a self-extracting archive, use one of the following
@@ -121,14 +121,14 @@
         </ul>
         All these method create self-extracting archives compatible with popular archivers.
         <div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     zip.PrependData(_T(<span class="stringliteral">"C:\\Temp\\my-sf-stub.exe"</span>));
     <span class="comment">// renaming is performed (lpszExt is not NULL) </span>
     <span class="comment">// so the archive will be closed after prepending</span>
 
     <span class="comment">// now we have z:\temp\test.exe file that can be executed</span>
-</pre></div> 
+</pre></div> </div>
         <h4 id="callbacks" name="callbacks" class="kb">
             Callbacks Called</h4>
         While shifting data, the <a class="linkapi" href="structCZipActionCallback.html#a987550875690c39c4278cc65e4f11734a1d8d913bae0e790f596774fd5aa69e5a">CZipActionCallback::cbMoveData</a>
@@ -164,7 +164,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

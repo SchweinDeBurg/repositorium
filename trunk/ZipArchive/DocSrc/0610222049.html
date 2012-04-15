@@ -54,7 +54,7 @@
 		In the STL version, the ZipArchive Library throws exceptions inherited from <code>std::exception</code>. When catching exceptions,
 		you should catch a reference to an exception object, not a pointer to it.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="keywordflow">try</span>
     {
         zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
@@ -71,13 +71,13 @@
         <span class="comment">// if it was modified</span>
         zip.Close(CZipArchive::afAfterException);
     }
-</pre></div> 
+</pre></div> </div>
 		<h2 id="mfc" name="mfc" class="kb">
 			MFC Version</h2>
 		In the MFC version, the ZipArchive Library throws exceptions inherited from <code>CException</code>. When catching exceptions,
 		you should catch a pointer to an exception object and delete the object after you have finished handling the exception.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="keywordflow">try</span>
     {
         zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
@@ -111,7 +111,7 @@
         <span class="comment">// the archive should be usable after this call</span>
         zip.Close(CZipArchive::afWriteDir);
     }
-</pre></div> 
+</pre></div> </div>
 		<h2 id="api" name="api" class="kb">
 			See Also API Links</h2>
 		<ul class="non">
@@ -127,7 +127,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

@@ -23,6 +23,7 @@
         <div class="kbaindex">
             <ul class="kbaindex">
 
+<li><a class="linkindex" href="#4.1.2">4.1.2 (2012-03-03)</a></li>
 <li><a class="linkindex" href="#4.1.1">4.1.1 (2011-06-27)</a></li>
 <li><a class="linkindex" href="#4.1.0">4.1.0 (2010-10-31)</a></li>
 <li><a class="linkindex" href="#4.0.1">4.0.1 (2009-04-24)</a></li>
@@ -31,7 +32,12 @@
 
         </div>
         <div class="kbacontents">
-            <h2 class="kb" id="4.1.1" name="4.1.1">4.1.1 (2011-06-27)
+            <h2 class="kb" id="4.1.2" name="4.1.2">4.1.2 (2012-03-03)
+            </h2><h4 class="kb">Changes</h4><ul><li>
+				Zlib library updated to 1.2.6
+			</li></ul><h4 class="kb">Bugs Fixed</h4><ul><li>
+				An archive was corrupted if replacing a file in the archive with a file that is locked by another process.
+			</li><li>Fixed the situation where removing all files in an archive with self-extract stub resulted in overwriting the stub.</li><li>Recovery from extracting a split archive with missing parts was not possible without a callback.</li><li>Zippie extraction problems with split archives.</li></ul><h2 class="kb" id="4.1.1" name="4.1.1">4.1.1 (2011-06-27)
             </h2><h4 class="kb">New Features</h4><ul><li>
 				Added <a class="linkapi" href="classCZipArchive.html#a23977e24b0930a40a83c0e4075860e4da7ecd57be82b9d2a43d0ef3d720f8fca8">CZipArchive::checkDecryptionVerifier</a> to allow skipping verification of decryption control bytes to recover some invalid archives.
 			</li></ul><h4 class="kb">Changes</h4><ul><li>
@@ -239,7 +245,7 @@
 			</li><li>
 				Exception <a class="linkapi" href="classCZipException.html#aa4f3fc7c792e57a0a6881b6ea48725afa1dd6ae22f1928ff94d83943286416317">CZipException::fileError</a> is now thrown when attributes could not be read from a file (in various places).
 			</li><li>
-				<a class="linkapi" href="classCZipArchive.html#afc3097b486b8acefca0ccf07aa300d3f">CZipArchive::PredictMaximumFileSizeInArchive()</a> uses now<br /><a class="linkapi" href="classCZipFileHeader.html#a26a40f4a1ddf82be77e085418121d378">CZipFileHeader::m_uComprSize</a> instead of <a class="linkapi" href="classCZipFileHeader.html#aef50a33f370b40c87dad9c906d903905">CZipFileHeader::m_uLocalComprSize</a>.
+				<a class="linkapi" href="classCZipArchive.html#a65a7724e8724a6a0c1f0465ec382e1ff">CZipArchive::PredictMaximumFileSizeInArchive()</a> uses now<br /><a class="linkapi" href="classCZipFileHeader.html#a26a40f4a1ddf82be77e085418121d378">CZipFileHeader::m_uComprSize</a> instead of <a class="linkapi" href="classCZipFileHeader.html#aef50a33f370b40c87dad9c906d903905">CZipFileHeader::m_uLocalComprSize</a>.
 			</li><li>
 				<a class="linkapi" href="namespaceZipCompatibility.html#ae66702f3e1756c3a13834602f8861209ad3d0d8040622597bb25fbc425a2cfb89">ZipCompatibility::zcNtfs</a> value changed to <code>11</code> to be consistent with other software (thanks to Ken Daraseng for reporting it).
 			</li><li>
@@ -266,7 +272,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>
