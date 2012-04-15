@@ -504,6 +504,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\tiffconf.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\tiffio.h"
 				>
 			</File>
