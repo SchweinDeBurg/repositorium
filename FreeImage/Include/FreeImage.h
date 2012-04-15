@@ -30,7 +30,7 @@
 
 #define FREEIMAGE_MAJOR_VERSION   3
 #define FREEIMAGE_MINOR_VERSION   15
-#define FREEIMAGE_RELEASE_SERIAL  2
+#define FREEIMAGE_RELEASE_SERIAL  3
 
 // Compiler options ---------------------------------------------------------
 
@@ -207,6 +207,16 @@ typedef struct tagBITMAPINFO {
 } BITMAPINFO, *PBITMAPINFO;
 
 #endif // _WINDOWS_
+
+#ifndef _MSC_VER
+// define portable types for 32-bit / 64-bit OS
+typedef int64_t FIINT64;
+typedef uint64_t FIUINT64;
+#else
+// MS is not C99 ISO compliant
+typedef signed __int64 FIINT64;
+typedef unsigned __int64 FIUINT64;
+#endif // _MSC_VER
 
 // Types used in the library (specific to FreeImage) ------------------------
 
@@ -587,7 +597,10 @@ FI_ENUM(FREE_IMAGE_MDTYPE) {
 	FIDT_FLOAT		= 11,	// 32-bit IEEE floating point 
 	FIDT_DOUBLE		= 12,	// 64-bit IEEE floating point 
 	FIDT_IFD		= 13,	// 32-bit unsigned integer (offset) 
-	FIDT_PALETTE	= 14	// 32-bit RGBQUAD 
+	FIDT_PALETTE	= 14,	// 32-bit RGBQUAD 
+	FIDT_LONG8		= 16,	// 64-bit unsigned integer 
+	FIDT_SLONG8		= 17,	// 64-bit signed integer
+	FIDT_IFD8		= 18	// 64-bit unsigned integer (offset)
 };
 
 /**

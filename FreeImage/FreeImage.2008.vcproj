@@ -846,7 +846,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\license-gpl.txt"
+			RelativePath=".\license-gplv2.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\license-gplv3.txt"
 			>
 		</File>
 		<File
