@@ -107,14 +107,14 @@
 		a file. There is no need to use this method when decompressing. The decompression process automatically detects the algorithms
 		used.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// create a new archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>), CZipArchive::zipCreate);    
     <span class="comment">// set the compression method</span>
     zip.SetCompressionMethod(CZipCompressor::methodBzip2);
     zip.AddNewFile(_T(<span class="stringliteral">"C:\\Temp\\file1.dat"</span>));
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h3 id="deflate" name="deflate" class="kb">
 			Deflate</h3>
 		It is the most frequently used algorithm in zip archives and supported by all standard zip utilities. The implementation
@@ -173,7 +173,7 @@
 			<li>the index of a file to be replaced by the new file (see <a class="linkkb" href="0610231944.html#replace">Modification of Archives: Replacing, Renaming, Deleting and Changing Data</a> for more information).</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// create a new archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>), CZipArchive::zipCreate);    
     <span class="comment">// simple add with the default compression level</span>
@@ -196,7 +196,7 @@
 <span class="comment">     |-file4.dat</span>
 <span class="comment">     |-renamed.dat</span>
 <span class="comment">*/</span>
-</pre></div> 
+</pre></div> </div>
 		<h3 id="callback" name="callback" class="kb">
 			Callbacks Called</h3>
 		The methods for easy compression can call the following callbacks to notify about the progress:
@@ -240,7 +240,7 @@
 			<li>To group multiple filters, you can use the <a class="linkapi" href="classZipArchiveLib_1_1CGroupFileFilter.html">ZipArchiveLib::CGroupFileFilter</a> filter.</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment"><span class="comment">// use the namespace where the default filters are located</span>
+<div class="textblock"><div class="fragment"><pre class="fragment"><span class="comment">// use the namespace where the default filters are located</span>
 <span class="keyword">using namespace </span>ZipArchiveLib;
 
 <span class="comment">// create a custom filter that accepts files depending on their size.</span>
@@ -293,7 +293,7 @@
     zip.AddNewFiles(_T(<span class="stringliteral">"C:\\Temp"</span>), groupFilter);
     zip.Close();    
 }
-</pre></div> 
+</pre></div> </div>
 		<h4 id="filterDirs" name="filterDirs" class="kb">
 			Filtering Directories</h4>
 		To match directories, use the <code>_T("*")</code> pattern in the name filter (<a class="linkapi" href="classZipArchiveLib_1_1CNameFileFilter.html">ZipArchiveLib::CNameFileFilter</a>).
@@ -303,7 +303,7 @@
 			in the <code>iSmartLevel</code> parameter of the <a class="linkapi" href="classCZipArchive.html#a41c83a931fe53ed2f4c374b4a7177969">CZipArchive::AddNewFiles()</a> method.
 		</p>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>), CZipArchive::zipCreate);
     <span class="comment">// to include empty directories, use the following filter</span>
     CNameFileFilter filter(_T(<span class="stringliteral">"*"</span>), <span class="keyword">false</span>, CNameFileFilter::toAll);
@@ -318,7 +318,7 @@
         CZipArchive::zipsmSafeSmart | CZipArchive::zipsmIgnoreDirectories);    
 
     zip.Close();    
-</pre></div> 
+</pre></div> </div>
 		<h4 id="filtersNotes" name="filtersNotes" class="kb">
 			Additional Considerations</h4>
 		<ul>
@@ -353,7 +353,7 @@
 				to prevent further exceptions being thrown when closing.</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// open an existing archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));    
     <span class="comment">// specify a template for the file to be added</span>
@@ -373,7 +373,7 @@
     zip.CloseNewFile();
     <span class="comment">// close the archive</span>
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h3 id="dir" name="dir" class="kb">
 			Adding Directories</h3>
 		You can add a directory in two ways:
@@ -383,7 +383,7 @@
 		</ul>
 		The ZipArchive Library treats files ending with a path separator like directories.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;
     <span class="comment">// create a zip archive</span>
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>), CZipArchive::zipCreate);    
     <span class="comment">// add an existing directory (no files from that directory will be added)</span>
@@ -397,7 +397,7 @@
     zip.OpenNewFile(header, CZipCompressor::levelStore);
     zip.CloseNewFile();    
     zip.Close();    
-</pre></div> 
+</pre></div> </div>
 		<h2 id="other" name="other" class="kb">
 			Other Functionality</h2>
 		<h3 id="get" name="get" class="kb">
@@ -418,7 +418,7 @@
 				method and a password.</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    <span class="comment">// create a new archive</span>
+<div class="textblock"><div class="fragment"><pre class="fragment">    <span class="comment">// create a new archive</span>
     CZipArchive zipDest;
     zipDest.Open(_T(<span class="stringliteral">"C:\\Temp\\testDest.zip"</span>), CZipArchive::zipCreate);    
 
@@ -433,7 +433,7 @@
     zipDest.GetFromArchive(zipSource, indexes);
     zipSource.Close();
     zipDest.Close();
-</pre></div> 
+</pre></div> </div>
 		<h3 id="threaded" name="threaded" class="kb">
 			Multithreaded Compression</h3>
 		Although compression to a single archive from multiple threads is not possible, you can perform multithreaded compression
@@ -500,7 +500,7 @@
 		<code>ZipArchiveLib::CBzip2Compressor::COptions</code>, respectively. Please refer to the sample code below
 		and the documentation of these classes.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment"><span class="comment">// These headers needs to be included.</span>
+<div class="textblock"><div class="fragment"><pre class="fragment"><span class="comment">// These headers needs to be included.</span>
 
 <span class="preprocessor">#include "DeflateCompressor.h"</span>
 <span class="preprocessor">#include "Bzip2Compressor.h"</span>
@@ -525,7 +525,7 @@
     <span class="comment">// ... Process files</span>
     
 }
-</pre></div> 
+</pre></div> </div>
 		<h2 id="notes" name="notes" class="kb">
 			Additional Considerations (Windows Only)</h2>
 		When your system utilizes large amount of memory while extensive file operations, see <a class="linkkb" href="0610231944.html#cache">Modification of Archives: Replacing, Renaming, Deleting and Changing Data</a>
@@ -566,7 +566,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

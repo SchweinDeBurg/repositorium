@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2012 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -132,7 +132,7 @@
 	#define _lseeki64 lseek64
 #else
 	#include <TCHAR.H>
-   	#include <windows.h>
+   #include <windows.h>
 	#include <stddef.h>
 #ifndef _I64_MAX
 	#include <limits.h>

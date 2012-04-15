@@ -379,10 +379,10 @@
 		</ul>
 		<h3 id="borland" name="borland" class="kb">
 			C++Builder and Borland</h3>
-		To compile the library under C++Builder, create e.g. a Static Library project, add source files to it and compile.
-		If you receive an error during linking saying that <span class="preproc">[TLib Error] library too large, please restart with
-			library page size 32.</span>, increase the Page Size value in the Project Options on the "TLib" page. A value of 128
-		should be sufficient.
+		To compile the library under C++Builder, create e.g. a Static Library project, add source files to it and compile. If you
+		receive an error during linking saying that <span class="preproc">[TLib Error] library too large, please restart with library
+			page size 32.</span>, increase the Page Size value in the Project Options on the "TLib" page. A value of 128 should
+		be sufficient.
 		<h3 id="linux" name="linux" class="kb">
 			Linux/Mac OS X</h3>
 		The ZipArchive Library does not use the Zlib library that is installed in the system. The Zlib library included in the ZipArchive
@@ -420,8 +420,7 @@
 			<li><strong>STL</strong> - uses STL libraries for file operation. Used for the STL version of the library.</li>
 			<li><strong>MFC</strong> - uses MFC libraries for file operation. Used for the MFC version of the library.</li>
 			<li><strong>Windows API</strong> - uses Windows API directly for file operations. Used under <strong>Microsoft Visual Studio
-				6.0 (MFC)</strong> and <strong>C++Builder</strong>, because the libraries under these compilers do not support
-				large files.</li>
+				6.0 (MFC)</strong> and <strong>C++Builder</strong>, because the libraries under these compilers do not support large files.</li>
 		</ul>
 		If you need, you can adjust this behavior by setting the <span class="preproc">_ZIP_FILE_IMPLEMENTATION</span> definition
 		in the <span class="file">_features.h</span> file to the following values:
@@ -470,10 +469,11 @@
 			<li>ZipArchive Library automatically includes the neccessary long path prefix when needed.</li>
 			<li>To manually prefix the paths:
 				<ul>
-					<li>To use long UNC paths, replace <span class="file">\\</span> at the beginning of the UNC path with <span class="file">\\?\UNC\</span>
-						(<code>"\\\\?\\UNC\\"</code> when escaped). </li>
-					<li>To use long file paths (not limited to 260 characters for file paths and 248 characters for folder paths) include <span class="file">\\?\</span> at the beginning of each path (<code>"\\\\?\\"</code> when escaped). Paths are limited to 32,767
-						characters in this case. </li>
+					<li>To use long UNC paths, replace \\ at the beginning of the UNC path with \\?\UNC\ (<code>"\\\\?\\UNC\\"</code> when escaped).
+					</li>
+					<li>To use long file paths (not limited to 260 characters for file paths and 248 characters for folder paths) include \\?\ at
+						the beginning of each path (<code>"\\\\?\\"</code> when escaped). Paths are limited to 32,767 characters in this case.
+					</li>
 				</ul>
 			</li>
 		</ul>
@@ -484,7 +484,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

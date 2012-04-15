@@ -162,14 +162,14 @@
 				in the sample code below.
 				<br />
 				<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipArchive zip;    
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipArchive zip;    
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>));
     CZipCentralDir::CInfo info;
     zip.GetCentralDirInfo(info);
     ZIP_VOLUME_TYPE uTotalSegments = info.m_uLastVolume + 1;
     <span class="comment">// ...</span>
     zip.Close();    
-</pre></div> 
+</pre></div> </div>
 			</li>
 		</ul>
 		<h3 id="conv" name="conv" class="kb">
@@ -261,7 +261,7 @@
 		This is caused by the lack of the implementation of the <a class="linkapi" href="namespaceZipPlatform.html#afd9f8021d83764be0fb27ea940222796">ZipPlatform::IsDriveRemovable()</a>
 		function and the device containing the archive is always assumed to be removable.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    LPCTSTR zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
+<div class="textblock"><div class="fragment"><pre class="fragment">    LPCTSTR zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
     CZipArchive zip;    
     <span class="comment">// specify the segment size to be 1MB</span>
     zip.Open(zipFileName, CZipArchive::zipCreateSplit, 1024 * 1024);    
@@ -273,7 +273,7 @@
     <span class="comment">// under Linux/Mac OS X, call instead: zip.Open(zipFileName, CZipArchive::zipOpenSplit);</span>
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"big.ext"</span>));
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h3 id="splitCallback" name="splitCallback" class="kb">
 			Using Callback with Split Archives</h3>
 		Using callback with split archives is not necessary, but possible. This is useful
@@ -311,7 +311,7 @@
 			</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment"><span class="keyword">class </span>CSplitCallback : <span class="keyword">public</span> CZipSegmCallback
+<div class="textblock"><div class="fragment"><pre class="fragment"><span class="keyword">class </span>CSplitCallback : <span class="keyword">public</span> CZipSegmCallback
 {
     <span class="keywordtype">bool</span> Callback(ZIP_SIZE_TYPE)
     {
@@ -379,7 +379,7 @@
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"big.ext"</span>));
     zip.Close();
 }
-</pre></div> 
+</pre></div> </div>
 		<h3 id="splitNames" name="splitNames" class="kb">
 			Custom Naming Scheme of Volumes</h3>
 		You can implement a custom naming scheme of volumes for split archives. In order
@@ -402,7 +402,7 @@
 		when closing the archive (it is the return value of the <a class="linkapi" href="classCZipArchive.html#af5a360f32249b89ff32b69ad436416b7">CZipArchive::Close()</a>
 		method).
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment"><span class="keyword">class </span>CCustomNamesHandler : <span class="keyword">public</span> CZipSplitNamesHandler
+<div class="textblock"><div class="fragment"><pre class="fragment"><span class="keyword">class </span>CCustomNamesHandler : <span class="keyword">public</span> CZipSplitNamesHandler
 {
 <span class="keyword">public</span>:
     CZipString GetVolumeName(<span class="keyword">const</span> CZipString&amp; archiveName, 
@@ -454,7 +454,7 @@
     zip.Close();
     
 }
-</pre></div> 
+</pre></div> </div>
 		<h3 id="splitBinary" name="splitBinary" class="kb">
 			Binary Split</h3>
 		The binary splitting produces archives with the internal structure of a single-segment
@@ -537,7 +537,7 @@
 			</table>
 		</div>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    CZipString zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
+<div class="textblock"><div class="fragment"><pre class="fragment">    CZipString zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
     CZipArchive zip;    
     <span class="comment">// specify the segment size to be 1MB</span>
     zip.Open(zipFileName, CZipArchive::zipCreateBinSplit, 1024 * 1024);    
@@ -553,7 +553,7 @@
     zip.Open(zipFileName, CZipArchive::zipOpenBinSplit);    
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"big.ext"</span>));
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h2 id="span" name="span" class="kb">
 			Spanning: Use on Removable Media</h2>
 		<ul>
@@ -577,7 +577,7 @@
 			</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;conio.h&gt;</span> <span class="comment">// for _getch()</span>
+<div class="textblock"><div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;conio.h&gt;</span> <span class="comment">// for _getch()</span>
 
 <span class="keyword">class </span>CSpanCallback : <span class="keyword">public</span> CZipSegmCallback
 {
@@ -630,7 +630,7 @@
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"big.ext"</span>));
     zip.Close();
 }
-</pre></div> 
+</pre></div> </div>
 		<h3 id="spanLast" name="spanLast" class="kb">
 			Detecting Last Disk in Drive</h3>
 		When extracting a spanned archive, you need to insert the last disk into the drive
@@ -697,7 +697,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

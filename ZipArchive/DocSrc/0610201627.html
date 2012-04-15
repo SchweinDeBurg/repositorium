@@ -116,7 +116,7 @@
 		is considered weak and should be only used with low security requirements or for
 		preserving compatibility with applications that do not support <a class="linkindex" href="#aes">the strong encryption</a>.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    LPCTSTR zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
+<div class="textblock"><div class="fragment"><pre class="fragment">    LPCTSTR zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
     LPCTSTR password = _T(<span class="stringliteral">"secret"</span>);
     CZipArchive zip;
     zip.Open(zipFileName, CZipArchive::zipCreate);
@@ -144,7 +144,7 @@
     <span class="comment">// when decrypting a not encrypted file</span>
     zip.ExtractFile(1, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"file2.ext"</span>));
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h2 id="aes" name="aes" class="kb">
 			Strong AES Encryption Conforming to the WinZip Format</h2>
 		The ZipArchive Library supports AES encryption with key sizes <span class="nowrap">128-bit</span>,
@@ -171,7 +171,7 @@
 		using one of the <a class="linkapi" href="classCZipCryptograph.html#ab3e0a46c0680f616ccf7a163f4f40332">CZipCryptograph::EncryptionMethod</a>
 		values.
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    LPCTSTR zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
+<div class="textblock"><div class="fragment"><pre class="fragment">    LPCTSTR zipFileName = _T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>);
     LPCTSTR password = _T(<span class="stringliteral">"secret"</span>);
     CZipArchive zip;
     zip.Open(zipFileName, CZipArchive::zipCreate);
@@ -194,7 +194,7 @@
     zip.ExtractFile(0, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"file1.ext"</span>));
     zip.ExtractFile(1, _T(<span class="stringliteral">"C:\\Temp"</span>), <span class="keyword">false</span>, _T(<span class="stringliteral">"file2.ext"</span>));
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h4 id="issues" name="issues" class="kb">
 			Special Considerations</h4>
 		<ul>
@@ -251,7 +251,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>

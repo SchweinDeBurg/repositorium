@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2012 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -332,6 +332,10 @@ CZipString CZipStorage::ChangeSplitRead()
 				iCode = CZipSegmCallback::scFileNotFound;
 			}
 		}
+	}
+	else if (!ZipPlatform::FileExists(szVolumeName))
+	{
+		CZipException::Throw(CZipException::notFound, szVolumeName);
 	}
 	m_pFile->Close();
 	return szVolumeName;

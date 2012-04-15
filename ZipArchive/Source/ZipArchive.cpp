@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyrighted 2000 - 2011 by Artpol Software - Tadeusz Dracz
+// is Copyrighted 2000 - 2012 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -52,8 +52,8 @@
 
 using namespace ZipArchiveLib;
 
-const char CZipArchive::m_gszCopyright[] = {"The ZipArchive Library Copyright (c) 2000 - 2011 Artpol Software - Tadeusz Dracz"};
-const char CZipArchive::m_gszVersion[] = {"4.1.1"};
+const char CZipArchive::m_gszCopyright[] = {"The ZipArchive Library Copyright (c) 2000 - 2012 Artpol Software - Tadeusz Dracz"};
+const char CZipArchive::m_gszVersion[] = {"4.1.2"};
 
 void CZipAddNewFileInfo::Defaults()
 {
@@ -1101,7 +1101,8 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray& aIndexes)
 			}
 
 			m_centralDir.RemoveFromDisk();
-			m_storage.m_pFile->SetLength((ZIP_FILE_USIZE) m_storage.m_uBytesBeforeZip);
+			// we take into account the bytes present in an archive that was created with CZipArchive::zipCreateAppend
+			m_storage.m_pFile->SetLength(GetFileInfo(0)->m_uOffset + (ZIP_FILE_USIZE)m_storage.m_uBytesBeforeZip);
 			m_centralDir.RemoveAll();
 			Finalize(true);
 			if (pCallback)
@@ -1206,7 +1207,7 @@ bool CZipArchive::RemoveFiles(CZipIndexesArray& aIndexes)
 	while (i > 0)
 	{
 		i--;
-		// cannot use a decreasing loop because i is unsigned and instead negative at the end of the loop it will be maximum positive
+		// cannot use a decreasing loop because it is unsigned and instead negative at the end of the loop it will be maximum positive
 		const CZipDeleteInfo& di = aInfo[(ZIP_ARRAY_SIZE_TYPE)i];
 		if (!di.m_bDelete)
 		{
@@ -1603,7 +1604,7 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 		{
 			if (!ZipPlatform::GetFileSize(info.m_szFilePath, uFileSize) && bEff)
 			{
-				bEff = false;   // the file size is needed only when efficient in a segmented archive
+				uFileSize = ZIP_SIZE_TYPE(-1);
 			}
 		}
 
@@ -1616,6 +1617,16 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 			if (bCheckForSmallFiles && uFileSize < 5)
 			{
 				info.m_iComprLevel = 0;
+			}
+		}
+		else
+		{
+			bEff = false;
+			bNeedTempArchive = false;
+			if (bReplace && bIsCompression)
+			{
+				info.m_iComprLevel = 0;
+				bIsCompression = false;
 			}
 		}
 	}
@@ -1723,9 +1734,15 @@ bool CZipArchive::AddNewFile(CZipAddNewFileInfo& info)
 	}
 
 	ASSERT(pf);
-	// call init before opening (in case of exception we have the names)
-	uFileSize = (ZIP_SIZE_TYPE)pf->GetLength();
 
+	if (uFileSize == ZIP_SIZE_TYPE(-1))
+	{
+		uFileSize = (ZIP_SIZE_TYPE)pf->GetLength();
+		if (uFileSize == ZIP_SIZE_TYPE(-1))
+		{
+			return false;
+		}
+	}
 	// predict sizes in local header, so that zip64 can write extra header if needed
 	header.m_uLocalUncomprSize = uFileSize;
 	if (!bIsCompression)

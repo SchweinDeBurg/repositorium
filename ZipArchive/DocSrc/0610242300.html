@@ -79,7 +79,7 @@
 				file to an archive as described in <a class="linkkb" href="0610231446.html#advanced">Compressing Data</a>.</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    <span class="comment">// define your id</span>
+<div class="textblock"><div class="fragment"><pre class="fragment">    <span class="comment">// define your id</span>
     <span class="keyword">const</span> WORD <span class="keywordtype">id</span> = 0xABCD;
     CZipArchive zip;    
     zip.Open(_T(<span class="stringliteral">"C:\\Temp\\test.zip"</span>), CZipArchive::zipCreate);
@@ -97,7 +97,7 @@
     zip.OpenNewFile(templ);
     zip.CloseNewFile();
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h2 id="central" name="central" class="kb">
 			Writing Central Extra Field</h2>
 		<ul>
@@ -114,7 +114,7 @@
 				Library does not support their modification.</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    <span class="comment">// define your id</span>
+<div class="textblock"><div class="fragment"><pre class="fragment">    <span class="comment">// define your id</span>
     <span class="keyword">const</span> WORD <span class="keywordtype">id</span> = 0xABCD;
     CZipArchive zip;    
     <span class="comment">// open an existing file</span>
@@ -129,7 +129,7 @@
     <span class="comment">// resave the central directory</span>
     zip.RemoveCentralDirectoryFromArchive();
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 		<h2 id="read" name="read" class="kb">
 			Reading Extra Fields</h2>
 		<ul>
@@ -146,7 +146,7 @@
 				Library correctly read these fields, add their identifiers to the static <a class="linkapi" href="classCZipExtraField.html#ab40422c56868c2cb497c98f9e61d6970">CZipExtraField::m_aNoSizeExtraHeadersID</a> array before starting the decompression.</li>
 		</ul>
 		<div class="codetitle">Sample Code</div>
-<div class="fragment"><pre class="fragment">    <span class="comment">// define your id</span>
+<div class="textblock"><div class="fragment"><pre class="fragment">    <span class="comment">// define your id</span>
     <span class="keyword">const</span> WORD <span class="keywordtype">id</span> = 0xABCD;
     CZipArchive zip;    
     <span class="comment">// open an existing file</span>
@@ -170,7 +170,7 @@
         <span class="comment">// ... process data</span>
     }
     zip.Close();
-</pre></div> 
+</pre></div> </div>
 	
         </div>
         <div class="kbafooter">
@@ -178,7 +178,7 @@
         </div>
     </div>
    <div style="font-size:11px; text-align:center;border-top:solid 1px gray;width:400px;margin:10px auto 5px auto;color:gray">
-Copyright &copy;&nbsp;2000 - 2011 Artpol Software - Tadeusz Dracz
+Copyright &copy;&nbsp;2000 - 2012 Artpol Software - Tadeusz Dracz
 </div>
 </body>
 </html>
