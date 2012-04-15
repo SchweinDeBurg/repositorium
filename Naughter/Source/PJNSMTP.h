@@ -234,7 +234,7 @@ public:
   CString GetBoundary() const { return m_sBoundary; };
 
 //Misc methods
-  CStringA          GetHeader();
+  CStringA          GetHeader(const CString& sRootCharset);
   CStringA          GetBody(BOOL bDoSingleDotFix);
   CStringA          GetFooter();
   CPJNSMTPBodyPart* FindFirstBodyPart(const CString sContentType);
@@ -375,7 +375,7 @@ public:
 
 protected:
 //Methods
-  void             WriteToDisk(ATL::CAtlFile& file, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
+  void             WriteToDisk(ATL::CAtlFile& file, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot, const CString& sRootCharset);
   CString          ConvertHTMLToPlainText(const CString& sHtml);
   virtual CStringA FormDateHeader();
 
@@ -515,7 +515,7 @@ protected:
 	virtual void AuthPlain(LPCTSTR pszUsername, LPCTSTR pszPassword);
   virtual CString FormMailFromCommand(const CString& sEmailAddress, DWORD DSN, CPJNSMTPMessage::DSN_RETURN_TYPE DSNReturnType, CString& sENVID);
 	virtual void SendRCPTForRecipient(DWORD DSN, CPJNSMTPAddress& recipient);
-  virtual void SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot);
+  virtual void SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot, const CString& sRootCharset);
 	virtual BOOL ReadCommandResponse(int nExpectedCode);
   virtual BOOL ReadCommandResponse(int nExpectedCode1, int nExpectedCode2);
 	virtual BOOL ReadResponse(CStringA& sResponse);

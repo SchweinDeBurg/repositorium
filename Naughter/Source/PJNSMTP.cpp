@@ -510,6 +510,9 @@ History: PJN / 15-06-1998 1. Fixed the case where a single dot occurs on its own
                           2. Set/GetBoundAddress have been renamed Set/GetBindAddress for consistency with the sockets class
          PJN / 01-04-2011 1. Reintroduced the concept of Address Header encoding. By default this setting is off, but can be enabled via a new
                           CPJNSMPTMessage::m_bAddressHeaderEncoding boolean value. Thanks to Bostjan Erzen for reporting this issue.
+         PJN / 04-12-2011 1. Updated CPJNSMTPBodyPart::GetHeader to encode the title of a filename if it contains non-ASCII characters. Thanks to Anders Gustafsson
+                          for reporting this issue.
+                          2. The sample app is now linked against the latst OpenSSL v1.0.0e dlls.
                           
 Copyright (c) 1998 - 2011 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
@@ -980,8 +983,8 @@ CString CPJNSMTPBodyPart::CreateGUID()
 
 BOOL CPJNSMTPBodyPart::SetFilename(const CString& sFilename)
 {
-  //Validate our parameters
-  ASSERT(sFilename.GetLength());  //You need to a valid Filename!
+	//Validate our parameters
+	ASSERT(sFilename.GetLength());  //You need to a valid Filename!
 
 	//Hive away the filename and form the title from the filename
   TCHAR sPath[_MAX_PATH];
@@ -992,7 +995,7 @@ BOOL CPJNSMTPBodyPart::SetFilename(const CString& sFilename)
 	m_sFilename = sFilename;
   m_sTitle = sPath;
 
-  //Also sent the content type to be appropiate for an attachment
+  //Also set the content type to be appropiate for an attachment
   m_sContentType = _T("application/octet-stream");
 
   //Also set the Content-Transfer-Encoding to base64
@@ -1091,12 +1094,27 @@ CStringA CPJNSMTPBodyPart::ConvertToUTF8(const CString& sText)
   return sOutput;
 }
 
-CStringA CPJNSMTPBodyPart::GetHeader()
+CStringA CPJNSMTPBodyPart::GetHeader(const CString& sRootCharset)
 {
   CString sHeaderT;
   if (m_bAttachment)
   {
     //Ok, it's an attachment
+    
+    //Check if filename title has non-ASCII characters
+	  BOOL bNeedTitleEscaping = FALSE;
+	  for (int i=0; i<m_sTitle.GetLength() && !bNeedTitleEscaping; i++)
+	  {
+	    TCHAR cChar = m_sTitle.GetAt(i);
+		  if (cChar <  _T(' ') || cChar > _T('~')) 
+		    bNeedTitleEscaping = TRUE;
+	  }
+    //Encode the title of the file if required
+    CString sTitle;
+	  if (bNeedTitleEscaping)
+	    sTitle = HeaderEncode(m_sTitle, sRootCharset);
+	  else 
+	    sTitle = m_sTitle;
 
     //Form the header to go along with this body part
     if (GetNumberOfChildBodyParts())
@@ -1106,19 +1124,19 @@ CStringA CPJNSMTPBodyPart::GetHeader()
         case BASE64_ENCODING:
         {
 		      sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
-                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sBoundary.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), sTitle.operator LPCTSTR(), m_sBoundary.operator LPCTSTR(), sTitle.operator LPCTSTR());
           break;
         }
         case QP_ENCODING:
         {
 		      sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"; Boundary=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
-                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sBoundary.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), sTitle.operator LPCTSTR(), m_sBoundary.operator LPCTSTR(), sTitle.operator LPCTSTR());
           break;
         }
         default:
         {
 		      sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"; Boundary=\"%s\"\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
-                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sBoundary.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), sTitle.operator LPCTSTR(), m_sBoundary.operator LPCTSTR(), sTitle.operator LPCTSTR());
           break;
         }
       }
@@ -1130,19 +1148,19 @@ CStringA CPJNSMTPBodyPart::GetHeader()
         case BASE64_ENCODING:
         {
   		    sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
-                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), sTitle.operator LPCTSTR(), sTitle.operator LPCTSTR());
           break;
         }
         case QP_ENCODING:
         {
 		      sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
-                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), sTitle.operator LPCTSTR(), sTitle.operator LPCTSTR());
           break;
         }
         default:
         {
 		      sHeaderT.Format(_T("\r\n\r\n--%s\r\nContent-Type: %s; name=\"%s\"\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"), 
-                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), m_sTitle.operator LPCTSTR(), m_sTitle.operator LPCTSTR());
+                          m_pParentBodyPart->m_sBoundary.operator LPCTSTR(), m_sContentType.operator LPCTSTR(), sTitle.operator LPCTSTR(), sTitle.operator LPCTSTR());
           break;
         }
       }
@@ -1597,7 +1615,7 @@ CStringA CPJNSMTPBodyPart::FoldSubjectHeader(const CString& sSubject, const CStr
 }
 
 
-CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.93")), 
+CPJNSMTPMessage::CPJNSMTPMessage() : m_sXMailer(_T("CPJNSMTPConnection v2.94")), 
                                      m_bMime(FALSE), 
                                      m_Priority(NoPriority),
                                      m_DSNReturnType(HeadersOnly),
@@ -2167,7 +2185,7 @@ void CPJNSMTPMessage::SaveToDisk(const CString& sFilename)
   if (m_RootPart.GetNumberOfChildBodyParts() || m_bMime)
   {
     //Write the root body part (and all its children)
-    WriteToDisk(file, &m_RootPart, TRUE);
+    WriteToDisk(file, &m_RootPart, TRUE, m_RootPart.GetCharset());
   }
   else
   {
@@ -2181,7 +2199,7 @@ void CPJNSMTPMessage::SaveToDisk(const CString& sFilename)
   }
 }
 
-void CPJNSMTPMessage::WriteToDisk(ATL::CAtlFile& file, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
+void CPJNSMTPMessage::WriteToDisk(ATL::CAtlFile& file, CPJNSMTPBodyPart* pBodyPart, BOOL bRoot, const CString& sRootCharset)
 {
   //Validate our parameters
   AFXASSUME(pBodyPart);
@@ -2189,7 +2207,7 @@ void CPJNSMTPMessage::WriteToDisk(ATL::CAtlFile& file, CPJNSMTPBodyPart* pBodyPa
   if (!bRoot)
   {
     //First send this body parts header
-    CStringA sHeader(pBodyPart->GetHeader());
+    CStringA sHeader(pBodyPart->GetHeader(sRootCharset));
 		HRESULT hr = file.Write(sHeader.operator LPCSTR(), sHeader.GetLength());
 		if (FAILED(hr))
       CPJNSMTPConnection::ThrowPJNSMTPException(hr);
@@ -2206,7 +2224,7 @@ void CPJNSMTPMessage::WriteToDisk(ATL::CAtlFile& file, CPJNSMTPBodyPart* pBodyPa
   for (INT_PTR i=0; i<nChildBodyParts; i++)
   {
     CPJNSMTPBodyPart* pChildBodyPart = pBodyPart->GetChildBodyPart(i);
-    WriteToDisk(file, pChildBodyPart, FALSE);
+    WriteToDisk(file, pChildBodyPart, FALSE, sRootCharset);
   }
 
   //Then the MIME footer if need be
@@ -2866,7 +2884,7 @@ void CPJNSMTPConnection::Disconnect(BOOL bGracefully)
     ThrowPJNSMTPException(hr, sLastResponse);
 }
 
-void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
+void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot, const CString& sRootCharset)
 {
   //Validate our parameters
   AFXASSUME(pBodyPart != NULL);
@@ -2874,7 +2892,7 @@ void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
   if (!bRoot)
   {
     //First send this body parts header
-    CStringA sHeader(pBodyPart->GetHeader());
+    CStringA sHeader(pBodyPart->GetHeader(sRootCharset));
     try
     {
       int nHeaderLength = sHeader.GetLength();
@@ -2909,7 +2927,7 @@ void CPJNSMTPConnection::SendBodyPart(CPJNSMTPBodyPart* pBodyPart, BOOL bRoot)
   for (INT_PTR i=0; i<nChildBodyParts; i++)
   {
     CPJNSMTPBodyPart* pChildBodyPart = pBodyPart->GetChildBodyPart(i);
-    SendBodyPart(pChildBodyPart, FALSE);
+    SendBodyPart(pChildBodyPart, FALSE, sRootCharset);
   }
 
   //Then the MIME footer if need be
@@ -3052,7 +3070,7 @@ void CPJNSMTPConnection::SendMessage(CPJNSMTPMessage& Message)
   if (Message.m_RootPart.GetNumberOfChildBodyParts() || Message.m_bMime)
   {
     //Send the root body part (and all its children)
-    SendBodyPart(&Message.m_RootPart, TRUE);
+    SendBodyPart(&Message.m_RootPart, TRUE, Message.GetCharset());
   }
   else
   {
