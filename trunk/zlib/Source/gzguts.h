@@ -12,7 +12,7 @@
 #  endif
 #endif
 
-#if ((__GNUC__-0) * 10 + __GNUC_MINOR__-0 >= 33) && !defined(NO_VIZ)
+#ifdef HAVE_HIDDEN
 #  define ZLIB_INTERNAL __attribute__((visibility ("hidden")))
 #else
 #  define ZLIB_INTERNAL
@@ -30,7 +30,11 @@
 #  include <fcntl.h>
 #endif
 
-#if defined(__TURBOC__) || (defined(_MSC_VER) && !defined(UNDER_CE))
+#ifdef _WIN32
+#  include <stddef.h>
+#endif
+
+#if defined(__TURBOC__) || ((defined(_MSC_VER) || defined(_WIN32)) && !defined(UNDER_CE))
 #  include <io.h>
 #endif
 
@@ -105,7 +109,7 @@
 #  pragma warning(pop)
 #  define zstrerror() gz_strwinerror((DWORD)GetLastError())
 #else
-#  ifdef STDC
+#  ifndef NO_STRERROR
 #    include <errno.h>
 #    define zstrerror() strerror(errno)
 #  else
