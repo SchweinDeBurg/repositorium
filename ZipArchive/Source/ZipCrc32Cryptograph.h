@@ -107,7 +107,7 @@ public:
 	/**
 		Returns the CRC table.
 	*/
-	static const unsigned long* GetCRCTable()
+	static const z_crc_t* GetCRCTable()
 	{
 		return z_get_crc_table();
 	}
@@ -128,7 +128,7 @@ private:
 	void CryptUpdateKeys(char c);
 	DWORD CryptCRC32(DWORD l, char c)
 	{
-		const unsigned long* CRC_TABLE = z_get_crc_table();
+		const z_crc_t* CRC_TABLE = z_get_crc_table();
 		return CRC_TABLE[(l ^ c) & 0xff] ^ (l >> 8);
 	}
 	void CryptEncode(char& c)

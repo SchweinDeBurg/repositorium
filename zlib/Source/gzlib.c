@@ -1,5 +1,5 @@
 /* gzlib.c -- zlib functions common to reading and writing gzip files
- * Copyright (C) 2004, 2010, 2011 Mark Adler
+ * Copyright (C) 2004, 2010, 2011, 2012 Mark Adler
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
@@ -17,7 +17,7 @@
 
 /* Local functions */
 local void gz_reset OF((gz_statep));
-local gzFile gz_open OF((const char *, int, const char *));
+local gzFile gz_open OF((const void *, int, const char *));
 
 #if defined UNDER_CE
 
@@ -89,13 +89,22 @@ local void gz_reset(state)
 
 /* Open a gzip file either by name or file descriptor. */
 local gzFile gz_open(path, fd, mode)
-    const char *path;
+    const void *path;
     int fd;
     const char *mode;
 {
     gz_statep state;
+    size_t len;
 #ifdef UNDER_CE
     wchar_t wszWidePath[_MAX_PATH];
+#else
+    int oflag;
+#endif
+#ifdef O_CLOEXEC
+    int cloexec = 0;
+#endif
+#ifdef O_EXCL
+    int exclusive = 0;
 #endif
 
     /* check input */
@@ -136,6 +145,16 @@ local gzFile gz_open(path, fd, mode)
                 return NULL;
             case 'b':       /* ignore -- will request binary anyway */
                 break;
+#ifdef O_CLOEXEC
+            case 'e':
+                cloexec = 1;
+                break;
+#endif
+#ifdef O_EXCL
+            case 'x':
+                exclusive = 1;
+                break;
+#endif
             case 'f':
                 state->strategy = Z_FILTERED;
                 break;
@@ -171,39 +190,77 @@ local gzFile gz_open(path, fd, mode)
     }
 
     /* save the path name for error messages */
-    state->path = malloc(strlen(path) + 1);
+#ifdef _WIN32
+    if (fd == -2) {
+        len = wcstombs(NULL, path, 0);
+        if (len == (size_t)-1)
+            len = 0;
+    }
+    else
+#endif
+        len = strlen(path);
+    state->path = malloc(len + 1);
     if (state->path == NULL) {
         free(state);
         return NULL;
     }
-    strcpy(state->path, path);
+#ifdef _WIN32
+    if (fd == -2)
+        if (len)
+            wcstombs(state->path, path, len + 1);
+        else
+            *(state->path) = 0;
+    else
+#endif
+        strcpy(state->path, path);
 
-    /* open the file with the appropriate mode (or just use fd) */
 #ifdef UNDER_CE
-    mbstowcs(wszWidePath, path, sizeof(wszWidePath) / sizeof(wszWidePath[0]));
-    if (fd == -1)
+    if (fd > -1)
     {
+        state->fd = fd;
+    }
+    else if (fd == -2)
+    {
+        state->fd = (int)CreateFile(path, state->mode == GZ_READ ? GENERIC_READ : GENERIC_WRITE,
+            FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, state->mode == GZ_WRITE ? CREATE_ALWAYS : OPEN_ALWAYS,
+            FILE_ATTRIBUTE_NORMAL, NULL);
+    }
+    else
+    {
+        mbstowcs(wszWidePath, path, sizeof(wszWidePath) / sizeof(wszWidePath[0]));
         state->fd = (int)CreateFile(wszWidePath, state->mode == GZ_READ ? GENERIC_READ : GENERIC_WRITE,
             FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, state->mode == GZ_WRITE ? CREATE_ALWAYS : OPEN_ALWAYS,
             FILE_ATTRIBUTE_NORMAL, NULL);
     }
 #else
-    state->fd = fd != -1 ? fd :
-        _open(path,
+    /* compute the flags for open() */
+    oflag =
 #ifdef O_LARGEFILE
-            O_LARGEFILE |
+        O_LARGEFILE |
 #endif
 #ifdef O_BINARY
-            O_BINARY |
+        O_BINARY |
 #endif
-            (state->mode == GZ_READ ?
-                O_RDONLY :
-                (O_WRONLY | O_CREAT | (
-                    state->mode == GZ_WRITE ?
-                        O_TRUNC :
-                        O_APPEND))),
-            0666);
+#ifdef O_CLOEXEC
+        (cloexec ? O_CLOEXEC : 0) |
 #endif
+        (state->mode == GZ_READ ?
+         O_RDONLY :
+         (O_WRONLY | O_CREAT |
+#ifdef O_EXCL
+          (exclusive ? O_EXCL : 0) |
+#endif
+          (state->mode == GZ_WRITE ?
+           O_TRUNC :
+           O_APPEND)));
+
+    /* open the file with the appropriate flags (or just use fd) */
+    state->fd = fd > -1 ? fd : (
+#ifdef _WIN32
+        fd == -2 ? _wopen(path, oflag, 0666) :
+#endif
+        _open(path, oflag, 0666));
+#endif   /* UNDER_CE */
     if (state->fd == -1) {
         free(state->path);
         free(state);
@@ -260,6 +317,16 @@ gzFile ZEXPORT gzdopen(fd, mode)
     free(path);
     return gz;
 }
+
+/* -- see zlib.h -- */
+#ifdef _WIN32
+gzFile ZEXPORT gzopen_w(path, mode)
+    const wchar_t *path;
+    const char *mode;
+{
+    return gz_open(path, -2, mode);
+}
+#endif
 
 /* -- see zlib.h -- */
 int ZEXPORT gzbuffer(file, size)
