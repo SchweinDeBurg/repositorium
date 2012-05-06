@@ -5,7 +5,7 @@ Purpose: Defines the interface for an MFC class to implement a tree options cont
          Internet Explorer 4 and later
 Created: PJN / 31-03-1999
 
-Copyright (c) 1999 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2012 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -60,7 +60,7 @@ public:
     ASSERT(pTreeCtrl);
     
     m_pTreeCtrl = pTreeCtrl; 
-  };
+  }
 
 protected:
 	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
@@ -86,18 +86,18 @@ protected:
   void SetButtonBuddy(CTreeOptionsBrowseButton* pButton) 
   { 
     m_pButtonCtrl = pButton; 
-  };
+  }
   void SetTreeBuddy(CTreeOptionsCtrl* pTreeCtrl)   
   { 
     //validate our parameters
     ASSERT(pTreeCtrl);
     
     m_pTreeCtrl = pTreeCtrl; 
-  };
+  }
   void SetTreeItem(HTREEITEM hItem) 
   { 
     m_hTreeCtrlItem = hItem; 
-  };
+  }
   virtual DWORD GetWindowStyle();
   virtual int GetDropDownHeight();
   BOOL IsRelatedWnd(CWnd* pChild);
@@ -176,19 +176,19 @@ protected:
     ASSERT(pTreeCtrl);
     
     m_pTreeCtrl = pTreeCtrl; 
-  };
+  }
   void SetButtonBuddy(CTreeOptionsBrowseButton* pButtonCtrl) 
   { 
     m_pButtonCtrl = pButtonCtrl; 
-  };
+  }
   void SetTreeItem(HTREEITEM hItem) 
   { 
     m_hTreeCtrlItem = hItem; 
-  };
+  }
   void SetMultiLineFrameWndBuddy(CMultiLineEditFrameWnd* pFrameWnd) 
   { 
     m_pFrameWnd = pFrameWnd; 
-  };
+  }
   virtual DWORD GetWindowStyle();
   virtual int GetHeight(int nItemHeight);
   virtual void BrowseForFolder(const CString& sInitialFolder);
@@ -224,7 +224,6 @@ class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsSpinCtrl : public CSpinButtonCtrl
 public:
 //Constructors / Destructors
 	CTreeOptionsSpinCtrl();
-	virtual ~CTreeOptionsSpinCtrl() {};
 
 protected:
 //Misc methods
@@ -233,7 +232,7 @@ protected:
   void SetTreeItem(HTREEITEM hItem) 
   { 
     m_hTreeCtrlItem = hItem; 
-  };
+  }
   virtual DWORD GetWindowStyle();
   virtual void GetDefaultRange(int &nLower, int& nUpper);
 
@@ -255,7 +254,6 @@ class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsBrowseButton : public CButton
 public:
 //Constructors / Destructors
 	CTreeOptionsBrowseButton();
-	virtual ~CTreeOptionsBrowseButton() {};
 
 protected:
 //Misc methods
@@ -263,7 +261,7 @@ protected:
   void            SetTreeItem(HTREEITEM hItem) 
   { 
     m_hTreeCtrlItem = hItem; 
-  };
+  }
   void            SetEditBuddy(CTreeOptionsEdit* pEdit);
   void            SetFrameBuddy(CMultiLineEditFrameWnd* pFrameWnd);
   void            SetComboBuddy(CTreeOptionsCombo* pCombo);
@@ -273,7 +271,7 @@ protected:
   COLORREF        GetColor() const 
   { 
     return m_Color; 
-  };
+  }
   void            SetColor(COLORREF color);
   void            GetFontItem(LOGFONT* pLogFont);
   void            SetFontItem(const LOGFONT* pLogFont);
@@ -321,7 +319,6 @@ class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsDateCtrl : public CDateTimeCtrl
 public:
 //Constructors / Destructors
 	CTreeOptionsDateCtrl();
-	virtual ~CTreeOptionsDateCtrl() {};
 
 //Methods
   virtual CString GetDisplayText(const SYSTEMTIME& st);
@@ -334,21 +331,21 @@ protected:
     ASSERT(pTreeCtrl);
     
     m_pTreeCtrl = pTreeCtrl; 
-  };
+  }
   void SetTreeItem(HTREEITEM hItem) 
   { 
     m_hTreeCtrlItem = hItem; 
-  };
+  }
   virtual DWORD GetWindowStyle();
   virtual BOOL IsRelatedWnd(CWnd* pChild);
   void GetDateTime(SYSTEMTIME& st) const 
   { 
     memcpy(&st, &m_SystemTime, sizeof(SYSTEMTIME)); 
-  };
+  }
   void SetDateTime(const SYSTEMTIME& st) 
   { 
     memcpy(&m_SystemTime, &st, sizeof(SYSTEMTIME)); 
-  };
+  }
 	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg UINT OnGetDlgCode ();
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
@@ -371,7 +368,6 @@ class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsTimeCtrl : public CTreeOptionsDateC
 public:
 //Constructors / Destructors
 	CTreeOptionsTimeCtrl();
-	virtual ~CTreeOptionsTimeCtrl() {};
 
 //methods
   virtual CString GetDisplayText(const SYSTEMTIME& st);
@@ -390,7 +386,6 @@ class CTREEOPTIONSCTRL_EXT_CLASS CTreeOptionsIPAddressCtrl : public CIPAddressCt
 public:
 //Constructors / Destructors
 	CTreeOptionsIPAddressCtrl();
-	virtual ~CTreeOptionsIPAddressCtrl() {};
 
 //methods
   virtual CString GetDisplayText(DWORD dwAddress);
@@ -403,20 +398,20 @@ protected:
     ASSERT(pTreeCtrl);
     
     m_pTreeCtrl = pTreeCtrl; 
-  };
+  }
   void SetTreeItem(HTREEITEM hItem) 
   { 
     m_hTreeCtrlItem = hItem; 
-  };
+  }
   virtual DWORD GetWindowStyle();
   DWORD GetIPAddress() const 
   { 
     return m_dwAddress; 
-  };
+  }
   void SetIPAddress(DWORD dwAddress) 
   { 
     m_dwAddress = dwAddress; 
-  };
+  }
   virtual BOOL IsRelatedWnd(CWnd* pChild);
 
 	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
@@ -495,7 +490,6 @@ class CTREEOPTIONSCTRL_EXT_CLASS CMultiLineEditFrameWnd : public CFrameWnd
 public:
 //Constructors / Destructors
 	CMultiLineEditFrameWnd();
-	virtual ~CMultiLineEditFrameWnd() {};
 
 protected:
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
@@ -666,7 +660,8 @@ protected:
   virtual void  CreateSpinCtrl(CRuntimeClass* pRuntimeClassSpinCtrl, CRect rItem, CRect rText, CRect rPrimaryControl);
   virtual void  CreateBrowseButton(CRuntimeClass* pRuntimeClassBrowseButton, CRect rItem, CRect rText);
   virtual void  UpdateTreeControlValueFromChildControl(HTREEITEM hItem);
-  virtual void  HandleCheckBox(HTREEITEM hItem, BOOL bCheck);
+  virtual BOOL  SetCheckBoxIntern(HTREEITEM hItem, BOOL bCheck);
+  virtual BOOL  HandleCheckBox(HTREEITEM hItem, BOOL bCheck);
   virtual BOOL  SetSemiCheckBox(HTREEITEM hItem, BOOL bSemi);
   virtual BOOL  GetSemiCheckBox(HTREEITEM hItem, BOOL& bSemi) const;
   virtual void  MemDeleteAllItems(HTREEITEM hParent);

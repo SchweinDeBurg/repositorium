@@ -2,13 +2,13 @@
 
 <head>
 <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
-<title>CTreeOptionsCtrl v1.71</title>
+<title>CTreeOptionsCtrl v1.72</title>
 <link rel="stylesheet" type="text/css" href="./naughter.css">
 </head>
 
 <body>
 
-<h2 align="left">CTreeOptionsCtrl v1.71</h2>
+<h2 align="left">CTreeOptionsCtrl v1.72</h2>
 <p>Welcome to <strong>CTreeOptionsCtrl</strong>, a control which implements a tree 
 options control similar to the advanced tab as seen on the &quot;Internet Options&quot; dialog 
 in Internet Explorer 4 and later. In addition to Boolean values, it also allows 
@@ -469,6 +469,20 @@ the demo application and what the control looks like. </p>
 	style of drawing these items by SetFlatStyleRadioButtons(TRUE) and 
 	SetFlatStyleCheckBoxes(TRUE) respectively. Thanks to Ingmar Koecher for 
 	reporting this issue.</li>
+</ul>
+<p><strong>V1.72 (29 April 2012)</strong> </p>
+<ul>
+	<li>Updated copyright details. </li>
+	<li>Updated sample project settings to more modern defaults </li>
+	<li>Code now compiles cleanly using Code Analysis (/analyze) </li>
+	<li>When the parent node of a group of checkboxes is also a checkbox 
+	(e.g. the Node &quot;Security&quot; in the test app) the parent is checked / unchecked 
+	depending on the status of its children whenever a child is modified in the 
+	GUI. This previously worked ok when you changed the checkmark of a child in 
+	the GUI by mouse or keyboard, but it doesn't work if the change is made 
+	programmatically (via SetCheckBox or by means of the referenced boolean 
+	variable). The code has now been updated to handle this anomaly. Thanks to 
+	Michael Oerder for providing this nice update. </li>
 </ul>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -1550,7 +1564,7 @@ object and a BOOL value.</p>
 <p>PJ Naughter<br>
 Email: <a href="mailto:pjna@naughter.com">pjna@naughter.com</a><br>
 Web: <a href="http://www.naughter.com">http://www.naughter.com</a><br>
-20 July 2008</p>
+29 April 2012</p>
 
 </body>
 
