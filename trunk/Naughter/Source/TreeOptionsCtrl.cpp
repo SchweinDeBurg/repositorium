@@ -207,8 +207,18 @@ History: PJN / 21-04-1999 Added full support for enabling / disabling all the it
                           is not active. You can revert back to a more flat style of drawing these items by 
                           SetFlatStyleRadioButtons(TRUE) and SetFlatStyleCheckBoxes(TRUE) respectively. Thanks to 
                           Ingmar Koecher for reporting this issue.
+         PJN / 29-04-2012 1. Updated copyright details.
+                          2. Updated sample project settings to more modern defaults
+                          3. Code now compiles cleanly using Code Analysis (/analyze)
+                          4. When the parent node of a group of checkboxes is also a checkbox (e.g. the Node "Security" 
+                          in the test app) the parent is checked / unchecked depending on the status of its children 
+                          whenever a child is modified in the GUI. This previously worked ok when you changed the 
+                          checkmark of a child in the GUI by mouse or keyboard, but it doesn't work if the change is 
+                          made programmatically (via SetCheckBox or by means of the referenced boolean variable). The 
+                          code has now been updated to handle this anomaly. Thanks to Michael Oerder for providing this
+                          nice update.
 
-Copyright (c) 1999 - 2008 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
+Copyright (c) 1999 - 2012 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
 
 All rights reserved.
 
@@ -474,13 +484,16 @@ void CTreeOptionsCtrl::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags )
   }
 }
 
-void CTreeOptionsCtrl::HandleCheckBox(HTREEITEM hItem, BOOL bCheck)
+BOOL CTreeOptionsCtrl::HandleCheckBox(HTREEITEM hItem, BOOL bCheck)
 {
+  //What will be the return value from this method (Assume the worst)
+  BOOL bSuccess = FALSE;
+
   //Turn of redraw to Q all the changes we're going to make here
   SetRedraw(FALSE);
 
   //Toggle the state
-  VERIFY(SetCheckBox(hItem, !bCheck));
+  bSuccess = SetCheckBoxIntern(hItem, !bCheck);
 
   //If the item has children, then iterate through them and for all items
   //which are check boxes set their state to be the same as the parent
@@ -488,7 +501,7 @@ void CTreeOptionsCtrl::HandleCheckBox(HTREEITEM hItem, BOOL bCheck)
   while (hChild)
   {
     if (IsCheckBox(hChild))
-      SetCheckBox(hChild, !bCheck);  
+      SetCheckBoxIntern(hChild, !bCheck);  
 
     //Move on to the next item
     hChild = GetNextItem(hChild, TVGN_NEXT);
@@ -520,23 +533,25 @@ void CTreeOptionsCtrl::HandleCheckBox(HTREEITEM hItem, BOOL bCheck)
 
     if (bNoCheckBoxesChecked)
     {
-      SetCheckBox(hParent, FALSE);
+      SetCheckBoxIntern(hParent, FALSE);
       SetSemiCheckBox(hParent, FALSE);
     }
     else if (bAllCheckBoxesChecked)
     {
-      SetCheckBox(hParent, TRUE);
+      SetCheckBoxIntern(hParent, TRUE);
       SetSemiCheckBox(hParent, FALSE);
     }
     else
     {
-      SetCheckBox(hParent, TRUE);
+      SetCheckBoxIntern(hParent, TRUE);
       SetSemiCheckBox(hParent, TRUE);
     }
   }
 
   //Reset the redraw flag
   SetRedraw(TRUE);
+
+  return bSuccess;
 }
 
 void CTreeOptionsCtrl::OnLButtonDown(UINT nFlags, CPoint point) 
@@ -671,8 +686,7 @@ HTREEITEM CTreeOptionsCtrl::InsertCheckBox(LPCTSTR lpszItem, HTREEITEM hParent, 
   pItemData->m_Type = CTreeOptionsItemData::CheckBox;
   pItemData->m_dwItemData = dwItemData;
   SetItemData(hItem, (DWORD_PTR) pItemData);
-  BOOL bSuccess = SetCheckBox(hItem, bCheck);
-  ASSERT(bSuccess);
+  SetCheckBoxIntern(hItem, bCheck);
 
   return hItem;
 }
@@ -690,8 +704,7 @@ HTREEITEM CTreeOptionsCtrl::InsertRadioButton(LPCTSTR lpszItem, HTREEITEM hParen
   if (bCheck)
   {
     //if requested to, check the newly added radio button
-    BOOL bSuccess = SetRadioButton(hItem);
-    ASSERT(bSuccess);
+    SetRadioButton(hItem);
   }
 
   return hItem;
@@ -798,10 +811,15 @@ BOOL CTreeOptionsCtrl::IsOpaqueItem(HTREEITEM hItem) const
 
 BOOL CTreeOptionsCtrl::SetCheckBox(HTREEITEM hItem, BOOL bCheck)
 {
+	return HandleCheckBox(hItem,!bCheck);
+}
+
+BOOL CTreeOptionsCtrl::SetCheckBoxIntern(HTREEITEM hItem, BOOL bCheck)
+{
   //Validate our parameters
   ASSERT(IsCheckBox(hItem)); //Must be a check box to check it
 
-  //Assume the worst
+  //What will be the return value from this method (Assume the worst)
   BOOL bSuccess = FALSE;
 
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
@@ -824,7 +842,7 @@ BOOL CTreeOptionsCtrl::SetSemiCheckBox(HTREEITEM hItem, BOOL bSemi)
   //Validate our parameters
   ASSERT(IsCheckBox(hItem)); //Must be a check box to check it
 
-  //Assume the worst
+  //What will be the return value from this method (Assume the worst)
   BOOL bSuccess = FALSE;
 
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
@@ -844,7 +862,7 @@ BOOL CTreeOptionsCtrl::SetSemiCheckBox(HTREEITEM hItem, BOOL bSemi)
 
 BOOL CTreeOptionsCtrl::GetCheckBox(HTREEITEM hItem, BOOL& bCheck) const
 {
-  //Assume the worst
+  //What will be the return value from this method (Assume the worst)
   BOOL bSuccess = FALSE;
 
   CTreeOptionsItemData* pItemData = reinterpret_cast<CTreeOptionsItemData*>(GetItemData(hItem));
@@ -988,8 +1006,7 @@ BOOL CTreeOptionsCtrl::GetRadioButton(HTREEITEM hParent, int& nIndex, HTREEITEM&
     if (!IsRadioButton(hChild))  // Handle multiple groups
       nIndex = 0;
 
-    BOOL bSuccess = GetRadioButton(hChild, bFound);
-    ASSERT(bSuccess);
+    GetRadioButton(hChild, bFound);
 
     //Move on to the next sibling if not found
     if (!bFound)
@@ -1816,11 +1833,7 @@ void CTreeOptionsCtrl::CreateSpinCtrl(CRuntimeClass* pRuntimeClassSpinCtrl, CRec
     int nLower = 0;
     int nUpper = 0;
     m_pSpin->GetDefaultRange(nLower, nUpper);
-#if (_MFC_VER >= 0x700)
     m_pSpin->SetRange32(nLower, nUpper);
-#else    
-    m_pSpin->SetRange(nLower, nUpper);
-#endif    
 
     //set the font the edit box should use based on the font in the tree control
     m_pSpin->SetFont(&m_Font);
@@ -2781,15 +2794,6 @@ DWORD CTreeOptionsFontNameCombo::GetWindowStyle()
 }
 
 
-//The following line is to fix a bug in VC 6 where the CDateTimeCtrl 
-//does not correctly expose it's runtime information when you link
-//to MFC as a DLL
-#ifdef _AFXDLL
-#if (_MFC_VER < 0x700)
-IMPLEMENT_DYNAMIC(CDateTimeCtrl, CWnd)
-#endif
-#endif
-
 IMPLEMENT_DYNCREATE(CTreeOptionsDateCtrl, CDateTimeCtrl)
 
 CTreeOptionsDateCtrl::CTreeOptionsDateCtrl() : m_pTreeCtrl(NULL),
@@ -3579,15 +3583,9 @@ void DDX_TreeCheck(CDataExchange* pDX, int nIDC, HTREEITEM hItem, BOOL& bCheck)
   ASSERT(pCtrlTreeOptions->IsKindOf(RUNTIME_CLASS(CTreeOptionsCtrl)));
 
   if (pDX->m_bSaveAndValidate)
-  {
-    BOOL bSuccess = pCtrlTreeOptions->GetCheckBox(hItem, bCheck);
-    ASSERT(bSuccess);
-  }
+    pCtrlTreeOptions->GetCheckBox(hItem, bCheck);
   else
-  {
-    BOOL bSuccess = pCtrlTreeOptions->SetCheckBox(hItem, bCheck);
-    ASSERT(bSuccess);
-  }
+    pCtrlTreeOptions->SetCheckBox(hItem, bCheck);
 }
 
 void DDX_TreeRadio(CDataExchange* pDX, int nIDC, HTREEITEM hParent, int& nIndex)
@@ -3599,15 +3597,11 @@ void DDX_TreeRadio(CDataExchange* pDX, int nIDC, HTREEITEM hParent, int& nIndex)
 
   if (pDX->m_bSaveAndValidate)
   {
-    HTREEITEM hCheckItem;
-    BOOL bSuccess = pCtrlTreeOptions->GetRadioButton(hParent, nIndex, hCheckItem);
-    ASSERT(bSuccess);
+    HTREEITEM hCheckItem = NULL;
+    pCtrlTreeOptions->GetRadioButton(hParent, nIndex, hCheckItem);
   }
   else
-  {
-    BOOL bSuccess = pCtrlTreeOptions->SetRadioButton(hParent, nIndex);
-    ASSERT(bSuccess);
-  }
+    pCtrlTreeOptions->SetRadioButton(hParent, nIndex);
 }
 
 void DDX_TreeEdit(CDataExchange* pDX, int nIDC, HTREEITEM hItem, CString& sText)
