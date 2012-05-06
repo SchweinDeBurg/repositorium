@@ -4,9 +4,14 @@
 // Author:  Rolf Kristensen	
 // Source:  http://www.codeproject.com/KB/list/CGridListCtrlEx.aspx
 // License: Free to use for all (New BSD License)
-// Version: 1.9
+// Version: 2.0
 //
 // Change History:
+//	2.0 - Added copy/paste support for CDateTimeCtrl editor (DTS_APPCANPARSE)
+//		  When having grouped by column, then column header click now sorts instead of grouping by column.
+//		  Changed the row sorting to be case insensitive by default
+//		  Fixed bug where cell editor discarded changes performed using the mouse (copy/paste using context menu)
+//		  Fixed several compiler warnings, and small bugs
 // 	1.9 - Added new CGridColumnTrait::OnSortRows() to take LVITEM as parameter (2011-05-30)
 //		  Renamed CGridColumnConfig to CViewConfigSection (Now general purpose settings manager)
 //		  Removed CGridColumnManager and moved LoadState/SaveState into CGridListCtrlEx (Breaking change)
@@ -118,7 +123,7 @@ public:
 
 	// Cell / Subitem 
 	UINT CellHitTest(const CPoint& pt, int& nRow, int& nCol) const;
-	BOOL GetCellRect(int nRow, int nCol, UINT nCode, CRect& rect);
+	BOOL GetCellRect(int nRow, int nCol, int nCode, CRect& rect);
 	inline int GetFocusCell() const { return m_FocusCell; }
 	virtual void SetFocusCell(int nCol, bool bRedraw = false);
 	virtual CWnd* EditCell(int nRow, int nCol);
@@ -175,8 +180,8 @@ protected:
 	virtual void DeleteColumnTrait(int nCol);
 	CViewConfigSectionProfiles* m_pColumnConfig;	//!< Column state persistence
 	bool m_bConfigOwner; //!< Column state persistence object is freed by destructor
-	int InternalColumnPicker(CMenu& menu, int offset);
-	int InternalColumnProfileSwitcher(CMenu& menu, int offset, CSimpleArray<CString>& profiles);
+	int InternalColumnPicker(CMenu& menu, UINT offset);
+	int InternalColumnProfileSwitcher(CMenu& menu, UINT offset, CSimpleArray<CString>& profiles);
 
 	// Maintaining row traits
 	CGridRowTrait* m_pDefaultRowTrait;	//!< Default row trait used for special row drawing
@@ -290,6 +295,10 @@ protected:
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP();
+
+private:
+	CGridListCtrlEx(const CGridListCtrlEx&);
+	CGridListCtrlEx& operator=(const CGridListCtrlEx&);
 };
 
 //{{AFX_INSERT_LOCATION}}
