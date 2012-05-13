@@ -11,8 +11,8 @@
 # The one monster makefile better suits building in non-unix
 # environments.
 
-INSTALLTOP=P:\Purgatory\OpenSSL\1.0.1b
-OPENSSLDIR=P:\Purgatory\OpenSSL\1.0.1b\ssl
+INSTALLTOP=P:\Purgatory\OpenSSL\1.0.1c
+OPENSSLDIR=P:\Purgatory\OpenSSL\1.0.1c\ssl
 
 # Set your compiler options
 PLATFORM=VC-WIN64A
