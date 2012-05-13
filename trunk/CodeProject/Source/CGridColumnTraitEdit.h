@@ -8,6 +8,8 @@
 
 #include "CGridColumnTraitImage.h"
 
+class CGridEditorText;
+
 //------------------------------------------------------------------------
 //! CGridColumnTraitEdit implements a CEdit as cell-editor
 //------------------------------------------------------------------------
@@ -19,7 +21,7 @@ public:
 	void SetStyle(DWORD dwStyle);
 	DWORD GetStyle() const;
 
-	void SetLimitText(UINT nMax);
+	void SetLimitText(UINT nMaxChars);
 	UINT GetLimitText() const;
 
 	virtual CWnd* OnEditBegin(CGridListCtrlEx& owner, int nRow, int nCol);
@@ -27,7 +29,7 @@ public:
 
 protected:
 	virtual void Accept(CGridColumnTraitVisitor& visitor);
-	virtual CEdit* CreateEdit(CGridListCtrlEx& owner, int nRow, int nCol, const CRect& rect);
+	virtual CEdit* CreateEdit(CGridListCtrlEx& owner, int nRow, int nCol, DWORD dwStyle, const CRect& rect);
 
 	DWORD m_EditStyle;				//!< Style to use when creating CEdit
 	UINT m_EditLimitText;			//!< Max number of characters the CEdit will accept
@@ -52,7 +54,7 @@ protected:
 	int		m_Col;					//!< The index of the column being edited
 	bool	m_Completed;			//!< Ensure the editor only reacts to a single close event
 	bool	m_Modified;				//!< Register if text was modified while the editor was open
-	bool	m_InitialModify;
+	bool	m_InitialModify;		//!< Initial text modication should not set that the editor text was modified
 
 	DECLARE_MESSAGE_MAP();
 

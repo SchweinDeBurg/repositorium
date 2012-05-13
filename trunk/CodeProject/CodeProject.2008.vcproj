@@ -1729,11 +1729,27 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Source\CGridColumnTraitHyperLink.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\CGridColumnTraitHyperLink.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Source\CGridColumnTraitImage.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Source\CGridColumnTraitImage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\CGridColumnTraitMultilineEdit.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Source\CGridColumnTraitMultilineEdit.h"
 					>
 				</File>
 				<File

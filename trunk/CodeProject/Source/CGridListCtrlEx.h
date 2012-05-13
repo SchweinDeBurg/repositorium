@@ -58,7 +58,9 @@ template<class T> class COleDropTargetWnd;
 //!		- CGridColumnTraitEdit Implements cell editing using CEdit
 //!		- CGridColumnTraitCombo Implements cell editing using CComboBox
 //!		- CGridColumnTraitDateTime Implements cell editing using CDateTimeCtrl
+//!		- CGridColumnTraitHyperLink Implements cell behavior as hyperlinks
 //!		- CGridColumnTraitImage Implements cell editing using cell-image (can mimic checkbox)
+//!		- CGridColumnTraitMultilineEdit Implements cell editing using multiline CEdit 
 //! - CGridRowTrait provides an interface to perform custom drawing at row level
 //!		- CGridRowTraitText implements alternate row coloring
 //!			- CGridRowTraitXP removes the white background for cell images on WinXP
@@ -90,6 +92,8 @@ public:
 	virtual CFont* GetCellFont();
 	virtual void SetCellMargin(double margin);
 	void SetEmptyMarkupText(const CString& strText);
+	void SetTooltipMaxWidth(int width) { m_TooltipMaxWidth = width; }
+	int GetTooltipMaxWidth() const { return m_TooltipMaxWidth; }
 	static bool CheckOSVersion(WORD requestOS);
 
 	// Row
@@ -206,6 +210,8 @@ protected:
 	CWnd* m_pEditor;			//!< Cell value editor currently in use
 
 	bool m_UsingVisualStyle;	//!< Vista Style has been enabled (alpha blend)
+
+	int m_TooltipMaxWidth;		//!< Whether tooltips should be split in multiple lines
 
 	// Maintaining margin
 	CFont m_GridFont;			//!< Original font of the the list control

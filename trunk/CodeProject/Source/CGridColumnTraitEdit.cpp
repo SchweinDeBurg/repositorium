@@ -50,11 +50,11 @@ DWORD CGridColumnTraitEdit::GetStyle() const
 //------------------------------------------------------------------------
 //! Set max number of characters the CEdit will accept
 //!
-//! @param nMax The text limit, in characters.
+//! @param nMaxChars The text limit, in characters.
 //------------------------------------------------------------------------
-void CGridColumnTraitEdit::SetLimitText(UINT nMax)
+void CGridColumnTraitEdit::SetLimitText(UINT nMaxChars)
 {
-	m_EditLimitText = nMax;
+	m_EditLimitText = nMaxChars;
 }
 
 //------------------------------------------------------------------------
@@ -65,44 +65,21 @@ UINT CGridColumnTraitEdit::GetLimitText() const
 	return m_EditLimitText;
 }
 
+
 //------------------------------------------------------------------------
 //! Create a CEdit as cell value editor
 //!
 //! @param owner The list control starting a cell edit
 //! @param nRow The index of the row
 //! @param nCol The index of the column
+//! @param dwStyle The windows style to use when creating the CEdit
 //! @param rect The rectangle where the inplace cell value editor should be placed
 //! @return Pointer to the cell editor to use
 //------------------------------------------------------------------------
-CEdit* CGridColumnTraitEdit::CreateEdit(CGridListCtrlEx& owner, int nRow, int nCol, const CRect& rect)
+CEdit* CGridColumnTraitEdit::CreateEdit(CGridListCtrlEx& owner, int nRow, int nCol, DWORD dwStyle, const CRect& rect)
 {
-	// Get the text-style of the cell to edit
-	DWORD dwStyle = m_EditStyle;
-	HDITEM hd = {0};
-	hd.mask = HDI_FORMAT;
-	VERIFY( owner.GetHeaderCtrl()->GetItem(nCol, &hd) );
-	if (hd.fmt & HDF_CENTER)
-		dwStyle |= ES_CENTER;
-	else if (hd.fmt & HDF_RIGHT)
-		dwStyle |= ES_RIGHT;
-	else
-		dwStyle |= ES_LEFT;
-
-	CEdit* pEdit = new CGridEditorText(nRow, nCol);
+	CGridEditorText* pEdit = new CGridEditorText(nRow, nCol);
 	VERIFY( pEdit->Create( WS_CHILD | dwStyle, rect, &owner, 0) );
-
-	// Configure font
-	pEdit->SetFont(owner.GetCellFont());
-
-	// First item (Label) doesn't have a margin (Subitems does)
-	if (nCol==0)
-		pEdit->SetMargins(0, 0);
-	else
-		pEdit->SetMargins(4, 0);
-
-	if (m_EditLimitText!=UINT_MAX)
-		pEdit->SetLimitText(m_EditLimitText);
-
 	return pEdit;
 }
 
@@ -119,15 +96,42 @@ CWnd* CGridColumnTraitEdit::OnEditBegin(CGridListCtrlEx& owner, int nRow, int nC
 	// Get position of the cell to edit
 	CRect rectCell = GetCellEditRect(owner, nRow, nCol);
 
+	// Get the text-style of the cell to edit
+	DWORD dwStyle = m_EditStyle;
+	HDITEM hditem = {0};
+	hditem.mask = HDI_FORMAT;
+	VERIFY( owner.GetHeaderCtrl()->GetItem(nCol, &hditem) );
+	if (hditem.fmt & HDF_CENTER)
+		dwStyle |= ES_CENTER;
+	else if (hditem.fmt & HDF_RIGHT)
+		dwStyle |= ES_RIGHT;
+	else
+		dwStyle |= ES_LEFT;
+
 	// Create edit control to edit the cell
-	CEdit* pEdit = CreateEdit(owner, nRow, nCol, rectCell);
+	CEdit* pEdit = CreateEdit(owner, nRow, nCol, dwStyle, rectCell);
 	VERIFY(pEdit!=NULL);
 	if (pEdit==NULL)
 		return NULL;
 
-	pEdit->SetWindowText(owner.GetItemText(nRow, nCol));
-	pEdit->SetSel(0, -1, 0);
+	// Configure font
+	pEdit->SetFont(owner.GetCellFont());
 
+	// First item (Label) doesn't have a margin (Subitems does)
+	if (nCol==0 || (dwStyle & ES_CENTER))
+		pEdit->SetMargins(0, 0);
+	else
+	if (dwStyle & ES_RIGHT)
+		pEdit->SetMargins(0, 7);
+	else
+		pEdit->SetMargins(4, 0);
+
+	if (m_EditLimitText!=UINT_MAX)
+		pEdit->SetLimitText(m_EditLimitText);
+
+	CString cellText = owner.GetItemText(nRow, nCol);
+	pEdit->SetWindowText(cellText);
+	pEdit->SetSel(0, -1, 0);
 	return pEdit;
 }
 
@@ -150,7 +154,7 @@ CGridEditorText::CGridEditorText(int nRow, int nCol)
 	,m_Col(nCol)
 	,m_Completed(false)
 	,m_Modified(false)
-	,m_InitialModify(false)
+	,m_InitialModify(true)
 {}
 
 //------------------------------------------------------------------------
@@ -216,10 +220,10 @@ void CGridEditorText::OnNcDestroy()
 //------------------------------------------------------------------------
 void CGridEditorText::OnEnChange()
 {
-	if (m_InitialModify)
+	if (!m_InitialModify)
 		m_Modified = true;
 	else
-		m_InitialModify = true;
+		m_InitialModify = false;
 }
 
 //------------------------------------------------------------------------
@@ -237,7 +241,14 @@ BOOL CGridEditorText::PreTranslateMessage(MSG* pMsg)
 		{
 			switch(pMsg->wParam)
 			{
-				case VK_RETURN: EndEdit(true); return TRUE;
+				case VK_RETURN:
+				{
+					if (GetStyle() & ES_WANTRETURN)
+						break;
+
+					EndEdit(true);
+					return TRUE;
+				}
 				case VK_TAB: EndEdit(true); return FALSE;
 				case VK_ESCAPE: EndEdit(false);return TRUE;
 			}
