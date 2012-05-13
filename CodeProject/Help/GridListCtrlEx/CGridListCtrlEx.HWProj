@@ -158,8 +158,19 @@
     <File Url="class_c_view_config_section_profiles.png"/>
     <File Url="class_c_view_config_section_win_app.png"/>
     <File Url="NamedURLIndex.HxK"/>
+    <File Url="class_c_grid_multiline_editor_text-members.html"/>
+    <File Url="class_c_grid_column_trait_hyper_link.html"/>
+    <File Url="class_c_grid_column_trait_hyper_link-members.html"/>
+    <File Url="class_c_grid_column_trait_multiline_edit.html"/>
+    <File Url="class_c_grid_column_trait_multiline_edit-members.html"/>
+    <File Url="class_c_grid_multiline_editor_text.html"/>
+    <File Url="class_c_grid_multiline_editor_text.png"/>
+    <File Url="class_c_grid_column_trait_hyper_link.png"/>
+    <File Url="class_c_grid_column_trait_multiline_edit.png"/>
+    <File Url="class_c_grid_editor_text.png"/>
     </Files>
 	<Dirs>
-	</Dirs>
+		<Dir Url="search"/>
+    </Dirs>
 	<Options/>
 </HelpWorkshopProject>
