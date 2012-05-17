@@ -564,6 +564,8 @@ skip_write_field(TIFF* tif, uint32 tag) {
 		case TIFFTAG_PHOTOMETRIC:
 		case TIFFTAG_PLANARCONFIG:
 		case TIFFTAG_ROWSPERSTRIP:
+		case TIFFTAG_STRIPBYTECOUNTS:
+		case TIFFTAG_STRIPOFFSETS:
 		case TIFFTAG_RESOLUTIONUNIT:
 		case TIFFTAG_XRESOLUTION:
 		case TIFFTAG_YRESOLUTION:
@@ -649,8 +651,8 @@ tiff_write_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib) {
 				// skip tag or _TIFFmemcpy will fail
 				continue;
 			}
-			// type of storage may differ (e.g. rational array vs float array type)
-			if(_TIFFDataSize(tif_tag_type) != (int)FreeImage_TagDataWidth(tag_type)) {
+			// type of storage may differ (e.g. rationnal array vs float array type)
+			if(static_cast<unsigned>(_TIFFDataSize(tif_tag_type)) != FreeImage_TagDataWidth(tag_type)) {
 				// skip tag or _TIFFmemcpy will fail
 				continue;
 			}
